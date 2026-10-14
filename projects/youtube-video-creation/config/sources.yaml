@@ -66,8 +66,20 @@ domains:
              ligue1.com, www.ligaportugal.pt, www.the-afc.com, www.fifa.com,
              spfl.co.uk, eredivisie.nl,
              losc.fr, asmonaco.com, feyenoord.nl,
+             # 2026-10-11 に追加。クラブ公式サイトの声明をそのまま引ける（到達を実測）
+             www.rayovallecano.es,
              premierleague.com, laliga.com, bundesliga.com, legaseriea.it,
-             mlssoccer.com, uefa.com]
+             mlssoccer.com, uefa.com,
+             # 2026-09-28 に追加。オランダサッカー協会（KNVB）の代表の公式サイト
+             www.onsoranje.nl,
+             # 2026-09-29 に追加。競技規則（VAR の手順）の原文
+             www.theifab.com,
+             # 2026-10-10 に追加。PSV（佐野航大の所属。選手ページ・試合後会見の原文を引く）と
+             # トルコサッカー連盟（モンテッラ解任の公告が一次情報）。どちらも到達を実測
+             www.psv.nl, www.tff.org,
+             # 2026-10-11 に追加。ナポリ公式（マクトミネイの心臓の処置は、病名も経過も
+             # クラブの「ノータ・メディカ」が一次情報。英語版 /en/ も同じ文面を出す）。到達を実測
+             sscnapoli.it]
 
   # 日本の公式。Jリーグの話をここまで辿れば確定にできる
   official_jp: [jleague.jp, jfa.jp, urawa-reds.co.jp, frontale.co.jp,
@@ -93,7 +105,9 @@ domains:
             # 2026-09-06 に追加。どちらもブラウザで直接開いて本文が読めることを
             # 確認した。フィードに載らない話（会見の発言、退団メッセージの全文）が
             # ここにしか無く、網に無いせいで確度を決められない候補が毎日出ていた
-            mirror.co.uk, bbc.co.uk, espn.co.uk, dailymail.co.uk]
+            mirror.co.uk, bbc.co.uk, espn.co.uk, dailymail.co.uk,
+            # 2026-10-10 に追加。クラブ名義の声明を全文に近い形で引く英語媒体。到達を実測
+            www.sportsmole.co.uk]
 
   # 記録・数字。「数字で見ると」の節で使う。順位・得点・出場数はここ
   stats: [fbref.com, understat.com, worldfootball.net, sofascore.com,
@@ -128,14 +142,21 @@ domains:
   # 検索はその言語で書く（kicker をドイツ語以外で引いても返らない）
   german: [kicker.de, sport1.de]
   italian: [football-italia.net, calciomercato.com, tuttomercatoweb.com,
-            gazzetta.it]
+            gazzetta.it,
+            # 2026-10-11 に追加。試合の実況（交代の分・シュートの場面）と会見の答えを
+            # 時刻つきで全部載せる。到達を実測
+            sport.sky.it]
   french: [footmercato.net, eurosport.fr, lequipe.fr, sofoot.com, lyonfoot.com]
-  dutch: [voetbalzone.nl, vi.nl]
+  # nos.nl はオランダの公共放送（2026-09-28 に追加）
+  dutch: [voetbalzone.nl, vi.nl, nos.nl]
   # ポルトガル。日本人選手が多く、欧州ビッグクラブへの経由地になる
   portuguese: [abola.pt, record.pt]
   # スペイン語圏。南米(ole / tycsports)もここで引く。検索はスペイン語で書く
   spanish: [besoccer.com, marca.com, as.com, mundodeportivo.com, relevo.com,
-            sport.es, ole.com.ar, tycsports.com, eldebate.com]
+            sport.es, ole.com.ar, tycsports.com, eldebate.com,
+            # 2026-10-10 に追加。会見の答えを項目ごとに全部載せる媒体（FútbolFantasy）と、
+            # EFE の配信をそのまま載せる媒体（Infobae）、同じ会見を切った Libertad Digital。到達を実測
+            www.futbolfantasy.com, www.infobae.com, www.libertaddigital.com]
 
   # ウクライナ。代表と、東欧に散った選手の話はここでしか出ない（2026-09-24 に追加）
   ukrainian: [sport.ua, sport-express.ua, ukrfootball.ua, nv.ua, english.nv.ua]
@@ -192,8 +213,8 @@ domains:
 leagues:
   england:
     name: プレミアリーグ
-    official: [premierleague.com, arsenal.com, chelseafc.com, manutd.com,
-               liverpoolfc.com, tottenhamhotspur.com, newcastleunited.co.uk]
+    official: [premierleague.com, thefa.com, efl.com, arsenal.com, chelseafc.com,
+               manutd.com, liverpoolfc.com, tottenhamhotspur.com, newcastleunited.co.uk]
     media: english
     utc_offset: 1          # BST（夏時間）
     active_local: "09:00-23:30"
@@ -1067,6 +1088,43 @@ routines:
         queries:
           - {q: "順位表 反応", domains: rumour}
         check: 数えた件数と母数を書く。10〜20件を短く刻む
+
+  # ---------------------------------------------------------------- 仕組みの解説（水曜のシリーズ、10月の案4。2026-09-28）
+  explain:
+    name: 仕組みの解説（規定・制度）
+    when: 水曜
+    cover_hours: 168
+    target_minutes: 5
+    angle: |
+      規定や制度を1つ選んで、初めて聞く人に通じる形で説明する（ネーションズリーグの
+      「リーグB」、CLのリーグフェーズ、財政のルール、移籍の窓、VARの手順など）。
+      **公式の規定の原文まで辿る**（UEFA・リーグ・FIFA・連盟）。記事の言い換えを根拠にしない。
+      節は「問い → 仕組み → 数字（表） → 実例 → 見立て」。数字は表に、実例は今季の出来事から1つ。
+      他人の声は無くてよい。用語は初めて聞く人に通じる形で（流れの点検の問い⑤）。
+    structure:
+      - {id: what, heading: 何の仕組みか, tier: 確定}
+      - {id: how, heading: どう動くのか, tier: 確定}
+      - {id: numbers, heading: 数字で見ると, tier: 確定}
+      - {id: example, heading: 今季の実例, tier: 報道}
+      - {id: view, heading: 見立て, tier: 背景}
+    steps:
+      - id: rule
+        what: 規定の原文（公式サイトの規約・レギュレーション）
+        tier: 確定
+        queries:
+          - {q: "{en} regulations", domains: official}
+          - {q: "{title} 規定 公式", domains: japanese}
+        check: |
+          公式の規定の条文か。何年版か。**記事の説明を規定の代わりにしない。**
+          数字（枠・金額・期日）は条文からそのまま
+
+      - id: example
+        what: 今季その仕組みが効いた出来事
+        tier: 報道
+        queries:
+          - {q: "{en} this season", domains: english}
+          - {q: "{title} 今季", domains: japanese}
+        check: 出来事の日付とクラブ名を控える。仕組みの説明と実例を混ぜない
 
   deadline_day:
     name: 移籍期限日（特別編）

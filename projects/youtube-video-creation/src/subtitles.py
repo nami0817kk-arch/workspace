@@ -16,8 +16,7 @@ MIN_CAPTION_SECONDS = 1.2
 
 
 def to_srt(script: Script) -> str:
-    blocks = []
-    index = 1
+    entries: list[list] = []      # [始まり, 終わり, 文]
     for line in script.lines:
         # 字幕は読み上げた内容そのもの。テロップは画面に焼き込んであるし、
         # 画面用に短く切ってあるので、そのまま字幕にすると途中で切れる。
@@ -47,11 +46,16 @@ def to_srt(script: Script) -> str:
             # 代弁は人の名前がそのまま話者になるので、長い名前だと本文が
             # 押し出されて上限を超える（2026-09-05 実測「ヒュルツェラー監督」）
             head = f"{line.speaker}: " if order == 0 else ""
-            blocks.append(
-                f"{index}\n{_timestamp(at)} --> {_timestamp(stop)}\n{head}{chunk}\n"
-            )
-            index += 1
+            entries.append([at, stop, f"{head}{chunk}"])
             at = stop
+    # **前の字幕の終わりが、次の字幕の始まりを越えない**（2026-09-28、review「字幕」が×）。
+    # 短い行を細かく割ると `MIN_CAPTION_SECONDS` の積み上げが行の尺を超え、
+    # 最後の1枚が次の行の頭に食い込んでいた（クロップの回で 50ms）
+    for here, following in zip(entries, entries[1:]):
+        if here[1] > following[0]:
+            here[1] = following[0]
+    blocks = [f"{n}\n{_timestamp(a)} --> {_timestamp(b)}\n{text}\n"
+              for n, (a, b, text) in enumerate(entries, start=1)]
     return "\n".join(blocks)
 
 
@@ -175,6 +179,29 @@ def _is_x(url: str) -> bool:
     return host.removeprefix("www.") in _X_HOSTS
 
 
+# 引用元の記事の媒体名（2026-09-30）。知らないサイトはホスト名のまま出す
+OUTLETS = {
+    "web.gekisaka.jp": "ゲキサカ", "gekisaka.jp": "ゲキサカ",
+    "soccer-king.jp": "サッカーキング", "www.soccer-king.jp": "サッカーキング",
+    "football-zone.net": "Football ZONE", "www.football-zone.net": "Football ZONE",
+    "news.yahoo.co.jp": "Yahoo!ニュース", "hochi.news": "スポーツ報知",
+    "www.nikkansports.com": "日刊スポーツ", "www.sponichi.co.jp": "スポニチ",
+    "www.sanspo.com": "サンスポ", "www.daily.co.jp": "デイリースポーツ",
+    "www.tokyo-sports.co.jp": "東スポ", "www.marca.com": "MARCA", "as.com": "AS",
+    "www.mundodeportivo.com": "Mundo Deportivo", "www.sport.es": "SPORT",
+    "www.skysports.com": "Sky Sports", "www.bbc.com": "BBC", "www.espn.com": "ESPN",
+    "www.theguardian.com": "The Guardian", "www.lance.com.br": "Lance!",
+    "ge.globo.com": "ge", "www.gazzetta.it": "La Gazzetta dello Sport",
+    "www.lequipe.fr": "L'Équipe", "www.kicker.de": "kicker",
+}
+
+
+def outlet_name(url: str) -> str:
+    from urllib.parse import urlparse
+    host = (urlparse(str(url)).hostname or "").lower()
+    return OUTLETS.get(host) or OUTLETS.get(host.removeprefix("www.")) or host.removeprefix("www.")
+
+
 # 概要欄に置く連絡先（2026-09-17 ユーザー決定）。アプリと同じ窓口
 CONTACT = "\n".join((
     "■ お問い合わせ",
@@ -196,6 +223,20 @@ def description(script: Script, credits: list[str] | None = None,
     # 連絡先を置いたので、問い合わせはそちらで受ける。
     # **台本の `sources` には残す。**確度の札（確定／報道／未確認）の根拠は
     # そちらにあり、こちらの手元では全部辿れる
+    # **選手・監督の言葉の出どころだけ、媒体名で1行**（2026-09-30 ユーザー「選手コメントの引用先にしよう。
+    # 出典だと、真似してるみたい」「記事から動画作ってると思われたくないの」）。
+    # 記事のアドレスを並べると、動画ごと記事から作ったように見える。**言葉がどこで語られたか**だけを言う。
+    # 媒体名は残す（引用には出どころの明示が要る。著作権法48条）
+    names: list[str] = []
+    for item in ((getattr(script, "meta", None) or {}).get("quote_sources") or []):
+        item = str(item)
+        # 「媒体名 URL」と書いてあれば、その名前（Yahoo!ニュース経由の記事は元の媒体名）
+        label, _, url = item.rpartition(" ")
+        name = label.strip() if (label.strip() and url.startswith("http")) else outlet_name(item)
+        if name and name not in names:
+            names.append(name)
+    if names:
+        parts.append("■ 選手コメント\n発言は、" + "・".join(names) + "が伝えた取材から引いています。")
     if credits:
         parts.append("■ クレジット\n" + "\n".join(credits))
     # **連絡先を必ず置く**（2026-09-17。報道写真を使う方針とセット）。

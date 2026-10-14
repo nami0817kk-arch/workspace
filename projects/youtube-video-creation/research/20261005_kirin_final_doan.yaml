@@ -1,0 +1,232 @@
+# 取材メモ（10/5 題材 kirin_final_doan、型は news）。材料の控え: research/raw/20261005_kirin_final_doan.md
+# キリンカップ決勝（10/5 19:30 国立）日本 2-1 ニュージーランド。主将・堂安律が71分に決勝ゴール。
+# 昼の回 doan_captain（課題はシュート数・9月からの3試合で0本）の答えになる回。昼の回の数字は「更新した形」で1回だけ言う。過去回には触れない。
+# 別の回「上田綺世、4戦4発」と重ねない: 上田は先制点の1行だけ。上田の数字・言葉は入れない。写真 04（堂安と上田）は使わない。
+# 事実の裏:
+#   スコア・得点者・時間・交代: JFA 公式の試合ページ m4.html（28分 上田／32分 ベン・オールド／71分 堂安。中村敬斗 64分 IN）
+#   シュート数: JFA の試合記録 PDF は 22:00 時点で未掲載 → スポーツナビの試合データ（堂安5本・日本21本）
+#   主将の6戦全勝: ゲキサカ 460136（10/1 時点で5戦全勝）＋JFA 2026年の結果表（エクアドル戦の PK 勝ちも ○）
+#   発言: 試合後。スポニチアネックス・サンケイスポーツ（Yahoo 21:38/21:49）。言葉はスポニチの形に揃えた
+date: 2026年10月5日
+slot: japan
+format: news
+people:
+- 堂安律
+- 中村敬斗
+- 森保一
+- 上田綺世
+theme:
+  id: kirin_final_doan
+  league: japan
+  league_name: キリンカップ
+  kind: match
+  topic: 日本代表
+  title: 堂安律、325日ぶりの代表弾でキリン杯V。主将が試合後に漏らした本音
+  question: シュート0本が続いていた主将の堂安律は、決勝で何を変え、試合後に何を口にしたのか
+  opening_image: assets/images/20261005_kirin_final_doan/01_w.jpg
+  takeaway: 9月からの3試合でシュートが0本だった主将の堂安律は、決勝の1試合で5本を打ち、日本のシュート21本のうち4本に1本を占めた。最後のゴールから325日、代表11試合ぶりの得点で、キャプテンを務めた試合は3月から6戦全勝になった。次は11月14日からシンガポールでブラジル、パラグアイと戦う
+short_title: 堂安律が決勝ゴール。主将が明かした「ふがいない試合が多かった」
+thumbnail:
+  photo: assets/images/20261005_kirin_final_doan/01_w.jpg
+  short_photo: assets/images/20261005_kirin_final_doan/01_v.jpg
+  line1: 主将・堂安 国立で決勝弾
+  line2: 0本だったシュートは●本に
+  reaction: 今夜は久しぶりにシュートを沢山狙っていた
+sections:
+- id: honne
+  main: true
+  heading: 決勝ゴールのあとの本音
+  tier: 報道
+  telop: 堂安律「ゴールという結果で報われてホッとしてます」
+  narrator: キャスター
+  say:
+  - text: 日本代表の主将、堂安律。キリンカップ決勝で勝ち越しゴールを決めました。
+    short_only: true
+    image: assets/images/20261005_kirin_final_doan/01_w.jpg
+  - text: 決めたのは後半26分。3試合で0本だったシュートを、この日は5本も打ちました。
+    image: assets/images/20261005_kirin_final_doan/03_w.jpg
+  - voice: 堂安律
+    text: 最近はゴールが取れずに、
+  - voice: 堂安律
+    text: 自分自身ふがいない試合が多かったので
+    cont: true
+  - voice: 堂安律
+    text: ゴールという結果で報われてホッとしてます
+    cont: true
+  quotes_from:
+  - スポーツニッポン https://news.yahoo.co.jp/articles/8505da981de75a74a142c111582e8ca857d8aacc
+  sources:
+  - https://news.yahoo.co.jp/articles/8505da981de75a74a142c111582e8ca857d8aacc
+  - https://news.yahoo.co.jp/articles/b650bb3ff26c5499abde3c3144a8b47dcd134604
+  - https://www.jfa.jp/samuraiblue/kirincupsoccer_2026/match_page/m4.html
+- id: goal
+  heading: 中村敬斗の左足から生まれた1点
+  tier: 報道
+  telop: 堂安律「あそこにいるのがウインガーの仕事」
+  narrator: キャスター
+  say:
+  - text: 森保一監督は、最終ラインを4人にする形で、2年半ぶりに先発を組みました。
+    image: assets/images/20261005_kirin_final_doan/01_w.jpg
+  - text: 堂安は右のウイング。前半28分に上田綺世が先制します。
+    card:
+      type: table
+      title: 得点の流れ
+      columns: [時間, 得点者, スコア]
+      rows: &goals
+      - ['前半28分', '上田綺世', '1-0']
+      - ['前半32分', 'ベン・オールド', '1-1']
+      - ['後半26分', '堂安律', '2-1']
+      highlight_row: 0
+  - text: しかし4分後、カウンターからベン・オールドに決められ同点。
+    card:
+      type: table
+      title: 得点の流れ
+      columns: [時間, 得点者, スコア]
+      rows: *goals
+      highlight_row: 1
+  - text: 後半19分、森保監督は中村敬斗ら3人を送り出します。
+    image: assets/images/20261005_kirin_final_doan/02_w.jpg
+    card: none
+  - text: その7分後、中村が左サイドを縦に破り、左足でゴール前へ。
+  - text: 流れたボールに、右から入った堂安が右足で合わせました。
+    image: assets/images/20261005_kirin_final_doan/03_w.jpg
+    card:
+      type: table
+      title: 得点の流れ
+      columns: [時間, 得点者, スコア]
+      rows: *goals
+      highlight_row: 2
+  - voice: 堂安律
+    text: 敬斗から非常に良いボールが来たので
+    card: none
+  - voice: 堂安律
+    text: 流し込むだけでした。
+    cont: true
+  - voice: 堂安律
+    text: あそこにいるのがウインガーの仕事だと思うので、
+    cont: true
+  - voice: 堂安律
+    text: 良いボールが来た敬斗に感謝したい
+    cont: true
+  - text: 2対1で勝った日本がキリンカップを制したのは、2011年以来15年ぶりです。
+  quotes_from:
+  - スポーツニッポン https://news.yahoo.co.jp/articles/8505da981de75a74a142c111582e8ca857d8aacc
+  sources:
+  - https://www.jfa.jp/samuraiblue/kirincupsoccer_2026/match_page/m4.html
+  - https://web.gekisaka.jp/news/japan/detail/?460359-460359-fl
+  - https://web.gekisaka.jp/news/japan/detail/?460360-460360-fl
+  - https://web.gekisaka.jp/news/japan/detail/?460363-460363-fl
+  - https://news.yahoo.co.jp/articles/8505da981de75a74a142c111582e8ca857d8aacc
+- id: shots
+  heading: 主将が打った5本のシュート
+  tier: 報道
+  telop: 前半10分までに3本。日本のシュート21本のうち5本が堂安
+  narrator: 解説
+  say:
+  - text: 堂安律が自分の課題に挙げていたのは、シュートの数でした。
+    image: assets/images/20261005_kirin_final_doan/01_wr.jpg
+    card:
+      type: table
+      title: 堂安律 シュート数
+      columns: [試合, シュート, 得点]
+      rows: &shots
+      - ['9月からの3試合', '0本', '0']
+      - ['決勝 ニュージーランド戦', '5本', '1']
+      - ['決勝 日本チーム全体', '21本', '2']
+  - text: 立ち上がりから左足で狙い、前半10分までに3本を打ちました。
+    card:
+      type: table
+      title: 堂安律 シュート数
+      columns: [試合, シュート, 得点]
+      rows: *shots
+      highlight_row: 1
+  - text: 日本のシュートは21本。そのおよそ4本に1本が堂安でした。
+    emph: true
+    card:
+      type: table
+      title: 堂安律 シュート数
+      columns: [試合, シュート, 得点]
+      rows: *shots
+      highlight_row: 2
+  sources:
+  - https://soccer.yahoo.co.jp/japan/category/men/game/2026100501/stats
+  - https://soccer.yahoo.co.jp/japan/category/men/game/2026100501/text
+  - https://web.gekisaka.jp/news/japan/detail/?460359-460359-fl
+  - https://www.jfa.jp/national_team/samuraiblue/20260924/schedule_result/pdf/m01.pdf
+  - https://www.jfa.jp/national_team/samuraiblue/20260928/schedule_result/pdf/m01.pdf
+  - https://www.jfa.jp/national_team/samuraiblue/kirincupsoccer_2026/schedule_result/pdf/m02.pdf
+- id: view
+  viewpoint: true
+  heading: 325日ぶりのゴールと、主将としての6戦全勝
+  tier: 背景
+  telop: 前のゴールから325日、代表11試合ぶりの得点。主将を務めた試合は6戦全勝
+  narrator: 解説
+  say:
+  - text: 前の代表ゴールは、去年11月14日のガーナ戦でした。
+    image: assets/images/20261005_kirin_final_doan/01_wr.jpg
+    card: none
+  - text: そこからゴールの無い代表戦が、11試合続いていました。
+  - text: 通算は73試合で12点目になります。
+  - text: キャプテンを務めた試合は、今年3月から6戦全勝になりました。
+  - text: そのうちエクアドル戦は、0対0からのPK戦での勝ちです。
+  - text: 次は11月14日から、シンガポールでブラジル、パラグアイと戦います。
+  - voice: 堂安律
+    text: 今回の4連勝は大きな自信になると思うし、
+  - voice: 堂安律
+    text: これを自信にアジア杯を獲りに行きたいと思います
+    cont: true
+  quotes_from:
+  - スポーツニッポン https://news.yahoo.co.jp/articles/8505da981de75a74a142c111582e8ca857d8aacc
+  sources:
+  - https://www.jfa.jp/national_team/samuraiblue/20251114/schedule_result/pdf/m01.pdf
+  - https://www.jfa.jp/samuraiblue/schedule_result/2026.html
+  - https://web.gekisaka.jp/news/japan/detail/?460136-460136-fl
+  - https://web.gekisaka.jp/news/japan/detail/?460359-460359-fl
+  - https://web.gekisaka.jp/news/japan/detail/?460361-460361-fl
+  - https://www.soccer-king.jp/news/japan/national/20261004/2212999.html
+  - https://news.yahoo.co.jp/articles/8505da981de75a74a142c111582e8ca857d8aacc
+- id: voices
+  heading: ネットの反応
+  tier: 未確認
+  telop: 「今夜は久しぶりにシュートを沢山狙っていた」
+  narrator: キャスター
+  say:
+  # Yahoo!ニュース（スポーツ報知「堂安律が勝ち越し弾！中村敬斗がアシスト…」）のコメント欄 luc********。全文
+  - voice: ネット民
+    text: 堂安選手ナイスゴール！！
+    image: assets/images/20261005_kirin_final_doan/01_w.jpg
+  - voice: ネット民
+    text: ワールドカップでも今大会でも献身的なプレーが多かったが、
+    cont: true
+  - voice: ネット民
+    text: 今夜は久しぶりにシュートを沢山狙っていた。
+    cont: true
+  - voice: ネット民
+    text: やっぱ攻撃的な堂安選手はカッコいい！
+    cont: true
+  - voice: ネット民
+    text: 次回も活躍して下さい！！
+    cont: true
+  # Yahoo!ニュース（サンケイスポーツ「堂安律、勝ち越し弾で待望の得点…」）のコメント欄 reb********。全文
+  - voice: ネット民
+    text: 前半から積極的にミドルを撃って戦う姿勢を見せていた。
+  - voice: ネット民
+    text: ゴールの場面はもしかしたら中村敬斗のパスは
+    cont: true
+  - voice: ネット民
+    text: 上田へのパスを狙ったものだったかもしれないと思うが、
+    cont: true
+  - voice: ネット民
+    text: 堂安の果敢な姿勢がああいうボールを呼び込んだとも思う。
+    cont: true
+  # スポーツ報知の同じコメント欄 tjtpwm。全文
+  - voice: ネット民
+    text: やっぱ堂安は前で使った方がいいよなー。
+    short_voice: true
+  - voice: ネット民
+    text: いいサイドバック出てきてくれー
+    cont: true
+    short_voice: true
+  sources:
+  - https://news.yahoo.co.jp/articles/886ffb98dd0992098fb8dab4090b3f87b9f38505/comments
+  - https://news.yahoo.co.jp/articles/b650bb3ff26c5499abde3c3144a8b47dcd134604/comments

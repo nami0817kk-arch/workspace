@@ -1,0 +1,92 @@
+date: 2026年9月26日
+slot: world_1
+format: quote
+voice_min: 0.55
+people: [マルク・ククレジャ, ロドリ]
+theme:
+  id: cucurella_rodri
+  league: spain
+  league_name: ラ・リーガ
+  kind: transfer
+  topic: レアル・マドリード
+  title: 'ククレジャ「代理人に電話はあった」。バルサを選んだロドリへの本音'
+  question: ククレジャはロドリに何を送っていたのか
+short_title: ククレジャ、ロドリに送った一言
+thumbnail:
+  photo: assets/images/20260926_pair_cucurella_rodri/01.jpg
+  line1: ククレジャがロドリに本音
+  line2: 「あまり●●しないでほしい」
+sections:
+  - id: calls
+    heading: 代理人への電話
+    tier: 報道
+    telop: バルサとアトレティコの関心は「本当の関心とは言えない」
+    narrator: キャスター
+    say:
+      - 今年の夏、チェルシーからレアル・マドリードに移ったククレジャ。
+      - スペイン代表の合宿で、ラジオの単独インタビューに答えました。
+      - バルサやアトレティコからの関心はあったのか、と聞かれています。
+      - voice: ククレジャ
+        text: 代理人に電話があったのは本当だ。でも、それだけ。本当の関心とは言えない
+      - voice: ククレジャ
+        text: 本気で来てくれたのはマドリーで、しかもすごく速かった。来ると決めてよかったよ
+    sources:
+      - https://cadenaser.com/nacional/2026/09/23/cucurella-quiso-convencer-a-rodri-para-fichar-por-el-real-madrid-esperaba-que-fuesemos-companeros-cadena-ser/
+      - https://as.com/futbol/seleccion/cucurella-mourinho-siempre-esta-de-buen-humor-f202609-n/
+      - https://www.realmadrid.com/en-US/news/club/announcements/comunicado-oficial-cucurella-15-06-2026
+      - https://www.goal.com/en-in/lists/real-madrid-marc-cucurella-barcelona-transfer-rodri/blt838c69948a67d63a
+  - id: rodri
+    main: true
+    heading: ロドリへのメッセージ
+    tier: 報道
+    telop: 「一緒にプレーできたらいいな」と送っていた
+    narrator: キャスター
+    say:
+      - text: 'レアル・マドリードのククレジャが、バルサへ移ったロドリについて明かしました。'
+        short_only: true
+      - 話は、スペイン代表で一緒にプレーするロドリにも及びました。
+      - ロドリは8月、マンチェスター・シティからバルセロナへ移りました。
+      - その移籍の前に、ククレジャはロドリをマドリードに誘っていました。
+      - voice: ククレジャ
+        text: 来てほしかったよ。すごい選手だし、代表で何をしているかは、みんな見ている
+      - voice: ククレジャ
+        text: 仲間にプレッシャーをかけるのは好きじゃない。誰かにずっと付きまとわれるのは、自分でも嫌だから
+      - voice: ククレジャ
+        text: でも話が表に出る前に、「一緒にプレーできたらいいな」と、さりげなくメッセージを送った
+      - voice: ククレジャ
+        text: 返事は「まあ、見てみよう」みたいな感じ。結局、彼は別の道を選んだ
+      - voice: ククレジャ
+        text: 彼のためにはうれしい。でも、あまり成功しないでほしいね。そうなれば、成功しているのは僕らの方だから
+      - ロドリが選んだバルサは、いまリーグ戦7戦全勝。マドリーは勝ち点6差で追う立場です。
+    sources:
+      - https://cadenaser.com/nacional/2026/09/23/cucurella-quiso-convencer-a-rodri-para-fichar-por-el-real-madrid-esperaba-que-fuesemos-companeros-cadena-ser/
+      - https://as.com/futbol/seleccion/cucurella-mourinho-siempre-esta-de-buen-humor-f202609-n/
+      - https://www.msn.com/es-ve/noticias/otras/cucurella-se-pronuncia-sobre-rodri-tras-el-intento-fallido-de-atraerlo-al-real-madrid/ar-AA2cXkcU
+      - https://www.msn.com/en-ie/sports/football/cucurella-confirms-barcelona-called-his-agent/ar-AA2cSLBJ
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: 「良い奴だな」と「自分で決めて行ったんやから」
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: 相当気を遣ってることがよくわかる記事だった。
+      - voice: ネット民
+        text: ククレジャ…良い奴だな
+      - voice: ネット民
+        text: ひたすら守備に追われるマドリーに行って後悔がないか気になる
+      - voice: ネット民
+        text: ククレジャ白に行ってから苦労してるみたいやけど、自分で決めて行ったんやから苦しめばいいって思ってる
+      - voice: ネット民
+        text: ククレジャ、リーグ戦ずっと見てるけど、スペイン代表戦での感じと違う気がする。ハマってない感じがするのだが。
+      - voice: ネット民
+        text: 最近ククレジャの笑顔すら観てない
+      - voice: ネット民
+        text: 今のサッカー市場でククレジャ以上の守備強度を誇る左SBはほとんど居ないと思ってる。
+      - voice: ネット民
+        text: ヘタフェ時代だっけなぁ、久保選手が悪質なファウルを受けた際、真っ先に相手選手に抗議した選手ククレジャ。イイやつだな。
+        short_voice: true
+    sources:
+      - https://news.yahoo.co.jp/articles/4219d91d721831d84f9c4af277d873ee33dc27d5/comments
+      - https://news.yahoo.co.jp/articles/412c062b7757dab7de5e29eec9e20de28fd559de/comments
+      - https://search.yahoo.co.jp/realtime/search?p=ククレジャ

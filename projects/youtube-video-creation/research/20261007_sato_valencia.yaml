@@ -1,0 +1,272 @@
+# 取材メモ（10/7 題材 sato_valencia、型は news・日本人枠）。材料の控え: research/raw/20261007_sato_valencia.md
+# 主役はマルカ（2026-10-05 14:31 CEST、DARÍO PUIG）の「Un máster para Sato de apenas 90 días: había que quitarle presión」。原文は marca.com 本体を requests で読んだ。
+# 問いは1つ:「スペインの大手紙は、加入90日の19歳に何を見て、何を求めたのか」。答え＝何でも経験した90日、だから落ち着いて見守れ（hay que pedir calma）。
+# 加入の経緯: 2026-07-07 にバレンシアが FC東京との合意を発表（完全移籍＝traspaso、2031年まで、トップチーム初の日本人）。クラブ公式の声明＋Plaza Deportiva・FútbolFantasy の当日の記事で日付。
+# 出場の数字: ESPN の試合ごとの出場記録で自分で数えた（7試合中5出場・先発4・297分・0得点）。Football ZONE の「全5試合（うち4試合スタメン）」「初ゴールはまだ」と一致。
+# 監督の交代: 英語版 Wikipedia 2026–27 Valencia CF season（9/13 コルベラン解任、暫定オスカル・サンチェス、9/23 アギーレ）。アギーレは 10/2 に「監督の経歴」の回あり。ここでは佐藤の起用に関わる2行まで（代表から戻った先が新しい監督、というだけ）。10/2 の言い回し（「先発に残れるか」「初陣」）は使わない。
+# 本人の言葉: 9/28 ベネズエラ戦の後（GOAL 9/29）。マルカの記事より前だが、マルカが書いた「代表から早く戻った」の理由を本人が語ったもの。マルカの記事（10/5）以降の本人の言葉は見つからなかった。
+# 比べ: 久保建英は 2019-09-01 にラ・リーガ初出場、11/10 に初ゴール（英語版 Wikipedia）＝70日。佐藤は 8/22 初出場、次のラシン戦（10/11）で50日。加入発表 7/7 → 記事 10/5 はちょうど90日（数えた）。
+# 市場価値: Transfermarkt の推移 200万（2026-06-03）→ 400万ユーロ（2026-10-05、マルカと同じ日）。
+# 反応: マルカの記事のコメント欄（バレンシアのファン、スペイン語を訳した）2件＋Yahoo!ニュース（GOAL の記事）1件。全文。
+# 写真: 05 バレンシア公式（7月の加入時の撮影、ホームのユニホーム。2000x1125）をサムネ・冒頭・ショート（05_w / 05_v）、03 サッカーマガジンWEB（ベネズエラ戦、写真 毛受亮介）を代表の節（03_w）。代理店ではない。
+#   マルカの記事の写真2枚は小さく（1024x682）引き伸ばしで×、主写真は頭の上が切れるので外した。
+date: 2026年10月7日
+slot: japan_sato
+format: news
+people:
+- 佐藤龍之介
+- 久保建英
+- ハビエル・アギーレ
+theme:
+  id: sato_valencia
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: バレンシア
+  title: 佐藤龍之介、わずか90日で「修士課程」。スペイン紙が19歳のために求めたこと
+  question: スペインの大手紙は、加入90日の佐藤龍之介に何を見て、何を求めたのか
+  opening_image: assets/images/20261007_sato_valencia/05_w.jpg
+  takeaway: 佐藤龍之介の加入が発表されてから、マルカの記事が出るまでちょうど90日。そのあいだにリーグ戦7試合のうち4試合で先発し、監督が代わった後の2試合は出番が無かった。ラ・リーガの初ゴールまでには、18歳の久保建英も初出場から70日かかっている。佐藤は初出場から次のラシン戦までで50日。マルカの「落ち着いて見守れ」は、数字の上でも急ぎすぎない注文になっている
+short_title: 佐藤龍之介、スペイン紙が19歳に下した「90日」の評価
+thumbnail:
+  photo: assets/images/20261007_sato_valencia/05.jpg
+  short_photo: assets/images/20261007_sato_valencia/05_v.jpg
+  line1: 佐藤龍之介 加入90日
+  line2: スペイン紙が求めたのは●●
+  reaction: 一度落ちて、そこから定着した
+  tags:
+  - 佐藤龍之介
+  - バレンシア
+  - ラ・リーガ
+sections:
+- id: master
+  heading: わずか90日で「修士課程」
+  tier: 報道
+  telop: スペイン紙マルカ「佐藤は、わずか90日で修士課程を修めた」
+  narrator: キャスター
+  say:
+  - text: 10月5日、スペインの大手紙マルカが、バレンシアの佐藤龍之介を取り上げました。
+    image: assets/images/20261007_sato_valencia/05_w.jpg
+  - voice: スペイン紙マルカ
+    text: 佐藤龍之介は、バレンシアでの最初のシーズンで、
+  - voice: スペイン紙マルカ
+    text: もう修士課程を修めたと言っていい。
+    cont: true
+  - voice: スペイン紙マルカ
+    text: いや、わずか90日で、と言うべきか。
+    cont: true
+  - voice: スペイン紙マルカ
+    text: ほとんど何でも経験したのだから。
+    cont: true
+  - text: 修士課程は、大学を出たあとに専門を深める学びのこと。
+  - text: それほど中身の詰まった日々だった、という書き方です。
+  quotes_from:
+  - マルカ https://www.marca.com/futbol/valencia/2026/10/05/master-sato-apenas-90-dias-habia-quitarle-presion.html
+  sources:
+  - https://www.marca.com/futbol/valencia/2026/10/05/master-sato-apenas-90-dias-habia-quitarle-presion.html
+  - https://www.soccerdigestweb.com/news/detail/id=198173
+- id: back_early
+  heading: 代表を早く離れて、スペインへ
+  tier: 報道
+  telop: ベネズエラ戦の翌日に代表を離れた佐藤「自分の責任でもあった」
+  narrator: キャスター
+  say:
+  - text: 9月28日、佐藤は日本代表のベネズエラ戦に先発し、前半の45分を戦いました。
+    image: assets/images/20261007_sato_valencia/03_w.jpg
+  - text: そして翌日、残る代表の試合を待たずに、スペインへ戻ります。
+  - voice: 佐藤龍之介
+    text: チームとしても点が取れず、自分の責任でもあった。
+  - voice: 佐藤龍之介
+    text: チームとしてもうまくいっていなかったなかで、
+    cont: true
+  - voice: 佐藤龍之介
+    text: これからまた違う監督で頭をスッキリさせてやりたい。
+    cont: true
+  - text: その違う監督が、9月23日に就いた元日本代表監督、ハビエル・アギーレです。
+    image: assets/images/20261007_sato_valencia/05_w.jpg
+  - voice: スペイン紙マルカ
+    text: 日本人ウイングは、予定より早く代表から戻った。
+  - voice: スペイン紙マルカ
+    text: アギーレに認めてもらうためだ。
+    cont: true
+  quotes_from:
+  - GOAL https://www.goal.com/jp/%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9/2026-0929-sato-ryu-mori-vale-jp/blt596fec7063bb4b0f
+  - マルカ https://www.marca.com/futbol/valencia/2026/10/05/master-sato-apenas-90-dias-habia-quitarle-presion.html
+  sources:
+  - https://www.goal.com/jp/%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9/2026-0929-sato-ryu-mori-vale-jp/blt596fec7063bb4b0f
+  - https://soccermagazine.jp/national_A/17867020
+  - https://en.wikipedia.org/wiki/2026%E2%80%9327_Valencia_CF_season
+  - https://www.marca.com/futbol/valencia/2026/10/05/master-sato-apenas-90-dias-habia-quitarle-presion.html
+- id: calma
+  main: true
+  heading: クラブは「重荷を背負わせない」
+  tier: 報道
+  telop: マルカ「19歳の選手には、落ち着いて見守るよう求めなければならない」
+  narrator: キャスター
+  say:
+  - text: バレンシアで開幕から5試合中4度先発の佐藤龍之介。監督交代の後の2試合は出番なし。
+    short_only: true
+  - text: マルカは、開幕前の練習試合の時期の佐藤を、こう振り返ります。
+  - voice: スペイン紙マルカ
+    text: 前の監督たちも、スタンドも驚かせた。
+  - voice: スペイン紙マルカ
+    text: 最初の瞬間から気に入られた。
+    cont: true
+  - voice: スペイン紙マルカ
+    text: クラブは、この日本人ウイングに
+  - voice: スペイン紙マルカ
+    text: 重荷を背負わせてはいけないと分かっている。
+    cont: true
+  - voice: スペイン紙マルカ
+    text: まだとても若いのだから。
+    cont: true
+  - voice: スペイン紙マルカ
+    text: 19歳の選手には、落ち着いて見守るよう求めなければならない。
+  quotes_from:
+  - マルカ https://www.marca.com/futbol/valencia/2026/10/05/master-sato-apenas-90-dias-habia-quitarle-presion.html
+  sources:
+  - https://www.marca.com/futbol/valencia/2026/10/05/master-sato-apenas-90-dias-habia-quitarle-presion.html
+- id: yardstick
+  viewpoint: true
+  heading: 佐藤の90日を数える。久保建英の1年目と比べると
+  tier: 報道
+  telop: 加入の発表から記事まで、ちょうど90日。7試合で先発4
+  narrator: 解説
+  card:
+    type: table
+    title: 佐藤龍之介の今季のリーグ戦
+    columns: [日付, 相手, 佐藤]
+    rows: &games
+    - ['8月22日', 'セルタ', '先発 57分']
+    - ['8月25日', 'ベティス', '先発 90分']
+    - ['8月30日', 'デポルティーボ', '先発 60分']
+    - ['9月6日', 'バルセロナ', '途中から 28分']
+    - ['9月11日', 'セビージャ', '先発 62分']
+    - ['9月15日', 'アラベス', '出番なし']
+    - ['9月20日', 'ソシエダ', '出番なし']
+  say:
+  - text: 加入の発表は7月7日。記事が出た10月5日は、ちょうど90日目でした。
+    card: none
+  - text: そのあいだのリーグ戦は7試合。佐藤は開幕から先発に名を連ねます。
+    card:
+      type: table
+      title: 佐藤龍之介の今季のリーグ戦
+      columns: [日付, 相手, 佐藤]
+      rows: *games
+      highlight_row: 0
+  - text: 前の監督の5試合では、4試合で先発しました。
+    card:
+      type: table
+      title: 佐藤龍之介の今季のリーグ戦
+      columns: [日付, 相手, 佐藤]
+      rows: *games
+      highlight_row: 4
+  - text: 9月13日に監督が解任されると、続くアラベス戦とソシエダ戦はベンチのままでした。
+    card:
+      type: table
+      title: 佐藤龍之介の今季のリーグ戦
+      columns: [日付, 相手, 佐藤]
+      rows: *games
+      highlight_row: 6
+  - text: 先発は7試合の57%。出場は297分で、全体の47%にあたります。
+    card:
+      type: table
+      title: 佐藤龍之介の今季のリーグ戦
+      columns: [日付, 相手, 佐藤]
+      rows: *games
+  - text: 初ゴールはまだです。では、同じリーグに来た日本人の先輩はどうだったか。
+    card:
+      type: table
+      title: ラ・リーガの初ゴールまで
+      columns: ['', 久保建英, 佐藤龍之介]
+      rows: &firsts
+      - ['来た年の年齢', '18歳', '19歳']
+      - ['初出場', '2019年9月1日', '2026年8月22日']
+      - ['初ゴール', '11月10日', 'まだ']
+      - ['初出場からの日数', '70日', '次の試合で50日']
+  - text: 18歳でマジョルカに来た久保建英は、初出場から初ゴールまで70日でした。
+    card:
+      type: table
+      title: ラ・リーガの初ゴールまで
+      columns: ['', 久保建英, 佐藤龍之介]
+      rows: *firsts
+      highlight_row: 2
+  - text: 佐藤の初出場から次の試合までは、50日です。
+    card:
+      type: table
+      title: ラ・リーガの初ゴールまで
+      columns: ['', 久保建英, 佐藤龍之介]
+      rows: *firsts
+      highlight_row: 3
+  - text: 市場価値は10月5日、6月の200万ユーロから400万ユーロへ倍になりました。
+    card: none
+  - text: 次は日本時間12日の朝4時、敵地でのラシン・サンタンデール戦。
+  - text: その4日後の16日、佐藤は20歳になります。
+  sources:
+  - https://www.valenciacf.com/official-statement-ryunosuke-sato
+  - https://plazadeportiva.valenciaplaza.com/plazadeportiva/valenciacf/oficial-ryunosuke-sato-ya-es-nuevo-futbolista-del-valencia-cf
+  - https://www.espn.com/soccer/team/schedule/_/id/94
+  - https://www.football-zone.net/archives/678031
+  - https://www.transfermarkt.com/ryunosuke-sato/profil/spieler/948169
+  - https://en.wikipedia.org/wiki/Takefusa_Kubo
+  - https://en.wikipedia.org/wiki/2026%E2%80%9327_Valencia_CF_season
+- id: voices
+  heading: ネットの反応
+  tier: 未確認
+  telop: 「出だしは良くて、一度落ちて、そこから定着した」
+  narrator: キャスター
+  say:
+  # Yahoo!ニュース（GOAL の記事）のコメント欄 vfz********。全文
+  - voice: ネット民
+    text: そりゃそうだよ。
+  - voice: ネット民
+    text: ラリーガデビューまでが上手くいきすぎてたからね。
+    cont: true
+  - voice: ネット民
+    text: 実際はシーズンの後半にでもポツポツ試合に出れるようになれば
+    cont: true
+  - voice: ネット民
+    text: 大したものだったはずだし。
+    cont: true
+  - voice: ネット民
+    text: ラリーガ初年度なんだから。
+    cont: true
+  # マルカの記事のコメント欄 #5 AlexCheDevil（スペイン語を訳した）。全文
+  - voice: ネット民
+    text: いい選手になる素質はある。
+  - voice: ネット民
+    text: ドリブルや技術のように、
+    cont: true
+  - voice: ネット民
+    text: 持っているか一生持てないかのものも持っているし、
+    cont: true
+  - voice: ネット民
+    text: 守備でもよく働く。
+    cont: true
+  - voice: ネット民
+    text: 足りないのは、19歳で、
+    cont: true
+  - voice: ネット民
+    text: とても小さなリーグから来た選手なら当たり前のもの。
+    cont: true
+  - voice: ネット民
+    text: もっと結果に結びつけるための、慣れと経験だ。
+    cont: true
+  - voice: ネット民
+    text: 自分はいい補強だと思う。
+    cont: true
+  # マルカの記事のコメント欄 #11 jcbarre（スペイン語を訳した）。全文
+  - voice: ネット民
+    text: キーパーのギオルギと同じ道をたどるかもしれない。
+    short_voice: true
+  - voice: ネット民
+    text: 出だしはすごく良くて、一度落ちて、そこから定着した。
+    cont: true
+    short_voice: true
+  - voice: ネット民
+    text: そうなるなら大歓迎だ。
+    cont: true
+    short_voice: true
+  sources:
+  - https://news.yahoo.co.jp/articles/baf9b03a2b06fa88cf1dac501e5c61664ec482da/comments
+  - https://www.marca.com/futbol/valencia/2026/10/05/master-sato-apenas-90-dias-habia-quitarle-presion.html

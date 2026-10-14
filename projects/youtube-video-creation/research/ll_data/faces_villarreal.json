@@ -1,0 +1,24 @@
+{
+ "villarreal": {
+  "フアン・ロマン・リケルメ": {
+   "role": "legend",
+   "file": "assets/photos/ll/villarreal/villarreal_legend_a75286ad.jpg",
+   "page": "Juan Román Riquelme"
+  },
+  "マルコス・セナ": {
+   "role": "legend",
+   "file": "assets/photos/ll/villarreal/villarreal_legend_25513b35.jpg",
+   "page": "Marcos Senna"
+  },
+  "サンティ・カソルラ": {
+   "role": "legend",
+   "file": "assets/photos/ll/villarreal/villarreal_legend_4ca6fa77.jpg",
+   "page": "Santi Cazorla"
+  },
+  "イニゴ・ペレス": {
+   "role": "manager",
+   "file": "assets/photos/ll/villarreal/villarreal_manager_1c383d6e.jpg",
+   "page": "Iñigo Pérez"
+  }
+ }
+}

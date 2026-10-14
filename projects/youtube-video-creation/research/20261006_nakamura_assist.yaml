@@ -1,0 +1,274 @@
+# 取材メモ（10/6 題材 nakamura_assist、型は quote）。材料の控え: research/raw/20261006_nakamura_assist.md
+# 主役は、キリンカップ決勝（10/5 19:34 国立、日本 2-1 ニュージーランド）で64分から入り、71分に堂安律の決勝点をアシストした中村敬斗と、試合後の言葉。
+# 昨日の回「堂安律、325日ぶりの代表弾でキリン杯V」（20261005_kirin_final_doan）と重ねない:
+#   堂安の言葉は使わない。決勝点の場面は中村の側から短く。「15年ぶり」「2年半ぶりの4バック」「11月のシンガポール」「4連勝」は言わない。
+# 上田の回（20261005_ueda_4goals）と重ねない: 後半30分の上田へのパス（オフサイド）は入れない。
+# 同時に作る「久保のトップ下」と重ねない: 久保の話は入れない。
+# 事実の裏:
+#   決勝の出場・アシスト: JFA マッチレポート m04.pdf（#13 中村 64分 IN、71分 #10 堂安 アシスト #13）。ゲキサカ地の文の「後半36分」は誤記とみて JFA の71分（後半26分）を採った。
+#   オーストラリア戦: JFA マッチレポート（2024/10/15 埼玉、W杯アジア最終予選、1-1。58分 日本のオウンゴール、中村 70分 IN、76分 オーストラリアのオウンゴール。中村が左で縦に運んで折り返し）。位置はゲキサカ地の文「左ウイングバック」。
+#   9月からの4試合の出場: JFA マッチレポート 3本＋m04。83＋19＋79＋26＝207分（追加時間を除く）。9/24 の先制点の起点はスポニチ「中村敬斗が先制演出」と JFA の得点経過。
+#   代表の年ごとの得点: 日本語版 Wikipedia の代表個人成績（33試合11得点）。2026年のアシスト4は JFA（イングランド戦レポート・m04）、サッカーキング（チュニジア戦）、スポニチ（ウルグアイ戦）で1本ずつ裏を取った。
+#   リヨン: FotMob 887704（9/12 パリFC 15分、9/16 アンデルレヒト 90分1点、9/19 レンヌ 11分）。昨季フランス2部29試合14点。次は 10/9 18:45 UTC アウェーのランス戦（日本時間 10/10 3:45）。
+# 反応: Yahoo!ニュース（サッカーマガジンWeb・ゲキサカの記事）のコメント欄から個人の投稿を頭から終わりまで3件。海外の声は X を requests で読めず入れていない。
+# 写真: 02 サッカーマガジン（高原由佳）、03 日刊スポーツ（宮地輝）、05 スポニチ（小海途良幹）、01 ゲキサカ（©Koki NAGAHAMA/GEKISAKA）。代理店ではない。
+date: 2026年10月6日
+slot: japan
+format: quote
+people:
+- 中村敬斗
+- 堂安律
+- 鈴木淳之介
+- 三笘薫
+- 鎌田大地
+- 松木玖生
+theme:
+  id: nakamura_assist
+  league: japan
+  league_name: キリンカップ
+  kind: other
+  topic: 日本代表
+  title: 中村敬斗、途中出場7分で決勝アシスト。縦に仕掛けた瞬間によぎった試合
+  opening_image: assets/images/20261006_nakamura_assist/02_w.jpg
+  takeaway: 中村敬斗は2024年10月のオーストラリア戦で、70分に入って6分後に左の縦突破から同点のオウンゴールを誘った。キリンカップ決勝では64分に入って7分後、同じ左の縦突破から決勝点を生んだ。9月からの代表4試合は207分でアシスト2、今年の代表は11試合で1得点4アシストと、得点の4倍のアシストを記録している。リヨンでは公式戦3試合116分で1点。日本時間10月10日のランス戦で、この突破をクラブでも見せられるかが次の見どころになる
+short_title: 中村敬斗「オーストラリア戦をちょっと思い出した」。途中出場7分で決勝アシスト
+thumbnail:
+  photo: assets/images/20261006_nakamura_assist/02.jpg
+  short_photo: assets/images/20261006_nakamura_assist/05_v.jpg
+  line1: 中村敬斗 決勝点アシスト
+  line2: よぎったのは●●●●●●戦
+  reaction: 視野広くてよく見えてるよね
+sections:
+- id: scene
+  main: true
+  heading: 突破の瞬間によぎった試合
+  tier: 報道
+  telop: 中村敬斗「オーストラリア戦をちょっと思い出した」
+  narrator: キャスター
+  say:
+  - text: キリンカップ決勝の日本代表。途中から入った中村敬斗が、決勝点を生みました。
+    short_only: true
+    image: assets/images/20261006_nakamura_assist/05_w.jpg
+  - text: 左サイドを縦に破った場面を、本人はこう振り返ります。
+    image: assets/images/20261006_nakamura_assist/03_w.jpg
+  - voice: 中村敬斗
+    text: オーストラリア戦をちょっと思い出した
+    image: assets/images/20261006_nakamura_assist/03_w.jpg
+  - voice: 中村敬斗
+    text: ボールを前に運んだときに、すごくスペースを空けてくれたので、
+    cont: true
+  - voice: 中村敬斗
+    text: 自分の得意なフェイントがあるので、
+    cont: true
+  - voice: 中村敬斗
+    text: ちぎれるだろうなと思って切り込んだ
+    cont: true
+  - text: 思い出したのは、2024年10月のオーストラリア戦です。
+  - text: 途中から入り、左の突破で同点を生んだ試合でした。
+  quotes_from:
+  - ゲキサカ https://web.gekisaka.jp/news/japan/detail/?460369-460369-fl
+  sources:
+  - https://web.gekisaka.jp/news/japan/detail/?460369-460369-fl
+  - https://www.jfa.jp/national_team/samuraiblue/kirincupsoccer_2026/schedule_result/pdf/m04.pdf
+- id: australia
+  heading: 2024年10月、埼玉のオーストラリア戦
+  tier: 報道
+  telop: 入って6分後の同点と、入って7分後の決勝点。どちらも左サイドの縦突破から
+  narrator: キャスター
+  say:
+  - text: 10月15日、埼玉でのワールドカップ・アジア最終予選。
+    image: assets/images/20261006_nakamura_assist/05_w.jpg
+    card:
+      type: table
+      title: 左サイドの縦突破 2つの試合
+      columns: ['', '2024年 オーストラリア戦', '2026年 ニュージーランド戦']
+      rows: &two
+      - ['入った時間', '70分', '64分']
+      - ['突破の時間', '76分', '71分']
+      - ['生まれた点', '同点（オウンゴール）', '決勝点（堂安律）']
+      - ['位置', '左ウイングバック', '左サイドハーフ']
+  - text: 日本は後半に先制され、追いかける展開でした。
+    card:
+      type: table
+      title: 左サイドの縦突破 2つの試合
+      columns: ['', '2024年 オーストラリア戦', '2026年 ニュージーランド戦']
+      rows: *two
+  - text: 70分に入った中村は、その6分後に左サイドを縦に破ります。
+    card:
+      type: table
+      title: 左サイドの縦突破 2つの試合
+      columns: ['', '2024年 オーストラリア戦', '2026年 ニュージーランド戦']
+      rows: *two
+      highlight_row: 0
+  - text: 折り返しが相手のオウンゴールを誘い、試合は1対1の引き分けに。
+    card:
+      type: table
+      title: 左サイドの縦突破 2つの試合
+      columns: ['', '2024年 オーストラリア戦', '2026年 ニュージーランド戦']
+      rows: *two
+      highlight_row: 2
+  - text: そして今回は、64分に入って7分後。入ってからの時間は、わずか1分違いです。
+    card:
+      type: table
+      title: 左サイドの縦突破 2つの試合
+      columns: ['', '2024年 オーストラリア戦', '2026年 ニュージーランド戦']
+      rows: *two
+      highlight_row: 1
+  - text: 決勝では、鈴木淳之介が頭でつないだボールを受けました。
+    image: assets/images/20261006_nakamura_assist/03_w.jpg
+    card: none
+  - text: 縦へのフェイントで、目の前の相手を外します。
+  - text: 選んだのは、キーパーとディフェンダーの間へ転がすパスです。
+  - voice: 中村敬斗
+    text: あそこに転がすのが一番チャンス
+  quotes_from:
+  - ゲキサカ https://web.gekisaka.jp/news/japan/detail/?460369-460369-fl
+  sources:
+  - https://www.jfa.jp/national_team/samuraiblue/worldcup_2026/final_q_2026/groupC/schedule_result/pdf/m10.pdf
+  - https://www.jfa.jp/national_team/samuraiblue/kirincupsoccer_2026/schedule_result/pdf/m04.pdf
+  - https://web.gekisaka.jp/news/japan/detail/?460369-460369-fl
+- id: fourback
+  heading: 「4ならではの良さ」とは
+  tier: 報道
+  telop: 中村敬斗「4ならではの良さが出た」
+  narrator: キャスター
+  say:
+  - text: この日の日本は、最終ラインを4人にした形でした。
+    image: assets/images/20261006_nakamura_assist/05_w.jpg
+  - text: 中村は左のサイドハーフ。後ろに味方の守備の選手がいる位置です。
+  - text: 最終ラインを3人にする形では、中村は左のウイングバック。
+  - text: 左の端を1人で上下し、守備では最後尾まで戻る役です。
+  - voice: 中村敬斗
+    text: あまり後ろに戻ることも意識する必要はなく、
+  - voice: 中村敬斗
+    text: 攻撃に専念できたので、
+    cont: true
+  - voice: 中村敬斗
+    text: 久々に4でやった形としては、すごく感触が良かった
+    cont: true
+  - text: 決勝点にも、この形が出たと話します。
+  - text: 逆の右にいた堂安が、ゴール前まで来られたからです。
+  - voice: 中村敬斗
+    text: ウイングバックだとおそらく、
+  - voice: 中村敬斗
+    text: 逆からあそこまで入ってくるというのは、なかなか難しい
+    cont: true
+  - voice: 中村敬斗
+    text: 4ならではの良さが出た
+    cont: true
+  quotes_from:
+  - ゲキサカ https://web.gekisaka.jp/news/japan/detail/?460369-460369-fl
+  sources:
+  - https://web.gekisaka.jp/news/japan/detail/?460369-460369-fl
+  - https://www.jfa.jp/national_team/samuraiblue/kirincupsoccer_2026/schedule_result/pdf/m04.pdf
+- id: view
+  viewpoint: true
+  heading: 中村敬斗のアシストの数と、リヨンでの出番
+  tier: 背景
+  telop: 9月からの代表4試合は207分でアシスト2。今年の代表は1得点4アシスト
+  narrator: 解説
+  say:
+  - text: 9月からの代表戦を、1試合ずつ見ていきます。
+    image: assets/images/20261006_nakamura_assist/01_w.jpg
+    card:
+      type: table
+      title: 中村敬斗 9月からの代表4試合
+      columns: [日付, 相手, 出場, 点に絡んだ場面]
+      rows: &games
+      - ['9/24', 'ウルグアイ', '先発・83分まで', '先制点をアシスト']
+      - ['9/28', 'ベネズエラ', '71分から', '―']
+      - ['10/1', 'エクアドル', '先発・79分まで', '―']
+      - ['10/5', 'ニュージーランド', '64分から', '決勝点をアシスト']
+  - text: 先発のウルグアイ戦では、松木玖生の先制点を生みました。
+    card:
+      type: table
+      title: 中村敬斗 9月からの代表4試合
+      columns: [日付, 相手, 出場, 点に絡んだ場面]
+      rows: *games
+      highlight_row: 0
+  - text: そして途中から入った決勝で、2つ目のアシスト。
+    card:
+      type: table
+      title: 中村敬斗 9月からの代表4試合
+      columns: [日付, 相手, 出場, 点に絡んだ場面]
+      rows: *games
+      highlight_row: 3
+  - text: 4試合で出た時間は207分。およそ100分に1回、点を生んだ計算です。
+    card:
+      type: table
+      title: 中村敬斗 9月からの代表4試合
+      columns: [日付, 相手, 出場, 点に絡んだ場面]
+      rows: *games
+      highlight_row: 3
+  - text: 今年の代表は11試合で1点。アシストはその4倍の4つです。
+    emph: true
+    card: none
+  - text: イングランド戦の三笘薫の先制点も、中村のパスからでした。
+  - text: ワールドカップのチュニジア戦、鎌田大地の先制点もそうです。
+  - voice: 中村敬斗
+    text: 途中出場ならではの役割があると思う。
+  - voice: 中村敬斗
+    text: 今日はその役割を果たせた
+    cont: true
+  - text: 9月に加わったリヨンでは、公式戦3試合の116分で1点。
+    image: assets/images/20261006_nakamura_assist/02_w.jpg
+  - text: 先発はヨーロッパリーグの1試合で、リーグ戦の2試合は途中出場でした。
+  - text: 昨季はフランス2部で29試合14点。点を取る力は、数字に残っています。
+  - text: 次は日本時間10月10日の午前3時45分から、アウェーのランス戦。
+  - text: 代表で決勝点を生んだ左の縦突破を、リヨンでも見せられるか。
+  - text: ランス戦が、その最初の場になります。
+  quotes_from:
+  - ゲキサカ https://web.gekisaka.jp/news/japan/detail/?460369-460369-fl
+  sources:
+  - https://www.jfa.jp/national_team/samuraiblue/20260924/schedule_result/pdf/m01.pdf
+  - https://www.jfa.jp/national_team/samuraiblue/20260928/schedule_result/pdf/m01.pdf
+  - https://www.jfa.jp/national_team/samuraiblue/kirincupsoccer_2026/schedule_result/pdf/m02.pdf
+  - https://www.jfa.jp/national_team/samuraiblue/kirincupsoccer_2026/schedule_result/pdf/m04.pdf
+  - https://news.infoseek.co.jp/article/sponichin_20260925_0054/
+  - https://www.jfa.jp/samuraiblue/news/00036199/
+  - https://www.soccer-king.jp/news/japan/national/20260621/2175040.html
+  - https://ja.wikipedia.org/wiki/%E4%B8%AD%E6%9D%91%E6%95%AC%E6%96%97
+  - https://www.fotmob.com/players/887704/keito-nakamura
+  - https://web.gekisaka.jp/news/japan/detail/?460369-460369-fl
+- id: voices
+  heading: ネットの反応
+  tier: 未確認
+  telop: 「視野広くてよく見えてるよね。」
+  narrator: キャスター
+  say:
+  # Yahoo!ニュース（サッカーマガジンWeb「中村敬斗が左サイドの『敬斗ゾーン』で輝く！」）のコメント欄 dnf********。全文
+  - voice: ネット民
+    text: 彼は本当に決定的な仕事をしてくれる。
+    image: assets/images/20261006_nakamura_assist/05_w.jpg
+  - voice: ネット民
+    text: カットインからのシュートがあるし、
+    cont: true
+  - voice: ネット民
+    text: 縦への突破からの鋭いクロスもあるからＤＦも読み切れない。
+    cont: true
+  - voice: ネット民
+    text: 中盤ではボール離れも良く、
+    cont: true
+  - voice: ネット民
+    text: TPOに合わせてスキルを使い分けられる頭の良さも素晴らしい。
+    cont: true
+  # Yahoo!ニュース（ゲキサカ「狙い通りのドリブル突破から決勝アシスト…」）のコメント欄 sab********。全文
+  - voice: ネット民
+    text: 前はさすがに三笘相手ならサブかなって思ってたけど、
+  - voice: ネット民
+    text: ちょっと手が付けられなくなってきた。
+    cont: true
+  - voice: ネット民
+    text: なんでこれでギリギリの国内移籍だったんやろ
+    cont: true
+  # 同じコメント欄 kot*。全文
+  - voice: ネット民
+    text: 視野広くてよく見えてるよね。
+    short_voice: true
+  - voice: ネット民
+    text: 現代サイドの選手に求められる資質だと思う。
+    cont: true
+    short_voice: true
+  sources:
+  - https://news.yahoo.co.jp/articles/6ed539da40da1020ace8ff1afa4b8871bd2bf5ef/comments
+  - https://news.yahoo.co.jp/articles/26a052626375f49dea34a97a4d46a33b4bddbfb7/comments

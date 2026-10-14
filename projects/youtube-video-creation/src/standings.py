@@ -134,15 +134,25 @@ def _rows(payload: dict) -> list[Row]:
     return out
 
 
+# FotMob の短い名前のうち、英語の普通の語と同じ綴りのもの（nice / lens / brest / angers）。
+# clubs.yaml には見出しの照合で誤爆しない長い形しか置けないので、ここで長い形に直してから引く
+FOTMOB_LONG = {
+    "Nice": "OGC Nice",
+    "Lens": "RC Lens",
+    "Brest": "Stade Brestois",
+    "Angers": "Angers SCO",
+}
+
+
 def japanese(team: str) -> str:
     """クラブ名を日本語表記にする。辞書に無ければ英語のまま。
 
     FotMob は英語表記で返す。**読み上げにも画面にも日本語が要る**ので、
-    `config/clubs.yaml`（61クラブの別名辞書）を通す。
+    `config/clubs.yaml` の別名辞書を通す（5大リーグの1部は 2026-09-28 に全部入れた）。
     """
     from . import clubs as clubs_mod
 
-    found = clubs_mod.find(team)
+    found = clubs_mod.find(FOTMOB_LONG.get(team, team))
     return found[0].canonical if found else team
 
 

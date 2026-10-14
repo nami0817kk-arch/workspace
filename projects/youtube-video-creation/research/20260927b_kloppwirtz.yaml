@@ -1,0 +1,183 @@
+date: 2026年9月27日
+slot: premier_1
+format: quote
+voice_min: 0.55
+people: [フロリアン・ヴィルツ, ユルゲン・クロップ]
+theme:
+  id: klopp_wirtz
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: リヴァプール
+  title: 'クロップがヴィルツを擁護。「フロは、よりによって一番悪い…」'
+  question: クロップは、リヴァプールで苦しむヴィルツをどう見ているのか
+short_title: クロップ、苦しむヴィルツをかばう
+thumbnail:
+  photo: assets/images/20260927b_pair_klopp_wirtz/01.jpg
+  line1: クロップがヴィルツを擁護
+  line2: 理由に挙げたのは「●●●の死」
+sections:
+  - id: numbers
+    heading: リヴァプールでの数字
+    tier: 報道
+    telop: 移籍金は1億ポンド超。今季は6試合で得点なし
+    narrator: キャスター
+    card:
+      type: table
+      title: リヴァプールでのヴィルツ
+      columns: ['', '']
+      rows:
+        - [移籍金, 1億ポンド超（2025年夏、レヴァークーゼンから）]
+        - [昨季, 49試合で得点とアシストが合わせて17]
+        - [今季, 6試合で得点0・アシスト1]
+    say:
+      - ヴィルツがレヴァークーゼンからリヴァプールへ来たのは、2025年の夏。
+      - 移籍金は、1億ポンドを超えます。
+      - 1年目の昨季は、49試合で得点とアシストが合わせて17。
+      - 今季はここまで6試合で、まだゴールがありません。アシストは1つです。
+      - 20日のボーンマス戦のあと、元リヴァプールのキャラガーは、これが実力だと批判しました。
+    sources:
+      - https://www.n-tv.de/sport/fussball/Klopp-ueber-Wirtz-Liverpool-Wechsel-im-unguenstigsten-aller-Momente-id31351314.html
+      - https://www.sport1.de/news/fussball/dfb-team/2026/09/klopp-erklaert-warum-wirtz-ein-schweres-jahr-hatte
+      - https://www.espn.com/soccer/story/_/id/50037458/jurgen-klopp-defends-florian-wirtz-liverpool-struggles
+  - id: reluctant
+    heading: 答えを渋ったクロップ
+    tier: 報道
+    telop: ギリシャ戦を前にした会見で、ヴィルツについて質問
+    narrator: キャスター
+    say:
+      - 26日、ドイツ代表はギリシャ戦を前に会見を開きました。
+      - ヴィルツについて聞かれたクロップ監督は、はじめ、答えるのを渋っています。
+      - voice: ユルゲン・クロップ
+        text: リヴァプールやイングランドで何が言われているか、ここで話しても仕方がない
+      - voice: ユルゲン・クロップ
+        text: 良いことを言っても悪いことを言っても、大騒ぎになる。特にイングランドでね
+      - voice: ユルゲン・クロップ
+        text: 彼は、そこへ帰っていくんだから
+    sources:
+      - https://www.sport1.de/news/fussball/dfb-team/2026/09/klopp-erklaert-warum-wirtz-ein-schweres-jahr-hatte
+      - https://www.welt.de/sport/fussball/article6ab7a4a23386855e1e1e3e5e/nationalmannschaft-klopp-will-ueber-wirtz-nichts-sagen-doch-dann-holt-er-weit-aus.html
+      - https://www.n-tv.de/sport/fussball/Klopp-ueber-Wirtz-Liverpool-Wechsel-im-unguenstigsten-aller-Momente-id31351314.html
+  - id: timing
+    main: true
+    heading: 来た時期
+    tier: 報道
+    telop: 「フロは、よりによって一番悪い時期にリヴァプールへ来た」
+    narrator: キャスター
+    say:
+      - text: 'リヴァプールで点が取れないヴィルツを、ドイツ代表のクロップ監督がかばいました。'
+        short_only: true
+      - それでもクロップは、最後には言葉を重ねました。
+      - voice: ユルゲン・クロップ
+        text: フロは、よりによって一番悪い時期にリヴァプールへ来た
+      - voice: ユルゲン・クロップ
+        text: ディオゴ・ジョタが亡くなったあとのチームに、入ってきたんだ
+      - voice: ユルゲン・クロップ
+        text: 多くの選手にとって、サッカーどころではなくなっていた
+      - voice: ユルゲン・クロップ
+        text: 新しく来た選手に、みんながすぐ、この苦しい状況を何とかしてくれと期待する
+      - voice: ユルゲン・クロップ
+        text: そんなことは、できるわけがない
+      - voice: ユルゲン・クロップ
+        text: サッカー選手としての能力は、疑いようがない
+      - voice: ユルゲン・クロップ
+        text: 彼は良い方向に向かっている。ただ今の世の中は、みんないつも結果を急ぎすぎるんだ
+    sources:
+      - https://www.sport1.de/news/fussball/dfb-team/2026/09/klopp-erklaert-warum-wirtz-ein-schweres-jahr-hatte
+      - https://www.welt.de/sport/fussball/article6ab7a4a23386855e1e1e3e5e/nationalmannschaft-klopp-will-ueber-wirtz-nichts-sagen-doch-dann-holt-er-weit-aus.html
+      - https://www.transfermarkt.at/klopps-pladoyer-fur-vielkritisierten-wirtz-war-sehr-ungunstige-konstellation-quot-in-liverpool/view/news/487858
+  - id: greece
+    heading: ギリシャ戦では
+    tier: 報道
+    telop: ギリシャ戦での先発は否定。「少しずつ自信を」
+    narrator: キャスター
+    say:
+      - ヴィルツは、ムシアラとハヴァーツが代表を離れたため、予定より早く呼ばれていました。
+      - それでもギリシャ戦での先発は、はっきり否定しています。
+      - voice: ユルゲン・クロップ
+        text: いきなり先発させるのは、今やれることの中で、いちばん間違ったことだ
+      - voice: ユルゲン・クロップ
+        text: 少しずつ自信と、いい感触を持たせたい。できれば、うまくいったという手応えもね
+      - 話し終えたクロップは、こう付け加えました。
+      - voice: ユルゲン・クロップ
+        text: もう話しすぎたな。一般論の範囲にとどめられていればいいんだが
+    sources:
+      - https://www.sport1.de/news/fussball/dfb-team/2026/09/klopp-erklaert-warum-wirtz-ein-schweres-jahr-hatte
+      - https://www.transfermarkt.at/klopps-pladoyer-fur-vielkritisierten-wirtz-war-sehr-ungunstige-konstellation-quot-in-liverpool/view/news/487858
+      - https://www.espn.com/soccer/story/_/id/50037458/jurgen-klopp-defends-florian-wirtz-liverpool-struggles
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: 「クロップは選手を守ってくれる」と「ジョタを理由にするな」
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: クロップがリヴァプールの誰よりもヴィルツのことを考えてくれている気がする
+      - voice: ネット民
+        text: 相変わらずクロップは選手を守ってくれるね。ヴィルツも好きになっちゃうだろうね
+      - voice: ネット民
+        text: まさにうちのヴィルツに必要なことだ。
+      - voice: ネット民
+        text: 名将のもとで過ごしたあと、またリヴァプールでプレーするのが楽しみ。
+        cont: true
+      - voice: ネット民
+        text: 助けてくれてありがとう、クロッポ！
+        cont: true
+      - voice: ネット民
+        text: ジョタを喪った悲しみは私たちファンにとっても大きなものだったが、
+      - voice: ネット民
+        text: そんな言葉も烏滸がましい程にチームは深すぎる悲しみを背負っていたんだと気付かされた。
+        cont: true
+      - voice: ネット民
+        text: シーズンが始まってしまえば、ジョタの不在はあくまでプレイヤーとして感じさせられていたが、
+        cont: true
+      - voice: ネット民
+        text: ロバートソンやチームにとってはそれ以前のもっと大きな問題だったとは、頭ですら深く理解出来ていなかった。
+        cont: true
+      - voice: ネット民
+        text: サッカー選手である以前に人間。 彼らも機械じゃない。 サッカーは二の次。
+      - voice: ネット民
+        text: ほんと昨季はみんなギリギリの状態だったんだろね
+        cont: true
+      - voice: ネット民
+        text: ジョタをカモフラに使うのやめーや。
+      - voice: ネット民
+        text: 引退後にそれを話すならまだわかる。
+      - voice: ネット民
+        text: あのシーズンはそんな感じだったんだ〜って思うし…でも今話す事じゃないだろ。
+        cont: true
+      - voice: ネット民
+        text: 成績不振、新戦力がフィットしなかった理由をジョタになすりつけてるようにしか聞こえない。
+        cont: true
+      - voice: ネット民
+        text: そもそもその数字にあらわれているプレーがヴィルツにきたいされているものと違うから非難されているのでは？
+      - voice: ネット民
+        text: 彼には得点に関わるプレーを望まれてるし、ブンデスにいた時に評価されていたのもそこ。
+        cont: true
+      - voice: ネット民
+        text: 庇うのは良いけど本質を逸らしてはいけない。
+        cont: true
+      - voice: ネット民
+        text: 自分だけかもしれないけど、日曜のボーンマス戦でフロを下げたら、前線でボールを持てなくなった気がする。
+      - voice: ネット民
+        text: 彼が下がってから、相手が試合に入ってきた
+        cont: true
+      - voice: ネット民
+        text: 今季はガクポが批判を黙らせた。でも残念ながら、今度はヴィルツが標的になってる
+      - voice: ネット民
+        text: そうだ。不当だ。がんばれヴィルツ。
+      - voice: ネット民
+        text: ヴィルツが早めに来たってことは、ワンチャン明日出番あるのか？さすがにないか。
+      - voice: ネット民
+        text: ヴィルツいっつも代表戦でとんでもゴール決めてるよな リヴァプールでも見せてね
+        short_voice: true
+    sources:
+      - https://x.com/szobocantara/status/2104034115389735035
+      - https://x.com/tkakrw/status/2104023260614758595
+      - https://x.com/ravilever/status/2103865867343974677
+      - https://x.com/musasabi_33/status/2104039740270158050
+      - https://news.yahoo.co.jp/articles/91e07231ef77178dcbee5a4e0516aadb6b2fc758/comments
+      - https://news.yahoo.co.jp/articles/09566379b4cb21227d448c30bd63f44c7770dd21/comments
+      - https://bsky.app/profile/jasonconga.bsky.social/post/3mwfstf3hns2g
+      - https://bsky.app/profile/shanko80.bsky.social/post/3mwdl4tnozs22
+      - https://bsky.app/profile/joannat.bsky.social/post/3mwdmolk7pk2u

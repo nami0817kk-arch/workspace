@@ -44,7 +44,7 @@ from .assets import ensure_assets
 from .config import ConfigError, load_config
 from .pipeline import build
 from .plan import PlanError
-from .research import ResearchError
+from .research import ResearchError, wants_reactions
 from .script_model import ScriptError, load_script
 from .thumbnail import build_thumbnail
 from .tts import TtsError
@@ -640,13 +640,8 @@ def _cmd_approve(args, config) -> int:
         spoken = parse_script(text)
         voices = [line for scene in spoken.scenes for line in scene.lines
                   if (line.speaker or "") in crowd]
-        if not voices and not args.no_voices:
-            print(f"■ {Path(script).name} には、ネットの声が1件もありません", file=sys.stderr)
-            print("■ 通していません。`reactions <スレURL> --say` で実在の書き込みを足してください",
-                  file=sys.stderr)
-            print("■ 紹介ものなど、声を入れない型だと分かっている回だけ "
-                  "`--no-voices <理由>` を付けてください", file=sys.stderr)
-            return 1
+        # **声が無くても止めない**（2026-09-28 に外した）。収益化の審査に合わせて、
+        # 反応は3件まで・こちらの解説を主役にする方針へ変えた。声の無い回は正しい形
         # **流れの点検の控えが無ければ通さない**（2026-09-22）。9/13 に作った手順を
         # 使わないまま、「何を言いたいか分からない」を同じ日に3本で言われた。
         # 台本を直したら点検もやり直す（控えが台本より古ければ止める）
@@ -659,7 +654,8 @@ def _cmd_approve(args, config) -> int:
                   "指摘を直してから掛け直してください", file=sys.stderr)
             return 1
         stamp = approval.approve(script)
-        note = f"　（声なし: {args.no_voices}）" if not voices else f"　声{len(voices)}件"
+        note = (f"　声{len(voices)}件" if voices
+                else "　（声なし" + (f": {args.no_voices}" if args.no_voices else "") + "）")
         if args.no_flow:
             note += f"　（流れ点検なし: {args.no_flow}）"
         print(f"確認済み: {approval.key_of(script)}　{stamp}{note}")
@@ -764,6 +760,9 @@ def _cmd_short(args, config) -> int:
         print(f"  ! {problem}", file=sys.stderr)
     # **題名に答えているか**（2026-09-17。同じ日に2回やった）
     for problem in shorts.subject_problems(short, script):
+        print(f"  ! {problem}", file=sys.stderr)
+    # **締めに反応が入ったか**（2026-10-02 久保の結婚。長い反応が入らず途中で終わった）
+    for problem in shorts.voice_tail_problems(short, script):
         print(f"  ! {problem}", file=sys.stderr)
     # **冒頭の写真が横長で縦版が無いか**（2026-09-25「子供が主役になってる」）
     for problem in shorts.photo_problems(script):
@@ -2293,6 +2292,11 @@ def _cmd_xshot(args, config) -> int:
     誰が有名人かは、こちらの判断ではなく `accounts:` の一覧で決める。
     載っていない人は止める（人が足す）。
     """
+    # **X のスクショは使わない**（2026-09-28、収益化の整理 9。ユーザーが○）。
+    # 他人の著作物で @ハンドルも写る。反応は文字で3件だけになったので、画像で見せる必要も薄い
+    print("■ xshot は 2026-09-28 に止めました（収益化の整理 9：X の投稿の画像は使わない）。"
+          "反応は文字で載せてください", file=sys.stderr)
+    return 1
     from . import xshot as xshot_mod
     from .config import _resolve
     from .plan import load_plan
@@ -2951,14 +2955,14 @@ def _cmd_pick(args, config) -> int:
 # **これが出たら、そのまま進めない**（2026-09-15）。重複と反応の欠落は、
 # どちらも同じ日に2度ユーザーから指摘された
 MUST_FIX = __import__("re").compile(
-    r"同じことを言っています|重なっています|他人の声が0|反応が1件も")
+    r"同じことを言っています|重なっています|他人の声が0|反応が1件も|長い反応が分かれていません|報道・まとめの")
 
 
 def _cmd_draft(args, config) -> int:
     from .config import _resolve
     from .plan import load_plan
     from . import coverage as coverage_mod
-    from .research import advise, check_repeats, load_notes, to_script, verify
+    from .research import YARD_STRONG_MARK, advise, check_repeats, load_notes, to_script, verify
 
     plan = load_plan()
     notes = load_notes(args.notes)
@@ -2990,7 +2994,7 @@ def _cmd_draft(args, config) -> int:
     # ヒントは真ん中に並ぶので、`grep 検証` のように絞って読むと**消える**。
     # 実際 9/15 に同じ日のうちに2度、自分で入れた重複検査の警告を捨てている
     serious = [n for n in hints if MUST_FIX.search(n)]
-    if not any("ネット民" in str(v) for sec in notes.sections for v in sec.voices):
+    if wants_reactions(notes.series) and not any("ネット民" in str(v) for sec in notes.sections for v in sec.voices):
         serious.append("ネットの反応が1件もありません。"
                        "`xread.py <検索語>` で実在の投稿を探して節を足してください")
     if serious:
@@ -2999,6 +3003,14 @@ def _cmd_draft(args, config) -> int:
         for note in serious:
             print(f"   ・{note}")
         print("■ 台本は書き出しましたが、このまま進めないでください", flush=True)
+    # **山場・見立てで物差しの無い数字が並ぶ節（2026-10-05 ⑧）と、シリーズの見立てに
+    # この回だけの数字が無い節（2026-10-06 ⑩）は、最後にもう一度出す**。
+    # 止めない（終了コードは変えない）が、ヒントの山に埋もれないようにする
+    strong = [n for n in hints if n.startswith(YARD_STRONG_MARK)]
+    if strong:
+        print(f"{chr(10)}■ 強めの知らせ（数字の物差し・この回だけの数字）が {len(strong)}件あります（止めません）")
+        for note in strong:
+            print(f"   ・{note}")
     if args.check_only:
         return 1 if serious else 0
 
@@ -3045,6 +3057,18 @@ def _cmd_draft(args, config) -> int:
             _found = _fn(_script)
             if getattr(_found, "ok", True) is False:
                 late.append(f"{_found.label}: {_found.detail}")
+        # **ショートの組み立てを、書き出す前に見積もる**（2026-10-03「動画の質を上げる仕組み ③」）。
+        # 締めの反応が入るか・題名に答えているかは、書き出してからでないと分からなかった
+        # （久保の結婚の回でショートを3回作り直した）。見積もりの尺で一度組んでみて知らせる
+        from . import shorts as _shorts
+        try:
+            _short = _shorts.trim(_script)
+        except _shorts.ShortError as err:
+            late.append(f"ショート: {err}")
+        else:
+            for _p in (_shorts.voice_tail_problems(_short, _script)
+                       + _shorts.subject_problems(_short, _script)):
+                late.append(f"ショート（見積もり）: {_p}")
     except Exception as err:      # 検査で書き出しを落とさない
         # **黙って飲み込まない。**2026-09-16 に `Finding.name` を書き間違えて、
         # この except が全部を吸っていた。**「✓ しか出ない点検」そのもの**だった
@@ -3140,6 +3164,39 @@ MAIN_PLAYLIST = "PLNEp9wyuYKJk"
 # 別の再生リストにして」）。`series:` の名前で振り分ける。
 # 20本が1つ並ぶので、ニュースの再生リストに混ぜると自動再生が紹介ものだけになる
 SERIES_PLAYLIST = {"プレミアリーグチーム紹介": "PLEG5zd5gf28Q"}
+# **知らないシリーズ名は、再生リストを作って控える**（2026-09-28 収益化の整理 2）。
+# シリーズは本編の視聴時間の柱で、続けて見てもらう道は再生リストの自動再生しかない。
+# 作った id は research/playlists.json に残す（playlists.insert は 50 ユニット）
+PLAYLISTS_FILE = Path("research/playlists.json")
+
+
+def _series_playlist(api, series: str) -> str:
+    """シリーズ名から再生リストの id。無ければ作る。シリーズ名が空なら本編の再生リスト。"""
+    import json as _json
+
+    if not series:
+        return MAIN_PLAYLIST
+    if series in SERIES_PLAYLIST:
+        return SERIES_PLAYLIST[series]
+    book = {}
+    if PLAYLISTS_FILE.exists():
+        try:
+            book = _json.loads(PLAYLISTS_FILE.read_text(encoding="utf-8"))
+        except ValueError:
+            book = {}
+    if series in book:
+        return str(book[series])
+    made = api.playlists().insert(
+        part="snippet,status",
+        body={"snippet": {"title": series,
+                          "description": f"{series}を1本ずつ。海外サッカーの理由"},
+              "status": {"privacyStatus": "public"}},
+    ).execute()
+    book[series] = made["id"]
+    PLAYLISTS_FILE.parent.mkdir(parents=True, exist_ok=True)
+    PLAYLISTS_FILE.write_text(_json.dumps(book, ensure_ascii=False, indent=1), encoding="utf-8")
+    print(f"  再生リストを作りました: {series} → {made['id']}")
+    return str(made["id"])
 
 
 def _cmd_upload(args, config) -> int:
@@ -3290,7 +3347,7 @@ def _cmd_upload(args, config) -> int:
             api = quota_mod.counted(upload_mod.get_service())
             # シリーズ名は**公開する題の後ろ書き**にある（「◯◯｜プレミアリーグチーム紹介」）
             series = draft.title.rsplit("｜", 1)[-1].strip() if "｜" in draft.title else ""
-            playlist = SERIES_PLAYLIST.get(series, MAIN_PLAYLIST)
+            playlist = _series_playlist(api, series)
             api.playlistItems().insert(
                 part="snippet",
                 body={"snippet": {"playlistId": playlist,

@@ -1,0 +1,301 @@
+# 取材メモ（10/4 題材 minamino_return、型は news）。材料の控えは research/raw/20261004_minamino_return.md。
+# 問いは1つ：左膝の大けがから286日、南野拓実はどこまで戻ってきたのか（公式戦のピッチにはいつ戻るのか）。
+# 親善試合であることをはっきり言う（公式戦の出場は、けが以来まだ無い。9/4 PSG戦は登録外、9/18 ランス戦はベンチのみ）。
+# 本人の言葉: ピサ戦のあとの本人の言葉は見つからなかった（本人のインスタ・X、モナコ公式の記事・X・YouTube、日本・フランスの記事を当たった）。
+#   けがの間の言葉を日付つきで使う（3月のインスタ、5月のインスタ、ワールドカップ期間中のサンスポの引用）。
+#   ワールドカップ期間中の発言は、元の日付を確かめられなかった（サンスポ 10/3 が「語っていた」と引用）。台本では「ワールドカップの期間中」まで。
+# 監督の言葉は Nice-Matin（La Diagonale の転載）を Qoly の訳で。「ゴールに近くいる」は「ゴールの近くにいる」に直した（脱字の補い）。
+# 見立て: 前十字靱帯の大けがから試合に戻るまでの日数。BJSM 2016（欧州78クラブ・15年）の中央値7.4か月（手術から公式戦）、
+#   同じモナコのサリス（1/3 負傷→9/18 公式戦、258日）、南野（12/21→10/3 親善試合、286日）。次の公式戦 10/10 トゥールーズ戦から16日で5試合。
+# 守田英正の話は題に答えないので入れない。
+# 反応: Yahoo!ニュース（サッカーキングの記事）のコメント欄2件と X の個人の投稿1件。全文。海外の声は取れなかった（YouTube の配信はコメント閉鎖、X の返信はログインが要る）。
+# 写真: モナコ公式のギャラリー（2026-10-03、ピサ戦）。01＝前を向く南野（サムネ・冒頭・ショート）、02＝ゴール前でシュートする南野（背中）。代理店の写真は使わない。
+date: 2026年10月4日
+slot: japanese
+format: news
+people:
+- 南野拓実
+- フィリペ・ルイス
+- モハメド・サリス
+theme:
+  id: minamino_return
+  league: france
+  league_name: リーグ・アン
+  kind: other
+  topic: モナコ
+  title: 南野拓実、大けがから10か月で実戦のピッチへ。監督が口にした約束
+  question: 左膝の大けがから286日、南野拓実はどこまで戻ってきたのか
+  takeaway: 南野拓実は左膝前十字靱帯断裂から286日で、ピサとの親善試合に先発して57分プレーした。ただ公式戦にはまだ出ていない。欧州のプロの調査では手術から公式戦まで中央値7.4か月、同じモナコで13日後に同じけがをしたサリスは258日で公式戦に戻っており、南野は見立ての長い側の端にいる。監督は中央で使いたい選手だと話し、起用を約束した。次の公式戦は10日のトゥールーズ戦で、そこから16日間で5試合が続く
+  opening_image: assets/images/20261004_minamino_return/01_w.jpg
+short_title: 南野拓実が大けがから実戦復帰。親善試合で先発57分
+thumbnail:
+  photo: assets/images/20261004_minamino_return/01.jpg
+  line1: 南野拓実 大けがから実戦復帰
+  line2: 左膝を痛めてから●●●日
+  reaction: 全然ブランクを感じませんでした
+sections:
+- id: friendly
+  heading: ピサとの親善試合で先発
+  tier: 確定
+  official: true
+  telop: モナコ2対0ピサ（親善試合）。南野拓実は先発して57分までプレー
+  narrator: キャスター
+  card:
+    type: table
+    title: 親善試合 モナコ 2-0 ピサ（10月3日）
+    columns: [分, 出来事]
+    rows: &match
+    - ['19分', '南野が左足でシュート（枠外）']
+    - ['57分', '南野が交代']
+    - ['59分', 'バログンのPKで先制']
+    - ['80分', 'ビエレスが追加点']
+  say:
+  - text: 3日、モナコはイタリア2部のピサと、練習場で親善試合を行いました。
+  - text: 南野拓実は、右サイドの攻撃の位置で先発しました。
+  - text: 19分には、左足を振り抜いてゴールを狙います。枠は外れました。
+    image: assets/images/20261004_minamino_return/02_w.jpg
+    card:
+      type: table
+      title: 親善試合 モナコ 2-0 ピサ（10月3日）
+      columns: [分, 出来事]
+      rows: *match
+      highlight_row: 0
+  - text: 57分までプレーして交代。試合はモナコが2対0で勝っています。
+    card:
+      type: table
+      title: 親善試合 モナコ 2-0 ピサ（10月3日）
+      columns: [分, 出来事]
+      rows: *match
+      highlight_row: 1
+  - text: クラブは公式アカウントで、その映像に「タキが帰ってきた」と添えました。
+  sources:
+  - https://www.asmonaco.com/en/news/patient-as-monaco-see-off-pisa-in-composed-friendly-victory
+  - https://www.footballchannel.jp/2026/10/04/post1026402/
+  - https://www.soccer-king.jp/news/world/fra/20261003/2212700.html
+- id: road
+  main: true
+  heading: けがの日から286日
+  tier: 報道
+  telop: 南野拓実「より強くなって戻ってきたいと思います」
+  narrator: キャスター
+  card:
+    type: table
+    title: 南野拓実の286日
+    columns: [日付, 出来事]
+    rows: &road
+    - ['2025年12月21日', 'オセール戦で左膝の前十字靱帯を断裂']
+    - ['2026年5月', 'ボールを使った練習を再開']
+    - ['2026年6月', 'ワールドカップはメンターとして帯同']
+    - ['2026年9月18日', 'ランス戦でベンチ入り。出番は無し']
+    - ['2026年10月3日', 'ピサとの親善試合で先発し57分']
+  say:
+  - text: 左膝の大けがで長く離れていたモナコの南野拓実が、親善試合で先発しました。
+    short_only: true
+  - voice: 南野拓実
+    text: より強くなって戻ってきたいと思います。
+  - voice: 南野拓実
+    text: 沢山のメッセージありがとうございます。
+    cont: true
+  - text: 3月、リハビリ中にインスタグラムへ書いた言葉です。
+  - text: けがは昨年12月21日のオセール戦。左膝の前十字靱帯断裂という大けがでした。
+    card:
+      type: table
+      title: 南野拓実の286日
+      columns: [日付, 出来事]
+      rows: *road
+      highlight_row: 0
+  - text: 5月、ボールを使う練習に戻った日には、ひと言だけ。
+    card:
+      type: table
+      title: 南野拓実の286日
+      columns: [日付, 出来事]
+      rows: *road
+      highlight_row: 1
+  - voice: 南野拓実
+    text: 一歩一歩、着実に！
+  - text: ワールドカップには、選手ではなく、仲間を支えるメンターとして帯同。そこで話した言葉です。
+    card:
+      type: table
+      title: 南野拓実の286日
+      columns: [日付, 出来事]
+      rows: *road
+      highlight_row: 2
+  - voice: 南野拓実
+    text: 僕もチームにパワーを与えながら、
+  - voice: 南野拓実
+    text: チームメートもみんな僕に、
+    cont: true
+  - voice: 南野拓実
+    text: 結構ジムとかで声をかけてくれたりする。
+    cont: true
+  - voice: 南野拓実
+    text: それは僕自身望んでいた環境。
+    cont: true
+  - voice: 南野拓実
+    text: 早くピッチに立ちたい気持ちを抑えきれない
+    cont: true
+  - text: 9月18日のランス戦で、ようやくベンチへ。ただ、出番はありませんでした。
+    card:
+      type: table
+      title: 南野拓実の286日
+      columns: [日付, 出来事]
+      rows: *road
+      highlight_row: 3
+  - text: そして10月3日。けがの日から286日目、親善試合で先発。公式戦は、まだこれからです。
+    emph: true
+    card:
+      type: table
+      title: 南野拓実の286日
+      columns: [日付, 出来事]
+      rows: *road
+      highlight_row: 4
+  quotes_from:
+  - スポーツ報知 https://hochi.news/articles/20260326-OHT1T51039.html
+  - フットボールゾーン https://www.football-zone.net/archives/643172
+  - サンケイスポーツ https://news.yahoo.co.jp/articles/bd02079ba9f3c9fc95d2a98b7ccf1a7d2c6af718
+  sources:
+  - https://hochi.news/articles/20260326-OHT1T51039.html
+  - https://www.football-zone.net/archives/643172
+  - https://news.yahoo.co.jp/articles/bd02079ba9f3c9fc95d2a98b7ccf1a7d2c6af718
+  - https://www.goal.com/jp/%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9/minamino-takumi-monaco-japan-football-soccer-20251222/blt7748200655e323d1
+  - https://hochi.news/articles/20260601-OHT1T51278.html
+  - https://news.yahoo.co.jp/articles/60212ec0ff0c375be48c5e42cc158aa6eda6c2ad
+- id: coach
+  heading: 監督が話した南野の居場所
+  tier: 報道
+  telop: フィリペ・ルイス監督「私は可能な限り彼を起用する」
+  narrator: キャスター
+  say:
+  - text: 試合のあと、フィリペ・ルイス監督は、南野の使い方に触れました。
+    image: assets/images/20261004_minamino_return/01_w.jpg
+  - voice: フィリペ・ルイス監督
+    text: タキはゴールの近くにいる必要がある選手。
+  - voice: フィリペ・ルイス監督
+    text: 中央で最も力を発揮する。
+    cont: true
+  - text: この日の南野は右サイド。監督は、それが一番の使い方ではないとも話しています。
+  - text: ただ、中央の位置には、アンス・ファティやゴロビンら、競う選手が何人もいます。
+  - voice: フィリペ・ルイス監督
+    text: 私は可能な限り彼を起用するし、
+  - voice: フィリペ・ルイス監督
+    text: 常にポジションを勝ち取るための競争をさせるつもりだ
+    cont: true
+  quotes_from:
+  - Qoly https://qoly.jp/q1/17868051
+  sources:
+  - https://qoly.jp/q1/17868051
+  - https://www.ladiagonale.net/index.php/2026/10/03/je-laisse-la-competition-tres-ouverte-entre-mes-joueurs-filipe-luis-evoque-la-concurrence-en-attaque/
+  - https://www.footmercato.net/a296135238040656119-amical-las-monaco-bat-pise-avec-plusieurs-blesses-de-retour
+- id: view
+  viewpoint: true
+  heading: 前十字靱帯の大けがから、試合に戻るまでの日数
+  tier: 背景
+  telop: 欧州のプロは手術から公式戦まで中央値7.4か月。同じモナコのサリスは258日
+  narrator: 解説
+  card:
+    type: table
+    title: 前十字靱帯の大けがから試合に戻るまで
+    columns: ['', けが, 戻った試合, かかった日数]
+    rows: &days
+    - ['欧州のプロの調査', '手術から', '公式戦', '中央値7.4か月']
+    - ['サリス', '1月3日', '9月18日 公式戦', '258日']
+    - ['南野拓実', '12月21日', '10月3日 親善試合', '286日']
+  say:
+  - text: 欧州の78クラブを15年追った調査では、手術から公式戦まで、真ん中の値で7.4か月です。
+    card:
+      type: table
+      title: 前十字靱帯の大けがから試合に戻るまで
+      columns: ['', けが, 戻った試合, かかった日数]
+      rows: *days
+      highlight_row: 0
+  - text: 同じモナコの守備の選手サリスは、南野の13日後に、左膝の同じけがを負いました。
+    card:
+      type: table
+      title: 前十字靱帯の大けがから試合に戻るまで
+      columns: ['', けが, 戻った試合, かかった日数]
+      rows: *days
+      highlight_row: 1
+  - text: サリスが公式戦に戻ったのは9月18日。けがから258日でした。
+    card:
+      type: table
+      title: 前十字靱帯の大けがから試合に戻るまで
+      columns: ['', けが, 戻った試合, かかった日数]
+      rows: *days
+      highlight_row: 1
+  - text: 南野は、親善試合に出るまででも、サリスより4週間長くかかりました。
+    card:
+      type: table
+      title: 前十字靱帯の大けがから試合に戻るまで
+      columns: ['', けが, 戻った試合, かかった日数]
+      rows: *days
+      highlight_row: 2
+  - text: けがをした日に言われた目安は8か月から10か月。いまは、その長い側の端にいます。
+    card:
+      type: table
+      title: 前十字靱帯の大けがから試合に戻るまで
+      columns: ['', けが, 戻った試合, かかった日数]
+      rows: *days
+      highlight_row: 2
+  - text: けがをした昨季は、それまでに公式戦21試合で4得点3アシストを記録していました。
+    card: none
+  - text: モナコとの契約は2027年6月まで。残りは9か月です。
+  - text: 次の公式戦は、日本時間11日の未明、リーグ・アンのトゥールーズ戦。
+    emph: true
+  - text: そこから16日間で5試合。公式戦へ戻る機会は、この10月に詰まっています。
+  sources:
+  - https://europepmc.org/article/MED/27034129
+  - https://qoly.jp/q1/17813862
+  - https://www.footmercato.net/a296135238040656119-amical-las-monaco-bat-pise-avec-plusieurs-blesses-de-retour
+  - https://hochi.news/articles/20260326-OHT1T51039.html
+  - https://www.transfermarkt.com/takumi-minamino/leistungsdaten/spieler/165793/saison/2025/plus/1
+  - https://www.goal.com/jp/%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9/20251205-monaco-takumi-minamino/bltdac7df755f9be624
+  - https://www.goal.com/jp/%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9/20250304-minamino-takumi-monaco-contract-extension/blt3267afd6702085f9
+  - https://www.asmonaco.com/en/pros/fixtures
+- id: voices
+  heading: ネットの反応
+  tier: 未確認
+  telop: 「全然ブランクを感じませんでした」
+  narrator: キャスター
+  say:
+  # Yahoo!ニュース（サッカーキング 10/3 の記事）のコメント欄 1ページ目 fum********。全文
+  - voice: ネット民
+    text: しっかり走れてたし、南野らしい動き出しで
+  - voice: ネット民
+    text: 何度かチャンスに絡んでいましたね。
+    cont: true
+  - voice: ネット民
+    text: 全然ブランクを感じませんでした。
+    cont: true
+  - voice: ネット民
+    text: 来週からのモナコの試合が楽しみです。
+    cont: true
+  # X の個人の投稿 @KopStray（2026-10-04 02:32 JST）。全文
+  - voice: ネット民
+    text: モナコのトレーニングマッチ見た！
+  - voice: ネット民
+    text: タキがピッチに立っている！
+    cont: true
+  - voice: ネット民
+    text: もうそれだけで今は満足ですわ、公式戦の復帰が楽しみだ
+    cont: true
+  - voice: ネット民
+    text: パフォーマンスに関してはおいおい上げていきましょう
+    cont: true
+  - voice: ネット民
+    text: できれば中央で使って欲しいが…
+    cont: true
+  # 同じ Yahoo! のコメント欄 1ページ目 oia********。全文
+  - voice: ネット民
+    text: WC直前の大怪我なんて、
+    short_voice: true
+  - voice: ネット民
+    text: 選手としてどれだけの苦痛を乗り越えたのかと想像を絶する。
+    cont: true
+    short_voice: true
+  - voice: ネット民
+    text: またモナ王として活躍してくれることを願っています。
+    cont: true
+    short_voice: true
+  sources:
+  - https://news.yahoo.co.jp/articles/64ee17bddab36a0a821c47db3bdcc8b87950bd24/comments
+  - https://x.com/KopStray/status/2106437324301279672

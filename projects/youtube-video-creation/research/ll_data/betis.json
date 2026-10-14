@@ -1,0 +1,83 @@
+{
+ "title": "レアル・ベティス 基礎DATA",
+ "colors": [
+  "#0B6B3A",
+  "#FFFFFF"
+ ],
+ "crest": "assets/crests/レアルベティス.png",
+ "tiles": [
+  [
+   "クラブ創立",
+   "1907年",
+   "学生が創立。名は川の古名から"
+  ],
+  [
+   "愛称",
+   "エリオポリタノス",
+   "地区の名から。意味は「太陽の町」"
+  ],
+  [
+   "ホームタウン",
+   "セビージャ",
+   "アンダルシアの州都"
+  ],
+  [
+   "本拠地",
+   "ラ・カルトゥーハ",
+   "収容 70,000人。改修中の仮住まい"
+  ],
+  [
+   "会長",
+   "アンヘル・アロ",
+   "2016年〜。クラブは株式会社"
+  ],
+  [
+   "タイトル歴",
+   "1部優勝 1回",
+   "国王杯3"
+  ],
+  [
+   "最多出場",
+   "528試合",
+   "ホアキン、2度の在籍で"
+  ],
+  [
+   "直近のタイトル",
+   "国王杯優勝",
+   "2021-22シーズン"
+  ],
+  [
+   "昨季の順位",
+   "5位",
+   "勝ち点60。チャンピオンズリーグへ"
+  ]
+ ],
+ "trophies": [
+  [
+   "ラ・リーガ",
+   1
+  ],
+  [
+   "国王杯",
+   3
+  ],
+  [
+   "スーペルコパ",
+   0
+  ],
+  [
+   "ヨーロッパ",
+   0
+  ]
+ ],
+ "sources": [
+  "https://en.wikipedia.org/wiki/Real_Betis",
+  "https://es.wikipedia.org/wiki/Real_Betis_Balomp%C3%A9",
+  "https://es.wikipedia.org/wiki/Historia_del_Real_Betis_Balomp%C3%A9",
+  "https://en.wikipedia.org/wiki/Estadio_de_La_Cartuja",
+  "https://en.wikipedia.org/wiki/2022_Copa_del_Rey_final",
+  "https://www.laliga.com/noticias/por-que-a-los-jugadores-del-betis-se-les-llama-heliopolitanos",
+  "https://en.wikipedia.org/wiki/Template:2025%E2%80%9326_La_Liga_table"
+ ],
+ "notes": "取材の控えは research/ll_data/betis_research.md。収容人数は 70,000（英語版クラブ記事・2026-27 La Liga の表）／71,374（英語版スタジアム記事）と割れるので、クラブ記事とリーグの表の数字を採った。最多出場は 528（英語版の表・西語版の表とも Joaquín）／574（英語版 Player records は Esnaola。同じ箇所の「公式戦」は Esnaola 460）と割れるので、英西の表がそろう Joaquín 528 を採った。スーペルコパは英語版 Honours に記載なし（優勝なし）。欧州は2025年カンファレンスリーグ準優勝のみで優勝なし。"
+}

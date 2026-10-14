@@ -1,0 +1,72 @@
+title: 9月30日の題材（昼用）
+lead: マンCの正式な有罪認定と、代表戦の夜の結果・言葉から9件
+note: '<b>○×を付けてください。</b>今日は 10:30〜14:00 に4本（本編＋ショート）が予約済み。<b>今日足せるショートはあと2本</b>（本編は制限なし）。日本人の海外組の新しい記事は、代表の試合の前日でほとんどありません（なでしこ・Jリーグは扱わない）。中身は記事の本文まで確かめてあります。'
+items:
+- num: 1
+  slot: プレミア
+  head: マンC、プレミアリーグが違反を「すべての告発で有罪」と正式発表。罰はこれから、上訴の期限は10月2日
+  why: 'リーグの声明（日本時間9/30 0:44）。見せかけのスポンサー契約で、足りない分を親会社が払っていた。水増しと圧縮は合わせて9億ポンド超。判断の文書（黒塗り版）も公開。罰は別の非公開の審理で決める。マスターズCEO「プレミアリーグ史上最も重大」、ソリアーノCEO「陰謀論を支持する判断」。<b>ゆうべの「もし優勝が取り消されたら」の台本は「正式発表はまだ」が前提なので、○ならこちらに作り直します</b>
+    '
+  src: プレミアリーグ公式・Sky Sports・ESPN（9/29〜30）
+  url: https://www.skysports.com/football/news/11661/13593407/man-city-charges-verdict-key-findings-the-fordham-arrangement-effectively-a-front-for-abu-dhabi-united-group
+  fmt: news
+- num: 2
+  slot: ラ・リーガ
+  head: ヤマル2得点1アシスト、スペインがクロアチアに4-1で40戦無敗。セビージャではモドリッチに総立ちの拍手
+  why: 'ヤマルは開始70秒の先制、30分のアシスト、63分の2点目。代表の2試合で4つ得点に関与。デ・ラ・フエンテ監督「ラミンは魔法をチームのために使っている」。ヤマルはバロンドールに値するかと聞かれ「もう1つ」。ヤマルは有名選手の紹介②（10/2）で扱う予定なので、重ならない切り口にする
+    '
+  src: ESPN・MARCA（9/29）
+  url: https://www.espn.com/soccer/story/_/id/50061797/spain-coach-beloved-yamal-magic-service-team
+  fmt: news
+- num: 3
+  slot: その他
+  head: メッシ、10月6日にモヌメンタルでベナンと代表のお別れ試合。スカローニ監督「それまで10番は誰にも付けさせない」
+  why: 'ローマは移動の長さと日程を理由に、ディバラとモリーナを行かせないと声明（「メッシへの最大の敬意」）。10番の件はアルゼンチン協会の公式発表ではなく監督の発言。
+    '
+  src: ESPN・football-italia（9/29）
+  url: https://www.espn.com/soccer/story/_/id/50061253/argentina-rush-reassign-lionel-messi-no-10
+  fmt: quote
+- num: 4
+  slot: プレミア
+  head: トゥヘル監督「良心が痛む」。マンCの判決の日に、シティの選手へ声をかけなかった。イングランドは10人のチェコに2-0
+  why: 'ゲヒ・アンダーソン・オライリーに試合前に声をかけなかったことを悔やんだ。ゴードンが頭で先制、ケインが代表87点目。7試合ぶりの無失点。ベリンガムについて「この期間の最後に主将なら、正式な主将になれる」。
+    '
+  src: Guardian・Daily Mail（9/29）
+  url: https://www.theguardian.com/football/2026/sep/29/czechia-england-nations-league-match-report
+  fmt: quote
+- num: 5
+  slot: その他
+  head: ユヴェントス、6600万ユーロの赤字。筆頭株主エクソールが2億5000万ユーロの増資を計画
+  why: '売上は4億7470万ユーロで5490万減（クラブW杯の分が無くなった）。純負債3億3110万ユーロ。増資は11月3日の株主総会にかける。人の言葉は無く、数字の回。
+    '
+  src: football-italia（9/29）
+  url: https://football-italia.net/juventus-confirm-66m-loss-cut-operating-costs/
+  fmt: news
+  weak: true
+- num: 6
+  slot: プレミア
+  head: キャリック監督のマンU、リーグ5試合で勝ち点5はプレミア最悪の出だし。マズラウィも代表戦で負傷交代
+  why: 'リーグカップもブライトンに負けて敗退。ブルーノ・フェルナンデスもすねの負傷でポルトガル代表を離脱。次は10/10のトッテナム戦。前半は論評記事で、新しい出来事はマズラウィの負傷。
+    '
+  src: Daily Mail（9/29）
+  url: https://www.dailymail.com/sport/football/article-16170163/
+  fmt: news
+  weak: true
+- num: 7
+  slot: その他
+  head: ポコニョーリ監督の本拠地初戦、ヘンドリーが12分に退場し、スコットランドはスイスに0-3
+  why: '最初はPKと警告だった判定が、VARでFKと退場に。監督「ジャックの退場は我々全員の退場だ」。スコットランドは5試合で1得点。日本での関心は薄い。
+    '
+  src: Guardian（9/29）
+  url: https://www.theguardian.com/football/2026/sep/29/scotland-switzerland-nations-league-match-report
+  fmt: quote
+  weak: true
+- num: 8
+  slot: 日本人
+  head: 長崎からブンデス2部へ期限付き移籍の22歳・安部大晴、背中のけがで手術へ
+  why: '日本人の海外組の新しい記事はこれだけ。記事は1本で、けがの期間はまだ出ていない。
+    '
+  src: ゲキサカ（9/30）
+  url: https://web.gekisaka.jp/news/world/detail/?460023-460023-fl
+  fmt: news
+  weak: true

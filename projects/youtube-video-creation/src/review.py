@@ -13,6 +13,7 @@ from pathlib import Path
 
 from .config import _resolve
 from .script_model import Script
+from .cards import FULL_SCREEN_TYPES
 from .render import _is_board
 from .subtitles import chapters
 
@@ -29,6 +30,9 @@ MIN_SECONDS = 60
 # メッシの代表引退のように、引用が主役で中身が濃い回は3分でも成立する。
 # 短く詰めるために発言を削るのは本末転倒
 MAX_SECONDS = 210
+# シリーズの回は本編4〜6分（2026-09-28「共通の作り」）。ニュースの210秒を当てると
+# シリーズが全部 × になる（2026-10-09 未明に8本で踏んだ）
+SERIES_MAX_SECONDS = 360
 
 
 @dataclass
@@ -69,11 +73,14 @@ def inspect(script: Script, out_dir: Path, duration: float | None = None) -> lis
     findings.append(_caption_load(out_dir / "subtitles.srt"))
     findings.append(_caption_badges(out_dir / "subtitles.srt"))
     findings.append(_still_length(out_dir / "script.json"))
-    findings.append(_screen_change(out_dir / "script.json"))
+    # **台本のカードの中身も渡す**（2026-10-08）。script.json にはカードの名前しか
+    # 残らないので、光らせる行だけが違う同じ表を見分けられない（`card_look`）
+    specs = dict(getattr(script, "cards", None) or {})
+    findings.append(_screen_change(out_dir / "script.json", specs))
     findings.append(_telop_coverage(out_dir / "script.json"))
     size = _dimensions(out_dir / "video.mp4")
     portrait = bool(size and size[1] > size[0])
-    findings.append(check_card_hold(out_dir / "script.json", hold_limit(portrait)))
+    findings.append(check_card_hold(out_dir / "script.json", hold_limit(portrait), specs))
     reaction = check_reaction_layer(script)
     if reaction is not None:
         findings.append(reaction)
@@ -90,7 +97,7 @@ def inspect(script: Script, out_dir: Path, duration: float | None = None) -> lis
         # 型になっていない。まとめの節があるのは news だけなので、他の型では
         # 「最後の節が長い」は見ない（最後の節が反応の本体になる）
         shape = _format_of(script)
-        findings.append(check_voice_share(script, _voice_floor(script, shape)))
+        findings.append(check_voice_share(script))
         # **どこで読んだかと埋め草は落とす**（2026-09-10 ユーザー指示）
         findings.append(check_board_mention(script))
         findings.append(check_outlet_talk(script))
@@ -121,7 +128,7 @@ def inspect(script: Script, out_dir: Path, duration: float | None = None) -> lis
     findings.append(check_quote_speed(out_dir, portrait))
     findings.append(check_tail_silence(script, out_dir))
     if duration is not None:
-        findings.append(_duration(duration))
+        findings.append(_duration(duration, str((script.meta or {}).get("series") or "")))
     return findings
 
 
@@ -216,13 +223,48 @@ SHORT_CARD_HOLD_MAX = 8.0
 TELOP_SHARE_MIN = 0.70
 
 
-def _screen_change(script_json: Path) -> Finding:
+def card_look(name: str | None, specs: dict | None = None) -> str:
+    """**画面に出ている絵として見たカードの見分け**（2026-10-08）。
+
+    光らせる行（`highlight_row` / 散らばり図の `highlight`）だけが違う同じ表は、
+    **同じ絵**として数える。`cards.same_table`（「同じ表なら開き直さない」）と
+    同じ決まりを、停滞の数え方の側にも当てる。
+
+    **なぜ要るか。**2026-10-07 から、数字を読む行が続く節では
+    `research` が**行ごとに別のカード**（`rivals_0_card`〜`rivals_9_card`）を
+    作る。中身は同じ表で、違うのは光らせる行だけ。ところが停滞を数える側は
+    **カードの名前**で見分けていたので、**行が替わるたびに「絵が変わった」と
+    数え直して**いた。20秒の上限に一度も届かず、`spread_long_cards` は
+    写真を挟まず、`review` は ○ を返していた。
+    実物（`output/20261008_finance_arteta` 第4節）は、同じ散らばり図のまま
+    **37秒**動いていない（`tools/qc.py` が書き出した絵で見つけた）。
+
+    `specs`（台本の `cards`）が無ければ、今までどおり名前で見分ける。
+    """
+    import json as _json
+
+    from . import cards as cards_mod
+
+    key = str(name or "").strip()
+    if key in ("", "none", "なし"):
+        return ""
+    spec = (specs or {}).get(key)
+    if not isinstance(spec, dict):
+        return key
+    body = {k: v for k, v in spec.items() if k not in cards_mod.HIGHLIGHT_KEYS}
+    return _json.dumps(body, sort_keys=True, ensure_ascii=False, default=str)
+
+
+def _screen_change(script_json: Path, specs: dict | None = None) -> Finding:
     """見た目が変わらないまま続く時間。
 
     1枚あたりの秒数が短くても、**カードもテロップも同じなら画面は止まって
     見える。**2026-09-04 に contact で一覧にして初めて気づいた。
     「なぜ外れたのか」の節は7枚つづけて同じカードと同じテロップで、
     約40秒ぶん見た目が変わっていなかった。
+
+    `specs` には台本の `cards` を渡す。光らせる行だけが違う同じ表を
+    「同じ絵」と数えるため（`card_look`）。
     """
     import json
 
@@ -235,7 +277,9 @@ def _screen_change(script_json: Path) -> Finding:
     worst_telop = ""
     for scene in data.get("scenes", []):
         for line in scene.get("lines", []):
-            now = (line.get("telop") or "", line.get("card") or "", line.get("image") or "")
+            # 書き込み（2026-10-07）を足した行は画面が変わる。数に入れる
+            now = (line.get("telop") or "", card_look(line.get("card"), specs),
+                   line.get("image") or "", len(line.get("marks") or []))
             if now == look:
                 span += float(line.get("duration") or 0)
             else:
@@ -277,6 +321,12 @@ def _telop_coverage(script_json: Path) -> Finding:
             # 登録選手一覧の上に読み上げ文を重ねると、タイルが読めなくなる。
             # ここで数えないと、板の回だけ「声だけで流れている」と出てしまう
             if line.get("no_telop") and _is_board(str(line.get("image") or "")):
+                shown += len(line.get("text") or "")
+                previous = None
+                continue
+            # **左右の比べ（versus）も同じ**（2026-10-07）。画面いっぱいの絵で、名前と数字が画面の字。
+            # 見出しは重ねない（render.frame）ので、ここで数えないとこの行だけ声だけに見える
+            if str(line.get("card_type") or "") in FULL_SCREEN_TYPES:
                 shown += len(line.get("text") or "")
                 previous = None
                 continue
@@ -900,7 +950,13 @@ NARRATORS = ("キャスター", "解説", "ナレーター", "")
 #   他人の声が尺の58%（38〜67%）／19.2件／1件3.1秒
 # こちらは 14%・2.2件・1件39字だった。**これが再生数の差の中身**なので、
 # 書式ではなく構成の点検として置く。
-VOICE_SHARE_MIN = 40.0     # 他人の声が占める字数の下限（%）
+VOICE_SHARE_MIN = 40.0     # 2026-09-28 から使っていない（下限をやめ、上限にした）
+# **他人の声は半分まで・ネットの反応は3件まで**（2026-09-28 ユーザー決定
+# 「収益化することが目的なので、そこに目線を合わせましょう」）。
+# YouTube の収益化ポリシーは「自分で作成していない他の資料の内容を読み上げただけ」
+# 「他のソーシャル メディアのコンテンツを集めた」動画を対象外にしている
+VOICE_SHARE_MAX = 50.0
+CROWD_MAX = 3
 # 1件の長さ。2026-09-07 の実測（1件3.1秒＝約16字）で20字にしたが、
 # 2026-09-08 にサッカーラボ（25.5万回）の文字起こしを取ると1件30〜45字だった。
 # 参考どうしで割れているので、上限は長いほうに合わせる
@@ -916,22 +972,6 @@ def _format_of(script: Script) -> dict:
     name = str((script.meta or {}).get("format") or "news").strip().lower()
     return FORMATS.get(name, FORMATS["news"])
 
-
-def _voice_floor(script: Script, shape: dict) -> float:
-    """他人の声の下限。台本が `voice_min` を書いていればそちらを使う（2026-09-09）。
-
-    ユーザー「スズキはネットの声はなしでOK。試合の評価を詳しく伝えましょう」。
-    試合の経過を詳しく伝える回は、実況のような地の文が増えて他人の声の割合が
-    下がる。**型の下限は目安であって、回ごとの判断を潰すものではない。**
-    下げるときは取材メモに理由を書く。
-    """
-    written = (script.meta or {}).get("voice_min")
-    if written is None:
-        return float(shape["voice_min"])
-    try:
-        return max(0.0, min(100.0, float(written)))
-    except (TypeError, ValueError):
-        return float(shape["voice_min"])
 
 
 def _voice_lines(script: Script) -> tuple[list[int], int]:
@@ -1086,24 +1126,38 @@ def check_filler(script: Script) -> Finding:
     return Finding(True, "埋め草", "見当たりません")
 
 
-def check_voice_share(script: Script, minimum: float | None = None) -> Finding:
-    """他人の声が足りているか。語りだけの動画は最後まで見てもらえない。
+def check_voice_share(script: Script, maximum: float | None = None) -> Finding:
+    """他人の声が多すぎないか（2026-09-28 に下限から上限へ反転）。
 
-    下限は型で変わる（2026-09-08）。news は40%、voices は70%、quote は60%。
-    サッカーラボ（25.5万回）は 0:36 以降がすべて反応で、他人の声が約83%だった。
+    それまでは「他人の声が4割以上」を求めていた（参考チャンネルは58〜83%）。
+    再生数には効いたが、収益化の審査では**読み上げただけ・集めただけ**に近づく。
+    9/28 の点検で、本編の視聴時間の66%が他人の声が半分以上の動画から来ていた。
     """
     other, total = _voice_lines(script)
     if not total:
         return Finding(False, "他人の声の量", "読み上げる文がありません")
-    floor = VOICE_SHARE_MIN if minimum is None else minimum
+    ceiling = VOICE_SHARE_MAX if maximum is None else maximum
     share = sum(other) / total * 100
-    if share < floor:
+    if share > ceiling:
         return Finding(
             False, "他人の声の量",
-            f"{share:.0f}%（{len(other)}件）しかありません（下限{floor:.0f}%）。"
-            f"伸びているチャンネルは58〜83%です。反応を増やしてください",
+            f"{share:.0f}%（{len(other)}件）あります（上限{ceiling:.0f}%）。"
+            "こちらの解説（数字・経緯・なぜ）を主役にしてください",
         )
-    return Finding(True, "他人の声の量", f"{share:.0f}%（{len(other)}件）")
+    crowd = _crowd_groups(script)
+    if crowd > CROWD_MAX:
+        return Finding(
+            False, "他人の声の量",
+            f"ネットの反応が{crowd}件あります（{CROWD_MAX}件まで）。解説の材料になる2〜3件に絞ってください",
+        )
+    return Finding(True, "他人の声の量", f"{share:.0f}%（{len(other)}件・ネット{crowd}件）")
+
+
+def _crowd_groups(script: Script) -> int:
+    """ネットの反応の件数。行に分けた続き（cont）は1件に数える。"""
+    crowd = ("ネット民", "現地サポ", "海外のファン")
+    return sum(1 for scene in script.scenes for line in scene.lines
+               if (line.speaker or "") in crowd and not getattr(line, "cont", False))
 
 
 def check_voice_length(script: Script) -> Finding:
@@ -1134,23 +1188,34 @@ def check_opening_title(script: Script) -> Finding:
     参考4本は全部、最初の2〜5秒でタイトルをそのまま読み上げていた。
     クリックした人が「これで合っている」と確かめられる作りになっている。
     """
-    first = ""
+    # **シリーズの回は「クラブを表す一言 → タイトル → つかみ」の3行**（2026-09-21 指示
+    # 「最初にクラブを表す一言を述べてから始める」）。1行目だけを見ると、一言を
+    # 読んでいる回が全部 × になる（2026-10-09 未明に8本で踏んだ）。
+    # **一言のぶん1行だけ待つ**。2行目にもタイトルが無ければ、今までどおり ×
+    heads: list[str] = []
     for scene in script.scenes:
         for line in scene.lines:
             if (line.text or "").strip():
-                first = line.text.strip()
+                heads.append(line.text.strip())
+            if len(heads) >= 2:
                 break
-        if first:
+        if len(heads) >= 2:
             break
-    if not first:
+    if not heads:
         return Finding(False, "1行目", "読み上げる文がありません")
+    first = heads[0]
+    series = str((script.meta or {}).get("series") or "")
+    look = heads[:2] if series else heads[:1]
 
-    said, title = _bare(first), _bare(script.title)
-    # タイトルの一部を拾っただけ（「アーセナル」だけ読んで本題に入らない）を
-    # 通さないため、含まれる側には長さを求める
-    enough = len(said) >= max(4, len(title) * 0.6)
-    if said and title and (title in said or (said in title and enough)):
-        return Finding(True, "1行目", "タイトルを読んでいます")
+    title = _bare(script.title)
+    for number, text in enumerate(look):
+        said = _bare(text)
+        # タイトルの一部を拾っただけ（「アーセナル」だけ読んで本題に入らない）を
+        # 通さないため、含まれる側には長さを求める
+        enough = len(said) >= max(4, len(title) * 0.6)
+        if said and title and (title in said or (said in title and enough)):
+            where = "1行目" if number == 0 else "2行目（1行目はクラブを表す一言）"
+            return Finding(True, "1行目", f"タイトルを読んでいます（{where}）")
     return Finding(
         False, "1行目",
         f"タイトルと違います（1行目『{first[:20]}…』）。"
@@ -1458,6 +1523,9 @@ def check_quote_speed(out_dir: Path, portrait: bool) -> Finding:
     if not script_json.exists():
         return Finding(False, "言葉の早さ", "script.json がありません")
     data = json.loads(script_json.read_text(encoding="utf-8"))
+    # **シリーズの回の本編は見ない**（2026-10-06。research._check_quote_timing と同じ決まり）
+    if not portrait and str((data.get("meta") or {}).get("series") or data.get("series") or "").strip():
+        return Finding(True, "言葉の早さ", "シリーズの回の本編は見ません")
     narrators = {"キャスター", "解説", "ナレーター"}
     elapsed = 0.0
     for scene in data.get("scenes", []):
@@ -1473,7 +1541,8 @@ def check_quote_speed(out_dir: Path, portrait: bool) -> Finding:
     return Finding(True, "言葉の早さ", "語りだけの回なので見ません")
 
 
-def check_card_hold(script_json: Path, limit: float = CARD_HOLD_MAX) -> Finding:
+def check_card_hold(script_json: Path, limit: float = CARD_HOLD_MAX,
+                    specs: dict | None = None) -> Finding:
     """**カード**が同じまま続く時間。テロップの変化は数えない。
 
     カードは書かれた行で差し替わり、次の地の文にも残る。引用が10行続く回で
@@ -1487,6 +1556,10 @@ def check_card_hold(script_json: Path, limit: float = CARD_HOLD_MAX) -> Finding:
 
     画面がほんとうに止まっていないかは `見た目の変化`（カードもテロップも
     変わらないまま20秒）が見る。実測でこの3本は 9〜11秒だった。
+
+    **光らせる行だけが違う同じ表は、同じ絵として数える**（2026-10-08。`card_look`）。
+    `specs` に台本の `cards` を渡さないと、今までどおり名前で見分ける
+    （＝行ごとにカードを分けた回を素通りする）。
     """
     import json
 
@@ -1500,7 +1573,8 @@ def check_card_hold(script_json: Path, limit: float = CARD_HOLD_MAX) -> Finding:
         for line in scene.get("lines", []):
             if line.get("image"):
                 seen_photo = True
-            card = line.get("card") or ""
+            name = line.get("card") or ""
+            card = name
             # カードが出ていない行は数えない。**止まっているのはカードの話**で、
             # カードが無い行の画面はテロップが1行ごとに変わっている
             if card in ("", "none", "なし"):
@@ -1514,12 +1588,23 @@ def check_card_hold(script_json: Path, limit: float = CARD_HOLD_MAX) -> Finding:
             if not seen_photo:
                 current, span = None, 0.0
                 continue
+            # **書き込みを足した行は同じ絵ではない**（2026-10-07）。赤ペンが1つ増えると目が行く
+            # **光らせる行を替えただけなら、同じ絵**（2026-10-08）。
+            # 10/8 に実物を測ったら、散らばり図の光らせる点を替えても表の行を
+            # 光らせ替えても、画面の変化は `qc` のしきい値（0.08）に届いていなかった。
+            # 名前で見分けていたので、行ごとにカードを分けた節を全部素通りしていた
+            # **写真が替わった行も同じ絵ではない**（2026-10-08）。「写真は数えない」のは
+            # **出したままでも鳴らさない**という意味で（2026-09-15）、
+            # **替わった**ところまで素通りすると、`spread_long_cards` が写真を替えて
+            # 止まりを割った節でも × が残り、**人には直しようの無い検査**になる
+            card = (card_look(name, specs) + "#" * len(line.get("marks") or [])
+                    + "@" + str(line.get("image") or ""))
             if card == current:
                 span += float(line.get("duration") or 0)
             else:
                 current, span = card, float(line.get("duration") or 0)
             if span > worst:
-                worst, label = span, card
+                worst, label = span, name
 
     if worst > limit:
         return Finding(
@@ -1646,13 +1731,22 @@ def _marks(script: Script) -> Finding:
     return Finding(True, "チャプター", f"{len(marks)}章")
 
 
-def _duration(seconds: float) -> Finding:
+def _duration(seconds: float, series: str = "") -> Finding:
+    """尺。**シリーズの回は6分まで**（2026-10-09 未明に直した）。
+
+    210秒はニュースの回の上限（2026-09-07「尺は1〜3分半」）。ところが
+    シリーズの回は **本編4〜6分** が決まり（2026-09-28「共通の作り」）なので、
+    10/9 のシリーズ8本が**全部この × で止まっていた**。
+    8本中8本に出る × は、読む側が無視するようになるだけで害になる
+    （「✓ しか出ない点検は、壊れていても気づけない」の裏返し）。
+    """
     shown = f"{int(seconds) // 60}分{int(seconds) % 60}秒"
+    limit = SERIES_MAX_SECONDS if series else MAX_SECONDS
     if seconds < MIN_SECONDS:
         return Finding(False, "尺", f"{shown}　短すぎます（{MIN_SECONDS // 60}分以上に）")
-    if seconds > MAX_SECONDS:
-        return Finding(False, "尺", f"{shown}　長すぎます（{MAX_SECONDS // 60}分まで）")
-    return Finding(True, "尺", shown)
+    if seconds > limit:
+        return Finding(False, "尺", f"{shown}　長すぎます（{limit // 60}分まで）")
+    return Finding(True, "尺", shown + ("　シリーズの回（6分まで）" if series else ""))
 
 
 def check_sources(urls: list[str], fetch=None) -> list[Finding]:
@@ -1854,7 +1948,7 @@ def check_opening_background(script: Script) -> Finding:
 TAIL_SILENCE_MAX = 1.5
 # **本編は最後のカードを3秒出す決まり**（締めの挨拶を読み上げない代わり）。
 # そこは意図した無音なので、少しだけ余裕を見る
-TAIL_SILENCE_MAX_MAIN = 3.6
+TAIL_SILENCE_MAX_MAIN = 15.6   # 2026-10-03 に最後のカードを15秒にした（終了画面の置き場）
 
 
 def check_tail_silence(script: Script, out_dir) -> Finding:

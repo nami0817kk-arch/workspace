@@ -1,0 +1,6 @@
+title: 久保建英の今季のシュート
+unit: xG
+shots=2
+goals=0
+xg=0.53
+source: FotMob

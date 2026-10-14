@@ -73,6 +73,31 @@ def same_story(url: str) -> str:
     return f"skysports:{found.group(1)}" if found else url
 
 
+# **扱わないと決めたもの**（2026-10-11）。印は付いていたのに落とす所が無く、
+# 10/11 は470件のうち約110件が Jリーグ・国内の育成年代・女子で埋まっていた。
+# 毎日その量を人が読み飛ばしている。決まりは CLAUDE.md の
+# 「Jリーグは扱わない」（2026-09-07）「女子サッカーは扱わない」（2026-09-16）
+# 「扱うのは欧州7リーグ」（2026-09-15）。
+# **海外でプレーする日本人の話は落とさない。**当たるのは「Jリーグ」「J1」など
+# 国内リーグの名前と、育成年代・女子をはっきり指す言葉だけ
+OFF_SCOPE = (
+    "Jリーグ", "J1リーグ", "J2リーグ", "J3リーグ", "JFL", "ルヴァン", "天皇杯",
+    "WEリーグ", "なでしこ", "女子", "USWNT", "NWSL", "WSL",
+    "高校サッカー", "高校選手権", "インターハイ", "国スポ", "国体",
+    "大学サッカー", "関東大学", "関西学生", "インカレ",
+    "プレミアリーグEAST", "プレミアリーグWEST", "プリンスリーグ",
+    "U-15", "U-16", "U-17", "U-18", "ユース年代",
+)
+
+
+def off_scope(text: str) -> str:
+    """扱わないと決めた題材なら、当たった言葉を返す。そうでなければ空。"""
+    for word in OFF_SCOPE:
+        if word in text:
+            return word
+    return ""
+
+
 def drop_seen(hits: list, known: set[str]) -> tuple[list, list]:
     """既出のURLを外す。同じ記事の重複もここで落とす。"""
     kept: list = []
@@ -81,6 +106,9 @@ def drop_seen(hits: list, known: set[str]) -> tuple[list, list]:
     here: set[str] = set()
     for hit in hits:
         story = same_story(hit.url)
+        if off_scope(f"{getattr(hit, 'title', '')} {getattr(hit, 'summary', '')}"):
+            dropped.append(hit)
+            continue
         if story in known_stories:
             dropped.append(hit)
         elif story in here:

@@ -1,0 +1,106 @@
+[
+ {
+  "club": "レアル・ソシエダ",
+  "legends": [
+   {
+    "name": "シャビ・アロンソ",
+    "era": "1999-2004",
+    "numbers": "リーグ114試合9得点",
+    "why": "20歳で主将。2002-03の2位の中心",
+    "source": "https://en.wikipedia.org/wiki/Xabi_Alonso"
+   },
+   {
+    "name": "アントワーヌ・グリーズマン",
+    "era": "2009-2014",
+    "numbers": "リーグ180試合46得点",
+    "why": "2部優勝と昇格、CL出場を決めた得点",
+    "source": "https://en.wikipedia.org/wiki/Antoine_Griezmann"
+   },
+   {
+    "name": "マルティン・スビメンディ",
+    "era": "2019-2025",
+    "numbers": "リーグ180試合9得点",
+    "why": "地元育ちの中盤。国王杯優勝",
+    "source": "https://en.wikipedia.org/wiki/Mart%C3%ADn_Zubimendi"
+   }
+  ]
+ },
+ {
+  "club": "バルセロナ",
+  "legends": [
+   {
+    "name": "シャビ・エルナンデス",
+    "era": "1998-2015",
+    "numbers": "リーグ505試合58得点",
+    "why": "3冠の中心",
+    "source": "https://en.wikipedia.org/wiki/Xavi_(footballer,_born_1980)"
+   },
+   {
+    "name": "アンドレス・イニエスタ",
+    "era": "2002-2018",
+    "numbers": "リーグ442試合35得点",
+    "why": "終了間際の同点弾",
+    "source": "https://en.wikipedia.org/wiki/Andr%C3%A9s_Iniesta"
+   },
+   {
+    "name": "リオネル・メッシ",
+    "era": "2004-2021",
+    "numbers": "リーグ520試合474得点",
+    "why": "1年で91得点",
+    "source": "https://en.wikipedia.org/wiki/Lionel_Messi"
+   }
+  ]
+ },
+ {
+  "club": "アトレティコ・マドリード",
+  "legends": [
+   {
+    "name": "フェルナンド・トーレス",
+    "era": "2001-07, 2015-18",
+    "numbers": "リーグ321試合109得点",
+    "why": "19歳で主将。最後の試合で2得点",
+    "source": "https://en.wikipedia.org/wiki/Fernando_Torres"
+   },
+   {
+    "name": "ディエゴ・ゴディン",
+    "era": "2010-2019",
+    "numbers": "リーグ277試合17得点",
+    "why": "2014年の優勝を決めた同点弾",
+    "source": "https://en.wikipedia.org/wiki/Diego_God%C3%ADn"
+   },
+   {
+    "name": "アントワーヌ・グリーズマン",
+    "era": "2014-19, 2021-26",
+    "numbers": "リーグ349試合143得点",
+    "why": "クラブ歴代最多得点",
+    "source": "https://en.wikipedia.org/wiki/Antoine_Griezmann"
+   }
+  ]
+ },
+ {
+  "club": "バレンシア",
+  "legends": [
+   {
+    "name": "ガイスカ・メンディエタ",
+    "era": "1993-2001",
+    "numbers": "リーグ230試合44得点",
+    "why": "欧州最優秀MFに2年続けて。クラブ最高額の売却",
+    "source": "https://en.wikipedia.org/wiki/Gaizka_Mendieta"
+   },
+   {
+    "name": "ダビド・アルベルダ",
+    "era": "1995-2013",
+    "numbers": "リーグ351試合6得点",
+    "why": "地元育ちの主将。2度のリーグ優勝",
+    "source": "https://en.wikipedia.org/wiki/David_Albelda"
+   },
+   {
+    "name": "ダビド・ビジャ",
+    "era": "2005-2010",
+    "numbers": "リーグ166試合108得点",
+    "why": "2008-09にリーグ28得点。2010年W杯優勝",
+    "source": "https://en.wikipedia.org/wiki/David_Villa"
+   }
+  ]
+ }
+]

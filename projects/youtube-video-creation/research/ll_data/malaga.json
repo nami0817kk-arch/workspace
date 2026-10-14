@@ -1,0 +1,82 @@
+{
+ "title": "マラガ 基礎DATA",
+ "colors": [
+  "#103E9E",
+  "#87CEEB"
+ ],
+ "crest": "assets/crests/マラガ.png",
+ "tiles": [
+  [
+   "クラブ創立",
+   "1948年",
+   "前身クラブの控えチームとして"
+  ],
+  [
+   "愛称",
+   "ボケロネス",
+   "カタクチイワシ。ほかに「白と空色」"
+  ],
+  [
+   "ホームタウン",
+   "マラガ",
+   "アンダルシア第2の都市。人口59万"
+  ],
+  [
+   "本拠地",
+   "ラ・ロサレダ",
+   "収容 30,778人（クラブ発表）"
+  ],
+  [
+   "オーナー",
+   "アブドゥラー・アル・サーニ",
+   "2010年〜。2020年から裁判所の管理下"
+  ],
+  [
+   "タイトル歴",
+   "1部優勝 0回",
+   "国王杯0・スーペルコパ0"
+  ],
+  [
+   "最多出場",
+   "405試合",
+   "ミゲリ。前身クラブの時代を含む"
+  ],
+  [
+   "直近のタイトル",
+   "インタートトカップ優勝",
+   "2002年"
+  ],
+  [
+   "昨季の順位",
+   "2部 4位",
+   "勝ち点73。プレーオフで昇格"
+  ]
+ ],
+ "trophies": [
+  [
+   "ラ・リーガ",
+   0
+  ],
+  [
+   "国王杯",
+   0
+  ],
+  [
+   "スーペルコパ",
+   0
+  ],
+  [
+   "インタートトカップ",
+   1
+  ]
+ ],
+ "sources": [
+  "https://en.wikipedia.org/wiki/M%C3%A1laga_CF",
+  "https://es.wikipedia.org/wiki/M%C3%A1laga_Club_de_F%C3%BAtbol",
+  "https://es.wikipedia.org/wiki/Anexo:Estad%C3%ADsticas_del_M%C3%A1laga_Club_de_F%C3%BAtbol",
+  "https://en.wikipedia.org/wiki/Abdullah_bin_Nasser_Al_Thani_(businessman)",
+  "https://en.wikipedia.org/wiki/2025%E2%80%9326_Segunda_Divisi%C3%B3n",
+  "https://en.wikipedia.org/wiki/2026_Segunda_Divisi%C3%B3n_play-offs"
+ ],
+ "notes": "取材の控えは research/ll_data/malaga_research.md。創立は 1948年5月25日（Club Atlético Malagueño として。前身 CD Málaga の控え）。英語版冒頭は CD Málaga（1904年）に遡ると書くが、infobox と西語版はともに1948年なので1948年を採った。収容人数は 30,778（西語版・クラブ公式サイト、2026-06-15参照）／30,044（英語版 infobox・clubs.json）と割れるので、クラブ発表の数字を採った。最多出場の 405 は西語版『Anexo:Estadísticas』の表（CD Málaga 時代を含む通算、2019-09-18 時点）。ミゲリ本人の記事は 463（全カテゴリ）と書く。リーグ戦だけならドゥダの315が最多（同じ表の説明文）。タイトル歴は1部・国王杯・スーペルコパとも0。欧州はインタートトカップ2002の1回（英語版 Honours）。2部優勝（1998-99）は数えていない。オーナーはアル・サーニのまま（英語版 infobox・西語版）だが、2020年2月に裁判所が経営から外し、管財人 José María Muñoz が運営（西語版 infobox は Presidente を Muñoz と書く）。昨季は2部4位・21勝10分11敗・勝ち点73（ラス・パルマスと同勝ち点、直接対決で上）。プレーオフでラス・パルマス（合計2-1）とアルメリア（合計2-1）を破って昇格。"
+}

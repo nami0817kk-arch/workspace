@@ -1,0 +1,399 @@
+# 取材メモ（10/8 題材 ronaldo_statement、型は quote）。材料の控え: research/raw/20261008_ronaldo_statement.md（頭に「## 精査」、原文と訳）
+# 主役は「約束」。10月6日にロナウドが出した声明の原文（ポルトガル語の全文）を当たり、訳は日本語として自然になるように直した。
+# 事実の裏:
+#   声明の全文: A Bola 2026-10-06 19:26 掲載。本人はインスタグラムに出した（日刊スポーツ・スポーツ報知が一致）。X の @Cristiano には 10/6 の投稿が見つからない。
+#   8項目: 声明の中に本人が全文を引用している。台本に出すのは①⑥⑦の3つ。
+#   ジェズス監督の 9/30 の会見: CNN Portugal の書き起こし（20発言）と Renascença。誤りを認めたのは「アップに行かせた時間」だけで、8項目の⑥より狭い。ここが食い違いの中身。
+#   ジェズス監督の 10/7: Record（自宅前、10:05 掲載）。
+#   処分 1〜6か月: fpf.pt の原本は開けなかった（403・タイムアウト。10/2 と同じ）。ポルトガル紙が同じ文言で引いたものなので「報道」。10/8 朝まで処分の発表は見つからない。
+#   出場時間・得点・日程: FotMob（選手 30893・代表 8361・アル・ナスル 101918）。W杯5試合441分3得点、ジェズス監督の3試合は67分0得点は自分で足した。
+#   代表通算 234試合146得点は 10/2 の控え（Sky・Maisfutebol・英語版Wikipedia）。声明では本人が「230試合以上」「24年続けて」と書いている。
+# 外したもの: モドリッチの言葉（10/7、スペイン紙アス。問い「破られた約束とは何か」に答えないので落とした）、
+#   「ジェズスがいるかぎり戻らない」の報道（10/6 の昼。同じ日の夕方の声明と食い違い、声明のほうが後なので使わない）、
+#   7番の背番号・空港・ブルーノの言葉・10/4 の試合内容（10/2〜10/5 の回で出している）。
+# 反応: X の個人1件（10/8）、Lemmy の英語の個人1件（10/6、訳した）、Yahoo!ニュース（スポニチの記事）のコメント欄1件。全文。
+#   ポルトガル語の個人の投稿は取れなかった（Bluesky 403・Reddit 403・Mastodon は報道アカウントの記事貼りだけ）。中身のあった1件は記者の投稿だったので外した。
+# 写真: Commons「Cristiano Ronaldo Croatia v Portugal 2 July 2026-154.jpg」（Bryan Berlin、CC BY-SA 4.0、W杯のクロアチア戦）。
+#   10/2 の回で使った同じ組の -087 とは別のファイル。facecrop で _w（1920x1080）と _v を切った。
+#   監督が語る行は、ジェズス（Commons 2020、CC BY 2.0）を左に並べた pair/01.jpg。ショート用に pair/01_v.jpg。
+#   代理店（Getty・AFLO・AFP・ロイター・IMAGO・AP・PA・Lusa・EPA）は使っていない。
+date: 2026年10月8日
+slot: other_1
+format: quote
+people:
+- クリスティアーノ・ロナウド
+- ジョルジェ・ジェズス
+theme:
+  id: ronaldo_statement
+  league: spain
+  league_name: UEFAネーションズリーグ
+  kind: other
+  topic: ポルトガル代表
+  title: ロナウド、代表離脱から6日。「監督は、私との約束を破った」
+  question: ロナウドが「破られた」と言う約束とは、何だったのか
+  opening_image: assets/images/20261008_ronaldo_statement/01_w.jpg
+  takeaway: ロナウドが言う「約束」は2つ。ノルウェー戦の当日に監督から「30分出てもらう」と言われながら出番が無かったこと、48時間後の話し合いで会見の内容を8項目の文書にまとめながら、その通りには話されなかったこと。監督が9月30日の会見で認めた誤りは「アップに行かせた時間」だけで、文書の⑥「出さなかったこと自体が誤り」より狭い。数字で見ると、今夏のW杯5試合441分3得点が、新監督の3試合では67分0得点になっていた。本人は情状酌量なしの処分を求めつつ代表引退は否定していて、1か月なら11月14日のデンマーク戦に間に合い、6か月なら2027年3月末まで出られない
+short_title: ロナウド、「30分出てもらう」と言われた日に起きたこと
+thumbnail:
+  layout: face
+  photo: assets/images/20261008_ronaldo_statement/01_w.jpg
+  short_photo: assets/images/20261008_ronaldo_statement/01_v.jpg
+  line1: ロナウド、離脱の理由
+  line2: ●●分の約束
+  reaction: 出場確約があるってのも異常
+sections:
+- id: promise
+  main: true
+  heading: 約束された30分
+  tier: 報道
+  telop: ロナウド「では準備しておけ、30分出てもらう、と監督は言った」
+  narrator: キャスター
+  say:
+  - text: ポルトガル代表を離れたロナウドが、6日ぶりに書きました。
+    short_only: true
+    image: assets/images/20261008_ronaldo_statement/01_w.jpg
+  - text: 話は、9月27日のノルウェー戦の日。その昼食の席です。
+  - voice: ロナウド
+    text: コーチの一人が、みんなで食事をしている席に来た。
+  - voice: ロナウド
+    text: 監督が話したがっている、と。
+    cont: true
+  - voice: ロナウド
+    text: まったく思いがけないことに、監督はこう聞いてきた。
+    cont: true
+  - voice: ロナウド
+    text: 30分プレーできるか、と。
+    cont: true
+    emph: true
+  - voice: ロナウド
+    text: もちろん、はい、と答えた。
+    cont: true
+  - voice: ロナウド
+    text: 監督は、では準備しておけ、30分出てもらう、と言った。
+    cont: true
+  - voice: ロナウド
+    text: あとは、みんなが知っているとおりだ。
+  - voice: ロナウド
+    text: ハーフタイムからずっとアップをして、
+    cont: true
+  - voice: ロナウド
+    text: 時間が過ぎていくのを見ていた。呼ばれることはなかった。
+    cont: true
+  - voice: ロナウド
+    text: 監督は、私との約束を破った。
+    cont: true
+    emph: true
+  quotes_from:
+  - A Bola https://www.abola.pt/noticias/cristiano-ronaldo-revela-tudo-o-explosivo-comunicado-do-capitao-da-selecao-2026100618261215738
+  sources:
+  - https://www.abola.pt/noticias/cristiano-ronaldo-revela-tudo-o-explosivo-comunicado-do-capitao-da-selecao-2026100618261215738
+  - https://www.soccerdigestweb.com/news/detail/id=198182
+  - https://www.fotmob.com/players/30893/cristiano-ronaldo
+- id: eight
+  heading: 二度目の約束と、8項目の文書
+  tier: 報道
+  telop: ロナウド「短い文書が作られ、それを私自身が確かめた」
+  narrator: キャスター
+  say:
+  - text: ノルウェー戦は、ポルトガルが2対1で勝ちました。
+  - text: ロナウドはもともと、この日は出ない予定で動いていました。
+  - voice: ロナウド
+    text: 私の体の戻し方の予定にも、練習の予定にも無い話だった。
+  - voice: ロナウド
+    text: 10月4日の、ポルトでの試合にしか出ない予定だったからだ。
+    cont: true
+  - text: 2つめの約束は、その48時間後の話し合いで交わされます。
+  - voice: ロナウド
+    text: 監督が、いま私的な場で私に言ったことを、
+  - voice: ロナウド
+    text: 記者会見場で、もう一度言う。それだ。
+    cont: true
+  - voice: ロナウド
+    text: 短い文書が作られ、それを私自身が確かめた。
+  - text: 声明には、その文書の8項目が、そのまま書き写されています。
+    card:
+      type: table
+      title: 会見で読まれるはずだった8項目（抜粋）
+      columns: &eight_cols
+      - ''
+      - 文書に書かれていたこと
+      rows: &eight_rows
+      - - 1番
+        - 計画を出したのは、ほかの誰でもなく私だ
+      - - 6番
+        - アップに行かせて出さなかったのは誤り
+      - - 7番
+        - 彼に代表にいてほしい。とてもそうしてほしい
+  - text: 1番は、起用の計画を出したのは監督だった、という中身です。
+    card:
+      type: table
+      title: 会見で読まれるはずだった8項目（抜粋）
+      columns: *eight_cols
+      rows: *eight_rows
+      highlight_row: 0
+  - text: 6番は、ペレやマラドーナほどの選手を、という書き出しでした。
+    card:
+      type: table
+      title: 会見で読まれるはずだった8項目（抜粋）
+      columns: *eight_cols
+      rows: *eight_rows
+      highlight_row: 1
+  - text: アップに行かせて出さなかった。いまならやらない、と。
+    card:
+      type: table
+      title: 会見で読まれるはずだった8項目（抜粋）
+      columns: *eight_cols
+      rows: *eight_rows
+      highlight_row: 1
+    mark:
+      kind: strike
+      row: 1
+      col: 1
+      text: 誤りは時間のことに
+  - text: 7番は、クリスティアーノに代表にいてほしい、でした。
+    card:
+      type: table
+      title: 会見で読まれるはずだった8項目（抜粋）
+      columns: *eight_cols
+      rows: *eight_rows
+      highlight_row: 2
+  - text: ところが会見では、6番も7番も、この形では出てきません。
+    card:
+      type: table
+      title: 会見で読まれるはずだった8項目（抜粋）
+      columns: *eight_cols
+      rows: *eight_rows
+      highlight_row: 2
+  - voice: ロナウド
+    text: あの場の態度は、私たちの話し合いとは何の関係もなかった。
+    card: none
+  - voice: ロナウド
+    text: 約束を破られたのは、これで二度目だった。
+    cont: true
+    emph: true
+  - voice: ロナウド
+    text: これ以上、約束が破られるのを待つのはやめて、
+    cont: true
+  - voice: ロナウド
+    text: 合宿を離れることにした。
+    cont: true
+  quotes_from:
+  - A Bola https://www.abola.pt/noticias/cristiano-ronaldo-revela-tudo-o-explosivo-comunicado-do-capitao-da-selecao-2026100618261215738
+  sources:
+  - https://www.abola.pt/noticias/cristiano-ronaldo-revela-tudo-o-explosivo-comunicado-do-capitao-da-selecao-2026100618261215738
+  - https://cnnportugal.iol.pt/jorge-jesus/cristiano-ronaldo/nao-ha-caso-nenhum-ninguem-se-recusa-a-treinar-aqui-e-que-eu-fiz-mal-ou-se-precisar-dele-entra-jesus-responde-a-polemica-com-ronaldo-em-20-frases/20260930/6abd494bd34e9a786e75a5a8
+- id: jesus
+  heading: 監督が口にした言葉
+  tier: 報道
+  telop: ジェズス監督「アップに行かせるのは、15分か20分、遅くするべきだった」
+  narrator: キャスター
+  say:
+  - text: 9月30日の会見で、監督はこう言っています。
+    image: assets/images/20261008_ronaldo_statement/pair/01.jpg
+  - voice: ジェズス監督
+    text: そこは私の誤りだ。アップに行かせるのは、
+  - voice: ジェズス監督
+    text: 15分か20分、遅くするべきだった。
+    cont: true
+  - text: 声明が出た翌朝、監督は自宅の前で記者に短く答えました。
+  - voice: ジェズス監督
+    text: 声明は読んだ。あとは、いつもの毎日と同じだ。
+  - voice: ジェズス監督
+    text: 連盟へ行って仕事をする。もう何も言うことはない。
+    cont: true
+  - text: 自分の非をどこまで認めたかを、3つ並べてみます。
+    card:
+      type: verdict
+      title: 誰が、どこまで自分の非を認めたか
+      columns: &vcols
+      - ''
+      - 認めたか
+      - 言葉
+      rows: &vrows
+      - - ロナウド 6日
+        - ◎
+        - 責任は、すべて私にある
+      - - ジェズス監督 9月30日
+        - △
+        - アップは15分か20分、遅く
+      - - ジェズス監督 7日
+        - ×
+        - もう何も言うことはない
+  - text: ロナウドは、合宿を離れたことの責任は自分だけにある、と。
+    card:
+      type: verdict
+      title: 誰が、どこまで自分の非を認めたか
+      columns: *vcols
+      rows: *vrows
+      highlight_row: 0
+  - text: 監督が認めたのは、アップに行かせた時間の一点だけでした。
+    card:
+      type: verdict
+      title: 誰が、どこまで自分の非を認めたか
+      columns: *vcols
+      rows: *vrows
+      highlight_row: 1
+  - text: そして10月7日は、中身に触れずに終わりました。
+    card:
+      type: verdict
+      title: 誰が、どこまで自分の非を認めたか
+      columns: *vcols
+      rows: *vrows
+      highlight_row: 2
+  quotes_from:
+  - CNN Portugal https://cnnportugal.iol.pt/jorge-jesus/cristiano-ronaldo/nao-ha-caso-nenhum-ninguem-se-recusa-a-treinar-aqui-e-que-eu-fiz-mal-ou-se-precisar-dele-entra-jesus-responde-a-polemica-com-ronaldo-em-20-frases/20260930/6abd494bd34e9a786e75a5a8
+  - Record https://www.record.pt/futebol/selecoes/detalhe/jorge-jesus-ja-leu-comunicado-de-ronaldo-vou-para-a-federacao-trabalhar-pensar-na-equipa
+  sources:
+  - https://cnnportugal.iol.pt/jorge-jesus/cristiano-ronaldo/nao-ha-caso-nenhum-ninguem-se-recusa-a-treinar-aqui-e-que-eu-fiz-mal-ou-se-precisar-dele-entra-jesus-responde-a-polemica-com-ronaldo-em-20-frases/20260930/6abd494bd34e9a786e75a5a8
+  - https://www.record.pt/futebol/selecoes/detalhe/jorge-jesus-ja-leu-comunicado-de-ronaldo-vou-para-a-federacao-trabalhar-pensar-na-equipa
+- id: view
+  viewpoint: true
+  heading: 441分から67分へ。11月に間に合うか
+  tier: 背景
+  telop: 代表の出場時間は、W杯の5試合441分から、新監督の3試合67分へ
+  narrator: 解説
+  say:
+  - text: ロナウドは、処分に情状酌量はいらない、とも書いています。
+    image: assets/images/20261008_ronaldo_statement/01_w.jpg
+  - voice: ロナウド
+    text: 私はただの一選手ではない。チームの主将だ。
+  - text: そのうえで、代表をやめるとは一言も書いていません。
+  - voice: ロナウド
+    text: 体の状態がよく、クラブで試合に出て、点も取れているなら、
+  - voice: ロナウド
+    text: 科される出場停止を終えたあと、私はいつでも出るつもりだ。
+    cont: true
+  - text: 代表は234試合146得点。男子の代表では最多の記録です。
+    card:
+      type: stats
+      title: ロナウドの代表
+      items:
+      - - '234'
+        - 試合
+        - 24年続けて代表に
+      - - '146'
+        - 得点
+        - 男子の最多記録
+      - - '67'
+        - 分
+        - 新監督の3試合で
+      focus: 1
+  - text: その出場時間が、夏からの4か月で大きく減りました。
+    card:
+      type: stats
+      title: ロナウドの代表
+      items:
+      - - '234'
+        - 試合
+        - 24年続けて代表に
+      - - '146'
+        - 得点
+        - 男子の最多記録
+      - - '67'
+        - 分
+        - 新監督の3試合で
+      focus: 2
+  - text: 今夏のワールドカップは5試合で441分、3得点。
+    card:
+      type: table
+      title: 代表での出場時間を数えた
+      columns: &mcols
+      - ''
+      - 出場
+      - 得点
+      rows: &mrows
+      - - ワールドカップ 6〜7月
+        - 441分
+        - 3
+      - - 新監督の3試合 9〜10月
+        - 67分
+        - 0
+      highlight_row: 0
+  - text: 新監督になってからの3試合は、合わせて67分で0得点。
+    card:
+      type: table
+      title: 代表での出場時間を数えた
+      columns: *mcols
+      rows: *mrows
+      highlight_row: 1
+    emph: true
+  - text: 441分が67分へ。6分の1より少ない時間に減っています。
+    card:
+      type: table
+      title: 代表での出場時間を数えた
+      columns: *mcols
+      rows: *mrows
+      highlight_row: 1
+  - text: クラブでは、点が取れていないわけではありません。
+    card: none
+  - text: 今季のサウジのリーグは6試合423分で3得点。
+  - text: 141分に1点。ワールドカップは147分に1点でした。
+  - text: 割合はほぼ同じ。点も取れている、という条件は満たせています。
+  - text: 残るのは、連盟が決める処分です。
+  - text: 規定では、合宿を離れた選手は1か月から6か月の出場停止。
+  - text: 9月30日から数えると、1か月なら10月30日に明けます。
+  - text: ポルトガルの次は、11月14日のホームでのデンマーク戦。
+  - text: 1か月なら間に合い、6か月なら2027年3月末までです。
+  - text: 10月8日の時点で、処分はまだ発表されていません。
+  sources:
+  - https://www.abola.pt/noticias/cristiano-ronaldo-arrisca-suspensao-de-seis-meses-por-abandonar-o-estagio-da-selecao-2026093021352978441
+  - https://www.fotmob.com/players/30893/cristiano-ronaldo
+  - https://www.fotmob.com/teams/8361/fixtures/portugal
+  - https://www.abola.pt/noticias/cristiano-ronaldo-revela-tudo-o-explosivo-comunicado-do-capitao-da-selecao-2026100618261215738
+- id: voices
+  heading: ネットの反応
+  tier: 未確認
+  telop: 「出場確約があるってのも異常な状態ですね」
+  narrator: キャスター
+  say:
+  # Yahoo!ニュース（スポニチの記事）のコメント欄 ryo********。全文
+  - voice: ネット民
+    text: ちょっと感覚が麻痺してたんだけど、
+  - voice: ネット民
+    text: 真剣勝負の国際Aマッチで、
+    cont: true
+  - voice: ネット民
+    text: すでにパフォーマンスがかなり落ちてる
+    cont: true
+  - voice: ネット民
+    text: 元スペシャルな選手の出場確約があるってのも
+    cont: true
+  - voice: ネット民
+    text: 異常な状態ですね・・・。
+    cont: true
+  - voice: ネット民
+    text: まぁ「必ず出す」とか
+    cont: true
+  - voice: ネット民
+    text: 「状況に応じて投入する」とか、
+    cont: true
+  - voice: ネット民
+    text: ニュアンスがどうだったのかは分かりませんが。
+    cont: true
+  # Lemmy（英語）username968142。全文を訳した
+  - voice: ネット民
+    text: ロナウドは甘やかされた子どもだ
+  # X @yuka3dx1。全文
+  - voice: ネット民
+    text: ロナウドの30分出場の約束って
+    short_voice: true
+  - voice: ネット民
+    text: 単純に実力でスタメン勝ち取れば
+    cont: true
+    short_voice: true
+  - voice: ネット民
+    text: いいだけ話じゃないの
+    cont: true
+    short_voice: true
+  - voice: ネット民
+    text: あまり詳しくないので
+    cont: true
+    short_voice: true
+  - voice: ネット民
+    text: 間違ってたらごめんなさい
+    cont: true
+    short_voice: true
+  sources:
+  - https://news.yahoo.co.jp/articles/292cfd79b0dcada6351302e3f594229395d378e7/comments
+  - https://lemmy.world/comment/26200144
+  - https://x.com/yuka3dx1/status/2107820082915320291

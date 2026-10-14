@@ -1,0 +1,154 @@
+title: 9月27日の題材
+lead: 0時までに出た見出しから16件
+note: <b>○×を付けてください。</b>欧州は代表戦の中断中で、昨日のリーグ戦は（Jリーグを除いて）ありません。<br><br>ロマーノの投稿は、手元の Chrome に接続できず今回も読めませんでした。移籍の話はフィードから拾っています。<br><br>⑦イングランド対スペインは<b>今朝3時45分キックオフ</b>なので、○なら試合のあとに作ります。<br><br>昨日の一覧に出して×だった題材（鈴木彩艶の評価、ヤマルの「火花」、マンCの続報、パルマーなど）は入れていません。中身はまだ<b>見出しだけ</b>です。
+items:
+- num: 1
+  slot: 日本人
+  head: U-21日本代表、北朝鮮を1-0で破ってアジア大会4強。北朝鮮の監督は決勝点に「フェアプレーの精神にかなっていたのか」
+  why: 'ンワディケ・ウチェ・ブライアン世雄の先制点を守り切った。相手監督がその得点に異議を唱えた、という見出し。
+
+    大関友翔が、もうろうとした北朝鮮の選手を介抱してネットで話題、という小ネタもある。若い選手は顔写真が取れないことがある。
+
+    '
+  src: ゲキサカ（9/26）
+  url: https://web.gekisaka.jp/news/japan/detail/?459818-459818-fl
+  fmt: news
+- num: 2
+  slot: 日本人
+  head: 松木玖生、サウサンプトンを早くも離れる可能性。「エヴァートン…」
+  why: '代表デビュー戦で決めたばかりの松木に、再び移籍の話、という見出し。移籍の噂なので確度は低め。
+
+    '
+  src: Football Tribe（9/26）
+  url: https://football-tribe.com/japan/2026/09/26/359741/
+  fmt: news
+  weak: true
+- num: 3
+  slot: 日本人
+  head: 23歳になった佐野航大「ホットラインまた開通させましょう」。塩貝健人との再共闘を熱望
+  why: '塩貝の代表初ゴールをお膳立てした佐野が、また組みたいと話した、という見出し。**本人の言葉**がある。
+
+    '
+  src: サッカーキング（9/26）
+  url: https://www.soccer-king.jp/news/japan/national/20260926/2209642.html
+  fmt: quote
+- num: 4
+  slot: 日本人
+  head: 後藤啓介、ブンデス初挑戦は全試合途中出場。それでも「シントトロイデンの時よりできている」
+  why: '出番は限られても手応えがある、と本人が話した見出し。**本人の言葉**がある。
+
+    '
+  src: ゲキサカ（9/26）
+  url: https://web.gekisaka.jp/news/japan/detail/?459815-459815-fl
+  fmt: quote
+- num: 5
+  slot: 日本人
+  head: 28歳で初招集の谷村海那「東京五輪世代は届かない存在だと思っていた」
+  why: '遅咲きのFWが、同世代への思いと「決められる自信はある」を語った見出し。**本人の言葉**がある。
+
+    '
+  src: ゲキサカ（9/26）
+  url: https://web.gekisaka.jp/news/japan/detail/?459816-459816-fl
+  fmt: quote
+- num: 6
+  slot: 日本人
+  head: 中村俊輔コーチが居残りFK特訓。高校の後輩・齋藤俊輔もゴール連発で「キッカーに名乗り」
+  why: 'コーチになった中村俊輔が、3人に直接FKを教えた、という見出し。**本人の言葉**がある。
+
+    '
+  src: ゲキサカ（9/26）
+  url: https://web.gekisaka.jp/news/japan/detail/?459807-459807-fl
+  fmt: news
+- num: 7
+  slot: 試合結果
+  head: イングランド対スペイン（今朝3時45分キックオフ、ウェンブリー）
+  why: 'W杯王者スペインのネーションズリーグ初戦。バルサの選手が3分の1いる、という見出しも出ている。**○なら試合のあとに作る。**
+
+    '
+  src: ―
+  url: https://www.bbc.co.uk/sport/football/articles/cqn744el41d8o
+  fmt: news
+- num: 8
+  slot: その他
+  head: ルカク、マンCの違反認定に「俺に2つプレミアの借りがある」。マンUも「今、何回優勝したことになる？」
+  why: '違反の認定を受けて、当時優勝を逃した側が次々に声を上げた、という見出し。マンCの本編とは別の切り口（取られた側の言葉）。
+
+    '
+  src: Marca（9/26）
+  url: https://www.marca.com/futbol/premier-league/2026/09/26/lukaku-encara-donnarumma-dispara-city-me-deben-dos-premier-video.html
+  fmt: voices
+- num: 9
+  slot: プレミア
+  head: サラー、人工芝を理由にエジプト代表の試合を欠場
+  why: '代表戦のピッチが人工芝で、リヴァプールのサラーが出ない、という見出し。
+
+    '
+  src: BBC（9/26）
+  url: https://www.bbc.co.uk/sport/football/articles/cm1dllzgrdkro
+  fmt: news
+- num: 10
+  slot: プレミア
+  head: リヴァプールの17歳ングモハ、UEFAの規定でスペイン戦のイングランド代表から外れる
+  why: '選ばれていたのに、規定のせいで出られない、という見出し。
+
+    '
+  src: BBC（9/26）
+  url: https://www.bbc.co.uk/sport/football/articles/cqn744el41d8o
+  fmt: news
+- num: 11
+  slot: その他
+  head: ジダン、フランス代表の合宿所で「散髪禁止令」
+  why: 'これまで毎回合宿所で髪を切っていた選手たちに、新監督が待ったをかけた、という見出し。
+
+    元記事はまだ当たっていない（まとめサイトの見出し）。
+
+    '
+  src: まとめサイト（9/26）
+  url: https://worldfn.net/archives/63505718.html
+  fmt: voices
+- num: 12
+  slot: ラリーガ
+  head: バルサの今季の出だしは、欧州主要リーグで約100年ぶりの得点ペース
+  why: 'リーグ戦とCLを合わせた得点が歴史的、という見出し。数字の図が作れる。
+
+    '
+  src: ESPN（9/26）
+  url: https://www.espn.com/soccer/story/_/id/50004145/why-barcelona-start-season-laliga-champions-league-best-europe-top-5-leagues-almost-100-years
+  fmt: news
+- num: 13
+  slot: その他
+  head: 欧州ゴールデンシュー争い、ラフィーニャ・ムバッペ・ハーランドを抑えて首位にいるのは
+  why: '得点ランキングの首位が意外な選手、という見出し。答えを伏せたタイトルが作れる。
+
+    '
+  src: ESPN（9/26）
+  url: https://www.espn.com/soccer/story/_/id/50010819/european-golden-shoe-whos-leading-raphinha-mbappe-haaland
+  fmt: news
+- num: 14
+  slot: その他
+  head: トッティが50歳に。ローマを変えた主将の半世紀
+  why: 'ローマ一筋の主将の誕生日。本人の言葉や逸話を並べる回にできる。
+
+    '
+  src: Gazzetta（9/26）
+  url: https://www.gazzetta.it/sportweek/26-09-2026/totti-fa-50-mezzo-secolo-del-capitano-che-ha-cambiato-la-roma.shtml
+  fmt: quote
+- num: 15
+  slot: その他
+  head: ベルギーのファン・ボメル監督「デ・ブライネはベルギー史上最高の選手」。本人は「代表125試合」
+  why: 'イタリアに勝った初陣のあと、監督と本人が語った、という見出し。**本人の言葉**がある。
+
+    '
+  src: Voetbal International ほか（9/26）
+  url: https://www.vi.nl/video/van-bommel-de-bruyne-is-de-beste-belgische-voetballer-aller-tijden
+  fmt: quote
+- num: 16
+  slot: ラリーガ
+  head: モウリーニョのレアル・マドリード、直しきれない問題
+  why: '出だしでつまずいたマドリーの課題を英国の放送局が分析、という見出し。
+
+    '
+  src: BBC（9/26）
+  url: https://www.bbc.co.uk/sport/football/articles/c620ld00n5n9o
+  fmt: news
+  weak: true

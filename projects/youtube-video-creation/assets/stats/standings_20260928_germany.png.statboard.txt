@@ -1,0 +1,9 @@
+title: ブンデスリーガ 第4節
+unit: 勝点
+Borussia Dortmund=12.0
+Bayern München=10.0
+Freiburg=10.0
+Augsburg=7.0
+Bayer Leverkusen=7.0
+Mainz 05=7.0
+source: FotMob

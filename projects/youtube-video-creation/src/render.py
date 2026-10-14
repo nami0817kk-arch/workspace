@@ -9,13 +9,17 @@ from __future__ import annotations
 
 import hashlib
 import math
+import os
 import re
 from dataclasses import dataclass
+from collections import OrderedDict
+from concurrent.futures import Future, ThreadPoolExecutor
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
 
 from . import cards, emphasis, ffmpeg
+from . import marks as marks_mod
 from .backgrounds import moving_background
 from .inserts import Inserts
 from .ffmpeg import is_video
@@ -37,6 +41,29 @@ TELOP_MARGIN = 110
 TELOP_HEIGHT = 250
 TELOP_MAX_SHARE = 0.42   # 字が多いとき、テロップ枠が使ってよい画面の高さ
 TELOP_BOTTOM = 58
+
+# **見た目の作り直し**（2026-09-28 ユーザー「全体的に画面描画の質を上げたい／目でも楽しめるように」
+# →見本を2回見せて「よくなってきた」）。色はチャンネルの2色で通す
+BRAND_GREEN = (11, 61, 46)
+BRAND_GOLD = (255, 213, 74)
+MEDIA_FLOOR = 0.64       # 立ち絵なしのとき、表や写真が使ってよい下限（画面の高さの割合）
+# **進捗バーは出さない**（2026-09-29 ユーザー「これからは外して」）。9/28 に入れた画面下端の黄色い線。
+# 仕組み（ffmpeg の overlay で時間で伸ばす）は残してあり、8 に戻せばまた出る。蒸し返さない
+PROGRESS_HEIGHT = 0
+PHOTO_MAX_ZOOM = 1.25    # 写真の寄りの上限（背景の 1.45 だと顔が荒れる）
+PILL_IN = 0.35           # 節の頭で左上のピルとテロップが滑り込む秒数（動きの段3）
+IMAGE_FADE = 0.35        # 写真が別の写真に替わる行は、前の絵から溶かして切り替える（品質100回の11）
+ROW_IN = 0.14            # 表・棒グラフの行が1本ずつ現れる間隔（動きの段2）
+# **書き込み（赤ペン）を描き進める秒数とコマ数**（2026-10-07、src/marks.py）。線が伸び、添え書きが1字ずつ出る。
+# 読み上げの内側から取るので尺は変わらない
+MARK_IN = 0.5
+MARK_STEPS = 7
+# 読み上げの数字は自動で黄色にする（「22点」「75.5%」「4試合」）。囲みで指定した強調があればそちらを優先
+AUTO_STRONG = re.compile(r"\d[\d,.]*(?:[億万千])?(?:[点本人%回分秒位歳勝敗年倍]|試合|ゴール|アシスト|ユーロ|パーセント|メートル|キロ|センチ|km|m)?")   # 2文字の単位は字の集合に入れない（「キロ」が「キ」で切れた）
+# **亡くなった人の数は自動で強調しない**（2026-10-09 未明。ヒルズボロの97人で踏んだ）。
+# 行にこの言葉があれば、「◯人」の形の数字だけ強調から外す
+MOURNING = re.compile(r"亡くな|死亡|死者|犠牲|追悼|悼[むみん]|遺族|殉")
+PEOPLE_COUNT = re.compile(r"\d[\d,.]*(?:[億万千])?人")
 
 
 @dataclass
@@ -64,8 +91,12 @@ class Layout:
 
     @property
     def media_slot(self) -> tuple[int, int]:
-        """画像やカードを置く縦の範囲。文字の上を使う。"""
-        floor = (self.headline_box if not self.with_characters else self.telop_box)[1]
+        """画像やカードを置く縦の範囲。文字の上を使う。
+
+        立ち絵なしのときの見出しは下寄せなので、2行なら画面の 0.69 より下にしか来ない。
+        表の下限を 0.58 → 0.64 に下げて、表を大きく出す（2026-09-28）。
+        """
+        floor = (int(self.height * MEDIA_FLOOR) if not self.with_characters else self.telop_box[1])
         return (int(self.height * 0.11), floor - 34)
 
     @property
@@ -107,8 +138,16 @@ class Renderer:
         self._board_stages: set[str] = set()
         # 冒頭の節で敷く写真（frame_entries が台本から入れる）
         self.opening_photo: str = ""
+        self.nameplate: str = ""
         self.opening_scene: str = ""
         self.opening_points: list[str] = []
+        # 節の番号（左上のピルに「02」と出す）と、右上の点（何節目か）
+        self.scene_order: dict[str, int] = {}
+        self.scene_total: int = 0
+        # 書き込みの的：いま描いたカードの置き場（名前・幅・画面の枠）と、写真ごとの顔の位置
+        self._card_place: tuple[str, int, tuple[float, float, float, float]] | None = None
+        self._mark_heads: dict[str, list] = {}
+        self._card_layouts: dict[str, dict] = {}
         self.frame_dir.mkdir(parents=True, exist_ok=True)
 
         font_path = str(config.video.font_path())
@@ -121,6 +160,7 @@ class Renderer:
         self.font_title_big = ImageFont.truetype(font_path, int(config.video.title_size * 1.4))
         self.font_label = ImageFont.truetype(font_path, 32)
         self.font_date = ImageFont.truetype(font_path, 30)
+        self.font_pill = ImageFont.truetype(font_path, 38)
 
         self.script_background: str | None = None  # 台本 frontmatter の bg
         self.script_cards: dict = {}
@@ -130,6 +170,91 @@ class Renderer:
         self.over_video = False
         self._backgrounds: dict[str, Image.Image] = {}
         self._sprites: dict[tuple[str, str, bool], Image.Image | None] = {}
+        # **絵の保存は別スレッドに回す**（2026-10-08）。PNG の書き出しは描くのと同じくらい
+        # 時間を食うので、次のコマを描いているあいだに書く。`frame_entries` が返るときに
+        # 全部待ち合わせるので、ffmpeg が書きかけの絵を読むことは無い
+        self._saver: ThreadPoolExecutor | None = None
+        self._pending: dict[Path, Future] = {}
+        # 保存した絵の控え（溶かしの中間フレームを、ファイルを読み直さずに作るため）。
+        # 1920x1080 の RGBA は1枚8MBなので、直近のぶんだけ持つ
+        self._recent: OrderedDict[Path, Image.Image] = OrderedDict()
+        self._saved: set[Path] = set()
+
+    # -------------------------------------------------------------- 絵の保存
+
+    # 控えに残す枚数。溶かしは直前の絵と今の絵だけを使うので、少しで足りる
+    RECENT_MAX = 8
+
+    def _frame_suffix(self) -> str:
+        """途中の絵の形式。
+
+        **動画の下地に重ねる回は RGBA の PNG のまま**（透過が要る。写真が替わる瞬間に
+        下地が見えてしまう）。**下地が静止画だけの回は JPEG**（透過が要らないので、
+        書くのも読むのも速い）。
+        **1本の列の中で形式を混ぜない。**RGB の絵を RGBA の列に混ぜたとき、
+        ffmpeg がそのコマを落とした（2026-10-01「エクアドルの本編でスタジアムの背景が入る」）。
+        `over_video` は1本のあいだ変わらないので、形式も1本のあいだ変わらない。
+        """
+        return ".png" if self.over_video else ".jpg"
+
+    def _frame_path(self, stem: str) -> Path:
+        return self.frame_dir / (stem + self._frame_suffix())
+
+    def _have(self, target: Path) -> bool:
+        """もう作ってあるか。別スレッドが書いている途中のものも「ある」と数える。"""
+        return target in self._saved or target.exists()
+
+    def _save_frame(self, image: Image.Image, target: Path) -> Path:
+        """1枚を保存する。形式は `_frame_suffix` に合わせる（混ぜない）。"""
+        target = Path(target).with_suffix(self._frame_suffix())
+        if self.over_video:
+            if image.mode != "RGBA":
+                image = image.convert("RGBA")
+        elif image.mode != "RGB":
+            image = image.convert("RGB")
+        self._remember(target, image)
+        self._saved.add(target)
+        if self._saver is not None:
+            self._pending[target] = self._saver.submit(_write_image, image, target)
+        else:
+            _write_image(image, target)
+        return target
+
+    def _remember(self, target: Path, image: Image.Image) -> None:
+        self._recent[target] = image
+        self._recent.move_to_end(target)
+        while len(self._recent) > self.RECENT_MAX:
+            self._recent.popitem(last=False)
+
+    def _image(self, target: Path) -> Image.Image:
+        """保存した絵を取り出す。控えにあればファイルを読まない。
+
+        控えに無ければ読み直すが、**書きかけを読まないようにそのコマだけ待つ**。
+        """
+        mode = "RGBA" if self.over_video else "RGB"
+        got = self._recent.get(Path(target))
+        if got is not None:
+            return got if got.mode == mode else got.convert(mode)
+        pending = self._pending.get(Path(target))
+        if pending is not None:
+            pending.result()
+        with Image.open(target) as opened:
+            return opened.convert(mode)
+
+    def _open_saver(self) -> None:
+        """保存を別スレッドに回し始める。"""
+        self._close_saver()
+        self._saver = ThreadPoolExecutor(max_workers=max(2, min(4, (os.cpu_count() or 2))),
+                                         thread_name_prefix="frame-save")
+
+    def _close_saver(self) -> None:
+        """書きかけを全部待ってから閉じる。ここを抜けたら、並びの絵は全部読める。"""
+        saver, self._saver = self._saver, None
+        pending, self._pending = list(self._pending.values()), {}
+        for future in pending:
+            future.result()       # 失敗していればここで上がる（黙って欠けた絵を残さない）
+        if saver is not None:
+            saver.shutdown(wait=True)
 
     # ------------------------------------------------------------------ 画面
 
@@ -142,8 +267,18 @@ class Renderer:
         hop_t: float = 1.0,
         panel: tuple[str, str | None, str | None] | None = None,
         stack: tuple[str, ...] = (),
+        reveal: int | None = None,
+        marks: tuple | None = None,
+        mark_new: int = 0,
+        mark_t: float = 1.0,
     ) -> Path:
         """1枚の画面を描いて PNG のパスを返す。
+
+        marks は画面に出ている書き込み（赤ペン、src/marks.py）。後ろの mark_new 個は
+        この行で足したもので、mark_t（0→1）まで描き進める。panel を渡さないときは行の書き込み。
+
+        reveal は表・棒グラフの行を何本まで出すか（出現アニメの1コマ）。
+        節の頭の行では telop_t で左上のピルも滑り込む（2026-09-28 動きの段3）。
 
         telop_t / hop_t は 0→1 のアニメーション進捗。同じ絵は使い回すので、
         アニメーションを入れてもフレーム数は必要なぶんしか増えない。
@@ -156,7 +291,12 @@ class Renderer:
         text, source, card = (
             (line.telop_text(), line.source, line.card) if panel is None else panel
         )
+        if marks is None:
+            marks = tuple(line.marks) if panel is None else ()
         background = scene.background or self.script_background or self.config.video.background
+        opening = scene.title == self.opening_scene and self.opening_photo
+        stage_path = line.image or (self.opening_photo if opening else None)
+        over_video = self.over_video
         key = "|".join(
             [
                 background,
@@ -168,6 +308,7 @@ class Renderer:
                 card or "",
                 line.image or "",
                 (self.opening_photo if scene.title == self.opening_scene else ""),
+                f"moving:{self.moving_photo(stage_path) and over_video}",
                 # チャンネル名が空なら絵は変わらないので、鍵にも入れない
                 ("card:" + self.config.video.channel_name
                  if self.config.video.channel_name.strip()
@@ -176,23 +317,34 @@ class Renderer:
                 ("hook:" + "/".join(self.opening_points)
                  if self.opening_points and scene.title == self.opening_scene
                  and scene.lines and line is scene.lines[0] else ""),
+                ("plate:" + self.nameplate
+                 if self.nameplate and scene.title == self.opening_scene
+                 and scene.lines and line in scene.lines[:2] else ""),
                 # 立ち絵を出さないなら口パクも跳ねも絵に影響しない
                 ("open" if mouth_open else "close") if self.layout.with_characters else "-",
                 f"{telop_t:.2f}/{hop_t if self.layout.with_characters else 1.0:.2f}",
                 f"{self.layout.width}x{self.layout.height}",
                 "|".join(stack),
+                f"s{self.scene_order.get(scene.title, 0)}/{self.scene_total}",
+                f"r{reveal if reveal is not None else '-'}",
+                (f"m{marks_mod.dump(list(marks))}/{mark_new}/{mark_t:.2f}" if marks else ""),
+                # 節の頭かどうかは、滑り込みの途中（telop_t<1）でだけ絵に効く。それ以外は同じ絵を使い回す
+                f"head{bool(scene.lines and line is scene.lines[0]) and telop_t < 1.0}",
             ]
         )
-        target = self.frame_dir / f"{hashlib.sha1(key.encode('utf-8')).hexdigest()[:16]}.png"
-        if target.exists():
+        target = self._frame_path(hashlib.sha1(key.encode('utf-8')).hexdigest()[:16])
+        if self._have(target):
             return target
 
-        over_video = self.over_video
         # **冒頭の節はサムネの写真を敷く**（2026-09-08）。ぼかした夜景に黒い板では、
         # 最初の3秒が止まって見えた。参考は0秒目からその人の実写が出ている
-        opening = scene.title == self.opening_scene and self.opening_photo
-        stage_path = line.image or (self.opening_photo if opening else None)
         stage = self._photo_stage(stage_path)
+        # **画面いっぱいのカード（versus）は下地そのものにする**（2026-10-07）。
+        # 板（一覧板・数字の図）と同じで、それ自体が読ませる絵。上に節の名前・見出し・
+        # ほかのカードを重ねない。ショート（縦）は上下に割った絵を描く
+        full = self._full_card(card)
+        if full is not None:
+            stage, stage_path = full, None
         # **板を出している間は、その上に何も重ねない**（2026-09-17 ユーザー指示
         # 「松木の顔ではなくて、サムネ画面をだしておいて」）。板は文字でできた絵なので、
         # カードや節の名前を乗せると板の文字が読めなくなる。
@@ -202,8 +354,11 @@ class Renderer:
         # 板（一覧板・数字の図）はそれ自体が読ませる絵なので、上に何も重ねない。
         # ふつうの写真は重ねてよい
         board = bool(stage is not None and stage_path
-                     and str(stage_path) in self._board_stages)
-        if stage is not None:
+                     and str(stage_path) in self._board_stages) or full is not None
+        if stage is not None and over_video and self.moving_photo(stage_path):
+            # 写真は背景側の動画がゆっくり寄っている。絵の側は透明にして、その上に文字と表だけ描く
+            canvas = self._transparent()
+        elif stage is not None:
             # 写真を主役にした下地。動画背景の上でも不透明に敷く
             canvas = stage.copy()
         else:
@@ -213,18 +368,34 @@ class Renderer:
         # 写真を下地にしたときは小さなカードを重ねない。図表だけ左半分に置く。
         # **縦型は左半分に寄せない。**写真が画面いっぱいなので、寄せる相手がいない
         # （2026-09-09。1080の幅をさらに半分にすると図表が読めなくなる）
+        self._card_place = None
         if not board:
+            # 表は見出しの帯の上に収める（3行の見出しで表の最後の行が隠れた。2026-09-28）。
+            # 反応の積み上げのときは帯が無い
+            compact = bool(card) and not self.layout.is_portrait
+            floor = self.headline_band_top(text, compact) if (not stack and not self.layout.with_characters) else None
             self._draw_media(canvas, None if stage is not None else line.image, card, telop_t,
                              left_half=(stage is not None and not wide
-                                        and not self.layout.is_portrait))
+                                        and not self.layout.is_portrait),
+                             floor=floor,
+                             # 横長の写真の上では左に寄せる（真ん中に置くと人の顔にかかる）
+                             align_left=(stage is not None and wide and not self.layout.is_portrait),
+                             reveal=reveal)
+            # **書き込み（赤ペン）**（2026-10-07）。表の行が出きってから（reveal 中は描かない）。
+            # 見出しの帯・節の名前より下に描くので、帯と名前は書き込みの上に乗る
+            if marks and reveal is None and not self.layout.with_characters:
+                self._draw_marks(canvas, marks, mark_new, mark_t, stage, stage_path, floor, telop_t)
         # **縦型では制作側の言葉を画面に出さない**（2026-09-07 の方針）。
         # 「オープニング」「まとめ」は章の目印で、視聴者には意味が無い。
         # 一等地の左上を、本編の作業用ラベルで埋めない。
         # 中身のある節名（「監督は何と言ったか」など）は残す
         if not board and not (self.layout.is_portrait and scene.title in INTERNAL_LABELS):
-            self._draw_scene_title(canvas, scene.title)
+            head = bool(scene.lines and line is scene.lines[0])
+            self._draw_scene_title(canvas, scene.title, telop_t if head else 1.0)
         if scene.title == self.opening_scene and scene.lines and line is scene.lines[0]:
             self._draw_channel_card(canvas)
+        if self.nameplate and scene.title == self.opening_scene and scene.lines and line in scene.lines[:2] and not board:
+            self._draw_nameplate(canvas, self.nameplate)
             self._draw_hook_points(canvas, self.opening_points)
         if self.layout.with_characters:
             self._draw_telop(canvas, member, text, telop_t, source)
@@ -235,30 +406,39 @@ class Renderer:
             # **反応の最中はテロップを出さない**（2026-09-14 指示
             # 「ネット民の声の時は複数の声が並ぶ感じで、その時にテロップは不要」）。
             # 声は白い箱に並ぶので、同じ一文を下でもう一度読ませる意味がない
-            if stack:
+            if full is not None:
+                # **左右の比べの上に見出しを重ねない**（2026-10-07）。名前と数字が画面の字で、
+                # 下の帯を出すと名前・数字に重なる（板の行の no_telop と同じ考え。review の
+                # 「画面に出る字」は、この行を画面に出たと数える）
+                pass
+            elif stack:
                 self._draw_stack(canvas, stack)
             else:
-                self._draw_headline(canvas, text, telop_t, source)
-        # 動画背景のときは重ねる前提なのでアルファを残す
-        canvas.save(target) if over_video else canvas.convert("RGB").save(target)
-        return target
+                self._draw_headline(canvas, text, telop_t, source,
+                                    compact=bool(card) and not board and not self.layout.is_portrait)
+        # 動画背景のときは重ねる前提なのでアルファを残す（`_save_frame` が形式をそろえる）
+        return self._save_frame(canvas, target)
 
     def _black(self) -> Path:
-        target = self.frame_dir / "black.png"
+        target = self.frame_dir / "black_rgba.png"
         if not target.exists():
-            Image.new("RGB", (self.layout.width, self.layout.height), (0, 0, 0)).save(target)
+            Image.new("RGBA", (self.layout.width, self.layout.height), (0, 0, 0, 255)).save(target)
         return target
 
     def blend(self, first: Path, second: Path, ratio: float) -> Path:
         """2枚の画面を混ぜた中間フレーム。シーン転換のクロスフェードに使う。"""
-        key = f"{first.name}|{second.name}|{ratio:.3f}"
-        target = self.frame_dir / f"x{hashlib.sha1(key.encode('utf-8')).hexdigest()[:15]}.png"
-        if target.exists():
+        # **透過つき（RGBA）で保存する**（2026-10-01 ユーザー「エクアドルの本編でスタジアムの背景が入る」）。
+        # フレーム列は RGBA の PNG を concat して背景動画に重ねている。ここだけ RGB で保存していたため、
+        # 形式が切り替わるところで ffmpeg がコマを落とし、写真が替わる瞬間に下地（スタジアム）が見えていた
+        key = f"{first.name}|{second.name}|{ratio:.3f}|rgba"
+        target = self._frame_path("x" + hashlib.sha1(key.encode('utf-8')).hexdigest()[:15])
+        if self._have(target):
             return target
-        a = Image.open(first).convert("RGB")
-        b = Image.open(second).convert("RGB")
-        Image.blend(a, b, ratio).save(target)
-        return target
+        # **手元に残した絵から作る**（2026-10-08）。保存を別スレッドに回したので、
+        # ここでファイルを読むと書き終わるのを待つことになる。読み直しても同じ絵になる
+        a = self._image(first)
+        b = self._image(second)
+        return self._save_frame(Image.blend(a, b, ratio), target)
 
     def _transparent(self) -> Image.Image:
         """動画背景に重ねるための透過キャンバス。
@@ -273,6 +453,30 @@ class Renderer:
             draw.line([(0, y), (self.layout.width, y)], fill=(4, 8, 14, int(215 * ratio**1.3)))
         canvas.alpha_composite(scrim)
         return canvas
+
+    def _stage_file(self, image_path: str) -> Path | None:
+        """写真の下地（_photo_stage の絵）を PNG にして返す。背景側の動画（ズーム）の元にする。"""
+        stage = self._photo_stage(image_path)
+        if stage is None:
+            return None
+        stage_dir = self.frame_dir.parent / "stages"
+        stage_dir.mkdir(parents=True, exist_ok=True)
+        key = hashlib.sha1(f"{image_path}|{self.layout.width}x{self.layout.height}|{self.layout.focus_x}".encode("utf-8")).hexdigest()[:16]
+        target = stage_dir / f"{key}.png"
+        if not target.exists():
+            stage.convert("RGB").save(target)
+        return target
+
+    def moving_photo(self, image_path: str | None) -> bool:
+        """この写真の下地を、絵に焼き込まず背景側の動画（ズーム）で出すか（2026-09-28）。
+
+        板（一覧板・数字の図）は寄せない（字が滲む）。縦型も寄せる。
+        """
+        if not image_path or self.config.motion.photo_zoom <= 1.0:
+            return False
+        if self._photo_stage(image_path) is None:
+            return False
+        return not _is_board(image_path)
 
     def _photo_stage(self, image_path: str | None) -> Image.Image | None:
         """写真を画面の主役にした下地（2026-09-08）。
@@ -301,6 +505,9 @@ class Renderer:
 
         width, height = self.layout.width, self.layout.height
         photo = Image.open(path).convert("RGBA")
+        # **写真をごく軽く補正**（2026-09-28「背景の画像をもっと向上」）。Commons の写真は眠いものが多い
+        photo = ImageEnhance.Contrast(photo).enhance(1.06)
+        photo = ImageEnhance.Sharpness(photo).enhance(1.15)
         bed = _cover(photo, width, height).filter(ImageFilter.GaussianBlur(30))
         bed = ImageEnhance.Brightness(bed).enhance(0.55)
         if self.layout.is_portrait and _is_board(image_path):
@@ -343,13 +550,21 @@ class Renderer:
         if photo.width >= photo.height * 0.95:
             self._wide_stages.add(image_path)
             if _is_board(image_path):
+                # **横の板も下を暗くしない**（2026-09-30 ユーザー「下の方黒くなってない？」）。
+                # 縦の板は 09-23 に外していたのに、横の板だけ写真と同じ幕を掛けていた。
+                # ソシエダの回で、選手一覧の最後の段と順位表の17〜20位が黒く沈んでいた。
+                # 板の行は見出しを出さない（no_telop）ので、幕は要らない
                 self._board_stages.add(image_path)
+                stage = _cover(photo, width, height)
+                self._stages[image_path] = stage
+                return stage
             bed = _cover(photo, width, height)
             shade = Image.new("RGBA", (width, height), (0, 0, 0, 0))
             shade_draw = ImageDraw.Draw(shade)
-            start = int(height * 0.56)
+            start = int(height * 0.40)
             for y in range(start, height):
-                alpha = int(150 * (y - start) / (height - start))
+                t = (y - start) / (height - start)
+                alpha = int(215 * t ** 1.3)
                 shade_draw.line([(0, y), (width, y)], fill=(0, 0, 0, alpha))
             bed.alpha_composite(shade)
             self._stages[image_path] = bed
@@ -373,10 +588,10 @@ class Renderer:
         # 見出しの乗る下側を落とす
         shade = Image.new("RGBA", (width, height), (0, 0, 0, 0))
         shade_draw = ImageDraw.Draw(shade)
-        start = int(height * 0.56)
+        start = int(height * 0.40)
         for y in range(start, height):
-            alpha = int(150 * (y - start) / (height - start))
-            shade_draw.line([(0, y), (width, y)], fill=(0, 0, 0, alpha))
+            t = (y - start) / (height - start)
+            shade_draw.line([(0, y), (width, y)], fill=(0, 0, 0, int(215 * t ** 1.3)))
         bed.alpha_composite(shade)
         self._stages[image_path] = bed
         return bed
@@ -454,22 +669,29 @@ class Renderer:
         card_name: str | None,
         progress: float = 1.0,
         left_half: bool = False,
+        floor: int | None = None,
+        align_left: bool = False,
+        reveal: int | None = None,
     ) -> None:
         """画像とカードを文字の上のスペースに置く。両方あれば左右に並べる。
 
         left_half は写真を右半分に敷いたときに、図表を左半分の中央に置く。
+        floor は見出しの帯の上端。align_left は横長の写真の上で左に寄せる（2026-09-28）。
 
         以前は縦に積んでいたが、カードが高いぶん写真が潰れた。実測
         （2026-09-04）で、顔が判別できない大きさ（横120px）になっていた。
         画面は横1920あるので、両方あるときは幅を使う。
         """
         slot_top, slot_bottom = self.layout.media_slot
+        if floor is not None:
+            slot_bottom = min(slot_bottom, floor - 24)
         slot_height = max(80, slot_bottom - slot_top)
         # **縦型は縦に積む。**横に並べると1つあたりの幅が半分になり、
         # ただでさえ狭い1080がさらに割れる。上下は余っている
         side_by_side = (bool(image_path) and bool(card_name)
                         and not self.layout.is_portrait)
         items: list[Image.Image] = []
+        card_at: tuple[int, int] | None = None     # (items の中の番号, 描いた幅)。書き込みの的に使う
 
         if image_path:
             picture = self._picture(image_path, slot_height, beside=side_by_side)
@@ -480,16 +702,20 @@ class Renderer:
             # 左半分に置くカードは、大きく描いてから 0.63 倍に縮めていたので、
             # 34px で描いた字が**21px になっていた**。はじめからその幅で描く
             # 写真の左90pxはぼかして馴染ませてあるので、そこまで使ってよい
-            limit = (self.layout.width // 2 - 30) if left_half else None
-            card = self._card(card_name, beside=side_by_side, limit=limit)
+            # 表は幅の 58% まで（2026-09-28）。写真の左端はなじませてあるので少し重なってよい
+            limit = int(self.layout.width * 0.58) if left_half else None
+            card = self._card(card_name, beside=side_by_side, limit=limit, reveal=reveal)
             if card is not None:
+                card_at = (len(items), card.width)
                 items.append(card)
         if not items:
             return
 
         gap = 26
         if side_by_side and len(items) == 2:
-            self._place_beside(canvas, items, slot_top, slot_height, gap, progress)
+            placed = self._place_beside(canvas, items, slot_top, slot_height, gap, progress)
+            if card_at is not None and placed:
+                self._card_place = (card_name, card_at[1], placed[card_at[0]])
             return
         total = sum(item.height for item in items) + gap * (len(items) - 1)
         if total > slot_height:  # 入りきらないときは全体を縮める
@@ -504,7 +730,7 @@ class Renderer:
 
         y = slot_top + (slot_height - total) // 2
         span = self.layout.width // 2 if left_half else self.layout.width
-        for item in items:
+        for number, item in enumerate(items):
             if item.width > span - 60 and left_half:
                 ratio = (span - 60) / item.width
                 item = item.resize((int(item.width * ratio), int(item.height * ratio)),
@@ -514,7 +740,11 @@ class Renderer:
                 item.putalpha(
                     item.getchannel("A").point(lambda a: int(a * _ease_out(progress)))
                 )
-            canvas.alpha_composite(item, ((span - item.width) // 2, y))
+            x = 48 if align_left else (span - item.width) // 2
+            self._drop_shadow(canvas, item, (x, y))
+            canvas.alpha_composite(item, (x, y))
+            if card_at is not None and number == card_at[0]:
+                self._card_place = (card_name, card_at[1], (x, y, x + item.width, y + item.height))
             y += item.height + gap
 
     def _place_beside(
@@ -525,8 +755,8 @@ class Renderer:
         slot_height: int,
         gap: int,
         progress: float,
-    ) -> None:
-        """写真とカードを左右に並べる。高さは各自の中央でそろえる。"""
+    ) -> list[tuple[int, int, int, int]]:
+        """写真とカードを左右に並べる。高さは各自の中央でそろえる。置いた枠を返す。"""
         total_w = sum(item.width for item in items) + gap
         if total_w > self.layout.width - 96:  # 端に寄りすぎないよう全体を縮める
             ratio = (self.layout.width - 96) / total_w
@@ -535,14 +765,31 @@ class Renderer:
                 for item in items
             ]
             total_w = sum(item.width for item in items) + gap
+        # **置き場より高いものは、1つずつ縮めて収める**（2026-10-08 の歯止め）。
+        # 横並びは幅でしか縮めていなかったので、高い板が置き場からはみ出して
+        # 字幕の帯（下 250px）に落ちていた（`tools/typecheck.py` が scatter 833px・
+        # line 755px・convert 744px・table 662px で知らせていた）。
+        # **字幕にかぶるより、縮んで小さくなるほうがまし**という倒し方。
+        # ただし板は `cards.render(slot=…)` で置き場に収まる高さに作り直したので、
+        # ここが効くのは置き場より高い写真が来たときだけ（＝ふだんは何もしない）
+        items = [
+            item if item.height <= slot_height else
+            item.resize((max(1, int(item.width * slot_height / item.height)), slot_height),
+                        Image.LANCZOS)
+            for item in items
+        ]
+        total_w = sum(item.width for item in items) + gap
         x = (self.layout.width - total_w) // 2
+        placed = []
         for item in items:
             if progress < 1.0:
                 item = item.copy()
                 item.putalpha(item.getchannel("A").point(lambda a: int(a * _ease_out(progress))))
             y = slot_top + (slot_height - item.height) // 2
             canvas.alpha_composite(item, (x, y))
+            placed.append((x, y, x + item.width, y + item.height))
             x += item.width + gap
+        return placed
 
     def _picture(
         self, image_path: str, slot_height: int, beside: bool = False
@@ -576,7 +823,121 @@ class Renderer:
         framed.alpha_composite(picture, (8, 8))
         return framed
 
-    def _card(self, name: str, beside: bool = False, limit: int | None = None) -> Image.Image | None:
+    def _full_card(self, name: str | None) -> Image.Image | None:
+        """その名前のカードが画面いっぱいの絵（versus）なら、画面の大きさで描いた絵を返す。"""
+        spec = self.script_cards.get(name or "")
+        if not cards.is_full_screen(spec):
+            return None
+        size = (self.layout.width, self.layout.height)
+        target = self.card_dir / f"full_{cards.card_key(spec, size[0] * 10000 + size[1])}.png"
+        if str(target) in self._stages:
+            return self._stages[str(target)]
+        if not target.exists():
+            cards.render_versus(spec, size, str(self.config.video.font_path()), target,
+                                str(self.config.video.latin_font_path()))
+        stage = Image.open(target).convert("RGBA")
+        self._stages[str(target)] = stage
+        return stage
+
+    def is_full_card(self, name: str | None) -> bool:
+        return cards.is_full_screen(self.script_cards.get(name or ""))
+
+    # ------------------------------------------------------------------ 書き込み（2026-10-07）
+
+    def mark_heads(self, stage_path: str | None, stage: Image.Image | None) -> list:
+        """写真の下地の頭の枠（x, y, w, h）。書き込みが顔を囲む・顔を避けるのに使う。同じ写真は1回だけ探す。"""
+        if stage is None or not stage_path:
+            return []
+        key = f"{stage_path}|{self.layout.width}x{self.layout.height}|{self.layout.focus_x}"
+        if key not in self._mark_heads:
+            from . import faces
+
+            heads = []
+            try:
+                for box in faces.find_faces(stage.convert("RGB")):
+                    heads.append(faces.head_box(box))
+            except Exception:       # 顔が取れなくても書き込み（表の上）は描く
+                heads = []
+            self._mark_heads[key] = heads
+        return self._mark_heads[key]
+
+    @property
+    def _card_slot(self) -> int:
+        """板を置ける高さ（`Layout.media_slot`）。板はこれに収まる高さで描く。
+
+        **これを `cards.render` と `cards.layout` の両方に同じ値で渡す。**
+        片方だけだと、表・図の行の高さが食い違って書き込み（赤ペン）の的がずれる
+        （2026-10-08）。
+        """
+        top, bottom = self.layout.media_slot
+        return bottom - top
+
+    def _card_layout(self, name: str, width: int) -> dict | None:
+        spec = self.script_cards.get(name)
+        if not spec or str(spec.get("type", "")).lower() not in cards.MARKABLE_TYPES:
+            return None
+        slot = self._card_slot
+        key = f"{cards.card_key(spec, width)}_{slot}"
+        if key not in self._card_layouts:
+            self._card_layouts[key] = cards.layout(spec, width, str(self.config.video.font_path()),
+                                                   str(self.config.video.latin_font_path()),
+                                                   slot=slot)
+        return self._card_layouts[key]
+
+    def mark_targets(self, marks, stage_path: str | None = None, stage: Image.Image | None = None) -> list:
+        """書き込みごとの的（画面の座標）。指した先が今の画面に無ければ None（描かない）。"""
+        out = []
+        for mark in marks:
+            if marks_mod.is_photo(mark):
+                out.append(marks_mod.photo_target(mark, self.mark_heads(stage_path, stage)))
+                continue
+            if self._card_place is None:
+                out.append(None)
+                continue
+            name, drawn, (x0, y0, x1, _) = self._card_place
+            geo = self._card_layout(name, drawn)
+            if geo is None:
+                out.append(None)
+                continue
+            out.append(marks_mod.card_target(mark, self.script_cards[name], geo, (x0, y0), (x1 - x0) / drawn))
+        return out
+
+    def _draw_marks(self, canvas: Image.Image, marks, fresh: int, t: float, stage, stage_path,
+                    floor: int | None, progress: float) -> None:
+        """書き込みを、透明の層に描いてから重ねる（RGB に落とさない＝黒い枠が出ない）。"""
+        targets = self.mark_targets(marks, stage_path, stage)
+        if not any(targets):
+            return
+        width, height = self.layout.width, self.layout.height
+        band = floor if floor is not None else self.layout.media_slot[1] + 34
+        avoid = [(0, 0, width, marks_mod.TOP_BAND), (0, band, width, height)]
+        avoid += [(x, y, x + w, y + h) for x, y, w, h in self.mark_heads(stage_path, stage)]
+        planned = marks_mod.plan(list(marks), targets, (width, height), avoid,
+                                 str(self.config.video.font_path()))
+        layer = marks_mod.render_layer((width, height), planned, fresh, t,
+                                       str(self.config.video.font_path()))
+        if layer is None:
+            return
+        if progress < 1.0:
+            layer.putalpha(layer.getchannel("A").point(lambda a: int(a * _ease_out(progress))))
+        canvas.alpha_composite(layer)
+
+    def card_rows(self, name: str | None) -> int:
+        spec = self.script_cards.get(name or "")
+        return cards.row_count(spec) if spec else 0
+
+    def same_table(self, first: str | None, second: str | None) -> bool:
+        """光らせる行（highlight_row）だけが違う、同じ表か。
+
+        **同じ表なら行を1本ずつ出し直さない**（2026-10-01 ユーザー「表が毎回開き直しになっていて目に悪い」）。
+        話している行を光らせるために行ごとに別のカードを持たせているので、カードの名前は毎行変わる。
+        名前で比べると、行が替わるたびに表が空から組み直されていた
+        """
+        # 散らばり図の highlight（2026-10-07 夜）も同じ。決まりは cards.same_table の1か所に置く
+        return cards.same_table(self.script_cards.get(first or ""), self.script_cards.get(second or ""))
+
+    def _card(self, name: str, beside: bool = False, limit: int | None = None,
+              reveal: int | None = None) -> Image.Image | None:
         spec = self.script_cards.get(name)
         if not spec:
             return None
@@ -592,7 +953,12 @@ class Renderer:
             width = int(self.layout.width * (0.74 if not self.layout.with_characters else 0.46))
         if limit:
             width = min(width, limit)
-        target = self.card_dir / f"{cards.card_key(spec, width)}.png"
+        # **板は置き場に収まる高さで描く**（2026-10-08）。収まらない板は `_draw_media` が
+        # 全体を縮めて貼るので、板の中の 28px が画面では 21px になっていた
+        # （`tools/typecheck.py` の実測。出典は 16px＝スマホ 3.2pt）。
+        # 控えの名前に置き場の高さも入れる（同じ幅でも置き場が違えば別の絵）
+        slot = self._card_slot
+        target = self.card_dir / f"{cards.card_key(spec, width, reveal)}_{slot}.png"
         if not target.exists():
             cards.render(
                 spec,
@@ -600,6 +966,8 @@ class Renderer:
                 str(self.config.video.font_path()),
                 target,
                 str(self.config.video.latin_font_path()),
+                reveal=reveal,
+                slot=slot,
             )
         return Image.open(target).convert("RGBA")
 
@@ -655,19 +1023,72 @@ class Renderer:
         draw.text((bx + 20, top + 16), button, font=font, fill=(255, 255, 255, 255))
         canvas.alpha_composite(layer)
 
-    def _draw_scene_title(self, canvas: Image.Image, title: str) -> None:
+    def _drop_shadow(self, canvas: Image.Image, item: Image.Image, at: tuple[int, int]) -> None:
+        """表や板の下に、ぼかした影を敷く（品質100回の12）。写真の上で板が浮いて見える。"""
+        from PIL import ImageFilter
+
+        x, y = at
+        pad = 40
+        shadow = Image.new("RGBA", (item.width + pad * 2, item.height + pad * 2), (0, 0, 0, 0))
+        alpha = item.getchannel("A").point(lambda a: int(a * 0.55))
+        shadow.paste((0, 0, 0, 255), (pad, pad + 10), alpha)
+        shadow = shadow.filter(ImageFilter.GaussianBlur(18))
+        canvas.alpha_composite(shadow, (x - pad, y - pad))
+
+    def _draw_nameplate(self, canvas: Image.Image, text: str) -> None:
+        """冒頭の2行に出す名前の板（2026-09-28 選手紹介）。「名前｜所属 位置」を左の中ほどに大きく。
+
+        名前は白の大きな字、下に黄色の線、その下に所属を小さく。左上の登録カードと、下の見出しの帯のあいだに置く。
+        """
+        name, _, sub = text.partition("｜")
+        layer, draw = _layer(canvas.size)
+        font_path = str(self.config.video.font_path())
+        big = ImageFont.truetype(font_path, 96 if not self.layout.is_portrait else 72)
+        small = ImageFont.truetype(font_path, 38 if not self.layout.is_portrait else 34)
+        x, y = 48, int(self.layout.height * (0.16 if not self.layout.is_portrait else 0.14))
+        # 長い名前（「アーリング・ブラウト・ハーランド」）は字を縮めて右端に収める（品質100回の65）。縦画面は 1080 幅しか無い
+        limit = self.layout.width - x - 64
+        while draw.textlength(name, font=big) > limit and big.size > 40:
+            big = ImageFont.truetype(font_path, big.size - 4)
+        w = draw.textlength(name, font=big)
+        # 字の裏に暗い帯（写真の上でも読める）
+        draw.rounded_rectangle([x - 16, y - 16, x + w + 32, y + (big.size + 30) + (small.size + 22 if sub else 0)],
+                               radius=18, fill=(6, 10, 14, 150))
+        draw.text((x, y), name, font=big, fill=(255, 255, 255, 255), stroke_width=2, stroke_fill=(0, 0, 0, 160))
+        bar_y = y + big.size + 16
+        draw.rounded_rectangle([x, bar_y, x + w, bar_y + 8], radius=4, fill=BRAND_GOLD + (255,))
+        if sub:
+            draw.text((x, bar_y + 18), sub.strip(), font=small, fill=(230, 234, 240, 255))
+        canvas.alpha_composite(layer)
+
+    def _draw_scene_title(self, canvas: Image.Image, title: str, slide_t: float = 1.0) -> None:
         # RGBA の canvas に直接半透明の図形を描くと下地を「置き換えて」しまうため、
         # 透明レイヤーに描いてから alpha_composite する。
         layer, draw = _layer(canvas.size)
+        # 節の頭では左から滑り込む（2026-09-28 動きの段3。章カードは 9/10 に外したので時間は足さない）
+        slide = int(-(1.0 - _ease_out(slide_t)) * 420)
         # **制作側の言葉は画面に出さない**（2026-09-07）。「オープニング」は
         # 台本の構造の名前で、視聴者には何の情報でもない。しかも冒頭の
         # いちばん見られる位置に出ていた。日付は残す
         if title.strip() not in INTERNAL_SCENE_TITLES:
-            text_w = draw.textlength(title, font=self.font_scene)
+            # 緑のピルに番号つき（「02　22点の中身」）。左に黄色の縦帯（2026-09-28）
+            number = self.scene_order.get(title, 0)
+            label = f"{number:02d}　{title}" if number else title
+            text_w = draw.textlength(label, font=self.font_pill)
+            x0 = 48 + slide
             draw.rounded_rectangle(
-                [48, 42, 48 + text_w + 56, 42 + 68], radius=34, fill=(0, 0, 0, 150)
+                [x0, 42, x0 + text_w + 70, 42 + 68], radius=34, fill=BRAND_GREEN + (235,)
             )
-            draw.text((76, 58), title, font=self.font_scene, fill=(240, 240, 240, 255))
+            draw.rounded_rectangle([x0, 42, x0 + 14, 42 + 68], radius=7, fill=BRAND_GOLD + (255,))
+            draw.text((x0 + 34, 54), label, font=self.font_pill, fill=(255, 255, 255, 255))
+        # 右上に「何節目か」の点（節の数が2つ以上のとき）
+        if self.scene_total >= 2 and not self.layout.is_portrait:
+            number = self.scene_order.get(title, 0)
+            for index in range(self.scene_total):
+                cx = self.layout.width - 48 - (self.scene_total - 1 - index) * 26
+                lit = number and index < number
+                draw.ellipse([cx - 8, 68, cx + 8, 84],
+                             fill=BRAND_GOLD + (255,) if lit else (255, 255, 255, 110))
 
         # **日付は画面に出さない**（2026-09-14 指示「日付入れなくて良い」）。
         # 右上に「2026年9月14日」と出していたが、いつの話かは中身で言っている。
@@ -841,6 +1262,12 @@ class Renderer:
             total += height + pad
         # 上から積む。**下に余白が残っても、字の大きさを優先する**
         y = int(self.layout.height * STACK_TOP)
+        # **縦型（ショート）は下に寄せる**（2026-10-03「動画の質を上げる仕組み ②」の facecheck で発見）。
+        # 縦の写真は顔が上の3分の1に来るので、上から積むと白い箱がちょうど顔に重なっていた
+        # （三笘・フランス対イタリア・レヴァンドフスキ・ポルトガルのショートの最後、顔の枠の100%）。
+        # 反応の最中はテロップを出さないので、下端（92%）まで使ってよい
+        if self.layout.height > self.layout.width:
+            y = max(y, int(self.layout.height * 0.92) - total)
 
         for indent, width, lines, ink in boxes:
             height = font.size * len(lines) + int(font.size * 0.42) * (len(lines) - 1) + pad * 2
@@ -855,28 +1282,21 @@ class Renderer:
             y += height + pad
         canvas.alpha_composite(layer)
 
-    def _draw_headline(
-        self,
-        canvas: Image.Image,
-        text: str,
-        telop_t: float = 1.0,
-        source: str | None = None,
-    ) -> None:
-        """立ち絵なしのときの見出し。左に縦のアクセント帯を置いたニュース風。"""
-        if not text:
-            return
-        layer, draw = _layer(canvas.size)
-        left, top, right, bottom = self.layout.headline_box
-        rise = int(TELOP_RISE * (1.0 - _ease_out(telop_t)))
+    def _headline_metrics(self, draw: ImageDraw.ImageDraw, text: str, compact: bool = False):
+        """見出しの字の大きさ・行・上端を決める。描く前に高さを知りたいとき（表の下限）にも使う。
 
-        # **読み上げる文はぜんぶ出す**（2026-09-14 指示）。3行で切っていたので、
-        # 長い一文は「…アンドレス・」で終わっていた。
-        # 4行を超えるようなら字を小さくして、全部を入れる
+        **読み上げる文はぜんぶ出す**（2026-09-14 指示）。3行で切っていたので、
+        長い一文は「…アンドレス・」で終わっていた。4行を超えるようなら字を小さくして、全部を入れる
+        """
         from PIL import ImageFont as _IF
+        left, top, right, bottom = self.layout.headline_box
         font_path = str(self.config.video.font_path())
         size = self.config.video.headline_size
+        if compact:
+            # **表や板が出ている行は見出しを一回り小さく**（品質100回の21）。3行に伸びると表が縮んで読めない
+            size = int(size * 0.84)
         floor = max(22, int(size * 0.52))
-        font = self.font_headline
+        font = _IF.truetype(font_path, size) if compact else self.font_headline
         # **強調の囲みを外してから折り返す**（2026-09-15）。囲みで割れ方が変わらない
         plain, spans = emphasis.split(text)
         while True:
@@ -887,64 +1307,96 @@ class Renderer:
                 break
             size -= 4
             font = _IF.truetype(font_path, size)
-        self.font_headline_fit = font
         line_height = size + 26
-        text_top = bottom - line_height * len(lines) + rise
+        text_top = bottom - line_height * len(lines)
+        return font, size, plain, spans, lines, line_height, text_top
+
+    def headline_band_top(self, text: str, compact: bool = False) -> int | None:
+        """見出しの帯の上端（px）。表や写真はこれより上に収める（2026-09-28）。"""
+        if not text or self.layout.with_characters:
+            return None
+        draw = ImageDraw.Draw(Image.new("RGBA", (8, 8)))
+        _, _, _, _, _, _, text_top = self._headline_metrics(draw, text, compact)
+        return text_top - 26
+
+    def _draw_headline(
+        self,
+        canvas: Image.Image,
+        text: str,
+        telop_t: float = 1.0,
+        source: str | None = None,
+        compact: bool = False,
+    ) -> None:
+        """立ち絵なしのときの見出し。幅いっぱいの帯に、左は確度の色の縦帯（2026-09-28）。"""
+        if not text:
+            return
+        layer, draw = _layer(canvas.size)
+        left, top, right, bottom = self.layout.headline_box
+        rise = int(TELOP_RISE * (1.0 - _ease_out(telop_t)))
+        font, size, plain, spans, lines, line_height, text_top = self._headline_metrics(draw, text, compact)
+        self.font_headline_fit = font
+        text_top += rise
 
         badge = SOURCE_BADGES.get(source or "")
         # 話者ではなく情報の確度で色を決める。会話が続くあいだ見出しを動かさないため
-        accent = badge[1] if badge else _hex(self.config.video.accent)
+        accent = badge[1] if badge else BRAND_GOLD
 
         # 文字の下に暗い帯を敷く。**縁取りだけでは背景に沈む**（2026-09-07 に
         # 参考チャンネルと並べて確認）。63万回のチャンネルは白文字＋黒帯で、
         # 実写の上でも見出しが読めていた。こちらは白文字＋細い縁だけだった。
-        band_right = left
-        for chunk in lines:
-            band_right = max(band_right, left + 34 + draw.textlength(chunk, font=font))
-        draw.rounded_rectangle(
-            [left - 8, text_top - 18,
-             min(right, int(band_right + 34)), text_top + line_height * len(lines) - 4],
-            radius=10, fill=(8, 10, 16, 170),
-        )
+        # **幅いっぱいの帯に、下へ向かって濃くなるグラデ**（2026-09-28）。
+        # 字の幅だけの黒い箱は、写真の上で「貼った紙」に見えた
+        band_top = text_top - 26
+        band_bottom = text_top + line_height * len(lines) + 2
+        band = Image.new("RGBA", (right - left + 16, band_bottom - band_top), (0, 0, 0, 0))
+        band_draw = ImageDraw.Draw(band)
+        for yy in range(band.height):
+            band_draw.line([(0, yy), (band.width, yy)],
+                           fill=(8, 12, 18, int(190 + 50 * yy / max(1, band.height))))
+        layer.alpha_composite(band, (left - 8, band_top))
 
-        # 縦のアクセント帯
-        draw.rounded_rectangle(
-            [left, text_top - 6, left + 11, text_top + line_height * len(lines) - 12],
-            radius=6, fill=accent + (255,),
-        )
+        # 左の太い縦帯。色は確度（報道＝橙、確定＝緑…）
+        draw.rounded_rectangle([left - 8, band_top, left + 8, band_bottom], radius=8, fill=accent + (255,))
 
         if badge:
+            # 確度の札は帯の左肩に（帯の上端にまたがせる）
             label, color = badge
             label_w = draw.textlength(label, font=self.font_name)
-            chip = [left + 34, text_top - 84, left + 34 + label_w + 46, text_top - 20]
-            draw.rounded_rectangle(chip, radius=22, fill=color + (255,))
-            draw.text((chip[0] + 23, chip[1] + 9), label, font=self.font_name,
+            chip = [left + 34, band_top - 26, left + 34 + label_w + 46, band_top + 26]
+            draw.rounded_rectangle(chip, radius=26, fill=color + (255,))
+            draw.text((chip[0] + 23, chip[1] + 6), label, font=self.font_name,
                       fill=(16, 16, 20, 255))
 
         y = text_top
-        strong_color = _hex(self.config.video.telop_accent) + (255,)
+        strong_color = BRAND_GOLD + (255,)
+        # 囲みで指定した強調が無ければ、数字を自動で強調する
+        if not spans:
+            spans = [(m.start(), m.end()) for m in AUTO_STRONG.finditer(plain)]
+            if MOURNING.search(plain):
+                # **亡くなった人の数は黄色くしない**（2026-10-09 未明）。
+                # リヴァプールのユニフォームの回で「ヒルズボロで亡くなった**97人**を悼み」の
+                # 97人が、語りの数字を自動で強調する仕組みで黄色く出ていた（ショートの
+                # qc.png を目で見て気づいた）。**追悼の数を見出しの色で飾らない。**
+                # 同じ行のほかの数字（年号など）は今までどおり強調する
+                spans = [(a, b) for a, b in spans if not PEOPLE_COUNT.fullmatch(plain[a:b])]
         offset = 0
         for chunk in lines:
             # 折り返しが空白を落とすことがあるので、位置は全文から探して合わせる
             found = plain.find(chunk, offset)
             offset = found if found >= 0 else offset
-            x = left + 34
+            x = left + 40
             for segment, strong in _emphasis_segments(
                 chunk, emphasis.spans_in(chunk, offset, spans)
             ):
                 # 縁取りは縦型で太くする。実写や模様の上でも輪郭が残るように
+                # 帯が濃くなったので縁取りは細く（太い縁は字を太らせて読みにくい）
                 draw.text(
                     (x, y), segment, font=font,
                     fill=strong_color if strong else (255, 255, 255, 255),
-                    stroke_width=8 if self.layout.is_portrait else 5,
-                    stroke_fill=(0, 0, 0, 235),
+                    stroke_width=5 if self.layout.is_portrait else 2,
+                    stroke_fill=(0, 0, 0, 200),
                 )
                 width = draw.textlength(segment, font=font)
-                if strong:
-                    # **下線も引く。**色だけだと明るい写真の上で差が薄れる
-                    bar = y + size + 8
-                    draw.rounded_rectangle([x, bar, x + width, bar + 7], radius=3,
-                                           fill=strong_color)
                 x += width
             offset += len(chunk)
             y += line_height
@@ -964,12 +1416,14 @@ class Renderer:
     ) -> Path:
         """冒頭タイトル / 章タイトルの1枚。progress は 0→1 のフェード。"""
         key = f"title|{kind}|{background}|{heading}|{sub}|{label}|{progress:.2f}|{self.over_video}"
-        target = self.frame_dir / f"t{hashlib.sha1(key.encode('utf-8')).hexdigest()[:15]}.png"
-        if target.exists():
+        target = self._frame_path("t" + hashlib.sha1(key.encode('utf-8')).hexdigest()[:15])
+        if self._have(target):
             return target
 
         stage = self._photo_stage(background) if kind == "intro" else None
-        if stage is not None:
+        if stage is not None and self.over_video and self.moving_photo(background):
+            base = self._transparent()
+        elif stage is not None:
             base = stage.copy()
         else:
             base = self._transparent() if self.over_video else self._background(background).copy()
@@ -977,8 +1431,9 @@ class Renderer:
 
         # 背景を落として文字を主役にする。落としすぎると背景が死ぬので控えめに。
         # 写真を舞台にしたときは人物が見えるよう、落とし方を弱める
-        draw.rectangle([0, 0, base.width, base.height],
-                       fill=(6, 10, 18, 70 if stage is not None else 178))
+        # **本編の最後（終了画面の置き場）は明るめ**（2026-10-03 ユーザー「もう少し明るく」）
+        shade = 70 if stage is not None else (0 if kind == "outro" else 178)
+        draw.rectangle([0, 0, base.width, base.height], fill=(6, 10, 18, shade))
 
         accent = _hex(self.config.video.accent)
         font = self.font_title_big if kind == "intro" else self.font_title
@@ -986,6 +1441,9 @@ class Renderer:
         line_height = font.size + 26
         block = line_height * len(lines)
         top = (base.height - block) // 2 - (34 if sub else 0)
+        if kind == "outro" and base.width > base.height:
+            # **本編の最後は終了画面の置き場**（2026-10-03）。文字を上に寄せ、真ん中から下を空ける
+            top = int(base.height * 0.08)
 
         left = int(base.width * 0.11)
         if label:
@@ -1010,8 +1468,7 @@ class Renderer:
         if progress < 1.0:
             layer.putalpha(layer.getchannel("A").point(lambda a: int(a * _ease_out(progress))))
         base.alpha_composite(layer)
-        base.save(target) if self.over_video else base.convert("RGB").save(target)
-        return target
+        return self._save_frame(base, target)
 
     def _title_entries(
         self,
@@ -1054,11 +1511,8 @@ class Renderer:
         self.script_background = script.background
         self.script_cards = script.cards
         self.script_date = script.date
-        self.over_video = any(is_video(bg) for bg, _ in self.background_segments(script))
         motion = self.config.motion
         inserts = inserts or Inserts()
-        entries: list[tuple[Path, float]] = []
-        previous: Path | None = None
         # **横のどこを残すか**（2026-09-18）。縦型は写真を画面いっぱいに敷くので、
         # 端に写っている人が落ちる。台本の `thumbnail_focus_x` で寄せる
         _fx = script.meta.get("thumbnail_focus_x")
@@ -1067,6 +1521,24 @@ class Renderer:
         self.opening_photo = opening_photo(script.meta)
         self.opening_scene = script.scenes[0].title if script.scenes else ""
         self.opening_points = [str(x) for x in (script.meta.get("thumbnail_points") or [])]
+        # 名前の板（選手紹介の冒頭。「名前｜所属 位置」）
+        self.nameplate = str(script.meta.get("nameplate") or "").strip()
+        # 写真の下地（focus_x を反映したもの）を背景側に並べてから、動画の上に描くかを決める
+        self.over_video = any(is_video(bg) for bg, _ in self.background_segments(script, inserts))
+        self.scene_order = {scene.title: index + 1 for index, scene in enumerate(script.scenes)}
+        self.scene_total = len(script.scenes)
+        # ここから先の保存は別スレッドに回す。**返る前に全部待ち合わせる**（下の finally）ので、
+        # この並びを受け取った側は、どのコマもそのまま読める
+        self._open_saver()
+        try:
+            return self._frame_entries(script, inserts, motion)
+        finally:
+            self._close_saver()
+
+    def _frame_entries(self, script: Script, inserts: Inserts, motion) -> list[tuple[Path, float]]:
+        entries: list[tuple[Path, float]] = []
+        previous: Path | None = None
+        prev_stage: str | None = None
 
         if inserts.intro > 0 and script.scenes:
             first_bg = script.scenes[0].background or script.background or self.config.video.background
@@ -1098,6 +1570,8 @@ class Renderer:
                 previous = None  # 章タイトル直後は転換の溶かしを入れない
             headline: tuple[str, str | None] = ("", None)
             card: str | None = None
+            # **書き込みは前の行から積もる**（2026-10-07）。カードが替われば消える（同じ表のあいだは残る）
+            board = marks_mod.Board()
             # **反応は画面に積む**（2026-09-07）。匿名の書き込みが続くあいだ、
             # 前の行を見出しの上に残す。別の話者が入ったら積み直す
             stack: list[str] = []
@@ -1124,10 +1598,18 @@ class Renderer:
                 # 出さない決まりにしたので、ここに入れないと読んでいる声が
                 # 画面のどこにも出なくなる
                 shown = tuple(stack + [emphasis.strip(line.telop_text() or line.text)]) if crowd else ()
+                new_marks = list(line.marks) if not self.layout.with_characters else []
+                drawn = (tuple(board.step(card, self.script_cards.get(card or ""),
+                                          line.image or (self.opening_photo if scene.title == self.opening_scene else None),
+                                          new_marks))
+                         if not self.layout.with_characters else None)
+                ink = {"marks": drawn, "mark_new": len(new_marks)}
                 closed = self.frame(line, scene, mouth_open=False, panel=current,
-                                    stack=shown)
+                                    stack=shown, **ink)
                 opened = self.frame(line, scene, mouth_open=True, panel=current,
-                                    stack=shown)
+                                    stack=shown, **ink)
+                # 出現のアニメ・行の出現のあいだは、この行の書き込みはまだ描かない
+                ink_before = dict(ink, mark_t=0.0)
                 # 積むのは匿名の反応だけ。語りが入ったらいったん流す
                 stack = (stack + [emphasis.strip(line.telop_text() or line.text)]) if crowd else []
                 pause = line.pause or 0.0
@@ -1135,8 +1617,23 @@ class Renderer:
                 is_scene_head = index == 0
 
                 intro = 0.0
+                card_changed = bool(current and current[2] and current[2] != before[1]) if not self.layout.with_characters else False
+                rows = (self.card_rows(current[2])
+                        if card_changed and not self.same_table(before[1], current[2]) else 0)
+                stage_now = line.image or (self.opening_photo if scene.title == self.opening_scene else None)
+                image_changed = bool(previous is not None and stage_now and stage_now != prev_stage)
+                prev_stage = stage_now
+                if not self.layout.with_characters and previous is not None and (
+                        self.is_full_card(current[2]) or self.is_full_card(before[1])) \
+                        and current[2] != before[1]:
+                    # **左右の比べ（versus）に入る・出るところも溶かす**（2026-10-07）。画面が丸ごと替わる
+                    image_changed = True
                 if motion.enabled:
-                    if is_scene_head and previous is not None and motion.scene_fade > 0:
+                    if image_changed and IMAGE_FADE > 0:
+                        # **写真が替わる行は前の絵から溶かす**（品質100回の11）。ぶつ切りだと編集していないように見える
+                        intro = min(IMAGE_FADE, speaking * 0.4)
+                        entries += self._transition_crossfade(previous, closed, intro)
+                    elif is_scene_head and previous is not None and motion.scene_fade > 0:
                         # シーン転換。前の画面から新しい画面へ溶かす
                         intro = min(motion.scene_fade, speaking * 0.5)
                         entries += self._transition(previous, closed, intro)
@@ -1145,7 +1642,29 @@ class Renderer:
                     ):
                         # 見出しやカードが変わったときだけ、出現のアニメを入れる
                         intro = min(motion.telop_in, speaking * 0.5)
-                        entries += self._intro(line, scene, intro, current, shown)
+                        entries += self._intro(line, scene, intro, current, shown, ink=ink_before)
+                    elif is_scene_head and not stack and PILL_IN > 0:
+                        # **節の頭ではピルとテロップが滑り込む**（2026-09-28 動きの段3）。時間は足さない
+                        intro = min(PILL_IN, speaking * 0.4)
+                        entries += self._intro(line, scene, intro, current, shown,
+                                               reveal=0 if rows else None, ink=ink_before)
+                    if rows and motion.enabled and not stack:
+                        # **表の行が1本ずつ現れる**（2026-09-28 動きの段2）。読み上げの内側から取る
+                        step = min(ROW_IN, max(0.0, speaking * 0.5 - intro) / rows)
+                        if step > 0.02:
+                            for k in range(1, rows + 1):
+                                entries.append((self.frame(line, scene, False, panel=current, stack=shown,
+                                                           reveal=k if k < rows else None,
+                                                           **ink_before), step))
+                            intro += step * rows
+                    if new_marks and MARK_IN > 0 and MARK_STEPS > 1:
+                        # **書き込みを描き進める**（2026-10-07）。線が伸び、添え書きが1字ずつ出る。読み上げの内側から取る
+                        step = min(MARK_IN / MARK_STEPS, max(0.0, speaking * 0.6 - intro) / MARK_STEPS)
+                        if step > 0.02:
+                            for k in range(1, MARK_STEPS):
+                                entries.append((self.frame(line, scene, False, panel=current, stack=shown,
+                                                           **dict(ink, mark_t=k / MARK_STEPS)), step))
+                            intro += step * (MARK_STEPS - 1)
 
                 entries += self._mouth_loop(closed, opened, speaking - intro)
                 if pause > 0.01:
@@ -1166,6 +1685,12 @@ class Renderer:
             )
 
         return entries
+
+    def _transition_crossfade(self, before: Path, after: Path, seconds: float) -> list[tuple[Path, float]]:
+        """写真の切り替え用。scene_transition の設定にかかわらず、前後を直接混ぜる。"""
+        steps = max(2, round(seconds * self.config.motion.fps))
+        step = seconds / steps
+        return [(self.blend(before, after, (i + 1) / steps), step) for i in range(steps)]
 
     def _transition(self, before: Path, after: Path, seconds: float) -> list[tuple[Path, float]]:
         """シーン転換。
@@ -1196,6 +1721,8 @@ class Renderer:
         seconds: float,
         panel: tuple[str, str | None, str | None] | None = None,
         stack: tuple[str, ...] = (),
+        reveal: int | None = None,
+        ink: dict | None = None,
     ) -> list[tuple[Path, float]]:
         steps = max(1, round(seconds * self.config.motion.fps))
         step = seconds / steps
@@ -1210,7 +1737,7 @@ class Renderer:
                     # 反応の行でも0.3秒だけ大テロップが描かれていた
                     self.frame(
                         line, scene, False, telop_t=progress, hop_t=progress,
-                        panel=panel, stack=stack
+                        panel=panel, stack=stack, reveal=reveal, **(ink or {})
                     ),
                     step,
                 )
@@ -1236,7 +1763,12 @@ class Renderer:
         タイトルカードのぶんも、そのシーンの背景で埋める。
         """
         inserts = inserts or Inserts()
-        segments: list[tuple[Path, float]] = []
+        # **写真の下地は背景側に移して、ゆっくり寄せる**（2026-09-28）。行ごとに
+        # 「その行の写真の下地」か「節の背景」を並べ、同じものが続くあいだは1つにまとめる
+        # （まとめないとズームが行ごとに始まり直す）。タイトルカードのぶんは最初・最後の行に足す
+        raw: list[tuple[Path, float, bool]] = []   # (素材, 秒, 写真か)
+        opening_scene = script.scenes[0].title if script.scenes else ""
+        opening_photo = opening_photo_of(script.meta)
         for index, scene in enumerate(script.scenes):
             name = scene.background or script.background or self.config.video.background
             # 既に書いた台本は .png を指している。書き出しのたびに実写を探す
@@ -1246,8 +1778,36 @@ class Renderer:
                 extra += inserts.intro
             if index == len(script.scenes) - 1:
                 extra += inserts.outro
-            seconds = scene.duration + extra
-            segments += self._split_long(name, seconds, index)
+            if not scene.lines:
+                raw.append((_resolve(name), scene.duration + extra, False))
+                continue
+            for line_index, line in enumerate(scene.lines):
+                stage_path = line.image or (opening_photo if scene.title == opening_scene else None)
+                seconds = max(0.0, line.duration)
+                if line_index == 0 and index == 0:
+                    seconds += inserts.intro + inserts.before_scene(index)
+                elif line_index == 0:
+                    seconds += inserts.before_scene(index)
+                if line_index == len(scene.lines) - 1 and index == len(script.scenes) - 1:
+                    seconds += inserts.outro
+                if stage_path and self.moving_photo(stage_path):
+                    raw.append((self._stage_file(stage_path), seconds, True))
+                else:
+                    raw.append((_resolve(name), seconds, False))
+        merged: list[tuple[Path, float, bool]] = []
+        for path, seconds, is_photo in raw:
+            if merged and merged[-1][0] == path:
+                merged[-1] = (path, merged[-1][1] + seconds, is_photo)
+            else:
+                merged.append((path, seconds, is_photo))
+        segments: list[tuple[Path, float]] = []
+        for index, (path, seconds, is_photo) in enumerate(merged):
+            if seconds <= 0:
+                continue
+            if is_photo:
+                segments.append((self._moving(path, seconds, self.config.motion.photo_zoom), seconds))
+            else:
+                segments += self._split_long(str(path), seconds, index)
         return segments
 
     # 1枚の絵をこれ以上見せ続けない。実測で「まとめ」が24秒あり、
@@ -1269,13 +1829,15 @@ class Renderer:
         """
         return [(self._moving(_resolve(name), seconds), seconds)]
 
-    def _moving(self, path: Path, seconds: float) -> Path:
+    def _moving(self, path: Path, seconds: float, zoom: float | None = None) -> Path:
         """静止画の背景を、ゆっくり寄っていくクリップに置き換える。
 
         止まった絵が続くと動画に見えないので既定で有効。同じ画と長さの
-        組み合わせは作り直さない。
+        組み合わせは作り直さない。写真の下地は `photo_zoom`、それ以外は `background_zoom`。
         """
-        zoom = self.config.motion.background_zoom
+        # 写真は寄りすぎると顔が荒れるので上限を低く（1本を通して最大 1.25 倍）
+        max_zoom = ffmpeg.MAX_ZOOM if zoom is None else PHOTO_MAX_ZOOM
+        zoom = self.config.motion.background_zoom if zoom is None else zoom
         if zoom <= 1.0 or is_video(path) or not path.exists():
             return path
 
@@ -1286,19 +1848,20 @@ class Renderer:
         # 起きた。背景の模様を増やしたのに、動画は前のまま静止していた）。
         # 寄り方を変えたときも同じことが起きるので、版（r2）も残す。
         stamp = hashlib.sha1(path.read_bytes()).hexdigest()[:8]
-        target = cache / f"{path.stem}_{int(length)}s_{int(zoom * 100)}r2_{stamp}.mp4"
+        target = cache / f"{path.stem}_{int(length)}s_{int(zoom * 100)}r2_{int(max_zoom * 100)}_{stamp}.mp4"
         if not target.exists():
             cache.mkdir(parents=True, exist_ok=True)
             ffmpeg.still_to_clip(
                 path, target, length,
                 (self.layout.width, self.layout.height), zoom, self.config.video.fps,
+                max_zoom=max_zoom,
             )
         return target
 
     def build_video(
         self,
         script: Script,
-        audio_path: Path | None,
+        audio_path: Path | None | Future,
         out_path: Path,
         work_dir: Path,
         inserts: Inserts | None = None,
@@ -1307,19 +1870,68 @@ class Renderer:
         list_path = ffmpeg.write_concat_list(entries, work_dir / "frames.txt")
         out_path.parent.mkdir(parents=True, exist_ok=True)
         size = (self.layout.width, self.layout.height)
+        # **動画の長さは、絵の列の合計で決める**（2026-10-10）。音の実尺に任せる
+        # （`-shortest`）と、音が足りない回だけ末尾が黙って切られ、
+        # **15秒の終了画面の置き場**が消える。ここには `inserts.outro` が入っている
+        total = sum(seconds for _, seconds in entries)
+        # **混ぜている途中の音は、ffmpeg に渡す前に待つ**（2026-10-08）。音の混ぜは
+        # 絵を描くあいだに別スレッドで回している（pipeline）。渡すのは出来上がった音のパス
+        if isinstance(audio_path, Future):
+            audio_path = audio_path.result()
 
         if self.over_video:
-            # 背景をつないだ1本の動画にしてから、透過フレームを重ねる
-            track = ffmpeg.build_background_track(
-                self.background_segments(script, inserts),
-                work_dir / "background.mp4",
-                size,
-                self.config.video.fps,
-            )
+            segments = self.background_segments(script, inserts)
+            if len(segments) == 1 and is_video(segments[0][0]):
+                # **下地が動画1本だけなら、つなぎ直さずにそのまま敷く**（2026-10-08）。
+                # `encode_video_over_clip` は `-stream_loop -1` で尺に合わせて回し、
+                # 画面いっぱいに拡大して切り出すので、作り直す意味が無い。
+                # メッシの回（3分15秒）の実測で、ここの 298秒が丸ごと消えた
+                track = Path(segments[0][0])
+            else:
+                # 下地が複数（静止画が混ざる・節ごとに違う）なら、今までどおりつないで1本にする
+                track = ffmpeg.build_background_track(
+                    segments,
+                    work_dir / "background.mp4",
+                    size,
+                    self.config.video.fps,
+                )
             return ffmpeg.encode_video_over_clip(
-                list_path, track, audio_path, out_path, size, self.config.video.fps
+                list_path, track, audio_path, out_path, size, self.config.video.fps,
+                progress=self._progress_spec(entries), duration=total,
             )
-        return ffmpeg.encode_video(list_path, audio_path, out_path, self.config.video.fps)
+        return ffmpeg.encode_video(list_path, audio_path, out_path, self.config.video.fps,
+                                   size=size, progress=self._progress_spec(entries),
+                                   duration=total)
+
+    def _progress_spec(self, entries: list[tuple[Path, float]]) -> tuple[float, int] | None:
+        """画面下端の進捗バー（2026-09-28）。ffmpeg が時間で動かすので、フレームは増えない。
+
+        縦型（ショート）には出さない。一覧の1コマ目に線が入る
+        """
+        if self.layout.is_portrait:
+            return None
+        total = sum(seconds for _, seconds in entries)
+        return (total, PROGRESS_HEIGHT) if total > 1.0 and PROGRESS_HEIGHT > 0 else None
+
+
+def _write_image(image: Image.Image, target: Path) -> None:
+    """1枚をファイルに書く（別スレッドから呼ばれる）。
+
+    **PNG は圧縮を軽くするだけ**（可逆なので画素は変わらない）。JPEG は色を間引かない
+    （`subsampling=0`）。書きかけを ffmpeg に読ませないよう、別名に書いてから置き換える。
+    """
+    target = Path(target)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    tmp = target.with_name(f"{target.name}.{os.getpid()}.part")
+    try:
+        if target.suffix.lower() == ".png":
+            image.save(tmp, "PNG", compress_level=1)
+        else:
+            image.save(tmp, "JPEG", quality=92, subsampling=0, optimize=False)
+        os.replace(tmp, target)
+    finally:
+        if tmp.exists():
+            tmp.unlink(missing_ok=True)
 
 
 def _emphasis_segments(chunk: str, spans: list[tuple[int, int]]
@@ -1514,6 +2126,24 @@ def wrap_text(draw: ImageDraw.ImageDraw, text: str, font: ImageFont.FreeTypeFont
                 continue
             lines.append(current)
             current = char
+        elif not current and lines and char in forbidden:
+            # **ぶら下げた直後の約物も前の行へ**（2026-10-05、鈴木彩艶の回）。
+            # 「…特長」」をぶら下げたあと、続く「。」が次の行の頭に来ていた
+            # （「」。決勝の前日…」「なるけど、／」」）
+            prev = lines[-1]
+            if draw.textlength(prev, font=font) > max_width:
+                # **2文字目はぶら下げず、追い出す**（2026-10-07、「ロジャー」の
+                # 「ャ」をぶら下げたあと「ー」も足して、右端の外へ切れていた）。
+                # 前の行の最後の「頭に来てよい文字」から後ろを、次の行へ送る
+                cut = len(prev)
+                while cut > 1 and prev[cut - 1] in forbidden:
+                    cut -= 1
+                cut -= 1
+                if cut > 0:
+                    lines[-1] = prev[:cut]
+                    current = prev[cut:] + char
+                    continue
+            lines[-1] += char
         else:
             current += char
     if current:
@@ -1570,6 +2200,10 @@ def _layer(size: tuple[int, int]) -> tuple[Image.Image, ImageDraw.ImageDraw]:
 
 # 制作の都合で付けている章の名前。視聴者に見せる意味が無い
 INTERNAL_LABELS = ("オープニング", "まとめ")
+
+
+def opening_photo_of(meta: dict) -> str:
+    return opening_photo(meta)
 
 
 def opening_photo(meta: dict) -> str:

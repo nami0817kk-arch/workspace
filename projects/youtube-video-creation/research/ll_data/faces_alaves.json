@@ -1,0 +1,24 @@
+{
+ "alaves": {
+  "コスミン・コントラ": {
+   "role": "legend",
+   "file": "assets/photos/ll/alaves/alaves_legend_beff6e54.jpg",
+   "page": "Cosmin Contra"
+  },
+  "テオ・エルナンデス": {
+   "role": "legend",
+   "file": "assets/photos/ll/alaves/alaves_legend_fde608ec.jpg",
+   "page": "Théo Hernandez"
+  },
+  "ホセル": {
+   "role": "legend",
+   "file": "assets/photos/ll/alaves/alaves_legend_53371c83.jpg",
+   "page": "Joselu"
+  },
+  "キケ・サンチェス・フローレス": {
+   "role": "manager",
+   "file": "assets/photos/ll/alaves/alaves_manager_9f0d84e4.jpg",
+   "page": "Quique Sánchez Flores"
+  }
+ }
+}

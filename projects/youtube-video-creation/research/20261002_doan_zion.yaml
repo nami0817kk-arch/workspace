@@ -1,0 +1,262 @@
+# 取材メモ（10/2 題材 doan_zion、型は quote）。材料の控え: research/raw/20261002_doan_zion.md
+# 主役は堂安律が鈴木彩艶を評した言葉と、鈴木本人の言葉。同じ日に「試合全体（PK戦の5人・先発・森保監督）」と
+# 「久保の代表先発」の回があるので、キッカー5人・森保監督・久保の話は入れない。
+# 前日の「月間MVP」の回（移籍金・9月の5試合・トッテナム戦の配球）とは重ねない。
+# 事実の裏:
+#   試合: 10/1 キリン杯準決勝 日本 0-0（PK5-4）エクアドル。鈴木がエクアドルの3人目（カスティージョ）を止め、日本は5人全員成功。
+#   堂安: サッカーダイジェスト 197909 の文字起こしのまま。キャプテンで先発、後半22分に交代、PK戦はベンチから（ゲキサカ 460123）。
+#   鈴木: 「相手のリズムを狂わせようかなと」「先に動くことを意識してたので、相手の特徴を見ながら」（FOOTBALL ZONE 676935）、
+#     「できればもう一本…」（ゲキサカ 460129）、「ミスキック」「ゴールを守ること」（サッカーダイジェスト 197930）。（笑）は外した。
+#   採点: 鈴木7・佐野海舟7で最高タイ（サッカーダイジェスト 197856）。
+#   PK戦の歴史: 2010 パラグアイ（全員に決められた）／2011 韓国（川島が2本止めた、日経）／2015 UAE／2022 クロアチア（唯一の失敗はポスト）。
+#     2015 の3人目が止めたものか枠外かは分からないので、止めた本数は W杯の2回と 2011 だけ言う。
+#   ヴィラ公式Xと英語のファンの声は原文が取れなかった（raw の 5.）。
+# 流れの点検（Claude が自分で読んだ。控え output/flow/20261002_doan_zion.md）で直したこと:
+#   PK戦の表を時系列で読む形に（「その前に勝ったのは」が何の前か曖昧だった）／「止めたのは1本」を2つの節で言っていた → 見立ての側を言い換え
+#   「相手の3人目」→「3人目のキック」と冒頭で試合の流れを2行に分けた／short_only の前置きは次の行と同じ中身になるので外した
+#   ミスキックの発言は「もちろんチャンスになったシーンもありますし、」から引く（「全然、」から始まると唐突）
+# 写真: ゲキサカ（©Kaoru WATANABE/GEKISAKA）のエクアドル戦の2枚。冒頭は鈴木の 16:9、堂安が語る行は 堂安（左）＋鈴木（右）。
+date: 2026年10月2日
+slot: japan
+format: quote
+people:
+- 鈴木彩艶
+- 堂安律
+- 川島永嗣
+- 権田修一
+theme:
+  id: doan_zion
+  league: japan
+  league_name: キリンカップ
+  kind: other
+  topic: 日本代表
+  title: 堂安律「間違いなく世界一のキーパーになる」。蹴る側が鈴木彩艶に感じるもの
+  opening_image: assets/images/20261002_doan_zion_suzuki_w/01.jpg
+  takeaway: 2010年からの日本代表のPK戦は5回。W杯の2回は日本のキーパーが1本も止められずに敗れ、勝ったのは川島永嗣が2本止めた2011年の韓国戦が最後だった。鈴木彩艶は自分からボールを手渡して間を作り、3人目で先に動いて1本を止めた。堂安の言う「ボールを置いた瞬間の圧」は、キックの前から始まっている
+short_title: 堂安律「世界一のキーパーになる」。PK戦で鈴木彩艶がしていたこと
+thumbnail:
+  photo: assets/images/20261002_pair_doan_zion/01.jpg   # 本文の既定（横長）。サムネは photos の2枚を並べる
+  photos:
+  - assets/images/20261002_doan_zion_doan_face/01.jpg
+  - assets/images/20261002_doan_zion_suzuki_face/01.jpg
+  line1: 堂安「世界一になる」
+  line2: W杯のPK戦、日本が止めたのは●本
+  reaction: 世界一のGKになって欲しいですね
+sections:
+- id: pressure
+  main: true
+  heading: ボールを置いた瞬間の圧
+  tier: 報道
+  telop: 堂安「間違いなく僕は世界一のキーパーになると思う」
+  narrator: キャスター
+  say:
+  - text: 10月1日の日本対エクアドルは、90分で点が入らずPK戦へ。
+    image: assets/images/20261002_doan_zion_suzuki_w/01.jpg
+  - text: 鈴木彩艶が3人目のキックを止め、日本はPK戦を5対4で勝って、キリンカップの決勝へ進みました。
+  - text: キャプテンの堂安律は、PK戦をベンチから見ていました。試合のあと、鈴木の存在感をこう話しています。
+    image: assets/images/20261002_pair_doan_zion/01.jpg
+  - voice: 堂安律
+    text: 圧がすごいですね。
+  - voice: 堂安律
+    text: ただデカいというのと、
+    cont: true
+  - voice: 堂安律
+    text: やっぱり、蹴り手としては立った瞬間、
+    cont: true
+  - voice: 堂安律
+    text: ボールを置いた瞬間に圧というのは重要になってくる。
+    cont: true
+  - voice: 堂安律
+    text: あとはもう彼の能力
+    cont: true
+  - text: そして最後に、こう言い切りました。
+  - voice: 堂安律
+    text: 間違いなく僕は世界一のキーパーになると思う。
+  - voice: 堂安律
+    text: 非常に頼もしいキーパーが出てきてくれたなと思います
+    cont: true
+  quotes_from:
+  - サッカーダイジェスト https://www.soccerdigestweb.com/news/detail/id=197909
+  sources:
+  - https://www.soccerdigestweb.com/news/detail/id=197909
+  - https://web.gekisaka.jp/news/japan/detail/?460123-460123-fl=
+  - https://web.gekisaka.jp/news/japan/detail/?460121-460121-fl=
+- id: stop
+  heading: 先に動いた3人目
+  tier: 報道
+  telop: 鈴木「先に動くことを意識してたので、相手の特徴を見ながら」
+  narrator: キャスター
+  say:
+  - text: 鈴木本人はPK戦で、キッカーに自分からボールを手渡していました。
+    image: assets/images/20261002_doan_zion_suzuki_w/01.jpg
+  - voice: 鈴木彩艶
+    text: 相手のリズムを狂わせようかなと
+  - text: キッカーの目線やキックの癖を見て、先に飛ぶか、ボールを見てから反応するかを決める。
+  - text: 止めた3人目は、先に飛ぶほうでした。
+  - voice: 鈴木彩艶
+    text: 先に動くことを意識してたので、相手の特徴を見ながら
+  - text: 止めたのは1本だけ。その場面の駆け引きを、本人が明かしています。
+  - voice: 鈴木彩艶
+    text: できればもう一本止めて落ち着かせていたかったですけど、
+  - voice: 鈴木彩艶
+    text: まず最低限一本止められたらなと思っています
+    cont: true
+  quotes_from:
+  - FOOTBALL ZONE https://www.football-zone.net/archives/676935
+  - ゲキサカ https://web.gekisaka.jp/news/japan/detail/?460129-460129-fl=
+  sources:
+  - https://www.football-zone.net/archives/676935
+  - https://web.gekisaka.jp/news/japan/detail/?460129-460129-fl=
+- id: kick
+  heading: ミスキックでも沸いたスタンド
+  tier: 報道
+  telop: 鈴木「ゴールを守ることが常に僕の中では1番の優先順位」
+  narrator: キャスター
+  say:
+  - text: 試合のあいだ、スタンドがいちばん沸いたのは、鈴木の長いキックでした。
+  - text: 堂安も、ピッチのサイドから「すげえなって言いながら」見ていたそうです。
+  - text: ただ、本人の受け止めは少し違います。
+  - voice: 鈴木彩艶
+    text: もちろんチャンスになったシーンもありますし、
+  - voice: 鈴木彩艶
+    text: 全然、ミスキックになってしまってもスタンドが沸いていた。
+    cont: true
+  - voice: 鈴木彩艶
+    text: 自分としてはミスキックだなと思いながらも
+    cont: true
+  - voice: 鈴木彩艶
+    text: 今日のゲームなんかもキックに目がいきがちですけど、
+  - voice: 鈴木彩艶
+    text: やっぱりゴールを守ることが常に僕の中では1番の優先順位
+    cont: true
+  - text: この試合の採点で、鈴木は佐野海舟と並ぶチーム最高の7でした。
+  quotes_from:
+  - サッカーダイジェスト https://www.soccerdigestweb.com/news/detail/id=197930
+  sources:
+  - https://www.soccerdigestweb.com/news/detail/id=197930
+  - https://www.soccerdigestweb.com/news/detail/id=197909
+  - https://www.soccerdigestweb.com/topics_detail9/id=197856
+- id: view
+  heading: 日本代表のPK戦と、止めたキーパー
+  tier: 背景
+  viewpoint: true
+  telop: 2010年からのPK戦は5回。W杯の2回は、日本のキーパーが1本も止められずに敗れた
+  narrator: 解説
+  say:
+  - text: 2010年からの日本代表のPK戦は、これで5回目です。
+    card:
+      type: table
+      title: 日本代表のPK戦（2010年から）
+      columns: [年, 大会・相手, キーパー, 結果]
+      rows: &pk
+      - ['2010', 'W杯 パラグアイ', '川島永嗣', '3-5 負け']
+      - ['2011', 'アジア杯 韓国', '川島永嗣', '3-0 勝ち']
+      - ['2015', 'アジア杯 UAE', '川島永嗣', '4-5 負け']
+      - ['2022', 'W杯 クロアチア', '権田修一', '1-3 負け']
+      - ['2026', 'キリン杯 エクアドル', '鈴木彩艶', '5-4 勝ち']
+      highlight_row: 4
+  - text: 2010年のワールドカップ、パラグアイ戦は、相手の5人全員に決められて敗退。
+    card:
+      type: table
+      title: 日本代表のPK戦（2010年から）
+      columns: [年, 大会・相手, キーパー, 結果]
+      rows: *pk
+      highlight_row: 0
+  - text: 翌年のアジアカップ準決勝では、川島永嗣が2本を止めて韓国に勝ちました。
+    card:
+      type: table
+      title: 日本代表のPK戦（2010年から）
+      columns: [年, 大会・相手, キーパー, 結果]
+      rows: *pk
+      highlight_row: 1
+  - text: そのあとは2015年のアジアカップ、2022年のワールドカップと、続けて敗れています。
+    card:
+      type: table
+      title: 日本代表のPK戦（2010年から）
+      columns: [年, 大会・相手, キーパー, 結果]
+      rows: *pk
+      highlight_row: 2
+  - text: クロアチア戦で相手が外したのは、ポストに当たった1本だけでした。
+    card:
+      type: table
+      title: 日本代表のPK戦（2010年から）
+      columns: [年, 大会・相手, キーパー, 結果]
+      rows: *pk
+      highlight_row: 3
+  - text: ワールドカップでの2回、日本のキーパーは相手のキックを1本も止めていません。
+    card:
+      type: table
+      title: 日本代表のPK戦（2010年から）
+      columns: [年, 大会・相手, キーパー, 結果]
+      rows: *pk
+      highlight_row: 3
+  - text: 今回の勝ちは、川島の韓国戦以来。鈴木は、止める前から手を打っていました。
+    card:
+      type: table
+      title: 日本代表のPK戦（2010年から）
+      columns: [年, 大会・相手, キーパー, 結果]
+      rows: *pk
+      highlight_row: 4
+  - text: 手渡しで相手のリズムを崩し、先に動くと決めて飛ぶ。
+    image: assets/images/20261002_doan_zion_suzuki_w/01.jpg
+  - text: 堂安の言う「置いた瞬間の圧」は、キックの前から相手にかかっています。
+  - text: 次にPK戦で向き合うキッカーは、ボールを置く前から、この24歳を相手にすることになります。
+  sources:
+  - https://en.wikipedia.org/wiki/2010_FIFA_World_Cup_knockout_stage
+  - https://en.wikipedia.org/wiki/2011_AFC_Asian_Cup_knockout_stage
+  - https://www.nikkei.com/article/DGXNASDH2503C_V20C11A1SY5101/
+  - https://en.wikipedia.org/wiki/2015_AFC_Asian_Cup_knockout_stage
+  - https://www.jfa.jp/samuraiblue/asiancup2015/news/00004707/
+  - https://en.wikipedia.org/wiki/2022_FIFA_World_Cup_knockout_stage
+  - https://web.gekisaka.jp/news/japan/detail/?460121-460121-fl=
+  - https://www.football-zone.net/archives/676865
+- id: voices
+  heading: ネットの反応
+  tier: 未確認
+  telop: 「さらにブラッシュアップさせて、世界一のGKになって欲しいですね」
+  narrator: キャスター
+  say:
+  # Yahoo!ニュース（サッカーダイジェスト 197909 の転載）のコメント欄 kan********。全文
+  - voice: ネット民
+    text: PK戦のときも、どっちかに勘で跳ぶんじゃなくて、
+  - voice: ネット民
+    text: 全部反応して跳んでたもんな。
+    cont: true
+  - voice: ネット民
+    text: 「速くて良いコース蹴らないと止められる」というのは、
+    cont: true
+  - voice: ネット民
+    text: キッカーにとっては相当なプレッシャーになると思う。
+    cont: true
+  - voice: ネット民
+    text: 過去に日本はワールドカップで何度もPK戦に泣いてきたけど、
+    cont: true
+  - voice: ネット民
+    text: PK戦が強みになりそう。楽しみです。
+    cont: true
+  # 同じ欄 spbr3s。全文
+  - voice: ネット民
+    text: 確かに抜きん出ていた存在感でした。
+    short_voice: true
+  - voice: ネット民
+    text: PKの圧は素晴らしいし、
+    cont: true
+    short_voice: true
+  - voice: ネット民
+    text: また正確で距離が出るフィードも
+    cont: true
+    short_voice: true
+  - voice: ネット民
+    text: 攻撃のオプションになってました。
+    cont: true
+    short_voice: true
+  - voice: ネット民
+    text: さらにブラッシュアップさせて、
+    cont: true
+    short_voice: true
+  - voice: ネット民
+    text: 世界一のGKになって欲しいですね。
+    cont: true
+    short_voice: true
+  sources:
+  - https://news.yahoo.co.jp/articles/6e49856658efa4fa561ae182c10643b7af896ae5/comments

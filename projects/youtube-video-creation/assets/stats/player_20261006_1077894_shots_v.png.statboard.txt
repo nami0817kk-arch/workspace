@@ -1,0 +1,6 @@
+title: ジュード・ベリンガムの今季のシュート
+unit: xG
+shots=16
+goals=3
+xg=1.26
+source: FotMob

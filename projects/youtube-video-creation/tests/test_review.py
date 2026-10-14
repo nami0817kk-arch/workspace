@@ -41,17 +41,14 @@ tags: [サッカー, アーセナル, 海外サッカー]
 ネット民: これは優勝を狙える。
   source: 未確認
 
-ネット民: 見ていて楽しい。
-  source: 未確認
+キャスター: ボールを奪った位置は、前の試合より10メートル前でした。
+  source: 報道
 
-ネット民: この調子で頼む。
-  source: 未確認
+解説: 奪う位置が上がったので、相手は前へボールを運べませんでした。
+  source: 背景
 
-ネット民: 来週も楽しみだ。
-  source: 未確認
-
-ネット民: 守備も良かった。
-  source: 未確認
+キャスター: シュートは18本、相手は4本でした。
+  source: 報道
 
 ## まとめ
 
@@ -331,8 +328,6 @@ def test_止まりすぎる画面を弾く(tmp_path):
     assert not _still_length(path).ok
 
 
-
-
 def _endo_credit(root):
     """**写真と控えをテストの中で作る**（2026-09-26）。`assets/images/` は git に入らないので、
     手元の写真に頼ったテストは CI で前提が無くなり、9/18 から落ち続けていた。"""
@@ -599,11 +594,20 @@ def test_ショートは同じ絵の上限が短い():
 # 他人の声が尺の58%・19.2件・1件3.1秒で、こちらは14%・2.2件・1件39字だった。
 # **✓ しか出ない点検は、壊れていても気づけない**ので、壊れた例を1つずつ食わせる。
 
-def test_語りだけの台本は他人の声で止まる(tmp_path):
-    body = GOOD_BODY.replace("ネット民:", "解説:")
+def test_他人の声が半分を超えると止まる(tmp_path):
+    """2026-09-28 に下限から上限へ反転（収益化の審査。こちらの解説を主役にする）。"""
+    body = GOOD_BODY.replace("キャスター: シュートは18本", "ネット民: シュートは18本").replace(
+        "解説: 奪う位置が上がった", "ネット民: 奪う位置が上がった").replace(
+        "キャスター: ボールを奪った位置", "ネット民: ボールを奪った位置")
     result = _by_label(inspect(parse_script(body), _built(tmp_path)))
     assert result["他人の声の量"].ok is False
-    assert "0%" in result["他人の声の量"].detail
+    assert "上限50%" in result["他人の声の量"].detail
+
+
+def test_語りだけの台本は他人の声で止まらない(tmp_path):
+    body = GOOD_BODY.replace("ネット民:", "解説:")
+    result = _by_label(inspect(parse_script(body), _built(tmp_path)))
+    assert result["他人の声の量"].ok is True
 
 
 def test_長い引用でも刻みで止めない(tmp_path):
@@ -915,20 +919,19 @@ def test_タグに人名が入っていれば通る():
     assert check_tag_names(script).ok
 
 
-def test_反応の型は他人の声7割が下限():
-    """型でしきい値が変わる（2026-09-08）。news の40%を通る台本でも voices では止まる。"""
+def test_ネットの反応は3件まで():
+    """2026-09-28。反応を集めただけに見せない（収益化の審査）。"""
     from src.review import check_voice_share
     from src.script_model import parse_script
 
     nl = chr(10)
-    script = parse_script(nl.join([
-        "---", "title: T", "format: voices", "---", "",
-        "## 本編", "",
-        "キャスター: 事実を三十字ほど読みます。事実を三十字ほど読みます。",
-        "現地サポ: 本物のGKを手に入れたぞ",
-        "現地サポ: 前にボールを出せるじゃん", ""]))
-    assert check_voice_share(script, 40.0).ok
-    assert not check_voice_share(script, 70.0).ok
+    base = ["---", "title: T", "---", "", "## 本編", ""]
+    base += ["キャスター: 事実を三十字ほど読みます。事実を三十字ほど読みます。"] * 6
+    three = base + ["ネット民: いい", "ネット民: すごい", "ネット民: 強い", ""]
+    four = base + ["ネット民: いい", "ネット民: すごい", "ネット民: 強い", "ネット民: 最高", ""]
+    assert check_voice_share(parse_script(nl.join(three))).ok
+    got = check_voice_share(parse_script(nl.join(four)))
+    assert not got.ok and "4件" in got.detail
 
 
 def test_反応の型ではまとめの長さを見ない():
@@ -948,27 +951,6 @@ def test_反応の型ではまとめの長さを見ない():
         "現地サポ: もう前線で使っちゃえよ", "現地サポ: 補強は大成功だ", ""]))
     labels = {f.label for f in inspect(script, Path("does-not-exist"))}
     assert "まとめの長さ" not in labels
-
-
-def test_台本ごとに他人の声の下限を下げられる():
-    """試合の経過を詳しく伝える回は地の文が増える（2026-09-09 ユーザー指示）。"""
-    from pathlib import Path
-
-    from src.review import inspect
-    from src.script_model import parse_script
-
-    nl = chr(10)
-    rows = ["---", "title: T", "format: news", "sources: [https://example.com/a]",
-            "tags: [サッカー]", "---", "", "## オープニング", "",
-            "キャスター: タイトルを読みます。", "", "## 試合はどう動いたか", ""]
-    rows += ["キャスター: 実況のような地の文がここに七行ならびます。"] * 7
-    rows += ["現地メディア: 壁を築いた", ""]
-    strict = _by_label(inspect(parse_script(nl.join(rows)), Path("no-such-dir")))
-    assert strict["他人の声の量"].ok is False            # news の下限40%では止まる
-
-    loose = rows[:3] + ["voice_min: 2"] + rows[3:]
-    got = _by_label(inspect(parse_script(nl.join(loose)), Path("no-such-dir")))
-    assert got["他人の声の量"].ok is True                # 台本が下げた下限では通る
 
 
 def test_漢字の名前で始まるタイトルも主語として通す():
@@ -1386,6 +1368,53 @@ def test_カードの持ちは写真を数えない():
         assert check_card_hold(build(tmp, early)).ok, "写真が出る前のカードで鳴っている"
 
 
+def test_行ごとに分けた同じ表の持ちを見逃さない(tmp_path):
+    """**実物4本の点検（`tools/qc.py`）で出た停滞**（2026-10-08）。
+
+    2026-10-07 から、数字を読む行が続く節では `research` が**行ごとに別のカード**を
+    作り、光らせる行だけを替える（`rivals_0_card`〜`rivals_9_card`）。
+    `check_card_hold` は**カードの名前**で見分けていたので、行が替わるたびに
+    数え直して ○ を返していた。`output/20261008_finance_arteta` 第4節は、
+    同じ散らばり図のまま 37秒 動いていない。
+    """
+    import json
+
+    from src.review import check_card_hold, _screen_change
+
+    table = {"type": "table", "columns": ["監督", "年俸"],
+             "rows": [["監督A", "1"], ["監督B", "2"], ["監督C", "3"]]}
+    specs = {f"rivals_{i}_card": dict(table, highlight_row=i % 3) for i in range(8)}
+    lines = [{"card": f"rivals_{i}_card", "image": "a.jpg", "duration": 4.0,
+              "telop": f"見出し{i}", "marks": []} for i in range(8)]
+    path = tmp_path / "script.json"
+    path.write_text(json.dumps({"scenes": [{"lines": lines}]}), encoding="utf-8")
+
+    # 名前で見分けると、どの区間も4秒にしか見えない（直す前の素通り）
+    assert check_card_hold(path).ok
+    # 中身で見分ければ 32秒
+    assert not check_card_hold(path, specs=specs).ok
+
+    # 表そのものが替わる行では、ちゃんと数え直す
+    other = dict(table, rows=[["別の表", "9"]])
+    specs2 = dict(specs)
+    for i in range(4, 8):
+        specs2[f"rivals_{i}_card"] = dict(other, highlight_row=i % 3)
+    assert check_card_hold(path, specs=specs2).ok
+
+    # 「見た目の変化」はテロップも数えるので、テロップまで同じときに鳴る
+    flat = [dict(line, telop="同じ見出し") for line in lines]
+    path.write_text(json.dumps({"scenes": [{"lines": flat}]}), encoding="utf-8")
+    assert _screen_change(path).ok                      # 名前で見分けた頃は素通り
+    assert not _screen_change(path, specs).ok
+
+    # **途中で写真が替われば数え直す**（2026-10-08）。`spread_long_cards` は
+    # 写真を替えて止まりを割るので、ここで数え直さないと直しようが無い × が残る
+    swapped = [dict(line, image=("a.jpg" if i < 4 else "b.jpg"))
+               for i, line in enumerate(lines)]
+    path.write_text(json.dumps({"scenes": [{"lines": swapped}]}), encoding="utf-8")
+    assert check_card_hold(path, specs=specs).ok
+
+
 def test_したのはで止める形も答えを隠している():
     """**3度目の同じ壊れ方**（2026-09-15）。
 
@@ -1435,16 +1464,18 @@ def test_手元に無いエンブレムを主役にしたら止める(tmp_path):
     町田浩樹の回は `crest_main: [ホッフェンハイム]` と書いてあり検査は通ったが、
     `assets/crests/` にホッフェンハイムは無く、できあがったのは**夜景だけ**のサムネ。
     **名前を書けば通る検査は、通るだけ。**実物があるかを見る。
+    ホッフェンハイムのエンブレムは 2026-09-28 のブンデス下地で手に入ったので、
+    ここでは**どの日にも手元に無い架空のクラブ**で見る（実在のクラブ名だと、集めた日に落ちる）。
     """
     from src.review import _thumbnail_face
     from src.script_model import parse_script
 
     missing = parse_script(
-        "---\ntitle: T\nthumbnail_crest_main:\n- ホッフェンハイム\n---\n\n"
+        "---\ntitle: T\nthumbnail_crest_main:\n- 架空FC\n---\n\n"
         "## 何が起きたか\n\nキャスター: あ。\n")
     found = _thumbnail_face(missing)
     assert found.ok is False
-    assert "ホッフェンハイム" in found.detail
+    assert "架空FC" in found.detail
 
     有る = parse_script(
         "---\ntitle: T\nthumbnail_crest_main:\n- アーセナル\n---\n\n"
@@ -1574,3 +1605,45 @@ def test_名前の途中に普通名詞があっても名前とみなす():
     from src.script_model import Script
     assert check_title_subject(Script(title="ジャンニ・インファンティーノ会長に、欧州4大リーグが突きつけたもの")).ok
     assert check_title_subject(Script(title="インファンティーノ会長に、欧州4大リーグが突きつけたもの")).ok
+
+
+def test_シリーズの回は尺が6分まで():
+    """ニュースの210秒をシリーズに当てると、全部 × になる（2026-10-09 未明に8本で踏んだ）。
+
+    シリーズの回は本編4〜6分が決まり（2026-09-28「共通の作り」）。
+    8本中8本に出る × は、読む側が無視するようになるだけで害になる。
+    """
+    from src.review import _duration
+
+    assert _duration(259.0).ok is False                      # ニュースなら長すぎる
+    assert _duration(259.0, "ユニフォームとエンブレムの歴史").ok is True
+    assert _duration(400.0, "ユニフォームとエンブレムの歴史").ok is False   # 6分は超えられない
+    assert _duration(30.0, "スタジアム紹介").ok is False       # 短すぎる側は変わらない
+
+
+def test_シリーズの回は一言のぶん1行だけ待つ():
+    """シリーズの回は「クラブを表す一言 → タイトル → つかみ」の3行（2026-09-21 指示）。
+
+    1行目だけを見ると、一言を読んでいる回が全部 × になる。2行目までにタイトルがあればよい。
+    **ニュースの回は今までどおり1行目だけ**（待つと冒頭の1行が死ぬ）。
+    """
+    from src.review import check_opening_title
+    from src.script_model import parse_script
+
+    body = ("---\ntitle: {t}\n{s}---\n\n## オープニング\n\n"
+            "キャスター: 赤いシャツ、赤いパンツ、赤いソックス。\n"
+            "キャスター: リヴァプールの赤は、一度に完成していない。\n")
+    title = "リヴァプールの赤は、一度に完成していない"
+
+    news = parse_script(body.format(t=title, s=""))
+    assert check_opening_title(news).ok is False, "ニュースの回で一言を許してはいけない"
+
+    series = parse_script(body.format(t=title, s="series: ユニフォームとエンブレムの歴史\n"))
+    got = check_opening_title(series)
+    assert got.ok is True and "2行目" in got.detail
+
+    # 2行目にもタイトルが無ければ、シリーズでも ×
+    far = parse_script(
+        "---\ntitle: {t}\nseries: X\n---\n\n## オープニング\n\n"
+        "キャスター: ひとこと。\nキャスター: ふたこと。\n".format(t=title))
+    assert check_opening_title(far).ok is False

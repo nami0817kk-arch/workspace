@@ -1,0 +1,276 @@
+# 取材メモ（10/11 題材 ② tanaka_rating、型は news、日本人枠）。**ショートだけ作る**（本編は作らない）。
+# 効く一点：**田中碧に付いた7点は、リーズの先発11人で最も高い数字**（ジャスティン・ムハレモビッチ・
+#   グズムンドソンと並んで最高タイ）。そこを①（main）に置いた。
+# **いちばん大事な注意（ユーザー指示）**：**今日のシリーズでデクラン・ライス（アーセナル）を
+#   10:00 に公開している。画面と語りはリーズと田中碧だけで組む。アーセナルの話に寄せない。**
+#   そのため、
+#   ・**アーセナルの得点者（62分・70分）の名前を、語りにも画面にも出していない**（「2点を返された」で通す）。
+#   ・採点の表は**リーズの先発だけ**を並べた。
+#   ・ガーディアンの実況が書いた「田中がライスからボールを奪った」場面（43分）は**使っていない**。
+#   ・VAVEL の原文 "broke up Arsenal's attacks" は「**相手の攻撃を断ち切り**」と訳した。
+#     固有名を外したのは上の指示のため。意味は変えていない（アーセナル＝この試合の相手）。
+# **引用元の記事に当たった**（フットボールチャンネルの訳はそのまま使っていない。訳は自分で起こした）。
+#   ・BBC Sport「Arsenal 2-1 Leeds: How the Leeds players rated」（10 October 2026）
+#     https://www.bbc.co.uk/sport/football/articles/cmpqgl2lywzno
+#     原文 "Ao Tanaka: Very good on the ball and worked hard alongside Ethan Ampadu in the middle of the pitch. 7"
+#     同じ記事のリーズ先発の点: Trafford 6 / Bogle 6 / **Justin 7** / **Muharemovic 7** / Elvedi 6 /
+#     **Gudmundsson 7** / **Tanaka 7** / Ampadu 6 / Stach 6 / Okafor 6 / Calvert-Lewin 6
+#   ・VAVEL「Arsenal 2-1 Leeds: Post-Match Leeds Player Ratings」（Mark Davey-Spence、10 Oct 2026）
+#     https://www.vavel.com/en/football/2026/10/10/premier-league/1274670-arsenal-2-1-leeds-post-match-leeds-player-ratings.html
+#     原文 "Ao Tanaka - 7.0 / Was very tenacious in his defensive work, similarly to Ampadu, broke up Arsenal's
+#     attacks and stopped their progression in midfield, gave away an unnecessary foul and also picked up an early yellow."
+#     **注意：VAVEL では田中が最高点ではない**（Justin 7.5・Stach 7.5 が上）。だから台本では
+#     「最も高い」と言っているのは**10点満点の採点のほう（BBC Sport）だけ**で、VAVEL は「同じ7.0」とだけ言う。
+#   ・The Guardian の実況（76分の記述）
+#     https://www.theguardian.com/football/live/2026/oct/10/arsenal-v-leeds-premier-league-live
+#     原文 "76 min: Leeds double-substitution from a couple of minutes ago: Harry Wilson and Brenden Aaronson
+#     on for Tanaka and Okafor, who have both been terrific."
+#     フットボールチャンネルは「ともに素晴らしいプレーだった」と訳していたが、**これは試合記事ではなく実況の一行**。
+#     台本では媒体名を出さず「交代を伝えた現地の実況」とした。
+# **スコア・交代・警告はプレミアリーグ公式まで辿った**（/v2/matches/2645245 と commentary、lineups）。
+#     55' James Justin (Leeds) assisted by Gabriel Gudmundsson with a cross
+#     62' / 70' アーセナルが2点（**名前は使わない**）
+#     71' Harry Wilson replaces Ao Tanaka
+#     36' Ao Tanaka is shown the yellow card for a bad foul
+#   会場 Emirates Stadium / 入場者 60,315 / 主審 Paul Tierney（リーズ公式の試合記録）。
+# **数字の食い違い**：田中の警告は**プレミアリーグ公式が36分**、ガーディアンの実況は37分。**公式を採った**。
+# **53分のシュートはガーディアンの実況が元**（"David Raya is forced to tip an Ao Tanaka shot over the bar"）。
+#   きっかけに相手選手の名前が出てくるが、**上の指示のため語りでは触れていない**。
+# **4試合連続先発**：VAVEL が "unchanged lineup for their fourth league game in a row"、ゲキサカの見出しも
+#   「プレミア4試合連続先発」。リーズ公式も「Unchanged from the meeting with Crystal Palace」と書いている。
+# **リーズの開幕5試合無敗は1部では2001年以来**（BBC Sport の試合記事）。失点3はリーグ最少タイ（同）。
+# 写真はリーズ・ユナイテッド公式の試合写真1枚（3000x1687、Ao_Tanaka_vs_Arsenal__A__action_shot_Oct_26.jpg）。
+#   **代理店の配信ではない**（クラブ自身の掲載。画像の中にも代理店の表記は無い。拡大して確認した）。
+#   ゲキサカ・サッカーキング・フットボールチャンネルの写真は**すべて Getty 配信**なので使っていない。
+#   facecrop で 01_w（16:9）と 01_v（9:16・949x1687）を切り、どちらも目で見た。
+# サムネ：構図 number（**ユーザーと相談して決める**。ここに書いたのは点検を通すための1案）。
+# ネットの反応は集めていない。反応の節は無い。
+# 数字の重なり対策：『7点』『7.0』は①だけ、『36分』『53分』は②だけ、『5試合』『2001年』は③だけ。
+date: 2026年10月11日
+slot: japan_2
+format: news
+voice_min: 0
+people:
+- 田中碧
+- ダニエル・ファルケ
+- リーズ
+theme:
+  id: tanaka_rating
+  league: england
+  league_name: プレミアリーグ
+  kind: match
+  topic: 田中碧
+  title: 田中碧は71分まで。リーズが今季初めて負けた日に付いた点
+  question: 田中碧の71分に、現地はいくつの点を付け、どこを評価したのか
+  takeaway: 田中碧は4試合続けてリーズの先発に名を連ね、71分までプレーした。10点満点で付いた点は7。同じ採点でリーズの先発を見ると、ジャスティン、ムハレモビッチ、グズムンドソンと並ぶ最も高い数字で、中盤を組んだアンパドゥは6だった。添えられていたのは「ボールを持ったときのプレーが非常によく、中盤でイーサン・アンパドゥとともによく働いた」の一文。別の採点も同じ7.0で、こちらは「守備での粘りが非常に強く、相手の攻撃を断ち切り、中盤で前進を止めた」と書き、同時に不必要なファウルで36分に警告を受けた点も挙げている。試合は55分にジャスティンが先制しながら、62分と70分に2点を返されて1対2。リーズは開幕からの5試合無敗が止まり、今季のリーグ戦で初めて負けた。1部での開幕5試合無敗は2001年以来だった
+  opening_image: assets/images/20261011_tanaka_rating/01_w.jpg
+short_title: 田中碧に7点。リーズの先発11人で、これより高い数字は無かった
+thumbnail:
+  layout: number
+  photo: assets/images/20261011_tanaka_rating/01_w.jpg
+  short_photo: assets/images/20261011_tanaka_rating/01_v.jpg
+  number: ●点
+  line1: 田中碧 リーズ
+  line2: 71分までに付いた採点
+  tags:
+  - 田中碧
+  - リーズ
+  - プレミアリーグ
+sections:
+- id: rating
+  main: true
+  heading: リーズの先発で、これより上が無い
+  tier: 報道
+  telop: 田中碧に10点満点の7点。リーズの先発11人で、これより高い数字は付いていない
+  narrator: キャスター
+  card: &rates
+    type: table
+    title: この試合に付いた点（リーズの先発から）
+    columns: &c_rate
+    - 選手
+    - 位置
+    - 点
+    rows: &r_rate
+    - - ジャスティン
+      - DF
+      - '7'
+    - - ムハレモビッチ
+      - DF
+      - '7'
+    - - グズムンドソン
+      - MF
+      - '7'
+    - - 田中碧
+      - MF
+      - '7'
+    - - アンパドゥ
+      - MF
+      - '6'
+    - - カルバート＝ルーウィン
+      - FW
+      - '6'
+  say:
+  - text: プレミアリーグ第6節。リーズの田中碧が4試合続けて先発しました。
+    short_only: true
+    card: none
+    image: assets/images/20261011_tanaka_rating/01_w.jpg
+  - text: ピッチにいたのは71分まで。チームは1対2で負けています。
+    short_only: true
+    card: none
+  - voice: ファルケ監督
+    text: ゲームの運び、プレス、ボールが無いときのコンパクトさ。
+    card: none
+  - voice: ファルケ監督
+    text: すべての面で成長しています。
+    cont: true
+    card: none
+  - text: 試合のあと、リーズの監督はそう話しました。
+    card: none
+    image: assets/images/20261011_tanaka_rating/01_w.jpg
+  - text: その中盤を71分まで走った田中碧に、現地の採点は10点満点で7点を付けています。
+    card: *rates
+  - text: 同じ採点でリーズの先発を並べると、7点は4人でした。
+    card:
+      <<: *rates
+      highlight_row: 0
+  - text: ジャスティン、ムハレモビッチ。どちらも守る側の選手です。
+    card:
+      <<: *rates
+      highlight_row: 1
+  - text: それに、先制点をアシストしたグズムンドソン。
+    card:
+      <<: *rates
+      highlight_row: 2
+  - text: 中盤でただ1人そこに並んだのが、田中碧でした。
+    card:
+      <<: *rates
+      highlight_row: 3
+    emph: true
+  - text: 隣で組んだアンパドゥは6点。11人のうち、7点より上は1人もいません。
+    card:
+      <<: *rates
+      highlight_row: 4
+  - text: 点に添えられていたのは、短い一文です。
+    card: none
+    image: assets/images/20261011_tanaka_rating/01_w.jpg
+  - text: ボールを持ったときのプレーが非常によく。
+    card: none
+  - text: 中盤でイーサン・アンパドゥとともによく働いた。
+    card: none
+    emph: true
+  quotes_from:
+  - BBC Sport（リーズの選手採点、2026-10-10） https://www.bbc.co.uk/sport/football/articles/cmpqgl2lywzno
+  - The Guardian（試合後のダニエル・ファルケ監督の言葉、2026-10-10） https://www.theguardian.com/football/2026/oct/10/arsenal-leeds-premier-league-match-report
+  sources:
+  - https://www.bbc.co.uk/sport/football/articles/cmpqgl2lywzno
+  - https://www.theguardian.com/football/2026/oct/10/arsenal-leeds-premier-league-match-report
+  - https://web.gekisaka.jp/news/world/detail/?460707-460707-fl
+- id: work
+  heading: 7点が指していた中身
+  tier: 報道
+  telop: 別の採点も同じ7.0。守備の粘りと、36分の警告の両方が書かれている
+  narrator: キャスター
+  card: &works
+    type: table
+    title: 田中碧のこの試合
+    columns:
+    - 時間
+    - できごと
+    rows:
+    - - 36分
+      - 相手を倒して警告
+    - - 53分
+      - 遠めから枠へ、バーの上に
+    - - 55分
+      - リーズが先制
+    - - 71分
+      - ウィルソンと交代
+    highlight_row: 1
+  say:
+  - text: 田中碧には、同じ試合にもう1つの採点も出ています。こちらは7.0でした。
+    card: *works
+  - text: 守備での粘りが非常に強く、相手の攻撃を断ち切り、中盤で前進を止めた。
+    card: none
+    image: assets/images/20261011_tanaka_rating/01_w.jpg
+    emph: true
+  - text: 同じ採点は、不必要なファウルで警告を受けたことにも触れています。
+    card:
+      <<: *works
+      highlight_row: 0
+  - text: 公式の記録では36分。この試合でリーズが受けた4枚のうち、いちばん早い1枚です。
+    card:
+      <<: *works
+      highlight_row: 0
+  - text: 攻める側でも、53分に一度ゴールへ向かっています。
+    card:
+      <<: *works
+      highlight_row: 1
+  - text: 中盤でこぼれた球を拾い、遠い位置から強く振り抜きました。
+    card:
+      <<: *works
+      highlight_row: 1
+  - text: ボールはバーの上へ。その2分後に、リーズが先制します。
+    card:
+      <<: *works
+      highlight_row: 2
+  - text: 田中が退いたのは71分。交代を伝えた現地の実況は、こう書いています。
+    card:
+      <<: *works
+      highlight_row: 3
+  - text: ウィルソンとアーロンソンが、田中とオカフォーに代わって入る。
+    card: none
+    image: assets/images/20261011_tanaka_rating/01_w.jpg
+  - text: 2人ともすばらしかった。
+    card: none
+    emph: true
+  sources:
+  - https://www.vavel.com/en/football/2026/10/10/premier-league/1274670-arsenal-2-1-leeds-post-match-leeds-player-ratings.html
+  - https://www.theguardian.com/football/live/2026/oct/10/arsenal-v-leeds-premier-league-live
+  - https://www.premierleague.com/en/matches/premier-league/2026-27
+- id: view
+  viewpoint: true
+  heading: 無敗が止まった日に、点は上がった
+  tier: 背景
+  telop: リーズは開幕5試合無敗が止まり、今季初黒星。1部での5試合無敗は2001年以来だった
+  narrator: 解説
+  card: &run
+    type: stats
+    title: リーズのここまで
+    items:
+    - - '5'
+      - 試合
+      - 開幕から負けなしで来た数
+    - - '2001'
+      - 年
+      - 1部で前に同じことをした季
+    - - '3'
+      - 失点
+      - 6試合でのリーグ最少タイ
+    focus: 0
+  say:
+  - text: リーズはこの試合まで、開幕から5試合負けていませんでした。
+    card: *run
+  - text: 1部で開幕5試合を無敗で通したのは、2001年以来です。
+    card:
+      <<: *run
+      focus: 1
+  - text: 失点も6試合で3。リーグでいちばん少ない側に並んでいました。
+    card:
+      <<: *run
+      focus: 2
+  - text: その無敗が、この日止まりました。
+    card: none
+  - text: 55分に先制しながら、62分と70分に2点を返されています。
+    card: none
+  - text: 結果は1対2。今季のリーグ戦で、初めての負けでした。
+    card: none
+    image: assets/images/20261011_tanaka_rating/01_w.jpg
+  - text: チームが初めて落とした日に、田中碧には先発で最も高い点が付いた。
+    card: none
+    emph: true
+  - text: 4試合続けて同じ先発が組まれていて、この試合もその顔ぶれのままでした。
+    card: none
+  sources:
+  - https://www.bbc.co.uk/sport/football/live/c620rnn3zg17t
+  - https://www.vavel.com/en/football/2026/10/10/premier-league/1274670-arsenal-2-1-leeds-post-match-leeds-player-ratings.html
+  - https://www.leedsunited.com/en/news/leeds-united-run-premier-league-champions-arsenal-close-in-tight-emirates-defeat

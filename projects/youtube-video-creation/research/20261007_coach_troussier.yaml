@@ -1,0 +1,726 @@
+# 監督の経歴：フィリップ・トルシエ（10/7）。1998年秋〜2002年6月の日本代表監督。シリーズ「監督の経歴」。
+# 日本代表の50試合は JFA の公式記録「日本代表 試合別出場記録」（AGame.pdf、Wayback 2016-03-03 の控え）の監督欄から数えた（raw の1節に全行）。
+#   JFA の今のサイトに 1998〜2002 年の試合日程・結果のページは無い（404）。数え方は 10/6 の3本と同じ：国際Aマッチだけ、PK戦は引き分け
+#   （JFA の表は 2000-06-04 フランス戦 2-2 PK2-4 を負けにしている）。英語版 Wikipedia の監督成績（43試合）は集計が違うので使わない。
+#   比べの数字はザッケローニ・ハリルホジッチ・森保の取材メモの表から（アジア杯：ザック 4勝2分、森保 12試合9勝、アギーレ 3勝1分は英語版 Wikipedia）。
+# 大会ごとの成績は JFA の殿堂の紹介文と、英語版 Wikipedia の各大会の記事（ワールドユース1999・シドニー五輪・アジアカップ2000・コンフェデ杯2001）。
+# W杯日韓大会の4試合は JFA「ワールドカップヒストリー」（2018）。アフリカの経歴と就任の経緯は英語版・日本語版 Wikipedia。
+# 本人の言葉：ロシア戦の勝ち点3とフラット3はゲキサカ（2012-01-22、松田直樹メモリアルゲーム）、殿堂入りは JFA（2020-09-10）、レリーフ授与は JFA（2022-06-08）。
+#   日本代表監督の時期（1998〜2002）の本人の言葉は、当時の記事の控えを辿れず使っていない（raw の5節）。
+# 冒頭は山場（W杯初勝利・初のベスト16と本人の言葉）から。基礎DATAは3節目で3行だけ読む。ネットの反応は入れていない（シリーズの回）。
+# 写真: ゲキサカの記事の写真（代理店の表記・透かしなし）。01 2012年の松田直樹メモリアルゲーム（©Koki NAGAHAMA）、
+#   03 2024年アジア杯の日本対ベトナム（©Koki NAGAHAMA/GEKISAKA）、04 2024年アジア杯の会見（同）。
+#   日本代表監督の時期の写真は見つからなかった（Commons は2枚だけ、ゲキサカの 2020 の1枚は ©Getty Images で削除）。材料の控えは research/raw/20261007_coach_troussier.md。
+date: 2026年10月07日
+slot: other_1
+format: news
+series: 監督の経歴
+people:
+- フィリップ・トルシエ
+theme:
+  id: coach_troussier
+  league: ''
+  league_name: 日本代表
+  kind: other
+  topic: フィリップ・トルシエ
+  title: トルシエ、日本代表を初めてW杯の16強に。フラット3と4年間の数字
+  question: 日本代表を初めてW杯のベスト16に導いたトルシエの4年間は、数字で並べるとどんな姿だったのか
+  takeaway: JFA の公式記録から数えた日本代表50試合（PK戦は引き分け）は23勝16分け11敗、勝率46.0%。ザッケローニ54.5%・アギーレ60.0%・ハリルホジッチ55.3%・森保一68.5%と同じ数え方で並べると通算は5人で最も低いが、アジアカップ（6試合5勝1分け、83.3%）とW杯本大会（4試合2勝、50%）は5人で最高。公式大会21試合は61.9%、親善試合29試合は34.5%で、通算を下げたのは引き分けの多い親善試合と、就任から1999年までの8試合（1勝）だった
+  opening_image: assets/images/20261007_coach_troussier/01_w.jpg
+short_title: トルシエ、W杯初勝利の夜を語る「素晴らしい経験だった」
+thumbnail:
+  photo: assets/images/20261007_coach_troussier/01_w.jpg
+  short_photo: assets/images/20261007_coach_troussier/01_v.jpg
+  line1: トルシエ 通算の勝率は46%
+  line2: 大会の勝率は歴代●●
+  tags:
+  - トルシエ
+  - 日本代表
+  - フラット3
+  - 日韓W杯
+  - 監督の経歴
+sections:
+- id: yokohama
+  main: true
+  heading: W杯で初めてつかんだ勝ち点3
+  tier: 報道
+  telop: 1998年は3戦全敗。2002年、2勝1分けの首位で初のベスト16
+  narrator: キャスター
+  say:
+  - text: 2002年、日本と韓国で開かれたW杯。トルシエ監督の日本が、歴史を動かしました。
+    short_only: true
+    image: assets/images/20261007_coach_troussier/01_w.jpg
+  - text: 4年前の初出場は3戦全敗。その壁を、監督は松田直樹の名を挙げて振り返ります。
+    image: assets/images/20261007_coach_troussier/01_w.jpg
+    card: none
+  - text: 直樹と一緒に、日本のサッカー史上初めて
+    voice: トルシエ監督
+    card: none
+  - text: W杯で勝ち点3を取れた
+    voice: トルシエ監督
+    cont: true
+    card: none
+  - text: 素晴らしい経験だった。
+    voice: トルシエ監督
+    cont: true
+    card: none
+  - text: 最後はチュニジアも破り、2勝1分けの首位。日本は初めてベスト16へ進みます。
+    emph: true
+    card: none
+  quotes_from:
+  - ゲキサカ https://web.gekisaka.jp/news/japan/detail/?95091-93500-fl
+  sources:
+  - https://web.gekisaka.jp/news/japan/detail/?95091-93500-fl
+  - https://www.jfa.jp/national_team/news/00017492/
+  - https://www.jfa.jp/national_team/news/00017530/
+- id: worldcup
+  heading: 埼玉、横浜、長居、そして雨の宮城
+  tier: 確定
+  official: true
+  telop: 初の勝ち点、初の勝利、初の1次リーグ突破。トルコに0対1で終わる
+  narrator: 解説
+  card:
+    type: table
+    title: W杯日韓大会の4試合（2002）
+    columns: &id001
+    - 日付
+    - 相手
+    - 結果
+    rows: &id002
+    - - 6月4日
+      - ベルギー
+      - 2-2
+    - - 6月9日
+      - ロシア
+      - 1-0 勝ち
+    - - 6月14日
+      - チュニジア
+      - 2-0 勝ち
+    - - 6月18日
+      - トルコ（1回戦）
+      - 0-1 負け
+  say:
+  - text: 初戦は埼玉でベルギー。先制されたあと、鈴木隆行と稲本潤一のゴールで逆転します。
+    image: assets/images/20261007_coach_troussier/01.jpg
+    card:
+      type: table
+      title: W杯日韓大会の4試合（2002）
+      columns: *id001
+      rows: *id002
+      highlight_row: 0
+  - text: 終盤に追いつかれて2対2。それでも、日本がW杯で取った初めての勝ち点でした。
+    card:
+      type: table
+      title: W杯日韓大会の4試合（2002）
+      columns: *id001
+      rows: *id002
+      highlight_row: 0
+  - text: 横浜のロシア戦は後半6分。柳沢敦が落としたボールを、稲本が右足で決めます。
+    card:
+      type: table
+      title: W杯日韓大会の4試合（2002）
+      columns: *id001
+      rows: *id002
+      highlight_row: 1
+  - text: この1点を守り切り、W杯の5試合目で、ついに初めての白星です。
+    emph: true
+    card:
+      type: table
+      title: W杯日韓大会の4試合（2002）
+      columns: *id001
+      rows: *id002
+      highlight_row: 1
+  - text: 長居のチュニジア戦。トルシエはハーフタイムに、森島寛晃と市川大祐を送り出します。
+    card:
+      type: table
+      title: W杯日韓大会の4試合（2002）
+      columns: *id001
+      rows: *id002
+      highlight_row: 2
+  - text: その森島が後半3分に先制。中田英寿も頭で続き、2対0で勝ち切りました。
+    card:
+      type: table
+      title: W杯日韓大会の4試合（2002）
+      columns: *id001
+      rows: *id002
+      highlight_row: 2
+  - text: ベスト8をかけたトルコ戦は、雨の宮城。
+    card:
+      type: table
+      title: W杯日韓大会の4試合（2002）
+      columns: *id001
+      rows: *id002
+      highlight_row: 3
+  - text: 前半12分、コーナーキックから頭で決められ、0対1の負けで大会を去りました。
+    card:
+      type: table
+      title: W杯日韓大会の4試合（2002）
+      columns: *id001
+      rows: *id002
+      highlight_row: 3
+  sources:
+  - https://www.jfa.jp/national_team/news/00017494/
+  - https://www.jfa.jp/national_team/news/00017519/
+  - https://www.jfa.jp/national_team/news/00017530/
+  - https://www.jfa.jp/national_team/news/00017535/
+  - https://web.archive.org/web/20160303165323/http://www.jfa.or.jp/archive/daihyo/daihyo/data/AGame.pdf
+- id: data
+  heading: 基礎DATA
+  tier: 報道
+  official: true
+  telop: フィリップ・トルシエの基礎DATA
+  narrator: キャスター
+  card:
+    type: table
+    title: フィリップ・トルシエの基礎DATA
+    columns: &id003
+    - 項目
+    - 内容
+    rows: &id004
+    - - 生まれ
+      - 1955年3月21日（71歳）、フランス・パリ
+    - - 選手時代
+      - DF。フランス2部のクラブで142試合
+    - - 監督の始まり
+      - 1983年、28歳
+    - - 主なタイトル
+      - アジアカップ（2000）、コートジボワール1部3連覇
+    - - 日本代表監督
+      - 1998年秋〜2002年6月、国際Aマッチ50試合
+    - - 日本のあと
+      - カタール代表、マルセイユ、ベトナム代表など
+  say:
+  - text: この日本代表の監督が、1955年パリ生まれのフィリップ・トルシエ。
+    image: assets/images/20261007_coach_troussier/03_t.jpg
+    card:
+      type: table
+      title: フィリップ・トルシエの基礎DATA
+      columns: *id003
+      rows: *id004
+      highlight_row: 0
+  - text: 選手時代はフランス2部の守備の選手で、28歳で監督の道に入りました。
+    card:
+      type: table
+      title: フィリップ・トルシエの基礎DATA
+      columns: *id003
+      rows: *id004
+      highlight_row: 2
+  - text: 日本代表を率いたのは、1998年の秋からW杯までの4年足らずです。
+    card:
+      type: table
+      title: フィリップ・トルシエの基礎DATA
+      columns: *id003
+      rows: *id004
+      highlight_row: 4
+  sources:
+  - https://www.jfa.jp/about_jfa/news/00025303/
+  - https://en.wikipedia.org/wiki/Philippe_Troussier
+  - https://ja.wikipedia.org/wiki/%E3%83%95%E3%82%A3%E3%83%AA%E3%83%83%E3%83%97%E3%83%BB%E3%83%88%E3%83%AB%E3%82%B7%E3%82%A8
+  - https://web.archive.org/web/20160303165323/http://www.jfa.or.jp/archive/daihyo/daihyo/data/AGame.pdf
+- id: africa
+  heading: アフリカで呼ばれた「白い呪術師」
+  tier: 報道
+  telop: コートジボワールで3連覇。南アフリカを率いて1998年のW杯へ
+  narrator: 解説
+  card:
+    type: table
+    title: 日本に来る前に率いた主なチーム
+    columns: &id005
+    - チーム
+    - 時期
+    - 成績
+    rows: &id006
+    - - アセック・ミモザ
+      - 1989〜92
+      - コートジボワール1部 3連覇
+    - - コートジボワール代表
+      - '1993'
+      - W杯予選の途中で退任
+    - - FUSラバト
+      - 1995〜97
+      - モロッコ国王杯 優勝（1995）
+    - - ナイジェリア代表
+      - '1997'
+      - W杯出場を決める（予選途中から）
+    - - ブルキナファソ代表
+      - 1997〜98
+      - アフリカ選手権 4位（開催国）
+    - - 南アフリカ代表
+      - '1998'
+      - W杯フランス大会 2分1敗
+  say:
+  - text: トルシエが名を上げたのは、アフリカでした。
+    image: assets/images/20261007_coach_troussier/03_t.jpg
+    card:
+      type: table
+      title: 日本に来る前に率いた主なチーム
+      columns: *id005
+      rows: *id006
+      highlight_row: 0
+  - text: コートジボワールのアセック・ミモザで、リーグ3連覇。
+    card:
+      type: table
+      title: 日本に来る前に率いた主なチーム
+      columns: *id005
+      rows: *id006
+      highlight_row: 0
+  - text: アフリカでついた呼び名は、「白い呪術師」でした。
+    card:
+      type: table
+      title: 日本に来る前に率いた主なチーム
+      columns: *id005
+      rows: *id006
+      highlight_row: 0
+  - text: 1997年には、予選の途中からナイジェリア代表を任され、W杯出場を決めます。
+    card:
+      type: table
+      title: 日本に来る前に率いた主なチーム
+      columns: *id005
+      rows: *id006
+      highlight_row: 3
+  - text: それでも本大会は別の監督に託され、次は開催国ブルキナファソへ。
+    card:
+      type: table
+      title: 日本に来る前に率いた主なチーム
+      columns: *id005
+      rows: *id006
+      highlight_row: 4
+  - text: アフリカ選手権で、ブルキナファソを当時いちばんの4位まで押し上げました。
+    card:
+      type: table
+      title: 日本に来る前に率いた主なチーム
+      columns: *id005
+      rows: *id006
+      highlight_row: 4
+  - text: 1998年、南アフリカ代表を率いてW杯フランス大会へ。結果は2分け1敗です。
+    card:
+      type: table
+      title: 日本に来る前に率いた主なチーム
+      columns: *id005
+      rows: *id006
+      highlight_row: 5
+  - text: その秋、日本の協会が次の代表監督に選んだのが彼でした。
+    card: none
+  - text: 最初に打診したアーセナルのベンゲル監督に断られ、その推薦で決まった人選です。
+    card: none
+  sources:
+  - https://www.jfa.jp/about_jfa/news/00025303/
+  - https://en.wikipedia.org/wiki/Philippe_Troussier
+  - https://ja.wikipedia.org/wiki/%E3%83%95%E3%82%A3%E3%83%AA%E3%83%83%E3%83%97%E3%83%BB%E3%83%88%E3%83%AB%E3%82%B7%E3%82%A8
+  - https://www.rsssf.org/tablesi/ivochamp.html
+  - https://www.rsssf.org/tables/98a-det.html
+- id: youth
+  heading: ユースで準優勝、解任論が出た春
+  tier: 報道
+  telop: 1999年ワールドユース準優勝。A代表はコパ・アメリカで1次リーグ敗退
+  narrator: キャスター
+  card:
+    type: table
+    title: トルシエが率いた大会（PK戦は引き分け）
+    columns: &id007
+    - 年
+    - 大会
+    - 成績
+    - 勝・分・負
+    rows: &id008
+    - - '1999'
+      - ワールドユース（U-20）
+      - 準優勝
+      - 4・1・2
+    - - '1999'
+      - コパ・アメリカ
+      - 1次リーグ敗退
+      - 0・1・2
+    - - '2000'
+      - シドニー五輪（U-23）
+      - ベスト8
+      - 2・1・1
+    - - '2000'
+      - アジアカップ
+      - 優勝
+      - 5・1・0
+    - - '2001'
+      - コンフェデ杯
+      - 準優勝
+      - 3・1・1
+    - - '2002'
+      - W杯日韓大会
+      - ベスト16
+      - 2・1・1
+  say:
+  - text: 1999年、トルシエはA代表に加えて、20歳以下の代表も率います。
+    image: assets/images/20261007_coach_troussier/01.jpg
+    card:
+      type: table
+      title: トルシエが率いた大会（PK戦は引き分け）
+      columns: *id007
+      rows: *id008
+      highlight_row: 0
+  - text: ナイジェリアでのワールドユース。初戦を落としながら勝ち上がり、決勝まで進みました。
+    card:
+      type: table
+      title: トルシエが率いた大会（PK戦は引き分け）
+      columns: *id007
+      rows: *id008
+      highlight_row: 0
+  - text: 決勝はスペインに0対4。それでも、日本がフィファの大会で初めて手にした準優勝です。
+    emph: true
+    card:
+      type: table
+      title: トルシエが率いた大会（PK戦は引き分け）
+      columns: *id007
+      rows: *id008
+      highlight_row: 0
+  - text: 一方のA代表は、招待されたコパ・アメリカで2敗1分け。1次リーグで姿を消します。
+    card:
+      type: table
+      title: トルシエが率いた大会（PK戦は引き分け）
+      columns: *id007
+      rows: *id008
+      highlight_row: 1
+  - text: 翌2000年の春にはメキシコと韓国に敗れ、解任を求める声が上がりました。
+    card: none
+  - text: 去就がかかった6月、モロッコでの大会で、前回のW杯王者フランスと2対2で引き分け。
+    card: none
+  - text: 続くキリンカップも負けなしで乗り切り、指揮を続けることになります。
+    card: none
+  - text: 9月のシドニー五輪では、23歳以下の代表を率いて1次リーグを突破しました。
+    card:
+      type: table
+      title: トルシエが率いた大会（PK戦は引き分け）
+      columns: *id007
+      rows: *id008
+      highlight_row: 2
+  sources:
+  - https://en.wikipedia.org/wiki/1999_FIFA_World_Youth_Championship
+  - https://en.wikipedia.org/wiki/Football_at_the_2000_Summer_Olympics_%E2%80%93_Men%27s_tournament
+  - https://www.jfa.jp/about_jfa/news/00025303/
+  - https://ja.wikipedia.org/wiki/%E3%83%95%E3%82%A3%E3%83%AA%E3%83%83%E3%83%97%E3%83%BB%E3%83%88%E3%83%AB%E3%82%B7%E3%82%A8
+  - https://web.archive.org/web/20160303165323/http://www.jfa.or.jp/archive/daihyo/daihyo/data/AGame.pdf
+- id: asia
+  heading: 21得点でアジア王者、0対5からの決勝
+  tier: 確定
+  official: true
+  telop: 2000年アジアカップ優勝。2001年コンフェデ杯は5試合1失点で準優勝
+  narrator: 解説
+  card:
+    type: table
+    title: トルシエが率いた大会（PK戦は引き分け）
+    columns: *id007
+    rows: *id008
+  say:
+  - text: 10月、レバノンでのアジアカップ。1次リーグでウズベキスタンを8対1で下します。
+    card:
+      type: table
+      title: トルシエが率いた大会（PK戦は引き分け）
+      columns: *id007
+      rows: *id008
+      highlight_row: 3
+  - text: イラク、中国、決勝でサウジアラビアを破り、日本は2度目のアジアの頂点へ。
+    card:
+      type: table
+      title: トルシエが率いた大会（PK戦は引き分け）
+      columns: *id007
+      rows: *id008
+      highlight_row: 3
+  - text: 6試合で21得点。この年、トルシエはアジアの年間最優秀監督に選ばれました。
+    emph: true
+    card:
+      type: table
+      title: トルシエが率いた大会（PK戦は引き分け）
+      columns: *id007
+      rows: *id008
+      highlight_row: 3
+  - text: ところが翌年3月、敵地のフランス戦で0対5の大敗を喫します。
+    card: none
+  - text: 守りを立て直して迎えた6月、W杯の前年に開かれるコンフェデ杯。
+    card:
+      type: table
+      title: トルシエが率いた大会（PK戦は引き分け）
+      columns: *id007
+      rows: *id008
+      highlight_row: 4
+  - text: ブラジルとも引き分け、5試合で許したゴールは1つだけでした。
+    card:
+      type: table
+      title: トルシエが率いた大会（PK戦は引き分け）
+      columns: *id007
+      rows: *id008
+      highlight_row: 4
+  - text: 決勝は、ふたたびフランス。2か月半前の0対5から、1点差の0対1まで迫りました。
+    card:
+      type: table
+      title: トルシエが率いた大会（PK戦は引き分け）
+      columns: *id007
+      rows: *id008
+      highlight_row: 4
+  sources:
+  - https://en.wikipedia.org/wiki/2000_AFC_Asian_Cup
+  - https://en.wikipedia.org/wiki/2001_FIFA_Confederations_Cup
+  - https://web.archive.org/web/20160303165323/http://www.jfa.or.jp/archive/daihyo/daihyo/data/AGame.pdf
+  - https://www.jfa.jp/about_jfa/news/00025303/
+- id: flat3
+  heading: 「フラット3、イコール直樹」
+  tier: 報道
+  telop: 3人の守備の選手を横一列に並べ、ラインを高く保つ守り方
+  narrator: キャスター
+  say:
+  - text: 就任から最後まで貫いたのが、フラット3と呼ばれる守り方です。
+    image: assets/images/20261007_coach_troussier/01_w.jpg
+    card: none
+  - text: 3人の守備の選手を横一列に並べてラインを高く保ち、相手をオフサイドに誘います。
+    card: none
+  - text: W杯でその3人に入っていたのが、松田直樹でした。
+    card: none
+  - text: 2011年に亡くなった松田さんを悼む試合で、監督はこう話しています。
+    card: none
+  - text: フラット3、イコール直樹だった。
+    voice: トルシエ監督
+    card: none
+  - text: 直樹がいなければ、フラット3にする意味はない。
+    voice: トルシエ監督
+    cont: true
+    card: none
+  - text: この日のトルシエは、守備の選手をいつもより1人多い4人で並べました。
+    card: none
+  - text: 中田浩二、宮本、森岡、直樹。
+    voice: トルシエ監督
+    card: none
+  - text: その4人しか、フラット3を上手くできなかった。
+    voice: トルシエ監督
+    cont: true
+    card: none
+  quotes_from:
+  - ゲキサカ https://web.gekisaka.jp/news/japan/detail/?95091-93500-fl
+  sources:
+  - https://web.gekisaka.jp/news/japan/detail/?95091-93500-fl
+  - https://www.jfa.jp/national_team/news/00017494/
+  - https://ja.wikipedia.org/wiki/%E3%83%95%E3%83%A9%E3%83%83%E3%83%88%E3%82%B9%E3%83%AA%E3%83%BC
+- id: after
+  heading: 殿堂入りの言葉、「私のせいですね」
+  tier: 報道
+  official: true
+  telop: 2020年、日本サッカー殿堂に。W杯のあとはカタールやベトナムの代表を指揮
+  narrator: 解説
+  say:
+  - text: W杯のあと日本を離れ、カタール代表やマルセイユ、ベトナム代表を指揮しました。
+    image: assets/images/20261007_coach_troussier/04_w.jpg
+    card: none
+  - text: 2024年のアジアカップでは、ベトナムの監督として日本と戦っています。
+    card: none
+  - text: 2020年、日本サッカー殿堂に入ることが決まり、協会にこう寄せました。
+    card: none
+  - text: 日本サッカー協会での活動経験は、
+    voice: トルシエ監督
+    card: none
+  - text: 私のキャリアの中でも忘れることのできない
+    voice: トルシエ監督
+    cont: true
+    card: none
+  - text: 大変貴重なものでした。
+    voice: トルシエ監督
+    cont: true
+    card: none
+  - text: 決して全てがスムーズに進んだ道のりではありませんでしたが、
+    voice: トルシエ監督
+    card: none
+  - text: 私のせいですね。
+    voice: トルシエ監督
+    cont: true
+    card: none
+  quotes_from:
+  - 日本サッカー協会 https://www.jfa.jp/about_jfa/news/00025303/
+  sources:
+  - https://www.jfa.jp/about_jfa/news/00025303/
+  - https://en.wikipedia.org/wiki/Philippe_Troussier
+  - https://ja.wikipedia.org/wiki/%E3%83%95%E3%82%A3%E3%83%AA%E3%83%83%E3%83%97%E3%83%BB%E3%83%88%E3%83%AB%E3%82%B7%E3%82%A8
+  - https://web.gekisaka.jp/news/japan/detail/?399997-399997-fl
+- id: view
+  viewpoint: true
+  heading: 通算46%と大会の勝率、トルシエの50試合
+  tier: 背景
+  telop: 通算46.0%は森保一より22ポイント余り下。アジア杯83.3%とW杯50%は5人で最高
+  narrator: キャスター
+  card:
+    type: table
+    title: 日本代表監督の勝率（JFAの記録から計算・PK戦は引き分け）
+    columns: &id009
+    - 監督
+    - 試合
+    - 通算
+    - アジア杯
+    - W杯本大会
+    rows: &id010
+    - - トルシエ（1998〜2002）
+      - '50'
+      - 46.0%
+      - 83.3%
+      - 50.0%
+    - - ザッケローニ（2010〜14）
+      - '55'
+      - 54.5%
+      - 66.7%
+      - 0%
+    - - アギーレ（2014〜15）
+      - '10'
+      - 60.0%
+      - 75.0%
+      - ―
+    - - ハリルホジッチ（2015〜18）
+      - '38'
+      - 55.3%
+      - ―
+      - ―
+    - - 森保一（2018〜26）
+      - '111'
+      - 68.5%
+      - 75.0%
+      - 37.5%
+  say:
+  - text: トルシエの50試合を、のちの4人の代表監督と同じ数え方で並べます。
+    image: assets/images/20261007_coach_troussier/03_t.jpg
+    card:
+      type: table
+      title: 日本代表監督の勝率（JFAの記録から計算・PK戦は引き分け）
+      columns: *id009
+      rows: *id010
+  - text: もとにしたのは協会の試合記録で、PK戦の勝ち負けは引き分けに数えました。
+    card:
+      type: table
+      title: 日本代表監督の勝率（JFAの記録から計算・PK戦は引き分け）
+      columns: *id009
+      rows: *id010
+  - text: 通算は23勝16分け11敗で、勝率46.0%。
+    card:
+      type: table
+      title: 日本代表監督の勝率（JFAの記録から計算・PK戦は引き分け）
+      columns: *id009
+      rows: *id010
+      highlight_row: 0
+  - text: 森保一の通算より、22ポイント余り低い数字です。
+    card:
+      type: table
+      title: 日本代表監督の勝率（JFAの記録から計算・PK戦は引き分け）
+      columns: *id009
+      rows: *id010
+      highlight_row: 4
+  - text: ところが大会に絞ると、順番が入れ替わります。
+    card:
+      type: table
+      title: 日本代表監督の勝率（JFAの記録から計算・PK戦は引き分け）
+      columns: *id009
+      rows: *id010
+      highlight_row: 0
+  - text: アジアカップは6試合で5勝、83.3%。森保一の75%も上回り、5人で最高です。
+    emph: true
+    card:
+      type: table
+      title: 日本代表監督の勝率（JFAの記録から計算・PK戦は引き分け）
+      columns: *id009
+      rows: *id010
+      highlight_row: 0
+  - text: W杯の本大会は、4試合で2勝。勝率は5割です。
+    card:
+      type: table
+      title: 日本代表監督の勝率（JFAの記録から計算・PK戦は引き分け）
+      columns: *id009
+      rows: *id010
+      highlight_row: 0
+  - text: ザッケローニの0勝、森保一の8試合3勝を上回ります。
+    card:
+      type: table
+      title: 日本代表監督の勝率（JFAの記録から計算・PK戦は引き分け）
+      columns: *id009
+      rows: *id010
+      highlight_row: 4
+  - text: では、通算を押し下げたのは何か。
+    card:
+      type: table
+      title: トルシエの50試合を、大会と年で分けると
+      columns: &id011
+      - 分け方
+      - 試合
+      - 勝・分・負
+      - 勝率
+      rows: &id012
+      - - 公式大会
+        - '21'
+        - 13・4・4
+        - 61.9%
+      - - 親善試合
+        - '29'
+        - 10・12・7
+        - 34.5%
+      - - 就任〜1999年
+        - '8'
+        - 1・4・3
+        - 12.5%
+      - - 2000年
+        - '18'
+        - 11・5・2
+        - 61.1%
+      - - 2001〜02年
+        - '24'
+        - 11・7・6
+        - 45.8%
+  - text: 公式大会の21試合は13勝で、勝率は6割を超えます。
+    card:
+      type: table
+      title: トルシエの50試合を、大会と年で分けると
+      columns: *id011
+      rows: *id012
+      highlight_row: 0
+  - text: 親善試合は29試合で10勝。勝率は34.5%です。
+    emph: true
+    card:
+      type: table
+      title: トルシエの50試合を、大会と年で分けると
+      columns: *id011
+      rows: *id012
+      highlight_row: 1
+  - text: 公式大会より27ポイント余り低く、引き分けが12もありました。
+    card:
+      type: table
+      title: トルシエの50試合を、大会と年で分けると
+      columns: *id011
+      rows: *id012
+      highlight_row: 1
+  - text: 就任から1999年までの8試合は、勝ちが1つでした。
+    card:
+      type: table
+      title: トルシエの50試合を、大会と年で分けると
+      columns: *id011
+      rows: *id012
+      highlight_row: 2
+  - text: それが2000年は18試合で11勝。勝率は61.1%まで上がりました。
+    card:
+      type: table
+      title: トルシエの50試合を、大会と年で分けると
+      columns: *id011
+      rows: *id012
+      highlight_row: 3
+  - text: 2001年からW杯までの24試合は11勝。勝率は45.8%に落ち着きました。
+    card:
+      type: table
+      title: トルシエの50試合を、大会と年で分けると
+      columns: *id011
+      rows: *id012
+      highlight_row: 4
+  - text: 2022年、殿堂のレリーフを受け取ったときの言葉です。
+    card: none
+  - text: 皆さんと一丸となって成し遂げた業績は、
+    voice: トルシエ監督
+    card: none
+  - text: 私達全員の誇りと言えます。
+    voice: トルシエ監督
+    cont: true
+    card: none
+  quotes_from:
+  - 日本サッカー協会 https://www.jfa.jp/football_museum/news/00029771/
+  sources:
+  - https://web.archive.org/web/20160303165323/http://www.jfa.or.jp/archive/daihyo/daihyo/data/AGame.pdf
+  - https://web.archive.org/web/2016/http://www.jfa.or.jp/archive/daihyo/daihyo/data/AGame.pdf
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_results_(2010%E2%80%932019)
+  - https://www.jfa.jp/samuraiblue/schedule_result/2011.html
+  - https://www.jfa.jp/samuraiblue/schedule_result/2026.html
+  - https://www.jfa.jp/football_museum/news/00029771/

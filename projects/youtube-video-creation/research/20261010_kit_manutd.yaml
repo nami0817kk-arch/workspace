@@ -1,0 +1,432 @@
+# ユニフォームとエンブレムの歴史 第2回：マンチェスター・ユナイテッド（10/10 公開）。
+# 材料の控えは research/raw/20261010_kit_manutd_material.md。**この控えの外へ出ていない。**
+# 節の並びは第1回（research/20261009_kit_liverpool.yaml）と同じ型:
+#   ①オープニング（一言→題→引き）②エンブレムの年表（main・頭に強い一点・timeline の板・読み上げは5行）
+#   ③色の歴史 ④胸スポンサーと用具メーカー（金額の伸びは折れ線）⑤見立て（自分で数えた比べ3つ）
+#
+# **強い一点は材料 §8 が推した (b)**：1998年から28年変わっていないこの紋章から、
+#   「Football Club」の文字が消えている。②の年表の板がそのまま効き、⑥②のウッドワードの言葉に繋がる。
+#
+# **材料の食い違いの扱い**（§1）:
+#   シャツに初めて付いた季は **1972-73** を採り、「1971年とする資料もある」と一行添えた
+#   （Historical Football Kits は実際の着用シャツの写真にもとづく）。**1973年説は採らない**。
+# **言わないと決めたもの**:
+#   **「デイヴィスが赤を選んだ」とは言わない**（§2。赤を選んだ理由も決めた人も、一次に当たる記述が無い）。
+#   語りは「1888〜89年ごろから赤と白を使っていて、1902年の改名のときに赤に固まった」までにした。
+#   **1998年の意匠がその後変わっていないことは HFK の2015年時点までしか確認できていない**ので、
+#   語りは「いまも基本の形は同じ」という言い方にしてある（§5 比べ③の注記）。
+#   スナップドラゴンの金額は 20-F に書かれていないので「報道では」を付けた（§4 の注記）。
+#   バスビーが「レッド・デビルズ」を採った理由の本人の言葉は見つかっていないので引かない（§6④）。
+#
+# **ミュンヘンの事故（1958年）はこの回に入れていない。**
+#   材料 §1 の決まりは「不死鳥の話は誤り」と「2008年の追悼のユニフォーム」の2行まで、だが、
+#   **語りの数字を自動で黄色くする仕組み（AUTO_STRONG）がある**以上、追悼に触れて数字が近くに並ぶ形を
+#   作らないほうが安全だと判断した。**犠牲者の数も、事故そのものも、一度も出していない。**
+# **女子チームの話は入れていない**（決まり）。
+#
+# 第1回（リヴァプール）と重ねないようにしたもの（材料 §8 の表のとおり）:
+#   「◯年に1回」の形は使わない（あちらが「エンブレムは8.4年に1回」）。こちらは「24年で5回 → 125季で6季」。
+#   「1年ぶんを時間に直す」形は使わない（あちらが「日立の1年分は今の7時間18分」）。こちらは**1試合あたり**。
+#   胸スポンサーの社数の比べで**リヴァプールを持ち出さない**（あちらが使った比べ）。ユナイテッドの中だけで比べた。
+#   更衣室で色が決まる逸話は無いので、**更衣室で色を脱いだ話**（灰色のシャツ）を使った。
+#   「イングランド初」も「リヴァプールより3年あと」も言わない（あちらの回を前提にすることになる）。
+#   見立ての1行目の言い回しも変えた（あちらは「ここからは、自分で数えた比べを3つ並べます」）。
+#   問いの文も変えた（あちらは「どうやっていまの形になったのか」）。
+#
+# **プレミア20クラブ紹介 ⑯（2026-09-24 公開）と重ねない**:
+#   あちらが読み上げたのは「創立1878年・鉄道の操車場・ニュートン・ヒース」「愛称はレッド・デビルズ」
+#   「1902年1月、2670ポンドの借金で解散の命令」「実業家4人が500ポンドずつ出資」。
+#   **借金の額・解散命令・4人の出資・操車場という言い方は、この回では一度も使っていない。**
+#   1878年と親会社の鉄道会社は、緑と金の由来として必要なので1行だけ触れている。
+#
+# アルファベットは読み上げに出さない（§8）。
+#   「Football Club」→「フットボール・クラブ」、AIG →「エーアイジー」、FA →「イングランドサッカー協会」は
+#   罰金の行で「クラブは1万ポンドの罰金」と主語を変えて回避した。20-F・LUHG は読まない（板にも出さない）。
+# ネットの反応は入れない（シリーズの回。ブラウザの道具を使っていないので集めていない）→ voice_min: 0。
+#
+# 写真は手元の2枚＋取材で取った1枚。入れ替えは2回:
+#   ②③＝オールド・トラッフォードの中（手元） → 灰色のシャツの逸話＝ファーガソン（左）＋本拠地（右）の1枚
+#   （2026-09-25「別の人がその人について語るときは、その人も画面に出す」。縦写真1枚は置けないので
+#   tools/pairphoto.py で横に並べた） → ④⑤＝本拠地の外観（手元）。
+#   ファーガソンは Commons に2013年の1枚しか無く、顔の検出も効かなかったので facecrop ではなく pairphoto で組んだ。
+# サムネは構図 scene（横に広い1920x1080、クラブ名入り、答えは ●● で伏せた）。
+#   同じ日のもう1本（記録の解説・代表の最多出場）は number なので、2本で構図を変えてある。
+format: news
+voice_min: 0
+slot: other_1
+date: 2026年10月10日
+series: ユニフォームとエンブレムの歴史
+people:
+- マンチェスター・ユナイテッド
+- エド・ウッドワード
+- アレックス・ファーガソン
+short_title: マンチェスター・ユナイテッドの紋章から消えた、フットボール・クラブの文字
+theme:
+  id: kit_manutd
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: マンチェスター・ユナイテッド
+  title: マンチェスター・ユナイテッドの紋章、28年変わっていない。そこから消えた言葉
+  question: マンチェスター・ユナイテッドの胸にある印は、何が変わって何が残ったのか
+  lead: 胸の真ん中にいる、三叉の槍を持った赤い悪魔。
+  hook: 変わらなくなった、その始まりに何があったのかを見ます。
+  takeaway: マンチェスター・ユナイテッドの紋章は1998年の作り直しから形が変わっていない。その作り直しで、帯から「Football Club」の2語が消えた。2013年にエド・ウッドワードが戻す意向を語ったが、2026年のシャツにも文字は無い。創立の1878年は白いシャツに青い紐で、1881年は親会社だった鉄道会社の色の緑と金、1888年ごろに赤と白、1892年にまた緑と金へ戻り、1902年の改名で赤に落ち着いた。赤を選んだ理由と決めた人は、どの資料にも書かれていない。胸スポンサーは1982年のシャープが最初で5年50万ポンド、いまのスナップドラゴンは報道で年6000万ポンド超。用具のアディダスは2035年6月まで、通算の最低保証が16億5000万ポンドで、チャンピオンズリーグに出ない年は年1000万ポンド減り、プレミアリーグにいない年は半分になる。自分で数えると、148年のうち胸に印があったのは55季で37.2%。ニュートン・ヒースだった24年で色は5回変わったが、そのあとの125季で赤でなかったのは6季だけで4.8%。アディダスの年9000万ポンドは1982年のシャープの年10万ポンドの900倍で、リーグ戦38試合で割ると1試合およそ237万ポンドになる
+  opening_image: assets/backgrounds/stadium_マンチェスターユナイテッド_in.png
+thumbnail:
+  layout: scene
+  photo: assets/backgrounds/stadium_マンチェスターユナイテッド_in.png
+  band: bottom
+  line1: マンチェスター・ユナイテッド
+  line2: 紋章から消えた●●の文字
+  crests:
+  - マンチェスターユナイテッド
+  tags:
+  - マンチェスター・ユナイテッド
+  - プレミアリーグ
+  - ユニフォーム
+  - エンブレム
+sections:
+- id: crest
+  main: true
+  heading: 紋章が止まって28年
+  tier: 報道
+  telop: いまの紋章は1998年から変わっていない。その作り直しで2語が消えた
+  narrator: キャスター
+  card: &crest_board
+    type: timeline
+    title: シャツに付いた紋章
+    rows:
+    - ['1948年', 市の紋章の会章。決勝だけ]
+    - ['1960年代', 帆船と白いバラ。書類だけ]
+    - ['1970年', 真ん中に赤い悪魔]
+    - ['1972-73', 初めてシャツに付く]
+    - ['1993年', 文字と帆船を白から金へ]
+    - ['1998年', 作り直し。Football Club が消える]
+    focus: '1998年'
+  say:
+  - text: ユナイテッドの胸の紋章の話です。
+    short_only: true
+    image: assets/backgrounds/stadium_マンチェスターユナイテッド_in.png
+  # **ショートの16秒に間に合わせるため、言葉を山場の頭に置いた**（`_check_quote_timing`）。
+  # 強い一点（28年変わっていない／Football Club が消えた）は、言葉のすぐ後ろの2行で言い切る
+  - text: 紋章は1998年から28年そのまま。その文字について、こう言った人がいます。
+    image: assets/backgrounds/stadium_マンチェスターユナイテッド_in.png
+    card:
+      <<: *crest_board
+      highlight_row: 5
+    emph: true
+  # 原文（材料 6-②、Inside World Football 2013-07-23）:
+  #   "We are a football club. We are not a business. The way I described it to the staff was
+  #    'we are a 135-year-old club and that's what you have to remember.'"
+  - voice: エド・ウッドワード
+    text: 我々はフットボール・クラブだ。企業ではない。
+    card: none
+  - voice: エド・ウッドワード
+    text: 職員にはこう説明した。創立135年のクラブなんだ、と。
+    cont: true
+    emph: true
+  - text: エド・ウッドワード。2013年にクラブの経営を預かった人です。
+    card: *crest_board
+  - text: 真ん中の赤い悪魔は1970年から。帯のフットボール・クラブは消えています。
+    card:
+      <<: *crest_board
+      highlight_row: 5
+  - text: 消したのは1998年の作り直し。戻すと言われたまま、いまも文字はありません。
+    card:
+      <<: *crest_board
+      highlight_row: 5
+  - text: シャツに紋章が付いたのは1972-73シーズン。1971年とする資料もあります。
+    card:
+      <<: *crest_board
+      highlight_row: 3
+  sources:
+  - https://www.historicalkits.co.uk/Manchester_United/Manchester_United.htm
+  - https://en.wikipedia.org/wiki/Manchester_United_F.C.
+  - https://www.insideworldfootball.com/2013/07/23/manchester-united-to-become-a-football-club-again-glazers-in-for-long-term/
+  - https://www.theheraldrysociety.com/wp-content/uploads/2019/10/CoA-229-Phillips-paper.pdf
+  quotes_from:
+  - インサイド・ワールド・フットボール https://www.insideworldfootball.com/2013/07/23/manchester-united-to-become-a-football-club-again-glazers-in-for-long-term/
+- id: colour
+  heading: 最初の色は赤ではなかった
+  tier: 報道
+  telop: 1878年は白いシャツに青い紐。赤に落ち着くのは1902年の改名から
+  narrator: キャスター
+  card: &colour_board
+    type: table
+    title: 赤に落ち着くまで
+    columns: &colc
+    - いつ
+    - 格好
+    rows: &colr
+    - ['1878年', 白いシャツに青い紐]
+    - ['1881年', 緑と金。親会社の色]
+    - ['1888年ごろ', 赤と白]
+    - ['1892年', 緑と金に戻す]
+    - ['1896年', 白いシャツに紺のパンツ]
+    - ['1902年', 改名とともに赤へ]
+  say:
+  - text: 1878年に生まれたニュートン・ヒース。色は赤ではなく、白と青でした。
+    card:
+      <<: *colour_board
+      highlight_row: 0
+  - text: 1881年には緑と金のシャツを買います。親会社だった鉄道会社の色でした。
+    card:
+      <<: *colour_board
+      highlight_row: 1
+  - text: 赤と白が出てくるのは1888年か89年ごろ。
+    card:
+      <<: *colour_board
+      highlight_row: 2
+  - text: ところが1892年に1部へ入ると、緑と金に戻します。
+    card:
+      <<: *colour_board
+      highlight_row: 3
+  - text: 1902年に名前がマンチェスター・ユナイテッドへ変わり、赤に決まります。
+    card:
+      <<: *colour_board
+      highlight_row: 5
+    emph: true
+  - text: 赤を選んだ理由も、決めた人の名前も、どの資料にも残っていません。
+    card: *colour_board
+  - text: そのあとの125季で、ホームが赤でなかったのは2つの時期だけです。
+    card: &notred
+      type: table
+      title: ホームが赤でなかった季
+      columns: &nrc
+      - いつ
+      - 格好
+      rows: &nrr
+      - ['1922-23から5季', 白いシャツに、襟のまわりが深い赤のV]
+      - ['1934-35の1季', えび茶の横縞。3部への降格が迫っていた]
+  - text: 1922年から5季は、白いシャツに襟のまわりが深い赤のVでした。
+    card:
+      <<: *notred
+      highlight_row: 0
+  - text: 1934年3月、3部への降格が迫ると、縁起のよい横縞に変えています。
+    card:
+      <<: *notred
+      highlight_row: 1
+  - text: 色のせいで負けた、と言われた試合もあります。
+    card: none
+    image: assets/images/20261010_kit_manutd/pair_fergie/01.jpg
+  - text: 1996年4月13日、サウサンプトンに1対3で負けた試合です。
+  - text: 前半を終えて3点のビハインド。監督が青と白へ着替えさせます。
+  - text: 灰色のシャツはこの日が5回目。前の4試合も、ひとつも勝てていません。
+  # 原文（材料 6-①、Sky Sports）:
+  #   "The players don't like the grey strip. The players couldn't pick each other out.
+  #    They said it was difficult to see their team-mates at distance when they lifted their heads.
+  #    It was nothing to do with superstition."
+  - text: ファーガソンは、理由をこう挙げています。
+    card: none
+  - voice: アレックス・ファーガソン
+    text: 選手たちは、あの灰色を好まない。
+    card: none
+  - voice: アレックス・ファーガソン
+    text: 顔を上げたとき、離れた味方が見えないそうだ。
+    cont: true
+  - voice: アレックス・ファーガソン
+    text: 縁起をかつぐ話ではない。
+    cont: true
+    emph: true
+  - text: 規定に反する着替えで、クラブは1万ポンドの罰金を受けました。
+    card: none
+  - text: ファーガソンは、のちにこう付け加えました。
+  # 原文: "the best £10,000 I ever spent"
+  - voice: アレックス・ファーガソン
+    text: これまでに使ったなかで、いちばん有効な1万ポンドだった。
+    card: none
+    emph: true
+  - text: 灰色は、この試合で廃止になりました。
+    card: none
+  sources:
+  - https://www.historicalkits.co.uk/Manchester_United/Manchester_United.htm
+  - https://en.wikipedia.org/wiki/Manchester_United_F.C.
+  - https://www.skysports.com/football/news/11095/11972605/manchester-uniteds-grey-kit-gary-neville-reflects-on-1996-defeat-at-southampton
+  - https://www.goal.com/en/news/best-10k-i-ever-spent-story-behind-manchester-uniteds/1rfzlcjwflvh41shlmahwu79mj
+  quotes_from:
+  - スカイスポーツ https://www.skysports.com/football/news/11095/11972605/manchester-uniteds-grey-kit-gary-neville-reflects-on-1996-defeat-at-southampton
+- id: money
+  heading: 胸と作り手に動いた金
+  tier: 報道
+  telop: 胸の最初は1982年のシャープで1年10万ポンド。いまは報道で1年6000万ポンド超
+  narrator: 解説
+  card: &money_line
+    type: line
+    title: 胸スポンサーの1年あたり
+    x: &mx ['1982', '2000', '2006', '2010', '2021', '2024']
+    series: &ms
+    - [1年あたりの額, [10, 750, 1413, 2000, 4700, 6000]]
+    unit: 万ポンド
+    note: 金額が分かっているポンドの契約だけを並べた
+  say:
+  - text: マンチェスター・ユナイテッドが始まった土地、ニュートン・ヒース。
+    card: none
+    image: assets/backgrounds/stadium_マンチェスターユナイテッド.png
+  - text: そこにあった日本のシャープの物流センター。その会社が初めて胸に名前を出します。
+    card: *money_line
+  - text: 1982-83シーズン、最初の契約は5年50万ポンド。1年にすると10万です。
+    card:
+      <<: *money_line
+      highlight: '1982'
+  - text: シャープはそこから18季。このあと6社が入れ替わりますが、いちばん長い。
+    card: *money_line
+    emph: true
+  - text: 2000年からは通信のボーダフォン。4年で3000万ポンドです。
+    card:
+      <<: *money_line
+      highlight: '2000'
+  - text: 1年にすると750万ポンド。18年前の10万ポンドから75倍です。
+    card:
+      <<: *money_line
+      highlight: '2000'
+  - text: 2006年からは保険のエーアイジー。4年で5650万ポンド。
+    card:
+      <<: *money_line
+      highlight: '2006'
+  - text: 2010年からは再保険のエーオン。4年で8000万ポンド、当時の最高額です。
+    card:
+      <<: *money_line
+      highlight: '2010'
+  - text: 2021年からはソフトの会社、チームビューアー。5年で2億3500万ポンド。
+    card:
+      <<: *money_line
+      highlight: '2021'
+  - text: 1年およそ4700万ポンド。5年の契約を、3季で終えています。
+    card:
+      <<: *money_line
+      highlight: '2021'
+  - text: いまはクアルコムのスナップドラゴン。報道では1年6000万ポンドを超えます。
+    card:
+      <<: *money_line
+      highlight: '2024'
+  - text: ここからは、シャツを作っている会社の話です。
+    card: &maker
+      type: table
+      title: 用具メーカーと1年あたり
+      columns: &mkc
+      - 期間
+      - メーカー
+      - 1年あたり
+      rows: &mkr
+      - ['2002–2015', ナイキ, 約2330万ポンド]
+      - ['2015–2025', アディダス, 7500万ポンド]
+      - ['2025–2035', アディダス（延長）, 9000万ポンド]
+  - text: 2002年からのナイキは13年で3億290万ポンド。1年にすると2330万ほど。
+    card:
+      <<: *maker
+      highlight_row: 0
+  - text: 2015年にアディダスへ。1年あたり最低7500万ポンドで、当時の世界最高額。
+    card:
+      <<: *maker
+      highlight_row: 1
+  - text: 2023年7月の延長で、契約は2035年6月まで伸びました。
+    card:
+      <<: *maker
+      highlight_row: 2
+  - text: 延長分は10年で最低9億ポンド。通算では16億5000万ポンドになります。
+    card:
+      <<: *maker
+      highlight_row: 2
+    emph: true
+  - text: チャンピオンズリーグに出ない年は、この支払いが1年1000万ポンド減ります。
+    card:
+      <<: *maker
+      highlight_row: 2
+  - text: プレミアリーグにいない年は、支払いが半分になる条項も入っています。
+    card:
+      <<: *maker
+      highlight_row: 2
+  sources:
+  - https://en.wikipedia.org/wiki/Manchester_United_F.C.
+  - https://www.sec.gov/Archives/edgar/data/1549107/000110465926110384/manu-20260630x20f.htm
+  - https://news.bbc.co.uk/2/hi/business/4882640.stm
+  - https://news.bbc.co.uk/1/hi/business/1005794.stm
+  - https://www.theguardian.com/football/2014/jul/14/manchester-united-kit-deal-adidas
+  - https://www.bbc.co.uk/sport/articles/cy9w28zzly7o
+  - https://www.skysports.com/football/news/11667/12250656/manchester-united-agree-235m-shirt-sponsorship-contract-with-teamviewer-from-next-season-in-five-year-deal
+  - https://www.prolificnorth.co.uk/profile/sharp-project/
+- id: view
+  viewpoint: true
+  heading: 148年のうち、胸に印があった季はいくつか
+  tier: 背景
+  telop: 胸に印があったのは55季で37.2%。赤でなかったのは125季のうち6季
+  narrator: 解説
+  card: &mark_calc
+    type: calc
+    title: 胸に印があったのは、歴史のどれだけか
+    terms:
+    - ['55季', 紋章がシャツに付いていた季]
+    - ['148年', 1878年から2026年まで]
+    - ['37.2%', 歴史に占める割合]
+    ops: ['÷', ＝]
+  say:
+  - text: ここからは、この回で数え直した数字を並べます。
+    card: *mark_calc
+    image: assets/backgrounds/stadium_マンチェスターユナイテッド.png
+  - text: ひとつ目。胸に紋章があった55季を、148年の歴史で割ります。
+    card: *mark_calc
+  - text: 答えは37.2%。6割を超える年月、印はありませんでした。
+    card: *mark_calc
+    emph: true
+  - text: ふたつ目は、色が動いた回数です。
+    card: &colour_count
+      type: table
+      title: 色が動いた回数（自分で数えた）
+      columns: &ccc
+      - 時期
+      - 長さ
+      - 色の動き
+      rows: &ccr
+      - [ニュートン・ヒース, 24年, 色が5回変わった]
+      - [マンチェスター・ユナイテッド, 125季, 赤でなかったのは6季]
+  - text: ニュートン・ヒースだった24年で、色は5回変わっています。
+    card:
+      <<: *colour_count
+      highlight_row: 0
+  - text: 平均すると、5年と持たずに次の色へ移っています。
+    card:
+      <<: *colour_count
+      highlight_row: 0
+  - text: マンチェスター・ユナイテッドになってからの125季で、赤でなかったのは6季。
+    card:
+      <<: *colour_count
+      highlight_row: 1
+  - text: 割合にすると4.8%。残りの119季は、ずっと赤です。
+    card:
+      <<: *colour_count
+      highlight_row: 1
+    emph: true
+  - text: みっつ目。胸と作り手に動いた金を、割ってみます。
+    card: &times_calc
+      type: calc
+      title: 作り手の1年ぶんは、最初の胸の何倍か
+      terms:
+      - ['9000万ポンド', 2025年からのアディダスの1年]
+      - ['10万ポンド', 1982年のシャープの1年]
+      - [900倍, 43年でついた差]
+      ops: ['÷', ＝]
+  - text: いまの作り手は1年9000万ポンド。最初の胸は1年10万ポンドです。
+    card: *times_calc
+  - text: 割ると900倍。43年のあいだについた差になります。
+    card: *times_calc
+    emph: true
+  - text: その9000万ポンドを、リーグ戦38試合で割ってみます。
+    card: &permatch_calc
+      type: calc
+      title: 作り手の1年ぶんは、1試合いくらか
+      terms:
+      - ['9000万ポンド', アディダスの1年]
+      - ['38試合', リーグ戦]
+      - [約237万ポンド, 1試合あたり]
+      ops: ['÷', ＝]
+  - text: 1試合ぶんにすると、およそ237万ポンドです。
+    card: *permatch_calc
+    emph: true
+  - text: それでも胸にいちばん長くいたのは、いちばん額の小さかった会社でした。
+    card: none
+  sources:
+  - https://www.historicalkits.co.uk/Manchester_United/Manchester_United.htm
+  - https://en.wikipedia.org/wiki/Manchester_United_F.C.
+  - https://www.sec.gov/Archives/edgar/data/1549107/000110465926110384/manu-20260630x20f.htm
+  - http://www.timesonline.co.uk/tol/sport/football/premier_league/manchester_united/article6426463.ece

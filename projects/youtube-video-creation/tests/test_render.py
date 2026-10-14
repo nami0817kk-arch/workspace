@@ -52,8 +52,8 @@ def test_frames_are_cached_by_content(tmp_path):
     script = _script_with_timing()
     renderer = Renderer(config, tmp_path)
     renderer.frame_entries(script)
-    # 2行 x (口を閉じた絵 + 開けた絵) = 4枚だけ
-    assert len(list((tmp_path / "frames").glob("*.png"))) == 4
+    # 2行 x (口を閉じた絵 + 開けた絵) = 4枚だけ（下地が静止画の回は JPEG。2026-10-08）
+    assert len(list((tmp_path / "frames").glob("*.jpg"))) == 4
 
 
 def test_news_layout_skips_mouth_frames(tmp_path):
@@ -70,7 +70,7 @@ def test_news_layout_skips_mouth_frames(tmp_path):
     renderer = Renderer(config, tmp_path)
     renderer.frame_entries(script)
     # 見出し2種類ぶんだけ。口の開閉では増えない
-    assert len(list((tmp_path / "frames").glob("*.png"))) == 2
+    assert len(list((tmp_path / "frames").glob("*.jpg"))) == 2
 
 
 def test_news_layout_keeps_previous_headline(tmp_path):
@@ -88,7 +88,7 @@ def test_news_layout_keeps_previous_headline(tmp_path):
     renderer = Renderer(config, tmp_path)
     entries = renderer.frame_entries(script)
     # 見出しが変わらないので、2行とも同じ絵を使い回す
-    assert len({path for path, _ in entries}) == 1
+    assert len({path for path, seconds in entries if seconds >= 0.3}) == 1
 
 
 def test_news_layout_clears_headline_on_no_telop(tmp_path):
@@ -103,7 +103,7 @@ def test_news_layout_clears_headline_on_no_telop(tmp_path):
 
     renderer = Renderer(config, tmp_path)
     entries = renderer.frame_entries(script)
-    assert len({path for path, _ in entries}) == 2
+    assert len({path for path, seconds in entries if seconds >= 0.3}) == 2
 
 
 def test_motion_adds_intro_frames(tmp_path):
@@ -133,8 +133,8 @@ def test_scene_change_uses_crossfade(tmp_path):
         line.duration, line.pause = 2.0, 0.4
     renderer = Renderer(config, tmp_path)
     renderer.frame_entries(script)
-    # blend() が作る中間フレームは x で始まる名前にしている
-    assert list((tmp_path / "frames").glob("x*.png"))
+    # blend() が作る中間フレームは x で始まる名前にしている（下地が静止画の回は JPEG）
+    assert list((tmp_path / "frames").glob("x*.jpg"))
 
 
 def test_intro_is_capped_by_speaking_time(tmp_path):
@@ -191,7 +191,7 @@ def test_news_headline_keeps_its_source_badge(tmp_path):
     renderer = Renderer(config, tmp_path)
     entries = renderer.frame_entries(script)
     # 見出しも確度も変わらないので、2行とも同じ絵になる
-    assert len({path for path, _ in entries}) == 1
+    assert len({path for path, seconds in entries if seconds >= 0.3}) == 1
 
 
 def _card_script():
@@ -212,7 +212,7 @@ def test_card_persists_to_following_lines(tmp_path):
     config.video.channel_name = ""   # 冒頭の登録カードは1行目だけ変える。ここでは見ない
     renderer = Renderer(config, tmp_path)
     entries = renderer.frame_entries(_card_script())
-    assert len({path for path, _ in entries}) == 1
+    assert len({path for path, seconds in entries if seconds >= 0.3}) == 1
     assert list((tmp_path / "cards").glob("*.png"))
 
 
@@ -229,7 +229,7 @@ def test_card_none_clears_it(tmp_path):
 
     renderer = Renderer(config, tmp_path)
     entries = renderer.frame_entries(script)
-    assert len({path for path, _ in entries}) == 2
+    assert len({path for path, seconds in entries if seconds >= 0.3}) == 2
 
 
 def test_balanced_wrap_evens_out_line_lengths():
@@ -551,11 +551,11 @@ def test_冒頭の1行目にだけ登録カードが乗る(tmp_path):
         line.duration, line.pause = 2.0, 0.4
     entries = Renderer(config, tmp_path).frame_entries(script)
     # 1行目（カード付き）と2行目（カード無し）で絵が分かれる
-    assert len({path for path, _ in entries}) == 2
+    assert len({path for path, seconds in entries if seconds >= 0.3}) == 2
 
     config.video.channel_name = ""
     entries = Renderer(config, tmp_path / "plain").frame_entries(script)
-    assert len({path for path, _ in entries}) == 1
+    assert len({path for path, seconds in entries if seconds >= 0.3}) == 1
 
 
 def test_縦型の冒頭は写真を画面いっぱいに敷く(tmp_path):
@@ -650,6 +650,22 @@ def test_件数が多い節では古いほうから落として字を保つ():
         many = tuple(f"ネット民「{i}件目の書き込みです。" + "あ" * 30 + "」" for i in range(12))
         r._draw_stack(canvas, many)   # 落ちずに描ければよい（字の大きさは中で保つ）
         assert canvas.getbbox() is not None
+
+
+def test_縦型では反応の箱を下に寄せて顔を避ける(tmp_path):
+    """2026-10-03。ショートの最後で、反応の白い箱が上の3分の1にある顔へ重なっていた。"""
+    from PIL import Image
+
+    from src.config import load_config
+    from src.render import Renderer
+    from src.shorts import portrait
+
+    config = portrait(load_config())
+    r = Renderer(config, tmp_path)
+    canvas = Image.new("RGBA", (config.video.width, config.video.height))
+    r._draw_stack(canvas, ("ネット民「短い反応です」", "ネット民「もう1件の反応です」"))
+    top = canvas.getbbox()[1]
+    assert top > config.video.height * 0.45, top
 
 
 def test_横長の一覧板は画面いっぱいに敷く(tmp_path):
@@ -904,3 +920,183 @@ def test_左半分のカードは縮めずにその幅で描く(tmp_path):
     assert beside_photo is not None and wide is not None
     assert beside_photo.width == config.video.width // 2 - 30
     assert beside_photo.width < wide.width
+
+
+def test_自動で黄色にする数字は単位ごと拾う():
+    """テロップの数字は黄色（2026-09-28 の見た目）。単位まで一緒に拾わないと「36」だけ黄色で「点」が白くなる。
+    品質100回の68 で 倍・キロ・センチ・ユーロ・パーセント・メートル を足した。"""
+    from src.render import AUTO_STRONG
+
+    def spans(text):
+        return [m.group(0) for m in AUTO_STRONG.finditer(text)]
+
+    assert spans("36点と2倍、時速36キロ") == ["36点", "2倍", "36キロ"]
+    assert spans("2億2000万ユーロで195センチ") == ["2億", "2000万ユーロ", "195センチ"]
+    assert spans("枠内率は58パーセント、11.6km") == ["58パーセント", "11.6km"]
+
+
+def test_進捗バーは出さない():
+    """2026-09-29 ユーザー「これからは外して」（画面下端の黄色い線）。"""
+    from src import render
+
+    assert render.PROGRESS_HEIGHT == 0, "進捗バーが戻っている"
+
+
+def test_横の板は下を暗くしない(tmp_path):
+    """2026-09-30「下の方黒くなってない？」。写真のための幕が板にも掛かり、一覧の最後の段が沈んでいた。"""
+    from PIL import Image
+
+    from src.config import load_config
+    from src.render import Renderer
+
+    board = tmp_path / "assets" / "stats" / "squad.png"
+    board.parent.mkdir(parents=True, exist_ok=True)
+    Image.new("RGB", (1280, 720), (40, 80, 160)).save(board)
+    photo = tmp_path / "assets" / "photos" / "p" / "01.jpg"
+    photo.parent.mkdir(parents=True, exist_ok=True)
+    Image.new("RGB", (1280, 720), (40, 80, 160)).save(photo)
+
+    renderer = Renderer(load_config(), tmp_path / "work")
+    b = renderer._photo_stage(str(board)).convert("RGB")
+    p = renderer._photo_stage(str(photo)).convert("RGB")
+    h = b.height
+    # 板は上と下で同じ明るさ
+    assert sum(b.getpixel((10, h - 5))) == sum(b.getpixel((10, 5)))
+    # 写真は今までどおり下を落とす（見出しを読ませるため）
+    assert sum(p.getpixel((10, h - 5))) < sum(p.getpixel((10, 5))) * 0.5
+
+
+def test_溶かしの途中の絵も透過つきで保存する(tmp_path):
+    """2026-10-01：RGB の中間フレームを RGBA の列に混ぜると、ffmpeg がそのコマを落として下地が見えた。"""
+    from PIL import Image
+
+    from src.config import load_config
+    from src.render import Renderer
+
+    r = Renderer(load_config(), tmp_path / "work")
+    r.over_video = True     # 動画の下地に重ねる回の話（下地が静止画だけの回は JPEG にそろえる）
+    a = tmp_path / "a.png"; b = tmp_path / "b.png"
+    Image.new("RGBA", (64, 36), (255, 0, 0, 255)).save(a)
+    Image.new("RGBA", (64, 36), (0, 0, 255, 255)).save(b)
+    assert Image.open(r.blend(a, b, 0.5)).mode == "RGBA"
+    assert Image.open(r._black()).mode == "RGBA"
+
+
+def test_光らせる行だけ違う表は同じ表とみなす(tmp_path):
+    """2026-10-01「表が毎回開き直しになっていて目に悪い」。行ごとのカードで表を組み直していた。"""
+    from src.config import load_config
+    from src.render import Renderer
+
+    r = Renderer(load_config(), tmp_path / "work")
+    base = {"type": "table", "title": "T", "columns": ["a", "b"], "rows": [["1", "2"], ["3", "4"]]}
+    r.script_cards = {"c0": dict(base, highlight_row=0), "c1": dict(base, highlight_row=1),
+                      "other": dict(base, title="U")}
+    assert r.same_table("c0", "c1")
+    assert not r.same_table("c0", "other")
+    assert not r.same_table(None, "c1")
+
+
+def test_ぶら下げた直後の約物も次の行の頭に置かない():
+    """2026-10-05 鈴木彩艶の回。「…特長」」をぶら下げたあと、「。」が次の行の頭に来ていた。"""
+    from PIL import Image, ImageDraw
+    from src import render
+    draw = ImageDraw.Draw(Image.new("RGB", (10, 10)))
+    font = ImageFont.truetype(str(load_config().video.font_path()), 40)
+    text = "鈴木彩艶「彼が相手チームの特長」。決勝の前日、守護神が名指しで警戒したエース"
+    for width in range(300, 900, 7):
+        for line in render.wrap_text(draw, text, font, width)[1:]:
+            assert line[0] not in render.LINE_START_FORBIDDEN, (width, line)
+
+
+def test_ぶら下げは1文字まで_2文字目は追い出す():
+    """2026-10-07。「ロジャー」の「ャ」をぶら下げたあと「ー」も足して、右端の外へ切れていた。"""
+    from PIL import Image, ImageDraw
+    from src import render
+    draw = ImageDraw.Draw(Image.new("RGB", (10, 10)))
+    font = ImageFont.truetype(str(load_config().video.font_path()), 40)
+    one = draw.textlength("あ", font=font)
+    for text in ("いちばん応えているのはロジャーズ。7試合すべてに出て、3点4アシストです。",
+                 "鈴木彩艶「彼が相手チームの特長」。決勝の前日、守護神が名指しで警戒したエース"):
+        for width in range(300, 900, 7):
+            lines = render.wrap_text(draw, text, font, width)
+            assert "".join(lines) == text
+            for line in lines:
+                assert draw.textlength(line, font=font) <= width + one + 1, (width, line)
+            for line in lines[1:]:
+                assert line[0] not in render.LINE_START_FORBIDDEN, (width, line)
+
+
+# ---------------------------------------------------------------- 板は置き場に収まる高さで描く（2026-10-08）
+
+
+def test_板は置き場の高さを渡して描く(tmp_path):
+    """`_draw_media` は置き場より高い板を**全体を縮めて**貼るので、板の中の 28px が
+    画面では 21px になっていた（`tools/typecheck.py` の実測）。`_card` が置き場の高さを
+    `cards.render` に渡して、**はじめからそこに収まる高さ**で描かせる。
+    """
+    from src import cards
+    from src.render import Renderer
+
+    config = load_config()
+    config.video.show_characters = False
+    renderer = Renderer(config, tmp_path)
+    renderer.script_cards = {"t": {"type": "table", "title": "長い表",
+                                   "columns": ["項目", "内容"],
+                                   "rows": [[f"行{i}", f"中身{i}"] for i in range(6)],
+                                   "source": "報道"}}
+    top, bottom = renderer.layout.media_slot
+    assert renderer._card_slot == bottom - top
+    card = renderer._card("t")
+    assert card is not None
+    assert card.height <= renderer._card_slot        # 貼るときに縮まない
+    # 書き込みの的（layout）も同じ置き場で測る。片方だけだと行の高さが食い違う
+    geo = renderer._card_layout("t", card.width)
+    assert geo["size"] == (card.width, card.height)
+
+
+def test_写真と横に並べる板も置き場からはみ出さない(tmp_path):
+    """横並びは幅でしか縮めていなかったので、高い板が字幕の帯（下 250px）に落ちていた。
+
+    板は置き場に収まるよう作り直したので、ふだんは何も起きない。ここで見るのは
+    **歯止めが効くこと**（置き場より高い絵が来ても、字幕にかぶらない）。
+    """
+    from PIL import Image as PILImage
+
+    from src.render import Renderer
+
+    config = load_config()
+    config.video.show_characters = False
+    renderer = Renderer(config, tmp_path)
+    top, bottom = renderer.layout.media_slot
+    room = bottom - top
+    canvas = PILImage.new("RGBA", (renderer.layout.width, renderer.layout.height))
+    tall = PILImage.new("RGBA", (400, room + 400), (255, 0, 0, 255))
+    short = PILImage.new("RGBA", (400, room - 100), (0, 255, 0, 255))
+    placed = renderer._place_beside(canvas, [short, tall], top, room, 26, 1.0)
+    assert all(y1 <= bottom for _, _, _, y1 in placed), placed
+
+
+def test_亡くなった人の数は自動で黄色くしない():
+    """**追悼の数を見出しの色で飾らない**（2026-10-09 未明）。
+
+    リヴァプールのユニフォームの回で「ヒルズボロで亡くなった**97人**を悼み」の 97人 が、
+    語りの数字を自動で強調する仕組み（`AUTO_STRONG`）で黄色く出ていた
+    （ショートの `qc.png` を目で見て気づいた）。
+    同じ行のほかの数字（年号など）は今までどおり強調する。
+    """
+    from src.render import AUTO_STRONG, MOURNING, PEOPLE_COUNT
+
+    def strong(text):
+        spans = [(m.start(), m.end()) for m in AUTO_STRONG.finditer(text)]
+        if MOURNING.search(text):
+            spans = [(a, b) for a, b in spans if not PEOPLE_COUNT.fullmatch(text[a:b])]
+        return [text[a:b] for a, b in spans]
+
+    got = strong("ヒルズボロで亡くなった97人を悼み、1993年に2つの永遠の炎が加わります")
+    assert "97人" not in got, "追悼の数が黄色のまま"
+    assert "1993年" in got, "同じ行の年号まで落としてはいけない"
+
+    # 追悼の言葉が無い行は、今までどおり「◯人」も強調する
+    assert "2357人" in strong("収容は1万2357人。20クラブでいちばん小さい本拠地です")
+    # 死者・犠牲・遺族でも効く
+    assert "96人" not in strong("この事故で96人が犠牲になりました")

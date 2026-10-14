@@ -1,0 +1,6 @@
+title: フリアン・アルバレスの今季のシュート
+unit: xG
+shots=8
+goals=0
+xg=0.73
+source: FotMob

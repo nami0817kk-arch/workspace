@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 import shutil
 import subprocess
 from pathlib import Path
@@ -72,11 +73,19 @@ def write_concat_list(entries: list[tuple[Path, float]], list_path: Path) -> Pat
     """
     if not entries:
         raise FfmpegError("concat する要素がありません")
-    lines = []
+    # **続けて同じ絵ならまとめる**（2026-10-08）。口パクを止めた回・写真を出したままの回は
+    # 同じ1枚が何十行も並ぶ。絵と秒は変わらないが、ffmpeg が読むコマ数が桁で減る
+    merged: list[list] = []
     for path, duration in entries:
-        lines.append(f"file '{path.resolve().as_posix()}'")
+        if merged and merged[-1][0] == path:
+            merged[-1][1] += duration
+        else:
+            merged.append([path, duration])
+    lines = []
+    for path, duration in merged:
+        lines.append(f"file '{Path(path).resolve().as_posix()}'")
         lines.append(f"duration {duration:.3f}")
-    lines.append(f"file '{entries[-1][0].resolve().as_posix()}'")
+    lines.append(f"file '{Path(merged[-1][0]).resolve().as_posix()}'")
     list_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
     return list_path
 
@@ -161,6 +170,7 @@ def still_to_clip(
     size: tuple[int, int] = (1920, 1080),
     zoom: float = 1.18,
     fps: int = 30,
+    max_zoom: float = MAX_ZOOM,
 ) -> Path:
     """静止画から、ゆっくり寄っていく背景クリップを作る。
 
@@ -176,7 +186,7 @@ def still_to_clip(
     width, height = size
     frames = max(1, int(seconds * fps))
     per_second = (zoom - 1.0) / REFERENCE_SECONDS
-    total = min(MAX_ZOOM, 1.0 + per_second * seconds)
+    total = min(max_zoom, 1.0 + per_second * seconds)
     step = (total - 1.0) / frames
     zoom = total
     run([
@@ -197,6 +207,80 @@ def grab_frame(clip: Path, out_path: Path, at: float = 1.0) -> Path:
     return out_path
 
 
+PROGRESS_COLOR = "0xffd54a"   # 進捗バーの色（チャンネルの黄）
+
+# 音の入力の番号は経路で違う（動画に重ねる回は 2:a、静止画だけの回は 1:a）。
+# 伸ばすチェーンを1か所で書いて、ここだけ差し替える
+AUDIO_LABEL = "@audio@"
+
+# 書き出した動画の尺が、計画した尺とこれ以上ずれていたら止める（秒）。
+# 1コマ（30fps で 0.034秒）と、concat の作法で最後の1枚が足す端数を見込んだ幅
+LENGTH_TOLERANCE = 0.5
+
+
+def length_args(duration: float, audio_path: Path | None) -> tuple[list[str], list[str]]:
+    """**音が足りなければ足す。切らない**（2026-10-10）。
+    返すのは (音を伸ばすチェーン, 出力オプション)。
+
+    `-shortest` は「絵の列」ではなく**音の実尺で動画の長さを決める**。
+    音が少しでも足りないと**後ろから黙って切られる**。切られるのは必ず末尾＝
+    **15秒の終了画面の置き場**なので、そこだけが回によって消えていた
+    （2026-10-10 に実物3本で確認。音の末尾の無音が 0.4〜0.6秒しか無く、
+    動画も同じ長さで終わっていた）。
+
+    **`-shortest` は外さない。**外すと長い音に引かれて尺が伸びる。
+    代わりに `apad=whole_dur=<計画の秒数>` で、音を**計画の長さまで無音で埋める**。
+    こうすると `-shortest` が見る「いちばん短い流れ」は必ず絵の列になるので、
+    足りない音で絵が切られることがない（音のほうが長い回は今までどおり切る）。
+
+    **`-t` で切る形は採らない。**concat で並べた静止画の最後のコマは
+    計画した秒数ちょうどに来るので、`-t` がそのコマを落とし、
+    直前のコマを埋めないまま終わる（実測で17秒が2秒になった）。
+    """
+    if audio_path is None:
+        return [], []
+    return [f"[{AUDIO_LABEL}]apad=whole_dur={duration:.3f}[a]"], ["-shortest"]
+
+
+def check_length(path: Path, duration: float, tolerance: float = LENGTH_TOLERANCE) -> None:
+    """書き出した動画が、計画した尺になっているか確かめる。
+
+    **黙って通さない。**`-t` を付けたので普通はずれないが、ずれたときに
+    気づかないのが一番まずい（15秒の終了画面が消えた回は、公開予約のあとに
+    ユーザーが見つけた）。読めなければ何も言わない（点検では落とさない）。
+    """
+    info = probe(path)
+    actual = (info or {}).get("duration")
+    if actual is None:
+        return
+    if abs(actual - duration) > tolerance:
+        raise FfmpegError(
+            f"書き出した動画の尺が計画と合いません: {actual:.2f}秒"
+            f"（計画 {duration:.2f}秒・許容 {tolerance:.2f}秒）\n"
+            f"  {path}\n"
+            "絵の列（frames.txt）と音（voice.wav）の長さを突き合わせてください。"
+        )
+
+
+def progress_chains(source: str, size: tuple[int, int], fps: int,
+                    progress: tuple[float, int] | None) -> tuple[list[str], str]:
+    """画面下端の進捗バー（2026-09-28）。**overlay の x を時間で動かす**ので、フレームは増えない。
+
+    drawbox は式を最初に1回しか評価しないので動かない。黄色い帯を色の源から作り、
+    左の画面外から t/T の割合だけ滑り込ませる。返すのは (追加のチェーン, 出力ラベル)。
+    """
+    if not progress:
+        return [], source
+    total, height = progress
+    width, _ = size
+    chains = [
+        f"[{source}]drawbox=x=0:y=ih-{height}:w=iw:h={height}:color=white@0.25:t=fill[pbase]",
+        f"color=c={PROGRESS_COLOR}:s={width}x{height}:r={fps}[pbar]",
+        f"[pbase][pbar]overlay=x='-w+W*min(1\\,t/{total:.3f})':y=H-{height}:eval=frame:shortest=1[pv]",
+    ]
+    return chains, "pv"
+
+
 def encode_video_over_clip(
     frame_list: Path,
     clip: Path,
@@ -204,10 +288,14 @@ def encode_video_over_clip(
     out_path: Path,
     size: tuple[int, int],
     fps: int = 30,
+    progress: tuple[float, int] | None = None,
+    *,
+    duration: float,
 ) -> Path:
     """背景動画の上に、透過PNGのフレーム列を重ねて書き出す。
 
     背景クリップは尺に足りなければループし、画面いっぱいになるよう拡大して中央を切り出す。
+    `duration` は絵の列の合計秒数。**ここで尺を決める**（`length_args` を見る）。
     """
     width, height = size
     args = [
@@ -223,21 +311,29 @@ def encode_video_over_clip(
         f"[1:v]format=rgba,fps={fps},setsar=1[fg]",
         "[bg][fg]overlay=shortest=1:format=auto[v]",
     ]
+    extra, label = progress_chains("v", size, fps, progress)
+    chains += extra
+    pad, tail = length_args(duration, audio_path)
+    chains += [chain.replace(AUDIO_LABEL, "2:a") for chain in pad]
     args += [
         "-filter_complex", ";".join(chains),
-        "-map", "[v]",
-        *(["-map", "2:a"] if audio_path is not None else []),
+        "-map", f"[{label}]",
+        *(["-map", "[a]"] if audio_path is not None else []),
         "-c:v", "libx264",
-        "-preset", "medium",
+        # **preset だけ速くする**（2026-10-08）。crf は 20 のまま＝絵の細かさは変えない。
+        # 実測で書き出しが 348秒 → 222秒、mp4 は 42.6MB → 40.4MB
+        "-preset", "veryfast",
         "-crf", "20",
         "-pix_fmt", "yuv420p",
         "-r", str(fps),
         "-movflags", "+faststart",
     ]
     if audio_path is not None:
-        args += ["-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-shortest"]
+        args += ["-c:a", "aac", "-b:a", "192k", "-ar", "48000"]
+    args += tail
     args.append(str(out_path))
     run(args)
+    check_length(out_path, duration)
     return out_path
 
 
@@ -246,16 +342,34 @@ def encode_video(
     audio_path: Path | None,
     out_path: Path,
     fps: int = 30,
+    size: tuple[int, int] | None = None,
+    progress: tuple[float, int] | None = None,
+    *,
+    duration: float,
 ) -> Path:
-    """静止画リスト（+音声）を YouTube 向けの MP4 にエンコードする。"""
+    """静止画リスト（+音声）を YouTube 向けの MP4 にエンコードする。
+
+    `duration` は絵の列の合計秒数。**ここで尺を決める**（`length_args` を見る）。
+    """
     args = ["-f", "concat", "-safe", "0", "-i", str(frame_list)]
     if audio_path is not None:
         args += ["-i", str(audio_path)]
+    video_map = ["-map", "0:v"]
+    chains: list[str] = []
+    if progress and size:
+        chains, label = progress_chains("0:v", size, fps, progress)
+        chains[0] = chains[0].replace("[0:v]", "[0:v]fps=" + str(fps) + ",")
+        video_map = ["-map", f"[{label}]"]
+    pad, tail = length_args(duration, audio_path)
+    chains += [chain.replace(AUDIO_LABEL, "1:a") for chain in pad]
+    if chains:
+        args += ["-filter_complex", ";".join(chains)]
     args += [
-        "-map", "0:v",
-        *(["-map", "1:a"] if audio_path is not None else []),
+        *video_map,
+        *(["-map", "[a]"] if audio_path is not None else []),
         "-c:v", "libx264",
-        "-preset", "medium",
+        # preset だけ速くする（crf は 20 のまま）。上の encode_video_over_clip と同じ
+        "-preset", "veryfast",
         "-crf", "20",
         "-pix_fmt", "yuv420p",
         "-r", str(fps),
@@ -263,7 +377,100 @@ def encode_video(
         "-movflags", "+faststart",
     ]
     if audio_path is not None:
-        args += ["-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-shortest"]
+        args += ["-c:a", "aac", "-b:a", "192k", "-ar", "48000"]
+    args += tail
     args.append(str(out_path))
     run(args)
+    check_length(out_path, duration)
     return out_path
+
+
+# --- 出来上がった動画を点検するための読み取り（2026-10-08、tools/qc.py が使う） --------------
+
+SCAN_SCENE_FPS = 5        # 画面の変化を見るときの1秒あたりのコマ数（溶け合いもこれで拾える）
+SCAN_SCENE_BASE = 0.001   # これを超えた変化だけ記録する（判定のしきい値は後から当てる）
+SCAN_WINDOW = 0.5         # 音の大きさを測る刻み（秒）
+
+
+def probe(path: Path) -> dict | None:
+    """動画の尺・幅・高さ・音の有無。**絵は読み込まない**（`ffmpeg -i` の表示を読むだけ）。
+
+    一覧に並べるコマの大きさは、縦型（ショート）と横型（本編）で変えないと潰れる。
+    それを決めるためだけに動画を丸ごと読むのは無駄なので、ここだけ先に軽く見る。
+    読めなければ None（点検そのものは落とさない）。
+    """
+    path = Path(path)
+    if not path.exists():
+        return None
+    result = subprocess.run([ffmpeg_exe(), "-i", str(path)], **CAPTURE)
+    err = result.stderr or ""
+    found = re.search(r"Duration:\s*(\d+):(\d+):(\d+(?:\.\d+)?)", err)
+    if not found:
+        return None
+    hours, minutes, seconds = found.groups()
+    size = re.search(r"Video:[^\n]*?\s(\d{2,5})x(\d{2,5})", err)
+    return {
+        "duration": int(hours) * 3600 + int(minutes) * 60 + float(seconds),
+        "width": int(size.group(1)) if size else 0,
+        "height": int(size.group(2)) if size else 0,
+        "audio": "Audio:" in err,
+    }
+
+
+def scan(
+    path: Path,
+    *,
+    step: float,
+    thumb: tuple[int, int],
+    scene_fps: int = SCAN_SCENE_FPS,
+    scene_base: float = SCAN_SCENE_BASE,
+    window: float = SCAN_WINDOW,
+    audio: bool = True,
+) -> tuple[str, bytes]:
+    """**動画を1回だけ読んで**、点検に要るものをまとめて取る。
+
+    返すのは (ffmpeg の出力, 一定間隔のコマの生データ)。読み解くのは tools/qc.py。
+    1本の mp4 は 40〜50MB あるので、scene 検出・音の大きさ・コマ抜きで3回起こすと
+    その回数ぶん丸ごと読み直すことになる。filter_complex で枝を分けて1回で済ませる。
+
+    枝は4つ:
+      [s] 画面の変化（scene の点数を metadata で出す。しきい値は後から当てる）
+      [t] `step` 秒ごとのコマ（`thumb` の大きさの生データを pipe:1 に流す。
+          何秒のコマなのかは showinfo が出す＝番号×step と決め打ちにしない）
+      [x] 音の大きさ（loudnorm の測定値）
+      [y] `window` 秒ごとの音の大きさ（astats の RMS。語りの切れ目を後から探す）
+    """
+    width, height = thumb
+    chains = [
+        "[0:v]split=2[sv][tv]",
+        f"[sv]fps={scene_fps},scale=320:-2,select='gt(scene,{scene_base})',metadata=mode=print[s]",
+        # **`fps=1/step` は使わない。**あれは区間ごとに「最後に来たコマ」を残すので、
+        # 出てくる絵が区間の終わりのもの（＝1つ後ろ）になる。select なら狙った時刻の
+        # コマがそのまま出て、showinfo が**元の動画での時刻**を出す
+        f"[tv]select='isnan(prev_selected_t)+gte(t-prev_selected_t,{step:g})',"
+        f"scale={width}:{height}:flags=bicubic,format=rgb24,showinfo[t]",
+    ]
+    maps = ["-map", "[s]", "-f", "null", "-"]
+    if audio:
+        samples = max(1, int(48000 * window))
+        chains += [
+            "[0:a]asplit=2[la][sa]",
+            "[la]loudnorm=print_format=json[x]",
+            f"[sa]aresample=48000,asetnsamples=n={samples},"
+            "astats=metadata=1:reset=1:measure_perchannel=none:measure_overall=RMS_level,"
+            "ametadata=mode=print:key=lavfi.astats.Overall.RMS_level[y]",
+        ]
+        maps += ["-map", "[x]", "-f", "null", "-", "-map", "[y]", "-f", "null", "-"]
+    # **`-fps_mode passthrough` が要る。**rawvideo は既定で元のコマ数に合わせて
+    # 同じ絵を水増しするので、14枚のつもりが8,399枚（1.4GB）流れてくる
+    maps += ["-map", "[t]", "-fps_mode", "passthrough", "-f", "rawvideo", "pipe:1"]
+    command = [
+        ffmpeg_exe(), "-hide_banner", "-nostats", "-i", str(path),
+        "-filter_complex", ";".join(chains), *maps,
+    ]
+    done = subprocess.run(command, capture_output=True)
+    err = (done.stderr or b"").decode("utf-8", errors="replace")
+    if done.returncode != 0:
+        tail = "\n".join(err.strip().splitlines()[-15:])
+        raise FfmpegError(f"ffmpeg が失敗しました（点検の読み取り、exit {done.returncode}）:\n{tail}")
+    return err, done.stdout or b""

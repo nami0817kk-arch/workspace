@@ -1,0 +1,102 @@
+{
+ "bounds": {
+  "top": 55.1,
+  "bottom": 47.2,
+  "left": 5.5,
+  "right": 15.5,
+  "image": "Germany adm location map.svg"
+ },
+ "clubs": {
+  "augsburg": {
+   "ground": "WWK Arena",
+   "lat": 48.32305556,
+   "lon": 10.88611111
+  },
+  "bayern": {
+   "ground": "Allianz Arena",
+   "lat": 48.218775,
+   "lon": 11.62475278
+  },
+  "bremen": {
+   "ground": "Weser-Stadion",
+   "lat": 53.06638889,
+   "lon": 8.8375
+  },
+  "dortmund": {
+   "ground": "Westfalenstadion",
+   "lat": 51.4925,
+   "lon": 7.45166667
+  },
+  "elversberg": {
+   "ground": "Waldstadion an der Kaiserlinde",
+   "lat": 49.31861111,
+   "lon": 7.12166667
+  },
+  "frankfurt": {
+   "ground": "Waldstadion (Frankfurt)",
+   "lat": 50.068056,
+   "lon": 8.645806
+  },
+  "freiburg": {
+   "ground": "Europa-Park Stadion",
+   "lat": 48.0216,
+   "lon": 7.8297
+  },
+  "gladbach": {
+   "ground": "Borussia-Park",
+   "lat": 51.17472222,
+   "lon": 6.38555556
+  },
+  "hamburg": {
+   "ground": "Volksparkstadion",
+   "lat": 53.587222,
+   "lon": 9.898611,
+   "note": "座標は clubs.json（取材で各スタジアム記事から控えた値。API の coordinates が空だった）"
+  },
+  "hoffenheim": {
+   "ground": "Rhein-Neckar-Arena",
+   "lat": 49.23805556,
+   "lon": 8.8875
+  },
+  "koln": {
+   "ground": "RheinEnergieStadion",
+   "lat": 50.93361111,
+   "lon": 6.875
+  },
+  "leipzig": {
+   "ground": "Red Bull Arena (Leipzig)",
+   "lat": 51.34583333,
+   "lon": 12.34833333
+  },
+  "leverkusen": {
+   "ground": "BayArena",
+   "lat": 51.03833333,
+   "lon": 7.00222222
+  },
+  "mainz": {
+   "ground": "Mewa Arena",
+   "lat": 49.98416667,
+   "lon": 8.22416667
+  },
+  "paderborn": {
+   "ground": "Home Deluxe Arena",
+   "lat": 51.73083333,
+   "lon": 8.71111111
+  },
+  "schalke": {
+   "ground": "Arena AufSchalke",
+   "lat": 51.55444444,
+   "lon": 7.0675
+  },
+  "stuttgart": {
+   "ground": "MHPArena",
+   "lat": 48.79222222,
+   "lon": 9.23194444
+  },
+  "unionberlin": {
+   "ground": "Stadion An der Alten Försterei",
+   "lat": 52.45722222,
+   "lon": 13.56805556
+  }
+ }
+}

@@ -1,0 +1,226 @@
+# 取材メモ（10/11 題材 ① maeda_ipswich、型は news、日本人枠）。**ショートだけ作る**（本編は作らない）。
+# 効く一点：**前田大然は81分までに4度チャンスに絡み、75分にはエリア内で倒れたが笛は鳴らなかった**。
+#   そこを①（main）に置いた。試合がひっくり返るのは、前田が下がった7分後と9分後。
+# **前田本人の言葉は 10/11 10:00 時点で見つかっていない**（クラブ公式・ゲキサカ・サッカーキング・
+#   The Guardian・本人のSNSを当たった）。無いまま作る。推測で書かない。
+#   代わりに置いたのは**ゲーリー・オニール監督の試合後の言葉**（The Guardian の取材）。
+# **スコアと得点者はプレミアリーグ公式まで辿った**（sdp-prem-prod … /v2/matches/2645251 と
+#   同じ試合の commentary）。公式の記録はこうなっている:
+#     55' Ryan Sessegnon  … left footed shot from outside the box to the bottom right corner following a corner
+#     88' Abdoul Ouattara … left footed shot from outside the box to the bottom left corner
+#     90'+1' Dara O'Shea  … header from very close range, assisted by Jack Clarke with a cross following a set piece
+#     81' Sindre Egeli replaces Daizen Maeda（＝前田の交代は81分で確定）
+#   会場 Portman Road / 入場者 29,445（公式）。先発の背番号は38、公式の区分は Midfielder。
+# **数字の食い違い（必ず見る）**
+#   ・逆転ゴールの時間：**プレミアリーグ公式は 90'+1'**。ゲキサカは「90+2分」、The Guardian は
+#     「in the second minute of stoppage time」。**公式を採った**（台本もカードも 90分＋1）。
+#   ・前田の位置：公式の区分は MF だが、サッカーキング・ゲキサカはどちらも「右ウイング」。
+#     **台本では「右サイド」とだけ言う**（区分の違いを画面に出さない）。
+# **PKにならなかった場面はゲキサカの記述だけが詳しい**（後半30分＝75分。セセニョンをかわして
+#   エリア内に入り、後方からの接触で転倒。主審はノーファウル、VARの介入も無し）。
+#   **「誤審だった」とは言わない。**判定の理由はどこにも出ていないので、起きたことだけを書く。
+# **フルハムの話は見立ての1行だけ**にした（相手側の評価に寄せない）。
+# 写真は Commons の1枚（File:Celtic-20240722-018.jpg、CC BY-SA 4.0 / Hameltion、2024年、
+#   セルティックの練習着＋ビブス）。**いまはイプスウィッチだが、前田の顔がはっきり写った写真が
+#   他に無い**（決まり「他に無ければ古いユニフォームでよい」）。
+#   Commons の 3840x2560 を落として、**顔の位置から手で切った**（01_w は16:9・1955x1100で顔を上から1/3、
+#   01_v は9:16・1068x1900で顔を上から18%）。縦版は**顔が上から6〜24%**に来るので、板（画面の11〜62%）と
+#   ぶつからない。01_w_v は 01_v と同じ切り方（本編用の 01_w をショートで差し替えるため）。
+#   **一度は別の Commons の写真（手を挙げた2023年のもの）で組んだが、`src/faces` が顔を
+#   1つも見つけられず（preview4 が「冒頭に顔が1つも見つかりません」で ×）、この写真に替えた。**
+#   切った絵は3枚とも開いて目で見た。
+#   **ゲキサカと サッカーキング の記事写真は使っていない**：どちらも画像の中に「©Getty Images」が
+#   焼き込まれていた（実際に開いて右下を拡大して確認。URLの警告では素通りする）。
+# サムネ：構図 face（**ユーザーと相談して決める**。ここに書いたのは点検を通すための1案）。
+# ネットの反応は集めていない（この回は反応なしで出す）。反応の節は無い。
+# 数字の重なり対策：『81分』は①と②の頭だけ、『75分』は①だけ、『88分』『90分＋1』は②だけ、
+#   『3勝』『7点差』は③だけ。
+date: 2026年10月11日
+slot: japan_1
+format: news
+voice_min: 0
+people:
+- 前田大然
+- ゲーリー・オニール
+- イプスウィッチ
+theme:
+  id: maeda_ipswich
+  league: england
+  league_name: プレミアリーグ
+  kind: match
+  topic: 前田大然
+  title: 前田大然の81分と、エリア内で鳴らなかった笛
+  question: 前田大然は81分のあいだに何をして、イプスウィッチの試合はそのあとどう動いたのか
+  takeaway: 前田大然は右サイドで先発し、81分までに4度チャンスに絡んだ。16分は落としからエンシソのミドル、24分は浮き球に抜け出しながらトラップで転倒、35分と36分は右を破ってクロス。75分にはエリア内で倒れたが主審はノーファウルと判断し、VARの介入も無くPKにはならなかった。前田が下がったのは81分で、そこからイプスウィッチが試合をひっくり返す。88分にワタラがエリアの外から左足、90分＋1分にオシェイがクラークのボールを頭で合わせて2対1。先制されたのは55分、セセニョンの左足だった。イプスウィッチはこれが今季3勝目で、3つとも90分以降に決勝点が入っている。前田の先発はリーグ戦では3試合ぶりだった
+  opening_image: assets/images/20261011_maeda_ipswich/01_w.jpg
+short_title: 前田大然の81分。エリア内で倒れた75分に、笛は鳴らなかった
+thumbnail:
+  layout: face
+  photo: assets/images/20261011_maeda_ipswich/01_w.jpg
+  short_photo: assets/images/20261011_maeda_ipswich/01_v.jpg
+  line1: 前田大然 81分
+  line2: 退いた直後に●●
+  tags:
+  - 前田大然
+  - イプスウィッチ
+  - プレミアリーグ
+sections:
+- id: minutes
+  main: true
+  heading: 81分のあいだに、4度
+  tier: 報道
+  telop: 前田大然は右サイドで先発し、81分までに4度チャンスに絡んだ
+  narrator: キャスター
+  card: &moments
+    type: table
+    title: 前田大然がからんだ場面
+    columns: &c_mom
+    - 時間
+    - その場面
+    rows: &r_mom
+    - - 16分
+      - 落としからエンシソがミドル
+    - - 24分
+      - 浮き球に抜け出すも転倒
+    - - 35分
+      - 右を独走して折り返す
+    - - 36分
+      - 抜け出してクロス
+  say:
+  - text: プレミアリーグ第6節。前田大然がイプスウィッチで先発しました。
+    short_only: true
+    card: none
+    image: assets/images/20261011_maeda_ipswich/01_w.jpg
+  - text: 試合はフルハムに2対1。アディショナルタイムでの逆転勝ちです。
+    short_only: true
+    card: none
+  - voice: オニール監督
+    text: 最後の20分、相手のほうが先に疲れ始めたように見えました。
+    card: none
+  - text: その20分間、前田大然はもうピッチにいません。
+    card: none
+    image: assets/images/20261011_maeda_ipswich/01_w.jpg
+  - text: リーグ戦では3試合ぶりの先発で、81分での交代でした。
+    card: none
+  - text: チャンスに絡んだのは4度。
+    card: *moments
+  - text: 4度とも前半、それも16分から36分までの20分間に集まっています。
+    card: *moments
+  - text: 16分は中央で受けた落とし。そこからエンシソが枠の右へミドルを放っています。
+    card:
+      <<: *moments
+      highlight_row: 0
+  - text: 24分は浮き球のスルーパスに抜け出し、相手の背中を取りました。
+    card:
+      <<: *moments
+      highlight_row: 1
+  - text: ただ、受けたときにバランスを崩して倒れ、シュートまで持ち込めていません。
+    card:
+      <<: *moments
+      highlight_row: 1
+  - text: 35分はゴールキーパーのロングフィードを受けて、右を深い位置まで独走しました。
+    card:
+      <<: *moments
+      highlight_row: 2
+  - text: 36分も同じ右から抜け出してクロス。どちらも味方には合いませんでした。
+    card:
+      <<: *moments
+      highlight_row: 3
+  - text: 後半に同じ形が来たのは、1時間を過ぎた75分でした。
+    card: *moments
+  - text: 前田は裏から相手をかわし、右からペナルティエリアの中へ入ります。
+    card: none
+    image: assets/images/20261011_maeda_ipswich/01_w.jpg
+  - text: 後ろから接触を受けて倒れましたが、主審はノーファウルと判断します。
+    card: none
+  - text: ビデオ判定の介入も無く、ペナルティキックにはなりませんでした。
+    card: none
+    emph: true
+  quotes_from:
+  - The Guardian（試合後のゲーリー・オニール監督の言葉、2026-10-10） https://www.theguardian.com/football/2026/oct/10/ipswich-fulham-premier-league-match-report
+  sources:
+  - https://web.gekisaka.jp/news/world/detail/?460720-460720-fl
+  - https://www.soccer-king.jp/news/world/eng/20261011/2215212.html
+  - https://www.theguardian.com/football/2026/oct/10/ipswich-fulham-premier-league-match-report
+- id: turn
+  heading: 前田が下がってからの9分
+  tier: 確定
+  official: true
+  telop: 88分にワタラ、90分＋1分にオシェイ。先制されたのは55分だった
+  narrator: キャスター
+  card: &score
+    type: score
+    competition: プレミアリーグ 第6節
+    home: イプスウィッチ
+    away: フルハム
+    score: 2 - 1
+    home_scorers:
+    - 88分 ワタラ
+    - 90分＋1 オシェイ
+    away_scorers:
+    - 55分 セセニョン
+    note: ポートマン・ロード
+  say:
+  - text: 試合が動いたのは、前半ではなく後半の終わりでした。
+    card: *score
+  - text: 55分、コーナーからこぼれた球をセセニョンが左足で蹴り込み、フルハムが先制します。
+    card: *score
+  - text: 入ったのはゴール右の下。エリアの外からの一本でした。
+    card: none
+  - text: イプスウィッチが追いついたのは88分。ワタラがエリアの外から左足を振り抜きました。
+    card: *score
+  - text: こちらはゴール左の下。前田が下がって7分後の同点弾です。
+    card: none
+  - text: そしてアディショナルタイム。クラークが左からボールを入れます。
+    card: *score
+  - text: これをオシェイがゴール前で頭に当てました。
+    card: *score
+  - text: 公式の記録では90分＋1分。ポートマン・ロードは、ここで逆転しました。
+    card: *score
+    emph: true
+  sources:
+  - https://www.premierleague.com/en/matches/premier-league/2026-27
+  - https://web.gekisaka.jp/news/world/detail/?460721-460721-fl
+  - https://www.soccer-king.jp/news/world/eng/20261011/2215212.html
+- id: view
+  viewpoint: true
+  heading: 勝ち方が3つとも同じ
+  tier: 背景
+  telop: イプスウィッチの今季3勝は、3つとも90分以降に決勝点が入っている
+  narrator: 解説
+  card: &wins
+    type: table
+    title: イプスウィッチの今季3勝、決勝点が入った時間
+    columns:
+    - 何勝目
+    - 決勝点
+    rows:
+    - - 1勝目
+      - 90分
+    - - 2勝目
+      - 90分
+    - - 3勝目
+      - 90分＋1
+    highlight_row: 2
+  say:
+  - text: イプスウィッチが今季のリーグ戦で勝ったのは、これで3つ目です。
+    card: *wins
+  - text: 前の2つは、どちらも90分に決勝点が入っていました。
+    card:
+      <<: *wins
+      highlight_row: 0
+  - text: この試合はさらに遅く、アディショナルタイムでの逆転です。
+    card: *wins
+  - text: 一方のフルハムは、開幕から6試合勝てていません。
+    card: none
+  - text: この日の勝ちで、イプスウィッチとフルハムの勝ち点差は7に広がりました。
+    card: none
+    image: assets/images/20261011_maeda_ipswich/01_w.jpg
+  - text: 前田大然が81分のあいだに作った4つの場面は、どれも点には結びついていません。
+    card: none
+  - text: それでもチームは、相手が疲れ始めた最後の20分で3つ目の勝ちを拾いました。
+    card: none
+    emph: true
+  sources:
+  - https://web.gekisaka.jp/news/world/detail/?460720-460720-fl
+  - https://www.theguardian.com/football/2026/oct/10/ipswich-fulham-premier-league-match-report

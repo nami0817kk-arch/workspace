@@ -1,0 +1,6 @@
+title: デクラン・ライスの今季のシュート
+unit: xG
+shots=4
+goals=0
+xg=0.12
+source: FotMob

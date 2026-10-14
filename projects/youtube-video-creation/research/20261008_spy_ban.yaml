@@ -1,0 +1,358 @@
+# 取材メモ（10/8 題材 spy_ban、型は news、ほかのニュース枠）。材料の控えは research/raw/20261008_spy_ban.md。
+# **判決・処分の回**なので、イングランドサッカー協会の独立規制委員会の判断の文書（全48ページ）と1行ずつ突き合わせた。
+#   文書: THE FOOTBALL ASSOCIATION and TONDA ECKERT / WRITTEN REASONS（2026年10月5日付、審理は9月24日）
+#   https://www.thefa.com/-/media/files/thefaportal/governance-docs/discipline-cases/2026-27/the-fa-v-tonda-eckert.ashx
+#   公式発表: https://www.thefa.com/news/2026/oct/07/tonda-eckert-update-071026
+#   記事と食い違ったところ（猶予の期間・求刑・円換算・EFL の認定の相手・出発点の罰金）は raw の「精査」の表に残した。
+#   台本の数字は、すべて判断の文書の段落から取っている（記事の要約は使っていない）。
+# 本人の言葉は、判断の文書に引かれたエッカートの陳述書と反対尋問の発言（＝この処分の中身そのもの）だけを使う。
+#   6月の謝罪（「禁止されているとは知らなかった」）は、この処分より前の言葉なので置かない。
+# 為替は 1ポンド＝208.93円（欧州中央銀行の参考レート、2026年10月7日。api.frankfurter.app）。
+# ネットの声は Yahoo!ニュースのコメント欄から1件（全文）。2件目はマンチェスター・シティの話なので外した。
+#   英語の声は取れなかった（X・Reddit はブラウザが要る。英語媒体のコメント欄は JavaScript）。
+# 写真は Commons の File:Tonda Eckert 22112025 (16).jpg（CC0 / Timmy96、2025年11月22日のチャールトン戦）。
+#   右にエッカート、左に得点板。本編の板は左寄せなので顔にかからない。01_w＝冒頭と本文、01_v＝ショート。
+# 松木玖生が在籍しているクラブだが、題は処分の中身なので台本には入れない。
+date: 2026年10月8日
+slot: other_1
+format: news
+people: []
+theme:
+  id: spy_ban
+  league: england
+  league_name: チャンピオンシップ
+  kind: other
+  topic: サウサンプトン
+  title: サウサンプトン監督、練習のぞき見の処分。16週間はどこまで減ったか
+  question: サウサンプトンのエッカート監督は何をして、どんな罰が出たのか
+  takeaway: 委員会が釣り合うと見た出発点は4か月、16週間の活動禁止。そこから情状酌量で7週間、罪を認めた割引で3週間が引かれて6週間になり、最後に全部が2028年6月30日まで執行猶予になった。実際に休む週はゼロで、いま効くのは2万8000ポンドの罰金と譴責だけ。2019年のリーズは同じのぞき見でクラブに20万ポンドの罰金が出たが個人への処分は無く、2024年のカナダは1年の禁止だった
+  opening_image: assets/images/20261008_spy_ban/01_w.jpg
+short_title: サウサンプトン監督のスパイ処分。16週間の出発点が何週になったか
+thumbnail:
+  layout: number
+  photo: assets/images/20261008_spy_ban/01_w.jpg
+  short_photo: assets/images/20261008_spy_ban/01_v.jpg
+  number: 16週間
+  line1: サウサンプトン スパイ処分
+  line2: 実際に休むのは●●週
+  tags:
+  - サウサンプトン
+  - チャンピオンシップ
+  - スパイゲート
+sections:
+- id: what
+  heading: のぞいたのは3クラブの練習
+  tier: 確定
+  official: true
+  telop: 2025年12月から今年5月まで3件。オックスフォード、イプスウィッチ、ミドルズブラ
+  narrator: キャスター
+  card: &deeds
+    type: table
+    title: 認定された3件
+    columns: &c_deeds
+    - 相手
+    - 試合
+    - 認定された中身
+    rows: &r_deeds
+    - - オックスフォード
+      - 2025年12月26日
+      - 練習を2日見に行かせた
+    - - イプスウィッチ
+      - 2026年4月28日
+      - 練習の映像を受け取った
+    - - ミドルズブラ
+      - 2026年5月
+      - 準決勝の前に見に行かせた
+  say:
+  - text: 協会の委員会が認めたのは、エッカート監督による3つの違反です。
+    image: assets/images/20261008_spy_ban/01_w.jpg
+    card: *deeds
+  - text: 1つ目はオックスフォード。12月26日の試合の3日前です。
+    card:
+      <<: *deeds
+      highlight_row: 0
+  - voice: エッカート監督
+    text: オックスフォードが監督を代えたのを、テレビで知りました。
+    card:
+      <<: *deeds
+      highlight_row: 0
+  - voice: エッカート監督
+    text: 4バックか5バックかを見てきてもらえないか、と聞きました。
+    cont: true
+    card:
+      <<: *deeds
+      highlight_row: 0
+  - text: 2つ目はイプスウィッチ。試合当日の練習を写した映像でした。
+    card:
+      <<: *deeds
+      highlight_row: 1
+  - voice: エッカート監督
+    text: 廊下で声をかけられ、映像を見たいかと聞かれました。
+    card:
+      <<: *deeds
+      highlight_row: 1
+  - voice: エッカート監督
+    text: 5秒か10秒の会話で、間違って、はいと答えました。
+    cont: true
+    card:
+      <<: *deeds
+      highlight_row: 1
+  - text: 3つ目がミドルズブラ。昇格プレーオフ準決勝の前でした。
+    card:
+      <<: *deeds
+      highlight_row: 2
+  - voice: エッカート監督
+    text: けがから戻ったと噂の選手が、練習しているか確かめたかった。
+    card:
+      <<: *deeds
+      highlight_row: 2
+  - voice: エッカート監督
+    text: 誰ひとり、ためらいも反対も口にしませんでした。
+    cont: true
+    card:
+      <<: *deeds
+      highlight_row: 2
+  - text: 5月7日に見に行った人が見つかり、相手はリーグへ訴えました。
+    card:
+      <<: *deeds
+      highlight_row: 2
+  quotes_from:
+  - イングランドサッカー協会（独立規制委員会の判断の文書） https://www.thefa.com/-/media/files/thefaportal/governance-docs/discipline-cases/2026-27/the-fa-v-tonda-eckert.ashx
+  sources:
+  - https://www.thefa.com/-/media/files/thefaportal/governance-docs/discipline-cases/2026-27/the-fa-v-tonda-eckert.ashx
+  - https://www.thefa.com/news/2026/oct/07/tonda-eckert-update-071026
+- id: sanction
+  main: true
+  heading: 出た処分と、いま効いているもの
+  tier: 確定
+  official: true
+  telop: 6週間の活動禁止は全部が執行猶予。いま効くのは2万8000ポンドの罰金と譴責
+  narrator: キャスター
+  card: &verdict
+    type: verdict
+    title: 10月7日に出た処分
+    columns:
+    - 処分
+    - いま効くか
+    - 中身
+    rows:
+    - - 6週間の活動禁止
+      - ✗
+      - 2028年6月末まで猶予
+    - - 罰金2万8000ポンド
+      - ✓
+      - 猶予なし
+    - - 譴責
+      - ✓
+      - 3つすべてに
+  say:
+  - text: サウサンプトンの指揮官が、相手の練習をのぞいて処分されました。
+    short_only: true
+  - voice: 規制委員会
+    text: 相手をのぞき見ることは、非常に重い違反である。
+    card: *verdict
+  - text: 出たのは3つ。6週間の活動禁止と、罰金と、戒めの譴責です。
+    card: *verdict
+  - text: 委員会が置いた出発点の16週間より、10週間も短い数字です。
+    card: *verdict
+  - text: ただし活動禁止は全部、2028年6月30日まで執行猶予になりました。
+    card:
+      <<: *verdict
+      highlight_row: 0
+    mark:
+      kind: strike
+      row: 0
+      col: 0
+      text: 休む週はゼロ
+    emph: true
+  - text: 猶予が解けるのは、もう一度同じことをしたときだけです。
+    card: none
+    image: assets/images/20261008_spy_ban/01_w.jpg
+  - text: いま効くのは罰金と譴責だけ。譴責は3つすべてに付きました。
+    card:
+      <<: *verdict
+      highlight_row: 2
+  - text: 罰金は2万8000ポンド。7日のレートで、日本円なら約585万円です。
+    card: &money
+      type: convert
+      title: 罰金の額
+      steps:
+      - - 7万5000
+        - ポンド
+        - 委員会の出発点
+      - - 2万8000
+        - ポンド
+        - 決まった罰金
+      - - 約585万
+        - 円
+        - 10月7日のレート
+      via:
+      - 情状酌量と3分の1の割引
+      - 1ポンド＝208.93円
+  - text: 出発点の7万5000ポンドより、4万7000ポンド軽い額です。
+    card: *money
+  quotes_from:
+  - イングランドサッカー協会（独立規制委員会の判断の文書） https://www.thefa.com/-/media/files/thefaportal/governance-docs/discipline-cases/2026-27/the-fa-v-tonda-eckert.ashx
+  sources:
+  - https://www.thefa.com/news/2026/oct/07/tonda-eckert-update-071026
+  - https://www.thefa.com/-/media/files/thefaportal/governance-docs/discipline-cases/2026-27/the-fa-v-tonda-eckert.ashx
+- id: howmuch
+  heading: 16週間が6週間になるまで
+  tier: 確定
+  official: true
+  telop: 出発点は4か月・16週間。情状酌量で7週間、罪を認めた割引で3週間が引かれた
+  narrator: キャスター
+  card: &calc1
+    type: calc
+    title: 情状酌量まで
+    terms:
+    - - 16週
+      - 委員会の出発点
+    - - 7週
+      - 情状酌量で引く
+    - - 9週
+      - 引いたあと
+    ops:
+    - －
+    - ＝
+  say:
+  - text: 委員会がまず置いた出発点は、4か月、16週間の活動禁止でした。
+    card: *calc1
+    image: assets/images/20261008_spy_ban/01_w.jpg
+  - text: リーグ戦でおよそ20試合。1季46試合の4割より長い計算です。
+    card: *calc1
+  - text: そこから汲むべき事情、情状酌量で7週間が引かれ、9週間です。
+    card: *calc1
+  - voice: 規制委員会
+    text: 反省の深さは、誰に期待できるものとしても、
+    card: *calc1
+  - voice: 規制委員会
+    text: これ以上ないほど深く、真剣なものだった。
+    cont: true
+    card: *calc1
+  - text: 重くする事情は1つも無い、というのが委員会の見方です。
+    card: &calc2
+      type: calc
+      title: 罪を認めた割引
+      terms:
+      - - 9週
+        - 情状酌量のあと
+      - - 3週
+        - 3分の1の割引
+      - - 6週
+        - 決まった禁止
+      ops:
+      - －
+      - ＝
+  - text: 最初の機会に罪を認めたので、もう一段の割引が入ります。
+    card: *calc2
+  - text: 9週間から3週間が引かれ、6週間。ここで長さが決まりました。
+    card: *calc2
+  - text: 全部を猶予にした理由も、委員会は書き残しています。
+    card: none
+  - voice: 規制委員会
+    text: 監督が6週間いなくなれば、クラブとサポーターに、
+    card: none
+  - voice: 規制委員会
+    text: もう一つ罰を科すのと同じことになる。
+    cont: true
+    card: none
+  - text: クラブはプレミア昇格のプレーオフから外され、勝ち点4も引かれました。
+    card: none
+  quotes_from:
+  - イングランドサッカー協会（独立規制委員会の判断の文書） https://www.thefa.com/-/media/files/thefaportal/governance-docs/discipline-cases/2026-27/the-fa-v-tonda-eckert.ashx
+  sources:
+  - https://www.thefa.com/-/media/files/thefaportal/governance-docs/discipline-cases/2026-27/the-fa-v-tonda-eckert.ashx
+- id: view
+  viewpoint: true
+  heading: 過去のスパイ処分と並べた6週間
+  tier: 背景
+  telop: 2019年のリーズは個人への処分なし、2024年のカナダは1年。猶予は2028年6月30日まで
+  narrator: 解説
+  card: &past
+    type: table
+    title: のぞき見で出た処分（公式の文書で確かめた）
+    columns: &c_past
+    - 件
+    - クラブへ
+    - 個人へ
+    rows: &r_past
+    - - 2019年 リーズ
+      - 罰金20万ポンド
+      - 処分なし
+    - - 2024年 カナダ
+      - 勝ち点6減と罰金
+      - 1年の活動禁止
+    - - 2026年 サウサンプトン
+      - プレーオフ除外・勝点4減
+      - 6週間・全部猶予
+  say:
+  - text: この6週間は重いのか軽いのか。過去の処分と並べてみます。
+    card: *past
+  - text: 2019年のリーズは、クラブに20万ポンドの罰金で終わっています。
+    card:
+      <<: *past
+      highlight_row: 0
+  - text: いま決まった監督個人の罰金の、7倍を超える額です。
+    card:
+      <<: *past
+      highlight_row: 0
+  - text: 当時の監督ら個人への処分は無かったようだ、と委員会は書いています。
+    card:
+      <<: *past
+      highlight_row: 0
+  - text: この件が、試合前72時間の観察を禁じる規則のきっかけでした。
+    card:
+      <<: *past
+      highlight_row: 0
+  - text: 2024年のパリ五輪では、カナダの監督ら3人に1年の禁止。
+    card:
+      <<: *past
+      highlight_row: 1
+  - text: 52週です。今回の出発点16週間は、その3割ほどにあたります。
+    card:
+      <<: *past
+      highlight_row: 1
+  - text: 個人の監督は6週間で、しかも全部が猶予です。
+    card:
+      <<: *past
+      highlight_row: 2
+    mark:
+      kind: circle
+      row: 2
+      col: 2
+    emph: true
+  - text: 公式の文書で確かめられた範囲では、のぞき見を理由に、
+    card: none
+    image: assets/images/20261008_spy_ban/01_w.jpg
+  - text: 英国の監督個人に活動禁止が出たのは、この件が初めてです。
+    card: none
+  - text: 猶予が切れるのは2028年6月30日。それまで休む週はありません。
+    card: none
+  sources:
+  - https://www.thefa.com/-/media/files/thefaportal/governance-docs/discipline-cases/2026-27/the-fa-v-tonda-eckert.ashx
+  - https://www.itv.com/news/calendar/2019-02-18/spygate-leeds-united-fined-200k-and-reprimanded-as-efl-investigation-ends
+  - https://www.cbc.ca/1.7277691
+- id: voices
+  heading: ネットの声
+  tier: 未確認
+  telop: 「そんな微罪なら、プレーオフに出してもよかったのでは」
+  narrator: キャスター
+  say:
+  # Yahoo!ニュース（フットボールチャンネルの記事）のコメント欄。全文、元の改行で分けた
+  - voice: ネット民
+    text: そんな微罪なら、プレーオフに出してもよかったのでは。
+    card: none
+    short_voice: true
+  - voice: ネット民
+    text: 勝ち点剥奪は取り消しかな。
+    cont: true
+    card: none
+    short_voice: true
+  - voice: ネット民
+    text: 少なくとも主導者の一人ではあったのに。
+    cont: true
+    card: none
+    short_voice: true
+  sources:
+  - https://news.yahoo.co.jp/articles/050fa5f539f4845e0b9809239866d6a88fde1861/comments

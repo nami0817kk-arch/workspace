@@ -220,7 +220,8 @@ def test_breaking_prefix_is_fine_with_a_confirmed_section():
     # （参考3チャンネルは尺の58%が他人の声、こちらは14%だった）。札の点検とは別の話
     # 2026-09-08: 中身の量（数字・出典）のヒントも同様にどのメモにも出る
     # 2026-09-25: サムネに名前を入れる決まりも、名前を書いていないメモには必ず出る
-    volume = ("他人の声", "数字を含む行", "出典が", "クラブ名も人名も")
+    # 2026-09-28: 見立て（takeaway）のヒントも、書いていないメモには必ず出る
+    volume = ("他人の声", "数字を含む行", "出典が", "クラブ名も人名も", "takeaway", "viewpoint")
     assert [h for h in advise(build_notes(raw)) if not any(v in h for v in volume)] == []
 
 
@@ -663,24 +664,26 @@ def test_締めの挨拶を読み上げない():
     assert "次の焦点です" not in body
 
 
-def test_他人の声が足りないと助言する():
-    from src.research import advise
-
-    hints = advise(build_notes(_raw()))
-    assert any("他人の声" in h for h in hints)
-
-
-def test_反応を入れれば助言は出ない():
+def test_他人の声が多すぎると助言する():
+    """2026-09-28 に下限から上限へ反転（収益化の審査。こちらの解説を主役にする）。"""
     from src.research import advise
 
     raw = _raw()
-    voices = [{"voice": "ネット民", "text": f"これは強い{i}"} for i in range(12)]
+    voices = [{"voice": "ネット民", "text": f"これはとても強いチームだと思う{i}"} for i in range(12)]
     raw["sections"] = raw["sections"] + [{
         "id": "voices", "heading": "どう受け止められたか", "tier": "未確認",
         "telop": "ネットの反応", "say": voices,
         "sources": ["https://footballnet.example/1"],
     }]
-    assert not any("他人の声が" in h for h in advise(build_notes(raw)))
+    hints = advise(build_notes(raw))
+    assert any("他人の声（発言と反応）が" in h for h in hints)
+    assert any("ネットの反応が12件" in h for h in hints)
+
+
+def test_語りが主役なら他人の声の助言は出ない():
+    from src.research import advise
+
+    assert not any("他人の声（発言と反応）が" in h for h in advise(build_notes(_raw())))
 
 
 def test_過去形の答えが壊れない():
@@ -777,8 +780,10 @@ def _voices_raw():
     return raw
 
 
-def test_反応の型は問いと答えが無くても通る():
-    assert verify(build_notes(_voices_raw()), _plan()) == []
+def test_反応の型は新しく作らない():
+    """2026-09-28、収益化の審査に合わせて voices 型を止めた。"""
+    problems = verify(build_notes(_voices_raw()), _plan())
+    assert any("新しく作りません" in p for p in problems)
 
 
 def test_反応の型に反応の行が無ければ止める():
@@ -795,19 +800,6 @@ def test_知らない型は止める():
     raw["format"] = "podcast"
     with pytest.raises(ResearchError):
         build_notes(raw)
-
-
-def test_反応の型の台本にまとめは無い():
-    from src.script_model import parse_script
-
-    script = parse_script(to_script(build_notes(_voices_raw()), _plan()))
-    assert [s.title for s in script.scenes] == ["オープニング", "何があったか", "現地の声"]
-    assert "wrap" not in script.cards
-    assert script.meta.get("format") == "voices"
-    assert script.meta.get("intro_label") == "みんなの反応"
-    # 1行目はタイトルを読む。問いのテロップは出さない
-    assert "ハル戦の鈴木彩艶を見た現地サポの反応" in script.lines[0].text
-    assert not any("今回の問い" in line.telop_text() for line in script.lines)
 
 
 def test_ニュースの型は今まで通り問いが要る():
@@ -1333,7 +1325,7 @@ sections:
     assert "本編に残る最初の行" in holder
 
 
-def test_ネットの声が少ない回を知らせる(tmp_path):
+def test_ネットの反応が多い回を知らせる(tmp_path):
     """**件数を数えていなかった**（2026-09-18 に気づいた）。
 
     「読み上げる反応は10〜20件」と 2026-09-07 に決めてあるのに、
@@ -1382,12 +1374,12 @@ sections:
 """, encoding="utf-8")
         return advise(load_notes(path), load_plan())
 
-    few = [n for n in note(6) if "ネットの声が" in n]
-    assert few, "6件でも知らせていない"
-    assert "6件" in few[0]
+    many = [n for n in note(6) if "ネットの反応が" in n]
+    assert many, "6件でも知らせていない"
+    assert "6件" in many[0]
 
-    enough = [n for n in note(12) if "ネットの声が" in n]
-    assert not enough, "12件で鳴っている"
+    enough = [n for n in note(3) if "ネットの反応が" in n]
+    assert not enough, "3件で鳴っている"
 
 
 def test_1節目がショート専用の行で始まっても落ちない(tmp_path):
@@ -1769,6 +1761,21 @@ def test_行に差し込む縦長の写真は止める(tmp_path):
     assert len(problems) == 1 and "tall.jpg" in problems[0] and "pairphoto" in problems[0]
 
 
+def test_表のある節の縦長の写真は止めない(tmp_path):
+    """2026-09-26 ラ・リーガ版。名選手・監督・逸話の節は表が左、写真が右に並ぶので左に面は残らない。"""
+    from PIL import Image
+    from src.research import _check_line_images_wide
+    tall = tmp_path / "tall.jpg"; Image.new("RGB", (300, 400), "gray").save(tall)
+    raw = _raw()
+    raw["sections"] = [
+        _section(id="what", main=True, say=["さいしょのぎょうです。"]),
+        _section(id="legend", heading="語る人", card={"type": "table", "title": "名選手",
+                                                   "columns": ["", ""], "rows": [["a", "b"]]},
+                 say=[{"text": "このひとです。", "image": str(tall)}]),
+    ]
+    assert _check_line_images_wide(build_notes(raw)) == []
+
+
 def test_主役の名前が出ない節は知らせる():
     """2026-09-25 に4本で「この節は不要」と言われた。機械で取れるのは名前の有無だけ。"""
     from src.research import _advise_offtopic_section
@@ -1807,3 +1814,153 @@ def test_行の多い表と長い行は重なりを知らせる():
         card={"type": "table", "title": "t", "columns": ["", ""], "rows": [[1, "a"], [2, "b"], [3, "c"], [4, "d"], [5, "e"]]},
         say=["あ" * 30])]
     assert not _advise_card_telop_overlap(build_notes(raw))
+
+
+def _reaction_notes(tmp_path, say, sources):
+    import yaml
+    from src.research import load_notes
+
+    note = {
+        "date": "2026年9月27日", "slot": "japanese_1", "format": "news",
+        "theme": {"id": "t", "league": "spain", "kind": "other", "topic": "バルセロナ",
+                  "title": "バルセロナの話", "question": "何が起きたか"},
+        "sections": [
+            {"id": "a", "heading": "何が起きたか", "tier": "報道", "telop": "t", "narrator": "キャスター",
+             "say": ["バルセロナが勝ちました。"], "sources": ["https://www.espn.com/x"]},
+            {"id": "voices", "heading": "ネットの反応", "tier": "未確認", "telop": "t", "narrator": "キャスター",
+             "say": say, "sources": sources},
+        ],
+    }
+    p = tmp_path / "n.yaml"
+    p.write_text(yaml.safe_dump(note, allow_unicode=True), encoding="utf-8")
+    return load_notes(p)
+
+
+def test_分けていない長い反応を止める(tmp_path):
+    """**2026-09-27「過去の指摘は平気？」**。9/26 に決めた「長い反応は分けて cont」が1件残っていた。"""
+    from src.research import _advise_reactions
+
+    long = "イングランドに住むスペイン人です。クラブも代表もスペインのスタイルをまねしようとしているのを見てきたが、上には行けない"
+    notes = _reaction_notes(tmp_path, [{"voice": "ネット民", "text": long}], ["https://x.com/someone/status/1"])
+    assert any("長い反応が分かれていません" in w for w in _advise_reactions(notes))
+
+
+def test_分けてあれば通す(tmp_path):
+    from src.research import _advise_reactions
+
+    say = [{"voice": "ネット民", "text": "イングランドに住むスペイン人です。まねしようとしているのを見てきた。とても長い前半の文です。"},
+           {"voice": "ネット民", "text": "でも上には行けない", "cont": True}]
+    notes = _reaction_notes(tmp_path, say, ["https://x.com/someone/status/1"])
+    assert not any("長い反応" in w for w in _advise_reactions(notes))
+
+
+def test_報道アカウントの見出しを反応に入れない(tmp_path):
+    """**2026-09-27**。ESPN FC や AS の Bluesky の見出しを「ネット民」で読んでいた。"""
+    from src.research import _advise_reactions
+
+    notes = _reaction_notes(tmp_path, [{"voice": "ネット民", "text": "ラフィーニャがハットトリック！"}],
+                            ["https://bsky.app/profile/espnfc-m.bsky.social/post/3mvv"])
+    assert any("報道・まとめ" in w for w in _advise_reactions(notes))
+
+
+def test_見立ては概要欄に1行出る():
+    """2026-09-28 収益化の整理 7。審査はメタデータも見る。"""
+    from src.research import advise
+    from src.script_model import parse_script
+
+    raw = _raw()
+    raw["theme"]["takeaway"] = "移籍金より出場時間の差が理由でした"
+    script = parse_script(to_script(build_notes(raw), _plan()))
+    assert "この動画の見立て: 移籍金より出場時間の差が理由でした" in script.description
+    assert not any("takeaway" in h for h in advise(build_notes(raw)))
+    assert any("takeaway" in h for h in advise(build_notes(_raw())))
+
+
+def test_見立ての節は印で示し無ければ知らせる():
+    """2026-09-28 収益化の整理。見立ての節が無い news は助言。カードが無ければ見立てを引用で出す。"""
+    from src.research import advise
+    from src.script_model import parse_script
+
+    raw = _raw()
+    assert any("viewpoint" in h for h in advise(build_notes(raw)))
+    raw["theme"]["takeaway"] = "差は移籍金ではなく出場時間でした"
+    raw["sections"] = raw["sections"] + [_section(id="view", heading="差は出場時間", tier="背景",
+                                                  viewpoint=True, say="差は移籍金より出場時間でした。")]
+    notes = build_notes(raw)
+    assert not any("viewpoint" in h for h in advise(notes))
+    view = next(s for s in notes.sections if s.id == "view")
+    assert view.card == {"type": "quote", "label": "この動画の見立て", "text": "差は移籍金ではなく出場時間でした"}
+    script = parse_script(to_script(notes, _plan()))
+    assert any(scene.viewpoint for scene in script.scenes)
+
+
+def test_雛形の書き残しは_draft_が知らせる():
+    """雛形の「（…）」の行は人が書く。埋め忘れたまま読み上げられないように（品質100回の61）。"""
+    from src import research as r
+
+    def notes_with(say):
+        section = r.Section(id="s", heading="プレースタイル", tier="報道", telop="", say=say, line_images=[None] * len(say),
+                            line_telops=[""] * len(say), line_cards=[None] * len(say), line_onlys=[""] * len(say))
+        return r.Notes(date="2026年10月1日", slot="other_1", title="t", theme_id="t", question="q", sections=[section])
+
+    hints = r._advise_placeholders(notes_with(["数字で見ます。", "（6つの軸のうち最上位と最下位を言う）"]))
+    assert len(hints) == 1 and "書き残し" in hints[0] and "最上位と最下位" in hints[0]
+    # 括弧で始まる普通の文（補足の一言）は鳴らさない
+    assert r._advise_placeholders(notes_with(["（笑）", "（前置き）これは本文です。"])) == []
+    # 題・見立て・サムネの欄も見る（雛形は「例：」で置く）
+    n = notes_with(["本文。"])
+    n.title = "ハーランドってどんな選手？（答えを伏せた言い換えを足す。例：ボールに触らないのに点だけ取る理由）"
+    n.takeaway = "（数字で分かったことを1文で）"
+    n.thumbnail = {"line2": "（いちばん強い事実を伏せる。例：●●）", "photo": "（横長の顔写真1枚）"}
+    got = r._advise_placeholders(n)
+    assert [h.split("に雛形")[0] for h in got] == ["題", "見立て（takeaway）", "サムネの2行目", "サムネの写真"]
+
+
+def test_選手紹介の写真の決まり_スタジアムと2枚並べと同じ写真の連続():
+    from src import research as r
+
+    def notes_with(images, series="有名選手の紹介", photo="assets/images/a/01.jpg"):
+        sections = [r.Section(id=f"s{i}", heading=f"節{i}", tier="報道", telop="", say=["x"], line_images=[img], line_telops=[""], line_cards=[None],
+                              line_onlys=[""]) for i, img in enumerate(images)]
+        return r.Notes(date="2026年10月1日", slot="other_1", title="t", theme_id="t", question="q", sections=sections,
+                       series=series, thumbnail={"photo": photo})
+
+    hints = r._advise_player_photos(notes_with(["assets/images/a/01.jpg"] * 3, photo="assets/backgrounds/stadium_x_in.png"))
+    assert any("スタジアム" in h for h in hints) and any("3つの節で続きます" in h for h in hints)
+    hints = r._advise_player_photos(notes_with(["assets/images/20261001_haaland_pair_open/01.jpg"]))
+    assert any("2枚並べ" in h for h in hints)
+    assert r._advise_player_photos(notes_with(["a.jpg", "b.jpg", "a.jpg"], series="速報")) == []
+
+
+def test_紹介ものは反応が無くても知らせない():
+    """クラブ紹介・選手紹介は他人の声 0 の企画（2026-09-28）。ニュースの回だけ「反応が1件もありません」を出す。"""
+    from src.research import wants_reactions
+
+    assert wants_reactions("") and wants_reactions("速報")
+    assert not wants_reactions("有名選手の紹介") and not wants_reactions("プレミアリーグチーム紹介")
+
+
+def test_引用元は名前のある人の言葉がある節の記事だけ():
+    """反応の節・SNS・コメント欄・数字のサイトは入れない（2026-09-30）。"""
+    from src.research import Notes, Section
+
+    words = Section(id="w", heading="言葉", tier="報道", telop="t", say=["a", "b"],
+                    voices=["", "伊東純也"],
+                    sources=["https://web.gekisaka.jp/x", "https://www.fotmob.com/players/1"])
+    fans = Section(id="v", heading="反応", tier="未確認", telop="t", say=["c"],
+                   voices=["ネット民"], sources=["https://news.yahoo.co.jp/articles/abc/comments"])
+    facts = Section(id="f", heading="事実", tier="報道", telop="t", say=["d"],
+                    voices=[""], sources=["https://www.soccer-king.jp/y"])
+    notes = Notes(date="2026年9月30日", title="T", question="", sections=[words, fans, facts])
+    assert notes.quote_sources == ["https://web.gekisaka.jp/x"]
+
+
+def test_言葉を引いた記事を書けば引用元はそれだけ():
+    from src.research import Notes, Section
+
+    words = Section(id="w", heading="言葉", tier="報道", telop="t", say=["a", "b"],
+                    voices=["", "伊東純也"],
+                    sources=["https://web.gekisaka.jp/x", "https://www.spacemoney.com.br/y"],
+                    quotes_from=["https://web.gekisaka.jp/x"])
+    notes = Notes(date="2026年9月30日", title="T", question="", sections=[words])
+    assert notes.quote_sources == ["https://web.gekisaka.jp/x"]

@@ -767,7 +767,7 @@ def test_TikTok用は1分を超えるまで台本の中身を足す():
 
     script = Script(title="t", scenes=[
         Scene(title="オープニング", lines=[talk("題名です", 4.0)]),
-        Scene(title="何があったか", lines=[talk(f"事実{i}", 5.0) for i in range(4)]),
+        Scene(title="何があったか", lines=[talk(f"事実{i}", 5.0) for i in range(8)]),
         Scene(title="山場", lines=[talk(f"山場{i}", 5.0) for i in range(5)]),
         Scene(title="見ていた人", lines=[talk(f"反応{i}", 3.0, "ネット民") for i in range(8)]),
     ])
@@ -812,6 +812,29 @@ def test_実尺で上限に収める(tmp_path):
     # **締めは残す。**落とすのは後ろ（＝ネットの声）から
     assert script.lines[-1].text == SHORT_SUBSCRIBE
     assert any(l.text.startswith("語り") for l in script.lines)
+
+
+def test_実尺で収めるとき最後の反応1件は残す():
+    """2026-10-03 ジダンの回。締めの反応（1件）を実尺で落とし、ショートに誰の声も無くなった。"""
+    from src.config import load_config
+    from src.script_model import Line, Scene, Script
+    from src.shorts import SHORT_SUBSCRIBE, enforce_limit
+
+    def talk(text, sec, who="キャスター"):
+        line = Line(speaker=who, text=text)
+        line.duration = sec
+        return line
+
+    lines = [talk(f"語り{i}", 8.0) for i in range(6)]
+    lines += [talk("反応の頭", 3.0, "ネット民"), talk("反応の続き", 3.0, "ネット民")]
+    lines[-1].cont = True
+    lines += [talk(SHORT_SUBSCRIBE, 2.0)]
+    script = Script(title="t", scenes=[Scene(title="オープニング", lines=[talk("題", 4.0)]),
+                                       Scene(title="本編", lines=lines)])
+    enforce_limit(script, 58.0, load_config())
+    texts = [l.text for l in script.lines]
+    assert "反応の頭" in texts and "反応の続き" in texts, texts
+    assert sum(l.duration for l in script.lines) <= 58.0
 
 
 def test_状況説明の1行があってもネットの声は締めに足す():
@@ -918,6 +941,48 @@ def test_ショートが題名に答えていなければ知らせる():
 
     story.lines.append(Line(speaker="解説", text="鈴木彩艶は45分を無失点で守りました"))
     assert subject_problems(trim(script), script) == []
+
+
+def test_長い反応しか印が無ければ入る短い1件のぶんを空ける():
+    """2026-10-03（③）。8行に分けた1件に印を付け、行で数えて3行ぶんしか空けず、反応0件になった。"""
+    from src.script_model import parse_script
+    from src.shorts import trim
+
+    nl = chr(10)
+    body = ["## オープニング", "", "キャスター: つかみ。", "", "## 本編", ""]
+    for i in range(8):
+        body += [f"解説: 語り{i}です。" + "あ" * 40, ""]
+    body += ["## 見立て", "", "解説: 見立ての1行目です。" + "い" * 30, "", "解説: 見立ての答えです。" + "い" * 30, ""]
+    body += ["## ネットの反応", ""]
+    body += ["ネット民: 長い反応の頭です。" + "う" * 30, "  short_voice: true", ""]
+    for i in range(7):
+        body += [f"ネット民: 長い反応の続き{i}。" + "う" * 30, "  short_voice: true", "  cont: true", ""]
+    body += ["ネット民: 短い反応です。", ""]
+    script = parse_script(nl.join(body))
+    # 尺が足りない状況を作る（上限は 2026-10-14 に 58秒 → 120秒。このテストは58秒の窮屈さを見る）
+    got = [line.text for line in trim(script, "本編", max_seconds=58.0).scenes[-1].lines]
+    assert any(t.startswith("短い反応") for t in got), got
+    # 見立ての節を途中まで足して、答えを言わずに終わらない
+    assert not any(t.startswith("見立ての1行目") for t in got), got
+
+
+def test_締めに反応が入らなければ知らせる():
+    """2026-10-02 久保の結婚の回。印を付けた反応が長くて入らず、見立ての語りで途中終わりになった。"""
+    from src.script_model import Line, Scene, Script
+    from src.shorts import voice_tail_problems
+
+    opening = Scene(title="オープニング", lines=[Line(speaker="キャスター", text="題")])
+    story = Scene(title="山場", main=True, lines=[Line(speaker="キャスター", text="本題です")])
+    voices = Scene(title="ネットの反応", lines=[Line(speaker="ネット民", text="おめでとう")])
+    script = Script(title="題", scenes=[opening, story, voices])
+    short = Script(title="題", scenes=[Scene(title="山場", lines=list(story.lines))])
+    assert voice_tail_problems(short, script)
+
+    short.scenes[-1].lines.append(Line(speaker="ネット民", text="おめでとう"))
+    assert voice_tail_problems(short, script) == []
+
+    script.meta = {"short_voices": False}
+    assert voice_tail_problems(Script(title="題", scenes=[Scene(title="山場", lines=list(story.lines))]), script) == []
 
 
 def test_ショートの締めで本編へ渡す():
@@ -1252,3 +1317,298 @@ def test_冒頭の写真も縦版に差し替える(tmp_path, monkeypatch):
     short.meta = {"thumbnail_photo": "assets/images/20260925_pair_y/01.jpg"}
     _add_face(short)
     assert line.image == "assets/images/20260925_pair_y/01_v.jpg"
+
+
+def test_分けた反応はかたまりで扱う():
+    """2026-09-26 久保の回。長い反応を行に分けたら、ショートが前半だけ拾って途中で切れた。"""
+    from types import SimpleNamespace as L
+    from src.shorts import _voice_groups
+    lines = [L(text="頭1", cont=False), L(text="続き1", cont=True), L(text="頭2", cont=False)]
+    groups = _voice_groups(lines)
+    assert [[l.text for l in g] for g in groups] == [["頭1", "続き1"], ["頭2"]]
+
+
+def test_話者の名前が入った振りは残す():
+    """**2026-09-27 ユーザー指摘「板倉のショートは流れが変」。**
+    「先発が有力な鈴木淳之介は、こう話します。」まで振りとして落ち、ショートでは
+    誰だか分からないまま本人の言葉が続いた。名前の入った振りは話者を名乗る行として残す。"""
+    from src.script_model import parse_script
+    from src.shorts import trim
+
+    nl = chr(10)
+    body = ["## オープニング", "", "キャスター: タイトルです。", "", "## 本編", ""]
+    body += ["キャスター: 空いた3バックに誰が入るのか。", ""]
+    body += ["キャスター: 先発が有力な鈴木淳之介は、こう話します。", ""]
+    body += ["鈴木淳之介: どうにか食らいつくところは終わった", ""]
+    short = trim(parse_script(nl.join(body)))
+    texts = [line.text for line in short.scenes[-1].lines]
+    assert "先発が有力な鈴木淳之介は、こう話します。" in texts, texts
+
+
+def test_尺を埋める語りは反応より前に入れる():
+    """**反応のあとに、次の節の語りが続いていた**（2026-09-28、伊藤洋輝のショート）。
+
+    反応を締めに足しても尺が余ると、`_add_more_body` が次の節の語り
+    （けがの話）を**いちばん後ろ**に足していた。「ネットの声は最後」（2026-09-16）が崩れ、
+    9/27 の板倉のショート「流れが変」と同じ形になった。語りは反応の手前に差し込む。
+    """
+    from src.script_model import Line, Scene, Script
+    from src.shorts import trim
+
+    opening = Scene(title="オープニング", lines=[Line(speaker="キャスター", text="題名です")])
+    story = Scene(title="山場", main=True, lines=[Line(speaker="キャスター", text="ここが芯です")])
+    after = Scene(title="その前の話", lines=[Line(speaker="キャスター", text="足の骨を折りました")])
+    voices = Scene(title="ネットの反応",
+                   lines=[Line(speaker="ネット民", text="出るべきなのでは", short_voice=True)])
+    short = trim(Script(title="見出し", scenes=[opening, story, after, voices]))
+    said = [l.text for l in short.scenes[-1].lines]
+    assert "足の骨を折りました" in said and "出るべきなのでは" in said
+    assert said.index("足の骨を折りました") < said.index("出るべきなのでは"), said
+
+
+def test_長い反応が入らなくても次の反応を試す():
+    """2026-09-28、シャビの回。印付きの1件目が17秒で入らず、そこで止めて反応0件になった。"""
+    from src import shorts
+    from src.script_model import Line, Scene, Script
+
+    def talk(text, sec, speaker="キャスター", **kw):
+        line = Line(speaker=speaker, text=text)
+        line.duration = sec
+        for k, v in kw.items():
+            setattr(line, k, v)
+        return line
+
+    voices = Scene(title="ネットの反応", lines=[
+        talk("とても長い反応その1", 17.0, "ネット民", short_voice=True),
+        talk("短い反応", 3.0, "ネット民", short_voice=True),
+    ])
+    script = Script(title="t", scenes=[
+        Scene(title="オープニング", lines=[talk("題名です", 4.0)]),
+        Scene(title="山場", lines=[talk(f"山場{i}", 5.0) for i in range(7)]),
+        voices,
+    ])
+    script.scenes[1].main = True
+    short = Script(title="t", scenes=[
+        Scene(title="オープニング", lines=[talk("題名です", 4.0)]),
+        Scene(title="山場", lines=[talk(f"山場{i}", 6.0) for i in range(9)]),
+    ])
+    # 見積り 58秒。上限58×1.25=72.5 に対し、17秒の1件目は入らず、3秒の2件目は入る
+    shorts._add_voices_tail(short, script, 58.0)
+    texts = [l.text for l in short.scenes[-1].lines]
+    assert "短い反応" in texts
+    assert "とても長い反応その1" not in texts
+
+
+def test_上下に割る写真は縦版があればそちらを使う(tmp_path, monkeypatch):
+    """2026-09-28、クロップの回。縦長の写真の下の帯が挙げた手だけになった。"""
+    from PIL import Image
+
+    from src import shorts
+
+    a = tmp_path / "a" / "01.jpg"; a.parent.mkdir()
+    b = tmp_path / "b" / "01.jpg"; b.parent.mkdir()
+    Image.new("RGB", (400, 300), (200, 30, 30)).save(a)
+    Image.new("RGB", (300, 900), (30, 30, 200)).save(b)          # 縦長
+    Image.new("RGB", (300, 300), (30, 200, 30)).save(b.with_name("01_v.jpg"))
+    monkeypatch.setattr(shorts, "STACK_DIR", tmp_path / "stack")
+    out = shorts.stacked_photo({"thumbnail_photos": [a.as_posix(), b.as_posix()]})
+    with Image.open(out) as img:
+        w, h = img.size
+        r, g, b_ = img.getpixel((w // 2, h * 3 // 4))                 # 下の帯は縦版の色（JPEG の丸めは許す）
+        assert abs(r - 30) < 8 and abs(g - 200) < 8 and abs(b_ - 30) < 8
+
+
+def test_ショートは読み終えたら終わる():
+    """**読み終えたあとに無音のカードを付けない**（2026-09-29 指摘「ショートに変な画面がはいる」）。
+
+    9/18 に締めの読み上げ枠を5秒に広げたとき、最後のカードの長さにも同じ数字を
+    使っていた。伊東のショートは「チャンネル登録もお願いします」のあと、
+    スタジアムの実写に小さな字のカードが5秒、音も無く出ていた。
+
+    **シリーズの回にも付けない**（2026-10-08）。9/29 は「続き物の回だけ3秒」として
+    `SERIES_END_CARD = 3.0` を残し、**このテストがその3秒を正しいものとして縛っていた。**
+    10月に `series:` がほぼ全部の回に付くようになって、例外が既定になった
+    （10/8 の実物2本とも、読み終えたあと3.4秒の無音で終わっていた）。
+    """
+    from src import inserts as inserts_mod
+    from src.config import load_config
+    from src.shorts import portrait, _add_subscribe
+
+    config = portrait(load_config())
+    short = trim(parse_script(BODY), "何が起きたか")
+    _add_subscribe(short)
+    assert inserts_mod.plan(short, config).outro == 0.0, "ニュースのショートに最後のカードが付いている"
+
+    for name in ("プレミアリーグチーム紹介", "記録", "クラブの財布", "有名選手の紹介"):
+        series = trim(parse_script(BODY), "何が起きたか")
+        series.meta = dict(series.meta or {}, series=name)
+        _add_subscribe(series)
+        plan = inserts_mod.plan(series, config)
+        assert plan.outro == 0.0, f"{name} の回に最後のカードが付いている"
+        assert plan.total == 0.0, f"{name} の回に無音の差し込みがある"
+
+
+def _real_series_scripts(limit: int = 6):
+    """**実物の台本**のうち `series:` のあるものを新しい順に。無ければ空。"""
+    from pathlib import Path
+
+    from src.script_model import load_script
+
+    root = Path(__file__).resolve().parents[1] / "scripts"
+    out = []
+    for path in sorted(root.glob("2026*.md"), reverse=True):
+        try:
+            script = load_script(path)
+        except Exception:                       # 書きかけの台本は飛ばす
+            continue
+        if str((script.meta or {}).get("series") or "").strip():
+            out.append((path.name, script))
+        if len(out) >= limit:
+            break
+    return out
+
+
+def test_実物のシリーズの台本でもショートの末尾に無音が残らない():
+    """**作り物の台本で試していたから素通りした**（2026-10-08）。
+
+    前のテストは `inserts.plan(...).outro` という**部品の値**だけを見ていて、しかも
+    シリーズの回は「3秒付いているのが正しい」と縛っていた。実物の台本を、書き出しと
+    同じ道筋（`portrait` → `trim` → `_add_subscribe` → `inserts.plan` →
+    `inserts.audio_segments`）で通して、**最後の音が読み上げで終わる**ことを見る。
+    `review.TAIL_SILENCE_MAX`（1.5秒）が見ているのと同じもの。
+    """
+    from src import inserts as inserts_mod
+    from src.config import load_config
+    from src.shorts import portrait, _add_subscribe
+    from src.review import TAIL_SILENCE_MAX
+
+    found = _real_series_scripts()
+    if not found:
+        pytest.skip("scripts/ にシリーズの台本がありません")
+
+    config = portrait(load_config())
+    for name, script in found:
+        try:
+            short = trim(script)
+        except ShortError:
+            continue
+        _add_subscribe(short)
+        inserts = inserts_mod.plan(short, config)
+        assert inserts.total <= TAIL_SILENCE_MAX, f"{name}: 無音が {inserts.total:.1f}秒 入っている"
+        # 合成はしないので、音のつなぎを見るために控えの場所だけ埋める
+        for number, line in enumerate(short.lines):
+            line.audio_path = f"{number:04d}.wav"
+            line.duration = 2.0
+        segments = inserts_mod.audio_segments(short, inserts)
+        assert segments, name
+        assert segments[-1][0] is not None, f"{name}: 読み上げのあとに無音が付いている"
+
+
+def test_クラブ紹介でないシリーズは締めでクラブの歩みを言わない():
+    """2026-10-01：ヤマル紹介・得点王・月間まとめのショートが「クラブの歩みと今季の選手は、本編で」で終わっていた。"""
+    from src.shorts import _series_outro, SHORT_SUBSCRIBE_SERIES, SHORT_SUBSCRIBE_SERIES_OTHER
+    assert _series_outro("ラ・リーガチーム紹介") == SHORT_SUBSCRIBE_SERIES
+    assert _series_outro("プレミアリーグチーム紹介") == SHORT_SUBSCRIBE_SERIES
+    for s in ("有名選手の紹介", "代表チームの紹介", "得点王レース", "日本人選手の月間まとめ", "有名選手の比較"):
+        assert _series_outro(s) == SHORT_SUBSCRIBE_SERIES_OTHER, s
+
+
+def test_尺に収めるとき2行に分けた発言を途中で切らない():
+    """2026-10-01：森保監督の発言が「気付いた人が持ってきてくれて、」で切れた（2行目だけ落ちた）。"""
+    from src.script_model import Line, Scene, Script
+    from src.shorts import _fit
+
+    lines = [Line(speaker="キャスター", text="あ" * 40),
+             Line(speaker="森保一", text="気付いた人が持ってきてくれて、"),
+             Line(speaker="森保一", text="より伝達しやすいように準備をしてくれたもの", cont=True)]
+    script = Script(title="t", scenes=[Scene(title="s", lines=lines)])
+    budget = (lines[0].estimated_duration() + lines[1].estimated_duration()) / 1.25 + 0.01
+    _fit(script, budget)
+    texts = [l.text for l in script.scenes[-1].lines]
+    assert texts == ["あ" * 40], texts
+
+
+def test_ショート用に指定した写真は重ねた写真より先に使う(tmp_path, monkeypatch):
+    """2026-10-04 キリンの回。3人を上下に重ねると、3段目（佐野）が字幕の裏に隠れた。"""
+    from PIL import Image
+    from src import shorts as shorts_mod
+    from src.script_model import Line, Scene, Script
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(shorts_mod, "STACK_DIR", tmp_path / "_stack")
+    for name in ("a.jpg", "b.jpg", "c.jpg", "m_v.jpg"):
+        Image.new("RGB", (480, 660), "gray").save(tmp_path / name)
+    line = Line(speaker="キャスター", text="a")
+    short = Script(title="t", scenes=[Scene(title="s", lines=[line])])
+    short.meta = {"thumbnail_photos": ["a.jpg", "b.jpg", "c.jpg"], "short_photo": "m_v.jpg"}
+    shorts_mod._add_face(short)
+    assert line.image == "m_v.jpg"
+
+
+def test_取材メモのショート用の写真は台本の頭に渡る():
+    from src import research
+    import inspect
+    assert '"short_photo"' in inspect.getsource(research)
+
+
+def test_本編にだけ出す行はショートに入らない():
+    """2026-10-07 久保の回。本編で前置きした人の名前の反応が、ショートに説明なしで出た"""
+    text = ("---\ntitle: T\n---\n\n## オープニング\n\nキャスター: 題です。\n\n"
+            "## 山場\n\nキャスター: 本題の一行です。\n"
+            "ネット民: 本編だけの反応です。\n  only: main\n"
+            "ネット民: どちらにも出る反応です。\n")
+    script = parse_script(text)
+    main_texts = [l.text for sc in script.scenes for l in sc.lines]
+    assert "本編だけの反応です。" in main_texts
+    short = trim(script)
+    short_texts = [l.text for sc in short.scenes for l in sc.lines]
+    assert "本編だけの反応です。" not in short_texts
+    assert "どちらにも出る反応です。" in short_texts
+
+
+def test_締めの一言に前の行の確度の札を引き継がない():
+    """2026-10-07 ケインの回。反応の「未確認」の札が締めの一言に付いていた"""
+    from src.shorts import _add_subscribe
+    text = ("---\ntitle: T\n---\n\n## オープニング\n\nキャスター: 題です。\n\n"
+            "## 山場\n\nキャスター: 本題の一行です。\n"
+            "ネット民: 反応です。\n  source: 未確認\n")
+    short = trim(parse_script(text))
+    _add_subscribe(short)
+    tail = short.scenes[-1].lines[-2:]
+    assert [l.source for l in tail] == [None, None]
+
+
+def _board_fixture(series: str, tmp_path, monkeypatch):
+    """`assets/backgrounds/stadium_X.png` を敷いた回のショートを作る。
+
+    `assets/stats/stadium_X_v.png`（クラブ紹介の基礎DATAの縦板）が隣にある状態を仕込む。
+    """
+    from pathlib import Path
+    from src import shorts as _shorts
+
+    root = tmp_path
+    (root / "assets" / "backgrounds").mkdir(parents=True)
+    (root / "assets" / "stats").mkdir(parents=True)
+    (root / "assets" / "backgrounds" / "stadium_X.png").write_bytes(b"photo")
+    (root / "assets" / "stats" / "stadium_X_v.png").write_bytes(b"board")
+    monkeypatch.setattr(_shorts, "__file__", str(root / "src" / "shorts.py"))
+
+    head = "---\ntitle: T\n" + (f"series: {series}\n" if series else "") + "---\n\n"
+    body = (head
+            + "## オープニング\n\nキャスター: つかみです。\n\n"
+            + "## 何が起きたか\n\nキャスター: いち。\n  image: assets/backgrounds/stadium_X.png\n")
+    script = parse_script(body)
+    short = trim(script)
+    _shorts._drop_boards(short, script)
+    return short.scenes[1].lines[0]
+
+
+def test_クラブ紹介いがいの回で下地の写真を別の回の板に差し替えない(tmp_path, monkeypatch):
+    """**10/9 に始めたスタジアム紹介が、ショートでクラブ紹介の基礎DATAの板に化けていた。**
+
+    `assets/stats/stadium_<クラブ>_v.png` は `clubdata.py --portrait` が書く基礎DATAの板で、
+    名前は差し替える相手（`assets/backgrounds/stadium_<クラブ>.png`）から取っている。
+    つまり「同じ名前＝同じ中身」ではなく、**クラブ紹介のときだけ成り立つ決め事**。
+    縦版は40クラブぶんあるので、放っておくとスタジアム紹介20本すべてで踏む。
+    """
+    line = _board_fixture("", tmp_path, monkeypatch)
+    assert line.image == "assets/backgrounds/stadium_X.png", "写真が別の回の板に化けた"

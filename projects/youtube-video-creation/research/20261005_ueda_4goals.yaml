@@ -1,0 +1,265 @@
+# 取材メモ（10/5 題材 ueda_4goals、型は quote）。材料の控え: research/raw/20261005_ueda_4goals.md
+# 主役は、キリンカップ決勝（10/5 19:30 国立、日本 2-1 ニュージーランド）の前半28分に先制点を決めた上田綺世と、試合後の言葉。
+# 同時に作る別の回「堂安律、325日ぶりの代表弾でキリン杯V」（20261005_kirin_final_doan）と重ねない:
+#   試合の流れ・堂安のゴールは1行まで。「2年半ぶりの4バック」「15年ぶり」「11月のシンガポール」「4連勝」は言わない。
+#   昼の回（堂安の課題・鈴木彩艶とウッド・ニュージーランド代表紹介・移籍の答え合わせ）の数字も言わない。
+# 事実の裏:
+#   発言はすべて 10/5 試合後のフラッシュインタビュー。ゲキサカ 460362 の原文（スポニチ・サッカーマガジン・サッカーキング・サンスポで同旨）。
+#   4試合の出場と得点の時間: JFA の試合記録（9/24・9/28・10/1 は PDF、10/5 は JFA の試合ページ m4.html）。raw の 2.
+#     出場時間（追加時間を除く）は 27＋45＋45＋78 ＝ 195分。FotMob は 9/24 を26分・エクアドル戦を出場なし・NZ戦を90分としていて食い違うので JFA を採った。
+#   代表通算: ゲキサカ 460359「A代表通算22、中山雅史氏を上回る単独13位」。FotMob 47試合22点（10/5 まで）、Transfermarkt 46試合21点（10/1 まで）。
+#     → 9月の前は43試合18点。
+#   リールの今季: FotMob 942393（全公式戦4試合271分3点）。次は日本時間 10/11 0:15 ホームでル・アーヴル（FotMob nextMatch 5802948）。
+#   大会MVP、日本の選手は2016年に賞ができてから初めて: サッカーキング（Yahoo 88cd7c5e）。
+#   後半のバー直撃のヘッドとオフサイドのゴール: スポニチ（後半3分・後半30分）・サッカーマガジン（48分・75分）。
+# 反応: Yahoo!ニュース（スポニチの記事）のコメント欄から個人の投稿を頭から終わりまで3件。海外の声は Bluesky で個人の中身のある投稿が見つからず入れていない。
+# 写真: 01・03 ゲキサカ（©Kaoru WATANABE/GEKISAKA）、04 サッカーマガジン（高野徹）、05 サンケイスポーツ（水島啓輔）。代理店ではない。
+date: 2026年10月5日
+slot: japan
+format: quote
+people:
+- 上田綺世
+- 中野就斗
+- 鈴木淳之介
+- 中山雅史
+- 瀬古歩夢
+theme:
+  id: ueda_4goals
+  league: japan
+  league_name: キリンカップ
+  kind: other
+  topic: 日本代表
+  title: 上田綺世、決勝の先制点で4試合4点。「運も良かった」に続けた言葉
+  opening_image: assets/images/20261005_ueda_4goals/04_w.jpg
+  takeaway: 上田綺世は9月までの代表43試合で18点、1試合あたり0.42点だった。9月からの4試合は4点で1試合1点、出ていた195分でおよそ49分に1点になる。8月末に加わったリールでは公式戦271分で3点、90分に1点。代表通算は22点で中山雅史を抜いて歴代単独13位に上がった。日本時間10月11日のル・アーヴル戦から、クラブでも同じ速さで点を重ねられるかが次の見どころになる
+short_title: 上田綺世「今はこぼれてくる時期」。決勝の先制点で4試合4点目
+thumbnail:
+  photo: assets/images/20261005_ueda_4goals/05.jpg
+  focus: 0.0
+  short_photo: assets/images/20261005_ueda_4goals/03_v.jpg
+  line1: 上田綺世 4試合4点
+  line2: 代表22点、抜いたのは●●
+  reaction: 能力があるからこその謙虚さ
+sections:
+- id: goal
+  main: true
+  heading: 先制点と「こぼれてくる時期」
+  tier: 報道
+  telop: 上田綺世「今はこぼれてくる時期なのかなと思います」
+  narrator: キャスター
+  say:
+  - text: キリンカップ決勝の前半28分。日本代表の先制点は、上田綺世でした。
+    short_only: true
+    image: assets/images/20261005_ueda_4goals/04_w.jpg
+  - voice: 上田綺世
+    text: 運も良かったですね。
+    image: assets/images/20261005_ueda_4goals/04_w.jpg
+  - voice: 上田綺世
+    text: 噛み合いという話をしていますが、
+    cont: true
+  - voice: 上田綺世
+    text: 今はこぼれてくる時期なのかなと思います
+    cont: true
+  quotes_from:
+  - ゲキサカ https://web.gekisaka.jp/news/japan/detail/?460362-460362-fl
+  sources:
+  - https://web.gekisaka.jp/news/japan/detail/?460362-460362-fl
+  - https://news.yahoo.co.jp/articles/c8e12d770b28b96470e0d1a28d4195a600466edc
+  - https://news.yahoo.co.jp/articles/13041b44039b5c59712c35e7aa367452208467c7
+  - https://www.jfa.jp/samuraiblue/kirincupsoccer_2026/match_page/m4.html
+- id: shape
+  heading: 4試合4点、ゴールの形
+  tier: 報道
+  telop: 途中出場の3試合で3点、初めて先発した決勝で1点
+  narrator: キャスター
+  say:
+  - text: 決勝の1点は、右から中野就斗が上げたクロスが相手に当たり、こぼれたところでした。
+    image: assets/images/20261005_ueda_4goals/01_w.jpg
+  - text: 誰より早く反応して、左足で蹴り込みました。
+  - text: 9月からの代表戦4試合、上田は途中から3回ピッチに入っています。
+    image: assets/images/20261005_ueda_4goals/wide_shape.jpg
+    card:
+      type: table
+      title: 上田綺世 9月からの4試合
+      columns: [日付, 相手, 出場, 得点]
+      rows: &games
+      - ['9/24', 'ウルグアイ', '63分から', '1（90+6分）']
+      - ['9/28', 'ベネズエラ', '後半から', '2（49分・90+6分）']
+      - ['10/1', 'エクアドル', '後半から', '0']
+      - ['10/5', 'ニュージーランド', '先発・78分まで', '1（28分）']
+  - text: ウルグアイ戦は63分から入り、後半の追加時間に右足で決めました。
+    card:
+      type: table
+      title: 上田綺世 9月からの4試合
+      columns: [日付, 相手, 出場, 得点]
+      rows: *games
+      highlight_row: 0
+  - text: ベネズエラ戦は後半から入って2点。49分の同点弾と、終了間際のPKです。
+    card:
+      type: table
+      title: 上田綺世 9月からの4試合
+      columns: [日付, 相手, 出場, 得点]
+      rows: *games
+      highlight_row: 1
+  - text: 前の2試合で2本ずつ打ったシュートは、エクアドル戦では0本でした。
+    card:
+      type: table
+      title: 上田綺世 9月からの4試合
+      columns: [日付, 相手, 出場, 得点]
+      rows: *games
+      highlight_row: 2
+  - text: そして決勝で、この4試合で初めての先発。28分に答えを出しました。
+    card:
+      type: table
+      title: 上田綺世 9月からの4試合
+      columns: [日付, 相手, 出場, 得点]
+      rows: *games
+      highlight_row: 3
+  sources:
+  - https://www.jfa.jp/national_team/samuraiblue/20260924/schedule_result/pdf/m01.pdf
+  - https://www.jfa.jp/national_team/samuraiblue/20260928/schedule_result/pdf/m01.pdf
+  - https://www.jfa.jp/national_team/samuraiblue/kirincupsoccer_2026/schedule_result/pdf/m02.pdf
+  - https://www.jfa.jp/samuraiblue/kirincupsoccer_2026/match_page/m4.html
+  - https://web.gekisaka.jp/news/japan/detail/?460362-460362-fl
+- id: more
+  heading: 「まだまだ」と言った後半
+  tier: 報道
+  telop: 上田綺世「もっとチームを楽にできるシーンがあったので、まだまだかなと思います」
+  narrator: キャスター
+  say:
+  - text: 上田は大会の最優秀選手にも選ばれました。
+    image: assets/images/20261005_ueda_4goals/04_w.jpg
+  - text: 2016年に賞ができてから、日本の選手が選ばれたのは初めてです。
+  - text: それでも、本人の口から出たのは反省でした。
+  - text: 後半3分、鈴木淳之介のクロスに頭で合わせた1本はクロスバー。
+  - text: 後半30分には右足でネットを揺らしましたが、オフサイドでした。
+  - voice: 上田綺世
+    text: 今日の後半もシュートチャンスがあったし、
+  - voice: 上田綺世
+    text: もっとチームを楽にできるシーンがあったので、
+    cont: true
+  - voice: 上田綺世
+    text: まだまだかなと思います
+    cont: true
+  - text: 次に目を向けたのは、自分のクラブでした。
+  - voice: 上田綺世
+    text: まずは自分のクラブで結果を残すことが、
+  - voice: 上田綺世
+    text: 各々大事だと思うので、
+    cont: true
+  - voice: 上田綺世
+    text: また次呼ばれるように頑張りたい
+    cont: true
+  quotes_from:
+  - ゲキサカ https://web.gekisaka.jp/news/japan/detail/?460362-460362-fl
+  sources:
+  - https://web.gekisaka.jp/news/japan/detail/?460362-460362-fl
+  - https://news.yahoo.co.jp/articles/88cd7c5e38243eb2b0fdaf53bae238f189d33f61
+  - https://news.yahoo.co.jp/articles/c8e12d770b28b96470e0d1a28d4195a600466edc
+  - https://news.yahoo.co.jp/articles/13041b44039b5c59712c35e7aa367452208467c7
+- id: view
+  viewpoint: true
+  heading: 代表とリール、上田綺世の得点ペース
+  tier: 背景
+  telop: 代表は9月まで1試合0.42点、9月からの4試合は1点。リールの今季は0.75点
+  narrator: 解説
+  say:
+  - text: 上田綺世の得点を、試合の記録で数えて並べました。
+    image: assets/images/20261005_ueda_4goals/wide_view.jpg
+    card:
+      type: table
+      title: 上田綺世 得点のペース
+      columns: ['', 試合, 得点, 1試合あたり]
+      rows: &pace
+      - ['代表 9月まで', '43', '18', '0.42']
+      - ['代表 9月からの4試合', '4', '4', '1.00']
+      - ['リール 今季の公式戦', '4', '3', '0.75']
+  - text: 代表では、9月までの43試合で18点。1試合あたり0.42点でした。
+    card:
+      type: table
+      title: 上田綺世 得点のペース
+      columns: ['', 試合, 得点, 1試合あたり]
+      rows: *pace
+      highlight_row: 0
+  - text: 9月からの4試合は4点。1試合に1点と、それまでの2倍を超えています。
+    emph: true
+    card:
+      type: table
+      title: 上田綺世 得点のペース
+      columns: ['', 試合, 得点, 1試合あたり]
+      rows: *pace
+      highlight_row: 1
+  - text: 出ていた時間は4試合で195分。およそ49分ごとに1点の計算です。
+    card:
+      type: table
+      title: 上田綺世 得点のペース
+      columns: ['', 試合, 得点, 1試合あたり]
+      rows: *pace
+      highlight_row: 1
+  - text: 8月の終わりに加わったリールでは、公式戦4試合で3点。
+    card:
+      type: table
+      title: 上田綺世 得点のペース
+      columns: ['', 試合, 得点, 1試合あたり]
+      rows: *pace
+      highlight_row: 2
+  - text: 271分で3点なので、こちらは90分に1点。代表の速さが際立ちます。
+    card:
+      type: table
+      title: 上田綺世 得点のペース
+      columns: ['', 試合, 得点, 1試合あたり]
+      rows: *pace
+      highlight_row: 2
+  - text: 代表の通算は22点。中山雅史の21点を抜き、歴代で単独13位です。
+    image: assets/images/20261005_ueda_4goals/01_w.jpg
+    card: none
+  - text: 次はリールに戻り、日本時間10月11日の午前0時15分からル・アーヴル戦。
+  - text: 相手は、この4試合すべてに先発した瀬古歩夢のクラブです。
+  - text: こぼれ球への一歩目の速さが、リールでも点を生むか。まずはル・アーヴル戦で確かめられます。
+  sources:
+  - https://web.gekisaka.jp/news/japan/detail/?460359-460359-fl
+  - https://www.fotmob.com/players/942393/ayase-ueda
+  - https://www.transfermarkt.com/ayase-ueda/nationalmannschaft/spieler/589128
+  - https://www.jfa.jp/national_team/samuraiblue/20260924/schedule_result/pdf/m01.pdf
+  - https://www.jfa.jp/national_team/samuraiblue/20260928/schedule_result/pdf/m01.pdf
+  - https://www.jfa.jp/national_team/samuraiblue/kirincupsoccer_2026/schedule_result/pdf/m02.pdf
+  - https://www.jfa.jp/samuraiblue/kirincupsoccer_2026/match_page/m4.html
+  - https://www.jfa.jp/samuraiblue/kirincupsoccer_2026/member.html
+- id: voices
+  heading: ネットの反応
+  tier: 未確認
+  telop: 「能力があるからこその謙虚さ。」
+  narrator: キャスター
+  say:
+  # Yahoo!ニュース（スポニチ「上田綺世『運も良かった。今はこぼれてくる時期かな』」）のコメント欄 yaf********。全文
+  - voice: ネット民
+    text: 彼は確実に点を取る覚悟があるからこそ、
+    image: assets/images/20261005_ueda_4goals/05_w.jpg
+  - voice: ネット民
+    text: 『こぼれてきた』なんて謙遜を言う。
+    cont: true
+  - voice: ネット民
+    text: 能力があるからこその謙虚さ。
+    cont: true
+  # 同じコメント欄 fre********。全文
+  - voice: ネット民
+    text: 数少ないチャンスを豪快に仕留める
+  - voice: ネット民
+    text: これまではフランクフルト時代の高原
+    cont: true
+  - voice: ネット民
+    text: (代表だと2007アジアカップ前後)が
+    cont: true
+  - voice: ネット民
+    text: 最高のCFだと思ってたけど上田が更新してくれた
+    cont: true
+  # 同じコメント欄 スヌー。全文
+  - voice: ネット民
+    text: さすがアヤセさん！
+    short_voice: true
+  - voice: ネット民
+    text: やるときはやるね。
+    cont: true
+    short_voice: true
+  sources:
+  - https://news.yahoo.co.jp/articles/c8e12d770b28b96470e0d1a28d4195a600466edc/comments

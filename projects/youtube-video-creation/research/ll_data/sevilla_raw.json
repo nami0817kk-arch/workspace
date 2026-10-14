@@ -1,0 +1,610 @@
+{
+ "club_title": "Sevilla_FC",
+ "season_title": "2026–27_Sevilla_FC_season",
+ "squad": [
+  {
+   "no": "1",
+   "pos": "GK",
+   "nat": "GRE",
+   "name": "Odysseas Vlachodimos",
+   "page": "Odysseas Vlachodimos",
+   "dob": "1994-04-26",
+   "captain": false,
+   "loan": true,
+   "team": "Greece",
+   "caps": 53,
+   "club_caps": 40,
+   "club_goals": 0
+  },
+  {
+   "no": "2",
+   "pos": "DF",
+   "nat": "ESP",
+   "name": "Juan Iglesias",
+   "page": "Juan Iglesias",
+   "dob": "1998-07-03",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 0,
+   "club_goals": 0
+  },
+  {
+   "no": "3",
+   "pos": "DF",
+   "nat": "ESP",
+   "name": "Julio Díaz",
+   "page": "Julio Díaz (footballer, born 2005)",
+   "dob": "2005-01-10",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 0,
+   "club_goals": 0
+  },
+  {
+   "no": "4",
+   "pos": "DF",
+   "nat": "ESP",
+   "name": "Kike Salas",
+   "page": "Kike Salas",
+   "dob": "2002-04-23",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 89,
+   "club_goals": 9
+  },
+  {
+   "no": "5",
+   "pos": "DF",
+   "nat": "ESP",
+   "name": "Andrés Castrín",
+   "page": "Andrés Castrín",
+   "dob": "2003-05-26",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 19,
+   "club_goals": 1
+  },
+  {
+   "no": "6",
+   "pos": "MF",
+   "nat": "FRA",
+   "name": "Lucien Agoumé",
+   "page": "Lucien Agoumé",
+   "dob": "2002-02-09",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 81,
+   "club_goals": 2
+  },
+  {
+   "no": "7",
+   "pos": "FW",
+   "nat": "ESP",
+   "name": "Alfon González",
+   "page": "Alfon González",
+   "dob": "1999-05-04",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 10,
+   "club_goals": 1
+  },
+  {
+   "no": "8",
+   "pos": "MF",
+   "nat": "GEO",
+   "name": "Giorgi Kochorashvili",
+   "page": "Giorgi Kochorashvili",
+   "dob": "1999-06-29",
+   "captain": false,
+   "loan": false,
+   "team": "Georgia",
+   "caps": 27,
+   "club_caps": 0,
+   "club_goals": 0
+  },
+  {
+   "no": "9",
+   "pos": "FW",
+   "nat": "SCO",
+   "name": "Robbie Ure",
+   "page": "Robbie Ure",
+   "dob": "2004-02-24",
+   "captain": false,
+   "loan": false,
+   "team": "Scotland",
+   "caps": 1,
+   "club_caps": 7,
+   "club_goals": 0
+  },
+  {
+   "no": "10",
+   "pos": "MF",
+   "nat": "ESP",
+   "name": "Peque Fernández",
+   "page": "Peque Fernández",
+   "dob": "2002-10-04",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 55,
+   "club_goals": 4
+  },
+  {
+   "no": "11",
+   "pos": "FW",
+   "nat": "SUI",
+   "name": "Rubén Vargas",
+   "page": "Rubén Vargas",
+   "dob": "1998-08-05",
+   "captain": false,
+   "loan": false,
+   "team": "Switzerland",
+   "caps": 67,
+   "club_caps": 35,
+   "club_goals": 5
+  },
+  {
+   "no": "12",
+   "pos": "DF",
+   "nat": "SEN",
+   "name": "Arouna Sangante",
+   "page": "Arouna Sangante",
+   "dob": "2002-04-12",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 0,
+   "club_goals": 0
+  },
+  {
+   "no": "13",
+   "pos": "GK",
+   "nat": "ESP",
+   "name": "Fran González",
+   "page": "Fran González (footballer, born 2005)",
+   "dob": "2005-06-24",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 0,
+   "club_goals": 0
+  },
+  {
+   "no": "14",
+   "pos": "MF",
+   "nat": "ESP",
+   "name": "Manu Bueno",
+   "page": "Manu Bueno",
+   "dob": "2004-07-27",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 24,
+   "club_goals": 1
+  },
+  {
+   "no": "16",
+   "pos": "FW",
+   "nat": "ESP",
+   "name": "Isaac Romero",
+   "page": "Isaac Romero",
+   "dob": "2000-05-18",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 87,
+   "club_goals": 20
+  },
+  {
+   "no": "17",
+   "pos": "DF",
+   "nat": "CHI",
+   "name": "Gabriel Suazo",
+   "page": "Gabriel Suazo",
+   "dob": "1997-08-09",
+   "captain": true,
+   "loan": false,
+   "team": "Chile",
+   "caps": 44,
+   "club_caps": 36,
+   "club_goals": 0
+  },
+  {
+   "no": "18",
+   "pos": "MF",
+   "nat": "ESP",
+   "name": "Jon Guridi",
+   "page": "Jon Guridi",
+   "dob": "1995-02-28",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 0,
+   "club_goals": 0
+  },
+  {
+   "no": "19",
+   "pos": "FW",
+   "nat": "BEL",
+   "name": "Lucas Stassin",
+   "page": "Lucas Stassin",
+   "dob": "2004-11-29",
+   "captain": false,
+   "loan": true,
+   "team": "Belgium",
+   "caps": 1,
+   "club_caps": 1,
+   "club_goals": 1
+  },
+  {
+   "no": "20",
+   "pos": "FW",
+   "nat": "POR",
+   "name": "Félix Correia",
+   "page": "Félix Correia",
+   "dob": "2001-01-22",
+   "captain": false,
+   "loan": true,
+   "team": "",
+   "caps": null,
+   "club_caps": 0,
+   "club_goals": 0
+  },
+  {
+   "no": "21",
+   "pos": "FW",
+   "nat": "NGA",
+   "name": "Chidera Ejuke",
+   "page": "Chidera Ejuke",
+   "dob": "1998-01-02",
+   "captain": false,
+   "loan": false,
+   "team": "Nigeria",
+   "caps": 14,
+   "club_caps": 52,
+   "club_goals": 3
+  },
+  {
+   "no": "22",
+   "pos": "DF",
+   "nat": "ESP",
+   "name": "José Ángel Carmona",
+   "page": "José Ángel Carmona",
+   "dob": "2002-01-29",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 81,
+   "club_goals": 3
+  },
+  {
+   "no": "23",
+   "pos": "DF",
+   "nat": "BRA",
+   "name": "Marcão",
+   "page": "Marcão (footballer, born 1996)",
+   "dob": "1996-06-05",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 37,
+   "club_goals": 0
+  },
+  {
+   "no": "24",
+   "pos": "MF",
+   "nat": "FRA",
+   "name": "Youssouf Fofana",
+   "page": "Youssouf Fofana (footballer, born 1999)",
+   "dob": "1999-01-10",
+   "captain": false,
+   "loan": true,
+   "team": "France",
+   "caps": 25,
+   "club_caps": 4,
+   "club_goals": 1
+  },
+  {
+   "no": "30",
+   "pos": "FW",
+   "nat": "ESP",
+   "name": "Miguel Sierra",
+   "page": "Miguel Sierra (footballer)",
+   "dob": "2004-07-14",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 4,
+   "club_goals": 0
+  }
+ ],
+ "results": [
+  [
+   "15 August 2026",
+   "1",
+   "Sevilla",
+   "2–1",
+   "Rayo Vallecano"
+  ],
+  [
+   "22 August 2026",
+   "2",
+   "Athletic Bilbao",
+   "1–3",
+   "Sevilla"
+  ],
+  [
+   "29 August 2026",
+   "3",
+   "Sevilla",
+   "1–3",
+   "Atlético Madrid"
+  ],
+  [
+   "6 September 2026",
+   "4",
+   "Espanyol",
+   "1–1",
+   "Sevilla"
+  ],
+  [
+   "11 September 2026",
+   "5",
+   "Sevilla",
+   "1–0",
+   "Valencia"
+  ],
+  [
+   "16 September 2026",
+   "6",
+   "Deportivo A Coruña",
+   "0–1",
+   "Sevilla"
+  ],
+  [
+   "19 September 2026",
+   "7",
+   "Sevilla",
+   "1–3",
+   "Barcelona"
+  ],
+  [
+   "12 October 2026",
+   "8",
+   "Levante",
+   "",
+   "Sevilla"
+  ],
+  [
+   "18 October 2026",
+   "9",
+   "Real Madrid",
+   "",
+   "Sevilla"
+  ],
+  [
+   "26 October 2026",
+   "10",
+   "Sevilla",
+   "",
+   "Osasuna"
+  ],
+  [
+   "1 November 2026",
+   "11",
+   "Getafe",
+   "",
+   "Sevilla"
+  ],
+  [
+   "8 November 2026",
+   "12",
+   "Sevilla",
+   "",
+   "Alavés"
+  ],
+  [
+   "22 November 2026",
+   "13",
+   "Sevilla",
+   "",
+   "Real Betis"
+  ],
+  [
+   "29 November 2026",
+   "14",
+   "Real Sociedad",
+   "",
+   "Sevilla"
+  ],
+  [
+   "6 December 2026",
+   "15",
+   "Sevilla",
+   "",
+   "Málaga"
+  ],
+  [
+   "13 December 2026",
+   "16",
+   "Elche",
+   "",
+   "Sevilla"
+  ],
+  [
+   "20 December 2026",
+   "17",
+   "Sevilla",
+   "",
+   "Racing Santander"
+  ],
+  [
+   "3 January 2027",
+   "18",
+   "Villarreal",
+   "",
+   "Sevilla"
+  ],
+  [
+   "10 January 2027",
+   "19",
+   "Sevilla",
+   "",
+   "Celta Vigo"
+  ],
+  [
+   "17 January 2027",
+   "20",
+   "Rayo Vallecano",
+   "",
+   "Sevilla"
+  ],
+  [
+   "24 January 2027",
+   "21",
+   "Valencia",
+   "",
+   "Sevilla"
+  ],
+  [
+   "31 January 2027",
+   "22",
+   "Sevilla",
+   "",
+   "Athletic Bilbao"
+  ],
+  [
+   "7 February 2027",
+   "23",
+   "Real Betis",
+   "",
+   "Sevilla"
+  ],
+  [
+   "14 February 2027",
+   "24",
+   "Sevilla",
+   "",
+   "Espanyol"
+  ],
+  [
+   "21 February 2027",
+   "25",
+   "Sevilla",
+   "",
+   "Real Madrid"
+  ],
+  [
+   "28 February 2027",
+   "26",
+   "Osasuna",
+   "",
+   "Sevilla"
+  ],
+  [
+   "7 March 2027",
+   "27",
+   "Sevilla",
+   "",
+   "Real Sociedad"
+  ],
+  [
+   "14 March 2027",
+   "28",
+   "Alavés",
+   "",
+   "Sevilla"
+  ],
+  [
+   "21 March 2027",
+   "29",
+   "Sevilla",
+   "",
+   "Elche"
+  ],
+  [
+   "4 April 2027",
+   "30",
+   "Barcelona",
+   "",
+   "Sevilla"
+  ],
+  [
+   "11 April 2027",
+   "31",
+   "Sevilla",
+   "",
+   "Deportivo A Coruña"
+  ],
+  [
+   "18 April 2027",
+   "32",
+   "Atlético Madrid",
+   "",
+   "Sevilla"
+  ],
+  [
+   "21 April 2027",
+   "33",
+   "Sevilla",
+   "",
+   "Levante"
+  ],
+  [
+   "2 May 2027",
+   "34",
+   "Celta Vigo",
+   "",
+   "Sevilla"
+  ],
+  [
+   "9 May 2027",
+   "35",
+   "Racing Santander",
+   "",
+   "Sevilla"
+  ],
+  [
+   "16 May 2027",
+   "36",
+   "Sevilla",
+   "",
+   "Villarreal"
+  ],
+  [
+   "23 May 2027",
+   "37",
+   "Sevilla",
+   "",
+   "Getafe"
+  ],
+  [
+   "30 May 2027",
+   "38",
+   "Málaga",
+   "",
+   "Sevilla"
+  ]
+ ]
+}

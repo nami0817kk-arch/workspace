@@ -29,14 +29,20 @@ from pathlib import Path
 
 import yaml
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import clubleague  # noqa: E402
+
 ROOT = Path(__file__).resolve().parents[1]
-DATA = ROOT / "research" / "pl_data"
+# **リーグは CLUB_LEAGUE で切り替える**（2026-09-26 ラ・リーガ版。tools/clubleague.py）
+LEAGUE = clubleague.current()
+DATA = clubleague.data_dir()
+P = LEAGUE["prefix"]
 TODAY = datetime.date(2026, 9, 19)
 NUM = "①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳"
 # **これ未満の出場数は「有名な選手」として出さない。**「1試合」は紹介にならない
 CAPS_MIN = 10
 # 代表の名前（Wikipedia の英語表記）を日本語に
-TEAM_JA = {"England": "イングランド", "Scotland": "スコットランド", "Wales": "ウェールズ",
+TEAM_JA = {"Dominican Republic": "ドミニカ共和国", "Gabon": "ガボン", "Guadeloupe": "グアドループ", "Guinea-Bissau": "ギニアビサウ", "Indonesia": "インドネシア", "Kenya": "ケニア", "Malaysia": "マレーシア", "North Macedonia": "北マケドニア", "Russia": "ロシア", "Togo": "トーゴ", "Venezuela": "ベネズエラ", "England": "イングランド", "Scotland": "スコットランド", "Wales": "ウェールズ",
            "Northern Ireland": "北アイルランド", "Republic of Ireland": "アイルランド",
            "France": "フランス", "Spain": "スペイン", "Portugal": "ポルトガル",
            "Germany": "ドイツ", "Netherlands": "オランダ", "Belgium": "ベルギー",
@@ -66,7 +72,7 @@ NAT = {"JPN": "日本", "ENG": "イングランド", "SCO": "スコットラン�
        "NED": "オランダ", "BEL": "ベルギー", "ITA": "イタリア", "SUI": "スイス", "AUT": "オーストリア",
        "DEN": "デンマーク", "SWE": "スウェーデン", "NOR": "ノルウェー", "POL": "ポーランド", "CZE": "チェコ",
        "CRO": "クロアチア", "SRB": "セルビア", "SVN": "スロベニア", "SVK": "スロバキア", "HUN": "ハンガリー",
-       "UKR": "ウクライナ", "GRE": "ギリシャ", "TUR": "トルコ", "BRA": "ブラジル", "ARG": "アルゼンチン",
+       "UKR": "ウクライナ", "RUS": "ロシア", "GRE": "ギリシャ", "TUR": "トルコ", "BRA": "ブラジル", "ARG": "アルゼンチン",
        "URU": "ウルグアイ", "COL": "コロンビア", "ECU": "エクアドル", "PAR": "パラグアイ", "CHI": "チリ",
        "PER": "ペルー", "VEN": "ベネズエラ", "MEX": "メキシコ", "USA": "アメリカ", "CAN": "カナダ",
        "JAM": "ジャマイカ", "SEN": "セネガル", "CIV": "コートジボワール", "GHA": "ガーナ", "NGA": "ナイジェリア",
@@ -112,7 +118,7 @@ def boards(key: str, club: str, colors: list[str], squad: list[dict], kana: dict
             if not chunk:
                 continue
             suffix = "" if len(chunks) == 1 else "①②"[i]
-            out = f"assets/stats/pl_{key}_{pos.lower()}{i + 1 if len(chunks) > 1 else ''}.png"
+            out = f"assets/stats/{P}{key}_{pos.lower()}{i + 1 if len(chunks) > 1 else ''}.png"
             args = [sys.executable, str(ROOT / "tools" / "squadboard.py"), str(ROOT / out), "--full",
                     "--colors", f"{colors[0]},#15090f",
                     "--title", f"{club} {label}{suffix}（{len(people)}人）", "--note", "年齢は2026年9月19日時点"]
@@ -126,7 +132,8 @@ def boards(key: str, club: str, colors: list[str], squad: list[dict], kana: dict
             # **同じ引数をとっておく**。あとで「話している選手だけ明るい板」を
             # 作り直すのに要る。ここで作れないのは、誰を紹介するかが
             # 読み上げを組み立てるときに決まるから
-            made.append({"out": out, "label": label, "count": len(people), "args": args})
+            # count は位置全体の人数（「◯◯は13人」と読む）、shown はこの板に載っている人数
+            made.append({"out": out, "label": label, "count": len(people), "shown": len(chunk), "args": args})
     return made
 
 
@@ -189,15 +196,28 @@ def build(key: str, number: int, old_file: str) -> Path:
     facts = json.loads((DATA / f"{key}.json").read_text(encoding="utf-8"))
     raw = json.loads((DATA / f"{key}_raw.json").read_text(encoding="utf-8"))
     kana = json.loads((DATA / "kana.json").read_text(encoding="utf-8"))
-    legends_all = json.loads((DATA / "pl_legends.json").read_text(encoding="utf-8"))
-    old = yaml.safe_load((ROOT / "research" / old_file).read_text(encoding="utf-8"))
+    # クラブごとのカタカナ（kana_<key>.json）も足す。下請けが並んで書くので1つのファイルにしない
+    if (DATA / f"kana_{key}.json").exists():
+        kana.update(json.loads((DATA / f"kana_{key}.json").read_text(encoding="utf-8")))
+    legends_path = DATA / LEAGUE["legends"]
+    legends_all = json.loads(legends_path.read_text(encoding="utf-8")) if legends_path.exists() else []
+    # **旧台本が無いリーグもある**（ラ・リーガは最初からこの形で作る）。`-` なら
+    # クラブの話は <key>_say.yaml の story_sections、題とサムネも say.yaml から取る
+    if old_file in ("", "-"):
+        old = {"theme": {"id": f"{key}_intro", "topic": ov_club(key)}, "thumbnail": {}, "sections": []}
+    else:
+        old = yaml.safe_load((ROOT / "research" / old_file).read_text(encoding="utf-8"))
     # **読み上げる文はクラブごとに手で書く**（<key>_say.yaml）。板の文字をそのまま
     # 読ませると「収容 60,704人。」「(2018年〜)」のようになった（2026-09-20）
     ov_path = DATA / f"{key}_say.yaml"
     ov = yaml.safe_load(ov_path.read_text(encoding="utf-8")) if ov_path.exists() else {}
     club = old["theme"]["topic"]
     wiki = f"https://en.wikipedia.org/wiki/{raw['club_title']}"
-    season_url = f"https://en.wikipedia.org/wiki/{raw['season_title']}"
+    season_url = f"https://en.wikipedia.org/wiki/{raw['season_title'].strip()}"
+    # **シーズン記事の無いクラブがある**（2026-09-27、ラ・リーガのラシン・エスパニョールなど）。
+    # 記事から1試合も読めなかったときは、実在しないURLを出典に載せず、順位表の出典にする
+    if not raw.get("results") and (DATA / "standings.json").exists():
+        season_url = json.loads((DATA / "standings.json").read_text(encoding="utf-8"))["source"]
     # **下地はスタジアムの「中」の実写**（2026-09-23 指摘「最初の画面が魅力的ではなくて、
     # 視聴者が離れそう」）。外観は駐車場と建物だけで人が写っておらず、
     # 最初の12秒がそれ一枚だった。中の写真は満員の客席とピッチが入る。
@@ -232,16 +252,16 @@ def build(key: str, number: int, old_file: str) -> Path:
                            check=True, capture_output=True)
         return rel
 
-    data_board(f"assets/stats/pl_{key}_data.png")
+    data_board(f"assets/stats/{P}{key}_data.png")
     # 理由を読み上げている行は、柱だけを明るく残す
     reasons_board = ""
     if reason_args:
-        reasons_board = data_board(f"assets/stats/pl_{key}_data_r.png", "--focus", "reasons")
+        reasons_board = data_board(f"assets/stats/{P}{key}_data_r.png", "--focus", "reasons")
     # **トロフィーの板も毎回描き直す**（2026-09-22 ユーザー指摘「ヨーロッパ合計になってる
     # クラブがいくつかある」。`trophies` を直しても、ここで描き直していなかった）
     if (DATA / f"{key}.json").exists():
         subprocess.run([sys.executable, str(ROOT / "tools" / "trophies.py"),
-                        str(ROOT / f"assets/stats/pl_{key}_cups.png"),
+                        str(ROOT / f"assets/stats/{P}{key}_cups.png"),
                         "--spec", str(DATA / f"{key}.json")], check=True, capture_output=True)
     squad_boards = boards(key, club, facts["colors"], raw["squad"], kana)
 
@@ -274,7 +294,7 @@ def build(key: str, number: int, old_file: str) -> Path:
                             + ["では、どんなクラブなのか。まずは基本のデータから見ていきます。"]),
                             sources=[wiki]))
     # 基礎DATA
-    img = f"assets/stats/pl_{key}_data.png"
+    img = f"assets/stats/{P}{key}_data.png"
     # **ショート専用の前置きも、日本人が2人なら2人とも**（2026-09-22）。題は2人なのに
     # この行だけ1人目で、パレスの鎌田大地がショートから消えていた
     # **理由も1つずつ明るくする**（2026-09-23。3つ並べたまま読むと、柱が明るい板が
@@ -312,7 +332,7 @@ def build(key: str, number: int, old_file: str) -> Path:
         k = r_focus[n] if n < len(r_focus) else reason_of(text)
         if not k:
             return reasons_board
-        return data_board(f"assets/stats/pl_{key}_data_r{k}.png", "--focus", f"reasons:{k}")
+        return data_board(f"assets/stats/{P}{key}_data_r{k}.png", "--focus", f"reasons:{k}")
 
     say = []
     if reasons:
@@ -348,7 +368,7 @@ def build(key: str, number: int, old_file: str) -> Path:
     def board_for(i: int | None) -> str:
         if i is None:
             return img
-        return data_board(f"assets/stats/pl_{key}_data{i}.png", "--focus", str(i))
+        return data_board(f"assets/stats/{P}{key}_data{i}.png", "--focus", str(i))
 
     # **話している題材の画面にする**（2026-09-20 指示「各題材ごとに別画面に
     # 映るようにしたい」「スタジアムの話では、スタジアムに映る感じに」）。
@@ -364,19 +384,19 @@ def build(key: str, number: int, old_file: str) -> Path:
 
     # **ホームタウンの話では地図を出す**（2026-09-20 指示。イングランドの地図に
     # 20クラブの紋章を置き、その回のクラブだけ大きく残す。tools/plmap.py）
-    town_map = f"assets/stats/pl_{key}_map.png"
+    town_map = f"assets/stats/{P}{key}_map.png"
     if not (ROOT / town_map).exists():
         town_map = ""
     # **優勝回数の話ではトロフィーの板を出す**（2026-09-21 指示。見本はアーセナルの
     # トロフィーキャビネット。画像は使わず tools/trophies.py で描いている）
-    cups = f"assets/stats/pl_{key}_cups.png"
+    cups = f"assets/stats/{P}{key}_cups.png"
     if not (ROOT / cups).exists():
         cups = ""
     # **昨季の順位の話では、昨季の最終順位表を出す**（2026-09-21 指示。見本は
     # 順位表アプリの画面。画像は使わず tools/plast.py で描いている）。
     # **20クラブで同じ表を使い、明るい行だけが違う**ので、自分の順位が
     # 他の19クラブの中のどこかとして見える
-    last = f"assets/stats/pl_{key}_last.png"
+    last = f"assets/stats/{P}{key}_last.png"
     if not (ROOT / last).exists():
         last = ""
     # **昇格したクラブは昨季の表にいない**（2026-09-21。コヴェントリー・ハル・
@@ -390,6 +410,9 @@ def build(key: str, number: int, old_file: str) -> Path:
     # **自由に使えるものが無い人は写真無し**（作らない・探し回らない）
     faces_path = DATA / "faces.json"
     faces = json.loads(faces_path.read_text(encoding="utf-8")).get(key, {}) if faces_path.exists() else {}
+    # クラブごとの控え（faces_<key>.json。tools/clubfaces.py が書く）も足す
+    if (DATA / f"faces_{key}.json").exists():
+        faces = dict(faces, **json.loads((DATA / f"faces_{key}.json").read_text(encoding="utf-8")).get(key, {}))
     owner_face = next((v["file"] for v in faces.values()
                        if v.get("role") == "owner" and v.get("file")), "")
 
@@ -413,7 +436,7 @@ def build(key: str, number: int, old_file: str) -> Path:
                 and not any(str(tiles[j][0]).startswith("タイトル歴")
                             for j in picks if j is not None)):
             return cups, True
-        if i is not None and last and str(tiles[i][0]).startswith("プレミア最高位"):
+        if i is not None and last and str(tiles[i][0]).startswith(LEAGUE["best_label"]):
             return last, True
         return board_for(i), True
 
@@ -426,7 +449,7 @@ def build(key: str, number: int, old_file: str) -> Path:
 
     def picture(n: int, i: int | None) -> tuple[str, bool]:  # noqa: F811
         shot, mute = _picture(n, i)
-        if i is not None and shot.endswith(".png") and not shot.startswith(f"assets/stats/pl_{key}_data"):
+        if i is not None and shot.endswith(".png") and not shot.startswith(f"assets/stats/{P}{key}_data"):
             # 置き場は **assets/stats**（下地の置き場に縦版を置くと、
             # `_add_face` が「写真」と見て冒頭から敷いてしまう）
             twin = f"assets/stats/{Path(shot).stem}_v.png"
@@ -449,7 +472,7 @@ def build(key: str, number: int, old_file: str) -> Path:
     # **昨季の順位表を必ず出す**（2026-09-21）。「プレミア最高位」のタイルを
     # 読み上げに入れていないクラブが多く、せっかく作った順位表の板が出ないままだった。
     # ホームタウンの地図と同じ直し方で、1行つくって足す
-    last_i = next((i for i, x in enumerate(tiles) if str(x[0]).startswith("プレミア最高位")), None)
+    last_i = next((i for i, x in enumerate(tiles) if str(x[0]).startswith(LEAGUE["best_label"])), None)
     if ov.get("data") and last and last_i is not None and last_i not in picks:
         table = json.loads((DATA / "last_season.json").read_text(encoding="utf-8"))["table"]
         me = next((r for r in table if r.get("key") == key), None)
@@ -513,11 +536,24 @@ def build(key: str, number: int, old_file: str) -> Path:
                        if isinstance(v, dict) and v.get("role") == "manager"), "")
         if f_face:
             f_say[0] = {"text": f_say[0], "image": f_face}
+        f_card = {"type": "table", "title": "このクラブの特徴", "columns": ["", ""],
+                  "rows": ov.get("features_rows") or []}
+        # **表を話に合わせて1段ずつ増やす**（2026-09-28）。ラ・リーガは特徴を4〜7行で語るので、
+        # 3行ぶんの表が1枚のまま20〜33秒出ていた（20本すべてで review「カードの持ち」）。
+        # `features_marks` に「運営の話が始まる行」「気質の話が始まる行」を書く。
+        # 行で等分しないのは、まだ話していない段が先に画面へ出るから
+        marks = [int(m) for m in (ov.get("features_marks") or [])]
+        if marks and len(f_card["rows"]) > len(marks):
+            for k, m in enumerate(marks, start=2):
+                item = f_say[m]
+                item = dict(item) if isinstance(item, dict) else {"text": item}
+                item["card"] = dict(f_card, rows=f_card["rows"][:k])
+                f_say[m] = item
+            f_card = dict(f_card, rows=f_card["rows"][:1])
         sections.append(sec(id="features", heading="このクラブの特徴", tier="背景",
                             telop=str(ov.get("features_telop") or "このクラブの特徴"),
                             narrator="解説",
-                            card={"type": "table", "title": "このクラブの特徴", "columns": ["", ""],
-                                  "rows": ov.get("features_rows") or []},
+                            card=f_card,
                             say=f_say,
                             sources=[wiki] + [u for u in (ov.get("features_sources") or []) if u != wiki],
                             **({"bg": bg} if bg else {})))
@@ -534,6 +570,16 @@ def build(key: str, number: int, old_file: str) -> Path:
         sections.append(split_card(sec(**ep)))
     # 名選手（1990年以降）
     leg = next((c for c in legends_all if c["club"].replace("・", "").replace("AFC", "") in club.replace("・", "") or club.replace("・", "") in c["club"].replace("・", "")), None)
+    # **共有の一覧に無くても、<key>_say.yaml に書いてあれば組む**（2026-09-27）。
+    # ラ・リーガは下請けが並んで書くので、1つのファイルに足させるとぶつかる。
+    # アスレティックはここが無くて、名選手の節が黙って消えていた
+    if not leg and ov.get("legend_rows") and ov.get("legends"):
+        extra = ov.get("legend_sources") or []
+        leg = {"club": club, "legends": [
+            {"name": str(r[0]), "era": str(r[1]) if len(r) > 1 else "", "numbers": "",
+             "why": str(r[2]) if len(r) > 2 else "",
+             "source": (list(extra[i])[0] if i < len(extra) and extra[i] else "")}
+            for i, r in enumerate(ov["legend_rows"])]}
     if leg:
         rows = ov.get("legend_rows") or [[l["name"], l["era"], l["why"][:24]] for l in leg["legends"]]
         # **3列目は12字まで**（2026-09-23 指摘「表をもう少し大きく」）。写真の横に置く
@@ -544,7 +590,7 @@ def build(key: str, number: int, old_file: str) -> Path:
         # **1人ずつ節を分け、カードは名前が出たぶんだけ増やす**（2026-09-20）。
         # 3人を1枚のカードでまとめると**22秒**、同じ絵のまま出っぱなしになった（上限20秒）。
         # 増やす形なら、**まだ話していない選手が先に画面に出ることがない**
-        srcs = [l["source"] for l in leg["legends"]]
+        srcs = [l["source"] for l in leg["legends"] if l.get("source")]
         # **1人に何行でも書ける**（2026-09-22 指示「このクラブの3人の内容をもう少し濃くしたい」）。
         # <key>_say.yaml の `legends` の要素が list なら、その行を全部その選手の節に置く。
         # 顔写真は1行目に付け、あとの行にも残る（hold_photo）。
@@ -598,19 +644,30 @@ def build(key: str, number: int, old_file: str) -> Path:
     first_board = squad_boards[0]["out"] if squad_boards else ""
     ssay = [{"text": f"今季の登録選手は{total}人です。", "image": first_board, "no_telop": True}
             if first_board else f"今季の登録選手は{total}人です。"]
-    seen = set()
+    seen, sheets = set(), {}
     for board in squad_boards:
         out, label, n = board["out"], board["label"], board["count"]
         if label in seen:
-            ssay.append({"image": out, "text": f"{label}の続きです。", "no_telop": True})
+            # 「◯◯の続きです。」だけだと中身の無い行になる（2026-09-27 流れの点検）。人数を言う。
+            # 「残りは6人」だと、直前に2人の名前を読んだあとなので「13−2＝11のはず」と数が合わなく
+            # 聞こえた（エルチェ・マラガ、同じ日の2回目の点検）。**2枚目の板の人数**だと分かる言い方にする
+            sheets[label] = sheets.get(label, 1) + 1
+            ssay.append({"image": out, "text": f"{label}の{sheets[label]}枚目、{board.get('shown', n)}人です。", "no_telop": True})
             continue
         seen.add(label)
         here = [p for p in raw["squad"]
                 if dict(POS).get(p["pos"]) == label and age(p["dob"]) is not None]
+        # **紹介するのは、いま映している板に載っている人だけ**（2026-09-27）。
+        # 1つの位置が12人を超えると板が2枚に分かれ、2枚目の選手を読んでいるあいだ
+        # 1枚目が映っていた（エルチェのミッドフィールダー13人）
+        rows = " ".join(a for a in board["args"] if "|" in a)
+        on_board = [p for p in here if f"{kana.get(p['name'], p['name'])}|" in rows]
+        if on_board:
+            here = on_board
         names = [kana.get(p["name"], p["name"]) for p in here]
         jp = [n2 for n2 in names if n2 in jp_names]
         tail = f"日本の{jp[0]}がいます。" if jp else ""
-        if cap and dict(POS).get(cap["pos"]) == label:
+        if cap and dict(POS).get(cap["pos"]) == label and any(p["name"] == cap["name"] for p in here):
             cap_name = kana.get(cap["name"], cap["name"])
             more = f"リーグ戦で**{cap['club_caps']}試合**に出ています。" if (cap.get("club_caps") or 0) >= 50 else ""
             tail += f"主将を務めるのが**{cap_name}**。{more}"
@@ -650,7 +707,8 @@ def build(key: str, number: int, old_file: str) -> Path:
         note = "".join(about(p) for p in known)
         extra = (ov.get("squad") or {}).get(label, "")
         # **読み上げで名前を出す人だけ、板の行を明るくする**
-        lit = ([jp[0]] if jp else []) + ([cap_name] if cap and dict(POS).get(cap["pos"]) == label else [])
+        cap_here = cap and dict(POS).get(cap["pos"]) == label and any(p["name"] == cap["name"] for p in here)
+        lit = ([jp[0]] if jp else []) + ([cap_name] if cap_here else [])
         lit += [kana.get(p["name"], p["name"]) for p in known]
         # **1文ずつ別の行にする**（2026-09-22）。「ディフェンダーは10人。主将は…。◯◯は代表で…」を
         # 1行で読むと50〜80字になり、合成音声で一息に聞き取れない（読み手の指摘）。
@@ -676,7 +734,7 @@ def build(key: str, number: int, old_file: str) -> Path:
         # **いまの順位を必ず載せる**（2026-09-21 指示「今季は、今の順位を載せる」）。
         # 順位表は research/pl_data/standings.json に控えてある
         stand = json.loads((DATA / "standings.json").read_text(encoding="utf-8"))["table"].get(key)
-        say_season = [f"プレミアリーグは{len(games)}試合を終えて、**{record}**です。"]
+        say_season = [f"{LEAGUE['league_name']}は{len(games)}試合を終えて、**{record}**です。"]
         if stand:
             rows = [["順位", f"**{stand['rank']}位** / 20クラブ"],
                     ["勝ち点", f"{stand['points']}"],
@@ -684,18 +742,26 @@ def build(key: str, number: int, old_file: str) -> Path:
             say_season.append(f"順位は**{stand['rank']}位**、勝ち点は**{stand['points']}**です。")
             if stand["rank"] >= 18:
                 say_season.append("いまは降格圏にいます。")
+            elif stand["rank"] == 1:
+                # 首位に「この順位を保てば、来季のチャンピオンズリーグ」は筋が合わない（2026-09-27）
+                pass   # 直前の行で「1位」と言っている。言い直さない
             elif stand["rank"] <= 4:
                 say_season.append("この順位を保てば、来季のチャンピオンズリーグに出られます。")
         sections.append(sec(id="season", heading="今季のここまで", tier="報道",
                             telop=f"{len(games)}試合で{record}。{stand['rank']}位" if stand else f"{len(games)}試合で{record}",
                             narrator="解説",
-                            card={"type": "table", "title": "プレミアリーグの結果", "columns": ["節", "相手", "結果"], "rows": rows},
+                            card={"type": "table", "title": f"{LEAGUE['league_name']}の結果", "columns": ["節", "相手", "結果"], "rows": rows},
                             # `season_image`（<key>_say.yaml）: 今季の節の1行目に置く写真。
                             # 結果の表が6行で22秒出っぱなしになった回（アーセナル）だけ、
                             # 写真を先に置いて3行目で表を下ろす（名選手の節と同じ仕掛け）
                             say=([{"text": say_season[0], "image": str(ov["season_image"])}] + say_season[1:]
                                  if ov.get("season_image") and say_season else say_season) + (ov.get("season") or []),
-                            sources=[season_url]))
+                            # ESPN からまとめて取った回は、その出どころと順位表を出典にする（2026-09-27）。
+                            # シーズン記事の無いクラブで、存在しない記事のURLを出していた
+                            sources=([f"https://www.espn.com/soccer/team/results/_/name/{key}",
+                                      "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard",
+                                      json.loads((DATA / "standings.json").read_text(encoding="utf-8"))["source"]]
+                                     if (DATA / "results.json").exists() else [season_url])))
 
     # **日本人が2人いるクラブは2人とも題に出す**（2026-09-21）。
     # 1人目だけだと、パレスが「冨安健洋がいる」になって鎌田大地が消えていた
@@ -703,10 +769,10 @@ def build(key: str, number: int, old_file: str) -> Path:
     # キャッチコピーを明るくした板（＝最初の画面）
     opening_board = ""
     if tagline:
-        opening_board = data_board(f"assets/stats/pl_{key}_data_t.png", "--focus", "tagline")
+        opening_board = data_board(f"assets/stats/{P}{key}_data_t.png", "--focus", "tagline")
 
     note = {
-        "format": "news", "voice_min": 0, "slot": "premier_1", "date": "2026年9月19日",
+        "format": "news", "voice_min": 0, "slot": LEAGUE["slot"], "date": "2026年9月19日",
         # `people_extra`: 本人の言葉を読ませる人（監督・名選手）。声の割り当てと、言葉の早さの点検に使う
         "people": jp_names + [club] + [str(x) for x in (ov.get("people_extra") or [])],
         # **題は手で書く**（2026-09-22 指示「タイトルをもっと視聴者が見たいと思うものに」）。
@@ -714,8 +780,8 @@ def build(key: str, number: int, old_file: str) -> Path:
         "short_title": str(ov.get("short_title") or ov.get("title") or f"{title_head}ってどんなクラブ？")[:40],
         # **公開する題の後ろにシリーズ名**（2026-09-23 指示「サブタイトルにプレミアリーグチーム紹介として」）。
         # 「題｜プレミアリーグチーム紹介」。読み上げには入らない（subtitles.write_outputs）
-        "series": "プレミアリーグチーム紹介",
-        "theme": {"id": old["theme"]["id"], "league": "england", "league_name": "プレミアリーグ", "kind": "other",
+        "series": LEAGUE["series"],
+        "theme": {"id": old["theme"]["id"], "league": LEAGUE["league"], "league_name": LEAGUE["league_name"], "kind": "other",
                   # **シリーズの名札は付けない**（2026-09-21 指示「②プレミア20クラブ紹介はいらない」）。
                   # 検索で来る言葉はクラブ名で、連番はタイトルの尺を食うだけだった
                   "topic": club, "title": str(ov.get("title") or f"{title_head}ってどんなクラブ？"),
@@ -743,9 +809,9 @@ def build(key: str, number: int, old_file: str) -> Path:
                           **({"board": opening_board} if opening_board else {})),
         "sections": sections,
     }
-    out = ROOT / "research" / f"20260920_pl{number:02d}_{key}.yaml"
+    out = ROOT / "research" / f"{LEAGUE['note_prefix']}{number:02d}_{key}.yaml"
     header = (f"# プレミアリーグ20クラブ紹介 {NUM[number - 1]}{club}（2026-09-20 ヴィラの見本の形で作り直し）\n"
-              f"# tools/plbuild.py で組み立て。材料は research/pl_data/{key}*.json と旧台本 {old_file}\n")
+              f"# tools/plbuild.py で組み立て。材料は research/{LEAGUE['data']}/{key}*.json と旧台本 {old_file}\n")
     out.write_text(header + yaml.safe_dump(note, allow_unicode=True, sort_keys=False, width=1000), encoding="utf-8")
     return out
 
@@ -761,14 +827,27 @@ def pl_games(key: str) -> list[list[str]]:
     import re as _re
     raws = {p.name[:-9]: json.loads(p.read_text(encoding="utf-8")) for p in DATA.glob("*_raw.json")}
     titles = {k: v["club_title"] for k, v in raws.items()}
+    # **リーグの20クラブは clubs.json からも拾う**（2026-09-26）。ラ・リーガは見本の1クラブしか
+    # 登録選手を取っていないので、相手が「リーグのクラブ」と分からず0試合になった
+    for k, row in league_clubs().items():
+        titles.setdefault(k, row["wiki"])
     me = titles[key]
 
     def is_pl(team):
         return any(club_matches(team, t) for t in titles.values())
 
     found = {}
-    for k, v in raws.items():
-        for date, rnd, t1, score, t2 in v["results"]:
+    # **ESPN からまとめて取った結果も読む**（2026-09-27、tools/llresults.py）。
+    # シーズン記事の無いクラブ（エスパニョール・アラベス）は、相手の記事に載った試合しか
+    # 拾えず「1試合を終えて1敗」になっていた。**あるときはこれだけを使う。**記事の番号は
+    # 「そのクラブの何試合目か」のこともあり、節を鍵に上書きすると試合が消えた
+    extra = DATA / "results.json"
+    if extra.exists():
+        sources = [json.loads(extra.read_text(encoding="utf-8"))["results"]]
+    else:
+        sources = [v["results"] for v in raws.values()]
+    for results in sources:
+        for date, rnd, t1, score, t2 in results:
             if not rnd.strip().isdigit() or not _re.fullmatch(r"\d+\s*[–−-]\s*\d+", score.strip()):
                 continue
             if not (is_pl(t1) and is_pl(t2)):
@@ -778,6 +857,29 @@ def pl_games(key: str) -> list[list[str]]:
     return [found[r] for r in sorted(found)]
 
 
+def league_clubs() -> dict:
+    """clubs.json（リーグの20クラブ）。{key: {"wiki", "name_ja"}}。無ければ空。"""
+    path = DATA / "clubs.json"
+    if not path.exists():
+        return {}
+    got = json.loads(path.read_text(encoding="utf-8"))
+    rows = got.get("clubs", got) if isinstance(got, dict) else got
+    if isinstance(rows, dict):
+        rows = [dict(v, key=k) for k, v in rows.items()]
+    out = {}
+    for r in rows:
+        wiki = r.get("wiki") or r.get("wiki_title") or r.get("club_title") or r.get("title") or ""
+        out[r["key"]] = {"wiki": str(wiki).replace(" ", "_"),
+                         "name_ja": r.get("name_ja") or r.get("ja") or r.get("japanese") or ""}
+    return out
+
+
+def ov_club(key: str) -> str:
+    """旧台本が無いときのクラブ名。基礎DATAの板の題から取る。"""
+    facts = json.loads((DATA / f"{key}.json").read_text(encoding="utf-8"))
+    return facts["title"].replace(" 基礎DATA", "")
+
+
 def ja_club(team: str) -> str:
     """相手の名前を日本語に。基礎DATAの板の題（「〇〇 基礎DATA」）から引く。"""
     for raw_file in DATA.glob("*_raw.json"):
@@ -785,14 +887,23 @@ def ja_club(team: str) -> str:
         facts = DATA / raw_file.name.replace("_raw", "")
         if club_matches(team, title) and facts.exists():
             return json.loads(facts.read_text(encoding="utf-8"))["title"].replace(" 基礎DATA", "")
+    for row in league_clubs().values():
+        if row["name_ja"] and club_matches(team, row["wiki"]):
+            return row["name_ja"]
     return team
 
 
 def club_matches(team: str, club_title: str) -> bool:
-    base = club_title.replace("_", " ").replace(" F.C.", "").replace(" A.F.C.", "").replace("AFC ", "")
+    base = (club_title.replace("_", " ").replace(" F.C.", "").replace(" A.F.C.", "").replace("AFC ", "")
+            .replace(" CF", "").replace(" C.F.", "").replace(" FC", "").replace(" de Fútbol", ""))
     t = team.replace("AFC ", "").strip()
     # 頭の1語で比べると、マンチェスター・シティとユナイテッドを取り違える
-    return base == t or base in t or t in base
+    if base == t or base in t or t in base:
+        return True
+    # **略した書き方も拾う**（2026-09-26 ラ・リーガ版）。試合の表は「Celta Vigo」、
+    # クラブ記事は「RC Celta de Vigo」。3字以上の語が全部クラブ名に入っていれば同じ
+    words = [w for w in t.split() if len(w) >= 3]
+    return bool(words) and len(words) >= 2 and all(w in base.split() for w in words)
 
 
 def main() -> int:

@@ -1,0 +1,662 @@
+# 取材メモ（10/6 シリーズ「数字で見るランキング」、key: fifa_ranking、型は news）。材料の控えは research/raw/20261006_fifa_ranking.md。
+# 数字は FIFA のライブランキング（inside.fifa.com の API、10/6 7:51 JST 取得）。フットボールチャンネルの「10月6日付」の一覧・記事と全部一致。
+#   ⚠ 公式の発表は 10/7 12:00 UTC（日本時間 21:00）。期間は 10/7 10:59 UTC まで続いていて、6〜7日にまだ試合がある（raw の 0.）。
+#   日本（4試合を終えた）・上位10か国の並び・17位は残り試合で動かない計算。動き得るのはスイス12位とクロアチア13位（クロアチアがスペインに勝つと逆転）と韓国の点。
+#   ⚠ 韓国のウズベキスタン戦（10/6 20:00 JST）の結果が出たら、アジアの節の最後の3行を書き直す。公式の発表が出たら、全部の数字を公式と突き合わせる。
+# 試合ごとの増減は FIFA の API（TeamAPointsBefore/TeamAPoints）。計算式は FIFA の説明 PDF。自分でも同じ式で計算して一致を確かめた（11月の見込みは自分の計算）。
+# 日本の試合の結果は JFA の日程と結果。10/5 の回（堂安・上田・NZ紹介）と重ねないため、決勝の得点者・内容は言わない。NZ は順位と点だけ。
+# 女子のランキングは扱わない。他人の声は国際サッカー連盟の説明1件と、ネットの反応2件（Yahoo!ニュースのフットボールチャンネルの記事のコメント欄、個人の投稿を全文。尺のため3件目は外した）。
+# 海外の反応は取れていない（X・Reddit は読めない）。
+# 写真は Commons（Keiteay、CC BY 4.0、2025-09-09 アメリカ戦の日本代表。02＝ウォームアップ＝冒頭・サムネ・ショート、03_w は 02_w と同じ絵（ショートの山場で表が顔にかからない縦の切り抜き 03_w_v を持たせるため）、01＝円陣＝見立ての節）。記事の写真（田中伸弥・Getty）は使っていない。
+date: 2026年10月6日
+slot: other_1
+format: news
+series: 数字で見るランキング
+people: []
+theme:
+  id: fifa_ranking
+  league: japan
+  league_name: 日本代表
+  kind: other
+  topic: 日本代表
+  title: 日本代表、4連勝でもFIFAランキングは17位のまま。順位が動かなかった理由は
+  question: 9月から4連勝した日本代表は、なぜFIFAランキングで順位を上げられなかったのか
+  takeaway: 4連勝で日本が積んだのは11.08ポイント。20位ウルグアイに勝ってプラス4.63だったのに対し、87位ニュージーランドへの勝ちはプラス1.75、PK戦で勝ったエクアドル戦はプラス1.61で、相手の強さと勝ち方で1勝の重みが3倍近く違った。16位アメリカも同じ時期に11.29を積み、差は16.87のまま。11月のブラジル戦は勝てばプラス6.15で、2連勝しても今のアメリカには6.96届かない
+  opening_image: assets/images/20261006_fifa_ranking/02_w.jpg
+short_title: 日本代表、4連勝でも17位のまま。決勝の勝利で増えたのは1.75
+thumbnail:
+  photo: assets/images/20261006_fifa_ranking/02.jpg
+  short_photo: assets/images/20261006_fifa_ranking/02_v.jpg
+  line1: 日本代表 4連勝でも17位
+  line2: 決勝の1勝で増えたのは●.●●
+  tags:
+  - 日本代表
+  - FIFAランキング
+  - キリンカップ
+  - 数字で見るランキング
+sections:
+- id: now
+  heading: 4連勝、順位は17位のまま
+  tier: 報道
+  telop: 日本は10月6日時点で17位・1684.75ポイント。7月から11.08増えても順位は同じ
+  narrator: キャスター
+  card:
+    type: table
+    title: 日本のFIFAランキング
+    columns: &id001
+    - 項目
+    - 7月20日
+    - 10月6日
+    rows: &id002
+    - - 順位
+      - 17位
+      - 17位
+    - - ポイント
+      - '1673.68'
+      - '1684.75'
+    - - 16位との差
+      - '16.65'
+      - '16.87'
+    - - アジアの順位
+      - 1位
+      - 1位
+  say:
+  - text: 9月からの代表戦で、日本は4戦4勝。フィファランキングの点が増えました。
+    card: none
+    image: assets/images/20261006_fifa_ranking/02_w.jpg
+  - text: 10月6日の時点で1684.75ポイント。7月の発表より11.08多い数字です。
+    card:
+      type: table
+      title: 日本のFIFAランキング
+      columns: *id001
+      rows: *id002
+      highlight_row: 1
+  - text: ところが順位は17位。ワールドカップを終えた7月から、1つも動いていません。
+    card:
+      type: table
+      title: 日本のFIFAランキング
+      columns: *id001
+      rows: *id002
+      highlight_row: 0
+  - text: 1つ上、16位のアメリカとの差は16.87ポイント。
+    card:
+      type: table
+      title: 日本のFIFAランキング
+      columns: *id001
+      rows: *id002
+      highlight_row: 2
+  - text: 7月は16.65でした。4つ勝っても、差はわずかに開いています。
+    card:
+      type: table
+      title: 日本のFIFAランキング
+      columns: *id001
+      rows: *id002
+      highlight_row: 2
+  - text: アジアでは1位のままです。
+    card:
+      type: table
+      title: 日本のFIFAランキング
+      columns: *id001
+      rows: *id002
+      highlight_row: 3
+  - text: ここまでの数字は、国際サッカー連盟が試合ごとに更新する速報の順位。
+    card: none
+  - text: 正式な発表は、日本時間の7日の夜に出ます。
+    card: none
+  sources:
+  - https://inside.fifa.com/fifa-world-ranking/men
+  - https://inside.fifa.com/api/live-world-ranking/get-rankings?mode=live&gender=1&locale=en&count=250
+  - https://www.footballchannel.jp/2026/10/06/post1027875/
+  - https://www.footballchannel.jp/2026/10/06/post484208/
+- id: weight
+  main: true
+  heading: 1勝の重さは相手で変わる
+  tier: 確定
+  official: true
+  telop: 国際サッカー連盟「上のチームは、下のチームに良い結果を出すはず。その見込みも計算に含める」
+  narrator: キャスター
+  card: &id005
+    type: table
+    title: 日本の4試合で増えたポイント
+    columns: &id003
+    - 日付
+    - 相手（順位）
+    - 結果
+    - 増えた点
+    rows: &id004
+    - - 9/24
+      - ウルグアイ（20位）
+      - 3-1
+      - '+4.63'
+    - - 9/28
+      - ベネズエラ（49位）
+      - 2-1
+      - '+3.09'
+    - - 10/1
+      - エクアドル（24位）
+      - 0-0 PK5-4
+      - '+1.61'
+    - - 10/5
+      - ニュージーランド（87位）
+      - 2-1
+      - '+1.75'
+    - - 4試合
+      - ''
+      - 4勝
+      - '+11.08'
+  say:
+  - text: 日本代表は9月から4連勝。それでもフィファランキングの17位は動きません。
+    short_only: true
+  - voice: 国際サッカー連盟
+    text: 足したり引いたりする点は、相手との力の差でも決まる。
+  - voice: 国際サッカー連盟
+    text: ランキングが上のチームは、下のチームに良い結果を出すはずだ。
+    cont: true
+  - voice: 国際サッカー連盟
+    text: その見込みも、計算に含めている
+    cont: true
+  - text: 格下に勝っても、点はあまり増えないということです。4試合を並べます。
+    card:
+      type: table
+      title: 日本の4試合で増えたポイント
+      columns: *id003
+      rows: *id004
+    image: assets/images/20261006_fifa_ranking/03_w.jpg
+  - text: いちばん効いたのは初戦。20位のウルグアイに3対1で勝ち、プラス4.63。
+    card:
+      type: table
+      title: 日本の4試合で増えたポイント
+      columns: *id003
+      rows: *id004
+      highlight_row: 0
+  - text: 決勝の相手、ニュージーランドは87位。2対1で勝って、プラス1.75です。
+    card:
+      type: table
+      title: 日本の4試合で増えたポイント
+      columns: *id003
+      rows: *id004
+      highlight_row: 3
+  - text: 同じ1勝でも、ウルグアイ戦の半分にも届きません。
+    card:
+      type: table
+      title: 日本の4試合で増えたポイント
+      columns: *id003
+      rows: *id004
+      highlight_row: 3
+    emph: true
+  quotes_from:
+  - 国際サッカー連盟（ランキングの計算の説明） https://inside.fifa.com/fifa-world-ranking/procedure-men
+  sources:
+  - https://inside.fifa.com/fifa-world-ranking/procedure-men
+  - https://digitalhub.fifa.com/m/f99da4f73212220/original/edbm045h0udbwkqew35a-pdf.pdf
+  - https://inside.fifa.com/api/live-world-ranking/get-match-window-matches
+  - https://www.jfa.jp/samuraiblue/schedule_result/2026.html
+- id: pk
+  heading: PK戦の勝ちと、アメリカの伸び
+  tier: 確定
+  official: true
+  telop: PK戦の勝ちは勝ちと引き分けの間。90分で勝っていればプラス4.11だった
+  narrator: キャスター
+  card: *id005
+  say:
+  - text: 計算の中身は、試合の重みと、結果と見込みの差のかけ算です。
+    card:
+      type: table
+      title: 日本の4試合で増えたポイント
+      columns: *id003
+      rows: *id004
+  - text: 親善試合の重みは10。強い相手に勝つほど、見込みとの差が大きくなります。
+    card:
+      type: table
+      title: 日本の4試合で増えたポイント
+      columns: *id003
+      rows: *id004
+  - text: 2戦目は49位のベネズエラ。2対1の勝利で、3.09増えました。
+    card:
+      type: table
+      title: 日本の4試合で増えたポイント
+      columns: *id003
+      rows: *id004
+      highlight_row: 1
+  - text: ニュージーランド戦の、1.8倍の点が入りました。
+    card:
+      type: table
+      title: 日本の4試合で増えたポイント
+      columns: *id003
+      rows: *id004
+      highlight_row: 1
+  - text: 準決勝のエクアドル戦は、0対0からのPK戦で勝ちました。増えたのは1.61。
+    card:
+      type: table
+      title: 日本の4試合で増えたポイント
+      columns: *id003
+      rows: *id004
+      highlight_row: 2
+  - text: 計算の決まりでは、PK戦の勝ちは、勝ちと引き分けの間として数えます。
+    card:
+      type: table
+      title: 日本の4試合で増えたポイント
+      columns: *id003
+      rows: *id004
+      highlight_row: 2
+  - text: もし90分で勝っていれば、プラス4.11。PK戦で2.5ほど少なくなった形です。
+    card:
+      type: table
+      title: 日本の4試合で増えたポイント
+      columns: *id003
+      rows: *id004
+      highlight_row: 2
+  - text: では4つ勝っても、なぜ16位との差は縮まらなかったのか。
+    card:
+      type: table
+      title: 日本の4試合で増えたポイント
+      columns: *id003
+      rows: *id004
+      highlight_row: 4
+  - text: アメリカも同じ時期にペルー、チリ、メキシコに3連勝。
+    card: none
+  - text: 3試合でプラス11.29と、日本とほぼ同じだけ積んでいたんです。
+    card: none
+    emph: true
+  sources:
+  - https://digitalhub.fifa.com/m/f99da4f73212220/original/edbm045h0udbwkqew35a-pdf.pdf
+  - https://inside.fifa.com/api/live-world-ranking/get-match-window-matches
+  - https://www.jfa.jp/samuraiblue/schedule_result/2026.html
+- id: top10
+  heading: 上位10か国の顔ぶれ
+  tier: 報道
+  telop: 1位スペインは2007.86。ポルトガルが7位から5位へ、ブラジルとモロッコを抜いた
+  narrator: キャスター
+  card:
+    type: table
+    title: FIFAランキング 1〜5位（10月6日時点）
+    columns: &id006
+    - 順位
+    - 国
+    - ポイント
+    - 7月から
+    rows: &id007
+    - - '1'
+      - スペイン
+      - '2007.86'
+      - '+11.97'
+    - - '2'
+      - アルゼンチン
+      - '1972.17'
+      - '+1.81'
+    - - '3'
+      - フランス
+      - '1958.86'
+      - '+9.89'
+    - - '4'
+      - イングランド
+      - '1923.43'
+      - '+0.60'
+    - - 5（↑2）
+      - ポルトガル
+      - '1807.69'
+      - '+19.84'
+  say:
+  - text: では、上の10か国はどう動いたのか。
+    card:
+      type: table
+      title: FIFAランキング 1〜5位（10月6日時点）
+      columns: *id006
+      rows: *id007
+  - text: 1位はスペイン。3戦3勝で、ただ1か国2000ポイントを超えました。
+    card:
+      type: table
+      title: FIFAランキング 1〜5位（10月6日時点）
+      columns: *id006
+      rows: *id007
+      highlight_row: 0
+  - text: 大きく上げたのはポルトガル。7位から5位へ、2つ順位を上げました。
+    card:
+      type: table
+      title: FIFAランキング 1〜5位（10月6日時点）
+      columns: *id006
+      rows: *id007
+      highlight_row: 4
+  - text: ヨーロッパの国どうしの公式戦、ネーションズリーグで4連勝しています。
+    card:
+      type: table
+      title: FIFAランキング 1〜5位（10月6日時点）
+      columns: *id006
+      rows: *id007
+      highlight_row: 4
+  - text: プラス19.84は、上位10か国でいちばん大きな伸びです。
+    card:
+      type: table
+      title: FIFAランキング 1〜5位（10月6日時点）
+      columns: *id006
+      rows: *id007
+      highlight_row: 4
+  - text: 抜かれたブラジルとモロッコを含め、5位から7位は2.35ポイントの中です。
+    card:
+      type: table
+      title: FIFAランキング 6〜10位（10月6日時点）
+      columns: *id006
+      rows: &id008
+      - - 6（↓1）
+        - ブラジル
+        - '1806.51'
+        - '+1.59'
+      - - 7（↓1）
+        - モロッコ
+        - '1805.34'
+        - '+1.35'
+      - - '8'
+        - ベルギー
+        - '1779.17'
+        - '+0.81'
+      - - '9'
+        - オランダ
+        - '1778.61'
+        - '+3.07'
+      - - '10'
+        - メキシコ
+        - '1746.04'
+        - '-8.26'
+      highlight_row: 1
+  - text: 10位のメキシコは点を減らし、日本との差は7月の80.62から61.29に。
+    card:
+      type: table
+      title: FIFAランキング 6〜10位（10月6日時点）
+      columns: *id006
+      rows: *id008
+      highlight_row: 4
+  sources:
+  - https://inside.fifa.com/fifa-world-ranking/men
+  - https://inside.fifa.com/api/live-world-ranking/get-rankings?mode=live&gender=1&locale=en&count=250
+  - https://inside.fifa.com/api/live-world-ranking/get-match-window-matches
+  - https://www.footballchannel.jp/2026/10/06/post484208/
+- id: movers
+  heading: ネーションズリーグの重み
+  tier: 報道
+  telop: ネーションズリーグの1試合は重み15、親善試合は10。スイスはクロアチアとドイツを抜いた
+  narrator: キャスター
+  card:
+    type: table
+    title: 大きく動いた国（10月6日時点）
+    columns: &id009
+    - 国
+    - 順位
+    - 7月から
+    - この期間
+    rows: &id010
+    - - スウェーデン
+      - 37→34
+      - '+18.22'
+      - 3勝1分け
+    - - スイス
+      - 14→12
+      - '+11.58'
+      - 3勝
+    - - ドイツ
+      - 12→14
+      - '-8.70'
+      - 1勝2分け1敗
+    - - トルコ
+      - 27→31
+      - '-19.01'
+      - 4敗
+    - - ナイジェリア
+      - 26→30
+      - '-16.75'
+      - 1勝1敗
+  say:
+  - text: ヨーロッパの国は、ネーションズリーグで大きく動きました。
+    card:
+      type: table
+      title: 大きく動いた国（10月6日時点）
+      columns: *id009
+      rows: *id010
+  - text: この大会の1試合は重みが15。親善試合の10の、1.5倍です。
+    card:
+      type: table
+      title: 大きく動いた国（10月6日時点）
+      columns: *id009
+      rows: *id010
+  - text: スウェーデンは3勝1分けでプラス18.22。37位から34位に上がりました。
+    card:
+      type: table
+      title: 大きく動いた国（10月6日時点）
+      columns: *id009
+      rows: *id010
+      highlight_row: 0
+  - text: スイスは3戦3勝。14位から12位へ、クロアチアとドイツを抜いています。
+    card:
+      type: table
+      title: 大きく動いた国（10月6日時点）
+      columns: *id009
+      rows: *id010
+      highlight_row: 1
+  - text: ドイツはホームでギリシャに0対1の負け。この1試合でマイナス10.80です。
+    card:
+      type: table
+      title: 大きく動いた国（10月6日時点）
+      columns: *id009
+      rows: *id010
+      highlight_row: 2
+  - text: 日本が4連勝で積んだ11.08に近い点を、1試合で失いました。
+    card:
+      type: table
+      title: 大きく動いた国（10月6日時点）
+      columns: *id009
+      rows: *id010
+      highlight_row: 2
+  - text: トルコは4戦全敗でマイナス19.01。27位から31位まで下げています。
+    card:
+      type: table
+      title: 大きく動いた国（10月6日時点）
+      columns: *id009
+      rows: *id010
+      highlight_row: 3
+  sources:
+  - https://inside.fifa.com/api/live-world-ranking/get-rankings?mode=live&gender=1&locale=en&count=250
+  - https://inside.fifa.com/api/live-world-ranking/get-match-window-matches
+  - https://digitalhub.fifa.com/m/f99da4f73212220/original/edbm045h0udbwkqew35a-pdf.pdf
+  - https://www.footballchannel.jp/2026/10/06/post1027875/
+- id: asia
+  heading: アジアの上位
+  tier: 報道
+  telop: アジア2番手のイランとの差は63.83から87.44に。韓国は6日夜にウズベキスタン戦
+  narrator: キャスター
+  card:
+    type: table
+    title: アジアの上位（10月6日時点）
+    columns: &id011
+    - 順位
+    - 国
+    - ポイント
+    - 7月から
+    rows: &id012
+    - - '17'
+      - 日本
+      - '1684.75'
+      - '+11.08'
+    - - 23（↓1）
+      - イラン
+      - '1597.31'
+      - '-12.53'
+    - - 26（↑2）
+      - オーストラリア
+      - '1580.52'
+      - '-0.99'
+    - - '32'
+      - 韓国
+      - '1558.79'
+      - '+0.07'
+  say:
+  - text: アジアに目を移すと、日本の1位は変わりません。
+    card:
+      type: table
+      title: アジアの上位（10月6日時点）
+      columns: *id011
+      rows: *id012
+      highlight_row: 0
+  - text: 2番手イランは2連敗。日本との差は、7月の63.83から87.44に開きました。
+    card:
+      type: table
+      title: アジアの上位（10月6日時点）
+      columns: *id011
+      rows: *id012
+      highlight_row: 1
+  - text: オーストラリアはブラジルに1分け1敗。上のトルコとナイジェリアが下げて2つ上昇。
+    card:
+      type: table
+      title: アジアの上位（10月6日時点）
+      columns: *id011
+      rows: *id012
+      highlight_row: 2
+  - text: 韓国は32位。6日の夜に、59位のウズベキスタンとの試合が残っています。
+    card:
+      type: table
+      title: アジアの上位（10月6日時点）
+      columns: *id011
+      rows: *id012
+      highlight_row: 3
+  - text: 計算では、負けるとマイナス6.30。
+    card:
+      type: table
+      title: アジアの上位（10月6日時点）
+      columns: *id011
+      rows: *id012
+      highlight_row: 3
+  - text: それでも33位のパラグアイを0.19上回り、32位にとどまります。
+    card:
+      type: table
+      title: アジアの上位（10月6日時点）
+      columns: *id011
+      rows: *id012
+      highlight_row: 3
+  sources:
+  - https://inside.fifa.com/api/live-world-ranking/get-rankings?mode=live&gender=1&locale=en&count=250
+  - https://inside.fifa.com/api/live-world-ranking/get-match-window-matches
+  - https://www.footballchannel.jp/2026/10/06/post1027875/
+- id: november
+  viewpoint: true
+  heading: 11月のブラジル戦で動く点
+  tier: 背景
+  telop: ブラジルに勝てばプラス6.15。2連勝でも今のアメリカには6.96届かない
+  narrator: 解説
+  card:
+    type: table
+    title: 11月の2試合で動く日本の点（計算）
+    columns: &id013
+    - 相手
+    - 勝ち
+    - 引き分け
+    - 負け
+    rows: &id014
+    - - 11/14 ブラジル（6位）
+      - '+6.15'
+      - '+1.15'
+      - '-3.85'
+    - - 11/17 パラグアイ（33位）
+      - '+3.76'
+      - '-1.24'
+      - '-6.24'
+  say:
+  - text: 次に日本の点が動くのは11月です。
+    card: none
+    image: assets/images/20261006_fifa_ranking/01_w.jpg
+  - text: 舞台はシンガポール。14日にブラジル、17日にパラグアイが相手です。
+    card:
+      type: table
+      title: 11月の2試合で動く日本の点（計算）
+      columns: *id013
+      rows: *id014
+  - text: 6位のブラジルに勝てば、プラス6.15。
+    card:
+      type: table
+      title: 11月の2試合で動く日本の点（計算）
+      columns: *id013
+      rows: *id014
+      highlight_row: 0
+  - text: 9月からの4試合の、どの1勝よりも大きな数字です。
+    card:
+      type: table
+      title: 11月の2試合で動く日本の点（計算）
+      columns: *id013
+      rows: *id014
+      highlight_row: 0
+    emph: true
+  - text: 引き分けでもプラス1.15。決勝で勝った1.75に近い点が入ります。
+    card:
+      type: table
+      title: 11月の2試合で動く日本の点（計算）
+      columns: *id013
+      rows: *id014
+      highlight_row: 0
+  - text: 33位パラグアイは勝って当然と見込まれる相手。引き分けでマイナス1.24。
+    card:
+      type: table
+      title: 11月の2試合で動く日本の点（計算）
+      columns: *id013
+      rows: *id014
+      highlight_row: 1
+  - text: 2つとも勝てばプラス9.91。この秋の4連勝の合計に迫ります。
+    card:
+      type: table
+      title: 11月の2試合で動く日本の点（計算）
+      columns: *id013
+      rows: *id014
+  - text: それでも1694.66で、今のアメリカの1701.62には6.96足りません。
+    card:
+      type: table
+      title: 11月の2試合で動く日本の点（計算）
+      columns: *id013
+      rows: *id014
+  - text: 16位に上がるには、2連勝に加えて、アメリカの取りこぼしが要る計算です。
+    card: none
+  sources:
+  - https://www.jfa.jp/samuraiblue/schedule_result/2026.html
+  - https://digitalhub.fifa.com/m/f99da4f73212220/original/edbm045h0udbwkqew35a-pdf.pdf
+  - https://inside.fifa.com/api/live-world-ranking/get-rankings?mode=live&gender=1&locale=en&count=250
+- id: voices
+  heading: ネットの声
+  tier: 未確認
+  telop: 「キリンカップは親善試合扱い」「欧州に強豪が集中」
+  narrator: キャスター
+  say:
+  - voice: ネット民
+    text: キリンカップは親善試合扱いだから
+    card: none
+  - voice: ネット民
+    text: ランキングが下の国に勝ってもポイントの上積みは少ないが
+    cont: true
+    card: none
+  - voice: ネット民
+    text: ヨーロッパのネーションズカップは大きなポイントが動く。
+    cont: true
+    card: none
+  - voice: ネット民
+    text: W杯の組み合わせにランキングが関係してくる事を考えると
+    cont: true
+    card: none
+  - voice: ネット民
+    text: 不公平ですよね。
+    cont: true
+    card: none
+  - voice: ネット民
+    text: やっぱりワールドカップ前年に
+    card: none
+    short_voice: true
+  - voice: ネット民
+    text: コンフェデカップみたいな大会欲しいよね。
+    cont: true
+    card: none
+    short_voice: true
+  - voice: ネット民
+    text: 欧州に強豪が集中してて、
+    cont: true
+    card: none
+    short_voice: true
+  - voice: ネット民
+    text: 日本のポイント獲得が南米の強豪と組めないと難しくなってる。
+    cont: true
+    card: none
+    short_voice: true
+  sources:
+  - https://news.yahoo.co.jp/articles/5e830f1adce558881cac917073e413d4bef615a4/comments

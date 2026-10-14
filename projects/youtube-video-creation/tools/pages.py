@@ -2,7 +2,7 @@
 """ユーザーに見せるページを作る（2026-09-22、別セッションからも同じ形で出せるように）。
 
     python tools/pages.py topics <日付> <候補.yaml>     # ○△✖ を押せる題材の一覧
-    python tools/pages.py scripts <日付> [--images]      # その日の台本を1枚に（読み上げ全文・板・写真の名前）
+    python tools/pages.py scripts <日付> [--images] [--skip 中止した鍵,…] [--stems 台本名,…]  # その日の台本を1枚に
 
 出力は output/pages/topics_<日付>/index.html と output/pages/scripts_<日付>/index.html。
 それを Artifact として出す（題材ページは `capabilities: {db: {}}` を付けると ○△✖ が保存される）。
@@ -130,19 +130,22 @@ def ja_date(date: str) -> str:
 # ---------- 題材の一覧 ----------
 def topics(date: str, spec_path: Path) -> Path:
     spec = yaml.safe_load(spec_path.read_text(encoding="utf-8"))
+    # **方針の整理にも使う**（2026-09-28）。ボタンの文言と型の凡例を spec で差し替えられる
+    labels = [str(x) for x in (spec.get("labels") or ["○ 作る", "△ 保留", "✖ 却下"])]
     cards = []
     for it in spec.get("items") or []:
         tag = f'<span class="slot">{e(str(it.get("slot", "")))}</span>'
         fmt = f'<span class="fmt">{e(str(it.get("fmt", "news")))}</span>'
         warn = '<span class="weak">弱い</span>' if it.get("weak") else ""
         if it.get("new"):
-            warn = '<span class="fresh">差し替え候補</span>' + warn
+            label = it["new"] if isinstance(it["new"], str) else "差し替え候補"
+            warn = f'<span class="fresh">{e(label)}</span>' + warn
         cards.append(f'''<div class="card" data-num="{int(it["num"])}">
 <h3><span class="num">{int(it["num"])}</span>{e(str(it["head"]))}</h3>
 <p class="meta">{tag}{fmt}{warn}<a href="{e(str(it.get("url", "")))}" target="_blank" rel="noopener">{e(str(it.get("src", "")))}</a></p>
 <p>{rich(it.get("why", ""))}</p>
 <div class="picks">
-  <button class="o" data-v="o">○ 作る</button><button class="t" data-v="t">△ 保留</button><button class="x" data-v="x">✖ 却下</button>
+  <button class="o" data-v="o">{e(labels[0])}</button><button class="t" data-v="t">{e(labels[1])}</button><button class="x" data-v="x">{e(labels[2])}</button>
   <input placeholder="ひとこと（任意）">
 </div></div>''')
     drops = "".join(f"<li><b>{e(str(a))}</b> … {rich(b)}</li>" for a, b in (spec.get("drops") or []))
@@ -151,9 +154,11 @@ def topics(date: str, spec_path: Path) -> Path:
             f"<script>window.PICK_KEY='{date}';</script>"
             f"<main><h1>{e(title)}</h1>"
             f'<p class="lead">{e(str(spec.get("lead", "")))} ／ ○△✖を押すと残ります</p>'
-            f'<div class="note">{spec.get("note", "")}<br>'
-            '<span class="fmt">news</span> <span class="fmt">voices</span> <span class="fmt">quote</span> は動画の型の提案です。'
-            '<span class="weak">弱い</span>は出典が1本だったり、同じ選手が続いたりするものです。</div>'
+            f'<div class="note">{spec.get("note", "")}'
+            + ("" if spec.get("legend") is False else
+               '<br><span class="fmt">news</span> <span class="fmt">voices</span> <span class="fmt">quote</span> は動画の型の提案です。'
+               '<span class="weak">弱い</span>は出典が1本だったり、同じ選手が続いたりするものです。')
+            + '</div>'
             '<div id="pickbar" class="pickbar"></div>' + "".join(cards)
             + (f'<div class="note"><b>落とした候補と、その理由</b><ul>{drops}</ul></div>' if drops else "")
             + "</main>" + PICK_JS)
@@ -175,13 +180,17 @@ def parse(path: Path):
     sections, cur, line = [], None, None
     for raw in body.splitlines():
         if raw.startswith("## "):
-            cur = {"heading": raw[3:].strip(), "lines": [], "main": False}
+            cur = {"heading": raw[3:].strip(), "lines": [], "main": False, "viewpoint": False}
             sections.append(cur)
             line = None
             continue
         if raw.startswith("@main"):
             if cur:
                 cur["main"] = True
+            continue
+        if raw.startswith("@viewpoint"):
+            if cur:
+                cur["viewpoint"] = True
             continue
         if raw.startswith("@"):
             continue
@@ -226,11 +235,54 @@ def data_uri(path: Path, width: int = 420) -> str:
     return "data:image/jpeg;base64," + base64.b64encode(buf.getvalue()).decode("ascii")
 
 
-def scripts(date: str, images: bool = False) -> Path:
-    paths = sorted(p for p in (ROOT / "scripts").glob(f"{date}_*.md"))
+VIEW_CSS = """
+.view{border:2px solid var(--pitch);border-radius:12px;padding:10px 14px;margin:12px 0;background:var(--card)}
+.view .k{display:inline-block;background:var(--pitch);color:var(--card);border-radius:99px;padding:0 10px;font-size:.8rem;font-weight:700;margin-right:6px}
+.view .about{font-weight:700}
+.view p{margin:.4rem 0 0;font-size:.95rem}
+.view.none{border-color:var(--acc)}
+.view.none .k{background:var(--acc)}
+summary .v{display:block;font-size:.8rem;color:var(--pitch);font-weight:600;margin-top:2px}
+section.vp{border-left:4px solid var(--pitch);padding-left:10px}
+"""
+
+
+def takeaway_of(meta: dict) -> str:
+    """概要欄の「この動画の見立て: …」の1文（取材メモの theme.takeaway）。無ければ空。"""
+    for line in str(meta.get("description") or "").splitlines():
+        line = line.strip()
+        if line.startswith("この動画の見立て:") or line.startswith("この動画の見立て："):
+            return line.split(":", 1)[-1].split("：", 1)[-1].strip()
+    return str(meta.get("takeaway") or "").strip()
+
+
+def view_box(meta: dict, sections: list[dict]) -> tuple[str, str]:
+    """台本を見る人が「この回の見立ては何についてか」を最初に読めるように（2026-10-01 ユーザー指示）。
+    返すのは（本文の頭に置く枠, 閉じた一覧に出す1行）。"""
+    heads = [s["heading"] for s in sections if s.get("viewpoint")]
+    text = takeaway_of(meta)
+    if not heads and not text:
+        return ('<div class="view none"><span class="k">見立て</span>'
+                '<span class="about">見立ての節がありません</span></div>',
+                '<span class="v">見立て：なし</span>')
+    about = "・".join(heads) if heads else "（見立ての節の印が無い）"
+    body = f"<p>{e(text)}</p>" if text else "<p>見立ての1文（takeaway）が書かれていません</p>"
+    return (f'<div class="view"><span class="k">見立て</span><span class="about">何について：{e(about)}</span>{body}</div>',
+            f'<span class="v">見立て：{e(about)}</span>')
+
+
+def scripts(date: str, images: bool = False, skip: tuple[str, ...] = (),
+            stems: tuple[str, ...] = ()) -> Path:
+    # 中止した題材の台本は残っていても載せない（--skip rodri,foo）。9/26 のロドリが残っていた
+    # 日付の違う台本を1枚に並べるときは --stems（前の日に作った紹介ものを今日出す、など）
+    if stems:
+        paths = [ROOT / "scripts" / f"{s}.md" for s in stems]
+    else:
+        paths = sorted(p for p in (ROOT / "scripts").glob(f"{date}_*.md")
+                       if p.stem[len(date) + 1:] not in skip)
     chunks, toc, stats, est_all = [], [], [], []
     for path in paths:
-        key = path.stem[len(date) + 1:]
+        key = path.stem if stems else path.stem[len(date) + 1:]
         meta, sections = parse(path)
         cards = meta.get("cards") or {}
         nline = sum(len(s["lines"]) for s in sections)
@@ -246,7 +298,10 @@ def scripts(date: str, images: bool = False) -> Path:
         body = []
         for sec in sections:
             tag = ' <span class="tag">ショートはこの節</span>' if sec["main"] else ""
-            body.append(f'<section><h3 class="sec">{e(sec["heading"])}{tag}</h3>')
+            if sec.get("viewpoint"):
+                tag += ' <span class="tag">見立て</span>'
+            vp = ' class="vp"' if sec.get("viewpoint") else ""
+            body.append(f'<section{vp}><h3 class="sec">{e(sec["heading"])}{tag}</h3>')
             used, items = set(), []
             for l in sec["lines"]:
                 cname = l["attr"].get("card")
@@ -271,14 +326,15 @@ def scripts(date: str, images: bool = False) -> Path:
         thumb = ROOT / "output" / path.stem / "thumbnail.png"
         th = (f'<figure class="thumb"><img src="{data_uri(thumb, 640)}" alt=""><figcaption>サムネイル</figcaption></figure>'
               if thumb.exists() else "")
+        vbox, vline = view_box(meta, sections)
         chunks.append(f'<details id="{e(key)}"><summary><span class="t">{e(str(meta.get("title", key)))}</span>'
-                      f'<span class="d">{e(length)} ／ {len(sections)}節</span></summary>{th}'
+                      f'<span class="d">{e(length)} ／ {len(sections)}節</span>{vline}</summary>{vbox}{th}'
                       + "".join(body) + src + "</details>")
     total_est = sum(est_all)
     rows = "".join(f"<tr><td>{e(str(n))}</td><td>{e(ln)}</td><td>{s}</td><td>{l}</td><td>{c}</td></tr>"
                    for n, s, l, c, ln in stats)
     title = f"{ja_date(date)}の台本"
-    page = (f"<meta charset=\"utf-8\"><title>{e(title)}</title><style>{BASE_CSS}</style><main>"
+    page = (f"<meta charset=\"utf-8\"><title>{e(title)}</title><style>{BASE_CSS}{VIEW_CSS}</style><main>"
             f"<h1>{e(title)}（{len(paths)}本）</h1>"
             f'<p class="lead">{date[:4]}-{date[4:6]}-{date[6:]} ／ 読み上げの全文。太字は画面で強調する数字。<b>尺は本編の見込み</b>（ショートは別に58秒まで）</p>'
             '<div class="toc">' + " ".join(toc) + "</div>" + "".join(chunks)
@@ -299,7 +355,19 @@ def main(argv: list[str]) -> int:
         print(topics(argv[1], Path(argv[2])))
         return 0
     if argv[0] == "scripts":
-        print(scripts(argv[1], images="--images" in argv))
+        skip: tuple[str, ...] = ()
+        if "--skip" in argv:
+            skip = tuple(k for k in argv[argv.index("--skip") + 1].split(",") if k)
+        stems: tuple[str, ...] = ()
+        if "--stems" in argv:
+            # 空白で区切って渡しても全部拾う（2026-10-07、空白区切りで渡して1本目しか載らなかった）
+            after = []
+            for a in argv[argv.index("--stems") + 1:]:
+                if a.startswith("--"):
+                    break
+                after.append(a)
+            stems = tuple(k for a in after for k in a.split(",") if k)
+        print(scripts(argv[1], images="--images" in argv, skip=skip, stems=stems))
         return 0
     print(__doc__)
     return 2

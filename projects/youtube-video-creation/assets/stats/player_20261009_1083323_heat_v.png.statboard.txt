@@ -1,0 +1,4 @@
+title: ペドリの今季のヒートマップ
+unit: touches
+points=566
+source: FotMob

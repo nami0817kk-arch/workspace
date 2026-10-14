@@ -1,0 +1,520 @@
+# 移籍の深掘り 第3回：エデン・アザール チェルシー → レアル・マドリード（2019年）。10/12 公開。「1つの移籍」の回（第1回＝ネイマール、第2回＝マンCの夏は「1クラブ」）。
+# 材料の控えは research/raw/20261012_transfer_single.md。**材料から出ない。**
+#
+# **選んだ移籍：アザール（歴代15位）。理由は、クラブ公式・クラブの決算・報道のどれで額が追えるかを確かめたら、
+#   「額がどの文書にも書かれていない」ことそのものが芯になったため。**
+#   レアルとチェルシーの発表文（2019-06-07、全文を読んだ）に額は無い／チェルシーの2020年6月期の決算は
+#   売却益の合計（1億4263万ポンド）で、理由にアザールを名指しするが1人ぶんの額は無い／レアルの2019-20年度の決算は
+#   獲得費の合計（3億2300万ユーロ）で、アザールの名前そのものが無い。額は報道でしか追えない。
+#   → **「どこまでが公表で、どこからが報道か」を言い分ける回**。ネイマールの回（払い方の仕組み）・マンCの回（窓全体の金の動き）と角度が重ならない。
+#   代案（ルカク・カイセド）は使っていない（材料が足りたので）。
+#
+# **ネイマール・マンCの回と型を重ねない**
+#   節の並び：①強い一点（stats）②発表文と決算（verdict）③固定とボーナス（waterfall）④もう1つの報道額（waterfall）⑤移籍のあとの4シーズン（line・stats・timeline）⑥見立て（convert・calc）
+#   ネイマール：金額の中身→払い方の仕組み→その後→見立て／マンC：窓全体→払った→戻った→相場→見立て。**払い方の仕組みも窓全体の金の動きも、この回には無い。**
+#   強い一点の型も違う：ネイマールは「歴代1位を9年抜かれていない」、マンCは「世界一の支出」。**こちらは「額を書いた発表文が無い」**。
+#   使った板：stats・verdict・waterfall×2・line・timeline・calc×2・convert×2。**scatter・versus は使っていない**（人の比べでも相場の比べでもないため）。
+#
+# **直近30日の重なりの確認**（corpus.txt＝9/11以降の取材メモの題・人名・covered.yaml の見出し／research/posted.json の build 788件／research/covered.yaml を引いた）
+#   アザール／Hazard：**0件**（posted・covered・corpus とも）。9/16・9/17・9/19 の題材候補ファイルに英語紙の見出し（スウォンジーのボールボーイ、
+#   モウリーニョとの話、テリーの話）が出てくるだけで、**1本も作っていない**。
+#   ルカク：1件（9/26 italy_belgium「マンチーニのイタリア、ベルギーに0-2。試合後にルカクがした仕草」）。**この回では使っていない**。
+#   カイセド：0件。ベルギー代表：1件（同じ9/26。アザールの代表の話はしない）。
+#   **クラブ名は重なる**（人ではなく、題材が別）：チェルシー＝9/13 chelsea_hull・9/16〜9/24 pl06_chelsea（クラブ紹介⑥）・9/18 alonso・9/19 chelsea・
+#   10/11 palmer_deal／レアル・マドリード＝9/12 nicopaz・9/16 rodri・9/23 realmadrid・9/24 carvajal・9/26 ll17_realmadrid（クラブ紹介）・10/9 finance_realmadrid。
+#   **アザール本人も2019年の移籍も、どの回にも出ていない。**使ったのは、**クラブ名だけ重なる別の題材**として扱う。
+#   10/9 finance_realmadrid（レアルの財政）は**収入の回**で、決算の「選手獲得費」「移籍収入」の数字は使っていない。
+#   **この回で使うレアルの決算の数字（2019-20年度の獲得費 3億2300万ユーロ）は、10/9 の回では読んでいない**（取材メモを確認）。
+#   **この日の他の枠**（リヴァプール＝財政・ブレントフォード＝スタジアム・レバンテ・イプスウィッチ・アトレティコ）とは重ならない。
+#   **使わないと決めた人**（エムバペ・デンベレ・ネイマール・PSG／エンソ・アンダーソン・ブアディ・サヴィオ／ライス／ベリンガム／ロナウド）は**一度も出していない**。
+#   歴代15位の前後（14位がエンソ）は**名前を出さず、金額の差だけ**にした（材料 §5）。…ただし台本ではこの比べも使っていない。
+#
+# **数字の確度（固定とボーナスの扱い）**
+#   **クラブが公表した額は無い。**台本は「クラブが発表した」と一度も言わない。言うのは次の3つだけ。
+#     ・「両クラブの発表文に、額は書かれていません」（全文を読んだ。**言える**）
+#     ・「決算に出るのは合計まで」（チェルシー：売却益の合計＝1億4263万ポンドで前年の約2.36倍、理由にアザールを名指し／レアル：獲得費の合計＝3億2300万ユーロ、アザールの名前なし）
+#     ・「報じられた額」＝固定およそ1億ユーロ、ボーナスを足した上限1億4000万ユーロ前後（固定の1.4倍・4割）、Transfermarkt の集計1億2080万ユーロ（歴代15位）、ベルギーの新聞の3回払い合計1億6000万ユーロ（レアルは否定したと報じられた）
+#   **ボーナスの条件の一覧は公表も報道も見つからなかった**（2024年5月にチャンピオンズリーグ決勝進出で500万ポンドと報じられた1件だけ。「本人に関係しない条件も含まれていた」と伝えられた）。
+#   **Transfermarkt の額は成功報酬の達成分を含む集計**なので「報じられた額」と言う。
+#
+# **自分で数えた数**（材料 §2・§3・§4・§6 に式と元の数字がある）
+#   売却益の前年比 142.630÷60.449＝2.3595（約2.36倍）／ボーナス上限 140−100＝40（固定の4割）・140÷100＝1.4倍／
+#   ベルギーの3回払い 40+56+64＝160（上限より 160−140＝20 多い）・補償金 0.5%×40=0.20、×56=0.28、×64=0.32、合計0.80（万ユーロでなく百万ユーロ。20万・28万・32万・80万ユーロ）／
+#   報じられた固定÷レアルの獲得費 100÷323＝0.3096（約31%）／
+#   出場時間 3878（チェルシー最後の1年）・1545・896・904・392（レアル4年）、レアル合計 76試合・3737分、3878−3737＝141／
+#   為替（欧州中央銀行の参照相場）：100,000,000×122.27＝12,227,000,000円（約122億円）、×177.34＝17,734,000,000円（約177億円）、177.34÷122.27＝1.4504（約1.45倍）、差は約55億円。
+# **為替は ECB 参照相場。取得日 2026-10-11。**2019-06-07（発表の日）＝1ユーロ122.27円、2026-10-09（取れた最新日）＝177.34円。
+#   **どちらの日の為替かを必ず言う**（⑥の換算の板2枚と calc）。**読み上げでは ECB と言わず「欧州中央銀行」**（英字を声に出さない）。
+# 数字の重なり対策（別の節で同じ数字を読まない）：「1億ユーロ」「1億4000万ユーロ」「1億2080万ユーロ」は①だけ。③は「固定の4割」「固定の1.4倍」で受け、
+#   ボーナスの金額は読まない。④の「4000万・5600万・6400万」「1億6000万」は④だけ。⑥は割合・倍率・為替だけで、①〜④の金額は言い直さない。**題には金額を入れない**。
+#
+# 板：①stats ②verdict（4行）③waterfall ④waterfall ⑤line（5点）・stats・timeline（4行）⑥convert×2・calc×2。
+#   **板を下ろす行には `card: none` を明示した。**focus／highlight は 0 から数え、迷うところは字で指した。赤ペン（mark）は使っていない。
+#   **顔のある写真は板と共存できない**（本編の板は左74%）ので、冒頭の2行（①）と本人の言葉（⑤の入団の言葉）だけ写真、そのほかは板の下地（本拠地の中）。
+# 写真：Commons の3枚（すべて CC BY / BY-SA。代理店の写真は無し）。
+#   **06（Chelsea Debs / CC BY-SA 2.0、2018-09-15、5065x3377）を冒頭とサムネに使う**。チェルシーの2018-19の青いユニフォーム、顔がはっきり写る。
+#   **本当はレアルの白い練習着の写真（02、CC BY 3.0 / Real Madrid、918x644）を冒頭にしたかったが、本編で2.09倍の引き伸ばしになり precheck が × を出した**
+#   （サムネの写真は冒頭にも敷かれるため。サムネだけなら1.39倍で通る）。**大きなレアル時代の顔写真は Commons に無い**（Salzburg との親善試合 2019-08-07 は顔が小さい）。
+#   **02 はサムネ案A、03（CC BY 4.0 / Amir Hosseini、2019-05-29 ヨーロッパリーグ決勝の得点後、1050x700）は案Bで使うための置き場**で、台本の `image:` には出していない。
+#   `portrait` は depicts が無いと止めるので、ファイル名・Category:Eden Hazard・目視で本人を確認して手で取り込んだ（credits.json の subject_check に書いた）。
+#   06 の16:9は人物を残して2400x1350を切って1920x1080にした（facecrop は2人写りの縦長で別人を選んだので使わず、手で切った）。縦版（`06_v` と、ショートの冒頭が拾う `06_w_v`）は1900x3377から切った。
+#   **板の下地は本拠地の実写**（assets/backgrounds/stadium_レアルマドリード_in.png と同 .png。顔が無いので板が顔にかからない）。
+#   **20秒を超える板の連続には本拠地の中と外を交互に挟んだ**（挟まないと `spread_long_cards` がサムネの顔写真を板の下に差し込み、60秒の板が顔にかかって preview4 が × を出した）。
+#   **シリーズの回にショートは作らない**ので縦版は置いてあるだけ。冒頭の顔は preview4 のショートでも ✓（`06_w_v` を置いたら顔が入った）。
+# 声：エデン・アザール本人の言葉2か所（入団の披露＝2019-06-13・引退の発表＝2023-10-10。どちらも本人が公に話した・書いた言葉）。
+#   **ネットの反応は入れない**（voice_min: 0）。他人の声は本人の言葉の4行だけ（尺の1割に満たない）。
+# サムネ：**ユーザーと相談して決める。**ここに書いたのは点検用の案A（構図 face、06の写真、顔を左 `side: left`）。案B（versus）・案C（scene）は報告に書いた。
+#   案A の見本は output/thumb_samples/hz_face06_face.png（`_list.png` もある）。
+#   直近が 10/9 ネイマール＝number、10/11 マンC＝number なので、**今回も number にすると3回続く。face にして外した。**
+#   **集中線は付けない**（rays は書かない。既定でオフ）。
+format: news
+voice_min: 0
+slot: other_1
+date: 2026年10月12日
+series: 移籍の深掘り
+people:
+- アザール
+- レアル・マドリード
+- チェルシー
+short_title: アザールのレアル移籍。両クラブの発表文に、額は書かれていなかった
+theme:
+  id: transfer_single
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: エデン・アザール
+  title: アザールのレアル移籍。両クラブの発表文に、なかったもの
+  question: アザールの移籍金は、どこまでが公表で、どこからが報道なのか
+  lead: 歴代の移籍金で、15位に入る選手。
+  takeaway: アザールの移籍金は、2019年6月7日のレアルとチェルシーの発表文のどちらにも額が書かれておらず、報じられた額で追うしかない。固定がおよそ1億ユーロ、ボーナスを足した上限が1億4000万ユーロ前後（固定の1.4倍）、歴代ランキングの額は1億2080万ユーロで15位。ベルギーの新聞は3回払いの合計を1億6000万ユーロと報じ、レアルは否定したと伝えられた。クラブ自身の文書に出るのは合計までで、チェルシーの2020年6月期の選手売却の利益は1億4263万ポンドと前の年の約2.36倍、レアルの2019-20年度の獲得費は3億2300万ユーロで、報じられた固定の額はその約31%に当たる。同じ固定の1億ユーロでも、発表の日の為替（1ユーロ122円27銭）なら約122億円、2026年10月9日の為替（177円34銭）なら約177億円で、為替だけで約1.45倍になる。固定か、ボーナス込みか、どの日の為替かを言い分けないと、同じ移籍が別の大きさになる
+  opening_image: assets/images/20261012_transfer_single/06_w.jpg
+thumbnail:
+  layout: face
+  side: left
+  photo: assets/images/20261012_transfer_single/06_w.jpg
+  short_photo: assets/images/20261012_transfer_single/06_v.jpg
+  line1: アザール移籍、発表文に
+  line2: ●●が書かれていない
+  crests:
+  - レアルマドリード
+  - チェルシー
+  tags:
+  - エデン・アザール
+  - レアル・マドリード
+  - チェルシー
+  - 移籍金
+  - 移籍の深掘り
+sections:
+- id: money
+  main: true
+  heading: 両クラブの発表文に、額は無い
+  tier: 報道
+  telop: 歴代15位の移籍。レアルもチェルシーも、発表文に額を書いていない
+  narrator: キャスター
+  card: &top
+    type: stats
+    title: アザールの移籍金に付いた額（どれもクラブの発表ではない）
+    items:
+    - ['1億', ユーロ, 固定の額（報道）]
+    - ['1億4000万', ユーロ, ボーナスを足した上限（報道）]
+    - ['1億2080万', ユーロ, 歴代ランキングの額（集計）]
+    focus: 2
+  say:
+  - text: 2019年6月、エデン・アザールがチェルシーからレアル・マドリードへ移りました。
+    short_only: true
+    image: assets/images/20261012_transfer_single/06_w.jpg
+  - text: 2019年6月7日。チェルシーのアザールがレアルへ移ると、両クラブが発表しました。
+    image: assets/images/20261012_transfer_single/06_w.jpg
+    card: none
+  - text: その発表文のどちらにも、移籍金の額は書かれていません。
+    emph: true
+    card: none
+  - text: 先に払う固定の額は、およそ1億ユーロと報じられました。
+    image: assets/backgrounds/stadium_レアルマドリード_in.png
+    card:
+      <<: *top
+      focus: 0
+  - text: ボーナスを全部足した上限は、1億4000万ユーロ前後です。
+    card:
+      <<: *top
+      focus: 1
+  - text: 歴代ランキングで15位の額は、1億2080万ユーロ。
+    card:
+      <<: *top
+      focus: 2
+  - text: 三つとも、クラブが発表した額ではありません。
+    card:
+      <<: *top
+      focus: 2
+  sources:
+  - https://www.realmadrid.com/es-ES/noticias/club/comunicados/comunicado-oficial-hazard-07-06-2019
+  - https://www.chelseafc.com/en/news/article/eden-hazard-transfer-deal-agreed
+  - https://www.cnn.com/2019/06/07/football/eden-hazard-transfer-real-madrid-chelsea-spt-intl/index.html
+  - https://www.goal.com/en-gb/news/hazard-set-to-complete-real-madrid-move-as-chelsea-accept/136esnbli75ur1l8khdyz0vxq6
+  - https://www.transfermarkt.com/statistik/transferrekorde
+- id: docs
+  heading: 発表文と決算に、額はあるか
+  tier: 確定
+  official: true
+  telop: 発表文に額は無く、決算に出るのは合計まで。選手1人の額は読み取れない
+  narrator: 解説
+  card: &docs
+    type: verdict
+    title: 移籍金の額は書いてあるか
+    columns: ['書類', '額', '書いてあること']
+    rows:
+    - &d1 [レアルの発表文, ×, 契約は5シーズン]
+    - &d2 [チェルシーの発表文, ×, 352試合と110ゴール]
+    - &d3 [チェルシーの決算, △, 売却益の合計]
+    - &d4 [レアルの決算, △, 獲得費の合計]
+  say:
+  - text: では、クラブ自身の文書には、何が書いてあるのでしょうか。
+    card: *docs
+  - text: まず、レアルの発表文。書かれていたのは、合意と、契約の期間です。
+    card:
+      <<: *docs
+      highlight_row: 0
+  - text: 移籍金の額は、ありません。
+    emph: true
+    card:
+      <<: *docs
+      highlight_row: 0
+  - text: 同じ日に出した、チェルシーの発表文です。
+    card:
+      <<: *docs
+      highlight_row: 1
+  - text: アザールは、チェルシーで352試合に出て、110ゴール。
+    image: assets/backgrounds/stadium_レアルマドリード.png
+    card:
+      <<: *docs
+      highlight_row: 1
+  - text: 年間最優秀選手には、クラブ史上最多の4度選ばれています。
+    card:
+      <<: *docs
+      highlight_row: 1
+  - text: 取締役の言葉は、子どもの頃からの夢を尊重する、というものでした。
+    card:
+      <<: *docs
+      highlight_row: 1
+  - text: こちらにも、額はありません。
+    card:
+      <<: *docs
+      highlight_row: 1
+  - text: では、決算はどうか。まず、チェルシーです。
+    card:
+      <<: *docs
+      highlight_row: 2
+  - text: 2020年6月期の決算に、アザールの名前があります。
+    image: assets/backgrounds/stadium_レアルマドリード_in.png
+    card:
+      <<: *docs
+      highlight_row: 2
+  - text: チェルシーが選手の売却で得た利益は、1億4263万ポンド。
+    card:
+      <<: *docs
+      highlight_row: 2
+  - text: 前の年の6045万ポンドから、約2.36倍になっています。
+    emph: true
+    card:
+      <<: *docs
+      highlight_row: 2
+  - text: 決算が理由に挙げたのは、3人の売却。アザールは、その1人です。
+    card:
+      <<: *docs
+      highlight_row: 2
+  - text: ただ、1人ぶんの額は、決算からは読み取れません。
+    card:
+      <<: *docs
+      highlight_row: 2
+  - text: レアルの決算も、同じ形です。
+    image: assets/backgrounds/stadium_レアルマドリード.png
+    card:
+      <<: *docs
+      highlight_row: 3
+  - text: 同じ2020年6月期に、選手の獲得へ使ったのは3億2300万ユーロ。
+    card:
+      <<: *docs
+      highlight_row: 3
+  - text: こちらは、アザールの名前そのものがありません。
+    card:
+      <<: *docs
+      highlight_row: 3
+  - text: クラブが自分の文書で出しているのは、合計までです。
+    card: *docs
+  sources:
+  - https://www.realmadrid.com/es-ES/noticias/club/comunicados/comunicado-oficial-hazard-07-06-2019
+  - https://www.chelseafc.com/en/news/article/eden-hazard-transfer-deal-agreed
+  - https://find-and-update.company-information.service.gov.uk/company/01965149/filing-history
+  - https://publish.realmadrid.com/content/dam/portals/realmadrid-com/es-es/core-content/assemblies/pages/generic-pages/el-club/transparencia/01-documentos-transparencia/informes-econocimicos/2019-2020_INFORME%20ECON%C3%93MICO.pdf
+- id: bonus
+  heading: 固定とボーナス。どこまでが報道か
+  tier: 報道
+  telop: ボーナスは固定の4割ほどが上限と報じられた。条件の一覧は公表されていない
+  narrator: 解説
+  card: &bonus
+    type: waterfall
+    title: 報じられた額の組み立て
+    start: [固定の額（報道）, 100]
+    steps:
+    - [ボーナスの上限（報道）, 40]
+    total: [上限, 140]
+    unit: 百万ユーロ
+  say:
+  - text: 公表が無い以上、額は報道から追うことになります。
+    image: assets/backgrounds/stadium_レアルマドリード_in.png
+    card: none
+  - text: 移籍金には、先に払う固定と、条件を満たしたら払うボーナスがあります。
+    card: *bonus
+  - text: 固定は、移籍が成立した時点で決まっている額です。
+    card:
+      <<: *bonus
+      highlight: 固定の額（報道）
+  - text: ボーナスは、条件を満たしたときに足される額です。
+    card:
+      <<: *bonus
+      highlight: ボーナスの上限（報道）
+  - text: 上限は、固定の4割ほどと伝えられました。
+    card:
+      <<: *bonus
+      highlight: ボーナスの上限（報道）
+  - text: ただ、どの条件でいくら払うのかは、明かされていません。
+    card:
+      <<: *bonus
+      highlight: 上限
+  - text: 条件の1つが報じられたのは、移籍の5年後でした。
+    card: none
+  - text: 2024年5月。レアルが、チャンピオンズリーグの決勝に進みます。
+    card: none
+  - text: するとチェルシーに、500万ポンドが支払われる、と伝えられました。
+    card: none
+  - text: このとき、アザールはすでにレアルを離れ、引退していました。
+    card: none
+  - text: ボーナスには、本人に関係しない条件も含まれていたと伝えられています。
+    card: none
+  - text: 固定とボーナスの切り分けも、条件の一覧も、公表はありません。
+    card: *bonus
+  sources:
+  - https://www.goal.com/en-gb/news/hazard-set-to-complete-real-madrid-move-as-chelsea-accept/136esnbli75ur1l8khdyz0vxq6
+  - https://www.skysports.com/football/news/11668/11737250/real-madrid-sign-eden-hazard-from-chelsea-on-five-year-deal
+  - https://www.90min.com/eden-hazard-windfall-real-madrid-will-still-pay-chelsea-despite-2023-retirement
+  - https://www.footballtransfers.com/en/transfer-news/uk-premier-league/2024/05/chelsea-transfer-news-eden-hazard-bonus-real-madrid-record-transfer-fee
+- id: belgium
+  heading: もう1つの数字。ベルギーの報道
+  tier: 報道
+  telop: ベルギーの2紙は3回払いの合計を報じた。レアルは否定したと伝えられている
+  narrator: 解説
+  card: &belgium
+    type: waterfall
+    title: ベルギーの新聞が報じた3回払い
+    start: ['2019年', 40]
+    steps:
+    - ['2020年', 56]
+    - ['2021年', 64]
+    total: [合計, 160]
+    unit: 百万ユーロ
+  say:
+  - text: 額を巡る報道は、アザールの移籍にもう1つあります。
+    image: assets/backgrounds/stadium_レアルマドリード.png
+    card: none
+  - text: 2020年9月。ベルギーの2つの新聞が、別の数字を報じました。
+    card: *belgium
+  - text: 3回に分けた支払いで、合計1億6000万ユーロ。
+    emph: true
+    card:
+      <<: *belgium
+      highlight: 合計
+  - text: 2019年の分は、全体の4分の1です。
+    card:
+      <<: *belgium
+      highlight: '2019年'
+  - text: 2020年の分が35%、2021年の分が40%。
+    card:
+      <<: *belgium
+      highlight: '2021年'
+  - text: 根拠は、育った小さなクラブが受け取る、育成の補償金の計算でした。
+    image: assets/backgrounds/stadium_レアルマドリード_in.png
+    card: *belgium
+  - text: 補償金は総額の0.5%で、80万ユーロ。20万、28万、32万の3回払いです。
+    card: *belgium
+  - text: 0.5%を掛けると3回分に合います。ただ、元の額の裏づけは見つかっていません。
+    card: *belgium
+  - text: レアルは、この額を否定したと報じられています。
+    card: *belgium
+  - text: この合計は、固定にボーナス上限を足した額より、さらに2000万ユーロ多い。
+    card:
+      <<: *belgium
+      highlight: 合計
+  - text: どれが実際の額なのか、文書の上では確かめようがありません。
+    card: none
+  sources:
+  - https://www.goal.com/es/noticias/en-belgica-aseguran-que-hazard-le-costo-al-real-madrid-160-millones-de-euros/1kc764kt656s41h2b6lis1hr1c
+  - https://www.lessentiel.lu/fr/story/le-veritable-cout-du-transfert-dhazard-revele-895010746600
+  - https://www.fichajes.net/noticias/real-madrid-desmiente-hazard-no-costo-160-millones-euros-20200904.html
+- id: stint
+  heading: 移籍のあとの4シーズン
+  tier: 報道
+  telop: 契約は5年。出場時間はチェルシー最後の1年の3878分から、レアルの1年目は1545分へ
+  narrator: キャスター
+  card: &mins
+    type: line
+    title: クラブでの出場時間（公式戦）
+    unit: 分
+    x: ['2018-19', '2019-20', '2020-21', '2021-22', '2022-23']
+    series:
+    - [出場時間, [3878, 1545, 896, 904, 392]]
+    focus: 出場時間
+    note: 2018-19はチェルシー、2019-20からレアル
+  say:
+  - text: 2019年6月13日。アザールは、ベルナベウで入団を披露されました。
+    image: assets/backgrounds/stadium_レアルマドリード.png
+    card: none
+  - voice: エデン・アザール
+    text: 小さい頃からの夢は、レアルでプレーすることでした。
+    card: none
+  - voice: エデン・アザール
+    text: このユニフォームでプレーするのが、待ちきれない。
+    cont: true
+    card: none
+  - voice: エデン・アザール
+    text: そして、たくさんのタイトルを取りたい。
+    cont: true
+    card: none
+  - text: 契約は5年。ここから、レアルでの4シーズンが始まります。
+    image: assets/backgrounds/stadium_レアルマドリード_in.png
+    card: *mins
+  - text: チェルシーでの最後の1年は、3878分。
+    card:
+      <<: *mins
+      highlight: '2018-19'
+  - text: レアルの1年目は、1545分です。
+    card:
+      <<: *mins
+      highlight: '2019-20'
+  - text: 2年目は896分、3年目は904分。
+    card:
+      <<: *mins
+      highlight: '2021-22'
+  - text: 最後の4年目は、392分でした。
+    card:
+      <<: *mins
+      highlight: '2022-23'
+  - text: レアルでの4シーズンは、合わせて76試合、3737分です。
+    card: &stint_stats
+      type: stats
+      title: レアルでの4シーズン
+      items:
+      - ['76', 試合, 公式戦の出場]
+      - ['3737', 分, 出場時間の合計]
+      - ['8', タイトル, クラブ公式の数]
+      focus: 2
+  - text: 4シーズンの合計は、チェルシーでの最後の1年とほぼ同じ長さです。
+    card:
+      <<: *stint_stats
+      focus: 1
+  - text: そして、レアルは4シーズンで、8つのタイトルを数えています。
+    emph: true
+    card:
+      <<: *stint_stats
+      focus: 2
+  - text: リーガ2回、チャンピオンズリーグ1回、クラブワールドカップ1回を含みます。
+    card:
+      <<: *stint_stats
+      focus: 2
+  - text: 2023年6月3日。レアルは、合意による契約の終了を発表しました。
+    card: &tl
+      type: timeline
+      title: 移籍のあとの年表
+      rows:
+      - ['2019年6月13日', ベルナベウで入団を披露]
+      - ['2023年6月3日', 合意で契約を終えると発表]
+      - ['2023年10月10日', 引退を発表]
+      focus: '2023年6月3日'
+  - text: 契約は2024年6月までありましたが、1年早く終わりました。
+    card:
+      <<: *tl
+      highlight_row: 1
+  - text: 同じ年の10月10日、本人が引退を発表します。
+    card:
+      <<: *tl
+      highlight_row: 2
+  - voice: エデン・アザール
+    text: 夢をかなえて、世界のいろんなピッチで、楽しんできた。
+    card:
+      <<: *tl
+      highlight_row: 2
+  quotes_from:
+  - AP通信 https://www.si.com/soccer/2019/06/13/eden-hazard-real-madrid-bernabeu-unveiling
+  - ESPN https://abcnews.com/Sports/real-madrid-chelsea-forward-hazard-retires-football/story?id=103856038
+  sources:
+  - https://www.si.com/soccer/2019/06/13/eden-hazard-real-madrid-bernabeu-unveiling
+  - https://www.realmadrid.com/es-ES/noticias/club/comunicados/comunicado-oficial-hazard-03-06-2023
+  - https://abcnews.com/Sports/real-madrid-chelsea-forward-hazard-retires-football/story?id=103856038
+  - https://tmapi-alpha.transfermarkt.technology/player/50202/performance-game
+- id: view
+  viewpoint: true
+  heading: 同じ額を、為替と決算の割合で数える
+  tier: 報道
+  telop: 同じ固定の額が、為替だけで約1.45倍の円になる。決算の獲得費の約31%にあたる
+  narrator: 解説
+  card: &share
+    type: calc
+    title: 報じられた固定の額は、獲得費の何割か
+    terms:
+    - ['約1億ユーロ', 報じられた固定の額]
+    - ['3億2300万ユーロ', レアルの獲得費（決算）]
+    - [約31%, 獲得費に占める割合]
+    ops: ['÷', ＝]
+  say:
+  - text: アザールの移籍金のように、公表されない額を、数えて比べてみます。
+    image: assets/backgrounds/stadium_レアルマドリード_in.png
+    card: *share
+  - text: 報じられた固定の額を、レアルの決算の獲得費で割ります。
+    card: *share
+  - text: 約31%。1人の移籍が、その年度の獲得費の3割ほどに当たる計算です。
+    emph: true
+    card: *share
+  - text: ただ、固定の額は報道、決算は合計なので、会計上の割合とは限りません。
+    card: *share
+  - text: 次は、円に直してみます。
+    card: *share
+  - text: 発表の日、2019年6月7日の欧州中央銀行の為替は、1ユーロ122円27銭。
+    card: &yen_then
+      type: convert
+      title: 報じられた固定の額を円に（発表の日の為替）
+      from: ['1億', ユーロ, 報じられた固定の額]
+      to: ['約122億', 円, 2019年6月7日の為替]
+      via: 1ユーロ＝122.27円
+  - text: この日の為替なら、およそ122億円です。
+    card: *yen_then
+  - text: いちばん新しい、2026年10月9日は、1ユーロ177円34銭。
+    card: &yen_now
+      type: convert
+      title: 報じられた固定の額を円に（いまの為替）
+      from: ['1億', ユーロ, 報じられた固定の額]
+      to: ['約177億', 円, 2026年10月9日の為替]
+      via: 1ユーロ＝177.34円
+  - text: 同じ額が、およそ177億円になります。
+    card: *yen_now
+  - text: 割ると、為替だけで約1.45倍。55億円の違いです。
+    emph: true
+    card: &fx
+      type: calc
+      title: 円で見た額は、為替で何倍か
+      terms:
+      - ['177.34円', 2026年10月9日]
+      - ['122.27円', 2019年6月7日]
+      - [約1.45倍, 同じ額の円での大きさ]
+      ops: ['÷', ＝]
+  - text: 額は動いていません。円とユーロの関係が動いたのです。
+    card: *fx
+  - text: 結局、クラブが公表したのは、移籍の日付と契約の期間でした。
+    card: none
+  - text: 額は、報じられた数字を並べて、読むことになります。
+    card: none
+  - text: 固定か、ボーナス込みか。どの日の為替か。
+    card: none
+  - text: 言い分けないと、同じ移籍が、別の大きさに見えてしまいます。
+    card: none
+  sources:
+  - https://data-api.ecb.europa.eu/service/data/EXR/D.JPY.EUR.SP00.A
+  - https://publish.realmadrid.com/content/dam/portals/realmadrid-com/es-es/core-content/assemblies/pages/generic-pages/el-club/transparencia/01-documentos-transparencia/informes-econocimicos/2019-2020_INFORME%20ECON%C3%93MICO.pdf

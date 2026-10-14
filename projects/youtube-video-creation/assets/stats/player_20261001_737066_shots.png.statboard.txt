@@ -1,0 +1,6 @@
+title: アーリング・ハーランドの今季のシュート
+unit: xG
+shots=20
+goals=5
+xg=4.43
+source: FotMob

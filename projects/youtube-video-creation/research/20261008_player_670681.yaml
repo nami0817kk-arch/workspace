@@ -1,0 +1,591 @@
+# ジョアン・ネヴェス（パリ・サンジェルマン）の紹介。8節の型（2026-09-28）を、ヴィニシウス（research/20261007_player_371998.yaml）・
+# ベリンガム（research/20261006_player_581678.yaml）の形にそろえた（2026-10-08）。雛形は tools/player_intro.py 670681。
+# 材料は research/raw/20261008_joao_neves_material.md、数字と写真は research/raw/20261008_player_670681.md。
+# 通算は Transfermarkt（performance-season を季ごとに合計）と FotMob（careerHistory）で突き合わせ、試合と得点は一致
+#   （ベンフィカ75-4・パリ102-14・ポルトガル代表30-4 → 207試合22点。ベンフィカB 11試合と U19・U21 は入れない）。アシストは食い違うので出さない。
+# 季ごとの数字はクラブW杯2025（7試合2点）の置き場が2社で違う（FotMob 25/26、TM 24/25）。台本は FotMob の割り振りで出す。
+#   「ベンフィカの2季で4点、パリで14点」の比べは、この置き場に左右されない。
+# 身長は**クラブ公式の174センチ**を使う（Transfermarkt は1.71m。食い違いは基礎DATAの書き込み＝添え書きで出す）。
+# 契約の満了年は 2029/2030/2031 で割れているので**年を言わず**「2026年9月に延長」とだけ言う。
+# 移籍金はベンフィカの CMVM 届け出（固定 59,921,587ユーロ／総額 69,908,518ユーロ）。報道の「6000万＋1000万」はこれを丸めたもの。
+#   円は 1ユーロ＝177円（2026-10-07 実測の中ほど。open.er-api 178.13／frankfurter 176.85）で、6991万ユーロ＝約124億円。
+# 2026年のバロンドールは授賞式が 10月26日で**まだ結果が出ていない**。順位を言うのは2025年の19位だけ。10/26 以降に出すなら作り直す。
+# 2025年10月の「けがで代表離脱」の記事は**去年の話**（2025-09-17 アタランタ戦のハムストリング）。今季のけがの登録は無い。
+# 2026-10-07 夜までに入った板（⑪⑬）を選手紹介で初めて使う：冒頭の強い一点に stats、マンC戦の1試合に stats、
+#   パリでの10冠に verdict、移籍金に convert、年齢と市場価値に scatter、見立ての「この回だけの数字」に calc。書き込みは2か所（身長の添え書き・calc の丸）。
+# 同じPSGのヴィティーニャの回（scripts/20261005_player_487469.md）と重ねない：あちらは「パスで試合を動かす司令塔」「バロンドール3位」。
+#   こちらは「守る位置から点の取れる位置まで」。昨日のヴィニシウス（20261007）・ベリンガム（20261006）とも言い回しを重ねない。
+# 写真は時期ごとに切り替える（ベンフィカ2023／パリ2024／代表2026年3月／W杯2026年7月）。同じ選手を横に並べない。スタジアムの写真は出さない。
+#   4枚とも Commons で、代理店（Getty・AFLO・AFP・ロイター・IMAGO・AP・PA・Lusa・EPA）由来は1枚も無い。
+date: 2026年10月08日
+slot: other_1
+format: news
+series: 有名選手の紹介
+people:
+- ジョアン・ネヴェス
+theme:
+  id: player_670681
+  league: france
+  kind: other
+  topic: パリ・サンジェルマン
+  title: ジョアン・ネヴェスってどんな選手？174センチの中盤が前半7分で2本決めた蹴り方
+  question: ジョアン・ネヴェスはどういう作りの選手で、中盤の位置からなぜ点が取れるのか
+  takeaway: クラブと代表を合わせた通算は207試合22点（10月8日まで）。ベンフィカの2季で4点だったのが、パリでの2季と今季で14点。1点あたりの試合数は18.8試合から7.3試合へ、およそ2.6倍の速さになった。守備の関与とチャンス創出は同じ中盤の中で下の側なのに、得点と空中戦は上の側という珍しい形で、2025年には1年のうちに2度のハットトリックがある。今季はまだ8試合0点だが、シュート10本のうち8本はペナルティエリアの中か縁から。日本時間11日未明のル・マン戦と、10月26日のバロンドール発表が次の節目
+  nameplate: ジョアン・ネヴェス｜パリ・サンジェルマン MF／ポルトガル代表
+  opening_image: assets/images/20261008_player_670681/wc2026/01_w.jpg
+  bgm: assets/audio/bgm_calm.wav
+watch: 明日は⑨ペドリ
+short_title: ジョアン・ネヴェスってどんな選手？
+thumbnail:
+  layout: face
+  line1: ネヴェス22歳
+  line2: すでに●冠
+  tags:
+  - パリ・サンジェルマン
+  - ジョアン・ネヴェス
+  - ジョアン・ネヴィス
+  - ジョアン・ネベス
+  - ポルトガル代表
+  - 選手紹介
+  - プレースタイル
+  photo: assets/images/20261008_player_670681/wc2026/01_w.jpg
+  photos: []
+  short_photo: assets/images/20261008_player_670681/wc2026/01_v.jpg
+sections:
+- id: hook
+  heading: 174センチの、22歳
+  tier: 報道
+  telop: 174センチで、優勝はすでに13回
+  narrator: キャスター
+  card:
+    type: stats
+    title: ジョアン・ネヴェスの22歳
+    items:
+    - ['13', 冠, クラブと代表で]
+    - ['2', 度, 1年にハットトリック]
+    - ['174', センチ, 中盤では小さい]
+    focus: 2
+  say:
+  - text: パリ・サンジェルマンの背番号87、ジョアン・ネヴェス。
+    image: assets/images/20261008_player_670681/wc2026/01_r.jpg
+  - text: ポルトガル代表の中盤で、まだ22歳です。
+  - text: それでもクラブと代表で、優勝はすでに13回。
+    emph: true
+    card: &hook_stats
+      type: stats
+      title: ジョアン・ネヴェスの22歳
+      items:
+      - ['13', 冠, クラブと代表で]
+      - ['2', 度, 1年にハットトリック]
+      - ['174', センチ, 中盤では小さい]
+      focus: 0
+  - text: 去年は1年のうちに、2度のハットトリックも決めました。
+    card:
+      <<: *hook_stats
+      focus: 1
+  - text: 身長は174センチ。中盤では小さいほうです。
+    card:
+      <<: *hook_stats
+      focus: 2
+  - text: 87番は17歳で獲った、ヨーロッパのユース大会の番号。
+    card: none
+  - text: 縁起をかついで、それから一度も変えていません。
+  - text: その番号のままパリで2年。本人はこう言い切ります。
+  - voice: ネヴェス
+    text: 来たときより、ずっと良くなっている
+    pause: 0.5
+  quotes_from:
+  - https://www.flashscore.com/news/soccer-champions-league-from-promising-youngster-to-established-midfielder-joao-neves-amazing-rise-at-psg/EXZED3R8
+  sources:
+  - https://www.flashscore.com/news/soccer-champions-league-from-promising-youngster-to-established-midfielder-joao-neves-amazing-rise-at-psg/EXZED3R8
+  - https://www.psg.fr/content/100e-match-en-rouge-et-bleu-pour-joao-neves-paris-saint-germain-as-monaco-ligue-1-mcdonalds-2026-2027/
+  - https://www.fotmob.com/players/1342757
+- id: data
+  heading: 基礎DATA
+  tier: 報道
+  telop: ジョアン・ネヴェスの基礎DATA
+  narrator: キャスター
+  card:
+    type: table
+    title: ジョアン・ネヴェス（パリ・サンジェルマン）
+    columns: [項目, 内容]
+    rows: &bdata
+    - [所属, パリ・サンジェルマン（87番）]
+    - [ポジション, セントラルMF]
+    - [生年月日, 2004年9月27日（22歳）]
+    - [生まれ, タヴィラ（ポルトガル）]
+    - [体格, 174cm・66kg・右利き]
+    - [契約, 2026年9月に延長]
+    - [市場価値, 1.4億ユーロ]
+    source: パリ・サンジェルマン公式・Transfermarkt
+  say:
+  - text: ネヴェスの位置は中盤の真ん中。守備的な役もこなします。
+    image: assets/images/20261008_player_670681/psg2026/01.jpg
+    card: &data_card
+      type: table
+      title: ジョアン・ネヴェス（パリ・サンジェルマン）
+      columns: [項目, 内容]
+      rows: *bdata
+      source: パリ・サンジェルマン公式・Transfermarkt
+      highlight_row: 1
+  - text: 生まれはポルトガル南部の港町、タヴィラです。
+    card:
+      <<: *data_card
+      highlight_row: 3
+  - text: 体重は66キロで右利き。クラブの公式が出している数字です。
+    card:
+      <<: *data_card
+      highlight_row: 4
+    mark: {kind: note, row: 4, col: 1, text: 資料により171センチ}
+  - text: 契約は、この9月に延ばしたばかり。
+    card:
+      <<: *data_card
+      highlight_row: 5
+  - text: 市場価値は1億4000万ユーロ。1年10か月で2.3倍になりました。
+    card:
+      <<: *data_card
+      highlight_row: 6
+  sources:
+  - https://www.psg.fr/en/players/joao-neves
+  - https://www.transfermarkt.jp/joao-neves/profil/spieler/670681
+  - https://www.abola.pt/noticias/joao-neves-luis-enrique-e-nao-so-psg-anuncia-varias-renovacoes-2026090419142313809
+- id: career
+  heading: 母を送った3日後に、ピッチへ
+  tier: 報道
+  telop: 2024年2月、19歳で向き合ったこと
+  narrator: 解説
+  card:
+    type: table
+    title: 歩んできた道
+    columns: [シーズン, クラブ, 年齢, 市場価値]
+    rows: &career_rows
+    - ['21/22〜23/24', ベンフィカ, 17〜19歳, 最高 5500万ユーロ]
+    - ['24/25〜26/27', パリ・サンジェルマン, 19〜22歳, 最高 1.4億ユーロ]
+    source: Transfermarkt
+  say:
+  - text: ネヴェスを育てたのはベンフィカです。
+    image: assets/images/20261008_player_670681/benfica2024/03_v.jpg
+    card: &career_card
+      type: table
+      title: 歩んできた道
+      columns: [シーズン, クラブ, 年齢, 市場価値]
+      rows: *career_rows
+      source: Transfermarkt
+      highlight_row: 0
+  - text: 故郷タヴィラのクラブから下部組織へ移ったのが2016年。
+    card: *career_card
+  - text: トップチームでの初出場は2023年1月、18歳のときでした。
+    card: *career_card
+  - text: その翌シーズン、19歳でピッチの外の出来事と向き合います。
+    image: assets/images/20261008_player_670681/benfica2024/01_w.jpg
+    card: none
+  - text: 2024年2月19日、母のサラさんが50歳で亡くなりました。
+    emph: true
+  - text: 葬儀の翌日は、ヨーロッパリーグのトゥールーズ戦。
+  - text: 出るかどうかは本人に委ねられました。
+  - text: 彼が選んだのは、すべてをいつもどおりにやることでした。
+  - text: 右腕に喪章を着けて、90分のうち大半をピッチで過ごします。
+  - text: 試合のあと、1000人を超える人が彼の名前を歌いました。
+  - text: その声を聞いた19歳は、芝の上で泣き崩れています。
+    emph: true
+  - text: のちに本人は、プレーは平穏を見つける手段だったと語りました。
+  quotes_from:
+  - https://www.abola.pt/noticias/benfica-neves-jogou-com-a-dor-2024022319594909896
+  sources:
+  - https://www.abola.pt/noticias/benfica-neves-jogou-com-a-dor-2024022319594909896
+  - https://postal.pt/nacional/morreu-a-mae-do-futebolista-tavirense-joao-neves/
+  - https://rfm.pt/atualidade/17286/joao-neves-e-aplaudido-e-emociona-se-no-primeiro-jogo-apos-a-morte-da-mae
+  - https://www.transfermarkt.jp/joao-neves/profil/spieler/670681
+- id: transfer
+  heading: パリが払った額と、2年で獲ったもの
+  tier: 報道
+  telop: 固定5992万ユーロ、出来高込みで6991万ユーロ
+  narrator: 解説
+  card:
+    type: table
+    title: パリへの移籍（2024年8月5日）
+    columns: [項目, 中身]
+    rows: &deal_rows
+    - [移籍の日, 2024年8月5日]
+    - [年齢, 19歳313日]
+    - [固定の移籍金, 5992万ユーロ]
+    - [出来高込み, 6991万ユーロ]
+    - [ベンフィカ史上, 6番目の売却額]
+    source: ベンフィカのCMVM届け出
+  say:
+  - text: 2024年8月5日、22歳の夏にパリへ渡りました。
+    image: assets/images/20261008_player_670681/psg2024/01.jpg
+    card: &deal_card
+      type: table
+      title: パリへの移籍（2024年8月5日）
+      columns: [項目, 中身]
+      rows: *deal_rows
+      source: ベンフィカのCMVM届け出
+      highlight_row: 0
+  - text: ベンフィカが公の文書で届け出た額は、固定で5992万ユーロ。
+    card:
+      <<: *deal_card
+      highlight_row: 2
+  - text: 出来高を足すと、最大で6991万ユーロになります。
+    card:
+      <<: *deal_card
+      highlight_row: 3
+  - text: 日本円にすると、いくらになるのか。
+    card: &conv_card
+      type: convert
+      title: ベンフィカへ払われた額
+      steps:
+      - ['5992万', ユーロ, 固定の移籍金]
+      - ['6991万', ユーロ, 出来高を入れると]
+      - ['124', 億円, 日本円で]
+      via: ['＋出来高', '1ユーロ＝177円']
+      source: ベンフィカのCMVM届け出
+  - text: およそ124億円です。19歳の中盤に、この額でした。
+    emph: true
+    card: *conv_card
+  - text: ベンフィカの歴史では、6番目に高い売却になります。
+    card:
+      <<: *deal_card
+      highlight_row: 4
+  - text: では、そこからの2年で何を獲ったのか。
+    card: &verdict_card
+      type: verdict
+      title: パリでの2年で獲ったもの
+      columns: [大会, 獲得, いつ]
+      rows:
+      - [チャンピオンズリーグ 2回, ✓, '24/25・25/26']
+      - [リーグ・アン 2回, ✓, '24/25・25/26']
+      - [フランスの2つの杯 3回, ✓, '24/25・25/26']
+      - [UEFAスーパーカップ 2回, ✓, '25/26・26/27']
+      - [インターコンチネンタル杯, ✓, '2025年']
+      highlight_row: 0
+      source: パリ・サンジェルマン公式
+  - text: ヨーロッパの頂点には、2年つづけて立ちました。
+    card:
+      <<: *verdict_card
+      highlight_row: 0
+  - text: 国内リーグも2回。2つのカップ戦は、合わせて3回です。
+    card:
+      <<: *verdict_card
+      highlight_row: 2
+  - text: 代表の大会、ネーションズリーグも加えて13になります。
+    card:
+      <<: *verdict_card
+      highlight_row: 4
+  - text: 獲ったものは、値段にも表れます。
+    card: none
+  - text: 1億ユーロを超える中盤を、年齢と並べてみます。
+    card: &scatter_card
+      type: scatter
+      title: 市場価値1億ユーロ以上の中盤
+      x: {label: 年齢, unit: 歳}
+      y: {label: 市場価値, unit: 百万ユーロ}
+      points:
+      - [ペドリ, 23, 150]
+      - [ヴィティーニャ, 26, 140]
+      - [ジョアン・ネヴェス, 22, 140]
+      - [ライス, 27, 120]
+      - [アンダーソン, 23, 110]
+      - [エンソ, 25, 100]
+      - [カイセド, 24, 100]
+      focus: ジョアン・ネヴェス
+      source: Transfermarkt
+  - text: 7人のうち、22歳はネヴェスだけです。
+    emph: true
+    card: *scatter_card
+  sources:
+  - https://www.noticiasaominuto.com/desporto/2610559/joao-neves-protagoniza-a-sexta-maior-venda-de-sempre-do-benfica
+  - https://www.dn.pt/desporto/joao-neves-no-psg-por-59-9-milhoes-de-euros-se-eu-quisesse-mesmo-ir-embora
+  - https://www.psg.fr/content/100e-match-en-rouge-et-bleu-pour-joao-neves-paris-saint-germain-as-monaco-ligue-1-mcdonalds-2026-2027/
+  - https://www.transfermarkt.jp/joao-neves/profil/spieler/670681
+- id: style
+  heading: 守る位置から、点の取れる位置まで
+  tier: 報道
+  telop: 自陣のゴール前から、相手のゴール前まで
+  narrator: 解説
+  card:
+    type: bars
+    title: 同じ中盤の中での位置（100が最上位）
+    unit: ''
+    items:
+    - {label: 得点, value: 88, highlight: true}
+    - {label: ボールタッチ, value: 86, highlight: false}
+    - {label: 空中戦, value: 85, highlight: false}
+    - {label: 守備の関与, value: 42}
+    source: FotMob
+  say:
+  - text: ネヴェスの形を、同じ中盤の選手と比べた図で見ます。
+    image: assets/stats/player_20261008_1342757_radar.png
+    no_telop: true
+  - text: 図の外へ張り出しているのは、得点の多さと、触れる回数。
+    image: assets/stats/player_20261008_1342757_radar.png
+    no_telop: true
+  - text: 空中戦も上の側です。174センチで、ここに立っています。
+    emph: true
+    image: assets/stats/player_20261008_1342757_radar.png
+    no_telop: true
+  - text: 反対に内へ寄るのが、チャンスを作る数と守備の関与でした。
+    image: assets/stats/player_20261008_1342757_radar.png
+    no_telop: true
+  - text: では、どこにいる選手なのか。
+    image: assets/stats/player_20261008_1342757_heat.png
+    no_telop: true
+    card: none
+  - text: 色の付いた所は、自陣のゴール前から相手のゴール前まで。
+    image: assets/stats/player_20261008_1342757_heat.png
+    no_telop: true
+    card: none
+  - text: ピッチのほぼ全面に、色が付いています。
+    image: assets/stats/player_20261008_1342757_heat.png
+    no_telop: true
+    card: none
+  - text: 守る所から相手のゴール前まで、走って埋める選手なのです。
+    image: assets/images/20261008_player_670681/wc2026b/01_r.jpg
+    card: &mancity_card
+      type: stats
+      title: マンチェスター・シティ戦（2025年1月22日）
+      items:
+      - ['7', 回, タックル成功]
+      - ['7', 本, シュート]
+      - ['89', '%', パス成功率]
+      focus: 0
+  - text: はっきり出たのが、2025年1月のマンチェスター・シティ戦。
+    card: *mancity_card
+  - text: タックル成功7回、シュート7本、パスは89パーセント。
+    card:
+      <<: *mancity_card
+      focus: 2
+  - text: 1点はヘディング。その試合の最優秀選手にも選ばれました。
+    card:
+      <<: *mancity_card
+      focus: 1
+  sources:
+  - https://www.fotmob.com/players/1342757
+  - https://www.flashscore.com/news/soccer-champions-league-from-promising-youngster-to-established-midfielder-joao-neves-amazing-rise-at-psg/EXZED3R8
+- id: strike
+  heading: 前半7分で、2本
+  tier: 報道
+  main: true
+  telop: 2025年8月30日、トゥールーズ戦で3点
+  narrator: 解説
+  card:
+    type: table
+    title: 1年のうちの、2度のハットトリック
+    columns: [いつ, 相手, 中身]
+    rows: &hat_rows
+    - ['2025年8月30日', トゥールーズ, 前半7分で2本・計3点]
+    - ['2025年11月16日', アルメニア, 3点・評点9.7]
+    source: ESPN・FotMob
+  say:
+  - text: パリ・サンジェルマンの中盤が1試合で3点。去年、2度あります。
+    short_only: true
+    image: assets/images/20261008_player_670681/wc2026b/01.jpg
+  - text: 本人は自分の体について、こう話しています。
+  - voice: ネヴェス
+    text: たぶん人は、僕の体の大きさのせいで
+  - voice: ネヴェス
+    text: 僕を低く見るのだと思う
+    cont: true
+    pause: 0.5
+  - text: その体で何をしたか。2025年8月30日、トゥールーズ戦です。
+    card: &hat_card
+      type: table
+      title: 1年のうちの、2度のハットトリック
+      columns: [いつ, 相手, 中身]
+      rows: *hat_rows
+      source: ESPN・FotMob
+      highlight_row: 0
+  - text: 前半のわずか7分間に、背中から倒れ込むバイシクルを2本。
+    emph: true
+    card:
+      <<: *hat_card
+      highlight_row: 0
+  - text: 3点目はゴールの上の角へ。パリが6対3で勝った試合でした。
+    card:
+      <<: *hat_card
+      highlight_row: 0
+  - text: 3か月もたたない11月16日、今度は代表の試合で。
+    card:
+      <<: *hat_card
+      highlight_row: 1
+  - text: アルメニアに9対1で勝った夜。ここでも3点を挙げます。
+    emph: true
+    card:
+      <<: *hat_card
+      highlight_row: 1
+  - text: 10点満点の評点は9.7。ふだんのリーグ戦は7点台です。
+    card:
+      <<: *hat_card
+      highlight_row: 1
+  quotes_from:
+  - https://www.abola.pt/noticias/joao-neves-recorda-conquista-senti-o-maior-alivio-que-alguma-vez-senti-na-vida-2025120912445703837
+  sources:
+  - https://www.beinsports.com/en-mena/football/ligue-1/articles-video/joao-neves-bags-stunning-hat-trick-as-psg-put-six-past-toulouse-2025-08-30
+  - https://www.espn.com/soccer/report/_/gameId/746437
+  - https://www.soccerway.com/news/portugal-armenia-world-cup-qualifier-report-november-16/6H7a3sVI
+  - https://www.abola.pt/noticias/joao-neves-recorda-conquista-senti-o-maior-alivio-que-alguma-vez-senti-na-vida-2025120912445703837
+- id: past
+  heading: ベンフィカの4点と、パリの14点
+  tier: 報道
+  telop: 季ごとの数字と、10月8日までの通算
+  narrator: 解説
+  card:
+    type: table
+    title: ジョアン・ネヴェス 通算（2026年10月8日まで）
+    columns: [所属, 試合, 得点]
+    rows:
+    - [ベンフィカ, '75', '4']
+    - [パリ・サンジェルマン, '102', '14']
+    - [ポルトガル代表, '30', '4']
+    - [合計, '207', '22']
+    source: Transfermarkt・FotMob
+  rows_seasons:
+  - &s1 ['22/23', ベンフィカ, '20', '1']
+  - &s2 ['23/24', ベンフィカ, '55', '3']
+  - &s3 ['24/25', パリ, '52', '5']
+  - &s4 ['25/26', パリ, '45', '9']
+  - &s5 ['26/27', パリ, '5', '0']
+  rows_total:
+  - &t1 [ベンフィカ, '75', '4']
+  - &t2 [パリ・サンジェルマン, '102', '14']
+  - &t3 [ポルトガル代表, '30', '4']
+  - &t4 [合計, '207', '22']
+  say:
+  - text: ここからは、ネヴェスがクラブで積んだ季ごとの数字。
+    image: assets/images/20261008_player_670681/psg2026/01.jpg
+    card: &seasons_card
+      type: table
+      title: ジョアン・ネヴェス 季ごとの数字（クラブの公式戦）
+      columns: [季, クラブ, 試合, 得点]
+      rows: [*s1, *s2, *s3, *s4, *s5]
+      source: FotMob
+      highlight_row: 0
+  - text: ベンフィカの2季は、合わせて4点にとどまっています。
+    card:
+      <<: *seasons_card
+      highlight_row: 1
+  - text: パリに来た最初の季は52試合5点。すでに上回りました。
+    card:
+      <<: *seasons_card
+      highlight_row: 2
+  - text: 昨季は45試合で9点。中盤の選手としては多い数字です。
+    emph: true
+    card:
+      <<: *seasons_card
+      highlight_row: 3
+  - text: 通算を見ます。ベンフィカでは75試合4点。
+    card: &total_card
+      type: table
+      title: ジョアン・ネヴェス 通算（2026年10月8日まで）
+      columns: [所属, 試合, 得点]
+      rows: [*t1, *t2, *t3, *t4]
+      source: Transfermarkt・FotMob
+      highlight_row: 0
+  - text: パリでは102試合14点。2年でその3倍を超えました。
+    card:
+      <<: *total_card
+      highlight_row: 1
+  - text: ポルトガル代表は30試合4点。デビューは19歳でした。
+    card:
+      <<: *total_card
+      highlight_row: 2
+  - text: 足すと207試合22点。22歳での数字です。
+    card:
+      <<: *total_card
+      highlight_row: 3
+  sources:
+  - https://www.transfermarkt.com/joao-neves/leistungsdatenverein/spieler/670681
+  - https://www.fotmob.com/players/1342757
+- id: view
+  heading: 今季の0点を、どう見るか
+  tier: 背景
+  viewpoint: true
+  narrator: 解説
+  telop: 今季は8試合0点。それでも形は作れている
+  card:
+    type: table
+    title: 直近5試合（代表を含む）
+    columns: [日付, 相手, 出場, 得点, 評点]
+    rows: &recent_rows
+    - ['10/1', デンマーク（代表）, 9分, 0G 0A, '-']
+    - ['9/27', ノルウェー（代表）, 55分, 0G 0A, '7.1']
+    - ['9/24', ウェールズ（代表）, 1分, 0G 0A, '-']
+    - ['9/20', マルセイユ, 90分, 0G 0A, '8.0']
+    - ['9/13', ブレスト, 90分, 0G 0A, '7.4']
+    source: FotMob
+  say:
+  - text: ここからは、今季の出足をどう読むかです。
+    image: assets/images/20261008_player_670681/psg2026/01.jpg
+    card: &recent_card
+      type: table
+      title: 直近5試合（代表を含む）
+      columns: [日付, 相手, 出場, 得点, 評点]
+      rows: *recent_rows
+      source: FotMob
+  - text: ネヴェスはクラブと代表で8試合、470分。まだ0点0アシスト。
+    card: *recent_card
+  - text: 昨季は5試合に1点の割でしたから、出足は遅れています。
+    card: *recent_card
+  - text: ただ9月20日のマルセイユ戦は90分で評点8.0。
+    card:
+      <<: *recent_card
+      highlight_row: 3
+  - text: 過去2季の平均、7点台を上回る出来でした。
+    card:
+      <<: *recent_card
+      highlight_row: 3
+  - text: 点だけが出ていません。シュートは10本撃っています。
+    image: assets/stats/player_20261008_1342757_shots.png
+    no_telop: true
+    card: none
+  - text: 入りやすさを足し合わせたゴール期待値は、1.5ぶん。
+    image: assets/stats/player_20261008_1342757_shots.png
+    no_telop: true
+  - text: 10本のうち8本は、ペナルティエリアの中か、その縁から。
+    image: assets/stats/player_20261008_1342757_shots.png
+    no_telop: true
+  - text: 機会は作れていて、まだ決まっていないだけ、とも読めます。
+    image: assets/stats/player_20261008_1342757_shots.png
+    no_telop: true
+  - text: ここで、ベンフィカとパリの点の出方を割ってみます。
+    image: assets/images/20261008_player_670681/psg2026/01.jpg
+    card: &calc_card
+      type: calc
+      title: パリでの1点あたりの試合数
+      terms:
+      - ['102試合', パリでの出場]
+      - ['14点', 挙げた点]
+      - ['7.3試合', 1点あたり]
+      ops: ['÷', '＝']
+  - text: パリでの出場を、挙げた点で割ると、1点あたり7.3試合。
+    card: *calc_card
+    mark: {kind: circle, item: 2}
+  - text: ベンフィカでは18.8試合に1点。およそ2.6倍の速さです。
+    emph: true
+    card: *calc_card
+    mark: {kind: circle, item: 2}
+  - text: 代表では、ジェズス監督が9月の会見でこう話しました。
+    image: assets/images/20261008_player_670681/wc2026/01_w.jpg
+    card: none
+  - voice: ジェズス監督
+    text: ネヴェスは明日の試合に出る。
+  - voice: ジェズス監督
+    text: 彼は、とても大事な運動量と
+    cont: true
+  - voice: ジェズス監督
+    text: 守備での激しさを与えてくれる子だ
+    cont: true
+    pause: 0.5
+  - text: 9月からの代表4試合で、出た時間は合わせて65分。
+  - text: 先発は1試合だけで、まだ序列の途中にいます。
+  - text: クラブの次は日本時間11日の未明、本拠地でのル・マン戦。
+    image: assets/images/20261008_player_670681/wc2026/01_w.jpg
+  - text: 10月26日にはバロンドールの発表。去年は19位でした。
+  - text: 174センチの22歳が、どこまで伸びるのか。見どころです。
+  quotes_from:
+  - https://www.rtp.pt/noticias/selecao-nacional/jorge-jesus-nao-vou-ter-medo-nenhum-da-noruega-zero_d1767930
+  sources:
+  - https://www.fotmob.com/players/1342757
+  - https://www.rtp.pt/noticias/selecao-nacional/jorge-jesus-nao-vou-ter-medo-nenhum-da-noruega-zero_d1767930
+  - https://www.soccer-king.jp/news/world/20260909/2202579.html
+  - https://en.wikipedia.org/wiki/2025_Ballon_d%27Or

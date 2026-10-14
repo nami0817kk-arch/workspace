@@ -1,0 +1,888 @@
+# クラブ同士の比較：クラシコの数字（バルセロナ対レアル・マドリード）。材料の控えは research/raw/20261003_compare_clasico.md。
+# 過去に同じ題材は出していない（covered.yaml に無し。ll05 バルセロナ紹介と 10/4 エムバペ紹介に1行ずつ触れているだけ）。
+# 通算はクラブ公式（FC Barcelona 2026-05-12）と英語版Wikipedia・365Scores の「264試合 106-52-106」を主に使い、
+# 1902年の大会を除く数え方（スペイン語版Wikipedia、263試合でレアル1勝リード）と親善試合込み（307試合）を並べる。
+# El Diario NY の「バルサ107勝」は5/10の試合を二重に数えたものと見て使わない。
+# 今季の数字は ESPN の順位表（FotMob と一致）と、ESPN の試合記録7試合ずつを自分で足したもの。
+# 本人の言葉は入れていない。反応は5/10のクラシコの記事のコメント欄から2件（通算が並んだ夜の声）。久保の話は入れていない。
+# 本編46秒までに誰かの言葉を出すため、通算の節を頭に置き、次のクラシコの日程は見立ての前に回した。
+date: 2026年10月03日
+slot: other_1
+format: news
+series: クラブ同士の比較
+people: []
+theme:
+  id: compare_clasico
+  league: spain
+  kind: other
+  topic: バルセロナ
+  title: バルセロナとレアル・マドリード、クラシコの通算成績はいまどちらが上なのか
+  question: 次のクラシコを前に、通算・直近・今季の数字は、両クラブのどんな差と並びを示しているのか
+  takeaway: クラシコは公式戦264試合でレアル106勝・バルサ106勝・引き分け52と並んでいる（1902年の大会を除けばレアルが1勝多く、親善試合まで含めればバルサが19勝多い）。直近10試合はバルサの6勝4敗で、2020年3月から21試合続けて引き分けが無い。今季のリーグ戦はバルサが7戦全勝・31得点、打たれたシュートは51本対89本。10月25日のカンプ・ノウで勝ったほうが、通算で単独の先頭に立つ
+  opening_image: assets/images/20261003_compare_clasico/01_w.jpg
+  bgm: assets/audio/bgm_calm.wav
+short_title: バルサとレアル、クラシコ通算264試合の勝ち数
+thumbnail:
+  crest_main:
+  - バルセロナ
+  - レアル・マドリード
+  face_link: VS
+  line1: バルサ対レアル
+  line2: 通算264試合、勝ち数の差は●
+  tags:
+  - バルセロナ
+  - レアル・マドリード
+  - クラシコ
+  - ラ・リーガ
+sections:
+- id: alltime
+  heading: 通算264試合の勝ち数
+  tier: 報道
+  main: true
+  telop: 公式戦264試合、勝ち数は106と106
+  narrator: 解説
+  card:
+    type: table
+    title: クラシコの通算成績（数え方で3通り）
+    columns:
+    - 数え方
+    - 試合
+    - レアル勝
+    - 分
+    - バルサ勝
+    rows:
+    - &id001
+      - 公式戦（1902年の大会を含む）
+      - '264'
+      - '106'
+      - '52'
+      - '106'
+    - &id002
+      - 公式戦（1902年の大会を除く）
+      - '263'
+      - '106'
+      - '52'
+      - '105'
+    - &id003
+      - 親善試合も含む
+      - '307'
+      - '112'
+      - '64'
+      - '131'
+  say:
+  - text: 10月25日に次の対戦を控える、レアルとバルセロナ。これまでの成績を数え直します。
+    short_only: true
+  - text: スペインの2強が戦う一戦、クラシコ。公式戦で数えると、これまでに264試合。
+    image: assets/images/20261003_compare_clasico/scene.jpg
+    card:
+      type: table
+      title: クラシコの通算成績（数え方で3通り）
+      columns:
+      - 数え方
+      - 試合
+      - レアル勝
+      - 分
+      - バルサ勝
+      rows:
+      - *id001
+      - *id002
+      - *id003
+      highlight_row: 0
+  - text: レアルの106勝、バルサの106勝、引き分けが52。勝ち数は、ぴったり並んでいます。
+    emph: true
+    card:
+      type: table
+      title: クラシコの通算成績（数え方で3通り）
+      columns:
+      - 数え方
+      - 試合
+      - レアル勝
+      - 分
+      - バルサ勝
+      rows:
+      - *id001
+      - *id002
+      - *id003
+      highlight_row: 0
+  - text: 得点もレアルの444に対して、バルサが441。差はわずか3点です。
+    card:
+      type: table
+      title: クラシコの通算成績（数え方で3通り）
+      columns:
+      - 数え方
+      - 試合
+      - レアル勝
+      - 分
+      - バルサ勝
+      rows:
+      - *id001
+      - *id002
+      - *id003
+      highlight_row: 0
+  - text: 並んだのは今年の5月10日。バルサがリーグ優勝を決めた、カンプ・ノウの夜でした。
+    image: assets/images/20261003_compare_clasico/02.jpg
+    card:
+      type: table
+      title: クラシコの通算成績（数え方で3通り）
+      columns:
+      - 数え方
+      - 試合
+      - レアル勝
+      - 分
+      - バルサ勝
+      rows:
+      - *id001
+      - *id002
+      - *id003
+      highlight_row: 0
+  - text: レアルを応援する人からも、この夜はこんな声が上がっていました。
+    card: none
+  - voice: ネット民
+    text: クラシコで勝利し優勝決定とは非常に持ってるチームですね
+    short_voice: true
+  - voice: ネット民
+    text: レアルサポではありますが
+    cont: true
+    short_voice: true
+  - voice: ネット民
+    text: バルセロナは組織的で良いクラブだと思いますね
+    cont: true
+    short_voice: true
+  - voice: ネット民
+    text: クラシコも負けてしまい悔しくて、ビールが止まりません
+    cont: true
+    short_voice: true
+  - voice: ネット民
+    text: 優勝するチームの団結と集中。
+  - voice: ネット民
+    text: クオリティの差もあったけど一番如実に感じたのはそこだったな。
+    cont: true
+  - voice: ネット民
+    text: 才覚溢れる若いチームにフリックが植え付けた規律。
+    cont: true
+  - voice: ネット民
+    text: 宿敵を破っての歴史的優勝、おめでとう！
+    cont: true
+  - text: ただし、この数字は数え方で変わります。
+    card:
+      type: table
+      title: クラシコの通算成績（数え方で3通り）
+      columns:
+      - 数え方
+      - 試合
+      - レアル勝
+      - 分
+      - バルサ勝
+      rows:
+      - *id001
+      - *id002
+      - *id003
+  - text: 1902年に一度だけ開かれた大会での対戦を、スペインの連盟は公式と認めていません。
+    card:
+      type: table
+      title: クラシコの通算成績（数え方で3通り）
+      columns:
+      - 数え方
+      - 試合
+      - レアル勝
+      - 分
+      - バルサ勝
+      rows:
+      - *id001
+      - *id002
+      - *id003
+      highlight_row: 1
+  - text: この試合はバルサが3対1で勝っていて、外すとレアルが1勝多い263試合になります。
+    card:
+      type: table
+      title: クラシコの通算成績（数え方で3通り）
+      columns:
+      - 数え方
+      - 試合
+      - レアル勝
+      - 分
+      - バルサ勝
+      rows:
+      - *id001
+      - *id002
+      - *id003
+      highlight_row: 1
+  - text: 親善試合まで含めると307試合。こちらはバルサが131勝、レアルが112勝と、大きく逆転します。
+    card:
+      type: table
+      title: クラシコの通算成績（数え方で3通り）
+      columns:
+      - 数え方
+      - 試合
+      - レアル勝
+      - 分
+      - バルサ勝
+      rows:
+      - *id001
+      - *id002
+      - *id003
+      highlight_row: 2
+  - text: 歩みは抜きつ抜かれつ。2019年3月には、バルサが96勝対95勝で一度前に出ています。
+  - text: そこからレアルの5連勝で引き離され、今年5月、また並んだのです。
+    emph: true
+  sources:
+  - https://www.fcbarcelona.com/en/football/first-team/news/4502686/fc-barcelona-match-real-madrid-for-clasico-wins
+  - https://en.wikipedia.org/wiki/El_Cl%C3%A1sico
+  - https://es.wikipedia.org/wiki/El_Cl%C3%A1sico
+  - https://www.365scores.com/es/news/barcelona-vs-real-madrid-historial-2/
+  - https://news.yahoo.co.jp/articles/60b4cbb96d6015a949fcbaf3d5daf0416dc71357/comments
+- id: recent
+  heading: 直近10試合の流れ
+  tier: 報道
+  telop: 直近10試合は、バルサの6勝4敗
+  narrator: 解説
+  card:
+    type: table
+    title: 直近10試合（2023年10月〜2025年1月）
+    columns:
+    - 日付
+    - 大会
+    - 勝ち
+    - スコア
+    rows:
+    - &id004
+      - 2023年10月28日
+      - リーグ
+      - レアル
+      - 2-1
+    - &id005
+      - 2024年1月14日
+      - スーペルコパ決勝
+      - レアル
+      - 4-1
+    - &id006
+      - 2024年4月21日
+      - リーグ
+      - レアル
+      - 3-2
+    - &id007
+      - 2024年10月26日
+      - リーグ
+      - バルサ
+      - 4-0
+    - &id008
+      - 2025年1月12日
+      - スーペルコパ決勝
+      - バルサ
+      - 5-2
+  say:
+  - text: 次は、直近10試合の流れです。
+    image: assets/images/20261003_compare_clasico/04.jpg
+    card:
+      type: table
+      title: 直近10試合（2023年10月〜2025年1月）
+      columns:
+      - 日付
+      - 大会
+      - 勝ち
+      - スコア
+      rows:
+      - *id004
+      - *id005
+      - *id006
+      - *id007
+      - *id008
+  - text: 2023年の秋から、まずレアルが3連勝。
+    card:
+      type: table
+      title: 直近10試合（2023年10月〜2025年1月）
+      columns:
+      - 日付
+      - 大会
+      - 勝ち
+      - スコア
+      rows:
+      - *id004
+      - *id005
+      - *id006
+      - *id007
+      - *id008
+      highlight_row: 0
+  - text: スペインのスーパーカップ、スーペルコパの決勝では、4対1で突き放しました。
+    card:
+      type: table
+      title: 直近10試合（2023年10月〜2025年1月）
+      columns:
+      - 日付
+      - 大会
+      - 勝ち
+      - スコア
+      rows:
+      - *id004
+      - *id005
+      - *id006
+      - *id007
+      - *id008
+      highlight_row: 1
+  - text: 流れが変わったのは2024年10月。バルサが敵地で4対0と大勝します。
+    card:
+      type: table
+      title: 直近10試合（2023年10月〜2025年1月）
+      columns:
+      - 日付
+      - 大会
+      - 勝ち
+      - スコア
+      rows:
+      - *id004
+      - *id005
+      - *id006
+      - *id007
+      - *id008
+      highlight_row: 3
+  - text: 年明けのスーペルコパ決勝も、バルサが5対2。
+    card:
+      type: table
+      title: 直近10試合（2023年10月〜2025年1月）
+      columns:
+      - 日付
+      - 大会
+      - 勝ち
+      - スコア
+      rows:
+      - *id004
+      - *id005
+      - *id006
+      - *id007
+      - *id008
+      highlight_row: 4
+  - text: その先もバルサ。スペインのカップ戦、国王杯の決勝は、延長戦の末に3対2。
+    image: assets/images/20261003_compare_clasico/01.jpg
+    card:
+      type: table
+      title: 直近10試合（2025年4月〜2026年5月）
+      columns:
+      - 日付
+      - 大会
+      - 勝ち
+      - スコア
+      highlight_row: 0
+      rows:
+      - &id009
+        - 2025年4月26日
+        - 国王杯決勝
+        - バルサ
+        - 3-2
+      - &id010
+        - 2025年5月11日
+        - リーグ
+        - バルサ
+        - 4-3
+      - &id011
+        - 2025年10月26日
+        - リーグ
+        - レアル
+        - 2-1
+      - &id012
+        - 2026年1月11日
+        - スーペルコパ決勝
+        - バルサ
+        - 3-2
+      - &id013
+        - 2026年5月10日
+        - リーグ
+        - バルサ
+        - 2-0
+  - text: その2週間後のリーグ戦も、4対3の打ち合いを制しました。
+    card:
+      type: table
+      title: 直近10試合（2025年4月〜2026年5月）
+      columns:
+      - 日付
+      - 大会
+      - 勝ち
+      - スコア
+      rows:
+      - *id009
+      - *id010
+      - *id011
+      - *id012
+      - *id013
+      highlight_row: 1
+  - text: 去年の10月はレアルが本拠地で返しますが、
+    card:
+      type: table
+      title: 直近10試合（2025年4月〜2026年5月）
+      columns:
+      - 日付
+      - 大会
+      - 勝ち
+      - スコア
+      rows:
+      - *id009
+      - *id010
+      - *id011
+      - *id012
+      - *id013
+      highlight_row: 2
+  - text: 今年に入ってからは、スーペルコパ決勝とリーグ戦で、またバルサが2連勝です。
+    card:
+      type: table
+      title: 直近10試合（2025年4月〜2026年5月）
+      columns:
+      - 日付
+      - 大会
+      - 勝ち
+      - スコア
+      rows:
+      - *id009
+      - *id010
+      - *id011
+      - *id012
+      - *id013
+      highlight_row: 4
+  - text: 10試合で、バルサの6勝、レアルの4勝。
+    card:
+      type: table
+      title: 直近10試合（2025年4月〜2026年5月）
+      columns:
+      - 日付
+      - 大会
+      - 勝ち
+      - スコア
+      rows:
+      - *id009
+      - *id010
+      - *id011
+      - *id012
+      - *id013
+  - text: そして、引き分けは1つもありません。
+    emph: true
+    card:
+      type: table
+      title: 直近10試合（2025年4月〜2026年5月）
+      columns:
+      - 日付
+      - 大会
+      - 勝ち
+      - スコア
+      rows:
+      - *id009
+      - *id010
+      - *id011
+      - *id012
+      - *id013
+  - text: 最後の引き分けは、2019年12月の0対0。
+  - text: そこから21試合、延長も含めて、すべて決着がついています。
+  - text: バルサのフリック監督は、就任からクラシコ7試合で6勝1敗。
+    image: assets/images/20261003_compare_clasico/02.jpg
+  - text: クラシコでこれより多く勝ったバルサの監督は、
+  - text: クライフとグアルディオラの2人しかいません。
+  sources:
+  - https://en.wikipedia.org/wiki/List_of_El_Cl%C3%A1sico_matches
+  - https://www.transfermarkt.com/vergleich/bilanzdetail/verein/131/gegner_id/418
+  - https://www.fcbarcelona.com/en/football/first-team/news/4502224/four-of-the-last-five-titles-won-against-real-madrid
+- id: season
+  heading: 今季7試合の得点と、打たれたシュート
+  tier: 報道
+  telop: 今季のリーグ戦7試合、得点は31と18
+  narrator: 解説
+  card:
+    type: table
+    title: 今季のリーグ戦7試合（10月3日時点）
+    columns:
+    - 項目
+    - バルセロナ
+    - レアル・マドリード
+    rows:
+    - &id014
+      - 順位
+      - 1位
+      - 4位
+    - &id015
+      - 勝ち点
+      - '21'
+      - '15'
+    - &id016
+      - 成績
+      - 7勝0分0敗
+      - 5勝0分2敗
+    - &id017
+      - 得点
+      - '31'
+      - '18'
+    - &id018
+      - 失点
+      - '7'
+      - '8'
+    - &id019
+      - シュート
+      - 150本
+      - 132本
+    source: ESPN・FotMob
+  say:
+  - text: では、今季はどうか。バルサはリーグ戦7試合すべてに勝ち、首位に立っています。
+    image: assets/images/20261003_compare_clasico/01.jpg
+    card:
+      type: table
+      title: 今季のリーグ戦7試合（10月3日時点）
+      columns:
+      - 項目
+      - バルセロナ
+      - レアル・マドリード
+      rows:
+      - *id014
+      - *id015
+      - *id016
+      - *id017
+      - *id018
+      - *id019
+      highlight_row: 2
+      source: ESPN・FotMob
+  - text: レアルは5勝2敗の4位。勝ち点の差は6です。
+    image: assets/images/20261003_compare_clasico/03.jpg
+    card:
+      type: table
+      title: 今季のリーグ戦7試合（10月3日時点）
+      columns:
+      - 項目
+      - バルセロナ
+      - レアル・マドリード
+      rows:
+      - *id014
+      - *id015
+      - *id016
+      - *id017
+      - *id018
+      - *id019
+      highlight_row: 1
+      source: ESPN・FotMob
+  - text: 大きく開いているのは得点。バルサの31点に対し、レアルは18点です。
+    card:
+      type: table
+      title: 今季のリーグ戦7試合（10月3日時点）
+      columns:
+      - 項目
+      - バルセロナ
+      - レアル・マドリード
+      rows:
+      - *id014
+      - *id015
+      - *id016
+      - *id017
+      - *id018
+      - *id019
+      highlight_row: 3
+      source: ESPN・FotMob
+  - text: バルサは、1試合に4点を超えるペースで取り続けています。
+    emph: true
+    card:
+      type: table
+      title: 今季のリーグ戦7試合（10月3日時点）
+      columns:
+      - 項目
+      - バルセロナ
+      - レアル・マドリード
+      rows:
+      - *id014
+      - *id015
+      - *id016
+      - *id017
+      - *id018
+      - *id019
+      highlight_row: 3
+      source: ESPN・FotMob
+  - text: 打ったシュートも、150本と132本で、差は2割に届きません。
+    card:
+      type: table
+      title: 今季のリーグ戦7試合（10月3日時点）
+      columns:
+      - 項目
+      - バルセロナ
+      - レアル・マドリード
+      rows:
+      - *id014
+      - *id015
+      - *id016
+      - *id017
+      - *id018
+      - *id019
+      highlight_row: 5
+      source: ESPN・FotMob
+  - text: はっきり違うのは、相手に打たれた数のほうです。
+    card:
+      type: table
+      title: シュートの中身（今季のリーグ戦7試合）
+      columns:
+      - 項目
+      - バルセロナ
+      - レアル・マドリード
+      rows:
+      - &id020
+        - 打たれたシュート
+        - 51本
+        - 89本
+      - &id021
+        - ボールを持った割合
+        - 69%
+        - 53%
+      - &id022
+        - 点になった割合
+        - 21%
+        - 14%
+      source: ESPNの試合記録から集計
+  - text: 打たれたシュートは、バルサが51本、レアルが89本。
+    card:
+      type: table
+      title: シュートの中身（今季のリーグ戦7試合）
+      columns:
+      - 項目
+      - バルセロナ
+      - レアル・マドリード
+      rows:
+      - *id020
+      - *id021
+      - *id022
+      highlight_row: 0
+      source: ESPNの試合記録から集計
+  - text: 1試合にならすと、7本と13本。レアルは倍近く打たれています。
+    card:
+      type: table
+      title: シュートの中身（今季のリーグ戦7試合）
+      columns:
+      - 項目
+      - バルセロナ
+      - レアル・マドリード
+      rows:
+      - *id020
+      - *id021
+      - *id022
+      highlight_row: 0
+      source: ESPNの試合記録から集計
+  - text: ボールを持った割合も、バルサの69パーセントに対し、レアルは53パーセント。
+    card:
+      type: table
+      title: シュートの中身（今季のリーグ戦7試合）
+      columns:
+      - 項目
+      - バルセロナ
+      - レアル・マドリード
+      rows:
+      - *id020
+      - *id021
+      - *id022
+      highlight_row: 1
+      source: ESPNの試合記録から集計
+  - text: シュートが点になった割合は、バルサが21パーセント、レアルが14パーセントです。
+    card:
+      type: table
+      title: シュートの中身（今季のリーグ戦7試合）
+      columns:
+      - 項目
+      - バルセロナ
+      - レアル・マドリード
+      rows:
+      - *id020
+      - *id021
+      - *id022
+      highlight_row: 2
+      source: ESPNの試合記録から集計
+  - text: レアルの2つの負けは、どちらもアウェーでした。
+  - text: 9月20日のアトレティコ戦は、ボールを持てた時間が4割を切りました。
+  - text: シュートも8本にとどまっています。
+  sources:
+  - https://site.api.espn.com/apis/v2/sports/soccer/esp.1/standings
+  - https://www.fotmob.com/leagues/87/table
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/all/teams/83/schedule
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/all/teams/86/schedule
+- id: next
+  heading: 次のクラシコは10月25日
+  tier: 報道
+  telop: 次のクラシコは10月25日、カンプ・ノウ
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季のリーグ戦のクラシコ
+    columns:
+    - 日付（現地）
+    - 会場
+    - 節
+    rows:
+    - &id023
+      - 2026年10月25日（日）
+      - カンプ・ノウ
+      - 第10節
+    - &id024
+      - 2027年5月9日（日）
+      - ベルナベウ
+      - 第35節
+  say:
+  - text: そして次のクラシコは、10月25日の日曜日。バルセロナのホーム、カンプ・ノウです。
+    image: assets/images/20261003_compare_clasico/01_w.jpg
+    card:
+      type: table
+      title: 今季のリーグ戦のクラシコ
+      columns:
+      - 日付（現地）
+      - 会場
+      - 節
+      rows:
+      - *id023
+      - *id024
+      highlight_row: 0
+  - text: 日本時間では、週明けの月曜、朝5時のキックオフです。
+    card:
+      type: table
+      title: 今季のリーグ戦のクラシコ
+      columns:
+      - 日付（現地）
+      - 会場
+      - 節
+      rows:
+      - *id023
+      - *id024
+      highlight_row: 0
+  - text: リーグ戦での対戦は、この日と、来年5月9日のベルナベウの2回。
+    card:
+      type: table
+      title: 今季のリーグ戦のクラシコ
+      columns:
+      - 日付（現地）
+      - 会場
+      - 節
+      rows:
+      - *id023
+      - *id024
+      highlight_row: 1
+  - text: この2試合のためだけに、白に金と黒をあしらった専用のボールまで作られました。
+  sources:
+  - https://www.espn.com/soccer/story/_/id/50075555/clasico-match-ball-barcelona-real-madrid-laliga-clashes-unveiled
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/all/teams/83/schedule?fixture=true
+- id: view
+  heading: 10月25日のクラシコ、数字で見る3つの見どころ
+  tier: 背景
+  viewpoint: true
+  telop: 勝ったほうが、通算で単独の先頭へ
+  narrator: 解説
+  say:
+  - text: では、その一戦には何が懸かるのか。数字で見ます。
+    image: assets/images/20261003_compare_clasico/01.jpg
+    card:
+      type: table
+      title: 次のクラシコの見どころ
+      columns:
+      - ''
+      - 中身
+      rows:
+      - - 通算の勝ち数
+        - 勝ったほうが107勝目で単独の先頭（1902年を含む数え方）
+      - - 引き分け
+        - クラシコでは2019年12月以来
+      - - 場所
+        - レアルのカンプ・ノウでの最後の勝ちは2023年4月
+      - - 勝ち点の差
+        - いま6。3に縮まるか、9に開くか
+  - text: 1つ目は通算の勝ち数。1902年の大会を含む数え方なら、
+    card:
+      type: table
+      title: 次のクラシコの見どころ
+      columns:
+      - ''
+      - 中身
+      rows:
+      - - 通算の勝ち数
+        - 勝ったほうが107勝目で単独の先頭（1902年を含む数え方）
+      - - 引き分け
+        - クラシコでは2019年12月以来
+      - - 場所
+        - レアルのカンプ・ノウでの最後の勝ちは2023年4月
+      - - 勝ち点の差
+        - いま6。3に縮まるか、9に開くか
+      highlight_row: 0
+  - text: 勝ったほうが107勝目で、単独の先頭に立ちます。
+    emph: true
+    card:
+      type: table
+      title: 次のクラシコの見どころ
+      columns:
+      - ''
+      - 中身
+      rows:
+      - - 通算の勝ち数
+        - 勝ったほうが107勝目で単独の先頭（1902年を含む数え方）
+      - - 引き分け
+        - クラシコでは2019年12月以来
+      - - 場所
+        - レアルのカンプ・ノウでの最後の勝ちは2023年4月
+      - - 勝ち点の差
+        - いま6。3に縮まるか、9に開くか
+      highlight_row: 0
+  - text: 2つ目は引き分け。もし引き分ければ、クラシコでは2019年12月以来となります。
+    card:
+      type: table
+      title: 次のクラシコの見どころ
+      columns:
+      - ''
+      - 中身
+      rows:
+      - - 通算の勝ち数
+        - 勝ったほうが107勝目で単独の先頭（1902年を含む数え方）
+      - - 引き分け
+        - クラシコでは2019年12月以来
+      - - 場所
+        - レアルのカンプ・ノウでの最後の勝ちは2023年4月
+      - - 勝ち点の差
+        - いま6。3に縮まるか、9に開くか
+      highlight_row: 1
+  - text: 3つ目は場所。レアルがカンプ・ノウで最後に勝ったのは、2023年4月の国王杯準決勝です。
+    card:
+      type: table
+      title: 次のクラシコの見どころ
+      columns:
+      - ''
+      - 中身
+      rows:
+      - - 通算の勝ち数
+        - 勝ったほうが107勝目で単独の先頭（1902年を含む数え方）
+      - - 引き分け
+        - クラシコでは2019年12月以来
+      - - 場所
+        - レアルのカンプ・ノウでの最後の勝ちは2023年4月
+      - - 勝ち点の差
+        - いま6。3に縮まるか、9に開くか
+      highlight_row: 2
+  - text: 今季のレアルはアウェーで2勝2敗。一方のバルサは、ホームで3戦3勝。
+    card:
+      type: table
+      title: 次のクラシコの見どころ
+      columns:
+      - ''
+      - 中身
+      rows:
+      - - 通算の勝ち数
+        - 勝ったほうが107勝目で単独の先頭（1902年を含む数え方）
+      - - 引き分け
+        - クラシコでは2019年12月以来
+      - - 場所
+        - レアルのカンプ・ノウでの最後の勝ちは2023年4月
+      - - 勝ち点の差
+        - いま6。3に縮まるか、9に開くか
+      highlight_row: 2
+  - text: 1試合21本を打つバルサの攻めを、1試合13本打たれるレアルの守りがどこまで減らせるか。
+  - text: 勝ち点の差は6。この一戦だけで、3つに縮まるか、9つに開くかが決まります。
+    card:
+      type: table
+      title: 次のクラシコの見どころ
+      columns:
+      - ''
+      - 中身
+      rows:
+      - - 通算の勝ち数
+        - 勝ったほうが107勝目で単独の先頭（1902年を含む数え方）
+      - - 引き分け
+        - クラシコでは2019年12月以来
+      - - 場所
+        - レアルのカンプ・ノウでの最後の勝ちは2023年4月
+      - - 勝ち点の差
+        - いま6。3に縮まるか、9に開くか
+      highlight_row: 3
+  - text: 並んだ勝ち数が動くのは、10月最後の日曜日の夜です。
+  sources:
+  - https://www.fcbarcelona.com/en/football/first-team/news/4502686/fc-barcelona-match-real-madrid-for-clasico-wins
+  - https://en.wikipedia.org/wiki/List_of_El_Cl%C3%A1sico_matches
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/all/teams/86/schedule?fixture=true

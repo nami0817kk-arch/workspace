@@ -1,0 +1,2387 @@
+[
+ {
+  "name": "アペルカンプ真大",
+  "tm": "452121",
+  "clubs": [
+   "フォルトゥナ・デュッセルドルフ(ドイツ)"
+  ],
+  "games2026": 7,
+  "played": 5,
+  "minutes": 417,
+  "goals": 0,
+  "assists": 1,
+  "states": {
+   "played": 5,
+   "injured": 2
+  },
+  "comps": {
+   "L2": 6,
+   "DFB": 1
+  },
+  "club_id": "65"
+ },
+ {
+  "name": "オナイウ阿道",
+  "tm": "308133",
+  "clubs": [
+   "1.FCマクデブルク(ドイツ)",
+   "AJオセール(フランス)",
+   "トゥールーズFC(フランス)"
+  ],
+  "games2026": 8,
+  "played": 5,
+  "minutes": 214,
+  "goals": 1,
+  "assists": 0,
+  "states": {
+   "in squad": 3,
+   "played": 5
+  },
+  "comps": {
+   "JAP1": 8
+  },
+  "club_id": "828"
+ },
+ {
+  "name": "シュミット・ダニエル",
+  "tm": "158799",
+  "clubs": [
+   "KAAヘント(ベルギー)"
+  ],
+  "games2026": 8,
+  "played": 2,
+  "minutes": 180,
+  "goals": 0,
+  "assists": 0,
+  "states": {
+   "played": 2,
+   "in squad": 1,
+   "not in squad": 5
+  },
+  "comps": {
+   "JAP1": 8
+  },
+  "club_id": "1066"
+ },
+ {
+  "name": "ハーフナー・ニッキ",
+  "tm": "129684",
+  "clubs": [
+   "SVホルン(オーストリア)"
+  ],
+  "games2026": 11,
+  "played": 8,
+  "minutes": 460,
+  "goals": 0,
+  "assists": 0,
+  "states": {
+   "played": 8,
+   "in squad": 3
+  },
+  "comps": {
+   "BE1": 7,
+   "EL": 1,
+   "CLQ": 2,
+   "BESC": 1
+  },
+  "club_id": "3948"
+ },
+ {
+  "name": "ファンティーニ燦",
+  "tm": "395867",
+  "clubs": [
+   "ACチェゼーナ(イタリア)"
+  ],
+  "games2026": 0,
+  "played": 0,
+  "minutes": 0,
+  "goals": 0,
+  "assists": 0,
+  "states": {},
+  "comps": {},
+  "club_id": ""
+ },
+ {
+  "name": "ブーゾ・アモス",
+  "tm": "420273",
+  "clubs": [
+   "カッラレーゼ・カルチョ(イタリア)"
+  ],
+  "games2026": 0,
+  "played": 0,
+  "minutes": 0,
+  "goals": 0,
+  "assists": 0,
+  "states": {},
+  "comps": {},
+  "club_id": ""
+ },
+ {
+  "name": "三塚龍哉",
+  "tm": "746146",
+  "clubs": [
+   "UEコルネリャ(スペイン王国)"
+  ],
+  "games2026": 0,
+  "played": 0,
+  "minutes": 0,
+  "goals": 0,
+  "assists": 0,
+  "states": {},
+  "comps": {},
+  "club_id": ""
+ },
+ {
+  "name": "三好康児",
+  "tm": "295060",
+  "clubs": [
+   "バーミンガム・シティFC(イギリス)"
+  ],
+  "games2026": 7,
+  "played": 7,
+  "minutes": 605,
+  "goals": 2,
+  "assists": 1,
+  "states": {
+   "played": 7
+  },
+  "comps": {
+   "L2": 6,
+   "DFB": 1
+  },
+  "club_id": "80"
+ },
+ {
+  "name": "三宅海斗",
+  "tm": "416319",
+  "clubs": [
+   "フォルトゥナ・デュッセルドルフ(ドイツ)"
+  ],
+  "games2026": 9,
+  "played": 9,
+  "minutes": 704,
+  "goals": 1,
+  "assists": 3,
+  "states": {
+   "played": 9
+  },
+  "comps": {
+   "JAP3": 8,
+   "JAPC": 1
+  },
+  "club_id": "0"
+ },
+ {
+  "name": "三浦知良",
+  "tm": "112589",
+  "clubs": [
+   "UDオリヴェイレンセ(ポルトガル)"
+  ],
+  "games2026": 9,
+  "played": 0,
+  "minutes": 0,
+  "goals": 0,
+  "assists": 0,
+  "states": {
+   "in squad": 4,
+   "not in squad": 5
+  },
+  "comps": {
+   "JAP3": 8,
+   "JAPC": 1
+  },
+  "club_id": "28753"
+ },
+ {
+  "name": "三竿健斗",
+  "tm": "295059",
+  "clubs": [
+   "OHルーヴェン(ベルギー)"
+  ],
+  "games2026": 9,
+  "played": 9,
+  "minutes": 534,
+  "goals": 0,
+  "assists": 0,
+  "states": {
+   "played": 9
+  },
+  "comps": {
+   "JAP1": 8,
+   "ACLE": 1
+  },
+  "club_id": "2241"
+ },
+ {
+  "name": "三笘薫",
+  "tm": "504849",
+  "clubs": [
+   "ブライトン・アンド・ホーヴ・アルビオンFC(イギリス)"
+  ],
+  "games2026": 8,
+  "played": 0,
+  "minutes": 0,
+  "goals": 0,
+  "assists": 0,
+  "states": {
+   "injured": 8
+  },
+  "comps": {
+   "GB1": 5,
+   "CGB": 1,
+   "ECLQ": 2
+  },
+  "club_id": "1237"
+ },
+ {
+  "name": "上田綺世",
+  "tm": "589128",
+  "clubs": [
+   "LOSCリール(フランス)"
+  ],
+  "games2026": 8,
+  "played": 8,
+  "minutes": 579,
+  "goals": 6,
+  "assists": 1,
+  "states": {
+   "played": 8
+  },
+  "comps": {
+   "FR1": 3,
+   "CL": 1,
+   "NL1": 4
+  },
+  "club_id": "1082"
+ },
+ {
+  "name": "上里琢文",
+  "tm": "115777",
+  "clubs": [
+   "USVアラーハイリゲン(オーストリア)"
+  ],
+  "games2026": 0,
+  "played": 0,
+  "minutes": 0,
+  "goals": 0,
+  "assists": 0,
+  "states": {},
+  "comps": {},
+  "club_id": ""
+ },
+ {
+  "name": "世川楓悟",
+  "tm": "486458",
+  "clubs": [
+   "マール・メノールFC(スペイン王国)"
+  ],
+  "games2026": 0,
+  "played": 0,
+  "minutes": 0,
+  "goals": 0,
+  "assists": 0,
+  "states": {},
+  "comps": {},
+  "club_id": ""
+ },
+ {
+  "name": "中岡涼太",
+  "tm": "417975",
+  "clubs": [
+   "VfB Speldorf(ドイツ)"
+  ],
+  "games2026": 0,
+  "played": 0,
+  "minutes": 0,
+  "goals": 0,
+  "assists": 0,
+  "states": {},
+  "comps": {},
+  "club_id": ""
+ },
+ {
+  "name": "中村敬斗",
+  "tm": "405397",
+  "clubs": [
+   "オリンピック・リヨン(フランス)"
+  ],
+  "games2026": 8,
+  "played": 3,
+  "minutes": 116,
+  "goals": 1,
+  "assists": 0,
+  "states": {
+   "played": 3,
+   "not in squad": 5
+  },
+  "comps": {
+   "FR1": 3,
+   "EL": 1,
+   "FR2": 4
+  },
+  "club_id": "1041"
+ },
+ {
+  "name": "中村航輔",
+  "tm": "165794",
+  "clubs": [
+   "ポルティモネンセSC(ポルトガル)"
+  ],
+  "games2026": 8,
+  "played": 8,
+  "minutes": 720,
+  "goals": 0,
+  "assists": 0,
+  "states": {
+   "played": 8
+  },
+  "comps": {
+   "JAP1": 8
+  },
+  "club_id": "1022"
+ },
+ {
+  "name": "丸谷明",
+  "tm": "28765",
+  "clubs": [
+   "FKピルマゼンス(ドイツ)"
+  ],
+  "games2026": 0,
+  "played": 0,
+  "minutes": 0,
+  "goals": 0,
+  "assists": 0,
+  "states": {},
+  "comps": {},
+  "club_id": ""
+ },
+ {
+  "name": "久保建英",
+  "tm": "405398",
+  "clubs": [
+   "レアル・ソシエダ(スペイン王国)"
+  ],
+  "games2026": 8,
+  "played": 6,
+  "minutes": 230,
+  "goals": 0,
+  "assists": 0,
+  "states": {
+   "in squad": 2,
+   "played": 6
+  },
+  "comps": {
+   "ES1": 7,
+   "EL": 1
+  },
+  "club_id": "681"
+ },
+ {
+  "name": "亀倉龍希",
+  "tm": "291997",
+  "clubs": [
+   "FCポルト(ポルトガル)"
+  ],
+  "games2026": 0,
+  "played": 0,
+  "minutes": 0,
+  "goals": 0,
+  "assists": 0,
+  "states": {},
+  "comps": {},
+  "club_id": ""
+ },
+ {
+  "name": "井手ウィリアム航輔",
+  "tm": "493387",
+  "clubs": [
+   "アレマニア・アーヘン(ドイツ)"
+  ],
+  "games2026": 0,
+  "played": 0,
+  "minutes": 0,
+  "goals": 0,
+  "assists": 0,
+  "states": {},
+  "comps": {},
+  "club_id": ""
+ },
+ {
+  "name": "井手口陽介",
+  "tm": "318219",
+  "clubs": [
+   "セルティックFC(イギリス)"
+  ],
+  "games2026": 9,
+  "played": 9,
+  "minutes": 781,
+  "goals": 0,
+  "assists": 0,
+  "states": {
+   "played": 9
+  },
+  "comps": {
+   "JAP1": 8,
+   "ACLE": 1
+  },
+  "club_id": "3958"
+ },
+ {
+  "name": "伊東純也",
+  "tm": "348791",
+  "clubs": [
+   "スタッド・ランス(フランス)"
+  ],
+  "games2026": 7,
+  "played": 7,
+  "minutes": 587,
+  "goals": 1,
+  "assists": 2,
+  "states": {
+   "played": 7
+  },
+  "comps": {
+   "BE1": 7
+  },
+  "club_id": "1184"
+ },
+ {
+  "name": "伊藤健史",
+  "tm": "156623",
+  "clubs": [
+   "カプフェンベルガーSV(オーストリア)"
+  ],
+  "games2026": 0,
+  "played": 0,
+  "minutes": 0,
+  "goals": 0,
+  "assists": 0,
+  "states": {},
+  "comps": {},
+  "club_id": ""
+ },
+ {
+  "name": "伊藤洋輝",
+  "tm": "353892",
+  "clubs": [
+   "VfBシュトゥットガルト(ドイツ)"
+  ],
+  "games2026": 7,
+  "played": 1,
+  "minutes": 10,
+  "goals": 0,
+  "assists": 0,
+  "states": {
+   "in squad": 6,
+   "played": 1
+  },
+  "comps": {
+   "L1": 4,
+   "CL": 1,
+   "DFB": 1,
+   "DFL": 1
+  },
+  "club_id": "27"
+ },
+ {
+  "name": "伊藤涼太郎",
+  "tm": "415522",
+  "clubs": [
+   "シント＝トロイデンVV(ベルギー)"
+  ],
+  "games2026": 0,
+  "played": 0,
+  "minutes": 0,
+  "goals": 0,
+  "assists": 0,
+  "states": {},
+  "comps": {},
+  "club_id": ""
+ },
+ {
+  "name": "伊藤達哉",
+  "tm": "381248",
+  "clubs": [
+   "ハンブルガーSV(ドイツ)"
+  ],
+  "games2026": 8,
+  "played": 8,
+  "minutes": 645,
+  "goals": 2,
+  "assists": 1,
+  "states": {
+   "played": 8
+  },
+  "comps": {
+   "JAP1": 8
+  },
+  "club_id": "9598"
+ },
+ {
+  "name": "佐藤龍之介",
+  "tm": "948169",
+  "clubs": [
+   "バレンシアCF(スペイン王国)"
+  ],
+  "games2026": 7,
+  "played": 5,
+  "minutes": 297,
+  "goals": 0,
+  "assists": 0,
+  "states": {
+   "in squad": 2,
+   "played": 5
+  },
+  "comps": {
+   "ES1": 7
+  },
+  "club_id": "1049"
+ },
+ {
+  "name": "佐野海舟",
+  "tm": "643574",
+  "clubs": [
+   "1.FSVマインツ05(ドイツ)"
+  ],
+  "games2026": 5,
+  "played": 5,
+  "minutes": 448,
+  "goals": 0,
+  "assists": 2,
+  "states": {
+   "played": 5
+  },
+  "comps": {
+   "L1": 4,
+   "DFB": 1
+  },
+  "club_id": "39"
+ },
+ {
+  "name": "佐野航大",
+  "tm": "957544",
+  "clubs": [
+   "NECナイメヘン(オランダ)",
+   "PSVアイントホーフェン(オランダ)"
+  ],
+  "games2026": 9,
+  "played": 7,
+  "minutes": 567,
+  "goals": 1,
+  "assists": 0,
+  "states": {
+   "played": 7,
+   "absent": 1,
+   "not in squad": 1
+  },
+  "comps": {
+   "NL1": 7,
+   "CL": 1,
+   "CLQ": 1
+  },
+  "club_id": "383"
+ },
+ {
+  "name": "八塚利朗",
+  "tm": "310369",
+  "clubs": [
+   "SCリッツィング(オーストリア)"
+  ],
+  "games2026": 0,
+  "played": 0,
+  "minutes": 0,
+  "goals": 0,
+  "assists": 0,
+  "states": {},
+  "comps": {},
+  "club_id": ""
+ },
+ {
+  "name": "内田篤人",
+  "tm": "27800",
+  "clubs": [
+   "1.FCウニオン・ベルリン(ドイツ)"
+  ],
+  "games2026": 0,
+  "played": 0,
+  "minutes": 0,
+  "goals": 0,
+  "assists": 0,
+  "states": {},
+  "comps": {},
+  "club_id": ""
+ },
+ {
+  "name": "冨安健洋",
+  "tm": "331560",
+  "clubs": [
+   "クリスタル・パレスFC(イギリス)"
+  ],
+  "games2026": 7,
+  "played": 5,
+  "minutes": 280,
+  "goals": 0,
+  "assists": 0,
+  "states": {
+   "played": 5,
+   "in squad": 2
+  },
+  "comps": {
+   "GB1": 5,
+   "EL": 1,
+   "CGB": 1
+  },
+  "club_id": "873"
+ },
+ {
+  "name": "前田大然",
+  "tm": "420931",
+  "clubs": [
+   "イプスウィッチ・タウンFC(イギリス)"
+  ],
+  "games2026": 7,
+  "played": 6,
+  "minutes": 271,
+  "goals": 0,
+  "assists": 0,
+  "states": {
+   "played": 6,
+   "in squad": 1
+  },
+  "comps": {
+   "GB1": 5,
+   "CGB": 2
+  },
+  "club_id": "677"
+ },
+ {
+  "name": "千葉恵二",
+  "tm": "1334994",
+  "clubs": [
+   "アビスパ・レコード(スペイン王国)"
+  ],
+  "games2026": 0,
+  "played": 0,
+  "minutes": 0,
+  "goals": 0,
+  "assists": 0,
+  "states": {},
+  "comps": {},
+  "club_id": ""
+ },
+ {
+  "name": "原口元気",
+  "tm": "79377",
+  "clubs": [
+   "KFCOベールスホット・ヴィルレイク(ベルギー)"
+  ],
+  "games2026": 7,
+  "played": 7,
+  "minutes": 537,
+  "goals": 0,
+  "assists": 1,
+  "states": {
+   "played": 7
+  },
+  "comps": {
+   "CCB": 1,
+   "BE2": 6
+  },
+  "club_id": "41274"
+ },
+ {
+  "name": "原大智",
+  "tm": "495752",
+  "clubs": [
+   "デポルティーボ・アラベス(スペイン王国)"
+  ],
+  "games2026": 7,
+  "played": 7,
+  "minutes": 378,
+  "goals": 2,
+  "assists": 1,
+  "states": {
+   "played": 7
+  },
+  "comps": {
+   "L2": 6,
+   "DFB": 1
+  },
+  "club_id": "35"
+ },
+ {
+  "name": "古橋亨梧",
+  "tm": "489463",
+  "clubs": [
+   "スタッド・レンヌ(フランス)"
+  ],
+  "games2026": 0,
+  "played": 0,
+  "minutes": 0,
+  "goals": 0,
+  "assists": 0,
+  "states": {},
+  "comps": {},
+  "club_id": ""
+ },
+ {
+  "name": "土屋慶太",
+  "tm": "46668",
+  "clubs": [
+   "1.FCザールブリュッケン(ドイツ)"
+  ],
+  "games2026": 0,
+  "played": 0,
+  "minutes": 0,
+  "goals": 0,
+  "assists": 0,
+  "states": {},
+  "comps": {},
+  "club_id": ""
+ },
+ {
+  "name": "坂元達裕",
+  "tm": "617408",
+  "clubs": [
+   "KVオステンド(ベルギー)"
+  ],
+  "games2026": 7,
+  "played": 3,
+  "minutes": 178,
+  "goals": 0,
+  "assists": 0,
+  "states": {
+   "in squad": 4,
+   "played": 3
+  },
+  "comps": {
+   "GB1": 5,
+   "CGB": 2
+  },
+  "club_id": "990"
+ },
+ {
+  "name": "堂安律",
+  "tm": "358504",
+  "clubs": [
+   "アイントラハト・フランクフルト(ドイツ)"
+  ],
+  "games2026": 5,
+  "played": 3,
+  "minutes": 238,
+  "goals": 0,
+  "assists": 1,
+  "states": {
+   "played": 3,
+   "injured": 2
+  },
+  "comps": {
+   "L1": 4,
+   "DFB": 1
+  },
+  "club_id": "24"
+ },
+ {
+  "name": "塩貝健人",
+  "tm": "1144627",
+  "clubs": [
+   "NECナイメヘン(オランダ)"
+  ],
+  "games2026": 7,
+  "played": 6,
+  "minutes": 336,
+  "goals": 0,
+  "assists": 0,
+  "states": {
+   "in squad": 1,
+   "played": 6
+  },
+  "comps": {
+   "L2": 6,
+   "DFB": 1
+  },
+  "club_id": "82"
+ },
+ {
+  "name": "大南拓磨",
+  "tm": "423112",
+  "clubs": [
+   "OHルーヴェン(ベルギー)"
+  ],
+  "games2026": 9,
+  "played": 3,
+  "minutes": 245,
+  "goals": 0,
+  "assists": 0,
+  "states": {
+   "not in squad": 6,
+   "played": 3
+  },
+  "comps": {
+   "JAP1": 8,
+   "JAPC": 1
+  },
+  "club_id": "23581"
+ },
+ {
+  "name": "大橋祐紀",
+  "tm": "592116",
+  "clubs": [
+   "ブラックバーン・ローヴァーズFC(イギリス)"
+  ],
+  "games2026": 10,
+  "played": 4,
+  "minutes": 116,
+  "goals": 0,
+  "assists": 0,
+  "states": {
+   "not in squad": 6,
+   "played": 4
+  },
+  "comps": {
+   "GB2": 8,
+   "CGB": 2
+  },
+  "club_id": "164"
+ },
+ {
+  "name": "奥川雅也",
+  "tm": "307052",
+  "clubs": [
+   "FCリーフェリング(オーストリア)"
+  ],
+  "games2026": 9,
+  "played": 1,
+  "minutes": 45,
+  "goals": 0,
+  "assists": 1,
+  "states": {
+   "not in squad": 7,
+   "played": 1,
+   "in squad": 1
+  },
+  "comps": {
+   "JAP1": 8,
+   "ACLE": 1
+  },
+  "club_id": "593"
+ },
+ {
+  "name": "奥抜侃志",
+  "tm": "515654",
+  "clubs": [
+   "1.FCニュルンベルク(ドイツ)"
+  ],
+  "games2026": 10,
+  "played": 0,
+  "minutes": 0,
+  "goals": 0,
+  "assists": 0,
+  "states": {
+   "injured": 9,
+   "not in squad": 1
+  },
+  "comps": {
+   "JAP1": 8,
+   "ACLE": 1,
+   "ACEQ": 1
+  },
+  "club_id": "596"
+ },
+ {
+  "name": "守田英正",
+  "tm": "524315",
+  "clubs": [
+   "ハル・シティAFC(イギリス)"
+  ],
+  "games2026": 7,
+  "played": 2,
+  "minutes": 76,
+  "goals": 0,
+  "assists": 0,
+  "states": {
+   "not in squad": 5,
+   "played": 2
+  },
+  "comps": {
+   "GB1": 5,
+   "CGB": 2
+  },
+  "club_id": "3008"
+ },
+ {
+  "name": "安藤智哉",
+  "tm": "610795",
+  "clubs": [
+   "FCザンクトパウリ(ドイツ)"
+  ],
+  "games2026": 7,
+  "played": 6,
+  "minutes": 471,
+  "goals": 0,
+  "assists": 0,
+  "states": {
+   "played": 6,
+   "not in squad": 1
+  },
+  "comps": {
+   "L2": 6,
+   "DFB": 1
+  },
+  "club_id": "35"
+ },
+ {
+  "name": "安部柊斗",
+  "tm": "678075",
+  "clubs": [
+   "RWDモレンベーク(ベルギー)"
+  ],
+  "games2026": 10,
+  "played": 9,
+  "minutes": 824,
+  "goals": 0,
+  "assists": 1,
+  "states": {
+   "played": 9,
+   "absent": 1
+  },
+  "comps": {
+   "JAP1": 8,
+   "ACLE": 1,
+   "ACEQ": 1
+  },
+  "club_id": "596"
+ },
+ {
+  "name": "室屋成",
+  "tm": "188910",
+  "clubs": [
+   "ハノーファー96(ドイツ)"
+  ],
+  "games2026": 8,
+  "played": 7,
+  "minutes": 626,
+  "goals": 0,
+  "assists": 1,
+  "states": {
+   "played": 7,
+   "in squad": 1
+  },
+  "comps": {
+   "JAP1": 8
+  },
+  "club_id": "6631"
+ },
+ {
+  "name": "小久保玲央ブライアン",
+  "tm": "501737",
+  "clubs": [
+   "シント＝トロイデンVV(ベルギー)"
+  ],
+  "games2026": 9,
+  "played": 9,
+  "minutes": 810,
+  "goals": 0,
+  "assists": 0,
+  "states": {
+   "played": 9
+  },
+  "comps": {
+   "BE1": 7,
+   "ELQ": 2
+  },
+  "club_id": "475"
+ },
+ {
+  "name": "小川航基",
+  "tm": "351567",
+  "clubs": [
+   "NECナイメヘン(オランダ)"
+  ],
+  "games2026": 11,
+  "played": 6,
+  "minutes": 319,
+  "goals": 3,
+  "assists": 0,
+  "states": {
+   "played": 6,
+   "injured": 4,
+   "absent": 1
+  },
+  "comps": {
+   "JAP1": 5,
+   "ACL2": 1,
+   "CLQ": 3,
+   "NL1": 2
+  },
+  "club_id": "23568"
+ },
+ {
+  "name": "小杉啓太",
+  "tm": "1146988",
+  "clubs": [
+   "Eintracht Frankfurt(ドイツ)"
+  ],
+  "games2026": 5,
+  "played": 5,
+  "minutes": 450,
+  "goals": 0,
+  "assists": 3,
+  "states": {
+   "played": 5
+  },
+  "comps": {
+   "L1": 4,
+   "DFB": 1
+  },
+  "club_id": "24"
+ },
+ {
+  "name": "小林友希",
+  "tm": "405386",
+  "clubs": [
+   "セルティックFC(イギリス)"
+  ],
+  "games2026": 13,
+  "played": 9,
+  "minutes": 720,
+  "goals": 1,
+  "assists": 0,
+  "states": {
+   "not in squad": 4,
+   "played": 9
+  },
+  "comps": {
+   "PL1": 8,
+   "EL": 1,
+   "ELQ": 4
+  },
+  "club_id": "2300"
+ },
+ {
+  "name": "小池裕太",
+  "tm": "286503",
+  "clubs": [
+   "シント＝トロイデンVV(ベルギー)"
+  ],
+  "games2026": 9,
+  "played": 8,
+  "minutes": 594,
+  "goals": 4,
+  "assists": 1,
+  "states": {
+   "played": 8,
+   "in squad": 1
+  },
+  "comps": {
+   "JAP2": 8,
+   "JAPC": 1
+  },
+  "club_id": "29307"
+ },
+ {
+  "name": "小田裕太郎",
+  "tm": "432401",
+  "clubs": [
+   "ハート・オブ・ミドロシアンFC(イギリス)"
+  ],
+  "games2026": 9,
+  "played": 4,
+  "minutes": 144,
+  "goals": 0,
+  "assists": 0,
+  "states": {
+   "in squad": 1,
+   "played": 4,
+   "not in squad": 1,
+   "injured": 3
+  },
+  "comps": {
+   "JAP2": 8,
+   "JAPC": 1
+  },
+  "club_id": "8457"
+ },
+ {
+  "name": "小野正朋",
+  "tm": "107979",
+  "clubs": [
+   "1.FCザールブリュッケン(ドイツ)"
+  ],
+  "games2026": 0,
+  "played": 0,
+  "minutes": 0,
+  "goals": 0,
+  "assists": 0,
+  "states": {},
+  "comps": {},
+  "club_id": ""
+ },
+ {
+  "name": "小野裕二",
+  "tm": "155761",
+  "clubs": [
+   "シント＝トロイデンVV(ベルギー)"
+  ],
+  "games2026": 9,
+  "played": 0,
+  "minutes": 0,
+  "goals": 0,
+  "assists": 0,
+  "states": {
+   "not in squad": 8,
+   "injured": 1
+  },
+  "comps": {
+   "JAP2": 8,
+   "JAPC": 1
+  },
+  "club_id": "8344"
+ },
+ {
+  "name": "山口瑠伊",
+  "tm": "496655",
+  "clubs": [
+   "エストレマドゥーラUD(スペイン王国)"
+  ],
+  "games2026": 8,
+  "played": 0,
+  "minutes": 0,
+  "goals": 0,
+  "assists": 0,
+  "states": {
+   "in squad": 8
+  },
+  "comps": {
+   "JAP1": 8
+  },
+  "club_id": "9598"
+ },
+ {
+  "name": "山本天翔",
+  "tm": "1385085",
+  "clubs": [
+   "ボルシア・ドルトムント(ドイツ)"
+  ],
+  "games2026": 11,
+  "played": 8,
+  "minutes": 529,
+  "goals": 0,
+  "assists": 3,
+  "states": {
+   "played": 8,
+   "not in squad": 2,
+   "absent": 1
+  },
+  "comps": {
+   "RLW3": 10,
+   "PLIC": 1
+  },
+  "club_id": "16"
+ },
+ {
+  "name": "山田新",
+  "tm": "681970",
+  "clubs": [
+   "OHルーヴェン(ベルギー)",
+   "SCプロイセン・ミュンスター(ドイツ)",
+   "セルティックFC(イギリス)"
+  ],
+  "games2026": 7,
+  "played": 6,
+  "minutes": 192,
+  "goals": 0,
+  "assists": 0,
+  "states": {
+   "in squad": 1,
+   "played": 6
+  },
+  "comps": {
+   "BE1": 7
+  },
+  "club_id": "2727"
+ },
+ {
+  "name": "山田楓喜",
+  "tm": "432400",
+  "clubs": [
+   "CDナシオナル(ポルトガル)"
+  ],
+  "games2026": 8,
+  "played": 2,
+  "minutes": 54,
+  "goals": 0,
+  "assists": 0,
+  "states": {
+   "in squad": 6,
+   "played": 2
+  },
+  "comps": {
+   "JAP1": 8
+  },
+  "club_id": "6631"
+ },
+ {
+  "name": "岩田智輝",
+  "tm": "356236",
+  "clubs": [
+   "セルティックFC(イギリス)"
+  ],
+  "games2026": 10,
+  "played": 10,
+  "minutes": 809,
+  "goals": 0,
+  "assists": 0,
+  "states": {
+   "played": 10
+  },
+  "comps": {
+   "GB2": 8,
+   "CGB": 2
+  },
+  "club_id": "337"
+ },
+ {
+  "name": "川中健太",
+  "tm": "424080",
+  "clubs": [
+   "SVホルン(オーストリア)"
+  ],
+  "games2026": 5,
+  "played": 4,
+  "minutes": 87,
+  "goals": 1,
+  "assists": 2,
+  "states": {
+   "in squad": 1,
+   "played": 4
+  },
+  "comps": {
+   "JFL": 5
+  },
+  "club_id": "0"
+ },
+ {
+  "name": "川井大地",
+  "tm": "1257463",
+  "clubs": [
+   "CFカンビダレット(スペイン王国)"
+  ],
+  "games2026": 0,
+  "played": 0,
+  "minutes": 0,
+  "goals": 0,
+  "assists": 0,
+  "states": {},
+  "comps": {},
+  "club_id": ""
+ },
+ {
+  "name": "広岡ライアン勇輝",
+  "tm": "149156",
+  "clubs": [
+   "レイションイスSC(ポルトガル)"
+  ],
+  "games2026": 0,
+  "played": 0,
+  "minutes": 0,
+  "goals": 0,
+  "assists": 0,
+  "states": {},
+  "comps": {},
+  "club_id": ""
+ },
+ {
+  "name": "廣瀬慧",
+  "tm": "417972",
+  "clubs": [
+   "FCクライ(ドイツ)"
+  ],
+  "games2026": 3,
+  "played": 3,
+  "minutes": 129,
+  "goals": 0,
+  "assists": 0,
+  "states": {
+   "played": 3
+  },
+  "comps": {
+   "IN1L": 3
+  },
+  "club_id": "97916"
+ },
+ {
+  "name": "後藤崇介",
+  "tm": "248312",
+  "clubs": [
+   "インテルナツィオナーレ・ミラノ(イタリア)"
+  ],
+  "games2026": 0,
+  "played": 0,
+  "minutes": 0,
+  "goals": 0,
+  "assists": 0,
+  "states": {},
+  "comps": {},
+  "club_id": ""
+ },
+ {
+  "name": "新井瑞希",
+  "tm": "419615",
+  "clubs": [
+   "SVホルン(オーストリア)"
+  ],
+  "games2026": 9,
+  "played": 1,
+  "minutes": 49,
+  "goals": 0,
+  "assists": 0,
+  "states": {
+   "not in squad": 8,
+   "played": 1
+  },
+  "comps": {
+   "JAP1": 8,
+   "JAPC": 1
+  },
+  "club_id": "21975"
+ },
+ {
+  "name": "新川志音",
+  "tm": "1153358",
+  "clubs": [
+   "シント＝トロイデンVV(ベルギー)"
+  ],
+  "games2026": 10,
+  "played": 5,
+  "minutes": 111,
+  "goals": 1,
+  "assists": 0,
+  "states": {
+   "in squad": 5,
+   "played": 5
+  },
+  "comps": {
+   "BE1": 7,
+   "VFVB": 1,
+   "ELQ": 2
+  },
+  "club_id": "475"
+ },
+ {
+  "name": "旗手怜央",
+  "tm": "496656",
+  "clubs": [
+   "セルティックFC(イギリス)"
+  ],
+  "games2026": 11,
+  "played": 6,
+  "minutes": 226,
+  "goals": 0,
+  "assists": 1,
+  "states": {
+   "played": 6,
+   "not in squad": 2,
+   "in squad": 3
+  },
+  "comps": {
+   "GB2": 5,
+   "SC1": 3,
+   "CLQ": 2,
+   "SCP": 1
+  },
+  "club_id": "371"
+ },
+ {
+  "name": "明本考浩",
+  "tm": "733309",
+  "clubs": [
+   "OHルーヴェン(ベルギー)"
+  ],
+  "games2026": 9,
+  "played": 8,
+  "minutes": 711,
+  "goals": 1,
+  "assists": 0,
+  "states": {
+   "absent": 1,
+   "played": 8
+  },
+  "comps": {
+   "JAP1": 8,
+   "ACL2": 1
+  },
+  "club_id": "23568"
+ },
+ {
+  "name": "木下康介",
+  "tm": "221968",
+  "clubs": [
+   "SCフライブルク(ドイツ)"
+  ],
+  "games2026": 8,
+  "played": 8,
+  "minutes": 257,
+  "goals": 1,
+  "assists": 0,
+  "states": {
+   "played": 8
+  },
+  "comps": {
+   "JAP1": 8
+  },
+  "club_id": "1062"
+ },
+ {
+  "name": "木村誠二",
+  "tm": "501749",
+  "clubs": [
+   "KVCウェステルロー(ベルギー)"
+  ],
+  "games2026": 7,
+  "played": 7,
+  "minutes": 630,
+  "goals": 0,
+  "assists": 1,
+  "states": {
+   "played": 7
+  },
+  "comps": {
+   "BE1": 7
+  },
+  "club_id": "968"
+ },
+ {
+  "name": "村上範和",
+  "tm": "123100",
+  "clubs": [
+   "ヒラル・ベルクハイム(ドイツ)"
+  ],
+  "games2026": 0,
+  "played": 0,
+  "minutes": 0,
+  "goals": 0,
+  "assists": 0,
+  "states": {},
+  "comps": {},
+  "club_id": ""
+ },
+ {
+  "name": "東城翔也",
+  "tm": "374109",
+  "clubs": [
+   "CSマリティモ(ポルトガル)"
+  ],
+  "games2026": 0,
+  "played": 0,
+  "minutes": 0,
+  "goals": 0,
+  "assists": 0,
+  "states": {},
+  "comps": {},
+  "club_id": ""
+ },
+ {
+  "name": "松坂暖",
+  "tm": "347437",
+  "clubs": [
+   "サウスエンド・ユナイテッドFC(イギリス)"
+  ],
+  "games2026": 0,
+  "played": 0,
+  "minutes": 0,
+  "goals": 0,
+  "assists": 0,
+  "states": {},
+  "comps": {},
+  "club_id": ""
+ },
+ {
+  "name": "松尾佑介",
+  "tm": "675754",
+  "clubs": [
+   "KVCウェステルロー(ベルギー)"
+  ],
+  "games2026": 9,
+  "played": 7,
+  "minutes": 158,
+  "goals": 1,
+  "assists": 0,
+  "states": {
+   "played": 7,
+   "not in squad": 2
+  },
+  "comps": {
+   "JAP1": 8,
+   "ACL2": 1
+  },
+  "club_id": "23568"
+ },
+ {
+  "name": "松木玖生",
+  "tm": "902021",
+  "clubs": [
+   "サウサンプトンFC(イギリス)"
+  ],
+  "games2026": 10,
+  "played": 10,
+  "minutes": 669,
+  "goals": 1,
+  "assists": 1,
+  "states": {
+   "played": 10
+  },
+  "comps": {
+   "GB2": 8,
+   "CGB": 2
+  },
+  "club_id": "180"
+ },
+ {
+  "name": "板倉滉",
+  "tm": "355816",
+  "clubs": [
+   "ボルシア・メンヒェングラートバッハ(ドイツ)"
+  ],
+  "games2026": 11,
+  "played": 5,
+  "minutes": 387,
+  "goals": 0,
+  "assists": 0,
+  "states": {
+   "played": 5,
+   "in squad": 1,
+   "injured": 5
+  },
+  "comps": {
+   "L1": 4,
+   "DFB": 1,
+   "NL1": 2,
+   "ECLQ": 4
+  },
+  "club_id": "610"
+ },
+ {
+  "name": "柏瀬暁",
+  "tm": "203911",
+  "clubs": [
+   "ヴッパーターラーSVボルシア(ドイツ)"
+  ],
+  "games2026": 0,
+  "played": 0,
+  "minutes": 0,
+  "goals": 0,
+  "assists": 0,
+  "states": {},
+  "comps": {},
+  "club_id": ""
+ },
+ {
+  "name": "森下龍矢",
+  "tm": "679903",
+  "clubs": [
+   "ブラックバーン・ローヴァーズFC(イギリス)"
+  ],
+  "games2026": 10,
+  "played": 10,
+  "minutes": 860,
+  "goals": 2,
+  "assists": 2,
+  "states": {
+   "played": 10
+  },
+  "comps": {
+   "GB2": 8,
+   "CGB": 2
+  },
+  "club_id": "164"
+ },
+ {
+  "name": "森岡亮太",
+  "tm": "140310",
+  "clubs": [
+   "シャルルロワSC(ベルギー)"
+  ],
+  "games2026": 0,
+  "played": 0,
+  "minutes": 0,
+  "goals": 0,
+  "assists": 0,
+  "states": {},
+  "comps": {},
+  "club_id": ""
+ },
+ {
+  "name": "榊翔太",
+  "tm": "194784",
+  "clubs": [
+   "SVホルン(オーストリア)"
+  ],
+  "games2026": 0,
+  "played": 0,
+  "minutes": 0,
+  "goals": 0,
+  "assists": 0,
+  "states": {},
+  "comps": {},
+  "club_id": ""
+ },
+ {
+  "name": "橋岡大樹",
+  "tm": "387191",
+  "clubs": [
+   "シント＝トロイデンVV(ベルギー)",
+   "ルートン・タウンFC(イギリス)"
+  ],
+  "games2026": 6,
+  "played": 3,
+  "minutes": 180,
+  "goals": 1,
+  "assists": 0,
+  "states": {
+   "played": 3,
+   "injured": 2,
+   "not in squad": 1
+  },
+  "comps": {
+   "L1": 4,
+   "DFB": 1,
+   "TS1": 1
+  },
+  "club_id": "18"
+ },
+ {
+  "name": "橋本拳人",
+  "tm": "183436",
+  "clubs": [
+   "SDウエスカ(スペイン王国)"
+  ],
+  "games2026": 8,
+  "played": 6,
+  "minutes": 360,
+  "goals": 0,
+  "assists": 0,
+  "states": {
+   "played": 6,
+   "not in squad": 2
+  },
+  "comps": {
+   "JAP1": 8
+  },
+  "club_id": "6631"
+ },
+ {
+  "name": "毎熊晟矢",
+  "tm": "733438",
+  "clubs": [
+   "AZアルクマール(オランダ)"
+  ],
+  "games2026": 9,
+  "played": 6,
+  "minutes": 64,
+  "goals": 0,
+  "assists": 0,
+  "states": {
+   "played": 6,
+   "in squad": 3
+  },
+  "comps": {
+   "NL1": 7,
+   "EL": 1,
+   "NLSC": 1
+  },
+  "club_id": "1090"
+ },
+ {
+  "name": "池田誠剛",
+  "tm": "749706",
+  "clubs": [
+   "ウェストハム・ユナイテッドFC(イギリス)"
+  ],
+  "games2026": 0,
+  "played": 0,
+  "minutes": 0,
+  "goals": 0,
+  "assists": 0,
+  "states": {},
+  "comps": {},
+  "club_id": ""
+ },
+ {
+  "name": "浅野拓磨",
+  "tm": "245744",
+  "clubs": [
+   "VfLボーフム(ドイツ)"
+  ],
+  "games2026": 0,
+  "played": 0,
+  "minutes": 0,
+  "goals": 0,
+  "assists": 0,
+  "states": {},
+  "comps": {},
+  "club_id": ""
+ },
+ {
+  "name": "渡井理己",
+  "tm": "550631",
+  "clubs": [
+   "ボアヴィスタFC(ポルトガル)"
+  ],
+  "games2026": 9,
+  "played": 6,
+  "minutes": 289,
+  "goals": 0,
+  "assists": 5,
+  "states": {
+   "played": 6,
+   "not in squad": 2,
+   "injured": 1
+  },
+  "comps": {
+   "JAP1": 8,
+   "ACLE": 1
+  },
+  "club_id": "6632"
+ },
+ {
+  "name": "渡辺剛",
+  "tm": "598791",
+  "clubs": [
+   "フェイエノールト(オランダ)"
+  ],
+  "games2026": 8,
+  "played": 7,
+  "minutes": 581,
+  "goals": 0,
+  "assists": 1,
+  "states": {
+   "played": 7,
+   "injured": 1
+  },
+  "comps": {
+   "NL1": 7,
+   "CL": 1
+  },
+  "club_id": "234"
+ },
+ {
+  "name": "渡辺夏彦",
+  "tm": "568069",
+  "clubs": [
+   "VfRアーレン(ドイツ)"
+  ],
+  "games2026": 0,
+  "played": 0,
+  "minutes": 0,
+  "goals": 0,
+  "assists": 0,
+  "states": {},
+  "comps": {},
+  "club_id": ""
+ },
+ {
+  "name": "澤田恒",
+  "tm": "382022",
+  "clubs": [
+   "キッカーズ・オッフェンバッハ(ドイツ)"
+  ],
+  "games2026": 0,
+  "played": 0,
+  "minutes": 0,
+  "goals": 0,
+  "assists": 0,
+  "states": {},
+  "comps": {},
+  "club_id": ""
+ },
+ {
+  "name": "瀬古樹",
+  "tm": "683269",
+  "clubs": [
+   "ストーク・シティFC(イギリス)"
+  ],
+  "games2026": 8,
+  "played": 6,
+  "minutes": 363,
+  "goals": 0,
+  "assists": 1,
+  "states": {
+   "played": 6,
+   "not in squad": 2
+  },
+  "comps": {
+   "JAP1": 6,
+   "GB2": 1,
+   "CGB": 1
+  },
+  "club_id": "828"
+ },
+ {
+  "name": "瀬古歩夢",
+  "tm": "405389",
+  "clubs": [
+   "グラスホッパー・クラブ・チューリッヒ(スイス)",
+   "ル・アーヴルAC(フランス)"
+  ],
+  "games2026": 5,
+  "played": 5,
+  "minutes": 450,
+  "goals": 0,
+  "assists": 0,
+  "states": {
+   "played": 5
+  },
+  "comps": {
+   "FR1": 5
+  },
+  "club_id": "738"
+ },
+ {
+  "name": "犬塚友輔",
+  "tm": "86169",
+  "clubs": [
+   "リカータ・カルチョ(イタリア)"
+  ],
+  "games2026": 0,
+  "played": 0,
+  "minutes": 0,
+  "goals": 0,
+  "assists": 0,
+  "states": {},
+  "comps": {},
+  "club_id": ""
+ },
+ {
+  "name": "田中碧",
+  "tm": "489359",
+  "clubs": [
+   "リーズ・ユナイテッドAFC(イギリス)"
+  ],
+  "games2026": 7,
+  "played": 6,
+  "minutes": 348,
+  "goals": 0,
+  "assists": 2,
+  "states": {
+   "played": 6,
+   "in squad": 1
+  },
+  "comps": {
+   "GB1": 5,
+   "CGB": 2
+  },
+  "club_id": "399"
+ },
+ {
+  "name": "田中靖大",
+  "tm": "149110",
+  "clubs": [
+   "FSVフランクフルト(ドイツ)"
+  ],
+  "games2026": 0,
+  "played": 0,
+  "minutes": 0,
+  "goals": 0,
+  "assists": 0,
+  "states": {},
+  "comps": {},
+  "club_id": ""
+ },
+ {
+  "name": "田嶋凜太郎",
+  "tm": "457823",
+  "clubs": [
+   "VVVフェンロー(オランダ)"
+  ],
+  "games2026": 0,
+  "played": 0,
+  "minutes": 0,
+  "goals": 0,
+  "assists": 0,
+  "states": {},
+  "comps": {},
+  "club_id": ""
+ },
+ {
+  "name": "田川亨介",
+  "tm": "469952",
+  "clubs": [
+   "ハート・オブ・ミドロシアンFC(イギリス)"
+  ],
+  "games2026": 9,
+  "played": 3,
+  "minutes": 45,
+  "goals": 1,
+  "assists": 0,
+  "states": {
+   "not in squad": 6,
+   "played": 3
+  },
+  "comps": {
+   "JAP1": 8,
+   "ACLE": 1
+  },
+  "club_id": "2241"
+ },
+ {
+  "name": "町田浩樹",
+  "tm": "415035",
+  "clubs": [
+   "TSG1899ホッフェンハイム(ドイツ)"
+  ],
+  "games2026": 7,
+  "played": 4,
+  "minutes": 201,
+  "goals": 0,
+  "assists": 0,
+  "states": {
+   "played": 4,
+   "not in squad": 3
+  },
+  "comps": {
+   "L1": 4,
+   "EL": 1,
+   "L3": 1,
+   "DFB": 1
+  },
+  "club_id": "533"
+ },
+ {
+  "name": "直川公俊",
+  "tm": "99320",
+  "clubs": [
+   "ブレシア・カルチョ(イタリア)"
+  ],
+  "games2026": 0,
+  "played": 0,
+  "minutes": 0,
+  "goals": 0,
+  "assists": 0,
+  "states": {},
+  "comps": {},
+  "club_id": ""
+ },
+ {
+  "name": "相馬勇紀",
+  "tm": "594069",
+  "clubs": [
+   "カーザ・ピアAC(ポルトガル)"
+  ],
+  "games2026": 9,
+  "played": 9,
+  "minutes": 722,
+  "goals": 3,
+  "assists": 3,
+  "states": {
+   "played": 9
+  },
+  "comps": {
+   "JAP1": 8,
+   "ACL2": 1
+  },
+  "club_id": "23568"
+ },
+ {
+  "name": "矢島倫太郎",
+  "tm": "165375",
+  "clubs": [
+   "SVホルン(オーストリア)"
+  ],
+  "games2026": 13,
+  "played": 12,
+  "minutes": 913,
+  "goals": 3,
+  "assists": 0,
+  "states": {
+   "played": 12,
+   "in squad": 1
+  },
+  "comps": {
+   "RLN4": 11,
+   "BPP": 2
+  },
+  "club_id": "5608"
+ },
+ {
+  "name": "石原卓",
+  "tm": "79405",
+  "clubs": [
+   "FCエルツゲビルゲ・アウエ(ドイツ)",
+   "TSGノイシュトレーリッツ(ドイツ)"
+  ],
+  "games2026": 0,
+  "played": 0,
+  "minutes": 0,
+  "goals": 0,
+  "assists": 0,
+  "states": {},
+  "comps": {},
+  "club_id": ""
+ },
+ {
+  "name": "福留健吾",
+  "tm": "240644",
+  "clubs": [
+   "アレマニア・アーヘン(ドイツ)"
+  ],
+  "games2026": 0,
+  "played": 0,
+  "minutes": 0,
+  "goals": 0,
+  "assists": 0,
+  "states": {},
+  "comps": {},
+  "club_id": ""
+ },
+ {
+  "name": "菅原由勢",
+  "tm": "405385",
+  "clubs": [
+   "カリアリ・カルチョ(イタリア)",
+   "サウサンプトンFC(イギリス)"
+  ],
+  "games2026": 9,
+  "played": 2,
+  "minutes": 53,
+  "goals": 0,
+  "assists": 0,
+  "states": {
+   "played": 2,
+   "absent": 1,
+   "not in squad": 6
+  },
+  "comps": {
+   "IT1": 3,
+   "CIT": 1,
+   "GB2": 3,
+   "CGB": 2
+  },
+  "club_id": "180"
+ },
+ {
+  "name": "菊池禎晃",
+  "tm": "614696",
+  "clubs": [
+   "レイションイスSC(ポルトガル)"
+  ],
+  "games2026": 0,
+  "played": 0,
+  "minutes": 0,
+  "goals": 0,
+  "assists": 0,
+  "states": {},
+  "comps": {},
+  "club_id": ""
+ },
+ {
+  "name": "藤井陽也",
+  "tm": "570385",
+  "clubs": [
+   "KVコルトレイク(ベルギー)"
+  ],
+  "games2026": 8,
+  "played": 7,
+  "minutes": 630,
+  "goals": 0,
+  "assists": 0,
+  "states": {
+   "played": 7,
+   "not in squad": 1
+  },
+  "comps": {
+   "JAP1": 8
+  },
+  "club_id": "1066"
+ },
+ {
+  "name": "藤田譲瑠チマ",
+  "tm": "697277",
+  "clubs": [
+   "シント＝トロイデンVV(ベルギー)"
+  ],
+  "games2026": 7,
+  "played": 5,
+  "minutes": 378,
+  "goals": 1,
+  "assists": 0,
+  "states": {
+   "played": 5,
+   "in squad": 2
+  },
+  "comps": {
+   "L2": 6,
+   "DFB": 1
+  },
+  "club_id": "35"
+ },
+ {
+  "name": "谷口彰悟",
+  "tm": "307870",
+  "clubs": [
+   "シント＝トロイデンVV(ベルギー)"
+  ],
+  "games2026": 9,
+  "played": 6,
+  "minutes": 408,
+  "goals": 1,
+  "assists": 0,
+  "states": {
+   "played": 6,
+   "injured": 1,
+   "in squad": 2
+  },
+  "comps": {
+   "BE1": 7,
+   "ELQ": 2
+  },
+  "club_id": "475"
+ },
+ {
+  "name": "道脇豊",
+  "tm": "914195",
+  "clubs": [
+   "ワースラント＝ベフェレン(ベルギー)"
+  ],
+  "games2026": 9,
+  "played": 6,
+  "minutes": 477,
+  "goals": 1,
+  "assists": 1,
+  "states": {
+   "not in squad": 3,
+   "played": 6
+  },
+  "comps": {
+   "JAP2": 8,
+   "JAPC": 1
+  },
+  "club_id": "53668"
+ },
+ {
+  "name": "遠藤渓太",
+  "tm": "421726",
+  "clubs": [
+   "1.FCウニオン・ベルリン(ドイツ)"
+  ],
+  "games2026": 9,
+  "played": 8,
+  "minutes": 562,
+  "goals": 2,
+  "assists": 0,
+  "states": {
+   "played": 8,
+   "in squad": 1
+  },
+  "comps": {
+   "JAP1": 8,
+   "ACLE": 1
+  },
+  "club_id": "6632"
+ },
+ {
+  "name": "金城ジャスティン俊樹",
+  "tm": "353100",
+  "clubs": [
+   "フォルトゥナ・デュッセルドルフ(ドイツ)"
+  ],
+  "games2026": 5,
+  "played": 3,
+  "minutes": 3,
+  "goals": 0,
+  "assists": 0,
+  "states": {
+   "played": 3,
+   "not in squad": 2
+  },
+  "comps": {
+   "JFL": 5
+  },
+  "club_id": "0"
+ },
+ {
+  "name": "鈴木彩艶",
+  "tm": "432298",
+  "clubs": [
+   "アストン・ヴィラFC(イギリス)"
+  ],
+  "games2026": 8,
+  "played": 6,
+  "minutes": 495,
+  "goals": 0,
+  "assists": 0,
+  "states": {
+   "played": 6,
+   "in squad": 1,
+   "not in squad": 1
+  },
+  "comps": {
+   "GB1": 5,
+   "CGB": 1,
+   "CL": 1,
+   "CIT": 1
+  },
+  "club_id": "405"
+ },
+ {
+  "name": "鈴木準弥",
+  "tm": "568068",
+  "clubs": [
+   "VfRアーレン(ドイツ)"
+  ],
+  "games2026": 9,
+  "played": 7,
+  "minutes": 388,
+  "goals": 0,
+  "assists": 1,
+  "states": {
+   "played": 7,
+   "in squad": 2
+  },
+  "comps": {
+   "JAP3": 8,
+   "JAPC": 1
+  },
+  "club_id": "28730"
+ },
+ {
+  "name": "鈴木諒",
+  "tm": "259811",
+  "clubs": [
+   "アレマニア・アーヘン(ドイツ)"
+  ],
+  "games2026": 0,
+  "played": 0,
+  "minutes": 0,
+  "goals": 0,
+  "assists": 0,
+  "states": {},
+  "comps": {},
+  "club_id": ""
+ },
+ {
+  "name": "鎌田大地",
+  "tm": "356141",
+  "clubs": [
+   "クリスタル・パレスFC(イギリス)"
+  ],
+  "games2026": 7,
+  "played": 7,
+  "minutes": 548,
+  "goals": 1,
+  "assists": 3,
+  "states": {
+   "played": 7
+  },
+  "comps": {
+   "GB1": 5,
+   "EL": 1,
+   "CGB": 1
+  },
+  "club_id": "873"
+ },
+ {
+  "name": "長島滉大",
+  "tm": "500220",
+  "clubs": [
+   "ポルティモネンセSC(ポルトガル)"
+  ],
+  "games2026": 3,
+  "played": 3,
+  "minutes": 270,
+  "goals": 0,
+  "assists": 1,
+  "states": {
+   "played": 3
+  },
+  "comps": {
+   "ILI2": 3
+  },
+  "club_id": "36633"
+ },
+ {
+  "name": "長谷部誠",
+  "tm": "39259",
+  "clubs": [
+   "アイントラハト・フランクフルト(ドイツ)"
+  ],
+  "games2026": 0,
+  "played": 0,
+  "minutes": 0,
+  "goals": 0,
+  "assists": 0,
+  "states": {},
+  "comps": {},
+  "club_id": ""
+ },
+ {
+  "name": "高井幸大",
+  "tm": "671108",
+  "clubs": [
+   "シント＝トロイデンVV(ベルギー)",
+   "トッテナム・ホットスパーFC(イギリス)",
+   "ボルシア・メンヒェングラートバッハ(ドイツ)"
+  ],
+  "games2026": 7,
+  "played": 0,
+  "minutes": 0,
+  "goals": 0,
+  "assists": 0,
+  "states": {
+   "in squad": 2,
+   "not in squad": 5
+  },
+  "comps": {
+   "BE1": 4,
+   "GB1": 2,
+   "CGB": 1
+  },
+  "club_id": "475"
+ },
+ {
+  "name": "高橋友矢",
+  "tm": "1025362",
+  "clubs": [
+   "UDオリヴェイレンセ(ポルトガル)"
+  ],
+  "games2026": 6,
+  "played": 5,
+  "minutes": 404,
+  "goals": 1,
+  "assists": 0,
+  "states": {
+   "played": 5,
+   "not in squad": 1
+  },
+  "comps": {
+   "POPO": 2,
+   "CPSA": 4
+  },
+  "club_id": "92265"
+ },
+ {
+  "name": "髙橋仁胡",
+  "tm": "834465",
+  "clubs": [
+   "FC Barcelona Juvenil B(スペイン王国)",
+   "U-16サッカースペイン代表(スペイン王国)",
+   "アルメレ・シティFC(オランダ)"
+  ],
+  "games2026": 7,
+  "played": 2,
+  "minutes": 78,
+  "goals": 0,
+  "assists": 0,
+  "states": {
+   "not in squad": 1,
+   "in squad": 4,
+   "played": 2
+  },
+  "comps": {
+   "L2": 5,
+   "DFB": 1,
+   "JAP1": 1
+  },
+  "club_id": "269"
+ }
+]

@@ -161,13 +161,32 @@ def portrait(config: ProjectConfig) -> ProjectConfig:
     # 読み上げ37.2秒に対して動画は40.2秒。**最後の3秒は音が無い。**
     # 冒頭の静止カードを外した理由（「最初の2.6秒で誰も喋っていなかった」）と
     # まったく同じことが、終わりで起きていた。**ショートは最後の一言で終える**
-    titles = replace(config.titles, intro=0.0, chapter=0.0, outro=SHORT_OUTRO)
+    # **最後のカードは出さない**（2026-09-29 指摘「ショートに変な画面がはいる」）。
+    # 9/18 に締めの読み上げ枠（SHORT_OUTRO）を5秒へ広げたとき、ここも同じ数字を
+    # 使っていたので、**読み終えたあとに無音のカードが5秒**付いていた（9/13 に0秒にしたもの）。
+    # 続き物の回だけは「続きは本編で」のカードを残す（9/23 指示）。`_add_subscribe` が meta で頼む
+    titles = replace(config.titles, intro=0.0, chapter=0.0, outro=0.0)
     # **ショートは少し速く読む**（2026-09-08）。参考は反応1件3秒台で、
     # 9/7 に Gemini に聞いた答えでも「1件3〜4秒に詰める」が2番目だった。
     # 本編の話速（1.0〜1.05）は参考と同じなので触らず、ショートだけ上げる
     cast = {key: replace(member, speed=round(member.speed * SHORT_SPEED, 3))
             for key, member in config.cast.items()}
     return replace(config, video=video, titles=titles, cast=cast)
+
+
+def _drop_main_only(script: Script) -> Script:
+    """本編にだけ出す行（`only: main`）を、ショートの材料から外す。
+
+    2026-10-07、久保の回で、本編の見立てで説明した「ダニ・ディアス」の反応が
+    ショートの締めに説明なしで出た（ユーザー「推しで良いよ、本編はそのまま」）。
+    """
+    if not any(str(getattr(l, "only", "") or "") == "main"
+               for sc in script.scenes for l in sc.lines):
+        return script
+    out = copy.deepcopy(script)
+    for sc in out.scenes:
+        sc.lines = [l for l in sc.lines if str(getattr(l, "only", "") or "") != "main"]
+    return out
 
 
 def trim(script: Script, section: str = "", max_seconds: float = MAX_SECONDS) -> Script:
@@ -178,6 +197,7 @@ def trim(script: Script, section: str = "", max_seconds: float = MAX_SECONDS) ->
     """
     if len(script.scenes) < 2:
         raise ShortError("節が1つしかありません。ショートにする意味がありません")
+    script = _drop_main_only(script)
 
     opening = script.scenes[0]
     body = _pick(script, section)
@@ -203,7 +223,7 @@ def trim(script: Script, section: str = "", max_seconds: float = MAX_SECONDS) ->
     # 続きの節を先に足し、反応は**その後ろ**に置く。反応のぶんの秒数は先に空けておく
     _add_more_body(short, script, max_seconds, reserve=_tail_cost(short, script, max_seconds))
     _add_voices_tail(short, script, max_seconds)
-    _drop_boards(short)
+    _drop_boards(short, script)
     _add_face(short)
     _add_subscribe(short)
     if not short.scenes[-1].lines:
@@ -236,7 +256,7 @@ def _retitle(short: Script, body: Scene) -> None:
     short.meta = dict(meta)
 
 
-def _drop_boards(short: Script) -> None:
+def _drop_boards(short: Script, script: Script | None = None) -> None:
     """**板は縦版に差し替える。無ければ外す**（2026-09-23 指示「基礎データも見して」）。
 
     16:9 の板を縦（9:16）に敷くと真ん中しか映らず、「マス 基礎DATA」のように
@@ -245,10 +265,25 @@ def _drop_boards(short: Script) -> None:
     画面にその中身が出ない。`tools/clubdata.py --portrait` が同じ中身の
     縦版（`<名前>_v.png`）を書き出すので、**あれば差し替える**。
     **写真は外さない**（顔は縦でも成立する）。
+
+    **`assets/stats/<名前>_v.png` への差し替えは、クラブ紹介の回だけ**（2026-10-08）。
+    この縦版は `clubdata.py --portrait` が書く**基礎DATAの板**で、名前は差し替える相手
+    （`assets/backgrounds/stadium_<クラブ>.png`）から取っている。つまり
+    **「同じ名前＝同じ中身」ではなく、「この下地のときはこの板を出す」という決め事**。
+    ところが 10/9 に始めたスタジアム紹介シリーズは、同じ
+    `assets/backgrounds/stadium_<クラブ>.png` を**本物の写真として**敷く。
+    そのままだと、ショートの画面が**クラブ紹介の基礎DATAの板**（創立年・愛称・オーナー…）に
+    丸ごと化けていた（preview4 で見つけた）。縦版は40クラブぶんあるので、
+    **このシリーズは20本すべてで踏む**。
+    クラブ紹介以外では、**隣に `_v.png` があればそれを使い、無ければ写真のまま残す**。
     """
     from pathlib import Path as _P
 
     from .render import _is_board
+
+    # クラブ紹介の回か（`series:` に「チーム紹介」が入る。ラ・リーガ版も同じ）
+    series = str(((script.meta if script is not None else None) or {}).get("series") or "")
+    club_intro = "チーム紹介" in series
 
     for scene in short.scenes:
         for line in scene.lines:
@@ -264,12 +299,15 @@ def _drop_boards(short: Script) -> None:
                 if (root / tall).exists():
                     line.image = tall.as_posix()
                 continue
-            # 縦版は隣か、**まとめて assets/stats** に置いてある
+            # 縦版は隣か、**クラブ紹介のときだけ** まとめて assets/stats にも置いてある
             name = _P(str(line.image))
             root = _P(__file__).resolve().parents[1]
-            line.image = None
-            for tall in (name.with_name(name.stem + "_v.png"),
-                         _P("assets/stats") / (name.stem + "_v.png")):
+            photo = not _is_board(line.image)      # 下地の置き場の「写真」か
+            line.image = None if (club_intro or not photo) else line.image
+            places = [name.with_name(name.stem + "_v.png")]
+            if club_intro or _is_board(str(name)):
+                places.append(_P("assets/stats") / (name.stem + "_v.png"))
+            for tall in places:
                 if (root / tall).exists():
                     line.image = tall.as_posix()
                     # **ショートでは字幕を出す**（2026-09-23 指摘「たまに、字幕で
@@ -367,8 +405,8 @@ def strength(scene: Scene, cards: dict) -> int:
         kind = str((cards.get(name) or {}).get("type", "")).lower() if name else ""
         if kind == "quote":
             score += 3          # 原文の引用が画面に出る
-        elif kind in ("bars", "table"):
-            score += 2          # 数字が語る
+        elif kind in ("bars", "table", "stats", "calc", "verdict", "versus", "scatter", "convert"):
+            score += 2          # 数字が語る（2026-10-07 に足した数字の板・式・判定表・左右の比べ・散らばり図・換算も）
         elif kind:
             score += 1
         if getattr(line, "image", None):
@@ -436,6 +474,15 @@ def _pick(script: Script, section: str) -> Scene:
 # **ショートから本編へ渡す道が、これまで無かった。**本編の再生は登録者からが
 # 86%で、ショートを見た人が本編へ回る経路はどこにも作っていない
 SHORT_OUTRO = 5.0
+# **ショートに最後のカードは付けない**（2026-10-08、`tools/qc.py` が実物2本で見つけた）。
+# 9/29 に「続き物の回の『続きは本編で』だけ3秒」として `SERIES_END_CARD = 3.0` を残したが、
+# あのときの「続き物」は**プレミア20クラブ紹介のことだけ**だった。10月に入って
+# シリーズ中心に切り替えたので `series:` はほぼ全部の回に付き、**例外が既定になった。**
+# 10/8 の実物（記録・クラブの財布）は2本とも、読み終えたあと**3.4秒の無音**で終わっていた
+# （上限は `review.TAIL_SILENCE_MAX` の1.5秒）。カードが言う「続きは本編で」は、
+# その手前で読み上げている `_series_outro`（＋同じ文のテロップ）がすでに言っている。
+# **ショートは最後の一言で終える。**ここに秒数の定数を戻さない
+SERIES_END_CARD = 0.0
 
 # 最後に読み上げる一言（2026-09-15）。**短くする。**8秒使っていた頃の
 # 「続報はチャンネル登録してお待ちください」には戻さない
@@ -449,11 +496,20 @@ SHORT_SUBSCRIBE_2 = "チャンネル登録もお願いします。"
 # 「本編はチャンネルから」だけだと、何が続くのか分からないまま終わっていた。
 # 使うのは `series:` のある回（いまはプレミア20クラブ紹介）
 SHORT_SUBSCRIBE_SERIES = "クラブの歩みと今季の選手は、本編で見られます。"
+# **クラブ紹介でないシリーズの締め**（2026-10-01）。選手紹介・代表・得点王・月間まとめ・比較にも
+# 上の「クラブの歩み」を読んでいた（ヤマルの回に「クラブの歩みと今季の選手」）
+SHORT_SUBSCRIBE_SERIES_OTHER = "くわしい数字と見立ては、本編で見られます。"
+
+
+def _series_outro(series: str) -> str:
+    """シリーズの回の締めの一言。クラブ紹介（「〜リーグチーム紹介」「ラ・リーガチーム紹介」）だけクラブの言い方。"""
+    club = "紹介" in series and ("リーグ" in series or "リーガ" in series)
+    return SHORT_SUBSCRIBE_SERIES if club else SHORT_SUBSCRIBE_SERIES_OTHER
 
 # 締めのかたまり（本編への誘い＋登録の依頼）。**2行ある**（2026-09-18 に1行から増やした）
 SHORT_OUTRO_LINES = (SHORT_SUBSCRIBE, SHORT_SUBSCRIBE_2)
 # 締めかどうかを見分けるときは、続き物の言い方も数える
-SHORT_OUTRO_ANY = (SHORT_SUBSCRIBE, SHORT_SUBSCRIBE_SERIES, SHORT_SUBSCRIBE_2)
+SHORT_OUTRO_ANY = (SHORT_SUBSCRIBE, SHORT_SUBSCRIBE_SERIES, SHORT_SUBSCRIBE_SERIES_OTHER, SHORT_SUBSCRIBE_2)
 
 
 def _outro_count(lines) -> int:
@@ -472,7 +528,7 @@ def _has_outro(lines) -> bool:
 
 
 # ショートの最後に足すネットの声の本数（2026-09-13 ユーザー「ショートにもいくつか」）
-VOICES_TAIL_MAX = 12
+VOICES_TAIL_MAX = 3   # 2026-09-28 に 12 → 3（収益化の審査。反応を集めただけに見せない）
 
 
 def _is_voices_scene(scene: Scene) -> bool:
@@ -504,13 +560,26 @@ def _reserved(script: Script, short: Script, max_seconds: float) -> float:
     source = _voices_source(short, script)
     if source is None:
         return 0.0
-    picked = [l for l in source.lines if getattr(l, "short_voice", False)]
-    if not picked:
+    if not any(getattr(l, "short_voice", False) for l in source.lines):
         return 0.0
-    need = sum(l.duration or l.estimated_duration()
-               for l in picked[:VOICES_TAIL_MAX])
+    # **反応はかたまり（頭の行＋続きの cont）で数える**（2026-10-03「動画の質を上げる仕組み ③」）。
+    # 行で数えていたので、8行に分けた1件は頭の3行ぶんしか空けず、締めに入らなかった（久保の結婚の回）
+    def cost(group):
+        return sum(l.duration or l.estimated_duration() for l in group)
+    groups = [g for g in _voice_groups(source.lines)
+              if str(getattr(g[0], "only", "") or "").strip() != "short"]
     # 語りを削りすぎない。**半分までしか空けない**
-    return min(need, max_seconds * 0.5)
+    cap = max_seconds * 0.5
+    need = 0.0
+    for group in [g for g in groups if any(getattr(l, "short_voice", False) for l in g)][:VOICES_TAIL_MAX]:
+        if need + cost(group) <= cap:
+            need += cost(group)
+    if need == 0.0:
+        # **印の付いた反応がどれも半分を超えるなら、入るいちばん短い1件のぶんを空ける**。
+        # 空けずに進むと反応0件のまま、次の節の語りで途中終わりになった（同じ回で2回作り直した）
+        fits = [cost(g) for g in groups if cost(g) <= cap]
+        need = min(fits) if fits else 0.0
+    return need
 
 
 def _voices_source(short: Script, script: Script) -> Scene | None:
@@ -582,16 +651,28 @@ def _add_voices_tail(short: Script, script: Script, max_seconds: float) -> None:
     rest = [l for l in rest if not _echoes_title(l.text, title)]
     # 冒頭に上げた反応（`_hoist_voice`）は締めに重ねない
     already = {(l.text or "").strip() for l in short.lines}
+    # **反応はかたまりで扱う**（2026-09-26）。長い反応を行に分けると、続きの行
+    # （`cont`）が別の反応として並ぶ。1行ずつ足すと前半だけ入って途中で切れた
+    # （久保の回「代表戦て普段…無理だな。」で終わった）。頭の行に続きをまとめる
+    groups = _voice_groups(source.lines)
+    head_of = {id(g[0]): g for g in groups}
     added = 0
     for line in (picked + rest):
+        group = head_of.get(id(line))
+        if group is None:
+            continue                     # 続きの行は、頭の行と一緒にしか入れない
         if (line.text or "").strip() in already:
             continue
         if added >= VOICES_TAIL_MAX:
             break
-        cost = line.duration or line.estimated_duration()
+        cost = sum(l.duration or l.estimated_duration() for l in group)
         if _estimate(short) + cost > target:
-            break
-        short.scenes[-1].lines.append(copy.deepcopy(line))
+            # **入らない1件は飛ばして、次を試す**（2026-09-28）。ここで止めていたので、
+            # 印付きの1件目が17秒あったシャビの回は反応が1件も入らず、
+            # 数字の語りで終わった（反応は3件までになり、1件が長い回が増える）
+            continue
+        for part in group:
+            short.scenes[-1].lines.append(copy.deepcopy(part))
         added += 1
 
 
@@ -602,6 +683,17 @@ def _tail_cost(short: Script, script: Script, max_seconds: float) -> float:
     _add_voices_tail(probe, script, max_seconds * 10)      # 上限を外して、足される行を数える
     added = probe.scenes[-1].lines[before:]
     return sum(l.duration or l.estimated_duration() for l in added)
+
+
+def _voice_groups(lines: list) -> list[list]:
+    """反応の行を、頭の行と続き（`cont`）のかたまりに分ける。"""
+    groups: list[list] = []
+    for line in lines:
+        if getattr(line, "cont", False) and groups:
+            groups[-1].append(line)
+        else:
+            groups.append([line])
+    return groups
 
 
 def _add_more_body(short: Script, script: Script, max_seconds: float, reserve: float = 0.0) -> None:
@@ -618,6 +710,11 @@ def _add_more_body(short: Script, script: Script, max_seconds: float, reserve: f
     target = max_seconds * ESTIMATE_SLACK - reserve
     if _estimate(short) > target - 4:
         return
+    # **反応の節がある回は、節を丸ごと入るときだけ足す**（2026-10-03「動画の質を上げる仕組み ③」）。
+    # 久保の結婚の回で、反応が入らなかったぶんを見立ての節の頭3行で埋め、
+    # 「何度も相手探しが起きてきました」で答えを言わずに終わった。紹介もの（反応が無い回）は今までどおり
+    whole_only = (_voices_source(short, script) is not None
+                  and str((script.meta or {}).get("short_voices", "")).lower() not in ("false", "no", "0"))
     body_title = short.scenes[-1].title
     seen = {str(l.text) for l in short.scenes[-1].lines}
     after = []
@@ -628,7 +725,19 @@ def _add_more_body(short: Script, script: Script, max_seconds: float, reserve: f
             continue
         if passed and not _is_voices_scene(scene):
             after.append(scene)
+    # **足すのは反応の手前**（2026-09-28）。反応が締めに入っている回で、反応のあとに
+    # 次の節の語り（伊藤のけがの話）が続き、「ネットの声は最後」（2026-09-16）が崩れた。
+    # 9/27 の板倉のショート「流れが変」と同じ形。反応の節から来た行の最初の位置に差し込む
+    voiced = {(l.text or "").strip()
+              for sc in script.scenes if _is_voices_scene(sc) for l in sc.lines}
+    lines = short.scenes[-1].lines
+    at = next((i for i, l in enumerate(lines) if (l.text or "").strip() in voiced), None)
     for scene in after:
+        if whole_only:
+            rest = [l for l in scene.lines
+                    if str(getattr(l, "only", "") or "").strip() != "short" and str(l.text) not in seen]
+            if _estimate(short) + sum(l.duration or l.estimated_duration() for l in rest) > target:
+                return
         for line in scene.lines:
             if str(getattr(line, "only", "") or "").strip() == "short":
                 continue
@@ -637,7 +746,14 @@ def _add_more_body(short: Script, script: Script, max_seconds: float, reserve: f
             cost = line.duration or line.estimated_duration()
             if _estimate(short) + cost > target:
                 return
-            short.scenes[-1].lines.append(copy.deepcopy(line))
+            filler = copy.deepcopy(line)
+            # **埋めた語りだと分かる印**（2026-09-28）。尺に収めるとき、締めの反応より先に落とす
+            filler.filler = True
+            if at is None:
+                lines.append(filler)
+            else:
+                lines.insert(at, filler)
+                at += 1
             seen.add(str(line.text))
 
 
@@ -649,19 +765,19 @@ def _add_subscribe(short: Script) -> None:
     やめた理由（毎回同じ文句に8秒）にも、2秒なら当たらない。
 
     **写真とテロップは前の行のものを引き継ぐ**（画面は止めない）。
+
+    **最後のカード（無音の静止画）はどの回にも付けない**（2026-10-08）。
+    シリーズの回だけ `end_card` を頼んでいたが、10月は `series:` がほぼ全部の回に
+    付くので、**読み終えたあとの3秒の無音が既定になっていた**（`SERIES_END_CARD` の注記）。
+    「続きは本編で」は `_series_outro` が声とテロップで言う。
     """
     lines = short.scenes[-1].lines
     if not lines:
         return
+    series = str((short.meta or {}).get("series") or "").strip()
     if _has_outro(lines):
         return
-    series = str((short.meta or {}).get("series") or "").strip()
-    if series:
-        # **最後のカードも本編へ向ける**（2026-09-23 指示「本編に繋いで」）。
-        # 続き物の回に「続報は次回お伝えします」は合わない（次回は別のクラブ）
-        short.meta = dict(short.meta or {}, outro_title="続きは本編で",
-                          outro_sub="チャンネルから見られます")
-    first = SHORT_SUBSCRIBE_SERIES if series else SHORT_SUBSCRIBE
+    first = _series_outro(series) if series else SHORT_SUBSCRIBE
     words_list = (first, SHORT_SUBSCRIBE_2)
     # **本編が無い回は、本編へ渡す一言を言わない**（2026-10-14 指示「本編はない」）。
     # ニュースはショートだけを出す。「本編はチャンネルから」は存在しないものへの案内になる
@@ -675,10 +791,21 @@ def _add_subscribe(short: Script) -> None:
         last.duration = 0.0
         last.audio_path = None
         last.card = "none"
+        last.marks = []       # 書き込み（2026-10-07）は写した行に付いてこさせない
+        # 前の行の確度の札を引き継がない（2026-10-07、ケインの回で反応の
+        # 「未確認」が締めの一言に付いていた）
+        last.source = None
         lines.append(last)
 
 
 STACK_DIR = Path("assets/images/_stack")
+
+
+def _tall_variant(tile: str) -> str:
+    """`01.jpg` の隣に `01_v.jpg` があればそれ。"""
+    path = Path(tile)
+    tall = path.with_name(path.stem + "_v" + path.suffix)
+    return tall.as_posix() if tall.exists() else tile
 
 
 def stacked_photo(meta: dict) -> str:
@@ -696,6 +823,10 @@ def stacked_photo(meta: dict) -> str:
     tiles = [x for x in tiles if x and Path(x).exists()]
     if len(tiles) < 2:
         return ""
+    # **主役中心の縦版（`_v.jpg`）があれば、そちらを使う**（2026-09-28）。縦長の写真を
+    # 上下の帯に切ると真ん中しか残らず、クロップの回は下の帯が挙げた手だけになった。
+    # 冒頭の1枚と同じ約束（`_add_face`）を、2枚並びにも当てる
+    tiles = [_tall_variant(t) for t in tiles]
     from PIL import Image
 
     from .render import _cover
@@ -717,7 +848,52 @@ def stacked_photo(meta: dict) -> str:
             canvas.paste(_cover(image.convert("RGB"), width, band), (0, band * index))
     out.parent.mkdir(parents=True, exist_ok=True)
     canvas.save(out, quality=95)
+    _carry_credits(tiles[:3], out)
     return out.as_posix()
+
+
+def _carry_credits(tiles: list[str], out: Path) -> None:
+    """組んだ1枚へ、**元の写真の出典だけ**を引き継ぐ（2026-10-11）。
+
+    **CC BY / BY-SA は表示が利用の条件**なので、組んだ絵に帳簿が無いと
+    概要欄から撮影者が落ちる（`tts._ledger_lines` は使った絵の置き場を見る）。
+    ベンフィカの回のショートで、組んだ1枚に `credits.json` の行が無く、
+    **表示が落ちるところだった**。
+
+    **引き継ぐのは、その写真の行だけ。**置き場の帳簿を丸ごと写すと、
+    使っていない写真のクレジットまで概要欄に並ぶ（10/10 に `tools/pairphoto.py` が
+    109件を引き継いで概要欄が16,769字になり、投稿が弾かれた）。**同じ穴の3か所目**。
+    """
+    import json
+
+    rows: list[dict] = []
+    for tile in tiles:
+        book = Path(tile).parent / "credits.json"
+        if not book.exists():
+            continue
+        try:
+            data = json.loads(book.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            continue
+        for row in data if isinstance(data, list) else []:
+            if not isinstance(row, dict):
+                continue
+            name = str(row.get("file") or row.get("filename") or "")
+            if Path(name).name != Path(tile).name:
+                continue
+            rows.append({**row, "file": out.name, "note": "ショート用に上下へ組んだ1枚"})
+    if not rows:
+        return
+    book = out.parent / "credits.json"
+    have: list[dict] = []
+    if book.exists():
+        try:
+            data = json.loads(book.read_text(encoding="utf-8"))
+            have = [r for r in data if isinstance(r, dict)] if isinstance(data, list) else []
+        except (OSError, ValueError):
+            have = []
+    keep = [r for r in have if str(r.get("file") or "") != out.name]
+    book.write_text(json.dumps(keep + rows, ensure_ascii=False, indent=1), encoding="utf-8")
 
 
 def _add_face(script: Script) -> None:
@@ -731,8 +907,12 @@ def _add_face(script: Script) -> None:
     カードとテロップで、写真は指定した行だけ。最初そう思い込んで先頭にだけ
     置いたところ、5秒出て消えた（実測して分かった）。全部の行に置く。
     """
+    # **ショート用に指定した写真があれば、それを使う**（2026-10-04）。3枚を上下に重ねると
+    # 3段目が字幕の裏に隠れる（キリンの回の佐野）
+    photo = str((script.meta or {}).get("short_photo") or "").strip()
     # **2枚並びのサムネは、上下に割った1枚にしてから敷く**（2026-09-17 指示）
-    photo = stacked_photo(script.meta)
+    if not photo:
+        photo = stacked_photo(script.meta)
     if not photo:
         photo = str((script.meta or {}).get("thumbnail_photo") or "").strip()
     if not photo:
@@ -820,6 +1000,28 @@ def photo_problems(script: Script) -> list[str]:
     return [f"冒頭の写真 {name.name} は横長（{w}×{h}）で、縦に敷くと真ん中しか映りません。"
             "`tools/frames.py` で冒頭を見て、主役が外れていたら主役中心の縦版を "
             f"{name.stem}_v{name.suffix} として隣に置いてください（2026-09-25「子供が主役になってる」）"]
+
+
+def voice_tail_problems(short: Script, script: Script) -> list[str]:
+    """**締めにネットの反応が1件も入っていないなら知らせる**（2026-10-02）。
+
+    久保の結婚の回で、`short_voice` の印を付けた反応が長すぎて尺に入らず、
+    反応0件のまま、次の節（見立て）の語りで埋めて「何度も相手探しが起きてきました」と
+    途中で終わった。印を付け替えても2件目も入らず、**2回作り直した**。
+    書き出した結果だけでは気づきにくいので、反応の節がある回で締めに1件も無ければ知らせる。
+    直し方は、短い投稿に `short_voice` を付け直すこと（反応は全文で載せる決まりなので切らない）。
+    """
+    if str((script.meta or {}).get("short_voices", "")).lower() in ("false", "no", "0"):
+        return []
+    voiced = {(l.text or "").strip()
+              for scene in script.scenes if _is_voices_scene(scene)
+              for l in scene.lines if (l.text or "").strip()}
+    if not voiced:
+        return []
+    if any((l.text or "").strip() in voiced for l in short.lines):
+        return []
+    return ["締めにネットの反応が1件も入っていません（印の付いた反応が長くて尺に入らない。"
+            "短い投稿に short_voice を付け直す）"]
 
 
 def subject_problems(short: Script, script: Script) -> list[str]:
@@ -934,12 +1136,19 @@ def _drop_lead_in(scene: Scene) -> None:
     発言までの秒数がそのまま維持に効く。**話者を名乗る行は残す
     （「ショート単体で分かるように」の決まりと衝突するため）。
     """
+    # **話者を名乗る振りは残す**（2026-09-27）。上の決まりどおりにしていなかった。
+    # 板倉の回で「先発が有力な鈴木淳之介は、こう話します。」まで落ち、ショートでは
+    # **誰だか分からないまま本人の言葉が続いた**（ユーザー指摘「板倉のショートは流れが変」）
+    first_voice = next(((getattr(l, "speaker", "") or "").strip() for l in scene.lines
+                        if (getattr(l, "speaker", "") or "").strip() not in NARRATORS), "")
+    names = {first_voice} | {part for part in first_voice.split("・") if len(part) >= 2}
     out = []
     for index, line in enumerate(scene.lines):
         who = (getattr(line, "speaker", "") or "").strip()
         if who not in NARRATORS:
             break
-        if _is_lead_in(line):
+        text = getattr(line, "text", "") or ""
+        if _is_lead_in(line) and not any(n and n in text for n in names):
             out.append(index)
     for index in reversed(out):
         del scene.lines[index]
@@ -1149,7 +1358,13 @@ def _fit(script: Script, max_seconds: float) -> None:
     if _estimate(script) > target:
         _drop_middle(script.scenes[-1], script, target)
     while _estimate(script) > target and len(script.scenes[-1].lines) > 1:
-        script.scenes[-1].lines.pop()
+        lines = script.scenes[-1].lines
+        last = lines.pop()
+        # **続き（cont）の行を落としたら、頭の行まで一緒に落とす**（2026-10-01）。
+        # コーチの回で森保監督の発言が「気付いた人が持ってきてくれて、」で切れていた。
+        # 2行に分けた発言の2行目だけが後ろから落ち、1行目が宙に浮いた
+        while getattr(last, "cont", False) and len(lines) > 1:
+            last = lines.pop()
 
 
 def _estimate(script: Script) -> float:
@@ -1263,6 +1478,7 @@ def tiktok_cut(script: Script, section: str = "") -> Script:
         tail.duration = 0.0
         tail.audio_path = None
         tail.card = "none"
+        tail.marks = []
         lines.append(tail)
         lines[-1].audio_path = None
         lines[-1].duration = 0.0
@@ -1327,13 +1543,45 @@ def enforce_limit(script: Script, max_seconds: float, config) -> int:
         index = len(lines) - (keep + 1)
         if index < 1:
             return dropped          # これ以上は削れない。呼んだ側が止める
+        # **尺を埋めた語りを、締めの反応より先に落とす**（2026-09-28）。シャビの回で、
+        # 埋めた語りのあとに置いた反応（2行）が後ろから落とされ、ショートが
+        # 「支配率は67%…」の語りで終わった。埋めた行は `_add_more_body` の印で分かる
+        fillers = [i for i in range(1, index + 1) if getattr(lines[i], "filler", False)]
+        if fillers:
+            lines.pop(fillers[-1])
+            dropped += 1
+            continue
+        # **締めの反応は最後の1件まで残す**（2026-10-03 ジダンの回）。反応が1件だけ残っているときに
+        # それを落とすと、ショートに誰の声も無いまま終わる（「声は必ず」2026-09-17）。
+        # そのときは反応のすぐ手前の語りから落とす（冒頭の2行は残す）
+        start = index
+        while start > 1 and (getattr(lines[start - 1], "speaker", "") or "").strip() not in NARRATORS:
+            start -= 1
+        if (getattr(lines[index], "speaker", "") or "").strip() not in NARRATORS:
+            groups = [l for l in lines[start:index + 1] if not getattr(l, "cont", False)]
+            if len(groups) == 1 and start - 1 >= 3:
+                at = start - 1
+                take = [at]
+                if _introduces(lines, at):
+                    take.insert(0, at - 1)
+                for x in reversed(take):
+                    lines.pop(x)
+                    dropped += 1
+                continue
         # **見出しと発言は対で落とす**（2026-09-18 ユーザー指摘。ヴァツケの回で
         # 「一つ目は…」「二つ目は…」だけが消え、**発言が宙に浮いていた**）。
         # 1行ずつ後ろから抜くので、語りだけが先に消えて
         # 「二つ目についての発言」が、何の二つ目か分からないまま流れる。
         # 落とす行が発言なら、**その直前の語り（振り）も一緒に**落とす
         take = [index]
-        if _introduces(lines, index):
+        # **続きの行を落とすなら、頭の行まで一緒に落とす**（2026-09-26）。
+        # 反応の前半だけが残って途中で切れる形にしない
+        head = index
+        while head > 1 and getattr(lines[head], "cont", False):
+            head -= 1
+        if head < index:
+            take = list(range(head, index + 1))
+        elif _introduces(lines, index):
             take.insert(0, index - 1)
         for at in reversed(take):
             lines.pop(at)

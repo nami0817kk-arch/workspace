@@ -1,0 +1,610 @@
+# 取材メモ（10/6 シリーズ「記録の解説」、key: record_kane、型は news）。材料の控えは research/raw/20261006_record_kane.md。
+# 何の記録か: イングランド代表の最多出場（シルトン125）。ケインは124で、10/6 のチェコ戦に出れば並び、抜くのは11/12 のクロアチア戦（The FA の一覧・日程）。
+#   最多得点（89）は2023年3月に既に更新済み（The FA）。年間10点以上を3度（2019年12・2021年16・2026年11）は The FA の会見記事と Opta。
+#   サッカーキングの「2026年は10」はクロアチア戦の2点目の前の数。FA・BBC・Wikipedia の一覧はどれも11なので11で通す。
+# 比べ: 120試合の時点の得点は Wikipedia の得点一覧（85点目が119試合目、86点目が122試合目）から自分で数えた。1年あたりの試合は自分で割った値。
+# 重ねない: 10/4 のイングランド対クロアチアの回（試合の中身・ビリッチ・モドリッチ）は1行だけ。ロナウドの回（10/2〜10/4）の話は出さない（ケインの「160、170、180」も名前を付けない）。
+# バイエルンとの契約は確度が低いので1行（報道）。反応は入れない回（シリーズ。数字の表が主役）。
+# 写真は Commons だけ（Bryan Berlin・YantsImages・Кирилл Венедиктов・Number 10・Dingleberries2001）。代理店の写真は使っていない。
+#   時期ごとに切り替え: 2026 W杯（冒頭・基礎DATA）→ 2016 ドイツ戦（デビューのころ）→ 2018 ロシアW杯の練習→ 2023（得点の記録を抜いた年）→ 2026 W杯 → トゥヘルと並べた1枚。
+date: 2026年10月6日
+slot: other_1
+format: news
+series: 記録の解説
+people:
+- ハリー・ケイン
+- トーマス・トゥヘル
+theme:
+  id: record_kane
+  league: england
+  league_name: イングランド代表
+  kind: other
+  topic: イングランド代表
+  title: ハリー・ケイン、イングランド代表の最多出場に王手。36年続いた記録が塗り替わる日
+  question: ケインはイングランド代表の最多出場に、いつ、どんな中身で届くのか
+  takeaway: ケインの代表出場は124で、シルトンの125まであと1。10月6日のチェコ戦に出れば並び、抜くのは早ければ11月12日のクロアチア戦。シルトンが約20年かけた数に、ケインは11年半で迫った。同じ120試合の時点で比べると、ルーニーの53点に対しケインは85点（1試合0.44対0.71）。出場の多さと点を取る重さを両方そろえて、歴代1位に並ぶ
+  opening_image: assets/images/20261006_record_kane/02_2026ghana_w.jpg
+short_title: ハリー・ケイン、代表124試合。歴代1位に手をかけた
+thumbnail:
+  photo: assets/images/20261006_record_kane/02_2026ghana.jpg
+  short_photo: assets/images/20261006_record_kane/02_2026ghana_v.jpg
+  line1: ケイン 最多出場まであと1
+  line2: 120試合 ルーニー53 ケイン●●
+  tags:
+  - ハリー・ケイン
+  - イングランド代表
+  - ウェイン・ルーニー
+  - ピーター・シルトン
+  - 記録の解説
+sections:
+- id: record
+  heading: 代表124試合、歴代1位まであと1
+  tier: 報道
+  telop: 出場124試合は歴代2位。1位シルトンの125まで、あと1つ
+  narrator: キャスター
+  card:
+    type: table
+    title: ハリー・ケイン 代表の基礎DATA
+    columns: &id001
+    - 項目
+    - 内容
+    rows: &id002
+    - - 代表デビュー
+      - 2015年3月（初戦で得点）
+    - - 出場
+      - 124試合（歴代2位）
+    - - 得点
+      - 89点（歴代1位）
+    - - 主将
+      - 2018年から
+    - - 年齢
+      - 33歳
+    - - 次の試合
+      - 10月6日 チェコ戦（ホーム）
+  say:
+  - text: イングランドの主将、ハリー・ケイン。10月3日のクロアチア戦で2点を挙げました。
+    card:
+      type: table
+      title: ハリー・ケイン 代表の基礎DATA
+      columns: *id001
+      rows: *id002
+    image: assets/images/20261006_record_kane/02_2026ghana_p.jpg
+  - text: 代表の得点は89まで伸びました。
+    card:
+      type: table
+      title: ハリー・ケイン 代表の基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 2
+  - text: そして代表の出場は、この試合で124になりました。
+    card:
+      type: table
+      title: ハリー・ケイン 代表の基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 1
+  - text: イングランド代表の最多出場は125。ケインは、その1つ手前にいます。
+    card:
+      type: table
+      title: ハリー・ケイン 代表の基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 1
+    emph: true
+  - text: 初めて代表で出たのは2015年3月。その初戦で、もうゴールを決めています。
+    card:
+      type: table
+      title: ハリー・ケイン 代表の基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 0
+    image: assets/images/20261006_record_kane/10_2016_v.jpg
+  - text: 2018年からは主将。いまは33歳です。
+    card:
+      type: table
+      title: ハリー・ケイン 代表の基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 3
+  - text: 次の試合は10月6日、ホームのウェンブリーでのチェコ戦です。
+    card:
+      type: table
+      title: ハリー・ケイン 代表の基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 5
+    image: assets/images/20261006_record_kane/02_2026ghana_p.jpg
+  sources:
+  - https://www.englandfootball.com/articles/2022/Aug/22/england-mens-senior-all-time-record-appearances-international-caps
+  - https://www.transfermarkt.com/harry-kane/nationalmannschaft/spieler/132098
+  - https://www.englandfootball.com/articles/2026/Feb/13/uefa-nations-league-2026-27-fixture-dates-confirmed-20261302
+- id: ranking
+  main: true
+  heading: イングランド代表の最多出場
+  tier: 報道
+  telop: 1位シルトン125、2位ケイン124、3位ルーニー120
+  narrator: キャスター
+  card:
+    type: table
+    title: イングランド代表 最多出場 歴代
+    columns: &id003
+    - 選手
+    - 試合
+    - 得点
+    - 期間
+    rows: &id004
+    - - ピーター・シルトン
+      - '125'
+      - '0'
+      - 1970〜90
+    - - ハリー・ケイン
+      - '124'
+      - '89'
+      - 2015〜
+    - - ウェイン・ルーニー
+      - '120'
+      - '53'
+      - 2003〜18
+  say:
+  - text: 歴代1位シルトンの125まで、あと1つ。主将ケインの代表は124試合です。
+    short_only: true
+    image: assets/images/20261006_record_kane/02_2026ghana_w.jpg
+  - text: 子どものころは、イングランド代表でプレーするのが夢だった。
+    voice: ハリー・ケイン
+    image: assets/images/20261006_record_kane/11_2026panama184.jpg
+  - text: いちばん多く出るなんて、そのころは頭にもなかった。
+    voice: ハリー・ケイン
+    cont: true
+  - text: 9月の合宿での言葉です。歴代の顔ぶれを並べます。
+    card:
+      type: table
+      title: イングランド代表 最多出場 歴代
+      columns: *id003
+      rows: *id004
+  - text: 1位はゴールキーパーのピーター・シルトン。1970年から20年、守り続けました。
+    card:
+      type: table
+      title: イングランド代表 最多出場 歴代
+      columns: *id003
+      rows: *id004
+      highlight_row: 0
+  - text: 最後の試合は1990年のW杯。40歳でした。
+    card:
+      type: table
+      title: イングランド代表 最多出場 歴代
+      columns: *id003
+      rows: *id004
+      highlight_row: 0
+  - text: 3位はウェイン・ルーニーの120。ケインはこの夏に越えました。
+    card:
+      type: table
+      title: イングランド代表 最多出場 歴代
+      columns: *id003
+      rows: *id004
+      highlight_row: 2
+  - text: そして2位がケイン。2015年からの11年半で、ここまで来ました。
+    card:
+      type: table
+      title: イングランド代表 最多出場 歴代
+      columns: *id003
+      rows: *id004
+      highlight_row: 1
+    emph: true
+  - text: 1年に直すと、シルトンは6試合ほど。ケインは11試合近くになります。
+    card:
+      type: table
+      title: イングランド代表 最多出場 歴代
+      columns: *id003
+      rows: *id004
+      highlight_row: 1
+  - text: 並ぶのは次の試合。塗り替えるのは、11月になりそうです。
+    card:
+      type: table
+      title: イングランド代表 最多出場 歴代
+      columns: *id003
+      rows: *id004
+      highlight_row: 0
+  - text: しかも点を取りながらの出場。1年で10点以上も、もう3度目です。
+    card:
+      type: table
+      title: イングランド代表 最多出場 歴代
+      columns: *id003
+      rows: *id004
+      highlight_row: 1
+  quotes_from:
+  - AFP（2026-09-24 の会見） https://sports.yahoo.com/articles/kane-relishing-chance-become-englands-124457378.html
+  sources:
+  - https://www.englandfootball.com/articles/2022/Aug/22/england-mens-senior-all-time-record-appearances-international-caps
+  - https://en.wikipedia.org/wiki/England_national_football_team
+  - https://sports.yahoo.com/articles/tuchel-nobody-better-harry-kane-140324953.html
+  - https://sports.yahoo.com/articles/kane-relishing-chance-become-englands-124457378.html
+- id: goals
+  heading: すでに持っている得点の記録
+  tier: 報道
+  telop: 代表の得点89は歴代1位。2位ルーニーと36点差
+  narrator: 解説
+  card:
+    type: table
+    title: イングランド代表 得点 歴代
+    columns: &id005
+    - 選手
+    - 得点
+    - 試合
+    - 1試合あたり
+    rows: &id006
+    - - ハリー・ケイン
+      - '89'
+      - '124'
+      - '0.72'
+    - - ウェイン・ルーニー
+      - '53'
+      - '120'
+      - '0.44'
+    - - ボビー・チャールトン
+      - '49'
+      - '106'
+      - '0.46'
+    - - ゲーリー・リネカー
+      - '48'
+      - '80'
+      - '0.60'
+    - - ジミー・グリーヴス
+      - '44'
+      - '57'
+      - '0.77'
+    - - マイケル・オーウェン
+      - '40'
+      - '89'
+      - '0.45'
+  say:
+  - text: 出場の記録の前に、ケインがすでに手にしている記録があります。
+    card:
+      type: table
+      title: イングランド代表 得点 歴代
+      columns: *id005
+      rows: *id006
+    image: assets/images/20261006_record_kane/12_2026ghana05_v.jpg
+  - text: 通算89点。2位のルーニーの53に、なんと36点の差をつけています。
+    card:
+      type: table
+      title: イングランド代表 得点 歴代
+      columns: *id005
+      rows: *id006
+      highlight_row: 0
+    emph: true
+  - text: 3位のボビー・チャールトンは、1966年にW杯を制したイングランドの名選手です。
+    card:
+      type: table
+      title: イングランド代表 得点 歴代
+      columns: *id005
+      rows: *id006
+      highlight_row: 2
+  - text: 1試合あたりなら、1960年代のジミー・グリーヴスの0.77が上です。
+    card:
+      type: table
+      title: イングランド代表 得点 歴代
+      columns: *id005
+      rows: *id006
+      highlight_row: 4
+  - text: それでも100試合を超えて、1試合0.7点を保っているのはケインだけ。
+    card:
+      type: table
+      title: イングランド代表 得点 歴代
+      columns: *id005
+      rows: *id006
+      highlight_row: 0
+  - text: W杯だけでも14点。これもイングランドの歴代1位で、2位のベリンガムの倍です。
+    card:
+      type: table
+      title: イングランド代表 得点 歴代
+      columns: *id005
+      rows: *id006
+      highlight_row: 0
+  sources:
+  - https://www.englandfootball.com/articles/2021/Nov/15/england-mens-all-time-record-goalscorers-20211115
+  - https://www.englandfootball.com/articles/2026/Jun/17/harry-kane-england-men-world-cup-goals-record-20261706
+  - https://sports.yahoo.com/articles/englands-greatest-international-kane-now-190558893.html
+- id: years
+  heading: 1年で10点以上、3度目
+  tier: 報道
+  telop: 2019年12点、2021年16点、2026年11点。イングランド代表で初めて
+  narrator: 解説
+  card:
+    type: table
+    title: ケイン 代表の年ごとの得点
+    columns: &id007
+    - 年
+    - 試合
+    - 得点
+    rows: &id008
+    - - '2018'
+      - '12'
+      - '8'
+    - - '2019'
+      - '10'
+      - '12'
+    - - '2021'
+      - '16'
+      - '16'
+    - - '2023'
+      - '9'
+      - '9'
+    - - '2025'
+      - '9'
+      - '9'
+    - - '2026'
+      - '12'
+      - '11'
+  say:
+  - text: その得点は、どう積み上がってきたのか。年ごとに並べます。
+    card:
+      type: table
+      title: ケイン 代表の年ごとの得点
+      columns: *id007
+      rows: *id008
+    image: assets/images/20261006_record_kane/03_2018russia_p.jpg
+  - text: 2018年はロシアW杯の年。12試合で8点でした。
+    card:
+      type: table
+      title: ケイン 代表の年ごとの得点
+      columns: *id007
+      rows: *id008
+      highlight_row: 0
+  - text: 翌2019年は10試合で12点。初めて1年で10点を超えます。
+    card:
+      type: table
+      title: ケイン 代表の年ごとの得点
+      columns: *id007
+      rows: *id008
+      highlight_row: 1
+  - text: 2021年は16試合で16点。1試合に1点のペースです。
+    card:
+      type: table
+      title: ケイン 代表の年ごとの得点
+      columns: *id007
+      rows: *id008
+      highlight_row: 2
+  - text: 2023年と2025年は9点。10点には、あと1つ届きませんでした。
+    card:
+      type: table
+      title: ケイン 代表の年ごとの得点
+      columns: *id007
+      rows: *id008
+      highlight_row: 3
+  - text: そして2026年。ケインはここまで12試合で11点です。
+    card:
+      type: table
+      title: ケイン 代表の年ごとの得点
+      columns: *id007
+      rows: *id008
+      highlight_row: 5
+    image: assets/images/20261006_record_kane/02_2026ghana_p.jpg
+  - text: 10点の大台に乗せた年が3つ。イングランド代表では、初めての記録です。
+    card:
+      type: table
+      title: ケイン 代表の年ごとの得点
+      columns: *id007
+      rows: *id008
+      highlight_row: 5
+    emph: true
+  - text: トゥヘル監督は、チェコ戦の前日にこう話しています。
+    card: none
+    image: assets/images/20261006_record_kane/20_pair_tuchel.jpg
+  - text: 彼のやることは、すべてが最高の水準だ。
+    card: none
+    voice: トーマス・トゥヘル
+  - text: バイエルンで大きな役割を担ってから、彼は新しい次元に入った。
+    card: none
+    voice: トーマス・トゥヘル
+    cont: true
+  - text: ピッチの中でも外でも、最高の次元だ。
+    card: none
+    voice: トーマス・トゥヘル
+    cont: true
+  quotes_from:
+  - The FA（2026-10-05 の会見） https://www.englandfootball.com/articles/2026/Oct/05/thomas-tuchel-england-press-conference-czechia-20260510
+  sources:
+  - https://en.wikipedia.org/wiki/List_of_international_goals_scored_by_Harry_Kane
+  - https://www.englandfootball.com/articles/2026/Oct/05/thomas-tuchel-england-press-conference-czechia-20260510
+  - https://news.yahoo.co.jp/articles/393384835bb311bf53c77e0b4048b4817dc1d9ce
+- id: view
+  viewpoint: true
+  heading: ルーニーと同じ試合数での差と、記録を抜く日
+  tier: 背景
+  telop: 120試合の時点で、ルーニー53点、ケイン85点。抜くのは早ければ11月12日
+  narrator: 解説
+  card:
+    type: table
+    title: 同じ120試合で比べる
+    columns: &id009
+    - 項目
+    - ルーニー
+    - ケイン
+    rows: &id010
+    - - 120試合での得点
+      - '53'
+      - '85'
+    - - 1試合あたり
+      - '0.44'
+      - '0.71'
+    - - 代表にいた年月
+      - 約16年
+      - 11年半（続く）
+    - - 得点の歴代1位になった年
+      - 2015年
+      - 2023年（81試合目）
+  say:
+  - text: では、ケインの124試合は、これまでの名選手と中身で何が違うのか。
+    card:
+      type: table
+      title: 同じ120試合で比べる
+      columns: *id009
+      rows: *id010
+    image: assets/images/20261006_record_kane/12_2026ghana05_v.jpg
+  - text: 比べるのは同じフォワードで、出場3位のルーニーです。
+    card:
+      type: table
+      title: 同じ120試合で比べる
+      columns: *id009
+      rows: *id010
+  - text: ルーニーは代表の120試合で53点。
+    card:
+      type: table
+      title: 同じ120試合で比べる
+      columns: *id009
+      rows: *id010
+      highlight_row: 0
+  - text: ケインは、120試合目を終えた時点で85点でした。
+    card:
+      type: table
+      title: 同じ120試合で比べる
+      columns: *id009
+      rows: *id010
+      highlight_row: 0
+  - text: 1試合あたりで、ルーニーの0.44に対して、ケインは0.71。
+    card:
+      type: table
+      title: 同じ120試合で比べる
+      columns: *id009
+      rows: *id010
+      highlight_row: 1
+    emph: true
+  - text: ルーニーが代表の全試合で積んだ53点を、ケインは81試合目で越えました。
+    card:
+      type: table
+      title: 同じ120試合で比べる
+      columns: *id009
+      rows: *id010
+      highlight_row: 3
+  - text: ルーニーは中盤でも使われた万能型。役割の違いは差し引く必要があります。
+    card:
+      type: table
+      title: 同じ120試合で比べる
+      columns: *id009
+      rows: *id010
+      highlight_row: 2
+  - text: それでも、出た試合の多さと点を取る力が、ここまでそろった例はありません。
+    card:
+      type: table
+      title: 同じ120試合で比べる
+      columns: *id009
+      rows: *id010
+      highlight_row: 1
+  - text: では、記録はいつ動くのか。
+    card:
+      type: table
+      title: 最多出場の記録 これからの日程
+      columns: &id011
+      - 日本時間
+      - 試合
+      - 出場
+      rows: &id012
+      - - 10月7日 3時45分
+        - チェコ戦（ホーム）
+        - 125 並ぶ
+      - - 11月13日 4時45分
+        - クロアチア戦（ホーム）
+        - 126 抜く
+      - - 11月16日 4時45分
+        - スペイン戦（アウェー）
+        - '127'
+    image: assets/images/20261006_record_kane/11_2026panama184.jpg
+  - text: チェコ戦に出れば125。並ぶのは、日本時間7日の未明です。
+    card:
+      type: table
+      title: 最多出場の記録 これからの日程
+      columns: *id011
+      rows: *id012
+      highlight_row: 0
+  - text: 抜くのは早ければ11月12日、ホームでのクロアチア戦。日本では13日です。
+    card:
+      type: table
+      title: 最多出場の記録 これからの日程
+      columns: *id011
+      rows: *id012
+      highlight_row: 1
+  - text: トゥヘル監督も、けがが無ければ11月に抜くと見ています。
+    card:
+      type: table
+      title: 最多出場の記録 これからの日程
+      columns: *id011
+      rows: *id012
+      highlight_row: 1
+  - text: 抜けば、出場と得点の歴代1位を1人で持つのは、チャールトン以来です。
+    card:
+      type: table
+      title: 最多出場の記録 これからの日程
+      columns: *id011
+      rows: *id012
+      highlight_row: 1
+    emph: true
+  - text: 合宿に入った日の会見で、ケインはその先の話もしていました。
+    card:
+      type: table
+      title: 最多出場の記録 これからの日程
+      columns: *id011
+      rows: *id012
+      highlight_row: 2
+  - text: イングランドの名選手たちは、なぜ届かないのか。
+    card:
+      type: table
+      title: 最多出場の記録 これからの日程
+      columns: *id011
+      rows: *id012
+      highlight_row: 2
+    voice: ハリー・ケイン
+  - text: ほかの国のように、160、170、180試合に。
+    card:
+      type: table
+      title: 最多出場の記録 これからの日程
+      columns: *id011
+      rows: *id012
+      highlight_row: 2
+    voice: ハリー・ケイン
+    cont: true
+  - text: 光栄なことだ。でも、道はまだ長い。
+    card:
+      type: table
+      title: 最多出場の記録 これからの日程
+      columns: *id011
+      rows: *id012
+      highlight_row: 2
+    voice: ハリー・ケイン
+    cont: true
+  - text: クラブでは、バイエルンと2029年まで契約を延ばす方向だと報じられています。
+    card:
+      type: table
+      title: 最多出場の記録 これからの日程
+      columns: *id011
+      rows: *id012
+      highlight_row: 2
+  - text: いまのペースが続けば、160に届くのは2030年ごろの計算です。
+    card:
+      type: table
+      title: 最多出場の記録 これからの日程
+      columns: *id011
+      rows: *id012
+      highlight_row: 2
+  sources:
+  - https://en.wikipedia.org/wiki/List_of_international_goals_scored_by_Harry_Kane
+  - https://www.englandfootball.com/articles/2021/Nov/15/england-mens-all-time-record-goalscorers-20211115
+  - https://www.englandfootball.com/articles/2026/Feb/13/uefa-nations-league-2026-27-fixture-dates-confirmed-20261302
+  - https://sports.yahoo.com/articles/tuchel-nobody-better-harry-kane-140324953.html
+  - https://sports.yahoo.com/articles/kane-relishing-chance-become-englands-124457378.html
+  - https://www.vi.nl/nieuws/kane-op-het-randje-van-engels-record-hij-heeft-een-nieuw-niveau-bereikt
+  - https://en.wikipedia.org/wiki/Bobby_Charlton
+- id: voices
+  heading: ネットの反応
+  tier: 未確認
+  telop: 「まだまだ記録伸ばしそう」
+  narrator: キャスター
+  say:
+  - text: なんなら4度、5度、6度と
+    voice: ネット民
+    short_voice: true
+  - text: まだまだ記録伸ばしそうだから恐ろしい。
+    voice: ネット民
+    cont: true
+    short_voice: true
+  sources:
+  - https://news.yahoo.co.jp/articles/393384835bb311bf53c77e0b4048b4817dc1d9ce/comments

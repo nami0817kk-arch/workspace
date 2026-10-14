@@ -1,0 +1,24 @@
+{
+ "rayo": {
+  "ミチェル": {
+   "role": "legend",
+   "file": "assets/photos/ll/rayo/rayo_legend_c90014d9.jpg",
+   "page": "Míchel (footballer, born 1975)"
+  },
+  "ディエゴ・コスタ": {
+   "role": "legend",
+   "file": "assets/photos/ll/rayo/rayo_legend_55bcb8d3.jpg",
+   "page": "Diego Costa"
+  },
+  "ラダメル・ファルカオ": {
+   "role": "legend",
+   "file": "assets/photos/ll/rayo/rayo_legend_9bf16262.jpg",
+   "page": "Radamel Falcao"
+  },
+  "ベニャト・サン・ホセ": {
+   "role": "manager",
+   "file": "assets/photos/ll/rayo/rayo_manager_c03b3eca.jpg",
+   "page": "Beñat San José"
+  }
+ }
+}

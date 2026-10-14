@@ -1,0 +1,290 @@
+# 取材メモ（9/30 昼の題材 manu_carrick）。起点は Daily Mail の2本（THE AUDIT 9/29、マズラウィ負傷 9/29）。
+# 事実の裏:
+#   リーグ5試合の結果: ESPN の日程API（teams/360/schedule, season=2026）と FotMob の試合記録で一致。
+#     8/22 ハル(A) 0-2／8/30 イプスウィッチ(H) 5-2／9/6 エヴァートン(A) 2-2／9/13 マンC(H) 0-1／9/20 フルアム(A) 1-1 → 1勝2分2敗、勝ち点5、得失点 8-8。
+#   「最悪の出だし」の中身: マンU自身のプレミア時代（1992-93〜）で5試合の勝ち点として**2014-15と並ぶ最少**（Sky「joint-fewest…also 5 in 2014-15」、
+#     ESPN「worst start since 2014」。9/21 の取材 research/raw/20260921_manu.md）。Daily Mail は「worst return」と書くが「並ぶ」を採る。
+#     **今季の20クラブの中では12位で、最悪ではない**（FotMob の順位表。最下位はトッテナム・フルアムの勝ち点2）。だから「プレミア最悪」とは言わない。
+#   ハル・イプスウィッチは昇格組（Daily Mail 16170163）。エヴァートン戦: ムベウモ46分・ジョージ83分・シェシュコ88分・メイトランド＝ナイルズ90分（FotMob）。
+#   xG（FotMob の試合ごとの値、作った/与えた）: ハル 1.83/1.01、イプスウィッチ 4.77/2.06、エヴァートン 0.69/1.01、マンC 1.00/1.10、フルアム 1.60/1.62。
+#     合計 9.89/6.80。イプスウィッチ戦を除く4試合は 5.12/4.74 で、実際は3得点6失点。
+#   キャリックの経緯: 2026-01-13 にアモリムの後任として復帰（昨季終了まで）、3位でCL出場権、5/22 に2028年までの契約（Wikipedia の Michael Carrick。Daily Mail とも一致）。
+#   リーグカップ: 9/16 ブライトンに2-3で3回戦敗退（9/17 の回で扱った。ここでは1行だけ）。
+#   マズラウィ: 9/29 モロッコ 2-0 レソト（アフリカ・ネーションズカップ予選）の68分、タックルで着地を誤り腰を押さえて交代、ハキミと交代（Daily Mail 16170163）。
+#     ショーが3試合で離脱したあと、ドルグとマズラウィが左サイドバックに入った（Daily Mail 16166139）。
+#   ブルーノ: ウェールズ戦で途中交代、ノルウェー戦の前に代表を離脱。ジェズス監督「complicated」、すねの問題（Daily Mail 16170163）。
+#   ラッシュフォード・メイヌー: フルアム戦の軽傷でイングランド代表を辞退。シェシュコ・アマド・ドルグも離脱中（同）。
+#   シェシュコ: すねの痛みで準備期間を全休、2試合先発して再発。本職のセンターフォワード不在でクーニャが偽の9番（Daily Mail 16166139）。
+#   次の日程: 10/10 トッテナム(H)、その後アトレティコ(A・CL)、リーズ(A)、コモ(A)（Daily Mail 16166139・16170163、ESPN 9/21 も 10/10 トッテナム）。
+#   「重圧」は論評: 見出しで言っているのは英国の報道（Daily Mail の THE AUDIT「under pressure」）。ファンのブーイングはブライトン戦のあとと、
+#     フルアム戦でメイヌーを下げたとき（Daily Mail 16166139）。ネビルの批判は 9/21 の回で扱ったので1行だけ・発言は引かない。解任は予想しない。
+#   9/30 流れの点検で直した: 「重圧」とブーイング（タブロイド1本・試合が曖昧）は外した。センターフォワードは DM 16166139「without a conventional striker」「Cunha…false nine」に合わせて言い方を弱めた。
+#     失点の側: ハル（期待値1.01で2失点）・エヴァートン（1.01で2失点）。フルアムの1失点はオウンゴール。けが人の節は見立ての終わりに2行で畳んだ。
+#   キャリックの「ばかげている」（進退の憶測に）は日付が取れなかったので使わない。
+# 本人の言葉: Daily Mail 16166139 の2つ。9/6 エヴァートン戦のあと "It's not that bad… we'll be fine" と、
+#   その10日後（9/16 ブライトン戦のあと）"It feels bad at the moment… pretty quickly"。同じ日の "We can't accept that as a group" は
+#   9/17 の回の「受け入れられるものではなかった」と重なるので使わない。
+# 以前のマンUの回（9/11 サバ戦・9/17 ブライトン戦・9/21 ネビル・9/24 決算）と同じ文は言わない。
+date: 2026年9月30日
+slot: premier_2
+format: news
+people:
+- マイケル・キャリック
+theme:
+  id: manu_carrick
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: マンチェスター・ユナイテッド
+  title: マンU、5試合で勝ち点5。キャリックの出だしが並んだのは
+  question: 勝ち点5は、内容どおりの数字なのか
+  takeaway: イプスウィッチ戦を除く4試合はゴール期待値で5.1対4.7とほぼ互角なのに、実際は3得点6失点。前はシェシュコを欠いて期待値ほど決められず、後ろは期待値1点ほどのハルとエヴァートンに2点ずつ取られた。互角の試合を勝ち点1か0で終えたのが勝ち点5の中身で、ブルーノとマズラウィの状態を抱えて10月10日のトッテナム戦を迎える
+  opening_image: assets/images/20260930b_pair_carrick_bruno/01.jpg
+short_title: マンU、1勝止まりのキャリック体制
+thumbnail:
+  photo: assets/images/20260930b_pair_carrick_bruno/01.jpg
+  line1: キャリックのマンU
+  line2: 中身は互角、順位は●●位
+  reaction: カウンター一本にすべきなんよ
+sections:
+- id: report
+  main: true
+  heading: 5試合で1勝
+  tier: 報道
+  telop: プレミアリーグ5試合で1勝2分け2敗、勝ち点5。1992年の発足後のユナイテッドで、2014-15季と並ぶ最少
+  narrator: キャスター
+  card:
+    type: table
+    title: プレミアリーグ5試合（ユナイテッド）
+    columns: [日付, 相手, 結果]
+    rows: &id001
+    - [8月22日, ハル（敵地）, 0-2 負け]
+    - [8月30日, イプスウィッチ（本拠地）, 5-2 勝ち]
+    - [9月6日, エヴァートン（敵地）, 2-2 分け]
+    - [9月13日, マンチェスター・C（本拠地）, 0-1 負け]
+    - [9月20日, フルアム（敵地）, 1-1 分け]
+  say:
+  - {text: キャリック監督のマンチェスター・ユナイテッド。リーグ戦は1勝しかしていません。, short_only: true}
+  - text: 開幕戦は、昇格してきたハルに敵地で0対2の負け。
+    image: assets/images/20260930b_pair_carrick_bruno/01.jpg
+    card:
+      type: table
+      title: プレミアリーグ5試合（ユナイテッド）
+      columns: [日付, 相手, 結果]
+      rows: *id001
+      highlight_row: 0
+  - text: 唯一の勝利は、同じく昇格組のイプスウィッチに5対2でした。
+    card:
+      type: table
+      title: プレミアリーグ5試合（ユナイテッド）
+      columns: [日付, 相手, 結果]
+      rows: *id001
+      highlight_row: 1
+  - text: エヴァートン戦は終了間際に追いつかれて2対2の引き分け。
+    card:
+      type: table
+      title: プレミアリーグ5試合（ユナイテッド）
+      columns: [日付, 相手, 結果]
+      rows: *id001
+      highlight_row: 2
+  - 9月6日、この試合のあとのキャリックです。
+  - voice: キャリック
+    text: そんなに悪くない。
+    card:
+      type: table
+      title: プレミアリーグ5試合（ユナイテッド）
+      columns: [日付, 相手, 結果]
+      rows: *id001
+      highlight_row: 2
+  - {voice: キャリック, text: もう少しうまくやれる場面はあるが、我々は大丈夫だ, cont: true}
+  - text: マンチェスター・シティとのダービーは、ホームで0対1の負け。
+    card:
+      type: table
+      title: プレミアリーグ5試合（ユナイテッド）
+      columns: [日付, 相手, 結果]
+      rows: *id001
+      highlight_row: 3
+  - text: フルアムとは1対1の引き分けでした。
+    card:
+      type: table
+      title: プレミアリーグ5試合（ユナイテッド）
+      columns: [日付, 相手, 結果]
+      rows: *id001
+      highlight_row: 4
+  - text: 勝ち点5は、1992年のプレミア発足後のクラブ最少。
+    card: &id002
+      type: table
+      title: 5試合での勝ち点（ユナイテッド）
+      columns: ['', '']
+      rows: &id003
+      - [2014-15季, '5']
+      - [2026-27季, '5']
+      - [今季の順位, 20チーム中12位]
+      highlight_row: 1
+  - text: ファン・ハール監督1年目の2014-15季と並びます。
+    card: *id002
+  - text: ただ、リーグ全体では20チーム中12位。最下位ではありません。
+    card:
+      type: table
+      title: 5試合での勝ち点（ユナイテッド）
+      columns: ['', '']
+      rows: *id003
+      highlight_row: 2
+  quotes_from: ['https://www.dailymail.com/sport/football/article-16166139/manchester-united-carrick-academy-fan-fury.html']
+  sources: ['https://www.espn.com/soccer/team/fixtures/_/id/360/manchester-united', 'https://www.fotmob.com/teams/10260/overview/manchester-united', 'https://www.skysports.com/football/fulham-vs-manchester-united/report/559488', 'https://www.espn.com/soccer/story/_/id/49991106/carrick-squashes-notion-manchester-united-shape', 'https://www.dailymail.com/sport/football/article-16166139/manchester-united-carrick-academy-fan-fury.html']
+- id: carrick
+  heading: 3位の翌季に
+  tier: 未確認
+  telop: 1月にアモリムの後任で就任し3位。5月に2028年までの契約。9月16日「かなり早く勝たなければ」
+  narrator: キャスター
+  card:
+    type: table
+    title: キャリックとユナイテッド
+    columns: ['', '']
+    rows: &id004
+    - [2026年1月, アモリムの後任で就任]
+    - [2025-26季, 3位]
+    - [2026年5月, 2028年までの契約]
+    - [9月16日, リーグカップ3回戦で敗退]
+  say:
+  - text: 選手としてこのクラブに12年いたキャリック。
+    card: &id005
+      type: table
+      title: キャリックとユナイテッド
+      columns: ['', '']
+      rows: *id004
+      highlight_row: 0
+  - text: 今年1月、解任されたアモリムの後任に就きました。
+    card: *id005
+  - text: 3位で昨季を終え、5月に2028年までの契約を結んでいます。
+    card:
+      type: table
+      title: キャリックとユナイテッド
+      columns: ['', '']
+      rows: *id004
+      highlight_row: 2
+  - text: 今季はリーグカップも、9月16日の3回戦でブライトンに敗れました。その夜の言葉です。
+    card:
+      type: table
+      title: キャリックとユナイテッド
+      columns: ['', '']
+      rows: *id004
+      highlight_row: 3
+  - {voice: キャリック, text: この2、3週間が良くなかったから、今は気分が悪い。}
+  - {voice: キャリック, text: 試合に勝たなければいけない。それも、かなり早く, cont: true}
+  quotes_from: ['https://www.dailymail.com/sport/football/article-16166139/manchester-united-carrick-academy-fan-fury.html']
+  sources: ['https://en.wikipedia.org/wiki/Michael_Carrick', 'https://www.dailymail.com/sport/football/article-16166139/manchester-united-carrick-academy-fan-fury.html']
+- id: view
+  heading: ゴール期待値で見直す
+  tier: 背景
+  viewpoint: true
+  telop: イプスウィッチ戦を除く4試合は、期待値5.1対4.7とほぼ互角。実際は3得点6失点
+  narrator: 解説
+  card:
+    type: table
+    title: 5試合のゴール期待値（ユナイテッド）
+    columns: [相手, スコア, 作った, 与えた]
+    rows: &id006
+    - [ハル, 0-2, '1.83', '1.01']
+    - [イプスウィッチ, 5-2, '4.77', '2.06']
+    - [エヴァートン, 2-2, '0.69', '1.01']
+    - [マンチェスター・C, 0-1, '1.00', '1.10']
+    - [フルアム, 1-1, '1.60', '1.62']
+    - [合計, 8-8, '9.89', '6.80']
+  say:
+  - text: ゴール期待値は、シュートの位置や形から見込まれる得点です。
+    card:
+      type: table
+      title: 5試合のゴール期待値（ユナイテッド）
+      columns: [相手, スコア, 作った, 与えた]
+      rows: *id006
+  - text: 5試合の合計では、ユナイテッドが上回っています。
+    card:
+      type: table
+      title: 5試合のゴール期待値（ユナイテッド）
+      columns: [相手, スコア, 作った, 与えた]
+      rows: *id006
+      highlight_row: 5
+  - text: ただ、その差の大半は、5対2で勝ったイプスウィッチ戦です。
+    card:
+      type: table
+      title: 5試合のゴール期待値（ユナイテッド）
+      columns: [相手, スコア, 作った, 与えた]
+      rows: *id006
+      highlight_row: 1
+  - text: 残りの4試合は、ユナイテッドが作ったのが5.1点ぶん、相手に与えたのが4.7点ぶん。
+    card:
+      type: table
+      title: イプスウィッチ戦を除く4試合
+      columns: ['', 期待値, 実際]
+      rows: &id007
+      - [作った・取った, '5.12', 3点]
+      - [与えた・取られた, '4.74', 6点]
+      highlight_row: 0
+  - text: ほぼ互角なのに、実際は3得点6失点です。
+    card:
+      type: table
+      title: イプスウィッチ戦を除く4試合
+      columns: ['', 期待値, 実際]
+      rows: *id007
+      highlight_row: 1
+  - text: 失点の側では、期待値1点ほどのハルとエヴァートンに、2点ずつ取られました。
+    card:
+      type: table
+      title: 5試合のゴール期待値（ユナイテッド）
+      columns: [相手, スコア, 作った, 与えた]
+      rows:
+      - [ハル, 0-2, '1.83', '1.01']
+      - [イプスウィッチ, 5-2, '4.77', '2.06']
+      - [エヴァートン, 2-2, '0.69', '1.01']
+      - [マンチェスター・C, 0-1, '1.00', '1.10']
+      - [フルアム, 1-1, '1.60', '1.62']
+      - [合計, 8-8, '9.89', '6.80']
+      highlight_row: 0
+  - text: 少ないチャンスを、相手に決められています。
+    card:
+      type: table
+      title: 5試合のゴール期待値（ユナイテッド）
+      columns: [相手, スコア, 作った, 与えた]
+      rows:
+      - [ハル, 0-2, '1.83', '1.01']
+      - [イプスウィッチ, 5-2, '4.77', '2.06']
+      - [エヴァートン, 2-2, '0.69', '1.01']
+      - [マンチェスター・C, 0-1, '1.00', '1.10']
+      - [フルアム, 1-1, '1.60', '1.62']
+      - [合計, 8-8, '9.89', '6.80']
+      highlight_row: 2
+  - {text: 点を取る側では、シェシュコが2試合先発したあと、すねの痛みが再発。, image: assets/images/20260930b_pair_carrick_bruno/01.jpg}
+  - 本来の位置ではないクーニャが、前線の真ん中に入っています。
+  - text: 代表戦では、マズラウィが負傷交代。
+    card: &id008
+      type: table
+      title: 10月のユナイテッド
+      columns: ['', '']
+      rows:
+      - [10月10日, トッテナム（本拠地）]
+      - [その後, アトレティコ・マドリード（敵地）]
+      - ['', リーズ（敵地）]
+      - ['', コモ（敵地）]
+      highlight_row: 1
+  - text: 主将ブルーノも、すねの痛みでポルトガル代表を離れました。
+    card: *id008
+  - text: その状態で、キャリックは10月10日、ホームでトッテナムを迎えます。
+    card: *id008
+  - 互角の試合を、勝ち点1か0で終えている。それが勝ち点5の中身です。
+  sources: ['https://www.fotmob.com/teams/10260/fixtures/manchester-united', 'https://www.dailymail.com/sport/football/article-16166139/manchester-united-carrick-academy-fan-fury.html', 'https://www.dailymail.com/sport/football/article-16170163/Man-United-suffer-blow-Noussair-Mazraoui-forced-injured-Morocco-duty-days-star-man-Bruno-Fernandes-pulled-Portugal-squad-complicated-shin-problem.html']
+- id: voices
+  heading: ネットの反応
+  tier: 未確認
+  telop: 「誰が監督でもこうなるなら、監督以外に原因があると思う」
+  narrator: キャスター
+  say:
+  - {voice: ネット民, text: カゼミロの抜けた穴とアマド離脱で一気に弱くなった。}
+  - {voice: ネット民, text: それなのに繋ごうとする。カウンター一本にすべきなんよ。, cont: true}
+  - {voice: ネット民, text: 結局みんな現実に背いた理想の戦術を通そうとする。, cont: true}
+  - {voice: ネット民, text: どの監督がやっても結局このムーブ。, short_voice: true}
+  - {voice: ネット民, text: 在籍歴の長い選手の態度なのか、, cont: true, short_voice: true}
+  - {voice: ネット民, text: オールドトラッフォードの重圧なのか、, cont: true, short_voice: true}
+  - {voice: ネット民, text: やはりクラブ経営なのか。, cont: true, short_voice: true}
+  - {voice: ネット民, text: 誰が監督でもこうなるなら、監督以外に原因があると思う。, cont: true, short_voice: true}
+  sources: ['https://news.yahoo.co.jp/articles/057aebb87c70b863f4a005025dcab3d2f053b62c/comments', 'https://news.yahoo.co.jp/articles/fb7d23f0248b13152b4d8fde3850e5e73b7b465d/comments']

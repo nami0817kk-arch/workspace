@@ -1,0 +1,370 @@
+# 取材メモ（10/10 題材 psv_sano、型は news、日本人枠）。材料の控えは research/raw/20261010_psv_sano_material.md。
+# **この1本だけ本編とショートの両方を作る。**ほかの5本はショートだけ。
+# **材料から出ない。**数字は材料の「2.」「3.」「5.」「6.」から取り、式は材料の「6.」のまま。
+# 効く一点：**佐野の評点8.0は、この試合の22人で2位。上はGKコバーシュ（8.5）だけで、フィールドでは最高**。
+#   そこを①に置いた（冒頭に強い一点）。
+# **佐野本人の言葉は 10/10 10:00 時点で見つかっていない**（材料 4-1）。無いまま作る。推測で書かない。
+#   代わりに置いたのは、①のボス監督の佐野評（オランダ『ESPN』→フットボールチャンネルの訳、2026-09-11。
+#   原文は未取得。訳の形のまま引く）と、④のボス監督の試合後会見（PSV公式、オランダ語の原文あり）:
+#   "Ik heb sommige jongens gister pas voor het eerst de hand kunnen schudden." /
+#   "Ja dat heeft invloed, maar wij moeten alsnog onze wedstrijden winnen."
+# **goal.com 日本版の「信じてほしい。彼はとても素晴らしい選手になる」は18歳コルネシオンの話**（材料 4-3 の注意）。
+#   佐野のことではないので使っていない。
+# 数字の食い違い（材料 8）の扱い：
+#   ・出場時間は **PSV公式の568分**を採った（FotMob は567分）。クラブ公式を上に置く。sources に両方。
+#   ・得点数は **リーグ公式の順位表の「8試合26得点」**を採った（PSV公式の試合前記事は「7試合22得点」）。
+#     材料の指示どおり、リーグ公式のほうが安全。
+#   ・代表4連戦の出場数は **1試合とも2試合とも確定できない**ので、台本に出していない。
+#   ・次のCLの相手は **PSV公式のマッチセンターの「ライプツィヒ」**（NL Times の「ザルツブルク」は誤り）。
+# **順位は「暫定」と書く**（AZ は 10/10 にまだ試合が残っている。材料 1-1 の注）。
+# 媒体名は画面にも読み上げにも出していない（評点も「この試合に付いた点」とだけ言う）。出典は節の sources。
+# 数字の重なり対策（別の節で同じ数字を読まない）：『8.0』『8.5』は①だけ（③の表には出るが読まない）。
+#   『90分』は③だけ（①は「フル出場」、⑤は「一度もベンチに戻らず」で受ける）。
+#   『29分』『68分』『65分』は②だけ。『17人』は④だけ。『3.25点』『勝ち点19』は⑤だけ。
+# 写真は Commons の1枚だけ（File:Kodai Sano.JPG、CC BY-SA 4.0 / Hans Reefman、2026年、PSVのユニフォーム・背番号24）。
+#   facecrop で 01_w（16:9・冒頭とサムネ）と 01_v（9:16・ショート）を切った。**入れ替えは無し**（下地は1本のあいだ変えない）。
+#   記事の写真は当たったが、この試合の佐野が主役の横長は取れなかったので Commons の1枚で通す。
+# サムネ：構図 face（横長・顔が大きい）。10/10 は carrick が face、maresca と emirates が number、around が versus なので3回続きにならない。
+# ネットの反応は集めていない（材料の方針）。反応の節は無い。
+date: 2026年10月10日
+slot: japan_1
+format: news
+voice_min: 0
+people:
+- 佐野航大
+- PSV
+- ペーター・ボス
+theme:
+  id: psv_sano
+  league: netherlands
+  league_name: エールディビジ
+  kind: match
+  topic: 佐野航大
+  title: 佐野航大に8.0。ピッチの20人でいちばん高い点が付いた夜
+  question: 佐野航大はこの試合で何をして、なぜいちばん高い点が付いたのか
+  takeaway: 佐野航大に付いた8.0は、この試合に出た22人のうち2位。上はゴールキーパーのコバーシュ8.5だけで、フィールドを走った20人では最も高い数字だった。試合はPSVが2-0で勝ったが、自分たちの足で決めたのは29分のティルのヘッドだけで、68分の2点目はコーナーからのオウンゴール。1試合あたり3.25点を取っているチームが1点しか決めず、それでも勝てたのは今季のリーグ戦で初めて無失点に抑えたからだった。佐野は先発6試合がすべて90分で、途中で下げられたことが一度もない。クラブの紹介文では堂安律以来はじめてのPSVの日本人選手にあたる。代表ウィークが明けて最初の一戦で、PSVからは17人が代表に呼ばれており、全員での練習は前日の1日だけ。ボス監督は「何人かの選手とは、昨日はじめて握手できた」と言っている。勝ち点19で暫定2位、次は13日にアウェイでライプツィヒと戦う
+  opening_image: assets/images/20261010_psv_sano/01_w.jpg
+short_title: 佐野航大の8.0。ゴールキーパーを除けば、この試合でいちばん高い点だった
+thumbnail:
+  layout: face
+  photo: assets/images/20261010_psv_sano/01_w.jpg
+  short_photo: assets/images/20261010_psv_sano/01_v.jpg
+  line1: 佐野航大 PSV
+  line2: 20人で●●
+  tags:
+  - 佐野航大
+  - PSV
+  - エールディビジ
+sections:
+- id: rating
+  main: true
+  heading: 走った20人で、いちばん高い点
+  tier: 報道
+  telop: 佐野航大に8.0。ゴールキーパーを除けば、この試合でいちばん高い数字
+  narrator: キャスター
+  card: &ratings
+    type: table
+    title: この試合に付いた点（上から5人）
+    columns: &c_rate
+    - 選手
+    - 位置
+    - 点
+    rows: &r_rate
+    - - コバーシュ
+      - GK
+      - '8.5'
+    - - 佐野航大
+      - MF
+      - '8.0'
+    - - フラミンゴ
+      - DF
+      - '7.9'
+    - - デスト
+      - DF
+      - '7.6'
+    - - ティル
+      - MF
+      - '7.6'
+  say:
+  - text: 代表から帰ってきた最初の試合で、佐野航大が先発しました。
+    short_only: true
+  - voice: ボス監督
+    text: 彼は3つすべてのポジションでプレーできる。
+  - text: 加入からひと月のとき、ピーエスブイの監督はそう話していました。
+    card: none
+    image: assets/images/20261010_psv_sano/01_w.jpg
+  - text: 10月9日のヘーレンフェーン戦で、佐野に付いた点は8.0です。
+    card: *ratings
+  - text: 出た22人のうち、上にいたのはゴールキーパーのコバーシュだけ。
+    card:
+      <<: *ratings
+      highlight_row: 0
+  - text: 8.5。この日のマン・オブ・ザ・マッチに選ばれた選手です。
+    card: none
+    image: assets/images/20261010_psv_sano/01_w.jpg
+  - text: つまり走った20人のなかでは、佐野がいちばん高い数字でした。
+    card:
+      <<: *ratings
+      highlight_row: 1
+    emph: true
+  - text: 3位はフラミンゴ、4位はデスト。守る側の選手が上に並んだ試合です。
+    card:
+      <<: *ratings
+      highlight_row: 2
+  quotes_from:
+  - フットボールチャンネル（オランダ『ESPN』の記事を引用、2026-09-11） https://www.footballchannel.jp/2026/10/10/post1008717/
+  sources:
+  - https://www.fotmob.com/matches/psv-eindhoven-vs-sc-heerenveen/2xzk6a#5781762
+  - https://www.footballchannel.jp/2026/10/10/post1008717/
+- id: match
+  heading: 2点のうち、自分で決めたのは1点
+  tier: 確定
+  official: true
+  telop: 29分にティルのヘッド。68分はコーナーからのオウンゴール
+  narrator: キャスター
+  card: &score
+    type: score
+    competition: エールディビジ 第8節
+    home: PSV
+    away: ヘーレンフェーン
+    score: 2 - 0
+    home_scorers:
+    - 29分 ティル
+    - 68分 オウンゴール
+    away_scorers: []
+    note: フィリップス・スタディオン
+  say:
+  - text: 佐野が先発したこの試合、ピーエスブイは2点を取り、0点に抑えました。
+    card: *score
+  - text: 先制は29分。ティルにとっては、今季8試合で5点目のゴールです。
+    card: *score
+  - text: 右から入ったボールを、相手のゴールキーパーが弾ききれませんでした。
+    card: *score
+  - text: こぼれた球がちょうどティルの頭に落ちて、ファーポストから押し込んでいます。
+    card: none
+  - text: 2点目は68分。ペリシッチのコーナーをコスティッチが頭でそらしました。
+    card: *score
+  - text: それが相手の選手に当たってラインを越え、オウンゴールになっています。
+    card: *score
+  - text: 2人はどちらも65分に入ったばかりで、これがこの試合の最初のタッチでした。
+    card: none
+    emph: true
+  - text: 入った2点のうち、ピーエスブイの選手が決めたのは1点だけです。
+    card: *score
+  - text: 中盤の底にいた佐野は、コーナーキックを2本蹴り、自分のシュートは1本でした。
+    card: none
+  sources:
+  - https://eredivisie.nl/competitie/stand/
+  - https://www.espn.com/soccer/match/_/gameId/401875592
+  - https://nltimes.nl/2026/10/09/psv-beat-heerenveen-2-0-first-game-international-break
+  - https://www.voetbalzone.nl/nieuws/psv-ontsnapt-aan-rode-kaart-en-komt-met-de-schrik-vrij-tegen-sterker-heerenveen/blt818f435a688c2be2
+- id: starts
+  heading: 先発した日は、まだ一度もベンチに戻っていない
+  tier: 確定
+  official: true
+  telop: 今季7試合568分。先発した6試合はすべて90分で、途中交代は0
+  narrator: キャスター
+  card: &games
+    type: table
+    title: 今季のリーグ戦で先発した6試合
+    columns: &c_games
+    - 日付
+    - 相手
+    - 出場
+    - 点
+    rows: &r_games
+    - - 8月23日
+      - フローニンゲン
+      - 90分
+      - '7.5'
+    - - 8月30日
+      - ユトレヒト
+      - 90分
+      - '7.9'
+    - - 9月5日
+      - アヤックス
+      - 90分
+      - '7.6'
+    - - 9月13日
+      - スパルタ
+      - 90分
+      - '8.5'
+    - - 9月20日
+      - トゥウェンテ
+      - 90分
+      - '6.6'
+    - - 10月9日
+      - ヘーレンフェーン
+      - 90分
+      - '8.0'
+  say:
+  - text: 佐野がピーエスブイに来たのは、この夏の8月です。
+    card: none
+  - text: クラブが出している今季の数字は、7試合で568分。
+    card: *games
+  - text: そのうち先発は6つ。全部が90分で、途中で下げられたことは一度もありません。
+    card: *games
+    emph: true
+  - text: クラブの表では、交代で退いた回数の欄がゼロのままです。
+    card:
+      <<: *games
+      highlight_row: 5
+  - text: 9月13日のスパルタ戦では自分で得点も決めていて、表の中では最も上の数字です。
+    card:
+      <<: *games
+      highlight_row: 3
+  - text: クラブの紹介文には、堂安律以来はじめての日本人選手だと書かれています。
+    card: none
+  sources:
+  - https://www.psv.nl/teams/speler/kodai-sano
+  - https://www.fotmob.com/players/1337282/kodai-sano
+- id: comeback
+  heading: 17人が帰ってきた週の、最初の試合
+  tier: 確定
+  official: true
+  telop: PSVからは17人が代表へ。全員でそろって練習できたのは、試合の前の日だけ
+  narrator: キャスター
+  card: &came
+    type: stats
+    title: 代表ウィーク明けのPSV
+    items:
+    - - '17'
+      - 人
+      - 代表に呼ばれた選手
+    - - '1'
+      - 日
+      - 全員でそろえた練習
+    - - '2'
+      - 人
+      - 代表に初めて選ばれた
+    focus: 0
+  say:
+  - text: この試合は、代表ウィークが明けて最初の一戦でした。
+    card: *came
+  - text: ピーエスブイからは17人が代表に呼ばれています。
+    card:
+      <<: *came
+      focus: 0
+  - voice: ボス監督
+    text: 何人かの選手とは、昨日はじめて握手できた。
+    card: none
+  - voice: ボス監督
+    text: そう、それは影響している。
+    cont: true
+  - voice: ボス監督
+    text: それでも我々は試合に勝たなければならない。
+    cont: true
+    card: none
+  - text: 全員がそろって練習できたのは、試合の前の日の1日だけでした。
+    card:
+      <<: *came
+      focus: 1
+  - text: オーストラリアやインドから戻り、1日しか練習できなかった選手もいます。
+    card: none
+    image: assets/images/20261010_psv_sano/01_w.jpg
+  - text: 佐野はその中でフル出場し、ボールを奪われた回数も剥がされた回数も0でした。
+    card: &duel
+      type: stats
+      title: 佐野航大のこの試合
+      items:
+      - - '75'
+        - 回
+        - ボールに触った
+      - - '7'
+        - 勝ち
+        - 10回の競り合いで
+      - - '0'
+        - 回
+        - 奪われた・抜かれた
+      focus: 2
+  - text: 触った回数は75。90分で割ると、72秒に1回は足元に来ていた計算です。
+    card:
+      <<: *duel
+      focus: 0
+  - text: 相手とぶつかり合った10回のうち、7回は佐野が勝っています。
+    card:
+      <<: *duel
+      focus: 1
+  quotes_from:
+  - PSV公式（試合後の記者会見、2026-10-09） https://www.psv.nl/media/artikel/persconferentie-dit-soort-wedstrijden-zijn-extra-gevaarlijk
+  sources:
+  - https://www.psv.nl/media/artikel/persconferentie-dit-soort-wedstrijden-zijn-extra-gevaarlijk
+  - https://www.psv.nl/media/artikel/alles-over-psv-sc-heerenveen-in-het-teken-van-coen-dillen
+  - https://www.fotmob.com/matches/psv-eindhoven-vs-sc-heerenveen/2xzk6a#5781762
+- id: view
+  viewpoint: true
+  heading: 攻めが止まった日に、守りが初めて噛み合った
+  tier: 背景
+  telop: 1試合3.25点のチームが1点だけ。それでも勝てたのは、今季初めて失点が0だったから
+  narrator: 解説
+  card: &avg
+    type: calc
+    title: 今季のリーグ戦の得点
+    terms:
+    - - '26'
+      - 今季の得点
+    - - '8'
+      - 試合
+    - - '3.25'
+      - 1試合あたり
+    ops:
+    - ÷
+    - ＝
+  say:
+  - text: 今季のピーエスブイは、リーグ戦で1試合あたり3.25点を取っているチームです。
+    card: *avg
+  - text: その日に自分たちで決めたのは1点。いつもの3分の1にも届きません。
+    card: *avg
+  - text: それでも勝てたのは、相手に1点も与えなかったからです。
+    card: &clean
+      type: calc
+      title: 失点はどう変わったか
+      terms:
+      - - '10'
+        - 前の7試合の失点
+      - - '7'
+        - 試合
+      - - '1.43'
+        - 1試合あたり
+      ops:
+      - ÷
+      - ＝
+  - text: それまでの7試合では10点を失っていました。1試合に1.43点です。
+    card: *clean
+  - text: 攻めが止まった日に、守る側が初めて噛み合った。そういう試合でした。
+    card: none
+    emph: true
+  - text: 勝ち点は19。暫定で首位と並び、得失点差で2位につけています。
+    card: &table
+      type: table
+      title: エールディビジの順位（10月10日の時点）
+      columns:
+      - 順位
+      - クラブ
+      - 試合
+      - 勝点
+      rows:
+      - - '1'
+        - AZ
+        - '7'
+        - '19'
+      - - '2'
+        - PSV
+        - '8'
+        - '19'
+      - - '3'
+        - フェイエノールト
+        - '7'
+        - '17'
+      highlight_row: 1
+  - text: ただしエーゼットは1試合少ないので、この並びはまだ動きます。
+    card: *table
+  - text: 次は13日、アウェイでのチャンピオンズリーグ。相手はライプツィヒです。
+    card: none
+    image: assets/images/20261010_psv_sano/01_w.jpg
+  - text: 一度もベンチに戻っていない佐野航大が、その試合にも立つことになります。
+    card: none
+  sources:
+  - https://eredivisie.nl/competitie/stand/
+  - https://www.psv.nl/match-center/wedstrijd/psv-sc-heerenveen-09-10-2026
+  - https://web.ultra-soccer.jp/news/all/39438/

@@ -1,0 +1,605 @@
+# 監督の経歴：ジネディーヌ・ジダン（10/3）。2026年7月28日にフランス代表監督に就任（前任デシャン、14年）。ここまで3試合 2勝1分け。
+# 監督歴の数字は Transfermarkt（trainer/21284 の詳細表示）と英語版Wikipedia（Managerial statistics、BDFutbol 由来）で突き合わせて一致。
+#   1期目 149試合105勝28分16敗（得点2.67・失点1.09/試合）、2期目 114試合69勝25分20敗（1.82・0.91）、フランス 3試合2勝1分0敗（1.00・0.33）。
+#   PK戦の勝ち（2016 CL決勝・2020 スペイン・スーパーカップ決勝）を勝ちに数える形。クラブの通算（172勝55分36敗）は PK戦を引き分けに数える。表の題に断る。
+#   タイトルは Transfermarkt の称号ページ（1期目9・2期目2＝11）。退任の発表はクラブ（2021-05-27、Infobae が全文）。
+# 同じ日のニュース「フランス対イタリア」（scripts/20261003_france_italy.md）が 10/2 の試合とジダンの試合後の言葉、3試合の得点の中身を扱う。
+#   この回は試合の細部を1行に留め、ジダンの言葉は 7/28 の就任会見（Maxifoot の書き起こし。ESPN・Sky Sports の英訳で裏取り）から引く。
+#   2006年決勝は「延長の退場」の1行だけ。頭突きの語は使わない。
+# 「選手の扱いで勝つ監督」の評価は ESPN（Sid Lowe 2018-05-25）。そこで引かれた主将ラモスの言葉を1つ使う（発言の日付は記事に無い）。
+# 見立ての数字（先発の入れ替え9人・3試合で20人）は FotMob と ESPN の先発表で自分で数えた（Transfermarkt の「使った選手20」とも一致）。
+# ネットの反応は2件（Yahoo!ニュースのコメント欄、就任を伝えた記事 7/28〜29。個人の投稿を頭から終わりまで）。海外の声は取れていない。
+#   acm********（THE DIGEST の記事）: レアルの戦力だったから、という見方。見立ての問いと同じ向きの声。bqw********（スポーティングニュースの記事）: 短いのでショートの締め。
+# 写真: Commons 4枚（01 2018キーウ CC BY-SA 2.0 / 02 2006決勝 CC BY 2.0 / 03 ラモスと2016 CC BY 3.0 / 04 2019 CC BY-SA 4.0）と
+#   レキップの記事の写真 05（P.Lahalle/L'Equipe、代理店ではない。同じ日のニュースの A. Réau の1枚とは別）。材料の控えは research/raw/20261003_coach_zidane.md。
+date: 2026年10月03日
+slot: other_1
+format: news
+series: 監督の経歴
+people:
+- ジネディーヌ・ジダン
+theme:
+  id: coach_zidane
+  league: france
+  league_name: フランス代表
+  kind: other
+  topic: ジネディーヌ・ジダン
+  title: ジダン、欧州3連覇の名将。フランス代表でも同じ勝ち方をするのか
+  question: レアルで選手の扱いで勝ったジダンは、フランス代表でも同じ勝ち方をしているのか
+  takeaway: レアルでは「選手の扱いで勝つ監督」と評されたジダン。代表でも2試合目に先発を9人入れ替えて勝ち、3試合で20人を使った。扱い方はレアルの頃と同じだが、1試合の得点はレアル1期目の2.67点に対して1点。失点を1試合0.33点に抑えて勝ち点を積んでいる。10月5日のベルギー戦で先発をどう組み、何点取るかが次の手がかり
+  opening_image: assets/images/20261003_coach_zidane/05_w.jpg
+short_title: ジダン、レアルで3年続けて欧州の頂点に
+thumbnail:
+  photo: assets/images/20261003_coach_zidane/05.jpg
+  line1: ジダン 欧州3連覇の名将
+  line2: 代表2戦目、先発を●人入れ替え
+  tags:
+  - ジネディーヌ・ジダン
+  - フランス代表
+  - レアル・マドリード
+  - 監督の経歴
+sections:
+- id: data
+  heading: 基礎DATA
+  tier: 報道
+  official: true
+  telop: ジネディーヌ・ジダンの基礎DATA
+  narrator: キャスター
+  card:
+    type: table
+    title: ジネディーヌ・ジダンの基礎DATA
+    columns: &id001
+    - 項目
+    - 内容
+    rows: &id002
+    - - 生まれ
+      - 1972年6月23日（54歳）、マルセイユ
+    - - 選手時代
+      - カンヌ→ボルドー→ユベントス→レアル
+    - - フランス代表
+      - 108試合31得点
+    - - 選手での栄誉
+      - W杯1998・ユーロ2000・バロンドール
+    - - 監督歴
+      - レアル・マドリード（2度）
+    - - いま
+      - フランス代表監督（2026年7月から）
+  say:
+  - text: フランス代表を率いる、ジネディーヌ・ジダン。今年7月に監督に就きました。
+    image: assets/images/20261003_coach_zidane/05_w.jpg
+    card:
+      type: table
+      title: ジネディーヌ・ジダンの基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 5
+  - text: 就任の会見で、自分のことをこう話しています。
+    card:
+      type: table
+      title: ジネディーヌ・ジダンの基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 5
+  - text: 私は10番だった。私を突き動かすのは、点を取りに行くことだ。
+    voice: ジネディーヌ・ジダン
+  - text: かつては、ピッチの上のリーダーだった。
+    voice: ジネディーヌ・ジダン
+    cont: true
+  - text: いまは、経験で引っ張るリーダーになる。
+    voice: ジネディーヌ・ジダン
+    cont: true
+  - text: 歩みの始まりは1972年、フランス南部の港町マルセイユです。
+    card:
+      type: table
+      title: ジネディーヌ・ジダンの基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 0
+  - text: 選手としてはカンヌ、ボルドー、ユベントスを経て、レアル・マドリードへ。
+    image: assets/images/20261003_coach_zidane/02.jpg
+    card:
+      type: table
+      title: ジネディーヌ・ジダンの基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 1
+  - text: 1998年、自国開催のW杯。決勝でブラジルから頭で2点を奪います。
+    emph: true
+    card:
+      type: table
+      title: ジネディーヌ・ジダンの基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 3
+  - text: フランスを、初めての世界一に導きました。
+    card:
+      type: table
+      title: ジネディーヌ・ジダンの基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 3
+  - text: その年、世界最高の選手に贈られるバロンドールも手にしました。
+    card:
+      type: table
+      title: ジネディーヌ・ジダンの基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 3
+  - text: 代表では108試合で31点を挙げました。
+    card:
+      type: table
+      title: ジネディーヌ・ジダンの基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 2
+  - text: 最後の試合は2006年W杯の決勝。延長での退場が、現役の終わりでした。
+    card:
+      type: table
+      title: ジネディーヌ・ジダンの基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 2
+  - text: 監督としての舞台は、ずっとレアル・マドリードでした。
+    card:
+      type: table
+      title: ジネディーヌ・ジダンの基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 4
+  quotes_from:
+  - Maxifoot https://www.maxifoot.fr/football/article-65498.htm
+  sources:
+  - https://en.wikipedia.org/wiki/Zinedine_Zidane
+  - https://www.transfermarkt.com/zinedine-zidane/profil/trainer/21284
+  - https://www.maxifoot.fr/football/article-65498.htm
+  - https://www.espn.com/soccer/story/_/id/49431120/france-announce-zinedine-zidane-new-coach-replacing-didier-deschamps
+- id: madrid1
+  main: true
+  heading: レアル1期目、欧州3連覇
+  tier: 報道
+  official: true
+  telop: 2016〜2018年、149試合で105勝。欧州の頂点に3年続けて
+  narrator: キャスター
+  card:
+    type: table
+    title: レアル1期目 2016年1月〜2018年5月（PK戦の勝ちを含む）
+    columns: &id003
+    - 項目
+    - 数字
+    rows: &id004
+    - - 試合
+      - '149'
+    - - 勝ち・分け・負け
+      - 105・28・16
+    - - 勝率
+      - 70.5%
+    - - 欧州チャンピオンズリーグ
+      - 3連覇（2016・2017・2018）
+    - - スペインのリーグ
+      - 優勝1回（2016-17）
+    - - タイトルの合計
+      - '9'
+  say:
+  - text: フランス代表を率いるジダンは、レアルで3年続けて欧州の頂点に立った監督です。
+    short_only: true
+    image: assets/images/20261003_coach_zidane/01_w.jpg
+  - text: 2016年1月、ジダンはレアル・マドリードの監督に就きます。
+    image: assets/images/20261003_coach_zidane/01_w.jpg
+    card:
+      type: table
+      title: レアル1期目 2016年1月〜2018年5月（PK戦の勝ちを含む）
+      columns: *id003
+      rows: *id004
+  - text: 前の監督ベニテスが、シーズン途中で解任された日のことでした。
+    card:
+      type: table
+      title: レアル1期目 2016年1月〜2018年5月（PK戦の勝ちを含む）
+      columns: *id003
+      rows: *id004
+  - text: それまで率いていたのは2軍のチーム。トップの監督は初めてです。
+    card:
+      type: table
+      title: レアル1期目 2016年1月〜2018年5月（PK戦の勝ちを含む）
+      columns: *id003
+      rows: *id004
+  - text: 目指すのは、欧州のクラブ王者を決めるチャンピオンズリーグ。
+    card:
+      type: table
+      title: レアル1期目 2016年1月〜2018年5月（PK戦の勝ちを含む）
+      columns: *id003
+      rows: *id004
+      highlight_row: 3
+  - text: 就任から5か月、ミラノでの決勝でアトレティコ・マドリードをPK戦で破ります。
+    card:
+      type: table
+      title: レアル1期目 2016年1月〜2018年5月（PK戦の勝ちを含む）
+      columns: *id003
+      rows: *id004
+      highlight_row: 3
+  - text: 翌年はカーディフで、ユベントスに4対1の勝利。
+    card:
+      type: table
+      title: レアル1期目 2016年1月〜2018年5月（PK戦の勝ちを含む）
+      columns: *id003
+      rows: *id004
+      highlight_row: 3
+  - text: 2018年はキーウで、リヴァプールに3対1で勝ちました。
+    card:
+      type: table
+      title: レアル1期目 2016年1月〜2018年5月（PK戦の勝ちを含む）
+      columns: *id003
+      rows: *id004
+      highlight_row: 3
+  - text: 1992年に今の大会名になってから、3連覇した監督はジダンただ一人です。
+    emph: true
+    card:
+      type: table
+      title: レアル1期目 2016年1月〜2018年5月（PK戦の勝ちを含む）
+      columns: *id003
+      rows: *id004
+      highlight_row: 3
+  - text: 2017年にはスペインのリーグも制し、2年半で手にしたタイトルは9つ。
+    card:
+      type: table
+      title: レアル1期目 2016年1月〜2018年5月（PK戦の勝ちを含む）
+      columns: *id003
+      rows: *id004
+      highlight_row: 5
+  - text: 149試合で105勝。勝率は70.5%に達しました。
+    card:
+      type: table
+      title: レアル1期目 2016年1月〜2018年5月（PK戦の勝ちを含む）
+      columns: *id003
+      rows: *id004
+      highlight_row: 2
+  - text: 3度目の欧州制覇から5日後、ジダンは自ら退任を発表します。
+    card:
+      type: table
+      title: レアル1期目 2016年1月〜2018年5月（PK戦の勝ちを含む）
+      columns: *id003
+      rows: *id004
+  - text: チームには変化が必要だ、というのが理由でした。
+    card:
+      type: table
+      title: レアル1期目 2016年1月〜2018年5月（PK戦の勝ちを含む）
+      columns: *id003
+      rows: *id004
+  sources:
+  - https://en.wikipedia.org/wiki/Zinedine_Zidane
+  - https://www.transfermarkt.com/zinedine-zidane/stationen/trainer/21284/plus/1
+  - https://www.transfermarkt.com/zinedine-zidane/erfolge/trainer/21284
+  - https://www.espn.com/soccer/story/_/id/37555522/zinedine-zidane-leaves-real-madrid-third-champions-league-title
+- id: madrid2
+  heading: レアル2期目、呼び戻されて
+  tier: 報道
+  official: true
+  telop: 2019〜2021年、リーグとスーパーカップを制して2度目の退任
+  narrator: 解説
+  card:
+    type: table
+    title: レアル2期目 2019年3月〜2021年5月（PK戦の勝ちを含む）
+    columns: *id003
+    rows: &id005
+    - - 試合
+      - '114'
+    - - 勝ち・分け・負け
+      - 69・25・20
+    - - 勝率
+      - 60.5%
+    - - スペイン・スーパーカップ
+      - 優勝（2020年1月）
+    - - スペインのリーグ
+      - 優勝1回（2019-20）
+    - - 最後の季（2020-21）
+      - 無冠。リーグ2位
+  say:
+  - text: 退任から9か月あまり。2019年3月、ジダンはレアルに呼び戻されます。
+    image: assets/images/20261003_coach_zidane/04.jpg
+    card:
+      type: table
+      title: レアル2期目 2019年3月〜2021年5月（PK戦の勝ちを含む）
+      columns: *id003
+      rows: *id005
+  - text: ジダンが去ったあと、後任の2人はどちらも1年もちませんでした。
+    card:
+      type: table
+      title: レアル2期目 2019年3月〜2021年5月（PK戦の勝ちを含む）
+      columns: *id003
+      rows: *id005
+  - text: 戻って最初の1年で、2つのタイトルを取ります。
+    card:
+      type: table
+      title: レアル2期目 2019年3月〜2021年5月（PK戦の勝ちを含む）
+      columns: *id003
+      rows: *id005
+  - text: まず2020年1月、リーグとカップ戦の上位4チームが争うスペイン・スーパーカップ。
+    card:
+      type: table
+      title: レアル2期目 2019年3月〜2021年5月（PK戦の勝ちを含む）
+      columns: *id003
+      rows: *id005
+      highlight_row: 3
+  - text: 決勝の相手はまたもアトレティコ。PK戦を制しました。
+    card:
+      type: table
+      title: レアル2期目 2019年3月〜2021年5月（PK戦の勝ちを含む）
+      columns: *id003
+      rows: *id005
+      highlight_row: 3
+  - text: リーグは新型コロナで中断。再開してから10連勝で、3年ぶりの優勝を決めます。
+    emph: true
+    card:
+      type: table
+      title: レアル2期目 2019年3月〜2021年5月（PK戦の勝ちを含む）
+      columns: *id003
+      rows: *id005
+      highlight_row: 4
+  - text: 翌シーズンは無冠。リーグは2位、チャンピオンズリーグは準決勝で敗退。
+    card:
+      type: table
+      title: レアル2期目 2019年3月〜2021年5月（PK戦の勝ちを含む）
+      columns: *id003
+      rows: *id005
+      highlight_row: 5
+  - text: 2021年5月、ジダンは2度目の退任を選びます。
+    card:
+      type: table
+      title: レアル2期目 2019年3月〜2021年5月（PK戦の勝ちを含む）
+      columns: *id003
+      rows: *id005
+      highlight_row: 5
+  - text: 2期目は114試合で69勝。勝率は60.5%でした。
+    card:
+      type: table
+      title: レアル2期目 2019年3月〜2021年5月（PK戦の勝ちを含む）
+      columns: *id003
+      rows: *id005
+      highlight_row: 2
+  sources:
+  - https://en.wikipedia.org/wiki/2019%E2%80%9320_Real_Madrid_CF_season
+  - https://en.wikipedia.org/wiki/2020_Supercopa_de_Espa%C3%B1a_final
+  - https://www.transfermarkt.com/zinedine-zidane/stationen/trainer/21284/plus/1
+  - https://www.infobae.com/america/deportes/futbol-europeo/2021/05/27/oficial-zinedine-zidane-dejo-de-ser-el-entrenador-del-real-madrid/
+- id: france
+  heading: 空白の5年、そしてフランス代表へ
+  tier: 報道
+  official: true
+  telop: 誘いをすべて断った5年。7月28日、デシャンの後任に
+  narrator: キャスター
+  card:
+    type: table
+    title: 空白の5年からフランス代表へ
+    columns: &id006
+    - 時期
+    - 出来事
+    rows: &id007
+    - - 2021年5月
+      - レアルを退任。監督の仕事から離れる
+    - - 2025年1月
+      - デシャン監督が、W杯での退任を表明
+    - - 2026年7月
+      - W杯で4位。デシャンの14年が終わる
+    - - 2026年7月28日
+      - ジダンの就任を発表（2030年まで）
+    - - 9月25日・28日
+      - トルコ 1-0、ベルギー 1-0（ともに敵地）
+    - - 10月2日
+      - イタリア 1-1（ホーム）
+  say:
+  - text: レアルを離れてから5年、ジダンはどこの監督にも就きませんでした。
+    image: assets/images/20261003_coach_zidane/05_w.jpg
+    card:
+      type: table
+      title: 空白の5年からフランス代表へ
+      columns: *id006
+      rows: *id007
+      highlight_row: 0
+  - text: その間のことを、就任の会見でこう明かしています。
+    card:
+      type: table
+      title: 空白の5年からフランス代表へ
+      columns: *id006
+      rows: *id007
+      highlight_row: 0
+  - text: この4、5年、誘いはあった。だが全部断った。
+    voice: ジネディーヌ・ジダン
+  - text: フランス代表のためだ。
+    voice: ジネディーヌ・ジダン
+    cont: true
+  - text: 5年間、何もせずにいたわけではない。
+    voice: ジネディーヌ・ジダン
+    cont: true
+  - text: 本当にたくさんの試合を見てきた。
+    voice: ジネディーヌ・ジダン
+    cont: true
+  - text: レアルを率いていた頃よりも多くだ。
+    voice: ジネディーヌ・ジダン
+    cont: true
+  - text: 待っていた席は、14年続いたデシャン監督の後でした。
+    card:
+      type: table
+      title: 空白の5年からフランス代表へ
+      columns: *id006
+      rows: *id007
+      highlight_row: 1
+  - text: デシャンは2025年1月、今年のW杯を最後に退くと明かします。
+    card:
+      type: table
+      title: 空白の5年からフランス代表へ
+      columns: *id006
+      rows: *id007
+      highlight_row: 1
+  - text: W杯は4位。そして7月28日、連盟がジダンの就任を発表します。
+    card:
+      type: table
+      title: 空白の5年からフランス代表へ
+      columns: *id006
+      rows: *id007
+      highlight_row: 3
+  - text: 契約は2030年まで。次のW杯までの4年を任されました。
+    card:
+      type: table
+      title: 空白の5年からフランス代表へ
+      columns: *id006
+      rows: *id007
+      highlight_row: 3
+  - text: 迎えた9月、敵地でトルコとベルギーを続けて破り、ホームのイタリア戦は引き分け。
+    card:
+      type: table
+      title: 空白の5年からフランス代表へ
+      columns: *id006
+      rows: *id007
+      highlight_row: 5
+  quotes_from:
+  - Maxifoot https://www.maxifoot.fr/football/article-65498.htm
+  sources:
+  - https://www.maxifoot.fr/football/article-65498.htm
+  - https://www.skysports.com/football/news/11095/13567717/zinedine-zidane-france-manager-reveals-he-turned-down-every-job-offer-he-received-in-last-five-years-to-become-national-team-coach
+  - https://www.espn.com/soccer/story/_/id/49431120/france-announce-zinedine-zidane-new-coach-replacing-didier-deschamps
+  - https://www.aljazeera.com/sports/2026/7/28/zidane-named-new-france-head-coach-after-fifa-world-cup-2026
+  - https://www.espn.com/soccer/match/_/gameId/760516/england-france
+  - https://www.espn.com/soccer/story/_/id/50086165/
+- id: view
+  viewpoint: true
+  heading: レアルの勝ち方は、代表でも同じか
+  tier: 背景
+  telop: 選手の回し方はレアルのまま。点の取り方は1試合2.67点から1点に
+  narrator: 解説
+  say:
+  - text: レアルでのジダンは、戦術より選手の扱いで勝つ監督だと評されてきました。
+    image: assets/images/20261003_coach_zidane/03.jpg
+  - text: 3連覇を共にした主将、セルヒオ・ラモスの言葉です。
+  - text: ジダンは、難しいロッカールームを繊細にまとめてくれた。
+    voice: セルヒオ・ラモス
+  - text: その扱い方は、代表でも見えています。3試合でピッチに立った選手は20人。
+    image: assets/images/20261003_coach_zidane/05_w.jpg
+  - text: トルコ戦からベルギー戦へは、先発11人のうち9人を入れ替えました。
+    emph: true
+  - text: ムバッペのけがもありましたが、残したのはゴールキーパーと守備の1人だけ。それでも勝っています。
+  - text: 一方で、勝ち方の中身は大きく違います。
+    card:
+      type: table
+      title: ジダンのチームの得点と失点
+      columns: &id008
+      - 時期
+      - 試合
+      - 1試合の得点
+      - 1試合の失点
+      rows: &id009
+      - - レアル1期目
+        - '149'
+        - '2.67'
+        - '1.09'
+      - - レアル2期目
+        - '114'
+        - '1.82'
+        - '0.91'
+      - - フランス代表
+        - '3'
+        - '1.00'
+        - '0.33'
+  - text: レアルの1期目は、1試合に2.67点を取って勝つチームでした。
+    card:
+      type: table
+      title: ジダンのチームの得点と失点
+      columns: *id008
+      rows: *id009
+      highlight_row: 0
+  - text: 代表の3試合は、1試合1点。そのかわり、失点は1試合0.33点に抑えています。
+    card:
+      type: table
+      title: ジダンのチームの得点と失点
+      columns: *id008
+      rows: *id009
+      highlight_row: 2
+  - text: 守りの数字は、むしろレアルの頃より上です。
+    card:
+      type: table
+      title: ジダンのチームの得点と失点
+      columns: *id008
+      rows: *id009
+      highlight_row: 2
+  - text: ジダン自身、代表の仕事をこう見ていました。
+  - text: クラブとはまったく違う仕事だ。
+    voice: ジネディーヌ・ジダン
+  - text: 私には初めてのことだが、怖くはない。
+    voice: ジネディーヌ・ジダン
+    cont: true
+  - text: 選手を入れ替えながら勝つ形は、レアルの頃のまま。点を取りに行く形は、まだこれからです。
+    card:
+      type: table
+      title: ジダンのチームの得点と失点
+      columns: *id008
+      rows: *id009
+      highlight_row: 2
+  - text: 5日の相手は、9人を替えて破ったベルギー。今度はパリ郊外のホームで迎えます。
+    card:
+      type: table
+      title: ジダンのチームの得点と失点
+      columns: *id008
+      rows: *id009
+      highlight_row: 2
+  - text: 先発をどう組み、何点取るか。10番だった監督の答えが、そこで見えてきます。
+    card:
+      type: table
+      title: ジダンのチームの得点と失点
+      columns: *id008
+      rows: *id009
+      highlight_row: 2
+  quotes_from:
+  - ESPN https://www.espn.com/soccer/story/_/id/37497073/real-madrid-zinedine-zidane-manager-knows-how-win-faces-champions-league-final
+  - Maxifoot https://www.maxifoot.fr/football/article-65498.htm
+  sources:
+  - https://www.espn.com/soccer/story/_/id/37497073/real-madrid-zinedine-zidane-manager-knows-how-win-faces-champions-league-final
+  - https://www.fotmob.com/api/data/matchDetails?matchId=5181789
+  - https://www.fotmob.com/api/data/matchDetails?matchId=5181790
+  - https://www.fotmob.com/api/data/matchDetails?matchId=5181793
+  - https://www.espn.com/soccer/match/_/gameId/401861081
+  - https://www.maxifoot.fr/football/article-65498.htm
+  - https://www.cp24.com/news/sports/2026/10/02/zidanes-first-home-game-in-charge-of-france-ends-in-1-1-draw-with-italy/
+- id: voices
+  heading: ネットの反応
+  tier: 未確認
+  telop: 「ここからがジダン監督の本当の手腕の見せどころ」
+  narrator: キャスター
+  say:
+  - text: 正直言ってジダンの監督のキャリアの
+    voice: ネット民
+  - text: CL3連覇とかラ・リーガ制覇は素晴らしいと思うんだけど、
+    voice: ネット民
+    cont: true
+  - text: 全部がレアルマドリードのキャリアだからなーとも思ってる。
+    voice: ネット民
+    cont: true
+  - text: ロナウドやモドリッチ、クロースなど錚々たるメンバーもいたし。
+    voice: ネット民
+    cont: true
+  - text: バルサのロナウジーニョやメッシのいた時の
+    voice: ネット民
+    cont: true
+  - text: ライカールトのような印象があるんだよね。
+    voice: ネット民
+    cont: true
+  - text: ここからがジダン監督の本当の手腕の
+    voice: ネット民
+    cont: true
+  - text: 見せどころではないかと思います。
+    voice: ネット民
+    cont: true
+  - text: 期待してます！
+    voice: ネット民
+    cont: true
+  - text: 残るタイトルは代表監督のタイトルだけか
+    voice: ネット民
+    short_voice: true
+  - text: 今のフランスなら十分狙える
+    voice: ネット民
+    cont: true
+    short_voice: true
+  - text: 頑張って欲しいね
+    voice: ネット民
+    cont: true
+    short_voice: true
+  sources:
+  - https://news.yahoo.co.jp/articles/2f5a2d1cbcf6c9eaf7c0e01ec91c3f57eb7b9995/comments
+  - https://news.yahoo.co.jp/articles/7d412a7a1ebc267e9762f669325e9fe4474477e5/comments

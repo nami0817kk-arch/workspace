@@ -1,0 +1,624 @@
+# クラブの財政：リヴァプール（10/12 月、シリーズ「クラブの財政」、key: finance_liverpool、型は news）。
+#
+# 軸は「**優勝した年に、売上を増やしたのはリーグではなかった**」。
+#   10/11 バイエルン回の軸（株の持ち主＝会員・50プラス1）／10/10 PSG 回（関連当事者取引・公正価値）／
+#   10/9 レアル回（スクワッド・コスト・ルール）／10/3 バルサ回（使える上限）は**1行も出さない**。
+#   ★**スクワッド・コスト・ルール（70%）は言わない**（レアル回の軸）。人件費の割合は「売上に対する割合」だけ。
+#   ★**10/9 のユニフォームの回で言った胸スポンサー・用具メーカー・エンブレム・シャツの話は言い直さない**
+#     （日立・スタンダードチャータード・トルコ航空・アディダス・ヒルズボロの炎は1行も出さない）。
+#     商業収入は**総額（3億2347万ポンド）と前の季からの増減だけ**。内訳の社名・金額は言わない。
+#   ★同じ日の他の回（ブレントフォード＝スタジアム、レバンテ＝クラブ紹介、イプスウィッチ＝ユニフォーム、
+#     アトレティコ・アルバレス）の名前は1つも出していない。チャンピオンズリーグは大会名だけで、相手クラブは言わない。
+#
+# **出どころ（一次情報まで辿れたもの）**:
+#   ○ **クラブの決算書**（The Liverpool Football Club and Athletic Grounds Limited、Companies House 00035668）。
+#       2025年5月期（2026-03-04 提出、取締役会の承認は 2025-09-22）／2024年／2023年／2022年／2021年の5冊。
+#       **画像のPDFなので1ページずつ開いて読んだ**（P&L・貸借・キャッシュフロー・注記2/3/4/9）。数字は千ポンド単位の原文から。
+#   ○ **クラブ公式の決算発表**（liverpoolfc.com、2026-02-27）。CFO の言葉と前の季からの増減が出ている。
+#   ○ **プレミアリーグの公式発表**（premierleague.com「2024/25 Payments to Clubs」「2023/24 Payments to Clubs」の表の画像）。
+#       リヴァプールへの配分 2024/25＝1億7490万ポンド（20クラブで最高）、2023/24＝1億7100万ポンド。
+#   ○ **デロイトのフットボール・マネー・リーグ 2026（2026-01-22、2024/25）**＝リヴァプール 5位 8億3600万ユーロ。
+#   ○ ヨーロッパ中央銀行の参照相場（frankfurter.app 経由）2026-10-09：1ポンド＝209.22円（丸めて209円）。
+#   × **ヨーロッパの大会からの配分額（クラブごと）は、UEFA の公式資料で見つけられなかった**
+#       （uefa.com の配分の頁は総額と仕組みだけ。クラブごとの表は無い）。だから台本では
+#       「ヨーロッパの大会でいくら入ったかは決算に別の行が無い」と言い、**額は言わない**。
+#       「リーグ以外のメディア収入」は**決算の放映権収入からリーグの配分を引いた自分の引き算**で、台本でもそう言う。
+#
+# ★**数字が3種類あるので混ぜない**:
+#   (1) **8億3600万ユーロ** … デロイトの集計（2024/25、世界5位）。ユーロ。
+#   (2) **7億272万ポンド** … クラブの決算の売上（2025年5月期。クラブ公式の発表は「703百万ポンド」、戦略報告は702.8）。ポンド。
+#   (3) **1億7490万ポンド** … プレミアリーグが公表した配分（リーグの中央支払い。メディア収入の一部）。
+#   **(1) と (2) を為替で橋渡ししない。**台本では「集計はデロイト、決算はクラブ」と出どころを言い分けるだけ。
+#   決算の季は 6月1日〜5月31日。「2024-25」＝2025年5月期。
+#
+# 自分で計算した数（機械は検算しない）:
+#   売上の増加 702.722 − 613.764 ＝ 88.958 →「8900万」
+#   メディア 263.659 − 203.705 ＝ 59.954 →「6000万」／商業 323.472 − 308.398 ＝ 15.074 →「1510万」／試合日 115.591 − 101.661 ＝ 13.930 →「1390万」
+#   waterfall は 613.8＋60.0＋15.1＋13.9 ＝ 702.8（板の合計は決算の 702.7 を置く。0.1の端数）
+#   放映権収入の増加 ÷ 売上の増加 59.954 ÷ 88.958 ＝ 67.4% →「3分の2」「67.4%」
+#   売上の構成（2024-25）メディア 37.5%・商業 46.0%・試合日 16.4%（語りでは使わない）
+#   試合日から補償金（前の季に含まれる860万）を除く：101.661 − 8.6 ＝ 93.061 →「9310万」。115.591 − 93.061 ＝ 22.53 →「2250万」
+#   リーグの配分の増加 174.9 − 171.0 ＝ 3.9 →「390万」（2.3%）。売上の増加に対して 3.9 ÷ 88.958 ＝ 4.38% →「4.4%」
+#   メディアからリーグ配分を引いた残り：前の季 203.705 − 171.0 ＝ 32.705 →「3270万」、今季 263.659 − 174.9 ＝ 88.759 →「8880万」、差 56.054 →「5610万」（2.7倍）
+#   メディア収入に占めるリーグ配分：171.0 ÷ 203.705 ＝ 83.9% →「84%」、174.9 ÷ 263.659 ＝ 66.3% →「66%」
+#   人件費 427.727（前の季 386.086、増加 41.641 →「4160万」）。売上に対して 60.87% →「60.9%」、前の季 62.90% →「62.9%」
+#   5季：売上 487.4 → 702.7 ＝ +44.2%、人件費 314.354 → 427.727 ＝ +36.1%
+#   割合の5季：2020-21 64.5%（314.354÷487.4）／2021-22 61.6%（366.092÷594.3）／2022-23 62.8%（372.881÷593.8）／2023-24 62.9%／2024-25 60.9%
+#   償却 117.165（選手の獲得費用を契約の年数で割って毎年の費用にするもの）。人件費＋償却 ＝ 427.727 ＋ 117.165 ＝ 544.892 →「5億4490万」、売上の 77.54% →「77.5%」
+#   現金（キャッシュフロー）2024-25：営業から 103.599／選手の獲得 −113.345／選手の売却 +53.828／設備 −19.370＋0.055 ＝ −19.315／
+#     合計 24.767（=「借入を返す前の余り」）。検算 103.599−113.345+53.828−19.315 ＝ 24.767 ✓
+#   獲得に出した現金 ÷ 営業の現金 113.345 ÷ 103.599 ＝ 1.094（約1割多い）
+#   銀行借入の返済 48.946 →「4890万」。親会社グループからの借入は 19.216 増えて 217.916（語りでは返済だけ言う）
+#   5季の現金（獲得／売却／差）：90.168/34.540/−55.628、97.201/32.170/−65.031、122.154/39.072/−83.082、181.568/49.061/−132.507、113.345/53.828/−59.517。
+#     合計 604.436 / 208.671 / −395.765 →「6億440万」「2億870万」「3億9580万」。5季の平均の差 79.15 →「7920万」
+#   ★2020-21 の現金は 2022年5月期の決算の「比較」欄（restated＝再計算済み）から取った。
+#   売却益（5季）39.340 / 28.124 / 33.768 / 22.017 / 53.268 → 2024-25 が最大
+#   1日あたり 702.722 ÷ 365 ＝ 1.9253 →「約193万ポンド」。×209 ＝ 402.4 →「約4億200万円」
+#   営業の利益 23.761 − 選手の売却益 53.268 ＝ −29.507 →「2950万ポンドの赤字」（保険金1289万も入った上での数）
+#   最終の利益 8.273 ÷ 702.722 ＝ 1.18% →「1.2%」
+#
+# **言い切っていないもの**:
+#   ・メディアの増加の中身は「クラブは理由にチャンピオンズリーグ参加を挙げている」まで。
+#     「引き算で出した目安」と必ず言う（リーグの配分は決算の季と1月ずれることがありうるため）。
+#   ・5位と4位の差100万ユーロは**デロイトの端数**（8億3600万と8億3700万）。丸めのずれも含むので「たった100万ユーロ」と言う。
+#   ・次の決算（2025-26）はまだ出ていない。例年2月末〜3月初め（2024-03-08・2025-03-03・2026-02-27〜03-04）。
+#   ・この季のあとの夏の補強は**名前も金額も出さない**（クラブは「この期間のあとに大きく投資した」と書くだけ）。
+#
+# 写真は2枚、入れ替えは1本1回（冒頭＝スタンドを外から見た1枚 → ③の節から中の1枚）。
+#   どちらも Commons・CC BY-SA 2.0（Mike Pennington）で、credits.json は assets/backgrounds/ にある。
+#   10/9 のユニフォームの回は逆の順（中 → 外）で使っている。顔が入っていないので板が顔にかからない。
+# アルファベットは読み上げに出さない（チャンピオンズリーグ・ヨーロッパリーグと書く）。
+# サムネは構図 number（10/11 バイエルンは number、10/11 記録は versus、10/10 PSG は scene、10/9 ユニフォームは scene）。
+#   **ユーザーと相談して決める**ので、ここに書いたのは案A。案B・Cは報告に出す。
+date: 2026年10月12日
+slot: other_1
+format: news
+series: クラブの財政
+voice_min: 0
+people:
+- リヴァプール
+theme:
+  id: finance_liverpool
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: リヴァプール
+  title: リヴァプール、優勝の年に7億ポンド超え。増えた収入の96%はどこから来たか
+  question: 優勝した年に、収入を増やしたのは何だったのか
+  lead: 収入がイングランドでいちばん多いクラブ。
+  hook: ただ、優勝の年に、リーグから増えたお金はわずかでした。
+  takeaway: リヴァプールの2024-25の収入は、デロイトの集計で8億3600万ユーロ。世界で5番目、イングランドでは最も多く、4位との差は100万ユーロだった。クラブの決算では売上が7億272万ポンドで過去最高、5季前の4億8740万ポンドから2億1530万ポンド増えた。前の季からは8900万ポンド増え、放映権収入が6000万ポンド（増加の67.4%）、商業収入が1510万ポンド、試合日の収入が1390万ポンド。プレミアリーグが公表した配分は1億7490万ポンドで20クラブ最高だが、前の季の1億7100万ポンドから増えたのは390万ポンドだけで、売上の増加の4.4%にすぎない。決算の放映権収入からリーグの配分を引いた残りは3270万ポンドから8880万ポンドへ増え、クラブは理由にチャンピオンズリーグ参加を挙げている。人件費は4億2770万ポンドで売上の60.9%（前の季は62.9%）、5季とも6割台。人件費に選手獲得費用の償却1億1720万ポンドを足すと売上の77.5%。現金の出入りでは、営業から入った現金およそ1億400万ポンドに対し選手の獲得に1億1330万ポンドを出し、売却で5380万ポンドが戻り、設備に1930万ポンドを使って2480万ポンドが残った。5季の選手の売り買いは6億440万ポンド出て2億870万ポンド戻り、差し引き3億9580万ポンドの持ち出し。営業の利益は2380万ポンドだが、選手の売却益5330万ポンドを引くと2950万ポンドの赤字になる。最終の利益は827万ポンドで売上の1.2%。1日あたりの売上はおよそ193万ポンド、円でおよそ4億200万円
+  opening_image: assets/backgrounds/stadium_リヴァプール.png
+short_title: リヴァプールの優勝の年、収入の増加のうちリーグの配分は4.4%だった
+thumbnail:
+  layout: number
+  photo: assets/backgrounds/stadium_リヴァプール.png
+  number: ●.●%
+  line1: リヴァプールの収入
+  line2: 増えた分のうち、リーグの配分
+  crests:
+  - リヴァプール
+  tags:
+  - リヴァプール
+  - プレミアリーグ
+  - アンフィールド
+  - クラブの財政
+sections:
+- id: data
+  main: true
+  heading: 収益の基礎DATA
+  tier: 報道
+  telop: 収入は世界5位、決算の売上は7億272万ポンドで過去最高
+  narrator: キャスター
+  card: &line_card
+    type: line
+    title: 売上の5季（百万ポンド）
+    x:
+    - 2020-21
+    - 2021-22
+    - 2022-23
+    - 2023-24
+    - 2024-25
+    series:
+    - - 売上
+      - [487.4, 594.3, 593.8, 613.8, 702.7]
+    unit: 百万ポンド
+  say:
+  - text: イングランドのリヴァプール。その収入の中身を、決算まで見ていきます。
+    short_only: true
+    image: assets/backgrounds/stadium_リヴァプール.png
+  - text: 世界のクラブの収入で、5位。4位との差は、たった100万ユーロです。
+    emph: true
+    image: assets/backgrounds/stadium_リヴァプール.png
+    card: &data_stats
+      type: stats
+      title: リヴァプールの2024-25
+      items:
+      - - '836'
+        - 百万ユーロ
+        - 収入（世界で5番目）
+      - - '1'
+        - 百万ユーロ
+        - 4位との差
+      - - '703'
+        - 百万ポンド
+        - 決算の売上（過去最高）
+      focus: 1
+  - text: 集計したのはデロイト。イングランドのクラブでは、いちばん上でした。
+    card:
+      <<: *data_stats
+      focus: 0
+  - text: クラブ自身の決算では、売上は7億270万ポンド。過去最高です。
+    card:
+      <<: *data_stats
+      focus: 2
+  - text: 5季前の4億8740万ポンドから、2億1530万ポンド増えました。
+    card:
+      <<: *line_card
+      highlight: 2020-21
+  - text: 2020-21はコロナ禍の季で、試合日の収入は360万ポンド。
+    card:
+      <<: *line_card
+      highlight: 2020-21
+  sources:
+  - https://www.deloitte.com/uk/en/services/financial-advisory/analysis/deloitte-football-money-league..html
+  - https://www.liverpoolfc.com/news/lfc-announces-financial-results-premier-league-title-winning-season
+  - https://find-and-update.company-information.service.gov.uk/company/00035668/filing-history
+- id: breakdown
+  heading: 増えた8900万ポンドの中身
+  tier: 確定
+  official: true
+  telop: 売上は8900万ポンド増。放映権6000万、商業1510万、試合日1390万
+  narrator: 解説
+  card: &fall_card
+    type: waterfall
+    title: 売上の増加の中身（2023-24 → 2024-25、百万ポンド）
+    start:
+    - 放映権収入
+    - 60.0
+    steps:
+    - - 商業
+      - 15.1
+    - - 試合日
+      - 13.9
+    total:
+    - 売上の増加
+    - 89.0
+  say:
+  - text: リヴァプールの売上の伸びは、前の季から8900万ポンドです。
+    image: assets/backgrounds/stadium_リヴァプール_in.png
+    card:
+      <<: *fall_card
+      highlight: 売上の増加
+  - text: いちばん大きいのは放映権収入。6000万ポンド増えています。
+    card:
+      <<: *fall_card
+      highlight: 放映権収入
+  - text: 増えた分の、3分の2にあたります。
+    emph: true
+    card:
+      <<: *fall_card
+      highlight: 放映権収入
+    mark:
+      kind: circle
+      row: 0
+  - text: リーグや大会から入る分を、まとめた項目です。
+    card:
+      <<: *fall_card
+      highlight: 放映権収入
+  - text: 商業収入が1510万、試合日の収入が1390万ポンド。
+    card:
+      <<: *fall_card
+      highlight: 商業
+  - text: 商業収入は、スポンサーや店、コンサートなどの収入です。
+    card:
+      <<: *fall_card
+      highlight: 商業
+  - text: クラブは放映権収入が増えた理由に、チャンピオンズリーグに出たことを挙げています。
+    card:
+      <<: *fall_card
+      highlight: 放映権収入
+  - text: 前の季に出ていたのは、ヨーロッパリーグでした。
+    card: none
+  - text: その季、放映権収入は2億370万ポンドまで落ちていました。
+    card:
+      type: line
+      title: 放映権収入の5季（百万ポンド）
+      x:
+      - 2020-21
+      - 2021-22
+      - 2022-23
+      - 2023-24
+      - 2024-25
+      series:
+      - - 放映権収入
+        - [266.1, 260.8, 241.6, 203.7, 263.7]
+      unit: 百万ポンド
+      highlight: 2023-24
+  - text: 試合日の1390万ポンドは、割り引いて見る必要があります。
+    card:
+      <<: *fall_card
+      highlight: 試合日
+  - text: 前の季の数字に、失った入場料の補償金が860万ポンド入っていたからです。
+    card: none
+  - text: それを除くと、試合日の収入は9310万から1億1560万ポンドへ。
+    card:
+      <<: *fall_card
+      highlight: 試合日
+  - text: 2250万ポンドの増加になります。
+    card:
+      <<: *fall_card
+      highlight: 試合日
+  - text: 増えた理由のひとつは、アンフィールド・ロードのスタンドです。
+    card: none
+  - text: シーズンを通して使えたのは、この季が初めてでした。
+    card: none
+  sources:
+  - https://www.liverpoolfc.com/news/lfc-announces-financial-results-premier-league-title-winning-season
+  - https://find-and-update.company-information.service.gov.uk/company/00035668/filing-history
+- id: league
+  heading: リーグの配分は、増えた分の4.4%
+  tier: 確定
+  official: true
+  telop: リーグの配分は1億7490万ポンドで最高額。ただ前の季から増えたのは390万
+  narrator: 解説
+  card: &lg_table
+    type: table
+    title: 放映権収入とリーグの配分（百万ポンド）
+    columns: &lg_cols
+    - 項目
+    - 2023-24
+    - 2024-25
+    - 差
+    rows: &lg_rows
+    - - 放映権収入（決算）
+      - '203.7'
+      - '263.7'
+      - '+60.0'
+    - - うちリーグの配分
+      - '171.0'
+      - '174.9'
+      - '+3.9'
+    - - 残り（引き算）
+      - '32.7'
+      - '88.8'
+      - '+56.1'
+  say:
+  - text: プレミアリーグは、放映権を売ったお金を20クラブに配っています。
+    card: *lg_table
+  - text: その配分額は、クラブごとに公表されています。
+    card: *lg_table
+  - text: 2024-25のリヴァプールは1億7490万ポンドで、20クラブの最高額です。
+    card:
+      <<: *lg_table
+      highlight_row: 1
+  - text: 前の季は3位で、1億7100万ポンドでした。
+    card:
+      <<: *lg_table
+      highlight_row: 1
+  - text: 優勝したのに、増えたのは390万ポンドにとどまります。
+    emph: true
+    card:
+      <<: *lg_table
+      highlight_row: 1
+    mark:
+      kind: circle
+      row: 1
+      col: 3
+  - text: では、放映権収入の残りは何か。決算の額から、リーグの配分を引いてみます。
+    card:
+      <<: *lg_table
+      highlight_row: 0
+  - text: 放映権収入からリーグの配分を引いた残りは、3270万から8880万ポンドへ。
+    card:
+      <<: *lg_table
+      highlight_row: 2
+  - text: リーグ以外の放映権収入が、5610万ポンド膨らんだ形です。
+    emph: true
+    card:
+      <<: *lg_table
+      highlight_row: 2
+  - text: 引き算で出した目安です。増えた理由は、クラブの説明とも合っています。
+    card: none
+  - text: 放映権収入のうち、リーグの配分が占める割合は、84%から66%に下がりました。
+    card:
+      <<: *lg_table
+      highlight_row: 1
+  - text: 売上全体の増加に占める割合では、リーグの配分は4.4%。
+    emph: true
+    card:
+      <<: *lg_table
+      highlight_row: 1
+  - text: 残りの96%は、リーグ以外の放映権収入と、商業収入、試合日の収入です。
+    card:
+      <<: *lg_table
+      highlight_row: 1
+  - text: ヨーロッパの大会でいくら入ったかは、クラブの決算に別の行がありません。
+    card: none
+  sources:
+  - https://www.premierleague.com/en/news/4325409/premier-league-central-payments-to-clubs-202425-season
+  - https://www.premierleague.com/en/news/4037205
+  - https://www.liverpoolfc.com/news/lfc-announces-financial-results-premier-league-title-winning-season
+  - https://find-and-update.company-information.service.gov.uk/company/00035668/filing-history
+- id: cost
+  heading: 人件費は、5季とも売上の6割台
+  tier: 確定
+  official: true
+  telop: 人件費は4億2770万ポンドで売上の60.9%。人件費と償却で売上の77.5%
+  narrator: 解説
+  card: &cost_table
+    type: table
+    title: 売上と人件費の5季（百万ポンド）
+    columns: &cost_cols
+    - 季
+    - 売上
+    - 人件費
+    - 割合
+    rows: &cost_rows
+    - - 2020-21
+      - '487.4'
+      - '314.4'
+      - '64.5%'
+    - - 2021-22
+      - '594.3'
+      - '366.1'
+      - '61.6%'
+    - - 2022-23
+      - '593.8'
+      - '372.9'
+      - '62.8%'
+    - - 2023-24
+      - '613.8'
+      - '386.1'
+      - '62.9%'
+    - - 2024-25
+      - '702.7'
+      - '427.7'
+      - '60.9%'
+  say:
+  - text: リヴァプールで出ていくお金の、いちばん大きい項目は人件費です。
+    card: *cost_table
+  - text: 2024-25は4億2770万ポンド。前の季より4160万ポンドの上積みです。
+    card:
+      <<: *cost_table
+      highlight_row: 4
+  - text: ただ、売上がそれ以上に増えたので、割合は62.9%から60.9%に下がっています。
+    emph: true
+    card:
+      <<: *cost_table
+      highlight_row: 4
+    mark:
+      kind: circle
+      row: 4
+      col: 3
+  - text: 5季とも、売上の6割台です。
+    card:
+      <<: *cost_table
+      highlight_row: 0
+  - text: その5季で、売上は44%増え、人件費は36%増えました。
+    emph: true
+    card: *cost_table
+  - text: この数字には、選手以外の従業員の分も入っています。
+    card: none
+  - text: 平均の従業員数は1083人で、そのうち選手・監督・コーチは238人です。
+    card: none
+  - text: 試合の日などに働く短時間のスタッフが、ほかに平均2436人います。
+    card: none
+  - text: 移籍金は、契約の年数で割って、毎年の費用にします。
+    card: none
+  - text: それが償却で、1億1720万ポンドにのぼります。
+    card: none
+  - text: 人件費と償却を足すと、5億4490万ポンド。売上の77.5%です。
+    emph: true
+    card: *cost_table
+  sources:
+  - https://www.liverpoolfc.com/news/lfc-announces-financial-results-premier-league-title-winning-season
+  - https://find-and-update.company-information.service.gov.uk/company/00035668/filing-history
+- id: cash
+  heading: 稼いだ現金は、どこへ出ていったのか
+  tier: 確定
+  official: true
+  telop: 営業の現金1億360万、選手の獲得に1億1330万、売却で5380万が戻る
+  narrator: 解説
+  card: &cash_fall
+    type: waterfall
+    title: 現金の出入り（2024-25、百万ポンド）
+    start:
+    - 本業で入った現金
+    - 103.6
+    steps:
+    - - 選手の獲得
+      - -113.3
+    - - 選手の売却
+      - 53.8
+    - - 設備
+      - -19.3
+    total:
+    - 借入を返す前の余り
+    - 24.8
+  say:
+  - text: リヴァプールの決算には、現金の出入りを数えた表があります。
+    card: *cash_fall
+  - text: 本業で入った現金は、およそ1億ポンド。
+    card:
+      <<: *cash_fall
+      highlight: 本業で入った現金
+  - text: 選手の獲得に出した現金は、1億1330万ポンド。
+    card:
+      <<: *cash_fall
+      highlight: 選手の獲得
+  - text: 本業で入った現金より、約1割多い額です。
+    emph: true
+    card:
+      <<: *cash_fall
+      highlight: 選手の獲得
+  - text: 選手を売って入ってきたのは、5380万ポンド。
+    card:
+      <<: *cash_fall
+      highlight: 選手の売却
+  - text: 設備に1930万ポンドを使い、残りは2480万ポンド。
+    card:
+      <<: *cash_fall
+      highlight: 借入を返す前の余り
+  - text: その余りで、銀行からの借入を4890万ポンド返しました。
+    card: none
+  - text: では、5季ではどうだったのか。選手の売り買いだけを並べます。
+    card: &trade_table
+      type: table
+      title: 選手の売り買いの現金（百万ポンド）
+      columns: &trade_cols
+      - 季
+      - 出した
+      - 入った
+      - 差
+      rows: &trade_rows
+      - - 2020-21
+        - '90.2'
+        - '34.5'
+        - '-55.6'
+      - - 2021-22
+        - '97.2'
+        - '32.2'
+        - '-65.0'
+      - - 2022-23
+        - '122.2'
+        - '39.1'
+        - '-83.1'
+      - - 2023-24
+        - '181.6'
+        - '49.1'
+        - '-132.5'
+      - - 2024-25
+        - '113.3'
+        - '53.8'
+        - '-59.5'
+      - - 5季の合計
+        - '604.4'
+        - '208.7'
+        - '-395.8'
+  - text: 5季で、選手の獲得に出した現金は6億440万ポンド。
+    card:
+      <<: *trade_table
+      highlight_row: 5
+  - text: 売って戻ったのは約2億900万ポンドで、差し引き3億9580万ポンドの持ち出し。
+    emph: true
+    card:
+      <<: *trade_table
+      highlight_row: 5
+  - text: 前の季は1億3250万ポンドで、5季でいちばん多い年でした。
+    card:
+      <<: *trade_table
+      highlight_row: 3
+  - text: 優勝した2024-25は5950万ポンドで、5季の平均7920万より少ない年です。
+    card:
+      <<: *trade_table
+      highlight_row: 4
+  - text: この季のあとの夏の補強は、次の決算に入ります。
+    card: none
+  - text: クラブは、大きく投資したと書いています。
+    card: none
+  sources:
+  - https://find-and-update.company-information.service.gov.uk/company/00035668/filing-history
+  - https://www.liverpoolfc.com/news/lfc-announces-financial-results-premier-league-title-winning-season
+- id: view
+  viewpoint: true
+  heading: 見立て・1日あたりと、売却益を引いた営業損益
+  tier: 背景
+  telop: 1日あたり約193万ポンド。売却益を引くと営業は2950万ポンドの赤字
+  narrator: 解説
+  card: &calc_card
+    type: calc
+    title: 1日あたりの売上（自分で割った）
+    terms:
+    - - 7億270万ポンド
+      - 2024-25の売上
+    - - 365日
+      - 1年
+    - - 約193万ポンド
+      - 1日あたり
+    ops:
+    - ÷
+    - ＝
+  say:
+  - text: ここからは、自分で割った数字です。
+    card: *calc_card
+  - text: リヴァプールの2024-25の売上を、365日で割ってみました。
+    card: *calc_card
+  - text: 1日あたり、およそ193万ポンド。
+    card: *calc_card
+  - text: 円に直すと、1日あたりおよそ4億円です。
+    emph: true
+    card: &yen_card
+      type: convert
+      title: 1日あたりの売上を円で見る
+      from:
+      - '193'
+      - 万ポンド
+      - 1日あたり
+      to:
+      - 約4億200万
+      - 円
+      - 2026年10月9日の相場
+      via: 1ポンド＝209円
+  - text: 1ポンド209円は、ヨーロッパ中央銀行の10月9日の参照相場。
+    card: none
+  - text: もうひとつ、本業の損益です。決算の営業の利益は、2380万ポンドの黒字。
+    card: &view_table
+      type: table
+      title: 自分で割ってみた（2024-25）
+      columns: &view_cols
+      - 比べ
+      - 答え
+      rows: &view_rows
+      - - 選手の売却益 ÷ 営業の利益
+        - 2.2倍
+      - - 営業の利益 − 選手の売却益
+        - 2950万ポンドの赤字
+      - - 最終の利益 ÷ 売上
+        - '1.2%'
+      highlight_row: 0
+  - text: ただ、その中には、選手を売った利益5330万ポンドが含まれています。
+    card:
+      type: table
+      title: 自分で割ってみた（2024-25）
+      columns: *view_cols
+      rows: *view_rows
+      highlight_row: 0
+  - text: 営業の利益の、2.2倍にあたる額です。
+    emph: true
+    card:
+      type: table
+      title: 自分で割ってみた（2024-25）
+      columns: *view_cols
+      rows: *view_rows
+      highlight_row: 0
+  - text: それを引くと、営業は2950万ポンドの赤字になります。
+    emph: true
+    card:
+      type: table
+      title: 自分で割ってみた（2024-25）
+      columns: *view_cols
+      rows: *view_rows
+      highlight_row: 1
+    mark:
+      kind: circle
+      row: 1
+      col: 1
+      text: 売却益を引くと
+  - text: 選手を売った利益は、5季のなかで最大です。
+    card: none
+  - text: 売上が過去最高でも、選手の売却益に支えられた黒字、と読めます。
+    card: none
+  - text: 最終の利益は827万ポンド。売上に対して1.2%です。
+    card:
+      type: table
+      title: 自分で割ってみた（2024-25）
+      columns: *view_cols
+      rows: *view_rows
+      highlight_row: 2
+  - text: 次の決算が出るのは、例年2月末から3月の初め。前回は今年の2月27日でした。
+    card: none
+  sources:
+  - https://find-and-update.company-information.service.gov.uk/company/00035668/filing-history
+  - https://www.liverpoolfc.com/news/lfc-announces-financial-results-premier-league-title-winning-season
+  - https://api.frankfurter.app/2026-10-09?from=GBP&to=JPY

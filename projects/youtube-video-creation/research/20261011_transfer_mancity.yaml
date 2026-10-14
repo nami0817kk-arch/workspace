@@ -1,0 +1,369 @@
+# 移籍の深掘り 第2回：マンチェスター・シティの2026年夏（「1クラブの移籍期間」の回）。10/11 公開。
+# **「1つの移籍」と「1クラブの移籍期間」を使い分ける決まり。**10/9 の第1回は「1つの移籍」（ネイマール）だったので、
+#   今回は「1クラブ」。並びは今夏の支出上位クラブからで、いちばん上がマンチェスター・シティ。
+# 材料の控えは research/raw/20261011_transfer_mancity.md。**材料から出ない。**
+#
+# **角度は「窓全体の金の動き」。**同じ3人を扱った回と切り口が重ならないようにしてある:
+#   10/5「移籍の答え合わせ」… エンソ・アンダーソン・ブアディの**出来**（出場時間・得点・評点）。
+#     この回は**出場・得点・評点を1つも使っていない**。選手が何をしたかには触れない。
+#   10/7「マンチェスター・シティの財政」… **判決・罰・前例の減点**。
+#     この回は**規律の話を1行も入れていない**。扱うのは移籍金の出入りだけ。
+#   10/10「city_around」「city_carrick」「city_maresca」… 人事と監督。重ならない。
+#
+# いちばん強い一点：**今夏、世界でいちばん金を出したクラブがマンチェスター・シティ**（5億2620万ユーロ）。
+#   2位のチェルシー4億748万ユーロに対して約1.29倍。山場の節の頭に置いた。
+#
+# **数字の確度。**移籍金はすべて Transfermarkt の集計で、**確度は「報道」**:
+#   - **固定の額とボーナスの切り分けは、どのクラブも公表していない。**だから台本でも
+#     「この額が固定なのかボーナス込みなのかは公表されていません」と**声に出して断っている**（節②）。
+#     クラブが発表した額ではないので「クラブが発表した」とは一度も言わない。
+#   - 市場価値は Transfermarkt の**推定**であって値段ではない。節④で声に出して断っている。
+#   - 媒体名は台本に出さない（2026-09-21 の決まり）。出どころは各節の sources に置くだけ。
+#
+# **自分で数えた数**（材料 3〜6 に式と元の数字がある。すべて百万ユーロ）:
+#   上位3人 145+135+95＝375.0 → 375.0÷526.20＝71.3%／残る6人 70+37.5+25+11.7+3.5+3.5＝151.2／
+#   1人あたり 526.20÷9＝58.47／売却上位3人 87.70+61.00+60.00＝208.70 → ÷337.02＝61.9%（台本は62%）／
+#   337.02÷526.20＝64.0%／526.20−337.02＝189.18／
+#   買った9人の移籍前の市場価値 100+110+80+55+20+15+15+6+0.9＝401.9 → 526.20÷401.9＝1.309（約1.31倍）、差 124.30／
+#   売った8人の移籍前の市場価値 35+50+55+40+25+17+12+4＝238.0 → 336.92÷238.0＝1.416（約1.42倍）／
+#   5年の夏の支出 144.00+241.10+25.00+206.80+526.20＝1143.10 → 526.20÷1143.10＝46.0%、526.20÷25.00＝21.0倍／
+#   プレミア20クラブの今夏の支出の合計 4119.43 → 526.20÷4119.43＝12.8%（台本では読まない。材料の控えのみ）
+# **3億3702万と3億3692万を言い分ける。**3億3702万は貸し出しの手数料10万ユーロを含む窓全体の収入、
+#   3億3692万は**移籍金の付いた8人ぶん**。節④の割り算は8人ぶんのほう（市場価値も8人ぶんで足しているため）。
+# 為替は ECB 参照相場の 2026-10-09＝1ユーロ177.34円（取れたいちばん新しい日）。**どの日の為替かを必ず言う**。
+#   5億2620万ユーロ × 177.34 ＝ 933億1631万円 → 「およそ933億円」。
+#   1億8918万ユーロ × 177.34 ＝ 335億4918万円 → 「およそ335億円」。
+#
+# 数字の重なり対策（別の節で同じ数字を読まない）：
+#   『5億2620万ユーロ』は①だけ（④⑤は「払った額」「今年の夏」で受ける）。『3億3702万ユーロ』も①だけ。
+#   『1億8918万ユーロ』は⑤だけ。『933億円』は①だけ、『335億円』は⑤だけ。**題には金額を入れない**。
+# 板：①waterfall と convert ②table（9行）③table（8行）④scatter（diagonal つき）と calc 2枚 ⑤line と calc。
+#   **versus は使っていない**（1つの節に20秒以上出せないうえ、この回は人の比べではないため）。
+#   板を下ろす行には `card: none` を明示した（`card:` を消すだけでは前の板が残る）。
+#   赤ペン（mark）は使っていない。
+# 写真：3枚。エンソ・フェルナンデス（Commons「Enzo Fernandez Argentina v Egypt 7 July 2026-276.jpg」
+#   CC BY-SA 4.0 / Bryan Berlin、2026年。**10/5 の回で使った -050 とは別の1枚**）＋
+#   本拠地の実写2枚（assets/backgrounds の内と外。顔が無いので板が顔にかからない）。
+#   **10/7 の財政の回で使った City of Manchester Stadium の3枚は1枚も使っていない。**代理店の写真は無し。
+#   **エンソは冒頭（0:03 の顔）とサムネだけ。**最初は節②〜⑤にも敷いていたが、preview4 で
+#   山場（13.1秒）と60秒の板が顔に100%かかったので、節①の2行目から本拠地の実写に替えた。
+#   縦版（ショート用）は `01_w_v.jpg`（＝01_v.jpg と同じ切り）と、背景の `_v.png` 2枚を作った。
+# 声：1件も無い（数字が主役の回。シリーズなので反応は集めていない）。
+# サムネ：**ユーザーと相談して決める。**ここに書いてあるのは案A（構図 number、伏せるのは933億円）。
+#   伏せた答えは節①の読み上げに出てくる。10/9 が number、10/10 が scene と classic なので3回続きにはならない。
+format: news
+voice_min: 0
+slot: other_1
+date: 2026年10月11日
+series: 移籍の深掘り
+people:
+- マンチェスター・シティ
+- エンソ・フェルナンデス
+- エリオット・アンダーソン
+- アユーブ・ブアディ
+- サヴィオ
+short_title: マンチェスター・シティ、今夏の支出は世界一の5億2620万ユーロ
+theme:
+  id: transfer_mancity
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: マンチェスター・シティ
+  title: マンチェスター・シティ、今夏の移籍で世界一の支出。売って取り返していた額
+  question: 今夏のマンチェスター・シティの移籍期間で、金はどこへ、どれだけ動いたのか
+  lead: この夏、世界でいちばん選手に金を出したクラブ。
+  hook: ただ、その半分以上は、窓が閉じる前に戻ってきています。
+  takeaway: マンチェスター・シティが今夏に選手へ払った5億2620万ユーロは、世界のどのクラブより多い（2位チェルシーの4億748万ユーロの約1.29倍）。いまの為替でおよそ933億円。一方で選手を売って受け取った額が3億3702万ユーロあり、出した額の64%が同じ夏のうちに戻っている。払ったのは9人で、エンソ・フェルナンデス1億4500万、エリオット・アンダーソン1億3500万、アユーブ・ブアディ9500万の3人だけで3億7500万ユーロ＝全体の71%。売って金になったのは8人で、サヴィオ8770万、レインデルス6100万、ロドリ6000万の3人で62%を占める。移籍の直前に付いていた推定の市場価値と比べると、買った9人は合計4億190万ユーロに対して約1.31倍を払い、売った8人は合計2億3800万ユーロに対して約1.42倍を受け取っている。高く買ってはいるが、売るほうはもっと高く売っている。夏の支出を5年並べると1億4400万、2億4110万、2500万、2億680万、そして今年で、2024年の夏の21.0倍、5年の合計11億4310万ユーロの46%がこの夏ひとつに入っている。ただし差し引きの1億8918万ユーロ（およそ335億円）は今夏の世界で4番目で、1位は2億3340万ユーロのリヴァプール。そのリヴァプールとの試合が日本時間12日0時半に組まれている
+  opening_image: assets/images/20261011_transfer_mancity/01_w.jpg
+  bgm: assets/audio/bgm_calm.wav
+thumbnail:
+  layout: number
+  photo: assets/images/20261011_transfer_mancity/01_w.jpg
+  short_photo: assets/images/20261011_transfer_mancity/stadium_v.jpg
+  number: ●●●億円
+  line1: マンCが今夏に買った9人
+  line2: 使った額は世界一だった
+  crests:
+  - マンチェスターシティ
+  tags:
+  - マンチェスター・シティ
+  - エンソ・フェルナンデス
+  - 移籍金
+  - プレミアリーグ
+  - 移籍の深掘り
+sections:
+- id: money
+  main: true
+  heading: 世界でいちばん金を出した夏
+  tier: 報道
+  telop: 5億2620万ユーロ。今年の夏、これを超えて選手に払ったクラブは世界に無い
+  narrator: キャスター
+  card: &flow
+    type: waterfall
+    title: 今夏の移籍で動いた額
+    start: [払った額, 526.2]
+    steps:
+    - [売って戻した額, -337.02]
+    total: [差し引き, 189.18]
+    unit: 百万ユーロ
+  say:
+  - text: この夏、マンチェスター・シティが世界でいちばん金を出したクラブになりました。
+    short_only: true
+    image: assets/images/20261011_transfer_mancity/01_w.jpg
+  - text: 5億2620万ユーロ。この夏、これを超えて払ったクラブはありません。
+    emph: true
+    image: assets/backgrounds/stadium_マンチェスターシティ_in.png
+    card:
+      <<: *flow
+      highlight: 払った額
+  - text: 2位はチェルシーの4億748万ユーロ。およそ1.29倍の開きです。
+    card:
+      <<: *flow
+      highlight: 払った額
+  - text: いまの為替で円に直すと、およそ933億円になります。
+    card: &yen
+      type: convert
+      title: この夏に払った額を円に
+      from: ['5億2620万', ユーロ, この夏に払った額]
+      to: [約933億, 円, 10月9日の為替]
+      via: 1ユーロ＝177.34円
+  - text: ただ、この夏のシティは、売るほうも大きく動いていました。
+    card: *flow
+  - text: 選手を売って受け取った額が、3億3702万ユーロ。
+    card:
+      <<: *flow
+      highlight: 売って戻した額
+  - text: 出した額の64%が、同じ夏のうちに戻ってきた計算になります。
+    card:
+      <<: *flow
+      highlight: 差し引き
+  sources:
+  - https://www.transfermarkt.com/transfers/einnahmenausgaben/statistik/plus/1?ids=a&saison_id=2026&saison_id_bis=2026&w_s=s
+  - https://www.transfermarkt.com/manchester-city/transfers/verein/281/saison_id/2026
+  - https://data-api.ecb.europa.eu/service/data/EXR/D.JPY.EUR.SP00.A
+- id: spent
+  heading: 金を払って加えたのは9人
+  tier: 報道
+  telop: 上の3人だけで3億7500万ユーロ。払った額の71%がここに入っている
+  narrator: 解説
+  card: &inlist
+    type: table
+    title: 払った額の大きい順（9人のうち6人）
+    columns: ['選手', '前のクラブ', '百万ユーロ']
+    rows:
+    - &i1 [エンソ・フェルナンデス, チェルシー, '145.0']
+    - &i2 [エリオット・アンダーソン, フォレスト, '135.0']
+    - &i3 [アユーブ・ブアディ, リール, '95.0']
+    - &i4 [イリマン・ンディアイェ, エヴァートン, '70.0']
+    - &i5 [アラン, パルメイラス, '37.5']
+    - &i6 [マティス・デトゥルベ, トロワ, '25.0']
+  say:
+  - text: まず、出ていった金のほうから見ていきます。
+    image: assets/backgrounds/stadium_マンチェスターシティ_in.png
+    card: none
+  - text: 移籍金を払ってシティに加わった選手は、9人でした。
+    card: *inlist
+  - text: いちばん高いのはエンソ・フェルナンデス。1億4500万ユーロ。
+    card: {type: table, title: 払った額の大きい順（9人のうち6人）, columns: ['選手', '前のクラブ', '百万ユーロ'], rows: [*i1, *i2, *i3, *i4, *i5, *i6], highlight_row: 0}
+  - text: 次がエリオット・アンダーソンの1億3500万ユーロ。
+    card: {type: table, title: 払った額の大きい順（9人のうち6人）, columns: ['選手', '前のクラブ', '百万ユーロ'], rows: [*i1, *i2, *i3, *i4, *i5, *i6], highlight_row: 1}
+  - text: 3人目がアユーブ・ブアディ。18歳に9500万ユーロを払っています。
+    card: {type: table, title: 払った額の大きい順（9人のうち6人）, columns: ['選手', '前のクラブ', '百万ユーロ'], rows: [*i1, *i2, *i3, *i4, *i5, *i6], highlight_row: 2}
+  - text: この3人だけで3億7500万ユーロ。払った額の71%です。
+    emph: true
+    image: assets/backgrounds/stadium_マンチェスターシティ.png
+    card: {type: table, title: 払った額の大きい順（9人のうち6人）, columns: ['選手', '前のクラブ', '百万ユーロ'], rows: [*i1, *i2, *i3, *i4, *i5, *i6], highlight_row: 2}
+  - text: 4人目のンディアイェが7000万ユーロ、5人目のアランが3750万。
+    card: {type: table, title: 払った額の大きい順（9人のうち6人）, columns: ['選手', '前のクラブ', '百万ユーロ'], rows: [*i1, *i2, *i3, *i4, *i5, *i6], highlight_row: 3}
+  - text: 表に出した6人で5億750万ユーロ。残る3人は合わせて1870万でした。
+    card: {type: table, title: 払った額の大きい順（9人のうち6人）, columns: ['選手', '前のクラブ', '百万ユーロ'], rows: [*i1, *i2, *i3, *i4, *i5, *i6], highlight_row: 5}
+  - text: 1人あたりに直すと、平均5847万ユーロになります。
+    card: {type: table, title: 払った額の大きい順（9人のうち6人）, columns: ['選手', '前のクラブ', '百万ユーロ'], rows: [*i1, *i2, *i3, *i4, *i5, *i6], highlight_row: 4}
+  - text: ただし、この額が固定なのかボーナス込みなのかは、公表されていません。
+    card: {type: table, title: 払った額の大きい順（9人のうち6人）, columns: ['選手', '前のクラブ', '百万ユーロ'], rows: [*i1, *i2, *i3, *i4, *i5, *i6], highlight_row: 0}
+  - text: 内訳を出したクラブは1つも無いので、伝えられた総額で並べています。
+    card: *inlist
+  sources:
+  - https://www.transfermarkt.com/manchester-city/transfers/verein/281/saison_id/2026
+- id: sold
+  heading: 移籍金が付いて出たのは8人
+  tier: 報道
+  telop: いちばん高いのはサヴィオの8770万ユーロ。上の3人で戻った額の62%
+  narrator: 解説
+  card: &outlist
+    type: table
+    title: 戻った額の大きい順（8人のうち6人）
+    columns: ['選手', '行き先', '百万ユーロ']
+    rows:
+    - &o1 [サヴィオ, トッテナム, '87.7']
+    - &o2 [ティヤニ・レインデルス, サウジアラビア, '61.0']
+    - &o3 [ロドリ, バルセロナ, '60.0']
+    - &o4 [ニコ・ゴンサレス, ニューカッスル, '56.0']
+    - &o5 [ジェームズ・トラフォード, リーズ, '46.7']
+    - &o6 [マヌエル・アカンジ, インテル, '15.0']
+  say:
+  - text: 次は、戻ってきたほうです。
+    image: assets/backgrounds/stadium_マンチェスターシティ.png
+    card: none
+  - text: シティから移籍金が付いて出ていったのは、8人でした。
+    card: *outlist
+  - text: いちばん高いのがサヴィオ。8770万ユーロでトッテナムへ移りました。
+    card: {type: table, title: 戻った額の大きい順（8人のうち6人）, columns: ['選手', '行き先', '百万ユーロ'], rows: [*o1, *o2, *o3, *o4, *o5, *o6], highlight_row: 0}
+  - text: 2人目がティヤニ・レインデルス。6100万ユーロでサウジアラビアへ。
+    card: {type: table, title: 戻った額の大きい順（8人のうち6人）, columns: ['選手', '行き先', '百万ユーロ'], rows: [*o1, *o2, *o3, *o4, *o5, *o6], highlight_row: 1}
+  - text: 3人目がロドリ。6000万ユーロでバルセロナへ。
+    card: {type: table, title: 戻った額の大きい順（8人のうち6人）, columns: ['選手', '行き先', '百万ユーロ'], rows: [*o1, *o2, *o3, *o4, *o5, *o6], highlight_row: 2}
+  - text: この3人で2億870万ユーロ。戻った額の62%にあたります。
+    emph: true
+    image: assets/backgrounds/stadium_マンチェスターシティ_in.png
+    card: {type: table, title: 戻った額の大きい順（8人のうち6人）, columns: ['選手', '行き先', '百万ユーロ'], rows: [*o1, *o2, *o3, *o4, *o5, *o6], highlight_row: 2}
+  - text: 表の6人で3億2640万ユーロ。残る2人は817万と235万でした。
+    card: {type: table, title: 戻った額の大きい順（8人のうち6人）, columns: ['選手', '行き先', '百万ユーロ'], rows: [*o1, *o2, *o3, *o4, *o5, *o6], highlight_row: 5}
+  - text: ここに、貸し出しの手数料10万ユーロが加わります。
+    card: {type: table, title: 戻った額の大きい順（8人のうち6人）, columns: ['選手', '行き先', '百万ユーロ'], rows: [*o1, *o2, *o3, *o4, *o5, *o6], highlight_row: 5}
+  - text: 一方で、金額が動かない退団も2件ありました。
+    card: *outlist
+  - text: ベルナルド・シウバとジョン・ストーンズ。この2人は収入に数えていません。
+    card: *outlist
+  sources:
+  - https://www.transfermarkt.com/manchester-city/transfers/verein/281/saison_id/2026
+- id: value
+  heading: 相場と比べると、どちらが高いか
+  tier: 報道
+  telop: 買った9人は推定の市場価値の約1.31倍、売った8人は約1.42倍だった
+  narrator: 解説
+  card: &scat
+    type: scatter
+    title: 移籍の直前の推定の市場価値と、払った移籍金
+    x: {label: 移籍の直前の市場価値, unit: 百万ユーロ}
+    y: {label: 払った移籍金, unit: 百万ユーロ}
+    points:
+    - [エンソ, 100, 145]
+    - [アンダーソン, 110, 135]
+    - [ブアディ, 80, 95]
+    - [ンディアイェ, 55, 70]
+    - [アラン, 20, 37.5]
+    - [デトゥルベ, 15, 25]
+    - [モンガ, 15, 11.7]
+    - [ルリ, 6, 3.5]
+    - [チャールズ, 0.9, 3.5]
+    diagonal: 市場価値と同じ額
+    focus: エンソ
+  say:
+  - text: シティが高く買ったのかどうかは、相場と並べると見えます。
+    image: assets/backgrounds/stadium_マンチェスターシティ_in.png
+    card: none
+  - text: 移籍の直前に付いていた、推定の市場価値を足してみます。
+    card: *scat
+  - text: 買った9人の市場価値は、合わせて4億190万ユーロでした。
+    card: *scat
+  - text: 払ったのは、その約1.31倍。1億2430万ユーロ多く出した計算です。
+    emph: true
+    card: &calc_in
+      type: calc
+      title: 買った9人は相場の何倍か
+      terms:
+      - ['5億2620万ユーロ', 払った額]
+      - ['4億190万ユーロ', 直前の市場価値の合計]
+      - [約1.31倍, 相場の何倍か]
+      ops: ['÷', ＝]
+  - text: 斜めの線は、市場価値とちょうど同じ額を払った場合を表します。
+    card:
+      <<: *scat
+      highlight: エンソ
+  - text: その線より上にいる7人が、相場より高く買われた側です。
+    card:
+      <<: *scat
+      highlight: エンソ
+  - text: 下にいるのは2人だけ。17歳のモンガと、34歳のルリでした。
+    card:
+      <<: *scat
+      highlight: モンガ
+  - text: では、売るほうはどうだったのか。
+    image: assets/backgrounds/stadium_マンチェスターシティ.png
+    card: none
+  - text: 移籍金が付いた8人の市場価値は、合わせて2億3800万ユーロ。
+    card: &calc_out
+      type: calc
+      title: 売った8人は相場の何倍か
+      terms:
+      - ['3億3692万ユーロ', 8人ぶんの受け取り]
+      - ['2億3800万ユーロ', 直前の市場価値の合計]
+      - [約1.42倍, 相場の何倍か]
+      ops: ['÷', ＝]
+  - text: 受け取ったのは、その約1.42倍でした。
+    emph: true
+    card: *calc_out
+  - text: 高く買ってはいますが、売るほうはもっと高く売っています。
+    card: *calc_out
+  - text: ただし市場価値は推定で、値段ではありません。物差しとして並べただけです。
+    card: *calc_out
+  sources:
+  - https://www.transfermarkt.com/manchester-city/transfers/verein/281/saison_id/2026
+  - https://www.transfermarkt.com/enzo-fernandez/marktwertverlauf/spieler/648195
+  - https://www.transfermarkt.com/savio/marktwertverlauf/spieler/743591
+- id: view
+  viewpoint: true
+  heading: 2年前の夏は、2500万ユーロだった
+  tier: 報道
+  telop: 夏の支出を5年並べると、2024年の2500万から21.0倍に増えている
+  narrator: 解説
+  card: &years
+    type: line
+    title: 夏の移籍期間に払った額（5年）
+    unit: 百万ユーロ
+    x: ['2022年', '2023年', '2024年', '2025年', '2026年']
+    series:
+    - [払った額, [144.0, 241.1, 25.0, 206.8, 526.2]]
+    focus: 払った額
+  say:
+  - text: この夏が特別だったのかどうかを、最後に見ておきます。
+    image: assets/backgrounds/stadium_マンチェスターシティ_in.png
+    card: *years
+  - text: 夏の移籍期間に払った額を、5年ぶん並べました。
+    card: *years
+  - text: 2022年は1億4400万、2023年は2億4110万ユーロ。
+    card:
+      <<: *years
+      highlight: '2023年'
+  - text: 2024年は2500万ユーロだけ。プレミアで20番目の額でした。
+    emph: true
+    card:
+      <<: *years
+      highlight: '2024年'
+  - text: 2025年は2億680万ユーロ。そして、この夏です。
+    card:
+      <<: *years
+      highlight: '2026年'
+  - text: 5年の合計は11億4310万ユーロ。その46%が、この夏ひとつに入っています。
+    emph: true
+    card: &calc_year
+      type: calc
+      title: この夏は2年前の何倍か
+      terms:
+      - ['5億2620万ユーロ', この夏]
+      - ['2500万ユーロ', 2024年の夏]
+      - [21.0倍, 2年での開き]
+      ops: ['÷', ＝]
+  - text: 2024年の夏から見れば、21.0倍に増えています。
+    card: *calc_year
+  - text: では、手元から消えたのはいくらか。差し引きで1億8918万ユーロです。
+    card: &yen2
+      type: convert
+      title: 差し引きを円に
+      from: ['1億8918万', ユーロ, 払った額から戻った額を引く]
+      to: [約335億, 円, 10月9日の為替]
+      via: 1ユーロ＝177.34円
+  - text: 10月9日の1ユーロ177円34銭で、およそ335億円です。
+    card: *yen2
+  - text: ところがこの差し引きは、今夏の世界で4番目でしかありません。
+    image: assets/backgrounds/stadium_マンチェスターシティ.png
+    card: none
+  - text: いちばん大きいのはリヴァプールの2億3340万ユーロ。
+  - text: そのリヴァプールとシティが、日本時間12日の0時半に当たります。
+  - text: 払った額が世界一のクラブと、手元から消えた額が世界一のクラブ。
+  - text: この夏の買い物どうしが、初めて向かい合う試合になります。
+  sources:
+  - https://www.transfermarkt.com/premier-league/einnahmenausgaben/wettbewerb/GB1/plus/1?saison_id=2026&saison_id_bis=2026&w_s=s
+  - https://www.transfermarkt.com/transfers/einnahmenausgaben/statistik/plus/1?ids=a&saison_id=2026&saison_id_bis=2026&w_s=s
+  - https://www.fotmob.com/teams/8456/fixtures/man-city

@@ -1,0 +1,3250 @@
+# 候補テーマ（2026年9月26日）
+# collect が作った下書き。見出しに書いてあることだけが入っている。
+# tier / topic / league は判断が要るので、目で見て埋めること。
+date: "2026年9月26日"
+candidates:
+  - id: man_city_transfer
+    title: "Man City latest: Rodri reacts to charges decision reports"
+    topic: "マンチェスター・シティ"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: england    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Man City Rumours Gossip"            # URLから作った。合っているか見る
+    url: https://www.skysports.com/football/live-blog/11661/13025499/man-city-transfer-news-rumours-and-gossip-live-updates-and-latest-on-deals-signings-loans-and-contracts
+    hours_ago: 10.2   # フィードの時刻から
+    # 同じ話を 11媒体が報じている
+    sources:
+      - https://www.skysports.com/football/live-blog/11661/13025499/man-city-transfer-news-rumours-and-gossip-live-updates-and-latest-on-deals-signings-loans-and-contracts
+      - https://www.skysports.com/football/news/11661/13591930/man-city-premier-league-charges-what-does-the-appeals-process-look-like-and-what-happens-now
+      - https://www.espn.com/soccer/story/_/id/44382463/man-city-115-charges-premier-league-verdict
+      - https://www.espn.com/soccer/story/_/id/50029194/rodri-man-city-premier-league-charges-financial-breaches
+      - https://www.caughtoffside.com/2026/09/26/man-city-financial-charges-what-punishment-verdict/
+      - https://www.vi.nl/nieuws/man-city-reageert-op-aanklachten-premier-league-teams-willen-schadevergoeding
+      - https://www.dailymail.com/sport/football/article-16161429/Rodri-issues-defiant-response-Man-City-guilty-vast-majority-Premier-League-rule-break-charges-insists-believes-club-despite-verdict.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
+      - https://www.bbc.co.uk/sport/football/articles/cmkgwwze9r28o?at_medium=RSS&at_campaign=rss
+      - https://www.bbc.co.uk/sounds/play/p0pckjx7?at_medium=RSS&at_campaign=rss
+      - https://www.manchestereveningnews.co.uk/sport/football/football-news/erling-haaland-man-city-charges-34675326
+      - https://www.goal.com/en-gb/lists/barcelona-star-rodri-defends-man-city-over-115-premier-league-financial-charges/bltf290fab3901d38f2?utm_id=fa3iys5y8hyz9ezk&#38;utm_source_platform=newsnow
+      # ↑ Man City charges - what happens now?
+      # ↑ Source: Man City set to be found guilty of most PL financial
+      # ↑ Rodri 'believes in innocence' of Man City, says success 'des
+      # ↑ Man City Financial Charges: What punishment would be fair af
+      # ↑ Man City reageert op overtredingen, Premier League-teams wil
+      # ↑ Rodri issues defiant response to Man City being found guilty
+      # ↑ Rodri believes in Man City's 'innocence'
+      # ↑ Man City guilty of majority of 115 charges - 5 Live reaction
+      # ↑ Erling Haaland U-turn confirmed after Man City handed 115 ch
+      # ↑ Barcelona star Rodri defends Man City over 115 Premier Leagu
+
+  - id: jess_fishlock_sets
+    title: "Fishlock breaks Rapinoe's Reign scoring record"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Jess Fishlock Sets Seattle"            # URLから作った。合っているか見る
+    url: https://www.espn.com/soccer/story/_/id/50030971/jess-fishlock-sets-seattle-reign-scoring-record-two-goals-win-boston
+    hours_ago: 1.9   # フィードの時刻から
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50030971/jess-fishlock-sets-seattle-reign-scoring-record-two-goals-win-boston
+
+  - id: mbappe_exits_knee
+    title: "Mbappé to leave France camp after injury while scoring in Zidane's debut"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Mbappe Exits Knee Injury"            # URLから作った。合っているか見る
+    url: https://www.espn.com/soccer/story/_/id/50029181/mbappe-exits-knee-injury-scoring-france-zidane-debut
+    hours_ago: 1.9   # フィードの時刻から
+    # 同じ話を 3媒体が報じている
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50029181/mbappe-exits-knee-injury-scoring-france-zidane-debut
+      - https://as.com/futbol/zidane-la-lesion-de-mbappe-no-va-bien-f202609-n/
+      - https://www.independent.com.mt/articles/2026-09-25/local-news/France-coach-Zinedine-Zidane-s-first-win-soured-by-Mbappe-s-knee-injury-Italy-lose-to-Belgium-6736293212
+      # ↑ Zidane: “La lesión de Mbappé no va bien...”
+      # ↑ France coach Zinedine Zidane's first win soured by Mbappé's 
+
+  - id: folarin_balogun_mauricio
+    title: "Poch shares 'regret' over Balogun controversy, impact on USMNT"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Folarin Balogun Mauricio Pochettino"            # URLから作った。合っているか見る
+    url: https://www.espn.com/soccer/story/_/id/50028671/folarin-balogun-mauricio-pochettino-red-card-suspension-usa-world-cup
+    hours_ago: 1.9   # フィードの時刻から
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50028671/folarin-balogun-mauricio-pochettino-red-card-suspension-usa-world-cup
+
+  - id: italy_vs_belgium
+    title: "Returning Mancini accepts fans' jeers as Italy beaten by Belgium"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Italy Belgium Roberto Mancini"            # URLから作った。合っているか見る
+    url: https://www.espn.com/soccer/story/_/id/50029412/italy-vs-belgium-roberto-mancini-jeers-fans-nations-league
+    hours_ago: 1.9   # フィードの時刻から
+    # 同じ話を 3媒体が報じている
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50029412/italy-vs-belgium-roberto-mancini-jeers-fans-nations-league
+      - https://football-italia.net/italy-0-2-belgium-mancini-return-disaster/
+      - https://www.espn.co.uk/football/story/_/id/50029412/italy-vs-belgium-roberto-mancini-jeers-fans-nations-league
+      # ↑ Italy 0-2 Belgium: Mancini return begins with disaster
+      # ↑ Returning Mancini accepts fans' jeers as Italy beaten by Bel
+
+  - id: mexico_rafa_marquez
+    title: "Márquez: Returning 'Chucky' still 'difference-maker' for Mexico"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Mexico Rafa Marquez Chucky"            # URLから作った。合っているか見る
+    url: https://www.espn.com/soccer/story/_/id/50029641/mexico-rafa-marquez-chucky-lozano-colombia
+    hours_ago: 1.9   # フィードの時刻から
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50029641/mexico-rafa-marquez-chucky-lozano-colombia
+
+  - id: brazil_australia_friendly
+    title: "Ancelotti unhappy with pitch after Brazil draw in Australia"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Brazil Australia Friendly Townsville"            # URLから作った。合っているか見る
+    url: https://www.espn.com/soccer/story/_/id/50028484/brazil-australia-friendly-townsville-pitch-carlo-ancelotti
+    hours_ago: 1.9   # フィードの時刻から
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50028484/brazil-australia-friendly-townsville-pitch-carlo-ancelotti
+
+  - id: which_club_most
+    title: "⚽ Transfer tiers: Which club has the most valuable players?"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 未確認           # 見出しの言い回しからの当たり。見て直す
+    en: "Which Club Most Players"            # URLから作った。合っているか見る
+    url: https://www.espn.com/soccer/story/_/id/50003864/which-club-most-players-worth-100m-plus
+    hours_ago: 1.9   # フィードの時刻から
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50003864/which-club-most-players-worth-100m-plus
+
+  - id: spain_reigning_fifa
+    title: "Spain are reigning world and European champions. They're just getting started"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Spain Reigning Fifa Cup"            # URLから作った。合っているか見る
+    url: https://www.espn.com/soccer/story/_/id/50012238/spain-reigning-fifa-world-cup-uefa-european-champions-just-getting-started
+    hours_ago: 7.6   # フィードの時刻から
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50012238/spain-reigning-fifa-world-cup-uefa-european-champions-just-getting-started
+
+  - id: thomas_tuchel_england
+    title: "Should England try to emulate Spain or embrace Premier League 'chaos'?"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: england    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 未確認           # 見出しの言い回しからの当たり。見て直す
+    en: "Thomas Tuchel England Dilemma"            # URLから作った。合っているか見る
+    url: https://www.espn.com/soccer/story/_/id/50018752/thomas-tuchel-england-dilemma-emulate-spain-embrace-premier-league-chaos
+    hours_ago: 7.6   # フィードの時刻から
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50018752/thomas-tuchel-england-dilemma-emulate-spain-embrace-premier-league-chaos
+
+  - id: ranked_top_usmnt
+    title: "Top 50 USMNT players, ranked by club performance: Which Americans are in hot form?"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 未確認           # 見出しの言い回しからの当たり。見て直す
+    en: "Ranked Top Usmnt Players"            # URLから作った。合っているか見る
+    url: https://www.espn.com/soccer/story/_/id/50016805/ranked-top-50-usmnt-players-world-based-club-form-2026
+    hours_ago: 11.6   # フィードの時刻から
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50016805/ranked-top-50-usmnt-players-world-based-club-form-2026
+
+  - id: pech_dass_freiburg
+    title: "'Pech, dass Freiburg Dritter ist': Schweizer U-21-Coach Frei redet Ogbus stark"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Pech Dass Freiburg Dritter"            # URLから作った。合っているか見る
+    url: https://www.kicker.de/pech-dass-freiburg-dritter-ist-schweizer-u-21-coach-frei-redet-ogbus-stark-1256043/artikel#omrss
+    hours_ago: 0.9   # フィードの時刻から
+    sources:
+      - https://www.kicker.de/pech-dass-freiburg-dritter-ist-schweizer-u-21-coach-frei-redet-ogbus-stark-1256043/artikel#omrss
+
+  - id: zum_geniessen_ballacks
+    title: "Zum Genießen: Ballacks schönste Bundesligatore"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Zum Geniessen Ballacks Schoenste"            # URLから作った。合っているか見る
+    url: https://www.kicker.de/zum-geniessen-ballacks-schoenste-bundesligatore-1255317/video#omrss
+    hours_ago: 9.5   # フィードの時刻から
+    sources:
+      - https://www.kicker.de/zum-geniessen-ballacks-schoenste-bundesligatore-1255317/video#omrss
+
+  - id: es_sieht_leider
+    title: "'Es sieht leider nicht gut aus': Mbappé erleidet Knieverletzung"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Sieht Leider Nicht Gut"            # URLから作った。合っているか見る
+    url: https://www.kicker.de/es-sieht-leider-nicht-gut-aus-mbappe-erleidet-knieverletzung-1256014/artikel#omrss
+    hours_ago: 9.5   # フィードの時刻から
+    sources:
+      - https://www.kicker.de/es-sieht-leider-nicht-gut-aus-mbappe-erleidet-knieverletzung-1256014/artikel#omrss
+
+  - id: afrika_cup_qualifikation
+    title: "Afrika-Cup-Qualifikation: Kap Verde verliert mit Vozinha - Maza trifft"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Afrika Cup Qualifikation Kap"            # URLから作った。合っているか見る
+    url: https://www.kicker.de/afrika-cup-qualifikation-kap-verde-verliert-mit-vozinha-maza-trifft-1255975/artikel#omrss
+    hours_ago: 10.6   # フィードの時刻から
+    sources:
+      - https://www.kicker.de/afrika-cup-qualifikation-kap-verde-verliert-mit-vozinha-maza-trifft-1255975/artikel#omrss
+
+  - id: spielbericht
+    title: "Dank Dreierpacker Doumbouya: Schöningen holt 0:3 gegen Drochtersen auf"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: other           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: "Spielbericht Schoeningen Gegen Drochtersena"            # URLから作った。合っているか見る
+    url: https://www.kicker.de/schoeningen-gegen-drochtersena-2026-regionalliga-nord-5232997/spielbericht#omrss
+    hours_ago: 10.6   # フィードの時刻から
+    sources:
+      - https://www.kicker.de/schoeningen-gegen-drochtersena-2026-regionalliga-nord-5232997/spielbericht#omrss
+
+  - id: spielbericht_2
+    title: "Desaströse erste Hälfte: Italien unterliegt Belgien bei Mancini-Rückkehr"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Spielbericht Italien Gegen Belgien"            # URLから作った。合っているか見る
+    url: https://www.kicker.de/italien-gegen-belgien-2026-uefa-nations-league-5193259/spielbericht#omrss
+    hours_ago: 10.7   # フィードの時刻から
+    sources:
+      - https://www.kicker.de/italien-gegen-belgien-2026-uefa-nations-league-5193259/spielbericht#omrss
+
+  - id: mauses_herrliche_lupfer
+    title: "Mauses herrliche Lupfer-Vorlage: Fortuna Köln siegt beim TSV Havelse"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Mauses Herrliche Lupfer Vorlage"            # URLから作った。合っているか見る
+    url: https://www.kicker.de/mauses-herrliche-lupfer-vorlage-fortuna-koeln-siegt-beim-tsv-havelse-1256011/video#omrss
+    hours_ago: 10.8   # フィードの時刻から
+    sources:
+      - https://www.kicker.de/mauses-herrliche-lupfer-vorlage-fortuna-koeln-siegt-beim-tsv-havelse-1256011/video#omrss
+
+  - id: spielbericht_3
+    title: "Tempo, Tore und ein unrühmliches Ende: Fürth gewinnt das kleine Frankenderby"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Spielbericht Fuerth Gegen Nuernberg"            # URLから作った。合っているか見る
+    url: https://www.kicker.de/fuerth-ii-gegen-nuernberg-ii-2026-regionalliga-bayern-5234622/spielbericht#omrss
+    hours_ago: 10.8   # フィードの時刻から
+    sources:
+      - https://www.kicker.de/fuerth-ii-gegen-nuernberg-ii-2026-regionalliga-bayern-5234622/spielbericht#omrss
+
+  - id: ferchichis_bemerkenswertes_s
+    title: "Ferchichis bemerkenswertes Schiri-Lob: 'Sensationelle Leistung'"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Ferchichis Bemerkenswertes Schiri Lob"            # URLから作った。合っているか見る
+    url: https://www.kicker.de/ferchichis-bemerkenswertes-schiri-lob-sensationelle-leistung-1256008/video#omrss
+    hours_ago: 11   # フィードの時刻から
+    sources:
+      - https://www.kicker.de/ferchichis-bemerkenswertes-schiri-lob-sensationelle-leistung-1256008/video#omrss
+
+  - id: van_bommel_belgium
+    title: "Van Bommel: ‘Belgium 100 per cent happy’ after ending Italy curse"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Van Bommel Belgium Happy"            # URLから作った。合っているか見る
+    url: https://football-italia.net/van-bommel-belgium-happy-ending-italy-curse/
+    hours_ago: 9.4   # フィードの時刻から
+    sources:
+      - https://football-italia.net/van-bommel-belgium-happy-ending-italy-curse/
+
+  - id: montella_turkiye_incredible
+    title: "Montella: ‘Turkiye incredible against France, same mentality with Italy’"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Montella Turkiye Incredible France"            # URLから作った。合っているか見る
+    url: https://football-italia.net/montella-turkiye-incredible-france-same-italy/
+    hours_ago: 9.7   # フィードの時刻から
+    sources:
+      - https://football-italia.net/montella-turkiye-incredible-france-same-italy/
+
+  - id: di_lorenzo_tearing
+    title: "Di Lorenzo: ‘Tearing Italy apart is not helpful’ after 2-0 defeat to Belgium"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: other           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: "Lorenzo Tearing Italy Apart"            # URLから作った。合っているか見る
+    url: https://football-italia.net/di-lorenzo-tearing-italy-apart-is-not-helpful/
+    hours_ago: 10   # フィードの時刻から
+    sources:
+      - https://football-italia.net/di-lorenzo-tearing-italy-apart-is-not-helpful/
+
+  - id: cambiaghi_italy_struggled
+    title: "Cambiaghi: ‘Italy struggled, but will see a better performance in Turkiye’"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Cambiaghi Italy Struggled See"            # URLから作った。合っているか見る
+    url: https://football-italia.net/cambiaghi-italy-struggled-see-better-turkiye/
+    hours_ago: 10.3   # フィードの時刻から
+    sources:
+      - https://football-italia.net/cambiaghi-italy-struggled-see-better-turkiye/
+
+  - id: football_italia_live
+    title: "Football Italia LIVE Show: Italy 0-2 Belgium"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: other           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: "Italia Live Show Italy"            # URLから作った。合っているか見る
+    url: https://football-italia.net/football-italia-live-show-italy-0-2-belgium/
+    hours_ago: 10.3   # フィードの時刻から
+    sources:
+      - https://football-italia.net/football-italia-live-show-italy-0-2-belgium/
+
+  - id: calafiori_saw_a
+    title: "Calafiori: ‘Saw a good Italy side in fits and starts’ during 2-0 loss to Belgium"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: other           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: "Calafiori Saw Good Italy"            # URLから作った。合っているか見る
+    url: https://football-italia.net/calafiori-saw-a-good-italy-side-in-fits-starts/
+    hours_ago: 10.5   # フィードの時刻から
+    sources:
+      - https://football-italia.net/calafiori-saw-a-good-italy-side-in-fits-starts/
+
+  - id: mancini_italy_half
+    title: "Mancini: ‘Italy first half below expectations, but better than Belgium in second’"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Mancini Italy Half Below"            # URLから作った。合っているか見る
+    url: https://football-italia.net/mancini-italy-half-below-expectations-belgium/
+    hours_ago: 10.6   # フィードの時刻から
+    sources:
+      - https://football-italia.net/mancini-italy-half-below-expectations-belgium/
+
+  - id: italy_booed_rome
+    title: "Italy booed in Rome as Belgium lead 1-0 at half-time"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: other           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: "Italy Booed Rome Belgium"            # URLから作った。合っているか見る
+    url: https://football-italia.net/italy-booed-rome-as-belgium-lead-1-0-half-time/
+    hours_ago: 11.7   # フィードの時刻から
+    sources:
+      - https://football-italia.net/italy-booed-rome-as-belgium-lead-1-0-half-time/
+
+  - id: c29
+    title: "ジダン初陣勝利に貢献のシェルキ「この勝利は彼に捧げるもの」…新たな役割も歓迎"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: other           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: ""            # 英語サイトを引く語
+    url: https://www.soccer-king.jp/news/world/fra/20260926/2209592.html
+    hours_ago: 0.6   # フィードの時刻から
+    sources:
+      - https://www.soccer-king.jp/news/world/fra/20260926/2209592.html
+
+  - id: world_other
+    title: "米代表ポチェッティーノ監督、北中米W杯でのバログン問題に言及…「あの決定が下される過程にもっと関与すべきだった」と後悔の念語る"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: "Html Other"            # URLから作った。合っているか見る
+    url: https://www.soccer-king.jp/news/world/world_other/20260926/2209590.html
+    hours_ago: 0.9   # フィードの時刻から
+    sources:
+      - https://www.soccer-king.jp/news/world/world_other/20260926/2209590.html
+
+  - id: c31
+    title: "リヴァプール、早くもアラウホの買い取りを検討か…イラオラ監督が高く評価"
+    topic: "リバプール"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: england    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: ""            # 英語サイトを引く語
+    url: https://www.soccer-king.jp/news/world/eng/20260926/2209491.html
+    hours_ago: 1.6   # フィードの時刻から
+    sources:
+      - https://www.soccer-king.jp/news/world/eng/20260926/2209491.html
+
+  - id: world_other_2
+    title: "鮮烈な代表初得点「監督がどんどん仕掛けろと」　W杯落選が原動力…「競争」求めPSG移籍"
+    topic: "パリ・サンジェルマン"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: france    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Html Other"            # URLから作った。合っているか見る
+    url: https://www.soccer-king.jp/news/world/world_other/20260926/2209570.html
+    hours_ago: 2.7   # フィードの時刻から
+    sources:
+      - https://www.soccer-king.jp/news/world/world_other/20260926/2209570.html
+
+  - id: world_other_3
+    title: "ジダン新監督率いるフランス代表と善戦…トルコ代表指揮官は自信「どんな相手とも互角に戦える」"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Html Other"            # URLから作った。合っているか見る
+    url: https://www.soccer-king.jp/news/world/world_other/20260926/2209556.html
+    hours_ago: 4.5   # フィードの時刻から
+    sources:
+      - https://www.soccer-king.jp/news/world/world_other/20260926/2209556.html
+
+  - id: national
+    title: "DAZN、日本代表戦のゲスト解説に黒田剛監督が初登場…特別討論番組『DEEP SESSION ～日本サッカー未来への設計図～』の出演者も発表"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: "Html National"            # URLから作った。合っているか見る
+    url: https://www.soccer-king.jp/news/japan/national/20260926/2209572.html
+    hours_ago: 4.5   # フィードの時刻から
+    sources:
+      - https://www.soccer-king.jp/news/japan/national/20260926/2209572.html
+
+  - id: c35
+    title: "マンチーニ監督の2期目は黒星スタート「1敗や2敗したからといって落ち込まず…」"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: ""            # 英語サイトを引く語
+    url: https://www.soccer-king.jp/news/world/ita/20260926/2209501.html
+    hours_ago: 4.7   # フィードの時刻から
+    # 同じ話を 2媒体が報じている
+    sources:
+      - https://www.soccer-king.jp/news/world/ita/20260926/2209501.html
+      - https://www.soccer-king.jp/news/world/ita/20260926/2209551.html
+      # ↑ イタリア代表、マンチーニ監督の復帰後初戦は黒星も…ディ・ロレンツォ「前向きに捉えられる点もある」
+
+  - id: national_2
+    title: "日本代表、ベネズエラ戦は日本テレビ系が全国生中継…解説は柿谷曜一朗＆山田直輝、ゲストに権田修一が登場"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Html National"            # URLから作った。合っているか見る
+    url: https://www.soccer-king.jp/news/japan/national/20260926/2209567.html
+    hours_ago: 4.7   # フィードの時刻から
+    sources:
+      - https://www.soccer-king.jp/news/japan/national/20260926/2209567.html
+
+  - id: national_3
+    title: "ABEMA、10月5日（月）キリンカップサッカー2026 日本代表戦無料生中継を発表！　なでしこジャパン欧州遠征2連戦も無料生中継"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: "Html National"            # URLから作った。合っているか見る
+    url: https://www.soccer-king.jp/news/japan/national/20260926/2209562.html
+    hours_ago: 4.9   # フィードの時刻から
+    sources:
+      - https://www.soccer-king.jp/news/japan/national/20260926/2209562.html
+
+  - id: post1019928
+    title: "FIFAランキング更新で順位変動　モロッコが“TOP5”入り、ブラジルを抜いて5位浮上　スウェーデンも2ランクアップ"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 未確認           # 見出しの言い回しからの当たり。見て直す
+    en: ""            # 英語サイトを引く語
+    url: https://www.footballchannel.jp/2026/09/26/post1019928/
+    hours_ago: 0.3   # フィードの時刻から
+    sources:
+      - https://www.footballchannel.jp/2026/09/26/post1019928/
+
+  - id: post1019901
+    title: "アジア大会】U-21日本代表、今夜北朝鮮と激突　勝利すれば4戦全勝中のウズベキスタンと準決勝"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: other           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: ""            # 英語サイトを引く語
+    url: https://www.footballchannel.jp/2026/09/26/post1019901/
+    hours_ago: 2.3   # フィードの時刻から
+    sources:
+      - https://www.footballchannel.jp/2026/09/26/post1019901/
+
+  - id: post1019385
+    title: "ユーヴェからイタリア人が消えた… 129年の歴史で初、フィールドプレーヤーにイタリア人不在の先発メンバーから浮かび上がる疑問【カルチョを読む】"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: other           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: ""            # 英語サイトを引く語
+    url: https://www.footballchannel.jp/2026/09/26/post1019385/
+    hours_ago: 4.5   # フィードの時刻から
+    sources:
+      - https://www.footballchannel.jp/2026/09/26/post1019385/
+
+  - id: post1019877
+    title: "一緒にプレーがしたかった」。日本代表、松木玖生が明かした大先輩への思い。4年前に受け取った「待っているぞ」の言葉【コラム】"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しの言い回しからの当たり。見て直す
+    en: ""            # 英語サイトを引く語
+    url: https://www.footballchannel.jp/2026/09/26/post1019877/
+    hours_ago: 4.6   # フィードの時刻から
+    sources:
+      - https://www.footballchannel.jp/2026/09/26/post1019877/
+
+  - id: post1014996
+    title: "アジア大会2026 女子ハンドボール日本代表のテレビ放送・配信予定・日程｜アジア競技大会 愛知・名古屋"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: ""            # 英語サイトを引く語
+    url: https://www.footballchannel.jp/2026/09/26/post1014996/
+    hours_ago: 5.3   # フィードの時刻から
+    # 同じ話を 4媒体が報じている
+    sources:
+      - https://www.footballchannel.jp/2026/09/26/post1014996/
+      - https://www.footballchannel.jp/2026/09/26/post1014990/
+      - https://www.footballchannel.jp/2026/09/26/post1016748/
+      - https://www.footballchannel.jp/2026/09/26/post1014975/
+      # ↑ アジア大会2026 男子ハンドボール日本代表のテレビ放送・配信予定・日程｜アジア競技大会 愛知・名古屋
+      # ↑ アジア大会2026 スケートボードのテレビ放送・配信予定・日程｜アジア競技大会 愛知・名古屋
+      # ↑ アジア大会2026 卓球のテレビ放送・配信予定・日程｜アジア競技大会 愛知・名古屋
+
+  - id: post1019730
+    title: "アジア大会女子サッカー“4強”が出揃う　なでしこジャパンは準決勝で“日韓戦”、北朝鮮は中国と激突"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: ""            # 英語サイトを引く語
+    url: https://www.footballchannel.jp/2026/09/26/post1019730/
+    hours_ago: 5.5   # フィードの時刻から
+    sources:
+      - https://www.footballchannel.jp/2026/09/26/post1019730/
+
+  - id: post1019865
+    title: "過去には日本選手に“グーパンチ”、スタッフを威嚇…U-21日本代表、因縁の北朝鮮と3年ぶり対戦　韓国紙が注目「悪縁のリターンマッチ」"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: ""            # 英語サイトを引く語
+    url: https://www.footballchannel.jp/2026/09/26/post1019865/
+    hours_ago: 6.6   # フィードの時刻から
+    sources:
+      - https://www.footballchannel.jp/2026/09/26/post1019865/
+
+  - id: a_c
+    title: "名門復権を目指す清水エスパルス、今夏新加入9選手の活躍をA〜C評価【2026/27】"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: ""            # 英語サイトを引く語
+    url: https://football-tribe.com/japan/2026/09/26/359204/
+    hours_ago: 2.5   # フィードの時刻から
+    sources:
+      - https://football-tribe.com/japan/2026/09/26/359204/
+
+  - id: gk_jfa
+    title: "鹿島・日本代表GK早川友基にパスミス失点で…「有能なJFAなら…」柿谷曜一朗氏らは「それも気付けない」"
+    topic: "鹿島アントラーズ"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: japan    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: ""            # 英語サイトを引く語
+    url: https://football-tribe.com/japan/2026/09/26/359735/
+    hours_ago: 6.9   # フィードの時刻から
+    # 同じ話を 2媒体が報じている
+    sources:
+      - https://football-tribe.com/japan/2026/09/26/359735/
+      - https://web.gekisaka.jp/news/jleague/detail/?459751-459751-fl
+      # ↑ 鹿島が“29年ぶり”の生中継決定を報告
+
+  - id: w
+    title: "田中碧に「W杯後メディアで語る場面少なかったが…」とツッコミ！本人は「ひとりで…」"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: ""            # 英語サイトを引く語
+    url: https://football-tribe.com/japan/2026/09/26/359731/
+    hours_ago: 7.3   # フィードの時刻から
+    sources:
+      - https://football-tribe.com/japan/2026/09/26/359731/
+
+  - id: c48
+    title: "伊東純也「自覚あまりない」日本代表について本音！歴代アシストランキングでは首位タイ"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: ""            # 英語サイトを引く語
+    url: https://football-tribe.com/japan/2026/09/26/359729/
+    hours_ago: 7.8   # フィードの時刻から
+    sources:
+      - https://football-tribe.com/japan/2026/09/26/359729/
+
+  - id: ob
+    title: "鈴木唯人は「まだまだ未熟」一部の意見を日本代表OB切り捨てる！その理由とは？"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 未確認           # 見出しの言い回しからの当たり。見て直す
+    en: ""            # 英語サイトを引く語
+    url: https://football-tribe.com/japan/2026/09/26/359727/
+    hours_ago: 8.1   # フィードの時刻から
+    sources:
+      - https://football-tribe.com/japan/2026/09/26/359727/
+
+  - id: c50
+    title: "久保建英は「日本代表で軽率な発言」その内容とは？今季開幕前に「ソシエダを批判」"
+    topic: "レアル・ソシエダ"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: spain    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: ""            # 英語サイトを引く語
+    url: https://football-tribe.com/japan/2026/09/26/359725/
+    hours_ago: 8.3   # フィードの時刻から
+    sources:
+      - https://football-tribe.com/japan/2026/09/26/359725/
+
+  - id: c51
+    title: "久保建英が「試合勘が物足りないが…」と指摘される！「堂安律と違って…」"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: ""            # 英語サイトを引く語
+    url: https://football-tribe.com/japan/2026/09/26/359723/
+    hours_ago: 8.7   # フィードの時刻から
+    sources:
+      - https://football-tribe.com/japan/2026/09/26/359723/
+
+  - id: c52
+    title: "堂安律は「やりにくさを感じる」「鈴木唯人と一緒」日本代表でスタメン白紙論も"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: ""            # 英語サイトを引く語
+    url: https://football-tribe.com/japan/2026/09/26/359721/
+    hours_ago: 8.9   # フィードの時刻から
+    sources:
+      - https://football-tribe.com/japan/2026/09/26/359721/
+
+  - id: ob_jfa
+    title: "森保監督巡り…日本代表OBがJFA批判！「中途半端」「選手たちやりにくい」"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: ""            # 英語サイトを引く語
+    url: https://football-tribe.com/japan/2026/09/26/359719/
+    hours_ago: 9.2   # フィードの時刻から
+    sources:
+      - https://football-tribe.com/japan/2026/09/26/359719/
+
+  - id: sources_liverpool_man
+    title: "Sources: Liverpool and Man United at ‘close monitoring’ stage for PL speedster"
+    topic: "リバプール"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: england    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 未確認           # 見出しの言い回しからの当たり。見て直す
+    en: "Sources Liverpool Man United"            # URLから作った。合っているか見る
+    url: https://www.caughtoffside.com/2026/09/26/sources-liverpool-man-united-monitoring-stage-pl-speedster/
+    hours_ago: 0   # フィードの時刻から
+    # 同じ話を 3媒体が報じている
+    sources:
+      - https://www.caughtoffside.com/2026/09/26/sources-liverpool-man-united-monitoring-stage-pl-speedster/
+      - https://www.dailymail.com/sport/football/article-16161039/oliver-holt-manchester-city-title-stripped-relegation.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
+      - https://www.dailymail.com/sport/football/article-16136527/jj-gabriel-manchester-united-wonderkids.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
+      # ↑ OLIVER HOLT: Strip Man City of ALL eight of their Premier Le
+      # ↑ Move over JJ Gabriel: With 'kid Messi' wanting out, here are
+
+  - id: report_european_giants
+    title: "Report: European giants enter race for left-back eyed by Man United as Shaw replacement"
+    topic: "マンチェスター・ユナイテッド"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: england    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 未確認           # 見出しは『報道』寄りだが、この情報源では未確認まで
+    en: "European Giants Enter Race"            # URLから作った。合っているか見る
+    url: https://www.caughtoffside.com/2026/09/26/report-european-giants-enter-race-for-left-back-eyed-by-man-united-as-shaw-replacement/
+    hours_ago: 0.9   # フィードの時刻から
+    # 同じ話を 2媒体が報じている
+    sources:
+      - https://www.caughtoffside.com/2026/09/26/report-european-giants-enter-race-for-left-back-eyed-by-man-united-as-shaw-replacement/
+      - https://www.dailymail.com/sport/football/article-16161213/Slovenia-boss-captain-hit-former-Man-United-stars-criticism-Benjamin-Sesko-missing-matches-shin-injury.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
+      # ↑ Slovenia boss and captain hit back at former Man United star
+
+  - id: ronald_araujo_transfer
+    title: "Ronald Araujo transfer update as Liverpool consider Barcelona buy option"
+    topic: "リバプール"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 未確認           # 見出しは『報道』寄りだが、この情報源では未確認まで
+    en: "Ronald Araujo Liverpool Buy"            # URLから作った。合っているか見る
+    url: https://www.caughtoffside.com/2026/09/26/ronald-araujo-transfer-update-liverpool-buy-option/
+    hours_ago: 1.1   # フィードの時刻から
+    # 同じ話を 2媒体が報じている
+    sources:
+      - https://www.caughtoffside.com/2026/09/26/ronald-araujo-transfer-update-liverpool-buy-option/
+      - https://thehardtackle.com/transfer-news/2026/09/26/michael-olise-prefers-la-liga-move-to-premier-league-return/
+      # ↑ Barcelona, Real Madrid gain advantage over Liverpool in race
+
+  - id: premier_league_club
+    title: "Premier League club looking to protect winger’s future amid rising interest from Arsenal"
+    topic: "アーセナル"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: england    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 未確認           # 見出しは『報道』寄りだが、この情報源では未確認まで
+    en: "Club Looking Protect Wingers"            # URLから作った。合っているか見る
+    url: https://www.caughtoffside.com/2026/09/26/premier-league-club-looking-to-protect-wingers-future-amid-rising-interest-from-arsenal/
+    hours_ago: 1.8   # フィードの時刻から
+    sources:
+      - https://www.caughtoffside.com/2026/09/26/premier-league-club-looking-to-protect-wingers-future-amid-rising-interest-from-arsenal/
+
+  - id: details_of_erling
+    title: "Details of Erling Haaland relegation clause emerge amid fresh Man City uncertainty"
+    topic: "マンチェスター・シティ"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: england    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 未確認           # 見出しは『報道』寄りだが、この情報源では未確認まで
+    en: "Details Erling Haaland Relegation"            # URLから作った。合っているか見る
+    url: https://www.caughtoffside.com/2026/09/26/details-of-erling-haaland-relegation-clause-emerge/
+    hours_ago: 1.9   # フィードの時刻から
+    # 同じ話を 3媒体が報じている
+    sources:
+      - https://www.caughtoffside.com/2026/09/26/details-of-erling-haaland-relegation-clause-emerge/
+      - https://www.dailymail.com/sport/football/article-16160887/Man-City-RELEGATION-nuclear-option-appeal-highly-unlikely-succeed-says-former-financial-advisor-guilty-114-Premier-League-charges.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
+      - https://www.bbc.co.uk/sport/football/articles/cx30540044q0o?at_medium=RSS&at_campaign=rss
+      # ↑ Man City face RELEGATION 'nuclear option' and appeal 'highly
+      # ↑ Relegation? Titles stripped? Appeals? What next for Man City
+
+  - id: thomas_tuchel_cole
+    title: "Thomas Tuchel sends blunt message to Cole Palmer after latest England setback"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 未確認           # 見出しは『報道』寄りだが、この情報源では未確認まで
+    en: "Thomas Tuchel Cole Palmer"            # URLから作った。合っているか見る
+    url: https://www.caughtoffside.com/2026/09/25/thomas-tuchel-cole-palmer-injury-england-setback/
+    hours_ago: 8.9   # フィードの時刻から
+    sources:
+      - https://www.caughtoffside.com/2026/09/25/thomas-tuchel-cole-palmer-injury-england-setback/
+
+  - id: jurgen_klopp_man
+    title: "What Jurgen Klopp said in 2024 about Man City having titles stripped resurfaces after guilty verdict"
+    topic: "マンチェスター・シティ"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: england    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 未確認           # 見出しの言い回しからの当たり。見て直す
+    en: "Jurgen Klopp Man City"            # URLから作った。合っているか見る
+    url: https://www.caughtoffside.com/2026/09/25/jurgen-klopp-man-city-bus-parade-verdict/
+    hours_ago: 10.4   # フィードの時刻から
+    # 同じ話を 7媒体が報じている
+    sources:
+      - https://www.caughtoffside.com/2026/09/25/jurgen-klopp-man-city-bus-parade-verdict/
+      - https://www.caughtoffside.com/2026/09/25/rio-ferdinand-man-city-verdict-premier-league-medal/
+      - https://www.dailymail.com/sport/football/article-16161231/The-clubs-seek-compensation-Premier-League-sides-consider-legal-action-Man-City-guilty-vast-majority-rule-breaches-happens-Key-questions-answered.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
+      - https://www.dailymail.com/sport/football/article-16161263/scotland-andy-robertson-manchester-city-guilty-sebastien-pocognoli-nations-league.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
+      - https://www.dailymail.com/sport/football/article-16160591/Premier-League-medal-Rio-Ferdinand.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
+      - https://www.bbc.co.uk/sport/football/articles/cwy7zzdmn4v7o?at_medium=RSS&at_campaign=rss
+      - https://www.football365.com/news/man-city-ffp-man-utd-arsenal-compensation-ornstein-response-guilty-verdict
+      # ↑ Rio Ferdinand sends cheeky message after Man City found guil
+      # ↑ The clubs who could seek compensation as Premier League side
+      # ↑ Former Liverpool star Andy Robertson admits 'shock' over Man
+      # ↑ Rio Ferdinand calls for Man City to be STRIPPED of title aft
+      # ↑ Man City fans face up to reality of guilty verdict
+      # ↑ Man City FFP: Man Utd, Arsenal eye compensation as Ornstein 
+
+  - id: liverpool_join_race
+    title: "Liverpool join race for 24-year-old German forward as Arsenal interest intensifies"
+    topic: "リバプール"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: england    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 未確認           # 見出しは『報道』寄りだが、この情報源では未確認まで
+    en: "Liverpool Join Race Year"            # URLから作った。合っているか見る
+    url: https://www.caughtoffside.com/2026/09/25/liverpool-join-race-for-24-year-old-german-forward-as-arsenal-interest-intensifies/
+    hours_ago: 10.5   # フィードの時刻から
+    sources:
+      - https://www.caughtoffside.com/2026/09/25/liverpool-join-race-for-24-year-old-german-forward-as-arsenal-interest-intensifies/
+
+  - id: love_you_banda
+    title: "La La Love You, la banda sonora del éxito de la selección: &quot;Que nada nos pare&quot;"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Love You Banda Sonora"            # URLから作った。合っているか見る
+    url: https://www.marca.com/futbol/futbol-femenino/seleccion/2026/09/26/love-you-banda-sonora-exito-seleccion-pare.html
+    hours_ago: 0.6   # フィードの時刻から
+    sources:
+      - https://www.marca.com/futbol/futbol-femenino/seleccion/2026/09/26/love-you-banda-sonora-exito-seleccion-pare.html
+
+  - id: wembley_estadio_imperio
+    title: "Wembley, el estadio del imperio"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Wembley Estadio Imperio Html"            # URLから作った。合っているか見る
+    url: https://www.marca.com/futbol/seleccion/2026/09/26/wembley-estadio-imperio.html
+    hours_ago: 0.6   # フィードの時刻から
+    sources:
+      - https://www.marca.com/futbol/seleccion/2026/09/26/wembley-estadio-imperio.html
+
+  - id: gorrotxategi_busca_recuperar
+    title: "Gorrotxategi busca recuperar su sitio"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Gorrotxategi Busca Recuperar Sitio"            # URLから作った。合っているか見る
+    url: https://www.marca.com/futbol/real-sociedad/2026/09/26/gorrotxategi-busca-recuperar-sitio.html
+    hours_ago: 1   # フィードの時刻から
+    sources:
+      - https://www.marca.com/futbol/real-sociedad/2026/09/26/gorrotxategi-busca-recuperar-sitio.html
+
+  - id: flick_olvida_gavi
+    title: "Flick no se olvida de Gavi"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Flick Olvida Gavi Html"            # URLから作った。合っているか見る
+    url: https://www.marca.com/futbol/barcelona/2026/09/26/flick-olvida-gavi.html
+    hours_ago: 1.2   # フィードの時刻から
+    sources:
+      - https://www.marca.com/futbol/barcelona/2026/09/26/flick-olvida-gavi.html
+
+  - id: iglesias_villanueva_equivoca
+    title: "Iglesias Villanueva: &quot;¿Nos equivocamos? Sí, pero no es para quemarnos en la hoguera&quot;"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Iglesias Villanueva Equivocamos Quemarnos"            # URLから作った。合っているか見る
+    url: https://www.marca.com/futbol/primera-division/2026/09/26/iglesias-villanueva-equivocamos-quemarnos-hoguera.html
+    hours_ago: 1.3   # フィードの時刻から
+    sources:
+      - https://www.marca.com/futbol/primera-division/2026/09/26/iglesias-villanueva-equivocamos-quemarnos-hoguera.html
+
+  - id: lamine_espectacular_infantil
+    title: "&quot;Lamine es espectacular desde infantiles...¡le veíamos en vídeos!&quot;"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Lamine Espectacular Infantiles Veiamos"            # URLから作った。合っているか見る
+    url: https://www.marca.com/futbol/athletic/2026/09/26/lamine-espectacular-infantiles-le-veiamos-videos.html
+    hours_ago: 1.7   # フィードの時刻から
+    sources:
+      - https://www.marca.com/futbol/athletic/2026/09/26/lamine-espectacular-infantiles-le-veiamos-videos.html
+
+  - id: hora_santi_denia
+    title: "La hora de Santi Denia: &quot;Es un honor y un privilegio&quot;"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Hora Santi Denia Honor"            # URLから作った。合っているか見る
+    url: https://www.marca.com/futbol/nations-league/2026/09/26/hora-santi-denia-honor-privilegio.html
+    hours_ago: 1.7   # フィードの時刻から
+    sources:
+      - https://www.marca.com/futbol/nations-league/2026/09/26/hora-santi-denia-honor-privilegio.html
+
+  - id: vuelta_realidad_campeones
+    title: "La vuelta a la realidad de los campeones de mundo: de los 52.117 del Bernabéu a los 920 del Di Stéfano"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Vuelta Realidad Campeones Mundo"            # URLから作った。合っているか見る
+    url: https://www.marca.com/futbol/real-madrid/2026/09/26/vuelta-realidad-campeones-mundo-52-117-bernabeu-920-di-stefano.html
+    hours_ago: 1.7   # フィードの時刻から
+    sources:
+      - https://www.marca.com/futbol/real-madrid/2026/09/26/vuelta-realidad-campeones-mundo-52-117-bernabeu-920-di-stefano.html
+
+  - id: asencio_quedo_esto
+    title: "Asencio se quedó para esto"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Asencio Quedo Esto Html"            # URLから作った。合っているか見る
+    url: https://www.marca.com/futbol/real-madrid/2026/09/26/asencio-quedo-esto.html
+    hours_ago: 1.8   # フィードの時刻から
+    sources:
+      - https://www.marca.com/futbol/real-madrid/2026/09/26/asencio-quedo-esto.html
+
+  - id: campeona_catedral_desafio
+    title: "La campeona, la catedral y el desafío"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Campeona Catedral Desafio Html"            # URLから作った。合っているか見る
+    url: https://www.marca.com/futbol/seleccion/2026/09/26/campeona-catedral-desafio.html
+    hours_ago: 1.8   # フィードの時刻から
+    sources:
+      - https://www.marca.com/futbol/seleccion/2026/09/26/campeona-catedral-desafio.html
+
+  - id: paron_juegan_son
+    title: "En el parón los que se la juegan son los clubes"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Paron Juegan Son Clubes"            # URLから作った。合っているか見る
+    url: https://www.marca.com/futbol/atletico/opinion/2026/09/26/paron-juegan-son-clubes.html
+    hours_ago: 2.1   # フィードの時刻から
+    sources:
+      - https://www.marca.com/futbol/atletico/opinion/2026/09/26/paron-juegan-son-clubes.html
+
+  - id: fresneda_roberto_victor
+    title: "Fresneda, Roberto y Víctor Muñoz, los descartes ante Inglaterra"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Fresneda Roberto Victor Munoz"            # URLから作った。合っているか見る
+    url: https://www.marca.com/futbol/seleccion/2026/09/26/fresneda-roberto-victor-munoz-descartes-inglaterra.html
+    hours_ago: 7.6   # フィードの時刻から
+    sources:
+      - https://www.marca.com/futbol/seleccion/2026/09/26/fresneda-roberto-victor-munoz-descartes-inglaterra.html
+
+  - id: inglaterra_destroza_city
+    title: "Inglaterra destroza al City con unas portadas durísimas"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Inglaterra Destroza City Portadas"            # URLから作った。合っているか見る
+    url: https://www.marca.com/futbol/album/2026/09/26/inglaterra-destroza-city-portadas-durisimas.html
+    hours_ago: 7.7   # フィードの時刻から
+    sources:
+      - https://www.marca.com/futbol/album/2026/09/26/inglaterra-destroza-city-portadas-durisimas.html
+
+  - id: alineaciones_probables_ingla
+    title: "Alineaciones probables del Inglaterra-España de la Liga de las Naciones"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: spain    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Alineaciones Probables Inglaterra Espana"            # URLから作った。合っているか見る
+    url: https://www.marca.com/futbol/seleccion/2026/09/26/alineaciones-probables-inglaterra-espana-liga-naciones.html
+    hours_ago: 8   # フィードの時刻から
+    sources:
+      - https://www.marca.com/futbol/seleccion/2026/09/26/alineaciones-probables-inglaterra-espana-liga-naciones.html
+
+  - id: zaragoza_empacha_victorias
+    title: "El Zaragoza se empacha de victorias en Ibiza gracias a Ureña"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Zaragoza Empacha Victorias Ibiza"            # URLから作った。合っているか見る
+    url: https://www.marca.com/futbol/zaragoza/2026/09/25/zaragoza-empacha-victorias-ibiza-gracias-urena.html
+    hours_ago: 10.1   # フィードの時刻から
+    sources:
+      - https://www.marca.com/futbol/zaragoza/2026/09/25/zaragoza-empacha-victorias-ibiza-gracias-urena.html
+
+  - id: rodri_sobre_sancion
+    title: "Rodri sobre la sanción al Manchester City: &quot;Confío en la impunidad del club&quot;"
+    topic: "マンチェスター・シティ"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: england    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Rodri Sobre Sancion Manchester"            # URLから作った。合っているか見る
+    url: https://www.marca.com/futbol/seleccion/2026/09/25/rodri-sobre-sancion-manchester-city-confio-impunidad-club-video.html
+    hours_ago: 10.3   # フィードの時刻から
+    # 同じ話を 2媒体が報じている
+    sources:
+      - https://www.marca.com/futbol/seleccion/2026/09/25/rodri-sobre-sancion-manchester-city-confio-impunidad-club-video.html
+      - https://www.theguardian.com/football/2026/sep/26/manchester-city-verdict-what-happens-next-appeal-relegated
+      # ↑ Manchester City verdict: what happens next, will club appeal
+
+  - id: vieja_guardia_desatasca
+    title: "La &#039;vieja guardia&#039; desatasca a una Marruecos sin Brahim"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Vieja Guardia Desatasca Marruecos"            # URLから作った。合っているか見る
+    url: https://www.marca.com/futbol/copa-africa/2026/09/25/vieja-guardia-desatasca-marruecos-brahim.html
+    hours_ago: 10.5   # フィードの時刻から
+    sources:
+      - https://www.marca.com/futbol/copa-africa/2026/09/25/vieja-guardia-desatasca-marruecos-brahim.html
+
+  - id: girona_albacete_resumen
+    title: "Girona 2-0 Albacete | Resumen"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: other           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: "Girona Albacete Resumen Html"            # URLから作った。合っているか見る
+    url: https://www.marca.com/futbol/2026/09/25/girona-2-0-albacete-resumen-video.html
+    hours_ago: 10.5   # フィードの時刻から
+    # 同じ話を 2媒体が報じている
+    sources:
+      - https://www.marca.com/futbol/2026/09/25/girona-2-0-albacete-resumen-video.html
+      - https://www.marca.com/futbol/segunda-division/cronica/2026/09/25/girona-doblega-montilivi-albacete-perdona-indecible.html
+      # ↑ Calidad y efectividad, ¡divino tesoro! El Girona vence a un 
+
+  - id: nueva_italia_mancini
+    title: "La nueva Italia de Mancini sigue igual y pierde en su &#039;redebut&#039;"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Nueva Italia Mancini Sigue"            # URLから作った。合っているか見る
+    url: https://www.marca.com/futbol/cronica/2026/09/25/nueva-italia-mancini-sigue-igual-pierde-redebut.html
+    hours_ago: 10.6   # フィードの時刻から
+    sources:
+      - https://www.marca.com/futbol/cronica/2026/09/25/nueva-italia-mancini-sigue-igual-pierde-redebut.html
+
+  - id: estreno_zidane_telenovela
+    title: "El estreno de Zidane, una telenovela turca para el Madrid"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Estreno Zidane Telenovela Turca"            # URLから作った。合っているか見る
+    url: https://www.marca.com/futbol/nations-league/2026/09/25/estreno-zidane-telenovela-turca-madrid.html
+    hours_ago: 10.6   # フィードの時刻から
+    sources:
+      - https://www.marca.com/futbol/nations-league/2026/09/25/estreno-zidane-telenovela-turca-madrid.html
+
+  - id: mbappe_cara_cruz
+    title: "Mbappé, cara y cruz en el estreno de ‘Zizou’"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Mbappe Cara Cruz Estreno"            # URLから作った。合っているか見る
+    url: https://www.marca.com/futbol/nations-league/cronica/2026/09/25/mbappe-cara-cruz-estreno-zizou.html
+    hours_ago: 10.6   # フィードの時刻から
+    sources:
+      - https://www.marca.com/futbol/nations-league/cronica/2026/09/25/mbappe-cara-cruz-estreno-zizou.html
+
+  - id: maxima_expectacion_llegada
+    title: "Máxima expectación en la llegada de la selección española a Londres"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Maxima Expectacion Llegada Seleccion"            # URLから作った。合っているか見る
+    url: https://www.marca.com/futbol/seleccion/2026/09/25/maxima-expectacion-llegada-seleccion-espanola-londres-video.html
+    hours_ago: 11.1   # フィードの時刻から
+    sources:
+      - https://www.marca.com/futbol/seleccion/2026/09/25/maxima-expectacion-llegada-seleccion-espanola-londres-video.html
+
+  - id: mbappe_marca_primer
+    title: "Mbappé marca el primer gol de la era Zidane y se lesiona: &quot;No pinta bien&quot;"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Mbappe Marca Primer Gol"            # URLから作った。合っているか見る
+    url: https://www.marca.com/futbol/nations-league/2026/09/25/mbappe-marca-primer-gol-zidane-da-susto.html
+    hours_ago: 11.3   # フィードの時刻から
+    # 同じ話を 2媒体が報じている
+    sources:
+      - https://www.marca.com/futbol/nations-league/2026/09/25/mbappe-marca-primer-gol-zidane-da-susto.html
+      - https://www.abola.pt/noticias/mourinho-em-alerta-mbappe-lesiona-se-ao-marcar-2026092520074681566
+      # ↑ Mourinho em alerta: Mbappé lesiona-se ao marcar
+
+  - id: rodri_balon_oro
+    title: "Rodri: &quot;El Balón de Oro no depende de lo que diga, depende de lo que hagas en el campo&quot;"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Rodri Balon Oro Depende"            # URLから作った。合っているか見る
+    url: https://www.marca.com/futbol/seleccion/2026/09/25/rodri-balon-oro-depende-diga-depende-hagas-campo.html
+    hours_ago: 11.5   # フィードの時刻から
+    sources:
+      - https://www.marca.com/futbol/seleccion/2026/09/25/rodri-balon-oro-depende-diga-depende-hagas-campo.html
+
+  - id: fuente_adecuado_jugar
+    title: "De la Fuente: &quot;No es lo más adecuado jugar cuatro partidos en diez días&quot;"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Fuente Adecuado Jugar Cuatro"            # URLから作った。合っているか見る
+    url: https://www.marca.com/futbol/seleccion/2026/09/25/fuente-adecuado-jugar-cuatro-partidos-diez-dias.html
+    hours_ago: 11.9   # フィードの時刻から
+    sources:
+      - https://www.marca.com/futbol/seleccion/2026/09/25/fuente-adecuado-jugar-cuatro-partidos-diez-dias.html
+
+  - id: villarreal_b_refuerza
+    title: "El Villarreal B refuerza su liderato pasando por encima del Madrileño"
+    topic: "ビジャレアル"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: spain    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Villarreal Refuerza Liderato Pasando"            # URLから作った。合っているか見る
+    url: https://www.marca.com/futbol/atletico/2026/09/25/villarreal-b-refuerza-liderato-pasando-encima-madrileno.html
+    hours_ago: 12   # フィードの時刻から
+    sources:
+      - https://www.marca.com/futbol/atletico/2026/09/25/villarreal-b-refuerza-liderato-pasando-encima-madrileno.html
+
+  - id: la_ultima_visita
+    title: "La última visita del Córdoba a Zorrilla se saldó con un 0-0"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: other           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: "Ultima Visita Del Cordoba"            # URLから作った。合っているか見る
+    url: https://as.com/futbol/segunda/la-ultima-visita-del-cordoba-a-zorrilla-se-saldo-con-un-0-0-f202609-n/
+    hours_ago: 0.5   # フィードの時刻から
+    sources:
+      - https://as.com/futbol/segunda/la-ultima-visita-del-cordoba-a-zorrilla-se-saldo-con-un-0-0-f202609-n/
+
+  - id: mercado_de_fichajes
+    title: "Mercado de fichajes, en directo: rumores, altas y bajas de LaLiga, Premier, Serie A..."
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: italy    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 未確認           # 見出しの言い回しからの当たり。見て直す
+    en: "Mercado Fichajes Directo Rumores"            # URLから作った。合っているか見る
+    url: https://as.com/futbol/primera/mercado-de-fichajes-en-directo-rumores-altas-y-bajas-de-laliga-premier-serie-a-f202609-d-26/
+    hours_ago: 0.6   # フィードの時刻から
+    sources:
+      - https://as.com/futbol/primera/mercado-de-fichajes-en-directo-rumores-altas-y-bajas-de-laliga-premier-serie-a-f202609-d-26/
+
+  - id: guler_pide_agua
+    title: "Lo que le ocurrió a Güler ayer con su propia afición es digno de ver: parece un spot cómico"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Guler Pide Agua Grada"            # URLから作った。合っているか見る
+    url: https://as.com/futbol/videos/guler-pide-agua-a-la-grada-lo-que-ocurre-es-lo-mas-viral-del-dia-f202609-v/
+    hours_ago: 0.6   # フィードの時刻から
+    sources:
+      - https://as.com/futbol/videos/guler-pide-agua-a-la-grada-lo-que-ocurre-es-lo-mas-viral-del-dia-f202609-v/
+
+  - id: un_tormento_para
+    title: "Un tormento para Mbappé"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Tormento Para Mbappe Primera"            # URLから作った。合っているか見る
+    url: https://as.com/futbol/primera/un-tormento-para-mbappe-f202609-n/
+    hours_ago: 1.2   # フィードの時刻から
+    sources:
+      - https://as.com/futbol/primera/un-tormento-para-mbappe-f202609-n/
+
+  - id: una_liga_bipolar
+    title: "Una Liga bipolar ante el macroparón"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Una Liga Bipolar Ante"            # URLから作った。合っているか見る
+    url: https://as.com/futbol/una-liga-bipolar-ante-el-macroparon-f202609-n/
+    hours_ago: 2   # フィードの時刻から
+    sources:
+      - https://as.com/futbol/una-liga-bipolar-ante-el-macroparon-f202609-n/
+
+  - id: aviv_levy_he
+    title: "Aviv Levy: “He tratado con futbolistas de menor nivel que se creían dioses”"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Aviv Levy Tratado Con"            # URLから作った。合っているか見る
+    url: https://as.com/futbol/internacional/aviv-levy-he-tratado-con-futbolistas-de-menor-nivel-que-se-creian-dioses-f202609-n/
+    hours_ago: 2   # フィードの時刻から
+    sources:
+      - https://as.com/futbol/internacional/aviv-levy-he-tratado-con-futbolistas-de-menor-nivel-que-se-creian-dioses-f202609-n/
+
+  - id: bendita_amnesia_colectiva
+    title: "Bendita amnesia colectiva: los 8 de De la Fuente ‘contra’ España"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Bendita Amnesia Colectiva Los"            # URLから作った。合っているか見る
+    url: https://as.com/futbol/seleccion/bendita-amnesia-colectiva-los-8-de-de-la-fuente-contra-espana-f202609-n/
+    hours_ago: 2.1   # フィードの時刻から
+    sources:
+      - https://as.com/futbol/seleccion/bendita-amnesia-colectiva-los-8-de-de-la-fuente-contra-espana-f202609-n/
+
+  - id: si_masacramos_a
+    title: "“Si masacramos a los jugadores después del primer partido, no estamos ayudando a Italia”"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Masacramos Los Jugadores Despues"            # URLから作った。合っているか見る
+    url: https://as.com/futbol/internacional/si-masacramos-a-los-jugadores-despues-del-primer-partido-no-estamos-ayudando-a-italia-f202609-n/
+    hours_ago: 9.7   # フィードの時刻から
+    sources:
+      - https://as.com/futbol/internacional/si-masacramos-a-los-jugadores-despues-del-primer-partido-no-estamos-ayudando-a-italia-f202609-n/
+
+  - id: quique_alvarez_no
+    title: "Quique Álvarez: “No ha sido brillante, pero en esta categoría no se gana fácil”"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Quique Alvarez Sido Brillante"            # URLから作った。合っているか見る
+    url: https://as.com/futbol/quique-alvarez-no-ha-sido-brillante-pero-en-esta-categoria-no-se-gana-facil-f202609-n/
+    hours_ago: 10   # フィードの時刻から
+    sources:
+      - https://as.com/futbol/quique-alvarez-no-ha-sido-brillante-pero-en-esta-categoria-no-se-gana-facil-f202609-n/
+
+  - id: el_manchester_city
+    title: "El Manchester City, culpable en el caso del Fair Play financiero: reacciones y última hora del incumplimiento, hoy en directo"
+    topic: "マンチェスター・シティ"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: england    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Manchester City Culpable Caso"            # URLから作った。合っているか見る
+    url: https://as.com/futbol/internacional/el-manchester-city-culpable-en-el-caso-del-fair-play-financiero-reacciones-y-ultima-hora-del-incumplimiento-hoy-en-directo-f202609-n/
+    hours_ago: 10.2   # フィードの時刻から
+    sources:
+      - https://as.com/futbol/internacional/el-manchester-city-culpable-en-el-caso-del-fair-play-financiero-reacciones-y-ultima-hora-del-incumplimiento-hoy-en-directo-f202609-n/
+
+  - id: alineacion_posible_de
+    title: "Alineación posible de España contra Inglaterra en la Nations League"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Alineacion Posible Espana Contra"            # URLから作った。合っているか見る
+    url: https://as.com/futbol/alineacion-posible-de-espana-contra-inglaterra-en-la-nations-league-f202609-n/
+    hours_ago: 10.2   # フィードの時刻から
+    sources:
+      - https://as.com/futbol/alineacion-posible-de-espana-contra-inglaterra-en-la-nations-league-f202609-n/
+
+  - id: urena_asalta_can
+    title: "Ureña asalta Can Misses y el Zaragoza duerme segundo"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Urena Asalta Can Misses"            # URLから作った。合っているか見る
+    url: https://as.com/futbol/primera-rfef/urena-asalta-can-misses-y-el-zaragoza-duerme-segundo-f202609-n/
+    hours_ago: 10.2   # フィードの時刻から
+    sources:
+      - https://as.com/futbol/primera-rfef/urena-asalta-can-misses-y-el-zaragoza-duerme-segundo-f202609-n/
+
+  - id: nuevas_ideas_mismo
+    title: "Nuevas ideas, mismo resultado para Italia"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: other           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Nuevas Ideas Mismo Resultado"            # URLから作った。合っているか見る
+    url: https://as.com/futbol/seleccion/nuevas-ideas-mismo-resultado-para-italia-f202609-n/
+    hours_ago: 10.8   # フィードの時刻から
+    sources:
+      - https://as.com/futbol/seleccion/nuevas-ideas-mismo-resultado-para-italia-f202609-n/
+
+  - id: gazzaniga_sostiene_a
+    title: "Gazzaniga sostiene a un efectivo Girona"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Gazzaniga Sostiene Efectivo Girona"            # URLから作った。合っているか見る
+    url: https://as.com/futbol/segunda/gazzaniga-sostiene-a-un-efectivo-girona-f202609-n/
+    hours_ago: 11   # フィードの時刻から
+    sources:
+      - https://as.com/futbol/segunda/gazzaniga-sostiene-a-un-efectivo-girona-f202609-n/
+
+  - id: alarma_mbappe_lesionado
+    title: "Alarma con Mbappé: vuelve a Madrid lesionado de la rodilla"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Alarma Mbappe Lesionado Internacional"            # URLから作った。合っているか見る
+    url: https://as.com/futbol/internacional/alarma-mbappe-lesionado-f202609-n/
+    hours_ago: 11.2   # フィードの時刻から
+    sources:
+      - https://as.com/futbol/internacional/alarma-mbappe-lesionado-f202609-n/
+
+  - id: rodri_creo_en
+    title: "Rodri: “Creo en la inocencia del City, ojalá se haga justicia”"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Rodri Creo Inocencia Del"            # URLから作った。合っているか見る
+    url: https://as.com/futbol/rodri-creo-en-la-inocencia-del-city-ojala-se-haga-justicia-f202609-n/
+    hours_ago: 11.5   # フィードの時刻から
+    sources:
+      - https://as.com/futbol/rodri-creo-en-la-inocencia-del-city-ojala-se-haga-justicia-f202609-n/
+
+  - id: de_la_fuente
+    title: "De la Fuente: “No habrá dejadez: queremos seguir haciendo historia”"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Fuente Habra Dejadez Queremos"            # URLから作った。合っているか見る
+    url: https://as.com/futbol/seleccion/de-la-fuente-no-habra-dejadez-queremos-seguir-haciendo-historia-f202609-n/
+    hours_ago: 11.8   # フィードの時刻から
+    sources:
+      - https://as.com/futbol/seleccion/de-la-fuente-no-habra-dejadez-queremos-seguir-haciendo-historia-f202609-n/
+
+  - id: top_fantacalcio_migliori
+    title: "Statistiche Fantacampionato: la top 11 dopo cinque giornate di Serie A"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: italy    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Top Fantacalcio Migliori Giocatori"            # URLから作った。合っているか見る
+    url: https://www.gazzetta.it/calcio/fantanews/26-09-2026/top-11-fantacalcio-migliori-giocatori-fantamedia-dopo-cinque-giornate-serie-a.shtml
+    hours_ago: 0.3   # フィードの時刻から
+    # 同じ話を 4媒体が報じている
+    sources:
+      - https://www.gazzetta.it/calcio/fantanews/26-09-2026/top-11-fantacalcio-migliori-giocatori-fantamedia-dopo-cinque-giornate-serie-a.shtml
+      - https://www.gazzetta.it/calcio/fantanews/26-09-2026/flop-11-fantacalcio-peggiori-giocatori-fantamedia-dopo-cinque-giornate-serie-a.shtml
+      - https://www.gazzetta.it/calcio/fantanews/26-09-2026/migliori-allenatori-per-fantamedia-fantacampionato-dopo-5-giornata-serie-a.shtml
+      - https://www.gazzetta.it/calcio/fantanews/26-09-2026/peggiori-allenatori-per-fantamedia-fantacampionato-dopo-5-giornata-serie-a.shtml
+      # ↑ Statistiche Fantacampionato: la flop 11 dopo cinque giornate
+      # ↑ Statistiche Fantacampionato: i cinque migliori allenatori pe
+      # ↑ Statistiche Fantacampionato: i cinque peggiori allenatori pe
+
+  - id: daniel_osvaldo_ricoverato
+    title: "Osvaldo in terapia intensiva: operato d'urgenza al polmone, è in prognosi riservata"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Daniel Osvaldo Ricoverato Terapia"            # URLから作った。合っているか見る
+    url: https://www.gazzetta.it/Calcio/Estero/26-09-2026/daniel-osvaldo-ricoverato-in-terapia-intensiva-le-condizioni-dell-ex-calciatore.shtml
+    hours_ago: 0.3   # フィードの時刻から
+    sources:
+      - https://www.gazzetta.it/Calcio/Estero/26-09-2026/daniel-osvaldo-ricoverato-in-terapia-intensiva-le-condizioni-dell-ex-calciatore.shtml
+
+  - id: amorim_e_l
+    title: "Possesso, tattica e anagrafe: i parametri di Amorim quando pensa a come utilizzare Modric"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Amorim Impiego Modric Milan"            # URLから作った。合っているか見る
+    url: https://www.gazzetta.it/Calcio/Serie-A/Milan/26-09-2026/amorim-e-l-impiego-di-modric-milan-i-parametri-per-il-suo-utilizzo.shtml
+    hours_ago: 0.4   # フィードの時刻から
+    sources:
+      - https://www.gazzetta.it/Calcio/Serie-A/Milan/26-09-2026/amorim-e-l-impiego-di-modric-milan-i-parametri-per-il-suo-utilizzo.shtml
+
+  - id: l_ex_direttore
+    title: "Le lacrime di Modric, la piazza di Leo, le stampelle di Rodri: tutti i retroscena del Pallone d'oro"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Direttore France Pascal Ferre"            # URLから作った。合っているか見る
+    url: https://www.gazzetta.it/Calcio/Estero/26-09-2026/l-ex-direttore-di-france-football-pascal-ferre-la-faccia-nascosta-del-pallone-d-oro.shtml
+    hours_ago: 0.5   # フィードの時刻から
+    sources:
+      - https://www.gazzetta.it/Calcio/Estero/26-09-2026/l-ex-direttore-di-france-football-pascal-ferre-la-faccia-nascosta-del-pallone-d-oro.shtml
+
+  - id: fabio_capello_italia
+    title: "Capello: 'Passaggini laterali senza cross né energia. Italia, c’è tanto da fare. E quanta paura'"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Fabio Capello Italia Tanto"            # URLから作った。合っているか見る
+    url: https://www.gazzetta.it/Calcio/Nazionale/26-09-2026/fabio-capello-italia-c-e-tanto-da-fare-e-quanta-paura.shtml
+    hours_ago: 0.5   # フィードの時刻から
+    sources:
+      - https://www.gazzetta.it/Calcio/Nazionale/26-09-2026/fabio-capello-italia-c-e-tanto-da-fare-e-quanta-paura.shtml
+
+  - id: inter_donne_bugeja
+    title: "Bugeja: 'In Champions fatto la storia. Come ho festeggiato il mio gol? Ballando col cane'"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Inter Donne Bugeja Intervista"            # URLから作った。合っているか見る
+    url: https://www.gazzetta.it/Calcio/Serie-A/Inter/26-09-2026/inter-donne-bugeja-intervista-in-champions-abbiamo-fatto-la-storia-non-fermiamoci.shtml
+    hours_ago: 0.5   # フィードの時刻から
+    sources:
+      - https://www.gazzetta.it/Calcio/Serie-A/Inter/26-09-2026/inter-donne-bugeja-intervista-in-champions-abbiamo-fatto-la-storia-non-fermiamoci.shtml
+
+  - id: francesco_modesto_intervista
+    title: "Modesto: 'Spingo il mio Mantova oltre il limite e possiamo emulare il Frosinone'"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Francesco Modesto Intervista Spingo"            # URLから作った。合っているか見る
+    url: https://www.gazzetta.it/Calcio/Serie-B/Mantova/26-09-2026/francesco-modesto-intervista-spingo-i-ragazzi-oltre-il-limite-cosi-si-vince.shtml
+    hours_ago: 0.6   # フィードの時刻から
+    sources:
+      - https://www.gazzetta.it/Calcio/Serie-B/Mantova/26-09-2026/francesco-modesto-intervista-spingo-i-ragazzi-oltre-il-limite-cosi-si-vince.shtml
+
+  - id: bologna_sartori_intervista
+    title: "Sartori: 'Basta pessimismo e io non scappo da Bologna. Palladino? Un mix di Italiano e Motta'"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Bologna Sartori Intervista Rilancio"            # URLから作った。合っているか見る
+    url: https://www.gazzetta.it/Calcio/Serie-A/Bologna/26-09-2026/bologna-sartori-intervista-rilancio-il-bologna-palladino-e-l-ideale-e-io-non-scappo.shtml
+    hours_ago: 0.7   # フィードの時刻から
+    sources:
+      - https://www.gazzetta.it/Calcio/Serie-A/Bologna/26-09-2026/bologna-sartori-intervista-rilancio-il-bologna-palladino-e-l-ideale-e-io-non-scappo.shtml
+
+  - id: tutti_da_messi
+    title: "Lautaro, Paz, Mastantuono e... La Serie A fa gli straordinari per l'addio di Messi alla nazionale"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: italy    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Tutti Messi Lautaro Paz"            # URLから作った。合っているか見る
+    url: https://www.gazzetta.it/Calcio/Serie-A/26-09-2026/tutti-da-messi-da-lautaro-a-paz-straordinari-di-a-per-l-addio-di-leo.shtml
+    hours_ago: 0.7   # フィードの時刻から
+    sources:
+      - https://www.gazzetta.it/Calcio/Serie-A/26-09-2026/tutti-da-messi-da-lautaro-a-paz-straordinari-di-a-per-l-addio-di-leo.shtml
+
+  - id: walter_de_vecchi
+    title: "Walter De Vecchi: 'Baresi mi ha insegnato tanto. Ho giocato con Maradona, ma Platini era più forte'"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Walter Vecchi Intervista Giocato"            # URLから作った。合っているか見る
+    url: https://www.gazzetta.it/Calcio/Serie-A/26-09-2026/walter-de-vecchi-intervista-ho-giocato-con-maradona-ma-platini-era-piu-forte.shtml
+    hours_ago: 1   # フィードの時刻から
+    sources:
+      - https://www.gazzetta.it/Calcio/Serie-A/26-09-2026/walter-de-vecchi-intervista-ho-giocato-con-maradona-ma-platini-era-piu-forte.shtml
+
+  - id: lazio_il_ct
+    title: "Lazio, il tecnico del Portogallo su Nuno Tavares: 'È entrato molto bene in partita'"
+    topic: "ラツィオ"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: italy    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Lazio Del Portogallo Nuno"            # URLから作った。合っているか見る
+    url: https://www.cittaceleste.it/news/lazio-il-ct-del-portogallo-nuno-tavares-e-entrato-molto-bene/
+    hours_ago: 1.1   # フィードの時刻から
+    sources:
+      - https://www.cittaceleste.it/news/lazio-il-ct-del-portogallo-nuno-tavares-e-entrato-molto-bene/
+
+  - id: figc_presidente_del
+    title: "Buonfiglio in contropiede su Malagò: 'Commissariamento Figc antidemocratico? E chi lo dice?'"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Figc Presidente Del Coni"            # URLから作った。合っているか見る
+    url: https://www.gazzetta.it/Calcio/Nazionale/26-09-2026/figc-presidente-del-coni-buonfiglio-a-malago-ci-sono-le-regole-ma-il-calcio-fa-muro.shtml
+    hours_ago: 1.3   # フィードの時刻から
+    sources:
+      - https://www.gazzetta.it/Calcio/Nazionale/26-09-2026/figc-presidente-del-coni-buonfiglio-a-malago-ci-sono-le-regole-ma-il-calcio-fa-muro.shtml
+
+  - id: a_questo_lautaro
+    title: "A questo Lautaro l'Inter può chiedere solo una cosa... Che duri a lungo"
+    topic: "インテル"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: italy    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Questo Lautaro Inter Puo"            # URLから作った。合っているか見る
+    url: https://www.gazzetta.it/sportweek/26-09-2026/a-questo-lautaro-l-inter-puo-chiedere-solo-una-cosa-che-duri-a-lungo.shtml
+    hours_ago: 9.4   # フィードの時刻から
+    sources:
+      - https://www.gazzetta.it/sportweek/26-09-2026/a-questo-lautaro-l-inter-puo-chiedere-solo-una-cosa-che-duri-a-lungo.shtml
+
+  - id: serie_a_femminile
+    title: "Caccia alla Roma: si parte. Juve e Milan lanciano la corsa scudetto tra novità e certezze"
+    topic: "ローマ"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: italy    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Serie Femminile Parte Caccia"            # URLから作った。合っているか見る
+    url: https://www.gazzetta.it/calcio/calcio-femminile/25-09-2026/serie-a-femminile-si-parte-caccia-alla-roma-inter-juve-milan-e-corsa-scudetto.shtml
+    hours_ago: 9.7   # フィードの時刻から
+    sources:
+      - https://www.gazzetta.it/calcio/calcio-femminile/25-09-2026/serie-a-femminile-si-parte-caccia-alla-roma-inter-juve-milan-e-corsa-scudetto.shtml
+
+  - id: italia_belgio_pagelle
+    title: "Italia-Belgio, le pagelle: Donnarumma 8, ci salva la faccia. Romano nella tempesta affonda, 4,5"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: other           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Italia Belgio Pagelle Voti"            # URLから作った。合っているか見る
+    url: https://www.gazzetta.it/Calcio/Nazionale/25-09-2026/italia-belgio-pagelle-voti-gazzetta.shtml
+    hours_ago: 9.8   # フィードの時刻から
+    sources:
+      - https://www.gazzetta.it/Calcio/Nazionale/25-09-2026/italia-belgio-pagelle-voti-gazzetta.shtml
+
+  - id: d3b78d80_9d22_4bb7
+    title: "Italia-Belgio 0-2, le reazioni social: 'Così non va, squadra imbarazzante'"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: "Fxlk Italia Belgio Reazioni"            # URLから作った。合っているか見る
+    url: https://video.gazzetta.it/calcio/video-italia-belgio-0-2-reazioni-social-cosi-non-va-squadra-imbarazzante/d3b78d80-9d22-4bb7-84a6-72631c86fxlk
+    hours_ago: 10.3   # フィードの時刻から
+    sources:
+      - https://video.gazzetta.it/calcio/video-italia-belgio-0-2-reazioni-social-cosi-non-va-squadra-imbarazzante/d3b78d80-9d22-4bb7-84a6-72631c86fxlk
+
+  - id: edoardo_bove_in
+    title: "Dall'arresto cardiaco in campo alla nuova vita nel Watford: in arrivo il docu-film su Edoardo Bove"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Edoardo Bove Arrivo Battito"            # URLから作った。合っているか見る
+    url: https://www.gazzetta.it/Calcio/Serie-A/Fiorentina/25-09-2026/edoardo-bove-in-arrivo-in-un-battito-il-docu-film-sulla-sua-storia.shtml
+    hours_ago: 11.9   # フィードの時刻から
+    sources:
+      - https://www.gazzetta.it/Calcio/Serie-A/Fiorentina/25-09-2026/edoardo-bove-in-arrivo-in-un-battito-il-docu-film-sulla-sua-storia.shtml
+
+  - id: premier_league_spelers
+    title: "'Premier League-spelers maken verschil voor Oranje'"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: england    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Spelers Maken Verschil Voor"            # URLから作った。合っているか見る
+    url: https://www.vi.nl/video/premier-league-spelers-maken-verschil-voor-oranje
+    hours_ago: 0.2   # フィードの時刻から
+    sources:
+      - https://www.vi.nl/video/premier-league-spelers-maken-verschil-voor-oranje
+
+  - id: tevreden_van_bommel
+    title: "Tevreden Van Bommel prijst Godts na zege in Rome bij debuut Rode Duivels"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Tevreden Van Bommel Prijst"            # URLから作った。合っているか見る
+    url: https://www.vi.nl/nieuws/tevreden-van-bommel-prijst-godts-na-zege-in-roma-bij-debuut-rode-duivels
+    hours_ago: 0.3   # フィードの時刻から
+    sources:
+      - https://www.vi.nl/nieuws/tevreden-van-bommel-prijst-godts-na-zege-in-roma-bij-debuut-rode-duivels
+
+  - id: fraser_stunt_in
+    title: "Fraser stunt in Honduras bij debuut als bondscoach van Suriname"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Fraser Stunt Honduras Bij"            # URLから作った。合っているか見る
+    url: https://www.vi.nl/nieuws/fraser-stunt-in-honduras-bij-debuut-als-bondscoach-van-suriname
+    hours_ago: 1   # フィードの時刻から
+    sources:
+      - https://www.vi.nl/nieuws/fraser-stunt-in-honduras-bij-debuut-als-bondscoach-van-suriname
+
+  - id: lex_en_aad
+    title: "Lex en Aad, voor altijd samen bij ADO"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Lex Aad Voor Altijd"            # URLから作った。合っているか見る
+    url: https://www.vi.nl/pro/lex-en-aad-voor-altijd-samen-bij-ado
+    hours_ago: 1.5   # フィードの時刻から
+    sources:
+      - https://www.vi.nl/pro/lex-en-aad-voor-altijd-samen-bij-ado
+
+  - id: de_ketelaere_doet
+    title: "De Ketelaere doet PSG-boekje open en uit vertrekwens"
+    topic: "パリ・サンジェルマン"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: france    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Ketelaere Doet Psg Boekje"            # URLから作った。合っているか見る
+    url: https://www.vi.nl/nieuws/de-ketelaere-doet-psg-boekje-open-en-uit-vertrekwens
+    hours_ago: 1.7   # フィードの時刻から
+    sources:
+      - https://www.vi.nl/nieuws/de-ketelaere-doet-psg-boekje-open-en-uit-vertrekwens
+
+  - id: jong_oranje_stuit
+    title: "Jong Oranje stuit weer op hetzelfde gebrek: 'Eigenlijk is het schandalig'"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Jong Oranje Stuit Weer"            # URLから作った。合っているか見る
+    url: https://www.vi.nl/pro/jong-oranje-stuit-weer-op-hetzelfde-gebrek-eigenlijk-is-het-schandalig
+    hours_ago: 1.9   # フィードの時刻から
+    sources:
+      - https://www.vi.nl/pro/jong-oranje-stuit-weer-op-hetzelfde-gebrek-eigenlijk-is-het-schandalig
+
+  - id: de_brandende_liefde
+    title: "De brandende liefde van Adil Ramzi: 'De bal is net als een meisje'"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Brandende Liefde Van Adil"            # URLから作った。合っているか見る
+    url: https://www.vi.nl/pro/de-brandende-liefde-van-adil-ramzi-de-bal-is-net-als-een-meisje
+    hours_ago: 3.5   # フィードの時刻から
+    sources:
+      - https://www.vi.nl/pro/de-brandende-liefde-van-adil-ramzi-de-bal-is-net-als-een-meisje
+
+  - id: pover_jong_oranje
+    title: "Pover Jong Oranje heeft EK-deelname niet meer in eigen hand"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Pover Jong Oranje Heeft"            # URLから作った。合っているか見る
+    url: https://www.vi.nl/nieuws/pover-jong-oranje-heeft-ek-deelname-niet-meer-in-eigen-hand
+    hours_ago: 9.6   # フィードの時刻から
+    sources:
+      - https://www.vi.nl/nieuws/pover-jong-oranje-heeft-ek-deelname-niet-meer-in-eigen-hand
+
+  - id: na_xhaka_ook
+    title: "Na Xhaka ook Embolo uit Zwitserse selectie gezet voor vervalste certificaten"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Xhaka Ook Embolo Uit"            # URLから作った。合っているか見る
+    url: https://www.vi.nl/nieuws/na-xhaka-ook-embolo-uit-zwitserse-selectie-gezet-voor-vervalste-certificaten
+    hours_ago: 9.6   # フィードの時刻から
+    sources:
+      - https://www.vi.nl/nieuws/na-xhaka-ook-embolo-uit-zwitserse-selectie-gezet-voor-vervalste-certificaten
+
+  - id: frankrijk_zonder_mbappe
+    title: "Frankrijk zonder Mbappé tegen België van Van Bommel"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Frankrijk Zonder Mbappe Tegen"            # URLから作った。合っているか見る
+    url: https://www.vi.nl/nieuws/frankrijk-zonder-mbappe-tegen-belgie-van-van-bommel
+    hours_ago: 9.7   # フィードの時刻から
+    sources:
+      - https://www.vi.nl/nieuws/frankrijk-zonder-mbappe-tegen-belgie-van-van-bommel
+
+  - id: godts_over_mislopen
+    title: "Godts over mislopen WK: 'Maakte me hongeriger om er nu wél bij te zijn'"
+    topic: "マルセイユ"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: france    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Godts Over Mislopen Maakte"            # URLから作った。合っているか見る
+    url: https://www.vi.nl/nieuws/godts-over-mislopen-wk-maakte-me-hongeriger-om-er-nu-wel-bij-te-zijn
+    hours_ago: 9.8   # フィードの時刻から
+    sources:
+      - https://www.vi.nl/nieuws/godts-over-mislopen-wk-maakte-me-hongeriger-om-er-nu-wel-bij-te-zijn
+
+  - id: rode_duivels_schrijven
+    title: "Rode Duivels schrijven historie: eerste officiële uitzege ooit op Italië"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Rode Duivels Schrijven Historie"            # URLから作った。合っているか見る
+    url: https://www.vi.nl/nieuws/rode-duivels-schrijven-historie-eerste-officiele-uitzege-ooit-op-italie
+    hours_ago: 10.2   # フィードの時刻から
+    sources:
+      - https://www.vi.nl/nieuws/rode-duivels-schrijven-historie-eerste-officiele-uitzege-ooit-op-italie
+
+  - id: marokko_wint_bij
+    title: "Marokko wint bij debuut Ouazane, Hadj Moussa gaat vrolijk door met scoren"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Marokko Wint Bij Debuut"            # URLから作った。合っているか見る
+    url: https://www.vi.nl/nieuws/marokko-wint-bij-debuut-ouazane-hadj-moussa-gaat-vrolijk-door-met-scoren
+    hours_ago: 10.3   # フィードの時刻から
+    sources:
+      - https://www.vi.nl/nieuws/marokko-wint-bij-debuut-ouazane-hadj-moussa-gaat-vrolijk-door-met-scoren
+
+  - id: almere_city_verzuimt
+    title: "Almere City verzuimt koppositie te pakken ondanks blunder Dordrecht-keeper"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Almere City Verzuimt Koppositie"            # URLから作った。合っているか見る
+    url: https://www.vi.nl/nieuws/almere-city-verzuimt-koppositie-te-pakken-ondanks-blunder-dordrecht-keeper
+    hours_ago: 10.6   # フィードの時刻から
+    sources:
+      - https://www.vi.nl/nieuws/almere-city-verzuimt-koppositie-te-pakken-ondanks-blunder-dordrecht-keeper
+
+  - id: mbappe_levert_zidane
+    title: "Mbappé levert Zidane goede start en flinke zorgen op"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Mbappe Levert Zidane Tegen"            # URLから作った。合っているか見る
+    url: https://www.vi.nl/nieuws/mbappe-levert-zidane-tegen-turkije-goede-start-en-flinke-zorgen-op
+    hours_ago: 10.7   # フィードの時刻から
+    sources:
+      - https://www.vi.nl/nieuws/mbappe-levert-zidane-tegen-turkije-goede-start-en-flinke-zorgen-op
+
+  - id: scorende_psv_er
+    title: "Scorende PSV'er Man niet opgewassen tegen Zweeds spitsengeweld"
+    topic: "PSV"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: netherlands    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Scorende Psv Man Niet"            # URLから作った。合っているか見る
+    url: https://www.vi.nl/nieuws/scorende-psv-er-man-niet-opgewassen-tegen-zweeds-spitsengeweld
+    hours_ago: 10.7   # フィードの時刻から
+    sources:
+      - https://www.vi.nl/nieuws/scorende-psv-er-man-niet-opgewassen-tegen-zweeds-spitsengeweld
+
+  - id: scorende_godts_bezorgt
+    title: "Trefzekere Godts bezorgt Van Bommel historische debuutzege in Rome"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Scorende Godts Bezorgt Van"            # URLから作った。合っているか見る
+    url: https://www.vi.nl/nieuws/scorende-godts-bezorgt-van-bommel-historische-debuutzege-in-rome
+    hours_ago: 10.8   # フィードの時刻から
+    sources:
+      - https://www.vi.nl/nieuws/scorende-godts-bezorgt-van-bommel-historische-debuutzege-in-rome
+
+  - id: van_de_beek
+    title: "Van de Beek maakt bij opkrabbelend Girona eerste goal in 650 dagen"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Van Beek Maakt Bij"            # URLから作った。合っているか見る
+    url: https://www.vi.nl/nieuws/van-de-beek-maakt-bij-opkrabbelend-girona-eerste-goal-in-650-dagen
+    hours_ago: 11.1   # フィードの時刻から
+    sources:
+      - https://www.vi.nl/nieuws/van-de-beek-maakt-bij-opkrabbelend-girona-eerste-goal-in-650-dagen
+
+  - id: arbitragem_respeito_e
+    title: "Arbitragem, respeito e visão"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Arbitragem Respeito Visao"            # URLから作った。合っているか見る
+    url: https://www.abola.pt/noticias/arbitragem-respeito-e-visao-2026092521072721117
+    hours_ago: 0.3   # フィードの時刻から
+    sources:
+      - https://www.abola.pt/noticias/arbitragem-respeito-e-visao-2026092521072721117
+
+  - id: ronaldo_o_homem
+    title: "Ronaldo: o homem que ninguém desliga"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Ronaldo Homem Que Ninguem"            # URLから作った。合っているか見る
+    url: https://www.abola.pt/noticias/ronaldo-o-homem-que-ninguem-desliga-2026092520343305371
+    hours_ago: 0.5   # フィードの時刻から
+    sources:
+      - https://www.abola.pt/noticias/ronaldo-o-homem-que-ninguem-desliga-2026092520343305371
+
+  - id: onde_da_bola
+    title: "Hoje pode ver em direto na TV..."
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Onde Bola Hoje Pode"            # URLから作った。合っているか見る
+    url: https://www.abola.pt/noticias/onde-da-bola-na-tv-hoje-pode-ver-em-direto-na-tv-2026092517464038445
+    hours_ago: 2.5   # フィードの時刻から
+    sources:
+      - https://www.abola.pt/noticias/onde-da-bola-na-tv-hoje-pode-ver-em-direto-na-tv-2026092517464038445
+
+  - id: de_setembro_de
+    title: "26 de setembro de 2026"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Barba Cabelo Setembro"            # URLから作った。合っているか見る
+    url: https://www.abola.pt/noticias/26-de-setembro-de-2026-2026092523092617343
+    hours_ago: 8.3   # フィードの時刻から
+    # 同じ話を 2媒体が報じている
+    sources:
+      - https://www.abola.pt/noticias/26-de-setembro-de-2026-2026092523092617343
+      - https://www.abola.pt/noticias/barba-e-cabelo-de-26-de-setembro-de-2026-2026092522422822477
+      # ↑ Barba e Cabelo de 26 de setembro de 2026
+
+  - id: que_confusao_lukaku
+    title: "Que confusão: Lukaku provocou Itália e Donnarumma não gostou"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Que Confusao Lukaku Provocou"            # URLから作った。合っているか見る
+    url: https://www.abola.pt/noticias/que-confusao-lukaku-provocou-italia-e-donnarumma-nao-gostou-2026092522451508319
+    hours_ago: 8.7   # フィードの時刻から
+    sources:
+      - https://www.abola.pt/noticias/que-confusao-lukaku-provocou-italia-e-donnarumma-nao-gostou-2026092522451508319
+
+  - id: antes_de_jorge
+    title: "«Antes de Jorge Jesus, Portugal ia para muitos jogos sem identidade»"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Antes Jorge Jesus Portugal"            # URLから作った。合っているか見る
+    url: https://www.abola.pt/video/antes-de-jorge-jesus-portugal-ia-para-muitos-jogos-sem-identidade-2026092521323496064
+    hours_ago: 8.8   # フィードの時刻から
+    sources:
+      - https://www.abola.pt/video/antes-de-jorge-jesus-portugal-ia-para-muitos-jogos-sem-identidade-2026092521323496064
+
+  - id: ja_nao_tenho
+    title: "«Já não tenho adjetivos para a vitimização do FC Porto»"
+    topic: "ポルト"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Nao Tenho Adjetivos Para"            # URLから作った。合っているか見る
+    url: https://www.abola.pt/video/ja-nao-tenho-adjetivos-para-a-vitimizacao-do-fc-porto-2026092522114818028
+    hours_ago: 8.9   # フィードの時刻から
+    # 同じ話を 2媒体が報じている
+    sources:
+      - https://www.abola.pt/video/ja-nao-tenho-adjetivos-para-a-vitimizacao-do-fc-porto-2026092522114818028
+      - https://www.abola.pt/noticias/jogadores-de-fc-porto-e-benfica-titulares-em-encontro-frustrante-para-a-polonia-2026092520532488115
+      # ↑ Jogadores de FC Porto e Benfica titulares em encontro frustr
+
+  - id: nao_podemos_ficar
+    title: "«Não podemos ficar muito admirados por Palhinha ser assobiado em Alvalade»"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Nao Podemos Ficar Muito"            # URLから作った。合っているか見る
+    url: https://www.abola.pt/video/nao-podemos-ficar-muito-admirados-por-palhinha-ser-assobiado-em-alvalade-2026092521480237256
+    hours_ago: 9   # フィードの時刻から
+    sources:
+      - https://www.abola.pt/video/nao-podemos-ficar-muito-admirados-por-palhinha-ser-assobiado-em-alvalade-2026092521480237256
+
+  - id: novas_imagens_da
+    title: "Novas imagens da picardia entre Samu e Bah no FC Porto-Benfica"
+    topic: "ポルト"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Novas Imagens Picardia Entre"            # URLから作った。合っているか見る
+    url: https://www.abola.pt/video/novas-imagens-da-picardia-entre-samu-e-bah-no-fc-porto-benfica-2026092522274631554
+    hours_ago: 9   # フィードの時刻から
+    sources:
+      - https://www.abola.pt/video/novas-imagens-da-picardia-entre-samu-e-bah-no-fc-porto-benfica-2026092522274631554
+
+  - id: benfica_lesao_de
+    title: "Benfica: lesão de Kaminski não causa apreensão na Polónia"
+    topic: "ベンフィカ"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Benfica Lesao Kaminski Nao"            # URLから作った。合っているか見る
+    url: https://www.abola.pt/noticias/benfica-lesao-de-kaminski-nao-causa-apreensao-na-polonia-2026092522143408239
+    hours_ago: 9.2   # フィードの時刻から
+    sources:
+      - https://www.abola.pt/noticias/benfica-lesao-de-kaminski-nao-causa-apreensao-na-polonia-2026092522143408239
+
+  - id: governo_brasileiro_proibe
+    title: "Governo brasileiro proíbe apostas online"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Governo Brasileiro Proibe Apostas"            # URLから作った。合っているか見る
+    url: https://www.abola.pt/noticias/governo-brasileiro-proibe-apostas-online-2026092522105734179
+    hours_ago: 9.3   # フィードの時刻から
+    sources:
+      - https://www.abola.pt/noticias/governo-brasileiro-proibe-apostas-online-2026092522105734179
+
+  - id: ele_destroi_nos
+    title: "«Ele destrói-nos nos treinos»: Paul Seixas comparado a Pogacar antes dos Mundiais"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Ele Destroi Nos Treinos"            # URLから作った。合っているか見る
+    url: https://www.abola.pt/noticias/ele-destroi-nos-nos-treinos-paul-seixas-comparado-a-pogacar-antes-dos-mundiais-2026092522035036928
+    hours_ago: 9.4   # フィードの時刻から
+    sources:
+      - https://www.abola.pt/noticias/ele-destroi-nos-nos-treinos-paul-seixas-comparado-a-pogacar-antes-dos-mundiais-2026092522035036928
+
+  - id: sorrisos_e_confianca
+    title: "Sorrisos e confiança: a viagem da Seleção para a Noruega (vídeo)"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Sorrisos Confianca Viagem Selecao"            # URLから作った。合っているか見る
+    url: https://www.abola.pt/video/sorrisos-e-confianca-a-viagem-da-selecao-para-a-noruega-video-2026092521364725821
+    hours_ago: 9.9   # フィードの時刻から
+    sources:
+      - https://www.abola.pt/video/sorrisos-e-confianca-a-viagem-da-selecao-para-a-noruega-video-2026092521364725821
+
+  - id: atencao_real_madrid
+    title: "Atenção, Real Madrid: Zidane não tem boas notícias em relação a Mbappé"
+    topic: "レアル・マドリード"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: spain    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Atencao Real Madrid Zidane"            # URLから作った。合っているか見る
+    url: https://www.abola.pt/noticias/atencao-real-madrid-zidane-nao-tem-boas-noticias-em-relacao-a-mbappe-2026092521343026017
+    hours_ago: 9.9   # フィードの時刻から
+    # 同じ話を 3媒体が報じている
+    sources:
+      - https://www.abola.pt/noticias/atencao-real-madrid-zidane-nao-tem-boas-noticias-em-relacao-a-mbappe-2026092521343026017
+      - https://www.footmercato.net/a4967025649384857489-le-real-madrid-retient-son-souffle-pour-kylian-mbappe
+      - https://www.goal.com/en-gb/lists/real-madrid-star-kylian-mbappe-withdraws-from-france-squad-as-zinedine-zidane-admits-left-knee-issue/bltc59427e54923effc?utm_id=fa3iys5y8hyz9ezk&#38;utm_source_platform=newsnow
+      # ↑ Le Real Madrid tremble pour Kylian Mbappé !
+      # ↑ Real Madrid star Kylian Mbappe withdraws from France squad a
+
+  - id: victor_andersson_esta
+    title: "Victor Andersson está de pé quente e dá triunfo ao V. Guimarães em Chaves"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Victor Andersson Esta Quente"            # URLから作った。合っているか見る
+    url: https://www.abola.pt/noticias/victor-andersson-esta-de-pe-quente-e-da-triunfo-ao-v-guimaraes-em-chaves-2026092521271179548
+    hours_ago: 10   # フィードの時刻から
+    sources:
+      - https://www.abola.pt/noticias/victor-andersson-esta-de-pe-quente-e-da-triunfo-ao-v-guimaraes-em-chaves-2026092521271179548
+
+  - id: golo_fabuloso_de
+    title: "Golo fabuloso de Lukebakio na vitória da Bélgica em Itália"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Golo Fabuloso Lukebakio Vitoria"            # URLから作った。合っているか見る
+    url: https://www.abola.pt/noticias/golo-fabuloso-de-lukebakio-na-vitoria-da-belgica-em-italia-2026092521033338572
+    hours_ago: 10.1   # フィードの時刻から
+    sources:
+      - https://www.abola.pt/noticias/golo-fabuloso-de-lukebakio-na-vitoria-da-belgica-em-italia-2026092521033338572
+
+  - id: vozinha_no_negativo
+    title: "Vozinha no negativo e Sidny no positivo: Cabo Verde derrotado pós-Mundial 2026"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Vozinha Negativo Sidny Positivo"            # URLから作った。合っているか見る
+    url: https://www.abola.pt/noticias/vozinha-no-negativo-e-sidny-no-positivo-cabo-verde-derrotado-pos-mundial-2026-2026092521053639138
+    hours_ago: 10.3   # フィードの時刻から
+    sources:
+      - https://www.abola.pt/noticias/vozinha-no-negativo-e-sidny-no-positivo-cabo-verde-derrotado-pos-mundial-2026-2026092521053639138
+
+  - id: sudakov_ajuda_ucrania
+    title: "Sudakov ajuda Ucrânia a triunfar na Puskás Arena, Trubin no banco"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Sudakov Ajuda Ucrania Triunfar"            # URLから作った。合っているか見る
+    url: https://www.abola.pt/noticias/sudakov-ajuda-ucrania-a-triunfar-na-puskas-arena-trubin-no-banco-2026092521100073028
+    hours_ago: 10.3   # フィードの時刻から
+    sources:
+      - https://www.abola.pt/noticias/sudakov-ajuda-ucrania-a-triunfar-na-puskas-arena-trubin-no-banco-2026092521100073028
+
+  - id: como_a_noruega
+    title: "Como a Noruega se transformou numa potência mundial no Desporto"
+    topic: "コモ"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: italy    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Como Noruega Transformou Numa"            # URLから作った。合っているか見る
+    url: https://www.abola.pt/video/como-a-noruega-se-transformou-numa-potencia-mundial-no-desporto-2026092415530991681
+    hours_ago: 10.6   # フィードの時刻から
+    sources:
+      - https://www.abola.pt/video/como-a-noruega-se-transformou-numa-potencia-mundial-no-desporto-2026092415530991681
+
+  - id: gyokeres_voltou_a
+    title: "Gyokeres voltou a pôr a máscara e deu triunfo à Suécia"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Gyokeres Voltou Por Mascara"            # URLから作った。合っているか見る
+    url: https://www.abola.pt/noticias/gyokeres-voltou-a-por-a-mascara-e-deu-triunfo-a-suecia-2026092520501772295
+    hours_ago: 10.6   # フィードの時刻から
+    sources:
+      - https://www.abola.pt/noticias/gyokeres-voltou-a-por-a-mascara-e-deu-triunfo-a-suecia-2026092520501772295
+
+  - id: edwards_marca_golaco
+    title: "Edwards marca golaço na estreia pelo Chipre, mas ex-Vizela estraga a festa"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Edwards Marca Golaco Estreia"            # URLから作った。合っているか見る
+    url: https://www.abola.pt/noticias/edwards-marca-golaco-na-estreia-pelo-chipre-mas-ex-vizela-estraga-a-festa-2026092520482462162
+    hours_ago: 10.7   # フィードの時刻から
+    sources:
+      - https://www.abola.pt/noticias/edwards-marca-golaco-na-estreia-pelo-chipre-mas-ex-vizela-estraga-a-festa-2026092520482462162
+
+  - id: lesao_de_mbappe
+    title: "Lesão de Mbappé assombra estreia feliz de Zidane"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Lesao Mbappe Assombra Estreia"            # URLから作った。合っているか見る
+    url: https://www.abola.pt/noticias/lesao-de-mbappe-assombra-estreia-feliz-de-zidane-2026092520472054325
+    hours_ago: 10.7   # フィードの時刻から
+    # 同じ話を 2媒体が報じている
+    sources:
+      - https://www.abola.pt/noticias/lesao-de-mbappe-assombra-estreia-feliz-de-zidane-2026092520472054325
+      - https://www.footmercato.net/a6184479491287887679-ca-ne-va-pas-bien-il-va-falloir-quil-rentre-zinedine-zidane-confirme-les-mauvaises-nouvelles-pour-mbappe
+      # ↑ « Ça ne va pas bien, il va falloir qu’il rentre » : Zinédine
+
+  - id: fc_porto_gabriel
+    title: "FC Porto: Gabriel Veron aplicou-se e ganhou nova oportunidade"
+    topic: "ポルト"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Porto Gabriel Veron Aplicou"            # URLから作った。合っているか見る
+    url: https://www.abola.pt/noticias/fc-porto-gabriel-veron-aplicou-se-e-ganhou-nova-oportunidade-2026092518194503395
+    hours_ago: 10.7   # フィードの時刻から
+    sources:
+      - https://www.abola.pt/noticias/fc-porto-gabriel-veron-aplicou-se-e-ganhou-nova-oportunidade-2026092518194503395
+
+  - id: lebron_james_quebra
+    title: "LeBron James quebra silêncio e explica decisão de se juntar aos Sixers"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Lebron James Quebra Silencio"            # URLから作った。合っているか見る
+    url: https://www.abola.pt/noticias/lebron-james-quebra-silencio-e-explica-decisao-de-se-juntar-aos-sixers-2026092520420515667
+    hours_ago: 10.8   # フィードの時刻から
+    sources:
+      - https://www.abola.pt/noticias/lebron-james-quebra-silencio-e-explica-decisao-de-se-juntar-aos-sixers-2026092520420515667
+
+  - id: golaco_de_lukebakio
+    title: "Golaço de Lukebakio amplia vantagem da Bélgica (vídeo)"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Golaco Lukebakio Amplia Vantagem"            # URLから作った。合っているか見る
+    url: https://www.abola.pt/noticias/golaco-de-lukebakio-amplia-vantagem-da-belgica-video-2026092519451636693
+    hours_ago: 11   # フィードの時刻から
+    sources:
+      - https://www.abola.pt/noticias/golaco-de-lukebakio-amplia-vantagem-da-belgica-video-2026092519451636693
+
+  - id: w52_fc_porto
+    title: "W52-FC Porto: julgamento de Nuno Ribeiro terá de ser repetido por erro processual"
+    topic: "ポルト"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Porto Julgamento Nuno Ribeiro"            # URLから作った。合っているか見る
+    url: https://www.abola.pt/noticias/w52-fc-porto-julgamento-de-nuno-ribeiro-tera-de-ser-repetido-por-erro-processual-2026092520282166303
+    hours_ago: 11   # フィードの時刻から
+    sources:
+      - https://www.abola.pt/noticias/w52-fc-porto-julgamento-de-nuno-ribeiro-tera-de-ser-repetido-por-erro-processual-2026092520282166303
+
+  - id: primeiro_golo_de
+    title: "Primeiro golo de Gyokeres esta época devolve vantagem à Suécia (vídeo)"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Primeiro Golo Gyokeres Esta"            # URLから作った。合っているか見る
+    url: https://www.abola.pt/noticias/primeiro-golo-de-gyokeres-esta-epoca-devolve-vantagem-a-suecia-video-2026092519505224024
+    hours_ago: 11.6   # フィードの時刻から
+    sources:
+      - https://www.abola.pt/noticias/primeiro-golo-de-gyokeres-esta-epoca-devolve-vantagem-a-suecia-video-2026092519505224024
+
+  - id: sc_braga_bons
+    title: "SC Braga: bons arranques não são compatíveis com a Europa"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Braga Bons Arranques Nao"            # URLから作った。合っているか見る
+    url: https://www.abola.pt/noticias/sc-braga-bons-arranques-nao-sao-compativeis-com-a-europa-2026092519473885466
+    hours_ago: 11.7   # フィードの時刻から
+    sources:
+      - https://www.abola.pt/noticias/sc-braga-bons-arranques-nao-sao-compativeis-com-a-europa-2026092519473885466
+
+  - id: jleague
+    title: "山形vs鳥栖 スタメン発表"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://web.gekisaka.jp/news/jleague/detail/?459765-459765-fl
+    hours_ago: 1   # フィードの時刻から
+    # 同じ話を 5媒体が報じている
+    sources:
+      - https://web.gekisaka.jp/news/jleague/detail/?459765-459765-fl
+      - https://web.gekisaka.jp/news/jleague/detail/?459764-459764-fl
+      - https://web.gekisaka.jp/news/jleague/detail/?459760-459760-fl
+      - https://web.gekisaka.jp/news/jleague/detail/?459759-459759-fl
+      - https://web.gekisaka.jp/news/jleague/detail/?459757-459757-fl
+      # ↑ 秋田vs新潟 スタメン発表
+      # ↑ 奈良vs滋賀 スタメン発表
+      # ↑ 山口vs相模原 スタメン発表
+      # ↑ 金沢vs鳥取 スタメン発表
+
+  - id: c
+    title: "マンC、降格やプレミアリーグ追放の可能性も…財務違反114件が認定される"
+    topic: "マンチェスター・シティ"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: england    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 未確認           # 見出しの言い回しからの当たり。見て直す
+    en: ""            # 英語サイトを引く語
+    url: https://web.gekisaka.jp/news/world/detail/?459763-459763-fl
+    hours_ago: 1.3   # フィードの時刻から
+    sources:
+      - https://web.gekisaka.jp/news/world/detail/?459763-459763-fl
+
+  - id: jleague_2
+    title: "金沢vs鳥取 試合記録"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: ""            # 英語サイトを引く語
+    url: https://web.gekisaka.jp/news/jleague/detail/?459762-459762-fl
+    hours_ago: 1.5   # フィードの時刻から
+    sources:
+      - https://web.gekisaka.jp/news/jleague/detail/?459762-459762-fl
+
+  - id: jleague_3
+    title: "元KAT-TUNメンバーがJリーグ公式戦に来場決定"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: japan    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://web.gekisaka.jp/news/jleague/detail/?459761-459761-fl
+    hours_ago: 1.9   # フィードの時刻から
+    sources:
+      - https://web.gekisaka.jp/news/jleague/detail/?459761-459761-fl
+
+  - id: jleague_4
+    title: "柿谷曜一朗氏が“フォルランの乱終戦”を報告「当時の彼に対する嫉妬、プライドまみれの言動行動、情けないとしか言いようがない」"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: ""            # 英語サイトを引く語
+    url: https://web.gekisaka.jp/news/jleague/detail/?459758-459758-fl
+    hours_ago: 3.2   # フィードの時刻から
+    sources:
+      - https://web.gekisaka.jp/news/jleague/detail/?459758-459758-fl
+
+  - id: jleague_5
+    title: "まさかの…」「バカかっけぇ」浦和が新3rdユニフォームを発表"
+    topic: "浦和レッズ"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: japan    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://web.gekisaka.jp/news/jleague/detail/?459755-459755-fl
+    hours_ago: 4.2   # フィードの時刻から
+    sources:
+      - https://web.gekisaka.jp/news/jleague/detail/?459755-459755-fl
+
+  - id: japan
+    title: "Jリーグから初招集! ベネズエラ戦でA代表デビューを狙う中野就斗、熊坂光希、谷村海那(15枚)"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: japan    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Japan Photonews"            # URLから作った。合っているか見る
+    url: https://web.gekisaka.jp/photonews/japan/detail/?459756-459756-pn
+    hours_ago: 4.8   # フィードの時刻から
+    sources:
+      - https://web.gekisaka.jp/photonews/japan/detail/?459756-459756-pn
+
+  - id: japan_2
+    title: "共にJ1未経験、ベルギーで飛躍しA代表デビューへ! 小久保玲央ブライアン、齋藤俊輔(12枚)"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: japan    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Japan Photonews"            # URLから作った。合っているか見る
+    url: https://web.gekisaka.jp/photonews/japan/detail/?459754-459754-pn
+    hours_ago: 4.8   # フィードの時刻から
+    sources:
+      - https://web.gekisaka.jp/photonews/japan/detail/?459754-459754-pn
+
+  - id: japan_3
+    title: "ウルグアイ戦は出番なし…渡辺剛、田中聡、後藤啓介、佐藤龍之介はベネズエラ戦に照準(20枚)"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Japan Photonews"            # URLから作った。合っているか見る
+    url: https://web.gekisaka.jp/photonews/japan/detail/?459753-459753-pn
+    hours_ago: 4.9   # フィードの時刻から
+    sources:
+      - https://web.gekisaka.jp/photonews/japan/detail/?459753-459753-pn
+
+  - id: japan_4
+    title: "東京五輪組の再会…ウルグアイ戦途中出場の田中碧、相馬勇紀は練習後も揃ってランニング(12枚)"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Japan Photonews"            # URLから作った。合っているか見る
+    url: https://web.gekisaka.jp/photonews/japan/detail/?459752-459752-pn
+    hours_ago: 4.9   # フィードの時刻から
+    sources:
+      - https://web.gekisaka.jp/photonews/japan/detail/?459752-459752-pn
+
+  - id: japan_5
+    title: "鈴木彩艶が初合流でさっそくフルメニュー合流! プレミア&CL初挑戦「まだまだ成長できる」(6枚)"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: england    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Japan Photonews"            # URLから作った。合っているか見る
+    url: https://web.gekisaka.jp/photonews/japan/detail/?459750-459750-pn
+    hours_ago: 4.9   # フィードの時刻から
+    # 同じ話を 2媒体が報じている
+    sources:
+      - https://web.gekisaka.jp/photonews/japan/detail/?459750-459750-pn
+      - https://web.gekisaka.jp/news/japan/detail/?459747-459747-fl
+      # ↑ プレミア&CL初挑戦、ロングキックで話題沸騰…課題にも向き合うGK鈴木彩艶「まだまだ成長できると思っている」
+
+  - id: jleague_6
+    title: "山形が10番MFの接触事故を報告「心よりお詫び申し上げます」"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: ""            # 英語サイトを引く語
+    url: https://web.gekisaka.jp/news/jleague/detail/?459732-459732-fl
+    hours_ago: 4.9   # フィードの時刻から
+    sources:
+      - https://web.gekisaka.jp/news/jleague/detail/?459732-459732-fl
+
+  - id: japan_6
+    title: "A代表初ゴールから一夜明けたFW塩貝健人、ミニゲームやシュート練習で気迫全開(12枚)"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Japan Photonews"            # URLから作った。合っているか見る
+    url: https://web.gekisaka.jp/photonews/japan/detail/?459749-459749-pn
+    hours_ago: 5   # フィードの時刻から
+    sources:
+      - https://web.gekisaka.jp/photonews/japan/detail/?459749-459749-pn
+
+  - id: japan_7
+    title: "広島での初日練習にファン2000人! ウルグアイ戦から一夜明け、森保Jが13人で再始動(14枚)"
+    topic: "サンフレッチェ広島"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: japan    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Japan Photonews"            # URLから作った。合っているか見る
+    url: https://web.gekisaka.jp/photonews/japan/detail/?459748-459748-pn
+    hours_ago: 5   # フィードの時刻から
+    sources:
+      - https://web.gekisaka.jp/photonews/japan/detail/?459748-459748-pn
+
+  - id: japan_8
+    title: "北朝鮮戦前日トレーニング終了、大岩Jは日の沈んだ練習場を後に(4枚)"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Japan Photonews"            # URLから作った。合っているか見る
+    url: https://web.gekisaka.jp/photonews/japan/detail/?459746-459746-pn
+    hours_ago: 5.9   # フィードの時刻から
+    sources:
+      - https://web.gekisaka.jp/photonews/japan/detail/?459746-459746-pn
+
+  - id: c183
+    title: "ジダン監督「状態はあまり良くない」ムバッペが決勝ゴールの場面で負傷…フランス代表から離脱"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: ""            # 英語サイトを引く語
+    url: https://web.gekisaka.jp/news/world/detail/?459733-459733-fl
+    hours_ago: 5.9   # フィードの時刻から
+    sources:
+      - https://web.gekisaka.jp/news/world/detail/?459733-459733-fl
+
+  - id: japan_9
+    title: "今夜準々決勝で北朝鮮と対戦…大岩JのGK陣:荒木琉偉(G大阪)、小林将天(松本)、ピサノアレックス幸冬堀尾(名古屋)(19枚)"
+    topic: "フランクフルト"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: germany    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Japan Photonews"            # URLから作った。合っているか見る
+    url: https://web.gekisaka.jp/photonews/japan/detail/?459745-459745-pn
+    hours_ago: 5.9   # フィードの時刻から
+    # 同じ話を 6媒体が報じている
+    sources:
+      - https://web.gekisaka.jp/photonews/japan/detail/?459745-459745-pn
+      - https://web.gekisaka.jp/photonews/japan/detail/?459743-459743-pn
+      - https://web.gekisaka.jp/photonews/japan/detail/?459742-459742-pn
+      - https://web.gekisaka.jp/photonews/japan/detail/?459741-459741-pn
+      - https://web.gekisaka.jp/photonews/japan/detail/?459738-459738-pn
+      - https://web.gekisaka.jp/photonews/japan/detail/?459736-459736-pn
+      # ↑ 今夜準々決勝で北朝鮮と対戦…大岩Jの4-3-3布陣:左CB市原吏音(AZ)、土屋櫂大(福島)(15枚)
+      # ↑ 今夜準々決勝で北朝鮮と対戦…大岩Jの4-3-3布陣:右SB梅木怜(今治)、森壮一朗(岡山)(15枚)
+      # ↑ 今夜準々決勝で北朝鮮と対戦…大岩Jの4-3-3布陣:左SB小杉啓太(フランクフルト)、佐藤海宏(新潟)(15枚)
+      # ↑ 今夜準々決勝で北朝鮮と対戦…大岩Jの4-3-3布陣:左IH石井久継(湘南)、嶋本悠大(清水)(14枚)
+      # ↑ 今夜準々決勝で北朝鮮と対戦…大岩Jの4-3-3布陣:左ウイング横山夢樹(C大阪)、石橋瀬凪(湘南)(17枚)
+
+  - id: japan_10
+    title: "今夜準々決勝で北朝鮮と対戦…大岩Jの4-3-3布陣:右CB永野修都(FC東京)、岡部タリクカナイ颯斗(東洋大)(10枚)"
+    topic: "FC東京"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: japan    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Japan Photonews"            # URLから作った。合っているか見る
+    url: https://web.gekisaka.jp/photonews/japan/detail/?459744-459744-pn
+    hours_ago: 5.9   # フィードの時刻から
+    # 同じ話を 3媒体が報じている
+    sources:
+      - https://web.gekisaka.jp/photonews/japan/detail/?459744-459744-pn
+      - https://web.gekisaka.jp/photonews/japan/detail/?459737-459737-pn
+      - https://web.gekisaka.jp/photonews/japan/detail/?459735-459735-pn
+      # ↑ 今夜準々決勝で北朝鮮と対戦…大岩Jの4-3-3布陣:右ウイング古谷柊介(東京国際大/柏内定)、福永裕也(京都産業大)(8
+      # ↑ 今夜準々決勝で北朝鮮と対戦…大岩Jの4-3-3布陣:1トップ道脇豊(いわき)、ンワディケ・ウチェ・ブライアン世雄(オール
+
+  - id: japan_11
+    title: "今夜準々決勝で北朝鮮と対戦…大岩Jの4-3-3布陣:アンカー保田堅心(長崎)、中島洋太朗(広島)(13枚)"
+    topic: "サンフレッチェ広島"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: japan    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Japan Photonews"            # URLから作った。合っているか見る
+    url: https://web.gekisaka.jp/photonews/japan/detail/?459740-459740-pn
+    hours_ago: 5.9   # フィードの時刻から
+    sources:
+      - https://web.gekisaka.jp/photonews/japan/detail/?459740-459740-pn
+
+  - id: japan_12
+    title: "今夜準々決勝で北朝鮮と対戦…大岩Jの4-3-3布陣:右IH大関友翔(川崎F)、石渡ネルソン(シントトロイデン)(16枚)"
+    topic: "川崎フロンターレ"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: japan    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Japan Photonews"            # URLから作った。合っているか見る
+    url: https://web.gekisaka.jp/photonews/japan/detail/?459739-459739-pn
+    hours_ago: 5.9   # フィードの時刻から
+    sources:
+      - https://web.gekisaka.jp/photonews/japan/detail/?459739-459739-pn
+
+  - id: japan_13
+    title: "アジア大会4強懸けた北朝鮮戦へ…最終調整を行った大岩ジャパン(13枚)"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Japan Photonews"            # URLから作った。合っているか見る
+    url: https://web.gekisaka.jp/photonews/japan/detail/?459734-459734-pn
+    hours_ago: 5.9   # フィードの時刻から
+    sources:
+      - https://web.gekisaka.jp/photonews/japan/detail/?459734-459734-pn
+
+  - id: vs
+    title: "ニューカッスルvsハル 試合記録"
+    topic: "ニューカッスル"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: england    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Card Two Man Citys"            # URLから作った。合っているか見る
+    url: https://web.gekisaka.jp/news/world/detail/?459193-459193-fl
+    hours_ago: 7.3   # フィードの時刻から
+    # 同じ話を 2媒体が報じている
+    sources:
+      - https://web.gekisaka.jp/news/world/detail/?459193-459193-fl
+      - https://www.dailymail.com/sport/football/article-16157915/PREMIER-LEAGUE-REPORT-CARD-TWO-Man-Citys-formidable-start-Enzo-Maresca-Hull-shocked-league-Spurs-Man-United-struggle-10-sides-GRADED.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
+      # ↑ PREMIER LEAGUE REPORT CARD - PART TWO: Man City's formidable
+
+  - id: youth
+    title: "[関東ROOKIE LEAGUE]Aリーグ優秀選手:西武台GKカク・ミンソ「韓国代表としてワールドカップに出る」"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: ""            # 英語サイトを引く語
+    url: https://web.gekisaka.jp/news/youth/detail/?459731-459731-fl
+    hours_ago: 8.8   # フィードの時刻から
+    # 同じ話を 5媒体が報じている
+    sources:
+      - https://web.gekisaka.jp/news/youth/detail/?459731-459731-fl
+      - https://web.gekisaka.jp/news/youth/detail/?459730-459730-fl
+      - https://web.gekisaka.jp/news/youth/detail/?459729-459729-fl
+      - https://web.gekisaka.jp/news/youth/detail/?459728-459728-fl
+      - https://web.gekisaka.jp/news/youth/detail/?459727-459727-fl
+      # ↑ [関東ROOKIE LEAGUE]Aリーグ優秀選手:桐光学園MF清水桜介「日本代表になって、世界で戦える選手になる」
+      # ↑ [関東ROOKIE LEAGUE]Aリーグ優秀選手:日大藤沢DF横山聡己「プロのサッカー選手になって、目標とされる選手に
+      # ↑ [関東ROOKIE LEAGUE]Aリーグ優秀選手:日体大柏DF山口蒼空「高校サッカーで国立の舞台に立つ」
+      # ↑ [関東ROOKIE LEAGUE]Aリーグ優秀選手:駒澤大高DF横井日来「コーチングして守備できるようになった」
+
+  - id: japan_14
+    title: "6人の交代を行ったなでしこジャパン、FW浜田芽来は“脳震盪の疑いによる交代”のため競技規則上も問題なし"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: ""            # 英語サイトを引く語
+    url: https://web.gekisaka.jp/news/japan/detail/?459726-459726-fl
+    hours_ago: 10.3   # フィードの時刻から
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?459726-459726-fl
+
+  - id: japan_15
+    title: "塩貝健人が高校時代に警戒した男…梅木怜(今治)はA代表初弾に刺激「いつか一緒のフィールドでまた」"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: ""            # 英語サイトを引く語
+    url: https://web.gekisaka.jp/news/japan/detail/?459724-459724-fl
+    hours_ago: 10.7   # フィードの時刻から
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?459724-459724-fl
+
+  - id: japan_16
+    title: "MF五十嵐陵(柏U-18)が同点弾も…退場者が発生したU-17日本代表、仏遠征2戦目は後半AT被弾で黒星"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: ""            # 英語サイトを引く語
+    url: https://web.gekisaka.jp/news/japan/detail/?459725-459725-fl
+    hours_ago: 11   # フィードの時刻から
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?459725-459725-fl
+
+  - id: alejandro_garnacho_aston
+    title: "Inside Alejandro Garnacho's Aston Villa struggles: The doubt over who really signed him from Chelsea, ominous signs behind the scenes that won't please Unai Emery - and how Argentine can still win him over"
+    topic: "アストン・ヴィラ"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: england    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 未確認           # 見出しは『報道』寄りだが、この情報源では未確認まで
+    en: "Alejandro Garnacho Aston Villa"            # URLから作った。合っているか見る
+    url: https://www.dailymail.com/sport/football/article-16160055/alejandro-garnacho-aston-villa-struggles.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
+    hours_ago: 6.5   # フィードの時刻から
+    sources:
+      - https://www.dailymail.com/sport/football/article-16160055/alejandro-garnacho-aston-villa-struggles.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
+
+  - id: cole_palmer_harry
+    title: "RIATH AL-SAMARRAI: 'Not bothered' Cole Palmer may be too cool for school but here's why he should follow Harry Kane's example - and how he may have blown it with detail-obsessed Thomas Tuchel"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 未確認           # 見出しの言い回しからの当たり。見て直す
+    en: "Cole Palmer Harry Kane"            # URLから作った。合っているか見る
+    url: https://www.dailymail.com/sport/football/article-16160529/cole-palmer-harry-kane-thomas-tuchel.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
+    hours_ago: 6.5   # フィードの時刻から
+    sources:
+      - https://www.dailymail.com/sport/football/article-16160529/cole-palmer-harry-kane-thomas-tuchel.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
+
+  - id: tottenham_lankshear_england
+    title: "Why Tottenham may regret selling red-hot Will Lankshear, the warning signs Lee Carsley cannot ignore and a fresh Chelsea injury concern as England's Under 21s beat Kazakhstan 4-2"
+    topic: "トッテナム"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: england    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 未確認           # 見出しの言い回しからの当たり。見て直す
+    en: "Tottenham Lankshear England Kazakhstan"            # URLから作った。合っているか見る
+    url: https://www.dailymail.com/sport/football/article-16151133/tottenham-lankshear-england-21-kazakhstan.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
+    hours_ago: 8.6   # フィードの時刻から
+    sources:
+      - https://www.dailymail.com/sport/football/article-16151133/tottenham-lankshear-england-21-kazakhstan.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
+
+  - id: manchester_city_premier
+    title: "Manchester City found guilty RECAP: Betting SUSPENDED on relegation as rivals call for title stripping"
+    topic: "マンチェスター・シティ"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: england    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 未確認           # 見出しは『報道』寄りだが、この情報源では未確認まで
+    en: "Manchester City Guilty Expulsion"            # URLから作った。合っているか見る
+    url: https://www.dailymail.com/sport/football/article-16160653/manchester-city-premier-league-guilty-expulsion.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
+    hours_ago: 9.1   # フィードの時刻から
+    # 同じ話を 5媒体が報じている
+    sources:
+      - https://www.dailymail.com/sport/football/article-16160653/manchester-city-premier-league-guilty-expulsion.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
+      - https://www.dailymail.com/sport/football/article-15172849/man-city-financial-skullduggery-fan-view.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
+      - https://www.dailymail.com/sport/football/article-14566769/Man-City-acceptance-IAN-LADYMAN.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
+      - https://www.dailymail.com/sport/football/article-16161045/Pep-Guardiola-Man-City-trophies.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
+      - https://www.bbc.co.uk/sport/football/articles/cwywld5v28jo?at_medium=RSS&at_campaign=rss
+      # ↑ MAN CITY FAN VIEW: My club's relationship with financial sku
+      # ↑ Forget the appeal, the mud attached to Manchester City's nam
+      # ↑ Pep Guardiola was convinced Man City were innocent and used 
+      # ↑ The computer hacker who tried to take down Man City
+
+  - id: argentina_star_mauro
+    title: "Argentina star Mauro Icardi hit with 73-YEAR driving ban after video posted online by his girlfriend alerted authorities to his expired driving licence"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 未確認           # 見出しは『報道』寄りだが、この情報源では未確認まで
+    en: "Argentina Star Mauro Icardi"            # URLから作った。合っているか見る
+    url: https://www.dailymail.com/sport/football/article-16160025/Argentina-star-Mauro-Icardi-hit-73-YEAR-driving-ban-video-posted-online-girlfriend-alerted-authorities-expired-driving-licence.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
+    hours_ago: 9.8   # フィードの時刻から
+    sources:
+      - https://www.dailymail.com/sport/football/article-16160025/Argentina-star-Mauro-Icardi-hit-73-YEAR-driving-ban-video-posted-online-girlfriend-alerted-authorities-expired-driving-licence.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
+
+  - id: sebastien_pocognoli_scotland
+    title: "Sebastien Pocognoli bursting with pride but 'nervous' ahead of Scotland bow"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 未確認           # 見出しは『報道』寄りだが、この情報源では未確認まで
+    en: "Sebastien Pocognoli Scotland Slovenia"            # URLから作った。合っているか見る
+    url: https://www.dailymail.com/sport/football/article-16161297/sebastien-pocognoli-scotland-slovenia-nations-league.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
+    hours_ago: 11.5   # フィードの時刻から
+    sources:
+      - https://www.dailymail.com/sport/football/article-16161297/sebastien-pocognoli-scotland-slovenia-nations-league.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
+
+  - id: crq8j9572vejo
+    title: "The MMA fighter helping Brighton - and filling stadiums"
+    topic: "ブライトン"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: england    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Crq Vejo Mixed Martial"            # URLから作った。合っているか見る
+    url: https://www.bbc.co.uk/sport/mixed-martial-arts/articles/crq8j9572vejo?at_medium=RSS&at_campaign=rss
+    hours_ago: 0.6   # フィードの時刻から
+    sources:
+      - https://www.bbc.co.uk/sport/mixed-martial-arts/articles/crq8j9572vejo?at_medium=RSS&at_campaign=rss
+
+  - id: cmr4v77zyr64o
+    title: "Do England have a problem against top-10 teams?"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 未確認           # 見出しの言い回しからの当たり。見て直す
+    en: "Cmr Zyr"            # URLから作った。合っているか見る
+    url: https://www.bbc.co.uk/sport/football/articles/cmr4v77zyr64o?at_medium=RSS&at_campaign=rss
+    hours_ago: 0.8   # フィードの時刻から
+    sources:
+      - https://www.bbc.co.uk/sport/football/articles/cmr4v77zyr64o?at_medium=RSS&at_campaign=rss
+
+  - id: cqy4zz7rze21o
+    title: "Charles brothers 'brilliant' in NI's landmark win"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Cqy Rze"            # URLから作った。合っているか見る
+    url: https://www.bbc.co.uk/sport/football/articles/cqy4zz7rze21o?at_medium=RSS&at_campaign=rss
+    hours_ago: 1.1   # フィードの時刻から
+    sources:
+      - https://www.bbc.co.uk/sport/football/articles/cqy4zz7rze21o?at_medium=RSS&at_campaign=rss
+
+  - id: c9lykey73542o
+    title: "Flex your football brain with our daily quizzes"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: ""            # 英語サイトを引く語
+    url: https://www.bbc.co.uk/sport/football/articles/c9lykey73542o?at_medium=RSS&at_campaign=rss
+    hours_ago: 2   # フィードの時刻から
+    sources:
+      - https://www.bbc.co.uk/sport/football/articles/c9lykey73542o?at_medium=RSS&at_campaign=rss
+
+  - id: c84gkkepxxl4o
+    title: "No relegation clause in Haaland's City deal - Saturday's gossip"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 未確認           # 見出しの言い回しからの当たり。見て直す
+    en: ""            # 英語サイトを引く語
+    url: https://www.bbc.co.uk/sport/football/articles/c84gkkepxxl4o?at_medium=RSS&at_campaign=rss
+    hours_ago: 10.3   # フィードの時刻から
+    sources:
+      - https://www.bbc.co.uk/sport/football/articles/c84gkkepxxl4o?at_medium=RSS&at_campaign=rss
+
+  - id: cqrl663ew3kxo
+    title: "Late drama as Northern Ireland beat Georgia"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Cqrl Kxo Videos"            # URLから作った。合っているか見る
+    url: https://www.bbc.co.uk/sport/football/videos/cqrl663ew3kxo?at_medium=RSS&at_campaign=rss
+    hours_ago: 10.7   # フィードの時刻から
+    sources:
+      - https://www.bbc.co.uk/sport/football/videos/cqrl663ew3kxo?at_medium=RSS&at_campaign=rss
+
+  - id: cr89jjwy4nqpo
+    title: "Clubs seek legal advice over Man City charges compensation"
+    topic: "マンチェスター・シティ"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: england    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Jjwy Nqpo"            # URLから作った。合っているか見る
+    url: https://www.bbc.co.uk/sport/football/articles/cr89jjwy4nqpo?at_medium=RSS&at_campaign=rss
+    hours_ago: 11.3   # フィードの時刻から
+    sources:
+      - https://www.bbc.co.uk/sport/football/articles/cr89jjwy4nqpo?at_medium=RSS&at_campaign=rss
+
+  - id: c6qxvvw15p0lo
+    title: "O'Neill left baffled by refereeing in late NI win"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: ""            # 英語サイトを引く語
+    url: https://www.bbc.co.uk/sport/football/articles/c6qxvvw15p0lo?at_medium=RSS&at_campaign=rss
+    hours_ago: 11.6   # フィードの時刻から
+    sources:
+      - https://www.bbc.co.uk/sport/football/articles/c6qxvvw15p0lo?at_medium=RSS&at_campaign=rss
+
+  - id: manchester_city_verdict
+    title: "Manchester City verdict latest, England v Spain buildup, WSL and more – live"
+    topic: "マンチェスター・シティ"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: england    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Manchester City Verdict England"            # URLから作った。合っているか見る
+    url: https://www.theguardian.com/football/live/2026/sep/26/manchester-city-verdict-latest-england-v-spain-buildup-wsl-and-more-live
+    hours_ago: 0.3   # フィードの時刻から
+    sources:
+      - https://www.theguardian.com/football/live/2026/sep/26/manchester-city-verdict-latest-england-v-spain-buildup-wsl-and-more-live
+
+  - id: how_do_england
+    title: "How do England beat Spain, or even score against them? The data suggests crosses"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "How England Beat Spain"            # URLから作った。合っているか見る
+    url: https://www.theguardian.com/football/2026/sep/26/how-do-england-beat-spain-or-even-score-against-them-the-data-suggests-crosses
+    hours_ago: 0.5   # フィードの時刻から
+    sources:
+      - https://www.theguardian.com/football/2026/sep/26/how-do-england-beat-spain-or-even-score-against-them-the-data-suggests-crosses
+
+  - id: womens_super_league
+    title: "‘Island girl’ Malard aims to ‘become a legend’ in Réunion with Bompastor"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Womens Super Chelsea Girl"            # URLから作った。合っているか見る
+    url: https://www.theguardian.com/football/2026/sep/26/womens-super-league-chelsea-girl-from-island-melvine-malard-sees-reunion-sonia-bompastor-way-become-legend
+    hours_ago: 0.5   # フィードの時刻から
+    sources:
+      - https://www.theguardian.com/football/2026/sep/26/womens-super-league-chelsea-girl-from-island-melvine-malard-sees-reunion-sonia-bompastor-way-become-legend
+
+  - id: lamine_yamal_football
+    title: "Lamine Yamal: ‘Football is mechanised but players like me have that special spark’"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Lamine Yamal Special Spark"            # URLから作った。合っているか見る
+    url: https://www.theguardian.com/football/2026/sep/26/lamine-yamal-football-special-spark-spain-world-cup-barcelona
+    hours_ago: 0.5   # フィードの時刻から
+    sources:
+      - https://www.theguardian.com/football/2026/sep/26/lamine-yamal-football-special-spark-spain-world-cup-barcelona
+
+  - id: burnhams_booze_ruse
+    title: "Burnham’s booze ruse is a non-starter: just keep doing your drinking in the pub | Barney Ronay"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Burnhams Booze Ruse Non"            # URLから作った。合っているか見る
+    url: https://www.theguardian.com/football/2026/sep/26/burnhams-booze-ruse-is-a-non-starter-just-keep-doing-your-drinking-in-the-pub
+    hours_ago: 0.5   # フィードの時刻から
+    sources:
+      - https://www.theguardian.com/football/2026/sep/26/burnhams-booze-ruse-is-a-non-starter-just-keep-doing-your-drinking-in-the-pub
+
+  - id: manchester_city_financial
+    title: "How drawn-out saga of Manchester City’s alleged cheating came to this"
+    topic: "マンチェスター・シティ"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: england    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Manchester City Financial Charges"            # URLから作った。合っているか見る
+    url: https://www.theguardian.com/football/2026/sep/26/manchester-city-financial-charges-premier-league-uefa-abu-dhabi
+    hours_ago: 2.5   # フィードの時刻から
+    sources:
+      - https://www.theguardian.com/football/2026/sep/26/manchester-city-financial-charges-premier-league-uefa-abu-dhabi
+
+  - id: nations_league_roundup
+    title: "Nations League: Kylian Mbappé injured after scoring France winner in Turkey"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Nations Roundup Turkey France"            # URLから作った。合っているか見る
+    url: https://www.theguardian.com/football/2026/sep/25/nations-league-roundup-turkey-france-kylian-mbappe-italy-belgium
+    hours_ago: 9.9   # フィードの時刻から
+    sources:
+      - https://www.theguardian.com/football/2026/sep/25/nations-league-roundup-turkey-france-kylian-mbappe-italy-belgium
+
+  - id: archives
+    title: "中国メディア「ウルグアイは日本のミスを待つばかりだった 日本の勝利は運ではなく技術の賜物 我々には運の要素すらない」"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: other           # transfer / match。見出しからの当たり。見て直す
+    tier: 未確認           # 見出しは『報道』寄りだが、この情報源では未確認まで
+    en: "Html Archives"            # URLから作った。合っているか見る
+    url: https://footballnet.2chblog.jp/archives/60071136.html
+    hours_ago: 0.5   # フィードの時刻から
+    sources:
+      - https://footballnet.2chblog.jp/archives/60071136.html
+
+  - id: archives_2
+    title: "こっちの後押しをしてほしい」久保建英が４万人超え観衆に“異例”の注文「むしろブーイングをして…」"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 未確認           # 見出しは『報道』寄りだが、この情報源では未確認まで
+    en: "Html Archives"            # URLから作った。合っているか見る
+    url: https://footballnet.2chblog.jp/archives/60071103.html
+    hours_ago: 4.5   # フィードの時刻から
+    sources:
+      - https://footballnet.2chblog.jp/archives/60071103.html
+
+  - id: archives_3
+    title: "動画】松木玖生、史上40人目の日本代表デビュー戦ゴール 過去には川淵三郎、釜本邦茂、武田修宏、柿谷曜一朗らが記録"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 未確認           # 見出しは『報道』寄りだが、この情報源では未確認まで
+    en: "Html Archives"            # URLから作った。合っているか見る
+    url: https://footballnet.2chblog.jp/archives/60071129.html
+    hours_ago: 9.5   # フィードの時刻から
+    sources:
+      - https://footballnet.2chblog.jp/archives/60071129.html
+
+  - id: a246500638680900343_equipe_d
+    title: "Équipe de France : la réaction d’Estéban Lepaul après sa première sélection avec les Bleus"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Equipe France Reaction Desteban"            # URLから作った。合っているか見る
+    url: https://www.footmercato.net/a246500638680900343-equipe-de-france-la-reaction-desteban-lepaul-apres-sa-premiere-selection-avec-les-bleus
+    hours_ago: 0   # フィードの時刻から
+    # 同じ話を 4媒体が報じている
+    sources:
+      - https://www.footmercato.net/a246500638680900343-equipe-de-france-la-reaction-desteban-lepaul-apres-sa-premiere-selection-avec-les-bleus
+      - https://www.footmercato.net/a2364326501684249969-zinedine-zidane-juge-la-grande-premiere-de-son-equipe-de-france
+      - https://www.footmercato.net/a4438573513212681273-esteban-lepaul-est-ravi-de-sa-premiere-en-equipe-de-france
+      - https://www.footmercato.net/a3529221785492896508-turquie-france-les-notes-du-match
+      # ↑ Zinedine Zidane juge la grande première de son équipe de Fra
+      # ↑ Estéban Lepaul est ravi de sa première en équipe de France
+      # ↑ Turquie - France : les notes du match
+
+  - id: a8033764606380312258_la_pres
+    title: "La presse espagnole retient son souffle après la blessure de Kylian Mbappé !"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Presse Espagnole Retient Son"            # URLから作った。合っているか見る
+    url: https://www.footmercato.net/a8033764606380312258-la-presse-espagnole-retient-son-souffle-apres-la-blessure-de-kylian-mbappe
+    hours_ago: 0.2   # フィードの時刻から
+    sources:
+      - https://www.footmercato.net/a8033764606380312258-la-presse-espagnole-retient-son-souffle-apres-la-blessure-de-kylian-mbappe
+
+  - id: a3446395629683669181_equipe
+    title: "Équipe de France : les mots très inquiétants de Maxence Lacroix sur la blessure de Kylian Mbappé"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Equipe France Les Mots"            # URLから作った。合っているか見る
+    url: https://www.footmercato.net/a3446395629683669181-equipe-de-france-les-mots-tres-inquietants-de-maxence-lacroix-sur-la-blessure-de-kylian-mbappe
+    hours_ago: 0.6   # フィードの時刻から
+    sources:
+      - https://www.footmercato.net/a3446395629683669181-equipe-de-france-les-mots-tres-inquietants-de-maxence-lacroix-sur-la-blessure-de-kylian-mbappe
+
+  - id: a5843833390647425357_raphinh
+    title: "Raphinha a failli quitter le Barça !"
+    topic: "バルセロナ"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: spain    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Raphinha Failli Quitter Barca"            # URLから作った。合っているか見る
+    url: https://www.footmercato.net/a5843833390647425357-raphinha-a-failli-quitter-le-barca
+    hours_ago: 0.9   # フィードの時刻から
+    sources:
+      - https://www.footmercato.net/a5843833390647425357-raphinha-a-failli-quitter-le-barca
+
+  - id: a7372428000135714785_edf_zid
+    title: "EdF : Zidane explique pourquoi il a raté le début de la Marseillaise"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Edf Zidane Explique Pourquoi"            # URLから作った。合っているか見る
+    url: https://www.footmercato.net/a7372428000135714785-edf-zidane-explique-pourquoi-il-a-rate-le-debut-de-la-marseillaise
+    hours_ago: 8.7   # フィードの時刻から
+    sources:
+      - https://www.footmercato.net/a7372428000135714785-edf-zidane-explique-pourquoi-il-a-rate-le-debut-de-la-marseillaise
+
+  - id: a3830217576263959900_edf_adr
+    title: "EdF : Adrien Truffert donne son homme du match contre la Turquie"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Edf Adrien Truffert Donne"            # URLから作った。合っているか見る
+    url: https://www.footmercato.net/a3830217576263959900-edf-adrien-truffert-donne-son-homme-du-match-contre-la-turquie
+    hours_ago: 8.8   # フィードの時刻から
+    sources:
+      - https://www.footmercato.net/a3830217576263959900-edf-adrien-truffert-donne-son-homme-du-match-contre-la-turquie
+
+  - id: a796262795368476862_edf_raya
+    title: "EdF : Rayan Cherki dédie la victoire à Zidane"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Edf Rayan Cherki Dedie"            # URLから作った。合っているか見る
+    url: https://www.footmercato.net/a796262795368476862-edf-rayan-cherki-dedie-la-victoire-a-zidane
+    hours_ago: 9   # フィードの時刻から
+    sources:
+      - https://www.footmercato.net/a796262795368476862-edf-rayan-cherki-dedie-la-victoire-a-zidane
+
+  - id: a8546894140413272510_la_fff
+    title: "La FFF annonce le forfait de Kylian Mbappé pour le reste du rassemblement"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Fff Annonce Forfait Kylian"            # URLから作った。合っているか見る
+    url: https://www.footmercato.net/a8546894140413272510-la-fff-annonce-le-forfait-de-kylian-mbappe-pour-le-reste-du-rassemblement
+    hours_ago: 9.7   # フィードの時刻から
+    sources:
+      - https://www.footmercato.net/a8546894140413272510-la-fff-annonce-le-forfait-de-kylian-mbappe-pour-le-reste-du-rassemblement
+
+  - id: a9071154973203930798_equipe
+    title: "Équipe de France : Michael Olise rejoint Raymond Kopa dans l’histoire des Bleus"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Equipe France Michael Olise"            # URLから作った。合っているか見る
+    url: https://www.footmercato.net/a9071154973203930798-equipe-de-france-michael-olise-rejoint-raymond-kopa-dans-lhistoire-des-bleus
+    hours_ago: 9.8   # フィードの時刻から
+    sources:
+      - https://www.footmercato.net/a9071154973203930798-equipe-de-france-michael-olise-rejoint-raymond-kopa-dans-lhistoire-des-bleus
+
+  - id: a1097199654675319263_equipe
+    title: "Équipe de France : Zinédine Zidane est convaincu par Rayan Cherki"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Equipe France Zinedine Zidane"            # URLから作った。合っているか見る
+    url: https://www.footmercato.net/a1097199654675319263-equipe-de-france-zinedine-zidane-devoile-les-dessous-du-role-de-rayan-cherki
+    hours_ago: 10   # フィードの時刻から
+    # 同じ話を 3媒体が報じている
+    sources:
+      - https://www.footmercato.net/a1097199654675319263-equipe-de-france-zinedine-zidane-devoile-les-dessous-du-role-de-rayan-cherki
+      - https://www.footmercato.net/a8674207580947480128-equipe-de-france-jules-kounde-devoile-les-consignes-de-zidane-a-la-mi-temps
+      - https://www.footmercato.net/a6762201726540863150-equipe-de-france-le-but-de-kylian-mbappe-pour-lancer-lere-zinedine-zidane
+      # ↑ Équipe de France : Jules Koundé dévoile les consignes de Zid
+      # ↑ Équipe de France : le but de Kylian Mbappé pour lancer l’ère
+
+  - id: a4868925626346685008_edf_la
+    title: "EdF : la sortie troublante de Jules Koundé sur Ousmane Dembélé et Kylian Mbappé"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Edf Sortie Troublante Jules"            # URLから作った。合っているか見る
+    url: https://www.footmercato.net/a4868925626346685008-edf-la-sortie-troublante-de-jules-kounde-sur-ousmane-dembele-et-kylian-mbappe
+    hours_ago: 10   # フィードの時刻から
+    sources:
+      - https://www.footmercato.net/a4868925626346685008-edf-la-sortie-troublante-de-jules-kounde-sur-ousmane-dembele-et-kylian-mbappe
+
+  - id: a3919079828483174936_equipe
+    title: "Équipe de France : la réponse sans détour de Dembélé sur son nouveau positionnement"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Equipe France Reponse Sans"            # URLから作った。合っているか見る
+    url: https://www.footmercato.net/a3919079828483174936-equipe-de-france-la-reponse-sans-detour-de-dembele-sur-son-nouveau-positionnement
+    hours_ago: 10.2   # フィードの時刻から
+    sources:
+      - https://www.footmercato.net/a3919079828483174936-equipe-de-france-la-reponse-sans-detour-de-dembele-sur-son-nouveau-positionnement
+
+  - id: a1865732415335400672_ousmane
+    title: "Ousmane Dembélé dévoile ce qu’a demandé Zinédine Zidane aux Bleus"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Ousmane Dembele Devoile Qua"            # URLから作った。合っているか見る
+    url: https://www.footmercato.net/a1865732415335400672-ousmane-dembele-devoile-ce-qua-demande-zinedine-zidane-aux-bleus
+    hours_ago: 10.4   # フィードの時刻から
+    sources:
+      - https://www.footmercato.net/a1865732415335400672-ousmane-dembele-devoile-ce-qua-demande-zinedine-zidane-aux-bleus
+
+  - id: a7638477421567108995_elimina
+    title: "Éliminatoires CAN 2027 : l’Algérie surclasse la Zambie, le Maroc domine le Gabon, le Mali s’offre le Cap-Vert"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Eliminatoires Can Lalgerie Surclasse"            # URLから作った。合っているか見る
+    url: https://www.footmercato.net/a7638477421567108995-eliminatoires-can-2027-lalgerie-surclasse-la-zambie-le-maroc-domine-le-gabon-le-mali-soffre-le-cap-vert
+    hours_ago: 10.5   # フィードの時刻から
+    sources:
+      - https://www.footmercato.net/a7638477421567108995-eliminatoires-can-2027-lalgerie-surclasse-la-zambie-le-maroc-domine-le-gabon-le-mali-soffre-le-cap-vert
+
+  - id: a4402100567630949409_equipe
+    title: "Équipe de France : Zinédine Zidane met fin à une incroyable série pour ses débuts"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Equipe France Zinedine Zidane"            # URLから作った。合っているか見る
+    url: https://www.footmercato.net/a4402100567630949409-equipe-de-france-zinedine-zidane-met-fin-a-une-incroyable-serie-pour-ses-debuts
+    hours_ago: 10.6   # フィードの時刻から
+    sources:
+      - https://www.footmercato.net/a4402100567630949409-equipe-de-france-zinedine-zidane-met-fin-a-une-incroyable-serie-pour-ses-debuts
+
+  - id: a5569131801411033731_ligue_d
+    title: "Ligue des Nations : pour les débuts de Mark van Bommel, la Belgique surclasse l’Italie"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Ligue Des Nations Pour"            # URLから作った。合っているか見る
+    url: https://www.footmercato.net/a5569131801411033731-ligue-des-nations-pour-la-premiere-de-mark-van-bommel-la-belgique-surclasse-litalie
+    hours_ago: 10.7   # フィードの時刻から
+    sources:
+      - https://www.footmercato.net/a5569131801411033731-ligue-des-nations-pour-la-premiere-de-mark-van-bommel-la-belgique-surclasse-litalie
+
+  - id: a5250801781753487357_ligue_d
+    title: "Ligue des Nations : l’Équipe de France bat la Turquie mais perd Mbappé pour la première de Zidane"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Ligue Des Nations Lequipe"            # URLから作った。合っているか見る
+    url: https://www.footmercato.net/a5250801781753487357-ligue-des-nations-lequipe-de-france-bat-la-turquie-mais-perd-mbappe-pour-la-premiere-zidane
+    hours_ago: 10.7   # フィードの時刻から
+    sources:
+      - https://www.footmercato.net/a5250801781753487357-ligue-des-nations-lequipe-de-france-bat-la-turquie-mais-perd-mbappe-pour-la-premiere-zidane
+
+  - id: a2987778214587943293_equipe
+    title: "Équipe de France : grosse inquiétude pour Kylian Mbappé, blessé au genou en marquant"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Equipe France Grosse Inquietude"            # URLから作った。合っているか見る
+    url: https://www.footmercato.net/a2987778214587943293-equipe-de-france-grosse-inquietude-pour-kylian-mbappe-visiblement-touche-au-genou
+    hours_ago: 11.3   # フィードの時刻から
+    sources:
+      - https://www.footmercato.net/a2987778214587943293-equipe-de-france-grosse-inquietude-pour-kylian-mbappe-visiblement-touche-au-genou
+
+  - id: a600422280657333433_les_club
+    title: "Les clubs de Premier League réclament des dommages et intérêts à Manchester City"
+    topic: "マンチェスター・シティ"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: england    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Les Clubs Reclament Des"            # URLから作った。合っているか見る
+    url: https://www.footmercato.net/a600422280657333433-les-clubs-de-premier-league-reclament-des-dommages-et-interets-a-manchester-city
+    hours_ago: 11.5   # フィードの時刻から
+    sources:
+      - https://www.footmercato.net/a600422280657333433-les-clubs-de-premier-league-reclament-des-dommages-et-interets-a-manchester-city
+
+  - id: a7167209471154084651_quatre
+    title: "Quatre grandes ligues européennes réclament une vaste réforme de la FIFA"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Quatre Grandes Ligues Europeennes"            # URLから作った。合っているか見る
+    url: https://www.footmercato.net/a7167209471154084651-quatre-grandes-ligues-europeennes-reclament-une-vaste-reforme-de-la-fifa
+    hours_ago: 11.8   # フィードの時刻から
+    sources:
+      - https://www.footmercato.net/a7167209471154084651-quatre-grandes-ligues-europeennes-reclament-une-vaste-reforme-de-la-fifa
+
+  - id: archives_4
+    title: "サッカーゲーム「FC27」日本人選手全107名・総合能力値ランキング"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 未確認           # 見出しは『報道』寄りだが、この情報源では未確認まで
+    en: "Html Archives"            # URLから作った。合っているか見る
+    url: https://samuraigoal.doorblog.jp/archives/63501880.html
+    topic_rank: 1   # まとめ集約サイトの掲載順（クリック数順）
+    hours_ago: 8.94966   # フィードの時刻から
+    sources:
+      - https://samuraigoal.doorblog.jp/archives/63501880.html
+
+  - id: archives_5
+    title: "◆悲報◆豪州戦のブラジル代表ヴィニシウスさんフェイントのつもりがボールを置いていってしまう"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 未確認           # 見出しは『報道』寄りだが、この情報源では未確認まで
+    en: "Html Archives"            # URLから作った。合っているか見る
+    url: https://worldfn.net/archives/63505693.html
+    topic_rank: 2   # まとめ集約サイトの掲載順（クリック数順）
+    hours_ago: 9.21633   # フィードの時刻から
+    sources:
+      - https://worldfn.net/archives/63505693.html
+
+  - id: archives_6
+    title: "◆悲報◆ベルギー戦前半のイタリア代表の守備がｇｄｇｄすぎると話題に！カテナチオはもはやピスタチオ"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 未確認           # 見出しは『報道』寄りだが、この情報源では未確認まで
+    en: "Html Archives"            # URLから作った。合っているか見る
+    url: https://worldfn.net/archives/63505716.html
+    topic_rank: 3   # まとめ集約サイトの掲載順（クリック数順）
+    hours_ago: 4.21633   # フィードの時刻から
+    sources:
+      - https://worldfn.net/archives/63505716.html
+
+  - id: scotland
+    title: "What channel is Slovenia vs Scotland on? TV coverage, streaming, kick-off time and predicted Xi"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 未確認           # 見出しの言い回しからの当たり。見て直す
+    en: "Scotland International"            # URLから作った。合っているか見る
+    url: https://www.3addedminutes.com/international-football/scotland/-9187264
+    hours_ago: 0.041366   # フィードの時刻から
+    sources:
+      - https://www.3addedminutes.com/international-football/scotland/-9187264
+
+  - id: celtic_consider_return
+    title: "'It beggars belief' - Expert: Celtic told to pull the plug on appointing their ex-manager"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Celtic Consider Return Former"            # URLから作った。合っているか見る
+    url: https://www.footballinsider247.com/celtic/next-manager/celtic-consider-return-of-former-boss-to-replace-martin-oneill-it-beggars-belief
+    hours_ago: 0.0544216   # フィードの時刻から
+    sources:
+      - https://www.footballinsider247.com/celtic/next-manager/celtic-consider-return-of-former-boss-to-replace-martin-oneill-it-beggars-belief
+
+  - id: leeds_united_will
+    title: "View: Leeds' failure to pay the extra money to sign PL star is coming back to haunt them"
+    topic: "リーズ"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: england    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Leeds United Will Regret"            # URLから作った。合っているか見る
+    url: https://www.footballinsider247.com/leeds-united/leeds-united-will-regret-shea-charles-transfer-collapse-as-latest-stats-emerge
+    hours_ago: 0.0544216   # フィードの時刻から
+    sources:
+      - https://www.footballinsider247.com/leeds-united/leeds-united-will-regret-shea-charles-transfer-collapse-as-latest-stats-emerge
+
+  - id: blt9201bbf3510b8610
+    title: "Manchester City star Rayan Cherki hails France's fluid football on 'poor pitch' in Zinedine…"
+    topic: "マンチェスター・シティ"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: england    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Blt Bbf Manchester City"            # URLから作った。合っているか見る
+    url: https://www.goal.com/en-gb/lists/manchester-city-star-rayan-cherki-hails-france-s-fluid-football-on-poor-pitch-in-zinedine-zidane-s-d/blt9201bbf3510b8610?utm_id=fa3iys5y8hyz9ezk&#38;utm_source_platform=newsnow
+    hours_ago: 0.112755   # フィードの時刻から
+    sources:
+      - https://www.goal.com/en-gb/lists/manchester-city-star-rayan-cherki-hails-france-s-fluid-football-on-poor-pitch-in-zinedine-zidane-s-d/blt9201bbf3510b8610?utm_id=fa3iys5y8hyz9ezk&#38;utm_source_platform=newsnow
+
+  - id: blt7d85f6e0d732ae36
+    title: "Paulo Dybala faces Roma dilemma as Gian Piero Gasperini vetoes travel for Lionel Messi's…"
+    topic: "ローマ"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: italy    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Blt Paulo Dybala Faces"            # URLから作った。合っているか見る
+    url: https://www.goal.com/en-gb/lists/paulo-dybala-faces-roma-dilemma-as-gian-piero-gasperini-vetoes-travel-for-lionel-messi-s-argentina-f/blt7d85f6e0d732ae36?utm_id=fa3iys5y8hyz9ezk&#38;utm_source_platform=newsnow
+    hours_ago: 0.112755   # フィードの時刻から
+    sources:
+      - https://www.goal.com/en-gb/lists/paulo-dybala-faces-roma-dilemma-as-gian-piero-gasperini-vetoes-travel-for-lionel-messi-s-argentina-f/blt7d85f6e0d732ae36?utm_id=fa3iys5y8hyz9ezk&#38;utm_source_platform=newsnow
+
+  - id: managing_proper_rangers
+    title: "After managing proper player at Rangers they should get him back in their side"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Managing Proper Rangers Star"            # URLから作った。合っているか見る
+    url: https://www.glasgowtimes.co.uk/sport/26584042.managing-proper-rangers-star-get-back-team/
+    hours_ago: 0.124699   # フィードの時刻から
+    sources:
+      - https://www.glasgowtimes.co.uk/sport/26584042.managing-proper-rangers-star-get-back-team/
+
+  - id: bristol_city_women
+    title: "Bristol City Women 'targets' detailed by Charlotte Healy ahead of Robins' trip to Burnley"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Bristol City Women Targets"            # URLから作った。合っているか見る
+    url: https://www.bristolpost.co.uk/sport/football/football-news/bristol-city-women-targets-detailed-11172160
+    hours_ago: 0.149699   # フィードの時刻から
+    sources:
+      - https://www.bristolpost.co.uk/sport/football/football-news/bristol-city-women-targets-detailed-11172160
+
+  - id: leeds_united_unwilling
+    title: "Leeds United make decision on future of struggling 25-year-old playmaker"
+    topic: "リーズ"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: england    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Leeds United Unwilling Sell"            # URLから作った。合っているか見る
+    url: https://thehardtackle.com/transfer-news/2026/09/26/leeds-united-unwilling-to-sell-brenden-aaronson-amid-exit-links/
+    hours_ago: 0.157755   # フィードの時刻から
+    sources:
+      - https://thehardtackle.com/transfer-news/2026/09/26/leeds-united-unwilling-to-sell-brenden-aaronson-amid-exit-links/
+
+  - id: blta8614f58693ffbc1
+    title: "Arsenal assistant Miguel Molina confirms Vinicius Junior's name was 'on the table' during…"
+    topic: "アーセナル"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: spain    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Blta Ffbc Arsenal Assistant"            # URLから作った。合っているか見る
+    url: https://www.goal.com/en-gb/lists/arsenal-assistant-miguel-molina-confirms-vinicius-junior-s-name-was-on-the-table-during-summer-windo/blta8614f58693ffbc1?utm_id=fa3iys5y8hyz9ezk&#38;utm_source_platform=newsnow
+    hours_ago: 0.451644   # フィードの時刻から
+    # 同じ話を 2媒体が報じている
+    sources:
+      - https://www.goal.com/en-gb/lists/arsenal-assistant-miguel-molina-confirms-vinicius-junior-s-name-was-on-the-table-during-summer-windo/blta8614f58693ffbc1?utm_id=fa3iys5y8hyz9ezk&#38;utm_source_platform=newsnow
+      - https://thehardtackle.com/reactions/miguel-molina-reveals-the-truth-about-arsenal-links-with-vinicius-junior/
+      # ↑ "A name on the table" - Arsenal coach confirms club's transf
+
+  - id: blte2f362da7ed2e594
+    title: "Roberto Mancini defends Italy stars and brushes off boos after painful Nations League defeat to …"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Blte Roberto Mancini Defends"            # URLから作った。合っているか見る
+    url: https://www.goal.com/en-gb/lists/roberto-mancini-defends-italy-stars-and-brushes-off-boos-after-painful-nations-league-defeat-to-belg/blte2f362da7ed2e594?utm_id=fa3iys5y8hyz9ezk&#38;utm_source_platform=newsnow
+    hours_ago: 0.789144   # フィードの時刻から
+    sources:
+      - https://www.goal.com/en-gb/lists/roberto-mancini-defends-italy-stars-and-brushes-off-boos-after-painful-nations-league-defeat-to-belg/blte2f362da7ed2e594?utm_id=fa3iys5y8hyz9ezk&#38;utm_source_platform=newsnow
+
+  - id: bayern_munichs_karl
+    title: "Bayern Munich’s Karl-Heinz Rummenigge happy to make an exception to contract rules for Harry…"
+    topic: "バイエルン"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: england    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 未確認           # 見出しは『報道』寄りだが、この情報源では未確認まで
+    en: "Bayern Munichs Karl Heinz"            # URLから作った。合っているか見る
+    url: https://www.bavarianfootballworks.com/bayern-munich-transfer-rumors-news/261013/bayern-munichs-karl-heinz-rummenigge-happy-to-make-an-exception-to-contract-rules-for-harry-kane
+    hours_ago: 1.6322   # フィードの時刻から
+    # 同じ話を 2媒体が報じている
+    sources:
+      - https://www.bavarianfootballworks.com/bayern-munich-transfer-rumors-news/261013/bayern-munichs-karl-heinz-rummenigge-happy-to-make-an-exception-to-contract-rules-for-harry-kane
+      - https://www.teamtalk.com/manchester-united/harry-kane-bayern-munich-man-utd-2027-transfer-decision-rule-change
+      # ↑ Bayern Munich change rule to stop Harry Kane from joining Ma
+
+  - id: bayern_munich_fc
+    title: "Bayern Munich News: FC Bayern to rekindle interest in FC Barcelona’s Dani Olmo for January…"
+    topic: "バイエルン"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: germany    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 未確認           # 見出しは『報道』寄りだが、この情報源では未確認まで
+    en: "Bayern Munich Barcelona Olmo"            # URLから作った。合っているか見る
+    url: https://www.bavarianfootballworks.com/transfer-rumors/260158/bayern-munich-fc-barcelona-olmo-olise-spain-manchester-united-borussia-dortmund-diaz-bvb
+    hours_ago: 3.32414   # フィードの時刻から
+    # 同じ話を 2媒体が報じている
+    sources:
+      - https://www.bavarianfootballworks.com/transfer-rumors/260158/bayern-munich-fc-barcelona-olmo-olise-spain-manchester-united-borussia-dortmund-diaz-bvb
+      - https://www.bavarianfootballworks.com/bayern-munich-opinion/259595/bayern-munich-michael-olise-ballon-dor-case
+      # ↑ Bayern Munich’s Michael Olise is letting his numbers do the 
+
+  - id: sunderlands_dan_ballard
+    title: "Sunderland suffer second injury concern ahead of Albion clash"
+    topic: "サンダーランド"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: england    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Sunderlands Dan Ballard Faces"            # URLから作った。合っているか見る
+    url: https://www.theargus.co.uk/sport/26583973.sunderlands-dan-ballard-faces-late-hamstring-injury-concern/
+    hours_ago: 8.4422   # フィードの時刻から
+    # 同じ話を 2媒体が報じている
+    sources:
+      - https://www.theargus.co.uk/sport/26583973.sunderlands-dan-ballard-faces-late-hamstring-injury-concern/
+      - https://hayters.com/sunderland-handed-another-major-injury-concern-following-brobbey-blow/
+      # ↑ Sunderland handed another major injury concern following Bro
+
+  - id: hassan_celtic_riddle
+    title: "Haissem Hassan Celtic injury riddle as he starts for Egypt despite manager's claim"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Hassan Celtic Riddle Starts"            # URLから作った。合っているか見る
+    url: https://www.glasgowtimes.co.uk/sport/26583954.hassan-celtic-riddle-starts-egypt-despite-managers-claim/
+    hours_ago: 10.1161   # フィードの時刻から
+    # 同じ話を 2媒体が報じている
+    sources:
+      - https://www.glasgowtimes.co.uk/sport/26583954.hassan-celtic-riddle-starts-egypt-despite-managers-claim/
+      - https://www.celticway.co.uk/interviews/26583948.hassan-plays-egypt-despite-manager-seemingly-ruling/
+      # ↑ Celtic star Haissem Hassan plays for Egypt despite manager s
+
+  - id: northern_ireland
+    title: "Pierce and Shea Charles 'just proud' after Northern Ireland win in Georgia"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: england    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Northern Ireland"            # URLから作った。合っているか見る
+    url: https://www.newsletter.co.uk/sport/football/northern-ireland/-9183334
+    hours_ago: 11.0503   # フィードの時刻から
+    # 同じ話を 2媒体が報じている
+    sources:
+      - https://www.newsletter.co.uk/sport/football/northern-ireland/-9183334
+      - https://www.irishexaminer.com/sport/soccer/arid-41915995.html
+      # ↑ Charles brothers play key roles as Northern Ireland win it a
+

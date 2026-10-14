@@ -1,0 +1,582 @@
+{
+ "club_title": "Athletic_Bilbao",
+ "season_title": "2026–27_Athletic_Bilbao_season",
+ "squad": [
+  {
+   "no": "1",
+   "pos": "GK",
+   "nat": "ESP",
+   "name": "Unai Simón",
+   "page": "Unai Simón",
+   "dob": "1997-06-11",
+   "captain": false,
+   "loan": false,
+   "team": "Spain",
+   "caps": 66,
+   "club_caps": 243,
+   "club_goals": 0
+  },
+  {
+   "no": "3",
+   "pos": "DF",
+   "nat": "ESP",
+   "name": "Dani Vivian",
+   "page": "Daniel Vivian",
+   "dob": "1999-07-05",
+   "captain": false,
+   "loan": false,
+   "team": "Spain",
+   "caps": 10,
+   "club_caps": 149,
+   "club_goals": 8
+  },
+  {
+   "no": "4",
+   "pos": "DF",
+   "nat": "ESP",
+   "name": "Aitor Paredes",
+   "page": "Aitor Paredes",
+   "dob": "2000-04-29",
+   "captain": false,
+   "loan": false,
+   "team": "Spain",
+   "caps": 1,
+   "club_caps": 92,
+   "club_goals": 6
+  },
+  {
+   "no": "5",
+   "pos": "DF",
+   "nat": "ESP",
+   "name": "Yeray Álvarez",
+   "page": "Yeray Álvarez",
+   "dob": "1995-01-24",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 220,
+   "club_goals": 3
+  },
+  {
+   "no": "6",
+   "pos": "MF",
+   "nat": "ESP",
+   "name": "Beñat Prados",
+   "page": "Beñat Prados",
+   "dob": "2001-02-08",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 58,
+   "club_goals": 1
+  },
+  {
+   "no": "7",
+   "pos": "FW",
+   "nat": "ESP",
+   "name": "Álex Berenguer",
+   "page": "Álex Berenguer",
+   "dob": "1995-07-04",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 213,
+   "club_goals": 31
+  },
+  {
+   "no": "8",
+   "pos": "MF",
+   "nat": "ESP",
+   "name": "Oihan Sancet",
+   "page": "Oihan Sancet",
+   "dob": "2000-04-25",
+   "captain": false,
+   "loan": false,
+   "team": "Spain",
+   "caps": 4,
+   "club_caps": 197,
+   "club_goals": 43
+  },
+  {
+   "no": "9",
+   "pos": "FW",
+   "nat": "GHA",
+   "name": "Iñaki Williams",
+   "page": "Iñaki Williams",
+   "dob": "1994-06-15",
+   "captain": true,
+   "loan": false,
+   "team": "Ghana",
+   "caps": 28,
+   "club_caps": 413,
+   "club_goals": 86
+  },
+  {
+   "no": "10",
+   "pos": "FW",
+   "nat": "ESP",
+   "name": "Nico Williams",
+   "page": "Nico Williams",
+   "dob": "2002-07-12",
+   "captain": false,
+   "loan": false,
+   "team": "Spain",
+   "caps": 36,
+   "club_caps": 163,
+   "club_goals": 23
+  },
+  {
+   "no": "11",
+   "pos": "FW",
+   "nat": "ESP",
+   "name": "Gorka Guruzeta",
+   "page": "Gorka Guruzeta",
+   "dob": "1996-09-12",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 143,
+   "club_goals": 37
+  },
+  {
+   "no": "12",
+   "pos": "DF",
+   "nat": "ESP",
+   "name": "Jesús Areso",
+   "page": "Jesús Areso",
+   "dob": "1999-07-02",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 30,
+   "club_goals": 0
+  },
+  {
+   "no": "13",
+   "pos": "GK",
+   "nat": "MEX",
+   "name": "Álex Padilla",
+   "page": "Alex Padilla (footballer)",
+   "dob": "2003-09-01",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 6,
+   "club_goals": 0
+  },
+  {
+   "no": "14",
+   "pos": "DF",
+   "nat": "ESP",
+   "name": "Aymeric Laporte",
+   "page": "Aymeric Laporte",
+   "dob": "1994-05-27",
+   "captain": false,
+   "loan": false,
+   "team": "Spain",
+   "caps": 54,
+   "club_caps": 192,
+   "club_goals": 7
+  },
+  {
+   "no": "15",
+   "pos": "DF",
+   "nat": "ESP",
+   "name": "Hugo Rincón",
+   "page": "Hugo Rincón",
+   "dob": "2003-01-27",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 2,
+   "club_goals": 0
+  },
+  {
+   "no": "16",
+   "pos": "MF",
+   "nat": "ESP",
+   "name": "Iñigo Ruiz de Galarreta",
+   "page": "Iñigo Ruiz de Galarreta",
+   "dob": "1993-08-06",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 97,
+   "club_goals": 2
+  },
+  {
+   "no": "17",
+   "pos": "DF",
+   "nat": "ESP",
+   "name": "Yuri Berchiche",
+   "page": "Yuri Berchiche",
+   "dob": "1990-02-10",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 228,
+   "club_goals": 10
+  },
+  {
+   "no": "18",
+   "pos": "MF",
+   "nat": "ESP",
+   "name": "Mikel Jauregizar",
+   "page": "Mikel Jauregizar",
+   "dob": "2003-11-13",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 80,
+   "club_goals": 4
+  },
+  {
+   "no": "20",
+   "pos": "MF",
+   "nat": "ESP",
+   "name": "Alejandro Rego",
+   "page": "Alejandro Rego",
+   "dob": "2003-06-11",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 29,
+   "club_goals": 1
+  },
+  {
+   "no": "21",
+   "pos": "FW",
+   "nat": "MAR",
+   "name": "Maroan Sannadi",
+   "page": "Maroan Sannadi",
+   "dob": "2001-02-01",
+   "captain": false,
+   "loan": false,
+   "team": "Morocco",
+   "caps": 3,
+   "club_caps": 29,
+   "club_goals": 2
+  },
+  {
+   "no": "22",
+   "pos": "FW",
+   "nat": "ESP",
+   "name": "Nico Serrano",
+   "page": "Nico Serrano",
+   "dob": "2003-03-05",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 35,
+   "club_goals": 2
+  },
+  {
+   "no": "23",
+   "pos": "FW",
+   "nat": "ESP",
+   "name": "Robert Navarro",
+   "page": "Robert Navarro (footballer)",
+   "dob": "2002-04-12",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 37,
+   "club_goals": 8
+  },
+  {
+   "no": "24",
+   "pos": "MF",
+   "nat": "ESP",
+   "name": "Beñat Gerenabarrena",
+   "page": "Beñat Gerenabarrena",
+   "dob": "2003-03-29",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 4,
+   "club_goals": 0
+  },
+  {
+   "no": "25",
+   "pos": "FW",
+   "nat": "GNB",
+   "name": "Álvaro Djaló",
+   "page": "Álvaro Djaló",
+   "dob": "1999-08-16",
+   "captain": false,
+   "loan": false,
+   "team": "Guinea-Bissau",
+   "caps": 3,
+   "club_caps": 17,
+   "club_goals": 1
+  },
+  {
+   "no": "28",
+   "pos": "MF",
+   "nat": "ESP",
+   "name": "Peio Canales",
+   "page": "Peio Canales",
+   "dob": "2005-01-17",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 12,
+   "club_goals": 0
+  },
+  {
+   "no": "31",
+   "pos": "DF",
+   "nat": "FRA",
+   "name": "Johaneko Louis-Jean",
+   "page": "Johaneko Louis-Jean",
+   "dob": "2004-06-28",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 5,
+   "club_goals": 0
+  },
+  {
+   "no": "",
+   "pos": "DF",
+   "nat": "ESP",
+   "name": "Unai Egiluz",
+   "page": "Unai Egiluz",
+   "dob": "2002-03-19",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 0,
+   "club_goals": 0
+  }
+ ],
+ "results": [
+  [
+   "22 August 2026",
+   "2",
+   "Athletic Bilbao",
+   "1–3",
+   "Sevilla"
+  ],
+  [
+   "27 August 2026",
+   "1",
+   "Barcelona",
+   "2–0",
+   "Athletic Bilbao"
+  ],
+  [
+   "30 August 2026",
+   "3",
+   "Celta Vigo",
+   "0–2",
+   "Athletic Bilbao"
+  ],
+  [
+   "5 September 2026",
+   "4",
+   "Athletic Bilbao",
+   "3–0",
+   "Atlético Madrid"
+  ],
+  [
+   "12 September 2026",
+   "5",
+   "Athletic Bilbao",
+   "1–1",
+   "Elche"
+  ],
+  [
+   "19 September 2026",
+   "7",
+   "Athletic Bilbao",
+   "0–0",
+   "Alavés"
+  ],
+  [
+   "11 October 2026",
+   "8",
+   "Rayo Vallecano",
+   "",
+   "Athletic Bilbao"
+  ],
+  [
+   "18 October 2026",
+   "9",
+   "Valencia",
+   "",
+   "Athletic Bilbao"
+  ],
+  [
+   "21 October 2026",
+   "6",
+   "Levante",
+   "",
+   "Athletic Bilbao"
+  ],
+  [
+   "25 October 2026",
+   "10",
+   "Athletic Bilbao",
+   "",
+   "Getafe"
+  ],
+  [
+   "1 November 2026",
+   "11",
+   "Athletic Bilbao",
+   "",
+   "Real Sociedad"
+  ],
+  [
+   "8 November 2026",
+   "12",
+   "Osasuna",
+   "",
+   "Athletic Bilbao"
+  ],
+  [
+   "22 November 2026",
+   "13",
+   "Athletic Bilbao",
+   "",
+   "Espanyol"
+  ],
+  [
+   "29 November 2026",
+   "14",
+   "Málaga",
+   "",
+   "Athletic Bilbao"
+  ],
+  [
+   "6 December 2026",
+   "15",
+   "Athletic Bilbao",
+   "",
+   "Real Madrid"
+  ],
+  [
+   "13 December 2026",
+   "16",
+   "Deportivo A Coruña",
+   "",
+   "Athletic Bilbao"
+  ],
+  [
+   "20 December 2026",
+   "17",
+   "Athletic Bilbao",
+   "",
+   "Betis"
+  ],
+  [
+   "3 January 2027",
+   "18",
+   "Racing Santander",
+   "",
+   "Athletic Bilbao"
+  ],
+  [
+   "10 January 2027",
+   "19",
+   "Athletic Bilbao",
+   "",
+   "Villarreal"
+  ],
+  [
+   "17 January 2027",
+   "20",
+   "Getafe",
+   "",
+   "Athletic Bilbao"
+  ],
+  [
+   "24 January 2027",
+   "21",
+   "Athletic Bilbao",
+   "",
+   "Levante"
+  ],
+  [
+   "31 January 2027",
+   "22",
+   "Sevilla",
+   "",
+   "Athletic Bilbao"
+  ],
+  [
+   "7 February 2027",
+   "23",
+   "Athletic Bilbao",
+   "",
+   "Osasuna"
+  ],
+  [
+   "14 February 2027",
+   "24",
+   "Real Madrid",
+   "",
+   "Athletic Bilbao"
+  ],
+  [
+   "21 February 2027",
+   "25",
+   "Athletic Bilbao",
+   "",
+   "Celta Vigo"
+  ],
+  [
+   "28 February 2027",
+   "26",
+   "Athletic Bilbao",
+   "",
+   "Barcelona"
+  ],
+  [
+   "7 March 2027",
+   "27",
+   "Alavés",
+   "",
+   "Athletic Bilbao"
+  ],
+  [
+   "14 March 2027",
+   "28",
+   "Athletic Bilbao",
+   "",
+   "Valencia"
+  ],
+  [
+   "21 March 2027",
+   "29",
+   "Espanyol",
+   "",
+   "Athletic Bilbao"
+  ],
+  [
+   "4 April 2027",
+   "30",
+   "Athletic Bilbao",
+   "",
+   "Racing Santander"
+  ]
+ ]
+}

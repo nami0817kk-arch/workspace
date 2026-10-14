@@ -1,0 +1,477 @@
+# 取材メモ（10/12 月、シリーズ「比べる」、key: compare_dortmund_monaco、型は news）。
+# 材料の控えは research/raw/20261012_compare_dortmund_monaco.md。**この控えの外へ出ていない。**
+#
+# **「比べる」の3つ（選手／クラブ／同じ年齢）のうち「クラブ」で組んだ。**
+#   ブンデスリーガの首位ドルトムントと、リーグ・アンの首位モナコ。どちらもリーグ戦は無敗（4勝1分／4勝2分）。
+#   軸は「同じ週末に、どちらもホームで2対0から2対2。その2クラブは、点が入る時間と点を取る人がどう違うか」。
+#   強い一点は、**ドルトムント（10/9）とモナコ（10/10）が24時間のうちに、ホームで2対0から2対2になった**こと。
+#
+# **候補は3組検討した**（控え 0）。①ドルトムント×モナコ（採用）②ラツィオ×ミラン（10/11 に両クラブとも第6節があり、
+#   公開までに数字が動く。見送り）③ヌメチャ×カマラ（どちらも市場価値5500万ユーロの中盤。軸が弱い）。
+#
+# **重なりの確認（直近30日）**: corpus.txt・posted.json・covered.yaml を人名・クラブ名で引いた。
+#   選手の人名 0件／ブレーメン・トゥールーズ・ボデ/グリムト・CSKAソフィア 0件。
+#   **クラブ名だけ4件残る**：ドルトムント1件（9/18「ヴァツケが会長に…」＝会長の発言の話で、試合も選手も出てこない）、
+#   モナコ3件（9/13・9/27・10/4＝すべて南野拓実の復帰の話）。**ユーザーに報告して、外すかどうかは判断してもらう。**
+#   南野はこの台本に出していない。使わない指定のクラブ・人名は1つも使っていない。
+#   モナコの9/4 のパリ・サンジェルマン戦（2対1）は、相手クラブとして1行だけ出る（PSG の選手は出さない）。
+#
+# **数字はすべて自分で数えた。**得点の分と得点者は Transfermarkt の tmapi（/game/<id> の actions）、FotMob、ESPN の3つ、
+#   順位は tmapi の順位表と ESPN で確かめ、**一次情報は2つ**：ブンデスリーガ公式の試合記録（10/9）と AS モナコ公式の試合記録（10/10）。
+#   リーグ戦だけ。基準は **2026年10月11日の朝**（ドルトムント5試合・モナコ6試合）。
+#   自分で割った数: 13÷5＝2.60／14÷6＝2.33／11÷5＝2.20／10÷6＝1.67／4÷5＝0.80／5÷6＝0.83／
+#     最初の得点の分 (9+61+5+70+80)÷5＝45.0、(14+13+58+71+32+29)÷6＝36.17（36.2）／
+#     76分以降 5÷11＝45%、1÷10＝10%／ブルナー 4÷10＝40.0%、ドルトムントの最多 2÷11＝18.2%／13+2＝15、14+2＝16
+#   15分ごとの得点（45+1 は31〜45、90+2 は76〜90の帯）: ドルトムント 2・0・1・0・3・5／モナコ 2・1・2・2・2・1
+#   **食い違いの控え**（raw 1 の末尾）:
+#     ①ドルトムント対ハンブルク 45+1分は、ESPN が「相手のオウンゴール」、Transfermarkt と FotMob が「コンスタンテリアス」。
+#       **Transfermarkt と FotMob に揃えた**ので、ドルトムントの得点者は選手7人＋オウンゴール1（ESPN だと6人＋2）。
+#     ②オポンの得点は tmapi・FotMob・ESPN が59分、AS モナコ公式は60分。**台本は分を言わず「後半の15分以内」と言う**。
+#     ③「首位」は時点つき。ドルトムントは10/11 夜のフライブルク戦で入れ替わりうる（フライブルクは4試合・勝ち点10・得失点差+9）。
+#       台本は「第5節を終えて」「10月11日の朝」と言い、**公開前に順位を取り直す**。モナコは10/11 に試合が無い。
+# **言い切っていないもの**: どちらが上かは一度も言わない。時間帯と得点者の違いは「寄っている」「分かれている」までにして、
+#   失点の側（後半の頭にモナコ4失点）も数字だけで並べた。「2対0を守れなかった」とは言わず、勝ち点が3から1になった、までにした。
+#   「もし2対0で終わっていれば15と16」は式として出すだけで、その先（優勝・順位）は言っていない。
+#   「だけ」「最下位」などで小さく見せていない。
+# 板：①versus（スタジアムの写真。3行だけで下ろす）②timeline×2（試合の分）③table（6行）④line（15分ごとの得点）と calc×2
+#   ⑤waterfall×2（勝ち点の積み上がり）と table（失点の帯）⑥stats（得点者）と calc×2 ⑦calc×2（15と16）。
+#   **`card: none` は明示してある**。赤ペンは使っていない。
+# 写真：Commons の場面写真だけ（顔は出さない）。ドルトムント＝「GER Dortmund Stadion 002 2011 - Südtribüne.jpg」CC BY-SA 3.0 / Der-wuppertaler、
+#   モナコ＝「StadeLouisII-MonacoNice.jpg」CC0 / Ing-renault06。2枚を横に並べた1枚（cmp_pair）と、それぞれの横長（cmp_mon_w）。
+#   ブンデスリーガ公式の試合記録の写真は IMAGO、AS モナコ公式の写真は幅842pxで、どちらも取り込んでいない。
+#   モナコの顔写真は Commons に無い。ギラシ・シュロッターベックの Commons 写真（2024年・2022年）は取り込んだが、軸に関係しないので使っていない。
+#   **本編の冒頭に顔が無い**（スタジアムの写真）ので、preview4 の「冒頭に顔なし」の × は、あれば報告する。
+# 声：1件も無い（シリーズの回。ブラウザの道具を使わない約束なので反応は集めていない）。
+# **ショート**：シリーズの回にショートは作らない決まり（2026-10-10）なので、ショートの × は直していない。
+# サムネ：**ユーザーと相談して決める。**ここに書いてあるのは点検用の1つ（構図 number）。直近は versus（10/9・10/11）なので
+#   同じ構図を続けない。案3つは報告に書いた。
+format: news
+voice_min: 0
+slot: other_1
+date: 2026年10月12日
+series: 比べる
+people: []
+short_title: ドルトムントとモナコ、同じ週末にホームで2対0から2対2
+theme:
+  id: compare_dortmund_monaco
+  league: germany
+  league_name: ブンデスリーガとリーグ・アン
+  kind: other
+  topic: ドルトムントとモナコ
+  title: ドルトムントとモナコ、首位に立つ2クラブ。点が入る時間と人は、どう違うのか
+  question: 同じ週末に2対0から2対2になった首位の2クラブは、点の入り方がどう違うのか
+  lead: ブンデスリーガの首位と、リーグ・アンの首位。
+  takeaway: ドルトムント（ブンデスリーガ、第5節を終えて首位）は10月9日、モナコ（リーグ・アン、首位）は10日に、どちらもホームで2対0のリードから2対2になった。リーグ戦は10月11日の朝まででドルトムントが5試合4勝1分け・勝ち点13（1試合あたり2.60）、モナコが6試合4勝2分け・勝ち点14（2.33）で、どちらも負けていない。得点は11と10、失点は4と5でよく似ているが、点が入る時間が違う。ドルトムントは11点のうち5点が76分以降（45%）、モナコは10点のうち1点（10%）。試合ごとの最初の得点の分は平均45.0分と36.2分で、モナコのほうが約9分早い。得点者はドルトムントが選手7人で最多2点（18.2%）、モナコは6人でブルナーが4点（40.0%）。2対0で終わっていれば勝ち点は15と16で、2位との差はいまの2点と1点から4点と3点だった。次の物差しは欧州の敵地で、ドルトムントは日本時間15日の午前4時にボデ・グリムト（チャンピオンズリーグ）、モナコは16日の午前1時45分にCSKAソフィア（カンファレンスリーグ）と当たる
+  opening_image: assets/images/20261012_cmp_pair/01.jpg
+  bgm: assets/audio/bgm_calm.wav
+thumbnail:
+  layout: number
+  photo: assets/images/20261012_cmp_yellowwall/01.jpg
+  number: 2対0
+  line1: 首位のドルトムントとモナコ
+  line2: 2対0から、●対●に
+  tags:
+  - ドルトムント
+  - モナコ
+  - ブンデスリーガ
+  - リーグ・アン
+  - 比べる
+sections:
+- id: lead
+  main: true
+  heading: 同じ週末、首位の2クラブが2対0から2対2に
+  tier: 報道
+  telop: ドルトムントは9日、モナコは10日。どちらもホームで2対0から2対2
+  narrator: キャスター
+  card: &vs
+    type: versus
+    title: 2点リードから2対2（リーグ戦・ホーム）
+    left:
+      image: assets/images/20261012_cmp_yellowwall/01.jpg
+      name: ドルトムント
+      number: 85分
+      note: 2対0にした分。2対2は90分+2
+    right:
+      image: assets/images/20261012_cmp_mon/scene.jpg
+      name: モナコ
+      number: 38分
+      note: 2対0にした分。2対2は後半の15分以内
+  say:
+  - text: ドルトムントとモナコ、それぞれの国の首位。同じ週末に、同じことが起きました。
+    short_only: true
+    image: assets/images/20261012_cmp_pair/01.jpg
+  - text: 現地9日の夜、ドルトムントはホームでブレーメンと2対2。勝ち点1を分けました。
+    card: *vs
+  - text: 85分に2対0。88分に1点を返され、追加時間の2分に追いつかれます。
+    card: *vs
+  - text: 翌10日、首位のモナコも、ホームでトゥールーズと2対2でした。
+    card: *vs
+  - text: 首位のクラブが、同じ週末に、ホームで2点のリードから2対2になりました。
+    emph: true
+    card: none
+    image: assets/images/20261012_cmp_pair/01.jpg
+  - text: ドルトムントの流れを、分で並べます。
+    card: &tl_b
+      type: timeline
+      title: 10月9日 ドルトムント対ブレーメン
+      rows:
+      - &b0 [80分, スヴェンソンが決めて1対0]
+      - &b1 [85分, シュロッターベックが決めて2対0]
+      - &b2 [88分, ブレーメンが1点を返して2対1]
+      - &b3 [90分+2, ブレーメンが追いついて2対2]
+  - text: 前半は0対0。80分と85分に決めて、2対0でした。
+    card: {type: timeline, title: 10月9日 ドルトムント対ブレーメン, rows: [*b0, *b1, *b2, *b3], highlight_row: 85分}
+  - text: そのあと、88分と追加時間の2分に、ブレーメンが1点ずつ決めました。
+    card: {type: timeline, title: 10月9日 ドルトムント対ブレーメン, rows: [*b0, *b1, *b2, *b3], highlight_row: 90分+2}
+  - text: モナコは29分と38分に決めて、前半を2対0で終えています。
+    card: &tl_m
+      type: timeline
+      title: 10月10日 モナコ対トゥールーズ
+      rows:
+      - &m0 [29分, ディオプが決めて1対0]
+      - &m1 [38分, アブリーヌが決めて2対0]
+      - &m2 [後半3分, トゥールーズがPKで2対1]
+      - &m3 [後半の15分以内, トゥールーズが追いついて2対2]
+    emph: true
+  - text: 後半の3分にPKで1点を返され、15分以内に2対2になりました。
+    card: {type: timeline, title: 10月10日 モナコ対トゥールーズ, rows: [*m0, *m1, *m2, *m3], highlight_row: 後半の15分以内}
+  - text: ドルトムントが追いつかれた追加時間より、30分ほど早い同点です。
+    card: {type: timeline, title: 10月10日 モナコ対トゥールーズ, rows: [*m0, *m1, *m2, *m3], highlight_row: 後半の15分以内}
+  - text: 勝てば3になるはずの勝ち点が、どちらも1になりました。
+    card: none
+    image: assets/images/20261012_cmp_pair/01.jpg
+  - text: それでも、ドルトムントは5試合で勝ち点13、モナコは6試合で14です。
+    card: none
+  sources:
+  - https://www.bundesliga.com/en/bundesliga/news/borussia-dortmund-werder-bremen-match-report-highlights-matchday-5-39473
+  - https://www.asmonaco.com/en/news/as-monaco-lead-at-half-time-but-are-held-to-a-frustrating-draw-by-toulouse
+  - https://tmapi-alpha.transfermarkt.technology/game/4916159
+  - https://tmapi-alpha.transfermarkt.technology/game/5802950
+- id: numbers
+  heading: リーグ戦の数字を並べる
+  tier: 報道
+  telop: ドルトムント5試合で勝ち点13、モナコ6試合で14。1試合あたりは2.60と2.33
+  narrator: 解説
+  card: &nt
+    type: table
+    title: リーグ戦（10月11日の朝まで）
+    columns: [項目, ドルトムント, モナコ]
+    rows:
+    - &n0 [試合, '5', '6']
+    - &n1 [勝・分・敗, 4・1・0, 4・2・0]
+    - &n2 [勝ち点, '13', '14']
+    - &n3 ['1試合あたりの勝ち点', '2.60', '2.33']
+    - &n4 [得点, '11', '10']
+    - &n5 [失点, '4', '5']
+  say:
+  - text: ここからは、リーグ戦の数字を並べます。時点は、10月11日の朝です。
+    card: *nt
+    image: assets/images/20261012_cmp_mon_w/01.jpg
+  - text: ドルトムントは5試合で4勝1分け。モナコは6試合で4勝2分け。
+    card: {type: table, title: リーグ戦（10月11日の朝まで）, columns: [項目, ドルトムント, モナコ], rows: [*n0, *n1, *n2, *n3, *n4, *n5], highlight_row: 1}
+  - text: どちらも、リーグ戦ではまだ負けていません。
+    card: {type: table, title: リーグ戦（10月11日の朝まで）, columns: [項目, ドルトムント, モナコ], rows: [*n0, *n1, *n2, *n3, *n4, *n5], highlight_row: 1}
+  - text: 勝ち点は13と14。試合数が違うので、1試合あたりにすると2.60と2.33。
+    emph: true
+    card: {type: table, title: リーグ戦（10月11日の朝まで）, columns: [項目, ドルトムント, モナコ], rows: [*n0, *n1, *n2, *n3, *n4, *n5], highlight_row: 3}
+  - text: 得点は11と10。1試合あたりでは、2.20と1.67。
+    card: {type: table, title: リーグ戦（10月11日の朝まで）, columns: [項目, ドルトムント, モナコ], rows: [*n0, *n1, *n2, *n3, *n4, *n5], highlight_row: 4}
+  - text: 失点は4と5。1試合あたりでは0.80と0.83で、ほとんど同じ。
+    card: {type: table, title: リーグ戦（10月11日の朝まで）, columns: [項目, ドルトムント, モナコ], rows: [*n0, *n1, *n2, *n3, *n4, *n5], highlight_row: 5}
+  - text: 勝ち点も、得点も、失点も、並べるとよく似ています。
+    card: *nt
+  - text: 違いが出るのは、点が入る時間です。
+    card: none
+    image: assets/images/20261012_cmp_pair/01.jpg
+  sources:
+  - https://tmapi-alpha.transfermarkt.technology/competition/L1/table
+  - https://tmapi-alpha.transfermarkt.technology/competition/FR1/table
+  - https://site.api.espn.com/apis/v2/sports/soccer/ger.1/standings
+  - https://site.api.espn.com/apis/v2/sports/soccer/fra.1/standings
+- id: when
+  heading: 点が入る時間は、どこに寄っているか
+  tier: 報道
+  telop: ドルトムントは11点のうち76分以降が5点。モナコは10点のうち1点
+  narrator: 解説
+  card: &ln
+    type: line
+    title: 15分ごとの得点（リーグ戦）
+    unit: 点
+    x: ['0〜15', '16〜30', '31〜45', '46〜60', '61〜75', '76〜90']
+    series:
+    - [ドルトムント, [2, 0, 1, 0, 3, 5]]
+    - [モナコ, [2, 1, 2, 2, 2, 1]]
+    focus: ドルトムント
+  say:
+  - text: リーグ戦の得点を、15分ごとに数えました。
+    card: *ln
+    image: assets/images/20261012_cmp_yellowwall/01.jpg
+  - text: ドルトムントの11点のうち、76分から後に入ったのは5点です。
+    emph: true
+    card:
+      <<: *ln
+      highlight: 76〜90
+  - text: ホッフェンハイム戦の86分と、パーダーボルン戦の80分、89分。
+    card:
+      <<: *ln
+      highlight: 76〜90
+  - text: ブレーメン戦の80分と85分も、すべて試合の終盤です。
+    card:
+      <<: *ln
+      highlight: 76〜90
+  - text: 一方、後半が始まってから60分までは、1点も入っていません。
+    card:
+      <<: *ln
+      highlight: 46〜60
+  - text: モナコの10点は、どの時間帯にも1点か2点ずつ入っています。
+    card:
+      <<: *ln
+      focus: モナコ
+  - text: 76分から後に入ったのは、ランス戦の84分の1点です。
+    card:
+      <<: *ln
+      focus: モナコ
+      highlight: 76〜90
+  - text: もう1つ、試合ごとの最初の得点が、何分に入ったかを見ます。
+    card: none
+    image: assets/images/20261012_cmp_mon_w/01.jpg
+  - text: ドルトムントは5試合で、9分、61分、5分、70分、80分。
+    card: &c_b
+      type: calc
+      title: 最初の得点の分（ドルトムント、5試合）
+      terms:
+      - ['225分', 5試合の分を足す]
+      - ['5試合', 試合数]
+      - ['45.0分', 平均]
+      ops: ['÷', ＝]
+  - text: 足すと225、5で割って、平均は45.0分です。
+    card: *c_b
+  - text: モナコは6試合で、14分、13分、58分、71分、32分、29分。
+    card: &c_m
+      type: calc
+      title: 最初の得点の分（モナコ、6試合）
+      terms:
+      - ['217分', 6試合の分を足す]
+      - ['6試合', 試合数]
+      - ['36.2分', 平均]
+      ops: ['÷', ＝]
+  - text: 足すと217、6で割って36.2分。ドルトムントより約9分早い。
+    emph: true
+    card: *c_m
+  - text: 点が入る時間は、ドルトムントが後ろに、モナコが前に寄っています。
+    card: none
+    image: assets/images/20261012_cmp_pair/01.jpg
+  sources:
+  - https://tmapi-alpha.transfermarkt.technology/game/4916115
+  - https://tmapi-alpha.transfermarkt.technology/game/4916133
+  - https://tmapi-alpha.transfermarkt.technology/game/4916141
+  - https://tmapi-alpha.transfermarkt.technology/game/4916151
+  - https://tmapi-alpha.transfermarkt.technology/game/4916159
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/summary?event=401884781
+- id: points
+  heading: 勝ち点は、どう積み上がったか
+  tier: 報道
+  telop: 先に失点した試合から拾った勝ち点は、ドルトムント3、モナコ4
+  narrator: 解説
+  card: &wb
+    type: waterfall
+    title: ドルトムントの勝ち点
+    steps:
+    - &w0 [ハンブルク, 3]
+    - &w1 [ホッフェンハイム, 3]
+    - &w2 [パーダーボルン, 3]
+    - &w3 [シュトゥットガルト, 3]
+    - &w4 [ブレーメン, 1]
+    total: [いま, 13]
+  say:
+  - text: 勝ち点は、試合ごとにどう積み上がったのか。まずドルトムントです。
+    card: *wb
+    image: assets/images/20261012_cmp_yellowwall/01.jpg
+  - text: 開幕から4連勝で、勝ち点は12になりました。
+    card:
+      <<: *wb
+      highlight: シュトゥットガルト
+  - text: ホッフェンハイム戦は、54分に0対2とされています。
+    card:
+      <<: *wb
+      highlight: ホッフェンハイム
+  - text: そこから61分、66分と決めて、86分に勝ち越し、3対2で勝ちました。
+    emph: true
+    card:
+      <<: *wb
+      highlight: ホッフェンハイム
+  - text: ブレーメン戦で積んだ勝ち点は、1でした。
+    card:
+      <<: *wb
+      highlight: ブレーメン
+  - text: モナコの勝ち点も、同じ形で数えます。
+    card: &wm
+      type: waterfall
+      title: モナコの勝ち点
+      steps:
+      - &x0 [ル・アーヴル, 3]
+      - &x1 [マルセイユ, 3]
+      - &x2 [パリ・サンジェルマン, 3]
+      - &x3 [ストラスブール, 1]
+      - &x4 [ランス, 3]
+      - &x5 [トゥールーズ, 1]
+      total: [いま, 14]
+  - text: 先に失点した試合は2つあります。
+    card:
+      <<: *wm
+      highlight: ストラスブール
+  - text: パリ・サンジェルマン戦は、31分に0対1。58分と72分に決めて逆転。
+    card:
+      <<: *wm
+      highlight: パリ・サンジェルマン
+  - text: ストラスブール戦は、52分に0対1。71分に追いついて、1対1でした。
+    card:
+      <<: *wm
+      highlight: ストラスブール
+  - text: 先に失点した試合から拾った勝ち点は、ドルトムントが1試合で3、モナコが2試合で4。
+    emph: true
+    card: none
+    image: assets/images/20261012_cmp_pair/01.jpg
+  - text: 失点の時間も、並べてみます。
+    card: &lt
+      type: table
+      title: 失点の時間（リーグ戦）
+      columns: [時間帯, ドルトムント, モナコ]
+      rows:
+      - &l0 ['31〜45分', '1', '1']
+      - &l1 ['46〜60分', '1', '4']
+      - &l2 ['76〜90分', '2', '0']
+  - text: モナコの5失点のうち4つは、46分から60分に集まっています。
+    card: {type: table, title: 失点の時間（リーグ戦）, columns: [時間帯, ドルトムント, モナコ], rows: [*l0, *l1, *l2], highlight_row: 1}
+  - text: ドルトムントの4失点のうち2つは、88分と90分プラス2です。
+    card: {type: table, title: 失点の時間（リーグ戦）, columns: [時間帯, ドルトムント, モナコ], rows: [*l0, *l1, *l2], highlight_row: 2}
+  sources:
+  - https://tmapi-alpha.transfermarkt.technology/game/4916133
+  - https://tmapi-alpha.transfermarkt.technology/game/4916159
+  - https://tmapi-alpha.transfermarkt.technology/game/5802950
+  - https://www.asmonaco.com/en/news/as-monaco-lead-at-half-time-but-are-held-to-a-frustrating-draw-by-toulouse
+- id: scorers
+  heading: 点を決めた人の数
+  tier: 報道
+  telop: ドルトムントは選手7人、モナコは6人。モナコはブルナーが4点
+  narrator: 解説
+  card: &sc
+    type: stats
+    title: 点を決めた選手（リーグ戦）
+    items:
+    - ['7', 人, ドルトムント（最多は2点）]
+    - ['6', 人, モナコ（最多は4点）]
+    - ['4', 点, モナコのブルナー]
+    focus: 0
+  say:
+  - text: 点を決めた選手の数も、数えました。
+    card: *sc
+    image: assets/images/20261012_cmp_mon_w/01.jpg
+  - text: ドルトムントの11点は、選手7人の10点と、相手のオウンゴール1点。
+    card: *sc
+  - text: ギラシとファビオ・シルバ、ヌメチャが、2点ずつ。
+    emph: true
+    card: *sc
+  - text: ほかの4人が、1点ずつ決めています。
+    card: *sc
+  - text: モナコの10点は、選手6人の9点と、相手のオウンゴール1点です。
+    card:
+      <<: *sc
+      focus: 1
+  - text: ブルナーは、マルセイユ戦で2点、ストラスブール戦とランス戦で1点ずつ。
+    card:
+      <<: *sc
+      focus: 2
+  - text: 合わせて4点です。
+    emph: true
+    card:
+      <<: *sc
+      focus: 2
+  - text: 10点のうちの4点。割合は40.0%。
+    card: &r_m
+      type: calc
+      title: モナコの得点のうち、ブルナーの割合
+      terms:
+      - ['4点', ブルナーの得点]
+      - ['10点', モナコの得点]
+      - ['40.0%', 割合]
+      ops: ['÷', ＝]
+  - text: ドルトムントで最も多い2点は、11点のうちの18.2%です。
+    card: &r_b
+      type: calc
+      title: ドルトムントの最多得点の割合
+      terms:
+      - ['2点', ギラシ・ファビオ・シルバ・ヌメチャ]
+      - ['11点', ドルトムントの得点]
+      - ['18.2%', 割合]
+      ops: ['÷', ＝]
+  - text: 1人に集まるモナコと、7人に分かれるドルトムント。
+    card: none
+    image: assets/images/20261012_cmp_pair/01.jpg
+  sources:
+  - https://tmapi-alpha.transfermarkt.technology/game/4916115
+  - https://tmapi-alpha.transfermarkt.technology/game/4916133
+  - https://tmapi-alpha.transfermarkt.technology/game/4916141
+  - https://tmapi-alpha.transfermarkt.technology/game/4916151
+  - https://tmapi-alpha.transfermarkt.technology/game/4916159
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/summary?event=401884781
+- id: view
+  viewpoint: true
+  heading: 同じ2対2でも、点の入り方は違う
+  tier: 報道
+  telop: あの2点があれば勝ち点は15と16。次は欧州の敵地です
+  narrator: 解説
+  card: &c15
+    type: calc
+    title: 2対0で終わっていれば（ドルトムント）
+    terms:
+    - ['13点', いまの勝ち点]
+    - ['2点', 3と1の差]
+    - ['15点', 2対0で終わっていた場合]
+    ops: ['＋', ＝]
+  say:
+  - text: 最後に、あの2試合が2対0のままだった場合を数えます。
+    card: none
+    image: assets/images/20261012_cmp_pair/01.jpg
+  - text: ブレーメン戦が2対0で終われば、勝ち点は3。実際は1で、差は2です。
+    card: *c15
+  - text: ドルトムントの勝ち点は、13ではなく15になる計算です。
+    emph: true
+    card: *c15
+  - text: モナコも同じ。14に2を足して16。
+    card: &c16
+      type: calc
+      title: 2対0で終わっていれば（モナコ）
+      terms:
+      - ['14点', いまの勝ち点]
+      - ['2点', 3と1の差]
+      - ['16点', 2対0で終わっていた場合]
+      ops: ['＋', ＝]
+  - text: 10月11日の朝の2位との差は、ドルトムントが2点、モナコが1点でした。
+    card: *c16
+  - text: あの2試合が2対0なら、4点と3点に広がっていた計算です。
+    card: none
+    image: assets/images/20261012_cmp_pair/01.jpg
+  - text: ただ、2つのクラブの形は違います。
+    card: none
+  - text: ドルトムントは、11点のうち5点が76分以降。モナコは、10点のうち1点です。
+    emph: true
+    card: none
+  - text: 得点者は、ドルトムントが7人で最多2点。モナコは6人で、ブルナーが4点です。
+    card: none
+  - text: 次の物差しは、どちらも欧州の敵地。時刻は日本時間で言います。
+    card: none
+  - text: ドルトムントは15日の午前4時、チャンピオンズリーグのボデ・グリムト戦。
+    card: none
+  - text: モナコは16日の午前1時45分、カンファレンスリーグのツェスカ・ソフィア戦。
+    card: none
+  - text: 終盤に点が入るドルトムントと、序盤から入るモナコ。
+    card: none
+  - text: その形が欧州でも出るのか。次に見えてくるのは、そこです。
+    card: none
+  sources:
+  - https://tmapi-alpha.transfermarkt.technology/competition/L1/table
+  - https://tmapi-alpha.transfermarkt.technology/competition/FR1/table
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20261014
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.europa.conf/scoreboard?dates=20261015
+  - https://www.asmonaco.com/en/news/as-monaco-lead-at-half-time-but-are-held-to-a-frustrating-draw-by-toulouse

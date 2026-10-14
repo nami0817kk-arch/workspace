@@ -1,0 +1,112 @@
+title: 10月11日の題材
+lead: 候補470件と昨夜の試合、ロマーノの投稿から15件
+note: <b>昨日は代表ウィークではなく、国内リーグの再開節でした。</b>プレミア第6節・ラ・リーガ第8節・セリエA第6節・ブンデス・リーグ・アン第6節が一斉に行われています（私が「代表ウィーク中」と言ったのは誤りでした）。<br><br><b>①〜⑩が本線、⑪〜⑮が予備</b>です。ショートは10本要ります。<br><b>本編も作れるのは①ヴィニシウスと②マクトミネイ</b>（印つき）。①は本人の謝罪・チュアメニ・ベリンガム・モウリーニョの4つの反応がそろっています。<br><br><b>日本人は4件</b>（③前田・④田中・⑤上田・⑭旗手）。検索で来る上位4語が日本人名なので外せません。<br><b>⑭旗手だけイングランド2部</b>です。1部に限るなら外してください。<br><br><b>大きいのに外したもの</b>：ロナウドの出場停止（10/8
+  と 10/10 で2度扱い済み）、マンCの判決の続報（4度目になる）、マンUの最悪の開幕（10/10 に3本）、ノイアーのミスからの8秒ゴール（今日のシリーズでバイエルンを出すため）、鈴木彩艶の5試合連続先発（今日のシリーズでヴィラを出すため）。
+items:
+- num: 1
+  slot: ラリーガ
+  head: ヴィニシウス、ゴール取り消しの直後に一発退場
+  why: 52分投入→得点→VARで相手の髪を引っ張った行為が確認され一発退場。**本人がInstagramで謝罪**、モウリーニョは試合後の会見を欠席。チュアメニとベリンガムも口を開いた。**10/25のクラシコが危うい**。発言が4つそろう、今日いちばん厚い題材
+  src: ESPN・marca（主審の報告書とVARの音声まで）。本人の謝罪は Instagram
+  url: https://www.espn.com/soccer/story/_/id/50150534/vinicius-junior-red-card-real-madrid-villarreal
+  fmt: news
+  main: true
+- num: 2
+  slot: セリエA
+  head: マクトミネイ、心臓手術から4週間で復帰
+  why: 9月8日に良性の心房細動の手術、2週間の完全休養から段階的に戻り、10/10のフロジノーネ戦で途中出場。**日付がはっきりしていて話が一本道**。ナポリ公式と Sky Sport Italia まで辿れる
+  src: football-italia（一次はナポリ公式・Sky Sport Italia）
+  url: https://football-italia.net/mctominay-makes-napoli-comeback-heart-surgery/
+  fmt: news
+  main: true
+- num: 3
+  slot: 日本人
+  head: 前田大然81分、イプスウィッチが土壇場で逆転
+  why: プレミア第6節。55分に先制されながら88分と90+1分で2対1。前田は先発81分で、**エリア内で倒されたがPKにならなかった場面**つき
+  src: サッカーキング・ゲキサカ
+  url: https://www.soccer-king.jp/news/world/eng/20261011/2215212.html
+  fmt: news
+- num: 4
+  slot: 日本人
+  head: 田中碧にBBC採点7。「非常に粘り強い」
+  why: アーセナル戦に4試合連続先発で71分。**BBC Sport が7点、VAVELも7**。現地の評価の言葉が複数そろっている。※今日のシリーズでアーセナル（ライス）を出すので、アーセナル側の話に寄せない
+  src: フットボールチャンネル（引用元は BBC Sport・VAVEL・The Guardian）
+  url: https://www.footballchannel.jp/2026/10/11/post1030752/
+  fmt: quote
+- num: 5
+  slot: 日本人
+  head: 上田綺世が56分から出場、リールが暫定首位
+  why: リーグ・アン第6節。ル・アーヴルに1対0。上田は56分にジルーと交代で1トップ。**リールは5試合3勝1分1敗の勝ち点10で暫定首位**
+  src: サッカーキング・Foot Mercato
+  url: https://www.soccer-king.jp/news/world/fra/20261011/2215197.html
+  fmt: news
+- num: 6
+  slot: リーグアン
+  head: 瀬古歩夢、62分に決定機阻止で一発退場
+  why: ⑤と同じ試合の裏側。抜け出しを止めて62分に退場、ル・アーヴルは未勝利が続く。日本人で時間と理由がはっきりしている。※写真が見つかりにくい恐れ
+  src: サッカーキング
+  url: https://www.soccer-king.jp/news/world/fra/20261011/2215197.html
+  fmt: news
+- num: 7
+  slot: プレミア
+  head: ベンタンクール頭突き退場。デ・ゼルビ「キスして礼を言った」
+  why: 途中出場から頭突きで一発退場。10人になったトッテナムが後半ATで引き分け。**デ・ゼルビが「キスして、ありがとうと言った」「この反応が要る」**と語った。発言がそのまま見出しになる。※10/10 にマンU側を3本出したので、トッテナム側だけで作る
+  src: ESPN・kicker
+  url: https://www.espn.com/soccer/story/_/id/50150532/roberto-de-zerbi-kissed-rodrigo-bentancur-red-card-character-spurs-need
+  fmt: quote
+- num: 8
+  slot: プレミア
+  head: パーマー、2034年まで延長「大きなタイトルを取り続ける」
+  why: 契約を2034年まで延長。**本人の談話が長めに取れている**。2023年のシティからの加入、2冠と並べられる
+  src: Sky Sports・BBC
+  url: https://www.skysports.com/football/news/12691/13597179/cole-palmer-contract-chelsea-forward-signs-extension-at-stamford-bridge-until-2034
+  fmt: quote
+- num: 9
+  slot: ブンデス
+  head: ンクンクが3発、ライプツィヒが6対0
+  why: 5分・41分・44分のハットトリック。フランクフルトに6対0（前半だけで4対0）。**「アモリムが手放した選手がブンデスを壊している」**という切り口も付く
+  src: ゲキサカ・A BOLA（台本では bundesliga.com の公式記録に当て直す）
+  url: https://web.gekisaka.jp/news/world/detail/?460727-460727-fl
+  fmt: news
+- num: 10
+  slot: セリエA
+  head: ファブレガス「ケインは負傷したまま90分出た」
+  why: コモのファブレガスがイタリア協会を名指しで批判し、**代表のチームドクターが反論**。双方の発言がそろった対立
+  src: football-italia・Gazzetta
+  url: https://football-italia.net/fabregas-kean-played-for-italy-while-injured/
+  fmt: quote
+- num: 11
+  slot: ラリーガ
+  head: ラージョ戦が紙飛行機で中止。クラブは「計画された攻撃」
+  why: バジェカスでビー玉と紙飛行機が投げ込まれて試合が中止。**クラブが「計画された襲撃」という強い言葉**を使っている。※BBC と marca は本文が読めていないので、台本の前に別経路で原文を取る
+  src: BBC・marca
+  url: https://www.bbc.co.uk/sport/football/articles/cw99zy27x0rro
+  fmt: news
+- num: 12
+  slot: 移籍
+  head: ミランのオーナーがG・イナシオに「オールイン」
+  why: カルディナーレがスポルティングのゴンサロ・イナシオ獲得に全振り。※確度は報道どまりなので断定しない
+  src: A BOLA
+  url: https://www.abola.pt/noticias/dono-do-milan-faz-all-in-por-goncalo-inacio-2026101009362554099
+  fmt: news
+- num: 13
+  slot: 代表
+  head: 13歳の乱入。オランダ協会がUEFA処分に損害賠償を示唆
+  why: ドイツ戦で13歳の少年がピッチに乱入。処分が下った場合にオランダ協会が損害賠償を請求する構え。**代表枠で残っていた数少ない題材**。※出典が1件なので KNVB 公式に当て直す
+  src: ゲキサカ
+  url: https://web.gekisaka.jp/news/world/detail/?460683-460683-fl
+  fmt: news
+- num: 14
+  slot: 日本人
+  head: 旗手怜央が移籍後初ゴール、1G1Aでチーム今季初勝利
+  why: 13分にアシスト、25分に移籍後初ゴール。**わずか12分で2点に関与**してワトフォードに4対0。バーンリーの今季初勝利。※イングランド2部（チャンピオンシップ）
+  src: サッカーキング・フットボールチャンネル
+  url: https://www.soccer-king.jp/news/world/eng/20261011/2215281.html
+  fmt: news
+- num: 15
+  slot: 試合結果
+  head: FCポルトの決勝点、1センチで認められた
+  why: マリティモ戦でピエトゥシェフスキの決勝点が**VARで1センチ差**で認められた。本人の「VARの確認で緊張した」という発言つき
+  src: A BOLA
+  url: https://www.abola.pt/noticias/pietuszewski-e-o-golo-decisivo-estava-nervoso-com-a-revisao-do-var-2026101007405391150
+  fmt: quote

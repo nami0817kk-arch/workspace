@@ -79,6 +79,33 @@ class EngineBackend:
             return None
         return None
 
+    def sync_user_dict(self, words: dict[str, str]) -> None:
+        """読みの辞書の固有名詞を、ENGINE のユーザー辞書にそろえる（2026-09-28）。
+
+        文にひらがなで埋めると前後とくっついて名前が割れる（src/reading.split_dictionary）。
+        **優先度は最大**にする。既定の5では「鎌田大地」「旗手」が組み込みの辞書に負けた。
+        """
+        try:
+            have = requests.get(f"{self.url}/user_dict", timeout=self.timeout).json()
+            by_surface = {}
+            for uid, word in (have or {}).items():
+                by_surface.setdefault(_zenkaku(word.get("surface", "")), (uid, word))
+            for surface, spoken in words.items():
+                params = {"surface": surface, "pronunciation": spoken, "accent_type": 0,
+                          "word_type": "PROPER_NOUN", "priority": 10}
+                got = by_surface.get(_zenkaku(surface))
+                if got and got[1].get("pronunciation") == spoken and got[1].get("priority") == 10:
+                    continue
+                if got:
+                    response = requests.put(f"{self.url}/user_dict_word/{got[0]}",
+                                            params=params, timeout=self.timeout)
+                else:
+                    response = requests.post(f"{self.url}/user_dict_word",
+                                             params=params, timeout=self.timeout)
+                response.raise_for_status()
+        except requests.RequestException as exc:
+            raise TtsError(f"VOICEVOX ENGINE のユーザー辞書を更新できません（{self.url}）: {exc}") from exc
+
     def synthesize(self, line: Line, member: CastMember) -> bytes:
         try:
             query = requests.post(
@@ -88,9 +115,10 @@ class EngineBackend:
             )
             query.raise_for_status()
             params = query.json()
-            params["speedScale"] = line.speed if line.speed is not None else member.speed
-            params["pitchScale"] = member.pitch
-            params["intonationScale"] = member.intonation
+            speed, pitch, intonation = voice_params(line, member)
+            params["speedScale"] = speed
+            params["pitchScale"] = pitch
+            params["intonationScale"] = intonation
 
             audio = requests.post(
                 f"{self.url}/synthesis",
@@ -216,9 +244,7 @@ class CoreBackend:
         self._ensure_style(member.style_id)
         synth = self._synth()
         query = synth.create_audio_query(line.text, member.style_id)
-        query.speed_scale = line.speed if line.speed is not None else member.speed
-        query.pitch_scale = member.pitch
-        query.intonation_scale = member.intonation
+        query.speed_scale, query.pitch_scale, query.intonation_scale = voice_params(line, member)
         return synth.synthesis(query, member.style_id)
 
 
@@ -285,15 +311,27 @@ def synthesize_script(
     from dataclasses import replace as _replace
 
     from .reading import apply as _apply_reading, load_dictionary as _load_readings
+    from .reading import split_dictionary, words_in
 
     readings = _load_readings()
+    # **名前はユーザー辞書で読ませる**（2026-09-28）。文にひらがなで埋めると、
+    # 前後とくっついて「堂安と塩貝」が「ドオアント／シ／オガイ」になった。
+    # ユーザー辞書を持たない合成（core・無音）は、今までどおり全部を文で開く
+    words: dict[str, str] = {}
+    if hasattr(backend, "sync_user_dict"):
+        words, readings = split_dictionary(readings)
+        backend.sync_user_dict(words)
+    variants = voice_variants(script.lines)
     for index, line in enumerate(script.lines):
-        member = config.resolve_speaker(line.speaker, line.text or '')
+        member = config.resolve_speaker(line.speaker, variants[index])
         pause = pause_for(config, line)
         # **声に渡す文は、読みの辞書で開く**（2026-09-22）。画面の字（line.text）は変えない。
         # 控えの鍵も開いた文で作るので、辞書を足せば作り直される
         spoken = _replace(line, text=_apply_reading(line.text or "", readings))
-        target = out_dir / f"{index:04d}_{member.key}_{_digest(spoken, member, pause, backend.name)}.wav"
+        # 控えの鍵に、その文に効くユーザー辞書の語を混ぜる。文の字は変わらないので、
+        # 混ぜないと辞書を直しても古い声のまま残る
+        seed = _replace(spoken, text=f"{spoken.text}#{words_in(spoken.text, words)}") if words_in(spoken.text, words) else spoken
+        target = out_dir / f"{index:04d}_{member.key}_{_digest(seed, member, pause, backend.name)}.wav"
 
         if not target.exists():
             _write_padded(backend.synthesize(spoken, member), pause, target)
@@ -312,7 +350,8 @@ def credits(script: Script, config: ProjectConfig, backend) -> list[str]:
 
     config に定義してあっても、その動画で使っていない話者はクレジットしない。
     """
-    used = {config.resolve_speaker(line.speaker, line.text or '').style_id for line in script.lines}
+    used = {config.resolve_speaker(line.speaker, v).style_id
+            for line, v in zip(script.lines, voice_variants(script.lines))}
     names: list[str] = []
     for style_id in sorted(used):
         name = backend.speaker_name(style_id)
@@ -373,11 +412,40 @@ def _write_wav(target: Path, channels: int, sampwidth: int, framerate: int, fram
         out.writeframes(frames)
 
 
+def _zenkaku(text: str) -> str:
+    """ENGINE はユーザー辞書の表記を全角にして返す。突き合わせるために同じ形へそろえる。"""
+    import unicodedata
+
+    return unicodedata.normalize("NFKC", text or "")
+
+
+# **山を作る行の読み方**（2026-10-03「動画の質を上げる仕組み ④」）。
+# 抑揚を強め、ほんの少しゆっくり・高めに読む。VOICEVOX の pitchScale は足し算（±0.15 の範囲）
+EMPH_INTONATION = 1.35
+EMPH_SPEED = 0.94
+EMPH_PITCH = 0.03
+
+
+def voice_params(line: Line, member: CastMember) -> tuple[float, float, float]:
+    """その行を読む速さ・高さ・抑揚。`emph` の行だけ山を作る。"""
+    speed = line.speed if line.speed is not None else member.speed
+    pitch = member.pitch
+    intonation = member.intonation
+    if getattr(line, "emph", False):
+        speed = round(speed * EMPH_SPEED, 3)
+        pitch = round(pitch + EMPH_PITCH, 3)
+        intonation = round(intonation * EMPH_INTONATION, 3)
+    return speed, pitch, intonation
+
+
 def _digest(line: Line, member: CastMember, pause: float, backend: str) -> str:
     """同じ条件なら再合成しないためのキャッシュキー。"""
+    speed, pitch, intonation = voice_params(line, member)
+    # 山の無い行は今までと同じ鍵（作り直しを起こさない）
+    tail = f"|{intonation}|{pause}" + ("|emph" if getattr(line, "emph", False) else "")
     seed = (
         f"{backend}|{line.text}|{member.style_id}|{line.speed or member.speed}"
-        f"|{member.pitch}|{member.intonation}|{pause}"
+        f"|{member.pitch}{tail}"
     )
     return hashlib.sha1(seed.encode("utf-8")).hexdigest()[:8]
 
@@ -526,8 +594,10 @@ def image_credits(script, root=None) -> list[str]:
     概要欄の頭に長い行が並ぶと読むところが埋まる。YouTube は最初の3行しか
     初期表示しないので、**見える位置には1行、義務は末尾で果たす**。
     """
-    _, sites = _ledger_lines(script, root)
-    return [f"画像: {' / '.join(sites)}"] if sites else []
+    # **出さない**（2026-09-29 ユーザー「出さなければならないものを除いて出さなくて良い」）。
+    # サイト名の1行は、どの写真の条件でも求められていない。表示が条件の
+    # CC BY / BY-SA は `image_details` が末尾に出すので、それで義務は足りる
+    return []
 
 
 def image_details(script, root=None) -> list[str]:
@@ -542,3 +612,21 @@ def image_details(script, root=None) -> list[str]:
     """
     details, _ = _ledger_lines(script, root)
     return [f"※ 画像: {line}" for line in details]
+
+
+def voice_variants(lines) -> list[str]:
+    """声を選ぶときの手がかり（群衆は文から声を選ぶ）。
+
+    **分けた反応の続き（`cont`）は、頭の行と同じ声にする**（2026-09-26）。
+    長い書き込みを文の切れ目で行に分けたら、行ごとに声が変わって
+    1件の書き込みが別々の人の声に聞こえた。
+    """
+    out: list[str] = []
+    head = ""
+    for line in lines:
+        if getattr(line, "cont", False) and head:
+            out.append(head)
+        else:
+            head = line.text or ""
+            out.append(head)
+    return out

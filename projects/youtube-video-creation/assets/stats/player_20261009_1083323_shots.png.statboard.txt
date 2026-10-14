@@ -1,0 +1,6 @@
+title: ペドリの今季のシュート
+unit: xG
+shots=6
+goals=1
+xg=0.53
+source: FotMob

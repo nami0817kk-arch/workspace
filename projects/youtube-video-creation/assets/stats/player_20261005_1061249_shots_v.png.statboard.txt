@@ -1,0 +1,6 @@
+title: ヴィティーニャの今季のシュート
+unit: xG
+shots=12
+goals=1
+xg=0.47
+source: FotMob

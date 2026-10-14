@@ -1,0 +1,82 @@
+{
+ "title": "エスパニョール 基礎DATA",
+ "colors": [
+  "#0064AE",
+  "#FFFFFF"
+ ],
+ "crest": "assets/crests/エスパニョール.png",
+ "tiles": [
+  [
+   "クラブ創立",
+   "1900年",
+   "今も続くスペインのクラブで5番目に古い"
+  ],
+  [
+   "愛称",
+   "ペリキートス",
+   "「インコ」。由来はネコのフィリックス"
+  ],
+  [
+   "ホームタウン",
+   "コルネリャ",
+   "バルセロナ都市圏の南西、人口9万2237人"
+  ],
+  [
+   "本拠地",
+   "RCDEスタジアム",
+   "収容 40,000人（クラブ発表）。2009年開場"
+  ],
+  [
+   "オーナー",
+   "ベロシティ・スポーツ",
+   "2025年〜。アラン・ペイス（米）が率いる"
+  ],
+  [
+   "タイトル歴",
+   "1部優勝 0回",
+   "国王杯4・欧州の決勝は2度とも準優勝"
+  ],
+  [
+   "最多出場",
+   "389試合",
+   "タムード、1996〜2010年に出場"
+  ],
+  [
+   "直近のタイトル",
+   "国王杯優勝",
+   "2005-06シーズン"
+  ],
+  [
+   "昨季の順位",
+   "11位",
+   "勝ち点46。10位と同じ勝ち点"
+  ]
+ ],
+ "trophies": [
+  [
+   "ラ・リーガ",
+   0
+  ],
+  [
+   "国王杯",
+   4
+  ],
+  [
+   "スーペルコパ",
+   0
+  ],
+  [
+   "ヨーロッパ",
+   0
+  ]
+ ],
+ "sources": [
+  "https://en.wikipedia.org/wiki/RCD_Espanyol",
+  "https://es.wikipedia.org/wiki/Real_Club_Deportivo_Espanyol",
+  "https://es.wikipedia.org/wiki/Anexo:Clasificaci%C3%B3n_hist%C3%B3rica_de_la_Primera_Divisi%C3%B3n_de_Espa%C3%B1a",
+  "https://www.rcdespanyol.com/en/events",
+  "https://alkcapital.com/2025/10/velocity-sports-partners-complete-acquisition-of-rcd-espanyol-de-barcelona/",
+  "https://en.wikipedia.org/wiki/Template:2025%E2%80%9326_La_Liga_table"
+ ],
+ "notes": "取材の控えは research/ll_data/espanyol_research.md。収容人数は 40,000（英語版 infobox・クラブ公式のイベント案内「capacity in Barcelona of 40,000 seats」）／40,445（西語版 infobox）／40,500（西語版の施設の節）／37,776（西語版の冒頭と 2026-27 La Liga の表）と割れるので、クラブ発表の数字を採った。最多出場389試合は英語版の表（2020-09-12更新）と西語版本文で一致。愛称の由来は西語版に2説（ネコのフィリックスのカタルーニャ語名「gat perico」説と、旧本拠地サリアのヤシにいたインコ説）があり、西語版が本文として書く前者を採った。オーナーは株の99.65%を持つ Velocity Sports（Alan Pace が率いる ALK Capital の投資部門。AS 2025-10-08）。「国王杯4回」に 1940年の Copa del Generalísimo を含む（英語版・西語版とも）。1部優勝0は89シーズン（西語版の通算順位表、2025-26終了時点）。"
+}

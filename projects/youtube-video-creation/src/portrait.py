@@ -20,6 +20,20 @@ class PortraitError(Exception):
     pass
 
 
+def with_file_prefix(title: str) -> str:
+    """`--file` に渡した名前を Commons の題（`File:` 付き）にそろえる（品質100回の69）。
+
+    材料集めの下請けは File 名を「File:」無しで書く。そのまま `info()` に渡すと
+    Commons は別の題として探して「見つかりません」と返し、**実在する写真が取れなかった**
+    （2026-09-28 ヤマルの5枚で踏んだ）。被写体の照合は前から prefix 無しでも通っていたので、
+    落ちる場所が分かりにくかった。
+    """
+    t = (title or "").strip()
+    if t and not t.lower().startswith("file:"):
+        return "File:" + t
+    return t
+
+
 def info(title: str, session=None) -> dict:
     """Commons から画像のURL・ライセンス・撮影者を引く。"""
     pages = _get(COMMONS_API, {
@@ -306,6 +320,7 @@ def save(names: list[str], folder: Path, session=None, only: str = "",
     それでも被写体とライセンスの確認は同じように通す。
     """
     reasons: list[str] = []
+    only = with_file_prefix(only)
     pool = ([only] if only
             else sorted([c for c in candidates(names, session=session)
                          if is_image(c) and looks_like_person(c)],
@@ -418,7 +433,7 @@ def save_scene(words: list[str], folder: Path, session=None, only: str = "",
 
     reasons: list[str] = []
     if only:
-        pool = [only]
+        pool = [with_file_prefix(only)]
     else:
         # **言葉をまとめて1つの検索にする。**別々に引くと、クラブの記章や
         # 建物の写真が上に来る（2026-09-07 実測）。football を足して場面に寄せる

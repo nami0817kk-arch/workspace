@@ -1,0 +1,54 @@
+# 候補テーマ（2026年10月9日）
+# collect が作った下書き。見出しに書いてあることだけが入っている。
+# tier / topic / league は判断が要るので、目で見て埋めること。
+date: "2026年10月9日"
+candidates:
+  - id: borussia_dortmund_werder
+    title: "Borussia Dortmund 2 - 2 Werder Bremen（Bundesliga）"
+    topic: "ドルトムント"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: germany    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5881180
+    hours_ago: 12.5   # フィードの時刻から
+    sources:
+      - https://www.fotmob.com/matches/x/5881180
+
+  - id: m_laga_espanyol
+    title: "Málaga 1 - 1 Espanyol（LaLiga）"
+    topic: "マラガ"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: spain    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5868086
+    hours_ago: 12.5   # フィードの時刻から
+    sources:
+      - https://www.fotmob.com/matches/x/5868086
+
+  - id: lens_lyon_ligue
+    title: "Lens 2 - 1 Lyon（Ligue 1）"
+    topic: "リヨン"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: france    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5802947
+    hours_ago: 12.5   # フィードの時刻から
+    numbers: true        # 試合データから自動で立てた
+    sources:
+      - https://www.fotmob.com/matches/x/5802947
+
+  - id: psv_eindhoven_sc
+    title: "PSV Eindhoven 2 - 0 SC Heerenveen（Eredivisie）"
+    topic: "PSV"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: netherlands    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5781762
+    hours_ago: 12.5   # フィードの時刻から
+    sources:
+      - https://www.fotmob.com/matches/x/5781762
+

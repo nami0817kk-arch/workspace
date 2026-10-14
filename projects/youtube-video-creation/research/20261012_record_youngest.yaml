@@ -1,0 +1,553 @@
+# 記録の解説：最年少（10/12 月、シリーズ「記録の解説」、key: record_youngest、型は news）。
+#   記録の種類の並び：得点（10/9）・出場（10/10）・連勝（10/11）→ **最年少**。
+#   どの記録かは材料を見て決めた：**チャンピオンズリーグの最年少出場**（UEFA が 2026-05-31 に出した公式の一覧が根拠）。
+#
+# 軸は「**記録が動く間隔が、26年から5年に縮んだ**」。
+#   主役は**15歳308日で出場したアーセナルのダウマン**（2025-11-04）。前の保持者はドルトムントのムココ（16歳18日、2020-12-08）。
+#   **ヤマルは主役にしない**（10/4「19歳のヤマルとメッシ」・10/1 選手紹介）。上位7人の表に1行だけ入る（UEFA の一覧にいる）。語りでは名前を出さない。
+#
+# 同じ日の他の回と重ねないようにしたもの：
+#   スタジアム＝ブレントフォード／クラブ紹介＝レバンテ／ユニフォーム＝イプスウィッチ／移籍・比べる・選手紹介＝アトレティコ（アルバレス）／財政＝リヴァプール。
+#   ★**ンワネリのプレミア最年少出場（15歳181日）の試合の相手は、ブレントフォードだった**。台本では**相手を言わず「2022年のンワネリ」だけ**にした。
+#   ★ハーヴィー・エリオット（リヴァプール）の名前も出さない（同じ理由）。
+#   10/9（1シーズン最多得点）・10/10（代表の通算出場）・10/11（連勝）の選手・クラブ（レヴァンドフスキ・メッシ・ロナウド・ソー・チンアン・ベンフィカ・マンC・インテル）は出さない。
+#
+# **一次情報まで辿れた所**:
+#   ○ **UEFA の公式記事**（uefa.com、2026-05-31）「Youngest Champions League players and winners」＝最年少出場の上位7人（年齢・日付・試合）と最年少優勝。
+#   ○ **UEFA の公式記事**（同日）「Youngest Champions League goalscorers」＝最年少得点の上位10人（ファティ 17歳40日・2019-12-10）。
+#   ○ **UEFA の公式記事（2020-12）**「Moukoko becomes youngest Champions League player」＝ムココの記録（16歳18日、前の保持者ババヤロ16歳86日）と
+#       「ババヤロの記録から10年に3日足りない日に生まれた」。
+#   ○ **アーセナル公式**（arsenal.com「Dowman becomes youngest Champions League player」、2025-11）＝72分の出場・1992年に今の名前になってから最初の15歳・
+#       当時の上位10人の表・「2027年2月まで」。
+#   ○ **ESPN の試合記録（scoreboard／summary）**：Slavia Praha 0-3 Arsenal（2025-11-04、32分サカPK・46分と68分メリーノ・**72分 ダウマンがトロサールと交代**）、
+#       Zenit 1-2 Dortmund（2020-12-08、**58分 ムココがパスラックと交代、その時 0-1**、68分ピシュチェク・78分ヴィツェル）、
+#       ヘルタ 2-5 ドルトムント（2020-11-21、**85分 ムココがハーランドと交代**）、ほか上位7人の交代の分（パヴィッチ72・ヤマル68・シェルキ75・サルモン83）。
+#   ○ **プレミアリーグ公式**（premierleague.com、2022-09-18）＝ンワネリのプレミア最年少出場 15歳181日。
+#   ○ **ブンデスリーガ公式**（bundesliga.com）＝ムココが「史上最年少の選手（16歳1日）」。
+#   × **ババヤロの試合（1994-11-23、アンデルレヒト対ステアウア 1-1）の試合記録・出場の分は取れなかった**（ESPN に無い）。台本では日付と年齢だけ（UEFA の表）。
+#   × **UEFA の規定の原文で「なぜ15歳が登録できたか」は辿れなかった**。2026/27 の大会規則（第31条31.12）は「リストB＝2005年1月1日以降生まれで、15歳の誕生日から2年…」と
+#       読めるが、15歳308日のダウマンがどの規定で登録されたかは**確認できていない**（2025/26 の規則の頁は 404）。だから台本では**理由を書いていない**。
+#   × ESPN の予定表は 2026-09-10 の第1節までで、ダウマンはナポリ戦（9/9）に出ていない。**9/10 以降のチャンピオンズリーグで得点があったかは確かめられない**。
+#       「ファティの記録は5月31日の時点で…」と**UEFA の一覧の日付つき**で言う。
+#   ※**材料どうしの食い違い**：UEFA の2020年の記事は「11月21日（16歳の誕生日）にブンデスリーガ最年少デビュー」と書くが、ムココの誕生日は11月20日（UEFA の「10年に3日足りない」と
+#       ババヤロの試合日から逆算して合う）。ブンデスリーガ公式の頁は「16歳1日」と書きつつデビューを11月22日と書く。**試合記録（ESPN）は11月21日**。台本は「誕生日の翌日、11月21日」にした。
+#       ESPN の分は試合後の記録、アーセナル公式は72分で一致。ウィキペディアは別の分（82分）を書く記事もあったが採らない。
+#
+# 自分で計算した数（機械は検算しない。誕生日は ダウマン 2009-12-31・ムココ 2004-11-20・ババヤロ 1978-08-29。年齢は UEFA の表と一致を確認）:
+#   ダウマンの出場日 5787日・ムココ 5862日 → **75日**若い（16歳18日 − 15歳308日）。ババヤロ 5930日 → ムココは**68日**若い。
+#   ババヤロの記録が残った期間 1994-11-23 → 2020-12-08 ＝ **9512日**（26年15日）。ムココの記録 2020-12-08 → 2025-11-04 ＝ **1792日**（4年と10か月27日、約4年11か月）。9512 ÷ 1792 ＝ 5.31 →「約5.3倍」。
+#   上位7人の差：サルモン 5947日 − ダウマン 5787日 ＝ **160日**。
+#   上位7人のうち 2019-11-27 以降は6人（シェルキ・ムココ・ヤマル・ダウマン・サルモン・パヴィッチ）。それ以前は1994年のババヤロだけ。
+#   分がわかる6人の交代：72・58・72・68・75・83 → 平均 71.3分。
+#   ダウマンの16歳の誕生日は出場の57日後（2025-12-31 − 2025-11-04）。
+#   ファティ（17歳40日、2019-12-10）の記録が 2026-05-31 まで残った日数 **2364日**。2364 ÷ 1792 ＝ 1.32（ムココの記録の1.3倍）。
+#   ダウマンが17歳40日になる日 ＝ 2027-02-09（2026-12-31 ＋ 40日）。アーセナル公式の「2027年2月まで」と一致。
+#   プレミアの最年少出場 15歳181日（ンワネリ）とダウマンの15歳308日の差 ＝ 308 − 181 ＝ **127日**。
+#   ムココの2つの記録のあいだ：2020-11-21 → 2020-12-08 ＝ **17日**。
+#
+# **言い切っていないもの**:
+#   ・「出場の分がわかる6人」＝ババヤロ（1994）は ESPN に無いので数えていない。UEFA の記事で「交代」とあるのはダウマン・パヴィッチだけ。残りは ESPN の交代の記録で確かめた。
+#   ・ババヤロの記録は「26年残った」と言う（UEFA の表の日付から数えた。UEFA が「ババヤロの前の記録」を挙げていないので、ババヤロの前は言わない）。
+#   ・ダウマンの得点の見込みは言わない。「それまでに点を取れば、記録を抜く」という**条件の話**だけ。
+#
+# **同じ日の「比べる」（ドルトムント×モナコ、research/20261012_compare_dortmund_monaco.yaml）とクラブ名を重ねないため、台本・板・下地で「ドルトムント」を一度も言っていない**
+#   （ムココは「ムココ」とだけ言う。上位7人の表は**クラブの列を外して「相手」の列**にした＝UEFA の一覧の試合の相手）。ハーランドは人名として出る（ヘルタ戦で交代した相手。比べるの回には出ていない）。
+#   ※依頼文には「比べる」の2クラブの名前が無く、ドルトムント×モナコだと分かったのは書き終わりの点検で research/ を見たとき。**ムココの所属が言えないぶん、説明がやや遠回しになった**。
+# 写真は assets/backgrounds/ の1枚だけ（スラヴィア・プラハの本拠地の中。**1本のあいだ変えない**）。
+#   stadium_スラヴィア・プラハ_in.png は 10/11 にこのセッションで取った（Commons・CC BY 4.0 / Vojtasekd、File:Stadion Eden tribuny (5).jpg）。
+#   顔の写真は使っていない（ダウマン・ムココの写真は Commons に自由に使えるものを探していない）。
+# アルファベットは読み上げに出さない（チャンピオンズリーグ・UEFA は「ヨーロッパ連盟」と言い換えるか言わない）。
+# サムネは構図 number（同じ日のもう1本＝財政リヴァプールも number なので、**2本で構図が同じになる**。案B（versus）・案C（scene）も報告に出す）。
+#   **ユーザーと相談して決める**ので、ここに書いたのは案A。
+date: 2026年10月12日
+slot: other_2
+format: news
+series: 記録の解説
+voice_min: 0
+people:
+- マックス・ダウマン
+- ユスファ・ムココ
+- セレスティン・ババヤロ
+- ジェームズ・ヴォーン
+theme:
+  id: record_youngest
+  league: england
+  league_name: チャンピオンズリーグ
+  kind: other
+  topic: アーセナル
+  title: ダウマン、15歳で欧州の舞台へ。26年動かなかった最年少記録に何が起きたか
+  question: 最年少出場の記録は、どこまで若くなったのか
+  lead: 15歳で、ヨーロッパの最高峰に立った選手。
+  hook: その記録は、26年間、動かなかったものでした。
+  takeaway: チャンピオンズリーグの最年少出場は、アーセナルのダウマンの15歳308日（2025年11月4日、スラヴィア・プラハ戦の72分）。それまではムココの16歳18日（2020年12月8日、ゼニト戦）で、75日更新した。ムココの前の記録はアンデルレヒトのババヤロの16歳86日（1994年11月23日）で、68日更新。ババヤロの記録は26年（9512日）、ムココの記録は4年と11か月（1792日）で破られ、更新の間隔は約5.3倍縮まった。UEFAの5月末の一覧では上位7人のうち6人が2019年11月以降の出場で、1位から7位までの差は160日。ほかの最年少の記録は、得点がバルセロナのファティの17歳40日（2019年12月10日）、優勝がアヤックスのカヌの18歳296日。ファティの記録は5月31日の時点で2364日残っていて、ムココの記録の約1.3倍。ダウマンが17歳40日になるのは2027年2月9日で、それまでにチャンピオンズリーグで得点すれば最年少得点の記録を更新する。プレミアリーグの最年少出場は2022年のンワネリの15歳181日で、チャンピオンズリーグの記録とは127日の差。ダウマンは2026年3月14日、プレミアリーグでも最年少得点（16歳73日）を決め、2005年4月10日にエヴァートンのヴォーンが作った16歳270日の記録を197日更新した。その記録は7643日残っていて、ムココの記録の約4.3倍
+  opening_image: assets/backgrounds/stadium_スラヴィア・プラハ_in.png
+short_title: 15歳308日。チャンピオンズリーグの最年少出場は、5年で2度動いた
+thumbnail:
+  layout: number
+  photo: assets/backgrounds/stadium_スラヴィア・プラハ_in.png
+  number: 15歳●●●日
+  line1: チャンピオンズリーグ最年少
+  line2: アーセナルの選手が更新
+  crests:
+  - アーセナル
+  tags:
+  - ダウマン
+  - アーセナル
+  - チャンピオンズリーグ
+  - 記録の解説
+sections:
+- id: top
+  main: true
+  heading: 最年少出場の基礎DATA
+  tier: 確定
+  official: true
+  telop: 15歳308日。チャンピオンズリーグの最年少出場、前の記録より75日若い
+  narrator: キャスター
+  card: &top_stats
+    type: stats
+    title: 最年少出場の記録（2025年11月4日）
+    items:
+    - - '15'
+      - 歳308日
+      - 出場したときの年齢
+    - - '75'
+      - 日
+      - 前の記録より若い
+    - - '72'
+      - 分
+      - 交代で入った時間
+    focus: 0
+  say:
+  - text: チャンピオンズリーグに、15歳の選手が立ちました。
+    short_only: true
+    image: assets/backgrounds/stadium_スラヴィア・プラハ_in.png
+  - text: 15歳308日。チャンピオンズリーグ史上、最年少の出場です。
+    emph: true
+    image: assets/backgrounds/stadium_スラヴィア・プラハ_in.png
+    card: *top_stats
+  - text: 2025年11月4日、アーセナルのダウマン。相手はスラヴィア・プラハでした。
+    card: *top_stats
+  - text: それまでの記録は、ムココの16歳18日です。
+    card:
+      <<: *top_stats
+      focus: 1
+  - text: 出たのは、後半の72分。交代で入りました。
+    card:
+      <<: *top_stats
+      focus: 2
+  - text: 1992年に今の名前になってから、15歳の選手は初めてでした。
+    card: none
+  sources:
+  - https://www.uefa.com/uefachampionsleague/news/0253-0d042a009474-d3a14de143a9-1000--youngest-champions-league-players-and-winners-max-dowman-you/
+  - https://www.arsenal.com/news/dowman-becomes-youngest-champions-league-player-aY0jI7I7NAkv
+- id: match
+  heading: ダウマンが入った72分
+  tier: 確定
+  official: true
+  telop: 3対0になったあとの72分、トロサールと交代でピッチへ
+  narrator: 解説
+  card: &match_table
+    type: table
+    title: スラヴィア・プラハ 0対3 アーセナル（2025年11月4日）
+    columns: &match_cols
+    - 分
+    - できごと
+    - 点差
+    rows: &match_rows
+    - - '32'
+      - サカのPKで先制
+      - 0対1
+    - - '46'
+      - メリーノが決める
+      - 0対2
+    - - '68'
+      - メリーノが2点目
+      - 0対3
+    - - '72'
+      - ダウマンが交代で入る
+      - 0対3
+  say:
+  - text: 舞台は、チェコのスラヴィア・プラハ。8試合ずつ戦う、最初の総当たりの1試合でした。
+    card: *match_table
+  - text: 32分、サカのPKでアーセナルが先制します。
+    card:
+      <<: *match_table
+      highlight_row: 0
+  - text: 後半の46分と68分に、メリーノが決めました。
+    card:
+      <<: *match_table
+      highlight_row: 1
+  - text: 3点を取って、勝負がついたあとの72分です。
+    card:
+      <<: *match_table
+      highlight_row: 3
+  - text: トロサールと交代で、ダウマンがピッチへ。
+    emph: true
+    card:
+      <<: *match_table
+      highlight_row: 3
+    mark:
+      kind: circle
+      row: 3
+  - text: プレミアリーグには、8月のリーズ戦で出ていました。
+    card: none
+  - text: 史上2番目の若さでの出場だった、とクラブは伝えています。
+    card: none
+  - text: その1週間前には、リーグカップで先発も経験しています。
+    card: none
+  - text: アーセナルの一軍で、最年少の先発でした。
+    card: none
+  - text: 16歳の誕生日まで、あと57日。
+    card: none
+  sources:
+  - https://www.arsenal.com/news/dowman-becomes-youngest-champions-league-player-aY0jI7I7NAkv
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=757707
+- id: moukoko
+  heading: それまでの記録は、ムココの16歳18日
+  tier: 確定
+  official: true
+  telop: 16歳の誕生日の翌日にブンデスリーガ最年少デビュー。17日後に、この記録
+  narrator: 解説
+  card: &mk_time
+    type: timeline
+    title: ムココの17日間（2020年）
+    rows: &mk_rows
+    - - 11月20日
+      - 16歳の誕生日
+    - - 11月21日
+      - ブンデスリーガ最年少の出場（16歳1日）
+    - - 12月8日
+      - チャンピオンズリーグ最年少の出場（16歳18日）
+    focus: 12月8日
+  say:
+  - text: 更新される前の記録は、ムココでした。
+    image: assets/backgrounds/stadium_スラヴィア・プラハ_in.png
+    card: *mk_time
+  - text: 2020年11月20日に16歳になり、その翌日、ブンデスリーガに出ます。
+    card:
+      <<: *mk_time
+      highlight_row: 1
+  - text: ヘルタ戦の85分、ハーランドと交代しました。
+    card:
+      <<: *mk_time
+      highlight_row: 1
+  - text: ブンデスリーガの歴代で、いちばん若い選手になりました。
+    card:
+      <<: *mk_time
+      highlight_row: 1
+  - text: そのわずか17日後、チャンピオンズリーグでも最年少の記録を作ります。
+    emph: true
+    card:
+      <<: *mk_time
+      highlight_row: 2
+  - text: ゼニトとの試合の58分。ムココのチームは0対1で負けていました。
+    card:
+      <<: *mk_time
+      highlight_row: 2
+  - text: 試合は2対1の逆転勝ちでした。
+    card: none
+  - text: その前の記録は、ババヤロの16歳86日。それより68日、若い出場でした。
+    card: none
+  - text: ババヤロが記録を作った試合の、10年に3日足りない日に、ムココは生まれています。
+    card: none
+  - text: その記録を塗り替えたのが、15歳のダウマンです。
+    card: none
+  sources:
+  - https://www.uefa.com/uefachampionsleague/news/0253-0d042a009474-d3a14de143a9-1000--moukoko-becomes-youngest-champions-league-player/
+  - https://www.bundesliga.com/en/bundesliga/news/gio-reyna-moukoko-top-10-youngest-players-in-league-history-9529
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=585773
+- id: top7
+  heading: 最年少の上位7人
+  tier: 確定
+  official: true
+  telop: 上位7人のうち6人が、2019年11月以降。1位から7位までの差は160日
+  narrator: 解説
+  card: &t7_table
+    type: table
+    title: 最年少出場の上位7人（UEFA、2026年5月31日）
+    columns: &t7_cols
+    - 選手
+    - 年齢
+    - 出た日
+    - 相手
+    rows: &t7_rows
+    - - ダウマン
+      - 15歳308日
+      - 2025.11.4
+      - スラヴィア・プラハ
+    - - ムココ
+      - 16歳18日
+      - 2020.12.8
+      - ゼニト
+    - - パヴィッチ
+      - 16歳58日
+      - 2026.3.18
+      - アタランタ
+    - - ヤマル
+      - 16歳68日
+      - 2023.9.19
+      - アントワープ
+    - - ババヤロ
+      - 16歳86日
+      - 1994.11.23
+      - ステアウア
+    - - シェルキ
+      - 16歳102日
+      - 2019.11.27
+      - ゼニト
+    - - サルモン
+      - 16歳103日
+      - 2025.12.10
+      - クラブ・ブルッヘ
+  say:
+  - text: ヨーロッパサッカー連盟が5月末に出した、最年少の上位7人です。
+    image: assets/backgrounds/stadium_スラヴィア・プラハ_in.png
+    card: *t7_table
+  - text: 出た日で見ると、6人が2019年11月以降です。
+    emph: true
+    card:
+      <<: *t7_table
+      highlight_row: 5
+  - text: それより前は、1994年のババヤロ1人。
+    card:
+      <<: *t7_table
+      highlight_row: 4
+  - text: 16歳に届かずに出たのは、1位のダウマンだけ。
+    card:
+      <<: *t7_table
+      highlight_row: 0
+  - text: 1位から7位までの差は、160日。
+    card: *t7_table
+  - text: 5か月ほどの幅に、7人が収まっています。
+    card: *t7_table
+  - text: 入った時間がわかる6人は、全員が交代でした。
+    card: none
+  - text: 入ったのは58分から83分で、平均はおよそ71分。
+    card: none
+  sources:
+  - https://www.uefa.com/uefachampionsleague/news/0253-0d042a009474-d3a14de143a9-1000--youngest-champions-league-players-and-winners-max-dowman-you/
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20260318
+- id: others
+  heading: 出場のほかの最年少
+  tier: 確定
+  official: true
+  telop: 得点はファティの17歳40日、優勝はカヌの18歳296日
+  narrator: 解説
+  card: &oth_table
+    type: table
+    title: チャンピオンズリーグの最年少の記録
+    columns: &oth_cols
+    - 記録
+    - 保持者
+    - 年齢
+    rows: &oth_rows
+    - - 出場
+      - ダウマン
+      - 15歳308日
+    - - 得点
+      - ファティ
+      - 17歳40日
+    - - 優勝
+      - カヌ
+      - 18歳296日
+  say:
+  - text: ダウマンの出場のほかにも、最年少の記録があります。
+    card: *oth_table
+  - text: 得点は、バルセロナのアンス・ファティ。17歳40日です。
+    card:
+      <<: *oth_table
+      highlight_row: 1
+  - text: 2019年12月10日、インテルとの試合で決めました。
+    card:
+      <<: *oth_table
+      highlight_row: 1
+  - text: ヨーロッパサッカー連盟の5月末の一覧でも、まだ破られていません。
+    emph: true
+    card:
+      <<: *oth_table
+      highlight_row: 1
+  - text: 優勝は、アヤックスのカヌ。1995年に、18歳296日で頂点に立ちました。
+    card:
+      <<: *oth_table
+      highlight_row: 2
+  - text: 出場の15歳と得点の17歳。記録の年齢には、1年と97日の開きがあります。
+    card: *oth_table
+  sources:
+  - https://www.uefa.com/uefachampionsleague/news/025a-0e9f8a869d0f-4945c17a2380-1000--youngest-champions-league-goalscorers-ansu-fati-lamine-ya/
+  - https://www.uefa.com/uefachampionsleague/news/0253-0d042a009474-d3a14de143a9-1000--youngest-champions-league-players-and-winners-max-dowman-you/
+- id: plrec
+  heading: ダウマンは、プレミアの記録も動かした
+  tier: 確定
+  official: true
+  telop: 2026年3月14日、16歳73日でプレミア最年少得点。2005年の記録を197日更新
+  narrator: 解説
+  card: &pl_table
+    type: table
+    title: プレミアリーグの最年少得点
+    columns: &pl_cols
+    - 選手
+    - クラブ
+    - 年齢
+    - 試合の日
+    rows: &pl_rows
+    - - ダウマン
+      - アーセナル
+      - 16歳73日
+      - 2026.3.14
+    - - ヴォーン
+      - エヴァートン
+      - 16歳270日
+      - 2005.4.10
+  say:
+  - text: ダウマンは、プレミアリーグの記録も動かしています。
+    card: *pl_table
+  - text: 2026年3月14日、エヴァートン戦。74分に交代で入ります。
+    card:
+      <<: *pl_table
+      highlight_row: 0
+  - text: 1点リードの、アディショナルタイム7分。相手のGKまで攻め上がった場面でした。
+    card:
+      <<: *pl_table
+      highlight_row: 0
+  - text: ボールを拾って、ピッチの半分近くを運び、無人のゴールに流し込みます。
+    card:
+      <<: *pl_table
+      highlight_row: 0
+  - text: 16歳73日。プレミアリーグの最年少得点です。
+    emph: true
+    card:
+      <<: *pl_table
+      highlight_row: 0
+    mark:
+      kind: circle
+      row: 0
+      col: 2
+  - text: それまでの記録は、エヴァートンのヴォーン。16歳270日でした。
+    card:
+      <<: *pl_table
+      highlight_row: 1
+  - text: 197日、更新したことになります。
+    card:
+      <<: *pl_table
+      highlight_row: 1
+  - text: ヴォーンが決めたのは、2005年4月10日。
+    card:
+      <<: *pl_table
+      highlight_row: 1
+  - text: エヴァートンが4対0で勝った試合でした。
+    card:
+      <<: *pl_table
+      highlight_row: 1
+  - text: その試合の先制点は、のちにアーセナルの監督になるアルテタです。
+    card: none
+  - text: 記録が生まれた日と、破られた日の両方に、同じ人がいました。
+    card: none
+  sources:
+  - https://www.premierleague.com/en/news/4613476/dowman-becomes-premier-leagues-youngest-ever-goalscorer
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/summary?event=155041
+- id: view
+  viewpoint: true
+  heading: 見立て・記録が動く間隔を数える
+  tier: 背景
+  telop: ババヤロの記録は9512日、ムココの記録は1792日。間隔は約5.3倍縮んだ
+  narrator: 解説
+  card: &gap_calc
+    type: calc
+    title: 記録が残った日数（自分で数えた）
+    terms:
+    - - 9512日
+      - ババヤロの記録
+    - - 1792日
+      - ムココの記録
+    - - 約5.3倍
+      - 長さの比べ
+    ops:
+    - ÷
+    - ＝
+  say:
+  - text: ここからは、日数を数えて比べます。
+    card: *gap_calc
+  - text: ババヤロの記録は、1994年から2020年まで。9512日、残りました。
+    card: *gap_calc
+  - text: ムココの記録は、2020年から2025年まで。1792日です。
+    card: *gap_calc
+  - text: 割ってみると、およそ5.3倍。
+    card: *gap_calc
+  - text: 更新の間隔が、5分の1に縮んだことになります。
+    emph: true
+    card: *gap_calc
+  - text: 得点の記録は、動いていません。ファティの17歳40日は、2019年12月からです。
+    card: &view_table
+      type: table
+      title: 自分で数えてみた
+      columns: &view_cols
+      - 比べ
+      - 答え
+      rows: &view_rows
+      - - ババヤロの記録 ÷ ムココの記録
+        - 約5.3倍
+      - - ファティの記録（5月31日まで）
+        - 2364日
+      - - プレミアの最年少出場との差
+        - 127日
+      - - プレミアの最年少得点の記録
+        - 7643日
+      highlight_row: 1
+  - text: 5月31日の時点で、2364日。ムココの記録の1792日を、もう超えています。
+    emph: true
+    card:
+      type: table
+      title: 自分で数えてみた
+      columns: *view_cols
+      rows: *view_rows
+      highlight_row: 1
+    mark:
+      kind: circle
+      row: 1
+      col: 1
+  - text: プレミアリーグの最年少出場は、2022年のンワネリで15歳181日。
+    card:
+      type: table
+      title: 自分で数えてみた
+      columns: *view_cols
+      rows: *view_rows
+      highlight_row: 2
+  - text: チャンピオンズリーグの記録とは、127日の差があります。
+    card:
+      type: table
+      title: 自分で数えてみた
+      columns: *view_cols
+      rows: *view_rows
+      highlight_row: 2
+  - text: プレミアの最年少得点は、2005年から2026年まで。
+    card:
+      type: table
+      title: 自分で数えてみた
+      columns: *view_cols
+      rows: *view_rows
+      highlight_row: 3
+  - text: 7643日、動きませんでした。
+    card:
+      type: table
+      title: 自分で数えてみた
+      columns: *view_cols
+      rows: *view_rows
+      highlight_row: 3
+  - text: ムココの記録の、およそ4.3倍です。
+    card:
+      type: table
+      title: 自分で数えてみた
+      columns: *view_cols
+      rows: *view_rows
+      highlight_row: 3
+  - text: 次に動くとしたら、チャンピオンズリーグの得点の記録かもしれません。
+    card: none
+  - text: ダウマンの誕生日は12月31日。17歳40日になるのは、2027年2月9日です。
+    card: none
+  - text: それまでにチャンピオンズリーグで点を取れば、ファティの記録を抜きます。
+    emph: true
+    card: none
+  sources:
+  - https://www.uefa.com/uefachampionsleague/news/025a-0e9f8a869d0f-4945c17a2380-1000--youngest-champions-league-goalscorers-ansu-fati-lamine-ya/
+  - https://www.premierleague.com/en/news/2796137
+  - https://www.arsenal.com/news/dowman-becomes-youngest-champions-league-player-aY0jI7I7NAkv

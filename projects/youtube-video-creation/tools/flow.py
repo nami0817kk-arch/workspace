@@ -45,7 +45,8 @@ PROMPT = """あなたはテレビのニュース番組の構成作家です。�
 2. 立てたのに回収されない疑問。タイトルや冒頭が約束したのに、本文が答えていないこと
 3. 順番を入れ替えたほうが分かりやすい箇所
 4. 抜いても意味が変わらない行（同じことの言い直し、数字の確認だけの行）
-5. 一度聞いただけでは分からない言い回し（合成音声で読まれることを前提に）
+5. 一度聞いただけでは分からない言い回し（合成音声で読まれることを前提に）。
+   サッカーの用語や大会の仕組み（例：ネーションズリーグの階層、リーグB）を、初めて聞く人に分かる言い方で説明していない箇所も、ここに含める
 
 最後に、**ショート（@main の節）だけを取り出して1本にしたとき**、
 初めて見る人が「何が起きて、何が論点か」を分かるかどうかを、分かる／分からないで答え、
@@ -83,21 +84,33 @@ def ask(text: str, model: str | None = None) -> str:
     body = json.dumps({"contents": [{"parts": [{"text": text}]}]}).encode("utf-8")
     data = None
     last: Exception | None = None
-    for name in order:
-        for attempt in range(2):
-            try:
-                data = _call(name, body)
+    # **全モデルが 503 の夜がある**（2026-09-28 に3回）。1周で諦めず、90秒おいてもう2周する（品質100回の87）。
+    # 429（枠切れ）は待っても戻らないので、その周では次のモデルへ進むだけ
+    for round_ in range(3):
+        if round_:
+            if not saw_503:
+                break   # 全部 429（枠切れ）なら待っても戻らない。その日は Claude の下請けで読む
+            print(f"  （全モデルが混雑。{90 * round_}秒待って {round_ + 1}周目）")
+            time.sleep(90 * round_)
+        saw_503 = False
+        for name in order:
+            for attempt in range(2):
+                try:
+                    data = _call(name, body)
+                    break
+                except urllib.error.HTTPError as err:
+                    last = err
+                    if err.code not in (429, 503):
+                        raise
+                    if err.code == 429:
+                        break          # 枠切れは待っても戻らない。次のモデルへ
+                    saw_503 = True
+                    time.sleep(20)
+            if data is not None:
+                if name != first:
+                    print(f"  （{first} が混雑のため {name} で読みました）")
                 break
-            except urllib.error.HTTPError as err:
-                last = err
-                if err.code not in (429, 503):
-                    raise
-                if err.code == 429:
-                    break          # 枠切れは待っても戻らない。次のモデルへ
-                time.sleep(20)
         if data is not None:
-            if name != first:
-                print(f"  （{first} が混雑のため {name} で読みました）")
             break
     if data is None:
         raise last  # type: ignore[misc]
@@ -118,13 +131,21 @@ def main(argv: list[str]) -> int:
     if not argv:
         print(__doc__)
         return 2
-    if argv == ["--prompt"]:
+    if any(a in ("-h", "--help") for a in argv):
+        # **--help で Gemini を呼ばない**（2026-10-03〜04 に下請けが3回呼んだ。`--help` も
+        # 台本の名前と見なされ、`<台本> --prompt` の順でも呼ばれていた）
+        print(__doc__)
+        return 0
+    if "--prompt" in argv:
         # Gemini の無料枠が切れた日は、同じ問いを別の読み手（Claude の下請け）に渡す。
         # 控えは同じ output/flow/<台本>.md に、1行目を
         # 「# 流れの点検: <台本>（読み手: Claude。Gemini は無料枠切れ）」として書く
         print(PROMPT)
         return 0
     for arg in argv:
+        if arg.startswith("-"):
+            print(f"知らない指定です: {arg}（Gemini は呼びません）", file=sys.stderr)
+            return 2
         script = Path(arg)
         if not script.exists():
             print(f"台本がありません: {script}", file=sys.stderr)

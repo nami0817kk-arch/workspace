@@ -1,0 +1,678 @@
+# スタジアム紹介：サン・シーロ（スタディオ・ジュゼッペ・メアッツァ）（10/4）。材料の控えは research/raw/20261004_stadium_sansiro.md。
+# 見本は監督の経歴（research/20261002_coach_aguirre.yaml）の形：表を行ごとに付けて highlight_row で光らせる。
+# 開業・座席・同居はインテル公式（stadium ページ・100周年の特集 2026-09-19）と英伊の Wikipedia。欧州の決勝4回は決勝の一覧と 1965 決勝のページで確かめた。
+# 売却は Sky Sport（議決 2025-09-30、24対20）・ANSA / il Fatto（契約 2025-11-05、1億9700万ユーロ、初回7300万）・両クラブの共同声明（linterista.it に全文）。札は「確定」（クラブの声明まで辿れた）。
+# 新スタジアムはすべて予定。費用は報道で 約13億（2025-09）→20億超（2026-09）。台本は20億超と「膨らみ、固まっていない」だけ言う（13億はバルセロナの回と数字が重なるため出さない）。解体と9%は 2025-09 の報道。
+# 五輪の開会式は 2026-02-06 にここで開かれた（olympics.com・Wikipedia）。聖火台は別の場所なので触れない。
+# 2027年CL決勝はサン・シーロが選ばれなかった（Wikipedia：2024-09 の執行委員会で外れ、2025-09-11 にマドリード）。「一度決まっていた」とは言わない。
+# 入れなかったもの：売却の入札をめぐる検察の捜査（2026-03-31 に9人。2026-05 にリエザーメが捜索を退けた）。人名が要り、結論も出ていないため。
+# ネットの反応は置いていない（シリーズの決まりで無くてよい）。写真は Commons（credits.json）。報道写真・代理店は使っていない。
+date: 2026年10月04日
+slot: other_1
+format: news
+series: スタジアム紹介
+people: []
+theme:
+  id: stadium_sansiro
+  league: italy
+  league_name: セリエA
+  kind: other
+  topic: サン・シーロ
+  title: サン・シーロ、開業100年で持ち主が交代。新しい家で何が変わるか
+  question: 100年使われてきたサン・シーロは、ミランとインテルの持ち物になって何が変わるのか
+  takeaway: サン・シーロは1926年にミランが建て、1935年からミラノ市が持ってきた。2025年11月5日、ミランとインテルが1億9700万ユーロで買い取り、90年ぶりにクラブの持ち物になった。隣に建てる予定の新スタジアムは7万1500席と今より約4300席少ないが、特別席を1万3000席以上置く。街の競技場から、2つのクラブが稼ぐための家に変わる。次の節目は10月末ごろの完成予想図の発表、着工は2027年後半、完成は2031年の予定で、いまのスタジアムは約9%を残して解体される計画
+  opening_image: assets/images/20261004_stadium_sansiro/01_w.jpg
+short_title: サン・シーロ、90年ぶりにクラブの持ち物に
+thumbnail:
+  photo: assets/images/20261004_stadium_sansiro/06.jpg
+  line1: サン・シーロ 開業100年
+  line2: 取り壊しで残るのは●%
+  tags:
+  - サン・シーロ
+  - ミラン
+  - インテル
+  - セリエA
+  - スタジアム紹介
+  crests: []
+sections:
+- id: data
+  heading: 基礎DATA
+  tier: 報道
+  official: true
+  telop: サン・シーロの基礎DATA
+  narrator: キャスター
+  card:
+    type: table
+    title: サン・シーロの基礎DATA
+    columns: &id001
+    - 項目
+    - 内容
+    rows: &id002
+    - - 開業
+      - 1926年9月19日
+    - - 場所
+      - イタリア・ミラノ市の西、サン・シーロ地区
+    - - 座席
+      - 7万5817席
+    - - 本拠地
+      - ミラン（1926年〜）・インテル（1947年〜）
+    - - 正式名
+      - スタディオ・ジュゼッペ・メアッツァ
+    - - 持ち主
+      - ミランとインテル（2025年11月〜）
+  say:
+  - text: ミラノのサン・シーロが、9月19日で開業からちょうど100年を迎えました。
+    card:
+      type: table
+      title: サン・シーロの基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 0
+    image: assets/images/20261004_stadium_sansiro/01_w.jpg
+  - text: インテルはその日、クラブのサイトにこう記しています。
+    card:
+      type: table
+      title: サン・シーロの基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 0
+  - voice: インテルの声明
+    text: 100年の歴史は、ミラノの街にも、
+  - voice: インテルの声明
+    text: 世界のサッカーにも影響を与えてきた。
+    cont: true
+  - text: 場所はミラノの西、サン・シーロ地区。地区の名前がそのまま呼び名です。
+    card:
+      type: table
+      title: サン・シーロの基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 1
+  - text: 座席は7万5817席。陸上のトラックを持たない、サッカーのための競技場です。
+    card:
+      type: table
+      title: サン・シーロの基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 2
+  - text: 建てたのはミラン。インテルは1947年に移ってきました。
+    card:
+      type: table
+      title: サン・シーロの基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 3
+  - text: 街のライバル同士が1つの家を分け合う。欧州の名門では珍しい形です。
+    card:
+      type: table
+      title: サン・シーロの基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 3
+  - text: 正式な名前は、スタディオ・ジュゼッペ・メアッツァ。
+    card:
+      type: table
+      title: サン・シーロの基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 4
+  - text: 1934年と1938年のW杯を制した、イタリア代表のストライカーの名前です。
+    card:
+      type: table
+      title: サン・シーロの基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 4
+  - text: インテルを中心に、ミランでもプレーした、2つのクラブをつなぐ選手でした。
+    card:
+      type: table
+      title: サン・シーロの基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 4
+  - text: そしてこの家の持ち主が、去年の秋に入れ替わりました。
+    card:
+      type: table
+      title: サン・シーロの基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 5
+  quotes_from:
+  - インテル公式 https://www.inter.it/en/news/san-siro-100th-anniversary-special-inter
+  sources:
+  - https://www.inter.it/en/news/san-siro-100th-anniversary-special-inter
+  - https://www.inter.it/en/club/stadium
+  - https://en.wikipedia.org/wiki/San_Siro
+  - https://en.wikipedia.org/wiki/Giuseppe_Meazza
+- id: history
+  heading: 3度の増築で今の姿へ
+  tier: 報道
+  official: true
+  telop: 1926年の3万5000人から、1990年の大改修まで
+  narrator: 解説
+  card:
+    type: table
+    title: サン・シーロの歩み
+    columns: &id003
+    - 年
+    - 出来事
+    rows: &id004
+    - - 1926年
+      - ミランが建てて開業（3万5000人）
+    - - 1935年
+      - ミラノ市が買い取り、スタンドを広げる
+    - - 1955年
+      - 2層目のスタンドが完成
+    - - 1980年
+      - メアッツァの名前が付く
+    - - 1990年
+      - W杯に向けて3層目と屋根、11本の塔
+  say:
+  - text: 1926年の開業のとき、入れたのは3万5000人でした。
+    card:
+      type: table
+      title: サン・シーロの歩み
+      columns: *id003
+      rows: *id004
+      highlight_row: 0
+    image: assets/images/20261004_stadium_sansiro/03.jpg
+  - text: こけら落としはミラノ・ダービー。インテルが6対3で勝ちました。
+    card:
+      type: table
+      title: サン・シーロの歩み
+      columns: *id003
+      rows: *id004
+      highlight_row: 0
+  - text: ところが9年後の1935年、ミラノ市がこの競技場を買い取ります。
+    card:
+      type: table
+      title: サン・シーロの歩み
+      columns: *id003
+      rows: *id004
+      highlight_row: 1
+  - text: 市はスタンドの切れ目をつなぎ、ぐるりと囲む形に広げました。
+    card:
+      type: table
+      title: サン・シーロの歩み
+      columns: *id003
+      rows: *id004
+      highlight_row: 1
+  - text: 戦後の1955年には、スタンドの上に2層目が乗ります。
+    card:
+      type: table
+      title: サン・シーロの歩み
+      columns: *id003
+      rows: *id004
+      highlight_row: 2
+  - text: 1980年、前の年に亡くなったメアッツァの名前が付けられました。
+    card:
+      type: table
+      title: サン・シーロの歩み
+      columns: *id003
+      rows: *id004
+      highlight_row: 3
+  - text: そして1990年、W杯の開催に向けた大改修です。
+    card:
+      type: table
+      title: サン・シーロの歩み
+      columns: *id003
+      rows: *id004
+      highlight_row: 4
+    image: assets/images/20261004_stadium_sansiro/04.jpg
+  - text: スタンドを囲むように11本の円い塔を建て、3つの面に3層目を乗せました。
+    card:
+      type: table
+      title: サン・シーロの歩み
+      columns: *id003
+      rows: *id004
+      highlight_row: 4
+  - text: 角に立つ4本の塔が、赤い梁の屋根を支えます。いまの姿の完成です。
+    card:
+      type: table
+      title: サン・シーロの歩み
+      columns: *id003
+      rows: *id004
+      highlight_row: 4
+    emph: true
+  - text: 改修のあとは8万5700席。そこから1万席ほど減って、いまの数になっています。
+    card:
+      type: table
+      title: サン・シーロの歩み
+      columns: *id003
+      rows: *id004
+      highlight_row: 4
+  sources:
+  - https://en.wikipedia.org/wiki/San_Siro
+  - https://it.wikipedia.org/wiki/Stadio_Giuseppe_Meazza
+- id: stage
+  heading: 欧州の決勝4回、W杯2大会
+  tier: 報道
+  official: true
+  telop: 欧州の頂点を決める決勝が4回。今年は冬季五輪の開会式も
+  narrator: キャスター
+  card:
+    type: table
+    title: サン・シーロで開かれた大舞台
+    columns: &id005
+    - 年
+    - 大会
+    - 試合
+    rows: &id006
+    - - 1934年・1990年
+      - W杯
+      - 2大会で9試合（1990年は開幕戦）
+    - - 1965年
+      - 欧州チャンピオンズカップ決勝
+      - インテル 1-0 ベンフィカ
+    - - 1970年
+      - 欧州チャンピオンズカップ決勝
+      - フェイエノールト 2-1 セルティック
+    - - 2001年
+      - チャンピオンズリーグ決勝
+      - バイエルン 1-1 バレンシア（PK）
+    - - 2016年
+      - チャンピオンズリーグ決勝
+      - レアル・マドリード 1-1 アトレティコ（PK）
+    - - 2026年
+      - 冬季オリンピック
+      - 開会式（2月6日）
+  say:
+  - text: 100年のあいだに、サン・シーロは世界の大舞台を何度も迎えてきました。
+    card:
+      type: table
+      title: サン・シーロで開かれた大舞台
+      columns: *id005
+      rows: *id006
+    image: assets/images/20261004_stadium_sansiro/02.jpg
+  - text: W杯は1934年と1990年の2大会。1990年は、開幕戦の舞台でした。
+    card:
+      type: table
+      title: サン・シーロで開かれた大舞台
+      columns: *id005
+      rows: *id006
+      highlight_row: 0
+  - text: その開幕戦で、前回王者のアルゼンチンがカメルーンに0対1で敗れています。
+    card:
+      type: table
+      title: サン・シーロで開かれた大舞台
+      columns: *id005
+      rows: *id006
+      highlight_row: 0
+  - text: 欧州のクラブの頂点を決める決勝は、ここで4回行われました。
+    card:
+      type: table
+      title: サン・シーロで開かれた大舞台
+      columns: *id005
+      rows: *id006
+      highlight_row: 1
+  - text: 1965年はインテル自身が決勝に進み、本拠地で2年連続の欧州王者に。
+    card:
+      type: table
+      title: サン・シーロで開かれた大舞台
+      columns: *id005
+      rows: *id006
+      highlight_row: 1
+    emph: true
+  - text: 2001年はバイエルン、2016年はレアル・マドリードが優勝。
+    card:
+      type: table
+      title: サン・シーロで開かれた大舞台
+      columns: *id005
+      rows: *id006
+      highlight_row: 3
+  - text: どちらも、PK戦までもつれた決勝でした。
+    card:
+      type: table
+      title: サン・シーロで開かれた大舞台
+      columns: *id005
+      rows: *id006
+      highlight_row: 4
+  - text: そして今年2月6日、冬のオリンピックの開会式がここで開かれました。
+    card:
+      type: table
+      title: サン・シーロで開かれた大舞台
+      columns: *id005
+      rows: *id006
+      highlight_row: 5
+    image: assets/images/20261004_stadium_sansiro/05.jpg
+  - text: 客席にはおよそ6万1000人。サッカーの外でも、ミラノの顔になっています。
+    card:
+      type: table
+      title: サン・シーロで開かれた大舞台
+      columns: *id005
+      rows: *id006
+      highlight_row: 5
+  - text: 一方で、来年のチャンピオンズリーグ決勝の開催地には選ばれませんでした。
+    image: assets/images/20261004_stadium_sansiro/02.jpg
+  - text: 建て替えの工事が決勝に響かないと、ミラノ市が約束できなかったためです。
+  sources:
+  - https://en.wikipedia.org/wiki/1934_FIFA_World_Cup
+  - https://en.wikipedia.org/wiki/1990_FIFA_World_Cup
+  - https://en.wikipedia.org/wiki/1965_European_Cup_final
+  - https://en.wikipedia.org/wiki/List_of_European_Cup_and_UEFA_Champions_League_finals
+  - https://en.wikipedia.org/wiki/2026_Winter_Olympics_opening_ceremony
+  - https://www.olympics.com/en/milano-cortina-2026/venues/milano-san-siro-olympic-stadium
+  - https://en.wikipedia.org/wiki/2027_UEFA_Champions_League_final
+- id: sale
+  main: true
+  heading: 市からクラブの手へ
+  tier: 確定
+  official: true
+  telop: ミランとインテルが、ミラノ市から1億9700万ユーロで買い取り
+  narrator: キャスター
+  card:
+    type: table
+    title: サン・シーロの売却
+    columns: &id007
+    - 項目
+    - 内容
+    rows: &id008
+    - - ミラノ市議会の議決
+      - 2025年9月30日（賛成24・反対20）
+    - - 価格
+      - 1億9700万ユーロ（周りの土地も含む）
+    - - 契約
+      - 2025年11月5日
+    - - 買い手
+      - ミランとインテルの共同の会社
+    - - 最初の支払い
+      - 7300万ユーロ
+  say:
+  - text: ミランとインテルの本拠地サン・シーロは、去年の秋、持ち主が変わりました。
+    short_only: true
+    image: assets/images/20261004_stadium_sansiro/06.jpg
+  - voice: ミランとインテルの共同声明
+    text: 新しいスタジアムと地区の再生は、
+  - voice: ミランとインテルの共同声明
+    text: ミラノの街と両クラブにとって、新しい章になる。
+    cont: true
+  - text: ミラノ市議会が売却を決めたのは、去年の9月30日。
+    card:
+      type: table
+      title: サン・シーロの売却
+      columns: *id007
+      rows: *id008
+      highlight_row: 0
+    image: assets/images/20261004_stadium_sansiro/06.jpg
+  - text: 11時間を超える議論の末、採決は夜中の2時半ごろでした。
+    card:
+      type: table
+      title: サン・シーロの売却
+      columns: *id007
+      rows: *id008
+      highlight_row: 0
+  - text: 賛成24、反対20。わずか4票の差です。
+    card:
+      type: table
+      title: サン・シーロの売却
+      columns: *id007
+      rows: *id008
+      highlight_row: 0
+    emph: true
+  - text: 値段は1億9700万ユーロ。周りの土地も含みます。
+    card:
+      type: table
+      title: サン・シーロの売却
+      columns: *id007
+      rows: *id008
+      highlight_row: 1
+  - text: そして11月5日、2つのクラブが一緒に作った会社が、市と契約を結びました。
+    card:
+      type: table
+      title: サン・シーロの売却
+      columns: *id007
+      rows: *id008
+      highlight_row: 3
+  - text: その日にまず7300万ユーロを払い、残りは分けて払います。
+    card:
+      type: table
+      title: サン・シーロの売却
+      columns: *id007
+      rows: *id008
+      highlight_row: 4
+  - text: 急いだのは、11月10日から2層目が文化財として守られる決まりだったため。
+    card:
+      type: table
+      title: サン・シーロの売却
+      columns: *id007
+      rows: *id008
+      highlight_row: 2
+  - text: そうなると、取り壊しが難しくなる。その5日前の契約でした。
+    card:
+      type: table
+      title: サン・シーロの売却
+      columns: *id007
+      rows: *id008
+      highlight_row: 2
+  quotes_from:
+  - '両クラブの共同声明（全文: https://www.linterista.it/primo-piano/san-siro-acquistato-da-inter-e-milan-ecco-la-nota-congiunta-dei-due-club-177842）'
+  sources:
+  - https://sport.sky.it/calcio/serie-a/2025/09/30/san-siro-stadio-vendita-milan-inter-voto-comune
+  - https://www.ansa.it/sito/notizie/topnews/2025/11/05/s.-siro-passa-a-inter-e-milan-per-197-milioni-firmato-il-rogito_4f97f758-3b64-4e6d-b611-a1d0b0023f89.html
+  - https://www.ilfattoquotidiano.it/2025/11/05/san-siro-milan-inter-rogito-vendita-stadio-news/8185551/
+  - https://www.linterista.it/primo-piano/san-siro-acquistato-da-inter-e-milan-ecco-la-nota-congiunta-dei-due-club-177842
+- id: plan
+  heading: 隣に建てる新スタジアム
+  tier: 報道
+  official: true
+  telop: 新スタジアムは7万1500席の予定。いまのサン・シーロは約9%を残して解体の計画
+  narrator: 解説
+  card:
+    type: table
+    title: 新スタジアムの計画（予定）
+    columns: &id009
+    - 項目
+    - 内容
+    rows: &id010
+    - - 設計
+      - フォスター・アンド・パートナーズとマニカ
+    - - 場所
+      - いまのスタジアムの隣
+    - - 座席
+      - 7万1500席（2層）
+    - - 費用
+      - 20億ユーロ超（2026年9月の報道）
+    - - いまのスタジアム
+      - 完成後に解体、約9%を残す
+  say:
+  - text: 2つのクラブが進めるのは、すぐ隣に新しいスタジアムを建てる計画です。
+    card:
+      type: table
+      title: 新スタジアムの計画（予定）
+      columns: *id009
+      rows: *id010
+      highlight_row: 1
+    image: assets/images/20261004_stadium_sansiro/01.jpg
+  - text: 設計は、イギリスのフォスター・アンド・パートナーズと、アメリカのマニカ。
+    card:
+      type: table
+      title: 新スタジアムの計画（予定）
+      columns: *id009
+      rows: *id010
+      highlight_row: 0
+  - text: ロンドンのウェンブリー・スタジアムにも関わった設計事務所です。
+    card:
+      type: table
+      title: 新スタジアムの計画（予定）
+      columns: *id009
+      rows: *id010
+      highlight_row: 0
+  - text: 座席は7万1500席の予定。スタンドは2層にして、客席をピッチに近づけます。
+    card:
+      type: table
+      title: 新スタジアムの計画（予定）
+      columns: *id009
+      rows: *id010
+      highlight_row: 2
+  - text: 費用は、今年9月の報道で20億ユーロ超。
+    card:
+      type: table
+      title: 新スタジアムの計画（予定）
+      columns: *id009
+      rows: *id010
+      highlight_row: 3
+  - text: 売却が決まった去年の秋の見積もりから膨らみ、額はまだ固まっていません。
+    card:
+      type: table
+      title: 新スタジアムの計画（予定）
+      columns: *id009
+      rows: *id010
+      highlight_row: 3
+  - text: では、いまのサン・シーロはどうなるのか。
+    card:
+      type: table
+      title: 新スタジアムの計画（予定）
+      columns: *id009
+      rows: *id010
+      highlight_row: 4
+    image: assets/images/20261004_stadium_sansiro/04.jpg
+  - text: 計画では、新しいスタジアムができてから、1年ほどかけて解体されます。
+    card:
+      type: table
+      title: 新スタジアムの計画（予定）
+      columns: *id009
+      rows: *id010
+      highlight_row: 4
+  - text: 残すのは、全体の9%ほど。
+    card:
+      type: table
+      title: 新スタジアムの計画（予定）
+      columns: *id009
+      rows: *id010
+      highlight_row: 4
+    emph: true
+  - text: 南のゴール裏とオレンジ色のスタンド、塔の、それぞれ一部です。
+    card:
+      type: table
+      title: 新スタジアムの計画（予定）
+      columns: *id009
+      rows: *id010
+      highlight_row: 4
+  - text: 残した部分には、店や娯楽の施設を入れる計画です。
+    card:
+      type: table
+      title: 新スタジアムの計画（予定）
+      columns: *id009
+      rows: *id010
+      highlight_row: 4
+  sources:
+  - https://www.calcioefinanza.it/2025/09/30/progetto-nuovo-san-siro-capienza-struttura-stadio/
+  - https://www.sportmediaset.mediaset.it/calcio/san-siro-100-anni-futuro-nuovo-stadio-milano_116629543-202602k.shtml
+  - https://blog.urbanfile.org/2026/09/14/milano-san-siro-ci-siamo-quasi-a-fine-ottobre-il-nuovo-stadio-di-foster-e-manica/
+  - https://www.ilfattoquotidiano.it/2025/09/30/san-siro-vendita-inter-milan-cosa-succede-ora-quando-demolizione-meazza-nuovo-stadio-date-cronologia/8144066/
+  - https://www.milannews.it/news/nuovo-stadio-san-siro-verso-la-demolizione-verranno-salvate-una-parte-della-curva-sud-un-pezzo-di-tribuna-e-una-torre-569989
+  - https://africa.espn.com/football/story/_/id/46222719/madrid-metropolitano-stadium-host-27-champions-league-final
+- id: view
+  viewpoint: true
+  heading: 100年の舞台と新スタジアム、変わるもの
+  tier: 背景
+  telop: 席は約4300減、特別席は1万3000以上。市の持ち物から、クラブの家へ
+  narrator: 解説
+  card:
+    type: table
+    title: いまのサン・シーロと新スタジアム
+    columns: &id011
+    - 項目
+    - いま
+    - 新スタジアム（予定）
+    rows: &id012
+    - - 開業
+      - 1926年
+      - 2031年
+    - - 座席
+      - 7万5817席
+      - 7万1500席
+    - - 特別席
+      - ―
+      - 1万3000席以上
+    - - 持ち主
+      - ミラノ市（1935〜2025年）
+      - ミランとインテル
+    - - 次の節目
+      - ―
+      - 完成予想図の発表（10月末ごろ）・着工（2027年後半）
+  say:
+  - text: 100年のサン・シーロと新スタジアム。数字を並べると、違いが見えてきます。
+    card:
+      type: table
+      title: いまのサン・シーロと新スタジアム
+      columns: *id011
+      rows: *id012
+    image: assets/images/20261004_stadium_sansiro/07.jpg
+  - text: まず席の数。7万5817から7万1500へ、4300席ほど減ります。
+    card:
+      type: table
+      title: いまのサン・シーロと新スタジアム
+      columns: *id011
+      rows: *id012
+      highlight_row: 1
+  - text: それでも、高い料金の特別席は1万3000席以上を置く予定。
+    card:
+      type: table
+      title: いまのサン・シーロと新スタジアム
+      columns: *id011
+      rows: *id012
+      highlight_row: 2
+  - text: 席を減らしてでも特別席を厚くする。クラブが稼ぐ力を上げる作りです。
+    card:
+      type: table
+      title: いまのサン・シーロと新スタジアム
+      columns: *id011
+      rows: *id012
+      highlight_row: 2
+    emph: true
+  - text: 持ち主も変わりました。
+    card:
+      type: table
+      title: いまのサン・シーロと新スタジアム
+      columns: *id011
+      rows: *id012
+      highlight_row: 3
+  - text: 1935年から90年続いた市の持ち物が、クラブの手に戻ったのです。
+    card:
+      type: table
+      title: いまのサン・シーロと新スタジアム
+      columns: *id011
+      rows: *id012
+      highlight_row: 3
+  - text: 変わらないものもあります。ライバル同士の同居は、新スタジアムでも続きます。
+    card:
+      type: table
+      title: いまのサン・シーロと新スタジアム
+      columns: *id011
+      rows: *id012
+      highlight_row: 3
+  - text: 新スタジアムは9月30日、2032年の欧州選手権、ユーロの会場候補にも入りました。
+    card:
+      type: table
+      title: いまのサン・シーロと新スタジアム
+      columns: *id011
+      rows: *id012
+      highlight_row: 4
+  - text: 次の節目は、早ければ今月の終わり。完成予想図の発表が見込まれています。
+    card:
+      type: table
+      title: いまのサン・シーロと新スタジアム
+      columns: *id011
+      rows: *id012
+      highlight_row: 4
+  - text: 着工は2027年の後半、完成は2031年の予定。
+    card:
+      type: table
+      title: いまのサン・シーロと新スタジアム
+      columns: *id011
+      rows: *id012
+      highlight_row: 4
+  - text: 100年目を迎えた舞台は、あと5年ほどで、隣の新しい家に役目を譲る見込みです。
+    card:
+      type: table
+      title: いまのサン・シーロと新スタジアム
+      columns: *id011
+      rows: *id012
+      highlight_row: 0
+  sources:
+  - https://www.sportmediaset.mediaset.it/calcio/san-siro-100-anni-futuro-nuovo-stadio-milano_116629543-202602k.shtml
+  - https://blog.urbanfile.org/2026/09/14/milano-san-siro-ci-siamo-quasi-a-fine-ottobre-il-nuovo-stadio-di-foster-e-manica/
+  - https://www.calcioefinanza.it/2026/09/30/stadi-candidati-euro-2032-figc-uefa/
+  - https://sport.sky.it/calcio/serie-a/2025/09/30/san-siro-stadio-vendita-milan-inter-voto-comune
+  - https://it.wikipedia.org/wiki/Stadio_Giuseppe_Meazza

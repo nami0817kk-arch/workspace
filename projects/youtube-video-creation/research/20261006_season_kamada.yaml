@@ -1,0 +1,558 @@
+# 今季の軌跡（随時のシリーズ）。鎌田大地（クリスタル・パレス）。材料の控えは research/raw/20261006_season_kamada.md。
+# 試合ごとの出場・得点・アシスト・先発は Transfermarkt の試合記録（tmapi、10/6 取得）、評点・位置・90分あたりは FotMob（playerData・playerStats 0-0／1-0）。
+# 位置: 開幕2試合は FotMob の守備的MF（66）、9/5・9/12・9/20 は攻撃的MF（84）。日刊「シャドーの位置で先発」、ゲキサカ「右シャドーで先発」（EL）。
+# 昨季の同じ時点＝2025-26 のクラブ公式戦 9/20 まで（9試合中6出場6先発475分）。アシストは TM がヴィラ戦の1を数えるが、
+#   FotMob と日刊（「プレミアリーグで自身初のアシスト」）は0。0に揃えた。
+# この回だけの数字＝プレミア5試合を位置で分けた表（自分で数えた。見立ての節）。
+# 重ねない: 9/6（フラム戦の幻のゴール）・9/9／9/10（ループ弾と冨安の縦パス）・9/29（腕章）・10/5〜6 の代表の回。どの場面も1行まで。
+#   代表は1行（4試合出場・決勝はボランチで先発）。10/5 の言葉は使わない。
+# 本人の言葉は 9/12 イプスウィッチ戦前の U-NEXT のインタビュー（日刊スポーツが引用）。冨安の言葉は試合後（サッカーダイジェストWeb）。
+# 反応は3件（Yahoo!ニュースのコメント欄、個人の投稿を全文）。サッカーダイジェストの記事 0bf9100c の thi・oia、theWORLD の記事 25eb3763 の oku（短いので short_voice）。
+# 写真: 03＝Commons 2026-05 アーセナル戦（本拠の服。冒頭・サムネ・ショート）、01＝Commons 2025-08 フレドリクスタ戦（昨季の同じ時期）、
+#   04＝サッカーキング（金田慎平）10/5 代表、pair＝冨安（Commons 2020 ボローニャ）＋03。試合の記事の写真は Getty・ロイターで使っていない。
+date: 2026年10月6日
+slot: other_1
+format: news
+series: 今季の軌跡
+people:
+- 鎌田大地
+- 冨安健洋
+theme:
+  id: season_kamada
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: クリスタル・パレス
+  title: 鎌田大地、ボランチからシャドーへ。今季7試合の数字に出た変化とは
+  question: ボランチからシャドーへ1列上がった鎌田大地の今季、数字の上で何が変わったのか
+  takeaway: 鎌田大地は今季、開幕2試合のボランチから9月にシャドーへ1列上がり、公式戦7試合で1得点3アシスト。昨季の同じ9月20日までは0得点0アシストだった。プレミアの5試合を位置で分けると、パレスの得点はボランチの2試合で1、シャドーの3試合で5。守備の列を越えるパスは90分あたり7.7本から10.0本に増え、タックルは3.0回から2.2回に減った。数えたのは2試合と3試合なので、10月11日のフォレスト戦でどちらの位置に立つかが、この形が続くかの最初の答えになる
+  hook: ''
+  opening_image: assets/images/20261006_season_kamada/03_w.jpg
+short_title: 鎌田大地、1列前に出て増えた数字
+thumbnail:
+  photo: assets/images/20261006_season_kamada/03_w.jpg
+  short_photo: assets/images/20261006_season_kamada/03_v.jpg
+  line1: 鎌田大地 1列前に出た今季
+  line2: 昨季0→今季3 増えたのは●●●●●
+  tags:
+  - クリスタル・パレス
+  - 鎌田大地
+  - 今季の軌跡
+  photos: []
+sections:
+- id: run
+  heading: 9月の3試合で1得点3アシスト
+  tier: 報道
+  narrator: 解説
+  main: true
+  telop: 9月の公式戦3試合で、1得点3アシスト
+  quotes_from:
+  - 日刊スポーツ https://www.nikkansports.com/soccer/world/news/202609130000074.html
+  say:
+  - text: パレスの鎌田大地が、ひとつ前の位置で結果を出しています。
+    short_only: true
+    image: assets/images/20261006_season_kamada/03_r.jpg
+  - text: 9月は3試合で1得点3アシスト。昨季の同じ時期は得点もアシストも0。
+    image: assets/images/20261006_season_kamada/03_r.jpg
+  - voice: 鎌田大地
+    text: コンディションはいいと思いますし、
+  - voice: 鎌田大地
+    text: 6番だったり、10番だったり、
+    cont: true
+  - voice: 鎌田大地
+    text: 2つのポジションをこなしていますけど、
+    cont: true
+  - voice: 鎌田大地
+    text: いいフィーリングで今はプレーができている
+    cont: true
+  - text: 6番はボランチで中盤の底、10番はシャドーで最前線のひとつ手前です。
+  - text: 開幕の2試合はボランチで出て、パレスは2連敗でした。
+  - text: 9月のフラム戦でシャドーに上がると、そこからアシストが続きます。
+  - text: プレミアのアシストは5試合で3つ。昨季はリーグ戦28試合で0でした。
+    emph: true
+  sources:
+  - https://www.nikkansports.com/soccer/world/news/202609130000074.html
+  - https://www.transfermarkt.jp/daichi-kamada/leistungsdatendetails/spieler/356141
+  - https://www.fotmob.com/players/621515/daichi-kamada
+- id: log
+  heading: 開幕からの公式戦7試合
+  tier: 報道
+  narrator: キャスター
+  card:
+    type: table
+    title: 鎌田大地 今季のプレミアリーグ5試合
+    columns: &id001
+    - 日付
+    - 相手
+    - 位置
+    - 出場
+    - 得点/アシスト
+    - 評点
+    rows: &id002
+    - - 8/22
+      - エヴァートン
+      - ボランチ
+      - 90分
+      - 0/0
+      - '7.4'
+    - - 8/28
+      - マンチェスター・C
+      - ボランチ
+      - 90分
+      - 0/0
+      - '6.8'
+    - - 9/5
+      - フラム
+      - シャドー
+      - 89分
+      - 0/1
+      - '7.7'
+    - - 9/12
+      - イプスウィッチ
+      - シャドー
+      - 84分
+      - 0/2
+      - '8.1'
+    - - 9/20
+      - リーズ
+      - シャドー
+      - 90分
+      - 0/0
+      - '6.6'
+  telop: プレミア5試合と、カップ戦・欧州の大会で2試合
+  say:
+  - text: ここからは今季の試合を、順に表で追います。まずはプレミアリーグの5試合。
+    image: assets/images/20261006_season_kamada/03_v.jpg
+    card:
+      type: table
+      title: 鎌田大地 今季のプレミアリーグ5試合
+      columns: *id001
+      rows: *id002
+  - text: 開幕戦は敵地でエヴァートンに0対2の負け。鎌田は90分出ています。
+    card:
+      type: table
+      title: 鎌田大地 今季のプレミアリーグ5試合
+      columns: *id001
+      rows: *id002
+      highlight_row: 0
+  - text: 2戦目はマンチェスター・シティに1対4で敗戦。ここもフル出場です。
+    card:
+      type: table
+      title: 鎌田大地 今季のプレミアリーグ5試合
+      columns: *id001
+      rows: *id002
+      highlight_row: 1
+  - text: 3戦目のフラム戦は3対2。パレスの今季初勝利です。
+    card:
+      type: table
+      title: 鎌田大地 今季のプレミアリーグ5試合
+      columns: *id001
+      rows: *id002
+      highlight_row: 2
+  - text: 鎌田は勝ち越し点のもとになり、プレミアで自身初のアシストが付きました。
+    card:
+      type: table
+      title: 鎌田大地 今季のプレミアリーグ5試合
+      columns: *id001
+      rows: *id002
+      highlight_row: 2
+  - text: 4戦目のイプスウィッチ戦は、1試合で2つのアシスト。
+    card:
+      type: table
+      title: 鎌田大地 今季のプレミアリーグ5試合
+      columns: *id001
+      rows: *id002
+      highlight_row: 3
+  - text: 1人少なくなっても追いつきましたが、90分に決められ2対3で負けました。
+    card:
+      type: table
+      title: 鎌田大地 今季のプレミアリーグ5試合
+      columns: *id001
+      rows: *id002
+      highlight_row: 3
+  - text: 採点は8.1で、5試合の中の最高でした。
+    card:
+      type: table
+      title: 鎌田大地 今季のプレミアリーグ5試合
+      columns: *id001
+      rows: *id002
+      highlight_row: 3
+  - text: 5戦目のリーズ戦は0対0の引き分け。シャドーのまま90分出ています。
+    card:
+      type: table
+      title: 鎌田大地 今季のプレミアリーグ5試合
+      columns: *id001
+      rows: *id002
+      highlight_row: 4
+  - text: カップ戦では、ミドルズブラ戦に途中から入って今季初ゴール。
+    card:
+      type: table
+      title: 鎌田大地 今季のカップ戦と欧州の大会
+      columns: *id001
+      rows: &id003
+      - - 9/8
+        - ミドルズブラ（リーグ杯）
+        - 途中出場
+        - 31分
+        - 1/0
+        - '7.3'
+      - - 9/17
+        - レフ・ポズナン（EL）
+        - 右シャドー
+        - 74分
+        - 0/0
+        - '7.4'
+      highlight_row: 0
+  - text: ヨーロッパリーグの初戦は右のシャドーで先発し、4対0で勝ちました。
+    card:
+      type: table
+      title: 鎌田大地 今季のカップ戦と欧州の大会
+      columns: *id001
+      rows: *id003
+      highlight_row: 1
+  - text: ここまで公式戦7試合、出なかった試合はありません。
+    card:
+      type: table
+      title: 鎌田大地 今季のカップ戦と欧州の大会
+      columns: *id001
+      rows: *id003
+  sources:
+  - https://www.transfermarkt.jp/daichi-kamada/leistungsdatendetails/spieler/356141
+  - https://www.fotmob.com/players/621515/daichi-kamada
+  - https://www.nikkansports.com/soccer/world/news/202609130000074.html
+  - https://www.sponichi.co.jp/soccer/news/2026/08/29/kiji/20260829s00002021040000c.html
+  - https://web.gekisaka.jp/news/world/detail/?459047-459047-fl
+  - https://www.footballchannel.jp/2026/09/21/post1015668/
+- id: compare
+  heading: 昨季の9月20日までと比べる
+  tier: 報道
+  narrator: キャスター
+  card:
+    type: table
+    title: 9月20日までのクラブの公式戦
+    columns: &id004
+    - ''
+    - 昨季
+    - 今季
+    rows: &id005
+    - - 出た試合
+      - 9試合中6
+      - 7試合中7
+    - - 先発
+      - '6'
+      - '6'
+    - - 出場時間
+      - 475分
+      - 548分
+    - - 得点
+      - '0'
+      - '1'
+    - - アシスト
+      - '0'
+      - '3'
+  telop: 昨季と今季、どちらも9月20日まで
+  say:
+  - text: 同じ9月20日までの鎌田の数字を、昨季と並べます。
+    image: assets/images/20261006_season_kamada/02_v.jpg
+    card:
+      type: table
+      title: 9月20日までのクラブの公式戦
+      columns: *id004
+      rows: *id005
+  - text: 昨季はこの時期、開幕から3試合を欠場していました。出たのは9試合中6。
+    card:
+      type: table
+      title: 9月20日までのクラブの公式戦
+      columns: *id004
+      rows: *id005
+      highlight_row: 0
+  - text: 先発はどちらも6試合。出場時間は475分から548分に増えました。
+    card:
+      type: table
+      title: 9月20日までのクラブの公式戦
+      columns: *id004
+      rows: *id005
+      highlight_row: 2
+  - text: 得点は0から1へ。
+    card:
+      type: table
+      title: 9月20日までのクラブの公式戦
+      columns: *id004
+      rows: *id005
+      highlight_row: 3
+  - text: アシストは0から3へ。出た時間の伸びより、ゴールに絡む数の伸びが大きいんです。
+    emph: true
+    card:
+      type: table
+      title: 9月20日までのクラブの公式戦
+      columns: *id004
+      rows: *id005
+      highlight_row: 4
+  sources:
+  - https://www.transfermarkt.jp/daichi-kamada/leistungsdatendetails/spieler/356141
+  - https://www.fotmob.com/players/621515/daichi-kamada
+- id: per90
+  heading: 1列前で増えたパス、減った守備
+  tier: 報道
+  narrator: 解説
+  card:
+    type: table
+    title: 90分あたり（プレミアリーグ）
+    columns: &id006
+    - ''
+    - 昨季 1908分
+    - 今季 443分
+    rows: &id007
+    - - 守備の列を越えるパス
+      - 7.7本
+      - 10.0本
+    - - チャンス創出
+      - 0.9回
+      - 1.2回
+    - - 決定機の演出
+      - 0.24回
+      - 0.41回
+    - - タックル
+      - 3.0回
+      - 2.2回
+    - - 守備のアクション
+      - 9.9回
+      - 7.7回
+    - - データの採点
+      - '6.84'
+      - '7.33'
+  telop: 守備の列を越えるパスは90分あたり7.7本から10.0本へ
+  quotes_from:
+  - サッカーダイジェストWeb https://www.soccerdigestweb.com/news/detail/id=197052
+  say:
+  - text: 位置が上がって、鎌田の何が変わったのか。90分あたりで昨季と比べます。
+    image: assets/images/20261006_season_kamada/03_v.jpg
+    card:
+      type: table
+      title: 90分あたり（プレミアリーグ）
+      columns: *id006
+      rows: *id007
+  - text: 相手の守備の列を越えるパスは、7.7本から10.0本に。
+    card:
+      type: table
+      title: 90分あたり（プレミアリーグ）
+      columns: *id006
+      rows: *id007
+      highlight_row: 0
+  - text: シュートの手前の最後のパス、チャンス創出は0.9回から1.2回。
+    card:
+      type: table
+      title: 90分あたり（プレミアリーグ）
+      columns: *id006
+      rows: *id007
+      highlight_row: 1
+  - text: 決定的な場面を作った数は、0.24回から0.41回。倍に近づいています。
+    card:
+      type: table
+      title: 90分あたり（プレミアリーグ）
+      columns: *id006
+      rows: *id007
+      highlight_row: 2
+  - text: 一方でタックルは3.0回から2.2回。守備の仕事は減りました。
+    card:
+      type: table
+      title: 90分あたり（プレミアリーグ）
+      columns: *id006
+      rows: *id007
+      highlight_row: 3
+  - text: データサイトの採点は、6.84から7.33に上がりました。
+    card:
+      type: table
+      title: 90分あたり（プレミアリーグ）
+      columns: *id006
+      rows: *id007
+      highlight_row: 5
+  - text: 今季パレスに加わった冨安健洋は、イプスウィッチ戦のあとこう話しています。
+    image: assets/images/20261006_season_kamada/pair/01.jpg
+    card: none
+  - voice: 冨安健洋
+    text: 正直、去年の彼のことを全て知ってるわけじゃないですけど、
+    card: none
+  - voice: 冨安健洋
+    text: 今年来て、チームの中心選手だと思います。
+    cont: true
+    card: none
+  - voice: 冨安健洋
+    text: 先日のカップ戦でもゴールを決めて、今日も2アシストってことで
+    cont: true
+    card: none
+  - voice: 冨安健洋
+    text: 調子は良いんじゃないかなと思います
+    cont: true
+    card: none
+  sources:
+  - https://www.fotmob.com/players/621515/daichi-kamada
+  - https://www.soccerdigestweb.com/news/detail/id=197052
+- id: view
+  heading: ボランチとシャドー、位置で分けた鎌田の5試合
+  tier: 背景
+  narrator: 解説
+  viewpoint: true
+  card:
+    type: table
+    title: 鎌田大地 位置で分けたプレミア5試合
+    columns: &id008
+    - ''
+    - ボランチ
+    - シャドー
+    rows: &id009
+    - - 試合
+      - '2'
+      - '3'
+    - - パレスの結果
+      - 2敗
+      - 1勝1分1敗
+    - - パレスの得点
+      - '1'
+      - '5'
+    - - パレスの失点
+      - '6'
+      - '5'
+    - - 鎌田のアシスト
+      - '0'
+      - '3'
+    - - 採点の平均
+      - '7.1'
+      - '7.5'
+  telop: 1列前の3試合で、パレスの得点は1から5へ
+  say:
+  - text: 最後に、プレミアの5試合を位置で2つに分けて数えました。
+    image: assets/images/20261006_season_kamada/03_v.jpg
+    card:
+      type: table
+      title: 鎌田大地 位置で分けたプレミア5試合
+      columns: *id008
+      rows: *id009
+  - text: ボランチで出た2試合は、2敗。パレスの得点は1、失点は6です。
+    card:
+      type: table
+      title: 鎌田大地 位置で分けたプレミア5試合
+      columns: *id008
+      rows: *id009
+      highlight_row: 1
+  - text: シャドーで出た3試合は1勝1分け1敗。チームの得点は1から5に増えました。
+    emph: true
+    card:
+      type: table
+      title: 鎌田大地 位置で分けたプレミア5試合
+      columns: *id008
+      rows: *id009
+      highlight_row: 2
+  - text: 失点は6から5。守りの数字は、ほとんど変わっていません。
+    card:
+      type: table
+      title: 鎌田大地 位置で分けたプレミア5試合
+      columns: *id008
+      rows: *id009
+      highlight_row: 3
+  - text: アシストは3つともシャドーの試合。採点の平均も7.1から7.5に上がりました。
+    card:
+      type: table
+      title: 鎌田大地 位置で分けたプレミア5試合
+      columns: *id008
+      rows: *id009
+      highlight_row: 4
+  - text: 鎌田が1列前に出たことで、パレスの点の取り方が変わった、と読めます。
+    card:
+      type: table
+      title: 鎌田大地 位置で分けたプレミア5試合
+      columns: *id008
+      rows: *id009
+  - text: ただ、数えたのは2試合と3試合。相手の強さもそろっていません。
+    card:
+      type: table
+      title: 鎌田大地 位置で分けたプレミア5試合
+      columns: *id008
+      rows: *id009
+      highlight_row: 0
+  - text: 代表では9月からの4試合すべてに出て、10月5日の決勝はボランチで先発しました。
+    image: assets/images/20261006_season_kamada/04_w.jpg
+    card: none
+  - text: クラブに戻って次は10月11日、本拠でノッティンガム・フォレストと戦います。
+    image: assets/images/20261006_season_kamada/03_v.jpg
+    card:
+      type: table
+      title: 鎌田大地 位置で分けたプレミア5試合
+      columns: *id008
+      rows: *id009
+  - text: シャドーのまま4つ目のアシストを狙うのか、ボランチに戻るのか。
+    card:
+      type: table
+      title: 鎌田大地 位置で分けたプレミア5試合
+      columns: *id008
+      rows: *id009
+      highlight_row: 4
+  - text: その位置で、3試合で5点という数字が続くかどうかが見えてきます。
+    card:
+      type: table
+      title: 鎌田大地 位置で分けたプレミア5試合
+      columns: *id008
+      rows: *id009
+      highlight_row: 2
+  - text: ボランチか、シャドーか。ネット民の見方も分かれています。
+    card: none
+  sources:
+  - https://www.fotmob.com/players/621515/daichi-kamada
+  - https://www.transfermarkt.jp/daichi-kamada/leistungsdatendetails/spieler/356141
+  - https://www.jfa.jp/samuraiblue/kirincupsoccer_2026/match_page/m4.html
+  - https://www.soccer-king.jp/news/japan/national/20261005/2213679.html
+- id: voices
+  heading: ネットの声
+  tier: 未確認
+  narrator: キャスター
+  telop: シャドーの鎌田、ネット民の見方
+  say:
+  - voice: ネット民
+    text: 鎌田選手は今のチームではシャドーが一番似合いそう。
+    card: none
+  - voice: ネット民
+    text: ボランチで攻守のバランスを取りつつ、
+    cont: true
+    card: none
+  - voice: ネット民
+    text: ゲーム展開をコントロール出来る類いまれなプレイヤーだけど、
+    cont: true
+    card: none
+  - voice: ネット民
+    text: やはりゴールに近いポジションでのプレイは魅力的。
+    cont: true
+    card: none
+  - voice: ネット民
+    text: これからもシャドーで得点やアシストを積み重ねる
+    cont: true
+    card: none
+  - voice: ネット民
+    text: 鎌田選手の姿を是非見たい。
+    cont: true
+    card: none
+  - voice: ネット民
+    text: 才能の塊の人。
+    card: none
+  - voice: ネット民
+    text: アタッカーとして優秀だから前で使っても機能するけど、
+    cont: true
+    card: none
+  - voice: ネット民
+    text: 彼以上に視野とビジョンがあるレジスタはいないから
+    cont: true
+    card: none
+  - voice: ネット民
+    text: その能力を使わないのも勿体ない。
+    cont: true
+    card: none
+  - voice: ネット民
+    text: 監督は悩むでしょうね。
+    cont: true
+    card: none
+  - voice: ネット民
+    text: シャドーも全然いけるんちゃうの？
+    short_voice: true
+    card: none
+  sources:
+  - https://news.yahoo.co.jp/articles/0bf9100c5bf543607ee934515e0f1c36315d6ec4/comments
+  - https://news.yahoo.co.jp/articles/25eb376310d81d854e4aadcdc867cbf47cb72767/comments

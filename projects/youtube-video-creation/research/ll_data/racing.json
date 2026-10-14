@@ -1,0 +1,82 @@
+{
+ "title": "ラシン・サンタンデール 基礎DATA",
+ "colors": [
+  "#0A6B3A",
+  "#FFFFFF"
+ ],
+ "crest": "assets/crests/ラシンサンタンデール.png",
+ "tiles": [
+  [
+   "クラブ創立",
+   "1913年",
+   "最初の試合は地元の相手に1対2"
+  ],
+  [
+   "愛称",
+   "ベルディブランコス",
+   "スペイン語で「緑と白」"
+  ],
+  [
+   "ホームタウン",
+   "サンタンデール",
+   "カンタブリア州の州都。港町"
+  ],
+  [
+   "本拠地",
+   "エル・サルディネーロ",
+   "収容 22,514人（クラブ発表）"
+  ],
+  [
+   "オーナー",
+   "セバスティアン・セリア",
+   "2023年〜。会長と2人で株の74%"
+  ],
+  [
+   "タイトル歴",
+   "1部優勝 0回",
+   "国王杯0・スーペルコパ0"
+  ],
+  [
+   "最多出場",
+   "460試合",
+   "GKセバージョス、1989〜2003年"
+  ],
+  [
+   "直近のタイトル",
+   "2部優勝",
+   "2025-26シーズン"
+  ],
+  [
+   "昨季の順位",
+   "2部 1位",
+   "勝ち点82。昇格"
+  ]
+ ],
+ "trophies": [
+  [
+   "ラ・リーガ",
+   0
+  ],
+  [
+   "国王杯",
+   0
+  ],
+  [
+   "スーペルコパ",
+   0
+  ],
+  [
+   "ヨーロッパ",
+   0
+  ]
+ ],
+ "sources": [
+  "https://en.wikipedia.org/wiki/Racing_de_Santander",
+  "https://es.wikipedia.org/wiki/Real_Racing_Club_de_Santander",
+  "https://www.realracingclub.es/informacion",
+  "https://en.wikipedia.org/wiki/2025%E2%80%9326_Segunda_Divisi%C3%B3n",
+  "https://www.relevo.com/futbol/liga-segunda/racing-vendido-sebman-sports-international-20230711211207-nt.html",
+  "https://en.wikipedia.org/wiki/Jos%C3%A9_Mar%C3%ADa_Ceballos"
+ ],
+ "notes": "取材の控えは research/ll_data/racing_research.md。創立日は 1913年2月23日（英語版 infobox・西語版「最初の試合の日を誕生日とする」）／1913年6月14日（クラブ公式の「Fundación」、英語版本文の「officially founded」）と割れるので、年だけ言う。収容人数は 22,514（クラブ公式・西語版 infobox）／22,222（英語版・2025-26 Segunda の表）／22,308（2026-27 La Liga の表）／22,124（西語版本文）と割れるので、クラブ発表の数字を採った。オーナーは英語版・西語版 infobox とも Sebastián Ceria。2023年7月に Sebman Sports International（Ceria と現会長 Manuel Higuera の会社）が株の74%を取得（Relevo、Efe 経由）。最多出場 460 は公式戦（英語版・西語版とも）。在籍年は 1989-2003（西語版本文「14 temporadas consecutivas entre 1989 y 2003」）／1988-2003（英語版 infobox）。1部の最高は 1930-31 の2位。昨季は 2025-26 Segunda で 25勝7分10敗・90得点61失点・勝ち点82で優勝（2位デポルティーボ 77）。"
+}

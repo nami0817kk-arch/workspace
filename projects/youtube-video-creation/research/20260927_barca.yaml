@@ -1,0 +1,107 @@
+date: 2026年9月27日
+slot: laliga_1
+format: news
+voice_min: 0.45
+people: [ラフィーニャ, ルイス・ガルシア]
+theme:
+  id: barca_start
+  league: spain
+  league_name: ラ・リーガ
+  kind: match
+  topic: バルセロナ
+  title: 'バルセロナの開幕8連勝。この滑り出しより上にいたチーム'
+  question: バルサの出だしは、どれほどのものか
+short_title: バルセロナ8連勝、上には1チームだけ
+thumbnail:
+  photo: assets/images/20260927_barca/01.jpg
+  line1: バルサ8戦全勝
+  line2: 上にいるのは●●年前の1チーム
+sections:
+  - id: run
+    heading: 8戦全勝、36得点
+    tier: 報道
+    telop: 公式戦8試合で8勝。36得点8失点
+    narrator: キャスター
+    card:
+      type: table
+      title: バルセロナ 今季の公式戦
+      columns: ['', '']
+      rows:
+        - [ラ・リーガ, 7試合7勝・31得点7失点]
+        - [チャンピオンズリーグ, 1試合1勝・5対1]
+        - [合計, 8試合8勝・36得点8失点]
+    say:
+      - 今季のバルセロナは、公式戦8試合で8勝。点は**36**取って、取られたのは**8**です。
+      - 5点以上を取った試合が、8試合のうち**5回**あります。
+      - いちばん点を取っているのは、主将のラフィーニャ。公式戦で**14点**です。
+      - ラ・リーガは7連勝で首位。2位のアトレティコに、勝ち点で**5**の差をつけています。
+      - text: 8試合目は敵地のセビージャ戦。ラフィーニャが2試合続けてハットトリックを決め、3対1で勝ちました。
+        card: {type: table, title: 8試合目, columns: ['', ''], rows: [[9月19日, セビージャに3対1で勝利], [ラフィーニャ, 2試合続けてハットトリック]]}
+      - text: 敗れたセビージャのルイス・ガルシア監督は、こう話しています。
+        image: assets/images/20260927_pair_luisgarcia_raphinha/01.jpg
+      - voice: ルイス・ガルシア
+        text: バルサは最高の水準でプレーしている。ただ、私の関心はセビージャだ
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50004145/why-barcelona-start-season-laliga-champions-league-best-europe-top-5-leagues-almost-100-years
+      - https://site.api.espn.com/apis/v2/sports/soccer/esp.1/standings
+      - https://www.espn.com/soccer/story/_/id/49983111/raphinha-ballon-dor-sevilla-luis-garcia-joke-barcelona-hat-trick
+  - id: century
+    main: true
+    heading: 上にいるのは98年前の1チーム
+    tier: 報道
+    telop: 最初の8試合の得失点差で、1928-29年のレアル・マドリード以来の数字
+    narrator: キャスター
+    card:
+      type: table
+      title: 最初の8試合の得失点差（5大リーグ）
+      columns: [国, クラブ, 得失点差]
+      rows:
+        - [スペイン, レアル・マドリード 1928-29, ＋31]
+        - [スペイン, バルセロナ 2026-27, ＋28]
+        - [ドイツ, バイエルン 2016-17, ＋26]
+    say:
+      - text: 'バルセロナが公式戦で8連勝。36点取って、取られたのは8点です。'
+        short_only: true
+        image: assets/images/20260927_barca/01.jpg
+      - text: この滑り出しは、ヨーロッパの5大リーグで、ほぼ100年ぶりのものです。
+        image: assets/images/20260927_barca/01.jpg
+      - 比べたのは、シーズン最初の8試合の得失点差。バルサは**プラス28**。
+      - ドイツの最高、2016年のバイエルンでも**プラス26**です。
+      - これを上回るのは、98年前、1928年のレアル・マドリードだけ。**プラス31**でした。
+      - マドリードのその8試合は、すべて国王杯。リーグ戦が始まる前の記録です。
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50004145/why-barcelona-start-season-laliga-champions-league-best-europe-top-5-leagues-almost-100-years
+      - https://now.core.api.espn.com/v1/sports/news/50004145
+      - https://www.espn.com/soccer/story/_/id/49983111/raphinha-ballon-dor-sevilla-luis-garcia-joke-barcelona-hat-trick
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: 「強すぎるんだよ、まじで」
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: 強すぎるんだよ、まじで。バランスもいいし穴がない
+      - voice: ネット民
+        text: ２試合連続ハット。しかも強敵セビージャのアウェー
+      - voice: ネット民
+        text: この価値は凄いね。
+        cont: true
+      - voice: ネット民
+        text: フリックになってからラフィーニャ覚醒したって言ってたけど、さらに覚醒してとんでもないバケモノになっちまった
+      - voice: ネット民
+        text: リーズにいた頃にまさかこんなに大化けするとは全く思わんかったわ。
+      - voice: ネット民
+        text: 本人の才能も凄いが指導者との相性がいかに大事かがよくわかった
+        cont: true
+      - voice: ネット民
+        text: ラフィーニャ何なら本職のWGより、CFの方が生き生きしてる
+      - voice: ネット民
+        text: 一時メッシ超えの記録も11-12の50ゴールが異次元と再認識させられるのか記録に迫ってラフィーニャすげえってなるのか楽しみ
+      - voice: ネット民
+        text: 難所攻略。こりゃバルサもハフィーニャも止まらんな。
+      - voice: ネット民
+        text: バルサファンは向こう数年は楽しそうだね
+        short_voice: true
+    sources:
+      - https://news.yahoo.co.jp/articles/a6bb22e3326063510d500e7af3192ade338732c2/comments
+      - https://news.yahoo.co.jp/articles/98e8d5103daf41f679caf88457b3ed54b96515fd/comments

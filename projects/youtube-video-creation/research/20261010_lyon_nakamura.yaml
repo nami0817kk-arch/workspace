@@ -1,0 +1,239 @@
+# 取材メモ（10/10 題材 lyon_nakamura、型は news、日本人枠）。材料の控えは research/raw/20261010_lyon_nakamura_material.md。
+# **ショートだけ作る**（台本は1本。`short` が山場の節を切り出す）。
+# **いちばん気をつけたところ：「ランス」の取り違え**（材料 0）。
+#   この試合の相手は **Lens（RCランス、北部パ・ド・カレー県、Stade Bollaert-Delelis）**。
+#   中村敬斗が 2023-08-10〜2026-09-01 にいたのは **Reims（スタッド・ドゥ・ランス）** で、**別のクラブ**。
+#   日本語ではどちらも「ランス」なので、①で「同じ読みの別のクラブです」と**はっきり言い分ける**。
+#   **「元所属のランス」とは一度も書いていない。**
+# **中村本人の言葉も、リヨンの監督の言葉も取れていない**（材料 7）。だから**声は1つも無い**台本にした。
+#   リヨンの監督名も一次情報で確定できなかったので、**監督名は出さない**（材料 7 の指示）。
+# 数字の食い違い（材料 6）の扱い：
+#   ・10/5 ニュージーランド戦の出場は FotMob と報道で食い違う（材料 6-1）ので、
+#     **代表の「191分」は使っていない**。代表の話は「4連戦のうち3試合に出た」までに留めた。
+#   ・評点は FotMob の値だけ（フランス紙の採点は取れていない）。だから画面でも「この試合に付いた点」とだけ言う。
+# 数字の重なり対策：『30分』『6.3』は②だけ。『56分』『146分』『61.6%』は③だけ。
+#   『2失点』『9.0』『16歳』『8分』は④だけ。スコアの2-1は①だけ。
+# 写真は記事の横長を先に当たった。02＝サッカーキングの記事の og:image（この試合そのもの。リヨンの黒いユニフォーム、
+#   相手は黄と赤のランス＝Lens）。facecrop で 02_w（16:9）と 02_v（9:16）。
+#   01（Commons、CC BY-SA 4.0 / Werner100359、2022年のLASK時代）は**古いので使わない**。入れ替えは無し。
+# サムネ：構図 number（リヨンでのリーグ戦の最長が30分）。
+# ネットの反応は集めていない（材料の方針）。
+date: 2026年10月10日
+slot: japan_2
+format: news
+voice_min: 0
+people:
+- 中村敬斗
+- リヨン
+theme:
+  id: lyon_nakamura
+  league: france
+  league_name: リーグ・アン
+  kind: match
+  topic: 中村敬斗
+  title: 中村敬斗の30分。リヨンに来てからの出場時間を足すとどうなるか
+  question: 中村敬斗の30分は、リヨンでのここまでと比べてどういう30分だったのか
+  takeaway: 中村敬斗が10月9日に出た30分は、リヨンに移ってからのリーグ戦でいちばん長い出場だった。開幕戦が15分、2試合目が11分で、3試合を足しても56分にしかならない。リヨンで過ごした時間は公式戦で146分あり、その61.6%は9月16日のヨーロッパリーグ、初先発で初ゴールを決めた1試合が占めている。この日は60分に負傷したオペンダと代わって入り、67分に左から切り込んでシュートを放った。シュートは2本、相手ボックス内のタッチは7回で、点は6.3だった。試合はランス、つづりはLensのほうのクラブが2-1で勝ち、リヨンは開幕5試合無敗から今季初黒星。2点はどちらも33歳のトゥヴァンのパスから生まれ、この試合の最高点9.0が付いている。中村が3年いたランスはReimsで、同じ読みの別のクラブ
+  opening_image: assets/images/20261010_lyon_nakamura/06.jpg
+short_title: 中村敬斗がリヨンで過ごした最長の30分。3試合を足しても56分にしかならない
+thumbnail:
+  layout: number
+  photo: assets/images/20261010_lyon_nakamura/06.jpg
+  short_photo: assets/images/20261010_lyon_nakamura/06_v.jpg
+  number: 30分
+  line1: 中村敬斗 リヨン
+  line2: 3試合あわせて●●分
+  tags:
+  - 中村敬斗
+  - リヨン
+  - リーグ・アン
+sections:
+- id: what
+  heading: 相手は、同じ読みの別のランス
+  tier: 報道
+  telop: ランス 2-1 リヨン。この相手は北部のランスで、中村が3年いたランスとは別のクラブ
+  narrator: キャスター
+  card: &score
+    type: score
+    competition: リーグ・アン 第6節
+    home: ランス
+    away: リヨン
+    score: 2 - 1
+    home_scorers:
+    - 36分 ソトカ
+    - 76分 ウドル
+    away_scorers:
+    - 85分 メラ
+    note: スタッド・ボラエール＝ドゥリス
+  say:
+  - text: リヨンが敵地で2対1で敗れました。
+    card: *score
+  - text: ここで先に、ひとつ分けておきたいことがあります。
+    card: none
+  - text: この相手は北部のランス。中村敬斗が3年いたランスとは、同じ読みの別のクラブです。
+    card: none
+    emph: true
+  - text: 中村が97試合で30得点を挙げたほうのランスは、今季このリーグにいません。
+    card: none
+  - text: 先制は36分、35歳のソトカ。2点目は76分、ウドルのヘッドでした。
+    card: *score
+  - text: リヨンが返したのは85分、19歳のメラ。1点差のまま終わっています。
+    card: *score
+  sources:
+  - https://www.soccer-king.jp/news/world/fra/20261010/2215050.html
+  - https://www.espn.com/soccer/match/_/gameId/401876447
+  - https://www.fotmob.com/matches/lens-vs-lyon/2s3gtg#5802947
+- id: thirty
+  main: true
+  heading: 60分から、いちばん長い30分
+  tier: 報道
+  telop: 負傷したオペンダと交代で60分から出場。シュート2本、相手ボックス内のタッチ7回
+  narrator: キャスター
+  card: &his
+    type: stats
+    title: 中村敬斗のこの30分
+    items:
+    - - '30'
+      - 分
+      - リヨンでの最長
+    - - '2'
+      - 本
+      - シュート
+    - - '7'
+      - 回
+      - 相手ボックス内のタッチ
+    focus: 0
+  say:
+  - text: 中村敬斗が入ったのは、北部のランスとの試合の後半なかばでした。
+    short_only: true
+  - text: 58分に相手のオペンダが倒れ、その交代で60分から中村がピッチに立ちます。
+    card: *his
+  - text: 持ち時間は30分。開幕戦で与えられた15分の、ちょうど2倍です。
+    card: *his
+    emph: true
+  - text: 67分には左から中へ切り込んでシュート。この試合のシュートは2本でした。
+    card:
+      <<: *his
+      focus: 1
+  - text: 相手ボックスの中で触ったのは7回。90分に直すと21回のペースです。
+    card:
+      <<: *his
+      focus: 2
+  - text: 付いた点は6.3。リヨンでいちばん高かったのは、得点した19歳メラの7.3でした。
+    card: none
+    image: assets/images/20261010_lyon_nakamura/06.jpg
+  sources:
+  - https://www.fotmob.com/matches/lens-vs-lyon/2s3gtg#5802947
+- id: minutes
+  heading: 3試合を足しても、1試合に届かない
+  tier: 報道
+  telop: リーグ戦は15分・11分・30分で合計56分。リヨンでの146分のうち61.6%は、ある1試合
+  narrator: キャスター
+  card: &mins
+    type: table
+    title: リヨンでのリーグ戦3試合
+    columns:
+    - 日付
+    - 相手
+    - 出場
+    - 点
+    rows:
+    - - 9月12日
+      - パリFC
+      - 15分
+      - '6.0'
+    - - 9月19日
+      - レンヌ
+      - 11分
+      - '6.3'
+    - - 10月9日
+      - ランス
+      - 30分
+      - '6.3'
+  say:
+  - text: 中村がリヨンに移ったのは、9月1日です。
+    card: none
+  - text: リーグ戦は3試合に出て、15分、11分、そして今回。足すと56分です。
+    card: *mins
+  - text: 3試合を合わせても、1試合の90分には届いていません。
+    card: *mins
+  - text: 公式戦では146分を過ごしていて、その61.6%はある1試合のものです。
+    card: &share
+      type: calc
+      title: リヨンでの146分の中身
+      terms:
+      - - '90'
+        - ある1試合
+      - - '146'
+        - リヨンでの全出場
+      - - 61.6%
+        - その割合
+      ops:
+      - ÷
+      - ＝
+  - text: 9月16日のヨーロッパリーグ、初先発で90分。初ゴールも決めています。
+    card: none
+    image: assets/images/20261010_lyon_nakamura/06.jpg
+    emph: true
+  - text: 代表の4連戦では3試合に出ていて、クラブより代表で長く走っていました。
+    card: none
+  sources:
+  - https://www.fotmob.com/players/887704/keito-nakamura
+  - https://www.fotmob.com/leagues/53/overview/ligue-1
+- id: view
+  viewpoint: true
+  heading: 5試合で2失点のチームが、1試合で2点を失った
+  tier: 背景
+  telop: リヨンは開幕5戦無敗から今季初黒星。2失点は前の5試合の合計と同じ
+  narrator: 解説
+  card: &lost
+    type: calc
+    title: リヨンの失点
+    terms:
+    - - '4'
+      - 6試合の失点
+    - - '2'
+      - この試合の失点
+    - - '2'
+      - 前の5試合の合計
+    ops:
+    - －
+    - ＝
+  say:
+  - text: リヨンは開幕から5試合を無敗で来ていました。3勝2分けです。
+    card: none
+  - text: 今季のリーグ戦で、負けたのはこの試合が初めてです。
+    card: *lost
+  - text: 失点は6試合で4。この1試合の2点は、前の5試合の合計と同じ。
+    card: *lost
+    emph: true
+  - text: 相手の2点は、どちらも33歳のトゥヴァンのパスから生まれています。
+    card: &thauvin
+      type: table
+      title: ランスの2点をつくった1人
+      columns:
+      - 時間
+      - 得点者
+      - 誰のパスから
+      rows:
+      - - 36分
+        - ソトカ
+        - トゥヴァンのスルーパス
+      - - 76分
+        - ウドル
+        - トゥヴァンのクロス
+      highlight_row: 0
+  - text: 2点とも同じ1人。この試合の最高点9.0が、その選手に付きました。
+    card:
+      <<: *thauvin
+      highlight_row: 1
+  - text: 先制した35歳と、返した19歳。得点者の年齢は16歳離れていました。
+    card: none
+  - text: 2点目を決めたウドルは、その8分後に一発退場になっています。
+    card: none
+  - text: 相手が10人になってからの時間に、中村はピッチの上にいました。
+    card: none
+    image: assets/images/20261010_lyon_nakamura/06.jpg
+  sources:
+  - https://www.fotmob.com/leagues/53/overview/ligue-1
+  - https://www.espn.com/soccer/match/_/gameId/401876447

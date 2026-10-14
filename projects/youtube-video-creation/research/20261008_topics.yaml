@@ -1,0 +1,164 @@
+title: 10月8日の題材
+lead: シリーズ6本はこちらで決めました。ニュースは16件から○×をお願いします
+note: '<b>ニュースに○×を付けてください。</b>今日の本編10本は、シリーズ6本＋ニュース4本（日本人3・ほか1）の予定です。シリーズ（21〜26）はこちらで決めました。外したいものには×を、入れ替えたいときは予備（27・28）に○を付けてください。<br><b>写真の注意：</b>ニュース16件のうち14件は、記事の写真が代理店（Getty・アフロ・ロイター）の配信でした。○が付いたものは、代理店でない写真を別に探します。見つからなければ、その時点で知らせます。<br>欧州のリーグ戦は10/10〜12に再開します。書き出しが1本2〜3分に速くなったので、今日は時間に余裕があります。'
+items:
+- num: 21
+  slot: シリーズ
+  fmt: クラブ紹介
+  head: ラ・リーガ紹介⑨エルチェ
+  why: 9/26 に作った台本を、今日の数字・見立ての節・冒頭の強い一点に合わせて直して出す（デポルティーボの続き）
+  src: 作り置き（20260926_ll09_elche）
+- num: 22
+  slot: シリーズ
+  fmt: 選手紹介
+  head: 選手紹介⑧ジョアン・ネヴェス（パリ・サンジェルマン）
+  why: 10/6 のベリンガムの回の終わりの画面で「明日は⑦ジョアン・ネヴェス」と予告していた（実際に出したのはヴィニシウス）。ここで出せば予告と合う。22歳、市場価値1.4億ユーロ
+  src: 選手紹介の型（tools/player_intro.py）
+- num: 23
+  slot: シリーズ
+  fmt: 数字で見る
+  head: 得点王レース、代表ウィーク明けの5大リーグ
+  why: 木曜の型。10/1 の控えと比べて先週からの動き（首位交代・独走・PK頼み・日本人）を出す。新しい板（散らばり図＝得点×期待値）の初回に向く
+  src: tools/scorers.py（控えは 10/1）
+- num: 24
+  slot: シリーズ
+  fmt: 1年前の噂
+  head: 1年前の移籍の噂、本当になったのはどれか
+  why: 2025年10月に出ていた移籍の噂を並べ、◎○△×で答え合わせ（新しい判定表の板が向く）。噂の出どころと、実際にどうなったかを原典で確かめる
+  src: 1年前の報道（要調査）
+- num: 25
+  slot: シリーズ
+  fmt: 移籍の答え合わせ
+  head: 夏の高額移籍、3か月たっていちばん応えているのは誰か
+  why: 10/5 に初回を出した型の続き。今回は「出場時間あたりの得点関与」で並べ替えるなど、前回と違う切り口にする（前回は10人の出場と得点）
+  src: Transfermarkt（自分で数える）・前回の控え 20261005_transfer_review
+- num: 26
+  slot: シリーズ
+  fmt: 次の相手
+  head: 日本人選手の週末、10月10〜12日の相手はどこか
+  why: リーグ戦再開。日本人のいるクラブの週末の試合を並べ、相手の今（順位・直近5試合）と、その試合の日本人の今季の数字を出す
+  src: tools/next_opponent.py
+- num: 27
+  slot: シリーズ（予備）
+  fmt: 記録
+  head: アルテタ、アーセナルで2030年まで。プレミア最高給の中身
+  why: 総額8000万ポンド超・年俸最大2500万ポンド。歴代の監督の年俸と並べる
+  src: The Guardian・The Times（10/7〜8）
+- num: 28
+  slot: シリーズ（予備）
+  fmt: クラブの財政
+  head: ペドロが39歳で引退。バルサ321試合99得点と、獲った銀器
+  why: W杯・EURO・CL3回。同じ時代のバルサの選手と数字で並べる
+  src: サッカーキング（10/7）
+- num: 1
+  slot: 日本人
+  fmt: news
+  head: 三笘薫、ブライトンが示した復帰の段取り。11月の代表には間に合うのか
+  why: 監督が「リハビリは第2段階」。復帰まで4週以上で、11/14 のブラジル戦は欠場が濃厚。日本代表にとって大きい
+  src: Sussex World（football-tribe 経由、10/8）
+  url: https://football-tribe.com/japan/2026/10/08/360170/
+- num: 2
+  slot: 日本人
+  fmt: news
+  head: 中村敬斗、代表から戻って2日でリヨンの練習へ。9日のランス戦に出るのか
+  why: 10/7 に全体練習へ即合流。現地メディアは「良いニュース」。リーグ戦再開のいちばん早い試合
+  src: Olympique et Lyonnais（フットボールチャンネル経由、10/8）
+  url: https://www.footballchannel.jp/2026/10/08/post1029414/
+- num: 3
+  slot: 日本人
+  fmt: news
+  head: 鈴木彩艶、アジアカップでヴィラを最大7試合空ける。そこにCLの2試合が入る
+  why: 昨日の「招集のルール」の回を、クラブ側から見た続き。英メディアが1月の穴を指摘
+  src: Football Insider（football-tribe 経由、10/7）
+  url: https://football-tribe.com/japan/2026/10/07/360156/
+- num: 4
+  slot: 日本人
+  fmt: news
+  head: 田中碧、リーズの地元メディアが喜んだ代表での扱い。10日はアーセナル戦
+  why: 4連戦で先発は1試合だけ。現地は「サポーターと監督にとっては前向き」。写真が代理店でない数少ない1件
+  src: MOT Leeds News（サッカーダイジェスト経由、10/8）
+  url: https://www.soccerdigestweb.com/news/detail/id=198197
+- num: 5
+  slot: 日本人
+  fmt: news
+  head: 板倉滉、ドイツ紙が書いた「エクアドル戦で使った理由が理解できない」
+  why: 監督は「軽い問題」。ビルトが代表での起用に苦言。クラブと代表の板挟み
+  src: Bild（football-tribe 経由、10/7）
+  url: https://football-tribe.com/japan/2026/10/07/360129/
+- num: 6
+  slot: 日本人
+  fmt: news
+  head: 渡辺剛の負傷、オランダの記者が気にしたのは発表の仕方だった
+  why: 「日本サッカー協会は当初、負傷の程度を発表していなかった」。10/10 の AZ 戦には出る見込み
+  src: VoetbalPrimeur（football-tribe 経由、10/7）
+  url: https://football-tribe.com/japan/2026/10/07/360158/
+- num: 7
+  slot: 日本人
+  fmt: news
+  head: 鎌田大地と冨安健洋、英メディアがパレスの序列で3位と4位に置いた
+  why: パレスは5試合1勝1分3敗で15位。2人の位置づけを数字で見る
+  src: The Athletic（Qoly 経由、10/7）
+  url: https://qoly.jp/q1/17868669
+- num: 8
+  slot: 日本人
+  fmt: news
+  head: 田中聡、キッカーが書いたシャルケの売値は「1000万ユーロ超もあり得る」
+  why: デュエルの勝率65.3%がブンデス1部2部で2位。2部からの評価の上がり方
+  src: kicker（football-tribe 経由、10/7）
+  url: https://football-tribe.com/japan/2026/10/07/360135/
+- num: 9
+  slot: 日本人
+  fmt: news
+  head: 大橋祐紀、ブラックバーンとの契約が今季末。90試合20得点のあとの選択
+  why: 期限が見えている移籍の話
+  src: Football League World（サッカーダイジェスト経由、10/4）
+  url: https://www.soccerdigestweb.com/news/detail/id=198177
+- num: 10
+  slot: 日本人
+  fmt: quote
+  head: 堂安律、325日ぶりの代表ゴールで語った森保監督との8年
+  why: 「森保さんと自分は、たいていの人よりずっと深い物語を共有している」。写真が代理店でない数少ない1件。ただし堂安は 10/5・10/6 にも回がある
+  src: フットボールチャンネル・サッカーキング（10/6〜7）
+  url: https://www.footballchannel.jp/2026/10/07/post1028595/
+- num: 11
+  slot: ほか
+  fmt: quote
+  head: ロナウド、ポルトガル代表を離れたあとに出した声明。出場時間の約束とは
+  why: 本人が約束が破られたと主張。モドリッチも10/7に言及
+  src: サッカーダイジェスト（10/7）
+  url: https://www.soccerdigestweb.com/news/detail/id=198182
+- num: 12
+  slot: ほか
+  fmt: news
+  head: ハーランド「単純に疲れ切っていた」。11日のリヴァプール戦へ
+  why: 代表の試合のあとの状態。週末の大一番の前
+  src: Mirror（サッカーキング経由、10/7）
+  url: https://www.soccer-king.jp/news/world/world_other/20261007/2214088.html
+- num: 13
+  slot: ほか
+  fmt: news
+  head: ギュレル、レアルと2031年まで。モウリーニョが絶賛した20歳
+  why: 延長の合意
+  src: AS（サッカーキング経由、10/7）
+  url: https://www.soccer-king.jp/news/world/esp/20261007/2214177.html
+- num: 14
+  slot: ほか
+  fmt: news
+  head: サウサンプトンの監督、スパイ行為で6週間の活動禁止
+  why: 独立委員会の処分。2万8000ポンドの罰金。一次情報（委員会の判断）まで辿る
+  src: BBC（フットボールチャンネル経由、10/8）
+  url: https://www.footballchannel.jp/2026/10/08/post1029243/
+- num: 15
+  slot: ほか
+  fmt: news
+  head: アルテタ、アーセナルで2030年まで。プレミア最高給の監督に
+  why: 27 と同じ話なので、出すならどちらか
+  src: The Guardian・The Times（10/7〜8）
+  url: https://www.footballchannel.jp/2026/10/08/post1029420/
+- num: 16
+  slot: ほか
+  fmt: news
+  head: ペドロ、39歳で現役引退。バルサ321試合99得点
+  why: 28 と同じ話なので、出すならどちらか
+  src: サッカーキング（10/7）
+  url: https://www.soccer-king.jp/news/world/ita/20261007/2214206.html

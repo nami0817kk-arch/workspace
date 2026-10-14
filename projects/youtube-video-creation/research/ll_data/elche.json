@@ -1,0 +1,84 @@
+{
+ "title": "エルチェ 基礎DATA",
+ "colors": [
+  "#05642C",
+  "#FFFFFF"
+ ],
+ "crest": "assets/crests/エルチェ.png",
+ "tiles": [
+  [
+   "クラブ創立",
+   "1923年",
+   "花火師の作業場に町の代表が集まる"
+  ],
+  [
+   "愛称",
+   "フランヒベルデス",
+   "「緑の帯の者たち」。白地に緑の帯"
+  ],
+  [
+   "ホームタウン",
+   "エルチェ",
+   "アリカンテ県。ヤシ林は世界遺産"
+  ],
+  [
+   "本拠地",
+   "マルティネス・バレーロ",
+   "収容 31,388人（クラブ発表）"
+  ],
+  [
+   "オーナー",
+   "クリスティアン・ブラガルニク",
+   "2019年〜。株の90%を取得"
+  ],
+  [
+   "タイトル歴",
+   "1部優勝 0回",
+   "国王杯0・スーペルコパ0"
+  ],
+  [
+   "最多出場",
+   "461試合",
+   "ニーノ。135得点もクラブ最多"
+  ],
+  [
+   "直近のタイトル",
+   "2部優勝",
+   "2012-13シーズン"
+  ],
+  [
+   "昨季の順位",
+   "15位",
+   "勝ち点43。1部に残留"
+  ]
+ ],
+ "trophies": [
+  [
+   "ラ・リーガ",
+   0
+  ],
+  [
+   "国王杯",
+   0
+  ],
+  [
+   "スーペルコパ",
+   0
+  ],
+  [
+   "ヨーロッパ",
+   0
+  ]
+ ],
+ "sources": [
+  "https://en.wikipedia.org/wiki/Elche_CF",
+  "https://es.wikipedia.org/wiki/Elche_Club_de_F%C3%BAtbol",
+  "https://www.elchecf.es/la-fundacion",
+  "https://www.elchecf.es/estadio",
+  "https://es.wikipedia.org/wiki/Christian_Bragarnik",
+  "https://en.wikipedia.org/wiki/Nino_(footballer,_born_1980)",
+  "https://en.wikipedia.org/wiki/Elche",
+  "https://en.wikipedia.org/wiki/Template:2025%E2%80%9326_La_Liga_table"
+ ],
+ "notes": "取材の控えは research/ll_data/elche_research.md。創立は1923年（英語版 infobox・クラブ公式）／1922年8月28日創立・1923年1月10日連盟登録（西語版）と割れるので、英語版とクラブ公式の1923年を採った。収容人数は 31,388（クラブ公式・2026–27 La Liga の表・西語版 infobox）／33,732（英語版。出典は2015年のアーカイブ）と割れるので、改修後のクラブ発表を採った。最多出場は英語版 Nino 記事の冒頭（全公式戦461試合135得点）。直近のタイトルは英語版 Honours にある2部優勝（1部・国王杯・スーペルコパ・欧州の優勝は無い）。昨季15位は 13〜15位が勝ち点43で並び直接対決の勝ち点で決まった。"
+}

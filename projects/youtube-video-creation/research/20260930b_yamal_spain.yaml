@@ -1,0 +1,309 @@
+# 取材メモ（9/30 昼の題材 2）。UEFAネーションズリーグ A3 第2節 スペイン 4-1 クロアチア（9/29・セビージャ、サンチェス・ピスフアン）。
+# 事実の裏:
+#   得点: 2分（70秒）ヤマル／28分 ベーリョ（ペリシッチのクロスを頭）／31分 プビル（ヤマルのクロス）／63分 ヤマル（ペドリのスルーパス、角度のない所からニア）／89分 ニコ・ウィリアムズ。
+#     時刻はゲキサカ・フットボールチャンネル（Yahoo!）・Al Jazeera（Reuters）で一致。ESPN はアシストを30分、RFEF は4点目を88分と書く。台本は31分・「終了間際」。
+#   先制までのパス24本、相手に一度も触らせず（ゲキサカ）。ヤマルは68分にニコ・ウィリアムズと交代（RFEF の先発表・フットボールチャンネル）。
+#   ウェンブリー（9/26 イングランド 2-3 スペイン）の先制は104秒、この日は70秒。「2試合続けて最初の2分で得点は初めて」（RFEF のクロニカ）。
+#   40試合無敗: 365Scores の一覧（31勝9分、最後の負けは 2024-03-22 コロンビア 0-1）。年ごと: 2024 16試合14勝2分／2025 10試合6勝4分／2026 14試合11勝3分。
+#     2025 NL 決勝ポルトガル 2-2（PK負け）は記録上は引き分け（elespanol・365Scores）。前の最長はイタリアの37（2018〜21、elespanol）。W杯決勝で38に（elespanol）。
+#     W杯は初戦カーボベルデ 0-0、そこから7連勝で優勝（365Scores の一覧）。
+#   ヤマルの代表の数字: RFEF の選手ページ（9/29 の試合まで）35試合10得点、27勝7分（負けは 2024-03-22 コロンビア戦の1つ）。
+#     9月の2試合で3得点1アシスト（ウェンブリー1点、この日2点1アシスト）→ それまでの33試合で7点。
+#     DAZN の「34試合8得点12アシスト」は内訳の合計が33試合で合わず、W杯の試合数も RFEF（8試合）と違うので使わない。通算アシストは言わない。
+#   次: 10/3（土）オビエドでチェコ戦（RFEF のクロニカ）。
+#   モドリッチへの拍手（MARCA「la ovación a Modric al entrar」）は題（ヤマル・40戦無敗）に答えないので入れない。「ありがとう、スペイン」は確かめられていない。
+#   監督の言葉: ESPN の英語（試合後）。RFEF の会見記事のスペイン語（"pone su talento individual al grupo"）とは言い回しが違う。台本は ESPN のほうを訳した。
+#   ヤマルの言葉: MARCA（lamine-yamal-muesca-balon-oro）"Otra más" / "Al final no solo juego para este Balón de Oro, juego para mí, para la afición,
+#     para la siguiente temporada, para mi selección, para seguir ganando" / "No lo sé, no voto yo, ni sé quién ha ganado"。投票は締め切り済み（MARCA）。発表は10/26。
+#   10/2 の有名選手の紹介②（scripts/20261002_player_937958.md）と重ねない: メッシの赤ん坊の写真・304・10番・ユーロ最年少・市場価値・レーダー・
+#     「世界最高の選手は僕たち2人」・「世界年間最優秀選手、バロンドールの発表は10月26日」の言い方は使わない。写真も紹介の回と別の File。
+# 写真: 記事（ESPN・MARCA・Yahoo!の5本）は全部 Getty か合成画像、RFEF の記事の写真はプビルたちでヤマルが写っていないので、Commons の W杯の2枚（紹介の回と別）。
+#   01: Argentina v Spain 19 July 2026-144（赤のユニフォーム）、02: France v Spain 7.24.26-092（白、走る）。どちらも 3:2 を頭が入る位置で16:9に切った _w。
+# 反応: Yahoo!ニュースのコメント欄（theWORLD・フットボールチャンネルの記事）から、個人の投稿を頭から終わりまで3件。
+date: 2026年9月30日
+slot: ラ・リーガ
+format: news
+people:
+- ラミン・ヤマル
+theme:
+  id: yamal_spain
+  league: spain
+  league_name: UEFAネーションズリーグ
+  kind: match
+  topic: スペイン代表
+  title: ヤマル2発1アシスト。バロンドールを聞かれて返した短い一言
+  question: ヤマルは、40戦負けないスペインの中で何が変わってきたのか
+  takeaway: スペインの無敗は40試合（31勝9分け）で、前の最長のイタリアの37を越えた。ヤマルは代表35試合10得点のうち3点をこの9月の2試合で取っていて、負けない代表の中で点を取る役に回り始めている。次は10月3日のチェコ戦
+  opening_image: assets/images/20260930b_yamal_spain/01_w.jpg
+short_title: ヤマル、バロンドールを聞かれた答えは一言
+thumbnail:
+  photo: assets/images/20260930b_yamal_spain/01_w.jpg
+  line1: ヤマル、代表10点のうち
+  line2: ●点はこの9月の2試合
+  reaction: W杯の時より調子良いみたい
+sections:
+- id: report
+  heading: 70秒の先制から4対1
+  tier: 報道
+  telop: 9月29日、セビージャ。スペイン 4-1 クロアチア。ヤマルは2得点1アシスト
+  narrator: キャスター
+  card:
+    type: table
+    title: スペイン 4-1 クロアチア（9月29日）
+    columns:
+    - 分
+    - 得点
+    rows:
+    - &g1
+      - 2分
+      - ヤマル（開始70秒）
+    - &g2
+      - 28分
+      - クロアチアが同点
+    - &g3
+      - 31分
+      - プビル（ヤマルのクロス）
+    - &g4
+      - 63分
+      - ヤマル
+    - &g5
+      - 89分
+      - ニコ・ウィリアムズ
+  say:
+  - text: 9月29日、欧州の代表どうしのリーグ戦で、スペインがクロアチアに4対1で勝ちました。
+    image: assets/images/20260930b_yamal_spain/01_w.jpg
+  - text: キックオフから24本のパスをつなぎ、相手には一度も触らせません。
+  - text: 最後はヤマルが決めて、開始70秒で先制しました。
+    card:
+      type: table
+      title: スペイン 4-1 クロアチア（9月29日）
+      columns: [分, 得点]
+      rows: [*g1]
+      highlight_row: 0
+  - text: 28分に追いつかれますが、3分後、ヤマルのクロスをプビルが頭で合わせます。
+    card:
+      type: table
+      title: スペイン 4-1 クロアチア（9月29日）
+      columns: [分, 得点]
+      rows: [*g1, *g2, *g3]
+      highlight_row: 2
+  - text: 63分にはヤマルが、ペドリの縦パスに抜け出して自身2点目。
+    card:
+      type: table
+      title: スペイン 4-1 クロアチア（9月29日）
+      columns: [分, 得点]
+      rows: [*g1, *g2, *g3, *g4]
+      highlight_row: 3
+  - text: 終了間際、ヤマルと代わって入ったニコ・ウィリアムズが4点目。
+    card:
+      type: table
+      title: スペイン 4-1 クロアチア（9月29日）
+      columns: [分, 得点]
+      rows: [*g1, *g2, *g3, *g4, *g5]
+      highlight_row: 4
+  sources:
+  - https://news.yahoo.co.jp/articles/1006fa90a9e488b3e9b78b627287fc09f151f9e0
+  - https://news.yahoo.co.jp/articles/5c6c9aa3ae058f7dc7944928683957c07d43be13
+  - https://www.aljazeera.com/sports/2026/9/29/yamal-stars-as-spain-thrash-croatia
+  - https://rfef.es/es/noticias/lamine-yama-brilla-y-espa%C3%B1a-deslubra
+- id: coach
+  heading: 監督が見た「魔法」の使い道
+  tier: 報道
+  telop: デ・ラ・フエンテ監督「彼はその魔法をチームのために使っている」
+  narrator: 解説
+  say:
+  - text: 試合後、スペインのデ・ラ・フエンテ監督は、ヤマルをこう評しました。
+    image: assets/images/20260930b_yamal_spain/01_w.jpg
+  - voice: デ・ラ・フエンテ監督
+    text: 今日もラミンの魔法を楽しんだ。
+  - voice: デ・ラ・フエンテ監督
+    text: でも彼は、その魔法をチームのために使っている。
+    cont: true
+  - voice: デ・ラ・フエンテ監督
+    text: そこに、選手としての彼がよく表れている
+    cont: true
+  quotes_from:
+  - ESPN https://www.espn.com/soccer/story/_/id/50061797/spain-coach-beloved-yamal-magic-service-team
+  sources:
+  - https://www.espn.com/soccer/story/_/id/50061797/spain-coach-beloved-yamal-magic-service-team
+- id: ballon
+  main: true
+  heading: バロンドールを聞かれて
+  tier: 報道
+  telop: ヤマル「もう1つ」。投票はもう締め切られている
+  narrator: キャスター
+  say:
+  - text: 9月29日、スペインはクロアチアに4対1で勝ちました。
+    short_only: true
+  - text: 年間の最優秀選手に贈られるバロンドール。今年の投票は、もう締め切られています。
+    image: assets/images/20260930b_yamal_spain/01_w.jpg
+  - text: 試合後、この活躍でバロンドールにふさわしい理由が増えたかと聞かれ、ヤマルは間を置かずに答えました。
+  - voice: ヤマル
+    text: もう1つ
+  - text: 受賞に近づいたかと聞かれると、こう答えています。
+  - voice: ヤマル
+    text: 分からない。
+  - voice: ヤマル
+    text: 投票するのは僕じゃないし、誰が獲ったかも知らない
+    cont: true
+  - text: 結果が出るのは10月26日です。取材の中では、こうも話しています。
+  - voice: ヤマル
+    text: このバロンドールのためだけにプレーしているわけじゃない。
+  - voice: ヤマル
+    text: 自分のため、ファンのため、来季のため、
+    cont: true
+  - voice: ヤマル
+    text: 代表のため、勝ち続けるためにやっている
+    cont: true
+  quotes_from:
+  - MARCA https://www.marca.com/futbol/seleccion/2026/09/29/lamine-yamal-muesca-balon-oro.html
+  sources:
+  - https://www.marca.com/futbol/seleccion/2026/09/29/lamine-yamal-muesca-balon-oro.html
+- id: view
+  heading: 40試合と、ヤマルの10点
+  tier: 背景
+  viewpoint: true
+  telop: 40試合で31勝9分け。ヤマルは代表10点のうち3点をこの9月に
+  narrator: 解説
+  card:
+    type: table
+    title: スペインの40試合無敗（2024年3月〜）
+    columns:
+    - 年
+    - 試合
+    - 勝
+    - 分
+    rows:
+    - &u1 ['2024年', '16', '14', '2']
+    - &u2 ['2025年', '10', '6', '4']
+    - &u3 ['2026年', '14', '11', '3']
+    - &u4 ['合計', '40', '31', '9']
+  say:
+  - text: スペインはこれで40試合、負けていません。それまでの最長は、イタリアの37試合でした。
+    image: assets/images/20260930b_yamal_run/01_w.jpg
+    card:
+      type: table
+      title: スペインの40試合無敗（2024年3月〜）
+      columns: [年, 試合, 勝, 分]
+      rows: [*u1, *u2, *u3, *u4]
+      highlight_row: 3
+  - text: 最後に負けたのは、2024年3月のコロンビア戦です。
+    card:
+      type: table
+      title: スペインの40試合無敗（2024年3月〜）
+      columns: [年, 試合, 勝, 分]
+      rows: [*u1, *u2, *u3, *u4]
+  - text: その年のユーロは7戦全勝でした。
+    card:
+      type: table
+      title: スペインの40試合無敗（2024年3月〜）
+      columns: [年, 試合, 勝, 分]
+      rows: [*u1, *u2, *u3, *u4]
+      highlight_row: 0
+  - text: 2025年は引き分けが4つありました。
+    card:
+      type: table
+      title: スペインの40試合無敗（2024年3月〜）
+      columns: [年, 試合, 勝, 分]
+      rows: [*u1, *u2, *u3, *u4]
+      highlight_row: 1
+  - text: ネーションズリーグの決勝はPK戦で敗れましたが、記録では引き分けです。
+    card:
+      type: table
+      title: スペインの40試合無敗（2024年3月〜）
+      columns: [年, 試合, 勝, 分]
+      rows: [*u1, *u2, *u3, *u4]
+      highlight_row: 1
+  - text: 今年のワールドカップは、初戦の引き分けから7連勝で優勝。
+    card:
+      type: table
+      title: スペインの40試合無敗（2024年3月〜）
+      columns: [年, 試合, 勝, 分]
+      rows: [*u1, *u2, *u3, *u4]
+      highlight_row: 2
+  - text: 9月の2試合を足すと、9連勝になります。
+    card:
+      type: table
+      title: スペインの40試合無敗（2024年3月〜）
+      columns: [年, 試合, 勝, 分]
+      rows: [*u1, *u2, *u3, *u4]
+      highlight_row: 2
+  - text: ヤマルの代表での得点は、通算35試合で10点。
+    card:
+      type: table
+      title: ヤマルの代表での得点（9月29日まで）
+      columns: ['', 試合, 得点]
+      rows: [['通算', '35', '10'], ['9月の2試合', '2', '3'], ['それより前', '33', '7']]
+      highlight_row: 0
+  - text: そのうち3点が、この9月の2試合です。
+    card:
+      type: table
+      title: ヤマルの代表での得点（9月29日まで）
+      columns: ['', 試合, 得点]
+      rows: [['通算', '35', '10'], ['9月の2試合', '2', '3'], ['それより前', '33', '7']]
+      highlight_row: 1
+  - text: 9月26日のイングランド戦でも、開始104秒で先制点を決めています。
+    card:
+      type: table
+      title: ヤマルの代表での得点（9月29日まで）
+      columns: ['', 試合, 得点]
+      rows: [['通算', '35', '10'], ['9月の2試合', '2', '3'], ['それより前', '33', '7']]
+      highlight_row: 1
+  - text: 2試合続けて開始2分以内の得点は、スペイン代表で初めてです。
+    card:
+      type: table
+      title: ヤマルの代表での得点（9月29日まで）
+      columns: ['', 試合, 得点]
+      rows: [['通算', '35', '10'], ['9月の2試合', '2', '3'], ['それより前', '33', '7']]
+      highlight_row: 1
+  - text: それより前の33試合では7点。この9月は、点を取る側に回っています。
+    card:
+      type: table
+      title: ヤマルの代表での得点（9月29日まで）
+      columns: ['', 試合, 得点]
+      rows: [['通算', '35', '10'], ['9月の2試合', '2', '3'], ['それより前', '33', '7']]
+      highlight_row: 2
+  - text: 35試合で負けは1つだけ。それが、あのコロンビア戦です。
+    card:
+      type: table
+      title: ヤマルの代表での得点（9月29日まで）
+      columns: ['', 試合, 得点]
+      rows: [['通算', '35', '10'], ['9月の2試合', '2', '3'], ['それより前', '33', '7']]
+  sources:
+  - https://www.espn.com/soccer/story/_/id/50061797/spain-coach-beloved-yamal-magic-service-team
+  - https://www.365scores.com/es/news/espana-historico-partidos-sin-perder/
+  - https://www.elespanol.com/deportes/futbol/20260929/espana-divierte-lamine-yamal-supera-croacia-alcanzar-victorias-consecutivas/1003744402534_0.html
+  - https://rfef.es/es/selecciones/jugadores/lamine-yamal-absoluta
+  - https://rfef.es/es/noticias/lamine-yama-brilla-y-espa%C3%B1a-deslubra
+- id: voices
+  heading: ネットの反応
+  tier: 未確認
+  telop: 「W杯の時より調子良いみたい。スペイン強いわ」
+  narrator: キャスター
+  say:
+  - voice: ネット民
+    text: ヤマル19歳。すごいね。
+    short_voice: true
+  - voice: ネット民
+    text: W杯の時より調子良いみたい。スペイン強いわ
+    cont: true
+    short_voice: true
+  - voice: ネット民
+    text: ヤマルの得点力がどんどん覚醒してきてる。
+  - voice: ネット民
+    text: メッシがスペイン代表を選んでいたらの世界線に近づきつつある。
+    cont: true
+  - voice: ネット民
+    text: ワールドカップ初戦でカーボベルデに引き分けてから以降、
+  - voice: ネット民
+    text: 9連勝中
+    cont: true
+  - voice: ネット民
+    text: この前のイングランド戦は相手の自滅のような感じだったけど、
+    cont: true
+  - voice: ネット民
+    text: もう手が付けれないな…
+    cont: true
+  sources:
+  - https://news.yahoo.co.jp/articles/c5db6ae2fb189829c9f43f9270242c162ffd660d/comments
+  - https://news.yahoo.co.jp/articles/5c6c9aa3ae058f7dc7944928683957c07d43be13/comments

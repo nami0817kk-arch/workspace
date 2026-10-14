@@ -6,6 +6,7 @@
 
 from __future__ import annotations
 
+import os
 import wave
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -34,7 +35,9 @@ def plan(script: Script, config: ProjectConfig) -> Inserts:
     冒頭はタイトル、以降の章の頭には章タイトル。最初の章はタイトル直後なので入れない。
     """
     titles = config.titles
-    inserts = Inserts(intro=max(0.0, titles.intro), outro=max(0.0, titles.outro))
+    # 台本が最後のカードを頼んでいれば、その秒数（ショートの続き物の回。shorts.SERIES_END_CARD）
+    end_card = float((getattr(script, "meta", None) or {}).get("end_card") or 0.0)
+    inserts = Inserts(intro=max(0.0, titles.intro), outro=max(0.0, titles.outro, end_card))
     if titles.chapter > 0:
         # **最初の章にはカードを入れない。**冒頭タイトルの有無に関係なく入れない。
         # 以前は「冒頭タイトルがあるときだけ飛ばす」だったため、冒頭タイトルを 0 に
@@ -89,10 +92,41 @@ def realize_audio(
             paths.append(path)
             continue
         silence = work_dir / f"gap_{number:03d}_{int(seconds * 1000)}.wav"
-        if not silence.exists():
+        if not _silence_ready(silence, seconds, params):
             _write_silence(silence, seconds, params)
         paths.append(silence)
     return paths
+
+
+def _silence_ready(path: Path, seconds: float, params: tuple[int, int, int]) -> bool:
+    """**中身まで見てから使い回す**（2026-10-10）。
+
+    前は `path.exists()` だけだった。work_dir は失敗した書き出しのあと残るので、
+    **途中まで書かれた無音**（ディスクが埋まった・途中で止めた）がそのまま
+    次の回で使われる。ffmpeg は**ヘッダではなく実際のバイト数**で尺を決めるので、
+    15秒のつもりの無音が 0.4秒になっても**警告もエラーも出ない**。
+    その結果、音が14秒短くなり、`-shortest` で動画の末尾（終了画面の置き場）が
+    黙って切られていた。
+    """
+    try:
+        if not path.exists():
+            return False
+        with wave.open(str(path), "rb") as handle:
+            if (handle.getnchannels(), handle.getsampwidth(), handle.getframerate()) != params:
+                return False
+            frames = handle.getnframes()
+        if frames != _silence_frames(seconds, params):
+            return False
+        channels, sampwidth, _ = params
+        # ヘッダが正しくても、バイトが足りていなければ尺は足りない
+        return path.stat().st_size >= frames * channels * sampwidth
+    except (wave.Error, OSError, EOFError):
+        return False
+
+
+def _silence_frames(seconds: float, params: tuple[int, int, int]) -> int:
+    _, _, framerate = params
+    return int(framerate * max(0.0, seconds))
 
 
 def _params_of(segments: list[tuple[Path | None, float]]) -> tuple[int, int, int]:
@@ -105,10 +139,21 @@ def _params_of(segments: list[tuple[Path | None, float]]) -> tuple[int, int, int
 
 
 def _write_silence(path: Path, seconds: float, params: tuple[int, int, int]) -> None:
+    """無音を1つ書く。**書きかけを残さない**（2026-10-10）。
+
+    別名に書いてから置き換える（`render._write_image` と同じ）。途中で落ちても
+    `path` は出来ないので、次の回が**半分の無音**を拾うことがない。
+    """
     channels, sampwidth, framerate = params
-    frames = b"\x00" * int(framerate * max(0.0, seconds)) * channels * sampwidth
-    with wave.open(str(path), "wb") as out:
-        out.setnchannels(channels)
-        out.setsampwidth(sampwidth)
-        out.setframerate(framerate)
-        out.writeframes(frames)
+    frames = b"\x00" * (_silence_frames(seconds, params) * channels * sampwidth)
+    tmp = path.with_name(f"{path.name}.{os.getpid()}.part")
+    try:
+        with wave.open(str(tmp), "wb") as out:
+            out.setnchannels(channels)
+            out.setsampwidth(sampwidth)
+            out.setframerate(framerate)
+            out.writeframes(frames)
+        os.replace(tmp, path)
+    finally:
+        if tmp.exists():
+            tmp.unlink(missing_ok=True)

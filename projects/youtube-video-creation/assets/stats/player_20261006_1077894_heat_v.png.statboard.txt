@@ -1,0 +1,4 @@
+title: ジュード・ベリンガムの今季のヒートマップ
+unit: touches
+points=430
+source: FotMob

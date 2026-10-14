@@ -1,0 +1,323 @@
+# クラブの財政：レアル・マドリード（10/9 金、シリーズ「クラブの財政」）。材料の控えは research/raw/20261009_finance_realmadrid_material.md。
+# 軸は **UEFA のスクワッド・コスト・ルール（70%）とクラブ自身が出している比率**。
+#   バルサ回（10/3）の軸「ラ・リーガの選手に使える上限」は主役にしない（この回では一度も出さない）。
+#   バルサ回の「稼いでいるのに使えない」という語り口も、アルテタ回（10/8）の「◯倍になった」という締めも使わない。
+#   この回は「稼ぎは世界の頂点、ただしその分がどこへ出ていくか」で通す。デロイトの順位表はバルサ回で出したので使わない。
+# 数字はすべてクラブ自身の公表（realmadrid.com 2026-07-28 の発表と ANEXO の PDF、透明性のページの Budget 2025-2026 PDF）。
+#   2024-25 の4本立ての実績（千ユーロ）→ 2025-26 の3本立て（363／319／539）への組み替えと増減は材料の §2-2 で検算済み
+#   （326,8＋351,7＋506,2＝1.184,7 がクラブの表と一致）。TV と親善・国際大会への割り振り（+4,8／−37,9）は
+#   ANEXO の地の文の増減率（+3%／−20%）を 2024-25 の実績に当てたこちらの計算。板には合算の内訳として出さず、語りで言う。
+# **材料で「確かめられなかった」ものは使っていない**：デロイトの正確な総額／2025-26 の人件費の実額（46% の比率だけ言う。
+#   562 は予算の数字なので台本には出さない）／借入 11億7000万ユーロ全体の金利と最終返済年（「公表されていません」と断る）／
+#   2026-27 の予算（11月の総会で出る、とだけ言う）／本拠地の公式戦の総数（25 は使わない。リーグのホーム19試合だけで割る）。
+# 単位：**板はすべて百万ユーロ**（line・waterfall・calc・表）。語りは億／万ユーロで通し、基礎DATAの1行で
+#   「12億2130万ユーロ＝百万ユーロで1221.3」と一度だけ橋をかける。円は convert の板だけ（1ユーロ＝177円。ECB 2026-10-07 の 176,85 を丸めた値）。
+# 成績（リーグ2位・CL ベスト8・国王杯ベスト16）は Wikipedia の二次情報なので、順位と敗退の段階までにとどめた。
+# ネットの反応は置いていない（ブラウザの道具を使っていないので集めていない。バルサ回と同じ）。本人の言葉も引いていない。
+# アルファベットは読み上げに出さない（UEFA → 「欧州の連盟」、VIP席 → 「特別席」。板の題にだけ UEFA と書いてある）。
+# 写真は手元の2枚だけ：assets/backgrounds/stadium_レアルマドリード.png（外観、1920x1080）と _in.png（内部、1920x1080）。
+#   **顔が入っていないので板が顔にかからない**（アルテタ回で顔の76%が隠れた件を踏まない）。入れ替えは1本1回（冒頭=外観 → 基礎DATAの1行目から内部）。
+#   クレジットは assets/backgrounds/credits.json（CC の表示は概要欄に出る）。
+# サムネは構図 number（直近はアルテタ回が face、バルサ回が classic）。横に広い写真＋伏せた数字。
+# 本のあいだの重なり（variety）で消した言い回し：「およそ1.7倍になりました」（アルテタ回）、
+#   「10億ユーロを初めて超えた」（バルサ回の『初めて10億ユーロを突破』）、「◯◯000万ユーロでした」（同）、
+#   「もう1つあります」（シティ回）。残るのは数字の頭だけが重なる『12億』『14億』の2件（別の事実）。
+date: 2026年10月09日
+slot: other_1
+format: news
+series: クラブの財政
+people:
+- レアル・マドリード
+theme:
+  id: finance_realmadrid
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: レアル・マドリード
+  title: レアル・マドリード、無冠の季に史上最高の収入。その稼ぎが出ていく先は
+  question: 世界でいちばん稼ぐクラブの収入は、どこへ出ていくのか
+  lead: 1日に入ってくるお金が、およそ335万ユーロ。
+  hook: 入ってきた分の行き先を、決算から追います。
+  takeaway: レアル・マドリードは2025-26をリーグ2位・チャンピオンズリーグはベスト8・国王杯はベスト16の無冠で終えながら、営業収入は12億2130万ユーロでスポーツのクラブとして史上最高になった。前の季の11億8470万ユーロから増えたのはスタジアム3620万・マーケティング3280万・国内の放映権480万ユーロで、減ったのは親善試合と国際大会の3790万ユーロ。人件費は収入の46%で、欧州の連盟が2025-26から敷いた70%の上限に対して、選手団の費用6億1800万ユーロは収入の50.6%、上限までは2億3690万ユーロの余白がある。いちばん重いのはベルナベウで、改修に積んだ14億770万ユーロは1季の収入の1.15季ぶん、スタジアムが生む分だけなら3.9季ぶん。1試合あたりに直したスタジアム収入1910万ユーロは改修前の2.07倍。国と社会保険に納めた3億5480万ユーロは税引後の利益の13.5倍で、手元に残るのは収入の2.2%。借入の残高11億840万ユーロは2025-26に減った2330万ユーロのペースなら約48年かかり、全体の金利は公表されていない。次の数字は11月の総会で出る
+short_title: レアル・マドリードが無冠の季に史上最高の収入。12億ユーロの中身
+thumbnail:
+  layout: number
+  photo: assets/backgrounds/stadium_レアルマドリード.png
+  number: ●●億ユーロ
+  line1: レアル・マドリードの収入
+  line2: 無冠なのに史上最高
+  crests:
+  - レアル・マドリード
+  tags:
+  - レアル・マドリード
+  - ベルナベウ
+  - ラ・リーガ
+  - クラブの財政
+sections:
+- id: data
+  main: true
+  heading: 収入の基礎DATA
+  tier: 確定
+  official: true
+  telop: 無冠で終えた2025-26に、営業収入12億2130万ユーロ。スポーツのクラブとして史上最高
+  narrator: キャスター
+  card: &line_card
+    type: line
+    title: 営業収入の5年（移籍を除く）
+    x: ['2021-22', '2022-23', '2023-24', '2024-25', '2025-26']
+    series:
+    - [営業収入, [721.5, 843.0, 1073.2, 1184.7, 1221.3]]
+    unit: 百万ユーロ
+  say:
+  - text: レアル・マドリードが決算を発表しました。無冠だった季の数字です。
+    short_only: true
+    card: &data_stats
+      type: stats
+      title: 2025-26 のレアル・マドリード
+      items:
+      - ['0', 冠, この季に獲ったタイトル]
+      - ['1221.3', 百万ユーロ, 営業収入（史上最高）]
+      - ['1.7', 倍, 2021-22 から]
+      focus: 1
+  - text: 2025-26のリーグは2位、チャンピオンズリーグはベスト8。
+    image: assets/backgrounds/stadium_レアルマドリード_in.png
+    card: *data_stats
+  - text: 国王杯もベスト16で、タイトルはゼロ。それでも収入は史上最高でした。
+    emph: true
+    card: *data_stats
+  - text: 収入は12億2130万ユーロ。折れ線は百万ユーロで並べています。
+    card:
+      <<: *line_card
+      highlight: '2025-26'
+  - text: 5年前の2021-22は7億2150万ユーロ。差はおよそ5億ユーロです。
+    card:
+      <<: *line_card
+      highlight: '2021-22'
+  - text: 税引後の利益は2630万ユーロ。2000年から26期、黒字が続いています。
+    card:
+      type: stats
+      title: 黒字は26期つづいている
+      items:
+      - ['26.3', 百万ユーロ, 税引後の利益（2025-26）]
+      - ['26', 期連続, 2000年からの黒字]
+      focus: 1
+  - text: 出ていく先は、人件費、税金、そしてベルナベウの借金です。
+    card: none
+  sources:
+  - https://www.realmadrid.com/es-ES/noticias/club/actualidad/el-real-madrid-cierra-la-temporada-2025-2026-con-los-mayores-ingresos-y-el-mayor-ebitda-de-su-historia-28-07-2026
+  - https://static.realmadrid.com/StaticFiles/RealMadrid/img/pdf/anexo-evolucion_economica.pdf
+  - https://www.realmadrid.com/es-ES/noticias/club/actualidad/noticia-real-madrid-ejercicio-economico-2025
+  - https://www.realmadrid.com/es-ES/noticias/club/actualidad/ejercicio-economico-2023-24-23-07-2024
+  - https://www.realmadrid.com/es-ES/noticias/club/actualidad/el-real-madrid-cierra-el-ejercicio-2022-23-con-un-resultado-positivo-de-12-millones-de-euros
+  - https://en.wikipedia.org/wiki/2025%E2%80%9326_Real_Madrid_CF_season
+- id: breakdown
+  heading: 何が上げて、何が下げたか
+  tier: 確定
+  official: true
+  telop: 上げたのはスタジアム・マーケティング・国内の放映権。下げたのは親善試合と国際大会
+  narrator: 解説
+  card: &fall_card
+    type: waterfall
+    title: 収入の増減（2024-25→2025-26、百万ユーロ）
+    start: [2024-25 の収入, 1184.7]
+    steps:
+    - [スタジアム, 36.2]
+    - [マーケティング, 32.8]
+    - [国内の放映権, 4.8]
+    - [親善試合と国際大会, -37.9]
+    total: [2025-26 の収入, 1221.3]
+  say:
+  - text: 前の季、2024-25の収入は11億8470万ユーロ。ここが出発点です。
+    card:
+      <<: *fall_card
+      highlight: 2024-25 の収入
+  - text: レアル・マドリードが伸ばした柱は、ベルナベウ。3620万ユーロ増えました。
+    card:
+      <<: *fall_card
+      highlight: スタジアム
+  - text: スポンサーと物販のマーケティングは、3280万ユーロ増えています。
+    card:
+      <<: *fall_card
+      highlight: マーケティング
+  - text: 国内の放映権も480万ユーロ増えて、上げたのはこの3つです。
+    card:
+      <<: *fall_card
+      highlight: 国内の放映権
+  - text: 下げたのは1つだけ。親善試合と国際大会が3790万ユーロ減っています。
+    emph: true
+    card:
+      <<: *fall_card
+      highlight: 親善試合と国際大会
+  - text: クラブワールドカップの計上が前の季に寄り、夏の親善ツアーも組めませんでした。
+    card: none
+  - text: 差し引きで3660万ユーロ増えて、史上最高に届きました。
+    card:
+      <<: *fall_card
+      highlight: 2025-26 の収入
+  sources:
+  - https://www.realmadrid.com/es-ES/noticias/club/actualidad/el-real-madrid-cierra-la-temporada-2025-2026-con-los-mayores-ingresos-y-el-mayor-ebitda-de-su-historia-28-07-2026
+  - https://static.realmadrid.com/StaticFiles/RealMadrid/img/pdf/anexo-evolucion_economica.pdf
+  - https://publish.realmadrid.com/content/dam/portals/realmadrid-com/en-us/core-content/assemblies/pages/generic-pages/el-club/transparencia/01-documentos-transparencia/Budget%202025-2026.pdf
+- id: cost
+  heading: 出ていくほう。人件費と、ベルナベウの借金
+  tier: 確定
+  official: true
+  telop: 人件費は収入の46%。欧州の連盟が敷いた上限は70%
+  narrator: 解説
+  card: &cost_table
+    type: table
+    title: 人件費と UEFA の上限（2025-26、額は百万ユーロ）
+    columns: &cost_cols
+    - 項目
+    - 数字
+    rows: &cost_rows
+    - [人件費 ÷ 営業収入, 46%]
+    - [クラブが置く目安, 50%]
+    - [UEFA の上限, 70%]
+    - [選手団の費用（人件費＋償却）, '618']
+    - [選手団の費用 ÷ 営業収入, 50.6%]
+    - [上限までの余白, '236.9']
+  say:
+  - text: ここからは、出ていくほうです。人件費は2025-26で、収入の46%でした。
+    card:
+      type: table
+      title: 人件費と UEFA の上限（2025-26、額は百万ユーロ）
+      columns: *cost_cols
+      rows: *cost_rows
+      highlight_row: 0
+  - text: 前の季は43%で、2000年以降いちばん低い数字。3ポイント上がりました。
+    card:
+      type: table
+      title: 人件費と UEFA の上限（2025-26、額は百万ユーロ）
+      columns: *cost_cols
+      rows: *cost_rows
+      highlight_row: 0
+  - text: レアル・マドリードが自分で引く目安は50%。そこは下回っています。
+    card:
+      type: table
+      title: 人件費と UEFA の上限（2025-26、額は百万ユーロ）
+      columns: *cost_cols
+      rows: *cost_rows
+      highlight_row: 1
+  - text: もう1つの目安が70%。ヨーロッパの連盟が2025-26から敷いた上限です。
+    card:
+      type: table
+      title: 人件費と UEFA の上限（2025-26、額は百万ユーロ）
+      columns: *cost_cols
+      rows: *cost_rows
+      highlight_row: 2
+    emph: true
+  - text: 名前はスクワッド・コスト・ルール。人件費に、移籍金の年割りも足します。
+    card:
+      type: table
+      title: 人件費と UEFA の上限（2025-26、額は百万ユーロ）
+      columns: *cost_cols
+      rows: *cost_rows
+      highlight_row: 2
+  - text: その選手団の費用は6億1800万ユーロで、収入の50.6%にあたります。
+    card:
+      type: table
+      title: 人件費と UEFA の上限（2025-26、額は百万ユーロ）
+      columns: *cost_cols
+      rows: *cost_rows
+      highlight_row: 4
+  - text: 上限まではまだ2億3690万ユーロの余白。ただ数え方は少し違います。
+    card:
+      type: table
+      title: 人件費と UEFA の上限（2025-26、額は百万ユーロ）
+      columns: *cost_cols
+      rows: *cost_rows
+      highlight_row: 5
+  - text: 連盟が数えるのは、登録した選手と監督の分だけです。
+    card: none
+  - text: クラブの数字には、バスケットボール部門の人件費も入ります。
+    card: none
+  - text: もう一つの出口が、ベルナベウの改修です。
+    card: &yen_card
+      type: convert
+      title: ベルナベウの改修に積んだ額を円に
+      from: ['14億770万', ユーロ, 2026年6月末までの累計]
+      to: ['2492', 億円, 1ユーロ＝177円で]
+      via: 1ユーロ＝177円
+  - text: 積んだ投資は14億770万ユーロ。円に直すと、およそ2492億円。
+    card: *yen_card
+    emph: true
+  - text: 借入の総額は11億7000万ユーロ。全額が引き出し済みです。
+    card: *yen_card
+  - text: 2026年6月末の残高は、11億840万ユーロ。
+    card: *yen_card
+  - text: 借入全体の金利と最終の返済年は、クラブが公表していません。
+    card: none
+  sources:
+  - https://static.realmadrid.com/StaticFiles/RealMadrid/img/pdf/anexo-evolucion_economica.pdf
+  - https://www.realmadrid.com/es-ES/noticias/club/actualidad/el-real-madrid-cierra-la-temporada-2025-2026-con-los-mayores-ingresos-y-el-mayor-ebitda-de-su-historia-28-07-2026
+  - https://documents.uefa.com/r/UEFA-Club-Licensing-and-Financial-Sustainability-Regulations-2025/Article-94-Squad-cost-rule-Online
+  - https://documents.uefa.com/r/UEFA-Club-Licensing-and-Financial-Sustainability-Regulations-2025/Article-93-Calculation-of-squad-cost-ratio-Online
+  - https://api.frankfurter.app/latest?from=EUR&to=JPY
+- id: view
+  viewpoint: true
+  heading: 見立て・稼ぎのうち、手元に残るのはどれだけか
+  tier: 背景
+  telop: 改修費は1季の収入の1.15季ぶん。税と社会保険は、税引後の利益の13.5倍
+  narrator: 解説
+  card: &calc_card
+    type: calc
+    title: 改修費は何季ぶんの収入か（百万ユーロ）
+    terms:
+    - ['1407.7', 改修に積んだ額]
+    - ['1221.3', 2025-26 の営業収入]
+    - [1.15季ぶん, 割った答え]
+    ops: ['÷', ＝]
+  say:
+  - text: レアル・マドリードが改修に積んだ額は、収入の1.15季ぶんにあたります。
+    card: *calc_card
+  - text: スタジアムが生む分だけで割ると、3.9季ぶん。回収には時間がかかります。
+    card: *calc_card
+  - text: 1試合あたりのスタジアム収入は1910万ユーロ。改修前の2.07倍です。
+    emph: true
+    card: &view_table
+      type: table
+      title: 自分で割ってみた（2025-26、額は百万ユーロ）
+      columns: &view_cols
+      - 比べ
+      - 答え
+      rows: &view_rows
+      - [改修費 ÷ 1季の収入, 1.15季ぶん]
+      - [改修費 ÷ スタジアム収入, 3.9季ぶん]
+      - [1試合あたりのスタジアム収入, 19.1（改修前の2.07倍）]
+      - [税と社会保険 ÷ 税引後の利益, 13.5倍]
+      - [税引後の利益 ÷ 営業収入, 2.2%]
+      - [借入残高 ÷ 1季に返した元本, 約48年]
+    mark: {kind: circle, row: 2, col: 1, text: 改修前の2.07倍}
+  - text: リーグのホーム19試合で割った数です。見学ツアーや特別席も入ります。
+    card: none
+  - text: 税金と社会保険料で納めたのは3億5480万ユーロ。利益の13.5倍です。
+    card:
+      type: table
+      title: 自分で割ってみた（2025-26、額は百万ユーロ）
+      columns: *view_cols
+      rows: *view_rows
+      highlight_row: 3
+  - text: 手元に残るのは収入の2.2%。稼ぎの大きさとは、別の話です。
+    emph: true
+    card:
+      type: table
+      title: 自分で割ってみた（2025-26、額は百万ユーロ）
+      columns: *view_cols
+      rows: *view_rows
+      highlight_row: 4
+  - text: 借入は2025-26に2330万ユーロ減りました。
+    card:
+      type: table
+      title: 自分で割ってみた（2025-26、額は百万ユーロ）
+      columns: *view_cols
+      rows: *view_rows
+      highlight_row: 5
+  - text: このペースのままなら、返し終わるのは約48年後です。
+    card: none
+  - text: 次の数字は11月の総会で出ます。2026-27の予算が示されます。
+    card: none
+  sources:
+  - https://www.realmadrid.com/es-ES/noticias/club/actualidad/el-real-madrid-cierra-la-temporada-2025-2026-con-los-mayores-ingresos-y-el-mayor-ebitda-de-su-historia-28-07-2026
+  - https://static.realmadrid.com/StaticFiles/RealMadrid/img/pdf/anexo-evolucion_economica.pdf
+  - https://en.wikipedia.org/wiki/2025%E2%80%9326_Real_Madrid_CF_season

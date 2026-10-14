@@ -1,0 +1,648 @@
+# クラブの財政：バルセロナ（10/3 土、シリーズ「クラブの財政」）。材料の控えは research/raw/20261003_finance_barcelona.md。
+# 選手に使える上限は、ラ・リーガの公表（千ユーロ単位の表。2021/22〜2026/27 の6季ぶんを PDF・画像で読んだ）。夏の数字で並べる。
+#   2025/26 のファイルはページ上の札が「2026/27」だが中身は SEASON 2025-2026（冬 2026-03-03 公表）。2026/27 夏は 2026-09-10。
+# 上限を超えたクラブの決まりは NEP 2024 第100条（減らした費用の50%まで。2024/25・2025/26 は経過規定で60%、上限の5%以上の選手は70%）→「半分ほど」。
+# 1対1に戻ったのは報道（ElNacional 9/10、ラ・リーガの Javier Gómez の話）。台本は「リーグは…明かしました」。
+# 2021年の危機はクラブの発表（メッシ 8/5、ラポルタ 8/16、決算 10/6）。放映権は1回目の10%の額（2億750万）だけクラブが公表。2回目の15%の額は報道で割れるので言わない。
+# バルサ・スタジオの49%（2億ユーロ）と VIP席（1億ユーロ）は報道。2025/26 の収入10億6000万・純負債6億700万は総会の報道（EFE）。クラブは「初めて10億ユーロ超え」まで。
+# 収入の順位はデロイト（2026-01-22、2024/25 年度。バルサ €975m 2位、レアル「close to €1.2bn」1位）。レアルの細かい額は書かない（約12億）。
+# スタジアム：融資 14億5000万（クラブ 2023-04-24）、最後の試合 2023-05-28、帰還 2025-11-22（クラブ、4-0、45,157人、909日）、
+#   1C の許可 2026-03-10（62,652人、報道）、屋根は 2027年夏・第3層は早くて 2027年4〜5月・VIP席 2027年3月（報道 9/30）、完成時 約10万5000人（クラブ）。
+# 年間シート：副会長エレナ・フォルトの BTV の取材（10/2 ElNacional・Crónica Global）。値上げは決まっていない（ElNacional の地の文）。発言は訳して全文に近い形で引く。
+# 反応（ネットの声）は置いていない（ブラウザ不可で集めていない）。本人の言葉はラポルタ（2021）とフォルト（10/2）。
+# 写真は Commons：05 ラポルタ（2025、CC BY 4.0）、06 フォルト（2024、カタルーニャ州政府・表示）、02 改修前の最後の試合（2023-05-28、CC BY-SA 4.0）、
+#   03 工事中の外観（2025-07-18、CC BY-SA 4.0）、04 工事の始まり（2023-08、CC BY 4.0、未使用）。pair_fort はフォルト＋02 を並べた1枚。
+date: 2026年10月03日
+slot: other_1
+format: news
+series: クラブの財政
+people:
+- バルセロナ
+- ジョアン・ラポルタ
+- エレナ・フォルト
+theme:
+  id: finance_barcelona
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: バルセロナ
+  title: バルセロナ、世界2位の稼ぎでも補強に苦しんだ5年間の正体
+  question: 世界2位の収入があるバルセロナは、なぜ選手を補強できない時期が続いたのか
+  takeaway: バルセロナの収入は2024-25年度に世界2位（9億7500万ユーロ）でも、ラ・リーガの選手に使える上限は今季5億8277万ユーロで、レアル・マドリードより2億5002万ユーロ少ない。上限は収入から選手以外の出費を引いて決まり、2022年に売った放映権の4分の1は25年間ほかへ渡る。それでも上限の差は5年前の6億4122万ユーロから半分以下に縮み、1対1のルールにも戻った。次の公表は冬の移籍市場のあと（今年は3月3日）、スタジアムは来年3月にVIP席、夏に屋根の工事が続く
+  opening_image: assets/images/20261003_finance_barcelona/03.jpg
+short_title: バルサが年間シートの値段を見直しへ。理由は新しいカンプ・ノウ
+thumbnail:
+  photo: assets/images/20261003_finance_barcelona_thumbfull/01.jpg
+  crests:
+  - バルセロナ
+  line1: バルセロナのお金
+  line2: 使える額は5年で●倍に
+  tags:
+  - バルセロナ
+  - カンプ・ノウ
+  - ラ・リーガ
+  - クラブの財政
+sections:
+- id: data
+  heading: お金の基礎DATA
+  tier: 報道
+  official: true
+  telop: バルセロナのお金の基礎DATA
+  narrator: キャスター
+  card:
+    type: table
+    title: バルセロナのお金の基礎DATA
+    columns: &id001
+    - 項目
+    - 内容
+    rows: &id002
+    - - 収入（2025-26）
+      - 10億6000万ユーロ（クラブ最高）
+    - - 世界の収入順位
+      - 2位（2024-25、デロイト調べ）
+    - - 選手に使える上限
+      - 5億8277万ユーロ（2026-27）
+    - - 借金（リーグ基準の純負債）
+      - 6億700万ユーロ（2026年6月末）
+    - - 本拠地カンプ・ノウ
+      - いまの収容 6万2652人
+    - - 改修の借り入れ
+      - 14億5000万ユーロ（2023年）
+  say:
+  - text: スペインの名門バルセロナ。昨シーズンの収入は、初めて10億ユーロを突破。
+    card:
+      type: table
+      title: バルセロナのお金の基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 0
+    image: assets/images/20261003_finance_barcelona/03.jpg
+  - text: 世界のクラブの稼ぎでも、2024-25年度は堂々の2位です。
+    card:
+      type: table
+      title: バルセロナのお金の基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 1
+  - text: なのにこの5年、バルサは「お金が無くて選手を登録できない」と言われ続けてきました。
+    card:
+      type: table
+      title: バルセロナのお金の基礎DATA
+      columns: *id001
+      rows: *id002
+    emph: true
+  - text: 選手に使えるお金には、ラ・リーガが決めた上限があります。
+    card:
+      type: table
+      title: バルセロナのお金の基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 2
+  - text: 手元のお金を差し引いた借金は、6億700万ユーロ残っています。
+    card:
+      type: table
+      title: バルセロナのお金の基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 3
+  - text: そして本拠地カンプ・ノウは、いまも大改修の途中です。
+    card:
+      type: table
+      title: バルセロナのお金の基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 4
+  sources:
+  - https://www.fcbarcelona.com/en/club/news/4571765/fc-barcelona-announcement
+  - https://www.infobae.com/america/agencias/2026/09/19/la-asamblea-del-barca-aprueba-holgadamente-las-cuentas-del-202526-y-el-presupuesto-202627/
+  - https://www.deloitte.com/uk/en/about/press-room/real-madrid-tops-deloitte-football-money-league.html
+  - https://assets.laliga.com/assets/2026/09/10/originals/8322aac5b34ae1736439cc40e636265d.pdf
+  - https://www.aldia.cat/esports/noticia-lspotify-camp-nou-obte-llicencia-per-ampliar-laforament-fins-als-62000-espectadors-20260310150901.html
+  - https://www.fcbarcelona.com/en/club/news/3234018/fc-barcelona-agrees-financing-for-espai-barca
+- id: crisis
+  heading: 2021年の危機と「レバー」
+  tier: 確定
+  official: true
+  telop: 赤字4億8100万ユーロ。将来の収入を前もって売った
+  narrator: 解説
+  card:
+    type: table
+    title: 2021年の危機と、切り売りしたもの
+    columns: &id003
+    - 時期
+    - 出来事
+    - 額
+    rows: &id004
+    - - 2021年6月末
+      - 2020-21年度の赤字
+      - 4億8100万ユーロ
+    - - 2021年8月
+      - 会長が明かした負債の総額
+      - 13億5000万ユーロ
+    - - 2021年8月
+      - 給料は収入の
+      - 103%
+    - - 2022年夏
+      - 放映権の4分の1を25年分
+      - 最初の10%で2億750万ユーロ
+    - - 2022年夏
+      - 映像の子会社の49%
+      - 2億ユーロ
+    - - 2025年1月
+      - VIP席475席を30年分
+      - 1億ユーロ
+  say:
+  - text: なぜ、バルセロナはここまで苦しんだのか。始まりは2021年の夏です。
+    card:
+      type: table
+      title: 2021年の危機と、切り売りしたもの
+      columns: *id003
+      rows: *id004
+    image: assets/images/20261003_finance_barcelona/pair_laporta/01.jpg
+  - text: 就任したばかりのラポルタ会長は、こう話しました。
+    card:
+      type: table
+      title: 2021年の危機と、切り売りしたもの
+      columns: *id003
+      rows: *id004
+  - voice: ジョアン・ラポルタ
+    text: 財政と経済の状況は、劇的で、とても心配なものです。
+    card:
+      type: table
+      title: 2021年の危機と、切り売りしたもの
+      columns: *id003
+      rows: *id004
+  - text: その11日前の8月5日、クラブはメッシと契約を結び直せないと発表していました。
+    card:
+      type: table
+      title: 2021年の危機と、切り売りしたもの
+      columns: *id003
+      rows: *id004
+  - text: 両者は合意していました。止めたのは、リーグの登録の規則でした。
+    card:
+      type: table
+      title: 2021年の危機と、切り売りしたもの
+      columns: *id003
+      rows: *id004
+    emph: true
+  - text: その年度の赤字は、4億8100万ユーロ。
+    card:
+      type: table
+      title: 2021年の危機と、切り売りしたもの
+      columns: *id003
+      rows: *id004
+      highlight_row: 0
+  - text: 会長が明かした負債の総額は、13億5000万ユーロでした。
+    card:
+      type: table
+      title: 2021年の危機と、切り売りしたもの
+      columns: *id003
+      rows: *id004
+      highlight_row: 1
+  - text: 選手たちへの給料は、収入の103%。稼いだ以上を払っていたのです。
+    card:
+      type: table
+      title: 2021年の危機と、切り売りしたもの
+      columns: *id003
+      rows: *id004
+      highlight_row: 2
+  - text: そこでクラブは、先の収入を前もって売る「レバー」、てこに手を出します。
+    card:
+      type: table
+      title: 2021年の危機と、切り売りしたもの
+      columns: *id003
+      rows: *id004
+  - text: 2022年の夏、リーグ戦の放映権の4分の1を25年分、投資会社へ。
+    card:
+      type: table
+      title: 2021年の危機と、切り売りしたもの
+      columns: *id003
+      rows: *id004
+      highlight_row: 3
+  - text: 最初の10%だけで、2億750万ユーロが入りました。
+    card:
+      type: table
+      title: 2021年の危機と、切り売りしたもの
+      columns: *id003
+      rows: *id004
+      highlight_row: 3
+  - text: 映像を作る子会社の49%も、2社に1億ユーロずつで売っています。
+    card:
+      type: table
+      title: 2021年の危機と、切り売りしたもの
+      columns: *id003
+      rows: *id004
+      highlight_row: 4
+  - text: 2025年1月には、新スタジアムの特別席475席を30年分売りました。
+    card:
+      type: table
+      title: 2021年の危機と、切り売りしたもの
+      columns: *id003
+      rows: *id004
+      highlight_row: 5
+  quotes_from:
+  - FCバルセロナ https://www.fcbarcelona.com/en/club/news/2221392/the-financial-and-economic-situation-is-dramatic-and-very-worrying
+  sources:
+  - https://www.fcbarcelona.com/en/noticies/2207655/leo-messi-no-seguira-lligat-al-fc-barcelona/amp
+  - https://www.fcbarcelona.com/en/club/news/2221392/the-financial-and-economic-situation-is-dramatic-and-very-worrying
+  - https://www.fcbarcelona.com/en/club/news/2283767/barca-presents-the-closure-of-the-202021-season-with-losses-of-481-million-euros
+  - https://www.fcbarcelona.com/en/club/news/2662883/fc-barcelona-and-sixth-street-reach-an-agreement-for-the-acquisition-of-a-10-share-of-the-clubs-laliga-tv-rights
+  - https://www.fcbarcelona.com/en/club/news/2686108/fc-barcelona-and-sixth-street-reach-agreement-for-the-acquisition-of-an-additional-15-share-of-the-clubs-laliga-broadcasting-rights
+  - https://www.infobae.com/america/agencias/2022/08/12/el-club-vende-a-orpheus-media-el-245-de-barca-studios-por-100-millones-2/
+  - https://www.sportspro.com/news/barcelona-vip-season-tickets-camp-nou-olmo-january-2025/
+- id: limit
+  heading: 選手に使えるお金の上限
+  tier: 確定
+  official: true
+  telop: 上限は9794万ユーロから5億8277万ユーロへ
+  narrator: キャスター
+  card:
+    type: table
+    title: バルセロナの「選手に使える上限」（夏の公表）
+    columns: &id005
+    - 季
+    - 上限
+    - その年
+    rows: &id006
+    - - 2021-22
+      - 9794万ユーロ
+      - メッシが退団
+    - - 2022-23
+      - 6億5643万ユーロ
+      - 切り売りの年
+    - - 2023-24
+      - 2億7003万ユーロ
+      - 売った分は1回きり
+    - - 2024-25
+      - 4億2643万ユーロ
+      - ''
+    - - 2025-26
+      - 3億5128万ユーロ
+      - ''
+    - - 2026-27
+      - 5億8277万ユーロ
+      - 1対1に戻る
+  say:
+  - text: では、スペインの「上限」とはどんな仕組みなのか。
+    card:
+      type: table
+      title: バルセロナの「選手に使える上限」（夏の公表）
+      columns: *id005
+      rows: *id006
+  - text: ラ・リーガは毎年、クラブごとにこの上限の額を公表します。
+    card:
+      type: table
+      title: バルセロナの「選手に使える上限」（夏の公表）
+      columns: *id005
+      rows: *id006
+  - text: 見込みの収入から、選手以外にかかるお金を引いた残りが上限です。
+    card:
+      type: table
+      title: バルセロナの「選手に使える上限」（夏の公表）
+      columns: *id005
+      rows: *id006
+  - text: 上限を超えたクラブは、減らした費用の半分ほどしか補強に回せません。
+    card:
+      type: table
+      title: バルセロナの「選手に使える上限」（夏の公表）
+      columns: *id005
+      rows: *id006
+  - text: 内側なら、浮いたお金はそのまま使える。これが「一対一のルール」です。
+    card:
+      type: table
+      title: バルセロナの「選手に使える上限」（夏の公表）
+      columns: *id005
+      rows: *id006
+  - text: メッシが去った2021年の夏、バルセロナの上限は9794万ユーロでした。
+    card:
+      type: table
+      title: バルセロナの「選手に使える上限」（夏の公表）
+      columns: *id005
+      rows: *id006
+      highlight_row: 0
+  - text: 冬には、マイナスにまで落ち込みます。
+    card:
+      type: table
+      title: バルセロナの「選手に使える上限」（夏の公表）
+      columns: *id005
+      rows: *id006
+      highlight_row: 0
+  - text: 切り売りした翌年は、なんと6億5643万ユーロに跳ね上がりました。
+    card:
+      type: table
+      title: バルセロナの「選手に使える上限」（夏の公表）
+      columns: *id005
+      rows: *id006
+      highlight_row: 1
+    emph: true
+  - text: でも売ったお金は1回きり。翌年は2億7003万ユーロまで下がります。
+    card:
+      type: table
+      title: バルセロナの「選手に使える上限」（夏の公表）
+      columns: *id005
+      rows: *id006
+      highlight_row: 2
+  - text: そしてこの9月、5億8277万ユーロ。5年でおよそ6倍です。
+    card:
+      type: table
+      title: バルセロナの「選手に使える上限」（夏の公表）
+      columns: *id005
+      rows: *id006
+      highlight_row: 5
+  - text: リーグの幹部は、バルサが一対一のルールに戻ったと話したと報じられています。
+    card:
+      type: table
+      title: バルセロナの「選手に使える上限」（夏の公表）
+      columns: *id005
+      rows: *id006
+      highlight_row: 5
+  sources:
+  - https://www.laliga.com/en-GB/transparency/economic-management/squad-cost-limit
+  - https://assets.laliga.com/assets/2022/03/14/originals/2deda1b7b04352b0dda8e21853296da1.jpeg
+  - https://assets.laliga.com/assets/2023/02/20/originals/2d18e5130d1a236fa704a4e0e544e8f8.pdf
+  - https://assets.laliga.com/assets/2024/02/20/originals/b49d40d6efe216aa02ec05e1596415f5.jpeg
+  - https://assets.laliga.com/assets/2025/02/18/originals/9bb7faa1838e6be61d2f25227724a906.pdf
+  - https://assets.laliga.com/assets/2026/03/03/originals/773708d2c0cb11b077a21405dbda21bf.pdf
+  - https://assets.laliga.com/assets/2026/09/10/originals/8322aac5b34ae1736439cc40e636265d.pdf
+  - https://business-school.laliga.com/en/news/salary-cap-what-is-it-examples-s
+  - https://assets.laliga.com/assets/2025/06/26/originals/2ce3f70cec1ec0e5c5e6f6af01dc9000.pdf
+  - https://www.elnacional.cat/es/deportes/publicados-nuevos-limites-salariales-laliga-ilusion-barcelona-record-real-madrid_1693699_102.html
+- id: stadium
+  heading: 新しいカンプ・ノウ
+  tier: 報道
+  official: true
+  telop: 909日ぶりの本拠地。完成すれば約10万5000人
+  narrator: 解説
+  card:
+    type: table
+    title: 新しいカンプ・ノウ
+    columns: &id007
+    - 時期
+    - 出来事
+    rows: &id008
+    - - 2023年4月
+      - 改修の資金 14億5000万ユーロを確保
+    - - 2023年5月28日
+      - 改修前の最後の試合
+    - - 2025年11月22日
+      - 909日ぶりに帰還（4万5157人）
+    - - 2026年3月10日
+      - 6万2652人まで入れる許可
+    - - 2027年夏
+      - 屋根の工事（予定）
+    - - 完成時
+      - およそ10万5000人
+  say:
+  - text: お金の話の真ん中にあるのが、バルセロナの本拠地カンプ・ノウの大改修です。
+    card:
+      type: table
+      title: 新しいカンプ・ノウ
+      columns: *id007
+      rows: *id008
+    image: assets/images/20261003_finance_barcelona/02.jpg
+  - text: 2023年4月、クラブは20の投資家と14億5千万ユーロの融資で合意。
+    card:
+      type: table
+      title: 新しいカンプ・ノウ
+      columns: *id007
+      rows: *id008
+      highlight_row: 0
+  - text: 5月28日のマジョルカ戦を最後に、スタジアムは工事に入りました。
+    card:
+      type: table
+      title: 新しいカンプ・ノウ
+      columns: *id007
+      rows: *id008
+      highlight_row: 1
+  - text: 戻ってきたのは2025年11月22日。909日ぶりの本拠地でした。
+    card:
+      type: table
+      title: 新しいカンプ・ノウ
+      columns: *id007
+      rows: *id008
+      highlight_row: 2
+    emph: true
+    image: assets/images/20261003_finance_barcelona/03.jpg
+  - text: アスレティック・ビルバオに4対0で勝ち、4万5157人が見届けました。
+    card:
+      type: table
+      title: 新しいカンプ・ノウ
+      columns: *id007
+      rows: *id008
+      highlight_row: 2
+  - text: 今年の3月には、6万2652人まで入れるようになりました。
+    card:
+      type: table
+      title: 新しいカンプ・ノウ
+      columns: *id007
+      rows: *id008
+      highlight_row: 3
+  - text: すべて終われば、席はいまの1.7倍近くまで増えます。
+    card:
+      type: table
+      title: 新しいカンプ・ノウ
+      columns: *id007
+      rows: *id008
+      highlight_row: 5
+  - text: 融資は、完成後に年約2億4700万ユーロと見込むスタジアムの収入で返します。
+    card:
+      type: table
+      title: 新しいカンプ・ノウ
+      columns: *id007
+      rows: *id008
+      highlight_row: 5
+  sources:
+  - https://www.fcbarcelona.com/en/club/news/3234018/fc-barcelona-agrees-financing-for-espai-barca
+  - https://www.fcbarcelona.com/en/football/first-team/news/4407735/first-game-back-at-spotify-camp-nou-in-figures
+  - https://www.aldia.cat/esports/noticia-lspotify-camp-nou-obte-llicencia-per-ampliar-laforament-fins-als-62000-espectadors-20260310150901.html
+  - https://www.cronicaglobal.cat/culemania/llotja/20260930/nou-lajuntament-barcelona-barca-impedeixen-camp-previsions/1003742798690_0.html
+  - https://espaibarca.fcbarcelona.com/en/spaces/future-spotify-camp-nou
+- id: abonos
+  main: true
+  heading: 年間シートの値段の見直し
+  tier: 報道
+  telop: 副会長「スタジアムが完成したら見直す」
+  narrator: キャスター
+  card:
+    type: table
+    title: 年間シートとスタジアムの収入
+    columns: &id009
+    - 項目
+    - 内容
+    rows: &id010
+    - - 2023年の一部の席
+      - 年180〜200ユーロ
+    - - 値上げ
+      - まだ決まっていない
+    - - 今季のスタジアム収入（予算）
+      - 2億8500万ユーロ（前年比27%増）
+  say:
+  - text: バルセロナが、年間シートの値段の見直しを口にしました。
+    image: assets/images/20261003_finance_barcelona/pair_fort/01.jpg
+    short_only: true
+  - text: 新しいカンプ・ノウの年間シートについて、副会長のエレナ・フォルトが語りました。
+    image: assets/images/20261003_finance_barcelona/pair_fort/01.jpg
+  - voice: エレナ・フォルト
+    text: スタジアムが完成したら、見直しを考えなければならない。
+  - voice: エレナ・フォルト
+    text: 私たちは、ずっとそう言ってきました。
+    cont: true
+  - voice: エレナ・フォルト
+    text: 前は、屋根の下の席がいちばん高かった。雨にぬれないからです。
+    cont: true
+  - voice: エレナ・フォルト
+    text: これからはスタジアム全体が屋根に覆われます。
+    cont: true
+  - voice: エレナ・フォルト
+    text: 良くなるところも、たくさんあります。
+    cont: true
+  - voice: エレナ・フォルト
+    text: だから、どう並べ直すかを見ていくことになります。
+    cont: true
+  - text: フォルトによると、2023年には年に180ユーロから200ユーロの席もありました。
+    card:
+      type: table
+      title: 年間シートとスタジアムの収入
+      columns: *id009
+      rows: *id010
+      highlight_row: 0
+  - voice: エレナ・フォルト
+    text: それは、どんな状況でも、まったく市場から外れた値段です。
+  - voice: エレナ・フォルト
+    text: このクラブは、会員が家族の集まりだとよく分かっています。
+  - voice: エレナ・フォルト
+    text: だから並べ直すときは、必ず釣り合いを取ります。
+    cont: true
+  - text: 値上げは、まだ決まっていません。クラブがいま急ぐのは、別の工事です。
+    emph: true
+    card:
+      type: table
+      title: 年間シートとスタジアムの収入
+      columns: *id009
+      rows: *id010
+      highlight_row: 1
+  - voice: エレナ・フォルト
+    text: いま集中すべきは、特別席の仕上げです。
+  - voice: エレナ・フォルト
+    text: 資金づくりを助けてくれるのは、その席だからです。
+    cont: true
+  - text: 今季の予算で、スタジアムの収入は2億8500万ユーロ。前の年より27%多い見込みです。
+    card:
+      type: table
+      title: 年間シートとスタジアムの収入
+      columns: *id009
+      rows: *id010
+      highlight_row: 2
+  quotes_from:
+  - ElNacional.cat https://www.elnacional.cat/es/deportes/barca-abre-puerta-subir-precio-abonos-cuando-spotify-camp-nou-este-terminado_1704511_102.html
+  - Crónica Global https://cronicaglobal.elespanol.com/culemania/palco/20261002/elena-fort-confirma-barca-spotify-camp-nou/1003742799309_0.html
+  sources:
+  - https://www.elnacional.cat/es/deportes/barca-abre-puerta-subir-precio-abonos-cuando-spotify-camp-nou-este-terminado_1704511_102.html
+  - https://cronicaglobal.elespanol.com/culemania/palco/20261002/elena-fort-confirma-barca-spotify-camp-nou/1003742799309_0.html
+  - https://www.infobae.com/america/agencias/2026/09/19/la-asamblea-del-barca-aprueba-holgadamente-las-cuentas-del-202526-y-el-presupuesto-202627/
+- id: view
+  heading: 世界2位の収入と、使える額の差
+  tier: 背景
+  viewpoint: true
+  telop: レアルとの上限の差は、5年で半分以下に
+  narrator: 解説
+  card:
+    type: table
+    title: 収入と「選手に使える上限」（ユーロ）
+    columns: &id011
+    - 項目
+    - バルセロナ
+    - レアル・マドリード
+    rows: &id012
+    - - 世界の収入（2024-25）
+      - 2位 9億7500万
+      - 1位 約12億
+    - - 上限（2021-22 夏）
+      - 9794万
+      - 7億3916万
+    - - 上限（2026-27 夏）
+      - 5億8277万
+      - 8億3279万
+    - - 上限の差
+      - 6億4122万 → 2億5002万
+      - ''
+  say:
+  - text: 世界2位の稼ぎがあるバルセロナが、なぜ補強に苦しんできたのか。
+    card:
+      type: table
+      title: 収入と「選手に使える上限」（ユーロ）
+      columns: *id011
+      rows: *id012
+    image: assets/images/20261003_finance_barcelona/03.jpg
+  - text: 比べられる最新の2024-25年度で、収入は9億7500万ユーロ。
+    card:
+      type: table
+      title: 収入と「選手に使える上限」（ユーロ）
+      columns: *id011
+      rows: *id012
+      highlight_row: 0
+  - text: 1位のレアル・マドリードは、約12億ユーロでした。
+    card:
+      type: table
+      title: 収入と「選手に使える上限」（ユーロ）
+      columns: *id011
+      rows: *id012
+      highlight_row: 0
+  - text: ところが選手に使える上限は、マドリードの8億3279万ユーロに届きません。
+    card:
+      type: table
+      title: 収入と「選手に使える上限」（ユーロ）
+      columns: *id011
+      rows: *id012
+      highlight_row: 2
+  - text: 上限は、収入から選手以外の出費を引いた残り。稼いでも、出ていく額が大きければ増えません。
+    card:
+      type: table
+      title: 収入と「選手に使える上限」（ユーロ）
+      columns: *id011
+      rows: *id012
+  - text: しかも2022年に売った放映権の取り分は、この先も毎年、投資会社へ流れます。
+    card:
+      type: table
+      title: 収入と「選手に使える上限」（ユーロ）
+      columns: *id011
+      rows: *id012
+  - text: ただ、差は縮んでいます。5年前、上限の差は6億4122万ユーロありました。
+    card:
+      type: table
+      title: 収入と「選手に使える上限」（ユーロ）
+      columns: *id011
+      rows: *id012
+      highlight_row: 1
+  - text: それがいまは2億5002万ユーロ。半分以下になりました。
+    card:
+      type: table
+      title: 収入と「選手に使える上限」（ユーロ）
+      columns: *id011
+      rows: *id012
+      highlight_row: 3
+    emph: true
+  - text: 次の上限は、冬の移籍市場のあとに公表されます。今年は3月3日でした。
+    card:
+      type: table
+      title: 収入と「選手に使える上限」（ユーロ）
+      columns: *id011
+      rows: *id012
+  - text: スタジアムは来年3月に特別席、早ければ4月か5月に最上段の席が開く見込み。
+    card:
+      type: table
+      title: 収入と「選手に使える上限」（ユーロ）
+      columns: *id011
+      rows: *id012
+  - text: 席が増え、値段が並べ直されるほど、上限が上がる余地も広がります。
+    card:
+      type: table
+      title: 収入と「選手に使える上限」（ユーロ）
+      columns: *id011
+      rows: *id012
+  sources:
+  - https://www.deloitte.com/uk/en/about/press-room/real-madrid-tops-deloitte-football-money-league.html
+  - https://assets.laliga.com/assets/2022/03/14/originals/2deda1b7b04352b0dda8e21853296da1.jpeg
+  - https://assets.laliga.com/assets/2026/09/10/originals/8322aac5b34ae1736439cc40e636265d.pdf
+  - https://assets.laliga.com/assets/2026/03/03/originals/773708d2c0cb11b077a21405dbda21bf.pdf
+  - https://www.cronicaglobal.cat/culemania/llotja/20260930/nou-lajuntament-barcelona-barca-impedeixen-camp-previsions/1003742798690_0.html

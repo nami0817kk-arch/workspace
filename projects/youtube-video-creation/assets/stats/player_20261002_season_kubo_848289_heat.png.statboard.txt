@@ -1,0 +1,4 @@
+title: 久保建英の今季のヒートマップ
+unit: touches
+points=121
+source: FotMob

@@ -402,3 +402,12 @@ def test_古い写真は知らせるが止めない():
     assert PORTRAIT_OLD_YEARS == 5
     # クロップの2010年の写真は、いつ実行しても「古い」に落ちる
     assert datetime.date.today().year - 2010 >= PORTRAIT_OLD_YEARS
+
+
+def test_名指しのファイル名はFile付きにそろえる():
+    """材料集めは File 名を「File:」無しで書く。そのまま渡すと Commons が見つけられなかった（2026-09-28 ヤマル）。"""
+    from src.portrait import with_file_prefix
+
+    assert with_file_prefix("Lamine Yamal in 2025 (cropped2).jpg") == "File:Lamine Yamal in 2025 (cropped2).jpg"
+    assert with_file_prefix("File:Lamine Yamal in 2025 (cropped2).jpg") == "File:Lamine Yamal in 2025 (cropped2).jpg"
+    assert with_file_prefix("") == ""

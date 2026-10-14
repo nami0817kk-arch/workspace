@@ -1,0 +1,6 @@
+title: ヴィニシウスの今季のシュート
+unit: xG
+shots=22
+goals=1
+xg=3.01
+source: FotMob

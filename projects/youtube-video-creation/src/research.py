@@ -22,6 +22,8 @@ from .backgrounds import moving_background
 from .config import _resolve
 
 from . import coverage, xposts
+from . import marks as _marks
+from . import cards as _cards
 from .plan import Plan
 
 # 節の中身に合う背景を選ぶ。順番に配るだけだと、緑の芝ばかりが続く
@@ -119,6 +121,9 @@ class Section:
     # **代弁は出典のある発言だけ**に使う（2026-09-05 の型）
     voices: list[str] = field(default_factory=list)
     sources: list[str] = field(default_factory=list)
+    # **言葉を実際に引いた記事**（2026-09-30）。書けば概要欄の「選手コメントの引用元」はこれだけになる。
+    # 書かなければ、名前のある人の発言がある節の sources から拾う（事実の確認に使った記事も混ざる）
+    quotes_from: list[str] = field(default_factory=list)
     official: bool = False
     card: dict | None = None
     # **行ごとのテロップとカード。**節に1枚だけだと、節の途中で画面が
@@ -128,6 +133,7 @@ class Section:
     # 行に差し込む写真。**本文に写真が1枚も入っていなかった**（実測 2026-09-06）。
     # 使えるライセンスが広がったので、顔を本文にも出す
     line_images: list = field(default_factory=list)
+    line_pauses: list = field(default_factory=list)   # 行のあとに置く間（秒）。引用のあとなど（品質100回の22）
     # 行ごとの "short"（ショート専用）。空なら本編にも出す
     line_onlys: list = field(default_factory=list)
     # **画面に出している板と字幕が同じなら、字幕は出さない**（2026-09-20 指示
@@ -137,6 +143,13 @@ class Section:
     # **ショートの締めに回す反応**（2026-09-15 指示）。印の付いた反応だけを
     # ショートの最後に足す。付いていなければ今までどおり上から順に取る
     line_short_voices: list = field(default_factory=list)
+    # **長い反応を行に分けたときの「続き」の印**（2026-09-26）。ショートが反応を
+    # 行ごとに拾って前半だけで切れた（久保の回）。続きの行は前の行とひとかたまり
+    line_conts: list = field(default_factory=list)
+    # **山を作る行**（2026-10-03 ④）。台本に `emph: true` を書き、声の抑揚を強める
+    line_emphs: list = field(default_factory=list)
+    # **書き込み（赤ペン）**（2026-10-07、src/marks.py）。行ごとに確かめた辞書の並び
+    line_marks: list = field(default_factory=list)
     bg: str = ""      # この節の背景。空なら既定の並びから割り当てる
     # **その節の地の文を誰が読むか**（2026-09-09 ユーザー指示）。
     # 空なら今までどおりキャスターと解説の交互。「何が起きたか」は事実なので
@@ -147,6 +160,7 @@ class Section:
     # **聞く人には要らない言葉**だった。読み上げから外し、指定だけを残す。
     # ショートはこの印の付いた節を優先して選ぶ（`shorts.MAIN_BONUS`）
     main: bool = False
+    viewpoint: bool = False          # こちらの見立ての節（2026-09-28 収益化の整理）
 
 
 # まとめの答えの上限。**実測で決めた**（2026-09-08）。
@@ -194,25 +208,29 @@ FORMATS = {
         "label": "海外サッカー ニュース",
         "needs_question": True, "needs_answer": False, "wrap": False,
         "min_sections": 3,
-        "voice_min": 40.0,
-        "note": "※各社の報道をもとにしています。クラブが発表した「確定」、\n"
+        "voice_min": 0.0,
+        # 「※各社の報道をもとにしています。」はやめた（2026-09-30 ユーザー「記事から動画作ってると
+        # 思われたくないの」）。画面の札の説明だけ残す
+        "note": "※画面の札で、クラブが発表した「確定」、\n"
                 "報道機関が伝える「報道」、SNS段階の「未確認」、\n"
-                "経緯の説明である「背景」を画面上で分けています。\n",
+                "経緯の説明である「背景」を分けています。\n",
     },
     "voices": {
         "label": "みんなの反応",
         "needs_question": False, "needs_answer": False, "wrap": False,
         "min_sections": 2,
-        "voice_min": 70.0,
-        "note": "※反応は実在する投稿・記事から引いています。出典は下にあります。\n"
+        "voice_min": 0.0,
+        "note": "※反応は実在する投稿から引いています。\n"
                 "個人が特定できる形では出していません。\n",
     },
     "quote": {
         "label": "本人の言葉",
         "needs_question": False, "needs_answer": False, "wrap": False,
         "min_sections": 1,
-        "voice_min": 60.0,
-        "note": "※発言は下の記事から引いています。\n",
+        "voice_min": 0.0,
+        # **引用元の行は出さない**（2026-09-29 ユーザー「概要欄の引用元消したい」）。記事のURLは
+        # 9/17 から載せていないので、「下の記事」は何も指していなかった
+        "note": "",
     },
 }
 
@@ -248,6 +266,8 @@ class Notes:
     # 一言を述べてから始める」）。プレミア20クラブ紹介のために足した。
     # 書いていなければ、その行は出さない（今までどおりタイトルから始まる）
     lead: str = ""
+    # 冒頭に出す名前の板（「アーリング・ハーランド｜マンチェスター・シティ FW」。選手紹介 2026-09-28）
+    nameplate: str = ""
     # **このあと話すことを、冒頭で見せる**（2026-09-23 指摘「最初の15秒で人が離れる
     # 可能性があるから、この後の流れを見せるのもあり」）。題を読む行に表を出す。
     # 取材メモの `theme.opening_card`（{type: table, ...}）に書く
@@ -256,7 +276,9 @@ class Notes:
     # オープニングの3行（一言・題・つかみ）にこの絵を当てる。板を指定したときは、
     # 「この動画で分かること」は板に焼き込んである（板の上にカードは重ねない決まり）
     opening_image: str = ""
+    bgm: str = ""    # BGM のファイル（theme.bgm。紹介ものは落ち着いた曲。品質100回の23）
     answer: str = ""                 # まとめで返す答え
+    takeaway: str = ""               # この動画の見立て（概要欄に1行。2026-09-28 収益化の整理 7）
     watch: str = ""                  # 次に何を見るか
     follow_up: bool = False
     # **ショートに反応を入れない回**（2026-09-14 指示「この話題において、
@@ -272,6 +294,8 @@ class Notes:
     topic: str = ""                  # 話題のまとまり。続報かどうかを見るのに使う
     thumbnail: dict = field(default_factory=dict)
     sections: list[Section] = field(default_factory=list)
+    # 取材メモのファイル名（拡張子なし）。サムネの構図が続いていないかを、投稿の控えと突き合わせるのに使う
+    stem: str = ""
 
     @property
     def video_title(self) -> str:
@@ -286,6 +310,27 @@ class Notes:
         seen: list[str] = []
         for section in self.sections:
             for url in section.sources:
+                if url not in seen:
+                    seen.append(url)
+        return seen
+
+    @property
+    def quote_sources(self) -> list[str]:
+        """**選手・監督の言葉を引いた記事**（2026-09-30 ユーザー「選手コメントの引用先にしよう。
+        出典だと、真似してるみたい」）。名前のある人の発言がある節の出典だけを拾う。
+        反応（ネット民など）の節、SNS の投稿、コメント欄、数字のサイトは入れない
+        """
+        skip_hosts = ("x.com", "twitter.com", "fotmob.com", "transfermarkt", "wikipedia.org",
+                      "site.api.espn.com", "wikidata.org")
+        seen: list[str] = []
+        for section in self.sections:
+            named = [v for v in section.voices if v and v not in CROWD_VOICES]
+            if not named:
+                continue
+            for url in (section.quotes_from or section.sources):
+                low = url.lower()
+                if any(host in low for host in skip_hosts) or low.rstrip("/").endswith("/comments"):
+                    continue
                 if url not in seen:
                     seen.append(url)
         return seen
@@ -313,7 +358,18 @@ def load_notes(path: str | Path) -> Notes:
                 '（例: - "**4試合**になりました。"）。YAML は `*` を別名の印とみなします'
             ) from err
         raise ResearchError(f"{path} を読めません: {err}") from err
-    return build_notes(raw)
+    notes = build_notes(raw)
+    notes.stem = path.stem
+    return notes
+
+
+def _viewpoint_card(raw: dict) -> dict | None:
+    """見立ての節に置く引用カード。`theme.takeaway` を画面にも出す（自作の絵を1枚増やす）。"""
+    theme = raw.get("theme") or {}
+    text = str(raw.get("takeaway") or theme.get("takeaway") or "").strip()
+    if not text:
+        return None
+    return {"type": "quote", "label": "この動画の見立て", "text": text}
 
 
 def build_notes(raw: dict) -> Notes:
@@ -347,8 +403,12 @@ def build_notes(raw: dict) -> Notes:
         telops: list[str] = []
         cards: list = []
         images: list[str] = []
+        pauses: list[float] = []
         onlys: list[str] = []
         picks: list[bool] = []
+        conts: list[bool] = []
+        emphs: list[bool] = []
+        inks: list[list] = []
         mutes: list[bool] = []
         for item in raw_lines:
             if isinstance(item, dict):
@@ -366,29 +426,46 @@ def build_notes(raw: dict) -> Notes:
                 telops.append(str(item.get("telop", "")).strip())
                 cards.append(item.get("card"))
                 images.append(str(item.get("image", "")).strip())
+                pauses.append(float(item.get("pause") or 0.0))
                 # **ショートにだけ出す行**（2026-09-14 指示「ショートでも、
                 # 試合の概要を最初に説明して」）。ショートは節を切り出して
                 # 単体で出すので前置きが要るが、本編に残すと言い直しになる
-                onlys.append("short" if item.get("short_only") else "")
+                # **本編にだけ出す行**（2026-10-07、本編で前置きした人の名前が
+                # ショートの反応に説明なしで出た。久保の回の「ダニ・ディアス」）
+                onlys.append("short" if item.get("short_only")
+                             else "main" if item.get("main_only") else "")
                 # **ショートの締めに回す反応**（2026-09-15 指示）。
                 # 上から順に取ると、1件目が見出しの言い直しになる回がある
                 picks.append(bool(item.get("short_voice")))
                 mutes.append(bool(item.get("no_telop")))
+                conts.append(bool(item.get("cont")))
+                emphs.append(bool(item.get("emph")))
+                # **書き込み**（2026-10-07）。書き方の誤り（知らない kind・鍵）はここで止める。
+                # 指した行がカードにあるか・1画面2つまでかは verify が台本の形で見る
+                try:
+                    inks.append(_marks.parse(item.get("mark"), f"{entry.get('id') or index}: "))
+                except _marks.MarkError as exc:
+                    raise ResearchError(str(exc)) from exc
             else:
                 lines.append(str(item).strip())
                 voices.append("")
                 telops.append("")
                 cards.append(None)
                 images.append("")
+                pauses.append(0.0)
                 onlys.append("")
                 picks.append(False)
                 mutes.append(False)
+                conts.append(False)
+                emphs.append(False)
+                inks.append([])
         keep = [i for i, s in enumerate(lines) if s]
         sections.append(
             Section(
                 id=str(entry.get("id") or f"s{index}"),
                 heading=str(entry.get("heading", "")).strip(),
                 main=bool(entry.get("main", False)),
+                viewpoint=bool(entry.get("viewpoint", False)),
                 tier=str(entry.get("tier", "")).strip(),
                 telop=str(entry.get("telop", "")).strip(),
                 say=[s for s in lines if s],
@@ -396,12 +473,18 @@ def build_notes(raw: dict) -> Notes:
                 line_telops=[telops[i] for i in keep],
                 line_cards=[cards[i] for i in keep],
                 line_images=[images[i] for i in keep],
+                line_pauses=[pauses[i] for i in keep],
                 line_onlys=[onlys[i] for i in keep],
                 line_short_voices=[picks[i] for i in keep],
+                line_conts=[conts[i] for i in keep],
+                line_emphs=[emphs[i] for i in keep],
+                line_marks=[inks[i] for i in keep],
                 line_no_telops=[mutes[i] for i in keep],
                 sources=[str(u).strip() for u in (entry.get("sources") or []) if str(u).strip()],
+                quotes_from=[str(u).strip() for u in (entry.get("quotes_from") or []) if str(u).strip()],
                 official=bool(entry.get("official", False)),
-                card=entry.get("card"),
+                # **見立ての節にカードが無ければ、見立てそのものを引用カードで出す**（2026-09-28）
+                card=entry.get("card") or (_viewpoint_card(raw) if entry.get("viewpoint") else None),
                 bg=str(entry.get("bg", "")).strip(),
                 narrator=str(entry.get("narrator", "")).strip(),
             )
@@ -430,10 +513,13 @@ def build_notes(raw: dict) -> Notes:
         prefix=str(theme.get("prefix") or "").strip().strip("【】"),
         hook=str(theme.get("hook") or "").strip(),
         lead=str(theme.get("lead") or "").strip(),
+        nameplate=str(theme.get("nameplate") or "").strip(),
         opening_card=(dict(theme["opening_card"]) if theme.get("opening_card") else None),
         opening_image=str(theme.get("opening_image") or "").strip(),
+        bgm=str(theme.get("bgm") or "").strip(),
         thumbnail=dict(raw.get("thumbnail") or {}),
         answer=str(raw.get("answer") or "").strip(),
+        takeaway=str(raw.get("takeaway") or theme.get("takeaway") or "").strip(),
         watch=str(raw.get("watch") or "").strip(),
         follow_up=bool(raw.get("follow_up", False)),
         short_voices=raw.get("short_voices", True) is not False,
@@ -488,7 +574,18 @@ def verify(notes: Notes, plan: Plan) -> list[str]:
     problems += _check_voices_last(notes)
     problems += _check_quote_timing(notes)
     problems += _check_thumbnail_resolution(notes)
+    problems += _check_thumbnail_layout(notes)
     problems += _check_line_images_wide(notes)
+    problems += _check_20261001(notes)
+    problems += _check_viewpoint_substance(notes)
+    # **voices 型は新しく作らない**（2026-09-28 ユーザー決定「収益化することが目的なので、
+    # そこに目線を合わせましょう」）。YouTube の収益化ポリシーは「他の資料の内容を
+    # 読み上げただけのコンテンツ」「他のソーシャル メディアのコンテンツを集めた短い動画」を
+    # 対象外にしている。事実30秒のあと反応を読み続けるこの型が、いちばん近い
+    if notes.format == "voices":
+        problems.append(
+            "型『voices』は新しく作りません（2026-09-28、収益化の審査に合わせる）。"
+            "news にして、こちらの解説（数字・経緯・なぜ）を主役にしてください")
     if notes.format == "voices" and not _has_crowd(notes):
         problems.append(
             "型『voices』なのに、反応の行（voice: ネット民 など）がありません。"
@@ -529,7 +626,28 @@ def verify(notes: Notes, plan: Plan) -> list[str]:
                 "発表を確認できないなら tier を下げてください"
             )
     problems += _check_voice_clash(notes)
+    if not problems:
+        problems += _check_marks(notes, plan)
     return problems
+
+
+def _check_marks(notes: Notes, plan) -> list[str]:
+    """**書き込み（赤ペン）の先と数**（2026-10-07）。台本に組んだ形で見る。
+
+    カードは行をまたいで引き継がれ、写真があると1行で下ろされる（CARD_LINES_MAX）。取材メモの
+    並びだけで数えるとずれるので、実際に組んだ台本の行で「その行に出ている表の何行目か」
+    「1画面2つまでか」を見る（script_model の読み込みと同じ決まり）。
+    """
+    if not any(m for section in notes.sections for m in section.line_marks):
+        return []
+    from .script_model import parse_script
+
+    try:
+        script = parse_script(_compose_script(notes, plan))
+    except Exception as exc:          # 書き込み以外で組めないときは、その知らせが先に出ている
+        message = str(exc)
+        return [message] if "書き込み" in message else []
+    return [f"書き込み（mark）: {p}" for p in _marks.check_script(script)]
 
 def _has_crowd(notes: Notes) -> bool:
     """匿名の反応の行があるか。voice が付いていてキャスター・解説ではないもの。"""
@@ -553,6 +671,88 @@ def _voice_heavy(section: Section) -> bool:
         return False
     crowd = sum(1 for v in section.voices if v in CROWD_VOICES)
     return crowd * 2 >= len(section.say)
+
+
+THUMB_ONLY_MARK = ".thumbonly"   # tools/thumbpanel.py が「サムネ専用の絵」に置く印
+
+
+# **見立ての中身の型**（2026-10-03 ユーザー選択「動画の質を上げる仕組み ⑥」）。
+# 収益化の審査が対象外にする「読み上げただけ」から離れるのは、こちらが比べて言えること。
+# 見出しの言葉（_check_20261001）は見ていたが、中身が感想だけでも通っていた
+VIEW_COMPARE = re.compile(r"より|上回|下回|倍|差|比べ|並ぶ|以来|前回|昨季|去年|年前|これまで|過去|初めて|史上|一度も|最多|最少|上位|下位")
+VIEW_NEXT = re.compile(r"(?:\d+月)?\d+日|次の|次は|次に|目指|次戦|来週|来月|このあと|この先|これから|待って|控え")
+VIEW_NUMBER = re.compile(r"\d[\d,.]*")
+
+
+def _check_viewpoint_substance(notes: Notes) -> list[str]:
+    """**見立ての節に「比べ」か「次に起きること」が1つは入っているか**（2026-10-03）。
+
+    通すのは、語りの行（代弁・反応を除く）に次のどれかがあるとき。
+    1. 数字の比べ：1行に数字が2つ以上
+    2. 過去・ほかとの比べ：「以来」「前回」「昨季」「これまで」「史上」「より」など
+    3. 次に起きること：日付（5日・10月11日）や「次の」「これから」「待って」など
+    どれも無い見立ては感想で終わっている。止めて、比べか次の予定を足してもらう。
+    """
+    out: list[str] = []
+    for sec in notes.sections:
+        if not sec.viewpoint:
+            continue
+        lines = [t for i, t in enumerate(sec.say)
+                 if not (sec.voices[i] if i < len(sec.voices) else "")]
+        ok = any(len(VIEW_NUMBER.findall(t)) >= 2 or VIEW_COMPARE.search(t) or VIEW_NEXT.search(t)
+                 for t in lines)
+        if not ok:
+            out.append(f"見立ての節『{sec.heading}』に、比べ（数字2つ・過去やほかとの比べ）も、"
+                       "次に起きること（日付・次の試合）もありません。感想だけで終わっています"
+                       "（2026-10-03「動画の質を上げる仕組み ⑥」）。数字で比べた1行か、次の予定の1行を足してください")
+    return out
+
+
+def _check_20261001(notes: Notes) -> list[str]:
+    """**2026-10-01 にまとめて言われたことを、見せる前に止める**（ユーザー「本日の指摘事項を再度指摘されないように」）。
+
+    1. シリーズの回のサムネに札（シリーズ名）を付けない ……「サムネの選手紹介は無くして」
+    2. 見立ての節の見出しを「見立て」だけにしない ……「見立ては何についてかを分かりやすく」
+    3. 選手紹介にはキャリア通算の表を入れる ……「キャリア全体の数値を出したい」
+    4. 欧州組の月間まとめは、題で欧州組の日本人の回だと分かる ……「ちゃんと欧州日本人の9月とわかる」「8のタイトルは変えてね」
+    5. サムネ専用に表を描き込んだ絵を、本編の冒頭に敷かない（ヤマル紹介で名前の札と表が重なった）
+    """
+    out: list[str] = []
+    series = (notes.series or "").strip()
+    thumb = notes.thumbnail or {}
+    badge = str(thumb.get("note_red") or "").strip()
+    if series and badge:
+        out.append(f"サムネに札「{badge}」があります。シリーズの回は札を付けません（2026-10-01「サムネの選手紹介は無くして」）。"
+                   "thumbnail.note_red を消してください")
+    for sec in notes.sections:
+        if sec.viewpoint and (sec.heading.strip() in ("見立て", "この動画の見立て", "最後に見立て")
+                              or sec.heading.strip().startswith("（")):
+            out.append(f"見立ての節の見出しが「{sec.heading}」だけです。何についての見立てかが分かる見出しにしてください"
+                       "（2026-10-01「見立ては何についてかを分かりやすく」。例：エムバペとの今季の差）")
+    if "選手の紹介" in series or series == "選手紹介":
+        def _has_total(sec) -> bool:
+            # **表の題に「通算」**があること。本文に「代表通算65点」と1度出るだけでは通さない（ハーランドが素通りした）
+            cards = [sec.card or {}] + [c or {} for c in (sec.line_cards or [])]
+            return any(isinstance(c, dict) and str(c.get("type", "")).lower() == "table"
+                       and "通算" in str(c.get("title") or "") for c in cards)
+        if not any(_has_total(sec) for sec in notes.sections):
+            out.append("選手紹介に、キャリア通算（クラブと代表の試合・得点の合計）の表がありません"
+                       "（2026-10-01「キャリア全体の数値を出したい」。ヤマル紹介の「キャリア全体の数字」の節が見本）")
+    if "月間まとめ" in series or "週報" in series or "欧州組" in series:
+        head = f"{notes.title}"
+        if not any(w in head for w in ("欧州組", "日本人", "海外組")):
+            out.append(f"題「{notes.title}」から、欧州組の日本人をまとめた回だと分かりません。"
+                       "題に「欧州組」か「日本人」を入れてください（2026-10-01「8のタイトルは変えてね」）")
+        lines = f"{thumb.get('line1') or ''}{thumb.get('line2') or ''}"
+        if not any(w in lines for w in ("欧州", "日本人", "海外組")):
+            out.append("サムネの文字から、欧州組の日本人の回だと分かりません（2026-10-01「ちゃんと欧州日本人の9月とわかるサムネに」）")
+    photo = str(thumb.get("photo") or "")
+    if photo and not notes.opening_image:
+        mark = Path(__file__).resolve().parents[1] / (photo + THUMB_ONLY_MARK)
+        if mark.exists():
+            out.append(f"サムネ専用の絵（{photo}）が、本編とショートの冒頭にも敷かれます。theme.opening_image に"
+                       "表を描き込んでいない写真を指定してください（2026-10-01 ヤマル紹介で名前の札と表が重なった）")
+    return out
 
 
 def _check_voices_last(notes: Notes) -> list[str]:
@@ -613,8 +813,8 @@ def _check_voice_clash(notes: Notes) -> list[str]:
 
 
 # 1行ぶんの辞書に書いてよい鍵
-LINE_KEYS = frozenset({"text", "voice", "telop", "card", "image",
-                       "short_only", "short_voice", "no_telop"})
+LINE_KEYS = frozenset({"text", "voice", "telop", "card", "image", "pause",
+                       "short_only", "main_only", "short_voice", "no_telop", "cont", "emph", "mark"})
 
 
 def _check_card(section: Section) -> list[str]:
@@ -625,11 +825,19 @@ def _check_card(section: Section) -> list[str]:
     `render` で「table カードには columns と rows が必要です」で落ちた。
     落ちる条件はカードの側が知っているので、ここで先に同じことを見る。
     """
-    card = section.card or {}
+    problems: list[str] = []
+    # **行ごとのカードも見る**（2026-10-07）。判定表（verdict）は話している行を光らせるために
+    # 行ごとにカードを持たせるので、節のカードだけ見ていると壊れた行が書き出しまで通る
+    cards = [section.card] + list(section.line_cards or [])
+    for card in cards:
+        if isinstance(card, dict) and card:
+            problems += _check_one_card(section, card)
+    return problems
+
+
+def _check_one_card(section: Section, card: dict) -> list[str]:
     kind = str(card.get("type", "")).lower()
     problems: list[str] = []
-    if not card:
-        return problems
     # **type の名前そのものを見ていなかった**（2026-09-18 に踏んだ）。
     # `type: bullets` と書いた取材メモが draft を通り、**音声を合成し終えた
     # あとの render** で「カードの type は … のいずれか」で落ちた。
@@ -665,6 +873,106 @@ def _check_card(section: Section) -> list[str]:
                                     f"{{label: …, value: …}} で書いてください（{str(item)[:30]}）")
                     break
         problems += _check_bar_units(section, card)
+    elif kind in NEW_CARD_KEYS:
+        problems += _check_number_card(section, card, kind)
+    return problems
+
+
+# 2026-10-07 に足した4つの型で書いてよい鍵。**知らない鍵は止める**（行の鍵と同じ考え。
+# `item:` と `items:` の書き違いを、書き出しの途中ではなく draft で見つける）
+NEW_CARD_KEYS = {
+    "stats": frozenset({"type", "title", "items", "focus", "note", "source", "color"}),
+    "verdict": frozenset({"type", "title", "columns", "rows", "highlight_row", "note", "source", "color"}),
+    "calc": frozenset({"type", "title", "terms", "ops", "note", "source", "color"}),
+    "versus": frozenset({"type", "title", "left", "right", "credit"}),
+    # 2026-10-07 夜（③2軸の散らばり図・⑤換算の板）。鍵の一覧は cards の側に1つだけ置く
+    "scatter": _cards.SCATTER_KEYS,
+    "convert": _cards.CONVERT_KEYS,
+    # 2026-10-08（折れ線・増減の内訳・年表）。鍵の一覧は cards の側に1つだけ置く
+    "line": _cards.LINE_KEYS,
+    "waterfall": _cards.WATERFALL_KEYS,
+    "timeline": _cards.TIMELINE_KEYS,
+}
+
+
+def _check_number_card(section: Section, card: dict, kind: str) -> list[str]:
+    """stats・verdict・calc・versus・scatter・convert の形を見る（2026-10-07）。落ちる条件は cards の側と同じ。"""
+    from . import cards as cards_mod
+
+    where = f"{section.id}: {kind} カード"
+    unknown = sorted(str(k) for k in card if k not in NEW_CARD_KEYS[kind])
+    if unknown:
+        return [f"{where}に知らない鍵があります（{unknown[0]}）。"
+                f"使えるのは {'・'.join(sorted(NEW_CARD_KEYS[kind]))}"]
+    problems: list[str] = []
+    if kind == "stats":
+        items = cards_mod.stat_items(card)
+        if not items or not all(i["number"] for i in items):
+            problems.append(f"{where}には items（[数字, 単位, 注記] を1〜3つ）が必要です")
+        elif len(items) > 3:
+            problems.append(f"{where}の items は3つまでです（{len(items)}つ）。強い一点に絞ってください")
+        focus = card.get("focus")
+        if isinstance(focus, int) and not isinstance(focus, bool) and items and not 0 <= focus < len(items):
+            problems.append(f"{where}の focus（{focus}）は 0〜{len(items) - 1} で書いてください")
+    elif kind == "verdict":
+        rows = card.get("rows") or []
+        if not rows or not all(isinstance(r, (list, tuple)) for r in rows):
+            problems.append(f"{where}には rows（[項目, 判定, 一言] の並び）が必要です")
+            return problems
+        lengths = {len(r) for r in rows}
+        if len(lengths) != 1 or next(iter(lengths)) not in (2, 3):
+            problems.append(f"{where}の各行は [項目, 判定] か [項目, 判定, 一言] でそろえてください")
+            return problems
+        bad = [str(r[1]) for r in rows if not cards_mod.verdict_mark(r[1])]
+        if bad:
+            problems.append(f"{where}の判定『{bad[0]}』は使えません。"
+                            f"{'・'.join(cards_mod.VERDICT_MARKS)} のどれかにしてください")
+        columns = card.get("columns")
+        if columns and len(columns) != len(rows[0]):
+            problems.append(f"{where}の columns は行と同じ数（{len(rows[0])}）にしてください")
+        hl = card.get("highlight_row")
+        if hl is not None and not (isinstance(hl, int) and 0 <= hl < len(rows)):
+            problems.append(f"{where}の highlight_row（{hl}）は 0〜{len(rows) - 1} で書いてください")
+    elif kind == "calc":
+        terms = cards_mod.calc_terms(card)
+        if len(terms) < 2 or not all(t["value"] for t in terms):
+            problems.append(f"{where}には terms（[値, 注記] を2つ以上）が必要です")
+            return problems
+        ops = cards_mod.calc_ops(card, len(terms))
+        if len(ops) != len(terms) - 1:
+            problems.append(f"{where}の ops は項より1つ少なく（{len(terms) - 1}個）書いてください"
+                            f"（いまは{len(ops)}個）")
+        odd = [op for op in ops if op not in cards_mod.CALC_OPS]
+        if odd:
+            problems.append(f"{where}の記号『{odd[0]}』は使えません（{' '.join(cards_mod.CALC_OPS)}）")
+    elif kind == "versus":
+        for side_name in ("left", "right"):
+            side = card.get(side_name)
+            if not isinstance(side, dict):
+                problems.append(f"{where}には {side_name}: {{image, name, number, note}} が必要です")
+                continue
+            extra = sorted(str(k) for k in side if k not in cards_mod.VERSUS_SIDE_KEYS)
+            if extra:
+                problems.append(f"{where}の {side_name} に知らない鍵があります（{extra[0]}）。"
+                                f"使えるのは {'・'.join(sorted(cards_mod.VERSUS_SIDE_KEYS))}")
+            if not str(side.get("name") or "").strip():
+                problems.append(f"{where}の {side_name} に name がありません")
+            image = str(side.get("image") or "").strip()
+            if not image:
+                problems.append(f"{where}の {side_name} に image がありません")
+            elif not _resolve(image).exists():
+                problems.append(f"{where}の {side_name} の写真がありません: {image}")
+    elif kind == "scatter":
+        # 点11個・数でない座標・知らない focus は、書き出しの途中ではなくここで止める
+        problems += [f"{section.id}: {p}" for p in cards_mod.check_scatter(card)]
+    elif kind == "convert":
+        problems += [f"{section.id}: {p}" for p in cards_mod.check_convert(card)]
+    elif kind in ("line", "waterfall", "timeline"):
+        # 2026-10-08。上限を超えた項目数・数でない値・知らない focus/highlight は、
+        # 書き出しの途中ではなくここで止める（落ちる条件は cards の側と同じ）
+        checker = {"line": cards_mod.check_line, "waterfall": cards_mod.check_waterfall,
+                   "timeline": cards_mod.check_timeline}[kind]
+        problems += [f"{section.id}: {p}" for p in checker(card)]
     return problems
 
 
@@ -750,9 +1058,24 @@ def _has_name(title: str, sections) -> bool:
     return bool(re.search(r"[一-鿿]{2,4}", title))
 
 
-# **読み上げる反応は10〜20件**（2026-09-07 ユーザー決定）。
-# 伸びている3チャンネルの実測は他人の声が尺の58%・19.2件で、こちらは14%・2.2件だった
-REACTION_MIN = 10
+# **ネットの反応は3件まで**（2026-09-28 ユーザー決定。それまでは10〜20件）。
+# 再生数を追って増やしてきたが、収益化の審査は「他のソーシャル メディアの
+# コンテンツを集めた」動画を対象外にする。反応は、こちらの解説の材料として2〜3件
+REACTION_MAX = 3
+
+
+def _crowd_count(notes: Notes) -> int:
+    """ネットの反応の件数。行に分けた続き（cont）は頭の行と合わせて1件に数える。"""
+    count = 0
+    for sec in notes.sections:
+        conts = list(getattr(sec, "line_conts", []) or [])
+        for number, voice in enumerate(sec.voices):
+            if str(voice or "").strip() not in ("ネット民", "現地サポ", "海外のファン"):
+                continue
+            if number < len(conts) and conts[number]:
+                continue
+            count += 1
+    return count
 
 
 def advise(notes: Notes, plan: Plan | None = None, now=None) -> list[str]:
@@ -764,12 +1087,22 @@ def advise(notes: Notes, plan: Plan | None = None, now=None) -> list[str]:
     # サンバの回は6件、ヴァツケの回は日本語0件のまま書き出せた。
     # **数が少ない回はある**（記事が1本しか出ていない題材など）ので**止めない**。
     # 気づかずに出ることだけを防ぐ
-    voices = sum(1 for sec in notes.sections for v in sec.voices
-                 if str(v or "").strip() in ("ネット民", "現地サポ", "海外のファン"))
-    if 0 < voices < REACTION_MIN:
+    voices = _crowd_count(notes)
+    if voices > REACTION_MAX:
         notes_warnings.append(
-            f"ネットの声が{voices}件です（決まりは10〜20件）。"
-            "少ないまま出すなら、それでよいか確かめてください")
+            f"ネットの反応が{voices}件です（{REACTION_MAX}件まで、2026-09-28）。"
+            "解説の材料になる2〜3件に絞ってください")
+
+    if notes.format == "news" and not any(sec.viewpoint for sec in notes.sections):
+        notes_warnings.append(
+            "見立ての節（viewpoint: true）がありません。数字で比べて分かったこと・次に何が起きるかを"
+            "語る節に viewpoint: true を付けてください（2026-09-28 収益化の整理。カードが無ければ"
+            "見立てを引用カードで出します）")
+
+    if not notes.takeaway and notes.format == "news":
+        notes_warnings.append(
+            "theme.takeaway（この動画の見立て）が空です。概要欄に1行出します。"
+            "数字で比べて分かったこと・次に何が起きるか、を1文で（2026-09-28）")
 
     if notes.prefix and notes.prefix not in PREFIXES:
         known = " / ".join(k for k in PREFIXES if k)
@@ -830,6 +1163,7 @@ def advise(notes: Notes, plan: Plan | None = None, now=None) -> list[str]:
     notes_warnings += _advise_posts(notes, plan, now)
     notes_warnings += _advise_sources(notes, plan)
     notes_warnings += _advise_voices(notes)
+    notes_warnings += _advise_reactions(notes)
     notes_warnings += _advise_spread(notes, plan)
     return notes_warnings
 
@@ -888,8 +1222,11 @@ CROWD_WORDS = (
 
 # 他人の声の目安（2026-09-07、docs/video-quality.md の実測）。
 # 参考3チャンネルは尺の58%・19.2件・1件3.1秒。こちらは14%・2.2件・1件39字だった
-VOICE_SHARE_TARGET = 40      # %
-VOICE_COUNT_TARGET = 10      # 件
+VOICE_SHARE_TARGET = 40      # %（2026-09-28 から使っていない。下限はやめた）
+VOICE_COUNT_TARGET = 10      # 件（同上）
+# **他人の声は尺の半分まで**（2026-09-28 ユーザー決定）。収益化の審査は
+# 「独自の解説」が付いているかを見る。こちらの語りが主役であること
+VOICE_SHARE_MAX = 50         # %
 # 字。2026-09-07 に実測（1件3.1秒＝約16字）で20字に締めたが、2026-09-08 に
 # サッカーラボ（25.5万回）の文字起こしを取ると1件30〜45字だった。参考が割れて
 # いるので目安は30字、review の上限は45字にする
@@ -936,15 +1273,10 @@ def _advise_volume(notes: Notes) -> list[str]:
 
     hints: list[str] = []
     share = sum(other) / total * 100
-    if share < VOICE_SHARE_TARGET:
+    if share > VOICE_SHARE_MAX:
         hints.append(
-            f"他人の声が{share:.0f}%（{len(other)}件）しかありません。"
-            f"伸びている3チャンネルは58%・19件です。"
-            "`reactions <スレURL> --say` で短い反応を取り出せます"
-        )
-    elif len(other) < VOICE_COUNT_TARGET:
-        hints.append(
-            f"他人の声は{len(other)}件です。参考は19件で、1件2〜4秒に刻んでいます"
+            f"他人の声（発言と反応）が{share:.0f}%あります（{VOICE_SHARE_MAX}%まで、2026-09-28）。"
+            "収益化の審査は独自の解説を見ます。数字・経緯・なぜの語りを主役にしてください"
         )
     long_lines = [n for n in other if n > VOICE_LINE_TARGET]
     if long_lines:
@@ -1019,7 +1351,11 @@ def _check_quote_timing(notes: Notes) -> list[str]:
             elapsed += _seconds_of(sentence)
         if found:
             break
-    if found and elapsed > MAIN_QUOTE_BY:
+    # **シリーズの回の本編は見ない**（2026-10-06 ユーザー「その人の発言を何秒以内に入れるって
+    # 制約のせいで流れおかしくない？」）。46秒はニュースの回の数字から決めたもので、基礎DATAから
+    # 始まるシリーズでは、言葉を経歴の途中へ押し込む形になっていた（森保・ジェズス・セルタ）。
+    # ショート（16秒）は山場の節から始まるので、シリーズでも下で見る
+    if found and elapsed > MAIN_QUOTE_BY and not (notes.series or "").strip():
         problems.append(
             f"本編で誰かの言葉が出るのが{elapsed:.0f}秒目です（{MAIN_QUOTE_BY:.0f}秒まで）。"
             "本人の発言か反応を、前のほうの節に1つ置いてください")
@@ -1047,6 +1383,75 @@ def _check_quote_timing(notes: Notes) -> list[str]:
 # 400×530の写真を1280×720の左3分の1に伸ばしていた。9/17 の「画面の左がぼやける」も同じ
 THUMB_STRETCH_MAX = 1.6
 THUMB_SIZE = (1280, 720)
+
+
+def _advise_player_photos(notes: Notes) -> list[str]:
+    """**選手紹介の写真の決まり**（2026-09-28 指摘）。
+
+    1. 選手の回にスタジアムの写真を出さない（「選手の話なのに、スタジアムがある」）
+    2. 同じ写真が3つ以上の節で続かない（「同じ画像が続くのは微妙」）。時期ごとに切り替える
+    3. 同じ選手を横に並べた写真（pairphoto の出力）を使わない（「同じ選手を横並びにするのはやめよう」）
+    """
+    if "選手" not in (notes.series or ""):
+        return []
+    hints: list[str] = []
+    thumb = notes.thumbnail or {}
+    photos = [str(thumb.get("photo") or "")] + [str(x) for x in (thumb.get("photos") or [])]
+    for section in notes.sections:
+        photos += [str(x) for x in (section.line_images or []) if x]
+    for photo in photos:
+        if "stadium" in photo.lower() or "スタジアム" in photo:
+            hints.append(f"選手紹介の回にスタジアムの写真（{photo}）があります。選手の写真に替えてください（2026-09-28 指摘）")
+        if "_pair" in photo.lower() and "pair_" in photo.lower():
+            hints.append(f"2枚並べの写真（{photo}）が選手紹介にあります。同じ選手を横に並べない決まりです（2026-09-28）")
+    # 節の最初の写真が3節つづけて同じなら知らせる
+    firsts = []
+    for section in notes.sections:
+        own = next((x for x in (section.line_images or []) if x), "")
+        firsts.append(own)
+    run = 1
+    for a, b in zip(firsts, firsts[1:]):
+        run = run + 1 if (a and a == b) else 1
+        if run == 3:
+            hints.append(f"同じ写真（{a}）が3つの節で続きます。時期ごとに別の写真に切り替えてください（2026-09-28「同じ画像が続くのは微妙」）")
+            break
+    return hints
+
+
+PLACEHOLDER_MARK = "（"   # 雛形が「人が書く行」に置く印。行の頭がこれで始まり「）」で終わる
+
+
+def wants_reactions(series: str) -> bool:
+    """紹介もの（クラブ紹介・選手紹介）は他人の声が 0 の企画。「反応が1件もありません」を出さない（品質100回の75）。
+
+    2026-09-28 の収益化の整理で「声が1件も無い台本も通してよい」と決めた。ニュースの回は
+    反応が無いと題材を聞き直す決まり（09-27）なので、そちらは今までどおり知らせる。
+    """
+    return "紹介" not in (series or "")
+
+
+def _advise_placeholders(notes: Notes) -> list[str]:
+    """**雛形の（…）を埋めずに見せない**（品質100回の61）。
+
+    選手紹介の雛形は、数字と板を機械が埋め、話（プレースタイル・転機・マル秘話・見立て）は
+    人が書く。その行は「（6つの軸のうち最上位と最下位を言う）」のように**丸括弧だけの行**で置いてある。
+    埋め忘れると、そのまま読み上げられて画面にも出る。見せる前の決まりの表には
+    「雛形の（…）が全部埋まっているか」を手で見ると書いたが、**手に頼らず draft が知らせる**。
+    """
+    hints: list[str] = []
+    for section in notes.sections:
+        for text in section.say:
+            t = str(text).strip()
+            if t.startswith(PLACEHOLDER_MARK) and t.endswith("）") and len(t) >= 6:
+                hints.append(f"節「{section.heading}」に雛形の書き残しがあります：{t}。人が書く行です（材料は research/raw/ の material.md）")
+    # 題・見立て・サムネの欄は「（答えを伏せた言い換えを足す。例：…）」の形で置いてある
+    thumb = notes.thumbnail or {}
+    for label, value in (("題", notes.title), ("見立て（takeaway）", notes.takeaway),
+                         ("サムネの2行目", thumb.get("line2")), ("サムネの写真", thumb.get("photo"))):
+        v = str(value or "").strip()
+        if "例：" in v or (v.startswith(PLACEHOLDER_MARK) and v.endswith("）")):
+            hints.append(f"{label}に雛形の書き残しがあります：{v}")
+    return hints
 
 
 def _advise_wide_photo(notes: Notes) -> list[str]:
@@ -1094,6 +1499,11 @@ def _check_line_images_wide(notes: Notes) -> list[str]:
     problems: list[str] = []
     seen: set[str] = set()
     for section in notes.sections:
+        # **表のある節は見ない**（2026-09-26 ラ・リーガ版の見本）。表は画面の左に出て、
+        # 写真は右に並ぶ（名選手・監督・逸話の節。プレミア版ボーンマスで見せて通った形）。
+        # 左に面は残らない。止めるべきは、表の無い節で縦の写真が1枚だけ立つ場合
+        if section.card and str(section.card.get("type")) == "table":
+            continue
         for image in (section.line_images or []):
             path = str(image or "").strip()
             if not path or path in seen:
@@ -1117,6 +1527,9 @@ def _check_line_images_wide(notes: Notes) -> list[str]:
     return problems
 
 
+# 上から伸びて、下から伸びるテロップとぶつかる板（2026-10-08 に折れ線・増減・年表を足した）
+TALL_CARD_NAMES = {"table": "表", "verdict": "判定表", "scatter": "散らばり図",
+                   "line": "折れ線", "waterfall": "増減の内訳", "timeline": "年表"}
 TABLE_ROWS_WITH_LONG_LINE = 4     # これより多い行の表と
 LONG_TELOP_CHARS = 40             # これより長い1行（テロップが3行になる）を同じ節に置かない
 
@@ -1131,9 +1544,19 @@ def _advise_card_telop_overlap(notes: Notes) -> list[str]:
     hints: list[str] = []
     for section in notes.sections:
         card = section.card or {}
-        if str(card.get("type", "")).lower() != "table":
+        # 判定表（verdict、2026-10-07）も表と同じく上から伸びる。散らばり図（scatter）は
+        # 行の数によらず背が高い（本編で約660px）ので、いつも行の多い表と同じに見る
+        kind = str(card.get("type", "")).lower()
+        if kind not in TALL_CARD_NAMES:
             continue
-        rows = len(card.get("rows") or [])
+        if kind in ("table", "verdict", "timeline"):
+            rows = len(card.get("rows") or [])
+        elif kind == "waterfall":
+            from . import cards as cards_mod       # _cards は後ろで関数に上書きされている
+            rows = len(cards_mod.waterfall_rows(card))
+        else:
+            # 散らばり図・折れ線は行の数によらず背が高い（本編で約660px）ので、いつも当てる
+            rows = TABLE_ROWS_WITH_LONG_LINE
         if rows < TABLE_ROWS_WITH_LONG_LINE:
             continue
         for number, sentence in enumerate(section.say):
@@ -1143,10 +1566,60 @@ def _advise_card_telop_overlap(notes: Notes) -> list[str]:
             text = _bare_text(sentence if isinstance(sentence, str) else str((sentence or {}).get("text", "")))
             if len(text) > LONG_TELOP_CHARS:
                 hints.append(
-                    f"節『{section.heading}』: 表が{rows}行あり、{len(text)}字の行（『{text[:16]}…』）の"
+                    f"節『{section.heading}』: "
+                    f"{TALL_CARD_NAMES[kind] + 'があり' if kind in ('scatter', 'line') else f'{TALL_CARD_NAMES[kind]}が{rows}行あり'}、"
+                    f"{len(text)}字の行（『{text[:16]}…』）の"
                     "テロップが3行になって表の下にかかります。行を2つに割るか、表を減らしてください"
                     "（2026-09-25 ラフィーニャ）")
                 break
+    return hints
+
+
+def _advise_convert_math(notes: Notes) -> list[str]:
+    """**換算の板の検算**（2026-10-07 夜、⑬）。via に倍率が数で書いてあれば、元 × 倍率 と書いた値を比べる。
+
+    換算の値は書いた人が計算する決まり（機械は確かめない）。ただ「×52週」「1ポンド＝195円」のように
+    倍率が数で書いてあれば掛け算はできるので、1割を超えてずれたら知らせる。**止めない**
+    （為替を丸めた・税引きの額を書いた、など書いた人に理由があることもある）。
+    """
+    from . import cards as cards_mod
+
+    hints: list[str] = []
+    for section in notes.sections:
+        for card in [section.card] + list(section.line_cards or []):
+            if not (isinstance(card, dict) and str(card.get("type", "")).lower() == "convert"):
+                continue
+            if cards_mod.check_convert(card):
+                continue            # 形の誤りは _check_card が止める
+            for gap in cards_mod.convert_mismatches(card):
+                hint = (f"節『{section.heading}』: 換算の板の値が式と合いません（{gap}）。"
+                        "計算し直すか、via の倍率を直してください")
+                if hint not in hints:
+                    hints.append(hint)
+    return hints
+
+
+def _advise_waterfall_math(notes: Notes) -> list[str]:
+    """**増減の内訳の検算**（2026-10-08）。`total` を書いてあれば、もと＋各段の足し算と比べる。
+
+    換算の板（`_advise_convert_math`）と同じ考え方。合計は書いた人が決めてよい
+    （税や丸めで合わないこともある）ので**止めない**。`total` を書かなければ足し算で埋まるので、
+    そもそも鳴らない。
+    """
+    from . import cards as cards_mod
+
+    hints: list[str] = []
+    for section in notes.sections:
+        for card in [section.card] + list(section.line_cards or []):
+            if not (isinstance(card, dict) and str(card.get("type", "")).lower() == "waterfall"):
+                continue
+            gap = cards_mod.waterfall_mismatch(card)
+            if not gap:
+                continue
+            hint = (f"節『{section.heading}』: 増減の内訳の合計が段の足し算と合いません（{gap}）。"
+                    "数え直すか、total を外して足し算に任せてください")
+            if hint not in hints:
+                hints.append(hint)
     return hints
 
 
@@ -1181,6 +1654,84 @@ def _advise_offtopic_section(notes: Notes) -> list[str]:
             "題に答えない節（相手側の評価・歴史のおさらい・脇役の紹介・別の話題）なら落としてください。"
             "**この節を落としても題の答えが変わらないなら、要らない節です**（2026-09-25 に4本で指摘）")
     return hints
+
+
+def _notes_layout(thumbnail: dict) -> dict | None:
+    from .thumbnail import notes_layout
+
+    return notes_layout(thumbnail)
+
+
+def _check_thumbnail_layout(notes: Notes) -> list[str]:
+    """**サムネの構図の名前の誤り・要る項目の不足は止める**（2026-10-08）。
+
+    構図（face・scene・versus・number）は書き出すまで絵にならないので、写真が無い・
+    縦長・数字が無い、を書き出してから気づくと台本から作り直しになる。
+    """
+    from .thumbnail import layout_problems
+
+    return layout_problems(notes.thumbnail or {})
+
+
+# 同じ構図がこの回数続いたら知らせる（2026-10-08、「歴史の地層」と同じ）
+LAYOUT_STREAK = 3
+LAYOUT_LEDGER = Path("research/posted.json")
+
+
+def _layout_of_note(path: Path) -> str | None:
+    from .thumbnail import layout_of
+
+    try:
+        raw = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    except Exception:
+        return None
+    return layout_of((raw.get("thumbnail") or {}).get("layout"))
+
+
+def _advise_layout_streak(notes: Notes, ledger: Path | None = None,
+                          research_dir: Path | None = None) -> list[str]:
+    """**同じ構図が3回続いたら知らせる**（2026-10-08。止めない）。
+
+    投稿の控え（research/posted.json）の本編を公開の順に並べ、それぞれの取材メモの
+    `thumbnail.layout`（書いていなければ classic）を見て、最後にこの回を足す。
+    この回がもう投稿済みなら、その手前までで数える。控えに取材メモが無い本（9/5 以前）は数えない。
+    """
+    import json
+
+    from .thumbnail import LAYOUTS, layout_of
+
+    if not getattr(notes, "stem", ""):
+        return []            # ファイルから読んだ取材メモだけ（どの回か分からないと控えと突き合わせられない）
+    ledger = ledger or _resolve(LAYOUT_LEDGER)
+    research_dir = research_dir or _resolve("research")
+    try:
+        entries = json.loads(Path(ledger).read_text(encoding="utf-8")) if Path(ledger).exists() else []
+    except (OSError, ValueError):
+        entries = []
+    mains = [e for e in entries if isinstance(e, dict)
+             and not str(e.get("build", "")).endswith("_short")]
+    mains.sort(key=lambda e: str(e.get("publish_at") or e.get("at") or ""))
+    names: list[str] = []
+    for entry in mains:
+        build = str(entry.get("build") or "")
+        if build and build not in names and (Path(research_dir) / f"{build}.yaml").exists():
+            names.append(build)
+    if notes.stem and notes.stem in names:
+        names = names[:names.index(notes.stem)]
+    layout = layout_of((notes.thumbnail or {}).get("layout"))
+    run = [notes.stem]
+    for name in reversed(names):
+        if len(run) >= 10 or _layout_of_note(Path(research_dir) / f"{name}.yaml") != layout:
+            break
+        run.append(name)
+    if len(run) < LAYOUT_STREAK:
+        return []
+    count = f"{len(run)}回以上" if len(run) >= 10 else f"{len(run)}回"
+    shown = "→".join(reversed(run[:4]))
+    others = "・".join(x for x in LAYOUTS if x != layout)
+    return [f"サムネの構図「{layout}」が{count}続いています（…→{shown}）。続けて見ると繰り返しに見えます"
+            f"（収益化の審査の「繰り返し」）。題材に合う別の構図（{others}）を thumbnail.layout で選んでください"
+            "（選び方は CLAUDE.md「サムネの構図」）"]
 
 
 def _check_thumbnail_resolution(notes: Notes) -> list[str]:
@@ -1248,6 +1799,276 @@ def _advise_ear(notes: Notes) -> list[str]:
             run = run + 1 if bare.endswith("です") else 0
             if run == 3:
                 hints.append(f"{where}: 語尾の「です」が3行続いています（『{text[:20]}…』）。言い切りや体言止めを混ぜてください")
+    return hints
+
+
+# **数字には比べる物差しを1つ添える**（2026-10-05 ユーザー決定「動画の質を上げる仕組み ⑧」）。
+# 「勝ち点16」だけでは大きいのか小さいのか耳で分からない。「昨季の同じ時点より4多い」
+# 「2025年秋の4試合では6本」のように、比べる相手（過去・ほか・平均・順位・割合）を
+# 同じ行か前後の行で言う。数えるのは語りの行（キャスター・解説）だけ
+#
+# 数字に数えないもの。**先に消してから**残った数字を数える。
+# 年号・日付・時刻・背番号・日程・スコアはユーザーの指定。試合の中の時刻（55分、79分、）、
+# 年齢・期間（5年・9か月・16日間）、「1人の」「2つの」は、最近の台本に当てて鳴りすぎたので足した
+YARD_SKIP = re.compile(
+    r"(?:19|20)\d\d\s*[-/／－〜~]\s*\d{2,4}"          # 2025-26 / 2025/26（シーズン）
+    r"|\d{2}\s*[-/／－]\s*\d{2}(?=シーズン|季)"        # 25-26シーズン
+    r"|(?:19|20)\d\d(?:年代?)?"                         # 年号
+    r"|\d+月\d+日|\d+月|\d+日(?!間)|\d+/\d+"             # 日付
+    r"|\d+時(?:\d+分)?|\d+時半|\d+[:：]\d+"               # 時刻
+    r"|背番号\s*\d+|\d+番(?!目)"                         # 背番号
+    r"|\d+\s*(?:対|[-－ー−])\s*\d+(?:\s*[-－ー−]\s*\d+)*"   # スコア（2対1）・布陣（4-3-3）
+    r"|第\d+[節戦回]?|\d+節|\d+回戦|\d+次リーグ"         # 日程
+    r"|(?:前半|後半|延長(?:前半|後半)?|開始|アディショナルタイム|ロスタイム|迎えた|のは)\s*\d+分(?!間)"   # 試合の中の時刻
+    r"|(?:^|(?<=[。、]))\s*\d+分(?=[、。])|\d+分(?:に|から|まで|すぎ|過ぎ|ごろ|頃|後|前)"
+    r"|\d+歳(?:と\d+日)?"                                # 年齢
+    r"|\d[\d.]*(?:年|か月|ヶ月|カ月|週間?|日間)(?:半|あまり|足らず)?(?!前|ぶり)"   # 期間（「12年前」「11か月ぶり」は比べなので残す）
+    r"|(?<![\d.])[12](?:人|つ|度)"                        # 「1人の」「2つの」「2度」
+    r"|U-?\d+|\d+歳以下|ベスト\d+|トップ\d+|\d+大リーグ|\d+部|\d+バック|\d+トップ"   # 呼び名
+)
+YARD_NUMBER = re.compile(r"\d[\d,.]*(?:[万億千]\d*)*")
+# 数字のあとの単位（点・試合・本・ポンド…）。前後の行で同じ単位が並べば、並べて比べている
+YARD_UNIT = re.compile(r"\d[\d,.]*(?:[万億千]\d*)*\s*(か月|ヶ月|カ月|[一-龥ァ-ヴー%％]{1,2})")
+# 比べの言葉。⑥の VIEW_COMPARE に、平均・割合・順位・ぶり・同じ時点などを足した
+YARD_COMPARE = re.compile(
+    VIEW_COMPARE.pattern
+    + r"|平均|真ん中の値|中央値|前年|前季|昨年|昨シーズン|前の年|同じ時点|同じ|横並び|一方|ぶり|倍|％|%|パーセント|\d+割|割合"
+    + r"|対(?!戦|応|策|象|決|面|処)|位(?!置)|最多|最少|最高|最低|最年少|最年長|最速|(?<!最)初|ランキング|満点|ただ一人|ただ1人|唯一"
+    + r"|あたり|当たり|につき|ずつ|ペース|連覇|連勝|連敗|連続|全勝|全敗|無敗|負けなし|\d+(?:戦|試合)で?\d+(?:勝|敗|分け)|\d+分の\d+|半分"
+    + r"|\d+\D{0,3}目|\d+\D{0,4}中(?:で|\d)|のうち|うち\d|\d[^\d。]{0,8}(?:すべて|全て)|\d[^\d。]{0,4}続けて"
+    + r"|\d+(?:年|週間|か月|ヶ月|カ月|日|試合)前"
+    + r"|縮め|減ら|減っ|増え|増や|伸ば|伸び|跳ね上が|下が|上が|戻"           # 増えた・減った（10を6まで縮めた）
+    + r"|\d[^\d。]{0,8}から[^\d。]{0,8}\d|\d[\d,.]*[^\d。]{0,3}と[^\d。]{0,8}\d"   # 5位から2位へ・20本と9本
+)
+
+# 知らせる境目（2026-10-05、10/3〜10/5 の台本26本に当てて決めた。報告は CLAUDE.md ⑧）。
+# ふつうの節は、物差しの無い数字の行が2行から。1行だけの節まで知らせると、26本中ほぼ全部で鳴る
+YARD_HINT_LINES = 2
+# 題に答える山場（main）と見立ての節（viewpoint）は1行から知らせる。堂安の回の山場の頭
+# 「9月からの3試合で、シュートは0本でした」が、2行の境目では素通りした
+YARD_KEY_HINT_LINES = 1
+# 山場・見立ての節で、物差しの無い数字がこの数あれば強めに知らせる（draft の最後にもう一度出す）
+YARD_STRONG_NUMBERS = 3
+YARD_STRONG_MARK = "【強め】"
+
+
+def _bare_numbers(text: str) -> list[str]:
+    """年号・日付・時刻・背番号・日程・スコアを消して、残った数字。"""
+    return YARD_NUMBER.findall(YARD_SKIP.sub("・", str(text or "")))
+
+
+def _units(text: str) -> list[str]:
+    return YARD_UNIT.findall(YARD_SKIP.sub("・", str(text or "")))
+
+
+def _has_yardstick(text: str) -> bool:
+    """比べの言葉があるか。同じ単位が1行に2度出る（17本のうち15本、10試合11点と10試合10点）のも比べ。"""
+    # スコアの「対」は比べではない。先に消してから探す
+    if YARD_COMPARE.search(YARD_SKIP.sub("・", str(text or ""))):
+        return True
+    units = _units(text)
+    return len(units) != len(set(units))
+
+
+def _yardstick_gaps(section: Section) -> list[tuple[str, list[str]]]:
+    """節の中で、数字を言っているのに物差しが前後1行にも無い語りの行（行・数字）。"""
+    texts = [s if isinstance(s, str) else str((s or {}).get("text", "")) for s in section.say]
+    voices = list(section.voices) + [""] * (len(texts) - len(section.voices))
+    narrated = [not (v and v not in SPEAKERS) for v in voices]   # 本人の言葉・反応は見ない
+    out: list[tuple[str, list[str]]] = []
+    for i, text in enumerate(texts):
+        if not narrated[i]:
+            continue
+        nums = _bare_numbers(text)
+        if not nums:
+            continue
+        # 前後1行（語りの行だけ。本人の「減ってる」はこちらの物差しではない）
+        near = [texts[j] for j in (i - 1, i + 1) if 0 <= j < len(texts) and narrated[j]]
+        if _has_yardstick(text) or any(_has_yardstick(t) for t in near):
+            continue
+        # 前後の行と同じ単位の数字を並べている（「秋の4試合で6本」「3月からの3試合は2本」）のも比べ
+        mine = set(_units(text))
+        if any(mine & set(_units(t)) for t in near):
+            continue
+        out.append((text, nums))
+    return out
+
+
+def _advise_yardstick(notes: Notes) -> list[str]:
+    """**数字を言うたびに、比べる物差しを1つ添える**（2026-10-05「動画の質を上げる仕組み ⑧」）。
+
+    語りの行で数字を言っているのに、その行と前後1行（語りの行）に比べの言葉
+    （より・以来・昨季・平均・倍・％・位・最多・初・ぶり・から〜へ など）も、同じ単位で
+    並べた数字も無い行を、節ごとに数えて知らせる。**止めない。**
+    題に答える山場（main）と見立ての節（viewpoint）は1行から、ほかの節は2行から知らせ、
+    山場・見立てで物差しの無い数字が3つ以上なら強めに知らせる。
+    年号・日付・時刻・背番号・日程・スコア・試合の中の時刻・年齢・期間は数えない。
+    紹介の回（series あり）の「基礎DATA」の節は、板を読む節なので見ない。
+    """
+    hints: list[str] = []
+    for section in notes.sections:
+        if notes.series and "基礎DATA" in section.heading:
+            continue
+        gaps = _yardstick_gaps(section)
+        if not gaps:
+            continue
+        key = section.main or section.viewpoint
+        count = sum(len(nums) for _, nums in gaps)
+        example = gaps[0][0]
+        where = f"節『{section.heading}』"
+        if key:
+            where += "（見立ての節）" if section.viewpoint else "（山場の節）"
+        tail = ("「勝ち点16。昨季の同じ時点より4多い」「シュート0本。2025年秋の4試合では6本」のように、"
+                "過去・ほかの選手やチーム・平均・順位・割合のどれかと、同じ行か次の行で比べてください（2026-10-05 ⑧）")
+        if key and count >= YARD_STRONG_NUMBERS:
+            hints.append(
+                f"{YARD_STRONG_MARK}{where}: 比べる物差しの無い数字が{count}つあります"
+                f"（{len(gaps)}行。例『{example[:28]}』）。題に答える節なので、大きいのか小さいのか伝わりません。" + tail)
+        elif len(gaps) >= (YARD_KEY_HINT_LINES if key else YARD_HINT_LINES):
+            hints.append(
+                f"{where}: 比べる物差しの無い数字の行が{len(gaps)}行あります（例『{example[:28]}』）。" + tail)
+    return hints
+
+
+# **シリーズの回の質を上げる2つ**（2026-10-06 ユーザー決定「動画の質を上げる仕組み ⑩」）。
+# どちらも止めない（draft のヒント）。2つ目が欠けているときは【強め】にして、draft の最後にもう一度出す。
+#
+# 1. 冒頭は「いちばん強い一点」から。本編213本の離脱の測定（research/metrics/dropmap_main_20261005.md）で、
+#    落ち幅の上位5本のうち4本がクラブ紹介の基礎DATAの節、30秒の維持はシリーズ45%・ニュース57%。
+#    オープニングの次の最初の節が基礎DATAで、その前に強い一点（いま見る理由の1つ目・山場の事実）が
+#    1〜2行で置かれていなければ知らせる。基礎DATAで読み上げる語りが多すぎる節も知らせる
+#    （読み上げは題に答える3〜4項目、残りは板・表に出すだけ）。
+#    クラブ紹介の「冒頭に板を敷く」形（2026-09-23 決定）は咎めない。板の上で読む「いま見る理由」
+#    （plbuild の `_data_r*.png` の行）は強い一点として数え、咎めるのは読み上げの長さだけ
+# 2. この回だけの数字。見立ての節に、自分で数えた比べ（表＋「数字2つ＋比べの言葉」の1行）が無ければ【強め】
+SERIES_DATA_HEADING = re.compile(r"基礎\s*(?:DATA|データ)|基本\s*(?:DATA|データ)", re.IGNORECASE)
+# 基礎DATAの節で読み上げてよい語りの行数。これを超えたら知らせる（題に答える3〜4項目＋つなぎ1行）
+SERIES_DATA_READ_MAX = 5
+# 強い一点は、基礎DATAの前の1〜2行に置く
+SERIES_FRONT_LINES = 2
+# クラブ紹介の「いま見る理由」の行の板（tools/plbuild.py が `<key>_data_r<k>.png` を当てる）
+SERIES_REASON_BOARD = re.compile(r"_data_r\d*\.png$")
+# 強い一点の言葉：⑧の比べの言葉に、いちばん・最も・記録・首位を足す
+SERIES_STRONG = re.compile(YARD_COMPARE.pattern + r"|いちばん|一番|最も|記録|首位|頂点")
+# 見立ての比べの言葉：⑥⑧の語彙に、物差し・時点・前後を足す
+SERIES_VIEW_COMPARE = re.compile(YARD_COMPARE.pattern + r"|物差し|時点|前後")
+
+
+def _main_narration(section: Section) -> list[tuple[int, str]]:
+    """本編で読む語りの行（行番号・文）。本人の言葉・反応と、ショート専用の行は外す。"""
+    texts = [s if isinstance(s, str) else str((s or {}).get("text", "")) for s in section.say]
+    voices = list(section.voices) + [""] * len(texts)
+    onlys = list(section.line_onlys) + [""] * len(texts)
+    return [(i, t) for i, t in enumerate(texts)
+            if not (voices[i] and voices[i] not in SPEAKERS) and onlys[i] != "short"]
+
+
+def _strong_point(text: str) -> bool:
+    """強い一点：比べられる数字（年号・日付・年齢などを除いた数字）と、比べ・最上の言葉がある。"""
+    clean = YARD_SKIP.sub("・", str(text or ""))
+    return bool(_bare_numbers(text)) and bool(SERIES_STRONG.search(clean))
+
+
+def _data_front(section: Section) -> int:
+    """基礎DATAの節の頭で、強い一点として読んでいる語りの行数（読み上げの行数から外す）。"""
+    narr = _main_narration(section)
+    images = list(section.line_images) + [""] * len(section.say)
+    front = 0
+    for i, _ in narr:                      # クラブ紹介の「いま見る理由」の行（板の上で読む）
+        if SERIES_REASON_BOARD.search(str(images[i] or "")):
+            front += 1
+        else:
+            break
+    if front:
+        return front
+    texts = [t for _, t in narr[:SERIES_FRONT_LINES]]
+    first = bool(texts) and _strong_point(texts[0])
+    # 2行で1つの強い一点（「4戦4勝です。」「クラブの歴史で、いちばんの滑り出し」）も数える
+    if (len(texts) > 1 and _strong_point(" ".join(texts))
+            and (not first or SERIES_STRONG.search(YARD_SKIP.sub("・", texts[1])))):
+        return 2
+    return int(first)
+
+
+def _advise_series_opening(notes: Notes) -> list[str]:
+    """**シリーズの回の冒頭は「いちばん強い一点」から**（2026-10-06「動画の質を上げる仕組み ⑩」の1）。
+
+    1. オープニングの次の最初の節が基礎DATAで、その頭の1〜2行に強い一点（比べられる数字と、
+       比べ・最上の言葉）が無ければ知らせる。前に別の節（どんな選手か など）があれば知らせない
+    2. 基礎DATAの節で、強い一点を除いて読み上げる語りが SERIES_DATA_READ_MAX 行を超えれば知らせる
+    ニュースの回（series なし）は見ない。止めない。
+    """
+    if not (notes.series or "").strip() or not notes.sections:
+        return []
+    hints: list[str] = []
+    for n, section in enumerate(notes.sections):
+        if not SERIES_DATA_HEADING.search(section.heading or ""):
+            continue
+        front = _data_front(section)
+        read = len(_main_narration(section)) - front
+        where = f"節『{section.heading}』"
+        if n == 0 and not front:
+            hints.append(
+                f"{where}: オープニングのすぐあとが基礎DATAから始まっています。シリーズの回は30秒の維持が"
+                "45%（ニュース57%）で、落ち幅の上位5本のうち4本が基礎DATAの節でした（dropmap 10/5）。"
+                "基礎DATAの前に、いちばん強い一点（いま見る理由の1つ目・山場の事実）を1〜2行で置いてください"
+                "（例「今季は公式戦8戦8勝。クラブの歴史で、いちばんの滑り出しです」）（2026-10-06 ⑩）")
+        if read > SERIES_DATA_READ_MAX:
+            hints.append(
+                f"{where}: 基礎DATAで読み上げる語りが{read}行あります（{SERIES_DATA_READ_MAX}行まで）。"
+                "読み上げは題に答える3〜4項目にして、残りは板・表に出すだけにしてください（2026-10-06 ⑩）")
+    return hints
+
+
+def _view_comparison(text: str) -> bool:
+    """自分で数えた比べの1行：数字が2つ以上と、比べの言葉（より・対・倍・％・差・時点 など）。"""
+    clean = YARD_SKIP.sub("・", str(text or ""))
+    return len(_bare_numbers(text)) >= 2 and bool(SERIES_VIEW_COMPARE.search(clean))
+
+
+def _has_count_table(section: Section) -> bool:
+    """見立ての節に表があるか。節の card（表・棒）か、行ごとの card。引用カード（見立ての一言）は数えない。"""
+    card = section.card if isinstance(section.card, dict) else {}
+    # 判定表・数字の板・計算の式・散らばり図・換算の板（2026-10-07）と
+    # 折れ線・増減の内訳・年表（2026-10-08）も自分で数えた表に数える
+    if str(card.get("type", "")).lower() in ("table", "bars", "verdict", "stats", "calc", "scatter",
+                                             "convert", "line", "waterfall", "timeline"):
+        return True
+    return any(isinstance(c, dict) and c for c in section.line_cards)
+
+
+def _has_calc(section: Section) -> bool:
+    """見立ての節に計算の式（calc）か換算の板（convert）があるか。**式そのものが「この回だけの数字」の比べ**（2026-10-07）。"""
+    cards = [section.card] + list(section.line_cards or [])
+    return any(isinstance(c, dict) and str(c.get("type", "")).lower() in ("calc", "convert") for c in cards)
+
+
+def _advise_series_numbers(notes: Notes) -> list[str]:
+    """**シリーズの回は、見立ての節に「この回だけの数字」を置く**（2026-10-06「動画の質を上げる仕組み ⑩」の2）。
+
+    見立ての節（viewpoint）に表（card の table・bars、または行ごとの card）があり、かつ語りの
+    どこかに「数字2つ以上＋比べの言葉」の行（続く2行にまたがってもよい）があれば通す。どちらかが欠けたら【強め】で知らせる
+    （draft の最後にもう一度出す。止めない）。ニュースの回（series なし）は見ない。
+    """
+    if not (notes.series or "").strip():
+        return []
+    hints: list[str] = []
+    for section in notes.sections:
+        if not section.viewpoint:
+            continue
+        table = _has_count_table(section)
+        texts = [t for _, t in _main_narration(section)]
+        # 1行で言い切るか、続く2行で比べる（「ブラガでは50%。」「名門2つでは68.5%に上がります」）。
+        # 10/6 に最近の25本へ当てたら、時期ごとの勝率を1行ずつ並べたジェズスの回が1行の判定では鳴った
+        line = any(_view_comparison(t) for t in texts) or any(
+            _view_comparison(a + " " + b) for a, b in zip(texts, texts[1:])) or _has_calc(section)
+        if table and line:
+            continue
+        missing = "・".join(x for x, ok in (("自分で数えた表", table), ("数字2つを比べた1行", line)) if not ok)
+        hints.append(
+            f"{YARD_STRONG_MARK}見立ての節『{section.heading}』に、この回だけの数字（{missing}）がありません。"
+            "シリーズの回は、ほかの動画や記事に無い比べを自分で数えて、表と1行で見せてください"
+            "（例「同じ7試合で、今季は勝ち点21、昨季は16」）（2026-10-06 ⑩）")
     return hints
 
 
@@ -1655,9 +2476,7 @@ def _advise_material(notes: Notes) -> list[str]:
     sources = notes.sources
     outlets = {urlparse(u).netloc for u in sources}
     hints: list[str] = []
-    if voices < VOLUME_VOICES:
-        hints.append(f"他人の声が{voices}件です（目安{VOLUME_VOICES}件）。"
-                     "`reactions --find <題材>` でスレを探して足せます")
+    # 他人の声の件数の目安は 2026-09-28 にやめた（多いほど審査に弱い）
     if numbers < VOLUME_NUMBERS:
         hints.append(f"数字を含む行が{numbers}行です（目安{VOLUME_NUMBERS}行）。"
                      "`material` の数字の行から拾えます")
@@ -1667,6 +2486,91 @@ def _advise_material(notes: Notes) -> list[str]:
     return hints
 
 
+REACTION_SPLIT_AT = 55   # これを超える反応は、文の終わりで分けて cont を付ける（2026-09-26）
+# 報道・まとめ・転載のアカウントに多い字面。**個人の声ではない**ものが「ネット民」で
+# 読まれていた（2026-09-27、バルサ・ゴールデンシューの回で6件）
+NEWSISH_HANDLE = re.compile(
+    r"(news|espn|marca|as\.com|sport|football|futbol|goal|times|daily|trend|official|"
+    r"yopro|media|press|tv\.|radio|report|fcbarcelona-|blaugrana)", re.I)
+
+
+def _advise_reactions(notes: Notes) -> list[str]:
+    """反応の2つの決まりを機械で見る（2026-09-27 ユーザー「過去の指摘は平気？」を2回）。
+
+    1. **長い反応は文の終わりで分けて `cont: true`**（2026-09-26）。分けないとショートが
+       途中で切れ、画面の箱が12〜26秒止まった。表の決まりにあったのに、9/27 に1件残った
+    2. **報道・まとめアカウントの見出しを反応に入れない**。9/27 に ESPN FC、AS、
+       ロマーノの転載アカウントなどの見出しを「ネット民」で読んでいた
+    """
+    out: list[str] = []
+    for sec in notes.sections:
+        crowd = [i for i, v in enumerate(sec.voices)
+                 if str(v or "").strip() in ("ネット民", "現地サポ", "海外のファン")]
+        if not crowd:
+            continue
+        conts = list(sec.line_conts) + [False] * len(sec.say)
+        for i in crowd:
+            text = str(sec.say[i]) if i < len(sec.say) else ""
+            nxt_cont = i + 1 < len(sec.say) and bool(conts[i + 1])
+            if len(text) > REACTION_SPLIT_AT and not nxt_cont and "。" in text[:-1]:
+                out.append(f"節『{sec.heading}』: 長い反応が分かれていません（{len(text)}字）"
+                           f"『{text[:20]}…』。文の終わりで分け、2行目以降に cont: true を"
+                           "付けてください（2026-09-26）")
+        for url in sec.sources:
+            handle = re.search(r"(?:bsky\.app/profile/|x\.com/|twitter\.com/)([^/]+)", url)
+            if handle and NEWSISH_HANDLE.search(handle.group(1)):
+                out.append(f"節『{sec.heading}』: 反応の出典 {handle.group(1)} は報道・まとめの"
+                           "アカウントに見えます。個人の投稿か確かめてください（見出しは反応に入れない。2026-09-27）")
+    return out
+
+
+def _advise_short_boards(notes: Notes) -> list[str]:
+    """**山場が発言ばかりで、板が1枚も出ない回**（2026-10-10）。
+
+    ショートは山場（`main: true`）の節だけを切り出すので、そこに板が無いと
+    **50秒まるごと同じ写真1枚**になる。原因は決まりどうしの噛み合わせで、
+    「代弁の行に引用カードを出さない」（2026-09-14、画面に同じ字を二度出さないため）が
+    効くと、**発言の行には板が1枚も付かない**。
+
+    2026-10-10 に**1日で5本**出た（キャリック51秒・コンパニ53秒・モイーズ35秒・
+    代表ウィーク11秒・佐野8秒）。10月から**ニュースはショートだけ**作る形にしたので、
+    会見の発言が主役の回は毎日この型になる。
+
+    **`tools/preview4.py`（書き出す前の4コマ）では見つからない**——見る4つの時点が
+    たまたま板の無い所に当たる。見つかるのは `tools/qc.py`（通しで見る）だけで、
+    それは**書き出したあと**なので、ここで先に知らせる。**止めはしない**
+    （板を置けない回もある。縦の画面では顔と板が共存できないことがある）。
+    """
+    main = next((s for s in notes.sections if s.main), None)
+    if not main:
+        return []
+    says = [s for s in main.say if str(s).strip()]
+    if len(says) < 4:
+        return []
+    # 節の板も、行ごとの板も無いか（`card: none` は「下ろす」なので板ではない）
+    has_board = bool(main.card) or any(
+        c for c in (main.line_cards or []) if c and not _card_off(c))
+    if has_board:
+        return []
+    voices = [v for v in (main.voices or []) if str(v).strip()]
+    if len(voices) * 2 < len(says):      # 発言が半分に満たなければ別の型
+        return []
+    # **写真を入れ替えている回は鳴らさない**（2026-10-10）。板の代わりに写真を
+    # 替えても画面は動く。実際、フリックとヤマルの回は板を入れると顔が潰れたので
+    # 2枚並べ↔ヤマル1枚を3往復させてあり、通しの点検（qc）でも最長6.6秒で通った
+    shots = {str(x).strip() for x in (main.line_images or []) if str(x).strip()}
+    if len(shots) >= 2:
+        return []
+    return [
+        f"山場『{main.heading or main.id}』に板が1枚もありません。"
+        f"**ショートはこの節だけを切り出す**ので、{len(says)}行のあいだ"
+        "同じ写真1枚のままになります（2026-10-10 に1日で5本出ました）。"
+        "発言が続く区間に**行ごとに分けた表**を置き、`highlight_row` を動かしてください。"
+        "**いちばん強い1行だけ板を外して顔だけ**にします。"
+        "縦の画面では板が画面の11〜62%を占めるので、顔が上にある写真を選んでください"
+    ]
+
+
 def _advise_voices(notes: Notes) -> list[str]:
     """反応の扱いで気をつける点。"""
     hints: list[str] = (_advise_volume(notes) + _advise_material(notes) + _advise_cards(notes)
@@ -1674,11 +2578,18 @@ def _advise_voices(notes: Notes) -> list[str]:
                         + _advise_thumbnail_promise(notes)
                         + _advise_thumbnail_name(notes)
                         + _advise_wide_photo(notes)
+                        + _advise_player_photos(notes)
+                        + _advise_placeholders(notes)
                         + _advise_offtopic_section(notes)
-                        + _advise_card_telop_overlap(notes)
+                        + _advise_card_telop_overlap(notes) + _advise_convert_math(notes)
+                        + _advise_waterfall_math(notes)
                         + _advise_repeats(notes) + _advise_short_repeats(notes)
                         + _advise_title(notes) + _advise_group_thumbnail(notes)
-                        + _advise_ear(notes) + _advise_readings(notes))
+                        + _advise_layout_streak(notes)
+                        + _advise_ear(notes) + _advise_readings(notes)
+                        + _advise_yardstick(notes)
+                        + _advise_series_opening(notes) + _advise_series_numbers(notes)
+                        + _advise_short_boards(notes))
     for section in notes.sections:
         card = section.card or {}
         if str(card.get("type", "")).lower() != "reactions":
@@ -1892,6 +2803,12 @@ def to_script(notes: Notes, plan: Plan) -> str:
     problems = verify(notes, plan)
     if problems:
         raise ResearchError("取材メモに不備があります:\n  - " + "\n  - ".join(problems))
+    return _compose_script(notes, plan)
+
+
+def _compose_script(notes: Notes, plan: Plan) -> str:
+    """台本の Markdown を組む（検証は to_script の側。書き込みの点検は検証の中からこれを呼ぶ）。"""
+    from . import tags as tags_mod
 
     thumbnail = notes.thumbnail or {}
     shape = FORMATS[notes.format]
@@ -1921,10 +2838,16 @@ def to_script(notes: Notes, plan: Plan) -> str:
         # **赤で1行**（2026-09-14 指示）。エンブレムの回は points を出さないので、
         # 言いたい一言を置く場所が帯しか無かった
         "thumbnail_note_red": str(thumbnail.get("note_red") or ""),
+        # 帯の上の小窓に出す反応のひとこと（2026-09-28 指示「サムネにコメント入れて、もっと人が興味引くように」）。
+        # 書き出し側（thumbnail.py の thumbnail_reaction）にはあったが、取材メモから渡す口が無かった
+        **({"thumbnail_reaction": str(thumbnail["reaction"])} if thumbnail.get("reaction") else {}),
         "thumbnail_band_full": bool(thumbnail.get("band_full", False)),
         # **ショートに反応を入れない回**（2026-09-14 指示）。取材メモに
         # `short_voices: false` と書く。既定は入れる
         **({} if notes.short_voices else {"short_voices": False}),
+        # **ショートだけ別の写真を敷く**（2026-10-04、キリンの回）。3人を上下に重ねると
+        # 3段目が字幕の裏に隠れ、1段目は頭が上で切れた。山場の主役1人の縦写真を指定する
+        **({"short_photo": str(thumbnail["short_photo"])} if thumbnail.get("short_photo") else {}),
         # 顔を並べる（2026-09-08）。2〜3枚で全面が写真になる
         "thumbnail_photos": [str(x) for x in (thumbnail.get("photos") or [])][:5],
         # **エンブレムを主役にする**（2026-09-09 ユーザー指示）。
@@ -1953,17 +2876,23 @@ def to_script(notes: Notes, plan: Plan) -> str:
         # 横長の写真を縦の画面に敷くと真ん中で切られ、端の人が落ちる
         **({"thumbnail_focus_x": thumbnail["focus_x"]}
            if thumbnail.get("focus_x") is not None else {}),
+        # **サムネの構図**（2026-10-08）。書いた回だけ持ち越す（classic の台本は今と1字も変わらない）
+        **({"thumbnail_layout": _layout} if (_layout := _notes_layout(thumbnail)) else {}),
         # init-assets が必ず作るものを既定にする。動く背景にしたいときは
         # `make-clip` で mp4 を作ってから、台本の bg を差し替える
         "bg": "assets/backgrounds/stadium.png",
         "date": notes.date,
         "intro_title": notes.title,
         "intro_label": shape["label"],
+        **({"nameplate": notes.nameplate} if notes.nameplate else {}),
         "outro_title": _telop(notes.watch, 20) or "続報は次回お伝えします",
         "outro_sub": "チャンネル登録でお待ちください",
+        **({"bgm": notes.bgm} if notes.bgm else {}),
         "description": (
             f"{notes.title}\n\n"
             + (f"この動画が答える問い: {notes.question}\n\n" if notes.question else "")
+            # **こちらの見立てを概要欄にも1行**（2026-09-28 収益化の整理 7）。審査はメタデータも見る
+            + (f"この動画の見立て: {notes.takeaway}\n\n" if notes.takeaway else "")
             + shape["note"]
         ),
         # タグは話の中身から作る。どの動画にも同じ4つでは検索に掛からない
@@ -1995,6 +2924,8 @@ def to_script(notes: Notes, plan: Plan) -> str:
             topic=notes.topic,
         ),
         "sources": notes.sources,
+        # 概要欄の「■ 選手コメントの引用元」（2026-09-30）
+        "quote_sources": notes.quote_sources,
         "cards": _cards(notes),
     }
 
@@ -2123,6 +3054,8 @@ def to_script(notes: Notes, plan: Plan) -> str:
         lines += [f"## {section.heading}", f"@bg: {moving_background(background)}"]
         if section.main:
             lines.append("@main: true")
+        if section.viewpoint:
+            lines.append("@viewpoint: true")
         # **ここから写真に替える。**それより前は下地のまま
         if has_photo and index >= switch_at:
             photo_on = True
@@ -2161,11 +3094,22 @@ def to_script(notes: Notes, plan: Plan) -> str:
             # 本編に残る最初の行（`only: short` を飛ばす）
             first_kept = next(
                 (i for i in range(len(section.say))
-                 if not (section.line_onlys[i]
-                         if i < len(section.line_onlys) else "")), 0)
+                 if (section.line_onlys[i]
+                     if i < len(section.line_onlys) else "") != "short"), 0)
             if (number < len(section.line_short_voices)
                     and section.line_short_voices[number]):
                 lines.append("  short_voice: true")
+            if (number < len(section.line_conts)
+                    and section.line_conts[number]):
+                lines.append("  cont: true")
+            if (number < len(section.line_emphs)
+                    and section.line_emphs[number]):
+                lines.append("  emph: true")
+            # **書き込み**（2026-10-07）。1つずつ1行に
+            own_marks = (section.line_marks[number]
+                         if number < len(section.line_marks) else [])
+            for one in own_marks:
+                lines.append(f"  mark: {_marks.dump(one)}")
             # **`only: short` の行に節のカードを付けない**（2026-09-18 に踏んだ）。
             # その行は本編では落ちるので、**カードごと消える**。
             # クロップの回で、選手の表が画面に一度も出なかった。
@@ -2196,7 +3140,9 @@ def to_script(notes: Notes, plan: Plan) -> str:
                 else:
                     lines.append(f"  telop: {head}")
                 lines.append(f"  source: {section.tier}")
-                if own_card:
+                if _card_off(own_card):
+                    lines.append("  card: none")
+                elif own_card:
                     lines.append(f"  card: {section.id}_{number}_card")
                 elif section.card:
                     lines.append(f"  card: {section.id}_card")
@@ -2208,6 +3154,8 @@ def to_script(notes: Notes, plan: Plan) -> str:
                 # 節が変わるたびに下地へ戻り、写真と下地が交互に出ていた
                 if photo_on and fallback_image and not own_image:
                     own_image = fallback_image
+                if number < len(section.line_pauses) and section.line_pauses[number] > 0:
+                    lines.append(f"  pause: {section.line_pauses[number]:.2f}")
                 if own_image:
                     lines.append(f"  image: {own_image}")
                     # **入れ替えた写真は、そのあとの行にも残す**（2026-09-25 指摘
@@ -2256,8 +3204,16 @@ def to_script(notes: Notes, plan: Plan) -> str:
                     # 数えないと、次の行に同じ写真がもう一度出て12.6秒になった
                     showed_photo = True
                     last_image = own_image
-                if own_card:
+                if _card_off(own_card):
+                    # **行で表を下ろす**（2026-10-03）。反応の白い箱が表に重なった（クラシコの回）
+                    lines.append("  card: none")
+                    shown_for = 0
+                elif own_card:
                     lines.append(f"  card: {section.id}_{number}_card")
+                    shown_for = 0
+                elif own_marks:
+                    # **書き込みを足す行では表を下ろさない**（2026-10-07）。書き込みの先が消える。
+                    # 赤ペンが1つ増えれば画面は変わるので、数え直す
                     shown_for = 0
                 elif shown_for >= CARD_LINES_MAX:
                     # **同じカードを出しっぱなしにしない**（2026-09-12）。
@@ -2291,6 +3247,8 @@ def to_script(notes: Notes, plan: Plan) -> str:
                 # image は行ごとの指定で次の行に残らないので、毎行に書く
                 if photo_on and fallback_image and not own_image:
                     own_image = fallback_image
+                if number < len(section.line_pauses) and section.line_pauses[number] > 0:
+                    lines.append(f"  pause: {section.line_pauses[number]:.2f}")
                 if own_image:
                     lines.append(f"  image: {own_image}")
                     fallback_image = own_image      # 上と同じ（2026-09-25）
@@ -2327,6 +3285,11 @@ def to_script(notes: Notes, plan: Plan) -> str:
     return "\n".join(lines)
 
 
+def _card_off(card) -> bool:
+    """行の `card: none`（表を下ろす指定）か。"""
+    return isinstance(card, str) and card.strip() in ("none", "なし")
+
+
 def _cards(notes: Notes) -> dict:
     cards: dict = {}
     if notes.opening_card:
@@ -2335,7 +3298,7 @@ def _cards(notes: Notes) -> dict:
         if section.card:
             cards[f"{section.id}_card"] = section.card
         for number, one in enumerate(section.line_cards):
-            if one:
+            if one and not _card_off(one):
                 cards[f"{section.id}_{number}_card"] = one
         # **代弁の行ぶんの引用カード**（2026-09-12）。台本と同じ番号で作る
         for number, sentence in enumerate(section.say):

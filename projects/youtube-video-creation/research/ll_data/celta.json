@@ -1,0 +1,83 @@
+{
+ "title": "セルタ 基礎DATA",
+ "colors": [
+  "#2F6EA5",
+  "#9DD1F1"
+ ],
+ "crest": "assets/crests/セルタ.png",
+ "tiles": [
+  [
+   "クラブ創立",
+   "1923年",
+   "ビーゴの2クラブが合併して誕生"
+  ],
+  [
+   "愛称",
+   "オス・セレステス",
+   "ガリシア語で「空色」。州旗の色"
+  ],
+  [
+   "ホームタウン",
+   "ビーゴ",
+   "大西洋に面した、ガリシア最大の町"
+  ],
+  [
+   "本拠地",
+   "バライードス",
+   "改修中の収容 23,432人（クラブ発表）"
+  ],
+  [
+   "オーナー",
+   "モウリーニョ家",
+   "2023年〜娘のマリアンが会長"
+  ],
+  [
+   "タイトル歴",
+   "1部優勝 0回",
+   "国王杯0・スーペルコパ0"
+  ],
+  [
+   "最多出場",
+   "578試合",
+   "イアゴ・アスパス、いまも更新中"
+  ],
+  [
+   "直近のタイトル",
+   "インタートトカップ優勝",
+   "2000年"
+  ],
+  [
+   "昨季の順位",
+   "6位",
+   "勝ち点54。ヨーロッパリーグへ"
+  ]
+ ],
+ "trophies": [
+  [
+   "ラ・リーガ",
+   0
+  ],
+  [
+   "国王杯",
+   0
+  ],
+  [
+   "スーペルコパ",
+   0
+  ],
+  [
+   "インタートトカップ",
+   1
+  ]
+ ],
+ "sources": [
+  "https://en.wikipedia.org/wiki/RC_Celta_de_Vigo",
+  "https://es.wikipedia.org/wiki/Real_Club_Celta_de_Vigo",
+  "https://en.wikipedia.org/wiki/Vigo",
+  "https://en.wikipedia.org/wiki/Bal%C3%A1idos_Stadium",
+  "https://rccelta.es/club/actualidad/abanca-balaidos-amplia-su-aforo-en-el-inicio-de-una-nueva-temporada/",
+  "https://en.wikipedia.org/wiki/Mari%C3%A1n_Mouri%C3%B1o",
+  "https://en.wikipedia.org/wiki/Template:2025%E2%80%9326_La_Liga_table"
+ ],
+ "notes": "取材の控えは research/ll_data/celta_research.md。収容は 24,870（英語版・改修完了後の数）／23,432（クラブ公式 2026-08-27、改修中のいまの数）と割れるので、クラブ発表のいまの数を採った。持ち主は GES（モウリーニョ家）で、持ち分は 67.9%（英語版、2020年）／75%（西語版、2023年の商業登記簿）と割れるので新しいほう。会長制ではなく株式会社で大株主がいるので見出しは「オーナー」。最多出場 578 は英語版の Most appearances の表（全大会と読んだ）、リーグ戦だけなら 512。直近のタイトルは 2000年のインタートトカップ（ゼニトに合計4-3）で、西語版は「クラブ唯一の公式タイトル」と書く（2部優勝は数えていない）。国王杯は決勝で3度敗退。"
+}

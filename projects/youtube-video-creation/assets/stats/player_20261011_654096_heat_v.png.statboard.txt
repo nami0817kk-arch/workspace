@@ -1,0 +1,4 @@
+title: デクラン・ライスの今季のヒートマップ
+unit: touches
+points=537
+source: FotMob

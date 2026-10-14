@@ -33,6 +33,40 @@ HAND_CHECKS = [
 ]
 
 
+def table_hand_rules(path: Path | None = None) -> list[tuple[str, str]]:
+    """CLAUDE.md の「見せる前の決まり」の表から、手で見る行を全部取る（2026-09-27）。
+
+    HAND_CHECKS は8つで止まっていて、表に足した決まり（反応は題の中身だけ、
+    ショートの並びを通しで読む、など）がここに出てこなかった。表を正にして、
+    足せば自動で出るようにする。
+    """
+    path = path or ROOT / "CLAUDE.md"
+    if not path.exists():
+        return []
+    rules = []
+    heading = ""
+    ours = False
+    previous: list[str] = []
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if line.startswith("#"):
+            heading = line
+            continue
+        # 題材の一覧の表は台本の関門ではないので外す。それ以外の「決まり｜言われた日｜誰が見るか」の表は全部
+        if not line.startswith("|") or "題材を見せるとき" in heading:
+            continue
+        cells = [c.strip() for c in line.strip().strip("|").split("|")]
+        if all(set(c) <= set("-: ") for c in cells):
+            # 区切りの行。その上の行が見出しなので、ここで表の種類が決まる
+            ours = previous == ["決まり", "言われた日", "誰が見るか"]
+            continue
+        previous = cells
+        if not ours or len(cells) != 3:
+            continue
+        if "手" in cells[2]:
+            rules.append((cells[0].replace("**", ""), cells[1]))
+    return rules
+
+
 def _run(*cmd: str) -> int:
     done = subprocess.run([sys.executable, *cmd], cwd=ROOT)
     return done.returncode
@@ -70,6 +104,11 @@ def main(argv: list[str]) -> int:
     print("\n■ 手で見る決まり（1つずつ答えてから見せる）")
     for index, (rule, how) in enumerate(HAND_CHECKS, start=1):
         print(f"  {index}. {rule}　— {how}")
+    table = table_hand_rules()
+    if table:
+        print("\n■ 表の「手」の行（CLAUDE.md の決まりの表。全部当ててから見せる）")
+        for index, (rule, when) in enumerate(table, start=1):
+            print(f"  {index}. {rule}（{when}）")
     print()
     if bad:
         print(f"■ 機械の点検で {bad} 件止まっています。直してから見せてください")

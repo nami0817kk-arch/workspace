@@ -176,6 +176,158 @@
     "videos.list": 5,
     "videos.update": 5
   },
+  "2026-09-26": {
+    "channels.list": 18,
+    "playlistItems.list": 18,
+    "videos.insert": 18,
+    "thumbnails.set": 18,
+    "playlistItems.insert": 9
+  },
+  "2026-09-27": {
+    "channels.list": 27,
+    "playlistItems.list": 62,
+    "videos.insert": 20,
+    "thumbnails.set": 20,
+    "playlistItems.insert": 10,
+    "videos.list": 52,
+    "videos.update": 6,
+    "channels.update": 1
+  },
+  "2026-09-28": {
+    "channels.list": 14,
+    "playlistItems.list": 14,
+    "videos.insert": 12,
+    "thumbnails.set": 13,
+    "playlistItems.insert": 6,
+    "videos.list": 6,
+    "videos.update": 4,
+    "commentThreads.insert": 1
+  },
+  "2026-09-29": {
+    "channels.list": 23,
+    "playlistItems.list": 22,
+    "videos.insert": 22,
+    "thumbnails.set": 22,
+    "playlistItems.insert": 11,
+    "videos.list": 49,
+    "commentThreads.list": 12,
+    "videos.update": 143,
+    "playlists.insert": 1
+  },
+  "2026-09-30": {
+    "channels.list": 20,
+    "playlistItems.list": 20,
+    "videos.insert": 24,
+    "thumbnails.set": 24,
+    "playlistItems.insert": 12,
+    "videos.list": 20,
+    "videos.update": 137,
+    "playlists.insert": 5
+  },
+  "2026-10-01": {
+    "channels.list": 18,
+    "playlistItems.list": 18,
+    "videos.insert": 18,
+    "thumbnails.set": 18,
+    "playlistItems.insert": 9,
+    "playlists.insert": 2,
+    "videos.list": 4,
+    "videos.update": 150
+  },
+  "2026-10-02": {
+    "channels.list": 14,
+    "playlistItems.list": 14,
+    "videos.insert": 14,
+    "thumbnails.set": 14,
+    "playlistItems.insert": 7,
+    "videos.list": 4,
+    "videos.update": 138
+  },
+  "2026-10-03": {
+    "channels.list": 23,
+    "playlistItems.list": 23,
+    "videos.insert": 23,
+    "thumbnails.set": 23,
+    "playlistItems.insert": 12,
+    "playlists.insert": 5,
+    "videos.list": 1
+  },
+  "2026-10-04": {
+    "channels.list": 20,
+    "playlistItems.list": 20,
+    "videos.insert": 19,
+    "thumbnails.set": 19,
+    "playlistItems.insert": 9,
+    "playlists.insert": 1,
+    "videos.list": 1
+  },
+  "2026-10-05": {
+    "channels.list": 20,
+    "playlistItems.list": 31,
+    "videos.insert": 18,
+    "thumbnails.set": 18,
+    "playlists.insert": 1,
+    "playlistItems.insert": 9,
+    "videos.list": 16,
+    "videos.update": 1,
+    "videoCategories.list": 1
+  },
+  "2026-10-06": {
+    "channels.list": 26,
+    "playlistItems.list": 26,
+    "videos.insert": 26,
+    "thumbnails.set": 26,
+    "playlistItems.insert": 13,
+    "playlists.insert": 1,
+    "videos.list": 1
+  },
+  "2026-10-07": {
+    "videos.list": 26,
+    "videos.update": 60,
+    "channels.list": 18,
+    "playlistItems.list": 32,
+    "videos.insert": 16,
+    "thumbnails.set": 16,
+    "playlists.insert": 2,
+    "playlistItems.insert": 11,
+    "playlists.list": 3,
+    "playlists.update": 1,
+    "playlistItems.delete": 3
+  },
+  "2026-10-08": {
+    "channels.list": 10,
+    "playlistItems.list": 10,
+    "videos.insert": 10,
+    "thumbnails.set": 10,
+    "playlistItems.insert": 5,
+    "playlists.insert": 1,
+    "videos.list": 1
+  },
+  "2026-10-09": {
+    "channels.list": 5,
+    "playlistItems.list": 29,
+    "videos.list": 27,
+    "videos.insert": 3,
+    "thumbnails.set": 3,
+    "playlistItems.insert": 3,
+    "playlists.insert": 1
+  },
+  "2026-10-10": {
+    "channels.list": 38,
+    "playlistItems.list": 38,
+    "videos.insert": 36,
+    "thumbnails.set": 42,
+    "playlistItems.insert": 16,
+    "videos.list": 10,
+    "videos.update": 7
+  },
+  "2026-10-11": {
+    "channels.list": 8,
+    "playlistItems.list": 8,
+    "videos.insert": 8,
+    "thumbnails.set": 8,
+    "playlistItems.insert": 8
+  },
   "2026-10-14": {
     "channels.list": 8,
     "playlistItems.list": 8,

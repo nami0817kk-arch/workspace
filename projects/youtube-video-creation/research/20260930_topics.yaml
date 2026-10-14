@@ -1,0 +1,132 @@
+title: 9月30日の題材
+lead: 代表戦の翌々日の選手コメントと、欧州の移籍・けが・マンCの続報から17件。番号だけ振ってあります
+note: <b>○×を付けてください。</b>9/29 の夜はクラブの試合がありません（代表ウィーク）。ロマーノの投稿は読めました（11・12・15番と10番の主将の件）。中身は記事の本文まで確かめてあります。今日の10本と同じ題材・同じ人の言葉は外しました。レオン（いまはトルコのリーグ）は扱うリーグの外なので外しました。
+items:
+- num: 1
+  slot: 日本人
+  head: 板倉滉が練習復帰「自分が合流できたので大丈夫」。主将に堂安律を推したのも自分だった
+  why: '24日のウルグアイ戦で左足首を痛めた板倉が29日に練習復帰。10/1 エクアドル戦に出られる可能性。W杯で主将だった板倉が、森保監督に「律で間違いないと思います」と伝えたと明かした。本人の言葉が主役。 '
+  src: ゲキサカ（9/29）
+  url: https://web.gekisaka.jp/news/japan/detail/?459942-459942-fl
+  fmt: quote
+- num: 2
+  slot: 日本人
+  head: 中村敬斗、10人のベネズエラ戦で初めての左サイドバック「想定としては良かった」。4-4-1で勝ち切った裏側
+  why: '交代枠を使い切ったあとに渡辺剛が負傷し、DFは伊藤洋輝と鈴木淳之介の2人だけ。中村と伊東がサイドバックに入った。「一人足りない中でも点を取る力、勝ち切る力がある」。今日の VAR・伊東の回とは中村の側から。 '
+  src: ゲキサカ（9/29）
+  url: https://web.gekisaka.jp/news/japan/detail/?459951-459951-fl
+  fmt: quote
+- num: 3
+  slot: 日本人
+  head: 主将・堂安律、23歳の松木玖生に「僕も教わるところがある」。若手の何を見ているのか
+  why: '初招集でウルグアイ戦に代表初ゴールの松木について「一緒に生活していてメンタリティがすごい」。主将としての戦績は4戦全勝。松木本人の言葉は無い。 '
+  src: ゲキサカ（9/29）
+  url: https://web.gekisaka.jp/news/japan/detail/?459954-459954-fl
+  fmt: quote
+- num: 4
+  slot: 日本人
+  head: 渡辺剛もケガで離脱し、望月ヘンリー海輝を約1年ぶりに追加招集。森保ジャパンのDF陣に負傷者が続く
+  why: '渡辺（フェイエノールト）は右ふくらはぎ。冨安は不参加、安藤智哉・熊坂光希もケガで離脱、鈴木淳之介も試合後に病院へ。10/1 エクアドル戦の最終ラインが誰になるか。望月本人の言葉は無い。 '
+  src: サッカーキング・スポニチ（9/29）
+  url: https://www.soccer-king.jp/news/japan/national/20260929/2210889.html
+  fmt: news
+- num: 5
+  slot: 日本人
+  head: 齋藤俊輔、代表デビューの直後に英バーミンガムが関心か。本人は「鎌田大地、遠藤航のように」
+  why: 'ウェステルローで今季リーグ7試合3得点。関心の根拠は英メディア1本の又聞きで、クラブの動きは確かめられていない。本人の言葉は9/29のものではない。 '
+  src: Football Tribe Japan（9/29）
+  url: https://football-tribe.com/japan/2026/09/29/359817/
+  fmt: news
+  weak: true
+- num: 6
+  slot: 日本人
+  head: エクアドル代表、パリSGのパチョやミランのエストゥピニャンが来日。10月1日に日本と対戦する相手の顔ぶれ
+  why: 'W杯ベスト32、24日に韓国に0-3で敗れている。日本人は出てこないので、「日本人の次の相手」の形（相手の今・顔ぶれ・過去の対戦）で作る回。 '
+  src: ゲキサカ（9/29）
+  url: https://web.gekisaka.jp/news/world/detail/?459987-459987-fl
+  fmt: news
+  weak: true
+- num: 7
+  slot: 日本人
+  head: 旗手怜央が結婚を報告。セルティックからバーンリーへ移った今季「僕たちにとっても新たなスタート」
+  why: '本人のインスタグラムでの報告。サッカーの中身は薄い（今季リーグ4試合、代表は昨年3月が最後）。 '
+  src: ゲキサカ（9/29）
+  url: https://web.gekisaka.jp/news/world/detail/?459935-459935-fl
+  fmt: quote
+  weak: true
+- num: 8
+  slot: プレミア
+  head: ポチェッティーノ、マンCの違反報道に「欺かれていた時代を生きていたことになる」。補強できなかったスパーズ時代を振り返った
+  why: 'トッテナムとチェルシーを率いた現アメリカ代表監督の言葉。「私たちにはとても厳しかったのに、よそにはずいぶん甘かった」「時間は巻き戻せない」。115件のほぼすべてが認められたという報道の段階で、正式発表ではない。9/28 の2本とは語る人が違う。 '
+  src: Sky Sports・MARCA（9/29）、ロマーノの投稿
+  url: https://www.skysports.com/football/news/11661/13593126/man-city-charges-we-lived-through-a-period-of-deception
+  fmt: quote
+- num: 9
+  slot: プレミア
+  head: ルーニー「2012年の優勝は受け取れない」。マンCが剥奪されてもメダルを求める元同僚と逆の立場
+  why: 'ファーディナンドとデ・ヘアは優勝を回すよう求めた。ルーニーは「あの年、僕らは優勝に値しなかった」「持っている5つで満足だ」。アグエロの劇的な決勝点の年。元はポッドキャストで、記事はタブロイド1本。8番と1本にまとめることもできる。 '
+  src: Daily Mail（9/29）
+  url: https://www.dailymail.com/sport/football/article-16166817/wayne-rooney-man-united-man-city-title.html
+  fmt: quote
+  weak: true
+- num: 10
+  slot: ラ・リーガ
+  head: ラフィーニャ、ブラジル代表の新主将に。偽9番でPK弾のあと前半で交代、右太ももに違和感でバルサに不安
+  why: 'アンチェロッティ「プレーを次の段階に上げていて、統率でも助けてくれる」。オーストラリア戦でPK。今季はクラブと代表で毎試合得点に絡み、15得点4アシスト。けがの程度は検査待ちなので、結果が出てから作るほうが確実。 '
+  src: MARCA（9/29）、ロマーノの投稿（CBF 発表）
+  url: https://www.marca.com/futbol/barcelona/2026/09/29/raphinha-sustituido-brasil-molestias-musculares.html
+  fmt: news
+- num: 11
+  slot: ラ・リーガ
+  head: カマヴィンガ「W杯を逃したのは本当にこたえた」。レアルで先発に足りないものを聞かれて答えた一言
+  why: 'ジダンのフランス代表に呼ばれて「僕にとっては勝ちだ」「落ち込みっぱなしにはならなかった」。先発に足りないのは「安定感だと思う」。本人の言葉が主役。 '
+  src: ロマーノの投稿（9/28、フランスのメディアの取材）
+  url: https://x.com/FabrizioRomano
+  fmt: quote
+- num: 12
+  slot: その他
+  head: ファビアン・ルイス「バロンドールのチャンスはある」「いつかベティスに戻りたい」。主要タイトルを全部獲った男の言い分
+  why: 'パリSGのMF。30人の候補に入っていて、投票は締め切り済み（発表は10/26）。「宣伝するものじゃない」「今はパリSGで幸せ。いつか必ず戻る」。 '
+  src: ロマーノの投稿（9/28）
+  url: https://x.com/FabrizioRomano
+  fmt: quote
+- num: 13
+  slot: その他
+  head: コモのセスク監督に特別な退団条項か。バルサ・アーセナル・チェルシーから声がかかれば、安い違約金で出られる
+  why: '2028年6月までの契約。コモを21年ぶりのセリエA、クラブ初のCLへ。記者1人の報道を伝え直したもので、金額は出ていない。実際に声がかかったわけではない。 '
+  src: MARCA・Foot Mercato（9/29、元は Sky Sport イタリア）
+  url: https://www.marca.com/futbol/barcelona/2026/09/29/cesc-ambicioso-asegura-liberacion-barca-le-llama.html
+  fmt: news
+  weak: true
+- num: 14
+  slot: プレミア
+  head: リヴァプール、レアルのチュアメニに関心か。今季まだ3試合、モウリーニョの下で出番が減れば
+  why: '代理人と連絡を続けているという話。元は TEAMtalk 1本で、「今すぐは動いていない」とはっきり書かれている。 '
+  src: ESPN（9/29、元は TEAMtalk）
+  url: https://www.espn.com/soccer/story/_/id/50056942/transfer-rumors-news-liverpool-keen-real-madrid-midfielder-tch
+  fmt: news
+  weak: true
+- num: 15
+  slot: その他
+  head: パルマ、ジラルディーノを新監督に。辞めると決めたクエスタの後任、鈴木彩艶が2季守ったクラブ
+  why: '9/28 のロマーノの投稿。クエスタ監督が自分から退くと決め、ジラルディーノがすぐに指揮を執る。記事で裏を取るのはこれから。 '
+  src: ロマーノの投稿（9/28）
+  url: https://x.com/FabrizioRomano
+  fmt: news
+  weak: true
+- num: 16
+  slot: その他
+  head: FIFA、UEFA を「誤情報キャンペーン」と非難。W杯の民間投資案をめぐって米国の裁判所で応酬
+  why: 'インファンティーノ会長の投資案（評価額200億ドル）をめぐる法廷の争い。UEFA は来年の会長選に対立候補を立てようとしている。選手が出てこず、画にしにくい。 '
+  src: ESPN（9/29、PA 配信）
+  url: https://www.espn.com/soccer/story/_/id/50057069/fifa-accuse-uefa-misinformation-campaign-world-cup-privatisati
+  fmt: news
+  weak: true
+- num: 17
+  slot: その他
+  head: ダルミアン、インテル退団後の新天地はボローニャか。ホルムの負傷で36歳のベテランに声
+  why: 'インテルで公式戦218試合、セリエA優勝3回。記者1人の報道で正式発表ではない。話としては小さい。 '
+  src: サッカーキング（9/29）
+  url: https://www.soccer-king.jp/news/world/ita/20260929/2210915.html
+  fmt: news
+  weak: true

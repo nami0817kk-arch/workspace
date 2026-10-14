@@ -1,0 +1,548 @@
+# 取材メモ（10/9 金、シリーズ「記録の解説」、key: record_topscore、型は news）。
+# 材料の控えは research/raw/20261009_record_topscore_material.md。**この控えの外へ出ていない。**
+#
+# 軸は「**得点の数だけでは順番が決まらない**」。
+#   山場の頭に置く強い一点は、レヴァンドフスキの41点が**29試合**で取った数字で、
+#   点の数では上のスコブラル44点・メッシ50点を、**1試合あたり（1.414 / 1.222 / 1.351）では上回る**こと。
+# **流れの点検（2026-10-08、読み手は Claude の下請け）で見つけた誤りを直した**:
+#   「5大リーグの1シーズン最多は44点（スコブラル）」と書いていたが、**5大リーグのリーグ戦の最多はメッシの50点**。
+#   44点は「レヴァンドフスキの41点より上」でしかない。題・short_title・takeaway・サムネの伏せ字を全部直した。
+# 直前2本と重ねないようにしたもの:
+#   10/8 ペドロの回（引退・銀器25個・バルサ321試合99得点）… 「◯試合に1点の割合」「およそ9か月に1つ」の言い回しと
+#     calc の「÷ ＝」の2段は使っていない（この回の calc は ÷ × ＝ の3段）。ペドロ・バルサの話は一度も出さない。
+#   10/7 ケインの回（代表の最多出場）… 「歴代◯位」「同じ◯試合で比べる」の形は使わない。代表の話は出さない。
+#   10/7 メッシの引退試合の回… メッシは 2011-12 のリーグ50点としてだけ出す。代表・引退の話はしない。写真も別の1枚にした。
+#   10/7 トルシエの回と「順番が入れ替わります」が重なったので、言い回しを変えた。
+# **枠を必ず付けたもの**（材料 §0・§7）:
+#   表と語りは**リーグ戦だけ**で統一し、節の中で「リーグ戦だけで数えた」と声に出す。
+#   全公式戦（メッシ73点）は後半に分け、「全公式戦では」と言ってから出す。暦年の91点は出さない。
+#   プレミアリーグ（1992年〜）とイングランド1部は別の枠として、ディーン60点は時代の段で扱う。
+#   ロセッティ36点はディヴィジオーネ・ナツィオナーレなので**表に入れず、1行だけ触れる**。
+# **90分あたりを出していないもの**: スコブラル・イグアイン・ディーン（出場分が取れていない。材料 §2）。
+#   出場分が取れたのは4つ（レヴァンドフスキ1.498／メッシ1.377／ハーランド1.167／インモービレ1.020）だけなので、
+#   **90分あたりで「5つの記録のなかでいちばん高い」とは言わない**。比べるのは1試合あたり（6つそろう）。
+#   板の注記も「90分あたりの得点」にとどめ、順位は書いていない。
+# 言い切っていないもの: スコブラルのPKゼロ・イグアインのPK3本は「伝えられています」。
+#   全公式戦の73点は「2000年以降では最多」までにして「史上最多」と言わない。
+# 自分で計算した数（材料 §2・§6 に式と元の数字がある）: 90分あたり・1試合あたり・PKの割合・
+#   いまの試合数への置き直し（60÷39×38=58.5／50÷37×38=51.4／41÷29×34=48.1／44÷36×34=41.6）・
+#   チームの得点に占める割合・ラフィーニャの 12÷7×38=65.1。
+# 今季の数字は research/scorers/2026-10-01.json の控えと突き合わせた（ラフィーニャ12点7試合555分、
+#   鈴木唯人4点4試合323分、ハーランド5点5試合、マレン6点5試合、トーレスとブルナー4点）。10/8 取り直しでも順位は動いていない。
+# 日本人（鈴木唯人）は今季の節で自然に触れるだけ。**題にもサムネにも出さない**（10-05 の決まり）。
+# 反応は入れない（シリーズの回。ブラウザの道具を使っていないので集めていない）。本人の言葉も引いていない。
+# アルファベットは読み上げに出さない（PK → 「ペナルティーキック」。板の題にだけ PK と書いてある）。
+# 写真: メッシ（Commons CC BY-SA 4.0）とレヴァンドフスキ（Commons CC BY-SA 3.0）を tools/pairphoto.py で横に並べた1枚を
+#   冒頭と前半に敷く（縦版 01_v.jpg がショート用）。後半は今季の話に合わせてラフィーニャ → 鈴木唯人 → ハーランドへ。
+#   レヴァンドフスキの単体写真は元が 820x460 しかないので、全面に敷かず並べた1枚の右半分として使っている。
+# サムネは構図 versus（記録の並びはこの構図、と CLAUDE.md にある）。同じ日の3本は number・scene・scene。
+#   伏せるのは「1試合あたりで上は●●」＝レヴァンドフスキ。点の数は50と41でメッシが上なのに、
+#   1試合あたりは1.351と1.414で逆になる、という伏せ方。作り込みの tint と rays は切った（右半分が赤く染まったため）。
+date: 2026年10月09日
+slot: other_1
+format: news
+series: 記録の解説
+people:
+- レヴァンドフスキ
+- メッシ
+- ハーランド
+- ラフィーニャ
+- 鈴木唯人
+theme:
+  id: record_topscore
+  league: germany
+  league_name: 5大リーグ
+  kind: other
+  topic: ブンデスリーガ
+  title: レヴァンドフスキの41点、これを超える1シーズンの記録を持つのは誰か
+  question: 1シーズンの最多得点は、どの枠で、どう数えたときの記録なのか
+  lead: 1シーズンで41点。出た試合は、29だけ。
+  hook: 得点の数だけでは、順番が決まりません。試合数まで入れて、並べ直します。
+  takeaway: 5大リーグのリーグ戦だけで数えた1シーズンの最多得点は、2011-12のメッシの50点。リーグ・アンの記録は1970-71のスコブラルの44点、ブンデスリーガは2020-21のレヴァンドフスキの41点で、レヴァンドフスキは29試合しか出ていないため1試合あたり1.414となり、6つの記録で最も高い（メッシ1.351、スコブラル1.222）。90分あたりは1.498で、出場分の分かるメッシの1.377を上回る。同じ36点でもインモービレは14本がペナルティーキックで38.9%、イグアインは3本と伝えられていて差は11本。いまの試合数に置き直すと、ディーン58.5・メッシ51.4・レヴァンドフスキ48.1・スコブラル41.6で、点の数で上だったスコブラルが下に回る。チームの得点に占める割合はディーンが58.8%、ハーランドが38.3%で、スコブラル46.8%がメッシ43.9%を上回るように、得点の数が多い記録ほど比重が大きいとは限らない。今季はラフィーニャが7試合12点で90分あたり1.946、このままなら65.1という計算になる
+  opening_image: assets/images/20261009_record_topscore/pair_messi_lewa/01.jpg
+short_title: レヴァンドフスキの41点は29試合。1試合あたりではメッシの50点より上
+thumbnail:
+  layout: versus
+  photos:
+  - assets/images/20260930b_messi_farewell/01_w.jpg
+  - assets/images/20261003_lewandowski_hat/01_w.jpg
+  names:
+  - メッシ
+  - レヴァンドフスキ
+  numbers:
+  - 50点
+  - 41点
+  line1: メッシとレヴァンドフスキ
+  line2: 1試合あたりで上は●●
+  cutout: false
+  tint: none
+  rays: false
+  short_photo: assets/images/20261009_record_topscore/pair_messi_lewa/01_v.jpg
+  tags:
+  - レヴァンドフスキ
+  - メッシ
+  - ブンデスリーガ
+  - ラ・リーガ
+  - 記録の解説
+sections:
+- id: record
+  main: true
+  heading: 5大リーグの1シーズン最多得点
+  tier: 報道
+  telop: 41点を29試合で。1試合あたり1.414は、6つの記録のなかで最も高い
+  narrator: キャスター
+  card: &big5
+    type: table
+    title: 5大リーグ 1シーズンのリーグ最多得点
+    columns: &b5c
+    - リーグ
+    - 選手
+    - 季
+    - 得点
+    - 試合
+    rows: &b5r
+    - - プレミア
+      - ハーランド
+      - 2022-23
+      - '36'
+      - '35'
+    - - ラ・リーガ
+      - メッシ
+      - 2011-12
+      - '50'
+      - '37'
+    - - セリエA
+      - イグアイン
+      - 2015-16
+      - '36'
+      - '35'
+    - - セリエA
+      - インモービレ
+      - 2019-20
+      - '36'
+      - '37'
+    - - ブンデス
+      - レヴァンドフスキ
+      - 2020-21
+      - '41'
+      - '29'
+    - - リーグ・アン
+      - スコブラル
+      - 1970-71
+      - '44'
+      - '36'
+  say:
+  - text: ブンデスリーガの記録、レヴァンドフスキの41点を、ほかのリーグと比べます。
+    short_only: true
+    card: &lewa_stats
+      type: stats
+      title: レヴァンドフスキ 2020-21
+      items:
+      - - '41'
+        - 点
+        - ブンデスリーガの記録
+      - - '29'
+        - 試合
+        - 34試合の季に出た数
+      - - '1.498'
+        - 点
+        - 90分あたりの得点
+      focus: 2
+  - text: レヴァンドフスキのブンデスリーガ41点は、29試合で取った数字です。
+    card: *lewa_stats
+  - text: 出場した時間で割ると90分あたり1.498点。メッシの1.377より上です。
+    card: *lewa_stats
+    emph: true
+  - text: ただ、点の数だけならメッシの50点もスコブラルの44点も、41点より上。
+    card:
+      type: table
+      title: 5大リーグ 1シーズンのリーグ最多得点
+      columns: *b5c
+      rows: *b5r
+      highlight_row: 1
+  - text: それでも1試合あたりなら、レヴァンドフスキの1.414が6つで最も高い数です。
+    card:
+      type: table
+      title: 5大リーグ 1シーズンのリーグ最多得点
+      columns: *b5c
+      rows: *b5r
+      highlight_row: 4
+  - text: リーグ戦だけで数えた、リーグごとの記録がこちらです。
+    card: *big5
+  sources:
+  - https://www.premierleague.com/en/news/3238749
+  - https://www.bundesliga.com/en/bundesliga/news/all-top-scorers-bundesliga-muller-lewandowski-dzeko-nkunku-klinsmann-heynckes-fullkrug-24227
+  - https://www.espn.com/soccer/stats/_/league/ESP.1/view/scoring/season/2011/spanish-laliga
+  - https://www.espn.com/soccer/stats/_/league/ITA.1/view/scoring/season/2015/italian-serie-a
+  - https://en.wikipedia.org/wiki/1970%E2%80%9371_French_Division_1
+  - https://en.wikipedia.org/wiki/Josip_Skoblar
+  - https://www.messivsronaldo.app/club-stats/2011-2012/
+- id: inside
+  heading: 同じ36点の中身と、記録が生まれた時代
+  tier: 報道
+  telop: インモービレの36点は14本がペナルティーキック、イグアインは3本と伝えられている
+  narrator: 解説
+  card: &pk3
+    type: bars
+    title: 同じ36点 PKの本数
+    unit: 本
+    items:
+    - {label: インモービレ 2019-20, value: 14, highlight: true}
+    - {label: ハーランド 2022-23, value: 7}
+    - {label: イグアイン 2015-16, value: 3}
+  say:
+  - text: 36点で並ぶ記録は3つあります。セリエAの2人と、プレミアのハーランドです。
+    card: *pk3
+  - text: 同じ36点でも、中身はずいぶん違います。
+    card: *pk3
+  - text: インモービレは36点のうち14本がペナルティーキック。38.9%にあたります。
+    card: *pk3
+    emph: true
+  - text: 一方のイグアインは3本と伝えられていて、その差は11本です。
+    card:
+      type: bars
+      title: 同じ36点 PKの本数
+      unit: 本
+      items:
+      - {label: インモービレ 2019-20, value: 14, highlight: true}
+      - {label: ハーランド 2022-23, value: 7}
+      - {label: イグアイン 2015-16, value: 3, highlight: true}
+  - text: ほかの記録の季も見ると、メッシは10本、レヴァンドフスキは8本。
+    card: &pk5
+      type: bars
+      title: 記録の季 PKの本数
+      unit: 本
+      items:
+      - {label: インモービレ 36点, value: 14}
+      - {label: メッシ 50点, value: 10}
+      - {label: レヴァンドフスキ 41点, value: 8}
+      - {label: ハーランド 36点, value: 7}
+      - {label: スコブラル 44点, value: 0}
+  - text: ハーランドは7本で、どれも2割ほど。スコブラルは1本も無かったと伝えられています。
+    card:
+      type: bars
+      title: 記録の季 PKの本数
+      unit: 本
+      items:
+      - {label: インモービレ 36点, value: 14}
+      - {label: メッシ 50点, value: 10}
+      - {label: レヴァンドフスキ 41点, value: 8}
+      - {label: ハーランド 36点, value: 7}
+      - {label: スコブラル 44点, value: 0, highlight: true}
+  - text: セリエAが始まる前の年にも、別の大会で36点があります。枠が違う数字です。
+    card: *pk5
+  - text: 数字の後ろには、時代の違いもあります。
+    card: &era
+      type: table
+      title: 記録の季と、いまの違い
+      columns: &erac
+      - くらべるもの
+      - その季
+      - いま
+      rows: &erar
+      - - リーグ・アンの節数
+        - 38（1970-71）
+        - '34'
+      - - ラ・リーガの節数
+        - 30（1950-51）
+        - '38'
+      - - ラ・リーガの1試合の得点
+        - '4.33'
+        - '3.04'
+      - - 交代できる人数
+        - 0（1927-28）
+        - '5'
+  - text: イングランドの1部がプレミアリーグになったのは1992年です。
+    card:
+      type: table
+      title: 記録の季と、いまの違い
+      columns: *erac
+      rows: *erar
+      highlight_row: 3
+  - text: それより前の1部には、1927-28のディキシー・ディーンの60点があります。
+    card:
+      type: table
+      title: 記録の季と、いまの違い
+      columns: *erac
+      rows: *erar
+      highlight_row: 3
+  - text: エヴァートンで、42試合ある季に39試合へ出た数字です。
+    card:
+      type: table
+      title: 記録の季と、いまの違い
+      columns: *erac
+      rows: *erar
+      highlight_row: 3
+  - text: そのころ交代は1人も認められていません。いまは5人まで使えます。
+    card:
+      type: table
+      title: 記録の季と、いまの違い
+      columns: *erac
+      rows: *erar
+      highlight_row: 3
+  - text: ラ・リーガの1950-51は1チーム30試合。1試合に4.33点入っていました。
+    card:
+      type: table
+      title: 記録の季と、いまの違い
+      columns: *erac
+      rows: *erar
+      highlight_row: 2
+  - text: いまは3.04点なので1.42倍。リーグ・アンは節が38から34に減りました。
+    card:
+      type: table
+      title: 記録の季と、いまの違い
+      columns: *erac
+      rows: *erar
+      highlight_row: 0
+  - text: ここまでは、すべてリーグ戦だけの数字。ここからはカップ戦も入れた数です。
+    card: &allcomp
+      type: table
+      title: 全公式戦の1シーズン得点（2000年以降）
+      columns: &acc
+      - 選手
+      - 季
+      - 得点
+      - 試合
+      rows: &acr
+      - - メッシ
+        - 2011-12
+        - '73'
+        - '60'
+      - - ロナウド
+        - 2014-15
+        - '61'
+        - '54'
+      - - レヴァンドフスキ
+        - 2019-20
+        - '55'
+        - '47'
+      - - ハーランド
+        - 2022-23
+        - '52'
+        - '53'
+  - text: 全公式戦では、メッシの2011-12が60試合で73点。
+    card:
+      type: table
+      title: 全公式戦の1シーズン得点（2000年以降）
+      columns: *acc
+      rows: *acr
+      highlight_row: 0
+  - text: 内訳はリーグ戦が50、チャンピオンズリーグが14、残りが国内と国際の大会です。
+    card:
+      type: table
+      title: 全公式戦の1シーズン得点（2000年以降）
+      columns: *acc
+      rows: *acr
+      highlight_row: 0
+  - text: 2000年以降に限れば、全公式戦でもこれが最多。リーグ戦とは枠が違います。
+    card: *allcomp
+    emph: true
+  sources:
+  - https://www.espn.com/soccer/story/_/id/37638555/premier-league-history-maker-erling-haaland-nowhere-lionel-messi-single-season-goal-record-europes-top-five-leagues
+  - https://football-italia.net/penalties-galore-in-serie-a-2019-20/
+  - https://thelaziali.com/2020/08/19/2019-20-serie-a-penalty-kick-analysis-top-4-comparison/
+  - https://en.wikipedia.org/wiki/Dixie_Dean
+  - https://en.wikipedia.org/wiki/1950%E2%80%9351_La_Liga
+  - https://www.soccerhistory.co.uk/a-history-of-substitutions
+  - https://www.theifab.com/news/the-ifab-permanently-approves-five-substitute-option-in-top-level-competitions/
+  - https://theanalyst.com/articles/lionel-messi-barcelona-73-goal-2011-12-season
+  - https://www.espn.com/soccer/story/_/id/39605842/who-scored-most-goals-european-soccer-season
+- id: season
+  heading: 今季ここまでの先頭
+  tier: 報道
+  telop: ラ・リーガの先頭はラフィーニャ、7試合で12点。ブンデスは4点で5人が並ぶ
+  narrator: キャスター
+  card: &now
+    type: table
+    title: 今季ここまでの先頭（10月8日）
+    columns: &nowc
+    - リーグ
+    - 先頭
+    - 得点
+    - 試合
+    rows: &nowr
+    - - ラ・リーガ
+      - ラフィーニャ（バルサ）
+      - '12'
+      - '7'
+    - - セリエA
+      - マレン（ローマ）
+      - '6'
+      - '5'
+    - - プレミア
+      - ハーランド（シティ）
+      - '5'
+      - '5'
+    - - ブンデス
+      - 5人が並ぶ
+      - '4'
+      - '4'
+    - - リーグ・アン
+      - 2人が並ぶ
+      - '4'
+      - '5'
+  say:
+  - text: ここからは、いまの季にこの記録へ近づく選手がいるかを見ます。
+    card: *now
+    image: assets/images/20260930_raphinha/01_w.jpg
+  - text: ラ・リーガはバルセロナのラフィーニャ。7試合で12点と、ひとり抜けています。
+    card:
+      type: table
+      title: 今季ここまでの先頭（10月8日）
+      columns: *nowc
+      rows: *nowr
+      highlight_row: 0
+  - text: セリエAはローマのマレンが5試合で6点、プレミアはハーランドが5試合で5点。
+    card:
+      type: table
+      title: 今季ここまでの先頭（10月8日）
+      columns: *nowc
+      rows: *nowr
+      highlight_row: 1
+  - text: ブンデスリーガは4点で5人が並び、そのひとりがフライブルクの鈴木唯人です。
+    card:
+      type: table
+      title: 今季ここまでの先頭（10月8日）
+      columns: *nowc
+      rows: *nowr
+      highlight_row: 3
+    image: assets/images/20261001_scorers/01_w.jpg
+  - text: リーグ・アンも4点で2人が並びます。消化した試合数はリーグごとに違います。
+    card:
+      type: table
+      title: 今季ここまでの先頭（10月8日）
+      columns: *nowc
+      rows: *nowr
+      highlight_row: 4
+  - text: そのラフィーニャの12点を、このままの調子で季の終わりまで伸ばしてみます。
+    card: &pace
+      type: calc
+      title: このままなら、という計算
+      terms:
+      - - 12点
+        - 7試合での得点
+      - - 7試合
+        - 出場
+      - - 38試合
+        - ラ・リーガの試合数
+      - - '65.1'
+        - このままなら
+      ops:
+      - ÷
+      - ×
+      - ＝
+    image: assets/images/20260930_raphinha/01_w.jpg
+  - text: 65.1点。リーグ戦のメッシの記録50点を、15点上回る数になります。
+    card: *pace
+    emph: true
+  - text: ただし、これは7試合ぶんの数字を伸ばしただけのものです。
+    card: *pace
+  - text: レヴァンドフスキの41点もメッシの50点も、季を走り切ってからの数字です。
+    card: *pace
+  sources:
+  - https://www.planetfootball.com/stats-tables/top-goalscorers-europe-major-leagues-2025-26-golden-shoe
+  - https://www.premierleague.com/en/news/4591856
+  - https://en.wikipedia.org/wiki/2026%E2%80%9327_Ligue_1
+- id: view
+  viewpoint: true
+  heading: いまの試合数に置き直すと、順番はどう変わるか
+  tier: 背景
+  telop: 置き直すとディーン58.5・メッシ51.4・レヴァンドフスキ48.1・スコブラル41.6
+  narrator: 解説
+  card: &reframe
+    type: table
+    title: いまの試合数に置き直すと
+    columns: &rfc
+    - 記録
+    - 元の数字
+    - 置き直すと
+    rows: &rfr
+    - - ディーン 1927-28
+      - 60点／39試合
+      - '58.5'
+    - - メッシ 2011-12
+      - 50点／37試合
+      - '51.4'
+    - - レヴァンドフスキ 2020-21
+      - 41点／29試合
+      - '48.1'
+    - - スコブラル 1970-71
+      - 44点／36試合
+      - '41.6'
+  say:
+  - text: 最後に、時代の違う記録を、いまの物差しで並べ直してみます。
+    card: *reframe
+    image: assets/images/20261009_record_topscore/pair_messi_lewa/01.jpg
+  - text: 1試合あたりの得点に、いまのその国のリーグの試合数を掛けました。
+    card: *reframe
+  - text: スペインとイングランドは38、ドイツとフランスは34。もしもの計算です。
+    card: *reframe
+  - text: ディーンの60点は58.5、メッシの50点は51.4になります。
+    card:
+      type: table
+      title: いまの試合数に置き直すと
+      columns: *rfc
+      rows: *rfr
+      highlight_row: 0
+  - text: レヴァンドフスキの41点は48.1まで上がります。
+    card:
+      type: table
+      title: いまの試合数に置き直すと
+      columns: *rfc
+      rows: *rfr
+      highlight_row: 2
+    emph: true
+  - text: 逆にスコブラルの44点は41.6まで下がり、6点以上の差がつきます。
+    card:
+      type: table
+      title: いまの試合数に置き直すと
+      columns: *rfc
+      rows: *rfr
+      highlight_row: 3
+  - text: もうひとつ、チームの点のうち何割を1人で入れたかを数えました。
+    card: &share
+      type: bars
+      title: クラブのリーグ戦の得点に占める割合
+      unit: '%'
+      items:
+      - {label: ディーン 1927-28, value: 58.8, highlight: true}
+      - {label: スコブラル 1970-71, value: 46.8}
+      - {label: メッシ 2011-12, value: 43.9}
+      - {label: レヴァンドフスキ 2020-21, value: 41.4}
+      - {label: ハーランド 2022-23, value: 38.3}
+    image: assets/images/20261002_cmp_haaland_wide/01.jpg
+  - text: ディーンはエヴァートンのリーグ戦102点のうち60点、58.8%です。
+    card: *share
+  - text: ハーランドの36点は、シティの94点のうちの38.3%で、いちばん小さい割合。
+    card:
+      type: bars
+      title: クラブのリーグ戦の得点に占める割合
+      unit: '%'
+      items:
+      - {label: ディーン 1927-28, value: 58.8}
+      - {label: スコブラル 1970-71, value: 46.8}
+      - {label: メッシ 2011-12, value: 43.9}
+      - {label: レヴァンドフスキ 2020-21, value: 41.4}
+      - {label: ハーランド 2022-23, value: 38.3, highlight: true}
+  - text: 3つのタイトルを獲った季で、点を取る人がほかにもいました。
+    card: *share
+  - text: ただ、スコブラルは46.8%、メッシは43.9%。点の数はメッシが上です。
+    card:
+      type: bars
+      title: クラブのリーグ戦の得点に占める割合
+      unit: '%'
+      items:
+      - {label: ディーン 1927-28, value: 58.8}
+      - {label: スコブラル 1970-71, value: 46.8, highlight: true}
+      - {label: メッシ 2011-12, value: 43.9, highlight: true}
+      - {label: レヴァンドフスキ 2020-21, value: 41.4}
+      - {label: ハーランド 2022-23, value: 38.3}
+  - text: 得点の数が多い記録ほど、チームに占める割合が大きいとは限らないんです。
+    card: *share
+    emph: true
+  sources:
+  - https://www.espn.com/soccer/story/_/id/39605842/who-scored-most-goals-european-soccer-season
+  - https://en.wikipedia.org/wiki/Dixie_Dean
+  - https://en.wikipedia.org/wiki/1970%E2%80%9371_French_Division_1
+  - https://en.wikipedia.org/wiki/2011%E2%80%9312_La_Liga
+  - https://www.messivsronaldo.app/club-stats/2011-2012/

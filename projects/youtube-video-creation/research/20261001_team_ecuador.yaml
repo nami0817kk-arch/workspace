@@ -1,0 +1,688 @@
+# エクアドル代表の紹介（代表チームの紹介・初回）。10/1 キリンカップ準決勝（日産スタジアム）の相手。
+# 来日メンバーは JFA の発表（jfa.jp samuraiblue/news/00036833、ゲキサカ 9/29 459987 も同じ）。対戦チーム情報（00036822）の FIFA25位・2勝2分・W杯の結果・南米予選5失点・2022年のPK失敗とも突き合わせた。位置と生年月日は Transfermarkt（英語版Wikipediaの代表メンバー表と一致）。年齢は 10/1 時点。
+# FIFAランキングは FIFA 公式（api.fifa.com、2026-07-20 発表の回。9月の代表戦のあとの更新はまだ無い）。
+# W杯と韓国戦の結果・数字は ESPN の試合記録（韓国戦：保持 40.7%、ロングボール 49本/25本、クロス 11本で成功1）。
+# 南米予選の表は英語版Wikipedia（18試合 8勝8分2敗 得点14 失点5、勝点29は3点の減点後）。
+# 日本との対戦は JFA の記録（samuraiblue.jp の代表TIMELINE と jfa.jp の試合ページ）。英語版Wikipediaの対戦成績（4試合2勝2分 得点5失点1）と一致。
+# カイセド・インカピエ・オルドニェスはけがで今回のアジア遠征に入っていない（El Universo 9/23）。
+# プラタとロドリゲスは韓国戦を欠場したが、日本戦の来日メンバーには入っている（出るかは分からないので書かない）。
+# 本人・監督の言葉は使っていない。ネットの反応も置いていない（紹介ものは声なしで通す）。
+date: 2026年10月01日
+slot: other_1
+format: news
+series: 代表チームの紹介
+people: []
+theme:
+  id: team_ecuador
+  league: france
+  league_name: キリンカップ
+  kind: preview
+  topic: エクアドル代表
+  title: エクアドル代表はどんなチーム？W杯でドイツに逆転勝ちした顔ぶれ
+  question: 10月1日に日本と戦うエクアドル代表は、どんなチームか
+  takeaway: エクアドルは南米予選18試合で5失点の、守って勝ち点を積むチーム。監督が替わった初戦の韓国戦は0-3で、ロングボールは韓国の約2倍の49本だった。DFに離脱が続く日本は、その長いボールと左のウイングへの当たり方が問われる
+  opening_image: assets/images/20261001_ecu_team/scene_w.jpg
+short_title: エクアドル代表、欧州でプレーする主力6人
+thumbnail:
+  photo: assets/images/20261001_ecu_team/scene_w.jpg
+  line1: エクアドル代表
+  line2: 南米予選18試合で失点●
+  tags:
+  - エクアドル代表
+  - キリンカップ
+  - 日本代表
+  - 代表チーム紹介
+  note_red: 代表チームの紹介
+  photos:
+  - assets/images/20261001_ecu_pacho/01.jpg
+  - assets/images/20261001_ecu_estupinan/01.jpg
+  - assets/images/20261001_ecu_angulo/01.jpg
+sections:
+- id: data
+  heading: 基礎DATA
+  tier: 確定
+  official: true
+  telop: エクアドル代表の基礎DATA
+  narrator: キャスター
+  card:
+    type: table
+    title: エクアドル代表の基礎DATA
+    columns: &id001
+    - 項目
+    - 内容
+    rows: &id002
+    - - FIFAランキング
+      - 25位（日本は17位）
+    - - 監督
+      - マルセロ・ガジャルド（9月就任）
+    - - W杯
+      - 2大会連続5回目。2026年はベスト32
+    - - 南米予選
+      - 10か国中2位（18試合で5失点）
+    - - 主な所属
+      - パリSG・ミラン・サンダーランド
+  say:
+  - text: 10月1日、日産スタジアムで日本と戦うエクアドル代表。
+    image: assets/images/20261001_ecu_team/scene_w.jpg
+  - text: どんなチームなのかを、数字で見ていきます。
+    card:
+      type: table
+      title: エクアドル代表の基礎DATA
+      columns: *id001
+      rows: *id002
+  - text: 世界の国を試合の結果で並べた、フィファランキングでは25位。
+    card:
+      type: table
+      title: エクアドル代表の基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 0
+  - text: 監督はアルゼンチン出身のマルセロ・ガジャルド、50歳。
+    card:
+      type: table
+      title: エクアドル代表の基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 1
+    image: assets/images/20261001_ecu_gallardo/01.jpg
+  - text: 母国の名門リーベル・プレートを率いた人物で、9月に就任したばかり。
+    card:
+      type: table
+      title: エクアドル代表の基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 1
+  - text: 南米一のクラブを争うコパ・リベルタドーレスで、2度優勝しています。
+    card:
+      type: table
+      title: エクアドル代表の基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 1
+  - text: W杯は2大会続けての出場で、通算5回目。
+    card:
+      type: table
+      title: エクアドル代表の基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 2
+    image: assets/images/20261001_ecu_team/scene_w.jpg
+  - text: 48か国が出た2026年の大会で、32か国の勝ち抜き戦まで進みました。
+    card:
+      type: table
+      title: エクアドル代表の基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 2
+  - text: W杯への南米予選は、10か国が18試合ずつ戦う総当たり。
+    card:
+      type: table
+      title: エクアドル代表の基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 3
+  - text: エクアドルはアルゼンチンに次ぐ2位で抜けました。
+    card:
+      type: table
+      title: エクアドル代表の基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 3
+  - text: この18試合で許したゴールは、たった5つ。10か国で最も少ない数です。
+    card:
+      type: table
+      title: エクアドル代表の基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 3
+  - text: 主力の多くは、欧州のクラブでプレーしています。
+    card:
+      type: table
+      title: エクアドル代表の基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 4
+  sources:
+  - https://www.jfa.jp/samuraiblue/news/00036822/
+  - https://www.jfa.jp/samuraiblue/news/00036833/
+  - https://www.fifa.com/fifa-world-ranking/men?dateId=FRS_Male_Football_20260611
+  - https://batimes.com.ar/news/sports/ex-river-boss-marcelo-gallardo-appointed-as-new-ecuador-head-coach.phtml
+  - https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_qualification_(CONMEBOL)
+- id: recent
+  heading: この夏からの5試合
+  tier: 確定
+  official: true
+  telop: W杯は1勝1分け1敗でグループ3位。ベスト32で敗退
+  narrator: 解説
+  card:
+    type: table
+    title: エクアドルの直近5試合
+    columns: &id003
+    - 日付
+    - 相手
+    - 結果
+    rows: &id004
+    - - 6月14日
+      - コートジボワール（W杯）
+      - 0-1 負け
+    - - 6月20日
+      - キュラソー（W杯）
+      - 0-0 分け
+    - - 6月25日
+      - ドイツ（W杯）
+      - 2-1 勝ち
+    - - 6月30日
+      - メキシコ（W杯 ベスト32）
+      - 0-2 負け
+    - - 9月24日
+      - 韓国（親善試合）
+      - 0-3 負け
+  say:
+  - text: この夏からの5試合です。
+    card:
+      type: table
+      title: エクアドルの直近5試合
+      columns: *id003
+      rows: *id004
+  - text: W杯のグループは1勝1分け1敗の3位。
+    card:
+      type: table
+      title: エクアドルの直近5試合
+      columns: *id003
+      rows: *id004
+  - text: 初戦はコートジボワールに0-1。90分に決められました。
+    card:
+      type: table
+      title: エクアドルの直近5試合
+      columns: *id003
+      rows: *id004
+      highlight_row: 0
+  - text: 続くキュラソー戦は、0-0の引き分け。
+    card:
+      type: table
+      title: エクアドルの直近5試合
+      columns: *id003
+      rows: *id004
+      highlight_row: 1
+  - text: そして3戦目のドイツ戦。開始2分に先に点を取られます。
+    card:
+      type: table
+      title: エクアドルの直近5試合
+      columns: *id003
+      rows: *id004
+      highlight_row: 2
+  - text: そこからアングロとプラタが決め、2-1とひっくり返しました。
+    card:
+      type: table
+      title: エクアドルの直近5試合
+      columns: *id003
+      rows: *id004
+      highlight_row: 2
+    image: assets/images/20261001_ecu_angulo/01.jpg
+  - text: 各組の3位のうち、成績の良い8チームに入って勝ち上がりました。
+    card:
+      type: table
+      title: エクアドルの直近5試合
+      columns: *id003
+      rows: *id004
+      highlight_row: 3
+    image: assets/images/20261001_ecu_team/scene_w.jpg
+  - text: 勝ち抜き戦の初戦で、開催国のメキシコに0-2で敗れています。
+    card:
+      type: table
+      title: エクアドルの直近5試合
+      columns: *id003
+      rows: *id004
+      highlight_row: 3
+  - text: ガジャルド監督の初陣が、9月24日に韓国で戦った親善試合です。
+    card:
+      type: table
+      title: エクアドルの直近5試合
+      columns: *id003
+      rows: *id004
+      highlight_row: 4
+    image: assets/images/20261001_ecu_gallardo/01.jpg
+  - text: 結果は0-3。3点は、どれも後半に失いました。
+    card:
+      type: table
+      title: エクアドルの直近5試合
+      columns: *id003
+      rows: *id004
+      highlight_row: 4
+  - text: 韓国のフィファランキングは32位。エクアドルより7つ下の相手です。
+    card:
+      type: table
+      title: エクアドルの直近5試合
+      columns: *id003
+      rows: *id004
+      highlight_row: 4
+  - text: ボールを持っていた時間は41%。相手に握られた試合でした。
+    card:
+      type: table
+      title: エクアドルの直近5試合
+      columns: *id003
+      rows: *id004
+      highlight_row: 4
+  sources:
+  - https://www.fifa.com/en/match-centre/match/17/285023/289273/400021466
+  - https://www.espn.com/soccer/match/_/gameId/760468
+  - https://www.espn.com/soccer/match/_/gameId/401905196/ecuador-south-korea
+- id: europe
+  main: true
+  heading: 欧州でプレーする主力
+  tier: 確定
+  official: true
+  telop: パリSGのパチョ、ミランのエストゥピニャン、サンダーランドのアングロ
+  narrator: キャスター
+  card:
+    type: table
+    title: 来日メンバーの欧州組（主な6人）
+    columns: &id005
+    - 名前
+    - 所属
+    - 位置
+    - 年齢
+    rows: &id006
+    - - ウィリアン・パチョ
+      - パリSG
+      - センターバック
+      - 24歳
+    - - ペルビス・エストゥピニャン
+      - ミラン
+      - 左サイドバック
+      - 28歳
+    - - ニルソン・アングロ
+      - サンダーランド
+      - 左ウイング
+      - 23歳
+    - - ジェレミー・サルミエント
+      - ミドルズブラ
+      - 左ウイング
+      - 24歳
+    - - ジョン・ジェボア
+      - ベネチア
+      - セカンドトップ
+      - 26歳
+    - - ケビン・ロドリゲス
+      - ユニオンSG
+      - センターFW
+      - 26歳
+  say:
+  - text: 10月1日に日本と戦う、W杯ベスト32のエクアドル。
+    image: assets/images/20261001_ecu_team/scene_w.jpg
+    short_only: true
+  - text: 来日メンバーのうち、欧州のクラブでプレーする主な6人です。
+    card:
+      type: table
+      title: 来日メンバーの欧州組（主な6人）
+      columns: *id005
+      rows: *id006
+    image: assets/images/20261001_ecu_team/scene_w.jpg
+  - text: 主将のモイセス・カイセドと、アーセナルのピエロ・インカピエは、けがで外れました。
+    card:
+      type: table
+      title: 来日メンバーの欧州組（主な6人）
+      columns: *id005
+      rows: *id006
+  - text: 守りの柱は、パリ・サンジェルマンのウィリアン・パチョ。
+    card:
+      type: table
+      title: 来日メンバーの欧州組（主な6人）
+      columns: *id005
+      rows: *id006
+      highlight_row: 0
+    image: assets/images/20261001_ecu_pacho/01.jpg
+  - text: ゴール前の真ん中を守るセンターバックで、24歳です。
+    card:
+      type: table
+      title: 来日メンバーの欧州組（主な6人）
+      columns: *id005
+      rows: *id006
+      highlight_row: 0
+  - text: 主将のいない韓国戦では、パチョがキャプテンマークを巻きました。
+    card:
+      type: table
+      title: 来日メンバーの欧州組（主な6人）
+      columns: *id005
+      rows: *id006
+      highlight_row: 0
+  - text: 左サイドバックには、ミランのペルビス・エストゥピニャン。
+    card:
+      type: table
+      title: 来日メンバーの欧州組（主な6人）
+      columns: *id005
+      rows: *id006
+      highlight_row: 1
+    image: assets/images/20261001_ecu_estupinan/01.jpg
+  - text: 左の守備から上がり、攻めにも出ていく位置です。
+    card:
+      type: table
+      title: 来日メンバーの欧州組（主な6人）
+      columns: *id005
+      rows: *id006
+      highlight_row: 1
+  - text: 代表で57試合に出てきた、28歳の経験者。
+    card:
+      type: table
+      title: 来日メンバーの欧州組（主な6人）
+      columns: *id005
+      rows: *id006
+      highlight_row: 1
+  - text: 攻めの軸は、ピッチの端を走るウイングです。
+    card:
+      type: table
+      title: 来日メンバーの欧州組（主な6人）
+      columns: *id005
+      rows: *id006
+      highlight_row: 2
+    image: assets/images/20261001_ecu_angulo/01.jpg
+  - text: サンダーランドのニルソン・アングロは23歳。
+    card:
+      type: table
+      title: 来日メンバーの欧州組（主な6人）
+      columns: *id005
+      rows: *id006
+      highlight_row: 2
+  - text: W杯のドイツ戦で、同点のゴールを決めています。
+    card:
+      type: table
+      title: 来日メンバーの欧州組（主な6人）
+      columns: *id005
+      rows: *id006
+      highlight_row: 2
+  - text: ミドルズブラのジェレミー・サルミエントも、左のウイングの24歳。
+    card:
+      type: table
+      title: 来日メンバーの欧州組（主な6人）
+      columns: *id005
+      rows: *id006
+      highlight_row: 3
+    image: assets/images/20261001_ecu_sarmiento/01.jpg
+  - text: 前線には、イタリアのベネチアでプレーするジョン・ジェボア。
+    card:
+      type: table
+      title: 来日メンバーの欧州組（主な6人）
+      columns: *id005
+      rows: *id006
+      highlight_row: 4
+    image: assets/images/20261001_ecu_team/scene_w.jpg
+  - text: ベルギーのユニオン・サンジロワーズからは、ケビン・ロドリゲス。
+    card:
+      type: table
+      title: 来日メンバーの欧州組（主な6人）
+      columns: *id005
+      rows: *id006
+      highlight_row: 5
+  - text: ドイツ戦の決勝点は、ロドリゲスが頭で落としたボールからでした。
+    card:
+      type: table
+      title: 来日メンバーの欧州組（主な6人）
+      columns: *id005
+      rows: *id006
+      highlight_row: 5
+  - text: 決めたゴンサロ・プラタは、ブラジルのフラメンゴから来日します。
+    card:
+      type: table
+      title: 来日メンバーの欧州組（主な6人）
+      columns: *id005
+      rows: *id006
+  sources:
+  - https://www.jfa.jp/samuraiblue/news/00036833/
+  - https://web.gekisaka.jp/news/world/detail/?459987-459987-fl
+  - https://www.transfermarkt.com/willian-pacho/profil/spieler/661171
+  - https://www.transfermarkt.com/pervis-estupinan/profil/spieler/349599
+  - https://www.transfermarkt.com/nilson-angulo/profil/spieler/903611
+  - https://www.transfermarkt.com/jeremy-sarmiento/profil/spieler/568005
+  - https://www.transfermarkt.com/john-yeboah/profil/spieler/439914
+  - https://www.transfermarkt.com/kevin-rodriguez/profil/spieler/684159
+  - https://www.espn.com/soccer/match/_/gameId/760468
+  - https://www.elcomercio.com/deportes/futbol/gallardo-corea-ecuador-alineacion-debut/
+  - https://www.eluniverso.com/deportes/futbol/moises-caicedo-piero-hincapie-y-tres-jugadores-mas-se-pierden-el-ecuador-vs-corea-del-sur-estas-son-las-opciones-de-gallardo-nota/
+- id: h2h
+  heading: 日本との過去の対戦
+  tier: 確定
+  official: true
+  telop: これまで4試合。日本の2勝2分け
+  narrator: 解説
+  card:
+    type: table
+    title: 日本とエクアドルの過去の対戦
+    columns: &id007
+    - 日付
+    - 大会（会場）
+    - 日本から見て
+    rows: &id008
+    - - 1995年5月28日
+      - キリンカップ（国立競技場）
+      - 3-0 勝ち
+    - - 2006年3月30日
+      - キリンチャレンジカップ（大分）
+      - 1-0 勝ち
+    - - 2019年6月24日
+      - コパ・アメリカ（ブラジル）
+      - 1-1 分け
+    - - 2022年9月27日
+      - キリンチャレンジカップ（ドイツ）
+      - 0-0 分け
+  say:
+  - text: 日本とエクアドルは、これまで4回戦っています。
+    card:
+      type: table
+      title: 日本とエクアドルの過去の対戦
+      columns: *id007
+      rows: *id008
+    image: assets/images/20261001_ecu_team/scene_w.jpg
+  - text: 日本の2勝2分けで、まだ負けはありません。
+    card:
+      type: table
+      title: 日本とエクアドルの過去の対戦
+      columns: *id007
+      rows: *id008
+  - text: 最初は1995年のキリンカップ。国立競技場で3-0でした。
+    card:
+      type: table
+      title: 日本とエクアドルの過去の対戦
+      columns: *id007
+      rows: *id008
+      highlight_row: 0
+  - text: 点を取ったのは、中山雅史と三浦知良でした。
+    card:
+      type: table
+      title: 日本とエクアドルの過去の対戦
+      columns: *id007
+      rows: *id008
+      highlight_row: 0
+  - text: 2006年は大分で1-0。途中出場の佐藤寿人が85分に決めました。
+    card:
+      type: table
+      title: 日本とエクアドルの過去の対戦
+      columns: *id007
+      rows: *id008
+      highlight_row: 1
+  - text: 2019年はブラジルで開かれた南米選手権、コパ・アメリカ。
+    card:
+      type: table
+      title: 日本とエクアドルの過去の対戦
+      columns: *id007
+      rows: *id008
+      highlight_row: 2
+  - text: 招待されて出た日本は1-1。両チームとも、ここで大会を去りました。
+    card:
+      type: table
+      title: 日本とエクアドルの過去の対戦
+      columns: *id007
+      rows: *id008
+      highlight_row: 2
+  - text: 直近は2022年、ドイツのデュッセルドルフでの0-0です。
+    card:
+      type: table
+      title: 日本とエクアドルの過去の対戦
+      columns: *id007
+      rows: *id008
+      highlight_row: 3
+  - text: エクアドルは、ペナルティキックを外していました。
+    card:
+      type: table
+      title: 日本とエクアドルの過去の対戦
+      columns: *id007
+      rows: *id008
+      highlight_row: 3
+  - text: このとき先発したのが、エストゥピニャンとジャクソン・ポロソ。
+    card:
+      type: table
+      title: 日本とエクアドルの過去の対戦
+      columns: *id007
+      rows: *id008
+      highlight_row: 3
+    image: assets/images/20261001_ecu_estupinan/01.jpg
+  - text: ゴールキーパーのエルナン・ガリンデスも、先発で出ていました。
+    card:
+      type: table
+      title: 日本とエクアドルの過去の対戦
+      columns: *id007
+      rows: *id008
+      highlight_row: 3
+    image: assets/images/20261001_ecu_team/scene_w.jpg
+  - text: 途中から出たサルミエントとアングロを含め、5人が今回も来日します。
+    card:
+      type: table
+      title: 日本とエクアドルの過去の対戦
+      columns: *id007
+      rows: *id008
+      highlight_row: 3
+    image: assets/images/20261001_ecu_sarmiento/01.jpg
+  sources:
+  - http://samuraiblue.jp/timeline/19950528/
+  - http://samuraiblue.jp/timeline/20060330/
+  - https://www.jfa.jp/samuraiblue/copaamerica2019/news/00021776/
+  - https://www.jfa.jp/samuraiblue/20220927/match_page.html
+  - https://www.jfa.jp/samuraiblue/news/00036822/
+- id: view
+  heading: 長いボールと左の翼
+  tier: 背景
+  viewpoint: true
+  telop: 得点は多くない。韓国戦のロングボールは49本、韓国の約2倍
+  narrator: 解説
+  card:
+    type: table
+    title: 数字で見るエクアドルの形
+    columns: &id009
+    - ''
+    - ''
+    rows: &id010
+    - - 南米予選（18試合）
+      - 得点14・失点5
+    - - W杯（4試合）
+      - 得点2・失点4
+    - - 韓国戦のロングボール
+      - 49本（韓国は25本）
+    - - 韓国戦のボール保持
+      - 41%
+  say:
+  - text: ここからは見立てです。エクアドルは、守って勝ち点を積んできたチームでした。
+    card:
+      type: table
+      title: 数字で見るエクアドルの形
+      columns: *id009
+      rows: *id010
+    image: assets/images/20261001_ecu_team/scene_w.jpg
+  - text: 南米予選の得点は14。パラグアイと並んで、3番目に少ない数でした。
+    card:
+      type: table
+      title: 数字で見るエクアドルの形
+      columns: *id009
+      rows: *id010
+      highlight_row: 0
+  - text: W杯でも、4試合で2点。点の少なさは変わりませんでした。
+    card:
+      type: table
+      title: 数字で見るエクアドルの形
+      columns: *id009
+      rows: *id010
+      highlight_row: 1
+  - text: 点を取られにくい代わりに、たくさんは取らない。それが予選で見せた形です。
+    card:
+      type: table
+      title: 数字で見るエクアドルの形
+      columns: *id009
+      rows: *id010
+      highlight_row: 1
+  - text: その守りが、監督の替わった韓国戦では崩れました。
+    card:
+      type: table
+      title: 数字で見るエクアドルの形
+      columns: *id009
+      rows: *id010
+      highlight_row: 2
+    image: assets/images/20261001_ecu_gallardo/01.jpg
+  - text: この試合では、ロングボールが49本。相手の、およそ2倍の数でした。
+    card:
+      type: table
+      title: 数字で見るエクアドルの形
+      columns: *id009
+      rows: *id010
+      highlight_row: 2
+  - text: ロングボールは、後ろから前へ長く蹴るパスのことです。
+    card:
+      type: table
+      title: 数字で見るエクアドルの形
+      columns: *id009
+      rows: *id010
+      highlight_row: 2
+  - text: 短いパスでつなぐより、前へ速く運ぶ。
+    card:
+      type: table
+      title: 数字で見るエクアドルの形
+      columns: *id009
+      rows: *id010
+      highlight_row: 2
+    image: assets/images/20261001_ecu_angulo/01.jpg
+  - text: その先で待つのが、左のウイングのアングロやサルミエントです。
+    card:
+      type: table
+      title: 数字で見るエクアドルの形
+      columns: *id009
+      rows: *id010
+      highlight_row: 2
+  - text: 迎える日本は、ディフェンダーの渡辺剛と安藤智哉が、けがで離脱。
+    card:
+      type: table
+      title: 数字で見るエクアドルの形
+      columns: *id009
+      rows: *id010
+      highlight_row: 2
+    image: assets/images/20261001_ecu_team/scene_w.jpg
+  - text: 組み直した守備陣が、長いボールの競り合いにどう当たるか。
+    card:
+      type: table
+      title: 数字で見るエクアドルの形
+      columns: *id009
+      rows: *id010
+      highlight_row: 2
+  - text: そして、左から来るウイングをどう止めるか。そこが見どころです。
+    card:
+      type: table
+      title: 数字で見るエクアドルの形
+      columns: *id009
+      rows: *id010
+      highlight_row: 2
+  - text: 日本戦は、ガジャルド監督にとって2試合目。
+    card:
+      type: table
+      title: 数字で見るエクアドルの形
+      columns: *id009
+      rows: *id010
+      highlight_row: 2
+    image: assets/images/20261001_ecu_gallardo/01.jpg
+  - text: 蹴る本数がどう変わるかにも、新しい監督の考えが出るはずです。
+    card:
+      type: table
+      title: 数字で見るエクアドルの形
+      columns: *id009
+      rows: *id010
+      highlight_row: 2
+  sources:
+  - https://www.espn.com/soccer/match/_/gameId/401905196/ecuador-south-korea
+  - https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_qualification_(CONMEBOL)
+  - https://www.soccer-king.jp/news/japan/national/20260929/2210889.html
+  - https://www.soccer-king.jp/news/japan/national/20260928/2210649.html

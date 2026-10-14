@@ -1,0 +1,82 @@
+{
+ "title": "レバンテ 基礎DATA",
+ "colors": [
+  "#14306E",
+  "#B3122E"
+ ],
+ "crest": "assets/crests/レバンテ.png",
+ "tiles": [
+  [
+   "クラブ創立",
+   "1909年",
+   "1939年に2クラブが合併して今の形"
+  ],
+  [
+   "愛称",
+   "グラノタ",
+   "バレンシア語で「カエル」"
+  ],
+  [
+   "ホームタウン",
+   "バレンシア",
+   "人口はスペインで3番目の都市"
+  ],
+  [
+   "本拠地",
+   "シウダ・デ・バレンシア",
+   "収容 26,354人。1969年開場"
+  ],
+  [
+   "会長",
+   "パブロ・サンチェス",
+   "2023年〜。クラブは株式会社"
+  ],
+  [
+   "タイトル歴",
+   "1部優勝 0回",
+   "国王杯0・スーペルコパ0・2部優勝3"
+  ],
+  [
+   "最多出場",
+   "377試合",
+   "モラレス、2度の在籍で"
+  ],
+  [
+   "直近のタイトル",
+   "2部優勝",
+   "2024-25シーズン"
+  ],
+  [
+   "昨季の順位",
+   "16位",
+   "勝ち点42。3チーム並び直接対決で残留"
+  ]
+ ],
+ "trophies": [
+  [
+   "ラ・リーガ",
+   0
+  ],
+  [
+   "国王杯",
+   0
+  ],
+  [
+   "スーペルコパ",
+   0
+  ],
+  [
+   "ヨーロッパ",
+   0
+  ]
+ ],
+ "sources": [
+  "https://en.wikipedia.org/wiki/Levante_UD",
+  "https://es.wikipedia.org/wiki/Levante_Uni%C3%B3n_Deportiva",
+  "https://en.wikipedia.org/wiki/Estadi_Ciutat_de_Val%C3%A8ncia",
+  "https://es.wikipedia.org/wiki/Estadio_Ciudad_de_Valencia",
+  "https://en.wikipedia.org/wiki/1937_Copa_de_la_Espa%C3%B1a_Libre",
+  "https://en.wikipedia.org/wiki/Template:2025%E2%80%9326_La_Liga_table"
+ ],
+ "notes": "取材の控えは research/ll_data/levante_research.md。創立の日は 6日（英語版 infobox）／9日（英語版本文）／7日（西語版）と割れるので年だけにした。収容は 26,354（英語版・西語版スタジアム本文）／25,354（英語版クラブ記事の本文）／26,000／24,700（西語版）と割れ、多数の26,354を採った。1937年の Copa de la España Libre は英語版クラブ記事だけが国王杯1回に数えるが、2023年3月25日に RFEF が公式と認めたのは『国王杯としてではない』（英語版の大会記事・RFEF の国王杯一覧に無い・西語版の Palmarés も別立て）ので国王杯は0にした。最多出場377は西語版の表（英語版本人記事の311＋66と一致）。会長は Pablo Sánchez（英語版・西語版 infobox、西語版の歴代会長表『2023-act.』）。財団（Fundación Cent Anys）の持ち株比率は確かめられなかった。"
+}

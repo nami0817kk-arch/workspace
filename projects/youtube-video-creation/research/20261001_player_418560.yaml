@@ -1,0 +1,410 @@
+# アーリング・ハーランド（マンチェスター・シティ）の紹介。8節の型（2026-09-28）。材料と出典は research/raw/20261001_haaland_material.md。
+# 数字は Transfermarkt・FotMob・マンC公式（Opta）・premierleague.com。本人の言葉はサッカーダイジェストWeb／Qoly（ライブドア配信）の訳をそのまま。
+# 2026-10-01 にヤマル紹介（20261002_player_937958）の形へそろえた：キャリア全体の数字（季ごと＋通算の表）・サムネ（写真いっぱい＋通算の表）・盛り上げる語り。
+# 通算の表は FotMob の通算表（9/28 時点）＋代表 57試合65得点。ただしモルデだけ Transfermarkt の 50試合20点にそろえた（公開済みの比較の回が「いま369点」と言っているため）。合計 444試合369得点
+# Transfermarkt ではモルデが 50試合20得点（合計 444試合369得点）で割れている（材料のメモに書いた。公開済みの比較の回は 369）。
+# 翌日公開のマンC有罪の回と同じチームなので、判決の話は入れない。
+date: 2026年10月01日
+slot: other_1
+format: news
+series: 有名選手の紹介
+people:
+- アーリング・ハーランド
+theme:
+  id: player_418560
+  league: england
+  kind: other
+  topic: マンチェスター・シティ
+  title: ハーランドってどんな選手？少ないタッチで点を取り続ける理由
+  question: ハーランドはどういう作りの選手で、なぜ点だけ取れるのか
+  takeaway: ボールタッチは下から1%、得点は上から1%。ゴール前で左足で決め切る形を、10年で1,000倍の市場価値まで育てた
+  nameplate: アーリング・ハーランド｜マンチェスター・シティ FW／ノルウェー代表
+  opening_image: assets/images/20261001_haaland_leipzig2023_w/01.jpg
+  bgm: assets/audio/bgm_calm.wav
+short_title: ハーランドってどんな選手？
+thumbnail:
+  line1: ハーランド、通算444試合369点
+  line2: デビュー戦の前半に●●、史上唯一
+  tags:
+  - マンチェスター・シティ
+  - ホーランド
+  - 選手紹介
+  - プレースタイル
+  photo: assets/images/20261001_haaland_thumbfull/01.jpg
+  photos: []
+sections:
+- id: hook
+  heading: どんな選手か
+  tier: 報道
+  telop: 少ないタッチで、点を取り続ける
+  narrator: キャスター
+  say:
+  - text: アーリング・ハーランド。ボールに触る回数は少ないのに、点を取り続けるフォワードです。
+    image: assets/images/20261001_haaland_face_w/01.jpg
+  - 同じフォワード100人と比べると、ボールに触る回数は最も少ない側。それなのに、得点は最も多い側。
+  - 5歳で、立ち幅跳びの「世界記録」と言われる跳躍を残した少年。本人は、生い立ちをこう語ります。
+  - voice: ハーランド
+    text: 僕は小さい頃から陸上競技に携わってきた
+    pause: 0.5
+  - 母も祖母も陸上の選手。その体ひとつで、どうやってここまで来たのか。数字と話で迫ります。
+  sources:
+  - https://www.fotmob.com/players/737066/erling-haaland
+  - https://www.football-zone.net/archives/286672
+- id: data
+  heading: 基礎DATA
+  tier: 報道
+  telop: アーリング・ハーランドの基礎DATA
+  narrator: キャスター
+  card:
+    type: table
+    title: アーリング・ハーランド（マンチェスター・シティ）
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - 所属
+      - マンチェスター・シティ（9番）
+    - - ポジション
+      - センターフォワード
+    - - 生年月日
+      - 2000年7月21日（26歳）
+    - - 身長
+      - 1.95m
+    - - 利き足
+      - 左
+    - - 契約
+      - 2034年まで
+    - - 市場価値
+      - 2.2億ユーロ
+    source: Transfermarkt
+  say:
+  - text: アーリング・ハーランド、26歳。マンチェスター・シティの9番、センターフォワードです。
+    image: assets/images/20261001_haaland_city2024/01.jpg
+  - 実はリーズ生まれ。父アルフ＝インゲが、当時そこでプレーしていたからです。
+  - 身長は1メートル95、利き足は左。契約は、なんと2034年まで残っています。
+  - そして市場価値は2.2億ユーロ。2億ユーロだった評価が、この夏もう一段上がりました。
+  sources:
+  - https://www.transfermarkt.com/erling-haaland/profil/spieler/418560
+  - https://www.goal.com/story/erling-haaland-unstoppable-rise/
+- id: career
+  heading: 歩んできた道と転機
+  tier: 報道
+  telop: ブリーネからシティまで、市場価値は10年で1,000倍
+  narrator: 解説
+  card:
+    type: table
+    title: 歩んできた道
+    columns:
+    - シーズン
+    - クラブ
+    - 年齢
+    - 市場価値
+    rows:
+    - - 15/16
+      - ブリーネ
+      - 16歳
+      - 最高 20万ユーロ
+    - - 16/17〜17/18
+      - モルデ
+      - 17歳〜18歳
+      - 最高 500万ユーロ
+    - - 18/19〜19/20
+      - ザルツブルク
+      - 18歳〜19歳
+      - 最高 4500万ユーロ
+    - - 19/20〜21/22
+      - ドルトムント
+      - 19歳〜21歳
+      - 最高 1.5億ユーロ
+    - - 22/23〜26/27
+      - マンチェスター・シティ
+      - 22歳〜26歳
+      - 最高 2.2億ユーロ
+    source: Transfermarkt
+  say:
+  - text: 16歳でいたのは、父の故郷ノルウェーのブリーネ。市場価値は、わずか20万ユーロ。
+    image: assets/images/20261001_haaland_salzburg/01.jpg
+  - text: モルデで2年。18歳で500万ユーロ。
+    image: assets/stats/player_20261001_737066_value.png
+    no_telop: true
+  - text: ザルツブルクの1年半で、ハーランドは一気に4500万ユーロ。転機はここです。
+    image: assets/images/20261001_haaland_salzburg/01.jpg
+  - 2019年9月17日、ヨーロッパのクラブ王者を決める大会、
+  - チャンピオンズリーグのデビュー戦。
+  - 相手はヘンク。その前半だけで、ハットトリックを決めてしまいました。
+  - デビュー戦の前半ハットトリックは、いまも史上ただ1人です。
+  - その冬に選んだのは、マンチェスター・ユナイテッドではなく、ドルトムントでした。
+  - ドルトムントで1.5億ユーロ。そしてシティで、いまの額まで上り詰めます。
+  sources:
+  - https://www.transfermarkt.com/erling-haaland/profil/spieler/418560
+  - https://www.uefa.com/uefachampionsleague/news/0268-11f9321e7599-fde3dd4a7bd0-1000--erling-haaland-in-the-champions-league-records-stats-who-h/
+  - https://www.skysports.com/football/news/11899/11897354/erling-haaland-signs-for-borussia-dortmund-from-rb-salzburg
+- id: style
+  heading: プレースタイル
+  tier: 報道
+  telop: 左足、ボックスの中、少ないタッチ
+  narrator: 解説
+  card:
+    type: bars
+    title: 同じFWの中での位置（100が最上位）
+    unit: ''
+    items:
+    - label: 得点
+      value: 100
+      highlight: true
+    - label: xGOT（枠内の質）
+      value: 100
+      highlight: false
+    - label: シュート
+      value: 100
+      highlight: false
+    - label: アシスト（今季のリーグ）
+      value: 0
+    source: FotMob
+  say:
+  - text: ハーランドの武器を、同じフォワードと並べた6つの軸で、丸裸にします。
+    image: assets/stats/player_20261001_737066_radar.png
+    no_telop: true
+  - text: 得点とシュート数は、文句なしの最上位。ボールタッチとチャンス創出は、いちばん少ない側です。
+    image: assets/images/20261001_haaland_train2024_w/01.jpg
+  - ボールを持って崩すより、ゴール前で仕留めることに力を注いできた選手です。
+  - 今季のリーグでは、アシストはまだ0。
+  - ただ昨季までは毎シーズン7から10のアシスト。作れない選手ではありません。
+  - text: では、触らずに点が取れるのはなぜか。カギは、ボールが来る前の動きにあります。
+    image: assets/stats/player_20261001_737066_heat.png
+    no_telop: true
+  - text: ニアに走ると見せて一度中央へ、また戻る。自陣側へ下がって、オフサイドをかいくぐる。
+    image: assets/images/20261001_haaland_back9_w/01.jpg
+  - 味方が作り、本人は最後の一歩を誰より速く動く。だから触る回数が少なくても、点になるんです。
+  - text: 今季のシュート20本を並べると、なんと19本がゴール前の四角い枠、ペナルティエリアの中。
+    image: assets/stats/player_20261001_737066_shots.png
+    no_telop: true
+  - text: プレミアリーグ通算100点の内訳は、左足71・右足11・頭17。エリアの中だけで94点です。
+    image: assets/images/20260928d_haaland_c/01.jpg
+  - 195センチの体で、今季の最高速度は時速34.6キロ。速くて、大きくて、いつもゴール前にいる。
+  sources:
+  - https://www.fotmob.com/players/737066/erling-haaland
+  - https://www.mancity.com/news/mens/erling-haaland-premier-league-100-club-statistics-63900357
+  - https://football-tribe.com/japan/2025/01/25/323530/
+- id: past
+  heading: キャリア全体の数字
+  tier: 報道
+  telop: 季ごとの数字と、ここまでの通算
+  narrator: 解説
+  rows_seasons:
+  - &s1 ['21/22', '32', '32', '9', 2514分]
+  - &s2 ['22/23', '64', '64', '10', 5059分]
+  - &s3 ['23/24', '50', '42', '7', 4107分]
+  - &s4 ['24/25', '62', '57', '8', 5283分]
+  - &s5 ['25/26', '60', '46', '10', 4789分]
+  rows_total:
+  - &t1 [ブリーネ, '16', '0']
+  - &t2 [モルデ, '50', '20']
+  - &t3 [ザルツブルク, '27', '29']
+  - &t4 [ドルトムント, '89', '86']
+  - &t5 [マンチェスター・シティ, '205', '169']
+  - &t6 [ノルウェー代表, '57', '65']
+  - &t7 [合計, '444', '369']
+  say:
+  - text: ここからは、ハーランドが積み上げてきた数字を、まるごと見ていきます。
+    image: assets/images/20261001_haaland_city2023full_w/01.jpg
+    card: &season_card
+      type: table
+      title: アーリング・ハーランド 季ごとの数字（代表を含む全公式戦）
+      columns: [季, 試合, 得点, アシスト, 出場時間]
+      rows: [*s1, *s2, *s3, *s4, *s5]
+      source: Transfermarkt
+  - text: ドルトムント最後の季は、32試合で32点。1試合1点です。
+    card:
+      <<: *season_card
+      highlight_row: 0
+  - text: シティ1年目は、64試合で64点。とんでもない数字です。
+    card:
+      <<: *season_card
+      highlight_row: 1
+  - text: この季のプレミアリーグ36点は、いまもリーグの1季最多。
+    card:
+      <<: *season_card
+      highlight_row: 1
+  - text: 翌年は50試合で42点。
+    card:
+      <<: *season_card
+      highlight_row: 2
+  - text: その次は62試合で57点。
+    card:
+      <<: *season_card
+      highlight_row: 3
+  - text: 昨季も60試合で46点。点の数が、試合の数に迫り続けます。
+    card:
+      <<: *season_card
+      highlight_row: 4
+  - text: では、プロになってからの通算はどうか。
+    card: &total_card
+      type: table
+      title: アーリング・ハーランド 通算（2026年9月末まで）
+      columns: [所属, 試合, 得点]
+      rows: [*t1, *t2, *t3, *t4, *t5, *t6, *t7]
+      source: FotMob・ノルウェー代表はVG・マンC公式
+  - text: 始まりのブリーネは、16試合で0点。ここからです。
+    card:
+      <<: *total_card
+      highlight_row: 0
+  - text: モルデで50試合20点。
+    card:
+      <<: *total_card
+      highlight_row: 1
+  - text: ザルツブルクでは27試合で29点。試合より点が多い。
+    card:
+      <<: *total_card
+      highlight_row: 2
+  - text: ドルトムントは89試合で86点。
+    card:
+      <<: *total_card
+      highlight_row: 3
+  - text: シティでは205試合で169点。
+    card:
+      <<: *total_card
+      highlight_row: 4
+  - text: ノルウェー代表でも57試合で65点。こちらも点が上回ります。
+    card:
+      <<: *total_card
+      highlight_row: 5
+  - text: 合わせて444試合で369点。デビューから10年で積んだ数字です。
+    card:
+      <<: *total_card
+      highlight_row: 6
+  sources:
+  - https://www.transfermarkt.com/erling-haaland/profil/spieler/418560
+  - https://www.premierleague.com/en/news/4459046/haaland-hits-100-goals-the-amazing-numbers-behind-milestone
+  - https://www.fotmob.com/players/737066/erling-haaland
+  - https://www.mancity.com/news/mens/norway-portugal-nations-league-match-report-63926139
+  - https://www.vg.no/sport/i/6qLWlQ/landslaget-norge-portugal
+- id: season
+  heading: 今季の数字と直近5試合
+  tier: 報道
+  main: true
+  telop: 今季ここまで
+  narrator: 解説
+  card:
+    type: table
+    title: 直近5試合（代表を含む）
+    columns:
+    - 日付
+    - 相手
+    - 出場
+    - 得点
+    - 評点
+    rows:
+    - - 9/27
+      - ポルトガル
+      - 90分
+      - 1G 0A
+      - '7.9'
+    - - 9/24
+      - デンマーク
+      - 90分
+      - 2G 0A
+      - '9.1'
+    - - 9/20
+      - サンダーランド
+      - 90分
+      - 1G 0A
+      - '7.5'
+    - - 9/13
+      - マンチェスター・ユナイテッド
+      - 90分
+      - 1G 0A
+      - '8.1'
+    - - 9/8
+      - ポルト
+      - 90分
+      - 2G 0A
+      - '8.9'
+    source: FotMob
+  say:
+  - text: シティのハーランド、26歳。タッチは同じフォワードで最少クラス、それでも得点は止まりません。
+    short_only: true
+  - text: 今季はここまで9試合で10得点。出場773分で、77分に1点という驚きのペースです。
+    image: assets/images/20261001_haaland_norway2026/01.jpg
+  - プレミアリーグは5試合で5点。今季のプレミアで5点以上は、ハーランドただ1人。
+  - 直近5試合は、すべてフル出場。その5試合で、7点を叩き込みました。
+  - 10点満点の評点は、いちばん低い試合でも7.5。とにかく崩れません。
+  - ゴール前の一瞬の動き出しを磨いてきたからこそ、少ない機会でも決め切れるんです。
+  sources:
+  - https://www.transfermarkt.com/erling-haaland/profil/spieler/418560
+  - https://www.fotmob.com/players/737066/erling-haaland
+  - https://www.fotmob.com/leagues/47/stats/premier-league
+- id: story
+  heading: マル秘話
+  tier: 報道
+  telop: 心臓と肝臓を食べ、口にテープを貼って寝る
+  narrator: 解説
+  card:
+    type: points
+    title: ハーランドの習慣
+    items:
+    - 食事：牛の心臓と肝臓。水はろ過したものだけ
+    - 睡眠：ブルーライトを切るメガネ、口にテープ
+    - ゴール後の座禅：瞑想が好き（19歳のとき）
+  say:
+  - text: ここで数字をいったん置いて、ハーランドの素顔がわかる話を2つ。
+    image: assets/images/20261001_haaland_city2024_w/01.jpg
+  - 1つ目は食事。2022年、ドキュメンタリー番組で、自分の食生活をこう明かしました。
+  - voice: ハーランド
+    text: 人々は肉（を食べるの）は悪いと言うけれど、
+  - voice: ハーランド
+    text: それはどんな肉なのって聞きたいね。
+    cont: true
+  - voice: ハーランド
+    text: マクドナルドの肉なのか、
+    cont: true
+  - voice: ハーランド
+    text: 地元の牧草を食べて育った牛の肉なのか。
+    cont: true
+  - voice: ハーランド
+    text: 自分は（牛の）心臓と肝臓を食べる
+    cont: true
+    pause: 0.6
+  - 飲む水は、ろ過したものだけ。夜はブルーライトを切るメガネをかける。
+  - さらに、鼻で呼吸するために、口にテープを貼って眠るんです。
+  - 2つ目は、ゴールのあとの座禅のポーズ。2020年、19歳のときに理由を聞かれ、こう答えました。
+  - voice: ハーランド
+    text: 僕は本当に瞑想が好きなんだ。
+  - voice: ハーランド
+    text: 瞑想は僕に穏やかさと静けさを運んでくれる。
+    cont: true
+  - voice: ハーランド
+    text: これはとても大事なこと。
+    cont: true
+  - voice: ハーランド
+    text: だから時々ゴールを決めたあと、あのポーズをするんだ
+    cont: true
+    pause: 0.6
+  - その年のチャンピオンズリーグで当たった、パリ・サンジェルマンの選手たちは、
+  - text: 勝ったあとに、このポーズを真似してみせたんです。
+    pause: 0.5
+  sources:
+  - https://news.livedoor.com/article/detail/23002168/
+  - https://www.thestandard.com.hk/football/article/335314/Haalands-extreme-diet-beef-organs-filtered-water-and-mouth-taping-for-sleep
+  - https://www.soccerdigestweb.com/news/detail/id=70590
+  - https://web.gekisaka.jp/news/world/detail/?301398-301398-fl=
+- id: view
+  heading: エムバペとの今季の差
+  tier: 背景
+  viewpoint: true
+  narrator: 解説
+  telop: 10月12日、リバプール戦
+  say:
+  - text: では、ここから先はどうなるのか。最後に、数字で占います。
+    image: assets/images/20261001_haaland_norway2026_w/01.jpg
+  - 比べる相手は、同じセンターフォワードで市場価値も並ぶエムバペ。今季9試合で9点、779分。
+  - ほぼ同じ出場時間で、ハーランドが1点上回っています。
+  - 10年で市場価値は1,000倍。今季も、数字はまったく落ちていません。
+  - この差は開くのか、縮むのか。いまは各国の代表戦のためリーグが中断中で、
+  - クラブの次の試合は10月12日、アウェーのリバプール戦です。
+  - 首位争いの相手にも、77分に1点のペースを貫けるか。そこが見どころです。
+  sources:
+  - https://www.transfermarkt.com/erling-haaland/profil/spieler/418560
+  - https://www.transfermarkt.com/kylian-mbappe/profil/spieler/342229
+  - https://www.fotmob.com/players/737066/erling-haaland
+watch: 明日は③ミカエル・オリーズ

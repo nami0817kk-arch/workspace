@@ -1,6 +1,7 @@
 import pytest
 from PIL import Image
 
+from src import cards
 from src.cards import CardError, card_key, render
 from src.config import load_config
 
@@ -124,6 +125,54 @@ def test_table_card_renders(tmp_path, fonts):
         WIDTH, font, tmp_path / "table.png", latin,
     )
     assert path.exists()
+
+
+def test_表の出典は画面に描かない(tmp_path, fonts):
+    """`source:` を書いても、板には出典を描かない。
+
+    2026-10-08 ユーザー「出典は動画に出さなくていいからね」。
+    「出典は概要欄に書く。画面にも読み上げにも出さない」（2026-09-10）という決まりが
+    元からあるのに、**板だけが従っていなかった**（品質100回の65で右下に描いていた）。
+    `source:` は取材メモ・台本の控えとして残す（どこの数字かを作る側が辿れる必要がある）が、
+    **絵は出典の有る無しで1pxも変わらない**。
+    """
+    from PIL import Image
+
+    font, latin = fonts
+    spec = {"type": "table", "title": "順位", "columns": ["順位", "クラブ", "勝点"], "rows": [["1", "A", "12"], ["2", "B", "10"]]}
+    plain = Image.open(render(dict(spec), WIDTH, font, tmp_path / "plain.png", latin))
+    marked = Image.open(render(dict(spec, source="FotMob"), WIDTH, font, tmp_path / "marked.png", latin))
+    assert marked.height == plain.height, "出典のぶん板が伸びている"
+    assert list(marked.getdata()) == list(plain.getdata()), "出典を書くと絵が変わっている"
+
+
+def test_versus_の写真の表示も画面に描かない(tmp_path, fonts):
+    """全画面の比べ（versus）の `credit:` も描かない（板の出典と同じ、2026-10-08）。
+
+    CC BY / BY-SA の表示は**概要欄**（`tts` の帳簿）が出すので、そちらで条件は満たしている。
+    """
+    from PIL import Image
+
+    font, latin = fonts
+    photo = tmp_path / "p.png"
+    Image.new("RGB", (600, 800), (90, 110, 130)).save(photo)
+    spec = {"type": "versus", "title": "比べる",
+            "left": {"image": str(photo), "name": "A", "number": "1"},
+            "right": {"image": str(photo), "name": "B", "number": "2"}}
+    plain = Image.open(cards.render_versus(dict(spec), (1920, 1080), font, tmp_path / "plain.png", latin))
+    marked = Image.open(cards.render_versus(dict(spec, credit="©どこか"), (1920, 1080), font,
+                                            tmp_path / "marked.png", latin))
+    assert list(marked.getdata()) == list(plain.getdata()), "写真の表示を書くと絵が変わっている"
+
+
+def test_出典のぶん板は伸びない():
+    """出典を描かないので、板の下に足す高さは0（2026-10-08）。
+
+    また描くことにしたときのために `SOURCE_PX`（スマホで読める下限 28px）は残してある。
+    22px だと本編でスマホ 3.2〜4.5pt で、読める下限 5.7pt を割る（`tools/typecheck.py` の実測）。
+    """
+    assert cards.SOURCE_ROOM == 0
+    assert cards.SOURCE_PX >= 28
 
 
 def test_table_rejects_mismatched_row_length(tmp_path, fonts):
@@ -357,3 +406,55 @@ def test_訳が無ければ原文がそのまま主役(fonts):
     )
     # 訳が無いときの原文は、訳があるときの原文より大きい（46 と 32）
     assert only[-1]["height"] > withtr[-1]["height"]
+
+
+def test_表は7行目から先も捨てない(tmp_path, fonts):
+    """2026-09-30：ソシエダの回で「7試合を終えて」と読みながら、表は6行で切れていた。
+    行が多いときは詰めて全部出し、背は6行の表とほぼ同じに収める。"""
+    from src.cards import _table
+
+    font, latin = fonts
+    rows6 = [[f"第{i}節", "相手", "1対0"] for i in range(1, 7)]
+    rows7 = rows6 + [["第7節", "バレンシア（アウェー）", "3対2"]]
+    spec = {"type": "table", "title": "ラ・リーガの結果", "columns": ["節", "相手", "結果"]}
+    blocks = _table(dict(spec, rows=rows7), WIDTH, font, latin)
+    assert sum(1 for b in blocks if b.get("row")) == 7
+    six = Image.open(render(dict(spec, rows=rows6), WIDTH, font, tmp_path / "six.png", latin))
+    seven = Image.open(render(dict(spec, rows=rows7), WIDTH, font, tmp_path / "seven.png", latin))
+    assert seven.height <= six.height + 12
+
+
+# ---------------------------------------------------------------- 置き場に収まる高さ（2026-10-08）
+
+
+def test_表は置き場に収まるよう行を詰める(tmp_path, fonts):
+    """6行の表は 72px の行だと 662px で、置き場（539px）に収まるまで 0.81 倍に縮んでいた。
+
+    縮むと出典が 18px・列の見出しが 24px になる（スマホ 3.6pt / 5.0pt）。
+    **行を間引かずに**（2026-09-30 の決まり）行の高さと字を詰めて、倍率1.00で収める。
+    """
+    font, latin = fonts
+    spec = {"type": "table", "title": "アルテタの新しい契約", "columns": ["項目", "内容"],
+            "rows": [[f"行{i}", f"中身{i}"] for i in range(6)], "source": "報道"}
+    fitted = Image.open(render(dict(spec), 1420, font, tmp_path / "fit.png", latin,
+                               slot=cards.SLOT_LANDSCAPE))
+    free = Image.open(render(dict(spec), 1420, font, tmp_path / "free.png", latin))
+    assert fitted.height <= cards.SLOT_LANDSCAPE
+    assert free.height > cards.SLOT_LANDSCAPE      # 置き場を渡さなければ今までどおり
+    assert len(spec["rows"]) == 6                  # 行は1つも捨てていない
+
+
+def test_表の行の字は読める下限を割らない(tmp_path, fonts):
+    """行を詰めても、字は `TABLE_CELL_MIN_PX`（28px＝スマホ 5.7pt）より小さくしない。"""
+    assert cards.TABLE_CELL_MIN_PX >= 28
+    assert cards.TABLE_ROW_MIN_H >= cards.TABLE_CELL_MIN_PX + 14   # 行の帯から字がはみ出さない
+
+
+def test_置き場を渡さなければ今までどおりの高さ(tmp_path, fonts):
+    """`slot` は後から足した任意の引数。渡さない呼び出し（statboard など）の絵は変えない。"""
+    font, latin = fonts
+    spec = {"type": "table", "title": "順位", "columns": ["順位", "クラブ"],
+            "rows": [["1", "A"], ["2", "B"]]}
+    a = Image.open(render(dict(spec), 1080, font, tmp_path / "a.png", latin))
+    b = Image.open(render(dict(spec), 1080, font, tmp_path / "b.png", latin, slot=None))
+    assert a.tobytes() == b.tobytes()

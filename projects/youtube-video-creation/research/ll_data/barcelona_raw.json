@@ -1,0 +1,659 @@
+{
+ "club_title": "FC_Barcelona",
+ "season_title": "2026–27_FC_Barcelona_season",
+ "squad": [
+  {
+   "no": "1",
+   "pos": "GK",
+   "nat": "ESP",
+   "name": "Joan Garcia",
+   "page": "Joan Garcia",
+   "dob": "2001-05-04",
+   "captain": false,
+   "loan": false,
+   "team": "Spain",
+   "caps": 2,
+   "club_caps": 36,
+   "club_goals": 0
+  },
+  {
+   "no": "2",
+   "pos": "DF",
+   "nat": "POR",
+   "name": "João Cancelo",
+   "page": "João Cancelo",
+   "dob": "1994-05-27",
+   "captain": false,
+   "loan": false,
+   "team": "Portugal",
+   "caps": 74,
+   "club_caps": 54,
+   "club_goals": 5
+  },
+  {
+   "no": "3",
+   "pos": "DF",
+   "nat": "ESP",
+   "name": "Alejandro Balde",
+   "page": "Alejandro Balde",
+   "dob": "2003-10-18",
+   "captain": false,
+   "loan": false,
+   "team": "Spain",
+   "caps": 7,
+   "club_caps": 146,
+   "club_goals": 1
+  },
+  {
+   "no": "4",
+   "pos": "MF",
+   "nat": "ESP",
+   "name": "Brian Fariñas",
+   "page": "Brian Fariñas",
+   "dob": "2006-02-09",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 42,
+   "club_goals": 5
+  },
+  {
+   "no": "5",
+   "pos": "DF",
+   "nat": "ESP",
+   "name": "Pau Cubarsí",
+   "page": "Pau Cubarsí",
+   "dob": "2007-01-22",
+   "captain": false,
+   "loan": false,
+   "team": "Spain",
+   "caps": 20,
+   "club_caps": 99,
+   "club_goals": 1
+  },
+  {
+   "no": "6",
+   "pos": "MF",
+   "nat": "ESP",
+   "name": "Gavi",
+   "page": "Gavi (footballer)",
+   "dob": "2004-08-05",
+   "captain": false,
+   "loan": false,
+   "team": "Spain",
+   "caps": 32,
+   "club_caps": 121,
+   "club_goals": 6
+  },
+  {
+   "no": "7",
+   "pos": "MF",
+   "nat": "ESP",
+   "name": "Fermín López",
+   "page": "Fermín López",
+   "dob": "2003-05-11",
+   "captain": false,
+   "loan": false,
+   "team": "Spain",
+   "caps": 7,
+   "club_caps": 96,
+   "club_goals": 24
+  },
+  {
+   "no": "8",
+   "pos": "MF",
+   "nat": "ESP",
+   "name": "Pedri",
+   "page": "Pedri",
+   "dob": "2002-11-25",
+   "captain": false,
+   "loan": false,
+   "team": "Spain",
+   "caps": 49,
+   "club_caps": 172,
+   "club_goals": 23
+  },
+  {
+   "no": "9",
+   "pos": "FW",
+   "nat": "BRA",
+   "name": "Gabriel Jesus",
+   "page": "Gabriel Jesus",
+   "dob": "1997-04-03",
+   "captain": false,
+   "loan": false,
+   "team": "Brazil",
+   "caps": 64,
+   "club_caps": 3,
+   "club_goals": 1
+  },
+  {
+   "no": "10",
+   "pos": "FW",
+   "nat": "ESP",
+   "name": "Lamine Yamal",
+   "page": "Lamine Yamal",
+   "dob": "2007-07-13",
+   "captain": false,
+   "loan": false,
+   "team": "Spain",
+   "caps": 33,
+   "club_caps": 109,
+   "club_goals": 37
+  },
+  {
+   "no": "11",
+   "pos": "FW",
+   "nat": "BRA",
+   "name": "Raphinha",
+   "page": "Raphinha",
+   "dob": "1996-12-14",
+   "captain": true,
+   "loan": false,
+   "team": "Brazil",
+   "caps": 41,
+   "club_caps": 129,
+   "club_goals": 56
+  },
+  {
+   "no": "12",
+   "pos": "DF",
+   "nat": "ESP",
+   "name": "Xavi Espart",
+   "page": "Xavi Espart",
+   "dob": "2007-05-21",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 29,
+   "club_goals": 2
+  },
+  {
+   "no": "13",
+   "pos": "GK",
+   "nat": "POL",
+   "name": "Wojciech Szczęsny",
+   "page": "Wojciech Szczęsny",
+   "dob": "1990-04-18",
+   "captain": false,
+   "loan": false,
+   "team": "Poland",
+   "caps": 84,
+   "club_caps": 24,
+   "club_goals": 0
+  },
+  {
+   "no": "14",
+   "pos": "FW",
+   "nat": "GER",
+   "name": "Karim Adeyemi",
+   "page": "Karim Adeyemi",
+   "dob": "2002-01-18",
+   "captain": false,
+   "loan": false,
+   "team": "Germany",
+   "caps": 12,
+   "club_caps": 7,
+   "club_goals": 2
+  },
+  {
+   "no": "15",
+   "pos": "DF",
+   "nat": "DEN",
+   "name": "Andreas Christensen",
+   "page": "Andreas Christensen",
+   "dob": "1996-04-10",
+   "captain": false,
+   "loan": false,
+   "team": "Denmark",
+   "caps": 81,
+   "club_caps": 76,
+   "club_goals": 3
+  },
+  {
+   "no": "16",
+   "pos": "MF",
+   "nat": "ESP",
+   "name": "Rodri",
+   "page": "Rodri",
+   "dob": "1996-06-22",
+   "captain": false,
+   "loan": false,
+   "team": "Spain",
+   "caps": 70,
+   "club_caps": 6,
+   "club_goals": 0
+  },
+  {
+   "no": "17",
+   "pos": "FW",
+   "nat": "ENG",
+   "name": "Anthony Gordon",
+   "page": "Anthony Gordon (footballer)",
+   "dob": "2001-02-24",
+   "captain": false,
+   "loan": false,
+   "team": "England",
+   "caps": 25,
+   "club_caps": 6,
+   "club_goals": 0
+  },
+  {
+   "no": "18",
+   "pos": "DF",
+   "nat": "ESP",
+   "name": "Gerard Martín",
+   "page": "Gerard Martín (footballer)",
+   "dob": "2002-02-26",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 103,
+   "club_goals": 1
+  },
+  {
+   "no": "19",
+   "pos": "FW",
+   "nat": "SWE",
+   "name": "Roony Bardghji",
+   "page": "Roony Bardghji",
+   "dob": "2005-11-15",
+   "captain": false,
+   "loan": false,
+   "team": "Sweden",
+   "caps": 3,
+   "club_caps": 21,
+   "club_goals": 1
+  },
+  {
+   "no": "20",
+   "pos": "MF",
+   "nat": "ESP",
+   "name": "Dani Olmo",
+   "page": "Dani Olmo",
+   "dob": "1998-05-07",
+   "captain": false,
+   "loan": false,
+   "team": "Spain",
+   "caps": 58,
+   "club_caps": 65,
+   "club_goals": 17
+  },
+  {
+   "no": "21",
+   "pos": "MF",
+   "nat": "NED",
+   "name": "Frenkie de Jong",
+   "page": "Frenkie de Jong",
+   "dob": "1997-05-12",
+   "captain": false,
+   "loan": false,
+   "team": "Netherlands",
+   "caps": 70,
+   "club_caps": 202,
+   "club_goals": 15
+  },
+  {
+   "no": "22",
+   "pos": "MF",
+   "nat": "ESP",
+   "name": "Marc Bernal",
+   "page": "Marc Bernal",
+   "dob": "2007-05-26",
+   "captain": false,
+   "loan": false,
+   "team": "Spain",
+   "caps": 1,
+   "club_caps": 58,
+   "club_goals": 4
+  },
+  {
+   "no": "23",
+   "pos": "DF",
+   "nat": "FRA",
+   "name": "Jules Koundé",
+   "page": "Jules Koundé",
+   "dob": "1998-11-12",
+   "captain": false,
+   "loan": false,
+   "team": "France",
+   "caps": 57,
+   "club_caps": 130,
+   "club_goals": 5
+  },
+  {
+   "no": "24",
+   "pos": "DF",
+   "nat": "ESP",
+   "name": "Eric Garcia",
+   "page": "Eric Garcia (footballer, born 2001)",
+   "dob": "2001-01-09",
+   "captain": false,
+   "loan": false,
+   "team": "Spain",
+   "caps": 22,
+   "club_caps": 121,
+   "club_goals": 4
+  },
+  {
+   "no": "25",
+   "pos": "GK",
+   "nat": "CRO",
+   "name": "Dominik Livaković",
+   "page": "Dominik Livaković",
+   "dob": "1995-01-09",
+   "captain": false,
+   "loan": false,
+   "team": "Croatia",
+   "caps": 79,
+   "club_caps": 1,
+   "club_goals": 0
+  },
+  {
+   "no": "27",
+   "pos": "FW",
+   "nat": "BEL",
+   "name": "Jesse Bisiwu",
+   "page": "Jesse Bisiwu",
+   "dob": "2008-01-22",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 1,
+   "club_goals": 0
+  },
+  {
+   "no": "29",
+   "pos": "FW",
+   "nat": "EGY",
+   "name": "Hamza Abdelkarim",
+   "page": "Hamza Abdelkarim",
+   "dob": "2008-01-01",
+   "captain": false,
+   "loan": false,
+   "team": "Egypt",
+   "caps": 6,
+   "club_caps": 1,
+   "club_goals": 0
+  }
+ ],
+ "results": [
+  [
+   "23 August 2026",
+   "2",
+   "Elche",
+   "0–5",
+   "Barcelona"
+  ],
+  [
+   "27 August 2026",
+   "1",
+   "Barcelona",
+   "2–0",
+   "Athletic Bilbao"
+  ],
+  [
+   "31 August 2026",
+   "3",
+   "Barcelona",
+   "5–2",
+   "Rayo Vallecano"
+  ],
+  [
+   "6 September 2026",
+   "4",
+   "Valencia",
+   "0–5",
+   "Barcelona"
+  ],
+  [
+   "13 September 2026",
+   "5",
+   "Levante",
+   "2–4",
+   "Barcelona"
+  ],
+  [
+   "16 September 2026",
+   "6",
+   "Barcelona",
+   "7–2",
+   "Racing Santander"
+  ],
+  [
+   "19 September 2026",
+   "7",
+   "Sevilla",
+   "1–3",
+   "Barcelona"
+  ],
+  [
+   "10 October 2026",
+   "8",
+   "Barcelona",
+   "",
+   "Getafe"
+  ],
+  [
+   "17 October 2026",
+   "9",
+   "Real Betis",
+   "",
+   "Barcelona"
+  ],
+  [
+   "25 October 2026",
+   "10",
+   "Barcelona",
+   "",
+   "Real Madrid"
+  ],
+  [
+   "1 November 2026",
+   "11",
+   "Barcelona",
+   "",
+   "Alavés"
+  ],
+  [
+   "8 November 2026",
+   "12",
+   "Atlético Madrid",
+   "",
+   "Barcelona"
+  ],
+  [
+   "22 November 2026",
+   "13",
+   "Barcelona",
+   "",
+   "Villarreal"
+  ],
+  [
+   "29 November 2026",
+   "14",
+   "Deportivo A Coruña",
+   "",
+   "Barcelona"
+  ],
+  [
+   "6 December 2026",
+   "15",
+   "Barcelona",
+   "",
+   "Celta Vigo"
+  ],
+  [
+   "13 December 2026",
+   "16",
+   "Málaga",
+   "",
+   "Barcelona"
+  ],
+  [
+   "20 December 2026",
+   "17",
+   "Barcelona",
+   "",
+   "Real Sociedad"
+  ],
+  [
+   "3 January 2027",
+   "18",
+   "Espanyol",
+   "",
+   "Barcelona"
+  ],
+  [
+   "10 January 2027",
+   "19",
+   "Osasuna",
+   "",
+   "Barcelona"
+  ],
+  [
+   "17 January 2027",
+   "20",
+   "Barcelona",
+   "",
+   "Elche"
+  ],
+  [
+   "24 January 2027",
+   "21",
+   "Alavés",
+   "",
+   "Barcelona"
+  ],
+  [
+   "31 January 2027",
+   "22",
+   "Barcelona",
+   "",
+   "Valencia"
+  ],
+  [
+   "7 February 2027",
+   "23",
+   "Barcelona",
+   "",
+   "Atlético Madrid"
+  ],
+  [
+   "14 February 2027",
+   "24",
+   "Villarreal",
+   "",
+   "Barcelona"
+  ],
+  [
+   "21 February 2027",
+   "25",
+   "Barcelona",
+   "",
+   "Levante"
+  ],
+  [
+   "28 February 2027",
+   "26",
+   "Athletic Bilbao",
+   "",
+   "Barcelona"
+  ],
+  [
+   "7 March 2027",
+   "27",
+   "Barcelona",
+   "",
+   "Real Betis"
+  ],
+  [
+   "14 March 2027",
+   "28",
+   "Barcelona",
+   "",
+   "Deportivo A Coruña"
+  ],
+  [
+   "21 March 2027",
+   "29",
+   "Rayo Vallecano",
+   "",
+   "Barcelona"
+  ],
+  [
+   "4 April 2027",
+   "30",
+   "Barcelona",
+   "",
+   "Sevilla"
+  ],
+  [
+   "11 April 2027",
+   "31",
+   "Racing Santander",
+   "",
+   "Barcelona"
+  ],
+  [
+   "18 April 2027",
+   "32",
+   "Barcelona",
+   "",
+   "Espanyol"
+  ],
+  [
+   "21 April 2027",
+   "33",
+   "Celta Vigo",
+   "",
+   "Barcelona"
+  ],
+  [
+   "2 May 2027",
+   "34",
+   "Barcelona",
+   "",
+   "Osasuna"
+  ],
+  [
+   "9 May 2027",
+   "35",
+   "Real Madrid",
+   "",
+   "Barcelona"
+  ],
+  [
+   "16 May 2027",
+   "36",
+   "Real Sociedad",
+   "",
+   "Barcelona"
+  ],
+  [
+   "23 May 2027",
+   "37",
+   "Barcelona",
+   "",
+   "Málaga"
+  ],
+  [
+   "30 May 2027",
+   "38",
+   "Getafe",
+   "",
+   "Barcelona"
+  ],
+  [
+   "2 February 2027",
+   "Semi-finals",
+   "Barcelona",
+   "",
+   "Atlético Madrid"
+  ]
+ ]
+}

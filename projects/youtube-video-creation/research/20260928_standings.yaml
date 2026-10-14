@@ -1,0 +1,315 @@
+# 5大リーグの順位表（2026-09-28）。数字は FotMob と各リーグ公式。先週の控えが無いので先週比は出していない。
+# 「今週の1つ」の候補（点の高い順。1つ選んで pick の節を書く）:
+#   [独走] ラ・リーガ：バルセロナが2位に5点差
+#   [無敗] ラ・リーガ：7試合を終えて無敗はバルセロナだけ
+#   [未勝利] ラ・リーガ：7試合で未勝利はマラガ
+#   [未勝利] リーグ・アン：5試合で未勝利はル・アーヴル
+date: 2026年09月28日
+slot: other_1
+format: news
+series: 5大リーグの順位表
+theme:
+  id: standings_0928
+  league: spain
+  league_name: 欧州5大リーグ
+  kind: match
+  topic: 順位表
+  title: バルセロナの独走と、5大リーグの順位表（9月28日）。今週いちばん動いたのは
+  question: 5大リーグの順位表は今週どう動いて、その中の1つは何を示しているのか
+  takeaway: （5つの表を並べて分かったことを1文で）
+short_title: 5大リーグの順位表 9/28
+thumbnail:
+  line1: 5大リーグ順位表
+  line2: バルセロナの独走
+  tags:
+  - 順位表
+  board: assets/stats/standings_20260928_spain.png
+sections:
+- id: england
+  heading: プレミアリーグ 第5節
+  tier: 確定
+  telop: プレミアリーグ 第5節終了時点
+  narrator: キャスター
+  official: true
+  card:
+    type: table
+    title: プレミアリーグ 第5節終了時点
+    columns:
+    - 順位
+    - クラブ
+    - 試合
+    - 勝点
+    - 先週比
+    rows:
+    - - '1'
+      - マンチェスター・シティ
+      - '5'
+      - '15'
+      - ―
+    - - '2'
+      - アーセナル
+      - '5'
+      - '12'
+      - ―
+    - - '3'
+      - ブライトン
+      - '5'
+      - '10'
+      - ―
+    - - '4'
+      - ブレントフォード
+      - '5'
+      - '9'
+      - ―
+    - - '5'
+      - リーズ
+      - '5'
+      - '9'
+      - ―
+    - - '6'
+      - リバプール
+      - '5'
+      - '9'
+      - ―
+    source: FotMob
+  say:
+  - プレミアリーグは第5節まで。
+  - 首位はマンチェスター・シティ、勝点15です。2位のアーセナルとは3点差。
+  sources:
+  - https://www.premierleague.com/tables
+  - https://www.fotmob.com/leagues/47/table
+- id: spain
+  heading: ラ・リーガ 第7節
+  tier: 確定
+  telop: ラ・リーガ 第7節終了時点
+  narrator: キャスター
+  official: true
+  card:
+    type: table
+    title: ラ・リーガ 第7節終了時点
+    columns:
+    - 順位
+    - クラブ
+    - 試合
+    - 勝点
+    - 先週比
+    rows:
+    - - '1'
+      - バルセロナ
+      - '7'
+      - '21'
+      - ―
+    - - '2'
+      - アトレティコ・マドリード
+      - '7'
+      - '16'
+      - ―
+    - - '3'
+      - ベティス
+      - '7'
+      - '16'
+      - ―
+    - - '4'
+      - レアル・マドリード
+      - '7'
+      - '15'
+      - ―
+    - - '5'
+      - セビージャ
+      - '7'
+      - '13'
+      - ―
+    - - '6'
+      - アラベス
+      - '7'
+      - '11'
+      - ―
+    source: FotMob
+  say:
+  - ラ・リーガは第7節まで。
+  - バルセロナが首位で勝点21。アトレティコ・マドリードが5点差で追います。
+  sources:
+  - https://www.laliga.com/en-GB/laliga-easports/standing
+  - https://www.fotmob.com/leagues/87/table
+- id: germany
+  heading: ブンデスリーガ 第4節
+  tier: 確定
+  telop: ブンデスリーガ 第4節終了時点
+  narrator: キャスター
+  official: true
+  card:
+    type: table
+    title: ブンデスリーガ 第4節終了時点
+    columns:
+    - 順位
+    - クラブ
+    - 試合
+    - 勝点
+    - 先週比
+    rows:
+    - - '1'
+      - ドルトムント
+      - '4'
+      - '12'
+      - ―
+    - - '2'
+      - バイエルン
+      - '4'
+      - '10'
+      - ―
+    - - '3'
+      - フライブルク
+      - '4'
+      - '10'
+      - ―
+    - - '4'
+      - アウクスブルク
+      - '4'
+      - '7'
+      - ―
+    - - '5'
+      - レバークーゼン
+      - '4'
+      - '7'
+      - ―
+    - - '6'
+      - マインツ
+      - '4'
+      - '7'
+      - ―
+    source: FotMob
+  say:
+  - ブンデスリーガは第4節まで。
+  - 上にいるのはドルトムント。勝点12で、バイエルンを2点引き離しています。
+  sources:
+  - https://www.bundesliga.com/en/bundesliga/table
+  - https://www.fotmob.com/leagues/54/table
+- id: italy
+  heading: セリエA 第5節
+  tier: 確定
+  telop: セリエA 第5節終了時点
+  narrator: キャスター
+  official: true
+  card:
+    type: table
+    title: セリエA 第5節終了時点
+    columns:
+    - 順位
+    - クラブ
+    - 試合
+    - 勝点
+    - 先週比
+    rows:
+    - - '1'
+      - ローマ
+      - '5'
+      - '13'
+      - ―
+    - - '2'
+      - インテル
+      - '5'
+      - '13'
+      - ―
+    - - '3'
+      - ラツィオ
+      - '5'
+      - '13'
+      - ―
+    - - '4'
+      - カリアリ
+      - '5'
+      - '12'
+      - ―
+    - - '5'
+      - ミラン
+      - '5'
+      - '11'
+      - ―
+    - - '6'
+      - フロジノーネ
+      - '5'
+      - '10'
+      - ―
+    source: FotMob
+  say:
+  - セリエAは第5節まで。
+  - 首位に立つのはローマ、勝点は13。インテルも同じ数字です。
+  sources:
+  - https://www.legaseriea.it/en/serie-a/classifica
+  - https://www.fotmob.com/leagues/55/table
+- id: france
+  heading: リーグ・アン 第5節
+  tier: 確定
+  telop: リーグ・アン 第5節終了時点
+  narrator: キャスター
+  official: true
+  card:
+    type: table
+    title: リーグ・アン 第5節終了時点
+    columns:
+    - 順位
+    - クラブ
+    - 試合
+    - 勝点
+    - 先週比
+    rows:
+    - - '1'
+      - モナコ
+      - '5'
+      - '13'
+      - ―
+    - - '2'
+      - リヨン
+      - '5'
+      - '11'
+      - ―
+    - - '3'
+      - パリFC
+      - '5'
+      - '11'
+      - ―
+    - - '4'
+      - リール
+      - '5'
+      - '10'
+      - ―
+    - - '5'
+      - レンヌ
+      - '5'
+      - '10'
+      - ―
+    - - '6'
+      - パリ・サンジェルマン
+      - '5'
+      - '8'
+      - ―
+    source: FotMob
+  say:
+  - リーグ・アンは第5節まで。
+  - モナコが勝点13でトップ。2番手はリヨンで、その差は2点です。
+  sources:
+  - https://ligue1.com/ranking
+  - https://www.fotmob.com/leagues/53/table
+- id: pick
+  heading: 今週の1つ
+  tier: 確定
+  main: true
+  official: true
+  telop: 今週の1つ
+  narrator: 解説
+  say:
+  - text: （ショート用の前置き1行：5大リーグの順位表から、今週は●●の話）
+    short_only: true
+  - （候補から1つ選んで、数字で掘る。3〜6行。表かグラフを1枚）
+  sources:
+  - https://www.laliga.com/en-GB/laliga-easports/standing
+- id: view
+  heading: 見立て
+  tier: 背景
+  viewpoint: true
+  narrator: 解説
+  telop: 来週どこを見るか
+  say:
+  - （5つの表を並べて分かったこと・来週どこを見るか）
+  sources:
+  - https://www.fotmob.com/leagues/87/table

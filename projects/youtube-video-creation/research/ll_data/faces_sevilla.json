@@ -1,0 +1,24 @@
+{
+ "sevilla": {
+  "アンドレス・パロップ": {
+   "role": "legend",
+   "file": "assets/photos/ll/sevilla/sevilla_legend_d36378f0.jpg",
+   "page": "Andrés Palop"
+  },
+  "フレデリック・カヌーテ": {
+   "role": "legend",
+   "file": "assets/photos/ll/sevilla/sevilla_legend_2a86ec4f.jpg",
+   "page": "Frédéric Kanouté"
+  },
+  "イヴァン・ラキティッチ": {
+   "role": "legend",
+   "file": "assets/photos/ll/sevilla/sevilla_legend_7bd34f11.jpg",
+   "page": "Ivan Rakitić"
+  },
+  "ルイス・ガルシア・プラサ": {
+   "role": "manager",
+   "file": "assets/photos/ll/sevilla/sevilla_manager_46745b5c.jpg",
+   "page": "Luis García (footballer, born 1972)"
+  }
+ }
+}

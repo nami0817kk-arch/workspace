@@ -64,11 +64,56 @@ def test_説明欄の中身はこれまでどおり(tmp_path):
 
     assert text.startswith("16歳が並んだ相手はルーニー\n")
     assert "16歳のダウマンが並んだのは、ルーニーの記録だった" in text
-    # 出典は媒体名だけ（TikTok の説明欄ではURLが押せないので、長いURLは邪魔）
-    assert "出典: espn.com" in text
-    assert "espn.com/soccer" not in text
+    # 引用元は出さない（2026-09-29 ユーザー「概要欄の引用元消したい」）
+    assert "出典" not in text
+    assert "espn.com" not in text
     # ハッシュタグは「海外サッカー」を足して4つまで
     tags = next(x for x in text.splitlines() if x.startswith("#")).split()
-    assert tags == ["#サッカー", "#アーセナル", "#マックス・ダウマン", "#海外サッカー"]
+    # 「・」は抜く（ハッシュタグは記号で切れる。2026-09-29）
+    assert tags == ["#サッカー", "#アーセナル", "#マックスダウマン", "#海外サッカー"]
     assert "※この動画は報道をもとに構成しています" in text
     assert len(text) <= tiktok.CAPTION_MAX
+
+
+def test_ファイル名の頭はYouTubeのショートを予約した時刻(tmp_path, monkeypatch):
+    """PC の TikTok Studio でまとめて予約する（2026-09-29 ユーザー選択）。
+
+    名前を見ればそのまま予約の時刻を入れられるように、頭を時刻にする。
+    """
+    import json
+    from src import posted
+
+    ledger = tmp_path / "posted.json"
+    ledger.write_text(json.dumps([{"build": "20260929b_ito_short", "video_id": "x",
+                                   "publish_at": "2026-09-29T08:00:00Z"}]), encoding="utf-8")
+    monkeypatch.setattr(posted, "LEDGER", ledger)
+    assert tiktok.slot_of(Path("output/20260929b_ito_short")) == "17:00"
+    assert tiktok.slot_of(Path("output/20260929b_ito_tiktok")) == "17:00"
+    assert tiktok.slot_of(Path("output/20260929b_nothing_short")) == ""
+
+
+def test_ハッシュタグの中の中黒を抜く(tmp_path):
+    """「#レアル・ソシエダ」は「・」で切れて「#レアル」だけがタグになる（2026-09-29）。"""
+    body = DESCRIPTION.replace("#マックス・ダウマン", "#レアル・ソシエダ")
+    io.open(tmp_path / "description.txt", "w", encoding="utf-8").write(body)
+    text = tiktok.caption(tmp_path)
+    tag_line = [line for line in text.splitlines() if line.startswith("#")][0]
+    assert "#レアルソシエダ" in tag_line.split()
+    assert "・" not in tag_line
+
+
+def test_その日に公開するショートは名前の日付が違っても拾う(tmp_path, monkeypatch):
+    """2026-09-30：20260930b_ と、前の日に作った紹介もの（20260926_ll01_）が一式から漏れていた。"""
+    import json
+    from src import posted
+
+    ledger = tmp_path / "posted.json"
+    ledger.write_text(json.dumps([
+        {"build": "20260930b_messi_short", "publish_at": "2026-09-30T10:30:00Z"},
+        {"build": "20260926_ll01_soc_short", "publish_at": "2026-09-30T11:30:00Z"},
+        {"build": "20260926_ll01_soc", "publish_at": "2026-09-30T11:00:00Z"},        # 本編は入れない
+        {"build": "20260929_old_short", "publish_at": "2026-09-29T10:00:00Z"},        # 別の日
+        {"build": "20260930_late_short", "publish_at": "2026-09-30T15:30:00Z"},       # 日本時間では翌日0:30
+    ]), encoding="utf-8")
+    monkeypatch.setattr(posted, "LEDGER", ledger)
+    assert tiktok._shorts_published_on("20260930") == ["20260930b_messi_short", "20260926_ll01_soc_short"]

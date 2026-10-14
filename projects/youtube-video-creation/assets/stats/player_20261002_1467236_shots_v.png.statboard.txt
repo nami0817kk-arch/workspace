@@ -1,0 +1,6 @@
+title: ラミン・ヤマルの今季のシュート
+unit: xG
+shots=38
+goals=7
+xg=6.08
+source: FotMob

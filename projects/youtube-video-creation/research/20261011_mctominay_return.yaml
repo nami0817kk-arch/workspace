@@ -1,0 +1,310 @@
+# 取材メモ（10/11 題材 mctominay_return、型は news、その他枠）。材料の控えは research/raw/20261011_mctominay_return_material.md。
+# **本編とショートの両方を作る**（ユーザー指示）。
+# **病気の話なので煽らない。**「衝撃」「まさか」「奇跡」「異例の早さ」は書かない。
+#   早いかどうかを比べる材料をこちらは持っていないので、**日付と週数と出場時間だけ**で組む。
+# **病名は一次情報の言葉をそのまま使う。**題材の一覧には「良性の心房細動」と書いたが、
+#   ナポリ公式の発表文は「lieve aritmia benigna ＝ **軽度の良性の不整脈**」で、
+#   **心房細動（fibrillazione atriale）という語はどこにも無い**（材料 0）。
+#   台本では「軽度の良性の不整脈」で通し、**「心房細動」とは言わない**。
+#   処置は「アブレーション（PFA）」。英語版の発表文が「the operation was a complete success」なので、
+#   そこだけ「手術は完全に成功した」と訳した。
+# **ナポリ公式の発表文は3本とも原文に当たった**（9/1 のノータ・メディカ、9/8 の医療アップデート、
+#   10/7 の練習レポート）。伊・英の両方を突き合わせてある。出場の61分はクラブの試合記録（確定）。
+# 本人の言葉は**インスタグラムの1つだけ**（材料 3）。試合後のコメントはどこにも無かった。
+#   当たったのは ナポリ公式・Sky Sport Italia・football-italia・Reuters・PA・theScore。
+# **山場（②）に板を入れてある**（10/10 に5本踏んだ「発言の行に板が1枚も付かない」対策）。
+#   行ごとに表を分けて highlight_row を 0→1→2→3 と動かし、**いちばん強い1行（本人のインスタの言葉）
+#   だけ card: none で板を外して顔だけ**にする。`card:` を消すだけでは板が引き継がれるので、必ず none と書く。
+# 数字の重なり対策：『32日』『14日』『18日』は④だけ。『41日』と見送った4試合は③だけ。
+#   『61分』は①と④、『74分』は①だけ。
+# 写真は**ナポリ公式が自分のサイトに載せた写真だけ**。代理店（Getty・AFLO・AFP・ロイター・IMAGO・AP・PA・EPA・共同）は1枚も取り込んでいない。
+#   04＝10/7 の練習レポートの写真（2560x2048）の右半分を 16:9 に切り出したもの（1410x793）。04_v は 9:16（900x1600）。
+#   03＝10/10 の試合記録のマラドーナの全景。01（Commons、2021年のマンチェスター・ユナイテッド時代）は所属が違うので使わない。
+# サムネ：構図 face（点検を通すために1案だけ書いた。**決めるのはユーザー**。案は報告に3つ出す）。
+# ネットの反応は集めていない（この題材は反応なしで出す）。
+date: 2026年10月11日
+slot: world_1
+format: news
+voice_min: 0
+people:
+- マクトミネイ
+- ナポリ
+theme:
+  id: mctominay_return
+  league: italy
+  league_name: セリエA
+  kind: other
+  topic: ナポリ
+  title: マクトミネイがピッチに戻った夜。心臓の処置から数えて、何日目だったか
+  question: 心臓の処置を受けたマクトミネイは、どんな段取りでピッチまで戻ってきたのか
+  takeaway: ナポリのスコット・マクトミネイが、10月10日のフロジノーネ戦で61分から出場した。心臓の処置を受けたのは9月8日、マンチェスターのスパイア病院で、クラブの発表文によれば「軽度の良性の不整脈」に対するアブレーション。処置から32日後の出場になる。クラブが書いた休養は「約2週間」で、残りの18日は個別の調整と検査にあてられた。10月7日の発表文で追加の診断検査を行い、競技活動への適性が確認されている。本人がこの間に残した言葉はインスタグラムの一つだけで、処置が決まった日に「またすぐ会おう、ナポリ。長くはかからない」と書いていた。出場してから13分後の74分、エリアの外から打ったシュートは相手のゴールキーパーがコーナーに逃げている
+  opening_image: assets/images/20261011_mctominay_return/04.jpg
+short_title: マクトミネイ「またすぐ会おう、ナポリ」。心臓の処置から戻るまでに書かれていたこと
+thumbnail:
+  layout: number
+  number: ●●日
+  photo: assets/images/20261011_mctominay_return/04.jpg
+  short_photo: assets/images/20261011_mctominay_return/04_v.jpg
+  line1: マクトミネイ 心臓の処置
+  line2: ピッチに戻るまで
+  tags:
+  - ナポリ
+  - スコット・マクトミネイ
+  - セリエA
+sections:
+- id: back
+  heading: 61分に名前が呼ばれた
+  tier: 確定
+  official: true
+  telop: 10月10日、マラドーナ。ネレスに代わってマクトミネイが入った
+  narrator: キャスター
+  card: &match
+    type: table
+    title: 10月10日 ナポリ対フロジノーネ
+    columns:
+    - 時刻
+    - 出来事
+    rows:
+    - - 29分
+      - デ・ブライネのPK
+    - - 32分
+      - ラングが追加点
+    - - 61分
+      - マクトミネイ投入
+    - - 74分
+      - そのシュート
+  say:
+  - text: 10月10日、ナポリはホームのマラドーナでフロジノーネと戦いました。
+    card:
+      <<: *match
+      highlight_row: 0
+  - text: 前半のうちに2点を奪い、ナポリが3対0で勝ちました。
+    card:
+      <<: *match
+      highlight_row: 1
+  - text: 動いたのは61分。ネレスに代えて、スコット・マクトミネイがピッチに入りました。
+    card:
+      <<: *match
+      highlight_row: 2
+  - text: 名前が場内に読み上げられると、スタンドが大きく沸きました。
+    card:
+      <<: *match
+      highlight_row: 2
+  - text: 13分後の74分、エリアの外から右足で打ちます。
+    card:
+      <<: *match
+      highlight_row: 3
+    emph: true
+  - text: ゴールキーパーがコーナーに逃げました。
+    card:
+      <<: *match
+      highlight_row: 3
+  sources:
+  - https://sscnapoli.it/match-report-napoli-frosinone-3-0/
+  - https://sport.sky.it/calcio/serie-a/partite/2026/giornata-6/napoli-frosinone/risultato-gol
+  - https://football-italia.net/mctominay-makes-napoli-comeback-heart-surgery/
+- id: words
+  main: true
+  heading: クラブが書いていた、三つの文
+  tier: 確定
+  official: true
+  telop: 「軽度の良性の不整脈」「手術は完全に成功した」「競技活動への適性が確認された」
+  narrator: キャスター
+  card: &said
+    type: table
+    title: ナポリが出した発表文
+    columns:
+    - 日付
+    - 書かれていたこと
+    rows:
+    - - 9月1日
+      - 良性の不整脈
+    - - 9月8日
+      - 処置は完全に成功
+    - - 同じ文
+      - 約2週間の休養
+    - - 10月7日
+      - 適性を確認
+  say:
+  - text: 心臓の処置を受けていたナポリのマクトミネイが、10月10日、ピッチに戻りました。
+    short_only: true
+    card:
+      <<: *said
+      highlight_row: 0
+  - text: ここに至るまでに、クラブは三つの文を出しています。最初は9月1日でした。
+    card:
+      <<: *said
+      highlight_row: 0
+  - voice: ナポリの発表文
+    text: 軽度の良性の不整脈が起きたことを受け、
+    card:
+      <<: *said
+      highlight_row: 0
+  - voice: ナポリの発表文
+    text: スコット・マクトミネイは近日中に、
+    cont: true
+    card:
+      <<: *said
+      highlight_row: 0
+  - voice: ナポリの発表文
+    text: アブレーションによる矯正の処置を受ける。
+    cont: true
+    card:
+      <<: *said
+      highlight_row: 0
+  - text: 処置そのものは、その1週間後の9月8日の午前でした。
+    card:
+      <<: *said
+      highlight_row: 1
+  - voice: ナポリの発表文
+    text: スパイア・マンチェスター病院で、予定どおり処置を行った。
+    card:
+      <<: *said
+      highlight_row: 1
+  - voice: ナポリの発表文
+    text: 手術は完全に成功した。
+    cont: true
+    card:
+      <<: *said
+      highlight_row: 1
+  - text: 同じ文の最後に、戻り方の目安も書いてあります。
+    card:
+      <<: *said
+      highlight_row: 2
+  - voice: ナポリの発表文
+    text: 約2週間の休養をとったのち、練習を再開する。
+    card:
+      <<: *said
+      highlight_row: 2
+  - text: そして10月7日。クラブは検査の結果をこう伝えました。
+    card:
+      <<: *said
+      highlight_row: 3
+  - voice: ナポリの発表文
+    text: 追加の診断検査を行い、競技活動への適性が確認された。
+    card:
+      <<: *said
+      highlight_row: 3
+  - text: この間に本人が残した言葉は、ひとつだけです。
+    card: none
+  - text: 処置が決まった日の、インスタグラムの投稿でした。
+    card: none
+  - voice: マクトミネイ
+    text: またすぐ会おう、ナポリ。長くはかからない。
+    card: none
+    emph: true
+  quotes_from:
+  - football-italia https://football-italia.net/mctominay-8-words-message-heart-procedure/
+  sources:
+  - https://sscnapoli.it/nota-medica-mctominay/
+  - https://sscnapoli.it/en/aggiornamento-medico-mctominay/
+  - https://sscnapoli.it/en/sscn-report-allenamento-7-ottobre
+  - https://football-italia.net/mctominay-8-words-message-heart-procedure/
+- id: gap
+  heading: ひとりで調整していた期間
+  tier: 報道
+  telop: 最後の出場は8月30日。公式戦4つを見送り、ピッチでは別メニューが続いた
+  narrator: キャスター
+  card: &missed
+    type: table
+    title: 見送った公式戦
+    columns:
+    - 日付
+    - 相手
+    rows:
+    - - 9月5日
+      - インテル
+    - - 9月9日
+      - アーセナル
+    - - 9月13日
+      - ボローニャ
+    - - 9月20日
+      - フィオレンティーナ
+  say:
+  - text: 最後にピッチに立ったのは、8月30日のコモ戦でした。
+    card:
+      <<: *missed
+      highlight_row: 0
+  - text: 56分での交代。異変が見つかったのは、そのあとです。
+    card:
+      <<: *missed
+      highlight_row: 0
+  - text: 今季のリーグ戦で出場したのは、開幕のジェノア戦とこの試合の2つだけです。
+    card:
+      <<: *missed
+      highlight_row: 0
+  - text: そこからの41日で、ナポリは4つの公式戦を戦いました。
+    card:
+      <<: *missed
+      highlight_row: 1
+  - text: 出た試合より、見送った試合のほうが多くなります。
+    card:
+      <<: *missed
+      highlight_row: 1
+  - text: インテルとの一戦に、チャンピオンズリーグのアーセナル戦。
+    card:
+      <<: *missed
+      highlight_row: 1
+  - text: ボローニャ戦とフィオレンティーナ戦も、ベンチにすらいませんでした。
+    card:
+      <<: *missed
+      highlight_row: 3
+  - text: 代表のスコットランドからも、この間は外れています。
+    card: none
+  - text: イタリアでは、試合に出るのに医学的な適性の証明が要ります。
+    card: none
+  - text: その窓口になるのが、イタリア・オリンピック委員会です。
+    card: none
+  - text: だからマクトミネイは、休養が明けてもすぐには合流できません。
+    card: none
+  - text: ピッチでひとりだけ、別のメニューをこなす日が続きました。
+    card: none
+  sources:
+  - https://www.thestar.com.my/sport/football/2026/10/08/soccer-mctominay-cleared-to-return-napoli-say
+  - https://www.lbc.co.uk/article/scott-mctominay-back-in-napoli-training-heart-5HjdjY8_2/
+  - https://football-italia.net/mctominay-makes-napoli-comeback-heart-surgery/
+- id: view
+  viewpoint: true
+  heading: 32日のうち、休んでいたのは半分に満たない
+  tier: 背景
+  telop: 処置から出場まで32日。クラブが書いた休養は約2週間で、残りは18日
+  narrator: 解説
+  card: &days
+    type: calc
+    title: 処置からピッチまでの32日
+    terms:
+    - - '32'
+      - 処置から出場まで
+    - - '14'
+      - クラブが書いた休養
+    - - '18'
+      - 戻すために使った日数
+    ops:
+    - −
+    - ＝
+  say:
+  - text: 処置の9月8日から、出場した10月10日までは32日あります。
+    card: *days
+  - text: このうち発表文が「約2週間」と書いた休養は14日です。
+    card: *days
+  - text: 残りの18日のほうが長い計算になります。
+    card: *days
+    emph: true
+  - text: 長いほうの18日が、検査と、ひとりぶんのメニューにあてられたことになります。
+    card: *days
+  - text: 試合の前、アレグリ監督は先発させなかった理由をこう話しています。
+    card: none
+    image: assets/images/20261011_mctominay_return/03.jpg
+  - voice: アレグリ監督
+    text: マクトミネイはまだトップコンディションではない。
+    card: none
+  - text: それでも61分から送り出し、終了のホイッスルまでピッチに残しました。
+    card: none
+  - text: 次は13日の火曜、チャンピオンズリーグでビジャレアルとのアウェイ戦です。
+    card: none
+  quotes_from:
+  - Sky Sport Italia https://sport.sky.it/calcio/serie-a/partite/2026/giornata-6/napoli-frosinone/risultato-gol
+  sources:
+  - https://sscnapoli.it/en/aggiornamento-medico-mctominay/
+  - https://sport.sky.it/calcio/serie-a/partite/2026/giornata-6/napoli-frosinone/risultato-gol
+  - https://sscnapoli.it/villarreal-napoli-info-biglietti-settore-ospiti/

@@ -1,0 +1,492 @@
+# クラブの財政：パリ・サンジェルマン（10/10 土、シリーズ「クラブの財政」）。材料の控えは research/raw/20261010_finance_psg_material.md。
+# 軸は **ヨーロッパの連盟の「関連当事者取引」と「公正価値」**。
+#   レアル回（10/9）の軸「スクワッド・コスト・ルール（70%）」は主役にしない（この回では1行も出さない）。
+#   レアル回の「稼ぎは世界の頂点、ただしその分がどこへ出ていくか」「手元に残るのは収入の◯%」、
+#   アルテタ回（10/8）の「およそ◯倍になりました」、バルサ回（10/3）の「初めて10億ユーロを超えた」は使わない。
+# ★**2025-26 の数字は公開日の時点でまだ公表されていない**（前の季の発表は 2025-10-28）。
+#   折れ線は **2020-21〜2024-25 の5季**（556.2 / 654 / 801.8 / 805.9 / 837、百万ユーロ。デロイト各版）。
+#   台本で「次の数字は今月の下旬に出る見込み」と必ず言う。推計の9億1000万ユーロは使わない。
+# ★**収入8億3700万ユーロはクラブ全体の数字**（複数の競技を抱えている）。**部門名を並べない**（女子は扱わない決まり）。
+# 放映権の額は**クラブもデロイトも出していない**。2億9500万ユーロは 837 − 367 − 175 の**こちらの引き算**。
+# ★**2026-06-30 の連盟のリリースに名前が無い**ところまでしか言わない。「合格と発表された」とは言わない。
+# ★**ネイマール回（10/9）と重ねない**：2億2200万／勅令1006号／173試合118ゴール／金融検察／歴代上位は**使っていない**。
+#   2017年の調査は「2人の大型補強を受けて」とだけ言い、**移籍金の額を出さない**。
+# エムバペへの支払い命令（2025-12-16、6100万ユーロ）は**報道**。**控訴の余地があることを添える**。
+# **数字の重なり対策**：6500万ユーロ（2022年の制裁金）は基礎DATAの節の強い一点だけで読み上げ、年表では額を読まない（板には出る）。
+#   6000万ユーロは2014年の制裁金の1か所だけ。連盟の赤字の許容幅とエムバペの請求額は出さない。
+# 2026年のチャンピオンズリーグ決勝（PSG 1-1 アーセナル）は、**同じ日のもう1本（スタジアム紹介②エミレーツ）とつながる**ので、
+#   **2本とも決勝の試合には触れていない**。この回は「チャンピオンズリーグを制した季」までにとどめる。
+# アルファベットは読み上げに出さない（UEFA →「ヨーロッパの連盟」／CAS →「スポーツ仲裁裁判所」／
+#   QSI →「カタールの投資会社」／QTA →「カタールの観光局」／DNCG →「フランスのリーグの財務の監督機関」）。板の題にだけ書く。
+# 円は換算の板でだけ出す（1ユーロ＝177円。ECB 2026-10-09 の 177.34 を丸めた値）。**レアル回も177円なので言い回しを変えた**
+#   （あちらは「円に直すと、およそ2492億円」。こちらは相場の日付を言い、1席あたりの額で出す）。
+# 写真は assets/backgrounds/ の2枚（stadium_パリサンジェルマン.png＝ピッチとスタンド、_in.png＝外側から見たスタンド）。
+#   どちらも Commons・CC BY-SA で、credits.json は assets/backgrounds/ にある。**顔が入っていないので板が顔にかからない**。
+#   このシリーズはクラブ紹介ではないので、`shorts._drop_boards` は縦版を探して無ければ写真のまま残す（10/8 の直しが効いている）。
+# サムネは構図 scene（レアル回が number、アルテタ回が face、バルサ回が classic）。同じ日のもう1本は number。
+date: 2026年10月10日
+slot: other_1
+format: news
+series: クラブの財政
+people:
+- パリ・サンジェルマン
+theme:
+  id: finance_psg
+  league: france
+  league_name: リーグ・アン
+  kind: other
+  topic: パリ・サンジェルマン
+  title: パリ・サンジェルマン、稼いだ額に連盟が値段を付け直せる。規定に書かれていること
+  question: 稼いだと書いた額は、そのまま収入として認められるのか
+  lead: 胸の広告も、場内の看板も、持ち主と同じ国につながるクラブ。
+  hook: 規定の原文を開くと、政府という言葉まで書かれています。
+  takeaway: パリ・サンジェルマンの2024-25の営業収入は8億3700万ユーロで、クラブとして史上最高。5季前の5億5620万ユーロから1.50倍、1年あたりおよそ10.8%の伸びで、2025-26の数字は今月の下旬に出る見込み。内訳は商業3億6700万ユーロと入場料1億7500万ユーロで、残る2億9500万ユーロ、全体の35.2%は放映権などにあたるが、クラブは放映権の額を出していない。ヨーロッパの連盟の規定は、関連当事者の定義に政府を明記し、形式ではなく実態を見ると書いている。スポンサー契約からの収入は公正価値に直さなければならず、上げる方向の直しは認められない。公正価値を超えた分は収入ではなく出資に数えられる。2014年に制裁金6000万ユーロと観光局との契約の値付け直し、2019年にスポーツ仲裁裁判所が期限切れを理由に決定を取り消し、2022年に8クラブの和解でいちばん重い6500万ユーロ。2026年6月の点検では、違反した15クラブの一覧に名前が無い。入場料を収容47929席で割ると1席あたり3651ユーロで、レアル・マドリードの2801ユーロの1.30倍。ただし出どころの違う数字を自分で割ったもの。史上最高の収入の季も最終は4010万ユーロの赤字で、収入の4.8%にあたる
+  opening_image: assets/backgrounds/stadium_パリサンジェルマン.png
+short_title: パリ・サンジェルマンの収入が5季で1.5倍。連盟が見ているところ
+thumbnail:
+  layout: scene
+  photo: assets/backgrounds/stadium_パリサンジェルマン.png
+  line1: パリ・サンジェルマンの収入
+  line2: 過去最高は●億●●00万ユーロ
+  crests:
+  - パリサンジェルマン
+  tags:
+  - パリ・サンジェルマン
+  - パルク・デ・プランス
+  - リーグ・アン
+  - クラブの財政
+sections:
+- id: data
+  main: true
+  heading: 収益の基礎DATA
+  tier: 報道
+  telop: 2024-25の営業収入は8億3700万ユーロ。5季前からの伸びは1.50倍
+  narrator: キャスター
+  card: &line_card
+    type: line
+    title: 営業収入の5季（百万ユーロ）
+    x:
+    - 2020-21
+    - 2021-22
+    - 2022-23
+    - 2023-24
+    - 2024-25
+    series:
+    - - 営業収入
+      - [556.2, 654.0, 801.8, 805.9, 837.0]
+    unit: 百万ユーロ
+  say:
+  - text: フランスのパリ・サンジェルマンの、お金の話です。
+    short_only: true
+    image: assets/backgrounds/stadium_パリサンジェルマン.png
+  - text: 4季前、欧州で最も重い制裁金を負ったクラブがあります。6500万ユーロ。
+    emph: true
+    image: assets/backgrounds/stadium_パリサンジェルマン.png
+    card: &data_stats
+      type: stats
+      title: パリ・サンジェルマンの2024-25
+      items:
+      - - '837'
+        - 百万ユーロ
+        - 営業収入（史上最高）
+      - - '1.50'
+        - 倍
+        - 5季前からの伸び
+      - - '4'
+        - 位
+        - 世界のクラブの中で
+      focus: 0
+  - text: 制裁金には3年の約束が付き、その最後の年が先の季。パリ・サンジェルマンです。
+    card: *data_stats
+  - text: この収入を、ヨーロッパの連盟が値付けし直せる決まりがあります。
+    short_only: true
+    card: *data_stats
+  - text: 最新の決算は2024-25。営業収入は8億3700万ユーロで、過去最高です。
+    card:
+      <<: *line_card
+      highlight: 2024-25
+  - text: この収入はクラブ全体のもの。サッカー男子だけの額ではありません。
+    card: none
+  - text: 5季前は5億5620万ユーロ。1.50倍、1年あたり10.8%の伸び。
+    card:
+      <<: *line_card
+      highlight: 2020-21
+  - text: 次の季の数字はまだありません。前の発表は10月28日、今回も下旬の見込みです。
+    card:
+      <<: *line_card
+      highlight: 2024-25
+  sources:
+  - https://www.psg.fr/en/content/paris-saint-germain-posts-record-breaking-financial-season-and-reinforces-growth-strategy
+  - https://www.deloitte.com/uk/en/services/financial-advisory/analysis/deloitte-football-money-league..html
+  - https://www.deloitte.com/fi/fi/about/press-room/real-madrid-tops-deloitte-football-money-league.html
+  - https://www.uefa.com/news-media/news/0279-1603e68faca4-8a20edf89532-1000--the-cfcb-first-chamber-finalises-the-monitoring-of-clubs-having/
+- id: breakdown
+  heading: 何で稼いでいるのか
+  tier: 確定
+  official: true
+  telop: 商業3億6700万ユーロ、入場料1億7500万ユーロ。残りはクラブが出していない
+  narrator: 解説
+  card: &fall_card
+    type: waterfall
+    title: 収入の中身（2024-25、百万ユーロ）
+    start:
+    - 商業（スポンサー・物販）
+    - 367
+    steps:
+    - - 入場料
+      - 175
+    - - 放映権など（こちらの引き算）
+      - 295
+    total:
+    - 2024-25 の営業収入
+    - 837
+  say:
+  - text: パリ・サンジェルマンが出した数字から、その中身を見ていきます。
+    image: assets/backgrounds/stadium_パリサンジェルマン_in.png
+    card:
+      <<: *fall_card
+      highlight: 商業（スポンサー・物販）
+  - text: 最大は商業。スポンサーと物販で3億6700万ユーロ、全体の43.8%です。
+    card:
+      <<: *fall_card
+      highlight: 商業（スポンサー・物販）
+  - text: 次が入場料で1億7500万ユーロ。4季つづけて記録を更新したとあります。
+    card:
+      <<: *fall_card
+      highlight: 入場料
+  - text: ここで引っかかります。残りの額が、どこにも出てきません。
+    card: none
+  - text: 放映権の額を、クラブは公表していません。そこで総額から2つを引いてみました。
+    card:
+      <<: *fall_card
+      highlight: 放映権など（こちらの引き算）
+  - text: 残りは2億9500万ユーロ。全体の35.2%が放映権などにあたります。
+    emph: true
+    card:
+      <<: *fall_card
+      highlight: 放映権など（こちらの引き算）
+    mark:
+      kind: circle
+      row: 2
+  - text: 入場料は、持ち主が替わった2011年のおよそ7倍。当時は2500万ユーロほど。
+    card:
+      <<: *fall_card
+      highlight: 入場料
+  - text: 出していないのは放映権だけではありません。スポンサー料の中身も同じです。
+    card: none
+  sources:
+  - https://www.psg.fr/en/content/paris-saint-germain-posts-record-breaking-financial-season-and-reinforces-growth-strategy
+  - https://www.deloitte.com/uk/en/services/financial-advisory/analysis/deloitte-football-money-league..html
+- id: uefa
+  heading: 連盟が、収入そのものに値段を付け直す
+  tier: 報道
+  telop: 関連当事者の定義に「政府」が入り、形式ではなく実態を見る、と書いてある
+  narrator: 解説
+  card: &time_card
+    type: timeline
+    title: 審査と和解の年表
+    rows: &time_rows
+    - - 2014年5月
+      - 制裁金6000万ユーロ。カタールの観光局との契約は半値に
+    - - 2017年9月
+      - 2人の大型補強を受け、連盟が調査を始める
+    - - 2019年3月
+      - 仲裁裁判所が決定を取り消す。理由は期限切れ
+    - - 2022年9月
+      - 8クラブの和解。6500万ユーロでいちばん重い
+    - - 2026年6月
+      - 違反した15クラブの一覧に名前が無い
+    focus: 2026年6月
+  say:
+  - text: ほかのクラブの財政は、稼いだお金をどう使うかの話になります。
+    card: none
+  - text: パリ・サンジェルマンだけは、稼いだと書いた額が本当にその値段かを問われます。
+    emph: true
+    card: none
+  - text: 持ち主がカタールの投資会社で、胸と看板にも同じ国につながる名が並ぶからです。
+    card: none
+  - text: ヨーロッパの連盟の規定には、関連当事者という言葉があります。
+    card: &rule_card
+      type: table
+      title: 規定の原文
+      columns: &rule_cols
+      - 条文
+      - 中身
+      rows: &rule_rows
+      - - 関連当事者
+        - 人・法人、そして政府。実態で見る
+      - - 付属書 J.2.1
+        - 収入は公正価値に直す。例はスポンサー
+      - - 同
+        - 上げる直しは認めない
+      - - 付属書 J.8
+        - 鑑定人は連盟の名簿から。2通なら平均
+      - - 第89条
+        - 超えた分は収入でなく出資
+      highlight_row: 0
+  - text: 同じ持ち主につながる相手のこと。その定義に、政府という語が入っています。
+    card:
+      type: table
+      title: 規定の原文
+      columns: *rule_cols
+      rows: *rule_rows
+      highlight_row: 0
+  - text: しかも、形式ではなく実態を見る、と書いてあります。
+    card:
+      type: table
+      title: 規定の原文
+      columns: *rule_cols
+      rows: *rule_rows
+      highlight_row: 0
+  - text: そのうえで出てくるのが、公正価値という言葉です。
+    card:
+      type: table
+      title: 規定の原文
+      columns: *rule_cols
+      rows: *rule_rows
+      highlight_row: 1
+  - text: 市場でついたであろう値段のこと。収入は、そこへ直さなければなりません。
+    card:
+      type: table
+      title: 規定の原文
+      columns: *rule_cols
+      rows: *rule_rows
+      highlight_row: 1
+  - text: 直す対象として最初に挙がっている例が、スポンサー契約からの収入です。
+    emph: true
+    card:
+      type: table
+      title: 規定の原文
+      columns: *rule_cols
+      rows: *rule_rows
+      highlight_row: 1
+  - text: そして直せるのは下げる方向だけ。上げる直しは認めない、と書いてあります。
+    card:
+      type: table
+      title: 規定の原文
+      columns: *rule_cols
+      rows: *rule_rows
+      highlight_row: 2
+  - text: 値付けをするのは、連盟が認めた名簿の中の鑑定人です。
+    card:
+      type: table
+      title: 規定の原文
+      columns: *rule_cols
+      rows: *rule_rows
+      highlight_row: 3
+  - text: 鑑定の報告書が2通そろえば、その平均を使う、とまで書いてあります。
+    card:
+      type: table
+      title: 規定の原文
+      columns: *rule_cols
+      rows: *rule_rows
+      highlight_row: 3
+  - text: 公正価値を超えた分は、収入ではなく出資に数えられます。
+    card:
+      type: table
+      title: 規定の原文
+      columns: *rule_cols
+      rows: *rule_rows
+      highlight_row: 4
+  - text: 稼いだお金ではなく、持ち主が入れたお金として扱う、ということです。
+    card: none
+  - text: この値付けの審査は、12年前から何度もこのクラブに当たってきました。
+    card: *time_card
+  - text: 2014年には制裁金6000万ユーロ。
+    card:
+      type: timeline
+      title: 審査と和解の年表
+      rows: *time_rows
+      focus: 2026年6月
+      highlight_row: 0
+  - text: カタールの観光局との契約が、2億から1億ユーロへ半分にされています。
+    card:
+      type: timeline
+      title: 審査と和解の年表
+      rows: *time_rows
+      focus: 2026年6月
+      highlight_row: 0
+  - text: 2017年9月、2人の大型補強を受けて、連盟が帳簿を開けに来ました。
+    card:
+      type: timeline
+      title: 審査と和解の年表
+      rows: *time_rows
+      focus: 2026年6月
+      highlight_row: 1
+  - text: その調査は2019年3月、スポーツ仲裁裁判所で消えます。
+    card:
+      type: timeline
+      title: 審査と和解の年表
+      rows: *time_rows
+      focus: 2026年6月
+      highlight_row: 2
+  - text: 勝った理由は中身ではなく、連盟が自分で決めた期限を過ぎていたことでした。
+    emph: true
+    card:
+      type: timeline
+      title: 審査と和解の年表
+      rows: *time_rows
+      focus: 2026年6月
+      highlight_row: 2
+  - text: 2022年9月、8クラブが和解。合計1億7200万ユーロの38%がここでした。
+    card:
+      type: timeline
+      title: 審査と和解の年表
+      rows: *time_rows
+      focus: 2026年6月
+      highlight_row: 3
+  - text: 守るべき期限として切られたのが、ちょうど前の季の末です。
+    card:
+      type: timeline
+      title: 審査と和解の年表
+      rows: *time_rows
+      focus: 2026年6月
+      highlight_row: 3
+  - text: 今年6月の点検で、違反したクラブが15並びました。そこに名前は出てきません。
+    emph: true
+    card:
+      type: timeline
+      title: 審査と和解の年表
+      rows: *time_rows
+      focus: 2026年6月
+      highlight_row: 4
+  - text: 連盟が出したのは違反の一覧で、通ったクラブの名簿ではありません。
+    card: none
+  sources:
+  - https://fmf.md/cdn/docs/Regulations_CLFS_2025_EN.pdf
+  - https://documents.uefa.com/r/UEFA-Club-Licensing-and-Financial-Sustainability-Regulations-2025/J.7-Definition-of-fair-value-Online
+  - https://www.uefa.com/news-media/news/0279-1603e68faca4-8a20edf89532-1000--the-cfcb-first-chamber-finalises-the-monitoring-of-clubs-having/
+  - https://www.uefa.com/news-media/news/02a6-20fe598acc34-5b167fbb1b19-1000--finalisation-of-club-monitoring-for-the-2025-26-season/
+  - https://www.uefa.com/insideuefa/disciplinary/news/newsid=2596531.html
+  - https://m.naharnet.com/stories/en/130946-uefa-fine-man-city-psg-60m-euros-cap-champions-league-squad
+- id: view
+  viewpoint: true
+  heading: 見立て・1席あたりで見ると、順位が入れ替わる
+  tier: 背景
+  telop: 1席あたりの入場料は3651ユーロ。レアル・マドリードの2801ユーロの1.30倍
+  narrator: 解説
+  card: &calc_card
+    type: calc
+    title: 1席あたりの入場料収入（自分で割った）
+    terms:
+    - - 1億7500万ユーロ
+      - 2024-25 の入場料
+    - - 47929席
+      - パルク・デ・プランスの収容
+    - - 約3651ユーロ
+      - 1席あたり
+    ops:
+    - ÷
+    - ＝
+  say:
+  - text: 総額では世界で4番目、上位20に入ったフランスのクラブはここだけでした。
+    image: assets/backgrounds/stadium_パリサンジェルマン.png
+    card: *calc_card
+  - text: では、器の大きさで割るとどう見えるでしょうか。
+    card: *calc_card
+  - text: さきほどの入場料を、収容4万7929席で割ってみました。
+    card: *calc_card
+  - text: 1席あたり3651ユーロ。レアル・マドリードの2801ユーロの1.30倍です。
+    emph: true
+    card: &view_table
+      type: table
+      title: 自分で割ってみた（2024-25）
+      columns: &view_cols
+      - 比べ
+      - 答え
+      rows: &view_rows
+      - - 1席あたりの入場料（パリ）
+        - 約3651ユーロ
+      - - 1席あたりの入場料（レアル）
+        - 約2801ユーロ
+      - - その比
+        - 1.30倍
+      - - 放映権など ÷ 営業収入
+        - 35.2%
+      - - 最終の赤字 ÷ 営業収入
+        - 4.8%
+      highlight_row: 2
+    mark:
+      kind: circle
+      row: 2
+      col: 1
+      text: 器は小さいのに
+  - text: ただし出どころが違います。片方はクラブの発表、もう片方は集計会社の数字です。
+    card:
+      type: table
+      title: 自分で割ってみた（2024-25）
+      columns: *view_cols
+      rows: *view_rows
+      highlight_row: 1
+  - text: 1席の額を日本円にすると、こうなります。10月9日の相場で計算しました。
+    card: &yen_card
+      type: convert
+      title: 1席あたりの入場料を円で見る
+      from:
+      - '3651'
+      - ユーロ
+      - 1席あたり（2024-25）
+      to:
+      - 約64万6000
+      - 円
+      - 2026年10月9日の相場
+      via: 1ユーロ＝177円
+  - text: 1ユーロ177円で、1席あたりおよそ64万6000円になります。
+    emph: true
+    card: *yen_card
+  - text: 器が小さいぶん、1つの席から取る額が重くなっている、と見ています。
+    card: none
+  - text: もう一方の柱は細っています。収入のおよそ3分の1を占める、放映権です。
+    image: assets/backgrounds/stadium_パリサンジェルマン_in.png
+    card:
+      type: table
+      title: 自分で割ってみた（2024-25）
+      columns: *view_cols
+      rows: *view_rows
+      highlight_row: 3
+  - text: フランスのリーグの国内の放映権は、前の周期より2割ほど安く始まりました。
+    card: none
+  - text: 配信の契約も途中で解かれ、リーグは自前の配信に踏み切っています。
+    card: none
+  - text: 加えて、史上最高の収入を上げた季も、最終は4010万ユーロの赤字でした。
+    card:
+      type: table
+      title: 自分で割ってみた（2024-25）
+      columns: *view_cols
+      rows: *view_rows
+      highlight_row: 4
+  - text: 収入に対して4.8%。チャンピオンズリーグを制した季の数字です。
+    emph: true
+    card:
+      type: table
+      title: 自分で割ってみた（2024-25）
+      columns: *view_cols
+      rows: *view_rows
+      highlight_row: 4
+  - text: 出ていくお金の話も残っています。去年12月、パリの労働審判所の判断です。
+    card: none
+  - text: かつてこのクラブにいたエムバペへ、6100万ユーロを払うよう命じられました。
+    card: none
+  - text: 2024年の4月から6月の、未払いの賃金とボーナスにあたると報じられています。
+    card: none
+  - text: クラブは従うとしたうえで、控訴する権利は留保すると述べています。まだ動きます。
+    card: none
+  - text: ここで、最初の話に戻ります。帳簿に並んだ数字は、そのまま通るのか。
+    card: none
+  - text: いちばん大きい商業の分が、いくらと値付けされたのかは公表されていません。
+    card: none
+  - text: 1件ずつの値付けの中身は、外に出てきません。
+    card: none
+  - text: 稼いだ額がそのまま通るとは限らない。そこが、このクラブのほかと違う点です。
+    emph: true
+    card: none
+  - text: 10日後の10月20日、パルク・デ・プランスにバルセロナが来ます。
+    card: none
+  - text: 170試合つづけて売り切れ、シーズン券の更新率も98%のままです。
+  sources:
+  - https://www.psg.fr/en/content/paris-saint-germain-posts-record-breaking-financial-season-and-reinforces-growth-strategy
+  - https://www.deloitte.com/uk/en/services/financial-advisory/analysis/deloitte-football-money-league..html
+  - https://en.wikipedia.org/wiki/Parc_des_Princes
+  - https://en.wikipedia.org/wiki/2026%E2%80%9327_Paris_Saint-Germain_FC_season
+  - https://www.tsn.ca/soccer/article/court-rules-psg-must-pay-more-than-70m-to-mbappe-in-dispute-over-unpaid-wages/
+  - https://api.frankfurter.app/2026-10-09?from=EUR&to=JPY

@@ -1,0 +1,278 @@
+# 取材メモ（10/10 題材 flick_yamal、型は news、ラ・リーガ枠）。材料の控えは research/raw/20261010_flick_yamal_material.md。
+# **ショートだけ作る**（台本は1本。`short` が山場の節を切り出す）。
+# **10/2 にヤマルの選手紹介を出している**（research/20261002_player_937958.yaml）。
+#   材料の「0.」の**使ってはいけないもの一覧**をそのまま守った。この回で使っていないもの：
+#   メッシに抱かれた赤ん坊の写真／10代でユーロとW杯を両方獲った話／基礎DATA（生年月日・身長・契約・背番号）／
+#   歩んできた道（15歳290日のデビュー等）／プレースタイルの図（レーダー・シュートマップ・ヒートマップ）／
+#   季ごとの通算の表／マル秘話（304・ネイマール・背番号の変遷）／9月のバロンドール発言／エムバペとの比較。
+#   **市場価値も出していない。**
+# **この回で新しいのは4つだけ**（材料 0）。そこに寄せた：
+#   ①フリックが 2026-10-09 の会見で語った言葉 ②代表の4試合で4得点
+#   ③「60分や70分」という使い方の考えと、実際の出場時間とのずれ ④フリックがウェンブリーのスタンドで見ていたこと
+# 10/2 で読んだ「9試合9得点6アシスト」の**続きとして**「12試合12得点7アシスト」を出している（材料 6-4 の指示）。
+# **フリックの会見は英語で行われ、スペインの媒体がスペイン語に訳して出している**（材料 1・7-1）。
+#   英語の原文（録音の書き起こし）は取れていないので、**いちばん詳しいスペイン語の形から日本語にし、
+#   「英語で答えた」と台本の中で言う**。beIN Sports の英語訳とは文の切り方が違うので、混ぜていない。
+# **ヤマル本人の反応は 10/10 10:00 時点で無い**（材料 4・8）。だから本人の言葉は1つも置いていない。
+# **ヘタフェ戦はまだ行われていない**（現地10/10 18:30、日本時間11日1:30）。結果に触れていない。
+# 数字の食い違い（材料 7-3）：ウェンブリーの試合は **ESPN の「イングランド 2-3 スペイン」** の形を採った。
+# バロンドールの発表日は 10/2 で読み上げ済みなので、**この回の時点の「16日後」という形だけ**にした（材料 5）。
+# 数字の重なり対策：『4得点』『281分』『70分に1点』は②だけ。『83分』『13分』『23分』は③だけ。
+#   『12試合』『12得点』『7アシスト』『16日』は④だけ。
+# 写真は **語る人（左）＋主役（右）の2枚並べ**（tools/pairphoto.py）。左＝フリック（Commons、CC BY-SA 4.0 /
+#   Steffen Prößdorf、2022年）、右＝ヤマル（スペイン代表、1920x2562）。**ショート用の縦版（01_v.jpg）も同時に書かれる**。
+#   beIN Sports の記事の og:image（フリックとヤマルが並んで写った1枚）も当たったが、**横長1枚をショートで縦に切ると
+#   2人の間の客席だけが映った**（下見で実際にそうなった）ので、2枚並べに替えた。
+#   代表の節だけ 20261002_yamal_spain2025_w/01.jpg（スペイン代表のユニフォーム、1920x1080）に入れ替える。**入れ替えは1回**。
+# サムネ：構図 classic（写真＋下の帯に2行）。10/10 は face・number・versus が出ているので、ここは classic に寄せた。
+# ネットの反応は集めていない（材料の方針）。
+date: 2026年10月10日
+slot: laliga_1
+format: news
+voice_min: 0
+people:
+- ハンジ・フリック
+theme:
+  id: flick_yamal
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: ラミン・ヤマル
+  title: フリックがヤマルに付けた条件。「今まだそうでないとしても」
+  question: フリックはヤマルの何を見て、どういう言い方で「世界最高になる」と言ったのか
+  takeaway: フリックは2026年10月9日、ヘタフェ戦の前日会見で英語の質問に答え、ヤマルについて「彼は世界最高の選手になる。今まだそうでないとしても、私はもうそこに近いと思う」と話した。ただし言い切ってはおらず、「この態度、このメンタリティーを続けて、練習して、毎日よくなり続けるなら、100パーセントそうなる」と条件を付けている。褒めたのは出来ではなく態度のほうだった。フリックが挙げたのはクラブでの最初の8試合と代表で、9月26日のウェンブリーでのイングランド戦はスタンドから生で見ていたと言っている。その代表ウィークでヤマルは4試合281分に出て4得点1アシスト。70分に1点のペースで、スペインが取った12点のうち5点に絡んだ。一方でフリックは「60分や70分で下がったら、たぶん彼は嬉しくない。でも彼にとってはそれが完璧なんだ」とも言っているが、今季のラ・リーガでヤマルは1試合平均83分出ていて、監督が口にした数字より13分から23分長い。クラブと代表を足すと今季は12試合12得点7アシストになる
+  opening_image: assets/images/20261010_flick_yamal_pair/01.jpg
+short_title: フリックがヤマルに言った「100パーセントそうなる」ための条件
+thumbnail:
+  photo: assets/images/20261010_flick_yamal_pair/01.jpg
+  short_photo: assets/images/20261010_flick_yamal_pair/01_v.jpg
+  line1: フリック バルセロナ監督
+  line2: ヤマルは●●になる
+  tags:
+  - ラミン・ヤマル
+  - ハンジ・フリック
+  - バルセロナ
+sections:
+- id: words
+  main: true
+  heading: 言い切らずに、条件を付けた
+  tier: 報道
+  telop: 「世界最高の選手になる。今まだそうでないとしても」。続けるなら、という条件つき
+  narrator: キャスター
+  say:
+  - text: バルセロナのフリック監督が、会見でヤマルについて英語で答えました。
+    short_only: true
+    card: none
+  - voice: フリック
+    text: これが彼に必要なことだ。
+    emph: true
+    card: none
+  - voice: フリック
+    text: なぜなら彼は世界最高の選手になるからだ。
+    cont: true
+    emph: true
+    card: none
+    image: assets/images/20261002_yamal_spain2025_w/01.jpg
+  - voice: フリック
+    text: 今まだそうでないとしても、私はもうそこに近いと思う。
+    cont: true
+    card: none
+  - text: ここで終わらず、フリックは条件を付けました。
+    card: none
+    image: assets/images/20261010_flick_yamal_pair/01.jpg
+  - voice: フリック
+    text: この態度、このメンタリティーを続けて、練習して、
+    card: none
+  - voice: フリック
+    text: 毎日よくなり続けるなら、100パーセントそうなる。
+    cont: true
+    card: none
+    image: assets/images/20261002_yamal_spain2025_w/01.jpg
+  - text: 褒めたのは出来ではなく、態度のほうでした。
+    card: none
+    image: assets/images/20261010_flick_yamal_pair/01.jpg
+  - voice: フリック
+    text: いま彼には自信がある。でもそれだけでなく、
+    card: none
+  - voice: フリック
+    text: 彼の態度が信じられないほどだ。
+    cont: true
+    card: none
+    image: assets/images/20261002_yamal_spain2025_w/01.jpg
+  - voice: フリック
+    text: ここで、練習でも私が見ているものは最高だ。
+    cont: true
+    card: none
+  - text: 会見は英語で行われ、現地ではスペイン語に訳されて出ています。
+    card: none
+    image: assets/images/20261010_flick_yamal_pair/01.jpg
+  quotes_from:
+  - FútbolFantasy（2026-10-09 のヘタフェ戦前日会見。英語の答えをスペイン語に訳したもの） https://www.futbolfantasy.com/laliga/noticias/152484-rueda-de-prensa-de-hansi-flick-en-directo
+  sources:
+  - https://www.futbolfantasy.com/laliga/noticias/152484-rueda-de-prensa-de-hansi-flick-en-directo
+  - https://www.beinsports.com/en-us/soccer/la-liga/articles/flick-assures-that-lamine-yamal-will-be-the-best-player-in-the-world-if-he-isn-t-already-2026-10-09
+- id: spain
+  heading: 監督はスタンドから見ていた
+  tier: 報道
+  telop: 代表の4試合で281分4得点1アシスト。9月26日のロンドンの一戦は、フリックが客席から見た
+  narrator: キャスター
+  card: &four
+    type: table
+    title: 代表ウィークの4試合
+    columns:
+    - 日付
+    - 相手
+    - 出場
+    - 得点
+    rows:
+    - - 9月26日
+      - イングランド
+      - 90分
+      - '1'
+    - - 9月29日
+      - クロアチア
+      - 68分
+      - '2'
+    - - 10月3日
+      - チェコ
+      - 45分
+      - '1'
+    - - 10月6日
+      - クロアチア
+      - 78分
+      - '0'
+  say:
+  - text: フリックが挙げたのは、クラブでの最初の8試合と、代表でした。
+    card: *four
+    image: assets/images/20261002_yamal_spain2025_w/01.jpg
+  - voice: フリック
+    text: ロンドンでのイングランド戦も、スタンドから生で見た。
+    card: *four
+  - voice: フリック
+    text: 素晴らしい。
+    cont: true
+    card: none
+  - text: 9月26日のウェンブリー。スペインが3対2で勝った試合です。
+    card:
+      <<: *four
+      highlight_row: 0
+  - text: 監督が客席にいたその夜、ヤマルは90分出て1点を決めています。
+    card:
+      <<: *four
+      highlight_row: 0
+  - text: 4試合の合計は281分で4得点1アシスト。70分に1点のペースです。
+    card: &pace
+      type: calc
+      title: 代表の4試合
+      terms:
+      - - '281'
+        - 出場した分
+      - - '4'
+        - 得点
+      - - '70'
+        - 1点あたりの分
+      ops:
+      - ÷
+      - ＝
+    emph: true
+  - text: スペインがこの4試合で取ったのは12点。その5点にヤマルが絡みました。
+    card: &share
+      type: calc
+      title: スペインの12点のうち
+      terms:
+      - - '5'
+        - 得点とアシスト
+      - - '12'
+        - チームの得点
+      - - 41.7%
+        - その割合
+      ops:
+      - ÷
+      - ＝
+  sources:
+  - https://www.fotmob.com/players/1467236
+  - https://www.libertaddigital.com/deportes/futbol/2026-10-09/flick-elogia-a-de-la-fuente-por-cuidar-a-sus-jugadores-es-perfecto-7473266/
+- id: minutes
+  heading: 「60分や70分」と、実際の83分
+  tier: 報道
+  telop: フリックが口にした数字より、ヤマルは1試合あたり13分から23分長く出ている
+  narrator: キャスター
+  card: &gap
+    type: bars
+    title: 1試合あたりの出場時間
+    unit: 分
+    items:
+    - label: 監督が言った下限
+      value: 60
+    - label: 監督が言った上限
+      value: 70
+    - label: 今季のラ・リーガ
+      value: 83
+      highlight: true
+  say:
+  - text: 同じ会見で、フリックは使い方についても話しています。
+    card: *gap
+  - voice: フリック
+    text: 60分や70分で下がったら、たぶん彼は嬉しくないだろう。
+  - voice: フリック
+    text: でも彼にとってはそれが完璧なんだ。
+    cont: true
+  - text: ところが今季のラ・リーガでは、1試合平均83分出ています。
+    card: *gap
+    emph: true
+  - text: 監督が口にした数字より、13分から23分長いことになります。
+    card: *gap
+  - text: 言っていることと、実際に使っている時間がずれている形です。
+    card: none
+  sources:
+  - https://www.fotmob.com/players/1467236
+  - https://www.libertaddigital.com/deportes/futbol/2026-10-09/flick-elogia-a-de-la-fuente-por-cuidar-a-sus-jugadores-es-perfecto-7473266/
+- id: view
+  viewpoint: true
+  heading: 19歳を、別の物差しで見るという話
+  tier: 背景
+  telop: フリックは「選手というものを違う見方で考えないといけないのかもしれない」と言っている
+  narrator: 解説
+  card: &total
+    type: stats
+    title: 今季のヤマル（クラブと代表）
+    items:
+    - - '12'
+      - 試合
+      - クラブ8・代表4
+    - - '12'
+      - 得点
+      - クラブ8・代表4
+    - - '7'
+      - アシスト
+      - クラブ6・代表1
+    focus: 1
+  say:
+  - text: この会見でフリックは、もうひとつ変わったことを言っています。
+    card: none
+  - voice: フリック
+    text: もしかすると我々は、選手というものを、
+  - voice: フリック
+    text: 違う見方で考えないといけないのかもしれない。
+    cont: true
+  - voice: フリック
+    text: 彼らは若くて、19歳で、回復がとても速い。
+    cont: true
+  - text: 代表ウィークの日程を批判した、その直後に出てきた言葉です。
+    card: none
+  - text: 仕組みは厳しい。ただしこの年代は別だ、という分け方になります。
+    card: none
+  - text: クラブと代表を足すと、今季は12試合で12得点7アシストです。
+    card: *total
+    emph: true
+  - text: 1試合に1.58回、点に絡んでいる計算になります。
+    card:
+      <<: *total
+      focus: 2
+  - text: 監督が条件を付けて「世界最高になる」と言いました。
+  - text: その16日後に、バロンドールが発表されます。
+    card: none
+    image: assets/images/20261010_flick_yamal_pair/01.jpg
+  sources:
+  - https://www.futbolfantasy.com/laliga/noticias/152484-rueda-de-prensa-de-hansi-flick-en-directo
+  - https://www.infobae.com/america/agencias/2026/10/09/flick-elogia-a-de-la-fuente-es-perfecto-lo-que-hace-con-mis-jugadores-gestiona-los-minutos/

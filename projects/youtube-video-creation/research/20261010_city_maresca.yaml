@@ -1,0 +1,298 @@
+# 取材メモ（10/10 題材 city_maresca、型は news、プレミア枠。**ショートだけ出す**）。
+#   材料の控えは research/raw/20261010_city_maresca_material.md。
+# **マレスカはマンチェスター・シティの監督**（2026-06-29 就任、グアルディオラの後任、3年契約）。
+#   チェルシーは 2024-07-01〜2026-01-01 の前職で、いまのチェルシーの監督はシャビ・アロンソ。
+#   ここを取り違えると「ライバルの監督の感想」になってしまう。この本は**当事者クラブの監督の弁明**。
+# 事実の土台（判定の中身・一次情報・控訴の期限）は **city_carrick の本に置いた**。この本では繰り返さない。
+#   ここで言う土台は「9月29日に財務の告発が認められた」「10月1日に控訴した」の2つだけ。
+# **件数は言わない**（判断の本文は「100を超える」だけ）。当たった媒体は全部114件と書いているが、一次情報には無い。
+# **処分の見通しへ流さない**。3部の発言は本人の言葉として引くだけで、降格の話にしない。
+# 発言は Sky・ESPN・football365 の原文から。移籍情報の記者の投稿にある4行
+#   （大文字の強調つきの上訴の1行・「我々は皆を信頼している」・「私はいたい場所にいる」・「とても誇りだ」）は
+#   3社の原文と字面が違うか見つからないので使わない。
+#   3部の発言は football365 の短い形（Pulse Sports の長い形は加工の疑いがあるので採らない）。
+#   ESPN の「三冠の季」の引用は本文が途中で切れているので、推測で補わず使わない。
+# **「オーナーが確信している」はマレスカの見立て**（I think they are convinced）。クラブの発表ではない。台本で主語を取り違えない。
+# **会見の場所は書かれていない**ので「試合前の記者会見で」とだけ言う。媒体名は画面にも読み上げにも出さない。
+# 写真：01＝Commons（CC BY-SA 4.0 / Oscar0123、2024年。前職のチェルシー時代だが、縦で顔が大きいのはこれだけ。
+#   ショートの縦に使う）、03＝記事の og:image（シティのタッチライン、横1296。冒頭とサムネ）、
+#   trophy/01＝Commons（CC BY-SA 4.0 / Timfilbert、2024年。レスターで2部のトロフィーを掲げた1枚）。
+# ネットの反応は集めていない（この題材で実在する投稿を当たっていないため、作らない）。
+date: 2026年10月10日
+slot: premier_2
+format: news
+people: []
+theme:
+  id: city_maresca
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: マンチェスター・シティ
+  title: マレスカがシティの判定に初めて答えた。3部に落ちたらと聞かれた監督の答え
+  question: 告発されたクラブの監督は、就任からまだ3か月で何を答えたのか
+  takeaway: マレスカがシティの監督になったのは6月29日で、判定まで92日、会見まで102日。問われている2009-10から2017-18の9季に、この人は1日もクラブにいない。最後の対象の季が終わってから就任まで2,969日、8年1か月あいている。だから答えは中身ではなく姿勢になり、上訴については勝ったときに話す、3部については「レスターで2部を勝った。リーグ・ワンは、そのときに見てみよう」だった。そのチームはいま5試合5勝、勝ち点15で首位にいる
+  opening_image: assets/images/20261010_city_maresca/04_w.jpg
+short_title: マレスカがシティの判定に初めて答えた。3部の問いに返した一言
+thumbnail:
+  layout: number
+  photo: assets/images/20261010_city_maresca/04_w.jpg
+  short_photo: assets/images/20261010_city_maresca/04_w_v.jpg
+  number: 102日
+  line1: マレスカ シティ監督
+  line2: 問われた9年にいたのは●日
+  tags:
+  - マンチェスター・シティ
+  - エンツォ・マレスカ
+  - プレミアリーグ
+sections:
+- id: who
+  heading: 答えを求められた人は、いつ来たのか
+  tier: 報道
+  telop: 就任は6月29日。判定まで92日、会見まで102日。問われた9季には1日もいない
+  narrator: キャスター
+  card: &when
+    type: table
+    title: マレスカがシティにいた時期
+    columns:
+    - 時期
+    - 役割
+    - 問われた9季
+    rows:
+    - - 2020年8月
+      - 育成のトップチームの監督
+      - 外
+    - - 2022年6月
+      - 助監督
+      - 外
+    - - 2026年6月
+      - 監督
+      - 外
+  say:
+  - text: 告発されたクラブ自身の監督が、この件を初めて聞かれました。
+    image: assets/images/20261010_city_maresca/04_w.jpg
+    card: &days3
+      type: stats
+      title: マレスカの日数
+      items:
+      - - 102
+        - 日
+        - 就任から会見まで
+      - - 92
+        - 日
+        - 就任から判定まで
+      - - 0
+        - 季
+        - 問われた9季にいた数
+      focus: 2
+  - text: マレスカがシティの監督になったのは6月29日。グアルディオラの後任です。
+    card: *days3
+  - text: 判定が先に公表されていても、このクラブに来ていたか。そう問われました。
+    card: none
+  - voice: マレスカ
+    text: 100パーセント、来た。
+    emph: true
+  - text: 判定が出るまで92日、この会見まで102日。就任3か月ちょうどの人でした。
+    card: *days3
+  - text: そして、問われている9つの季に、この人は1日もクラブにいません。
+    card: *days3
+    emph: true
+  - text: 初めてシティに来たのは2020年8月、育成のトップチームの監督としてでした。
+    card:
+      <<: *when
+      highlight_row: 0
+  - text: 助監督として戻ったのが2022年6月。三冠を取った季です。
+    card:
+      <<: *when
+      highlight_row: 1
+  - text: どちらも、問われている季が終わったあとの話です。
+    card:
+      <<: *when
+      highlight_row: 2
+  sources:
+  - https://en.wikipedia.org/wiki/Enzo_Maresca
+  - https://www.espn.com/soccer/story/_/id/50138770/enzo-maresca-joined-man-city-even-knew-guilty-verdict
+- id: words
+  main: true
+  heading: 上訴に勝ったときに話す
+  tier: 報道
+  telop: 「レスターでチャンピオンシップを勝った。リーグ・ワンは、そのときに見てみよう」
+  narrator: キャスター
+  card: &answered
+    type: verdict
+    title: この会見で、どこまで答えたか
+    columns:
+    - 問われたこと
+    - 答えたか
+    - 中身
+    rows:
+    - - 判定の中身
+      - ×
+      - 一言も触れず
+    - - 上訴の見通し
+      - △
+      - 勝ったときに話す
+    - - タイトルは汚れたか
+      - ○
+      - まったく、そんなことはない
+    - - 3部に落ちたら
+      - ○
+      - そのときに見てみよう
+  say:
+  - text: 9月29日に財務の違反が認められ、シティは10月1日に控訴しました。
+    short_only: true
+    card: none
+  - text: その10日後、監督は会見に早く来て、席に着くとき笑っていました。
+    image: assets/images/20261010_city_maresca/04_w.jpg
+    card: none
+  - text: 判定の中身そのものには、この日も立ち入りませんでした。
+    card:
+      <<: *answered
+      highlight_row: 0
+  - voice: マレスカ
+    text: おそらく、そのことを話すのにふさわしいのは、
+    card:
+      <<: *answered
+      highlight_row: 1
+  - voice: マレスカ
+    text: この上訴に勝つときだ。
+    cont: true
+    emph: true
+    card:
+      <<: *answered
+      highlight_row: 1
+  - text: クラブとは話した、とも言っています。
+    card: none
+  - voice: マレスカ
+    text: 彼らは正直な形で考えている。
+  - voice: マレスカ
+    text: 最後には上訴に勝つと、彼らは確信していると思う。
+    cont: true
+  - text: 確信しているのはオーナー側だ、という本人の見立てです。
+    card: none
+  - text: クラブが勝つと発表したわけではありません。
+    card: none
+  - text: 成し遂げたものは汚れたのか。この問いへの答えは短いものでした。
+    card: none
+  - voice: マレスカ
+    text: まったく、そんなことはない。
+    card:
+      <<: *answered
+      highlight_row: 2
+  - text: 上訴が通らず3部まで落ちたらどうするのか、とも聞かれています。
+    image: assets/images/20261010_city_maresca/trophy/01.jpg
+    card: &leagues
+      type: table
+      title: この監督と、イングランドの3つの階層
+      columns:
+      - リーグ
+      - 階層
+      - この監督との関わり
+      rows:
+      - - プレミアリーグ
+        - 1部
+        - 2026年6月からシティで指揮
+      - - チャンピオンシップ
+        - 2部
+        - 2023-24にレスターで優勝
+      - - リーグ・ワン
+        - 3部
+        - 指揮した経験は無い
+  - voice: マレスカ
+    text: レスターでチャンピオンシップを勝った。
+    emph: true
+    card:
+      <<: *leagues
+      highlight_row: 1
+  - voice: マレスカ
+    text: リーグ・ワンは、そのときに見てみよう。
+    cont: true
+    card: none
+  - text: チャンピオンシップはイングランドの2部、リーグ・ワンは3部です。
+    card: none
+  quotes_from:
+  - Sky Sports https://www.skysports.com/football/news/13596454/man-city-charges-enzo-maresca-says-owners-convinced-club-will-win-appeal-against-guilty-verdict-as-he-trusts-hierarchy
+  - football365 https://www.football365.com/news/man-city-maresca-league-one-relegation-appeal
+  sources:
+  - https://www.skysports.com/football/news/13596454/man-city-charges-enzo-maresca-says-owners-convinced-club-will-win-appeal-against-guilty-verdict-as-he-trusts-hierarchy
+  - https://www.football365.com/news/man-city-maresca-league-one-relegation-appeal
+  - https://www.espn.com/soccer/story/_/id/50138770/enzo-maresca-joined-man-city-even-knew-guilty-verdict
+- id: control
+  heading: 扱えるのはサッカーの側だけ
+  tier: 報道
+  telop: 「扱えるのはサッカーの側だけ」。11日はアンフィールドでリヴァプール戦
+  narrator: キャスター
+  say:
+  - text: 中身を語らない代わりに、この監督が何度も使った言葉があります。
+    image: assets/images/20261010_city_maresca/04_w.jpg
+    card: none
+  - voice: マレスカ
+    text: 私たちはただ、雑音を扱おうとしている。
+  - voice: マレスカ
+    text: 状況の重さも、雑音も分かっている。それを扱うしかない。
+    cont: true
+  - voice: マレスカ
+    text: アンフィールドに行って、試合に勝たなければならない。
+    cont: true
+  - text: 扱えるのはサッカーの側だけ、という言い方を会見で繰り返しました。
+    card: none
+  - text: そのアンフィールドは、11日の日曜。リヴァプール戦です。
+    card: none
+  sources:
+  - https://www.skysports.com/football/news/13596454/man-city-charges-enzo-maresca-says-owners-convinced-club-will-win-appeal-against-guilty-verdict-as-he-trusts-hierarchy
+  - https://www.football365.com/news/andoni-iraola-michael-carrick-enzo-maresca-liverpool-manchester-united-manchester-city
+- id: view
+  viewpoint: true
+  heading: 102日の監督が9年分を聞かれるということ
+  tier: 背景
+  telop: 最後の対象の季の終わりから就任まで2,969日。チームは5試合5勝で首位
+  narrator: 解説
+  card: &gap
+    type: calc
+    title: 問われた季から、この監督が来るまで
+    terms:
+    - - 2018年5月
+      - 最後の対象の季の最終節
+    - - 2026年6月
+      - マレスカの就任
+    - - 2969日
+      - あいだの日数
+    ops:
+    - －
+    - ＝
+  say:
+  - text: 問われた最後の季が終わったのは2018年5月。
+    card: *gap
+  - text: そこから就任まで2,969日あります。
+    card: *gap
+  - text: 8年1か月。監督としてここにいる日数の、29倍ちかくあります。
+    card: *gap
+    emph: true
+  - text: 答えられるのは、自分がいなかった9年ではなく、来てからのぶんだけになります。
+    card: *gap
+  - text: この人がシティで触れたのは、育成リーグと三冠の2つだけ。
+    card: &outside
+      type: table
+      title: マレスカがシティで取ったもの
+      columns:
+      - 季
+      - 取ったもの
+      - 問われた9季
+      rows:
+      - - 2020-21
+        - 育成リーグの優勝
+        - 外
+      - - 2022-23
+        - 助監督として三冠
+        - 外
+  - text: どちらも問われた9季の外なので、答えようがない、が正直なところです。
+    card:
+      <<: *outside
+      highlight_row: 1
+  - text: 一方で、3部の話をしている監督のチームは、まだ勝ち点を1つも落としていません。
+    image: assets/images/20261010_city_maresca/04_w.jpg
+    card: none
+  - text: 5試合5勝、勝ち点15で首位。2位との差ではなく、満点という意味の15です。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Enzo_Maresca
+  - https://en.wikipedia.org/wiki/2026%E2%80%9327_Premier_League

@@ -32,7 +32,7 @@ ATTR_RE = re.compile(r"^(?P<key>[a-zA-Z_]+)[:：]\s*(?P<value>.*)$")
 DIRECTIVE_RE = re.compile(r"^@(?P<key>[a-zA-Z_]+)[:：]\s*(?P<value>.*)$")
 
 LINE_ATTRS = {"telop", "emotion", "pause", "image", "speed", "no_telop", "se", "source",
-              "card", "only", "short_voice"}
+              "card", "only", "short_voice", "cont", "emph", "mark"}
 
 # 情報の確度。ニュース系では、これを画面に出さないと視聴者が判断できない
 SOURCE_TIERS = {
@@ -49,7 +49,7 @@ SOURCE_TIERS = {
     "背景": "context",
     "解説": "context",
 }
-SCENE_DIRECTIVES = {"bg", "background", "main"}
+SCENE_DIRECTIVES = {"bg", "background", "main", "viewpoint"}
 
 # 読み上げ時間の概算（TTS を使わない --no-tts モード用）
 SECONDS_PER_CHAR = 0.16
@@ -61,7 +61,7 @@ class ScriptError(Exception):
     """台本の書式エラー。行番号つきで投げる。"""
 
 
-def _scene_lines(scene) -> list[dict]:
+def _scene_lines(scene, cards: dict | None = None) -> list[dict]:
     """script.json に残す行。**画面に出ているものを記録する。**
 
     見出しとカードは、指定した行で差し替わり、それ以外の行では出たままになる
@@ -69,11 +69,16 @@ def _scene_lines(scene) -> list[dict]:
     記録と画面が食い違い、「見た目が何秒変わっていないか」を測れなかった
     （2026-09-04 実測）。記録が画面と違うと、点検が効かない。
     """
+    from . import marks as marks_mod
+
     rows: list[dict] = []
     headline = ""
     source = None
     card = None
-    for line in scene.lines:
+    # **画面に出ている書き込み**（2026-10-07）。review の「見た目の変化」「カードの持ち」が、
+    # 書き込みを足した行を「画面が変わった」と数える
+    shown_marks = marks_mod.on_screen(scene, cards or {})
+    for number, line in enumerate(scene.lines):
         if line.no_telop:
             headline, source = "", None
         elif line.telop is not None:
@@ -89,6 +94,10 @@ def _scene_lines(scene) -> list[dict]:
             "no_telop": line.no_telop,
             "source": source,
             "card": card,
+            # **カードの型も残す**（2026-10-07）。左右の比べ（versus）は画面いっぱいの絵で見出しを
+            # 出さないので、review の「画面に出る字」がこれを見て、板の行と同じく画面に出たと数える
+            "card_type": str(((cards or {}).get(card) or {}).get("type", "")).lower() if card else "",
+            "marks": [marks_mod.describe(m) for m in shown_marks[number]],
             "emotion": line.emotion,
             "image": line.image,
             "start": round(line.start, 3),
@@ -120,6 +129,16 @@ class Line:
     # ショートの最後に足す。付いていなければ今までどおり上から順に取る。
     # `only: short` とは別物で、**本編にもそのまま残る**
     short_voice: bool = False
+    # **前の行の続き**（2026-09-26）。長い反応を行に分けたとき、2行目以降に付く。
+    # ショートは反応を丸ごと入れるか丸ごと落とす（途中で切らない決まり）
+    cont: bool = False
+    # **山を作る行**（2026-10-03「動画の質を上げる仕組み ④」。ユーザー「もう少し、盛り上げて説明する感じで」）。
+    # 抑揚を強め、少しだけゆっくり・高めに読む（`tts.voice_params`）。言葉の選び方だけでは山が作れなかった
+    emph: bool = False
+    # **書き込み（赤ペン）**（2026-10-07、src/marks.py）。`mark: {kind: strike, row: 0}` を1行に1つずつ。
+    # そのとき画面に出ているカードの項目か、写真の顔（on: photo）に足す。前の行の書き込みは
+    # カードが替わるまで残る。1画面2つまで
+    marks: list = field(default_factory=list)
     source_line: int = 0
 
     # ビルド中に埋まる
@@ -160,6 +179,7 @@ class Scene:
     # それまでは読み上げの1行目に「ここからが本題です。」と書いて印にしていたが、
     # **聞く人には要らない言葉**だった。読み上げから外し、指定だけを残す
     main: bool = False
+    viewpoint: bool = False      # こちらの見立ての節（2026-09-28）
 
     @property
     def duration(self) -> float:
@@ -207,7 +227,8 @@ class Script:
                     "title": scene.title,
                     "background": scene.background,
                     "main": scene.main,
-                    "lines": _scene_lines(scene),
+                    "viewpoint": scene.viewpoint,
+                    "lines": _scene_lines(scene, self.cards),
                 }
                 for scene in self.scenes
             ],
@@ -279,6 +300,9 @@ def parse_script(text: str) -> Script:
             if key == "main":
                 value = directive["value"].strip().lower()
                 current.main = value not in ("false", "no", "0", "いいえ")
+            elif key == "viewpoint":
+                value = directive["value"].strip().lower()
+                current.viewpoint = value not in ("false", "no", "0", "いいえ")
             else:
                 current.background = directive["value"].strip() or None
             continue
@@ -320,6 +344,13 @@ def parse_script(text: str) -> Script:
                 f"{line.source_line}行目: カード『{line.card}』は frontmatter の "
                 f"cards に定義されていません（定義済み: {known}）"
             )
+    # **書き込みの先と数を確かめる**（2026-10-07）。指した行がカードに無い・3つ目、は書き出す前に止める
+    if any(line.marks for line in script.lines):
+        from . import marks as marks_mod
+
+        problems = marks_mod.check_script(script)
+        if problems:
+            raise ScriptError("書き込み（mark）: " + problems[0])
     return script
 
 
@@ -339,11 +370,18 @@ def _apply_attr(line: Line, key: str, value: str, number: int) -> None:
             setattr(line, key, float(value))
         except ValueError as exc:
             raise ScriptError(f"{number}行目: {key} には数値を指定してください") from exc
-    elif key in ("no_telop", "short_voice"):
+    elif key in ("no_telop", "short_voice", "cont", "emph"):
         setattr(line, key, value.lower() not in ("false", "no", "0", ""))
+    elif key == "mark":
+        from . import marks as marks_mod
+
+        try:
+            line.marks.extend(marks_mod.parse(value, f"{number}行目: "))
+        except marks_mod.MarkError as exc:
+            raise ScriptError(str(exc)) from exc
     elif key == "only":
-        if value.strip() not in ("short",):
-            raise ScriptError(f"{number}行目: only に書けるのは short だけです")
+        if value.strip() not in ("short", "main"):
+            raise ScriptError(f"{number}行目: only に書けるのは short か main だけです")
         line.only = value.strip()
     else:
         setattr(line, key, value)

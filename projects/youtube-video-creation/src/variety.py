@@ -64,8 +64,14 @@ CROSS_REPEAT_MIN = 10
 NARRATORS = ("キャスター", "解説", "ナレーター")
 
 
-def _cross_repeats(scripts: list[Script]) -> list[str]:
-    """語りの行どうしで、10字以上続けて重なるところ。反応（他人の文）は見ない。"""
+def _cross_repeats(scripts: list[Script], least: int | None = None,
+                   focus: list[Script] | None = None) -> list[str]:
+    """語りの行どうしで、10字以上続けて重なるところ。反応（他人の文）は見ない。
+
+    `least` は重なりとみなす長さ（既定は本数で決まる）。`focus` を渡すと、そのどれかを含む
+    組だけを見る（`tools/precheck.py` が、その日と前日・前々日の台本を並べて、見せる台本の
+    重なりだけを出すため。3本以上に出る型の文は、並べた全部で数える）。
+    """
     import itertools
     import re
 
@@ -115,11 +121,15 @@ def _cross_repeats(scripts: list[Script]) -> list[str]:
         for n in ns:
             count_n[n] = count_n.get(n, 0) + 1
     # 10本を超える並び（シリーズ）は決まり文句が多いので、長い重なりだけ見る
-    least = CROSS_REPEAT_MIN if len(scripts) < 10 else CROSS_REPEAT_MIN + 6
+    if least is None:
+        least = CROSS_REPEAT_MIN if len(scripts) < 10 else CROSS_REPEAT_MIN + 6
+    focused = None if focus is None else {id(s) for s in focus}
 
     out: list[str] = []
     seen: set[str] = set()
     for (a, la, wa, na), (b, lb, wb, nb) in itertools.combinations(per_script, 2):
+        if focused is not None and id(a) not in focused and id(b) not in focused:
+            continue
         for tok in sorted(na & nb):
             if count_n.get(tok, 0) == 2 and tok not in seen:
                 seen.add(tok)
@@ -186,9 +196,13 @@ def _spoken_for(script: Script) -> tuple[int, int]:
     キャスターが「〇〇はこう話しました」と地の文で読むだけでは、
     せっかくの代弁が効かない。
     """
+    # **見立ての引用カード（label「この動画の見立て」）は数えない**（2026-10-01）。
+    # こちらの見立てを画面に出すカードで、誰かの発言ではない。数えると、
+    # 声の無い紹介ものが「本人の声で読ませていない」で止まっていた
     quotes = sum(
         1 for spec in (script.cards or {}).values()
-        if str((spec or {}).get("type", "")).lower() == "quote")
+        if str((spec or {}).get("type", "")).lower() == "quote"
+        and "見立て" not in str((spec or {}).get("label", "")))
     voiced = len({
         (getattr(line, "speaker", "") or "").strip()
         for scene in script.scenes for line in scene.lines
@@ -216,8 +230,24 @@ def inspect_day(scripts: list[Script]) -> list[Finding]:
     # 三つ組が丸ごと一致することは少ない。実際に問題として出たのは
     # 「9本が『何が起きたか』で始まり、7本が『これからどうなる』で終わる」
     # という**入口と出口の一致**だった（2026-09-06）
+    # **締め方は、反応の節の手前で見る**（2026-09-27）。この点検は 09-06 に入ったが、
+    # 09-08 に「news の型は反応の節で終わる」が決まりになった。決まりどおりに書くと
+    # 毎日「3本中3本が『ネットの反応』」で止まり、直す道が無かった。
+    # 見たいのは「何の話で締めているか」なので、反応の節は数えない
+    def _ending(s):
+        body = [t for t in _skeleton(s) if "反応" not in t]
+        return tuple(body[-1:])
+
+    # **紹介のシリーズは節の並びが型どおりでよい**（品質100回の85）。クラブ紹介・選手紹介は
+    # 「8節の型」を決めて量産する企画で、入り方・締め方・並びが同じなのは設計。
+    # 見るべきは読み上げの文が同じでないか（「本のあいだ」）で、そちらは今までどおり見る。
+    # プレミア20クラブ紹介のときも「結び方が20本とも同じなのは連番シリーズなので受け入れる」と書いた
+    if all(is_series_intro(s) for s in scripts):
+        findings.append(Finding(True, "話の型", "紹介のシリーズ。節の並びは型どおりでよい（本のあいだの重なりだけ見る）"))
+        return findings + _inspect_wording(scripts, total)
+
     for label, pick in (("入り方", lambda s: _skeleton(s)[:1]),
-                        ("締め方", lambda s: _skeleton(s)[-1:])):
+                        ("締め方", _ending)):
         counts = Counter(pick(s) for s in scripts if pick(s))
         top, share = _share(counts, total)
         if share > SAME_SHAPE:
@@ -238,7 +268,17 @@ def inspect_day(scripts: list[Script]) -> list[Finding]:
             f"{int(share * total)}本が同じ並びです（{' → '.join(top[:3])}）"))
     else:
         findings.append(Finding(True, "話の型", f"同じ並びは最大{int(share * total)}本"))
+    return findings + _inspect_wording(scripts, total)
 
+
+def is_series_intro(script: Script) -> bool:
+    """クラブ紹介・選手紹介のシリーズか（front matter の `series` に「紹介」）。"""
+    return "紹介" in str((getattr(script, "meta", None) or {}).get("series") or "")
+
+
+def _inspect_wording(scripts: list[Script], total: int) -> list[Finding]:
+    """並びではなく言葉の側の点検（出だし・結び方・本のあいだ・札・接頭辞・代弁）。"""
+    findings: list[Finding] = []
     starts = Counter(_opening(s) for s in scripts if _opening(s))
     top, share = _share(starts, total)
     if share > SAME_SHAPE:

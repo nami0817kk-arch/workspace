@@ -1,0 +1,24 @@
+{
+ "betis": {
+  "デニウソン": {
+   "role": "legend",
+   "file": "assets/photos/ll/betis/betis_legend_62f14409.jpg",
+   "page": "Denílson (footballer, born 1977)"
+  },
+  "ルベン・カストロ": {
+   "role": "legend",
+   "file": "assets/photos/ll/betis/betis_legend_db788c4e.jpg",
+   "page": "Rubén Castro"
+  },
+  "ボルハ・イグレシアス": {
+   "role": "legend",
+   "file": "assets/photos/ll/betis/betis_legend_d078226b.jpg",
+   "page": "Borja Iglesias"
+  },
+  "マヌエル・ペジェグリーニ": {
+   "role": "manager",
+   "file": "assets/photos/ll/betis/betis_manager_56bb9280.jpg",
+   "page": "Manuel Pellegrini"
+  }
+ }
+}

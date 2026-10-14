@@ -1,0 +1,279 @@
+# 取材メモ（10/10 題材 moyes_everton、型は news、その他枠）。材料の控えは research/raw/20261010_moyes_everton_material.md。
+# **ショートだけ作る**（台本は1本。`short` が山場の節を切り出す）。
+# **「今朝はじめて知った」が何についてなのかを、本文まで当てて特定した**（材料 0）。
+#   → **オーナーのザ・フリードキン・グループが、支配権の売却を含む投資の選択肢を探ると発表したこと**。
+#   監督の去就でも、補強でも、選手の件でもない。①でそこを先に置いてから②の言葉に入る。
+# **一次情報はエヴァートンの公式の声明**（クラブ名義）。公式サイトそのものは JavaScript で読めず（材料 7）、
+#   同じ文面を2つの媒体が同一に引用しているのを突き合わせて確認した。だから確度は**報道**に置いた。
+# モイーズの言葉は、**Sky Sports が引いた形**を採った（材料 6-2。同じ会見でも通信社と文言が違うので、
+#   より会見の生に近いほうに1つ決める）。**2つの形を混ぜていない。**
+# **言っていないことは言わない**（材料 5）：去就の話、買い手の名前、ローマの売却、モシリが受け取った額。
+#   8億〜10億ポンドは **アナリストの見立て**で、オーナーが出した数字ではない。④でそう言う。
+# 数字の食い違い（材料 6）：モイーズは「1年半」と言い、買収完了の2024年12月から数えると**約1年10か月**。
+#   **本人の言葉はそのまま引き、こちらで数えた月数は別の行に置いた**（③）。
+# **政治の話は使わない**（材料 3-4）。
+# 数字の重なり対策：『4億ポンド』『8億』『10億』『2.5倍』は③だけ。『22か月』『20年』も③だけ。
+#   『勝ち点9』『3失点』『1.8』は④だけ。
+# 写真は記事の横長を先に当たった。02＝Sky Sports の記事の og:image（1600x900、エヴァートンの監督としての横顔）。
+#   facecrop で 02_w（16:9）と 02_v（9:16、--center 0.53 で手で決めた）。
+#   01（Commons、CC BY-SA 4.0 / Egghead06、2021年のウェストハム時代）は**所属が違うので使わない**。入れ替えは無し。
+# サムネ：構図 face（顔が大きく写った横長）。
+# ネットの反応は集めていない（材料の方針）。
+date: 2026年10月10日
+slot: world_2
+format: news
+voice_min: 0
+people:
+- デビッド・モイーズ
+- エヴァートン
+theme:
+  id: moyes_everton
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: エヴァートン
+  title: エヴァートンが売りに出た。モイーズがそれを知ったのはいつだったか
+  question: モイーズが「今朝はじめて知った」と言ったのは、何についてだったのか
+  takeaway: 10月9日、エヴァートンのオーナーであるザ・フリードキン・グループが、新しい投資の選択肢を探ると発表し、その中に「支配権の売却」も含まれると明言した。クラブ名義の声明で、売却の助言役には投資銀行のモエリス・アンド・カンパニーが就いている。監督のデビッド・モイーズはその日の試合前会見で「私も今朝はじめて知った。ほかのみんなと一緒に」と話した。知らされなかったことに腹は立てておらず、気の毒に思うのはファンのほうだと言っている。この一族がクラブを買ったのは2024年12月で、額は4億ポンド超と伝えられた。いま言われている売却の規模は8億から10億ポンドだが、これはアナリストの見立てでオーナーが出した数字ではない。モイーズ自身は「彼らが来たのはたった1年半前」「20年から30年ここにいると思っていた」と言っており、買収完了から数えると約22か月。ピッチの上ではエヴァートンは5試合を終えて2勝3分の無敗で、失点3は上位8クラブでいちばん少ない
+  opening_image: assets/images/20261010_moyes_everton/03.jpg
+short_title: モイーズ「私も今朝はじめて知った」。エヴァートンが売りに出た日の会見
+thumbnail:
+  layout: face
+  photo: assets/images/20261010_moyes_everton/03.jpg
+  line1: モイーズ監督
+  line2: 知ったのは●●
+  tags:
+  - エヴァートン
+  - デビッド・モイーズ
+  - プレミアリーグ
+sections:
+- id: sale
+  heading: 売りに出たのはクラブそのもの
+  tier: 報道
+  telop: オーナーが「支配権の売却」を含む投資の選択肢を探ると発表。助言役は投資銀行
+  narrator: キャスター
+  card: &what
+    type: points
+    title: 10月9日に出たクラブ名義の声明
+    items:
+    - 新しい投資の選択肢を探る
+    - 支配権の売却も含むと明言
+    - 助言役にモエリス・アンド・カンパニー
+    - 買い手の名前は出ていない
+  say:
+  - text: エヴァートンのオーナーが、クラブを手放す道を探ると発表しました。
+    card: *what
+  - text: 声明にあるのは「新しい投資の選択肢」。そこに支配権の売却も含まれると書いています。
+    card: *what
+  - text: 売り先を探す助言役として、アメリカの投資銀行が入りました。
+    card: *what
+  - voice: エヴァートンの声明
+    text: その土台が今、安全に整った。
+    card: none
+  - voice: エヴァートンの声明
+    text: エヴァートンの次の章を考えるのにふさわしい時期である。
+    cont: true
+    card: none
+  - voice: エヴァートンの声明
+    text: 正しい管理者になると強く信じられる、
+    cont: true
+    card: none
+  - voice: エヴァートンの声明
+    text: その相手からの関心だけを受け入れる。
+    cont: true
+    card: none
+  - text: 誰が関心を持っているかは、まだ出ていません。モイーズも知らされていませんでした。
+    card: none
+  sources:
+  - https://www.sportsmole.co.uk/football/everton/news/everton-owners-open-to-full-sale-of-club-why-what-next-for-the-toffees_606546.html
+  - https://www.ksat.com/sports/2026/10/09/everton-up-for-sale-after-us-owner-says-it-is-exploring-investment-options/
+  - https://www.vavel.com/en/football/2026/10/09/everton/1274536-moyes-express-disappointment-for-evertonians-about-possible-club-sale.html
+- id: moyes
+  main: true
+  heading: 監督が知ったのは、その日の朝
+  tier: 報道
+  telop: 「私も今朝はじめて知った。ほかのみんなと一緒に」
+  narrator: キャスター
+  card: &said
+    type: table
+    title: 10月9日の会見で、モイーズが答えたこと
+    columns:
+    - 問われたこと
+    - 答え
+    rows:
+    - - いつ知ったのか
+      - 今朝、みんなと一緒に
+    - - オーナーをどう見ていたか
+      - 20年から30年いると思っていた
+    - - 知らされず腹は立つか
+      - いや、このクラブを愛している
+    - - 気の毒なのは誰か
+      - エヴァートニアンズ
+  say:
+  - text: クラブが売りに出た日、監督のモイーズは試合前の会見でこう話しました。
+    short_only: true
+    card: none
+  - voice: モイーズ
+    text: 私も今朝はじめて知った。ほかのみんなと一緒に。
+    emph: true
+    card: none
+  - text: 売却の話を、監督は一般の人と同じ時間に知ったことになります。
+    card:
+      <<: *said
+      highlight_row: 0
+  - voice: モイーズ
+    text: ああ、驚いた。彼らが来たのはたった1年半前だ。
+    card:
+      <<: *said
+      highlight_row: 1
+  - voice: モイーズ
+    text: ほとんどのオーナーは、それよりずっと長く入ってくる。
+    cont: true
+    card:
+      <<: *said
+      highlight_row: 1
+  - voice: モイーズ
+    text: 我々はみんな、彼らが20年から30年ここにいると思っていた。
+    cont: true
+    card: none
+  - text: 知らされなかったことに、腹は立てていないとも言っています。
+    card:
+      <<: *said
+      highlight_row: 2
+  - voice: モイーズ
+    text: いや。私はこのクラブをあまりにも愛しているから、
+    card:
+      <<: *said
+      highlight_row: 2
+  - voice: モイーズ
+    text: 彼らが何を売り込んできても受け入れていただろう。
+    cont: true
+    card: none
+  - text: 気の毒に思う相手として挙げたのは、自分ではなくファンでした。
+    card:
+      <<: *said
+      highlight_row: 3
+  - voice: モイーズ
+    text: いちばん気の毒に思うのはエヴァートニアンズだ。
+    card:
+      <<: *said
+      highlight_row: 3
+  - voice: モイーズ
+    text: 彼らはあまりに多くの困難な時期をくぐってきた。
+    cont: true
+    card: none
+  quotes_from:
+  - Sky Sports（2026-10-09 の試合前会見） https://www.skysports.com/football/news/13596920/david-moyes-everton-manager-admits-surprise-at-seeing-the-club-being-put-up-for-sale-by-the-friedkin-group
+  sources:
+  - https://www.skysports.com/football/news/13596920/david-moyes-everton-manager-admits-surprise-at-seeing-the-club-being-put-up-for-sale-by-the-friedkin-group
+- id: money
+  heading: 1年10か月で、2倍の値札
+  tier: 報道
+  telop: 買ったのは2024年12月、4億ポンド超。いま言われている額は8億から10億ポンド
+  narrator: キャスター
+  card: &price
+    type: calc
+    title: 買った額と、言われている額
+    terms:
+    - - 4億
+      - 2024年12月に買った額
+    - - 10億
+      - いま言われている上限
+    - - 2.5倍
+      - その比
+    ops:
+    - →
+    - ＝
+  say:
+  - text: この一族がクラブを買ったのは2024年12月です。
+  - text: 額は4億ポンドを超えた、と伝えられました。
+    card: *price
+  - text: いま言われている売却の規模は8億から10億ポンド。2倍から2.5倍です。
+    card: *price
+    emph: true
+  - text: ただしこれはアナリストの見立てで、オーナーが出した数字ではありません。
+    card: *price
+  - text: モイーズが言った「1年半」を、買収が終わった月から数え直すと約22か月。
+    card: &span
+      type: calc
+      title: 20年と、実際の長さ
+      terms:
+      - - 240
+        - 20年を月に直すと
+      - - '22'
+        - 実際にいた月数
+      - - 11分の1
+        - その割合
+      ops:
+      - ÷
+      - ＝
+  - text: 20年を月に直せば240か月。思っていた長さの11分の1で、出口を探し始めました。
+    card: *span
+  sources:
+  - https://www.skysports.com/football/news/13596920/david-moyes-everton-manager-admits-surprise-at-seeing-the-club-being-put-up-for-sale-by-the-friedkin-group
+  - https://www.bloomberg.com/news/articles/2026-10-09/everton-considers-sale-in-test-of-football-s-inflated-valuations
+- id: view
+  viewpoint: true
+  heading: ピッチの上では、まだ一度も負けていない
+  tier: 背景
+  telop: 5試合で2勝3分の無敗。失点3は上位8クラブでいちばん少ない
+  narrator: 解説
+  card: &table
+    type: table
+    title: プレミアリーグの上位（10月10日の時点）
+    columns:
+    - 順位
+    - クラブ
+    - 得点
+    - 失点
+    rows:
+    - - '1'
+      - マンチェスター・シティ
+      - '13'
+      - '5'
+    - - '2'
+      - アーセナル
+      - '8'
+      - '4'
+    - - '3'
+      - ブライトン
+      - '16'
+      - '5'
+    - - '7'
+      - エヴァートン
+      - '6'
+      - '3'
+    highlight_row: 3
+  say:
+  - text: モイーズが率いるチームが、いまどこにいるかを見ておきます。
+    card: *table
+  - text: 5試合で2勝3分け。負けはまだありません。
+    card: *table
+  - text: 失点は3。上位8クラブを見渡しても、これより少ないクラブはありません。
+    card: *table
+    emph: true
+  - text: 勝ち点は9で、1試合あたり1.8。首位との差は6です。
+    card: &pace
+      type: calc
+      title: 1試合あたりの勝ち点
+      terms:
+      - - '9'
+        - 勝ち点
+      - - '5'
+        - 試合
+      - - '1.8'
+        - 1試合あたり
+      ops:
+      - ÷
+      - ＝
+  - text: 新しいスタジアムは完成し、夏の最終日には3人を売ってトップチームは18人。
+    card: none
+    image: assets/images/20261010_moyes_everton/03.jpg
+  - text: 建物も順位も整ったところで、持ち主だけが入れ替わろうとしています。
+    card: none
+    emph: true
+  - text: 次の試合は11日、アウェイでハル・シティと戦います。
+    card: none
+  sources:
+  - https://www.fotmob.com/leagues/47/overview/premier-league
+  - https://www.ksat.com/sports/2026/10/09/everton-up-for-sale-after-us-owner-says-it-is-exploring-investment-options/

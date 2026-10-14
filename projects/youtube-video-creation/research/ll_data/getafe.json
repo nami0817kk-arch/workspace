@@ -1,0 +1,84 @@
+{
+ "title": "ヘタフェ 基礎DATA",
+ "colors": [
+  "#0B3D91",
+  "#E8392E"
+ ],
+ "crest": "assets/crests/ヘタフェ.png",
+ "tiles": [
+  [
+   "クラブ創立",
+   "1983年",
+   "前身の解散から1週間後に誕生"
+  ],
+  [
+   "愛称",
+   "アスロネス",
+   "「濃い青」。作業着の色とも"
+  ],
+  [
+   "ホームタウン",
+   "ヘタフェ",
+   "マドリードの南13キロ"
+  ],
+  [
+   "本拠地",
+   "コリセウム",
+   "改修中。完成後は約18,500人"
+  ],
+  [
+   "オーナー",
+   "アンヘル・トーレス",
+   "2002年〜。会長も務める"
+  ],
+  [
+   "タイトル歴",
+   "1部優勝 0回",
+   "国王杯0・スーペルコパ0"
+  ],
+  [
+   "最多出場",
+   "335試合",
+   "GKペドロ・カバジェロ"
+  ],
+  [
+   "直近のタイトル",
+   "2部B 優勝",
+   "1998-99シーズン（当時の3部）"
+  ],
+  [
+   "昨季の順位",
+   "7位",
+   "勝ち点51。カンファレンスリーグへ"
+  ]
+ ],
+ "trophies": [
+  [
+   "ラ・リーガ",
+   0
+  ],
+  [
+   "国王杯",
+   0
+  ],
+  [
+   "スーペルコパ",
+   0
+  ],
+  [
+   "ヨーロッパ",
+   0
+  ]
+ ],
+ "sources": [
+  "https://en.wikipedia.org/wiki/Getafe_CF",
+  "https://es.wikipedia.org/wiki/Getafe_Club_de_F%C3%BAtbol",
+  "https://en.wikipedia.org/wiki/Getafe",
+  "https://en.wikipedia.org/wiki/%C3%81ngel_Torres_(businessman)",
+  "https://www.marca.com/futbol/getafe/2025/08/14/descubriendo-nuevo-coliseum-10-500-18-500-69-palcos-vip-coste-estadio-cvc.html",
+  "https://www.laliga.com/noticias/por-que-a-los-jugadores-del-getafe-se-les-llama-azulones",
+  "https://www.getafecf.com/en/news/djene-se-convierte-en-el-segundo-jugador-con-mas-partidos",
+  "https://en.wikipedia.org/wiki/Template:2025%E2%80%9326_La_Liga_table"
+ ],
+ "notes": "取材の控えは research/ll_data/getafe_research.md。収容人数は 16,500（英語版・LaLiga の表）／17,393（英語版スタジアム記事）／約10,500（西語版、改修中）と割れ、2025年6月から改修中で今の数は確かめられないため、完成後の約18,500（Marca 2025-08-14）を採った。最多出場はペドロ・カバジェロ 335（AS 2026-04）／336（西語版の表）で、数字を明示した記事の335を採った。2位は今の主将ジェネ（西語版の表 2026-09-20 で335。並んだかは未確認）。直近のタイトルは英語版 Honours の範囲の2部B（当時の3部）優勝。創立は公式の1983年7月8日（西語版は1923・1946・1976年の説も併記）。"
+}

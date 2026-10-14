@@ -1,0 +1,4 @@
+title: アーリング・ハーランドの今季のヒートマップ
+unit: touches
+points=164
+source: FotMob

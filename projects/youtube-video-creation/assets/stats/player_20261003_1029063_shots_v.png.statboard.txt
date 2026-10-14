@@ -1,0 +1,6 @@
+title: ミカエル・オリーズの今季のシュート
+unit: xG
+shots=17
+goals=4
+xg=2.65
+source: FotMob

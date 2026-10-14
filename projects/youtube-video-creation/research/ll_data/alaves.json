@@ -1,0 +1,83 @@
+{
+ "title": "アラベス 基礎DATA",
+ "colors": [
+  "#0A4FA8",
+  "#FFFFFF"
+ ],
+ "crest": "assets/crests/アラベス.png",
+ "tiles": [
+  [
+   "クラブ創立",
+   "1921年",
+   "大学生のクラブが改名して誕生"
+  ],
+  [
+   "愛称",
+   "ババソロス",
+   "バスク語で「豆の袋」"
+  ],
+  [
+   "ホームタウン",
+   "ビトリア＝ガステイス",
+   "バスク自治州の州都。人口26万"
+  ],
+  [
+   "本拠地",
+   "メンディソローサ",
+   "収容 19,840人。1924年開場"
+  ],
+  [
+   "オーナー",
+   "ホセアン・ケレヘタ",
+   "2011年〜。バスケのバスコニア会長"
+  ],
+  [
+   "タイトル歴",
+   "1部優勝 0回",
+   "国王杯0・スーペルコパ0"
+  ],
+  [
+   "最多出場",
+   "346試合",
+   "アストゥディージョ、1999〜2009年"
+  ],
+  [
+   "直近のタイトル",
+   "2部優勝",
+   "2015-16シーズン"
+  ],
+  [
+   "昨季の順位",
+   "14位",
+   "勝ち点43。国王杯はベスト8"
+  ]
+ ],
+ "trophies": [
+  [
+   "ラ・リーガ",
+   0
+  ],
+  [
+   "国王杯",
+   0
+  ],
+  [
+   "スーペルコパ",
+   0
+  ],
+  [
+   "ヨーロッパ",
+   0
+  ]
+ ],
+ "sources": [
+  "https://en.wikipedia.org/wiki/Deportivo_Alav%C3%A9s",
+  "https://es.wikipedia.org/wiki/Deportivo_Alav%C3%A9s",
+  "https://en.wikipedia.org/wiki/Mendizorrotza_Stadium",
+  "https://en.wikipedia.org/wiki/Vitoria-Gasteiz",
+  "https://en.wikipedia.org/wiki/Mart%C3%ADn_Astudillo",
+  "https://en.wikipedia.org/wiki/2025%E2%80%9326_Deportivo_Alav%C3%A9s_season",
+  "https://en.wikipedia.org/wiki/Template:2025%E2%80%9326_La_Liga_table"
+ ],
+ "notes": "取材の控えは research/ll_data/alaves_research.md。1部・国王杯・スーペルコパ・欧州の優勝は無い（英語版 Honours。欧州は2001年UEFAカップ準優勝、国王杯は2017年準優勝）。直近のタイトルは2015-16の2部優勝を採った（英語版 Honours には2023年の2部プレーオフ勝ち抜けも Winners として載るが、昇格の決定戦で優勝ではないため）。最多出場346試合は西語版の表（2023-06-19更新、2部より下の試合を除く）。英語版 infobox のリーグ戦のみは311試合。創立は英語版冒頭・西語版とも1921年1月23日（前身 Sport Friend's Club は1920年結成、英語版 History は Founded in 1920 とも書く）。収容は 19,840（英語版・西語版 infobox）／19.940（西語版本文）で割れるので infobox の数を採った。オーナーは英語版 infobox では Baskonia-Alavés Group、西語版は筆頭株主をバスケットボールのバスコニア（その筆頭株主ホセアン・ケレヘタ）とする。会長（president）はアルフォンソ・フェルナンデス・デ・トロコニス（2013年〜）。"
+}

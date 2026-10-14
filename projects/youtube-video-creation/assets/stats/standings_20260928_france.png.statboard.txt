@@ -1,0 +1,9 @@
+title: リーグ・アン 第5節
+unit: 勝点
+Monaco=13.0
+Lyon=11.0
+Paris FC=11.0
+Lille=10.0
+Rennes=10.0
+Paris Saint-Germain=8.0
+source: FotMob

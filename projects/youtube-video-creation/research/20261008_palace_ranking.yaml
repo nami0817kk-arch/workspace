@@ -1,0 +1,420 @@
+# 取材メモ（10/8 題材 palace_ranking、型は news）。材料の控えは research/raw/20261008_palace_ranking.md。
+# The Athletic の原文は 403 で本文が開けなかった。見出し（1位は Timber）と要約まで。順位づけの中身は東スポWEBの訳を引く。
+# 10/6 に「鎌田大地、ボランチからシャドーへ」（今季の軌跡）を出している。この回は序列の順位と、5人の出場時間・冨安の2か月に絞る。
+#   10/6 で読んだ数字（9月の3試合で1得点3アシスト／5試合で3アシスト・昨季28試合で0／475分→548分／90分あたり／位置で分けた2試合と3試合）は使わない。
+# 写真: 記事は Getty とロイターなので使わない。Commons 2枚（冨安=Hans Reefman 2026-04、鎌田=Chensiyuan 2026-05）。
+#   鎌田の元ファイルは 10/6 と同じ（Commons でパレスの服の鎌田は1枚しかない）。切り出す場所を変えてある。
+# 為替・換算は使っていない。
+date: 2026年10月8日
+slot: japan_1
+format: news
+people:
+- 鎌田大地
+- 冨安健洋
+theme:
+  id: palace_ranking
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: クリスタル・パレス
+  title: 鎌田大地と冨安健洋、パレスの序列で3位と4位。順番は何で決まったのか
+  question: 鎌田大地と冨安健洋は、いまクリスタル・パレスでどこに立っているのか
+  takeaway: パレスの選手を並べた序列で鎌田大地が3位、冨安健洋が4位。ただ、リーグ5試合の出場時間を自分で数えると、3位の鎌田が443分でいちばん長く、4位の冨安は190分でいちばん短い。450分すべてに立ったリチャーズは上の4人に入っていない。鎌田はパレス3季目で、最初の2季は89試合で得点とアシストが10、今季は7試合で4とおよそ5倍の密度。冨安は2024年からの2季で公式戦10試合だったのが、加入から2か月で5試合。序列は出た時間の順ではなく、いまの中身で付いていると読める。次は10月11日のフォレスト戦
+  opening_image: assets/images/20261008_palace_ranking/02_w.jpg
+short_title: 鎌田大地が3位、冨安健洋が4位。パレスの序列
+thumbnail:
+  layout: versus
+  photos:
+  - assets/images/20261008_palace_ranking/02_w.jpg
+  - assets/images/20261008_palace_ranking/01_w.jpg
+  names:
+  - 鎌田大地
+  - 冨安健洋
+  numbers:
+  - 3位
+  - 4位
+  line1: 鎌田大地と冨安健洋
+  line2: 1位に置かれたのは●●●●
+  cutout: false
+  tint: none
+  short_photo: assets/images/20261008_palace_ranking/02_v.jpg
+  reaction: ティンバー一位なのか相当評価されてるな
+  tags:
+  - クリスタル・パレス
+  - 鎌田大地
+  - 冨安健洋
+  - プレミアリーグ
+sections:
+- id: ladder
+  main: true
+  heading: 序列の3位と4位
+  tier: 報道
+  telop: パレスの序列で鎌田大地が3位、冨安健洋が4位
+  narrator: 解説
+  card:
+    type: verdict
+    title: パレスの序列 上から4人
+    columns: [選手, 出場, 中身]
+    rows:
+    - ['1位　クインテン・ティンバー', '△', 'リーグ3試合']
+    - ['2位　ティリック・ミッチェル', '◎', '5試合で2得点']
+    - ['3位　鎌田大地', '◎', '5試合すべて先発']
+    - ['4位　冨安健洋', '○', '4試合で190分']
+    highlight_row: 2
+  say:
+  - text: パレスの序列で、日本人の2人が上位に入りました。
+    short_only: true
+    card: none
+    image: assets/images/20261008_palace_ranking/02_w.jpg
+  - text: 3位が鎌田大地、4位が冨安健洋。まず鎌田への評から。
+    card: none
+    image: assets/images/20261008_palace_ranking/02_w.jpg
+  - voice: ジ・アスレティック
+    text: サージュ監督は必要に迫られて10番として起用したものの、
+    card: none
+  - voice: ジ・アスレティック
+    text: 鎌田は概ね成功を収めている。
+    cont: true
+    card: none
+  - voice: ジ・アスレティック
+    text: 彼の技術力は優れており、
+    cont: true
+    card: none
+  - voice: ジ・アスレティック
+    text: ミドルスブラ戦ですばらしいゴールを決めて
+    cont: true
+    card: none
+  - voice: ジ・アスレティック
+    text: イプスウィッチ戦では2アシストを記録した
+    cont: true
+    card: none
+  quotes_from:
+  - 東スポWEB https://www.tokyo-sports.co.jp/articles/-/405788
+  sources:
+  - https://www.tokyo-sports.co.jp/articles/-/405788
+  - https://qoly.jp/q1/17868669
+  - https://www.nytimes.com/athletic/7662948/2026/10/06/crystal-palace-squad-ladder-timber-richards/
+- id: four
+  heading: 上から4人と、並べた理由
+  tier: 報道
+  telop: 1位ティンバー、2位ミッチェル、3位鎌田、4位冨安
+  narrator: キャスター
+  card:
+    type: verdict
+    title: パレスの序列 上から4人
+    columns: [選手, 出場, 中身]
+    rows: &four
+    - ['1位　クインテン・ティンバー', '△', 'リーグ3試合']
+    - ['2位　ティリック・ミッチェル', '◎', '5試合で2得点']
+    - ['3位　鎌田大地', '◎', '5試合すべて先発']
+    - ['4位　冨安健洋', '○', '4試合で190分']
+  say:
+  - text: サージュは、今季からパレスを率いる監督です。
+    card: none
+    image: assets/images/20261008_palace_ranking/02_r.jpg
+  - text: 10番は、前線のすぐ後ろで攻めを作る役です。
+    card: none
+  - text: 何を見て並べたのかは、こう書かれています。
+    card: none
+  - voice: ジ・アスレティック
+    text: 彼らの統計的貢献度や試合への全体的な影響を考慮して決定された
+    card: none
+  - text: 上から4人を並べます。リーグ5試合で何試合に出たかも見ます。
+    card:
+      type: verdict
+      title: パレスの序列 上から4人
+      columns: [選手, 出場, 中身]
+      rows: *four
+  - text: 1位はオランダ代表の中盤、クインテン・ティンバー。
+    card:
+      type: verdict
+      title: パレスの序列 上から4人
+      columns: [選手, 出場, 中身]
+      rows: *four
+      highlight_row: 0
+  - text: リーグ戦に出たのは3試合で、開幕の2試合には出ていません。
+    mark: {kind: circle, row: 0, col: 1}
+    card:
+      type: verdict
+      title: パレスの序列 上から4人
+      columns: [選手, 出場, 中身]
+      rows: *four
+      highlight_row: 0
+  - text: 2位は左サイドのティリック・ミッチェル。5試合で2得点です。
+    card:
+      type: verdict
+      title: パレスの序列 上から4人
+      columns: [選手, 出場, 中身]
+      rows: *four
+      highlight_row: 1
+  - text: 2点はどちらも9月5日のフラム戦。今季唯一の勝ち試合でした。
+    card:
+      type: verdict
+      title: パレスの序列 上から4人
+      columns: [選手, 出場, 中身]
+      rows: *four
+      highlight_row: 1
+  - text: 3位の鎌田大地は、リーグ5試合すべてに先発しています。
+    card:
+      type: verdict
+      title: パレスの序列 上から4人
+      columns: [選手, 出場, 中身]
+      rows: *four
+      highlight_row: 2
+  - text: 4位の冨安健洋は、4試合に出て190分でした。
+    mark: {kind: note, row: 3, col: 2, text: 代表戦の前に負傷}
+    card:
+      type: verdict
+      title: パレスの序列 上から4人
+      columns: [選手, 出場, 中身]
+      rows: *four
+      highlight_row: 3
+  quotes_from:
+  - 東スポWEB https://www.tokyo-sports.co.jp/articles/-/405788
+  sources:
+  - https://www.tokyo-sports.co.jp/articles/-/405788
+  - https://www.fotmob.com/teams/9826/overview/crystal-palace
+- id: tomiyasu
+  heading: 冨安健洋、2季で10試合から2か月で5試合へ
+  tier: 報道
+  telop: 冨安健洋への評「センターバックの中でも最も安定した存在」
+  narrator: 解説
+  card:
+    type: table
+    title: 冨安健洋 季ごとの公式戦
+    columns: [季, 所属, 公式戦]
+    rows:
+    - ['2023/24', 'アーセナル', '30試合']
+    - ['2024/25', 'アーセナル', '1試合']
+    - ['2025/26', 'アヤックス', '9試合']
+    - ['2026/27', 'パレス', '5試合']
+  say:
+  - text: 鎌田の1つ下、4位に置かれた冨安健洋への評は、こう続きます。
+    card: none
+    image: assets/images/20261008_palace_ranking/01_w.jpg
+  - voice: ジ・アスレティック
+    text: 冨安の能力に疑いの余地はなく、
+    card: none
+  - voice: ジ・アスレティック
+    text: ケガの経歴だけが問題だった。
+    cont: true
+    card: none
+  - voice: ジ・アスレティック
+    text: リーグ戦4試合で安定したプレーを見せ、
+    cont: true
+    card: none
+  - voice: ジ・アスレティック
+    text: センターバックの中でも最も安定した存在。
+    cont: true
+    card: none
+  - voice: ジ・アスレティック
+    text: アーセナル時代の経験と親しみが
+    cont: true
+    card: none
+  - voice: ジ・アスレティック
+    text: すぐに試合に出る助けになったかもしれないが、
+    cont: true
+    card: none
+  - voice: ジ・アスレティック
+    text: 小さなケガは続いている
+    cont: true
+    card: none
+  - text: 代表の試合の前にふくらはぎを痛め、戻りは10月の半ばと見られています。
+    card: none
+  - text: ここまでの4シーズンを並べます。
+    card:
+      type: table
+      title: 冨安健洋 季ごとの公式戦
+      columns: [季, 所属, 公式戦]
+      rows: &seasons
+      - ['2023/24', 'アーセナル', '30試合']
+      - ['2024/25', 'アーセナル', '1試合']
+      - ['2025/26', 'アヤックス', '9試合']
+      - ['2026/27', 'パレス', '5試合']
+  - text: 2023年から24年は、アーセナルで30試合に出ていました。
+    card:
+      type: table
+      title: 冨安健洋 季ごとの公式戦
+      columns: [季, 所属, 公式戦]
+      rows: *seasons
+      highlight_row: 0
+  - text: 翌シーズンは長い離脱があり、出たのは1試合です。
+    mark: {kind: circle, row: 1, col: 2}
+    card:
+      type: table
+      title: 冨安健洋 季ごとの公式戦
+      columns: [季, 所属, 公式戦]
+      rows: *seasons
+      highlight_row: 1
+  - text: 昨季の冬にアヤックスへ移り、ここでは9試合でした。
+    card:
+      type: table
+      title: 冨安健洋 季ごとの公式戦
+      columns: [季, 所属, 公式戦]
+      rows: *seasons
+      highlight_row: 2
+  - text: そして8月にパレスへ。2か月で、もう5試合に立っています。
+    emph: true
+    mark: {kind: note, row: 3, col: 2, text: 2季の半分を2か月で}
+    card:
+      type: table
+      title: 冨安健洋 季ごとの公式戦
+      columns: [季, 所属, 公式戦]
+      rows: *seasons
+      highlight_row: 3
+  quotes_from:
+  - 東スポWEB https://www.tokyo-sports.co.jp/articles/-/405788
+  sources:
+  - https://www.tokyo-sports.co.jp/articles/-/405788
+  - https://qoly.jp/q1/17868669
+  - https://www.fotmob.com/players/664444/takehiro-tomiyasu
+- id: view
+  viewpoint: true
+  heading: 序列の順と、出た時間の順はそろっていない
+  tier: 背景
+  telop: 3位の鎌田が443分、4位の冨安が190分。450分のリチャーズは4人に入っていない
+  narrator: 解説
+  card:
+    type: scatter
+    title: パレスの5人 リーグ5試合の出場時間と得点関与
+    x: {label: 出場時間, unit: 分}
+    y: {label: 得点とアシスト, unit: 回}
+    points: &pts
+    - [鎌田大地, 443, 3]
+    - [ミッチェル, 421, 2]
+    - [ティンバー, 254, 0]
+    - [冨安健洋, 190, 0]
+    - [リチャーズ, 450, 0]
+    focus: 冨安健洋
+    source: FotMob
+  say:
+  - text: 序列の4人にリチャーズを足して、出場時間を数えました。
+    card:
+      type: scatter
+      title: パレスの5人 リーグ5試合の出場時間と得点関与
+      x: {label: 出場時間, unit: 分}
+      y: {label: 得点とアシスト, unit: 回}
+      points: *pts
+      focus: 冨安健洋
+      source: FotMob
+  - text: 横は出場時間。5試合ぜんぶに出れば450分で、それより短いほど左です。
+    card:
+      type: scatter
+      title: パレスの5人 リーグ5試合の出場時間と得点関与
+      x: {label: 出場時間, unit: 分}
+      y: {label: 得点とアシスト, unit: 回}
+      points: *pts
+      focus: 冨安健洋
+      source: FotMob
+  - text: いちばん長いのは3位の鎌田で443分。450分の98パーセントです。
+    card:
+      type: scatter
+      title: パレスの5人 リーグ5試合の出場時間と得点関与
+      x: {label: 出場時間, unit: 分}
+      y: {label: 得点とアシスト, unit: 回}
+      points: *pts
+      focus: 冨安健洋
+      highlight: 鎌田大地
+      source: FotMob
+  - text: 2位のミッチェルは421分、1位のティンバーは254分。
+    card:
+      type: scatter
+      title: パレスの5人 リーグ5試合の出場時間と得点関与
+      x: {label: 出場時間, unit: 分}
+      y: {label: 得点とアシスト, unit: 回}
+      points: *pts
+      focus: 冨安健洋
+      highlight: ティンバー
+      source: FotMob
+  - text: 4位の冨安は、450分のうち42パーセント。5人でいちばん短い時間です。
+    card:
+      type: scatter
+      title: パレスの5人 リーグ5試合の出場時間と得点関与
+      x: {label: 出場時間, unit: 分}
+      y: {label: 得点とアシスト, unit: 回}
+      points: *pts
+      focus: 冨安健洋
+      highlight: 冨安健洋
+      source: FotMob
+  - text: 450分すべてに立ったリチャーズは、上の4人に入っていません。
+    card:
+      type: scatter
+      title: パレスの5人 リーグ5試合の出場時間と得点関与
+      x: {label: 出場時間, unit: 分}
+      y: {label: 得点とアシスト, unit: 回}
+      points: *pts
+      focus: 冨安健洋
+      highlight: リチャーズ
+      source: FotMob
+  - text: 序列の順と、出た時間の順はそろっていません。
+    card: none
+    image: assets/images/20261008_palace_ranking/01_w.jpg
+  - text: 鎌田はパレス3季目。最初の2季は89試合で得点とアシストが10でした。
+    card: none
+  - text: 今季は7試合で4つ。1試合あたりでは、およそ5倍の密度です。
+    emph: true
+    card: none
+  - text: 2人は、数を積み上げた結果ではなく、いまの中身で置かれています。
+    card: none
+  - text: 次は11日、本拠にフォレストを迎え、15日は敵地でリヨンと戦います。
+    card: none
+  sources:
+  - https://www.fotmob.com/players/621515/daichi-kamada
+  - https://www.fotmob.com/players/664444/takehiro-tomiyasu
+  - https://www.fotmob.com/teams/9826/overview/crystal-palace
+- id: voices
+  heading: ネットの反応
+  tier: 未確認
+  telop: 「小さいケガがあっても4位にランクインか」
+  narrator: キャスター
+  say:
+  # Yahoo!ニュース（東スポWEBの記事）のコメント欄 穴熊。全文
+  - voice: ネット民
+    text: 小さいケガがあっても4位にランクインか
+    card: none
+    image: assets/images/20261008_palace_ranking/01_w.jpg
+  - voice: ネット民
+    text: それはそうですよね
+    cont: true
+    card: none
+  - voice: ネット民
+    text: ケガがなければ、アーセナルで主力だったのは間違いないし、
+    cont: true
+    card: none
+  - voice: ネット民
+    text: 能力は疑いの余地がない
+    cont: true
+    card: none
+  - voice: ネット民
+    text: とにかく大怪我せずにシーズンを完走してほしい
+    cont: true
+    card: none
+  - voice: ネット民
+    text: 無理に代表活動参加する必要はない
+    cont: true
+    card: none
+  # Holmesdale Online（パレスのサポーターの掲示板）Canterbury Palace。全文を訳した
+  - voice: ネット民
+    text: サールがまた先発に戻ったら、
+    card: none
+  - voice: ネット民
+    text: 鎌田がどうやって11人に入るのか、正直わからない。
+    cont: true
+    card: none
+  - voice: ネット民
+    text: ピノは大きく伸びたし、ティンバーは一級品だ。
+    cont: true
+    card: none
+  # 同じコメント欄 uip********。全文
+  - voice: ネット民
+    text: ティンバー一位なのか相当評価されてるな。
+    short_voice: true
+    card: none
+  - voice: ネット民
+    text: 当分鎌田のボランチ起用はなさそう
+    cont: true
+    short_voice: true
+    card: none
+  sources:
+  - https://news.yahoo.co.jp/articles/c074cf0e32db4a2484564f300e7162569c6ac515/comments
+  - https://forum.holmesdale.net/threads/whats-our-best-side-for-the-forest-game.3799/

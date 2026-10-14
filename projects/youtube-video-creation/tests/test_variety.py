@@ -178,3 +178,53 @@ def test_本のあいだの重なりは語りだけを見て名前は数えな�
     c = script("C", "前の5人は、メッシ、クリスティアーノ・ロナウド、イグアイン。")
     d = script("D", "クリスティアーノ・ロナウドは64本、マラドーナは61本です。")
     assert _cross_repeats([c, d]) == []
+
+
+def test_反応の節で終わるのは締め方に数えない():
+    """**news の型は反応の節で終わる決まり**（2026-09-08）。締め方の点検がそれを数えると、
+    決まりどおりの台本が毎日止まった（2026-09-27）。手前の節で比べる。"""
+    from src.variety import inspect_day
+
+    scripts = [_script("A", ["何が起きたか", "ケインの足もと", "ネットの反応"]),
+               _script("B", ["8戦全勝", "98年前の1チーム", "ネットの反応"]),
+               _script("C", ["モナコの企画", "夏のワールドカップ", "ネットの反応"])]
+    found = {f.label: f for f in inspect_day(scripts)}
+    assert found["締め方"].ok, found["締め方"].detail
+
+
+def test_反応の手前が揃っていれば止める():
+    from src.variety import inspect_day
+
+    scripts = [_script(f"T{i}", [f"話{i}", "これからどうなる", "ネットの反応"]) for i in range(3)]
+    found = {f.label: f for f in inspect_day(scripts)}
+    assert not found["締め方"].ok
+    assert "これからどうなる" in found["締め方"].detail
+
+
+def test_紹介のシリーズは節の並びが同じでも止めない():
+    """クラブ紹介・選手紹介は8節の型で量産する企画（2026-09-28）。入り方・締め方・話の型は見ず、本のあいだの重なりだけ見る。"""
+    from src.script_model import parse_script
+    from src.variety import inspect_day, is_series_intro
+
+    def script(name, first_line):
+        return parse_script(
+            f"---\ntitle: {name}ってどんな選手？\nseries: 有名選手の紹介\n---\n\n"
+            f"## どんな選手か\n\nキャスター: {first_line}\n\n## 基礎DATA\n\nキャスター: {name}、19歳。\n\n## 見立て\n\n解説: {name}の次の試合を見ます。\n")
+
+    scripts = [script("ハーランド", "ボールに触らないのに点だけ取る。"), script("ヤマル", "メッシの腕の中にいた赤ん坊。"),
+               script("オリーズ", "3度追い出された少年。")]
+    assert all(is_series_intro(s) for s in scripts)
+    labels = {f.label: f.ok for f in inspect_day(scripts)}
+    assert labels["話の型"] is True and "入り方" not in labels and "締め方" not in labels
+    assert "本のあいだ" in labels
+
+
+def test_見立てのカードは代弁の点検で数えない():
+    """2026-10-01：声の無い比較の回が、見立ての引用カードだけで「本人の声で読ませていない」と止まった。"""
+    from types import SimpleNamespace
+    from src.variety import _spoken_for
+    script = SimpleNamespace(cards={"view_card": {"type": "quote", "label": "この動画の見立て", "text": "…"}},
+                             scenes=[SimpleNamespace(lines=[SimpleNamespace(speaker="解説")])])
+    assert _spoken_for(script) == (0, 0)
+    script.cards["q"] = {"type": "quote", "text": "本人の言葉"}
+    assert _spoken_for(script)[0] == 1

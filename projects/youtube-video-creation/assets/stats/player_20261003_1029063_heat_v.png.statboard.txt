@@ -1,0 +1,4 @@
+title: ミカエル・オリーズの今季のヒートマップ
+unit: touches
+points=359
+source: FotMob

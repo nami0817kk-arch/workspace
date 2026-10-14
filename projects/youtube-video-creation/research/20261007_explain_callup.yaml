@@ -1,0 +1,443 @@
+# 取材メモ（10/7 シリーズ「仕組みの解説」、key: explain_callup、型は news）。材料の控えは research/raw/20261007_explain_callup.md。
+# 雛形は `python -m src.cli plan --routine explain --date 2026-10-07 --write`（問い → 仕組み → 数字（表）→ 実例 → 見立て）。
+# 規定は FIFA「選手の地位と移籍に関する規則」付属文書1（現行版＝2025年1月施行、2027年版＝2027年1月施行。付属文書1は両版で同文）。
+#   第1条1項（出す義務）・2項（国際試合の期間と大陸の選手権の本大会）・4項（9日、9〜10月は16日）・7項（開幕の週の前の週の月曜の朝〜最後の試合の翌朝）・
+#   8項（話し合いで変えられる）・9項（24時間、大陸が違えば48時間）・第2条1項（補償なし）・4項（FIFA の補償）・第3条1項（選手は応じる）・2項（15日前に書面、6日以内に返事）・
+#   第4条（けが）・第5条（出られない＋5日）・第6条（懲戒）。暦は FIFA の男子国際試合カレンダー（2026年4月版）。
+# 同じ日のニュースの回（kubo_january）が「久保は1月にソシエダを去る」の報道を扱う。この回は移籍・序列の話は1行も入れない。
+# 欧州の日程は FotMob（10/6 取得）。数えた期間は 12/28〜2/5（日本が決勝まで進んだ場合に代表へ出している日）。国内カップは数えない（久保の節だけ別に数える）。
+# 写真は 01（Commons「File:Takefusa Kubo.jpg」、CC BY-SA 4.0、アジアカップの日本代表の久保）を冒頭から山場まで、表の多い window の節から最後までは 02（Commons「File:King Fahd Int. Stadium- Opening Arabian Gulf Cup 2014.jpg」、CC BY-SA 4.0、決勝の会場キング・ファハド国際スタジアム）に1回だけ替える（表が久保の顔にかからないように）。02_w_v はショート用の縦の切り抜き。
+# 過去の欠場は Transfermarkt の試合記録（absent＝代表で不在）。when の節の「遠藤は元日の夜に出場」も同じ記録（past の節の出典）。
+date: 2026年10月7日
+slot: other_1
+format: news
+series: 仕組みの解説
+people:
+- 久保建英
+- 遠藤航
+- 鎌田大地
+- 伊藤洋輝
+- 三笘薫
+- 上田綺世
+- 柴崎岳
+- 武藤嘉紀
+theme:
+  id: explain_callup
+  league: japan
+  league_name: 日本代表
+  kind: other
+  topic: 日本代表
+  title: アジアカップで久保建英は最大11試合いなくなる？代表の招集とクラブのルール
+  question: 来年1月のアジアカップで、欧州のクラブは日本人選手をいつから何試合手放すことになり、それを断れるのか
+  takeaway: 国際サッカー連盟の規則では、アジアカップは国際試合の期間の外でも出す義務があり、解放は開幕の前の週の月曜＝12月28日から。断っても選手はその期間と5日間クラブで出られないので、日本が決勝まで行けば2月11日までの46日間は使えない。12月28日から2月5日のリーグ戦と欧州カップを数えると、遠藤航と鎌田大地は8試合で、2024年に遠藤が欠けた7試合を上回る。久保はソシエダが国王杯とスーパーカップを勝ち進めば最大11試合で、2019年の柴崎岳の9試合より2つ多い
+  opening_image: assets/images/20261007_explain_callup/01_w.jpg
+short_title: 久保建英は最大11試合？クラブが断れない、代表の招集のルール
+thumbnail:
+  photo: assets/images/20261007_explain_callup/01_w.jpg
+  short_photo: assets/images/20261007_explain_callup/01_v.jpg
+  line1: 久保建英 1月に最大11試合
+  line2: 断れば●日長くクラブで出られない
+  tags:
+  - 久保建英
+  - アジアカップ
+sections:
+- id: what
+  heading: 1月7日開幕、欧州はシーズンの真ん中
+  tier: 確定
+  official: true
+  telop: アジアカップ2027は1月7日〜2月5日。日本は1月11日にインドネシアと初戦
+  narrator: キャスター
+  card:
+    type: table
+    title: アジアカップ2027（サウジアラビア）
+    columns: &c1
+    - 日付
+    - 試合
+    rows: &r1
+    - - 1月7日
+      - 開幕
+    - - 1月11日
+      - 日本－インドネシア
+    - - 1月16日
+      - 日本－タイ
+    - - 1月20日
+      - 日本－カタール
+    - - 2月5日
+      - 決勝
+  say:
+  - text: 来年1月のアジアカップは、サウジアラビアで開かれます。
+    card: none
+    image: assets/images/20261007_explain_callup/01_w.jpg
+  - text: 開幕は1月7日、決勝は2月5日。30日間の大会です。
+    card: {type: table, title: アジアカップ2027（サウジアラビア）, columns: *c1, rows: *r1, highlight_row: 0}
+  - text: 日本の初戦は11日のインドネシア戦。続いてタイ、カタールと戦います。
+    card: {type: table, title: アジアカップ2027（サウジアラビア）, columns: *c1, rows: *r1, highlight_row: 1}
+  - text: 決勝まで勝ち進めば、日本は7試合を戦います。
+    card: {type: table, title: アジアカップ2027（サウジアラビア）, columns: *c1, rows: *r1, highlight_row: 4}
+  - text: その間も、ヨーロッパのリーグは真冬の真っ最中です。
+    card: none
+  - text: 久保建英たち欧州の日本人を、クラブは何試合手放すのか。断れるのか。
+    card: none
+  sources:
+  - https://digitalhub.fifa.com/m/3123d37097318f7f/original/Men-s-International-Match-Calendar-2023-2030_EN.pdf
+  - https://en.wikipedia.org/wiki/2027_AFC_Asian_Cup
+  - https://www.the-afc.com/en/national/afc_asian_cup.html/news/afc-asian-cup-saudi-arabia-2027%E2%84%A2-primed-for-spectacular-showdowns
+
+- id: rule
+  main: true
+  heading: クラブには代表へ出す義務がある
+  tier: 確定
+  official: true
+  telop: 国際サッカー連盟の規則「クラブは、招集された選手を代表チームに出さなければならない」
+  narrator: キャスター
+  say:
+  - text: 日本が勝ち進めば、ソシエダと重なる試合は最大で11。前回の大会は7でした。
+    short_only: true
+  - voice: 国際サッカー連盟
+    text: クラブは、代表チームに招集された選手を、
+  - voice: 国際サッカー連盟
+    text: 出さなければならない。
+    cont: true
+  - voice: 国際サッカー連盟
+    text: これに反する、選手とクラブの取り決めは禁止する。
+    cont: true
+  - text: 日本の協会が久保建英を呼べば、ソシエダは送り出すしかありません。
+    emph: true
+  quotes_from:
+  - 国際サッカー連盟（選手の地位と移籍に関する規則 付属文書1 第1条1項） https://digitalhub.fifa.com/m/696d877ea35ca761/original/Regulations-on-the-Status-and-Transfer-of-Players-January-2026-edition.pdf
+  sources:
+  - https://digitalhub.fifa.com/m/696d877ea35ca761/original/Regulations-on-the-Status-and-Transfer-of-Players-January-2026-edition.pdf
+  - https://digitalhub.fifa.com/asset/5c0e740b-0810-4349-a7ba-256b16bda300/FIFA-Legal-Handbook-2026.pdf
+
+- id: window
+  heading: 国際試合の期間の外でも出す理由
+  tier: 確定
+  official: true
+  telop: 出す義務は「国際試合の期間」と「W杯・大陸の選手権の本大会」。アジアカップは後者
+  narrator: 解説
+  card:
+    type: table
+    title: 出す義務がある代表の活動（第1条）
+    columns: &c2
+    - 活動
+    - 長さ
+    rows: &r2
+    - - 国際試合の期間
+      - 9日（9〜10月は16日）
+    - - ワールドカップ本大会
+      - 大会の期間
+    - - 大陸の選手権の本大会
+      - 大会の期間
+  say:
+  - text: 普段の代表戦は、リーグを止めて行う、国際試合の期間に組まれます。
+    image: assets/images/20261007_explain_callup/02_w.jpg
+    card: {type: table, title: 出す義務がある代表の活動（第1条）, columns: *c2, rows: *r2, highlight_row: 0}
+  - text: 月曜から翌週の火曜までの9日間です。
+    card: {type: table, title: 出す義務がある代表の活動（第1条）, columns: *c2, rows: *r2, highlight_row: 0}
+  - text: この秋からは、9月と10月の期間が16日間に広がりました。
+    card: {type: table, title: 出す義務がある代表の活動（第1条）, columns: *c2, rows: *r2, highlight_row: 0}
+  - text: この秋、久保建英が日本代表で戦ったのも、この16日間でした。
+    card: {type: table, title: 出す義務がある代表の活動（第1条）, columns: *c2, rows: *r2, highlight_row: 0}
+  - text: アジアカップの30日間は、この期間の外にあります。
+    card: {type: table, title: 出す義務がある代表の活動（第1条）, columns: *c2, rows: *r2}
+  - text: 出す義務は、ワールドカップと大陸の選手権にも及ぶと、規則が名指ししています。
+    card: {type: table, title: 出す義務がある代表の活動（第1条）, columns: *c2, rows: *r2}
+  - text: アジアカップは、アジアの代表の選手権。まさにこれに当たります。
+    card: {type: table, title: 出す義務がある代表の活動（第1条）, columns: *c2, rows: *r2, highlight_row: 2}
+  - text: 国際サッカー連盟が公開する日程表にも、1月7日から2月5日で載っています。
+    card: none
+  sources:
+  - https://digitalhub.fifa.com/m/696d877ea35ca761/original/Regulations-on-the-Status-and-Transfer-of-Players-January-2026-edition.pdf
+  - https://digitalhub.fifa.com/m/3123d37097318f7f/original/Men-s-International-Match-Calendar-2023-2030_EN.pdf
+
+- id: when
+  heading: 招集は12月28日から、戻るのは最後の試合の翌朝
+  tier: 確定
+  official: true
+  telop: 出すのは開幕の前の週の月曜＝12月28日の朝。代表を離れるのはチームの最後の試合の翌朝
+  narrator: キャスター
+  card:
+    type: table
+    title: アジアカップ2027の招集の流れ（付属文書1）
+    columns: &c3
+    - 手順
+    - 日付
+    rows: &r3
+    - - 選手への書面の知らせ
+      - 12月13日まで
+    - - クラブの返事
+      - 知らせから6日以内
+    - - クラブを離れる
+      - 12月28日（月）の朝
+    - - 開幕
+      - 1月7日（木）
+    - - 代表を離れる
+      - 最後の試合の翌朝
+    - - クラブに戻る
+      - そこから48時間以内
+  say:
+  - text: では、いつからクラブを離れるのか。規則は曜日で決めています。
+    card: none
+  - text: 大会が始まる週の、1つ前の週の月曜の朝です。
+    card: {type: table, title: アジアカップ2027の招集の流れ（付属文書1）, columns: *c3, rows: *r3, highlight_row: 2}
+  - text: 開幕は1月7日の木曜。その前の週の月曜は、12月28日です。
+    card: {type: table, title: アジアカップ2027の招集の流れ（付属文書1）, columns: *c3, rows: *r3, highlight_row: 2}
+  - text: 開幕の10日前。インドネシア戦から数えれば、2週間前に合流します。
+    card: {type: table, title: アジアカップ2027の招集の流れ（付属文書1）, columns: *c3, rows: *r3, highlight_row: 3}
+  - text: 招集されれば、久保建英がソシエダを離れるのもこの日です。
+    card: {type: table, title: アジアカップ2027の招集の流れ（付属文書1）, columns: *c3, rows: *r3, highlight_row: 3}
+  - text: 呼ぶ側の協会は、その15日前までに選手へ書面で知らせる決まり。
+    card: {type: table, title: アジアカップ2027の招集の流れ（付属文書1）, columns: *c3, rows: *r3, highlight_row: 0}
+  - text: 逆算すると12月13日。クラブは、そこから6日以内に返事をします。
+    card: {type: table, title: アジアカップ2027の招集の流れ（付属文書1）, columns: *c3, rows: *r3, highlight_row: 1}
+  - text: 代表を離れるのは、チームの最後の試合の翌朝。決勝まで行けば2月6日です。
+    card: {type: table, title: アジアカップ2027の招集の流れ（付属文書1）, columns: *c3, rows: *r3, highlight_row: 4}
+  - text: クラブへ戻るのは、その48時間以内。大陸をまたぐので、普段の24時間の倍です。
+    card: {type: table, title: アジアカップ2027の招集の流れ（付属文書1）, columns: *c3, rows: *r3, highlight_row: 5}
+  - text: ただし日付は、クラブと協会が話し合えば変えられます。
+    card: none
+  - text: 前回2024年の大会では、クラブを離れる日が元日の月曜でした。
+    card: none
+  - text: それでも遠藤航は、その夜のリバプールの試合に出てから合流しています。
+    card: none
+  sources:
+  - https://digitalhub.fifa.com/m/696d877ea35ca761/original/Regulations-on-the-Status-and-Transfer-of-Players-January-2026-edition.pdf
+  - https://digitalhub.fifa.com/m/3123d37097318f7f/original/Men-s-International-Match-Calendar-2023-2030_EN.pdf
+  - https://inside.fifa.com/legal/documents
+
+- id: refuse
+  heading: 断っても、その選手は5日長くクラブで出られない
+  tier: 確定
+  official: true
+  telop: 規則「招集された選手は、出されるべきだった期間と、さらに5日間、クラブの試合に出られない」
+  narrator: 解説
+  card:
+    type: table
+    title: 断ったら・けがをしたら（付属文書1）
+    columns: &c4
+    - 場面
+    - 規則
+    rows: &r4
+    - - クラブが出さない
+      - その期間＋5日はクラブで出られない
+    - - 規則に反した
+      - 懲戒委員会が処分（第6条）
+    - - 出したクラブへのお金
+      - 補償を受ける権利はない
+    - - 代表で大けが
+      - 国際サッカー連盟が補償
+  say:
+  - text: もしクラブが、選手を出さなかったらどうなるのか。規則はこう書いています。
+    card: none
+  - voice: 国際サッカー連盟
+    text: 招集された選手は、出された期間、
+    card: none
+  - voice: 国際サッカー連盟
+    text: または出されるべきだった期間と、
+    cont: true
+    card: none
+  - voice: 国際サッカー連盟
+    text: さらに5日間、クラブの試合に出ることができない。
+    cont: true
+    card: none
+  - text: 協会が認めない限り、です。ソシエダが断っても、久保建英は使えません。
+    card: {type: table, title: 断ったら・けがをしたら（付属文書1）, columns: *c4, rows: *r4, highlight_row: 0}
+  - text: 日本が決勝まで進めば、12月28日から2月11日まで。46日間です。
+    card: {type: table, title: 断ったら・けがをしたら（付属文書1）, columns: *c4, rows: *r4, highlight_row: 0}
+    emph: true
+  - text: 大会の30日より16日も長く、手元に置けない計算です。
+    card: {type: table, title: 断ったら・けがをしたら（付属文書1）, columns: *c4, rows: *r4, highlight_row: 0}
+  - text: 規則に反すれば、国際サッカー連盟の懲戒委員会が処分を決めます。
+    card: {type: table, title: 断ったら・けがをしたら（付属文書1）, columns: *c4, rows: *r4, highlight_row: 1}
+  - text: 選手を出したクラブへのお金も無し。補償を受ける権利はない、と明記されています。
+    card: {type: table, title: 断ったら・けがをしたら（付属文書1）, columns: *c4, rows: *r4, highlight_row: 2}
+  - text: 代表戦の大けがで長く離れたときだけ、国際サッカー連盟がクラブに補償します。
+    card: {type: table, title: 断ったら・けがをしたら（付属文書1）, columns: *c4, rows: *r4, highlight_row: 3}
+  quotes_from:
+  - 国際サッカー連盟（選手の地位と移籍に関する規則 付属文書1 第5条） https://digitalhub.fifa.com/m/696d877ea35ca761/original/Regulations-on-the-Status-and-Transfer-of-Players-January-2026-edition.pdf
+  sources:
+  - https://digitalhub.fifa.com/m/696d877ea35ca761/original/Regulations-on-the-Status-and-Transfer-of-Players-January-2026-edition.pdf
+  - https://digitalhub.fifa.com/asset/5c0e740b-0810-4349-a7ba-256b16bda300/FIFA-Legal-Handbook-2026.pdf
+
+- id: past
+  heading: 2019年と2024年、クラブで欠けた試合
+  tier: 報道
+  telop: 2019年の柴崎岳は9試合、2024年の遠藤航と久保建英は7試合をクラブで欠いた
+  narrator: キャスター
+  card:
+    type: table
+    title: 大会のあいだに欠けたクラブの試合（試合記録から数えた）
+    columns: &c5
+    - 大会
+    - 選手（クラブ）
+    - 試合
+    rows: &r5
+    - - 2019年（準優勝）
+      - 柴崎岳（ヘタフェ）
+      - '9'
+    - - 2019年（準優勝）
+      - 武藤嘉紀（ニューカッスル）
+      - '7'
+    - - 2024年（8強）
+      - 遠藤航（リバプール）
+      - '7'
+    - - 2024年（8強）
+      - 久保建英（ソシエダ）
+      - '7'
+    - - アフリカ2025（4位）
+      - サラー（リバプール）
+      - '7'
+  say:
+  - text: では過去の大会で、クラブは何試合、選手を欠いたのか。試合の記録から数えました。
+    card: {type: table, title: 大会のあいだに欠けたクラブの試合（試合記録から数えた）, columns: *c5, rows: *r5}
+  - text: 2019年の日本は準優勝でした。
+    card: {type: table, title: 大会のあいだに欠けたクラブの試合（試合記録から数えた）, columns: *c5, rows: *r5, highlight_row: 0}
+  - text: ヘタフェの柴崎岳は、リーグ戦とスペインの国王杯で、合わせて9試合を欠きました。
+    card: {type: table, title: 大会のあいだに欠けたクラブの試合（試合記録から数えた）, columns: *c5, rows: *r5, highlight_row: 0}
+  - text: ニューカッスルの武藤嘉紀は7試合。
+    card: {type: table, title: 大会のあいだに欠けたクラブの試合（試合記録から数えた）, columns: *c5, rows: *r5, highlight_row: 1}
+  - text: 2024年の日本は準々決勝で敗退。それでも遠藤航と久保建英は7試合ずつ。
+    card: {type: table, title: 大会のあいだに欠けたクラブの試合（試合記録から数えた）, columns: *c5, rows: *r5, highlight_row: 2}
+  - text: 遠藤のリバプールでは、リーグカップの準決勝2試合も重なりました。
+    card: {type: table, title: 大会のあいだに欠けたクラブの試合（試合記録から数えた）, columns: *c5, rows: *r5, highlight_row: 2}
+  - text: アフリカの大会も同じ規則です。リバプールのサラーは、4位までの道のりで7試合。
+    card: {type: table, title: 大会のあいだに欠けたクラブの試合（試合記録から数えた）, columns: *c5, rows: *r5, highlight_row: 4}
+  sources:
+  - https://www.transfermarkt.jp/gaku-shibasaki/leistungsdaten/spieler/129693/saison/2018
+  - https://www.transfermarkt.jp/yoshinori-muto/leistungsdaten/spieler/230541/saison/2018
+  - https://www.transfermarkt.jp/wataru-endo/leistungsdaten/spieler/146310/saison/2023
+  - https://www.transfermarkt.jp/takefusa-kubo/leistungsdaten/spieler/405398/saison/2023
+  - https://www.transfermarkt.jp/mohamed-salah/leistungsdaten/spieler/148455/saison/2025
+
+- id: kubo
+  heading: ソシエダで数える「11試合」の中身
+  tier: 報道
+  telop: 日本が決勝まで進み、ソシエダが勝ち上がれば、2月5日までに10試合。翌日のスーパーカップ決勝で11
+  narrator: キャスター
+  card:
+    type: table
+    title: ソシエダの試合のうち大会に重なる数（12月28日から）
+    columns: &c6
+    - 日本の最後の試合
+    - 重なる試合
+    - うちリーグ戦
+    rows: &r6
+    - - 1次リーグ（1月20日）
+      - '5'
+      - '3'
+    - - 16強（1月24日）
+      - '7'
+      - '4'
+    - - 8強（1月28日）
+      - '8'
+      - '4'
+    - - 4強（2月1日）
+      - '9'
+      - '5'
+    - - 決勝（2月5日）
+      - 10（翌日11）
+      - '5'
+  say:
+  - text: 題の数字は、久保建英のソシエダで、いちばん多く数えた場合です。
+    card: none
+  - text: ソシエダの1月は、リーグ戦、ヨーロッパリーグ、国王杯、スーパーカップ。
+    card: none
+  - text: リーグ戦は1月3日から週末ごとに5試合。2024年に欠けたのは4試合でした。
+    card: none
+  - text: ヨーロッパリーグは21日と28日。最後の2試合が大会に重なります。
+    card: none
+  - text: 国王杯は、12月16日の試合に勝てば、1月6日と13日にも試合が入ります。
+    card: none
+  - text: さらにスペインのスーパーカップ。国王杯の前回王者として出場します。
+    card: none
+  - text: 2月3日の準決勝の相手は、レアル・マドリードです。
+    card: none
+  - text: 日本が2月5日の決勝まで残れば、重なるのは10試合。前回の7試合より3つ多い。
+    card: {type: table, title: ソシエダの試合のうち大会に重なる数（12月28日から）, columns: *c6, rows: *r6, highlight_row: 4}
+  - text: 翌日の夜はイスタンブールでスーパーカップの決勝。勝ち上がれば、11に届きます。
+    card: {type: table, title: ソシエダの試合のうち大会に重なる数（12月28日から）, columns: *c6, rows: *r6, highlight_row: 4}
+  - text: 1次リーグで敗退なら5試合。そのうちリーグ戦は3試合です。
+    card: {type: table, title: ソシエダの試合のうち大会に重なる数（12月28日から）, columns: *c6, rows: *r6, highlight_row: 0}
+  sources:
+  - https://www.fotmob.com/leagues/87/fixtures/laliga
+  - https://www.fotmob.com/leagues/73/fixtures/europa-league
+  - https://en.wikipedia.org/wiki/2026%E2%80%9327_Copa_del_Rey
+  - https://en.wikipedia.org/wiki/2027_Supercopa_de_Espa%C3%B1a
+  - https://rfef.es/en/noticias/semi-final-draw-barca-atletico-and-real-sociedad-real-madrid
+
+- id: view
+  viewpoint: true
+  heading: 日本人選手ごとの、大会に重なるクラブの試合
+  tier: 背景
+  telop: 12月28日〜2月5日のリーグ戦と欧州カップ。遠藤航と鎌田大地は8試合で、2024年の遠藤の7試合を上回る
+  narrator: 解説
+  card:
+    type: table
+    title: 大会に重なるクラブの試合（12月28日〜2月5日）
+    columns: &c7
+    - 選手
+    - クラブ
+    - リーグ
+    - 欧州
+    - 計
+    rows: &r7
+    - - 遠藤航
+      - リバプール
+      - '6'
+      - '2'
+      - '8'
+    - - 鎌田大地
+      - パレス
+      - '6'
+      - '2'
+      - '8'
+    - - 久保建英
+      - ソシエダ
+      - '5'
+      - '2'
+      - '7'
+    - - 伊藤洋輝
+      - バイエルン
+      - '5'
+      - '2'
+      - '7'
+    - - 三笘薫
+      - ブライトン
+      - '6'
+      - '0'
+      - '6'
+    - - 上田綺世
+      - リール
+      - '4'
+      - '2'
+      - '6'
+  say:
+  - text: 最後に、ほかの日本人選手も同じ物差しで数えます。
+    card: none
+  - text: 大会の最後まで日本が残ったとして、12月28日から2月5日の試合です。
+    card: {type: table, title: 大会に重なるクラブの試合（12月28日〜2月5日）, columns: *c7, rows: *r7}
+  - text: 数えたのはリーグ戦と、チャンピオンズリーグなど欧州の大会。国内の杯は除外。
+    card: {type: table, title: 大会に重なるクラブの試合（12月28日〜2月5日）, columns: *c7, rows: *r7}
+  - text: 多いのはイングランドの2人。遠藤航と鎌田大地は8試合です。
+    card: {type: table, title: 大会に重なるクラブの試合（12月28日〜2月5日）, columns: *c7, rows: *r7, highlight_row: 0}
+  - text: 年末年始も休まないプレミアリーグは、リーグ戦だけで6試合が重なります。
+    card: {type: table, title: 大会に重なるクラブの試合（12月28日〜2月5日）, columns: *c7, rows: *r7, highlight_row: 1}
+  - text: カップ戦を数えなくても、2024年に遠藤が欠けた7試合より1つ多い数です。
+    card: {type: table, title: 大会に重なるクラブの試合（12月28日〜2月5日）, columns: *c7, rows: *r7, highlight_row: 0}
+    emph: true
+  - text: ドイツは12月20日から1月8日まで冬の休み。伊藤洋輝はリーグ戦が5試合です。
+    card: {type: table, title: 大会に重なるクラブの試合（12月28日〜2月5日）, columns: *c7, rows: *r7, highlight_row: 3}
+  - text: フランスはリーグ戦4試合。上田綺世はチャンピオンズリーグの2試合を足して6試合。
+    card: {type: table, title: 大会に重なるクラブの試合（12月28日〜2月5日）, columns: *c7, rows: *r7, highlight_row: 5}
+  - text: 久保は、国王杯とスーパーカップを足すと最大11。
+    card: {type: table, title: 大会に重なるクラブの試合（12月28日〜2月5日）, columns: *c7, rows: *r7, highlight_row: 2}
+  - text: 2019年の柴崎岳の9試合を、2つ上回ります。
+    card: {type: table, title: 大会に重なるクラブの試合（12月28日〜2月5日）, columns: *c7, rows: *r7, highlight_row: 2}
+  - text: 招集の知らせの期限は12月13日。誰が何試合離れるか、そこで見えてきます。
+    card: none
+  sources:
+  - https://www.fotmob.com/leagues/47/fixtures/premier-league
+  - https://www.fotmob.com/leagues/54/fixtures/bundesliga
+  - https://www.fotmob.com/leagues/53/fixtures/ligue-1
+  - https://www.fotmob.com/leagues/42/fixtures/champions-league
+  - https://www.premierleague.com/en/news/4675097/all-380-fixtures-for-202627-premier-league-season
