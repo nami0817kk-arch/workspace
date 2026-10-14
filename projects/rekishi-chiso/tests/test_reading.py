@@ -89,6 +89,26 @@ MISREADS = [
     ("hideyoshi", "柴田勝家の", "カツイエ", "カツイエ"),
     ("hideyoshi", "敗れた勝家は", "カツイエ", "／カツイエ"),
     ("hideyoshi", "刀狩って", "かたながりって", "カタナガリッテ"),
+    # 徳川慶喜（yoshinobu）
+    ("yoshinobu", "一橋家を継ぎます", "ひとつばしけを", "ヒトツバシケオ"),
+    ("yoshinobu", "家慶の「慶」", "いえよし", "イエヨシ"),
+    ("yoshinobu", "家茂を助ける", "いえもち", "イエモチ"),
+    ("yoshinobu", "養子の徳川家達", "いえさと", "イエサト"),
+    ("yoshinobu", "老中の板倉勝静", "いたくらかつきよ", "カツキヨ"),
+    ("yoshinobu", "有栖川宮織仁親王", "ありすがわのみやたるひと", "タルヒト"),
+    ("yoshinobu", "鳥羽と伏見で", "とばふしみ", "トバフシミ"),
+    ("yoshinobu", "艦長は榎本武揚", "えのもとたけあき", "タケアキ"),
+    ("yoshinobu", "勝海舟と大久保一翁", "かつかいしゅう", "カツカイシュウ"),
+    ("yoshinobu", "小日向の屋敷", "こひなた", "コヒナタ"),
+    ("yoshinobu", "谷中霊園", "やなか", "ヤナカ"),
+    ("yoshinobu", "二心殿と", "にしんどの", "ニシンドノ"),
+    ("yoshinobu", "蛤御門で", "はまぐりごもん", "ハマグリゴモン"),
+    ("yoshinobu", "小御所で開かれた", "こごしょ", "コゴショ"),
+    ("yoshinobu", "錦の御旗", "にしきのみはた", "ニシキノミハタ"),
+    ("yoshinobu", "徳川家の墓所", "ぼしょ", "ボショ"),
+    ("yoshinobu", "無血開城", "むけつかいじょう", "ムケツカイジョオ"),
+    ("yoshinobu", "駿府の宝台院", "ほうだいいん", "ホオダイイン"),
+    ("yoshinobu", "紺屋町にあった", "こうやちょう", "コオヤチョオ"),
 ]
 
 
@@ -116,7 +136,7 @@ def test_misread_kana(stem, phrase, _said, kana):
 def test_misread_list_covers_the_four_episodes():
     # 約50か所（4本）を残している
     assert len(MISREADS) >= 50
-    assert {m[0] for m in MISREADS} == {"shikoutei", "hidenaga", "oichi", "hideyoshi"}
+    assert {m[0] for m in MISREADS} == {"shikoutei", "hidenaga", "oichi", "hideyoshi", "yoshinobu"}
 
 
 # --- 置き換え ------------------------------------------------------------------
