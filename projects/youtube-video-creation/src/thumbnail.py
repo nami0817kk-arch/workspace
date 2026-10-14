@@ -2271,7 +2271,7 @@ def _layout_versus(spec, o, photos, line1, line2, marks, face_link, font_path, o
         avoid.append(_rect_of((SIZE[0] / 2 - big.getlength(mark) / 2, 350), mark, big, anchor="lm", pad=14))
     # bold は 108px（画面高さの15%）。顔の上に出ないよう、ここの位置は今までのまま
     crest_rect = None
-    crest_marks = [m for m in (_crest_image(n, 108 if bold else 96) for n in (marks or [])[:2])
+    crest_marks = [m for m in (_crest_image(n, 160 if bold else 96) for n in (marks or [])[:2])
                    if m is not None]
     if len(crest_marks) == 1:
         piece = crest_marks[0]
@@ -2420,15 +2420,15 @@ def _layout_number(spec, o, photo, source, line1, line2, marks, focus, focus_x, 
 # （約8〜10%）、エンブレムは顔・文字・帯と重ならない範囲で大きく左下（顔が左なら右下）、
 # 補足の吹き出し（callouts）は0〜2個で写真の上の空いた所へ。字数が多ければ主役は縮む（下限 BOLD_MAIN_MIN）。
 
-BOLD_MAIN_SIZES = tuple(range(200, 99, -8))     # 画面高さの 28% → 14%（168px の一覧でも読める）
+BOLD_MAIN_SIZES = tuple(range(152, 99, -8))     # 画面高さの 21% → 14%（2026-10-15 ユーザー「49とかの文字が大きすぎる」で 200 → 152）
 BOLD_MAIN_MIN = BOLD_MAIN_SIZES[-1]
 BOLD_SUB_SIZES = (72, 68, 64, 60, 56, 52, 48, 44, 40)    # 補足：画面高さの約10% → 5.5%
-BOLD_CREST_MAX = 180        # エンブレムの高さ（画面高さの 25%。今までと同じ大きさ）
-BOLD_CREST_PREF = 108       # 先に空けておく高さ（画面高さの 15%）
-BOLD_CREST_MIN = 86         # 画面高さの 12%。これより小さくなるなら出さない
-BOLD_CREST_MAX_W = 300      # 横長のエンブレムが場所を取りすぎない
+BOLD_CREST_MAX = 270        # エンブレムの高さ（画面高さの 37%。2026-10-15 ユーザー「エンブレムとかを大きく」で 180 → 270）
+BOLD_CREST_PREF = 180       # 先に空けておく高さ（画面高さの 25%）
+BOLD_CREST_MIN = 130        # 画面高さの 18%。これより小さくなるなら出さない
+BOLD_CREST_MAX_W = 440      # 横長のエンブレムが場所を取りすぎない
 BOLD_FLOOR = SIZE[1] - RULE_YELLOW_H - RULE_GREEN_H - 26     # 下端の線の上の余白
-CALLOUT_SIZE = 36
+CALLOUT_SIZE = 52          # 吹き出しの字（2026-10-15 ユーザー「とかを大きく」で 36 → 52）
 _REPORT: dict = {}
 
 
@@ -2695,7 +2695,7 @@ def _bold_scene(spec, o, photo, source, line1, line2, marks, focus, focus_x, fon
             thumbfx.rays(canvas, (SIZE[0] // 2, SIZE[1] // 2))
     # 写真は暗くしない。字の下だけ落とす（ぼかさない）
     _shade(canvas, bottom=480, bottom_alpha=228)
-    strip = _crest_strip(marks, 160)
+    strip = _crest_strip(marks, 250)
     side, crest = _pick_corner(strip, faces)
     left, right = 48, SIZE[0] - 48
     if crest is not None:
@@ -2743,7 +2743,7 @@ def _bold_number(spec, o, photo, source, line1, line2, marks, focus, focus_x, fo
     canvas.alpha_composite(dark)
     parts = _number_parts(str(spec.get("number") or "").strip())
     room = SIZE[0] - 96
-    size = 400
+    size = 270
 
     def measure(big, small) -> float:
         return sum(_part_font(s, n, big, small).getlength(s) + (0 if n else 8) for s, n in parts)
@@ -2786,8 +2786,13 @@ def _bold_number(spec, o, photo, source, line1, line2, marks, focus, focus_x, fo
             _say(canvas, o, (cursor, baseline), text, small, WHITE, anchor="ls")
             rects.append(_rect_of((cursor, baseline), text, small, anchor="ls"))
             cursor += small.getlength(text)
-    strip = _crest_strip(marks, 160)
-    side, crest = _pick_corner(strip, faces + rects)
+    # **数字や文字にかからない大きさまで縮める**（2026-10-15、チェルシーの ●●●●万ポンド の最初の丸にかかった）。
+    # 大きいほうから試し、どちらの隅でも重ならない最初の大きさを使う。下限（BOLD_CREST_MIN）でも重なれば、重なりの小さい隅
+    for h in (250, 220, 190, 160, BOLD_CREST_MIN):
+        strip = _crest_strip(marks, h)
+        side, crest = _pick_corner(strip, faces + rects)
+        if strip is None or crest is None or not any(_inter(crest, r) for r in faces + rects):
+            break
     left, right = 48, SIZE[0] - 48
     if crest is not None:
         canvas.alpha_composite(strip, (crest[0], crest[1]))

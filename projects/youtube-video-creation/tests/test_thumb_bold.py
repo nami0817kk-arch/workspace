@@ -4,7 +4,7 @@
 クラブ紹介でなく、構図が face・scene・number・versus」のときだけ。**
 
 - クラブ紹介・classic・series なし・`bold: false` の回は、画素まで今と同じ
-- 主役の語は画面高さの約22%以上（字数が多ければ縮むが下限は BOLD_MAIN_MIN）
+- 主役の語は画面高さの約18%以上（2026-10-15 ユーザー「49とかの文字が大きすぎる」で 22% → 18%、上限 152px）（字数が多ければ縮むが下限は BOLD_MAIN_MIN）
 - エンブレムは顔・文字と重ならない（左下、だめなら右下）
 - 吹き出し（thumbnail.callouts）は2個まで・12字まで・空でない・答えを入れない
 """
@@ -20,7 +20,7 @@ from src import thumbnail as thumb
 from src.config import load_config
 from src.thumbnail import SIZE, build_thumbnail
 
-MAIN_MIN = int(SIZE[1] * 0.22)          # 画面高さの22%＝158px
+MAIN_MIN = int(SIZE[1] * 0.18)          # 画面高さの18%＝129px
 
 
 def _config():
@@ -153,7 +153,7 @@ def test_classicとseries付きでも画素まで今と同じ(tmp_path):
 def test_faceの主役は画面高さの22パーセント以上(tmp_path):
     _render(tmp_path, "f", {"layout": "face", "bold": True})
     r = thumb.bold_report()
-    assert r["main_size"] >= MAIN_MIN and r["main_size"] <= 200
+    assert r["main_size"] >= MAIN_MIN and r["main_size"] <= 152
     assert r["sub_size"] <= 72                  # 補足は画面高さの約10%まで
     assert r["sub_size"] < r["main_size"]
 
@@ -192,10 +192,11 @@ def test_字数が多ければ縮むが下限より小さくならない(tmp_pat
     assert thumb.BOLD_MAIN_MIN <= small < big
 
 
-def test_bold_の主役は今の見た目より大きい(tmp_path):
-    """今の face の主役は156pxまで（字数が多いと60〜90px）。8字なら bold はそれより大きい。"""
+def test_bold_の主役は大きすぎない(tmp_path):
+    """2026-10-15 ユーザー「49とかの文字が大きすぎる」。主役の語は上限152px（画面高さの21%）まで。
+    10/15 の最初の版は200pxで、数字や主役の語が画面を占めすぎた。"""
     _render(tmp_path, "b", {"layout": "face", "bold": True})
-    assert thumb.bold_report()["main_size"] > 156
+    assert MAIN_MIN <= thumb.bold_report()["main_size"] <= 152
 
 
 def test_幅に収まらない長い字は今までどおり縮める(tmp_path):
@@ -212,15 +213,16 @@ def _overlap(a, b) -> bool:
 
 
 @pytest.mark.parametrize("layout", ["face", "scene", "number"])
-def test_エンブレムは左下に大きく置く(tmp_path, layout):
+def test_エンブレムは下の隅に大きく置く(tmp_path, layout):
     kw = {"number": "49試合"} if layout == "number" else {}
     _render(tmp_path, layout, {"layout": layout, "bold": True, **kw}, crests=["アーセナル"],
             lines=("リーグ戦で負けなかった", "記録"))
     crest = thumb.bold_report()["crest"]
     assert crest is not None
     height = crest[3] - crest[1]
-    assert SIZE[1] * 0.12 <= height <= SIZE[1] * 0.25 + 1      # 画面高さの12〜25%（今までの180pxを上回らない）
-    assert crest[0] < SIZE[0] / 3 and crest[3] > SIZE[1] * 0.8       # 左下
+    assert SIZE[1] * 0.18 <= height <= SIZE[1] * 0.38 + 1      # 画面高さの18〜38%（2026-10-15「エンブレムとかを大きく」。130〜270px）
+    # 下の隅（左か右）。大きくしたので、文字と重なる側は避けて反対の隅に置かれる
+    assert (crest[0] < SIZE[0] / 3 or crest[2] > SIZE[0] * 2 / 3) and crest[3] > SIZE[1] * 0.8
 
 
 @pytest.mark.parametrize("layout", ["face", "scene", "number"])
@@ -251,7 +253,7 @@ def test_エンブレムが無ければ出さない(tmp_path):
     assert thumb.bold_report()["crest"] is None
 
 
-def test_エンブレムは文字の下に入りきらなければ縮めるが86px未満は出さない(tmp_path):
+def test_エンブレムは文字の下に入りきらなければ縮めるが130px未満は出さない(tmp_path):
     _render(tmp_path, "c", {"layout": "face", "bold": True}, crests=["アーセナル"])
     crest = thumb.bold_report()["crest"]
     assert crest[3] - crest[1] >= thumb.BOLD_CREST_MIN
