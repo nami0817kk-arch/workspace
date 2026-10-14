@@ -14,6 +14,10 @@
   <取材メモ>_<構図>_plain.png  作り込みなし（fx: false）
   <取材メモ>_<構図>_list.png   上の2枚と classic を、一覧の大きさ（640・320・168px）で並べたもの
 
+シリーズの回（取材メモに series: があり、クラブ紹介でない。2026-10-15）は、新しい見た目（bold：大きい字・
+左下のエンブレム・補足の吹き出し）と今の見た目（bold: false）と classic を並べる（`_bold.png`・`_bold_list.png`）。
+吹き出しは `--set "callouts=[金融費用は？, どこで赤字に]"` で試せる（取材メモには戻さない）。
+
 --set は取材メモの thumbnail: を上書きする（値は YAML として読む）。書いた値は取材メモには戻さない。
 気に入ったら取材メモの thumbnail: に layout と項目を書き写す。
 """
@@ -32,12 +36,12 @@ sys.path.insert(0, str(ROOT))
 
 from src.config import load_config  # noqa: E402
 from src.thumbnail import (  # noqa: E402
-    LAYOUTS, build_thumbnail, from_meta, layout_problems, notes_layout)
+    LAYOUTS, build_thumbnail, from_meta, layout_problems, notes_layout, series_style)
 
 LIST_WIDTHS = (640, 320, 168)
 
 
-def meta_of(thumb: dict, title: str = "") -> dict:
+def meta_of(thumb: dict, title: str = "", series: str = "") -> dict:
     """取材メモの thumbnail: を、台本の front matter と同じ鍵にする（research._compose_script と同じ対応）。"""
     meta = {
         "thumbnail_line1": str(thumb.get("line1") or title),
@@ -60,11 +64,13 @@ def meta_of(thumb: dict, title: str = "") -> dict:
     layout = notes_layout(thumb)
     if layout:
         meta["thumbnail_layout"] = layout
+    if series:
+        meta["series"] = series      # シリーズの回は bold（2026-10-15。series_style が判定）
     return meta
 
 
-def render(config, thumb: dict, out: Path, title: str = "") -> Path:
-    look = from_meta(meta_of(thumb, title), title)
+def render(config, thumb: dict, out: Path, title: str = "", series: str = "") -> Path:
+    look = from_meta(meta_of(thumb, title, series), title)
     return build_thumbnail(
         config, look["title"], out, subtitle=look["subtitle"],
         background=look["photo"] or config.video.background, focus=look.get("focus"),
@@ -121,7 +127,7 @@ def main(argv: list[str] | None = None) -> int:
     for item in args.set:
         key, _, value = item.partition("=")
         thumb[key.strip()] = yaml.safe_load(value)
-    classic = {k: v for k, v in thumb.items() if k != "layout"}
+    classic = {k: v for k, v in thumb.items() if k not in ("layout", "bold", "callouts")}
     thumb["layout"] = args.layout
     problems = layout_problems(thumb)
     if problems:
@@ -133,13 +139,25 @@ def main(argv: list[str] | None = None) -> int:
     config = load_config()
     out = Path(args.out)
     stem = args.name or Path(args.notes).stem
-    made = [
-        render(config, thumb, out / f"{stem}_{args.layout}.png", title),
-        render(config, dict(thumb, fx=False), out / f"{stem}_{args.layout}_plain.png", title),
-        render(config, classic, out / f"{stem}_classic.png", title),
-    ]
-    sheet = list_sheet(made, [f"{args.layout}（作り込みあり）", f"{args.layout}（fx: false）", "classic（今の形）"],
-                       out / f"{stem}_{args.layout}_list.png", str(config.video.font_path()))
+    series = str(raw.get("series") or "")
+    if series_style(meta_of(thumb, title, series)):
+        # シリーズの回（2026-10-15）：新しい見た目（bold）と、今の見た目（bold: false）を並べる
+        made = [
+            render(config, thumb, out / f"{stem}_{args.layout}_bold.png", title, series),
+            render(config, dict(thumb, bold=False), out / f"{stem}_{args.layout}.png", title, series),
+            render(config, classic, out / f"{stem}_classic.png", title),
+        ]
+        labels = [f"{args.layout}（新：bold）", f"{args.layout}（今の見た目）", "classic（今の形）"]
+        sheet = list_sheet(made, labels, out / f"{stem}_{args.layout}_bold_list.png",
+                           str(config.video.font_path()))
+    else:
+        made = [
+            render(config, thumb, out / f"{stem}_{args.layout}.png", title, series),
+            render(config, dict(thumb, fx=False), out / f"{stem}_{args.layout}_plain.png", title, series),
+            render(config, classic, out / f"{stem}_classic.png", title),
+        ]
+        sheet = list_sheet(made, [f"{args.layout}（作り込みあり）", f"{args.layout}（fx: false）", "classic（今の形）"],
+                           out / f"{stem}_{args.layout}_list.png", str(config.video.font_path()))
     for path in made:
         print(f"サムネ: {path}")
     print(f"一覧の大きさで並べたもの: {sheet}")

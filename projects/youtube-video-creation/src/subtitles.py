@@ -211,10 +211,35 @@ CONTACT = "\n".join((
 ))
 
 
+def as_of_line(script: Script, today=None) -> str:
+    """**情報の時点**（2026-10-15 参考2チャンネルの概要欄。ユーザー「シリーズものの質を上げたい」）。
+
+    財政・記録・移籍・成績の数字は古くなる。シリーズの回（クラブ紹介を除く）だけ、
+    いつの情報かを1行出す。日付は台本の `date`、無ければ書き出しの日。
+    ニュース（series なし）とクラブ紹介（series に「チーム紹介」）は空を返す。
+    """
+    import re
+    from datetime import date as _date
+    series = str((getattr(script, "meta", None) or {}).get("series") or "").strip()
+    if not series or "チーム紹介" in series:
+        return ""
+    m = re.match(r"\s*(\d{4})\D+(\d{1,2})\D+(\d{1,2})", str(getattr(script, "date", "") or ""))
+    if m:
+        year, month, day = (int(x) for x in m.groups())
+    else:
+        now = today or _date.today()
+        year, month, day = now.year, now.month, now.day
+    return f"■ 情報は{year}年{month}月{day}日時点です"
+
+
 def description(script: Script, credits: list[str] | None = None,
                 footnotes: list[str] | None = None) -> str:
     """概要欄のたたき台（本文 + チャプター + クレジット + タグ）。"""
     parts = [script.description.strip()] if script.description.strip() else []
+    # 見立て（script.description の中の「この動画の見立て」）の次、目次の前
+    as_of = as_of_line(script)
+    if as_of:
+        parts.append(as_of)
     marks = chapters(script)
     if len(marks) > 1:
         parts.append("■ 目次\n" + "\n".join(f"{_clock(t)} {title}" for t, title in marks))

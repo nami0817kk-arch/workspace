@@ -1,0 +1,462 @@
+# 取材メモ（10/14 水、シリーズ「比べる」、key: compare_973085_918969、型は news）。2026-10-14 に組み直した（ネヴェス×カマラは research/dropped_1014/ に退避）。
+# 材料の控えは research/raw/20261014_compare_973085_918969.md。
+#
+# **組み直しの理由**：最初の組み（ネヴェス×カマラ）はネヴェスが 10/8 の選手紹介・10/10 のPSG財政・10/12 のモナコ回で既に出ていた。
+#   カマラ（モナコ、22歳）を軸に、**誕生日が2日違い（2004-01-01 と 2004-01-03）**のカルロス・バレバ（マンチェスター・ユナイテッド、22歳）に替えた。
+#   候補：①バレバ（誕生日2日違い・市場価値がカマラと同じ帯・守備的MFとセントラルMFで役割が違う）／②パブロ・バリオス（アトレティコ、23歳・同額5500万）
+#   ／③ギュレル（レアル、21歳、9/12 に契約の回で出している）。①に決めた。
+#
+# **重なりの確認（直近30日、research/posted.json の題と research/covered.yaml、research/20261*.yaml を人名・クラブ名で引いた）**:
+#   バレバ本人が主題の回は 0件（9/24 マンUの財政、10/10 マンUの1週間に名前が出る脇役のみ）。カマラ本人は 0件
+#   （10/12 ドルトムント×モナコはクラブの回）。この2人の組み合わせは 0件。
+#   型は 10/12 のドルトムント×モナコ（得点の時間帯）・10/9 ベリンガム×ムシアラ（同じ日数）と重ならないようにした：
+#   こちらは「21歳までの出場時間（ほぼ同じ）と、その時間に残した数字（違う）」。板は table・line・calc。
+#   同じ日（10/14）にマンUの財政（finance_manutd）が出る。**クラブ名の重なりであって人の重なりではない**が、ユーザーに伝える。
+#
+# **強い一点**：誕生日が2日違いの2人が21歳までに積んだトップチームの公式戦の出場時間は 6414分と6102分、差は312分（1.05倍、約3.5試合ぶん）。
+#   ところがその時間の中身は違う。90分あたりの得点＋アシストは 0.08 と 0.27（3.2倍）。得点は 4 と 3 で近く、差はアシスト 2 と 15。
+#
+# **数字はすべて自分で数えた。**Transfermarkt の1試合ずつの記録（tmapi の performance-game）を足したもの。
+#   年齢は各試合の日の年齢。**トップチームの公式戦だけ**（リール・ブライトン・マンU・メス・モナコの試合。代表戦・親善試合・Bチーム・育成リーグ・
+#   リールB（FR5G）・メスB（FR4B/FR5I）・メスの育成リーグ（FRR1）は除く）。基準は 2026年10月14日の朝（最後の試合は バレバ 10/13 CLアトレティコ戦、カマラ 10/10 リーグ・アン）。
+#   バレバ：18歳 61分／19歳 1282分／20歳 2141分／21歳 2930分＝6414分（119試合・先発77・途中出場42・4得点2アシスト）。22歳は18試合918分。
+#   カマラ：19歳 1409分／20歳 2399分／21歳 2294分＝6102分（87試合・先発73・途中出場14・3得点15アシスト）。22歳は27試合2325分。
+#   **アシストは TM の「公式アシスト（assistsOfficial）」で数えた**。TM の assists はバレバの19歳に2つ多く（リール時代の2つは公式扱いでない）、
+#     FotMob の経歴（ブライトン通算2アシスト・リール0）と合うのは公式のほう。カマラは両方15で同じ。
+#   自分で割った数: 6414÷6102＝1.051／6414−6102＝312／312÷90＝3.47試合／6414÷119＝53.9分／6102÷87＝70.1分／
+#     先発率 19歳 16÷34＝47%と16÷21＝76%、21歳 37÷41＝90%と28÷33＝85%／累計 19歳末 1343と1409、20歳末 3484と3808、21歳末 6414と6102／
+#     (4+2)×90÷6414＝0.084（0.08）／(3+15)×90÷6102＝0.265（0.27）／0.265÷0.084＝3.15（3.2倍）／
+#     得点 4×90÷6414＝0.056（0.06）と 3×90÷6102＝0.044（0.04）／アシスト 2×90÷6414＝0.028（0.03）と 15×90÷6102＝0.221（0.22）／
+#     市場価値 6000÷3000＝2.0／6500÷5500＝1.18／22歳の日数 1/3〜10/14＝284日・1/1〜10/14＝286日
+#   プレーの数字は FotMob の昨季（25/26）リーグ（バレバ＝プレミア1662分、カマラ＝リーグ・アン1851分、90分あたり）。
+#     **リーグも戦い方も違うので、2人の優劣の根拠にはしない**と台本で言う。パーセンタイルは数として読まない（台本に出していない）。
+#     （FotMob の「守備アクション」はバレバだけ二重に数えている疑いがあるので使わない。下の控え）空中戦勝ち 1.57÷0.78＝2.01／チャンス創出 1.70÷0.49＝3.47／ラインを破るパス 9.09÷6.44＝1.41
+# **食い違いの控え**:
+#   ⓪FotMob の「守備アクション」：カマラ 117（＝タックル55＋インターセプト37＋ブロック7＋クリア18、5.69/90）は内訳と一致するが、バレバは 209（11.32/90）で
+#      内訳の合計 104（37＋29＋6＋32、5.63/90）のほぼ2倍。**バレバの数字は二重計上の疑い**＝台本では使わず、自分で足した「守る動きの合計」5.6回と5.7回（ほぼ同じ）を使った。
+#   ①バレバの市場価値：FotMob は €63.2m、TM は 6500万（10/7 更新）。TM に揃えた（カマラも TM の 5500万）。
+#   ②身長：TM はバレバ 1.79m・カマラ 1.74m、FotMob は 179cm・173cm。TM に揃えた（マンUの選手ページに身長は無い）。
+#   ③カマラの今季のアシスト：TM・FotMob は1、AS モナコ公式の選手ページは0。**台本の今季の節ではアシストを言わない**。
+#   ④TM の出場分は、バレバ昨季のプレミア31試合1662分が FotMob・マンU公式（31試合）と一致。カマラの今季 8試合720分は AS モナコ公式と一致。
+#   ⑤TM の「ケガ」は participationState が injured の試合数で、診断名は見ていない。バレバ22歳の8試合（3/14 と 8/20〜9/16）。
+#      プレシーズンの負傷は FotMob の記事（カリック監督の発言）にある。クラブの医療発表は取れていない。
+# **一次情報まで辿れたもの**：マンU公式の選手ページ（生年月日・契約・昨季31試合・タックル＋インターセプトの位置）／AS モナコ公式の選手ページ
+#   （生年月日・今季8試合720分・経歴）／ESPN scoreboard（10/13 アトレティコ 2-0 マンU、次の日程）。
+# **辿れなかったもの**：移籍金（クラブは公表していない。報道は6500万＋500万ポンドで割れる＝台本に入れない）。
+#   バレバ・カマラ本人の言葉（マンU公式・AS モナコ公式の選手ページに引用なし。モナコの9/11会見は本文が取れていない）＝台本に入れない。
+#   TM の「ケガ」の診断名／試合記録（Opta）での出場分の突き合わせ（FotMob の数字とは一致を確認）。
+# 言い切っていないもの: どちらが上かは一度も言わない。「だけ」「最下位」で小さく見せていない。守備・アシストの数字は役割とリーグでも動くと添えた。
+# 板：①stats ②table（基礎DATA）③table（年齢別）＋line（累計）＋table（出場の中身）④table（22歳になってから）⑤table×2（プレー）⑥table（市場価値）⑦table＋calc×2（見立て）。
+#   **`card: none` は明示してある**。赤ペン（mark）は使っていない。
+# 写真：thumbnail.photos に2枚（左バレバ、右カマラ）、opening_image は2人を並べた1枚（pairphoto で作る）。出典は credits.json。
+# 声：1件も無い（シリーズの回。ブラウザの道具を使わない約束なので反応は集めていない）。
+# サムネ：**ユーザーと相談して決める。**ここに書いてあるのは案A（versus、伏せるのは「差が何分か」）。
+format: news
+voice_min: 0
+slot: other_1
+date: 2026年10月14日
+series: 比べる
+people:
+- カルロス・バレバ
+- ラミン・カマラ
+short_title: バレバとカマラ、21歳までの出場時間を並べる
+theme:
+  id: compare_973085_918969
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: バレバとカマラ
+  title: バレバとカマラ、誕生日が2日違いの中盤。21歳までの出場時間は、どれだけ違うのか
+  question: 誕生日が2日違いのバレバとカマラは、21歳までに積んだ時間と、その中身がどう違うのか
+  lead: マンチェスター・ユナイテッドとモナコの、22歳の中盤。
+  hook: 同じ年の初めに生まれた、2人の中盤です。
+  takeaway: バレバ（マンチェスター・ユナイテッド）は2004年1月3日、カマラ（モナコ）は1月1日生まれで、誕生日は2日違い。21歳までのトップチームの公式戦の出場時間は6414分と6102分で、差は312分（1.05倍）。ところが中身は違い、先発は77と73でほぼ同じだが途中出場は42と14、90分あたりの得点とアシストは0.08と0.27で3倍あまりの開きがある。得点は4と3で近く、差はアシストの2と15。昨季のリーグ（FotMob、90分あたり）では、守る動きの合計（タックル・インターセプト・クリア・ブロック）は5.6回と5.7回でほぼ同じ、中身は空中戦の勝ちが1.6回と0.8回、チャンス創出が0.5回と1.7回と分かれる。22歳になってからの出場は918分と2325分。推定の市場価値は21歳の終わりに6000万ユーロと3000万ユーロで2.0倍、いまは6500万と5500万で1.2倍。次の物差しは、日本時間16日午前1時45分のツェスカ・ソフィア対モナコ（カンファレンスリーグ）と、18日午後10時のリーズ対マンチェスター・ユナイテッド（プレミアリーグ）
+  bgm: assets/audio/bgm_calm.wav
+  opening_image: assets/images/20261014_cmp_pair/01.jpg
+thumbnail:
+  layout: versus
+  photos:
+  - assets/images/20261014_cmp_baleba_w/01.jpg
+  - assets/images/20261014_cmp_camara_w/01.jpg
+  names:
+  - バレバ
+  - カマラ
+  line1: バレバとカマラ
+  line2: 21歳までの差は●●●分
+  # 相手クラブ（モナコ）は書かない（tags.build が thumbnail.tags のクラブ名から config/players.yaml の日本人選手＝南野拓実を3枠目に足すため）
+  tags:
+  - マンチェスター・ユナイテッド
+  - 22歳
+  - 比べる
+  face_link: VS
+  cutout: false
+  tint: none
+  rays: false
+sections:
+- id: lead
+  heading: 誕生日は2日違い。21歳までの出場時間は
+  tier: 報道
+  telop: 誕生日は2日違い。21歳までの出場時間は、6414分と6102分
+  narrator: キャスター
+  card: &ls
+    type: stats
+    title: 2004年生まれの2人
+    items:
+    - ['2', 日, 誕生日の違い（カマラ1月1日・バレバ1月3日）]
+    - ['312', 分, 21歳までの出場時間の差]
+    - ['3', 倍あまり, 90分あたりの得点＋アシストの差]
+    focus: 1
+  say:
+  - text: カルロス・バレバとラミン・カマラは、どちらも22歳です。
+    card: *ls
+  - text: 誕生日は、カマラが2004年の1月1日。バレバは1月3日。2日しか違いません。
+    emph: true
+    card:
+      <<: *ls
+      focus: 0
+  - text: バレバはマンチェスター・ユナイテッド、カマラはモナコの中盤です。
+    card: *ls
+  - text: 同じ時期に生まれた2人が、21歳までに積んだ出場時間を数えました。
+    card: *ls
+  - text: トップチームの公式戦で、6414分と6102分。差は312分、1.05倍です。
+    emph: true
+    card: *ls
+  - text: ほとんど同じ時間です。ところが、その時間に残した数字は、大きく違いました。
+    card:
+      <<: *ls
+      focus: 2
+  - text: 年齢ごとの数字から入ります。
+    card: none
+  sources: &id001
+  - https://www.manutd.com/en/teams/mens-team/carlos-baleba
+  - https://www.asmonaco.com/en/joueurs/lamine-camara
+  - https://www.transfermarkt.com/carlos-baleba/profil/spieler/973085
+  - https://www.transfermarkt.com/lamine-camara/profil/spieler/918969
+  - https://tmapi-alpha.transfermarkt.technology/player/973085/performance-game
+  - https://tmapi-alpha.transfermarkt.technology/player/918969/performance-game
+- id: data
+  heading: 2人の基礎DATA
+  tier: 報道
+  telop: 守備的MFと、セントラルMF。利き足は、左と右
+  narrator: キャスター
+  card: &dt
+    type: table
+    title: バレバ と カマラ
+    columns:
+    - 項目
+    - バレバ
+    - カマラ
+    rows:
+    - &d1 [所属, マンチェスター・ユナイテッド, モナコ]
+    - &d2 [ポジション, 守備的MF, セントラルMF]
+    - &d3 [誕生日, 2004年1月3日, 2004年1月1日]
+    - &d4 [身長, 1.79m, 1.74m]
+    - &d5 [利き足, 左, 右]
+    - &d6 [代表, カメルーン, セネガル]
+    - &d7 [市場価値, 6500万ユーロ, 5500万ユーロ]
+  say:
+  - text: バレバの所属はマンチェスター・ユナイテッド、カマラはモナコです。
+    card: *dt
+  - text: バレバは守備的MF、カマラはセントラルMFです。
+    card: {type: table, title: バレバ と カマラ, columns: [項目, バレバ, カマラ], rows: [*d1, *d2, *d3, *d4, *d5, *d6, *d7], highlight_row: 1}
+  - text: 利き足は、左と右。
+    card: {type: table, title: バレバ と カマラ, columns: [項目, バレバ, カマラ], rows: [*d1, *d2, *d3, *d4, *d5, *d6, *d7], highlight_row: 4}
+  - text: 身長は、1.79mと1.74mです。
+    card: {type: table, title: バレバ と カマラ, columns: [項目, バレバ, カマラ], rows: [*d1, *d2, *d3, *d4, *d5, *d6, *d7], highlight_row: 3}
+  - text: 代表は、バレバがカメルーン、カマラがセネガルです。
+    card: {type: table, title: バレバ と カマラ, columns: [項目, バレバ, カマラ], rows: [*d1, *d2, *d3, *d4, *d5, *d6, *d7], highlight_row: 5}
+  sources:
+  - https://www.manutd.com/en/teams/mens-team/carlos-baleba
+  - https://www.asmonaco.com/en/joueurs/lamine-camara
+  - https://www.transfermarkt.com/carlos-baleba/profil/spieler/973085
+  - https://www.transfermarkt.com/lamine-camara/profil/spieler/918969
+- id: ages
+  main: true
+  heading: 21歳までの出場時間は、ほぼ同じ
+  tier: 報道
+  telop: 19歳は1282分と1409分、20歳は2141分と2399分、21歳は2930分と2294分
+  narrator: 解説
+  card: &ag
+    type: table
+    title: 年齢ごとの出場時間（トップチームの公式戦）
+    columns: [年齢, バレバ, カマラ]
+    rows:
+    - &a0 [18歳, 61分, 出場なし]
+    - &a1 [19歳, 1282分, 1409分]
+    - &a2 [20歳, 2141分, 2399分]
+    - &a3 [21歳, 2930分, 2294分]
+    - &a4 [21歳まで, 6414分, 6102分]
+  say:
+  - text: バレバとカマラを、21歳までの出場時間で並べます。
+    short_only: true
+    image: assets/images/20261014_cmp_pair/01.jpg
+  - text: 数えたのは、トップチームの公式戦です。代表戦とBチームは入れていません。
+    image: assets/images/20261014_cmp_pair/01.jpg
+    card: *ag
+  - text: バレバは18歳の夏にリールで、カマラは19歳の春にメスで、初めて出ました。
+    card: {type: table, title: 年齢ごとの出場時間（トップチームの公式戦）, columns: [年齢, バレバ, カマラ], rows: [*a0, *a1, *a2, *a3, *a4], highlight_row: 0}
+  - text: 19歳の1年は、1282分と1409分。
+    card: {type: table, title: 年齢ごとの出場時間（トップチームの公式戦）, columns: [年齢, バレバ, カマラ], rows: [*a0, *a1, *a2, *a3, *a4], highlight_row: 1}
+  - text: 20歳は、2141分と2399分。
+    card: {type: table, title: 年齢ごとの出場時間（トップチームの公式戦）, columns: [年齢, バレバ, カマラ], rows: [*a0, *a1, *a2, *a3, *a4], highlight_row: 2}
+  - text: 21歳は、2930分と2294分でした。
+    card: {type: table, title: 年齢ごとの出場時間（トップチームの公式戦）, columns: [年齢, バレバ, カマラ], rows: [*a0, *a1, *a2, *a3, *a4], highlight_row: 3}
+  - text: 足し合わせた差は、90分の試合にして3.5試合ぶんです。
+    emph: true
+    card: {type: table, title: 年齢ごとの出場時間（トップチームの公式戦）, columns: [年齢, バレバ, カマラ], rows: [*a0, *a1, *a2, *a3, *a4], highlight_row: 4}
+  - text: 積み上げの線にすると、2本はほとんど重なって進みます。
+    card: &agl
+      type: line
+      title: 出場時間の累計（分）
+      x: ['19歳', '20歳', '21歳']
+      series:
+      - [バレバ, [1343, 3484, 6414]]
+      - [カマラ, [1409, 3808, 6102]]
+      unit: 分
+      focus: カマラ
+  - text: 19歳の終わりは、1343分と1409分。
+    card:
+      <<: *agl
+      highlight: 19歳
+  - text: 20歳の終わりは、3484分と3808分です。
+    card:
+      <<: *agl
+      highlight: 20歳
+  - text: 21歳でバレバが追い抜き、2本の線は入れ替わりました。
+    card:
+      <<: *agl
+      highlight: 21歳
+  - text: 時間は同じでも、出場の中身には違いがあります。
+    card: &cn
+      type: table
+      title: 21歳までの出場の中身
+      columns: [項目, バレバ, カマラ]
+      rows:
+      - &c1 [試合, '119', '87']
+      - &c2 [先発, '77', '73']
+      - &c3 [途中出場, '42', '14']
+      - &c4 [1試合の平均, 54分, 70分]
+  - text: 試合数は、119と87。先発は77と73で、ほぼ同じです。
+    card: {type: table, title: 21歳までの出場の中身, columns: [項目, バレバ, カマラ], rows: [*c1, *c2, *c3, *c4], highlight_row: 1}
+  - text: 違うのは途中出場で、42と14。
+    emph: true
+    card: {type: table, title: 21歳までの出場の中身, columns: [項目, バレバ, カマラ], rows: [*c1, *c2, *c3, *c4], highlight_row: 2}
+  - text: 1試合の平均は、54分と70分です。
+    card: {type: table, title: 21歳までの出場の中身, columns: [項目, バレバ, カマラ], rows: [*c1, *c2, *c3, *c4], highlight_row: 3}
+  - text: 先発の割合は、19歳で47%と76%。21歳では90%と85%になり、並びました。
+    card: none
+  sources:
+  - https://www.transfermarkt.com/carlos-baleba/leistungsdatendetails/spieler/973085
+  - https://www.transfermarkt.com/lamine-camara/leistungsdatendetails/spieler/918969
+  - https://tmapi-alpha.transfermarkt.technology/player/973085/performance-game
+  - https://tmapi-alpha.transfermarkt.technology/player/918969/performance-game
+- id: age22
+  heading: 22歳になってからは、時間が分かれた
+  tier: 報道
+  telop: 22歳になってからの出場時間は、918分と2325分
+  narrator: 解説
+  card: &tw
+    type: table
+    title: 22歳になってから（10月14日まで）
+    columns: [項目, バレバ, カマラ]
+    rows:
+    - &t1 [日数, 284日, 286日]
+    - &t2 [試合, '18', '27']
+    - &t3 [出場時間, 918分, 2325分]
+    - &t4 [ケガで出られなかった試合, '8', '0']
+  say:
+  - text: 22歳になってからの日数は、バレバが284日、カマラが286日です。
+    card: *tw
+  - text: その間の出場は、18試合918分と、27試合2325分でした。
+    emph: true
+    card: {type: table, title: 22歳になってから（10月14日まで）, columns: [項目, バレバ, カマラ], rows: [*t1, *t2, *t3, *t4], highlight_row: 2}
+  - text: バレバには、ケガで出られなかった試合が8つあります。
+    card: {type: table, title: 22歳になってから（10月14日まで）, columns: [項目, バレバ, カマラ], rows: [*t1, *t2, *t3, *t4], highlight_row: 3}
+  - text: プレシーズン中の足首のケガで、ユナイテッドでの初出場は10月10日。
+    card: none
+  - text: 相手はトッテナムで、出場は31分でした。
+    card: none
+  - text: 13日のチャンピオンズリーグ、アトレティコ戦では先発して、66分に出ています。
+    card: none
+  - text: カマラは今季、8試合すべてに先発して、720分に出ています。
+    card: none
+  sources:
+  - https://tmapi-alpha.transfermarkt.technology/player/973085/performance-game
+  - https://tmapi-alpha.transfermarkt.technology/player/918969/performance-game
+  - https://www.asmonaco.com/en/joueurs/lamine-camara
+  - https://www.fotmob.com/news/1slvmz5zlthui1at06v40ge5a0-baleba-bouncing-around-place-wait-man-utd-debut
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20261013
+- id: style
+  heading: プレーの数字は、どこが違うのか
+  tier: 報道
+  telop: 昨季のリーグ。守る動きの合計は5.6回と5.7回、チャンス創出は0.5回と1.7回
+  narrator: 解説
+  card: &pl
+    type: table
+    title: 昨季（25/26）のリーグ（90分あたり）
+    columns: [項目, バレバ, カマラ]
+    rows:
+    - &p0 [守る動きの合計, 5.6回, 5.7回]
+    - &p1 [タックル, 2.0回, 2.7回]
+    - &p1b [インターセプト, 1.6回, 1.8回]
+    - &p2 [クリア, 1.7本, 0.9本]
+    - &p2b [ブロック, 0.3回, 0.3回]
+    - &p3 [空中戦の勝ち, 1.6回, 0.8回]
+  say:
+  - text: プレーの中身を、90分あたりで並べます。昨季のリーグの数字です。
+    card: *pl
+  - text: バレバはプレミアリーグ、カマラはリーグ・アン。戦い方の違いも入った数字です。
+    card: none
+  - text: 守る動きの合計は、5.6回と5.7回。ほぼ同じ。
+    emph: true
+    card: {type: table, title: 昨季（25/26）のリーグ（90分あたり）, columns: [項目, バレバ, カマラ], rows: [*p0, *p1, *p1b, *p2, *p2b, *p3], highlight_row: 0}
+  - text: タックル、インターセプト、クリア、ブロックを足した数字。
+    card: {type: table, title: 昨季（25/26）のリーグ（90分あたり）, columns: [項目, バレバ, カマラ], rows: [*p0, *p1, *p1b, *p2, *p2b, *p3], highlight_row: 0}
+  - text: 中身を見ると、タックルは2.0回と2.7回。カマラが多い。
+    card: {type: table, title: 昨季（25/26）のリーグ（90分あたり）, columns: [項目, バレバ, カマラ], rows: [*p0, *p1, *p1b, *p2, *p2b, *p3], highlight_row: 1}
+  - text: インターセプトは、1.6回と1.8回。
+    card: {type: table, title: 昨季（25/26）のリーグ（90分あたり）, columns: [項目, バレバ, カマラ], rows: [*p0, *p1, *p1b, *p2, *p2b, *p3], highlight_row: 2}
+  - text: クリアは、1.7本と0.9本。
+    card: {type: table, title: 昨季（25/26）のリーグ（90分あたり）, columns: [項目, バレバ, カマラ], rows: [*p0, *p1, *p1b, *p2, *p2b, *p3], highlight_row: 3}
+  - text: ブロックは、どちらも0.3回です。
+    card: {type: table, title: 昨季（25/26）のリーグ（90分あたり）, columns: [項目, バレバ, カマラ], rows: [*p0, *p1, *p1b, *p2, *p2b, *p3], highlight_row: 4}
+  - text: 空中戦の勝ちは、1.6回と0.8回。バレバが2倍。
+    emph: true
+    card: {type: table, title: 昨季（25/26）のリーグ（90分あたり）, columns: [項目, バレバ, カマラ], rows: [*p0, *p1, *p1b, *p2, *p2b, *p3], highlight_row: 5}
+  - text: マンチェスター・ユナイテッドの公式サイトは、バレバの昨季を紹介しています。
+    card: none
+  - text: タックルとインターセプトの合計で、プレミアの上位8%でした。
+    card: none
+  - text: 攻めの数字では、差が出ました。
+    card: &pa
+      type: table
+      title: 昨季（25/26）のリーグ（90分あたり）
+      columns: [項目, バレバ, カマラ]
+      rows:
+      - &q1 [ラインを破るパス, 6.4本, 9.1本]
+      - &q2 [チャンス創出, 0.5回, 1.7回]
+      - &q3 [ボール回収, 5.7回, 7.7回]
+  - text: ラインを破るパスの数は、6.4本と9.1本。
+    card: {type: table, title: 昨季（25/26）のリーグ（90分あたり）, columns: [項目, バレバ, カマラ], rows: [*q1, *q2, *q3], highlight_row: 0}
+  - text: チャンスの創出は、0.5回と1.7回。カマラが3倍あまり。
+    emph: true
+    card: {type: table, title: 昨季（25/26）のリーグ（90分あたり）, columns: [項目, バレバ, カマラ], rows: [*q1, *q2, *q3], highlight_row: 1}
+  - text: ボール回収は、5.7回と7.7回。
+    card: {type: table, title: 昨季（25/26）のリーグ（90分あたり）, columns: [項目, バレバ, カマラ], rows: [*q1, *q2, *q3], highlight_row: 2}
+  - text: モナコの公式サイトは、カマラをボックス・トゥ・ボックスのMFと紹介しています。
+    card: none
+  - text: 2人の優劣ではなく、役割とリーグの違いが出た数字です。
+    card: none
+  sources:
+  - https://www.fotmob.com/players/1352713/carlos-baleba
+  - https://www.fotmob.com/players/1436305/lamine-camara
+  - https://www.manutd.com/en/teams/mens-team/carlos-baleba
+  - https://www.asmonaco.com/en/joueurs/lamine-camara
+- id: value
+  heading: 市場価値の歩み
+  tier: 報道
+  telop: 21歳の終わりは6000万と3000万ユーロ。いまは6500万と5500万
+  narrator: 解説
+  card: &vl
+    type: table
+    title: 推定の市場価値（各年齢の最後の評価）
+    columns: [年齢, バレバ, カマラ]
+    rows:
+    - &v1 [19歳, 2000万ユーロ, 400万ユーロ]
+    - &v2 [20歳, 3500万ユーロ, 2000万ユーロ]
+    - &v3 [21歳, 6000万ユーロ, 3000万ユーロ]
+    - &v4 [いま（22歳）, 6500万ユーロ, 5500万ユーロ]
+  say:
+  - text: 推定の市場価値も、年齢で並べます。各年齢の、最後の評価額です。
+    card: *vl
+  - text: 19歳は、2000万ユーロと400万ユーロ。
+    card: {type: table, title: 推定の市場価値（各年齢の最後の評価）, columns: [年齢, バレバ, カマラ], rows: [*v1, *v2, *v3, *v4], highlight_row: 0}
+  - text: 20歳は、3500万と2000万。
+    card: {type: table, title: 推定の市場価値（各年齢の最後の評価）, columns: [年齢, バレバ, カマラ], rows: [*v1, *v2, *v3, *v4], highlight_row: 1}
+  - text: 21歳の終わりは、6000万と3000万。2倍の開きでした。
+    card: {type: table, title: 推定の市場価値（各年齢の最後の評価）, columns: [年齢, バレバ, カマラ], rows: [*v1, *v2, *v3, *v4], highlight_row: 2}
+  - text: いまは、6500万と5500万です。
+    card: {type: table, title: 推定の市場価値（各年齢の最後の評価）, columns: [年齢, バレバ, カマラ], rows: [*v1, *v2, *v3, *v4], highlight_row: 3}
+  - text: カマラは今年に入って3回見直され、3000万から5500万まで上がりました。
+    emph: true
+    card: {type: table, title: 推定の市場価値（各年齢の最後の評価）, columns: [年齢, バレバ, カマラ], rows: [*v1, *v2, *v3, *v4], highlight_row: 3}
+  - text: 5500万は、9月24日に付いた、カマラの最高額です。
+    card: *vl
+  - text: バレバの6500万は、10月7日に付いた、本人の最高額です。
+    card: *vl
+  - text: 比べると、21歳の終わりは2.0倍、いまは1.2倍でした。
+    card: *vl
+  sources:
+  - https://www.transfermarkt.com/carlos-baleba/marktwertverlauf/spieler/973085
+  - https://www.transfermarkt.com/lamine-camara/marktwertverlauf/spieler/918969
+- id: view
+  viewpoint: true
+  heading: 同じ時間に、残した数字の違い
+  tier: 背景
+  telop: 出場時間は1.05倍。90分あたりの得点とアシストは、0.08と0.27
+  narrator: 解説
+  card: &vw
+    type: table
+    title: 21歳まで（トップチームの公式戦）
+    columns: [項目, バレバ, カマラ]
+    rows:
+    - &w1 [試合, '119', '87']
+    - &w2 [出場時間, 6414分, 6102分]
+    - &w3 [得点, '4', '3']
+    - &w4 [アシスト, '2', '15']
+    - &w5 [得点＋アシスト／90分, '0.08', '0.27']
+  say:
+  - text: 最後に、21歳までの数字を、もう一度まとめます。
+    card: *vw
+  - text: 出場時間は、画面の通り。1.05倍の開きです。
+    card: {type: table, title: 21歳まで（トップチームの公式戦）, columns: [項目, バレバ, カマラ], rows: [*w1, *w2, *w3, *w4, *w5], highlight_row: 1}
+  - text: ところが、90分あたりの得点とアシストは、0.08と0.27。3倍あまりです。
+    emph: true
+    card: {type: table, title: 21歳まで（トップチームの公式戦）, columns: [項目, バレバ, カマラ], rows: [*w1, *w2, *w3, *w4, *w5], highlight_row: 4}
+  - text: バレバは、6に90を掛けて、出場時間で割ります。
+    card: &c_n
+      type: calc
+      title: バレバの得点＋アシスト（90分あたり）
+      terms:
+      - ['6', 得点4＋アシスト2]
+      - ['90', 1試合の分]
+      - ['6414', 出場時間（分）]
+      - ['0.08', 90分あたり]
+      ops: ['×', '÷', '＝']
+  - text: カマラも同じ式で、18から0.27が出ます。
+    card: &c_c
+      type: calc
+      title: カマラの得点＋アシスト（90分あたり）
+      terms:
+      - ['18', 得点3＋アシスト15]
+      - ['90', 1試合の分]
+      - ['6102', 出場時間（分）]
+      - ['0.27', 90分あたり]
+      ops: ['×', '÷', '＝']
+  - text: 中身を分けると、得点は4と3。近い数字です。
+    card: {type: table, title: 21歳まで（トップチームの公式戦）, columns: [項目, バレバ, カマラ], rows: [*w1, *w2, *w3, *w4, *w5], highlight_row: 2}
+  - text: 開きが出たのは、アシストです。2と15でした。
+    emph: true
+    card: {type: table, title: 21歳まで（トップチームの公式戦）, columns: [項目, バレバ, カマラ], rows: [*w1, *w2, *w3, *w4, *w5], highlight_row: 3}
+  - text: 守る動きの合計は、ほぼ同じでした。違うのは、中身の配分です。
+    card: none
+  - text: 同じ時間を積んでも、その時間で受け持つ仕事で、残る数字は変わります。
+    emph: true
+    card: *vw
+  - text: 次の物差しは、このあとの欧州の試合です。
+    card: none
+  - text: カマラのモナコは、日本時間16日の午前1時45分。
+    card: none
+  - text: カンファレンスリーグで、ブルガリアのツェスカ・ソフィアと当たります。
+    card: none
+  - text: バレバのユナイテッドは、18日の午後10時。
+    card: none
+  - text: プレミアリーグで、リーズと当たります。
+    card: none
+  - text: 22歳のページは、まだ途中です。続きを数えるのは、ここからです。
+    card: none
+  sources:
+  - https://tmapi-alpha.transfermarkt.technology/player/973085/performance-game
+  - https://tmapi-alpha.transfermarkt.technology/player/918969/performance-game
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.europa.conf/scoreboard?dates=20261015
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20261018

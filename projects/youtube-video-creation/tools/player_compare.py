@@ -79,7 +79,7 @@ def write_note(a: dict, b: dict, day: datetime.date, path: Path) -> None:
     pa, pb = peak(a["history"]), peak(b["history"])
     ta, tb = intro.totals(a["aggregated"]), intro.totals(b["aggregated"])
     sections = [
-        {"id": "data", "heading": "2人の基礎DATA", "tier": "報道", "telop": f"{na}と{nb}", "narrator": "キャスター",
+        {"id": "data", "heading": f"{surname(na)}と{surname(nb)}は、いまどこでいくらの2人か", "tier": "報道", "telop": f"{na}と{nb}", "narrator": "キャスター",
          "card": {"type": "table", "title": f"{na} と {nb}", "columns": ["項目", na, nb], "rows": data_rows(a, b),
                   "source": "Transfermarkt"},
          # 1行は40字まで（6行の表とテロップが重なる）。同じ位置なら1回で言う
@@ -88,7 +88,7 @@ def write_note(a: dict, b: dict, day: datetime.date, path: Path) -> None:
                    else [f"位置は{a['position']}と{b['position']}。"])
                 + [f"市場価値は{intro.compact_value(a['value'])}と{intro.compact_value(b['value'])}。"],
          "sources": urls},
-        {"id": "season", "heading": "今季の数字", "tier": "報道", "main": True, "telop": "今季ここまで", "narrator": "解説",
+        {"id": "season", "heading": "今季ここまで、数字はどう違うか", "tier": "報道", "main": True, "telop": "今季ここまで", "narrator": "解説",
          "card": {"type": "table", "title": "今季ここまで", "columns": ["項目", na, nb], "rows": season_rows(a, b),
                   "source": "Transfermarkt"},
          "say": [{"text": f"（前置き1行：{na}と{nb}、何を比べるのかを一言で）", "short_only": True},
@@ -96,7 +96,7 @@ def write_note(a: dict, b: dict, day: datetime.date, path: Path) -> None:
                  f"{nb}は{tb['apps']}試合で{tb['goals']}得点{tb['assists']}アシストです。",
                  "（90分あたりの数字で、試合数の差をならして比べる1行）"],
          "sources": urls},
-        {"id": "value", "heading": "市場価値の歩み", "tier": "報道", "telop": "最高額と、いま", "narrator": "解説",
+        {"id": "value", "heading": "市場価値は、いつどこまで上がったのか", "tier": "報道", "telop": "最高額と、いま", "narrator": "解説",
          "card": {"type": "table", "title": "市場価値", "columns": ["", na, nb],
                   "rows": [["最高額", intro.compact_value(pa[0]), intro.compact_value(pb[0])],
                            ["そのときの年齢", f"{pa[1]}歳", f"{pb[1]}歳"],
@@ -106,7 +106,7 @@ def write_note(a: dict, b: dict, day: datetime.date, path: Path) -> None:
          "say": [f"{na}の最高額は{pa[1]}歳のとき。{nb}は{pb[1]}歳のときでした。",
                  "（最高額と今の差を1行。金額は表に任せる）"],
          "sources": urls},
-        {"id": "view", "heading": "（何についての見立てか。例：エムバペとの今季の差）", "tier": "背景", "viewpoint": True, "narrator": "解説", "telop": "数字の違いが示すもの",
+        {"id": "view", "heading": f"（見立てを問いの形で。例：{surname(na)}と{surname(nb)}、どちらがチームの得点に近いか）", "tier": "背景", "viewpoint": True, "narrator": "解説", "telop": "数字の違いが示すもの",
          "say": [f"（{surname(na)}と{surname(nb)}で何が違うのか。上下は言わず、数字の差を見立てに）"],
          "sources": urls},
     ]

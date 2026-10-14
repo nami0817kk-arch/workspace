@@ -1612,3 +1612,116 @@ def test_クラブ紹介いがいの回で下地の写真を別の回の板に�
     """
     line = _board_fixture("", tmp_path, monkeypatch)
     assert line.image == "assets/backgrounds/stadium_X.png", "写真が別の回の板に化けた"
+
+
+# **ショートの質を上げる3つ**（2026-10-14 ユーザー「参考2チャンネルを参考に質を上げて」）
+
+def test_締めは取材メモの質問で終える():
+    """参考2チャンネルは96本全部が質問か依頼で終わる。質問は毎回別の文（取材メモの short_question）。"""
+    script = parse_script(BODY)
+    script.meta = dict(script.meta or {}, no_main=True, short_question="あなたは、この交代をどう見ましたか。")
+    short = trim(script, "何が起きたか", max_seconds=1.0)
+    texts = [line.text for line in short.scenes[1].lines]
+    assert texts[-2:] == [SHORT_SUBSCRIBE_2, "あなたは、この交代をどう見ましたか。"]
+    # 質問の行も「締め」として数える（尺を詰めるときに落とさない）
+    from src.shorts import _outro_count
+    assert _outro_count(short.scenes[1].lines) == 2
+
+
+def test_質問が無ければ今までの締めのまま():
+    short = trim(parse_script(BODY), "何が起きたか", max_seconds=1.0)
+    assert [l.text for l in short.scenes[1].lines][-2:] == [SHORT_SUBSCRIBE, SHORT_SUBSCRIBE_2]
+
+
+LONG_TITLE = "佐野航大、CL2試合連続フル出場。PSVを0-1に沈めた前半の誤算とは"
+
+
+def test_冒頭で声に出すのは題の最初の一文まで_画面の字は題のまま():
+    """参考のショートは3〜4秒で最初の言葉に入る。題を丸ごと読むと6秒かかった（佐野）。"""
+    script = parse_script(
+        f"---\ntitle: {LONG_TITLE}\n---\n\n## オープニング\n\nキャスター: {LONG_TITLE}\n\n"
+        "## 何が起きたか\n\nキャスター: いち。\n解説: に。\n"
+    )
+    short = trim(script, "何が起きたか", max_seconds=30.0)
+    first = short.scenes[0].lines[0]
+    assert first.text == "佐野航大、CL2試合連続フル出場。"
+    assert first.telop == LONG_TITLE            # 画面には題を全部出す
+
+
+def test_短い題は切らず_short_hookがあればそれを読む():
+    script = parse_script(
+        "---\ntitle: 短い題です\n---\n\n## オープニング\n\nキャスター: 短い題です\n\n"
+        "## 何が起きたか\n\nキャスター: いち。\n"
+    )
+    short = trim(script, "何が起きたか", max_seconds=30.0)
+    assert short.scenes[0].lines[0].text == "短い題です"
+    script.meta = dict(script.meta or {}, short_hook="佐野が先発、前半に誤算")
+    short = trim(script, "何が起きたか", max_seconds=30.0)
+    assert short.scenes[0].lines[0].text == "佐野が先発、前半に誤算"
+
+
+def test_写真は3秒半ごとに同じ人の別の写真へ替わる(tmp_path, monkeypatch):
+    """参考2チャンネルは見た13本の全部で約3秒ごとに写真が替わっていた。最初の3.5秒は元の写真のまま。"""
+    from PIL import Image
+
+    import src.shorts as sh
+
+    root = sh.Path(sh.__file__).resolve().parents[1]
+    folder = root / "assets" / "images" / "_test_rotate"
+    folder.mkdir(parents=True, exist_ok=True)
+    try:
+        for name in ("01.jpg", "02.jpg", "03.jpg"):
+            Image.new("RGB", (540, 960), (40, 80, 120)).save(folder / name)
+        script = parse_script(
+            "---\ntitle: T\nthumbnail_photo: assets/images/_test_rotate/01.jpg\n---\n\n"
+            "## オープニング\n\nキャスター: つかみです。\n\n"
+            "## 何が起きたか\n\n" + "".join(f"キャスター: ぎょう{i}をとても長く読み上げます、ここまでが一行です。\n" for i in range(8))
+        )
+        short = trim(script, "何が起きたか", max_seconds=60.0)
+        images = [l.image for sc in short.scenes for l in sc.lines]
+        assert images[0].endswith("01.jpg")
+        assert {i.rsplit("/", 1)[-1] for i in images} >= {"01.jpg", "02.jpg"}
+        assert all(images)                       # 顔の無い時間は作らない
+    finally:
+        for f in folder.iterdir():
+            f.unlink()
+        folder.rmdir()
+
+
+def test_大きな一言は取材メモのmatchで行に付き_読み上げと全文のテロップは変えない():
+    """案A（ユーザー「a」）。参考2チャンネルは1画面1要点を約110pxで出す。付くのは読み上げ文の一部が当たった行だけ。"""
+    script = parse_script(BODY)
+    script.meta = dict(script.meta or {}, short_telops=[{"match": "いち", "text": "前半にPK/止められた"}])
+    short = trim(script, "何が起きたか", max_seconds=30.0)
+    first = short.scenes[1].lines[0]
+    assert first.text == "いち。"
+    assert first.short_telop == "前半にPK/止められた"
+    assert first.telop is None                      # 全文のテロップは変えない
+    # 締めの行には付いてこない
+    assert all(getattr(l, "short_telop", None) is None for l in short.scenes[1].lines[-2:])
+
+
+def test_大きな一言はショートの縦画面だけで描き_本編の横画面では出さない(tmp_path):
+    from PIL import Image
+
+    from src import shorts
+    from src.config import load_config
+    from src.render import Renderer
+    from src.script_model import Line, Scene
+
+    photo = tmp_path / "p.jpg"
+    Image.new("RGB", (1080, 1920), (60, 90, 120)).save(photo)
+    config = shorts.portrait(load_config())
+    renderer = Renderer(config, tmp_path / "s")
+    base = Line(speaker="キャスター", text="前半にPKを得たが止められました", image=str(photo))
+    big = Line(speaker="キャスター", text="前半にPKを得たが止められました", image=str(photo),
+               short_telop="前半にPK/止められた")
+    a = renderer.frame(base, Scene(title="何が起きたか", lines=[base]), False)
+    b = renderer.frame(big, Scene(title="何が起きたか", lines=[big]), False)
+    ia, ib = Image.open(a).convert("RGB"), Image.open(b).convert("RGB")
+    assert ia.size == ib.size == (1080, 1920)
+    assert ia.tobytes() != ib.tobytes()             # 画面が変わる（大きな一言が出る）
+    # 一言は画面の下寄り（0.80 より上・0.45 より下）にある。上の4割は触らない
+    top = Image.new("RGB", (1080, 700))
+    top.paste(ib.crop((0, 0, 1080, 700)))
+    assert ia.crop((0, 0, 1080, 700)).tobytes() == ib.crop((0, 0, 1080, 700)).tobytes()

@@ -835,7 +835,10 @@ def _table(spec: dict, width: int, font_path: str, latin_path: str,
     if any(len(row) != len(columns) for row in rows):
         raise CardError("table の各行は columns と同じ数にしてください")
 
-    highlight = spec.get("highlight_row")
+    # **光らせる行は1行でも、複数行（`highlight_row: [2, 3, 4]`）でもよい**（2026-10-14）。
+    # 「3人の行き先は」と読む行で、1人の行しか光らなかった（リヴァプールの回）
+    _hl = spec.get("highlight_row")
+    lit_rows = set(_hl) if isinstance(_hl, (list, tuple, set)) else ({_hl} if _hl is not None else set())
     title = str(spec.get("title") or "").strip()
     inner = width - PAD * 2 - 12
     # **行は全部出す**（2026-09-30）。7行目から先を黙って捨てていて、ソシエダの回で
@@ -927,7 +930,7 @@ def _table(spec: dict, width: int, font_path: str, latin_path: str,
     text_dy = 10 if row_h >= 72 else max(4, (row_h - 8 - cell_font.size) // 2 - 2)
     for number, row in enumerate(rows):
         def draw_row(draw, y, row=row, number=number):
-            if number == highlight:
+            if number in lit_rows:
                 # 話している行：明るい地＋左に黄色の印。数字も黄色
                 draw.rounded_rectangle(
                     [PAD - 8, y - 4, width - PAD + 8, y + row_h - 8], radius=10, fill=HILITE
@@ -938,7 +941,7 @@ def _table(spec: dict, width: int, font_path: str, latin_path: str,
             x = PAD + 12
             for index, cell in enumerate(row):
                 last = index == len(row) - 1
-                color = BRAND_GOLD if (number == highlight and last) else (TEXT if index != 0 else SUB)
+                color = BRAND_GOLD if (number in lit_rows and last) else (TEXT if index != 0 else SUB)
                 # 評点（7.9 のような小数1桁）は 8.0 以上を黄で目立たせる
                 if _looks_rating(cell) and float(cell) >= 8.0:
                     color = BRAND_GOLD
@@ -2318,6 +2321,17 @@ def _pick_by_name(value, names: list[str]) -> int | None:
     return -1
 
 
+def _pick_many(value, names: list[str]) -> set[int]:
+    """`highlight_row: [0, 1]` のように複数行を指せる版（2026-10-14）。1つならその1行。合わない指定は無視する。"""
+    items = value if isinstance(value, (list, tuple, set)) else [value]
+    out = set()
+    for one in items:
+        pick = _pick_by_name(one, names)
+        if pick is not None and pick != -1:
+            out.add(pick)
+    return out
+
+
 # ---- 折れ線（推移）
 
 
@@ -2882,7 +2896,10 @@ def check_timeline(spec: dict) -> list[str]:
         problems.append("timeline の年が重なっています（focus・書き込みで指せません）")
     if rows:
         for key in ("focus", "highlight_row"):
-            if _pick_by_name(spec.get(key), years) == -1:
+            _v = spec.get(key)
+            _bad = (any(_pick_by_name(x, years) == -1 for x in _v)
+                    if isinstance(_v, (list, tuple)) else _pick_by_name(_v, years) == -1)
+            if _bad:
                 problems.append(f"timeline の {key}『{spec.get(key)}』は年か "
                                 f"0〜{len(rows) - 1} の番号で書いてください")
     return problems
@@ -2907,7 +2924,7 @@ def _timeline(spec: dict, width: int, font_path: str, latin_path: str,
     n = len(rows)
     years = [r[0] for r in rows]
     focus = _pick_by_name(spec.get("focus"), years)
-    highlight = _pick_by_name(spec.get("highlight_row"), years)
+    lit_rows = _pick_many(spec.get("highlight_row"), years)
     ruler = _ruler()
 
     # 行が多い回は縦に詰める（ショートでも6行が板の半分に収まる）
@@ -2933,7 +2950,7 @@ def _timeline(spec: dict, width: int, font_path: str, latin_path: str,
     for number, row in enumerate(rows):
         def draw_row(draw, y, number=number, row=row):
             cy = y + row_h / 2 - 4
-            if number == highlight:
+            if number in lit_rows:
                 draw.rounded_rectangle([PAD - 8, y - 2, width - PAD + 8, y + row_h - 10],
                                        radius=10, fill=HILITE)
                 draw.rectangle([PAD - 8, y + 6, PAD - 2, y + row_h - 20], fill=BRAND_GOLD)
@@ -2947,7 +2964,7 @@ def _timeline(spec: dict, width: int, font_path: str, latin_path: str,
             draw.ellipse([spine - r, cy - r, spine + r, cy + r],
                          fill=BRAND_GOLD if hot else UP, outline=DOT_RING, width=3)
             draw.text((spine - 38, cy), row[0], font=when_font, anchor="rm",
-                      fill=BRAND_GOLD if hot else (TEXT if number == highlight else SUB))
+                      fill=BRAND_GOLD if hot else (TEXT if number in lit_rows else SUB))
             first = cy - (len(chunks[number]) - 1) * line_h / 2
             for k, chunk in enumerate(chunks[number]):
                 draw.text((text_x, first + k * line_h), chunk, font=what_font, anchor="lm",

@@ -1,0 +1,538 @@
+# 移籍の深掘り 第4回：リヴァプールの2026年夏（「1クラブの移籍期間」の回）。10/14 作成。
+# 型は 10/11 の第2回（マンチェスター・シティ）と同じ「1クラブの移籍期間」。10/12 の第3回（アザール）は「1つの移籍」。
+# 材料の控え（数字の根拠と読めたもの／読めなかったもの）はこのファイルの末尾のコメントに全部書いた。**材料から出ない。**
+#
+# **角度は「戻る金が細った夏」。**同じクラブを扱った回と切り口が重ならないようにしてある:
+#   10/12「クラブの財政：リヴァプール」… **決算（2024-25 の売上・放映権・商業・人件費）**。この回は決算の数字を1つも使っていない。
+#     読むのは**今夏の移籍期間の出入りだけ**（Transfermarkt の集計と、クラブの発表の日付）。
+#   9/10「バルコラ」… デビュー戦の最高速。この回は**選手が何をしたか（速さ・出場・得点）に触れない**。
+#   10/11「移籍の深掘り マンチェスター・シティ」… 同じ型だが、あちらは**払った額が世界一**、こちらは**差し引きが世界一**。
+#     あちらの数字（シティの額）は使わない。名前も出さない。
+#
+# いちばん強い一点：**今夏、差し引き（払った額−戻った額）がいちばん大きかったのはリヴァプール**（2億3340万ユーロ）。
+#   払った額は2億6460万ユーロで世界6番目なのに、戻ったのが3120万ユーロで払った額の12%だけだったため、差し引きでは世界で最も大きい。
+#   確かめ方：世界の一覧で、差し引きが2億3340万以上になり得るのは支出が2億3340万以上のクラブだけ。そのクラブは上位6つだけで
+#   （支出 526.20／407.48／366.35／313.00／300.20／264.60）、差し引きは −189.18／+40.32／−202.10／−33.90／+65.05／**−233.40**。
+#   リヴァプールが最大。**自分で数え直して一致を確かめた。**
+#
+# **数字の確度。**移籍金は Transfermarkt の集計で、**確度は「報道」**:
+#   - **リヴァプールのクラブ公式の発表文（liverpoolfc.com）に、額は1つも書かれていない。**加入5人（バルコラ・ジャケ・ムニョス・ブルフマンス・ンドゥクウェ）と
+#     退団の発表（ジョーンズ・バイチェティッチ・コナテ・サラー・ロバートソン）の本文を全部読んで確かめた。台本は「クラブが発表した額」と一度も言わず、
+#     ②で「クラブは発表していない」と声に出して断っている。
+#   - **固定とボーナスの切り分けは公表されていない。**バルコラだけ、報道に「最大1億4500万ユーロ」（ボーナス込みの上限）がある（2媒体）。
+#     集計は1億2500万ユーロ。**集計の額が固定だとは言わない**（②で「集計の額」「報じられた最大」と言い分けている）。
+#   - 市場価値は Transfermarkt の**推定**であって値段ではない（⑤で断っている）。移籍の直前の値は Transfermarkt の移籍履歴の API で読んだ。
+#   - 媒体名は台本に出さない（2026-09-21 の決まり）。出どころは各節の sources に置くだけ。
+#
+# **自分で数えた数**（すべて百万ユーロ。足し算で一致を確かめた）:
+#   払った額（集計の夏）125.0+63.6+40.0+33.0+3.0＝264.60 ← Transfermarkt の世界の一覧・プレミアの一覧の264.60と一致／
+#   戻った額 30.0+1.2＝31.20 ← 一覧の31.20と一致／差し引き 264.60−31.20＝233.40 ← 一覧の−233.40と一致／戻った割合 31.20÷264.60＝11.8%（台本は12%）／
+#   上位2人 125.0+63.6＝188.6 → 188.6÷264.60＝71.3%（71%）／バルコラ1人 125.0÷264.60＝47.2%（47%）／
+#   最後の2日（バルコラ8/31・ブルフマンス9/1）125.0+33.0＝158.0 → 158.0÷264.60＝59.7%（60%）／
+#   ジョーンズ1人 30.0÷31.20＝96.2%（96%）／
+#   買った5人の移籍直前の市場価値 90+55+30+4+3＝182.0 → 264.60÷182.0＝1.454（約1.45倍）、差 264.60−182.0＝82.6／
+#   ブルフマンス 33.0÷4.0＝8.25（約8倍）／バルコラ 125÷90＝1.39、ジャケ 63.6÷55＝1.16、ムニョス 40÷30＝1.33、ンドゥクウェ 3÷3＝1.00（線の上は4人、ぴったり1人）／
+#   売った5人の移籍直前の市場価値 35+4+45+22+7＝113.0 → 31.20÷113.0＝0.276（約0.28倍）／無償の3人 45+22+7＝74.0 → 74.0÷31.20＝2.37（約2.4倍）／
+#   バルコラの最大 145−125＝20 → 20÷125＝16%／
+#   夏の5年（払った額／戻った額／差し引き）2022 98.90／80.10／18.80、2023 172.00／60.70／111.30、2024 42.00／47.00／−5.00（黒字）、
+#   2025 483.13／219.50／263.63、2026 264.60／31.20／233.40。2025+2026 の差し引き 263.63+233.40＝497.03／
+#   264.60÷42.00＝6.30（2024年の夏の6.3倍）／5年の払った額の合計 1060.63（今年はその24.9%。台本では読まない）／戻った額は2026が5年で最少（31.20＜47.00）。
+# 為替は ECB 参照相場の 2026-10-13＝1ユーロ176.91円（取れたいちばん新しい日。ECB の API で取った）。**どの日の為替かを必ず言う**。
+#   2億3340万ユーロ × 176.91 ＝ 412.91億円 → 「およそ413億円」。4億9703万ユーロ × 176.91 ＝ 879.30億円 → 「およそ879億円」。
+#
+# 数字の重なり対策（別の節で同じ数字を読まない）：『2億6460万』『3120万』『2億3340万』『12%』『413億円』は①だけ（②以降は「払った額」「戻った額」で受ける。
+#   ⑤⑥の板の上には数字が出るが読まない）。②の『71%』『47%』は②だけ、③の『60%』『1億5800万』は③だけ、④の『96%』は④だけ、
+#   ⑤の『1.45倍』『0.28倍』『8倍』『7400万』は⑤だけ、⑥の『4億9703万』『879億円』『6.3倍』は⑥だけ。**題には金額を入れない**。
+# 板：①waterfall と convert ②table（5行）と waterfall（バルコラの最大）③timeline（5行）と calc ④table（5行）⑤scatter（diagonal つき）と calc 2枚 ⑥line（2本）・convert・calc。
+#   **versus・stats・verdict は使っていない**（この回は人の比べでも判定でもないため）。板を下ろす行には `card: none` を明示した。赤ペン（mark）は使っていない。
+# 写真（10/14 取得）：Commons の CC BY-SA。バルコラ（2026年W杯のフランス代表、背番号12・BARCOLA の背中の写真で本人を確認）、アンフィールド2枚。出典は assets/images/20261014_transfer_liverpool_window/credits.json。旧メモ：**未取得**（thumbnail の photo・short_photo・opening_image は空のまま。ユーザーと相談して決める）。画面の下地は本拠地の実写の指定（assets/backgrounds/stadium_リヴァプール*.png）だけ。
+#   **この worktree には assets/backgrounds の本拠地の実写が無い**（gitignore）ので、書き出す前に本体側から用意する必要がある（draft のヒントに出るはず）。
+# 声：1件も無い（数字が主役の回。シリーズなので反応は集めていない。本人の言葉・他人の声も使っていない）。voice_min: 0。
+# サムネ：**ユーザーと相談して決める。**ここに書いてあるのは案A（構図 number、伏せるのは差し引きの世界順位 ●位）。
+#   直近は 10/9 number・10/11 number・10/12 face なので、number だと「3回続き」ではないが10/11と同じ構図になる。
+#   案B：scene（本拠地の全景、2行目「差し引きは世界で●●●●」）／案C：face（バルコラの横長の写真、2行目「世界で●位の差し引き」）。写真が取れてから決める。
+format: news
+voice_min: 0
+slot: other_1
+date: 2026年10月14日
+series: 移籍の深掘り
+people:
+- リヴァプール
+- ブラッドリー・バルコラ
+- ジェレミー・ジャケ
+- ビクトル・ムニョス
+- カーティス・ジョーンズ
+- モハメド・サラー
+- アンディ・ロバートソン
+theme:
+  id: transfer_liverpool_window
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: リヴァプール
+  title: リヴァプール、今夏の移籍の差し引きは世界で何位か。戻った金が細かった理由
+  question: 今夏のリヴァプールの移籍期間で、払った額と戻った額はどれだけ違い、その差し引きは世界で何番目なのか
+  lead: この夏、払った額が戻った額を大きく上回ったクラブ。
+  takeaway: リヴァプールが今夏に払った額は2億6460万ユーロで世界6番目だが、選手を売って戻った額が3120万ユーロしかなく、払った額の12%にとどまった。差し引きは2億3340万ユーロ（およそ413億円）で、今夏の世界で最も大きい。払ったのは5人で、バルコラ1億2500万、ジャケ6360万の2人で71%を占め、払った額の60%はバルコラとブルフマンスが決まった窓の最後の2日間に動いた。戻った額の96%はジョーンズ1人で、コナテ・サラー・ロバートソンの3人は移籍金が付いていない。移籍の直前の推定の市場価値と比べると、買った5人は合計1億8200万ユーロに対して約1.45倍を払い、売った5人は合計1億1300万ユーロに対して約0.28倍しか受け取っていない。夏の払った額と戻った額を5年並べると、戻った額は今年が最も少なく、2025年と2026年の差し引きの合計は4億9703万ユーロ（およそ879億円）。リヴァプールの発表文に額は書かれておらず、額はすべて報じられた移籍金の集計で、固定かボーナス込みかは公表されていない。冬の窓は2027年1月1日に開く
+  opening_image: assets/images/20261014_transfer_liverpool_window/b01_barcola_w.jpg
+  bgm: assets/audio/bgm_calm.wav
+thumbnail:
+  layout: number
+  # **写真は未取得**（ユーザーと相談して決める）。取れたら photo・short_photo・theme.opening_image を入れる。
+  # **photo が空だと draft は『thumbnail.photo がありません』で止まる**ため、台本（scripts/）は仮の横長画像を一時的に指定して書き出した。
+  # 10/14 夜：thumbnail.photo をバルコラ→アンフィールド空撮（a05）に替えた（写真が人の話でない行に差し込まれていたため／サムネの黒を減らすため）。
+  # 写真を入れたら、scripts/20261014_transfer_liverpool_window.md を消して draft を掛け直すこと。
+  photo: assets/images/20261014_transfer_liverpool_window/a05_road_w.jpg
+  short_photo: ''
+  number: ●位
+  line1: リヴァプールの今夏の収支
+  line2: 差し引きの大きさは世界で
+  crests:
+  - リヴァプール
+  tags:
+  - リヴァプール
+  - バルコラ
+  - 移籍金
+  - プレミアリーグ
+  - 移籍の深掘り
+sections:
+- id: money
+  main: true
+  heading: 差し引きが、世界でいちばん大きい夏
+  tier: 報道
+  telop: 払った額は世界6番目。戻った額が少なく、差し引きは世界で最も大きい
+  narrator: キャスター
+  card: &flow
+    type: waterfall
+    title: 今夏の移籍で動いた額
+    start: [払った額, 264.6]
+    steps:
+    - [売って戻した額, -31.2]
+    total: [差し引き, 233.4]
+    unit: 百万ユーロ
+  say:
+  - text: この夏、リヴァプールは差し引きの額が世界一のクラブになりました。
+    short_only: true
+    image: assets/images/20261014_transfer_liverpool_window/a05_road_w.jpg
+  - text: 2億3340万ユーロ。差し引きの額で、これを超えたクラブは世界にありません。
+    emph: true
+    image: assets/images/20261014_transfer_liverpool_window/a01_full_w.jpg
+    card:
+      <<: *flow
+      highlight: 差し引き
+  - text: 額はすべて、報じられた移籍金を集めた集計です。
+    card:
+      <<: *flow
+      highlight: 差し引き
+  - text: 払った額だけで見れば、2億6460万ユーロで世界6番目です。
+    card:
+      <<: *flow
+      highlight: 払った額
+  - text: ところが、選手を売って戻ってきた額は、3120万ユーロでした。
+    card:
+      <<: *flow
+      highlight: 売って戻した額
+  - text: 払った額のうち、戻ったのは12%だけです。
+    card: *flow
+  - text: この差し引きを、いまの為替で円に直します。
+    card: &yen
+      type: convert
+      title: 差し引きを円に
+      from: ['2億3340万', ユーロ, 払った額から戻った額を引く]
+      to: [約413億, 円, 10月13日の為替]
+      via: 1ユーロ＝176.91円
+  - text: 欧州中央銀行の10月13日の参照相場は、1ユーロ176円91銭。
+    card: *yen
+  - text: およそ413億円になります。
+    card: *yen
+  sources:
+  - https://www.transfermarkt.com/transfers/einnahmenausgaben/statistik/plus/1?ids=a&saison_id=2026&saison_id_bis=2026&w_s=s
+  - https://www.transfermarkt.com/premier-league/einnahmenausgaben/wettbewerb/GB1/plus/1?ids=a&saison_id=2026&saison_id_bis=2026&w_s=s
+  - https://data-api.ecb.europa.eu/service/data/EXR/D.JPY.EUR.SP00.A
+- id: spent
+  heading: 金を払って加えたのは5人
+  tier: 報道
+  telop: 上の2人で払った額の71%。バルコラ1人で47%を占める
+  narrator: 解説
+  card: &inlist
+    type: table
+    title: 払った額の大きい順（5人）
+    columns: ['選手', '前のクラブ', '百万ユーロ']
+    rows:
+    - &i1 [ブラッドリー・バルコラ, パリ・サンジェルマン, '125.0']
+    - &i2 [ジェレミー・ジャケ, レンヌ, '63.6']
+    - &i3 [ビクトル・ムニョス, オサスナ, '40.0']
+    - &i4 [ブルフマンス, ヘンク, '33.0']
+    - &i5 [ンドゥクウェ, オーストリア・ウィーン, '3.0']
+  say:
+  - text: まず、払った額のほうから見ます。
+    image: assets/images/20261014_transfer_liverpool_window/a01_full_w.jpg
+    card: none
+  - text: 移籍金を払ってリヴァプールに加わったのは5人で、平均は1人5292万ユーロです。
+    card: *inlist
+  - text: いちばん高いのはバルコラ。パリ・サンジェルマンから1億2500万ユーロ。
+    image: assets/images/20261014_transfer_liverpool_window/b01_barcola_w.jpg
+    card: {type: table, title: 払った額の大きい順（5人）, columns: ['選手', '前のクラブ', '百万ユーロ'], rows: [*i1, *i2, *i3, *i4, *i5], highlight_row: 0}
+  - text: 次がジェレミー・ジャケ。レンヌから6360万ユーロ。
+    image: assets/images/20261014_transfer_liverpool_window/a05_road_w.jpg
+    card: {type: table, title: 払った額の大きい順（5人）, columns: ['選手', '前のクラブ', '百万ユーロ'], rows: [*i1, *i2, *i3, *i4, *i5], highlight_row: 1}
+  - text: 3人目がビクトル・ムニョス。オサスナから4000万ユーロ。
+    card: {type: table, title: 払った額の大きい順（5人）, columns: ['選手', '前のクラブ', '百万ユーロ'], rows: [*i1, *i2, *i3, *i4, *i5], highlight_row: 2}
+  - text: 上の2人だけで1億8860万ユーロ。払った額の71%です。
+    emph: true
+    image: assets/images/20261014_transfer_liverpool_window/a05_road_w.jpg
+    card: {type: table, title: 払った額の大きい順（5人）, columns: ['選手', '前のクラブ', '百万ユーロ'], rows: [*i1, *i2, *i3, *i4, *i5], highlight_row: [0, 1]}
+  - text: バルコラ1人では、47%にあたります。
+    image: assets/images/20261014_transfer_liverpool_window/b01_barcola_w.jpg
+    card: {type: table, title: 払った額の大きい順（5人）, columns: ['選手', '前のクラブ', '百万ユーロ'], rows: [*i1, *i2, *i3, *i4, *i5], highlight_row: 0}
+  - text: 4人目は18歳のゴールキーパー、ブルフマンス。ヘンクから3300万ユーロ。
+    image: assets/images/20261014_transfer_liverpool_window/a05_road_w.jpg
+    card: {type: table, title: 払った額の大きい順（5人）, columns: ['選手', '前のクラブ', '百万ユーロ'], rows: [*i1, *i2, *i3, *i4, *i5], highlight_row: 3}
+  - text: 5人目のンドゥクウェは、オーストリア・ウィーンから300万ユーロです。
+    card: {type: table, title: 払った額の大きい順（5人）, columns: ['選手', '前のクラブ', '百万ユーロ'], rows: [*i1, *i2, *i3, *i4, *i5], highlight_row: 4}
+  - text: ただし、この額が固定なのかボーナス込みなのかは、公表されていません。
+    card: *inlist
+  - text: 5人の加入を知らせたクラブの発表文にも、額は書かれていません。
+    card: *inlist
+  - text: バルコラは、ボーナスを足した最大で1億4500万ユーロとも報じられています。
+    image: assets/images/20261014_transfer_liverpool_window/b01_barcola_w.jpg
+    card: &bonus
+      type: waterfall
+      title: バルコラの移籍金（報じられた額）
+      start: [集計の額, 125.0]
+      steps:
+      - [最大までの差, 20.0]
+      total: [報じられた最大, 145.0]
+      unit: 百万ユーロ
+  - text: 集計の額との差は2000万ユーロ。集計の額の16%にあたります。
+    card:
+      <<: *bonus
+      highlight: 最大までの差
+  - text: 集計の額が固定だとは言えないので、表は集計の額のまま並べています。
+    image: assets/images/20261014_transfer_liverpool_window/a05_road_w.jpg
+    card: *inlist
+  sources:
+  - https://www.transfermarkt.com/liverpool-fc/transfers/verein/31/saison_id/2026
+  - https://www.liverpoolfc.com/news/liverpool-sign-bradley-barcola-paris-saint-germain
+  - https://www.soccer-king.jp/news/world/eng/20260903/2200407.html
+  - https://web.ultra-soccer.jp/news/all/35743/
+- id: late
+  heading: 払った額の60%は、窓が閉まる前の2日間に動いた
+  tier: 報道
+  telop: バルコラの加入は8月31日、ブルフマンスは9月1日。窓は9月1日の23時に閉まった
+  narrator: 解説
+  card: &when
+    type: timeline
+    title: 5人の獲得がクラブから発表された日
+    rows:
+    - ['1月26日', ンドゥクウェの獲得に合意]
+    - ['2月2日', ジャケの獲得に合意]
+    - ['6月18日', ムニョスの獲得に合意。窓は6月15日に開いた]
+    - ['8月31日', バルコラが加入]
+    - ['9月1日', ブルフマンスの獲得に合意。この日の23時に窓が閉まった]
+    focus: 8月31日
+  say:
+  - text: では、この獲得は、いつ決まったのか。
+    image: assets/images/20261014_transfer_liverpool_window/a05_road_w.jpg
+    card: none
+  - text: クラブが発表した日で並べます。
+    card: *when
+  - text: 移籍ができる期間、通称「窓」は、6月15日に開き、9月1日の23時に閉まりました。
+    card: *when
+  - text: ンドゥクウェとジャケは、窓が開く前の冬に合意しています。
+    card:
+      <<: *when
+      highlight_row: [0, 1]
+  - text: リヴァプールがムニョスと合意したのは6月18日。窓が開いて3日後です。
+    card:
+      <<: *when
+      highlight_row: 2
+  - text: バルコラの加入は8月31日。窓が閉まる前の日でした。
+    image: assets/images/20261014_transfer_liverpool_window/b01_barcola_w.jpg
+    emph: true
+    card:
+      <<: *when
+      highlight_row: 3
+  - text: ブルフマンスは9月1日、窓が閉まる当日に発表されました。
+    image: assets/images/20261014_transfer_liverpool_window/a05_road_w.jpg
+    card:
+      <<: *when
+      highlight_row: 4
+  - text: この2人を足すと1億5800万ユーロ。総額の60%にあたります。
+    emph: true
+    card: &calc_late
+      type: calc
+      title: 最後の2日に動いた額は、払った額の何割か
+      terms:
+      - ['1億5800万ユーロ', バルコラとブルフマンス]
+      - ['2億6460万ユーロ', 払った額]
+      - [約60%, 最後の2日の割合]
+      ops: ['÷', ＝]
+  - text: 窓が閉まったあとの9月4日にも、獲得の合意が1件ありました。
+    image: assets/images/20261014_transfer_liverpool_window/a01_full_w.jpg
+    card: none
+  - text: フォワードのンゲッサン。サンテティエンヌから500万ユーロ。
+  - text: 表の5人に並べれば、下から2番目の額です。
+  - text: 加わる日は、2027年1月1日と記録されています。今季はブレストへ貸し出されます。
+  - text: この500万ユーロは、今夏の合計に入れていません。
+  sources:
+  - https://www.liverpoolfc.com/news/liverpool-agree-deal-sign-ifeanyi-ndukwe
+  - https://www.liverpoolfc.com/news/liverpool-agree-deal-sign-jeremy-jacquet
+  - https://www.liverpoolfc.com/news/liverpool-agree-deal-sign-spain-forward-victor-munoz
+  - https://www.liverpoolfc.com/news/liverpool-sign-bradley-barcola-paris-saint-germain
+  - https://www.liverpoolfc.com/news/liverpool-agree-deal-sign-goalkeeper-lucca-brughmans
+  - https://www.liverpoolfc.com/news/liverpool-agree-deal-sign-djylian-nguessan
+  - https://www.premierleague.com/en/news/4664145/when-does-summer-2026-premier-league-transfer-window-open-and-close
+- id: sold
+  heading: 戻った金の96%は、ジョーンズ1人だった
+  tier: 報道
+  telop: 移籍金が付いて出たのは2人だけ。コナテ・サラー・ロバートソンは移籍金が付いていない
+  narrator: 解説
+  card: &outlist
+    type: table
+    title: 出ていった5人（戻った額の大きい順）
+    columns: ['選手', '行き先', '百万ユーロ']
+    rows:
+    - &o1 [カーティス・ジョーンズ, インテル, '30.0']
+    - &o2 [バイチェティッチ, セルタ, '1.2']
+    - &o3 [コナテ, レアル・マドリード, '0（移籍金なし）']
+    - &o4 [モハメド・サラー, トラブゾンスポル, '0（移籍金なし）']
+    - &o5 [アンディ・ロバートソン, トッテナム, '0（移籍金なし）']
+  say:
+  - text: 次は、戻ってきたほうです。
+    image: assets/images/20261014_transfer_liverpool_window/a05_road_w.jpg
+    card: none
+  - text: 移籍金が付いて出ていったのは、2人だけでした。
+    card: *outlist
+  - text: カーティス・ジョーンズが、インテルへ。3000万ユーロ。
+    card: {type: table, title: 出ていった5人（戻った額の大きい順）, columns: ['選手', '行き先', '百万ユーロ'], rows: [*o1, *o2, *o3, *o4, *o5], highlight_row: 0}
+  - text: バイチェティッチは、セルタへ戻りました。120万ユーロ。
+    card: {type: table, title: 出ていった5人（戻った額の大きい順）, columns: ['選手', '行き先', '百万ユーロ'], rows: [*o1, *o2, *o3, *o4, *o5], highlight_row: 1}
+  - text: ジョーンズ1人で、戻った額の96%です。
+    emph: true
+    image: assets/images/20261014_transfer_liverpool_window/a01_full_w.jpg
+    card: {type: table, title: 出ていった5人（戻った額の大きい順）, columns: ['選手', '行き先', '百万ユーロ'], rows: [*o1, *o2, *o3, *o4, *o5], highlight_row: 0}
+  - text: 移籍金が付かなかった退団は、3人です。
+    card: {type: table, title: 出ていった5人（戻った額の大きい順）, columns: ['選手', '行き先', '百万ユーロ'], rows: [*o1, *o2, *o3, *o4, *o5], highlight_row: [2, 3, 4]}
+  - text: コナテはレアル・マドリード、サラーはトラブゾンスポル、ロバートソンはトッテナムへ。
+    card: {type: table, title: 出ていった5人（戻った額の大きい順）, columns: ['選手', '行き先', '百万ユーロ'], rows: [*o1, *o2, *o3, *o4, *o5], highlight_row: [2, 3, 4]}
+  - text: ロバートソンは、契約の満了での移籍と、トッテナムが発表しています。
+    card: {type: table, title: 出ていった5人（戻った額の大きい順）, columns: ['選手', '行き先', '百万ユーロ'], rows: [*o1, *o2, *o3, *o4, *o5], highlight_row: 4}
+  - text: コナテは5月末に、サラーは3月に、退団をリヴァプールが発表していました。
+    card: {type: table, title: 出ていった5人（戻った額の大きい順）, columns: ['選手', '行き先', '百万ユーロ'], rows: [*o1, *o2, *o3, *o4, *o5], highlight_row: [2, 3]}
+  - text: この3人に、移籍金は付いていません。
+    card: {type: table, title: 出ていった5人（戻った額の大きい順）, columns: ['選手', '行き先', '百万ユーロ'], rows: [*o1, *o2, *o3, *o4, *o5], highlight_row: [2, 3, 4]}
+  - text: 貸し出しで出た選手は、収入に数えていません。
+    card: *outlist
+  sources:
+  - https://www.transfermarkt.com/liverpool-fc/transfers/verein/31/saison_id/2026
+  - https://www.liverpoolfc.com/news/curtis-jones-completes-permanent-transfer-internazionale
+  - https://www.liverpoolfc.com/news/stefan-bajcetic-completes-permanent-transfer-celta-vigo
+  - https://www.liverpoolfc.com/news/ibrahima-konate-leave-liverpool-fc
+  - https://www.liverpoolfc.com/news/mohamed-salah-leave-liverpool-end-season
+  - https://www.tottenhamhotspur.com/news/1071931/robertson-signing-secured
+- id: value
+  heading: 相場と並べると、買う側は高く、売る側は安い
+  tier: 報道
+  telop: 買った5人は推定の市場価値の約1.45倍、売った5人は約0.28倍だった
+  narrator: 解説
+  card: &scat
+    type: scatter
+    title: 移籍の直前の推定の市場価値と、払った移籍金
+    x: {label: 移籍の直前の市場価値, unit: 百万ユーロ}
+    y: {label: 払った移籍金, unit: 百万ユーロ}
+    points:
+    - [バルコラ, 90, 125]
+    - [ジャケ, 55, 63.6]
+    - [ムニョス, 30, 40]
+    - [ブルフマンス, 4, 33]
+    - [ンドゥクウェ, 3, 3]
+    diagonal: 市場価値と同じ額
+    focus: ブルフマンス
+  say:
+  - text: 高く買ったのかどうかは、相場と並べると見えます。
+    image: assets/images/20261014_transfer_liverpool_window/a05_road_w.jpg
+    card: none
+  - text: 移籍の直前に付いていた、推定の市場価値を足してみます。
+    card: *scat
+  - text: 買った5人の市場価値は、合わせて1億8200万ユーロ。
+    card: *scat
+  - text: 払ったのは、その約1.45倍。8260万ユーロ多く払った計算です。
+    emph: true
+    card: &calc_in
+      type: calc
+      title: 買った5人は相場の何倍か
+      terms:
+      - ['2億6460万ユーロ', 払った額]
+      - ['1億8200万ユーロ', 直前の市場価値の合計]
+      - [約1.45倍, 相場の何倍か]
+      ops: ['÷', ＝]
+  - text: 斜めの線は、市場価値とちょうど同じ額を払った場合を表します。
+    card:
+      <<: *scat
+      highlight: バルコラ
+  - text: その線より上にいる4人が、相場より高く払った側です。
+    card:
+      <<: *scat
+      highlight: ジャケ
+  - text: 相場との開きが倍率でいちばん大きいのが、リヴァプールが買った18歳のブルフマンス。
+    emph: true
+    card:
+      <<: *scat
+      highlight: ブルフマンス
+  - text: 移籍の直前の市場価値は、400万ユーロ。
+    card:
+      <<: *scat
+      highlight: ブルフマンス
+  - text: 相場のおよそ8倍です。今季はヘンクに残ってプレーする、とクラブが発表しています。
+    card:
+      <<: *scat
+      highlight: ブルフマンス
+  - text: ンドゥクウェは、線の上にぴったり乗っています。
+    card:
+      <<: *scat
+      highlight: ンドゥクウェ
+  - text: では、売るほうはどうだったのか。
+    image: assets/images/20261014_transfer_liverpool_window/a01_full_w.jpg
+    card: none
+  - text: 出ていった5人の、直前の市場価値は合わせて1億1300万ユーロ。
+    card: &calc_out
+      type: calc
+      title: 売った5人は相場の何倍か
+      terms:
+      - ['3120万ユーロ', 受け取った額]
+      - ['1億1300万ユーロ', 直前の市場価値の合計]
+      - [約0.28倍, 相場の何倍か]
+      ops: ['÷', ＝]
+  - text: 受け取ったのは、その約0.28倍。3割に届いていません。
+    emph: true
+    card: *calc_out
+  - text: この3人の市場価値だけで、7400万ユーロありました。
+    card: *calc_out
+  - text: 受け取った額の、約2.4倍にあたります。
+    card: *calc_out
+  - text: 契約が満了して出る選手に移籍金が付かないことも、この差に映っています。
+    card: *calc_out
+  - text: また、市場価値は推定で、値段ではありません。物差しとして並べただけです。
+    card: *calc_out
+  sources:
+  - https://www.transfermarkt.com/bradley-barcola/marktwertverlauf/spieler/708265
+  - https://www.transfermarkt.com/lucca-brughmans/marktwertverlauf/spieler/1105547
+  - https://www.liverpoolfc.com/news/liverpool-agree-deal-sign-goalkeeper-lucca-brughmans
+- id: view
+  viewpoint: true
+  heading: 戻った額が、5年の夏でいちばん少なかった
+  tier: 報道
+  telop: 戻った額は5年で最少。この2年の夏の差し引きは合わせて4億9703万ユーロ
+  narrator: 解説
+  card: &years
+    type: line
+    title: 夏の移籍期間に払った額と戻った額（5年）
+    unit: 百万ユーロ
+    x: ['2022年', '2023年', '2024年', '2025年', '2026年']
+    series:
+    - [払った額, [98.9, 172.0, 42.0, 483.13, 264.6]]
+    - [戻った額, [80.1, 60.7, 47.0, 219.5, 31.2]]
+    focus: 戻った額
+  say:
+  - text: リヴァプールにとって、この夏が特別だったのかを、5年の夏で見ておきます。
+    image: assets/images/20261014_transfer_liverpool_window/a05_road_w.jpg
+    card: *years
+  - text: 夏の移籍期間に払った額と、戻った額を、5年ぶん並べました。
+    card: *years
+  - text: 2024年の夏は、払った額が4200万ユーロ。プレミアで19番目の額でした。
+    card:
+      <<: *years
+      highlight: '2024年'
+  - text: この年は戻った額のほうが多く、差し引きはプラスでした。
+    card:
+      <<: *years
+      highlight: '2024年'
+  - text: 2025年は、払った額が4億8313万ユーロ。戻った額は2億1950万ユーロです。
+    card:
+      <<: *years
+      highlight: '2025年'
+  - text: そして、この夏。戻った額は、5年でいちばん少なくなりました。
+    emph: true
+    card:
+      <<: *years
+      highlight: '2026年'
+  - text: 2025年と2026年の、2年の夏の差し引きを足すと、4億9703万ユーロです。
+    emph: true
+    card: &yen2
+      type: convert
+      title: この2年の差し引きを円に
+      from: ['4億9703万', ユーロ, 2025年と2026年の夏の差し引き]
+      to: [約879億, 円, 10月13日の為替]
+      via: 1ユーロ＝176.91円
+  - text: 同じ10月13日の為替で、およそ879億円です。
+    card: *yen2
+  - text: 払った額で見ても、この夏は2024年の夏の6.3倍に増えています。
+    card: &calc_year
+      type: calc
+      title: この夏は2年前の何倍か
+      terms:
+      - ['2億6460万ユーロ', この夏]
+      - ['4200万ユーロ', 2024年の夏]
+      - [6.3倍, 2年での開き]
+      ops: ['÷', ＝]
+  - text: 買い物は大きく、戻る金は細い。この夏は、その形がはっきり出ました。
+    image: assets/images/20261014_transfer_liverpool_window/a01_full_w.jpg
+    card: none
+  - text: 次の窓は、2027年1月1日に開きます。閉まるのは2月1日の23時です。
+  - text: ンゲッサンが加わる日も、その1月1日です。
+  sources:
+  - https://www.transfermarkt.com/premier-league/einnahmenausgaben/wettbewerb/GB1/plus/1?ids=a&saison_id=2026&saison_id_bis=2026&w_s=s
+  - https://www.transfermarkt.com/premier-league/einnahmenausgaben/wettbewerb/GB1/plus/1?ids=a&saison_id=2025&saison_id_bis=2025&w_s=s
+  - https://www.transfermarkt.com/premier-league/einnahmenausgaben/wettbewerb/GB1/plus/1?ids=a&saison_id=2024&saison_id_bis=2024&w_s=s
+  - https://www.premierleague.com/en/news/4664145/when-does-summer-2026-premier-league-transfer-window-open-and-close
+  - https://data-api.ecb.europa.eu/service/data/EXR/D.JPY.EUR.SP00.A
+#
+# ─────────────── 以下は材料の控え（台本には出さない）。取った日 2026-10-14（JST）。使った道具は requests と WebFetch 相当の取得だけ。ブラウザ操作の道具は使っていない ───────────────
+#
+# 【一次情報まで辿れたこと】
+#  ・クラブ公式（liverpoolfc.com）の発表文の本文と公開日（記事の published_time）：
+#      加入 … ンドゥクウェ 2026-01-26／ジャケ（合意）2026-02-02・（加入完了）2026-07-01／ムニョス 2026-06-18／バルコラ 2026-08-31／ブルフマンス 2026-09-01／ンゲッサン 2026-09-04／アラウホ（貸し）2026-08-10
+#      退団 … コナテ 2026-05-31／サラー 2026-03-24／ロバートソン 2026-04-09／ジョーンズ 2026-08-21／バイチェティッチ 2026-08-31／エリオット（バレンシアへ貸し）2026-09-01／R.ウィリアムズ 2026-05-25
+#      → **どの発表文にも移籍金の額は書かれていない**（£・€・million・fee・add-on で全文検索して0件。ジャケの文の「feel」は誤検出）。
+#      ブルフマンス：「ヘンクに戻り、2026-27シーズンはそこにとどまる」（発表文の原文）。ンゲッサン：「2026-27の残りをブレストでの貸し出し」（原文）。
+#  ・プレミアリーグ公式：夏の窓は2026-06-15に開き、2026-09-01（火）23:00 BST に閉まる。冬の窓は2027-01-01に開き 2027-02-01 23:00 GMT に閉まる（premierleague.com の記事）。
+#  ・トッテナム公式：ロバートソンは「リヴァプールとの契約の満了にともない7月1日に加わる」（原文）。
+#  ・レアル・マドリード公式（2026-06-18）：コナテと「2030年6月30日まで4シーズン」で合意。額の記載なし。
+#  ・欧州中央銀行（ECB）の参照相場（API）：2026-10-13＝1ユーロ176.91円（取れた最新）。2026-10-09＝177.34、10-12＝177.33。
+#  ・Transfermarkt：クラブの移籍ページ（加入13件・退団11件の一覧、合計€269.60m／€31.20m）、世界の支出・収入の一覧（リヴァプール264.60／31.20／−233.40）、
+#      プレミアの一覧（2022〜2026の夏）、各選手の移籍履歴 API（移籍日・移籍金・移籍直前の市場価値）。
+#
+# 【読んだが突き合わせて分かったこと（食い違い）】
+#  ・**クラブの移籍ページの合計は€269.60m、世界の一覧は€264.60m。差の€5.00mは、ンゲッサン（サンテティエンヌ→）の移籍で、API では「isPending: true、日付 2027-01-01」。**
+#    世界の一覧は未実行の移籍を夏に数えていない。この回は**世界の一覧に合わせて264.60**（ンゲッサンは③の末尾で別に言い、合計に入れていないと断っている）。
+#    264.60で数えると差し引きは233.40で、10/11 の回で使った世界の一覧の数字（リヴァプール −233.40）と一致する。269.60で数えても −238.40 でやはり世界最大。
+#  ・ブルフマンス（ヘンク→、€33.00m）は API で移籍日 2026-09-01、同日にヘンクへ貸し出し。移籍履歴に 2027-06-30 の「貸し出しの終わり」（pending）がある。
+#
+# 【一次情報まで辿れなかったこと／未確認】
+#  ・**移籍金の額そのものは、どのクラブの発表にも無い。**額の出どころは Transfermarkt の集計だけ（確度「報道」）。固定・ボーナス・解除条項の切り分けは未確認。
+#  ・**バルコラの「最大1億4500万ユーロ」**は報道（サッカーキング 2026-09-03、ウルトラ・サッカー）で、報道の元（記者の投稿・外国紙）までは辿れていない。**未確認**。
+#    集計の1億2500万が固定かどうかも未確認（台本は固定とは言っていない）。
+#  ・**英語版 Wikipedia のポンド表記**（バルコラ £106m・最大 £123m、ジャケ £55m・最大 £60m、ムニョス £34.5m、ブルフマンス £28.3m＋£1.7m の追加条項、ンドゥクウェ £2.6m、
+#    ジョーンズ £25.7m・最大 £30m、バイチェティッチ £1.0m・最大 £1.3m、ンゲッサン £4.3m、アラウホ 買い取りオプション £47.1m）は**二次情報なので台本に使っていない**。
+#    注の元の報道までは辿れなかった。**アラウホの買い取りの額はクラブの発表に無く、未確認**（台本に出していない）。
+#  ・**サラーの行き先と「移籍金なし」**は Transfermarkt（無償）が根拠。トラブゾンスポルの公式ページは 403 で**読めなかった**。サラーが契約満了かどうかは**未確認**
+#    （リヴァプールの発表は「合意のうえ退団」で、契約の期限は書いていない）。台本は「満了」と言っていない（満了と言うのはロバートソンだけ＝トッテナムの発表）。
+#    ⑤の「契約が満了して出る選手には、もともと移籍金が付きません」は一般論で、サラーを含めて言っていない。
+#  ・Transfermarkt の集計外のもの：アカデミーの選手の売却（ルカ・ステファンソン→ボルトン £0.7m など）、サミュエル・マルティネス（2027-28から加入、£0.75m と報じられた）は
+#    Transfermarkt の一覧に無く、台本に使っていない。
+#  ・日本語の表記の未確認：ブルフマンス（Lucca Brughmans）・ンドゥクウェ（Ifeanyi Ndukwe）・ンゲッサン（Djylian N'Guessan）は、既存の取材メモ
+#    （20260908_transfer / 20261005_transfer_review）に合わせた姓だけの表記。名の読みは確認していない。draft の読みのヒントを見て辞書に足す。
+#  ・「世界で」の範囲：Transfermarkt の世界の一覧に載るクラブでの比べ。載っていないクラブは見ていない。
+#
+# 【直近30日の重なりの確認】
+#  ・リヴァプール：9/6・9/10・9/13・9/16・9/20（クラブ紹介・CL）・10/9（ユニフォーム）・10/12（財政）の取材メモがある。**この回はそのどれとも数字が重ならない**
+#    （10/12 の財政は決算のポンド・5季の現金の出入り。この回は今夏のユーロの移籍金だけ）。
+#  ・バルコラ：9/10（デビュー戦の最高速）・10/5（移籍の答え合わせ。移籍金1億2500万ユーロと出場の表）。**移籍金の額は 10/5 の回にも出ている**ので、この回は額を「集計の額」として
+#    もう一度出すが、角度は窓全体の出入りと決まった日・最大額で、出来（出場・評点）には触れない。
+#  ・サラー：9/9 の候補（トルコを選んだ理由）。アラウホ：9/26 候補。**どちらも作っておらず、この回では移籍金の有無だけ**。
+#  ・使わないと決めた人（エンソ・アンダーソン・ブアディ・サヴィオ・マンC）は一度も出していない。
+#
+# 【読みのヒント（draft に任せる）】
+#  ブラッドリー・バルコラ／ジェレミー・ジャケ／ビクトル・ムニョス／ブルフマンス／ンドゥクウェ／ンゲッサン／バイチェティッチ／アンディ・ロバートソン／オーストリア・ウィーン／
+#  トラブゾンスポル／サンテティエンヌ。

@@ -4380,5 +4380,53 @@
     "video_id": "w0H3h-yMmZQ",
     "at": "2026-10-14T07:29:24+00:00",
     "publish_at": "2026-10-14T10:00:00Z"
+  },
+  {
+    "build": "20260926_ll13_malaga",
+    "video_id": "YY50lRhUYcE",
+    "at": "2026-10-14T15:30:31+00:00",
+    "publish_at": "2026-10-15T02:00:00Z"
+  },
+  {
+    "build": "20261014_player_567576",
+    "video_id": "UKeSWa0gVic",
+    "at": "2026-10-14T15:31:24+00:00",
+    "publish_at": "2026-10-15T03:00:00Z"
+  },
+  {
+    "build": "20261014_stadium_brighton",
+    "video_id": "JF1hmwPsklI",
+    "at": "2026-10-14T15:33:05+00:00",
+    "publish_at": "2026-10-15T04:00:00Z"
+  },
+  {
+    "build": "20261014_compare_973085_918969",
+    "video_id": "DFvjovLGiXY",
+    "at": "2026-10-14T15:34:16+00:00",
+    "publish_at": "2026-10-15T05:00:00Z"
+  },
+  {
+    "build": "20261014_finance_manutd",
+    "video_id": "4lod1oW1uBM",
+    "at": "2026-10-14T15:35:02+00:00",
+    "publish_at": "2026-10-15T06:00:00Z"
+  },
+  {
+    "build": "20261014_record_unbeaten",
+    "video_id": "RQSJp9SYEbw",
+    "at": "2026-10-14T15:36:32+00:00",
+    "publish_at": "2026-10-15T07:00:00Z"
+  },
+  {
+    "build": "20261014_kit_chelsea",
+    "video_id": "CbsrWglL2oo",
+    "at": "2026-10-14T15:37:54+00:00",
+    "publish_at": "2026-10-15T08:00:00Z"
+  },
+  {
+    "build": "20261014_transfer_liverpool_window",
+    "video_id": "Wo_LqbWxJjA",
+    "at": "2026-10-14T15:38:55+00:00",
+    "publish_at": "2026-10-15T09:00:00Z"
   }
 ]

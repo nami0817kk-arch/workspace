@@ -1,6 +1,7 @@
 """シリーズの回の冒頭と、この回だけの数字（2026-10-06「動画の質を上げる仕組み ⑩」）。"""
 from src.research import (SERIES_DATA_READ_MAX, YARD_STRONG_MARK, Notes, Section,
-                          _advise_series_numbers, _advise_series_opening)
+                          _advise_heading_question, _advise_series_numbers,
+                          _advise_series_opening)
 
 
 def _sec(id, heading, say, voices=None, viewpoint=False, card=None, line_cards=None, images=None):
@@ -106,3 +107,30 @@ def test_見立てに表と比べがあれば知らせない():
     view = _sec("view", "時期ごとの勝率", say, viewpoint=True,
                 line_cards=[VIEW_TABLE, VIEW_TABLE])
     assert _advise_series_numbers(_notes([view])) == []
+
+
+# ---- 見出しは中身の問いにする（2026-10-15）
+
+def test_型名だけの見出しは問いにするよう知らせる():
+    notes = _notes([_sec("data", "基礎DATA", DATA), _sec("a", "オープニング", ["あ。"]),
+                    _sec("b", "収益の基礎DATA", ["あ。"]), _sec("v", "見立て", ["あ。"], viewpoint=True),
+                    _sec("c", "なぜ3年半もかかったのか", ["あ。"]),
+                    _sec("d", "純借入は、5年でいちばん多い", ["あ。"]),
+                    _sec("e", "（何についての見立てか。例：差）", ["あ。"], viewpoint=True)])
+    hints = _advise_heading_question(notes)
+    assert len(hints) == 3
+    assert "『基礎DATA』" in hints[0] and "『収益の基礎DATA』" in hints[1] and "『見立て』" in hints[2]
+    assert "中身の問い" in hints[0]
+
+
+def test_見出しの点検はクラブ紹介とニュースを見ない():
+    secs = [_sec("data", "基礎DATA", DATA)]
+    assert _advise_heading_question(_notes(secs, series="プレミアリーグチーム紹介")) == []
+    assert _advise_heading_question(_notes(secs, series="ラ・リーガチーム紹介")) == []
+    assert _advise_heading_question(_notes(secs, series="")) == []
+
+
+def test_基礎DATAの見出しを問いにしても冒頭の点検は効く():
+    """id が data なら、見出しが問いでも基礎DATAの節として見る（点検が黙って外れない）。"""
+    hints = _advise_series_opening(_notes([_sec("data", "エムバペは、いまどこで、いくらの選手か", DATA)]))
+    assert len(hints) == 2 and "基礎DATAから始まって" in hints[0]

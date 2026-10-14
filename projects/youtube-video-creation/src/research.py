@@ -250,6 +250,15 @@ class Notes:
     # **本編を出さない回**（2026-10-14 指示「本編はない」。ニュースはショートだけ）。
     # ショートの締めから「本編はチャンネルから見られます」を外す（`shorts._add_subscribe`）
     no_main: bool = False
+    # **ショートの質を上げる3つの指定**（2026-10-14 ユーザー「参考2チャンネルを参考に質を上げて」）。
+    # short_question: 締めで視聴者に聞く一言（コメントを誘う。毎回別の文にする。`shorts._add_subscribe`）
+    # short_hook: 冒頭で読む短い一言（題は画面に出す。無ければ題の最初の文で切る。`shorts._shorten_opening`）
+    # short_photos: 同じ人の別の写真（縦版 `_v` があるか縦長のもの。3〜4秒ごとに替える。`shorts._rotate_photos`）
+    short_question: str = ""
+    # 画面に出す大きな一言の組（`{match: 読み上げ文の一部, text: 前半/後半}`。`shorts._apply_short_telops`）
+    short_telops: list = field(default_factory=list)
+    short_hook: str = ""
+    short_photos: list = field(default_factory=list)
     # **シリーズ名を公開する題の後ろに付ける**（2026-09-23 指示「サブタイトルにプレミアリーグチーム紹介として」）。
     # 「題｜シリーズ名」の形。**読み上げの1行目には入れない**（ショートの16秒を食うだけ）。
     # 2026-09-21 の「②プレミア20クラブ紹介はいらない」は連番を頭に置く形の話で、こちらは末尾の名札
@@ -276,6 +285,7 @@ class Notes:
     # オープニングの3行（一言・題・つかみ）にこの絵を当てる。板を指定したときは、
     # 「この動画で分かること」は板に焼き込んである（板の上にカードは重ねない決まり）
     opening_image: str = ""
+    end_bg: str = ""  # 台本 front matter の bg（終了画面の下地。theme.end_bg。2026-10-14）
     bgm: str = ""    # BGM のファイル（theme.bgm。紹介ものは落ち着いた曲。品質100回の23）
     answer: str = ""                 # まとめで返す答え
     takeaway: str = ""               # この動画の見立て（概要欄に1行。2026-09-28 収益化の整理 7）
@@ -505,6 +515,10 @@ def build_notes(raw: dict) -> Notes:
         voice_min=(float(raw["voice_min"]) if raw.get("voice_min") is not None else None),
         short_title=str(raw.get("short_title", "")).strip(),
         no_main=bool(raw.get("no_main", False)),
+        short_question=str(raw.get("short_question") or "").strip(),
+        short_telops=[x for x in (raw.get("short_telops") or []) if isinstance(x, dict) and x.get("match") and x.get("text")],
+        short_hook=str(raw.get("short_hook") or "").strip(),
+        short_photos=[str(x).strip() for x in (raw.get("short_photos") or []) if str(x).strip()],
         series=str(raw.get("series", "")).strip(),
         people=[str(x).strip() for x in (raw.get("people") or []) if str(x).strip()],
         title=str(theme.get("title", "")).strip(),
@@ -516,6 +530,7 @@ def build_notes(raw: dict) -> Notes:
         nameplate=str(theme.get("nameplate") or "").strip(),
         opening_card=(dict(theme["opening_card"]) if theme.get("opening_card") else None),
         opening_image=str(theme.get("opening_image") or "").strip(),
+        end_bg=str(theme.get("end_bg") or "").strip(),
         bgm=str(theme.get("bgm") or "").strip(),
         thumbnail=dict(raw.get("thumbnail") or {}),
         answer=str(raw.get("answer") or "").strip(),
@@ -1668,9 +1683,17 @@ def _check_thumbnail_layout(notes: Notes) -> list[str]:
     構図（face・scene・versus・number）は書き出すまで絵にならないので、写真が無い・
     縦長・数字が無い、を書き出してから気づくと台本から作り直しになる。
     """
-    from .thumbnail import layout_problems
+    from .thumbnail import callout_leaks, layout_problems
 
-    return layout_problems(notes.thumbnail or {})
+    thumb = notes.thumbnail or {}
+    problems = layout_problems(thumb)
+    # **吹き出し（thumbnail.callouts）に答えを入れない**（2026-10-15）。サムネが伏せ字（●）なら、
+    # まとめの答え・見立ての数字が吹き出しに入っていないか見る
+    hidden = any("●" in str(thumb.get(k) or "") for k in ("line1", "line2", "number"))
+    if hidden and thumb.get("callouts"):
+        answer = f"{getattr(notes, 'answer', '')} {getattr(notes, 'takeaway', '')}"
+        problems += callout_leaks(thumb.get("callouts"), answer)
+    return problems
 
 
 # 同じ構図がこの回数続いたら知らせる（2026-10-08、「歴史の地層」と同じ）
@@ -1907,7 +1930,7 @@ def _advise_yardstick(notes: Notes) -> list[str]:
     """
     hints: list[str] = []
     for section in notes.sections:
-        if notes.series and "基礎DATA" in section.heading:
+        if notes.series and _is_data_section(section):
             continue
         gaps = _yardstick_gaps(section)
         if not gaps:
@@ -1942,6 +1965,11 @@ def _advise_yardstick(notes: Notes) -> list[str]:
 #    （plbuild の `_data_r*.png` の行）は強い一点として数え、咎めるのは読み上げの長さだけ
 # 2. この回だけの数字。見立ての節に、自分で数えた比べ（表＋「数字2つ＋比べの言葉」の1行）が無ければ【強め】
 SERIES_DATA_HEADING = re.compile(r"基礎\s*(?:DATA|データ)|基本\s*(?:DATA|データ)", re.IGNORECASE)
+
+
+def _is_data_section(section: Section) -> bool:
+    """基礎DATAの節か。**見出しが中身の問いに変わっても（2026-10-15）、id が data ならこの節**。"""
+    return bool(SERIES_DATA_HEADING.search(section.heading or "")) or section.id == "data"
 # 基礎DATAの節で読み上げてよい語りの行数。これを超えたら知らせる（題に答える3〜4項目＋つなぎ1行）
 SERIES_DATA_READ_MAX = 5
 # 強い一点は、基礎DATAの前の1〜2行に置く
@@ -2002,7 +2030,7 @@ def _advise_series_opening(notes: Notes) -> list[str]:
         return []
     hints: list[str] = []
     for n, section in enumerate(notes.sections):
-        if not SERIES_DATA_HEADING.search(section.heading or ""):
+        if not _is_data_section(section):
             continue
         front = _data_front(section)
         read = len(_main_narration(section)) - front
@@ -2018,6 +2046,40 @@ def _advise_series_opening(notes: Notes) -> list[str]:
                 f"{where}: 基礎DATAで読み上げる語りが{read}行あります（{SERIES_DATA_READ_MAX}行まで）。"
                 "読み上げは題に答える3〜4項目にして、残りは板・表に出すだけにしてください（2026-10-06 ⑩）")
     return hints
+
+
+# **見出しは中身の問いにする**（2026-10-15 参考2チャンネルのチャプター。ユーザー「シリーズものの質を上げたい」）。
+# 見出しは概要欄の目次（チャプター）に出る。「基礎DATA」「見立て」のような型名では、見る人が飛ばして見たい所を選べない。
+# 参考は「なぜ3年半もかかったのか」「起用法は？」。止めない。クラブ紹介（series に「チーム紹介」）とニュース（series なし）は見ない。
+HEADING_TYPE_WORDS = ("基礎DATA", "基礎データ", "基本データ", "基本情報", "DATA", "データ", "数字", "見立て",
+                      "まとめ", "いま見る理由", "概要")
+HEADING_TYPE_MAX = 10      # 型名で終わる見出しがこの字数までなら「型名だけ」と見る
+_HEADING_QUESTION = re.compile(r"[？?]|か$|なぜ|どう|何|いくら|どれ|どこ|いつ|誰|どちら")
+
+
+def _heading_is_type_name(heading: str) -> bool:
+    """型名だけの見出しか（完全一致、または「〜の」＋型名で10字まで）。問いの形・（雛形の書き残し）・長い見出しは違う。"""
+    h = re.sub(r"\s+", "", str(heading or ""))
+    if not h or h.startswith(("（", "(")) or _HEADING_QUESTION.search(h):
+        return False
+    return len(h) <= HEADING_TYPE_MAX and any(h.endswith(w) for w in HEADING_TYPE_WORDS)
+
+
+def _advise_heading_question(notes: Notes) -> list[str]:
+    series = (notes.series or "").strip()
+    if not series or "チーム紹介" in series:
+        return []
+    out = []
+    for section in notes.sections:
+        # オープニングは読み上げの冒頭の枠で、章カードにも出さない（対象外）
+        if section.id in ("opening", "intro") or str(section.heading).strip().startswith("オープニング"):
+            continue
+        if _heading_is_type_name(section.heading):
+            out.append(
+                f"節『{section.heading}』: 見出しが型名だけです。見出しは概要欄の目次（チャプター）に出るので、"
+                "中身の問いにしてください（例『なぜ◯◯が起きたのか』『◯◯はいくらか』）。"
+                "見立ての節も、viewpoint の印は残したまま問いの形にできます（2026-10-15）")
+    return out
 
 
 def _view_comparison(text: str) -> bool:
@@ -2589,6 +2651,7 @@ def _advise_voices(notes: Notes) -> list[str]:
                         + _advise_ear(notes) + _advise_readings(notes)
                         + _advise_yardstick(notes)
                         + _advise_series_opening(notes) + _advise_series_numbers(notes)
+                        + _advise_heading_question(notes)
                         + _advise_short_boards(notes))
     for section in notes.sections:
         card = section.card or {}
@@ -2822,6 +2885,10 @@ def _compose_script(notes: Notes, plan: Plan) -> str:
         # ショートだけ別の題名にする（2026-09-09）。shorts._retitle がここを見る
         **({"short_title": notes.short_title} if notes.short_title else {}),
         **({"no_main": True} if notes.no_main else {}),
+        **({"short_question": notes.short_question} if notes.short_question else {}),
+        **({"short_telops": [dict(x) for x in notes.short_telops]} if notes.short_telops else {}),
+        **({"short_hook": notes.short_hook} if notes.short_hook else {}),
+        **({"short_photos": list(notes.short_photos)} if notes.short_photos else {}),
         # シリーズ名（2026-09-23）。subtitles.write_outputs が公開する題の後ろに付ける
         **({"series": notes.series} if notes.series else {}),
         # **話のまとまり**を台本にも残す（2026-09-15）。`clubs.yaml` に無いクラブは
@@ -2880,7 +2947,7 @@ def _compose_script(notes: Notes, plan: Plan) -> str:
         **({"thumbnail_layout": _layout} if (_layout := _notes_layout(thumbnail)) else {}),
         # init-assets が必ず作るものを既定にする。動く背景にしたいときは
         # `make-clip` で mp4 を作ってから、台本の bg を差し替える
-        "bg": "assets/backgrounds/stadium.png",
+        "bg": notes.end_bg or "assets/backgrounds/stadium.png",
         "date": notes.date,
         "intro_title": notes.title,
         "intro_label": shape["label"],

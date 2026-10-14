@@ -196,3 +196,38 @@ def test_選手コメントの引用元だけを概要欄に出す():
     assert "■ 選手コメント" + chr(10) + "発言は、ゲキサカが伝えた取材から引いています。" in body
     assert "http" not in body
     assert "出典" not in body
+
+
+def _series_script(series, date="2026年10月05日"):
+    from src.script_model import parse_script
+    head = ["---", "title: T", "date: " + date] + ([f"series: {series}"] if series else []) + ["description: |", "  この動画の見立て: 数字で比べた。", "---", ""]
+    body = ["## 章1", "", "キャスター: あ。", "", "## 章2", "", "キャスター: い。", ""]
+    return parse_script(chr(10).join(head + body))
+
+
+def test_シリーズの概要欄に情報の時点を見立ての次_目次の前に1行足す():
+    from src.subtitles import description
+    script = _series_script("クラブの財政")
+    for scene, start in zip(script.scenes, (0.0, 5.0)):
+        scene.lines[0].start = start
+    text = description(script)
+    assert text.count("■ 情報は") == 1
+    assert "■ 情報は2026年10月5日時点です" in text      # 0 埋めは外す
+    assert text.index("この動画の見立て") < text.index("■ 情報は") < text.index("■ 目次")
+    assert "http" not in text
+
+
+def test_情報の時点は日付が無ければ書き出しの日():
+    import datetime
+    from src.subtitles import as_of_line
+    script = _series_script("クラブの財政", date="")
+    script.date = ""
+    assert as_of_line(script, today=datetime.date(2026, 10, 15)) == "■ 情報は2026年10月15日時点です"
+
+
+def test_クラブ紹介とニュースの概要欄は変わらない():
+    from src.subtitles import as_of_line, description
+    for series in ("", "プレミアリーグチーム紹介", "ラ・リーガチーム紹介"):
+        script = _series_script(series)
+        assert as_of_line(script) == ""
+        assert "情報は" not in description(script)

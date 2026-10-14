@@ -257,13 +257,13 @@ def write_note(p: dict, day: datetime.date, path: Path, fb: dict | None = None) 
         return {"text": text, **extra} if extra else text
 
     sections = [
-        {"id": "hook", "heading": "どんな選手か", "tier": "報道", "telop": "（一言の定義。例：ボールに触らないのに、点だけ取る）", "narrator": "キャスター",
+        {"id": "hook", "heading": f"{short}は、どんな選手か", "tier": "報道", "telop": "（一言の定義。例：ボールに触らないのに、点だけ取る）", "narrator": "キャスター",
          "say": [f"（{name}を一言で定義する1行。数字か意外な事実を1つ）",
                  "（同じポジションの中でどこが最上位・最下位かを、100人の中の何番目、の言い方で）",
                  "（幼少期の逸話を1つ）",
                  {"voice": short, "text": "（本人の言葉を1つ。声は16秒までに。記事の訳をそのまま）", "pause": 0.5}],
          "sources": [fm_url]},
-        {"id": "data", "heading": "基礎DATA", "tier": "報道", "telop": f"{name}の基礎DATA", "narrator": "キャスター",
+        {"id": "data", "heading": f"{short}は、いまどこで、いくらの選手か", "tier": "報道", "telop": f"{name}の基礎DATA", "narrator": "キャスター",
          "card": {"type": "table", "title": f"{name}（{p['club']}）", "columns": ["項目", "内容"], "rows": data_rows, "source": "Transfermarkt"},
          "say": [f"{name}、{p['age']}歳。{p['club']}の{p['position']}です。",
                  "（生まれた場所と家族の話を1行。出典つき）"]
@@ -278,7 +278,7 @@ def write_note(p: dict, day: datetime.date, path: Path, fb: dict | None = None) 
                 + ["（転機を1つ：入団拒否・大怪我・大舞台での一撃、など。日付と相手を入れる。出典つき）",
                    "（いまのクラブまでの道を1〜2行。「そしていまの額に」で締める）"],
          "sources": [url]},
-        {"id": "style", "heading": "プレースタイル", "tier": "報道", "telop": "（左足・ボックスの中・ボールは持たない、のような3語）", "narrator": "解説",
+        {"id": "style", "heading": f"{short}の強みと弱みは、どこにあるのか", "tier": "報道", "telop": "（左足・ボックスの中・ボールは持たない、のような3語）", "narrator": "解説",
          **({"card": {"type": "bars", "title": f"{fb.get('group', '同じポジション')}の中での位置（100が最上位）", "unit": "",
                       "items": [{"label": s_["ja"], "value": int(s_["pct"]), "highlight": i == 0} for i, s_ in enumerate(strong)]
                                + [{"label": w["ja"], "value": int(w["pct"])} for w in weak], "source": "FotMob"}} if strong else {}),
@@ -290,7 +290,7 @@ def write_note(p: dict, day: datetime.date, path: Path, fb: dict | None = None) 
                 + ([line("（今季のシュートの傾向を1行：本数・ペナルティエリアの中の割合）", image=boards["shots"], no_telop=True)] if boards.get("shots") else [])
                 + ["（体の数字：身長・最高速度など1行）"],
          "sources": [fm_url]},
-        {"id": "past", "heading": "過去5シーズンの数字", "tier": "報道", "telop": "直近5シーズンの試合と得点", "narrator": "解説",
+        {"id": "past", "heading": f"過去5シーズンで、{short}は何点取ったのか", "tier": "報道", "telop": "直近5シーズンの試合と得点", "narrator": "解説",
          "card": {"type": "table", "title": f"{name} 直近5シーズン（代表を含む全公式戦）", "columns": ["シーズン", "試合", "得点", "アシスト", "出場時間"],
                   "rows": list(reversed(past)), "source": "Transfermarkt"},
          "say": [phrase("past", seed, short=short)]

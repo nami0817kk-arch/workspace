@@ -52,6 +52,12 @@ def test_雛形は8節で_数字の行は埋まり_残りは人が書く(tmp_pat
     mod.write_note(p, datetime.date(2026, 10, 1), path, fb)
     note = yaml.safe_load(path.read_text(encoding="utf-8"))
     assert [s["id"] for s in note["sections"]] == ["hook", "data", "career", "style", "past", "season", "story", "view"]
+    # 見出しは中身の問い（2026-10-15）。型名だけの見出しを雛形が書かない。印（id・viewpoint）は残る
+    from src.research import _heading_is_type_name
+    heads = {sec["id"]: sec["heading"] for sec in note["sections"]}
+    assert heads["data"] == "エムバペは、いまどこで、いくらの選手か" and heads["hook"] == "エムバペは、どんな選手か"
+    assert not any(_heading_is_type_name(h) for h in heads.values())
+    assert note["sections"][7]["viewpoint"] is True and heads["view"].startswith("（")
     assert note["theme"]["nameplate"] == "キリアン・エムバペ｜レアル・マドリード FW"
     assert note["theme"]["bgm"] == "assets/audio/bgm_calm.wav"
     style = note["sections"][3]

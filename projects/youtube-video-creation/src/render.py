@@ -330,6 +330,7 @@ class Renderer:
                 (f"m{marks_mod.dump(list(marks))}/{mark_new}/{mark_t:.2f}" if marks else ""),
                 # 節の頭かどうかは、滑り込みの途中（telop_t<1）でだけ絵に効く。それ以外は同じ絵を使い回す
                 f"head{bool(scene.lines and line is scene.lines[0]) and telop_t < 1.0}",
+                ("big:" + str(line.short_telop or "") if panel is None and self.layout.is_portrait else ""),
             ]
         )
         target = self._frame_path(hashlib.sha1(key.encode('utf-8')).hexdigest()[:16])
@@ -413,6 +414,10 @@ class Renderer:
                 pass
             elif stack:
                 self._draw_stack(canvas, stack)
+            elif (panel is None and self.layout.is_portrait and not board
+                  and str(getattr(line, "short_telop", "") or "").strip()):
+                # **ショートは大きな一言を出す**（2026-10-14 ユーザー「a」。参考2チャンネルは1画面1要点を約110px）
+                self._draw_big_telop(canvas, str(line.short_telop), telop_t)
             else:
                 self._draw_headline(canvas, text, telop_t, source,
                                     compact=bool(card) and not board and not self.layout.is_portrait)
@@ -1401,6 +1406,37 @@ class Renderer:
             offset += len(chunk)
             y += line_height
 
+        if telop_t < 1.0:
+            layer.putalpha(layer.getchannel("A").point(lambda a: int(a * _ease_out(telop_t))))
+        canvas.alpha_composite(layer)
+
+    BIG_TELOP_SIZE = 112       # 1080幅のショートで約110px。参考2チャンネルの字の大きさ
+    BIG_TELOP_BOTTOM = 0.80    # 下端。ショートの操作の帯（画面の下2割）にかからない位置
+
+    def _draw_big_telop(self, canvas: Image.Image, text: str, telop_t: float = 1.0) -> None:
+        """大きな一言。「/」で行を分け（3行まで）、1行目は強調色、残りは白。縁は太く、箱は敷かない。"""
+        from PIL import ImageFont as _IF
+        parts = [p.strip() for p in str(text).split("/") if p.strip()][:3]
+        if not parts:
+            return
+        layer, draw = _layer(canvas.size)
+        font_path = str(self.config.video.font_path())
+        width_max = self.layout.width - 100
+        size = self.BIG_TELOP_SIZE
+        font = _IF.truetype(font_path, size)
+        # 幅に入らなければ字を小さくする（下限は読める大きさまで）
+        while size > 60 and max(draw.textlength(p, font=font) for p in parts) > width_max:
+            size -= 4
+            font = _IF.truetype(font_path, size)
+        line_height = size + 28
+        rise = int(TELOP_RISE * (1.0 - _ease_out(telop_t)))
+        top = int(self.layout.height * self.BIG_TELOP_BOTTOM) - line_height * len(parts) + rise
+        accent = BRAND_GOLD + (255,)
+        for i, part in enumerate(parts):
+            w = draw.textlength(part, font=font)
+            draw.text(((self.layout.width - w) / 2, top + i * line_height), part, font=font,
+                      fill=accent if i == 0 else (255, 255, 255, 255),
+                      stroke_width=max(8, size // 11), stroke_fill=(0, 0, 0, 255))
         if telop_t < 1.0:
             layer.putalpha(layer.getchannel("A").point(lambda a: int(a * _ease_out(telop_t))))
         canvas.alpha_composite(layer)

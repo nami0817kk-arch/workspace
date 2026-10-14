@@ -34,6 +34,11 @@ def test_2人の数字を横に並べて90分あたりも出す(tmp_path):
     assert note["sections"][1]["main"] is True and note["sections"][1]["card"]["columns"] == ["項目", "エムバペ", "ハーランド"]
     assert note["sections"][2]["card"]["rows"][1] == ["そのときの年齢", "19歳", "26歳"]
     assert note["thumbnail"]["face_link"] == "VS"
+    from src.research import _heading_is_type_name
+    heads = {sec["id"]: sec["heading"] for sec in note["sections"]}
+    assert heads["data"] == "エムバペとハーランドは、いまどこでいくらの2人か"
+    assert not any(_heading_is_type_name(h) for h in heads.values())
+    assert note["sections"][3]["viewpoint"] is True and heads["view"].startswith("（")
     assert "上下は言わず" in note["sections"][3]["say"][0]
     assert note["sections"][0]["say"][2] == "2人ともセンターフォワードです。"
     assert note["thumbnail"]["line1"] == "エムバペとハーランド"

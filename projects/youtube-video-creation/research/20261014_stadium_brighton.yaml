@@ -1,0 +1,689 @@
+# スタジアム紹介シリーズ⑤：ブライトンの本拠地（アメックス・スタジアム、10/14）。
+# 【10/14 夜の修正】第三者の点検で直した：①最初の敗戦はリーグ杯3回戦 2011-09-21 リヴァプール 1-2（ESPN eng.league_cup 入場21,897）が先。
+#   パレス戦（2011-09-27）は**リーグ戦で**初めての敗戦 → 全箇所を「リーグ戦で」に ②開場の年のリーグ戦の最大入場は20,968（パレス戦。カップ戦は21,897）
+#   ③ラグビーW杯 29,290−20,968＝8,322 → 「リーグ戦の最大より8000人以上」④「全会一致」は削除（Wikipedia のみ。Argus は未読）
+#   ⑤7/16 の地元カップ決勝は Wikipedia（Argus 引き）のみ → 「とされています」⑥2006年の審査やり直しは出典で割れる（サセックス大＝2006-11に大臣が再検討、
+#   Wikipedia＝2006-04に許可取り下げ）→ 年だけ ⑦2002-06 は原文が planners voted → 「市の計画委員会」⑧「器」を減らした（題・見立ての題に2か所だけ残す）
+#   ⑨**タグの三笘薫は src/tags.py が config/players.yaml から自動で足す。取材メモに外す口が無いので、draft のあとで scripts の tags を手で外した**
+#   （再 draft すると戻る。先頭3つ＝サッカー／ブライトン／アメックス・スタジアム）
+# **節の並びは①ボーンマス②エミレーツ③ヴィラ・パーク④ブレントフォードと同じ型**：
+#   オープニング → 基礎DATA(main・強い一点を頭に) → この土地と計画(年表) → 建て方(板) → ここで起きた試合(表) →
+#   手を入れてきた器(年表＋増減の内訳) → 見立て(viewpoint・自分で数えた比べ)。**文は全部この回のために書いた。**
+#
+# 強い一点：**計画の2万2374席が、今季の開幕時には3万2176人（リーグの公式の数字）。9802席ふえて1.44倍**
+#   （32,176 ÷ 22,374 = 1.4381。9月19日の入場は3万1944人＝収容の99.3%、差は232）。
+#   確度は**報道**（公式の数字を読んだが、クラブ・当事者の「発表」としては確認できていないので tier は報道。計画の席数＝ブライトン市の資料〔2009年8月〕／今季の収容＝プレミアリーグ公式ハンドブック2026/27／
+#   入場＝プレミアリーグ公式の試合データ）。名前のある人の言葉は使っていない → 声は0件。
+#
+# **重なりで外したもの（クラブ紹介⑤ブライトン 2026-09-20 公開が読んだ話）**
+#   クラブ紹介は「14年間スタジアムを持てなかった」を題にし、**ゴールドストーンを借金で売った・最終節の引き分けで4部に残った・
+#   ジリンガムで2年・ウィズディーンで12年・オーナーのトニー・ブルーム（2009年に会長・株75%）・三笘薫・アーセナル戦3対0・
+#   創立1901年・愛称シーガルズ・ヒュルツェラー**を読んでいる。この回は**どれも出していない**。「14年」を見出しの言葉にもしていない。
+#   建設費の出どころ（2009年に新会長が無利子の貸付で大半を出す約束）は**名前を出さずに**1行だけ。
+#   **3万2176人**はクラブ紹介も言っているが、この回の主役（計画との差）なので外せない。言い方は変えてある。
+#   アーセナル戦は**入場の数字だけ**（スコアはクラブ紹介が読んだので言わない）。
+#
+# **言わないと決めたもの**
+#   **女子の欧州選手権（2022）・女子ラグビーW杯（2025）・ブライトン女子の試合は扱わない**（2026-09-16 指示）。男子ラグビーW杯2015は入れた（日本が絡む）。
+#   **Wikipedia の「収容 32,500」は使わない。**プレミア公式ハンドブック2026/27は **32,176**（開幕時）で、食い違う（32,500は何の時点か未確認）。
+#   **Wikipedia の「最多入場は2026-09-20」は誤り**。プレミア公式の試合データでは **2026-09-19（土）15:00**、ESPN も 14:00Z で 19日。
+#   **PL公式の試合データに 2024-09-14 のイプスウィッチ戦で入場 41,573 という値**がある（収容を1万人上回る）。誤りと見て使わない
+#   （Wikipedia のシーズン表は 2024-25 の最多を 31,840 とする）。「過去最多」は Wikipedia が 31,944 を最多とするのに頼り、**「とされています」で止める**。
+#   計画の席数は 22,374（市の資料）。BBC・施工会社は「22,500」と丸めている。台本は 22,374 だけ。
+#   **「3階分、地面に沈めた」は言わない**（Wikipedia のみ。市の資料は「掘り下げと盛り土で地面に沈める」とだけ）。
+#   「ハヤブサでカモメとハトを追い払う」（Wikipedia・出典なし）は言わない。
+#   2012年の拡張は **「8000席を足す申請→2012-04-25 に市の委員会が全会一致で認める」「2012-13 末に 30,750」** が Wikipedia のみ
+#   （原典の The Argus は WebFetch・requests とも読めなかった）。台本は「認められた」「3万人を超えた（ESPN の入場 30,003 で確認）」まで。
+#   Wikipedia の「歴代最多入場」の並び（30,468 が 2017 年の記録、など）は PL 公式の数字と食い違うので**記録の並びは言わない**。
+#   「ブライトン駅まで電車で9分・ロンドンからの直通なし」「ルイスまで7分」は Wikipedia のみ（National Rail・Southern の時刻表は読めず**未確認**）→ 台本には入れていない。
+#   最寄りのファルマー駅が器の隣、は市の資料（2009）が「close to … Falmer railway station」と書く。
+#   アメリカン・エキスプレスが名前の権利を持つ（2010-06-22 発表）は Wikipedia（The Argus 引き）。契約の年数・金額は**未確認**で言わない。
+#   建設契約 6500万ポンド（施工会社の発表）と総額 9300万ポンド（BBC）は中身の範囲が違う可能性があり、**並べて割らない**（板には総額だけ）。
+#   サセックス杯決勝（2011-07-16、育成組 2-0 イーストボーン・バラ）は Wikipedia（The Argus 引き）のみ。入場は未確認なので表に入れない。
+#   2011-07-30 の親善試合（トッテナム）のスコアは BBC が書かず、Wikipedia は 3-2 とする（どちらが勝ったか文面が曖昧）→ スコアは言わない。
+#
+# 自分で数えた・割った（検算した）:
+#   32,176 ÷ 22,374 = 1.4381 →「1.44倍」／32,176 − 22,374 = 9,802／31,944 ÷ 32,176 = 0.99279 →「99.3%」／32,176 − 31,944 = 232／
+#   31,780 − 22,374 = 9,406／31,876 − 31,780 = 96／32,176 − 31,876 = 300／
+#   プレミア20クラブの今季開幕時の収容（PL ハンドブック2026/27）を大きい順に並べて、ブライトンは **13番目**（上に12・下に7）。
+#   20クラブの合計 822,365 ÷ 20 = 41,118.25 →「4万1118人」／32,176 ÷ 41,118.25 = 0.7825 →「78%」／
+#   2011-12 のホームのリーグ戦23試合の平均入場 20,028（ESPN の試合データから合計、Wikipedia の表 20,028 と一致）／
+#   2025-26 のホームのリーグ戦19試合の平均 31,379（同。Wikipedia の表は 31,354）→ 31,379 ÷ 20,028 = 1.5668 →「1.57倍」／
+#   20,028 ÷ 22,374 = 0.8951（開場の年の平均入場は計画席の89.5%）／
+#   2008-12-17 着工 → 2011-05-31 引き渡し ＝ 2年5か月あまり／2001-10 申請 → 2007-07 許可 ＝ 5年9か月／1998 → 2011 ＝ 13年ほど／
+#   1997-04-26 → 2011-08-06 は**言わない**（クラブ紹介の「14年」と重なるため）。
+#
+# 【ドラフトの経緯】draft は thumbnail.photo が空だと止まる。ヒントを読むために一時的に assets/backgrounds/stadium.png を入れて通し、
+#   scripts/20261014_stadium_brighton.md を作ってから photo を空に戻した。**台本のサムネ行は仮の写真のまま**なので、写真を取ったら入れ替える。
+# 基礎DATAの読み上げは5行以内に絞った（収容・建設費・ピッチ・場所は表だけ。建設費は build で読む）。
+# 写真：assets/images/20261014_stadium_brighton/ に Commons の7枚（credits.json 同梱。01_w＝2023年の外観 CC0／02_w＝上空 CC BY-SA 4.0＝サムネ／03_w＝スタンマー公園から CC0／04_w＝2010年の工事 CC0／05_w＝2011-07-30 開場試合 CC BY／06_w＝2011-08-06 ドンカスター戦 CC BY／07_w＝拡張後の東スタンド CC BY-SA 3.0）。
+#
+# **サムネは案を3つ出してユーザーに決めてもらう**（2026-10-11）。ここに書いた thumbnail は案A（scene。写真は未取得）。
+date: 2026年10月14日
+slot: other_1
+format: news
+series: スタジアム紹介
+voice_min: 0
+people: []
+theme:
+  id: stadium_brighton
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: ブライトン
+  title: ブライトンの本拠地、計画より9802席多い。どうやって増えたのか
+  question: 計画の2万2374席から、どう育ったスタジアムなのか
+  lead: 白い丘を掘り下げて建てた、開いて15年の器。
+  hook: このスタジアムは、計画より1万席近く、席が増えています。
+  opening_image: assets/images/20261014_stadium_brighton/01_w.jpg
+  end_bg: assets/images/20261014_stadium_brighton/01_w.jpg
+  takeaway: ブライトンの本拠地は、2009年の市の資料で計画が2万2374席だった。今季2026-27の開幕時の収容は3万2176人で、9802席ふえ、計画の1.44倍になっている。2012年に8000席を足す計画が認められ、東スタンドに段を足して収容は3万人を超えた。開幕時の収容は2022年が3万1780人、2025年が3万1876人、今季はさらに300ふえた。9月19日の入場は3万1944人で、収容の99.3%にあたり、空きは232。開場の年の平均入場2万28人から昨季の3万1379人へは1.57倍で、席の増え方1.44倍を上回る。収容はプレミア20クラブの13番目で、20クラブの平均の78%。土地が候補になった1998年から開場の2011年まで13年かかり、審問は2度、審査官は2003年に不許可を勧めていた。このスタジアムの最初のリーグ戦の相手ドンカスターは、前の本拠地の最終戦の相手と同じだった。次の本拠地戦は10月18日のクリスタル・パレス戦で、2011年9月にこの本拠地のリーグ戦で最初に負けた相手になる
+short_title: ブライトンの本拠地、計画より9802席多い
+thumbnail:
+  layout: scene
+  photo: assets/images/20261014_stadium_brighton/02_w.jpg
+  band: bottom
+  line1: ブライトン本拠地
+  line2: 計画より●●●●席ふえた
+  crests:
+  - ブライトン
+  tags:
+  - ブライトン
+  - アメックス・スタジアム
+  - プレミアリーグ
+  - スタジアム紹介
+sections:
+- id: data
+  main: true
+  heading: ブライトンの本拠地の基礎DATA
+  tier: 報道
+  telop: 計画の2万2374席が、今季は3万2176人。9802席ふえた
+  narrator: キャスター
+  card: &id_data
+    type: table
+    title: ブライトンの本拠地の基礎DATA
+    columns: &cols_data
+    - 項目
+    - 内容
+    rows: &rows_data
+    - - 収容人数
+      - 3万2176人（今季の開幕時）
+    - - 開場
+      - 2011年7月30日
+    - - 場所
+      - ブライトン北のはずれ ファルマー
+    - - 最寄り駅
+      - ファルマー駅（すぐ隣）
+    - - ピッチ
+      - 縦105×横68メートル
+    - - 建設費
+      - 約9300万ポンド
+  say:
+  - text: イングランド南部、ブライトンの本拠地の話です。
+    short_only: true
+  - text: この本拠地は、計画の2万2374席から、3万2176人まで増えています。
+    emph: true
+    card: &id_stats
+      type: stats
+      title: 計画より多い。育ったスタジアム
+      items:
+      - - '22374'
+        - 席
+        - 計画の席数（2009年の市の資料）
+      - - '32176'
+        - 人
+        - 今季の開幕時の収容
+      - - '9802'
+        - 席
+        - 計画から、ふえたぶん
+      focus: 1
+  - text: 9802席ふえて、収容は計画の1.44倍になりました。
+    emph: true
+    card:
+      <<: *id_stats
+      focus: 2
+  - text: 9月19日には、3万1944人が入りました。収容との差は、232人です。
+    card: *id_stats
+  - text: スタジアムが公式に開いたのは、2011年7月30日。トッテナムとの親善試合でした。
+    card:
+      type: table
+      title: ブライトンの本拠地の基礎DATA
+      columns: *cols_data
+      rows: *rows_data
+      highlight_row: 1
+  - text: 最寄りは、ファルマー駅。スタジアムのすぐ隣です。
+    card:
+      type: table
+      title: ブライトンの本拠地の基礎DATA
+      columns: *cols_data
+      rows: *rows_data
+      highlight_row: 3
+  sources:
+  - https://resources.premierleague.pulselive.com/premierleague/document/2026/07/31/8a890ff9-176c-4364-a8ff-e08f995e2c86/TM2040_PL-Handbook-and-Collateral-2026-27_Digital_31.07.pdf
+  - https://sdp-prem-prod.premier-league-prod.pulselive.com/api/v1/competitions/8/seasons/2026/matchweeks/5/matches
+  - https://web.archive.org/web/20110929164138/http://www.brighton-hove.gov.uk/downloads/bhcc/Microsoft_Word_-_The_scheme_August09.pdf
+  - https://www.bbc.co.uk/news/uk-england-sussex-14352820
+  - https://en.wikipedia.org/wiki/Falmer_Stadium
+- id: ground
+  heading: 土地が候補になって、着工まで
+  tier: 背景
+  telop: 1998年に候補地が決まり、審問は2度。着工は2008年12月
+  narrator: 解説
+  card: &id_time
+    type: timeline
+    title: 候補地から着工まで
+    rows: &rows_time
+    - - 1998年
+      - ファルマーの土地が候補になる
+    - - 1999年5月
+      - 住民投票。賛成は68％
+    - - 2002年6月
+      - 市の計画委員会が許可を決める
+    - - 2003年12月
+      - 国の審査官が不許可を勧める
+    - - 2007年7月
+      - 国が正式に許可
+    - - 2008年12月
+      - 着工
+    focus: 2007年7月
+  say:
+  - text: この本拠地の計画は、1998年に始まります。
+    image: assets/images/20261014_stadium_brighton/03_w.jpg
+    card:
+      <<: *id_time
+      highlight_row: 0
+  - text: 大学のとなりのファルマーの土地が、新しい本拠地の候補になりました。
+    card:
+      <<: *id_time
+      highlight_row: 0
+  - text: 近くには、自然の景観を守る区域が広がっていました。
+    card:
+      <<: *id_time
+      highlight_row: 0
+  - text: これが、あとで審査を長引かせます。
+    card:
+      <<: *id_time
+      highlight_row: 0
+  - text: 1999年5月、市民が投票で意見を示します。賛成は68％でした。
+    card:
+      <<: *id_time
+      highlight_row: 1
+  - text: 2001年10月、クラブが建築の許可を申請します。
+    card:
+      <<: *id_time
+      highlight_row: 1
+  - text: 2002年6月、市の計画委員会が、許可を決めました。
+    card:
+      <<: *id_time
+      highlight_row: 2
+  - text: ところが、そこから先が長い。
+    card:
+      <<: *id_time
+      highlight_row: 3
+  - text: 2003年の公開審問のあと、国の審査官が、不許可を勧めたからです。
+    emph: true
+    card:
+      <<: *id_time
+      highlight_row: 3
+  - text: 国は、審問をもう一度開くと決めます。ほかの7か所の候補地も、比べるためです。
+    card:
+      <<: *id_time
+      highlight_row: 3
+  - text: 2005年10月、副首相が許可を出しました。
+    card:
+      <<: *id_time
+      highlight_row: 3
+  - text: しかし、隣のルイス地区の議会が、裁判所に訴えます。
+    card:
+      <<: *id_time
+      highlight_row: 3
+  - text: 2006年に、国が審査をやり直しました。
+    card:
+      <<: *id_time
+      highlight_row: 3
+  - text: 正式な許可が出たのは、2007年7月です。
+    emph: true
+    card:
+      <<: *id_time
+      highlight_row: 4
+  - text: 申請から、5年9か月かかりました。
+    card:
+      <<: *id_time
+      highlight_row: 4
+  - text: 2008年12月に着工。
+    card:
+      <<: *id_time
+      highlight_row: 5
+  - text: 土地が候補になってから、開場の2011年まで、ほぼ13年です。
+    emph: true
+    card:
+      <<: *id_time
+      highlight_row: 5
+  sources:
+  - https://web.archive.org/web/20100209025559/http://www.sussex.ac.uk/falmerstadium/timeline.php
+  - https://web.archive.org/web/20110911094432/http://www.buckinghamgroup.co.uk/news.php?id=1726
+  - https://www.bbc.co.uk/news/uk-england-sussex-14352820
+  - https://en.wikipedia.org/wiki/Falmer_Stadium
+- id: build
+  heading: 丘に沈めて建てる
+  tier: 背景
+  telop: 白亜を13万8000立方メートル掘り、トラック2万2000回ぶんを減らした
+  narrator: 解説
+  card: &id_build
+    type: stats
+    title: このスタジアムをつくった数字
+    items:
+    - - '9300'
+      - 万ポンド
+      - 建設費
+    - - '13.8'
+      - 万立方メートル
+      - 掘り出した白亜（チョーク）
+    - - '22000'
+      - 回
+      - 減らせたトラックの走行
+    focus: 0
+  say:
+  - text: ブライトンの本拠地は、なだらかな丘のふちに建っています。
+    image: assets/images/20261014_stadium_brighton/04_w.jpg
+    card: none
+  - text: 計画では、曲線の屋根を、淡い青の透明な板でふく設計でした。
+    card: none
+  - text: 丘の形に合わせて、建物を地面に沈める作りです。
+    card: none
+  - text: 掘り出した白亜、つまりチョークは、最大で13万8000立方メートル。
+    card:
+      <<: *id_build
+      focus: 1
+  - text: 道の南の野原に敷いて、外へ運び出さずにすませました。
+    card:
+      <<: *id_build
+      focus: 1
+  - text: トラックの走行2万2000回ぶんを、減らせる計算です。
+    emph: true
+    card:
+      <<: *id_build
+      focus: 2
+  - text: 建設費は、およそ9300万ポンドでした。
+    card:
+      <<: *id_build
+      focus: 0
+  - text: その大半は、2009年に会長が代わったとき、無利子の貸付で出す約束になりました。
+    card:
+      <<: *id_build
+      focus: 0
+  - text: 設計はロンドンの建築事務所。施工はバッキンガム・グループです。
+    card: none
+  - text: 契約は2008年11月。引き渡しは2011年5月31日でした。
+    card: none
+  - text: 工期は、2年5か月あまりです。
+    card: none
+  - text: 最初から、あとで広げられる設計でした。
+    emph: true
+    card: none
+  - text: サッカーだけでなく、ラグビーやホッケー、コンサートにも使えます。
+    card: none
+  - text: ファルマー駅には、線路をまたぐ歩道橋も、新しく作られました。
+    card: none
+  - text: 本拠地の名前は、地元で最大の民間の雇用主、アメリカン・エキスプレスが持っています。
+    card: none
+  sources:
+  - https://web.archive.org/web/20110929164138/http://www.brighton-hove.gov.uk/downloads/bhcc/Microsoft_Word_-_The_scheme_August09.pdf
+  - https://web.archive.org/web/20110911094432/http://www.buckinghamgroup.co.uk/news.php?id=1726
+  - https://web.archive.org/web/20100209025559/http://www.sussex.ac.uk/falmerstadium/timeline.php
+  - https://www.bbc.co.uk/news/uk-england-sussex-14352820
+  - https://en.wikipedia.org/wiki/Falmer_Stadium
+- id: matches
+  heading: ここで起きた6つの日
+  tier: 報道
+  telop: 最初のリーグ戦は2万219人。いまは3万人台が当たり前
+  narrator: キャスター
+  card: &id_match
+    type: table
+    title: ブライトンの本拠地で起きた6つの日
+    columns: &cols_match
+    - 日付
+    - 試合
+    - 入場
+    rows: &rows_match
+    - - 2011年8月6日
+      - リーグ初戦 ドンカスター
+      - 2万219人
+    - - 2011年9月27日
+      - リーグ初の敗戦 パレス
+      - 2万968人
+    - - 2015年9月19日
+      - ラグビーW杯 日本対南ア
+      - 2万9290人
+    - - 2017年8月12日
+      - プレミア初戦 マンC
+      - 3万415人
+    - - 2023年9月21日
+      - 欧州初戦 エーイーケー
+      - 3万178人
+    - - 2026年9月19日
+      - アーセナル
+      - 3万1944人
+  say:
+  - text: ここでの「最初」を、順に見ていきます。
+    image: assets/images/20261014_stadium_brighton/05_w.jpg
+    card: *id_match
+  - text: 最初に使われた試合は、7月16日の地元カップの決勝とされています。
+    card: none
+  - text: 公式の開場は7月30日。トッテナムとの親善試合です。
+    card: none
+  - text: リーグ戦の最初は、8月6日のドンカスター。2対1の勝ちでした。
+    image: assets/images/20261014_stadium_brighton/06_w.jpg
+    card:
+      type: table
+      title: ブライトンの本拠地で起きた6つの日
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 0
+  - text: 入場は2万219人。計画の席数の、9割ほどでした。
+    card:
+      type: table
+      title: ブライトンの本拠地で起きた6つの日
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 0
+  - text: このドンカスターは、前の本拠地ゴールドストーンの、最後の試合の相手と同じでした。
+    emph: true
+    card:
+      type: table
+      title: ブライトンの本拠地で起きた6つの日
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 0
+  - text: 1997年4月26日、1対0で勝っています。
+    card:
+      type: table
+      title: ブライトンの本拠地で起きた6つの日
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 0
+  - text: リーグ戦で初めて負けたのは、9月27日。クリスタル・パレスに、1対3でした。
+    card:
+      type: table
+      title: ブライトンの本拠地で起きた6つの日
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 1
+  - text: 入場2万968人は、その季のリーグ戦では、本拠地でいちばん多い数でした。
+    card:
+      type: table
+      title: ブライトンの本拠地で起きた6つの日
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 1
+  - text: 2015年9月19日は、ラグビーのワールドカップです。
+    card:
+      type: table
+      title: ブライトンの本拠地で起きた6つの日
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 2
+  - text: 日本が、南アフリカを34対32で破りました。
+    emph: true
+    card:
+      type: table
+      title: ブライトンの本拠地で起きた6つの日
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 2
+  - text: 入場は2万9290人。
+    card:
+      type: table
+      title: ブライトンの本拠地で起きた6つの日
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 2
+  - text: 開場のシーズンのリーグ戦の最大、2万968人より、8000人以上多い数です。
+    card:
+      type: table
+      title: ブライトンの本拠地で起きた6つの日
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 2
+  - text: 2017年8月12日は、プレミアリーグの最初の試合です。
+    card:
+      type: table
+      title: ブライトンの本拠地で起きた6つの日
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 3
+  - text: マンチェスター・シティに、0対2で敗れました。
+    card:
+      type: table
+      title: ブライトンの本拠地で起きた6つの日
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 3
+  - text: 入場は3万415人。開場の年の最初のリーグ戦より、1万人以上多い数です。
+    card:
+      type: table
+      title: ブライトンの本拠地で起きた6つの日
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 3
+  - text: 2023年9月21日は、ヨーロッパリーグの最初の試合。
+    card:
+      type: table
+      title: ブライトンの本拠地で起きた6つの日
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 4
+  - text: エーイーケー・アテネに、2対3で敗れました。入場は3万178人です。
+    card:
+      type: table
+      title: ブライトンの本拠地で起きた6つの日
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 4
+  - text: そして今月、9月19日。この本拠地の最多とされる入場が出ました。
+    emph: true
+    card:
+      type: table
+      title: ブライトンの本拠地で起きた6つの日
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 5
+  sources:
+  - https://sdp-prem-prod.premier-league-prod.pulselive.com/api/v1/competitions/8/seasons/2026/matchweeks/5/matches
+  - https://sdp-prem-prod.premier-league-prod.pulselive.com/api/v1/competitions/8/seasons/2017/matchweeks/1/matches
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.2/teams/331/schedule?season=2011
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.europa/teams/331/schedule?season=2023
+  - https://site.api.espn.com/apis/site/v2/sports/rugby/164205/scoreboard?dates=20150919
+  - https://web.archive.org/web/20171011232432/https://www.brightonandhovealbion.com/news/2017/april/the-goldstone-20-years-on
+  - https://www.bbc.co.uk/news/uk-england-sussex-14352820
+  - https://en.wikipedia.org/wiki/Falmer_Stadium
+- id: reform
+  heading: 足して育ててきたスタジアム
+  tier: 報道
+  telop: 開場から3万人超えまで2年。今季はさらに300ふえた
+  narrator: 解説
+  card: &id_reform
+    type: timeline
+    title: 収容のふえ方
+    rows: &rows_reform
+    - - 2011年7月
+      - 開場。計画は2万2374席
+    - - 2012年4月
+      - 8000席を足す計画を、市の委員会が認める
+    - - 2013年5月
+      - 入場3万3人。収容は3万人を超えた
+    - - 2022年
+      - 開幕時の収容は3万1780人
+    - - 2025年
+      - 3万1876人
+    - - 2026年
+      - 3万2176人
+    focus: 2026年
+  say:
+  - text: 開いたあとも、この本拠地は大きくなり続けています。
+    image: assets/images/20261014_stadium_brighton/07_w.jpg
+    card:
+      <<: *id_reform
+      highlight_row: 0
+  - text: 2012年1月、クラブは、さらに8000席を足す申請を出しました。
+    card:
+      <<: *id_reform
+      highlight_row: 1
+  - text: 4月に、市の委員会が認めます。
+    card:
+      <<: *id_reform
+      highlight_row: 1
+  - text: 東スタンドの上に、座席の段を足す工事でした。
+    card:
+      <<: *id_reform
+      highlight_row: 1
+  - text: 2013年5月4日、入場は3万3人。収容が3万人を超えたことが、数字で分かります。
+    card:
+      <<: *id_reform
+      highlight_row: 2
+  - text: 開場から、2年たっていません。
+    emph: true
+    card:
+      <<: *id_reform
+      highlight_row: 2
+  - text: そのあとの開幕時の収容を、リーグの資料で並べます。
+    card:
+      <<: *id_reform
+      highlight_row: 3
+  - text: 2022年が3万1780人。2025年が3万1876人。
+    card:
+      <<: *id_reform
+      highlight_row: 4
+  - text: 今季は、前の年より300ふえました。
+    emph: true
+    card:
+      <<: *id_reform
+      highlight_row: 5
+  - text: 計画からの増え方を、足し算で見てみます。
+    card: &id_wf
+      type: waterfall
+      title: 計画から、どうふえたか（自分で引いた）
+      start:
+      - 計画の席数
+      - 22374
+      steps:
+      - - 2022年の開幕までに
+        - 9406
+      - - 2025年の開幕までに
+        - 96
+      - - 今季の開幕までに
+        - 300
+      total:
+      - 今季の開幕時
+      - 32176
+      unit: 席
+  - text: 増え方が最も大きいのは、2022年の開幕まで。9406席です。
+    card: *id_wf
+  - text: そのあとは、96席と300席。少しずつの増え方です。
+    card: *id_wf
+  sources:
+  - https://en.wikipedia.org/wiki/Falmer_Stadium
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.2/teams/331/schedule?season=2012
+  - https://resources.premierleague.com/premierleague/document/2022/07/19/40085fed-1e9e-4c33-9f14-0bcf57857da2/PL_Handbook_2022-23_DIGITAL_18.07.pdf
+  - https://resources.premierleague.pulselive.com/premierleague/document/2025/10/22/c03ebde8-8b59-4822-9f3b-bd42ed587f92/PL_Handbook_25-26_07.10.pdf
+  - https://resources.premierleague.pulselive.com/premierleague/document/2026/07/31/8a890ff9-176c-4364-a8ff-e08f995e2c86/TM2040_PL-Handbook-and-Collateral-2026-27_Digital_31.07.pdf
+- id: view
+  viewpoint: true
+  heading: 見立て・足して育てた器は、どこまで満員に近いのか
+  tier: 報道
+  telop: 収容は20クラブで13番目。入場は収容の99.3％
+  narrator: 解説
+  card: &id_rank
+    type: table
+    title: 今季の収容、20クラブの順位（自分で並べた）
+    columns: &cols_rank
+    - 順位
+    - クラブ
+    - 収容
+    rows: &rows_rank
+    - - 11位
+      - アストン・ヴィラ
+      - 3万6887人
+    - - 12位
+      - コヴェントリー
+      - 3万2609人
+    - - 13位
+      - ブライトン
+      - 3万2176人
+    - - 14位
+      - ノッティンガム・フォレスト
+      - 3万1212人
+    - - 15位
+      - イプスウィッチ
+      - 3万294人
+  say:
+  - text: 最後に、この本拠地の数字を、自分で比べてみます。
+    image: assets/images/20261014_stadium_brighton/02_w.jpg
+    card: *id_rank
+  - text: まず、プレミア20クラブの今季の収容を、大きい順に数えました。
+    card: *id_rank
+  - text: ブライトンは13番目。上に12クラブ、下に7クラブです。
+    emph: true
+    card:
+      type: table
+      title: 今季の収容、20クラブの順位（自分で並べた）
+      columns: *cols_rank
+      rows: *rows_rank
+      highlight_row: 2
+  - text: 20クラブの平均は、4万1118人。ブライトンは、その78％です。
+    card:
+      type: table
+      title: 今季の収容、20クラブの順位（自分で並べた）
+      columns: *cols_rank
+      rows: *rows_rank
+      highlight_row: 2
+  - text: 大きいほうではありません。それでも、9月19日の入場は、収容の99.3％でした。
+    card: &id_fill
+      type: calc
+      title: 9月19日の入場と今季の収容（自分で割った）
+      terms:
+      - - 3万1944人
+        - 9月19日の入場
+      - - 3万2176人
+        - 今季の開幕時の収容
+      - - 99.3％
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+  - text: 空いていたのは、232席だけです。
+    emph: true
+    card: *id_fill
+  - text: 次に、客の増え方を見ます。
+    card: &id_growth
+      type: calc
+      title: 平均入場の増え方（自分で割った）
+      terms:
+      - - 3万1379人
+        - 昨季の本拠地の平均入場
+      - - 2万28人
+        - 開場の年の平均入場
+      - - 1.57倍
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+  - text: 昨季の平均入場を、開場の年の平均で割ります。
+    card: *id_growth
+  - text: 答えは1.57倍。席の増え方は1.44倍でした。
+    emph: true
+    card: *id_growth
+  - text: 開場の年の平均は、計画の席の89.5％。席の増え以上に、客が増えました。
+    card: *id_growth
+  - text: 次の本拠地戦は、10月18日。相手はクリスタル・パレスです。
+    emph: true
+    card: none
+  - text: 2011年9月、この本拠地のリーグ戦で、最初に負けた相手です。
+    card: none
+  sources:
+  - https://resources.premierleague.pulselive.com/premierleague/document/2026/07/31/8a890ff9-176c-4364-a8ff-e08f995e2c86/TM2040_PL-Handbook-and-Collateral-2026-27_Digital_31.07.pdf
+  - https://sdp-prem-prod.premier-league-prod.pulselive.com/api/v1/competitions/8/seasons/2026/matchweeks/5/matches
+  - https://sdp-prem-prod.premier-league-prod.pulselive.com/api/v1/competitions/8/seasons/2026/matchweeks/7/matches
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.2/teams/331/schedule?season=2011
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/teams/331/schedule?season=2025
+  - https://web.archive.org/web/20110929164138/http://www.brighton-hove.gov.uk/downloads/bhcc/Microsoft_Word_-_The_scheme_August09.pdf

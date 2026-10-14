@@ -1,0 +1,6 @@
+title: エリオット・アンダーソンの今季のシュート
+unit: xG
+shots=6
+goals=0
+xg=0.2
+source: FotMob

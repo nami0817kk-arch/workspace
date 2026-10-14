@@ -458,3 +458,16 @@ def test_置き場を渡さなければ今までどおりの高さ(tmp_path, fon
     a = Image.open(render(dict(spec), 1080, font, tmp_path / "a.png", latin))
     b = Image.open(render(dict(spec), 1080, font, tmp_path / "b.png", latin, slot=None))
     assert a.tobytes() == b.tobytes()
+
+
+def test_表とタイムラインは複数行を光らせられる():
+    """`highlight_row: [2, 3]`（2026-10-14、リヴァプールの回）。1行だけ光って3人の行き先を読んでいた。"""
+    from src import cards
+
+    table = {"type": "table", "title": "t", "columns": ["a", "b"],
+             "rows": [["x", "1"], ["y", "2"], ["z", "3"]]}
+    assert cards._pick_many([0, 2], ["a", "b", "c"]) == {0, 2}
+    assert cards._pick_many(1, ["a", "b", "c"]) == {1}
+    assert cards._pick_many(None, ["a"]) == set()
+    tl = {"type": "timeline", "rows": [["1月", "a"], ["2月", "b"]], "highlight_row": [0, 1]}
+    assert cards.check_timeline(tl) == []

@@ -365,7 +365,7 @@ def from_meta(meta: dict, title: str) -> dict:
         "title": line1,
         "subtitle": line2,
         # 構図を書いた回は、2行に構図の指定を持たせる（ThumbLines の説明を参照）
-        "lines": _lines_with_layout((line1, line2), layout_spec(meta)),
+        "lines": _lines_with_layout((line1, line2), _with_bold(layout_spec(meta), meta)),
         "tags": [str(t) for t in (meta.get("thumbnail_tags") or [])],
         # 指定が無ければ、タイトルの【】をそのままバッジにする。
         # **既定の「速報」を出しっぱなしにすると、悲報の記事に速報と出る**
@@ -424,7 +424,8 @@ def from_meta(meta: dict, title: str) -> dict:
         # 並べた顔の継ぎ目に置く印。対立の回だけ
         "face_link": str(meta.get("thumbnail_face_link", "")),
         # **構図**（2026-10-08）。書かなければ None＝今の形（classic）。画素まで今と同じ
-        "layout": layout_spec(meta),
+        # シリーズの回だけ `bold: True` を足す（2026-10-15。`series_style`）
+        "layout": _with_bold(layout_spec(meta), meta),
     }
 
 
@@ -1578,7 +1579,7 @@ def _draw_date(draw: ImageDraw.ImageDraw, date: str, font_path: str, y: int) -> 
 LAYOUTS = ("classic", "face", "scene", "versus", "number")
 # 取材メモの thumbnail: から台本の thumbnail_layout へ持ち越す項目
 LAYOUT_KEYS = ("layout", "side", "band", "number", "names", "numbers",
-               "fx", "light", "rays", "tint", "cutout")
+               "fx", "light", "rays", "tint", "cutout", "bold", "callouts")
 # 写真が要る構図（thumbnail.photo。横に広いもの）
 PHOTO_LAYOUTS = ("face", "scene", "number")
 
@@ -1641,6 +1642,87 @@ def layout_spec(meta: dict) -> dict | None:
     return None if layout_of(spec) == "classic" else spec
 
 
+# ---- シリーズの回の見た目（2026-10-15）
+#
+# 参考2チャンネル（pltalkshowjp・crack-football）の実測：顔や人物が画面の4〜6割・主役の文字が大きい
+# （画面高さの25〜30%・8字前後）・補足の小さな吹き出しが2つまで・エンブレムが大きい。
+# うちのシリーズは顔が小さく、文字が小さく（1行10〜12%）、補足が無く、エンブレムが右上に小さかった。
+# **効かせるのは「シリーズの回（series あり）かつ構図が face・scene・number・versus」だけ。**
+# クラブ紹介（series に「チーム紹介」「クラブ紹介」）は基礎DATAの板をサムネにする独自の型なので変えない。
+# classic・crest_main・board・series なしのニュースも変えない（画素まで今と同じ）。
+# 取材メモに `thumbnail.bold: false` と書けば、その回だけ今の見た目に戻せる。
+BOLD_LAYOUTS = ("face", "scene", "number", "versus")
+CLUB_INTRO_WORDS = ("チーム紹介", "クラブ紹介")
+CALLOUT_MAX = 2           # 補足の吹き出しの数
+CALLOUT_LEN = 12          # 1つの字数
+
+
+def series_style(meta: dict) -> bool:
+    """この回のサムネに、シリーズ向けの大きい字・エンブレム・吹き出しを効かせるか（台本の front matter で判定）。
+
+    判定はここ1か所。条件は **series が付いている・クラブ紹介でない・構図が face/scene/number/versus・
+    crest_main も board も無い・`thumbnail_layout.bold` が false でない**。
+    """
+    meta = meta or {}
+    series = str(meta.get("series") or "").strip()
+    if not series or any(word in series for word in CLUB_INTRO_WORDS):
+        return False
+    raw = meta.get("thumbnail_layout")
+    spec = {"layout": raw} if isinstance(raw, str) else dict(raw or {})
+    if layout_of(spec) not in BOLD_LAYOUTS or spec.get("bold") is False:
+        return False
+    return not (meta.get("thumbnail_crest_main") or meta.get("thumbnail_board"))
+
+
+def _with_bold(spec: dict | None, meta: dict) -> dict | None:
+    if spec and series_style(meta):
+        return dict(spec, bold=True)
+    return spec
+
+
+def callout_problems(callouts) -> list[str]:
+    """`thumbnail.callouts`（補足の吹き出し）の誤り。0〜2個・各12字以内・空でない。"""
+    if callouts is None:
+        return []
+    if not isinstance(callouts, (list, tuple)):
+        return ["thumbnail.callouts は文字列の並び（[..]）で書く"]
+    out: list[str] = []
+    if len(callouts) > CALLOUT_MAX:
+        out.append(f"thumbnail.callouts は{CALLOUT_MAX}個までです（いま{len(callouts)}個）。"
+                   "吹き出しが多いと主役の字が埋もれます")
+    for item in callouts:
+        text = str(item or "").strip() if isinstance(item, str) else ""
+        if not text:
+            out.append("thumbnail.callouts に空の吹き出しがあります")
+        elif len(text) > CALLOUT_LEN:
+            out.append(f"thumbnail.callouts『{text}』が{len(text)}字です（{CALLOUT_LEN}字まで）")
+    return out
+
+
+def callout_leaks(callouts, answer: str) -> list[str]:
+    """吹き出しに答えが混じっていないか。伏せ字（●）のサムネの答え（数字）が入っていたら知らせる。
+
+    `answer` は取材メモのまとめの答え・見立て。数字（1桁でも）が重なるか、4字以上の言い回しが
+    そのまま入っていれば止める。**タイトルで隠している答えを、吹き出しで言ってしまわない**
+    （サムネの points と同じ決まり）。
+    """
+    out: list[str] = []
+    answer = str(answer or "")
+    numbers = set(re.findall(r"[0-9]+(?:[.,][0-9]+)?", answer.translate(
+        str.maketrans("０１２３４５６７８９", "0123456789"))))
+    for item in callouts or []:
+        text = str(item or "").strip()
+        if not text:
+            continue
+        said = set(re.findall(r"[0-9]+(?:[.,][0-9]+)?", text.translate(
+            str.maketrans("０１２３４５６７８９", "0123456789"))))
+        bare = text.replace("●", "").strip()
+        if said & numbers or (len(bare) >= 4 and bare in answer):
+            out.append(f"thumbnail.callouts『{text}』に答えが入っています。"
+                       "サムネで伏せている答えを、吹き出しで言わない")
+    return out
+
+
 def _merge_layout(base: dict | None, extra) -> dict | None:
     spec = dict(base or {})
     if isinstance(extra, str):
@@ -1665,6 +1747,9 @@ def layout_problems(thumb: dict, root: Path | None = None) -> list[str]:
     if name not in LAYOUTS:
         return [f"thumbnail.layout の『{name}』は分かりません（{'・'.join(LAYOUTS)} のどれか）"]
     out: list[str] = []
+    out += callout_problems(thumb.get("callouts"))
+    if "bold" in thumb and not isinstance(thumb["bold"], bool):
+        out.append("thumbnail.bold は true か false")
     for alt in thumb.get("alt") or []:
         if isinstance(alt, dict) and alt.get("layout") is not None:
             merged = dict(thumb, **(alt["layout"] if isinstance(alt["layout"], dict)
@@ -1990,6 +2075,8 @@ def _layout_thumbnail(config: ProjectConfig, out_path: Path, background: str | N
     if name not in LAYOUTS:
         raise ValueError(f"サムネの構図『{name}』は分かりません（{'・'.join(LAYOUTS)}）")
     o = fx_options(spec)
+    # **シリーズの回だけ**大きい字・エンブレム・吹き出し（2026-10-15。`series_style`）
+    o["bold"] = bool(spec.get("bold") is True and name in BOLD_LAYOUTS)
     marks = tags if crests is None else crests
     pair = tuple(lines or ("", ""))
     line1 = str(pair[0] or "").replace("\\n", " ")
@@ -1999,6 +2086,8 @@ def _layout_thumbnail(config: ProjectConfig, out_path: Path, background: str | N
     else:
         photo = _open_photo(background, out_path)
         draw_fn = {"face": _layout_face, "scene": _layout_scene, "number": _layout_number}[name]
+        if o["bold"]:
+            draw_fn = {"face": _bold_face, "scene": _bold_scene, "number": _bold_number}[name]
         canvas = draw_fn(spec, o, photo, background, line1, line2, marks, focus, focus_x, font_path)
     _brand_rule(canvas)
     out_path.parent.mkdir(parents=True, exist_ok=True)
@@ -2115,6 +2204,9 @@ def _layout_versus(spec, o, photos, line1, line2, marks, face_link, font_path, o
 
     from . import thumbfx
 
+    bold = bool(o.get("bold"))
+    if bold:
+        _bold_begin(o, spec)
     half = SIZE[0] // 2 + 60
     slant = 50
     tiles, faces_in = [], []
@@ -2136,6 +2228,7 @@ def _layout_versus(spec, o, photos, line1, line2, marks, face_link, font_path, o
     right = Image.new("RGBA", SIZE, (0, 0, 0, 0))
     right.paste(tiles[1].convert("RGBA"), (SIZE[0] // 2 - 60, 0))
     canvas.paste(right, (0, 0), split)
+    vs_faces = _face_rects(canvas) if bold else []
     numbers = [str(x) for x in (spec.get("numbers") or [])][:2]
     numbers = numbers if len(numbers) == 2 and all(numbers) else []
     mark = str(face_link or "").strip() or ("" if numbers else "VS")
@@ -2159,10 +2252,15 @@ def _layout_versus(spec, o, photos, line1, line2, marks, face_link, font_path, o
     draw.line(seam, fill=TEXT_DARK + (255,), width=22)
     draw.line(seam, fill=BAND_YELLOW + (255,), width=12)
     # 上：1行目（白）
-    font, rows = _fit_rows(line1, font_path, (92, 86, 80, 74, 68, 62, 56, 50), SIZE[0] - 120, 1)
+    avoid: list = []
+    font, rows = _fit_rows(line1, font_path, BOLD_SUB_SIZES if bold else (92, 86, 80, 74, 68, 62, 56, 50),
+                           SIZE[0] - 120, 1)
     if rows:
         _say(canvas, o, ((SIZE[0] - font.getlength(rows[0])) / 2, 74), rows[0], font, WHITE,
              anchor="lm")
+        avoid.append(_rect_of(((SIZE[0] - font.getlength(rows[0])) / 2, 74), rows[0], font, anchor="lm"))
+        if bold:
+            _REPORT["sub_size"] = font.size
     # 真ん中：VS（または face_link の字）
     crest_floor = 300
     if mark:
@@ -2170,33 +2268,65 @@ def _layout_versus(spec, o, photos, line1, line2, marks, face_link, font_path, o
         _say(canvas, o, (SIZE[0] / 2 - big.getlength(mark) / 2, 350), mark, big, BAND_YELLOW,
              main=True, anchor="lm", angle=(-6.0 if o.get("on") else 0.0))
         crest_floor = int(350 - big.size * 0.62)
-    crest_marks = [m for m in (_crest_image(n, 96) for n in (marks or [])[:2]) if m is not None]
+        avoid.append(_rect_of((SIZE[0] / 2 - big.getlength(mark) / 2, 350), mark, big, anchor="lm", pad=14))
+    # bold は 108px（画面高さの15%）。顔の上に出ないよう、ここの位置は今までのまま
+    crest_rect = None
+    crest_marks = [m for m in (_crest_image(n, 108 if bold else 96) for n in (marks or [])[:2])
+                   if m is not None]
     if len(crest_marks) == 1:
         piece = crest_marks[0]
-        canvas.alpha_composite(piece, (SIZE[0] // 2 - piece.width // 2,
-                                       max(130, crest_floor - piece.height - 14)))
+        pos = (SIZE[0] // 2 - piece.width // 2, max(130, crest_floor - piece.height - 14))
+        canvas.alpha_composite(piece, pos)
+        crest_rect = (pos[0], pos[1], pos[0] + piece.width, pos[1] + piece.height)
+        avoid.append(crest_rect)
     elif len(crest_marks) == 2:
         canvas.alpha_composite(crest_marks[0], (30, 140))
         canvas.alpha_composite(crest_marks[1], (SIZE[0] - crest_marks[1].width - 30, 140))
-    # 各自の数字と名前（左右の真ん中）
+        crest_rect = (30, 140, 30 + crest_marks[0].width, 140 + crest_marks[0].height)
+        avoid.append(crest_rect)
+        avoid.append((SIZE[0] - crest_marks[1].width - 30, 140, SIZE[0] - 30, 140 + crest_marks[1].height))
+    if bold:
+        _REPORT["crest"] = crest_rect
+    # 下：2行目（黄）。bold は主役（画面高さの約22〜28%・2行まで）。名前の札と数字はその上へ
     names = [str(x) for x in (spec.get("names") or [])][:2]
+    rule = RULE_YELLOW_H + RULE_GREEN_H
+    tag_y, num_y = 500, 440
+    line2_rows, line2_font = [], None
+    if bold and line2:
+        line2_font, line2_rows = _bold_main(line2, font_path, SIZE[0] - 120, 290)
+        block = int(line2_font.size * 1.14) * len(line2_rows)
+        top = BOLD_FLOOR - block + int(line2_font.size * 0.1)
+        tag_y = min(tag_y, top - int(44 * 1.5) - 10)
+        num_y = min(num_y, tag_y - 100)
+    # 各自の数字と名前（左右の真ん中）
     for index in range(2):
         cx = SIZE[0] // 4 + (SIZE[0] // 2) * index + (-10 if index else 10)
         if numbers:
             nf, nrows = _fit_rows(numbers[index], font_path, (132, 120, 108, 96, 84, 72),
                                   SIZE[0] // 2 - 120, 1)
             if nrows:
-                _say(canvas, o, (cx - nf.getlength(nrows[0]) / 2, 440), nrows[0], nf,
+                _say(canvas, o, (cx - nf.getlength(nrows[0]) / 2, num_y), nrows[0], nf,
                      BAND_YELLOW, main=True, anchor="lm")
+                avoid.append(_rect_of((cx - nf.getlength(nrows[0]) / 2, num_y), nrows[0], nf, anchor="lm"))
         if index < len(names) and names[index]:
-            _tag(canvas, o, cx, 500, names[index], font_path, 44, centre=True)
-    # 下：2行目（黄）
-    if line2:
+            box = _tag(canvas, o, cx, tag_y, names[index], font_path, 44, centre=True)
+            avoid.append(tuple(box))
+    if bold and line2_rows:
+        y = BOLD_FLOOR - int(line2_font.size * 1.14) * len(line2_rows) + int(line2_font.size * 0.1)
+        for row in line2_rows:
+            x = (SIZE[0] - line2_font.getlength(row)) / 2
+            _say(canvas, o, (x, y), row, line2_font, BAND_YELLOW, main=True)
+            avoid.append(_rect_of((x, y), row, line2_font, pad=14))
+            y += int(line2_font.size * 1.14)
+        _REPORT["main_size"] = line2_font.size
+    elif line2:
         font, rows = _fit_rows(line2, font_path, (100, 92, 86, 80, 74, 68, 62, 56), SIZE[0] - 120, 1)
-        rule = RULE_YELLOW_H + RULE_GREEN_H
         if rows:
             _say(canvas, o, ((SIZE[0] - font.getlength(rows[0])) / 2, SIZE[1] - rule - 62),
                  rows[0], font, BAND_YELLOW, main=True, anchor="lm")
+    if bold:
+        _REPORT.update(faces=vs_faces, text=list(avoid),
+                       callouts=_draw_callouts(canvas, spec.get("callouts"), font_path, avoid, vs_faces))
     return canvas
 
 
@@ -2280,4 +2410,398 @@ def _layout_number(spec, o, photo, source, line1, line2, marks, focus, focus_x, 
         rule = RULE_YELLOW_H + RULE_GREEN_H
         if rows2:
             _say(canvas, o, (48, SIZE[1] - rule - 84), rows2[0], f2, WHITE, anchor="lm")
+    return canvas
+
+
+# ------------------------------------------------------------------ シリーズ向けの大きい字（2026-10-15）
+#
+# `series_style` が True の回（spec["bold"] is True）だけ、下の描き方に入る。
+# 参考2チャンネルの実測に合わせる：主役の語は画面高さの約22〜28%・8字前後、補足（line1）は小さく
+# （約8〜10%）、エンブレムは顔・文字・帯と重ならない範囲で大きく左下（顔が左なら右下）、
+# 補足の吹き出し（callouts）は0〜2個で写真の上の空いた所へ。字数が多ければ主役は縮む（下限 BOLD_MAIN_MIN）。
+
+BOLD_MAIN_SIZES = tuple(range(200, 99, -8))     # 画面高さの 28% → 14%（168px の一覧でも読める）
+BOLD_MAIN_MIN = BOLD_MAIN_SIZES[-1]
+BOLD_SUB_SIZES = (72, 68, 64, 60, 56, 52, 48, 44, 40)    # 補足：画面高さの約10% → 5.5%
+BOLD_CREST_MAX = 180        # エンブレムの高さ（画面高さの 25%。今までと同じ大きさ）
+BOLD_CREST_PREF = 108       # 先に空けておく高さ（画面高さの 15%）
+BOLD_CREST_MIN = 86         # 画面高さの 12%。これより小さくなるなら出さない
+BOLD_CREST_MAX_W = 300      # 横長のエンブレムが場所を取りすぎない
+BOLD_FLOOR = SIZE[1] - RULE_YELLOW_H - RULE_GREEN_H - 26     # 下端の線の上の余白
+CALLOUT_SIZE = 36
+_REPORT: dict = {}
+
+
+def bold_report() -> dict:
+    """直近の bold の描画で決めた値（主役の字の大きさ・エンブレムの枠・吹き出しの枠）。テストと見本用。"""
+    return dict(_REPORT)
+
+
+def _bold_splits(text: str) -> list[tuple[str, str]]:
+    """2行に割る候補。助詞・空白のあとを先に、次に語の途中でも均等に。
+
+    **伏せ字の ●●●● は割らない**（赤い答えが2行に泣き別れると読めない）。行の頭が助詞
+    （「の差は●●●分」）になる割り方も選ばない。
+    """
+    def ok(a: str, b: str) -> bool:
+        return (len(a) >= 2 and len(b) >= 2 and not (a[-1] == "●" and b[0] == "●")
+                and b[0] not in "のをにはがでともへやっゃゅょ、。")
+
+    natural = [(a, b) for a, b in _natural_split(text) if ok(a, b)]
+    spread = sorted(((text[:i].rstrip(), text[i:].strip()) for i in range(2, len(text) - 1)
+                     if ok(text[:i], text[i:])),
+                    key=lambda ab: (max(len(ab[0]), len(ab[1])), -len(ab[0])))
+    return natural + [x for x in spread if x not in natural]
+
+
+def _bold_main(text: str, font_path: str, width: float, budget: float, max_rows: int = 2):
+    """入る中でいちばん大きい主役の字。行は max_rows まで、行の高さの合計が budget に収まること。
+
+    下限（BOLD_MAIN_MIN）でも入らないときは、その大きさで幅に収まるよう割る。
+    """
+    text = (text or "").replace("\\n", " ").replace("\n", " ").strip()
+    # 行の頭が助詞（「の差は●●●分」）になる割り方は選ばない
+    splits = _bold_splits(text) if max_rows >= 2 else []
+    for size in BOLD_MAIN_SIZES:
+        font = ImageFont.truetype(font_path, size)
+        if font.getlength(text) <= width:
+            rows = [text]
+        else:
+            rows = next(([a, b] for a, b in splits
+                         if font.getlength(a) <= width and font.getlength(b) <= width), None)
+            if rows is None:
+                continue
+        if len(rows) * int(size * 1.14) <= budget:
+            return font, rows
+    return _fit_rows(text, font_path, (BOLD_MAIN_MIN,), width, max_rows)
+
+
+def _rect_of(xy, text: str, font, anchor: str = "la", pad: int = 10) -> tuple[int, int, int, int]:
+    x0, y0, x1, y1 = font.getbbox(text, anchor=anchor)
+    return (int(xy[0] + x0 - pad), int(xy[1] + y0 - pad), int(xy[0] + x1 + pad), int(xy[1] + y1 + pad))
+
+
+def _inter(a, b) -> int:
+    w = min(a[2], b[2]) - max(a[0], b[0])
+    h = min(a[3], b[3]) - max(a[1], b[1])
+    return w * h if w > 0 and h > 0 else 0
+
+
+def _face_rects(image: Image.Image) -> list[tuple[int, int, int, int]]:
+    """画像の中の頭の枠（髪と顎を足した x0, y0, x1, y1）。大きい顔から。OpenCV が無ければ空。"""
+    from . import faces
+
+    if not faces.available():
+        return []
+    try:
+        found = faces.find_faces(image.convert("RGB"), min_face=0.035)
+    except Exception:
+        return []
+    return [_head_rect(box) for box in found[:6]]
+
+
+def _head_rect(box) -> tuple[int, int, int, int]:
+    """顔の枠（x, y, w, h）から、髪・顎・耳・後頭部を足した頭の枠（x0, y0, x1, y1）。
+
+    Haar の枠は眉〜口だけで、寄った写真では髪や耳が枠の外に出る（アンダーソンの実物で、枠の左より
+    約150px 外に髪があった）。字や吹き出しがかからないよう、横に顔幅の 25% ずつ余分に取る。
+    """
+    from . import faces
+
+    x, y, w, h = faces.head_box(box)
+    extra = int(box[2] * 0.25)
+    return (x - extra, y, x + w + extra, y + h)
+
+
+def _crest_strip(names, height: int) -> Image.Image | None:
+    """エンブレム（2つまで）を横に並べた1枚。無ければ None。広すぎれば縮める。"""
+    marks = [m for m in (_crest_image(n, height) for n in (names or [])[:2]) if m is not None]
+    if not marks:
+        return None
+    gap = 14
+    strip = Image.new("RGBA", (sum(m.width for m in marks) + gap * (len(marks) - 1), height), (0, 0, 0, 0))
+    x = 0
+    for mark in marks:
+        strip.alpha_composite(mark, (x, 0))
+        x += mark.width + gap
+    if strip.width > BOLD_CREST_MAX_W:
+        ratio = BOLD_CREST_MAX_W / strip.width
+        strip = strip.resize((BOLD_CREST_MAX_W, max(1, round(strip.height * ratio))), Image.LANCZOS)
+    return strip
+
+
+def _strip_rect(strip: Image.Image, side: str, edge: int = 44) -> tuple[int, int, int, int]:
+    """下の隅（左下 or 右下）に置いたときの枠。下端は線の上の余白に合わせる。"""
+    x0 = edge if side == "left" else SIZE[0] - edge - strip.width
+    y1 = BOLD_FLOOR
+    return (x0, y1 - strip.height, x0 + strip.width, y1)
+
+
+def _pick_corner(strip: Image.Image | None, avoid, prefer: str = "left"):
+    """エンブレムを置く隅。顔や文字（avoid）と重ならない側。どちらも重なれば重なりの小さいほう。"""
+    if strip is None:
+        return None, None
+    order = [prefer, "right" if prefer == "left" else "left"]
+    best = min(order, key=lambda s: sum(_inter(_strip_rect(strip, s), r) for r in avoid))
+    return best, _strip_rect(strip, best)
+
+
+def _bold_crest_below(canvas, names, text_rect, side: str, avoid) -> tuple[int, int, int, int] | None:
+    """face：文字の下にエンブレムを置く。**空いている高さに入るいちばん大きいもの**（86〜180px）。"""
+    room = BOLD_FLOOR - (text_rect[3] + 14)
+    height = min(BOLD_CREST_MAX, room)
+    while height >= BOLD_CREST_MIN:
+        strip = _crest_strip(names, height)
+        if strip is None:
+            return None
+        for s in (side, "right" if side == "left" else "left"):
+            rect = _strip_rect(strip, s)
+            if not any(_inter(rect, r) for r in avoid) and not _inter(rect, text_rect):
+                canvas.alpha_composite(strip, (rect[0], rect[1]))
+                return rect
+        height -= 6
+    return None
+
+
+def _draw_callouts(canvas: Image.Image, callouts, font_path: str, avoid, faces) -> list:
+    """補足の吹き出し（小さい角丸の箱。白地に黒字／黄地に黒字）。文字・エンブレム・顔を避けて左右の端へ。"""
+    texts = [str(c).strip() for c in (callouts or []) if str(c or "").strip()][:CALLOUT_MAX]
+    if not texts:
+        return []
+    font = ImageFont.truetype(font_path, CALLOUT_SIZE)
+    placed: list = []
+    fills = (WHITE, BAND_YELLOW)
+    angles = (-3.0, 2.5)
+    ceiling, floor = 24, BOLD_FLOOR - 4
+    for index, text in enumerate(texts):
+        w = int(font.getlength(text)) + 52
+        h = int(CALLOUT_SIZE * 1.55)
+        best, best_score = None, None
+        for y in range(ceiling, floor - h + 1, 24):
+            for x in range(24, SIZE[0] - 24 - w + 1, 32):
+                box = (x, y, x + w, y + h)
+                score = (sum(_inter(box, r) for r in avoid) * 3 + sum(_inter(box, r) for r in faces) * 2
+                         + sum(_inter(box, r) for r in placed) * 6
+                         + min(x - 24, SIZE[0] - 24 - (x + w)) * 1.0 + abs(y - 40) * 0.3)
+                if best_score is None or score < best_score:
+                    best, best_score = box, score
+        if best is None:
+            continue
+        # 文字にかかって置けない場所しか無ければ出さない（読めなくするより、無いほうがよい）
+        if sum(_inter(best, r) for r in avoid) > w * h * 0.04:
+            continue
+        pad = 14
+        tile = Image.new("RGBA", (w + pad * 2, h + pad * 2), (0, 0, 0, 0))
+        shadow = Image.new("L", tile.size, 0)
+        ImageDraw.Draw(shadow).rounded_rectangle([pad + 5, pad + 6, pad + w + 5, pad + h + 6], radius=16, fill=150)
+        tile.paste((0, 0, 0, 255), (0, 0), shadow.filter(ImageFilter.GaussianBlur(4)))
+        d = ImageDraw.Draw(tile)
+        d.rounded_rectangle([pad, pad, pad + w, pad + h], radius=16, fill=fills[index % 2] + (255,),
+                            outline=TEXT_DARK + (255,), width=4)
+        d.text((pad + w / 2, pad + h / 2), text, font=font, fill=TEXT_DARK + (255,), anchor="mm")
+        tile = tile.rotate(angles[index % 2], expand=True, resample=Image.BICUBIC)
+        cx, cy = (best[0] + best[2]) // 2, (best[1] + best[3]) // 2
+        canvas.alpha_composite(tile, (cx - tile.width // 2, cy - tile.height // 2))
+        placed.append(best)
+    return placed
+
+
+def _bold_begin(o: dict, spec: dict) -> None:
+    _REPORT.clear()
+    _REPORT.update(layout=layout_of(spec), callouts=[], crest=None, main_size=0, sub_size=0)
+
+
+def _bold_face(spec, o, photo, source, line1, line2, marks, focus, focus_x, font_path):
+    """face（シリーズ）：左に補足（小）と主役（大・2行まで）、その下にエンブレム。顔は反対側。"""
+    from . import thumbfx
+
+    _bold_begin(o, spec)
+    right = str(spec.get("side") or "right") == "right"
+    face = _main_face(photo) if photo is not None else None
+    tile = moved = None
+    if photo is not None:
+        tile, moved = _place(photo, SIZE, (0.72 if right else 0.28, 0.40), face, 0.30, focus, focus_x)
+        canvas = tile.convert("RGBA")
+    else:
+        canvas = _blank()
+    text_side = "left" if right else "right"
+    faces = _face_rects(canvas)
+    if not faces and moved is not None:
+        faces = [_head_rect(moved)]
+    if o.get("on"):
+        light = o.get("light")
+        light = ("right" if right else "left") if light == "auto" else str(light)
+        thumbfx.light(canvas, light)
+        if o.get("tint") in ("left", "right"):
+            thumbfx.tint(canvas, o["tint"])
+        if o.get("rays"):
+            thumbfx.rays(canvas, (int(SIZE[0] * (0.70 if right else 0.30)), 260))
+        if tile is not None:
+            _pop(canvas, o, tile, (0, 0), source, face=moved)
+    _side_shade(canvas, text_side, 195, 0.62)
+    _shade(canvas, bottom=150, bottom_alpha=110)
+    width = int(SIZE[0] * 0.55)
+    if faces:
+        # 顔（頭の枠）にかからない幅まで。寄せきれずに顔が内側に来た写真でも、字が顎にかからない
+        head = faces[0]
+        width = max(480, min(width, (head[0] - 16 - 48) if right else (SIZE[0] - 40 - (head[2] + 16))))
+    x0 = 48 if right else SIZE[0] - width - 40
+    has_crest = _crest_strip(marks, BOLD_CREST_PREF) is not None
+    limit = BOLD_FLOOR - ((BOLD_CREST_PREF + 14) if has_crest else 0)
+    y = 40
+    f1, rows1 = _fit_rows(line1, font_path, BOLD_SUB_SIZES, width, 2)
+    step1 = int(f1.size * 1.16)
+    rects = []
+    for row in rows1:
+        _say(canvas, o, (x0, y), row, f1, WHITE)
+        rects.append(_rect_of((x0, y), row, f1))
+        y += step1
+    if rows1:
+        y += 12
+    f2, rows2 = _bold_main(line2, font_path, width, limit - y)
+    step2 = int(f2.size * 1.14)
+    for row in rows2:
+        _say(canvas, o, (x0 - 4, y), row, f2, BAND_YELLOW, main=True)
+        rects.append(_rect_of((x0 - 4, y), row, f2, pad=14))
+        y += step2
+    _REPORT.update(main_size=f2.size if rows2 else 0, sub_size=f1.size if rows1 else 0)
+    text_rect = ((min(r[0] for r in rects), min(r[1] for r in rects), max(r[2] for r in rects), y)
+                 if rects else (x0, 40, x0, 40))
+    crest = _bold_crest_below(canvas, marks, text_rect, text_side, faces)
+    avoid = list(rects) + ([crest] if crest else [])
+    _REPORT.update(crest=crest, faces=faces, text=rects,
+                   callouts=_draw_callouts(canvas, spec.get("callouts"), font_path, avoid, faces))
+    return canvas
+
+
+def _bold_scene(spec, o, photo, source, line1, line2, marks, focus, focus_x, font_path):
+    """scene（シリーズ）：全景の写真の下を暗く落とし、補足の札（小）と主役（大・2行まで）を載せる。
+    エンブレムは左下（顔にかかるなら右下）で、文字はその横から。"""
+    from . import thumbfx
+
+    _bold_begin(o, spec)
+    if photo is not None:
+        canvas = _cover(photo.convert("RGBA"), *SIZE,
+                        focus=(0.35 if focus is None else focus), focus_x=focus_x)
+    else:
+        canvas = _blank()
+    faces = _face_rects(canvas)
+    if o.get("on"):
+        if o.get("light") in ("left", "right", "top"):
+            thumbfx.light(canvas, str(o["light"]), dark=0.8)
+        if o.get("tint") in ("left", "right"):
+            thumbfx.tint(canvas, o["tint"])
+        if o.get("rays"):
+            thumbfx.rays(canvas, (SIZE[0] // 2, SIZE[1] // 2))
+    # 写真は暗くしない。字の下だけ落とす（ぼかさない）
+    _shade(canvas, bottom=480, bottom_alpha=228)
+    strip = _crest_strip(marks, 160)
+    side, crest = _pick_corner(strip, faces)
+    left, right = 48, SIZE[0] - 48
+    if crest is not None:
+        canvas.alpha_composite(strip, (crest[0], crest[1]))
+        if side == "left":
+            left = crest[2] + 26
+        else:
+            right = crest[0] - 26
+    width = right - left
+    f2, rows2 = _bold_main(line2 or line1, font_path, width, 380)
+    step2 = int(f2.size * 1.14)
+    block = step2 * len(rows2)
+    y = BOLD_FLOOR - block + int(f2.size * 0.12)
+    rects = []
+    for row in rows2:
+        _say(canvas, o, (left, y), row, f2, BAND_YELLOW, main=True)
+        rects.append(_rect_of((left, y), row, f2, pad=14))
+        y += step2
+    top = (rects[0][1] if rects else BOLD_FLOOR)
+    if line1 and line2:
+        size = 60
+        _tag(canvas, o, left, top - int(size * 1.5) - 4, line1, font_path, size)
+        font = ImageFont.truetype(font_path, size)
+        rects.append((left, top - int(size * 1.5) - 4, left + int(font.getlength(line1)) + 64, top - 2))
+    avoid = list(rects) + ([crest] if crest else [])
+    _REPORT.update(main_size=f2.size if rows2 else 0, sub_size=60 if (line1 and line2) else 0,
+                   crest=crest, faces=faces, text=rects,
+                   callouts=_draw_callouts(canvas, spec.get("callouts"), font_path, avoid, faces))
+    return canvas
+
+
+def _bold_number(spec, o, photo, source, line1, line2, marks, focus, focus_x, font_path):
+    """number（シリーズ）：数字が主役（大）。補足は上に小さく。エンブレムは左下で、2行目はその横。"""
+    from . import thumbfx
+
+    _bold_begin(o, spec)
+    if photo is not None:
+        canvas = _cover(photo.convert("RGBA"), *SIZE, focus=focus, focus_x=focus_x)
+    else:
+        canvas = _blank()
+    faces = _face_rects(canvas)
+    dark, draw = _layer(SIZE)
+    for x in range(SIZE[0]):
+        draw.line([(x, 0), (x, SIZE[1])], fill=(0, 0, 0, int(190 - 80 * (x / SIZE[0]))))
+    canvas.alpha_composite(dark)
+    parts = _number_parts(str(spec.get("number") or "").strip())
+    room = SIZE[0] - 96
+    size = 400
+
+    def measure(big, small) -> float:
+        return sum(_part_font(s, n, big, small).getlength(s) + (0 if n else 8) for s, n in parts)
+
+    while size > 150:
+        if measure(ImageFont.truetype(font_path, size),
+                   ImageFont.truetype(font_path, int(size * 0.42))) <= room:
+            break
+        size -= 10
+    big, small = ImageFont.truetype(font_path, size), ImageFont.truetype(font_path, int(size * 0.42))
+    baseline = 468
+    x = 48
+    if o.get("on"):
+        light = o.get("light")
+        if light in ("left", "right", "top"):
+            thumbfx.light(canvas, str(light), dark=0.8)
+        if o.get("tint") in ("left", "right"):
+            thumbfx.tint(canvas, o["tint"])
+        if o.get("rays"):
+            thumbfx.rays(canvas, (int(x + measure(big, small) / 2), int(baseline - size * 0.38)),
+                         color=(255, 240, 120), alpha=0.20, hole=150)
+    rects = []
+    reserve = 0
+    if spec.get("callouts"):
+        reserve = max(int(ImageFont.truetype(font_path, CALLOUT_SIZE).getlength(str(c))) + 80
+                      for c in spec["callouts"])
+    f1, rows1 = _fit_rows(line1, font_path, BOLD_SUB_SIZES, SIZE[0] - 96 - min(reserve, 520), 1)
+    if rows1:
+        _say(canvas, o, (48, 84), rows1[0], f1, WHITE, anchor="lm")
+        rects.append(_rect_of((48, 84), rows1[0], f1, anchor="lm"))
+    cursor = x
+    for text, is_number in parts:
+        if is_number:
+            font = _part_font(text, True, big, small)
+            _say(canvas, o, (cursor, baseline), text, font, BAND_YELLOW, main=True, anchor="ls")
+            rects.append(_rect_of((cursor, baseline), text, font, anchor="ls", pad=14))
+            cursor += font.getlength(text)
+        else:
+            cursor += 8
+            _say(canvas, o, (cursor, baseline), text, small, WHITE, anchor="ls")
+            rects.append(_rect_of((cursor, baseline), text, small, anchor="ls"))
+            cursor += small.getlength(text)
+    strip = _crest_strip(marks, 160)
+    side, crest = _pick_corner(strip, faces + rects)
+    left, right = 48, SIZE[0] - 48
+    if crest is not None:
+        canvas.alpha_composite(strip, (crest[0], crest[1]))
+        if side == "left":
+            left = crest[2] + 26
+        else:
+            right = crest[0] - 26
+    if line2:
+        f2, rows2 = _fit_rows(line2, font_path, (100, 92, 86, 80, 74, 68, 62, 56), right - left, 1)
+        if rows2:
+            cy = ((crest[1] + crest[3]) // 2) if crest else BOLD_FLOOR - 54
+            _say(canvas, o, (left, cy), rows2[0], f2, WHITE, anchor="lm")
+            rects.append(_rect_of((left, cy), rows2[0], f2, anchor="lm"))
+    avoid = list(rects) + ([crest] if crest else [])
+    _REPORT.update(main_size=size, sub_size=f1.size if rows1 else 0, crest=crest, faces=faces,
+                   text=rects, callouts=_draw_callouts(canvas, spec.get("callouts"), font_path, avoid, faces))
     return canvas

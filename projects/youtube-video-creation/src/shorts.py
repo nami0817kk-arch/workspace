@@ -208,6 +208,7 @@ def trim(script: Script, section: str = "", max_seconds: float = MAX_SECONDS) ->
     # 冒頭に題の読み上げが何行目にあるかを見るため、元の題を渡す
     short.scenes[0]._title = str(getattr(script, "title", "") or (script.meta or {}).get("title", "") or "")
     _drop_hook(short.scenes[0])
+    _shorten_opening(short.scenes[0], short)
     _drop_main_mark(short.scenes[1])
     _drop_lead_in(short.scenes[1])
     _hoist_voice(short, script)
@@ -225,6 +226,8 @@ def trim(script: Script, section: str = "", max_seconds: float = MAX_SECONDS) ->
     _add_voices_tail(short, script, max_seconds)
     _drop_boards(short, script)
     _add_face(short)
+    _rotate_photos(short)
+    _apply_short_telops(short)
     _add_subscribe(short)
     if not short.scenes[-1].lines:
         raise ShortError(f"『{body.title}』は冒頭だけで尺を使い切ります。節を選び直してください")
@@ -354,6 +357,41 @@ def _drop_hook(opening: Scene) -> None:
     # ショートがクラブ名を言わないことはない。本編の一言はそのまま
     if keep >= 2:
         del opening.lines[: keep - 1]
+
+
+# **冒頭で声に出すのは、題の最初の一言まで**（2026-10-14 ユーザー「参考2チャンネルを参考に質を上げて」）。
+# 参考のショートは0.2秒目から喋り、3〜4秒で最初の本人の言葉か事実に入る。こちらは題を
+# 丸ごと読んでいて、佐野の回は6.2秒かかり、最初の発言は6.2秒目だった。**題は画面に全部出す**
+# （テロップは元のまま）ので、クリックした人が確かめられることは変わらない。
+OPENING_SPOKEN_MAX = 22
+
+
+def _shorten_opening(opening: Scene, short: Script) -> None:
+    """題を読む1行目を、最初の一文（長ければ最初の読点まで）に短くする。声だけで、画面の字は変えない。
+
+    取材メモに `short_hook` があればそれを読む。無いときは、題が `OPENING_SPOKEN_MAX` 字を
+    超えるときだけ、最初の「。」（無ければ最初の「、」）で切る。8字に満たなければ切らない。
+    """
+    if not opening.lines:
+        return
+    line = opening.lines[0]
+    text = str(line.text or "").strip()
+    hook = str((short.meta or {}).get("short_hook") or "").strip()
+    if not hook:
+        if len(text) <= OPENING_SPOKEN_MAX:
+            return
+        for mark in ("。", "、"):
+            at = text.find(mark)
+            if 8 <= at < len(text) - 1:
+                hook = text[:at + (1 if mark == "。" else 0)]
+                break
+    if not hook or hook == text:
+        return
+    if not str(line.telop or "").strip():
+        line.telop = text            # 画面には題をそのまま出す
+    line.text = hook
+    line.duration = 0.0
+    line.audio_path = None
 
 
 def _drop_main_mark(scene: Scene) -> None:
@@ -516,7 +554,7 @@ def _outro_count(lines) -> int:
     """末尾にある締めの行数。**0〜2**。"""
     count = 0
     for line in reversed(lines):
-        if (line.text or "").strip() in SHORT_OUTRO_ANY:
+        if (line.text or "").strip() in SHORT_OUTRO_ANY or getattr(line, "_outro", False):
             count += 1
         else:
             break
@@ -783,6 +821,12 @@ def _add_subscribe(short: Script) -> None:
     # ニュースはショートだけを出す。「本編はチャンネルから」は存在しないものへの案内になる
     if (short.meta or {}).get("no_main"):
         words_list = (SHORT_SUBSCRIBE_2,)
+    # **視聴者への質問で締める**（2026-10-14）。参考2チャンネルは96本全部が質問か依頼で終わる。
+    # 毎回同じ文にしない（量産に見える）ので、取材メモの `short_question` を1行目に置く。
+    # 書いていなければ今までどおり。質問のあとに「登録もお願いします」を続ける
+    question = str((short.meta or {}).get("short_question") or "").strip()
+    if question:
+        words_list = tuple(words_list) + (question,)      # 質問で終える（登録の依頼はその手前）
     for words in words_list:
         last = copy.deepcopy(lines[-1])
         last.text = words
@@ -792,9 +836,11 @@ def _add_subscribe(short: Script) -> None:
         last.audio_path = None
         last.card = "none"
         last.marks = []       # 書き込み（2026-10-07）は写した行に付いてこさせない
+        last.short_telop = None   # 大きな一言（2026-10-14）も写した行に付いてこさせない
         # 前の行の確度の札を引き継がない（2026-10-07、ケインの回で反応の
         # 「未確認」が締めの一言に付いていた）
         last.source = None
+        last._outro = True
         lines.append(last)
 
 
@@ -934,6 +980,113 @@ def _add_face(script: Script) -> None:
     for line in script.lines:
         if not line.image or photo.startswith(STACK_DIR.as_posix()):
             line.image = photo
+
+
+# **写真を3〜4秒ごとに替える**（2026-10-14 ユーザー「参考2チャンネルを参考に質を上げて」）。
+# 参考2チャンネルは見た13本の全部で、約3秒ごとに別の写真に変わっていた。こちらは1本を通して
+# 同じ1枚だった（2026-09-06 の「顔は最初の行から最後まで」を、1枚で満たしていた）。
+# 2026-09-15「目的なく画面をコロコロ変えない」は本編の話。**ショートは数秒で見るか決められる**ので、
+# 同じ人の別の写真に替える。最初の3秒は今までの顔のまま、**顔が無い時間は作らない**
+ROTATE_EVERY = 3.5
+_PHOTO_SUFFIXES = (".jpg", ".jpeg", ".png")
+_DERIVED = re.compile(r"_(?:v|w|r|u|o|s|t)$")
+
+
+def _photo_pool(short: Script, main: str) -> list[str]:
+    """main の次に出せる写真。縦長か縦版（`_v`）のあるものだけ。同じ写真は入れない。"""
+    from pathlib import Path as _P
+
+    root = _P(__file__).resolve().parents[1]
+    meta = short.meta or {}
+    found: list[str] = []
+    for raw in list(meta.get("short_photos") or []):
+        found.append(str(raw).strip())
+    # 写真が1枚の回でも、同じフォルダに 02.jpg・03.jpg があれば使う
+    src = _P(str(meta.get("short_photo") or meta.get("thumbnail_photo") or "")).as_posix()
+    if src and (root / src).exists():
+        folder = (root / src).parent
+        for f in sorted(folder.iterdir()):
+            if f.suffix.lower() in _PHOTO_SUFFIXES and f.stem.isdigit():
+                found.append((_P(src).parent / f.name).as_posix())
+    # 行で指定した写真（語る人・別の人）は入れない。その行のための写真で、ほかの行に出すと人が合わない
+    from .render import _is_board
+
+    pool: list[str] = []
+    seen = {_P(main).as_posix()}
+    for raw in found:
+        name = _P(raw)
+        if not raw or _is_board(raw) or raw.startswith("assets/backgrounds/"):
+            continue
+        base = _P(_DERIVED.sub("", name.stem) + name.suffix)
+        key = (name.parent / base).as_posix()
+        if key in seen or name.as_posix() in seen:
+            continue
+        tall = name.with_name(_DERIVED.sub("", name.stem) + "_v" + name.suffix)
+        pick = tall if (root / tall).exists() else name
+        try:
+            from PIL import Image
+            with Image.open(root / pick) as im:
+                if im.size[0] > im.size[1]:
+                    continue         # 横長を縦に敷くと真ん中しか映らない（縦版が無ければ使わない）
+        except Exception:
+            continue
+        seen.add(key)
+        seen.add(name.as_posix())
+        pool.append(pick.as_posix())
+    return pool
+
+
+def _rotate_photos(short: Script) -> int:
+    """冒頭の写真が敷かれている行を、`ROTATE_EVERY` 秒ごとに別の写真へ替える。替えた回数を返す。
+
+    板・カード・行で指定した別の写真は動かさない。最初の `ROTATE_EVERY` 秒は元の写真のまま。
+    """
+    lines = [ln for sc in short.scenes for ln in sc.lines]
+    main = next((str(ln.image) for ln in lines if ln.image), "")
+    if not main:
+        return 0
+    pool = _photo_pool(short, main)
+    if not pool:
+        return 0
+    cycle = [main] + pool
+    total = 0.0
+    last = 0.0
+    index = 0
+    changes = 0
+    for ln in lines:
+        span = ln.duration or ln.estimated_duration()
+        # **主役の写真が敷かれている行だけ動かす**。行で指定した別の写真・板はそのまま
+        if str(ln.image or "") == main:
+            if total - last >= ROTATE_EVERY:
+                index = (index + 1) % len(cycle)
+                last = total
+                changes += 1
+            ln.image = cycle[index]
+        total += span
+    return changes
+
+
+def _apply_short_telops(short: Script) -> int:
+    """取材メモの `short_telops`（`match`＝読み上げ文の一部、`text`＝前半/後半）を行に付ける。付けた行数を返す。
+
+    参考2チャンネルは1画面1要点を約110pxで出す。こちらは読み上げた文をそのまま小さく出していた。
+    **画面に出る字が減る**（読み上げた文は画面にも出す、の例外。ユーザー「a」で選んだ案A）ので、
+    行の `telop`（全文）は変えず、`short_telop` だけを足す。描くのは `render._draw_big_telop`。
+    """
+    items = [x for x in ((short.meta or {}).get("short_telops") or [])
+             if isinstance(x, dict) and x.get("match") and x.get("text")]
+    if not items:
+        return 0
+    used = 0
+    for scene in short.scenes[1:]:
+        for line in scene.lines:
+            body = str(line.text or "")
+            for item in items:
+                if str(item["match"]) in body:
+                    line.short_telop = str(item["text"]).strip()
+                    used += 1
+                    break
+    return used
 
 
 # ショートは数秒で見るか決められる。**顔が出るのが遅いと、その前に離脱する**

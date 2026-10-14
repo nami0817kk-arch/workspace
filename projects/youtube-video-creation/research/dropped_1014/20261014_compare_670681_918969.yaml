@@ -1,0 +1,426 @@
+# 取材メモ（10/14 水、シリーズ「比べる」、key: compare_670681_918969、型は news）。
+# 材料の控えは research/raw/20261014_compare_670681_918969.md。**この控えの外へ出ていない。**
+#
+# **「比べる」の3つ（選手／クラブ／同じ年齢）のうち「同じ年齢」で組んだ。**
+#   パリ・サンジェルマンのネヴェスとモナコのカマラ。どちらも右利きのセントラルMFで、いまは22歳。
+#   軸は「22歳の節目に何があるか」。22歳の誕生日は9月27日と1月1日で、きょう（10月14日）までの日数は17日と286日。
+#   22歳のぶんは並べられないので、**21歳までに確定した数字**で並べる——これが「同じ年齢で比べる」意味。
+#   強い一点：21歳までのトップチーム公式戦の出場時間は 1万2316分と6102分で2.02倍。
+#   ところが年齢ごとに分けると差は 2735 → 1735 → 579分と縮み、90分あたりの得点＋アシストは 0.26 と 0.27 でほぼ同じ。
+#   その中身（得点とアシスト）は逆向き。ここを見立てにした。
+#
+# **重なりの確認（直近30日、research/posted.json の題と research/covered.yaml を人名・クラブ名で引いた）**:
+#   **ジョアン・ネヴェス本人が 1件**：2026-10-08 `player_670681`「ジョアン・ネヴェスってどんな選手？174センチの中盤が前半7分で2本決めた蹴り方」
+#   （選手紹介、6日前）。**同じ選手を6日あけずに2本目。ユーザーに報告して、外すかどうかは判断してもらう。**
+#   PSG：2026-10-10 `finance_psg`（財政、4日前）。モナコ：2026-10-12 `compare_dortmund_monaco`（2日前）に加え、
+#   9/13・9/27・10/4 は南野拓実の話（この台本に南野は出していない）。カマラ本人は 0件。
+#   10/12 のドルトムント×モナコと、**型は重ならないようにした**：あちらは「点が入る時間と得点者」、こちらは「21歳までの出場時間と、年齢ごとの積み方」。
+#   板も変えた（あちらは timeline・waterfall・stats、こちらは table・line・calc）。
+#
+# **数字はすべて自分で数えた。**Transfermarkt の1試合ずつの記録（tmapi の performance-game）を足したもの。
+#   年齢は各試合の日の年齢。**トップチームの公式戦だけ**（ベンフィカ・PSG・モナコ・メスの試合。代表戦・親善試合・Bチーム・育成リーグは除く）。
+#   基準は 2026年10月14日の朝（最後の試合は10月10日のリーグ・アン第6節）。
+#   ネヴェス：18歳 1165分／19歳 4144分／20歳 4134分／21歳 2873分＝12316分（177試合18得点17アシスト）。22歳は1試合58分。
+#   カマラ：19歳 1409分／20歳 2399分／21歳 2294分＝6102分（87試合3得点15アシスト）。22歳は27試合2325分。
+#   自分で割った数: 12316÷6102＝2.018（2.02倍）／4144−1409＝2735／4134−2399＝1735／2873−2294＝579／
+#     35×90÷12316＝0.256（0.26）／18×90÷6102＝0.265（0.27）／18×90÷12316＝0.13／3×90÷6102＝0.04／17×90÷12316＝0.12／15×90÷6102＝0.22／
+#     昨季 11×90÷2701＝0.367／7×90÷2457＝0.256／7×90÷2701＝0.23／3×90÷2457＝0.11／4×90÷2701＝0.13／4×90÷2457＝0.15／
+#     市場価値 14000÷3000＝4.67／14000÷5500＝2.55
+#   プレーの数字は FotMob の昨季リーグ・アン（ネヴェス1287分、カマラ1851分、90分あたり）。位置は FotMob が出す
+#     「同じリーグ・同じポジション群の中での百分位」。数としては読まず、「上位◯%ほど」「少ない側」と期間つきで言った。
+# **食い違いの控え**:
+#   ①ネヴェスの身長：PSG 公式は 174 cm、Transfermarkt は 1.71m。**PSG 公式に揃えた**（10/8 の選手紹介の題も174センチ）。
+#   ②雛形の「今季」の表（9試合528分／10試合900分）は**代表戦を含んでいた**。クラブの公式戦だけで数え直した（6試合463分／8試合720分）。
+#      カマラの 8試合720分は AS モナコ公式の選手ページとも一致。
+#   ③ネヴェスの市場価値は 6月1日の更新のまま（1億4000万）。22歳になってからの更新はまだ無い。
+# **言い切っていないもの**: どちらが上かは一度も言わない。出場時間の2.02倍は「積み上げた時間の違い」までで、年齢ごとの差が
+#   縮んだ理由は「カマラが20歳で990分増え、ネヴェスが21歳で1261分減った」という数字だけ。ネヴェスの減りはケガで出られなかった試合
+#   （TM の記録で10試合、カマラは11試合）と並べて示し、原因は断定していない。守備・パスの数字は「チームの戦い方でも動く」と添えた。
+#   「だけ」「最下位」などで小さく見せていない。パーセンタイルは「少ない側」と言うに留めた。
+# **本人の言葉**：ネヴェス＝**未確認**（PSG 公式の選手ページに引用が無く、記者会見も取れていない）。
+#   カマラ＝AS モナコ公式の記者会見（9月11日）の見出しの一句だけ（本文は全文が取れていない）。台本には引いていない。
+# 板：①stats（22歳になってからの日数）②table（基礎DATA）③table（年齢別）＋line（年ごとの差）＋calc④table（昨季・今季）
+#   ⑤table×2（プレー）⑥table＋line（市場価値）⑦table＋calc×2（見立て）。**`card: none` は明示してある**。赤ペン（mark）は使っていない。
+# 写真：**未取得**。サムネは2枚並べて VS の形（photos は空のまま）。本編の冒頭・節の写真（`opening_image`・行の `image:`）も未指定。
+#   人の写真はユーザーが取る。取れたら `thumbnail.photos` に2枚、`theme.opening_image` に並べた1枚を入れる。
+# 声：1件も無い（シリーズの回。ブラウザの道具を使わない約束なので反応は集めていない）。
+# サムネ：**ユーザーと相談して決める。**ここに書いてあるのは案A（VS、伏せるのは「何倍か」）。
+#   題の「倍」は節の中で言う（2.02倍）。
+format: news
+voice_min: 0
+slot: other_1
+date: 2026年10月14日
+series: 比べる
+people:
+- ジョアン・ネヴェス
+- ラミン・カマラ
+short_title: ネヴェスとカマラ、22歳までの出場時間を並べる
+theme:
+  id: compare_670681_918969
+  league: france
+  league_name: リーグ・アン
+  kind: other
+  topic: ネヴェスとカマラ
+  title: ネヴェスとカマラ、同じ22歳の中盤。21歳までの積み方は、どう違うのか
+  question: 同じ22歳のネヴェスとカマラは、21歳までに何が違って、何が同じなのか
+  lead: パリ・サンジェルマンとモナコの、22歳の中盤。
+  hook: 22歳の誕生日までに積んだ時間を、年齢ごとに数えました。
+  takeaway: ネヴェス（パリ・サンジェルマン）は9月27日、カマラ（モナコ）は1月1日に22歳になった。10月14日までの22歳の日数は17日と286日で並べられないため、21歳までのトップチームの公式戦を数えた。出場時間は1万2316分と6102分で2.02倍の開きがあるが、年齢ごとの差は19歳の2735分、20歳の1735分、21歳の579分と縮んでいる。90分あたりの得点とアシストは0.26と0.27でほぼ同じで、内訳は得点が18と3、アシストが17と15。昨季のリーグ・アン（FotMob、90分あたり）では、パス成功がネヴェス66.4本、ラインを破るパスがカマラ9.1本と、目立つ場所が分かれる。推定の市場価値は21歳の終わりに1億4000万ユーロと3000万ユーロで4.7倍、いまは1億4000万と5500万で2.5倍。次の物差しは、日本時間15日午前4時のマンチェスター・シティ対PSG（チャンピオンズリーグ）と、16日午前1時45分のツェスカ・ソフィア対モナコ（カンファレンスリーグ）
+  bgm: assets/audio/bgm_calm.wav
+thumbnail:
+  line1: ネヴェスとカマラ
+  line2: 22歳までの出場時間は●倍
+  tags:
+  - パリ・サンジェルマン
+  - モナコ
+  - 22歳
+  - 比べる
+  photos: []
+  face_link: VS
+sections:
+- id: lead
+  heading: 同じ22歳。ただし誕生日からの日数が違う
+  tier: 報道
+  telop: 22歳の誕生日は、ネヴェスが9月27日、カマラが1月1日
+  narrator: キャスター
+  card: &ls
+    type: stats
+    title: 22歳になってから（10月14日まで）
+    items:
+    - ['17', 日, ネヴェス（9月27日から）]
+    - ['286', 日, カマラ（1月1日から）]
+    - ['2.02', 倍, 21歳までの出場時間の比]
+    focus: 2
+  say:
+  - text: ジョアン・ネヴェスとラミン・カマラは、どちらも22歳です。
+    card: *ls
+  - text: ネヴェスが22歳になったのは9月27日。カマラは1月1日でした。
+    card: *ls
+  - text: 誕生日から数えて、きょうまでの日数は17日と286日。
+    emph: true
+    card:
+      <<: *ls
+      focus: 0
+  - text: その間のトップチームの出番は、1試合58分と、27試合2325分です。
+    card: *ls
+  - text: 22歳のぶんは、並べるには日数が違いすぎます。
+    card: *ls
+  - text: そこで、21歳までに積んだ数字で比べます。
+    card: *ls
+  - text: 21歳までの出場時間は、1万2316分と6102分。2.02倍の開きがあります。
+    emph: true
+    card: *ls
+  - text: ただ、年齢ごとに分けると、見え方が変わります。
+    card: none
+  sources: &id001
+  - https://www.psg.fr/en/players/joao-neves
+  - https://www.asmonaco.com/en/joueurs/lamine-camara
+  - https://www.transfermarkt.com/joao-neves/profil/spieler/670681
+  - https://www.transfermarkt.com/lamine-camara/profil/spieler/918969
+  - https://tmapi-alpha.transfermarkt.technology/player/670681/performance-game
+  - https://tmapi-alpha.transfermarkt.technology/player/918969/performance-game
+- id: data
+  heading: 2人の基礎DATA
+  tier: 報道
+  telop: 2人とも右利きのセントラルMF。2026年のW杯には、そろって出場
+  narrator: キャスター
+  card: &dt
+    type: table
+    title: ネヴェス と カマラ
+    columns:
+    - 項目
+    - ネヴェス
+    - カマラ
+    rows:
+    - &d1 [所属, パリ・サンジェルマン, モナコ]
+    - &d2 [ポジション, セントラルMF, セントラルMF]
+    - &d3 [誕生日, 2004年9月27日, 2004年1月1日]
+    - &d4 [身長, 1.74m, 1.74m]
+    - &d5 [利き足, 右, 右]
+    - &d6 [2026年W杯, 5試合391分, 4試合250分]
+    - &d7 [同じピッチに立った試合, 6試合, 6試合]
+  say:
+  - text: ネヴェスの所属はパリ・サンジェルマン、カマラはモナコです。
+    card: *dt
+  - text: どちらも右利きのセントラルMFで、身長は1.74mで並びます。
+    card: {type: table, title: ネヴェス と カマラ, columns: [項目, ネヴェス, カマラ], rows: [*d1, *d2, *d3, *d4, *d5, *d6, *d7], highlight_row: 3}
+  - text: 今年のワールドカップには、2人とも出ました。5試合391分と、4試合250分。
+    card: {type: table, title: ネヴェス と カマラ, columns: [項目, ネヴェス, カマラ], rows: [*d1, *d2, *d3, *d4, *d5, *d6, *d7], highlight_row: 5}
+  - text: クラブで同じピッチに立った試合も、6試合あります。
+    card: {type: table, title: ネヴェス と カマラ, columns: [項目, ネヴェス, カマラ], rows: [*d1, *d2, *d3, *d4, *d5, *d6, *d7], highlight_row: 6}
+  - text: いちばん最近は9月4日のリーグ・アン。2人とも先発して、90分出ました。
+    card: {type: table, title: ネヴェス と カマラ, columns: [項目, ネヴェス, カマラ], rows: [*d1, *d2, *d3, *d4, *d5, *d6, *d7], highlight_row: 6}
+  sources:
+  - https://www.psg.fr/en/players/joao-neves
+  - https://www.asmonaco.com/en/joueurs/lamine-camara
+  - https://www.transfermarkt.com/joao-neves/profil/spieler/670681
+  - https://www.transfermarkt.com/lamine-camara/profil/spieler/918969
+  - https://tmapi-alpha.transfermarkt.technology/player/670681/performance-game
+  - https://tmapi-alpha.transfermarkt.technology/player/918969/performance-game
+- id: ages
+  main: true
+  heading: 年齢ごとに分けると、差は縮んでいた
+  tier: 報道
+  telop: 19歳の差は2735分、20歳は1735分、21歳は579分
+  narrator: 解説
+  card: &ag
+    type: table
+    title: 年齢ごとの出場時間（トップチームの公式戦）
+    columns: [年齢, ネヴェス, カマラ]
+    rows:
+    - &a0 [18歳, 1165分, 出場なし]
+    - &a1 [19歳, 4144分, 1409分]
+    - &a2 [20歳, 4134分, 2399分]
+    - &a3 [21歳, 2873分, 2294分]
+    - &a4 [21歳まで, 1万2316分, 6102分]
+  say:
+  - text: ネヴェスとカマラを、21歳までの出場時間で並べます。
+    short_only: true
+  - text: 数えたのは、トップチームの公式戦です。代表戦とBチームは入れていません。
+    card: *ag
+  - text: ネヴェスは18歳の冬、カマラは19歳の春に、トップチームでの初出場でした。
+    card: {type: table, title: 年齢ごとの出場時間（トップチームの公式戦）, columns: [年齢, ネヴェス, カマラ], rows: [*a0, *a1, *a2, *a3, *a4], highlight_row: 0}
+  - text: 19歳の1年は、4144分と1409分。
+    card: {type: table, title: 年齢ごとの出場時間（トップチームの公式戦）, columns: [年齢, ネヴェス, カマラ], rows: [*a0, *a1, *a2, *a3, *a4], highlight_row: 1}
+  - text: 20歳は、4134分と2399分。
+    card: {type: table, title: 年齢ごとの出場時間（トップチームの公式戦）, columns: [年齢, ネヴェス, カマラ], rows: [*a0, *a1, *a2, *a3, *a4], highlight_row: 2}
+  - text: 21歳は、2873分と2294分でした。
+    card: {type: table, title: 年齢ごとの出場時間（トップチームの公式戦）, columns: [年齢, ネヴェス, カマラ], rows: [*a0, *a1, *a2, *a3, *a4], highlight_row: 3}
+  - text: 差は、2735分、1735分、579分と縮んでいます。
+    emph: true
+    card: &agl
+      type: line
+      title: 年齢ごとの出場時間（分）
+      x: ['19歳', '20歳', '21歳']
+      series:
+      - [ネヴェス, [4144, 4134, 2873]]
+      - [カマラ, [1409, 2399, 2294]]
+      unit: 分
+      focus: カマラ
+  - text: 縮んだのは、カマラが20歳で990分増え、ネヴェスが21歳で1261分減ったからです。
+    card:
+      <<: *agl
+      highlight: 21歳
+  - text: ネヴェスの21歳には、ケガで出られなかった試合が10ありました。
+    card:
+      <<: *agl
+      highlight: 21歳
+  - text: カマラの21歳にも11試合あり、ネヴェスの10試合と近い数です。
+    card:
+      <<: *agl
+      highlight: 21歳
+  - text: その21歳に、ネヴェスはチャンピオンズリーグ決勝の120分も戦っています。
+    card: none
+  - text: カマラは21歳の1年で、8アシスト。19歳から22歳のどの年よりも多い数字です。
+    card: none
+  sources:
+  - https://tmapi-alpha.transfermarkt.technology/player/670681/performance-game
+  - https://tmapi-alpha.transfermarkt.technology/player/918969/performance-game
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20260530
+- id: season
+  heading: 昨季と今季の数字
+  tier: 報道
+  telop: 昨季の90分あたりの得点とアシストは、0.37と0.26
+  narrator: 解説
+  card: &sl
+    type: table
+    title: 昨季（25/26）のクラブの公式戦
+    columns: [項目, ネヴェス, カマラ]
+    rows:
+    - &s1 [試合, '38', '31']
+    - &s2 [出場時間, 2701分, 2457分]
+    - &s3 [得点, '7', '3']
+    - &s4 [アシスト, '4', '4']
+    - &s5 [得点＋アシスト／90分, '0.37', '0.26']
+  say:
+  - text: ここからは、昨季と今季。クラブの公式戦だけで数えます。
+    card: none
+  - text: 昨季は、ネヴェスが38試合2701分、カマラが31試合2457分でした。
+    card: {type: table, title: 昨季（25/26）のクラブの公式戦, columns: [項目, ネヴェス, カマラ], rows: [*s1, *s2, *s3, *s4, *s5], highlight_row: 1}
+  - text: ネヴェスは7得点4アシスト。カマラは3得点4アシスト。
+    card: {type: table, title: 昨季（25/26）のクラブの公式戦, columns: [項目, ネヴェス, カマラ], rows: [*s1, *s2, *s3, *s4, *s5], highlight_row: 3}
+  - text: 90分あたりに直すと、得点とアシストの合計は0.37と0.26です。
+    emph: true
+    card: {type: table, title: 昨季（25/26）のクラブの公式戦, columns: [項目, ネヴェス, カマラ], rows: [*s1, *s2, *s3, *s4, *s5], highlight_row: 4}
+  - text: 内訳は、得点が0.23と0.11、アシストが0.13と0.15です。
+    card: *sl
+  - text: 今季はここまで、ネヴェスが6試合463分、カマラが8試合720分。
+    card: &sn
+      type: table
+      title: 今季（26/27）のクラブの公式戦
+      columns: [項目, ネヴェス, カマラ]
+      rows:
+      - [試合, '6', '8']
+      - [出場時間, 463分, 720分]
+      - [得点, '0', '1']
+      - [アシスト, '0', '1']
+  - text: カマラは1得点1アシスト。ネヴェスは得点もアシストも0で、まだ6試合です。
+    card: *sn
+  sources:
+  - https://tmapi-alpha.transfermarkt.technology/player/670681/performance-game
+  - https://tmapi-alpha.transfermarkt.technology/player/918969/performance-game
+  - https://www.asmonaco.com/en/joueurs/lamine-camara
+- id: style
+  heading: プレーの数字は、どこが違うのか
+  tier: 報道
+  telop: 昨季のリーグ・アン。90分あたりのパス成功は、ネヴェス66.4本、カマラ50.8本
+  narrator: 解説
+  card: &pl
+    type: table
+    title: 昨季のリーグ・アン（90分あたり）
+    columns: [項目, ネヴェス, カマラ]
+    rows:
+    - &p1 [パス成功, 66.4本, 50.8本]
+    - &p2 [パス成功率, 91.4%, 85.9%]
+    - &p3 [ラインを破るパス, 2.4本, 9.1本]
+    - &p4 [敵陣ボックス内のタッチ, 3.8回, 1.0回]
+    - &p5 [チャンス創出, 1.0回, 1.7回]
+  say:
+  - text: プレーの中身も、90分あたりで並べます。昨季のリーグ・アンの数字です。
+    card: *pl
+  - text: ネヴェスのパス成功は66.4本。同じリーグ、同じポジションの中で、上位5%ほどです。
+    card: {type: table, title: 昨季のリーグ・アン（90分あたり）, columns: [項目, ネヴェス, カマラ], rows: [*p1, *p2, *p3, *p4, *p5], highlight_row: 0}
+  - text: 成功率は、91.4%と85.9%でした。
+    card: {type: table, title: 昨季のリーグ・アン（90分あたり）, columns: [項目, ネヴェス, カマラ], rows: [*p1, *p2, *p3, *p4, *p5], highlight_row: 1}
+  - text: ラインを破るパスは、2.4本と9.1本。カマラが3.8倍です。
+    emph: true
+    card: {type: table, title: 昨季のリーグ・アン（90分あたり）, columns: [項目, ネヴェス, カマラ], rows: [*p1, *p2, *p3, *p4, *p5], highlight_row: 2}
+  - text: 相手のボックスの中で触る回数は、3.8回と1.0回でした。
+    card: {type: table, title: 昨季のリーグ・アン（90分あたり）, columns: [項目, ネヴェス, カマラ], rows: [*p1, *p2, *p3, *p4, *p5], highlight_row: 3}
+  - text: ボールを奪う側の数字も見ます。
+    card: &pd
+      type: table
+      title: 昨季のリーグ・アン（90分あたり）
+      columns: [項目, ネヴェス, カマラ]
+      rows:
+      - &q1 [ボール回収, 5.2回, 7.7回]
+      - &q2 [インターセプト, 0.5回, 1.8回]
+      - &q3 [被ファウル, 0.9回, 2.3回]
+  - text: ボール回収は、5.2回と7.7回。
+    card: {type: table, title: 昨季のリーグ・アン（90分あたり）, columns: [項目, ネヴェス, カマラ], rows: [*q1, *q2, *q3], highlight_row: 0}
+  - text: インターセプトは、0.5回と1.8回です。
+    card: {type: table, title: 昨季のリーグ・アン（90分あたり）, columns: [項目, ネヴェス, カマラ], rows: [*q1, *q2, *q3], highlight_row: 1}
+  - text: ネヴェスの0.5回は、リーグの同じポジションの中では少ない側です。
+    card: {type: table, title: 昨季のリーグ・アン（90分あたり）, columns: [項目, ネヴェス, カマラ], rows: [*q1, *q2, *q3], highlight_row: 1}
+  - text: ファウルを受ける回数は、0.9回と2.3回でした。
+    card: {type: table, title: 昨季のリーグ・アン（90分あたり）, columns: [項目, ネヴェス, カマラ], rows: [*q1, *q2, *q3], highlight_row: 2}
+  - text: モナコの公式サイトは、カマラをボックス・トゥ・ボックスのMFと紹介しています。
+    card: none
+  - text: パリ・サンジェルマンの公式サイトは、ネヴェスを主力と紹介しています。
+    card: none
+  - text: ルイス・エンリケ監督のもとで、その座をつかんだという書き方です。
+    card: none
+  - text: チームの戦い方でも数字は動きます。これは2人の優劣ではなく、プレーの傾向です。
+    card: none
+  sources:
+  - https://www.fotmob.com/players/1342757/joao-neves
+  - https://www.fotmob.com/players/1436305/lamine-camara
+  - https://www.asmonaco.com/en/joueurs/lamine-camara
+  - https://www.psg.fr/en/players/joao-neves
+- id: value
+  heading: 市場価値の歩み
+  tier: 報道
+  telop: 21歳の終わりは1億4000万と3000万ユーロ。いまは1億4000万と5500万
+  narrator: 解説
+  card: &vl
+    type: table
+    title: 推定の市場価値（各年齢の最後の評価）
+    columns: [年齢, ネヴェス, カマラ]
+    rows:
+    - &v1 [19歳, 5500万ユーロ, 400万ユーロ]
+    - &v2 [20歳, 8000万ユーロ, 2000万ユーロ]
+    - &v3 [21歳, 1億4000万ユーロ, 3000万ユーロ]
+    - &v4 [いま（22歳）, 1億4000万ユーロ, 5500万ユーロ]
+  say:
+  - text: 推定の市場価値も、年齢で並べます。各年齢の、最後の評価額です。
+    card: *vl
+  - text: 19歳は5500万ユーロと400万ユーロ。20歳は8000万と2000万。
+    card: {type: table, title: 推定の市場価値（各年齢の最後の評価）, columns: [年齢, ネヴェス, カマラ], rows: [*v1, *v2, *v3, *v4], highlight_row: 1}
+  - text: 21歳の終わりは、1億4000万と3000万。
+    card: {type: table, title: 推定の市場価値（各年齢の最後の評価）, columns: [年齢, ネヴェス, カマラ], rows: [*v1, *v2, *v3, *v4], highlight_row: 2}
+  - text: いまは、1億4000万と5500万です。
+    card: {type: table, title: 推定の市場価値（各年齢の最後の評価）, columns: [年齢, ネヴェス, カマラ], rows: [*v1, *v2, *v3, *v4], highlight_row: 3}
+  - text: カマラは22歳になってから3回見直され、3000万から5500万まで上がりました。
+    emph: true
+    card: {type: table, title: 推定の市場価値（各年齢の最後の評価）, columns: [年齢, ネヴェス, カマラ], rows: [*v1, *v2, *v3, *v4], highlight_row: 3}
+  - text: 5500万は、9月24日に付いた、カマラの最高額です。
+    card: *vl
+  - text: ネヴェスの1億4000万も、6月1日に付いた、本人の最高額です。
+    card: *vl
+  - text: 比べると、21歳の終わりは4.7倍、いまは2.5倍でした。
+    card: *vl
+  sources:
+  - https://www.transfermarkt.com/joao-neves/marktwertverlauf/spieler/670681
+  - https://www.transfermarkt.com/lamine-camara/marktwertverlauf/spieler/918969
+- id: view
+  viewpoint: true
+  heading: 22歳までの積み方の違い
+  tier: 背景
+  telop: 出場時間は2.02倍。90分あたりの得点とアシストは、0.26と0.27
+  narrator: 解説
+  card: &vw
+    type: table
+    title: 21歳まで（トップチームの公式戦）
+    columns: [項目, ネヴェス, カマラ]
+    rows:
+    - &w1 [試合, '177', '87']
+    - &w2 [出場時間, 1万2316分, 6102分]
+    - &w3 [得点, '18', '3']
+    - &w4 [アシスト, '17', '15']
+    - &w5 [得点＋アシスト／90分, '0.26', '0.27']
+  say:
+  - text: 最後に、21歳までの数字を、もう一度まとめます。
+    card: *vw
+  - text: 出場時間は、画面の通り。2.02倍違います。
+    card: {type: table, title: 21歳まで（トップチームの公式戦）, columns: [項目, ネヴェス, カマラ], rows: [*w1, *w2, *w3, *w4, *w5], highlight_row: 1}
+  - text: ところが、90分あたりの得点とアシストは、0.26と0.27。ほぼ同じです。
+    emph: true
+    card: {type: table, title: 21歳まで（トップチームの公式戦）, columns: [項目, ネヴェス, カマラ], rows: [*w1, *w2, *w3, *w4, *w5], highlight_row: 4}
+  - text: ネヴェスは、35に90を掛けて、出場時間で割ります。
+    card: &c_n
+      type: calc
+      title: ネヴェスの得点＋アシスト（90分あたり）
+      terms:
+      - ['35', 得点18＋アシスト17]
+      - ['90', 1試合の分]
+      - ['1万2316', 出場時間（分）]
+      - ['0.26', 90分あたり]
+      ops: ['×', '÷', '＝']
+  - text: カマラも同じ式で、18から0.27が出ます。
+    card: &c_c
+      type: calc
+      title: カマラの得点＋アシスト（90分あたり）
+      terms:
+      - ['18', 得点3＋アシスト15]
+      - ['90', 1試合の分]
+      - ['6102', 出場時間（分）]
+      - ['0.27', 90分あたり]
+      ops: ['×', '÷', '＝']
+  - text: ただ、中身は逆向きです。得点は18と3、アシストは17と15。
+    card: {type: table, title: 21歳まで（トップチームの公式戦）, columns: [項目, ネヴェス, カマラ], rows: [*w1, *w2, *w3, *w4, *w5], highlight_row: 3}
+  - text: 90分あたりでは、得点が0.13と0.04。アシストが0.12と0.22です。
+    card: {type: table, title: 21歳まで（トップチームの公式戦）, columns: [項目, ネヴェス, カマラ], rows: [*w1, *w2, *w3, *w4, *w5], highlight_row: 3}
+  - text: 積んだ時間は違っても、1試合の中で残す数字は、近い量でした。
+    emph: true
+    card: *vw
+  - text: ネヴェスは得点で、カマラはアシストで、その数字を作ってきた形です。
+    card: none
+  - text: 差を縮めたのは、20歳のカマラの出番と、21歳のネヴェスの欠場でした。
+    card: *agl
+  - text: 次の物差しは、このあとの欧州の試合です。
+    card: none
+  - text: ネヴェスのパリ・サンジェルマンは、日本時間15日の午前4時。
+    card: none
+  - text: チャンピオンズリーグで、マンチェスター・シティと当たります。
+    card: none
+  - text: カマラのモナコは、16日の午前1時45分。
+    card: none
+  - text: カンファレンスリーグで、ツェスカ・ソフィアと当たります。
+    card: none
+  - text: 22歳のページは、まだ始まったばかりです。続きを数えるのは、ここからです。
+    card: none
+  sources:
+  - https://tmapi-alpha.transfermarkt.technology/player/670681/performance-game
+  - https://tmapi-alpha.transfermarkt.technology/player/918969/performance-game
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20261014
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.europa.conf/scoreboard?dates=20261015
