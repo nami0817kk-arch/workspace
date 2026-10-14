@@ -2330,5 +2330,37 @@
  "20261012_player_576024": {
   "at": "2026-10-12T00:24:59+09:00",
   "digest": "31d59076eca37ee9"
+ },
+ "20261014_ueda_lille_short": {
+  "at": "2026-10-14T15:26:01+09:00",
+  "digest": "2942baf8a61ecc75"
+ },
+ "20261014_sano_psv_short": {
+  "at": "2026-10-14T15:26:02+09:00",
+  "digest": "82ce221f8880c0eb"
+ },
+ "20261014_barca_gala_short": {
+  "at": "2026-10-14T15:26:03+09:00",
+  "digest": "705e31f733ed87ea"
+ },
+ "20261014_martinez_manu_short": {
+  "at": "2026-10-14T15:26:04+09:00",
+  "digest": "6c7614ef9b5b1343"
+ },
+ "20261014_mourinho_ref_short": {
+  "at": "2026-10-14T15:26:05+09:00",
+  "digest": "b2f0652b11013623"
+ },
+ "20261014_iraola_wirtz_short": {
+  "at": "2026-10-14T15:26:06+09:00",
+  "digest": "43ee39be416ac1c5"
+ },
+ "20261014_kane_bayern_short": {
+  "at": "2026-10-14T15:26:07+09:00",
+  "digest": "bdceeebf6fd1d8c3"
+ },
+ "20261014_brugge_inter_short": {
+  "at": "2026-10-14T15:26:08+09:00",
+  "digest": "69dc4a6a4ef2894e"
  }
 }

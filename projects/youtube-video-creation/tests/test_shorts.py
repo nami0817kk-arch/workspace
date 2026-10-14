@@ -843,6 +843,33 @@ def test_状況説明の1行があってもネットの声は締めに足す():
     assert "前提の説明です" not in [l.text for l in short.scenes[-1].lines]
 
 
+def test_ネットの声は続きの節より後ろに置く():
+    """**反応のあとに事実が続いていた**（2026-10-14 ユーザー「重複が多くない？」で全文を読んで発見）。
+
+    ショートの上限を2分に上げたら、`_add_more_body` が続きの節の事実を足すようになり、
+    それが**ネットの声のあとに**付いた（ブルッヘはゴールの経過、バルサは次の試合）。
+    決まりは「反応は最後」。続きの節を先に足し、反応は最後に置く。
+    """
+    from src.script_model import Line, Scene, Script
+    from src.shorts import trim
+
+    opening = Scene(title="オープニング", lines=[Line(speaker="キャスター", text="題名です")])
+    story = Scene(title="山場", main=True,
+                  lines=[Line(speaker="解説", text="ここが芯です")])
+    more = Scene(title="続き",
+                 lines=[Line(speaker="キャスター", text="続きの事実その一です"),
+                        Line(speaker="解説", text="続きの事実その二です")])
+    voices = Scene(title="ネットの声",
+                   lines=[Line(speaker="ネット民", text=f"声{i}") for i in range(3)])
+    short = trim(Script(title="見出し", scenes=[opening, story, more, voices]))
+    speakers = [l.speaker for l in short.scenes[-1].lines]
+    texts = [l.text for l in short.scenes[-1].lines]
+    assert "続きの事実その二です" in texts, "続きの節が足されていない"
+    first_voice = speakers.index("ネット民")
+    assert all(s == "ネット民" or "チャンネル" in texts[i]
+               for i, s in enumerate(speakers) if i >= first_voice),         "ネットの声のあとに、事実の行が続いている"
+
+
 def test_2枚並びのサムネはショートで上下に割って両方出す(tmp_path, monkeypatch):
     """**ショートの冒頭が、サムネの1枚目しか出ていなかった**
     （2026-09-17 指示「ショートも横割りで本編のサムネと同じようにして」）。

@@ -198,8 +198,11 @@ def trim(script: Script, section: str = "", max_seconds: float = MAX_SECONDS) ->
     # `_fit` は渡した秒数に ESTIMATE_SLACK を掛けてから使うので、
     # 空ける秒数のほうも割り戻しておく（掛け直されて目減りする）
     _fit(short, max_seconds - _reserved(script, short, max_seconds) / ESTIMATE_SLACK)
+    # **ネットの声は最後に置く**（2026-10-14 ユーザー「重複が多くない？」で全文を読んで気づいた）。
+    # 上限を2分に上げたら、反応のあとに続きの節の事実（ゴールの経過・次の試合）が来ていた。
+    # 続きの節を先に足し、反応は**その後ろ**に置く。反応のぶんの秒数は先に空けておく
+    _add_more_body(short, script, max_seconds, reserve=_tail_cost(short, script, max_seconds))
     _add_voices_tail(short, script, max_seconds)
-    _add_more_body(short, script, max_seconds)
     _drop_boards(short)
     _add_face(short)
     _add_subscribe(short)
@@ -592,7 +595,16 @@ def _add_voices_tail(short: Script, script: Script, max_seconds: float) -> None:
         added += 1
 
 
-def _add_more_body(short: Script, script: Script, max_seconds: float) -> None:
+def _tail_cost(short: Script, script: Script, max_seconds: float) -> float:
+    """締めに足す反応が使う秒数。`_add_voices_tail` を作業用の写しに掛けて測る。"""
+    probe = copy.deepcopy(short)
+    before = len(probe.scenes[-1].lines)
+    _add_voices_tail(probe, script, max_seconds * 10)      # 上限を外して、足される行を数える
+    added = probe.scenes[-1].lines[before:]
+    return sum(l.duration or l.estimated_duration() for l in added)
+
+
+def _add_more_body(short: Script, script: Script, max_seconds: float, reserve: float = 0.0) -> None:
     """**反応が無い回は、続きの節から足して尺を使い切る**（2026-09-20）。
 
     ユーザー指摘「ショートの内容が薄い、ちゃんと時間使って」。
@@ -602,7 +614,8 @@ def _add_more_body(short: Script, script: Script, max_seconds: float) -> None:
 
     足すのは語りだけ。**反応の節からは取らない**（それは `_add_voices_tail` の役目）。
     """
-    target = max_seconds * ESTIMATE_SLACK
+    # 反応のぶんを空けておく（`reserve`）。反応は続きの節より後ろに置く
+    target = max_seconds * ESTIMATE_SLACK - reserve
     if _estimate(short) > target - 4:
         return
     body_title = short.scenes[-1].title

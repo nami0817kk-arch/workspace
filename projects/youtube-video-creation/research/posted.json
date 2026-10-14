@@ -4332,5 +4332,53 @@
     "video_id": "rDpATyT7QyY",
     "at": "2026-10-11T15:25:40+00:00",
     "publish_at": "2026-10-12T09:00:00Z"
+  },
+  {
+    "build": "20261014_ueda_lille_short",
+    "video_id": "YQkH_UPAA8A",
+    "at": "2026-10-14T07:26:10+00:00",
+    "publish_at": "2026-10-14T07:40:00Z"
+  },
+  {
+    "build": "20261014_sano_psv_short",
+    "video_id": "8lxglqBG47c",
+    "at": "2026-10-14T07:26:39+00:00",
+    "publish_at": "2026-10-14T08:00:00Z"
+  },
+  {
+    "build": "20261014_barca_gala_short",
+    "video_id": "U47XPr1Gmrg",
+    "at": "2026-10-14T07:27:06+00:00",
+    "publish_at": "2026-10-14T08:20:00Z"
+  },
+  {
+    "build": "20261014_martinez_manu_short",
+    "video_id": "cVGdhN-e27I",
+    "at": "2026-10-14T07:27:33+00:00",
+    "publish_at": "2026-10-14T08:40:00Z"
+  },
+  {
+    "build": "20261014_mourinho_ref_short",
+    "video_id": "e3LezPmz4_Y",
+    "at": "2026-10-14T07:27:59+00:00",
+    "publish_at": "2026-10-14T09:00:00Z"
+  },
+  {
+    "build": "20261014_iraola_wirtz_short",
+    "video_id": "vquPjaWdamg",
+    "at": "2026-10-14T07:28:27+00:00",
+    "publish_at": "2026-10-14T09:20:00Z"
+  },
+  {
+    "build": "20261014_kane_bayern_short",
+    "video_id": "G3nfOSlf7Lw",
+    "at": "2026-10-14T07:28:52+00:00",
+    "publish_at": "2026-10-14T09:40:00Z"
+  },
+  {
+    "build": "20261014_brugge_inter_short",
+    "video_id": "w0H3h-yMmZQ",
+    "at": "2026-10-14T07:29:24+00:00",
+    "publish_at": "2026-10-14T10:00:00Z"
   }
 ]
