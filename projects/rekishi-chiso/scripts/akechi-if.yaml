@@ -15,7 +15,7 @@ en:
   title: "What If Akechi Mitsuhide Had Not Betrayed Nobunaga? | Japan After the Honnō-ji Incident"
   description: |-
     On the morning of the 2nd day of the 6th month of 1582 by the lunar calendar (June 21, 1582 in the Julian calendar), about 13,000 of Akechi Mitsuhide's troops surrounded Honnō-ji, where Oda Nobunaga had only 20-30 pages with him. This video asks: what if Mitsuhide had not moved?
-    We keep records, speculation and imagination apart. First, what the sources say: Nobunaga had decided on May 17 to go west himself, and was due to leave Kyoto on June 4. Then, what is known and unknown about Mitsuhide's motive, including the Shikoku theory. Finally, clearly marked imagination with reasons: the western campaign, Shikoku, the east, a table of what becomes of Nobutada, Hideyoshi, Ieyasu, Katsuie and Hideyori, how Japan would differ, and even modern Japan.
+    We keep records, speculation and imagination apart. First, what the sources say: Nobunaga had decided on May 17 to go west himself, and was due to set out on June 4. Then, what is known and unknown about Mitsuhide's motive, including the Shikoku theory. Finally, clearly marked imagination with reasons: the western campaign, Shikoku, the east, a table of what becomes of Nobutada, Hideyoshi, Ieyasu, Katsuie and Hideyori, how Japan would differ, and even modern Japan.
     In imagined parts we speak plainly, and the on-screen label tells you how likely it is: likely, possible, or nearly fantasy. Where historians disagree, we say so.
     A Japanese history video to listen to while you work (Japanese audio).
   chapters:
@@ -76,7 +76,7 @@ shorts:
     yt_title: "信長の死から2週間余りで東国は崩れた｜変の知らせから神流川の戦いまで"
     hook: "信長が死んで、／東国は何日で崩れた？"
     tease: "その東国を任されていた／武将は誰？"
-    lead: "本能寺の変のあと、関東と甲斐の織田の支配は、2週間余りで崩れました。6月3日の魚津城の落城から、6月19日の神流川の戦いまで。"
+    lead: "本能寺の変のあと、関東と甲斐の織田の支配は、2週間余りで崩れました。6月7日に関東で変が知られてから、6月19日の神流川の戦いまで。"
     tags: [本能寺の変 その後, 神流川の戦い, 魚津城, 天正壬午の乱]
   s5:
     title: "信忠が生きていたら／秀吉の天下は"
@@ -172,7 +172,7 @@ sections:
         short: s3
       - 聞き: 失脚してるわけじゃないんだ。ちゃんと、次の仕事をもらってる。
         short: s3
-      - 語り: 同じころ、四国でも動きがありました。信長の三男、神戸信孝が、約1万4千の軍を集めて、5月11日、住吉に着陣します。
+      - 語り: 同じころ、四国でも動きがありました。信長の三男、神戸信孝が、約1万4千といわれる軍を集めて、5月11日、住吉に着陣します。
         background: {image: paintings/hidenaga_shikoku_seito_toyonobu.jpg, credit: "歌川豊宣《新撰太閤記》四国征伐（後の1585年の戦いの絵）"}
       - 語り: 6月2日ごろの織田軍は、いくつもの方面に分かれて、散らばっていました。数の種類は、方面ごとに違います。
         background: {image: paintings/nene_kyoto_map_1696.jpg, credit: "《京都の地図》元禄9年（1696年）"}
@@ -459,8 +459,8 @@ sections:
       - 語り: 史実では、秀吉が、1587年の九州平定のあとに、バテレン追放令を出しました。信長が生きていれば、この追放令は出ません。信長の保護は、続きます。
         card: {head: 想像 ありうる, body: 追放令は出ず保護が続く}
         figure: {type: table, title: 日本の変化点（史実ともしも）, cols: [史実, もしも], rows: [[統一, 1590年 秀吉, 1587年 信長, ありうる], [幕府, 1603年 江戸幕府, 織田政権が続く, ありうる], [キリスト教, 1587年に追放令, 保護が続く, ありうる], [朝鮮出兵, 1592年から, 起きない, ほぼ妄想]], upto: 3, note: もしもは想像。右の札は可能性の高さ}
-      - 聞き: 信長って、新しいもの好きなイメージあるけど、それが理由なんだね。
-      - 語り: 研究者の渡邊大門さんは、当時の宗教観では、特定の宗教を排撃するのは良くないと考えられた、と見ます。数ある宗教の一つとして保護しただけで、特別視は要らない、という考えです。
+      - 聞き: 信長って、新しいもの好きなイメージあるけど、理由は、それだけ？
+      - 語り: 研究者の渡邊大門さんは、当時の宗教観では、特定の宗教を排撃するのは良くないと考えられた、と見ます。数ある宗教の一つとして保護した可能性が高く、特別視は要らない、という考えです。
       - 語り: 南蛮貿易の利益を理由に挙げる人も、います。
         background: {image: paintings/nobunaga_azuchi_castle_zu.jpg, credit: "《近江国蒲生郡安土城之図》（1855年に写された図。天主の姿は後世の想像）"}
       - 語り: 3つ目は、朝鮮出兵です。史実では、秀吉が、1592年から、朝鮮へ軍を送りました。この戦争は、秀吉が起こしたものです。秀吉が天下人にならない世界では、起きません。
@@ -543,7 +543,7 @@ sections:
         figure: null
       - 語り: 最後に、動かなかった光秀自身です。光秀は、丹波と、近江の坂本を合わせた、約34万石といわれる軍団長のまま。信長の家臣団の中で、重臣の一人です。
         background: {image: paintings/akechi_portrait_hontokuji.jpg, credit: "《明智光秀像》（本徳寺蔵）"}
-        card: {head: ここから想像, body: 動かなかった光秀のその後}
+        card: {head: 史料に残る事実, body: 光秀は約34万石の軍団長}
       - 語り: 光秀は、年齢が分かりません。生まれた年は、1513年から1540年以降まで、幅があります。変の年に、数えで43歳前後から70歳です。
       - 聞き: 43歳なら現役ばりばり。70歳なら、そろそろ引退の年だよね。
       - 語り: 嫡男は光慶です。谷口克広さんは、光秀が67歳なら、光慶は10代前半だった、と整理します。谷口さんは、これを、動いた動機の一つに数えます。
@@ -584,7 +584,7 @@ sections:
         background: {image: paintings/akechi_portrait_hontokuji.jpg, credit: "《明智光秀像》（本徳寺蔵）"}
       - 聞き: 動いた光秀も、動かなかった光秀も、本人の気持ちは、謎のまま。……あーしは、そこが、いちばん気になるかな。
         tone: しみじみ
-      - 語り: 分かれ道を一つ挙げるなら、5月29日から6月4日。信長が小姓衆だけで、京にいた、この数日でした。
+      - 語り: 分かれ道を一つ挙げるなら、5月29日から6月2日。信長が小姓衆だけで、京にいた、この数日でした。
         background: {image: paintings/akechi_honnoji_nobukazu_1893.jpg, credit: "楊斎延一《本能寺焼討之図》1893年"}
       - 語り: 今日の地層は、ここまでです。
       - 聞き: 「もしも」の意味って、答えを当てることじゃなくて、どこが分かれ道だったか、を見つけること、って覚えとく。次の「もしも」は、誰の、どの分かれ道かな。
