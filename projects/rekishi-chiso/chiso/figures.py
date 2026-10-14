@@ -17,6 +17,7 @@
     figure: {type: calc, title: 中国大返し, terms: [[200km, 備中高松→山崎], [7日], [約29km/日, 1日あたり]], ops: [÷, ＝]}
     figure: {type: numberline, title: 享年くらべ, items: [[織田信長, 49], [豊臣秀吉, 62], [徳川家康, 75]], unit: 歳, focus: 織田信長}
     figure: {type: line, title: 石高の移り変わり, points: [[1560年, 20], [1570年, 100], [1582年, 700]], unit: 万石}
+    figure: {type: table, title: 史実ともしも, cols: [史実, もしも], rows: [[統一, 1590年, 1585年ごろ, ありうる], [幕府, 江戸幕府, できない, ほぼ妄想]]}   # B（ifストーリー）。可能性は 高い／ありうる／ほぼ妄想
     figure: {type: versus, title: 同じ年の2人, left: {image: paintings/a.jpg, name: 織田信長, number: 49歳, note: 本能寺で死す},
              right: {image: paintings/b.jpg, name: 明智光秀, number: 55歳?, note: 11日後に死す}}   # 全画面の左右
 
@@ -223,10 +224,10 @@ def _panel(painter, img: Image.Image, title: str) -> tuple[ImageDraw.ImageDraw, 
 def draw(painter, img: Image.Image, spec: dict, t: float = 1.0) -> Image.Image:
     kind = spec.get("type")
     from .extras import draw_compare, draw_money
-    from .numbers import draw_calc, draw_line, draw_numberline, draw_stats, draw_versus
+    from .numbers import draw_calc, draw_line, draw_numberline, draw_stats, draw_table, draw_versus
     fn = {"map": _map, "pie": _pie, "bars": _bars, "people": _people, "compare": draw_compare,
           "money": draw_money, "stats": draw_stats, "calc": draw_calc, "numberline": draw_numberline,
-          "line": draw_line, "versus": draw_versus}.get(kind)
+          "line": draw_line, "versus": draw_versus, "table": draw_table}.get(kind)
     if fn is None:
         raise ValueError(f"図の種類が分かりません: {kind}")
     img = img.copy()

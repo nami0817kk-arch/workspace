@@ -260,10 +260,10 @@ def _card(raw, where: str) -> Card | None:
     return Card(head=str(raw["head"]), body=str(raw.get("body", "")))
 
 
-FIGURE_TYPES = ("map", "pie", "bars", "people", "compare", "money", "stats", "calc", "numberline", "line", "versus")
+FIGURE_TYPES = ("map", "pie", "bars", "people", "compare", "money", "stats", "calc", "numberline", "line", "versus", "table")
 FIGURE_NEEDS = {"stats": ("items",), "calc": ("terms",), "numberline": ("items",), "line": ("points",),
                 "versus": ("left", "right"), "bars": ("bars",), "people": ("nodes",), "compare": ("people",),
-                "pie": ("parts",)}
+                "pie": ("parts",), "table": ("rows",)}
 
 
 def _bubble(raw, where: str) -> str | None:
