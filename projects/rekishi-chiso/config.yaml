@@ -197,6 +197,24 @@ roles:
     tone_strength: 0.5
     max_intonation: 1.3
     max_speed: 1.0
+  秀吉想像:                  # 10-14。Bの想像のセリフ。字幕は「（想像）」付き。光秀（玄野武宏）・信長（青山龍星）と別の声にするため白上虎太郎
+    label: 豊臣秀吉（想像）
+    name: 白上虎太郎
+    style_id: 12
+    speed: 1.0
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.05
+  家康想像:                  # 10-14。Bの想像のセリフ。落ち着いた別の男性の声として麒ヶ島宗麟
+    label: 徳川家康（想像）
+    name: 麒ヶ島宗麟
+    style_id: 53
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
 
 character_credits:
   - "立ち絵：春日部つむぎ公式立ち絵素材（春日部つくし）"
