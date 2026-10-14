@@ -179,6 +179,24 @@ roles:
     tone_strength: 0.5
     max_intonation: 1.3
     max_speed: 1.0
+  信長想像:                  # 10-14。B（ifストーリー）の想像のセリフ。字幕は「（想像）」付き。信長（記録）と同じ声。記録のセリフと同じ節では混ぜない
+    label: 織田信長（想像）
+    name: 青山龍星
+    style_id: 13
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  光秀想像:                  # 10-14。B（ifストーリー）の想像のセリフ。光秀（記録）と同じ声
+    label: 明智光秀（想像）
+    name: 玄野武宏
+    style_id: 11
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
 
 character_credits:
   - "立ち絵：春日部つむぎ公式立ち絵素材（春日部つくし）"
