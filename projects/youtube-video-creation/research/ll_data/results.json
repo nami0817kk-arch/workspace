@@ -1,6 +1,6 @@
 {
  "source": "ESPN scoreboard (esp.1)",
- "fetched": "2026-10-08",
+ "fetched": "2026-10-14",
  "results": [
   [
    "15 August 2026",
@@ -484,6 +484,69 @@
    "Valencia CF",
    "2–3",
    "Real Sociedad"
+  ],
+  [
+   "9 October 2026",
+   "8",
+   "Málaga CF",
+   "1–1",
+   "RCD Espanyol"
+  ],
+  [
+   "10 October 2026",
+   "8",
+   "Deportivo Alavés",
+   "1–2",
+   "Atlético Madrid"
+  ],
+  [
+   "10 October 2026",
+   "8",
+   "FC Barcelona",
+   "3–0",
+   "Getafe CF"
+  ],
+  [
+   "10 October 2026",
+   "8",
+   "Real Madrid CF",
+   "1–0",
+   "Villarreal CF"
+  ],
+  [
+   "11 October 2026",
+   "8",
+   "Elche CF",
+   "0–0",
+   "RC Celta de Vigo"
+  ],
+  [
+   "11 October 2026",
+   "8",
+   "Real Sociedad",
+   "3–2",
+   "Deportivo de A Coruña"
+  ],
+  [
+   "11 October 2026",
+   "8",
+   "Real Betis",
+   "5–2",
+   "CA Osasuna"
+  ],
+  [
+   "11 October 2026",
+   "8",
+   "Racing de Santander",
+   "2–2",
+   "Valencia CF"
+  ],
+  [
+   "12 October 2026",
+   "8",
+   "Levante UD",
+   "3–3",
+   "Sevilla FC"
   ]
  ]
 }

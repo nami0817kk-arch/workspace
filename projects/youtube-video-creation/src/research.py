@@ -276,6 +276,7 @@ class Notes:
     # オープニングの3行（一言・題・つかみ）にこの絵を当てる。板を指定したときは、
     # 「この動画で分かること」は板に焼き込んである（板の上にカードは重ねない決まり）
     opening_image: str = ""
+    end_bg: str = ""  # 台本 front matter の bg（終了画面の下地。theme.end_bg。2026-10-14）
     bgm: str = ""    # BGM のファイル（theme.bgm。紹介ものは落ち着いた曲。品質100回の23）
     answer: str = ""                 # まとめで返す答え
     takeaway: str = ""               # この動画の見立て（概要欄に1行。2026-09-28 収益化の整理 7）
@@ -516,6 +517,7 @@ def build_notes(raw: dict) -> Notes:
         nameplate=str(theme.get("nameplate") or "").strip(),
         opening_card=(dict(theme["opening_card"]) if theme.get("opening_card") else None),
         opening_image=str(theme.get("opening_image") or "").strip(),
+        end_bg=str(theme.get("end_bg") or "").strip(),
         bgm=str(theme.get("bgm") or "").strip(),
         thumbnail=dict(raw.get("thumbnail") or {}),
         answer=str(raw.get("answer") or "").strip(),
@@ -2880,7 +2882,7 @@ def _compose_script(notes: Notes, plan: Plan) -> str:
         **({"thumbnail_layout": _layout} if (_layout := _notes_layout(thumbnail)) else {}),
         # init-assets が必ず作るものを既定にする。動く背景にしたいときは
         # `make-clip` で mp4 を作ってから、台本の bg を差し替える
-        "bg": "assets/backgrounds/stadium.png",
+        "bg": notes.end_bg or "assets/backgrounds/stadium.png",
         "date": notes.date,
         "intro_title": notes.title,
         "intro_label": shape["label"],

@@ -1,0 +1,4 @@
+title: エリオット・アンダーソンの今季のヒートマップ
+unit: touches
+points=703
+source: FotMob

@@ -1,0 +1,598 @@
+# ユニフォームとエンブレムの歴史 チェルシー（10/14 公開予定）。
+# 一次情報（クラブ公式・紋章院の授与を扱った論文・BBC・ガーディアン）まで辿り、固有名詞・数字・年は原文で引き直した。
+#
+# ---- 節の並び：リヴァプール・マンU（紋章→色→金→見立て）／ハル（色→紋章→柄→見立て）／イプスウィッチ（胸の広告→紋章→赤→見立て）と重ねない ----
+#   こちら：①オープニング ②**作り手との契約（main）→ ③紋章 → ④色 → ⑤胸の広告 → ⑥見立て**
+#   強い一点の型も替えた：リヴァプール＝描き直しの回数／マンU＝文字が消えた／ハル＝色が消えた2度／イプスウィッチ＝売上の数字 に対し、
+#   **こちらは「作り手との契約を、お金を払って途中で終わらせたのが2度」＝払った額（2005年 2450万ポンド・2016年 約4000万ポンド）**。
+#
+# ---- 強い一点（原文）----
+#   ガーディアン 2005-01-20：「Chelsea has paid £24.5m to Umbro to end the football kit manufacturer's deal ... after lining up a bigger contract with a rival」
+#     2001年に結んだ10年・5000万ポンドの継続を「ending it in 2006 rather than 2011」＝5年早く。
+#   BBC 2016-05：アディダスは契約を「on 30 June 2017 instead of 2023」に終える（6年早く）。クラブが補償金を払う。
+#   ガーディアン 2016-10-13：「Chelsea had to pay around £40m to part company with the German firm」。ナイキは「£60m a season for the next 15 years」「£900m」。
+#   確度は**報道**（金額は新聞・BBC の報道。クラブは額を公表していない）。年（2005・2006・2016・2017）はクラブ公式とも一致。
+#
+# ---- クラブ紹介⑥（2026-09-20 公開）と重ねない ----
+#   あちらが読み上げたのは：アロンソ・ドログバの言葉・創立1905・スタジアムが先にあった（ミアーズ）・愛称ブルーズ（青）・本拠地4万44人・
+#   オーナー（ブルーコ・クリアレイク）・優勝の数・昨季10位・「ペンショナーズ」の由来（王立チェルシー病院の退役軍人）・
+#   **1952年にドレイクが「古くさい」と言った**・ランパード・テリー・ドログバ・登録29人。
+#   **この回で使ったのは「1905」（色の起点）と「老兵の絵」（紋章の最初の1行）だけ。**
+#   ドレイクの「古くさい」・愛称の由来の説明・オーナーの名前・選手・成績は**一度も出していない**。
+#
+# ---- 食い違い（台本では言わない。ここに残す）----
+#   ・**濃い青（ロイヤルブルー）に替わった年**：HFK は「1906年10月13日の試合の資料に『青と白』とある」が最も古い言及で、クラブ史家の説は複数と書く／
+#     Wikipedia は「1912年ごろ」。クラブ公式は「最初の数季はイートン・ブルー」としか書かない。→ **台本は「のちに」までで年を言わない。**
+#   ・**アディダスに払った補償額**：ガーディアン「約4000万ポンド」／Wikipedia「4000万ポンド」／HFK「5400万ポンド」／BBC「数千万ユーロ」。
+#     → **台本は「報道で約4000万ポンド」**（ガーディアンの値）。HFK の5400万は採らない。
+#   ・**ライオンの紋章が使われた期間**：Wikipedia は「1953〜1986年ずっと」／HFK は「1963年に外れ、1967年に復活」。クラブ公式は「ドレイク（1952〜61）の時代に
+#     シャツに初めて付いた」。→ **台本は「1960年ごろ初めてシャツに」「1986年に消えた」の2点だけ**。1963〜67年の中断は言わない（HFK 単独）。
+#   ・**アンブロの開始年**：ガーディアン「1995年から」／HFK・クラブ公式「1987-88から」／Wikipedia「1995〜2006」。→ 開始年は言わず「2006年まで」だけ。
+#   ・**シャツに紋章が付いた年**：HFK「1960年」／Wikipedia「1960年代の初め」→ 「1960年ごろ」。
+#   ・**1986-87 の開幕は胸の広告が無かった**（HFK：チェルシー・コレクションは初めスポンサー無し）。→ 「史上初めて広告なしで開幕」とは**言わない**。「4季つづけて」だけ（BBC）。
+#
+# ---- 言わないと決めたもの ----
+#   ・**アブラモヴィッチの制裁・スリーが契約を一時止めた件**は触れない（シャツの話から離れる）。スリーは「3年契約から」「2023年に切れた」だけ。
+#   ・**女子チーム・育成年代の話は入れない**（決まり）。サークルの発表文は女子の欄があるが、台本は男子のシャツだけ。
+#   ・**ライオンが商標にできなかったという詳しい経緯**は「商標の問題」とクラブ公式の言葉どおりに1行だけ。
+#   ・**サムスン（2005〜15）・ヨコハマ（2015〜20）・コモドール・クアーズ等の期間**は Wikipedia 単独（サムスンは2005年のタイムズの見出しが出典）。→ 年表に入れず、
+#     見立ての③の「22季で4社」だけに使った（確度は背景、**一次に当たっていない**と下に書く）。
+#   ・アルファベットは読み上げに出さない（IFS →「アイエフエス」、ダマック、サークル。ユーエスディーシー・Nike 等の英字は板にも書かない）。
+#   ・**サークルの契約の長さと額は公表されていない**（クラブ公式の発表文に無い）。推測で埋めていない。インフィニット・アスリートの額は「4000万ポンド超」（BBC）。
+#
+# ---- 一次情報に届かなかったところ ----
+#   ・chelseafc.com の新しいページ（/en/club 等）は JS 描画で本文に届かない → web.archive.org の旧クラブ公式（club-history/1950・1960・1980・2000・1900）で代用した。
+#   ・アンブロの2005年の額 2450万は**ガーディアン単独**（アンブロの株式取引所への発表も引かれているが、原文は手元に無い）。BBC・クラブ公式には額が無い。
+#   ・ナイキが「相場より安い」は BBC（2026年8月）の評価。数字の裏づけは出ていない。
+#   ・サークルの発表日（8月28日）は Wikipedia の脚注。クラブ公式の本文には日付が出ない（「今度の日曜・ブライトン戦」）。
+#   ・2024-25 の開幕に広告が無かったこと：Wikipedia・BBC の「4季つづけて」から。個別のクラブ発表には当たっていない。
+#
+# ---- 自分で数えた数（検算した）----
+#   ・ナイキ 60百万 − アディダス 30百万 ＝ 年30百万（ガーディアン 2016）／2017〜2023 の6年 → 30×6 ＝ 180百万＝1億8000万ポンド
+#     180 ÷ 40 ＝ 4.5倍（違約金は約4000万）
+#   ・アンブロ：5000万 ÷ 10年 ＝ 年500万／ナイキ 年6000万 ÷ 500万 ＝ 12倍
+#   ・エミレーツ：2400万 ÷ 4年 ＝ 年600万／スリー 年4000万（スタンダード 2022-03）÷ 600万 ＝ 6.67→6.7倍／12 ÷ 6.67 ＝ 1.8倍
+#   ・2001-02 から 2022-23 は 22季／22 ÷ 4社（エミレーツ・サムスン・ヨコハマ・スリー）＝ 5.5季に1社
+#     直近 2023-24〜2026-27 の4季 ÷ 4社（インフィニット・アスリート・ダマック・アイエフエス・サークル）＝ 1季に1社／5.5 ÷ 1 ＝ 5.5倍
+#   ・2005 − 1986 ＝ 19年／2026 − 1905 ＝ 121年／19 ÷ 121 ＝ 0.157 → 15.7%／2026 − 2005 ＝ 21年（19年を上回る）
+#   ・ガーディアン 2005：アンブロ 5000万 ÷ 10 ＝ 500万／残り5年（2006〜2011）。
+#
+# 写真（10/14 取得）：assets/images/20261014_kit_chelsea/ の8枚。Wikimedia Commons（CC0 / CC BY / CC BY-SA）。出典は同じフォルダの credits.json。
+#   サムネ・冒頭＝2018年FAカップ優勝の集合（ナイキ）／アンブロ期＝2006年のチェフ／アディダス期＝2008-09 の拍手／1960〜86年のライオンと青いショーツ＝1974年の試合（白黒）／紋章＝スタンフォード・ブリッジの紋章の看板。
+#
+# ネットの反応は入れない（voice_min: 0）。シリーズの回にショートは作らない決まり。
+# **サムネは案を3つ出してユーザーに決めてもらう**（2026-10-11）。ここに書いた thumbnail は点検用の1案（number。直近は classic・number・scene なので 3回続きにならない）。
+date: 2026年10月14日
+slot: other_2
+format: news
+series: ユニフォームとエンブレムの歴史
+voice_min: 0
+people:
+- チェルシー
+theme:
+  id: kit_chelsea
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: チェルシー
+  title: チェルシーが契約を途中で切った2度。払った違約金はいくらだったのか
+  question: チェルシーのユニフォームと胸は、契約と色と紋章でどう変わってきたのか
+  opening_image: assets/images/20261014_kit_chelsea/c07_2018_w.jpg
+  lead: 青いシャツの胸に、ライオンが立つクラブ。
+  hook: 契約、紋章、色、広告。胸まわりに起きたことを順に見ます。
+  takeaway: チェルシーはユニフォームの作り手との契約を、お金を払って途中で終わらせたことが2度ある。2005年はアンブロとの契約を5年早く終え、報道で2450万ポンド。2016年はアディダスを6年早く終え、報道で約4000万ポンドを払ってナイキと15年の契約を結んだ（1年約6000万ポンド、総額9億ポンド）。自分で数えると、アディダスの1年約3000万との差は6年で1億8000万ポンドになり、違約金のおよそ4.5倍になる。1年あたりの額は、2001年のアンブロ約500万ポンドからナイキの約6000万ポンドまで12倍、胸の広告は2001年のエミレーツ航空600万ポンドからスリーの4000万ポンドまで6.7倍で、作り手の伸びは胸の広告の約1.8倍になる。胸の広告は1983年のガルフ・エアが最初で、2001年からの22季に付いた会社は4社だったが、2023年の契約切れ以降は開幕を広告なしで迎えることが4季つづき、その4季に4社が入れ替わった。紋章のライオンは1960年ごろにシャツへ付き、1986年に商標の問題で消えて、2005年の創立100年に戻った。別の絵だった19年は創立121年の15.7%で、戻ってから21年はそれを上回る。青は創立のころは会長だったカドガン伯爵の競走馬の勝負服の淡いイートン・ブルーで、1964-65シーズンにショーツが青、ソックスが白になった
+short_title: チェルシーが払って切った、ユニフォームの契約
+thumbnail:
+  layout: number
+  photo: assets/images/20261014_kit_chelsea/c07_2018_w.jpg
+  number: ●●万ポンド
+  line1: チェルシーのユニフォーム契約
+  line2: 途中で切って払った額は
+  crests:
+  - チェルシー
+  tags:
+  - チェルシー
+  - プレミアリーグ
+  - ユニフォーム
+  - エンブレム
+sections:
+- id: maker
+  main: true
+  heading: 作り手との契約を、払って切った2度
+  tier: 報道
+  telop: 作り手との契約を途中で終えたのが2度。報道で2005年は2450万、2016年は約4000万ポンド
+  narrator: キャスター
+  card: &id_two
+    type: stats
+    title: 作り手との契約を、払って終えた2度
+    items:
+    - - '2'
+      - 度
+      - 契約の途中で終えた
+    - - 2450万
+      - ポンド
+      - 2005年に払った額
+    - - 約4000万
+      - ポンド
+      - 2016年に払った額
+    focus: 0
+  say:
+  - text: チェルシーのシャツと紋章の話です。
+    short_only: true
+  - text: チェルシーは、ユニフォームの作り手との契約を、2度、途中で終わらせています。
+    image: assets/images/20261014_kit_chelsea/c10_sb2026_w.jpg
+    emph: true
+    card: *id_two
+  - text: どちらも、お金を払っての終わりでした。
+    card: *id_two
+  - text: 払った額は、2005年が2450万ポンド。
+    card: *id_two
+  - text: 2016年は約4000万ポンドと報じられています。
+    card: *id_two
+  - text: どちらも、もっと大きな契約が見つかったからでした。
+    card: *id_two
+  - text: その前、1986年には、作り手に頼らない季がありました。
+    card: &id_maker
+      type: table
+      title: 作り手と、契約の終わり方
+      columns: &cols_maker
+      - いつ
+      - 作り手
+      - 終わり方
+      rows: &rows_maker
+      - - 1986-87
+        - 自社「コレクション」
+        - 1季だけ
+      - - 2006年まで
+        - アンブロ
+        - 5年早く終える
+      - - 2006〜2017
+        - アディダス
+        - 6年早く終える
+      - - 2017〜2032
+        - ナイキ
+        - 15年で9億ポンド
+      highlight_row: 0
+  - text: ルコック・スポルティフとの関係が壊れ、クラブは自分たちでシャツを作りました。
+    card: *id_maker
+  - text: 名前は「チェルシー・コレクション」。売れた分を、自分たちで受け取る考えでした。
+    card: *id_maker
+  - text: 続いたのは、最初の季だけ。次のシーズンには、アンブロと結び直しています。
+    card: *id_maker
+  - text: 2005年1月、そのアンブロとの契約を、5年早く終えると発表します。
+    image: assets/images/20261014_kit_chelsea/c06_2017_w.jpg
+    emph: true
+    card:
+      <<: *id_maker
+      highlight_row: 1
+  - text: 2001年に結び直した10年の契約を、半分の5年で切りました。
+    card:
+      <<: *id_maker
+      highlight_row: 1
+  - text: 払ったのは、報道で2450万ポンドです。
+    card:
+      <<: *id_maker
+      highlight_row: 1
+  - text: 行き先はアディダス。2006年から、新しいシャツになりました。
+    image: assets/images/20261014_kit_chelsea/c17_2009_w.jpg
+    card:
+      <<: *id_maker
+      highlight_row: 2
+  - text: 2013年には、その契約を10年延ばしました。
+    card:
+      <<: *id_maker
+      highlight_row: 2
+  - text: クラブは「これまででいちばん大きな契約」と発表しています。
+    card:
+      <<: *id_maker
+      highlight_row: 2
+  - text: ところが2016年5月、契約が2023年を待たず、6年早く終わると発表されます。
+    card:
+      <<: *id_maker
+      highlight_row: 2
+  - text: クラブが払う違約金は、報道で約4000万ポンド。
+    card:
+      <<: *id_maker
+      highlight_row: 2
+  - text: 同じ年の10月、ナイキと15年の契約を結びました。
+    image: assets/images/20261014_kit_chelsea/c07_2018_w.jpg
+    card:
+      <<: *id_maker
+      highlight_row: 3
+  - text: クラブはこれを「史上最大の商業契約」と呼びました。
+    card:
+      <<: *id_maker
+      highlight_row: 3
+  - text: 1年およそ6000万ポンド、総額9億ポンドという報道です。
+    emph: true
+    card:
+      <<: *id_maker
+      highlight_row: 3
+  - text: 今のナイキの額は、相場より低いと見る向きもあります。
+    card:
+      <<: *id_maker
+      highlight_row: 3
+  sources:
+  - https://www.theguardian.com/media/2005/jan/20/citynews.marketingandpr
+  - https://www.bbc.com/news/business-36266181
+  - https://www.theguardian.com/football/2016/oct/13/chelsea-new-kit-deal-nike-60m
+  - https://www.chelseafc.com/en/news/article/blue-is-the-colour-the-chelsea-collection
+  - https://web.archive.org/web/2015id_/http://www.chelseafc.com/the-club/club-history/2000.html
+  - https://www.bbc.com/sport/articles/cn0r9xk94l9o
+- id: crest
+  heading: ライオンが消えて、戻った
+  tier: 背景
+  telop: ライオンの紋章は1960年ごろにシャツへ付き、1986年に消え、2005年の創立100年に戻った
+  narrator: 解説
+  card: &id_crest
+    type: timeline
+    title: 胸の紋章
+    rows: &rows_crest
+    - - 1905年ごろ
+      - 老兵の絵。シャツには一度も付かず
+    - - 1960年ごろ
+      - ライオンが初めてシャツに付く
+    - - 1975年
+      - 紋章院がライオンの図柄を認める
+    - - 1986年
+      - 商標の問題でライオンが消える
+    - - 2005年
+      - 創立100年。昔のライオンが戻る
+    focus: 2005年
+  say:
+  - text: ここからは、胸の紋章の話です。
+    image: assets/images/20261014_kit_chelsea/c08_2026_w.jpg
+    card: *id_crest
+  - text: 創立のころの紋章は、近くの病院で暮らす老兵の絵でした。
+    card:
+      <<: *id_crest
+      highlight_row: 0
+  - text: ただ、その絵がシャツに付いたことは、一度もありません。
+    card:
+      <<: *id_crest
+      highlight_row: 0
+  - text: 紋章がシャツに初めて付いたのは、1960年ごろ。ドレイク監督の時代です。
+    image: assets/images/20261014_kit_chelsea/c02_1974_w.jpg
+    card:
+      <<: *id_crest
+      highlight_row: 1
+  - text: 描かれたのは、後ろを振り返って立つライオン。司教の杖を持っています。
+    card:
+      <<: *id_crest
+      highlight_row: 1
+  - text: 由来は2つ。会長だった伯爵の紋章のライオンと、区の紋章にあった杖です。
+    card:
+      <<: *id_crest
+      highlight_row: 1
+  - text: 1975年10月、紋章を扱う紋章院が、この図柄をチェルシーの紋章と認めました。
+    card:
+      <<: *id_crest
+      highlight_row: 2
+  - text: そのライオンが、1986年にシャツから消えます。
+    emph: true
+    card:
+      <<: *id_crest
+      highlight_row: 3
+  - text: クラブ公式の歴史は、理由を商標の問題と書いています。
+    card:
+      <<: *id_crest
+      highlight_row: 3
+  - text: 代わりに付いたのは、クラブの頭文字の上に立つ、実物に近い姿のライオンでした。
+    card:
+      <<: *id_crest
+      highlight_row: 3
+  - text: それが2005年まで続きます。
+    card:
+      <<: *id_crest
+      highlight_row: 3
+  - text: 2005年、創立100年。昔のライオンが戻ってきました。
+    image: assets/images/20261014_kit_chelsea/c08_2026_w.jpg
+    emph: true
+    card:
+      <<: *id_crest
+      highlight_row: 4
+  sources:
+  - https://www.theheraldrysociety.com/wp-content/uploads/2019/10/CoA-229-Phillips-paper.pdf
+  - https://web.archive.org/web/2015id_/http://www.chelseafc.com/the-club/club-history/1980.html
+  - https://web.archive.org/web/2015id_/http://www.chelseafc.com/the-club/club-history/1960.html
+  - https://web.archive.org/web/2015id_/http://www.chelseafc.com/the-club/club-history/2000.html
+  - https://www.historicalkits.co.uk/Chelsea/Chelsea.htm
+  - https://en.wikipedia.org/wiki/Chelsea_F.C.
+- id: colour
+  heading: 淡い青から始まった
+  tier: 背景
+  telop: 最初の青は、会長の伯爵の競走馬の勝負服の色。ずっと淡い青だった
+  narrator: 解説
+  card: &id_colour
+    type: table
+    title: チェルシーの青
+    columns: &cols_colour
+    - いつ
+    - 着ていたもの
+    rows: &rows_colour
+    - - 1905年
+      - 淡いイートン・ブルーのシャツ
+    - - 最初の数季のあと
+      - 濃い青のシャツへ
+    - - 1964-65
+      - ショーツが青、ソックスが白
+    - - 1986-87
+      - アウェーは緑がかったジェイド色
+  say:
+  - text: チェルシーの青は、最初は今と違う青でした。
+    image: assets/images/20261014_kit_chelsea/c10_sb2026_w.jpg
+    emph: true
+    card: *id_colour
+  - text: 創立のころの数季は、イートン・ブルーと呼ばれる、ずっと淡い青でした。
+    card:
+      <<: *id_colour
+      highlight_row: 0
+  - text: 競走馬の勝負服の色。馬の持ち主は、会長だったカドガン伯爵です。
+    card:
+      <<: *id_colour
+      highlight_row: 0
+  - text: 紋章のライオンも、この伯爵の家のものでした。
+    card:
+      <<: *id_colour
+      highlight_row: 0
+  - text: シャツはのちに、いまの濃い青に替わりました。
+    card:
+      <<: *id_colour
+      highlight_row: 1
+  - text: 次に形が変わったのは、1964-65シーズン。
+    card:
+      <<: *id_colour
+      highlight_row: 2
+  - text: ドハティ監督が、ショーツを青、ソックスを白にしました。
+    image: assets/images/20261014_kit_chelsea/c02_1974_w.jpg
+    card:
+      <<: *id_colour
+      highlight_row: 2
+  - text: 青いシャツ、青いショーツ、白いソックス。いまのホームの形です。
+    card:
+      <<: *id_colour
+      highlight_row: 2
+  - text: 1986-87シーズンのアウェーは、ジェイドという緑がかった色でした。
+    card:
+      <<: *id_colour
+      highlight_row: 3
+  - text: クラブ公式の紹介では、創立のころの青への目配せとされています。
+    card:
+      <<: *id_colour
+      highlight_row: 3
+  sources:
+  - https://web.archive.org/web/20151218090652id_/http://www.chelseafc.com/the-club/club-history/1900.html
+  - https://web.archive.org/web/2015id_/http://www.chelseafc.com/the-club/club-history/1960.html
+  - https://www.chelseafc.com/en/news/article/blue-is-the-colour-the-chelsea-collection
+  - https://www.historicalkits.co.uk/Chelsea/Chelsea.htm
+- id: chest
+  heading: 胸の広告が空いた4季
+  tier: 報道
+  telop: 2023年の契約切れ以降、開幕を胸に広告なしで迎えるのが4季つづいた
+  narrator: キャスター
+  card: &id_chest
+    type: timeline
+    title: 胸に付いてきた広告
+    rows: &rows_chest
+    - - 1983年
+      - ガルフ・エア。胸の広告の始まり
+    - - 2001年
+      - エミレーツ航空。4年で2400万ポンド
+    - - 2020年
+      - スリー。3年契約から
+    - - 2023年
+      - 開幕は広告なし。9月末に1季だけの契約
+    - - 2025〜26年
+      - 季の終わりの数か月だけ。2社
+    - - 2026年8月
+      - サークルが胸に
+    focus: 2023年
+  say:
+  - text: 胸の広告の話です。チェルシーは1983年、ガルフ・エアという航空会社が最初でした。
+    image: assets/images/20261014_kit_chelsea/c17_2009_w.jpg
+    card:
+      <<: *id_chest
+      highlight_row: 0
+  - text: 2001年からはエミレーツ航空。4年で2400万ポンドでした。
+    card:
+      <<: *id_chest
+      highlight_row: 1
+  - text: 1年に直すと、600万ポンドです。
+    card:
+      <<: *id_chest
+      highlight_row: 1
+  - text: 2020年からは、通信会社のスリー。
+    card:
+      <<: *id_chest
+      highlight_row: 2
+  - text: エミレーツの4年より短い、3年の契約から始まりました。
+    card:
+      <<: *id_chest
+      highlight_row: 2
+  - text: その契約が切れた2023年、開幕の胸には広告がありませんでした。
+    image: assets/images/20261014_kit_chelsea/c10_sb2026_w.jpg
+    emph: true
+    card:
+      <<: *id_chest
+      highlight_row: 3
+  - text: 9月末に決まったのは、インフィニット・アスリート。
+    card:
+      <<: *id_chest
+      highlight_row: 3
+  - text: 1季だけの契約で、額はスリーの1年とほぼ同じ水準でした。
+    card:
+      <<: *id_chest
+      highlight_row: 3
+  - text: 翌2024-25シーズンも、広告なしの開幕です。
+    card:
+      <<: *id_chest
+      highlight_row: 4
+  - text: 2025年4月30日、ドバイの不動産会社ダマックの広告が付きます。
+    card:
+      <<: *id_chest
+      highlight_row: 4
+  - text: カンファレンスリーグの準決勝から、季の終わりまでです。
+    card:
+      <<: *id_chest
+      highlight_row: 4
+  - text: 2025-26シーズンの開幕も、広告なし。
+    card:
+      <<: *id_chest
+      highlight_row: 4
+  - text: 2026年2月、アイエフエスが、季の残りの胸に付きました。
+    card:
+      <<: *id_chest
+      highlight_row: 4
+  - text: 産業向けのAIソフトを作っている会社でした。
+    card:
+      <<: *id_chest
+      highlight_row: 4
+  - text: そして今季も、開幕は広告なし。これで4季つづけてです。
+    emph: true
+    card:
+      <<: *id_chest
+      highlight_row: 4
+  - text: 2026年8月28日、サークルを発表しました。デジタルのドルを出している会社です。
+    card:
+      <<: *id_chest
+      highlight_row: 5
+  - text: ホームでの今季最初のプレミアリーグの試合から、胸に付いています。
+    card:
+      <<: *id_chest
+      highlight_row: 5
+  - text: 契約の長さと額は、発表されていません。
+    card:
+      <<: *id_chest
+      highlight_row: 5
+  - text: 求める額は、報道で年5000万から5500万ポンドと理解されています。
+    card:
+      <<: *id_chest
+      highlight_row: 5
+  sources:
+  - https://www.bbc.com/sport/articles/cn0r9xk94l9o
+  - https://www.bbc.com/sport/football/66970280
+  - https://www.bbc.com/sport/football/articles/cpq784wjy88o
+  - https://www.chelseafc.com/en/news/article/chelsea-football-club-selects-ifs-as-principal-partner
+  - https://www.chelseafc.com/en/news/article/chelsea-football-club-announces-circle-internet-group-as-principal-partner
+  - https://www.chelseafc.com/en/news/2020/01/24/chelsea-announces-three-as-new-official-shirt-partner
+  - https://web.archive.org/web/2015id_/http://www.chelseafc.com/the-club/club-history/1980.html
+- id: view
+  viewpoint: true
+  heading: 見立て・違約金の4.5倍が戻る契約。広告の入れ替わりは5.5倍速く
+  tier: 背景
+  telop: 違約金は契約の差額の4.5分の1。胸の広告の入れ替わりは、5.5季に1社から1季に1社へ
+  narrator: 解説
+  card: &id_diff
+    type: calc
+    title: 差額は、違約金の何倍か
+    terms:
+    - - 1億8000万ポンド
+      - ナイキとアディダスの差、6年ぶん
+    - - 約4000万ポンド
+      - 払った違約金
+    - - 4.5倍
+      - 割った答え
+    ops:
+    - ÷
+    - ＝
+  say:
+  - text: ここから、チェルシーの契約と広告とライオンを、自分で数えて測り直します。
+    image: assets/images/20261014_kit_chelsea/c06_2017_w.jpg
+    card: *id_diff
+  - text: ひとつ目。2016年に払った違約金は、割に合ったのかを数えます。
+    card: *id_diff
+  - text: アディダスの1年は、およそ3000万ポンド。ナイキは、その2倍。
+    card: *id_diff
+  - text: 差は1年3000万。
+    card: *id_diff
+  - text: アディダスが残っていた6年でかけると、1億8000万ポンドになる。
+    card: *id_diff
+  - text: 違約金で割ると、4.5倍。報道の額で数えました。
+    emph: true
+    card: *id_diff
+    mark:
+      kind: circle
+      item: 2
+  - text: ふたつ目は、1年あたりの額の伸びです。
+    card: &id_grow
+      type: table
+      title: 1年あたりの額（報道）
+      columns: &cols_grow
+      - ''
+      - 2001年の契約
+      - 後の契約
+      - 倍
+      rows: &rows_grow
+      - - 作り手
+        - アンブロ 約500万
+        - ナイキ 約6000万
+        - 12倍
+      - - 胸の広告
+        - エミレーツ 600万
+        - スリー 4000万
+        - 6.7倍
+  - text: 作り手は、2001年のアンブロが約500万ポンド。ナイキの額は、その12倍。
+    card:
+      <<: *id_grow
+      highlight_row: 0
+  - text: 胸の広告は、2001年のエミレーツ航空から。スリーの額は、6.7倍にあたる。
+    card:
+      <<: *id_grow
+      highlight_row: 1
+  - text: 作り手の伸びは、胸の広告のおよそ1.8倍。胸の広告のほうが、伸びが小さい。
+    emph: true
+    card: *id_grow
+  - text: みっつ目は、胸に付く会社の入れ替わりです。
+    card: &id_swap
+      type: calc
+      title: 胸の広告が替わる間隔（季）
+      terms:
+      - - 22季
+        - 2001-02から2022-23。会社は4社
+      - - 4社
+        - エミレーツ・サムスン・ヨコハマ・スリー
+      - - 5.5季に1社
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+  - text: 2001年から2022-23までの22季で、胸に付いた会社は4社。
+    card: *id_swap
+  - text: 5.5季に1社の入れ替わりでした。
+    card: *id_swap
+  - text: 直近の4季も、付いた会社は4社。1季に1社になった。
+    card: *id_swap
+  - text: 入れ替わりは、5.5倍の速さになりました。
+    emph: true
+    card: *id_swap
+  - text: よっつ目は、ライオンです。
+    card: &id_lion
+      type: calc
+      title: ライオンが別の絵だった年は、歴史のどれだけか
+      terms:
+      - - 19年
+        - 1986年から2005年
+      - - 121年
+        - 1905年から2026年
+      - - 15.7%
+        - 歴史に占める割合
+      ops:
+      - ÷
+      - ＝
+  - text: 別の絵だった期間は、1986年から2005年までの19年。
+    card: *id_lion
+  - text: 創立121年の15.7%でした。
+    card: *id_lion
+  - text: 戻ってから、今年で21年。離れていた19年を、もう上回っています。
+    emph: true
+    card: *id_lion
+  - text: 作り手も、胸の広告も、何度も替わりました。
+    card: none
+  - text: ライオンは、いちど離れて戻ってきています。
+    card: none
+  sources:
+  - https://www.theguardian.com/football/2016/oct/13/chelsea-new-kit-deal-nike-60m
+  - https://www.bbc.com/news/business-36266181
+  - https://www.theguardian.com/media/2005/jan/20/citynews.marketingandpr
+  - https://www.standard.co.uk/sport/football/chelsea-shirt-sponsors-three-roman-abramovich-sanctions-suspend-b987279.html
+  - https://en.wikipedia.org/wiki/Chelsea_F.C.

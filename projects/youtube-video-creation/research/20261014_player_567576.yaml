@@ -1,0 +1,673 @@
+# エリオット・アンダーソン（マンチェスター・シティ）の紹介。8節の型（2026-09-28）を、アルバレス（research/20261012_player_576024.yaml）の形にそろえた。
+# 雛形は tools/player_intro.py 567576。材料は research/raw/20261014_anderson_material.md（出典URL・原文・自訳つき）。
+# 数字は FotMob（1089691）・Transfermarkt API（567576）・英語版Wikipedia・シティ公式・BBC（Opta の集計）・ESPN の試合記録。
+#
+# **鍵の付け方**：Transfermarkt の番号（567576）。FotMob の番号（1089691）は板のファイル名に入っている。
+#
+# **雛形から直したこと・数字の食い違い（材料 §0）**
+# - **雛形の「18歳の市場価値は1500万ユーロ」は誤り。**1500万は「ニューカッスル在籍中の最高額」（2024-05-27）で、18歳（2021-03-17）は **20万ユーロ**。
+#   読み上げは20万に直した。20万→1.2億は600倍（自分で計算）。表の「最高 1500万」は在籍期間の最高額なので、そのまま。
+# - **棒グラフはレーダーの数字（FotMob traits）にそろえた。**雛形の武器・弱点（パス成功100・ボールタッチ100・ライン96・得点0）は今季6試合の percentileRank で、
+#   画面に出るレーダー（ボールタッチ97・空中戦91・守備84・チャンス創出68・シュート67・得点45）と数字が違う。画面で食い違わないよう、読み上げ・棒グラフ・レーダーを97/91/84/68/45に統一。
+#   今季6試合の絶対値（ボールタッチ641・パス成功470・ラインを破るパス126）は季の節と見立ての節で「数」として読む（パーセンタイルは言わない）。
+# - **過去5季の表は、雛形（Transfermarkt「代表を含む全公式戦」）から、クラブだけの数字（FotMob・シティ公式・英語版Wikipedia で一致）に差し替えた。**
+#   雛形の 21/22（30試合12得点・2471分）はブリストル・ローヴァーズの21試合7得点と合わず（若い世代の試合が混ざる）、裏が取れなかった。
+#   シティ公式の「クラブ174試合」は同じ記事の季ごとの表（168）と合わない。FotMob・Wikipedia（55/21/92）に合わせて168＋シティ8＝176、代表21を足して197試合13得点。
+# - ブリストル・ローヴァーズの得点：BBC は途中の文で8、FotMob・シティ公式・Wikipedia は7。7を使った（BBC の8は未確認）。
+# - 「3アシスト＋1ゴール」（2022-05-07）：BBC の最終節の記事（原文 hat-trick of assists・head in）。ESPN の試合記録は 2022-05-07 の League Two が引けず、BBC だけ。
+# - 移籍金：シティ公式は金額を出していない。サッカーキング（ジ・アスレティック）・Sky が1億1600万ポンド。「報道で」と言う。Sky は発表時点で「英国人選手の史上最高額」。
+#   のちに他の選手が抜いた（Sky・Wikipedia）が、翌日の回の主役なので触れていない。
+# - **昨季3300回（Opta）と今季641回（FotMob）を1試合あたりで並べた（約87回→約107回）。**どちらも Opta 系だが、タッチの数え方が同じかは未確認。6試合の標本なので「まだ6試合ですが」と断っている。
+# - 10/11 リバプール戦（ESPN の試合記録）：0対3でシティの勝ち。68分のドクのゴールをアンダーソンがアシスト（FotMob の1アシストと一致）。
+# - 代表の対戦国名：Czechia は「チェコ」。クラブ名はリポジトリの正（clubs.yaml）に合わせて「リバプール」。
+#
+# **材料から入れなかったもの**
+# - 家族の暮らし・兄の話（私生活）。祖父は「選手としての経歴」だけ（クラブ公式・地元紙が書いている）。母・父の名前は出していない。
+# - 代表を選んだ経緯（スコットランドかイングランドか）。ジョーイ・バートンのマラドーナ評（19歳への比較で、今の形と合わない）。シティ公式の評（トゥヘル監督の1つに絞った）。
+# - ニューカッスルの PSR の事情・クラブ側の話。ワールドカップ決勝トーナメントの細部。
+#
+# **日本語名・読みで怪しいもの（確認してほしい）**
+# - ジェフ・アレン（Geoff Allen）：日本語の記事が見つからず、読みは未確認。「ゲオフ」ではなく「ジェフ」にした。
+# - ケヴィン・デ・ブライネ（日本語版Wikipedia のページ名。「デ・ブルイネ」ではない）。トゥヘル・ジェレミー・ドク・クリス・ウッドはリポジトリ内の台本の表記。
+# - ウィットリー・ベイ（日本語版Wikipedia は「ウィットリーベイ」、点を入れる表記にした）。ウォールセンド・ボーイズクラブ（日本語の記事が少なく、表記は未確認）。
+# - フェイエノールト・スカンソープ・ブリストル・ローヴァーズ・オプタ（Opta の読み）。**オプタ**は draft の「媒体名」の検査に当たるかもしれない。
+#
+# **写真は 10/14 に取得済み（assets/images/20261014_anderson/。出典は各フォルダの credits.json）。**以下は取得前のメモ：thumbnail.photos は空のまま。thumbnail.photo も空。時期は 2019年前後のニューカッスル／2024-26年のフォレスト／2026年のイングランド代表（Commons の
+#   「Elliot Anderson England v Ghana 23 June 2026」が候補。ライセンスは未確認）／シティ。**スタジアムの写真は使わない。**
+#
+# **本人の言葉は4か所**（自訳。原文は材料 §5）：①フック「スタンドのいちばん上から見ていた」（2019、地元紙）／②祖父「受け継ぎたい」（NUFC 公式 2020）／
+#   ③憧れ「この4、5年いちばん好きな選手」（ガーディアン 2025-09-04）／④シティ入りの日（シティ公式 2026-07-23）。
+date: 2026年10月14日
+slot: other_1
+format: news
+series: 有名選手の紹介
+people:
+- エリオット・アンダーソン
+theme:
+  id: player_567576
+  league: england
+  kind: other
+  topic: マンチェスター・シティ
+  title: エリオット・アンダーソンってどんな選手？ 全38試合で触り続けたものの数
+  question: エリオット・アンダーソンはどういう作りの選手で、なぜ誰よりもボールに触れるのか
+  takeaway: 昨季はプレミア全選手で最多の3300回ボールに触り、300回の奪取と100回のタックルはライス以来。今季の6試合はボールタッチ641回でライスの496回を上回り、ラインを破るパスは126本と127本でほぼ同じ。ゴールの欄はまだ0で、次の節目は日本時間10月15日のパリ・サンジェルマン戦
+  nameplate: エリオット・アンダーソン｜マンチェスター・シティ MF／イングランド代表
+  opening_image: assets/images/20261014_anderson/city_bts22/01_u.jpg
+  bgm: assets/audio/bgm_calm.wav
+watch: 明日は⑮モーガン・ロジャーズ
+short_title: アンダーソンってどんな選手？
+thumbnail:
+  layout: face
+  line1: アンダーソン
+  line2: ●●●●回触った
+  tags:
+  - マンチェスター・シティ
+  - エリオット・アンダーソン
+  - イングランド代表
+  - 選手紹介
+  - プレースタイル
+  photo: assets/images/20261014_anderson/city_agree/01.jpg
+  photos: []
+  short_photo: assets/images/20261014_anderson/commons/01_v.jpg
+sections:
+- id: hook
+  heading: プレミアで、誰よりも触った3300回
+  tier: 報道
+  telop: 昨季プレミア最多、ボールタッチ3300回
+  narrator: キャスター
+  card:
+    type: stats
+    title: エリオット・アンダーソンの23歳
+    items:
+    - ['3300', 回, 昨季プレミアのボールタッチ。全選手で最多]
+    - ['97', '', 同じMFの中での位置。100が最上位]
+    - ['8', 歳, ニューカッスルの下部組織へ]
+    focus: 0
+  say:
+  - text: 昨季のプレミアで、誰よりもボールに触った選手。エリオット・アンダーソン、23歳。
+    card: &hook_stats
+      type: stats
+      title: エリオット・アンダーソンの23歳
+      items:
+      - ['3300', 回, 昨季プレミアのボールタッチ。全選手で最多]
+      - ['97', '', 同じMFの中での位置。100が最上位]
+      - ['8', 歳, ニューカッスルの下部組織へ]
+      focus: 0
+  - text: その回数は、3300回。一度も欠場せず、積み上げた数字です。
+    image: assets/images/20261014_anderson/city_bts22/01_u.jpg
+    emph: true
+    card:
+      <<: *hook_stats
+      focus: 0
+  - text: 同じMFを100人並べると、ボールタッチは上から3番目あたり。
+    card:
+      <<: *hook_stats
+      focus: 1
+  - text: 生まれはイングランド北東部、ウィットリー・ベイ。8歳でニューカッスルの下部組織へ。
+    image: assets/images/20261014_anderson/ncl_contract/01_r.jpg
+    card:
+      <<: *hook_stats
+      focus: 2
+  - text: 少年の頃は、スタンドのいちばん上の席から、憧れの選手を見上げていました。
+    card: none
+  - text: 2019年、地元紙の取材に、本人はこう答えています。
+    card: none
+  - voice: アンダーソン
+    text: ずっと、スタンドのいちばん上から見ていた。
+  - voice: アンダーソン
+    text: いまここにいるのは、不思議な気分です。
+    cont: true
+    pause: 0.5
+  quotes_from:
+  - https://www.chroniclelive.co.uk/sport/football/football-news/how-toon-teen-elliot-anderson-17267757
+  sources:
+  - https://www.bbc.com/sport/football/articles/cgmppp4x34eo
+  - https://www.fotmob.com/players/1089691
+  - https://www.chroniclelive.co.uk/sport/football/football-news/how-toon-teen-elliot-anderson-17267757
+  - https://www.premierleague.com/news/4047529
+- id: data
+  heading: 基礎DATA
+  tier: 報道
+  telop: エリオット・アンダーソンの基礎DATA
+  narrator: キャスター
+  card:
+    type: table
+    title: エリオット・アンダーソン（マンチェスター・シティ）
+    columns:
+    - 項目
+    - 内容
+    rows: &bdata
+    - - 所属
+      - マンチェスター・シティ（5番）
+    - - ポジション
+      - 守備的MF
+    - - 生年月日
+      - 2002年11月6日（23歳）
+    - - 生まれ
+      - イングランド・ウィットリー・ベイ
+    - - 身長
+      - 1.79m
+    - - 利き足
+      - 右
+    - - 契約
+      - 2031年まで
+    - - 市場価値
+      - 1.2億ユーロ
+    source: Transfermarkt・FotMob
+  say:
+  - text: アンダーソンが立つのは、中盤の底。守備的MFです。
+    image: assets/images/20261014_anderson/commons/01_r.jpg
+    card: &data_card
+      type: table
+      title: エリオット・アンダーソン（マンチェスター・シティ）
+      columns: [項目, 内容]
+      rows: *bdata
+      source: Transfermarkt・FotMob
+      highlight_row: 1
+  - text: ボールを蹴り始めたのは、地元の名門、ウォールセンド・ボーイズクラブ。
+    card:
+      <<: *data_card
+      highlight_row: 3
+  - text: 出身者には、アラン・シアラーやマイケル・キャリックがいます。
+    card:
+      <<: *data_card
+      highlight_row: 3
+  - text: 身長は1メートル79で、右足が利き足。シティとの契約は2031年までです。
+    card:
+      <<: *data_card
+      highlight_row: 4
+  - text: 市場価値は1億2000万ユーロ。10月7日に、1億1000万から上がりました。
+    emph: true
+    card: none
+  sources:
+  - https://www.transfermarkt.com/elliot-anderson/profil/spieler/567576
+  - https://www.fotmob.com/players/1089691
+  - https://www.englandfootball.com/england/mens-senior-team/squad/elliot-anderson
+  - https://www.theguardian.com/football/2025/sep/04/elliot-anderson-england-scotland-newcastle-nottingham-forest-world-cup-qualifiers
+- id: career
+  heading: 18歳の20万ユーロから、1.2億ユーロへ
+  tier: 報道
+  telop: 2022年5月7日、リーグ2の最終節
+  narrator: 解説
+  card:
+    type: table
+    title: 歩んできた道
+    columns:
+    - シーズン
+    - クラブ
+    - 年齢
+    - 市場価値
+    rows: &career_rows
+    - - 20/21〜23/24
+      - ニューカッスル
+      - 18歳〜21歳
+      - 最高 1500万ユーロ
+    - - 24/25〜26/27
+      - ノッティンガム・フォレスト
+      - 21歳〜23歳
+      - 最高 1.1億ユーロ
+    - - 26/27
+      - マンチェスター・シティ
+      - 23歳
+      - 最高 1.2億ユーロ
+    source: Transfermarkt
+  say:
+  - text: 2021年1月9日、18歳でトップチームデビュー。
+    image: assets/images/20261014_anderson/ncl_contract/01_r.jpg
+    card: &career_card
+      type: table
+      title: 歩んできた道
+      columns: [シーズン, クラブ, 年齢, 市場価値]
+      rows: *career_rows
+      source: Transfermarkt
+      highlight_row: 0
+  - text: 敵地、アーセナルとのFAカップに、途中から出ました。
+    card: *career_card
+  - text: 18歳の市場価値は、20万ユーロ。ここから、およそ600倍になります。
+    card: *career_card
+  - text: 2022年1月31日、19歳で、4部のブリストル・ローヴァーズへ期限付き移籍。
+    card: *career_card
+  - text: 転機は5月7日の最終節。昇格をかけた、スカンソープ戦です。
+    card: none
+  - text: アンダーソンは1試合で4ゴールに絡みます。3アシストに、残り5分のヘディング。
+    emph: true
+    card: none
+  - text: 7対0の勝利。得点数の差で、ローヴァーズは自動昇格を決めます。
+    card: *career_card
+  - text: 2024年7月、ノッティンガム・フォレストへ。移籍金は報道で3500万ポンド。
+    image: assets/images/20261014_anderson/bbc/01_nologo_r.jpg
+    card:
+      <<: *career_card
+      highlight_row: 1
+  - text: 生まれ育ったクラブを離れる決断。本人は、こう振り返ります。
+    card:
+      <<: *career_card
+      highlight_row: 1
+  - text: あの移籍がなければ、いまここにいなかった、と。
+    card: none
+  - text: 2025年1月19日、サウサンプトン戦の11分に、プレミア初ゴール。
+    card:
+      <<: *career_card
+      highlight_row: 1
+  - text: 2025年6月、U-21欧州選手権で優勝。
+    card:
+      <<: *career_card
+      highlight_row: 1
+  - text: 準々決勝のスペイン戦では、90分の終わりにPKを決めています。
+    card:
+      <<: *career_card
+      highlight_row: 1
+  - text: 9月6日、アンドラ戦でイングランド代表デビュー。中盤の底で先発しました。
+    image: assets/images/20261014_anderson/sk_eng/01_r.jpg
+    card:
+      <<: *career_card
+      highlight_row: 1
+  - text: 2026年7月2日。ワールドカップのさなかに、シティが獲得で合意します。
+    image: assets/images/20261014_anderson/city_bts9/01_r.jpg
+    card:
+      <<: *career_card
+      highlight_row: 2
+  - text: 移籍金は報道で1億1600万ポンド。フォレストのときの3倍以上です。
+    emph: true
+    card:
+      <<: *career_card
+      highlight_row: 2
+  - text: 発表の時点で、英国人選手の史上最高額でした。
+    card:
+      <<: *career_card
+      highlight_row: 2
+  - text: ワールドカップは、3位決定戦でフランスに勝って、銅メダル。
+    card:
+      <<: *career_card
+      highlight_row: 2
+  - text: 市場価値の推移です。18歳の20万ユーロが、23歳の1.2億ユーロへ。
+    image: assets/stats/player_20261014_1089691_value.png
+    no_telop: true
+  sources:
+  - https://www.transfermarkt.com/elliot-anderson/profil/spieler/567576
+  - https://www.bbc.co.uk/sport/football/61281127
+  - https://www.skysports.com/football/news/12040/13161291/newcastle-transfers-elliot-anderson-completes-35m-move-to-nottingham-forest-and-yankuba-minteh-joins-brighton-for-30m
+  - https://www.theguardian.com/football/2025/sep/04/elliot-anderson-england-scotland-newcastle-nottingham-forest-world-cup-qualifiers
+  - https://www.theguardian.com/football/2025/jun/21/spain-england-european-under-21-championship-match-report
+  - https://www.mancity.com/news/mens/man-city-elliot-anderson-agreement-nottingham-forest-63918581
+  - https://www.skysports.com/football/news/11095/13558090/elliot-anderson-to-man-city-midfielder-completes-record-breaking-lb116m-transfer-from-nottingham-forest
+  - https://www.soccer-king.jp/news/world/eng/20260702/2177640.html
+- id: style
+  heading: 触って、奪って、運ぶ
+  tier: 報道
+  telop: ボールタッチ97、空中戦91
+  narrator: 解説
+  card:
+    type: bars
+    title: 同じMFの中での位置（100が最上位）
+    unit: ''
+    items:
+    - label: ボールタッチ
+      value: 97
+      highlight: true
+    - label: 空中戦
+      value: 91
+      highlight: true
+    - label: 守備の関与
+      value: 84
+    - label: チャンス創出
+      value: 68
+    - label: 得点
+      value: 45
+    source: FotMob
+  say:
+  - text: ここからはアンダーソンの形。同じMFと比べた図です。
+    image: assets/stats/player_20261014_1089691_radar.png
+    no_telop: true
+  - text: もっとも外へ張り出すのは、ボールタッチの97。最上位に迫る位置です。
+    image: assets/stats/player_20261014_1089691_radar.png
+    no_telop: true
+  - text: 続くのが、空中戦の91と、守備の関与の84。
+    image: assets/stats/player_20261014_1089691_radar.png
+    no_telop: true
+  - text: 触って、奪って、前へ運ぶ。中盤の底で、攻めと守りをつなぐ選手です。
+    emph: true
+    image: assets/stats/player_20261014_1089691_radar.png
+    no_telop: true
+  - text: 得点は45で、真ん中あたり。ゴールの数は、これから伸びしろを残しています。
+    image: assets/images/20261014_anderson/commons/01_w.jpg
+    no_telop: true
+  - text: トゥヘル監督は、代表デビュー戦のあと、こう評しました。
+    card: none
+  - text: 「守ることが好きで、競り合いに体を入れる」。
+    card: none
+  - text: 「パスが好きで、ラインを破る」。
+    emph: true
+    card: none
+  - text: 触る場所は、中盤の真ん中から、左右の外まで。ピッチの幅いっぱいに広がっています。
+    image: assets/stats/player_20261014_1089691_heat.png
+    no_telop: true
+  - text: 昨季の集計では、中央のMFで、守備のラインを越えるパスが最多の376本。
+    image: assets/stats/player_20261014_1089691_heat.png
+    no_telop: true
+  - text: 今季のプレミアのシュートは6本。ペナルティエリアの中からは1本でした。
+    image: assets/stats/player_20261014_1089691_shots.png
+    no_telop: true
+  - text: 昨季は411キロを走りました。これはプレミアで2番目に長い距離です。
+    image: assets/images/20261014_anderson/sk_eng/01_w.jpg
+    card: none
+  sources:
+  - https://www.fotmob.com/players/1089691
+  - https://www.bbc.com/sport/football/articles/cgmppp4x34eo
+  - https://www.theguardian.com/football/2025/sep/06/thomas-tuchel-hints-elliot-anderson-will-start-for-england-in-serbia
+  - https://www.mancity.com/news/mens/elliot-anderson-signs-for-man-city-63920416
+- id: past
+  heading: 5つの季と、通算197試合
+  tier: 報道
+  telop: 直近5シーズンの試合と得点
+  narrator: 解説
+  card:
+    type: table
+    title: エリオット・アンダーソン 直近5シーズン（クラブの全公式戦）
+    columns:
+    - シーズン
+    - クラブ
+    - 試合
+    - 得点
+    - アシスト
+    rows: &season_rows
+    - ['21/22', ブリストル・ローヴァーズ, '21', '7', '6']
+    - ['22/23', ニューカッスル, '27', '0', '1']
+    - ['23/24', ニューカッスル, '26', '0', '2']
+    - ['24/25', ノッティンガム・フォレスト, '42', '2', '6']
+    - ['25/26', ノッティンガム・フォレスト, '50', '4', '5']
+    source: FotMob・シティ公式
+  rows_total:
+  - &t1 [ニューカッスル, '55', '0']
+  - &t2 [ブリストル・ローヴァーズ, '21', '7']
+  - &t3 [ノッティンガム・フォレスト, '92', '6']
+  - &t4 [マンチェスター・シティ, '8', '0']
+  - &t5 [イングランド代表, '21', '0']
+  - &t6 [合計, '197', '13']
+  say:
+  - text: アンダーソンの5つの季を、クラブの公式戦で古い順に。まずは19歳の21/22。
+    image: assets/images/20261014_anderson/ncl_contract/01_r.jpg
+    card: &past_card
+      type: table
+      title: エリオット・アンダーソン 直近5シーズン（クラブの全公式戦）
+      columns: [シーズン, クラブ, 試合, 得点, アシスト]
+      rows: *season_rows
+      source: FotMob・シティ公式
+      highlight_row: 0
+  - text: 4部のブリストル・ローヴァーズで、21試合7得点6アシスト。
+    card: *past_card
+  - text: つづく2季はニューカッスルで、27試合と26試合。
+    card:
+      <<: *past_card
+      highlight_row: 1
+  - text: プレミアでの44試合のうち、先発は13。途中から出番を積み上げた時期です。
+    card:
+      <<: *past_card
+      highlight_row: 2
+  - text: 24/25、フォレストの1年目は、42試合で2得点6アシスト。
+    image: assets/images/20261014_anderson/bbc/01_nologo_r.jpg
+    card:
+      <<: *past_card
+      highlight_row: 3
+  - text: 25/26は50試合で4得点5アシスト。出場数は、5つの季の最多です。
+    emph: true
+    card:
+      <<: *past_card
+      highlight_row: 4
+  - text: プレミアでは、全試合に出場しています。
+    card:
+      <<: *past_card
+      highlight_row: 4
+  - text: 通算も見ます。ニューカッスルで55試合、ブリストル・ローヴァーズで21試合7得点。
+    card: &total_card
+      type: table
+      title: エリオット・アンダーソン 通算（2026年10月）
+      columns: [所属, 試合, 得点]
+      rows: [*t1, *t2, *t3, *t4, *t5, *t6]
+      source: FotMob・シティ公式
+      highlight_row: 0
+  - text: フォレストで92試合6得点。シティでは、今季8試合です。
+    image: assets/images/20261014_anderson/city_bts9/01_r.jpg
+    card:
+      <<: *total_card
+      highlight_row: 2
+  - text: イングランド代表は21試合。デビューは2025年9月、22歳でした。
+    image: assets/images/20261014_anderson/sk_eng/01_r.jpg
+    card:
+      <<: *total_card
+      highlight_row: 4
+  - text: 合わせて197試合13得点。23歳で、この数です。
+    emph: true
+    card:
+      <<: *total_card
+      highlight_row: 5
+  sources:
+  - https://www.fotmob.com/players/1089691
+  - https://www.mancity.com/news/mens/elliot-anderson-signs-for-man-city-63920416
+  - https://www.premierleague.com/news/4047529
+  - https://www.theguardian.com/football/2025/sep/06/thomas-tuchel-hints-elliot-anderson-will-start-for-england-in-serbia
+- id: season
+  heading: 今季の数字と直近5試合
+  tier: 報道
+  telop: 今季ここまで
+  narrator: 解説
+  card:
+    type: table
+    title: 直近5試合（代表を含む）
+    columns:
+    - 日付
+    - 相手
+    - 出場
+    - 得点
+    - 評点
+    rows: &recent_rows
+    - - 10/11
+      - リバプール
+      - 90分
+      - 0G 1A
+      - '8.5'
+    - - 10/6
+      - チェコ
+      - 63分
+      - 0G 0A
+      - '7.5'
+    - - 10/3
+      - クロアチア
+      - 79分
+      - 0G 1A
+      - '7.9'
+    - - 9/29
+      - チェコ
+      - 70分
+      - 0G 0A
+      - '7.6'
+    - - 9/26
+      - スペイン
+      - 90分
+      - 0G 0A
+      - '7.5'
+    source: FotMob
+  say:
+  - text: アンダーソンの今季は、ここまで12試合で0得点2アシスト、出場時間は895分。
+    image: assets/images/20261014_anderson/city_bts9/01_r.jpg
+    card: &recent_card
+      type: table
+      title: 直近5試合（代表を含む）
+      columns: [日付, 相手, 出場, 得点, 評点]
+      rows: *recent_rows
+      source: FotMob
+  - text: プレミアリーグは6試合、0得点1アシスト。
+    card: *recent_card
+  - text: 代表のネーションズリーグAは4試合で0得点1アシスト。
+    card: *recent_card
+  - text: 直近は10月11日、リバプール戦。90分出場です。
+    card:
+      <<: *recent_card
+      highlight_row: 0
+  - text: 68分、ドクのゴールをアシスト。評点は8.5でした。
+    emph: true
+    card: none
+  - text: プレミアの6試合で、ボールに触ったのは641回。90分あたり114回です。
+    card: *recent_card
+  - text: 通ったパスは470本。90分あたりで84本。
+    card: *recent_card
+  - text: 題の答えは、昨季と同じ。試合の真ん中で、ボールに触り続ける中盤です。
+    card: *recent_card
+  sources:
+  - https://www.fotmob.com/players/1089691
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20261011
+  - https://www.mancity.com/news/mens/elliot-anderson-signs-for-man-city-63920416
+- id: story
+  heading: 数字の外にある、2つの話
+  tier: 報道
+  main: true
+  telop: 祖父の道と、憧れの選手
+  narrator: 解説
+  card:
+    type: table
+    title: 数字の外にある、2つの話
+    columns: [いつ, 何があったか]
+    rows: &story_rows
+    - ['1968年9月11日', 祖父が、クラブ初の欧州戦で輝いた]
+    - ['2025年9月', 憧れの選手を、こう語った]
+    source: 各報道
+  say:
+  - text: シティのエリオット・アンダーソン。数字の外に、2つの話があります。
+    image: assets/images/20261014_anderson/commons/01_v.jpg
+    short_only: true
+    card: none
+  - text: 1つ目は、祖父の話。母方の祖父は、かつてニューカッスルの左ウイングでした。
+    image: assets/images/20261014_anderson/ncl_contract/01_r.jpg
+    card: &story_card
+      type: table
+      title: 数字の外にある、2つの話
+      columns: [いつ, 何があったか]
+      rows: *story_rows
+      source: 各報道
+      highlight_row: 0
+  - text: 名前はジェフ・アレン。1964年、17歳でデビューします。
+    card: *story_card
+  - text: 1968年9月11日、クラブ初のヨーロッパの試合。
+    emph: true
+    card: *story_card
+  - text: 相手はフェイエノールト。クラブ初の欧州でのゴールを、お膳立てしました。
+    card: *story_card
+  - text: ところが数週間後、フォレスト戦で大けが。23歳で、現役を退きます。
+    card: none
+  - text: 孫のエリオットは、その背中を、こう語っています。
+    card: *story_card
+  - voice: アンダーソン
+    text: 祖父の歩んだ道を、受け継いでいきたい。
+  - voice: アンダーソン
+    text: 祖父は早くにケガで終わってしまった。
+    cont: true
+  - voice: アンダーソン
+    text: だから、その分、力が湧くんです。
+    cont: true
+    pause: 0.6
+  - text: 祖父が大けがをした相手は、のちに孫が2年間プレーするフォレストでした。
+    card: *story_card
+  - text: 2つ目は、憧れの選手の話。名前は、ケヴィン・デ・ブライネ。
+    image: assets/images/20261014_anderson/bbc/01_nologo_r.jpg
+    card:
+      <<: *story_card
+      highlight_row: 1
+  - text: 2025年9月、本人は憧れを、こう語りました。
+    card:
+      <<: *story_card
+      highlight_row: 1
+  - voice: アンダーソン
+    text: この4、5年、プレミアで一番好きな選手でした。
+  - voice: アンダーソン
+    text: いつも見ていた。パスを出す目に、引きつけられた。
+    cont: true
+  - voice: アンダーソン
+    text: 僕が真似しようとしていた選手です。
+    cont: true
+    pause: 0.6
+  - text: その年の開幕戦では、クリス・ウッドの2点目を、鋭いパスで演出しています。
+    card: none
+  - text: そして2026年7月。シティ入りの日のインタビューで、こう続けました。
+    image: assets/images/20261014_anderson/city_bts9/01_r.jpg
+    card:
+      <<: *story_card
+      highlight_row: 1
+  - voice: アンダーソン
+    text: いつも彼を見ていた。
+  - voice: アンダーソン
+    text: 彼のいたチームに、いま座っているのは、
+    cont: true
+  - voice: アンダーソン
+    text: 特別なことです。
+    cont: true
+    pause: 0.6
+  - text: 憧れた「パスを出す目」を、同じチームで磨く。その先を、数字で見ます。
+    pause: 0.5
+    card: none
+  quotes_from:
+  - https://www.newcastleunited.com/en/news/anderson-wants-to-keep-following-in-grandfathers-footsteps-after-signing-new-contract
+  - https://www.theguardian.com/football/2025/sep/04/elliot-anderson-england-scotland-newcastle-nottingham-forest-world-cup-qualifiers
+  - https://www.mancity.com/citytv/mens/elliot-anderson-says-he-has-joined-the-kings-of-manchester-watch-his-first-manchester-city-interview-63920407
+  sources:
+  - https://www.chroniclelive.co.uk/sport/football/football-news/elliot-anderson-newcastle-geoff-allen-19622397
+  - https://www.newcastleunited.com/en/news/anderson-wants-to-keep-following-in-grandfathers-footsteps-after-signing-new-contract
+  - https://www.theguardian.com/football/2025/sep/04/elliot-anderson-england-scotland-newcastle-nottingham-forest-world-cup-qualifiers
+  - https://www.mancity.com/citytv/mens/elliot-anderson-says-he-has-joined-the-kings-of-manchester-watch-his-first-manchester-city-interview-63920407
+- id: view
+  heading: ボールタッチ、ライスと並べると
+  tier: 背景
+  viewpoint: true
+  narrator: 解説
+  telop: 10月15日、マンチェスター・シティ対パリ・サンジェルマン
+  card:
+    type: table
+    title: 今季プレミア、同じ6試合の数字
+    columns: [項目, アンダーソン, ライス]
+    rows: &cmp_rows
+    - ['出場時間', '505分', '504分']
+    - ['ボールタッチ', '641', '496']
+    - ['パス成功', '470', '380']
+    - ['ラインを破るパス', '126', '127']
+    - ['競り合いの勝ち', '46', '22']
+    source: FotMob
+  say:
+  - text: 最後に、同じ中盤の選手と、今季の数字を並べてみます。
+    image: assets/images/20261014_anderson/city_bts9/01_r.jpg
+    card: &cmp_card
+      type: table
+      title: 今季プレミア、同じ6試合の数字
+      columns: [項目, アンダーソン, ライス]
+      rows: *cmp_rows
+      source: FotMob
+      highlight_row: 0
+  - text: 相手は、アーセナルのデクラン・ライス。プレミアの6試合、出場時間もほぼ同じです。
+    card: *cmp_card
+  - text: ボールタッチは、ライスの496回に対して、アンダーソンが1.3倍。
+    emph: true
+    card:
+      <<: *cmp_card
+      highlight_row: 1
+  - text: ラインを破るパスは、126本と127本。ここは、ほぼ並んでいます。
+    card:
+      <<: *cmp_card
+      highlight_row: 3
+  - text: 昨季は、1試合あたり約87回でした。
+    card: none
+  - text: 今季は、1試合あたり約107回です。
+    card: none
+  - text: まだ6試合ですが、数字は落ちるどころか、上向いています。
+    card: none
+  - text: ゴールの欄は、今季ここまで0。昨季は4得点でした。数字がつく日を、待ちます。
+    card: none
+  - text: 次の節目は、日本時間10月15日の午前4時。
+    card: none
+  - text: マンチェスター・シティ対パリ・サンジェルマン。
+    image: assets/images/20261014_anderson/city_agree/01_o.jpg
+    card: none
+  - text: 欧州の舞台でも、ボールの真ん中にいられるか。見届けます。
+    card: none
+  sources:
+  - https://www.fotmob.com/players/1089691
+  - https://www.fotmob.com/players/654096
+  - https://www.bbc.com/sport/football/articles/cgmppp4x34eo
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20261014
