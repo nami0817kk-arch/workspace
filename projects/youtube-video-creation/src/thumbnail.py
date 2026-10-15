@@ -1473,7 +1473,7 @@ def _base(config: ProjectConfig, background: str | None, out_path: Path,
         still.parent.mkdir(parents=True, exist_ok=True)
         source = ffmpeg.grab_frame(source, still)
     if source.exists():
-        return _cover(Image.open(source).convert("RGBA"), *SIZE, focus=focus)
+        return _cover(lift_photo(Image.open(source).convert("RGBA")), *SIZE, focus=focus)
     return Image.new("RGBA", SIZE, (14, 20, 32, 255))
 
 
@@ -1827,6 +1827,27 @@ def fx_options(spec: dict) -> dict:
 # ---- 部品
 
 
+# 写真の持ち上げ（2026-10-15 ユーザー「他のチャンネルと比較して向上」）。参考7チャンネルのサムネを測ったら、
+# 明るさ 0.42〜0.52・彩度 0.55〜0.62 に対し、こちらは 0.27・0.44 で、**どの参考よりも暗く沈んでいた**
+# （research/metrics/refwatch_20261015.md）。一覧では明るく色の濃い絵のほうが目に入る。
+# 写真だけを持ち上げ、文字・帯・エンブレムの色は触らない（読み込みの所で1回だけ掛ける）
+PHOTO_LIFT = {"brightness": 1.20, "color": 1.25, "contrast": 1.06}
+
+
+def lift_photo(image: Image.Image) -> Image.Image:
+    """写真の明るさ・色の濃さ・コントラストを少し持ち上げる。透過（A）は保つ。"""
+    alpha = image.getchannel("A") if image.mode == "RGBA" else None
+    rgb = image.convert("RGB")
+    rgb = ImageEnhance.Brightness(rgb).enhance(PHOTO_LIFT["brightness"])
+    rgb = ImageEnhance.Color(rgb).enhance(PHOTO_LIFT["color"])
+    rgb = ImageEnhance.Contrast(rgb).enhance(PHOTO_LIFT["contrast"])
+    if alpha is not None:
+        rgb = rgb.convert("RGBA")
+        rgb.putalpha(alpha)
+    return rgb
+
+
+
 def _open_photo(background: str | None, out_path: Path) -> Image.Image | None:
     if not background:
         return None
@@ -1838,7 +1859,7 @@ def _open_photo(background: str | None, out_path: Path) -> Image.Image | None:
     if not source.exists():
         return None
     with Image.open(source) as image:
-        return image.convert("RGB")
+        return lift_photo(image.convert("RGB"))
 
 
 def _main_face(image: Image.Image):

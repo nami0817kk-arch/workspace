@@ -1,0 +1,13 @@
+# 参考にしているチャンネルの台帳（2026-10-15）。`python tools/refwatch.py` がここを読んで測る。
+# ユーザーが「参考にして」と言ったものだけを入れる。足したら role と note を書く。
+# role: news（ニュース本編）/ shorts / series（シリーズ・解説）/ intro（クラブ紹介）
+# 参考側の画像・文字起こしは測るためだけに使い、リポジトリには残さない。
+channels:
+  - {handle: uwasathefootball2, name: 2chサッカーの噂話, role: news, since: 2026-08, note: 最初の参考。1分前後の本編。反応を1件ずつ読む}
+  - {handle: 2ch-soccer-jyouhoukan, name: さっかー情報館, role: news, since: 2026-09, note: 日本人選手中心。冒頭4秒の極太文字}
+  - {handle: soccer_chiebukuro, name: サッカー知恵袋, role: news, since: 2026-09, note: 登録6千で63万回の異常値。スコアカードを早く出す}
+  - {handle: soccer-labo, name: サッカーラボ, role: news, since: 2026-09, note: 反応83%の型}
+  - {handle: halftimesokuho, name: ハーフタイム速報, role: shorts, since: 2026-10, note: ショートの質（10/15）。題名で約束して中盤で回収}
+  - {handle: ch-ic4op, name: ch-ic4op, role: shorts, since: 2026-10, note: ショートの質（10/15）。「ファンの本音」型}
+  - {handle: pltalkshowjp, name: プレミアトークショー, role: series, since: 2026-10, note: シリーズの質（10/15）。見出しは問い、概要欄に情報の時点}
+  - {handle: crack-football, name: クラックフットボール, role: series, since: 2026-10, note: 26.3万・40分の語り。題材の型（ランキング・まとめ・噂）と題名を参考}
