@@ -371,7 +371,7 @@ def make_video(args, draft: bool) -> int:
     lst = wd / "overlay.txt"
     lst.write_text(render.concat_list(items), encoding="utf-8")
     print("重ねています…")
-    video.compose(ffmpeg(), bg, lst, audio, target, v["fps"], preset="veryfast" if draft else "medium")
+    video.compose(ffmpeg(), bg, lst, audio, target, v["fps"], preset="veryfast")
     clock.lap("重ね")
     got = video.media_seconds(ffmpeg(), target)
     if got is None or abs(got - total) > 2.0:               # 10-05：3分しかない本編が「30.7分」と出て通っていた
