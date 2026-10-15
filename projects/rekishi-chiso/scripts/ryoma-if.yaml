@@ -656,7 +656,6 @@ sections:
       image: paintings/ryoma_nakaoka_shintaro.jpg
       caption: 中岡慎太郎（1866年ごろ）
       age: false
-    short: s2
   - 語り: 従僕の藤吉は16日に、中岡は17日の夕方に亡くなりました。この事件の犠牲者は、3人です。
     card:
       head: 11月16日・17日
