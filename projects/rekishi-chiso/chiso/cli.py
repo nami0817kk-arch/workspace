@@ -17,6 +17,7 @@
     python -m chiso.cli whoami                          # 許可したチャンネルの名前を出す（取り違えの確認）
     python -m chiso.cli playlists [--sync]              # 投稿済みを台本の playlists:／series:／shorts_playlists: の再生リストへ
     python -m chiso.cli localize scripts/x.yaml [--dry-run]   # 投稿済みの本編に台本の en:（英語の題名と説明）を付ける
+    python -m chiso.cli preview  scripts/x.yaml     # 画面だけの静止コマ確認（3×3 の一覧。音声・映像の組み立てを待たない）→ out/x_preview/
     python -m chiso.cli clean [--apply]                 # 投稿・予約が済んだ台本の frames・bg を消す（書き出しの前に空きが少なければ自動）
     python -m chiso.cli reauth                          # 許可の取り直し（ブラウザで同意する。ユーザーが打つ）
     python -m chiso.cli check   scripts/x.yaml          # 素材の有無・書きすぎ・抑揚の張りつきを点検
@@ -491,6 +492,72 @@ def cmd_clean(args) -> int:
 
 def cmd_build(args) -> int:
     return make_video(args, draft=False)
+
+
+def cmd_preview(args) -> int:
+    """画面だけの静止コマ確認（10-15）。音声の組み立て・映像の組み立て（ffmpeg）を待たずに、行ごとの画面を 3×3 の一覧にする。
+    前景の描き直しと背景の絵は本番の書き出し（build）と同じ控え（work/<台本>/frames・bg）を使うので、あとで build しても無駄にならない。
+    音声は読みの控え（voice）を使う（無ければここで作る）。out/<台本>_preview/sheetNN.jpg ができる。"""
+    from PIL import Image, ImageDraw
+    config = load_config()
+    path = Path(args.script)
+    sc = script_mod.load(path)
+    if not ensure_disk(config):
+        return 2
+    if not preflight(sc, config):
+        return 3
+    clock = Clock()
+    cues, total = synthesize(sc, config)
+    clock.lap("音声")
+    if sc.next:
+        total += render.END_SECONDS
+    wd = work_dir(sc)
+    v = config["video"]
+    size = (v["width"], v["height"])
+    painter = render.Painter(config, sc, assets_dir(config), size)
+    painter.layered = True
+    print("前景を描いています…")
+    fg = render.frames(painter, cues, total, wd / "frames", v["fps"], end_card=bool(sc.next))
+    clock.lap("前景")
+    print("背景を並べています…")
+    runs = video.runs_of(cues, total)
+    bg = video.still_frames(ffmpeg(), painter, runs, wd / "bg", v["fps"], size, workers=v.get("bg_workers", 5))
+    clock.lap("背景")
+
+    def at(items, t):
+        acc = 0.0
+        for path_, dur in items:
+            acc += dur
+            if t < acc:
+                return path_
+        return items[-1][0]
+    out = out_dir() / f"{path.stem}_preview"
+    out.mkdir(exist_ok=True)
+    for old in out.glob("sheet*.jpg"):
+        old.unlink()
+    font = painter.font("gothic", 26, bold=True)
+    W, H = 800, 450
+    names = {k: people.label(config, k) for k in list(config["cast"]) + sc.roles}
+    tiles = []
+    for n, cue in enumerate(cues, 1):
+        t = (cue.start + cue.end) / 2
+        base = Image.open(at(bg, t)).convert("RGBA").resize(size)
+        top = Image.open(at(fg, t)).convert("RGBA").resize(size)
+        im = Image.alpha_composite(base, top).convert("RGB").resize((W, H))
+        d = ImageDraw.Draw(im)
+        who = names.get(cue.line.speaker, cue.line.speaker)
+        d.rectangle([0, 0, W, 34], fill=(0, 0, 0))
+        d.text((4, 2), f"#{n} {int(t // 60)}:{int(t % 60):02d} {who}：{cue.line.text[:14]}", font=font, fill=(255, 255, 0))
+        tiles.append(im)
+    for k in range(0, len(tiles), 9):
+        sheet = Image.new("RGB", (W * 3, H * 3))
+        for j, im in enumerate(tiles[k:k + 9]):
+            sheet.paste(im, ((j % 3) * W, (j // 3) * H))
+        sheet.save(out / f"sheet{k // 9 + 1:02d}.jpg", quality=88)
+    print(f"{out}（{len(tiles)}コマ・{(len(tiles) + 8) // 9}枚）")
+    print(f"かかった時間：{clock}")
+    remind_mismatch(sc)
+    return 0
 
 
 def cmd_shorts(args) -> int:
@@ -1151,6 +1218,9 @@ def main(argv=None) -> int:
     s = sub.add_parser("clean")
     s.add_argument("--apply", action="store_true", help="消す（付けなければ一覧だけ）")
     s.set_defaults(fn=cmd_clean)
+    s = sub.add_parser("preview")
+    s.add_argument("script")
+    s.set_defaults(fn=cmd_preview)
     s = sub.add_parser("reauth")
     s.set_defaults(fn=cmd_reauth)
     s = sub.add_parser("prepare-characters")
