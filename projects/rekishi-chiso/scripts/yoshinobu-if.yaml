@@ -68,7 +68,7 @@ terms:
   局外中立: 内乱の両方を交戦団体とみなし、外国が手を出さないこと
   辞官納地: 官職と領地を朝廷に返すこと。慶喜に求められた
   王政復古: 慶応3年12月9日（1868年1月3日）、天皇中心の政府に戻すと宣言
-  開陽丸: オランダで造られた木造の蒸気軍艦。約2,590トン
+  開陽丸: オランダで造られた木造の蒸気軍艦
   挟み撃ち案: 小栗忠順の作戦。箱根の陸軍と駿河湾の艦隊で挟む
   交戦団体: 内乱で、国の政府と同じように扱われる側
   慶応の改革: 慶喜の幕政改革。洋式陸軍や横須賀製鉄所が進んだ
@@ -181,8 +181,8 @@ sections:
     short: s1
   - 語り: もし、慶喜が城に残って、戦い続けていたら。日本は、どうなっていたのでしょうか。今日は、その先を掘ります。
     background: &id003
-      image: paintings/yoshinobu_portrait_sutton_osaka_1867.jpg
-      credit: F.サットン撮影 徳川慶喜（大坂城、1867年）
+      image: paintings/yoshinobu_osaka_defense_kiyochika.jpg
+      credit: 小林清親 錦絵 馬上の一橋慶喜公（1870年代）
     portrait: &id009
       image: paintings/yoshinobu_portrait_1867_full.jpg
       caption: 徳川慶喜（フランス式軍装、1867年）
@@ -265,15 +265,13 @@ sections:
   - 聞き: 戦う気で来たっていうより、立て直しの拠点だったんだね。京都ににらみをきかせつつ、海にも近い場所、ってことか。
     figure: null
   - 語り: イギリス公使のパークスは、大坂で慶喜に会っています。パークスは、慶喜を、今まで会った日本人の中で最もすぐれた人物、と評したと伝わります。時期は、確かめられていません。
-    background: &id016
-      image: paintings/yoshinobu_beato_yokohama_1865.jpg
-      credit: F.ベアト 横浜の運河と家並（1865年）
+    background: *id001
     portrait: *id004
   - 聞き: 外国の公使にまで、そこまで評価されてたんだ。じゃあ、慶喜は、期待されてた人だったんだね。
   - 語り: ところが12月25日、江戸で、薩摩側に浪人の引き渡しを拒まれた末、庄内藩士らが薩摩藩邸を焼き討ちします。報せは28日に大坂へ届き、「薩摩討つべし」の声が、一気に高まりました。
     background: &id011
-      image: paintings/yoshinobu_beato_edo_panorama_1865.jpg
-      credit: F.ベアト 江戸のパノラマ（1865年）
+      image: paintings/yoshinobu_beato_yedo_inner_moat.jpg
+      credit: F.ベアト 江戸城の内濠（1863〜73年）
     portrait: null
     card:
       head: 12月25日
@@ -282,7 +280,7 @@ sections:
   - 語り: 慶喜は当初、こちらから戦を挑まないよう、諸隊を抑えていました。
   - 語り: ところが、老中の板倉勝静らが、従わなければ兵が慶喜を刺してでも脱走しかねない、と訴え、慶喜は抑えきれなかった、といいます。
     background: *id003
-    portrait: &id007
+    portrait:
       image: paintings/yoshinobu_itakura_katsukiyo.jpg
       caption: 板倉勝静
       age: false
@@ -299,7 +297,7 @@ sections:
   - 語り: 翌日の1月3日、鳥羽と伏見で、戦いが始まりました。
     hook: true
 - title: 1月3日 鳥羽・伏見 1万5千と5千の中身
-  background:
+  background: &id005
     image: paintings/yoshinobu_toba_fushimi_screen.jpg
     credit: 鳥羽伏見の戦いの黒白図（1868年）
   year: 1868
@@ -323,7 +321,7 @@ sections:
   - 聞き: 3倍も違うの？ それなら、楽勝じゃない？ 数だけで見たら、旧幕府の圧勝でしょ。
     tone: 驚き
   - 語り: 数の種類に、気をつけてください。戦場で向き合った数は、もっと少なくなります。たとえば伏見方面は、旧幕府軍およそ4,000に対して、新政府軍およそ1,200です。
-    background: &id022
+    background: &id006
       image: paintings/yoshinobu_toba_aizu_fushimi.jpg
       credit: 会津藩兵、伏見に上陸（1868年1月）
     figure:
@@ -340,18 +338,16 @@ sections:
   - 聞き: 伏見でも、3倍以上……。なのに、負けたの？
     figure: null
   - 語り: 旧幕府軍は、行軍の隊列のまま、小銃に弾を込めていない状態で、攻撃を受けた、とされます。鳥羽街道は、狭い街道でした。
-    background: &id005
-      image: paintings/yoshinobu_toba_encounter.jpg
-      credit: 鳥羽の遭遇戦（黒白図、1868年）
+    background: *id005
   - 聞き: 弾を込めてない行軍って、戦う用意をしてないのと同じじゃん。まさか攻撃されるとは、思ってなかったのかな。
     tone: 驚き
   - 語り: 装備にも、差がありました。英語圏の概説では、長州が最良、次に幕府の歩兵、薩摩。会津と、多くの譜代藩は、その下とされています。
-    background: &id013
+    background:
       image: paintings/yoshinobu_toba_toyogobashi.jpg
       credit: 「豊進図」豊後橋の戦い（錦絵、1870年ごろ）
   - 聞き: 数が多いだけじゃ、勝てないんだ。銃も大砲も指揮も、全部そろってないと、数は力にならないんだね。
   - 語り: 『会津戊辰戦史』は、敗因を3つ挙げた、と紹介されています。統一した指揮がなかったこと。狭い鳥羽街道に兵を集めすぎたこと。京都の情勢を見誤ったこと。
-    background: &id006
+    background: &id007
       image: paintings/yoshinobu_toba_tominomori.jpg
       credit: 富ノ森の戦い（黒白図、1868年）
     card:
@@ -383,6 +379,11 @@ sections:
   year: 1868
   lines:
   - 語り: 1月5日、1868年1月29日。前線に、錦の御旗が上がります。赤地に金の日と銀の月を描いた、天皇の軍の旗です。
+    background: *id006
+    portrait:
+      image: paintings/yoshinobu_toba_banner_1868.jpg
+      caption: 錦の御旗（1868年）
+      age: false
     card:
       head: 1868年1月29日
       body: 錦の御旗が上がる
@@ -391,7 +392,7 @@ sections:
   - 聞き: 同じ日本人どうしなのに、旗1本で、立場が逆になっちゃうんだ。さっきまで味方だった人が、いきなり敵、ってこともあるよね。
     tone: 驚き
   - 語り: この旗は、岩倉具視と薩摩藩が、前もって用意したものです。偽物だという説もありますが、朝廷が許して掲げた、とも書かれます。ここでは、「前もって用意した」までを、事実にします。
-    background: *id005
+    background: *id007
     portrait:
       image: paintings/yoshinobu_iwakura_tomomi.jpg
       caption: 岩倉具視
@@ -399,7 +400,7 @@ sections:
   - 聞き: 本物かどうかより、旗が出たことで、みんなが動いた、ってことだね。信じた人が動いたら、本物でも偽物でも、同じ力になっちゃう。
     portrait: null
   - 語り: まず淀。1月5日、淀藩は、退却してきた旧幕府軍の入城を拒みます。藩主の稲葉正邦は、老中として江戸にいました。
-    background: *id006
+    background: *id005
     figure:
       type: stats
       title: 離れていった藩
@@ -452,28 +453,31 @@ sections:
   - 語り: このとき慶喜は、こう答えたと伝わります。
     short: s2
   - 人物: 「では、打ち立つぞ」
-    who: 徳川慶喜
+    who: 慶喜の言葉
     short: s2
   - 聞き: やる気だ。……じゃあ、なんで？
     tone: 疑問
     short: s2
   - 語り: この夜、会津藩士の神保修理が建言し、若年寄の永井尚志も賛同した、といいます。ただし、建言の中身は、確かめられていません。
     background: *id003
-    portrait: *id007
+    portrait: null
   - 聞き: 中身が分からないのが、もどかしいなあ。誰かが、背中を押したってことだよね。
   - 語り: 諸隊長が持ち場へ戻ったあと、慶喜は、裏の門から城を出ます。同行は、老中の板倉勝静と酒井忠惇、会津藩主の松平容保、桑名藩主の松平定敬ら、4、5人でした。
     background: *id001
-    portrait: &id023
-      image: paintings/yoshinobu_matsudaira_katamori.jpg
-      caption: 松平容保（1863年）
-      age: false
+    portrait: *id004
     card:
       head: 同行は4、5人
       body: 老中2人・藩主2人ほか
   - 聞き: 兵には、何も言わずに？ 兵は、まだ大勢いたんじゃないの？
     tone: 驚き
-  - 語り: 容保は、家臣に知らせる間もなかった、といいます。慶喜は、大坂湾へ出て、軍艦を探しました。
+  - 語り: 容保は、家臣に知らせる間もなかった、といいます。
     background: *id008
+    portrait: &id020
+      image: paintings/yoshinobu_matsudaira_katamori.jpg
+      caption: 松平容保（1863年）
+      age: false
+    short: s2
+  - 語り: 慶喜は、大坂湾へ出て、軍艦を探しました。
     portrait: *id009
     short: s2
   - 語り: 旧幕府の最新の軍艦、開陽丸は、このとき見つかりません。艦長の榎本武揚は上陸中で、不在でした。慶喜は、まず米国の軍艦に乗り、そのあと開陽丸に移った、と伝わります。
@@ -487,7 +491,7 @@ sections:
     tone: しみじみ
   - 語り: 翌7日、慶喜に追討令が出て、官位は剥奪されます。榎本は、大坂城に入りましたが、慶喜は、もういませんでした。榎本はのち、城にあった金およそ18万両を、船で江戸へ運びます。
     background: *id001
-    portrait: &id014
+    portrait: &id013
       image: paintings/yoshinobu_enomoto_portrait.jpg
       caption: 榎本武揚（晩年）
       age: false
@@ -495,8 +499,9 @@ sections:
       head: 1月7日
       body: 追討令。榎本が大坂城へ入る
   - 聞き: 城に残された人たちは、将軍がいなくなったことを、いつ知ったの？ 朝起きて社長がいなかったら、ふつうに終わりじゃん。
+    portrait: null
   - 語り: 将軍の退去を知らされていなかった城内は、大混乱になりました。
-    background: &id017
+    background: &id024
       image: paintings/yoshinobu_choshu_modern_troops_1865.jpg
       credit: 第二次長州征討の幕府洋式部隊の絵巻（1865年）
     portrait: null
@@ -566,6 +571,7 @@ sections:
   - 聞き: 錦の御旗が上がった瞬間に、朝敵だもんね。水戸の家の人なら、なおさら動けなくなりそう。
   - 語り: ふたつ目は、江戸で立て直す、という説。江戸には、兵も艦隊もありました。
     background: *id011
+    portrait: *id010
     figure:
       type: stats
       title: 城を出た理由の説（その1）
@@ -661,15 +667,17 @@ sections:
   - 聞き: 守りは固そうだけど、兵糧とか弾薬は？
     figure: null
   - 語り: そこは、数字が見つかりませんでした。城の兵糧、弾薬、大砲の数は、今回の調査では、分かっていません。事実として言えるのは、金が約18万両あったことまでです。
+    background: *id012
   - 語り: 想像は、ここからです。新政府軍は、開戦時で約5千。増援は来ますが、32メートルの石垣と水堀を、力ずくで攻める数ではありません。大坂城は、2週間では落ちません。
-    background: *id013
+    background: *id001
     card:
       head: ありうる
       body: 大坂城は2週間では落ちない
   - 聞き: 城に詳しい人は、どう見てるの？
   - 語り: 噺家で城マニアの春風亭昇太さんは、慶喜が籠城していたら、落城させられなかったと思う、と語っています。個人の感想で、兵力の数字は示されていません。
-    background: *id001
+    background: *id012
   - 語り: 反対の見方もあります。堅城でも、兵も食料も弾薬も、指揮も、地元の協力も要る。味方の藩が離れれば、一つの城では、広い戦に勝てない、という解説です。
+    background: *id001
   - 聞き: 城は持っても、戦争に勝てるとは限らない、ってことか。城が持つかどうかと、戦争に勝つかどうかは、別の話なんだね。
   - 語り: ここから、想像劇場、第1幕です。1月7日の朝、大坂城の大広間。榎本武揚が、金を積んだ船ではなく、艦隊を率いて、慶喜の前に現れます。
     background: *id003
@@ -679,7 +687,7 @@ sections:
     short: s3
   - 人物: 「上様、榎本、ただいま戻りました。開陽は、大坂湾に出ております」
     who: 榎本想像
-    portrait: *id014
+    portrait: *id013
     short: s3
   - 人物: 「榎本、よく戻った。城は、わしが守る。海は、そなたに任せる」
     who: 慶喜想像
@@ -687,16 +695,18 @@ sections:
     short: s3
   - 人物: 「承知いたしました。天保山沖で、薩摩の船を一隻も通しませぬ」
     who: 榎本想像
-    portrait: *id014
+    portrait: *id013
     short: s3
   - 聞き: おお、ちゃんと役割分担してる。……でも、津と淀は、もう敵に回ってるんだよね。
     portrait: null
     short: s3
   - 語り: はい。これは、想像でも変わりません。津も淀も彦根も、すでに新政府側です。大坂城の北と東は、新政府側の藩に囲まれます。
-    background: *id006
+    background: *id007
   - 聞き: お金のほうは？ 戦いが長引いたら、どっちが先に苦しくなるの？
   - 語り: 大商人は、勢力に応じて立場を変えました。小野組と島田組は、旧幕府の為替の御用から、新政府の御用へ移っています。
-    background: *id013
+    background: &id014
+      image: paintings/yoshinobu_tokugawa_warships_shinagawa.png
+      credit: 小杉雅之進 幕府軍艦八隻の品川沖出帆の図（1868年）
   - 語り: 想像です。大坂城が落ちなければ、様子を見る商人が増えて、新政府の金は集まりにくくなります。
     background: *id001
     card:
@@ -717,14 +727,12 @@ sections:
       body: 約2,590トン
   - 聞き: 海では、旧幕府のほうが強かったんだ。陸で押されても、海なら有利、ってことか。
   - 語り: 旧幕府の艦隊は、のちに品川を出たときの数で、蒸気軍艦8隻、乗員2,000余名。薩摩も、幕府に次ぐ西洋艦の買い手でした。
-    background:
-      image: paintings/yoshinobu_tokugawa_warships_shinagawa.png
-      credit: 小杉雅之進 幕府軍艦八隻の品川沖出帆の図（1868年）
+    background: *id014
     card:
       head: 旧幕府艦隊
       body: 蒸気軍艦8隻・2,000余名
   - 語り: 史実では、阿波沖海戦のあと、近畿の海は新政府側に移りました。ここでは、慶喜が大坂に残っています。
-    background: &id020
+    background: &id016
       image: paintings/yoshinobu_enomoto_fleet_1868.png
       credit: 榎本艦隊の写真（1868〜69年）
   - 語り: 想像です。開陽丸を中心にした榎本の艦隊が、大坂湾の入り口、天保山沖を押さえます。西国から大坂へ向かう新政府の船は、湾に入れません。
@@ -734,6 +742,7 @@ sections:
       body: 艦隊が大坂湾の入り口をふさぐ
   - 聞き: じゃあ、新政府軍の兵や武器は、陸の道で運ぶしかないんだ。
   - 語り: そうなります。近畿以西の諸侯は急速に新政府に従った、と辞典は書きます。ただ、それは新政府が勝ったからです。大坂城が落ちず、海もふさがれていれば、様子を見る藩が増えます。
+    background: *id016
     figure:
       type: map
       title: 新政府の本国から大坂城まで（直線）
@@ -763,7 +772,7 @@ sections:
   - 聞き: 薩摩と長州の本国は、遠いもんね。補給が止まったら、持久戦は苦しいはず。
     figure: null
   - 語り: ここで、外国です。兵庫と大坂は、慶応3年12月7日、西暦の1868年1月1日に外国に開かれたばかりで、各国の公使団も近くにいました。
-    background: *id016
+    background: *id015
   - 語り: 史実では、1月25日、イギリス、アメリカ、フランス、オランダ、イタリア、プロイセンの6か国が、新政府と旧幕府を、戦う二つの側を、どちらも正式な当事者として扱います。
     card:
       head: 1月25日（2月18日）
@@ -777,12 +786,14 @@ sections:
       body: 局外中立の宣言は変わらない
   - 聞き: 外国は、どっちが勝つか、様子を見てたってことだよね。慶喜が残っても、それは同じなんだ。
   - 語り: ただし、武器を売る商人は、どちらにも売り続けました。イギリスのグラバー、プロイセンのスネル兄弟です。局外中立は、建前でした。
-    background: *id017
+    background: &id021
+      image: paintings/yoshinobu_beato_yokohama_1865.jpg
+      credit: F.ベアト 横浜の運河と家並（1865年）
   - 聞き: じゃあ、外国が戦争に加わる、はないの？ ロッシュはフランスの公使でしょ。フランスが後ろにいるなら、ありそうなのに。
     tone: 疑問
   - 語り: 英国とフランスが、日本で代理戦争をする。これを論じた研究は、見つかりませんでした。
     background: *id001
-    portrait: &id024
+    portrait: &id022
       image: paintings/yoshinobu_leon_roches_1865.jpg
       caption: レオン・ロッシュ（1865年ごろ）
       age: false
@@ -791,6 +802,7 @@ sections:
       head: ほぼ妄想
       body: 英仏の本格的な介入
   - 聞き: 外国は助けてくれない。……じゃあ、東は？
+    background: *id012
     portrait: null
     hook: true
   - 語り: 江戸には、徹底抗戦を唱える人たちがいました。
@@ -806,7 +818,7 @@ sections:
   - 聞き: 慶喜がいなくても、江戸の人たちは、戦う気だったの？
     tone: 疑問
   - 語り: 1月12日の評定で、財政と軍制改革を担った幕臣の小栗忠順が唱えた作戦は、こうです。箱根を下りた新政府軍を、陸軍で迎え撃つ。
-    background: &id018
+    background: &id017
       image: paintings/yoshinobu_keiheitai.jpg
       credit: 幕府の軽兵隊（1864〜65年）
     figure:
@@ -841,7 +853,7 @@ sections:
     background: *id012
     short: s4
   - 語り: 想像です。ただ、この挟み撃ちは、成功しにくい。作戦に要る艦隊は、大坂湾に張りついていて、駿河湾へ回せないからです。
-    background: *id018
+    background: *id017
     card:
       head: ありうる
       body: 挟み撃ちは成功しにくい
@@ -855,7 +867,7 @@ sections:
   - 聞き: 5千で始めた戦いが、あちこちに広がっちゃうんだ。じゃあ、江戸は誰が守るの？
   - 語り: 想像劇場、第2幕です。江戸、薩摩藩邸。史実では3月に、勝海舟と西郷隆盛が会談して、江戸総攻撃は止まりました。ここでは、慶喜が大坂で戦っています。
     background: *id012
-    portrait: &id019
+    portrait: &id018
       image: paintings/yoshinobu_katsu_kaishu.jpg
       caption: 勝海舟（1899年以前）
       age: false
@@ -864,21 +876,21 @@ sections:
       body: 江戸 薩摩藩邸 勝と西郷
   - 人物: 「西郷さん。江戸で戦えば、民の暮らしが焼かれる。大坂の決着を待って、刀を収められぬか」
     who: 勝想像
-    portrait: *id019
+    portrait: *id018
   - 人物: 「勝さん。大坂が落ちておらん以上、江戸を見逃せば、背中を突かれもす」
     who: 西郷想像
     background: *id011
-    portrait: &id021
+    portrait: &id019
       image: paintings/yoshinobu_saigo_takamori.jpg
       caption: 西郷隆盛（肖像画）
       age: false
   - 人物: 「ならば、江戸を戦場にせず、双方の損の少ない道を探そう」
     who: 勝想像
-    portrait: *id019
+    portrait: *id018
   - 聞き: 勝海舟、したたかだなあ。西郷は、うなずくの？
     portrait: null
   - 語り: 想像では、うなずきません。大坂が落ちていない以上、新政府は、江戸を押さえるしかない。無血開城は、起きません。江戸は、戦場になります。
-    background: &id025
+    background: &id023
       image: paintings/yoshinobu_ueno_yoshitora_1868.jpg
       credit: 歌川芳虎 上野戦争の錦絵（1868年）
     card:
@@ -941,8 +953,8 @@ sections:
   - 聞き: 逃げた史実と、残るもしも。……札は「ありうる」なんだね。
   - 語り: 大広間で「打ち立つぞ」と答えた、と伝わるからです。ただし、その先の勝ち負けまでは、ほぼ妄想です。
   - 語り: 2人目は、榎本武揚。史実では、慶喜に置いていかれたあと、蝦夷地で戦って降伏しました。もしもは、大坂湾で艦隊を率います。札は、ありうる、です。
-    background: *id020
-    portrait: *id014
+    background: *id016
+    portrait: *id013
     figure:
       type: table
       title: 人物の運命表（史実ともしも）
@@ -1024,7 +1036,7 @@ sections:
     tone: 驚き
   - 語り: 4人目は、勝海舟。史実では、江戸開城をまとめました。もしもは、戦いの外から、休戦の道を探し続けます。これは、ありうる話です。
     background: *id011
-    portrait: *id019
+    portrait: *id018
     figure:
       type: table
       title: 人物の運命表（史実ともしも）
@@ -1064,7 +1076,7 @@ sections:
       upto: 4
   - 聞き: 勝海舟は、史実でも想像でも、戦いを止める側にいるんだね。どっちの世界でも、いちばん苦労する役だなあ。
   - 語り: 5人目は、西郷隆盛。史実では、勝と会談し、江戸総攻撃を止めました。もしもは、西と東の二つの戦線で、持久戦を迫られます。可能性は、ありうる、です。
-    portrait: *id021
+    portrait: *id019
     figure:
       type: table
       title: 人物の運命表（史実ともしも）
@@ -1104,8 +1116,8 @@ sections:
       upto: 5
   - 聞き: 西郷は、どっちの世界でも、前に出る人だなあ。二つの戦線を抱えたら、さすがに大変そう。
   - 語り: 6人目は、松平容保。史実では、会津戦争に敗れました。もしもは、大坂城で戦い続けます。会津の戦いは、東北ではなく、大坂で始まります。札は、ありうる、です。
-    background: *id022
-    portrait: *id023
+    background: *id006
+    portrait: *id020
     figure:
       type: table
       title: 人物の運命表（史実ともしも）
@@ -1145,8 +1157,8 @@ sections:
       upto: 6
   - 聞き: 容保は、史実でも想像でも、最後まで残って戦う側なんだね。場所が変わっても、役目は同じなんだ。
   - 語り: 7人目は、フランス公使のロッシュ。史実では、慶喜に再起を促したと伝わりますが、断られ、失脚して帰国しました。もしもは、個人の立場で、助言と武器の手配を続けます。ここは、ありえます。
-    background: *id016
-    portrait: *id024
+    background: *id021
+    portrait: *id022
     figure:
       type: table
       title: 人物の運命表（史実ともしも）
@@ -1229,7 +1241,7 @@ sections:
       upto: 1
   - 聞き: 江戸が焼けなかったのは、慶喜が戦わなかったから、でもあるんだ。戦わない決断が、百万人の街を守った、って言い方もできるね。
   - 語り: 次に、戊辰戦争の長さ。史実では、鳥羽・伏見から箱館の降伏まで、約1年5か月です。もしもは、それより長くなります。上限は分かりませんが、短くはなりません。
-    background: *id025
+    background: *id023
     figure:
       type: table
       title: 日本の変化点（史実ともしも）
@@ -1259,7 +1271,7 @@ sections:
         - ほぼ妄想
       note: もしもは想像。右の札は可能性の高さ
       upto: 2
-  - 語り: 3つ目は、東京です。史実では、江戸が東京と改められ、天皇が移りました。江戸が戦場のままなら、これは進みません。可能性は、ありうる、です。
+  - 語り: 3つ目は、東京です。史実では、江戸が東京と改められ、天皇が移りました。江戸が戦場のままなら、これは進みません。可能性は、ほぼ妄想、です。
     background: *id011
     figure:
       type: table
@@ -1291,7 +1303,7 @@ sections:
       note: もしもは想像。右の札は可能性の高さ
       upto: 3
   - 語り: 4つ目は、近代化の担い手です。幕府の慶応の改革の中で、フランス式の陸軍、横須賀製鉄所、職制の整備が進んでいました。
-    background: *id018
+    background: *id017
     figure:
       type: table
       title: 日本の変化点（史実ともしも）
@@ -1322,7 +1334,7 @@ sections:
       note: もしもは想像。右の札は可能性の高さ
       upto: 4
   - 語り: 戦いが続けば、改革は進みにくい。それでも、幕府が残れば、幕府主導の近代化が続きます。札は、ありうる、です。
-    background: *id017
+    background: *id024
   - 聞き: 勝てば幕府主導、負ければ新政府。同じ近代化でも、担い手が変わるのか。そうなると、学校も鉄道も、別の形になってたかもね。
   - 語り: 5つ目は、日本の形です。大坂は京都から約39km。幕府と新政府が並び立てば、中心が二つになりえます。これを論じた研究は、見つかりません。材料が地理だけなので、妄想に近い話です。
     background: *id001
@@ -1362,9 +1374,8 @@ sections:
     figure: null
     short: s5
   - 語り: 最後に、現代へ、鎖をつなぎます。1つ目。上に立つ人が、部下を残して去る。慶喜の脱出が、組織を救ったのか、壊したのか。評価は、割れています。
-    background:
-      image: paintings/yoshinobu_portrait_hunting.png
-      credit: 狩猟姿の徳川慶喜（1870年代）
+    background: *id008
+    portrait: null
     figure:
       type: table
       title: 現代日本への鎖（史実ともしも）
@@ -1389,7 +1400,7 @@ sections:
     short: s5
   - 語り: 江戸が戦火を免れた事実と、鳥羽・伏見の兵の士気が崩れた事実は、どちらも本当です。
     short: s5
-  - 聞き: 同じ決断なのに、救いにも、逃げにも見えるんだ……。
+  - 聞き: 同じ決断が、救いにも逃げにも見えるんだ。
     figure: null
   - 語り: 2つ目。いま日本には、東京以外にも首都機能を持たせる、副首都の議論があります。もし東西に中心があれば、この議論は、なかったかもしれません。ただし、これは、ほぼ妄想です。
     background: *id001
@@ -1416,7 +1427,7 @@ sections:
       note: もしもは想像。右の札は可能性の高さ
       upto: 2
   - 語り: 3つ目。史実では、外国は局外中立のあと、新政府を承認しました。もしもは、長く両方と付き合います。
-    background: *id016
+    background: *id021
     figure:
       type: table
       title: 現代日本への鎖（史実ともしも）
@@ -1438,7 +1449,7 @@ sections:
         - ありうる
       note: もしもは想像。右の札は可能性の高さ
   - 語り: 外国が両方と付き合い続けた形は、どの国とも等距離で付き合う、いまの外交にも通じます。ここは、ありえます。
-    background: *id018
+    background: *id017
     hook: true
   - 聞き: 鎖は、これで3本だね。……最初の3つの問いの答え、まとめてもらえる？
     figure: null
