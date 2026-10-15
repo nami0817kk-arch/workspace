@@ -207,7 +207,6 @@ sections:
         - 24日
         - 王政復古まで
       upto: 1
-    short: s1
   - 語り: そこから24日後に、王政復古です。龍馬が、もしあの夜を越えていたら。今日は、その先を掘ります。
     background:
       image: paintings/ryoma_kyoto_shijo_kamogawa_hiroshige2.jpg
@@ -615,6 +614,7 @@ sections:
   year: 1867
   lines:
   - 語り: 話を、慶応3年11月15日に戻します。福井から戻った龍馬は、風邪をひいて、近江屋の二階に移っていました。用心のために、山田藤吉が雇われていたそうです。
+    short: s2
     portrait:
       image: paintings/ryoma_portrait_standing_ueno.jpg
       caption: 坂本龍馬（立像、上野彦馬撮影とされる、1866〜67年ごろ）
@@ -622,10 +622,8 @@ sections:
     card:
       head: 11月中旬
       body: 風邪で近江屋の二階に
-    short: s2
   - 聞き: 風邪で、寝込んでたんだ。守りは、その藤吉さん一人だけ？
     tone: 疑問
-    short: s2
   - 語り: 薩摩の吉井幸輔は、薩摩藩邸に避難するよう勧めました。御陵衛士の伊東甲子太郎が、新選組と見廻組が狙っている、と告げたとも伝わります。
     background:
       image: paintings/ryoma_kyoto_map_bunkyu_1864.jpg
@@ -915,7 +913,6 @@ sections:
       image: paintings/ryoma_nakaoka_shintaro.jpg
       caption: 中岡慎太郎（1866年ごろ）
       age: false
-    short: s3
   - 人物: 「坂本さん、風邪の身で、また走り回る気か」
     who: 中岡想像
     background:
@@ -937,7 +934,6 @@ sections:
     card:
       head: ありうる
       body: 龍馬と中岡の立場は分かれる
-    short: s3
   - 語り: では、24日で何ができたか。動かせる線は、3本。土佐の山内容堂と後藤象二郎。福井の松平春嶽と三岡八郎。慶喜の側近の永井尚志です。
     background:
       image: paintings/ryoma_tosa_kuniezu_1837.jpg
@@ -1135,7 +1131,6 @@ sections:
       body: 慶喜を議定に迎える妥協案
     short: s5
   - 語り: 辞官納地に応じれば、慶喜を議定に任じ、前内大臣の待遇を認める、という案です。
-    short: s5
   - 聞き: 慶喜も、新政府に入れる道があったんだ。
   - 語り: 想像劇場、第3幕です。旧暦12月13日、薩摩藩邸。龍馬は、西郷隆盛と向き合います。この幕の可能性は、ほぼ妄想、です。
     background:
