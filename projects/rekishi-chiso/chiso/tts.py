@@ -18,6 +18,31 @@ class VoicevoxError(RuntimeError):
     pass
 
 
+ENGINE_PATHS = ("~/AppData/Local/Programs/VOICEVOX/vv-engine/run.exe",)
+
+
+def ensure_engine(url: str = "http://127.0.0.1:50021", wait: float = 90.0) -> bool:
+    """エンジンが落ちていれば、入っている場所（ENGINE_PATHS）から起動して、つながるまで待つ。起動できたら True。"""
+    import subprocess
+    import time
+    from urllib.parse import urlparse
+    host, port = urlparse(url).hostname or "127.0.0.1", urlparse(url).port or 50021
+    exe = next((Path(p).expanduser() for p in ENGINE_PATHS if Path(p).expanduser().exists()), None)
+    if exe is None or host not in ("127.0.0.1", "localhost"):
+        return False
+    subprocess.Popen([str(exe), "--host", host, "--port", str(port)], cwd=str(exe.parent),
+                     stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                     creationflags=getattr(subprocess, "DETACHED_PROCESS", 0))
+    end = time.time() + wait
+    while time.time() < end:
+        try:
+            with urllib.request.urlopen(f"{url}/version", timeout=3):
+                return True
+        except OSError:
+            time.sleep(2)
+    return False
+
+
 @dataclass
 class Voicevox:
     url: str = "http://127.0.0.1:50021"
@@ -32,6 +57,11 @@ class Voicevox:
             with urllib.request.urlopen(req, timeout=self.timeout) as res:
                 return res.read()
         except OSError as e:  # 接続できない・タイムアウト
+            # 10-15：PC の再起動でエンジンが落ちていて、書き出し・概要欄が止まった。接続を断られたときだけ、
+            # 入っている場所のエンジンを自分で起動して、1回だけやり直す
+            if getattr(e, "reason", e).__class__.__name__ in ("ConnectionRefusedError", "ConnectionResetError")                     and ensure_engine(self.url):
+                with urllib.request.urlopen(req, timeout=self.timeout) as res:
+                    return res.read()
             raise VoicevoxError(f"VOICEVOX（{self.url}）に繋がりません。エンジンを起動してください: {e}") from e
 
     def query(self, text: str, style_id: int) -> dict:
