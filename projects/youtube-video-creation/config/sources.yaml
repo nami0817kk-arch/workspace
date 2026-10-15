@@ -118,7 +118,10 @@ domains:
           # jp は日本語で移籍金・市場価値・契約年数が読める（**数字の裏取り用**）。
           # ニュースのフィードとしては死んでいる（実測: 1週間で0件）ので feeds には入れない
           transfermarkt.co.uk, transfermarkt.jp,
-          fotmob.com]
+          fotmob.com,
+          # 2026-10-15 ユーザーが挙げた。FootyStats は大会別・90分あたり・xG・パーセンタイルが取れ、小さなリーグにも強いが、
+          # 通算は2006年より前が抜ける（メッシのラ・リーガ 442試合・443得点。実際は約520試合・474得点）。通算には使わない
+          footystats.org, soccerstats.com]
 
   # 日本語の報道機関。訳す手間が要らないぶん速い
   japanese: [soccer-king.jp, footballchannel.jp, web.ultra-soccer.jp, web.gekisaka.jp,
