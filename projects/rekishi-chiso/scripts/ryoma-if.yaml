@@ -90,7 +90,7 @@ terms:
   職制案: 新政府の人事の案。尾崎三良の回想などに版が分かれて伝わる
   討幕の密勅: 慶応3年10月、薩摩宛13日付・長州宛14日付の討幕の命令。偽勅の疑い
   万国公法: 当時の国際法の本。いろは丸事件の交渉で龍馬が持ち出した
-  辞官納地: 官職と領地を朝廷に返すこと。慶喜に求められた
+  辞官納地: 官職と領地を朝廷に返すこと
   王政復古: 慶応3年12月9日（1868年1月3日）、天皇中心の政府に戻すと宣言
   見廻組: 京都の治安を守った幕府の組織。近江屋事件の有力な説
 shorts:
@@ -300,10 +300,10 @@ sections:
       head: 海援隊約規
       body: 運輸・射利・投機・開拓
   - 聞き: 船の会社と、政治の顔、両方持ってたんだ。会社でいうと、社員はいるけど、株は持ってない社長、みたいな感じかな。
-  - 語り: 4月23日、西暦の1867年5月26日。海援隊のいろは丸が、紀州藩の明光丸とぶつかって沈みます。いろは丸は160トン、明光丸は約880トン。
+  - 語り: 4月23日、西暦の1867年5月26日。海援隊のいろは丸が、紀州藩の明光丸とぶつかって沈みます。160トンと、約880トン。画面は、現在の鞆の浦です。
     background:
-      image: paintings/ryoma_irohamaru_collision_diagram.jpg
-      credit: いろは丸と明光丸の衝突の位置図（土佐藩の記録を後世に図にしたもの）
+      image: paintings/ryoma_tomonoura_masuya_modern.jpg
+      credit: Saigen Jiro 鞆の浦の旧街並み・枡屋清右衛門宅（現在の写真、2020年）
     portrait:
       image: paintings/ryoma_portrait_standing_ueno.jpg
       caption: 坂本龍馬（立像、上野彦馬撮影とされる、1866〜67年ごろ）
@@ -324,21 +324,21 @@ sections:
       - 約880トン
   - 聞き: あーし、いろは丸は名前しか知らなかったなあ。海の上の交渉だったの？
     tone: 疑問
-  - 語り: 龍馬は、万国公法を持ち出して交渉し、賠償金は、請求した8万3千両余から、7万両に減って決まりました。画面は、現在の鞆の浦の宿です。
+  - 語り: 龍馬は、万国公法を持ち出して交渉し、賠償金は、請求した8万3千両余から、7万両に減って決まりました。
     background:
-      image: paintings/ryoma_tomonoura_masuya_modern.jpg
-      credit: Saigen Jiro 鞆の浦の旧街並み・枡屋清右衛門宅（現在の写真、2020年）
+      image: paintings/ryoma_nagasaki_beato_street.jpg
+      credit: F.ベアト《長崎の町通り》1863〜65年ごろ
     figure: null
   - 聞き: 5倍以上も大きい船に当てられて、それでも、ルールで勝負したんだ。剣じゃなくて、法律で戦う人だったんだね。……でも、薩長同盟は、龍馬が成立させたんでしょ？
     tone: 疑問
-  - 語り: 薩摩と長州が手を結んだ薩長同盟で、龍馬は、長州の桂小五郎との会談に同席しました。
+  - 語り: 薩摩と長州が手を結んだ薩長同盟で、龍馬は、長州の桂小五郎との会談に同席しました。画面は、現在の石碑です。
     background:
       image: paintings/ryoma_satcho_alliance_stone_modern.jpg
       credit: ぽかぶーぶー 薩長同盟所縁之地の石碑（現在の写真、2023年）
     card:
       head: 薩長同盟 1866年
       body: 龍馬は桂小五郎との会談に同席
-  - 語り: ただ、決定的だったのは薩摩の小松帯刀だ、と書く歴史家もいます。画面は、京都にある現在の石碑です。
+  - 語り: ただ、決定的だったのは薩摩の小松帯刀だ、と書く歴史家もいます。
     portrait:
       image: paintings/ryoma_komatsu_tatewaki.jpg
       caption: 小松帯刀（1870年以前）
@@ -348,6 +348,10 @@ sections:
       body: 小松帯刀、とも
   - 聞き: 龍馬の手柄って、盛られてる部分もあるってこと？
     tone: 疑問
+    portrait:
+      image: paintings/ryoma_portrait_standing_ueno.jpg
+      caption: 坂本龍馬（立像、上野彦馬撮影とされる、1866〜67年ごろ）
+      age: false
   - 語り: あります。のちの伝記や小説が、龍馬像を大きくした、とも言われます。だからこの回は、史料に残る龍馬の言動だけを材料にします。
     background:
       image: paintings/ryoma_tosa_hiroshige_bonito.jpg
@@ -379,6 +383,10 @@ sections:
       head: 船中八策
       body: 6月9日ごろ。日付は割れる
   - 語り: 船中八策です。絵は、同じ時代の洋式帆船、咸臨丸です。
+    portrait:
+      image: paintings/ryoma_portrait_standing_ueno.jpg
+      caption: 坂本龍馬（立像、上野彦馬撮影とされる、1866〜67年ごろ）
+      age: false
   - 聞き: 8つの案、って、どんな中身なの？
     tone: 疑問
   - 語り: 政権を朝廷に返す。上下の議政所、つまり議会をつくる。人材を登用する。外交は公議で決める。新しい法典。海軍の拡張。親兵。貨幣を外国と釣り合わせる。
@@ -437,9 +445,12 @@ sections:
     tone: 疑問
   - 語り: ところが、薩摩には13日付、長州には14日付で、討幕の密勅が出ていました。偽の勅書だった疑いが濃い、といわれます。
     background:
+      image: paintings/ryoma_kyoto_nijo_castle_before1902.jpg
+      credit: 《二条城の隅櫓と石垣》1902年以前（明治の写真）
+    portrait:
       image: paintings/ryoma_doc_tobaku_micchoku_1867.jpg
-      credit: 討幕の密勅（毛利家蔵、慶応3年10月14日）
-    portrait: null
+      caption: 討幕の密勅（毛利家蔵、慶応3年10月14日付）
+      age: false
     card:
       head: 10月13日・14日付
       body: 薩長に討幕の密勅も出る
@@ -466,8 +477,8 @@ sections:
     hook: true
 - title: 龍馬が考えた新政府 職制案・福井行き・綱領八策
   background:
-    image: paintings/ryoma_kyoto_sanjo_ohashi_hiroshige_1833.jpg
-    credit: 歌川広重《東海道五十三次之内 京師 三条大橋》1833年ごろ
+    image: paintings/nene_kyoto_map_1696.jpg
+    credit: 《京都の地図》元禄9年（1696年）
   year: 1867
   lines:
   - 語り: 10月中旬ごろ、龍馬は、職制案という人事の案を作った、と伝わります。相棒は、三条家に仕えた戸田雅楽、のちの尾崎三良です。
@@ -520,13 +531,21 @@ sections:
   - 聞き: 自分で作った人事案から、自分の名前が消えてる……。誰が、いつ消したの？
   - 語り: 消した人も時期も、分かっていません。ここで語られるのが、西郷の話です。名の無いのを訝しんだ西郷に、役人嫌いの龍馬は、「世界の海援隊」をやる、と答えたそうです。
     background:
-      image: paintings/ryoma_nagasaki_beato_panorama.jpg
-      credit: F.ベアト《長崎の部分パノラマ》1867〜68年
+      image: paintings/ryoma_satsuma_hiroshige_bonoura.jpg
+      credit: 歌川広重《六十余州名所図会 薩摩 坊ノ浦 双剣石》1856年
+    portrait:
+      image: paintings/yoshinobu_saigo_takamori.jpg
+      caption: 西郷隆盛（肖像画）
+      age: false
   - 語り: ただし、この話が本に見えるのは、龍馬の死の47年後、1914年の本です。裏付けは弱く、説として聞いてください。
     card:
       head: 「世界の海援隊」
       body: 説。初出は1914年
   - 聞き: 本当なら、龍馬は最初から、政府の外に出るつもりだった、ってことだよね。でも、説なんだ。
+    portrait:
+      image: paintings/ryoma_portrait_standing_ueno.jpg
+      caption: 坂本龍馬（立像、上野彦馬撮影とされる、1866〜67年ごろ）
+      age: false
   - 語り: もう一つ、龍馬は財政も考えました。10月24日、西暦の1867年11月19日に、京都を出て福井へ向かいます。謹慎中の三岡八郎と、新政府の財政を話し合った、と伝わります。
     background:
       image: paintings/ryoma_kyoto_arashiyama_hiroshige.jpg
@@ -541,7 +560,7 @@ sections:
       bounds:
       - 135.0
       - 137.4
-      - 34.5
+      - 34.2
       - 36.6
       places:
       - - 京都
@@ -559,25 +578,25 @@ sections:
       note: 10月24日に出発し、11月5日に戻る
   - 語り: 三岡は、福井藩で藩札を出して成功した人です。紙幣の発行を提案した、という話です。
     background:
-      image: paintings/ryoma_kyoto_sanjo_ohashi_hiroshige_1848.jpg
-      credit: 歌川広重《東海道五十三次 京 三条大はし》1848年ごろ
+      image: paintings/ryoma_kyoto_shijo_kamogawa_hiroshige2.jpg
+      credit: 二代歌川広重《諸国名所百景 京都四条夕涼み》1860年ごろ
     portrait: null
     figure: null
   - 聞き: 刀や兵より先に、お金の設計を考えてたんだ。それで、龍馬の自筆は残ってないの？
     tone: 疑問
-  - 語り: 残っています。福井から戻ったあとの11月に書いた、新政府綱領八策。自筆が2枚、いまも残っています。
+  - 語り: 残っています。福井から戻ったあとの11月に書いた、新政府綱領八策。自筆が2枚、いまも残っています。画面は、約1年前に姉へ書いた手紙です。
     background:
       image: paintings/ryoma_doc_letter_1867.jpg
       credit: 坂本龍馬 姉・乙女宛の手紙 1867年1月（京都国立博物館蔵）
     card:
       head: 新政府綱領八策
       body: 11月。自筆が2枚残る
-  - 語り: 署名は、実名の直柔です。画面は、約1年前、慶応2年12月に姉へ書いた手紙です。
+  - 語り: 署名は、実名の直柔です。手紙は、慶応2年12月のものです。
   - 聞き: 署名が本名だと、ほんとに龍馬が書いたって感じがするね。
   - 語り: 「自ら盟主となり」の主語が、伏せ字になっています。誰かは、慶喜、容堂、春嶽などの説があり、定説はありません。人名の名簿も、ありません。
     background:
-      image: paintings/ryoma_kyoto_sanjo_ohashi_hiroshige_1848.jpg
-      credit: 歌川広重《東海道五十三次 京 三条大はし》1848年ごろ
+      image: paintings/yoshinobu_kimbei_nijo_castle.jpg
+      credit: 日下部金兵衛《二条城》1890年ごろ（明治の写真）
     card:
       head: 伏せ字の主語
       body: ○○○は定説なし
@@ -591,8 +610,8 @@ sections:
     hook: true
 - title: 11月15日の夜 近江屋の二階
   background:
-    image: paintings/ryoma_kyoto_sanjo_ohashi_hiroshige_1848.jpg
-    credit: 歌川広重《東海道五十三次 京 三条大はし》1848年ごろ
+    image: paintings/ryoma_kyoto_nijo_castle_before1902.jpg
+    credit: 《二条城の隅櫓と石垣》1902年以前（明治の写真）
   year: 1867
   lines:
   - 語り: 話を、慶応3年11月15日に戻します。福井から戻った龍馬は、風邪をひいて、近江屋の二階に移っていました。用心のために、山田藤吉が雇われていたそうです。
@@ -701,7 +720,6 @@ sections:
       - - 紀州藩の報復説
         - 説
         - いろは丸の恨み
-      upto: 1
   - 語り: 口上書によると、佐々木只三郎ら7人が近江屋へ向かい、4人が実行、2人が見張りでした。
     figure:
       type: stats
@@ -716,7 +734,6 @@ sections:
       - - 紀州藩の報復説
         - 説
         - いろは丸の恨み
-      upto: 1
   - 語り: 動機は、寺田屋で龍馬が同心を撃ったことへの報復、という話です。画面は、現在の寺田屋です。
     background:
       image: paintings/ryoma_fushimi_teradaya_modern.jpg
@@ -734,10 +751,9 @@ sections:
       - - 紀州藩の報復説
         - 説
         - いろは丸の恨み
-      upto: 1
   - 聞き: ほぼ決まりじゃないの？ 本人が話してるんでしょ？
     tone: 疑問
-  - 語り: そこが難しいのです。今井の話は、誇張だとする見方があり、菊地明さんは、生きている人をかばう嘘だった可能性を挙げます。元見廻組の渡辺篤の系図とは、人数も鞘の持ち主も食い違います。
+  - 語り: そこが難しいのです。今井の話は、誇張だとする見方があり、菊地明さんは、生きている人をかばう嘘の可能性を挙げます。元見廻組の渡辺篤の系図とは、人数も鞘の持ち主も食い違います。
     background:
       image: paintings/ryoma_kyoto_map_bunkyu_1864.jpg
       credit: 竹原好兵衛《文久改正新撰都之図》1864年（フランス国立図書館蔵）
@@ -757,7 +773,6 @@ sections:
       - - 紀州藩の報復説
         - 説
         - いろは丸の恨み
-      upto: 1
   - 聞き: 本人の証言が、いちばん怪しいなんて。……そういえば、新選組が犯人、っていう話も聞くけど、そっちは？
     tone: 疑問
   - 語り: ふたつ目は、新選組説です。中岡が、新選組だと言ったと伝わり、土佐の寺村左膳の日記や、大久保利通の書状にも、新選組を疑う記述があります。近藤勇は、否定しています。
@@ -875,8 +890,8 @@ sections:
   - 人物: 「戦で決めれば、また血が流れる。わしは、話し合いの席を、ぎりぎりまで探す」
     who: 龍馬想像
     background:
-      image: paintings/ryoma_kyoto_sanjo_ohashi_hiroshige_1833.jpg
-      credit: 歌川広重《東海道五十三次之内 京師 三条大橋》1833年ごろ
+      image: paintings/nene_kyoto_map_1696.jpg
+      credit: 《京都の地図》元禄9年（1696年）
     portrait:
       image: paintings/ryoma_portrait_standing_ueno.jpg
       caption: 坂本龍馬（立像、上野彦馬撮影とされる、1866〜67年ごろ）
@@ -977,8 +992,8 @@ sections:
     tone: しみじみ
   - 語り: 想像です。龍馬は、福井と土佐と永井のあいだを走り、容堂の入京までに、話をつなぎます。可能性は、ありうる、です。
     background:
-      image: paintings/ryoma_kyoto_sanjo_ohashi_hiroshige_1833.jpg
-      credit: 歌川広重《東海道五十三次之内 京師 三条大橋》1833年ごろ
+      image: paintings/ryoma_kyoto_arashiyama_hiroshige.jpg
+      credit: 歌川広重《六十余州名所図会 山城 嵐山渡月橋》1853年
     card:
       head: ありうる
       body: 容堂の入京前に線をつなぐ
@@ -1010,6 +1025,7 @@ sections:
     card:
       head: 旧11月29日（12月24日）
       body: 島津茂久が上洛
+    year: 1867
   - 聞き: 兵は、もう動いてたんだ。3,000人の計画って、かなり本気じゃん。
   - 語り: 大久保と西郷は、武力倒幕で藩論をまとめ、12月9日へ進みました。龍馬が薩摩藩邸にいても、この流れは止まりません。可能性は、ありうる、です。
     portrait:
@@ -1019,6 +1035,7 @@ sections:
     card:
       head: ありうる
       body: 政変そのものは止まらない
+    year: 1868
   - 聞き: 止められないなら、龍馬がいても意味ない？
     tone: 疑問
     portrait: null
@@ -1039,7 +1056,6 @@ sections:
       labels:
       - 400万石
       - 200万石
-    year: 1867
   - 聞き: 半分にまけてもらった、ってことだね。春嶽たちのおかげで。小御所会議、名前は聞いたことあるけど、その日のうちに決まっちゃったのか。
   - 語り: 想像劇場、第2幕です。旧暦12月8日の夜、京都の土佐藩邸。辞官納地が決まる前の晩に、龍馬が、後藤象二郎を訪ねます。この幕の可能性は、ほぼ妄想、です。
     background:
@@ -1070,8 +1086,8 @@ sections:
   - 人物: 「慶喜公の顔も立つ。薩摩も呑める。それが、取引じゃ」
     who: 龍馬想像
     background:
-      image: paintings/ryoma_kyoto_nijo_castle_before1902.jpg
-      credit: 《二条城の隅櫓と石垣》1902年以前（明治の写真）
+      image: paintings/ryoma_tosa_kuniezu_1837.jpg
+      credit: 江戸の絵図師《天保国絵図 土佐国》1837年（国立公文書館蔵）
     portrait:
       image: paintings/ryoma_portrait_standing_ueno.jpg
       caption: 坂本龍馬（立像、上野彦馬撮影とされる、1866〜67年ごろ）
@@ -1100,8 +1116,8 @@ sections:
     hook: true
   - 語り: では、その先の戦争は、避けられたのでしょうか。
     background:
-      image: paintings/yoshinobu_osaka_palace_butt_1868.jpg
-      credit: J.H.バット《Tycoon's Palace, Osaka》1868年1月（水彩）
+      image: paintings/yoshinobu_kaiyo_maru_konb_4519.jpg
+      credit: 開陽丸の石版画（1866年）
     hook: true
 - title: 想像③ 12月13日の薩摩藩邸 戊辰戦争は起きたか
   background:
@@ -1135,13 +1151,13 @@ sections:
       image: paintings/yoshinobu_saigo_takamori.jpg
       caption: 西郷隆盛（肖像画）
       age: false
-  - 人物: 「西郷さん、約束は文にしてくれ。口だけでは、大坂の兵が信じん」
+  - 人物: 「西郷さん、約束は文にしてくれ。口だけでは、慶喜公の兵が信じん」
     who: 龍馬想像
     portrait:
       image: paintings/ryoma_portrait_standing_ueno.jpg
       caption: 坂本龍馬（立像、上野彦馬撮影とされる、1866〜67年ごろ）
       age: false
-  - 人物: 「考えておきもす。ただし、大坂の兵が動かぬ間は、じゃ」
+  - 人物: 「考えておきもす。ただし、慶喜公の兵が動かぬ間は、じゃ」
     who: 西郷想像
     background:
       image: paintings/ryoma_kyoto_nijo_castle_before1902.jpg
@@ -1175,8 +1191,8 @@ sections:
     short: s5
   - 語り: 想像です。龍馬が京都にいても、江戸の焼き討ちは止められません。大坂の兵が上京する流れも、変わりません。
     background:
-      image: paintings/yoshinobu_toba_fushimi_screen.jpg
-      credit: 鳥羽伏見の戦いの黒白図（1868年）
+      image: paintings/yoshinobu_toba_koedabashi.jpg
+      credit: 小枝橋の写真（鳥羽、1867年）
     short: s5
   - 語り: 鳥羽・伏見の戦いは、近江屋の夜から48日目に、起きます。可能性は、ありうる、です。
     card:
@@ -1208,15 +1224,15 @@ sections:
     tone: 疑問
   - 語り: ただし加来さんは、龍馬の功績は過大評価で、歴史学の見解としては、日本史にさほど影響しなかった、とも書いています。
     background:
-      image: paintings/yoshinobu_osaka_palace_butt_1868.jpg
-      credit: J.H.バット《Tycoon's Palace, Osaka》1868年1月（水彩）
+      image: paintings/yoshinobu_tokugawa_warships_shinagawa.png
+      credit: 小杉雅之進 幕府軍艦八隻の品川沖出帆の図（1868年）
     card:
       head: 歴史学の見方
       body: 影響は大きくなかった、とも
   - 語り: 生きていたら歴史が変わった、という見方は、研究者が支持しない可能性が高いものです。戊辰戦争が起きない世界は、可能性は、ほぼ妄想、です。材料は人の評価だけで、事実の足場がありません。
     background:
-      image: paintings/yoshinobu_toba_fushimi_screen.jpg
-      credit: 鳥羽伏見の戦いの黒白図（1868年）
+      image: paintings/yoshinobu_toba_aizu_fushimi.jpg
+      credit: 会津藩兵、伏見に上陸（1868年1月）
     card:
       head: ほぼ妄想
       body: 戊辰戦争が起きない世界
@@ -1240,7 +1256,7 @@ sections:
       head: ここから想像
       body: 人物の運命表
   - 聞き: 誰がどうなるのか、一覧で見られるんだ。
-  - 語り: 1人目は、龍馬本人。史実では、近江屋で亡くなりました。もしもは、政府の中か外か、二つに割れます。
+  - 語り: 1人目は、龍馬本人。史実では、龍馬は近江屋で亡くなりました。もしもは、政府の中か外か、二つに割れます。
     background:
       image: paintings/ryoma_nagasaki_beato_boats_river.jpg
       credit: F.ベアト《長崎の川の舟》1865年ごろ
@@ -1287,7 +1303,7 @@ sections:
       upto: 1
   - 語り: 中なら、尾崎の一部の版の職制案が、参議に名を入れた道です。外なら、約規に射利を掲げた、海運と商いの道です。可能性は、どちらも、ありうる、です。
   - 聞き: 中か外か、どっちもありそう。惜しい、決め手がないんだ。
-  - 語り: 2人目は、中岡慎太郎。もしもは、生き残って、倒幕を訴え続けます。前提は、先ほど足した仮定です。可能性は、ありうる、です。
+  - 語り: 2人目は、中岡慎太郎。もしもは、生き残って、倒幕を訴え続けます。先ほど足した仮定が、前提です。可能性は、ありうる、です。
     background:
       image: paintings/ryoma_kyoto_nijo_castle_before1902.jpg
       credit: 《二条城の隅櫓と石垣》1902年以前（明治の写真）
@@ -1428,7 +1444,7 @@ sections:
     background:
       image: paintings/ryoma_satsuma_hiroshige_bonoura.jpg
       credit: 歌川広重《六十余州名所図会 薩摩 坊ノ浦 双剣石》1856年
-  - 語り: 残りの3人は、表のとおりです。後藤象二郎は、龍馬が間に入っても、小御所会議の結論は変わりません。
+  - 語り: 残りの3人は、表のとおりです。参与は、新政府の実務を担う役職です。画面は、現在の高知城です。
     background:
       image: paintings/ryoma_kochi_castle_kurogane_gate_modern.jpg
       credit: Drivephotographer 高知城・黒鉄門（現在の写真、2022年）
@@ -1473,7 +1489,7 @@ sections:
         - ありうる
       note: もしもは想像。右の札は可能性の高さ
       upto: 5
-  - 語り: 参与は、新政府の実務を担う役です。可能性は、ありうる、です。画面は、現在の高知城です。
+  - 語り: 後藤象二郎は、龍馬が間に入っても、小御所会議の結論は変わりません。可能性は、ありうる、です。
   - 聞き: 三岡って、お金の人なんだ。龍馬が福井で会った人だよね。
   - 語り: 三岡八郎は、福井藩で財政を担った人です。登用は変わりません。龍馬の手引きが早めたかは、確かめられていません。可能性は、高い、です。
     background:
@@ -1680,8 +1696,8 @@ sections:
   - 聞き: 取引の案は面白いけど、材料が足りないなあ。
   - 語り: 戊辰戦争は、想像でも、起きます。江戸の焼き討ちを、龍馬は止められないからです。可能性は、ありうる、です。
     background:
-      image: paintings/yoshinobu_toba_fushimi_screen.jpg
-      credit: 鳥羽伏見の戦いの黒白図（1868年）
+      image: paintings/yoshinobu_toba_koedabashi.jpg
+      credit: 小枝橋の写真（鳥羽、1867年）
     figure:
       type: table
       title: 日本の変化点（史実ともしも）
@@ -1833,10 +1849,10 @@ sections:
         - 中か外か
         - ありうる
       upto: 1
-  - 語り: 2つ目。戊辰戦争は、起きなかったのか。想像では、起きます。江戸の焼き討ちも、大坂の兵の上京も、龍馬の手が届きません。起きなかった世界の可能性は、ほぼ妄想、です。
+  - 語り: 2つ目。戊辰戦争は、起きずに済んだのか。想像では、起きます。江戸の焼き討ちも、大坂の兵の上京も、龍馬の手が届きません。起きなかった世界の可能性は、ほぼ妄想、です。
     background:
-      image: paintings/yoshinobu_toba_fushimi_screen.jpg
-      credit: 鳥羽伏見の戦いの黒白図（1868年）
+      image: paintings/yoshinobu_toba_aizu_fushimi.jpg
+      credit: 会津藩兵、伏見に上陸（1868年1月）
     figure:
       type: stats
       title: 3つの問いの答え（想像）
