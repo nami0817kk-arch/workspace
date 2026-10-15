@@ -24,6 +24,7 @@ from pathlib import Path
 SCOPES = [
     "https://www.googleapis.com/auth/youtube.upload",
     "https://www.googleapis.com/auth/youtube.force-ssl",     # 字幕・概要欄の直し・再生リスト・英語の題名（videos.update）
+    "https://www.googleapis.com/auth/yt-analytics.readonly",  # 10-15：再生・視聴時間・流入元をAPIで読む（読み取りのみ）。表示回数・クリック率はAPIに無い
 ]
 # 再生リスト（playlists.insert・playlistItems.insert）と videos.update はどちらかが要る。
 # force-ssl で足りるので youtube は求めない（足すと今の許可の更新が invalid_scope で落ちる）

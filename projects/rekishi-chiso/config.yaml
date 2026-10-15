@@ -216,6 +216,15 @@ roles:
     max_intonation: 1.3
     max_speed: 1.0
 
+  慶喜の言葉:                # 10-15。慶喜の記録に伝わる言葉（慶喜IF の「では、打ち立つぞ」）。字幕の札は「伝わる言葉」。声は徳川慶喜（上表の一節）と同じ
+    label: 徳川慶喜（伝わる言葉）
+    name: 玄野武宏
+    style_id: 11
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
   慶喜想像:                  # 10-15。Bの慶喜IFの想像のセリフ。徳川慶喜（記録）と同じ声の玄野武宏
     label: 徳川慶喜（想像）
     name: 玄野武宏
