@@ -252,6 +252,22 @@ class ShortPainter(Painter):
             dr.text((W / 2, y + 200), card_head(state.card.head), font=self.font("gothic", 48), fill=GOLD, anchor="mt")
             if state.card.body:
                 dr.text((W / 2, y + 275), state.card.body, font=self.font("serif", 52), fill=INK, anchor="mt")
+        badge = getattr(self.script, "shorts_badge", "")
+        if badge:                                   # B作品（if）：「もしもの話」の札を肖像・図の左上に斜めに貼る（10-15）
+            img = img.convert("RGBA")
+            bf = self.font("gothic", 56, bold=True)
+            bw, bh = int(bf.getlength(badge)) + 64, 96
+            lay = Image.new("RGBA", (bw + 40, bh + 40), (0, 0, 0, 0))
+            ld = ImageDraw.Draw(lay)
+            ld.rounded_rectangle([20, 20, 20 + bw, 20 + bh], radius=12, fill=(205, 30, 40, 255),
+                                 outline=(255, 255, 255, 255), width=6)
+            ld.text((20 + bw // 2, 20 + bh // 2 + 2), badge, font=bf, fill=(255, 255, 255, 255), anchor="mm",
+                    stroke_width=2, stroke_fill=(110, 0, 10, 255))
+            sh = Image.new("RGBA", lay.size, (0, 0, 0, 0))
+            sh.paste((0, 0, 0, 140), (7, 7), lay.split()[3])
+            lay = Image.alpha_composite(sh, lay).rotate(8, expand=True, resample=Image.BICUBIC)
+            img.alpha_composite(lay, (28, y + 40))
+            dr = ImageDraw.Draw(img, "RGBA")
         names = [f"VOICEVOX:{n}" for n in people.credit_names(self.config, self.script)]
         cf = self.font("serif", 24)
         for i, row in enumerate(credit_rows(names, cf, W - 80)):
