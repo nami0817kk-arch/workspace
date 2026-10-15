@@ -21,7 +21,7 @@ playlists: [日本史を掘る（聞き流し）, 戦国時代を掘る]
 shorts_playlists: [日本史ショート]
 tags: [黒田官兵衛, 官兵衛, 黒田孝高, 黒田如水, 有岡城, 備中高松城, 中国大返し, 城井谷, 石垣原の戦い, 関ヶ原の戦い, 黒田家譜, 軍師, 戦国時代, 日本史, 歴史, 歴史解説, 歴史の地層]
 en:
-  title: "Kuroda Kanbei: The 'Your Luck Is Opening' Line Is the Form Edo-Period Books Gave It"
+  title: "Kuroda Kanbei: The 'Your Luck Is Opening' Line Is the Wording Found in Edo-Period Books"
   description: |-
     When news of the Honnoji Incident reached Hideyoshi's camp in 1582, Kuroda Kanbei is said to have remarked that his luck was about to open. That exact form of the line appears in Edo-period books such as the Rojin Zatsuwa and the Kuroda Kafu; the Kuroda Kafu itself was completed in 1688, about 84 years after his death. According to Wikipedia's summary, earlier records such as the Mori family documents say he spoke of having gained heaven's protection, and that everything would now go as he wished. The wording differs from book to book.
     This video digs into Kanbei's life from the small Himeji outpost of the Kodera retainers to his death in the 9th year of Keicho, and separates what records show from what later books and missionary accounts say: the year in the Arioka Castle prison (the "dungeon" and the leg injury come from later books), the flooding of Takamatsu Castle (no source confirms he proposed it), the Great Return from Bitchu, the 120,000-koku fief in Buzen compared with his neighbours, the Kii Valley fight in which his son Nagamasa's assault was repulsed and the banquet killing of Kii Shigefusa (how far Kanbei was involved is disputed), his tonsure, the separate war he fought in Kyushu during Sekigahara and the letter to Kikkawa Hiroie that is read in different ways, and his very detailed will.
@@ -83,14 +83,14 @@ shorts:
     lead: "天正15年の夏、九州の国分け。官兵衛に与えられたのは、豊前6郡です。いまの福岡県東部から、大分県北部にあたります。"
     tags: [黒田官兵衛, 九州平定, 豊前, 歴史の地層]
   s4:
-    title: "豊前の城井谷／長政の敗北"
+    title: "豊前の城井谷／黒田軍の力攻め"
     yt_title: "黒田軍は城井谷で負けた？｜豊前の領主・城井鎮房と長政の力攻め"
     hook: "豊前の城井谷で、／黒田軍の力攻めが／退けられた？"
     tease: "じゃあ、官兵衛はそのあと、／どんな作戦に切り替えた？"
     lead: "豊前には、地元の領主、城井鎮房がいました。秀吉は鎮房に国替えを命じますが、鎮房は拒み、天正15年、山あいの城井谷城に立てこもります。"
     tags: [城井谷, 城井鎮房, 黒田官兵衛, 歴史の地層]
   s5:
-    title: "関ヶ原の2日前／九州の戦い"
+    title: "関ヶ原の2日前／九州では"
     yt_title: "黒田官兵衛は関ヶ原の裏で九州の別の戦いをしていた？｜石垣原の戦い"
     hook: "関ヶ原の2日前、／九州でも戦があった？"
     tease: "じゃあ、官兵衛の九州の戦いを／終わらせたのは、何だった？"
@@ -222,7 +222,7 @@ sections:
         portrait: null
       - 聞き: 閉じ込められた官兵衛って、土牢で、頭に瘡ができて、足が悪くなった、っていう話を聞いたことある。
         short: s2
-      - 語り: その話の出どころは、『黒田家譜』です。土牢で長く幽閉され、頭に瘡ができた、と書きます。ただ、秀吉が小寺休夢に送った手紙には、官兵衛は本丸にいたと読める記述があります。
+      - 語り: 土牢と瘡の話の出どころは、『黒田家譜』です。土牢で長く幽閉され、頭に瘡ができた、と書きます。ただ、秀吉が小寺休夢に送った手紙には、官兵衛は本丸にいたと読める記述があります。
         background: {image: paintings/kanbei_settsu_kuniezu.jpg, credit: "《慶長国絵図 摂津国》1605年ごろ（西宮市立郷土資料館蔵）"}
         card: {head: 後世の話, body: 土牢・頭の瘡は『黒田家譜』の話}
         short: s2
@@ -281,17 +281,17 @@ sections:
       - 語り: 「ご運が開く」という形は、『老人雑話』『明良洪範』『黒田家譜』など、江戸時代の書に出てきます。ウィキペディアが引く形は、ご運のひらけさせたまうべき時が来た、です。
         background: {image: paintings/kanbei_takamatsu_flood_triptych.jpg, credit: "歌川国芳《赤松の城水攻之図》三枚続（1860年代ごろ）"}
         card: {head: 江戸の書の形, body: 『黒田家譜』は死の約84年後}
-        figure: {type: stats, title: 同じ場面の官兵衛の言葉, items: [[ご運が開く, 江戸時代の書, 老人雑話・明良洪範・黒田家譜], [天の加護を得た, 早い時期の記録, 毛利家文書・當代記]], upto: 1}
+        figure: {type: stats, title: 同じ場面の官兵衛の言葉, items: [[ご運が開く, 江戸時代の書, 老人雑話・明良洪範・黒田家譜], [天の加護を得た, ウィキペディアが挙げる早い記録, 毛利家文書・當代記]], upto: 1}
       - 語り: ウィキペディアの整理では、『毛利家文書』や『當代記』など、早い時期の記録も、この場面の官兵衛の言葉を伝えています。
         background: {image: paintings/akechi_honnoji_nobukazu_1896.jpg, credit: "楊斎延一《本能寺焼討之図》1896年"}
         card: {head: 早い時期の記録, body: 「天の加護を得た」の趣旨}
-        figure: {type: stats, title: 同じ場面の官兵衛の言葉, items: [[ご運が開く, 江戸時代の書, 老人雑話・明良洪範・黒田家譜], [天の加護を得た, 早い時期の記録, 毛利家文書・當代記]], upto: 2}
+        figure: {type: stats, title: 同じ場面の官兵衛の言葉, items: [[ご運が開く, 江戸時代の書, 老人雑話・明良洪範・黒田家譜], [天の加護を得た, ウィキペディアが挙げる早い記録, 毛利家文書・當代記]], upto: 2}
       - 語り: 趣旨は、「天の加護を得た。これで何事も思いのままになった」です。
       - 聞き: じゃあ、どっちが本当の言葉なの？ 同じ場面なのに、形がちがうよ。
         tone: 疑問
       - 語り: 一字一句、どの形が本当かは、分かっていません。ただ、同じ場面でも、書かれた本によって、言葉の形が違うことは、見えてきます。
         figure: null
-      - 聞き: あの名セリフの形は、本によって違うのか。同じ場面でも、書く人しだいで、言葉は変わるんだなあ。
+      - 聞き: どの本で読むかで、覚える言葉が変わっちゃうね。
       - 語り: 本能寺で信長を討ったのは、明智光秀です。秀吉は、毛利と急いで和睦し、光秀を討つために、引き返しました。中国大返しです。
         background: {image: paintings/hideyoshi_banshu_departure_sadahide.jpg, credit: "歌川貞秀《真柴久吉播州発向之図》19世紀（名を変えて描いた秀吉）"}
         card: {head: 中国大返し, body: 毛利と和睦し、光秀を討つため引き返す}
@@ -548,12 +548,12 @@ sections:
         card: {head: 3つ目の層, body: 後の逸話集}
         figure: {type: people, title: 官兵衛の像をつくった層, nodes: [[黒田官兵衛, 三つの層で語られた人], [黒田家譜, 黒田家の本], [宣教師の記録, 信仰の側から], [後の逸話集, 野心の側から]], edges: [[黒田官兵衛, 黒田家譜, 土牢・頭の瘡], [黒田官兵衛, 宣教師の記録, 洗礼・遺言], [黒田官兵衛, 後の逸話集, 100万石・野心]]}
       - 聞き: ヒーローにも、悪役にもできる話ばっかりだったのか。層ごとに、官兵衛の顔がちがうね。
-      - 語り: 冒頭の問いに戻ります。「ご運が開く」は、江戸の書の形です。ウィキペディアの整理では、早い時期の記録の形は「天の加護」です。
-      - 語り: 同じ場面でも、書かれた本によって、言葉の形が違ったのです。
+      - 語り: 冒頭の問いに戻ります。「ご運が開く」の形は、『黒田家譜』などの江戸の書にあります。
+      - 語り: ウィキペディアの整理では、早い時期の記録の形は「天の加護」。同じ名セリフでも、開く本で形が変わります。
         figure: null
         background: {image: paintings/akechi_honnoji_nobukazu_1893.jpg, credit: "楊斎延一《本能寺焼討之図》1893年"}
         card: {head: 冒頭の問い, body: 名セリフの形は、本によって違う}
-      - 聞き: あの名セリフも、層が違えば、形が違ったのか。どの本で読むかで、覚える言葉が変わっちゃうね。
+      - 聞き: 冒頭の問いが、ここで一周したね。名セリフにも、層ごとに別の顔があるのか。
       - 語り: では、層の下にある、記録で言える官兵衛は、どんな人だったのか。
         background: {image: paintings/kanbei_itami_town_map.jpg, credit: "《寛文九年 伊丹郷町絵図》1669年（有岡城跡のあたり）"}
       - 聞き: 播磨の小さな出城の家老で、織田につく道を選んで、有岡城に説得に入って、約1年、閉じ込められた人。だよね？
