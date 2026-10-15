@@ -123,6 +123,23 @@ domains:
           # 通算は2006年より前が抜ける（メッシのラ・リーガ 442試合・443得点。実際は約520試合・474得点）。通算には使わない
           footystats.org, soccerstats.com]
 
+  # 公的な書類・公的なデータ（2026-10-15 ユーザー「足そう！」。クラブの財政の回の主力の出典なのに網に無く、
+  # 確度の上限が空になっていた）。**書類そのもの**が一次情報なので確定まで置ける。
+  # SEC は米国上場クラブ（マンU）の 20-F、Companies House は英国法人の決算書、ECB は為替の公式レート
+  filings: [www.sec.gov, sec.gov, find-and-update.company-information.service.gov.uk,
+            beta.companieshouse.gov.uk, www.ecb.europa.eu, ecb.europa.eu]
+
+  # 参照・調査の出典（同日）。**二次の資料なので報道止まり**。Wikipedia はクラブ紹介（基礎DATA・登録選手・結果）の
+  # 土台、Wikidata は日本語名、Commons は写真とその権利、Deloitte は Football Money League（収益の順）、
+  # web.archive.org は消えた原本の保存、frankfurter は ECB の為替の集約
+  reference: [en.wikipedia.org, ja.wikipedia.org, es.wikipedia.org, de.wikipedia.org, it.wikipedia.org,
+              fr.wikipedia.org, www.wikidata.org, commons.wikimedia.org,
+              www.deloitte.com, www2.deloitte.com, web.archive.org, api.frankfurter.app, api.frankfurter.dev]
+
+  # 愛好家が集めた資料（同日）。ユニフォームの過去・スタジアムの案内。**裏が取れるまで未確認止まり**
+  enthusiast: [www.historicalkits.co.uk, historicalkits.co.uk, www.footballgroundguide.com,
+               footballgroundguide.com]
+
   # 日本語の報道機関。訳す手間が要らないぶん速い
   japanese: [soccer-king.jp, footballchannel.jp, web.ultra-soccer.jp, web.gekisaka.jp,
              theworldmagazine.jp, football-tribe.com, sportiva.shueisha.co.jp,
@@ -372,6 +389,9 @@ domain_tiers:
   japanese: 報道
   aggregator: 報道
   stats: 報道
+  filings: 確定
+  reference: 報道
+  enthusiast: 未確認
   german: 報道
   italian: 報道
   french: 報道

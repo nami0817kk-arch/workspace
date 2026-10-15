@@ -164,3 +164,8 @@
 - 移籍の深掘りで、クラブが公表しない額を何で補っているか（回ごとで一律でない）
 - セリエA版のクラブ紹介の道具・出典（`tools/clubleague.py` に未登録）
 - 随時シリーズ（監督の経歴・代表紹介・仕組みの解説）の「写真の出どころ」の標準（道具が無く回ごとに違う）
+
+## 5. 2026-10-15 の対応（ユーザー「足そう！」）
+- **確度の群を3つ足した**（`config/sources.yaml`）。`filings`（SEC・Companies House・ECB。書類そのものが一次なので**確定まで**）／`reference`（Wikipedia・Wikidata・Commons・Deloitte・web.archive.org・frankfurter。二次の資料なので**報道止まり**）／`enthusiast`（historicalkits・footballgroundguide。**未確認止まり**）
+- 統計サイトの群に **FootyStats・SoccerSTATS** を足した（報道止まり。FootyStats の通算は2006年より前が抜けるので通算には使わない）
+- これで、財政・クラブ紹介・ユニフォームの回の主力の出典に対して、`draft` が確度の上限を判定できる
