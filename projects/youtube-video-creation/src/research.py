@@ -916,6 +916,9 @@ NEW_CARD_KEYS = {
     "timeline": _cards.TIMELINE_KEYS,
     # 2026-10-15（文書カード）。公式声明・規則・本人の言葉の原文を紙の地で出す
     "document": _cards.DOCUMENT_KEYS,
+    # 2026-10-15（対面カード）。左右の顔写真・名前の色帯・項目名・左右の値
+    "duel": _cards.DUEL_KEYS,
+    "shelf": _cards.DUEL_KEYS,         # タイトル棚（トロフィーの絵＋個数）。形は対面カードと同じ
 }
 
 
@@ -993,6 +996,13 @@ def _check_number_card(section: Section, card: dict, kind: str) -> list[str]:
         problems += [f"{section.id}: {p}" for p in cards_mod.check_convert(card)]
     elif kind == "document":
         problems += [f"{section.id}: {p}" for p in cards_mod.check_document(card)]
+    elif kind in ("duel", "shelf"):
+        problems += [f"{section.id}: {p}" for p in (cards_mod.check_shelf(card) if kind == "shelf"
+                                                    else cards_mod.check_duel(card))]
+        for side_name in ("left", "right"):
+            photo = str((card.get(side_name) or {}).get("photo") or "").strip() if isinstance(card.get(side_name), dict) else ""
+            if photo and not _resolve(photo).exists():
+                problems.append(f"{section.id}: duel の {side_name} の顔写真がありません: {photo}")
     elif kind in ("line", "waterfall", "timeline"):
         # 2026-10-08。上限を超えた項目数・数でない値・知らない focus/highlight は、
         # 書き出しの途中ではなくここで止める（落ちる条件は cards の側と同じ）
@@ -2124,7 +2134,7 @@ def _has_count_table(section: Section) -> bool:
     # 判定表・数字の板・計算の式・散らばり図・換算の板（2026-10-07）と
     # 折れ線・増減の内訳・年表（2026-10-08）も自分で数えた表に数える
     if str(card.get("type", "")).lower() in ("table", "bars", "verdict", "stats", "calc", "scatter",
-                                             "convert", "line", "waterfall", "timeline"):
+                                             "convert", "line", "waterfall", "timeline", "duel", "shelf"):
         return True
     return any(isinstance(c, dict) and c for c in section.line_cards)
 

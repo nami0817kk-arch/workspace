@@ -11,13 +11,15 @@ from __future__ import annotations
 import hashlib
 from pathlib import Path
 
+import re
+
 from PIL import Image, ImageDraw, ImageFont
 
 TEAM_SIZES = (46, 42, 38, 34, 30, 26, 22)
 
 CARD_TYPES = ("quote", "transfer", "score", "points", "bars", "table", "reactions", "kit",
               "stats", "verdict", "calc", "versus", "scatter", "convert",
-              "line", "waterfall", "timeline", "document")
+              "line", "waterfall", "timeline", "document", "duel", "shelf")
 # **画面いっぱいの絵になる型**（2026-10-07）。板（カード）ではなく、写真の下地の代わりに敷く。
 # render.py は板と同じ扱い（上に節の名前・見出し・ほかのカードを重ねない）で描く
 FULL_SCREEN_TYPES = ("versus",)
@@ -108,6 +110,8 @@ def row_count(spec: dict) -> int:
         return min(TIMELINE_ROWS_MAX, len(timeline_rows(spec)))
     if kind == "document":
         return len(document_paragraphs(spec))
+    if kind in ("duel", "shelf"):
+        return min(DUEL_ROWS_MAX, len(duel_rows(spec)))
     return 0
 
 
@@ -298,6 +302,8 @@ def render(spec: dict, width: int, font_path: str, out_path: Path,
         "waterfall": _waterfall,
         "timeline": _timeline,
         "document": _document,
+        "duel": _duel,
+        "shelf": lambda *a, **k: _duel(*a, icon=True, **k),
     }[kind]
     blocks = builder(spec, width, font_path, latin_font_path or font_path, slot)
 
@@ -2282,7 +2288,9 @@ def _convert_down(values: list[dict], vias: list[str], n: int, width: int,
 # 入らないときは字を縮めるのではなく、**項目の数の上限で止める**（draft が知らせる）。
 
 LINE_KEYS = frozenset({"type", "title", "x", "series", "unit", "focus", "highlight",
-                       "note", "source", "color"})
+                       "badges", "peak", "note", "source", "color"})
+LINE_BADGES_MAX = 6       # クラブのエンブレムを点に置く数（多いと点と重なる）
+LINE_BADGE_PX = 46        # エンブレムの高さ
 LINE_SERIES_MAX = 3       # 線は3本まで。4本目は黄＋緑の2色では描き分けられない
 LINE_POINTS_MAX = 8       # 点は8つまで。ショート（幅972）で年の札が隣とぶつからない上限
 # 図の高さの下限（2026-10-08）。置き場が狭くてもここまでは残す。
@@ -2417,7 +2425,55 @@ def check_line(spec: dict) -> list[str]:
     if xs and line_highlight(spec, xs) == -1:
         problems.append(f"line の highlight『{spec.get('highlight')}』は x の札か "
                         f"0〜{len(xs) - 1} の番号で書いてください")
+    problems += _check_line_badges(spec, xs, series)
     return problems
+
+
+def line_badges(spec: dict, xs: list[str], series: list[dict]) -> list[tuple[int, int, str]]:
+    """(線の番号, 点の番号, クラブ名) の並び。書き方: badges: [{series: メッシ, at: 2005, crest: バルセロナ}, …]"""
+    out = []
+    names = [str(item["name"]) for item in series]
+    for entry in (spec.get("badges") or []):
+        if not isinstance(entry, dict):
+            continue
+        crest_name = str(entry.get("crest") or "").strip()
+        line = _pick_by_name(entry.get("series", 0), names)
+        point = _pick_by_name(entry.get("at"), xs)
+        if crest_name and line is not None and line >= 0 and point is not None and point >= 0:
+            out.append((line, point, crest_name))
+    return out
+
+
+def _check_line_badges(spec: dict, xs: list[str], series: list[dict]) -> list[str]:
+    badges = spec.get("badges")
+    if not badges:
+        return []
+    problems = []
+    if not isinstance(badges, (list, tuple)) or len(badges) > LINE_BADGES_MAX:
+        return [f"line の badges は{LINE_BADGES_MAX}つまでの一覧です"]
+    names = [str(item["name"]) for item in series]
+    for entry in badges:
+        if not isinstance(entry, dict) or not str(entry.get("crest") or "").strip():
+            problems.append("line の badges は {series: 線の名前, at: x の札, crest: クラブ名} で書いてください")
+            break
+        if _pick_by_name(entry.get("series", 0), names) in (None, -1):
+            problems.append(f"line の badges の series『{entry.get('series')}』は series の名前か番号で書いてください")
+            break
+        if _pick_by_name(entry.get("at"), xs) in (None, -1):
+            problems.append(f"line の badges の at『{entry.get('at')}』は x の札か番号で書いてください")
+            break
+    return problems
+
+
+def _badge_image(name: str):
+    """クラブのエンブレムを一定の高さで返す（手元に無ければ None）。権利は晴れていない（引き受ける危険）。"""
+    from . import crest
+    path = crest.find(name)
+    if not path:
+        return None
+    im = Image.open(path).convert("RGBA")
+    h = LINE_BADGE_PX
+    return im.resize((max(1, int(im.width * h / im.height)), h), Image.LANCZOS)
 
 
 def _line_range(values: list[float]) -> tuple[float, float]:
@@ -2577,6 +2633,15 @@ def _line(spec: dict, width: int, font_path: str, latin_path: str,
     radius = [[(14 if k == lit else 10) if i == focus else (9 if k == lit else 7)
                for k in range(n)] for i in range(m)]
 
+    badge_list = line_badges(spec, xs, series)
+    badge_tiles = {name: _badge_image(name) for _, _, name in badge_list}
+    peak_on = bool(spec.get("peak"))
+    peaks = {}                      # 点の番号 → その点で最高の線の番号（線ごとの最高点）
+    if peak_on:
+        for k, item in enumerate(series):
+            hi = max(range(n), key=lambda j: item["values"][j])
+            peaks.setdefault(hi, k)
+
     height = plot_bottom + tail
 
     def draw_legend(draw, y):
@@ -2646,7 +2711,37 @@ def _line(spec: dict, width: int, font_path: str, latin_path: str,
                 r = radius[i][index]
                 draw.ellipse([cx - r, cy - r, cx + r, cy + r], fill=colors[i],
                              outline=DOT_RING, width=3)
-            if index in value_at:
+            for b_line, b_point, b_name in badge_list:
+                if b_point != index:
+                    continue
+                tile = badge_tiles.get(b_name)
+                if tile is None:
+                    continue
+                bx = min(max(px(index), px(0) + tile.width / 2 + 10), px(n - 1) - tile.width / 2 - 6)   # 縦軸の数字・右端にかけない
+                by = y + py(series[b_line]["values"][index])
+                rr = radius[b_line][index]
+                low = series[b_line]["values"][index] <= min(it["values"][index] for it in series)
+                top = by + rr + 8 if low and len(series) > 1 else by - rr - 8 - tile.height
+                top = max(y + plot_top - 6, min(top, y + plot_bottom - tile.height))
+                draw.ellipse([bx - tile.width / 2 - 6, top - 4, bx + tile.width / 2 + 6, top + tile.height + 4],
+                             fill=(255, 255, 255, 235))
+                draw._image.alpha_composite(tile, (int(bx - tile.width / 2), int(top)))
+            if peak_on and index in peaks:
+                pk = peaks[index]
+                vals = [it["values"][index] for it in series]
+                cx, cy = px(index), y + py(vals[pk])
+                text = f"最高 {_tick_text(vals[pk])}"
+                tw = ruler.textlength(text, font=tick_font)
+                tx = min(max(cx, left + tw / 2 + 4), width - PAD - tw / 2 - 4)
+                lowest = len(series) > 1 and vals[pk] <= min(vals)      # 下の線の最高点は点の下に、上なら上に
+                ty = (cy + radius[pk][index] + 14 + tick_font.size) if lowest else (cy - radius[pk][index] - 12)
+                ty = max(y + plot_top + tick_font.size + 2, min(ty, y + plot_bottom - 6))
+                draw.ellipse([cx - radius[pk][index] - 7, cy - radius[pk][index] - 7,
+                              cx + radius[pk][index] + 7, cy + radius[pk][index] + 7], outline=colors[pk], width=3)
+                draw.rounded_rectangle([tx - tw / 2 - 8, ty - tick_font.size - 2, tx + tw / 2 + 8, ty + 6], radius=8,
+                                       fill=colors[pk])
+                draw.text((tx, ty), text, font=tick_font, fill=(12, 16, 24, 255), anchor="ms")
+            if index in value_at and not (peak_on and index in peaks):      # 最高額の札と重ねない
                 cx, baseline, text = hero_label(index, y)
                 tw = ruler.textlength(text, font=value_font)
                 # 札の下は板の地で塗る（線・目盛りが字を横切らない）
@@ -3405,3 +3500,310 @@ def _document(spec: dict, width: int, font_path: str, latin_path: str,
         blocks.append({"height": len(lines) * line_h + 22, "draw": draw_para,
                        "row": True, "unit": unit_para})
     return blocks + _note_blocks(spec, width, font_path)
+
+
+# ---------------------------------------------------------------- 対面カード（2026-10-15）
+# ユーザー「比較とかだとこういう画像とかも作っていきたい」（Transfermarkt の比較ページ）。左右に顔写真と名前の色帯、
+# 真ん中に項目名、左右に値を並べる。画像そのものは使わず自作する。
+# **数字の上の側は強調してよい**（2026-10-15 ユーザー「言い切らない決まりはない。数値上の上はある」）。数字どうしの行は、
+# 大きい側の値をその側の色で出し、差を短い棒で見せる。小さいほうが上の項目（失点など）は `lower: [項目名]` で指す。
+DUEL_KEYS = frozenset({"type", "title", "left", "right", "rows", "highlight_row", "bars", "lower", "note", "source", "color"})
+DUEL_SIDE_KEYS = frozenset({"name", "club", "photo", "color"})
+DUEL_ROWS_MAX = 8
+DUEL_VALUE_CHARS = 14
+DUEL_LEFT = (74, 200, 128, 255)      # 左の既定色（緑）
+DUEL_RIGHT = BRAND_GOLD              # 右の既定色（黄）
+DUEL_PHOTO = 112                     # 顔写真の一辺
+
+
+def duel_rows(spec: dict) -> list[list[str]]:
+    return [[str(c if c is not None else "").strip() for c in row]
+            for row in (spec.get("rows") or []) if isinstance(row, (list, tuple))]
+
+
+def _duel_color(side: dict, default):
+    raw = str((side or {}).get("color") or "").strip()
+    if raw.startswith("#") and len(raw) == 7:
+        return _hex(raw) + (255,)
+    return default
+
+
+DUEL_NO_BARS = ("年齢", "生年月日", "背番号", "身長", "体重", "国籍", "ポジション")   # 長さで比べる意味が無い項目
+
+
+def _duel_number(text: str):
+    """「5000万€」「1,020分」「1.85m」から (数, 単位の残り) を取る。数が無ければ None。"""
+    t = str(text).replace(",", "").replace("，", "").strip()
+    m = re.search(r"[-+]?\d+(?:\.\d+)?", t)
+    if not m:
+        return None
+    value = float(m.group(0))
+    rest = t[m.end():]
+    if rest.startswith("億"):
+        value *= 1e8
+        rest = rest[1:]
+    elif rest.startswith("万"):
+        value *= 1e4
+        rest = rest[1:]
+    return value, (t[:m.start()] + rest).strip()
+
+
+def _duel_bar_pair(label: str, lv: str, rv: str, allow):
+    """棒で見せる (左, 右) の数。単位が同じ数字どうしだけ。allow は True（既定）か項目名の一覧。"""
+    if allow is False:
+        return None
+    if isinstance(allow, (list, tuple)):
+        if label not in [str(a) for a in allow]:
+            return None
+    elif any(k in label for k in DUEL_NO_BARS):
+        return None
+    a, b = _duel_number(lv), _duel_number(rv)
+    if not a or not b or a[1] != b[1] or (a[0] <= 0 and b[0] <= 0):
+        return None
+    return a[0], b[0]
+
+
+def check_duel(spec: dict) -> list[str]:
+    """対面カードの形の誤り（描く前に止める。research の draft も同じものを見る）。"""
+    problems = []
+    unknown = sorted(str(k) for k in spec if k not in DUEL_KEYS)
+    if unknown:
+        problems.append(f"duel カードに知らない鍵があります（{unknown[0]}）。使えるのは {'・'.join(sorted(DUEL_KEYS))}")
+    for side_name in ("left", "right"):
+        side = spec.get(side_name)
+        if not isinstance(side, dict) or not str(side.get("name") or "").strip():
+            problems.append(f"duel の {side_name} に name がありません（{{name: …, club: …, photo: …}}）")
+            continue
+        extra = sorted(str(k) for k in side if k not in DUEL_SIDE_KEYS)
+        if extra:
+            problems.append(f"duel の {side_name} に知らない鍵があります（{extra[0]}）。"
+                            f"使えるのは {'・'.join(sorted(DUEL_SIDE_KEYS))}")
+    raw = spec.get("rows") or []
+    rows = duel_rows(spec)
+    if len(rows) != len(raw) or len(rows) < 2:
+        problems.append("duel には rows（[[項目, 左の値, 右の値], …]）を2行以上書いてください")
+    elif len(rows) > DUEL_ROWS_MAX:
+        problems.append(f"duel の rows は{DUEL_ROWS_MAX}行までです（{len(rows)}行）。多いと字が小さくなって読めません")
+    for row in rows:
+        if len(row) != 3 or not row[0]:
+            problems.append(f"duel の各行は [項目, 左の値, 右の値] の3つで書いてください（{str(row)[:30]}）")
+            break
+        if len(row[1]) > DUEL_VALUE_CHARS or len(row[2]) > DUEL_VALUE_CHARS:
+            problems.append(f"duel の値は{DUEL_VALUE_CHARS}字までです（{row[0]}）。長い説明は語りで言う")
+            break
+    labels = [r[0] for r in rows if r and r[0]]
+    if len(set(labels)) != len(labels):
+        problems.append("duel の項目名が重なっています（光らせる行を指せません）")
+    return problems
+
+
+def _duel_photo(path: str, size: int):
+    """顔写真を正方形に切る。顔が検出できれば顔の中心、できなければ上寄せ。無ければ None。"""
+    if not path:
+        return None
+    p = Path(path)
+    if not p.is_absolute():
+        p = Path(__file__).resolve().parents[1] / path
+    if not p.exists():
+        return None
+    im = Image.open(p).convert("RGB")
+    w, h = im.size
+    side = min(w, h)
+    cx, top = w / 2, 0.0
+    try:
+        from . import faces
+        box = faces.main_face(im) if faces.available() else None
+    except Exception:           # noqa: BLE001
+        box = None
+    if box:
+        x, y, bw, bh = box
+        cx = x + bw / 2
+        side = min(side, int(max(bw, bh) * 2.2))
+        top = max(0.0, min(h - side, y + bh / 2 - side * 0.45))
+    left = int(max(0, min(w - side, cx - side / 2)))
+    return im.crop((left, int(top), left + side, int(top) + side)).resize((size, size), Image.LANCZOS)
+
+
+def check_shelf(spec: dict) -> list[str]:
+    """タイトル棚の形の誤り。対面カードと同じ形で、値は個数（0以上の整数）。"""
+    problems = check_duel(spec)
+    for row in duel_rows(spec):
+        if len(row) == 3 and not all(v.isdigit() for v in row[1:]):
+            problems.append(f"shelf の個数は0以上の整数で書いてください（{row[0]}: {row[1]} / {row[2]}）")
+            break
+    return problems
+
+
+def _draw_trophy(draw, cx: float, cy: float, h: float, fill, edge) -> None:
+    """トロフィー（カップ）の絵。中心 (cx, cy)、高さ h。"""
+    w = h * 0.78
+    top, bot = cy - h / 2, cy + h / 2
+    bowl_b = top + h * 0.52
+    draw.polygon([(cx - w / 2, top), (cx + w / 2, top), (cx + w * 0.32, bowl_b), (cx - w * 0.32, bowl_b)],
+                 fill=fill, outline=edge)
+    for sign in (-1, 1):                                       # 持ち手
+        draw.arc([cx + sign * w * 0.30 - w * 0.22, top + h * 0.06, cx + sign * w * 0.30 + w * 0.22, top + h * 0.38],
+                 start=90 if sign < 0 else 270, end=270 if sign < 0 else 90, fill=edge, width=max(3, int(h * 0.06)))
+    draw.rectangle([cx - w * 0.07, bowl_b, cx + w * 0.07, bot - h * 0.14], fill=fill, outline=edge)
+    draw.rounded_rectangle([cx - w * 0.30, bot - h * 0.14, cx + w * 0.30, bot], radius=4, fill=fill, outline=edge)
+
+
+def _duel(spec: dict, width: int, font_path: str, latin_path: str,
+          slot: int | None = None, icon: bool = False) -> list[dict]:
+    """対面カード。比べる回の「2人の基礎DATA」「プレーの数字」に。
+
+    ```yaml
+    card: {type: duel,
+           left:  {name: バレバ, club: ブライトン, photo: assets/images/…/01.jpg},
+           right: {name: カマラ, club: ヴィラ, photo: assets/images/…/02.jpg},
+           rows: [[年齢, 21歳, 22歳], [身長, 1.82m, 1.84m], [市場価値, 3500万€, 4000万€]]}
+    ```
+    左右の顔写真と名前の色帯、真ん中に項目名。上から1行ずつ出る。数字どうしの行は、**数字の上の側を色で強調**し、
+    値の下に差を短い棒で見せる（長いほうが端まで）。小さいほうが上の項目は `lower: [失点]`。年齢・身長・国籍などは棒も強調も付けない
+    （`DUEL_NO_BARS`）。`bars: false` で全部消し、`bars: [項目名…]` で出す行を指す。`highlight_row`（項目名）で行が光る。
+    """
+    problems = check_shelf(spec) if icon else check_duel(spec)
+    if problems:
+        raise CardError(problems[0])
+    left_side, right_side = spec["left"], spec["right"]
+    rows = duel_rows(spec)
+    n = len(rows)
+    lc, rc = _duel_color(left_side, DUEL_LEFT), _duel_color(right_side, DUEL_RIGHT)
+    lit = _pick_many(spec.get("highlight_row"), [r[0] for r in rows])
+    allow = spec.get("bars", True)
+    lower = {str(x) for x in (spec.get("lower") or [])}
+    ruler = _ruler()
+
+    inner = width - PAD * 2 - 24
+    left_x = PAD + 12
+    label_w = inner * 0.26
+    side_w = (inner - label_w) / 2
+    photo = min(DUEL_PHOTO, int(side_w * 0.34))
+    head_h = photo + 20
+    room = (slot or 10_000) - PAD * 2 - head_h - 24
+    row_h = max(54, min(78, int(room / n))) if slot else 74
+    val_size = 40 if row_h >= 66 else 36
+    lab_size = 26 if row_h >= 66 else 24
+    gap = 18
+
+    name_font = _font(font_path, 40)
+    club_font = _font(font_path, 26)
+    label_font = _font(font_path, lab_size)
+    photos = [_duel_photo(str(left_side.get("photo") or ""), photo),
+              _duel_photo(str(right_side.get("photo") or ""), photo)]
+
+    bar_w = (inner - 14) / 2          # 名前の帯は左右とも、真ん中の列の手前まで（2つの帯が近づく）
+
+    def draw_head(draw, y):
+        for side, x0, color, ph, mirror in ((left_side, left_x, lc, photos[0], False),
+                                            (right_side, left_x + inner - bar_w, rc, photos[1], True)):
+            draw.rounded_rectangle([x0, y, x0 + bar_w, y + head_h - 12], radius=14, fill=color)
+            name = str(side.get("name") or "")
+            club = str(side.get("club") or "")
+            size = 40
+            f = name_font
+            avail = bar_w - (photo + 40 if ph else 40)
+            while size > 28 and draw.textlength(name, font=f) > avail:
+                size -= 2
+                f = _font(font_path, size)
+            cf = club_font
+            csize = 26
+            while csize > 18 and club and draw.textlength(club, font=cf) > avail:
+                csize -= 2
+                cf = _font(font_path, csize)
+            if mirror:
+                if ph is not None:
+                    canvas_paste(draw, ph, int(x0 + bar_w - photo - 8), int(y + 4))
+                tx, anchor = x0 + bar_w - (photo + 24 if ph else 20), "ra"
+            else:
+                if ph is not None:
+                    canvas_paste(draw, ph, int(x0 + 8), int(y + 4))
+                tx, anchor = x0 + (photo + 24 if ph else 20), "la"
+            draw.text((tx, y + 14), name, font=f, fill=(12, 16, 24, 255), anchor=anchor)
+            if club:
+                draw.text((tx, y + 14 + f.size + 8), club, font=cf, fill=(12, 16, 24, 220), anchor=anchor)
+
+    blocks: list[dict] = [{"height": head_h, "draw": draw_head}]
+    blocks += _title_block(spec, font_path)[:0]            # 題は出さない（名前の帯が題の代わり）
+
+    for number, (label, lv, rv) in enumerate(rows):
+        pair = None if icon else _duel_bar_pair(label, lv, rv, allow)
+
+        def draw_row(draw, y, number=number, label=label, lv=lv, rv=rv, pair=pair):
+            if number in lit:
+                draw.rounded_rectangle([PAD - 8, y - 2, width - PAD + 8, y + row_h - 8], radius=10, fill=HILITE)
+            elif number % 2 == 0:
+                draw.rounded_rectangle([PAD - 8, y - 2, width - PAD + 8, y + row_h - 8], radius=10,
+                                       fill=(20, 27, 40, 255))
+            cy = y + (row_h - 8) / 2
+            mid_l = left_x + side_w
+            mid_r = left_x + side_w + label_w
+            draw.text(((mid_l + mid_r) / 2, cy), label, font=label_font, fill=SUB, anchor="mm")
+            top_side = None                     # 数字の上の側（0=左, 1=右）。同じ値・数字でない行は無し
+            if icon:                              # タイトル棚：個数の多い側を強調
+                counts = (int(lv), int(rv))
+                if counts[0] != counts[1]:
+                    top_side = 0 if counts[0] > counts[1] else 1
+                ih = row_h * 0.66
+                for k, (count, x) in enumerate(((counts[0], mid_l - gap), (counts[1], mid_r + gap))):
+                    own = (lc, rc)[k]
+                    dim = count == 0
+                    ink = own if k == top_side else (TEXT if not dim else GRID)
+                    f = _font(font_path, val_size)
+                    txt = f"×{count}"
+                    tw = draw.textlength(txt, font=f)
+                    if k == 0:                    # 左：個数を中央側、トロフィーはその外側
+                        draw.text((x, cy), txt, font=f, fill=ink, anchor="rm",
+                                  stroke_width=1 if k == top_side else 0, stroke_fill=ink)
+                        _draw_trophy(draw, x - tw - 14 - ih * 0.39, cy, ih,
+                                     GRID if dim else BRAND_GOLD, (24, 30, 42, 255))
+                    else:                         # 右：トロフィーが中央側、個数はその外側
+                        _draw_trophy(draw, x + ih * 0.39, cy, ih,
+                                     GRID if dim else BRAND_GOLD, (24, 30, 42, 255))
+                        draw.text((x + ih * 0.78 + 14, cy), txt, font=f, fill=ink, anchor="lm",
+                                  stroke_width=1 if k == top_side else 0, stroke_fill=ink)
+                return
+            if pair and pair[0] != pair[1]:
+                bigger = 0 if pair[0] > pair[1] else 1
+                top_side = (1 - bigger) if label in lower else bigger
+            for k, (text, x, anchor) in enumerate(((lv, mid_l - gap, "rm"), (rv, mid_r + gap, "lm"))):
+                size = val_size
+                f = _font(font_path, size)
+                while size > 26 and draw.textlength(text, font=f) > side_w - gap * 2:
+                    size -= 2
+                    f = _font(font_path, size)
+                ink = (lc, rc)[k] if k == top_side else TEXT
+                draw.text((x, cy - (10 if pair else 0)), text, font=f, fill=ink, anchor=anchor,
+                          stroke_width=1 if k == top_side else 0, stroke_fill=ink)
+            if pair:
+                top = max(pair)
+                bar_max = side_w - gap * 2
+                by = y + row_h - 17
+                for value, x, color, to_left in ((pair[0], mid_l - gap, lc, True), (pair[1], mid_r + gap, rc, False)):
+                    length = max(6, int(bar_max * value / top))
+                    if to_left:
+                        draw.rounded_rectangle([x - length, by, x, by + 8], radius=4, fill=color)
+                    else:
+                        draw.rounded_rectangle([x, by, x + length, by + 8], radius=4, fill=color)
+
+        def unit_row(y, number=number, label=label, lv=lv, rv=rv):
+            cy = y + (row_h - 8) / 2
+            mid_l = left_x + side_w
+            mid_r = left_x + side_w + label_w
+            if icon:
+                lv, rv = f"×{lv}", f"×{rv}"
+            return {"box": (PAD - 8, y - 2, width - PAD + 8, y + row_h - 8),
+                    "cells": [_text_box(mid_l - gap, cy, lv, _font(font_path, val_size), "rm"),
+                              _text_box((mid_l + mid_r) / 2, cy, label, label_font, "mm"),
+                              _text_box(mid_r + gap, cy, rv, _font(font_path, val_size), "lm")]}
+
+        blocks.append({"height": row_h, "draw": draw_row, "row": True, "unit": unit_row})
+    return blocks + _note_blocks(spec, width, font_path)
+
+
+def canvas_paste(draw, tile, x: int, y: int) -> None:
+    """ImageDraw の下の画像に、角を丸くした顔写真を貼る。"""
+    base = draw._image
+    mask = Image.new("L", tile.size, 0)
+    ImageDraw.Draw(mask).rounded_rectangle([0, 0, tile.width - 1, tile.height - 1], radius=14, fill=255)
+    base.paste(tile.convert("RGBA"), (x, y), mask)

@@ -517,3 +517,118 @@ def test_文書カードは段落ごとに出て強調の黄が付く(tmp_path):
 def test_文書カードの知らない鍵は止める():
     from src import cards
     assert any("知らない鍵" in p for p in cards.check_document(_doc_spec(colour="x")))
+
+
+# ---- 対面カード（2026-10-15） ----
+def _duel_spec(**kw):
+    spec = {"type": "duel",
+            "left": {"name": "バレバ", "club": "ブライトン"},
+            "right": {"name": "カマラ", "club": "アストン・ヴィラ"},
+            "rows": [["年齢", "22歳", "21歳"], ["市場価値", "5000万€", "6000万€"], ["失点", "30", "20"]]}
+    spec.update(kw)
+    return spec
+
+
+def test_対面カードの形の誤りを止める():
+    from src import cards
+    assert cards.check_duel(_duel_spec()) == []
+    assert any("name" in p for p in cards.check_duel(_duel_spec(left={"club": "x"})))
+    assert any("2行以上" in p for p in cards.check_duel(_duel_spec(rows=[["年齢", "1", "2"]])))
+    assert any("8行まで" in p for p in cards.check_duel(_duel_spec(rows=[[f"項{i}", "1", "2"] for i in range(9)])))
+    assert any("3つ" in p for p in cards.check_duel(_duel_spec(rows=[["年齢", "1"], ["身長", "1", "2"]])))
+    assert any("14字" in p for p in cards.check_duel(_duel_spec(rows=[["a", "あ" * 15, "1"], ["b", "1", "2"]])))
+    assert any("知らない鍵" in p for p in cards.check_duel(_duel_spec(colour="x")))
+
+
+def test_対面カードの数字の読み取りは単位をそろえた行だけ棒にする():
+    from src import cards
+    assert cards._duel_number("5000万€") == (50_000_000.0, "€")
+    assert cards._duel_number("1,020分") == (1020.0, "分")
+    assert cards._duel_bar_pair("市場価値", "5000万€", "6000万€", True) == (50_000_000.0, 60_000_000.0)
+    assert cards._duel_bar_pair("年齢", "22歳", "21歳", True) is None, "年齢は長さで比べない"
+    assert cards._duel_bar_pair("市場価値", "5000万€", "1,020分", True) is None, "単位が違う"
+    assert cards._duel_bar_pair("市場価値", "5000万€", "6000万€", False) is None
+    assert cards._duel_bar_pair("得点", "3", "5", ["得点"]) == (3.0, 5.0)
+    assert cards._duel_bar_pair("得点", "3", "5", ["失点"]) is None
+
+
+def test_対面カードは数字の大きい側の値を側の色で強調する(tmp_path):
+    from PIL import Image
+    from src import cards
+    font = "C:/Windows/Fonts/meiryo.ttc"
+    out = cards.render(_duel_spec(rows=[["市場価値", "5000万€", "6000万€"], ["年齢", "22歳", "21歳"]]),
+                       1420, font, tmp_path / "d.png", slot=539)
+    im = Image.open(out).convert("RGB")
+    gold = lambda box: sum(1 for x in range(box[0], box[2], 2) for y in range(box[1], box[3], 2)
+                           if im.getpixel((x, y))[0] > 230 and im.getpixel((x, y))[1] > 190 and im.getpixel((x, y))[2] < 120)
+    w, h = im.size
+    right_half = (w // 2 + 100, 140, w - 60, h - 20)       # 右の値の側（名前の帯より下）
+    assert gold(right_half) > 150, "上の側（6000万€）が右の色で強調される"
+
+
+def test_対面カードのlowerは小さいほうを上にする(tmp_path):
+    from PIL import Image
+    from src import cards
+    font = "C:/Windows/Fonts/meiryo.ttc"
+    spec = _duel_spec(rows=[["失点", "30", "20"], ["得点", "10", "5"]], lower=["失点"])
+    out = cards.render(spec, 1420, font, tmp_path / "e.png", slot=539)
+    assert Image.open(out).size[0] == 1420
+
+
+def test_対面カードは行ごとに出る(tmp_path):
+    from src import cards
+    assert cards.row_count(_duel_spec()) == 3
+
+
+# ---- 折れ線のエンブレムと最高額の印（2026-10-15） ----
+def _line_spec(**kw):
+    spec = {"type": "line", "title": "市場価値", "x": ["2005", "2008", "2011"],
+            "series": [["メッシ", [10, 60, 120]], ["ロナウド", [25, 70, 100]]], "focus": "メッシ"}
+    spec.update(kw)
+    return spec
+
+
+def test_折れ線のbadgesは形を見る():
+    from src import cards
+    ok = _line_spec(badges=[{"series": "メッシ", "at": "2005", "crest": "バルセロナ"}])
+    assert cards.check_line(ok) == []
+    assert any("series" in p for p in cards.check_line(_line_spec(badges=[{"series": "誰か", "at": "2005", "crest": "x"}])))
+    assert any("at" in p for p in cards.check_line(_line_spec(badges=[{"series": "メッシ", "at": "1999", "crest": "x"}])))
+    assert any("crest" in p for p in cards.check_line(_line_spec(badges=[{"series": "メッシ", "at": "2005"}])))
+    assert any("6つまで" in p for p in cards.check_line(
+        _line_spec(badges=[{"series": "メッシ", "at": "2005", "crest": "x"}] * 7)))
+
+
+def test_折れ線のpeakは最高点に札を出す(tmp_path):
+    from PIL import Image
+    from src import cards
+    font = "C:/Windows/Fonts/meiryo.ttc"
+    plain = cards.render(_line_spec(), 1420, font, tmp_path / "a.png", slot=539)
+    peaked = cards.render(_line_spec(peak=True), 1420, font, tmp_path / "b.png", slot=539)
+    assert Image.open(plain).tobytes() != Image.open(peaked).tobytes(), "peak: true で絵が変わる"
+
+
+# ---- タイトル棚（2026-10-15） ----
+def _shelf_spec(**kw):
+    spec = {"type": "shelf", "left": {"name": "メッシ"}, "right": {"name": "ロナウド"},
+            "rows": [["バロンドール", "8", "5"], ["W杯", "1", "0"]]}
+    spec.update(kw)
+    return spec
+
+
+def test_タイトル棚の個数は整数だけ():
+    from src import cards
+    assert cards.check_shelf(_shelf_spec()) == []
+    assert any("整数" in p for p in cards.check_shelf(_shelf_spec(rows=[["a", "8", "5"], ["b", "多い", "0"]])))
+    assert cards.row_count(_shelf_spec()) == 2
+
+
+def test_タイトル棚は個数の多い側を強調し0個は薄く出す(tmp_path):
+    from PIL import Image
+    from src import cards
+    font = "C:/Windows/Fonts/meiryo.ttc"
+    out = cards.render(_shelf_spec(left={"name": "メッシ", "color": "#4ac880"}), 1420, font, tmp_path / "s.png", slot=539)
+    im = Image.open(out).convert("RGB")
+    green = sum(1 for x in range(0, im.width, 2) for y in range(150, im.height, 2)
+                if im.getpixel((x, y))[1] > 180 and im.getpixel((x, y))[0] < 110 and im.getpixel((x, y))[2] < 160)
+    assert green > 40, "個数の多い左（メッシ）が左の色で強調される"

@@ -3,7 +3,7 @@
     python tools/player_compare.py 342229 418560 --date 2026-10-02   # Transfermarkt の番号を2つ
 
 材料は `player_intro.py` と同じ（Transfermarkt の詳細・市場価値の推移・今季の数字）。
-**「どちらが上か」は言い切らない**（CLAUDE.md「10月のシリーズ」）。数字の違いを並べて、見立てで
+**「どちらが上か」は言ってよい**（2026-10-15 ユーザー「言い切らない決まりはない」。以前は言い切らない決まりだった）。数字の違いを並べて、見立てで
 「何が違うか」を言う。節は「2人の基礎DATA（2列の表）→ 今季の数字（2列、main）→ 市場価値の歩み（2人の
 最高額と今）→ 見立て」。顔写真は2枚並べる（`thumbnail.photos`、人が取る）。
 """
@@ -126,7 +126,7 @@ def write_note(a: dict, b: dict, day: datetime.date, path: Path) -> None:
         "sections": sections,
     }
     head = [f"# {na}（{a['club']}）と{nb}（{b['club']}）の比較。数字は Transfermarkt。",
-            "# 顔写真は2枚並べる（thumbnail.photos）。どちらが上かは言い切らない（10月のシリーズの決まり）。"]
+            "# 顔写真は2枚並べる（thumbnail.photos）。どちらが上かは言ってよい（2026-10-15 に決まりを外した）。"]
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text("\n".join(head) + "\n" + yaml.safe_dump(note, allow_unicode=True, sort_keys=False, width=100),
                     encoding="utf-8")
