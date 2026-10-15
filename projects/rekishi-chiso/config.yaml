@@ -261,6 +261,42 @@ roles:
     tone_strength: 0.5
     max_intonation: 1.3
     max_speed: 1.0
+  龍馬想像:                  # 10-15。Bの龍馬IFの想像のセリフ。龍馬（31歳）は若い声の白上虎太郎。中岡想像（青山龍星）・後藤想像（玄野武宏）・西郷想像（麒ヶ島宗麟）と同じ幕で重ならない
+    label: 坂本龍馬（想像）
+    name: 白上虎太郎
+    style_id: 12
+    speed: 1.0
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.05
+  中岡想像:                  # 10-15。第1幕の龍馬（白上虎太郎）と別の声として青山龍星
+    label: 中岡慎太郎（想像）
+    name: 青山龍星
+    style_id: 13
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  後藤想像:                  # 10-15。第2幕の龍馬（白上虎太郎）と別の声として玄野武宏
+    label: 後藤象二郎（想像）
+    name: 玄野武宏
+    style_id: 11
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  岩倉の言葉:                # 10-15。龍馬の死を嘆いた岩倉具視の言葉（伝わる記録）。想像の節には置かない。声は雀松朱司
+    label: 岩倉具視（伝わる言葉）
+    name: 雀松朱司
+    style_id: 52
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
 
 character_credits:
   - "立ち絵：春日部つむぎ公式立ち絵素材（春日部つくし）"

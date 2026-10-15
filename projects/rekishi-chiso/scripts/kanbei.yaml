@@ -1,0 +1,576 @@
+# 黒田官兵衛（A作品・10/17 19時公開予定）。型：掘り下げ型（生まれから順・節ごとに1つの山場・最後は「まとめ：黒田官兵衛とは何者だったのか」）
+# 冒頭の一点：名セリフ「ご運が開く」の形が出てくるのは江戸の書物（老人雑話・明良洪範・黒田家譜）。84年あとと確かめたのは黒田家譜（1688）だけ。
+#   Wikipedia「中国大返し」の整理では、毛利家文書・當代記など早い時期の記録は「天の加護を得た、これで何事も思いのままになった」という趣旨。
+#   野心か加護かの温度差とは言わない。同じ場面でも本によって言葉の形が違う、と言う（写された・書き継がれたとは断定しない）（答えは第4節、まとめで冒頭の問いに戻る）。
+# 事実の出どころは dev/output/rekishi-chiso/research/kanbei_facts.md（確実／有力／説／後世の話／未確認の区分もそこ）。素材は research/kanbei_assets.md。
+# 決まり：①日付は和暦で言う。西暦は『黒田家譜』の1688年と、年表・card の年だけ（「西暦だと」とは言わない）。誕生日は割れる（11月15日／29日）ので生まれは「天文15年の冬」。
+#   ②使わない話（入れない）：城井鎮房の謀殺の細部（鶴姫の磔・13人の侍女・血の壁・祟り・朝房の暗殺）／有岡城の荒木一族の処刑／松寿丸の偽首／
+#     牢番・輿に乗る話／「左手は何をしていた」／「草履片々、木履片々」／司馬遼太郎・大河の場面／「よく見ておけ」／遺体の埋葬の細部（夜の松林）／ネットの個人ブログ。
+#   ③「ご運が開く」の形・「100万石で天下を奪う」・「土牢・頭の瘡」・「足の障害」・「官兵衛の献策」は後世の話（出典名を言う）。『名将言行録』は幕末〜明治の成立（江戸の書とは言わない）。
+#     宣教師の「キリシタンゆえ減らされた」は「宣教師はこう書いた」と断る。毛利家文書・當代記は本文未読でWikipedia経由なので「ウィキペディアの整理では」と断る。
+#   ④数字は何の数かを言い、割れていれば割れていると言う（約12万石と12万5千石は混ぜない。有岡城は約1年）。兵数・9,000人・1万・水攻めの規模は二次の数字。長政の17万石は検地のあとの数字。
+#   ⑤人物のセリフは入れない。吉川広家宛書状は「趣旨」としか言えない。⑥年齢は数え。肖像の「この時○歳」は出さない（誕生日が割れるため）。
+#   ⑦背景に人物の肖像・拡大絵を使わない。NDL 系（古城絵図）は detail の box で枠内だけ。血・遺体・首・切腹の絵は使わない。
+#   ⑧城井谷で退けられたのは長政の力攻め。官兵衛は付け城の持久戦に切り替えて降伏させた（「官兵衛が負けた」とは言わない）。
+#   読みの注意：官兵衛＝かんべえ／孝高＝よしたか／如水＝じょすい／城井＝きい（鎮房＝しげふさ）／鶴姫＝つるひめ／晋州城＝しんしゅうじょう／石垣原＝いしがきばる／
+#     黒田家譜＝くろだかふ／老人雑話＝ろうじんざつわ／明良洪範＝めいりょうこうはん／兼見卿記は出さない／名護屋＝なごや／杵築＝きつき／臼杵＝うすき／水俣＝みなまた／
+#     金蔵＝かねぐら／辞世の句は台本の中でかなに開いてある。
+title: 黒田官兵衛｜「ご運が開く」の名セリフは、江戸の書の形だった
+series: ""
+playlists: [日本史を掘る（聞き流し）, 戦国時代を掘る]
+shorts_playlists: [日本史ショート]
+tags: [黒田官兵衛, 官兵衛, 黒田孝高, 黒田如水, 有岡城, 備中高松城, 中国大返し, 城井谷, 石垣原の戦い, 関ヶ原の戦い, 黒田家譜, 軍師, 戦国時代, 日本史, 歴史, 歴史解説, 歴史の地層]
+en:
+  title: "Kuroda Kanbei: The 'Your Luck Is Opening' Line Is the Form Edo-Period Books Gave It"
+  description: |-
+    When news of the Honnoji Incident reached Hideyoshi's camp in 1582, Kuroda Kanbei is said to have remarked that his luck was about to open. That exact form of the line appears in Edo-period books such as the Rojin Zatsuwa and the Kuroda Kafu; the Kuroda Kafu itself was completed in 1688, about 84 years after his death. According to Wikipedia's summary, earlier records such as the Mori family documents say he spoke of having gained heaven's protection, and that everything would now go as he wished. The wording differs from book to book.
+    This video digs into Kanbei's life from the small Himeji outpost of the Kodera retainers to his death in the 9th year of Keicho, and separates what records show from what later books and missionary accounts say: the year in the Arioka Castle prison (the "dungeon" and the leg injury come from later books), the flooding of Takamatsu Castle (no source confirms he proposed it), the Great Return from Bitchu, the 120,000-koku fief in Buzen compared with his neighbours, the Kii Valley fight in which his son Nagamasa's assault was repulsed and the banquet killing of Kii Shigefusa (how far Kanbei was involved is disputed), his tonsure, the separate war he fought in Kyushu during Sekigahara and the letter to Kikkawa Hiroie that is read in different ways, and his very detailed will.
+    We say plainly where sources disagree. Dates are in the Japanese calendar of the time.
+    A Japanese history video to listen to while you work (Japanese audio).
+  chapters:
+    - "1582: A Famous Line and Three Layers of Sources"
+    - "1546: Born at a Small Outpost, Choosing Oda over Mori"
+    - "1578: About a Year in Arioka Castle"
+    - "1582: The Flooding of Takamatsu and the Night of the Honnoji News"
+    - "1587: The Kyushu Campaign and a 120,000-koku Reward"
+    - "1587: The Kii Valley Fight, Nagamasa's Defeat and a Killing at a Banquet"
+    - "1593: Korea, Tonsure and the Name Josuiken Ensei"
+    - "1600: Sekigahara and a Separate War in Kyushu"
+    - "1604: Death and a Very Detailed Will"
+    - "Summary: Who Was Kuroda Kanbei?"
+
+texture: true
+recap: true
+
+people:
+  黒田官兵衛: {born: 1546-12-22, died: 1604-04-19, match: [官兵衛, 黒田孝高, 黒田如水, 如水]}
+  豊臣秀吉: {born: 1537-03-17, died: 1598-09-18, match: [秀吉, 羽柴秀吉]}
+  織田信長: {born: 1534-06-23, died: 1582-06-21, match: [信長]}
+
+timeline:
+  start: 1540
+  end: 1610
+  events: [[1546, 誕生], [1575, 信長に謁見], [1582, 本能寺], [1587, 豊前12万石], [1593, 剃髪], [1600, 石垣原], [1604, 没]]
+
+terms:
+  老人雑話: 江戸時代のはじめの談話集。江村専斎の談話を記した
+  黒田家譜: 貝原益軒らが編んだ黒田家の記録。1688年にできた
+  付け城: 敵の城を攻めるために、そのそばに築く城
+  軍監: 戦場で軍の働きを見て、秀吉に報告する役
+  国分け: 戦のあと、秀吉が大名に領地を割り振ること
+  タエス: 遺言に出る、お金の単位。2,000タエスは約320石
+
+shorts:
+  s1:
+    title: "官兵衛の囁き／いつの本？"
+    yt_title: "黒田官兵衛の「ご運が開く」は本当に言った？｜名セリフは江戸の書の形"
+    hook: "『ご運が開く』は、／官兵衛が言った／そのままの形？"
+    tease: "じゃあ、早い時期の記録は、／同じ場面の官兵衛の言葉を何と書いている？"
+    lead: "天正10年6月。本能寺の変の知らせを聞いた秀吉に、黒田官兵衛が、ご運が開く、という趣旨の言葉を囁いた。そう語られてきました。"
+    tags: [黒田官兵衛, 本能寺の変, 老人雑話, 歴史の地層]
+  s2:
+    title: "有岡城の土牢／どの本の話？"
+    yt_title: "黒田官兵衛の有岡城の土牢は本当にあった？｜黒田家譜の話と秀吉の手紙"
+    hook: "官兵衛が閉じ込められた／有岡城の土牢は、／本当にあった？"
+    tease: "じゃあ、閉じ込められた官兵衛を／助け出したのは、誰？"
+    lead: "天正6年、織田方だった荒木村重が、突然、謀反を起こします。村重の城は、摂津の有岡城。官兵衛は、村重を説得するため、その城へ入ります。"
+    tags: [有岡城, 黒田官兵衛, 荒木村重, 歴史の地層]
+  s3:
+    title: "九州平定の褒美／12万石"
+    yt_title: "黒田官兵衛は九州で冷遇された？｜豊前12万石を周りの石高と比べる"
+    hook: "官兵衛の褒美は12万石。／冷遇されたって、／本当？"
+    tease: "じゃあ、その12万石の豊前で、／官兵衛が最初に苦戦した相手は？"
+    lead: "天正15年の夏、九州の国分け。官兵衛に与えられたのは、豊前6郡です。いまの福岡県東部から、大分県北部にあたります。"
+    tags: [黒田官兵衛, 九州平定, 豊前, 歴史の地層]
+  s4:
+    title: "豊前の城井谷／長政の敗北"
+    yt_title: "黒田軍は城井谷で負けた？｜豊前の領主・城井鎮房と長政の力攻め"
+    hook: "豊前の城井谷で、／黒田軍の力攻めが／退けられた？"
+    tease: "じゃあ、官兵衛はそのあと、／どんな作戦に切り替えた？"
+    lead: "豊前には、地元の領主、城井鎮房がいました。秀吉は鎮房に国替えを命じますが、鎮房は拒み、天正15年、山あいの城井谷城に立てこもります。"
+    tags: [城井谷, 城井鎮房, 黒田官兵衛, 歴史の地層]
+  s5:
+    title: "関ヶ原の2日前／九州の戦い"
+    yt_title: "黒田官兵衛は関ヶ原の裏で九州の別の戦いをしていた？｜石垣原の戦い"
+    hook: "関ヶ原の2日前、／九州でも戦があった？"
+    tease: "じゃあ、官兵衛の九州の戦いを／終わらせたのは、何だった？"
+    lead: "慶長5年7月、石田三成らが挙兵します。官兵衛の息子、長政は、東軍の家康方について、関ヶ原へ向かいます。官兵衛は、豊前の中津に残りました。"
+    tags: [石垣原の戦い, 関ヶ原の戦い, 黒田官兵衛, 歴史の地層]
+
+next:
+  title: 武田信玄
+  series: ""
+  teaser: 三方ヶ原で家康を破った信玄。その像も、後の本が作ったのか。
+
+thumbnail:
+  image: paintings/kanbei_josui_portrait_color.jpg
+  crop: [0, 380, 1986, 1498]
+  hook: 「ご運が開く」
+  stamp: 江戸の書の形
+  name: 黒田官兵衛
+  lead: この言葉
+  main: 本当？
+
+sections:
+  # ---------------------------------------------------------------- 1 導入
+  - title: 1582年 本能寺の知らせと、官兵衛の像をつくった三つの層
+    background: {image: paintings/kanbei_takamatsu_flood_triptych.jpg, credit: "歌川国芳《赤松の城水攻之図》三枚続（1860年代ごろ）"}
+    year: 1582
+    lines:
+      - 語り: 天正10年6月。本能寺の変の知らせを聞いた秀吉に、黒田官兵衛が、ご運が開く、という趣旨の言葉を囁いた。そう語られてきました。
+        portrait: {image: paintings/kanbei_josui_portrait_color.jpg, caption: "黒田如水（孝高）の肖像（江戸時代）", age: false}
+        card: {head: 天正10年6月, body: 本能寺の変の知らせが陣に届く}
+        tone: 重い
+        short: s1
+      - 語り: ところが、「ご運が開く」という形の言葉が出てくるのは、《江戸時代》の書物です。なかでも『黒田家譜』は、死の約84年あと。
+        background: {image: paintings/ieyasu_edo_zu_byobu_castle_detail.jpg, credit: "《江戸図屏風》江戸城の部分（17世紀）"}
+        short: s1
+      - 聞き: え、84年も後？ それって、どれくらい違うの？
+        tone: 疑問
+        short: s1
+      - 語り: 官兵衛が亡くなったのは、慶長9年3月20日。『黒田家譜』が出たのは、1688年です。
+        year: 1604
+        portrait: null
+        card: {head: 約84年後, body: 『黒田家譜』ができた時期}
+        figure: {type: numberline, title: 『黒田家譜』が出るまで, items: [[官兵衛の死, 1604], [『黒田家譜』, 1688]], unit: 年, focus: 『黒田家譜』, note: 官兵衛の死の約84年あと}
+        short: s1
+      - 聞き: ひいおじいちゃんの話を、ひ孫が本にまとめる感じか。見てきたようには、書けないよね。
+        short: s1
+      - 語り: 『老人雑話』『明良洪範』にも、同じ形があります。一方、早い時期の記録は、別の形です。それは、本能寺の節で見ましょう。
+        year: 1582
+        figure: null
+        background: {image: paintings/kanbei_takamatsu_flood_triptych.jpg, credit: "歌川国芳《赤松の城水攻之図》三枚続（1860年代ごろ）"}
+      - 語り: 官兵衛の話は、《三つの層》でできています。黒田家の本、宣教師の記録、後の逸話集。今日は、記録で言えることと、後の本が語ることを分けて、掘ります。
+        background: {image: paintings/ieyasu_edo_zu_byobu_castle_detail.jpg, credit: "《江戸図屏風》江戸城の部分（17世紀）"}
+        card: {head: 三つの層, body: 黒田家の本・宣教師の記録・後の逸話集}
+      - 聞き: 記録の官兵衛と、本の官兵衛を分けるのか。じゃあ、まずは生まれから？
+
+  # ---------------------------------------------------------------- 2 生まれと織田
+  - title: 1546年 姫路の出城に生まれ、毛利ではなく織田を選ぶ
+    background: {image: paintings/kanbei_himeji_castletown_plan.jpg, credit: "《姫路城下絵図》1806年（江戸後期の絵図）"}
+    portrait: {image: paintings/kanbei_josui_portrait_color.jpg, caption: "黒田如水（孝高）の肖像（江戸時代）", age: false}
+    year: 1546
+    lines:
+      - 語り: 官兵衛は、天文15年の冬、播磨の姫路で生まれた、と多くの辞典が書きます。幼い名は、万吉。誕生日は、11月15日とも29日とも、割れています。
+        card: {head: 天文15年の冬, body: 播磨の姫路に生まれる（誕生日は割れる）}
+      - 聞き: 有名な人でも、誕生日が割れるのか。どんな家の子だったの？
+        tone: 疑問
+      - 語り: 主君は、御着城の小寺政職。黒田家は、その家老筋です。姫路城は、黒田家が、御着城の出城として預かり、築いた城でした。
+        background: {image: paintings/kanbei_himeji_zu_color.jpg, credit: "《姫路侍屋敷図》（江戸時代）"}
+        card: {head: 小寺家の家老筋, body: 姫路城は御着城の出城}
+      - 聞き: 出城って、本社に対する支店みたいなもの？ 官兵衛は、支店長の家の子ってことか。
+      - 語り: たとえは近いです。ただ、いま見る姫路城の姿は、江戸時代にできたものです。官兵衛の頃の城とは、別の城として見てください。
+        background: {image: paintings/kanbei_himeji_birdseye_meiji.jpg, credit: "《姫路城鳥瞰図》1870年ごろ（明治初期の掛軸）"}
+      - 語り: 永禄10年ごろ、22歳で、官兵衛は家督と家老職を継ぎ、姫路城代になります。
+        background: {image: paintings/kanbei_himeji_castletown_plan.jpg, credit: "《姫路城下絵図》1806年（江戸後期の絵図）"}
+        year: 1567
+      - 語り: 永禄12年、青山・土器山の戦い。300の兵で、赤松政秀の3,000の兵を退けた、と伝わります。
+        year: 1569
+        card: {head: 永禄12年, body: 300の兵が3,000の兵を退けた？}
+        figure: {type: bars, title: 青山・土器山の戦いの兵の数（伝わる数）, bars: [[官兵衛の兵, 300], [赤松政秀の兵, 3000]], labels: [300, 3000]}
+      - 聞き: 10倍の相手に勝ったの？ ちょっと、盛ってない？
+        tone: 疑問
+      - 語り: 天正5年の英賀合戦も、500の兵で、毛利方の5,000の兵を退けた、という話です。また、ちょうど10倍。どちらも、数字の出どころは、はっきり確かめられていません。
+        background: {image: paintings/hanbei_harima_map.jpg, credit: "《播磨国絵図》江戸時代（フランス国立図書館蔵）"}
+        year: 1577
+        card: {head: 天正5年, body: 英賀合戦も10倍の相手に勝った話}
+        figure: {type: bars, title: 英賀合戦の兵の数（伝わる数）, bars: [[官兵衛の兵, 500], [毛利方の兵, 5000]], labels: [500, 5000]}
+      - 聞き: 2回とも、ぴったり10倍かあ。きれいな数字ほど、あやしいよね。
+      - 語り: 官兵衛のイメージには、昭和50年の小説『播磨灘物語』の影響が、広く行き渡っている、と姫路市も書いています。小説と記録は、分けて見ます。
+        figure: null
+        background: {image: paintings/kanbei_himeji_zu_color.jpg, credit: "《姫路侍屋敷図》（江戸時代）"}
+        card: {head: 昭和50年, body: 小説の影響が広い（姫路市の注記）}
+      - 聞き: 小説で「天才軍師」ができあがったのか。じゃあ、記録で言えるのは、どこからだろう。
+      - 語り: 天正3年7月。羽柴秀吉の取り次ぎで、官兵衛は、岐阜で織田信長に会います。名刀「圧切長谷部」を授かった、と伝わります。
+        year: 1575
+        background: {image: paintings/kanbei_harima_maiko_hiroshige.jpg, credit: "歌川広重《六十余州名所図会 播磨 舞子の浜》1853年"}
+        card: {head: 天正3年7月, body: 岐阜で織田信長に会う}
+        figure: {type: map, title: 官兵衛の道のり, bounds: [133.8, 137.4, 34.2, 35.9], route: [姫路, 岐阜], places: [[姫路, 134.69, 34.83], [岐阜, 136.76, 35.42]], note: 姫路から岐阜へ}
+      - 聞き: 数えで30歳か。地方の中小企業の跡取りが、大手の社長に、いきなり会いに行ったみたいだね。
+      - 語り: 当時、播磨の周りでは、西の毛利と、東の織田が、にらみ合っていました。小さな家の家老が、どちらにつくか、選ばなくてはなりません。
+        figure: null
+        background: {image: paintings/hanbei_harima_map.jpg, credit: "《播磨国絵図》江戸時代（フランス国立図書館蔵）"}
+        portrait: {image: paintings/nobunaga_portrait_chokoji.jpg, caption: "織田信長（狩野宗秀画、長興寺蔵、1583年）", age: false}
+      - 聞き: 大きいのは毛利のほうでしょ？ なんで織田だったの？
+        tone: 疑問
+      - 語り: 『黒田家譜』は、官兵衛が主君の小寺政職を、織田方へ導いたと語ります。ただ、その役割がどこまで大きかったかは、史料では確かめられません。
+        card: {head: 黒田家譜, body: 「官兵衛が小寺家を織田へ導く」}
+      - 聞き: 黒田家の本だから、自分の家の人を、よく書いてる可能性もあるよね。
+      - 語り: 天正5年10月には、官兵衛が、長男の松寿丸を、人質として信長のもとへ送ったとされます。のちの黒田長政です。
+        year: 1577
+        background: {image: paintings/kanbei_himeji_castletown_plan.jpg, credit: "《姫路城下絵図》1806年（江戸後期の絵図）"}
+        card: {head: 天正5年10月, body: 長男の松寿丸を信長のもとへ人質に}
+      - 聞き: 自分の子どもを人質に出したの？ 織田につくって決めたの、本気じゃん。
+      - 語り: 翌年、官兵衛は、ある城へ説得に入ります。そこから約1年、出てこられなくなるのです。
+        portrait: {image: paintings/kanbei_josui_portrait_color.jpg, caption: "黒田如水（孝高）の肖像（江戸時代）", age: false}
+        hook: true
+      - 聞き: 説得に行ったのに、閉じ込められちゃったの？ それって、かなりまずい状況だよね。
+        hook: true
+
+  # ---------------------------------------------------------------- 3 有岡城
+  - title: 1578年 有岡城の約1年と、土牢の話の出どころ
+    background: {image: paintings/kanbei_itami_town_map.jpg, credit: "《寛文九年 伊丹郷町絵図》1669年（有岡城跡のあたり）"}
+    year: 1578
+    lines:
+      - 語り: 天正6年、織田方だった荒木村重が、突然、謀反を起こします。村重の城は、摂津の有岡城。官兵衛は、村重を説得するため、その城へ入ります。
+        portrait: {image: paintings/hanbei_araki_yoshiiku.jpg, caption: "荒木村重（『太平記英勇伝』、後世の想像図）", age: false}
+        card: {head: 天正6年, body: 荒木村重が謀反。官兵衛は説得に入る}
+        short: s2
+      - 聞き: 敵になった人の城に、一人で入ったの？ 帰れる自信、あったのかな。
+        short: s2
+      - 語り: 入城は、10月ごろと言われ、日にちは、はっきりしません。そして官兵衛は、城から出られなくなり、幽閉されました。
+        portrait: null
+      - 聞き: 閉じ込められた官兵衛って、土牢で、頭に瘡ができて、足が悪くなった、っていう話を聞いたことある。
+        short: s2
+      - 語り: その話の出どころは、『黒田家譜』です。土牢で長く幽閉され、頭に瘡ができた、と書きます。ただ、秀吉が小寺休夢に送った手紙には、官兵衛は本丸にいたと読める記述があります。
+        background: {image: paintings/kanbei_settsu_kuniezu.jpg, credit: "《慶長国絵図 摂津国》1605年ごろ（西宮市立郷土資料館蔵）"}
+        card: {head: 後世の話, body: 土牢・頭の瘡は『黒田家譜』の話}
+        short: s2
+      - 聞き: え、本丸？ 土牢と本丸じゃ、ぜんぜん違うじゃん。
+        short: s2
+      - 語り: 足が不自由になった、という話は、いちばん古い出典が、大正時代の『黒田如水傳』です。疑問を示す記述もあります。幽閉の場所も、特定されていません。
+        background: {image: paintings/hanbei_itami_map.jpg, credit: "《文禄伊丹之図》（江戸時代）"}
+        card: {head: 大正時代, body: 足の障害の話の最古の出典}
+      - 聞き: 牢の話は、ほとんど後の本なのか。じゃあ、確実に言えることは？
+        tone: 疑問
+      - 語り: 確実なのは、日付です。天正7年10月15日の夜、織田軍が有岡城に総攻撃をかけます。官兵衛は、翌16日、家臣の栗山利安らに救出されました。
+        year: 1579
+        background: {image: paintings/kanbei_itami_town_map.jpg, credit: "《寛文九年 伊丹郷町絵図》1669年（有岡城跡のあたり）"}
+        card: {head: 天正7年10月16日, body: 官兵衛、栗山利安らに救出される}
+      - 聞き: 閉じ込められてたのは、どのくらいの期間だったの？
+      - 語り: 入城が10月ごろ、救出が翌年の10月16日なので、日付で数えると、《約1年》です。1年半と書く解説もありますが、日付とは合いません。
+        figure: {type: stats, title: 有岡城の幽閉をめぐる日付, items: [[約1年, 幽閉の期間, 入城は天正6年10月ごろ], [10月16日, 救出された日, 天正7年], [11月19日, 有岡城が開城, 天正7年]]}
+      - 聞き: 約1年かあ。あーしなら、1年も閉じ込められたら、心が折れそう。
+      - 語り: ここで、もう一人の「兵衛」です。秀吉の軍師と呼ばれた竹中半兵衛は、この年の6月、官兵衛が出てくる4か月前に、陣中で亡くなっていました。
+        figure: null
+        background: {image: paintings/hanbei_miki_castle_map.jpg, credit: "《播磨三木城》諸国古城之図（江戸時代）"}
+        card: {head: 天正7年6月13日, body: 竹中半兵衛が陣中で病死}
+      - 聞き: 二人の兵衛は、すれ違いかあ。惜しいね。半兵衛が生きてたら、並んで戦えたのかな。
+      - 語り: 救出された官兵衛は、羽柴秀吉のもとで、中国攻めに戻ります。そして天正10年、備中の高松城。官兵衛の名セリフの場面が、やってきます。
+        background: {image: paintings/hidenaga_takamatsu_flood_kuniyoshi.jpg, credit: "歌川国芳《赤松城水攻之図》（江戸時代）"}
+        hook: true
+      - 聞き: 高松城って、水攻めのところだよね。
+        hook: true
+
+  # ---------------------------------------------------------------- 4 高松と本能寺
+  - title: 1582年 備中高松城の水攻めと、本能寺の知らせの夜
+    background: {image: paintings/hanbei_miki_castle_map.jpg, credit: "《播磨三木城》諸国古城之図（江戸時代）"}
+    year: 1580
+    lines:
+      - 語り: 官兵衛は、秀吉の中国攻めに従います。天正8年1月に三木城が落ち、同じ年の9月、播磨での働きに対して、1万石の領地を与えられました。
+        card: {head: 天正8年9月, body: 官兵衛に1万石の領地}
+      - 聞き: 1万石って、多いの？ 少ないの？
+        tone: 疑問
+      - 語り: 石高は、米の収穫量で表す、領地の大きさです。1石は、大人1人が1年に食べる米の量が目安。1万石なら、約1万人が1年食べられる米です。
+      - 語り: 天正9年の鳥取城の兵糧攻めと、天正10年の備中高松城の水攻め。官兵衛は、どちらにも従軍しました。ただ、官兵衛が献策した、と示す史料は、確かめられていません。
+        year: 1582
+        background: {image: paintings/hidenaga_takamatsu_flood_kuniyoshi.jpg, credit: "歌川国芳《赤松城水攻之図》（江戸時代）"}
+        card: {head: 献策の史料, body: 従軍は確か。献策は確かめられない}
+      - 聞き: 手柄って言われてきたのに、献策の記録が見つかってないの？ じゃあ、あの水攻めは、誰の考え？
+      - 語り: 発案者は一説に黒田官兵衛、と書く解説もありますが、あくまで説です。水攻めの決定は5月7日、着工は8日、完成は19日と伝わっています。
+        figure: {type: stats, title: 備中高松城の水攻め, items: [[12日, 堤の工期, 5月8日〜19日], [4km弱, 堤の全長, 数字は史料で割れる], [1万石, 官兵衛の領地, 天正8年]]}
+      - 聞き: 12日で、4キロ近い堤をつくったの？ いまの工事でも、かなり大変そうだよ。
+        tone: 驚き
+        reaction: {number: 12日, lead: 水攻めの堤の工期, say: ほんとに12日？}
+      - 語り: 6月2日、京都の本能寺で、織田信長が討たれます。その知らせが、秀吉の陣に届いたのは、6月3日の夜から、4日の未明にかけてです。
+        figure: null
+        background: {image: paintings/akechi_honnoji_nobukazu_1893.jpg, credit: "楊斎延一《本能寺焼討之図》1893年"}
+        card: {head: 天正10年6月2日, body: 本能寺の変}
+      - 聞き: 官兵衛は、そこで秀吉に、何て言ったの？
+        tone: 疑問
+      - 語り: 「ご運が開く」という形は、『老人雑話』『明良洪範』『黒田家譜』など、江戸時代の書に出てきます。ウィキペディアが引く形は、ご運のひらけさせたまうべき時が来た、です。
+        background: {image: paintings/kanbei_takamatsu_flood_triptych.jpg, credit: "歌川国芳《赤松の城水攻之図》三枚続（1860年代ごろ）"}
+        card: {head: 江戸の書の形, body: 『黒田家譜』は死の約84年後}
+        figure: {type: stats, title: 同じ場面の官兵衛の言葉, items: [[ご運が開く, 江戸時代の書, 老人雑話・明良洪範・黒田家譜], [天の加護を得た, 早い時期の記録, 毛利家文書・當代記]], upto: 1}
+      - 語り: ウィキペディアの整理では、『毛利家文書』や『當代記』など、早い時期の記録も、この場面の官兵衛の言葉を伝えています。
+        background: {image: paintings/akechi_honnoji_nobukazu_1896.jpg, credit: "楊斎延一《本能寺焼討之図》1896年"}
+        card: {head: 早い時期の記録, body: 「天の加護を得た」の趣旨}
+        figure: {type: stats, title: 同じ場面の官兵衛の言葉, items: [[ご運が開く, 江戸時代の書, 老人雑話・明良洪範・黒田家譜], [天の加護を得た, 早い時期の記録, 毛利家文書・當代記]], upto: 2}
+      - 語り: 趣旨は、「天の加護を得た。これで何事も思いのままになった」です。
+      - 聞き: じゃあ、どっちが本当の言葉なの？ 同じ場面なのに、形がちがうよ。
+        tone: 疑問
+      - 語り: 一字一句、どの形が本当かは、分かっていません。ただ、同じ場面でも、書かれた本によって、言葉の形が違うことは、見えてきます。
+        figure: null
+      - 聞き: あの名セリフの形は、本によって違うのか。同じ場面でも、書く人しだいで、言葉は変わるんだなあ。
+      - 語り: 本能寺で信長を討ったのは、明智光秀です。秀吉は、毛利と急いで和睦し、光秀を討つために、引き返しました。中国大返しです。
+        background: {image: paintings/hideyoshi_banshu_departure_sadahide.jpg, credit: "歌川貞秀《真柴久吉播州発向之図》19世紀（名を変えて描いた秀吉）"}
+        card: {head: 中国大返し, body: 毛利と和睦し、光秀を討つため引き返す}
+      - 語り: 軍は、6月9日に姫路を出て、13日に山崎に着きました。備中高松から山崎まで、解説によって約200kmとも230kmとも言われます。
+        year: 1582
+        card: {head: 天正10年6月13日, body: 山崎に着く（姫路出発は9日）}
+        figure: {type: map, title: 中国大返し, bounds: [133.4, 136.1, 34.3, 35.3], route: [備中高松, 姫路, 尼崎, 山崎], places: [[備中高松, 133.82, 34.69], [姫路, 134.69, 34.83], [尼崎, 135.42, 34.73], [山崎, 135.68, 34.89], [京都, 135.77, 35.01]], note: 約200kmとも230kmとも}
+      - 聞き: 東京から静岡のあたりを、軍勢で戻ったのか。兵は、何人くらいいたの？
+      - 語り: 姫路を出るときで「2万以上」。そのあとの数は、2万とも4万とも言われます。
+        figure: null
+      - 聞き: 2万と4万じゃ、倍も違うよ。数え方しだいで、大返しのすごさも変わるね。
+      - 語り: 官兵衛は、毛利方との交渉に関わったとも言われます。ただ、中国大返しを官兵衛が献策した、という史料は、見つかっていません。
+        background: {image: paintings/kanbei_bitchu_gokei_hiroshige.jpg, credit: "歌川広重《六十余州名所図会 備中 豪渓》1853年"}
+        card: {head: 大返しの献策, body: 官兵衛の関与を示す史料は無い}
+      - 語り: 天下人への道を進む秀吉。その下で官兵衛が受け取った褒美は、いくらだったのか。
+        hook: true
+      - 聞き: 褒美が少なかった、って話は聞くけど、本当なの？
+        hook: true
+
+  # ---------------------------------------------------------------- 5 九州平定と12万石
+  - title: 1587年 九州平定と、豊前12万石の褒美
+    background: {image: paintings/kanbei_japan_map_portuguese.jpg, credit: "ル・ブトゥー《日本の王国と地方の新しい正確な記述》17世紀"}
+    year: 1586
+    lines:
+      - 語り: 天正14年、官兵衛は軍監として、九州へ渡ります。軍監は、戦場で軍の働きを見て、秀吉に報告する役です。
+        portrait: {image: paintings/kanbei_yoshitaka_terumo.jpg, caption: "黒田孝高の肖像（照葉神社蔵とされる、江戸時代）", age: false}
+        card: {head: 天正14年, body: 軍監として九州へ渡る}
+      - 語り: 島津方の領主たちに、書状で「所領は保証する」と約束して、降伏を促した、と伝わります。
+      - 語り: このころ官兵衛は、洗礼を受けて、シメオンの名を持ちました。キリシタン、つまりキリスト教の信者になったのです。洗礼の年は、天正11年とも13年ごろとも、割れています。
+        background: {image: paintings/nobunaga_nanban_screen_naizen.png, credit: "《南蛮屏風》（安土桃山時代）"}
+        card: {head: シメオン, body: 官兵衛の洗礼名（洗礼の年は割れる）}
+      - 聞き: キリシタンの武将って、あとで苦労しそうなイメージあるけど……このあと、どうなるの？
+      - 語り: 天正15年の夏、九州の国分け。官兵衛に与えられたのは、豊前6郡です。いまの福岡県東部から、大分県北部にあたります。
+        year: 1587
+        background: {image: paintings/kanbei_buzen_rakanji_hiroshige.jpg, credit: "歌川広重《六十余州名所図会 豊前 羅漢寺下道》1855年"}
+        card: {head: 天正15年, body: 豊前6郡 約12万石}
+        figure: {type: map, title: 九州北部の国分け, bounds: [129.9, 131.9, 32.9, 34.2], places: [[小倉, 130.88, 33.88], [中津, 131.19, 33.60], [博多, 130.41, 33.59], [柳川, 130.41, 33.16]], note: 豊前は小倉から中津のあたり}
+        short: s3
+      - 語り: 石高は、《約12万石》です。12万5千石と書く本もありますが、ここでは約12万石で通しましょう。
+      - 聞き: 九州平定の功労者なのに、12万石だけ？ 冷遇されたんでしょ？
+        tone: 疑問
+        short: s3
+      - 語り: 近くの領地と比べます。小倉などを与えられた森吉成と毛利勝信は、それぞれ約6万石。官兵衛は、その倍です。一方、筑前などを得た小早川隆景は、約37万石でした。
+        background: {image: paintings/kanbei_japan_map_portuguese.jpg, credit: "ル・ブトゥー《日本の王国と地方の新しい正確な記述》17世紀"}
+        figure: {type: bars, title: 九州の国分けの石高（石）, bars: [[森吉成, 60000], [毛利勝信, 60000], [黒田官兵衛, 120000], [立花宗茂, 132000], [小早川隆景, 370000]], labels: [約6万, 約6万, 約12万, 約13万2千, 約37万]}
+        short: s3
+      - 聞き: え、森さんと毛利さんの倍？ じゃあ、12万石って、結局、多いの少ないの？
+        short: s3
+      - 語り: 近くの2人の倍で、立花宗茂とほぼ同じ。数字だけを見れば、冷遇とは言い切れません。
+        short: s3
+      - 語り: では、「恐れられて抑えられた」という話は、どこから来たのでしょう。
+        figure: null
+      - 語り: 「100万石を与えれば、官兵衛は天下を奪う」。秀吉の言葉として、江戸の『常山紀談』や、幕末から明治にかけて編まれた『名将言行録』に出てきます。
+        background: {image: paintings/kanbei_buzen_rakanji_hiroshige.jpg, credit: "歌川広重《六十余州名所図会 豊前 羅漢寺下道》1855年"}
+        portrait: {image: paintings/hideyoshi_portrait_osaka_city_1600.jpg, caption: "豊臣秀吉（大阪市立美術館蔵、1600年）", age: false}
+        card: {head: 後世の話, body: 「100万石で天下を奪う」は後の書}
+      - 語り: 同じ時代の史料の裏づけは、見つかっていません。
+        portrait: null
+      - 語り: もう一つの説明は、宣教師の記録です。「官兵衛はキリシタンだから、褒美を減らされた」と書きます。ただ、これは、書いた宣教師の側の主張です。
+        background: {image: paintings/nobunaga_nanban_screen_naizen.png, credit: "《南蛮屏風》（安土桃山時代）"}
+        card: {head: 宣教師の記録, body: 「キリシタンゆえ減らされた」と書く}
+      - 聞き: 後の書は「恐れられた」。宣教師は「信仰のせい」。理由が2つに割れてるのか。どっちも、役所の記録じゃないね。
+      - 語り: 確かなのは、豊前6郡と、約12万石を与えられた、ということです。官兵衛は、豊前に中津城を築き始めます。
+        background: {image: paintings/kanbei_buzen_rakanji_hiroshige.jpg, credit: "歌川広重《六十余州名所図会 豊前 羅漢寺下道》1855年"}
+      - 語り: ところが、その豊前で、黒田家は、思わぬ苦戦を強いられます。
+        hook: true
+      - 聞き: 苦戦？ 天才軍師なのに？ 想像つかないな。
+        hook: true
+
+  # ---------------------------------------------------------------- 6 城井谷
+  - title: 1587年 城井谷の戦い、長政の敗北と祝宴の謀殺
+    background: {image: paintings/kanbei_buzen_rakanji_hiroshige.jpg, credit: "歌川広重《六十余州名所図会 豊前 羅漢寺下道》1855年"}
+    year: 1587
+    lines:
+      - 語り: 豊前には、地元の領主、城井鎮房がいました。秀吉は鎮房に国替えを命じますが、鎮房は拒み、天正15年、山あいの城井谷城に立てこもります。
+        card: {head: 天正15年10月, body: 城井鎮房が城井谷城に立てこもる}
+        short: s4
+      - 聞き: 官兵衛は、知略の人でしょ？ 城ごと囲んで、あっという間に降参させたんじゃないの？ 天才軍師なんだし。
+        short: s4
+      - 語り: 最初に攻めたのは、官兵衛の息子の長政でした。ところが、谷の地形を生かした鎮房に、岩丸山の戦いで撃退されてしまいます。
+        portrait: {image: paintings/hanbei_nagamasa_kuroda2.jpg, caption: "黒田長政（1911年の模写）", age: false}
+        card: {head: 岩丸山の戦い, body: 長政の軍が撃退される}
+        short: s4
+      - 聞き: 息子の長政が負けたのか。官兵衛の軍って、もっと知略のイメージだったのに。
+        short: s4
+      - 語り: そこで官兵衛は、付け城を築いて兵糧の道を断つ、持久戦に切り替えます。12月下旬、鎮房は、本領を安堵されることと、鶴姫を人質に出すことを条件に、降伏しました。
+        portrait: null
+        background: {image: paintings/kanbei_japan_map_portuguese.jpg, credit: "ル・ブトゥー《日本の王国と地方の新しい正確な記述》17世紀"}
+        card: {head: 持久戦, body: 付け城を築いて兵糧の道を断つ}
+        figure: {type: people, title: 城井谷をめぐる人々, nodes: [[城井鎮房, 国替えを拒む], [黒田長政, 力攻めで撃退される], [黒田官兵衛, 持久戦に切り替え], [鶴姫, 人質に出される]], edges: [[黒田長政, 城井鎮房, 力攻め], [黒田官兵衛, 城井鎮房, 持久戦], [城井鎮房, 鶴姫, 人質に]]}
+      - 聞き: 戦って、条件つきで降参して、人質まで出したのか。それで、終わらなかったの？
+      - 語り: 天正16年4月20日。鎮房は、和睦のあとの酒宴に招かれた中津城で、討たれます。同行の家臣も討たれました。そのあと、人質の鶴姫も、命を落としました。
+        year: 1588
+        figure: null
+        background: {image: paintings/kanbei_nakatsu_map_335_ndl.jpg, credit: "『日本古城絵図』豊前中津城図（江戸時代、国立国会図書館蔵）"}
+        detail: {box: [440, 260, 3360, 2300], label: 豊前中津城図（江戸時代）}
+        card: {head: 天正16年4月20日, body: 城井鎮房、中津城で謀殺される}
+      - 聞き: え、和睦したのに？ 誰が決めたの？
+        tone: 疑問
+        background: {image: paintings/kanbei_nakatsu_map_335_ndl.jpg, credit: "『日本古城絵図』豊前中津城図（江戸時代、国立国会図書館蔵）"}
+        detail: {box: [440, 260, 3360, 2300], label: 豊前中津城図（江戸時代）}
+      - 語り: そこは、史料で割れているのです。ウィキペディアの城井鎮房の項は、長政が決めて、官兵衛が策を立てた、と書きます。一方、別の項は、官兵衛の関わり方が食い違う、と注記しているのです。
+        background: {image: paintings/kanbei_buzen_rakanji_hiroshige.jpg, credit: "歌川広重《六十余州名所図会 豊前 羅漢寺下道》1855年"}
+        card: {head: 官兵衛の関与, body: 史料で食い違う}
+      - 語り: 謀殺の年は、天正16年が主流。天正17年とする解説もあります。
+        card: {head: 謀殺の年, body: 天正16年が主流、17年説も}
+      - 聞き: 官兵衛の関わり方も、史料ごとに違うのか。人物像が、ずいぶん揺れて見えるよ。決めつけないで読むのが、大事なのかもね。
+      - 語り: この豊前を治めた官兵衛は、やがて朝鮮へ渡ります。そこで、秀吉の怒りを買うことになります。
+        background: {image: paintings/hideyoshi_nagoya_departure_yoshitoshi_met.jpg, credit: "月岡芳年《真柴秀吉公名護屋陣先手諸将繰出之図》19世紀"}
+        hook: true
+      - 聞き: 秀吉を怒らせたの？ 官兵衛が？ 何をしたんだろう。あの秀吉が相手だと、ちょっと怖いな。
+        hook: true
+
+  # ---------------------------------------------------------------- 7 朝鮮出兵と如水
+  - title: 1593年 朝鮮出兵で秀吉とぶつかり、剃髪して如水軒円清と号す
+    background: {image: paintings/hideyoshi_nagoya_departure_yoshitoshi_met.jpg, credit: "月岡芳年《真柴秀吉公名護屋陣先手諸将繰出之図》19世紀"}
+    year: 1591
+    lines:
+      - 語り: 天正19年、秀吉は朝鮮への出兵に向けて、肥前の名護屋に城を築きます。官兵衛は、その縄張りを担当した、と福岡県の年表にあります。
+        card: {head: 天正19年, body: 名護屋城の縄張り（福岡県の年表）}
+      - 語り: 文禄元年、宇喜多秀家の軍監として渡海しますが、病にかかって帰国。翌2年の3月、軍奉行として、もう一度海を渡ります。軍奉行は、軍の運営を取りしきる役です。
+        year: 1593
+        background: {image: paintings/kanbei_atakebune_fleet_1593.jpg, credit: "《1593年の九鬼嘉隆の船団》（大阪城天守閣蔵の複製）"}
+        card: {head: 文禄2年3月, body: 軍奉行として再び渡海}
+      - 語り: この戦は、朝鮮の人々に、大きな被害を出しました。官兵衛は、その現場にいたのです。
+      - 聞き: 戦場の最前線にいた、ってことか。それなのに、秀吉と、ぶつかったの？
+      - 語り: 文禄2年5月。秀吉は、朝鮮南部の晋州城を攻める計画を立てます。官兵衛は、これに反対しました。そして、名護屋まで戻って、秀吉を直接説得しようとしたのです。
+        background: {image: paintings/kanbei_korea_campaign_map.jpg, credit: "『大日本読史地図』より《文禄・慶長の役》1935年"}
+        card: {head: 文禄2年5月, body: 晋州城攻めに反対。名護屋へ戻る}
+        figure: {type: map, title: 晋州城攻めへの反対, bounds: [127.0, 131.2, 32.8, 36.0], route: [名護屋, 釜山, 晋州], places: [[名護屋, 129.87, 33.53], [釜山, 129.04, 35.10], [晋州, 128.11, 35.19]], note: 名護屋から海を渡る}
+      - 聞き: 反対して、わざわざ海を渡って、直接説得しに行ったの？ すごい度胸。でも、会社なら、社長に逆らう部下だよ。まずそう。
+      - 語り: 結果は、秀吉の怒りを買うことでした。8月、官兵衛は、髪を剃って「如水軒円清」と号して、許されたのです。
+        figure: null
+        background: {image: paintings/kanbei_nagoya_byobu_arakebune.jpg, credit: "《肥前名護屋城図屏風》の一部（桃山〜江戸初期）"}
+        portrait: {image: paintings/kanbei_josui_portrait_color.jpg, caption: "黒田如水（孝高）の肖像（江戸時代）", age: false}
+        card: {head: 文禄2年8月, body: 剃髪して「如水軒円清」と号す}
+      - 聞き: 頭を丸めて、お詫びしたってことか。じゃあ、「如水」の名前は、このときから？ 名前が変わるって、人生の区切りって感じだよね。
+      - 語り: そこが、割れています。福岡県の年表は、天正17年に家督を長政に譲ったときから、如水と名乗った、と書きます。如水の始まりは、史料ごとに違います。
+        figure: {type: numberline, title: 如水の名の始まりは割れる, items: [[隠居（福岡県の年表）, 1589], [剃髪, 1593]], unit: 年, focus: 剃髪, note: 天正17年とも文禄2年とも}
+      - 聞き: 名前の始まりまで割れてるなんて。官兵衛の話って、ほんとに、あとから作られた部分が多いね。
+      - 語り: 慶長2年。官兵衛は、小早川秀秋の軍監として、釜山に滞陣します。
+        year: 1597
+        figure: null
+        portrait: null
+        background: {image: paintings/kanbei_atakebune_fleet_1593.jpg, credit: "《1593年の九鬼嘉隆の船団》（大阪城天守閣蔵の複製）"}
+      - 語り: この年、次男の熊之助が、朝鮮へ向かう船の沈没で、亡くなりました。16歳でした。
+        card: {head: 慶長2年, body: 次男・熊之助が船の沈没で水死（16歳）}
+      - 聞き: 16歳……。長男は人質に出して、次男はこんな形で。家族の話になると、一気に重いね。
+        tone: しみじみ
+      - 語り: 慶長3年8月、秀吉が亡くなります。そして2年後、天下は関ヶ原へ向かいます。そのとき、官兵衛は九州にいました。
+        hook: true
+      - 聞き: 九州にいた官兵衛は、何をしてたの？
+        hook: true
+
+  # ---------------------------------------------------------------- 8 関ヶ原と九州
+  - title: 1600年 関ヶ原と、九州の別の戦い 石垣原
+    background: {image: paintings/ieyasu_sekigahara_zubyobu.jpg, credit: "《関ヶ原合戦図屏風》（江戸時代）"}
+    year: 1600
+    lines:
+      - 語り: 慶長5年7月、石田三成らが挙兵します。官兵衛の息子、長政は、東軍の家康方について、関ヶ原へ向かいます。官兵衛は、豊前の中津に残りました。
+        portrait: {image: paintings/hanbei_nagamasa_kuroda2.jpg, caption: "黒田長政（1911年の模写）", age: false}
+        card: {head: 慶長5年7月, body: 長政は東軍で関ヶ原へ}
+        short: s5
+      - 聞き: 息子が出たなら、官兵衛は、おとなしく留守番してたんじゃないの？
+        tone: 疑問
+      - 語り: 官兵衛は、中津の金蔵を開いて、約9,000人の軍勢を、短い間に集めた、という話です。この人数は二次的な数字で、確かではありません。
+        portrait: null
+        background: {image: paintings/kanbei_nakatsu_map_335_ndl.jpg, credit: "『日本古城絵図』豊前中津城図（江戸時代、国立国会図書館蔵）"}
+        detail: {box: [440, 260, 3360, 2300], label: 豊前中津城図（江戸時代）}
+        card: {head: 約9,000人, body: 金蔵を開き集めたと伝わる}
+        short: s5
+      - 聞き: 金蔵を開いて、人を集めたのか。貯金を全部はたいて、仲間をかき集めるみたいなものかな。
+      - 語り: 9月9日、豊後を治めた大友家の当主、大友義統が、杵築城を囲みます。官兵衛は、1万と公称する兵で出陣し、13日、石垣原の戦いで大友軍を破りました。
+        background: {image: paintings/kanbei_bungo_kuniezu.jpg, credit: "《慶長国絵図 豊後国》1605年ごろ（臼杵市歴史資料館蔵）"}
+        portrait: {image: paintings/kanbei_otomo_yoshimune_yoshiiku.jpg, caption: "大友義統（『太平記拾遺』、後世の想像図）", age: false}
+        card: {head: 慶長5年9月13日, body: 石垣原の戦い 大友軍に勝つ}
+        figure: {type: stats, title: 九州と関ヶ原の日付（慶長5年）, items: [[9月13日, 石垣原の戦い, 官兵衛が大友軍を破る], [9月15日, 関ヶ原の本戦, 石垣原の2日後], [9月19日, 西軍の敗報, 九州の官兵衛に届く]], upto: 2}
+        short: s5
+      - 聞き: え、マジ？ 関ヶ原の2日前に、九州でも戦があったの？
+        short: s5
+      - 語り: 15日が、関ヶ原の本戦です。官兵衛が西軍の敗報を知ったのは、19日。ある城を攻める最中に、飛脚船を捕らえて知ったと伝わります。
+        portrait: null
+        background: {image: paintings/nene_sekigahara_screen_gifu.jpg, credit: "《関ヶ原合戦図屏風》（江戸時代）"}
+        card: {head: 慶長5年9月15日, body: 関ヶ原の本戦}
+        figure: {type: stats, title: 九州と関ヶ原の日付（慶長5年）, items: [[9月13日, 石垣原の戦い, 官兵衛が大友軍を破る], [9月15日, 関ヶ原の本戦, 石垣原の2日後], [9月19日, 西軍の敗報, 九州の官兵衛に届く]], upto: 3}
+      - 聞き: 関ヶ原の4日後に敗報かあ。知らせが届くのも、そんなにかかったのか。それで、九州の戦いは続いたの？
+      - 語り: 続きました。官兵衛は、家康に「領地は切り取り次第」と申し入れ、臼杵城などを攻略。10月には久留米と柳川へ進み、立花宗茂が降伏して、官兵衛の軍に加わります。
+        figure: {type: map, title: 九州での官兵衛の進軍, bounds: [130.0, 132.0, 32.1, 34.0], route: [中津, 別府, 臼杵, 柳川, 水俣], places: [[中津, 131.19, 33.60], [別府, 131.49, 33.28], [臼杵, 131.80, 33.12], [久留米, 130.52, 33.32], [柳川, 130.41, 33.16], [水俣, 130.41, 32.21]], note: 最後は水俣の近くで停戦}
+        background: {image: paintings/kanbei_bungo_map_bnf.jpg, credit: "《豊後国古地図》（江戸時代、フランス国立図書館蔵）"}
+        card: {head: 慶長5年10月, body: 立花宗茂が降伏し、軍に加わる}
+      - 聞き: 柳川って、さっきの立花さんのところ？ すごい勢いじゃん。九州を全部取る気だったの？
+      - 語り: 動機は、分かっていません。東軍としての働きだったのか。それとも野心だったのか。史料でも、読みが割れたままです。
+        figure: null
+      - 語り: 慶長5年10月、吉川広家に宛てた書状に、「関ヶ原がもう1か月続いていれば」という趣旨の言葉がある、と紹介されています。
+        background: {image: paintings/kanbei_sekigahara_map_midmorning.jpg, credit: "藤井治左衛門《関ヶ原の戦い午前中の戦況図》1926年（近代の戦史地図）"}
+        card: {head: 吉川広家宛の書状, body: 「関ヶ原が1か月続けば」の趣旨}
+      - 語り: ここから「天下を狙った」という話が生まれた、と推測する記述もあります。ただ、この一文で言い切れるかは、読み方次第です。
+      - 聞き: 書状の趣旨だけでは、決められないよ。読み方が割れる、ってことだよね。
+      - 語り: 11月12日、水俣の近くまで進んだところで、家康と島津義久の和議による、停戦命令が届きます。官兵衛は、軍を解散しました。
+        background: {image: paintings/kanbei_bungo_kuniezu.jpg, credit: "《慶長国絵図 豊後国》1605年ごろ（臼杵市歴史資料館蔵）"}
+        card: {head: 慶長5年11月12日, body: 停戦命令で軍を解散}
+      - 語り: 長政は、戦後に、豊前の約17万石（検地のあと）から、筑前の52万石へ移ります。
+        figure: {type: bars, title: 長政の石高（石）, bars: [[豊前中津（検地のあと）, 170000], [筑前名島（戦のあと）, 520000]], labels: [約17万, 約52万]}
+      - 聞き: 長政は、大出世だね。官兵衛は？
+      - 語り: 官兵衛は、家康の加増の申し出を、辞退したと言われます。そして表舞台から離れ、4年後、最期のときを迎えます。
+        figure: null
+        hook: true
+      - 聞き: 最期は、どんなだったの？
+        hook: true
+
+  # ---------------------------------------------------------------- 9 最期
+  - title: 1604年 如水の最期と、細かすぎる遺言
+    background: {image: paintings/nene_kyoto_map_1696.jpg, credit: "《京都の地図》元禄9年（1696年）"}
+    portrait: {image: paintings/kanbei_josui_portrait_color.jpg, caption: "黒田如水（孝高）の肖像（江戸時代）", age: false}
+    year: 1604
+    lines:
+      - 語り: 慶長9年3月20日。黒田官兵衛は、京都の伏見藩邸で亡くなりました。数えで59歳です。辞世の句が、伝わっています。
+        card: {head: 慶長9年3月20日, body: 伏見の藩邸で死去（数え59）}
+      - 語り: 「おもいおく、ことのはなくて、ついにゆく、みちはまよわじ、なるにまかせて」。思い残す言葉はなく、これから行く道も迷わない。なりゆきに任せよう、という意味です。
+        background: {image: paintings/kanbei_chikuzen_hakozaki_hiroshige.jpg, credit: "歌川広重《六十余州名所図会 筑前 筥崎海中の道》1855年"}
+      - 聞き: 言い残すことは何もない、って詠んだのか。潔いなあ。
+      - 語り: ところが、遺言は、驚くほど細かいのです。ただ、宣教師の記録に基づくと見られ、出どころは、はっきりしません。
+        background: {image: paintings/nobunaga_nanban_screen_naizen.png, credit: "《南蛮屏風》（安土桃山時代）"}
+        card: {head: 遺言, body: 宣教師の記録に基づくと見られる}
+      - 語り: 内容は、遺体を博多の神父のもとへ運ぶこと。イエズス会に、2,000タエスを与えること。家臣の殉死を禁じること、と伝わります。
+        figure: {type: pie, title: 遺言の2,000タエスの内訳, parts: [[長崎の管区長へ, 1000], [博多の教会へ, 1000]], unit: タエス}
+      - 聞き: 「言い残すことはない」って詠んだ人が、誰にいくら、って細かく決めてたの？ ずいぶん、几帳面じゃん。
+      - 語り: 当時は、主人が亡くなると、家臣が後を追う習わしがありました。官兵衛は、それを禁じたと伝わります。
+        figure: null
+        background: {image: paintings/kanbei_chikuzen_hakozaki_hiroshige.jpg, credit: "歌川広重《六十余州名所図会 筑前 筥崎海中の道》1855年"}
+      - 聞き: 家臣に「死ぬな」って、最後に言い残したのか。それは、いい人だな。
+      - 語り: 埋葬の場所は、記録で分かれます。博多郊外とも、福岡県の資料は崇福寺とも書きます。
+        card: {head: 埋葬の場所, body: 博多郊外とも崇福寺とも}
+      - 語り: 官兵衛の最期は、ここまでです。残された像を、最後に、層ごとに見直しましょう。
+        hook: true
+      - 聞き: いよいよ、まとめだね。層の話、頭の中で整理しとかなきゃ。
+        hook: true
+
+  # ---------------------------------------------------------------- 10 まとめ
+  - title: まとめ：黒田官兵衛とは何者だったのか
+    background: {image: paintings/kanbei_himeji_castletown_plan.jpg, credit: "《姫路城下絵図》1806年（江戸後期の絵図）"}
+    portrait: {image: paintings/kanbei_yoshitaka_terumo.jpg, caption: "黒田孝高の肖像（照葉神社蔵とされる、江戸時代）", age: false}
+    year: 1604
+    lines:
+      - 語り: 官兵衛の像は、三つの層でできていました。1つ目は、黒田家が編んだ『黒田家譜』。土牢も、頭の瘡も、この層の話です。
+        card: {head: 1つ目の層, body: 黒田家譜（死の約84年後）}
+      - 聞き: 家の本だから、家の人を、よく書く。あーしは、そう受け取ったよ。悪く書くわけ、ないもんね。
+      - 語り: 2つ目は、宣教師の記録です。「キリシタンだから褒美を減らされた」という説明と、遺言の細かい内容は、この層に近いと見られます。
+        background: {image: paintings/nobunaga_nanban_screen_naizen.png, credit: "《南蛮屏風》（安土桃山時代）"}
+        card: {head: 2つ目の層, body: 宣教師の記録}
+      - 聞き: 冷遇の理由も、遺言の細かさも、宣教師が書いたから、そう伝わってるのか。
+      - 語り: 3つ目は、江戸から明治の逸話集です。『老人雑話』『常山紀談』、幕末から明治に編まれた『名将言行録』。「100万石で天下を奪う」という野心家の像は、多くが、この層の書に行き着きます。
+        background: {image: paintings/kanbei_himeji_zu_color.jpg, credit: "《姫路侍屋敷図》（江戸時代）"}
+        card: {head: 3つ目の層, body: 後の逸話集}
+        figure: {type: people, title: 官兵衛の像をつくった層, nodes: [[黒田官兵衛, 三つの層で語られた人], [黒田家譜, 黒田家の本], [宣教師の記録, 信仰の側から], [後の逸話集, 野心の側から]], edges: [[黒田官兵衛, 黒田家譜, 土牢・頭の瘡], [黒田官兵衛, 宣教師の記録, 洗礼・遺言], [黒田官兵衛, 後の逸話集, 100万石・野心]]}
+      - 聞き: ヒーローにも、悪役にもできる話ばっかりだったのか。層ごとに、官兵衛の顔がちがうね。
+      - 語り: 冒頭の問いに戻ります。「ご運が開く」は、江戸の書の形です。ウィキペディアの整理では、早い時期の記録の形は「天の加護」です。
+      - 語り: 同じ場面でも、書かれた本によって、言葉の形が違ったのです。
+        figure: null
+        background: {image: paintings/akechi_honnoji_nobukazu_1893.jpg, credit: "楊斎延一《本能寺焼討之図》1893年"}
+        card: {head: 冒頭の問い, body: 名セリフの形は、本によって違う}
+      - 聞き: あの名セリフも、層が違えば、形が違ったのか。どの本で読むかで、覚える言葉が変わっちゃうね。
+      - 語り: では、層の下にある、記録で言える官兵衛は、どんな人だったのか。
+        background: {image: paintings/kanbei_itami_town_map.jpg, credit: "《寛文九年 伊丹郷町絵図》1669年（有岡城跡のあたり）"}
+      - 聞き: 播磨の小さな出城の家老で、織田につく道を選んで、有岡城に説得に入って、約1年、閉じ込められた人。だよね？
+      - 語り: そうです。九州では約12万石を与えられ、城井谷では、長政の力攻めが退けられたあと、持久戦に切り替えました。
+      - 聞き: 「天才軍師」っていうより、迷いながら選んで、動いた人、って感じ。あーしには、そっちのほうが、人間らしく見えるよ。
+      - 語り: 天下を狙ったか。その答えは、出しません。吉川広家宛の書状も、読みは割れたままです。並べられるのは、《日付》だけです。
+        year: 1600
+        background: {image: paintings/kanbei_bungo_map_bnf.jpg, credit: "《豊後国古地図》（江戸時代、フランス国立図書館蔵）"}
+        card: {head: 慶長5年, body: 石垣原の勝ち・敗報・停戦}
+      - 語り: 9月13日に石垣原で勝ち、9月19日に敗報を知り、11月12日に、停戦命令で軍を解散しました。
+        card: {head: 慶長5年11月12日, body: 停戦命令で軍を解散}
+      - 聞き: 日付だけだと、天下を狙ったのか、東軍として働いたのか、決められないね。決められないって分かることが、いちばん正しいのかも。
+        tone: しみじみ
+      - 語り: 今日の地層は、ここまでです。
+        background: {image: paintings/kanbei_himeji_castletown_plan.jpg, credit: "《姫路城下絵図》1806年（江戸後期の絵図）"}
+      - 聞き: 次回は、武田信玄。三方ヶ原で家康を負かした相手だよね。その信玄の像も、後の本が作ったの？
+        tone: 疑問
+      - 語り: 知っている通説があれば、コメントで教えてください。
+      - 二人: また一緒に、掘りましょう！
+        tone: 明るい
