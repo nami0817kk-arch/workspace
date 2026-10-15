@@ -58,6 +58,8 @@ watch: 明日は⑮モーガン・ロジャーズ
 short_title: アンダーソンってどんな選手？
 thumbnail:
   layout: face
+  callouts:
+  - 昨季のプレミア最多
   line1: アンダーソン
   line2: ●●●●回触った
   tags:

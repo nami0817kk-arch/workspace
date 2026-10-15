@@ -75,6 +75,8 @@ theme:
   opening_image: assets/images/20261014_cmp_pair/01.jpg
 thumbnail:
   layout: versus
+  callouts:
+  - 出場時間を数えた
   photos:
   - assets/images/20261014_cmp_baleba_w/01.jpg
   - assets/images/20261014_cmp_camara_w/01.jpg

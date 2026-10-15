@@ -1,0 +1,115 @@
+# クリスタル・パレス（冨安健洋）の取材メモ（2026年10月15日）
+# 1本＝1テーマ。まとめではなく、1つの話を掘る
+# 埋めたら python -m src.cli draft このファイル で台本になる
+# 取材: 2026-10-15。requests（ブラウザUA）で原文を読んだ。
+#   サッカーキング・フットボールチャンネル2本（パレス側・リヨン側）、クリスタル・パレス公式（cpfc.co.uk の前日会見記事）、BBC Sport のパレスのチームページ。
+# 一次情報: サージュ監督の発言は、クラブ公式の英語原文
+#   「JP Mateta will not be here tomorrow. Dean Henderson, Takehiro Tomiyasu, Ben Chilwell too. … Everybody else is here and available.」
+#   と、日本語の記事（サッカーキング）の訳が一致。BBC も「Mateta, Henderson, Tomiyasu and Ben Chilwell will not be involved」と書く。
+#   公式の原文には、日本語の記事に無い一文（EL登録外の選手は遠征していない）が間にある → 日本語の記事の引用は切れていないが、間が1文抜けている。台本は日本語の記事の引用をそのまま使い、補わない。
+# 冨安の怪我・欠場の理由: 記事に書いてある範囲だけ（ふくらはぎ。9/20リーズ戦で前半のみで交代、日本代表は不参加、10/11フォレスト戦は欠場）。診断名・復帰時期は書かない。
+# 資料間のずれ: フットボールチャンネルは「9日のリーズ戦前日会見」と書くが、リーズ戦は9/20。フォレスト戦の前の会見の言葉（BBC）と読む。→ 日付を言わず「前の会見」とだけ言う。
+# フォンセカ監督の発言は、フットボールチャンネル（リヨン公式サイトの会見紹介を訳したもの）の日本語。フランス語の原文は読んでいない。
+# 反応（ネット民・海外のファン）: 取れなかった。まとめ4サイトのRSSと reactions --find で探したが、今日の話についての書き込みは無い（ヒットしたのは古いボローニャ時代のスレだけ）。作らない。→ 反応なしで報告する。
+slot: japan
+date: "2026年10月15日"
+format: quote
+no_main: true      # ニュースはショートだけ（2026-10-14）。締めで本編を案内しない
+people: [冨安健洋, 中村敬斗, クリスタル・パレス, リヨン]
+
+short_question: 冨安は、いつ戻ってくると思いますか。
+short_hook: 冨安健洋、リヨン戦は欠場。
+short_telops:
+  - {match: ケガ人について問われ, text: 前日会見で/ケガ人を問われ}
+  - {match: ディーン・ヘンダーソン、冨安, text: 冨安はリヨンに/同行しない}
+  - {match: ふくらはぎを痛め, text: 9月20日/リーズ戦で負傷}
+  - {match: 11日のノッティンガム・フォレスト戦, text: 11日のフォレスト戦/も欠場だった}
+  - {match: 前の会見では, text: 前の会見では/復帰を見込んでいた}
+  - {match: 18日のブライトン戦, text: 次は18日/ブライトン戦}
+  - {match: 明日は先発する, text: 中村敬斗は/先発と明言}
+short_photos: []
+
+theme:
+  id: tomiyasu_el_absence
+  league: england
+  league_name: ヨーロッパリーグ
+  kind: other
+  topic: クリスタル・パレス
+  prefix: ""
+  title: 冨安健洋、ELリヨン戦を前にパレス指揮官が語った言葉
+  hook: ""
+  question: パレス指揮官は冨安について何と言ったのか    # quote は問いを立てない。メモ用
+
+thumbnail:
+  line1: 冨安健洋、ELリヨン戦
+  line2: 指揮官が明言「明日は●●」
+  tags: [冨安健洋, 中村敬斗, パレス]
+  photo: assets/images/20261015_tomiyasu/01.jpg
+  short_photo: assets/images/20261015_tomiyasu/01_v.jpg
+
+answer: ""           # quote はまとめの節を作らない
+watch: 次は18日、プレミアのブライトン戦（アウェー）
+# follow_up: true
+
+sections:
+  - id: said
+    main: true
+    heading: 前日会見での言葉
+    tier: 報道
+    telop: 「明日はここにはいない」
+    say:
+      - {text: 'クリスタル・パレスのサージュ監督が、リヨン戦の前日会見で語りました。', short_only: true}
+      - ヨーロッパリーグ第2節、現地15日のリヨン戦を前に、ケガ人について問われて。
+      - voice: サージュ監督
+        text: ジャン・フィリップ・マテタは明日ここにはいない。
+      - voice: サージュ監督
+        text: ディーン・ヘンダーソン、冨安、ベン・チルウェルも同様だ。
+        cont: true
+      - voice: サージュ監督
+        text: それ以外の選手は全員揃っており、起用可能だ
+        cont: true
+    official: false
+    sources:
+      - https://www.cpfc.co.uk/news/first-team/sage-press-conference-lyon-palace-pre-match/
+      - https://www.soccer-king.jp/news/world/el/20261015/2216891.html
+      - https://www.footballchannel.jp/2026/10/15/post1032708/
+      - https://www.bbc.com/sport/football/teams/crystal-palace
+
+  - id: context
+    heading: どういう状況で出た言葉か
+    tier: 報道
+    telop: ふくらはぎの負傷。復帰は持ち越し
+    say:
+      - 冨安は9月20日のリーズ戦でふくらはぎを痛め、前半だけで交代しました。
+      - その後は、日本代表の活動にも加われませんでした。
+      - 11日のノッティンガム・フォレスト戦も欠場しています。
+      - 前の会見では、冨安とマテタ、ヘンダーソンについて、サージュ監督が語っていました。
+      - voice: サージュ監督
+        text: 3人とも、リヨン戦あるいはブライトン戦で
+      - voice: サージュ監督
+        text: 復帰できると見込んでいる
+        cont: true
+      - 今回は、リヨン戦での復帰は見送られました。次の機会は、18日のブライトン戦です。
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/10/15/post1032708/
+      - https://www.soccer-king.jp/news/world/el/20261015/2216891.html
+      - https://www.bbc.com/sport/football/teams/crystal-palace
+
+  - id: nakamura
+    heading: リヨン側の言葉
+    tier: 報道
+    telop: 中村敬斗は先発へ。対戦は実現せず
+    say:
+      - 同じ前日会見の場で、リヨンのフォンセカ監督は中村敬斗に触れました。
+      - voice: パウロ・フォンセカ監督
+        text: 明日は先発する。
+      - voice: パウロ・フォンセカ監督
+        text: ロイスがいないなか、敬斗のような選手がいることは重要だ
+        cont: true
+      - 日本代表の冨安と中村の対戦は、今回は実現しません。
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/10/15/post1032702/
+      - https://www.soccer-king.jp/news/world/el/20261015/2216891.html
+short_title: "冨安健洋、ELリヨン戦を前にパレス指揮官が語った言葉"

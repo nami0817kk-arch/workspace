@@ -1,0 +1,131 @@
+# CL の取材メモ（2026年10月15日）
+# 1本＝1テーマ。まとめではなく、1つの話を掘る
+# 埋めたら python -m src.cli draft このファイル で台本になる
+# 取材: 2026-10-15。サッカーキング（WebFetch で本文）・ESPN の試合記録（summary API、event 401915414）・
+#   ESPN の記事 id 50185130「Mourinho takes blame for Madrid struggles before late rally stuns Roma」（now.core.api.espn.com の本文そのもの）を読んだ。
+# 日付・場所: 現地10月14日（水）、ローマのスタディオ・オリンピコ。CLリーグフェーズ第2節。ローマ3-4レアル・マドリード。
+# 得点（ESPN の試合記録）: 20分 デ・ローン（ローマ）1-0／25分 ムバッペ 1-1／51分 マレン 2-1／57分 マレン 3-1（VAR確認後）／
+#   83分 エスピ 3-2（CKのあと、VAR確認後）／85分 エンドリッキ 3-3（ギュレルのクロス、CKのあと。ヘディング）／90分 リュディガー 3-4（ギュレルのクロス、CKのあと）。
+#   サッカーキングの得点者・時間と一致。
+# 「CKから3連発」はサッカーキングの見出し。ESPN の記録は3点とも「following a corner」（コーナーのあとの得点）。→ 台本は「コーナーキックのあと」と書く。
+# 資料間のずれ: 90分のゴールを、ESPN の記事は「ヘディング」、ESPN の試合記録は「右足のシュート（ごく近くから）」と書く。→ 台本では決め方を言わない。
+#   エスピの3-2はアシストの記載なし。エンドリッキ・リュディガーのゴールはどちらもギュレルのクロス（試合記録）。
+# 「7分間」は ESPN の記事の言い方（83分→90分）。
+# 監督の言葉: ESPN 記事の英語の引用をそのまま日本語にした（試合後会見、10/14）。ESPN の記事は
+#   「責任を引き受けた、そのあと選手を称えた」と書く。引用の1文目は "The first half was the coach's fault; the second half was the players' fault"。
+#   後半の「選手のせい」は文脈上は称賛の意味に読めるが、ESPN は説明していない → 台本では1文目を丸ごと引き、前後に意味づけを足さない。
+#   ヴィニシウスの出場停止・ヴィニシウスの交代の話は、もう1本の題材なので、この本では触れない（ESPN 記事内のヴィニシウスの発言・監督のヴィニシウス評は使わない）。
+# 反応（ネット民）: worldfn.net（WorldFootballNewS）の実況スレ「◆UCL◆LS2節 ローマ×マドリー…」の書き込み3件。
+#   >>599（85分の同点の直後）・>>652・>>657（90分の決勝点の直後）。2026/10/15 05:44〜05:49 の書き込み。全文のまま。匿名なので未確認。
+#   同じスレのヴィニシウスへの書き込み（>>609・>>610）は、この本では使わない。
+# 写真: レアル・マドリード公式サイトの試合レポート（realmadrid.com、ゴールの喜びの写真）。Commons は429で取れず（同時に走る別セッションの取得が多い）。リュディガー単独の顔写真は取れていない。
+# 読めなかったもの: AS の読者投票は AS 側が403（ボット対策）。Goal.com の選手コメント（リュディガー・エンドリッキ）は読んでいない。
+slot: cl
+date: "2026年10月15日"
+format: news
+no_main: true      # ニュースはショートだけ（2026-10-14）。締めで本編を案内しない
+people: [レアル・マドリード, ローマ, モウリーニョ, リュディガー]
+
+# ショートの質を上げる指定（2026-10-14〜15）
+short_question: 終盤の7分間、決め手は何だったと思いますか。
+short_hook: レアル・マドリードが、7分間で3点。ローマの3対1を逆転。
+short_telops:
+  - {match: デ・ローンが先制, text: 20分デ・ローン/ローマが先制}
+  - {match: マレンが2点を決めて, text: マレンが2発/ローマ3対1}
+  - {match: エスピが決めて, text: 83分エスピ/CKのあと3対2}
+  - {match: エンドリッキが, text: 85分エンドリッキ/頭で3対3}
+  - {match: リュディガーが決めて, text: 90分リュディガー/ついに3対4}
+  - {match: 7分間が始まります, text: 終盤7分間で/3対1を逆転}
+  - {match: 不可能だ, text: 90分間ずっとは/不可能だ}
+short_photos: []
+
+theme:
+  id: real_roma_cl
+  league: spain
+  prefix: ""
+  title: レアル・マドリード、終盤7分でCKのあと3発。ローマの3対1を逆転した決め手とは
+  hook: ""
+  question: レアル・マドリードは、なぜ終盤7分で3対1をひっくり返せたのか
+  takeaway: レアルは83分まで1点だけ。ローマが26分間守ったあとの7分間に、3点がすべてコーナーキックのあとで生まれた
+
+thumbnail:
+  line1: レアル、終盤7分で3発
+  line2: ローマ3対1が●●に
+  tags: [レアル・マドリード, ローマ, リュディガー]
+  layout: scene
+  photo: assets/images/20261015_real_roma_cl/01.jpg
+  short_photo: assets/images/20261015_real_roma_cl/02.jpg
+
+answer: コーナーキックのあと、83分・85分・90分に3点。エスピ、エンドリッキ、リュディガーが決めた
+watch: 次はレアルがライプツィヒ戦、ローマはスロヴァン・ブラチスラヴァ戦
+# follow_up: true
+
+sections:
+  - id: what
+    main: true
+    heading: 何が起きたか
+    tier: 報道
+    telop: 3対1から終盤7分間で3点。レアルが4対3で逆転
+    say:
+      - {text: 'レアルのモウリーニョ監督が、逆転勝ちのあとに語りました。', short_only: true}
+      - voice: モウリーニョ
+        text: 前半は監督のせいで、後半は選手たちのせいだった
+      - チャンピオンズリーグ第2節、ローマ対レアル・マドリード。
+      - ローマは20分に、デ・ローンが先制しました。
+      - レアルはムバッペが同点にします。
+      - 後半はマレンが2点を決めて、ローマが3対1とリードします。
+      - ここまで、レアルの得点は1点だけ。ここから、7分間が始まります。
+      - 83分、コーナーキックのあと、途中出場のエスピが決めて、3対2と1点差に迫ります。
+      - 85分、ギュレルのクロスから、エンドリッキが決めて、3対3の同点。
+      - 90分、またギュレルのクロスから、リュディガーが決めて、3対4の逆転です。
+      - 3点とも、コーナーキックのあとのゴールでした。
+      - ローマは、2点のリードを守れませんでした。
+      - voice: モウリーニョ
+        text: あの強度で、あのやり方で、
+      - voice: モウリーニョ
+        text: 90分間ずっとプレーするのは不可能だ。
+        cont: true
+      - voice: モウリーニョ
+        text: 私は必要だと思った交代をした。
+        cont: true
+      - voice: モウリーニョ
+        text: だが前半、彼らは私たちを本当に罰した
+        cont: true
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/cl/20261015/2216873.html
+      - https://www.espn.co.uk/football/story/_/id/50185130/real-madrid-roma-jose-mourinho-uefa-champions-league
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915414
+
+  - id: numbers
+    heading: 7分間の3点は、何がそろった結果か
+    viewpoint: true
+    tier: 報道
+    telop: ローマが守っていたのは26分間。レアルは7分で3点
+    say:
+      - ローマは、57分に3対1としてから、83分まで26分間、リードを守っていました。
+      - レアル・マドリードはこれで、リーグフェーズ2連勝としました。
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915414
+      - https://www.espn.co.uk/football/story/_/id/50185130/real-madrid-roma-jose-mourinho-uefa-champions-league
+
+  # ネットの反応: worldfn.net の実況スレ（2026/10/15 05:44〜05:49 の書き込み）。匿名の書き込みなので未確認。全文のまま。
+  - id: reactions
+    heading: ネットの反応
+    tier: 未確認
+    telop: 「ローマさん？？？」
+    say:
+      - voice: ネット民
+        text: マドリー結局追いつくんかーい
+        short_voice: true
+      - voice: ネット民
+        text: マドリーつえええ
+        short_voice: true
+      - voice: ネット民
+        text: ローマさん？？？
+        short_voice: true
+    official: false
+    sources:
+      - https://worldfn.net/archives/63547094.html
+short_title: "レアル・マドリード、終盤7分でCKのあと3発。ローマの3対1を逆転した決め手とは"

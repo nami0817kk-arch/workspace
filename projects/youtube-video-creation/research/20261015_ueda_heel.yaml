@@ -1,0 +1,138 @@
+# 日本人選手 の取材メモ（2026年10月15日）
+# 1本＝1テーマ。まとめではなく、1つの話を掘る
+# 埋めたら python -m src.cli draft このファイル で台本になる
+# 取材: 2026-10-15。requests（ブラウザUA）で原文を読んだ。サッカーキング（本文・L'Équipe の引用）、theWORLD、東スポWEB、
+#   フランスの Foot Mercato・Sport.fr・Foot en France、フットボールチャンネル。レキップ本体は 403（アクセス拒否）で読めなかった
+#   → レキップの内容は上の各社の引用から。レキップを直接引いたようには書かない。
+# 前の回（10/14 research/20261014_ueda_lille.yaml）で言ったこと: アーセナル戦の先発・幻のゴール・足を気にして78分に交代・診断は出ていない。
+#   → 今回は繰り返さない。今回の新しい事実だけ: 左かかと／バスで足を引きずっていた／経験したことのない種類の違和感／14日に検査予定／17日ブレスト戦は不透明／ジルー以外の選択肢。
+# 検査の結果: 15日朝(日本時間)の時点で、日本語・フランス語・英語のニュース検索（Google News）に結果の記事は無かった。→「まだ伝わっていない」と書く。
+#   公開前にもう一度探すこと（結果が出ていたらこの題材は組み直し）。
+# 日付・場所: 試合は現地10月13日、エミレーツ・スタジアム。検査は現地14日（水）にリールで予定。ブレスト戦は現地17日（土）20時45分、リールのスタッド・ピエール・モーロワ。
+# 資料間のずれ: 検査の日がサッカーキングは「14日午後にユーロスターでリールへ戻った後」、theWORLD は「現地14日にリールで検査」、フランス勢は「水曜（14日）」→ 一致。
+#   上田の今季成績は theWORLD「加入後ここまで公式戦6試合3ゴール」。フットボールチャンネルは試合前「5試合3得点」→ 1試合足して一致。
+# 東スポの「11月の日本代表活動にも大きな影響」は東スポ自身の見立て（レキップの内容ではない）。台本では東スポの見立てと分けて書く。
+# 反応（ネット民）: サカラボ（sakarabo.blog.jp）の記事「【速報】リールFW上田綺世がアーセナル戦で負傷…」に引かれた5ちゃんねるの書き込み（10/14 10:xx、レキップの報道より前）。
+#   >>15（what節・誰かの言葉を46秒までに出す決まりのため）、>>14・>>21（反応の節）の3件。全文のまま（原文の改行は空白に）。匿名なので未確認。
+slot: japan
+date: "2026年10月15日"
+format: news
+no_main: true      # ニュースはショートだけ（2026-10-14）。締めで本編を案内しない
+people: [上田綺世, リール, ジルー]
+
+# ショートの質を上げる指定（2026-10-14〜15）
+short_question: 上田は17日、ピッチに立てると思いますか。
+short_hook: 上田綺世、左かかとに経験のない違和感と仏紙。
+short_telops:
+  - {match: 左のかかとに違和感, text: 上田綺世は/左かかとに違和感}
+  - {match: チームバスに戻るときも, text: 試合後のバスで/足を引きずる}
+  - {match: 経験したことのない種類, text: キャリアで初めての/種類の違和感}
+  - {match: 14日に行われる予定, text: 14日にリールで/検査の予定}
+  - {match: 結果は、まだ伝わっていません, text: 検査の結果は/まだ伝わらず}
+  - {match: 現地17日の土曜, text: 17日の土曜/ホームでブレスト戦}
+  - {match: 21日には, text: 21日にはCLで/ガラタサライ戦}
+  - {match: 40歳のジルー, text: 代役の筆頭は/40歳のジルー}
+short_photos: []
+
+theme:
+  id: ueda_heel
+  league: france
+  prefix: ""
+  title: 上田綺世、左かかとに経験のない違和感と仏紙。17日のブレスト戦に出られるか
+  hook: ""
+  question: 上田綺世は、左かかとの違和感で17日のブレスト戦に出られるのか
+  takeaway: 上田の違和感はキャリアで初めて経験する種類のもので、検査の結果はまだ伝わっていない。リールは17日にブレスト戦、21日にチャンピオンズリーグでガラタサライ戦と試合が続くが、代役の筆頭は40歳のジルーで、前線の選択肢は多くない
+
+thumbnail:
+  line1: 上田綺世 左かかとに違和感
+  line2: 17日のブレスト戦は●●
+  tags: [上田綺世, リール]
+  photo: assets/images/20261015_ueda_heel/01.jpg
+  short_photo: assets/images/20261015_ueda_heel/01_v.jpg
+
+answer: 検査の結果はまだ伝わっておらず、出場は不透明なまま
+watch: 検査の結果と、17日のブレスト戦のメンバー発表
+# follow_up: true
+
+sections:
+  - id: what
+    main: true
+    heading: 何が起きたか
+    tier: 報道
+    telop: 左かかとに違和感。バスでも足を引きずる
+    say:
+      - {text: 'リールの上田綺世に、けがの心配が出ています。', short_only: true}
+      - アーセナル戦のあと、上田は左のかかとに違和感を覚えていたといいます。
+      - 試合後、チームバスに戻るときも足を引きずっていたと伝えられています。
+      - 上田にとって、これまでのキャリアで経験したことのない種類の違和感だということです。
+      - voice: ネット民
+        text: 足踏まれてからおかしくなったな
+      - voice: ネット民
+        text: どっか捻ったか
+        cont: true
+      - voice: ネット民
+        text: その後もかなり長い時間やってたから
+        cont: true
+      - voice: ネット民
+        text: そこまで重症じゃないと思うけど
+        cont: true
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/fra/20261014/2216749.html
+      - https://www.theworldmagazine.jp/20261015/01world/ucl/509784
+      - https://www.footmercato.net/a619919699182512197-losc-ayase-ueda-touche-au-talon-contre-arsenal
+      - https://www.sport.fr/football/losc-ueda-blesse-contre-arsenal-et-incertain-pour-brest-1489938.shtm
+
+  - id: exam
+    heading: 検査はどうなったか
+    tier: 報道
+    telop: 検査は14日にリールで。結果はまだ
+    say:
+      - 上田の検査は、チームがユーロスターでリールに戻った14日に行われる予定でした。
+      - 状態を詳しく調べて、離脱が必要になる場合はどのくらいか見極めるためです。
+      - ただ、その結果は、まだ伝わっていません。
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/fra/20261014/2216749.html
+      - https://www.footmercato.net/a619919699182512197-losc-ayase-ueda-touche-au-talon-contre-arsenal
+      - https://www.sport.fr/football/losc-ueda-blesse-contre-arsenal-et-incertain-pour-brest-1489938.shtm
+
+  - id: next
+    viewpoint: true
+    heading: 17日の試合に間に合うのか
+    tier: 報道
+    telop: 17日にブレスト戦。出場は不透明
+    say:
+      - リールは現地17日の土曜、ホームでブレストと戦います。リーグ・アンの第7節です。
+      - 上田が出られるかどうかは、いまのところ不透明です。
+      - 21日には、チャンピオンズリーグの第3節でガラタサライ戦も控えています。
+      - 上田の代わりに前線に立つなら、筆頭は40歳のジルーです。
+      - ジルーのほかに、センターフォワードの選択肢は多くないと指摘されています。
+      - 日本の東京スポーツは、11月の日本代表の活動にも影響が出そうだと見ています。
+    official: false
+    sources:
+      - https://www.footenfrance.fr/LOSC-coup-dur-pour-Davide-Ancelotti-avant-Lille-Brest_a4204.html
+      - https://www.sport.fr/football/losc-ueda-blesse-contre-arsenal-et-incertain-pour-brest-1489938.shtm
+      - https://www.footballchannel.jp/2026/10/14/post1031967/
+      - https://www.tokyo-sports.co.jp/articles/-/406627
+
+  # ネットの反応: 2026-10-15 に取った実在の書き込み（5ちゃんねる。サカラボの転載）。匿名の書き込みなので未確認。
+  # アーセナル戦の直後（レキップの報道より前）の書き込みで、かかとの話はまだ出ていない。台本ではそこを言わない。
+  - id: reactions
+    heading: ネットの反応
+    tier: 未確認
+    telop: 「しばらく休養だな」
+    say:
+      - voice: ネット民
+        text: 地味に怪我の多い選手だから リールの医療体制次第では選手寿命縮みそうだな
+      - voice: ネット民
+        text: しばらく休養だな
+        short_voice: true
+      - voice: ネット民
+        text: １１月のブラジル戦は問題外、安静にしてろ
+        cont: true
+        short_voice: true
+    official: false
+    sources:
+      - https://sakarabo.blog.jp/archives/1084563982.html
+short_title: "上田綺世、左かかとに経験のない違和感と仏紙。17日のブレスト戦に出られるか"

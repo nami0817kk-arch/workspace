@@ -23,6 +23,8 @@ thumbnail_crests:
 thumbnail_photo: assets/images/20261014_transfer_liverpool_window/a05_road_w.jpg
 thumbnail_layout:
   layout: number
+  callouts:
+  - 補強は成功か？
   number: ●位
 bg: assets/backgrounds/stadium.png
 date: 2026年10月14日

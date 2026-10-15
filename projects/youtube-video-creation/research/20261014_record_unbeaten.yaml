@@ -110,6 +110,8 @@ theme:
 short_title: アーセナルの49試合無敗より長い記録は、2つあった
 thumbnail:
   layout: number
+  callouts:
+  - 再現できるか？
   photo: assets/images/20261014_unbeaten/trophy/01.jpg
   short_photo: assets/images/20261014_unbeaten/wenger09/01_v.jpg
   number: 49試合

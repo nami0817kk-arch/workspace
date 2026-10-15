@@ -1,0 +1,176 @@
+# 試合結果 の取材メモ（2026年10月15日）
+# 1本＝1テーマ。まとめではなく、1つの話を掘る
+# 埋めたら python -m src.cli draft このファイル で台本になる
+# 取材: 2026-10-15。出典は原文を読んだもの。
+#  - 題材の元: フットボールチャンネル 2026-10-15「イタリア勢が第2節で4戦全敗の歴史的屈辱…」。
+#    本文は「TUTTOmercatoWEB が（ローマ戦の前に）『過去に例のない事態だ』として、イタリアからCLに4クラブ以上が出場するように
+#    なって以降、同じ節で4クラブすべてが敗れたことは一度もないと指摘していた」と書く。
+#  - 「前例がない」の一次確認: UEFA 公式の統計までは辿れなかった（UEFA 公式は当たっていない）。TUTTOmercatoWEB の原文も検索で見つからなかった。
+#    代わりにガゼッタ・デロ・スポルト 2026-10-14（4クラブ全敗の記事、本文を requests で読んだ）が
+#    「Non era mai successo che le squadre italiane cadessero tutte nello stesso turno di Champions League」と書く。
+#    → 台本では「これまで一度も起きていなかったと伝えられています」と報道止まり。確度は 報道。
+#  - 自分で数えた比べ（見立て）: ESPN の試合記録（scoreboard API を日付ごとに引いた）で、2018-19〜2025-26 の8シーズン、
+#    イタリア勢が4クラブ（2024-25 は5クラブ）出た 52 の節を数えた。全クラブが負けた節は 0。いちばん多かったのは
+#    4クラブ中3クラブの敗戦で3回（2018-19 第6節・2021-22 第6節・2022-23 第6節）。今季第2節が 4クラブ中4クラブ。
+#    節＝試合の日が2日以内に続くまとまりで切った。UEFA 公式の統計ではなく ESPN の記録から自分で数えたもの。それ以前（2017-18 まで）は数えていない。
+#  - 試合の事実は ESPN の試合記録（summary API）で確かめた:
+#      インテル 3-4 クラブ・ブルッヘ（サン・シーロ、10/13）／ビジャレアル 3-1 ナポリ（エスタディオ・デ・ラ・セラミカ、10/13）
+#      ローマ 3-4 レアル・マドリード（オリンピコ、10/14）／フェイエノールト 3-2 コモ（デ・カイプ、10/14）
+#    先制: ナポリ8分（ラフマニ）、コモ18分（ディアオ）、ローマ20分（デ・ローン）。インテルは一度もリードしていない。
+#    ローマは3-1（57分）から、83分・85分・90分に失点。ガゼッタは「82分まで夢のようだった、そのあと8分間のブラックアウト」と書く。
+#    ESPN の得点時間では83〜90分なので、台本では時間を言わず「終盤の3失点」にした。
+#  - 第1節（フットボールチャンネル本文）: インテル 1-2 R・マドリード、ナポリ 0-1 アーセナル、ローマ 1-1 フェネルバフチェ、コモ 4-1 ライプツィヒ。開幕2節の合計 1勝1分6敗。
+#    ESPN の第1節の記録（9/8〜9/10）で4試合とも一致を確認。
+#  - 順位（ESPN standings、36クラブ）: コモ12位・勝ち点3、ローマ25位・勝ち点1、インテル29位・勝ち点0、ナポリ32位・勝ち点0。
+#  - 第3節（ESPN scoreboard）: 現地20日 ナポリ-ボデ/グリムト、ローマ-スロヴァン・ブラチスラヴァ、21日 コモ-マンチェスターU、インテル-シャフタール（4クラブとも自分のホーム）。
+#  - 監督の言葉（イタリア語の原文から日本語に。切らずに文として完結している部分だけ使った）:
+#      アッレグリ（ナポリ）: ガゼッタ 10/14 の記事に引用。"Il livello della Champions è più alto. Quando giochi con le squadre medio-piccole non te ne accorgi, ma quando giochi in Champions te ne accorgi"
+#      ガスペリーニ（ローマ）: ガゼッタ 10/14 "Ci siamo piantati sul traguardo nel modo meno previsto" / "Non stavamo soffrendo invece nel finale ci siamo come paralizzati dalla situazione"
+#      ファブレガス（コモ）: ガゼッタ 10/14 "Sparate a me, non ai ragazzi" / "Se c'è un errore, è sempre tutto mio"
+#    インテルのキヴ監督の言葉は 10/14 のブルッヘ戦の回で使ったので、今回は使わない。
+#  - 読めなかったもの: UEFA 公式、TUTTOmercatoWEB の原文、france24（403）。X・Reddit・Bluesky は普通のUAの requests では読めない。
+#  - ネットの反応: 実在の投稿が取れなかった。作らない → 反応の節は置かない。
+slot: match
+date: "2026年10月15日"
+format: news
+no_main: true      # ニュースはショートだけ（2026-10-14）。締めで本編を案内しない
+people: [イタリア勢, アッレグリ, ガスペリーニ, ファブレガス]
+
+theme:
+  id: italy_cl_four_losses
+  league: italy
+  prefix: ""
+  title: "イタリア勢、CL第2節で4クラブ全敗。「前例がない」と伝わった夜"
+  hook: ""
+  question: イタリアの4クラブは、なぜ同じ節で全部負けたのか
+
+thumbnail:
+  short_photo: assets/images/20261015_allegri/01_v.jpg
+  line1: イタリア勢 CL4戦全敗
+  line2: 先に点を取った3クラブが●●
+  tags: [イタリア勢, セリエA]
+  photo: assets/images/20261015_italy_pair/01.jpg
+
+short_question: この全敗、いちばんの原因は何だと思いますか
+short_hook: イタリア勢が4クラブ全部負けた夜。前例はあったのでしょうか
+short_telops:
+  - {match: これまで一度も起きていなかった, text: 同じ節で4クラブ全敗/前例がないと伝わる}
+  - {match: チャンピオンズリーグのレベルは高い, text: ナポリのアッレグリ/「CLのレベルは高い」}
+  - {match: ゴール目前で, text: ローマは3-1から/終盤に3失点}
+  - {match: 状況に体が固まった, text: ガスペリーニ監督/「体が固まった」}
+  - {match: ぼくを撃ってくれ, text: ファブレガス監督/「撃つならぼくを」}
+  - {match: いつも全部ぼくのものだ, text: コモは2-3で逆転負け/責任は全部ぼく}
+
+takeaway: "チャンピオンズリーグ第2節で、イタリアの4クラブ（インテル・ナポリ・ローマ・コモ）がすべて負けた。9点を取って14点を取られ、先に点を取ったナポリ（8分）・コモ（18分）・ローマ（20分）は全部逆転された。同じ節で全部が負けたのは初めてだと伝えられた。自分で数えると、2018-19シーズンから昨季までの52の節で全部が負けた節は0回、最多は4クラブ中3クラブの3回。開幕2節の成績は1勝1分6敗、勝ち点4。第3節は現地20日と21日、4クラブとも自分のホーム"
+
+answer: 先に点を取ったナポリ、コモ、ローマの3クラブが、終盤までに全部ひっくり返された。インテルは一度もリードしていない
+watch: 現地20日と21日の第3節。4クラブとも自分のホームで、勝ち点を取れるか
+
+sections:
+  - id: score
+    heading: 試合はこうなった
+    tier: 報道
+    telop: イタリア勢 CL第2節 4戦全敗
+    card:
+      type: table
+      title: CL第2節 イタリア勢の結果
+      columns: [クラブ, 相手, スコア]
+      rows:
+      - [インテル, クラブ・ブルッヘ, 3-4]
+      - [ナポリ, ビジャレアル, 1-3]
+      - [ローマ, レアル・マドリード, 3-4]
+      - [コモ, フェイエノールト, 2-3]
+    say:
+      - 第2節で、イタリア勢の4クラブが、すべて負けました。
+      - インテル、ナポリ、ローマ、コモです。
+      - インテルはホームで、クラブ・ブルッヘに3対4で負けました。
+      - ナポリは敵地で、ビジャレアルに1対3で負けました。
+      - ローマはホームで、レアル・マドリードに3対4で負けました。
+      - コモはフェイエノールトに、2対3で負けました。
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/10/15/post1032759/
+      - https://www.gazzetta.it/Calcio/Champions-League/14-10-2026/champions-league-italiane-tutte-battute-e-la-prima-volta.shtml
+      - https://football-italia.net/ucl-inter-3-4-club-brugge-terrific-tresoldi/
+
+  - id: voices
+    main: true
+    heading: 敗れた監督たちの言葉
+    tier: 報道
+    telop: 4クラブ全敗は、前例がないと伝えられた
+    say:
+      - {text: '負けたのは、インテル、ナポリ、ローマ、コモ。第2節の4試合です。', short_only: true}
+      - 同じ節で全部負けたのは、これまで一度も起きていなかったと、伝えられています。
+      - ナポリのアッレグリ監督は、こう話しました。
+      - voice: アッレグリ
+        text: チャンピオンズリーグのレベルは高い。
+      - voice: アッレグリ
+        text: 中堅や小さなクラブと戦っているときは気づかないが、
+        cont: true
+      - voice: アッレグリ
+        text: チャンピオンズリーグで戦うと気づく
+        cont: true
+      - ローマのガスペリーニ監督は、リードを守れなかった試合を、こう振り返りました。
+      - voice: ガスペリーニ監督
+        text: ゴール目前で、いちばん思いがけない形で止まってしまった
+      - voice: ガスペリーニ監督
+        text: 苦しんでいたわけではない。
+      - voice: ガスペリーニ監督
+        text: なのに終盤は、状況に体が固まったようになった
+        cont: true
+      - コモのファブレガス監督は、責任は自分にあると話しています。
+      - voice: ファブレガス
+        text: 撃つなら、ぼくを撃ってくれ。選手たちではなく
+      - voice: ファブレガス
+        text: ミスがあるなら、それはいつも全部ぼくのものだ
+    official: false
+    sources:
+      - https://www.gazzetta.it/Calcio/Champions-League/14-10-2026/champions-league-italiane-tutte-battute-e-la-prima-volta.shtml
+      - https://www.gazzetta.it/Calcio/Serie-A/Roma/14-10-2026/gasperini-dopo-roma-real-li-abbiamo-surclassati-alla-fine-ci-siamo-paralizzati.shtml
+      - https://www.gazzetta.it/Calcio/Serie-A/Como/14-10-2026/fabregas-dopo-il-ko-col-feyenoord-sparate-su-di-me-queste-sconfitte-ci-fanno-crescere.shtml
+
+  - id: numbers
+    viewpoint: true
+    heading: 先に点を取った3クラブ
+    tier: 報道
+    telop: 先制した3クラブは全部逆転負け。全敗の節は過去52節で0節
+    card:
+      type: table
+      title: 先に点を取ったのは誰か
+      columns: [クラブ, 先制, 結果]
+      rows:
+      - [ナポリ, 8分, 1-3で負け]
+      - [コモ, 18分, 2-3で負け]
+      - [ローマ, 20分, 3-4で負け]
+      - [インテル, なし, 3-4で負け]
+    say:
+      - 第2節の4試合で、イタリア勢は9点を取って、14点を取られました。
+      - 先に点を取ったのは、ナポリが8分、コモが18分、ローマが20分。
+      - この3クラブは、全部ひっくり返されて負けています。
+      - インテルは、一度もリードできませんでした。
+      - 自分で数えてみます。対象は2018-19シーズンから昨季まで。
+      - イタリア勢が4クラブか5クラブ出た節は、全部で52節ありました。
+      - そのなかで、全クラブが負けた節は、ひとつもありません。
+      - いちばん多かったのは、4クラブ中3クラブが負けた節で、3節です。
+      - 今回は、4クラブ中4クラブが負けました。
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/10/15/post1032759/
+      - https://www.gazzetta.it/Calcio/Champions-League/14-10-2026/champions-league-italiane-tutte-battute-e-la-prima-volta.shtml
+      - https://football-italia.net/ucl-inter-3-4-club-brugge-terrific-tresoldi/
+
+  - id: next
+    heading: 順位と次の一戦
+    tier: 報道
+    telop: 次は4クラブとも自分のホーム
+    say:
+      - イタリア勢の開幕2節は、合わせて1勝1分6敗。勝ち点は4です。
+      - インテルとナポリは、2試合を終えて、まだ勝ち点0。
+      - 第3節は現地20日と21日。4クラブとも自分のホームです。
+      - ナポリはボデ・グリムト、ローマはスロヴァン・ブラチスラヴァを迎えます。
+      - コモはマンチェスター・ユナイテッド、インテルはシャフタールです。
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/10/15/post1032759/
+      - https://www.gazzetta.it/Calcio/Serie-A/Napoli/14-10-2026/napoli-cosa-serve-per-qualificarsi-ai-playoff-di-champions-league.shtml
+short_title: "イタリア勢、CL第2節で4クラブ全敗。「前例がない」と伝わった夜"

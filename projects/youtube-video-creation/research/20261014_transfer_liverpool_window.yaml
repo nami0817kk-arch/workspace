@@ -78,6 +78,8 @@ theme:
   bgm: assets/audio/bgm_calm.wav
 thumbnail:
   layout: number
+  callouts:
+  - 補強は成功か？
   # **写真は未取得**（ユーザーと相談して決める）。取れたら photo・short_photo・theme.opening_image を入れる。
   # **photo が空だと draft は『thumbnail.photo がありません』で止まる**ため、台本（scripts/）は仮の横長画像を一時的に指定して書き出した。
   # 10/14 夜：thumbnail.photo をバルコラ→アンフィールド空撮（a05）に替えた（写真が人の話でない行に差し込まれていたため／サムネの黒を減らすため）。

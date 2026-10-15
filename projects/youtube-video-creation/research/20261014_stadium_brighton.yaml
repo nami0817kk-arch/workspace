@@ -81,6 +81,8 @@ theme:
 short_title: ブライトンの本拠地、計画より9802席多い
 thumbnail:
   layout: scene
+  callouts:
+  - なぜ増席できた？
   photo: assets/images/20261014_stadium_brighton/02_w.jpg
   band: bottom
   line1: ブライトン本拠地

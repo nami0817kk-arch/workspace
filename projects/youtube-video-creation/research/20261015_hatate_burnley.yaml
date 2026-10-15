@@ -1,0 +1,146 @@
+# 日本人選手 の取材メモ（2026年10月15日）
+# 1本＝1テーマ。まとめではなく、1つの話を掘る
+# 埋めたら python -m src.cli draft このファイル で台本になる
+# 取材: 2026-10-15。WebFetch で原文を読んだ（ゲキサカ photonews・サッカーキング・フットボールチャンネル（10/11）・Yahoo!（Burnley Express の採点の引用）・
+#   バーンリー公式の試合レポート・Sky Sports の試合レポート・ESPN）。
+# ★ この試合は現地10月10日（土）。題材の元のゲキサカ photonews は10/14掲載。**5日前の出来事**で、その後バーンリーは13日にチャールトンと2-2、次は16日。
+#   → 「今季初勝利」の速報性は薄い。台本では「その後」を1行入れて、次の試合につなげた（ユーザーに確認する）。
+# 日付・場所: 現地10月10日、ヴィカレージ・ロード（ワトフォード）、EFLチャンピオンシップ第9節。ワトフォード0-4バーンリー（クラブ公式・Sky・ゲキサカ・サッカーキング・FCで一致）。
+# 得点: 13分ブルン・ラーセン（旗手アシスト）／19分アムドゥニ／25分旗手（移籍後初）／87分エドワーズ（途中出場）。クラブ公式・Sky・FC一致（サッカーキング・ゲキサカは時間の一部のみ）。
+# 資料間のずれ: 旗手の得点の場面。クラブ公式「ピレスが戻したボールをカールをかけて決めた」・Sky「15ヤードから、空いたスペースで」・サッカーキング/FC「ボックス内左で右足のコントロールショット」→ 台本は「ピレスのパスを受けて右足で」。
+#   13分のアシストの場面。FC「こぼれ球を回収してラストパス」・クラブ公式「ボールを奪って渡した」・Sky「高い位置のプレスのあとラーセンへ」→「こぼれ球を拾って」。
+#   旗手の今季の出場数。サッカーキング「公式戦5試合1ゴール2アシスト・直近2試合先発」→ 使う。celticshorts「最初の4試合で144分」は1社なので使わない。
+# 本人の言葉: どの記事にも無し（ゲキサカ・SK・FC・Burnley 公式・Sky・Express の引用）→ 取れなかった。台本に本人の言葉は入れない。
+# 他人の声: ① Burnley Express の採点評（日本語はサッカーダイジェスト系の記事がYahoo!に載せた訳。「チーム最高タイの8点」）② ニッキー・ヘイエン監督（Sky Sports の英語原文を訳した）。
+# 写真: 配信の写真は Getty。Commons の旗手は（CC BY-SA 4.0 Hameltion の縦写真1枚を使う。CC0 の Reo Hatate 2.jpg は後ろ姿で顔が無い。横長の写真は無し） 2024年のセルティックの練習着の1枚のみ（バーンリーの写真なし）。
+# 反応のうち「また旗手がアシストか」は、46秒までに誰かの声を出す決まりのため、何が起きたかの節（13分のアシストの直後）に置いた。
+# 反応: ①NO FOOTY NO LIFE（海外の反応まとめ・10/11）のバーンリーサポのコメントの日本語訳2件 ②サッカー批評Web（10/11）が引いたSNSの投稿1件（投稿者名は記事に無い）。匿名・未確認。
+slot: japan
+date: "2026年10月15日"
+format: news
+no_main: true      # ニュースはショートだけ（2026-10-14）。締めで本編を案内しない
+people: [旗手怜央, バーンリー]
+
+theme:
+  id: hatate_burnley_watford
+  league: england
+  league_name: イングランド2部
+  prefix: ""
+  title: 旗手怜央、移籍後初ゴール。バーンリーが9試合目で勝てた、その12分間に起きたこと
+  hook: ""
+  question: 旗手怜央の初ゴールは、なぜ最下位バーンリーを変えたのか
+  takeaway: 8試合勝てなかったバーンリーの初勝利に、旗手が12分で2得点に絡んだ。ただ監督は「まだ1勝」と慎重
+
+thumbnail:
+  line1: 旗手怜央、移籍後初ゴール
+  line2: 9試合目の初勝利を呼んだ●●
+  tags: [旗手怜央, バーンリー]
+  photo: assets/images/hatate/01.jpg
+  short_photo: assets/images/hatate/01_v.jpg
+
+answer: 13分のアシストと25分のゴールで、わずか12分間に2つの得点に絡んだから
+watch: 次は現地16日、チャンピオンシップのウルヴァーハンプトン戦
+short_question: あなたは、旗手怜央の復調をどう見ましたか。
+short_telops:
+  - {match: 移籍後初ゴール, text: 旗手怜央/移籍後初ゴール}
+  - {match: ブルン・ラーセンの先制点をアシスト, text: 13分/先制点をアシスト}
+  - {match: 右足でゴール, text: 25分/右足で初ゴール}
+  - {match: 2つの得点に絡みました, text: わずか12分で/2得点に関与}
+  - {match: 4対0で勝ちました, text: ワトフォード0-4/バーンリー}
+  - {match: 10点満点で8点, text: 採点は8点/チーム最高タイ}
+  - {match: まだ1勝にすぎない, text: 監督は慎重/まだ1勝にすぎない}
+# follow_up: true
+
+sections:
+  - id: what
+    main: true
+    heading: 何が起きたか
+    tier: 報道
+    telop: 旗手怜央が移籍後初ゴール。バーンリーが4-0で今季初勝利
+    say:
+      - {text: 'バーンリーの旗手怜央が、移籍後初ゴールを決めて、チームを今季初勝利に導きました。', short_only: true}
+      - チャンピオンシップ第9節、ワトフォード対バーンリー。
+      - バーンリーが4対0で勝ちました。現地10日の試合です。
+      - 13分、旗手はこぼれ球を拾って、ブルン・ラーセンの先制点をアシストしました。
+      - voice: ネット民
+        text: また旗手がアシストか。
+        short_voice: true
+      - voice: ネット民
+        text: 役に立たないって言ってた奴らがいたよな
+        cont: true
+      - 25分には、ルーカス・ピレスのパスを受けて、右足でゴール。移籍後初ゴールです。
+      - わずか12分間で、旗手が2つの得点に絡みました。
+    official: false
+    sources:
+      - https://web.gekisaka.jp/photonews/world/detail/?460997-460997-pn
+      - https://www.burnleyfootballclub.com/media-article/match-report-watford-0-4-burnley
+
+  - id: numbers
+    heading: 数字で見ると
+    tier: 報道
+    telop: バーンリー、リーグ戦9試合目で初勝利。旗手は8点
+    say:
+      - バーンリーは、開幕から8試合、リーグ戦で勝てていませんでした。
+      - これが9試合目での初勝利です。
+      - 19分にアムドゥニ、87分には途中出場のエドワーズも決めて、4点を奪いました。
+      - 地元紙は、旗手に10点満点で8点をつけました。
+      - チーム最高タイの評価です。
+      - voice: バーンリー・エクスプレス
+        text: 前半は中盤を支配していた。
+      - voice: バーンリー・エクスプレス
+        text: ラーセンのゴールをアシストし、
+        cont: true
+      - voice: バーンリー・エクスプレス
+        text: さらに見事なコントロールショットでネットを揺らして
+        cont: true
+      - voice: バーンリー・エクスプレス
+        text: バーンリー移籍後初ゴールも奪った
+        cont: true
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/10/11/post1030653/
+      - https://news.yahoo.co.jp/articles/4faac589c8aeec15e135d112dd81d1a2f90bcbea
+
+  - id: next
+    viewpoint: true
+    heading: 旗手の初ゴールのあと、バーンリーはどうなったか
+    tier: 報道
+    telop: 監督は「まだ1勝」。次は16日ウルヴァーハンプトン戦
+    say:
+      - 旗手は今夏セルティックから加わり、初ゴールは5試合目。
+      - ここまで1ゴール2アシストです。
+      - ニッキー・ヘイエン監督は、こう話しました。
+      - voice: ニッキー・ヘイエン監督
+        text: これが素晴らしい何かの始まりであってほしい。
+      - voice: ニッキー・ヘイエン監督
+        text: でも、まだ1勝にすぎない
+        cont: true
+      - 実際、続く13日のチャールトン戦は、2対2の引き分けでした。
+      - 次は現地16日、ウルヴァーハンプトンとの試合です。
+    official: false
+    sources:
+      - https://www.skysports.com/football/news/13594299/watford-burnley
+      - https://www.soccer-king.jp/news/world/eng/20261011/2215281.html
+      - https://www.espn.com/soccer/match/_/gameId/401880230/charlton-athletic-burnley
+      - https://www.espn.com/soccer/team/fixtures/_/id/379/burnley
+
+  # ネットの反応: 2026-10-15。1・2件目は NO FOOTY NO LIFE（海外の反応まとめ・10/11）のバーンリーサポのコメントの日本語訳（原文の英語は未確認）。
+  # 3件目はサッカー批評Web（10/11）が記事中に引いた日本語のSNS投稿（投稿者名は記事に無い）。絵文字だけ外した。1件ずつ全文。
+  - id: reactions
+    heading: ネットの反応
+    tier: 未確認
+    telop: 「旗手が良すぎるって」
+    say:
+      - voice: ネット民
+        text: 今日は旗手が中盤を支配していた！
+        short_voice: true
+      - voice: ネット民
+        text: まさにうちが必要としている選手だ！
+        cont: true
+      - voice: ネット民
+        text: 旗手が良すぎるって
+        short_voice: true
+    official: false
+    sources:
+      - https://nofootynolife.net/blog-entry-9411.html
+      - https://news.yahoo.co.jp/articles/6b4028e7cbff01f2003349f7235db5f7d0f2b006

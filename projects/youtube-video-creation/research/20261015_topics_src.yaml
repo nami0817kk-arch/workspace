@@ -1,0 +1,37 @@
+title: 10月15日の題材
+lead: 候補492件から28件。日本人を先に、CL第2節の結果と大きな話を並べました。ショートは10本、本編はシリーズ8本が予約済みです。
+note: |
+  **今日はCL第2節の翌日**です。日本人は鈴木彩艶・旗手怜央・松木玖生・冨安健洋・渡辺剛・板倉滉・久保建英・上田綺世・齋藤俊輔。
+  10/14 に出した題材（上田のアーセナル戦・佐野・ケイン・モウリーニョ・マルティネスの発言・バルサ・ブルッヘ対インテル・イラオラ）とは重ならないものを先に置き、重なる続報は弱い印を付けています。
+  **ロマーノの最新は未確認**（この一覧に入っていません。必要なら追加で拾います）。
+items:
+  - {num: 1, slot: 日本人, head: 鈴木彩艶、CLで好セーブ連発。ヴィラのチーム内2番目の高評価, why: ヴィラがフェネルバフチェを6発で下した試合。**決定機阻止とロングフィードで得点の起点**にも, src: footballchannel（1.6時間前）, url: "https://www.footballchannel.jp/2026/10/15/post1032780/", fmt: news}
+  - {num: 2, slot: 日本人, head: 旗手怜央、移籍後初ゴール＋1アシスト。バーンリーを今季初勝利に, why: 移籍後初ゴールと1アシストで今季初勝利。**本人の言葉が取れるか**は未確認, src: ゲキサカ（13.7時間前）, url: "https://web.gekisaka.jp/photonews/world/detail/?460997-460997-pn", fmt: news}
+  - {num: 3, slot: 日本人, head: 松木玖生、今季2点目が決勝弾。サウサンプトンは2連勝, why: ノリッジに勝ってイングランド2部で2連勝。2部の回は `league_name` を付ける, src: サッカーキング（0.8時間前）, url: "https://www.soccer-king.jp/news/world/eng/20261015/2216900.html", fmt: news}
+  - {num: 4, slot: 日本人, head: 冨安健洋、ELリヨン戦を欠場。中村敬斗との対戦は実現せず, why: パレス指揮官が欠場を明言。**中村敬斗（リヨン）との対戦が見られない**, src: サッカーキング（0.4時間前）, url: "https://www.soccer-king.jp/news/world/el/20261015/2216891.html", fmt: quote}
+  - {num: 5, slot: 日本人, head: 渡辺剛に関心。「過去最高額に」と報じられる, why: 日本代表DF。「上田綺世と同じく」と並べて報じられている。**どこが関心か・額は記事を開いて確認**, src: フットボールトライブ（0.4時間前）, url: "https://football-tribe.com/japan/2026/10/15/360375/", fmt: news, weak: true}
+  - {num: 6, slot: 日本人, head: 板倉滉の怪我の内容が明らかに。ブラジル戦の招集は？, why: 「極めて難しい」「珍しい」と報じられた怪我。25時間前の記事, src: フットボールトライブ, url: "https://football-tribe.com/japan/2026/10/14/360354/", fmt: news, weak: true}
+  - {num: 7, slot: 日本人, head: 上田綺世、左かかとに問題か。リール帰還後に検査へ, why: アーセナル戦の途中交代の続報。**10/14 に上田の回を出している**ので、検査の結果が出てから, src: サッカーキング（10時間前）, url: "https://www.soccer-king.jp/news/world/fra/20261014/2216749.html", fmt: news, weak: true}
+  - {num: 8, slot: 日本人, head: 久保建英、ソシエダ退団の可能性も報じられる, why: 結婚の件とあわせた記事。**憶測が中心**で出典1本, src: フットボールトライブ（0.7時間前）, url: "https://football-tribe.com/japan/2026/10/15/360372/", fmt: news, weak: true}
+  - {num: 9, slot: 日本人, head: 齋藤俊輔、中村俊輔が薦めた必殺技をベルギーで実践, why: 日本代表の45分間でも学び。**29時間前の古め**。本人の言葉の記事, src: サムライゴール（29時間前）, url: "https://samuraigoal.doorblog.jp/archives/63542628.html", fmt: quote, weak: true}
+  - {num: 10, slot: CL, head: レアル、終盤7分間でCKから3連発。ローマに逆転, why: 2点リードを守れなかったローマ。ムリーニョ監督の言葉あり（「マドリー苦戦」の責任を引き受けた）, src: サッカーキング（3.2時間前）／ESPN, url: "https://www.soccer-king.jp/news/world/cl/20261015/2216873.html", fmt: news}
+  - {num: 11, slot: CL, head: ヴィニシウス、髪を引っ張った退場で4試合出場停止。クラシコ欠場, why: ESPN が出場停止を報道。**反応が取れる**（AS の読者投票もある）, src: ESPN（0時間前）, url: "https://www.espn.com/soccer/story/_/id/50182804/real-madrid-vinicius-junior-suspension-red", fmt: news}
+  - {num: 12, slot: CL, head: バルコラがハットトリック。リヴァプールがCLで6得点, why: 加入後初ゴールを含む3点。**10/14 にイラオラの言葉（バルコラ・ヴィルツ）を出している**ので、別の角度で, src: サッカーキング（2.9時間前）／ESPN, url: "https://www.soccer-king.jp/news/world/cl/20261015/2216875.html", fmt: news, weak: true}
+  - {num: 13, slot: CL, head: イタリア勢が第2節で4戦全敗。インテル・ナポリは開幕2連敗, why: 現地紙が「過去に例がない」と嘆く。**自分で数えた並びが作れる**（見立ての材料）, src: footballchannel（2.5時間前）, url: "https://www.footballchannel.jp/2026/10/15/post1032759/", fmt: news}
+  - {num: 14, slot: CL, head: ファブレガス「CLはW杯より厳しい」。コモはフェイエノールトに3-2で敗戦, why: リードを守れずに逆転負け。**監督の言葉**（「撃ちたければ私を撃て」）が取れる, src: football-italia（4.3時間前）, url: "https://football-italia.net/fabregas-como-continue-to-learn-ucl/", fmt: quote}
+  - {num: 15, slot: CL, head: PSGがシティに勝利。「CLの金字塔」と評される, why: ESPN が「シティはPSGに太刀打ちできない」。ルイス・エンリケは「前半リードが怖かった」。**アンダーソンの回を今日出した直後**, src: ESPN（0時間前）, url: "https://www.espn.com/soccer/story/_/id/50184341/man-city-compete-psg-champions-league-gold", fmt: news}
+  - {num: 16, slot: CL, head: ボデ・グリムトがドルトムントに1-0。8メートルからの決定機を逃す, why: ドルトムントの敗戦。Marca の試合記事, src: Marca（2.9時間前）, url: "https://www.marca.com/futbol/champions-league/2026/10/14/bodo-glimt-1-0-borussia-dortmund-", fmt: news, weak: true}
+  - {num: 17, slot: CL, head: バイエルンがヴァイキングに引き分け。ヴァイキングが歴史的な勝ち点, why: 26時間前の試合。**欧州7リーグの外のクラブ**が主役, src: A Bola（26時間前）, url: "https://www.abola.pt/video/puro-cinema-viking-resgata-ponto-historico-contra-bayern-irreco", fmt: news, weak: true}
+  - {num: 18, slot: CL, head: ガラタサライがバルセロナに勝利。レオンの活躍, why: 28時間前の試合。バルサの敗戦。**反応が取れる**, src: A Bola（28.5時間前）, url: "https://www.abola.pt/video/galatasaray-surpreende-o-barcelona-e-bem-pode-agradecer-a-rafae", fmt: news, weak: true}
+  - {num: 19, slot: プレミア, head: ウェストハムのヌーノ監督、不満を爆発させる, why: 試合直後の言葉を Daily Mail が報じた（0.1時間前）。**内容は記事を開いて確認**, src: Daily Mail, url: "https://www.dailymail.com/sport/football/article-16210107/Channelling-inner-Phil-Brown-Nun", fmt: quote, weak: true}
+  - {num: 20, slot: プレミア, head: マンUの幹部2人が、新監督の候補で意見が割れる, why: ナーゲルスマンの名前が挙がる。CaughtOffside の記事で**出典は1つ・未確認**, src: CaughtOffside（4.8時間前）, url: "https://www.caughtoffside.com/2026/10/14/man-united-consider-nagelsmann-to-replace-carrick", fmt: news, weak: true}
+  - {num: 21, slot: プレミア, head: アーセナル、リール戦の層の厚さ。ただしギェケレシュに不安, why: ESPN の試合後の分析（16時間前）。**10/14 に上田の回を出している**, src: ESPN, url: "https://www.espn.com/soccer/story/_/id/50177357/arsenal-showed-strength-depth-lille-win-vi", fmt: news, weak: true}
+  - {num: 22, slot: 移籍, head: レアルとバルサがスパーズのポロに関心, why: ESPN の移籍まとめ（7.6時間前）。**出典1つ・未確認**, src: ESPN, url: "https://www.espn.com/soccer/story/_/id/50179920/transfer-rumors-news-real-madrid-barcelona", fmt: news, weak: true}
+  - {num: 23, slot: 移籍, head: リヴァプールとチェルシーが1億ポンド評価のMFに注目, why: 契約の懸念が背景。CaughtOffside の記事で**出典1つ・未確認**, src: CaughtOffside（6.2時間前）, url: "https://www.caughtoffside.com/2026/10/14/liverpool-and-chelsea-monitor-100m-rated-midfield", fmt: news, weak: true}
+  - {num: 24, slot: プレミア, head: ブアディ、「次のロドリ」と呼ばれる。シティの注目株, why: Daily Mail の人物記事（2.3時間前）。**10/15 にシティの回を出す**, src: Daily Mail, url: "https://www.dailymail.com/sport/football/article-16083793/Ayyoub-Bouaddi-Manchester-City-R", fmt: news, weak: true}
+drops:
+  - [マルティネスの声明「謝罪せず」, 10/14 に発言の回を出している（続報は声明の中身が出てから）]
+  - [佐野航大・パネンカの話, 10/14 に出している]
+  - [セメニョへの人種差別の件, 事実の確認が重く、本人が傍観者になる題材]
+  - [Jリーグ・ACL（神戸・松本対広島）, Jリーグは扱わない決まり]
+  - [女子の話題, 女子サッカーは扱わない決まり]

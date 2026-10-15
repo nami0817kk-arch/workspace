@@ -1,0 +1,159 @@
+# ラ・リーガ の取材メモ（2026年10月15日）
+# 1本＝1テーマ。まとめではなく、1つの話を掘る
+# 埋めたら python -m src.cli draft このファイル で台本になる
+# 取材: 2026-10-15。ESPN の記事 id 50182804（now.core.api.espn.com の本文そのもの）・BBC・Marca（requests・ブラウザUAで本文）・
+#   Marca が全文を載せた連盟の懲戒委員会の決定文・ESPN の記事 id 50185130（モウリーニョの会見）を読んだ。
+# 日付・場所: 試合は現地10月10日（土）、サンティアゴ・ベルナベウ。ラ・リーガ、レアル・マドリード1-0ビジャレアル。
+#   ヴィニシウスは途中出場（52分、ESPN・BBC・サッカーキングで一致）。相手はネイサン・サリバ（ビジャレアル。ESPN・BBC・Marca が一致）。
+#   決定の発表は現地10月14日（水）。ESPN は「水曜に懲戒委員会が確認」、Marca は 14/10/2026。
+# 主審: イシドロ・ディアス・デ・メラ。報告書（acta）の言い方は Marca・Minuto60 が引く。
+#   「ボールが2人のあいだで争われていない状態で髪を引っ張った」＝決定文が引く acta の語（sin estar el balón en disputa entre ellos）。
+#   退場後の抗議は acta が「大声で、攻撃的な態度で近づいて、チームメートに抑えられた」と書く。具体的な言葉は acta は「聞き取れなかった」と書く。
+#   報告書の時刻（Minuto60 は「73分」）は、ヴィニシウスが52分に入ったことと照らしてもほかの資料と食い違う書き方なので、台本では分を言わない。
+# 出場停止の根拠（決定文＝懲戒委員会。Marca が全文を転載）: 2試合は懲戒規定の130条2項（ボールを争える状態にない場面での暴力的な行為。規定が定める最小）、
+#   もう2試合は127条（主審への抗議。規定が定める最小）。罰金（52条）も付く。決定文は両方とも「最小」と書く。
+#   クラブは「髪に触れたのは偶発的」「プレーが続いていた」「抗議は独立した違反ではない」と主張したが、委員会は退けた
+#   （「髪を引っ張ったのは明白」と判断）。決定文の原文（スペイン語）に当たって日本語にした。
+# 欠場: セビージャ戦（18日、ベルナベウ）・クラシコ（25日、カンプ・ノウ）・ラシン・サンタンデール戦（11/1）・バレンシア戦（11/7）。BBC・Marca・サッカーキングで一致。
+#   ESPN の記事は「ラシン」を中心に書き、セビージャを「日曜（18日）」と書く。国内リーグだけの処分で、CL（ライプツィヒ戦・AEK戦）には出られる（ESPN）。
+# 発言の出どころ: ヴィニシウス＝Marca（ローマ戦後、スペイン語。ESPN の英訳と一致）。モウリーニョ＝ESPN の英訳（Movistar の取材）。Marca のスペイン語とも一致。
+#   エンドリッキ＝Marca（ローマ戦後。引用の中に「…」があるのは本人の間）。
+# 使わなかったもの: AS の読者投票（AS 側が403で読めなかった）。RMTV の批判（クラブ公式の番組で、反応ではなくクラブの声）。
+#   ヴィニシウスの「ブーイング」「100ゴール」の発言（別の話題）。ヴィニシウスが退場前に先発でなかった話・今季の成績（出場停止の中身ではない）。
+# 反応（ネット民）: 取れなかった。まとめサイト（footballnet・サカサカ10・worldfn・samuraigoal・sakarabo）を `reactions --find` と各トップで探したが、
+#   今回の処分の記事・スレは見つからず、同じ日の試合実況スレ（worldfn）にも出場停止の書き込みは無かった。作らない。
+#   他人の声はヴィニシウス本人・モウリーニョ・エンドリッキの3人（実名の発言）。
+# 前の回（10/14 research/20261014_mourinho_ref.yaml の context）で言ったこと: ビジャレアル戦で髪を引っ張った反則でゴール取り消し・退場。
+#   → 今回は繰り返さず、出場停止の中身（4試合の内訳・決定文・欠場する試合）が新しい事実。
+slot: laliga
+date: "2026年10月15日"
+format: news
+no_main: true      # ニュースはショートだけ（2026-10-14）。締めで本編を案内しない
+people: [ヴィニシウス, レアル・マドリード, モウリーニョ]
+
+# ショートの質を上げる指定（2026-10-14〜15）
+short_question: この4試合という処分、どう受け止めましたか。
+short_hook: ヴィニシウスに4試合の出場停止。クラシコも欠場。
+short_telops:
+  - {match: 懲戒委員会が, text: 4試合の出場停止/スペイン連盟が決定}
+  - {match: ボールを争っていない, text: 暴力的な行為で2試合/規定の最小}
+  - {match: 退場になったあとの抗議, text: 退場後の抗議で2試合/これも最小}
+  - {match: 髪に触れたのは偶発的, text: クラブは偶発的と主張/委員会は退けた}
+  - {match: 18日のセビージャ戦, text: 18日セビージャ/25日クラシコも欠場}
+  - {match: 国内リーグだけ, text: 処分はリーグ戦だけ/CLには出られる}
+  - {match: 2時間前にやるのか, text: モウリーニョ/なぜ試合の2時間前に}
+short_photos: []
+
+theme:
+  id: vinicius_ban
+  league: spain
+  prefix: ""
+  title: ヴィニシウス、4試合の出場停止でクラシコ欠場。連盟が決めた処分の内訳とは
+  hook: ""
+  question: ヴィニシウスの4試合の出場停止は、何に対する処分なのか
+  takeaway: 2つの違反が、どちらも最小の2試合。どちらか1つだけでもクラシコは欠場になり、もう1つの2試合は11月のラシン戦とバレンシア戦に回る
+
+thumbnail:
+  line1: ヴィニシウス 4試合停止
+  line2: クラシコ欠場、内訳は●●
+  tags: [ヴィニシウス, レアル・マドリード]
+  photo: assets/images/20261015_vinicius_ban2/01_w.jpg
+  short_photo: assets/images/20261015_vinicius_ban2/01_v.jpg
+
+answer: 髪を引っ張った暴力的な行為で2試合、退場後の主審への抗議で2試合。どちらも規定の最小
+watch: ヴィニシウスの次のリーグ戦は、11月の代表ウィーク明け
+# follow_up: true
+
+sections:
+  - id: what
+    main: true
+    heading: 何が起きたか
+    tier: 報道
+    telop: ヴィニシウスに4試合の出場停止。クラシコも欠場
+    say:
+      - {text: 'ヴィニシウスが、ローマ戦のあとに、処分の発表について語りました。', short_only: true}
+      - voice: ヴィニシウス
+        text: 処分は、悪いタイミングで出たと思う。
+      - voice: ヴィニシウス
+        text: 一日中あったのに、ぼくはスタジアムに着いてから知った
+        cont: true
+      - 14日、スペインサッカー連盟の懲戒委員会が、4試合の出場停止を決めました。
+      - 10日のビジャレアル戦で、ヴィニシウスはゴールを決めました。
+      - ところが、ビデオ判定で、その前の場面でサリバの髪を引っ張ったと判断されました。
+      - ゴールは取り消され、レッドカードが出ていました。
+      - 内訳は、2試合と2試合です。
+      - ひとつは、ボールを争っていない場面での暴力的な行為で、2試合。
+      - もうひとつは、退場になったあとの抗議で、2試合。
+      - 決定文は、どちらも規定が定める最小の試合数だとしています。
+      - 主審の報告書には、退場のあとも大声で抗議した、と書かれています。
+      - チームメートに抑えられたことも、記されていました。
+      - クラブは、髪に触れたのは偶発的で、プレーも続いていたと主張しました。
+      - 委員会は、映像から髪を引っ張ったことは明白だとして、退けています。
+      - ヴィニシウス本人は、こうも話しています。
+      - voice: ヴィニシウス
+        text: 他の選手に暴力を振るったことは、一度もない
+    official: false
+    sources:
+      - https://www.marca.com/futbol/real-madrid/2026/10/14/vinicius-pierde-clasico-cuatro-partidos-sancion.html
+      - https://www.espn.com/soccer/story/_/id/50182804/real-madrid-vinicius-junior-suspension-red-card-clasico
+      - https://www.bbc.co.uk/sport/football/articles/ckd7qg5q87qvo
+      - https://www.marca.com/futbol/real-madrid/2026/10/14/vinicius-volver-llegue-reian-mi-llevo-100-goles-real-madrid.html
+
+  - id: games
+    heading: 最小の2試合が2つ重なると、どの試合を欠場するのか
+    viewpoint: true
+    tier: 報道
+    telop: 18日セビージャ戦、25日クラシコ、11月のラシン戦とバレンシア戦
+    say:
+      - 欠場するのは、18日のセビージャ戦と、25日のカンプ・ノウでのクラシコです。
+      - どちらの違反も、1つだけで2試合です。
+      - つまり、どちらか1つだけでも、クラシコは欠場になります。
+      - もう1つの2試合が、11月のラシン・サンタンデール戦とバレンシア戦に回ります。
+      - 処分が効くのは国内リーグだけで、ヴィニシウスはチャンピオンズリーグには出られます。
+      - ライプツィヒ戦にも出場できます。
+      - リーグ戦に戻れるのは、11月の代表ウィークのあとです。
+    official: false
+    sources:
+      - https://www.bbc.co.uk/sport/football/articles/ckd7qg5q87qvo
+      - https://www.espn.com/soccer/story/_/id/50182804/real-madrid-vinicius-junior-suspension-red-card-clasico
+      - https://www.marca.com/futbol/real-madrid/2026/10/14/vinicius-pierde-clasico-cuatro-partidos-sancion.html
+
+  # 周囲の声: 実名の発言（報道）。モウリーニョは ESPN（Movistar の取材）の英訳、エンドリッキは Marca（ローマ戦後）。
+  - id: voices
+    heading: 周囲はどう受け止めたか
+    tier: 報道
+    telop: モウリーニョ「なぜ試合の2時間前に」
+    say:
+      - 発表のタイミングについて、モウリーニョ監督は、ローマ戦の前にこう話しています。
+      - voice: モウリーニョ
+        text: なぜ今朝や明日の朝にしなかったのか、
+      - voice: モウリーニョ
+        text: なぜレアル・マドリードにとって大事な試合の
+        cont: true
+      - voice: モウリーニョ
+        text: 2時間前にやるのか、委員会に聞くべきだと思う。
+        cont: true
+      - voice: モウリーニョ
+        text: レアル・マドリードはスペインのクラブだ
+        cont: true
+      - voice: モウリーニョ
+        text: ということも、忘れずに
+        cont: true
+      - ローマ戦のあと、エンドリッキは、チームメートの受け止めをこう語りました。
+      - voice: エンドリッキ
+        text: ぼくたちは2試合のはずだと思っていた。
+      - voice: エンドリッキ
+        text: でも心の底では、2試合では済まないと分かっていた。
+        cont: true
+      - voice: エンドリッキ
+        text: ヴィニに対してやっていることは異常だ。
+        cont: true
+      - voice: エンドリッキ
+        text: 戻ってきたら、とてもいい形で戻ってくる
+        cont: true
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50185130/real-madrid-roma-jose-mourinho-uefa-champions-league
+      - https://www.espn.com/soccer/story/_/id/50182804/real-madrid-vinicius-junior-suspension-red-card-clasico
+      - https://www.marca.com/futbol/real-madrid/2026/10/14/vestuario-vuelca-vini-sabiamos-serian-dos-partidos-locos.html
+short_title: "ヴィニシウス、4試合の出場停止でクラシコ欠場。連盟が決めた処分の内訳とは"

@@ -24,6 +24,8 @@ thumbnail_crests:
 thumbnail_photo: assets/images/20261014_unbeaten/trophy/01.jpg
 thumbnail_layout:
   layout: number
+  callouts:
+  - 再現できるか？
   number: 49試合
 bg: assets/backgrounds/stadium.png
 date: 2026年10月14日

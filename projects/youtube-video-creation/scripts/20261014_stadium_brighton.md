@@ -23,6 +23,8 @@ thumbnail_crests:
 thumbnail_photo: assets/images/20261014_stadium_brighton/02_w.jpg
 thumbnail_layout:
   layout: scene
+  callouts:
+  - なぜ増席できた？
   band: bottom
 bg: assets/images/20261014_stadium_brighton/01_w.jpg
 date: 2026年10月14日

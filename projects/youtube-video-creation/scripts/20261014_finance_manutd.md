@@ -23,6 +23,8 @@ thumbnail_crests:
 thumbnail_photo: assets/images/20261014_finance_manutd/02_w.jpg
 thumbnail_layout:
   layout: number
+  callouts:
+  - どこで赤字に
   number: ●.●倍
 bg: assets/backgrounds/stadium.png
 date: 2026年10月14日

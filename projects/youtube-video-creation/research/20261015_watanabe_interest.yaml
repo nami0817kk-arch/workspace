@@ -1,0 +1,157 @@
+short_title: 渡辺剛、推定移籍金が過去最高に並ぶ。同じ時期に動いた、もう一つの数字とは
+# 日本人選手 の取材メモ（2026年10月15日）
+# 1本＝1テーマ。まとめではなく、1つの話を掘る
+# 埋めたら python -m src.cli draft このファイル で台本になる
+# 取材: 2026-10-15。requests（ブラウザUA）で原文を読んだ。フットボールトライブ（題材の記事）→ 元の報道（FootballTransfers オランダ語版 2026-10-14 11:50 CEST の記事）→
+#   FootballTransfers の選手ページ、Transfermarkt の選手ページと市場価値の履歴（ceapi）、ESPN の試合記録（API）、Voetbalprimeur の採点記事。
+# 【題材の言葉の訂正】題材の見出しは「過去最高額に」「関心も報じられる」。元の報道に当たると、
+#   「過去最高額」は FootballTransfers が計算する推定移籍金（ETV＝Estimated Transfer Value）で、クラブが示した金額ではない。
+#   ETV は成績・年齢・契約期間・ポジション・リーグの水準・過去の移籍データから出すモデルの値で、月に一度更新される。
+#   → 台本では「推定移籍金」と言い、「関心」「オファー」とは分ける。
+# 数字（原文で確認）:
+#   FootballTransfers ETV: 2026年6月 1050万ユーロ（過去最高）／7月 950万（7月の記事）／9月 690万／10月 1050万（レンジ 950万〜1160万、10/1 更新）。
+#     Tribe は「690万ユーロ（約12億円）→1,050万ユーロ（約18億円）」。円換算は Tribe の数字をそのまま「伝えられています」で使う。
+#   Transfermarkt: 2026-05-28 1000万 → 2026-09-25 800万ユーロ（履歴 API と Voetbalprimeur の「Feyenoord ziet marktwaarden stijgen」の両方で確認。Voetbalprimeur は「2百万ユーロ下がって800万」）。
+#   移籍金: 2025年7月23日、ヘント→フェイエノールト。約800万ユーロ（Soccerway・FootballTransfers）。ロマーノは「総額900万」（出来高込みと見られる）→ 台本は「約800万ユーロと伝えられています」。
+#   契約: 2029年6月30日まで（FootballTransfers・Transfermarkt）。
+# 【関心の裏取り】
+#   題材の記事は「ブンデスリーガ複数クラブからの関心」「上田綺世と同じく5大リーグへ」と書くが、FootballTransfers（オランダ語・英語）のこの選手の記事を
+#   7月〜10月ぶん全部（選手ページの transfernieuws 約30本）読んでも、ブンデスリーガの関心を伝える記事は見つからなかった。「上田と同じく」の文言も無い。
+#   → ブンデスリーガの関心は台本に入れない（未確認）。Tribe の「本人はブンデスリーガ移籍を望んでいる」（Voetbal 2026年7月）も原文に当たれず → 入れない。
+#   当たれた関心: 2026-07（FootballTransfers 7月の2本、Mounir Boualin／SoccerNews 経由）サウジアラビアの Al-Taawoun と Al-Shabab が注目。「まだオファーは出ていない」。
+#   その後、10月までにオファーの報道は見つからなかった。
+# 今季（ESPN 試合記録）: リーグ戦は8節中6試合（8/9 スパルタ戦と 10/10 AZ戦は出ていない）、CL は 9/9 バルセロナ戦と 10/14 コモ戦。
+#   コモ戦は現地10月14日 18:45（日本時間15日1:45）キックオフ、フェイエノールト 3-2 コモ。渡辺は後半 79分（セントジャストと交代）、2-1 のとき。
+#   Voetbalprimeur の採点記事は「けが明けの復帰、出場時間が短く採点なし」。リーグはフェイエノールトが 8試合 勝ち点20 で首位（ESPN、10/10 AZ戦のあと）。
+#   アシスト数は FootballTransfers「1」・ESPN「0」で割れた → 台本で言わない。得点は 0 で一致だが、言わない（センターバックの数字として小さく見せない）。
+# 日付・場所: コモ戦は現地10月14日、デ・カイプ。
+# 反応（ネット民）: 見つからなかった。5ちゃんねる系まとめ（サカラボの検索 ＝ 渡辺剛・フェイエノールト）にこの話題のスレは無い。X は requests で読めない。
+#   はてなブックマークにも無し。→ 反応の節は置かない（作らない）。「反応なしで出すか」はユーザーに聞く。
+# 写真: Commons に渡辺剛の写真が無い（検索・カテゴリとも0件）。報道写真は Tribe＝アフロ、Voetbalprimeur・FR12・VI＝Pro Shots、FootballTransfers＝IMAGO で、全部代理店。
+#   → 取り込んでいない。thumbnail.photo は空き（用意できたら assets/images/20261015_watanabe/ に置く）。
+slot: japan
+date: "2026年10月15日"
+format: news
+no_main: true      # ニュースはショートだけ（2026-10-14）。締めで本編を案内しない
+people: [渡辺剛, フェイエノールト]
+
+# ショートの質を上げる指定（2026-10-14〜15）
+short_question: この評価額、妥当だと思いますか。
+short_telops:
+  - {match: 1050万ユーロ, text: 推定移籍金は/1050万ユーロ}
+  - {match: 690万ユーロでした, text: 9月は690万/1か月で5割増}
+  - {match: これまでの最高額, text: 6月の最高額と/同じ額に並ぶ}
+  - {match: クラブ間で決まった金額ではありません, text: クラブ間で決めた/金額ではない}
+  - {match: 年齢や契約期間, text: 年齢と契約と成績で/計算した値}
+  - {match: 月に一度, text: 更新は/月に一度}
+  - {match: 示したクラブ, text: 提示したクラブが/いる話でもない}
+  - {match: 1000万から800万ユーロ, text: 別の評価額は/1000万→800万}
+short_photos: []
+
+theme:
+  id: watanabe_interest
+  league: netherlands
+  prefix: ""
+  title: 渡辺剛、推定移籍金が過去最高に並ぶ。同じ時期に動いた、もう一つの数字とは
+  hook: ""
+  question: 渡辺剛の「過去最高額」は、買い手が付いたということなのか
+  takeaway: 渡辺剛の過去最高額は、計算サイトの推定値が6月の1050万ユーロに並んだという意味で、買い手が示した値段ではない。同じ時期に別の評価サイトは1000万から800万ユーロに下げていて、実際の移籍金は約800万ユーロ。物差しが違えば3割開く
+
+thumbnail:
+  line1: 渡辺剛 推定移籍金が最高額に
+  line2: 同じ時期、別の評価額は●●
+  tags: [渡辺剛, フェイエノールト]
+  photo: assets/images/20261015_watanabe/01.jpg
+  short_photo: assets/images/20261015_watanabe/01_v.jpg
+
+answer: 計算サイトの推定値が上がっただけで、買い手が値段を示したわけではない。別の評価サイトは同じ時期に下げている
+watch: 次の月の更新で推定移籍金が動くか。サウジ以外のクラブの具体的な動きが出るか
+# follow_up: true
+
+sections:
+  - id: what
+    main: true
+    heading: 何が起きたか
+    tier: 報道
+    telop: 渡辺剛の推定移籍金、1050万ユーロで過去最高に並ぶ
+    card:
+      type: table
+      title: 渡辺剛の推定移籍金（データサイトの計算）
+      columns: [時期, 推定移籍金]
+      rows:
+      - [2026年6月, 1050万€（これまでの最高）]
+      - [7月, 950万€]
+      - [9月, 690万€]
+      - [10月, 1050万€（最高に並ぶ）]
+    say:
+      - {text: 'フェイエノールトの渡辺剛の推定移籍金が、過去最高に並んだと伝えられました。', short_only: true}
+      - 10月の推定移籍金は1050万ユーロ。日本円で約18億円と伝えられています。
+      - 9月は690万ユーロでした。1か月で、およそ5割上がっています。
+      - これは、2026年6月に記録したこれまでの最高額と、同じ額です。
+      - ただ、この推定移籍金は、クラブ間で決まった金額ではありません。
+      - データサイトが、年齢や契約期間、成績などから計算する推定値で、更新は月に一度です。
+      - この金額を示したクラブがある、という話でもありません。
+    official: false
+    sources:
+      - https://football-tribe.com/japan/2026/10/15/360375/
+      - https://www.footballtransfers.com/nl/transfernieuws/nl-eredivisie/2026/10/feyenoord-ziet-etv-van-tsuyoshi-watanabe-weer-op-recordhoogte-staan
+      - https://www.footballtransfers.com/en/players/tsuyoshi-watanabe
+
+  - id: numbers
+    heading: 別の評価額は逆に動いた
+    tier: 報道
+    telop: 渡辺剛の評価、別の評価サイトは1000万から800万ユーロへ
+    card:
+      type: table
+      title: 渡辺剛の「値段」3つ
+      columns: [物差し, 時期, 金額]
+      rows:
+      - [移籍金（ヘント→フェイエノールト）, 2025年7月, 約800万€]
+      - [別の評価サイトの評価, 9月25日, 800万€]
+      - [データサイトの推定移籍金, 10月, 1050万€]
+    say:
+      - 同じ時期に、渡辺剛のほかの評価額は逆に動いていました。
+      - 別の評価サイトは、9月25日に渡辺を1000万から800万ユーロへ下げました。
+      - 下げ幅は200万ユーロ、2割です。
+      - 800万ユーロは、2025年夏にヘントから獲得したときの移籍金と、ほぼ同じ額です。
+    official: false
+    sources:
+      - https://www.transfermarkt.com/tsuyoshi-watanabe/profil/spieler/598791
+      - https://www.voetbalprimeur.nl/nieuws/2139779/feyenoord-ziet-marktwaarden-stijgen-na-update-transfermarkt.html
+      - https://www.footballtransfers.com/nl/transfernieuws/nl-eredivisie/2026/07/feyenoord-kan-vertrek-tsuyoshi-watanabe-intern-opvangen
+
+  - id: viewpoint
+    viewpoint: true
+    heading: 渡辺剛の過去最高額は、買い手の値段なのか
+    tier: 報道
+    telop: 同じ渡辺剛でも、物差しが違えば3割開く
+    say:
+      - 渡辺剛の値段を、3つの物差しで並べて数えます。
+      - 10月の推定は、実際に払われた額より250万ユーロ高く、約1.3倍です。
+      - 同じ渡辺の値段でも、物差しが違えば3割開きます。
+      - しかも、その推定は4か月で上下しています。
+      - いちばん高い月と低い月の差は、360万ユーロです。
+      - 過去最高額は、計算サイトの数字が上がったという意味です。
+      - 買い手が値段を示した、という意味ではありません。
+    official: false
+    sources:
+      - https://www.footballtransfers.com/nl/transfernieuws/nl-eredivisie/2026/10/feyenoord-ziet-etv-van-tsuyoshi-watanabe-weer-op-recordhoogte-staan
+      - https://www.transfermarkt.com/tsuyoshi-watanabe/profil/spieler/598791
+      - https://www.footballtransfers.com/nl/transfernieuws/nl-eredivisie/2026/07/feyenoord-kan-vertrek-tsuyoshi-watanabe-intern-opvangen
+
+  - id: next
+    heading: 渡辺剛への関心はどこまで伝わっているか
+    tier: 報道
+    telop: 関心の報道は7月のサウジ2クラブ。オファーはまだ
+    say:
+      - 渡辺剛への関心が伝えられたのは、7月です。
+      - サウジアラビアの2クラブが注目した、という報道でした。
+      - このときは、まだオファーは出ていないとされていました。
+      - 渡辺は14日のチャンピオンズリーグ、コモ戦で、けがから戻って79分に出場しました。
+      - 推定移籍金の更新は、月に一度。
+      - 渡辺の評価が次にどう動くかが、次の見どころです。
+    official: false
+    sources:
+      - https://www.footballtransfers.com/nl/transfernieuws/nl-eredivisie/2026/07/feyenoord-en-tsuyoshi-watanabe-uit-elkaar-interesse-uit-saoedi-arabie
+      - https://www.voetbalprimeur.nl/nieuws/2146856/feyenoord-op-rapport-tegen-como.html
+      - https://www.espn.com/soccer/match/_/gameId/401915416

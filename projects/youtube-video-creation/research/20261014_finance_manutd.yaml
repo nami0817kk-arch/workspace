@@ -99,6 +99,8 @@ theme:
 short_title: マンチェスター・ユナイテッド、売上は過去最高でも最終は赤字。金融費用は営業の黒字の3.1倍
 thumbnail:
   layout: number
+  callouts:
+  - どこで赤字に
   photo: assets/images/20261014_finance_manutd/02_w.jpg
   number: ●.●倍
   line1: マンUの営業の黒字に対し

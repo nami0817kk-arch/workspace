@@ -1,0 +1,154 @@
+# 日本人選手 の取材メモ（2026年10月15日）
+# 1本＝1テーマ。まとめではなく、1つの話を掘る
+# 埋めたら python -m src.cli draft このファイル で台本になる
+# 取材: 2026-10-15。requests（ブラウザUA）で原文を読んだ。
+#   題材の元記事（football-tribe.com/japan 2026/10/15 360372）は「結婚前から異変」「退団の可能性」だが、中身は
+#   (1) 久保のインスタからソシエダ関連の投稿が消えているという話（出どころは5ちゃんねるのスレ。football-tribe自身が「退団の兆候かは明らかでない」と書く）
+#   (2) ムンド・デポルティーボ経由のブレトス談話 (3) 「今冬移籍も取りざたされている」（出典なし）の3つ。
+#   → 「結婚前から異変」「退団」を題の柱にはできない（匿名の書き込みが出どころ）。そこで、football-tribe が孫引きしていた
+#     ブレトス談話の一次側に当たり直し、「クラブ幹部が公の会見で何を言ったか」と「15日の欧州戦の見込み」で組んだ。
+# 一次側（14日のブレトスの会見。ベルギー遠征を前にしたもの）:
+#   Mundo Deportivo 2026-10-14 11:59Z（Unai Valverde）全文の談話を訳した。Marca 2026-10-14（Óscar Badallo）は要約引用、Noticias de Gipuzkoa 2026-10-14 は談話を一部引く。三者一致。
+#   談話の原文は「Es un jugador fundamental…」。football-tribe の「必要不可欠」「必ず、どこかのタイミングで」はムンド・デポルティーボの原文と言い方が違う（要約）ので、原文から訳し直した。
+#   ブレトスの肩書きは各紙「director de fútbol」（サッカー部門のディレクター）。東スポは「クラブ幹部」。台本では「サッカー部門のディレクター」。
+# 出場の事実: Mundo Deportivo 2026-10-12「これで久保は2試合続けて出番なし」。11日(日)アノエタのデポルティボ戦、久保は出場せず（Marca 10/15 も「久保は出なかった」）。
+#   MDは「マタラッツォ監督が今の久保の状態をあまり信頼していない」と書く（MDの見立て）。Marca は久保とオヤルサバルは「今季まだ無得点」と書く。
+# 15日の試合: ヨーロッパリーグ第2節 ユニオン・サン・ジロワーズ対レアル・ソシエダ。キックオフ 現地18:45（MD の放送案内）＝日本時間16日 1:45。ソシエダは第1節ボーンマスに1-2（AS）。
+#   Marca の予想先発では久保は先発に入る見込み（「入る見込み」までで確定ではない）。
+# 契約年数（2029年6月まで）と移籍の話は football-tribe だけで、クラブ公式・リーグでは確かめられなかった → 台本に入れない。
+# 資料間のずれ: football-tribe は「11日のラ・リーガ第8節でも出ていない」。MD・Marca は「11日(日)のデポルティボ戦」。→ 台本は「11日」まで。
+# 反応（ネット民）: footballnet「久保建英は代表明けも出番なし…」スレ（10/12、5ちゃんねる）の3件（>>64・>>34・>>39）。ブレトスの会見より前の書き込み。
+#   全文のまま。匿名なので未確認。賛否が分かれるものを選んだ（批判だけにしない）。
+slot: japan
+date: "2026年10月15日"
+format: news
+no_main: true      # ニュースはショートだけ（2026-10-14）。締めで本編を案内しない
+people: [久保建英, ソシエダ, エリク・ブレトス]
+
+# ショートの質を上げる指定（2026-10-14〜15）
+short_question: 久保建英は、出番をつかめると思いますか。
+short_hook: 久保建英、ソシエダ幹部が出番は来ると語る。
+short_telops:
+  - {match: 14日の会見で、サッカー部門, text: 14日の会見で/久保について語る}
+  - {match: 久保は我々にとって欠かせない選手だ, text: 久保は我々に/欠かせない選手}
+  - {match: 本人が望むより少ない, text: 出場の少なさを/幹部が認める}
+  - {match: 出番は来ると感じている, text: 久保の出番は/来ると感じている}
+  - {match: 2試合続けての出番なし, text: ラ・リーガは/2試合出番なし}
+  - {match: 今季、まだゴールがありません, text: 久保建英は/今季まだ無得点}
+  - {match: 現地18時45分, text: 現地18時45分/欧州リーグ第2節}
+  - {match: ボーンマスに1対2, text: 第1節は/ボーンマスに1-2}
+short_photos: []
+
+theme:
+  id: kubo_bretos_oportunidad
+  league: spain
+  league_name: ラ・リーガ
+  prefix: ""
+  title: 久保建英、ソシエダ幹部が出番は来ると語る。15日の欧州戦で先発に戻るのか
+  hook: ""
+  question: 久保建英は、15日のヨーロッパリーグで先発に戻るのか
+  takeaway: ソシエダのディレクターが出番は来ると語った直後の試合で、久保がラ・リーガの2試合続けて出番なしからどう動くか。今季まだ無得点の久保が15日のヨーロッパリーグで先発に入れば、発言のすぐあとに起用で応える形になる
+
+thumbnail:
+  line1: 久保建英 ソシエダ幹部が語る
+  line2: 15日の欧州戦は●●
+  tags: [久保建英, ソシエダ]
+  photo: assets/images/20261015_kubo_exit/02.jpg
+  short_photo: assets/images/20261015_kubo_exit/02_v.jpg
+
+answer: 先発に入る見込みと予想されているが、メンバーの発表を待つ必要がある
+watch: 15日のユニオン・サン・ジロワーズ戦のメンバー発表
+# follow_up: true
+
+sections:
+  - id: what
+    main: true
+    heading: 何が起きたか
+    tier: 報道
+    telop: ソシエダの幹部「久保の出番は来る」
+    say:
+      - {text: 'レアル・ソシエダの久保建英について、クラブのディレクターが語りました。', short_only: true}
+      - 14日の会見で、サッカー部門のディレクター、ブレトスが久保について語りました。
+      - voice: エリク・ブレトス
+        text: 久保は我々にとって欠かせない選手だ。
+      - voice: エリク・ブレトス
+        text: 彼のレベルも、我々にとってどれだけ重要かも、あなたたちに説明する必要はない。
+        cont: true
+      - voice: エリク・ブレトス
+        text: 今、彼の出場は、本人が望むより少ない。
+      - voice: エリク・ブレトス
+        text: そして、最高の状態に戻れば出るだろうと誰もが分かっている量よりも、少ないのは明らかだ。
+        cont: true
+      - voice: エリク・ブレトス
+        text: だが彼はとてもよく取り組んでいて、とても落ち着いて見える。
+        cont: true
+      - voice: エリク・ブレトス
+        text: 彼の出番は来ると感じているし、今の様子なら、そのとき彼は準備ができているはずだ。
+    official: false
+    sources:
+      - https://www.mundodeportivo.com/futbol/real-sociedad/20261014/1004238693/bretos-tranquilo-kubo-gorrotxa-oyarzabal-renovacion-remiro.html
+      - https://www.marca.com/futbol/real-sociedad/2026/10/14/kubo-gorrotxategi-remiro-oyarzabal-nombres-propios-comparecencia-erik-bretos.html
+      - https://www.noticiasdegipuzkoa.eus/reala/2026/10/14/kubo-gorrotxategi-remiro-oyarzabal-erik-bretos-11648072.html
+
+  - id: playing
+    heading: 今の出場状況
+    tier: 報道
+    telop: ラ・リーガは2試合続けて出番なし
+    say:
+      - 久保は11日のラ・リーガ、デポルティボ戦で出番がありませんでした。
+      - スペインの報道では、これで2試合続けての出番なしです。
+      - 同じ報道は、監督が今の久保の状態をあまり信頼していないとも書いています。
+      - 久保は今季、まだゴールがありません。
+    official: false
+    sources:
+      - https://www.mundodeportivo.com/futbol/real-sociedad/20261012/1004237722/matarazzo-no-agoto-cambios-hubo-ceros-destacables.html
+      - https://amp.marca.com/futbol/real-sociedad/2026/10/15/union-saint-gilloise-real-sociedad-primer-visitante-ganar-usg.html
+
+  - id: rumor
+    heading: 退団の話は
+    tier: 未確認
+    telop: 退団の兆候かは、明らかになっていない
+    say:
+      - 日本では、久保の退団を心配する声も出ています。
+      - 久保のインスタから、ソシエダ関連の投稿が消えたという指摘が出ています。
+      - ただ、これが退団の兆候なのか、現時点では明らかになっていません。
+    official: false
+    sources:
+      - https://football-tribe.com/japan/2026/10/15/360372/
+      - https://sakarabo.blog.jp/archives/1084564449.html
+
+  - id: next
+    viewpoint: true
+    heading: 15日の起用はどうなるか
+    tier: 報道
+    telop: 15日、欧州リーグで先発に戻る見込み
+    say:
+      - ソシエダは現地15日、ヨーロッパリーグの第2節を戦います。
+      - 相手は、ベルギーのユニオン・サン・ジロワーズです。
+      - キックオフは現地18時45分。日本時間では16日の午前1時45分です。
+      - 第1節は、ボーンマスに1対2で負けています。
+      - スペインの報道は、この試合で久保が先発に入りそうだと予想しています。
+      - ただ、あくまで予想です。メンバーの発表を待つ必要があります。
+    official: false
+    sources:
+      - https://amp.marca.com/futbol/real-sociedad/2026/10/15/union-saint-gilloise-real-sociedad-primer-visitante-ganar-usg.html
+      - https://www.mundodeportivo.com/horarios/futbol/20261014/1004238540/horario-canal-ver-tv-union-saint-gilliose-real-sociedad-uefa-europa-league.html
+      - https://as.com/futbol/uefa/saint-gilloise-real-sociedad-tv-horario-y-como-ver-la-europa-league-online-hoy-f202610-n/
+
+  # ネットの反応: 2026-10-15 に取った実在の書き込み（5ちゃんねる。footballnet の転載。10/12、ブレトスの会見より前）。匿名の書き込みなので未確認。
+  - id: reactions
+    heading: ネットの反応
+    tier: 未確認
+    telop: 「そろそろ移籍考えよう」「見切りはつけられないだろ」
+    say:
+      - voice: ネット民
+        text: いない方が勝ってる以上仕方ないわな そろそろ移籍考えよう
+      - voice: ネット民
+        text: 同ポジ三番手以下の選手がベンチに入れるのは枠の無駄だからソシエダは久保をかなりリスペクトしてるとも言える
+      - voice: ネット民
+        text: 実際クラブでも高額年俸なんだから そうやすやすと見切りはつけられないだろ
+        short_voice: true
+    official: false
+    sources:
+      - https://footballnet.2chblog.jp/archives/60098896.html
+short_title: "久保建英、ソシエダ幹部が出番は来ると語る。15日の欧州戦で先発に戻るのか"

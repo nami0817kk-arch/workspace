@@ -1,0 +1,124 @@
+# 日本人選手 の取材メモ（2026年10月15日）
+# 1本＝1テーマ。まとめではなく、1つの話を掘る
+# 埋めたら python -m src.cli draft このファイル で台本になる
+# 取材: 2026-10-15。requests（ブラウザUA）で原文を読んだ。サッカーキング（本文）・BBC Sport の試合ページ（Norwich City 0-1 Southampton、得点者 K. Matsuki 54'、前半0-0、会場 Carrow Road）・BBC の順位表・BBC サウサンプトンのチームページ（エッケルト監督の談話は BBC Radio Solent）。
+# 日付・場所: 現地10月14日（水）、キャロー・ロード、チャンピオンシップ（イングランド2部）第10節。ノリッジ0-1サウサンプトン。
+# 試合記録で確かめたこと: 54分・スコア・前半0-0はサッカーキングとBBCが一致。ヤンデルのシュートをGKが弾いた、は両方に出る。
+#   足の指定（左足）はサッカーキングだけでBBCは「close range」だけ → 台本では足を言わない。
+# 資料間のずれ: BBC は「play-off places」と見出しにつけ、本文で「7位」「2位ミドルスブラと勝ち点5差」と書く。BBC の順位表の凡例は3〜8位がプレーオフ。→ 7位とプレーオフ圏は両方BBCに出ている。
+# 松木本人の試合後の言葉: サッカーキング・BBC・サウサンプトン公式のどれにも無かった → 入れない。代わりにエッケルト監督の談話（BBC Radio Solent。英語原文を日本語にした）。
+# 反応（ネット民・海外のファン）: 取れなかった。まとめ4サイトのRSSと reactions --find で探したが、この試合の得点についての書き込みはまだ無い
+#   （サカラボの「イングランド2部日本人選手成績」スレは試合の前に立ったもので、得点の話ではない）。作らない。→ 反応なしで報告する。
+slot: japan
+date: "2026年10月15日"
+format: news
+no_main: true      # ニュースはショートだけ（2026-10-14）。締めで本編を案内しない
+people: [松木玖生, サウサンプトン]
+
+# ショートの質を上げる指定（2026-10-14〜15）
+short_question: 松木は、あと何点取れると思いますか。
+short_hook: サウサンプトンの松木玖生、ノリッジ戦で今季2点目。
+short_telops:
+  - {match: ノリッジとの敵地戦, text: 敵地ノリッジ戦/松木玖生が先発}
+  - {match: 後半54分に破りました, text: 0-0のまま/迎えた54分}
+  - {match: こぼれ球に松木が反応, text: こぼれ球に反応/松木が押し込む}
+  - {match: 1対0で勝ちました, text: 1-0で勝利/1点を守り切る}
+  - {match: 松木はフル出場でした, text: 2連勝/松木はフル出場}
+  - {match: 4人を入れ替えました, text: 前の試合から/4人を入れ替え}
+  - {match: 30試合続けて得点, text: リーグ戦30試合/連続で得点}
+  - {match: 順位は7位, text: 順位は7位に/2位と勝ち点5差}
+  - {match: 12試合すべてに出場, text: 公式戦12試合/松木は2得点}
+short_photos: []
+
+theme:
+  id: matsuki_southampton_norwich
+  league: england
+  league_name: イングランド2部
+  prefix: ""
+  title: 松木玖生、ノリッジ戦で今季2点目の決勝弾。サウサンプトンの順位はどう動いたか
+  hook: ""
+  takeaway: 松木の決勝弾で、サウサンプトンはリーグ戦30試合続けて得点し、7位に浮上した
+  question: 松木玖生の決勝弾で、サウサンプトンの順位はどう動いたのか
+
+thumbnail:
+  line1: 松木玖生 今季2点目の決勝弾
+  line2: サウサンプトン●位へ
+  tags: [松木玖生, サウサンプトン]
+  photo: assets/images/20261015_matsuki/01.jpg
+  short_photo: assets/images/20261015_matsuki/01_v.jpg
+
+answer: 7位に上がり、プレーオフ圏内に入った。2位ミドルスブラとは勝ち点5差
+watch: 次節は17日、ホームでボルトン戦
+# follow_up: true
+
+sections:
+  - id: what
+    main: true
+    heading: 何が起きたか
+    tier: 報道
+    telop: 松木玖生が先発。54分の1点を守り切って1-0
+    say:
+      - 松木玖生は、イングランド2部の第10節、ノリッジとの敵地戦に先発しました。
+      - 前半は0対0。今季の敵地では、まだ勝てていなかったサウサンプトン。
+      - その均衡を、後半54分に破りました。
+      - 味方のカスパル・ヤンデルのシュートを、GKが弾きます。
+      - そのこぼれ球に松木が反応し、ゴール前で押し込みました。
+      - サウサンプトンはこの1点を守り切り、1対0で勝ちました。
+      - 2連勝です。松木はフル出場でした。
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/eng/20261015/2216900.html
+      - https://www.bbc.com/sport/football/live/cqze4pr4j31xt
+
+  - id: coach
+    heading: 監督は何と言ったか
+    tier: 報道
+    telop: 「選手一人ひとりが必要になる」
+    say:
+      - エッケルト監督は、ポーツマス戦から4人を入れ替えました。
+      - 松木も、その1人です。
+      - 試合後の談話です。
+      - voice: エッケルト監督
+        text: 入れ替えをするのは初めてではない
+      - voice: エッケルト監督
+        text: リーグ戦は46試合あって、
+        cont: true
+      - voice: エッケルト監督
+        text: 現実として、選手一人ひとりが必要になる
+        cont: true
+      - voice: エッケルト監督
+        text: 途中から出る選手も、先発する選手も、
+      - voice: エッケルト監督
+        text: 一人ひとりを信頼できると分かるのは大きい
+        cont: true
+      - voice: エッケルト監督
+        text: 今季の目標を目指すには、それしかないからだ
+        cont: true
+      - voice: エッケルト監督
+        text: 何人かの選手が今日、よく応えてくれた。
+        cont: true
+      - voice: エッケルト監督
+        text: それはとても大事なことだ
+        cont: true
+    official: false
+    sources:
+      - https://www.bbc.com/sport/football/teams/southampton
+      - https://www.bbc.com/sport/football/live/cqze4pr4j31xt
+
+  - id: numbers
+    viewpoint: true
+    heading: 順位はどう動いたか
+    tier: 報道
+    telop: 7位に浮上。2位とは勝ち点5差
+    say:
+      - サウサンプトンはこれで、リーグ戦30試合続けて得点しました。
+      - 順位は7位に上がり、2位のミドルスブラとは勝ち点5差です。
+      - イングランド2部のチャンピオンシップは、3位から8位がプレーオフ圏です。
+      - 松木の1点は、その圏内へ押し上げる1点になりました。
+      - 松木自身は、今季公式戦12試合すべてに出場して2得点です。
+    official: false
+    sources:
+      - https://www.bbc.com/sport/football/live/cqze4pr4j31xt
+      - https://www.bbc.com/sport/football/championship/table
+      - https://www.soccer-king.jp/news/world/eng/20261015/2216900.html
+short_title: "松木玖生、ノリッジ戦で今季2点目の決勝弾。サウサンプトンの順位はどう動いたか"

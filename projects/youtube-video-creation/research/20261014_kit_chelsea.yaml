@@ -84,6 +84,8 @@ theme:
 short_title: チェルシーが払って切った、ユニフォームの契約
 thumbnail:
   layout: number
+  callouts:
+  - なぜ契約を切った
   photo: assets/images/20261014_kit_chelsea/c07_2018_w.jpg
   number: ●●●●万ポンド
   line1: チェルシーのユニフォーム契約

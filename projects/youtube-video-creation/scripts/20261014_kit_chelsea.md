@@ -23,6 +23,8 @@ thumbnail_crests:
 thumbnail_photo: assets/images/20261014_kit_chelsea/c07_2018_w.jpg
 thumbnail_layout:
   layout: number
+  callouts:
+  - なぜ契約を切った
   number: ●●●●万ポンド
 bg: assets/backgrounds/stadium.png
 date: 2026年10月14日

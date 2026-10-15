@@ -1,0 +1,170 @@
+# 試合結果 の取材メモ（2026年10月15日）
+# 1本＝1テーマ。まとめではなく、1つの話を掘る
+# 埋めたら python -m src.cli draft このファイル で台本になる
+# 取材: 2026-10-15。出典は原文を読んだもの。
+#  - 試合: CL リーグフェーズ第2節 マンチェスター・シティ 2-4 PSG（エティハド、現地10/14 夜 = 日本時間10/15 朝）
+#  - 得点者・時間・PKセーブ・シュート数・枠内: ESPN の試合記録（summary API）。13分ドゥエ、15分デンベレ、32分ヴィティーニャ、
+#    53分ハーランド、62分アクリウシュ、75分ハーランド、90分 F・トーレスのPKをドンナルンマが止めた。
+#    シュートは シティ27本・PSG15本、枠内は シティ9・PSG10（ESPN の box score）。
+#  - 記者の評価: ESPN「Man City can't compete with PSG, the Champions League's gold standard」（Rob Dawson・Mark Ogden）。
+#    台本で読むのは本文の1文 "PSG are the standard in Europe at the moment, and City fell way below."（原文のまま日本語に）。
+#    見出しの "gold standard" は「金字塔」ではなく「基準」の意味なので「欧州の基準」と訳した。
+#  - ルイス・エンリケの言葉: ESPN「Halftime lead worried Luis Enrique in game PSG 'could have lost' to City」の引用（英語は ESPN が訳したもの）。
+#    切って補わず、引用の文を日本語にした。スペイン語の原語は読めていない。
+#  - マレスカの言葉: ESPN「Maresca insists Man City 'close' to PSG after 2nd-half rally falls short」の引用。
+#    「ルイスは最後にかなり運がよかったと言った」はマレスカが明かした伝聞（ルイス・エンリケ本人の言葉としては出ていない）。
+#  - 読めなかったもの: france24（403）、kicker・as.com は当たっていない。ESPN 本文は now.core.api.espn.com の記事APIで全文を読んだ（WebFetch は要約しか返さなかった）。
+#  - ネットの反応: 実在の投稿は取れなかった（X・Reddit・Bluesky は普通のUAの requests では読めない。footmercato の「ネットが沸いた」記事は
+#    投稿が埋め込みで本文に出ない）。作らない → 反応の節は置かない。
+#  - アンダーソン（シティ）の出場・評価には触れない（今日の選手紹介と別の話にした）。
+slot: match
+date: "2026年10月15日"
+format: news
+no_main: true      # ニュースはショートだけ（2026-10-14）。締めで本編を案内しない
+people: [ルイス・エンリケ, PSG, マンチェスター・シティ]
+
+theme:
+  id: psg_city_cl
+  league: france
+  prefix: ""
+  title: "PSG、シティに4対2。ルイス・エンリケが勝ったあとに口にした一言"
+  hook: ""
+  question: パリ・サンジェルマンの4対2を、ルイス・エンリケはなぜ手放しで喜ばなかったのか
+
+thumbnail:
+  short_photo: assets/images/20261015_enrique_pair/01_v.jpg
+  line1: PSG、シティに4-2
+  line2: 勝った監督の本音は●●●●
+  tags: [ルイス・エンリケ, PSG]
+  photo: assets/images/20261015_enrique_pair/01.jpg
+  crests: [パリサンジェルマン, マンチェスターシティ]
+
+short_question: この4対2を、あなたは完勝と呼びますか
+short_hook: パリ・サンジェルマンがシティに4対2。勝った監督が口にした一言とは
+short_telops:
+  - {match: 欧州の基準, text: パリが欧州の基準/シティは大きく下回る}
+  - {match: 3対0でリードして入る, text: ハーフタイム3-0/リードは好きじゃない}
+  - {match: 少し運が悪ければ, text: 少し運が悪ければ/負けていたかもしれない}
+  - {match: 後半はとても苦しんだ, text: 後半はとても苦しんだ/向こうがもっと取れた}
+  - {match: 近い、というのがぼくの感覚, text: マレスカは「近い」/シティは2-4で敗戦}
+  - {match: かなり運がよかった, text: ルイスが明かした/「かなり運がよかった」}
+  - {match: シュートはシティが27本, text: シュート27対15/シティが上回る}
+
+takeaway: "パリ・サンジェルマンはマンチェスター・シティに4対2で勝った。シュートはシティが27本、パリ・サンジェルマンが15本で、枠内は9本と10本、後半だけならシティが2点、パリ・サンジェルマンが1点。ルイス・エンリケ監督が「少し運が悪ければ負けていた」と話したのは、この数字と重なる。次は現地20日、ホームでバルセロナ（ともに勝ち点6）"
+
+answer: 3対0の前半のあと、後半はシティが2対1で上回った。監督自身が「運が悪ければ負けていた」と話した
+watch: 次は現地20日、ホームでバルセロナ戦。勝ち点6で並ぶ首位争い
+
+sections:
+  - id: score
+    heading: 試合はこうなった
+    tier: 報道
+    telop: シティ 2-4 パリ・サンジェルマン
+    card:
+      type: table
+      title: 得点の流れ（シティ-パリ）
+      columns: [分, 得点者, スコア]
+      rows:
+      - ['13', ドゥエ（パリ）, 0-1]
+      - ['15', デンベレ（パリ）, 0-2]
+      - ['32', ヴィティーニャ（パリ）, 0-3]
+      - ['53', ハーランド（シティ）, 1-3]
+      - ['62', アクリウシュ（パリ）, 1-4]
+      - ['75', ハーランド（シティ）, 2-4]
+    say:
+      - 第2節、パリ・サンジェルマンが敵地でマンチェスター・シティに4対2で勝ちました。
+      - ルイス・エンリケ監督のチームは、前半に3点を取りました。
+      - 13分にドゥエ、15分にデンベレ、32分にヴィティーニャです。
+      - 後半、ハーランドが53分と75分に決めました。
+      - ただ、間の62分に、アクリウシュが4点目を取っています。
+      - 終盤のフェラン・トーレスのPKは、シティのドンナルンマが止めました。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50184341/man-city-compete-psg-champions-league-gold-standard
+      - https://www.espn.com/soccer/story/_/id/50184899/luis-enrique-psg-lost-city
+
+  - id: voices
+    main: true
+    heading: 勝ったあとの言葉
+    tier: 報道
+    telop: ルイス・エンリケ「負けていたかもしれない」
+    say:
+      - {text: '敵地のシティ戦で、パリ・サンジェルマンは前半だけで3点を取りました。', short_only: true}
+      - 試合を見た記者は、パリ・サンジェルマンとシティの差を、こう書いています。
+      - voice: 記者
+        text: パリ・サンジェルマンは、いま欧州の基準だ。
+      - voice: 記者
+        text: シティは、それをはるかに下回った
+        cont: true
+      - ところが、勝ったルイス・エンリケ監督は、試合後に違うことを話しました。
+      - voice: ルイス・エンリケ
+        text: 前半は、ぼくらがやりたいことを見せられた。
+      - voice: ルイス・エンリケ
+        text: でも、ハーフタイムに3対0でリードして入るのは、好きじゃない
+      - voice: ルイス・エンリケ
+        text: 多くの人は試合が決まったと思うが、決してそうじゃない。
+      - voice: ルイス・エンリケ
+        text: 後半はとても苦しんだ。
+      - voice: ルイス・エンリケ
+        text: 向こうはもっと点を取っていい内容だった。
+        cont: true
+      - voice: ルイス・エンリケ
+        text: 少し運が悪ければ、この試合を負けていたかもしれない
+      - 一方、負けたシティのマレスカ監督は、パリとの差について、こう話しています。
+      - voice: マレスカ
+        text: ぼくらはそこにいると思う。近い、というのがぼくの感覚だ
+      - voice: マレスカ
+        text: ルイスは最後に、ぼくにこう言った。
+      - voice: マレスカ
+        text: 自分たちはかなり運がよかった、と
+        cont: true
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50184341/man-city-compete-psg-champions-league-gold-standard
+      - https://www.espn.com/soccer/story/_/id/50184899/luis-enrique-psg-lost-city
+      - https://www.espn.com/soccer/story/_/id/50184992/man-city-psg-enzo-maresca-uefa-champions-league
+
+  - id: numbers
+    viewpoint: true
+    heading: シュート数と点数のずれ
+    tier: 報道
+    telop: シュートはシティ27本、パリ15本。点はパリ4、シティ2
+    card:
+      type: table
+      title: シティ対パリ・サンジェルマン、試合の数字
+      columns: [項目, シティ, パリ]
+      rows:
+      - [シュート, '27', '15']
+      - [枠内, '9', '10']
+      - [後半の得点, '2', '1']
+      - [ボール支配率, 54%, 46%]
+    say:
+      - {text: '勝ったのはパリ・サンジェルマン。ただシュートは、シティが27本、パリが15本。', image: assets/images/20261015_enrique/01_w.jpg}
+      - 枠内に飛んだ数は、パリが10本、シティが9本。ほぼ同じです。
+      - 前半の3失点は、13分から32分までの19分間に集中しました。
+      - 後半だけを見ると、シティが2点、パリが1点で、シティが上回っています。
+      - ルイス・エンリケ監督が口にした危うさは、この数字にも出ています。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50184341/man-city-compete-psg-champions-league-gold-standard
+      - https://www.espn.com/soccer/story/_/id/50184992/man-city-psg-enzo-maresca-uefa-champions-league
+
+  - id: next
+    heading: 順位と次の一戦
+    tier: 報道
+    telop: 次は現地20日、ホームでバルセロナ
+    say:
+      - {text: '2試合で、パリ・サンジェルマンもバルセロナも勝ち点6。1位と2位です。', image: assets/images/20261015_enrique/01_w.jpg}
+      - 次の試合は現地20日、ホームのパルク・デ・プランスで、そのバルセロナを迎えます。
+      - ルイス・エンリケ監督は、次の試合をこう話しました。
+      - voice: ルイス・エンリケ
+        text: 今の時点で最高のチームでいることは、
+      - voice: ルイス・エンリケ
+        text: いちばん大事なことじゃない。
+        cont: true
+      - voice: ルイス・エンリケ
+        text: 大事なのは、シーズンの終わりに最高のチームでいることだ
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50184899/luis-enrique-psg-lost-city
+short_title: "PSG、シティに4対2。ルイス・エンリケが勝ったあとに口にした一言"
