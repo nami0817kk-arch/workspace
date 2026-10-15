@@ -56,7 +56,7 @@ UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
 # [[api-adoption-decisions]] で Getty 契約は見送りにしている。
 # **止めはしない**が、必ず知らせる
 AGENCIES = ("gettyimages", "getty", "aflo", "afpbb", "afp", "reuters", "alamy",
-            "imago", "shutterstock", "jiji", "kyodonews", "pa-images", "epa")
+            "imago", "shutterstock", "jiji", "kyodonews", "pa-images", "epa", "reuter")
 
 # 記事の中身ではないもの
 SKIP = ("logo", "icon", "avatar", "banner", "ad_", "/ads/", "sprite", "blank",
