@@ -17,6 +17,7 @@
     python -m chiso.cli whoami                          # 許可したチャンネルの名前を出す（取り違えの確認）
     python -m chiso.cli playlists [--sync]              # 投稿済みを台本の playlists:／series:／shorts_playlists: の再生リストへ
     python -m chiso.cli localize scripts/x.yaml [--dry-run]   # 投稿済みの本編に台本の en:（英語の題名と説明）を付ける
+    python -m chiso.cli clean [--apply]                 # 投稿・予約が済んだ台本の frames・bg を消す（書き出しの前に空きが少なければ自動）
     python -m chiso.cli reauth                          # 許可の取り直し（ブラウザで同意する。ユーザーが打つ）
     python -m chiso.cli check   scripts/x.yaml          # 素材の有無・書きすぎ・抑揚の張りつきを点検
     python -m chiso.cli qc      scripts/x.yaml [--video out/x.mp4]   # 出来上がった動画の点検（一覧・画面の替わり方・音）
@@ -190,6 +191,9 @@ def preflight(sc, config) -> bool:
         painter = Painter(config, sc, assets_dir(config), (1920, 1080))
         errors += check_mod.section_title_fit(painter)
         warns += check_mod.timeline_crowding(painter)
+    e, w = check_mod.render_risks(sc, assets_dir(config))
+    errors += e
+    warns += w
     warns += check_mod.lint(sc, config.get("short", {}).get("max_seconds", 60))
     from . import reading                                # 読み違い（10-10）：辞書との食い違い・割れる字・辞書の巻き込み
     e, w = reading.notes(sc, load_readings(ROOT / "readings.yaml"), kana_source(config))
@@ -322,6 +326,8 @@ def _stamp(painter_cls):
 
 def make_video(args, draft: bool) -> int:
     config = load_config()
+    if not ensure_disk(config):
+        return 2
     path = Path(args.script)
     sc = script_mod.load(path)
     limit = getattr(args, "lines", None)
@@ -419,12 +425,78 @@ def cmd_draft(args) -> int:
     return make_video(args, draft=True)
 
 
+# --- ディスク（10-15：work/<台本>/ の frames・bg が1本10〜28GB。C: が満杯になって書き出しが落ちた）--------------
+
+DISK_AUTO_CLEAN_GB = 60      # 空きがこれより少なければ、投稿済み・予約済みの中間ファイルを自動で消す
+DISK_MIN_GB = 30             # それでもこれより少なければ書き出さない
+
+
+def clean_targets() -> list[Path]:
+    """予約・公開が済んだ（posted.json に本編がある）台本の、作り直せる中間ファイル。音声（voice）は残す。"""
+    posted = ROOT / "posted.json"
+    stems = set()
+    if posted.exists():
+        for p in json.loads(posted.read_text(encoding="utf-8")):
+            if str(p.get("key", "")).endswith(":main"):
+                stems.add(str(p["key"]).split(":")[0])
+    out = []
+    for stem in sorted(stems):
+        for sub in ("frames", "frames-draft", "bg"):
+            d = ROOT / "work" / stem / sub
+            if d.exists():
+                out.append(d)
+    return out
+
+
+def _du(path: Path) -> int:
+    return sum(f.stat().st_size for f in path.rglob("*") if f.is_file())
+
+
+def disk_free_gb() -> float:
+    import shutil
+    return shutil.disk_usage(ROOT).free / 1e9
+
+
+def ensure_disk(config=None) -> bool:
+    """作る前に空きを見る。少なければ予約済みの中間ファイルを消し、それでも足りなければ False。"""
+    import shutil
+    free = disk_free_gb()
+    if free >= DISK_AUTO_CLEAN_GB:
+        return True
+    print(f"  ! ディスクの空きが{free:.0f}GBです（{DISK_AUTO_CLEAN_GB}GB未満）。予約済みの中間ファイルを消します")
+    for d in clean_targets():
+        shutil.rmtree(d, ignore_errors=True)
+    free = disk_free_gb()
+    print(f"  空き {free:.0f}GB")
+    if free < DISK_MIN_GB:
+        print(f"  × ディスクの空きが{DISK_MIN_GB}GB未満のため、書き出しません（途中で落ちて壊れたコマが残るため）")
+        return False
+    return True
+
+
+def cmd_clean(args) -> int:
+    """投稿・予約が済んだ台本の frames・frames-draft・bg を消す（--apply。付けなければ一覧だけ）。"""
+    import shutil
+    targets = clean_targets()
+    total = 0
+    for d in targets:
+        n = _du(d)
+        total += n
+        print(f"  {n / 1e9:6.1f}GB  {d.relative_to(ROOT)}")
+        if args.apply:
+            shutil.rmtree(d, ignore_errors=True)
+    print(f"{'消しました' if args.apply else '消せます（--apply で消す）'}：合計 {total / 1e9:.1f}GB／いまの空き {disk_free_gb():.0f}GB")
+    return 0
+
+
 def cmd_build(args) -> int:
     return make_video(args, draft=False)
 
 
 def cmd_shorts(args) -> int:
     config = load_config()
+    if not ensure_disk(config):
+        return 2
     path = Path(args.script)
     sc = script_mod.load(path)
     if not args.draft and not is_approved(path):
@@ -1076,6 +1148,9 @@ def main(argv=None) -> int:
     s.add_argument("script")
     s.add_argument("--dry-run", action="store_true", help="今の概要欄から英語の説明を作って見せるだけ（videos.list 1 単位）")
     s.set_defaults(fn=cmd_localize)
+    s = sub.add_parser("clean")
+    s.add_argument("--apply", action="store_true", help="消す（付けなければ一覧だけ）")
+    s.set_defaults(fn=cmd_clean)
     s = sub.add_parser("reauth")
     s.set_defaults(fn=cmd_reauth)
     s = sub.add_parser("prepare-characters")

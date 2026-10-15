@@ -776,3 +776,77 @@ def glyph_errors(script, fonts: dict) -> list[str]:
 
 def _order(at: str) -> int:
     return int(at[:-2]) if at.endswith("行目") else 0
+
+# --- 書き出してから気づく画面の不具合を、書き出す前に見つける（10-15。今日の直しの約半分がここ）-------------------
+WIDE_RATIO = 2.4         # 横長がこれ以上の絵は、真ん中の額に出ると細い帯になる
+_NUMLIKE = re.compile(r"^(約|およそ|第)?[0-9０-９][0-9０-９,.，]*\s*(年|日|月|人|石|万|千|km|キロ|%|％|隻|枚|本|回|倍|歳|両|トン|タエス|点|基|m|メートル)?")
+_PERSON_IMAGE = re.compile(r"portrait|_zou|_zou\.|eiyuden|meishokagami|_kao")
+
+
+def _is_numlike(text) -> bool:
+    return bool(_NUMLIKE.match(str(text).strip()))
+
+
+def render_risks(script, assets: Path) -> tuple[list[str], list[str]]:
+    """画面の描き方で、作ってから気づきやすい不具合。
+    × 描くときに落ちる・図が崩れる（labels が数字／flow の `{}` の題・札がカンマで切れた）
+    ! 見映えが崩れる（stats の並びが逆・背景が人物の絵・横長の絵が額で細い帯）"""
+    import json
+    errors: list[str] = []
+    warns: list[str] = []
+    seen = set()
+    from .figures import base_key
+    for l in script.lines:
+        if not l.figure:
+            continue
+        key = base_key(l.figure)
+        if key in seen:
+            continue
+        seen.add(key)
+        spec = json.loads(l.figure)
+        title = spec.get("title", "")
+        stray = [k for k, v in spec.items() if v is None or re.match(r"^[0-9０-９]", str(k))]
+        if stray:
+            errors.append(f"{l.index + 1}行目：図「{title}」の書き方が崩れています（題・注にカンマがあると切れる。"
+                          f"\"…\" で囲む）: {'・'.join(map(str, stray))}")
+        labels = spec.get("labels")
+        if labels and any(not isinstance(x, str) for x in labels):
+            errors.append(f"{l.index + 1}行目：図「{title}」の labels は文字列にする（数字のままだと描くときに落ちる）")
+        if spec.get("type") == "stats":
+            for it in spec.get("items", []):
+                if len(it) >= 2 and _is_numlike(it[0]) and not _is_numlike(it[1]):
+                    warns.append(f"{l.index + 1}行目：図「{title}」の stats は [ラベル, 数字, 注] の順（「{it[0]}」が先頭で、"
+                                 f"数字とラベルが逆に見えます）")
+                    break
+    portraits = {l.portrait.image for l in script.lines if l.portrait}
+    sizes: dict[str, tuple[int, int] | None] = {}
+
+    def size(img: str):
+        if img not in sizes:
+            try:
+                from PIL import Image
+                with Image.open(assets / img) as im:
+                    sizes[img] = im.size
+            except Exception:
+                sizes[img] = None
+        return sizes[img]
+    said_person, said_wide, said_portrait = set(), set(), set()
+    for l in script.lines:
+        bg = l.background.image if l.background else None
+        if bg and bg not in said_person and (bg in portraits or _PERSON_IMAGE.search(bg.rsplit("/", 1)[-1])):
+            said_person.add(bg)
+            warns.append(f"{l.index + 1}行目：背景が人物の絵（{bg.rsplit('/', 1)[-1]}）。拡大すると染みのように粗くなる"
+                         f"（肖像は portrait に、背景は風景・地図・城・戦の絵に）")
+        if bg and l.portrait is None and not l.figure and not getattr(l, "detail", None) and bg not in said_wide:
+            sz = size(bg)
+            if sz and sz[0] / max(sz[1], 1) >= WIDE_RATIO:
+                said_wide.add(bg)
+                warns.append(f"{l.index + 1}行目：背景の絵（{bg.rsplit('/', 1)[-1]}）が極端に横長（{sz[0] / sz[1]:.1f}:1）。"
+                             f"真ん中の額で細い帯になる（肖像か detail を付ける・別の絵に）")
+        if l.portrait and l.portrait.image not in said_portrait:
+            sz = size(l.portrait.image)
+            if sz and (sz[0] / max(sz[1], 1) >= 2.2 or sz[0] / max(sz[1], 1) <= 0.3):
+                said_portrait.add(l.portrait.image)
+                warns.append(f"{l.index + 1}行目：肖像の額に出す絵（{l.portrait.image.rsplit('/', 1)[-1]}）の縦横比が極端です")
+    return errors, warns
+
