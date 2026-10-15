@@ -200,13 +200,14 @@ YouTube チャンネル「歴史の地層｜日本史・世界史を聞き流し
 - **承認（approve）の直後に `voice` を背景で走らせる**（`python -m chiso.cli voice scripts/x.yaml`）。音声はキャッシュされるので、確認エージェントを待つあいだに作れば、本番の書き出しから音声の工程（6〜20分）が消える。直したあとも `voice` で直した行だけ作り直せる。
 - **確認の往復は少なく**：台本ができたら「事実の前半・事実の後半・流れ」を3件同時に→指摘を**1回にまとめて**直す→最終確認は直した所の再確認1件だけ→approve。コマ点検（3人）で出た画面の指摘も1回にまとめる。往復のたびに書き出しが止まる。
 - **書き出す前に check の「!」を潰す**（`render_risks`、10-15 追加）。stats の並びが逆（items は [ラベル, 数字, 注]）・図の題や札のカンマ切れ・labels が数字・背景が人物の絵・極端に横長の絵が額に出る、はここで見つかる。×（落ちる）は止まる。
+- **コマ点検は書き出しの前に `preview` で**（10-16 追加）：`python -m chiso.cli preview scripts/x.yaml` は、前景・背景を本番と同じ控え（work/<台本>/frames・bg）に描き、行ごとの画面を 3×3 の一覧（out/x_preview/sheetNN.jpg）にする。**ffmpeg の組み立て（8〜17分）と音声の組み立てを待たない**（官兵衛で9分）。この一覧を3人で点検して画面の指摘を1回にまとめて直し、**その後 build を1回**。直した行の前景だけ描き直しになり、build は控えを使う。一覧の時刻は読みの控えから出した目安。
 - **ディスクは自動で見る**：`build`・`shorts` の前に空きが60GB未満なら、投稿・予約が済んだ台本の frames・frames-draft・bg を自動で消し（`python -m chiso.cli clean [--apply]` で手動でも）、30GB未満なら書き出さない（満杯で落ちると壊れたコマが残る）。
 - **書き出しを2本同時に走らせない**（変わらず）。コマの抜き出し・全編のデコード検査は書き出しと重ねると組み立てが約2倍遅くなる（8分→17分）ので、組み立て中は避ける。
 - **YouTube の投稿枠は実測で縛られない**（10-15 に本編4＋ショート約20本が1日で通った）。投稿を「枠」のために翌日へ回さない。
 
 ## 3. 作り方とコマンド
 
-手順（スキル rekishi-video）：下調べ → 台本 → kana → check → draft → qc → 自分の確認3回 → reading-ok → approve → build → qc → shorts → thumb --variants → describe --keywords → 見せる → screen → upload
+手順（スキル rekishi-video）：下調べ → 台本 → kana → check → 自分の確認（事実2・流れ1を同時に）→ reading-ok → approve（直後に voice を背景で）→ preview → コマ点検3人 → 直し → build（1回）→ デコード検査 → shorts → thumb --variants → describe --keywords → 見せる → screen → upload
 
 ```
 python -m chiso.cli check    scripts/x.yaml     # 作る前の点検。止める(×)→直すと効く(!)→参考(・)の順、同じ種類は1件にまとめる
