@@ -851,7 +851,10 @@ def _salt(painter) -> str:
         pass
     src += json.dumps(painter.config, sort_keys=True, ensure_ascii=False).encode("utf-8")
     src += json.dumps(getattr(painter.script, "look", {}) or {}, sort_keys=True).encode("utf-8")
-    for extra in ("pen.py", "texture.py"):
+    # 10-15：numbers.py の年号のカンマを直したのに、図の控えが古いまま使い回され、書き出しをやり直した。
+    # 図・札・額・吹き出しなど、画面を描くファイルは全部入れる
+    for extra in ("pen.py", "texture.py", "numbers.py", "figures.py", "extras.py", "reaction.py", "style.py",
+                  "people.py", "faces.py", "helmet.py", "jaw.py"):
         try:
             src += (Path(__file__).parent / extra).read_bytes()
         except OSError:

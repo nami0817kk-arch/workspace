@@ -27,10 +27,12 @@ RULE = (190, 160, 110)       # 区切りの線
 GOLD = (214, 178, 110)
 
 
-def _fmt(v) -> str:
-    """値を画面の数字に（1000 → 1,000、2.5 → 2.5）。文字ならそのまま。"""
+def _fmt(v, unit: str = "") -> str:
+    """値を画面の数字に（1000 → 1,000、2.5 → 2.5）。文字ならそのまま。単位が「年」なら桁区切りは付けない（1579年）。"""
     if isinstance(v, bool) or not isinstance(v, (int, float)):
         return str(v)
+    if unit == "年" and float(v).is_integer():
+        return str(int(v))
     if float(v).is_integer():
         return f"{int(v):,}"
     return f"{v:,}"
@@ -166,7 +168,7 @@ def draw_numberline(painter, img, spec, t):
     for k, v in (("min", lo_v), ("max", hi_v)):
         if k in spec:                                            # 端の目盛りは min・max を書いたときだけ
             dr.line([(X(v), ly - 14), (X(v), ly + 14)], fill=COAST, width=3)
-            dr.text((X(v), ly + 24), f"{_fmt(v)}{unit}", font=sf, fill=SUB, anchor="mt")
+            dr.text((X(v), ly + 24), f"{_fmt(v, unit)}{unit}", font=sf, fill=SUB, anchor="mt")
     lo, hi = _grow(spec, n)
     steps = _steps(t, lo, hi)
     order = sorted(range(n), key=lambda i: vals[i])
@@ -178,7 +180,7 @@ def draw_numberline(painter, img, spec, t):
         px = X(vals[i])
         u = up[i]
 
-        _num = str(it["note"]) or f"{_fmt(it['value'])}{unit}"
+        _num = str(it["note"]) or f"{_fmt(it['value'], unit)}{unit}"
         _nw = number_width(painter, _num, 58 if hot else 46) / 2 + 6
         note_item(i, (px - _nw, ly - 200, px + _nw, ly - 104) if u else (px - _nw, ly + 104, px + _nw, ly + 200))
 
@@ -188,7 +190,7 @@ def draw_numberline(painter, img, spec, t):
             d.line([(px, ly), (px, ly - stem)], fill=col, width=4)
             d.ellipse([px - r, ly - r, px + r, ly + r], fill=col, outline=PAPER, width=4)
             lf = painter.font("serif", 38 if hot else 32, bold=True)
-            num = str(it["note"]) or f"{_fmt(it['value'])}{unit}"
+            num = str(it["note"]) or f"{_fmt(it['value'], unit)}{unit}"
             size = 58 if hot else 46
             nw = number_width(painter, num, size)
             if u:
@@ -266,7 +268,7 @@ def draw_line(painter, img, spec, t):
         hot = i == hot_i
         r = 16 if hot else 10
         dr.ellipse([x - r, y - r, x + r, y + r], fill=RED if hot else PAPER, outline=RED, width=4)
-        num = str(pts_raw[i]["note"]) or f"{_fmt(pts_raw[i]['value'])}{unit}"
+        num = str(pts_raw[i]["note"]) or f"{_fmt(pts_raw[i]['value'], unit)}{unit}"
         size = 64 if hot else 38
         w = number_width(painter, num, size)
         nx = min(max(x - w / 2, ax0 + 10), ax1 - 10 - w)

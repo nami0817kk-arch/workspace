@@ -278,6 +278,8 @@ def compose(ffmpeg: str, background: Path, overlay_list: Path, audio: Path, targ
     else:
         bg_in = ["-i", str(background)]
         bg_chain = "[0:v]null[b];"
+    import os
+    part = target.with_name(f"{target.stem}.{os.getpid()}.part{target.suffix}")
     subprocess.run([
         ffmpeg, "-y", "-loglevel", "error",
         *bg_in,
@@ -287,7 +289,14 @@ def compose(ffmpeg: str, background: Path, overlay_list: Path, audio: Path, targ
         "-map", "[v]", "-map", "2:a",
         "-c:v", "libx264", "-preset", preset, "-crf", "20", "-g", str(fps * 2),
         "-af", loudnorm_filter(ffmpeg, audio), "-c:a", "aac", "-b:a", "192k", "-ar", "48000",
-        "-movflags", "+faststart", "-shortest", str(target)], check=True)
+        "-movflags", "+faststart", "-shortest", str(part)], check=True)
+    # 10-15：途中で止めた書き出しの ffmpeg が残って同じファイルに書き込み、動画が壊れた（約1時間のやり直し）。
+    # 自分専用の仮ファイルに書き、音声と同じ長さで終わったことを確かめてから本物に置き換える
+    want = media_seconds(ffmpeg, audio)
+    if want is not None and not _ok_length(ffmpeg, part, want, 2.0):
+        part.unlink(missing_ok=True)
+        raise LengthError(f"仕上げた動画の長さが声と合いません: {target.name}")
+    part.replace(target)
 
 
 LOUD = "I=-14:TP=-1.5:LRA=11"     # YouTube の基準の大きさ
