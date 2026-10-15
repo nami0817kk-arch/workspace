@@ -206,6 +206,7 @@ class Script:
     look: dict = field(default_factory=dict)        # 画面の道具の入り切り（texture・recap）。config より優先
     playlists: list = field(default_factory=list)   # 本編を入れる再生リスト（省けば series:。chiso/channel.py）
     shorts_playlists: list = field(default_factory=list)   # ショートを入れる再生リスト（省けば入れない）
+    shorts_badge: str = ""                                   # ショートの画面に貼る札（B作品は「もしもの話」。省けば出さない）
     en: dict = field(default_factory=dict)          # 英語の題名・説明・章の題 {title, description, chapters}
 
     @property
@@ -543,6 +544,7 @@ def parse(data: dict, path: Path | None = None, glossary: dict[str, str] | None 
         look={k: bool(data[k]) for k in LOOK_KEYS if k in data},
         playlists=_names(data["playlists"]) if "playlists" in data else _names(data.get("series")),
         shorts_playlists=_names(data.get("shorts_playlists")),
+        shorts_badge=str(data.get("shorts_badge") or ""),
         en=_english(data.get("en"), len(sections)),
     )
 
