@@ -32,7 +32,7 @@ ATTR_RE = re.compile(r"^(?P<key>[a-zA-Z_]+)[:：]\s*(?P<value>.*)$")
 DIRECTIVE_RE = re.compile(r"^@(?P<key>[a-zA-Z_]+)[:：]\s*(?P<value>.*)$")
 
 LINE_ATTRS = {"telop", "emotion", "pause", "image", "speed", "no_telop", "se", "source",
-              "card", "only", "short_voice", "cont", "emph", "mark"}
+              "card", "only", "short_voice", "cont", "emph", "mark", "callword"}
 
 # 情報の確度。ニュース系では、これを画面に出さないと視聴者が判断できない
 SOURCE_TIERS = {
@@ -138,6 +138,9 @@ class Line:
     # **山を作る行**（2026-10-03「動画の質を上げる仕組み ④」。ユーザー「もう少し、盛り上げて説明する感じで」）。
     # 抑揚を強め、少しだけゆっくり・高めに読む（`tts.voice_params`）。言葉の選び方だけでは山が作れなかった
     emph: bool = False
+    # **画像の上に出す大きな見出し語**（2026-10-15 ユーザー「全部！」。参考シリーズは場面の核になる語を
+    # 画面に大きく置く：「神の子 歴代最多8回」「情熱がない」）。シリーズの本編だけ。10字まで、1節に1つまで
+    callword: str = ""
     # **書き込み（赤ペン）**（2026-10-07、src/marks.py）。`mark: {kind: strike, row: 0}` を1行に1つずつ。
     # そのとき画面に出ているカードの項目か、写真の顔（on: photo）に足す。前の行の書き込みは
     # カードが替わるまで残る。1画面2つまで

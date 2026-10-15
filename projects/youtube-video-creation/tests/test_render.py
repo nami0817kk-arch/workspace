@@ -1100,3 +1100,35 @@ def test_亡くなった人の数は自動で黄色くしない():
     assert "2357人" in strong("収容は1万2357人。20クラブでいちばん小さい本拠地です")
     # 死者・犠牲・遺族でも効く
     assert "96人" not in strong("この事故で96人が犠牲になりました")
+
+
+# ---- 画像の上の大見出し語（2026-10-15） ----
+def test_callword_は台本の行の属性として読める():
+    from src.script_model import parse_script
+    script = parse_script("キャスター: 神の子と呼ばれた。\n  callword: 神の子\n")
+    assert script.scenes[0].lines[0].callword == "神の子"
+
+
+def test_callword_を描くと画面に黄の太字が出る(tmp_path):
+    from PIL import Image
+    config = load_config()
+    config.motion.enabled = False
+    renderer = Renderer(config, tmp_path)
+    canvas = Image.new("RGBA", (config.video.width, config.video.height), (20, 30, 40, 255))
+    renderer._draw_callword(canvas, "神の子", 1.0)
+    px = canvas.convert("RGB")
+    w, h = px.size
+    yellow = sum(1 for x in range(0, w, 4) for y in range(0, h, 4)
+                 if px.getpixel((x, y))[0] > 230 and px.getpixel((x, y))[1] > 180 and px.getpixel((x, y))[2] < 120)
+    assert yellow > 200, "黄の太字が画面に出ていない"
+
+
+def test_callword_は10字まで1節に1つまで():
+    from types import SimpleNamespace
+    from src.research import _check_callwords
+    ok = SimpleNamespace(id="a", line_callwords=["", "神の子"])
+    long = SimpleNamespace(id="b", line_callwords=["あ" * 11])
+    two = SimpleNamespace(id="c", line_callwords=["神の子", "代表引退"])
+    assert _check_callwords(SimpleNamespace(sections=[ok])) == []
+    assert any("10字まで" in p for p in _check_callwords(SimpleNamespace(sections=[long])))
+    assert any("1節に1つまで" in p for p in _check_callwords(SimpleNamespace(sections=[two])))

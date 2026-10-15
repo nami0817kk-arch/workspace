@@ -148,6 +148,8 @@ class Section:
     line_conts: list = field(default_factory=list)
     # **山を作る行**（2026-10-03 ④）。台本に `emph: true` を書き、声の抑揚を強める
     line_emphs: list = field(default_factory=list)
+    # **画像の上に出す大きな見出し語**（2026-10-15）。行ごと。空は出さない
+    line_callwords: list = field(default_factory=list)
     # **書き込み（赤ペン）**（2026-10-07、src/marks.py）。行ごとに確かめた辞書の並び
     line_marks: list = field(default_factory=list)
     bg: str = ""      # この節の背景。空なら既定の並びから割り当てる
@@ -418,6 +420,7 @@ def build_notes(raw: dict) -> Notes:
         picks: list[bool] = []
         conts: list[bool] = []
         emphs: list[bool] = []
+        callwords: list[str] = []
         inks: list[list] = []
         mutes: list[bool] = []
         for item in raw_lines:
@@ -450,6 +453,7 @@ def build_notes(raw: dict) -> Notes:
                 mutes.append(bool(item.get("no_telop")))
                 conts.append(bool(item.get("cont")))
                 emphs.append(bool(item.get("emph")))
+                callwords.append(str(item.get("callword") or "").strip())
                 # **書き込み**（2026-10-07）。書き方の誤り（知らない kind・鍵）はここで止める。
                 # 指した行がカードにあるか・1画面2つまでかは verify が台本の形で見る
                 try:
@@ -468,6 +472,7 @@ def build_notes(raw: dict) -> Notes:
                 mutes.append(False)
                 conts.append(False)
                 emphs.append(False)
+                callwords.append("")
                 inks.append([])
         keep = [i for i, s in enumerate(lines) if s]
         sections.append(
@@ -488,6 +493,7 @@ def build_notes(raw: dict) -> Notes:
                 line_short_voices=[picks[i] for i in keep],
                 line_conts=[conts[i] for i in keep],
                 line_emphs=[emphs[i] for i in keep],
+                line_callwords=[callwords[i] for i in keep],
                 line_marks=[inks[i] for i in keep],
                 line_no_telops=[mutes[i] for i in keep],
                 sources=[str(u).strip() for u in (entry.get("sources") or []) if str(u).strip()],
@@ -591,6 +597,7 @@ def verify(notes: Notes, plan: Plan) -> list[str]:
     problems += _check_thumbnail_resolution(notes)
     problems += _check_thumbnail_layout(notes)
     problems += _check_line_images_wide(notes)
+    problems += _check_callwords(notes)
     problems += _check_20261001(notes)
     problems += _check_viewpoint_substance(notes)
     # **voices 型は新しく作らない**（2026-09-28 ユーザー決定「収益化することが目的なので、
@@ -829,7 +836,7 @@ def _check_voice_clash(notes: Notes) -> list[str]:
 
 # 1行ぶんの辞書に書いてよい鍵
 LINE_KEYS = frozenset({"text", "voice", "telop", "card", "image", "pause",
-                       "short_only", "main_only", "short_voice", "no_telop", "cont", "emph", "mark"})
+                       "short_only", "main_only", "short_voice", "no_telop", "cont", "emph", "mark", "callword"})
 
 
 def _check_card(section: Section) -> list[str]:
@@ -907,6 +914,8 @@ NEW_CARD_KEYS = {
     "line": _cards.LINE_KEYS,
     "waterfall": _cards.WATERFALL_KEYS,
     "timeline": _cards.TIMELINE_KEYS,
+    # 2026-10-15（文書カード）。公式声明・規則・本人の言葉の原文を紙の地で出す
+    "document": _cards.DOCUMENT_KEYS,
 }
 
 
@@ -982,6 +991,8 @@ def _check_number_card(section: Section, card: dict, kind: str) -> list[str]:
         problems += [f"{section.id}: {p}" for p in cards_mod.check_scatter(card)]
     elif kind == "convert":
         problems += [f"{section.id}: {p}" for p in cards_mod.check_convert(card)]
+    elif kind == "document":
+        problems += [f"{section.id}: {p}" for p in cards_mod.check_document(card)]
     elif kind in ("line", "waterfall", "timeline"):
         # 2026-10-08。上限を超えた項目数・数でない値・知らない focus/highlight は、
         # 書き出しの途中ではなくここで止める（落ちる条件は cards の側と同じ）
@@ -1502,6 +1513,25 @@ def _advise_wide_photo(notes: Notes) -> list[str]:
             "`tools/pairphoto.py` で2枚並べてください")
     return [f"本文と冒頭に敷く写真 {file.name} が縦長（{w}×{h}）です。右に立てると**左に面が残ります**。"
             f"{hint}（2026-09-25 指摘「ちゃんと横に広い写真を使う」）"]
+
+
+CALLWORD_MAX = 10          # 大きな見出し語は10字まで（画面の幅に収まる大きさで出す）
+
+
+def _check_callwords(notes: Notes) -> list[str]:
+    """画像の上の大きな見出し語（callword）の誤りを止める（2026-10-15）。
+
+    10字まで。1節に1つまで（あちこちに置くと何も目立たない）。伏せ字の答えをそのまま出さない。
+    """
+    problems: list[str] = []
+    for section in notes.sections:
+        words = [w for w in (section.line_callwords or []) if w]
+        for word in words:
+            if len(word) > CALLWORD_MAX:
+                problems.append(f"{section.id}: callword『{word[:12]}…』は{CALLWORD_MAX}字までです（{len(word)}字）")
+        if len(words) > 1:
+            problems.append(f"{section.id}: callword は1節に1つまでです（{len(words)}つ）。いちばん核になる語だけにする")
+    return problems
 
 
 def _check_line_images_wide(notes: Notes) -> list[str]:
@@ -2134,6 +2164,57 @@ def _advise_series_numbers(notes: Notes) -> list[str]:
     return hints
 
 
+def _advise_series_pen(notes: Notes) -> list[str]:
+    """**シリーズの見立ての数字に、赤ペンを付ける**（2026-10-15 ユーザー「全部！」。参考のシリーズは
+    重要な行を赤い矢印・枠で強調する）。止めない。
+
+    見立ての節（viewpoint）に表・板があるのに、その節の行に書き込み（`mark:`）が1つも無ければ知らせる。
+    ニュースの回（series なし）は見ない。
+    """
+    if not (notes.series or "").strip():
+        return []
+    hints: list[str] = []
+    for section in notes.sections:
+        if not section.viewpoint or not _has_count_table(section):
+            continue
+        if any(m for m in (section.line_marks or [])):
+            continue
+        hints.append(
+            f"見立ての節『{section.heading}』に赤ペン（mark:）がありません。いちばん言いたい数字の行に "
+            "`mark: {kind: circle, row: 0}`（丸・下線・矢印・添え書き）を1つ付けると、どこを見るかが一目で分かります"
+            "（2026-10-15。参考のシリーズは重要な行を赤で強調する）")
+    return hints
+
+
+def _advise_series_visuals(notes: Notes) -> list[str]:
+    """**シリーズの回は、写真以外の見せ方を使っているか**（2026-10-15 ユーザー「写真以外も使ってない？」）。止めない。
+
+    参考シリーズは、公式声明の原文（文書）・画像の上の大きな見出し語・紋章のアップ・年表などを混ぜる。
+    こちらの回が次のどれも使っていなければ知らせる：
+    文書カード（document）・大見出し語（callword）・年表／増減／折れ線／散らばり図・差し込みの紋章（cut_…）。
+    表だけの回は、数字は伝わるが場面の切り替わりが無い。
+    """
+    if not (notes.series or "").strip() or "チーム紹介" in (notes.series or "") or "クラブ紹介" in (notes.series or ""):
+        return []
+    kinds: set[str] = set()
+    for section in notes.sections:
+        card = section.card if isinstance(section.card, dict) else {}
+        kinds.add(str(card.get("type", "")).lower())
+        for c in (section.line_cards or []):
+            if isinstance(c, dict):
+                kinds.add(str(c.get("type", "")).lower())
+    has_doc = "document" in kinds
+    has_call = any(w for section in notes.sections for w in (section.line_callwords or []))
+    has_graphic = bool(kinds & {"timeline", "waterfall", "line", "scatter", "convert"})
+    has_cutaway = any("cut_" in str(img) for section in notes.sections for img in (section.line_images or []))
+    if has_doc or has_call or has_graphic or has_cutaway:
+        return []
+    return [
+        "写真と表だけの回です。参考のシリーズは、公式声明の原文（`card: {type: document, …}`）・画像の上の大見出し語"
+        "（行に `callword: 神の子`、10字・1節に1つ）・節の頭の紋章のアップ（`tools/cutaway.py`）・年表などを混ぜて"
+        "場面を切り替えます。どれか1つ入れてください（2026-10-15）"]
+
+
 def _advise_readings(notes: Notes) -> list[str]:
     """**漢字の人名は読みの辞書に無いと誤読される**（2026-09-22）。
 
@@ -2652,6 +2733,7 @@ def _advise_voices(notes: Notes) -> list[str]:
                         + _advise_yardstick(notes)
                         + _advise_series_opening(notes) + _advise_series_numbers(notes)
                         + _advise_heading_question(notes)
+                        + _advise_series_pen(notes) + _advise_series_visuals(notes)
                         + _advise_short_boards(notes))
     for section in notes.sections:
         card = section.card or {}
@@ -3172,6 +3254,9 @@ def _compose_script(notes: Notes, plan: Plan) -> str:
             if (number < len(section.line_emphs)
                     and section.line_emphs[number]):
                 lines.append("  emph: true")
+            if (number < len(section.line_callwords)
+                    and section.line_callwords[number]):
+                lines.append(f"  callword: {section.line_callwords[number]}")
             # **書き込み**（2026-10-07）。1つずつ1行に
             own_marks = (section.line_marks[number]
                          if number < len(section.line_marks) else [])

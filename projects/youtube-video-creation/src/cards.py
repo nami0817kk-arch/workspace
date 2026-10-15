@@ -17,7 +17,7 @@ TEAM_SIZES = (46, 42, 38, 34, 30, 26, 22)
 
 CARD_TYPES = ("quote", "transfer", "score", "points", "bars", "table", "reactions", "kit",
               "stats", "verdict", "calc", "versus", "scatter", "convert",
-              "line", "waterfall", "timeline")
+              "line", "waterfall", "timeline", "document")
 # **画面いっぱいの絵になる型**（2026-10-07）。板（カード）ではなく、写真の下地の代わりに敷く。
 # render.py は板と同じ扱い（上に節の名前・見出し・ほかのカードを重ねない）で描く
 FULL_SCREEN_TYPES = ("versus",)
@@ -106,6 +106,8 @@ def row_count(spec: dict) -> int:
         return len(waterfall_rows(spec))
     if kind == "timeline":
         return min(TIMELINE_ROWS_MAX, len(timeline_rows(spec)))
+    if kind == "document":
+        return len(document_paragraphs(spec))
     return 0
 
 
@@ -295,6 +297,7 @@ def render(spec: dict, width: int, font_path: str, out_path: Path,
         "line": _line,
         "waterfall": _waterfall,
         "timeline": _timeline,
+        "document": _document,
     }[kind]
     blocks = builder(spec, width, font_path, latin_font_path or font_path, slot)
 
@@ -304,8 +307,10 @@ def render(spec: dict, width: int, font_path: str, out_path: Path,
     draw = ImageDraw.Draw(canvas)
 
     accent = _hex(str(spec.get("color") or DEFAULT_ACCENT))
-    draw.rounded_rectangle([0, 0, width - 1, height - 1], radius=RADIUS, fill=PANEL)
-    draw.rounded_rectangle([0, 0, width - 1, height - 1], radius=RADIUS, outline=BORDER, width=2)
+    paper = kind == "document"           # 文書カードだけ明るい紙の地（原文を「文書」として見せる）
+    draw.rounded_rectangle([0, 0, width - 1, height - 1], radius=RADIUS, fill=PAPER if paper else PANEL)
+    draw.rounded_rectangle([0, 0, width - 1, height - 1], radius=RADIUS,
+                           outline=PAPER_BORDER if paper else BORDER, width=2)
     # 左端のアクセント帯
     draw.rounded_rectangle([0, RADIUS, 8, height - RADIUS], radius=4, fill=accent + (255,))
 
@@ -3236,3 +3241,167 @@ def _hex(value: str) -> tuple[int, int, int]:
     if len(value) != 6:
         return (62, 166, 255)
     return tuple(int(value[i : i + 2], 16) for i in (0, 2, 4))
+
+
+# ---------------------------------------------------------------- 文書カード（2026-10-15）
+# ユーザー「全部！」。参考のシリーズ（プレミアトークショー）は、公式声明・規則の原文を画面に出して重要な語を強調する。
+# こちらは声明を読み上げるだけだった。**原文（本人の言葉・公式声明・規則）を、文書の形で見せる**ための型。
+# 引用は出どころを示すのが条件（label に「プレミアリーグ 声明（9月29日）」のように書く）。訳は paragraphs に書く
+DOCUMENT_KEYS = frozenset({"type", "label", "paragraphs", "text", "highlight", "note", "source", "color"})
+DOCUMENT_PARAGRAPHS_MAX = 5
+DOCUMENT_PARAGRAPH_CHARS = 110
+DOCUMENT_HIGHLIGHT_MAX = 6
+PAPER = (247, 243, 232, 255)         # 紙の地
+PAPER_BORDER = (60, 50, 30, 70)
+PAPER_INK = (28, 31, 40, 255)        # 本文
+MARKER = (255, 221, 64, 255)         # 蛍光ペンの黄
+
+
+def document_paragraphs(spec: dict) -> list[str]:
+    raw = spec.get("paragraphs")
+    if raw is None and spec.get("text"):
+        raw = [spec.get("text")]
+    return [str(p).strip() for p in (raw or []) if str(p).strip()]
+
+
+def document_highlights(spec: dict) -> list[str]:
+    raw = spec.get("highlight") or []
+    if isinstance(raw, str):
+        raw = [raw]
+    return [str(h).strip() for h in raw if str(h).strip()]
+
+
+def check_document(spec: dict) -> list[str]:
+    """文書カードの形の誤り（描く前に止める。research の draft も同じものを見る）。"""
+    problems = []
+    unknown = sorted(str(k) for k in spec if k not in DOCUMENT_KEYS)
+    if unknown:
+        problems.append(f"document カードに知らない鍵があります（{unknown[0]}）。"
+                        f"使えるのは {'・'.join(sorted(DOCUMENT_KEYS))}")
+    paras = document_paragraphs(spec)
+    if not paras:
+        problems.append("document には paragraphs（段落の一覧）か text を書いてください")
+    elif len(paras) > DOCUMENT_PARAGRAPHS_MAX:
+        problems.append(f"document の段落は{DOCUMENT_PARAGRAPHS_MAX}つまでです（{len(paras)}つ）。"
+                        "多いと字が小さくなって読めません。要る所だけ抜き出す")
+    for para in paras:
+        if len(para) > DOCUMENT_PARAGRAPH_CHARS:
+            problems.append(f"document の1段落は{DOCUMENT_PARAGRAPH_CHARS}字までです"
+                            f"（{len(para)}字:『{para[:14]}…』）。段落を分けてください")
+            break
+    if not str(spec.get("label") or "").strip():
+        problems.append("document には label（出どころ。例: プレミアリーグ 声明（9月29日））が要ります。"
+                        "原文を引くときは出どころを示すのが条件です")
+    marks = document_highlights(spec)
+    if len(marks) > DOCUMENT_HIGHLIGHT_MAX:
+        problems.append(f"document の highlight は{DOCUMENT_HIGHLIGHT_MAX}つまでです（強調だらけだと何も目立たない）")
+    body = "".join(paras)
+    for mark in marks:
+        if mark not in body:
+            problems.append(f"document の highlight『{mark}』が本文にありません（一字一句そのまま書く）")
+            break
+    return problems
+
+
+def _highlight_mask(text: str, phrases: list[str]) -> list[bool]:
+    mask = [False] * len(text)
+    for phrase in phrases:
+        start = 0
+        while True:
+            i = text.find(phrase, start)
+            if i < 0:
+                break
+            for k in range(i, i + len(phrase)):
+                mask[k] = True
+            start = i + len(phrase)
+    return mask
+
+
+def _runs(text: str, mask: list[bool]) -> list[tuple[str, bool]]:
+    runs: list[tuple[str, bool]] = []
+    for ch, m in zip(text, mask):
+        if runs and runs[-1][1] == m:
+            runs[-1] = (runs[-1][0] + ch, m)
+        else:
+            runs.append((ch, m))
+    return runs
+
+
+def _wrap_marked(text: str, mask: list[bool], font, max_width: float) -> list[list[tuple[str, bool]]]:
+    """折り返した行ごとに、(文字列, 強調か) の並びを返す（日本語は文字で折る）。"""
+    ruler = _ruler()
+    lines: list[list[tuple[str, bool]]] = []
+    cur = ""
+    cur_mask: list[bool] = []
+    for ch, m in zip(text, mask):
+        if cur and ruler.textlength(cur + ch, font=font) > max_width:
+            lines.append(_runs(cur, cur_mask))
+            cur, cur_mask = "", []
+        cur += ch
+        cur_mask.append(m)
+    if cur:
+        lines.append(_runs(cur, cur_mask))
+    return lines
+
+
+def _document(spec: dict, width: int, font_path: str, latin_path: str,
+              slot: int | None = None) -> list[dict]:
+    """文書カード。公式声明・規則・本人の言葉の原文を、紙のような地に出し、重要な語に蛍光ペンを引く。
+
+    ```yaml
+    card: {type: document, label: プレミアリーグ 声明（9月29日）,
+           paragraphs: [委員会は、シティが収入を水増ししたと認定した, …],
+           highlight: [水増し, 認定]}
+    ```
+    段落は上から1つずつ出る（`reveal`）。強調の語には黄の下地が付く。
+    """
+    problems = check_document(spec)
+    if problems:
+        raise CardError(problems[0])
+    paras = document_paragraphs(spec)
+    phrases = document_highlights(spec)
+    label = str(spec.get("label") or "").strip()
+    inner = width - PAD * 2 - 24
+    size = 38
+    # 置き場の高さに収まるまで字を小さくする（下限30。収まらなければ draft の段落数で止まる）
+    room = (slot or 10_000) - PAD * 2 - 70
+    while True:
+        font = _font(font_path, size)
+        line_h = size + 16
+        wrapped = [_wrap_marked(p, _highlight_mask(p, phrases), font, inner) for p in paras]
+        total = sum(len(w) * line_h + 22 for w in wrapped)
+        if total <= room or size <= 30:
+            break
+        size -= 2
+
+    blocks: list[dict] = []
+    tag_font = _font(font_path, 28)
+
+    def draw_label(draw, y):
+        text_w = draw.textlength(label, font=tag_font)
+        draw.rounded_rectangle([PAD + 12, y, PAD + 12 + text_w + 30, y + 44], radius=12,
+                               fill=(46, 40, 24, 255))
+        draw.text((PAD + 27, y + 7), label, font=tag_font, fill=(255, 236, 160, 255))
+
+    blocks.append({"height": 44 + 20, "draw": draw_label})
+    for lines in wrapped:
+        def draw_para(draw, y, lines=lines):
+            for k, runs in enumerate(lines):
+                x = PAD + 12
+                top = y + k * line_h
+                for text, hot in runs:
+                    w = draw.textlength(text, font=font)
+                    if hot:
+                        draw.rectangle([x - 2, top + 6, x + w + 2, top + size + 6], fill=MARKER)
+                    draw.text((x, top), text, font=font, fill=PAPER_INK)
+                    x += w
+
+        def unit_para(y, lines=lines):
+            boxes = [_text_box(PAD + 12, y + k * line_h, "".join(t for t, _ in runs), font)
+                     for k, runs in enumerate(lines)]
+            return {"box": (PAD, y - 4, width - PAD, y + len(lines) * line_h),
+                    "cells": [_union(boxes)]}
+
+        blocks.append({"height": len(lines) * line_h + 22, "draw": draw_para,
+                       "row": True, "unit": unit_para})
+    return blocks + _note_blocks(spec, width, font_path)

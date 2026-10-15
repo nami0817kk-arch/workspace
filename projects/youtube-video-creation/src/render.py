@@ -331,6 +331,8 @@ class Renderer:
                 # 節の頭かどうかは、滑り込みの途中（telop_t<1）でだけ絵に効く。それ以外は同じ絵を使い回す
                 f"head{bool(scene.lines and line is scene.lines[0]) and telop_t < 1.0}",
                 ("big:" + str(line.short_telop or "") if panel is None and self.layout.is_portrait else ""),
+                ("call:" + str(getattr(line, "callword", "") or "")
+                 if panel is None and not self.layout.is_portrait else ""),
             ]
         )
         target = self._frame_path(hashlib.sha1(key.encode('utf-8')).hexdigest()[:16])
@@ -421,6 +423,10 @@ class Renderer:
             else:
                 self._draw_headline(canvas, text, telop_t, source,
                                     compact=bool(card) and not board and not self.layout.is_portrait)
+                # **画像の上に大きな見出し語**（2026-10-15、シリーズの本編だけ。表や板の上には重ねない）
+                word = str(getattr(line, "callword", "") or "").strip()
+                if word and panel is None and not board and not card and not self.layout.is_portrait:
+                    self._draw_callword(canvas, word, telop_t)
         # 動画背景のときは重ねる前提なのでアルファを残す（`_save_frame` が形式をそろえる）
         return self._save_frame(canvas, target)
 
@@ -1437,6 +1443,33 @@ class Renderer:
             draw.text(((self.layout.width - w) / 2, top + i * line_height), part, font=font,
                       fill=accent if i == 0 else (255, 255, 255, 255),
                       stroke_width=max(8, size // 11), stroke_fill=(0, 0, 0, 255))
+        if telop_t < 1.0:
+            layer.putalpha(layer.getchannel("A").point(lambda a: int(a * _ease_out(telop_t))))
+        canvas.alpha_composite(layer)
+
+    CALLWORD_SIZE = 168          # 1920x1080 での大きさ。参考は画面の高さの約15%
+    CALLWORD_CENTER_Y = 0.36     # 画面の高さに対する中心（見出しの帯より上、写真の顔にかかりにくい高さ）
+
+    def _draw_callword(self, canvas: Image.Image, text: str, telop_t: float = 1.0) -> None:
+        """画像の上に出す大きな見出し語。黄の太字に黒の縁。左から滑り込んで止まる。"""
+        from PIL import ImageFont as _IF
+        layer, draw = _layer(canvas.size)
+        font_path = str(self.config.video.font_path())
+        size = self.CALLWORD_SIZE
+        font = _IF.truetype(font_path, size)
+        width_max = self.layout.width - 160
+        while size > 90 and draw.textlength(text, font=font) > width_max:
+            size -= 6
+            font = _IF.truetype(font_path, size)
+        w = draw.textlength(text, font=font)
+        slide = int(self.layout.width * 0.06 * (1.0 - _ease_out(telop_t)))
+        x = (self.layout.width - w) / 2 - slide
+        y = self.layout.height * self.CALLWORD_CENTER_Y - size / 2
+        stroke = max(9, size // 12)
+        draw.text((x + 6, y + 8), text, font=font, fill=(0, 0, 0, 150),
+                  stroke_width=stroke, stroke_fill=(0, 0, 0, 150))                      # 影
+        draw.text((x, y), text, font=font, fill=BRAND_GOLD + (255,),
+                  stroke_width=stroke, stroke_fill=(12, 16, 24, 255))
         if telop_t < 1.0:
             layer.putalpha(layer.getchannel("A").point(lambda a: int(a * _ease_out(telop_t))))
         canvas.alpha_composite(layer)

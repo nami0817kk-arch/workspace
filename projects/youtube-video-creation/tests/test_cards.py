@@ -471,3 +471,49 @@ def test_表とタイムラインは複数行を光らせられる():
     assert cards._pick_many(None, ["a"]) == set()
     tl = {"type": "timeline", "rows": [["1月", "a"], ["2月", "b"]], "highlight_row": [0, 1]}
     assert cards.check_timeline(tl) == []
+
+
+# ---- 文書カード（2026-10-15） ----
+def _doc_spec(**kw):
+    spec = {"type": "document", "label": "プレミアリーグ 声明（9月29日）",
+            "paragraphs": ["独立委員会は、シティがスポンサー収入を水増ししたと認定した。", "クラブは控訴する意向を示している。"],
+            "highlight": ["水増し", "控訴"]}
+    spec.update(kw)
+    return spec
+
+
+def test_文書カードは出どころと段落が要る():
+    from src import cards
+    assert cards.check_document(_doc_spec()) == []
+    assert any("label" in p for p in cards.check_document(_doc_spec(label="")))
+    assert any("paragraphs" in p for p in cards.check_document(_doc_spec(paragraphs=[])))
+
+
+def test_文書カードの強調は本文にある語だけ():
+    from src import cards
+    assert any("本文にありません" in p for p in cards.check_document(_doc_spec(highlight=["存在しない語"])))
+    assert any("6つまで" in p for p in cards.check_document(_doc_spec(highlight=["水増し"] * 7)))
+
+
+def test_文書カードは段落5つ110字まで():
+    from src import cards
+    assert any("5つまで" in p for p in cards.check_document(_doc_spec(paragraphs=["あ"] * 6)))
+    assert any("110字" in p for p in cards.check_document(_doc_spec(paragraphs=["あ" * 111], highlight=[])))
+
+
+def test_文書カードは段落ごとに出て強調の黄が付く(tmp_path):
+    from PIL import Image
+    from src import cards
+    font = "C:/Windows/Fonts/meiryo.ttc"
+    full = cards.render(_doc_spec(), 1420, font, tmp_path / "a.png", slot=539)
+    first = cards.render(_doc_spec(), 1420, font, tmp_path / "b.png", slot=539, reveal=1)
+    assert cards.row_count(_doc_spec()) == 2
+    a, b = Image.open(full).convert("RGB"), Image.open(first).convert("RGB")
+    yellow = lambda im: sum(1 for px in im.getdata() if px[0] > 240 and 200 < px[1] < 235 and px[2] < 90)
+    assert yellow(a) > yellow(b) > 0, "控訴の黄が2段落目の出現で増える"
+    assert a.size[0] == 1420 and a.size[1] <= 539 + 40
+
+
+def test_文書カードの知らない鍵は止める():
+    from src import cards
+    assert any("知らない鍵" in p for p in cards.check_document(_doc_spec(colour="x")))
