@@ -79,7 +79,10 @@ domains:
              www.psv.nl, www.tff.org,
              # 2026-10-11 に追加。ナポリ公式（マクトミネイの心臓の処置は、病名も経過も
              # クラブの「ノータ・メディカ」が一次情報。英語版 /en/ も同じ文面を出す）。到達を実測
-             sscnapoli.it]
+             sscnapoli.it,
+             # 2026-10-16 に追加（10/16 のシリーズ作成の担当が、取材で読んだ公式サイトの群が無いと報告）。
+             # ニューカッスル（加入・退団の発表文12件。額は書いていない）とオサスナ（監督交代・就任会見の原文）
+             www.newcastleunited.com, newcastleunited.com, www.nufc.co.uk, www.osasuna.es]
 
   # 日本の公式。Jリーグの話をここまで辿れば確定にできる
   official_jp: [jleague.jp, jfa.jp, urawa-reds.co.jp, frontale.co.jp,
@@ -121,13 +124,17 @@ domains:
           fotmob.com,
           # 2026-10-15 ユーザーが挙げた。FootyStats は大会別・90分あたり・xG・パーセンタイルが取れ、小さなリーグにも強いが、
           # 通算は2006年より前が抜ける（メッシのラ・リーガ 442試合・443得点。実際は約520試合・474得点）。通算には使わない
-          footystats.org, soccerstats.com]
+          footystats.org, soccerstats.com,
+          # Transfermarkt の内部API（移籍の日付・移籍直前の市場価値・年齢。tmapi-alpha）。transfermarkt.com と同じ群
+          tmapi-alpha.transfermarkt.technology]
 
   # 公的な書類・公的なデータ（2026-10-15 ユーザー「足そう！」。クラブの財政の回の主力の出典なのに網に無く、
   # 確度の上限が空になっていた）。**書類そのもの**が一次情報なので確定まで置ける。
   # SEC は米国上場クラブ（マンU）の 20-F、Companies House は英国法人の決算書、ECB は為替の公式レート
   filings: [www.sec.gov, sec.gov, find-and-update.company-information.service.gov.uk,
-            beta.companieshouse.gov.uk, www.ecb.europa.eu, ecb.europa.eu]
+            beta.companieshouse.gov.uk, www.ecb.europa.eu, ecb.europa.eu,
+            # 英国の国家統計局（物価指数 CPI。移籍金の記録を物価で直す回で使った。公的な統計そのもの）
+            www.ons.gov.uk, ons.gov.uk]
 
   # 参照・調査の出典（同日）。**二次の資料なので報道止まり**。Wikipedia はクラブ紹介（基礎DATA・登録選手・結果）の
   # 土台、Wikidata は日本語名、Commons は写真とその権利、Deloitte は Football Money League（収益の順）、

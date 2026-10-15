@@ -1,12 +1,24 @@
-# プレミアリーグ20クラブ紹介 ⑭オサスナ（2026-09-20 ヴィラの見本の形で作り直し）
+# ラ・リーガ20クラブ紹介 ⑭オサスナ（2026-09-20 ヴィラの見本の形で作り直し）
 # tools/plbuild.py で組み立て。材料は research/ll_data/osasuna*.json と旧台本 -
+# 2026-10-16 に直した（plbuild を回し直したうえで、今季のここまでを手で見立ての節にした）:
+#   ・10/12 にラミス監督が退き、ハゴバ・アラサテが復帰（2029年6月まで）。クラブ公式 osasuna.es の 10/12 発表・10/13 就任会見・10/15 練習記事で確認。
+#     いま見る理由・今季の監督・特徴の1行目・サムネの文字を差し替え（ブディミルの通算100得点と「5連敗」の行は落とした）
+#   ・今季の結果は ESPN scoreboard（research/ll_data/results.json、10/16 取得）。第8節まで 2勝2分4敗・8得点18失点・勝ち点8・16位。
+#     Wikipedia の表（Template:2026–27 La Liga table、10/16 取得）の20クラブの勝敗・得点・失点・勝ち点と、results.json から自分で数えた値が全部一致。
+#     research/ll_data/standings.json も第8節の表に更新（plbuild の順位・勝ち点はここから）
+#   ・自分で数えた数字: 失点18＝ホーム4試合3（0-0 Levante・1-0 Getafe・0-2 Espanyol・1-1 Rayo）＋アウェー4試合15（2-1 Celta・2-5 Alavés・0-4 Atlético・2-5 Betis）。
+#     ホーム 2得点3失点・勝ち点5、アウェー 6得点15失点・勝ち点3。1試合の失点 18÷8=2.25。昨季 50÷38=1.32（last_season.json）。
+#     今季の1部の平均 241得点÷78試合÷2=1.54（results.json の全78試合）。2.25÷1.54=約1.46、2.25÷1.32=約1.7。降格圏の18位エルチェは勝ち点6（8-6=2差）
+#   ・初陣: 10/18（日曜）14:00 エル・サダール、ラシン戦（クラブ公式 2026-10-15 の練習記事）
+#   ・**未確認**: アラサテの256試合は英語版の監督成績表とクラブ公式（256 partidos）で一致。「2018年から6年間」は英語版の表（2018-06-20〜2024-06-30）。
+#     アラサテの戦い方（プレーの型）を述べた出典は見つからず、特徴の1行目は本人の会見の言葉だけにした
 format: news
 voice_min: 0
 slot: laliga_1
-date: 2026年9月19日
+date: 2026年10月16日
 people:
 - オサスナ
-- ルイス・ミゲル・ラミス
+- ハゴバ・アラサテ
 short_title: オサスナってどんなクラブ？
 series: ラ・リーガチーム紹介
 theme:
@@ -20,9 +32,10 @@ theme:
   hook: このクラブのマスコットは、一度捨てられています。
   lead: ラ・リーガでただひとつ、バスク語の名前。
   opening_image: assets/stats/ll_osasuna_data_t.png
+  takeaway: オサスナは第8節まで2勝2分4敗、勝ち点8の16位。1試合あたりの失点は昨季の1.32から2.25へ約1.7倍、今季の1部の平均1.54の約1.5倍。失点18のうち15はアウェー4試合で、ホーム4試合は3失点。10月12日に監督を替え、初陣は18日、本拠地でのラシン戦
 thumbnail:
   line1: 3部から9シーズンで欧州へ
-  line2: ブディミルのいるオサスナ
+  line2: 監督交代のオサスナ
   crest_main:
   - オサスナ
   board: assets/stats/ll_osasuna_data_t.png
@@ -31,17 +44,17 @@ sections:
   heading: いま見る理由と基礎DATA
   main: true
   tier: 背景
-  telop: 通算100得点のエースと、1部が初めての監督
+  telop: シーズン途中の監督交代と、古巣に戻る監督
   narrator: キャスター
   say:
-  - text: クロアチア代表のブディミルは9月、1部通算**100得点**に届きました。
+  - text: オサスナは10月12日、ラミス監督が退くことになりました。
     image: assets/stats/ll_osasuna_data_r1.png
     no_telop: true
-  - text: '**5連敗**で終えた昨シーズン。1部が初めてのラミス新監督は、こう求めます。'
+  - text: 後任は、古巣に戻るハゴバ・アラサテ。会見で、こう話しました。
     image: assets/stats/ll_osasuna_data_r2.png
     no_telop: true
-  - voice: ルイス・ミゲル・ラミス
-    text: 前に出るのは一歩ではなく三歩だ。一歩で済む状況ではない
+  - voice: ハゴバ・アラサテ
+    text: オサスナは私を必要としていると感じます。力になれると感じます
     image: assets/stats/ll_osasuna_data_r2.png
   - text: オサスナは**1976年**から77年のシーズンに3部。その**9シーズン**後に、ヨーロッパへ。
     image: assets/stats/ll_osasuna_data_r3.png
@@ -52,22 +65,10 @@ sections:
   - image: assets/stats/ll_osasuna_data1.png
     text: 愛称は「ロス・ロヒージョス」。スペイン語で「小さな赤たち」。
     no_telop: true
-  - image: assets/stats/ll_osasuna_data2.png
-    text: ホームタウンはパンプローナ。7月の牛追い祭りで、世界に知られる町です。
-    no_telop: true
   - image: assets/backgrounds/stadium_オサスナ.png
     text: 本拠地はエル・サダール。**1967年**に開き、**2万3576人**が入ります。
-  - image: assets/stats/ll_osasuna_data4.png
-    text: 会長は**2014年**からルイス・サバルサ。株式会社ではなく、会員が持つクラブです。
-    no_telop: true
-  - image: assets/stats/ll_osasuna_cups.png
-    text: 1部も国王杯もスーペルコパも、優勝はまだありません。
-    no_telop: true
-  - image: assets/stats/ll_osasuna_data6.png
-    text: 最多出場は、ナバラ生まれの中盤パチ・プニャル。このクラブで**513試合**です。
-    no_telop: true
   - image: assets/stats/ll_osasuna_data7.png
-    text: 直近のタイトルは、2018年から19年のシーズンの2部優勝。勝ち点は**87**でした。
+    text: 直近のタイトルは、2018年から19年のシーズンの2部優勝。1部の優勝は、まだありません。
     no_telop: true
   - image: assets/stats/ll_osasuna_data8.png
     text: 昨シーズンのリーグ戦は**17位**。勝ち点42で3チームが並び、直接対決の差で残りました。
@@ -75,9 +76,9 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/CA_Osasuna
   - https://en.wikipedia.org/wiki/Template:2026%E2%80%9327_La_Liga_table
-  - https://www.osasuna.es/cronica-osasunarayo-2026/27
-  - https://www.osasuna.es/rueda-prensa-osasuna-rayo-2026-27
-  - https://www.osasuna.es/luis-miguel-ramis-nuevo-entrenador-de-osasuna
+  - https://www.osasuna.es/luis-miguel-ramis-no-continuara-como-entrenador-de-osasuna
+  - https://www.osasuna.es/jagoba-arrasate-2029
+  - https://www.osasuna.es/jagoba-arrasate-osasuna-rueda-prensa-presentacion-13-10-2026
   - https://es.wikipedia.org/wiki/Club_Atl%C3%A9tico_Osasuna
   bg: assets/backgrounds/stadium_オサスナ_in.png
   official: false
@@ -98,7 +99,7 @@ sections:
     - - 1980年
       - 17年ぶりに1部へ
   say:
-  - 1970年代のオサスナは、2部と3部を行き来していました。
+  - 1970年代のオサスナは、2部と3部にとどまっていました。
   - 3部で優勝して上がると、**1980年**には17年ぶりに1部へ戻ります。
   - text: '**1985年**、前のシーズンの6位で、初めてヨーロッパの大会に出場。'
     card:
@@ -108,7 +109,7 @@ sections:
       rows:
       - - 1985年
         - 初めてのヨーロッパの大会
-  - 1回戦では、スコットランドのレンジャーズを合計**2対1**で破りました。
+  - 1回戦の相手は、スコットランドのレンジャーズ。合計**2対1**で勝ち上がりました。
   sources:
   - https://en.wikipedia.org/wiki/CA_Osasuna
   - https://es.wikipedia.org/wiki/Historia_del_Club_Atl%C3%A9tico_Osasuna
@@ -142,7 +143,7 @@ sections:
       rows:
       - - 予選
         - ハンブルクにアウェーゴールの差
-  - ハンブルクとは2試合とも引き分け、アウェーゴールの差で敗れます。
+  - ハンブルクとは2試合とも引き分け。アウェーゴールの数で、上回られました。
   sources:
   - https://en.wikipedia.org/wiki/CA_Osasuna
   - https://es.wikipedia.org/wiki/Club_Atl%C3%A9tico_Osasuna
@@ -197,7 +198,7 @@ sections:
       - レアル・マドリードに1対2
   say:
   - 国王杯では、**2度**決勝に進んでいます。
-  - '**2005年**はベティスに、延長の末**1対2**で敗れました。'
+  - '**2005年**はベティスに延長の末、**1対2**の敗戦です。'
   - '**2023年**はレアル・マドリードに、また**1対2**で敗れます。'
   sources:
   - https://en.wikipedia.org/wiki/2005_Copa_del_Rey_final
@@ -207,7 +208,7 @@ sections:
 - id: features
   heading: このクラブの特徴
   tier: 背景
-  telop: 守りから入る。地元で育てる。改修も投票で
+  telop: 練習から型をつくる。地元で育てる。改修も投票で
   narrator: 解説
   card:
     type: table
@@ -218,10 +219,10 @@ sections:
     rows:
     - &id005
       - プレーの色
-      - 守りから入る
+      - 練習から独自の型を
   say:
-  - text: ラミス監督は、守りから入る監督。前のチームは、2部で失点がいちばん少なかった。
-    image: assets/photos/ll/osasuna/osasuna_manager_10fb4485.jpg
+  - text: 新しい監督は、練習の進め方に自分たちの型があると話しています。
+    image: assets/photos/ll/osasuna/osasuna_manager_arrasate.jpg
   - text: ピッチの外は、地元で育てる型。
     card:
       type: table
@@ -245,7 +246,7 @@ sections:
         - 改修案も投票で決める
   sources:
   - https://en.wikipedia.org/wiki/CA_Osasuna
-  - https://www.osasuna.es/luis-miguel-ramis-nuevo-entrenador-de-osasuna
+  - https://www.osasuna.es/jagoba-arrasate-osasuna-rueda-prensa-presentacion-13-10-2026
   - https://es.wikipedia.org/wiki/Club_Atl%C3%A9tico_Osasuna
   - https://www.osasuna.es/historia-de-el-sadar
   bg: assets/backgrounds/stadium_オサスナ_in.png
@@ -267,7 +268,7 @@ sections:
     - - 2016年3月
       - ピッチ中央のコンテナから復活
   say:
-  - text: マスコットのロヒージョは**2002年**、新しい会長に工事現場のコンテナへ捨てられました。
+  - text: マスコットのロヒージョは**2002年**、新会長にコンテナへ捨てられました。
     image: assets/images/ll_osasuna_episode/scene.jpg
   - '**14年**後、町のあちこちのコンテナに、「戻りたい」と書いた腕が現れます。'
   - 翌日の試合前、ピッチの真ん中に置かれたコンテナから、ロヒージョが出てきました。
@@ -293,7 +294,7 @@ sections:
       - 2006-2012、2014-2015
       - 延長120分の決勝点
   say:
-  - text: ジャバド・ネクナムはイラン代表の中盤。2006年のワールドカップのあと、ここへ来ました。
+  - text: ジャバド・ネクナムはイラン代表の中盤。2006年のワールドカップ後に加入。
     image: assets/photos/ll/osasuna/osasuna_legend_418029b9.jpg
   - 2007年、4強まで進んだ大会のボルドー戦。延長**120分**に決勝点を決めました。
   - リーグ戦で**173試合29得点**。一度離れたあと、2014年に戻ってきています。
@@ -325,7 +326,7 @@ sections:
   - text: セサル・アスピリクエタは、ナバラ州生まれ。このクラブの下部組織で育ちました。
     image: assets/photos/ll/osasuna/osasuna_legend_ff057f6e.jpg
   - '**17歳**で1部にデビュー。リーグ戦で**99試合**に出ました。'
-  - 2010年にマルセイユへ。のちにチェルシーの主将として、ヨーロッパの頂点に立ちました。
+  - 2010年にマルセイユへ。のちにチェルシーの主将として、欧州の頂点に立ちました。
   sources:
   - https://en.wikipedia.org/wiki/Javad_Nekounam
   - https://en.wikipedia.org/wiki/C%C3%A9sar_Azpilicueta
@@ -353,8 +354,8 @@ sections:
   say:
   - text: ミケル・メリーノはパンプローナ生まれ。父も、オサスナでプレーした選手です。
     image: assets/photos/ll/osasuna/osasuna_legend_381dac82.jpg
-  - 2部にいた2016年、昇格のプレーオフで**3得点**。チームを1部へ戻しました。
-  - 2024年のユーロではシュトゥットガルトで勝ち越し点。1991年に父が点を取った場所です。
+  - 2部にいた2016年、昇格のプレーオフで**3得点**。1部復帰を引き寄せました。
+  - 2024年のユーロで勝ち越し点。父が1991年に点を取った競技場です。
   sources:
   - https://en.wikipedia.org/wiki/Javad_Nekounam
   - https://en.wikipedia.org/wiki/C%C3%A9sar_Azpilicueta
@@ -364,7 +365,7 @@ sections:
 - id: manager
   heading: 今季の監督
   tier: 報道
-  telop: 監督はラミス。前は2部のブルゴス
+  telop: 監督はアラサテ。2年あまりぶりの復帰
   narrator: キャスター
   card:
     type: table
@@ -374,19 +375,25 @@ sections:
     - ''
     rows:
     - - 監督
-      - ルイス・ミゲル・ラミス（スペイン）
+      - ハゴバ・アラサテ（スペイン）
     - - 就任
-      - 2026年6月
+      - 2026年10月12日
     - - 前職
-      - ブルゴス（2部）
+      - マジョルカ（今年2月まで）
+    - - 契約
+      - 2029年6月まで
   say:
-  - text: 今シーズンの監督は、スペインのルイス・ミゲル・ラミス。**2026年6月**の就任です。
-    image: assets/photos/ll/osasuna/osasuna_manager_10fb4485.jpg
-  - 前は2部のブルゴス。契約は**2028年**までの2年です。
+  - text: 今シーズンの監督は、ハゴバ・アラサテ。契約は**2029年**6月までです。
+    image: assets/photos/ll/osasuna/osasuna_manager_arrasate.jpg
+  - 2018年から6年間、**256試合**を指揮しました。
+  - 2部優勝も国王杯の決勝も、この人の下です。
+  - そのあとのマジョルカでは、今年2月に解任されています。
+  - 強化部長は、会見で「再び動き出すための火花が要る」と話しました。
   sources:
   - https://en.wikipedia.org/wiki/CA_Osasuna
-  - https://en.wikipedia.org/wiki/Luis_Miguel_Ramis
-  - https://www.osasuna.es/luis-miguel-ramis-nuevo-entrenador-de-osasuna
+  - https://www.osasuna.es/jagoba-arrasate-2029
+  - https://www.osasuna.es/jagoba-arrasate-osasuna-rueda-prensa-presentacion-13-10-2026
+  - https://en.wikipedia.org/wiki/Jagoba_Arrasate
   bg: assets/backgrounds/stadium_オサスナ_in.png
   official: false
 - id: squad
@@ -432,7 +439,7 @@ sections:
     text: 主将を務めるのが**キケ・バルハ**。
     no_telop: true
   - image: assets/stats/ll_osasuna_fw_f.png
-    text: リーグ戦で**204試合**に出ています。
+    text: リーグ戦の出場は**204試合**です。
     no_telop: true
   - image: assets/stats/ll_osasuna_fw_f.png
     text: アンテ・ブディミルはクロアチア代表で**41試合**。
@@ -442,45 +449,185 @@ sections:
   bg: assets/backgrounds/stadium_オサスナ_in.png
   official: false
 - id: season
-  heading: 今季のここまで
+  heading: 失点18のうち15は、アウェーの4試合
   tier: 報道
-  telop: 7試合で2勝2引き分け3敗。13位
+  telop: 8試合で2勝2分4敗の16位。失点の15はアウェーで
   narrator: 解説
-  card:
-    type: table
-    title: ラ・リーガの結果
-    columns:
-    - 節
-    - 相手
-    - 結果
-    rows:
-    - - 第1節
-      - セルタ（アウェー）
-      - 2対1
-    - - 第2節
-      - レバンテ（ホーム）
-      - 0対0
-    - - 第3節
-      - ヘタフェ（ホーム）
-      - 1対0
-    - - 第4節
-      - アラベス（アウェー）
-      - 2対5
-    - - 第5節
-      - エスパニョール（ホーム）
-      - 0対2
-    - - 第6節
-      - アトレティコ・マドリード（アウェー）
-      - 0対4
-    - - 第7節
-      - ラージョ・バジェカーノ（ホーム）
-      - 1対1
   say:
-  - ラ・リーガは7試合を終えて、**2勝2引き分け3敗**です。
-  - 順位は**13位**、勝ち点は**8**です。
+  - text: オサスナはここまでの8試合で、**2勝2引き分け4敗**。
+    card:
+      type: table
+      title: ラ・リーガの結果
+      columns:
+      - 節
+      - 相手
+      - 結果
+      rows:
+      - - 第1節
+        - セルタ（アウェー）
+        - 2対1
+      - - 第2節
+        - レバンテ（ホーム）
+        - 0対0
+      - - 第3節
+        - ヘタフェ（ホーム）
+        - 1対0
+      - - 第4節
+        - アラベス（アウェー）
+        - 2対5
+      - - 第5節
+        - エスパニョール（ホーム）
+        - 0対2
+      - - 第6節
+        - アトレティコ・マドリード（アウェー）
+        - 0対4
+      - - 第7節
+        - ラージョ・バジェカーノ（ホーム）
+        - 1対1
+      - - 第8節
+        - レアル・ベティス（アウェー）
+        - 2対5
+  - text: いまは**16位**。勝ち点**8**で、降格圏の18位エルチェとの開きは**2**です。
+    card:
+      type: table
+      title: ラ・リーガの結果
+      columns:
+      - 節
+      - 相手
+      - 結果
+      rows:
+      - - 第1節
+        - セルタ（アウェー）
+        - 2対1
+      - - 第2節
+        - レバンテ（ホーム）
+        - 0対0
+      - - 第3節
+        - ヘタフェ（ホーム）
+        - 1対0
+      - - 第4節
+        - アラベス（アウェー）
+        - 2対5
+      - - 第5節
+        - エスパニョール（ホーム）
+        - 0対2
+      - - 第6節
+        - アトレティコ・マドリード（アウェー）
+        - 0対4
+      - - 第7節
+        - ラージョ・バジェカーノ（ホーム）
+        - 1対1
+      - - 第8節
+        - レアル・ベティス（アウェー）
+        - 2対5
+  - text: 1試合あたりの失点は**2.25**。昨シーズンは**1.32**でした。
+    card:
+      type: table
+      title: 1試合あたりの失点
+      columns:
+      - ''
+      - 失点
+      rows:
+      - - 昨シーズン
+        - '1.32'
+      - - 今シーズン
+        - '2.25'
+      - - 今季の1部の平均
+        - '1.54'
+      highlight_row: 1
+  - text: 今季の1部の平均は**1.54**。その約**1.5倍**を取られています。
+    card:
+      type: table
+      title: 1試合あたりの失点
+      columns:
+      - ''
+      - 失点
+      rows:
+      - - 昨シーズン
+        - '1.32'
+      - - 今シーズン
+        - '2.25'
+      - - 今季の1部の平均
+        - '1.54'
+      highlight_row: 2
+  - text: 失点**18**のうち、**15**はアウェーの4試合で出ています。
+    card:
+      type: table
+      title: ホームとアウェーに分けると
+      columns:
+      - ''
+      - 得点
+      - 失点
+      - 勝ち点
+      rows:
+      - - ホーム4試合
+        - '2'
+        - '3'
+        - '5'
+      - - アウェー4試合
+        - '6'
+        - '15'
+        - '3'
+      - - 8試合の合計
+        - '8'
+        - '18'
+        - '8'
+      highlight_row: 1
+  - text: ホームの4試合は**3**失点で、勝ち点は**5**です。
+    card:
+      type: table
+      title: ホームとアウェーに分けると
+      columns:
+      - ''
+      - 得点
+      - 失点
+      - 勝ち点
+      rows:
+      - - ホーム4試合
+        - '2'
+        - '3'
+        - '5'
+      - - アウェー4試合
+        - '6'
+        - '15'
+        - '3'
+      - - 8試合の合計
+        - '8'
+        - '18'
+        - '8'
+      highlight_row: 0
+  - text: 失点の少ないホームで、新しい監督の初陣を迎えます。
+    card:
+      type: table
+      title: ホームとアウェーに分けると
+      columns:
+      - ''
+      - 得点
+      - 失点
+      - 勝ち点
+      rows:
+      - - ホーム4試合
+        - '2'
+        - '3'
+        - '5'
+      - - アウェー4試合
+        - '6'
+        - '15'
+        - '3'
+      - - 8試合の合計
+        - '8'
+        - '18'
+        - '8'
+      highlight_row: 0
+  - text: 相手は、18日の日曜に迎えるラシンです。
+    card: none
   sources:
   - https://www.espn.com/soccer/team/results/_/name/osasuna
   - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard
   - https://en.wikipedia.org/wiki/Template:2026%E2%80%9327_La_Liga_table
+  - https://www.osasuna.es/entrenamiento-15-10-2026
+  - https://www.osasuna.es/jagoba-arrasate-2029
+  - https://en.wikipedia.org/wiki/2025%E2%80%9326_La_Liga
   bg: assets/backgrounds/stadium_オサスナ_in.png
   official: false
+  viewpoint: true

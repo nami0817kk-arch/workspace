@@ -186,7 +186,7 @@ def check_target(mark: dict, spec: dict | None) -> list[str]:
     count = cards.mark_units(spec)
     if index_of(mark) >= count:
         return [f"{what}：{kind} カードの"
-                f"{'行' if kind in ('table', 'verdict', 'bars', 'waterfall', 'timeline') else '項目'}は"
+                f"{'行' if kind in ('table', 'verdict', 'bars', 'waterfall', 'timeline', 'duel', 'shelf', 'document') else '項目'}は"
                 f" 0〜{count - 1} です（{spec.get('title') or kind}）"]
     try:
         column_of(mark, spec)

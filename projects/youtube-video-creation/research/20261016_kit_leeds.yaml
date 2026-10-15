@@ -1,0 +1,470 @@
+# ユニフォームとエンブレムの歴史 リーズ・ユナイテッド（10/16 公開予定。プレミア⑬）。
+# 一次情報（クラブ公式の声明・発表）まで辿り、固有名詞・数字・年は原文で引き直した。
+# 2026-10-16 取材。取材はブラウザ操作なし（requests と WebFetch のみ）。
+#
+# ---- 節の並び（チェルシー=契約→紋章→色→広告→見立て、と重ねない）----
+#   こちら：①**紋章の案を出した翌日の声明（main）→ ②紋章の変遷 → ③白の始まり → ④作り手と胸の広告 → ⑤見立て**
+#   強い一点の型：**クラブの声明の原文**（2018年1月25日）。新しい紋章の案を公開した翌日に「協議を延ばす」と出した。
+#   （リヴァプール＝描き直しの回数／マンU＝文字が消えた／ハル＝色が消えた2度／イプスウィッチ＝売上／チェルシー＝払った違約金）
+#
+# ---- 強い一点（原文）----
+#   リーズ公式 2018-01-25「Club Statement: Crest Consultation」（web.archive.org の保存。元は leedsunited.com/news/club-news/22927/）
+#     「thank our supporters for their feedback on the proposed new crest released yesterday」＝公開は前日（2018-01-24）。
+#     「we also appreciate the need to extend the consultation with supporters」／「We will release further information on how supporters can get involved in the process next week」
+#     **「取り下げ」「撤回」とは書いていない**。台本も「協議を延ばす」と言い、取り下げたとは言わない。
+#   リーズ公式 2019-07-09「2019/20 centenary home kit launched」：金色の「centenary crest」を刺繍。Paul Bell「the all new centenary crest on the shirt and shorts」。
+#
+# ---- 食い違い（台本では言わない。ここに残す）----
+#   ・**新しい紋章の案の公開日**：en.wikipedia・愛好家サイト（historicalkits）は「2018年2月」と書く／**クラブ公式の声明は 1/25 付で「昨日公開」**＝1/24。
+#     → **台本は「2018年1月」**（公式に従う）。署名の数（「2時間で1万6000人」）は愛好家サイト単独の記述で原文に当たれなかった → **言わない**。
+#   ・**創立期の最初のシャツ**：HFK は「1919-20 は黒と白の縞」、Wikipedia は「最初のシャツはハダースフィールドの青と白の縞」。
+#     → **台本は「創立のころ、青と白の縞を着た時期がある」まで**。年は言わない。
+#   ・**アドミラルの1973年**：Wikipedia(Admiral Sportswear) は「1973-74 シーズンにリーズが1部で最初の“名前が見えるシャツ”を着た」と書くが、作り手名を直接は書かない。
+#     HFK は「1973年12月から Admiral」。→ 台本は「作り手の名前が見えるシャツ」「作ったのはアドミラル」を背景として言い、**確度は背景（愛好家サイトと Wikipedia）**。
+#   ・**紋章の種類の数え方**：Wikipedia(Leeds United F.C. の Badge 節) の年表（1964・71・73・76・77・80・84・98・99・2019）を**そのまま数えた**。
+#     1999 の「バラの中にボールを足した」微修正と 1971 の「斜めの LUFC 字」を1種類に数えるかは分かれる → 見立てで「10種類」と言うが、**数え方は取材メモにここで残す**。
+#     2019 は愛好家サイトの「100周年の改定版」。クラブ公式（2019-07-09）は「金色の100周年の紋章」としか書かない。
+#
+# ---- 言わないと決めたもの ----
+#   ・**契約の額**：カッパ（2015）・アディダス（2020・2024延長）・SBOTOP・レッドブルとも、クラブの発表に**額が無い**。推測で埋めていない。
+#     Companies House（Leeds United Football Club Limited 06233875）の 2023〜2025年6月期の決算書は**画像のスキャンで、文字が取れなかった**（OCR の道具が手元に無い）→ **額は言わない**。
+#   ・**賭けの会社**（SBOTOP は「スポーツベッティングのブランド」とクラブが書く）の中身には踏み込まない。名前と「最大の商業契約」というクラブの言葉だけ。
+#   ・**32Red（2016〜2020年の胸）・BOXT・Wish・JD・パリマッチ・ケーチャットの年**：Wikipedia と club の個別発表で確かめたが、胸と袖が混ざるので**年表に入れない**（BOXT は2026-10-07 に9年目の更新を公式が発表）。
+#   ・女子チーム・育成年代の話は入れない（決まり）。
+#   ・Macron との契約争い（2015）は愛好家サイト単独 → 言わない。
+#
+# ---- 一次情報に届かなかったところ ----
+#   ・紋章の変遷（1934・64・73・76・77・80・84・98・99）は **Wikipedia と historicalkits**（群の外＝未確認〜背景止まり）。クラブ公式の歴史ページは404で取れなかった。
+#   ・白の始まり（1961-62）と「レアル・マドリードにならった」は Wikipedia が **mightyleeds.co.uk（愛好家サイト）** を出典に書く。Wikipedia 自身が「Revie の就任は1961年3月」と併記する矛盾あり → 「と伝えられています」で言う。
+#   ・1973-74 の「1部で初の名前が見えるシャツ」は Wikipedia(Admiral Sportswear)。
+#   ・アディダスの延長（2024-10-30）の**期間はクラブ発表に無い**。
+#
+# ---- 自分で数えた数（検算した）----
+#   ・紋章の種類：1964〜1983年に始まったもの＝1964・1971・1973・1976・1977・1980 の6つ／期間 1983−1964+1 ＝20年／20 ÷ 6 ＝ 3.33 → 3.3年に1つ
+#     1984〜2025年に始まったもの＝1984・1998・1999・2019 の4つ／期間 2025−1984+1 ＝42年／42 ÷ 4 ＝ 10.5年に1つ
+#     10.5 ÷ 3.33 ＝ 3.15 → 「約3倍」。全体では 1964〜2019 の10種類。
+#   ・白：1961-62 から 2026 まで 2026 − 1961 ＝ 65年。
+#   ・アディダス（2020-07-21）→ SBOTOP（2020-08-10）：7月の残り10日＋8月10日 ＝ 20日。
+#   ・2018-01-24（公開）→ 2019-07-09（新しい紋章が胸に）＝ 約17か月半 → 「1年半後」。
+#
+# 写真：assets/images/20261016_kit_leeds/ の4枚。Wikimedia Commons（CC0 / CC BY / CC BY-SA）。出典は同じフォルダの credits.json。
+#   c01=1965年のオランダ代表との試合（CC0 Anefo）／c02=1966年のオランダ DWS との試合（CC0 Anefo）／
+#   c03=2019年10月5日 ミルウォール対リーズ（スコアボードに MIL・LUFC。左がリーズの円陣・白）／
+#   （c04=2018年10月の夜の写真は 1440px で縦に引き伸ばしすぎるため外した）／c05=2023年8月 エランド・ロード外観（ヒセンスの看板）。
+#   **クラブのエンブレム画像は assets/crests/リーズ.png（権利は晴れていない＝引き受ける危険。cutaway と同じ扱い）**。
+#   愛好家サイトの過去のキットの画像は使っていない。
+#
+# ネットの反応は入れない（voice_min: 0）。シリーズの回にショートは作らない決まり。
+# **サムネは案を3つ出してユーザーに決めてもらう**（2026-10-11）。ここの thumbnail は点検用の1案。
+date: 2026年10月16日
+slot: other_2
+format: news
+series: ユニフォームとエンブレムの歴史
+voice_min: 0
+people:
+- リーズ
+theme:
+  id: kit_leeds
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: リーズ
+  title: リーズの新しい紋章は、公開の翌日に何が起きたのか
+  question: リーズのユニフォームと胸は、紋章と色と契約でどう変わってきたのか
+  opening_image: assets/images/20261016_kit_leeds/c03_2019_w.jpg
+  lead: 白いシャツに、バラの紋章のクラブ。
+  hook: ''
+  takeaway: リーズ・ユナイテッドは2018年1月、新しい紋章の案を公開した翌日に、協議を延ばすと声明を出した（クラブの声明。取り下げとは書いていない）。新しい紋章がシャツに付いたのは1年半後の2019年7月。自分で数えると、紋章の絵は1964年から10種類替わり、1964〜83年の20年に6種類（3.3年に1つ）、1984年以降の42年に4種類（10.5年に1つ）で、替わる間隔は約3倍に延びた。一方、ホームの白は1961-62から65年のまま。2020年の夏には、アディダスを「新記録の契約」、エスビーオートップを「クラブ史上最大の商業契約」とクラブが発表し、2つの「最大」は20日で出た。額は発表されていない
+thumbnail:
+  layout: scene
+  callouts:
+  - 2018年1月
+  - 声明は何と書いた
+  photo: assets/images/20261016_kit_leeds/c03_2019_w.jpg
+  line1: リーズの新しい紋章
+  line2: 翌日、クラブが出した声明
+  crests:
+  - リーズ
+  tags:
+  - リーズ
+  - プレミアリーグ
+  - ユニフォーム
+  - エンブレム
+sections:
+- id: crest18
+  main: true
+  heading: 新しい紋章を出した翌日、クラブは何と言ったのか
+  tier: 確定
+  official: true
+  telop: 2018年1月、新しい紋章の案を出した翌日に、協議を延ばすと声明。取り下げとは書いていない
+  narrator: キャスター
+  card: &id_doc
+    type: document
+    label: リーズ・ユナイテッド公式声明「紋章の協議」（2018年1月25日）の訳
+    paragraphs:
+    - 昨日公開した新しい紋章の案に、サポーターの皆さんが意見を寄せてくれたことに感謝します。
+    - 寄せられた意見の数と深さは、このクラブへの皆さんの情熱の強さを、あらためて示しました。
+    - 現在の取締役会はクラブの預かり手にすぎず、サポーターはいつも中心にいます。皆さんの声は聞き届けられます。
+    - 紋章を変えたい気持ちは十分に調べました。ただ、協議を延ばす必要も理解しています。誰もが誇れる姿を、皆さんと一緒につくります。
+    - サポーターが関われる方法は、来週お知らせします。
+    highlight:
+    - 協議を延ばす
+    - 来週
+  say:
+  - text: リーズ・ユナイテッドの紋章と契約の話です。
+    short_only: true
+  - text: 2018年1月、リーズは新しい紋章の案を公開しました。
+    image: assets/images/20261016_kit_leeds/c05_2023_w.jpg
+    emph: true
+    card: none
+  - text: クラブが生まれて100年、2019年を控えた時期でした。
+    card: none
+  - text: ところが、公開の翌日に、クラブは声明を出します。
+    callword: 公開の翌日
+    card: none
+  - text: 声明は、サポーターの意見への感謝から始まります。
+    card:
+      <<: *id_doc
+      highlight: []
+  - text: 意見の数と深さが、クラブへの情熱を示した、と書いています。
+    card:
+      <<: *id_doc
+      highlight: []
+  - text: 経営陣は「預かり手」で、皆さんの声は聞き届ける、とも。
+    card:
+      <<: *id_doc
+      highlight: []
+  - text: そして、協議を延ばす、と伝えました。
+    emph: true
+    card: *id_doc
+  - text: 参加の方法は、来週お知らせするとしています。
+    card:
+      <<: *id_doc
+      highlight:
+      - 来週
+  - text: 紋章を取り下げる、とは書いていません。
+    card: none
+  - text: 公開から声明まで、わずか1日でした。
+    emph: true
+    card: none
+  - text: 新しい紋章がシャツに付いたのは、1年半後です。
+    card: none
+  - text: 2019年7月9日、白いホームシャツに、金色の紋章が付きました。
+    image: assets/images/20261016_kit_leeds/c03_2019_w.jpg
+    card: none
+  - text: クラブはこれを「まったく新しい紋章」と呼びました。
+    card: none
+  sources:
+  - https://www.leedsunited.com/news/club-news/22927/club-statement-crest-consultation
+  - https://web.archive.org/web/20180209id_/https://www.leedsunited.com/news/club-news/22927/club-statement-crest-consultation
+  - https://web.archive.org/web/20190801id_/https://www.leedsunited.com/news/club/25148/2019-20-centenary-home-kit-launched
+  - https://www.historicalkits.co.uk/Leeds_United/Leeds_United.htm
+- id: crest
+  heading: 紋章は、いつ何に替わってきたのか
+  tier: 背景
+  telop: 紋章の絵は1964年から10種類。フクロウ、スマイリー、バラ、盾と替わってきた
+  narrator: 解説
+  card: &id_crest
+    type: timeline
+    title: 胸の紋章の変遷
+    rows: &rows_crest
+    - - 1934年
+      - リーズ市の紋章をシャツに
+    - - 1961年〜
+      - 白いシャツに替わり、紋章なし
+    - - 1964年
+      - フクロウの紋章が付く
+    - - 1973年
+      - L・Uの丸字「スマイリー」
+    - - 1984年
+      - 白いバラとボールの紋章
+    - - 2019年
+      - 100周年の紋章
+    focus: 1964年
+  say:
+  - text: 次は、胸に付く紋章を見ます。
+    image: assets/backgrounds/cut_リーズ.png
+    card: none
+  - text: 最初の紋章は1934年。リーズ市の紋章を、そのまま使いました。
+    image: assets/images/20261016_kit_leeds/c01_1965_w.jpg
+    card:
+      <<: *id_crest
+      highlight_row: 0
+  - text: 白いシャツへ替わると、胸の紋章はしばらく外れます。
+    card:
+      <<: *id_crest
+      highlight_row: 1
+  - text: 1964年、フクロウが付きました。市の紋章に3羽いる鳥です。
+    emph: true
+    card:
+      <<: *id_crest
+      highlight_row: 2
+  - text: 1971年に斜めのエルユーエフシーの字、73年に丸字の「スマイリー」。
+    card:
+      <<: *id_crest
+      highlight_row: 3
+  - text: 1976年に色を反転、77年に円で囲み、80年にクジャクを入れます。
+    card:
+      <<: *id_crest
+      highlight_row: 3
+  - text: 1984年、白いバラとボール。98年に盾の形、99年にはボールが戻ります。
+    image: assets/images/20261016_kit_leeds/c02_1966_w.jpg
+    card:
+      <<: *id_crest
+      highlight_row: 4
+  - text: そして2019年、100周年の紋章に替わります。
+    card:
+      <<: *id_crest
+      highlight_row: 5
+  sources:
+  - https://en.wikipedia.org/wiki/Leeds_United_F.C.
+  - https://www.historicalkits.co.uk/Leeds_United/Leeds_United.htm
+  - https://web.archive.org/web/20190801id_/https://www.leedsunited.com/news/club/25148/2019-20-centenary-home-kit-launched
+- id: colour
+  heading: リーズの白は、いつから白になったのか
+  tier: 背景
+  telop: 創立のころは青と白の縞。1961-62に全身が白になり、レアル・マドリードにならったと伝えられる
+  narrator: 解説
+  card: &id_colour
+    type: table
+    title: リーズのシャツの色
+    columns: &cols_colour
+    - いつ
+    - 着ていたもの
+    rows: &rows_colour
+    - - 創立のころ
+      - 青と白の縞
+    - - そのあと
+      - 青と金、金に青い袖
+    - - 1961-62
+      - 全身が白
+    highlight_row: 2
+  say:
+  - text: 次は、リーズの色の話です。
+    image: assets/images/20261016_kit_leeds/c01_1965_w.jpg
+    card: *id_colour
+  - text: いまは白のクラブですが、創立のころは青と白の縞でした。
+    card:
+      <<: *id_colour
+      highlight_row: 0
+  - text: ハダースフィールドの会長が、合併を狙っていたためと伝えられます。
+    card:
+      <<: *id_colour
+      highlight_row: 0
+  - text: そのあとは、青と金の半々、金のシャツに青い袖と替わります。
+    card:
+      <<: *id_colour
+      highlight_row: 1
+  - text: 全身が白になったのは、1961-62のシーズンです。
+    emph: true
+    image: assets/images/20261016_kit_leeds/c02_1966_w.jpg
+    card:
+      <<: *id_colour
+      highlight_row: 2
+  - text: レアル・マドリードにならった、と伝えられています。
+    card:
+      <<: *id_colour
+      highlight_row: 2
+  - text: 以来、ホームの白は、いまも続いています。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Leeds_United_F.C.
+  - https://www.historicalkits.co.uk/Leeds_United/Leeds_United.htm
+- id: deal
+  heading: 作り手と胸の広告は、クラブ史上初の契約をどう発表したのか
+  tier: 確定
+  official: true
+  telop: 2020年、アディダスはクラブ史上初。胸のエスビーオートップは史上最大の商業契約と、クラブが発表
+  narrator: キャスター
+  card: &id_deal
+    type: table
+    title: 作り手と胸の広告、クラブの発表
+    columns: &cols_deal
+    - いつ
+    - 誰が
+    - クラブの言葉
+    rows: &rows_deal
+    - - 1973-74
+      - アドミラル
+      - 名前が見えるシャツ
+    - - 2015年6月
+      - カッパ
+      - 5年契約
+    - - 2020年7月
+      - アディダス
+      - 史上初・新記録
+    - - 2020年8月
+      - エスビーオートップ
+      - 史上最大の商業契約
+    - - 2024年5月
+      - レッドブル
+      - 胸に付く・出資も
+    highlight_row: 2
+  say:
+  - text: 次は、作り手と胸の広告の話です。
+    image: assets/images/20261016_kit_leeds/c05_2023_w.jpg
+    card: *id_deal
+  - text: 1973-74に、イングランド1部で初めて名前の見えるシャツを着たのがリーズ。
+    card:
+      <<: *id_deal
+      highlight_row: 0
+  - text: 作ったのはアドミラルで、複製シャツの市場も、ここから広がったと言われます。
+    card:
+      <<: *id_deal
+      highlight_row: 0
+  - text: 2015年6月、クラブはカッパとの5年契約を発表します。
+    card:
+      <<: *id_deal
+      highlight_row: 1
+  - text: 練習着や下部組織の分も含み、額は出ていません。
+    card:
+      <<: *id_deal
+      highlight_row: 1
+  - text: 2020年7月21日、アディダスが公式のキットパートナーになります。
+    image: assets/images/20261016_kit_leeds/c03_2019_w.jpg
+    card:
+      <<: *id_deal
+      highlight_row: 2
+  - text: アディダスと組むのは、クラブの歴史で初めてと発表されました。
+    emph: true
+    card:
+      <<: *id_deal
+      highlight_row: 2
+  - text: 試合用と練習用を、5年にわたって作る契約です。
+    card:
+      <<: *id_deal
+      highlight_row: 2
+  - text: クラブは「新記録の契約」と呼び、額は出ていません。
+    callword: クラブ史上初
+    card: none
+  - text: 2024年10月に延長が決まり、期間は出ていません。
+    card:
+      <<: *id_deal
+      highlight_row: 2
+  - text: 胸の広告です。2020年8月10日、エスビーオートップが胸に付くと発表されました。
+    image: assets/images/20261016_kit_leeds/c05_2023_w.jpg
+    card:
+      <<: *id_deal
+      highlight_row: 3
+  - text: クラブの発表は、これを「クラブ史上最大の商業契約」としています。
+    card:
+      <<: *id_deal
+      highlight_row: 3
+  - text: 2024年5月30日には、レッドブルが次の季から胸に付くと発表します。
+    card:
+      <<: *id_deal
+      highlight_row: 4
+  - text: この契約には、少数株主としての出資も含まれます。
+    card:
+      <<: *id_deal
+      highlight_row: 4
+  sources:
+  - https://web.archive.org/web/20150618231107id_/http://www.leedsunited.com/news/article/15hi4yx8buh8j1skbb8cqsqdwb/title/kappa-new-kit-deal-announced
+  - https://web.archive.org/web/20200722055508id_/https://www.leedsunited.com/news/club/26829/adidas-becomes-official-kit-partner-of-leeds-united
+  - https://web.archive.org/web/20200816115707id_/https://www.leedsunited.com/news/club/26890/sbotop-becomes-principal-sponsor-of-leeds-united
+  - https://www.leedsunited.com/en/news/leeds-united-announce-partnership-extension-with-adidas
+  - https://web.archive.org/web/20240530090955id_/https://www.leedsunited.com/news/partnerships/33559/leeds-united-football-club-announce-red-bull-as-front-of-shirt-partner
+  - https://en.wikipedia.org/wiki/Admiral_Sportswear
+- id: view
+  viewpoint: true
+  heading: 見立て・紋章の替わる間隔は約3倍に延び、動いたのは契約のほうだった
+  tier: 背景
+  telop: 紋章は3.3年に1つから10.5年に1つへ。白は65年同じ。2020年の「最大」2つは20日で出た
+  narrator: 解説
+  card: &id_ratio
+    type: calc
+    title: 紋章が替わる間隔は、何倍に延びたか
+    terms:
+    - - 10.5年に1つ
+      - 1984〜2025年の42年に4種類
+    - - 3.3年に1つ
+      - 1964〜83年の20年に6種類
+    - - 約3倍
+      - 割った答え
+    ops:
+    - ÷
+    - ＝
+  say:
+  - text: ここからは、リーズの紋章と色と契約を、数字で比べます。
+    image: assets/images/20261016_kit_leeds/c05_2023_w.jpg
+    card: none
+  - text: ひとつ目は、紋章が替わる速さです。
+    card: none
+  - text: 1964年から83年までの20年間に、6種類の紋章を使いました。
+    card: &id_early
+      type: calc
+      title: 1964〜83年は、何年に1つ替わったか
+      terms:
+      - - 20年
+        - 1964〜83年
+      - - 6種類
+        - 付いた紋章の絵
+      - - 3.3年に1つ
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+  - text: 20年を6で割ると、3.3年に1つ。これが平均のペースです。
+    card: *id_early
+  - text: 1984年から2025年までの42年間は、4種類でした。
+    card: &id_late
+      type: calc
+      title: 1984〜2025年は、何年に1つ替わったか
+      terms:
+      - - 42年
+        - 1984〜2025年
+      - - 4種類
+        - 付いた紋章の絵
+      - - 10.5年に1つ
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+  - text: 42年を4で割ると、10.5年に1つ。先ほどの3.3年より、ずっとゆっくりです。
+    card: *id_late
+  - text: 替わる間隔は、約3倍に延びました。
+    emph: true
+    card: *id_ratio
+    mark:
+      kind: circle
+      item: 2
+  - text: ふたつ目は、色です。ホームの白は、1961-62からずっと白のまま。
+    card: &id_vs
+      type: table
+      title: 紋章と色、どちらが替わったか
+      columns:
+      - ''
+      - 替わったもの
+      - 期間
+      rows:
+      - - 紋章の絵
+        - 10種類
+        - 1964〜2019
+      - - ホームの色
+        - 白のまま
+        - 65年
+  - text: 紋章は10種類替わり、色は一度も替わっていません。
+    emph: true
+    card: *id_vs
+    mark:
+      kind: circle
+      row: 1
+  - text: みっつ目は、2020年の夏に出た「最大」です。
+    card: none
+  - text: アディダスは「新記録の契約」、エスビーオートップは「史上最大の商業契約」。
+    card: none
+  - text: 2つの発表のあいだは、わずか20日です。
+    emph: true
+    card: none
+  - text: これから見るなら、アディダスとの契約の切れ目です。
+    card: none
+  - text: 延長の期間は、まだ分かりません。
+    card: none
+  - text: 白は変わらず、紋章の替わり方は落ち着きました。動いてきたのは、契約です。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Leeds_United_F.C.
+  - https://www.historicalkits.co.uk/Leeds_United/Leeds_United.htm
+  - https://web.archive.org/web/20200722055508id_/https://www.leedsunited.com/news/club/26829/adidas-becomes-official-kit-partner-of-leeds-united
+  - https://web.archive.org/web/20200816115707id_/https://www.leedsunited.com/news/club/26890/sbotop-becomes-principal-sponsor-of-leeds-united
+  - https://www.leedsunited.com/en/news/leeds-united-announce-partnership-extension-with-adidas

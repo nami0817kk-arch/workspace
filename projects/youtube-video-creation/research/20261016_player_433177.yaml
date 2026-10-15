@@ -1,0 +1,727 @@
+# ブカヨ・サカ（アーセナル）の紹介。8節の型（2026-09-28）を 10/14 アンダーソン（research/20261014_player_567576.yaml）の形にそろえた。
+# 雛形は tools/player_intro.py 433177。材料は research/raw/20261016_player_433177_material.md（出典URL・原文・自訳つき）。
+# 数字は FotMob（961995）・Transfermarkt API（433177）・英語版Wikipedia・アーセナル公式・BBC・Guardian・ESPN の試合記録。
+#
+# **人選**：`player_pool list --count 40`（市場価値の順）で出していない最初の選手は⑫ムシアラ（580195）だったが、
+#   今季の出場が4試合213分でFotMobの詳細スタッツ（450分の目安に届かない）が薄く、プレースタイル・今季の節が作れないので外した。
+#   次の⑬サカ（433177、市場価値1.1億ユーロ）を選んだ。今季12試合881分（プレミア6試合509分）で節が作れる。
+#
+# **雛形から直したこと・数字の食い違い**
+# - 雛形の過去5季の表は「代表を含む全公式戦」で、TMの代表の数に親善試合が入りアシストも Opta と食い違う
+#   （TMのプレミアのアシスト通算58に対しアーセナル公式は200試合時点で45・50本目は5月）。**アシストの列は出さず、クラブの試合・得点・出場時間だけ**にした。
+#   25/26の雛形の 58試合15得点 は、クラブ49試合11得点＋代表9試合4得点の合算。クラブだけに直した。
+#   24/25 の37試合12得点はアーセナル公式（「3か月以上欠場した季」）と一致。
+# - 通算：アーセナル321試合85得点・イングランド代表59試合19得点（FotMob と TM が一致、BBCの2月時点の48試合14得点とも矛盾しない）。合計380試合104得点。
+# - 契約：TM・FotMob・BBC（「わかっている限り5年、2030年まで」）は2030年、英語版Wikipediaは「報じられた」2031年。2030年を使った。
+# - 市場価値：TM 1.1億ユーロ、FotMob 1億1270万ユーロ。TM を使い、最高は1.5億（TMの推移、2024-12〜2025-05）。
+# - 身長：TM・FotMob とも1.78m（クラブ公式の数字は未確認）。
+# - レーダー・棒グラフは FotMob の traits（シュート数95・チャンス創出84・得点82・空中戦64・ボールタッチ60・守備の関与56）にそろえた。
+#   雛形の武器（Penalty goals 97・xG 96）は今季6試合の数字なので画面のレーダーと食い違う。**レーダーの数字だけを言う**。
+#   今季プレミア6試合の絶対値（シュート17・枠内10・xG 3.62・xA 1.04・敵陣ボックス内タッチ37）は「数」として読む。
+# - 「得点を146分に1点」は 881÷6=146.8 なので **約147分に1点**。見立ての90分あたりは 4点÷637分×90 を自分で計算した。
+# - W杯3位決定戦（2026-07-18）：BBC の試合速報と英語版Wikipedia で一致（イングランド6対4フランス、サカ37分・45+1分・87分PK）。
+#   「W杯の決勝トーナメントで3得点はハースト（1966年決勝）以来2人目」はBBC・Wikipedia。ベリンガムがPKのボールを渡した話はBBCの解説者（ウォーノック）の言葉。
+#   ESPN の記事は取得できず（bot対策）、BBC と Wikipedia の2系統で確認。
+# - 10/13 のリール戦：ESPN の試合記録（65分に途中出場、67分にエゼのゴールをアシスト、71分に自分のゴール、3対0）。FotMob の1G1Aと一致。
+# - 10/10 リーズ戦は2対1（0対1から逆転）、10/3 クロアチア戦はイングランド7対0で、サカは45分と68分（ESPN）。FotMob の2G・評点9.0と一致。
+# - 次戦：ESPN の日程は 2026-10-18 15:30（UTC）＝日本時間10/19 0:30、ノッティンガム・フォレスト対アーセナル（FotMob の「10月19日」と一致）。
+#   プレミアの順位は ESPN で アーセナル2位・勝ち点15（首位シティ18）。
+#
+# **材料から入れなかったもの**
+# - 私生活（婚約・信仰・ナンドスのソース事業）、ロナウド・メッシに並べるバロンドールの話、ナイジェリア代表を選べた話（Wikipedia のみ）。
+# - 「ニックネーム Little Chilli（オーバメヤン命名）」：Wikipedia のみで ESPN の原文は取得できなかった。
+# - アーセナルの「プレミアで50アシスト目・コーナーから」（Wikipediaのみ。TMの数字と食い違うので扱わない）。
+# - ユーロ決勝後の人種差別の中傷の詳細（事実は1文だけ）。
+# - ライプツィヒ等、他の選手の話。
+#
+# **日本語名・読みで怪しいもの（確認してほしい）**
+# - ヴォルスクラ・ポルタヴァ（Vorskla Poltava）、ドンナルンマ、ハースト（Geoff Hurst）、トゥヘル、テディ。
+# - 「ハーレ・エンド」（Hale End）は使っていない（育成の記述は「アーセナルのアカデミー」）。
+#
+# **写真**（assets/images/20261016_saka/）：eng_ghana＝Commons（CC BY-SA 4.0 / Bryan Berlin、2026-06-23 W杯 イングランド対ガーナ、横長に切った01_w）、
+#   ars_300・ars_portrait・ars_sign＝アーセナル公式サイトの記事の写真（許諾は得ていない、出典は credits.json）。
+#   ars_300（ガッツポーズ）は記事の説明に「Bukayo Saka celebrates」とあり本人。ars_portrait は契約記事の本人のポートレート。ars_sign は左から監督・サカ・クラブ幹部の署名の写真（顔は検出が別人を拾ったので _v は使わない）。
+#   ars_portrait は850pxと小さく、全画面だと約2.2倍の引き伸ばし。顔の検出が失敗した（右寄せの写真）。
+date: 2026年10月16日
+slot: other_1
+format: news
+series: 有名選手の紹介
+people:
+- ブカヨ・サカ
+theme:
+  id: player_433177
+  league: england
+  kind: other
+  topic: アーセナル
+  title: ブカヨ・サカってどんな選手？ 右から左足で仕留める背番号7の正体
+  question: ブカヨ・サカはどういう作りの選手で、なぜ決めきれるのか
+  takeaway: 今季のゴールは90分あたり0.57点で、直近3季の0.30〜0.47より高い。ただし出場は637分と標本が小さい。次の節目は日本時間10月19日午前0時30分のフォレスト戦
+  nameplate: ブカヨ・サカ｜アーセナル FW／イングランド代表
+  opening_image: assets/images/20261016_saka/ars_300/01_w.jpg
+  bgm: assets/audio/bgm_calm.wav
+watch: 明日は⑰フロリアン・ヴィルツ
+short_title: サカってどんな選手？
+thumbnail:
+  # 案A（暫定）。案B: 1行目「サカ」・2行目「22年ぶり優勝と●●●●●●●」／案C: 1行目「サカ、W杯3位決定戦」・2行目「●●●●●●●で6対4の勝ち」。決めるのはユーザー
+  line1: サカ、25歳の通算記録
+  line2: W杯KOの●●●●●●●は60年ぶり
+  tags:
+  - アーセナル
+  - ブカヨ・サカ
+  - イングランド代表
+  - 選手紹介
+  - プレースタイル
+  photo: assets/images/20261016_saka/thumb_panel.jpg
+  photos: []
+  short_photo: ''
+sections:
+- id: hook
+  heading: サカは、どんな選手か
+  tier: 報道
+  telop: W杯の3点と、22年ぶりの優勝
+  narrator: キャスター
+  card:
+    type: stats
+    title: ブカヨ・サカの25歳
+    items:
+    - ['3', 点, W杯3位決定戦、フランス戦で]
+    - ['22', 年ぶり, アーセナルのリーグ優勝（2026年5月）]
+    - ['8', 歳, アーセナルのアカデミーへ]
+    focus: 0
+  say:
+  - text: 2026年7月18日。W杯3位決定戦のフランス戦で、サカは3点を決めました。
+    image: assets/images/20261016_saka/eng_ghana_w/01.jpg
+    card: &hook_stats
+      type: stats
+      title: ブカヨ・サカの25歳
+      items:
+      - ['3', 点, W杯3位決定戦、フランス戦で]
+      - ['22', 年ぶり, アーセナルのリーグ優勝（2026年5月）]
+      - ['8', 歳, アーセナルのアカデミーへ]
+      focus: 0
+  - text: W杯の決勝トーナメントで、イングランド人が3点。
+    emph: true
+    card:
+      <<: *hook_stats
+      focus: 0
+  - text: 1966年決勝のハースト以来、2人目です。
+    card:
+      <<: *hook_stats
+      focus: 0
+  - text: その2か月前の5月19日には、アーセナルが22年ぶりのリーグ優勝を決めています。
+    image: assets/images/20261016_saka/ars_300/01_w.jpg
+    card:
+      <<: *hook_stats
+      focus: 1
+  - text: ブカヨ・サカ、25歳。右から中へ切れ込み、左足で決めるウイングです。
+    card: none
+  - text: 同じ位置の中で、シュートの多さは上位5%ほど。
+    image: assets/images/20261016_saka/eng_panama_w/01.jpg
+    callword: シュート上位5%
+    card: none
+  - text: 100人いたら、上から5番目あたりです。
+    card: none
+  - text: 始まりは8歳。2010年5月に、アーセナルのアカデミーへ入りました。
+    image: assets/images/20261016_saka/ars_portrait/01.jpg
+    card:
+      <<: *hook_stats
+      focus: 2
+  - text: 2026年2月、サカは将来を、こう語りました。
+    card: none
+  - voice: サカ
+    text: 7歳か8歳でトライアルに来た子供が、
+  - voice: サカ
+    text: 取れるタイトルを全部取るところまで行った。
+    cont: true
+  - voice: サカ
+    text: そう振り返れる自分でいたいんです。
+    cont: true
+    pause: 0.6
+  quotes_from:
+  - https://www.bbc.com/sport/football/articles/c4gje501g51o
+  sources:
+  - https://www.bbc.com/sport/football/live/cly5lj1nqdxt
+  - https://www.theguardian.com/football/2026/may/19/arsenal-premier-league-champions-manchester-city-bournemouth
+  - https://www.arsenal.com/news/bukayo-saka-signs-new-long-term-contract-46329922
+  - https://www.fotmob.com/players/961995
+- id: data
+  heading: サカは、いまどこで、いくらの選手か
+  tier: 報道
+  telop: ブカヨ・サカの基礎DATA
+  narrator: キャスター
+  card:
+    type: table
+    title: ブカヨ・サカ（アーセナル）
+    columns:
+    - 項目
+    - 内容
+    rows: &bdata
+    - - 所属
+      - アーセナル（7番）
+    - - ポジション
+      - 右ウイング
+    - - 生年月日
+      - 2001年9月5日（25歳）
+    - - 生まれ
+      - イングランド・ロンドン西部のイーリング
+    - - 育成
+      - アーセナルのアカデミー（8歳から）
+    - - 身長・利き足
+      - 1.78m・左
+    - - 契約
+      - 2030年まで
+    - - 市場価値
+      - 1.1億ユーロ
+    source: Transfermarkt・FotMob
+  say:
+  - text: サカが立つのは、右サイド。右ウイングです。
+    image: assets/images/20261016_saka/ars_portrait/01.jpg
+    card: &data_card
+      type: table
+      title: ブカヨ・サカ（アーセナル）
+      columns: [項目, 内容]
+      rows: *bdata
+      source: Transfermarkt・FotMob
+      highlight_row: 1
+  - text: ロンドン西部のイーリング生まれ。両親はナイジェリアにルーツを持ちます。
+    card:
+      <<: *data_card
+      highlight_row: 3
+  - text: 身長は1メートル78で、利き足は左。
+    card:
+      <<: *data_card
+      highlight_row: 5
+  - text: アーセナルとの契約は、2030年までです。
+    card:
+      <<: *data_card
+      highlight_row: 6
+  - text: 市場価値は1億1000万ユーロ。
+    emph: true
+    card:
+      <<: *data_card
+      highlight_row: 7
+  sources:
+  - https://www.transfermarkt.com/bukayo-saka/profil/spieler/433177
+  - https://www.fotmob.com/players/961995
+  - https://www.bbc.com/sport/football/articles/c4gje501g51o
+  - https://en.wikipedia.org/wiki/Bukayo_Saka
+- id: career
+  heading: 17歳のデビューから、優勝とW杯まで
+  tier: 報道
+  telop: 2018年11月29日、17歳のデビュー
+  narrator: 解説
+  card:
+    type: table
+    title: 歩んできた道
+    columns:
+    - いつ
+    - できごと
+    - 年齢
+    rows: &career_rows
+    - - 2018年11月
+      - アーセナルでデビュー
+      - 17歳
+    - - 2019/20
+      - 左サイドバックで定着
+      - 18歳
+    - - 2021年7月
+      - ユーロ決勝でPKを外す
+      - 19歳
+    - - 2021・2022年
+      - クラブの年間最優秀選手
+      - 19〜20歳
+    - - 2026年5月
+      - 初のリーグ優勝
+      - 24歳
+    - - 2026年7月
+      - W杯3位決定戦で3得点
+      - 24歳
+    source: アーセナル公式・BBC・Wikipedia
+  say:
+  - text: 2018年11月29日、ヨーロッパリーグのヴォルスクラ戦。
+    image: assets/images/20261016_saka/ars_300/01_w.jpg
+    card: &career_card
+      type: table
+      title: 歩んできた道
+      columns: [いつ, できごと, 年齢]
+      rows: *career_rows
+      source: アーセナル公式・BBC・Wikipedia
+      highlight_row: 0
+  - text: 17歳で、トップチームの初出場です。
+    card: *career_card
+  - text: 転機の1つ目は、2019/20。選手のけがが続き、左サイドバックで使われます。
+    card:
+      <<: *career_card
+      highlight_row: 1
+  - text: ウイングの選手が、守る側に回る。18歳のサカは、クラブ公式にこう話しました。
+    card:
+      <<: *career_card
+      highlight_row: 1
+  - voice: サカ
+    text: ウイングに、何をしてほしいか。何をしてほしくないか。
+  - voice: サカ
+    text: サイドバックをやると、それが分かる。
+    cont: true
+  - voice: サカ
+    text: いい勉強になっています。
+    cont: true
+    pause: 0.6
+  - text: 転機の2つ目は、2021年7月11日。ユーロ決勝、イタリア戦です。
+    card:
+      <<: *career_card
+      highlight_row: 2
+  - text: 延長戦のあとのPK戦で、5人目として蹴り、ドンナルンマに止められました。
+    card:
+      <<: *career_card
+      highlight_row: 2
+  - text: 19歳のサカには、ネット上で人種差別の中傷が集まります。
+    card: none
+  - text: それでも2021年、2022年と、クラブの年間最優秀選手に2年連続で選ばれました。
+    emph: true
+    card:
+      <<: *career_card
+      highlight_row: 3
+  - text: 2026年2月、クラブは新契約を発表。公式は、サカをこう記しています。
+    image: assets/images/20261016_saka/ars_portrait/01.jpg
+    card:
+      type: document
+      label: アーセナル公式（2026年2月、契約更新の発表）
+      paragraphs:
+      - 2010年5月、8歳でアカデミーに入った24歳は、現在のチームで、得点・アシスト・出場のいずれも最多の選手になった。
+      - クラブの月間最優秀選手を、2012年の創設以来、誰よりも多く受賞している。
+      highlight: [最多, 誰よりも多く]
+  - text: 2026年5月19日。シティがボーンマスと引き分け、アーセナルの優勝が決まります。
+    image: assets/images/20261016_saka/ars_sign/01.jpg
+    card:
+      <<: *career_card
+      highlight_row: 4
+  - text: サカにとって、初めてのリーグ優勝です。
+    card:
+      <<: *career_card
+      highlight_row: 4
+  - text: 5月30日のチャンピオンズリーグ決勝は、パリ・サンジェルマンにPK戦で敗れました。
+    card: none
+  - text: 7月のW杯は、コンディションに苦しむ大会。
+    image: assets/images/20261016_saka/eng_panama2_w/01.jpg
+    card:
+      <<: *career_card
+      highlight_row: 5
+  - text: それでも3位決定戦で、3点を決めます。
+    card:
+      <<: *career_card
+      highlight_row: 5
+  - text: 前半の2点で、4点のリード。87分のPKは、ベリンガムがボールを渡して蹴りました。
+    emph: true
+    card:
+      <<: *career_card
+      highlight_row: 5
+  - text: 試合は6対4の勝ち。トゥヘル監督は、こう評しています。
+    card: none
+  - voice: トゥヘル
+    text: 彼は、すべてを正しくやった。
+  - voice: トゥヘル
+    text: 主力であることに、疑いはない。
+    cont: true
+    pause: 0.6
+  - text: 市場価値の推移です。最高は1億5000万ユーロでした。
+    image: assets/stats/player_20261016_961995_value.png
+    no_telop: true
+  quotes_from:
+  - https://www.arsenal.com/news/saka-how-left-back-will-improve-me-winger
+  - https://www.bbc.com/sport/football/live/cly5lj1nqdxt
+  sources:
+  - https://www.transfermarkt.com/bukayo-saka/profil/spieler/433177
+  - https://en.wikipedia.org/wiki/Bukayo_Saka
+  - https://www.arsenal.com/news/saka-how-left-back-will-improve-me-winger
+  - https://www.theguardian.com/football/2026/may/19/arsenal-premier-league-champions-manchester-city-bournemouth
+  - https://www.thescore.com/chlg/news/3547570/champions-league-final-analysis-psg-beat-arsenal-on-penalties
+  - https://www.bbc.com/sport/football/live/cly5lj1nqdxt
+- id: style
+  heading: サカの強みと弱みは、どこにあるのか
+  tier: 報道
+  telop: シュート、チャンス創出、得点。同じ位置と比べた位置
+  narrator: 解説
+  card:
+    type: bars
+    title: 同じ攻撃的MF・ウイングの中での位置（100が最上位）
+    unit: ''
+    items:
+    - label: シュート数
+      value: 95
+      highlight: true
+    - label: チャンス創出
+      value: 84
+      highlight: true
+    - label: 得点
+      value: 82
+    - label: 守備の関与
+      value: 56
+    source: FotMob
+  say:
+  - text: ここからはサカの形。同じ攻撃的MF・ウイングと比べた図です。
+    image: assets/stats/player_20261016_961995_radar.png
+    no_telop: true
+  - text: いちばん外へ出ているのは、シュートの多さ。同じ位置の中で、上位5%ほどです。
+    image: assets/stats/player_20261016_961995_radar.png
+    no_telop: true
+  - text: 続くのが、チャンス創出で上位16%ほど、得点で上位18%ほどの位置。
+    image: assets/stats/player_20261016_961995_radar.png
+    no_telop: true
+  - text: 打って、仕留めて、味方にも渡す。右から中へ入り、左足を振る選手です。
+    emph: true
+    image: assets/stats/player_20261016_961995_radar.png
+    no_telop: true
+  - text: いちばん小さいのは守備の関与で、56。それでも、真ん中より上の位置です。
+    image: assets/images/20261016_saka/eng_panama_w/01.jpg
+    no_telop: true
+  - text: 今季プレミアのアシストは、まだ0。
+    card: none
+  - text: ただ、アシストの期待値は1.04。味方が決めていれば、1つ付いた計算。
+    card: none
+  - text: 触る場所は、右サイドから、ゴール前の中央まで。
+    image: assets/stats/player_20261016_961995_heat.png
+    no_telop: true
+  - text: 敵陣のボックス内に触った回数は37回。同じ位置の中で、上位13%ほどです。
+    image: assets/stats/player_20261016_961995_heat.png
+    no_telop: true
+  - text: 今季プレミアのシュートは17本、枠内に10本。得点は3です。
+    image: assets/stats/player_20261016_961995_shots.png
+    no_telop: true
+  - text: ゴール期待値は3.62。決定機のぶんには、あと少しという数字。
+    image: assets/stats/player_20261016_961995_shots.png
+    no_telop: true
+  sources:
+  - https://www.fotmob.com/players/961995
+  - https://en.wikipedia.org/wiki/Bukayo_Saka
+- id: past
+  heading: 過去5シーズンで、サカは何点取ったのか
+  tier: 報道
+  telop: 直近5シーズンの試合と得点
+  narrator: 解説
+  card:
+    type: table
+    title: ブカヨ・サカ 直近5シーズン（クラブの全公式戦）
+    columns:
+    - シーズン
+    - 試合
+    - 得点
+    - 出場時間
+    rows: &season_rows
+    - ['21/22', '43', '12', 3359分]
+    - ['22/23', '48', '15', 3744分]
+    - ['23/24', '47', '20', 3865分]
+    - ['24/25', '37', '12', 2619分]
+    - ['25/26', '49', '11', 3256分]
+    source: Transfermarkt・アーセナル公式
+  rows_total:
+  - &t1 [アーセナル, '321', '85']
+  - &t2 [イングランド代表, '59', '19']
+  - &t3 [合計, '380', '104']
+  say:
+  - text: サカの21/22から、クラブの公式戦を古い順に見ます。
+    image: assets/images/20261016_saka/ars_300/01_w.jpg
+    card: &past_card
+      type: table
+      title: ブカヨ・サカ 直近5シーズン（クラブの全公式戦）
+      columns: [シーズン, 試合, 得点, 出場時間]
+      rows: *season_rows
+      source: Transfermarkt・アーセナル公式
+      highlight_row: 0
+  - text: 43試合12得点。プレミアでは11得点で、クラブの得点王でした。
+    card: *past_card
+  - text: 22/23は48試合15得点。優勝を争った季です。
+    card:
+      <<: *past_card
+      highlight_row: 1
+  - text: いちばん多いのが23/24。プレミアの16得点を含めて、20得点です。
+    emph: true
+    card:
+      <<: *past_card
+      highlight_row: 2
+  - text: 24/25は37試合12得点。3か月以上、欠場した季でした。
+    card:
+      <<: *past_card
+      highlight_row: 3
+  - text: 25/26は49試合11得点。リーグ優勝の季です。
+    image: assets/images/20261016_saka/ars_sign/01.jpg
+    card:
+      <<: *past_card
+      highlight_row: 4
+  - text: 通算も見ます。アーセナルで321試合85得点。
+    card: &total_card
+      type: table
+      title: ブカヨ・サカ 通算（2026年10月）
+      columns: [所属, 試合, 得点]
+      rows: [*t1, *t2, *t3]
+      source: Transfermarkt・FotMob
+      highlight_row: 0
+  - text: イングランド代表では、59試合19得点です。
+    image: assets/images/20261016_saka/eng_panama2_w/01.jpg
+    card:
+      <<: *total_card
+      highlight_row: 1
+  - text: 合わせて380試合104得点。25歳で、この数です。
+    emph: true
+    card:
+      <<: *total_card
+      highlight_row: 2
+  sources:
+  - https://www.fotmob.com/players/961995
+  - https://www.transfermarkt.com/bukayo-saka/profil/spieler/433177
+  - https://www.arsenal.com/news/bukayo-saka-signs-new-long-term-contract-46329922
+  - https://en.wikipedia.org/wiki/Bukayo_Saka
+- id: season
+  heading: 今季の数字と直近5試合
+  tier: 報道
+  main: true
+  telop: 今季ここまで
+  narrator: 解説
+  card:
+    type: table
+    title: 直近5試合（代表を含む）
+    columns:
+    - 日付
+    - 相手
+    - 出場
+    - 得点
+    - 評点
+    rows: &recent_rows
+    - - 10/13
+      - リール
+      - 25分
+      - 1G 1A
+      - '7.9'
+    - - 10/10
+      - リーズ
+      - 90分
+      - 0G 0A
+      - '7.4'
+    - - 10/3
+      - クロアチア
+      - 90分
+      - 2G 0A
+      - '9.0'
+    - - 9/29
+      - チェコ
+      - 71分
+      - 0G 0A
+      - '7.2'
+    - - 9/26
+      - スペイン
+      - 83分
+      - 0G 0A
+      - '6.3'
+    source: FotMob
+  say:
+  - text: アーセナルのサカは、右から中へ切れ込んで、左足で決める。
+    short_only: true
+    card: none
+  - text: 今季はここまで12試合で6得点1アシスト。
+    image: assets/images/20261016_saka/ars_portrait/01.jpg
+    card: &recent_card
+      type: table
+      title: 直近5試合（代表を含む）
+      columns: [日付, 相手, 出場, 得点, 評点]
+      rows: *recent_rows
+      source: FotMob
+  - text: 出場時間は881分で、約147分に1点のペースです。
+    card: *recent_card
+  - text: プレミアリーグは6試合で3得点0アシスト。
+    card: *recent_card
+  - text: チャンピオンズリーグは2試合で1得点1アシスト。
+    card: *recent_card
+  - text: ネーションズリーグAは3試合で2得点です。
+    card: *recent_card
+  - text: 直近は10月13日、チャンピオンズリーグのリール戦。
+    card:
+      <<: *recent_card
+      highlight_row: 0
+  - text: 65分に途中出場すると、2分後にアシスト、6分後にゴール。3対0の勝ちです。
+    emph: true
+    card:
+      <<: *recent_card
+      highlight_row: 0
+  - text: その3日前、10月10日のリーズ戦は90分出場。
+    card:
+      <<: *recent_card
+      highlight_row: 1
+  - text: 直近5試合で90分出たのは、これで2試合目です。
+    card:
+      <<: *recent_card
+      highlight_row: 1
+  - text: 0対1からの逆転で、2対1の勝ちでした。
+    image: assets/images/20261016_saka/ars_300/01_w.jpg
+    card:
+      <<: *recent_card
+      highlight_row: 1
+  - text: 10月3日、ネーションズリーグのクロアチア戦は、7対0の勝ちで2得点。
+    card:
+      <<: *recent_card
+      highlight_row: 2
+  - text: 評点9.0は、直近5試合で最高です。
+    card:
+      <<: *recent_card
+      highlight_row: 2
+  - text: 題の答えは、シュートを打ち続けて決める右ウイング。数字が、それを示しています。
+    card: *recent_card
+  sources:
+  - https://www.fotmob.com/players/961995
+  - https://www.transfermarkt.com/bukayo-saka/profil/spieler/433177
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915417
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/summary?event=401879268
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.nations/summary?event=401861113
+- id: story
+  heading: 数字の外にある、2つの話
+  tier: 報道
+  main: true
+  telop: 8歳の少年の手紙と、初めてのキャプテン
+  narrator: 解説
+  card:
+    type: table
+    title: 数字の外にある、2つの話
+    columns: [いつ, 何があったか]
+    rows: &story_rows
+    - ['2021年7月', 8歳の少年が、手紙を送った]
+    - ['2023年10月28日', 初めて、キャプテンマークを巻いた]
+    source: 各報道
+  say:
+  - text: アーセナルのブカヨ・サカ。数字の外に、2つの話があります。
+    image: assets/images/20261016_saka/ars_portrait/01.jpg
+    short_only: true
+    card: none
+  - text: 1つ目は、少年からの手紙。2021年のユーロ決勝のあとのことです。
+    image: assets/images/20261016_saka/ars_300/01_w.jpg
+    card: &story_card
+      type: table
+      title: 数字の外にある、2つの話
+      columns: [いつ, 何があったか]
+      rows: *story_rows
+      source: 各報道
+      highlight_row: 0
+  - text: PKを外した19歳に、ワイト島の8歳の少年、テディが手紙を書きました。
+    card: *story_card
+  - text: お小遣いも、封筒に入れて送ったといいます。手紙には、こう書かれていました。
+    card: *story_card
+  - voice: テディ
+    text: もう悲しくなければいいな。
+  - voice: テディ
+    text: ここにいたら、お小遣いでアイスを買ってあげる。
+    cont: true
+  - voice: テディ
+    text: 公園でサッカーをして、君を勝たせてあげる。
+    cont: true
+    pause: 0.6
+  - text: 家族は、返事が来るとは思っていませんでした。ところが、サカは返事を書きます。
+    card: *story_card
+  - text: 手紙とビデオ。やり取りは、そこから続きました。
+    card: *story_card
+  - text: 2023年の取材で、サカの答えは、こうでした。
+    card: *story_card
+  - voice: サカ
+    text: いまも、連絡を取っているよ。
+  - voice: サカ
+    text: たくさん動画を送ってくれて、いつも見て嬉しくなる。
+    cont: true
+  - voice: サカ
+    text: 試合にも、2回来てくれた。
+    cont: true
+    pause: 0.6
+  - text: 2つ目は、初めてのキャプテンの日。
+    image: assets/images/20261016_saka/ars_sign/01.jpg
+    card:
+      <<: *story_card
+      highlight_row: 1
+  - text: 2023年10月28日、シェフィールド・ユナイテッド戦です。
+    card:
+      <<: *story_card
+      highlight_row: 1
+  - text: 8歳から育ったクラブで、先頭に立って入場。
+    card:
+      <<: *story_card
+      highlight_row: 1
+  - text: 5対0の勝ち。試合後の言葉です。
+    card:
+      <<: *story_card
+      highlight_row: 1
+  - voice: サカ
+    text: 自分がどこから来たか、知っているでしょう。アカデミーです。
+  - voice: サカ
+    text: 先頭でみんなを連れて出られて、信じられなかった。
+    cont: true
+  - voice: サカ
+    text: 学びながらだったから、
+  - voice: サカ
+    text: どこに立てばいいか、分からない時もあった。
+    cont: true
+    pause: 0.6
+  - text: 手紙に返事を書いた19歳が、育ったクラブで先頭に立つ。その先を、数字で見ます。
+    pause: 0.5
+    card: none
+  quotes_from:
+  - https://www.theguardian.com/football/2023/aug/25/bukayo-saka-nothing-worth-having-is-easy-its-about-how-much-you-want-it-arsenal
+  - https://www.arsenal.com/news/saka-leading-boys-out-was-unbelievable
+  sources:
+  - https://www.theguardian.com/football/2023/aug/25/bukayo-saka-nothing-worth-having-is-easy-its-about-how-much-you-want-it-arsenal
+  - https://www.arsenal.com/news/saka-leading-boys-out-was-unbelievable
+  - https://en.wikipedia.org/wiki/Bukayo_Saka
+- id: view
+  heading: ブカヨ・サカの得点ペースは、去年より上がったか
+  tier: 背景
+  viewpoint: true
+  narrator: 解説
+  telop: 10月19日、ノッティンガム・フォレスト対アーセナル
+  card:
+    type: table
+    title: 90分あたりの得点（クラブの全公式戦）
+    columns: [シーズン, 得点, 出場時間, 90分あたり]
+    rows: &view_rows
+    - ['23/24', '20', 3865分, '0.47']
+    - ['24/25', '12', 2619分, '0.41']
+    - ['25/26', '11', 3256分, '0.30']
+    - ['26/27', '4', 637分, '0.57']
+    source: Transfermarkt・FotMob から自分で計算
+  say:
+  - text: 話を数字に戻して、最後に見立て。
+    image: assets/images/20261016_saka/eng_ghana_w/01.jpg
+    card: &view_card
+      type: table
+      title: 90分あたりの得点（クラブの全公式戦）
+      columns: [シーズン, 得点, 出場時間, 90分あたり]
+      rows: *view_rows
+      source: Transfermarkt・FotMob から自分で計算
+      highlight_row: 0
+  - text: ブカヨ・サカのゴールを、出場時間をそろえて比べます。
+    card: *view_card
+  - text: 23/24は0.47、24/25は0.41、25/26は0.30。
+    card: *view_card
+  - text: 今季は、4得点を637分で。4を637で割って90をかけると、0.57です。
+    emph: true
+    card:
+      <<: *view_card
+      highlight_row: 3
+    mark:
+      kind: circle
+      row: 3
+      col: 90分あたり
+  - text: 直近3季のどれよりも、高い数字です。
+    card:
+      <<: *view_card
+      highlight_row: 3
+  - text: ただし、まだ9試合の標本。
+    card: none
+  - text: プレミアの得点は3で、ゴール期待値の3.62を、わずかに下回ります。
+    card: none
+  - text: クラブの次の試合は、日本時間10月19日の午前0時30分。
+    image: assets/images/20261016_saka/ars_300/01_w.jpg
+    card: none
+  - text: ノッティンガム・フォレスト対アーセナル。
+    card: none
+  - text: アーセナルは勝ち点15で2位。首位のシティとは、勝ち点3差です。
+    card: none
+  - text: そこで0.57のペースが続くか、見届けます。
+    card: none
+  sources:
+  - https://www.fotmob.com/players/961995
+  - https://www.transfermarkt.com/bukayo-saka/profil/spieler/433177
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20261018
+  - https://site.api.espn.com/apis/v2/sports/soccer/eng.1/standings

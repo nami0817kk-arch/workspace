@@ -1,0 +1,6 @@
+title: ジャマル・ムシアラの今季のシュート
+unit: xG
+shots=5
+goals=1
+xg=0.22
+source: FotMob

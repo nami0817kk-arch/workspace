@@ -51,3 +51,11 @@ def test_対面カードの行は群ごとに差の大きい項目を選ぶ():
     chosen = [r["title"] for r in cs.pick_rows(rows)]
     assert chosen == ["g2", "g3", "d1", "d2"]
     assert len(cs.pick_rows([row("攻撃", f"x{i}", 0, i * 10) for i in range(9)])) <= 8
+
+
+def test_シーズンが違えば比べないが主題の回だけ許す():
+    a, b = _ctx("A", 700, season="2025/2026"), _ctx("B", 800, season="2026/2027")
+    _, blockers = cs.conditions([a, b])
+    assert any("シーズンが違います" in x for x in blockers)
+    notes, blockers = cs.conditions([a, b], allow_season_gap=True)
+    assert blockers == [] and any("主題" in n for n in notes)

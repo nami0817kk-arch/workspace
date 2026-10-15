@@ -1,0 +1,503 @@
+# 記録の解説：移籍金の世界記録（10/16 金、シリーズ「記録の解説」、key: record_transfer_fee、型は news）。
+#   記録の種類の並び：得点（10/9）・出場（10/10）・連勝（10/11）・最年少（10/12）・連続無敗（10/14）→ **移籍金**。
+#
+# 軸は「**ネイマールの世界記録は、9年破られていない。これは歴代2位の長さ。物価で直すと、名前の上の記録2つは実は記録でなかった**」。
+#   10/9「移籍の深掘り：ネイマール」は**払い方の仕組み**（違約金・税）の回。今回は**記録の歴史（更新の間隔と物差し）**で、角度が違う。
+#   10/9 で読んだ数字（2位エムバペ1億8000万・81%・ポグバに対し約2.11倍・FIFAの63億7000万ドル・源泉徴収・代理人手数料）は**使っていない**。
+#   使う重なり：ネイマール 2億2200万ユーロ・バルセロナ公式（2017-08-03）＝10/9 でも読んだ**基礎の事実**。本編どうしで同じ文は言い換えてある。
+#   10/12 アザール（レアルが払った額の確度の回）・10/11 マンC・10/14 リヴァプールとは人も題材も重ならない（ジダン・カカ・ロナウド・ベイルはこの回が初）。
+#
+# ★**物差し（冒頭で言い、1つに決めた）**：「**報じられた総額を、ポンドで数える**。ボーナスの達成分は足さない。クラブが額を発表した移籍は、その額と照らす」。
+#   なぜポンドか：BBC・Wikipedia の世界記録の年表が**1893年から2017年までポンドで通っている**唯一の連続した物差しのため。
+#   ユーロ建て・リラ建ての移籍は、当時の報道のポンド額（BBC）を使う。ユーロだと記録の順が変わる例（カカ）は③で断って見せる。
+#
+# ★**クラブの公式発表まで辿れた額（2件）**
+#   ・ネイマール 2億2200万ユーロ：**バルセロナ公式の声明**（fcbarcelona.com/en/football/first-team/news/748497、2017-08-03、原文を読んだ）
+#     「ネイマールの代理人が午後に事務所へ来て、**222 million euros** を本人の名で払った。契約の一方的解除に関して」。
+#     ＝違約金の支払いで、「移籍金の額をクラブが発表した」型ではないが、**額はクラブ公式が認めている**（10/9 の取材で決算でも確認済み）。
+#   ・ポグバ 1億500万ユーロ：**ユヴェントス公式の発表（2016-08-09、PDF を読んだ）**「**€105 million**、2会計年度で支払い。
+#     **所定の条件を満たすと€5 million 増える**。経済効果はソリダリティ・補助費用を除き約€72.6 million のプラス」。**マンU側は額を公表していない**（検索の要約。原文未確認）。
+#     物差しは「ボーナス達成分を足さない」ので**ポグバは1億500万ユーロで数える**（上限の1億1000万は使わない）。
+#   ・ロナウド（2009）：マンU公式サイトが「£80million の無条件のオファーを受けた」と出した、という検索の要約はあるが、**原文は開けていない**。台本は「報じられた」。
+#   ・ジダン（2001）：ユヴェントス・レアルの公式文書は**見つけられなかった**。額は「**約1500億リラ**」と報道（イタリアの記事。検索で見つけた要約。原文未確認）。
+#     **1500億 ÷ 1936.27（リラ／ユーロの固定相場）＝約7747万ユーロ**で、Wikipedia の7750万ユーロと一致（自分で割った）。1936.27 は欧州の固定換算率（原文は開けていない。既知の値）。
+#
+# ★**食い違う額は両方書いた**
+#   ・ジダン（ポンド）：BBC（2013-09-01）**4560万**／Wikipedia の年表 **4660万**／Wikipedia の上位50 **4620万**。台本は BBC の4560万に統一し、100万の差を③で断る。
+#   ・ベイル：BBC **8530万**／Wikipedia の年表 **8600万**／上位50 **8530万**。台本は8530万。
+#   ・ネイマール（ポンド）：Wikipedia の年表・上位50は **2億**、同じ頁の本文は「各紙の換算で**1億9800万**」と書く。台本は2億（物価の計算に使う）で、1億9800万でも結論は変わらない（下の確かめ）。
+#   ・ポグバ：マンU側報道 8930万ポンド（Wikipedia 上位50）／年表は8900万。台本は8930万。
+#
+# ★**自分で数えた所**（Wikipedia「List of most expensive association football transfers」の年表を機械で数えた＋手計算）
+#   ・世界記録の一覧の件数：**51件**（1893 グローヴス〜2017 ネイマール）。年の差：1932→1949＝**17年**（最長。フェレイラ。Wikipedia本文も「最長」と書く）、
+#     2001→2009＝**8年**、1905→1913＝**8年**、1896→1903＝7年、1976→1982＝6年、1914→1920＝6年。それ以外は5年以下。
+#     ネイマール 2017-08-03 → 今日 2026-10-16＝**9年2か月**。年の差でも日付でも、**8年（ジダン→カカは約7年11か月、コモン→シェアは約7年11か月）を超える**。
+#     → 「**1949年以降でいちばん長い／歴代2位**」。注意：Wikipedia の年表は**年だけ**で、1905→1913、2001→2009は日付で確かめていない。
+#     BBC の記事（2013）は「ジダンの記録は8年破られなかった」と書き、Wikipedia 本文も「ジダンの8年は1940年代以来最長」と書く。
+#   ・1893年の100ポンド（グローヴス）→ ネイマール約2億ポンド＝**200万倍**（200,000,000÷100）。1893→2017＝**124年**。
+#   ・1990年のバッジョ（800万ポンド）〜2017年のネイマール：年表に**17件、更新は16回**。27年÷16＝約**1.7年に1回**。2017年以降は**0回（9年）**。
+#   ・物価で直す（**英国の消費者物価指数 CPI、2015年＝100、年平均、ONS系列 D7BT**。取得：ons.gov.uk/generator?format=csv&uri=/economy/inflationandpriceindices/timeseries/d7bt/mm23、2026-10-16。
+#     CPI は1988年から。2025年＝138.4）。**式：当時のポンド × 138.4 ÷ その年の指数**。指数：1990＝55.9、1997＝70.1、2000＝72.7、2001＝73.6、2009＝86.6、2013＝98.5、2016＝100.7、2017＝103.4。
+#       ジダン 45.6×138.4÷73.6＝85.7／カカ 56×138.4÷86.6＝89.5／ロナウド 80×138.4÷86.6＝127.9／ベイル 85.3×138.4÷98.5＝119.9／
+#       ポグバ 89.3×138.4÷100.7＝122.7／ネイマール 200×138.4÷103.4＝267.7（百万ポンド）。
+#     → **ベイル（119.9）もポグバ（122.7）も、物価を直すと2009年のロナウド（127.9）より低い**。名前の上の記録2つは、実質では記録でなかった。
+#     **確かめ（結論が変わらないか）**：ベイルを8600万（Wikipedia年表）にすると 120.9、ポグバを8900万にすると 122.3。どちらもロナウドの127.9に届かない。
+#     ロナウドの8000万ポンド（BBC・Wikipedia一致）を動かす理由は無い。ネイマールを1億9800万にしても 265.0 でロナウドの約2.07倍。
+#     ネイマール 267.7÷127.9＝**約2.09倍**。実質の記録がロナウドからネイマールまで動かなかった期間＝2009→2017＝**8年**。
+#   ・バッジョ（1990）→ネイマール：額面 200÷8＝**25倍**、物価を直すと (200÷103.4)÷(8÷55.9)＝**約13.5倍**（式は 25×55.9÷103.4）。
+#   ・次に起きること：Wikipedia 上位50（2026-09-01更新）の**今夏の最高は エンソ・フェルナンデス（チェルシー→マンC）1億4580万ユーロ**。
+#     記録 222÷145.8＝**約1.52倍**。**予想はしない**（「破るには今夏最高の約1.5倍の額が要る」という条件の話だけ）。
+#     ※10/9 の取材メモ（Transfermarkt）ではエンソは145.0。Wikipedia は145.8。**食い違いは「約1億4600万」と丸めて言う**。
+#
+# **辿れなかったもの（言い切っていない）**
+#   × ジダン・カカ・ロナウド・ベイルの**クラブ公式発表の原文**（額が載っているか不明）。台本は「報じられた」。
+#   × カカのユーロ 6700万は Wikipedia 本文のみ（ミラン公式・他紙の原文は未確認）。台本は「Wikipedia の換算では」と断らず、**表の注に出どころを書く**。
+#   × 1893〜1990年の個々の額は Wikipedia 年表と BBC の写真説明（コモン1000ポンド・ジャック1万890・スアレス15万2000・サヴォルディ120万・マラドーナ300万と500万）。
+#     BBC の写真説明で **コモン・ジャック・サヴォルディ・マラドーナ・ジダン・カカ・ロナウド**は一致を確かめた。グローヴス100ポンドとフェレイラ2万3000ポンドは Wikipedia のみ。
+#   × 物価指数は**英国のもの**。スペイン・イタリアのクラブ間の移籍にも英国の物価を当てている（ポンドで数える物差しのため。台本で断る）。年平均で、取引の月は見ていない。
+#   × 「記録を更新した移籍は51件」は **Wikipedia の一覧の件数**で、公式の数ではない。台本は「一覧に51件」と言う。
+#   × ネイマールの移籍金の額の内訳（代理人など）は触れない（10/9 の回）。
+#
+# 他人の声は使わない。voice_min: 0。反応は集めていない。ブラウザの道具・JavaScript は使っていない（requests と WebFetch／WebSearch のみ）。
+# アルファベットは読み上げに出さない（ポンド・ユーロ・リラは書き下す）。
+#
+# ★写真：assets/images/20261016_record_transfer_fee/neymar/01.jpg（Commons の File:Neymar PSG.jpg、CC BY-SA 2.0、Antoine Dellenbach、2017年）。
+#   パリ・サンジェルマンの入団披露で、背番号入りの「NEYMAR JR」のシャツを持つ本人。目で確かめた。顔の切り出し（01_w／01_v）は facecrop で作り、頭と顎が入っているのを目で見た。
+#   1578px幅なので、サムネ・本編の冒頭は 1920px に対し約1.22倍（1.6倍以内）。
+#   ほかの人（ジダン・カカ・ロナウド・ベイル）の写真は、時代の合うものが取れなかったので出さない（ロナウド 2026年・ジダン 2015年・ベイル 2008年（148px）は不採用）。
+# サムネ：下の案A〜C（ユーザーが選ぶ）。ここには案Aを入れてある。
+date: 2026年10月16日
+slot: other_2
+format: news
+series: 記録の解説
+voice_min: 0
+people:
+- ネイマール
+- ジネディーヌ・ジダン
+- カカ
+- クリスティアーノ・ロナウド
+- ガレス・ベイル
+- ポール・ポグバ
+theme:
+  id: record_transfer_fee
+  league: spain
+  league_name: 欧州5大リーグ
+  kind: other
+  topic: 移籍金の世界記録
+  title: ネイマールの移籍金の世界記録は、歴代の更新の中でどれほど大きいのか
+  question: 移籍金の世界記録は、どう更新されてきたのか
+  lead: 移籍金の世界記録は、一覧に51件あります。
+  hook: そのなかで、いまの記録は、歴代2位の長さです。
+  takeaway: 移籍金の世界記録は、一覧で51件。いまの記録は2017年のネイマール、バルセロナからパリ・サンジェルマンへの2億2200万ユーロ（バルセロナ公式）で、9年破られていない。これは1932年からの17年に次ぐ歴代2位の長さ。物差しは、報じられた総額をポンドで数える（ボーナスの達成分は足さない）。ポグバは1億500万ユーロ、条件を満たせば500万ユーロ増えるとユヴェントスが公式に発表している。ジダンは4560万ポンド（BBC）で、Wikipedia の年表は4660万ポンドと食い違う。カカはポンドでは5600万で記録だが、ユーロでは約6700万でジダンの約7750万に届かない。物価で直すと、2025年の物価で、ロナウド（2009年）は約1億2790万ポンド、ベイルは約1億1990万、ポグバは約1億2270万。名前の上の記録だったベイルとポグバは、実質ではロナウドを上回っていない。ネイマールは約2億6770万ポンドでロナウドの約2.1倍。1990年のバッジョから額面で25倍、物価を直すと約13.5倍。いま記録を動かすには、今夏の最高額（エンソ・フェルナンデス、約1億4580万ユーロ）の約1.5倍が要る。
+  opening_image: assets/images/20261016_record_transfer_fee/neymar/01_w.jpg
+short_title: ネイマールの世界記録を、歴代の更新と物価で数える
+thumbnail:
+  layout: face
+  side: left
+  photo: assets/images/20261016_record_transfer_fee/neymar/01_w.jpg
+  short_photo: assets/images/20261016_record_transfer_fee/neymar/01_v.jpg
+  line1: ネイマールの世界記録
+  line2: 破られない長さは歴代●位
+  crests:
+  - パリサンジェルマン
+  - バルセロナ
+  tags:
+  - ネイマール
+  - 移籍金
+  - 世界記録
+  - 記録の解説
+sections:
+- id: top
+  main: true
+  heading: 移籍金の世界記録の基礎DATA
+  tier: 確定
+  official: true
+  telop: ネイマールの記録は、9年破られていない。歴代2位の長さ
+  narrator: キャスター
+  card: &top_stats
+    type: stats
+    title: 移籍金の世界記録（自分で数えた）
+    items:
+    - - '51'
+      - 件
+      - 一覧にある、世界記録を更新した移籍
+    - - '9'
+      - 年
+      - いまの記録が破られていない長さ
+    - - '17'
+      - 年
+      - いちばん長く続いた記録（1932年から）
+    focus: 1
+  say:
+  - text: 移籍金の世界記録は、誰がいくらで更新してきたのか。
+    short_only: true
+  - text: いまの記録は、ネイマールです。
+    emph: true
+    card: none
+  - text: バルセロナからパリ・サンジェルマンへ、2億2200万ユーロ。
+    card: none
+  - text: この記録は、9年たっても破られていません。
+    image: assets/backgrounds/stadium_レアルマドリード.png
+    card:
+      <<: *top_stats
+      focus: 1
+  - text: 世界記録の更新は、一覧に51件あります。
+    card:
+      <<: *top_stats
+      focus: 0
+  - text: いちばん長く続いたのは、1932年からの17年。いまの記録は、それに次ぐ長さです。
+    emph: true
+    card:
+      <<: *top_stats
+      focus: 2
+  - text: 最初に、物差しを1つ決めます。報じられた総額を、ポンドで数えます。
+    card: none
+  - text: ボーナスの達成分は足しません。クラブが額を発表していれば、その額と照らします。
+    card: none
+  sources:
+  - https://fcbarcelona.com/en/football/first-team/news/748497/fc-barcelona-communique-on-neymar-jr
+  - https://en.wikipedia.org/wiki/List_of_most_expensive_association_football_transfers
+- id: history
+  heading: 100ポンドの記録は、どこまで育ったのか
+  tier: 報道
+  telop: 1893年の100ポンドから、2017年の約2億ポンドへ
+  narrator: 解説
+  card: &hist_time
+    type: timeline
+    title: 世界記録の節目（報じられた額）
+    rows: &hist_rows
+    - - 1893年
+      - グローヴス、100ポンド
+    - - 1905年
+      - コモン、初めて1000ポンド
+    - - 1928年
+      - ジャック、1万890ポンド
+    - - 1975年
+      - サヴォルディ、初の100万ポンド超え
+    focus: 1893年
+  say:
+  - text: 世界記録の歴史は、1893年に始まります。
+    image: assets/backgrounds/stadium_レアルマドリード.png
+    card: *hist_time
+  - text: ウィリー・グローヴスが、100ポンドでした。
+    card:
+      <<: *hist_time
+      highlight_row: 0
+  - text: 12年後の1905年、アルフ・コモンが、初めて1000ポンドを超えます。
+    card:
+      <<: *hist_time
+      highlight_row: 1
+  - text: 1928年のデヴィッド・ジャックで、初めて5桁。1万890ポンドでした。
+    card:
+      <<: *hist_time
+      highlight_row: 2
+  - text: 1975年、サヴォルディが、初めて100万ポンドを超えました。
+    card:
+      <<: *hist_time
+      highlight_row: 3
+  - text: 2度破ったのは、マラドーナだけです。
+    image: assets/backgrounds/stadium_レアルマドリード.png
+    card: none
+  - text: 2001年は、ジダンです。ユヴェントスからレアル・マドリードへ移りました。
+    card: &hist_time2
+      type: timeline
+      title: 世界記録の節目（報じられた額）その2
+      rows:
+      - - 2001年
+        - ジダン、4560万ポンド
+      - - 2017年
+        - ネイマール、約2億ポンド
+      focus: 2017年
+      highlight_row: 0
+  - text: そして2017年、ネイマール。ポンドに直すと、約2億になります。
+    emph: true
+    card:
+      <<: *hist_time2
+      highlight_row: 1
+  - text: 100ポンドから約2億ポンドまで、124年。額は200万倍になりました。
+    emph: true
+    card: *hist_time2
+  sources:
+  - https://www.bbc.co.uk/sport/football/23560273
+  - https://www.bbc.co.uk/sport/football/23903470
+  - https://en.wikipedia.org/wiki/List_of_most_expensive_association_football_transfers
+- id: gaps
+  heading: 世界記録は、どのくらい長く破られなかったのか
+  tier: 報道
+  telop: 1位は17年。2位はいまのネイマールで、まだ続いている
+  narrator: 解説
+  card: &gap_bars
+    type: bars
+    title: 世界記録が破られなかった長さ（年の差）
+    unit: 年
+    items:
+    - label: フェレイラ（1932年〜）
+      value: 17
+    - label: ネイマール（2017年〜、継続中）
+      value: 9
+      highlight: true
+    - label: コモン（1905年〜）
+      value: 8
+    - label: ジダン（2001年〜）
+      value: 8
+  say:
+  - text: 記録がどれだけ続いたかを、年の差で数えます。
+    image: assets/backgrounds/stadium_レアルマドリード.png
+    card: *gap_bars
+  - text: 1位は、1932年のベルナベ・フェレイラ。1949年まで続きました。
+    card:
+      <<: *gap_bars
+      highlight: 0
+  - text: アルゼンチンのタイグレから、リーベル・プレートへ。2万3000ポンドの移籍です。
+    card:
+      <<: *gap_bars
+      highlight: 0
+  - text: 8年で並ぶのは、1905年のコモンと、2001年のジダンです。
+    card:
+      <<: *gap_bars
+      highlight: 2
+  - text: いまのネイマールは、まだ続いているのに、その8年を超えています。
+    emph: true
+    card:
+      <<: *gap_bars
+      highlight: 1
+  - text: 1949年以降に限れば、最長の記録になります。
+    card:
+      <<: *gap_bars
+      highlight: 1
+  - text: 反対に、1990年から2017年は、更新が速い時代でした。
+    image: assets/backgrounds/stadium_レアルマドリード.png
+    card: none
+  - text: 27年で16回。平均すると、1.7年に1回、記録が変わっています。
+    emph: true
+    card: &gap_calc
+      type: calc
+      title: 1990年から2017年の、更新の間隔（自分で割った）
+      terms:
+      - - 27年
+        - 1990年から2017年
+      - - 16回
+        - 記録の更新
+      - - 1.7年
+        - 1回あたりの間隔
+      ops:
+      - ÷
+      - ＝
+  - text: その間隔が、ここ9年は、ずっと止まったままです。
+    card: *gap_calc
+  sources:
+  - https://en.wikipedia.org/wiki/List_of_most_expensive_association_football_transfers
+  - https://www.bbc.co.uk/sport/football/23903470
+- id: scale
+  heading: 記録の額は、どこまでが公式の数字なのか
+  tier: 報道
+  telop: 公式で額が確かめられたのは2件。ポンドとユーロで、更新の順が変わる
+  narrator: 解説
+  card: &scale_table
+    type: table
+    title: 記録の額と、出どころ
+    columns: &scale_cols
+    - 移籍
+    - 額
+    - 出どころ
+    rows: &scale_rows
+    - - ネイマール 2017
+      - 2億2200万ユーロ
+      - バルセロナ公式
+    - - ポグバ 2016
+      - 1億500万ユーロ
+      - ユヴェントス公式
+    - - ベイル 2013
+      - 8530万ポンド
+      - 報道
+    - - ロナウド 2009
+      - 8000万ポンド
+      - 報道
+    - - ジダン 2001
+      - 4560万ポンド
+      - 報道
+  say:
+  - text: ところで、この額は、どこまでが公式の数字でしょうか。
+    image: assets/backgrounds/stadium_レアルマドリード.png
+    card: *scale_table
+  - text: クラブが公式に認めたと確かめられたのは、2件です。
+    card:
+      <<: *scale_table
+      highlight_row: 0
+  - text: ネイマールは、バルセロナが声明を出しました。額は、さきほどの数字どおりです。
+    card:
+      <<: *scale_table
+      highlight_row: 0
+  - text: ポグバは、ユヴェントスが発表しています。額は1億500万ユーロ。
+    card:
+      <<: *scale_table
+      highlight_row: 1
+  - text: 条件を満たせば500万ユーロ増えると、発表にありました。足さずに数えます。
+    card:
+      <<: *scale_table
+      highlight_row: 1
+  - text: ベイル、ロナウド、ジダンは、報じられた額です。
+    card:
+      <<: *scale_table
+      highlight_row: 3
+  - text: ジダンの額は、4560万ポンドとされます。年表では4660万ポンド。
+    card:
+      <<: *scale_table
+      highlight_row: 4
+  - text: ポンドで数えるか、ユーロで数えるかでも、記録の順が変わります。
+    image: assets/backgrounds/stadium_レアルマドリード.png
+    card: none
+  - text: カカは2009年にミランから移り、5600万ポンドで、ジダンを超えました。
+    card: &cur_table
+      type: table
+      title: 同じ移籍を、ポンドとユーロで並べる（百万）
+      columns: [選手, ポンド, ユーロ]
+      rows: &cur_rows
+      - - ジダン 2001
+        - '45.6'
+        - '77.5'
+      - - カカ 2009
+        - '56'
+        - '67'
+      - - ロナウド 2009
+        - '80'
+        - '94'
+      highlight_row: 1
+      note: ポンドは BBC、ユーロは Wikipedia の一覧の換算
+  - text: ところがユーロだと、約6700万。ジダンの約7750万に届きません。
+    emph: true
+    card:
+      <<: *cur_table
+      highlight_row: 1
+    mark:
+      kind: circle
+      row: 1
+      col: 2
+  - text: 同じ移籍が、ポンドでは記録で、ユーロでは記録になりません。
+    card:
+      <<: *cur_table
+      highlight_row: 1
+  - text: 次の見立てでは、物差しをポンドに固定して、物価も直します。
+    image: assets/backgrounds/stadium_レアルマドリード.png
+    card: none
+  sources:
+  - https://fcbarcelona.com/en/football/first-team/news/748497/fc-barcelona-communique-on-neymar-jr
+  - https://www.juventus.com/images/image/private/fl_attachment/dev/aimxrfsfsremm3zqx0fv.pdf
+  - https://www.bbc.co.uk/sport/football/23903470
+  - https://en.wikipedia.org/wiki/List_of_most_expensive_association_football_transfers
+- id: view
+  viewpoint: true
+  heading: 見立て・物価で直すと、世界記録はどう変わるか
+  tier: 背景
+  telop: ベイルとポグバは、物価で直すとロナウドを上回らない
+  narrator: 解説
+  card: &real_line
+    type: line
+    title: 世界記録の額（百万ポンド）
+    x: ['1990', '1996', '2000', '2001', '2009', '2013', '2016', '2017']
+    series:
+    - [当時の額, [8, 15, 37, 45.6, 80, 85.3, 89.3, 200]]
+    - [2025年の物価, [19.8, 30.2, 70.4, 85.7, 127.9, 119.9, 122.7, 267.7]]
+    focus: 2025年の物価
+    peak: true
+    badges:
+    - {series: 当時の額, at: '2001', crest: レアルマドリード}
+    - {series: 当時の額, at: '2009', crest: レアルマドリード}
+    - {series: 当時の額, at: '2016', crest: マンチェスターユナイテッド}
+    - {series: 当時の額, at: '2017', crest: パリサンジェルマン}
+    note: 年ごとの最高額。年の間隔は一定ではない
+  say:
+  - text: 最後に、物価を直して数えます。
+    image: assets/backgrounds/stadium_レアルマドリード.png
+    card: *real_line
+  - text: 使うのは、イギリスの消費者物価指数。統計局の年平均です。
+    card: *real_line
+  - text: 当時のポンドに、2025年の指数を、その年の指数で割った倍率を掛けます。
+    card: &real_table
+      type: table
+      title: 物価で直した世界記録（百万ポンド）
+      columns: [移籍, 当時, 2025年の物価で]
+      rows: &real_rows
+      - - ジダン 2001
+        - '45.6'
+        - '85.7'
+      - - カカ 2009
+        - '56'
+        - '89.5'
+      - - ロナウド 2009
+        - '80'
+        - '127.9'
+      - - ベイル 2013
+        - '85.3'
+        - '119.9'
+      - - ポグバ 2016
+        - '89.3'
+        - '122.7'
+      - - ネイマール 2017
+        - '200'
+        - '267.7'
+      highlight_row: 2
+      note: 英国の消費者物価指数（2015年＝100、年平均）。2025年は138.4
+  - text: ロナウドの8000万ポンドは、2009年の指数86.6で割ります。
+    card:
+      <<: *real_table
+      highlight_row: 2
+  - text: 答えは、1億2790万ポンド。ベイルは1億1990万、ポグバは1億2270万です。
+    card:
+      <<: *real_table
+      highlight_row: 3
+  - text: どちらも、名前の上では世界記録でした。けれど、物価を直すとロナウドより低いのです。
+    emph: true
+    card:
+      <<: *real_table
+      highlight_row: 2
+    mark:
+    - {kind: circle, row: 3, col: 2}
+    - {kind: circle, row: 4, col: 2}
+  - text: ベイルを8600万、ポグバを8900万に変えても、結果は同じでした。
+    image: assets/backgrounds/stadium_レアルマドリード.png
+    card: none
+  - text: つまり、物価を直した記録は、ロナウドから、ネイマールまで動いていません。
+    card:
+      <<: *real_table
+      highlight_row: 2
+  - text: ネイマールは約2億6770万ポンド。ロナウドの、約2.1倍です。
+    emph: true
+    card:
+      <<: *real_table
+      highlight_row: 5
+  - text: 1990年のバッジョと比べると、額面は25倍。物価を直すと、約13.5倍です。
+    card: &real_calc
+      type: calc
+      title: バッジョ（1990年）からネイマール（2017年）まで（自分で割った）
+      terms:
+      - - 25倍
+        - 額面（200÷8）
+      - - 13.5倍
+        - 物価を直した倍率
+      ops:
+      - →
+  - text: では、次に記録が動くには、何が要るのでしょうか。
+    image: assets/backgrounds/stadium_レアルマドリード.png
+    card: none
+  - text: 今夏の最高額は、エンソ・フェルナンデスの約1億4600万ユーロ。
+    card: &next_calc
+      type: calc
+      title: 記録は、今夏の最高額の何倍か（自分で割った）
+      terms:
+      - - 2億2200万ユーロ
+        - いまの記録
+      - - 1億4580万ユーロ
+        - 今夏の最高額
+      - - 1.52倍
+        - 記録の大きさ
+      ops:
+      - ÷
+      - ＝
+  - text: 記録を破るには、その約1.5倍の額が要る、ということです。
+    emph: true
+    card: *next_calc
+  sources:
+  - https://www.ons.gov.uk/generator?format=csv&uri=/economy/inflationandpriceindices/timeseries/d7bt/mm23
+  - https://www.bbc.co.uk/sport/football/23903470
+  - https://en.wikipedia.org/wiki/List_of_most_expensive_association_football_transfers

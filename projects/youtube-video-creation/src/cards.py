@@ -134,7 +134,7 @@ def same_table(a: dict | None, b: dict | None) -> bool:
 
 # **書き込み（赤ペン）を足せる型**（2026-10-07、src/marks.py）。項目の番号・列で指す
 MARKABLE_TYPES = ("table", "verdict", "bars", "stats", "calc", "points", "scatter", "convert",
-                  "line", "waterfall", "timeline")
+                  "line", "waterfall", "timeline", "duel", "shelf", "document")
 
 
 def mark_units(spec: dict | None) -> int:
@@ -162,6 +162,10 @@ def mark_units(spec: dict | None) -> int:
         return len(waterfall_rows(spec))
     if kind == "timeline":
         return min(TIMELINE_ROWS_MAX, len(timeline_rows(spec)))
+    if kind in ("duel", "shelf"):                 # 2026-10-15。行で指す（`col:` は 左の値・項目・右の値）
+        return min(DUEL_ROWS_MAX, len(duel_rows(spec)))
+    if kind == "document":                        # 段落で指す
+        return len(document_paragraphs(spec))
     return 0
 
 
@@ -188,6 +192,10 @@ def mark_columns(spec: dict | None) -> list[str]:
         return ["名前", "段", "値"]
     if kind == "timeline":
         return ["年", "できごと"]
+    if kind in ("duel", "shelf"):
+        return ["左の値", "項目", "右の値"]
+    if kind == "document":
+        return ["本文"]
     return []
 
 

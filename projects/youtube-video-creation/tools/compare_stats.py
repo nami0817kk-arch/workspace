@@ -88,8 +88,12 @@ def _num(value):
         return None
 
 
-def conditions(ctx: list[dict], min_minutes: int = MIN_MINUTES) -> tuple[list[str], list[str]]:
-    """(条件の一言の一覧, 比べられない理由の一覧)。理由が空なら比べてよい。"""
+def conditions(ctx: list[dict], min_minutes: int = MIN_MINUTES,
+               allow_season_gap: bool = False) -> tuple[list[str], list[str]]:
+    """(条件の一言の一覧, 比べられない理由の一覧)。理由が空なら比べてよい。
+
+    **シーズンが違う2人は比べない**（2026-10-15、三笘＝去年のシーズン1721分とサカ＝今季508分が「比べられる」と出た）。
+    「同じ年齢で並べる」など、別のシーズンを並べること自体が主題の回だけ `allow_season_gap` で許す。"""
     notes, blockers = [], []
     names = [c["name"] or "?" for c in ctx]
     for c in ctx:
@@ -105,7 +109,11 @@ def conditions(ctx: list[dict], min_minutes: int = MIN_MINUTES) -> tuple[list[st
     if len(leagues) > 1:
         notes.append(f"大会が違います（{' / '.join(f'{c['name']}={c['league']}' for c in ctx)}）。リーグの強さが違う点を言う")
     if len(seasons) > 1:
-        notes.append(f"シーズンが違います（{' / '.join(f'{c['name']}={c['season']}' for c in ctx)}）")
+        text = f"シーズンが違います（{' / '.join(f'{c['name']}={c['season']}' for c in ctx)}）"
+        if allow_season_gap:
+            notes.append(text + "。別のシーズンを並べること自体を主題にする回として出す")
+        else:
+            blockers.append(text + "。90分あたりは同じシーズンどうしでしか比べられない（今季の数字が無い側は、まだ出ていない）")
     if len(groups) > 1:
         blockers.append(f"位置の群が違います（{' / '.join(f'{c['name']}={c['group']}' for c in ctx)}）。パーセンタイルの物差しが違う")
     for c in ctx:
@@ -195,6 +203,8 @@ def main(argv: list[str]) -> int:
     ap.add_argument("b")
     ap.add_argument("--names", nargs=2, default=None, help="日本語名を2つ（既定は FotMob の英語名）")
     ap.add_argument("--min", type=int, default=MIN_MINUTES, help="これ未満の出場時間は比べない（分）")
+    ap.add_argument("--allow-season-gap", action="store_true",
+                    help="シーズンが違っても比べる（「同じ年齢で並べる」など、別のシーズンを並べること自体が主題の回だけ）")
     ap.add_argument("--out", default="", help="控えの出力先（JSON）")
     args = ap.parse_args(argv)
 
@@ -203,7 +213,7 @@ def main(argv: list[str]) -> int:
     names = list(args.names) if args.names else [c["name"] for c in ctx]
     for c, n in zip(ctx, names):
         c["name"] = n
-    notes, blockers = conditions(ctx, args.min)
+    notes, blockers = conditions(ctx, args.min, args.allow_season_gap)
 
     print("■ 条件")
     for n in notes:

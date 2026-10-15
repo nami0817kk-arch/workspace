@@ -1,4 +1,5 @@
 # ラ・リーガ チーム紹介 ⑭オサスナ（2026-09-27）。形は見本のレアル・ソシエダと同じ。
+# 2026-10-16 に直した：10/12 にラミス監督が退き、ハゴバ・アラサテが復帰（クラブ公式 osasuna.es 2026-10-12・13）。いま見る理由・監督・特徴の1行目・サムネの文字を差し替え。今季のここまでは第8節まで（ESPN、standings.json も第8節に更新）
 # 事実はすべて research/ll_data/osasuna_research.md（出典付き）から。
 # 「季」は合成音声が「き」と読むので使わない。アルファベットは読み上げに残さない
 # 題の答え＝3部（1976-77 Tercera）から9シーズン後の1985-86に初めてヨーロッパの大会（UEFA杯）へ。
@@ -13,31 +14,32 @@ opening: "ラ・リーガでただひとつ、バスク語の名前。"
 hook: このクラブのマスコットは、一度捨てられています。
 thumbnail:
   line1: 3部から9シーズンで欧州へ
-  line2: ブディミルのいるオサスナ
+  line2: 監督交代のオサスナ
   crest_main: [オサスナ]
 
-# いま見る理由。監督の言葉はクラブ公式 2026-09-18（ラージョ戦の前日会見）の原文
-# 「Hay que dar tres pasos hacia adelante, no uno. No estamos para dar uno.」
+# いま見る理由。10/12 にクラブ公式が「ラミスは続けない」と発表し、アラサテ（2018-24 の監督）が2029年6月までの契約で復帰。
+# アラサテの言葉は 10/13 の就任会見（クラブ公式）の原文
+# 「siento que Osasuna me necesita y siento que puedo ayudar a Osasuna」
 reasons:
-- "クロアチア代表のブディミルは9月、1部通算**100得点**に届きました。"
-- "**5連敗**で終えた昨シーズン。1部が初めてのラミス新監督は、こう求めます。"
-- {voice: ルイス・ミゲル・ラミス, text: "前に出るのは一歩ではなく三歩だ。一歩で済む状況ではない"}
+- "オサスナは10月12日、ラミス監督が退くことになりました。"
+- "後任は、古巣に戻るハゴバ・アラサテ。会見で、こう話しました。"
+- {voice: ハゴバ・アラサテ, text: "オサスナは私を必要としていると感じます。私は力になれると感じます"}
 # 「1977年まで」「1985年」と年で言うと耳では8年に聞こえるので、控えの数え方（1976-77 から9シーズン後の 1985-86）どおりシーズンで言う（2026-09-27 流れの点検）
 - "オサスナは**1976年**から77年のシーズンに3部。その**9シーズン**後に、ヨーロッパへ。"
 reasons_focus: [1, 2, 2, 3]
-reasons_telop: 通算100得点のエースと、1部が初めての監督
+reasons_telop: シーズン途中の監督交代と、古巣に戻る監督
 reasons_rows:
-- ["理由1", "ブディミル、通算100得点"]
-- ["理由2", "5連敗のあと、新しい監督"]
+- ["理由1", "6月就任の監督が退任"]
+- ["理由2", "アラサテが2年ぶりに復帰"]
 - ["理由3", "3部から9シーズンで欧州へ"]
 reasons_sources:
-- https://www.osasuna.es/cronica-osasunarayo-2026/27
-- https://www.osasuna.es/rueda-prensa-osasuna-rayo-2026-27
-- https://www.osasuna.es/luis-miguel-ramis-nuevo-entrenador-de-osasuna
+- https://www.osasuna.es/luis-miguel-ramis-no-continuara-como-entrenador-de-osasuna
+- https://www.osasuna.es/jagoba-arrasate-2029
+- https://www.osasuna.es/jagoba-arrasate-osasuna-rueda-prensa-presentacion-13-10-2026
 - https://es.wikipedia.org/wiki/Club_Atl%C3%A9tico_Osasuna
 - https://en.wikipedia.org/wiki/CA_Osasuna
 people_extra:
-- ルイス・ミゲル・ラミス
+- ハゴバ・アラサテ
 
 # 基礎DATA。話す順は20クラブ共通（創立→愛称→ホームタウン→本拠地→会長→タイトル歴→記録→直近→昨季）
 data:
@@ -139,17 +141,17 @@ story_sections:
 
 # このクラブの特徴（プレーの色・運営の型・クラブの気質）
 features:
-- "ラミス監督は、守りから入る監督。前のチームは、2部で失点がいちばん少なかった。"
+- "新しい監督は、練習の進め方に自分たちの型があると話しています。"
 - "ピッチの外は、地元で育てる型。"
 - "ナバラ州の**100**を超えるクラブと手を組んで、選手を育てています。"
 - "スタジアムの改修案も、会員の投票で選びました。投票率は**75**パーセントです。"
-features_telop: 守りから入る。地元で育てる。改修も投票で
+features_telop: 練習から型をつくる。地元で育てる。改修も投票で
 features_rows:
-- ["プレーの色", "守りから入る"]
+- ["プレーの色", "練習から独自の型を"]
 - ["運営の型", "ナバラの100超のクラブと"]
 - ["クラブの気質", "改修案も投票で決める"]
 features_sources:
-- https://www.osasuna.es/luis-miguel-ramis-nuevo-entrenador-de-osasuna
+- https://www.osasuna.es/jagoba-arrasate-osasuna-rueda-prensa-presentacion-13-10-2026
 - https://es.wikipedia.org/wiki/Club_Atl%C3%A9tico_Osasuna
 - https://www.osasuna.es/historia-de-el-sadar
 
@@ -194,16 +196,20 @@ legend_sources:
 - - https://en.wikipedia.org/wiki/C%C3%A9sar_Azpilicueta
 - - https://en.wikipedia.org/wiki/Mikel_Merino
 
-# 今季の監督
+# 今季の監督（2026-10-12 に交代）。クラブ公式 2026-10-12（jagoba-arrasate-2029）・10-13（就任会見）、英語版 Jagoba Arrasate
 manager:
-- 今シーズンの監督は、スペインのルイス・ミゲル・ラミス。**2026年6月**の就任です。
-- 前は2部のブルゴス。契約は**2028年**までの2年です。
-manager_telop: 監督はラミス。前は2部のブルゴス
+- 今シーズンの監督は、10月12日に就任したハゴバ・アラサテ。契約は**2029年**6月までです。
+- 2018年から6年間、**256試合**を指揮しました。2部優勝も国王杯の決勝も、この人の下です。
+- そのあとのマジョルカでは、今年2月に解任されています。
+- 強化部長は、会見で「再び動き出すための火花が要る」と話しました。
+manager_telop: 監督はアラサテ。2年あまりぶりの復帰
 manager_rows:
-- ["監督", "ルイス・ミゲル・ラミス（スペイン）"]
-- ["就任", "2026年6月"]
-- ["前職", "ブルゴス（2部）"]
+- ["監督", "ハゴバ・アラサテ（スペイン）"]
+- ["就任", "2026年10月12日"]
+- ["前職", "マジョルカ（今年2月まで）"]
+- ["契約", "2029年6月まで"]
 manager_sources:
-- https://en.wikipedia.org/wiki/Luis_Miguel_Ramis
-- https://www.osasuna.es/luis-miguel-ramis-nuevo-entrenador-de-osasuna
+- https://www.osasuna.es/jagoba-arrasate-2029
+- https://www.osasuna.es/jagoba-arrasate-osasuna-rueda-prensa-presentacion-13-10-2026
+- https://en.wikipedia.org/wiki/Jagoba_Arrasate
 features_marks: [1, 3]

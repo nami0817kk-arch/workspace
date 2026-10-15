@@ -1,0 +1,679 @@
+# スタジアム紹介シリーズ⑥：チェルシーの本拠地（スタンフォード・ブリッジ、10/16）。雛形は 10/14 ブライトン回（research/20261014_stadium_brighton.yaml）。
+# 節の並び：オープニング → 基礎DATA(main・強い一点を頭に) → 生まれ（年表）→ 建て直し28年（年表）→ ここで起きた日（表）→ 計画が止まった所（年表＋文書カード＋増減）→ 見立て（自分で数えた比べ）
+#
+# 強い一点：**最多の入場は 82,905人（1935-10-12 アーセナル戦。クラブ公式の記録）。いまの収容は 40,044人（プレミア公式ハンドブック2026/27）。
+#   82,905 ÷ 40,044 = 2.0704 →「2.07倍」。40,044 ÷ 82,905 = 0.4830 →「半分以下」。**
+#   確度は**報道**（クラブ公式ページ・プレミア公式の資料まで辿ったが、最多入場のクラブ公式ページは原文を読めず＝Wikipedia 経由。tier は報道に留めた）。
+#
+# **重なりで外したもの（クラブ紹介⑥チェルシー 2026-09-20 公開 / 9-16 の旧台本が読んだ話）**
+#   クラブ紹介は「スタジアムが先にあった」を題にし、**1904年にガス・ミアーズが手に入れた・フラムに借りないかと持ちかけて断られた・
+#   だからクラブを作った・本拠地の土地とクラブ名の権利はサポーターの会社が持つ（開発業者への売却を防ぐ）・収容4万44人**を読んでいる。
+#   この回は **フラムの断り・「スタジアムが先」の筋・「売却を防ぐ」の一言**を言わない。ミアーズ兄弟は「権利を手に入れた」の1行だけ（公式の歴史の事実）。
+#   CPO は**新しい中身だけ**（会社ができた日＝Companies House、住宅やスーパーが建つ恐れ、2011年の投票、クラブ名の条件）。収容 4万44人 は同じ数字だが、この回の主役（記録との差）なので外せない。
+#
+# **言わないと決めたもの**
+#   **女子（チェルシー女子の本拠地入り 2026-27、1924年女子オリンピアード、2013年女子CL決勝）は扱わない**（2026-09-16 指示）。
+#   **クラブ公式の stadium-history ページ**（chelseafc.com/en/stadium-history）は本文を読めた（research/raw/20261016_stadium_chelsea_official_history.md）。年表の大半はこれ。
+#   **公式の「General information」ページは収容を 40,022 と書く**（取得 2026-10-16）。プレミア公式ハンドブック2026/27は 40,044（開幕時）。
+#     食い違い（22人）の理由は未確認。台本は 40,044（ハンドブック・Wikipedia）だけ。**40,022 は言わない。**
+#   **PL公式の試合データに 2024-12-01 ヴィラ戦で入場 40,853**（当時の収容 40,173 を超える。2018-19 の収容 40,853 と同じ数字で、入力の誤りの疑い）。使わない。
+#   **2018-05-31 の「計画保留」声明は、クラブ公式ページ（chelseafc.com/en/news/2018/5/31/stadium-plans-on-hold）が今は 404 で読めず**、Wikipedia の引用（英文）で確かめた。
+#     文書カードはその引用の訳（「…」を含む抜粋）。**クラブの原文を直接は読めていない**。
+#   **2018年より後の計画（2022-07 新オーナーが建築家を任命、2023-07 隣のサー・オズワルド・ストール・マンションズの買収合意）は報道のみ**。
+#     最新の公式発表まで辿れなかったので**台本に書かない**（指示：報道の推測は書かない）。
+#   「1905年の初年は6万人の観客」はクラブ公式ページの文（"a 60,000 crowd in the first year"）。数えた数字ではなく、「とクラブは書いています」。
+#   1945年のディナモ・モスクワ戦の入場「10万人超」は Wikipedia の**推定**（公式の最多 82,905 とは別）。日は 11月とだけ（Wikipedia は日付を書かない・未確認）。
+#   2010-11 の収容 42,449 は Wikipedia のシーズン表のみ（原典の PL ハンドブック2010-11 は未取得）→「とされています」。
+#   Wikipedia の「12番目に大きい」「（収容）12.5エーカー」等は使わない。
+#   1982年のケン・ベイツが「1ポンドで買った」は Wikipedia のみ。公式ページは「early 1980s」なので**年を言わず「1980年代の初め」**。
+#
+# 自分で数えた・割った（検算した）:
+#   82,905 ÷ 40,044 = 2.0704／40,044 ÷ 82,905 = 0.4830／
+#   プレミア20クラブの今季開幕時の収容（PL ハンドブック2026/27、20クラブ全部を抽出）を大きい順に並べて、チェルシーは **9番目**（上に8・下に11）。合計 822,365 ÷ 20 = 41,118.25、平均との差 41,118.25 − 40,044 = 1,074（≒1074人）／
+#   ロンドンの6クラブ（アーセナル62,850→トッテナム…）：トッテナム 62,850・アーセナル 60,704・チェルシー 40,044・フラム 28,107・パレス 25,194・ブレントフォード 17,250 → **3番目**／
+#   2025-26 ホーム19試合の入場（PL公式の試合データ）：合計 752,432 ÷ 19 = 39,601.68 →「3万9602人」（Wikipedia の表も 39,602）／
+#   39,601.68 ÷ 40,044 = 0.98895 →「98.9％」／最多 39,820（2025-11-30 アーセナル）・最少 39,253（2026-02-10 リーズ）→ 差 567 = 567 ÷ 40,044 = 1.416％ →「1.4％」／
+#   62,850 ÷ 40,044 = 1.5695 →「1.57倍」／
+#   42,449 − 40,343 = 2,106／40,343 − 40,044 = 299／42,449 − 40,044 = 2,405（−5.67%）／
+#   1973 着工 → 2001/02 完成 ＝ およそ28年（公式：「begun way back in 1973」）。
+#
+# 写真：assets/images/20261016_stadium_chelsea/（credits.json 同梱）。下地は assets/backgrounds/stadium_チェルシー_in.png（Commons: Neil Theasby, CC BY-SA 2.0）。
+# サムネは案を3つ出してユーザーに決めてもらう（2026-10-11）。ここに書いた thumbnail は案A。
+date: 2026年10月16日
+slot: other_1
+format: news
+series: スタジアム紹介
+voice_min: 0
+people: []
+theme:
+  id: stadium_chelsea
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: チェルシー
+  title: チェルシーの本拠地、最多の観客は今の収容の2倍。何があったのか
+  question: 10万人を見込んだ競技場は、なぜ4万人の本拠地になったのか
+  lead: 10万人を見込んで生まれた、ロンドン西部の競技場。
+  hook: ''
+  opening_image: assets/images/20261016_stadium_chelsea/01_w.jpg
+  end_bg: assets/images/20261016_stadium_chelsea/01_w.jpg
+  takeaway: チェルシーの本拠地、スタンフォード・ブリッジは、最多の入場が1935年の8万2905人で、今季の開幕時の収容は4万44人。最多は、いまの収容の2.07倍にあたる。もとは1877年に開いた陸上競技の会場で、計画した収容は10万人だった。1973年に始めた建て直しは、東スタンドだけで止まり、土地は一時、別の会社の持ち物になった。1992年に土地がクラブに戻り、4つの辺がそろったのは2001年から02年のシーズン。およそ28年かかった。6万席の新スタジアム計画は、2018年5月にクラブが保留を発表している。昨季のリーグ戦ホーム19試合の平均入場は3万9602人で、収容の98.9％にあたる。収容はプレミア20クラブの9番目、ロンドンの6クラブでは3番目。次の本拠地戦は10月24日のトッテナム戦で、トッテナムの本拠地の収容は、チェルシーの1.57倍になる
+short_title: チェルシーの本拠地、最多の観客は今の収容の2倍
+thumbnail:
+  layout: scene
+  callouts:
+  - 収容は半分以下？
+  photo: assets/images/20261016_stadium_chelsea/02_w.jpg
+  band: bottom
+  line1: チェルシー本拠地
+  line2: 最多は●●●●●人入った
+  crests:
+  - チェルシー
+  tags:
+  - チェルシー
+  - スタンフォード・ブリッジ
+  - プレミアリーグ
+  - スタジアム紹介
+sections:
+- id: data
+  main: true
+  heading: スタンフォード・ブリッジは、なぜ記録の半分の収容なのか
+  tier: 報道
+  telop: 最多の入場は8万2905人。いまの収容は4万44人
+  narrator: キャスター
+  card: &id_data
+    type: table
+    title: チェルシーの本拠地の基礎DATA
+    columns: &cols_data
+    - 項目
+    - 内容
+    rows: &rows_data
+    - - 収容人数
+      - 4万44人（今季の開幕時）
+    - - 最多の入場
+      - 8万2905人（1935年）
+    - - 開場
+      - 1877年4月28日
+    - - 場所
+      - ロンドン西部 フラム
+    - - 最寄り駅
+      - フラム・ブロードウェイ駅
+    - - ピッチ
+      - 縦103×横67.5メートル
+  say:
+  - text: ロンドン西部、チェルシーの本拠地の話です。
+    short_only: true
+  - text: ここの最多の入場は、8万2905人。今の収容は、4万44人です。
+    emph: true
+    card: &id_stats
+      type: stats
+      title: 最多は、いまの収容の2倍
+      items:
+      - - '82905'
+        - 人
+        - 最多の入場（1935年）
+      - - '40044'
+        - 人
+        - 今季の開幕時の収容
+      - - '2.07'
+        - 倍
+        - 最多は、今の収容の何倍か
+      focus: 0
+  - text: 最多は、今の収容の2.07倍。収容は、記録の半分以下に縮んでいます。
+    emph: true
+    card:
+      <<: *id_stats
+      focus: 2
+  - text: 開場は1877年。もとは、陸上の会場。
+    card:
+      type: table
+      title: チェルシーの本拠地の基礎DATA
+      columns: *cols_data
+      rows: *rows_data
+      highlight_row: 2
+  - text: 最寄りは、地下鉄のフラム・ブロードウェイ駅。
+    card:
+      type: table
+      title: チェルシーの本拠地の基礎DATA
+      columns: *cols_data
+      rows: *rows_data
+      highlight_row: 4
+  - text: ピッチは、縦103メートル、横67.5メートルです。
+    card:
+      type: table
+      title: チェルシーの本拠地の基礎DATA
+      columns: *cols_data
+      rows: *rows_data
+      highlight_row: 5
+  sources:
+  - https://resources.premierleague.pulselive.com/premierleague/document/2026/07/31/8a890ff9-176c-4364-a8ff-e08f995e2c86/TM2040_PL-Handbook-and-Collateral-2026-27_Digital_31.07.pdf
+  - https://www.chelseafc.com/en/general-information
+  - https://en.wikipedia.org/wiki/Stamford_Bridge_(stadium)
+- id: origin
+  heading: スタンフォード・ブリッジは、もとは何のための場所だったのか
+  tier: 背景
+  telop: 1877年は陸上の会場。計画した収容は10万人
+  narrator: 解説
+  card: &id_origin
+    type: timeline
+    title: 開場から、立ち見の丘がなくなるまで
+    rows: &rows_origin
+    - - 1877年4月
+      - 陸上競技の会場として開く
+    - - 1904年
+      - ミアーズ兄弟が権利を手に入れる
+    - - 1905年
+      - クラブが生まれる
+    - - 1930年代
+      - 南の立ち見に屋根がつく
+    - - 1945年
+      - 北東に、高く持ち上げた席ができる
+    - - 1965年
+      - 西側に6000席あまりのスタンド
+    focus: 1904年
+  say:
+  - text: スタンフォード・ブリッジが開いたのは、1877年4月28日です。
+    image: assets/images/20261016_stadium_chelsea/03_w.jpg
+    card: none
+  - text: 使っていたのは、ロンドン・アスレチック・クラブ。陸上のレースに使われました。
+    card: none
+  - text: 1904年、ミアーズ兄弟が、この会場の権利を手に入れます。
+    card:
+      <<: *id_origin
+      highlight_row: 1
+  - text: サッカーを開くために、となりの土地も買い足していました。
+    card:
+      <<: *id_origin
+      highlight_row: 1
+  - text: 設計は、アーチボルド・リーチ。各地の競技場を手がけた建築家です。
+    card:
+      <<: *id_origin
+      highlight_row: 1
+  - text: 計画した収容は、10万人でした。
+    emph: true
+    callword: 10万人
+    card: none
+  - text: 当時のイングランドで、クリスタル・パレスに次ぐ、2番目の大きさです。
+    card: none
+  - text: 屋根のある席は、東側の5000人ぶんだけ。ほかの3辺は、開けた大きな丘でした。
+    card: none
+  - text: 地下鉄の工事で出た土を盛って、立ち見の席にしたものです。
+    card: none
+  - text: ピッチのまわりを、トラックが囲んでいました。観客は、ピッチから遠かった。
+    card: none
+  - text: クラブが生まれたのは、1905年。
+    card:
+      <<: *id_origin
+      highlight_row: 2
+  - text: 初めの年には、6万人の観客が入ったと、クラブは書いています。
+    card:
+      <<: *id_origin
+      highlight_row: 2
+  - text: 1930年代には、南の立ち見の席に屋根がつきます。
+    card:
+      <<: *id_origin
+      highlight_row: 3
+  - text: 犬のレースを開く団体が、賭けをする人のために付けた屋根でした。
+    card:
+      <<: *id_origin
+      highlight_row: 3
+  - text: いまの「シェッド」という呼び名は、この屋根の形から来ています。
+    card:
+      <<: *id_origin
+      highlight_row: 3
+  - text: 1965年には、西側に6000席あまりのスタンドが建ちました。
+    card:
+      <<: *id_origin
+      highlight_row: 5
+  sources:
+  - https://www.chelseafc.com/en/stadium-history
+  - https://en.wikipedia.org/wiki/Stamford_Bridge_(stadium)
+- id: rebuild
+  heading: なぜ、観客席を全部そろえるのに28年もかかったのか
+  tier: 背景
+  telop: 1973年に東スタンドから着工。4辺がそろうのは2001年
+  narrator: 解説
+  card: &id_rebuild
+    type: timeline
+    title: 建て直しの歩み
+    rows: &rows_rebuild
+    - - 1974年
+      - 東スタンドだけ完成
+    - - 1980年代初め
+      - クラブが売られ、土地は別会社へ
+    - - 1992年
+      - 開発業者が破産、土地が戻る
+    - - 1994年
+      - 北スタンドが開く
+    - - 1997年
+      - 南のシェッドが開く
+    - - 2001年
+      - 西スタンドが完成
+    focus: 2001年
+  say:
+  - text: 1970年代の初め、クラブは、建て直しを決めます。
+    image: assets/backgrounds/cut_チェルシー.png
+    card: none
+  - text: 全体を、6万人の全席イス席にする計画でした。
+    image: assets/images/20261016_stadium_chelsea/04_w.jpg
+    card: none
+  - text: 最初は東側から。ところが、工事の遅れと費用の増加が重なります。
+    card: none
+  - text: 建てる側には、スタジアムの経験がありませんでした。
+    card: none
+  - text: 東スタンドは、1974年に開きます。でも、建て直しはそこで止まりました。
+    card:
+      <<: *id_rebuild
+      highlight_row: 0
+  - text: この費用が、クラブを破産寸前まで追い込みました。
+    card:
+      <<: *id_rebuild
+      highlight_row: 0
+  - text: 1980年代の初め、クラブは、実業家のケン・ベイツに買われます。
+    card:
+      <<: *id_rebuild
+      highlight_row: 1
+  - text: ところが、土地は、別の会社の持ち物になっていました。
+    card:
+      <<: *id_rebuild
+      highlight_row: 1
+  - text: 元の役員が、その会社の株を、開発業者に売っていたのです。
+    card:
+      <<: *id_rebuild
+      highlight_row: 1
+  - text: 土地に、住宅やスーパーが建つかもしれない。
+    emph: true
+    card:
+      <<: *id_rebuild
+      highlight_row: 1
+  - text: ほかのクラブと、本拠地を分けるかもしれない。
+    card:
+      <<: *id_rebuild
+      highlight_row: 1
+  - text: 法廷の争いは、およそ10年。「橋を守れ」という募金の運動まで生まれました。
+    card:
+      <<: *id_rebuild
+      highlight_row: 1
+  - text: 1992年、不動産の暴落で、開発業者のほうが破産します。
+    emph: true
+    card:
+      <<: *id_rebuild
+      highlight_row: 2
+  - text: 土地は、クラブに戻りました。
+    card:
+      <<: *id_rebuild
+      highlight_row: 2
+  - text: 翌1993年3月には、チェルシー・ピッチ・オーナーズという会社が作られます。
+    card:
+      <<: *id_rebuild
+      highlight_row: 2
+  - text: 二度と、同じ目にあわないための仕組みです。
+    card:
+      <<: *id_rebuild
+      highlight_row: 2
+  - text: 北スタンドが開いたのは、1994年11月。
+    image: assets/images/20261016_stadium_chelsea/05_w.jpg
+    card:
+      <<: *id_rebuild
+      highlight_row: 3
+  - text: 2年後、出資で建設を助けた副会長、マシュー・ハーディングの名前がつきました。
+    card:
+      <<: *id_rebuild
+      highlight_row: 3
+  - text: 南のシェッドは、1997年に座席の席になります。
+    card:
+      <<: *id_rebuild
+      highlight_row: 4
+  - text: 最後は西スタンド。下の段は、予定どおり建ちました。
+    card:
+      <<: *id_rebuild
+      highlight_row: 5
+  - text: ところが、市との許可の問題で、残りは2年止まります。
+    card:
+      <<: *id_rebuild
+      highlight_row: 5
+  - text: 4つの辺がそろったのは、2001年から02年のシーズンの開幕です。
+    emph: true
+    card:
+      <<: *id_rebuild
+      highlight_row: 5
+  - text: 東スタンドの着工から数えて、およそ28年です。
+    emph: true
+    card:
+      <<: *id_rebuild
+      highlight_row: 5
+  sources:
+  - https://www.chelseafc.com/en/stadium-history
+  - https://find-and-update.company-information.service.gov.uk/company/02800546
+  - https://en.wikipedia.org/wiki/Stamford_Bridge_(stadium)
+  - https://en.wikipedia.org/wiki/Chelsea_Pitch_Owners
+- id: matches
+  heading: スタンフォード・ブリッジで、いちばん人が集まった日はいつか
+  tier: 報道
+  telop: 決勝戦3回、公式の最多、10万人超の夜。いまは3万人台
+  narrator: キャスター
+  card: &id_match
+    type: table
+    title: スタンフォード・ブリッジで起きた6つの日
+    columns: &cols_match
+    - 日付
+    - 試合
+    - 入場
+    rows: &rows_match
+    - - 1920年4月24日
+      - FAカップ決勝 ヴィラ対ハダースフィールド
+      - 5万18人
+    - - 1921年4月23日
+      - FAカップ決勝 トッテナム対ウルヴス
+      - 7万2805人
+    - - 1922年4月29日
+      - FAカップ決勝 ハダースフィールド対プレストン
+      - 5万3000人
+    - - 1935年10月12日
+      - リーグ戦 アーセナル（最多）
+      - 8万2905人
+    - - 1945年11月
+      - 親善試合 ディナモ・モスクワ（推定）
+      - 10万人超
+    - - 2025年11月30日
+      - リーグ戦 アーセナル（昨季の最多）
+      - 3万9820人
+  say:
+  - text: ここで起きた日を、時代の順に見ていきます。
+    image: assets/images/20261016_stadium_chelsea/06_w.jpg
+    card: *id_match
+  - text: 1920年から22年に、FAカップの決勝が3回。入場は、どれも今の収容より上。
+    card:
+      type: table
+      title: スタンフォード・ブリッジで起きた6つの日
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 0
+  - text: 21年は、トッテナムがウルヴァーハンプトンを1対0で下しました。
+    card:
+      type: table
+      title: スタンフォード・ブリッジで起きた6つの日
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 1
+  - text: 入場は、3回のうち最多でした。
+    card:
+      type: table
+      title: スタンフォード・ブリッジで起きた6つの日
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 1
+  - text: 22年は、ウェンブリーができる前の、最後の決勝でした。
+    card:
+      type: table
+      title: スタンフォード・ブリッジで起きた6つの日
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 2
+  - text: 1935年10月12日、アーセナル戦。公式に数えた、最多の入場が出た日です。
+    emph: true
+    card:
+      type: table
+      title: スタンフォード・ブリッジで起きた6つの日
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 3
+  - text: 1945年11月には、ソ連のディナモ・モスクワが、親善試合で来ました。
+    card:
+      type: table
+      title: スタンフォード・ブリッジで起きた6つの日
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 4
+  - text: 3対3の引き分け。入場は、10万人を超えたと推定されています。
+    emph: true
+    card:
+      type: table
+      title: スタンフォード・ブリッジで起きた6つの日
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 4
+  - text: 犬のレースのトラックや、スタンドの上にまで、人があふれたとされています。
+    card:
+      type: table
+      title: スタンフォード・ブリッジで起きた6つの日
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 4
+  - text: いまの本拠地は、その逆です。
+    card: none
+  - text: 昨季のリーグ戦の最多は、11月30日のアーセナル戦。3万9820人でした。
+    card:
+      type: table
+      title: スタンフォード・ブリッジで起きた6つの日
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 5
+  sources:
+  - https://sdp-prem-prod.premier-league-prod.pulselive.com/api/v1/competitions/8/seasons/2025/matchweeks/13/matches
+  - https://en.wikipedia.org/wiki/1920_FA_Cup_final
+  - https://en.wikipedia.org/wiki/1921_FA_Cup_final
+  - https://en.wikipedia.org/wiki/1922_FA_Cup_final
+  - https://en.wikipedia.org/wiki/FC_Dynamo_Moscow%27s_1945_tour_of_the_United_Kingdom
+  - https://en.wikipedia.org/wiki/Stamford_Bridge_(stadium)
+- id: plan
+  heading: 6万席の新スタジアム計画は、どこで止まったのか
+  tier: 報道
+  telop: 2015年に6万席の計画を発表。2018年5月に保留
+  narrator: 解説
+  card: &id_plan
+    type: timeline
+    title: 新スタジアム計画の歩み
+    rows: &rows_plan
+    - - 2011年10月
+      - 土地を持つ会社の株主が、権利の売却を断る
+    - - 2012年5月
+      - バタシー発電所の跡地を買う申し出
+    - - 2015年12月
+      - 同じ場所で6万席の建て替えを発表
+    - - 2017年
+      - 区の議会と市長が許可
+    - - 2018年5月
+      - クラブが計画を保留
+    focus: 2018年5月
+  say:
+  - text: スタンフォード・ブリッジを大きくする話は、何度も出ています。
+    image: assets/images/20261016_stadium_chelsea/07_w.jpg
+    card: none
+  - text: 2011年10月、クラブは、土地の権利を買い戻したいと提案しました。
+    card:
+      <<: *id_plan
+      highlight_row: 0
+  - text: 土地を持つ会社の株主は、売らないと決めます。
+    card:
+      <<: *id_plan
+      highlight_row: 0
+  - text: ほかの場所へ移ると、クラブの名前は、自由に使えなくなります。
+    card:
+      <<: *id_plan
+      highlight_row: 0
+  - text: 株主の4分の3の同意が要る、とされています。
+    card:
+      <<: *id_plan
+      highlight_row: 0
+  - text: 2012年5月には、バタシー発電所の跡地を買う申し出をします。
+    card:
+      <<: *id_plan
+      highlight_row: 1
+  - text: 6万席を作る考えでしたが、受け入れられませんでした。
+    card:
+      <<: *id_plan
+      highlight_row: 1
+  - text: 2015年12月、いまの場所に、6万席のスタジアムを建てると発表します。
+    card:
+      <<: *id_plan
+      highlight_row: 2
+  - text: 設計は、ミュンヘンのアリアンツ・アレーナを手がけた、スイスの事務所でした。
+    card:
+      <<: *id_plan
+      highlight_row: 2
+  - text: 2017年には、区の議会とロンドン市長が、建築を許可しました。
+    card:
+      <<: *id_plan
+      highlight_row: 3
+  - text: ところが、2018年5月31日、クラブは、計画を止めます。
+    emph: true
+    card:
+      type: document
+      label: チェルシー 声明（2018年5月31日。英文の引用を訳した）
+      paragraphs:
+      - チェルシー・フットボールクラブは本日、新スタジアムの計画を保留したと発表する。
+      - これ以上、建設前の設計や計画の作業は行わない。
+      - クラブは、この判断を見直す時期を決めていない。
+      - 判断の理由は、現在の投資環境が不利なことである。
+      highlight:
+      - 保留
+      - 見直す時期を決めていない
+  - text: 建設前の設計や計画の作業は、これ以上しない。見直す時期も、決めていない。
+    card:
+      type: document
+      label: チェルシー 声明（2018年5月31日。英文の引用を訳した）
+      paragraphs:
+      - チェルシー・フットボールクラブは本日、新スタジアムの計画を保留したと発表する。
+      - これ以上、建設前の設計や計画の作業は行わない。
+      - クラブは、この判断を見直す時期を決めていない。
+      - 判断の理由は、現在の投資環境が不利なことである。
+      highlight:
+      - 保留
+      - 見直す時期を決めていない
+  - text: 理由は、いまの投資の環境が不利なことでした。
+    card:
+      type: document
+      label: チェルシー 声明（2018年5月31日。英文の引用を訳した）
+      paragraphs:
+      - チェルシー・フットボールクラブは本日、新スタジアムの計画を保留したと発表する。
+      - これ以上、建設前の設計や計画の作業は行わない。
+      - クラブは、この判断を見直す時期を決めていない。
+      - 判断の理由は、現在の投資環境が不利なことである。
+      highlight:
+      - 保留
+      - 見直す時期を決めていない
+  - text: このあとの計画で、クラブの発表まで確かめられたものは、ここでは扱いません。
+    card: none
+  - text: そのあいだに、収容は、少しずつ小さくなっています。
+    card: &id_wf
+      type: waterfall
+      title: 収容は、どう減ったか（自分で引いた）
+      start:
+      - 2010年度の収容
+      - 42449
+      steps:
+      - - 2022年の開幕までに
+        - -2106
+      - - 今季の開幕までに
+        - -299
+      total:
+      - 今季の開幕時
+      - 40044
+      unit: 人
+  - text: 2010年度は、4万2449人とされています。
+    card: *id_wf
+  - text: 2022年の開幕時は、4万343人です。
+    card: *id_wf
+  - text: 差は、2106人。そこから今季までに、さらに299人減りました。
+    emph: true
+    card: *id_wf
+  - text: 合わせて2405人、5.7％の減り方です。
+    card: *id_wf
+  sources:
+  - https://en.wikipedia.org/wiki/Stamford_Bridge_(stadium)
+  - https://en.wikipedia.org/wiki/Chelsea_F.C.
+  - https://resources.premierleague.com/premierleague/document/2022/07/19/40085fed-1e9e-4c33-9f14-0bcf57857da2/PL_Handbook_2022-23_DIGITAL_18.07.pdf
+  - https://resources.premierleague.pulselive.com/premierleague/document/2026/07/31/8a890ff9-176c-4364-a8ff-e08f995e2c86/TM2040_PL-Handbook-and-Collateral-2026-27_Digital_31.07.pdf
+- id: view
+  viewpoint: true
+  heading: 見立て・4万人の器は、どこまで満員なのか
+  tier: 報道
+  telop: 昨季の平均入場は収容の98.9％。収容は20クラブで9番目
+  narrator: 解説
+  card: &id_rank
+    type: table
+    title: 今季の収容、20クラブの順位（自分で並べた）
+    columns: &cols_rank
+    - 順位
+    - クラブ
+    - 収容
+    rows: &rows_rank
+    - - 7位
+      - ニューカッスル
+      - 5万2729人
+    - - 8位
+      - サンダーランド
+      - 4万8095人
+    - - 9位
+      - チェルシー
+      - 4万44人
+    - - 10位
+      - リーズ
+      - 3万7633人
+    - - 11位
+      - アストン・ヴィラ
+      - 3万6887人
+  say:
+  - text: ここからは、数字を自分で並べて比べます。
+    image: assets/images/20261016_stadium_chelsea/02_w.jpg
+    card: *id_rank
+  - text: 今季の収容を、20クラブぶん上から並べます。
+    card: *id_rank
+  - text: チェルシーは9番目。上に8クラブ、下に11クラブです。
+    emph: true
+    mark:
+      kind: circle
+      row: 2
+    card:
+      type: table
+      title: 今季の収容、20クラブの順位（自分で並べた）
+      columns: *cols_rank
+      rows: *rows_rank
+      highlight_row: 2
+  - text: 20クラブの平均より、1074人だけ小さい数です。
+    card:
+      type: table
+      title: 今季の収容、20クラブの順位（自分で並べた）
+      columns: *cols_rank
+      rows: *rows_rank
+      highlight_row: 2
+  - text: ロンドンの6クラブでは3番目。上にいるのは、トッテナムとアーセナル。
+    card:
+      type: table
+      title: 今季の収容、20クラブの順位（自分で並べた）
+      columns: *cols_rank
+      rows: *rows_rank
+      highlight_row: 2
+  - text: 次に、入場を見ます。昨季のホーム19試合の平均は、3万9602人でした。
+    card: &id_fill
+      type: calc
+      title: 昨季の平均入場と収容（自分で割った）
+      terms:
+      - - 3万9602人
+        - 昨季のホーム19試合の平均入場
+      - - 4万44人
+        - 昨季の開幕時の収容
+      - - 98.9％
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+  - text: 平均入場を、収容で割ります。答えは、98.9％です。
+    emph: true
+    card: *id_fill
+  - text: 19試合のうち、いちばん多い日と少ない日の差は、567人。収容の1.4％です。
+    card: *id_fill
+  - text: 相手がアーセナルでもリーズでも、ほぼ満員。
+    card: *id_fill
+  - text: 次の本拠地戦は、10月24日。相手はトッテナムです。
+    emph: true
+    card: none
+  - text: トッテナムの本拠地の収容は、チェルシーの1.57倍です。
+    card: none
+  - text: 1921年の決勝で、ここで勝った相手でもあります。
+    card: none
+  sources:
+  - https://resources.premierleague.pulselive.com/premierleague/document/2026/07/31/8a890ff9-176c-4364-a8ff-e08f995e2c86/TM2040_PL-Handbook-and-Collateral-2026-27_Digital_31.07.pdf
+  - https://sdp-prem-prod.premier-league-prod.pulselive.com/api/v1/competitions/8/seasons/2025/matchweeks/1/matches
+  - https://sdp-prem-prod.premier-league-prod.pulselive.com/api/v1/competitions/8/seasons/2026/matchweeks/8/matches

@@ -1,0 +1,6 @@
+title: ブカヨ・サカの今季のシュート
+unit: xG
+shots=17
+goals=3
+xg=3.62
+source: FotMob

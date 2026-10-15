@@ -9,8 +9,8 @@
   "file": "osasuna_legend_418029b9.jpg",
   "source": "wikimedia",
   "person": "ジャバド・ネクナム",
-  "subject_check": "未確認（取り込んだ人が目で確かめること）",
-  "note": "切り出し 300,120,1060,853"
+  "subject_check": "2026-10-16 目で確認（イラン代表のシャツ、英語版 Javad Nekounam 記事の代表画像）",
+  "note": "切り出し 300,120,1060,853（1280幅換算）。2026-10-16 に大きい版から切り直した（本編の引き伸ばし 2.53倍→解消）。顔・シャツ(I.R.IRAN)は目で確認"
  },
  {
   "title": "File:2021-12-08 - FC Zenit Saint Petersburg v Chelsea F.C. - Photo 002 (cropped).jpg",
@@ -48,5 +48,18 @@
   "person": "ルイス・ミゲル・ラミス",
   "subject_check": "未確認（取り込んだ人が目で確かめること）",
   "note": "切り出し 0,70,350,600"
+ },
+ {
+  "title": "File:Jagoba Arrasate (octubre de 2013) (cropped).jpg",
+  "author": "rubénortegavega",
+  "license": "CC BY-SA 2.0",
+  "page_url": "https://commons.wikimedia.org/wiki/File:Jagoba_Arrasate_(octubre_de_2013)_(cropped).jpg",
+  "image_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ed/Jagoba_Arrasate_%28octubre_de_2013%29_%28cropped%29.jpg/1280px-Jagoba_Arrasate_%28octubre_de_2013%29_%28cropped%29.jpg",
+  "page": "Jagoba Arrasate",
+  "file": "osasuna_manager_arrasate.jpg",
+  "source": "wikimedia",
+  "person": "ハゴバ・アラサテ",
+  "subject_check": "2026-10-16 目で確認（英語版記事 Jagoba Arrasate の代表画像。2013年10月、会見の写真）",
+  "note": "切り出し 0,40,1280,1560 → 850x1010"
  }
 ]

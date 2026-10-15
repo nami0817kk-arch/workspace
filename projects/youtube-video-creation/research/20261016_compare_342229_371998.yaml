@@ -1,0 +1,258 @@
+# 取材メモ（10/16 金、シリーズ「比べる」、key: compare_342229_371998、型は news）。エムバペ×ヴィニシウス（同じレアル・マドリード）。
+# 2026-10-16 に雛形（player_compare.py）を書き直した（金曜は 10/16。最初に 10/17 と書いたのは曜日の誤り）。バレバ×カマラは、バレバが今季1試合31分でスタッツが無く外した。
+# 材料の控え: research/raw/20261017_compare_stats.json（compare_stats.py。FotMob のラ・リーガ今季、90分あたりとパーセンタイル）。
+#   FotMob 番号: エムバペ 701154・ヴィニシウス 846033。Transfermarkt 番号: エムバペ 342229・ヴィニシウス 371998。
+# **範囲を混ぜない**：スタッツ（90分あたり・xG・合計）は FotMob の**ラ・リーガのみ**（今季2026/27・8試合。エムバペ720分・ヴィニシウス585分）。
+#   Transfermarkt の「全大会」の合計（エムバペ959分・ヴィニシウス923分）とは別。市場価値・タイトルは Transfermarkt。
+# 条件（compare_stats.py）: 同じクラブ・同じ大会・同じシーズン・同じ位置の群（同じFW）。900分に届かないので「いまの時点」と言う。
+# 年齢別の市場価値は Transfermarkt の推移（年齢ごとの最高値）。タイトルは Transfermarkt の実績ページ（2026-10-16 に取得）。
+# 出場停止（ヴィニシウス）は research/20261015_vinicius_ban.yaml の出典（Marca・ESPN・BBC。連盟の決定文）。
+# 写真: エムバペ＝Commons（2026年8月30日、ラ・リーガ・マラガ戦、CC BY-SA 4.0、Jester77aa08）。人が目で確かめた（レアルの10番）。
+#   ヴィニシウス＝10/15 のショートで使った Commons の写真（ブラジル代表のユニフォーム）。**ほかに今季の写真が無かった**。
+# 反応: 取れていない（作らない）。本人の言葉は使わない回（数字で比べる回）。
+slot: other_1
+date: "2026年10月16日"
+format: news
+series: 比べる
+people:
+  - エムバペ
+  - ヴィニシウス
+  - レアル・マドリード
+
+theme:
+  id: compare_342229_371998
+  league: spain
+  kind: other
+  topic: エムバペとヴィニシウス
+  prefix: ""
+  title: エムバペとヴィニシウス、同じレアルで同じ8試合。ゴール期待値は、どれだけ違うのか
+  hook: ""
+  question: 同じレアル・マドリードの2人は、ゴール期待値でどれだけ違うのか
+  takeaway: 同じボックスで90分に10回以上受けている2人なのに、ゴール期待値は90分あたり1.1と0.47で2倍以上。シュート1本あたりの質が0.20と0.13で、得点は期待値より2人とも約2点少ない
+  league_name: ラ・リーガ
+  opening_image: assets/images/20261016_cmp_pair/01.jpg
+
+short_title: エムバペとヴィニシウス、同じ8試合で数字を並べる
+
+thumbnail:
+  layout: versus
+  photo: assets/images/20261016_cmp_pair/01.jpg
+  photos:
+    - assets/images/20261016_mbappe/01_w.jpg
+    - assets/images/20261016_vinicius/01_w.jpg
+  names: [エムバペ, ヴィニシウス]
+  face_link: VS
+  line1: 同じレアルの2人
+  line2: 期待値の差は●●倍
+  callouts: [同じ8試合, 同じボックスで受ける]
+  tags: [エムバペ, ヴィニシウス, レアル・マドリード]
+
+answer: ゴール期待値は90分あたり1.1と0.47で、2倍以上。得点はどちらも期待値より約2点少ない
+watch: ヴィニシウスは4試合の出場停止（18日セビージャ戦・25日クラシコ・11月のラシン戦とバレンシア戦を欠場）。次に2人が並んで出る試合
+
+sections:
+  - id: data
+    heading: 同じレアルの2人は、いま何歳で、いくらの選手か
+    tier: 報道
+    telop: 同じレアルの2人
+    narrator: キャスター
+    card:
+      type: duel
+      left: {name: エムバペ, club: レアル・マドリード, photo: assets/images/20261016_mbappe/01_sq.jpg}
+      right: {name: ヴィニシウス, club: レアル・マドリード, photo: assets/images/20261016_vinicius/01_sq.jpg}
+      rows:
+        - [年齢, 27歳, 26歳]
+        - [身長, 1.80m, 1.76m]
+        - [ポジション, センターフォワード, 左ウイング]
+        - [市場価値, 2億€, 1.3億€]
+        - [契約満了, 2029年, 2032年]
+      bars: [市場価値]
+    say:
+      - text: 同じレアルの2人なのに、ゴール期待値は2倍以上違います。
+        image: assets/images/20261016_cmp_pair/01.jpg
+      - text: 同じレアル・マドリードの2人を、リーグ戦の数字で並べます。
+        image: assets/images/20261016_cmp_pair/01.jpg
+      - エムバペは27歳、ヴィニシウスは26歳です。
+      - 市場価値は、2億ユーロと1.3億ユーロです。
+      - 同じクラブ、同じ大会、同じ試合に出ているので、条件がそろいます。
+    sources:
+      - https://www.transfermarkt.com/kylian-mbappe/profil/spieler/342229
+      - https://www.transfermarkt.com/vinicius-junior/profil/spieler/371998
+
+  - id: season
+    main: true
+    heading: 今季のリーグ戦、90分あたりで並べると何が違うのか
+    tier: 報道
+    telop: ラ・リーガ今季8試合
+    narrator: 解説
+    card:
+      type: duel
+      left: {name: エムバペ, club: 720分, photo: assets/images/20261016_mbappe/01_sq.jpg}
+      right: {name: ヴィニシウス, club: 585分, photo: assets/images/20261016_vinicius/01_sq.jpg}
+      rows:
+        - [得点（90分あたり）, "0.88", "0.15"]
+        - [シュート（90分あたり）, "5.5", "3.5"]
+        - [パス成功率, 87%, 79%]
+        - [ラインを破るパス（90分あたり）, "0.25", "0.31"]
+        - [ドリブル成功（90分あたり）, "3.6", "2.2"]
+        - [ボールタッチ（90分あたり）, "54.0", "49.4"]
+        - [タックル（90分あたり）, "0.38", "0.92"]
+        - [かわされた回数（90分あたり）, "0.25", "0.92"]
+      lower: [かわされた回数（90分あたり）]
+      note: ラ・リーガ 今季8試合のみ。エムバペ720分・ヴィニシウス585分
+    say:
+      - text: 同じレアルのエムバペとヴィニシウスを、今季のリーグ戦の数字で比べます。
+        short_only: true
+        image: assets/backgrounds/stadium_レアルマドリード.png
+      - text: 今季のラ・リーガは、2人とも8試合に出ています。
+        image: assets/backgrounds/stadium_レアルマドリード.png
+      - 出場時間は、エムバペが720分、ヴィニシウスが585分です。
+      - そこで、すべて90分あたりに直して並べます。
+      - 得点は、エムバペが0.88、ヴィニシウスが0.15です。
+      - パス成功率は、87%と79%でした。
+    sources:
+      - https://www.fotmob.com/players/701154/kylian-mbappe
+      - https://www.fotmob.com/players/846033/vinicius-junior
+
+  - id: create
+    heading: 決める側と、つくる側。チャンスを作る数は逆だった
+    tier: 報道
+    telop: 打つエムバペ、つくるヴィニシウス
+    narrator: 解説
+    card:
+      type: duel
+      left: {name: エムバペ, club: 90分あたり, photo: assets/images/20261016_mbappe/01_sq.jpg}
+      right: {name: ヴィニシウス, club: 90分あたり, photo: assets/images/20261016_vinicius/01_sq.jpg}
+      rows:
+        - [シュート, "5.5", "3.5"]
+        - [xG（ゴール期待値）, "1.11", "0.47"]
+        - [チャンス創出, "1.4", "2.0"]
+        - [xA（アシスト期待値）, "0.26", "0.27"]
+      note: ラ・リーガ 今季8試合。xG・xA は FotMob の期待値
+    say:
+      - エムバペは90分に5.5本打ち、ゴール期待値は1.1です。
+      - ヴィニシウスのシュートは3.5本、期待値は0.47でした。
+      - 一方、チャンス創出は、ヴィニシウスが2.0回、エムバペが1.4回です。
+      - アシスト期待値は0.26と0.27で、ほぼ同じです。
+    sources:
+      - https://www.fotmob.com/players/701154/kylian-mbappe
+      - https://www.fotmob.com/players/846033/vinicius-junior
+
+  - id: gap
+    heading: 得点は、ゴール期待値より、どれだけ少ないのか
+    tier: 報道
+    telop: 得点とゴール期待値の差
+    narrator: 解説
+    card:
+      type: duel
+      left: {name: エムバペ, club: 合計, photo: assets/images/20261016_mbappe/01_sq.jpg}
+      right: {name: ヴィニシウス, club: 合計, photo: assets/images/20261016_vinicius/01_sq.jpg}
+      rows:
+        - [得点, "7", "1"]
+        - [xG（ゴール期待値）, "8.85", "3.05"]
+        - [差（得点−xG）, "-1.85", "-2.05"]
+      bars: false
+      note: ラ・リーガ 今季8試合の合計。差は自分で引いた値
+    say:
+      - 今度は、90分あたりではなく、今季の合計で見ます。
+      - 得点は、エムバペが7、ヴィニシウスが1です。
+      - ゴール期待値は、8.85と3.05でした。
+      - 差を引くと、エムバペはマイナス1.85、ヴィニシウスはマイナス2.05です。
+      - 2人とも、チャンスの数に対して、点がおよそ2つ足りていません。
+    sources:
+      - https://www.fotmob.com/players/701154/kylian-mbappe
+      - https://www.fotmob.com/players/846033/vinicius-junior
+
+  - id: value
+    heading: 市場価値は、年齢でどう動いたのか
+    tier: 報道
+    telop: 年齢ごとの最高値
+    narrator: 解説
+    card:
+      type: line
+      title: 市場価値（百万ユーロ。年齢ごとの最高値）
+      x: [18歳, 20歳, 22歳, 24歳, 26歳]
+      series:
+        - [エムバペ, [90, 200, 160, 180, 200]]
+        - [ヴィニシウス, [70, 50, 150, 200, 130]]
+      focus: エムバペ
+      peak: true
+      badges:
+        - {series: エムバペ, at: 18歳, crest: パリ・サンジェルマン}
+        - {series: エムバペ, at: 26歳, crest: レアル・マドリード}
+        - {series: ヴィニシウス, at: 18歳, crest: レアル・マドリード}
+    say:
+      - 市場価値は、年齢ごとの最高値で並べます。
+      - エムバペは19歳で2億ユーロに届き、いまも2億ユーロです。
+      - ヴィニシウスは24歳で2億ユーロ。その後、いまの値まで下がりました。
+      - 同じレアルでも、2人の値の動きは逆です。
+    sources:
+      - https://www.transfermarkt.com/kylian-mbappe/marktwertverlauf/spieler/342229
+      - https://www.transfermarkt.com/vinicius-junior/marktwertverlauf/spieler/371998
+
+  - id: titles
+    heading: タイトルは、どちらが多いのか
+    tier: 報道
+    telop: タイトルの数
+    narrator: 解説
+    card:
+      type: shelf
+      left: {name: エムバペ, club: 個数, photo: assets/images/20261016_mbappe/01_sq.jpg}
+      right: {name: ヴィニシウス, club: 個数, photo: assets/images/20261016_vinicius/01_sq.jpg}
+      rows:
+        - [国内リーグ優勝, "7", "3"]
+        - [CL優勝, "0", "2"]
+        - [W杯優勝, "1", "0"]
+        - [クラブW杯優勝, "0", "2"]
+        - [UEFAスーパーカップ, "1", "2"]
+        - [国内カップ優勝, "4", "1"]
+        - [国内スーパーカップ, "3", "3"]
+      note: Transfermarkt の実績ページ（2026年10月16日時点）
+    say:
+      - リーグ優勝は、エムバペが7回、ヴィニシウスが3回です。
+      - チャンピオンズリーグは、ヴィニシウスが2回、エムバペは0回。
+      - W杯の優勝は、エムバペだけが1回です。
+      - クラブW杯は、ヴィニシウスが2回でした。
+    sources:
+      - https://www.transfermarkt.com/kylian-mbappe/erfolge/spieler/342229
+      - https://www.transfermarkt.com/vinicius-junior/erfolge/spieler/371998
+
+  - id: view
+    viewpoint: true
+    heading: 見立て・同じ場所で受ける2人の差は、シュート1本の質にあった
+    tier: 背景
+    telop: ボックスで受ける数は同じ。質が違う
+    narrator: 解説
+    card: &viewcard
+      type: duel
+      left: {name: エムバペ, club: 90分あたり, photo: assets/images/20261016_mbappe/01_sq.jpg}
+      right: {name: ヴィニシウス, club: 90分あたり, photo: assets/images/20261016_vinicius/01_sq.jpg}
+      rows:
+        - [ボックス内のタッチ, "11.6", "10.5"]
+        - [シュート, "5.5", "3.5"]
+        - [1本あたりのxG, "0.20", "0.13"]
+      bars: [ボックス内のタッチ, シュート, 1本あたりのxG]
+      note: ラ・リーガ 今季8試合。1本あたりのxG はxG÷シュート数（自分で割った値）
+    say:
+      - text: 相手ボックス内のタッチは、90分に11.6回と10.5回で、ほぼ同じです。
+        card: *viewcard
+      - text: 2人は、同じ場所でボールを受けています。
+        card: *viewcard
+      - text: 違うのは、シュート1本の質です。
+        card: *viewcard
+      - text: ゴール期待値をシュート数で割ると、0.20と0.13でした。
+        card: *viewcard
+        mark:
+          - {kind: circle, row: 2, col: 左の値}
+          - {kind: circle, row: 2, col: 右の値}
+      - text: 同じ場所で受けても、エムバペのほうが、点になりやすい形で打っています。
+        card: *viewcard
+      - text: ヴィニシウスは、18日のセビージャ戦と25日のクラシコを欠場します。
+        card: *viewcard
+      - text: 11月のラシン戦とバレンシア戦も含めて、4試合の出場停止です。
+        card: *viewcard
+    sources:
+      - https://www.fotmob.com/players/701154/kylian-mbappe
+      - https://www.fotmob.com/players/846033/vinicius-junior
+      - https://www.marca.com/futbol/real-madrid/2026/10/14/vinicius-pierde-clasico-cuatro-partidos-sancion.html
+      - https://www.espn.com/soccer/story/_/id/50182804/real-madrid-vinicius-junior-suspension-red-card-clasico
