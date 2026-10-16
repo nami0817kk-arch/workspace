@@ -21,6 +21,10 @@ short_telops:
   text: 13日トロワ戦/無得点でも2対0の勝ち
 - match: 2勝2敗
   text: 9月に出た4試合/リールは2勝2敗
+- match: 左足裏の断裂
+  text: 15日の報道/初期検査で左足裏の断裂の疑い
+- match: まだ報じられていません
+  text: 追加検査の診断は/まだ報じられず
 short_hook: 上田綺世、リールの9月月間MVPに。
 thumbnail_line1: 上田綺世、リール月間MVP
 thumbnail_line2: 3ゴールの試合、チームは●●
@@ -76,6 +80,8 @@ sources:
 - https://lepetitlillois.com/2026/09/21/ueda-dessus-andre-difficulte-notes-presse-ogc-nice-losc/
 - https://www.losc.fr/actualites/2026-09-13/losc-estac-le-compte-rendu
 - https://lepetitlillois.com/2026/10/15/losc-vers-plusieurs-semaines-dabsence-pour-ayase-ueda/
+- https://web.gekisaka.jp/news/world/detail/?461104-461104-fl
+- https://www.soccerdigestweb.com/news/detail/id=198545
 quote_sources:
 - https://www.losc.fr/actualites/2026-10-15/ayase-ueda-dogue-du-mois-de-septembre
 - https://www.soccer-king.jp/news/world/fra/20261015/2217143.html
@@ -171,5 +177,21 @@ cards:
   image: assets/images/20261016_ueda_lille_mvp/01.jpg
 キャスター: 9月の数字を見ると、上田が点を取った試合で、チームが勝ったとは限りません。
   telop: 9月の数字を見ると、上田が点を取った試合で、チームが勝ったとは限りません
+  card: none
+  image: assets/images/20261016_ueda_lille_mvp/01.jpg
+
+## 上田のけがの報道
+@bg: assets/backgrounds/stock/stadium_night.mp4
+
+キャスター: 上田は初期検査で左足裏の断裂が疑われたと、15日に報じられました。
+  telop: 上田は初期検査で左足裏の断裂が疑われたと、15日に報じられました
+  source: 報道
+  image: assets/images/20261016_ueda_lille_mvp/01.jpg
+解説: 断裂が確認されれば、数週間の離脱の可能性があるといいます。
+  telop: 断裂が確認されれば、数週間の離脱の可能性があるといいます
+  card: none
+  image: assets/images/20261016_ueda_lille_mvp/01.jpg
+キャスター: 追加検査の診断は、まだ報じられていません。
+  telop: 追加検査の診断は、まだ報じられていません
   card: none
   image: assets/images/20261016_ueda_lille_mvp/01.jpg

@@ -23,6 +23,13 @@
 # 反応（ネット民）: 取れなかった。当たった先＝サッカーキング・FOOTBALL ZONE・フットボールチャンネルの記事、リール公式サイト、
 #   「上田綺世 月間MVP 反応」の検索（5ch系まとめ・サカラボ・fever-antenna）。この受賞についての書き込みはまだ見つからなかった（検索に出るのは2025年のフェイエノールト時代のまとめのみ）。
 #   Yahoo!ニュースのコメント欄は本文に出ない。X は読まない決まり。→ 作らない。approve は --no-voices "受賞直後で、この件の書き込みが見つからなかった" で通す。
+# けがの報道（2026-10-16 追加。ユーザー指示「入れる」）: Le Petit Lillois 2026-10-15 12:28「Vers plusieurs semaines d'absence pour Ayase Ueda ?」（research/raw/20261016_ueda_absence.html）。
+#   原文: 水曜(14日)にリールに戻ってから受けた最初の検査は「あまり芳しくなかった」。「左足裏の déchirure（断裂）が懸念される」。木曜(15日)は診断の確定と離脱期間を見極める追加検査が続く。断裂が確認されれば「数週間の離脱の可能性」(selon nos informations＝同紙の独自情報)。
+#   日本語での孫引き: ゲキサカ 10/15 22:42（research/raw/20261016_ueda_gekisaka.html。Le Petit Lillois を引き、レキップは「かかと」と伝えていると併記）、サッカーダイジェストWeb 10/15（raw/20261016_ueda_sdweb.html。同紙を引用）。サカノワ・au Web も同内容。
+#   台本は Le Petit Lillois の言葉のまま「左足裏の断裂が疑われた」「確認されれば数週間の離脱の可能性」。媒体名は読み上げない。「かかと」は前日(10/15)の話なので繰り返さない。
+#   最新の状況（2026-10-16 10時=日本時間に確認）: 追加検査の結果の記事は無い。losc.fr の記事一覧（〜10/15 16:32）にけがの発表は無い（クラブの発表なし）。Le Petit Lillois 一覧・サッカーキング・FOOTBALL ZONE・ゲキサカ・Google ニュース(日仏英)も 10/15 までで、10/16 付けの結果記事は無い。
+#     リールの会見は現地16日13時(日本時間20時)で、まだ。→ 台本は「追加検査の結果は、まだ伝わっていません」。公開前にもう一度探すこと（出ていたらこの節は組み直し）。
+#   使わなかったもの: Football Tribe 10/16「ブラジル戦出場は絶望的」（本文を読めず、代表の話）、東スポの「11月の代表戦にも影響」（東スポの見立て）。
 # 写真: 前日(10/15)は losc.fr 選手ページの DSC04577 を使った → 今日は別の写真にする（assets/images/20261016_ueda_lille_mvp/）。
 slot: japan
 date: "2026年10月16日"
@@ -41,6 +48,8 @@ short_telops:
   - {match: 79分に、左足, text: 9月20日ニース戦/79分に左足で1点}
   - {match: トロワ戦, text: 13日トロワ戦/無得点でも2対0の勝ち}
   - {match: 2勝2敗, text: 9月に出た4試合/リールは2勝2敗}
+  - {match: 左足裏の断裂, text: 15日の報道/初期検査で左足裏の断裂の疑い}
+  - {match: まだ報じられていません, text: 追加検査の診断は/まだ報じられず}
 short_photos: []
 
 theme:
@@ -117,4 +126,18 @@ sections:
     sources:
       - https://www.losc.fr/actualites/2026-09-13/losc-estac-le-compte-rendu
       - https://lepetitlillois.com/2026/10/15/losc-vers-plusieurs-semaines-dabsence-pour-ayase-ueda/
+
+  - id: injury
+    heading: 上田のけがの報道
+    tier: 報道
+    telop: 15日の報道。初期検査で左足裏の断裂の疑い。追加検査はまだ
+    say:
+      - 上田は初期検査で左足裏の断裂が疑われたと、15日に報じられました。
+      - 断裂が確認されれば、数週間の離脱の可能性があるといいます。
+      - 追加検査の診断は、まだ報じられていません。
+    official: false
+    sources:
+      - https://lepetitlillois.com/2026/10/15/losc-vers-plusieurs-semaines-dabsence-pour-ayase-ueda/
+      - https://web.gekisaka.jp/news/world/detail/?461104-461104-fl
+      - https://www.soccerdigestweb.com/news/detail/id=198545
 short_title: "上田綺世、リールの月間MVPに。3ゴールの試合、チームは勝てたのか"
