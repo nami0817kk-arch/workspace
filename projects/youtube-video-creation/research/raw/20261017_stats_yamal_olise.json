@@ -1,0 +1,35 @@
+{
+ "ok": false,
+ "context": [
+  {
+   "name": "ヤマル",
+   "team": "Barcelona",
+   "league": "LaLiga",
+   "season": "2026/2027",
+   "minutes": 671.0,
+   "matches": 8.0,
+   "group": "同じ攻撃的MF・ウイング",
+   "has_section": true
+  },
+  {
+   "name": "オリーズ",
+   "team": "Bayern München",
+   "league": "Bundesliga",
+   "season": "2026/2027",
+   "minutes": 393.0,
+   "matches": 5.0,
+   "group": "同じ攻撃的MF・ウイング",
+   "has_section": true
+  }
+ ],
+ "blockers": [
+  "オリーズ: 出場時間が393分で、450分（約5試合）に届きません"
+ ],
+ "notes": [
+  "大会が違います（ヤマル=LaLiga / オリーズ=Bundesliga）。リーグの強さが違う点を言う",
+  "ヤマル: 671分で標本が小さい。シーズンが進むと数字は動く（「いまの時点」と言う）",
+  "オリーズ: 393分で標本が小さい。シーズンが進むと数字は動く（「いまの時点」と言う）",
+  "ヤマル: Barcelona・LaLiga 2026/2027・8試合 671分",
+  "オリーズ: Bayern München・Bundesliga 2026/2027・5試合 393分"
+ ]
+}
