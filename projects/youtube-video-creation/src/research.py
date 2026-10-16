@@ -99,6 +99,15 @@ OPENING_BACKGROUND = STOCK + "stadium_night.mp4"
 STILL_BACKGROUND = "assets/backgrounds/studio.png"
 
 SPEAKERS = ("キャスター", "解説")
+# **シリーズの回は地の文を1人（解説）で読む**（2026-10-16 ユーザー「シリーズものって声変える必要ないよね」→「一人にしましょう」）。
+# キャスターと解説の掛け合いはニュース（1〜3分）向けに決めたもの。4〜7分の解説では1人の語りのほうが自然で、
+# 読み分けの切り替えで文が途切れる。本人の言葉（話者名がその人の名前の行）は今までどおり別の声。
+SERIES_NARRATOR = "解説"
+
+
+def narrator_for(notes) -> str:
+    """地の文の読み手。シリーズ（series あり）は1人（解説）、ほかは空（キャスターと解説の交互）。"""
+    return SERIES_NARRATOR if (getattr(notes, "series", "") or "").strip() else ""
 # 匿名の集まり。**画面に積む**ので、行ごとの引用カードは出さない
 # （config の voice_crowd と同じ並び。ここは台本を組み立てる側の控え）
 CROWD_VOICES = ("ネット民", "現地サポ", "海外のファン")
@@ -3126,11 +3135,11 @@ def _compose_script(notes: Notes, plan: Plan) -> str:
     _open_image = [f"  image: {notes.opening_image}"] if notes.opening_image else []
     if notes.lead and _bare_text(notes.lead) != _bare_text(notes.title):
         lines += [
-            f"キャスター: {_ends_sentence(notes.lead)}",
+            f"{narrator_for(notes) or SPEAKERS[0]}: {_ends_sentence(notes.lead)}",
             f"  telop: {_telop(notes.lead, TELOP_LIMIT)}",
         ] + _open_image + (["  no_telop: true"] if notes.opening_image else [])
     lines += [
-        f"キャスター: {_ends_sentence(notes.title)}",
+        f"{narrator_for(notes) or SPEAKERS[0]}: {_ends_sentence(notes.title)}",
         f"  telop: {notes.title}",
         "  se: assets/audio/se_pon.wav",
     ] + _open_image
@@ -3146,7 +3155,7 @@ def _compose_script(notes: Notes, plan: Plan) -> str:
         # もう知っている話の言い直し。**書いていなければ、その行ごと出さない。**
         if notes.hook and _bare_text(notes.hook) != _bare_text(notes.question):
             lines += [
-                f"キャスター: {_ends_sentence(notes.hook)}",
+                f"{narrator_for(notes) or SPEAKERS[0]}: {_ends_sentence(notes.hook)}",
                 # **問いを画面に出さない**（2026-09-14 指摘「この今回の問はいらない」）。
                 # 読み上げずに画面へ出す形にしていたが、**喋っている言葉と
                 # 画面の字が違う**状態が続いていた。喋っている一言をそのまま出す。
@@ -3157,7 +3166,7 @@ def _compose_script(notes: Notes, plan: Plan) -> str:
     elif notes.hook:
         # 反応・本人の言葉の型は、つかみが書いてあれば1行だけ。問いは立てない。
         # 参考（サッカーラボ 25.5万回）は 0:02 でタイトル、0:11 から事実だった
-        lines.append(f"キャスター: {_ends_sentence(notes.hook)}")
+        lines.append(f"{narrator_for(notes) or SPEAKERS[0]}: {_ends_sentence(notes.hook)}")
         # **テロップを付け忘れていた**（2026-09-24 に発見）。news の型には付けて
         # いたのに、quote / voices の型ではこの1行だけ声だけで流れていた。
         # 「読み上げた文は、画面にも出す」（2026-09-10）が、型で抜けていた形。
@@ -3233,7 +3242,7 @@ def _compose_script(notes: Notes, plan: Plan) -> str:
             voice = section.voices[number] if number < len(section.voices) else ""
             # 節が読み手を決めていれば、そのまま。**交互は既定であって決まりではない**
             # （2026-09-09 ユーザー「何が起きたかはキャスターが伝えて良い」）
-            speaker = voice or section.narrator or (
+            speaker = voice or narrator_for(notes) or section.narrator or (
                 SPEAKERS[0] if number == 0 else SPEAKERS[1 if number % 2 else 0]
             )
             lines.append(f"{speaker}: {sentence}")
