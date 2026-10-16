@@ -35,16 +35,13 @@ theme:
 short_title: エムバペとヴィニシウス、同じ8試合で数字を並べる
 
 thumbnail:
-  layout: versus
   photo: assets/images/20261016_cmp_pair/01.jpg
   photos:
     - assets/images/20261016_mbappe/01_w.jpg
     - assets/images/20261016_vinicius/01_w.jpg
-  names: [エムバペ, ヴィニシウス]
   face_link: VS
   line1: 同じレアルの2人
   line2: 期待値の差は●●倍
-  callouts: [同じ8試合, 同じボックスで受ける]
   tags: [エムバペ, ヴィニシウス, レアル・マドリード]
 
 answer: ゴール期待値は90分あたり1.1と0.47で、2倍以上。得点はどちらも期待値より約2点少ない

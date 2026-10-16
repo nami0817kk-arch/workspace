@@ -21,11 +21,6 @@ thumbnail_crest_main: []
 thumbnail_crests:
 - チェルシー
 thumbnail_photo: assets/images/20261016_stadium_chelsea/02_w.jpg
-thumbnail_layout:
-  layout: scene
-  band: bottom
-  callouts:
-  - 収容は半分以下？
 bg: assets/images/20261016_stadium_chelsea/01_w.jpg
 date: 2026年10月16日
 intro_title: チェルシーの本拠地、最多の観客は今の収容の2倍。何があったのか

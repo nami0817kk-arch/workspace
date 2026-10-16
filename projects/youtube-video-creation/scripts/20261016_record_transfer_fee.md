@@ -23,9 +23,6 @@ thumbnail_crests:
 - パリサンジェルマン
 - バルセロナ
 thumbnail_photo: assets/images/20261016_record_transfer_fee/neymar/01_w.jpg
-thumbnail_layout:
-  layout: face
-  side: left
 bg: assets/backgrounds/stadium.png
 date: 2026年10月16日
 intro_title: ネイマールの移籍金の世界記録を、歴代の更新と物価で数える

@@ -73,9 +73,6 @@ theme:
   opening_image: assets/images/20261016_transfer_nufc_window/c01_open.jpg
   bgm: assets/audio/bgm_calm.wav
 thumbnail:
-  layout: scene
-  callouts:
-  - 売って買った夏
   photo: assets/images/20261016_transfer_nufc_window/a01_stadium_w.jpg
   short_photo: assets/images/20261016_transfer_nufc_window/c01_open_v.jpg
   line1: ニューカッスルの今夏の収支

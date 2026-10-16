@@ -22,10 +22,6 @@ thumbnail_crest_main: []
 thumbnail_crests:
 - ニューカッスル
 thumbnail_photo: assets/images/20261016_transfer_nufc_window/a01_stadium_w.jpg
-thumbnail_layout:
-  layout: scene
-  callouts:
-  - 売って買った夏
 bg: assets/backgrounds/stadium.png
 date: 2026年10月16日
 intro_title: ニューカッスル、今夏の移籍で払った額の何割が戻ったか。主力3人を売った夏
