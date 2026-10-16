@@ -104,10 +104,10 @@ sections:
     total: [差し引き, 33.9]
     unit: 百万ユーロ
   say:
-  - text: この夏、ニューカッスルは、世界で4番目に多く払いました。
+  - text: この夏、ニューカッスルは3人の主力を売り、8人を買いました。
     short_only: true
     image: assets/images/20261016_transfer_nufc_window/a01_stadium_w.jpg
-  - text: 払った額は3億1300万ユーロで、世界4番目。
+  - text: 払った額は、およそ3億ユーロ。世界で4番目です。
     emph: true
     image: assets/images/20261016_transfer_nufc_window/a01_stadium_w.jpg
     card:
@@ -117,34 +117,120 @@ sections:
     card:
       <<: *flow
       highlight: 払った額
-  - text: 一方、選手を売った分が、2億7910万ユーロ戻りました。
+  - text: 一方、選手を売って戻った額も、2億ユーロ台の後半に届きました。
     card:
       <<: *flow
       highlight: 売って戻した額
-  - text: 戻ってきたのは、払った額の9割近くです。
+  - text: 払った額の9割近くが、戻ってきた計算です。
     card: *flow
-  - text: 差し引きは3390万ユーロ。割合では、11%です。
+  - text: 払った額から戻った額を引いた差し引きは、およそ3400万ユーロ。
     emph: true
     card:
       <<: *flow
       highlight: 差し引き
-  - text: プレミアの20クラブでは、差し引きの大きさは14番目。
+  - text: 支出に対して、11%にとどまります。
+    card:
+      <<: *flow
+      highlight: 差し引き
+  - text: プレミアの20クラブで、差し引きは大きい順に14番目です。
     card: *flow
-  - text: 差し引きを、日本円にしてみます。
+  - text: 差し引きを円にします。10月15日の欧州中央銀行の参照相場は、1ユーロ177円。
     card: &yen
       type: convert
       title: 差し引きを円に
       from: ['3390万', ユーロ, 払った額から戻った額を引く]
       to: [約60億, 円, 10月15日の為替]
       via: 1ユーロ＝177.06円
-  - text: 欧州中央銀行の10月15日の参照相場は、1ユーロ177円6銭。
-    card: *yen
   - text: およそ60億円になります。
     card: *yen
+  - text: では、なぜ差し引きが小さいのか。答えは、売った選手にあります。
+    image: assets/images/20261016_transfer_nufc_window/a01_stadium_w.jpg
+    card: none
   sources:
   - https://www.transfermarkt.com/transfers/einnahmenausgaben/statistik/plus/1?ids=a&saison_id=2026&saison_id_bis=2026&w_s=s
   - https://www.transfermarkt.com/premier-league/einnahmenausgaben/wettbewerb/GB1/plus/1?ids=a&saison_id=2026&saison_id_bis=2026&w_s=s
   - https://data-api.ecb.europa.eu/service/data/EXR/D.JPY.EUR.SP00.A
+- id: sold
+  heading: 差し引きが小さい理由は、売った3人の主力にある
+  tier: 報道
+  telop: 移籍金が付いて出たのは3人。トナーリ、ブルーノ、ゴードンで戻った額の99%
+  narrator: 解説
+  card: &outlist
+    type: table
+    title: 出ていった選手（戻った額の大きい順）
+    columns: ['選手', '行き先', '百万ユーロ']
+    rows:
+    - &o1 [サンドロ・トナーリ, トッテナム, '108.0']
+    - &o2 [ブルーノ・ギマランイス, アーセナル, '87.5']
+    - &o3 [アンソニー・ゴードン, バルセロナ, '80.0']
+    - &o4 [ヴォルテマーデ（貸し出し料）, ユヴェントス, '3.6']
+    - &o5 [ターゲットほか2人, ハル・ウルブズ, '0（移籍金なし）']
+  say:
+  - text: ニューカッスルは、3人の主力を高く売りました。
+    image: assets/backgrounds/cut_ニューカッスル.png
+    card: none
+  - text: 移籍金が付いた退団は3人。買った人数の半分に届きません。
+    image: assets/images/20261016_transfer_nufc_window/a01_stadium_w.jpg
+    card: *outlist
+  - text: まず、サンドロ・トナーリ。トッテナムへ、およそ1億1000万ユーロ。
+    emph: true
+    card: {type: table, title: 出ていった選手（戻った額の大きい順）, columns: ['選手', '行き先', '百万ユーロ'], rows: [*o1, *o2, *o3, *o4, *o5], highlight_row: 0}
+  - text: クラブの発表は、額を書かずに、こう伝えています。
+    card: &doc_tonali
+      type: document
+      label: ニューカッスル 公式発表（7月6日）トナーリ退団の文（訳）
+      paragraphs:
+      - 非公表の移籍金は、ニューカッスルの歴史で、選手を送り出して受け取った額として2番目に大きい。
+      highlight:
+      - 非公表
+      - 2番目
+  - text: 額は非公表。ただ、クラブの歴史で2番目に大きい受け取りだ、と書いています。
+    card: *doc_tonali
+  - text: 次に、ブルーノ・ギマランイス。アーセナルへ、およそ8800万ユーロ。
+    emph: true
+    image: assets/images/20261016_transfer_nufc_window/b03_bruno_w.jpg
+    card: {type: table, title: 出ていった選手（戻った額の大きい順）, columns: ['選手', '行き先', '百万ユーロ'], rows: [*o1, *o2, *o3, *o4, *o5], highlight_row: 1}
+  - text: ブルーノは主将で、昨季のチームの年間最優秀選手でした。
+    card: {type: table, title: 出ていった選手（戻った額の大きい順）, columns: ['選手', '行き先', '百万ユーロ'], rows: [*o1, *o2, *o3, *o4, *o5], highlight_row: 1}
+  - text: こちらも額は書かれず、額の位置づけだけが書かれています。
+    card: &doc_bruno
+      type: document
+      label: ニューカッスル 公式発表（8月8日）ブルーノ退団の文（訳）
+      paragraphs:
+      - 合意した移籍金は、28歳以上の選手に支払われた移籍金として、史上10指に入る額です。
+      - 同じ年齢で同じ位置の選手としては、過去最高の移籍金です。
+      highlight:
+      - 史上10指
+      - 過去最高
+  - text: 28歳以上の選手の移籍金として、史上上位10に入るそうです。
+    card: *doc_bruno
+  - text: 同じ年齢で同じ位置の選手では、過去最高の額だ、と書いています。
+    card: *doc_bruno
+  - text: 3人目は、アンソニー・ゴードン。バルセロナへ、およそ8000万ユーロ。
+    emph: true
+    image: assets/images/20261016_transfer_nufc_window/a01_stadium_w.jpg
+    card: {type: table, title: 出ていった選手（戻った額の大きい順）, columns: ['選手', '行き先', '百万ユーロ'], rows: [*o1, *o2, *o3, *o4, *o5], highlight_row: 2}
+  - text: ゴードンは、昨季のチーム最多、17得点の選手です。
+    card: {type: table, title: 出ていった選手（戻った額の大きい順）, columns: ['選手', '行き先', '百万ユーロ'], rows: [*o1, *o2, *o3, *o4, *o5], highlight_row: 2}
+  - text: この3人で、戻った額の99%を占めます。
+    emph: true
+    card: {type: table, title: 出ていった選手（戻った額の大きい順）, columns: ['選手', '行き先', '百万ユーロ'], rows: [*o1, *o2, *o3, *o4, *o5], highlight_row: [0, 1, 2]}
+  - text: 残りの1%は、貸し出し料。フォワードのヴォルテマーデが、ユヴェントスへ。
+    card: {type: table, title: 出ていった選手（戻った額の大きい順）, columns: ['選手', '行き先', '百万ユーロ'], rows: [*o1, *o2, *o3, *o4, *o5], highlight_row: 3}
+  - text: ベテランの退団3人は、移籍金が付いていません。
+    card: {type: table, title: 出ていった選手（戻った額の大きい順）, columns: ['選手', '行き先', '百万ユーロ'], rows: [*o1, *o2, *o3, *o4, *o5], highlight_row: 4}
+  - text: 払った額が大きくても、主力3人で戻った額が大きいから、差し引きは小さいのです。
+    emph: true
+    card: *flow
+  sources:
+  - https://www.transfermarkt.com/sandro-tonali/transfers/spieler/397033
+  - https://www.transfermarkt.com/bruno-guimaraes/transfers/spieler/520624
+  - https://www.transfermarkt.com/anthony-gordon/transfers/spieler/503733
+  - https://www.newcastleunited.com/en/news/sandro-tonali-leaves-newcastle-united-for-tottenham-hotspur
+  - https://www.newcastleunited.com/en/news/bruno-guimaraes-leaves
+  - https://www.newcastleunited.com/en/news/anthony-gordon-signs-for-barcelona
+  - https://www.newcastleunited.com/en/news/nick-woltemade-completes-juventus-loan-switch
+  - https://www.newcastleunited.com/en/news/captain-bruno-guimaraes-named-newcastle-uniteds-2025-26-player-of-the-year
 - id: spent
   heading: 金を払って加えたのは8人。いちばん高かったのは誰か
   tier: 報道
@@ -164,11 +250,11 @@ sections:
     - &i7 [ショーン・ステウル, アヤックス, '23.5']
     - &i8 [エワン・ジャウアン, ランス, '21.5']
   say:
-  - text: まず、ニューカッスルが払ったほうの8人です。
+  - text: 次は、ニューカッスルが払ったほうの8人です。
     image: assets/images/20261016_transfer_nufc_window/a01_stadium_w.jpg
     card: none
     callword: 8人に払った夏
-  - text: 移籍金が付いて加わったのは8人で、平均は1人3913万ユーロ。
+  - text: 移籍金が付いて加わったのは8人です。
     card: *inlist
   - text: いちばん高いのは、フェルナンデス・パルド。リールから6000万ユーロ。
     image: assets/images/20261016_transfer_nufc_window/b01_pardo_w.jpg
@@ -180,7 +266,7 @@ sections:
   - text: 3人目はトゥーレ。ホッフェンハイムから5000万ユーロ。
     image: assets/images/20261016_transfer_nufc_window/b02_toure_w.jpg
     card: {type: table, title: 払った額の大きい順（8人）, columns: ['選手', '前のクラブ', '百万ユーロ'], rows: [*i1, *i2, *i3, *i4, *i5, *i6, *i7, *i8], highlight_row: 2}
-  - text: 上の3人だけで1億6600万ユーロ。総額の53%です。
+  - text: 上の3人だけで、払った額の53%です。
     emph: true
     image: assets/images/20261016_transfer_nufc_window/a01_stadium_w.jpg
     card: {type: table, title: 払った額の大きい順（8人）, columns: ['選手', '前のクラブ', '百万ユーロ'], rows: [*i1, *i2, *i3, *i4, *i5, *i6, *i7, *i8], highlight_row: [0, 1, 2]}
@@ -196,9 +282,7 @@ sections:
     card: {type: table, title: 払った額の大きい順（8人）, columns: ['選手', '前のクラブ', '百万ユーロ'], rows: [*i1, *i2, *i3, *i4, *i5, *i6, *i7, *i8], highlight_row: [2, 5, 6]}
   - text: 残る5人の文には、額の記載がありません。
     card: *inlist
-  - text: 固定かボーナス込みかは、分かっていません。
-    card: *inlist
-  - text: ニューカッスルの発表では、額は確かめられません。
+  - text: 最初に決まった額か、条件で増える分を含むかも、分かっていません。
     card: *inlist
   sources:
   - https://www.transfermarkt.com/newcastle-united/transfers/verein/762/saison_id/2026
@@ -208,7 +292,7 @@ sections:
   - https://www.newcastleunited.com/en/news/newcastle-united-complete-nico-gonzalez-signing
   - https://www.newcastleunited.com/en/news/the-story-of-the-summer-meet-newcastle-uniteds-eight-new-senior-signings
 - id: late
-  heading: 補強の半分は、ブルーノが出る前に決まっていた
+  heading: 補強の額の半分は、ブルーノが出る前に決まっていた
   tier: 報道
   telop: ブルーノの退団の8月8日までに5人。窓が閉まる9月1日に、最後の1人
   narrator: 解説
@@ -224,16 +308,18 @@ sections:
     - ['9月1日', フェルナンデス・パルドが加入。窓が閉まる]
     focus: 8月8日
   say:
-  - text: 8人の補強は、どの日に決まったのでしょう。
+  - text: 売った金を待たずに、補強は進んだのか。日付で見ます。
     image: assets/images/20261016_transfer_nufc_window/a01_stadium_w.jpg
     card: none
+  - text: 選手を獲得できる期間を「窓」と呼びます。夏は6月15日から9月1日まで。
+    card: *when
   - text: ニューカッスルの主な動きを、発表の日付順に並べます。
     card: *when
   - text: 動きの最初は5月29日。ゴードンのバルセロナ行きの発表です。
     card:
       <<: *when
       highlight_row: 0
-  - text: 補強の最初は6月10日。ゴールキーパーのジャウアンでした。
+  - text: 補強の最初は6月10日。ゴールキーパーのジャウアンです。
     card:
       <<: *when
       highlight_row: 1
@@ -252,9 +338,9 @@ sections:
       - ['3億1300万ユーロ', 払った額]
       - [約51%, 退団より前の割合]
       ops: ['÷', ＝]
-  - text: その5人で1億6110万ユーロ。総額の51%です。
+  - text: 人数では8人のうち5人、額にすると、払った額の51%です。
     card: *calc_before
-  - text: 残る3人は、ブルーノの退団のあと。8月18日から決まりました。
+  - text: 残る3人は、ブルーノが出たあとに決まりました。
     image: assets/images/20261016_transfer_nufc_window/a01_stadium_w.jpg
     card:
       <<: *when
@@ -269,28 +355,26 @@ sections:
     card:
       <<: *when
       highlight_row: 5
-  - text: 選手を獲得できる期間を「窓」と呼び、開いたのは6月15日。
+  - text: 強化の責任者（スポーティングディレクター）が、最後の1人を待った理由を話します。
     image: assets/images/20261016_transfer_nufc_window/a01_stadium_w.jpg
-    card: none
-  - text: 閉まったのは、9月1日の夜11時です。
-    card: none
-  - text: この最後の1人について、スポーティングディレクターが話しています。
     card: &doc_wilson
       type: document
-      label: ニューカッスル 公式発表（9月1日）スポーティングディレクターの談話（訳）
+      label: ニューカッスル 公式発表（9月1日）強化の責任者の談話（訳）
       paragraphs:
-      - 5月には、彼が私たちの本命でした。ずっと接触を続けてきました。
-      - 窓の終わりのいま、彼は、刷新されたニューカッスルの8人目の補強になります。
+      - 5月には、彼が私たちの本命でした。私たちはずっと、接触を続けてきました。
+      - 窓が終わるいま、彼は、刷新されたニューカッスルの8人目の補強になります。
       - この1件には、たくさんの時間をかけました。
       highlight:
       - 本命
       - 8人目
-  - text: 5月には、本命だった。接触は、ずっと続けていた。
+  - text: 責任者は、この選手を、5月から本命だったと話します。
     card:
       <<: *doc_wilson
-  - text: 窓の終わりに、8人目として加わった、という言い方です。
+  - text: 接触を続け、窓の終わりに8人目として加わった、という説明です。
     card:
       <<: *doc_wilson
+  - text: 補強は売却を待たずに進み、最後の1人は、5月から待っていた選手でした。
+    card: none
   sources:
   - https://www.newcastleunited.com/en/news/newcastle-united-sign-matias-fernandez-pardo
   - https://www.newcastleunited.com/en/news/ewen-jaouen-signs-for-newcastle-united
@@ -299,88 +383,8 @@ sections:
   - https://www.newcastleunited.com/en/news/bruno-guimaraes-leaves
   - https://www.newcastleunited.com/en/news/newcastle-united-complete-nico-gonzalez-signing
   - https://www.premierleague.com/en/news/4664145/when-does-summer-2026-premier-league-transfer-window-open-and-close
-- id: sold
-  heading: 戻った額の99%は、3人の主力だった
-  tier: 報道
-  telop: 移籍金が付いて出たのは3人。トナーリ、ブルーノ、ゴードンで戻った額の99%
-  narrator: 解説
-  card: &outlist
-    type: table
-    title: 出ていった選手（戻った額の大きい順）
-    columns: ['選手', '行き先', '百万ユーロ']
-    rows:
-    - &o1 [サンドロ・トナーリ, トッテナム, '108.0']
-    - &o2 [ブルーノ・ギマランイス, アーセナル, '87.5']
-    - &o3 [アンソニー・ゴードン, バルセロナ, '80.0']
-    - &o4 [ヴォルテマーデ（貸し出し料）, ユヴェントス, '3.6']
-    - &o5 [ターゲットほか2人, ハル・ウルブズ, '0（移籍金なし）']
-  say:
-  - text: 次は、ニューカッスルに入ってきた金の側です。
-    image: assets/backgrounds/cut_ニューカッスル.png
-    card: none
-  - text: 移籍金が付いた退団は3人。買った8人の半分に届きません。
-    image: assets/images/20261016_transfer_nufc_window/a01_stadium_w.jpg
-    card: *outlist
-  - text: トナーリが、トッテナムへ。1億800万ユーロ。
-    emph: true
-    card: {type: table, title: 出ていった選手（戻った額の大きい順）, columns: ['選手', '行き先', '百万ユーロ'], rows: [*o1, *o2, *o3, *o4, *o5], highlight_row: 0}
-  - text: クラブの発表は、額を書かずに、こう伝えています。
-    card: &doc_tonali
-      type: document
-      label: ニューカッスル 公式発表（7月6日）トナーリ退団の文（訳）
-      paragraphs:
-      - 非公表の移籍金は、ニューカッスルの歴史で、受け取った額の2番目の高さです。
-      highlight:
-      - 非公表
-      - 2番目
-  - text: 非公表だが、歴代2番目に高い額だ、と書いています。
-    card: *doc_tonali
-  - text: ブルーノが、アーセナルへ。8750万ユーロ。
-    emph: true
-    image: assets/images/20261016_transfer_nufc_window/b03_bruno_w.jpg
-    card: {type: table, title: 出ていった選手（戻った額の大きい順）, columns: ['選手', '行き先', '百万ユーロ'], rows: [*o1, *o2, *o3, *o4, *o5], highlight_row: 1}
-  - text: ブルーノは主将で、昨季のチームの年間最優秀選手でした。
-    card: {type: table, title: 出ていった選手（戻った額の大きい順）, columns: ['選手', '行き先', '百万ユーロ'], rows: [*o1, *o2, *o3, *o4, *o5], highlight_row: 1}
-  - text: こちらも、クラブの発表は額を書いていません。
-    card: &doc_bruno
-      type: document
-      label: ニューカッスル 公式発表（8月8日）ブルーノ退団の文（訳）
-      paragraphs:
-      - 合意した移籍金は、28歳以上の選手が受け取った移籍金として、歴代の上位10に入ります。
-      - 年齢と位置を合わせた条件では、記録の額です。
-      highlight:
-      - 上位10
-      - 記録の額
-  - text: 28歳以上の選手の移籍金で、歴代の上位10に入るそうです。
-    card: *doc_bruno
-  - text: 年齢と位置を合わせて見ると、記録の額だ、と書いています。
-    card: *doc_bruno
-  - text: ゴードンは、バルセロナへ。8000万ユーロ。
-    emph: true
-    image: assets/images/20261016_transfer_nufc_window/a01_stadium_w.jpg
-    card: {type: table, title: 出ていった選手（戻った額の大きい順）, columns: ['選手', '行き先', '百万ユーロ'], rows: [*o1, *o2, *o3, *o4, *o5], highlight_row: 2}
-  - text: 昨季は、チーム最多の17得点を挙げた選手です。
-    card: {type: table, title: 出ていった選手（戻った額の大きい順）, columns: ['選手', '行き先', '百万ユーロ'], rows: [*o1, *o2, *o3, *o4, *o5], highlight_row: 2}
-  - text: この3人で2億7550万ユーロ。戻った額の99%です。
-    emph: true
-    card: {type: table, title: 出ていった選手（戻った額の大きい順）, columns: ['選手', '行き先', '百万ユーロ'], rows: [*o1, *o2, *o3, *o4, *o5], highlight_row: [0, 1, 2]}
-  - text: ヴォルテマーデは、ユヴェントスへの貸し出し。貸し出し料が360万ユーロ。
-    card: {type: table, title: 出ていった選手（戻った額の大きい順）, columns: ['選手', '行き先', '百万ユーロ'], rows: [*o1, *o2, *o3, *o4, *o5], highlight_row: 3}
-  - text: ターゲット、トリッピアー、ラディの3人は、移籍金が付いていません。
-    card: {type: table, title: 出ていった選手（戻った額の大きい順）, columns: ['選手', '行き先', '百万ユーロ'], rows: [*o1, *o2, *o3, *o4, *o5], highlight_row: 4}
-  - text: 貸し出し料は、戻った額に入れています。
-    card: *outlist
-  sources:
-  - https://www.transfermarkt.com/sandro-tonali/transfers/spieler/397033
-  - https://www.transfermarkt.com/bruno-guimaraes/transfers/spieler/520624
-  - https://www.transfermarkt.com/anthony-gordon/transfers/spieler/503733
-  - https://www.newcastleunited.com/en/news/sandro-tonali-leaves-newcastle-united-for-tottenham-hotspur
-  - https://www.newcastleunited.com/en/news/bruno-guimaraes-leaves
-  - https://www.newcastleunited.com/en/news/anthony-gordon-signs-for-barcelona
-  - https://www.newcastleunited.com/en/news/nick-woltemade-completes-juventus-loan-switch
-  - https://www.newcastleunited.com/en/news/captain-bruno-guimaraes-named-newcastle-uniteds-2025-26-player-of-the-year
 - id: value
-  heading: 相場と並べると、買うのも売るのも高かった
+  heading: 市場価値でも同じ位置の平均でも、高く買い、高く売った
   tier: 報道
   telop: 買った8人は市場価値の約1.65倍、売った3人は約1.28倍。同じ位置の平均の約1.31倍
   narrator: 解説
@@ -401,24 +405,24 @@ sections:
     diagonal: 市場価値と同じ額
     focus: ステウル
   say:
-  - text: 高い買い物だったかは、相場と並べて測ります。
+  - text: ニューカッスルは高く買い、高く売ったのか。物差しを2つ使います。
     image: assets/images/20261016_transfer_nufc_window/a01_stadium_w.jpg
     card: none
-  - text: 各選手の、移籍の直前の推定の市場価値を合計します。
+  - text: 1つ目は選手の市場価値。推定の評価で、実際の値段とは別物です。
     card: *scat
-  - text: 買った8人の直前の市場価値は、合計1億9000万ユーロ。
+  - text: 買った8人の、移籍の直前の市場価値を合計します。
     card: *scat
-  - text: ニューカッスルは約1.65倍で、1億2300万ユーロ多く払いました。
+  - text: 払った額は、その合計の約1.65倍です。
     emph: true
     card: &calc_in
       type: calc
-      title: 買った8人は相場の何倍か
+      title: 買った8人は市場価値の何倍か
       terms:
       - ['3億1300万ユーロ', 払った額]
       - ['1億9000万ユーロ', 直前の市場価値の合計]
-      - [約1.65倍, 相場の何倍か]
+      - [約1.65倍, 市場価値の何倍か]
       ops: ['÷', ＝]
-  - text: 図の斜めの線は、相場どおりに払った位置です。
+  - text: 図の斜めの線は、市場価値どおりに払った位置です。
     card:
       <<: *scat
       highlight: フェルナンデス・パルド
@@ -435,26 +439,22 @@ sections:
     card:
       <<: *scat
       highlight: ステウル
-  - text: 売る側は、どうだったでしょう。
+  - text: 売る側も、市場価値と比べます。
     image: assets/images/20261016_transfer_nufc_window/a01_stadium_w.jpg
     card: none
-  - text: 出た3人の直前の市場価値は、合計2億1500万ユーロ。
+  - text: 出た3人が受け取った額は、市場価値の合計の約1.28倍です。
+    emph: true
     card: &calc_out
       type: calc
-      title: 売った3人は相場の何倍か
+      title: 売った3人は市場価値の何倍か
       terms:
       - ['2億7550万ユーロ', 受け取った額]
       - ['2億1500万ユーロ', 直前の市場価値の合計]
-      - [約1.28倍, 相場の何倍か]
+      - [約1.28倍, 市場価値の何倍か]
       ops: ['÷', ＝]
-  - text: 受け取った額は約1.28倍。市場価値を上回ります。
-    emph: true
+  - text: 市場価値より高く買い、市場価値より高く売れた夏です。
     card: *calc_out
-  - text: 買う側も売る側も、市場価値を上回る額が動いています。
-    card: *calc_out
-  - text: 市場価値は推定の評価で、実際に払われた値段とは別物です。
-    card: *calc_out
-  - text: 次に、同じ位置の相場と比べます。
+  - text: 2つ目の物差しは、同じ位置の平均。
     card: &pos_table
       type: table
       title: 位置ごとの平均の移籍金（百万ユーロ）
@@ -474,7 +474,7 @@ sections:
     card:
       <<: *pos_table
       highlight_row: 1
-  - text: 8人を、同じ位置の平均で買えば、2億3925万ユーロです。
+  - text: 8人を同じ位置の平均で買った場合と比べると、約1.31倍を払っています。
     emph: true
     card: &calc_pos
       type: calc
@@ -484,8 +484,6 @@ sections:
       - ['2億3925万ユーロ', 位置の平均で買った場合]
       - [約1.31倍, 平均の何倍か]
       ops: ['÷', ＝]
-  - text: 実際は、その約1.31倍。7375万ユーロ多く払いました。
-    card: *calc_pos
   - text: 平均は、移籍金の数字が付いた加入だけで数えています。
     card: *pos_table
   sources:
@@ -499,7 +497,7 @@ sections:
   viewpoint: true
   heading: 払った額も戻った額も、5年でいちばん大きい夏だった
   tier: 報道
-  telop: 戻った額は5年で毎年増えた。出た3人は平均26.3歳、入った8人は平均21.4歳
+  telop: 払った額も戻った額も5年で最大。出た3人は平均26.3歳、入った8人は平均21.4歳
   narrator: 解説
   card: &years
     type: line
@@ -511,16 +509,21 @@ sections:
     - [戻った額, [2.9, 44.6, 76.2, 176.0, 279.1]]
     focus: 戻った額
   say:
-  - text: ニューカッスルのこの夏が突出していたか、過去5年と比べます。
+  - text: この夏が突出していたのか、過去5年のニューカッスルと比べます。
     image: assets/images/20261016_transfer_nufc_window/a01_stadium_w.jpg
     card: *years
   - text: 5年分の夏について、払った額と戻った額を線にしました。
     card: *years
+  - text: 払った額は、この夏が5年で最大。前の最大は、2025年の夏でした。
+    emph: true
+    card:
+      <<: *years
+      highlight: '2026年'
   - text: 戻った額は、2022年の夏は、払った額のわずか2%でした。
     card:
       <<: *years
       highlight: '2022年'
-  - text: そこから毎年増えて、この夏は5年でいちばん多くなりました。
+  - text: そこから毎年増えて、この夏は戻った額も5年で最大です。
     emph: true
     card:
       <<: *years
@@ -529,16 +532,6 @@ sections:
     card:
       <<: *years
       highlight: '2024年'
-  - text: 最近の2年の夏で、戻った額を足すと、4億5510万ユーロです。
-    emph: true
-    card: &yen2
-      type: convert
-      title: 最近2年の戻った額を円に
-      from: ['4億5510万', ユーロ, 2025年と2026年の夏に戻った額]
-      to: [約806億, 円, 10月15日の為替]
-      via: 1ユーロ＝177.06円
-  - text: 10月15日の為替だと、約806億円。
-    card: *yen2
   - text: では、何を売って、何を買ったのか。年齢で並べます。
     image: assets/images/20261016_transfer_nufc_window/a01_stadium_w.jpg
     card: &age_table
@@ -566,9 +559,7 @@ sections:
     card: *age_table
   - text: この形が実るかどうかは、これからの出場で決まります。
     card: none
-  - text: 冬の窓は、2027年1月1日から2月1日までです。
-    card: none
-  - text: ヴォルテマーデの貸し出しの終わりは、記録の上では2027年6月30日です。
+  - text: 次に動けるのは、冬の窓。2027年1月1日から2月1日までです。
     card: none
   sources:
   - https://www.transfermarkt.com/premier-league/einnahmenausgaben/wettbewerb/GB1/plus/1?ids=a&saison_id=2025&saison_id_bis=2025&w_s=s
@@ -576,5 +567,4 @@ sections:
   - https://www.transfermarkt.com/premier-league/einnahmenausgaben/wettbewerb/GB1/plus/1?ids=a&saison_id=2023&saison_id_bis=2023&w_s=s
   - https://www.transfermarkt.com/premier-league/einnahmenausgaben/wettbewerb/GB1/plus/1?ids=a&saison_id=2022&saison_id_bis=2022&w_s=s
   - https://www.premierleague.com/en/news/4664145/when-does-summer-2026-premier-league-transfer-window-open-and-close
-  - https://tmapi-alpha.transfermarkt.technology/transfer/history/player/455661
   - https://data-api.ecb.europa.eu/service/data/EXR/D.JPY.EUR.SP00.A

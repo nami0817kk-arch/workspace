@@ -55,7 +55,7 @@ theme:
   topic: アーセナル
   title: ブカヨ・サカってどんな選手？ 右から左足で仕留める背番号7の正体
   question: ブカヨ・サカはどういう作りの選手で、なぜ決めきれるのか
-  takeaway: 今季のゴールは90分あたり0.57点で、直近3季の0.30〜0.47より高い。ただし出場は637分と標本が小さい。次の節目は日本時間10月19日午前0時30分のフォレスト戦
+  takeaway: 今季のゴールは90分あたり0.57点で、直近3季の0.30〜0.47より高い。ただしクラブの9試合・637分と、試合数が少ない。次の節目は日本時間10月19日午前0時30分のフォレスト戦
   nameplate: ブカヨ・サカ｜アーセナル FW／イングランド代表
   opening_image: assets/images/20261016_saka/ars_300/01_w.jpg
   bgm: assets/audio/bgm_calm.wav
@@ -99,12 +99,16 @@ sections:
       - ['22', 年ぶり, アーセナルのリーグ優勝（2026年5月）]
       - ['8', 歳, アーセナルのアカデミーへ]
       focus: 0
-  - text: W杯の決勝トーナメントで、イングランド人が3点。
+  - text: W杯の決勝トーナメントで、ハットトリック。
     emph: true
     card:
       <<: *hook_stats
       focus: 0
-  - text: 1966年決勝のハースト以来、2人目です。
+  - text: イングランド人では、1966年決勝のハースト以来、2人目です。
+    card:
+      <<: *hook_stats
+      focus: 0
+  - text: ハーストは、その決勝で3点を決めた元イングランド代表。60年ぶりの記録です。
     card:
       <<: *hook_stats
       focus: 0
@@ -118,8 +122,6 @@ sections:
   - text: 同じ位置の中で、シュートの多さは上位5%ほど。
     image: assets/images/20261016_saka/eng_panama_w/01.jpg
     callword: シュート上位5%
-    card: none
-  - text: 100人いたら、上から5番目あたりです。
     card: none
   - text: 始まりは8歳。2010年5月に、アーセナルのアカデミーへ入りました。
     image: assets/images/20261016_saka/ars_portrait/01.jpg
@@ -195,11 +197,10 @@ sections:
     card:
       <<: *data_card
       highlight_row: 6
-  - text: 市場価値は1億1000万ユーロ。
+  - text: 市場価値は1億1000万ユーロ。最高は1億5000万ユーロでした。
     emph: true
-    card:
-      <<: *data_card
-      highlight_row: 7
+    image: assets/stats/player_20261016_961995_value.png
+    no_telop: true
   sources:
   - https://www.transfermarkt.com/bukayo-saka/profil/spieler/433177
   - https://www.fotmob.com/players/961995
@@ -249,7 +250,7 @@ sections:
       highlight_row: 0
   - text: 17歳で、トップチームの初出場です。
     card: *career_card
-  - text: 転機の1つ目は、2019/20。選手のけがが続き、左サイドバックで使われます。
+  - text: 転機は2つ。1つ目は2019/20。けが人が続き、左サイドバックへ。
     card:
       <<: *career_card
       highlight_row: 1
@@ -266,7 +267,7 @@ sections:
     text: いい勉強になっています。
     cont: true
     pause: 0.6
-  - text: 転機の2つ目は、2021年7月11日。ユーロ決勝、イタリア戦です。
+  - text: 2つ目は、2021年7月11日。ユーロ決勝、イタリア戦です。
     card:
       <<: *career_card
       highlight_row: 2
@@ -281,7 +282,7 @@ sections:
     card:
       <<: *career_card
       highlight_row: 3
-  - text: 2026年2月、クラブは新契約を発表。公式は、サカをこう記しています。
+  - text: 2026年2月、クラブは新契約を発表。公式の文面です。
     image: assets/images/20261016_saka/ars_portrait/01.jpg
     card:
       type: document
@@ -290,12 +291,20 @@ sections:
       - 2010年5月、8歳でアカデミーに入った24歳は、現在のチームで、得点・アシスト・出場のいずれも最多の選手になった。
       - クラブの月間最優秀選手を、2012年の創設以来、誰よりも多く受賞している。
       highlight: [最多, 誰よりも多く]
-  - text: 2026年5月19日。シティがボーンマスと引き分け、アーセナルの優勝が決まります。
+  - text: 得点・アシスト・出場が、チームで最多。月間最優秀選手も、創設以来で最多です。
+    card:
+      type: document
+      label: アーセナル公式（2026年2月、契約更新の発表）
+      paragraphs:
+      - 2010年5月、8歳でアカデミーに入った24歳は、現在のチームで、得点・アシスト・出場のいずれも最多の選手になった。
+      - クラブの月間最優秀選手を、2012年の創設以来、誰よりも多く受賞している。
+      highlight: [最多, 誰よりも多く]
+  - text: 2026年5月19日。追うシティがボーンマスと引き分け、優勝が決まります。
     image: assets/images/20261016_saka/ars_sign/01.jpg
     card:
       <<: *career_card
       highlight_row: 4
-  - text: サカにとって、初めてのリーグ優勝です。
+  - text: 最終節を残して、追いつけなくなりました。サカにとって、初めてのリーグ優勝です。
     card:
       <<: *career_card
       highlight_row: 4
@@ -310,11 +319,18 @@ sections:
     card:
       <<: *career_card
       highlight_row: 5
-  - text: 前半の2点で、4点のリード。87分のPKは、ベリンガムがボールを渡して蹴りました。
+  - text: 前半の2点で、4点のリード。
     emph: true
     card:
       <<: *career_card
       highlight_row: 5
+  - text: 87分のPK。ベリンガムが蹴らず、サカにボールを渡しました。
+    emph: true
+    card:
+      <<: *career_card
+      highlight_row: 5
+  - text: 元代表のウォーノックは、チームプレーの表れと評しました。
+    card: none
   - text: 試合は6対4の勝ち。トゥヘル監督は、こう評しています。
     card: none
   - voice: トゥヘル
@@ -323,9 +339,6 @@ sections:
     text: 主力であることに、疑いはない。
     cont: true
     pause: 0.6
-  - text: 市場価値の推移です。最高は1億5000万ユーロでした。
-    image: assets/stats/player_20261016_961995_value.png
-    no_telop: true
   quotes_from:
   - https://www.arsenal.com/news/saka-how-left-back-will-improve-me-winger
   - https://www.bbc.com/sport/football/live/cly5lj1nqdxt
@@ -337,7 +350,7 @@ sections:
   - https://www.thescore.com/chlg/news/3547570/champions-league-final-analysis-psg-beat-arsenal-on-penalties
   - https://www.bbc.com/sport/football/live/cly5lj1nqdxt
 - id: style
-  heading: サカの強みと弱みは、どこにあるのか
+  heading: サカの持ち味は、どこにあるのか
   tier: 報道
   telop: シュート、チャンス創出、得点。同じ位置と比べた位置
   narrator: 解説
@@ -361,7 +374,7 @@ sections:
   - text: ここからはサカの形。同じ攻撃的MF・ウイングと比べた図です。
     image: assets/stats/player_20261016_961995_radar.png
     no_telop: true
-  - text: いちばん外へ出ているのは、シュートの多さ。同じ位置の中で、上位5%ほどです。
+  - text: いちばん外へ出ているのは、シュートの多さです。
     image: assets/stats/player_20261016_961995_radar.png
     no_telop: true
   - text: 続くのが、チャンス創出で上位16%ほど、得点で上位18%ほどの位置。
@@ -374,20 +387,16 @@ sections:
   - text: いちばん小さいのは守備の関与で、56。それでも、真ん中より上の位置です。
     image: assets/images/20261016_saka/eng_panama_w/01.jpg
     no_telop: true
-  - text: 今季プレミアのアシストは、まだ0。
-    card: none
-  - text: ただ、アシストの期待値は1.04。味方が決めていれば、1つ付いた計算。
-    card: none
   - text: 触る場所は、右サイドから、ゴール前の中央まで。
     image: assets/stats/player_20261016_961995_heat.png
     no_telop: true
-  - text: 敵陣のボックス内に触った回数は37回。同じ位置の中で、上位13%ほどです。
+  - text: 今季プレミアで、相手ゴール前のボックスの中で、
     image: assets/stats/player_20261016_961995_heat.png
     no_telop: true
-  - text: 今季プレミアのシュートは17本、枠内に10本。得点は3です。
-    image: assets/stats/player_20261016_961995_shots.png
+  - text: 触れた回数は37回。同じ位置で、上位13%ほどです。
+    image: assets/stats/player_20261016_961995_heat.png
     no_telop: true
-  - text: ゴール期待値は3.62。決定機のぶんには、あと少しという数字。
+  - text: 今季プレミアのシュートが、どこから打たれたか。ゴール前に集まっています。
     image: assets/stats/player_20261016_961995_shots.png
     no_telop: true
   sources:
@@ -516,7 +525,7 @@ sections:
   - text: アーセナルのサカは、右から中へ切れ込んで、左足で決める。
     short_only: true
     card: none
-  - text: 今季はここまで12試合で6得点1アシスト。
+  - text: 今季は、クラブと代表を合わせて12試合で、6得点1アシスト。
     image: assets/images/20261016_saka/ars_portrait/01.jpg
     card: &recent_card
       type: table
@@ -524,13 +533,17 @@ sections:
       columns: [日付, 相手, 出場, 得点, 評点]
       rows: *recent_rows
       source: FotMob
-  - text: 出場時間は881分で、約147分に1点のペースです。
+  - text: 内訳は、プレミア6試合、チャンピオンズリーグ2試合、
     card: *recent_card
-  - text: プレミアリーグは6試合で3得点0アシスト。
+  - text: コミュニティ・シールド1試合、代表3試合です。
+    card: *recent_card
+  - text: クラブの9試合だけだと、4得点。約159分に1点です。
+    card: *recent_card
+  - text: プレミアリーグは6試合で3得点。アシストは、まだ0です。
     card: *recent_card
   - text: チャンピオンズリーグは2試合で1得点1アシスト。
     card: *recent_card
-  - text: ネーションズリーグAは3試合で2得点です。
+  - text: 代表のネーションズリーグAは、欧州の強豪が戦う大会。3試合で2得点です。
     card: *recent_card
   - text: 直近は10月13日、チャンピオンズリーグのリール戦。
     card:
@@ -541,11 +554,7 @@ sections:
     card:
       <<: *recent_card
       highlight_row: 0
-  - text: その3日前、10月10日のリーズ戦は90分出場。
-    card:
-      <<: *recent_card
-      highlight_row: 1
-  - text: 直近5試合で90分出たのは、これで2試合目です。
+  - text: その3日前、10月10日のリーズ戦は90分出場。直近5試合で、ならんで最長です。
     card:
       <<: *recent_card
       highlight_row: 1
@@ -562,6 +571,15 @@ sections:
     card:
       <<: *recent_card
       highlight_row: 2
+  - text: 今季プレミアのシュートは17本、枠内に10本。得点は3。
+    image: assets/stats/player_20261016_961995_shots.png
+    no_telop: true
+  - text: ゴール期待値は、シュートごとの入りやすさを足し合わせた数。
+    image: assets/stats/player_20261016_961995_shots.png
+    no_telop: true
+  - text: 3.62に対して得点は3。アシストの期待値は1.04で、味方が決めていれば1つ付いた計算です。
+    image: assets/stats/player_20261016_961995_shots.png
+    no_telop: true
   - text: 題の答えは、シュートを打ち続けて決める右ウイング。数字が、それを示しています。
     card: *recent_card
   sources:
@@ -600,7 +618,9 @@ sections:
       highlight_row: 0
   - text: PKを外した19歳に、ワイト島の8歳の少年、テディが手紙を書きました。
     card: *story_card
-  - text: お小遣いも、封筒に入れて送ったといいます。手紙には、こう書かれていました。
+  - text: お小遣いも、封筒に入れて送ったといいます。
+    card: *story_card
+  - text: もし目の前にサカがいたら、という手紙です。
     card: *story_card
   - voice: テディ
     text: もう悲しくなければいいな。
@@ -654,7 +674,7 @@ sections:
     text: どこに立てばいいか、分からない時もあった。
     cont: true
     pause: 0.6
-  - text: 手紙に返事を書いた19歳が、育ったクラブで先頭に立つ。その先を、数字で見ます。
+  - text: 19歳で手紙に応えた選手が、22歳で先頭に立つ。その先を、数字で見ます。
     pause: 0.5
     card: none
   quotes_from:
@@ -681,7 +701,7 @@ sections:
     - ['26/27', '4', 637分, '0.57']
     source: Transfermarkt・FotMob から自分で計算
   say:
-  - text: 話を数字に戻して、最後に見立て。
+  - text: 最後に見立てです。
     image: assets/images/20261016_saka/eng_ghana_w/01.jpg
     card: &view_card
       type: table
@@ -694,7 +714,7 @@ sections:
     card: *view_card
   - text: 23/24は0.47、24/25は0.41、25/26は0.30。
     card: *view_card
-  - text: 今季は、4得点を637分で。4を637で割って90をかけると、0.57です。
+  - text: 今季は、クラブの4得点を637分で。4点を637分で。90分に直すと0.57です。
     emph: true
     card:
       <<: *view_card
@@ -707,9 +727,9 @@ sections:
     card:
       <<: *view_card
       highlight_row: 3
-  - text: ただし、まだ9試合の標本。
+  - text: ただし、クラブの9試合、637分での数字。
     card: none
-  - text: プレミアの得点は3で、ゴール期待値の3.62を、わずかに下回ります。
+  - text: まだ試合数が少なく、動きやすい数字です。
     card: none
   - text: クラブの次の試合は、日本時間10月19日の午前0時30分。
     image: assets/images/20261016_saka/ars_300/01_w.jpg

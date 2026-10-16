@@ -1,0 +1,112 @@
+# 取材メモ（2026年10月16日）サンチョにヘタフェが正式オファー（ニュースのショート）
+# 取材: 2026-10-16。requests（ブラウザUA）で原文を読んだ（控えは research/raw/20261016_*）。
+#   ・BBC Sport（2026-10-15 12:45 BST、Senior football correspondent）— 一次の報道。全文を読んだ。
+#   ・サッカーキング 2026-10-16 00:11（BBC報道の日本語。カルバハルの発表日「13日」）。
+#   ・Marca（futbol/getafe/2026/10/15/angel-torres-reconoce-conversaciones-sancho-descarta-parejo）— ヘタフェのトーレス会長がラジオ（COPE『El Partidazo』）で話した内容を文字で報じた記事。会長の言葉は Marca の書き起こしから訳した。
+#   ・題材の一覧の「合意には複雑な作業が残る」は BBC 原文の "An agreement is said to be complicated"（said to be ＝伝えられている）。断定にしない。
+# 確度: 報道。ヘタフェ・サンチョ・クラブの発表は読めなかった（確定にできない）。「移籍が決まった」とは言わない。
+# オファーの条件・額: BBC にもトーレス会長の発言にも無い → 言わない（作らない）。
+# 数字は BBC 原文: 26歳／2021年にドルトムントから7300万ポンドでユナイテッドへ／チェルシー41試合・ヴィラ39試合／ヴィラでEL優勝・欧州の決勝は3季連続3度目（フライブルク戦は終盤の途中出場）／ヘタフェ14位・カンファレンスリーグ。
+# 自分で数えた数字: ユナイテッド在籍5年のあいだの貸し出し＝ドルトムント・チェルシー・ヴィラの3回（BBC は「ドルトムントとチェルシー」と昨季のヴィラを別々に書いている）／直近2季の出場＝41＋39＝80試合。
+# サンチョ本人の言葉: BBC・Marca・サッカーキングのどれにも無し。本人のインスタ（練習動画）は読んでいない（ブラウザ操作は使わない決まり）→ 入れない。
+# 日付: カルバハルのヘタフェ加入発表は13日（サッカーキング・Marca のURL日付）。BBC は「earlier this week」。契約は2027年6月まで（BBC。サッカーキング見出しは「今季終了まで」で同じ意味）。
+# 写真: Commons の Jadon Sancho 20042025 (1).jpg（2025-04-20、CC0、Timmy96。チェルシー在籍時の移動時の写真）。記事の写真は Getty なので使わない。顔が小さめ・チェルシーのウェア（他に使える写真が無かった）。
+# 反応: 取れなかった。まとめ4サイトを reactions --find で検索（「サンチョ ヘタフェ」→記事なし。「サンチョ」→古い記事4件で今回のオファーの話ではなく、書き込みも読めなかった）。X は使わない。作らない。
+#   → approve は --no-voices "反応は取れなかった（まとめ4サイト検索で該当記事なし）"。
+slot: la_liga
+date: "2026年10月16日"
+format: news
+no_main: true
+people: [サンチョ, ヘタフェ]
+
+short_question: サンチョは、ヘタフェを選ぶと思いますか。
+short_hook: ""
+short_telops:
+  - {match: 正式なオファーを出しました, text: 無所属のサンチョに/ヘタフェが正式オファー}
+  - {match: トーレス会長は, text: ヘタフェ会長/トーレス氏の言葉}
+  - {match: 今夏、ユナイテッド, text: 26歳/今夏ユナイテッドを契約満了}
+  - {match: 複雑な作業, text: 合意には/複雑な作業が残る}
+  - {match: 14位です, text: ヘタフェ/ラ・リーガ14位}
+  - {match: カルバハルの獲得, text: 13日/カルバハルを獲得}
+  - {match: 3回です, text: 貸し出しは3回/ドルトムント・チェルシー・ヴィラ}
+  - {match: 合わせて80試合, text: 直近2季/41＋39＝80試合}
+short_photos: []
+
+theme:
+  id: sancho_getafe_offer
+  league: spain
+  league_name: ラ・リーガ
+  prefix: ""
+  title: サンチョにヘタフェが正式オファー。会長はなぜ、辛抱を口にしたのか
+  hook: ""
+  takeaway: サンチョは5年で3回貸し出され、直近の2季で80試合に出た。ヘタフェのオファーは出たが、合意はまだで、決めるのは本人
+  question: ヘタフェ会長は、なぜ「辛抱」を口にしたのか
+
+thumbnail:
+  line1: サンチョに正式オファー
+  line2: 会長が語った●●
+  tags: [サンチョ, ヘタフェ]
+  photo: assets/images/20261016_sancho_getafe_offer/01.jpg
+  short_photo: assets/images/20261016_sancho_getafe_offer/01_v.jpg
+
+answer: 他にもカタールなどからオファーがあり、決めるのは本人だから。会長は「彼に決めさせる」と話している
+watch: 合意の続報
+sections:
+  - id: what
+    main: true
+    heading: 何が起きたか
+    tier: 報道
+    telop: ヘタフェがサンチョに正式オファー
+    say:
+      - 無所属のジェイドン・サンチョに、ヘタフェが正式なオファーを出しました。
+      - ヘタフェのトーレス会長は、ラジオでこう語りました。
+      - voice: トーレス会長
+        text: それは全くの事実だ。4か月、この件を追っている
+      - voice: トーレス会長
+        text: フリーの選手になった。最後のオファーを渡した
+        cont: true
+      - voice: トーレス会長
+        text: カタールなど、いくつかの所からオファーがある
+        cont: true
+      - voice: トーレス会長
+        text: 辛抱が必要だ。しつこく迫らず、彼に決めさせる
+        cont: true
+      - 26歳のサンチョは、今夏、ユナイテッドとの契約が切れ、次の所を探しています。
+      - 合意には、複雑な作業が残っていると伝えられています。
+      - サンチョは、イングランドの外への移籍を望んでいると伝えられています。
+    official: false
+    sources:
+      - https://www.bbc.co.uk/sport/football/articles/cm3r5p11d23no
+      - https://www.marca.com/futbol/getafe/2026/10/15/angel-torres-reconoce-conversaciones-sancho-descarta-parejo.html
+      - https://www.soccer-king.jp/news/world/esp/20261016/2217196.html
+
+  - id: getafe
+    heading: ヘタフェはどんなクラブか
+    tier: 背景
+    telop: ヘタフェは14位。13日にカルバハルを獲得
+    say:
+      - サンチョを誘うヘタフェは、ラ・リーガで14位です。
+      - 13日には、レアル・マドリードを退団したカルバハルの獲得を発表しました。
+      - 34歳のスペイン代表DFで、契約は2027年6月までです。
+      - カルバハルはレアルで、チャンピオンズリーグを6度制しました。
+    official: false
+    sources:
+      - https://www.bbc.co.uk/sport/football/articles/cm3r5p11d23no
+      - https://www.soccer-king.jp/news/world/esp/20261016/2217196.html
+
+  - id: numbers
+    viewpoint: true
+    heading: サンチョの5年を数える
+    tier: 報道
+    telop: 貸し出し3回。直近2季で80試合
+    say:
+      - 2021年、7300万ポンドで加入したサンチョ。
+      - それから5年で、貸し出されたのは3回です。
+      - ドルトムント、チェルシー、そして昨季のアストン・ヴィラ。
+      - 直近の2季は、チェルシーで41試合、ヴィラで39試合。合わせて80試合です。
+      - ヴィラでは、ヨーロッパリーグを制しました。欧州の決勝は、3季連続。
+      - オファーは出ました。ただ、決めるのは本人です。
+    official: false
+    sources:
+      - https://www.bbc.co.uk/sport/football/articles/cm3r5p11d23no
+short_title: "サンチョにヘタフェが正式オファー。会長はなぜ、辛抱を口にしたのか"

@@ -1,0 +1,118 @@
+# 日本人選手 の取材メモ（2026年10月16日）
+# 1本＝1テーマ。まとめではなく、1つの話を掘る
+# 埋めたら python -m src.cli draft このファイル で台本になる
+# 取材: 2026-10-16。requests（ブラウザUA）で原文を読んだ。リール公式サイト（losc.fr）の受賞記事・「Dogue du mois」歴代受賞者ページ・
+#   ベティス戦の公式レポート、サッカーキング、FOOTBALL ZONE、フットボールチャンネル（Yahoo!経由）、Le Petit Lillois（ニース戦の採点記事・トゥールーズ戦レポート）、Radarfoot（トゥールーズ戦）。
+# 前日(10/15 research/20261015_ueda_heel.yaml)で言ったこと: 左かかとの違和感・検査・ブレスト戦の出場。→ 今回は繰り返さない。今回は受賞の中身（9月の3ゴール）だけ。
+# 受賞: リール公式サイト 2026-10-15 14:02「Les supporters ont élu Ayase Ueda "Dogue du mois" de septembre by Kleber. Une première pour l'attaquant international japonais.」
+#   → サポーター投票・クラブ発表＝確定。「上田にとって初めて」はクラブ文面。賞の通称は「Dogue du mois」（リールの愛称ドーグ）。協賛 Kleber は台本では言わない。
+# 公式Xの投稿（losc.fr に埋め込み）: 「Vous avez élu Ayase Ueda Dogue du mois de septembre by Kleber. Félicitations Ayase」→ 台本の「みなさんが…選びました。おめでとう、綺世」はこの訳（絵文字・協賛名は省いた）。
+#   フットボールチャンネルの日本語訳は「皆さんが選ぶ、9月の月間最優秀Dogueに上田綺世が選ばれました」で少し違う → 原文（フランス語）から訳した。
+# 3ゴール（フランス語の一次側で確かめた。日付は現地）:
+#   9/3 トゥールーズ0-1リール（リーグ・アン第3節）: 73分、途中出場の上田が頭で決勝点（Radarfoot・Le Petit Lillois。リールデビュー戦）。
+#   9/8 リール2-3ベティス（CLリーグフェーズ第1節）: 12分、頭で先制（losc.fr の公式レポート）。チームは逆転負け。
+#   9/20 ニース2-1リール（リーグ・アン）: 79分、左足で1点を返す（Le Petit Lillois。ニースが0-2とリードしていた）。リールはリーグ戦初黒星。
+# 資料間のずれ: 「9月の公式戦4試合で3ゴール」（サッカーキング・FOOTBALL ZONE）／「リーグ3試合で2ゴール＋CLベティス戦1ゴール」（フットボールチャンネル）→ 合わせて4試合3ゴールで一致。台本は「3ゴール」だけ言い、4試合目は言わない（試合名を確かめていない）。
+#   サッカーキングは「フェイエノールトで今季4試合3ゴール1アシスト」とも書くが、9月の数字と取り違えやすいので使わない。
+# 数えたもの（自分で）: 上田が出たリール加入後の公式戦6試合（Le Petit Lillois「三つのゴール、六試合」と一致）のリールの成績。
+#   ゴールのあった3試合＝1勝（トゥールーズ）2敗（ベティス・ニース）／ゴールの無かった3試合＝2勝（トロワ9/13 2-0・ル・アーヴル10/10 1-0）1敗（アーセナル10/13 0-3）。
+#   出場は losc.fr の各試合レポートの先発・交代で確認（トロワ戦は先発71分交代、ル・アーヴル戦は56分に途中出場、アーセナル戦は先発78分交代）。
+#   ル・アーヴル戦の日付は losc.fr の記事URL（2026-10-10）。台本では日付を言わない。
+# 本人のコメント: 受賞についての上田本人の言葉はどの記事にも無かった → 入れない。
+# 反応（ネット民）: 取れなかった。当たった先＝サッカーキング・FOOTBALL ZONE・フットボールチャンネルの記事、リール公式サイト、
+#   「上田綺世 月間MVP 反応」の検索（5ch系まとめ・サカラボ・fever-antenna）。この受賞についての書き込みはまだ見つからなかった（検索に出るのは2025年のフェイエノールト時代のまとめのみ）。
+#   Yahoo!ニュースのコメント欄は本文に出ない。X は読まない決まり。→ 作らない。approve は --no-voices "受賞直後で、この件の書き込みが見つからなかった" で通す。
+# 写真: 前日(10/15)は losc.fr 選手ページの DSC04577 を使った → 今日は別の写真にする（assets/images/20261016_ueda_lille_mvp/）。
+slot: japan
+date: "2026年10月16日"
+format: news
+no_main: true      # ニュースはショートだけ（2026-10-14）。締めで本編を案内しない
+people: [上田綺世, リール]
+
+short_question: あなたは、上田の3ゴールのうち、どれが一番印象に残りましたか。
+short_hook: 上田綺世、リールの9月月間MVPに。
+short_telops:
+  - {match: 月間最優秀選手に選んだと発表, text: 9月のクラブ月間MVP/上田綺世に}
+  - {match: 初めての受賞, text: サポーター投票/上田は初受賞}
+  - {match: 73分に頭で, text: 9月3日トゥールーズ戦/73分に頭で決勝点}
+  - {match: 12分に、頭で先制, text: 9月8日CLベティス戦/12分に頭で先制}
+  - {match: 79分に左足で, text: 9月20日ニース戦/79分に左足で1点}
+  - {match: 1勝2敗, text: 3ゴールの3試合/リールは1勝2敗}
+  - {match: 2勝1敗, text: 無得点の3試合/リールは2勝1敗}
+short_photos: []
+
+theme:
+  id: ueda_lille_mvp
+  league: france
+  prefix: ""
+  title: 上田綺世、リールの月間MVPに。3ゴールの試合、チームは勝てたのか
+  hook: ""
+  question: 上田綺世はリールで、何をして月間MVPに選ばれたのか
+  takeaway: 上田はリール加入後の9月に3ゴールを決め、サポーター投票で月間MVPに選ばれた。ただし3ゴールの3試合でチームは1勝2敗、点が無かった3試合は2勝1敗だった
+
+thumbnail:
+  line1: 上田綺世、リール月間MVP
+  line2: 3ゴールの試合、チームは●●
+  tags: [上田綺世, リール]
+  photo: assets/images/20261016_ueda_lille_mvp/01.jpg
+  short_photo: assets/images/20261016_ueda_lille_mvp/01_v.jpg
+
+answer: 9月に3ゴールを決めたから。ただし3ゴールの3試合で、リールは1勝2敗（無得点の3試合は2勝1敗）
+watch: 次は現地17日、ホームでブレスト戦
+# follow_up: true
+
+sections:
+  - id: what
+    main: true
+    heading: 何が起きたか
+    tier: 確定
+    telop: 上田綺世が、リールの9月の月間MVPに
+    say:
+      - リールは15日、9月のクラブ月間最優秀選手に、上田綺世を選んだと発表しました。
+      - サポーターの投票で決まる賞で、上田は初めての受賞です。
+      - voice: リール公式
+        text: みなさんが、上田綺世を9月のドーグ・デュ・モワに選びました
+      - voice: リール公式
+        text: おめでとう、綺世
+        cont: true
+    official: true
+    sources:
+      - https://www.losc.fr/actualites/2026-10-15/ayase-ueda-dogue-du-mois-de-septembre
+      - https://www.soccer-king.jp/news/world/fra/20261015/2217143.html
+      - https://www.football-zone.net/archives/679399
+
+  - id: goals
+    heading: 選ばれた3ゴール
+    tier: 報道
+    telop: 9月の3ゴールは、頭、頭、左足
+    say:
+      - 上田の1点目は9月3日、トゥールーズ戦です。
+      - 途中出場でリールデビューを飾り、73分に頭で決めました。
+      - 2点目は8日、チャンピオンズリーグのベティス戦。
+      - 12分に、頭で先制しました。
+      - 3点目は20日のニース戦。
+      - 2点を追う79分に、左足で1点を返しました。
+    official: false
+    sources:
+      - https://radarfoot.fr/articles/toulouse-lille-0-1-ueda-losc-ligue-1-journee-3
+      - https://lepetitlillois.com/2026/09/03/victoire-lilloise-ueda-aime-moinsaime-tfc-losc/
+      - https://www.losc.fr/actualites/2026-09-08/losc-betis-le-compte-rendu
+      - https://lepetitlillois.com/2026/09/21/ueda-dessus-andre-difficulte-notes-presse-ogc-nice-losc/
+
+  - id: record
+    viewpoint: true
+    heading: 点を取った試合と、取れなかった試合
+    tier: 報道
+    telop: 点を取った3試合は1勝2敗。取れなかった3試合は2勝1敗
+    say:
+      - 上田が点を取った3試合で、リールは1勝2敗です。
+      - 点を取れなかった3試合は2勝1敗。トロワ戦とル・アーヴル戦に勝ちました。
+      - 得点と勝ち負けは、結びついていません。
+      - それでも選ばれたのは、上田でした。
+    official: false
+    sources:
+      - https://www.losc.fr/actualites/2026-09-13/losc-estac-le-compte-rendu
+      - https://www.losc.fr/actualites/2026-10-10/losc-le-havre-le-compte-rendu
+      - https://www.losc.fr/actualites/2026-10-13/arsenal-losc-le-compte-rendu
+      - https://lepetitlillois.com/2026/10/15/losc-vers-plusieurs-semaines-dabsence-pour-ayase-ueda/
+short_title: "上田綺世、リールの月間MVPに。3ゴールの試合、チームは勝てたのか"

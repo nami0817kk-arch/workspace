@@ -1,0 +1,54 @@
+title: 10月16日の題材
+lead: 候補435件から30件。日本人を先に10件（EL・ECL第2節の夜に動いた人が多い）、続いて欧州7リーグの大きい話を20件。ショートは10本、本編はシリーズ8本が予約済みです。
+note: |
+  **今日は欧州カップ戦（EL・ECL）の翌日**です。10/15 夜の試合で日本人は中村敬斗・鎌田大地・町田浩樹・南野拓実・久保建英・北野颯太が動きました。
+  10/15 に出した題材（鈴木彩艶・松木玖生・冨安健洋・上田綺世・久保のソシエダ幹部の言葉・レアル対ローマ・ヴィニシウス出場停止・イタリア勢CL全敗・PSG対シティ・渡辺剛）と重なる続報には **弱い印**を付けています。
+  **ロマーノは本人の X を今朝読みました**（ケイン新契約・ラフィーニャ復帰・ヴィティーニャ・バルベルデ・エンドリッキ）。個別の投稿URLは取れていないので、url が x.com/FabrizioRomano の2件は本人のページです。
+  日本人本人の発言（quote）は **鈴木彩艶（試合後）・久保建英（W杯優勝との距離）**の2件のみで、どちらも弱い印付きです。南野・町田・中村敬斗・鎌田の試合後コメントは、今朝の時点では見つかりませんでした。
+items:
+  - {num: 1, slot: 日本人, head: 中村敬斗、EL・パレス戦で2アシスト。仏メディアが試合の主役に選出, why: リヨンが3-2で勝って開幕2連勝。**前半終盤のクロスと76分のパスで2点を演出**し、MadeInFOOT が MOM に選んだ。監督は前日の会見で先発を明言していた, src: フットボールチャンネル（2.8時間前）／サッカーキング, url: "https://www.footballchannel.jp/2026/10/16/post1033500/", fmt: news}
+  - {num: 2, slot: 日本人, head: 町田浩樹、ELで初ゴール。大けが復帰後、ホッフェンハイム加入後の初得点, why: 87分にCKをヘッドで決めて2-3に迫ったが敗戦（EL2連敗）。**前十字靱帯断裂から385日ぶりに復帰した9月以来の初ゴール**。次戦は22日、中村敬斗のリヨン戦, src: フットボールチャンネル（0.6時間前）, url: "https://www.footballchannel.jp/2026/10/16/post1033539/", fmt: news}
+  - {num: 3, slot: 日本人, head: 南野拓実、298日ぶりの先発復帰。モナコの2得点の起点に, why: カンファレンスリーグ初戦、CSKAソフィアに2-1。**左膝前十字靱帯断裂から先発で戻り、2ゴールの起点**。仏メディアは7点（10点満点）。59分に交代, src: フットボールチャンネル（1.6時間前）／ゲキサカ, url: "https://www.footballchannel.jp/2026/10/16/post1033518/", fmt: news}
+  - {num: 4, slot: 日本人, head: 鎌田大地、パレスでEL初ゴール。途中出場から1点差に迫る, why: リヨン戦の81分、こぼれ球を右足で決めた。**11日のプレミア（フォレスト戦）に続く2戦連発**。パレスは2-3で敗れた。1と同じ試合, src: サッカーキング／ゲキサカ（3.7時間前）, url: "https://www.soccer-king.jp/news/world/el/20261016/2217261.html", fmt: news}
+  - {num: 5, slot: 日本人, head: 久保建英、3試合ぶりの出場。ハーフナー・ニッキとの日本人対決, why: ソシエダはユニオンSGと1-1。68分から出場、88分のFKで追いつかれ**開幕2戦未勝利**。10/15 に幹部の言葉を出したので続きになる, src: サッカーキング（1.3時間前）／ゲキサカ, url: "https://www.soccer-king.jp/news/world/world_other/20261016/2217266.html", fmt: news, weak: true}
+  - {num: 6, slot: 日本人, head: 久保建英「認められる側の国。スペインは認める側にいる」, why: 日本代表のW杯優勝までの距離を聞かれた本人の言葉。**「まねだとオリジナルにはかなわない」**とも。サンスポのコラム（10/13）で本人発言を引いたもの。3日前の記事, src: サンスポ（10/13）, url: "https://www.sanspo.com/article/20261013-ZO2QCU24VRKIFFX3PH2PF6XKVE/", fmt: quote, weak: true}
+  - {num: 7, slot: 日本人, head: 鈴木彩艶「質を上げていければ」。CL初クリーンシートの試合後の言葉, why: WOWOWの取材で**決定機阻止と、ジャクソンの得点につながったキック**を本人が振り返った。10/15 に鈴木のCLを出している。今回は本人の言葉が主役, src: サッカーキング（10/15）, url: "https://www.soccer-king.jp/news/world/cl/20261015/2217065.html", fmt: quote, weak: true}
+  - {num: 8, slot: 日本人, head: 上田綺世、リールの9月のクラブ月間MVPに。加入直後に4試合3ゴール, why: サポーター投票で選ばれた。9月はデビュー戦ゴール・CLベティス戦・ニース戦。ただし**連日続いた上田（10/14・10/15）の続き**, src: サッカーキング（11時間前）, url: "https://www.soccer-king.jp/news/world/fra/20261015/2217143.html", fmt: news, weak: true}
+  - {num: 9, slot: 日本人, head: 北野颯太は60分までプレー。ザルツブルクがミランに0-4、シセが19歳でハット, why: 北野が先発したがミランのアルファジョ・シセに3点を許した。**日本人の見せ場は少ない**。11と同じ試合, src: サッカーキング（0.6時間前）, url: "https://www.soccer-king.jp/news/world/world_other/20261016/2217274.html", fmt: news, weak: true}
+  - {num: 10, slot: 日本人, head: 鈴木唯人、フライブルクのECL初戦に先発。後藤啓介は途中出場, why: フライブルクがヤブロネツに3-2。鈴木唯人と長田澪が先発、後藤啓介が途中出場、山本理仁が初のベンチ入り。**日本人4人が絡んだ夜**。本文は未読（見出しと冒頭のみ確認）, src: ゲキサカ（2.7時間前）, url: "https://web.gekisaka.jp/news/world/detail/?461119-461119-fl", fmt: news, weak: true}
+  - {num: 11, slot: セリエA, head: ミランのシセ、19歳358日でイタリア人最年少の欧州ハット。デル・ピエロを抜いたトレゾルディの記録を1日で更新, why: ELでザルツブルクに4-0。シセが15分・32分・49分に決めた。**トレゾルディが2日前に抜いた記録が24時間もたなかった**。アモリムは「かなり改善が必要」, src: Gazzetta（5時間前）／ESPN, url: "https://www.gazzetta.it/Calcio/Serie-A/Milan/15-10-2026/milan-cisse-riscrive-la-storia-tripletta-a-19-anni-battuto-anche-il-record-di-del-piero.shtml", fmt: news}
+  - {num: 12, slot: プレミア, head: バルコラ、移籍後初ゴール含むハット。UEFA週間最優秀選手にも, why: リバプールがLASKリンツに6-3。**9ゴールが入った試合でバルコラが3点**。ロマーノが「UEFAの週間最優秀賞」と投稿。10/14 のイラオラ・ヴィルツの回とは別の話, src: サッカーキング（10/15）／ロマーノ, url: "https://www.soccer-king.jp/news/world/cl/20261015/2216875.html", fmt: news}
+  - {num: 13, slot: ブンデス, head: ケイン、バイエルンと2029年までの新契約で基本合意, why: スカイは「基本合意、書類を詰めている」。ロマーノは「条件は全部まとまり、弁護士が確認中」。**昨季は代表を含め72〜73ゴール（媒体で差）**。10/14 のケインの回の続きで弱い, src: Sky Sports（8.5時間前）／ロマーノ, url: "https://www.skysports.com/football/news/12691/13599678/harry-kane-england-captain-agrees-new-deal-in-principle-with-bayern-munich-until-2029", fmt: news, weak: true}
+  - {num: 14, slot: プレミア, head: L・マルティネス、上層部と面談のあと声明。それでも「謝罪」かで割れている, why: ユナイテッドの技術部門トップらと木曜に面談。声明は「怒りと失望で口にした」と説明。**契約は来夏まで、延長を渋っているとの報道**（Sky・紙面）。10/14 に出した題材の続き, src: Sky Sports（5.7時間前）／ロマーノ, url: "https://www.skysports.com/football/news/11661/13599725/lisandro-martinez-man-utd-defender-apologises-for-outburst-and-holds-talks-with-jason-wilcox-and-michael-carrick", fmt: news, weak: true}
+  - {num: 15, slot: プレミア, head: ユナイテッド、L・マルティネスの発言に一部チームメイトが反感か, why: 英紙サンの報道をサッカーキングが紹介。選手のあいだでは**率直さを評価する声と、騒ぎを大きくしたとの声に割れている**。報道の段階で、選手の実名は出ていない, src: サッカーキング（10/15）, url: "https://www.soccer-king.jp/news/world/eng/20261015/2217062.html", fmt: news, weak: true}
+  - {num: 16, slot: ラ・リーガ, head: エンドリッキ、ミランが1月のレンタルを狙うがモウリーニョは「不可能」と拒否, why: ローマ戦で出場4分から一転、ゴールを決めてMOM。**監督は「貸し出しは不可能」と明言**（ロマーノ）。10/15 のレアル対ローマの続きで弱い, src: Gazzetta（10.4時間前）／ロマーノ, url: "https://www.gazzetta.it/Calcio/Calciomercato/Milan/15-10-2026/endrick-obiettivo-milan-mourinho-muro-situazione-mercato.shtml", fmt: quote, weak: true}
+  - {num: 17, slot: ラ・リーガ, head: バルベルデ「ヴィニは4試合停止に値しない。故意ではなかった」, why: ロマーノが2時間前に投稿した本人の言葉。ヴィニシウスの出場停止（10/15 に出した）に**チームの主力が反応**。ロマーノ経由で、本人の取材応答の原文は未確認, src: ロマーノ（2時間前）, url: "https://x.com/FabrizioRomano", fmt: quote, weak: true}
+  - {num: 18, slot: ロマーノ, head: ラフィーニャとデ・ヨング、フル練習に復帰。PSG戦・クラシコ照準, why: ロマーノは「ラフィーニャは全体練習を完走。ベティス戦、さらにPSG戦に間に合わせる狙い」と投稿。マルカも同様に報道。**バルサは公式戦10連勝中**, src: ロマーノ（11時間前）／サッカーキング, url: "https://www.soccer-king.jp/news/world/esp/20261015/2217162.html", fmt: news}
+  - {num: 19, slot: プレミア, head: ボーンマス、アレックス・スコットに8,000万ポンド超なら売却を検討, why: 新契約を拒み続けるイングランド代表MF。**チェルシーとリバプールが関心を維持**。スカイの報道で、クラブの公式発表ではない, src: Sky Sports（15時間前）, url: "https://www.skysports.com/football/news/12691/13599539/alex-scott-transfer-news-bournemouth-will-consider-offers-in-excess-of-80m-for-england-international-amid-refusal-to-sign-new-contract", fmt: news}
+  - {num: 20, slot: ラ・リーガ, head: 無所属のサンチョに、ヘタフェが正式オファー, why: BBCが報道。26歳、ユナイテッドを夏に契約満了で退団。**ヘタフェは14位で、先週レアルを退団したカルバハルも獲った**。合意には「複雑な作業が残る」, src: BBC Sport（12時間前）／サッカーキング, url: "https://www.bbc.co.uk/sport/football/articles/cm3r5p11d23no", fmt: news}
+  - {num: 21, slot: セリエA, head: ラウタロ、左ハムストリング負傷で約1か月離脱。ミラノ・ダービーも欠場へ, why: インテルが負傷を発表。**離脱期間はクラブは明言せず、スカイ・イタリアが「1か月以上」と報道**。公式戦7試合を欠く見通し, src: サッカーキング（8時間前）, url: "https://www.soccer-king.jp/news/world/ita/20261016/2217201.html", fmt: news}
+  - {num: 22, slot: セリエA, head: ユベントス、セルタ戦の交代でコンセイソンが激怒。スパレッティ「怒るなら自分に」, why: ELで2-1の逆転勝ち（ウォルテマデ同点、コロ・ムアニが勝ち越し）。**64分の交代でベンチを殴るように出た**。本人は「口論はゼロ」と否定, src: Gazzetta（3.2時間前）／Football Italia, url: "https://www.gazzetta.it/Calcio/Serie-A/Juventus/15-10-2026/rabbia-conceicao-dopo-la-sostituzione-in-celta-vigo-juventus.shtml", fmt: quote}
+  - {num: 23, slot: リーグ・アン, head: デンベレ「3月まで休暇をもらおうかな」。出場時間の管理への批判に皮肉, why: マンC戦で1得点1アシスト。カナル・プリュスの取材に答えた**本人の言葉**。ル・マン戦は休養で欠場していた。10/15 のPSG対シティの回とは別の話, src: サッカーキング（10/15）, url: "https://www.soccer-king.jp/news/world/fra/20261015/2217080.html", fmt: quote}
+  - {num: 24, slot: ブンデス, head: パヴロヴィッチ、マンCの最大1億ユーロのオファーを断った理由「ここで育った」, why: シュポルト・ビルトの長いインタビュー。**「決断は難しくなかった」**と語った。22歳、バイエルンのアカデミー出身, src: サッカーキング（10/15）, url: "https://www.soccer-king.jp/news/world/ger/20261015/2217115.html", fmt: quote}
+  - {num: 25, slot: ロマーノ, head: ヴィティーニャ「ロナウドが代表に戻って、全部うまくいけばいい」, why: ロマーノが15時間前に投稿した本人の言葉（TNT Sports）。PSGのMFがポルトガル代表の話をした。**ロナウドの代表復帰の行方**が背景。原文の取材記事は未確認, src: ロマーノ（15時間前）／Foot Mercato, url: "https://x.com/FabrizioRomano", fmt: quote}
+  - {num: 26, slot: プレミア, head: サウスゲート「ほとんどサッカーを見ていない」。プレミアの監督復帰は「想像できない」, why: ポッドキャスト出演での本人の言葉。**「最後は勝っても楽しめるのは2〜3分」**とも語った。BBCが報道, src: フットボールチャンネル（3.9時間前）／BBC, url: "https://www.footballchannel.jp/2026/10/16/post1033425/", fmt: quote}
+  - {num: 27, slot: ラ・リーガ, head: レアル、スーパーリーグ構想のA22前CEOを事業部門に迎える, why: マルカが「レアルの関係者が確認」と報道。ドイツ人のライヒャルト氏が**ホセ・アンヘル・サンチェス専務の下で事業を統括**する。クラブの公式発表は未確認, src: Marca（5.6時間前）, url: "https://www.marca.com/futbol/real-madrid/2026/10/15/madrid-ficha-bernd-reichart-ceo-a22-sports-management.html", fmt: news}
+  - {num: 28, slot: ラ・リーガ, head: ニコ・ウィリアムスの代理人「出る気はあった。アスレティックでは欧州制覇はできないと分かっている」, why: ポッドキャストでの代理人の言葉。**2025年夏のバルサとの交渉**を振り返り、登録できる保証がなく破談になったと説明。選手本人の発言ではない, src: Marca（3時間前）, url: "https://www.marca.com/futbol/athletic/2026/10/15/felix-tainta-representante-nico-williams-tenia-idea-salir-athletic-vas-ganar-champions.html", fmt: quote}
+  - {num: 29, slot: リーグ・アン, head: マルセイユ監督「8試合で2勝。同じ説明を繰り返すのは苛立たしい」。EL第2節でオリンピアコスに0-1, why: 決定機9本で無得点、セットプレーから失点。**ジュネシオは「自分たちスタッフも4か月で、もっと速く進まないと」と自分も含めた**。カナル・プリュスの取材, src: Foot Mercato（1.9時間前）, url: "https://www.footmercato.net/a5813921595587090264-om-bruno-genesio-en-a-marre", fmt: quote}
+  - {num: 30, slot: ブンデス, head: マテウス、オリーズの退場を批判「受け入れられない。自分にもチームにも害を与えた」, why: バイエルンはスタヴァンゲルと3-3。74分にオリーズが相手主将にボールをぶつけて退場、数的不利で90分に同点を許した。ビルへの談話。**10/14 のケインの回で扱った試合**なので弱い, src: Foot Mercato（10.5時間前）, url: "https://www.footmercato.net/a8580075086319507402-bayern-munich-lothar-matthaus-detruit-michael-olise-apres-son-carton-rouge", fmt: quote, weak: true}
+drops:
+  - [旗手怜央（バーンリー、移籍後初ゴール）, 試合は10/14で2日前。古い]
+  - [モナコのアンス・ファティ、151日ぶりのゴール, 南野の回（3）で触れられる。単独だと弱い]
+  - [サラー（トラブゾンスポル）のECL1ゴール1アシスト, トルコ・リーグで欧州7リーグの外]
+  - [ルカク「トルコで酷評」, 同上（トルコ）]
+  - [マリオナ・カルデンテイ（アーセナル）の負傷, 女子サッカーなので除外]
+  - [ポルト・スポルティングのCL勝敗, ハンドボールの記事（abola）で題材が違った]
+  - [ヴィラのジャクソンの首を切るパフォーマンスがお咎めなし, 出典1本（SPORTBIBLE経由）で本文を確かめられず。ヴィラは10/15 に鈴木で出している]
+  - [ハーランドがCL史上最年少で60得点, 10/15 のPSG対シティの回と同じ話]
+  - [コンテが「カリックが解任されたら引き受ける」とユナイテッドに伝達（Daily Mirror）, 紙面の噂で出典1本。ユナイテッドは14・15で枠を使っている]
+  - [ボデ・グリムトがドルトムントに1-0, 出典がスコアのみで話の中身が取れない]
+  - [グリーンウッドが「加害者」と罵声, 内容が重く確かめられる原文が少ない]
+  - [ドンナルンマにL'Equipeが採点2, PSG対シティの回と同じ試合]
+  - [アヤックス、ハイドゥク戦敗戦後のアムラバト談話, 読んだが小さい話で山場が弱い]
+  - [石渡ネルソン（シント＝トロイデン）の幻のゴール, ベルギーは欧州7リーグの外]
+  - [南野・町田・中村敬斗の本人コメント, 今朝のフィードに試合後コメントが無く、quoteにできない]

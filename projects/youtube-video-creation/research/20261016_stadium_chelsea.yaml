@@ -91,7 +91,7 @@ sections:
     - - 収容人数
       - 4万44人（今季の開幕時）
     - - 最多の入場
-      - 8万2905人（1935年）
+      - 8万2905人（1935年。公式の数え）
     - - 開場
       - 1877年4月28日
     - - 場所
@@ -103,7 +103,7 @@ sections:
   say:
   - text: ロンドン西部、チェルシーの本拠地の話です。
     short_only: true
-  - text: ここの最多の入場は、8万2905人。今の収容は、4万44人です。
+  - text: ここの最多の入場は、公式に数えて8万2905人。今の収容は、4万44人です。
     emph: true
     card: &id_stats
       type: stats
@@ -111,7 +111,7 @@ sections:
       items:
       - - '82905'
         - 人
-        - 最多の入場（1935年）
+        - 最多の入場（1935年。公式の数え）
       - - '40044'
         - 人
         - 今季の開幕時の収容
@@ -119,32 +119,32 @@ sections:
         - 倍
         - 最多は、今の収容の何倍か
       focus: 0
-  - text: 最多は、今の収容の2.07倍。収容は、記録の半分以下に縮んでいます。
+  - text: 最多は、今の収容の2.07倍。収容は、記録の半分以下。
     emph: true
     card:
       <<: *id_stats
       focus: 2
-  - text: 開場は1877年。もとは、陸上の会場。
+  - text: 理由は、観客席の変わり方。最多の頃は、立ち見が主でした。
     card:
       type: table
       title: チェルシーの本拠地の基礎DATA
       columns: *cols_data
       rows: *rows_data
-      highlight_row: 2
-  - text: 最寄りは、地下鉄のフラム・ブロードウェイ駅。
+      highlight_row: 1
+  - text: 1990年代、上位のリーグは、全席イス席が決まりになります。
     card:
       type: table
       title: チェルシーの本拠地の基礎DATA
       columns: *cols_data
       rows: *rows_data
-      highlight_row: 4
-  - text: ピッチは、縦103メートル、横67.5メートルです。
+      highlight_row: 1
+  - text: 立ち見の丘は、イス席のスタンドに替わり、収容が減りました。
     card:
       type: table
       title: チェルシーの本拠地の基礎DATA
       columns: *cols_data
       rows: *rows_data
-      highlight_row: 5
+      highlight_row: 1
   sources:
   - https://resources.premierleague.pulselive.com/premierleague/document/2026/07/31/8a890ff9-176c-4364-a8ff-e08f995e2c86/TM2040_PL-Handbook-and-Collateral-2026-27_Digital_31.07.pdf
   - https://www.chelseafc.com/en/general-information
@@ -193,7 +193,7 @@ sections:
     emph: true
     callword: 10万人
     card: none
-  - text: 当時のイングランドで、クリスタル・パレスに次ぐ、2番目の大きさです。
+  - text: 当時のイングランドで、クリスタル・パレスの競技場に次ぐ、2番目の大きさです。
     card: none
   - text: 屋根のある席は、東側の5000人ぶんだけ。ほかの3辺は、開けた大きな丘でした。
     card: none
@@ -259,7 +259,7 @@ sections:
     card: none
   - text: 最初は東側から。ところが、工事の遅れと費用の増加が重なります。
     card: none
-  - text: 建てる側には、スタジアムの経験がありませんでした。
+  - text: 設計を任された建築家には、スタジアムの経験がありませんでした。
     card: none
   - text: 東スタンドは、1974年に開きます。でも、建て直しはそこで止まりました。
     card:
@@ -273,11 +273,15 @@ sections:
     card:
       <<: *id_rebuild
       highlight_row: 1
-  - text: ところが、土地は、別の会社の持ち物になっていました。
+  - text: ところが、ベイツが買ったのは、クラブだけでした。
     card:
       <<: *id_rebuild
       highlight_row: 1
-  - text: 元の役員が、その会社の株を、開発業者に売っていたのです。
+  - text: 土地は、別の会社の持ち物でした。
+    card:
+      <<: *id_rebuild
+      highlight_row: 1
+  - text: その会社の株は、元の役員から、不動産の開発業者へ渡っていました。
     card:
       <<: *id_rebuild
       highlight_row: 1
@@ -286,7 +290,7 @@ sections:
     card:
       <<: *id_rebuild
       highlight_row: 1
-  - text: ほかのクラブと、本拠地を分けるかもしれない。
+  - text: ほかのロンドンのクラブと、本拠地を分けるかもしれない。
     card:
       <<: *id_rebuild
       highlight_row: 1
@@ -299,7 +303,7 @@ sections:
     card:
       <<: *id_rebuild
       highlight_row: 2
-  - text: 土地は、クラブに戻りました。
+  - text: 土地は、クラブの手に戻ります。
     card:
       <<: *id_rebuild
       highlight_row: 2
@@ -307,7 +311,15 @@ sections:
     card:
       <<: *id_rebuild
       highlight_row: 2
-  - text: 二度と、同じ目にあわないための仕組みです。
+  - text: ファンが株を持つ会社で、のちに土地とクラブの名前の権利を持ちます。
+    card:
+      <<: *id_rebuild
+      highlight_row: 2
+  - text: つまり今の土地の持ち主は、クラブではなく、この会社です。
+    card:
+      <<: *id_rebuild
+      highlight_row: 2
+  - text: 移転してこの名前を使うには、株主の4分の3の同意が要るとされます。
     card:
       <<: *id_rebuild
       highlight_row: 2
@@ -320,7 +332,7 @@ sections:
     card:
       <<: *id_rebuild
       highlight_row: 3
-  - text: 南のシェッドは、1997年に座席の席になります。
+  - text: 南のシェッドは、1997年に、イス席のスタンドになります。
     card:
       <<: *id_rebuild
       highlight_row: 4
@@ -328,7 +340,7 @@ sections:
     card:
       <<: *id_rebuild
       highlight_row: 5
-  - text: ところが、市との許可の問題で、残りは2年止まります。
+  - text: ところが、市との許可の問題で、残りの工事は2年止まります。
     card:
       <<: *id_rebuild
       highlight_row: 5
@@ -440,7 +452,7 @@ sections:
       columns: *cols_match
       rows: *rows_match
       highlight_row: 4
-  - text: いまの本拠地は、その逆です。
+  - text: 昔は、席より人があふれた。いまは、席の数とほぼ同じです。
     card: none
   - text: 昨季のリーグ戦の最多は、11月30日のアーセナル戦。3万9820人でした。
     card:
@@ -480,23 +492,15 @@ sections:
   - text: スタンフォード・ブリッジを大きくする話は、何度も出ています。
     image: assets/images/20261016_stadium_chelsea/07_w.jpg
     card: none
-  - text: 2011年10月、クラブは、土地の権利を買い戻したいと提案しました。
+  - text: 2011年10月、クラブは、その会社から土地の権利を買い戻したいと提案しました。
     card:
       <<: *id_plan
       highlight_row: 0
-  - text: 土地を持つ会社の株主は、売らないと決めます。
+  - text: ファンが株主の、土地を持つ会社は、売らないと決めます。
     card:
       <<: *id_plan
       highlight_row: 0
-  - text: ほかの場所へ移ると、クラブの名前は、自由に使えなくなります。
-    card:
-      <<: *id_plan
-      highlight_row: 0
-  - text: 株主の4分の3の同意が要る、とされています。
-    card:
-      <<: *id_plan
-      highlight_row: 0
-  - text: 2012年5月には、バタシー発電所の跡地を買う申し出をします。
+  - text: 2012年5月には、ロンドンのバタシー地区、古い発電所の跡地を買う申し出をします。
     card:
       <<: *id_plan
       highlight_row: 1
@@ -553,9 +557,7 @@ sections:
       highlight:
       - 保留
       - 見直す時期を決めていない
-  - text: このあとの計画で、クラブの発表まで確かめられたものは、ここでは扱いません。
-    card: none
-  - text: そのあいだに、収容は、少しずつ小さくなっています。
+  - text: では、いまの本拠地の収容は、どう変わってきたのか。2010年度から追います。
     card: &id_wf
       type: waterfall
       title: 収容は、どう減ったか（自分で引いた）
@@ -579,6 +581,8 @@ sections:
     emph: true
     card: *id_wf
   - text: 合わせて2405人、5.7％の減り方です。
+    card: *id_wf
+  - text: 広げる計画は止まり、記録の半分以下のままです。
     card: *id_wf
   sources:
   - https://en.wikipedia.org/wiki/Stamford_Bridge_(stadium)
@@ -664,14 +668,17 @@ sections:
     card: *id_fill
   - text: 19試合のうち、いちばん多い日と少ない日の差は、567人。収容の1.4％です。
     card: *id_fill
-  - text: 相手がアーセナルでもリーズでも、ほぼ満員。
+  - text: 相手がアーセナルでもリーズでも、ほぼ満員。結論は、ほぼ毎試合が満員。
     card: *id_fill
   - text: 次の本拠地戦は、10月24日。相手はトッテナムです。
     emph: true
     card: none
   - text: トッテナムの本拠地の収容は、チェルシーの1.57倍です。
     card: none
-  - text: 1921年の決勝で、ここで勝った相手でもあります。
+  - text: 1921年の決勝で優勝したのも、ここスタンフォード・ブリッジでした。
+    card: none
+  - text: ほぼ満員の本拠地が、より大きな本拠地を迎えます。
+    emph: true
     card: none
   sources:
   - https://resources.premierleague.pulselive.com/premierleague/document/2026/07/31/8a890ff9-176c-4364-a8ff-e08f995e2c86/TM2040_PL-Handbook-and-Collateral-2026-27_Digital_31.07.pdf

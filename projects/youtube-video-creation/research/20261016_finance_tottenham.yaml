@@ -142,7 +142,7 @@ sections:
   - text: イングランドのトッテナム。その決算の中身を、数字で追います。
     image: assets/images/20261016_finance_tottenham/01_w.jpg
     short_only: true
-  - text: ヨーロッパリーグで優勝した年。収入は5億6530万ポンドで、5年でいちばん多い。
+  - text: ヨーロッパリーグで優勝した年。クラブの収入は5億6530万ポンドで、5年最多。
     image: assets/images/20261016_finance_tottenham/01_w.jpg
     emph: true
     card: &data_stats
@@ -151,7 +151,7 @@ sections:
       items:
       - - '9'
         - 位
-        - 収入の世界順位（2024-25）
+        - 収入の世界順位（デロイト、2024-25）
       - - '565'
         - 百万ポンド
         - 決算の収入（2024-25、5年で最多）
@@ -162,16 +162,16 @@ sections:
   - text: それなのに、最終の損益は赤字でした。
     card: none
     callword: 5年で最大の赤字
-  - text: 収入の世界順位は、デロイトの集計で2024-25に9位。
-    card:
-      <<: *data_stats
-      focus: 0
-  - text: ここからは、クラブ自身の2025年6月期の決算。2026年6月期は未発表です。
+  - text: これは、2025年6月期。2024-25シーズンの決算です。
     card: none
   - text: 2020-21の3億6190万ポンドから、2億340万ポンドの上乗せです。
     card:
       <<: *line_card
       highlight: 2020-21
+  - text: 別の物差しでは、デロイトの集計で2024-25の収入が世界9位。
+    card:
+      <<: *data_stats
+      focus: 0
   sources:
   - https://www.deloitte.com/uk/en/services/financial-advisory/analysis/deloitte-football-money-league.html
   - https://www.tottenhamhotspur.com/news/2026/march/financial-results-year-ended-30-june-2025/
@@ -221,7 +221,7 @@ sections:
     card:
       <<: *fall_card
       highlight: 試合日
-  - text: 商業などは2190万ポンドの増加。スポンサーが1550万ポンド増えました。
+  - text: 商業などは2190万ポンドの増加。その内訳を、順に見ます。
     card: &comm_table
       type: table
       title: 商業などの増減の中身（百万ポンド）
@@ -252,14 +252,22 @@ sections:
         - '277.1'
         - '+21.9'
       highlight_row: 0
-  - text: その他の売上は1330万ポンド増。試合以外のイベントや見学などです。
+  - text: スポンサーが1550万ポンド増。グッズも310万ポンド増。
+    card:
+      <<: *comm_table
+      highlight_row: 0
+  - text: 試合以外のイベントや見学などの売上が、1330万ポンド増。
     card:
       <<: *comm_table
       highlight_row: 2
-  - text: 売上とは別枠の、その他の収入は、1040万から40万ポンドに減りました。
+  - text: 売上に数えない収入だけは減って、1040万から40万ポンドに。
     card:
       <<: *comm_table
       highlight_row: 3
+  - text: 4つを足し引きして、2190万ポンドの増加になります。
+    card:
+      <<: *comm_table
+      highlight_row: 4
   - text: 放映権収入は、3890万ポンドの減少です。
     card:
       <<: *fall_card
@@ -272,6 +280,10 @@ sections:
     mark:
       kind: circle
       row: 3
+  - text: 17位は、20クラブの下から4番目。テレビ収入は順位の影響を受けます。
+    card:
+      <<: *fall_card
+      highlight: 放映権
   - text: 賞金の増えを、放映権の減りが上回りました。
     card:
       <<: *fall_card
@@ -308,7 +320,7 @@ sections:
     - -94.7
     note: 端数の丸めで、合計が0.2ずれる
   say:
-  - text: トッテナムの損益計算書を、いちばん上の行から追っていきます。
+  - text: トッテナムの損益を、いちばん上の行から追っていきます。
     image: assets/images/20261016_finance_tottenham/05_w.jpg
     card: *pl_fall
   - text: クラブが示す本業の利益は、1億1230万ポンド。
@@ -323,7 +335,7 @@ sections:
     card:
       <<: *pl_fall
       highlight: 本業の利益
-  - text: ここから、減価償却と特別な費用で、6850万ポンドを引きます。
+  - text: ここから、設備の費用と、雇用に関わる特別な費用で、6850万ポンドを引きます。
     card:
       <<: *pl_fall
       highlight: 減価償却・特別な費用
@@ -339,8 +351,12 @@ sections:
     card:
       <<: *pl_fall
       highlight: 選手の売却益
-  - text: ここまでが営業損益で、5040万ポンドの赤字。前の年は黒字でした。
+  - text: ここまでが営業損益。償却と売却益を入れたあとで、5040万ポンドの赤字。
     emph: true
+    card:
+      <<: *pl_fall
+      highlight: 選手の売却益
+  - text: 前の年は、2130万ポンドの黒字でした。
     card:
       <<: *pl_fall
       highlight: 選手の売却益
@@ -351,7 +367,7 @@ sections:
     mark:
       kind: circle
       row: 4
-  - text: 税金の戻りが2600万ポンドあり、最終は9470万ポンドの赤字で着地しました。
+  - text: 赤字への税の戻りが2600万ポンド。結果、最終は9470万ポンドの赤字に着地。
     card:
       <<: *pl_fall
       highlight: 最終の損益
@@ -380,6 +396,10 @@ sections:
     card:
       <<: *fin_fall
       highlight: 移籍金の分割払いの利息分
+  - text: ほかに、商業収入の前受けの利息分などが、差し引き430万ポンド。
+    card:
+      <<: *fin_fall
+      highlight: 商業収入の前受けの利息分
   - text: 増えたのは、株を買う権利の評価損。2340万ポンドです。
     emph: true
     card:
@@ -400,6 +420,9 @@ sections:
     card:
       <<: *fin_fall
       highlight: 金融費用（差し引き）
+  - text: 本業の利益を、償却や金融費用などの引き算が上回った。これが赤字の形です。
+    emph: true
+    card: none
   - text: 5年分の最終損益は、全部マイナス。合計は3億4160万ポンドに達します。
     emph: true
     card: &ni_table
@@ -534,7 +557,7 @@ sections:
       - 営業損益の変化
       - -71.7
       note: 端数の丸めで、合計が0.1ずれる
-  - text: 人件費など費用の上積みは、合わせて6980万ポンド。収入の増えより大きい。
+  - text: その他の費用も3590万ポンド増で、人件費と合わせて6980万ポンド。
     emph: true
     card:
       <<: *op_fall
@@ -546,10 +569,18 @@ sections:
     card:
       <<: *op_fall
       highlight: 選手の売却益の減少
-  - text: 一方で、設備の減価償却は1180万ポンド減っています。
+  - text: 一方で、設備の償却費などは、約1200万ポンド軽くなりました。
     card:
       <<: *op_fall
       highlight: 減価償却の減少
+  - text: 特別な費用の増加が1010万、選手の償却などの増加が1110万ポンド。
+    card:
+      <<: *op_fall
+      highlight: 特別な費用の増加
+  - text: すべて足し引きすると、悪化は7170万ポンドです。
+    card:
+      <<: *op_fall
+      highlight: 営業損益の変化
   sources:
   - https://find-and-update.company-information.service.gov.uk/company/01706358/filing-history
   - https://find-and-update.company-information.service.gov.uk/company/01706358/filing-history/MzUxMzg3MzM0N2FkaXF6a2N4/document?format=pdf&download=0
@@ -593,7 +624,7 @@ sections:
     card:
       <<: *debt_table
       highlight_row: 5
-  - text: 借入の総額は8億5170万ポンド。9割超が、固定金利です。
+  - text: 借入の総額は8億5170万ポンド。9割超が、金利の変わらない固定金利です。
     card:
       <<: *debt_table
       highlight_row: 1
@@ -675,14 +706,18 @@ sections:
     card:
       <<: *cash_fall
       highlight: 選手の売却など
-  - text: 設備には2380万ポンド。前の年は4330万ポンドでした。
+  - text: 設備の購入には、現金で2380万ポンド。前の年は4330万ポンドでした。
     card:
       <<: *cash_fall
       highlight: 設備
-  - text: 親会社が株を引き受け、3500万ポンドの資金になりました。
+  - text: 親会社が新しく株を買い、3500万ポンドの資金になりました。
     card:
       <<: *cash_fall
       highlight: 親会社の株の引き受け
+  - text: リースの支払いは、190万ポンド。
+    card:
+      <<: *cash_fall
+      highlight: リース
   - text: 差し引きで、現金は5860万ポンド減りました。
     emph: true
     card:
@@ -693,9 +728,8 @@ sections:
       row: 6
   - text: 手元の現金は、7900万ポンドから2040万ポンドになりました。
     card: none
-  - text: 決算期のあとにも、選手の売買があります。
-    card: none
-  - text: 差し引きの支出は、リーグの負担金を含めて約1億5860万ポンド。
+  - text: 決算期のあと、親会社は1億ポンドの出資を確保しています。
+    emph: true
     card: none
   sources:
   - https://find-and-update.company-information.service.gov.uk/company/01706358/filing-history
@@ -721,7 +755,7 @@ sections:
     - - 純借入 ÷ 本業の利益
       - 7.4倍
     - - 放映権の減り − 賞金の増え
-      - 550万ポンド
+      - 約540万ポンド
     highlight_row: 0
   say:
   - text: トッテナムの決算を、自分で割ってみた数字です。
@@ -778,7 +812,7 @@ sections:
       via: 1ポンド＝209円
   - text: 1ポンド209円は、ヨーロッパ中央銀行の10月15日の参照相場。
     card: none
-  - text: 放映権の減りは、賞金の増えより550万ポンド大きい計算です。
+  - text: 放映権の減りは、賞金の増えより約540万ポンド大きい計算です。
     card:
       type: table
       title: 自分で割ってみた（2024-25）
@@ -787,7 +821,7 @@ sections:
       highlight_row: 3
   - text: 次に起きることは、決算書の最後のほうに書いてあります。
     card: none
-  - text: 決算期のあとの出資は、1億ポンド。この年の引き受け分の、約2.9倍です。
+  - text: 決算期のあとの1億ポンドの出資は、この年の引き受け分の約2.9倍。
     emph: true
     card: &going_doc
       type: document
@@ -799,16 +833,18 @@ sections:
       highlight:
       - 1億ポンドの出資
       - ファクタリング
-  - text: 債権を売って現金にする取り決めも、決算期のあとに結んでいます。
+  - text: 代金を先に受け取る仕組みも結びましたが、対象と額は書かれていません。
     card:
       <<: *going_doc
       highlight:
       - ファクタリング
-  - text: 次の決算は、チャンピオンズリーグの出場権を得て迎えた、2025-26の分です。
+  - text: 決算期のあとの選手の売買は、リーグへの負担金込みで差し引き約1億6000万の支出。
     card: none
-  - text: 対象は2026年6月期。日付の告知は、見つかっていません。
+  - text: 優勝で得た、チャンピオンズリーグの出場権。その2025-26が、次の決算です。
     card: none
-  - text: 今回の2025年6月期は、2026年3月31日に発表されました。
+  - text: 今回の2025年6月期は、2026年3月31日の発表でした。
+    card: none
+  - text: 次の2026年6月期は、日付の告知が見つかっていません。
     card: none
   sources:
   - https://find-and-update.company-information.service.gov.uk/company/01706358/filing-history

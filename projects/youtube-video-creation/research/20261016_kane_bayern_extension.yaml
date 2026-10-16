@@ -1,0 +1,130 @@
+# ブンデス の取材メモ（2026年10月16日）
+# 1本＝1テーマ。まとめではなく、1つの話を掘る
+# 埋めたら python -m src.cli draft このファイル で台本になる
+# 取材: 2026-10-16。requests（ブラウザUA）と WebFetch で原文を読んだ。Sky Sports 本文（requests で取り出した全段落。raw/20261016_kane_sky.html）・
+#   fcbinside（ドイツのバイエルン系ニュース。BILD のファルク記者のポッドキャストの内容を引く記事・ロマーノがスカイのブリッジ記者を引いたと書く記事）・
+#   t-online（dpa 配信）・theWORLD（10/6）。クラブ公式（fcbayern.com）はタイムアウトで読めなかった。ロマーノ本人の投稿は個別URLが取れず読んでいない（fcbinside 経由の孫引きだけ）。
+# 原文（Sky Sports）: 2026-10-15 16:23 UTC 公開（17:38 UTC 更新）、Michael Bridge 記者。
+#   「Harry Kane has agreed a new deal in principle with Bayern Munich until the summer of 2029.」
+#   「It's understood the Bundesliga club are now finalising the paperwork on his contract extension.」
+#   → 台本はこの2文の範囲で書く。年俸・ボーナス・解除条項の数字は Sky に無い → 台本に入れない。
+# どこまでが確定か:
+#   確定＝無し。クラブ（バイエルン）の公式発表は 10/15 時点でまだ（fcbinside「Eine offizielle Bestätigung des FC Bayern steht weiterhin aus」、t-online も「Medienberichten zufolge」）。
+#   報道＝Sky の「原則合意（in principle）・書類を詰めている」、BILD ファルク記者「契約期間で合意」。確度は 報道。
+#   「基本合意」の訳: in principle＝原則として合意。契約書への署名は済んでいない。台本は「基本合意」と言い、署名はまだと添える。
+#   「基本合意」の報道自体は 10/6 から出ている（theWORLD 10/6 17:50 JST が、ドイツのプレッテンベルク氏を引いて「2029年夏までの新契約で原則合意」）。今回の Sky は、その続きで「書類を詰めている段階」まで進んだ報道。
+# 資料間のずれ・数字:
+#   Sky 10/15「バイエルン移籍後 156試合で154ゴール」。theWORLD 10/6 は「154試合で152ゴール」→ 2試合2ゴール増えて一致。台本は Sky の数字。
+#   昨季「代表を含めて73ゴール・65試合」（Sky）。題材一覧の「72〜73」は媒体差。台本では使わない。
+#   ブンデス100ゴール: Sky「98試合で到達。前の記録のディーター・ミュラーより31試合速い」。ミュラーの試合数は 98+31=129試合（自分で足した。Sky は 129 とは書いていない）。
+#   t-online（dpa）「100ゴールではなく101ゴール」と書く → Sky の「100ゴール到達」の時点と今の差。台本は 100 の到達だけ言う。
+#   現行契約: fcbinside（BILD 系）「2027年夏まで」・t-online「契約は夏に切れるはずだった」・theWORLD「2027年夏まで」→「2027年夏まで」で一致。Sky 本文には書いていない。
+#   期限: Sky「summer of 2029」。fcbinside（ロマーノ経由）「2029年6月」→ 台本は「2029年の夏まで」。
+# 発言: BILD の Christian Falk 記者（ポッドキャスト「Bayern Insider」、10/15 朝）。fcbinside が引いた原文（ドイツ語）を訳した。ポッドキャストの音声そのものは聞いていない。
+#   「Ich habe gehört, es gibt tatsächlich jetzt eine Einigung bei dem Hauptknackpunkt der Vertragslaufdauer」→「契約期間という最大の争点で、いま合意があると聞いている」
+#   「Jetzt geht's nur um Details」→「いまは細部だけの話だ」（細部は肖像権・マーケティング権＝Bild- und Vermarktungsrechte。fcbinside の説明）。
+#   「Sie wollen vor der Ballon-d'Or-Verleihung den Vertrag fix machen」→「バロンドール授賞式の前に契約を固めたい」（授賞式は 10/26）。
+# 本人（ケイン）のコメント: この件についての新しい発言は Sky・fcbinside・t-online のどれにも無い → 入れない（9/24 の「かなり良い状態だ」は契約の話ではないので使わない）。
+# 反応（ネット民）: 取れなかった。当たった先＝日本語の検索（ケイン バイエルン 契約延長 反応・サカラボ・nofootynolife・footballnet）、Yahoo!ニュースの記事（コメント欄は本文に出ない）、
+#   Sky・fcbinside・t-online の記事。この件についての書き込みの記事は見つからなかった。X は読まない決まり。→ 作らない。approve は --no-voices "反応が見つからなかった" で通す。
+# 写真: 10/14 のケインの回は assets/images/kane_a/01.jpg（Commons・イングランド対ガーナ）。→ 今日は別の写真にする（assets/images/20261016_kane_bayern_extension/）。
+slot: world
+date: "2026年10月16日"
+format: news
+no_main: true      # ニュースはショートだけ（2026-10-14）。締めで本編を案内しない
+people: [ハリー・ケイン, バイエルン]
+
+short_question: あなたは、ケインは2029年まで、今のペースで点を取り続けられると思いますか。
+short_hook: ケイン、バイエルンと2029年まで基本合意。
+short_telops:
+  - {match: 基本合意しました, text: ケインとバイエルン/2029年夏まで基本合意}
+  - {match: 書類を詰めている, text: 契約の書類は/詰めている段階}
+  - {match: 正式な発表は, text: クラブの正式発表は/まだ}
+  - {match: 2027年の夏まで, text: 現行契約は/2027年夏まで}
+  - {match: 最大の争点, text: 最大の争点は/契約期間で合意}
+  - {match: 細部だけ, text: 残りは/細部だけ}
+  - {match: 10月26日, text: バロンドール授賞式/10月26日より前に}
+  - {match: 154ゴール, text: 加入後156試合で/154ゴール}
+  - {match: 129試合, text: ブンデス100ゴール/98試合 前の記録は129試合}
+short_photos: []
+
+theme:
+  id: kane_bayern_extension
+  league: germany
+  prefix: ""
+  title: ケイン、バイエルンと2029年まで基本合意。いつ正式に決まるのか
+  hook: ""
+  question: ケインとバイエルンの契約は、どこまで決まっているのか
+  takeaway: ケインは2029年夏までの新契約で基本合意と報じられたが、クラブの正式発表と署名はまだ。バイエルン加入後は156試合で154ゴール、ほぼ1試合1点のペース
+
+thumbnail:
+  line1: ケイン、バイエルンと基本合意
+  line2: 2029年まで。正式発表は●●
+  tags: [ハリー・ケイン, バイエルン]
+  photo: assets/images/20261016_kane_bayern_extension/01.jpg
+  short_photo: assets/images/20261016_kane_bayern_extension/01_v.jpg
+
+answer: 期間は2029年夏まで、書類を詰める段階。クラブの正式発表はまだ
+watch: 次はバイエルンの正式発表。バロンドール授賞式は10月26日
+# follow_up: true
+
+sections:
+  - id: what
+    main: true
+    heading: 何が起きたか
+    tier: 報道
+    telop: ケインとバイエルン、2029年夏まで基本合意
+    say:
+      - text: ケインがバイエルンと、2029年の夏までの新契約で基本合意したと報じられました。
+      - text: 契約の書類を詰めている段階で、クラブの正式な発表はまだありません。
+      - text: 現行の契約は、2027年の夏までです。
+    official: false
+    sources:
+      - https://www.skysports.com/football/news/12691/13599678/harry-kane-england-captain-agrees-new-deal-in-principle-with-bayern-munich-until-2029
+      - https://fcbinside.de/2026/10/15/kane-hammer-beim-fc-bayern-einigung-ueber-neuen-vertrag-erzielt
+      - https://www.t-online.de/sport/fussball/bundesliga/fc-bayern-muenchen/id_101483634/fc-bayern-harry-kanes-vertragsverlaengerung-steht-vor-dem-abschluss.html
+
+  - id: falk
+    heading: どこまで決まっているのか
+    tier: 報道
+    telop: 「契約期間で合意がある」「あとは細部だけ」
+    say:
+      - ケインの新契約について、ビルド紙のファルク記者は、こう話しています。
+      - voice: クリスティアン・ファルク
+        text: 契約期間という最大の争点で、いま合意があると聞いている
+      - voice: クリスティアン・ファルク
+        text: いまは細部だけの話だ
+        cont: true
+      - バイエルンは、10月26日のバロンドール授賞式の前に固めたい考えだといいます。
+    official: false
+    sources:
+      - https://fcbinside.de/2026/10/15/kane-hammer-beim-fc-bayern-einigung-ueber-neuen-vertrag-erzielt
+    quotes_from: [ファルク記者（ビルド）]
+
+  - id: pace
+    viewpoint: true
+    heading: ケインは、どんなペースで点を取ってきたか
+    tier: 報道
+    telop: 加入後156試合で154ゴール。ほぼ1試合1点
+    card_def: &c_pace
+      type: table
+      title: ケイン バイエルン加入後
+      columns: [項目, 数字]
+      rows:
+        - [公式戦, 156試合 154ゴール]
+        - [1試合あたり, 約0.99ゴール]
+        - [ブンデス100ゴール, 98試合]
+        - [前の記録 ミュラー, 129試合]
+    say:
+      - text: ケインはバイエルン加入後、156試合で154ゴールです。
+        card: {<<: *c_pace, highlight_row: 0}
+      - text: 1試合あたり、およそ0.99点。ほぼ毎試合1点のペースです。
+        card: {<<: *c_pace, highlight_row: 1}
+      - text: ブンデスリーガの100ゴールは、98試合目でした。
+        card: {<<: *c_pace, highlight_row: 2}
+      - text: ミュラーの129試合より、31試合も速い到達です。
+        card: {<<: *c_pace, highlight_row: 3}
+    official: false
+    sources:
+      - https://www.skysports.com/football/news/12691/13599678/harry-kane-england-captain-agrees-new-deal-in-principle-with-bayern-munich-until-2029
+short_title: "ケイン、バイエルンと2029年まで基本合意。いつ正式に決まるのか"

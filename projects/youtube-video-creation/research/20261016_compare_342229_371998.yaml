@@ -68,13 +68,13 @@ sections:
         - [契約満了, 2029年, 2032年]
       bars: [市場価値]
     say:
-      - text: 同じレアルの2人なのに、ゴール期待値は2倍以上違います。
-        image: assets/images/20261016_cmp_pair/01.jpg
-      - text: 同じレアル・マドリードの2人を、リーグ戦の数字で並べます。
+      - text: 同じレアルの2人なのに、点が入る見込みは、2倍以上違います。
         image: assets/images/20261016_cmp_pair/01.jpg
       - エムバペは27歳、ヴィニシウスは26歳です。
       - 市場価値は、2億ユーロと1.3億ユーロです。
-      - 同じクラブ、同じ大会、同じ試合に出ているので、条件がそろいます。
+      - シュートの位置や形から、入る確率を足した数を、ゴール期待値と呼びます。
+      - この数字を、リーグ戦で2人を並べて見ます。
+      - 同じクラブ、同じ大会で、8試合ずつ出ています。条件が近い2人です。
     sources:
       - https://www.transfermarkt.com/kylian-mbappe/profil/spieler/342229
       - https://www.transfermarkt.com/vinicius-junior/profil/spieler/371998
@@ -104,18 +104,17 @@ sections:
       - text: 同じレアルのエムバペとヴィニシウスを、今季のリーグ戦の数字で比べます。
         short_only: true
         image: assets/backgrounds/stadium_レアルマドリード.png
-      - text: 今季のラ・リーガは、2人とも8試合に出ています。
+      - text: 今季のラ・リーガの数字です。
         image: assets/backgrounds/stadium_レアルマドリード.png
       - 出場時間は、エムバペが720分、ヴィニシウスが585分です。
       - そこで、すべて90分あたりに直して並べます。
       - 得点は、エムバペが0.88、ヴィニシウスが0.15です。
-      - パス成功率は、87%と79%でした。
     sources:
       - https://www.fotmob.com/players/701154/kylian-mbappe
       - https://www.fotmob.com/players/846033/vinicius-junior
 
   - id: create
-    heading: 決める側と、つくる側。チャンスを作る数は逆だった
+    heading: シュートはエムバペ、チャンス創出はヴィニシウスが多かった
     tier: 報道
     telop: 打つエムバペ、つくるヴィニシウス
     narrator: 解説
@@ -130,10 +129,11 @@ sections:
         - [xA（アシスト期待値）, "0.26", "0.27"]
       note: ラ・リーガ 今季8試合。xG・xA は FotMob の期待値
     say:
-      - エムバペは90分に5.5本打ち、ゴール期待値は1.1です。
-      - ヴィニシウスのシュートは3.5本、期待値は0.47でした。
-      - 一方、チャンス創出は、ヴィニシウスが2.0回、エムバペが1.4回です。
-      - アシスト期待値は0.26と0.27で、ほぼ同じです。
+      - シュートは、エムバペのほうが多く、ゴール期待値も高くなっています。
+      - 一方、シュートにつながるパスの数、チャンス創出は、
+      - ヴィニシウスが2.0回、エムバペが1.4回です。
+      - パスが得点につながる確率を足した、アシスト期待値は、
+      - 0.26と0.27で、ほぼ同じです。
     sources:
       - https://www.fotmob.com/players/701154/kylian-mbappe
       - https://www.fotmob.com/players/846033/vinicius-junior
@@ -157,8 +157,9 @@ sections:
       - 今度は、90分あたりではなく、今季の合計で見ます。
       - 得点は、エムバペが7、ヴィニシウスが1です。
       - ゴール期待値は、8.85と3.05でした。
-      - 差を引くと、エムバペはマイナス1.85、ヴィニシウスはマイナス2.05です。
-      - 2人とも、チャンスの数に対して、点がおよそ2つ足りていません。
+      - 得点からゴール期待値を引きます。
+      - エムバペはマイナス1.85、ヴィニシウスはマイナス2.05です。
+      - 2人とも、見込みどおりなら入っていた数より、およそ2点少ない形です。
     sources:
       - https://www.fotmob.com/players/701154/kylian-mbappe
       - https://www.fotmob.com/players/846033/vinicius-junior
@@ -171,10 +172,10 @@ sections:
     card:
       type: line
       title: 市場価値（百万ユーロ。年齢ごとの最高値）
-      x: [18歳, 20歳, 22歳, 24歳, 26歳]
+      x: [18歳, 19歳, 20歳, 22歳, 24歳, 26歳]
       series:
-        - [エムバペ, [90, 200, 160, 180, 200]]
-        - [ヴィニシウス, [70, 50, 150, 200, 130]]
+        - [エムバペ, [90, 200, 200, 160, 180, 200]]
+        - [ヴィニシウス, [70, 50, 50, 150, 200, 130]]
       focus: エムバペ
       peak: true
       badges:
@@ -213,43 +214,60 @@ sections:
       - チャンピオンズリーグは、ヴィニシウスが2回、エムバペは0回。
       - W杯の優勝は、エムバペだけが1回です。
       - クラブW杯は、ヴィニシウスが2回でした。
+      - リーグ優勝はエムバペ、CL優勝はヴィニシウスが多い。
+      - 強みは、分かれています。
     sources:
       - https://www.transfermarkt.com/kylian-mbappe/erfolge/spieler/342229
       - https://www.transfermarkt.com/vinicius-junior/erfolge/spieler/371998
 
   - id: view
     viewpoint: true
-    heading: 見立て・同じ場所で受ける2人の差は、シュート1本の質にあった
+    heading: 見立て・ゴール期待値の差は、本数と1本の質に分けられる
     tier: 背景
-    telop: ボックスで受ける数は同じ。質が違う
+    telop: 差は、打つ数と、1本の質
     narrator: 解説
     card: &viewcard
       type: duel
       left: {name: エムバペ, club: 90分あたり, photo: assets/images/20261016_mbappe/01_sq.jpg}
       right: {name: ヴィニシウス, club: 90分あたり, photo: assets/images/20261016_vinicius/01_sq.jpg}
       rows:
-        - [ボックス内のタッチ, "11.6", "10.5"]
-        - [シュート, "5.5", "3.5"]
+        - [シュート（本数）, "5.5", "3.5"]
         - [1本あたりのxG, "0.20", "0.13"]
-      bars: [ボックス内のタッチ, シュート, 1本あたりのxG]
-      note: ラ・リーガ 今季8試合。1本あたりのxG はxG÷シュート数（自分で割った値）
+        - [xG（ゴール期待値）, "1.11", "0.47"]
+        - [ボックス内のタッチ, "11.6", "10.5"]
+      bars: [シュート（本数）, 1本あたりのxG, xG（ゴール期待値）, ボックス内のタッチ]
+      note: ラ・リーガ 今季8試合・90分あたり。1本あたりのxG はxG÷シュート数（自分で割った値）
     say:
-      - text: 相手ボックス内のタッチは、90分に11.6回と10.5回で、ほぼ同じです。
+      - text: ゴール期待値は、90分あたり1.11と0.47で、およそ2.4倍の差です。
         card: *viewcard
-      - text: 2人は、同じ場所でボールを受けています。
+      - text: 期待値は、シュートの本数に、1本の入りやすさを掛けたものです。
         card: *viewcard
-      - text: 違うのは、シュート1本の質です。
+      - text: だから、この差は、本数と、1本の質に分けられます。
         card: *viewcard
-      - text: ゴール期待値をシュート数で割ると、0.20と0.13でした。
+      - text: 本数は、5.5本と3.5本で、およそ1.6倍です。
+        card: *viewcard
+      - text: 期待値をシュート数で割った1本の質、入りやすさは、0.20と0.13です。
         card: *viewcard
         mark:
-          - {kind: circle, row: 2, col: 左の値}
-          - {kind: circle, row: 2, col: 右の値}
-      - text: 同じ場所で受けても、エムバペのほうが、点になりやすい形で打っています。
+          - {kind: circle, row: 1, col: 左の値}
+          - {kind: circle, row: 1, col: 右の値}
+      - text: 質の差は、およそ1.5倍です。
         card: *viewcard
-      - text: ヴィニシウスは、18日のセビージャ戦と25日のクラシコを欠場します。
+      - text: 1.6倍と1.5倍を掛けると、およそ2.4倍になります。
         card: *viewcard
-      - text: 11月のラシン戦とバレンシア戦も含めて、4試合の出場停止です。
+      - text: 相手ゴール前のボックスで、ボールに触った回数は、
+        card: *viewcard
+      - text: 11.6回と10.5回で、ほぼ同じです。
+        card: *viewcard
+      - text: 同じ場所で受けて、エムバペのほうが、点になりやすい形で多く打っています。
+        card: *viewcard
+      - text: ヴィニシウスは、10日のビジャレアル戦で退場になり、4試合の出場停止です。
+        card: *viewcard
+      - text: 18日のセビージャ戦と、25日のバルセロナとのクラシコを欠場します。
+        card: *viewcard
+      - text: 11月のラシン戦とバレンシア戦も、含めて4試合です。
+        card: *viewcard
+      - text: 2人がそろって出る次の試合で、この差が縮まるかを見られます。
         card: *viewcard
     sources:
       - https://www.fotmob.com/players/701154/kylian-mbappe
