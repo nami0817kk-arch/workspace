@@ -21,7 +21,8 @@ thumbnail_photos:
 thumbnail_crest_main: []
 thumbnail_face_link: VS
 thumbnail_photo: assets/images/20261017_pedri_vitinha/01.jpg
-bg: assets/backgrounds/stadium.png
+bg: assets/images/20261017_pedri_vitinha/01.jpg
+end_bg: assets/images/20261017_pedri_vitinha/01.jpg
 date: 2026年10月17日
 intro_title: ペドリとヴィティーニャ、同じ1得点1アシスト。違いはチームの点か
 intro_label: 海外サッカー ニュース
@@ -318,7 +319,7 @@ cards:
     rows: *id010
     bars: *id011
     note: 試合数・得点は Transfermarkt（2026年10月17日）。1年あたりは、デビューから10月17日までの年数で割った値（自分で計算）
-    highlight_row: デビュー時の年齢
+    highlight_row: 1年あたりの試合数
   national_3_card:
     type: duel
     left: *id008
@@ -334,7 +335,7 @@ cards:
     rows: *id010
     bars: *id011
     note: 試合数・得点は Transfermarkt（2026年10月17日）。1年あたりは、デビューから10月17日までの年数で割った値（自分で計算）
-    highlight_row: 1年あたりの試合数
+    highlight_row: W杯2022
   national_5_card:
     type: duel
     left: *id008
@@ -342,7 +343,7 @@ cards:
     rows: *id010
     bars: *id011
     note: 試合数・得点は Transfermarkt（2026年10月17日）。1年あたりは、デビューから10月17日までの年数で割った値（自分で計算）
-    highlight_row: W杯2022
+    highlight_row: EURO2024
   national_6_card:
     type: duel
     left: *id008
@@ -350,7 +351,7 @@ cards:
     rows: *id010
     bars: *id011
     note: 試合数・得点は Transfermarkt（2026年10月17日）。1年あたりは、デビューから10月17日までの年数で割った値（自分で計算）
-    highlight_row: EURO2024
+    highlight_row: ネーションズL 2025
   national_7_card:
     type: duel
     left: *id008
@@ -850,8 +851,8 @@ cards:
 ## 2人の道のりは、何歳でどこが違ったのか
 @bg: assets/backgrounds/stock/stadium_night.mp4
 
-解説: まず、道のりを並べます。ペドリは、センターバックとして始め、ラス・パルマスへ。
-  telop: まず、道のりを並べます。ペドリは、センターバックとして始め、ラス・パルマスへ
+解説: ペドリは、センターバックとして始めました。2018年に、ラス・パルマスへ。
+  telop: ペドリは、センターバックとして始めました。2018年に、ラス・パルマスへ
   source: 報道
   card: career_0_card
   image: assets/images/20261017_pedri/02_w.jpg
@@ -864,8 +865,8 @@ cards:
 解説: 追加分を入れた総額は、2300万から2400万ユーロとされています。
   telop: 追加分を入れた総額は、2300万から2400万ユーロとされています
   card: career_3_card
-解説: 移籍が発効したのは、翌2020年7月です。
-  telop: 移籍が発効したのは、翌2020年7月です
+解説: 移籍が発効したのは、2020年7月です。
+  telop: 移籍が発効したのは、2020年7月です
   card: career_4_card
 解説: ヴィティーニャは、11歳でポルトの下部組織に入りました。
   telop: ヴィティーニャは、11歳でポルトの下部組織に入りました
@@ -883,8 +884,8 @@ cards:
 解説: 買い取られず、翌年ポルトに戻りました。
   telop: 買い取られず、翌年ポルトに戻りました
   card: career_9_card
-解説: 2022年6月、解除条項が使われて、いまのクラブへ。
-  telop: 2022年6月、解除条項が使われて、いまのクラブへ
+解説: 2022年6月、解除条項で今のクラブへ。決まった額で動ける取り決めです。
+  telop: 2022年6月、解除条項で今のクラブへ。決まった額で動ける取り決めです
   card: career_10_card
 解説: 数字で並べ直すと、プロ初出場の年齢は、ペドリが16歳、ヴィティーニャが19歳。
   telop: 数字で並べ直すと、プロ初出場の年齢は、ペドリが16歳、ヴィティーニャが19歳
@@ -914,26 +915,26 @@ cards:
   source: 報道
   card: national_0_card
   image: assets/images/20261017_pedri/03_w.jpg
-解説: ペドリのデビューは2021年3月、18歳。
-  telop: ペドリのデビューは2021年3月、18歳
+解説: デビューは、ペドリが2021年の18歳、ヴィティーニャが2022年の22歳。
+  telop: デビューは、ペドリが2021年の18歳、ヴィティーニャが2022年の22歳
   card: national_1_card
-解説: ヴィティーニャは2022年3月、22歳でした。
-  telop: ヴィティーニャは2022年3月、22歳でした
-  card: national_2_card
 解説: デビューからの年数で割ると、1年に9.5試合と10.3試合。
   telop: デビューからの年数で割ると、1年に9.5試合と10.3試合
-  card: national_3_card
+  card: national_2_card
 解説: 入った時期は違っても、出る頻度はほぼ同じです。
   telop: 入った時期は違っても、出る頻度はほぼ同じです
-  card: national_4_card
+  card: national_3_card
 解説: 2022年のワールドカップは、スペインがベスト16、ポルトガルがベスト8。
   telop: 2022年のワールドカップは、スペインがベスト16、ポルトガルがベスト8
-  card: national_5_card
+  card: national_4_card
 解説: 2024年のユーロは、スペインが優勝。ポルトガルはベスト8でした。
   telop: 2024年のユーロは、スペインが優勝。ポルトガルはベスト8でした
+  card: national_5_card
+解説: ネーションズリーグは、欧州の代表チームが戦う大会です。
+  telop: ネーションズリーグは、欧州の代表チームが戦う大会です
   card: national_6_card
-解説: 2025年のネーションズリーグは、ポルトガルが優勝。スペインは準優勝。
-  telop: 2025年のネーションズリーグは、ポルトガルが優勝。スペインは準優勝
+解説: 2025年は、ポルトガルが優勝。スペインは準優勝。
+  telop: 2025年は、ポルトガルが優勝。スペインは準優勝
   card: national_7_card
 解説: 2026年のワールドカップは、スペインが優勝しました。
   telop: 2026年のワールドカップは、スペインが優勝しました
@@ -1056,14 +1057,6 @@ cards:
   telop: チャンピオンズリーグは、ヴィティーニャが2回。ペドリは0回
   card: none
   image: assets/images/20261017_pedri/01_r.jpg
-解説: 代表では、ペドリがワールドカップと欧州選手権で、1回ずつ優勝。
-  telop: 代表では、ペドリがワールドカップと欧州選手権で、1回ずつ優勝
-  card: none
-  image: assets/images/20261017_pedri/01_r.jpg
-解説: ヴィティーニャの代表の優勝は、ネーションズリーグの1回。
-  telop: ヴィティーニャの代表の優勝は、ネーションズリーグの1回
-  card: none
-  image: assets/images/20261017_pedri/01_r.jpg
 解説: クラブのタイトルは、ヴィティーニャが多い形です。
   telop: クラブのタイトルは、ヴィティーニャが多い形です
   card: none
@@ -1134,8 +1127,8 @@ cards:
   telop: 2人とも先発で、ペドリは前半終了間際の得点につながるパスを出しました
   card: meet_2_card
   image: assets/images/20261017_pedri_vitinha/01.jpg
-解説: クラブでは、10月20日。チャンピオンズリーグのリーグフェーズです。
-  telop: クラブでは、10月20日。チャンピオンズリーグのリーグフェーズです
+解説: クラブでは、10月20日。チャンピオンズリーグの最初の段階、リーグフェーズです。
+  telop: クラブでは、10月20日。チャンピオンズリーグの最初の段階、リーグフェーズです
   card: meet_3_card
   image: assets/images/20261017_pedri_vitinha/01.jpg
 解説: パリ・サンジェルマンとバルセロナが当たります。
