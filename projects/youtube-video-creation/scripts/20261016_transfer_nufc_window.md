@@ -153,7 +153,8 @@ cards:
     unit: 百万ユーロ
     highlight: 差し引き
   money_7_card: *id004
-  money_8_card: &id005
+  money_8_card: *id004
+  money_9_card: &id005
     type: convert
     title: 差し引きを円に
     from:
@@ -165,7 +166,7 @@ cards:
     - 円
     - 10月15日の為替
     via: 1ユーロ＝177.06円
-  money_9_card: *id005
+  money_10_card: *id005
   sold_card: &id006
     type: table
     title: 出ていった選手（戻った額の大きい順）
@@ -869,9 +870,9 @@ cards:
   telop: この夏、ニューカッスルは3人の主力を売り、8人を買いました
   card: none
   image: assets/images/20261016_transfer_nufc_window/a01_stadium_w.jpg
-キャスター: 払った額は、およそ3億ユーロ。世界で4番目です。
+キャスター: 払った額は、およそ3億1300万ユーロ。世界で4番目です。
   emph: true
-  telop: 払った額は、およそ3億ユーロ。世界で4番目です
+  telop: 払った額は、およそ3億1300万ユーロ。世界で4番目です
   source: 報道
   card: money_1_card
   image: assets/images/20261016_transfer_nufc_window/a01_stadium_w.jpg
@@ -900,13 +901,17 @@ cards:
   telop: プレミアの20クラブで、差し引きは大きい順に14番目です
   card: money_7_card
   image: assets/images/20261016_transfer_nufc_window/a01_stadium_w.jpg
-キャスター: 差し引きを円にします。10月15日の欧州中央銀行の参照相場は、1ユーロ177円。
-  telop: 差し引きを円にします。10月15日の欧州中央銀行の参照相場は、1ユーロ177円
+キャスター: 差し引きを円にします。
+  telop: 差し引きを円にします
   card: money_8_card
+  image: assets/images/20261016_transfer_nufc_window/a01_stadium_w.jpg
+キャスター: 10月15日の、欧州中央銀行が公表する為替の目安は、1ユーロ177円。
+  telop: 10月15日の、欧州中央銀行が公表する為替の目安は、1ユーロ177円
+  card: money_9_card
   image: assets/images/20261016_transfer_nufc_window/a01_stadium_w.jpg
 キャスター: およそ60億円になります。
   telop: およそ60億円になります
-  card: money_9_card
+  card: money_10_card
   image: assets/images/20261016_transfer_nufc_window/a01_stadium_w.jpg
 キャスター: では、なぜ差し引きが小さいのか。答えは、売った選手にあります。
   telop: では、なぜ差し引きが小さいのか。答えは、売った選手にあります
@@ -1050,8 +1055,8 @@ cards:
 ## 補強の額の半分は、ブルーノが出る前に決まっていた
 @bg: assets/backgrounds/stock/stadium_night.mp4
 
-解説: 売った金を待たずに、補強は進んだのか。日付で見ます。
-  telop: 売った金を待たずに、補強は進んだのか。日付で見ます
+解説: ブルーノが出るのを待たずに、補強は進んだのか。日付で見ます。
+  telop: ブルーノが出るのを待たずに、補強は進んだのか。日付で見ます
   source: 報道
   card: none
   image: assets/images/20261016_transfer_nufc_window/a01_stadium_w.jpg
@@ -1097,8 +1102,8 @@ cards:
   telop: フェルナンデス・パルド。払った額の19%にあたります
   card: late_10_card
   image: assets/images/20261016_transfer_nufc_window/b01_pardo_w.jpg
-解説: 強化の責任者（スポーティングディレクター）が、最後の1人を待った理由を話します。
-  telop: 強化の責任者（スポーティングディレクター）が、最後の1人を待った理由を話します
+解説: 強化の責任者（スポーティングディレクター）が、最後の1人について話します。
+  telop: 強化の責任者（スポーティングディレクター）が、最後の1人について話します
   card: late_11_card
   image: assets/images/20261016_transfer_nufc_window/a01_stadium_w.jpg
 解説: 責任者は、この選手を、5月から本命だったと話します。
@@ -1109,12 +1114,12 @@ cards:
   telop: 接触を続け、窓の終わりに8人目として加わった、という説明です
   card: late_13_card
   image: assets/images/20261016_transfer_nufc_window/a01_stadium_w.jpg
-解説: 補強は売却を待たずに進み、最後の1人は、5月から待っていた選手でした。
-  telop: 補強は売却を待たずに進み、最後の1人は、5月から待っていた選手でした
+解説: 補強は、ブルーノの退団を待たずに進み、最後の1人は、5月から本命だった選手でした。
+  telop: 補強は、ブルーノの退団を待たずに進み、最後の1人は、5月から本命だった選手でした
   card: none
   image: assets/images/20261016_transfer_nufc_window/a01_stadium_w.jpg
 
-## 市場価値でも同じ位置の平均でも、高く買い、高く売った
+## 市場価値より高く買い、高く売った。同じ位置の平均でも、買った側は高かった
 @bg: assets/backgrounds/stock/stadium_night.mp4
 
 解説: ニューカッスルは高く買い、高く売ったのか。物差しを2つ使います。
@@ -1135,8 +1140,8 @@ cards:
   telop: 払った額は、その合計の約1.65倍です
   card: value_3_card
   image: assets/images/20261016_transfer_nufc_window/a01_stadium_w.jpg
-解説: 図の斜めの線は、市場価値どおりに払った位置です。
-  telop: 図の斜めの線は、市場価値どおりに払った位置です
+解説: 図には、払った額が市場価値と同じになる、斜めの線を引きました。
+  telop: 図には、払った額が市場価値と同じになる、斜めの線を引きました
   card: value_4_card
   image: assets/images/20261016_transfer_nufc_window/a01_stadium_w.jpg
 解説: 8人全員が、その線より上にいます。
@@ -1144,8 +1149,8 @@ cards:
   telop: 8人全員が、その線より上にいます
   card: value_5_card
   image: assets/images/20261016_transfer_nufc_window/a01_stadium_w.jpg
-解説: 倍率でいちばん開いたのは、18歳のステウル。
-  telop: 倍率でいちばん開いたのは、18歳のステウル
+解説: 市場価値との倍率がいちばん大きかったのは、18歳のステウル。
+  telop: 市場価値との倍率がいちばん大きかったのは、18歳のステウル
   card: value_6_card
   image: assets/images/20261016_transfer_nufc_window/a01_stadium_w.jpg
 解説: 市場価値は700万ユーロで、払ったのは約3.4倍です。
@@ -1165,8 +1170,8 @@ cards:
   telop: 市場価値より高く買い、市場価値より高く売れた夏です
   card: value_10_card
   image: assets/images/20261016_transfer_nufc_window/a01_stadium_w.jpg
-解説: 2つ目の物差しは、同じ位置の平均。
-  telop: 2つ目の物差しは、同じ位置の平均
+解説: 2つ目の物差しは、同じ位置の選手の平均。
+  telop: 2つ目の物差しは、同じ位置の選手の平均
   card: value_11_card
   image: assets/images/20261016_transfer_nufc_window/a01_stadium_w.jpg
 解説: プレミアの他の19クラブで、今夏に移籍金が動いた加入127人の平均です。

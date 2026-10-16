@@ -11,8 +11,6 @@ short_telops:
   text: 前半終了間際/左から折り返し
 - match: シュルツがヒールで押し込み
   text: 76分/中村が合わせ→ヒールで決着
-- match: 鎌田大地も途中出場
-  text: 同じ試合/パレスの鎌田も81分に得点
 - match: 10点満点で7点
   text: 採点は7点/チーム最高タイ
 - match: 先発を明言
@@ -99,9 +97,21 @@ cards:
 @bg: assets/backgrounds/stock/stadium_night.mp4
 @main: true
 
-キャスター: ヨーロッパリーグ、リヨンが3対2で勝ち、中村敬斗が2アシスト。
-  telop: ヨーロッパリーグ、リヨンが3対2で勝ち、中村敬斗が2アシスト
+キャスター: ヨーロッパリーグ、リヨンはクリスタル・パレスに3対2で勝ちました。
+  telop: ヨーロッパリーグ、リヨンはクリスタル・パレスに3対2で勝ちました
   source: 報道
+  image: assets/images/20261016_nakamura_el_assists/01.jpg
+解説: 中村敬斗が2アシストでした。
+  telop: 中村敬斗が2アシストでした
+  card: none
+  image: assets/images/20261016_nakamura_el_assists/01.jpg
+キャスター: 1本目は前半の終わり。左サイドから右足で折り返し、ヌアマが決めました。
+  telop: 1本目は前半の終わり。左サイドから右足で折り返し、ヌアマが決めました
+  card: none
+  image: assets/images/20261016_nakamura_el_assists/01.jpg
+解説: 2本目は76分。中村が右足で合わせ、シュルツがヒールで押し込みました。
+  telop: 2本目は76分。中村が右足で合わせ、シュルツがヒールで押し込みました
+  card: none
   image: assets/images/20261016_nakamura_el_assists/01.jpg
 フランスのメディア: 試合の主役になった選手と、結果を残した選手がいる。
   short_voice: true
@@ -111,18 +121,6 @@ cards:
 フランスのメディア: ヌアマが後者なら中村は前者だった。
   cont: true
   telop: フランスのメディア「ヌアマが後者なら中村は前者だった」
-  card: none
-  image: assets/images/20261016_nakamura_el_assists/01.jpg
-解説: 1本目は前半の終わり。左サイドから右足で折り返し、ヌアマが決めました。
-  telop: 1本目は前半の終わり。左サイドから右足で折り返し、ヌアマが決めました
-  card: none
-  image: assets/images/20261016_nakamura_el_assists/01.jpg
-キャスター: 2本目は76分。中村が右足で合わせ、シュルツがヒールで押し込みました。
-  telop: 2本目は76分。中村が右足で合わせ、シュルツがヒールで押し込みました
-  card: none
-  image: assets/images/20261016_nakamura_el_assists/01.jpg
-解説: 同じ試合では、パレスの鎌田大地も途中出場から81分に決めています。
-  telop: 同じ試合では、パレスの鎌田大地も途中出場から81分に決めています
   card: none
   image: assets/images/20261016_nakamura_el_assists/01.jpg
 

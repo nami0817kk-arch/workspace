@@ -17,9 +17,9 @@ short_telops:
   text: 59分に/ゴロヴィンと交代
 - match: 相変わらず技術的に洗練されている
   text: 仏メディア/評価は7点
-- match: 慣れないウイング
-  text: 地元の新聞/慣れないウイング
-- match: 2点すべてに
+- match: 起用された位置に注目
+  text: モナコの地元紙/起用位置に注目
+- match: 2点とも南野が絡み
   text: モナコの2点/どちらも起点
 short_hook: モナコの南野拓実、298日ぶりの先発復帰。
 thumbnail_line1: 南野拓実 298日ぶり先発
@@ -93,12 +93,12 @@ cards:
   telop: 南野拓実が、左膝の大けがから、先発で戻ってきました
   source: 報道
   image: assets/images/20261016_minamino_el_return/01.jpg
-解説: 現地15日、カンファレンスリーグ第1節、モナコ対ツェスカ・ソフィアの敵地戦。
-  telop: 現地15日、カンファレンスリーグ第1節、モナコ対ツェスカ・ソフィアの敵地戦
+解説: 現地15日、カンファレンスリーグ第1節。ヨーロッパで3番目の大会です。
+  telop: 現地15日、カンファレンスリーグ第1節。ヨーロッパで3番目の大会です
   card: none
   image: assets/images/20261016_minamino_el_return/01.jpg
-キャスター: モナコが2対1で勝ちました。
-  telop: モナコが2対1で勝ちました
+キャスター: 敵地でツェスカ・ソフィアに、モナコが2対1で勝ちました。
+  telop: 敵地でツェスカ・ソフィアに、モナコが2対1で勝ちました
   card: none
   image: assets/images/20261016_minamino_el_return/01.jpg
 解説: 開始早々、南野のパスからイドゥンボがシュート。ブロックされます。
@@ -109,12 +109,12 @@ cards:
   telop: そのこぼれ球を、ブルンナーが押し込んで先制です
   card: none
   image: assets/images/20261016_minamino_el_return/01.jpg
-解説: 前半のうちに、もう1点。南野のパスを受けたファティが決めました。
-  telop: 前半のうちに、もう1点。南野のパスを受けたファティが決めました
+解説: もう1点は前半。南野のパスを受けたファティが決め、2点とも南野が絡みます。
+  telop: もう1点は前半。南野のパスを受けたファティが決め、2点とも南野が絡みます
   card: none
   image: assets/images/20261016_minamino_el_return/01.jpg
-キャスター: 南野は後半の途中で交代。モナコは終盤に1点を返されましたが、逃げ切りました。
-  telop: 南野は後半の途中で交代。モナコは終盤に1点を返されましたが、逃げ切りました
+キャスター: 南野は後半の途中で交代。モナコは逃げ切りました。
+  telop: 南野は後半の途中で交代。モナコは逃げ切りました
   card: none
   image: assets/images/20261016_minamino_el_return/01.jpg
 
@@ -139,12 +139,8 @@ cards:
   source: 報道
   card: both_card
   image: assets/images/20261016_minamino_el_return/01.jpg
-解説: モナコの2点すべてに、南野が絡んだことになります。
-  telop: モナコの2点すべてに、南野が絡んだことになります
-  card: none
-  image: assets/images/20261016_minamino_el_return/01.jpg
-キャスター: 一方の地元の新聞は、慣れないウイングでの起用に注目します。
-  telop: 一方の地元の新聞は、慣れないウイングでの起用に注目します
+解説: 一方、モナコの地元の新聞は、南野が起用された位置に注目します。
+  telop: 一方、モナコの地元の新聞は、南野が起用された位置に注目します
   card: none
   image: assets/images/20261016_minamino_el_return/01.jpg
 地元の新聞: 自分のポジションを見つけるのに少し苦労した

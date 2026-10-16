@@ -7,14 +7,14 @@ short_question: サンチョは、ヘタフェを選ぶと思いますか。
 short_telops:
 - match: 正式なオファーを出しました
   text: 無所属のサンチョに/ヘタフェが正式オファー
+- match: ラ・リーガ14位
+  text: ヘタフェはスペインの/ラ・リーガ14位
+- match: 今夏ユナイテッド
+  text: 26歳/今夏ユナイテッドを契約満了
+- match: 簡単ではない
+  text: 合意は/簡単ではないと伝えられる
 - match: トーレス会長は
   text: ヘタフェ会長/トーレス氏の言葉
-- match: 今夏、ユナイテッド
-  text: 26歳/今夏ユナイテッドを契約満了
-- match: 複雑な作業
-  text: 合意には/複雑な作業が残る
-- match: 14位です
-  text: ヘタフェ/ラ・リーガ14位
 - match: カルバハルの獲得
   text: 13日/カルバハルを獲得
 - match: 3回です
@@ -95,8 +95,24 @@ cards:
   telop: 無所属のジェイドン・サンチョに、ヘタフェが正式なオファーを出しました
   source: 報道
   image: assets/images/20261016_sancho_getafe_offer/01.jpg
-解説: ヘタフェのトーレス会長は、ラジオでこう語りました。
-  telop: ヘタフェのトーレス会長は、ラジオでこう語りました
+解説: ヘタフェはスペインのクラブで、ラ・リーガ14位です。
+  telop: ヘタフェはスペインのクラブで、ラ・リーガ14位です
+  card: none
+  image: assets/images/20261016_sancho_getafe_offer/01.jpg
+キャスター: 26歳のサンチョは、今夏ユナイテッドとの契約が切れ、次の所を探しています。
+  telop: 26歳のサンチョは、今夏ユナイテッドとの契約が切れ、次の所を探しています
+  card: none
+  image: assets/images/20261016_sancho_getafe_offer/01.jpg
+解説: 合意は簡単ではないと伝えられています。
+  telop: 合意は簡単ではないと伝えられています
+  card: none
+  image: assets/images/20261016_sancho_getafe_offer/01.jpg
+キャスター: サンチョは、イングランドの外への移籍を望んでいると伝えられています。
+  telop: サンチョは、イングランドの外への移籍を望んでいると伝えられています
+  card: none
+  image: assets/images/20261016_sancho_getafe_offer/01.jpg
+解説: ヘタフェのトーレス会長は、ラジオでこの件を認め、こう語りました。
+  telop: ヘタフェのトーレス会長は、ラジオでこの件を認め、こう語りました
   card: none
   image: assets/images/20261016_sancho_getafe_offer/01.jpg
 トーレス会長: それは全くの事実だ。4か月、この件を追っている
@@ -118,36 +134,20 @@ cards:
   telop: トーレス会長「辛抱が必要だ。しつこく迫らず、彼に決めさせる」
   card: none
   image: assets/images/20261016_sancho_getafe_offer/01.jpg
-キャスター: 26歳のサンチョは、今夏、ユナイテッドとの契約が切れ、次の所を探しています。
-  telop: 26歳のサンチョは、今夏、ユナイテッドとの契約が切れ、次の所を探しています
-  card: none
-  image: assets/images/20261016_sancho_getafe_offer/01.jpg
-解説: 合意には、複雑な作業が残っていると伝えられています。
-  telop: 合意には、複雑な作業が残っていると伝えられています
-  card: none
-  image: assets/images/20261016_sancho_getafe_offer/01.jpg
-キャスター: サンチョは、イングランドの外への移籍を望んでいると伝えられています。
-  telop: サンチョは、イングランドの外への移籍を望んでいると伝えられています
-  card: none
-  image: assets/images/20261016_sancho_getafe_offer/01.jpg
 
-## ヘタフェはどんなクラブか
+## ヘタフェは、今週どう動いたか
 @bg: assets/backgrounds/stock/stadium_night.mp4
 
-キャスター: サンチョを誘うヘタフェは、ラ・リーガで14位です。
-  telop: サンチョを誘うヘタフェは、ラ・リーガで14位です
+キャスター: サンチョへのオファーの前にも、ヘタフェは大きな補強を発表していました。
+  telop: サンチョへのオファーの前にも、ヘタフェは大きな補強を発表していました
   source: 背景
   image: assets/images/20261016_sancho_getafe_offer/01.jpg
-解説: 13日には、レアル・マドリードを退団したカルバハルの獲得を発表しました。
-  telop: 13日には、レアル・マドリードを退団したカルバハルの獲得を発表しました
+解説: 13日、レアル・マドリードを退団したカルバハルの獲得です。
+  telop: 13日、レアル・マドリードを退団したカルバハルの獲得です
   card: none
   image: assets/images/20261016_sancho_getafe_offer/01.jpg
 キャスター: 34歳のスペイン代表DFで、契約は2027年6月までです。
   telop: 34歳のスペイン代表DFで、契約は2027年6月までです
-  card: none
-  image: assets/images/20261016_sancho_getafe_offer/01.jpg
-解説: カルバハルはレアルで、チャンピオンズリーグを6度制しました。
-  telop: カルバハルはレアルで、チャンピオンズリーグを6度制しました
   card: none
   image: assets/images/20261016_sancho_getafe_offer/01.jpg
 
@@ -172,11 +172,15 @@ cards:
   telop: 直近の2季は、チェルシーで41試合、ヴィラで39試合。合わせて80試合です
   card: none
   image: assets/images/20261016_sancho_getafe_offer/01.jpg
-キャスター: ヴィラでは、ヨーロッパリーグを制しました。欧州の決勝は、3季連続。
-  telop: ヴィラでは、ヨーロッパリーグを制しました。欧州の決勝は、3季連続
+キャスター: ヴィラでは、ヨーロッパリーグを制しました。欧州の決勝は、これで3季連続です。
+  telop: ヴィラでは、ヨーロッパリーグを制しました。欧州の決勝は、これで3季連続です
   card: none
   image: assets/images/20261016_sancho_getafe_offer/01.jpg
-解説: オファーは出ました。ただ、決めるのは本人です。
-  telop: オファーは出ました。ただ、決めるのは本人です
+解説: 貸し出し先でも出場を重ね、決勝に立ち続けた5年。
+  telop: 貸し出し先でも出場を重ね、決勝に立ち続けた5年
+  card: none
+  image: assets/images/20261016_sancho_getafe_offer/01.jpg
+キャスター: 複数のクラブから話がある背景には、この実績があると見られます。
+  telop: 複数のクラブから話がある背景には、この実績があると見られます
   card: none
   image: assets/images/20261016_sancho_getafe_offer/01.jpg

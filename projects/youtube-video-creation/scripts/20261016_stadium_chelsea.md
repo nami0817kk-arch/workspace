@@ -236,7 +236,7 @@ cards:
     title: 建て直しの歩み
     rows: *id005
     focus: 2001年
-    highlight_row: 1
+    highlight_row: 0
   rebuild_7_card:
     type: timeline
     title: 建て直しの歩み
@@ -278,7 +278,7 @@ cards:
     title: 建て直しの歩み
     rows: *id005
     focus: 2001年
-    highlight_row: 2
+    highlight_row: 1
   rebuild_14_card:
     type: timeline
     title: 建て直しの歩み
@@ -314,7 +314,7 @@ cards:
     title: 建て直しの歩み
     rows: *id005
     focus: 2001年
-    highlight_row: 3
+    highlight_row: 2
   rebuild_20_card:
     type: timeline
     title: 建て直しの歩み
@@ -326,13 +326,13 @@ cards:
     title: 建て直しの歩み
     rows: *id005
     focus: 2001年
-    highlight_row: 4
+    highlight_row: 3
   rebuild_22_card:
     type: timeline
     title: 建て直しの歩み
     rows: *id005
     focus: 2001年
-    highlight_row: 5
+    highlight_row: 4
   rebuild_23_card:
     type: timeline
     title: 建て直しの歩み
@@ -346,6 +346,24 @@ cards:
     focus: 2001年
     highlight_row: 5
   rebuild_25_card:
+    type: timeline
+    title: 建て直しの歩み
+    rows: *id005
+    focus: 2001年
+    highlight_row: 5
+  rebuild_26_card:
+    type: timeline
+    title: 建て直しの歩み
+    rows: *id005
+    focus: 2001年
+    highlight_row: 5
+  rebuild_27_card:
+    type: timeline
+    title: 建て直しの歩み
+    rows: *id005
+    focus: 2001年
+    highlight_row: 5
+  rebuild_28_card:
     type: timeline
     title: 建て直しの歩み
     rows: *id005
@@ -542,6 +560,7 @@ cards:
   plan_14_card: *id010
   plan_15_card: *id010
   plan_16_card: *id010
+  plan_17_card: *id010
   view_card: &id011
     type: table
     title: 今季の収容、20クラブの順位（自分で並べた）
@@ -660,8 +679,8 @@ cards:
   telop: 使っていたのは、ロンドン・アスレチック・クラブ。陸上のレースに使われました
   card: none
   image: assets/images/20261016_stadium_chelsea/03_w.jpg
-解説: 1904年、ミアーズ兄弟が、この会場の権利を手に入れます。
-  telop: 1904年、ミアーズ兄弟が、この会場の権利を手に入れます
+解説: 1904年、のちにクラブを作るミアーズ兄弟が、この会場の権利を手に入れます。
+  telop: 1904年、のちにクラブを作るミアーズ兄弟が、この会場の権利を手に入れます
   card: origin_2_card
   image: assets/images/20261016_stadium_chelsea/03_w.jpg
 解説: サッカーを開くために、となりの土地も買い足していました。
@@ -678,8 +697,8 @@ cards:
   telop: 計画した収容は、10万人でした
   card: none
   image: assets/images/20261016_stadium_chelsea/03_w.jpg
-解説: 当時のイングランドで、クリスタル・パレスの競技場に次ぐ、2番目の大きさです。
-  telop: 当時のイングランドで、クリスタル・パレスの競技場に次ぐ、2番目の大きさです
+解説: 当時のイングランドで、昔のクリスタル・パレスの競技場に次ぐ、2番目の大きさです。
+  telop: 当時のイングランドで、昔のクリスタル・パレスの競技場に次ぐ、2番目の大きさです
   card: none
   image: assets/images/20261016_stadium_chelsea/03_w.jpg
 解説: 屋根のある席は、東側の5000人ぶんだけ。ほかの3辺は、開けた大きな丘でした。
@@ -710,8 +729,8 @@ cards:
   telop: 犬のレースを開く団体が、賭けをする人のために付けた屋根でした
   card: origin_13_card
   image: assets/images/20261016_stadium_chelsea/03_w.jpg
-解説: いまの「シェッド」という呼び名は、この屋根の形から来ています。
-  telop: いまの「シェッド」という呼び名は、この屋根の形から来ています
+解説: いまの南のスタンドの「シェッド」という呼び名は、この屋根の形から来ています。
+  telop: いまの南のスタンドの「シェッド」という呼び名は、この屋根の形から来ています
   card: origin_14_card
   image: assets/images/20261016_stadium_chelsea/03_w.jpg
 解説: 1965年には、西側に6000席あまりのスタンドが建ちました。
@@ -743,100 +762,112 @@ cards:
   telop: 東スタンドは、1974年に開きます。でも、建て直しはそこで止まりました
   card: rebuild_4_card
   image: assets/images/20261016_stadium_chelsea/04_w.jpg
+解説: 全体を建て直す計画は、東側だけで終わりました。
+  telop: 全体を建て直す計画は、東側だけで終わりました
+  card: rebuild_5_card
+  image: assets/images/20261016_stadium_chelsea/04_w.jpg
 解説: この費用が、クラブを破産寸前まで追い込みました。
   telop: この費用が、クラブを破産寸前まで追い込みました
-  card: rebuild_5_card
+  card: rebuild_6_card
   image: assets/images/20261016_stadium_chelsea/04_w.jpg
 解説: 1980年代の初め、クラブは、実業家のケン・ベイツに買われます。
   telop: 1980年代の初め、クラブは、実業家のケン・ベイツに買われます
-  card: rebuild_6_card
+  card: rebuild_7_card
   image: assets/images/20261016_stadium_chelsea/04_w.jpg
 解説: ところが、ベイツが買ったのは、クラブだけでした。
   telop: ところが、ベイツが買ったのは、クラブだけでした
-  card: rebuild_7_card
+  card: rebuild_8_card
   image: assets/images/20261016_stadium_chelsea/04_w.jpg
 解説: 土地は、別の会社の持ち物でした。
   telop: 土地は、別の会社の持ち物でした
-  card: rebuild_8_card
+  card: rebuild_9_card
   image: assets/images/20261016_stadium_chelsea/04_w.jpg
 解説: その会社の株は、元の役員から、不動産の開発業者へ渡っていました。
   telop: その会社の株は、元の役員から、不動産の開発業者へ渡っていました
-  card: rebuild_9_card
+  card: rebuild_10_card
   image: assets/images/20261016_stadium_chelsea/04_w.jpg
 解説: 土地に、住宅やスーパーが建つかもしれない。
   emph: true
   telop: 土地に、住宅やスーパーが建つかもしれない
-  card: rebuild_10_card
-  image: assets/images/20261016_stadium_chelsea/04_w.jpg
-解説: ほかのロンドンのクラブと、本拠地を分けるかもしれない。
-  telop: ほかのロンドンのクラブと、本拠地を分けるかもしれない
   card: rebuild_11_card
+  image: assets/images/20261016_stadium_chelsea/04_w.jpg
+解説: ほかのロンドンのクラブと、本拠地を共有するかもしれない。
+  telop: ほかのロンドンのクラブと、本拠地を共有するかもしれない
+  card: rebuild_12_card
   image: assets/images/20261016_stadium_chelsea/04_w.jpg
 解説: 法廷の争いは、およそ10年。「橋を守れ」という募金の運動まで生まれました。
   telop: 法廷の争いは、およそ10年。「橋を守れ」という募金の運動まで生まれました
-  card: rebuild_12_card
+  card: rebuild_13_card
   image: assets/images/20261016_stadium_chelsea/04_w.jpg
 解説: 1992年、不動産の暴落で、開発業者のほうが破産します。
   emph: true
   telop: 1992年、不動産の暴落で、開発業者のほうが破産します
-  card: rebuild_13_card
+  card: rebuild_14_card
   image: assets/images/20261016_stadium_chelsea/04_w.jpg
 解説: 土地は、クラブの手に戻ります。
   telop: 土地は、クラブの手に戻ります
-  card: rebuild_14_card
+  card: rebuild_15_card
   image: assets/images/20261016_stadium_chelsea/04_w.jpg
 解説: 翌1993年3月には、チェルシー・ピッチ・オーナーズという会社が作られます。
   telop: 翌1993年3月には、チェルシー・ピッチ・オーナーズという会社が作られます
-  card: rebuild_15_card
+  card: rebuild_16_card
   image: assets/images/20261016_stadium_chelsea/04_w.jpg
 解説: ファンが株を持つ会社で、のちに土地とクラブの名前の権利を持ちます。
   telop: ファンが株を持つ会社で、のちに土地とクラブの名前の権利を持ちます
-  card: rebuild_16_card
+  card: rebuild_17_card
   image: assets/images/20261016_stadium_chelsea/04_w.jpg
 解説: つまり今の土地の持ち主は、クラブではなく、この会社です。
   telop: つまり今の土地の持ち主は、クラブではなく、この会社です
-  card: rebuild_17_card
-  image: assets/images/20261016_stadium_chelsea/04_w.jpg
-解説: 移転してこの名前を使うには、株主の4分の3の同意が要るとされます。
-  telop: 移転してこの名前を使うには、株主の4分の3の同意が要るとされます
   card: rebuild_18_card
+  image: assets/images/20261016_stadium_chelsea/04_w.jpg
+解説: 移転してクラブの名前を使うには、株主の4分の3の同意が要るとされます。
+  telop: 移転してクラブの名前を使うには、株主の4分の3の同意が要るとされます
+  card: rebuild_19_card
   image: assets/images/20261016_stadium_chelsea/04_w.jpg
 解説: 北スタンドが開いたのは、1994年11月。
   telop: 北スタンドが開いたのは、1994年11月
-  card: rebuild_19_card
+  card: rebuild_20_card
   image: assets/images/20261016_stadium_chelsea/05_w.jpg
 解説: 2年後、出資で建設を助けた副会長、マシュー・ハーディングの名前がつきました。
   telop: 2年後、出資で建設を助けた副会長、マシュー・ハーディングの名前がつきました
-  card: rebuild_20_card
+  card: rebuild_21_card
   image: assets/images/20261016_stadium_chelsea/05_w.jpg
 解説: 南のシェッドは、1997年に、イス席のスタンドになります。
   telop: 南のシェッドは、1997年に、イス席のスタンドになります
-  card: rebuild_21_card
+  card: rebuild_22_card
   image: assets/images/20261016_stadium_chelsea/05_w.jpg
 解説: 最後は西スタンド。下の段は、予定どおり建ちました。
   telop: 最後は西スタンド。下の段は、予定どおり建ちました
-  card: rebuild_22_card
+  card: rebuild_23_card
   image: assets/images/20261016_stadium_chelsea/05_w.jpg
 解説: ところが、市との許可の問題で、残りの工事は2年止まります。
   telop: ところが、市との許可の問題で、残りの工事は2年止まります
-  card: rebuild_23_card
+  card: rebuild_24_card
   image: assets/images/20261016_stadium_chelsea/05_w.jpg
 解説: 4つの辺がそろったのは、2001年から02年のシーズンの開幕です。
   emph: true
   telop: 4つの辺がそろったのは、2001年から02年のシーズンの開幕です
-  card: rebuild_24_card
+  card: rebuild_25_card
   image: assets/images/20261016_stadium_chelsea/05_w.jpg
 解説: 東スタンドの着工から数えて、およそ28年です。
   emph: true
   telop: 東スタンドの着工から数えて、およそ28年です
-  card: rebuild_25_card
+  card: rebuild_26_card
+  image: assets/images/20261016_stadium_chelsea/05_w.jpg
+解説: 4つの辺は、どれもピッチのすぐそばに並びました。
+  telop: 4つの辺は、どれもピッチのすぐそばに並びました
+  card: rebuild_27_card
+  image: assets/images/20261016_stadium_chelsea/05_w.jpg
+解説: 収容は4万人ほど。最初に描いた6万人より、約2万人少ないままです。
+  telop: 収容は4万人ほど。最初に描いた6万人より、約2万人少ないままです
+  card: rebuild_28_card
   image: assets/images/20261016_stadium_chelsea/05_w.jpg
 
 ## スタンフォード・ブリッジで、いちばん人が集まった日はいつか
 @bg: assets/backgrounds/stock/stadium_night.mp4
 
-キャスター: ここで起きた日を、時代の順に見ていきます。
-  telop: ここで起きた日を、時代の順に見ていきます
+キャスター: ここに、人が集まった日を、時代の順に見ていきます。
+  telop: ここに、人が集まった日を、時代の順に見ていきます
   source: 報道
   card: matches_0_card
   image: assets/images/20261016_stadium_chelsea/06_w.jpg
@@ -932,8 +963,8 @@ cards:
   telop: 理由は、いまの投資の環境が不利なことでした
   card: plan_10_card
   image: assets/images/20261016_stadium_chelsea/07_w.jpg
-解説: では、いまの本拠地の収容は、どう変わってきたのか。2010年度から追います。
-  telop: では、いまの本拠地の収容は、どう変わってきたのか。2010年度から追います
+解説: では、収容の数字は、その後どう動いたのか。2010年度から追います。
+  telop: では、収容の数字は、その後どう動いたのか。2010年度から追います
   card: plan_11_card
   image: assets/images/20261016_stadium_chelsea/07_w.jpg
 解説: 2010年度は、4万2449人とされています。
@@ -949,21 +980,26 @@ cards:
   telop: 差は、2106人。そこから今季までに、さらに299人減りました
   card: plan_14_card
   image: assets/images/20261016_stadium_chelsea/07_w.jpg
-解説: 合わせて2405人、5.7％の減り方です。
-  telop: 合わせて2405人、5.7％の減り方です
+解説: 減った理由は、確かめられていません。
+  emph: true
+  telop: 減った理由は、確かめられていません
   card: plan_15_card
   image: assets/images/20261016_stadium_chelsea/07_w.jpg
-解説: 広げる計画は止まり、記録の半分以下のままです。
-  telop: 広げる計画は止まり、記録の半分以下のままです
+解説: 合わせて2405人、5.7％の減り方です。
+  telop: 合わせて2405人、5.7％の減り方です
   card: plan_16_card
+  image: assets/images/20261016_stadium_chelsea/07_w.jpg
+解説: 広げる計画は止まったまま、収容は記録の半分以下です。
+  telop: 広げる計画は止まったまま、収容は記録の半分以下です
+  card: plan_17_card
   image: assets/images/20261016_stadium_chelsea/07_w.jpg
 
 ## 見立て・4万人の器は、どこまで満員なのか
 @bg: assets/backgrounds/stock/stadium_night.mp4
 @viewpoint: true
 
-解説: ここからは、数字を自分で並べて比べます。
-  telop: ここからは、数字を自分で並べて比べます
+解説: ここからは、4万人の器がどれだけ埋まっているかを、数字で比べます。
+  telop: ここからは、4万人の器がどれだけ埋まっているかを、数字で比べます
   source: 報道
   card: view_0_card
   image: assets/images/20261016_stadium_chelsea/02_w.jpg
@@ -998,8 +1034,8 @@ cards:
   telop: 19試合のうち、いちばん多い日と少ない日の差は、567人。収容の1.4％です
   card: view_7_card
   image: assets/images/20261016_stadium_chelsea/02_w.jpg
-解説: 相手がアーセナルでもリーズでも、ほぼ満員。結論は、ほぼ毎試合が満員。
-  telop: 相手がアーセナルでもリーズでも、ほぼ満員。結論は、ほぼ毎試合が満員
+解説: 最多はアーセナル戦、最少はリーズ戦。どちらも、ほぼ満員。結論は、ほぼ毎試合が満員。
+  telop: 最多はアーセナル戦、最少はリーズ戦。どちらも、ほぼ満員。結論は、ほぼ毎試合が満員
   card: view_8_card
   image: assets/images/20261016_stadium_chelsea/02_w.jpg
 解説: 次の本拠地戦は、10月24日。相手はトッテナムです。
@@ -1007,12 +1043,12 @@ cards:
   telop: 次の本拠地戦は、10月24日。相手はトッテナムです
   card: none
   image: assets/images/20261016_stadium_chelsea/02_w.jpg
-解説: トッテナムの本拠地の収容は、チェルシーの1.57倍です。
-  telop: トッテナムの本拠地の収容は、チェルシーの1.57倍です
+解説: このトッテナムは、1921年にここで開かれたFAカップ決勝で、優勝したクラブ。
+  telop: このトッテナムは、1921年にここで開かれたFAカップ決勝で、優勝したクラブ
   card: none
   image: assets/images/20261016_stadium_chelsea/02_w.jpg
-解説: 1921年の決勝で優勝したのも、ここスタンフォード・ブリッジでした。
-  telop: 1921年の決勝で優勝したのも、ここスタンフォード・ブリッジでした
+解説: トッテナムの本拠地の収容は、チェルシーの1.57倍です。
+  telop: トッテナムの本拠地の収容は、チェルシーの1.57倍です
   card: none
   image: assets/images/20261016_stadium_chelsea/02_w.jpg
 解説: ほぼ満員の本拠地が、より大きな本拠地を迎えます。

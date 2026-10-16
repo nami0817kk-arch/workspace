@@ -5,19 +5,21 @@ short_title: 鈴木彩艶「質を上げていければ」。CL初の完封の�
 no_main: true
 short_question: あなたは、鈴木彩艶の「質」とは何だと思いますか。
 short_telops:
-- match: 試合後のインタビュー
-  text: CL初の完封/試合後の言葉
-- match: 体を寄せてぶつけることができた
-  text: 17分の1対1/本人の振り返り
-- match: 理想としている形ではなかった
-  text: 39分のキック/理想の形ではなかった
+- match: フェネルバフチェに6対0
+  text: 14日CL/ヴィラ 6対0
+- match: クリーンシート
+  text: 鈴木はCL初の完封
 - match: 関わる時と関わらない時
   text: 関わる時と/関わらない時
 - match: 質を上げていければ
   text: 「質を上げていければ」
+- match: 体を寄せてぶつけることができた
+  text: 17分の1対1/本人の振り返り
+- match: 理想としている形ではなかった
+  text: 39分のキック/理想の形ではなかった
 - match: 憧れていた選手の1人と呼びました
   text: 相手GKは/憧れていた選手
-- match: ストレートインすることだ
+- match: ストレートインすること
   text: 目標は/ラウンド16へストレートイン
 - match: 場面は2つ
   text: 本人が挙げた場面は2つ
@@ -85,12 +87,42 @@ cards:
   telop: 鈴木彩艶「質を上げていければ」。CL初の完封のあと、本人は何を語ったのか
   se: assets/audio/se_pon.wav
 
-## 本人は何を語ったか
+## 鈴木彩艶が言う「質」とは
 @bg: assets/backgrounds/stock/stadium_night.mp4
 @main: true
 
-キャスター: 鈴木彩艶が、試合後のインタビューで、17分の一対一を振り返りました。
-  telop: 鈴木彩艶が、試合後のインタビューで、17分の一対一を振り返りました
+キャスター: ヴィラは14日のCLで6対0の勝ち。鈴木はCL初の完封で、こう話しました。
+  telop: ヴィラは14日のCLで6対0の勝ち。鈴木はCL初の完封で、こう話しました
+  source: 報道
+  image: assets/images/20261016_suzuki_quality_quote/01.jpg
+鈴木彩艶: 関わる時と関わらない時を
+  telop: 鈴木彩艶「関わる時と関わらない時を」
+  card: none
+  image: assets/images/20261016_suzuki_quality_quote/01.jpg
+鈴木彩艶: しっかり判断してプレーできていると思うので、
+  cont: true
+  telop: 鈴木彩艶「しっかり判断してプレーできていると思うので、」
+  card: none
+  image: assets/images/20261016_suzuki_quality_quote/01.jpg
+鈴木彩艶: 質を上げていければと思います
+  cont: true
+  telop: 鈴木彩艶「質を上げていければと思います」
+  card: none
+  image: assets/images/20261016_suzuki_quality_quote/01.jpg
+キャスター: この試合は、相手が引いて守っていたため、鈴木が関われる場面は限られました。
+  telop: この試合は、相手が引いて守っていたため、鈴木が関われる場面は限られました
+  card: none
+  image: assets/images/20261016_suzuki_quality_quote/01.jpg
+解説: 触る回数ではなく、関わるかどうかの判断。それが本人の言う「質」です。
+  telop: 触る回数ではなく、関わるかどうかの判断。それが本人の言う「質」です
+  card: none
+  image: assets/images/20261016_suzuki_quality_quote/01.jpg
+
+## 17分の一対一
+@bg: assets/backgrounds/stock/stadium_night.mp4
+
+キャスター: 試合後のインタビューで、鈴木はフェネルバフチェ戦17分の一対一も振り返りました。
+  telop: 試合後のインタビューで、鈴木はフェネルバフチェ戦17分の一対一も振り返りました
   source: 報道
   image: assets/images/20261016_suzuki_quality_quote/01.jpg
 鈴木彩艶: 相手のトラップが大きくなったところを狙うことは意識していて、
@@ -100,10 +132,6 @@ cards:
 鈴木彩艶: しっかり体を寄せてぶつけることができたのはよかったです
   cont: true
   telop: 鈴木彩艶「しっかり体を寄せてぶつけることができたのはよかったです」
-  card: none
-  image: assets/images/20261016_suzuki_quality_quote/01.jpg
-解説: 本人は、この場面が試合の結果につながったと見ています。
-  telop: 本人は、この場面が試合の結果につながったと見ています
   card: none
   image: assets/images/20261016_suzuki_quality_quote/01.jpg
 鈴木彩艶: 前半のああいったシーンで失点しなかったことが、
@@ -124,8 +152,8 @@ cards:
 ## 3点目の起点になったキック
 @bg: assets/backgrounds/stock/stadium_night.mp4
 
-キャスター: 39分、鈴木のキックから始まった攻撃は、ジャクソンのゴールで3点目になりました。
-  telop: 39分、鈴木のキックから始まった攻撃は、ジャクソンのゴールで3点目になりました
+キャスター: 39分、鈴木のキックが起点になり、ジャクソンのゴールで3点目が生まれました。
+  telop: 39分、鈴木のキックが起点になり、ジャクソンのゴールで3点目が生まれました
   source: 報道
   image: assets/images/20261016_suzuki_quality_quote/01.jpg
 解説: ただ、本人の評価は少し違います。
@@ -139,44 +167,6 @@ cards:
 鈴木彩艶: 結果的に得点に繋がったのはよかったかなと思います
   cont: true
   telop: 鈴木彩艶「結果的に得点に繋がったのはよかったかなと思います」
-  card: none
-  image: assets/images/20261016_suzuki_quality_quote/01.jpg
-キャスター: 得点にはつながったが、理想の形ではなかった。
-  telop: 得点にはつながったが、理想の形ではなかった
-  card: none
-  image: assets/images/20261016_suzuki_quality_quote/01.jpg
-
-## 「質」の中身
-@bg: assets/backgrounds/stock/stadium_night.mp4
-
-キャスター: この試合は、相手が引いて守っていました。
-  telop: この試合は、相手が引いて守っていました
-  source: 報道
-  image: assets/images/20261016_suzuki_quality_quote/01.jpg
-解説: 鈴木が触る機会は、多くなかったということです。
-  telop: 鈴木が触る機会は、多くなかったということです
-  card: none
-  image: assets/images/20261016_suzuki_quality_quote/01.jpg
-キャスター: その中で、本人は自分の役割をこう話しました。
-  telop: その中で、本人は自分の役割をこう話しました
-  card: none
-  image: assets/images/20261016_suzuki_quality_quote/01.jpg
-鈴木彩艶: 関わる時と関わらない時を
-  telop: 鈴木彩艶「関わる時と関わらない時を」
-  card: none
-  image: assets/images/20261016_suzuki_quality_quote/01.jpg
-鈴木彩艶: しっかり判断してプレーできていると思うので、
-  cont: true
-  telop: 鈴木彩艶「しっかり判断してプレーできていると思うので、」
-  card: none
-  image: assets/images/20261016_suzuki_quality_quote/01.jpg
-鈴木彩艶: 質を上げていければと思います
-  cont: true
-  telop: 鈴木彩艶「質を上げていければと思います」
-  card: none
-  image: assets/images/20261016_suzuki_quality_quote/01.jpg
-キャスター: 本人が話したのは、触る回数ではなく、関わるかどうかの判断です。
-  telop: 本人が話したのは、触る回数ではなく、関わるかどうかの判断です
   card: none
   image: assets/images/20261016_suzuki_quality_quote/01.jpg
 
@@ -214,23 +204,23 @@ cards:
   source: 報道
   card: numbers_card
   image: assets/images/20261016_suzuki_quality_quote/01.jpg
-解説: 17分の阻止と、39分のキックです。
-  telop: 17分の阻止と、39分のキックです
+解説: 17分の阻止は「よかった」。
+  telop: 17分の阻止は「よかった」
   card: none
   image: assets/images/20261016_suzuki_quality_quote/01.jpg
-キャスター: 阻止は「よかった」、キックは「理想ではなかった」と、分けて話しています。
-  telop: 阻止は「よかった」、キックは「理想ではなかった」と、分けて話しています
+キャスター: 39分のキックは「理想ではなかった」と話しています。
+  telop: 39分のキックは「理想ではなかった」と話しています
   card: none
   image: assets/images/20261016_suzuki_quality_quote/01.jpg
-解説: 6対0の大勝でも、本人が口にしたのは、できたことと、足りないことの両方でした。
-  telop: 6対0の大勝でも、本人が口にしたのは、できたことと、足りないことの両方でした
-  card: none
-  image: assets/images/20261016_suzuki_quality_quote/01.jpg
-キャスター: ヴィラは開幕2連勝で、順位は3位です。
+解説: ヴィラは開幕2連勝で、順位は3位です。
   telop: ヴィラは開幕2連勝で、順位は3位です
   card: none
   image: assets/images/20261016_suzuki_quality_quote/01.jpg
-解説: 目標は、ラウンド16にストレートインすることだと話しています。
-  telop: 目標は、ラウンド16にストレートインすることだと話しています
+キャスター: 目標は、チャンピオンズリーグのラウンド16に、ストレートインすること。
+  telop: 目標は、チャンピオンズリーグのラウンド16に、ストレートインすること
+  card: none
+  image: assets/images/20261016_suzuki_quality_quote/01.jpg
+解説: リーグフェーズの上位に入れば、プレーオフを挟まずにラウンド16へ進めます。
+  telop: リーグフェーズの上位に入れば、プレーオフを挟まずにラウンド16へ進めます
   card: none
   image: assets/images/20261016_suzuki_quality_quote/01.jpg

@@ -177,7 +177,7 @@ sections:
     card: none
   - text: 使っていたのは、ロンドン・アスレチック・クラブ。陸上のレースに使われました。
     card: none
-  - text: 1904年、ミアーズ兄弟が、この会場の権利を手に入れます。
+  - text: 1904年、のちにクラブを作るミアーズ兄弟が、この会場の権利を手に入れます。
     card:
       <<: *id_origin
       highlight_row: 1
@@ -193,7 +193,7 @@ sections:
     emph: true
     callword: 10万人
     card: none
-  - text: 当時のイングランドで、クリスタル・パレスの競技場に次ぐ、2番目の大きさです。
+  - text: 当時のイングランドで、昔のクリスタル・パレスの競技場に次ぐ、2番目の大きさです。
     card: none
   - text: 屋根のある席は、東側の5000人ぶんだけ。ほかの3辺は、開けた大きな丘でした。
     card: none
@@ -217,7 +217,7 @@ sections:
     card:
       <<: *id_origin
       highlight_row: 3
-  - text: いまの「シェッド」という呼び名は、この屋根の形から来ています。
+  - text: いまの南のスタンドの「シェッド」という呼び名は、この屋根の形から来ています。
     card:
       <<: *id_origin
       highlight_row: 3
@@ -265,6 +265,10 @@ sections:
     card:
       <<: *id_rebuild
       highlight_row: 0
+  - text: 全体を建て直す計画は、東側だけで終わりました。
+    card:
+      <<: *id_rebuild
+      highlight_row: 0
   - text: この費用が、クラブを破産寸前まで追い込みました。
     card:
       <<: *id_rebuild
@@ -290,7 +294,7 @@ sections:
     card:
       <<: *id_rebuild
       highlight_row: 1
-  - text: ほかのロンドンのクラブと、本拠地を分けるかもしれない。
+  - text: ほかのロンドンのクラブと、本拠地を共有するかもしれない。
     card:
       <<: *id_rebuild
       highlight_row: 1
@@ -319,7 +323,7 @@ sections:
     card:
       <<: *id_rebuild
       highlight_row: 2
-  - text: 移転してこの名前を使うには、株主の4分の3の同意が要るとされます。
+  - text: 移転してクラブの名前を使うには、株主の4分の3の同意が要るとされます。
     card:
       <<: *id_rebuild
       highlight_row: 2
@@ -351,6 +355,14 @@ sections:
       highlight_row: 5
   - text: 東スタンドの着工から数えて、およそ28年です。
     emph: true
+    card:
+      <<: *id_rebuild
+      highlight_row: 5
+  - text: 4つの辺は、どれもピッチのすぐそばに並びました。
+    card:
+      <<: *id_rebuild
+      highlight_row: 5
+  - text: 収容は4万人ほど。最初に描いた6万人より、約2万人少ないままです。
     card:
       <<: *id_rebuild
       highlight_row: 5
@@ -391,7 +403,7 @@ sections:
       - リーグ戦 アーセナル（昨季の最多）
       - 3万9820人
   say:
-  - text: ここで起きた日を、時代の順に見ていきます。
+  - text: ここに、人が集まった日を、時代の順に見ていきます。
     image: assets/images/20261016_stadium_chelsea/06_w.jpg
     card: *id_match
   - text: 1920年から22年に、FAカップの決勝が3回。入場は、どれも今の収容より上。
@@ -557,7 +569,7 @@ sections:
       highlight:
       - 保留
       - 見直す時期を決めていない
-  - text: では、いまの本拠地の収容は、どう変わってきたのか。2010年度から追います。
+  - text: では、収容の数字は、その後どう動いたのか。2010年度から追います。
     card: &id_wf
       type: waterfall
       title: 収容は、どう減ったか（自分で引いた）
@@ -580,9 +592,12 @@ sections:
   - text: 差は、2106人。そこから今季までに、さらに299人減りました。
     emph: true
     card: *id_wf
+  - text: 減った理由は、確かめられていません。
+    emph: true
+    card: *id_wf
   - text: 合わせて2405人、5.7％の減り方です。
     card: *id_wf
-  - text: 広げる計画は止まり、記録の半分以下のままです。
+  - text: 広げる計画は止まったまま、収容は記録の半分以下です。
     card: *id_wf
   sources:
   - https://en.wikipedia.org/wiki/Stamford_Bridge_(stadium)
@@ -619,7 +634,7 @@ sections:
       - アストン・ヴィラ
       - 3万6887人
   say:
-  - text: ここからは、数字を自分で並べて比べます。
+  - text: ここからは、4万人の器がどれだけ埋まっているかを、数字で比べます。
     image: assets/images/20261016_stadium_chelsea/02_w.jpg
     card: *id_rank
   - text: 今季の収容を、20クラブぶん上から並べます。
@@ -668,14 +683,14 @@ sections:
     card: *id_fill
   - text: 19試合のうち、いちばん多い日と少ない日の差は、567人。収容の1.4％です。
     card: *id_fill
-  - text: 相手がアーセナルでもリーズでも、ほぼ満員。結論は、ほぼ毎試合が満員。
+  - text: 最多はアーセナル戦、最少はリーズ戦。どちらも、ほぼ満員。結論は、ほぼ毎試合が満員。
     card: *id_fill
   - text: 次の本拠地戦は、10月24日。相手はトッテナムです。
     emph: true
     card: none
-  - text: トッテナムの本拠地の収容は、チェルシーの1.57倍です。
+  - text: このトッテナムは、1921年にここで開かれたFAカップ決勝で、優勝したクラブ。
     card: none
-  - text: 1921年の決勝で優勝したのも、ここスタンフォード・ブリッジでした。
+  - text: トッテナムの本拠地の収容は、チェルシーの1.57倍です。
     card: none
   - text: ほぼ満員の本拠地が、より大きな本拠地を迎えます。
     emph: true

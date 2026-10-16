@@ -53,7 +53,7 @@ theme:
   league: england
   kind: other
   topic: アーセナル
-  title: ブカヨ・サカってどんな選手？ 右から左足で仕留める背番号7の正体
+  title: ブカヨ・サカってどんな選手？ 右から左足で仕留める持ち味の正体
   question: ブカヨ・サカはどういう作りの選手で、なぜ決めきれるのか
   takeaway: 今季のゴールは90分あたり0.57点で、直近3季の0.30〜0.47より高い。ただしクラブの9試合・637分と、試合数が少ない。次の節目は日本時間10月19日午前0時30分のフォレスト戦
   nameplate: ブカヨ・サカ｜アーセナル FW／イングランド代表
@@ -104,11 +104,11 @@ sections:
     card:
       <<: *hook_stats
       focus: 0
-  - text: イングランド人では、1966年決勝のハースト以来、2人目です。
+  - text: 1966年の決勝で3点を決めたのは、イングランド代表のハースト。
     card:
       <<: *hook_stats
       focus: 0
-  - text: ハーストは、その決勝で3点を決めた元イングランド代表。60年ぶりの記録です。
+  - text: イングランド人では、それ以来2人目。60年ぶりの記録です。
     card:
       <<: *hook_stats
       focus: 0
@@ -319,7 +319,12 @@ sections:
     card:
       <<: *career_card
       highlight_row: 5
-  - text: 前半の2点で、4点のリード。
+  - text: 37分と、前半の終わりぎわの45分+1。
+    emph: true
+    card:
+      <<: *career_card
+      highlight_row: 5
+  - text: サカの2点で、イングランドは4点のリード。
     emph: true
     card:
       <<: *career_card
@@ -384,7 +389,7 @@ sections:
     emph: true
     image: assets/stats/player_20261016_961995_radar.png
     no_telop: true
-  - text: いちばん小さいのは守備の関与で、56。それでも、真ん中より上の位置です。
+  - text: いちばん小さいのは守備の関与。100が最上位の図で、56です。それでも、真ん中より上の位置です。
     image: assets/images/20261016_saka/eng_panama_w/01.jpg
     no_telop: true
   - text: 触る場所は、右サイドから、ゴール前の中央まで。
@@ -539,7 +544,7 @@ sections:
     card: *recent_card
   - text: クラブの9試合だけだと、4得点。約159分に1点です。
     card: *recent_card
-  - text: プレミアリーグは6試合で3得点。アシストは、まだ0です。
+  - text: プレミアリーグは6試合で3得点。アシストは、まだ0。
     card: *recent_card
   - text: チャンピオンズリーグは2試合で1得点1アシスト。
     card: *recent_card
@@ -549,12 +554,16 @@ sections:
     card:
       <<: *recent_card
       highlight_row: 0
-  - text: 65分に途中出場すると、2分後にアシスト、6分後にゴール。3対0の勝ちです。
+  - text: 65分に途中出場すると、67分にアシスト、71分にゴール。3対0の勝ちです。
     emph: true
     card:
       <<: *recent_card
       highlight_row: 0
-  - text: その3日前、10月10日のリーズ戦は90分出場。直近5試合で、ならんで最長です。
+  - text: その3日前、10月10日のリーズ戦は90分出場。
+    card:
+      <<: *recent_card
+      highlight_row: 1
+  - text: クロアチア戦と並ぶ、直近5試合で最長です。
     card:
       <<: *recent_card
       highlight_row: 1
@@ -577,7 +586,13 @@ sections:
   - text: ゴール期待値は、シュートごとの入りやすさを足し合わせた数。
     image: assets/stats/player_20261016_961995_shots.png
     no_telop: true
-  - text: 3.62に対して得点は3。アシストの期待値は1.04で、味方が決めていれば1つ付いた計算です。
+  - text: 今季は3.62に対して、得点は3。
+    image: assets/stats/player_20261016_961995_shots.png
+    no_telop: true
+  - text: アシストの期待値は1.04。パスからゴールが生まれる見込みを足した数です。
+    image: assets/stats/player_20261016_961995_shots.png
+    no_telop: true
+  - text: 味方が決めていれば、1つ付いた計算です。
     image: assets/stats/player_20261016_961995_shots.png
     no_telop: true
   - text: 題の答えは、シュートを打ち続けて決める右ウイング。数字が、それを示しています。
@@ -714,7 +729,7 @@ sections:
     card: *view_card
   - text: 23/24は0.47、24/25は0.41、25/26は0.30。
     card: *view_card
-  - text: 今季は、クラブの4得点を637分で。4点を637分で。90分に直すと0.57です。
+  - text: 今季は、クラブの4得点を637分で。90分に直すと0.57です。
     emph: true
     card:
       <<: *view_card

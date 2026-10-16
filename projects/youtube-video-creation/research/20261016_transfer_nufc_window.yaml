@@ -107,7 +107,7 @@ sections:
   - text: この夏、ニューカッスルは3人の主力を売り、8人を買いました。
     short_only: true
     image: assets/images/20261016_transfer_nufc_window/a01_stadium_w.jpg
-  - text: 払った額は、およそ3億ユーロ。世界で4番目です。
+  - text: 払った額は、およそ3億1300万ユーロ。世界で4番目です。
     emph: true
     image: assets/images/20261016_transfer_nufc_window/a01_stadium_w.jpg
     card:
@@ -134,7 +134,9 @@ sections:
       highlight: 差し引き
   - text: プレミアの20クラブで、差し引きは大きい順に14番目です。
     card: *flow
-  - text: 差し引きを円にします。10月15日の欧州中央銀行の参照相場は、1ユーロ177円。
+  - text: 差し引きを円にします。
+    card: *flow
+  - text: 10月15日の、欧州中央銀行が公表する為替の目安は、1ユーロ177円。
     card: &yen
       type: convert
       title: 差し引きを円に
@@ -308,7 +310,7 @@ sections:
     - ['9月1日', フェルナンデス・パルドが加入。窓が閉まる]
     focus: 8月8日
   say:
-  - text: 売った金を待たずに、補強は進んだのか。日付で見ます。
+  - text: ブルーノが出るのを待たずに、補強は進んだのか。日付で見ます。
     image: assets/images/20261016_transfer_nufc_window/a01_stadium_w.jpg
     card: none
   - text: 選手を獲得できる期間を「窓」と呼びます。夏は6月15日から9月1日まで。
@@ -355,7 +357,7 @@ sections:
     card:
       <<: *when
       highlight_row: 5
-  - text: 強化の責任者（スポーティングディレクター）が、最後の1人を待った理由を話します。
+  - text: 強化の責任者（スポーティングディレクター）が、最後の1人について話します。
     image: assets/images/20261016_transfer_nufc_window/a01_stadium_w.jpg
     card: &doc_wilson
       type: document
@@ -373,7 +375,7 @@ sections:
   - text: 接触を続け、窓の終わりに8人目として加わった、という説明です。
     card:
       <<: *doc_wilson
-  - text: 補強は売却を待たずに進み、最後の1人は、5月から待っていた選手でした。
+  - text: 補強は、ブルーノの退団を待たずに進み、最後の1人は、5月から本命だった選手でした。
     card: none
   sources:
   - https://www.newcastleunited.com/en/news/newcastle-united-sign-matias-fernandez-pardo
@@ -384,7 +386,7 @@ sections:
   - https://www.newcastleunited.com/en/news/newcastle-united-complete-nico-gonzalez-signing
   - https://www.premierleague.com/en/news/4664145/when-does-summer-2026-premier-league-transfer-window-open-and-close
 - id: value
-  heading: 市場価値でも同じ位置の平均でも、高く買い、高く売った
+  heading: 市場価値より高く買い、高く売った。同じ位置の平均でも、買った側は高かった
   tier: 報道
   telop: 買った8人は市場価値の約1.65倍、売った3人は約1.28倍。同じ位置の平均の約1.31倍
   narrator: 解説
@@ -422,7 +424,7 @@ sections:
       - ['1億9000万ユーロ', 直前の市場価値の合計]
       - [約1.65倍, 市場価値の何倍か]
       ops: ['÷', ＝]
-  - text: 図の斜めの線は、市場価値どおりに払った位置です。
+  - text: 図には、払った額が市場価値と同じになる、斜めの線を引きました。
     card:
       <<: *scat
       highlight: フェルナンデス・パルド
@@ -431,7 +433,7 @@ sections:
     card:
       <<: *scat
       highlight: ニコ・ゴンサレス
-  - text: 倍率でいちばん開いたのは、18歳のステウル。
+  - text: 市場価値との倍率がいちばん大きかったのは、18歳のステウル。
     card:
       <<: *scat
       highlight: ステウル
@@ -454,7 +456,7 @@ sections:
       ops: ['÷', ＝]
   - text: 市場価値より高く買い、市場価値より高く売れた夏です。
     card: *calc_out
-  - text: 2つ目の物差しは、同じ位置の平均。
+  - text: 2つ目の物差しは、同じ位置の選手の平均。
     card: &pos_table
       type: table
       title: 位置ごとの平均の移籍金（百万ユーロ）

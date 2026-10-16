@@ -11,13 +11,13 @@ short_telops:
   text: 3分/ヘッドは右ポスト
 - match: 先制します
   text: 前半は0-0/60分に先制される
-- match: 2点差に
+- match: 1対3と離されました
   text: 72分と79分/オ・ヒョンギュ2点
 - match: 頭で合わせました
   text: 87分/右CKから頭で
 - match: 2対3で敗れました
   text: 2-3で敗戦/EL開幕2連敗
-- match: 33日後
+- match: 復帰戦から数えて、33日後
   text: 復帰戦から/33日後の得点
 - match: 次は22日
   text: 次は22日/中村敬斗のリヨン戦
@@ -89,32 +89,40 @@ cards:
 @bg: assets/backgrounds/stock/stadium_night.mp4
 @main: true
 
-キャスター: 町田浩樹が、ヨーロッパリーグで初めてのゴールを決めました。
-  telop: 町田浩樹が、ヨーロッパリーグで初めてのゴールを決めました
+キャスター: ホッフェンハイムの町田浩樹が、ヨーロッパリーグで初めてのゴールを決めました。
+  telop: ホッフェンハイムの町田浩樹が、ヨーロッパリーグで初めてのゴールを決めました
   source: 報道
   image: assets/images/20261016_machida_el_first_goal/01.jpg
 解説: 現地15日、第2節のホッフェンハイム対ベシクタシュ。町田は先発です。
   telop: 現地15日、第2節のホッフェンハイム対ベシクタシュ。町田は先発です
   card: none
   image: assets/images/20261016_machida_el_first_goal/01.jpg
-キャスター: 3分、フリーキックからのヘディングが、右ポストに当たります。
-  telop: 3分、フリーキックからのヘディングが、右ポストに当たります
+キャスター: 3分、町田がフリーキックからヘディング。右ポストに当たります。
+  telop: 3分、町田がフリーキックからヘディング。右ポストに当たります
   card: none
   image: assets/images/20261016_machida_el_first_goal/01.jpg
 解説: 前半は無得点。後半、ベシクタシュが先制します。
   telop: 前半は無得点。後半、ベシクタシュが先制します
   card: none
   image: assets/images/20261016_machida_el_first_goal/01.jpg
-キャスター: ホッフェンハイムは追いつくも、オ・ヒョンギュに2点を許し、2点差に。
-  telop: ホッフェンハイムは追いつくも、オ・ヒョンギュに2点を許し、2点差に
+キャスター: ホッフェンハイムは1対1に追いつきます。
+  telop: ホッフェンハイムは1対1に追いつきます
   card: none
   image: assets/images/20261016_machida_el_first_goal/01.jpg
-解説: 87分、右コーナーキックからツォウファルがクロスを上げます。
+解説: しかしオ・ヒョンギュに2点を許し、1対3と離されました。
+  telop: しかしオ・ヒョンギュに2点を許し、1対3と離されました
+  card: none
+  image: assets/images/20261016_machida_el_first_goal/01.jpg
+キャスター: 87分、右コーナーキックからツォウファルがクロスを上げます。
   telop: 87分、右コーナーキックからツォウファルがクロスを上げます
   card: none
   image: assets/images/20261016_machida_el_first_goal/01.jpg
-キャスター: 町田が頭で合わせました。ボールはゴール右隅へ。
+解説: 町田が頭で合わせました。ボールはゴール右隅へ。
   telop: 町田が頭で合わせました。ボールはゴール右隅へ
+  card: none
+  image: assets/images/20261016_machida_el_first_goal/01.jpg
+キャスター: 復帰戦から数えて、33日後のゴールでした。
+  telop: 復帰戦から数えて、33日後のゴールでした
   card: none
   image: assets/images/20261016_machida_el_first_goal/01.jpg
 
@@ -134,21 +142,21 @@ cards:
 @bg: assets/backgrounds/stock/stadium_night.mp4
 @viewpoint: true
 
-キャスター: 町田は昨年8月の開幕戦で、左膝の前十字靱帯が断裂する大けがを負いました。
-  telop: 町田は昨年8月の開幕戦で、左膝の前十字靱帯が断裂する大けがを負いました
+キャスター: ホッフェンハイムへ加わったのは昨夏。移籍後の公式戦で、初めての得点でした。
+  telop: ホッフェンハイムへ加わったのは昨夏。移籍後の公式戦で、初めての得点でした
   source: 報道
   card: injury_card
   image: assets/images/20261016_machida_el_first_goal/01.jpg
-解説: 公式戦に戻ったのは、今年9月12日のシュトゥットガルト戦。385日ぶりです。
+解説: 町田は昨年8月の開幕戦で、左膝の前十字靱帯が断裂する大けがを負いました。
+  telop: 町田は昨年8月の開幕戦で、左膝の前十字靱帯が断裂する大けがを負いました
+  card: none
+  image: assets/images/20261016_machida_el_first_goal/01.jpg
+キャスター: 公式戦に戻ったのは、今年9月12日のシュトゥットガルト戦。385日ぶりです。
   telop: 公式戦に戻ったのは、今年9月12日のシュトゥットガルト戦。385日ぶりです
   card: none
   image: assets/images/20261016_machida_el_first_goal/01.jpg
-キャスター: そこから数えると、今回のゴールは33日後になります。
+解説: そこから数えると、今回のゴールは33日後になります。
   telop: そこから数えると、今回のゴールは33日後になります
-  card: none
-  image: assets/images/20261016_machida_el_first_goal/01.jpg
-解説: ホッフェンハイムへ加わったのは昨夏。移籍後の公式戦で、初めての得点でした。
-  telop: ホッフェンハイムへ加わったのは昨夏。移籍後の公式戦で、初めての得点でした
   card: none
   image: assets/images/20261016_machida_el_first_goal/01.jpg
 キャスター: 次は22日、EL第3節。中村敬斗のいるリヨンと対戦します。

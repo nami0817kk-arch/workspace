@@ -81,7 +81,7 @@ cards:
         - 528.2
         - 565.3
     unit: 百万ポンド
-  data_1_card:
+  data_2_card:
     type: stats
     title: トッテナムの数字
     items: &id003
@@ -293,7 +293,7 @@ cards:
     steps: *id011
     total: *id012
     note: 端数の丸めで、合計が0.2ずれる
-    highlight: 減価償却・特別な費用
+    highlight: 本業の利益
   profit_5_card:
     type: waterfall
     title: 本業の利益から最終の損益まで（百万ポンド、丸めで合計がずれる）
@@ -301,7 +301,7 @@ cards:
     steps: *id011
     total: *id012
     note: 端数の丸めで、合計が0.2ずれる
-    highlight: 選手の償却など
+    highlight: 減価償却・特別な費用
   profit_6_card:
     type: waterfall
     title: 本業の利益から最終の損益まで（百万ポンド、丸めで合計がずれる）
@@ -317,7 +317,7 @@ cards:
     steps: *id011
     total: *id012
     note: 端数の丸めで、合計が0.2ずれる
-    highlight: 選手の売却益
+    highlight: 選手の償却など
   profit_8_card:
     type: waterfall
     title: 本業の利益から最終の損益まで（百万ポンド、丸めで合計がずれる）
@@ -341,7 +341,7 @@ cards:
     steps: *id011
     total: *id012
     note: 端数の丸めで、合計が0.2ずれる
-    highlight: 金融費用（差し引き）
+    highlight: 選手の売却益
   profit_11_card:
     type: waterfall
     title: 本業の利益から最終の損益まで（百万ポンド、丸めで合計がずれる）
@@ -349,8 +349,24 @@ cards:
     steps: *id011
     total: *id012
     note: 端数の丸めで、合計が0.2ずれる
-    highlight: 最終の損益
+    highlight: 金融費用（差し引き）
   profit_12_card:
+    type: waterfall
+    title: 本業の利益から最終の損益まで（百万ポンド、丸めで合計がずれる）
+    start: *id010
+    steps: *id011
+    total: *id012
+    note: 端数の丸めで、合計が0.2ずれる
+    highlight: 税金の戻り
+  profit_13_card:
+    type: waterfall
+    title: 本業の利益から最終の損益まで（百万ポンド、丸めで合計がずれる）
+    start: *id010
+    steps: *id011
+    total: *id012
+    note: 端数の丸めで、合計が0.2ずれる
+    highlight: 最終の損益
+  profit_14_card:
     type: waterfall
     title: 金融費用の中身（百万ポンド、丸めで合計がずれる）
     start: &id013
@@ -370,49 +386,63 @@ cards:
     total: &id015
     - 金融費用（差し引き）
     - 70.2
-  profit_13_card:
-    type: waterfall
-    title: 金融費用の中身（百万ポンド、丸めで合計がずれる）
-    start: *id013
-    steps: *id014
-    total: *id015
-    highlight: 移籍金の分割払いの利息分
-  profit_14_card:
-    type: waterfall
-    title: 金融費用の中身（百万ポンド、丸めで合計がずれる）
-    start: *id013
-    steps: *id014
-    total: *id015
-    highlight: 商業収入の前受けの利息分
   profit_15_card:
     type: waterfall
     title: 金融費用の中身（百万ポンド、丸めで合計がずれる）
     start: *id013
     steps: *id014
     total: *id015
-    highlight: 株を買う権利の評価損
+    highlight: 移籍金の分割払いの利息分
   profit_16_card:
     type: waterfall
     title: 金融費用の中身（百万ポンド、丸めで合計がずれる）
     start: *id013
     steps: *id014
     total: *id015
-    highlight: 株を買う権利の評価損
+    highlight: 商業収入の前受けの利息分
   profit_17_card:
     type: waterfall
     title: 金融費用の中身（百万ポンド、丸めで合計がずれる）
     start: *id013
     steps: *id014
     total: *id015
-    highlight: 株を買う権利の評価損
+    highlight: 商業収入の前受けの利息分
   profit_18_card:
     type: waterfall
     title: 金融費用の中身（百万ポンド、丸めで合計がずれる）
     start: *id013
     steps: *id014
     total: *id015
-    highlight: 金融費用（差し引き）
+    highlight: 株を買う権利の評価損
+  profit_19_card:
+    type: waterfall
+    title: 金融費用の中身（百万ポンド、丸めで合計がずれる）
+    start: *id013
+    steps: *id014
+    total: *id015
+    highlight: 株を買う権利の評価損
   profit_20_card:
+    type: waterfall
+    title: 金融費用の中身（百万ポンド、丸めで合計がずれる）
+    start: *id013
+    steps: *id014
+    total: *id015
+    highlight: 株を買う権利の評価損
+  profit_21_card:
+    type: waterfall
+    title: 金融費用の中身（百万ポンド、丸めで合計がずれる）
+    start: *id013
+    steps: *id014
+    total: *id015
+    highlight: 株を買う権利の評価損
+  profit_22_card:
+    type: waterfall
+    title: 金融費用の中身（百万ポンド、丸めで合計がずれる）
+    start: *id013
+    steps: *id014
+    total: *id015
+    highlight: 金融費用（差し引き）
+  profit_24_card:
     type: table
     title: 利息の前の損益と最終損益の5年（百万ポンド）
     columns: &id016
@@ -439,13 +469,13 @@ cards:
       - '-143.1'
       - '-341.6'
     highlight_row: 5
-  profit_21_card:
+  profit_25_card:
     type: table
     title: 利息の前の損益と最終損益の5年（百万ポンド）
     columns: *id016
     rows: *id017
     highlight_row: 4
-  profit_22_card:
+  profit_26_card:
     type: table
     title: 利息の前の損益と最終損益の5年（百万ポンド）
     columns: *id016
@@ -539,7 +569,7 @@ cards:
     steps: *id022
     total: *id023
     note: 端数の丸めで、合計が0.1ずれる
-    highlight: その他の費用の増加
+    highlight: 収入の増加
   cost_8_card:
     type: waterfall
     title: 営業損益の悪化の中身（百万ポンド、丸めで合計がずれる）
@@ -547,7 +577,7 @@ cards:
     steps: *id022
     total: *id023
     note: 端数の丸めで、合計が0.1ずれる
-    highlight: 選手の売却益の減少
+    highlight: その他の費用の増加
   cost_9_card:
     type: waterfall
     title: 営業損益の悪化の中身（百万ポンド、丸めで合計がずれる）
@@ -555,7 +585,7 @@ cards:
     steps: *id022
     total: *id023
     note: 端数の丸めで、合計が0.1ずれる
-    highlight: 減価償却の減少
+    highlight: 選手の売却益の減少
   cost_10_card:
     type: waterfall
     title: 営業損益の悪化の中身（百万ポンド、丸めで合計がずれる）
@@ -563,8 +593,32 @@ cards:
     steps: *id022
     total: *id023
     note: 端数の丸めで、合計が0.1ずれる
-    highlight: 特別な費用の増加
+    highlight: 選手の売却益の減少
   cost_11_card:
+    type: waterfall
+    title: 営業損益の悪化の中身（百万ポンド、丸めで合計がずれる）
+    start: *id021
+    steps: *id022
+    total: *id023
+    note: 端数の丸めで、合計が0.1ずれる
+    highlight: 減価償却の減少
+  cost_12_card:
+    type: waterfall
+    title: 営業損益の悪化の中身（百万ポンド、丸めで合計がずれる）
+    start: *id021
+    steps: *id022
+    total: *id023
+    note: 端数の丸めで、合計が0.1ずれる
+    highlight: 特別な費用の増加
+  cost_13_card:
+    type: waterfall
+    title: 営業損益の悪化の中身（百万ポンド、丸めで合計がずれる）
+    start: *id021
+    steps: *id022
+    total: *id023
+    note: 端数の丸めで、合計が0.1ずれる
+    highlight: 営業損益の変化
+  cost_14_card:
     type: waterfall
     title: 営業損益の悪化の中身（百万ポンド、丸めで合計がずれる）
     start: *id021
@@ -790,8 +844,8 @@ cards:
 ## オープニング
 @bg: assets/backgrounds/stock/stadium_night.mp4
 
-キャスター: 2024-25にヨーロッパリーグを制した、トッテナム。
-  telop: 2024-25にヨーロッパリーグを制した、トッテナム
+キャスター: 2024-25にヨーロッパリーグで優勝した、トッテナム。
+  telop: 2024-25にヨーロッパリーグで優勝した、トッテナム
   image: assets/images/20261016_finance_tottenham/01_w.jpg
   no_telop: true
 キャスター: トッテナム、ヨーロッパリーグ優勝の年に最終は赤字。収入は増えたのになぜか。
@@ -808,19 +862,19 @@ cards:
   telop: イングランドのトッテナム。その決算の中身を、数字で追います
   card: none
   image: assets/images/20261016_finance_tottenham/01_w.jpg
+キャスター: 対象は、2025年6月期。2024-25シーズンの決算です。
+  telop: 対象は、2025年6月期。2024-25シーズンの決算です
+  source: 報道
+  card: data_card
+  image: assets/images/20261016_finance_tottenham/01_w.jpg
 キャスター: ヨーロッパリーグで優勝した年。クラブの収入は5億6530万ポンドで、5年最多。
   emph: true
   telop: ヨーロッパリーグで優勝した年。クラブの収入は5億6530万ポンドで、5年最多
-  source: 報道
-  card: data_1_card
+  card: data_2_card
   image: assets/images/20261016_finance_tottenham/01_w.jpg
 キャスター: それなのに、最終の損益は赤字でした。
   callword: 5年で最大の赤字
   telop: それなのに、最終の損益は赤字でした
-  card: none
-  image: assets/images/20261016_finance_tottenham/01_w.jpg
-キャスター: これは、2025年6月期。2024-25シーズンの決算です。
-  telop: これは、2025年6月期。2024-25シーズンの決算です
   card: none
   image: assets/images/20261016_finance_tottenham/01_w.jpg
 キャスター: 2020-21の3億6190万ポンドから、2億340万ポンドの上乗せです。
@@ -844,8 +898,8 @@ cards:
   telop: いちばん増えたのは、ヨーロッパの大会の賞金。3350万ポンドです
   card: breakdown_1_card
   image: assets/images/20261016_finance_tottenham/04_w.jpg
-解説: 前の年は出場なし。賞金の130万ポンドは、前の季の精算分でした。
-  telop: 前の年は出場なし。賞金の130万ポンドは、前の季の精算分でした
+解説: 前の年は出場なしで、賞金は130万ポンドだけ。前の季の精算分でした。
+  telop: 前の年は出場なしで、賞金は130万ポンドだけ。前の季の精算分でした
   card: breakdown_2_card
   image: assets/images/20261016_finance_tottenham/04_w.jpg
 解説: 試合日の収入は、2060万ポンドの増加。
@@ -911,73 +965,89 @@ cards:
   telop: クラブの表記は、イービットディーエー。償却や利息などを引く前の利益です
   card: profit_2_card
   image: assets/images/20261016_finance_tottenham/05_w.jpg
-解説: 前の年は1億4490万ポンド。そこから2割あまり落ちました。
-  telop: 前の年は1億4490万ポンド。そこから2割あまり落ちました
+解説: この先は、償却を引く前を「本業の利益」、引いたあとを「営業損益」と、言い分けます。
+  telop: この先は、償却を引く前を「本業の利益」、引いたあとを「営業損益」と、言い分けます
   card: profit_3_card
   image: assets/images/20261016_finance_tottenham/05_w.jpg
-解説: ここから、設備の費用と、雇用に関わる特別な費用で、6850万ポンドを引きます。
-  telop: ここから、設備の費用と、雇用に関わる特別な費用で、6850万ポンドを引きます
+解説: 前の年は1億4490万ポンド。そこから2割あまり落ちました。
+  telop: 前の年は1億4490万ポンド。そこから2割あまり落ちました
   card: profit_4_card
+  image: assets/images/20261016_finance_tottenham/05_w.jpg
+解説: ここから、設備の費用と、特別な費用で、6850万ポンドを引きます。
+  telop: ここから、設備の費用と、特別な費用で、6850万ポンドを引きます
+  card: profit_5_card
   image: assets/images/20261016_finance_tottenham/05_w.jpg
 解説: 次は、選手の償却などの費用。1億4670万ポンドを引きます。
   telop: 次は、選手の償却などの費用。1億4670万ポンドを引きます
-  card: profit_5_card
+  card: profit_6_card
   image: assets/images/20261016_finance_tottenham/05_w.jpg
 解説: 移籍金は、契約の年数で割って費用に入れていきます。
   telop: 移籍金は、契約の年数で割って費用に入れていきます
-  card: profit_6_card
+  card: profit_7_card
   image: assets/images/20261016_finance_tottenham/05_w.jpg
 解説: そこへ、選手を売った利益5260万ポンドが入ります。
   telop: そこへ、選手を売った利益5260万ポンドが入ります
-  card: profit_7_card
+  card: profit_8_card
   image: assets/images/20261016_finance_tottenham/05_w.jpg
 解説: ここまでが営業損益。償却と売却益を入れたあとで、5040万ポンドの赤字。
   emph: true
   telop: ここまでが営業損益。償却と売却益を入れたあとで、5040万ポンドの赤字
-  card: profit_8_card
+  card: profit_9_card
   image: assets/images/20261016_finance_tottenham/05_w.jpg
 解説: 前の年は、2130万ポンドの黒字でした。
   telop: 前の年は、2130万ポンドの黒字でした
-  card: profit_9_card
+  card: profit_10_card
   image: assets/images/20261016_finance_tottenham/05_w.jpg
 解説: 利払いなどの金融費用は、差し引きで7020万ポンド。
   mark: {"kind": "circle", "row": 4}
   telop: 利払いなどの金融費用は、差し引きで7020万ポンド
-  card: profit_10_card
-  image: assets/images/20261016_finance_tottenham/05_w.jpg
-解説: 赤字への税の戻りが2600万ポンド。結果、最終は9470万ポンドの赤字に着地。
-  telop: 赤字への税の戻りが2600万ポンド。結果、最終は9470万ポンドの赤字に着地
   card: profit_11_card
+  image: assets/images/20261016_finance_tottenham/05_w.jpg
+解説: 赤字のぶん、税金が戻ります。その額が2600万ポンド。
+  telop: 赤字のぶん、税金が戻ります。その額が2600万ポンド
+  card: profit_12_card
+  image: assets/images/20261016_finance_tottenham/05_w.jpg
+解説: 結果、最終は9470万ポンドの赤字に着地。
+  telop: 結果、最終は9470万ポンドの赤字に着地
+  card: profit_13_card
   image: assets/images/20261016_finance_tottenham/05_w.jpg
 解説: 金融費用を分けます。まず借入の利息、2910万ポンド。
   telop: 金融費用を分けます。まず借入の利息、2910万ポンド
-  card: profit_12_card
+  card: profit_14_card
   image: assets/images/20261016_finance_tottenham/05_w.jpg
 解説: 移籍金の分割払いにかかる利息分は、1340万ポンド。
   telop: 移籍金の分割払いにかかる利息分は、1340万ポンド
-  card: profit_13_card
+  card: profit_15_card
   image: assets/images/20261016_finance_tottenham/05_w.jpg
 解説: ほかに、商業収入の前受けの利息分などが、差し引き430万ポンド。
   telop: ほかに、商業収入の前受けの利息分などが、差し引き430万ポンド
-  card: profit_14_card
+  card: profit_16_card
+  image: assets/images/20261016_finance_tottenham/05_w.jpg
+解説: 前受けは、商業収入を早めに受け取ることです。
+  telop: 前受けは、商業収入を早めに受け取ることです
+  card: profit_17_card
   image: assets/images/20261016_finance_tottenham/05_w.jpg
 解説: 増えたのは、株を買う権利の評価損。2340万ポンドです。
   emph: true
   mark: {"kind": "circle", "row": 4}
   telop: 増えたのは、株を買う権利の評価損。2340万ポンドです
-  card: profit_15_card
+  card: profit_18_card
+  image: assets/images/20261016_finance_tottenham/05_w.jpg
+解説: 評価損は、値打ちを付け直したときに出る損のこと。
+  telop: 評価損は、値打ちを付け直したときに出る損のこと
+  card: profit_19_card
   image: assets/images/20261016_finance_tottenham/05_w.jpg
 解説: 親会社に渡してある権利で、評価額が上がると費用になります。
   telop: 親会社に渡してある権利で、評価額が上がると費用になります
-  card: profit_16_card
+  card: profit_20_card
   image: assets/images/20261016_finance_tottenham/05_w.jpg
 解説: 現金を払った費用ではありません。前の年は、ほぼゼロでした。
   telop: 現金を払った費用ではありません。前の年は、ほぼゼロでした
-  card: profit_17_card
+  card: profit_21_card
   image: assets/images/20261016_finance_tottenham/05_w.jpg
 解説: 金融費用は前の年から2290万ポンドの増加。この評価損と、ほぼ同じ額になります。
   telop: 金融費用は前の年から2290万ポンドの増加。この評価損と、ほぼ同じ額になります
-  card: profit_18_card
+  card: profit_22_card
   image: assets/images/20261016_finance_tottenham/05_w.jpg
 解説: 本業の利益を、償却や金融費用などの引き算が上回った。これが赤字の形です。
   emph: true
@@ -987,23 +1057,23 @@ cards:
 解説: 5年分の最終損益は、全部マイナス。合計は3億4160万ポンドに達します。
   emph: true
   telop: 5年分の最終損益は、全部マイナス。合計は3億4160万ポンドに達します
-  card: profit_20_card
+  card: profit_24_card
   image: assets/images/20261016_finance_tottenham/05_w.jpg
 解説: 2024-25の赤字は、5年の中で最も大きな額。
   mark: {"kind": "circle", "row": 4, "col": 2}
   telop: 2024-25の赤字は、5年の中で最も大きな額
-  card: profit_21_card
+  card: profit_25_card
   image: assets/images/20261016_finance_tottenham/05_w.jpg
 解説: 営業損益が黒字だったのは、5年のうち2023-24の1回だけ。
   telop: 営業損益が黒字だったのは、5年のうち2023-24の1回だけ
-  card: profit_22_card
+  card: profit_26_card
   image: assets/images/20261016_finance_tottenham/05_w.jpg
 
 ## 営業が赤字に戻ったのは、費用が増えたからか
 @bg: assets/backgrounds/stock/stadium_night.mp4
 
-解説: 営業が黒字から赤字に戻ったわけを、トッテナムの費用から探ります。
-  telop: 営業が黒字から赤字に戻ったわけを、トッテナムの費用から探ります
+解説: 営業損益が黒字から赤字に戻ったわけを、トッテナムの費用から探ります。
+  telop: 営業損益が黒字から赤字に戻ったわけを、トッテナムの費用から探ります
   source: 確定
   card: cost_0_card
   image: assets/images/20261016_finance_tottenham/01_w.jpg
@@ -1033,27 +1103,39 @@ cards:
   telop: 営業損益は、前の年より7170万ポンド悪くなりました。その中身です
   card: cost_6_card
   image: assets/images/20261016_finance_tottenham/01_w.jpg
+解説: まず、収入が3710万ポンド増えました。ここは良い向きの数字です。
+  telop: まず、収入が3710万ポンド増えました。ここは良い向きの数字です
+  card: cost_7_card
+  image: assets/images/20261016_finance_tottenham/01_w.jpg
 解説: その他の費用も3590万ポンド増で、人件費と合わせて6980万ポンド。
   emph: true
   mark: {"kind": "circle", "row": 2}
   telop: その他の費用も3590万ポンド増で、人件費と合わせて6980万ポンド
-  card: cost_7_card
-  image: assets/images/20261016_finance_tottenham/01_w.jpg
-解説: 選手の売却益も、前の年より2970万ポンド少なくなりました。
-  telop: 選手の売却益も、前の年より2970万ポンド少なくなりました
   card: cost_8_card
+  image: assets/images/20261016_finance_tottenham/01_w.jpg
+解説: もう1つ、収入の側の、選手の売却益。
+  telop: もう1つ、収入の側の、選手の売却益
+  card: cost_9_card
+  image: assets/images/20261016_finance_tottenham/01_w.jpg
+解説: 前の年より、2970万ポンド少なくなりました。
+  telop: 前の年より、2970万ポンド少なくなりました
+  card: cost_10_card
   image: assets/images/20261016_finance_tottenham/01_w.jpg
 解説: 一方で、設備の償却費などは、約1200万ポンド軽くなりました。
   telop: 一方で、設備の償却費などは、約1200万ポンド軽くなりました
-  card: cost_9_card
+  card: cost_11_card
   image: assets/images/20261016_finance_tottenham/01_w.jpg
 解説: 特別な費用の増加が1010万、選手の償却などの増加が1110万ポンド。
   telop: 特別な費用の増加が1010万、選手の償却などの増加が1110万ポンド
-  card: cost_10_card
+  card: cost_12_card
   image: assets/images/20261016_finance_tottenham/01_w.jpg
-解説: すべて足し引きすると、悪化は7170万ポンドです。
-  telop: すべて足し引きすると、悪化は7170万ポンドです
-  card: cost_11_card
+解説: 収入の増えを入れて足し引きすると、悪化は7170万ポンドです。
+  telop: 収入の増えを入れて足し引きすると、悪化は7170万ポンドです
+  card: cost_13_card
+  image: assets/images/20261016_finance_tottenham/01_w.jpg
+解説: 費用の増えと、売却益の減りの両方でした。
+  telop: 費用の増えと、売却益の減りの両方でした
+  card: cost_14_card
   image: assets/images/20261016_finance_tottenham/01_w.jpg
 
 ## 純借入は8億3120万ポンド。返す期限は、いつまで先なのか
@@ -1162,10 +1244,10 @@ cards:
   telop: 営業損益は、選手の売却益を足したあとの数字です
   card: view_1_card
   image: assets/images/20261016_finance_tottenham/02_w.jpg
-解説: 売却益を引くと、営業は1億300万ポンドの赤字になります。
+解説: 売却益を引くと、営業損益は1億300万ポンドの赤字になります。
   emph: true
   mark: {"kind": "circle", "row": 0, "col": 1, "text": "売却益を引くと"}
-  telop: 売却益を引くと、営業は1億300万ポンドの赤字になります
+  telop: 売却益を引くと、営業損益は1億300万ポンドの赤字になります
   card: view_2_card
   image: assets/images/20261016_finance_tottenham/02_w.jpg
 解説: 前の年は6100万ポンドの赤字。1.7倍に広がりました。
@@ -1203,8 +1285,12 @@ cards:
   telop: 代金を先に受け取る仕組みも結びましたが、対象と額は書かれていません
   card: view_10_card
   image: assets/images/20261016_finance_tottenham/02_w.jpg
-解説: 決算期のあとの選手の売買は、リーグへの負担金込みで差し引き約1億6000万の支出。
-  telop: 決算期のあとの選手の売買は、リーグへの負担金込みで差し引き約1億6000万の支出
+解説: 決算期のあとの選手の売買は、差し引き約1億6000万ポンドの支出。
+  telop: 決算期のあとの選手の売買は、差し引き約1億6000万ポンドの支出
+  card: none
+  image: assets/images/20261016_finance_tottenham/02_w.jpg
+解説: リーグに払う分も含めた額です。
+  telop: リーグに払う分も含めた額です
   card: none
   image: assets/images/20261016_finance_tottenham/02_w.jpg
 解説: 優勝で得た、チャンピオンズリーグの出場権。その2025-26が、次の決算です。

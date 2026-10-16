@@ -111,7 +111,7 @@ sections:
     - 協議を延ばす
     - 来週
   say:
-  - text: リーズ・ユナイテッドの紋章と契約の話です。
+  - text: リーズ・ユナイテッドの紋章と声明の話です。
     short_only: true
   - text: 2018年1月、リーズは新しい紋章の案を公開しました。
     image: assets/images/20261016_kit_leeds/c05_2023_w.jpg
@@ -191,7 +191,11 @@ sections:
     card:
       <<: *id_colour
       highlight_row: 0
-  - text: そのクラブの会長が、リーズとの合併を狙っていたためと伝えられます。
+  - text: 縞をまねた理由として、こう伝えられます。
+    card:
+      <<: *id_colour
+      highlight_row: 0
+  - text: そのクラブの会長が、リーズとの合併を狙っていたため、と。
     card:
       <<: *id_colour
       highlight_row: 0
@@ -243,6 +247,10 @@ sections:
     card:
       <<: *id_crest
       highlight_row: 0
+  - text: これは数えず、専用の紋章が付いた1964年から数えます。
+    card:
+      <<: *id_crest
+      highlight_row: 0
   - text: 白いシャツへ替わると、胸の紋章はしばらく外れます。
     card:
       <<: *id_crest
@@ -278,7 +286,7 @@ sections:
   - https://www.historicalkits.co.uk/Leeds_United/Leeds_United.htm
   - https://web.archive.org/web/20190801id_/https://www.leedsunited.com/news/club/25148/2019-20-centenary-home-kit-launched
 - id: deal
-  heading: 作り手と胸のスポンサーは、クラブ史上初の契約をどう発表したのか
+  heading: 作り手と胸のスポンサーは、クラブ史上初と史上最大の契約をどう発表したのか
   tier: 確定
   official: true
   telop: 2020年、アディダスはクラブ史上初。胸のスポンサーのエスビーオートップは史上最大の商業契約と、クラブが発表
@@ -312,6 +320,10 @@ sections:
     image: assets/images/20261016_kit_leeds/c05_2023_w.jpg
     card: *id_deal
   - text: 1973-74、1部で初めて、作り手の名前が見えるシャツを着たのがリーズ。
+    card:
+      <<: *id_deal
+      highlight_row: 0
+  - text: 作り手とは、シャツを作るメーカーのことです。
     card:
       <<: *id_deal
       highlight_row: 0
@@ -392,7 +404,7 @@ sections:
     - ÷
     - ＝
   say:
-  - text: ここからは、リーズの紋章と色と契約を、数字で比べます。
+  - text: ここからは、リーズの紋章と色と契約を、自分で数えて並べます。
     image: assets/images/20261016_kit_leeds/c05_2023_w.jpg
     card: none
   - text: ひとつ目は、紋章が替わる速さです。
@@ -450,7 +462,7 @@ sections:
       - - ホームの色
         - 白のまま
         - 65年
-  - text: 紋章の絵は10種類あり、色は一度も替わっていません。
+  - text: 紋章の絵は10種類替わりましたが、ホームのシャツの白は、一度も替わっていません。
     emph: true
     card: *id_vs
     mark:

@@ -8,15 +8,15 @@ short_telops:
 - match: 木曜の全体練習
   text: 木曜の全体練習に/ラフィーニャが復帰
 - match: 筋肉のトラブル
-  text: 筋肉のトラブルで/ブラジル代表を離脱していた
-- match: 欠場しました
-  text: 10日ヘタフェ戦/13日ガラタサライ戦を欠場
-- match: 復帰は、段階的
+  text: 筋肉のトラブルで/代表を離脱、2試合欠場
+- match: 17日にベティス戦
+  text: 17日ベティス戦から/PSG戦、レアル戦と3連戦
+- match: 3試合とも
+  text: 3試合とも出られる状態/ベティス戦は途中出場から
+- match: 段階的
   text: 復帰は段階的に
-- match: 17日のベティス戦
-  text: 17日ベティス戦/途中出場から
-- match: 来週はパリ
-  text: 来週/PSG戦とレアル戦
+- match: エル・クラシコ
+  text: レアル戦は/エル・クラシコ
 - match: 同じ練習に合流しました
   text: デ・ヨングも/同じ練習に復帰
 - match: 3か月半
@@ -105,44 +105,48 @@ cards:
   telop: ラフィーニャが、木曜の全体練習に戻りました
   source: 報道
   image: assets/images/20261016_raphinha_dejong_return/01.jpg
-解説: フリック監督の、欠場前の言葉です。
-  telop: フリック監督の、欠場前の言葉です
+解説: 筋肉のトラブルで代表を離れ、10日と13日の2試合を欠場していました。
+  telop: 筋肉のトラブルで代表を離れ、10日と13日の2試合を欠場していました
+  card: none
+  image: assets/images/20261016_raphinha_dejong_return/01.jpg
+キャスター: 欠場を決めたとき、フリック監督はこう話していました。
+  telop: 欠場を決めたとき、フリック監督はこう話していました
   card: none
   image: assets/images/20261016_raphinha_dejong_return/01.jpg
 フリック監督: 彼を大切に扱う必要がある
   telop: フリック監督「彼を大切に扱う必要がある」
   card: none
   image: assets/images/20261016_raphinha_dejong_return/01.jpg
-解説: 筋肉のトラブルで、ブラジル代表を離れていた選手です。
-  telop: 筋肉のトラブルで、ブラジル代表を離れていた選手です
+キャスター: バルセロナは17日にベティス戦。
+  telop: バルセロナは17日にベティス戦
   card: none
   image: assets/images/20261016_raphinha_dejong_return/01.jpg
-キャスター: 10日のヘタフェ戦と、13日のガラタサライ戦は、欠場しました。
-  telop: 10日のヘタフェ戦と、13日のガラタサライ戦は、欠場しました
+解説: 続くのは、パリ・サンジェルマン戦と、レアル・マドリード戦です。
+  telop: 続くのは、パリ・サンジェルマン戦と、レアル・マドリード戦です
+  card: none
+  image: assets/images/20261016_raphinha_dejong_return/01.jpg
+キャスター: ラフィーニャは、3試合とも出られる状態です。
+  telop: ラフィーニャは、3試合とも出られる状態です
+  card: none
+  image: assets/images/20261016_raphinha_dejong_return/01.jpg
+解説: ただ、ベティス戦は途中出場から、と報じられています。
+  telop: ただ、ベティス戦は途中出場から、と報じられています
   card: none
   image: assets/images/20261016_raphinha_dejong_return/01.jpg
 
-## 復帰はいつになるか
+## 先発の復帰はいつになるか
 @bg: assets/backgrounds/stock/stadium_night.mp4
 
 キャスター: ラフィーニャの復帰は、段階的になる見込みです。
   telop: ラフィーニャの復帰は、段階的になる見込みです
   source: 報道
   image: assets/images/20261016_raphinha_dejong_return/01.jpg
-解説: 17日のベティス戦は、途中出場から。そうなりそうだ、という見方です。
-  telop: 17日のベティス戦は、途中出場から。そうなりそうだ、という見方です
+解説: 先発は、続くパリ・サンジェルマン戦と、レアル戦を目指す見方です。
+  telop: 先発は、続くパリ・サンジェルマン戦と、レアル戦を目指す見方です
   card: none
   image: assets/images/20261016_raphinha_dejong_return/01.jpg
-キャスター: 来週はパリ・サンジェルマン戦と、レアル・マドリード戦。
-  telop: 来週はパリ・サンジェルマン戦と、レアル・マドリード戦
-  card: none
-  image: assets/images/20261016_raphinha_dejong_return/01.jpg
-解説: 先発への復帰は、そこを目指す見方です。
-  telop: 先発への復帰は、そこを目指す見方です
-  card: none
-  image: assets/images/20261016_raphinha_dejong_return/01.jpg
-キャスター: 3試合とも、出られる状態です。
-  telop: 3試合とも、出られる状態です
+キャスター: レアル戦は、エル・クラシコ。
+  telop: レアル戦は、エル・クラシコ
   card: none
   image: assets/images/20261016_raphinha_dejong_return/01.jpg
 
@@ -157,15 +161,19 @@ cards:
   telop: 右ひざの靱帯を痛め、3か月半、離脱していました
   card: none
   image: assets/images/20261016_raphinha_dejong_return/01.jpg
-キャスター: ただ、ラフィーニャより、復帰はもう少し先になる見込みです。
-  telop: ただ、ラフィーニャより、復帰はもう少し先になる見込みです
+キャスター: 17日の試合に出られそうなのは、ラフィーニャのほう。
+  telop: 17日の試合に出られそうなのは、ラフィーニャのほう
   card: none
   image: assets/images/20261016_raphinha_dejong_return/01.jpg
-解説: 夏にバルセロナは、中盤にロドリを獲得しました。
-  telop: 夏にバルセロナは、中盤にロドリを獲得しました
+解説: デ・ヨングの復帰は、それよりもう少し先になる見込みです。
+  telop: デ・ヨングの復帰は、それよりもう少し先になる見込みです
   card: none
   image: assets/images/20261016_raphinha_dejong_return/01.jpg
-キャスター: いまはペドリとロドリが、先発の軸という評価です。
+キャスター: 復帰しても、中盤には競争があります。夏にバルセロナは、ロドリを獲得しました。
+  telop: 復帰しても、中盤には競争があります。夏にバルセロナは、ロドリを獲得しました
+  card: none
+  image: assets/images/20261016_raphinha_dejong_return/01.jpg
+解説: いまはペドリとロドリが、先発の軸という評価です。
   telop: いまはペドリとロドリが、先発の軸という評価です
   card: none
   image: assets/images/20261016_raphinha_dejong_return/01.jpg
@@ -179,19 +187,19 @@ cards:
   source: 報道
   card: numbers_card
   image: assets/images/20261016_raphinha_dejong_return/01.jpg
-解説: バルセロナの公式戦10連勝のうち、ラフィーニャが出たのは8試合です。
-  telop: バルセロナの公式戦10連勝のうち、ラフィーニャが出たのは8試合です
+解説: バルセロナは公式戦10連勝で、ラフィーニャが出たのは10試合のうち8試合です。
+  telop: バルセロナは公式戦10連勝で、ラフィーニャが出たのは10試合のうち8試合です
   card: none
   image: assets/images/20261016_raphinha_dejong_return/01.jpg
-キャスター: 出なかったのは、ヘタフェ戦とガラタサライ戦の2試合。
-  telop: 出なかったのは、ヘタフェ戦とガラタサライ戦の2試合
+キャスター: 出なかった2試合も、バルセロナは勝ちました。
+  telop: 出なかった2試合も、バルセロナは勝ちました
   card: none
   image: assets/images/20261016_raphinha_dejong_return/01.jpg
 解説: 不在の穴は、ゴードン、アデイェミ、ジェズスのゴールが埋めた、と伝えられています。
   telop: 不在の穴は、ゴードン、アデイェミ、ジェズスのゴールが埋めた、と伝えられています
   card: none
   image: assets/images/20261016_raphinha_dejong_return/01.jpg
-キャスター: あとは、フリック監督がどう戻すか。
-  telop: あとは、フリック監督がどう戻すか
+キャスター: 次の注目は、17日のベティス戦のメンバーです。
+  telop: 次の注目は、17日のベティス戦のメンバーです
   card: none
   image: assets/images/20261016_raphinha_dejong_return/01.jpg

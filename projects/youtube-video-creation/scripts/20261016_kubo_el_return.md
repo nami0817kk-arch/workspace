@@ -117,12 +117,28 @@ cards:
   telop: 久保建英は、公式戦3試合ぶりに出場しました
   card: none
   image: assets/images/20261016_kubo_el_return/01.jpg
-キャスター: 相手には、日本人のハーフナー・ニッキが先発しました。
+キャスター: この試合まで、公式戦6試合続けてベンチスタートでした。
+  telop: この試合まで、公式戦6試合続けてベンチスタートでした
+  card: none
+  image: assets/images/20261016_kubo_el_return/01.jpg
+解説: 相手には、日本人のハーフナー・ニッキが先発しました。
   telop: 相手には、日本人のハーフナー・ニッキが先発しました
+  card: none
+  image: assets/images/20261016_kubo_el_return/01.jpg
+キャスター: 久保とハーフナー・ニッキが直接競り合った場面は、試合の記録には出ていません。
+  telop: 久保とハーフナー・ニッキが直接競り合った場面は、試合の記録には出ていません
   card: none
   image: assets/images/20261016_kubo_el_return/01.jpg
 解説: 結果は、1対1の引き分けです。
   telop: 結果は、1対1の引き分けです
+  card: none
+  image: assets/images/20261016_kubo_el_return/01.jpg
+キャスター: ソシエダは今大会、1分1敗で、まだ勝てていません。
+  telop: ソシエダは今大会、1分1敗で、まだ勝てていません
+  card: none
+  image: assets/images/20261016_kubo_el_return/01.jpg
+解説: 一方のユニオンは、1勝1分で無敗です。
+  telop: 一方のユニオンは、1勝1分で無敗です
   card: none
   image: assets/images/20261016_kubo_el_return/01.jpg
 キャスター: 46分、トゥリエンテスのゴールで、ソシエダが先制しました。
@@ -181,12 +197,8 @@ cards:
   telop: 本人はU-20日本代表の経験があります
   card: none
   image: assets/images/20261016_kubo_el_return/01.jpg
-解説: 交代の記録に名前はありません。
-  telop: 交代の記録に名前はありません
-  card: none
-  image: assets/images/20261016_kubo_el_return/01.jpg
-キャスター: 久保との直接の競り合いは、試合の記録には出ていません。
-  telop: 久保との直接の競り合いは、試合の記録には出ていません
+解説: ニッキは最後までピッチにいました。
+  telop: ニッキは最後までピッチにいました
   card: none
   image: assets/images/20261016_kubo_el_return/01.jpg
 
@@ -201,17 +213,5 @@ cards:
   image: assets/images/20261016_kubo_el_return/01.jpg
 解説: 投入から、20分後です。
   telop: 投入から、20分後です
-  card: none
-  image: assets/images/20261016_kubo_el_return/01.jpg
-キャスター: 久保はこの試合まで、公式戦6試合続けてベンチスタートでした。
-  telop: 久保はこの試合まで、公式戦6試合続けてベンチスタートでした
-  card: none
-  image: assets/images/20261016_kubo_el_return/01.jpg
-解説: ソシエダは今大会、1分1敗で、まだ勝てていません。
-  telop: ソシエダは今大会、1分1敗で、まだ勝てていません
-  card: none
-  image: assets/images/20261016_kubo_el_return/01.jpg
-キャスター: 一方のユニオンは、1勝1分で無敗です。
-  telop: 一方のユニオンは、1勝1分で無敗です
   card: none
   image: assets/images/20261016_kubo_el_return/01.jpg

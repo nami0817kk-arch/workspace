@@ -38,7 +38,7 @@ description: 'ネイマールの移籍金の世界記録を、歴代の更新と
   この動画が答える問い: ネイマールの移籍金の世界記録は、歴代の中でどう位置づくのか
 
 
-  この動画の見立て: 移籍金の世界記録は、一覧で51件。いまの記録は2017年のネイマール、バルセロナからパリ・サンジェルマンへの2億2200万ユーロ（バルセロナ公式）で、9年破られていない。これは1932年からの17年に次ぐ歴代2位の長さ。物差しは、報じられた総額をポンドで数える（ボーナスの達成分は足さない）。ポグバは1億500万ユーロ、条件を満たせば500万ユーロ増えるとユヴェントスが公式に発表している。ジダンは4560万ポンド（BBC）で、別の一覧は4660万ポンドと食い違う。カカはポンドでは5600万で記録だが、ユーロでは約6700万でジダンの約7750万に届かない。物価で直すと、2025年の物価で、ロナウド（2009年）は約1億2790万ポンド、ベイルは約1億1990万、ポグバは約1億2270万。名前の上の記録だったベイルとポグバは、実質ではロナウドを上回っていない。ネイマールは約2億6770万ポンドでロナウドの約2.1倍。1990年のバッジョから額面で25倍、物価を直すと約13.5倍。今夏の最高額（エンソ・フェルナンデス、約1億2500万ポンド）に対し、ネイマールの額面は約1.6倍、物価を直した額は約2.1倍。
+  この動画の見立て: 移籍金の世界記録を更新した移籍は、数えると51件。いまの記録は2017年のネイマール、バルセロナからパリ・サンジェルマンへの2億2200万ユーロ（バルセロナ公式）で、9年破られていない。これは1932年からの17年に次ぐ歴代2位の長さ。物差しは、報じられた総額をポンドで数える（ボーナスの達成分は足さない）。ポグバは1億500万ユーロ、条件を満たせば500万ユーロ増えるとユヴェントスが公式に発表している。ジダンは4560万ポンド（BBC）で、別の一覧は4660万ポンドと食い違う。カカはポンドでは5600万で記録だが、ユーロでは約6700万でジダンの約7750万に届かない。物価で直すと、2025年の物価で、ロナウド（2009年）は約1億2790万ポンド、ベイルは約1億1990万、ポグバは約1億2270万。名前の上の記録だったベイルとポグバは、条件分を足さない額なら、実質ではロナウドを上回っていない（ポグバに条件の500万ユーロを足すと約1億2860万ポンドで、わずかに上回る）。ネイマールは約2億6770万ポンドでロナウドの約2.1倍。1990年のバッジョから額面で25倍、物価を直すと約13.5倍。今夏の最高額（エンソ・フェルナンデス、約1億2500万ポンド）に対し、ネイマールの物価を直す前の額は約1.6倍、物価を直した額は約2.1倍。
 
 
   ※画面の札で、クラブが発表した「確定」、
@@ -80,7 +80,7 @@ cards:
     items: &id001
     - - '51'
       - 件
-      - 一覧にある、世界記録を更新した移籍
+      - 世界記録を更新した移籍（一覧で数えた）
     - - '9'
       - 年
       - いまの記録が破られていない長さ
@@ -123,20 +123,26 @@ cards:
     title: 世界記録の節目（報じられた額）
     rows: *id003
     focus: 1893年
-    highlight_row: 1
+    highlight_row: 0
   history_3_card:
     type: timeline
     title: 世界記録の節目（報じられた額）
     rows: *id003
     focus: 1893年
-    highlight_row: 2
+    highlight_row: 1
   history_4_card:
     type: timeline
     title: 世界記録の節目（報じられた額）
     rows: *id003
     focus: 1893年
+    highlight_row: 2
+  history_5_card:
+    type: timeline
+    title: 世界記録の節目（報じられた額）
+    rows: *id003
+    focus: 1893年
     highlight_row: 3
-  history_6_card: &id005
+  history_7_card: &id005
     type: timeline
     title: 世界記録の節目（報じられた額）その2
     rows: &id004
@@ -146,13 +152,13 @@ cards:
       - ネイマール、約2億ポンド
     focus: 2017年
     highlight_row: 0
-  history_7_card:
+  history_8_card:
     type: timeline
     title: 世界記録の節目（報じられた額）その2
     rows: *id004
     focus: 2017年
     highlight_row: 1
-  history_8_card: *id005
+  history_9_card: *id005
   gaps_card: &id006
     type: bars
     title: 世界記録が破られなかった長さ（年の差）
@@ -192,13 +198,7 @@ cards:
     unit: 年
     items: *id007
     highlight: 2
-  gaps_5_card:
-    type: bars
-    title: 世界記録が破られなかった長さ（年の差）
-    unit: 年
-    items: *id007
-    highlight: 1
-  gaps_7_card:
+  gaps_6_card:
     type: calc
     title: 1990年から2017年の、更新の間隔（自分で割った）
     terms:
@@ -296,7 +296,13 @@ cards:
     columns: *id009
     rows: *id010
     highlight_row: 4
-  scale_13_card:
+  scale_12_card:
+    type: table
+    title: 記録の額と、出どころ
+    columns: *id009
+    rows: *id010
+    highlight_row: 4
+  scale_14_card:
     type: table
     title: 同じ移籍を、ポンドとユーロで並べる（百万）
     columns: &id011
@@ -315,13 +321,6 @@ cards:
       - '94'
     highlight_row: 1
     note: ポンドは BBC、ユーロは Wikipedia の一覧の換算
-  scale_14_card:
-    type: table
-    title: 同じ移籍を、ポンドとユーロで並べる（百万）
-    columns: *id011
-    rows: *id012
-    highlight_row: 1
-    note: ポンドは BBC、ユーロは Wikipedia の一覧の換算
   scale_15_card:
     type: table
     title: 同じ移籍を、ポンドとユーロで並べる（百万）
@@ -330,6 +329,13 @@ cards:
     highlight_row: 1
     note: ポンドは BBC、ユーロは Wikipedia の一覧の換算
   scale_16_card:
+    type: table
+    title: 同じ移籍を、ポンドとユーロで並べる（百万）
+    columns: *id011
+    rows: *id012
+    highlight_row: 1
+    note: ポンドは BBC、ユーロは Wikipedia の一覧の換算
+  scale_17_card:
     type: table
     title: 同じ移籍を、ポンドとユーロで並べる（百万）
     columns: *id011
@@ -448,21 +454,28 @@ cards:
     rows: *id015
     highlight_row: 2
     note: 英国の消費者物価指数（2015年＝100、年平均）。2025年は138.4
-  view_9_card:
+  view_11_card:
     type: table
     title: 物価で直した世界記録（百万ポンド）
     columns: *id014
     rows: *id015
     highlight_row: 2
     note: 英国の消費者物価指数（2015年＝100、年平均）。2025年は138.4
-  view_10_card:
+  view_12_card:
     type: table
     title: 物価で直した世界記録（百万ポンド）
     columns: *id014
     rows: *id015
     highlight_row: 5
     note: 英国の消費者物価指数（2015年＝100、年平均）。2025年は138.4
-  view_12_card: &id016
+  view_13_card:
+    type: table
+    title: 物価で直した世界記録（百万ポンド）
+    columns: *id014
+    rows: *id015
+    highlight_row: 5
+    note: 英国の消費者物価指数（2015年＝100、年平均）。2025年は138.4
+  view_15_card: &id016
     type: calc
     title: バッジョ（1990年）からネイマール（2017年）まで（自分で割った）
     terms:
@@ -472,8 +485,8 @@ cards:
       - 物価を直した倍率
     ops:
     - →
-  view_13_card: *id016
-  view_15_card: &id017
+  view_16_card: *id016
+  view_19_card: &id017
     type: calc
     title: ネイマールの額面は、今夏の最高額の何倍か（自分で割った）
     terms:
@@ -486,8 +499,8 @@ cards:
     ops:
     - ÷
     - ＝
-  view_16_card: *id017
-  view_17_card:
+  view_20_card: *id017
+  view_22_card:
     type: calc
     title: 物価を直したネイマールは、今夏の最高額の何倍か（自分で割った）
     terms:
@@ -500,14 +513,14 @@ cards:
     ops:
     - ÷
     - ＝
-  view_18_card: *id017
+  view_23_card: *id017
 ---
 
 ## オープニング
 @bg: assets/backgrounds/stock/stadium_night.mp4
 
-キャスター: 移籍金の世界記録は、一覧に51件あります。
-  telop: 移籍金の世界記録は、一覧に51件あります
+キャスター: 移籍金の世界記録を更新した移籍は、数えると51件あります。
+  telop: 移籍金の世界記録を更新した移籍は、数えると51件あります
   image: assets/images/20261016_record_transfer_fee/neymar/01_w.jpg
   no_telop: true
 キャスター: ネイマールの移籍金の世界記録を、歴代の更新と物価で数える。
@@ -541,9 +554,9 @@ cards:
   telop: この記録は、9年たっても破られていません
   card: top_3_card
   image: assets/backgrounds/stadium_レアルマドリード.png
-キャスター: 更新の一覧は51件。9年は、その中で歴代2位の長さです。
+キャスター: 記録を更新した移籍は、数えると51件。9年は、その中で歴代2位の長さです。
   emph: true
-  telop: 更新の一覧は51件。9年は、その中で歴代2位の長さです
+  telop: 記録を更新した移籍は、数えると51件。9年は、その中で歴代2位の長さです
   card: top_4_card
   image: assets/backgrounds/stadium_レアルマドリード.png
 キャスター: 最初に、物差しを1つ決めます。報じられた総額を、ポンドで数えます。
@@ -554,8 +567,8 @@ cards:
   telop: ユーロで数えると、更新の順が変わる移籍があるからです
   card: none
   image: assets/backgrounds/stadium_レアルマドリード.png
-キャスター: ボーナスの達成分は足しません。クラブが額を発表していれば、その額と照らします。
-  telop: ボーナスの達成分は足しません。クラブが額を発表していれば、その額と照らします
+キャスター: 条件で増える分は足しません。額の発表があれば、その額と照らします。
+  telop: 条件で増える分は足しません。額の発表があれば、その額と照らします
   card: none
   image: assets/backgrounds/stadium_レアルマドリード.png
 
@@ -571,17 +584,21 @@ cards:
   telop: ウィリー・グローヴスが、100ポンドでした
   card: history_1_card
   image: assets/backgrounds/stadium_レアルマドリード.png
+解説: 間にも、更新が重なります。
+  telop: 間にも、更新が重なります
+  card: history_2_card
+  image: assets/backgrounds/stadium_レアルマドリード.png
 解説: 12年後の1905年、アルフ・コモンが、初めて1000ポンドに届きます。
   telop: 12年後の1905年、アルフ・コモンが、初めて1000ポンドに届きます
-  card: history_2_card
+  card: history_3_card
   image: assets/backgrounds/stadium_レアルマドリード.png
 解説: 1928年のデヴィッド・ジャックで、初めて5桁。1万890ポンドでした。
   telop: 1928年のデヴィッド・ジャックで、初めて5桁。1万890ポンドでした
-  card: history_3_card
+  card: history_4_card
   image: assets/backgrounds/stadium_レアルマドリード.png
 解説: 1975年、サヴォルディが、初めて100万ポンドを超えました。
   telop: 1975年、サヴォルディが、初めて100万ポンドを超えました
-  card: history_4_card
+  card: history_5_card
   image: assets/backgrounds/stadium_レアルマドリード.png
 解説: 1982年と1984年には、マラドーナが記録を2度更新しました。
   telop: 1982年と1984年には、マラドーナが記録を2度更新しました
@@ -589,17 +606,17 @@ cards:
   image: assets/backgrounds/stadium_レアルマドリード.png
 解説: 2001年は、ジダンです。ユヴェントスを離れ、レアル・マドリードに移りました。
   telop: 2001年は、ジダンです。ユヴェントスを離れ、レアル・マドリードに移りました
-  card: history_6_card
+  card: history_7_card
   image: assets/backgrounds/stadium_レアルマドリード.png
 解説: そして2017年、ネイマール。ポンドに直すと、約2億になります。
   emph: true
   telop: そして2017年、ネイマール。ポンドに直すと、約2億になります
-  card: history_7_card
+  card: history_8_card
   image: assets/backgrounds/stadium_レアルマドリード.png
 解説: 100ポンドから約2億ポンドまで、124年。額は200万倍になりました。
   emph: true
   telop: 100ポンドから約2億ポンドまで、124年。額は200万倍になりました
-  card: history_8_card
+  card: history_9_card
   image: assets/backgrounds/stadium_レアルマドリード.png
 
 ## 世界記録は、どのくらい長く破られなかったのか
@@ -622,14 +639,9 @@ cards:
   telop: いまの9年は、その次に長い記録です
   card: gaps_3_card
   image: assets/backgrounds/stadium_レアルマドリード.png
-解説: 2番目は8年で、1905年のコモンと、2001年のジダンが並びます。
-  telop: 2番目は8年で、1905年のコモンと、2001年のジダンが並びます
+解説: 3番目は8年で、1905年のコモンと、2001年のジダンが並びます。
+  telop: 3番目は8年で、1905年のコモンと、2001年のジダンが並びます
   card: gaps_4_card
-  image: assets/backgrounds/stadium_レアルマドリード.png
-解説: いまのネイマールは、まだ続いているのに、8年を超えました。
-  emph: true
-  telop: いまのネイマールは、まだ続いているのに、8年を超えました
-  card: gaps_5_card
   image: assets/backgrounds/stadium_レアルマドリード.png
 解説: 反対に、1990年から2017年は、更新が速い時代でした。
   telop: 反対に、1990年から2017年は、更新が速い時代でした
@@ -638,7 +650,7 @@ cards:
 解説: 27年で16回。平均すると、1.7年に1回、記録が変わっています。
   emph: true
   telop: 27年で16回。平均すると、1.7年に1回、記録が変わっています
-  card: gaps_7_card
+  card: gaps_6_card
   image: assets/backgrounds/stadium_レアルマドリード.png
 
 ## 記録の額は、どこまでが公式の数字なのか
@@ -689,31 +701,35 @@ cards:
   telop: 行き先は、レアル・マドリード。額は約8000万ポンド、報道です
   card: scale_10_card
   image: assets/backgrounds/stadium_レアルマドリード.png
-解説: ジダンは4560万ポンドとします。報道には、少し違う額もあります。
-  telop: ジダンは4560万ポンドとします。報道には、少し違う額もあります
+解説: ジダンは4560万ポンドとします。
+  telop: ジダンは4560万ポンドとします
   card: scale_11_card
   image: assets/backgrounds/stadium_レアルマドリード.png
-解説: ポンドで数えるか、ユーロで数えるかでも、記録の順が変わります。
-  telop: ポンドで数えるか、ユーロで数えるかでも、記録の順が変わります
+解説: 報道には、少し高い4660万ポンドの額もあります。
+  telop: 報道には、少し高い4660万ポンドの額もあります
+  card: scale_12_card
+  image: assets/backgrounds/stadium_レアルマドリード.png
+解説: 公式かどうかとは別に、通貨でも、記録の順が変わります。
+  telop: 公式かどうかとは別に、通貨でも、記録の順が変わります
   card: none
   image: assets/backgrounds/stadium_レアルマドリード.png
 解説: カカは2009年に、ミランを離れてレアルへ。5600万ポンドです。
   telop: カカは2009年に、ミランを離れてレアルへ。5600万ポンドです
-  card: scale_13_card
+  card: scale_14_card
   image: assets/backgrounds/stadium_レアルマドリード.png
 解説: ポンドでは、ジダンを超えた記録でした。
   telop: ポンドでは、ジダンを超えた記録でした
-  card: scale_14_card
+  card: scale_15_card
   image: assets/backgrounds/stadium_レアルマドリード.png
 解説: ところがユーロだと、約6700万。ジダンの約7750万に届きません。
   emph: true
   mark: {"kind": "circle", "row": 1, "col": 2}
   telop: ところがユーロだと、約6700万。ジダンの約7750万に届きません
-  card: scale_15_card
+  card: scale_16_card
   image: assets/backgrounds/stadium_レアルマドリード.png
 解説: 同じ移籍が、ポンドでは記録で、ユーロでは記録になりません。
   telop: 同じ移籍が、ポンドでは記録で、ユーロでは記録になりません
-  card: scale_16_card
+  card: scale_17_card
   image: assets/backgrounds/stadium_レアルマドリード.png
 解説: 次の見立てでは、物差しをポンドに固定して、物価も直します。
   telop: 次の見立てでは、物差しをポンドに固定して、物価も直します
@@ -760,18 +776,31 @@ cards:
   telop: 当時は世界記録でした。けれど、いまの物価では、ロナウドを下回ります
   card: view_7_card
   image: assets/backgrounds/stadium_レアルマドリード.png
-解説: ベイルとポグバの額を、少し動かしても、結論は変わりません。
-  telop: ベイルとポグバの額を、少し動かしても、結論は変わりません
+解説: ただし、ポグバに条件の分を足すと、約1億2860万ポンドになります。
+  telop: ただし、ポグバに条件の分を足すと、約1億2860万ポンドになります
   card: none
   image: assets/backgrounds/stadium_レアルマドリード.png
-解説: つまり、物価を直した記録は、ロナウドから、ネイマールまで動いていません。
-  telop: つまり、物価を直した記録は、ロナウドから、ネイマールまで動いていません
-  card: view_9_card
+解説: ロナウドを、わずかに上回ります。
+  telop: ロナウドを、わずかに上回ります
+  card: none
+  image: assets/backgrounds/stadium_レアルマドリード.png
+解説: ベイルは、別の報道の8600万ポンドでも、届きません。
+  telop: ベイルは、別の報道の8600万ポンドでも、届きません
+  card: none
+  image: assets/backgrounds/stadium_レアルマドリード.png
+解説: つまり、条件分を足さなければ、記録は、ロナウドからネイマールまで動きません。
+  telop: つまり、条件分を足さなければ、記録は、ロナウドからネイマールまで動きません
+  card: view_11_card
   image: assets/backgrounds/stadium_レアルマドリード.png
 解説: ネイマールは約2億6770万ポンド。ロナウドの、約2.1倍です。
   emph: true
   telop: ネイマールは約2億6770万ポンド。ロナウドの、約2.1倍です
-  card: view_10_card
+  card: view_12_card
+  image: assets/backgrounds/stadium_レアルマドリード.png
+解説: ポグバの条件分を足しても、ネイマールは、ロナウドの約2.1倍のままです。
+  emph: true
+  telop: ポグバの条件分を足しても、ネイマールは、ロナウドの約2.1倍のままです
+  card: view_13_card
   image: assets/backgrounds/stadium_レアルマドリード.png
 解説: ロベルト・バッジョは1990年、フィオレンティーナからユヴェントスへ。
   telop: ロベルト・バッジョは1990年、フィオレンティーナからユヴェントスへ
@@ -779,31 +808,39 @@ cards:
   image: assets/backgrounds/stadium_レアルマドリード.png
 解説: 約800万ポンドの記録でした。ネイマールは、その25倍です。
   telop: 約800万ポンドの記録でした。ネイマールは、その25倍です
-  card: view_12_card
+  card: view_15_card
   image: assets/backgrounds/stadium_レアルマドリード.png
 解説: 物価を直すと、約13.5倍です。
   emph: true
   telop: 物価を直すと、約13.5倍です
-  card: view_13_card
-  image: assets/backgrounds/stadium_レアルマドリード.png
-解説: では、次に記録が動くには、何が要るのでしょうか。
-  telop: では、次に記録が動くには、何が要るのでしょうか
-  card: none
-  image: assets/backgrounds/stadium_レアルマドリード.png
-解説: 今夏の最高額は、エンソ・フェルナンデスの約1億2500万ポンド。いまの額です。
-  telop: 今夏の最高額は、エンソ・フェルナンデスの約1億2500万ポンド。いまの額です
-  card: view_15_card
-  image: assets/backgrounds/stadium_レアルマドリード.png
-解説: ネイマールの額面、約2億ポンドは、その約1.6倍にあたります。
-  telop: ネイマールの額面、約2億ポンドは、その約1.6倍にあたります
   card: view_16_card
   image: assets/backgrounds/stadium_レアルマドリード.png
-解説: 2017年の額を物価で直すと、約2億6770万ポンド。比べると、約2.1倍です。
-  emph: true
-  telop: 2017年の額を物価で直すと、約2億6770万ポンド。比べると、約2.1倍です
-  card: view_17_card
+解説: では、いまの記録に、今夏の最高額はどこまで近いのでしょうか。
+  telop: では、いまの記録に、今夏の最高額はどこまで近いのでしょうか
+  card: none
   image: assets/backgrounds/stadium_レアルマドリード.png
-解説: 新しい記録は、額面で約2億ポンドを超えると生まれます。
-  telop: 新しい記録は、額面で約2億ポンドを超えると生まれます
-  card: view_18_card
+解説: 今夏の最高額は、エンソ・フェルナンデスの約1億2500万ポンド。
+  telop: 今夏の最高額は、エンソ・フェルナンデスの約1億2500万ポンド
+  card: none
+  image: assets/backgrounds/stadium_レアルマドリード.png
+解説: チェルシーからマンチェスター・シティへ。物価を直さない、いまの額です。
+  telop: チェルシーからマンチェスター・シティへ。物価を直さない、いまの額です
+  card: view_19_card
+  image: assets/backgrounds/stadium_レアルマドリード.png
+解説: 物価を直す前のネイマールの額、約2億ポンド。今夏の最高額の約1.6倍です。
+  telop: 物価を直す前のネイマールの額、約2億ポンド。今夏の最高額の約1.6倍です
+  card: view_20_card
+  image: assets/backgrounds/stadium_レアルマドリード.png
+解説: 2017年の額を物価で直すと、約2億6770万ポンド。
+  telop: 2017年の額を物価で直すと、約2億6770万ポンド
+  card: none
+  image: assets/backgrounds/stadium_レアルマドリード.png
+解説: 今夏の最高額と比べると、約2.1倍です。
+  emph: true
+  telop: 今夏の最高額と比べると、約2.1倍です
+  card: view_22_card
+  image: assets/backgrounds/stadium_レアルマドリード.png
+解説: 新しい記録は、物価を直す前の額で、約2億ポンドを超えると生まれます。
+  telop: 新しい記録は、物価を直す前の額で、約2億ポンドを超えると生まれます
+  card: view_23_card
   image: assets/backgrounds/stadium_レアルマドリード.png

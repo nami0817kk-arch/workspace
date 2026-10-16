@@ -5,14 +5,16 @@ short_title: ケイン、バイエルンと2029年まで基本合意。いつ正
 no_main: true
 short_question: あなたは、ケインは2029年まで、今のペースで点を取り続けられると思いますか。
 short_telops:
-- match: 基本合意しました
+- match: 基本合意したと
   text: ケインとバイエルン/2029年夏まで基本合意
+- match: 2年延びる
+  text: 現行契約は2027年夏まで/2年延びる形
 - match: 書類を詰めている
   text: 契約の書類は/詰めている段階
 - match: 正式な発表は
   text: クラブの正式発表は/まだ
-- match: 2027年の夏まで
-  text: 現行契約は/2027年夏まで
+- match: 10日以内
+  text: 手続きは/10日以内に終わる見込み
 - match: 最大の争点
   text: 最大の争点は/契約期間で合意
 - match: 細部だけ
@@ -49,7 +51,7 @@ description: 'ケイン、バイエルンと2029年まで基本合意。いつ�
   この動画が答える問い: ケインとバイエルンの契約は、どこまで決まっているのか
 
 
-  この動画の見立て: ケインは2029年夏までの新契約で基本合意と報じられたが、クラブの正式発表と署名はまだ。バイエルン加入後は156試合で154ゴール、ほぼ1試合1点のペース
+  この動画の見立て: ケインは2029年夏までの新契約で基本合意と報じられたが、クラブの正式発表と署名はまだ。手続きは10日以内に終わる見込みと伝えられている。バイエルン加入後は156試合で154ゴール、ほぼ1試合1点のペース
 
 
   ※画面の札で、クラブが発表した「確定」、
@@ -78,7 +80,7 @@ cards:
   pace_card:
     type: quote
     label: この動画の見立て
-    text: ケインは2029年夏までの新契約で基本合意と報じられたが、クラブの正式発表と署名はまだ。バイエルン加入後は156試合で154ゴール、ほぼ1試合1点のペース
+    text: ケインは2029年夏までの新契約で基本合意と報じられたが、クラブの正式発表と署名はまだ。手続きは10日以内に終わる見込みと伝えられている。バイエルン加入後は156試合で154ゴール、ほぼ1試合1点のペース
   pace_0_card:
     type: table
     title: ケイン バイエルン加入後
@@ -92,7 +94,7 @@ cards:
       - 約0.99ゴール
     - - ブンデス100ゴール
       - 98試合
-    - - 前の記録 ミュラー
+    - - 前の記録 D・ミュラー
       - 129試合
     highlight_row: 0
   pace_1_card:
@@ -108,6 +110,12 @@ cards:
     rows: *id002
     highlight_row: 2
   pace_3_card:
+    type: table
+    title: ケイン バイエルン加入後
+    columns: *id001
+    rows: *id002
+    highlight_row: 3
+  pace_4_card:
     type: table
     title: ケイン バイエルン加入後
     columns: *id001
@@ -130,20 +138,24 @@ cards:
   telop: ケインがバイエルンと、2029年の夏までの新契約で基本合意したと報じられました
   source: 報道
   image: assets/images/20261016_kane_bayern_extension/01.jpg
-解説: 契約の書類を詰めている段階で、クラブの正式な発表はまだありません。
+解説: 現行の契約は2027年の夏までなので、2年延びる形です。
+  telop: 現行の契約は2027年の夏までなので、2年延びる形です
+  card: none
+  image: assets/images/20261016_kane_bayern_extension/01.jpg
+キャスター: 契約の書類を詰めている段階で、クラブの正式な発表はまだありません。
   telop: 契約の書類を詰めている段階で、クラブの正式な発表はまだありません
   card: none
   image: assets/images/20261016_kane_bayern_extension/01.jpg
-キャスター: 現行の契約は、2027年の夏までです。
-  telop: 現行の契約は、2027年の夏までです
+解説: ドイツの報道では、手続きは10日以内に終わる見込みです。
+  telop: ドイツの報道では、手続きは10日以内に終わる見込みです
   card: none
   image: assets/images/20261016_kane_bayern_extension/01.jpg
 
 ## どこまで決まっているのか
 @bg: assets/backgrounds/stock/stadium_night.mp4
 
-キャスター: ケインの新契約について、ビルド紙のファルク記者は、こう話しています。
-  telop: ケインの新契約について、ビルド紙のファルク記者は、こう話しています
+キャスター: ケインの新契約について、ドイツの記者ファルク氏はこう語りました。
+  telop: ケインの新契約について、ドイツの記者ファルク氏はこう語りました
   source: 報道
   image: assets/images/20261016_kane_bayern_extension/01.jpg
 クリスティアン・ファルク: 契約期間という最大の争点で、いま合意があると聞いている
@@ -159,13 +171,17 @@ cards:
   telop: バイエルンは、10月26日のバロンドール授賞式の前に固めたい考えだといいます
   card: none
   image: assets/images/20261016_kane_bayern_extension/01.jpg
+キャスター: ケインは今年のバロンドールの有力候補の1人とも言われています。
+  telop: ケインは今年のバロンドールの有力候補の1人とも言われています
+  card: none
+  image: assets/images/20261016_kane_bayern_extension/01.jpg
 
 ## ケインは、どんなペースで点を取ってきたか
 @bg: assets/backgrounds/stock/stadium_night.mp4
 @viewpoint: true
 
-キャスター: ケインはバイエルン加入後、156試合で154ゴールです。
-  telop: ケインはバイエルン加入後、156試合で154ゴールです
+キャスター: では、加入後のペースを数字で見ます。ケインは156試合で154ゴールです。
+  telop: では、加入後のペースを数字で見ます。ケインは156試合で154ゴールです
   source: 報道
   card: pace_0_card
   image: assets/images/20261016_kane_bayern_extension/01.jpg
@@ -173,11 +189,15 @@ cards:
   telop: 1試合あたり、およそ0.99点。ほぼ毎試合1点のペースです
   card: pace_1_card
   image: assets/images/20261016_kane_bayern_extension/01.jpg
-キャスター: ブンデスリーガの100ゴールは、98試合目でした。
-  telop: ブンデスリーガの100ゴールは、98試合目でした
+キャスター: ブンデスリーガの100ゴールは、98試合目。史上最速でした。
+  telop: ブンデスリーガの100ゴールは、98試合目。史上最速でした
   card: pace_2_card
   image: assets/images/20261016_kane_bayern_extension/01.jpg
-解説: ミュラーの129試合より、31試合も速い到達です。
-  telop: ミュラーの129試合より、31試合も速い到達です
+解説: 前の記録は、半世紀近く破られなかった、ディーター・ミュラーの129試合。
+  telop: 前の記録は、半世紀近く破られなかった、ディーター・ミュラーの129試合
   card: pace_3_card
+  image: assets/images/20261016_kane_bayern_extension/01.jpg
+キャスター: それを、31試合も縮めました。
+  telop: それを、31試合も縮めました
+  card: pace_4_card
   image: assets/images/20261016_kane_bayern_extension/01.jpg

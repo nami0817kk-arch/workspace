@@ -57,6 +57,9 @@ sections:
   - voice: ハゴバ・アラサテ
     text: オサスナは私を必要としていると感じます。力になれると感じます
     image: assets/stats/ll_osasuna_data_r2.png
+  - text: アラサテは、2018年から6年間、このクラブを率いた監督です。
+    image: assets/stats/ll_osasuna_data_r2.png
+    no_telop: true
   - text: それまでの開幕8試合は、**2勝2引き分け4敗**で**16位**でした。
     image: assets/stats/ll_osasuna_data_r1.png
     no_telop: true
@@ -104,7 +107,7 @@ sections:
     - - 1980年
       - 17年ぶりに1部へ
   say:
-  - 3部で優勝して上がると、**1980年**には17年ぶりに1部へ戻ります。
+  - 3部で優勝して2部に上がり、**1980年**には17年ぶりに1部へ戻ります。
   - text: '**1985年**、前のシーズンの6位で、初めてヨーロッパの大会に出場。'
     card:
       type: table
@@ -272,7 +275,8 @@ sections:
         - 運営のやり方
         - ナバラの100超のクラブと
   - ナバラ州の**100**を超えるクラブと手を組んで、選手を育てています。
-  - text: 改修案は、クラブの持ち主の会員が選びました。投票率は**75**パーセントです。
+  - text: 会員がクラブを持っていて、本拠地エル・サダールの改修案も、投票で選びました。
+  - text: 投票率は**75**パーセントです。
     card:
       type: table
       title: このクラブの特徴
@@ -394,7 +398,9 @@ sections:
     image: assets/photos/ll/osasuna/osasuna_legend_381dac82.jpg
   - 2部にいた2016年、昇格のプレーオフで**3得点**。1部復帰を引き寄せました。
   - 2024年のサッカー欧州選手権、準々決勝のドイツ戦で、119分に勝ち越し点。
+  - 得点は、スペインの代表チームでのものです。
   - 場所はシュトゥットガルト。1991年に父がオサスナで点を取った競技場です。
+  - 父の点は、欧州の大会の試合でのものでした。
   sources:
   - https://en.wikipedia.org/wiki/Javad_Nekounam
   - https://en.wikipedia.org/wiki/C%C3%A9sar_Azpilicueta
