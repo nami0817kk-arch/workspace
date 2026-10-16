@@ -221,7 +221,9 @@ def layout(spec: dict, width: int, font_path: str, latin_font_path: str | None =
     kind = str(spec.get("type", "quote")).lower()
     builder = {"bars": _bars, "table": _table, "stats": _stats, "verdict": _verdict,
                "calc": _calc, "points": _points, "scatter": _scatter, "convert": _convert,
-               "line": _line, "waterfall": _waterfall, "timeline": _timeline}.get(kind)
+               "line": _line, "waterfall": _waterfall, "timeline": _timeline,
+               "document": _document, "duel": _duel,
+               "shelf": lambda *a, **k: _duel(*a, icon=True, **k)}.get(kind)
     if builder is None:
         raise CardError(f"{kind} カードには書き込みを足せません（{'・'.join(MARKABLE_TYPES)}）")
     blocks = builder(spec, width, font_path, latin_font_path or font_path, slot)
