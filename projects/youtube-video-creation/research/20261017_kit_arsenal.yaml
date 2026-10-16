@@ -83,6 +83,7 @@ voice_min: 0
 people:
 - アーセナル
 theme:
+  end_bg: assets/images/20261017_kit_arsenal/a01_2627_eze_w.jpg
   id: kit_arsenal
   league: england
   league_name: プレミアリーグ

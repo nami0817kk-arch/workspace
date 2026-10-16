@@ -53,6 +53,7 @@ people:
 - クリスティアーノ・ロナウド
 - リオネル・メッシ
 theme:
+  end_bg: assets/images/20261017_ronaldo/01_w.jpg
   id: record_ronaldo_messi
   league: spain
   league_name: ラ・リーガ
@@ -69,11 +70,11 @@ thumbnail:
   layout: versus
   photos:
   - assets/images/20261017_ronaldo/01_w.jpg
-  - assets/images/20261017_messi/01_w.jpg
+  - assets/images/20261017_messi/02_w.jpg
   names: [ロナウド, メッシ]
-  numbers: ['1.03', '0.86']
-  line1: 1試合あたりの得点
-  line2: ロナウド対メッシ
+  numbers: ['312点', '474点']
+  line1: ラ・リーガの総数ならメッシ
+  line2: 1試合あたりなら
   short_photo: assets/images/20261017_ronaldo/01_v.jpg
   tags:
   - クリスティアーノ・ロナウド

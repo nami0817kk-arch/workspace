@@ -21,8 +21,8 @@ theme:
   lead: ヨーロッパ王者に、史上最多の15回。
   opening_image: assets/stats/ll_realmadrid_data_t.png
 thumbnail:
-  line1: 欧州一の大会を作ったのは●●
-  line2: 名門レアル・マドリード
+  line1: ヨーロッパ王者、史上最多15回
+  line2: レアル・マドリード
   crest_main:
   - レアル・マドリード
   board: assets/stats/ll_realmadrid_data_t.png

@@ -5,8 +5,8 @@ voice_min: 0.0
 short_title: ロナウド451点とメッシ672点、1試合あたりでは
 series: 記録の解説
 topic: ロナウドとメッシ
-thumbnail_line1: 1試合あたりの得点
-thumbnail_line2: ロナウド対メッシ
+thumbnail_line1: ラ・リーガの総数ならメッシ
+thumbnail_line2: 1試合あたりなら
 thumbnail_tags:
 - クリスティアーノ・ロナウド
 - リオネル・メッシ
@@ -20,7 +20,7 @@ thumbnail_band_full: false
 short_photo: assets/images/20261017_ronaldo/01_v.jpg
 thumbnail_photos:
 - assets/images/20261017_ronaldo/01_w.jpg
-- assets/images/20261017_messi/01_w.jpg
+- assets/images/20261017_messi/02_w.jpg
 thumbnail_crest_main: []
 thumbnail_layout:
   layout: versus
@@ -28,9 +28,10 @@ thumbnail_layout:
   - ロナウド
   - メッシ
   numbers:
-  - '1.03'
-  - '0.86'
-bg: assets/backgrounds/stadium.png
+  - 312点
+  - 474点
+bg: assets/images/20261017_ronaldo/01_w.jpg
+end_bg: assets/images/20261017_ronaldo/01_w.jpg
 date: 2026年10月17日
 intro_title: ロナウドのレアル451得点と、メッシのバルサ672得点。1試合あたりに直すと
 intro_label: 海外サッカー ニュース

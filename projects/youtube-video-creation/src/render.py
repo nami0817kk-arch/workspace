@@ -1792,8 +1792,11 @@ class Renderer:
                 previous = closed
 
         if inserts.outro > 0 and script.scenes:
+            # **`end_bg` を書いた回は、それが終了画面の下地**（2026-10-17。最後の節の @bg が先に使われ、
+            # 写真の無い最終コマに既定の動画（ブラジルの球場）が出ていた）
             last_bg = (
-                script.scenes[-1].background or script.background or self.config.video.background
+                str(script.meta.get("end_bg") or "").strip()
+                or script.scenes[-1].background or script.background or self.config.video.background
             )
             entries += self._title_entries(
                 last_bg,

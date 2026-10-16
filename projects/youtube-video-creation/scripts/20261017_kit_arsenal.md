@@ -25,7 +25,8 @@ thumbnail_layout:
   callouts:
   - 何を1回と数える？
   - 53年変わらず
-bg: assets/backgrounds/stadium.png
+bg: assets/images/20261017_kit_arsenal/a01_2627_eze_w.jpg
+end_bg: assets/images/20261017_kit_arsenal/a01_2627_eze_w.jpg
 date: 2026年10月17日
 intro_title: アーセナルの胸の大砲は、何回形を変えたのか
 intro_label: 海外サッカー ニュース

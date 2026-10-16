@@ -82,11 +82,138 @@ sections:
       - ヴィティーニャは25%。ペドリは8%。
       - ペドリは23歳。バルセロナの中盤です。
       - ヴィティーニャは26歳、パリ・サンジェルマンの中盤。
-      - 市場価値は、1億5000万ユーロと1億4000万ユーロ。
-      - 2人の今季の数字を、基本の数から並べます。
+      - 市場価値は、どちらも1億ユーロを超えます。
+      - まず、2人の道のりから並べます。
     sources:
       - https://www.transfermarkt.com/pedri/profil/spieler/683840
       - https://www.transfermarkt.com/vitinha/profil/spieler/487469
+
+  - id: career
+    heading: 2人の道のりは、何歳でどこが違ったのか
+    tier: 報道
+    telop: プロ入りから、いまのクラブまで
+    narrator: 解説
+    card: &pedricard
+      type: timeline
+      title: ペドリの道のり
+      rows:
+        - ["2013〜15年", UDテゲステ。最初はセンターバック]
+        - ["2019年8月", プロ初出場。16歳]
+        - ["2019年9月", バルセロナ行きが決定。移籍金500万€]
+        - ["2020年7月", 移籍が発効。バルセロナの選手に]
+        - ["いま", バルセロナで7季目]
+    say:
+      - text: まず、道のりを並べます。ペドリは、センターバックとして始め、ラス・パルマスへ。
+        image: assets/images/20261017_pedri/02_w.jpg
+        card: {<<: *pedricard, highlight_row: "2013〜15年"}
+      - text: 2019年8月、16歳でプロ初出場。
+        card: {<<: *pedricard, highlight_row: "2019年8月"}
+      - text: 翌月にバルセロナ行きが決まり、移籍金は500万ユーロ。
+        card: {<<: *pedricard, highlight_row: "2019年9月"}
+      - text: 追加分を入れた総額は、2300万から2400万ユーロとされています。
+        card: {<<: *pedricard, highlight_row: "2019年9月"}
+      - text: 移籍が発効したのは、翌2020年7月です。
+        card: {<<: *pedricard, highlight_row: "2020年7月"}
+      - text: ヴィティーニャは、11歳でポルトの下部組織に入りました。
+        image: assets/images/20261017_vitinha/04_r.jpg
+        card: &vitcard
+          type: timeline
+          title: ヴィティーニャの道のり
+          rows:
+            - ["2019年8月", ポルトBでデビュー。19歳]
+            - ["2020年1月", ポルトのトップチームで初出場]
+            - ["2020年9月", 1年のレンタルでウォルヴァーハンプトンへ]
+            - ["2021年夏", 買い取られず、ポルトへ戻る]
+            - ["2022年6月", 解除条項でPSGへ。4000万€・5年契約]
+            - ["いま", PSGで5季目]
+      - text: 2019年8月に、19歳でポルトBにデビュー。
+        card: {<<: *vitcard, highlight_row: "2019年8月"}
+      - text: 2020年1月に、ポルトのトップチームで初出場。
+        card: {<<: *vitcard, highlight_row: "2020年1月"}
+      - text: 同じ年の9月、1年のレンタルでウォルヴァーハンプトンへ。
+        card: {<<: *vitcard, highlight_row: "2020年9月"}
+      - text: 買い取られず、翌年ポルトに戻りました。
+        card: {<<: *vitcard, highlight_row: "2021年夏"}
+      - text: 2022年6月、解除条項が使われて、いまのクラブへ。
+        card: {<<: *vitcard, highlight_row: "2022年6月"}
+      - text: 数字で並べ直すと、プロ初出場の年齢は、ペドリが16歳、ヴィティーニャが19歳。
+        image: assets/images/20261017_pedri/03_w.jpg
+        card: &pathcard
+          type: duel
+          left: {name: ペドリ, club: バルセロナ, photo: assets/images/20261017_pedri/01_sq.jpg, color: "#a50044"}
+          right: {name: ヴィティーニャ, club: パリ・サンジェルマン, photo: assets/images/20261017_vitinha/04_sq.jpg, color: "#004170"}
+          rows:
+            - [プロ初出場の年齢, 16歳, 19歳]
+            - [いまのクラブに移った年齢, 17歳, 22歳]
+            - [移籍金, 500万€, 4000万€]
+            - [市場価値, 1.5億€, 1.4億€]
+            - [市場価値÷移籍金, 30倍, 3.5倍]
+          bars: [移籍金, 市場価値÷移籍金]
+          highlight_row: プロ初出場の年齢
+          note: 移籍金はペドリが基本額（ラス・パルマス発表）、ヴィティーニャが解除条項の額（ESPN）。市場価値は Transfermarkt の推定。倍率は自分で割った値
+      - text: いまのクラブに移ったのは、17歳と22歳。
+        card: {<<: *pathcard, highlight_row: いまのクラブに移った年齢}
+      - text: 移籍金は、500万ユーロと4000万ユーロ。
+        card: {<<: *pathcard, highlight_row: 移籍金}
+      - text: いまの市場価値を、その移籍金で割ると、30倍と3.5倍。
+        card: {<<: *pathcard, highlight_row: 市場価値÷移籍金}
+      - text: ペドリは追加分を入れても、6倍あまり。
+        card: {<<: *pathcard, highlight_row: 市場価値÷移籍金}
+      - text: 市場価値は推定で、実際の売値ではありません。
+        card: *pathcard
+    sources:
+      - https://www.udlaspalmas.es/en/news/ud-las-palmas-and-fc-barcelona-strike-a-deal-to-transfer-pedri
+      - https://www.football-espana.net/2025/02/22/las-palmas-fee-barcelona-pedri
+      - https://www.espn.co.uk/football/story/_/id/37629691/psg-sign-portugal-midfielder-vitinha-40m-deal-porto
+      - https://en.wikipedia.org/wiki/Pedri
+      - https://en.wikipedia.org/wiki/Vitinha_(footballer,_born_2000)
+
+  - id: national
+    heading: 代表では、2人はどんな道を歩んだのか
+    tier: 報道
+    telop: スペイン代表とポルトガル代表
+    narrator: 解説
+    card: &natcard
+      type: duel
+      left: {name: ペドリ, club: スペイン代表, photo: assets/images/20261017_pedri/01_sq.jpg, color: "#a50044"}
+      right: {name: ヴィティーニャ, club: ポルトガル代表, photo: assets/images/20261017_vitinha/04_sq.jpg, color: "#004170"}
+      rows:
+        - [代表の試合数, "53", "47"]
+        - [代表の得点, "6", "1"]
+        - [代表デビュー, 2021年3月, 2022年3月]
+        - [デビュー時の年齢, 18歳, 22歳]
+        - [1年あたりの試合数, "9.5", "10.3"]
+        - [W杯2022, ベスト16, ベスト8]
+        - [EURO2024, 優勝, ベスト8]
+        - [ネーションズL 2025, 準優勝, 優勝]
+      bars: [代表の試合数, 1年あたりの試合数]
+      note: 試合数・得点は Transfermarkt（2026年10月17日）。1年あたりは、デビューから10月17日までの年数で割った値（自分で計算）
+    say:
+      - text: 次は代表です。試合数は、53と47。得点は、6と1。
+        image: assets/images/20261017_pedri/03_w.jpg
+        card: {<<: *natcard, highlight_row: 代表の試合数}
+      - text: ペドリのデビューは2021年3月、18歳。
+        card: {<<: *natcard, highlight_row: デビュー時の年齢}
+      - text: ヴィティーニャは2022年3月、22歳でした。
+        card: {<<: *natcard, highlight_row: デビュー時の年齢}
+      - text: デビューからの年数で割ると、1年に9.5試合と10.3試合。
+        card: {<<: *natcard, highlight_row: 1年あたりの試合数}
+      - text: 入った時期は違っても、出る頻度はほぼ同じです。
+        card: {<<: *natcard, highlight_row: 1年あたりの試合数}
+      - text: 2022年のワールドカップは、スペインがベスト16、ポルトガルがベスト8。
+        card: {<<: *natcard, highlight_row: W杯2022}
+      - text: 2024年のユーロは、スペインが優勝。ポルトガルはベスト8でした。
+        card: {<<: *natcard, highlight_row: EURO2024}
+      - text: 2025年のネーションズリーグは、ポルトガルが優勝。スペインは準優勝。
+        card: {<<: *natcard, highlight_row: ネーションズL 2025}
+      - text: 2026年のワールドカップは、スペインが優勝しました。
+        image: assets/images/20261017_pedri/02_w.jpg
+        card: *natcard
+    sources:
+      - https://www.transfermarkt.com/pedri/nationalmannschaft/spieler/683840
+      - https://www.transfermarkt.com/vitinha/nationalmannschaft/spieler/487469
+      - https://en.wikipedia.org/wiki/Pedri
+      - https://en.wikipedia.org/wiki/Vitinha_(footballer,_born_2000)
 
   - id: season
     main: true
@@ -213,7 +340,7 @@ sections:
         - [ネーションズリーグ優勝, "0", "1"]
       note: Transfermarkt の実績ページ（2026年10月17日時点）。ヴィティーニャの国内はフランスとポルトガルの合計
     say:
-      - text: 最後に、タイトルの数です。ヴィティーニャは3歳年上です。
+      - text: 次は、タイトルの数です。ヴィティーニャはおよそ3歳年上です。
         image: assets/images/20261017_pedri/01_r.jpg
       - リーグ優勝は、ヴィティーニャが6回、ペドリが3回です。
       - チャンピオンズリーグは、ヴィティーニャが2回。ペドリは0回。
@@ -223,6 +350,83 @@ sections:
     sources:
       - https://www.transfermarkt.com/pedri/erfolge/spieler/683840
       - https://www.transfermarkt.com/vitinha/erfolge/spieler/487469
+
+  - id: awards
+    heading: 個人賞は、どちらがどんな形で選ばれたのか
+    tier: 報道
+    telop: 2人の個人賞
+    narrator: 解説
+    card: &awardcard
+      type: timeline
+      title: 個人賞
+      rows:
+        - ["2021年7月", ペドリ。EURO2020の若手最優秀]
+        - ["2021年11月22日", ペドリ。ゴールデンボーイ]
+        - ["2021年11月29日", ペドリ。コパ・トロフィー]
+        - ["2023-24季", ヴィティーニャ。リーグ・アンのベストイレブン]
+        - ["2024-25季", 同じ選出。2回目]
+        - ["2025年9月", ヴィティーニャ。バロンドール3位]
+    say:
+      - text: 個人賞を並べます。ペドリの最初は、2021年7月。
+        image: assets/images/20261017_pedri/01_r.jpg
+        card: {<<: *awardcard, highlight_row: "2021年7月"}
+      - text: ユーロ2020の若手最優秀。選んだのは、欧州サッカー連盟の技術観察チームです。
+        card: {<<: *awardcard, highlight_row: "2021年7月"}
+      - text: 18歳で、この大会に629分出ていました。
+        card: {<<: *awardcard, highlight_row: "2021年7月"}
+      - text: 11月は、ゴールデンボーイ。21歳未満の最優秀に贈られる賞です。
+        card: {<<: *awardcard, highlight_row: "2021年11月22日"}
+      - text: 得点は318点で、2位ベリンガムの119点。この賞の過去最大の差とされています。
+        card: {<<: *awardcard, highlight_row: "2021年11月22日"}
+      - text: コパ・トロフィーは、存命のバロンドール受賞者たちの投票で決まる賞です。
+        card: {<<: *awardcard, highlight_row: "2021年11月29日"}
+      - text: ヴィティーニャは、リーグ・アンのベストイレブンに2回。
+        image: assets/images/20261017_vitinha/04_r.jpg
+        card: {<<: *awardcard, highlight_row: "2024-25季"}
+      - text: 2025年9月には、バロンドールで3位。1位はデンベレ、2位はヤマルでした。
+        card: {<<: *awardcard, highlight_row: "2025年9月"}
+      - text: ペドリの3つは、年齢に枠のある若手の賞です。
+        image: assets/images/20261017_pedri/02_w.jpg
+        card: *awardcard
+      - text: ヴィティーニャの賞に、年齢の枠はありません。
+        card: *awardcard
+      - text: 受賞した年齢は、ペドリが18歳、ヴィティーニャが25歳。
+        card: *awardcard
+    sources:
+      - https://www.uefa.com/uefaeuro/history/news/026b-12bbae1185ee-16613a63959a-1000--pedri-named-euro-2020-young-player-of-the-tournament/
+      - https://www.fcbarcelona.com/en/news/2357241/pedri-wins-golden-boy-award
+      - https://www.fcbarcelona.com/en/football/first-team/news/2377547/pedri-wins-another-award-by-taking-kopa-trophy
+      - https://ligue1.com/en/articles/l1_article_2529-unfp-psg-stars-lead-the-way-in-team-of-the-year-honors
+      - https://www.uefa.com/uefachampionsleague/news/029d-1ec96c30aa3f-f6868c869cbd-1000--ousmane-dembele-wins-2025-men-s-ballon-d-or/
+
+  - id: meet
+    heading: 2人が同じ試合に立つのは、いつなのか
+    tier: 報道
+    telop: 代表の決勝と、10月20日のCL
+    narrator: 解説
+    card: &meetcard
+      type: timeline
+      title: 2人の接点
+      rows:
+        - ["2025年6月8日", ネーションズリーグ決勝。2対2からPKでポルトガルが勝利]
+        - ["10月20日", CLリーグフェーズ。PSG対バルセロナ]
+    say:
+      - text: 2人は、2025年6月のネーションズリーグ決勝で向かい合いました。
+        image: assets/images/20261017_pedri_vitinha/01.jpg
+        card: {<<: *meetcard, highlight_row: "2025年6月8日"}
+      - text: 2対2のあと、PKでポルトガルが5対3で勝ちました。
+        card: {<<: *meetcard, highlight_row: "2025年6月8日"}
+      - text: 2人とも先発で、ペドリは前半終了間際の得点につながるパスを出しました。
+        card: {<<: *meetcard, highlight_row: "2025年6月8日"}
+      - text: クラブでは、10月20日。チャンピオンズリーグのリーグフェーズです。
+        card: {<<: *meetcard, highlight_row: "10月20日"}
+      - text: パリ・サンジェルマンとバルセロナが当たります。
+        card: {<<: *meetcard, highlight_row: "10月20日"}
+      - text: 2人が出るかどうかは、まだ分かりません。
+        card: *meetcard
+    sources:
+      - https://www.uefa.com/uefanationsleague/news/029a-1df446a2d81d-0bc47d9324a5-1000--portugal-vs-spain-highlights-and-report-selecao-create-natio/
+      - https://www.uefa.com/uefachampionsleague/news/02a8-2174c9e9019d-f909a77bd77a-1000--2026-27-champions-league-all-the-league-phase-fixtures-a/
 
   - id: view
     viewpoint: true

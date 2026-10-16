@@ -5,8 +5,8 @@ voice_min: 0.0
 short_title: シティとアーセナル、収入の差は760万ユーロ。給料の比率は
 series: クラブの財政
 topic: マンチェスター・シティとアーセナル
-thumbnail_line1: シティとアーセナル
-thumbnail_line2: 収入の差は760万ユーロ
+thumbnail_line1: 給料の比率
+thumbnail_line2: 収入差760万€でも
 thumbnail_tags:
 - マンチェスター・シティ
 - アーセナル
@@ -22,11 +22,16 @@ thumbnail_photos:
 - assets/images/20261017_finance_city_arsenal/01_w.jpg
 - assets/images/20261017_finance_city_arsenal/03_w.jpg
 thumbnail_crest_main: []
-thumbnail_face_link: VS
 thumbnail_layout:
-  callouts:
-  - 給料の比率は？
-bg: assets/backgrounds/stadium.png
+  layout: versus
+  names:
+  - シティ
+  - アーセナル
+  numbers:
+  - 58.8%
+  - 50.2%
+bg: assets/images/20261017_finance_city_arsenal/01_w.jpg
+end_bg: assets/images/20261017_finance_city_arsenal/01_w.jpg
 date: 2026年10月17日
 intro_title: シティとアーセナル、収入の差は760万ユーロ。給料の比率も近いのか
 intro_label: 海外サッカー ニュース

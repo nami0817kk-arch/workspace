@@ -49,7 +49,7 @@
 # 写真：assets/images/20261017_stadium_oldtrafford/（credits.json 同梱。すべて Commons の CC BY-SA。5枚：01 試合中の内側／02 空撮／03 外観／04 西側（ストレトフォード・エンド）／05 南側スタンド）。
 #   下地として手元にあった stadium_マンチェスターユナイテッド_in.png（Commons: Tom Morrison 原版 1024x768 を 1920 へ拡大していた）は**引き伸ばしが1.9倍で使えない**ので、別の写真に替えた。
 #   1920年代の空撮（Commons: Old trafford stadium 1920s.jpg、PD、919x567）は引き伸ばしが2.09倍になるので使わない。
-# サムネは案を3つ出してユーザーに決めてもらう（2026-10-11）。ここに書いた thumbnail は案1（Aだけ）。案2（Bだけ：1行目「マンU本拠地、10年の空白」2行目「借りた競技場に8万3260人」吹き出し「1941年の空襲」写真04）・
+# サムネは案を3つ出してユーザーに決めてもらう（2026-10-11）。ここに書いた thumbnail は**ユーザーが選んだ案3（10/17）**。案2（Bだけ：1行目「マンU本拠地、10年の空白」2行目「借りた競技場に8万3260人」吹き出し「1941年の空襲」写真04）・
 #   案3（A+B：1行目「マンU本拠地、最大7万4158席」2行目「最多は借りた競技場の8万3260人」吹き出し「空襲で壊れた」「2位と1万1308席差」写真01）。絵は output/thumb_samples/20261017_stadium_oldtrafford_案*.png。
 date: 2026年10月17日
 slot: other_1
@@ -72,10 +72,10 @@ theme:
   takeaway: マンチェスター・ユナイテッドの本拠地、オールド・トラッフォードの収容は、今季の開幕時で7万4158人。プレミア20クラブで最大で、2位トッテナム（6万2850人）との差は1万1308席。2位と3位の差（1574席）の7.2倍で、20クラブの平均（4万1118席）の1.8倍にあたる。1910年に開いたときは、設計の10万人から資金の都合で約8万人に縮められた。1941年の空襲でメインスタンドなどが壊れ、リーグ戦を本拠地で開けない期間は10年近く続いた。そのあいだ借りたメイン・ロードでは1948年に8万3260人が入り、ギネスがイングランド1部の1試合の最多として記録している。1990年のテイラー報告書で全席イス席に替えた1992年に、収容は約4万4000人まで落ち、2006年に約7万6000人まで戻した。昨季のリーグ戦ホーム19試合の平均入場は7万3975人で、収容の99.8％にあたる。次の本拠地戦は10月25日のボーンマス戦で、その本拠地の収容は1万2357人。オールド・トラッフォードは6.0倍になる
   short_title: マンUの本拠地、プレミア最大の7万4158席
 thumbnail:
-  callouts: [20クラブで最大]
+  callouts: [空襲で壊れた, 2位と1万1308席差]
   photo: assets/images/20261017_stadium_oldtrafford/01_w.jpg
-  line1: マンU本拠地、プレミア最大
-  line2: 2位と1万1308席の差
+  line1: マンU本拠地、最大7万4158席
+  line2: 最多は借りた競技場の8万3260人
   crests:
   - マンチェスター・ユナイテッド
   tags:
@@ -87,6 +87,7 @@ sections:
 - id: data
   main: true
   heading: オールド・トラッフォードは、2位の本拠地より何席大きいのか
+  bg: assets/images/20261017_stadium_oldtrafford/01_w.jpg
   tier: 報道
   telop: 収容は7万4158人。プレミア20クラブで最大で、2位との差は1万1308席
   narrator: 解説
@@ -149,6 +150,7 @@ sections:
   - https://ir.manutd.com/company-information/history.aspx
 - id: origin
   heading: 10万人の計画は、なぜ約8万人に縮められたのか
+  bg: assets/images/20261017_stadium_oldtrafford/01_w.jpg
   tier: 背景
   telop: 設計は10万人。資金の都合で、約8万人で1910年に開場
   narrator: 解説
@@ -239,6 +241,7 @@ sections:
   - https://wolvescompletehistory.co.uk/grimsby-town-n-193839-fac/
 - id: war
   heading: なぜ、本拠地でリーグ戦を開けないまま、10年近く経ったのか
+  bg: assets/images/20261017_stadium_oldtrafford/01_w.jpg
   tier: 報道
   telop: 1941年の空襲でメインスタンドが壊れ、本拠地へ戻ったのは1949年8月24日
   narrator: 解説
@@ -328,6 +331,7 @@ sections:
   - https://en.wikipedia.org/wiki/Old_Trafford
 - id: capacity
   heading: なぜ、約8万人の器は、4万4000人まで小さくなったのか
+  bg: assets/images/20261017_stadium_oldtrafford/01_w.jpg
   tier: 報道
   telop: 収容は約8万人から、1992年に約4万4000人へ。2006年に約7万6000人
   narrator: 解説
@@ -406,6 +410,7 @@ sections:
   - https://resources.premierleague.pulselive.com/premierleague/document/2026/07/31/8a890ff9-176c-4364-a8ff-e08f995e2c86/TM2040_PL-Handbook-and-Collateral-2026-27_Digital_31.07.pdf
 - id: plan
   heading: 7万4158席の次は、どんな計画なのか
+  bg: assets/images/20261017_stadium_oldtrafford/01_w.jpg
   tier: 報道
   telop: 2024年に新築を勧め、2026年6月に約350メートル先の土地を買った
   narrator: 解説
@@ -459,6 +464,7 @@ sections:
 - id: view
   viewpoint: true
   heading: 見立て・1位だけが飛び抜けた本拠地は、ほぼ毎試合が満員か
+  bg: assets/images/20261017_stadium_oldtrafford/01_w.jpg
   tier: 報道
   telop: 1位と2位の差は、2位と3位の差の7.2倍。昨季の平均入場は収容の99.8％
   narrator: 解説

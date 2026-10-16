@@ -5,7 +5,7 @@ voice_min: 0.0
 series: 移籍の深掘り
 topic: チェルシー
 thumbnail_line1: チェルシーの今夏の収支
-thumbnail_line2: 売った分を引くとプラス
+thumbnail_line2: 差し引きはプラス
 thumbnail_tags:
 - チェルシー
 - 移籍金
@@ -31,9 +31,8 @@ thumbnail_layout:
   numbers:
   - 1億3800万€
   - 1億4500万€
-  callouts:
-  - 世界2位の支出
-bg: assets/backgrounds/stadium.png
+bg: assets/images/20261017_chelsea_window/b01_rogers_w.jpg
+end_bg: assets/images/20261017_chelsea_window/b01_rogers_w.jpg
 date: 2026年10月17日
 intro_title: チェルシー、今夏の払った額は世界2位。売った分を引くと、どうなるか
 intro_label: 海外サッカー ニュース

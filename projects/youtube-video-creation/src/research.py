@@ -3131,6 +3131,8 @@ def _compose_script(notes: Notes, plan: Plan) -> str:
         # init-assets が必ず作るものを既定にする。動く背景にしたいときは
         # `make-clip` で mp4 を作ってから、台本の bg を差し替える
         "bg": notes.end_bg or "assets/backgrounds/stadium.png",
+        # 終了画面の下地を指定した回だけ出す（render の outro が最優先で使う。2026-10-17）
+        **({"end_bg": notes.end_bg} if notes.end_bg else {}),
         "date": notes.date,
         "intro_title": notes.title,
         "intro_label": shape["label"],

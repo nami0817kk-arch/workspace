@@ -4,8 +4,8 @@ format: news
 voice_min: 0.0
 series: スタジアム紹介
 topic: マンチェスター・ユナイテッド
-thumbnail_line1: マンU本拠地、プレミア最大
-thumbnail_line2: 2位と1万1308席の差
+thumbnail_line1: マンU本拠地、最大7万4158席
+thumbnail_line2: 最多は借りた競技場の8万3260人
 thumbnail_tags:
 - マンチェスター・ユナイテッド
 - オールド・トラッフォード
@@ -22,8 +22,10 @@ thumbnail_crests:
 thumbnail_photo: assets/images/20261017_stadium_oldtrafford/01_w.jpg
 thumbnail_layout:
   callouts:
-  - 20クラブで最大
+  - 空襲で壊れた
+  - 2位と1万1308席差
 bg: assets/images/20261017_stadium_oldtrafford/01_w.jpg
+end_bg: assets/images/20261017_stadium_oldtrafford/01_w.jpg
 date: 2026年10月17日
 intro_title: マンUの本拠地、プレミア最大の7万4158席。2位との差は何席か
 intro_label: 海外サッカー ニュース
@@ -526,7 +528,7 @@ cards:
 ---
 
 ## オープニング
-@bg: assets/backgrounds/stock/stadium_night.mp4
+@bg: assets/images/20261017_stadium_oldtrafford/01_w.jpg
 
 解説: 20クラブのなかで、いちばん大きな競技場。
   telop: 20クラブのなかで、いちばん大きな競技場
@@ -538,7 +540,7 @@ cards:
   image: assets/images/20261017_stadium_oldtrafford/01_w.jpg
 
 ## オールド・トラッフォードは、2位の本拠地より何席大きいのか
-@bg: assets/backgrounds/stock/stadium_night.mp4
+@bg: assets/images/20261017_stadium_oldtrafford/01_w.jpg
 @main: true
 
 解説: マンチェスター・ユナイテッドの本拠地、オールド・トラッフォードの話です。
@@ -571,7 +573,7 @@ cards:
   image: assets/images/20261017_stadium_oldtrafford/02_w.jpg
 
 ## 10万人の計画は、なぜ約8万人に縮められたのか
-@bg: assets/backgrounds/stock/stadium_night.mp4
+@bg: assets/images/20261017_stadium_oldtrafford/01_w.jpg
 
 解説: 開場の前の本拠地は、クレイトンのバンク・ストリート。煙が流れ込む場所でした。
   telop: 開場の前の本拠地は、クレイトンのバンク・ストリート。煙が流れ込む場所でした
@@ -620,7 +622,7 @@ cards:
   image: assets/images/20261017_stadium_oldtrafford/02_w.jpg
 
 ## なぜ、本拠地でリーグ戦を開けないまま、10年近く経ったのか
-@bg: assets/backgrounds/stock/stadium_night.mp4
+@bg: assets/images/20261017_stadium_oldtrafford/01_w.jpg
 
 解説: 第二次世界大戦が始まると、軍がオールド・トラッフォードを倉庫に使いました。
   telop: 第二次世界大戦が始まると、軍がオールド・トラッフォードを倉庫に使いました
@@ -681,7 +683,7 @@ cards:
   image: assets/images/20261017_stadium_oldtrafford/05_w.jpg
 
 ## なぜ、約8万人の器は、4万4000人まで小さくなったのか
-@bg: assets/backgrounds/stock/stadium_night.mp4
+@bg: assets/images/20261017_stadium_oldtrafford/01_w.jpg
 
 解説: 戦後は、改修のたびに収容が減り、1985年には5万6385人でした。
   telop: 戦後は、改修のたびに収容が減り、1985年には5万6385人でした
@@ -750,7 +752,7 @@ cards:
   image: assets/images/20261017_stadium_oldtrafford/04_w.jpg
 
 ## 7万4158席の次は、どんな計画なのか
-@bg: assets/backgrounds/stock/stadium_night.mp4
+@bg: assets/images/20261017_stadium_oldtrafford/01_w.jpg
 
 解説: 2024年、クラブの幹部は、いまの本拠地ではなく、新築を勧めました。
   telop: 2024年、クラブの幹部は、いまの本拠地ではなく、新築を勧めました
@@ -789,7 +791,7 @@ cards:
   image: assets/images/20261017_stadium_oldtrafford/03_w.jpg
 
 ## 見立て・1位だけが飛び抜けた本拠地は、ほぼ毎試合が満員か
-@bg: assets/backgrounds/stock/stadium_night.mp4
+@bg: assets/images/20261017_stadium_oldtrafford/01_w.jpg
 @viewpoint: true
 
 解説: 収容を並べると、1位はオールド・トラッフォード。2位はトッテナムです。

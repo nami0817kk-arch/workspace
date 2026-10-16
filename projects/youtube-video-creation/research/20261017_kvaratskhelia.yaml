@@ -43,6 +43,7 @@ series: 有名選手の紹介
 people:
 - フヴィチャ・クヴァラツヘリア
 theme:
+  end_bg: assets/images/20261017_kvaratskhelia/08_w.jpg
   id: player_502670
   league: france
   league_name: リーグ・アン

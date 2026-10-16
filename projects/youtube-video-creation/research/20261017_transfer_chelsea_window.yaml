@@ -52,6 +52,7 @@ people:
 - マクサンス・ラクロワ
 - マルコ・パレストラ
 theme:
+  end_bg: assets/images/20261017_chelsea_window/b01_rogers_w.jpg
   id: transfer_chelsea_window
   league: england
   league_name: プレミアリーグ
@@ -74,9 +75,8 @@ thumbnail:
   numbers:
   - 1億3800万€
   - 1億4500万€
-  callouts: [世界2位の支出]
   line1: チェルシーの今夏の収支
-  line2: 売った分を引くとプラス
+  line2: 差し引きはプラス
   short_photo: assets/images/20261017_chelsea_window/b01_rogers_v.jpg
   crests:
   - チェルシー

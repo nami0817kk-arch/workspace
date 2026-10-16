@@ -5,8 +5,8 @@ voice_min: 0.0
 short_title: レアル・マドリードってどんなクラブ？
 series: ラ・リーガチーム紹介
 topic: レアル・マドリード
-thumbnail_line1: 欧州一の大会を作ったのは●●
-thumbnail_line2: 名門レアル・マドリード
+thumbnail_line1: ヨーロッパ王者、史上最多15回
+thumbnail_line2: レアル・マドリード
 thumbnail_tags: []
 thumbnail_alt: []
 thumbnail_points: []

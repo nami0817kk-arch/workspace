@@ -25,7 +25,8 @@ thumbnail_layout:
   callouts:
   - ナポリの英雄
   - ジョージア主将
-bg: assets/backgrounds/stadium.png
+bg: assets/images/20261017_kvaratskhelia/08_w.jpg
+end_bg: assets/images/20261017_kvaratskhelia/08_w.jpg
 date: 2026年10月17日
 intro_title: クヴァラツヘリアってどんな選手？ スクデットの立役者が首位のナポリを去った理由
 intro_label: 海外サッカー ニュース
