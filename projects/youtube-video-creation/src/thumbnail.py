@@ -592,7 +592,7 @@ def build_thumbnail(
             config, out_path, background,
             lines or (title, subtitle), tags or [], focus, reaction, points or [],
             note_red, band_full, photos or [], crest_main or [], crests, crest_link,
-            face_link,
+            face_link, callouts=(spec or {}).get("callouts"),
         )
 
     font_path = str(config.video.font_path())
@@ -652,6 +652,7 @@ def _band_thumbnail(
     crests: list[str] | None = None,
     crest_link: str = "対",
     face_link: str = "",
+    callouts: list[str] | None = None,
 ) -> Path:
     """写真の上に蛍光イエローの帯を重ねる。**最高再生の型に合わせてある。**
 
@@ -769,6 +770,12 @@ def _band_thumbnail(
         _draw_tags(layer, tags if crests is None else crests, floor)
 
     canvas.alpha_composite(layer)
+    if callouts:
+        # 補足の吹き出し（白・黄の角丸）。帯・エンブレム・顔を避けて写真の上の空いた所へ（2026-10-16）
+        avoid = [(0, (band_top if band_top is not None else SIZE[1] - 200) - 8, SIZE[0], SIZE[1])]
+        if band_top is not None:
+            avoid.append((SIZE[0] - 380, band_top - 360, SIZE[0], band_top))
+        _draw_callouts(canvas, callouts, font_path, avoid, _face_rects(canvas))
     out_path.parent.mkdir(parents=True, exist_ok=True)
     canvas.convert("RGB").save(out_path, quality=95)
     return out_path
@@ -1639,7 +1646,10 @@ def layout_spec(meta: dict) -> dict | None:
     if not raw:
         return None
     spec = {"layout": str(raw)} if isinstance(raw, str) else dict(raw)
-    return None if layout_of(spec) == "classic" else spec
+    # classic でも吹き出し（callouts）があれば持ち越す（下段の黄色い帯の形に吹き出しを足す。2026-10-16）
+    if layout_of(spec) == "classic" and not spec.get("callouts"):
+        return None
+    return spec
 
 
 # ---- シリーズの回の見た目（2026-10-15）
@@ -1736,7 +1746,8 @@ def notes_layout(thumb: dict) -> dict | None:
     """取材メモの thumbnail: から、台本へ持ち越す構図の指定を抜く（classic なら None）。"""
     thumb = thumb or {}
     if layout_of(thumb.get("layout")) == "classic":
-        return None
+        # classic でも吹き出しは持ち越す（下段の黄色い帯の形に足す。2026-10-16）
+        return {"callouts": thumb["callouts"]} if thumb.get("callouts") else None
     return {k: thumb[k] for k in LAYOUT_KEYS if k in thumb}
 
 

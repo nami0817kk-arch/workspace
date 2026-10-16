@@ -104,7 +104,9 @@ def test_取材メモのboldとcalloutsは台本へ持ち越す():
     t = {"layout": "face", "photo": "p", "bold": False, "callouts": ["金融費用は？"], "line1": "x"}
     assert thumb.notes_layout(t) == {"layout": "face", "bold": False, "callouts": ["金融費用は？"]}
     # クラブ紹介でも持ち越しは同じ（効かせるかは series_style が決める）
-    assert thumb.notes_layout({"line1": "x", "callouts": ["a"]}) is None
+    # classic でも吹き出しは持ち越す（下段の黄色い帯の形に足す。2026-10-16）
+    assert thumb.notes_layout({"line1": "x", "callouts": ["a"]}) == {"callouts": ["a"]}
+    assert thumb.notes_layout({"line1": "x"}) is None
 
 
 # ---------------------------------------------------------------- 画素まで今と同じ

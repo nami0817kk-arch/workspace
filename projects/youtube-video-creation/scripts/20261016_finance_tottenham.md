@@ -21,6 +21,9 @@ thumbnail_crest_main: []
 thumbnail_crests:
 - トッテナム
 thumbnail_photo: assets/images/20261016_finance_tottenham/02_w.jpg
+thumbnail_layout:
+  callouts:
+  - 優勝の年に赤字
 bg: assets/backgrounds/stadium.png
 date: 2026年10月16日
 intro_title: トッテナム、ヨーロッパリーグ優勝の年に最終は赤字。収入は増えたのになぜか
