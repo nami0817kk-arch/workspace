@@ -17,7 +17,7 @@ from dataclasses import replace
 from pathlib import Path
 
 from .config import ProjectConfig
-from .script_model import Scene, Script
+from .script_model import HOOK_SECONDS, Line, Scene, Script
 
 # ショートの上限。ぎりぎりを狙うと音声の長さのぶれで超える
 # **58秒 → 120秒（2026-10-14）→ 60秒（2026-10-15）**。ユーザー「60秒以内にしましょうか。今までそれでうまくいっていたので」。
@@ -211,26 +211,132 @@ def trim(script: Script, section: str = "", max_seconds: float = MAX_SECONDS) ->
     _drop_main_mark(short.scenes[1])
     _drop_lead_in(short.scenes[1])
     _hoist_voice(short, script)
+    # **冒頭の型（X・Y）が使うぶんは、先に空けておく**（2026-10-17）。あとから足すと上限を越える
+    style, quote_lines = _hook_plan(short, script)
+    budget = max_seconds - _hook_cost(style, quote_lines)
     # **選ばれた反応のぶんは、先に空けておく**（2026-09-15）。
     # `_add_voices_tail` は尺が余っているぶんしか足さないので、
     # 印を付けた2件目が0.6秒はみ出して落ちていた（松木の回）。
     # 印は書いた人の指定なので、語りのほうを詰めて場所を作る
     # `_fit` は渡した秒数に ESTIMATE_SLACK を掛けてから使うので、
     # 空ける秒数のほうも割り戻しておく（掛け直されて目減りする）
-    _fit(short, max_seconds - _reserved(script, short, max_seconds) / ESTIMATE_SLACK)
+    _fit(short, budget - _reserved(script, short, budget) / ESTIMATE_SLACK)
     # **ネットの声は最後に置く**（2026-10-14 ユーザー「重複が多くない？」で全文を読んで気づいた）。
     # 上限を2分に上げたら、反応のあとに続きの節の事実（ゴールの経過・次の試合）が来ていた。
     # 続きの節を先に足し、反応は**その後ろ**に置く。反応のぶんの秒数は先に空けておく
-    _add_more_body(short, script, max_seconds, reserve=_tail_cost(short, script, max_seconds))
-    _add_voices_tail(short, script, max_seconds)
+    _add_more_body(short, script, budget, reserve=_tail_cost(short, script, budget))
+    _add_voices_tail(short, script, budget)
     _drop_boards(short, script)
     _add_face(short)
     _rotate_photos(short)
     _apply_short_telops(short)
     _add_subscribe(short)
+    _apply_hook_style(short, style, quote_lines)
     if not short.scenes[-1].lines:
         raise ShortError(f"『{body.title}』は冒頭だけで尺を使い切ります。節を選び直してください")
     return short
+
+
+# ---- ショート冒頭の3秒の型（2026-10-17 ユーザー「色んなパターンを試したい」） ----
+# 取材メモの `short_style` で選ぶ。B・G は写真の加工（別担当）。ここは X と Y だけ。
+#   X: 最初の約1秒に強い一言（`short_hook_word`）を画面いっぱいに出し、短い効果音を鳴らす
+#   Y: 1行目を本人の発言（`short_hook_quote`）にする。そのあとに題を読む
+HOOK_SOUND = "assets/audio/se_pon.wav"
+HOOK_WORD_MAX = 10
+
+
+def _hook_style(meta: dict) -> str:
+    return str((meta or {}).get("short_style") or "").strip().upper()
+
+
+def _hook_plan(short: Script, script: Script) -> tuple[str, list]:
+    """(型, Y で先頭に置く行のかたまり)。型が X・Y でなければ ("", [])。"""
+    meta = short.meta or {}
+    style = _hook_style(meta)
+    if style == "X":
+        word = str(meta.get("short_hook_word") or "").strip()
+        if not word:
+            raise ShortError("short_style: X なのに short_hook_word がありません")
+        if len(word) > HOOK_WORD_MAX:
+            raise ShortError(f"short_hook_word は{HOOK_WORD_MAX}字までです（{len(word)}字）")
+        return "X", []
+    if style == "Y":
+        return "Y", _find_quote(script, str(meta.get("short_hook_quote") or "").strip())
+    return "", []
+
+
+def _find_quote(script: Script, key: str) -> list:
+    """`short_hook_quote` に当たる本人の発言の行（と、その続きの行 `cont`）を台本から探す。原文のまま返す。"""
+    if not key:
+        raise ShortError("short_style: Y なのに short_hook_quote がありません")
+    hits = [(si, li) for si, sc in enumerate(script.scenes) for li, ln in enumerate(sc.lines)
+            if (getattr(ln, "speaker", "") or "").strip() not in NARRATORS
+            and not getattr(ln, "cont", False)
+            and key in str(ln.text or "")]
+    if not hits:
+        raise ShortError(f"short_hook_quote『{key[:20]}』に当たる発言の行が台本にありません")
+    exact = [h for h in hits if str(script.scenes[h[0]].lines[h[1]].text or "").strip() == key]
+    if len(exact) == 1:
+        hits = exact
+    if len(hits) > 1:
+        raise ShortError(f"short_hook_quote『{key[:20]}』に当たる行が{len(hits)}か所あります。もっと長く指定してください")
+    si, li = hits[0]
+    lines = script.scenes[si].lines
+    group = [lines[li]]
+    for nxt in lines[li + 1:]:
+        if getattr(nxt, "cont", False):
+            group.append(nxt)
+        else:
+            break
+    return [copy.deepcopy(l) for l in group]
+
+
+def _hook_cost(style: str, quote_lines: list) -> float:
+    if style == "X":
+        return HOOK_SECONDS
+    if style == "Y":
+        return sum(l.duration or l.estimated_duration() for l in quote_lines) / SHORT_SPEED
+    return 0.0
+
+
+def _apply_hook_style(short: Script, style: str, quote_lines: list) -> None:
+    if style == "X":
+        _apply_hook_word(short)
+    elif style == "Y":
+        _apply_hook_quote(short, quote_lines)
+
+
+def _apply_hook_word(short: Script) -> None:
+    """最初に無音の1拍（`HOOK_SECONDS`）を置き、強い一言を画面に出して効果音を鳴らす。以降は通常どおり。"""
+    word = str((short.meta or {}).get("short_hook_word") or "").strip()
+    opening = short.scenes[0]
+    speaker = opening.lines[0].speaker if opening.lines else "キャスター"
+    beat = Line(speaker=speaker, text="", telop="", no_telop=True, hook_word=word, se=HOOK_SOUND)
+    # 題の行にも同じ効果音が付いている台本が多い。続けて2度鳴らさない
+    if opening.lines and opening.lines[0].se == HOOK_SOUND:
+        opening.lines[0].se = None
+    opening.lines.insert(0, beat)
+
+
+def _apply_hook_quote(short: Script, quote_lines: list) -> None:
+    """本人の発言を1行目に置く。同じ発言が本文にあれば、重ならないよう本文から外す（前の振りも）。"""
+    texts = {str(l.text or "").strip() for l in quote_lines}
+    for scene in short.scenes[1:]:
+        lines = scene.lines
+        index = 0
+        while index < len(lines):
+            if (getattr(lines[index], "speaker", "") or "").strip() not in NARRATORS                     and str(lines[index].text or "").strip() in texts:
+                start = index
+                if index > 0 and _introduces(lines, index):
+                    start = index - 1
+                end = index + 1
+                while end < len(lines) and getattr(lines[end], "cont", False):
+                    end += 1
+                del lines[start:end]
+                index = start
+            else:
+                index += 1
+    short.scenes[0].lines[0:0] = quote_lines
 
 
 def _retitle(short: Script, body: Scene) -> None:

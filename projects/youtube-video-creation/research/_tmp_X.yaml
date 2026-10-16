@@ -1,0 +1,132 @@
+# 日本人選手 の取材メモ（2026年10月16日）
+# 1本＝1テーマ。まとめではなく、1つの話を掘る
+# 取材: 2026-10-16。requests（ブラウザUA）で原文を読んだ。フットボールチャンネル（2ページ）・サッカーキング（試合記事）・ゲキサカ（試合記事・中村のアシスト記事・鎌田のゴール記事・試合記録）。
+#   控えは research/raw/20261016_nakamura_fc.txt・20261016_kamada_sk.txt・20261016_gekisaka_*.txt・20261016_nfnl_9422.txt。
+# 日付・場所: 現地10月15日、グルパマ・スタジアム（リヨン）、ELリーグフェーズ第2節。リヨン3-2クリスタル・パレス（前半2-0）。FC・サッカーキング・ゲキサカの試合記録で一致。
+# 得点: 8分トリッソ／45+2分ヌアマ（中村アシスト）／50分ピノ／76分シュルツ（中村が絡む）／81分鎌田（パレス）。3紙で一致。
+# 資料間のずれ:
+#   ・1本目のアシストの描写: FC「左サイドから送ったクロス」、サッカーキング「メラーのダイレクトパスで抜け出し、ボックス内へパス」、ゲキサカ「PA左まで運び右足で折り返し」→「左サイドから右足で折り返し」とだけ言う（ゲキサカ）。
+#   ・2本目: FC「中村のシュートをシュルツが合わせた」、サッカーキング「折り返しに中村が合わせ、シュルツがバックヒール」、ゲキサカ「右サイドからのクロスにPA中央の中村が右足ダイレクト、シュルツがヒールで押し込んだ」→「中村が右足で合わせ、シュルツがヒールで押し込んだ」と言い、シュートともクロスとも言わない。
+#   ・ナーティの表記: FC「ナルテイ」、サッカーキング「ノア・ナーティ」、ゲキサカ「N. Nartey」→ ナーティ。
+# 仏メディア MadeInFOOT の採点・「試合の主役…」の言葉: フットボールチャンネルの訳。仏語原文は未読（MadeInFOOT のページは当たっていない）→ 媒体名は言わず「フランスのメディア」と言う。7点はヌアマ・ナーティと並んでチーム最高（FC）。
+# 本人の試合後の言葉: FC・サッカーキング・ゲキサカのどれにも無かった → 入れない。フォンセカ監督の前日の会見（FC。会見の原文は未読）は「先発を明言」だけ使う。
+# 反応: NO FOOTY NO LIFE（海外の反応まとめ・10/16。リヨンサポ中心のフォーラムの書き込みの日本語訳）から3件。匿名。元の言語の原文は未確認。切らずに全文。
+#   当たった先: 上のまとめ1本のみ（X は個別URLが取れる題材ではないので当たっていない）。
+# ELの得点関与の数え方: 前節（アンデルレヒト戦、ELデビュー）で初ゴール（ゲキサカ）＋今節2アシスト＝2試合で3つ。リヨンの今節3点のうち中村が絡んだのは2点（45+2分と76分）。自分で数えた。
+# 写真: 配信写真は Getty / Icon Sport。取り込まない。assets/images/20261016_nakamura_el_assists/ は photopool と Commons で集めた。
+slot: japan
+date: "2026年10月16日"
+format: news
+no_main: true      # ニュースはショートだけ（2026-10-14）。締めで本編を案内しない
+people: [中村敬斗, リヨン]
+
+short_question: 中村敬斗は、次のホッフェンハイム戦でもアシストできると思いますか。
+short_hook: 中村敬斗、ELで2アシスト。
+short_style: X
+short_hook_word: 2アシスト！
+short_telops:
+  - {match: 中村敬斗が2アシスト, text: リヨン3-2/中村敬斗が2アシスト}
+  - {match: 左サイドから右足で折り返し, text: 前半終了間際/左から折り返し}
+  - {match: シュルツがヒールで押し込み, text: 76分/中村が合わせ→ヒールで決着}
+  - {match: 10点満点で7点, text: 採点は7点/チーム最高タイ}
+  - {match: 先発を明言, text: フォンセカ監督/前日に先発を明言}
+  - {match: 初ゴールを決めていました, text: 前節/ELデビュー戦で初ゴール}
+  - {match: 絡んだのは2点, text: リヨンの3点のうち/中村は2点に絡む}
+  - {match: ホッフェンハイム, text: 次は22日/敵地ホッフェンハイム戦}
+
+theme:
+  id: nakamura_el_assists
+  league: france
+  prefix: ""
+  title: 中村敬斗、ELで2アシスト。「試合の主役」と呼ばれた理由
+  hook: ""
+  question: 中村敬斗はなぜ「試合の主役」と呼ばれたのか
+  takeaway: ELの2試合で、中村が得点に絡んだのは3回。この試合のリヨンの3点のうち2点が中村の場面だった
+
+thumbnail:
+  line1: 中村敬斗、ELで2アシスト
+  line2: リヨンの3点のうち2点に絡む
+  tags: [中村敬斗, リヨン]
+  photo: assets/images/20261016_nakamura_el_assists/01.jpg
+  short_photo: assets/images/20261016_nakamura_el_assists/01_v.jpg
+
+answer: 3点のうち2点に絡み、ドリブルでパレスの守備を苦しめたから
+watch: 次は現地22日、敵地でホッフェンハイム戦
+
+sections:
+  - id: what
+    main: true
+    heading: 何が起きたか
+    tier: 報道
+    telop: 中村敬斗が2アシスト。リヨンが3-2で勝利
+    say:
+      - ヨーロッパリーグ、リヨンはクリスタル・パレスに3対2で勝ちました。
+      - 中村敬斗が2アシストでした。
+      - 1本目は前半の終わり。左サイドから右足で折り返し、ヌアマが決めました。
+      - 2本目は76分。中村が右足で合わせ、シュルツがヒールで押し込みました。
+      - voice: フランスのメディア
+        text: 試合の主役になった選手と、結果を残した選手がいる。
+        short_voice: true
+      - voice: フランスのメディア
+        text: ヌアマが後者なら中村は前者だった。
+        cont: true
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/10/16/post1033500/
+      - https://www.soccer-king.jp/news/world/el/20261016/2217261.html
+      - https://web.gekisaka.jp/news/uel/detail/?461114-461114-fl
+      - https://web.gekisaka.jp/news/uel/detail/?461110-461110-fl
+      - https://web.gekisaka.jp/news/uel/detail/?461113-461113-fl
+
+  - id: numbers
+    heading: 数字と評価
+    tier: 報道
+    telop: 採点は7点。ヌアマ、ナーティと並ぶチーム最高
+    say:
+      - 現地の採点では、中村は10点満点で7点でした。
+      - ヌアマ、ナーティと並んで、チーム最高の評価です。
+      - 中村はフル出場でした。フォンセカ監督は前日の会見で、先発を明言していました。
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/10/16/post1033500/
+      - https://www.soccer-king.jp/news/world/el/20261016/2217261.html
+
+  - id: view
+    viewpoint: true
+    heading: ELの2試合で、中村は何に絡んだか
+    tier: 報道
+    telop: EL2試合で3つ。リヨンの3点中2点に絡む
+    say:
+      - 中村は前節、ELデビュー戦のアンデルレヒト戦で、初ゴールを決めていました。
+      - 今回は2アシスト。2試合で、得点に絡んだのは3回です。
+      - この試合のリヨンの3点のうち、中村が絡んだのは2点でした。
+      - 次は現地22日。敵地で、町田浩樹の所属するホッフェンハイムと戦います。
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/uel/detail/?461110-461110-fl
+      - https://web.gekisaka.jp/news/uel/detail/?461113-461113-fl
+      - https://www.soccer-king.jp/news/world/el/20261016/2217261.html
+
+  # ネットの反応: 2026-10-16、NO FOOTY NO LIFE（海外の反応まとめ）が載せたリヨンのサポーターのコメントの日本語訳。匿名。
+  # 元の言語の原文は未確認（まとめ側の訳）。1件ずつ、全文。切っていない。
+  - id: reactions
+    heading: ネットの反応
+    tier: 未確認
+    telop: 「触るたびに危険なプレーをする」
+    say:
+      - voice: ネット民
+        text: 中村は1対1に強い
+        short_voice: true
+      - voice: ネット民
+        text: 中村はボールに頻繁には触れないけど、
+        short_voice: true
+      - voice: ネット民
+        text: 触るたびに危険なプレーをする。
+        cont: true
+      - voice: ネット民
+        text: 中村のプレー判断の良さと利他的な姿勢が本当に好き。
+        short_voice: true
+    official: false
+    sources:
+      - https://nofootynolife.net/blog-entry-9422.html
+short_title: "中村敬斗、ELで2アシスト。「試合の主役」と呼ばれた理由"

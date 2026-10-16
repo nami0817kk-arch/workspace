@@ -270,6 +270,12 @@ class Notes:
     short_telops: list = field(default_factory=list)
     short_hook: str = ""
     short_photos: list = field(default_factory=list)
+    # **冒頭の3秒の型**（2026-10-17 ユーザー「色んなパターンを試したい」）。`short_style` は X か Y（B・G は写真の加工）。
+    # X: `short_hook_word`（10字まで）を最初の約1秒に画面いっぱいに出し、効果音を鳴らす（`shorts._apply_hook_word`）。
+    # Y: `short_hook_quote`（本人の発言の行の一部、または say の通し番号）を1行目にする（`shorts._apply_hook_quote`）
+    short_style: str = ""
+    short_hook_word: str = ""
+    short_hook_quote: str = ""
     # **シリーズ名を公開する題の後ろに付ける**（2026-09-23 指示「サブタイトルにプレミアリーグチーム紹介として」）。
     # 「題｜シリーズ名」の形。**読み上げの1行目には入れない**（ショートの16秒を食うだけ）。
     # 2026-09-21 の「②プレミア20クラブ紹介はいらない」は連番を頭に置く形の話で、こちらは末尾の名札
@@ -534,6 +540,9 @@ def build_notes(raw: dict) -> Notes:
         short_telops=[x for x in (raw.get("short_telops") or []) if isinstance(x, dict) and x.get("match") and x.get("text")],
         short_hook=str(raw.get("short_hook") or "").strip(),
         short_photos=[str(x).strip() for x in (raw.get("short_photos") or []) if str(x).strip()],
+        short_style=str(raw.get("short_style") or "").strip().upper(),
+        short_hook_word=str(raw.get("short_hook_word") or "").strip(),
+        short_hook_quote=str(raw.get("short_hook_quote") or "").strip(),
         series=str(raw.get("series", "")).strip(),
         people=[str(x).strip() for x in (raw.get("people") or []) if str(x).strip()],
         title=str(theme.get("title", "")).strip(),
@@ -607,6 +616,7 @@ def verify(notes: Notes, plan: Plan) -> list[str]:
     problems += _check_thumbnail_layout(notes)
     problems += _check_line_images_wide(notes)
     problems += _check_callwords(notes)
+    problems += _check_short_style(notes)
     problems += _check_20261001(notes)
     problems += _check_viewpoint_substance(notes)
     # **voices 型は新しく作らない**（2026-09-28 ユーザー決定「収益化することが目的なので、
@@ -1535,6 +1545,75 @@ def _advise_wide_photo(notes: Notes) -> list[str]:
 
 
 CALLWORD_MAX = 10          # 大きな見出し語は10字まで（画面の幅に収まる大きさで出す）
+
+
+SHORT_STYLES = ("B", "G", "X", "Y")     # B・G は写真の加工（別担当）。X・Y は冒頭の一言／本人の言葉
+HOOK_WORD_MAX = 10
+
+
+def _say_lines(notes: Notes) -> list[tuple[str, str, str]]:
+    """(節の id, 話者, 文) を say の順に。ショート専用の行も含む。"""
+    out = []
+    for section in notes.sections:
+        for number, sentence in enumerate(section.say):
+            voice = section.voices[number] if number < len(section.voices) else ""
+            out.append((section.id, voice, sentence))
+    return out
+
+
+def _hook_quote_hits(notes: Notes) -> list[tuple[str, str, str]]:
+    """`short_hook_quote` に当たる行。数字なら say の通し番号（1から）、そうでなければ文の一部。"""
+    key = notes.short_hook_quote
+    lines = _say_lines(notes)
+    if key.isdigit():
+        number = int(key)
+        return [lines[number - 1]] if 1 <= number <= len(lines) else []
+    return [x for x in lines if key in x[2]]
+
+
+def _hook_quote_text(notes: Notes) -> str:
+    """台本に書く `short_hook_quote`。番号で書かれていたら、その行の文に直す（台本は文で探す）。"""
+    hits = _hook_quote_hits(notes)
+    return hits[0][2] if hits else notes.short_hook_quote
+
+
+def _check_short_style(notes: Notes) -> list[str]:
+    """ショート冒頭の型（`short_style`）の誤りを止める（2026-10-17）。知らない値・長さ超過・指定漏れ。"""
+    problems: list[str] = []
+    style = notes.short_style
+    if style and style not in SHORT_STYLES:
+        problems.append(f"short_style『{style[:8]}』は知らない値です。使えるのは {'・'.join(SHORT_STYLES)}")
+        return problems
+    if notes.short_hook_word and style != "X":
+        problems.append("short_hook_word は short_style: X のときだけ使えます")
+    if notes.short_hook_quote and style != "Y":
+        problems.append("short_hook_quote は short_style: Y のときだけ使えます")
+    if style == "X":
+        word = notes.short_hook_word
+        if not word:
+            problems.append("short_style: X には short_hook_word（最初の1秒に出す強い一言）が要ります")
+        elif len(word) > HOOK_WORD_MAX:
+            problems.append(f"short_hook_word『{word[:12]}…』は{HOOK_WORD_MAX}字までです（{len(word)}字）")
+    if style == "Y":
+        if not notes.short_hook_quote:
+            problems.append("short_style: Y には short_hook_quote（本人の発言の行）が要ります")
+        else:
+            hits = _hook_quote_hits(notes)
+            if not hits:
+                problems.append(f"short_hook_quote『{notes.short_hook_quote[:16]}』に当たる say の行がありません")
+            elif len(hits) > 1:
+                problems.append(f"short_hook_quote『{notes.short_hook_quote[:16]}』に当たる行が{len(hits)}か所あります。もっと長く指定してください")
+            else:
+                _sid, voice, sentence = hits[0]
+                if not voice or voice in SPEAKERS:
+                    problems.append(f"short_hook_quote の行は本人の発言（voice 付き）ではありません: {sentence[:20]}")
+                title = "".join(ch for ch in (notes.short_title or notes.video_title or "") if ch not in "、。！？!? 　「」『』")
+                said = "".join(ch for ch in sentence if ch not in "、。！？!? 　「」『』")
+                if title and said and (said in title or title in said):
+                    problems.append("short_hook_quote の発言が題と同じ言葉です（題の読み上げと重なる）")
+                if len(sentence) > 60:
+                    problems.append(f"short_hook_quote の発言が長すぎます（{len(sentence)}字）。冒頭の1行は60字までにする")
+    return problems
 
 
 def _check_callwords(notes: Notes) -> list[str]:
@@ -2990,6 +3069,9 @@ def _compose_script(notes: Notes, plan: Plan) -> str:
         **({"short_telops": [dict(x) for x in notes.short_telops]} if notes.short_telops else {}),
         **({"short_hook": notes.short_hook} if notes.short_hook else {}),
         **({"short_photos": list(notes.short_photos)} if notes.short_photos else {}),
+        **({"short_style": notes.short_style} if notes.short_style else {}),
+        **({"short_hook_word": notes.short_hook_word} if notes.short_hook_word and notes.short_style == "X" else {}),
+        **({"short_hook_quote": _hook_quote_text(notes)} if notes.short_hook_quote and notes.short_style == "Y" else {}),
         # シリーズ名（2026-09-23）。subtitles.write_outputs が公開する題の後ろに付ける
         **({"series": notes.series} if notes.series else {}),
         # **話のまとまり**を台本にも残す（2026-09-15）。`clubs.yaml` に無いクラブは

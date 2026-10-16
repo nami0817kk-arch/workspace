@@ -18,6 +18,8 @@ MIN_CAPTION_SECONDS = 1.2
 def to_srt(script: Script) -> str:
     entries: list[list] = []      # [始まり, 終わり, 文]
     for line in script.lines:
+        if getattr(line, "hook_word", ""):
+            continue            # 冒頭の強い一言は無音の1拍。読み上げが無いので字幕も無い
         # 字幕は読み上げた内容そのもの。テロップは画面に焼き込んであるし、
         # 画面用に短く切ってあるので、そのまま字幕にすると途中で切れる。
         # **確度バッジ（[報道] など）は画面の表示物なので字幕には入れない。**

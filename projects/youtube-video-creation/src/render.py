@@ -293,6 +293,9 @@ class Renderer:
         )
         if marks is None:
             marks = tuple(line.marks) if panel is None else ()
+        # **ショート冒頭の強い一言**（2026-10-17、型X）。縦型の、無音の1拍の行だけ
+        hookword = (str(getattr(line, "hook_word", "") or "").strip()
+                    if self.layout.is_portrait else "")
         background = scene.background or self.script_background or self.config.video.background
         opening = scene.title == self.opening_scene and self.opening_photo
         stage_path = line.image or (self.opening_photo if opening else None)
@@ -335,6 +338,8 @@ class Renderer:
                  if panel is None and not self.layout.is_portrait else ""),
             ]
         )
+        if hookword:
+            key += "|hookword:" + hookword      # 無い行の鍵は変えない（絵の控えを使い回す）
         target = self._frame_path(hashlib.sha1(key.encode('utf-8')).hexdigest()[:16])
         if self._have(target):
             return target
@@ -392,12 +397,12 @@ class Renderer:
         # 「オープニング」「まとめ」は章の目印で、視聴者には意味が無い。
         # 一等地の左上を、本編の作業用ラベルで埋めない。
         # 中身のある節名（「監督は何と言ったか」など）は残す
-        if not board and not (self.layout.is_portrait and scene.title in INTERNAL_LABELS):
+        if not board and not hookword and not (self.layout.is_portrait and scene.title in INTERNAL_LABELS):
             head = bool(scene.lines and line is scene.lines[0])
             self._draw_scene_title(canvas, scene.title, telop_t if head else 1.0)
         if scene.title == self.opening_scene and scene.lines and line is scene.lines[0]:
             self._draw_channel_card(canvas)
-        if self.nameplate and scene.title == self.opening_scene and scene.lines and line in scene.lines[:2] and not board:
+        if self.nameplate and scene.title == self.opening_scene and scene.lines and line in scene.lines[:2] and not board and not hookword:
             self._draw_nameplate(canvas, self.nameplate)
             self._draw_hook_points(canvas, self.opening_points)
         if self.layout.with_characters:
@@ -409,7 +414,9 @@ class Renderer:
             # **反応の最中はテロップを出さない**（2026-09-14 指示
             # 「ネット民の声の時は複数の声が並ぶ感じで、その時にテロップは不要」）。
             # 声は白い箱に並ぶので、同じ一文を下でもう一度読ませる意味がない
-            if full is not None:
+            if hookword:
+                pass            # 見出しの帯は出さない。下で大きな一言だけを描く
+            elif full is not None:
                 # **左右の比べの上に見出しを重ねない**（2026-10-07）。名前と数字が画面の字で、
                 # 下の帯を出すと名前・数字に重なる（板の行の no_telop と同じ考え。review の
                 # 「画面に出る字」は、この行を画面に出たと数える）
@@ -427,6 +434,8 @@ class Renderer:
                 word = str(getattr(line, "callword", "") or "").strip()
                 if word and panel is None and not board and not card and not self.layout.is_portrait:
                     self._draw_callword(canvas, word, telop_t)
+        if hookword:
+            self._draw_hookword(canvas, hookword)
         # 動画背景のときは重ねる前提なのでアルファを残す（`_save_frame` が形式をそろえる）
         return self._save_frame(canvas, target)
 
@@ -1445,6 +1454,48 @@ class Renderer:
                       stroke_width=max(8, size // 11), stroke_fill=(0, 0, 0, 255))
         if telop_t < 1.0:
             layer.putalpha(layer.getchannel("A").point(lambda a: int(a * _ease_out(telop_t))))
+        canvas.alpha_composite(layer)
+
+    HOOKWORD_SIZE = 250          # 縦1080での上限。幅に入る大きさまで縮める
+
+    def _draw_hookword(self, canvas: Image.Image, text: str) -> None:
+        """ショート冒頭の強い一言（型X）。画面いっぱいの太い黄色に黒縁。1行で収まらなければ「/」か半分で2行にする。
+
+        callword（`_draw_callword`）と同じ配色・縁。写真の上なので、全面に薄い暗幕を敷いて読ませる。
+        """
+        from PIL import ImageFont as _IF
+        parts = [p.strip() for p in str(text).split("/") if p.strip()][:2]
+        font_path = str(self.config.video.font_path())
+        width_max = self.layout.width - 80
+        if len(parts) == 1 and len(parts[0]) > 3:
+            # 1行で140px以上に収まるなら1行のまま。収まらなければ半分で2行にする（「2アシ／スト！」のような切れ目は
+            # 避けたいので、2行にしたい語は取材メモで「/」を入れて区切る）
+            probe = _layer(canvas.size)[1]
+            one = _IF.truetype(font_path, 140)
+            if probe.textlength(parts[0], font=one) > width_max:
+                word = parts[0]
+                half = (len(word) + 1) // 2
+                parts = [word[:half], word[half:]]
+        if not parts:
+            return
+        layer, draw = _layer(canvas.size)
+        draw.rectangle([0, 0, canvas.width, canvas.height], fill=(0, 0, 0, 110))
+        size = self.HOOKWORD_SIZE
+        font = _IF.truetype(font_path, size)
+        while size > 90 and max(draw.textlength(p, font=font) for p in parts) > width_max:
+            size -= 6
+            font = _IF.truetype(font_path, size)
+        line_height = int(size * 1.18)
+        top = (self.layout.height * 0.42) - line_height * len(parts) / 2
+        stroke = max(10, size // 11)
+        for i, part in enumerate(parts):
+            w = draw.textlength(part, font=font)
+            x = (self.layout.width - w) / 2
+            y = top + i * line_height
+            draw.text((x + 6, y + 9), part, font=font, fill=(0, 0, 0, 150),
+                      stroke_width=stroke, stroke_fill=(0, 0, 0, 150))              # 影
+            draw.text((x, y), part, font=font, fill=BRAND_GOLD + (255,),
+                      stroke_width=stroke, stroke_fill=(12, 16, 24, 255))
         canvas.alpha_composite(layer)
 
     CALLWORD_SIZE = 168          # 1920x1080 での大きさ。参考は画面の高さの約15%

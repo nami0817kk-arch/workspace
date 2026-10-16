@@ -324,6 +324,18 @@ def synthesize_script(
     variants = voice_variants(script.lines)
     for index, line in enumerate(script.lines):
         member = config.resolve_speaker(line.speaker, variants[index])
+        if getattr(line, "hook_word", "") and not (line.text or "").strip():
+            # **冒頭の強い一言は無音の1拍**（型X）。声は作らない。秒数は `shorts.HOOK_SECONDS`
+            from .script_model import HOOK_SECONDS as seconds
+            target = out_dir / f"{index:04d}_hook_{int(seconds * 1000)}.wav"
+            if not target.exists():
+                target.write_bytes(_silent_wav(seconds))
+            line.audio_path = target
+            line.pause = 0.0
+            line.duration = wav_duration(target)
+            line.start = cursor
+            cursor += line.duration
+            continue
         pause = pause_for(config, line)
         # **声に渡す文は、読みの辞書で開く**（2026-09-22）。画面の字（line.text）は変えない。
         # 控えの鍵も開いた文で作るので、辞書を足せば作り直される
