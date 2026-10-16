@@ -19,10 +19,8 @@ thumbnail_band_full: false
 short_photo: assets/images/20261016_record_transfer_fee/neymar/01_v.jpg
 thumbnail_photos: []
 thumbnail_crest_main: []
-thumbnail_crests:
-- パリサンジェルマン
-- バルセロナ
-thumbnail_photo: assets/images/20261016_record_transfer_fee/neymar/01_w.jpg
+thumbnail_crests: []
+thumbnail_photo: assets/images/20261016_record_transfer_fee/neymar/01_w2.jpg
 bg: assets/backgrounds/stadium.png
 date: 2026年10月16日
 intro_title: ネイマールの移籍金の世界記録を、歴代の更新と物価で数える
@@ -56,8 +54,6 @@ tags:
 - 移籍金
 - 世界記録
 - 記録の解説
-- パリサンジェルマン
-- バルセロナ
 - 欧州5大リーグ
 - 解説
 - 海外サッカー
@@ -536,17 +532,17 @@ cards:
   only: short
   telop: 移籍金の世界記録は、誰がいくらで更新してきたのか
   card: none
-  image: assets/images/20261016_record_transfer_fee/neymar/01_w.jpg
+  image: assets/images/20261016_record_transfer_fee/neymar/01_w2.jpg
 キャスター: いまの記録は、ネイマールです。
   emph: true
   telop: いまの記録は、ネイマールです
   source: 確定
   card: none
-  image: assets/images/20261016_record_transfer_fee/neymar/01_w.jpg
+  image: assets/images/20261016_record_transfer_fee/neymar/01_w2.jpg
 キャスター: バルセロナからパリ・サンジェルマンへ、2億2200万ユーロ。
   telop: バルセロナからパリ・サンジェルマンへ、2億2200万ユーロ
   card: none
-  image: assets/images/20261016_record_transfer_fee/neymar/01_w.jpg
+  image: assets/images/20261016_record_transfer_fee/neymar/01_w2.jpg
 キャスター: この記録は、9年たっても破られていません。
   telop: この記録は、9年たっても破られていません
   card: top_3_card

@@ -93,13 +93,11 @@ theme:
   opening_image: assets/images/20261016_record_transfer_fee/neymar/01_w.jpg
 short_title: ネイマールの世界記録は、物価で直すと何が変わるか
 thumbnail:
-  photo: assets/images/20261016_record_transfer_fee/neymar/01_w.jpg
+  photo: assets/images/20261016_record_transfer_fee/neymar/01_w2.jpg
   short_photo: assets/images/20261016_record_transfer_fee/neymar/01_v.jpg
   line1: ネイマールの世界記録
   line2: 破られない長さは歴代●位
-  crests:
-  - パリサンジェルマン
-  - バルセロナ
+  crests: []
   tags:
   - ネイマール
   - 移籍金
