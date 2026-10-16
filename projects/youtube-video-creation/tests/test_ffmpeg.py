@@ -33,7 +33,8 @@ def test_draft_の既定の背景は_init_assets_が作るもの():
     from src import research
 
     source = Path(research.__file__).read_text(encoding="utf-8")
-    assert '"bg": "assets/backgrounds/stadium.png"' in source
+    # 2026-10-14 から台本 front matter の bg（notes.end_bg）が先、無ければ init-assets が作る stadium.png
+    assert 'notes.end_bg or "assets/backgrounds/stadium.png"' in source
 
     template = Path("scripts/templates/weekly.md").read_text(encoding="utf-8")
     assert "bg: assets/backgrounds/stadium.png" in template
