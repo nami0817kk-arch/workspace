@@ -1,0 +1,276 @@
+# 取材メモ（10/17 土、シリーズ「比べる」、key: compare_pedri_vitinha）。ペドリ（バルセロナ）×ヴィティーニャ（PSG）。
+# **FotMob・DataMB は使っていない**。数字は Transfermarkt だけ（2026-10-17 に取得。控え: research/raw/20261017_pedri_vitinha_tm.json）。
+#   Transfermarkt 番号: ペドリ 683840・ヴィティーニャ 487469。API を番号ごとに3本（プロフィール・今季の成績・市場価値の推移）、
+#   タイトルは実績ページ（erfolge）を1ページずつ。連続取得はしていない（8秒あけた）。
+# **範囲**：スタッツは**リーグ戦のみ**（今季2026/27。ペドリ＝ラ・リーガ ES1・ヴィティーニャ＝リーグ・アン FR1）。代表・CL・カップは混ぜない。
+#   足切り450分：ペドリ530分（8試合・先発6）・ヴィティーニャ460分（6試合・先発5）。**どちらも届いている**（ヴィティーニャは10分の余裕）。
+#   900分に届かない → 「いまの時点」と言う。大会が違う（ラ・リーガとリーグ・アン）一言を入れる。
+# 使った数（全部 Transfermarkt の基本の数）：出場時間・試合・先発・得点・アシスト、**ピッチにいた間のチームの得点・失点**（teamGoalsOnThePitch／opponentGoalsOnThePitch）。
+#   ペドリ：530分・得点1・アシスト1・出ていた間のチーム得点25・失点4／ヴィティーニャ：460分・得点1・アシスト1・チーム得点8・失点7。
+#   自分で割った値：90分あたり 得点 1×90÷530＝0.17／1×90÷460＝0.20（アシストも同じ）、得点＋アシスト 2×90÷530＝0.34／2×90÷460＝0.39、
+#   チーム得点 25×90÷530＝4.25／8×90÷460＝1.57、チーム失点 4×90÷530＝0.68／7×90÷460＝1.37（約2.0倍）、
+#   得点＋アシストがチーム得点に占める割合 2÷25＝8%／2÷8＝25%（約3.1倍）。
+# **言い切らないこと**：「出ていた間のチーム失点」は**個人の守備の数字ではない**（チーム全体の結果）。失点は4点と7点の小さい数。
+#   Transfermarkt の位置表記はペドリ＝セントラルMF、ヴィティーニャ＝守備的MF（どちらも MF）。「攻撃型と守備型」とは言わない。
+#   ページ側の画面で「出ていた間のチーム得点・失点」を目で突き合わせていない（leistungsdatendetails の静的HTMLに表が出なかった）。API の値をそのまま使った。
+# 年齢別の市場価値（Transfermarkt の推移・年齢ごとの最高値、百万€）：ペドリ 19歳100・20歳100・21歳90・22歳140・23歳150／ヴィティーニャ 19歳1.5・20歳5・21歳12・22歳45・23歳45・（24歳55・25歳110・26歳140）。
+#   同じ23歳で 150÷45＝3.3倍。ヴィティーニャのいまの140は、ペドリの23歳（150）より小さい。
+# タイトル（Transfermarkt 実績ページ、2026-10-17）：ペドリ＝リーグ3・国内カップ2・国内スーパーカップ3・EURO優勝1・W杯優勝1・ゴールデンボーイ1／
+#   ヴィティーニャ＝CL2・リーグ（フランス4＋ポルトガル2＝6）・国内カップ（フランス2＋ポルトガル2＝4）・国内スーパーカップ（フランス4）・UEFAスーパーカップ2・インターコンチネンタル1・UEFAネーションズリーグ1。
+# 写真：ペドリ＝FCバルセロナ公式のプロフィール写真（透過PNG、2026-07-21）＋Commons（スペイン代表。バルサのユニの写真は Commons に無い）。
+#   ヴィティーニャ＝PSG公式のプロフィール写真（透過PNG）＋Commons（PSG 2024・ポルトガル代表 2026）。2人とも目で見て本人確認済み。
+#   サムネ用 01_w2.jpg は公式の透過写真をクラブ色のグラデーションの上に置いた1920x1080（自作の合成）。
+# 反応・本人の言葉：入れていない（数字で比べる回）。
+slot: other_1
+date: "2026年10月17日"
+format: news
+series: 比べる
+people:
+  - ペドリ
+  - ヴィティーニャ
+  - バルセロナ
+  - パリ・サンジェルマン
+
+theme:
+  id: compare_683840_487469
+  league: spain
+  kind: other
+  topic: ペドリとヴィティーニャ
+  prefix: ""
+  title: ペドリとヴィティーニャ、同じ1得点1アシスト。違いはチームの点か
+  hook: ""
+  question: 得点もアシストも同じ1つずつの2人は、出ていた間のチームの点でどう違うのか
+  takeaway: 2人とも得点1・アシスト1で並ぶ。違うのは出ていた間のチームの点で、得点に絡んだ割合はヴィティーニャ25%・ペドリ8%、90分あたりの失点はペドリ0.68・ヴィティーニャ1.37（リーグ戦の8試合と6試合、いまの時点）
+  league_name: ラ・リーガ
+  opening_image: assets/images/20261017_pedri_vitinha/01.jpg
+
+short_title: ペドリとヴィティーニャ、同じ1得点1アシストで違う数字
+
+thumbnail:
+  photo: assets/images/20261017_pedri_vitinha/01.jpg
+  photos:
+    - assets/images/20261017_pedri/01_w2.jpg
+    - assets/images/20261017_vitinha/04_w2.jpg
+  face_link: VS
+  line1: ペドリとヴィティーニャ
+  line2: 同じ1得点1アシスト。違いは？
+  tags: [ペドリ, ヴィティーニャ, バルセロナ, パリ・サンジェルマン]
+
+answer: 得点もアシストも1つずつ。絡んだ割合はヴィティーニャ25%・ペドリ8%、失点はペドリが約半分
+watch: チーム得点が8点しかないヴィティーニャの割合は、試合が増えると動く。ペドリの失点4点も同じ。試合数が増えたあとの落ち着き先
+
+sections:
+  - id: data
+    heading: ペドリとヴィティーニャは、何歳でいくらの選手か
+    tier: 報道
+    telop: バルセロナとPSGの中盤
+    narrator: 解説
+    card:
+      type: duel
+      left: {name: ペドリ, club: バルセロナ, photo: assets/images/20261017_pedri/01_sq.jpg, color: "#a50044"}
+      right: {name: ヴィティーニャ, club: パリ・サンジェルマン, photo: assets/images/20261017_vitinha/04_sq.jpg, color: "#004170"}
+      rows:
+        - [年齢, 23歳, 26歳]
+        - [身長, 1.74m, 1.70m]
+        - [ポジション, セントラルMF, 守備的MF]
+        - [市場価値, 1.5億€, 1.4億€]
+        - [契約満了, 2030年, 2029年]
+      bars: [市場価値]
+    say:
+      - text: 得点かアシストで絡んだ、出ていた間のチーム得点の割合。
+        image: assets/images/20261017_pedri_vitinha/01.jpg
+      - ヴィティーニャは25%。ペドリは8%。
+      - ペドリは23歳。バルセロナの中盤です。
+      - ヴィティーニャは26歳、パリ・サンジェルマンの中盤。
+      - 市場価値は、1億5000万ユーロと1億4000万ユーロ。
+      - 2人の今季の数字を、基本の数から並べます。
+    sources:
+      - https://www.transfermarkt.com/pedri/profil/spieler/683840
+      - https://www.transfermarkt.com/vitinha/profil/spieler/487469
+
+  - id: season
+    main: true
+    heading: 今季のリーグ戦、基本の数で並べると何が同じか
+    tier: 報道
+    telop: ラ・リーガとリーグ・アン
+    narrator: 解説
+    card: &seasoncard
+      type: duel
+      left: {name: ペドリ, club: ラ・リーガ, photo: assets/images/20261017_pedri/01_sq.jpg, color: "#a50044"}
+      right: {name: ヴィティーニャ, club: リーグ・アン, photo: assets/images/20261017_vitinha/04_sq.jpg, color: "#004170"}
+      rows:
+        - [試合（先発）, 8（6）, 6（5）]
+        - [出場時間, 530分, 460分]
+        - [1試合の出場時間, 66分, 77分]
+        - [得点, "1", "1"]
+        - [アシスト, "1", "1"]
+        - [得点（90分あたり）, "0.17", "0.20"]
+        - [アシスト（90分あたり）, "0.17", "0.20"]
+      bars: [出場時間, 1試合の出場時間, 得点（90分あたり）, アシスト（90分あたり）]
+      note: 今季のリーグ戦のみ。ペドリはラ・リーガ、ヴィティーニャはリーグ・アン。90分あたりは自分で割った値
+    say:
+      - text: 今季のリーグ戦の基本の数。ペドリはラ・リーガ、ヴィティーニャはリーグ・アン。
+        image: assets/images/20261017_pedri/01_r.jpg
+        card: *seasoncard
+      - text: 大会が違うので、相手の強さまでは同じではありません。
+        card: {<<: *seasoncard, highlight_row: 試合（先発）}
+      - text: 出場時間は、ペドリが530分、ヴィティーニャが460分です。
+        card: {<<: *seasoncard, highlight_row: 出場時間}
+      - text: どちらも450分は超えていますが、900分には届きません。いまの時点の数字です。
+        card: {<<: *seasoncard, highlight_row: 出場時間}
+      - text: 1試合あたりにならすと、ペドリが66分、ヴィティーニャが77分。
+        card: {<<: *seasoncard, highlight_row: 1試合の出場時間}
+      - text: ヴィティーニャは、出れば長く出ている形です。
+        card: {<<: *seasoncard, highlight_row: 1試合の出場時間}
+      - text: 得点は、どちらも1。アシストも、どちらも1。
+        card: {<<: *seasoncard, highlight_row: 得点}
+      - text: 90分あたりは、得点もアシストも、ペドリが0.17、ヴィティーニャが0.20。
+        card: {<<: *seasoncard, highlight_row: 得点（90分あたり）}
+      - text: 差はわずか。この数では、ほぼ同じです。
+        card: {<<: *seasoncard, highlight_row: アシスト（90分あたり）}
+    sources:
+      - https://www.transfermarkt.com/pedri/leistungsdaten/spieler/683840
+      - https://www.transfermarkt.com/vitinha/leistungsdaten/spieler/487469
+
+  - id: onpitch
+    heading: 出ていた間、チームの点はどう動いていたのか
+    tier: 報道
+    telop: 出ていた間のチームの点
+    narrator: 解説
+    card: &oncard
+      type: duel
+      left: {name: ペドリ, club: 530分, photo: assets/images/20261017_pedri/01_sq.jpg, color: "#a50044"}
+      right: {name: ヴィティーニャ, club: 460分, photo: assets/images/20261017_vitinha/04_sq.jpg, color: "#004170"}
+      rows:
+        - [チーム得点, "25", "8"]
+        - [チーム失点, "4", "7"]
+        - [チーム得点/90分, "4.25", "1.57"]
+        - [チーム失点/90分, "0.68", "1.37"]
+      lower: [チーム失点, チーム失点/90分]
+      note: リーグ戦。その選手が出ていた時間に、チームが入れた点・入れられた点。90分あたりは自分で割った値
+    say:
+      - text: 次は、2人がピッチにいた時間の、チームの点です。
+        image: assets/images/20261017_vitinha/04_r.jpg
+        card: *oncard
+      - text: ペドリが出ていた間、バルセロナは25点を取りました。
+        card: {<<: *oncard, highlight_row: チーム得点}
+      - text: ヴィティーニャが出ていた間、パリは8点。
+        card: {<<: *oncard, highlight_row: チーム得点}
+      - text: 90分ならして、4.25点と1.57点。
+        card: {<<: *oncard, highlight_row: チーム得点/90分}
+      - text: 失点は、ペドリが出ていた間に4。ヴィティーニャは7。
+        card: {<<: *oncard, highlight_row: チーム失点}
+      - text: 90分あたりでは、0.68と1.37。およそ2倍の差。
+        card: {<<: *oncard, highlight_row: チーム失点/90分}
+      - text: これは個人の守備の数字ではなく、そのときのチーム全体の数字です。
+        card: {<<: *oncard, highlight_row: チーム失点/90分}
+    sources:
+      - https://www.transfermarkt.com/pedri/leistungsdaten/spieler/683840
+      - https://www.transfermarkt.com/vitinha/leistungsdaten/spieler/487469
+
+  - id: value
+    heading: 市場価値は、同じ年齢で並べると、どれだけ違ったのか
+    tier: 報道
+    telop: 同じ年齢での市場価値
+    narrator: 解説
+    card:
+      type: line
+      title: 市場価値（百万ユーロ。年齢ごとの最高値）
+      x: [19歳, 20歳, 21歳, 22歳, 23歳]
+      series:
+        - [ペドリ, [100, 100, 90, 140, 150]]
+        - [ヴィティーニャ, [1.5, 5, 12, 45, 45]]
+      focus: ペドリ
+      peak: true
+    say:
+      - text: 市場価値を、同じ年齢で並べます。
+        image: assets/images/20261017_pedri_vitinha/01.jpg
+      - 23歳の時点で、ペドリは、ヴィティーニャの3倍あまりでした。
+      - ヴィティーニャの23歳は、4500万ユーロ。
+      - その後に伸びて、26歳のいまの値になりました。
+      - それでも、ペドリの23歳の値には届いていません。
+    sources:
+      - https://www.transfermarkt.com/pedri/marktwertverlauf/spieler/683840
+      - https://www.transfermarkt.com/vitinha/marktwertverlauf/spieler/487469
+
+  - id: titles
+    heading: タイトルは、どちらが多いのか
+    tier: 報道
+    telop: タイトルの数
+    narrator: 解説
+    card:
+      type: shelf
+      left: {name: ペドリ, club: 個数, photo: assets/images/20261017_pedri/01_sq.jpg, color: "#a50044"}
+      right: {name: ヴィティーニャ, club: 個数, photo: assets/images/20261017_vitinha/04_sq.jpg, color: "#004170"}
+      rows:
+        - [国内リーグ優勝, "3", "6"]
+        - [CL優勝, "0", "2"]
+        - [UEFAスーパーカップ, "0", "2"]
+        - [インターコンチネンタル杯, "0", "1"]
+        - [国内カップ優勝, "2", "4"]
+        - [国内スーパーカップ, "3", "4"]
+        - [W杯・EURO優勝（代表）, "2", "0"]
+        - [ネーションズリーグ優勝, "0", "1"]
+      note: Transfermarkt の実績ページ（2026年10月17日時点）。ヴィティーニャの国内はフランスとポルトガルの合計
+    say:
+      - text: 最後に、タイトルの数です。ヴィティーニャは3歳年上です。
+        image: assets/images/20261017_pedri/01_r.jpg
+      - リーグ優勝は、ヴィティーニャが6回、ペドリが3回です。
+      - チャンピオンズリーグは、ヴィティーニャが2回。ペドリは0回。
+      - 代表では、ペドリがワールドカップと欧州選手権で、1回ずつ優勝。
+      - ヴィティーニャの代表の優勝は、ネーションズリーグの1回。
+      - クラブのタイトルは、ヴィティーニャが多い形です。
+    sources:
+      - https://www.transfermarkt.com/pedri/erfolge/spieler/683840
+      - https://www.transfermarkt.com/vitinha/erfolge/spieler/487469
+
+  - id: view
+    viewpoint: true
+    heading: 見立て・得点とアシストが同じ2人の違いは、チームの点に絡む濃さにある
+    tier: 背景
+    telop: 同じ1と1でも、濃さが違う
+    narrator: 解説
+    card: &viewcard
+      type: duel
+      left: {name: ペドリ, club: 530分, photo: assets/images/20261017_pedri/01_sq.jpg, color: "#a50044"}
+      right: {name: ヴィティーニャ, club: 460分, photo: assets/images/20261017_vitinha/04_sq.jpg, color: "#004170"}
+      rows:
+        - [得点＋アシスト, "2", "2"]
+        - [チーム得点, "25", "8"]
+        - [チーム得点に絡んだ割合, 8%, 25%]
+        - [チーム失点/90分, "0.68", "1.37"]
+      bars: [チーム得点に絡んだ割合, チーム失点/90分]
+      lower: [チーム失点/90分]
+      note: リーグ戦。割合は 得点＋アシスト÷出ていた間のチーム得点（自分で割った値）
+    say:
+      - text: 2人とも、得点とアシストを足して2。ここまでは同じ。
+        card: *viewcard
+      - text: 違うのは、その時間にチームが取った点。25点と8点。
+        card: {<<: *viewcard, highlight_row: チーム得点}
+      - text: 2を、チームの得点で割ります。
+        card: {<<: *viewcard, highlight_row: チーム得点に絡んだ割合}
+      - text: ペドリは8%、ヴィティーニャは25%。およそ3倍。
+        card: {<<: *viewcard, highlight_row: チーム得点に絡んだ割合}
+        mark:
+          - {kind: circle, row: 2, col: 右の値}
+      - text: 数字の上では、点への絡み方は、ヴィティーニャが濃い。
+        card: {<<: *viewcard, highlight_row: チーム得点に絡んだ割合}
+      - text: ただ、パリの8点という小さい数の上の割合。
+        card: {<<: *viewcard, highlight_row: チーム得点に絡んだ割合}
+      - text: 反対に、出ていた間の失点は、ペドリのほうが少なくなっています。
+        card: {<<: *viewcard, highlight_row: チーム失点/90分}
+      - text: 90分あたり0.68と1.37。ペドリのほうが、半分ほど。
+        card: {<<: *viewcard, highlight_row: チーム失点/90分}
+      - text: ペドリの時間のバルセロナは、点も多く、失点も少ない。
+        card: {<<: *viewcard, highlight_row: チーム失点/90分}
+      - text: ヴィティーニャは、少ない点の中で、より多くに絡んでいます。
+        card: {<<: *viewcard, highlight_row: チーム得点に絡んだ割合}
+      - text: ただし、リーグも相手も日程も違います。
+        card: *viewcard
+      - text: 8試合と6試合だけの数字。
+        card: *viewcard
+      - text: 試合が増えたあと、割合と失点がどこへ落ち着くかを、見たいところです。
+        card: *viewcard
+    sources:
+      - https://www.transfermarkt.com/pedri/leistungsdaten/spieler/683840
+      - https://www.transfermarkt.com/vitinha/leistungsdaten/spieler/487469

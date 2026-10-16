@@ -1,0 +1,572 @@
+# スタジアム紹介シリーズ⑦：マンチェスター・ユナイテッドの本拠地（オールド・トラッフォード、10/17）。雛形は 10/16 チェルシー回（research/20261016_stadium_chelsea.yaml）・10/14 ブライトン回。
+# 節の並び：オープニング → 基礎DATA(main・強い一点を頭に＝A) → 開場（年表＋数字3つ）→ 空襲と借りた競技場（年表）→ 収容の歩み（折れ線）→ 次の計画（年表）→ 見立て（自分で数えた比べ）
+# 軸：**A＝収容7万4158席はプレミア20クラブで最大（2位トッテナムとの差 1万1308席）と、B＝歴史（1910年の開場・1941年の空襲・1949年の復帰・収容の推移）の両方。冒頭はA。**
+#
+# 強い一点：**収容 74,158人（今季開幕時のプレミア公式ハンドブック2026/27）はプレミア20クラブで最大。2位トッテナム 62,850 との差は 11,308席。**
+#   確度は**報道**（公式ハンドブックの数字から自分で引き算。開場の日付・設計者・愛称はクラブの公式（ir.manutd.com）。ただし ir.manutd.com の「現在の収容 75,454」は2016/17年のまま古いので使わない）。
+#
+# **自分で数えた・割った（20クラブの収容を PL公式ハンドブック2026/27 の各クラブのページ「Ground Capacity at start of the Season」から全部抽出して検算した）**
+#   上から：ユナイテッド 74,158／トッテナム 62,850／リヴァプール 61,276／マンチェスター・シティ 61,038／アーセナル 60,704／エヴァートン 52,769／ニューカッスル 52,729／サンダーランド 48,095／チェルシー 40,044／リーズ 37,633／
+#   アストン・ヴィラ 36,887／コヴェントリー 32,609／ブライトン 32,176／フォレスト 31,212／イプスウィッチ 30,294／フラム 28,107／パレス 25,194／ハル 24,983／ブレントフォード 17,250／ボーンマス 12,357。合計 822,365。
+#   74,158 − 62,850 = 11,308（1位と2位の差）／62,850 − 61,276 = 1,574（2位と3位の差）→ 11,308 ÷ 1,574 = 7.184 →「7.2倍」／
+#   61,276 − 60,704 = 572（3位〜5位の幅）／822,365 ÷ 20 = 41,118.25、74,158 ÷ 41,118.25 = 1.8035 →「1.8倍」／
+#   ボーンマス 12,357：11,308 ÷ 12,357 = 0.915（差だけでボーンマスの本拠地の9割あまり）、74,158 ÷ 12,357 = 6.0013 →「6.0倍」／
+#   2025-26 ホーム19試合の入場（PL公式の試合データ、2025年シーズンの全38節を引いた）：合計 1,405,516 ÷ 19 = 73,974.53 →「7万3975人」／73,974.53 ÷ 74,158 = 0.99753 →「99.8％」／
+#   最多 74,257（2025-08-30 バーンリー）・最少 73,475（2025-08-17 アーセナル）→ 差 782 = 782 ÷ 74,158 = 1.05％ →「1.1％」／
+#   83,260 − 74,158 = 9,102（メイン・ロードの記録は、今の収容より 9102人多い）／76,212 − 74,158 = 2,054（2007年の収容から、今季まで）／100,000 ÷ 74,158 = 1.348 →「1.35倍」／1941 → 1959 = 18年。
+#
+# **重なりで外したもの**
+#   クラブ紹介⑯マンチェスター・ユナイテッド（2026-09-20 公開）は「収容7万4158人。20クラブでいちばん大きなスタジアム」「本拠地はオールド・トラッフォード。1910年から使っています」だけを読んでいる。
+#   この回は同じ数字が主役（収容）なので外せないが、**1910年の経緯・空襲・借りた競技場・収容の推移は新しい中身**。
+#   財政⑧（2026-10-14）は「設備に8590万ポンド。うち6350万ポンドは新スタジアムの計画の土地」を読んでいる。**この回は金額を言わない**（新スタジアムは年表の1節だけ）。
+#   ユニフォーム⑦（10-10）・クラブ紹介の「ホームタウン」の話は入れない。
+#
+# **言わないと決めたもの**
+#   **女子（女子チームの本拠地入り・2022年女子EURO開幕戦・女子W杯2035の候補地）は扱わない**（2026-09-16 指示）。
+#   **建設費の金額（1910年当時の6万ポンド・追加3万ポンド）は言わない**：Wikipedia の Old Trafford 記事は「土地を入れて総額6万ポンド、10万人にするにはあと3万ポンド」、
+#     同じ Wikipedia の Manchester United 記事は「土地代が約6万ポンド、建設の予算が3万ポンド」と書いていて**食い違う**。どちらが正しいかは確かめられていない。
+#     台本は「資金の都合で収容が約8万人に縮められた」まで（二つの記事が一致する）。
+#   **ヒルズボロの犠牲者の数・内容**は言わない（「事故を受けて1990年にテイラー報告書が出た」まで）。
+#   **新スタジアム：収容104,000（総席）・2030-31の入居・国民の祝い・命名権・旧スタジアムの行き先（女子とアカデミーに転用）は言わない**。
+#     ファンのブログ（Stretty News）に「旧スタジアムは取り壊さない」とあったが、Architects' Journal（2026-06-22）は「旧スタジアムをどうするかははっきりしない」と書く。**はっきりしない、までを言う。**
+#     「2030-31の入居をめざす」は Wikipedia の New Trafford Stadium 記事のみ（クラブの原文を読めていない）。**台本には書かない**。
+#   **クラブ公式（manutd.com）の記事は全て 404 / JS で読めなかった**（取得 2026-10-17）。公式として読めたのは ir.manutd.com（投資家向け・歴史）と PL公式ハンドブック。
+#   **FIFA の記事（inside.fifa.com）**は空襲の日付（1940-12-22 と 1941-03-11）と「リーグ戦が開かれない期間はおよそ10年」を確かめるのに使った。
+#   「メイン・ロードを借りた年」は Wikipedia の記事どうしで食い違う（Old Trafford 記事は「1941〜1949」、History of Manchester United 1945–1969 記事は「1945〜1949」）。**台本は年を言わない。**
+#   メイン・ロードの借り賃（1年5000ポンド＋入場料の一部）は Wikipedia（Maine Road・Old Trafford 記事）、借金1万5000ポンドは Wikipedia と FIFA。**「とされます」にとどめる**（一次の原文は読めていない）。
+#   戦後の再建補償金（4800ポンド・1万7478ポンド）は Wikipedia のみ。**言わない。**
+#   1948年1月17日の 83,260（ユナイテッド対アーセナル 1-1、メイン・ロード）は Guinness World Records の記録ページの原文で確かめた（本文が読めた）。Wikipedia の1947-48シーズン記事には「81,962」とあり食い違うが、
+#     Guinness と Maine Road 記事・mufcinfo は 83,260 で一致。**台本は 83,260（Guinness）。**
+#   1939年の 76,962（ウルヴス対グリムズビー、FAカップ準決勝）は 11v11 の試合記録・Wolves Complete History・Wikipedia で一致。
+#   2007-03-31 の 76,098（ブラックバーン戦、7万6212席のうち空席114）は Wikipedia と mufcinfo。「全席イス席になってからの最多」までを言う（**プレミアリーグ全体の最多ではない**。Guinness は 83,222＝2018年のウェンブリーと記す）。
+#   収容の歩み（約8万→5万6385→約4万4000→約5万8000→約6万8000→約7万6000）は ir.manutd.com の原文（「approximately」を含む）。**折れ線の値は「約」**で、台本も「約」を付ける。
+#   「76,212」（2007年の席数）と「2009年の 75,957」は Wikipedia のみ。**2054席の減り方の理由は確かめられていない**（Wikipedia は2016年の車いす席の改修が約3000席の減につながると見込むが、公式の説明を読めていない）。台本は「理由は確かめられていません」。
+#   「デイヴィス会長が土地を決め費用を出した」「J・J・ベントレー書記の提案で約8万人に縮めた」「ターンブルが初ゴール」「記者の評」は Wikipedia の Old Trafford 記事のみ。**背景**。
+#   1911年のFAカップ決勝の再試合（58,000人）は Wikipedia のみ。
+#   新スタジアム計画：2024年の幹部の推奨（新築は約20億ポンド、改修は10〜12億ポンドで工事中は収容が減る）・2026-06-22 の土地取得（約350メートル、約10ヘクタール、インデュレント）は Architects' Journal（建築の専門誌・2026-06-22）、
+#     設計はフォスター・アンド・パートナーズと進める（2026-09）は StadiumDB のニュース。2025年3月に約10万席の案を公開は Wikipedia と StadiumDB。**すべて報道**。「収容10万席」は「約」を付ける。
+#
+# 写真：assets/images/20261017_stadium_oldtrafford/（credits.json 同梱。すべて Commons の CC BY-SA。5枚：01 試合中の内側／02 空撮／03 外観／04 西側（ストレトフォード・エンド）／05 南側スタンド）。
+#   下地として手元にあった stadium_マンチェスターユナイテッド_in.png（Commons: Tom Morrison 原版 1024x768 を 1920 へ拡大していた）は**引き伸ばしが1.9倍で使えない**ので、別の写真に替えた。
+#   1920年代の空撮（Commons: Old trafford stadium 1920s.jpg、PD、919x567）は引き伸ばしが2.09倍になるので使わない。
+# サムネは案を3つ出してユーザーに決めてもらう（2026-10-11）。ここに書いた thumbnail は案1（Aだけ）。案2（Bだけ：1行目「マンU本拠地、10年の空白」2行目「借りた競技場に8万3260人」吹き出し「1941年の空襲」写真04）・
+#   案3（A+B：1行目「マンU本拠地、最大7万4158席」2行目「最多は借りた競技場の8万3260人」吹き出し「空襲で壊れた」「2位と1万1308席差」写真01）。絵は output/thumb_samples/20261017_stadium_oldtrafford_案*.png。
+date: 2026年10月17日
+slot: other_1
+format: news
+series: スタジアム紹介
+voice_min: 0
+people: []
+theme:
+  id: stadium_oldtrafford
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: マンチェスター・ユナイテッド
+  title: マンUの本拠地、プレミア最大の7万4158席。2位との差は何席か
+  question: プレミア最大の本拠地は、2位より何席大きく、どんな歴史でいまの形になったのか
+  lead: 20クラブのなかで、いちばん大きな競技場。
+  hook: ''
+  opening_image: assets/images/20261017_stadium_oldtrafford/01_w.jpg
+  end_bg: assets/images/20261017_stadium_oldtrafford/01_w.jpg
+  takeaway: マンチェスター・ユナイテッドの本拠地、オールド・トラッフォードの収容は、今季の開幕時で7万4158人。プレミア20クラブで最大で、2位トッテナム（6万2850人）との差は1万1308席。2位と3位の差（1574席）の7.2倍で、20クラブの平均（4万1118席）の1.8倍にあたる。1910年に開いたときは、設計の10万人から資金の都合で約8万人に縮められた。1941年の空襲でメインスタンドなどが壊れ、リーグ戦を本拠地で開けない期間は10年近く続いた。そのあいだ借りたメイン・ロードでは1948年に8万3260人が入り、ギネスがイングランド1部の1試合の最多として記録している。1990年のテイラー報告書で全席イス席に替えた1992年に、収容は約4万4000人まで落ち、2006年に約7万6000人まで戻した。昨季のリーグ戦ホーム19試合の平均入場は7万3975人で、収容の99.8％にあたる。次の本拠地戦は10月25日のボーンマス戦で、その本拠地の収容は1万2357人。オールド・トラッフォードは6.0倍になる
+  short_title: マンUの本拠地、プレミア最大の7万4158席
+thumbnail:
+  callouts: [20クラブで最大]
+  photo: assets/images/20261017_stadium_oldtrafford/01_w.jpg
+  line1: マンU本拠地、プレミア最大
+  line2: 2位と1万1308席の差
+  crests:
+  - マンチェスター・ユナイテッド
+  tags:
+  - マンチェスター・ユナイテッド
+  - オールド・トラッフォード
+  - プレミアリーグ
+  - スタジアム紹介
+sections:
+- id: data
+  main: true
+  heading: オールド・トラッフォードは、2位の本拠地より何席大きいのか
+  tier: 報道
+  telop: 収容は7万4158人。プレミア20クラブで最大で、2位との差は1万1308席
+  narrator: 解説
+  card: &id_data
+    type: table
+    title: オールド・トラッフォードの基礎DATA
+    columns: &cols_data
+    - 項目
+    - 内容
+    rows: &rows_data
+    - - 収容人数
+      - 7万4158人（今季の開幕時）
+    - - 20クラブでは
+      - 1位（2位と1万1308席差）
+    - - 開場
+      - 1910年2月19日
+    - - 設計
+      - アーチボルド・リーチ
+    - - ピッチ
+      - 縦105×横68メートル
+    - - 愛称
+      - シアター・オブ・ドリームス
+  say:
+  - text: マンチェスター・ユナイテッドの本拠地、オールド・トラッフォードの話です。
+    short_only: true
+  - text: 収容は、7万4158人。今季のプレミア20クラブで、いちばん大きな本拠地です。
+    emph: true
+    card: &id_stats
+      type: stats
+      title: プレミア最大の本拠地。2位との差
+      items:
+      - - '74158'
+        - 人
+        - オールド・トラッフォードの収容
+      - - '62850'
+        - 人
+        - 2位 トッテナム
+      - - '11308'
+        - 席
+        - 1位と2位の差（自分で引いた）
+      focus: 0
+  - text: 2位は、トッテナムの6万2850人。差は、1万1308席。
+    emph: true
+    card:
+      <<: *id_stats
+      focus: 2
+  - text: この差は、ボーンマスの本拠地の収容の、およそ9割にあたります。
+    card:
+      <<: *id_data
+      highlight_row: 1
+  - text: 20クラブの平均は、4万1118席ほど。この本拠地は、その1.8倍です。
+    card:
+      <<: *id_data
+      highlight_row: 1
+  - text: ただ、開場のときは約8万人。4万人台まで落ちた時期もあります。
+    image: assets/images/20261017_stadium_oldtrafford/02_w.jpg
+    card: none
+  sources:
+  - https://resources.premierleague.pulselive.com/premierleague/document/2026/07/31/8a890ff9-176c-4364-a8ff-e08f995e2c86/TM2040_PL-Handbook-and-Collateral-2026-27_Digital_31.07.pdf
+  - https://ir.manutd.com/company-information/history.aspx
+- id: origin
+  heading: 10万人の計画は、なぜ約8万人に縮められたのか
+  tier: 背景
+  telop: 設計は10万人。資金の都合で、約8万人で1910年に開場
+  narrator: 解説
+  card: &id_origin
+    type: timeline
+    title: 開場までと、開場してから
+    rows: &rows_origin
+    - - 1902年
+      - ニュートン・ヒースから、今の名前に
+    - - 1909年
+      - 会長のデイヴィスが、新しい本拠地の土地を決める
+    - - 1910年2月19日
+      - 開場。リヴァプールに3対4
+    - - 1911年
+      - FAカップ決勝の再試合を開く
+    - - 1936年
+      - 北側のスタンドに屋根がつく
+    - - 1939年3月25日
+      - FAカップ準決勝に7万6962人（ここの最多）
+    focus: 1910年2月19日
+  say:
+  - text: 開場の前の本拠地は、クレイトンのバンク・ストリート。煙が流れ込む場所でした。
+    image: assets/images/20261017_stadium_oldtrafford/02_w.jpg
+    card: none
+  - text: 1909年、会長のジョン・ヘンリー・デイヴィスは、新しい本拠地を決めます。
+    card:
+      <<: *id_origin
+      highlight_row: 1
+  - text: 設計を任されたのは、スコットランド出身の建築家、アーチボルド・リーチです。
+    card:
+      <<: *id_origin
+      highlight_row: 1
+  - text: 設計の収容は、10万人。
+    emph: true
+    callword: 10万人
+    card: none
+  - text: ところが、資金の都合で、収容は約8万人に縮められます。
+    card: &id_cut
+      type: stats
+      title: 設計の10万人と、開場の約8万人
+      items:
+      - - '100000'
+        - 人
+        - 設計の収容
+      - - '80000'
+        - 人
+        - 開場のときの収容（約）
+      - - '20000'
+        - 席
+        - 縮めた席（約。自分で引いた）
+      focus: 2
+  - text: 屋根が付いたスタンドは、南の1つだけ。残る3つは、屋根のない立ち見席でした。
+    card: *id_cut
+  - text: 開場は、1910年2月19日。相手はリヴァプールで、3対4の敗戦でした。
+    emph: true
+    card:
+      <<: *id_origin
+      highlight_row: 2
+  - text: 1936年には、北側のスタンドに、長さ約73メートルの屋根がつきました。
+    card:
+      <<: *id_origin
+      highlight_row: 4
+  - text: 1939年3月25日、FAカップ準決勝、ウルヴァーハンプトン対グリムズビー。
+    card:
+      <<: *id_origin
+      highlight_row: 5
+  - text: 入場は、7万6962人。ユナイテッドの試合ではなく、いまもここの最多です。
+    emph: true
+    card:
+      type: stats
+      title: ここの最多の観客と、いまの収容
+      items:
+      - - '76962'
+        - 人
+        - 最多の入場（1939年）
+      - - '74158'
+        - 人
+        - いまの収容
+      - - '2804'
+        - 人
+        - 最多のほうが多い人数（自分で引いた）
+      focus: 0
+  sources:
+  - https://en.wikipedia.org/wiki/Old_Trafford
+  - https://ir.manutd.com/company-information/history.aspx
+  - https://inside.fifa.com/en/news/old-trafford-history-and-innovation-combine-2156320
+  - https://www.11v11.com/matches/wolverhampton-wanderers-v-grimsby-town-25-march-1939-209142/
+  - https://wolvescompletehistory.co.uk/grimsby-town-n-193839-fac/
+- id: war
+  heading: なぜ、本拠地でリーグ戦を開けないまま、10年近く経ったのか
+  tier: 報道
+  telop: 1941年の空襲でメインスタンドが壊れ、本拠地へ戻ったのは1949年8月24日
+  narrator: 解説
+  card: &id_war
+    type: timeline
+    title: 空襲と、借りた競技場
+    rows: &rows_war
+    - - 1940年12月22日
+      - 空襲で壊れ、クリスマスの試合を別の場所へ
+    - - 1941年3月11日
+      - 2度目の空襲。メインスタンドが壊れる
+    - - 1948年1月17日
+      - 借りたメイン・ロードに、8万3260人
+    - - 1949年8月24日
+      - 本拠地に戻る。ボルトンに3対0
+    - - 1957年
+      - 夜の試合のための照明がつく
+    - - 1959年
+      - すべてのスタンドに屋根が戻る
+    focus: 1941年3月11日
+  say:
+  - text: 第二次世界大戦が始まると、軍がオールド・トラッフォードを倉庫に使いました。
+    image: assets/images/20261017_stadium_oldtrafford/05_w.jpg
+    card: none
+  - text: 1940年12月22日、空襲でスタジアムが壊れ、クリスマスの試合は移されます。
+    card:
+      <<: *id_war
+      highlight_row: 0
+  - text: 3月に試合は再開。その3日後、3月11日に、2度目の空襲が来ます。
+    emph: true
+    card:
+      <<: *id_war
+      highlight_row: 1
+  - text: スタジアムは大きく壊れ、なかでもメインスタンドが失われました。
+    card:
+      <<: *id_war
+      highlight_row: 1
+  - text: 再建のあいだは、同じ街のライバル、マンチェスター・シティの競技場を借りました。
+    card: none
+  - text: 1948年1月17日、その競技場、メイン・ロードで、アーセナル戦。
+    card:
+      <<: *id_war
+      highlight_row: 2
+  - text: 入場は、8万3260人でした。
+    emph: true
+    card: &id_mr
+      type: stats
+      title: メイン・ロードの記録と、いまの収容
+      items:
+      - - '83260'
+        - 人
+        - 1948年、メイン・ロードの入場
+      - - '74158'
+        - 人
+        - オールド・トラッフォードの収容
+      - - '9102'
+        - 人
+        - 記録のほうが多い人数（自分で引いた）
+      focus: 0
+  - text: 世界記録を集めるギネスが、イングランド1部の1試合の最多として記録しています。
+    card: *id_mr
+  - text: いまの収容より、9102人多い数字です。
+    emph: true
+    card:
+      <<: *id_mr
+      focus: 2
+  - text: 1949年8月24日、本拠地へ戻ります。ボルトンに3対0の勝ち。4万1748人。
+    card:
+      <<: *id_war
+      highlight_row: 3
+  - text: リーグ戦を本拠地で開けなかったのは、10年近く。
+    card:
+      <<: *id_war
+      highlight_row: 3
+  - text: 戻ったときは屋根もなく、照明は1957年、全部の屋根は1959年でした。
+    card:
+      <<: *id_war
+      highlight_row: 5
+  - text: 壊れてから、18年かかりました。
+    emph: true
+    card: none
+  sources:
+  - https://ir.manutd.com/company-information/history.aspx
+  - https://inside.fifa.com/en/news/old-trafford-history-and-innovation-combine-2156320
+  - https://www.guinnessworldrecords.com/world-records/85339-largest-attendance-at-an-english-football-soccer-top-division-match
+  - https://en.wikipedia.org/wiki/Maine_Road
+  - https://en.wikipedia.org/wiki/Old_Trafford
+- id: capacity
+  heading: なぜ、約8万人の器は、4万4000人まで小さくなったのか
+  tier: 報道
+  telop: 収容は約8万人から、1992年に約4万4000人へ。2006年に約7万6000人
+  narrator: 解説
+  card: &id_cap
+    type: line
+    title: 収容の歩み（クラブの公表。約を含む）
+    x: ['1910', '1985', '1992', '1996', '2000', '2006', '今季']
+    series:
+    - - 収容
+      - [80000, 56385, 44000, 58000, 68000, 76000, 74158]
+    unit: 人
+    focus: 収容
+    peak: true
+  say:
+  - text: 戦後は、改修のたびに収容が減り、1985年には5万6385人でした。
+    image: assets/images/20261017_stadium_oldtrafford/04_w.jpg
+    card:
+      <<: *id_cap
+      highlight: '1985'
+  - text: 1990年、ヒルズボロの事故を受け、安全を見直すテイラー報告書が出ます。
+    card:
+      <<: *id_cap
+      highlight: '1985'
+  - text: 1部と2部のスタンドは、すべてイス席にする。政府が、そう求めました。
+    card: none
+  - text: 立ち見を全部イス席に替えると、収容は約4万4000人まで落ちます。
+    emph: true
+    card:
+      <<: *id_cap
+      highlight: '1992'
+  - text: 1985年より約1万2000人少なく、クラブの歴史でいちばん少ない数でした。
+    card:
+      <<: *id_cap
+      highlight: '1992'
+  - text: 1995年、できて30年の北スタンドを壊し、3層の新しいスタンドを建てました。
+    card: none
+  - text: 約2万5500席。完成した1996年は、1992年より約1万4000人増えました。
+    card:
+      <<: *id_cap
+      highlight: '1996'
+  - text: 2000年には、東スタンドに2層目。続いて、西スタンドにも2層目です。
+    card:
+      <<: *id_cap
+      highlight: '2000'
+  - text: 収容は、6万8217人。イギリスで、いちばん大きなクラブの本拠地になりました。
+    emph: true
+    card:
+      <<: *id_cap
+      highlight: '2000'
+  - text: 2005年7月から2006年5月、北西と北東の角にも、2層目を足します。
+    card: none
+  - text: 約8000席が増え、収容は、約7万6000人になりました。
+    card:
+      <<: *id_cap
+      highlight: '2006'
+  - text: 2007年3月31日、ブラックバーン戦に、7万6098人が入ります。
+    card:
+      <<: *id_cap
+      highlight: '2006'
+  - text: 7万6212席で、空きは114席だけ。全席イス席になってからの最多です。
+    emph: true
+    card: none
+  - text: いまの収容は、2007年当時より、2054席少なくなりました。
+    card:
+      <<: *id_cap
+      highlight: '今季'
+  - text: この2054席の理由は、確認できていません。
+    emph: true
+    card:
+      <<: *id_cap
+      highlight: '今季'
+  sources:
+  - https://ir.manutd.com/company-information/history.aspx
+  - https://en.wikipedia.org/wiki/Old_Trafford
+  - https://www.mufcinfo.com/manupag/articles/article_pages/old-trafford-attendance-records-decade-by-decade.html
+  - https://resources.premierleague.pulselive.com/premierleague/document/2026/07/31/8a890ff9-176c-4364-a8ff-e08f995e2c86/TM2040_PL-Handbook-and-Collateral-2026-27_Digital_31.07.pdf
+- id: plan
+  heading: 7万4158席の次は、どんな計画なのか
+  tier: 報道
+  telop: 2024年に新築を勧め、2026年6月に約350メートル先の土地を買った
+  narrator: 解説
+  card: &id_plan
+    type: timeline
+    title: 新しいスタジアムの計画の歩み
+    rows: &rows_plan
+    - - 2024年
+      - 幹部が、建て直しでなく、新築を勧める
+    - - 2025年3月
+      - 約10万席の新スタジアムの案を公開
+    - - 2026年6月
+      - 約350メートル先の土地を買う
+    focus: 2026年6月
+  say:
+  - text: 2024年、クラブの幹部は、いまの本拠地ではなく、新築を勧めました。
+    image: assets/images/20261017_stadium_oldtrafford/03_w.jpg
+    card:
+      <<: *id_plan
+      highlight_row: 0
+  - text: いまの競技場を直す費用は、10億から12億ポンドの見込み。
+    card:
+      <<: *id_plan
+      highlight_row: 0
+  - text: 新築は約20億ポンド。直すあいだは、収容が減る見込みでもありました。
+    card: none
+  - text: 2025年3月、約10万席の新スタジアムの案が公開されます。
+    card:
+      <<: *id_plan
+      highlight_row: 1
+  - text: 描いたのは、イギリスの建築事務所、フォスター・アンド・パートナーズです。
+    card:
+      <<: *id_plan
+      highlight_row: 1
+  - text: 2026年6月、約350メートル先の土地を、クラブが買いました。
+    emph: true
+    card:
+      <<: *id_plan
+      highlight_row: 2
+  - text: 約10万席の計画どおりなら、いまの収容の1.35倍です。
+    card: none
+  - text: いまの競技場をどうするかは、はっきりしていません。
+    emph: true
+    card:
+      <<: *id_plan
+      highlight_row: 2
+  sources:
+  - https://www.architectsjournal.co.uk/news/man-utd-bags-site-for-new-100000-capacity-foster-partners-stadium
+  - https://stadiumdb.com/news/2026/09/england_manchester_united_officially_appoints_architect_for_new_stadium
+  - https://en.wikipedia.org/wiki/New_Trafford_Stadium
+- id: view
+  viewpoint: true
+  heading: 見立て・1位だけが飛び抜けた本拠地は、ほぼ毎試合が満員か
+  tier: 報道
+  telop: 1位と2位の差は、2位と3位の差の7.2倍。昨季の平均入場は収容の99.8％
+  narrator: 解説
+  card: &id_rank
+    type: table
+    title: 今季の収容、上位5クラブ（自分で並べた）
+    columns: &cols_rank
+    - 順位
+    - クラブ
+    - 収容
+    rows: &rows_rank
+    - - 1位
+      - マンチェスター・U
+      - 7万4158人
+    - - 2位
+      - トッテナム
+      - 6万2850人
+    - - 3位
+      - リヴァプール
+      - 6万1276人
+    - - 4位
+      - マンチェスター・C
+      - 6万1038人
+    - - 5位
+      - アーセナル
+      - 6万704人
+  say:
+  - text: 収容を並べると、1位はオールド・トラッフォード。2位はトッテナムです。
+    image: assets/images/20261017_stadium_oldtrafford/01_w.jpg
+    emph: true
+    mark:
+      kind: circle
+      row: 0
+    card:
+      type: table
+      title: 今季の収容、上位5クラブ（自分で並べた）
+      columns: *cols_rank
+      rows: *rows_rank
+      highlight_row: 0
+  - text: 1位と2位の差は、1万1308席。2位と3位の差は、1574席。
+    card: &id_gap
+      type: calc
+      title: 差と差の比べ（自分で割った）
+      terms:
+      - - 1万1308席
+        - 1位と2位の差
+      - - 1574席
+        - 2位と3位の差
+      - - 7.2倍
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+  - text: 1位と2位の差は、2位と3位の差の7.2倍。
+    emph: true
+    card: *id_gap
+  - text: 3位から5位は、572席のなかに並びます。飛び抜けているのは、1位だけ。
+    card:
+      type: table
+      title: 今季の収容、上位5クラブ（自分で並べた）
+      columns: *cols_rank
+      rows: *rows_rank
+      highlight_row: 2
+  - text: では、席は埋まっているのか。昨季のホーム19試合の平均入場は、7万3975人。
+    card: &id_fill
+      type: calc
+      title: 昨季の平均入場と収容（自分で割った）
+      terms:
+      - - 7万3975人
+        - 昨季のホーム19試合の平均入場
+      - - 7万4158人
+        - 今季の開幕時の収容
+      - - 99.8％
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+  - text: これを収容で割ると、99.8％になります。
+    emph: true
+    card: *id_fill
+  - text: 最多はバーンリー戦、最少はアーセナル戦。どちらも、満員に近い入場でした。
+    card: none
+  - text: 最大の器が、ほぼ毎試合、埋まっています。
+    emph: true
+    card: none
+  - text: 次の本拠地戦は、10月25日。相手は、ボーンマスです。
+    emph: true
+    card: none
+  - text: ボーンマスの本拠地の収容は、1万2357人。20クラブで、最も小さな数。
+    card: &id_bou
+      type: calc
+      title: 最大と最小の収容（自分で割った）
+      terms:
+      - - 7万4158人
+        - オールド・トラッフォード
+      - - 1万2357人
+        - ボーンマス
+      - - 6.0倍
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+  - text: オールド・トラッフォードは、その6.0倍にあたります。
+    card: *id_bou
+  - text: 最小の本拠地を、最大の本拠地が迎えます。
+    emph: true
+    card: none
+  sources:
+  - https://resources.premierleague.pulselive.com/premierleague/document/2026/07/31/8a890ff9-176c-4364-a8ff-e08f995e2c86/TM2040_PL-Handbook-and-Collateral-2026-27_Digital_31.07.pdf
+  - https://sdp-prem-prod.premier-league-prod.pulselive.com/api/v1/competitions/8/seasons/2025/matchweeks/1/matches
+  - https://sdp-prem-prod.premier-league-prod.pulselive.com/api/v1/competitions/8/seasons/2026/matchweeks/8/matches

@@ -1,0 +1,462 @@
+# 取材メモ（10/17 土、シリーズ「記録の解説」、key: record_ronaldo_messi、型は news）。
+# ロナウドのレアル・マドリード × メッシのバルセロナを、クラブでの得点を**1試合あたり**に直して比べる。
+#
+# ★**物差し（冒頭で言う）**：「クラブの**全大会の公式戦**の得点 ÷ 試合数」。リーグ・国王杯・ヨーロッパの大会・スーパーカップ等を全部足す。
+#
+# ★**数字の出どころ（2026-10-17 に原文を読み直した）**
+#   ・ロナウド（クラブ公式 realmadrid.com 英語版・スペイン語版の「Football legends」ページ。原文を読んだ）：
+#       **438 competitive appearances / 451 goals**（312 LaLiga・105 Champions League・22 Copa del Rey・6 Club World Cup・4 Supercopa de España・2 UEFA Super Cup）。
+#       公式は「averaging over a goal a game」と書く。9シーズン、1シーズン最多 61、CL 105。
+#       **指示の「450得点」とは1点違う**：英語版ウィキペディアの一覧は 438試合450得点（リーグ311）。クラブ公式は451（リーグ312）。
+#       AP などの報道は 451/438。**台本はクラブ公式の451を使い、450との食い違いを1か所で断る**（どちらでも1試合あたり 1.03）。
+#   ・メッシ（クラブ公式 fcbarcelona.com の選手ページ「Leo Messi」。原文を読んだ）：**778 appearances / 672 goals**、
+#       リーグ 474点・520試合、タイトル 35（CWC3・CL4・UEFAスーパーカップ3・リーグ10・国王杯7・スペイン・スーパーカップ8）。
+#       公式は「Top goalscorer in a season in official competition (73 goals in 2011/12)」。AP 配信（2021-08）も 672/778、リーグ 474/520。
+#   ・**大会別の「試合数」**はクラブ公式ページに無いので、英語版ウィキペディアの Career statistics の表を読んだ
+#       （ロナウド：リーグ292・国王杯30・欧州101・その他15＝438。メッシ：リーグ520・国王杯80・欧州149・その他29＝778。合計は両方クラブ公式と一致）。
+#       **シーズンごとの得点**もウィキペディアの表（ロナウドの合計は450、メッシは672）。確度は 報道。
+#   ・Transfermarkt：試した（leistungsdatenverein）が、取得した本文にレアルの行が出なかった（動的読み込み）。連続取得はしていない。**使っていない**。
+#   ・BBC：WebSearch が BBC を引けず、2018年・2021年の記事は見つからなかった。**BBC の原文は読めていない**（言っていない）。UEFA の公式ページも読んでいない。
+#
+# ★**自分で数えたもの（コードで検算済み）**
+#   1試合あたり：ロナウド 451÷438＝1.0297（約1.03）／メッシ 672÷778＝0.8638（約0.86）。比 1.19倍。（450÷438＝1.0274＝1.03）
+#   大会別（得点÷試合）：リーグ 312÷292＝1.07（Wikipediaの311なら1.065）、474÷520＝0.91／CL 105÷101＝1.04、120÷149＝0.81／国王杯 22÷30＝0.73、56÷80＝0.70／その他 12÷15＝0.80、22÷29＝0.76。
+#     4つとも ロナウドが上。差が大きいのは CL（約0.23）、リーグ（約0.16）。
+#   在籍：ロナウド 9シーズン（2009-10〜2017-18。入団24歳）／メッシ 17シーズン（2004-05〜2020-21。トップに出始めたのは17歳）。
+#   メッシの最初の4シーズン（2004-05〜2007-08）：110試合42点（9+25+36+40、1+8+17+16）。これを除くと 668試合630点＝0.943。
+#   **同じ9シーズン（2009-10〜2017-18。2人は同じラ・リーガにいた）**：メッシ 476試合472点＝0.992（ロナウド 438試合451点＝1.030）。差は約0.04（比1.04倍）。
+#     同9シーズンのリーグ戦：メッシ 309試合329点＝1.065、ロナウド 1.065〜1.069（312÷292）。**ほぼ同じ**。
+#     全体の差（1.030−0.864＝0.166）のうち、期間をそろえると 0.128 が消える（残り0.038）。
+#   50点以上のシーズン：ロナウド 6（2010-11〜2015-16。9シーズン中）／メッシ 6（17シーズン中。2010-11・11-12・12-13・14-15・16-17・18-19）。
+#   タイトル：ロナウド 16（4+3+3+2+2+2）／メッシ 35。1シーズンあたり 16÷9＝1.78、35÷17＝2.06。
+#   得点の総数の差 672−451＝221、試合数の差 778−438＝340。
+#   ※「メッシが451点に届くのは何試合目か」のような割り戻しは言っていない（仮定の数字になるため）。
+#
+# **言い切っていないもの**：大会別の試合数は Wikipedia のみ（クラブ公式に無い）。ロナウドのシーズン別得点は450基準（451との1点の出どころは不明）。
+#   タイトルの個数はクラブ公式のリスト（カタルーニャのカップは数えない。バルサ公式は「35」と書く）。
+#   「どちらが上か」は数字で言うが、**強み・弱みの価値判断はしていない**。メッシの若い時期は「小さく見せる」言い方を避け、「17歳で出始めた」と事実で言う。
+# 反応・本人の言葉は入れない（voice_min: 0）。ブラウザの道具・JavaScript は使っていない（requests と WebSearch のみ）。
+#
+# ★写真（目で見た）：
+#   ロナウド：Commons の File:Cristiano Ronaldo (163461621).jpeg（CC BY 3.0、Oleg Dubyna。2015年11月、CLのシャフタール戦、レアルの白いユニフォーム。横にナチョ）。
+#     01_w（1920x1080）・01_v。もう1枚 File:...(163461623).jpeg（同じ試合の横顔。**500px の透かしが左下にあるので、透かしの無い右側を 02_w（1200x675）に切った**。1.6倍まで）。
+#     クラブ公式（realmadrid.com）の写真は小さな顔写真（550x650）しか取れず使っていない。**2015年と古い（ほかに使える高解像度の写真が取れなかった）。**
+#   メッシ：FCバルセロナ公式サイトの写真5枚（クラブ公式。代理店の透かしなし）。01＝2009年のゴール後のキス（01_w 1600x900）、02＝2009-10の笑顔（02_w、3106px）、
+#     03＝2013-14（顔検出できず、そのまま）、04＝若い頃の喜び、05＝3つのトロフィー（2009）、06＝2020-21。
+#   2人を並べた pair（assets/images/20261017_pair/01.jpg）：レアルの白とバルサの赤青。
+date: 2026年10月17日
+slot: other_1
+format: news
+series: 記録の解説
+voice_min: 0
+people:
+- クリスティアーノ・ロナウド
+- リオネル・メッシ
+theme:
+  id: record_ronaldo_messi
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: ロナウドとメッシ
+  title: ロナウドのレアル451得点と、メッシのバルサ672得点。1試合あたりに直すと
+  question: クラブでの得点を1試合あたりに直すと、ロナウドとメッシはどう並ぶのか
+  lead: 得点の総数はメッシの672、ロナウドの451。
+  hook: ""
+  takeaway: クラブの全大会の得点を試合数で割ると、ロナウドはレアルで438試合451得点＝1試合あたり1.03、メッシはバルセロナで778試合672得点＝0.86。リーグ・チャンピオンズリーグ・国王杯・スーパーカップなど4つの区分すべてでロナウドが上。ただし在籍はロナウドが9シーズン、メッシが17シーズンで、メッシは17歳で出始めた最初の4シーズンに110試合42点。同じ9シーズン（2009-10〜2017-18。2人は同じラ・リーガにいた）に絞ると、メッシは476試合472点＝0.99で差は0.04まで縮み、リーグ戦だけなら1.07と1.06でほぼ同じ。全体の差0.17のうち0.13は、数える期間の違いで説明できる。タイトルはヨーロッパの3大会が同数（4・3・3）で、国内はメッシが多く、合計は16と35。451はクラブ公式の数で、統計の集計は450
+  opening_image: assets/images/20261017_pair/01.jpg
+short_title: ロナウド451点とメッシ672点、1試合あたりでは
+thumbnail:
+  layout: versus
+  photos:
+  - assets/images/20261017_ronaldo/01_w.jpg
+  - assets/images/20261017_messi/01_w.jpg
+  names: [ロナウド, メッシ]
+  numbers: ['1.03', '0.86']
+  line1: 1試合あたりの得点
+  line2: ロナウド対メッシ
+  short_photo: assets/images/20261017_ronaldo/01_v.jpg
+  tags:
+  - クリスティアーノ・ロナウド
+  - リオネル・メッシ
+  - レアル・マドリード
+  - バルセロナ
+  - 記録の解説
+sections:
+- id: top
+  main: true
+  heading: ロナウドとメッシは、1試合あたり何点だったのか
+  tier: 確定
+  official: true
+  telop: レアルのロナウドは1.03、バルサのメッシは0.86。総数はメッシが多い
+  narrator: キャスター
+  card: &top_duel
+    type: duel
+    title: クラブでの全大会（自分で割った）
+    left: {name: ロナウド, club: レアル・マドリード, photo: assets/images/20261017_ronaldo/01_w.jpg}
+    right: {name: メッシ, club: バルセロナ, photo: assets/images/20261017_messi/01_w.jpg}
+    rows:
+    - [試合数, '438', '778']
+    - [得点, '451', '672']
+    - [1試合あたりの得点, '1.03', '0.86']
+    - [在籍シーズン, '9', '17']
+    bars: [1試合あたりの得点]
+    note: 全大会の公式戦。得点と試合数はクラブ公式
+  say:
+  - text: ロナウドとメッシ。クラブでの得点を、同じ条件で比べます。
+    short_only: true
+    image: assets/images/20261017_pair/01.jpg
+    card: *top_duel
+  - text: まず、2人のクラブでの記録を、同じ条件で並べます。
+    image: assets/images/20261017_pair/01.jpg
+    card: none
+  - text: 数えるのは、クラブの全大会の公式戦です。
+    image: assets/backgrounds/pitch.png
+    card: *top_duel
+  - text: リーグ、カップ戦の国王杯、ヨーロッパの大会、スーパーカップまで入れます。
+    card: *top_duel
+  - text: ロナウドは、レアル・マドリードで438試合に出ました。
+    card:
+      <<: *top_duel
+      highlight_row: 0
+  - text: メッシは、バルセロナで778試合に出ています。
+    card:
+      <<: *top_duel
+      highlight_row: 1
+  - text: 得点の総数は、メッシが221点多く、ロナウドの約1.5倍。
+    image: assets/images/20261017_messi/01_w.jpg
+    card: none
+  - text: ただ、出た試合も、メッシが340試合多いんです。
+    card: none
+  - text: 1試合あたりでは、ロナウドが1.03、メッシが0.86です。
+    image: assets/backgrounds/pitch.png
+    card:
+      <<: *top_duel
+      highlight_row: 2
+    emph: true
+  - text: ロナウドは、1試合に1点を超えるペースでした。クラブ公式も、そう書いています。
+    card:
+      <<: *top_duel
+      highlight_row: 2
+  - text: 差は、およそ1.19倍です。
+    card:
+      <<: *top_duel
+      highlight_row: 2
+  - text: 451点は、クラブ公式の数字です。統計の集計の多くは、450点と数えます。
+    image: assets/images/20261017_ronaldo/02_w.jpg
+    card: none
+  - text: 違いは、リーグ戦の1点だけ。どちらでも、1試合あたりは1.03です。
+    card: none
+  sources:
+  - https://www.realmadrid.com/en-US/the-club/history/football-legends/cristiano-ronaldo-dos-santos-aveiro
+  - https://www.fcbarcelona.com/en/card/2214377/leo-messi
+  - https://en.wikipedia.org/wiki/Cristiano_Ronaldo
+  - https://en.wikipedia.org/wiki/Lionel_Messi
+- id: comps
+  heading: 大会ごとに割ると、差はどう変わるのか
+  tier: 報道
+  telop: リーグ・欧州・国王杯・スーパーカップ。4つとも、ロナウドの数字が上
+  narrator: 解説
+  card: &comp_table
+    type: table
+    title: 大会ごとの得点と試合数
+    columns:
+    - 大会
+    - ロナウド
+    - メッシ
+    rows:
+    - - リーグ戦
+      - 312点 292試合
+      - 474点 520試合
+    - - チャンピオンズリーグ
+      - 105点 101試合
+      - 120点 149試合
+    - - 国王杯
+      - 22点 30試合
+      - 56点 80試合
+    - - スーパーカップなど
+      - 12点 15試合
+      - 22点 29試合
+    note: 得点はクラブ公式。大会別の試合数は英語版ウィキペディアの集計
+  say:
+  - text: まず、大会ごとの得点と試合数を並べます。
+    image: assets/backgrounds/pitch.png
+    card: *comp_table
+  - text: リーグ戦は、ロナウドが292試合で312点。
+    card:
+      <<: *comp_table
+      highlight_row: 0
+  - text: メッシは、520試合で474点です。
+    card:
+      <<: *comp_table
+      highlight_row: 0
+  - text: チャンピオンズリーグは、ロナウドが101試合で105点。
+    card:
+      <<: *comp_table
+      highlight_row: 1
+  - text: メッシは、149試合で120点です。
+    card:
+      <<: *comp_table
+      highlight_row: 1
+  - text: 国王杯は、30試合22点と、80試合56点。
+    card: &comp_table_b
+      type: table
+      title: 大会ごとの得点と試合数（続き）
+      columns:
+      - 大会
+      - ロナウド
+      - メッシ
+      rows:
+      - - 国王杯
+        - 22点 30試合
+        - 56点 80試合
+      - - スーパーカップなど
+        - 12点 15試合
+        - 22点 29試合
+      highlight_row: 0
+      note: 得点はクラブ公式。大会別の試合数は英語版ウィキペディアの集計
+  - text: スーパーカップなどは、15試合12点と、29試合22点です。
+    card:
+      <<: *comp_table_b
+      highlight_row: 1
+  - text: これを、大会ごとに、1試合あたりへ割ります。
+    card: &comp_duel
+      type: duel
+      title: 大会ごとの1試合あたりの得点（自分で割った）
+      left: {name: ロナウド, club: 1試合あたり, photo: assets/images/20261017_ronaldo/01_w.jpg}
+      right: {name: メッシ, club: 1試合あたり, photo: assets/images/20261017_messi/01_w.jpg}
+      rows:
+      - [リーグ戦, '1.07', '0.91']
+      - [チャンピオンズリーグ, '1.04', '0.81']
+      - [国王杯, '0.73', '0.70']
+      - [スーパーカップなど, '0.80', '0.76']
+      bars: [リーグ戦, チャンピオンズリーグ, 国王杯, スーパーカップなど]
+  - text: リーグ戦は、ロナウドが1.07、メッシが0.91。
+    card:
+      <<: *comp_duel
+      highlight_row: 0
+  - text: チャンピオンズリーグは、1.04と0.81です。
+    card:
+      <<: *comp_duel
+      highlight_row: 1
+    emph: true
+  - text: 国王杯は0.73と0.70。ほとんど変わりません。
+    card:
+      <<: *comp_duel
+      highlight_row: 2
+  - text: スーパーカップなども、0.80と0.76で、近い数字です。
+    card:
+      <<: *comp_duel
+      highlight_row: 3
+  - text: 4つの区分のどれでも、ロナウドの数字が上でした。
+    card: *comp_duel
+  - text: チャンピオンズリーグの差は0.23。リーグ戦の0.16より広がります。
+    card: none
+    image: assets/images/20261017_messi/04_w.jpg
+  sources:
+  - https://www.realmadrid.com/en-US/the-club/history/football-legends/cristiano-ronaldo-dos-santos-aveiro
+  - https://www.fcbarcelona.com/en/card/2214377/leo-messi
+  - https://en.wikipedia.org/wiki/Cristiano_Ronaldo
+  - https://en.wikipedia.org/wiki/Lionel_Messi
+- id: seasons
+  heading: シーズンごとの得点は、どう動いたのか
+  tier: 報道
+  telop: 最多はロナウドの61点（2014-15）と、メッシの73点（2011-12）
+  narrator: 解説
+  card: &season_line
+    type: line
+    title: 1シーズンの得点（全大会）
+    x: ['2010-11', '2011-12', '2012-13', '2013-14', '2014-15', '2015-16', '2016-17', '2017-18']
+    series:
+    - [ロナウド, [53, 60, 55, 51, 61, 51, 42, 44]]
+    - [メッシ, [53, 73, 60, 41, 58, 41, 54, 45]]
+    unit: 点
+    focus: ロナウド
+    peak: true
+    note: 2009-10は、ロナウド33点・メッシ47点。ロナウドはウィキペディアの集計（合計450）
+  say:
+  - text: シーズンごとの得点を、全大会で並べます。
+    image: assets/backgrounds/pitch.png
+    card: *season_line
+  - text: 図は、2010-11からの8シーズンです。
+    card: *season_line
+  - text: 2009-10は、ロナウドが33点、メッシが47点でした。
+    card: *season_line
+  - text: ロナウドの最多は、2014-15シーズンの61点です。
+    card:
+      <<: *season_line
+      highlight: '2014-15'
+  - text: レアル・マドリードの1シーズン最多として、クラブ公式も記録しています。
+    card:
+      <<: *season_line
+      highlight: '2014-15'
+  - text: メッシの最多は、2011-12シーズンの73点です。
+    card:
+      <<: *season_line
+      highlight: '2011-12'
+    emph: true
+  - text: 公式戦の1シーズン最多として、バルセロナ公式が記録しています。
+    card:
+      <<: *season_line
+      highlight: '2011-12'
+  - text: 50点以上のシーズンは、どちらも6回ずつです。
+    image: assets/images/20261017_ronaldo/01_w.jpg
+    card: none
+  - text: ロナウドは9シーズンのうちの6回、メッシは17シーズンのうちの6回です。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Cristiano_Ronaldo
+  - https://en.wikipedia.org/wiki/Lionel_Messi
+  - https://www.realmadrid.com/en-US/the-club/history/football-legends/cristiano-ronaldo-dos-santos-aveiro
+  - https://www.fcbarcelona.com/en/card/2214377/leo-messi
+- id: titles
+  heading: クラブでの優勝は、どれだけ違うのか
+  tier: 確定
+  official: true
+  telop: ヨーロッパの3大会は同数。国内はメッシが多く、合計は16と35
+  narrator: 解説
+  card: &title_shelf
+    type: shelf
+    title: クラブでの優勝（クラブ公式の記録）
+    left: {name: ロナウド, club: レアル・マドリード, photo: assets/images/20261017_ronaldo/01_w.jpg}
+    right: {name: メッシ, club: バルセロナ, photo: assets/images/20261017_messi/01_w.jpg}
+    rows:
+    - [チャンピオンズリーグ, '4', '4']
+    - [クラブワールドカップ, '3', '3']
+    - [UEFAスーパーカップ, '3', '3']
+    - [リーグ優勝, '2', '10']
+    - [国王杯, '2', '7']
+    - [スペインのスーパーカップ, '2', '8']
+    note: カタルーニャのカップは数えない
+  say:
+  - text: 優勝の数も、クラブ公式の記録で並べます。
+    image: assets/images/20261017_messi/05.jpg
+    card: none
+  - text: ヨーロッパの3つは、2人とも同じ数です。
+    image: assets/backgrounds/pitch.png
+    card: *title_shelf
+  - text: チャンピオンズリーグは、どちらも4回です。
+    card:
+      <<: *title_shelf
+      highlight_row: 0
+  - text: クラブワールドカップと、ヨーロッパのスーパーカップは、どちらも3回ずつ。
+    card:
+      <<: *title_shelf
+      highlight_row: 1
+  - text: 国内は、メッシが多くなります。
+    image: assets/images/20261017_messi/02_w.jpg
+    card: none
+  - text: リーグ優勝は、ロナウドが2回、メッシが10回です。
+    image: assets/backgrounds/pitch.png
+    card:
+      <<: *title_shelf
+      highlight_row: 3
+    emph: true
+  - text: 国王杯は2回と7回。スペインのスーパーカップは2回と8回です。
+    card:
+      <<: *title_shelf
+      highlight_row: 4
+  - text: 合計は、ロナウドが16、メッシが35になります。
+    card: *title_shelf
+  - text: ただ、在籍は9シーズンと17シーズン。ほぼ倍の長さです。
+    image: assets/images/20261017_ronaldo/02_w.jpg
+    card: none
+  - text: 1シーズンあたりに割ると、1.78と2.06です。
+    card: none
+  sources:
+  - https://www.realmadrid.com/en-US/the-club/history/football-legends/cristiano-ronaldo-dos-santos-aveiro
+  - https://www.fcbarcelona.com/en/card/2214377/leo-messi
+- id: view
+  viewpoint: true
+  heading: 見立て・同じ9シーズンに絞ると、差はどう縮むのか
+  tier: 背景
+  telop: 全体の差は0.17。同じ9シーズンなら0.04。リーグ戦は1.07と1.06
+  narrator: 解説
+  card: &view_table
+    type: table
+    title: 1試合あたりの得点（自分で数えた）
+    columns:
+    - 数える範囲
+    - ロナウド
+    - メッシ
+    rows:
+    - - クラブでの全シーズン
+      - '1.03'
+      - '0.86'
+    - - メッシの最初の4シーズンを除く
+      - '1.03'
+      - '0.94'
+    - - 同じ9シーズン（2009-10〜）
+      - '1.03'
+      - '0.99'
+    - - 同じ9シーズンのリーグ戦
+      - '1.07'
+      - '1.06'
+    note: 全大会。同じ9シーズンは2009-10から2017-18まで
+  say:
+  - text: 最後に、数える期間をそろえて、数え直します。
+    image: assets/images/20261017_messi/03.jpg
+    card: none
+  - text: 1つ目は、在籍した全シーズン。1.03と0.86です。
+    image: assets/backgrounds/pitch.png
+    card:
+      <<: *view_table
+      highlight_row: 0
+  - text: メッシは17歳で、トップチームに出始めました。
+    card: none
+    image: assets/images/20261017_messi/04_w.jpg
+  - text: その最初の4シーズンは、110試合で42点です。
+    image: assets/backgrounds/pitch.png
+    card:
+      <<: *view_table
+      highlight_row: 1
+  - text: この4シーズンを除くと、668試合で630点。0.94になります。
+    card:
+      <<: *view_table
+      highlight_row: 1
+  - text: 2つ目は、ロナウドと同じ9シーズン、2009-10から2017-18です。
+    card:
+      <<: *view_table
+      highlight_row: 2
+  - text: 2人は、同じ時期に、同じラ・リーガでプレーしていました。
+    card:
+      <<: *view_table
+      highlight_row: 2
+  - text: メッシは、この9シーズンで476試合472点。割ると0.99です。
+    card: &view_calc
+      type: calc
+      title: メッシの同じ9シーズン（自分で割った）
+      terms:
+      - ['472点', 2009-10から2017-18の得点]
+      - ['476試合', 同じ9シーズンの試合数]
+      - ['0.99', 1試合あたり]
+      ops: ['÷', ＝]
+    emph: true
+  - text: ロナウドの1.03との差は、0.04まで縮みます。
+    card:
+      <<: *view_table
+      highlight_row: 2
+    mark: {kind: circle, row: 2, col: メッシ}
+  - text: 得点そのものは、この9シーズンだと、メッシがロナウドより21点多くなります。
+    card: *view_calc
+  - text: リーグ戦だけなら、1.07と1.06。ほぼ同じ数字です。
+    card:
+      <<: *view_table
+      highlight_row: 3
+    emph: true
+  - text: 全体の差は約0.17。そのうち約0.13は、期間をそろえると消えます。
+    card: *view_table
+  - text: 差の大部分は、数える期間の違いから来ています。
+    card: *view_table
+    emph: true
+  - text: どの数え方でも、1試合あたりはロナウドが上。
+    card: *view_table
+  - text: メッシは17シーズンかけて、1試合に0.86点を積み上げました。
+    image: assets/images/20261017_messi/01_w.jpg
+    card: none
+  - text: 総数ならメッシ、率ならロナウド。物差しで、景色が変わります。
+    card: none
+  sources:
+  - https://www.realmadrid.com/en-US/the-club/history/football-legends/cristiano-ronaldo-dos-santos-aveiro
+  - https://www.fcbarcelona.com/en/card/2214377/leo-messi
+  - https://en.wikipedia.org/wiki/Cristiano_Ronaldo
+  - https://en.wikipedia.org/wiki/Lionel_Messi

@@ -1,0 +1,539 @@
+# 移籍の深掘り 第6回：チェルシーの2026年夏（「1クラブの移籍期間」の回）。10/17 作成。
+# 材料の控えは research/raw/20261017_transfer_chelsea_window.md。**材料から出ない。**
+#
+# **角度：「支出は世界2位。売った分を引くと、差し引きはプラス」。**
+#   Transfermarkt の世界の一覧（2026年夏・支出順。**1ページ目＝支出の上位25クラブだけ**）で、2位チェルシー 407.48。
+#   同じページの「戻った額」は 447.80、差し引きは＋40.32。**プレミア20クラブの一覧でも支出2位・収入1位**（機械で確かめた）。
+#   世界の収入順位は、一覧が上位25クラブしか見ていないので**言わない**。
+#
+# **数字の確度。**移籍金は Transfermarkt の集計で**確度は「報道」**。
+#   - **クラブ公式（chelseafc.com）の発表文を全部読んだ（加入10・退団主要10）。額は1つも書かれていない。**
+#   - 報道（LBC・PA の配信、The National）の額は**ポンド**：ロジャーズ約1億1700万（「understood to be around」）、エンソ1億2500万（PA）。
+#     Transfermarkt のユーロは 138.00 と 145.00。**換算は集計の側のもの**（138÷117＝1.18、145÷125＝1.16。日付の違いで同じ率にならない）。
+#   - **固定かボーナス込みかは公表されていない**。買い取り条件は調べていない（言わない）。貸し出しは額に入っていない。
+#
+# **自分で数えた数**（百万ユーロ。足し算で一覧と一致を確かめた）:
+#   払った額 138.00+60.70+57.00+50.78+40.00+25.00+19.00+8.75+5.85+2.40＝407.48 ← 一覧と一致（移籍金の付いた加入10人。ヘンダーソンは移籍金なし）。
+#   戻った額 売り10人 145.00+56.30+55.50+55.00+52.50+30.00+21.00+15.00+11.65+2.50＝444.45、貸し出し料2件 3.00+0.35＝3.35 → 計 447.80 ← 一覧と一致。
+#     **下書きの「約4億4445万」は貸し出し料を除いた売りだけの合計で正しかった**（貸し出し料を足すと一覧の4億4780万になる）。
+#   差し引き 447.80−407.48＝40.32 ← 一覧の＋40.32と一致（売りだけだと＋36.97）。
+#   売り上位5人 145+56.3+55.5+55+52.5＝364.3 → 364.3÷444.45＝81.97%（82%）／残り5人 80.15。
+#   プレミアのクラブから 145+56.3+55.5+52.5+21+11.65＝341.95 → ÷444.45＝76.9%（77%）／海外 55+30+15+2.5＝102.5。
+#   買い上位3人 138+60.7+57＝255.7 → ÷407.48＝62.75%（63%）／ケンダ＋エメガ（2025年に決まっていた）50.78+25＝75.78 → 18.6%（19%）。
+#   ロジャーズとエンソの差 145−138＝7.0。
+#   日付はクラブの発表日。7/21 までに売った3人 55+21+56.3＝132.3 → ÷444.45＝29.8%（30%）／それ以後 444.45−132.3＝312.15（70%）。
+#   9/1 に出た3人 145+15+11.65＝171.65 → 38.6%（39%）。7月中に決まった買い4人（パレストラ7/1・ケンダ7/8・ロジャーズ7/21・ラクロワ7/30）
+#     57+50.78+138+60.7＝306.48 → 75.2%（75%）。
+#   市場価値（Transfermarkt のクラブ詳細表の「Market value」＝移籍時。ロジャーズは API の details.marketValue 90.0 と一致）:
+#     買い10人 90+50+35+42+40+25+10+12+3+3.5＝310.5 → 407.48÷310.5＝1.312（約1.31倍）／
+#     売り10人 100+40+40+50+28+40+20+12+16+4＝350 → 444.45÷350＝1.270（約1.27倍）／デラップ 52.5÷28＝1.875（約1.9倍）／
+#     線より下の売り3人：チャロバー（40→30）・アダラビオヨ（16→11.65）・フォファナ（4→2.5）。
+#   為替：ECB 参照相場 2026-10-16＝1ユーロ177.82円。40.32×177.82＝7,170百万円（約72億円）。
+#   プレミアの差し引きがプラスのクラブ：ヴィラ＋65.05・パレス＋44.00・チェルシー＋40.32・フォレスト＋26.50・エヴァートン＋26.20・ブライトン＋12.05＝6クラブ（チェルシーは3番目）。
+#   支出の上位4クラブ（世界の一覧）：シティ−189.18／チェルシー＋40.32／トッテナム−202.10／ニューカッスル−33.90 → プラスはチェルシーだけ。
+# 数字の重なり対策：『4億750万』『4億4780万』『4030万』『72億円』『3番目』『6クラブ』は①だけ／②は『1億4500万』『82%』『77%』『3億4195万』『8015万』『335万』／
+#   ③は『1億3800万』『63%』『7578万』『19%』『700万』『1億1700万ポンド』／④は『30%』『70%』『39%』『75%』『1億3230万』『3億1215万』『1億7165万』『3億648万』／
+#   ⑤は『1.31倍』『1.27倍』『1.9倍』『上位4クラブ』。**題には金額を入れない**。
+# 板：①waterfall と convert ②table・document・calc ③table・document・convert・duel ④timeline・calc ⑤calc 2枚・scatter・table（赤ペン）。
+# 写真（10/17 取得）：クラブ公式（chelseafc.com の記事の主写真）。ロジャーズ・エンソ・パレストラ・ケンダ・ラクロワ・ジャクソン。スタンフォード・ブリッジは Commons（10/16 のスタジアムの回と同じ2枚）。
+#   出典は assets/images/20261017_chelsea_window/credits.json。
+# 声：1件も無い。クラブ公式発表の文は文書カードで出した。voice_min: 0。
+# サムネ：ユーザーが選ぶ。ここは案A。案B・Cは報告に書いた。
+format: news
+voice_min: 0
+slot: other_1
+date: 2026年10月17日
+series: 移籍の深掘り
+people:
+- チェルシー
+- モーガン・ロジャーズ
+- エンソ・フェルナンデス
+- ニコラス・ジャクソン
+- マクサンス・ラクロワ
+- マルコ・パレストラ
+theme:
+  id: transfer_chelsea_window
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: チェルシー
+  title: チェルシー、今夏の払った額は世界2位。売った分を引くと、どうなるか
+  question: 今夏のチェルシーの移籍期間で、払った額と戻った額はどれだけ違い、差し引きはどうなったのか
+  lead: この夏、世界で2番目に多く払ったクラブ。
+  takeaway: チェルシーが今夏に払った額は4億750万ユーロで世界2位だが、選手を売って戻った額が4億4780万ユーロあり、差し引きは4030万ユーロ（およそ72億円）のプラス。プレミアでプラスのクラブは6つで、チェルシーは3番目。売ったのは10人で、エンソ・フェルナンデスら上の5人で82%、77%はプレミアのクラブから入った。買ったのは10人で、上の3人で63%。7月中に払った額の75%が決まり、売りの70%はロジャーズの加入（7月21日）のあと、窓が閉まる9月1日だけで39%だった。買った10人は移籍直前の推定の市場価値の約1.31倍、売った10人は約1.27倍。支出の上位4クラブでプラスなのはチェルシーだけ。クラブの発表に額は無く、額は報じられた移籍金の集計で、ロジャーズの報道はポンド（約1億1700万）。固定かボーナス込みかは公表されていない。冬の窓は2027年1月1日に開く
+  opening_image: assets/images/20261017_chelsea_window/b02_enzo_w.jpg
+  bgm: assets/audio/bgm_calm.wav
+thumbnail:
+  layout: versus
+  photos:
+  - assets/images/20261017_chelsea_window/b01_rogers_w.jpg
+  - assets/images/20261017_chelsea_window/b02_enzo_w.jpg
+  names:
+  - ロジャーズ（買った）
+  - エンソ（売った）
+  numbers:
+  - 1億3800万€
+  - 1億4500万€
+  callouts: [世界2位の支出]
+  line1: チェルシーの今夏の収支
+  line2: 売った分を引くとプラス
+  short_photo: assets/images/20261017_chelsea_window/b01_rogers_v.jpg
+  crests:
+  - チェルシー
+  tags:
+  - チェルシー
+  - 移籍金
+  - プレミアリーグ
+  - スタンフォード・ブリッジ
+  - 移籍の深掘り
+sections:
+- id: money
+  main: true
+  heading: 払った額は世界2位。売った分を引くと、差し引きはどうなったか
+  tier: 報道
+  telop: 払った額は世界2位。戻った額が上回り、差し引きはプラス
+  narrator: 解説
+  card: &flow
+    type: waterfall
+    title: 今夏の移籍で動いた額
+    start: [払った額, 407.48]
+    steps:
+    - [売って戻した額, -447.80]
+    total: [差し引き, -40.32]
+    unit: 百万ユーロ
+  say:
+  - text: この夏の支出は、チェルシーが世界2位でした。
+    short_only: true
+    image: assets/images/20261017_chelsea_window/a01_stadium_w.jpg
+  - text: 払った額は、およそ4億750万ユーロ。世界で2番目です。
+    emph: true
+    image: assets/images/20261017_chelsea_window/a01_stadium_w.jpg
+    card:
+      <<: *flow
+      highlight: 払った額
+  - text: 数字は、移籍金の報道を集めた集計です。
+    card:
+      <<: *flow
+      highlight: 払った額
+  - text: では、売って戻った額は。およそ4億4780万ユーロ。
+    card:
+      <<: *flow
+      highlight: 売って戻した額
+  - text: 払った額より、戻った額のほうが大きい夏です。
+    emph: true
+    card: *flow
+  - text: 戻った額から払った額を引いた差し引きは、約4030万ユーロのプラス。
+    emph: true
+    card:
+      <<: *flow
+      highlight: 差し引き
+  - text: プレミアの20クラブで、プラスだったのは6クラブ。
+    card: *flow
+  - text: その中で、チェルシーは大きい順に3番目です。
+    card:
+      <<: *flow
+      highlight: 差し引き
+  - text: 円にすると、いくらか。
+    card: *flow
+  - text: 換算は、欧州中央銀行の10月16日の目安、1ユーロ177.8円で行います。
+    card: &yen
+      type: convert
+      title: 差し引きを円に
+      from: ['4030万', ユーロ, 戻った額から払った額を引く]
+      to: [約72億, 円, 10月16日の為替]
+      via: 1ユーロ＝177.82円
+  - text: およそ72億円のプラスになります。
+    card: *yen
+  - text: 中身を見ます。まず、売った側です。
+    image: assets/images/20261017_chelsea_window/a01_stadium_w.jpg
+    card: none
+  sources:
+  - https://www.transfermarkt.com/transfers/einnahmenausgaben/statistik/plus/1?ids=a&saison_id=2026&saison_id_bis=2026&w_s=s
+  - https://www.transfermarkt.com/premier-league/einnahmenausgaben/wettbewerb/GB1/plus/1?ids=a&saison_id=2026&saison_id_bis=2026&w_s=s
+  - https://www.transfermarkt.com/fc-chelsea/transfers/verein/631/saison_id/2026
+  - https://data-api.ecb.europa.eu/service/data/EXR/D.JPY.EUR.SP00.A
+- id: sold
+  heading: 売ったのは10人。エンソ・フェルナンデスが世界でいちばん高かった
+  tier: 報道
+  telop: 売った10人の合計はおよそ4億4445万ユーロ。上の5人で82%
+  narrator: 解説
+  card: &outlist
+    type: table
+    title: 売った選手（受け取った額の大きい順）
+    columns: ['選手', '行き先', '百万ユーロ']
+    rows:
+    - &o1 [エンソ・フェルナンデス, マンチェスター・シティ, '145.00']
+    - &o2 [アンドレイ・サントス, マンチェスター・U, '56.30']
+    - &o3 [ニコラス・ジャクソン, アストン・ヴィラ, '55.50']
+    - &o4 [マルク・ククレジャ, レアル・マドリード, '55.00']
+    - &o5 [リアム・デラップ, ノッティンガム・F, '52.50']
+    - &o6 [ほか5人, コモほか, '80.15']
+    - &o7 [貸し出し料（2件）, ナポリ・バーンリー, '3.35']
+  say:
+  - text: 移籍金を受け取って売ったのは10人。買った10人と、同じ人数です。
+    image: assets/images/20261017_chelsea_window/a01_stadium_w.jpg
+    card: *outlist
+  - text: いちばん高いのは、エンソ・フェルナンデス。シティへ、1億4500万ユーロ。
+    emph: true
+    image: assets/images/20261017_chelsea_window/b02_enzo_w.jpg
+    card: {type: table, title: 売った選手（受け取った額の大きい順）, columns: ['選手', '行き先', '百万ユーロ'], rows: [*o1, *o2, *o3, *o4, *o5, *o6, *o7], highlight_row: 0}
+  - text: 今夏の移籍で、世界でいちばん高い額です。
+    card: {type: table, title: 売った選手（受け取った額の大きい順）, columns: ['選手', '行き先', '百万ユーロ'], rows: [*o1, *o2, *o3, *o4, *o5, *o6, *o7], highlight_row: 0}
+  - text: チェルシーの発表文は、こうです。額はありません。
+    image: assets/images/20261017_chelsea_window/a02_stadium_aerial_w.jpg
+    card: &doc_enzo
+      type: document
+      label: チェルシー 公式発表（9月1日）エンソ退団の文（訳）
+      paragraphs:
+      - エンソ・フェルナンデスは、プレミアリーグのマンチェスター・シティへの完全移籍を完了した。
+      - 彼はスタンフォード・ブリッジで170試合に出場し、31得点を挙げた。
+      highlight:
+      - 完全移籍
+      - 170試合
+  - text: 完全移籍、つまり貸し出しではなく、170試合で31得点でした。
+    card: *doc_enzo
+  - text: この額は報じられた数字で、ポンドでは1億2500万でした。
+    card: *doc_enzo
+  - text: 次に、アンドレイ・サントス。ユナイテッドへ、5630万ユーロ。
+    emph: true
+    card: {type: table, title: 売った選手（受け取った額の大きい順）, columns: ['選手', '行き先', '百万ユーロ'], rows: [*o1, *o2, *o3, *o4, *o5, *o6, *o7], highlight_row: 1}
+  - text: 3人目は、ジャクソン。ヴィラへ、5550万ユーロ。
+    image: assets/images/20261017_chelsea_window/b06_jackson_w.jpg
+    card: {type: table, title: 売った選手（受け取った額の大きい順）, columns: ['選手', '行き先', '百万ユーロ'], rows: [*o1, *o2, *o3, *o4, *o5, *o6, *o7], highlight_row: 2}
+  - text: ククレジャはレアルへ5500万、デラップはフォレストへ5250万ユーロ。
+    card: {type: table, title: 売った選手（受け取った額の大きい順）, columns: ['選手', '行き先', '百万ユーロ'], rows: [*o1, *o2, *o3, *o4, *o5, *o6, *o7], highlight_row: [3, 4]}
+  - text: この上の5人で、売った額の82%です。
+    emph: true
+    card: {type: table, title: 売った選手（受け取った額の大きい順）, columns: ['選手', '行き先', '百万ユーロ'], rows: [*o1, *o2, *o3, *o4, *o5, *o6, *o7], highlight_row: [0, 1, 2, 3, 4]}
+  - text: 残る5人は、チャロバー、ジョージ、ギウ、アダラビオヨ、フォファナ。
+    card: {type: table, title: 売った選手（受け取った額の大きい順）, columns: ['選手', '行き先', '百万ユーロ'], rows: [*o1, *o2, *o3, *o4, *o5, *o6, *o7], highlight_row: 5}
+  - text: 5人合わせて、8015万ユーロです。
+    card: {type: table, title: 売った選手（受け取った額の大きい順）, columns: ['選手', '行き先', '百万ユーロ'], rows: [*o1, *o2, *o3, *o4, *o5, *o6, *o7], highlight_row: 5}
+  - text: 貸し出し料が付いたのは2件で、合わせて335万ユーロ。
+    card: {type: table, title: 売った選手（受け取った額の大きい順）, columns: ['選手', '行き先', '百万ユーロ'], rows: [*o1, *o2, *o3, *o4, *o5, *o6, *o7], highlight_row: 6}
+  - text: 貸し出しで額が付かない移籍は、数に入れていません。
+    card: *outlist
+  - text: では、誰が買ったのか。買い手を、プレミアとそれ以外に分けます。
+    card: none
+    image: assets/images/20261017_chelsea_window/a02_stadium_aerial_w.jpg
+  - text: 売った額のうち、プレミアのクラブから入ったのは、77%です。
+    emph: true
+    card: &calc_pl
+      type: calc
+      title: 売った額のうち、プレミアのクラブからの割合
+      terms:
+      - ['3億4195万ユーロ', プレミアの6クラブから]
+      - ['4億4445万ユーロ', 売った額（貸し出し料を除く）]
+      - [約77%, プレミアの中の割合]
+      ops: ['÷', ＝]
+  - text: シティ、ユナイテッド、ヴィラ、フォレスト、エヴァートン、トッテナム。
+    card: *calc_pl
+  - text: 海外は、レアル、コモ、ライプツィヒ、セルヴェットの4件です。
+    card: *calc_pl
+  - text: 同じリーグのクラブから、売った額の大半が入っています。
+    card: none
+  sources:
+  - https://www.transfermarkt.com/fc-chelsea/transfers/verein/631/plus/1?saison_id=2026&pos=&detailed=1&w_s=s
+  - https://www.transfermarkt.com/transfers/saisontransfers/statistik/top/saison_id/2026/transferfenster/sommertransfers
+  - https://www.chelseafc.com/en/news/article/enzo-fernandez-leaves--chelsea-on-permanent-transfer
+  - https://www.chelseafc.com/en/news/article/summer-transfers-2026-all-the-chelsea-ins-outs-and-new-contracts-so-far
+  - https://www.irishexaminer.com/sport/soccer/arid-41905486.html
+  - https://www.thenationalnews.com/sport/football/2026/09/02/transfer-deadline-day-manchester-city-seal-125m-deal-with-chelsea-for-enzo-fernandez/
+- id: spent
+  heading: 買ったのは10人。いちばん高かったのは誰か
+  tier: 報道
+  telop: 買った10人で払った額は4億750万ユーロ。上の3人で63%
+  narrator: 解説
+  card: &inlist
+    type: table
+    title: 払った額の大きい順（移籍金の付いた10人）
+    columns: ['選手', '前のクラブ', '百万ユーロ']
+    rows:
+    - &i1 [モーガン・ロジャーズ, アストン・ヴィラ, '138.00']
+    - &i2 [マクサンス・ラクロワ, クリスタル・パレス, '60.70']
+    - &i3 [マルコ・パレストラ, アタランタ, '57.00']
+    - &i4 [ケンダ, スポルティング, '50.78']
+    - &i5 [バレンティン・バルコ, ストラスブール, '40.00']
+    - &i6 [エメガ, ストラスブール, '25.00']
+    - &i7 [ほか4人, バジェカーノほか, '36.00']
+  say:
+  - text: 次は、チェルシーが払ったほうの10人。売った額より、少ない払いです。
+    image: assets/images/20261017_chelsea_window/a01_stadium_w.jpg
+    card: *inlist
+    callword: 10人に払った夏
+  - text: いちばん高いのは、ロジャーズ。ヴィラから、1億3800万ユーロ。
+    emph: true
+    image: assets/images/20261017_chelsea_window/b01_rogers_w.jpg
+    card: {type: table, title: 払った額の大きい順（移籍金の付いた10人）, columns: ['選手', '前のクラブ', '百万ユーロ'], rows: [*i1, *i2, *i3, *i4, *i5, *i6, *i7], highlight_row: 0}
+  - text: クラブの発表は、ここでも額を書いていません。
+    card: &doc_rogers
+      type: document
+      label: チェルシー 公式発表（7月21日）ロジャーズ加入の文（訳）
+      paragraphs:
+      - チェルシーは、アストン・ヴィラからイングランド代表のモーガン・ロジャーズの獲得を発表する。
+      - 23歳のフォワードは、スタンフォード・ブリッジと2033年までの契約を結んだ。
+      highlight:
+      - 獲得を発表
+      - 2033年
+  - text: 書かれているのは、23歳であることと、契約が2033年までであること。
+    card: *doc_rogers
+  - text: ポンドでは、額はおよそ1億1700万と伝えられています。
+    card: &gbp
+      type: convert
+      title: 報じられた額と、集計の額
+      from: ['約1億1700万', ポンド, 報じられた額]
+      to: ['1億3800万', ユーロ, 集計の額]
+      via: 集計の額÷報じられた額＝約1.18
+  - text: 集計のユーロは、その換算です。報道は、およそ、という言い方でした。
+    card: *gbp
+  - text: 固定か、ボーナス込みかは、公表されていません。
+    card: none
+    image: assets/images/20261017_chelsea_window/b01_rogers_w.jpg
+  - text: 次はラクロワ。パレスから6070万ユーロ。
+    image: assets/images/20261017_chelsea_window/b05_lacroix_w.jpg
+    card: {type: table, title: 払った額の大きい順（移籍金の付いた10人）, columns: ['選手', '前のクラブ', '百万ユーロ'], rows: [*i1, *i2, *i3, *i4, *i5, *i6, *i7], highlight_row: 1}
+  - text: 3人目はパレストラ。アタランタから5700万ユーロ。
+    image: assets/images/20261017_chelsea_window/b03_palestra_w.jpg
+    card: {type: table, title: 払った額の大きい順（移籍金の付いた10人）, columns: ['選手', '前のクラブ', '百万ユーロ'], rows: [*i1, *i2, *i3, *i4, *i5, *i6, *i7], highlight_row: 2}
+  - text: 上位3人で、買った額の63%です。
+    emph: true
+    card: {type: table, title: 払った額の大きい順（移籍金の付いた10人）, columns: ['選手', '前のクラブ', '百万ユーロ'], rows: [*i1, *i2, *i3, *i4, *i5, *i6, *i7], highlight_row: [0, 1, 2]}
+  - text: 4人目はケンダ。スポルティングから5078万ユーロ。
+    image: assets/images/20261017_chelsea_window/b04_quenda_w.jpg
+    card: {type: table, title: 払った額の大きい順（移籍金の付いた10人）, columns: ['選手', '前のクラブ', '百万ユーロ'], rows: [*i1, *i2, *i3, *i4, *i5, *i6, *i7], highlight_row: 3}
+  - text: ケンダの獲得は、2025年3月に、すでに決まったと発表されていました。
+    card: {type: table, title: 払った額の大きい順（移籍金の付いた10人）, columns: ['選手', '前のクラブ', '百万ユーロ'], rows: [*i1, *i2, *i3, *i4, *i5, *i6, *i7], highlight_row: 3}
+  - text: エメガも、2025年9月に合意が発表され、加入は2026年とされていました。
+    card: {type: table, title: 払った額の大きい順（移籍金の付いた10人）, columns: ['選手', '前のクラブ', '百万ユーロ'], rows: [*i1, *i2, *i3, *i4, *i5, *i6, *i7], highlight_row: 5}
+  - text: この2人を合わせて、7578万ユーロ。払った額の19%です。
+    emph: true
+    card: {type: table, title: 払った額の大きい順（移籍金の付いた10人）, columns: ['選手', '前のクラブ', '百万ユーロ'], rows: [*i1, *i2, *i3, *i4, *i5, *i6, *i7], highlight_row: [3, 5]}
+  - text: 集計は、この2人も今夏の分に入れています。
+    card: *inlist
+  - text: 残る4人は、チャバリア、E・マルティネス、ウェルベック、サトパエフ。
+    card: {type: table, title: 払った額の大きい順（移籍金の付いた10人）, columns: ['選手', '前のクラブ', '百万ユーロ'], rows: [*i1, *i2, *i3, *i4, *i5, *i6, *i7], highlight_row: 6}
+  - text: ヘンダーソンは移籍金なしで、額には入っていません。
+    card: *inlist
+  - text: いちばん高く買った1人と、いちばん高く売った1人を並べます。
+    image: assets/images/20261017_chelsea_window/a01_stadium_w.jpg
+    card: &duel
+      type: duel
+      left: {name: ロジャーズ, club: 買った（ヴィラから）, photo: assets/images/20261017_chelsea_window/b01_rogers_sq.jpg, color: "#034694"}
+      right: {name: エンソ, club: 売った（シティへ）, photo: assets/images/20261017_chelsea_window/b02_enzo_sq.jpg, color: "#b8860b"}
+      rows:
+      - [チェルシーの発表日, 7月21日, 9月1日]
+      - [年齢, 23歳, 25歳]
+      - [移籍直前の市場価値, 0.9億€, 1億€]
+      - [額（集計）, 1.38億€, 1.45億€]
+      - [報じられた額, 約1.17億£, 1.25億£]
+      bars: [移籍直前の市場価値, 額（集計）]
+  - text: ロジャーズは23歳。エンソは25歳です。
+    card: {<<: *duel, highlight_row: 年齢}
+  - text: 移籍直前の市場価値は、9000万ユーロと、1億ユーロ。
+    card: {<<: *duel, highlight_row: 移籍直前の市場価値}
+  - text: 額は、買ったほうが1億3800万ユーロ。
+    card: {<<: *duel, highlight_row: 額（集計）}
+  - text: 売ったほうは、それを700万ユーロ上回ります。
+    card: {<<: *duel, highlight_row: 額（集計）}
+  - text: ロジャーズ1人の分を、エンソ1人が上回りました。
+    emph: true
+    card: {<<: *duel, highlight_row: 額（集計）}
+  sources:
+  - https://www.transfermarkt.com/fc-chelsea/transfers/verein/631/plus/1?saison_id=2026&pos=&detailed=1&w_s=s
+  - https://tmapi-alpha.transfermarkt.technology/transfer/history/player/503743
+  - https://www.chelseafc.com/en/news/article/morgan-rogers-signs-for-chelsea
+  - https://www.chelseafc.com/en/news/article/geovany-quenda-joins-chelsea
+  - https://www.chelseafc.com/en/news/article/chelsea-agree-deal-to-sign-emanuel-emegha
+  - https://www.chelseafc.com/en/news/article/summer-transfers-2026-all-the-chelsea-ins-outs-and-new-contracts-so-far
+  - https://www.lbc.co.uk/news/sport/morgan-rogers-chelsea-deal-aston-villa/
+- id: when
+  heading: 買いは7月に決まり、売りは窓の最後の日まで続いた
+  tier: 報道
+  telop: 7月中に払った額の75%が決まり、売りの70%はロジャーズ加入のあと
+  narrator: 解説
+  card: &when
+    type: timeline
+    title: チェルシーが発表した主な動き
+    rows:
+    - ['6月15日', 窓が開く。ククレジャがレアルへ]
+    - ['7月21日', ロジャーズの加入を発表]
+    - ['8月9日', チャロバーがコモへ]
+    - ['8月27〜28日', デラップとジャクソンが退団]
+    - ['8月30日', ゴールキーパーのE・マルティネスが加入]
+    - ['9月1日', エンソら3人が退団。窓が閉まる]
+    focus: 7月21日
+  say:
+  - text: 買いと売りは、どちらが先に決まったのか。発表の日付で見ます。
+    image: assets/images/20261017_chelsea_window/a01_stadium_w.jpg
+    card: none
+  - text: 夏の窓は、6月15日に開き、9月1日に閉まります。窓とは、受付の期間のことです。
+    card: *when
+  - text: 6月15日、窓が開く日に、ククレジャがレアルへ移りました。
+    card:
+      <<: *when
+      highlight_row: 0
+  - text: 7月21日には、ロジャーズの加入が発表されました。
+    emph: true
+    image: assets/images/20261017_chelsea_window/b01_rogers_w.jpg
+    card:
+      <<: *when
+      highlight_row: 1
+  - text: 7月のうちに、パレストラ、ケンダ、ロジャーズ、ラクロワが加わりました。
+    card:
+      <<: *when
+      highlight_row: 1
+  - text: この4人で3億648万ユーロ。買った額の75%です。
+    emph: true
+    card: &calc_buy
+      type: calc
+      title: 7月中に決まった買いは、全体の何割か
+      terms:
+      - ['3億648万ユーロ', 7月中の4人]
+      - ['4億748万ユーロ', 買った10人の合計]
+      - [約75%, 7月中に決まった割合]
+      ops: ['÷', ＝]
+  - text: では、売りはどうだったのか。7月21日までに出たのは3人です。
+    card:
+      <<: *when
+      highlight_row: 0
+  - text: ククレジャ、ジョージ、サントスで、1億3230万ユーロ。
+    card: &calc_sell
+      type: calc
+      title: ロジャーズの加入までに売った額は、何割か
+      terms:
+      - ['1億3230万ユーロ', 7月21日までの3人]
+      - ['4億4445万ユーロ', 売った額]
+      - [約30%, 7月21日までの割合]
+      ops: ['÷', ＝]
+  - text: 売った額の30%です。残る70%は、そのあとの話です。
+    emph: true
+    card: *calc_sell
+  - text: 8月に、チャロバー、デラップ、ジャクソンが出ていきます。
+    card:
+      <<: *when
+      highlight_row: [2, 3]
+  - text: そして窓が閉まる9月1日。エンソら3人が、チェルシーを離れました。
+    emph: true
+    image: assets/images/20261017_chelsea_window/b02_enzo_w.jpg
+    card:
+      <<: *when
+      highlight_row: 5
+  - text: エンソ、ギウ、アダラビオヨの3人です。
+    card:
+      <<: *when
+      highlight_row: 5
+  - text: この1日だけで、1億7165万ユーロ。売った額の39%です。
+    emph: true
+    card:
+      <<: *when
+      highlight_row: 5
+  - text: この夏の形は、買いが先、売りは最後の日まで。
+    card: *when
+  sources:
+  - https://www.chelseafc.com/en/news/article/summer-transfers-2026-all-the-chelsea-ins-outs-and-new-contracts-so-far
+  - https://www.chelseafc.com/en/news/article/marc-cucurella-departs-chelsea
+  - https://www.chelseafc.com/en/news/article/morgan-rogers-signs-for-chelsea
+  - https://www.chelseafc.com/en/news/article/enzo-fernandez-leaves--chelsea-on-permanent-transfer
+  - https://www.chelseafc.com/en/news/article/marc-guiu-departs-on-permanent-transfer-rb-leipzig-
+  - https://www.chelseafc.com/en/news/article/tosin-adarabioyo-departs-chelsea-on-permanent-transfer
+  - https://www.chelseafc.com/en/news/article/transfer-deadline-day-2026-everything-you-need-to-know
+  - https://www.premierleague.com/en/news/4664145/when-does-summer-2026-premier-league-transfer-window-open-and-close
+- id: view
+  viewpoint: true
+  heading: 買値も売値も市場価値の約1.3倍。支出の上位4クラブでプラスなのはチェルシーだけ
+  tier: 報道
+  telop: 買った10人は市場価値の約1.31倍、売った10人は約1.27倍
+  narrator: 解説
+  card: &scat
+    type: scatter
+    title: 売った10人の、移籍直前の市場価値と、受け取った移籍金
+    x: {label: 移籍直前の市場価値, unit: 百万ユーロ}
+    y: {label: 受け取った移籍金, unit: 百万ユーロ}
+    points:
+    - [エンソ, 100, 145]
+    - [サントス, 40, 56.3]
+    - [ジャクソン, 40, 55.5]
+    - [ククレジャ, 50, 55]
+    - [デラップ, 28, 52.5]
+    - [チャロバー, 40, 30]
+    - [ジョージ, 20, 21]
+    - [ギウ, 12, 15]
+    - [アダラビオヨ, 16, 11.65]
+    - [フォファナ, 4, 2.5]
+    diagonal: 市場価値と同じ額
+    focus: デラップ
+  say:
+  - text: 買値と売値は、相場より高かったのか。物差しは、移籍直前の推定の市場価値です。
+    image: assets/images/20261017_chelsea_window/a01_stadium_w.jpg
+    card: none
+  - text: 市場価値は、サイトが付けた推定です。実際の値段ではありません。
+    card: *scat
+  - text: 買った10人の市場価値は、合計で3億1050万ユーロ。
+    card: *scat
+  - text: 払った額は、その約1.31倍です。
+    emph: true
+    card: &calc_in
+      type: calc
+      title: 買った10人は市場価値の何倍か
+      terms:
+      - ['4億748万ユーロ', 払った額]
+      - ['3億1050万ユーロ', 直前の市場価値の合計]
+      - [約1.31倍, 市場価値の何倍か]
+      ops: ['÷', ＝]
+  - text: 売った10人の側は、市場価値の合計が3億5000万ユーロ。
+    card: *scat
+  - text: 受け取った額は、その約1.27倍です。
+    emph: true
+    card: &calc_out
+      type: calc
+      title: 売った10人は市場価値の何倍か
+      terms:
+      - ['4億4445万ユーロ', 受け取った額]
+      - ['3億5000万ユーロ', 直前の市場価値の合計]
+      - [約1.27倍, 市場価値の何倍か]
+      ops: ['÷', ＝]
+  - text: 売った10人を図にします。斜めの線は、市場価値と同じ額です。
+    card: *scat
+  - text: デラップは、市場価値の約1.9倍で売れました。
+    card:
+      <<: *scat
+      highlight: デラップ
+  - text: 線より下は3人。チャロバー、アダラビオヨ、フォファナです。
+    card:
+      <<: *scat
+      highlight: チャロバー
+  - text: 市場価値より安く出たのは、10人のうち3人でした。
+    card:
+      <<: *scat
+      highlight: アダラビオヨ
+  - text: もう1つ、今夏の支出が多い4クラブを並べます。
+    image: assets/images/20261017_chelsea_window/a02_stadium_aerial_w.jpg
+    card: &top4
+      type: table
+      title: 世界の支出の上位4クラブ（百万ユーロ）
+      columns: ['クラブ', '払った額', '戻った額', '差し引き']
+      rows:
+      - [シティ, '526.20', '337.02', '−189.18']
+      - [チェルシー, '407.48', '447.80', '＋40.32']
+      - [トッテナム, '366.35', '164.25', '−202.10']
+      - [ニューカッスル, '313.00', '279.10', '−33.90']
+  - text: 上位4クラブで、差し引きがプラスなのは、チェルシーだけです。
+    emph: true
+    card: *top4
+    mark: {kind: circle, row: 1, col: 差し引き}
+  - text: ほかの3クラブは、戻った額が払った額に届いていません。
+    card:
+      <<: *top4
+      highlight_row: [0, 2, 3]
+  - text: 世界2位の支出は、売った額が上回って、プラスで終わりました。
+    emph: true
+    card: *top4
+  - text: ただし、どの額も集計です。内訳までは、見えていません。
+    card: none
+  - text: 次の窓は、冬。2027年1月1日に開きます。
+    card: none
+  sources:
+  - https://www.transfermarkt.com/fc-chelsea/transfers/verein/631/plus/1?saison_id=2026&pos=&detailed=1&w_s=s
+  - https://www.transfermarkt.com/transfers/einnahmenausgaben/statistik/plus/1?ids=a&saison_id=2026&saison_id_bis=2026&w_s=s
+  - https://www.transfermarkt.com/premier-league/einnahmenausgaben/wettbewerb/GB1/plus/1?ids=a&saison_id=2026&saison_id_bis=2026&w_s=s
+  - https://www.premierleague.com/en/news/4664145/when-does-summer-2026-premier-league-transfer-window-open-and-close

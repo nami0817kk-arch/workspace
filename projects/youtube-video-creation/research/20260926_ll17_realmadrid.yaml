@@ -3,7 +3,7 @@
 format: news
 voice_min: 0
 slot: laliga_1
-date: 2026年9月19日
+date: 2026年10月17日
 people:
 - レアル・マドリード
 - ジョゼ・モウリーニョ
@@ -56,7 +56,7 @@ sections:
     text: ホームタウンは首都マドリード。人口およそ**348万人**、スペインでいちばん大きな町。
     no_telop: true
   - image: assets/backgrounds/stadium_レアルマドリード.png
-    text: 本拠地はベルナベウ。**8万3186人**が入り、20クラブでいちばん大きい。
+    text: 本拠地はベルナベウ。**8万3186人**が入る、リーグ最大の球場です。
   - image: assets/stats/ll_realmadrid_data4.png
     text: 会長はフロレンティーノ・ペレス。2009年に返り咲きました。クラブは会員が持つ形です。
     no_telop: true
@@ -236,7 +236,7 @@ sections:
       - &id006
         - 運営の型
         - 売上10億ユーロ超
-  - 2023年から24年のシーズン、サッカークラブで初めて、売上が**10億ユーロ**を超えました。
+  - 2023年から24年、サッカークラブで初めて売上が**10億ユーロ**超え。
   - text: 応援は世界規模。公認のファンクラブ「ペーニャ」は、**92か国**に2452あります。
     card:
       type: table
@@ -276,7 +276,7 @@ sections:
   - text: 1966年、スペインの選手だけのチームで、**6度目**のヨーロッパの頂点へ。
     image: assets/images/ll_realmadrid_episode/scene.jpg
   - 若い4人がビートルズのまねをして、新聞の写真に写りました。
-  - シー・ラブズ・ユーの「イエー、イエー、イエー」から、チームは「イエイエ」と呼ばれます。
+  - 歌の「イエー、イエー、イエー」から、チームは「イエイエ」と呼ばれます。
   sources:
   - https://en.wikipedia.org/wiki/Y%C3%A9-y%C3%A9_(Real_Madrid)
   - https://en.wikipedia.org/wiki/Real_Madrid_CF
@@ -300,8 +300,8 @@ sections:
       - 2001-2006
       - 決勝のボレー
   say:
-  - text: ジダンは2001年、当時の世界最高額でユヴェントスから。リーグ戦は**155試合37得点**。
-    image: assets/photos/ll/realmadrid/realmadrid_legend_fcd5d1e5.jpg
+  - text: ジダンは2001年、当時の最高額でユヴェントスから。リーグ戦**155試合37得点**。
+    image: assets/photos/ll/realmadrid/realmadrid_legend_zidane_zizu.jpg
   - 2002年のチャンピオンズリーグ決勝、左足のボレーで、レバークーゼンを破る決勝点。
   - 監督としても、チャンピオンズリーグを3連覇。今はフランス代表を率いています。
   sources:
@@ -329,8 +329,8 @@ sections:
       - 2009-2018
       - 歴代最多450得点
   say:
-  - text: クリスティアーノ・ロナウドは2009年に来ました。リーグ戦**292試合**で、**311得点**。
-    image: assets/photos/ll/realmadrid/realmadrid_legend_972c9872.jpg
+  - text: クリスティアーノ・ロナウドは2009年から。リーグ戦**292試合311得点**。
+    image: assets/photos/ll/realmadrid/realmadrid_legend_cr7_2013.jpg
   - 2015年10月、ラウルを抜いて、公式戦のクラブ歴代最多得点者になりました。
   - 公式戦で**450得点**を残し、2018年にユヴェントスへ移りました。
   sources:
@@ -359,8 +359,8 @@ sections:
       - 2005-2021
       - 93分の同点弾
   say:
-  - text: セルヒオ・ラモスは2005年、セビージャから。守備の選手で、リーグ戦**469試合72得点**。
-    image: assets/photos/ll/realmadrid/realmadrid_legend_e9e63b5b.jpg
+  - text: セルヒオ・ラモスは2005年、セビージャから。守備の選手で**469試合72得点**。
+    image: assets/photos/ll/realmadrid/realmadrid_legend_ramos_2015.jpg
   - 2014年の決勝、アトレティコ戦の**93分**に頭で同点。延長で勝ち、10度目の優勝。
   - 主将も務め、2021年にパリ・サンジェルマンへ移りました。
   sources:
@@ -486,8 +486,8 @@ sections:
   say:
   - ラ・リーガは7試合を終えて、**5勝2敗**です。
   - 順位は**4位**、勝ち点は**15**です。
-  - この順位を保てば、来季のチャンピオンズリーグに出られます。
-  - チャンピオンズリーグの初戦は、ホームでインテルに**2対1**で勝ちました。
+  - いまの4位は、来季のチャンピオンズリーグに届く位置です。
+  - チャンピオンズリーグの初戦は、ホームでインテルに**2対1**の勝利です。
   sources:
   - https://www.espn.com/soccer/team/results/_/name/realmadrid
   - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard

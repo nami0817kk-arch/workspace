@@ -1,0 +1,685 @@
+# フヴィチャ・クヴァラツヘリア（パリ・サンジェルマン／ジョージア代表）の紹介。選手紹介の8節の型（2026-09-28）。
+# 2026-10-17 の「シリーズ8本」の2枠目。**FotMob は使わない**（ユーザー決定 10/17）ので、雛形（player_intro.py の FotMob 部分）は使わず手で書いた。
+# パーセンタイル・同じ位置との順位・レーダー・シュートマップは出さない。数字は基本の数と自分で割った90分あたり。
+#
+# **数字の出どころ**
+# - Transfermarkt（API: /player/502670 の詳細・市場価値の推移・季ごとの大会別の出場）：生年月日・身長・契約・市場価値・季ごとの試合/得点/出場時間。
+#   **アシストは使わない**：TM は22/23のセリエAで13（公式・Wikipedia は10）、25/26のCLで7（UEFA は6）と、公式より多く数える。
+# - UEFA.com（Player of the Season 記事・CLの記録の記事）：25/26のCL 16試合・1,141分・10得点・6アシスト・走行124.17km・最高速度33.7km/h、
+#   CL通算の相手別得点、「ノックアウト7試合連続で得点かアシスト」の最多記録、ジョージア人初の年間最優秀選手。
+# - 英語版 Wikipedia（Career statistics／Honours／本文）：クラブ別・代表の試合と得点（クラブは2026-10-14、代表は2026-10-05時点）、優勝歴、主将就任（2026-03-24）、
+#   ルスタヴィ移籍の経緯、2022年のバトゥミ経由。
+# - ESPN（site.api.espn.com の試合記録・順位表）：直近の試合の出場・ゴール・アシスト・交代の時刻・スコア。セリエAの順位（22/23 ナポリ1位90点／23/24 10位53点／24/25 1位82点）。
+# - Reuters（Flashscore 転載 2024-06-27・2025-01-11）：EURO2024 のポルトガル戦の本人の言葉、コンテの退団要求の発言。
+# - AFP（SuperSport 転載 2025-01-17）：PSG 加入の発表、本人の言葉、報道の移籍金7000万ユーロ。
+# - calciomercato.com（2025-01-18・2022-06-30）：PSG 公式発表の全文、ナポリが受け取る7000万ユーロ（分割）、年俸の報道（ナポリ170万・更新の提示400万・PSG900万、手取り）、代理人の言う2022年の移籍金1000万。
+# - CBS Sports（2024-06-17）：代理人「チャンピオンズリーグに出るチームへ」、クラブ声明「非売品」。
+# - Corriere della Sera 7 誌（Cronache della Campania 転載 2025-08）：デ・ラウレンティス会長の説明（FIFAの第17条）。**クラブ側の一方の言い分**として扱う。
+# - Soccerway（2025-01-16 の別れの動画の全文）・Sky Sport（Italpress・Quotidiano 転載 2026-04-27）：本人の言葉。
+# - 取材はブラウザの道具・JavaScript実行を使っていない（requests と WebFetch）。BBC・Ahram・Dhaka Tribune・UEFA本体は requests が弾かれ、UEFA は WebFetch で読んだ。
+#
+# **数字の食い違い・判断**
+# - 25/26 のCLのアシスト：UEFA 6／TM・Nogomania 7。UEFA を採った（語りでは10得点を主に言い、アシストは言わない）。
+# - 移籍金：PSG もナポリも公式には金額を出していない。「報道で7000万ユーロ（ボーナス別）」。Wikipedia は最大8000万。
+# - 2022年の移籍金：本人の代理人が1000万と言った（calciomercato）。Wikipedia は1000〜1200万。「報道で1000万」。
+# - 退団の理由は**本人が語っていない**（別れの動画で「いつかすべてを話す」と言ったまま）。伝わっているのは ①2024年6月に代理人が「CLのあるチームへ」と発言
+#   ②契約更新が決まらなかった（コンテ） ③クラブ側は代理人が第17条を持ち出して迫ったと説明（会長）。どれも報道・一方の言い分なので、断定せず並べる。
+# - 年俸は報道（手取り）。1,000万単位の私的な額なので、語りには「400万と900万」とだけ出す。
+# - 「ジョージア人初のCL年間最優秀選手」：UEFA の記録の記事の記述。
+# - 優勝の数「9つ」：Wikipedia の優勝歴から自分で数えた（リーグ・アン2・クープ・ドゥ・フランス1・トロフェ・デ・シャンピオン1・CL2・UEFAスーパーカップ2・インターコンチネンタルカップ1）。
+#   ナポリ在籍中は22/23のスクデット1つ（24/25の優勝は退団の4か月後）。
+# - 90分あたり：得点÷出場時間×90（出場時間は Transfermarkt、得点は Wikipedia と一致）。CL通算の出場時間は ナポリ22/23の700分＋23/24の672分、PSG 24/25の736分＋25/26の1,140分（UEFAは1,141分）＋26/27の24分。
+#
+# **入れなかったもの**：私生活（結婚・子ども）。ジョージアがW杯に出られなかった件（読んだ出典が無い）。ナポリの会長の「代理人が高い手数料を求めた」の部分（一方の言い分で、個人攻撃に近い）。
+#   「クヴァラドーナ」の呼び名はフックで1度だけ。
+#
+# **日本語名・読みで怪しいもの**：フヴィチャ・クヴァラツヘリア（日本語版Wikipedia＝Wikidata の表記。報道では「クバラツヘリア」も）。ルスタヴィ・バトゥミ・ルビン・カザン・ロコモティフ・モスクワ・ミカウタゼ。
+#
+# 本人の言葉は5か所（自訳。原文は上の出典）：①フック「つらいけれど〜」「決め手はプロジェクト」②ナポリの別れ「家だった」「いつかすべてを話す」「ディエゴ」③ポルトガル戦「ロナウドのユニフォーム」「最高の日」「個人はいない」④ルイス・エンリケ「自由」「選択を誇りに」。
+date: 2026年10月17日
+slot: other_1
+format: news
+series: 有名選手の紹介
+people:
+- フヴィチャ・クヴァラツヘリア
+theme:
+  id: player_502670
+  league: france
+  league_name: リーグ・アン
+  kind: other
+  topic: パリ・サンジェルマン
+  title: クヴァラツヘリアってどんな選手？ スクデットの立役者が首位のナポリを去った理由
+  question: ナポリのスクデットの立役者は、なぜPSGへ移ったのか。ジョージアの主将は、どんな選手なのか
+  takeaway: 7000万ユーロで首位のナポリを去った25歳は、PSGで9つのタイトルを数えた。チャンピオンズリーグの得点は、90分あたり0.13（ナポリ）から0.62（PSG）へ。次の節目は10月26日のバロンドール
+  nameplate: クヴァラツヘリア｜パリ・サンジェルマン FW／ジョージア代表主将
+  opening_image: assets/images/20261017_kvaratskhelia/03_w.jpg
+  bgm: assets/audio/bgm_calm.wav
+short_title: クヴァラツヘリアってどんな選手？
+thumbnail:
+  layout: face
+  callouts:
+  - ナポリの英雄
+  - ジョージア主将
+  line1: クヴァラツヘリア
+  line2: なぜ去った
+  tags:
+  - パリ・サンジェルマン
+  - ナポリ
+  - ジョージア代表
+  - クヴァラツヘリア
+  - 選手紹介
+  photo: assets/images/20261017_kvaratskhelia/08_w.jpg
+  photos: []
+  short_photo: assets/images/20261017_kvaratskhelia/03_v.jpg
+sections:
+- id: hook
+  heading: ナポリの英雄は、なぜ首位のクラブを去ったのか
+  tier: 報道
+  telop: ナポリのスクデットの立役者、PSGへ
+  narrator: キャスター
+  card:
+    type: stats
+    title: フヴィチャ・クヴァラツヘリア 25歳
+    items:
+    - ['2', 回, チャンピオンズリーグ優勝。2連覇のどちらも]
+    - ['7000', 万ユーロ, 報道された移籍金。ナポリから]
+    - ['44', 点, 去ったときのナポリの勝ち点。首位]
+    focus: 0
+  say:
+  - text: ナポリに33年ぶりのスクデット。イタリア1部の優勝を、もたらした男。
+    image: assets/images/20261017_kvaratskhelia/07_w.jpg
+    card: &hook_stats
+      type: stats
+      title: フヴィチャ・クヴァラツヘリア 25歳
+      items:
+      - ['2', 回, チャンピオンズリーグ優勝。2連覇のどちらも]
+      - ['7000', 万ユーロ, 報道された移籍金。ナポリから]
+      - ['44', 点, 去ったときのナポリの勝ち点。首位]
+      focus: 0
+  - text: その名は、クヴァラツヘリア。25歳です。
+    card: *hook_stats
+  - text: 2025年1月。首位を走るナポリを、本人が去ります。
+    emph: true
+    card:
+      <<: *hook_stats
+      focus: 2
+  - text: 行き先は、パリ・サンジェルマン。報道された移籍金は、7000万ユーロ。
+    image: assets/images/20261017_kvaratskhelia/04_w.jpg
+    card:
+      <<: *hook_stats
+      focus: 1
+  - text: ナポリの英雄は、なぜ去ったのか。本人は、別れの動画で、こう話しました。
+    card: none
+  - voice: クヴァラツヘリア
+    text: つらく、苦しいけれど、お別れのときが来ました。
+  - voice: クヴァラツヘリア
+    text: 悲しんでいるのは分かっています。
+    cont: true
+  - voice: クヴァラツヘリア
+    text: でも、いつかすべてを話します。
+    cont: true
+    pause: 0.5
+  - text: 理由はまだ、本人の口からは語られていません。伝わっていることを、順に追います。
+    card: none
+  quotes_from:
+  - https://it.soccerway.com/news/calcio-serie-a-parla-kvara-saluta-napoli-in-modo-criptico-e-stata-casa-mia-un-giorno-vi-raccontero-video/CnpntNl4
+  sources:
+  - https://it.soccerway.com/news/calcio-serie-a-parla-kvara-saluta-napoli-in-modo-criptico-e-stata-casa-mia-un-giorno-vi-raccontero-video/CnpntNl4
+  - https://supersport.com/xtra/general/news/efa3d5e8-a3c4-4d31-b027-ea696e354b89/kvaratskhelia-leaves-napoli-to-join-psg
+  - https://www.flashscore.com/news/soccer-serie-a-disappointed-antonio-conte-confirms-khvicha-kvaratskhelia-has-asked-to-leave-napoli/d8sGWo3K
+  - https://www.calciomercato.com/news/addio-napoli-kvaratskhelia-al-psg-e-ufficiale-le-cifre-23922
+- id: data
+  heading: クヴァラツヘリアは、いまどこで、いくらの選手か
+  tier: 報道
+  telop: クヴァラツヘリアの基礎DATA
+  narrator: キャスター
+  card:
+    type: table
+    title: フヴィチャ・クヴァラツヘリア（パリ・サンジェルマン）
+    columns:
+    - 項目
+    - 内容
+    rows: &bdata
+    - - 所属
+      - パリ・サンジェルマン（7番）
+    - - ポジション
+      - 左ウイング
+    - - 生年月日
+      - 2001年2月12日（25歳）
+    - - 生まれ
+      - ジョージア・トビリシ
+    - - 身長・利き足
+      - 1.83m・両足
+    - - 代表
+      - ジョージア（主将）
+    - - 契約
+      - 2029年まで
+    - - 市場価値
+      - 1.4億ユーロ
+    source: Transfermarkt
+  say:
+  - text: クヴァラツヘリアが立つのは、左のウイング。いまはパリ・サンジェルマンの7番です。
+    image: assets/images/20261017_kvaratskhelia/03_w.jpg
+    card: &data_card
+      type: table
+      title: フヴィチャ・クヴァラツヘリア（パリ・サンジェルマン）
+      columns: [項目, 内容]
+      rows: *bdata
+      source: Transfermarkt
+      highlight_row: 1
+  - text: 2001年2月12日、ジョージアの首都トビリシ生まれ。25歳です。
+    card:
+      <<: *data_card
+      highlight_row: 2
+  - text: ジョージア代表では、2026年3月から主将を務めています。
+    card:
+      <<: *data_card
+      highlight_row: 5
+  - text: 市場価値は1億4000万ユーロ。12月の9000万から、6月に急上昇。
+    emph: true
+    card:
+      <<: *data_card
+      highlight_row: 7
+  sources:
+  - https://www.transfermarkt.com/khvicha-kvaratskhelia/profil/spieler/502670
+  - https://en.wikipedia.org/wiki/Khvicha_Kvaratskhelia
+- id: career
+  heading: 16歳の小さな名前は、どうやって7000万ユーロになったのか
+  tier: 報道
+  telop: 2022年3月、契約が止まった日
+  narrator: 解説
+  card:
+    type: table
+    title: 歩んできた道
+    columns:
+    - シーズン
+    - クラブ
+    - 年齢
+    - 市場価値
+    rows: &career_rows
+    - - 16/17〜17/18
+      - ディナモ・トビリシ→ルスタヴィ
+      - 16歳〜17歳
+      - 最高 40万ユーロ
+    - - 18/19
+      - ロコモティフ・モスクワ
+      - 18歳
+      - 最高 90万ユーロ
+    - - 19/20〜21/22
+      - ルビン・カザン
+      - 18歳〜20歳
+      - 最高 1800万ユーロ
+    - - 21/22
+      - ディナモ・バトゥミ
+      - 21歳
+      - 1500万ユーロ
+    - - 22/23〜24/25
+      - ナポリ
+      - 21歳〜23歳
+      - 最高 8500万ユーロ
+    - - 24/25〜
+      - パリ・サンジェルマン
+      - 24歳〜25歳
+      - 最高 1.4億ユーロ
+    source: Transfermarkt
+  say:
+  - text: 父のバドリも、プロの選手でした。11歳で地元のディナモ・トビリシへ。
+    image: assets/images/20261017_kvaratskhelia/06_r.jpg
+    card: &career_card
+      type: table
+      title: 歩んできた道
+      columns: [シーズン, クラブ, 年齢, 市場価値]
+      rows: *career_rows
+      source: Transfermarkt
+      highlight_row: 0
+  - text: 2019年にロシアのルビン・カザンへ。2季続けて、リーグの最優秀若手に選ばれます。
+    card:
+      <<: *career_card
+      highlight_row: 2
+  - text: 転機は2022年3月。ウクライナ侵攻で、ロシアの国外選手は契約を止められるように。
+    image: assets/images/20261017_kvaratskhelia/05_w.jpg
+    card: none
+  - text: ジョージアのバトゥミへ。ルビンの3季で9得点。ここでは11試合で、8得点です。
+    emph: true
+    card:
+      <<: *career_card
+      highlight_row: 3
+  - text: 7月、ナポリへ。代理人によれば、移籍金は1000万ユーロ。
+    image: assets/images/20261017_kvaratskhelia/07_w.jpg
+    card:
+      <<: *career_card
+      highlight_row: 4
+  - text: 1年目。開幕のヴェローナ戦から、2試合で3得点。ナポリ史上初です。
+    card:
+      <<: *career_card
+      highlight_row: 4
+  - text: セリエAの最優秀選手に。ナポリはその年、リーグを制します。
+    emph: true
+    card:
+      <<: *career_card
+      highlight_row: 4
+  - text: ファンはマラドーナにちなんで、こう呼びました。
+    callword: クヴァラドーナ
+    card: none
+  - text: では、なぜ去ったのか。伝わっている話を、時間順に。
+    card: &why_tl
+      type: timeline
+      title: 退団までの経緯（報道）
+      rows:
+      - ['2024年6月', 代理人「CLに出るチームへ」]
+      - ['2025年1月11日', コンテ監督が退団の希望を認める]
+      - ['2025年1月16日', 本人が別れの動画を公開]
+      - ['2025年1月17日', PSGが加入を発表]
+      focus: 0
+      highlight_row: 0
+  - text: まず2024年6月。代理人が、こう語ります。
+    card: *why_tl
+  - voice: マムカ・ジュゲリ
+    text: 優先したいのは、チャンピオンズリーグに出るチームだ。
+    emph: true
+    pause: 0.5
+  - text: ナポリは23/24を10位で終え、欧州の舞台に立てませんでした。
+    card: none
+  - text: 2025年1月11日、コンテ監督が、退団の希望を認めます。
+    image: assets/images/20261017_kvaratskhelia/04_w.jpg
+    card:
+      <<: *why_tl
+      highlight_row: 1
+  - text: 更新は決まらず。報道では、手取りの提示はナポリ400万、パリは900万ユーロ。
+    card: none
+  - text: 会長は、代理人が国際サッカー連盟の第17条を持ち出した、と話します。
+    card: none
+  - text: 違約金を払えば契約を解除できる、という規則です。
+    card: none
+  - text: 伝わる理由は、2つ。欧州の舞台と、契約の更新です。
+    card: none
+  - text: 本人の言葉は、まだありません。一方の言い分と、報道だけです。
+    emph: true
+    card: none
+  - text: 1月17日、パリ・サンジェルマンが発表。ジョージア人として、クラブ初の選手。
+    card:
+      <<: *career_card
+      highlight_row: 5
+  - text: 加入の日、本人は、こう話しました。
+    card:
+      <<: *career_card
+      highlight_row: 5
+  - voice: クヴァラツヘリア
+    text: 決め手は、プロジェクトでした。
+  - voice: クヴァラツヘリア
+    text: クラブが目指すものも、僕に合っています。
+    cont: true
+  - voice: クヴァラツヘリア
+    text: 選手との向き合い方も、同じです。
+    cont: true
+    pause: 0.6
+  quotes_from:
+  - https://supersport.com/xtra/general/news/efa3d5e8-a3c4-4d31-b027-ea696e354b89/kvaratskhelia-leaves-napoli-to-join-psg
+  - https://www.cbssports.com/soccer/news/khvicha-kvaratskhelias-agent-says-he-wants-him-to-leave-napoli-this-summer-for-a-champions-league-team/
+  sources:
+  - https://www.transfermarkt.com/khvicha-kvaratskhelia/profil/spieler/502670
+  - https://en.wikipedia.org/wiki/Khvicha_Kvaratskhelia
+  - https://www.calciomercato.com/news/napoli-la-vera-cifra-spesa-per-kvaratskhelia-71703
+  - https://www.cbssports.com/soccer/news/khvicha-kvaratskhelias-agent-says-he-wants-him-to-leave-napoli-this-summer-for-a-champions-league-team/
+  - https://www.flashscore.com/news/soccer-serie-a-disappointed-antonio-conte-confirms-khvicha-kvaratskhelia-has-asked-to-leave-napoli/d8sGWo3K
+  - https://www.calciomercato.com/news/addio-napoli-kvaratskhelia-al-psg-e-ufficiale-le-cifre-23922
+  - https://en.cronachedellacampania.it/2025/08/napoli-de-laurentiis-rompe-il-silenzio-costretto-a-cedere-kvaratskhelia/
+  - https://supersport.com/xtra/general/news/efa3d5e8-a3c4-4d31-b027-ea696e354b89/kvaratskhelia-leaves-napoli-to-join-psg
+  - https://site.api.espn.com/apis/v2/sports/soccer/ita.1/standings?season=2023
+- id: style
+  heading: 左から切り込み、守っても走る
+  tier: 報道
+  telop: 25/26、チャンピオンズリーグ10得点
+  narrator: 解説
+  card:
+    type: bars
+    title: 25/26シーズン、大会別の得点（クラブの公式戦19）
+    unit: 点
+    items:
+    - label: チャンピオンズリーグ
+      value: 10
+      highlight: true
+    - label: リーグ・アン
+      value: 8
+    - label: 欧州スーパー杯など
+      value: 1
+    source: Transfermarkt・Wikipedia
+  say:
+  - text: 武器は、左から中へ切り込む形です。強いほうの右足で、ゴールを狙います。
+    image: assets/images/20261017_kvaratskhelia/08_w.jpg
+    no_telop: true
+    card: &style_bars
+      type: bars
+      title: 25/26シーズン、大会別の得点（クラブの公式戦19）
+      unit: 点
+      items:
+      - label: チャンピオンズリーグ
+        value: 10
+        highlight: true
+      - label: リーグ・アン
+        value: 8
+      - label: 欧州スーパー杯など
+        value: 1
+      source: Transfermarkt・Wikipedia
+  - text: 最多は、チャンピオンズリーグ。16試合で10得点。
+    emph: true
+    card: *style_bars
+  - text: 1141分で10点。90分に直すと、0.79点です。
+    card: none
+  - text: 準決勝のバイエルン戦では、2ゴール。5対4の勝利。
+    image: assets/images/20261017_kvaratskhelia/02_w.jpg
+    card: none
+  - text: 走る数字です。16試合で124キロ。90分あたり、約9.8キロ。
+    card: &run_stats
+      type: stats
+      title: 25/26 チャンピオンズリーグ（UEFA）
+      items:
+      - ['124.17', km, 16試合で走った距離]
+      - ['9.8', km, 90分あたり（自分で割った値）]
+      - ['33.7', km/h, 最高速度]
+      focus: 0
+  - text: 準決勝の前の、本人の言葉。
+    image: assets/images/20261017_kvaratskhelia/04_w.jpg
+    card: none
+  - voice: クヴァラツヘリア
+    text: ルイス・エンリケは、攻撃の選手に大きな自由をくれる。
+  - voice: クヴァラツヘリア
+    text: それは、僕らにとって欠かせません。
+    cont: true
+    pause: 0.6
+  quotes_from:
+  - https://sport.quotidiano.net/en/ultimaora/champions-kvara-bayern-squadra-fantastica-ac3f9864
+  - https://www.italpress.com/?p=676480
+  sources:
+  - https://www.uefa.com/uefachampionsleague/news/02a5-20c1d7bf915e-f9e703cf0108-1000--khvicha-kvaratskhelia-named-2025-26-uefa-champions-league-/
+  - https://www.uefa.com/uefachampionsleague/news/02a7-2123ffd59758-f1600080259a-1000--khvicha-kvaratskhelia-in-the-champions-league-records-stats-/
+  - https://en.wikipedia.org/wiki/Khvicha_Kvaratskhelia
+  - https://www.transfermarkt.com/khvicha-kvaratskhelia/profil/spieler/502670
+- id: past
+  heading: 5つの季と、通算367試合
+  tier: 報道
+  telop: 直近5シーズンの試合と得点
+  narrator: 解説
+  card:
+    type: table
+    title: クヴァラツヘリア 直近5シーズン（クラブの全公式戦）
+    columns:
+    - シーズン
+    - クラブ
+    - 試合
+    - 得点
+    - 90分あたり
+    rows: &season_rows
+    - ['21/22', ルビン・カザン、バトゥミ, '33', '10', '0.37']
+    - ['22/23', ナポリ, '43', '14', '0.39']
+    - ['23/24', ナポリ, '45', '11', '0.28']
+    - ['24/25', ナポリ、PSG, '51', '13', '0.32']
+    - ['25/26', PSG, '48', '19', '0.59']
+    source: Transfermarkt・Wikipedia
+  rows_total:
+  - &t1 [ロシア・ジョージア（〜2022）, '117', '22']
+  - &t2 [ナポリ, '107', '30']
+  - &t3 [パリ・サンジェルマン, '89', '29']
+  - &t4 [ジョージア代表, '54', '23']
+  - &t5 [合計, '367', '104']
+  say:
+  - text: クヴァラツヘリアの5つの季。まず21/22。
+    image: assets/images/20261017_kvaratskhelia/06_r.jpg
+    card: &past_card
+      type: table
+      title: クヴァラツヘリア 直近5シーズン（クラブの全公式戦）
+      columns: [シーズン, クラブ, 試合, 得点, 90分あたり]
+      rows: *season_rows
+      source: Transfermarkt・Wikipedia
+      highlight_row: 0
+  - text: 22/23は、43試合で14得点。
+    image: assets/images/20261017_kvaratskhelia/07_w.jpg
+    card:
+      <<: *past_card
+      highlight_row: 1
+  - text: 23/24は、45試合で11得点。90分あたりは、0.28。
+    card:
+      <<: *past_card
+      highlight_row: 2
+  - text: 24/25は、移籍の季。ナポリとパリで、合わせて51試合。
+    image: assets/images/20261017_kvaratskhelia/04_w.jpg
+    card:
+      <<: *past_card
+      highlight_row: 3
+  - text: そして25/26。48試合で19得点。90分あたり0.59は、5季で最高。
+    emph: true
+    card:
+      <<: *past_card
+      highlight_row: 4
+  - text: 通算です。2022年までで117試合22得点。ナポリは107試合30得点。
+    image: assets/images/20261017_kvaratskhelia/03_w.jpg
+    card: &total_card
+      type: table
+      title: クヴァラツヘリア 通算（2026年10月）
+      columns: [所属, 試合, 得点]
+      rows: [*t1, *t2, *t3, *t4, *t5]
+      source: Wikipedia
+      highlight_row: 0
+  - text: パリ・サンジェルマン89試合29得点。代表は54試合で23得点。
+    card:
+      <<: *total_card
+      highlight_row: 1
+  - text: 通算は、367試合で104得点。
+    emph: true
+    card:
+      <<: *total_card
+      highlight_row: 4
+  sources:
+  - https://en.wikipedia.org/wiki/Khvicha_Kvaratskhelia
+  - https://www.transfermarkt.com/khvicha-kvaratskhelia/profil/spieler/502670
+- id: season
+  heading: 今季の数字と直近5試合
+  tier: 報道
+  telop: 今季ここまで
+  narrator: 解説
+  card:
+    type: table
+    title: 直近5試合（クラブ）
+    columns:
+    - 日付
+    - 相手
+    - 出場
+    - 得点
+    - 結果
+    rows: &recent_rows
+    - - 10/14
+      - マンチェスター・シティ
+      - 66分から
+      - 0G 0A
+      - 4-2 勝
+    - - 10/10
+      - ル・マン
+      - 59分から
+      - 1G 0A
+      - 3-1 勝
+    - - 9/20
+      - マルセイユ
+      - 先発・59分交代
+      - 0G 0A
+      - 2-1 勝
+    - - 9/13
+      - ブレスト
+      - 先発・66分交代
+      - 0G 0A
+      - 1-0 勝
+    - - 9/4
+      - モナコ
+      - 先発・68分交代
+      - 0G 1A
+      - 1-2 負
+    source: ESPN
+  say:
+  - text: クヴァラツヘリアの今季は、ここまで公式戦9試合。昨季は、年間48試合に出ました。
+    image: assets/images/20261017_kvaratskhelia/04_w.jpg
+    card: &recent_card
+      type: table
+      title: 直近5試合（クラブ）
+      columns: [日付, 相手, 出場, 得点, 結果]
+      rows: *recent_rows
+      source: ESPN
+  - text: 今季は2得点1アシスト。出場は1試合平均55分で、昨季の61分より短め。
+    card: *recent_card
+  - text: 10月10日、ル・マン戦。59分に出て、61分にゴールを決めます。
+    emph: true
+    card:
+      <<: *recent_card
+      highlight_row: 1
+  - text: 10月14日は、マンチェスター・シティ戦。66分から出場して、4対2の勝利。
+    card:
+      <<: *recent_card
+      highlight_row: 0
+  sources:
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/fra.1/summary?event=401876442
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915407
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/fra.1/summary?event=401876469
+  - https://www.transfermarkt.com/khvicha-kvaratskhelia/profil/spieler/502670
+- id: story
+  heading: 数字の外にある、2つの話
+  tier: 報道
+  main: true
+  telop: マラドーナの壁画と、ロナウドの写真
+  narrator: 解説
+  card:
+    type: table
+    title: 数字の外にある、2つの話
+    columns: [いつ, 何があったか]
+    rows: &story_rows
+    - ['2025年1月', ナポリへの別れを、動画で語った]
+    - ['2024年6月', 憧れの選手と、同じ試合に立った]
+    source: 各報道
+  say:
+  - text: パリ・サンジェルマンのクヴァラツヘリア。数字の外に、2つの話があります。
+    image: assets/images/20261017_kvaratskhelia/08_v.jpg
+    short_only: true
+    card: none
+  - text: 1つ目は、ナポリの別れ。夜中に、マラドーナの壁画へ。
+    image: assets/images/20261017_kvaratskhelia/07_w.jpg
+    card: none
+  - text: ディエゴとは、マラドーナのこと。壁画の前で、こう語りました。
+    card: none
+  - voice: クヴァラツヘリア
+    text: ディエゴは、ナポリの人々の心の中で生きている。
+  - voice: クヴァラツヘリア
+    text: ここに来ると、その意味が、強く分かります。
+    cont: true
+    pause: 0.6
+  - voice: クヴァラツヘリア
+    text: ナポリは、僕の家でした。
+  - voice: クヴァラツヘリア
+    text: 来たときは、ほとんど誰も知らない少年でした。
+    cont: true
+  - voice: クヴァラツヘリア
+    text: いまは大人として、多くの愛とスクデットを胸に、去ります。
+    cont: true
+    pause: 0.6
+  - text: 2つ目は、憧れの選手の話。2024年6月、ヨーロッパ選手権です。
+    image: assets/images/20261017_kvaratskhelia/08_w.jpg
+    card: &story_card
+      type: table
+      title: 数字の外にある、2つの話
+      columns: [いつ, 何があったか]
+      rows: *story_rows
+      source: 各報道
+      highlight_row: 1
+  - text: 試合前、2013年の写真が広まります。ロナウドを囲む少年たちの中に、彼がいました。
+    card:
+      <<: *story_card
+      highlight_row: 1
+  - text: グループの最終戦。開始2分、決めたのはクヴァラツヘリア。
+    image: assets/images/20261017_kvaratskhelia/02_w.jpg
+    emph: true
+    card: none
+  - text: 2対0。初めての大舞台で、ジョージアは決勝トーナメントへ。試合後の、本人の言葉。
+    card: none
+  - voice: クヴァラツヘリア
+    text: ロナウドのユニフォームを手に入れた。
+  - voice: クヴァラツヘリア
+    text: 次のラウンドにも進んだ。ジョージア人にとって、最高の日です。
+    cont: true
+  - voice: クヴァラツヘリア
+    text: 個人の最優秀選手はいない。チームの力でした。
+    cont: true
+    pause: 0.6
+  - text: 憧れの人と同じピッチで、国の歴史を動かした主将です。
+    pause: 0.5
+    card: none
+  quotes_from:
+  - https://it.soccerway.com/news/calcio-serie-a-parla-kvara-saluta-napoli-in-modo-criptico-e-stata-casa-mia-un-giorno-vi-raccontero-video/CnpntNl4
+  - https://www.flashscore.com/news/soccer-euro-kvaratskhelia-celebrating-best-day-of-his-life-after-historic-win-and-ronaldo-shirt-swap/zoEM2KED
+  sources:
+  - https://it.soccerway.com/news/calcio-serie-a-parla-kvara-saluta-napoli-in-modo-criptico-e-stata-casa-mia-un-giorno-vi-raccontero-video/CnpntNl4
+  - https://www.flashscore.com/news/soccer-euro-kvaratskhelia-celebrating-best-day-of-his-life-after-historic-win-and-ronaldo-shirt-swap/zoEM2KED
+  - https://www.skysports.com/football/news/13157537/euro-2024-georgia-2-0-portugal-khvicha-kvaratskhelia-scores-as-willy-sagnols-side-reach-last-16
+- id: view
+  heading: ナポリの2年半と、PSGの1年9か月を数えると
+  tier: 背景
+  viewpoint: true
+  narrator: 解説
+  telop: 10月26日、バロンドールの発表
+  card:
+    type: table
+    title: ナポリとPSG、チャンピオンズリーグの比べ
+    columns: [項目, ナポリ, PSG]
+    rows: &cmp_rows
+    - ['在籍', '2年半', '1年9か月']
+    - ['優勝', '1つ', '9つ']
+    - ['CLの試合', '17', '26']
+    - ['CLの得点', '2', '13']
+    - ['90分あたり', '0.13', '0.62']
+    source: Wikipedia・Transfermarkt・UEFA
+  say:
+  - text: 最後に、ナポリとパリ・サンジェルマンを、同じ物差しで並べてみます。
+    image: assets/images/20261017_kvaratskhelia/03_w.jpg
+    card: &cmp_card
+      type: table
+      title: ナポリとPSG、チャンピオンズリーグの比べ
+      columns: [項目, ナポリ, PSG]
+      rows: *cmp_rows
+      source: Wikipedia・Transfermarkt・UEFA
+      highlight_row: 0
+  - text: ナポリは2年半でスクデット1つ。パリ・サンジェルマンは1年9か月で9つ。
+    emph: true
+    card:
+      <<: *cmp_card
+      highlight_row: 1
+  - text: ナポリも24/25に再びスクデット。勝ち点82、インテルに1点差。
+    card: none
+  - text: 欧州の舞台。ナポリは17試合2得点、パリは26試合で13得点。
+    card:
+      <<: *cmp_card
+      highlight_row: 3
+  - text: 90分あたりに直すと、0.13から0.62。およそ4.7倍です。
+    emph: true
+    card:
+      <<: *cmp_card
+      highlight_row: 4
+    mark: {kind: circle, row: 4}
+  - text: 本人は、パリを選んだ自分を、こう振り返ります。
+    card: none
+  - voice: クヴァラツヘリア
+    text: ここに来たという、自分の決断を、誇りに思っています。
+  - voice: クヴァラツヘリア
+    text: パリでプレーできて、とても幸せです。
+    cont: true
+    pause: 0.6
+  - text: 次の節目は、10月26日。ロンドンで、バロンドールが発表されます。
+    image: assets/images/20261017_kvaratskhelia/08_w.jpg
+    card: none
+  - text: 候補30人のうち、パリ・サンジェルマンの選手が最多。彼も、その1人です。
+    card: none
+  - text: 去った理由が分かる日は、まだ先。選んだ道の結果は、もう数字に出ています。
+    card: none
+  quotes_from:
+  - https://sport.quotidiano.net/en/ultimaora/champions-kvara-bayern-squadra-fantastica-ac3f9864
+  sources:
+  - https://www.uefa.com/uefachampionsleague/news/02a7-2123ffd59758-f1600080259a-1000--khvicha-kvaratskhelia-in-the-champions-league-records-stats-/
+  - https://en.wikipedia.org/wiki/Khvicha_Kvaratskhelia
+  - https://www.transfermarkt.com/khvicha-kvaratskhelia/profil/spieler/502670
+  - https://site.api.espn.com/apis/v2/sports/soccer/ita.1/standings?season=2024
+  - https://www.sortiraparis.com/en/news/in-paris/articles/351895-ballon-d-or-who-are-the-30-nominees-and-which-paris-players-are-in-the-running
+  - https://amp.foxsports.com/stories/soccer/ballon-dor-2026-nominees-kane-mbappe-yamal-headline-30-man-shortlist

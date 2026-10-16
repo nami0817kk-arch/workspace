@@ -1,0 +1,542 @@
+# ユニフォームとエンブレムの歴史 アーセナル（10/17 作成。プレミア⑪→⑳→①→⑩ の ① にあたる）。
+# 軸：胸の紋章（大砲）が何回形を変えたか。何を1回と数えるかを冒頭で言い、自分で数えて答えを出す。
+# 一次情報（arsenal.com）の本文を requests のブラウザ User-Agent で読み、Wikipedia(en) の Arsenal F.C. 記事の Crest 節と突き合わせた。
+# 2026-10-17 取材。ブラウザ操作なし。web.archive.org は 429（レート制限）で取れなかったページがある（下記）。
+#
+# ---- 何を1回と数えるか（冒頭で言う）----
+#   **「クラブが新しい紋章の絵を出した年を1回」。色や書体を整えただけの年は数えない。**
+#   数える材料は、クラブ公式「The Arsenal Crest」(arsenal.com/news/news-archive/the-arsenal-crest) が番号を振った
+#   アーセナル自身の紋章の絵。ウーリッジ区の紋章（公式の(2)）・王立兵器廠の門の紋章（公式の(6)）は参考図で、数えない。
+#   公式のページに載るアーセナルの紋章：(1)1905 (3)1921/22 (4)1922/23 (5)1925/26 (7)1949/50 (9)2001/02の手直し (10)2002 (11)2011/12の記念版。
+#
+# ---- 読んだ根拠の年の一覧（クラブ公式の原文）----
+#   1905-10-20  最初の紋章。「Book of Football」の記事に付いた。大砲3門（ライオンの頭付き）。ウーリッジ区の紋章がもと（公式の言い方：universally acknowledged）。
+#   1913-1921   ハイバリー移転後、紋章は無かった（公式：「there was no sign of a crest」）。
+#   1921/22     便箋に、西向きの大砲1門（公式の(3)）。
+#   1922/23     第1節のプログラム（対バーンリー）に、東向きの大砲（公式の(4)）。「just three seasons」使われた。
+#   1925/26     西向きの大砲に戻る。1921/22 とよく似た細い大砲。「The Gunners」の文字が横に付く（公式の(5)）。
+#   1949/50     「Victoria Concordia Crescit」の紋章（公式の(7)）。西向きの大砲・ゴシック体の Arsenal・イズリントン区の紋章・アーミン。
+#               公式：「For the next 53 years this crest remained largely unchanged」。
+#   2001/02     「cleaned up for commercial reasons」金色を1色に・標語の書体を飾りの少ないものに（公式の(9)）。**数えない**（色と書体だけ）。
+#   2002        新しい紋章（公式の(10)）。「to embrace the future and move forward」。
+#   2011/12     125周年の記念紋章（公式の(11)）。シャツに付いた。15枚の月桂樹・15枚の樫の葉・「Forward」・1886と2011。**1シーズンだけ**。
+#   →数えると 1905・1921/22・1922/23・1925/26・1949/50・2002・2011/12 の**7種類**。最初の1905を除いた**替わった回数は6回**。
+#   公式の同じページ末尾：「Heritage Assets … Any material changes to our club crest or home kit colours would require meaningful consultation with our supporters.」
+#
+# ---- シャツの胸（クラブ公式・アディダス）----
+#   公式「Origins of the Arsenal kit」：大砲の図柄が初めてシャツに付いたのは1967年。このシャツで1970/71に初の二冠。
+#     胸の作り手ロゴは1970年代後半（アンブロ）、1981年にJVCが初の胸のスポンサー。2005/06は旧ハイバリー最後の年でえんじ色（1913/14の色）。
+#     チャップマン（1925年就任）が「赤いシャツに白い襟と袖」を考えた（年は書いていない）。1886年にノッティンガム・フォレストの元選手が赤いキットを持ち込んだ。
+#   公式「The return of the cannon」(2021-05) ：2021/22 アウェー（1970/71の二冠から50年）は紋章の代わりに大砲だけ。
+#   公式「Take a closer look at our 2024/25 home kit」：ホームのシャツが大砲を付けるのは「1989/90 以来」。
+#   アディダス公式 (news.adidas.com, 2024-05-16)：「The Arsenal cannon replaces the club crest on a home shirt, for the first time in 35 years.」
+#   公式「The details behind our 2025/26 adidas home kit」＋公式の写真：2025/26 のホームの胸は紋章（ゴシックの A の柄）。2026/27 のホームの胸も紋章（公式の記事の写真を開いて確認）。
+#
+# ---- 食い違い（台本では言わない・片方に寄せる。ここに残す）----
+#   ・**最初の紋章の年**：Wikipedia は「1888年・大砲3門・北向き」。**クラブ公式は1905年**。→ 台本は公式の1905年。1888は言わない。
+#   ・**ホームの胸から大砲だけが消えた年**：Wikipedia は「1991年以来」（紋章が付いた年から）、クラブ・アディダスは「1989/90 以来」。→ 台本は公式の「1989/90」。
+#   ・**1930年代の「A-ボール-C」アールデコの印**：クラブ公式は「Arsenal の象徴」と書くが紋章のページの番号付きの図には入っていない。→ 数えない（言わない）。
+#   ・**白い袖がいつから**：Wikipedia のキット箱は「1933」、公式の Origins は「チャップマン（1925年就任）が考えた」で年なし。→ 年は言わない。
+#   ・**昔のシャツに胸の印があったか**：公式 Crest「shirts remained plain, unless commemorating a significant match」／公式 Origins「Club badge was positioned on the left-hand side」。
+#     公式の2つの記述が噛み合わない。→ 台本は Crest の言い方（無地）まで、胸の印の年は言わない。
+#   ・**2002年の紋章の形（大砲の向き・色）**：公式ページは形を書かない。Wikipedia は「大砲は東向き・青が入る」。→ 台本では言わない。
+#   ・**2025/26 の胸**：アーセナルの記事は紋章かどうかを書かない。onlinegooner（ファンサイト）は「紋章が戻る」。公式の写真（2026/27 のモデル写真）は盾に Arsenal とある。
+#     → 台本は「ホームの胸に紋章が戻っています」まで（2025/26 の年は onlinegooner と公式のキット記事の写真名で確認）。確度は背景。
+#
+# ---- 言わないと決めたもの ----
+#   ・**契約の額**（アディダス・エミレーツ）：読んでいない。
+#   ・**2022/23・2023/24 のアウェーが大砲のみ・2023/24 のサード・2024/25 の3着すべて**：Wikipedia(Arsenal F.C. の Crest 節)だけが根拠。
+#     台本の「胸が紋章以外になったシーズン5つ」はこの Wikipedia に頼る**背景**（見立ての節。tier 背景）。2025/26・2026/27 のアウェー・サードは読んでいないので、数える期間は 2002/03〜2024/25 に区切った。
+#   ・女子チーム・ユース（公式は男女の写真が混ざる。台本は男子だけ）。
+#   ・Heritage Assets の規定が「シャツの図柄」に当たるかは、公式の文が書いていない → 台本も「書かれていない」と言う。
+#
+# ---- 自分で数えた数（検算した）----
+#   ・紋章の種類：1905, 1921/22, 1922/23, 1925/26, 1949/50, 2002, 2011/12 → 7種類／替わったのは 7−1 ＝ 6回。
+#   ・1905〜2011：2011−1905 ＝ 106年／106 ÷ 6 ＝ 17.67 → 17.7年に1回。
+#   ・1949/50〜2001/02 の53年：2002−1949 ＝ 53年。53 ÷ 17.67 ＝ 3.00 → 「約3倍」。
+#   ・1921/22〜1925/26 の5シーズン（1921/22, 22/23, 23/24, 24/25, 25/26）に新しい絵が 1921/22・1922/23・1925/26 の3つ。
+#   ・胸が紋章以外のシーズン（2002/03〜2024/25＝2024−2002＋1 ＝ 23シーズンのうち）：2011/12・2021/22・2022/23・2023/24・2024/25 の5つ／5 ÷ 23 ＝ 0.217 → 約22%（4.6シーズンに1回）。
+#   ・35年：2024−1989 ＝ 35。
+#
+# ---- 一次情報に届かなかったところ ----
+#   ・web.archive.org の保存（2008年の The Crest・2004年の新紋章の報道発表・2009年の The Arsenal shirt badge・2011年の125周年）は 429 で取れなかった。
+#     現行の arsenal.com「The Arsenal Crest」が同じ内容を番号付きで載せるので、それを根拠にした（2002年の発表文そのものは未読）。
+#   ・BBC・NYT/The Athletic の記事は読んでいない（Wikipedia の脚注に出てくるだけ）。
+#
+# ---- 写真（assets/images/20261017_kit_arsenal/、出典は credits.json） ----
+#   すべて arsenal.com の記事の写真（クラブ公式。権利は晴れていない＝引き受ける危険）。取り込んだあと全部開いて見た。
+#   a01_2627_eze = 2026/27 ホームのモデル写真（arsenal.com の記事の og:image、ファイル名 eberechieze）。人物名は**ファイル名からの推定なので台本で言わない**。
+#       原寸 5000x6666。_w.jpg（16:9 に切った 2560x1440）・_v.jpg（縦）。胸の紋章（盾に Arsenal）がはっきり見える。サムネ用。
+#   a05_2425_away_p = 2024/25 アウェーのモデル写真（arsenal.com の記事、原寸 2160x3840 の縦）。胸は大砲だけ。人物名は言わない。_w.jpg が16:9の切り出し（2160x1215）。
+#   a06_2627_chest_w = a01 の原寸（5000x6666）から胸の紋章を中心に 16:9 に切った 1920x1080。
+#   （1000〜1123px の写真 3枚＝2024/25 ホームの Ødegaard 写真・2025/26 ホームの2人・2021/22 アウェー は、横に1.7〜1.9倍引き伸ばすため外した。原寸が1123pxまでしか無かった）
+#   クラブの現行エンブレム assets/crests/アーセナル.png（折れ線の2002年の印）・assets/backgrounds/cut_アーセナル.png（節の頭の紋章の差し込み）。権利は晴れていない。
+#   **過去の紋章の画像は使っていない**（権利が晴れない）。板は文字だけの年表。
+#
+# ネットの反応は入れない（voice_min: 0）。シリーズの回にショートは作らない決まり。
+# **サムネは案を3つ出してユーザーに決めてもらう**。ここの thumbnail は点検用の1案。
+date: 2026年10月17日
+slot: other_2
+format: news
+series: ユニフォームとエンブレムの歴史
+voice_min: 0
+people:
+- アーセナル
+theme:
+  id: kit_arsenal
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: アーセナル
+  title: アーセナルの胸の大砲は、何回形を変えたのか
+  question: アーセナルの胸の紋章は、何回形を変えてきたのか
+  opening_image: assets/images/20261017_kit_arsenal/a01_2627_eze_w.jpg
+  lead: 胸に大砲を付けた、赤いシャツのクラブ。
+  hook: ''
+  takeaway: アーセナルの紋章の絵は、クラブ公式の記載で数えると1905年の最初から7種類で、替わったのは6回（色や書体の手直しは数えない）。1949/50から2001/02までの53年は、新しい絵が1つも出ず、1905〜2011年の平均17.7年に1回の約3倍の長さ。一方、胸の図柄は2002/03〜2024/25の23シーズンのうち5シーズンで紋章以外になり、2024/25にはホームのシャツも大砲だけになった（クラブは1989/90以来と書き、アディダスは35年ぶりと発表）。2025/26からホームの胸は紋章に戻っている
+  hook_unused: ''
+thumbnail:
+  layout: face
+  callouts: [何を1回と数える？, 53年変わらず]
+  photo: assets/images/20261017_kit_arsenal/a01_2627_eze_w.jpg
+  line1: アーセナルの紋章
+  line2: 替わったのは6回
+  crests:
+  - アーセナル
+  tags:
+  - アーセナル
+  - プレミアリーグ
+  - ユニフォーム
+  - エンブレム
+sections:
+- id: crest24
+  main: true
+  heading: 53年ほぼ変わらなかった紋章に、2024年に何が起きたのか
+  tier: 確定
+  official: true
+  telop: 1949/50の紋章は53年大きくは変わらず。2024/25のホームは、紋章が消えて大砲だけが付いた（クラブ公式）
+  narrator: 解説
+  card: &id_doc
+    type: document
+    label: アーセナル公式サイト「The Arsenal Crest」の記載（訳）
+    paragraphs:
+    - 1949/50シーズンに現れたエンブレムは、その後53年間、大きくは変わりませんでした。
+    - 2001/02シーズンの初めに、商業上の理由で整えられました。金色は1色になり、標語の書体は飾りの少ないものになりました。
+    highlight:
+    - 53年間
+    - 整えられました
+  say:
+  - text: アーセナルの、胸の紋章の話です。
+    short_only: true
+  - text: 胸の大砲の絵が、何回替わったのかを数えます。
+    image: assets/images/20261017_kit_arsenal/a01_2627_eze_w.jpg
+    emph: true
+    card: none
+  - text: 数え方を先に決めます。クラブが新しい絵を出した年だけを、数えます。
+    card: none
+  - text: 色や書体を整えただけの年は、数えません。
+    card: none
+  - text: 材料は、クラブの公式サイトの記載です。
+    card: none
+  - text: 公式の記載は、まず53年の話から始まります。
+    card:
+      <<: *id_doc
+      highlight: []
+  - text: 1949/50に現れた紋章は、53年間、大きくは変わりませんでした。
+    emph: true
+    card: *id_doc
+  - text: 2001/02の手直しは、色と書体を整えただけです。
+    card:
+      <<: *id_doc
+      highlight:
+      - 整えられました
+  - text: 2002年、クラブは新しい紋章に決めたと書いています。
+    card: &id_doc2
+      type: document
+      label: アーセナル公式サイト「The Arsenal Crest」の記載（訳）
+      paragraphs:
+      - 2002年、未来を受け入れて前へ進むために、新しいエンブレムを作ることにしました。
+      - エンブレムやホームのシャツの色を大きく変えるには、サポーターとの意味のある協議が必要です。
+      highlight:
+      - 新しいエンブレム
+      - 意味のある協議が必要
+  - text: サポーターとの協議が必要、という決まりも、公式は載せています。
+    card:
+      <<: *id_doc2
+      highlight:
+      - 意味のある協議が必要
+  - text: そして2024年、シャツの胸から、紋章が消えました。
+    image: assets/images/20261017_kit_arsenal/a05_2425_away_p_w.jpg
+    callword: 紋章が消えた
+    card: none
+  - text: 代わりに付いたのは、大砲だけです。
+    emph: true
+    card: none
+  - text: ホームで大砲が付くのは、1989/90以来と、クラブは書きました。
+    card: none
+  - text: では、紋章の絵は、これまで何回替わったのか。順に数えます。
+    image: assets/images/20261017_kit_arsenal/a01_2627_eze_w.jpg
+    card: none
+  sources:
+  - https://www.arsenal.com/news/news-archive/the-arsenal-crest
+  - https://www.arsenal.com/news/take-closer-look-our-2024-2025-home-kit
+  - https://news.adidas.com/football/the-cannon-returns-as-adidas-and-arsenal-unveil-home-kit-for-2024-25/s/53f7b092-4407-4c78-9074-16c6a883cbe6
+  - https://en.wikipedia.org/wiki/Arsenal_F.C.
+- id: crest
+  heading: 紋章の絵は、何回替わったのか
+  tier: 確定
+  official: true
+  telop: 紋章の絵は1905年から7種類。替わったのは6回（色と書体の手直しは数えない）
+  narrator: 解説
+  card: &id_crest
+    type: timeline
+    title: 胸の紋章の変遷（クラブ公式の記載）
+    rows: &rows_crest
+    - - 1905年
+      - 大砲3門の紋章（最初）
+    - - 1921/22
+      - 西向きの大砲が1門
+    - - 1922/23
+      - 東向きの太い大砲
+    - - 1925/26
+      - 西向きの細い大砲と文字
+    - - 1949/50
+      - ラテン語の標語入りの紋章
+    - - 2002年
+      - 新しいエンブレム
+    focus: 1905年
+  say:
+  - text: アーセナルの紋章の絵を、公式の記載の順に並べます。
+    image: assets/backgrounds/cut_アーセナル.png
+    card: none
+  - text: 最初の紋章は、1905年。のちの1門より多い、大砲3門の絵でした。
+    image: assets/images/20261017_kit_arsenal/a06_2627_chest_w.jpg
+    emph: true
+    card:
+      <<: *id_crest
+      highlight_row: 0
+  - text: 創立の地ウーリッジの区の紋章がもと、と公式は書きます。
+    card:
+      <<: *id_crest
+      highlight_row: 0
+  - text: これを、1つ目として数えます。
+    card:
+      <<: *id_crest
+      highlight_row: 0
+  - text: 1913年に北ロンドンへ移ったあと、しばらく紋章はありませんでした。
+    card:
+      <<: *id_crest
+      highlight_row: 0
+  - text: 1921/22に、西向きの大砲が1門。これが2つ目です。
+    image: assets/images/20261017_kit_arsenal/a05_2425_away_p_w.jpg
+    card:
+      <<: *id_crest
+      highlight_row: 1
+  - text: 翌1922/23には、東向きの太い大砲に替わります。3つ目です。
+    card:
+      <<: *id_crest
+      highlight_row: 2
+  - text: 使われたのは3シーズンだけ。1925/26に、西向きの細い大砲へ戻ります。
+    image: assets/images/20261017_kit_arsenal/a01_2627_eze_w.jpg
+    card:
+      <<: *id_crest
+      highlight_row: 3
+  - text: 「ザ・ガナーズ」の文字も添えられました。これが4つ目です。
+    card:
+      <<: *id_crest
+      highlight_row: 3
+  - text: 1949/50に、ラテン語の標語が入った紋章が出ます。5つ目です。
+    image: assets/images/20261017_kit_arsenal/a06_2627_chest_w.jpg
+    emph: true
+    card:
+      <<: *id_crest
+      highlight_row: 4
+  - text: 標語は「勝利は調和から育つ」。アーセナルの紋章は、ここで落ち着きます。
+    card:
+      <<: *id_crest
+      highlight_row: 4
+  - text: 2002年に、新しい紋章が出ます。これが6つ目です。
+    emph: true
+    image: assets/images/20261017_kit_arsenal/a01_2627_eze_w.jpg
+    card:
+      <<: *id_crest
+      highlight_row: 5
+  - text: そして2011/12。125周年の記念紋章が、シャツに付きました。
+    card: none
+  - text: 15人の創立メンバーにちなむ、15枚の葉が添えられた絵です。
+    card: none
+  - text: この1シーズンだけの絵を、7つ目として数えます。
+    card: &id_count
+      type: line
+      title: 紋章の絵の種類（積み上げ）
+      x:
+      - 1905
+      - 1921
+      - 1922
+      - 1925
+      - 1949
+      - 2002
+      - 2011
+      series:
+      - - 紋章の絵（累計）
+        - [1, 2, 3, 4, 5, 6, 7]
+      unit: 種類
+      focus: 紋章の絵（累計）
+      highlight: 2011
+      badges:
+      - series: 紋章の絵（累計）
+        at: 2002
+        crest: アーセナル
+  - text: 1905年の最初から、紋章の絵は7種類。
+    card: *id_count
+  - text: 最初のあとに替わったのは、6回です。
+    emph: true
+    card: *id_count
+  sources:
+  - https://www.arsenal.com/news/news-archive/the-arsenal-crest
+  - https://en.wikipedia.org/wiki/Arsenal_F.C.
+- id: chest
+  heading: 胸には、いつ何が付いていたのか
+  tier: 確定
+  official: true
+  telop: 大砲だけが胸に付いたのは1967年。2024/25にホームも大砲だけに。2025/26から紋章が戻った
+  narrator: 解説
+  card: &id_chest
+    type: timeline
+    title: シャツの胸に付いたもの
+    rows: &rows_chest
+    - - 1967年
+      - 胸に大砲だけが付く
+    - - 1989/90
+      - ホームで大砲だけの最後の年
+    - - 2011/12
+      - 125周年の記念紋章
+    - - 2021/22
+      - アウェーの胸が大砲だけに
+    - - 2024/25
+      - ホームも大砲だけに
+    - - 2025/26
+      - ホームの胸に紋章が戻る
+    focus: 1967年
+  say:
+  - text: ここからは、アーセナルのシャツの胸に、何が付いていたかです。
+    image: assets/images/20261017_kit_arsenal/a01_2627_eze_w.jpg
+    card: none
+  - text: 昔のシャツは無地で、紋章は便箋や、試合のプログラムのものでした。
+    card: none
+  - text: 大砲がシャツに初めて付いたのは、1967年です。
+    emph: true
+    card:
+      <<: *id_chest
+      highlight_row: 0
+  - text: この大砲のシャツで、1970/71に、初の二冠を取りました。
+    card:
+      <<: *id_chest
+      highlight_row: 0
+  - text: リーグ優勝と、FAカップの両方です。
+    card:
+      <<: *id_chest
+      highlight_row: 0
+  - text: 1989/90が、ホームで大砲だけを付けた最後の年です。
+    card:
+      <<: *id_chest
+      highlight_row: 1
+  - text: そのあと、ホームの胸は、紋章の時代が続きます。
+    image: assets/images/20261017_kit_arsenal/a01_2627_eze_w.jpg
+    card:
+      <<: *id_chest
+      highlight_row: 1
+  - text: 2011/12は、先ほどの125周年の記念紋章でした。
+    card:
+      <<: *id_chest
+      highlight_row: 2
+  - text: 2021/22のアウェーは、紋章を外して、大砲だけにしました。
+    image: assets/images/20261017_kit_arsenal/a05_2425_away_p_w.jpg
+    card:
+      <<: *id_chest
+      highlight_row: 3
+  - text: 1970/71の二冠から、50年の記念でした。
+    card:
+      <<: *id_chest
+      highlight_row: 3
+  - text: 2024/25は、ホームのシャツも、大砲だけになります。
+    emph: true
+    image: assets/images/20261017_kit_arsenal/a05_2425_away_p_w.jpg
+    card:
+      <<: *id_chest
+      highlight_row: 4
+  - text: アディダスは、紋章に替わる大砲は、ホームで35年ぶりと発表しました。
+    card:
+      <<: *id_chest
+      highlight_row: 4
+  - text: そして2025/26、ホームの胸に、紋章が戻ります。
+    image: assets/images/20261017_kit_arsenal/a06_2627_chest_w.jpg
+    card:
+      <<: *id_chest
+      highlight_row: 5
+  - text: 2026/27の新しいホームも、胸は紋章です。
+    image: assets/images/20261017_kit_arsenal/a01_2627_eze_w.jpg
+    card: none
+  sources:
+  - https://www.arsenal.com/feature/origins-of-the-arsenal-kit-a4Id94V60OO9
+  - https://www.arsenal.com/news/returnofthecannon
+  - https://www.arsenal.com/news/take-closer-look-our-2024-2025-home-kit
+  - https://news.adidas.com/football/the-cannon-returns-as-adidas-and-arsenal-unveil-home-kit-for-2024-25/s/53f7b092-4407-4c78-9074-16c6a883cbe6
+  - https://www.arsenal.com/news/details-behind-our-202526-adidas-home-kit
+  - https://www.arsenal.com/news/the-inspiration-and-features-behind-our-202627-home-kit-a84jJ7T0sFDo
+  - https://www.onlinegooner.com/articles/view/8788
+- id: colour
+  heading: 赤に白い袖は、誰がいつ始めたのか
+  tier: 確定
+  official: true
+  telop: 1886年の濃い赤から、チャップマン監督が赤に白い襟と袖へ。1981年にJVCが初の胸のスポンサー
+  narrator: 解説
+  card: &id_colour
+    type: table
+    title: アーセナルのシャツの歩み（クラブ公式）
+    columns: &cols_colour
+    - いつ
+    - できごと
+    rows: &rows_colour
+    - - 1886
+      - 元選手が持ち込んだ濃い赤
+    - - 1925〜
+      - 赤に白い襟と袖
+    - - 1970/71
+      - 大砲のシャツで二冠
+    - - 1981
+      - 初の胸のスポンサー JVC
+    - - 2005/06
+      - 旧ハイバリー最後の年、えんじ色
+    highlight_row: 0
+  say:
+  - text: 最後に、アーセナルのシャツの色です。
+    image: assets/images/20261017_kit_arsenal/a01_2627_eze_w.jpg
+    card: *id_colour
+  - text: 1886年、創立期の選手が、前のクラブの赤いキットを持ち込みました。
+    card:
+      <<: *id_colour
+      highlight_row: 0
+  - text: 前のクラブは、ノッティンガム・フォレストです。
+    card:
+      <<: *id_colour
+      highlight_row: 0
+  - text: 濃い赤のシャツに、白いショーツ。靴下は青と白の横縞でした。
+    card:
+      <<: *id_colour
+      highlight_row: 0
+  - text: 赤に白い襟と袖のシャツを考えたのは、1925年に来たチャップマン監督です。
+    image: assets/images/20261017_kit_arsenal/a06_2627_chest_w.jpg
+    emph: true
+    card:
+      <<: *id_colour
+      highlight_row: 1
+  - text: いまのホームの形の、もとになりました。
+    card:
+      <<: *id_colour
+      highlight_row: 1
+  - text: 1981年には、ジェイブイシーが、クラブ初の胸のスポンサーになります。
+    image: assets/images/20261017_kit_arsenal/a01_2627_eze_w.jpg
+    card:
+      <<: *id_colour
+      highlight_row: 3
+  - text: 2005/06は、旧ハイバリー最後の年で、えんじ色のシャツを着ました。
+    card:
+      <<: *id_colour
+      highlight_row: 4
+  - text: 1913/14の、ハイバリー最初の年の色にならったものです。
+    card:
+      <<: *id_colour
+      highlight_row: 4
+  sources:
+  - https://www.arsenal.com/feature/origins-of-the-arsenal-kit-a4Id94V60OO9
+- id: view
+  viewpoint: true
+  heading: 見立て・紋章の絵は53年止まり、胸は23季のうち5季で別の形
+  tier: 背景
+  telop: 絵の替わり方は平均17.7年に1回。最長の53年はその約3倍。胸が紋章以外の季は23季のうち5季
+  narrator: 解説
+  card: &id_ratio
+    type: calc
+    title: 最長の53年は、平均の何倍か
+    terms:
+    - - 53年
+      - 1949/50〜2001/02
+    - - 17.7年に1回
+      - 1905〜2011の106年÷6回
+    - - 約3倍
+      - 割った答え
+    ops:
+    - ÷
+    - ＝
+  say:
+  - text: ここからは、アーセナルの紋章の替わり方を、数え直して比べます。
+    image: assets/images/20261017_kit_arsenal/a01_2627_eze_w.jpg
+    card: none
+  - text: ひとつ目は、絵の替わる間隔です。
+    card: none
+  - text: 1905年から2011/12までの106年に、6回替わりました。
+    card: &id_avg
+      type: calc
+      title: 紋章の絵は、何年に1回替わったか
+      terms:
+      - - 106年
+        - 1905〜2011
+      - - 6回
+        - 紋章の絵が替わった回数
+      - - 17.7年に1回
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+  - text: 106年を6で割ると、17.7年に1回です。
+    card: *id_avg
+  - text: ただし、均等ではありません。1921/22からの5シーズンで、3つ出ています。
+    card: none
+  - text: 一方、1949/50から2001/02までの53年は、新しい絵が1つもありません。
+    card: none
+  - text: 53年を17.7年で割ると、約3倍です。
+    emph: true
+    card: *id_ratio
+    mark:
+      kind: circle
+      item: 2
+  - text: 最も長く変わらなかった間隔は、平均の約3倍でした。
+    card: *id_ratio
+  - text: ふたつ目は、胸です。2002/03から2024/25までの23シーズンを見ます。
+    image: assets/images/20261017_kit_arsenal/a06_2627_chest_w.jpg
+    card: none
+  - text: 紋章以外は、2011/12と、2021/22から2024/25の4季です。
+    card: none
+  - text: 5つのシーズンを、23シーズンで割ります。
+    card: &id_chest5
+      type: calc
+      title: 胸が紋章以外だったシーズンの割合
+      terms:
+      - - 5シーズン
+        - 2011/12と2021/22〜2024/25
+      - - 23シーズン
+        - 2002/03〜2024/25
+      - - 約22%
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+  - text: 約22%。およそ4.6シーズンに1回です。
+    emph: true
+    card: *id_chest5
+    mark:
+      kind: circle
+      item: 2
+  - text: 紋章の絵は長く止まり、胸の図柄は、ここ数年に動きました。
+    card: none
+  - text: アーセナルの公式は、先ほどの協議の決まりを載せています。
+    card: none
+  - text: この決まりが、シャツに付ける大砲に当たるかは、書かれていません。
+    card: none
+  - text: 次に分かるのは、来季のシャツの胸に何が付くかです。
+    card: none
+  sources:
+  - https://www.arsenal.com/news/news-archive/the-arsenal-crest
+  - https://en.wikipedia.org/wiki/Arsenal_F.C.
+  - https://www.arsenal.com/news/take-closer-look-our-2024-2025-home-kit

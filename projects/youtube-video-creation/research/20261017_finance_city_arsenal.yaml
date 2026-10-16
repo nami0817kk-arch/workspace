@@ -1,0 +1,576 @@
+# クラブの財政：マンチェスター・シティ × アーセナル（10/17 土、シリーズ「クラブの財政」、key: finance_city_arsenal、型は news）。
+#
+# 軸は「**収入の世界6位（シティ）と7位（アーセナル）の差が760万ユーロしかない。では利益・赤字・給料の比率も並ぶのか**」。
+#   → 収入は並んでも、中身（試合日と商業）・給料の比率・売却益への頼り方が違うことを、両クラブの決算書（ポンド）で並べる。
+#   他の財政回の軸（バルサ＝使える上限／シティ＝判決／アルテタ＝契約／レアル＝スクワッド・コスト・ルール／PSG＝関連当事者取引／
+#   バイエルン＝株の持ち主／リヴァプール＝放映権／マンU＝償却・金融費用／トッテナム＝優勝の年の赤字）は1行も出さない。
+#   ★プレミアリーグの判決・訴訟（シティの罰）は言わない（この回は決算の数字だけ。決算書の戦略報告に「2023年2月の付託」の一文があるのみ）。
+#   ★スクワッド・コスト・ルール／PSR は言わない。売った選手・買った選手の名前も言わない。
+#   ★クラブの数字は決算書の範囲のまま（アーセナルは持ち株会社の連結、シティはクラブの会社の決算）。部門名は並べない（女子は扱わない決まり）。
+#   ★アルファベットは読み上げに出さない。
+#
+# **決算期（brief は「両方6月期」だったが違った）**:
+#   ・シティ（Manchester City Football Club Limited、Companies House 00040946）＝**2025年6月期**（2024-25）。クラブの年次報告の発表 2025-12-16（mancity.com）、
+#     決算書の署名 2025-10-08、Companies House への提出（AA）2026-03-06。
+#   ・アーセナル（Arsenal Holdings Limited、04250459）＝**2025年5月期**（2024-25。**5月末決算**）。クラブの発表 2026-02-25（arsenal.com）、提出（AA）2026-02-27。
+#   → **ひと月ずれる**（同じ2024-25シーズンの決算）。台本で言う。**2026年6月期・5月期の決算はどちらも未提出**（Companies House の提出履歴の最新は上の2件。2026-10-17 確認）。
+#   → 通貨はどちらも**ポンド**（決算書の原数値）。デロイトの数字だけが**ユーロ**（年平均 1ユーロ＝0.84ポンドで換算、デロイト一次ページ）。台本で言い分ける。
+#
+# **出どころ（一次情報まで辿れたもの）**:
+#   ○ **Companies House のシティ 2025年6月期 決算書（39ページ、スキャン画像）**を、ページ画像で読んだ（OCR は場所探しだけに使い、数字は画像を目で読んだ）：
+#       戦略報告 p5〜6（KPI 表：人件費÷収入 59%・58%、売却益 95.2m・139.0m、順位 3位・1位）／損益計算書 p15／注記4 収入 p28／注記5 営業費用 p29（人件費・償却）／注記7 従業員 p29。
+#   ○ **Companies House のアーセナル 2025年5月期 連結決算書（45ページ、スキャン画像）**：戦略報告 p3〜4（収入・人件費・売却益の文と損益の内訳）／連結損益 p22／注記2・3 p32／注記4・5 p33（営業費用・金融費用）。
+#   ○ **クラブ公式**：mancity.com「Manchester City releases 2024-25 Annual Report…」(2025-12-16、収入6億9410万・赤字990万)／arsenal.com「Financial results for 2024/25」(2026-02-25)。
+#       ★アーセナル公式サイトの表の「非例外の償却」は (176.6) と出るが、決算書の戦略報告の表（画像）と注記4は **171.6（171,627）**。**決算書の値を使う**（サイト側の転記ミスと思われるが未確認）。
+#   ○ **デロイト Football Money League 2026（2024/25）一次ページ（deloitte.com、2026-01-22）**：ランキング6位シティ・7位アーセナル、本文「シティ（€829m）は2位から6位へ」、
+#       クラブごとの図（ページに埋め込まれた図の中身）で **シティ €829.3m（前の年 €837.8m、−1%、−€8.5m）／アーセナル €821.7m（前の年 €716.5m、+15%、+€105.2m）**、
+#       5年の図（試合日・放映権・商業の3つの合計。シティ 645・731・826・838・829、アーセナル 367・433・533・717・822、百万ユーロ）、給料（シティ 476・アーセナル 404、百万ユーロ）。為替の注記：€1＝£0.84。
+#       ★検索の一覧の「829.3／821.7」は一次ページで確かめられた。**差 829.3−821.7＝7.6 百万ユーロ**。
+#       ★デロイトは「シティの女子は男子と連結していない」と注記（アーセナルの注記なし）。デロイトの収入額と決算書の額は別の集計（下の検算）。
+#   ○ **ヨーロッパ中央銀行の参照相場（frankfurter 経由）2026-10-16：1ポンド＝210.72円**（丸めて211円）。
+#   × **BBC は読んでいない**（この回は一次の決算書とクラブ公式で足りた）。
+#
+# 自分で計算した数（コードで検算した。scratchpad の calc.py）:
+#   収入（百万ポンド）：シティ 694.094（前の年 715.019）／アーセナル 690.998（616.580）。差 3.096 →「310万」。3.096÷690.998＝0.45% →「0.4%」。
+#   収入の動き：シティ −20.925（−2.9%）／アーセナル +74.418（+12.1%）。
+#   収入の中身：試合日 75.084 対 153.854（アーセナルがシティの2.05倍）／放映権 278.627（UEFA 70.651＋その他 207.976）対 272.784／商業 340.383 対 263.193／アーセナルのその他（不動産 0.713＋選手貸出 0.454）1.167。
+#     差の分解：−78.770＋5.843＋77.190−1.167＝+3.096 ✓（丸め −78.8＋5.8＋77.2−1.2＝+3.0、waterfall の注に「0.1ずれ」）。
+#   シティの商業は「外注した小売事業の純額」。注記4：外注でなければ +61.8 で 755.9（前の年 +66.3 で 781.3）。アーセナルの小売は自前（営業費用に売上原価 30.9m）。
+#   営業損益（売却益を足す前、決算書の「Operating profit/(loss)」）：シティ −93.302（前の年 −60.497）／アーセナル −63.208（−48.394）。**どちらも同じ定義**（損益計算書の同じ行）。
+#   選手の売却益：シティ 95.210（139.009、−43.799、5年で 490m 超と決算書）／アーセナル 81.237（51.073）。
+#   最終損益の道筋：シティ −93.302＋95.210＋利息（受取 7.768−支払 19.592＝−11.824）＝−9.916 ✓（税 0）／
+#     アーセナル −63.208＋81.237＋（持分法の損 −1.690＋金融費用 −17.687＋税 −0.029＝−19.406）＝−1.377 ✓。丸め：−93.3＋95.2−11.8＝−9.9 ✓／−63.2＋81.2−19.4＝−1.4 ✓。
+#   前の年の最終損益：シティ +73.757／アーセナル −17.687。変化：シティ −83.673 →「8370万悪化」／アーセナル +16.310 →「1630万改善」。
+#   売却益を除いた最終損益：シティ −9.916−95.210＝−105.126 →「1億510万」／アーセナル −1.377−81.237＝−82.614 →「8260万」。
+#   人件費（決算書の employee costs / staff costs）：シティ 408.403（前 412.573）／アーセナル 346.804（327.822）。差 408.403−346.804＝61.599 →「6160万」。
+#   人件費÷収入：シティ 408.403÷694.094＝58.84%（前 57.70%）／アーセナル 346.804÷690.998＝50.19%（前 53.17%）。差 8.65pt →「8.7」。
+#     シティの決算書の KPI は 59%（58%）で一致。変化：シティ +1.14pt／アーセナル −2.98pt。
+#     外注小売を足した収入 755.9 で割る：408.403÷755.894＝54.03% →「54.0%」。差 54.03−50.19＝3.84pt →「3.8」。
+#   選手の償却など：シティ 169.546（amortisation and impairment）／アーセナル 償却 171.627＋減損 15.241＝186.868（減損は決算期のあとの売却額に合わせた評価減＝特別項目）。
+#   デロイト図の給料÷収入：シティ 476÷829.3＝57.4%／アーセナル 404÷821.7＝49.2%（デロイトの給料の定義は決算書と違う。向きだけ使う）。
+#   デロイトの収入と決算書の収入：694.094÷0.84＝826.3（デロイト 829.3、差 3.0）／690.998÷0.84＝822.6（デロイト 821.7、差 −0.9）。**デロイトに独自の調整がある**（中身は読めていない）。
+#     **ポンドの決算では差は 3.096 百万ポンド（≒3.7 百万ユーロ）、デロイトでは 7.6 百万ユーロ**。どちらも「ほぼ同じ」。
+#   5年の差（百万ユーロ、デロイト）：645−367＝278／731−433＝298／826−533＝293／837.8−716.5＝121.3／829.3−821.7＝7.6。アーセナルは 821.7÷367＝2.2倍、シティは 829.3÷645＝1.3倍。
+#   円換算：61.599×210.72＝12,980 百万円 →「約130億円」。
+#
+# **言い切っていないもの / 言わなかったもの**:
+#   ・シティの赤字の理由は「決算書の戦略報告の文（選手への支出の増加・選手の売却益の減少など）」まで。放映権の減りはクラブ公式の説明（早い欧州の大会の敗退・順位）。
+#   ・アーセナルの減損の理由は決算書の文（決算期のあとの売却額に合わせた評価減）まで。選手名・売却先は言わない。
+#   ・借入・手元の現金・資産・親会社からの資金は言わない（決算書の範囲が違うので同じ土俵で比べられない。この回は損益と給料の比率）。
+#   ・プレミアリーグの付託・判決は言わない。2025-26 の収入の見通しは言わない。
+#
+# 写真：assets/images/20261017_finance_city_arsenal/ に Commons の5枚（credits.json 同梱）。01_w＝エティハドの空撮 CC BY-SA 3.0 de（Arne Müseler）／
+#   02_w＝エティハドの場内 CC BY-SA 4.0（Ank kumar）／03_w＝エミレーツの空撮 CC BY-SA 3.0 de（Arne Müseler）／04_w＝エミレーツの正面（2009）パブリックドメイン／
+#   05_w＝エミレーツ外壁のエンブレム（2010）CC BY-SA 2.0。目で確認：すべてスタジアム。人物の顔は小さな群衆のみ（05 の壁画は過去の選手の絵）。
+# サムネは classic（下段の黄色い帯）の案A。ユーザーが選ぶので案B・Cは報告に出す。
+date: 2026年10月17日
+slot: other_1
+format: news
+series: クラブの財政
+voice_min: 0
+people:
+- マンチェスター・シティ
+- アーセナル
+theme:
+  id: finance_city_arsenal
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: マンチェスター・シティとアーセナル
+  title: シティとアーセナル、収入の差は760万ユーロ。給料の比率も近いのか
+  question: 収入の世界6位と7位で760万ユーロしか違わないシティとアーセナルは、利益・赤字・給料の比率でも並ぶのか
+  lead: 収入の世界6位と7位、差は760万ユーロ。
+  opening_image: assets/images/20261017_finance_city_arsenal/01_w.jpg
+  takeaway: デロイトの集計で2024-25の収入は、世界6位のシティが8億2930万ユーロ、7位のアーセナルが8億2170万ユーロで、差は760万ユーロ。5年前は2億7800万ユーロ離れていた。決算書（ポンド）では収入は6億9410万と6億9100万で差310万、ただし中身は違い、試合日はアーセナルがシティの2倍、商業はシティが7720万多く、シティの商業は外注した小売の純額。営業損益（選手の売却益を足す前）はシティ9330万・アーセナル6320万の赤字、売却益は9520万と8120万で、最終損益はシティ990万・アーセナル140万の赤字。売却益を除くとシティ1億510万、アーセナル8260万の赤字。人件費は4億840万と3億4680万で、収入に対する割合は58.8%と50.2%（8.7ポイント差、シティの外注小売を足すと3.8ポイント差）。決算期はシティが6月末、アーセナルが5月末でひと月ずれ、どちらの2026年期の決算もまだ出ていない
+short_title: シティとアーセナル、収入の差は760万ユーロ。給料の比率は
+thumbnail:
+  callouts: [給料の比率は？]
+  photos:
+  - assets/images/20261017_finance_city_arsenal/01_w.jpg
+  - assets/images/20261017_finance_city_arsenal/03_w.jpg
+  face_link: VS
+  line1: シティとアーセナル
+  line2: 収入の差は760万ユーロ
+  tags:
+  - マンチェスター・シティ
+  - アーセナル
+  - プレミアリーグ
+  - クラブの財政
+  - エティハド・スタジアム
+  - エミレーツ・スタジアム
+sections:
+- id: rank
+  main: true
+  heading: 収入の世界6位と7位は、どれだけ離れているのか
+  tier: 報道
+  telop: 収入の世界6位シティと7位アーセナル。差は760万ユーロ
+  narrator: キャスター
+  card: &rank_duel
+    type: duel
+    title: デロイトの収入ランキング（2024-25、百万ユーロ）
+    left: {name: シティ, club: 世界6位, photo: assets/images/20261017_finance_city_arsenal/01_sq.jpg, color: "#6cabdd"}
+    right: {name: アーセナル, club: 世界7位, photo: assets/images/20261017_finance_city_arsenal/03_sq.jpg, color: "#ef0107"}
+    rows:
+    - [順位, 6位, 7位]
+    - [収入, '829.3', '821.7']
+    - [前の年の収入, '837.8', '716.5']
+    - [前の年との差, '-1%', '+15%']
+    bars: [収入, 前の年の収入]
+  say:
+  - text: 収入の世界6位と7位。シティとアーセナルの決算を比べます。
+    image: assets/images/20261017_finance_city_arsenal/01_w.jpg
+    short_only: true
+  - text: デロイトの集計では、収入の世界6位がシティ、7位がアーセナルです。
+    image: assets/images/20261017_finance_city_arsenal/01_w.jpg
+    card:
+      <<: *rank_duel
+      highlight_row: 順位
+  - text: 2024-25の収入は、シティが8億2930万ユーロ。
+    emph: true
+    card:
+      <<: *rank_duel
+      highlight_row: 収入
+  - text: アーセナルは、8億2170万ユーロです。
+    card:
+      <<: *rank_duel
+      highlight_row: 収入
+  - text: その差は、シティの収入の約0.9%しかありません。
+    card:
+      <<: *rank_duel
+      highlight_row: 収入
+    mark:
+      kind: circle
+      row: 1
+      col: 0
+  - text: つまり、ほぼ同じ規模です。
+    card: none
+    callword: 差は760万ユーロ
+  - text: 5年前の2020-21は、約2億7800万ユーロ離れていました。
+    card: &gap_line
+      type: line
+      title: 収入の5年（デロイト、百万ユーロ）
+      x: [2020-21, 2021-22, 2022-23, 2023-24, 2024-25]
+      series:
+      - [アーセナル, [367, 433, 533, 716.5, 821.7]]
+      - [シティ, [645, 731, 826, 837.8, 829.3]]
+      unit: 百万ユーロ
+      focus: シティ
+      highlight: 2020-21
+  - text: 前の年は、1億2130万ユーロ。そして今年、760万ユーロです。
+    emph: true
+    card:
+      <<: *gap_line
+      highlight: 2023-24
+  - text: アーセナルは5年で、収入が2.2倍になりました。シティは1.3倍です。
+    image: assets/images/20261017_finance_city_arsenal/03_w.jpg
+    card:
+      <<: *gap_line
+      focus: アーセナル
+      highlight: 2024-25
+  - text: シティは、前の年から850万ユーロ減。順位は、2位から6位でした。
+    card:
+      <<: *gap_line
+      highlight: 2024-25
+  - text: 収入が並ぶと、利益と給料の比率も並ぶのか。両クラブの決算書で見ます。
+    card: none
+  - text: デロイトの数字はユーロです。ここから先は、決算書のポンドで比べます。
+    card: none
+  sources:
+  - https://www.deloitte.com/uk/en/services/financial-advisory/analysis/deloitte-football-money-league.html
+  - https://find-and-update.company-information.service.gov.uk/company/00040946/filing-history
+  - https://find-and-update.company-information.service.gov.uk/company/04250459/filing-history
+- id: breakdown
+  heading: 収入が同じ額でも、中身は同じなのか
+  tier: 確定
+  official: true
+  telop: 収入の差は310万ポンド。試合日はアーセナルが2倍、商業はシティが上
+  narrator: 解説
+  card: &rev_table
+    type: table
+    title: 収入の中身（2024-25、百万ポンド）
+    columns: [項目, シティ, アーセナル]
+    rows:
+    - [試合日, '75.1', '153.9']
+    - [放映権, '278.6', '272.8']
+    - [商業, '340.4', '263.2']
+    - [その他, '-', '1.2']
+    - [合計, '694.1', '691.0']
+    highlight_row: 4
+  say:
+  - text: 決算期は、シティが6月末、アーセナルが5月末。ひと月ずれます。
+    image: assets/images/20261017_finance_city_arsenal/02_w.jpg
+    card: none
+  - text: 2024-25の決算が最新です。2026年の決算は未提出。
+    card: none
+  - text: アーセナルは子会社も合わせた連結、シティはクラブ単体。範囲は、そろっていません。
+    card: none
+  - text: 決算書の収入は、シティが6億9410万ポンド。
+    card: *rev_table
+  - text: アーセナルは、6億9100万ポンドです。
+    card: *rev_table
+  - text: 差は310万ポンド。アーセナルの収入の、0.4%です。
+    emph: true
+    card:
+      <<: *rev_table
+      highlight_row: 4
+    mark:
+      kind: circle
+      row: 4
+      col: 1
+  - text: 中身を見ると、試合日の収入は、アーセナルがシティの2倍。
+    image: assets/images/20261017_finance_city_arsenal/04_w.jpg
+    card:
+      <<: *rev_table
+      highlight_row: 0
+  - text: アーセナルが1億5390万ポンド。シティは7510万ポンドです。
+    card:
+      <<: *rev_table
+      highlight_row: 0
+  - text: 放映権は、ほぼ同じ。シティが2億7860万、アーセナルが2億7280万ポンド。
+    card:
+      <<: *rev_table
+      highlight_row: 1
+  - text: シティの分には、クラブワールドカップの収入も入っています。
+    card:
+      <<: *rev_table
+      highlight_row: 1
+  - text: 商業収入は、スポンサーやグッズなど。シティのほうが7720万ポンド多い。
+    emph: true
+    card:
+      <<: *rev_table
+      highlight_row: 2
+  - text: ただしシティは、グッズ販売を外に任せ、受け取り分だけを収入に入れています。
+    image: assets/images/20261017_finance_city_arsenal/02_w.jpg
+    card: &retail_doc
+      type: document
+      label: シティ 2025年6月期 決算書 注記4（訳）
+      paragraphs:
+      - その他の商業収入には、外に任せた小売事業から受け取った純額が含まれます。この事業を外に任せていなければ、収入は6180万ポンド増えて、7億5590万ポンドになります。
+      highlight:
+      - 6180万ポンド
+      - 7億5590万ポンド
+  - text: 外に任せなければ、シティの収入は7億5590万ポンドでした。
+    card: *retail_doc
+  - text: アーセナルは、グッズの売上を、そのまま収入に入れています。
+    card:
+      <<: *retail_doc
+      highlight: [純額]
+  - text: 差310万ポンドの中身を、1枚にまとめます。
+    card: &gap_fall
+      type: waterfall
+      title: シティの収入 − アーセナルの収入（百万ポンド）
+      start: [試合日, -78.8]
+      steps:
+      - [放映権, 5.8]
+      - [商業, 77.2]
+      - [その他, -1.2]
+      total: [収入の差, 3.0]
+      note: 端数の丸めで、合計が0.1ずれる
+  - text: 試合日はアーセナルが7880万ポンド多く、商業はシティが上回ります。
+    card:
+      <<: *gap_fall
+      highlight: 試合日
+  - text: 足し引きして、差は310万ポンドです。
+    card:
+      <<: *gap_fall
+      highlight: 収入の差
+  - text: 前の年と比べると、動きは逆です。
+    card: &move_table
+      type: table
+      title: 収入の前の年との比べ（百万ポンド）
+      columns: [季, シティ, アーセナル]
+      rows:
+      - [2023-24, '715.0', '616.6']
+      - [2024-25, '694.1', '691.0']
+      - [増減, '-20.9', '+74.4']
+      highlight_row: 2
+  - text: アーセナルは7440万ポンド増え、約12%の伸び。
+    card:
+      <<: *move_table
+      highlight_row: 2
+  - text: シティは2090万ポンド減り、約3%の減少でした。
+    card:
+      <<: *move_table
+      highlight_row: 2
+  sources:
+  - https://find-and-update.company-information.service.gov.uk/company/00040946/filing-history/MzUwODQ0MDY0MmFkaXF6a2N4/document?format=pdf&download=0
+  - https://find-and-update.company-information.service.gov.uk/company/04250459/filing-history/MzUwNzE0ODU1NmFkaXF6a2N4/document?format=pdf&download=0
+  - https://www.mancity.com/news/club/manchester-city-annual-report-202425-63901491
+  - https://www.arsenal.com/news/financial-results-for-202425-axV959A5jyCF
+- id: profit
+  heading: 営業の赤字と、選手を売った利益は、どう違うのか
+  tier: 確定
+  official: true
+  telop: 営業損益はシティ9330万、アーセナル6320万の赤字。売却益で、最終はどちらも小さな赤字
+  narrator: 解説
+  card: &pl_duel
+    type: duel
+    title: 損益の比べ（2024-25、百万ポンド）
+    left: {name: シティ, club: 2025年6月期, photo: assets/images/20261017_finance_city_arsenal/01_sq.jpg, color: "#6cabdd"}
+    right: {name: アーセナル, club: 2025年5月期, photo: assets/images/20261017_finance_city_arsenal/03_sq.jpg, color: "#ef0107"}
+    rows:
+    - [収入, '694.1', '691.0']
+    - [営業損益, '-93.3', '-63.2']
+    - [選手の売却益, '+95.2', '+81.2']
+    - [利息・税など, '-11.8', '-19.4']
+    - [最終損益, '-9.9', '-1.4']
+    - [前の年の最終損益, '+73.8', '-17.7']
+    bars: [収入, 選手の売却益]
+  say:
+  - text: 損益を、上から追います。まず営業損益。選手を売った利益を足す前の損益です。
+    image: assets/images/20261017_finance_city_arsenal/01_w.jpg
+    card:
+      <<: *pl_duel
+      highlight_row: 営業損益
+  - text: シティの営業損益は、9330万ポンドの赤字。
+    emph: true
+    card:
+      <<: *pl_duel
+      highlight_row: 営業損益
+    mark:
+      kind: circle
+      row: 1
+      col: 0
+  - text: アーセナルは、6320万ポンドの赤字です。
+    card:
+      <<: *pl_duel
+      highlight_row: 営業損益
+  - text: 選手を売った利益は、シティが9520万、アーセナルが8120万ポンド。
+    card:
+      <<: *pl_duel
+      highlight_row: 選手の売却益
+  - text: シティの売却益は、5年の合計で4億9000万ポンド超。
+    card:
+      <<: *pl_duel
+      highlight_row: 選手の売却益
+  - text: シティの道筋です。営業損益はマイナス9330万ポンドから始まります。
+    card: &city_fall
+      type: waterfall
+      title: シティの営業損益から最終損益まで（百万ポンド）
+      start: [営業損益, -93.3]
+      steps:
+      - [選手の売却益, 95.2]
+      - [利息の差し引き, -11.8]
+      total: [最終損益, -9.9]
+      highlight: 営業損益
+  - text: 売却益の9520万ポンドで、赤字はほぼ消えます。
+    card:
+      <<: *city_fall
+      highlight: 選手の売却益
+  - text: 利息の差し引きが1180万ポンド。最終は、990万ポンドの赤字です。
+    card:
+      <<: *city_fall
+      highlight: 最終損益
+  - text: アーセナルの道筋です。6320万ポンドの赤字から始まります。
+    image: assets/images/20261017_finance_city_arsenal/03_w.jpg
+    card: &ars_fall
+      type: waterfall
+      title: アーセナルの営業損益から最終損益まで（百万ポンド）
+      start: [営業損益, -63.2]
+      steps:
+      - [選手の売却益, 81.2]
+      - [利息・税など, -19.4]
+      total: [最終損益, -1.4]
+      highlight: 営業損益
+  - text: 売却益の8120万ポンドで、1800万ポンドの黒字になります。
+    card:
+      <<: *ars_fall
+      highlight: 選手の売却益
+  - text: 利息と税などで1940万ポンド引かれ、最終は140万ポンドの赤字です。
+    emph: true
+    card:
+      <<: *ars_fall
+      highlight: 最終損益
+  - text: 売却益を除くと、最終の赤字は、シティが1億510万、アーセナルが8260万ポンド。
+    emph: true
+    card:
+      <<: *pl_duel
+      highlight_row: 最終損益
+  - text: 前の年は、シティが7380万ポンドの黒字。
+    card:
+      <<: *pl_duel
+      highlight_row: 前の年の最終損益
+  - text: アーセナルは、1770万ポンドの赤字でした。
+    card:
+      <<: *pl_duel
+      highlight_row: 前の年の最終損益
+  - text: シティは8370万ポンド悪化。アーセナルは1630万ポンド良くなりました。
+    emph: true
+    card:
+      <<: *pl_duel
+      highlight_row: 前の年の最終損益
+    mark:
+      kind: circle
+      row: 5
+      col: 0
+  - text: シティは売却益が4380万ポンド減り、営業損益も3280万ポンドの悪化です。
+    card: none
+  - text: シティの決算書は、赤字の理由を、こう書いています。
+    card: &city_doc
+      type: document
+      label: シティ 2025年6月期 戦略報告（訳）
+      paragraphs:
+      - 今年のわずかな赤字は、選手への支出の増加や、選手の売却益の減少など、いくつかの要因の結果です。
+      highlight:
+      - 選手への支出の増加
+      - 選手の売却益の減少
+  - text: アーセナルの決算書は、投資を続ける理由を、こう書いています。
+    card: &ars_doc
+      type: document
+      label: アーセナル 2025年5月期 戦略報告（訳）
+      paragraphs:
+      - 欧州の大会への出場は、クラブが自立した財務の土台で運営する状態へ戻るための、前提条件です。
+      highlight:
+      - 前提条件
+  sources:
+  - https://find-and-update.company-information.service.gov.uk/company/00040946/filing-history/MzUwODQ0MDY0MmFkaXF6a2N4/document?format=pdf&download=0
+  - https://find-and-update.company-information.service.gov.uk/company/04250459/filing-history/MzUwNzE0ODU1NmFkaXF6a2N4/document?format=pdf&download=0
+  - https://www.mancity.com/news/club/manchester-city-annual-report-202425-63901491
+  - https://www.arsenal.com/news/financial-results-for-202425-axV959A5jyCF
+- id: cost
+  heading: 給料は、収入の何割を占めているのか
+  tier: 確定
+  official: true
+  telop: 人件費÷収入は、シティが58.8%、アーセナルが50.2%
+  narrator: 解説
+  card: &wage_duel
+    type: duel
+    title: 人件費の比べ（2024-25、百万ポンド）
+    left: {name: シティ, club: 2025年6月期, photo: assets/images/20261017_finance_city_arsenal/01_sq.jpg, color: "#6cabdd"}
+    right: {name: アーセナル, club: 2025年5月期, photo: assets/images/20261017_finance_city_arsenal/03_sq.jpg, color: "#ef0107"}
+    rows:
+    - [収入, '694.1', '691.0']
+    - [人件費, '408.4', '346.8']
+    - [人件費÷収入, '58.8%', '50.2%']
+    - [前の年の比率, '57.7%', '53.2%']
+    - [選手の償却, '169.5', '171.6']
+    bars: [人件費, 選手の償却]
+  say:
+  - text: 次は給料です。決算書の人件費は、給料に社会保険料などを足した合計です。
+    image: assets/images/20261017_finance_city_arsenal/03_w.jpg
+    card:
+      <<: *wage_duel
+      highlight_row: 人件費
+  - text: シティが4億840万ポンド。アーセナルが3億4680万ポンドです。
+    card:
+      <<: *wage_duel
+      highlight_row: 人件費
+  - text: 収入がほぼ同じなのに、人件費はシティのほうが、約18%多い。
+    emph: true
+    card:
+      <<: *wage_duel
+      highlight_row: 人件費
+  - text: 収入に対する割合は、シティが58.8%。アーセナルが50.2%です。
+    emph: true
+    card:
+      <<: *wage_duel
+      highlight_row: 人件費÷収入
+    mark:
+      kind: circle
+      row: 2
+      col: 0
+  - text: 前の年は、シティが57.7%、アーセナルが53.2%でした。
+    card:
+      <<: *wage_duel
+      highlight_row: 前の年の比率
+  - text: シティは1.1ポイント上がり、アーセナルは3.0ポイント下がりました。
+    card:
+      <<: *wage_duel
+      highlight_row: 前の年の比率
+  - text: アーセナルも人件費は1900万ポンドの増加ですが、収入の伸びはそれ以上。
+    card: none
+  - text: デロイトの図の給料で割っても、シティ57%、アーセナル49%。向きは同じです。
+    card: none
+  - text: 選手の償却は、移籍金を契約の年数で割って、費用に入れるものです。
+    card:
+      <<: *wage_duel
+      highlight_row: 選手の償却
+  - text: シティが1億6950万、アーセナルが1億7160万ポンド。ほぼ同額。
+    emph: true
+    card:
+      <<: *wage_duel
+      highlight_row: 選手の償却
+  - text: アーセナルは、このほかに1520万ポンドの減損を計上しています。
+    card:
+      <<: *wage_duel
+      highlight_row: 選手の償却
+  - text: 減損は、選手の帳簿の値打ちを、下げる処理です。
+    card:
+      <<: *wage_duel
+      highlight_row: 選手の償却
+  sources:
+  - https://find-and-update.company-information.service.gov.uk/company/00040946/filing-history/MzUwODQ0MDY0MmFkaXF6a2N4/document?format=pdf&download=0
+  - https://find-and-update.company-information.service.gov.uk/company/04250459/filing-history/MzUwNzE0ODU1NmFkaXF6a2N4/document?format=pdf&download=0
+  - https://www.deloitte.com/uk/en/services/financial-advisory/analysis/deloitte-football-money-league.html
+- id: view
+  viewpoint: true
+  heading: 見立て・収入の差0.4%に対し、給料の比率の差は8.7ポイント
+  tier: 背景
+  telop: 収入の差は0.4%。人件費の差は6160万ポンド、比率の差は8.7ポイント
+  narrator: 解説
+  card: &view_table
+    type: table
+    title: 自分で割ってみた（2024-25）
+    columns: &view_cols [比べ, 答え]
+    rows: &view_rows
+    - [収入の差（シティ − アーセナル）, 310万ポンド（0.4%）]
+    - [人件費の差, 6160万ポンド]
+    - [人件費÷収入の差, 8.7ポイント]
+    - [同じ扱いに直した差, 3.8ポイント]
+    highlight_row: 0
+  say:
+  - text: 決算書の数字を、自分で割りました。
+    image: assets/images/20261017_finance_city_arsenal/02_w.jpg
+    card: *view_table
+  - text: 収入は、ほぼ同じ。
+    card:
+      <<: *view_table
+      highlight_row: 0
+  - text: ところが人件費の差は、6160万ポンドあります。
+    emph: true
+    card:
+      <<: *view_table
+      highlight_row: 1
+    mark:
+      kind: circle
+      row: 1
+      col: 1
+  - text: 円にすると、およそ130億円です。
+    card: &yen_card
+      type: convert
+      title: 人件費の差を円で見る
+      from: [6160万, ポンド, シティの人件費 − アーセナルの人件費]
+      to: [約130億, 円, 2026年10月16日の相場]
+      via: 1ポンド＝211円
+  - text: 1ポンド211円は、ヨーロッパ中央銀行の10月16日の参照相場です。
+    card: none
+  - text: 人件費÷収入の差は、8.7ポイント。
+    card:
+      <<: *view_table
+      highlight_row: 2
+  - text: シティのグッズ販売の外注分を、収入に足して割ると、54.0%。
+    card:
+      <<: *view_table
+      highlight_row: 3
+  - text: アーセナルとの差は3.8ポイントに縮みます。
+    emph: true
+    card:
+      <<: *view_table
+      highlight_row: 3
+    mark:
+      kind: circle
+      row: 3
+      col: 1
+  - text: 収入が並んでも、給料の比率は離れ、売却益の大きさも違いました。
+    emph: true
+    card: none
+  - text: 次の決算は、シティが2026年6月期、アーセナルが2026年5月期です。
+    card: none
+  - text: 今回の提出は、アーセナルが2月27日、シティが3月6日でした。
+    card: none
+  - text: 次の決算書は、どちらも未提出です。
+    card: none
+  sources:
+  - https://find-and-update.company-information.service.gov.uk/company/00040946/filing-history
+  - https://find-and-update.company-information.service.gov.uk/company/04250459/filing-history
+  - https://api.frankfurter.app/2026-10-16?from=GBP&to=JPY

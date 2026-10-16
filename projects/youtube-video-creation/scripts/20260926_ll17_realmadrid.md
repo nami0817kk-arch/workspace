@@ -17,7 +17,7 @@ thumbnail_crest_main:
 - レアル・マドリード
 thumbnail_board: assets/stats/ll_realmadrid_data_t.png
 bg: assets/backgrounds/stadium.png
-date: 2026年9月19日
+date: 2026年10月17日
 intro_title: レアル・マドリード。ヨーロッパ一を決める大会は、誰が作ったのか
 intro_label: 海外サッカー ニュース
 outro_title: 続報は次回お伝えします
@@ -28,11 +28,11 @@ description: 'レアル・マドリード。ヨーロッパ一を決める大会
   この動画が答える問い: どんなクラブなのか
 
 
-  ※各社の報道をもとにしています。クラブが発表した「確定」、
+  ※画面の札で、クラブが発表した「確定」、
 
   報道機関が伝える「報道」、SNS段階の「未確認」、
 
-  経緯の説明である「背景」を画面上で分けています。
+  経緯の説明である「背景」を分けています。
 
   '
 tags:
@@ -62,6 +62,8 @@ sources:
 - https://www.realmadrid.com/es-ES/noticias/club/ultimas-noticias/comunicado-oficial-mourinho-11-06-2026
 - https://www.espn.com/soccer/team/results/_/name/realmadrid
 - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard
+quote_sources:
+- https://www.marca.com/futbol/real-madrid/2026/09/25/mourinho-esclarece-decidio-volver-madrid-me-dijeron-necesitamos-inicies-decada-prodigiosa-video.html
 cards:
   kit_card:
     type: table
@@ -258,15 +260,15 @@ cards:
 ## オープニング
 @bg: assets/backgrounds/stadium_レアルマドリード_in.png
 
-キャスター: ヨーロッパ王者に、史上最多の15回。
+解説: ヨーロッパ王者に、史上最多の15回。
   telop: ヨーロッパ王者に、史上最多の15回
   image: assets/stats/ll_realmadrid_data_t.png
   no_telop: true
-キャスター: レアル・マドリード。ヨーロッパ一を決める大会は、誰が作ったのか。
+解説: レアル・マドリード。ヨーロッパ一を決める大会は、誰が作ったのか。
   telop: レアル・マドリード。ヨーロッパ一を決める大会は、誰が作ったのか
   se: assets/audio/se_pon.wav
   image: assets/stats/ll_realmadrid_data_t.png
-キャスター: 上下白のユニフォームを、1シーズンだけやめたことがあります。
+解説: 上下白のユニフォームを、1シーズンだけやめたことがあります。
   telop: 上下白のユニフォームを、1シーズンだけやめたことがあります
   image: assets/stats/ll_realmadrid_data_t.png
 
@@ -274,7 +276,7 @@ cards:
 @bg: assets/backgrounds/stadium_レアルマドリード_in.png
 @main: true
 
-キャスター: 無冠に終わった昨季のあと、**13年**ぶりに戻ったのがモウリーニョ監督です。
+解説: 無冠に終わった昨季のあと、**13年**ぶりに戻ったのがモウリーニョ監督です。
   no_telop: true
   source: 背景
   image: assets/stats/ll_realmadrid_data_r1.png
@@ -284,34 +286,34 @@ cards:
 ジョゼ・モウリーニョ: それでもレアル・マドリードは、レアル・マドリードだ
   telop: ジョゼ・モウリーニョ「それでもレアル・マドリードは、レアル・マドリードだ」
   image: assets/stats/ll_realmadrid_data_r2.png
-キャスター: そしてヨーロッパの王者を決める大会。作った一人は、会長のサンティアゴ・ベルナベウでした。
+解説: そしてヨーロッパの王者を決める大会。作った一人は、会長のサンティアゴ・ベルナベウでした。
   no_telop: true
   image: assets/stats/ll_realmadrid_data_r3.png
-キャスター: 創立は**1902年**。1920年、国王から「レアル」、つまり王立の称号を受けました。
+解説: 創立は**1902年**。1920年、国王から「レアル」、つまり王立の称号を受けました。
   no_telop: true
   image: assets/stats/ll_realmadrid_data0.png
-キャスター: 愛称は「ロス・ブランコス」。スペイン語で、**白い人たち**という意味です。
+解説: 愛称は「ロス・ブランコス」。スペイン語で、**白い人たち**という意味です。
   no_telop: true
   image: assets/stats/ll_realmadrid_data1.png
-キャスター: ホームタウンは首都マドリード。人口およそ**348万人**、スペインでいちばん大きな町。
+解説: ホームタウンは首都マドリード。人口およそ**348万人**、スペインでいちばん大きな町。
   no_telop: true
   image: assets/stats/ll_realmadrid_data2.png
-キャスター: 本拠地はベルナベウ。**8万3186人**が入り、20クラブでいちばん大きい。
-  telop: 本拠地はベルナベウ。**8万3186人**が入り、20クラブでいちばん大きい
+解説: 本拠地はベルナベウ。**8万3186人**が入る、リーグ最大の球場です。
+  telop: 本拠地はベルナベウ。**8万3186人**が入る、リーグ最大の球場です
   image: assets/backgrounds/stadium_レアルマドリード.png
-キャスター: 会長はフロレンティーノ・ペレス。2009年に返り咲きました。クラブは会員が持つ形です。
+解説: 会長はフロレンティーノ・ペレス。2009年に返り咲きました。クラブは会員が持つ形です。
   no_telop: true
   image: assets/stats/ll_realmadrid_data4.png
-キャスター: 1部の優勝は最多の**36回**。国王杯は**20回**、スーペルコパは**13回**。
+解説: 1部の優勝は最多の**36回**。国王杯は**20回**、スーペルコパは**13回**。
   no_telop: true
   image: assets/stats/ll_realmadrid_cups.png
-キャスター: 最多出場はラウル・ゴンサレス。1994年から2010年までに、**741試合**です。
+解説: 最多出場はラウル・ゴンサレス。1994年から2010年までに、**741試合**です。
   no_telop: true
   image: assets/stats/ll_realmadrid_data6.png
-キャスター: 直近のタイトルは2024年12月のインターコンチネンタルカップ。パチューカに**3対0**の勝ち。
+解説: 直近のタイトルは2024年12月のインターコンチネンタルカップ。パチューカに**3対0**の勝ち。
   no_telop: true
   image: assets/stats/ll_realmadrid_data7.png
-キャスター: 昨季のリーグ戦は**2位**。優勝したバルセロナに、勝ち点**8**届きませんでした。
+解説: 昨季のリーグ戦は**2位**。優勝したバルセロナに、勝ち点**8**届きませんでした。
   no_telop: true
   image: assets/stats/ll_realmadrid_data8.png
 
@@ -383,14 +385,12 @@ cards:
 解説: ピッチの外は、稼いだぶんで戦う型。
   telop: ピッチの外は、稼いだぶんで戦う型
   card: features_1_card
-  image: assets/photos/ll/realmadrid/realmadrid_manager_56b64b8a.jpg
-解説: 2023年から24年のシーズン、サッカークラブで初めて、売上が**10億ユーロ**を超えました。
-  telop: 2023年から24年のシーズン、サッカークラブで初めて、売上が**10億ユーロ**を超えました
+解説: 2023年から24年、サッカークラブで初めて売上が**10億ユーロ**超え。
+  telop: 2023年から24年、サッカークラブで初めて売上が**10億ユーロ**超え
   image: assets/photos/ll/realmadrid/realmadrid_manager_56b64b8a.jpg
 解説: 応援は世界規模。公認のファンクラブ「ペーニャ」は、**92か国**に2452あります。
   telop: 応援は世界規模。公認のファンクラブ「ペーニャ」は、**92か国**に2452あります
   card: features_3_card
-  image: assets/photos/ll/realmadrid/realmadrid_manager_56b64b8a.jpg
 
 ## ビートルズになった4人
 @bg: assets/backgrounds/stadium_レアルマドリード_in.png
@@ -402,107 +402,107 @@ cards:
   image: assets/images/ll_realmadrid_episode/scene.jpg
 解説: 若い4人がビートルズのまねをして、新聞の写真に写りました。
   telop: 若い4人がビートルズのまねをして、新聞の写真に写りました
-解説: シー・ラブズ・ユーの「イエー、イエー、イエー」から、チームは「イエイエ」と呼ばれます。
-  telop: シー・ラブズ・ユーの「イエー、イエー、イエー」から、チームは「イエイエ」と呼ばれます
+解説: 歌の「イエー、イエー、イエー」から、チームは「イエイエ」と呼ばれます。
+  telop: 歌の「イエー、イエー、イエー」から、チームは「イエイエ」と呼ばれます
   image: assets/images/ll_realmadrid_episode/scene.jpg
 
 ## このクラブを語る3人
 @bg: assets/backgrounds/stadium_レアルマドリード_in.png
 
-キャスター: ジダンは2001年、当時の世界最高額でユヴェントスから。リーグ戦は**155試合37得点**。
-  telop: ジダンは2001年、当時の世界最高額でユヴェントスから。リーグ戦は**155試合37得点**
+解説: ジダンは2001年、当時の最高額でユヴェントスから。リーグ戦**155試合37得点**。
+  telop: ジダンは2001年、当時の最高額でユヴェントスから。リーグ戦**155試合37得点**
   source: 背景
   card: legends_card
-  image: assets/photos/ll/realmadrid/realmadrid_legend_fcd5d1e5.jpg
-キャスター: 2002年のチャンピオンズリーグ決勝、左足のボレーで、レバークーゼンを破る決勝点。
+  image: assets/photos/ll/realmadrid/realmadrid_legend_zidane_zizu.jpg
+解説: 2002年のチャンピオンズリーグ決勝、左足のボレーで、レバークーゼンを破る決勝点。
   telop: 2002年のチャンピオンズリーグ決勝、左足のボレーで、レバークーゼンを破る決勝点
-キャスター: 監督としても、チャンピオンズリーグを3連覇。今はフランス代表を率いています。
+解説: 監督としても、チャンピオンズリーグを3連覇。今はフランス代表を率いています。
   telop: 監督としても、チャンピオンズリーグを3連覇。今はフランス代表を率いています
-  image: assets/photos/ll/realmadrid/realmadrid_legend_fcd5d1e5.jpg
+  image: assets/photos/ll/realmadrid/realmadrid_legend_zidane_zizu.jpg
 
 ## このクラブを語る3人（2人目）
 @bg: assets/backgrounds/stadium_レアルマドリード_in.png
 
-キャスター: クリスティアーノ・ロナウドは2009年に来ました。リーグ戦**292試合**で、**311得点**。
-  telop: クリスティアーノ・ロナウドは2009年に来ました。リーグ戦**292試合**で、**311得点**
+解説: クリスティアーノ・ロナウドは2009年から。リーグ戦**292試合311得点**。
+  telop: クリスティアーノ・ロナウドは2009年から。リーグ戦**292試合311得点**
   source: 背景
   card: legends2_card
-  image: assets/photos/ll/realmadrid/realmadrid_legend_972c9872.jpg
-キャスター: 2015年10月、ラウルを抜いて、公式戦のクラブ歴代最多得点者になりました。
+  image: assets/photos/ll/realmadrid/realmadrid_legend_cr7_2013.jpg
+解説: 2015年10月、ラウルを抜いて、公式戦のクラブ歴代最多得点者になりました。
   telop: 2015年10月、ラウルを抜いて、公式戦のクラブ歴代最多得点者になりました
-キャスター: 公式戦で**450得点**を残し、2018年にユヴェントスへ移りました。
+解説: 公式戦で**450得点**を残し、2018年にユヴェントスへ移りました。
   telop: 公式戦で**450得点**を残し、2018年にユヴェントスへ移りました
-  image: assets/photos/ll/realmadrid/realmadrid_legend_972c9872.jpg
+  image: assets/photos/ll/realmadrid/realmadrid_legend_cr7_2013.jpg
 
 ## このクラブを語る3人（3人目）
 @bg: assets/backgrounds/stadium_レアルマドリード_in.png
 
-キャスター: セルヒオ・ラモスは2005年、セビージャから。守備の選手で、リーグ戦**469試合72得点**。
-  telop: セルヒオ・ラモスは2005年、セビージャから。守備の選手で、リーグ戦**469試合72得点**
+解説: セルヒオ・ラモスは2005年、セビージャから。守備の選手で**469試合72得点**。
+  telop: セルヒオ・ラモスは2005年、セビージャから。守備の選手で**469試合72得点**
   source: 背景
   card: legends3_card
-  image: assets/photos/ll/realmadrid/realmadrid_legend_e9e63b5b.jpg
-キャスター: 2014年の決勝、アトレティコ戦の**93分**に頭で同点。延長で勝ち、10度目の優勝。
+  image: assets/photos/ll/realmadrid/realmadrid_legend_ramos_2015.jpg
+解説: 2014年の決勝、アトレティコ戦の**93分**に頭で同点。延長で勝ち、10度目の優勝。
   telop: 2014年の決勝、アトレティコ戦の**93分**に頭で同点。延長で勝ち、10度目の優勝
-キャスター: 主将も務め、2021年にパリ・サンジェルマンへ移りました。
+解説: 主将も務め、2021年にパリ・サンジェルマンへ移りました。
   telop: 主将も務め、2021年にパリ・サンジェルマンへ移りました
-  image: assets/photos/ll/realmadrid/realmadrid_legend_e9e63b5b.jpg
+  image: assets/photos/ll/realmadrid/realmadrid_legend_ramos_2015.jpg
 
 ## 今季の監督
 @bg: assets/backgrounds/stadium_レアルマドリード_in.png
 
-キャスター: 今季の監督はジョゼ・モウリーニョ。ポルトガル出身で、**2026年7月**の就任です。
+解説: 今季の監督はジョゼ・モウリーニョ。ポルトガル出身で、**2026年7月**の就任です。
   telop: 今季の監督はジョゼ・モウリーニョ。ポルトガル出身で、**2026年7月**の就任です
   source: 報道
   card: manager_card
   image: assets/photos/ll/realmadrid/realmadrid_manager_56b64b8a.jpg
-キャスター: 2010年から13年までに続いて2度目。前はベンフィカで、契約は**2029年**まで。
+解説: 2010年から13年までに続いて2度目。前はベンフィカで、契約は**2029年**まで。
   telop: 2010年から13年までに続いて2度目。前はベンフィカで、契約は**2029年**まで
 
 ## 今季の登録選手
 @bg: assets/backgrounds/stadium_レアルマドリード_in.png
 
-キャスター: 今季の登録選手は26人です。
+解説: 今季の登録選手は26人です。
   no_telop: true
   source: 報道
   image: assets/stats/ll_realmadrid_gk.png
-キャスター: ゴールキーパーは2人。
+解説: ゴールキーパーは2人。
   no_telop: true
   image: assets/stats/ll_realmadrid_gk_f.png
-キャスター: ティボー・クルトワはベルギー代表で**115試合**。
+解説: ティボー・クルトワはベルギー代表で**115試合**。
   no_telop: true
   image: assets/stats/ll_realmadrid_gk_f.png
-キャスター: アンドリー・ルニンはウクライナ代表で**16試合**。
+解説: アンドリー・ルニンはウクライナ代表で**16試合**。
   no_telop: true
   image: assets/stats/ll_realmadrid_gk_f.png
-キャスター: ディフェンダーは10人。
+解説: ディフェンダーは10人。
   no_telop: true
   image: assets/stats/ll_realmadrid_df_f.png
-キャスター: アントニオ・リュディガーはドイツ代表で**86試合**。
+解説: アントニオ・リュディガーはドイツ代表で**86試合**。
   no_telop: true
   image: assets/stats/ll_realmadrid_df_f.png
-キャスター: エデル・ミリトンはブラジル代表で**38試合**。
+解説: エデル・ミリトンはブラジル代表で**38試合**。
   no_telop: true
   image: assets/stats/ll_realmadrid_df_f.png
-キャスター: ミッドフィールダーは7人。
+解説: ミッドフィールダーは7人。
   no_telop: true
   image: assets/stats/ll_realmadrid_mf_f.png
-キャスター: 主将を務めるのが**フェデリコ・バルベルデ**。
+解説: 主将を務めるのが**フェデリコ・バルベルデ**。
   no_telop: true
   image: assets/stats/ll_realmadrid_mf_f.png
-キャスター: リーグ戦で**251試合**に出ています。
+解説: リーグ戦で**251試合**に出ています。
   no_telop: true
   image: assets/stats/ll_realmadrid_mf_f.png
-キャスター: ベルナルド・シウバはポルトガル代表で**113試合**。
+解説: ベルナルド・シウバはポルトガル代表で**113試合**。
   no_telop: true
   image: assets/stats/ll_realmadrid_mf_f.png
-キャスター: フォワードは7人。
+解説: フォワードは7人。
   no_telop: true
   image: assets/stats/ll_realmadrid_fw_f.png
-キャスター: ヴィニシウス・ジュニオールはブラジル代表で**55試合**。
+解説: ヴィニシウス・ジュニオールはブラジル代表で**55試合**。
   no_telop: true
   image: assets/stats/ll_realmadrid_fw_f.png
-キャスター: キリアン・エムバペはフランス代表で**107試合**。
+解説: キリアン・エムバペはフランス代表で**107試合**。
   no_telop: true
   image: assets/stats/ll_realmadrid_fw_f.png
 
@@ -515,7 +515,7 @@ cards:
   card: season_card
 解説: 順位は**4位**、勝ち点は**15**です。
   telop: 順位は**4位**、勝ち点は**15**です
-解説: この順位を保てば、来季のチャンピオンズリーグに出られます。
-  telop: この順位を保てば、来季のチャンピオンズリーグに出られます
-解説: チャンピオンズリーグの初戦は、ホームでインテルに**2対1**で勝ちました。
-  telop: チャンピオンズリーグの初戦は、ホームでインテルに**2対1**で勝ちました
+解説: いまの4位は、来季のチャンピオンズリーグに届く位置です。
+  telop: いまの4位は、来季のチャンピオンズリーグに届く位置です
+解説: チャンピオンズリーグの初戦は、ホームでインテルに**2対1**の勝利です。
+  telop: チャンピオンズリーグの初戦は、ホームでインテルに**2対1**の勝利です

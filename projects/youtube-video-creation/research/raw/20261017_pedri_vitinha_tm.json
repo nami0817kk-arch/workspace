@@ -1,0 +1,1266 @@
+{
+ "683840": {
+  "season": {
+   "playerId": "683840",
+   "performance": [
+    {
+     "generalInformation": {
+      "seasonId": 2026,
+      "competitionId": "ES1",
+      "clubId": "131",
+      "coachId": "67",
+      "season": {
+       "id": 2026,
+       "display": "26/27",
+       "cyclicalName": "2027",
+       "nonCyclicalName": "26/27"
+      }
+     },
+     "statistics": {
+      "goalStatistics": {
+       "goalsSum": 1,
+       "assistsSum": 1,
+       "scorersSum": 2,
+       "ownGoalsSum": 0,
+       "teamGoalsOnThePitchSum": 25,
+       "opponentGoalsOnThePitch": 4,
+       "penaltyShooterAttempts": 0,
+       "penaltyShooterGoalsScored": 0,
+       "penaltyShooterSaves": 0,
+       "penaltyShooterMisses": 0,
+       "penaltyGoalkeeperAttempts": 0,
+       "penaltyGoalkeeperGoalsConceded": 0,
+       "penaltyGoalkeeperSaves": 0,
+       "penaltyGoalkeeperMisses": 0
+      },
+      "cardStatistics": {
+       "yellowCardNetSum": 0,
+       "yellowCardGrossSum": 0,
+       "yellowRedCardsCount": 0,
+       "redCardsCount": 0
+      },
+      "playingTimeStatistics": {
+       "playedMinutesSum": 530,
+       "startingCount": 6,
+       "substitutedOutCount": 6,
+       "substitutedInCount": 2,
+       "appearancesCount": 8
+      }
+     }
+    },
+    {
+     "generalInformation": {
+      "seasonId": 2026,
+      "competitionId": "UNLA",
+      "clubId": "3375",
+      "coachId": "20031",
+      "season": {
+       "id": 2026,
+       "display": "26/27",
+       "cyclicalName": "2027",
+       "nonCyclicalName": "26/27"
+      }
+     },
+     "statistics": {
+      "goalStatistics": {
+       "goalsSum": 0,
+       "assistsSum": 1,
+       "scorersSum": 1,
+       "ownGoalsSum": 0,
+       "teamGoalsOnThePitchSum": 6,
+       "opponentGoalsOnThePitch": 1,
+       "penaltyShooterAttempts": 0,
+       "penaltyShooterGoalsScored": 0,
+       "penaltyShooterSaves": 0,
+       "penaltyShooterMisses": 0,
+       "penaltyGoalkeeperAttempts": 0,
+       "penaltyGoalkeeperGoalsConceded": 0,
+       "penaltyGoalkeeperSaves": 0,
+       "penaltyGoalkeeperMisses": 0
+      },
+      "cardStatistics": {
+       "yellowCardNetSum": 0,
+       "yellowCardGrossSum": 0,
+       "yellowRedCardsCount": 0,
+       "redCardsCount": 0
+      },
+      "playingTimeStatistics": {
+       "playedMinutesSum": 207,
+       "startingCount": 2,
+       "substitutedOutCount": 2,
+       "substitutedInCount": 2,
+       "appearancesCount": 4
+      }
+     }
+    },
+    {
+     "generalInformation": {
+      "seasonId": 2026,
+      "competitionId": "CL",
+      "clubId": "131",
+      "coachId": "67",
+      "season": {
+       "id": 2026,
+       "display": "26/27",
+       "cyclicalName": "2027",
+       "nonCyclicalName": "26/27"
+      }
+     },
+     "statistics": {
+      "goalStatistics": {
+       "goalsSum": 0,
+       "assistsSum": 1,
+       "scorersSum": 1,
+       "ownGoalsSum": 0,
+       "teamGoalsOnThePitchSum": 7,
+       "opponentGoalsOnThePitch": 1,
+       "penaltyShooterAttempts": 0,
+       "penaltyShooterGoalsScored": 0,
+       "penaltyShooterSaves": 0,
+       "penaltyShooterMisses": 0,
+       "penaltyGoalkeeperAttempts": 0,
+       "penaltyGoalkeeperGoalsConceded": 0,
+       "penaltyGoalkeeperSaves": 0,
+       "penaltyGoalkeeperMisses": 0
+      },
+      "cardStatistics": {
+       "yellowCardNetSum": 0,
+       "yellowCardGrossSum": 0,
+       "yellowRedCardsCount": 0,
+       "redCardsCount": 0
+      },
+      "playingTimeStatistics": {
+       "playedMinutesSum": 136,
+       "startingCount": 2,
+       "substitutedOutCount": 2,
+       "substitutedInCount": 0,
+       "appearancesCount": 2
+      }
+     }
+    }
+   ],
+   "aggregated": {
+    "goalStatistics": {
+     "goalsSum": 1,
+     "assistsSum": 3,
+     "scorersSum": 4,
+     "ownGoalsSum": 0,
+     "teamGoalsOnThePitchSum": 38,
+     "opponentGoalsOnThePitch": 6,
+     "penaltyShooterAttempts": 0,
+     "penaltyShooterGoalsScored": 0,
+     "penaltyShooterSaves": 0,
+     "penaltyShooterMisses": 0,
+     "penaltyGoalkeeperAttempts": 0,
+     "penaltyGoalkeeperGoalsConceded": 0,
+     "penaltyGoalkeeperSaves": 0,
+     "penaltyGoalkeeperMisses": 0
+    },
+    "cardStatistics": {
+     "yellowCardNetSum": 0,
+     "yellowCardGrossSum": 0,
+     "yellowRedCardsCount": 0,
+     "redCardsCount": 0
+    },
+    "playingTimeStatistics": {
+     "playedMinutesSum": 873,
+     "startingCount": 10,
+     "substitutedOutCount": 10,
+     "substitutedInCount": 4,
+     "appearancesCount": 14
+    }
+   },
+   "clubIds": [
+    "131",
+    "3375",
+    "131"
+   ],
+   "coachIds": [
+    "67",
+    "20031",
+    "67"
+   ],
+   "competitionIds": [
+    "ES1",
+    "UNLA",
+    "CL"
+   ]
+  },
+  "mv": {
+   "history": [
+    {
+     "playerId": "683840",
+     "seasonId": 2019,
+     "clubId": "472",
+     "age": 16,
+     "marketValue": {
+      "value": 5000000,
+      "currency": "EUR",
+      "compact": {
+       "prefix": "€",
+       "content": "5,00",
+       "suffix": "M"
+      },
+      "determined": "2019-09-10"
+     }
+    },
+    {
+     "playerId": "683840",
+     "seasonId": 2019,
+     "clubId": "472",
+     "age": 17,
+     "marketValue": {
+      "value": 8000000,
+      "currency": "EUR",
+      "compact": {
+       "prefix": "€",
+       "content": "8,00",
+       "suffix": "M"
+      },
+      "determined": "2019-12-20"
+     }
+    },
+    {
+     "playerId": "683840",
+     "seasonId": 2019,
+     "clubId": "472",
+     "age": 17,
+     "marketValue": {
+      "value": 7200000,
+      "currency": "EUR",
+      "compact": {
+       "prefix": "€",
+       "content": "7,00",
+       "suffix": "M"
+      },
+      "determined": "2020-04-08"
+     }
+    },
+    {
+     "playerId": "683840",
+     "seasonId": 2020,
+     "clubId": "131",
+     "age": 17,
+     "marketValue": {
+      "value": 15000000,
+      "currency": "EUR",
+      "compact": {
+       "prefix": "€",
+       "content": "15,00",
+       "suffix": "M"
+      },
+      "determined": "2020-10-08"
+     }
+    },
+    {
+     "playerId": "683840",
+     "seasonId": 2020,
+     "clubId": "131",
+     "age": 17,
+     "marketValue": {
+      "value": 30000000,
+      "currency": "EUR",
+      "compact": {
+       "prefix": "€",
+       "content": "30,00",
+       "suffix": "M"
+      },
+      "determined": "2020-11-23"
+     }
+    },
+    {
+     "playerId": "683840",
+     "seasonId": 2020,
+     "clubId": "131",
+     "age": 18,
+     "marketValue": {
+      "value": 50000000,
+      "currency": "EUR",
+      "compact": {
+       "prefix": "€",
+       "content": "50,00",
+       "suffix": "M"
+      },
+      "determined": "2021-01-05"
+     }
+    },
+    {
+     "playerId": "683840",
+     "seasonId": 2020,
+     "clubId": "131",
+     "age": 18,
+     "marketValue": {
+      "value": 70000000,
+      "currency": "EUR",
+      "compact": {
+       "prefix": "€",
+       "content": "70,00",
+       "suffix": "M"
+      },
+      "determined": "2021-03-19"
+     }
+    },
+    {
+     "playerId": "683840",
+     "seasonId": 2020,
+     "clubId": "131",
+     "age": 18,
+     "marketValue": {
+      "value": 70000000,
+      "currency": "EUR",
+      "compact": {
+       "prefix": "€",
+       "content": "70,00",
+       "suffix": "M"
+      },
+      "determined": "2021-05-31"
+     }
+    },
+    {
+     "playerId": "683840",
+     "seasonId": 2021,
+     "clubId": "131",
+     "age": 18,
+     "marketValue": {
+      "value": 80000000,
+      "currency": "EUR",
+      "compact": {
+       "prefix": "€",
+       "content": "80,00",
+       "suffix": "M"
+      },
+      "determined": "2021-07-15"
+     }
+    },
+    {
+     "playerId": "683840",
+     "seasonId": 2021,
+     "clubId": "131",
+     "age": 19,
+     "marketValue": {
+      "value": 80000000,
+      "currency": "EUR",
+      "compact": {
+       "prefix": "€",
+       "content": "80,00",
+       "suffix": "M"
+      },
+      "determined": "2021-12-30"
+     }
+    },
+    {
+     "playerId": "683840",
+     "seasonId": 2021,
+     "clubId": "131",
+     "age": 19,
+     "marketValue": {
+      "value": 80000000,
+      "currency": "EUR",
+      "compact": {
+       "prefix": "€",
+       "content": "80,00",
+       "suffix": "M"
+      },
+      "determined": "2022-06-03"
+     }
+    },
+    {
+     "playerId": "683840",
+     "seasonId": 2022,
+     "clubId": "131",
+     "age": 19,
+     "marketValue": {
+      "value": 90000000,
+      "currency": "EUR",
+      "compact": {
+       "prefix": "€",
+       "content": "90,00",
+       "suffix": "M"
+      },
+      "determined": "2022-09-23"
+     }
+    },
+    {
+     "playerId": "683840",
+     "seasonId": 2022,
+     "clubId": "131",
+     "age": 19,
+     "marketValue": {
+      "value": 100000000,
+      "currency": "EUR",
+      "compact": {
+       "prefix": "€",
+       "content": "100,00",
+       "suffix": "M"
+      },
+      "determined": "2022-11-07"
+     }
+    },
+    {
+     "playerId": "683840",
+     "seasonId": 2022,
+     "clubId": "131",
+     "age": 20,
+     "marketValue": {
+      "value": 100000000,
+      "currency": "EUR",
+      "compact": {
+       "prefix": "€",
+       "content": "100,00",
+       "suffix": "M"
+      },
+      "determined": "2023-06-13"
+     }
+    },
+    {
+     "playerId": "683840",
+     "seasonId": 2023,
+     "clubId": "131",
+     "age": 21,
+     "marketValue": {
+      "value": 90000000,
+      "currency": "EUR",
+      "compact": {
+       "prefix": "€",
+       "content": "90,00",
+       "suffix": "M"
+      },
+      "determined": "2023-12-22"
+     }
+    },
+    {
+     "playerId": "683840",
+     "seasonId": 2023,
+     "clubId": "131",
+     "age": 21,
+     "marketValue": {
+      "value": 80000000,
+      "currency": "EUR",
+      "compact": {
+       "prefix": "€",
+       "content": "80,00",
+       "suffix": "M"
+      },
+      "determined": "2024-03-21"
+     }
+    },
+    {
+     "playerId": "683840",
+     "seasonId": 2023,
+     "clubId": "131",
+     "age": 21,
+     "marketValue": {
+      "value": 80000000,
+      "currency": "EUR",
+      "compact": {
+       "prefix": "€",
+       "content": "80,00",
+       "suffix": "M"
+      },
+      "determined": "2024-06-07"
+     }
+    },
+    {
+     "playerId": "683840",
+     "seasonId": 2024,
+     "clubId": "131",
+     "age": 22,
+     "marketValue": {
+      "value": 100000000,
+      "currency": "EUR",
+      "compact": {
+       "prefix": "€",
+       "content": "100,00",
+       "suffix": "M"
+      },
+      "determined": "2024-12-27"
+     }
+    },
+    {
+     "playerId": "683840",
+     "seasonId": 2024,
+     "clubId": "131",
+     "age": 22,
+     "marketValue": {
+      "value": 120000000,
+      "currency": "EUR",
+      "compact": {
+       "prefix": "€",
+       "content": "120,00",
+       "suffix": "M"
+      },
+      "determined": "2025-03-21"
+     }
+    },
+    {
+     "playerId": "683840",
+     "seasonId": 2024,
+     "clubId": "131",
+     "age": 22,
+     "marketValue": {
+      "value": 140000000,
+      "currency": "EUR",
+      "compact": {
+       "prefix": "€",
+       "content": "140,00",
+       "suffix": "M"
+      },
+      "determined": "2025-06-09"
+     }
+    },
+    {
+     "playerId": "683840",
+     "seasonId": 2025,
+     "clubId": "131",
+     "age": 23,
+     "marketValue": {
+      "value": 140000000,
+      "currency": "EUR",
+      "compact": {
+       "prefix": "€",
+       "content": "140,00",
+       "suffix": "M"
+      },
+      "determined": "2025-12-12"
+     }
+    },
+    {
+     "playerId": "683840",
+     "seasonId": 2025,
+     "clubId": "131",
+     "age": 23,
+     "marketValue": {
+      "value": 150000000,
+      "currency": "EUR",
+      "compact": {
+       "prefix": "€",
+       "content": "150,00",
+       "suffix": "M"
+      },
+      "determined": "2026-03-16"
+     }
+    },
+    {
+     "playerId": "683840",
+     "seasonId": 2025,
+     "clubId": "131",
+     "age": 23,
+     "marketValue": {
+      "value": 150000000,
+      "currency": "EUR",
+      "compact": {
+       "prefix": "€",
+       "content": "150,00",
+       "suffix": "M"
+      },
+      "determined": "2026-06-05"
+     }
+    }
+   ],
+   "playerIds": [
+    "683840"
+   ],
+   "clubIds": [
+    "472",
+    "131"
+   ],
+   "current": {
+    "playerId": "683840",
+    "seasonId": 2025,
+    "clubId": "131",
+    "age": 23,
+    "marketValue": {
+     "value": 150000000,
+     "currency": "EUR",
+     "compact": {
+      "prefix": "€",
+      "content": "150,00",
+      "suffix": "M"
+     },
+     "determined": "2026-06-05"
+    }
+   }
+  }
+ },
+ "487469": {
+  "season": {
+   "playerId": "487469",
+   "performance": [
+    {
+     "generalInformation": {
+      "seasonId": 2026,
+      "competitionId": "FR1",
+      "clubId": "583",
+      "coachId": "6499",
+      "season": {
+       "id": 2026,
+       "display": "26/27",
+       "cyclicalName": "2027",
+       "nonCyclicalName": "26/27"
+      }
+     },
+     "statistics": {
+      "goalStatistics": {
+       "goalsSum": 1,
+       "assistsSum": 1,
+       "scorersSum": 2,
+       "ownGoalsSum": 0,
+       "teamGoalsOnThePitchSum": 8,
+       "opponentGoalsOnThePitch": 7,
+       "penaltyShooterAttempts": 0,
+       "penaltyShooterGoalsScored": 0,
+       "penaltyShooterSaves": 0,
+       "penaltyShooterMisses": 0,
+       "penaltyGoalkeeperAttempts": 0,
+       "penaltyGoalkeeperGoalsConceded": 0,
+       "penaltyGoalkeeperSaves": 0,
+       "penaltyGoalkeeperMisses": 0
+      },
+      "cardStatistics": {
+       "yellowCardNetSum": 1,
+       "yellowCardGrossSum": 1,
+       "yellowRedCardsCount": 0,
+       "redCardsCount": 0
+      },
+      "playingTimeStatistics": {
+       "playedMinutesSum": 460,
+       "startingCount": 5,
+       "substitutedOutCount": 1,
+       "substitutedInCount": 1,
+       "appearancesCount": 6
+      }
+     }
+    },
+    {
+     "generalInformation": {
+      "seasonId": 2026,
+      "competitionId": "UNLA",
+      "clubId": "3300",
+      "coachId": "2145",
+      "season": {
+       "id": 2026,
+       "display": "26/27",
+       "cyclicalName": "2027",
+       "nonCyclicalName": "26/27"
+      }
+     },
+     "statistics": {
+      "goalStatistics": {
+       "goalsSum": 1,
+       "assistsSum": 0,
+       "scorersSum": 1,
+       "ownGoalsSum": 0,
+       "teamGoalsOnThePitchSum": 7,
+       "opponentGoalsOnThePitch": 3,
+       "penaltyShooterAttempts": 0,
+       "penaltyShooterGoalsScored": 0,
+       "penaltyShooterSaves": 0,
+       "penaltyShooterMisses": 0,
+       "penaltyGoalkeeperAttempts": 0,
+       "penaltyGoalkeeperGoalsConceded": 0,
+       "penaltyGoalkeeperSaves": 0,
+       "penaltyGoalkeeperMisses": 0
+      },
+      "cardStatistics": {
+       "yellowCardNetSum": 1,
+       "yellowCardGrossSum": 1,
+       "yellowRedCardsCount": 0,
+       "redCardsCount": 0
+      },
+      "playingTimeStatistics": {
+       "playedMinutesSum": 301,
+       "startingCount": 3,
+       "substitutedOutCount": 1,
+       "substitutedInCount": 1,
+       "appearancesCount": 4
+      }
+     }
+    },
+    {
+     "generalInformation": {
+      "seasonId": 2026,
+      "competitionId": "CL",
+      "clubId": "583",
+      "coachId": "6499",
+      "season": {
+       "id": 2026,
+       "display": "26/27",
+       "cyclicalName": "2027",
+       "nonCyclicalName": "26/27"
+      }
+     },
+     "statistics": {
+      "goalStatistics": {
+       "goalsSum": 1,
+       "assistsSum": 0,
+       "scorersSum": 1,
+       "ownGoalsSum": 0,
+       "teamGoalsOnThePitchSum": 10,
+       "opponentGoalsOnThePitch": 3,
+       "penaltyShooterAttempts": 0,
+       "penaltyShooterGoalsScored": 0,
+       "penaltyShooterSaves": 0,
+       "penaltyShooterMisses": 0,
+       "penaltyGoalkeeperAttempts": 0,
+       "penaltyGoalkeeperGoalsConceded": 0,
+       "penaltyGoalkeeperSaves": 0,
+       "penaltyGoalkeeperMisses": 0
+      },
+      "cardStatistics": {
+       "yellowCardNetSum": 0,
+       "yellowCardGrossSum": 0,
+       "yellowRedCardsCount": 0,
+       "redCardsCount": 0
+      },
+      "playingTimeStatistics": {
+       "playedMinutesSum": 180,
+       "startingCount": 2,
+       "substitutedOutCount": 0,
+       "substitutedInCount": 0,
+       "appearancesCount": 2
+      }
+     }
+    },
+    {
+     "generalInformation": {
+      "seasonId": 2026,
+      "competitionId": "USC",
+      "clubId": "583",
+      "coachId": "6499",
+      "season": {
+       "id": 2026,
+       "display": "26/27",
+       "cyclicalName": "2027",
+       "nonCyclicalName": "26/27"
+      }
+     },
+     "statistics": {
+      "goalStatistics": {
+       "goalsSum": 0,
+       "assistsSum": 0,
+       "scorersSum": 0,
+       "ownGoalsSum": 0,
+       "teamGoalsOnThePitchSum": 2,
+       "opponentGoalsOnThePitch": 1,
+       "penaltyShooterAttempts": 0,
+       "penaltyShooterGoalsScored": 0,
+       "penaltyShooterSaves": 0,
+       "penaltyShooterMisses": 0,
+       "penaltyGoalkeeperAttempts": 0,
+       "penaltyGoalkeeperGoalsConceded": 0,
+       "penaltyGoalkeeperSaves": 0,
+       "penaltyGoalkeeperMisses": 0
+      },
+      "cardStatistics": {
+       "yellowCardNetSum": 0,
+       "yellowCardGrossSum": 0,
+       "yellowRedCardsCount": 0,
+       "redCardsCount": 0
+      },
+      "playingTimeStatistics": {
+       "playedMinutesSum": 90,
+       "startingCount": 1,
+       "substitutedOutCount": 0,
+       "substitutedInCount": 0,
+       "appearancesCount": 1
+      }
+     }
+    },
+    {
+     "generalInformation": {
+      "seasonId": 2026,
+      "competitionId": "FRCH",
+      "clubId": "583",
+      "coachId": "6499",
+      "season": {
+       "id": 2026,
+       "display": "26/27",
+       "cyclicalName": "2027",
+       "nonCyclicalName": "26/27"
+      }
+     },
+     "statistics": {
+      "goalStatistics": {
+       "goalsSum": 0,
+       "assistsSum": 0,
+       "scorersSum": 0,
+       "ownGoalsSum": 0,
+       "teamGoalsOnThePitchSum": 0,
+       "opponentGoalsOnThePitch": 1,
+       "penaltyShooterAttempts": 0,
+       "penaltyShooterGoalsScored": 0,
+       "penaltyShooterSaves": 0,
+       "penaltyShooterMisses": 0,
+       "penaltyGoalkeeperAttempts": 0,
+       "penaltyGoalkeeperGoalsConceded": 0,
+       "penaltyGoalkeeperSaves": 0,
+       "penaltyGoalkeeperMisses": 0
+      },
+      "cardStatistics": {
+       "yellowCardNetSum": 0,
+       "yellowCardGrossSum": 0,
+       "yellowRedCardsCount": 0,
+       "redCardsCount": 0
+      },
+      "playingTimeStatistics": {
+       "playedMinutesSum": 90,
+       "startingCount": 1,
+       "substitutedOutCount": 0,
+       "substitutedInCount": 0,
+       "appearancesCount": 1
+      }
+     }
+    }
+   ],
+   "aggregated": {
+    "goalStatistics": {
+     "goalsSum": 3,
+     "assistsSum": 1,
+     "scorersSum": 4,
+     "ownGoalsSum": 0,
+     "teamGoalsOnThePitchSum": 27,
+     "opponentGoalsOnThePitch": 15,
+     "penaltyShooterAttempts": 0,
+     "penaltyShooterGoalsScored": 0,
+     "penaltyShooterSaves": 0,
+     "penaltyShooterMisses": 0,
+     "penaltyGoalkeeperAttempts": 0,
+     "penaltyGoalkeeperGoalsConceded": 0,
+     "penaltyGoalkeeperSaves": 0,
+     "penaltyGoalkeeperMisses": 0
+    },
+    "cardStatistics": {
+     "yellowCardNetSum": 2,
+     "yellowCardGrossSum": 2,
+     "yellowRedCardsCount": 0,
+     "redCardsCount": 0
+    },
+    "playingTimeStatistics": {
+     "playedMinutesSum": 1121,
+     "startingCount": 12,
+     "substitutedOutCount": 2,
+     "substitutedInCount": 2,
+     "appearancesCount": 14
+    }
+   },
+   "clubIds": [
+    "583",
+    "3300",
+    "583",
+    "583",
+    "583"
+   ],
+   "coachIds": [
+    "6499",
+    "2145",
+    "6499",
+    "6499",
+    "6499"
+   ],
+   "competitionIds": [
+    "FR1",
+    "UNLA",
+    "CL",
+    "USC",
+    "FRCH"
+   ]
+  },
+  "mv": {
+   "history": [
+    {
+     "playerId": "487469",
+     "seasonId": 2019,
+     "clubId": "10331",
+     "age": 19,
+     "marketValue": {
+      "value": 1500000,
+      "currency": "EUR",
+      "compact": {
+       "prefix": "€",
+       "content": "1,50",
+       "suffix": "M"
+      },
+      "determined": "2019-12-31"
+     }
+    },
+    {
+     "playerId": "487469",
+     "seasonId": 2019,
+     "clubId": "720",
+     "age": 20,
+     "marketValue": {
+      "value": 1300000,
+      "currency": "EUR",
+      "compact": {
+       "prefix": "€",
+       "content": "1,30",
+       "suffix": "M"
+      },
+      "determined": "2020-04-08"
+     }
+    },
+    {
+     "playerId": "487469",
+     "seasonId": 2020,
+     "clubId": "720",
+     "age": 20,
+     "marketValue": {
+      "value": 5000000,
+      "currency": "EUR",
+      "compact": {
+       "prefix": "€",
+       "content": "5,00",
+       "suffix": "M"
+      },
+      "determined": "2020-08-17"
+     }
+    },
+    {
+     "playerId": "487469",
+     "seasonId": 2020,
+     "clubId": "543",
+     "age": 20,
+     "marketValue": {
+      "value": 5000000,
+      "currency": "EUR",
+      "compact": {
+       "prefix": "€",
+       "content": "5,00",
+       "suffix": "M"
+      },
+      "determined": "2020-10-13"
+     }
+    },
+    {
+     "playerId": "487469",
+     "seasonId": 2020,
+     "clubId": "543",
+     "age": 21,
+     "marketValue": {
+      "value": 6000000,
+      "currency": "EUR",
+      "compact": {
+       "prefix": "€",
+       "content": "6,00",
+       "suffix": "M"
+      },
+      "determined": "2021-03-18"
+     }
+    },
+    {
+     "playerId": "487469",
+     "seasonId": 2020,
+     "clubId": "543",
+     "age": 21,
+     "marketValue": {
+      "value": 7000000,
+      "currency": "EUR",
+      "compact": {
+       "prefix": "€",
+       "content": "7,00",
+       "suffix": "M"
+      },
+      "determined": "2021-06-08"
+     }
+    },
+    {
+     "playerId": "487469",
+     "seasonId": 2021,
+     "clubId": "720",
+     "age": 21,
+     "marketValue": {
+      "value": 12000000,
+      "currency": "EUR",
+      "compact": {
+       "prefix": "€",
+       "content": "12,00",
+       "suffix": "M"
+      },
+      "determined": "2021-12-27"
+     }
+    },
+    {
+     "playerId": "487469",
+     "seasonId": 2021,
+     "clubId": "720",
+     "age": 22,
+     "marketValue": {
+      "value": 24000000,
+      "currency": "EUR",
+      "compact": {
+       "prefix": "€",
+       "content": "24,00",
+       "suffix": "M"
+      },
+      "determined": "2022-03-10"
+     }
+    },
+    {
+     "playerId": "487469",
+     "seasonId": 2021,
+     "clubId": "720",
+     "age": 22,
+     "marketValue": {
+      "value": 30000000,
+      "currency": "EUR",
+      "compact": {
+       "prefix": "€",
+       "content": "30,00",
+       "suffix": "M"
+      },
+      "determined": "2022-05-31"
+     }
+    },
+    {
+     "playerId": "487469",
+     "seasonId": 2022,
+     "clubId": "583",
+     "age": 22,
+     "marketValue": {
+      "value": 40000000,
+      "currency": "EUR",
+      "compact": {
+       "prefix": "€",
+       "content": "40,00",
+       "suffix": "M"
+      },
+      "determined": "2022-09-19"
+     }
+    },
+    {
+     "playerId": "487469",
+     "seasonId": 2022,
+     "clubId": "583",
+     "age": 22,
+     "marketValue": {
+      "value": 45000000,
+      "currency": "EUR",
+      "compact": {
+       "prefix": "€",
+       "content": "45,00",
+       "suffix": "M"
+      },
+      "determined": "2022-11-02"
+     }
+    },
+    {
+     "playerId": "487469",
+     "seasonId": 2022,
+     "clubId": "583",
+     "age": 23,
+     "marketValue": {
+      "value": 42000000,
+      "currency": "EUR",
+      "compact": {
+       "prefix": "€",
+       "content": "42,00",
+       "suffix": "M"
+      },
+      "determined": "2023-03-27"
+     }
+    },
+    {
+     "playerId": "487469",
+     "seasonId": 2022,
+     "clubId": "583",
+     "age": 23,
+     "marketValue": {
+      "value": 42000000,
+      "currency": "EUR",
+      "compact": {
+       "prefix": "€",
+       "content": "42,00",
+       "suffix": "M"
+      },
+      "determined": "2023-06-27"
+     }
+    },
+    {
+     "playerId": "487469",
+     "seasonId": 2023,
+     "clubId": "583",
+     "age": 23,
+     "marketValue": {
+      "value": 45000000,
+      "currency": "EUR",
+      "compact": {
+       "prefix": "€",
+       "content": "45,00",
+       "suffix": "M"
+      },
+      "determined": "2023-10-16"
+     }
+    },
+    {
+     "playerId": "487469",
+     "seasonId": 2023,
+     "clubId": "583",
+     "age": 23,
+     "marketValue": {
+      "value": 45000000,
+      "currency": "EUR",
+      "compact": {
+       "prefix": "€",
+       "content": "45,00",
+       "suffix": "M"
+      },
+      "determined": "2023-12-18"
+     }
+    },
+    {
+     "playerId": "487469",
+     "seasonId": 2023,
+     "clubId": "583",
+     "age": 24,
+     "marketValue": {
+      "value": 50000000,
+      "currency": "EUR",
+      "compact": {
+       "prefix": "€",
+       "content": "50,00",
+       "suffix": "M"
+      },
+      "determined": "2024-06-03"
+     }
+    },
+    {
+     "playerId": "487469",
+     "seasonId": 2024,
+     "clubId": "583",
+     "age": 24,
+     "marketValue": {
+      "value": 55000000,
+      "currency": "EUR",
+      "compact": {
+       "prefix": "€",
+       "content": "55,00",
+       "suffix": "M"
+      },
+      "determined": "2024-07-18"
+     }
+    },
+    {
+     "playerId": "487469",
+     "seasonId": 2024,
+     "clubId": "583",
+     "age": 24,
+     "marketValue": {
+      "value": 55000000,
+      "currency": "EUR",
+      "compact": {
+       "prefix": "€",
+       "content": "55,00",
+       "suffix": "M"
+      },
+      "determined": "2024-12-10"
+     }
+    },
+    {
+     "playerId": "487469",
+     "seasonId": 2024,
+     "clubId": "583",
+     "age": 25,
+     "marketValue": {
+      "value": 60000000,
+      "currency": "EUR",
+      "compact": {
+       "prefix": "€",
+       "content": "60,00",
+       "suffix": "M"
+      },
+      "determined": "2025-03-24"
+     }
+    },
+    {
+     "playerId": "487469",
+     "seasonId": 2024,
+     "clubId": "583",
+     "age": 25,
+     "marketValue": {
+      "value": 80000000,
+      "currency": "EUR",
+      "compact": {
+       "prefix": "€",
+       "content": "80,00",
+       "suffix": "M"
+      },
+      "determined": "2025-06-03"
+     }
+    },
+    {
+     "playerId": "487469",
+     "seasonId": 2025,
+     "clubId": "583",
+     "age": 25,
+     "marketValue": {
+      "value": 90000000,
+      "currency": "EUR",
+      "compact": {
+       "prefix": "€",
+       "content": "90,00",
+       "suffix": "M"
+      },
+      "determined": "2025-10-10"
+     }
+    },
+    {
+     "playerId": "487469",
+     "seasonId": 2025,
+     "clubId": "583",
+     "age": 25,
+     "marketValue": {
+      "value": 110000000,
+      "currency": "EUR",
+      "compact": {
+       "prefix": "€",
+       "content": "110,00",
+       "suffix": "M"
+      },
+      "determined": "2025-12-15"
+     }
+    },
+    {
+     "playerId": "487469",
+     "seasonId": 2025,
+     "clubId": "583",
+     "age": 26,
+     "marketValue": {
+      "value": 140000000,
+      "currency": "EUR",
+      "compact": {
+       "prefix": "€",
+       "content": "140,00",
+       "suffix": "M"
+      },
+      "determined": "2026-06-01"
+     }
+    }
+   ],
+   "playerIds": [
+    "487469"
+   ],
+   "clubIds": [
+    "10331",
+    "720",
+    "543",
+    "583"
+   ],
+   "current": {
+    "playerId": "487469",
+    "seasonId": 2025,
+    "clubId": "583",
+    "age": 26,
+    "marketValue": {
+     "value": 140000000,
+     "currency": "EUR",
+     "compact": {
+      "prefix": "€",
+      "content": "140,00",
+      "suffix": "M"
+     },
+     "determined": "2026-06-01"
+    }
+   }
+  }
+ }
+}
