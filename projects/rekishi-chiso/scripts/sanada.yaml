@@ -1,0 +1,618 @@
+# 真田幸村＝真田信繁（A作品・10/19 19時公開予定）。型：掘り下げ型（生まれから順・節ごとに1つの山場・最後は「まとめ：真田信繁とは何者だったのか」）
+# 冒頭の一点：「幸村」の名は後世の呼び名。信繁自筆の書状は「信繁」で、「幸村」署名の写し2通は偽文書と判明（平山優 2015、Wikipedia 経由）。
+#   初出は軍記『難波戦記』（寛文12年＝1672、夏の陣の約57年後）。『桃源遺事』（1701）は「幸村は誤り」、松代藩は文化6年（1809）に幕府へ「信繁」と回答。
+#   同名の武田信繁（信玄の弟）と区別するための創作、と論じる研究者がいる（篠原幸久、Wikipedia 経由。理由は決まっていないと断る）。
+#   「日本一の兵」は島津忠恒（家久）が国元に書いた言葉（『薩藩旧記雑録』）。日付は5月7日説・6月11日説で未確定、宛先は「国元」だけ、
+#   丸島和洋の解説では「皆この話ばかり」とあるので他の大名の言葉の可能性もある（答えは第9節、まとめで冒頭の問いに戻る）。
+# 信玄の回（10/18）の次回予告「砥石城を取った幸隆の孫、幸村。その像も、後の本が作ったのか」に応える：幸隆の砥石城（天文20年5月26日、『高白斎記』）を第2節で言い、像は三つの層（まとめ）で答える。
+# 事実の出どころは dev/output/rekishi-chiso/research/sanada_facts.md（確実／有力／説／後世の話／未確認の区分もそこ）。素材は research/sanada_assets.md。
+# 決まり：①日付は和暦で言う。西暦は年表・card の年（year:）と、『難波戦記』の1672年・『桃源遺事』の1701年・松代藩の1809年だけ。「西暦だと」とは言わない。
+#   ②年齢は数え。生年が割れる（永禄10年1567／元亀元年1570／元亀3年1572）ので、信繁の「この時○歳」は出さない（age: false）。年齢を言うのは最期の49歳（説）と信之93歳・昌幸65歳（67とも）だけ。
+#   ③使わない話（入れない）：九度山の村人を酔い潰した脱出・抜け穴・真田紐を売って暮らした（出す場合は「俗説」と断る）／家康の空城・脱糞の話／十勇士の個々の活躍／
+#     信繁の首の扱い・遺体・血・首の絵／大助の最期の細部／豊臣秀頼・淀殿の自害の描写（日付だけ）／ドラマ『真田丸』『真田太平記』・小説・ネットの個人ブログの場面／
+#     「真田日本一の兵」を島津個人の評と断定／真田丸を信繁の築造と断定（「築いたとされる」まで）／夏の陣の家康が逃げた・自害を覚悟したを事実として／「信濃一国」を事実として。
+#   ④後世の話（出典名を言う）：幸村の名（難波戦記）・小松姫の開門拒否・犬伏の「家を二つに割る策」・籠城反対の策（幕末〜明治に編まれた『名将言行録』）・九度山の暮らしの描写（『真武内伝追加』）・
+#     真田紐（『安斎随筆』）・十勇士（立川文庫）・薩摩落ち・六文銭の旗・赤備え（『大坂御陣山口休庵咄』）。ウィキペディア経由の情報は「ウィキペディアの整理では」と断る。
+#     『高山公実録』『三河物語』『薩藩旧記』『細川家記』『駿府記』『高白斎記』の本文は未読。
+#   ⑤数字は何の数かを言い、割れていれば割れていると言う：上田合戦の兵（真田1,200〜2,000／徳川約7,000）・徳川の死者（約300／約1,300）・秀忠軍約3万8,000・真田丸の被害は言い切らない・享年49/46/44。
+#   ⑥人物のセリフは入れない（島津の書状は「趣旨」）。⑦背景に人物の肖像・拡大絵を使わない。NDL 系は trimmed copy だけ。血・遺体・首・切腹の絵は使わない（夏の陣屏風は detail で人の少ない所だけ）。
+#   ⑧現代の写真は「現在の〜」とその行で断る。真田丸の復元図・ジオラマは使わない。
+#   読みの注意：真田信繁＝さなだのぶしげ／昌幸＝まさゆき／信之＝のぶゆき／信幸＝のぶゆき／幸隆＝ゆきたか／小松姫＝こまつひめ／大谷吉継＝おおたによしつぐ／竹林院＝ちくりんいん／馬廻衆＝うままわりしゅう／
+#     上田＝うえだ／砥石＝といし／戸石＝といし／神川＝かんがわ／沼田＝ぬまた／犬伏＝いぬぶし／九度山＝くどやま／蓮華定院＝れんげじょういん／浅野幸長＝あさのよしなが／好白＝こうはく／
+#     真田丸＝さなだまる／惣構え＝そうがまえ／明星学園＝みょうじょうがくえん／天王寺＝てんのうじ／道明寺＝どうみょうじ／誉田＝こんだ／後藤基次＝ごとうもとつぐ／毛利勝永＝もうりかつなが／
+#     長宗我部盛親＝ちょうそかべもりちか／明石全登＝あかしたけのり／前田利常＝まえだとしつね／井伊直孝＝いいなおたか／松平忠直＝まつだいらただなお／真田信尹＝さなだのぶただ／
+#     高山公実録＝こうざんこうじつろく／三河物語＝みかわものがたり／薩藩旧記雑録＝さっぱんきゅうきざつろく／細川忠興＝ほそかわただおき／難波戦記＝なにわせんき／桃源遺事＝とうげんいじ／立川文庫＝たつかわぶんこ／
+#     西尾宗次＝にしおむねつぐ／安居神社＝やすいじんじゃ／片倉重長＝かたくらしげなが／島津忠恒＝しまづただつね／松代＝まつしろ／大助＝だいすけ／阿梅＝おうめ／
+title: 真田幸村（真田信繁）｜「幸村」の名は、本人の書状に出てこない
+series: ""
+playlists: [日本史を掘る（聞き流し）, 戦国時代を掘る]
+shorts_playlists: [日本史ショート]
+tags: [真田幸村, 真田信繁, 真田昌幸, 真田信之, 真田丸, 大坂の陣, 大坂冬の陣, 大坂夏の陣, 上田合戦, 九度山, 日本一の兵, 難波戦記, 真田十勇士, 戦国時代, 日本史, 歴史, 歴史解説, 歴史の地層]
+en:
+  title: "Sanada Yukimura (Nobushige): The Name 'Yukimura' Does Not Appear in His Own Letters"
+  description: |-
+    "Sanada Yukimura" is the name everyone knows, but the man himself signed his letters "Nobushige". According to Wikipedia's summary, two copies of letters signed "Yukimura" turned out to be forgeries. The name first appears in the war tale Naniwa Senki of 1672, about 57 years after the Summer Siege of Osaka. The famous phrase "the best warrior in Japan" comes from a letter by Shimazu Tadatsune (Iehisa) to his home domain; its date and addressee are not settled, and one commentator notes that it may repeat what other lords were saying.
+    This video digs into Nobushige's life from his grandfather Yukitaka's capture of Toishi Castle to his death in 1615, and separates what records show from what later books say: the year of his birth (three different years are given), the First Ueda campaign of 1585 where Nobushige's presence is not confirmed, the Second Ueda campaign of 1600 and the real reason Tokugawa Hidetada was late for Sekigahara, about fourteen years of exile at Kudoyama, the fort later called Sanada-maru (nobody knows when it got that name), the charge at Tennoji and Okayama in 1615 with its records of Ieyasu's camp in disarray, two competing places for his death, and the Sanada Ten Braves, who were invented in the late Meiji era by lecture-book publishers.
+    We say plainly where sources disagree. Dates are in the Japanese calendar of the time.
+    A Japanese history video to listen to while you work (Japanese audio).
+  chapters:
+    - "1615: The Name 'Yukimura' and Three Layers of Sources"
+    - "1567?: Born Into the Sanada Family, Grandfather Yukitaka and Father Masayuki"
+    - "1585: The First Ueda Campaign, and Where Was Nobushige?"
+    - "1594: Sayemon-no-suke, and Life in Hideyoshi's Osaka"
+    - "1600: The Parting at Inubushi and the Second Ueda Campaign"
+    - "1600: Fourteen Years of Exile at Kudoyama"
+    - "1614: Entering Osaka Castle and the Fort Later Called Sanada-maru"
+    - "1615: The Summer Siege of Osaka and Two Places of His Death"
+    - "1615: The 'Best Warrior in Japan' Letter and the Sanada Family Afterwards"
+    - "Summary: Who Was Sanada Nobushige?"
+
+texture: true
+recap: true
+
+timeline:
+  start: 1545
+  end: 1620
+  events: [[1551, 砥石], [1585, 上田], [1594, 叙任], [1600, 九度山], [1615, 夏の陣]]
+
+terms:
+  調略: 戦わずに敵の中の人を味方につける手
+  軍記: 戦いを物語の形で書いた本。江戸時代に多く作られた
+  左衛門佐: 朝廷から与えられる官職の名
+  馬廻衆: 大将の身近にいて、護衛や使いをする家来
+  浪人: 仕える主人を失った武士
+  出丸: 城の本体から離れた場所に築く、守りの砦
+  惣構え: 城下町までを囲む、大きな堀と土塁
+  しんがり: 退くときに最後尾で追手を防ぐ役目
+  大坂五人衆: 大坂の陣で豊臣方に入った、有力な浪人5人
+  立川文庫: 明治44年から出た講談の文庫本。十勇士で知られる
+
+shorts:
+  s1:
+    title: "「幸村」の名／いつの本？"
+    yt_title: "真田幸村の「幸村」は本人の名乗りだった？｜生前の書状は「信繁」、名の初出は軍記"
+    hook: "「幸村」は、／本人が名乗った／名前だった？"
+    tease: "じゃあ、「日本一の兵」と／書いたのは、誰？"
+    lead: "真田信繁は、なぜ「幸村」と呼ばれるようになったのか。名の出どころを、史料でたどります。"
+    tags: [真田幸村, 真田信繁, 難波戦記, 歴史の地層]
+  s2:
+    title: "上田城の約7,000／真田は何人？"
+    yt_title: "真田昌幸は1,200人で徳川7,000人に勝った？｜第一次上田合戦の数字は割れている"
+    hook: "真田は千ほどの兵で、／約7,000の徳川軍に／勝った？"
+    tease: "じゃあ、そのとき信繁は、／どこにいた？"
+    lead: "第一次上田合戦を、兵の数と、史料ごとの言い分から読み直します。"
+    tags: [第一次上田合戦, 真田昌幸, 上田城, 歴史の地層]
+  s3:
+    title: "秀忠の遅参／真田のせい？"
+    yt_title: "真田が秀忠軍を止めたから関ヶ原に遅れた？｜第二次上田合戦と、9月8日の上洛命令"
+    hook: "真田が足止めしたから、／秀忠は関ヶ原に／遅れた？"
+    tease: "じゃあ、負けた昌幸と信繁を、／死罪から救ったのは誰？"
+    lead: "第二次上田合戦と関ヶ原への遅参を、日付を並べて確かめます。"
+    tags: [第二次上田合戦, 徳川秀忠, 関ヶ原の戦い, 歴史の地層]
+  s4:
+    title: "出丸の名／いつから？"
+    yt_title: "「真田丸」という名は当時からあった？｜大坂冬の陣の出丸と、割れている形"
+    hook: "「真田丸」という名は、／当時からあった？"
+    tease: "じゃあ、そのあと徳川が信繁に出した／誘いの条件は？"
+    lead: "「真田丸」の名と形は、史料でどこまで言えるのかをたどります。"
+    tags: [真田丸, 大坂冬の陣, 真田信繁, 歴史の地層]
+  s5:
+    title: "家康の本陣／どう伝わる？"
+    yt_title: "家康は夏の陣で本当に切腹を覚悟した？｜天王寺・岡山の戦いを伝える記録"
+    hook: "家康は、夏の陣で／本当に切腹を／覚悟した？"
+    tease: "じゃあ、信繁が討たれた場所は、／どこだった？"
+    lead: "天王寺・岡山の戦いを、残る記録の言い分から読み直します。"
+    tags: [大坂夏の陣, 天王寺・岡山の戦い, 真田信繁, 歴史の地層]
+
+next:
+  title: 前田利家
+  series: ""
+  teaser: 秀吉と親しかったと言われる前田利家。その像も、後の本が作ったのか。
+
+thumbnail:
+  layout: face
+  image: paintings/ieyasu_sanada_yukimura_nobukazu.jpg
+  crop: [60, 0, 1160, 1100]
+  name: 真田幸村
+  lead: 本当の名は
+  main: 信繁
+
+sections:
+  # ---------------------------------------------------------------- 1 導入
+  - title: 1615年 日本一の兵と、幸村の名の出どころ
+    background: {image: paintings/ieyasu_osaka_rakujo_yoshitora.jpg, credit: "歌川芳虎《大阪落城大戦図》1868年"}
+    year: 1615
+    lines:
+      - 語り: 慶長20年の大坂夏の陣のこと。敵だった側の大名が、真田信繁を「日本一の兵」と国元に書き送った、と言われます。
+        portrait: {image: paintings/ieyasu_sanada_yukimura_nobukazu.jpg, caption: "騎馬の真田信繁（明治期の版画、後世の想像図）", age: false}
+        card: {head: 慶長20年, body: 夏の陣のあと敵の側が書いた評}
+        tone: 重い
+      - 聞き: 日本一って、すごい褒め言葉だね。その人が、幸村だよね？
+        tone: 疑問
+      - 語り: 「幸村」の名で知られる、真田信繁です。ところが、「幸村」と署名した真正の書状は、見つかっていません。大坂入城のあとも、署名は「信繁」でした。
+        short: s1
+        card: {head: 生前の署名, body: 署名は「信繁」（出家後は好白）}
+      - 語り: 「幸村」と署名した書状の写しは2通伝わりますが、どちらも偽物と分かった、とウィキペディアの整理にあります。
+        short: s1
+      - 聞き: え、本人が「幸村」って名乗ってないの？ じゃあ、誰が名づけたの？
+        tone: 驚き
+        short: s1
+      - 語り: 「幸村」の名が初めて出るのは、軍記の『難波戦記』。寛文12年、1672年です。夏の陣の約57年あとの本です。
+        portrait: null
+        background: {image: paintings/ieyasu_osaka_summer_screen_kuroda.jpg, credit: "《大坂夏の陣図屏風》右隻（黒田屏風、大阪城天守閣蔵、17世紀）"}
+        figure: {type: numberline, title: 「幸村」の名が出るまで, items: [[夏の陣, 1615], [『難波戦記』, 1672]], unit: 年, focus: 『難波戦記』, note: 約57年あと}
+        short: s1
+      - 聞き: 57年後かあ。孫の世代が書いた本で、広まった名前なんだね。本人は、知らない名前で呼ばれてるのか。
+        short: s1
+      - 語り: 前回の信玄の回の最後で、砥石城を取った真田幸隆の孫、と言いましたね。その孫が、今日の主人公です。
+        figure: null
+        background: {image: paintings/shingen_ueda_castle_map_trim.jpg, credit: "『日本古城絵図』信州上田城図の部分（江戸時代、国立国会図書館蔵。信玄の頃の城ではない）"}
+      - 聞き: 幸隆の孫だったね。信玄の回の続きだ。
+      - 語り: 予告の問いに、先に答えます。作られた部分は、あります。ですが、記録に残る部分も、あるのです。
+      - 語り: 今日は《三つの層》に分けて掘ります。本人の書状と同じ時代の記録、江戸の軍記、その後の講談です。
+        card: {head: 三つの層, body: 書状と同時代の記録・江戸の軍記・講談}
+      - 聞き: 本人と、江戸の本と、講談か。層を分けるんだね。じゃあ、まずは生まれから？
+
+  # ---------------------------------------------------------------- 2 生まれ
+  - title: 1567年ごろ 真田の家に生まれ、祖父幸隆と父昌幸の道
+    background: {image: paintings/shingen_shinano_sarashina_hiroshige.jpg, credit: "歌川広重《本朝名所 信州更科田毎之月》1835年ごろ"}
+    year: 1567
+    lines:
+      - 語り: 真田信繁は、信濃、いまの長野県の武士の家に生まれました。生まれた年は、永禄10年とも、元亀元年とも言われ、一つに決まっていません。
+        portrait: {image: paintings/ieyasu_sanada_yukimura_nobukazu.jpg, caption: "騎馬の真田信繁（明治期の版画、後世の想像図）", age: false}
+        card: {head: 生まれた年, body: 永禄10年・元亀元年・元亀3年の三説}
+        figure: {type: stats, title: 信繁の生まれた年の三説, items: [[永禄10年, 1567年, 夏の陣で49歳], [元亀元年, 1570年, 夏の陣で46歳], [元亀3年, 1572年, 夏の陣で44歳]]}
+      - 聞き: 生まれた年も、はっきりしないの？ 有名な人なのに。
+        tone: 疑問
+      - 語り: 亡くなったときの年齢が、49歳とも、46歳とも、44歳とも伝わるからです。この動画では、年齢は数えで言います。
+        figure: null
+      - 聞き: 年齢が3通りもあるんだ。じゃあ、家のほうは、どんな家だったの？
+      - 語り: 祖父は真田幸隆。信玄に仕えた武将です。天文20年5月26日、砥石城を、戦わずに寝返らせて、1日で落とした、と『高白斎記』にあります。
+        portrait: {image: paintings/sanada_yukitaka_portrait.jpg, caption: "真田幸隆（江戸時代の肖像）", age: false}
+        background: {image: paintings/shingen_ueda_castle_map_trim.jpg, credit: "『日本古城絵図』信州上田城図の部分（江戸時代、国立国会図書館蔵。信玄の頃の城ではない）"}
+        year: 1551
+        card: {head: 天文20年5月26日, body: 幸隆の調略で砥石城が1日で落ちる}
+      - 語り: 前の年の天文19年、武田軍が大敗した城でした。
+      - 聞き: 大敗した城を、1日で？ 力じゃなくて、調略だったんだね。
+      - 語り: その幸隆の三男が、信繁の父の昌幸です。7歳で人質として甲斐へ行き、信玄の側近くに仕えました。
+        portrait: {image: paintings/sanada_masayuki_portrait.jpg, caption: "真田昌幸（江戸時代の肖像）", age: false}
+        year: 1553
+        card: {head: 天文22年, body: 昌幸が7歳で甲斐へ人質に出る}
+      - 語り: 天正3年の長篠の戦いで、昌幸の兄2人が戦死します。そこで昌幸が、真田の家を継ぎました。
+        portrait: null
+        background: {image: paintings/ieyasu_nagashino_baba_nobuharu_screen.jpg, credit: "《長篠合戦図屏風》（徳川美術館蔵、18世紀）"}
+        year: 1575
+        card: {head: 天正3年, body: 長篠で兄2人が戦死。昌幸が家を継ぐ}
+      - 聞き: 三男なのに当主か。運命が変わった感じだね。
+      - 語り: 天正10年3月に武田家が滅びると、信繁は、滝川一益のもとへ人質に出されました。のち木曽義昌に引き渡された、と丸島和洋さんの研究にあります。
+        background: {image: paintings/sanada_shinano_suwako_hiroshige2.jpg, credit: "歌川広重（二代）《諸国名所百景 信州諏訪湖》1860年"}
+        portrait: {image: paintings/ieyasu_sanada_yukimura_nobukazu.jpg, caption: "騎馬の真田信繁（明治期の版画、後世の想像図）", age: false}
+        card: {head: 人質の信繁, body: 滝川、木曽へ預けられたとされる}
+      - 聞き: 人質を、たらい回しなの？ まだ10代だよね。
+      - 語り: そして天正13年、信繁は、また人質に出されます。その年、徳川軍が、真田に攻めてきました。
+        year: 1585
+        background: {image: paintings/sanada_ueda_castle_152_ndl_trim.jpg, credit: "『日本古城絵図』信州上田城図（江戸時代、国立国会図書館蔵。昌幸の頃の城ではない）"}
+        hook: true
+      - 聞き: 徳川が攻めてきたの？ 小さな真田に？
+        hook: true
+
+  # ---------------------------------------------------------------- 3 第一次上田合戦
+  - title: 1585年 第一次上田合戦と、数字が割れる勝ち負け
+    background: {image: paintings/shingen_ueda_castle_map_trim.jpg, credit: "『日本古城絵図』信州上田城図の部分（江戸時代、国立国会図書館蔵。信玄の頃の城ではない）"}
+    year: 1585
+    lines:
+      - 語り: 昌幸は、天正11年、上田城の築城を始めます。上杉に備える城として、家康の命で築いた、とウィキペディアは書きます。
+        year: 1583
+        card: {head: 天正11年, body: 昌幸が上田城の築城を始める}
+      - 聞き: 家康の命令で築いた城に、その家康の軍が攻めてくるの？ 皮肉だね。
+      - 語り: 火種は、沼田領です。天正10年10月に北条と徳川が和睦すると、家康は、沼田領を北条に渡すよう求めました。昌幸は反発しました。
+        year: 1582
+        background: {image: paintings/sanada_shinano_asamayama_hiroshige2.jpg, credit: "歌川広重（二代）《諸国名所百景 信州浅間山》1859年"}
+        card: {head: 天正10年10月, body: 沼田領の引き渡しに昌幸が反発}
+      - 聞き: 領地を取り上げられて、代わりの土地を出されても、納得できないよね。会社の転勤命令みたいな話か。
+      - 語り: 天正13年4月、家康は甲府まで来て、沼田領の引き渡しを求め、伊那郡を替わりの領地として示します。昌幸は、断りました。
+        year: 1585
+        background: {image: paintings/sanada_ueda_castle_152_ndl_trim.jpg, credit: "『日本古城絵図』信州上田城図（江戸時代、国立国会図書館蔵。昌幸の頃の城ではない）"}
+        card: {head: 天正13年4月, body: 家康が伊那郡を示すが、昌幸は拒む}
+      - 語り: 7月15日、昌幸は家康と手を切り、次男の信繁を人質に出して、上杉景勝に従います。家康は、真田の討伐を決めました。
+        card: {head: 天正13年7月15日, body: 昌幸が家康と手を切り、信繁を人質に}
+      - 聞き: 家康が、わざわざ攻めてきたの？ 人質まで出して上杉についたら、そりゃ怒るよね。
+      - 語り: 徳川軍は約7,000。昌幸が上田城に入り、長男の信幸、のちの信之が戸石城、親戚の矢沢頼康が矢沢城に入りました。
+        figure: {type: bars, title: 第一次上田合戦の兵の数, bars: [[真田方・少なめの数, 1200], [真田方・多めの数, 2000], [徳川方, 7000]], labels: [約1200人, 約2000人, 約7000人]}
+        short: s2
+      - 聞き: 1,200人なら約6倍、2,000人でも約3.5倍だよ。それで勝てるの？
+        tone: 驚き
+        short: s2
+      - 語り: 閏8月2日、徳川軍が上田城の二の丸まで攻め込んだところを、押し返しました。逃げる徳川軍は、神川で多くが溺れた、と伝わります。
+        background: {image: paintings/sanada_ueda_castle_151_ndl_trim.jpg, credit: "『日本古城絵図』信州上田城図（江戸時代、国立国会図書館蔵。昌幸の頃の城ではない）"}
+        figure: null
+        card: {head: 閏8月2日, body: 二の丸まで入った徳川軍を押し返す}
+        short: s2
+      - 聞き: 城の中に引き込んで、反撃した感じ？
+        short: s2
+      - 語り: 約4週間にらみ合い、閏8月28日に、徳川軍は引き上げます。勝ち負けの核心、徳川軍が引き上げたことは、確かです。
+        short: s2
+      - 語り: 一方、徳川軍の死者は、真田方の書状で約1,300人。徳川方の『三河物語』は、約300人です。
+        background: {image: paintings/sanada_ueda_castle_152_ndl_trim.jpg, credit: "『日本古城絵図』信州上田城図（江戸時代、国立国会図書館蔵。昌幸の頃の城ではない）"}
+        figure: {type: stats, title: 徳川軍の死者の数, items: [[真田信幸の書状, 約1300人, 宣伝で大きい可能性], [『三河物語』, 約300人, 徳川方の書]]}
+        card: {head: 死者の数, body: 約1,300人と約300人。割れている}
+      - 聞き: 同じ戦いなのに、4倍以上も違うの？ どっちを信じればいいの？
+      - 語り: 数は、そろわないままです。分からないところは、分からないと言うのが、いちばん正直でしょう。
+        figure: null
+      - 聞き: そうだね。で、そのとき信繁は、どこにいたの？
+        tone: 疑問
+      - 語り: 合戦は閏8月で、人質に出たのは7月15日。信繁は、越後の上杉のもとにいたとみられます。越後へ着いた時期は、確かめられていません。
+        background: {image: paintings/shingen_ueda_castle_map_trim.jpg, credit: "『日本古城絵図』信州上田城図の部分（江戸時代、国立国会図書館蔵。信玄の頃の城ではない）"}
+        portrait: {image: paintings/ieyasu_sanada_yukimura_nobukazu.jpg, caption: "騎馬の真田信繁（明治期の版画、後世の想像図）", age: false}
+        card: {head: 信繁の居場所, body: 人質で越後にいたとみられる}
+      - 聞き: じゃあ、「若き信繁が大活躍した」っていう話は、どこから？
+      - 語り: ウィキペディアの参戦武将の一覧に、信繁の名は見当たりません。戦場にいた記録も、今回の調べでは見つかっていません。
+        background: {image: paintings/sanada_shinano_asamayama_hiroshige2.jpg, credit: "歌川広重（二代）《諸国名所百景 信州浅間山》1859年"}
+      - 聞き: 戦場にいた記録がないのに、活躍の話があるのは、不思議だね。
+      - 語り: 上田合戦のあと、昌幸は豊臣秀吉に従います。信繁は、大坂へ移りました。
+        portrait: null
+        background: {image: paintings/nene_osaka_castle_summer_screen_detail.jpg, credit: "《大坂夏の陣図屏風》部分（17世紀前半、大阪城天守閣蔵）"}
+        hook: true
+      - 聞き: 大坂の信繁って、どんな感じだったの？
+        hook: true
+
+  # ---------------------------------------------------------------- 4 豊臣の大坂
+  - title: 1594年 左衛門佐の叙任と、豊臣の大坂での信繁
+    background: {image: paintings/nene_osaka_castle_summer_screen_detail.jpg, credit: "《大坂夏の陣図屏風》部分（17世紀前半、大阪城天守閣蔵）"}
+    year: 1594
+    lines:
+      - 語り: 文禄3年11月2日、信繁は、従五位下・左衛門佐に叙任され、豊臣の姓を与えられます。公家の記録に残る、確かな日付です。
+        portrait: {image: paintings/sanada_yukimura_portrait.jpg, caption: "真田信繁（江戸時代の肖像）", age: false}
+        card: {head: 文禄3年11月2日, body: 左衛門佐に叙任。豊臣の姓を下賜}
+      - 聞き: 左衛門佐って、どんな役なの？
+        tone: 疑問
+      - 語り: 朝廷から与えられる官職の名です。このとき信繁は、20代でした。
+      - 聞き: 20代で、秀吉から豊臣の姓をもらったのか。
+      - 語り: 近年の研究では、信繁は秀吉の馬廻衆で、昌幸とは別に、1万9千石の知行を持った、と紹介されます。ただ、いつの話かは、はっきりしません。
+        background: {image: paintings/nene_osaka_zu_byobu.jpg, credit: "《大坂図屏風》1607〜15年ごろ（豊臣期の大坂城と城下）"}
+        portrait: {image: paintings/hideyoshi_portrait_osaka_city_1600.jpg, caption: "豊臣秀吉像（1600年、大阪市立美術館蔵）", age: false}
+        card: {head: 馬廻衆, body: 昌幸とは別に1万9千石とされる}
+      - 聞き: 父親とは別に、自分の領地があったの？ 「人質」っていうイメージと、ちがうね。
+      - 語り: 慶長3年8月、秀吉が亡くなります。そして2年後、天下は関ヶ原へ向かいます。
+        portrait: null
+        year: 1598
+        background: {image: paintings/ieyasu_sekigahara_screen_1854_replica.jpg, credit: "《関ヶ原合戦図屏風》彦根城本の1854年の模写（原本は1620年代）"}
+        hook: true
+      - 聞き: いよいよ関ヶ原か。真田は、どっちについたの？
+        hook: true
+
+  # ---------------------------------------------------------------- 5 犬伏と第二次上田合戦
+  - title: 1600年 犬伏の別れと、第二次上田合戦
+    background: {image: paintings/ieyasu_sekigahara_screen_1854_replica.jpg, credit: "《関ヶ原合戦図屏風》彦根城本の1854年の模写（原本は1620年代）"}
+    year: 1600
+    lines:
+      - 語り: 慶長5年7月下旬、下野の犬伏。いまの栃木県佐野市です。昌幸、信繁、信之が、東と西のどちらにつくかを話し合った、とされます。
+        card: {head: 慶長5年7月下旬, body: 犬伏で父子が東西を話し合う}
+      - 聞き: 親子で、相談したんだね。ドラマみたいな場面だな。
+      - 語り: 結果は、昌幸と信繁が西軍、信之が東軍です。信之の妻の小松姫が、徳川の重臣・本多忠勝の娘だったことが、背景にあるとされます。
+        figure: {type: people, title: 犬伏で分かれた真田家, nodes: [[真田昌幸, 西軍へ], [真田信繁, 西軍へ], [真田信之, 東軍へ], [小松姫, 本多忠勝の娘]], edges: [[真田昌幸, 真田信繁, 父子], [真田昌幸, 真田信之, 父子], [真田信之, 小松姫, 夫婦]]}
+      - 聞き: 家族が東と西に分かれたなんて。これで、どっちが勝っても家は残るってこと？
+        background: {image: paintings/ieyasu_sekigahara_zubyobu.jpg, credit: "《関ヶ原合戦図屏風》（江戸時代）"}
+      - 語り: そう言われます。ただ、「家を二つに割って残す策だった」という筋書きは、後の軍記や家譜が出どころです。同時代の裏づけは、見当たりません。
+        figure: null
+        card: {head: 後世の話, body: 「家を二つに割る策」は後の軍記の筋書き}
+      - 聞き: 後からの意味づけかもしれないんだ。
+      - 語り: 9月、家康の三男、徳川秀忠が率いる軍が、中山道を進んできました。上田に立てこもる昌幸たちと戦う、第二次上田合戦です。
+        portrait: {image: paintings/sanada_tokugawa_hidetada_portrait.jpg, caption: "徳川秀忠（江戸時代の肖像）", age: false}
+        background: {image: paintings/shingen_ueda_castle_map_trim.jpg, credit: "『日本古城絵図』信州上田城図の部分（江戸時代、国立国会図書館蔵。信玄の頃の城ではない）"}
+        card: {head: 慶長5年9月, body: 秀忠軍が上田へ。第二次上田合戦}
+      - 語り: 秀忠軍は、約3万8,000。真田は、昌幸の2,000とも、2,500から3,000とも言われます。数千対3万8,000です。
+        figure: {type: bars, title: 第二次上田合戦の兵の数, bars: [[秀忠軍, 38000], [真田方・少なめの数, 2000], [真田方・多めの数, 3000]], labels: [約3万8000人, 約2000人, 約3000人]}
+        short: s3
+      - 聞き: 10倍以上の差だよ。それでも、止めたの？
+        tone: 驚き
+      - 語り: 9月3日、昌幸はいったん降伏を申し出て、秀忠も受け入れます。ところが、すぐ態度を変えて、籠城を続けました。
+        background: {image: paintings/sanada_ueda_castle_152_ndl_trim.jpg, credit: "『日本古城絵図』信州上田城図（江戸時代、国立国会図書館蔵。昌幸の頃の城ではない）"}
+        figure: null
+        card: {head: 9月3日, body: 降伏を申し出たが、のち態度を変える}
+      - 語り: 9月6日ごろ、徳川方の手勢が刈り田をしているところへ、真田勢が出撃します。秀忠は、撤退を命じました。ただ、大規模な合戦を裏づける同時代の史料は見当たりません。
+        short: s3
+      - 聞き: 大勝利じゃなくて、小競り合いだったかもしれないの？
+        short: s3
+      - 語り: 家譜類も、小競り合いしか書いていません。そして9月8日、家康の上洛命令が、秀忠に届きます。時間が尽きたから諦めた、と論じる研究者もいます。
+        background: {image: paintings/sanada_shinano_asamayama_hiroshige2.jpg, credit: "歌川広重（二代）《諸国名所百景 信州浅間山》1859年"}
+        card: {head: 9月8日, body: 家康の上洛命令が秀忠に届く}
+        short: s3
+      - 聞き: 真田に止められたんじゃなくて、命令が来たから離れた、ってこと？
+      - 語り: 9月9日、秀忠は小諸へ引き上げます。関ヶ原の本戦は、9月15日。秀忠は、間に合いませんでした。
+        background: {image: paintings/sanada_ueda_castle_151_ndl_trim.jpg, credit: "『日本古城絵図』信州上田城図（江戸時代、国立国会図書館蔵。昌幸の頃の城ではない）"}
+      - 聞き: 遅れた理由は、一つじゃなさそうだね。
+      - 語り: 信繁の働きも、同時代の史料では確かめられていません。戸石城では、信繁の軍が戦わずに撤退し、兄の信之が受け取った、という記述もあります。
+        background: {image: paintings/shingen_ueda_castle_map_trim.jpg, credit: "『日本古城絵図』信州上田城図の部分（江戸時代、国立国会図書館蔵。信玄の頃の城ではない）"}
+        portrait: {image: paintings/ieyasu_sanada_yukimura_nobukazu.jpg, caption: "騎馬の真田信繁（明治期の版画、後世の想像図）", age: false}
+        card: {head: 戸石城, body: 信繁の軍は撤退し、信之が接収した}
+      - 聞き: 兄弟で、城を受け渡しなの？ 敵味方に分かれた兄弟が城を渡し合うなんて、複雑すぎるよ。
+      - 語り: 戦いの結果は、西軍の敗北。昌幸と信繁を待っていたのは、処分でした。
+        portrait: null
+        background: {image: paintings/sekigahara_map_1926.jpg, credit: "藤井治左衛門《関ヶ原の戦い午前中の戦況図》1926年（近代の戦史地図）"}
+        hook: true
+      - 聞き: 負けた側だもんね。命は、助かったの？
+        hook: true
+
+  # ---------------------------------------------------------------- 6 九度山
+  - title: 1600年 高野山と九度山の約14年、昌幸の死
+    background: {image: paintings/ieyasu_osaka_haichi_map.jpg, credit: "《大坂冬夏の陣配置図》（江戸時代）"}
+    year: 1600
+    lines:
+      - 語り: 死罪にはなりませんでした。信之と本多忠勝の取りなしで、昌幸と信繁は、紀伊の高野山へ流されます。慶長5年12月12日に、上田を出ました。13日とも言われます。
+        figure: {type: map, title: 上田から九度山へ, bounds: [134.8, 139.0, 34.0, 36.8], route: [上田, 九度山], places: [[上田, 138.25, 36.40], [九度山, 135.55, 34.29], [大坂, 135.52, 34.69]], note: 九度山から大坂まで約50km}
+        background: {image: paintings/sanada_kii_yamato_six_provinces_map_ndl_trim.jpg, credit: "《紀伊大和河内伊賀山城伊勢六ヶ国絵図》の部分（江戸時代、国立国会図書館蔵）"}
+        card: {head: 慶長5年12月12日, body: 上田を出て高野山へ。13日とも}
+      - 聞き: 命を助けたのは、東軍の兄の信之と、本多忠勝なんだ。
+      - 語り: 信之は、上田の領地を継ぎました。上田城は、取り壊しを命じられました。
+        figure: null
+      - 聞き: 同じ家で、勝ち負けが分かれちゃったんだ。
+      - 語り: 流された先は、初め高野山の蓮華定院、のち麓の九度山です。画面は、現在の九度山の町並みです。
+        background: {image: paintings/sanada_kudoyama_photo_2009.jpg, credit: "shikabane taro撮影《九度山の町並み》2009年（CC BY 3.0）"}
+        figure: null
+      - 語り: 配流は、慶長5年12月から、慶長19年の秋まで、約14年。そのあいだ昌幸と信繁は、信之や蓮華定院、浅野幸長たちの援助を受けて暮らしました。
+        figure: null
+        card: {head: 約14年, body: 信之・蓮華定院・浅野幸長の援助}
+      - 聞き: 14年って、赤ちゃんが中学生になる時間だよ。何して暮らしてたの？
+      - 語り: 真田紐を作って売って暮らした、という話があります。これは俗説です。九度山で作った紐が脇差の柄巻に使われた、と江戸の『安斎随筆』にあり、そこから「父子の発明」という話が広まりました。
+        card: {head: 真田紐, body: 「父子が作って暮らした」は俗説}
+      - 語り: 慶長16年6月4日、昌幸は九度山で亡くなりました。65歳とも、67歳とも言われます。
+        background: {image: paintings/sanada_shinano_hiroshige2_1862.jpg, credit: "歌川広重（二代）《諸国六十八景 信濃 久米路橋》1862年"}
+        portrait: {image: paintings/sanada_masayuki_portrait.jpg, caption: "真田昌幸の肖像（江戸時代）", age: false}
+        year: 1611
+        card: {head: 慶長16年6月4日, body: 昌幸が九度山で死去}
+      - 聞き: 上田に、一度も帰れないまま、だったんだ。14年の流人暮らしの果てに。
+        tone: しみじみ
+      - 語り: 翌年の慶長17年、信繁は出家して、「好白」と名乗ります。九度山で生まれた息子、大助も、育っていました。
+        background: {image: paintings/sanada_kii_hiroshige2_1862.jpg, credit: "歌川広重（二代）《諸国六十八景 紀伊 和歌の浦》1862年"}
+        portrait: null
+        year: 1612
+        card: {head: 慶長17年, body: 信繁が出家して「好白」と名乗る}
+      - 聞き: 出家して、山の中で静かに終わる人生に、見えるね。
+      - 語り: ところが、慶長19年の秋、大坂から使者が来ます。
+        year: 1614
+        hook: true
+      - 聞き: 使者って、誰が、何のために？
+        hook: true
+
+  # ---------------------------------------------------------------- 7 大坂入城と真田丸
+  - title: 1614年 大坂入城と、のちの真田丸
+    background: {image: paintings/ieyasu_osaka_winter_siege_map_1614.jpg, credit: "《大坂城仕寄之図》（江戸時代）"}
+    year: 1614
+    lines:
+      - 語り: 慶長19年10月ごろ、信繁は九度山を出て、大坂城に入りました。豊臣秀頼が、徳川との戦いに備えて、浪人たちを集めていたのです。
+        portrait: {image: paintings/ieyasu_sanada_yukimura_nobukazu.jpg, caption: "騎馬の真田信繁（明治期の版画、後世の想像図）", age: false}
+        card: {head: 慶長19年10月ごろ, body: 信繁が九度山を出て大坂城へ}
+      - 聞き: 浪人って、主人のいない武士のことだよね。信繁も、そうだね。
+      - 語り: 『駿府記』によると、豊臣方から使者が来て、黄金200枚と銀30貫が贈られた、と伝わります。額は、後の解説を通した数字です。
+        background: {image: paintings/ieyasu_osaka_haichi_map.jpg, credit: "《大坂冬夏の陣配置図》（江戸時代）"}
+        portrait: null
+        card: {head: 支度金, body: 黄金200枚・銀30貫と伝わる}
+      - 聞き: 支度金ってことか。でも、どうやって見張りの目をくぐって出たの？
+      - 語り: 村人を酔い潰した話や、抜け穴で出た話が伝わりますが、後の脚色が強い、と指摘されます。
+      - 聞き: 脱出劇は、物語だったんだ。
+      - 語り: 大坂城には、浪人が集まりました。真田信繁、後藤基次、毛利勝永、長宗我部盛親、明石全登。この5人が、大坂五人衆と呼ばれます。
+        portrait: {image: paintings/sanada_chosokabe_morichika_portrait.jpg, caption: "長宗我部盛親の肖像（鈴木松年画）", age: false}
+        background: {image: paintings/nene_osaka_zu_byobu.jpg, credit: "《大坂図屏風》1607〜15年ごろ（豊臣期の大坂城と城下）"}
+        card: {head: 大坂五人衆, body: 信繁・後藤・毛利・長宗我部・明石}
+      - 聞き: 五人衆って、かっこいい呼び名だね。いつからそう呼ばれたの？
+      - 語り: 呼び名の古さは、調べた範囲では出てきません。信繁が率いたのは、5,000余りと、上田市の紹介にあります。
+      - 語り: 12月、大坂冬の陣。信繁は、大坂城の南に、出丸を築いたとされます。のちに「真田丸」と呼ばれる砦です。
+        portrait: {image: paintings/ieyasu_sanada_maru_battle_scroll.jpg, caption: "《大坂冬の陣図》真田丸の戦いの一場面（東京国立博物館蔵、17世紀）", age: false}
+        background: {image: paintings/ieyasu_osaka_haichi_map.jpg, credit: "《大坂冬夏の陣配置図》（江戸時代）"}
+        card: {head: 慶長19年12月, body: 城の南に出丸を築いたとされる}
+        short: s4
+      - 聞き: 真田丸！ 名前は聞いたことある。いつから、そう呼ばれてるの？
+        short: s4
+      - 語り: 呼び名の確かな初出は、はっきりしません。『山口休庵咄』などの江戸の書や、江戸時代の絵図に出てきますが、同時代とは言えません。
+        portrait: null
+        card: {head: 「真田丸」の名, body: 初出は不明。出てくるのは江戸の書}
+        short: s4
+      - 聞き: じゃあ、当時は何て呼ばれてたのか、分かんないんだ。
+        short: s4
+      - 語り: 場所は、現在の大阪市天王寺区、明星学園のあたりと考えられています。平成28年には、発掘調査も行われました。
+        background: {image: paintings/ieyasu_osaka_winter_siege_map_1614.jpg, credit: "《大坂城仕寄之図》（江戸時代）"}
+        short: s4
+      - 聞き: 学校の下に、眠ってるのか。どんな形だったの？
+      - 語り: 形も、一つに決まっていません。半円形とする説、五角形に近いとする説。規模は、南北220メートル、東西140メートルが通説で、もっと大きいとみる説もあります。
+        background: {image: paintings/ieyasu_osaka_haichi_map.jpg, credit: "《大坂冬夏の陣配置図》（江戸時代）"}
+        card: {head: 真田丸の形, body: 半円形とも五角形とも。規模も割れる}
+      - 聞き: 形も大きさも決まってないのに、あんなに有名なんだ。
+      - 語り: 12月4日、前田利常や井伊直孝、松平忠直の軍が攻め寄せました。信繁が引きつけて、撃退した、とされます。
+        year: 1614
+        card: {head: 12月4日, body: 前田・井伊・松平の軍を撃退したとされる}
+        short: s4
+      - 聞き: 寄せ手は、何人くらい死んだの？
+      - 語り: 数は、まったく一致しません。数千とも、約2,000とも、数万とも書かれ、出典の分からないものばかりです。ここでは、言い切りません。
+        background: {image: paintings/ieyasu_osaka_winter_siege_map_1614.jpg, credit: "《大坂城仕寄之図》（江戸時代）"}
+        figure: {type: stats, title: 寄せ手の被害を伝える数, items: [[一般向けの解説, 数千, 出典が不明], [前田軍の戦死, 約2000, 出典が不明], [根拠の無い記事, 数万, 裏づけなし]]}
+      - 聞き: 数字がバラバラだ。どれを信じたらいいの？
+      - 語り: 戦いは続かず、12月19日に和睦がまとまります。条件は、本丸を残して二の丸と三の丸を壊し、外の堀を埋めることでした。
+        figure: null
+        background: {image: paintings/ieyasu_osaka_rakujo_yoshitora.jpg, credit: "歌川芳虎《大阪落城大戦図》1868年"}
+        card: {head: 12月19日, body: 和睦。二の丸・三の丸を壊し、堀を埋める}
+      - 聞き: 堀を埋めたら、お城は無防備になっちゃうよね。だとしたら、豊臣は相当まずいよ。
+      - 語り: 真田丸も、取り壊されました。ここで徳川が、信繁に、ある誘いを出すのです。
+        hook: true
+      - 聞き: 誘い？ 徳川が、信繁を味方にしようとしたの？
+        hook: true
+
+  # ---------------------------------------------------------------- 8 夏の陣
+  - title: 1615年 夏の陣、天王寺・岡山の戦いと信繁の最期
+    background: {image: paintings/ieyasu_osaka_summer_screen_kuroda.jpg, credit: "《大坂夏の陣図屏風》右隻（黒田屏風、大阪城天守閣蔵、17世紀）"}
+    year: 1615
+    lines:
+      - 語り: 家康は、信繁の叔父の真田信尹を使者に立て、信濃での領地を示しました。『慶長見聞書』には、信濃で10万石、とあります。
+        card: {head: 家康の誘い, body: 信濃で10万石（『慶長見聞書』）}
+      - 聞き: 10万石！ 九度山の浪人が、いきなり大名になれる話だよね。断ったの？
+        tone: 驚き
+      - 語り: 信繁は応じず、対面もしなかった、とも言われます。使者は、諸書に見えます。金額は、書によって違うのです。
+      - 語り: 別の書の『台徳院殿御実紀』には「信濃一国で40万石」とありますが、信尹の使者と同じ話かどうかは、分かっていません。
+      - 聞き: 40万石って、もう大名どころじゃないよね。それでも、動かなかったのか。
+      - 語り: 年が明けて、慶長20年1月ごろ。徳川方は、外の堀を埋めたあと、二の丸の埋め立てに入り、1月23日ごろに工事を終えました。諸大名は、国元へ帰ります。
+        year: 1615
+        background: {image: paintings/ieyasu_osaka_haichi_map.jpg, credit: "《大坂冬夏の陣配置図》（江戸時代）"}
+        card: {head: 慶長20年1月ごろ, body: 堀の埋め立てが終わる}
+      - 聞き: 大軍が帰って、いったん平和に戻ったんだね。
+      - 語り: ところが3月15日、京都所司代の板倉勝重から、駿府へ知らせが届きます。大坂で浪人が乱暴している、堀や塀を直している、という内容です。
+        background: {image: paintings/ieyasu_osaka_winter_siege_map_1614.jpg, credit: "《大坂城仕寄之図》（江戸時代）"}
+        card: {head: 3月15日, body: 板倉勝重が駿府へ大坂の様子を知らせる}
+      - 聞き: 浪人の乱暴の知らせ、誰がどうやって確かめたんだろう。
+      - 語り: 家康は、新しく雇った浪人を全員追い出すか、豊臣家が大和か伊勢へ移るか、どちらかを求めました。
+        card: {head: 慶長20年3月, body: 浪人の追放か、豊臣家の移封か}
+      - 聞き: 浪人を追い出すか、大坂城を出るかの二択か。どっちも、豊臣には飲めないよね。
+      - 語り: ちょうど3月、信繁は、姉の夫の小山田茂誠に書状を送ります。日付は、3月10日とも19日とも言われます。
+        portrait: {image: paintings/sanada_yukimura_portrait.jpg, caption: "真田信繁の肖像（江戸時代）", age: false}
+        background: {image: paintings/nene_osaka_castle_summer_screen_detail.jpg, credit: "《大坂夏の陣図屏風》部分（17世紀前半、大阪城天守閣蔵）"}
+        card: {head: 小山田茂誠への書状, body: 現存する信繁の文書で最後のもの}
+      - 語り: 小山田家に伝わった書状で、国立国会図書館の目録は、現存する信繁の文書の最後のもの、としています。
+      - 語り: 趣旨は、「定めなき浮世ですから、一日先のことも分かりません」。自分のことは、もうこの世にいない者と思ってほしい、という覚悟だ、と紹介されています。
+      - 聞き: 戦う前に、家族へ宛てた手紙なんだ。「一日先は分からない」って、いまの言葉でも、そのまま通じるよ。
+      - 語り: 4月4日、家康は駿府を出ます。翌5日、大野治長の使者が、移ることを断りたいと申し入れます。家康は、それならどうしようもない、と応じました。
+        portrait: null
+        background: {image: paintings/sanada_osaka_summer_screen_cropped.jpg, credit: "《大坂夏の陣図屏風》黒田家本の部分（17世紀）"}
+        card: {head: 4月5日, body: 豊臣方が移封を断る}
+      - 聞き: 交渉は、ここで終わっちゃったんだね。
+      - 語り: 4月12日、豊臣方は、浪人たちに金銀を配り、武具の準備を始めます。約4か月前の和睦は、ここで終わりました。
+      - 聞き: 戦う準備を、また始めたんだ。堀を埋められた城で、しかも寄せ集めの浪人で、どう戦うんだろう。
+      - 語り: 5月5日、家康は京を発ち、翌6日、道明寺と誉田の戦い。後藤基次が討ち死にします。信繁は毛利勝永と遅れて着き、伊達隊の先鋒を押し止めたあと、しんがりを務めて退きました。
+        background: {image: paintings/nene_osaka_castle_summer_screen_detail.jpg, credit: "《大坂夏の陣図屏風》部分（17世紀前半、大阪城天守閣蔵）"}
+        card: {head: 慶長20年5月6日, body: 道明寺・誉田の戦い。信繁はしんがり}
+      - 聞き: しんがりって、一番後ろで守る役目でしょ？ 一番危ないところだよね。
+      - 語り: そうです。そして5月7日、天王寺・岡山の戦い。正午ごろに始まり、午後3時ごろには、豊臣方が崩れました。
+        background: {image: paintings/sanada_osaka_summer_wul_i17_trim.jpg, credit: "《大坂夏之陣》（江戸時代、早稲田大学図書館蔵）"}
+        card: {head: 慶長20年5月7日, body: 午後3時ごろ豊臣方が崩れる}
+        figure: {type: stats, title: 天王寺・岡山の戦いに配置された軍勢, items: [[豊臣方の天王寺口, 14500人, 信繁・毛利勝永ら], [徳川方の家康本陣, 15000人, 配置された軍勢], [徳川方の秀忠本陣, 23000人, 配置された軍勢]]}
+        short: s5
+      - 聞き: 数時間で終わっちゃったのか。信繁は、そこで何をしたの？
+        short: s5
+      - 語り: 家康の本陣めがけて、突撃した、と語られます。ここからが、記録の見せどころです。
+        figure: null
+        short: s5
+      - 語り: 藤堂高虎の一代記『高山公実録』は、「御旗本大崩れ」と伝えます。『三河物語』は、真田隊を恐れて家康を残して逃げた旗本が、あとで詮議された、と伝えます。
+        background: {image: paintings/sanada_osaka_summer_screen_cropped.jpg, credit: "《大坂夏の陣図屏風》黒田家本の部分（17世紀）"}
+        card: {head: 家康の本陣, body: 『高山公実録』は「御旗本大崩れ」と伝える}
+        short: s5
+      - 聞き: 家康の本陣が、崩れたの？ 家康は、どうなったの？
+        short: s5
+      - 語り: 薩摩の記録『薩藩旧記』には、家康が切腹も考えた、と書かれます。ただし本人の言葉ではなく、伝聞です。
+        card: {head: 切腹も考えた？, body: 薩摩の記録の伝聞。本人の言葉ではない}
+        short: s5
+      - 語り: 信繁は、討たれました。討ったのは、越前松平家、松平忠直の隊の鉄砲頭、西尾宗次だと伝わります。
+        background: {image: paintings/sanada_osaka_uno_toshi_wul_trim.jpg, credit: "《大坂卯年図》（元和元年ごろ、早稲田大学図書館蔵）"}
+        card: {head: 信繁の最期, body: 鉄砲頭の西尾宗次が討つとされる}
+      - 聞き: 場所は、どこだったの？ 神社で休んでたって、聞いたことあるよ。
+      - 語り: 一般には、安居神社と言われます。平成25年に見つかった越前松平家の文書では、場所が違うのです。西尾宗次が、生玉と勝鬘のあいだの高台で、休息中の信繁を討った、とされます。
+        background: {image: paintings/sanada_osaka_unotoshi_kawaraban.jpg, credit: "《大坂卯年図》瓦版（元和元年、国立公文書館蔵）"}
+        card: {head: 最期の場所, body: 安居神社とも、生玉と勝鬘の間の高台とも}
+      - 聞き: 最期の場所まで割れてるなんて。何歳だったの？
+      - 語り: 享年は、49歳が一般的です。生まれた年に幅があるので、46歳、44歳という説もあります。
+        background: {image: paintings/ieyasu_osaka_rakujo_yoshitora.jpg, credit: "歌川芳虎《大阪落城大戦図》1868年"}
+      - 語り: では、冒頭の「日本一の兵」は、誰が、いつ書いたのでしょう。
+        hook: true
+      - 聞き: あの言葉だね。誰の言葉だったの？
+        hook: true
+
+  # ---------------------------------------------------------------- 9 日本一の兵と残された家
+  - title: 1615年 「日本一の兵」の書状と、残された真田の家
+    background: {image: paintings/ieyasu_osaka_summer_screen_kuroda.jpg, credit: "《大坂夏の陣図屏風》右隻（黒田屏風、大阪城天守閣蔵、17世紀）"}
+    year: 1615
+    lines:
+      - 語り: 書いたのは、島津忠恒、のちの家久です。国元への書状に、「真田は日本一の兵だ。昔の物語にも例がない」という趣旨の言葉があります。『薩藩旧記雑録』に載っています。
+        card: {head: 日本一の兵, body: 島津忠恒が国元に書いた言葉}
+      - 聞き: それが、冒頭の言葉だ。敵の側の大名が、そんなことを書いたんだね。日本一って、どれくらいの褒め言葉なんだろう。
+      - 語り: この書状は、5月7日の戦いを伝える内容です。『薩藩旧記雑録』では6月11日の条にあり、書かれた日は、はっきりしません。宛先も、「国元」としか分かりません。
+        background: {image: paintings/nene_osaka_castle_summer_screen_detail.jpg, credit: "《大坂夏の陣図屏風》部分（17世紀前半、大阪城天守閣蔵）"}
+        card: {head: 書状の日付, body: 5月7日の戦いを伝える。書かれた日は未確定}
+      - 語り: 続く文に「皆この話ばかりしている」とあるので、島津ひとりの評ではなく、他の大名の言葉かもしれない、という解説もあります。
+      - 聞き: 島津さんが言ったんじゃなくて、みんなが言ってたことを、書いたのかもしれないんだ。
+      - 語り: 細川忠興も、信繁を「古今これなき大手柄」と書いた、と『細川家記』にあります。同じ時代の、敵の側の評価が、いくつも残っているのです。
+        background: {image: paintings/sanada_osaka_unotoshi_kawaraban.jpg, credit: "《大坂卯年図》瓦版（元和元年、国立公文書館蔵）"}
+        card: {head: 細川忠興, body: 「古今これなき大手柄」と『細川家記』}
+      - 聞き: 敵に褒められるって、相当だよね。ライバルチームの監督に、すごい選手だって言われるみたいな感じかな。
+      - 語り: 5月7日のうちに大坂城は落ち、8日に、秀頼が自刃しました。豊臣家は、ここで滅びます。
+        background: {image: paintings/sanada_osaka_caron_1663.jpg, credit: "カロン『日本大王国志』の大坂城の落城の銅版画（1663年、欧州の想像図）"}
+        card: {head: 慶長20年5月8日, body: 秀頼が自刃。豊臣家が滅びる}
+      - 聞き: 豊臣家は、ここで終わったんだ。
+      - 語り: 残された家族の話です。嫡男の大助、のちの幸昌は、九度山で生まれました。父と入城し、大坂城で自害した、とされます。
+        background: {image: paintings/ieyasu_osaka_rakujo_yoshitora.jpg, credit: "歌川芳虎《大阪落城大戦図》1868年"}
+        portrait: {image: paintings/sanada_yukimasa_yoshitoshi_1868.jpg, caption: "真田大助幸昌（月岡芳年画、後世の想像図）", age: false}
+      - 聞き: 大助……。父と同じ城で、最後まで。
+        tone: しみじみ
+      - 語り: そして、信之の家です。信之は、元和8年に信濃の松代へ移り、13万石を治めました。万治元年に、93歳で亡くなります。
+        portrait: {image: paintings/sanada_nobuyuki_portrait.jpg, caption: "真田信之の肖像（江戸時代）", age: false}
+        background: {image: paintings/sanada_matsushiro_castle_146_ndl_trim.jpg, credit: "『日本古城絵図』信州松城図（江戸時代、国立国会図書館蔵）"}
+        year: 1622
+        card: {head: 元和8年, body: 信之が松代へ。13万石を治める}
+      - 聞き: 93歳！ 弟とお父さんより、ずっと長生きしたんだね。
+      - 語り: 九度山の弟へは、援助を続けていました。松代藩は、幕末まで続きます。
+        figure: {type: numberline, title: 真田の家が続いた年, items: [[夏の陣, 1615], [松代へ移る, 1622], [信之の死, 1658]], unit: 年, focus: 信之の死, note: 松代藩は幕末まで}
+      - 聞き: 負けた側の血も残ったし、勝った側についた家は、江戸の終わりまで残ったのか。真田は、ちゃんと生き残ったんだね。
+      - 語り: 次は、まとめです。「幸村」という名と、十勇士まで、層ごとに見直しましょう。
+        portrait: null
+        figure: null
+        background: {image: paintings/ieyasu_osaka_summer_screen_kuroda.jpg, credit: "《大坂夏の陣図屏風》右隻（黒田屏風、大阪城天守閣蔵、17世紀）"}
+        hook: true
+      - 聞き: いよいよ、まとめだね。層の話、頭の中で整理しとかなきゃ。
+        hook: true
+
+  # ---------------------------------------------------------------- 10 まとめ
+  - title: まとめ：真田信繁とは何者だったのか
+    background: {image: paintings/ieyasu_osaka_summer_screen_kuroda.jpg, credit: "《大坂夏の陣図屏風》右隻（黒田屏風、大阪城天守閣蔵、17世紀）"}
+    year: 1615
+    lines:
+      - 語り: まとめます。信繁の像は、三つの層でできていました。1つ目は、本人の書状と、同じ時代の記録です。署名は「信繁」。最後の書状。敵の側の「日本一の兵」という評です。
+        portrait: {image: paintings/ieyasu_sanada_yukimura_nobukazu.jpg, caption: "騎馬の真田信繁（明治期の版画、後世の想像図）", age: false}
+        card: {head: 1つ目の層, body: 書状と同時代の記録}
+        figure: {type: people, title: 信繁の像をつくった層, nodes: [[真田信繁, 三つの層で語られた人], [書状と同時代の記録, 本人の時代], [江戸の軍記, 名と最期の場面], [講談と小説, 十勇士と生存説]], edges: [[真田信繁, 書状と同時代の記録, 署名は信繁], [真田信繁, 江戸の軍記, 幸村の名], [真田信繁, 講談と小説, 十勇士・薩摩落ち]], upto: 2}
+      - 聞き: 本人の署名が「信繁」で、敵の評価が「日本一」。ここが、いちばん固い層なんだね。
+      - 語り: 2つ目は、江戸の軍記です。「幸村」の名は、1672年の『難波戦記』が初出です。
+        background: {image: paintings/sanada_hirano_jiraika_yoshitora_trim.jpg, credit: "歌川芳虎《大坂平野合戦 真田幸村地雷火をもって関東の大軍を破る》（江戸末〜明治、後世の想像図。CC BY 4.0、長野県ADEAC）"}
+        card: {head: 2つ目の層, body: 江戸の軍記。「幸村」の名の初出}
+        figure: {type: people, title: 信繁の像をつくった層, nodes: [[真田信繁, 三つの層で語られた人], [書状と同時代の記録, 本人の時代], [江戸の軍記, 名と最期の場面], [講談と小説, 十勇士と生存説]], edges: [[真田信繁, 書状と同時代の記録, 署名は信繁], [真田信繁, 江戸の軍記, 幸村の名], [真田信繁, 講談と小説, 十勇士・薩摩落ち]], upto: 3}
+      - 語り: 1701年の『桃源遺事』は、幸村は誤りと書き、松代藩は1809年に、幕府の問い合わせに「信繁」と答えました。
+      - 聞き: 松代藩は「当家では信繁」と答えたんだ。それでも、幸村のほうが広まったんだね。
+      - 語り: 同じ名の武田信繁、信玄の弟と区別するための創作、と論じる研究者もいます。理由は、分かりません。
+        portrait: {image: paintings/shingen_takeda_nobushige_kuniyoshi.jpg, caption: "武田信繁（歌川国芳画、後世の想像図）", age: false}
+        figure: null
+      - 聞き: 信玄の弟と、同じ名前だったんだ。信玄の回と、つながったね。
+      - 語り: 3つ目は、講談と小説です。真田十勇士は、立川文庫の講談本で広まった創作です。猿飛佐助も、講談師の創作とされます。薩摩へ逃れた、という話は、鹿児島などに伝わる伝承で、俗説です。
+        portrait: null
+        background: {image: paintings/sanada_osaka_gunki_domyoji_toyonobu.jpg, credit: "歌川豊宣《大坂軍記之内》1883年（後世の想像図）"}
+        card: {head: 3つ目の層, body: 講談と小説。十勇士・薩摩落ち}
+        figure: {type: people, title: 信繁の像をつくった層, nodes: [[真田信繁, 三つの層で語られた人], [書状と同時代の記録, 本人の時代], [江戸の軍記, 名と最期の場面], [講談と小説, 十勇士と生存説]], edges: [[真田信繁, 書状と同時代の記録, 署名は信繁], [真田信繁, 江戸の軍記, 幸村の名], [真田信繁, 講談と小説, 十勇士・薩摩落ち]], upto: 4}
+      - 聞き: 十勇士って、実在の人たちじゃなかったの？
+        portrait: {image: paintings/sanada_sarutobi_frontis_p4_ndl921823_trim.jpg, caption: "『猿飛佐助』の口絵（立川文庫。後世の創作）", age: false}
+        tone: 驚き
+      - 語り: 十勇士という顔ぶれは、創作です。六文銭の旗も、江戸の芝居や講談で、真田の印として定着した、とウィキペディアは書きます。赤備えの話も、出どころは江戸の書です。
+        portrait: {image: paintings/sanada_kabuki_samon_yukimura_kunichika_trim.jpg, caption: "「真田左衛門幸村」の役者絵（豊原国周、明治。芝居の絵）", age: false}
+        figure: null
+        card: {head: 後の像, body: 六文銭も赤備えも、江戸の書や芝居から}
+      - 聞き: 赤い鎧も、六文銭も、イメージを作ったのは、後の人たちなんだ。真田といえば赤、っていう印象も、そこからなんだね。
+      - 語り: 冒頭の問いに戻ります。信繁は、生前の書状で、「幸村」とは署名していません。「幸村」は、後の本がつけた名前です。
+        background: {image: paintings/sanada_osaka_summer_screen_cropped.jpg, credit: "《大坂夏の陣図屏風》黒田家本の部分（17世紀）"}
+        portrait: null
+        card: {head: 冒頭の問い, body: 「幸村」は後の本がつけた名}
+      - 語り: ただ、「日本一の兵」という評価は、敵の側の書状に、確かに残っています。像は後から作られましたが、この評は残っています。誰の言葉かは、まだ分かっていません。
+      - 聞き: 名前は後の人がつけたけど、「すごい人だった」って評は、本人の時代から、ちゃんとあったんだね。
+      - 語り: では、層の下にある、記録で言える信繁は、どんな人だったのか。つむぎさんなら、信繁をどんな人と言いますか。
+        background: {image: paintings/nene_osaka_castle_summer_screen_detail.jpg, credit: "《大坂夏の陣図屏風》部分（17世紀前半、大阪城天守閣蔵）"}
+      - 聞き: 流されて14年、それでも大坂に呼ばれて、戦った人。生まれた年も、最期の場所も分からないけど、あーしは、そこが逆にリアルだと思うな。
+        tone: しみじみ
+      - 語り: 並べられるのは、日付です。天正13年閏8月の上田。慶長5年9月の上田。慶長16年6月4日の昌幸の死。慶長20年5月7日の天王寺と岡山。
+        card: {head: 並べられる日付, body: 上田・九度山・大坂の日付}
+      - 語り: もう一つ、数えてみます。上田を出た慶長5年12月から、大坂に入った慶長19年10月ごろまで、約13年10か月。日数にして、約5,000日です。
+        background: {image: paintings/ieyasu_osaka_summer_screen_kuroda.jpg, credit: "《大坂夏の陣図屏風》右隻（黒田屏風、大阪城天守閣蔵、17世紀）"}
+        card: {head: 九度山の日々, body: 約13年10か月。約5,000日}
+      - 聞き: 約5,000日かあ。毎日、何を考えてたんだろう。じゃあ、戦ってた日は、何日なの？
+      - 語り: 信繁が戦ったと伝わる日は、12月4日の真田丸、5月6日の道明寺、5月7日の天王寺で、3日です。約5,000日に対して、3日。ざっと1,700分の1です。
+        card: {head: 戦った日, body: 12月4日・5月6日・5月7日の3日}
+      - 聞き: 待ってた日のほうが、ずっと長かったんだ。小山田茂誠への手紙の「一日先は分からない」も、5,000日を過ごした人の言葉だと思うと、重いね。
+        tone: しみじみ
+      - 語り: 今日の地層は、ここまでです。
+        background: {image: paintings/shingen_shinano_sarashina_hiroshige.jpg, credit: "歌川広重《本朝名所 信州更科田毎之月》1835年ごろ"}
+      - 聞き: 次回は、前田利家。秀吉と親しかったって言われる人だよね。その利家の像も、後の本が作ったの？
+        tone: 疑問
+      - 語り: 知っている通説があれば、コメントで教えてください。
+      - 二人: また一緒に、掘りましょう！
+        tone: 明るい

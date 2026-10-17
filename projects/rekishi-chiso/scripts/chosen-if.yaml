@@ -1,0 +1,1813 @@
+# B（歴史の転換点の if ストーリー）。型：事実（唐入り構想と動機の諸説＝分かれ道 → 文禄・慶長の役 → 豊臣政権に残ったもの）→ 史料に残る別の道（渡海の制止／朝鮮の先導／明との講和）→ 「こうなった可能性」（理由つき）。
+# 事実の出どころは dev/output/rekishi-chiso/research/chosen_if_facts.md（確実／有力／説／未確認の区分もそこ）。絵の一覧は chosen_if_assets.md。既存：hideyoshi_facts.md・scripts/hideyoshi.yaml（秀吉の生涯はA作品で扱った。ここは出兵の可否に集中する）
+# 決まり：B は昼12時・約30分／題名は「もし〇〇だったら｜…どうなったか」／再生リストは A と分ける（歴史のif）／想像の部分は画面に「ここから想像」の札
+#   人物のセリフは B では想像のセリフを入れてよい。①「ここから想像」の札が出ている節（想像①②③）だけ ②字幕に「（想像）」（roles の秀吉想像・三成想像・清正想像・行長想像・家康想像）
+#   ③記録のセリフは本編に置かない（想像の節に記録のセリフを混ぜない）
+#   同じ幕で声が重ならない：第1幕＝秀吉（白上虎太郎）と三成（雀松朱司）／第2幕＝清正（黒沢冴白）と行長（離途）／第3幕＝秀吉（白上虎太郎）と家康（麒ヶ島宗麟）
+# 想像の部分は言い切る。確かさは画面の札（高い／ありうる／ほぼ妄想）で正直に出す。札の名は声に出す型を「可能性は、〜、です」に統一。事実の部分は「分かっていません」「と伝わります」を使い分ける。
+# 分岐点は1つ：天正19年8月、秀吉が唐入りを布告せず、名護屋城も築かない。
+# 冒頭の強い一点：名護屋に約120の陣屋・城下10万人超（数字は資料でばらつくと断る）。問いは3つ＝豊臣政権／大名／朝鮮と明。
+# 被害の扱い（10-17 指示）：事実どおり抑制的に。朝鮮の人々にも大きな犠牲が出たと言い、数字は割れることを断る。耳塚・首の数・晋州城の細部・残虐な絵は使わない。評価語（侵略・征伐）は地の文に使わない。
+#   韓国の呼び名（壬辰倭乱・丁酉再乱）を一度添える。日付は和暦の月日、西暦は年だけ（西暦への換算が資料でずれるため）。
+# 動機の諸説：国内統一の延長＋恩賞地不足（三鬼清一郎）／私戦禁止の不満を外へ（藤木久志）／貿易／信長の遺志／功名心・征服欲／鶴松の死の憂さ晴らし（池内宏が否定）。断定しない。
+# 使わない話：耳塚・鼻削ぎ・首の数／大河ドラマの血判の場面を史実として／地震加藤／虎退治／亀甲船の細部／近代の征韓論／秀吉の容貌・誇大妄想の断定。
+#   家康・利家・官兵衛が出兵に反対したという話は裏づけを確認できなかったので、事実としては言わない（第6節で断る）。
+# 決めた札の理由：
+#   高い＝布告が無ければ動員は起きない（論理）／恩賞地に限りがある構造は残る（事典）／家康は関東250万石のまま（事実）／戦後の国交回復を要しない・朝鮮の犠牲は起きない（論理）／行長の講和交渉という役目が無い。
+#   ありうる＝検地と普請で当面をしのぐ／清正と行長の対立が深まらない（深まりは八道国割以降とする説）／秀次事件の形が変わる（フロイスが不参加を理由に挙げる）／西国の力が残る／明の負担が軽くなる。
+#   ほぼ妄想＝恩賞を満たし続ける方法／出兵が無い場合の関ヶ原・豊臣家の存続／秀吉の没年／事件が起きるか／領地の境の争いが消えるか。
+#   研究は見つからない（正面から論じたもの）を冒頭で断り、各想像の節の頭でも断る。「秀長が生きていれば」は反実仮想で確かめようがないと第6節で断った。
+# 画面の決まり：背景に人物の肖像を使わない（肖像は額）／極端に横長の絵（縦横比2.4:1以上）は使わない／縦の継ぎ目のある三枚続を全面背景にしない／NDL系の絵図（色票・定規・黒帯）は全面に敷かない／血・遺体・首の絵は使わない／
+#   現代の写真（名護屋城跡など）は credit に「現在の〜」と書き、語りでもその行で断る。蔚山・東萊の絵は後世の絵と断り、拡大しない。
+title: もし豊臣秀吉が朝鮮出兵をしなかったら｜名護屋の約120の陣屋と15万の兵は消え、豊臣政権と大名はどうなったか
+series: ''
+playlists:
+- 歴史のif（もしもの地層）
+- 戦国時代を掘る
+shorts_playlists:
+- 歴史のifショート
+shorts_badge: もしもの話
+tags:
+- もし豊臣秀吉が朝鮮出兵をしなかったら
+- 豊臣秀吉 if
+- 朝鮮出兵
+- 文禄・慶長の役
+- 唐入り
+- 名護屋城
+- 加藤清正
+- 小西行長
+- 石田三成
+- 豊臣秀次
+- 徳川家康
+- 関ヶ原の戦い
+- 戦国時代
+- 歴史if
+- 日本史
+- 歴史解説
+- 歴史の地層
+en:
+  title: What If Hideyoshi Had Not Invaded Korea? | 120 Camps at Nagoya and the Toyotomi Regime
+  description: 'In the 8th month of Tensho 19 (1591), Toyotomi Hideyoshi announced a campaign to conquer Ming China through Korea and began building Nagoya Castle in Hizen. Around 120 daimyo camps gathered nearby, and the castle town reportedly grew past 100,000 people. This video asks: what if he had not announced the campaign?
+
+
+    We keep records, theories and imagination apart. First, what the sources say: how the idea of the ''Karairi'' grew, six competing explanations of his motive, the Bunroku and Keicho campaigns (1592-1598), the failed peace talks, and what was left of the Toyotomi regime. Korea suffered heavy losses, and the figures differ widely by source; we say so rather than pick one. Then three paths that really existed: Hideyoshi''s own plan to cross the sea (stopped), Korea acting as guide (it refused), and a peace with Ming (it broke down).
+
+
+    Then, clearly marked imagination with reasons: a fall evening in Osaka without the order, Kato Kiyomasa and Konishi Yukinaga in Higo, Hideyoshi and Tokugawa Ieyasu at Fushimi, a table of fates, and how Japan, Ming and Korea would differ.
+
+
+    In imagined parts we speak plainly, and the on-screen label tells you how likely it is: likely, possible, or nearly fantasy. We found no study that argues this counterfactual directly, and we say so.
+
+
+    The accounts of theories and figures follow Wikipedia, encyclopedias and similar secondary sources; we have not checked the original texts.
+
+
+    A Japanese history video to listen to while you work (Japanese audio).'
+  chapters:
+  - Nagoya Castle and a Town of 100,000
+  - The Karairi Idea and Six Theories of Motive
+  - '1591: Hidenaga, Rikyu, Tsurumatsu and the Order'
+  - '1592: From Busan to Hanseong and Pyongyang'
+  - Peace Talks, the Second Invasion and Hideyoshi's Death
+  - What Was Left of the Toyotomi Regime
+  - 'Other Paths in the Sources: Crossing the Sea, a Guide, Peace with Ming'
+  - 'Imagination 1: Autumn in Osaka Without the Order'
+  - 'Imagination 2: Kiyomasa and Yukinaga in Higo'
+  - 'Imagination 3: Hideyoshi and Ieyasu at Fushimi'
+  - 'Imagination 4: A Table of Fates - Who Becomes What?'
+  - 'Imagination 5: How Japan, Ming and Korea Change, and the Chains to Today'
+  - 'Summary: The Fork Before the Order of Tensho 19'
+texture: true
+recap: true
+timeline:
+  start: 1580
+  end: 1615
+  events:
+  - - 1585
+    - 唐国まで
+  - - 1591
+    - 布告
+  - - 1592
+    - 文禄の役
+  - - 1598
+    - 秀吉没
+  - - 1600
+    - 関ヶ原
+terms:
+  唐入り: 秀吉が明の征服をめざした構想。朝鮮は通り道とされた
+  仮道入明: 道を借りて明に入る、という建前
+  征明嚮導: 明を攻める道案内。秀吉が朝鮮に求めた
+  惣無事令: 大名どうしの私戦を禁じた秀吉の命令
+  蔵入地: 豊臣家が直接おさめた領地。約222万石とされる
+  御掟: 大名の縁組や誓約を勝手にしてはならない、とした決まり
+  太閤検地: 秀吉が全国で行った土地の調査
+  八道国割: 朝鮮の八道を日本の諸将に分けた計画
+shorts:
+  s1:
+    title: 海辺の巨大な城／約120の陣屋
+    yt_title: 秀吉が築いた名護屋城とは？｜約120の陣屋と10万人の城下
+    hook: 名護屋に、約120の陣屋が／並んだのはなぜ？
+    tease: じゃあ、秀吉が唐入りを／めざした動機は何通りに割れる？
+    lead: 朝鮮へ渡る軍勢が集まった、九州の港の話です。
+    tags:
+    - 名護屋城
+    - 豊臣秀吉
+    - 朝鮮出兵
+    - 唐入り
+    - 歴史if
+  s2:
+    title: 唐入りの構想／動機の説
+    yt_title: 秀吉はなぜ明をめざした？｜唐入りの動機をめぐる説
+    hook: 秀吉は、なぜ明を／めざした？
+    tease: じゃあ、朝鮮は先導に／どう答えた？
+    lead: 秀吉が明をめざした理由は、説が割れています。
+    tags:
+    - 豊臣秀吉
+    - 唐入り
+    - 朝鮮出兵
+    - 文禄・慶長の役
+    - 歴史if
+  s3:
+    title: 天正20年の四月／釜山から北へ
+    yt_title: 文禄の役はどう始まった？｜釜山上陸から漢城まで
+    hook: 釜山に上陸して、／漢城まで何日かかった？
+    tease: じゃあ、そのあと戦線は／どうなった？
+    lead: 船団が朝鮮の港に着いた日の話です。
+    tags:
+    - 文禄の役
+    - 朝鮮出兵
+    - 加藤清正
+    - 小西行長
+    - 歴史if
+  s4:
+    title: 秀頼の誕生／秀次の最期
+    yt_title: 豊臣秀次はなぜ切腹したのか？｜秀次事件の諸説
+    hook: 豊臣秀次は、なぜ／切腹を命じられた？
+    tease: じゃあ、出兵が無ければ／秀次事件は起きなかった？
+    lead: 文禄4年、豊臣家に起きた事件の話です。
+    tags:
+    - 豊臣秀次
+    - 秀次事件
+    - 豊臣秀吉
+    - 朝鮮出兵
+    - 歴史if
+  s5:
+    title: 別の道／史料に残る選択
+    yt_title: 秀吉の朝鮮渡海は止められた？｜史料に残る別の道
+    hook: 秀吉が海を渡るのを、／止めた人はいた？
+    tease: じゃあ、布告が出なかったら／余った兵はどうなる？
+    lead: 朝鮮へ渡ろうとした秀吉の、止められた話です。
+    tags:
+    - もし豊臣秀吉が出兵しなかったら
+    - 豊臣秀吉
+    - 石田三成
+    - 朝鮮出兵
+    - 歴史if
+next:
+  title: 次の「もしも」
+  series: ''
+  teaser: あなたが気になる歴史の分かれ道を、コメントで教えてください。
+thumbnail:
+  layout: mask
+  image: paintings/hideyoshi_portrait_date_1599.jpg
+  top: 名護屋の陣屋は約120
+  main:
+  - もし秀吉が
+  - 出兵しなかったら
+  blanks:
+  - - 秀次事件は
+    - 5
+  - - 清正と行長は
+    - 5
+  tags:
+  - 家康は？
+  - 朝鮮は？
+  name: 豊臣秀吉
+sections:
+- title: 天正19年8月 名護屋に築かれた城と約120の陣屋
+  background:
+    image: paintings/kanbei_nagoya_jinei_map.jpg
+    credit: 吉村茂三郎《西肥名古屋城豊太閤陣営図》1934年（近代の絵地図）
+  year: 1591
+  lines:
+  - 語り: 肥前の名護屋に、約120もの大名の陣屋が並びました。城下の人口は、最盛期に10万人を超えた、とされます。天正19年、秀吉が築かせた城です。
+    portrait: &id001
+      image: paintings/hideyoshi_portrait_date_1599.jpg
+      caption: 豊臣秀吉（宇和島伊達家伝来の像、1599年）
+      age: false
+    card:
+      head: 名護屋城
+      body: 約120の陣屋・城下10万人超
+    short: s1
+  - 語り: 目的は、明の征服をめざしたという、唐入りです。『松浦古事記』は、名護屋に集まった兵を10万2千余と記します。ただ、数字は資料でばらつきます。
+    background:
+      image: paintings/kanbei_nagoya_byobu_arakebune.jpg
+      credit: 《肥前名護屋城図屏風》（部分、桃山〜江戸初期）
+    short: s1
+  - 聞き: 10万人って、ひとつの都市ぶんだよね……。名護屋って、名古屋じゃなくて、佐賀県の唐津のほうだよね。
+    tone: しみじみ
+    short: s1
+  - 語り: 天正19年8月、秀吉は、諸大名に遠征の決意を発表します。8月23日とされます。名護屋の築城も、このころ始まりました。
+    portrait: null
+    background:
+      image: paintings/kanbei_nagoya_castle_plan.jpg
+      credit: 《諸国古城之図 名護屋》江戸時代（浅野文庫）
+    card:
+      head: 天正19年8月
+      body: 遠征の決意を発表し、築城を始める
+  - 語り: では、今日の仮定です。ひとつだけ。天正19年8月、秀吉は唐入りを布告せず、名護屋城も築かない。そのとき、豊臣政権と大名たちは、どうなったのでしょう。
+    background:
+      image: paintings/kanbei_nagoya_byobu_arakebune.jpg
+      credit: 《肥前名護屋城図屏風》（部分、桃山〜江戸初期）
+    card:
+      head: 今日の仮定
+      body: 唐入りを布告せず、名護屋城も築かない
+  - 聞き: えっ、あの大きな城が、そもそも無かったってこと？
+    tone: 驚き
+  - 語り: 問いは3つ。豊臣政権は、持ちこたえたのか。大名たちは、何を失わずに済んだのか。朝鮮と明は、どうなったのか。
+    background:
+      image: paintings/kanbei_korea_campaign_map.jpg
+      credit: 『大日本読史地図』「文禄・慶長の役」1935年（近代の地図）
+    card:
+      head: 今日の3つの問い
+      body: 豊臣は？ 大名は？ 朝鮮と明は？
+  - 語り: 先に、お断りです。朝鮮の人々にも、大きな犠牲が出ました。数字は史料で割れます。出兵しなかった場合を論じた学術研究は、今回の調査では見つかりませんでした。
+    background:
+      image: paintings/nene_osaka_castle_summer_screen_detail.jpg
+      credit: 《大坂夏の陣図屏風》（部分。1615年の景で、豊臣の大坂城）
+    card:
+      head: お断り
+      body: 朝鮮に大きな犠牲。研究は見つからない
+  - 聞き: 歴史に「もしも」はない、ってよく言うけど……じゃあ、何を材料にするの？
+    tone: 疑問
+  - 語り: 約束が2つ。事実と想像は分けます。想像のあいだは《ここから想像》の札を出し、可能性を、高い、ありうる、ほぼ妄想の3段階で示します。
+    background:
+      image: paintings/hideyoshi_jurakudai_screen_mitsui.jpg
+      credit: 《聚楽第図屏風》（三井記念美術館蔵）
+    card:
+      head: この回の約束
+      body: 事実と想像を分け、可能性を付ける
+  - 聞き: 材料は、本物だけにしてほしいな。
+  - 語り: 当時の人が考えていた選択肢と、記録に残る動きだけです。まずは、唐入りの構想の始まりから、掘ります。
+- title: 天正13年から19年 唐入りの構想と、動機の6つの説
+  background:
+    image: paintings/kanbei_korea_campaign_map.jpg
+    credit: 『大日本読史地図』「文禄・慶長の役」1935年（近代の地図）
+  year: 1585
+  lines:
+  - 語り: 唐入りの構想は、天正13年、1585年にさかのぼる、とされます。9月の書状に、唐国まで、という言葉が出ます。
+    card:
+      head: 天正13年（1585）
+      body: 書状に「唐国まで」の語
+    year: 1585
+    short: s2
+  - 語り: もっとも、1584年の朱印状に初めて出る、という説明もあります。初めて出る年は、割れています。
+    short: s2
+  - 聞き: 信長が死んで3年で、もう次の夢を見てたの？
+    short: s2
+  - 語り: 天正15年、対馬の宗氏に、高麗の征伐を予告します。宗氏は取りやめを願いますが、秀吉は朝鮮国王の入朝を求めました。
+    background:
+      image: paintings/kanbei_atakebune_fleet_1593.jpg
+      credit: 《1593年の九鬼嘉隆の船団》（複製、明治ごろ）
+    card:
+      head: 天正15年（1587）
+      body: 宗氏に朝鮮への出兵を予告
+    year: 1587
+  - 語り: 天正18年、朝鮮の通信使が京都に来ます。秀吉は国書で、明を攻める道案内、征明嚮導を命じました。朝鮮は、応じませんでした。
+    background:
+      image: paintings/hideyoshi_jurakudai_screen_mitsui.jpg
+      credit: 《聚楽第図屏風》（三井記念美術館蔵）
+    card:
+      head: 天正18年（1590）
+      body: 通信使が来日。朝鮮は先導を断る
+    year: 1590
+  - 聞き: 道案内って、いきなり戦の手伝いをしてって話でしょ？ そりゃ、断るよ。
+    tone: 疑問
+  - 語り: 建前は、仮道入明。道を借りて、明に入る、という意味です。では、なぜ明をめざしたのか。動機は、一つに決まっていません。
+    background:
+      image: paintings/kanbei_korea_campaign_map.jpg
+      credit: 『大日本読史地図』「文禄・慶長の役」1935年（近代の地図）
+    card:
+      head: 動機は一つに決まらない
+      body: 主な説を6つ並べる
+  - 語り: 1つ目は、国内統一の延長と、恩賞地の不足です。三鬼清一郎さんは、統一のあと家臣に与える土地には、限りがあった、と説明します。
+    background:
+      image: paintings/nene_osaka_castle_summer_screen_detail.jpg
+      credit: 《大坂夏の陣図屏風》（部分。1615年の景で、豊臣の大坂城）
+    card:
+      head: 動機 1
+      body: 恩賞地の不足（三鬼清一郎）
+    short: s2
+  - 語り: 直轄領を割く以外に方法がなく、海外に所領を望む大名も、いたとされます。
+    short: s2
+  - 聞き: ご褒美にあげる土地が足りない、か。会社で言えば、ポストが足りない感じかな。
+  - 語り: 2つ目。藤木久志さんの説です。惣無事令で、大名の私戦を止めた。そこに生まれた不満を、戦場を海に移して処理した、という見方です。
+    background:
+      image: paintings/kanbei_atakebune_fleet_1593.jpg
+      credit: 《1593年の九鬼嘉隆の船団》（複製、明治ごろ）
+    card:
+      head: 動機 2
+      body: 私戦禁止の不満を外へ（藤木久志）
+    short: s2
+  - 聞き: 戦を止められた兵が、行き場を失った、ってこと？ 戦で食べてる人たちだもんね。
+  - 語り: 3つ目は、貿易です。明との直接取引を求めた、という説ですが、田保橋潔さんは、根拠が薄いと指摘します。
+    background:
+      image: paintings/kanbei_nagoya_byobu_arakebune.jpg
+      credit: 《肥前名護屋城図屏風》（部分、桃山〜江戸初期）
+    card:
+      head: 動機 3
+      body: 貿易（根拠が薄いとの指摘）
+  - 語り: 4つ目は、信長の遺志です。信長の遺志を継いで明を治める、と秀吉が語ったとされますが、信頼性は慎重に見られています。
+    portrait: null
+    background:
+      image: paintings/hideyoshi_jurakudai_screen_mitsui.jpg
+      credit: 《聚楽第図屏風》（三井記念美術館蔵）
+    card:
+      head: 動機 4
+      body: 信長の遺志（信頼性は慎重に）
+  - 聞き: 信長の遺志、ってほんとなら、秀吉は、そのつもりだったのかもしれないね。
+  - 語り: 5つ目は、功名心や征服欲。徳富蘇峰は、征服欲の発作と評しました。6つ目は、鶴松の死の憂さ晴らしですが、池内宏さんは、後世のこじつけと退けています。
+    background:
+      image: paintings/nene_osaka_castle_summer_screen_detail.jpg
+      credit: 《大坂夏の陣図屏風》（部分。1615年の景で、豊臣の大坂城）
+    card:
+      head: 動機 5・6
+      body: 功名心・征服欲／憂さ晴らしは否定も
+  - 聞き: 説が多すぎて、どれが本命か分からないね。
+    tone: しみじみ
+  - 語り: 決め手はありません。朝鮮が先導を断ったことに、恩賞地の問題などが重なった、という整理もあります。
+  - 聞き: 構想はずっと前からあったのに、動いたのは天正19年。その年に、何があったの？
+    tone: 疑問
+    hook: true
+  - 語り: 天正19年は、秀吉の身の回りで、大きな出来事が続いた年です。
+    hook: true
+- title: 天正19年 秀長・利休・鶴松の死と、8月の布告
+  background:
+    image: paintings/nene_osaka_castle_summer_screen_detail.jpg
+    credit: 《大坂夏の陣図屏風》（部分。1615年の景で、豊臣の大坂城）
+  year: 1591
+  lines:
+  - 語り: 天正19年の正月、弟の豊臣秀長が亡くなります。2月には、千利休が切腹を命じられました。
+    portrait: &id002
+      image: paintings/hidenaga_portrait_shungakuin.jpg
+      caption: 豊臣秀長（春岳院蔵とされる像）
+      age: false
+    card:
+      head: 天正19年1月
+      body: 弟・秀長が死去
+  - 語り: そして8月5日、跡継ぎの鶴松が病死します。
+    portrait: null
+    background:
+      image: paintings/hideyoshi_jurakudai_screen_mitsui.jpg
+      credit: 《聚楽第図屏風》（三井記念美術館蔵）
+    card:
+      head: 8月5日
+      body: 鶴松が病死
+  - 聞き: 弟も、お茶の師匠も、息子も。1年のうちに、いなくなっちゃったの……。
+    tone: しみじみ
+  - 語り: 8月23日、秀吉は遠征の決意を発表し、肥前に名護屋城を築き始めます。縄張りは黒田孝高。普請奉行に、黒田長政、加藤清正、小西行長らが名を連ねます。
+    portrait: *id001
+    background:
+      image: paintings/kanbei_nagoya_castle_plan.jpg
+      credit: 《諸国古城之図 名護屋》江戸時代（浅野文庫）
+    card:
+      head: 8月23日
+      body: 遠征を発表、名護屋城の築城へ
+    short: s1
+  - 聞き: その年の暮れには、何があったの？
+    portrait: null
+    background:
+      image: paintings/hideyoshi_jurakudai_screen_mitsui.jpg
+      credit: 《聚楽第図屏風》（三井記念美術館蔵）
+  - 語り: 12月28日、甥の秀次が関白になり、秀吉は太閤と呼ばれます。とはいえ、全権は譲らず、秀吉が実権を握る、二元の体制でした。
+    card:
+      head: 12月28日
+      body: 秀次が関白に。秀吉は太閤
+  - 聞き: 名護屋城って、どのくらいの大きさなの？
+  - 語り: 面積は約17万平方メートル。大坂城に次ぐ大きさとされます。工事は約8か月で、翌年3月に完成しました。
+    portrait: null
+    background:
+      image: paintings/kanbei_nagoya_castle_plan.jpg
+      credit: 《諸国古城之図 名護屋》江戸時代（浅野文庫）
+    figure:
+      type: stats
+      title: 名護屋城の規模（資料でばらつく）
+      items:
+      - - 名護屋城
+        - 約17万㎡
+        - 大坂城に次ぐ規模とされる
+      - - 大名の陣屋
+        - 約120
+        - 確認は118か所とも
+      - - 城下の人口
+        - 10万人超
+        - 最盛期。数字は幅あり
+  - 聞き: 8か月で、大坂城に次ぐ大きさって、すごい動員だね。
+  - 語り: 動員の基準も出ます。九州の大名は、知行100石につき5人から6人など、資料で割れます。10万石なら、5,000人から6,000人です。
+    background:
+      image: paintings/nene_osaka_castle_summer_screen_detail.jpg
+      credit: 《大坂夏の陣図屏風》（部分。1615年の景で、豊臣の大坂城）
+    card:
+      head: 軍役の基準
+      body: 100石につき5〜6人。資料で割れる
+    figure: null
+  - 聞き: 10万石の大名で、5,000人から6,000人？ 家臣団がまるごと、動くってことだよね。
+    tone: 驚き
+  - 語り: 文禄の役の日本軍は、通説で15万8,700人。ただ、実数は定数の8割ほどで、人夫や水夫など、戦わない人を含む、という見方もあります。
+    background:
+      image: paintings/kanbei_atakebune_fleet_1593.jpg
+      credit: 《1593年の九鬼嘉隆の船団》（複製、明治ごろ）
+    figure:
+      type: bars
+      title: 文禄の役の陣立（隊ごとの定数）
+      bars:
+      - - 一番隊
+        - 18700
+      - - 二番隊
+        - 22800
+      - - 三番隊
+        - 11000
+      - - 四番隊
+        - 14000
+      - - 五番隊
+        - 25100
+      - - 六番隊
+        - 15700
+      labels:
+      - 18,700
+      - 22,800
+      - 11,000
+      - 14,000
+      - 25,100
+      - 15,700
+  - 聞き: これだけの人が、海を渡るのか。それで、朝鮮で何が起きたの？
+    tone: 疑問
+    background:
+      image: paintings/kanbei_nagoya_byobu_arakebune.jpg
+      credit: 《肥前名護屋城図屏風》（部分、桃山〜江戸初期）
+    figure: null
+    hook: true
+  - 語り: 戦いの経過を、日付で追います。
+    hook: true
+- title: 天正20年4月 釜山上陸から漢城、平壌へ
+  background:
+    image: paintings/kanbei_korea_campaign_map.jpg
+    credit: 『大日本読史地図』「文禄・慶長の役」1935年（近代の地図）
+  year: 1592
+  lines:
+  - 語り: 天正20年、文禄元年の4月13日。宗義智と小西行長の一番隊が、釜山を攻め落とします。15日には東萊城。東萊府使の宋象賢は、戦死しました。
+    background:
+      image: paintings/chosen_busanjin_1592.jpg
+      credit: 《釜山鎮殉節図》江戸時代（朝鮮の絵）
+    card:
+      head: 4月13日
+      body: 釜山に上陸、15日に東萊城
+    figure:
+      type: map
+      title: 文禄の役の主な場所
+      bounds:
+      - 124.5
+      - 131.0
+      - 33.0
+      - 39.8
+      places:
+      - - 名護屋
+        - 129.87
+        - 33.53
+      - - 釜山
+        - 129.04
+        - 35.1
+      - - 蔚山
+        - 129.32
+        - 35.54
+      - - 漢城
+        - 126.98
+        - 37.57
+      - - 平壌
+        - 125.75
+        - 39.02
+      note: 地名は主な場所のみ
+    short: s3
+  - 聞き: 釜山って、対馬のすぐ向こうだよね。名護屋から、そのまま海を渡るの？
+    tone: 疑問
+    short: s3
+  - 語り: はい。名護屋から海を渡ります。5月2日、漢城を占領します。3日とする資料も多くあります。加藤清正と小西行長が、一番乗りを競った、と伝わります。国王は、平壌のほうへ逃れました。
+    background:
+      image: paintings/kanbei_atakebune_fleet_1593.jpg
+      credit: 《1593年の九鬼嘉隆の船団》（複製、明治ごろ）
+    card:
+      head: 5月2日ごろ
+      body: 漢城を占領（3日とする資料も）
+    figure: null
+    short: s3
+  - 聞き: 3週間足らずで、首都が……。
+    tone: 重い
+    short: s3
+  - 語り: 6月には、小西行長が平壌を占領します。各地で、義兵が立ち上がりました。
+    background:
+      image: paintings/kanbei_korea_campaign_map.jpg
+      credit: 『大日本読史地図』「文禄・慶長の役」1935年（近代の地図）
+    card:
+      head: 6月
+      body: 平壌を占領。各地で義兵が蜂起
+    short: s3
+  - 語り: 海では、5月の玉浦で李舜臣の水軍が日本の輸送船団を攻撃し、7月の閑山島では日本水軍が敗れます。とはいえ、釜山の海を封鎖し続けたわけではない、という評価もあります。
+    background:
+      image: paintings/kanbei_atakebune_fleet_1593.jpg
+      credit: 《1593年の九鬼嘉隆の船団》（複製、明治ごろ）
+    card:
+      head: 5月・7月
+      body: 李舜臣の水軍が勝つ場面もあった
+  - 聞き: 海で負けた場面もあったのに、まだ進めたの？
+    tone: 疑問
+  - 語り: 7月、明の祖承訓が平壌を攻めて敗れます。翌年の正月には、明軍が平壌を取り返し、小西軍は退きました。同じ月の碧蹄館では、日本軍が明軍を破ります。
+    background:
+      image: paintings/kanbei_korea_campaign_map.jpg
+      credit: 『大日本読史地図』「文禄・慶長の役」1935年（近代の地図）
+    card:
+      head: 文禄2年正月
+      body: 平壌は明軍が奪回。碧蹄館は日本軍の勝ち
+  - 聞き: 勝ったり負けたりで、どっちも押し切れなかったのかな。
+    tone: しみじみ
+  - 語り: 戦線は膠着し、文禄2年4月ごろ、日本軍は漢城から釜山の周りへ引き揚げます。
+    background:
+      image: paintings/kanbei_korea_campaign_map.jpg
+      credit: 『大日本読史地図』「文禄・慶長の役」1935年（近代の地図）
+  - 語り: ここで、被害に触れます。朝鮮の人々にも、大きな犠牲が出ました。兵も、民もです。数字は、史料で大きく割れます。
+    background:
+      image: paintings/kanbei_korea_campaign_map.jpg
+      credit: 『大日本読史地図』「文禄・慶長の役」1935年（近代の地図）
+    card:
+      head: 被害について
+      body: 朝鮮に大きな犠牲。数字は割れる
+  - 聞き: 朝鮮の人たちの犠牲は、数字が割れるんだね。日本側はどうだったの？
+    tone: しみじみ
+  - 語り: ルイス・フロイスは、渡った約15万のうち、約5万人が亡くなったと推計します。死因の大半は、労苦、飢え、寒さ、病気でした。ただ、これも推計で、幅があります。
+    background:
+      image: paintings/kanbei_atakebune_fleet_1593.jpg
+      credit: 《1593年の九鬼嘉隆の船団》（複製、明治ごろ）
+    card:
+      head: 日本側の推計
+      body: 約5万人が死亡（フロイスの推計）
+  - 聞き: 戦で亡くなるより、飢えや病気のほうが多いなんて……。
+    tone: しみじみ
+    hook: true
+  - 語り: 休戦の交渉に、話を進めます。
+    hook: true
+- title: 文禄2年から慶長3年 偽りの講和、再出兵、秀吉の死
+  background:
+    image: paintings/chosen_map_korea_northwest.jpg
+    credit: 《彼我両界万里一覧之図》朝鮮北西部と明の境の古地図（18世紀）
+  year: 1593
+  lines:
+  - 語り: 小西行長は、明の沈惟敬と休戦を結びます。文禄2年4月には、講和の条件が合意されました。
+    card:
+      head: 休戦から講和へ
+      body: 行長と沈惟敬が交渉
+    year: 1593
+  - 語り: 一方、双方が、相手に実態を偽って報告した、とされます。秀吉には、明が降伏する、と。明には、秀吉が降伏する、と。家臣の内藤如安が、北京へ向かいました。
+    background:
+      image: paintings/kanbei_korea_campaign_map.jpg
+      credit: 『大日本読史地図』「文禄・慶長の役」1935年（近代の地図）
+    card:
+      head: 講和の交渉
+      body: 双方に偽って報告した、とされる
+  - 聞き: え、お互いに「相手が降参した」って伝えてたの？ それ、あとでバレるやつじゃん。
+    tone: 驚き
+  - 語り: 文禄5年、慶長元年の9月。明の使節が来日します。国書は、秀吉を日本国王に封じる内容で、秀吉の求めた条件を含みませんでした。秀吉は激怒し、再出兵を決めます。
+    background:
+      image: paintings/nene_osaka_castle_summer_screen_detail.jpg
+      credit: 《大坂夏の陣図屏風》（部分。1615年の景で、豊臣の大坂城）
+    card:
+      head: 慶長元年9月
+      body: 明の使節が来日。交渉は決裂
+    year: 1596
+  - 聞き: 日本国王って肩書をもらっても、秀吉は嬉しくなかったのかな。
+  - 語り: 慶長2年、再出兵。総勢は約14万1,500人です。7月の漆川梁海戦で朝鮮水軍が大敗し、8月に南原城と全州が落ちます。9月の鳴梁海戦では、李舜臣が勝ちました。
+    background:
+      image: paintings/kanbei_atakebune_fleet_1593.jpg
+      credit: 《1593年の九鬼嘉隆の船団》（複製、明治ごろ）
+    card:
+      head: 慶長2年（1597）
+      body: 再出兵。総勢は約14万1,500人
+    year: 1597
+  - 聞き: 再出兵でも、十数万人が動いたの？
+    tone: 驚き
+  - 語り: 慶長3年8月18日、秀吉が亡くなります。62歳でした。死はしばらく伏せられ、撤兵が進められます。
+    portrait: *id001
+    background:
+      image: paintings/nene_osaka_castle_summer_screen_detail.jpg
+      credit: 《大坂夏の陣図屏風》（部分。1615年の景で、豊臣の大坂城）
+    card:
+      head: 慶長3年8月18日
+      body: 秀吉が死去（62歳）
+    year: 1598
+  - 聞き: 死が伏せられたまま撤兵が進んだなんて……。現場の人たち、どんな気持ちだったんだろう。
+    tone: しみじみ
+  - 語り: 10月、五大老の命令で撤兵。諸大名は11月下旬、順に釜山から博多へ帰ります。
+    portrait: null
+    background:
+      image: paintings/kanbei_atakebune_fleet_1593.jpg
+      credit: 《1593年の九鬼嘉隆の船団》（複製、明治ごろ）
+    card:
+      head: 慶長3年11月
+      body: 諸大名が釜山から博多へ帰る
+  - 聞き: この戦いは、どう終わったの？
+    tone: 疑問
+  - 語り: 講和は成らず、双方が勝利を主張した、と整理されます。
+  - 語り: 朝鮮では、事典の記述で、耕地が約3分の1に減り、人口も大きく減りました。景福宮などの宮殿や官庁も焼けました。連れて行かれた人の数は、2万から5万まで、説が割れます。
+    background:
+      image: paintings/kanbei_korea_campaign_map.jpg
+      credit: 『大日本読史地図』「文禄・慶長の役」1935年（近代の地図）
+    card:
+      head: 朝鮮の被害
+      body: 耕地は約3分の1に（事典）
+  - 聞き: 胸が重い話だね。……
+    tone: 重い
+  - 語り: 韓国では、この戦いを、壬辰倭乱、丁酉再乱と呼びます。日本でいう、文禄・慶長の役です。呼び名にも、立場の違いが表れます。
+    background:
+      image: paintings/chosen_busanjin_1592.jpg
+      credit: 《釜山鎮殉節図》江戸時代（朝鮮の絵）
+    card:
+      head: 呼び名の違い
+      body: 日本＝文禄・慶長の役／韓国＝壬辰倭乱
+  - 聞き: じゃあ、この戦いで、豊臣政権は、どうなったの？
+    tone: 疑問
+    hook: true
+  - 語り: 政権に残ったものを、見ます。
+    hook: true
+- title: 文禄2年から慶長5年 豊臣政権に残ったもの
+  background:
+    image: paintings/hideyoshi_jurakudai_screen_mitsui.jpg
+    credit: 《聚楽第図屏風》（三井記念美術館蔵）
+  year: 1593
+  lines:
+  - 語り: 事典は、この大動員が、豊臣政権の「崩壊を招いた」と書きます。執筆は、三鬼清一郎さんです。
+    card:
+      head: 事典の評価
+      body: 大動員が政権の崩壊を招いた
+  - 聞き: 政権が崩れた原因は出兵だった、って、事典はそこまで書くの？
+  - 語り: 西国の大名は、過大な兵役で疲れ、家臣団の分裂や内乱も起きた、とされます。一方、留守の領地では太閤検地が進み、統治が強まった面もあります。
+    background:
+      image: paintings/nene_osaka_castle_summer_screen_detail.jpg
+      credit: 《大坂夏の陣図屏風》（部分。1615年の景で、豊臣の大坂城）
+    card:
+      head: 西国の大名
+      body: 兵役で疲れた。検地で統治は強まった
+  - 語り: 1つ目は、加藤清正と小西行長です。行長は講和を進め、清正は秀吉の条件を譲れないと反発します。行長に訴えられ、三成も行長を支持して、清正は京へ戻され、謹慎しました。
+    portrait: &id004
+      image: paintings/kanbei_kato_kiyomasa_portrait.jpg
+      caption: 加藤清正（江戸時代の肖像）
+      age: false
+    background:
+      image: paintings/kanbei_nagoya_byobu_arakebune.jpg
+      credit: 《肥前名護屋城図屏風》（部分、桃山〜江戸初期）
+    card:
+      head: 清正と行長
+      body: 講和をめぐり対立。清正は謹慎
+  - 聞き: 二人は、もとから仲が悪かったの？
+    tone: 疑問
+  - 語り: 不仲を裏づける一次史料は、出兵より前には無い、とされます。原因として、領地の境や水利、宗教の違いが挙げられます。深まったのは、1592年5月の八道国割以降、という説もあります。
+    portrait: null
+    background:
+      image: paintings/kanbei_korea_campaign_map.jpg
+      credit: 『大日本読史地図』「文禄・慶長の役」1935年（近代の地図）
+    card:
+      head: 対立の時期
+      body: 深まったのは出兵後とする説
+  - 聞き: じゃあ、出兵がきっかけで、こじれた面もあるんだ。
+  - 語り: 2つ目は、秀頼です。文禄2年8月3日、淀殿が大坂城で男の子を産みます。秀吉は57歳。名護屋で知らせを受けました。
+    portrait: &id005
+      image: paintings/hideyoshi_hideyori_edo.jpg
+      caption: 豊臣秀頼（江戸時代の像）
+      age: false
+    background:
+      image: paintings/nene_osaka_castle_summer_screen_detail.jpg
+      credit: 《大坂夏の陣図屏風》（部分。1615年の景で、豊臣の大坂城）
+    card:
+      head: 文禄2年8月3日
+      body: 秀頼が誕生。秀吉は57歳
+  - 語り: 文禄4年、秀次事件が起きます。7月8日、秀次は高野山へ。15日に切腹します。28歳でした。原因は、秀頼を溺愛したという説、三成の陰謀という説、権力闘争という説。諸説あります。
+    portrait: &id007
+      image: paintings/hidenaga_hidetsugu.jpg
+      caption: 豊臣秀次（肖像）
+      age: false
+    background:
+      image: paintings/hideyoshi_jurakudai_screen_mitsui.jpg
+      credit: 《聚楽第図屏風》（三井記念美術館蔵）
+    card:
+      head: 文禄4年7月15日
+      body: 秀次が切腹。原因は諸説
+    short: s4
+  - 語り: フロイスは、不和の理由の一つに、秀次が朝鮮出兵に加わらなかったことを挙げます。ただ、これは一つの見方です。
+    portrait: null
+    short: s4
+  - 聞き: 戦に出なかったことまで、理由にされちゃうの？
+    short: s4
+  - 語り: 事件のあと、8月3日に、五大老の名で御掟が出ます。大名どうしの縁組や誓約を、勝手にしてはならない、という決まりです。
+    background:
+      image: paintings/nene_osaka_castle_summer_screen_detail.jpg
+      credit: 《大坂夏の陣図屏風》（部分。1615年の景で、豊臣の大坂城）
+    card:
+      head: 御掟（8月3日）
+      body: 縁組や誓約を勝手にしてはならない
+    short: s4
+  - 聞き: 縁組まで勝手に決められないなんて、大名は窮屈だったね。
+    short: s4
+  - 語り: もう一人、家康です。朝鮮に渡らなかった、いちばん大きな大名でした。関東は250万石。豊臣の直轄地は、222万石です。
+    portrait: &id006
+      image: paintings/ieyasu_yoshitora_mikawa_eiyuden.jpg
+      caption: 徳川家康（武将姿、歌川芳虎画）
+      age: false
+    background:
+      image: paintings/hideyoshi_jurakudai_screen_mitsui.jpg
+      credit: 《聚楽第図屏風》（三井記念美術館蔵）
+    card:
+      head: 家康
+      body: 朝鮮に渡らず。関東250万石
+  - 聞き: 出兵に行かなかったのが、結果として得だったってこと？
+    tone: 疑問
+  - 語り: そうした見方があります。秀吉の死後、家康は五大老の筆頭として力を持ち、1600年、関ヶ原へ進みます。因果は一つに決められません。
+    background:
+      image: paintings/ieyasu_sekigahara_screen_1854_replica.jpg
+      credit: 《関ヶ原合戦図屏風》（1854年の模写）
+    card:
+      head: 関ヶ原へ
+      body: 原因は一つに決められない
+  - 聞き: じゃあ、出兵をしなかったら、そのどれかは変わったの？
+    tone: 疑問
+    hook: true
+  - 語り: その前に、史料に残る別の道を、3つ見ます。
+    hook: true
+- title: 天正20年 史料に残る別の道 渡海の制止・講和
+  background:
+    image: paintings/nene_osaka_castle_summer_screen_detail.jpg
+    credit: 《大坂夏の陣図屏風》（部分。1615年の景で、豊臣の大坂城）
+  year: 1592
+  lines:
+  - 語り: 別の道の、1つ目です。当時の人が実際に考えていた選択肢だけです。秀吉が自ら朝鮮へ渡る道。
+    portrait: *id001
+    card:
+      head: 別の道 1
+      body: 秀吉が自ら渡海する
+    short: s5
+  - 語り: これは、止められました。後陽成天皇や正親町上皇が反対し、天皇は直筆の書状で止めた、と紹介されます。出どころは一般向けの記事で、原本は確かめていません。
+    portrait: null
+    background:
+      image: paintings/kanbei_nagoya_byobu_arakebune.jpg
+      credit: 《肥前名護屋城図屏風》（部分、桃山〜江戸初期）
+    short: s5
+  - 聞き: 止められた人たちが、いたってこと？
+    short: s5
+  - 語り: 渡海については、そうです。もっとも、出兵そのものを事前に止めた確かな記録は、確かめられませんでした。家康や利家が反対した話も、裏づけを確認できていません。
+    background:
+      image: paintings/nene_osaka_castle_summer_screen_detail.jpg
+      credit: 《大坂夏の陣図屏風》（部分。1615年の景で、豊臣の大坂城）
+    short: s5
+  - 聞き: 有名な話なのに、史料では確かめられないの？
+    short: s5
+  - 語り: 2つ目。朝鮮が先導を受け入れる道です。朝鮮が拒んだことを、直接のきっかけと見る論文があります。ただ、受け入れた場合の記録は、見つかりません。
+    background:
+      image: paintings/kanbei_korea_campaign_map.jpg
+      credit: 『大日本読史地図』「文禄・慶長の役」1935年（近代の地図）
+    card:
+      head: 別の道 2
+      body: 朝鮮が先導を受け入れる
+  - 聞き: もし朝鮮が「いいですよ」って言ってたら、戦にならなかったのかな。
+  - 語り: 3つ目。明との講和です。文禄2年に休戦が結ばれ、慶長元年には明の使節が来ましたが、条件の食い違いで、決裂しました。
+    background:
+      image: paintings/chosen_map_korea_northwest.jpg
+      credit: 《彼我両界万里一覧之図》朝鮮北西部と明の境の古地図（18世紀）
+    card:
+      head: 別の道 3
+      body: 明との講和は、近くまで行った
+  - 聞き: 講和は、実際に近いところまで行ってたの？
+  - 語り: 秀長が生きていれば、という話もあります。とはいえ、秀長は補佐役で、最終判断は秀吉個人に集まっていた、という見方があります。確かめようのない「もしも」です。
+    portrait: *id002
+    background:
+      image: paintings/hideyoshi_jurakudai_screen_mitsui.jpg
+      credit: 《聚楽第図屏風》（三井記念美術館蔵）
+  - 聞き: 秀長がいても、止まったとは限らないのかな。
+  - 語り: そして、出兵を布告しなかった場合を、書いた史料は、見当たりません。
+    portrait: null
+    background:
+      image: paintings/kanbei_nagoya_byobu_arakebune.jpg
+      credit: 《肥前名護屋城図屏風》（部分、桃山〜江戸初期）
+  - 聞き: 史料が無いなら、どうやって考えるの？
+    tone: 疑問
+    hook: true
+  - 語り: 当時の人の選択肢を土台に、想像で掘ります。
+    hook: true
+- title: 想像① 天正19年の秋 大坂城に布告は出なかった
+  background:
+    image: paintings/nene_osaka_castle_summer_screen_detail.jpg
+    credit: 《大坂夏の陣図屏風》（部分。1615年の景で、豊臣の大坂城）
+  year: 1591
+  lines:
+  - 語り: ここから先は、想像です。仮定は、ひとつだけ。天正19年8月、秀吉は唐入りを布告しません。名護屋城も築きません。
+    portrait: *id001
+    card:
+      head: ここから想像
+      body: 唐入りを布告せず、築城もしない
+  - 語り: この場面も、今回の調査では、研究が見つかっていません。大事なのは、集めるはずだった大名と兵が、どうなるかです。
+    portrait: null
+  - 聞き: 動員が無いと、まず何が変わるの？
+    tone: 疑問
+  - 語り: 九州の大名への、100石につき5人から6人ほどの動員は、起きません。西国の兵と米が、国元に残ります。可能性は、高い、です。
+    background:
+      image: paintings/kanbei_nagoya_byobu_arakebune.jpg
+      credit: 《肥前名護屋城図屏風》（部分、桃山〜江戸初期）
+    card:
+      head: 高い
+      body: 出兵の動員は起きない
+  - 聞き: 兵が国元に残るのは、戦が無いってことだけど……その兵に食べさせるのも、大変そう。
+  - 語り: ただ、問題は、残った兵に何を与えるかです。恩賞地の不足という構造は、出兵が無くても残ります。
+    background:
+      image: paintings/nene_osaka_castle_summer_screen_detail.jpg
+      credit: 《大坂夏の陣図屏風》（部分。1615年の景で、豊臣の大坂城）
+    card:
+      head: 高い
+      body: 恩賞地の不足は残る
+  - 聞き: ご褒美にする土地は、増えないもんね。
+  - 語り: 想像劇場、第1幕です。天正19年の秋、大坂城。秀吉と石田三成が、向き合います。
+    portrait: *id001
+    background:
+      image: paintings/hideyoshi_jurakudai_screen_mitsui.jpg
+      credit: 《聚楽第図屏風》（三井記念美術館蔵）
+    card:
+      head: 想像劇場 第1幕
+      body: 天正19年秋 大坂城
+  - 人物: 「鶴松を亡くした。唐入りは、取りやめじゃ」
+    who: 秀吉想像
+    portrait: *id001
+  - 人物: 「承知いたしました。ですが、国元へ戻る大名たちに、何を与えます」
+    who: 三成想像
+    portrait: &id003
+      image: paintings/ieyasu_ishida_mitsunari_portrait.jpg
+      caption: 石田三成（江戸時代の肖像）
+      age: false
+  - 人物: 「与える土地が足りぬ、と申すか」
+    who: 秀吉想像
+    portrait: *id001
+  - 人物: 「直轄の地を割くにも、限りがございます。検地で増えた分を配るほかは」
+    who: 三成想像
+    portrait: *id003
+    background:
+      image: paintings/hideyoshi_jurakudai_3.jpg
+      credit: 《聚楽古城之図》（聚楽第の平面図）
+  - 人物: 「兵を国元に戻せば、米はどうなる」
+    who: 秀吉想像
+    portrait: *id001
+  - 人物: 「兵を養う米は、増えませぬ。それゆえ、普請に出して手当を与えるのが、よろしいかと」
+    who: 三成想像
+    portrait: *id003
+  - 人物: 「検地か。奥州では、この夏まで乱があった。国の隅々まで、まだ落ち着いてはおらぬ」
+    who: 秀吉想像
+    portrait: *id001
+    background:
+      image: paintings/nene_osaka_castle_summer_screen_detail.jpg
+      credit: 《大坂夏の陣図屏風》（部分。1615年の景で、豊臣の大坂城）
+  - 人物: 「兵は、遊ばせておくより、普請や検地に使うのが上策かと」
+    who: 三成想像
+    portrait: *id003
+  - 人物: 「よかろう。褒美の出し方は、これから考える」
+    who: 秀吉想像
+    portrait: *id001
+  - 聞き: 戦をやめても、悩みが無くなるわけじゃないんだね。
+    portrait: null
+  - 語り: ここでは、秀吉が布告せず、検地や普請で当面をしのごうとする、と想像します。
+    background:
+      image: paintings/nene_osaka_castle_summer_screen_detail.jpg
+      credit: 《大坂夏の陣図屏風》（部分。1615年の景で、豊臣の大坂城）
+    card:
+      head: ありうる
+      body: 検地と普請で当面をしのぐ
+  - 語り: 一方、恩賞を満たし続ける方法は、材料がありません。可能性は、ほぼ妄想、です。
+    background:
+      image: paintings/kanbei_nagoya_byobu_arakebune.jpg
+      credit: 《肥前名護屋城図屏風》（部分、桃山〜江戸初期）
+    card:
+      head: ほぼ妄想
+      body: 恩賞の満たし方は材料なし
+  - 聞き: 国元に戻った大名は、どうなるの？ 隣どうしの二人とか。
+    tone: 疑問
+    hook: true
+  - 語り: 場面は、肥後に移ります。
+    hook: true
+- title: 想像② 天正20年の春 肥後の清正と行長
+  background:
+    image: paintings/sakoku_nagasaki_ships_hiroshige2.jpg
+    credit: 歌川広重《諸国名所百景 肥前長崎唐船の津》（九州の景。肥後の景ではない）
+  year: 1592
+  lines:
+  - 語り: 想像劇場、第2幕です。天正20年の春、肥後の国境。肥後の北半分を預かる加藤清正と、南半分を預かる小西行長が、顔を合わせます。
+    portrait: *id004
+    card:
+      head: ここから想像
+      body: 第2幕 天正20年春 肥後
+  - 語り: 画面は、肥後ではなく、肥前長崎を描いた後世の絵です。行長の肖像は見つからず、出しません。この場面も、今回の調査では、研究が見つかっていません。
+    portrait: null
+    background:
+      image: paintings/sakoku_nagasaki_ships_hiroshige2.jpg
+      credit: 歌川広重《諸国名所百景 肥前長崎唐船の津》（九州の景。肥後の景ではない）
+  - 語り: 清正は、肥後の北半分で19万5,000石。行長は、南半分で20万石あまり。隣り合う二人です。
+    figure:
+      type: stats
+      title: 肥後を分けた二人の領地
+      items:
+      - - 加藤清正
+        - 19万5千石
+        - 肥後の北半分
+      - - 小西行長
+        - 20万石余
+        - 肥後の南半分
+  - 聞き: 隣どうしなの？ 堺の商人の子の行長と、清正が。……どうなるの？
+    tone: 疑問
+  - 人物: 「川の水は、毎年の取り合いだ。今年の堰の直しは、そちらも手を貸せ」
+    who: 清正想像
+    portrait: *id004
+  - 人物: 「手を貸すとも。わが領の田にも、水は要る。損をせぬ分け方を決めよう」
+    who: 行長想像
+    portrait: null
+    background:
+      image: paintings/kanbei_nagoya_castle_plan.jpg
+      credit: 《諸国古城之図 名護屋》江戸時代（浅野文庫）
+  - 人物: 「宗旨は違うが、田の水に宗旨はない」
+    who: 清正想像
+    portrait: *id004
+    detail:
+      image: paintings/sakoku_nagasaki_ships_hiroshige2.jpg
+      box:
+      - 0.0
+      - 0.3
+      - 0.55
+      - 0.85
+      label: 広重《肥前長崎唐船の津》の部分（肥後の景ではない）
+  - 人物: 「その通りじゃ。今年は戦支度が無い分、領国を固められる」
+    who: 行長想像
+    portrait: null
+    detail:
+      image: paintings/sakoku_nagasaki_ships_hiroshige2.jpg
+      box:
+      - 0.45
+      - 0.2
+      - 1.0
+      - 0.8
+      label: 広重《肥前長崎唐船の津》の部分（肥後の景ではない）
+  - 人物: 「国の者も、田に戻れる。今年の収穫が、楽しみだ」
+    who: 清正想像
+    portrait: *id004
+    background:
+      image: paintings/kanbei_nagoya_byobu_arakebune.jpg
+      credit: 《肥前名護屋城図屏風》（部分、桃山〜江戸初期）
+  - 人物: 「収穫が済んだら、堰の普請を二人でやるとしよう」
+    who: 行長想像
+    portrait: null
+  - 人物: 「よし。その時は、酒でも持って行こう」
+    who: 清正想像
+    portrait: *id004
+  - 聞き: 仲良し、とまでは言えないけど、ぶつからずに済んだのかな。
+    tone: しみじみ
+    portrait: null
+    background:
+      image: paintings/sakoku_nagasaki_ships_hiroshige2.jpg
+      credit: 歌川広重《諸国名所百景 肥前長崎唐船の津》（九州の景。肥後の景ではない）
+  - 語り: ここでは、二人の不仲は、出兵が無ければ深まらない、と想像します。深まったのは出兵後とする説があるからです。
+    background:
+      image: paintings/kanbei_nagoya_byobu_arakebune.jpg
+      credit: 《肥前名護屋城図屏風》（部分、桃山〜江戸初期）
+    card:
+      head: ありうる
+      body: 清正と行長の対立は深まらない
+  - 語り: ただ、領地の境や水利、宗教の違いが、出兵と関係なく残るのかは、手がかりがありません。対立が消えるのかも、分かりません。可能性は、ほぼ妄想、です。
+    background:
+      image: paintings/sakoku_nagasaki_ships_hiroshige2.jpg
+      credit: 歌川広重《諸国名所百景 肥前長崎唐船の津》（九州の景。肥後の景ではない）
+    card:
+      head: ほぼ妄想
+      body: 領地の境の争いが消えるかは材料なし
+  - 聞き: 隣り合う限り、もめる種は残るのかな。
+  - 語り: 次に、西国全体を見ます。出兵が無ければ、渡海するはずの約15万の兵と船と米は、国元に残り、兵役の疲れも起きません。
+    background:
+      image: paintings/kanbei_atakebune_fleet_1593.jpg
+      credit: 《1593年の九鬼嘉隆の船団》（複製、明治ごろ）
+    card:
+      head: 高い
+      body: 出兵の兵役による疲れは起きない
+  - 語り: その分の力が、何に向かうのか。それは分かりません。
+    background:
+      image: paintings/nene_osaka_castle_summer_screen_detail.jpg
+      credit: 《大坂夏の陣図屏風》（部分。1615年の景で、豊臣の大坂城）
+    card:
+      head: ほぼ妄想
+      body: 余った力の行き先は材料なし
+  - 聞き: じゃあ、秀頼が生まれたら、秀次はどうなるの？
+    tone: 疑問
+    hook: true
+  - 語り: 場面は、数年後の伏見に移ります。
+    hook: true
+- title: 想像③ 文禄4年 伏見の秀吉と家康
+  background:
+    image: paintings/nene_rakuchu_funaki_1.jpg
+    credit: 《洛中洛外図屏風》舟木本（京の都を描く屏風）
+  year: 1595
+  lines:
+  - 語り: 想像劇場、第3幕です。文禄4年の初夏、伏見。秀吉と、徳川家康が向き合います。画面は、京の都を描いた屏風です。この世界の秀吉は、名護屋に1年以上いた史実と違い、ずっと畿内にいます。
+    portrait: *id001
+    card:
+      head: ここから想像
+      body: 第3幕 文禄4年初夏 伏見
+  - 語り: もう一つ、前提です。秀頼は、史実どおり、生まれたことにします。
+    portrait: *id005
+    background:
+      image: paintings/nene_osaka_castle_summer_screen_detail.jpg
+      credit: 《大坂夏の陣図屏風》（部分。1615年の景で、豊臣の大坂城）
+    card:
+      head: 足す前提
+      body: 秀頼は生まれたことにする
+  - 聞き: 秀頼がいると、秀次の立場が危うくなるんだよね。
+  - 語り: ここは、記録に残る話です。秀頼が生まれたあと、秀吉が日本を5つに分け、4つを秀次、1つを秀頼に譲ると伝えた、とされます。
+    portrait: null
+    background:
+      image: paintings/hideyoshi_jurakudai_screen_mitsui.jpg
+      credit: 《聚楽第図屏風》（三井記念美術館蔵）
+    card:
+      head: 記録に残る話
+      body: 秀頼誕生のあと（二次の紹介）
+  - 語り: 『言経卿記』を引く二次の紹介で、原本は確かめていません。秀頼と秀次の娘の縁組の計画も、同じ紹介にあります。
+  - 聞き: 日本を5つに分けて、4つを秀次に？ 秀吉、秀次にけっこう渡すつもりだったの？
+    tone: 驚き
+  - 人物: 「秀頼が生まれた。秀次の娘と、縁を結ばせたい。どう思う、家康」
+    who: 秀吉想像
+    portrait: *id001
+    background:
+      image: paintings/nene_rakuchu_funaki_1.jpg
+      credit: 《洛中洛外図屏風》舟木本（京の都を描く屏風）
+  - 人物: 「よいお考えかと存じます。ただ、縁組は、慎重に」
+    who: 家康想像
+    portrait: *id006
+  - 人物: 「そちは、いつも慎重じゃな。西国の大名は、兵を出しておらぬゆえ、力が余っておる」
+    who: 秀吉想像
+    portrait: *id001
+    background:
+      image: paintings/nene_osaka_castle_summer_screen_detail.jpg
+      credit: 《大坂夏の陣図屏風》（部分。1615年の景で、豊臣の大坂城）
+  - 人物: 「余った力は、国元で蓄えられます。良し悪しは、使い方次第でございます」
+    who: 家康想像
+    portrait: *id006
+  - 人物: 「うむ。大名どうしの縁組と誓約は、わしが目を通すことにしよう」
+    who: 秀吉想像
+    portrait: *id001
+    background:
+      image: paintings/hideyoshi_jurakudai_3.jpg
+      credit: 《聚楽古城之図》（聚楽第の平面図）
+  - 人物: 「それがよろしいかと」
+    who: 家康想像
+    portrait: *id006
+  - 人物: 「秀次にも、そう伝えておけ」
+    who: 秀吉想像
+    portrait: *id001
+  - 人物: 「承知いたしました。確かに伝えます」
+    who: 家康想像
+    portrait: *id006
+  - 聞き: 家康、ずっと無難な返事だね。
+    portrait: null
+  - 語り: ここでは、秀次事件の形は変わる、と想像します。出兵への不参加を不和の理由に挙げる記録があるからです。もっとも、事件が起きないとまでは言えません。
+    background:
+      image: paintings/hideyoshi_jurakudai_screen_mitsui.jpg
+      credit: 《聚楽第図屏風》（三井記念美術館蔵）
+    card:
+      head: ありうる
+      body: 秀次事件の形が変わる
+  - 語り: 事件が起きるのか、起きたらどう終わるのかは、材料がありません。
+    background:
+      image: paintings/nene_osaka_castle_summer_screen_detail.jpg
+      credit: 《大坂夏の陣図屏風》（部分。1615年の景で、豊臣の大坂城）
+    card:
+      head: ほぼ妄想
+      body: 事件が起きるかは材料なし
+  - 語り: 次に、家康です。朝鮮に渡らなかった家康の領地は、出兵が無くても、関東の250万石のままです。
+    portrait: *id006
+    background:
+      image: paintings/nene_rakuchu_funaki_1.jpg
+      credit: 《洛中洛外図屏風》舟木本（京の都を描く屏風）
+    card:
+      head: 高い
+      body: 家康は関東250万石のまま
+  - 語り: ただ、周りの大名が疲れていない分、家康の力は、史実ほど目立たなかったかもしれません。
+    background:
+      image: paintings/ieyasu_sekigahara_screen_1854_replica.jpg
+      credit: 《関ヶ原合戦図屏風》（1854年の模写）
+    card:
+      head: ありうる
+      body: 家康の力は史実ほど目立たない
+  - 聞き: 周りが元気なままだと、家康だけが得、にはならないのかな。ここまでで、人の動きが見えてきたから、まとめて表で見たいな。
+    hook: true
+  - 語り: 次は、人の運命を、表にします。
+    hook: true
+- title: 想像④ 天正19年の布告が無かった世界 人物の運命表
+  background:
+    image: paintings/nene_osaka_castle_summer_screen_detail.jpg
+    credit: 《大坂夏の陣図屏風》（部分。1615年の景で、豊臣の大坂城）
+  year: 1591
+  lines:
+  - 語り: ここが、今日いちばんの見どころです。史実の秀吉は、天正19年8月、唐入りを布告しました。もしも、布告しなかったら、あの人たちは、どうなるのか。
+    portrait: null
+    card:
+      head: ここから想像
+      body: 人物の運命表
+  - 聞き: 誰がどうなるのか、一覧で見られるの？ この表も、研究はあるのかな。
+    tone: 疑問
+  - 語り: 材料は、これまで見た事実だけです。札は、表のとおりです。
+  - 聞き: 1人目は、誰なの？
+    portrait: *id007
+    background:
+      image: paintings/hideyoshi_jurakudai_screen_mitsui.jpg
+      credit: 《聚楽第図屏風》（三井記念美術館蔵）
+    figure:
+      type: table
+      title: 人物の運命表（史実ともしも）
+      cols:
+      - 史実
+      - もしも
+      rows:
+      - - 豊臣秀次
+        - 文禄4年7月に切腹
+        - 事件の形が変わる
+        - ありうる
+      - - 加藤清正
+        - 蔚山で籠城、行長と対立
+        - 行長との対立が深まらない
+        - ありうる
+      - - 小西行長
+        - 講和交渉に関わり、関ヶ原で処刑
+        - 講和交渉という役が無い
+        - 高い
+      - - 石田三成
+        - 行長を支持、のち家康と対立
+        - 対立の軸が変わる
+        - ありうる
+      - - 徳川家康
+        - 渡海せず、損耗を免れる
+        - 関東250万石は同じ
+        - 高い
+      - - 西国の大名
+        - 過大な兵役で疲れる
+        - 出兵の兵役は起きない
+        - 高い
+      - - 豊臣秀吉
+        - 慶長3年8月18日に死去
+        - 没年は同じとは言えない
+        - ほぼ妄想
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 1
+  - 語り: 豊臣秀次です。史実では、文禄4年7月に切腹します。もしもは、事件の形が変わります。出兵への不参加を不和の理由に挙げる記録があるからです。
+  - 聞き: じゃあ、現場にいた武将たちは？
+    portrait: *id004
+    background:
+      image: paintings/kanbei_nagoya_byobu_arakebune.jpg
+      credit: 《肥前名護屋城図屏風》（部分、桃山〜江戸初期）
+    figure:
+      type: table
+      title: 人物の運命表（史実ともしも）
+      cols:
+      - 史実
+      - もしも
+      rows:
+      - - 豊臣秀次
+        - 文禄4年7月に切腹
+        - 事件の形が変わる
+        - ありうる
+      - - 加藤清正
+        - 蔚山で籠城、行長と対立
+        - 行長との対立が深まらない
+        - ありうる
+      - - 小西行長
+        - 講和交渉に関わり、関ヶ原で処刑
+        - 講和交渉という役が無い
+        - 高い
+      - - 石田三成
+        - 行長を支持、のち家康と対立
+        - 対立の軸が変わる
+        - ありうる
+      - - 徳川家康
+        - 渡海せず、損耗を免れる
+        - 関東250万石は同じ
+        - 高い
+      - - 西国の大名
+        - 過大な兵役で疲れる
+        - 出兵の兵役は起きない
+        - 高い
+      - - 豊臣秀吉
+        - 慶長3年8月18日に死去
+        - 没年は同じとは言えない
+        - ほぼ妄想
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 2
+  - 語り: 2人目は、加藤清正。史実では、蔚山で籠城し、行長と対立しました。もしもは、対立が深まりません。深まったのは出兵後とする説があるからです。
+  - 聞き: その行長は？
+    portrait: null
+    background:
+      image: paintings/kanbei_korea_campaign_map.jpg
+      credit: 『大日本読史地図』「文禄・慶長の役」1935年（近代の地図）
+    figure:
+      type: table
+      title: 人物の運命表（史実ともしも）
+      cols:
+      - 史実
+      - もしも
+      rows:
+      - - 豊臣秀次
+        - 文禄4年7月に切腹
+        - 事件の形が変わる
+        - ありうる
+      - - 加藤清正
+        - 蔚山で籠城、行長と対立
+        - 行長との対立が深まらない
+        - ありうる
+      - - 小西行長
+        - 講和交渉に関わり、関ヶ原で処刑
+        - 講和交渉という役が無い
+        - 高い
+      - - 石田三成
+        - 行長を支持、のち家康と対立
+        - 対立の軸が変わる
+        - ありうる
+      - - 徳川家康
+        - 渡海せず、損耗を免れる
+        - 関東250万石は同じ
+        - 高い
+      - - 西国の大名
+        - 過大な兵役で疲れる
+        - 出兵の兵役は起きない
+        - 高い
+      - - 豊臣秀吉
+        - 慶長3年8月18日に死去
+        - 没年は同じとは言えない
+        - ほぼ妄想
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 3
+  - 語り: 3人目は、小西行長。史実では、講和交渉に関わり、関ヶ原で処刑されます。もしもは、その講和交渉という役が、そもそも無くなります。
+  - 聞き: 戦が無かったら、講和交渉もそもそも無いもんね。
+  - 語り: 4人目は、石田三成。史実では、講和をめぐって行長を支持し、のちに家康と対立します。もしもは、その講和が無いので、対立の軸が変わります。
+    portrait: *id003
+    background:
+      image: paintings/nene_osaka_castle_summer_screen_detail.jpg
+      credit: 《大坂夏の陣図屏風》（部分。1615年の景で、豊臣の大坂城）
+    figure:
+      type: table
+      title: 人物の運命表（史実ともしも）
+      cols:
+      - 史実
+      - もしも
+      rows:
+      - - 豊臣秀次
+        - 文禄4年7月に切腹
+        - 事件の形が変わる
+        - ありうる
+      - - 加藤清正
+        - 蔚山で籠城、行長と対立
+        - 行長との対立が深まらない
+        - ありうる
+      - - 小西行長
+        - 講和交渉に関わり、関ヶ原で処刑
+        - 講和交渉という役が無い
+        - 高い
+      - - 石田三成
+        - 行長を支持、のち家康と対立
+        - 対立の軸が変わる
+        - ありうる
+      - - 徳川家康
+        - 渡海せず、損耗を免れる
+        - 関東250万石は同じ
+        - 高い
+      - - 西国の大名
+        - 過大な兵役で疲れる
+        - 出兵の兵役は起きない
+        - 高い
+      - - 豊臣秀吉
+        - 慶長3年8月18日に死去
+        - 没年は同じとは言えない
+        - ほぼ妄想
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 4
+  - 聞き: 三成と家康の関係は、どうなるんだろう。じゃあ、家康は？
+    tone: 疑問
+  - 語り: 5人目は、徳川家康。史実では、渡海せず、損耗を免れます。もしもは、関東250万石が同じです。
+    portrait: *id006
+    background:
+      image: paintings/nene_rakuchu_funaki_1.jpg
+      credit: 《洛中洛外図屏風》舟木本（京の都を描く屏風）
+    figure:
+      type: table
+      title: 人物の運命表（史実ともしも）
+      cols:
+      - 史実
+      - もしも
+      rows:
+      - - 豊臣秀次
+        - 文禄4年7月に切腹
+        - 事件の形が変わる
+        - ありうる
+      - - 加藤清正
+        - 蔚山で籠城、行長と対立
+        - 行長との対立が深まらない
+        - ありうる
+      - - 小西行長
+        - 講和交渉に関わり、関ヶ原で処刑
+        - 講和交渉という役が無い
+        - 高い
+      - - 石田三成
+        - 行長を支持、のち家康と対立
+        - 対立の軸が変わる
+        - ありうる
+      - - 徳川家康
+        - 渡海せず、損耗を免れる
+        - 関東250万石は同じ
+        - 高い
+      - - 西国の大名
+        - 過大な兵役で疲れる
+        - 出兵の兵役は起きない
+        - 高い
+      - - 豊臣秀吉
+        - 慶長3年8月18日に死去
+        - 没年は同じとは言えない
+        - ほぼ妄想
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 5
+  - 聞き: 残りは、西国の大名たちと、秀吉本人だね。
+    tone: 疑問
+  - 語り: 西国は、出兵の兵役が起きません。秀吉の没年は、同じとは言えません。札は、表に並べました。
+    portrait: *id001
+    background:
+      image: paintings/kanbei_nagoya_byobu_arakebune.jpg
+      credit: 《肥前名護屋城図屏風》（部分、桃山〜江戸初期）
+    figure:
+      type: table
+      title: 人物の運命表（史実ともしも）
+      cols:
+      - 史実
+      - もしも
+      rows:
+      - - 豊臣秀次
+        - 文禄4年7月に切腹
+        - 事件の形が変わる
+        - ありうる
+      - - 加藤清正
+        - 蔚山で籠城、行長と対立
+        - 行長との対立が深まらない
+        - ありうる
+      - - 小西行長
+        - 講和交渉に関わり、関ヶ原で処刑
+        - 講和交渉という役が無い
+        - 高い
+      - - 石田三成
+        - 行長を支持、のち家康と対立
+        - 対立の軸が変わる
+        - ありうる
+      - - 徳川家康
+        - 渡海せず、損耗を免れる
+        - 関東250万石は同じ
+        - 高い
+      - - 西国の大名
+        - 過大な兵役で疲れる
+        - 出兵の兵役は起きない
+        - 高い
+      - - 豊臣秀吉
+        - 慶長3年8月18日に死去
+        - 没年は同じとは言えない
+        - ほぼ妄想
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 7
+  - 聞き: じゃあ、人じゃなくて、日本や東アジアは、どこまで変わるの？
+    tone: 疑問
+    hook: true
+  - 語り: 材料があるのは、近い人の運命だけです。遠い歴史は、分かりません。次は、国の形を、史実と並べます。
+    hook: true
+- title: 想像⑤ 日本と東アジアの変化点と、現代につながる鎖
+  background:
+    image: paintings/kanbei_korea_campaign_map.jpg
+    credit: 『大日本読史地図』「文禄・慶長の役」1935年（近代の地図）
+  year: 1598
+  lines:
+  - 語り: 日本と東アジアの変化点を、史実と並べます。
+    portrait: null
+    card:
+      head: ここから想像
+      body: 日本と東アジアの変化点
+  - 聞き: 国の形が変わるかどうか、いよいよ本題だね。どこから変わるの？
+    tone: 疑問
+  - 語り: まず、豊臣政権。史実では、五大老と五奉行が、秀頼を支えます。もしもは、西国の力が残ります。
+    background:
+      image: paintings/nene_osaka_castle_summer_screen_detail.jpg
+      credit: 《大坂夏の陣図屏風》（部分。1615年の景で、豊臣の大坂城）
+    figure:
+      type: table
+      title: 日本と東アジアの変化点（史実ともしも）
+      cols:
+      - 史実
+      - もしも
+      rows:
+      - - 豊臣政権
+        - 五大老・五奉行が秀頼を支える
+        - 西国の力が残る
+        - ありうる
+      - - 関ヶ原の戦い
+        - 1600年に家康が勝つ
+        - 起きるかも勝敗も分からない
+        - ほぼ妄想
+      - - 豊臣家
+        - 1615年の大坂の陣で滅びる
+        - 続いたかは分からない
+        - ほぼ妄想
+      - - 日朝の国交
+        - 1607年に回復
+        - 回復を要しない
+        - 高い
+      - - 明
+        - 戦費で衰えを早める
+        - 負担が軽くなる
+        - ありうる
+      - - 朝鮮
+        - 耕地が約3分の1に減る
+        - 出兵の犠牲は起きない
+        - 高い
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 1
+  - 聞き: 西国の力が残ったら、豊臣は、持ちこたえやすかったってことかな。
+  - 語り: 関ヶ原の戦いは、起きるのかも、勝敗も、分かりません。材料がないので、ほぼ妄想です。
+    background:
+      image: paintings/ieyasu_sekigahara_screen_1854_replica.jpg
+      credit: 《関ヶ原合戦図屏風》（1854年の模写）
+    figure:
+      type: table
+      title: 日本と東アジアの変化点（史実ともしも）
+      cols:
+      - 史実
+      - もしも
+      rows:
+      - - 豊臣政権
+        - 五大老・五奉行が秀頼を支える
+        - 西国の力が残る
+        - ありうる
+      - - 関ヶ原の戦い
+        - 1600年に家康が勝つ
+        - 起きるかも勝敗も分からない
+        - ほぼ妄想
+      - - 豊臣家
+        - 1615年の大坂の陣で滅びる
+        - 続いたかは分からない
+        - ほぼ妄想
+      - - 日朝の国交
+        - 1607年に回復
+        - 回復を要しない
+        - 高い
+      - - 明
+        - 戦費で衰えを早める
+        - 負担が軽くなる
+        - ありうる
+      - - 朝鮮
+        - 耕地が約3分の1に減る
+        - 出兵の犠牲は起きない
+        - 高い
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 2
+    year: 1600
+  - 聞き: そもそも起きないかもしれないの？
+  - 語り: 豊臣家はどうか。史実では、1615年の大坂の陣で滅びます。もしもは、続いたのかどうか、分かりません。ほぼ妄想、です。
+    background:
+      image: paintings/ieyasu_osaka_summer_screen_kuroda.jpg
+      credit: 《大坂夏の陣図屏風》右隻（黒田屏風、大阪城天守閣蔵）
+    figure:
+      type: table
+      title: 日本と東アジアの変化点（史実ともしも）
+      cols:
+      - 史実
+      - もしも
+      rows:
+      - - 豊臣政権
+        - 五大老・五奉行が秀頼を支える
+        - 西国の力が残る
+        - ありうる
+      - - 関ヶ原の戦い
+        - 1600年に家康が勝つ
+        - 起きるかも勝敗も分からない
+        - ほぼ妄想
+      - - 豊臣家
+        - 1615年の大坂の陣で滅びる
+        - 続いたかは分からない
+        - ほぼ妄想
+      - - 日朝の国交
+        - 1607年に回復
+        - 回復を要しない
+        - 高い
+      - - 明
+        - 戦費で衰えを早める
+        - 負担が軽くなる
+        - ありうる
+      - - 朝鮮
+        - 耕地が約3分の1に減る
+        - 出兵の犠牲は起きない
+        - 高い
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 3
+    year: 1615
+  - 語り: 日朝の国交。史実では、1604年に惟政が派遣され、1605年に家康と会い、1607年に国交が回復しました。もしもは、回復を要しません。
+    background:
+      image: paintings/kanbei_korea_campaign_map.jpg
+      credit: 『大日本読史地図』「文禄・慶長の役」1935年（近代の地図）
+    figure:
+      type: table
+      title: 日本と東アジアの変化点（史実ともしも）
+      cols:
+      - 史実
+      - もしも
+      rows:
+      - - 豊臣政権
+        - 五大老・五奉行が秀頼を支える
+        - 西国の力が残る
+        - ありうる
+      - - 関ヶ原の戦い
+        - 1600年に家康が勝つ
+        - 起きるかも勝敗も分からない
+        - ほぼ妄想
+      - - 豊臣家
+        - 1615年の大坂の陣で滅びる
+        - 続いたかは分からない
+        - ほぼ妄想
+      - - 日朝の国交
+        - 1607年に回復
+        - 回復を要しない
+        - 高い
+      - - 明
+        - 戦費で衰えを早める
+        - 負担が軽くなる
+        - ありうる
+      - - 朝鮮
+        - 耕地が約3分の1に減る
+        - 出兵の犠牲は起きない
+        - 高い
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 4
+    year: 1607
+  - 聞き: 国交の回復が要らない、ってことは、あの通信使の行列も、同じ形では来なかったのかな。
+  - 語り: 明は、戦費の負担で衰えを早めた、と事典は書きます。もしもは、負担が軽くなります。
+    background:
+      image: paintings/chosen_map_korea_northwest.jpg
+      credit: 《彼我両界万里一覧之図》朝鮮北西部と明の境の古地図（18世紀）
+    figure:
+      type: table
+      title: 日本と東アジアの変化点（史実ともしも）
+      cols:
+      - 史実
+      - もしも
+      rows:
+      - - 豊臣政権
+        - 五大老・五奉行が秀頼を支える
+        - 西国の力が残る
+        - ありうる
+      - - 関ヶ原の戦い
+        - 1600年に家康が勝つ
+        - 起きるかも勝敗も分からない
+        - ほぼ妄想
+      - - 豊臣家
+        - 1615年の大坂の陣で滅びる
+        - 続いたかは分からない
+        - ほぼ妄想
+      - - 日朝の国交
+        - 1607年に回復
+        - 回復を要しない
+        - 高い
+      - - 明
+        - 戦費で衰えを早める
+        - 負担が軽くなる
+        - ありうる
+      - - 朝鮮
+        - 耕地が約3分の1に減る
+        - 出兵の犠牲は起きない
+        - 高い
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 5
+  - 聞き: 明も、朝鮮も、日本も、みんな消耗した戦だった、ってことだよね。
+  - 語り: 朝鮮では、史実で耕地が約3分の1に減りました。もしもは、この犠牲は起きません。
+    background:
+      image: paintings/chosen_busanjin_1592.jpg
+      credit: 《釜山鎮殉節図》江戸時代（朝鮮の絵）
+    figure:
+      type: table
+      title: 日本と東アジアの変化点（史実ともしも）
+      cols:
+      - 史実
+      - もしも
+      rows:
+      - - 豊臣政権
+        - 五大老・五奉行が秀頼を支える
+        - 西国の力が残る
+        - ありうる
+      - - 関ヶ原の戦い
+        - 1600年に家康が勝つ
+        - 起きるかも勝敗も分からない
+        - ほぼ妄想
+      - - 豊臣家
+        - 1615年の大坂の陣で滅びる
+        - 続いたかは分からない
+        - ほぼ妄想
+      - - 日朝の国交
+        - 1607年に回復
+        - 回復を要しない
+        - 高い
+      - - 明
+        - 戦費で衰えを早める
+        - 負担が軽くなる
+        - ありうる
+      - - 朝鮮
+        - 耕地が約3分の1に減る
+        - 出兵の犠牲は起きない
+        - 高い
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 6
+  - 聞き: じゃあ、近い人の運命は動いて、遠い歴史は、はっきりしないってこと？
+    tone: しみじみ
+  - 語り: 最後に、現代へ鎖をつなぎます。1つ目。走り出した大きな事業は、止めるのが難しい。撤兵は、秀吉の死のあとでした。止める必要が無くなる点は、高い、です。
+    background:
+      image: paintings/kanbei_nagoya_byobu_arakebune.jpg
+      credit: 《肥前名護屋城図屏風》（部分、桃山〜江戸初期）
+    card:
+      head: 現代への鎖 1本目
+      body: 走り出した事業は止めにくい
+    figure:
+      type: table
+      title: 現代日本への鎖（史実ともしも）
+      cols:
+      - 史実
+      - もしも
+      rows:
+      - - 走り出した事業
+        - 撤兵は秀吉の死のあと
+        - 止める必要が無い
+        - 高い
+      - - 配る土地の不足
+        - 外に求めた、とする説
+        - 国内の分け方が問われる
+        - 高い
+      - - 呼び名の違い
+        - 文禄・慶長の役／壬辰倭乱
+        - 呼び名そのものが無い
+        - 高い
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 1
+    year: 1598
+  - 聞き: あー、大きなプロジェクトが、止めどきを失うやつだ。
+  - 語り: 2つ目。配る土地、今でいうポストが足りないとき、どう分けるか。恩賞地の不足は、出兵が無くても残ります。可能性は、高い、です。
+    background:
+      image: paintings/nene_osaka_castle_summer_screen_detail.jpg
+      credit: 《大坂夏の陣図屏風》（部分。1615年の景で、豊臣の大坂城）
+    card:
+      head: 現代への鎖 2本目
+      body: 配るものが足りないとき、どう分ける
+    figure:
+      type: table
+      title: 現代日本への鎖（史実ともしも）
+      cols:
+      - 史実
+      - もしも
+      rows:
+      - - 走り出した事業
+        - 撤兵は秀吉の死のあと
+        - 止める必要が無い
+        - 高い
+      - - 配る土地の不足
+        - 外に求めた、とする説
+        - 国内の分け方が問われる
+        - 高い
+      - - 呼び名の違い
+        - 文禄・慶長の役／壬辰倭乱
+        - 呼び名そのものが無い
+        - 高い
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 2
+  - 語り: 3つ目。同じ出来事が、国によって違う名で呼ばれます。日本では文禄・慶長の役、韓国では壬辰倭乱。呼び名そのものが無くなります。可能性は、高い、です。
+    background:
+      image: paintings/kanbei_nagoya_byobu_arakebune.jpg
+      credit: 《肥前名護屋城図屏風》（部分、桃山〜江戸初期）
+    card:
+      head: 現代への鎖 3本目
+      body: 同じ出来事でも呼び名が違う
+    figure:
+      type: table
+      title: 現代日本への鎖（史実ともしも）
+      cols:
+      - 史実
+      - もしも
+      rows:
+      - - 走り出した事業
+        - 撤兵は秀吉の死のあと
+        - 止める必要が無い
+        - 高い
+      - - 配る土地の不足
+        - 外に求めた、とする説
+        - 国内の分け方が問われる
+        - 高い
+      - - 呼び名の違い
+        - 文禄・慶長の役／壬辰倭乱
+        - 呼び名そのものが無い
+        - 高い
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 3
+  - 聞き: 鎖は、これで3本。じゃあ、最初の3つの問いの答え、まとめてもらえる？
+    tone: 疑問
+    figure: null
+    hook: true
+  - 語り: では、順に答えます。
+    hook: true
+- title: まとめ：天正19年8月 布告の前の分かれ道
+  background:
+    image: paintings/kanbei_nagoya_jinei_map.jpg
+    credit: 吉村茂三郎《西肥名古屋城豊太閤陣営図》1934年（近代の絵地図）
+  year: 1591
+  lines:
+  - 語り: 冒頭の3つの問いに答えます。1つ目。豊臣政権は、持ちこたえたのか。西国の力が残る点は、ありうる、です。とはいえ、豊臣の行方そのものは、ほぼ妄想、です。
+    portrait: null
+    figure:
+      type: stats
+      title: 3つの問いの答え（想像）
+      items:
+      - - 豊臣は？
+        - 行方は分からない
+        - ほぼ妄想
+      - - 大名は？
+        - 兵役の疲れは無い
+        - 高い
+      - - 朝鮮は？
+        - 出兵の犠牲は起きない
+        - 高い
+      upto: 1
+  - 聞き: じゃあ、大名たちのほうは？ 何を失わずに済んだの？
+    tone: 疑問
+  - 語り: 兵役の疲れが無い点も、恩賞地の不足が残る点も、高い、です。
+    background:
+      image: paintings/nene_osaka_castle_summer_screen_detail.jpg
+      credit: 《大坂夏の陣図屏風》（部分。1615年の景で、豊臣の大坂城）
+    figure:
+      type: stats
+      title: 3つの問いの答え（想像）
+      items:
+      - - 豊臣は？
+        - 行方は分からない
+        - ほぼ妄想
+      - - 大名は？
+        - 兵役の疲れは無い
+        - 高い
+      - - 朝鮮は？
+        - 出兵の犠牲は起きない
+        - 高い
+      upto: 2
+  - 聞き: 朝鮮と明は？ 出兵の犠牲は、どうなるの？
+    tone: 疑問
+  - 語り: 朝鮮では、出兵による犠牲は起きません。高い、です。明の負担が軽くなる点は、ありうる、です。ただ、起きたことをなかったことにする話ではありません。
+    background:
+      image: paintings/kanbei_korea_campaign_map.jpg
+      credit: 『大日本読史地図』「文禄・慶長の役」1935年（近代の地図）
+    card:
+      head: 明は
+      body: 負担が軽くなる（ありうる）
+    figure:
+      type: stats
+      title: 3つの問いの答え（想像）
+      items:
+      - - 豊臣は？
+        - 行方は分からない
+        - ほぼ妄想
+      - - 大名は？
+        - 兵役の疲れは無い
+        - 高い
+      - - 朝鮮は？
+        - 出兵の犠牲は起きない
+        - 高い
+  - 聞き: 人の運命の表だと、秀次事件は形が変わって、清正と行長の対立は深まらない、だったよね。家康は、関東250万石のまま。はっきりしてる答えと、分からない答えが、あるんだね。
+  - 語り: いまの3つの答えは、全部、想像です。史実で言えるのは、4つです。秀吉が布告し、文禄・慶長の役が起き、朝鮮の人々にも大きな犠牲が出て、撤兵は秀吉の死のあとでした。
+    background:
+      image: paintings/kanbei_nagoya_byobu_arakebune.jpg
+      credit: 《肥前名護屋城図屏風》（部分、桃山〜江戸初期）
+    card:
+      head: 史実で言えること
+      body: 布告・出兵・犠牲・撤兵
+    figure: null
+  - 聞き: 動機は一つに決まらないし、止める道も、渡海のほかには確かめられなかったんだよね。
+  - 語り: はい。弟と、師と、息子を失った年の布告、と語られることもあります。一方、動機は一つに決まりません。分かれ道を一つ挙げるなら、天正19年8月の布告です。
+    portrait: *id001
+    background:
+      image: paintings/kanbei_nagoya_jinei_map.jpg
+      credit: 吉村茂三郎《西肥名古屋城豊太閤陣営図》1934年（近代の絵地図）
+    card:
+      head: 分かれ道
+      body: 天正19年8月の布告
+  - 聞き: もしあのとき、布告を出さずにいたら……って、つい考えちゃうね。ただ、犠牲になった人たちのことも、忘れちゃいけないな。
+    tone: しみじみ
+  - 語り: 今日の地層は、ここまでです。
+    portrait: null
+  - 聞き: 次の「もしも」は、誰の、どの分かれ道かな。
+    tone: 疑問
+  - 語り: あなたが気になる、歴史の分かれ道を、コメントで教えてください。
+  - 二人: また一緒に、掘りましょう！
+    tone: 明るい

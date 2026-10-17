@@ -1,0 +1,1653 @@
+# B（歴史の転換点の if ストーリー）。型：事実（関ヶ原の戦い・小早川秀秋の離反の時期＝研究で割れる分かれ道）→ 史料に残る別の道（秀秋の迷い／輝元の出陣／広家の密約がない）→ 「こうなった可能性」（理由つき）。
+# 事実の出どころは dev/output/rekishi-chiso/research/sekigahara_if_facts.md（確実／有力／説／未確認の区分もそこ）。絵の一覧は sekigahara_if_assets.md。
+# 決まり：B は昼12時・約30分／題名は「もし〇〇だったら｜…どうなったか」／再生リストは A と分ける（歴史のif）／想像の部分は画面に「ここから想像」の札
+#   人物のセリフは B では想像のセリフを入れてよい。①「ここから想像」の札が出ている節（想像①②③）だけ ②字幕に「（想像）」（roles の家康想像・直政想像・三成想像・秀秋想像・輝元想像・広家想像）
+#   ③記録のセリフは本編に置かない。同じ幕で声が重ならない：第1幕＝家康（麒ヶ島宗麟）と直政（黒沢冴白）／第2幕＝三成（玄野武宏）と秀秋（白上虎太郎）／第3幕＝輝元（離途）と広家（雀松朱司）
+# 分岐点は1つだけ：小早川秀秋が松尾山から動かなかったら。ほかは史実のまま（毛利勢の不戦・輝元は大坂城・秀忠の遅参）。
+# 想像の部分は言い切る。確かさは画面の札（高い／ありうる／ほぼ妄想）で正直に出す。札の名は声に出す型を「可能性は、〜、です」に統一。
+#   高い＝広家の密約は9月14日で秀秋の動きと別（事実の並置）／ありうる＝戦いが昼を過ぎて続く・秀秋は迷い続ける（備前老人物語の迷い）・大谷隊が側面を突かれない・輝元は大坂に残る（史実でも動かず）・毛利家が減封されない／
+#   ほぼ妄想＝戦いの傾く先・ふもとの隊の動き・西軍が勝ち切れるか・三成の行方・島津の退き口の有無・豊臣政権と江戸幕府の有無・長州の因果。
+# 研究：「西軍が勝っていたら」を正面から論じた研究は見つかっていない（冒頭と各想像の節で断る）。論じられているのは秀秋の離反の時期（白峰旬・笠谷和比古・渡邊大門）と問鉄砲（藤本正行・三池純正・呉座勇一が疑問視）。本文は未読（Wikipedia 経由）。
+# 年齢は数えの自分の計算：家康1542生→59、三成1560生→41、秀秋1582生→19（1602没は数え21）。メッケルの逸話は出典なしと断る。島津隊の数（約300／3千）は何の数かで割れると言う。
+# 使わない話：問鉄砲を事実として／三成の讒言／メッケルの逸話を事実として／島津の夜襲進言を事実として／血・遺体・首／三成の最期の描写／ネット掲示板・個人ブログの「もし西軍が〜」／淀殿・秀頼の最期。
+# 画面の決まり：背景に人物の肖像・拡大絵を使わない（肖像は額）／縦横比2.4:1以上の絵は使わない（大坂図屏風は detail で寄せる）／黒縁は切り抜いた版を使う／現代の写真は今回は使っていない。
+title: もし関ヶ原で西軍が勝っていたら｜小早川秀秋が松尾山を動かなかった日、日本はどうなったか
+series: ''
+playlists:
+- 歴史のif（もしもの地層）
+- 戦国時代を掘る
+shorts_playlists:
+- 歴史のifショート
+shorts_badge: もしもの話
+tags:
+- もし関ヶ原で西軍が勝っていたら
+- 関ヶ原の戦い
+- 関ヶ原 if
+- 小早川秀秋
+- 石田三成
+- 徳川家康
+- 毛利輝元
+- 吉川広家
+- 島津義弘
+- 松尾山
+- 戦国時代
+- 歴史if
+- 日本史
+- 歴史解説
+- 歴史の地層
+en:
+  title: What If the Western Army Had Won Sekigahara? | The Day Kobayakawa Hideaki Did Not Move
+  description: 'On the 15th day of the 9th month of Keicho 5 (October 21, 1600), the Battle of Sekigahara was decided within hours. The traditional account says the turning point was Kobayakawa Hideaki, aged 19 by Japanese count, who came down from Mount Matsuo and attacked his own side. This video asks: what if he had not moved?
+
+
+    We keep records, theories and imagination apart. First, what the sources say: Tokugawa Ieyasu''s Aizu campaign and the rising of Ishida Mitsunari, the skirmishes at Gifu, Ueda and the Kuise River, the deployment and the numbers that historians cannot agree on, three competing theories about WHEN Hideaki switched sides, the ''warning shot'' story that appears only in later sources, and the Mori army that never fought.
+
+
+    Then, clearly marked imagination with reasons: noon at Ieyasu''s camp, Mitsunari and Hideaki on the mountain, a messenger reaching Osaka Castle, a table of fates, and how Japan might differ. In imagined parts we speak plainly, and the on-screen label tells you how likely it is: likely, possible, or nearly fantasy. We found no study that argues this counterfactual directly, and we say so.
+
+
+    The accounts of competing theories follow summaries on Wikipedia and similar sources; we have not checked the original texts.
+
+
+    A Japanese history video to listen to while you work (Japanese audio).'
+  chapters:
+  - 'September 15, 1600: The Turning Point Was a 19-Year-Old'
+  - 'Summer 1600: Ieyasu to Aizu, Mitsunari and Terumoto Rise'
+  - 'Skirmishes: Gifu Castle, Ueda Castle, the Kuise River'
+  - 'Morning of the 15th: Deployment and Troop Numbers'
+  - 'Kobayakawa Hideaki: A Boy Moved by Adults, 1582-1599'
+  - 'September 15: When Did He Come Down from the Mountain?'
+  - 'Mori and Shimazu: The Allies Who Did Not Move'
+  - 'After Sekigahara: A Promise Broken, Domains Redrawn'
+  - 'Other Paths in the Sources: Hesitation, Terumoto, the Secret Pact'
+  - 'Imagination 1: Noon at Momokubari Hill'
+  - 'Imagination 2: Mitsunari and Hideaki on the Mountain'
+  - 'Imagination 3: A Messenger Reaches Osaka Castle'
+  - 'Imagination 4: A Table of Fates'
+  - 'Imagination 5: How Japan Changes, and the Chains to Today'
+  - 'Summary: The Fork on Mount Matsuo'
+texture: true
+recap: true
+timeline:
+  start: 1580
+  end: 1605
+  events:
+  - - 1582
+    - 秀秋誕生
+  - - 1600
+    - 関ヶ原
+  - - 1602
+    - 秀秋没
+  - - 1603
+    - 江戸幕府
+terms:
+  内府ちがひの条々: 三奉行が、家康の違反を並べて諸大名に送った文書
+  小山評定: 家康が西へ引き返しを決めたとされる軍議。実在は割れる
+  問鉄砲: 家康が小早川陣へ撃ち込み、決断を迫ったという話。二次史料のみ
+  密約: 毛利勢が戦わない代わりに領国を守る約束。吉川広家が前日に結ぶ
+  起請文: 神仏にかけて誓う文書
+  総大将: 軍の最高の指揮役。西軍は毛利輝元
+  松尾山: 関ヶ原の南西の山。小早川秀秋の陣
+  南宮山: 関ヶ原の南東の山。毛利勢の陣
+  退き口: 島津義弘が敵中を抜けて退いたこと
+  三奉行: 前田玄以・増田長盛・長束正家。豊臣政権の実務役
+shorts:
+  s1:
+    title: 天下分け目／山の上の若者
+    yt_title: 関ヶ原の決め手は数え19歳？｜小早川秀秋と、もしも西軍が勝っていたら
+    hook: 関ヶ原の決め手は、／何歳の若者？
+    tease: じゃあ、その若者は、／いつ山を下りた？
+    lead: 関ヶ原の戦い、決め手の話です。
+    tags:
+    - 関ヶ原の戦い
+    - 小早川秀秋
+    - 歴史if
+    - もし関ヶ原で西軍が勝っていたら
+  s2:
+    title: 秀秋の裏切り／3つの説
+    yt_title: 小早川秀秋はいつ寝返った？｜関ヶ原、研究者の3つの説
+    hook: 小早川秀秋は、／いつ寝返った？
+    tease: じゃあ、家康の「問鉄砲」は、／本当にあった？
+    lead: 関ヶ原、松尾山の話です。
+    tags:
+    - 小早川秀秋
+    - 関ヶ原の戦い
+    - 松尾山
+    - 歴史if
+  s3:
+    title: 戦わなかった4万／南宮山
+    yt_title: 関ヶ原で毛利はなぜ戦わなかった？｜吉川広家の密約と、大坂城の輝元
+    hook: 毛利の4万は、／なぜ戦わなかった？
+    tease: じゃあ、島津は、／どう敵中を抜けた？
+    lead: 関ヶ原の南東、南宮山の話です。
+    tags:
+    - 毛利輝元
+    - 吉川広家
+    - 関ヶ原の戦い
+    - 歴史if
+  s4:
+    title: もしも／桃配山の昼
+    yt_title: もし小早川秀秋が動かなかったら？｜家康と井伊直政の想像劇場
+    hook: 秀秋が動かない昼、／家康は何と言う？
+    tease: じゃあ、西軍は、／本当に勝てた？
+    lead: 関ヶ原の昼ちかく、家康の本陣で、想像劇場です。
+    tags:
+    - もし関ヶ原で西軍が勝っていたら
+    - 井伊直政
+    - 徳川家康
+    - 歴史if
+  s5:
+    title: 島津義弘／退き口
+    yt_title: 島津の退き口とは？｜関ヶ原で80数名が生還したと言われる
+    hook: 島津は、敵の中を／どう抜けた？
+    tease: じゃあ、関ヶ原のあと、／毛利は、どうなった？
+    lead: 離反のあとの戦場、島津の話です。
+    tags:
+    - 島津義弘
+    - 島津の退き口
+    - 関ヶ原の戦い
+    - 歴史if
+next:
+  title: 次の「もしも」
+  series: ''
+  teaser: あなたが気になる歴史の分かれ道を、コメントで教えてください。
+thumbnail:
+  layout: mask
+  image: paintings/sekigahara_kobayakawa_hideaki_portrait_trim.jpg
+  top: 関ヶ原の決め手は数え19歳
+  main:
+  - もし秀秋が
+  - 動かなかったら
+  blanks:
+  - - 戦いは
+    - 2
+  - - 毛利は
+    - 4
+  tags:
+  - 家康は？
+  - 大谷は？
+  name: 小早川秀秋
+sections:
+- title: 慶長5年9月15日 天下分け目の決め手は数え19歳
+  background:
+    image: paintings/sekigahara_screen_gifu_L.jpg
+    credit: 関ヶ原合戦図屏風（部分、岐阜市歴史博物館蔵、江戸後期）
+  year: 1600
+  lines:
+  - 語り: 慶長5年9月15日、西暦では1600年10月21日。関ヶ原の戦いは、正午から午後2時ごろまでに決着した、とされます。時刻は、史料で割れます。
+    portrait:
+      image: paintings/sekigahara_kobayakawa_hideaki_portrait_trim.jpg
+      caption: 小早川秀秋（17世紀前半の肖像）
+      age: false
+    card:
+      head: 慶長5年9月15日
+      body: 関ヶ原の戦い（1600年10月21日）
+    short: s1
+  - 語り: 通説で、決め手とされるのは、小早川秀秋です。松尾山を下りて、味方のはずの大谷吉継の陣を攻めた、とされます。
+    short: s1
+  - 聞き: 主役は家康と三成じゃないの？ 決め手が、ひとりの武将の一歩って、すごい話だよね。
+    tone: 驚き
+    background:
+      image: paintings/sekigahara_zubyobu_p2a.jpg
+      credit: 関ヶ原合戦図屏風（部分、江戸時代）
+  - 語り: この日の3人です。徳川家康は数え59歳、石田三成は41歳。そして、小早川秀秋は、わずか19歳でした。
+    background:
+      image: paintings/sekigahara_zubyobu_p2a.jpg
+      credit: 関ヶ原合戦図屏風（部分、江戸時代）
+    figure:
+      type: stats
+      title: 関ヶ原の年（数え）
+      items:
+      - - 徳川家康
+        - 59歳
+        - 数え。東軍
+      - - 石田三成
+        - 41歳
+        - 数え。西軍の中心
+      - - 小早川秀秋
+        - 19歳
+        - 数え。松尾山
+    short: s1
+  - 聞き: 19歳って、高校3年生くらいじゃん。その子が、天下分け目を決めたの？
+    tone: 驚き
+    short: s1
+  - 語り: そこで、今日の問いです。もし、小早川秀秋が松尾山から動かなかったら。西軍は、勝っていたのか。問いは3つあります。
+    portrait: null
+    background:
+      image: paintings/sekigahara_zubyobu_p3a.jpg
+      credit: 関ヶ原合戦図屏風（部分、江戸時代）
+    card:
+      head: 今日の3つの問い
+      body: 戦いは？ 西軍は？ 毛利は？
+    figure: null
+    short: s1
+  - 語り: 1つ目。戦いは、続いたのか。2つ目。西軍は、勝てたのか。3つ目。南宮山の毛利勢は、動いたのか。ここでいう西軍の勝ちは、東軍が攻め切れずに引くこと、とします。
+  - 聞き: 関ヶ原の「もしも」って、よく聞くけど。ちゃんと考えた研究って、あるの？
+    tone: 疑問
+    background:
+      image: paintings/sekigahara_zubyobu_p2a.jpg
+      credit: 関ヶ原合戦図屏風（部分、江戸時代）
+  - 語り: 先に断ります。関ヶ原で西軍が勝った場合を、正面から論じた学術研究は、今回の調査では見つかりませんでした。
+    background:
+      image: paintings/sekigahara_screen_gifu_L.jpg
+      credit: 関ヶ原合戦図屏風（部分、岐阜市歴史博物館蔵、江戸後期）
+    card:
+      head: 最初の断り
+      body: 論じた研究は見つからない
+  - 聞き: 研究がないなら、ほとんど想像、ってこと？ 材料は、ちゃんとあるのかな。想像だけで話されると、ちょっと不安かも。
+    tone: 疑問
+  - 語り: 約束が2つ。事実と想像は分けます。想像のあいだは《ここから想像》の札を出し、可能性を、高い、ありうる、ほぼ妄想の3段階で示します。
+    background:
+      image: paintings/sekigahara_zubyobu_p2a.jpg
+      credit: 関ヶ原合戦図屏風（部分、江戸時代）
+    card:
+      head: この回の約束
+      body: 事実と想像を分け、可能性を付ける
+  - 聞き: 材料は、本物だけなんだよね？
+    tone: 疑問
+  - 語り: はい。史料に残る動きと、研究で割れている点だけです。まずは、天下分け目の前の、夏から掘ります。
+- title: 慶長5年夏 家康は会津へ、三成と輝元が動く
+  background:
+    image: paintings/ieyasu_edo_zu_byobu_castle_detail.jpg
+    credit: 江戸図屏風（江戸城の部分、17世紀。家康のころより後の姿）
+  year: 1600
+  lines:
+  - 語り: 慶長5年6月16日、徳川家康は大坂を発ち、会津の上杉景勝を討つために、東へ向かいます。7月1日に江戸へ着き、21日に江戸を出ました。
+    portrait:
+      image: paintings/sekigahara_tokugawa_ieyasu.jpg
+      caption: 徳川家康（江戸前期の肖像、伝・狩野探幽）
+      age: false
+    card:
+      head: 6月16日
+      body: 家康、大坂を発つ
+  - 語り: 会津の上杉景勝は、約120万石の大名です。家康が討とうとしたのは、これだけの相手でした。
+  - 聞き: 家康が、大坂を空けたんだね。留守のあいだに、何か起きたの？
+    tone: 疑問
+  - 語り: 7月17日、豊臣の三奉行が、家康の違反を並べた『内府ちがひの条々』を、諸大名に送ります。前田玄以、増田長盛、長束正家の3人です。
+    portrait: null
+    background:
+      image: paintings/sekigahara_screen_gifu_L.jpg
+      credit: 関ヶ原合戦図屏風（部分、岐阜市歴史博物館蔵、江戸後期）
+    card:
+      head: 7月17日
+      body: 三奉行が家康の違反を並べる
+  - 語り: 7月19日、毛利輝元が、日記では約6万、とされる兵を率いて大坂城の西の丸に入り、西軍の総大将に推されます。
+    portrait:
+      image: paintings/sekigahara_mori_terumoto.jpg
+      caption: 毛利輝元（江戸初期の肖像）
+      age: false
+    card:
+      head: 7月19日
+      body: 毛利輝元、総大将に
+  - 聞き: 総大将は輝元なんだ。三成は、総大将じゃないの？
+    tone: 疑問
+  - 語り: 三成は、挙兵の中心の一人でした。同じ19日に、家康方の伏見城への、西軍の攻撃も始まります。守る鳥居元忠の城は、8月1日に落ちました。
+    portrait:
+      image: paintings/sekigahara_torii_mototada.jpg
+      caption: 鳥居元忠（江戸時代の肖像）
+      age: false
+    card:
+      head: 8月1日
+      body: 伏見城が落ちる
+    background:
+      image: paintings/ieyasu_edo_zu_byobu_castle_detail.jpg
+      credit: 江戸図屏風（江戸城の部分、17世紀。家康のころより後の姿）
+  - 聞き: 家康、東の上杉と、西の三成に、挟まれちゃったんだ。
+    portrait:
+      image: paintings/sekigahara_tokugawa_ieyasu.jpg
+      caption: 徳川家康（江戸前期の肖像、伝・狩野探幽）
+      age: false
+  - 語り: 7月25日、下野の小山で、家康が諸将と軍議を開いて西へ引き返した、いわゆる小山評定の話があります。
+    portrait:
+      image: paintings/sekigahara_tokugawa_ieyasu.jpg
+      caption: 徳川家康（江戸前期の肖像、伝・狩野探幽）
+      age: false
+    card:
+      head: 小山評定
+      body: 実際にあったかは研究で割れる
+  - 語り: ただ、一次史料に直接の記録はありません。本多隆成さんらは実施を支持し、白峰旬さんは、虚構性を指摘します。
+  - 聞き: 有名な場面なのに、本当にあったか、割れてるんだ。
+    background:
+      image: paintings/sekigahara_screen_gifu_L.jpg
+      credit: 関ヶ原合戦図屏風（部分、岐阜市歴史博物館蔵、江戸後期）
+  - 語り: 東軍の西進は、7月26日に始まります。画面は、日本の地図です。江戸から関ヶ原へ、家康は9月1日に出ました。
+    portrait: null
+    background:
+      image: paintings/hanbei_mino_map.jpg
+      credit: 《美濃国郡県人跡路程図》（19世紀）
+    card:
+      head: 9月1日
+      body: 家康、江戸を出立
+    figure:
+      type: map
+      title: 慶長5年（1600年）の動き
+      bounds:
+      - 135.0
+      - 140.4
+      - 34.4
+      - 37.0
+      places:
+      - - 江戸
+        - 139.77
+        - 35.68
+      - - 小山
+        - 139.8
+        - 36.31
+      - - 上田城
+        - 138.25
+        - 36.4
+      - - 関ヶ原
+        - 136.46
+        - 35.37
+      - - 伏見
+        - 135.77
+        - 34.93
+      - - 大坂城
+        - 135.52
+        - 34.69
+      route:
+      - 江戸
+      - 関ヶ原
+      note: 家康は9月1日に江戸を出立
+  - 聞き: 東の家康が戻ってくるまでに、三成の側は、何をしたの？
+    tone: 疑問
+    hook: true
+  - 語り: 次は、決戦の前の前哨戦、岐阜城と上田城、杭瀬川です。
+    hook: true
+- title: 8月〜9月 岐阜城・上田城・杭瀬川の前哨戦
+  background:
+    image: paintings/hanbei_gifu_castle_zu.jpg
+    credit: 《岐阜城図》（江戸時代）
+  year: 1600
+  lines:
+  - 語り: 8月22日から23日、東軍の池田輝政らが木曽川を渡り、岐阜城を攻めます。城主の織田秀信は、降伏しました。
+    portrait: null
+    card:
+      head: 8月23日
+      body: 岐阜城が降伏
+    figure: null
+  - 語り: 救援に向かった石田三成と島津の隊も、撃退されました。
+  - 聞き: 西軍、前哨戦は負けから始まったんだ。
+  - 語り: 同じころ、信濃の上田城です。真田昌幸と信繁は、下野の犬伏で東軍を離れ、西軍につきます。昌幸の長男、信之は、東軍に残りました。
+    background:
+      image: paintings/shingen_ueda_castle_map_trim.jpg
+      credit: 《信州上田城図》（江戸時代）
+    card:
+      head: 犬伏
+      body: 真田父子は西軍、信之は東軍
+  - 語り: 9月、徳川秀忠が約3万8千の軍で、上田城を囲みます。ただ、8日に、家康から上洛を命じられました。秀忠は、関ヶ原に遅れます。
+    card:
+      head: 9月8日
+      body: 秀忠、上洛を命じられる
+  - 語り: 秀忠が家康と合流するのは、9月20日です。関ヶ原の戦いの5日後でした。
+    background:
+      image: paintings/shingen_ueda_castle_map_trim.jpg
+      credit: 《信州上田城図》（江戸時代）
+  - 聞き: 息子の軍が間に合わないって、家康、困ったよね。
+  - 語り: 上田で徳川が大敗した、という話は、江戸時代の『烈祖成績』に出ます。ただ、同時代の史料の裏づけは無く、近年は小競り合い程度だった、とみる見方が有力です。
+  - 聞き: そっちも、後から大きくなった話かもしれないんだ。勝った側の記録だと、負けた話は小さく書きそうだけど、逆なんだね。
+    tone: 納得
+    background:
+      image: paintings/hanbei_gifu_castle_zu.jpg
+      credit: 《岐阜城図》（江戸時代）
+  - 語り: 9月14日の夜、島清興、通称、島左近が、杭瀬川で東軍に奇襲をかけた、とされます。家康が赤坂に着き、西軍が動揺したからです。
+    background:
+      image: paintings/hanbei_mino_map.jpg
+      credit: 《美濃国郡県人跡路程図》（19世紀）
+    card:
+      head: 9月14日夜
+      body: 杭瀬川の奇襲（島清興）
+  - 語り: 同じ夜、石田三成や島津義弘ら西軍の主力は、大垣城を出て、関ヶ原へ向かいます。小早川秀秋は、松尾山に入りました。
+    background:
+      image: paintings/sekigahara_zubyobu_p3a.jpg
+      credit: 関ヶ原合戦図屏風（部分、江戸時代）
+    card:
+      head: 9月14日夜
+      body: 西軍、関ヶ原へ。秀秋は松尾山へ
+  - 聞き: 島左近の奇襲は、勢いをつけたかったのかな。いよいよ、関ヶ原に集まったんだね。陣は、どんな並びだったの？
+    tone: 疑問
+    hook: true
+  - 語り: 次は、9月15日の朝の布陣です。
+    hook: true
+- title: 9月15日の朝 桃配山と松尾山 布陣と兵数
+  background:
+    image: paintings/sekigahara_map_1926.jpg
+    credit: 関ヶ原の布陣図（午前なかば、藤井治左衛門、1926年）
+  year: 1600
+  lines:
+  - 語り: 東軍の家康は、桃配山に本陣を置きました。江戸を出たときの家康の兵は、約3万3千、とされます。
+    portrait:
+      image: paintings/sekigahara_tokugawa_ieyasu.jpg
+      caption: 徳川家康（江戸前期の肖像、伝・狩野探幽）
+      age: false
+    card:
+      head: 桃配山
+      body: 家康の本陣
+  - 語り: 西軍は、関ヶ原を囲む山にいました。南西の松尾山に小早川秀秋。南東の南宮山に毛利秀元と吉川広家。位置は、史料で表記が違います。
+    portrait: null
+    background:
+      image: paintings/sekigahara_screen_gifu_L.jpg
+      credit: 関ヶ原合戦図屏風（部分、岐阜市歴史博物館蔵、江戸後期）
+  - 聞き: 西軍が山の上から囲んでる形なんだね。なんだか、西軍が有利そうに見えるけど。
+  - 語り: この布陣を見て、ドイツの軍人メッケルが「西軍の勝ちだ」と言った、という話があります。ただ、その発言の出典は無く、布陣図が作られたのは、メッケルの帰国後だとする指摘もあります。
+    portrait: null
+    background:
+      image: paintings/sekigahara_zubyobu_p2a.jpg
+      credit: 関ヶ原合戦図屏風（部分、江戸時代）
+    card:
+      head: メッケルの逸話
+      body: 出典が見つからない
+  - 聞き: 有名な話なのに、出典が無いんだ。じゃあ、西軍有利って印象も、ちょっと怪しいのかな。
+    tone: 納得
+  - 語り: 兵の数も、割れます。西軍は8万以上、東軍は7万4千から10万4千と、見積もりに幅があります。西軍の主な隊を、史料の一つの数で並べます。
+    background:
+      image: paintings/sekigahara_map_1926.jpg
+      credit: 関ヶ原の布陣図（午前なかば、藤井治左衛門、1926年）
+    card:
+      head: 兵数
+      body: 史料で大きく割れる
+    figure:
+      type: bars
+      title: 西軍の主な隊の数（史料の一つの数）
+      bars:
+      - - 宇喜多秀家
+        - 15000
+      - - 小早川秀秋
+        - 8000
+      - - 石田三成
+        - 6000
+      - - 小西行長
+        - 5000
+      - - 島津義弘
+        - 3000
+      labels:
+      - 1万5千
+      - 8千
+      - 6千
+      - 5千
+      - 3千（別の記述は約300）
+  - 語り: 東軍の主な隊も、同じく史料の一つの数で並べます。家康は、江戸を出たときの数です。福島正則が8千、井伊直政の先手が2千、本多忠勝が4百です。
+    background:
+      image: paintings/sekigahara_zubyobu_p2a.jpg
+      credit: 関ヶ原合戦図屏風（部分、江戸時代）
+    figure:
+      type: bars
+      title: 東軍の主な隊の数（史料の一つの数）
+      bars:
+      - - 徳川家康（江戸出陣時）
+        - 32730
+      - - 福島正則
+        - 8000
+      - - 井伊直政（先手）
+        - 2000
+      - - 本多忠勝
+        - 400
+      labels:
+      - 約3万3千
+      - 8千
+      - 2千
+      - 4百
+  - 聞き: 島津さんが3千って、別の記述だと約300なんだ。何の数かで、桁が変わるの？
+    tone: 疑問
+  - 語り: はい。島津隊は、別の記述で約300、1千人説もあります。戦場にいた数か、率いてきた数かで、数字が変わります。
+    figure: null
+    background:
+      image: paintings/sekigahara_screen_gifu_L.jpg
+      credit: 関ヶ原合戦図屏風（部分、岐阜市歴史博物館蔵、江戸後期）
+  - 聞き: 桁が違うのは、もう別の軍だよ。
+  - 語り: 戦いの始まりも、割れます。午前8時ごろとも、10時ごろとも言われます。笠谷和比古さんは、8時ごろに小さな戦いが始まり、霧が晴れた10時ごろに本格化した、とみます。
+    background:
+      image: paintings/sekigahara_zubyobu_p3a.jpg
+      credit: 関ヶ原合戦図屏風（部分、江戸時代）
+    card:
+      head: 開戦の時刻
+      body: 午前8時ごろ〜10時ごろ
+  - 聞き: そのあいだに、秀秋は、いつ動いたの？
+    tone: 疑問
+    hook: true
+  - 語り: ここから、秀秋の一歩を掘ります。
+    hook: true
+- title: 1582年〜1599年 小早川秀秋 幼少から松尾山まで
+  background:
+    image: paintings/sekigahara_zubyobu_p3a.jpg
+    credit: 関ヶ原合戦図屏風（部分、江戸時代）
+  year: 1590
+  lines:
+  - 語り: 小早川秀秋は、1582年、木下家定の五男として生まれます。母は杉原家次の娘です。呼び名の辰之助は、同時代の史料で確かめられていません。
+    portrait:
+      image: paintings/sekigahara_kobayakawa_hideaki_portrait_trim.jpg
+      caption: 小早川秀秋（17世紀前半の肖像）
+      age: false
+    card:
+      head: 1582年
+      body: 木下家定の五男として誕生
+  - 語り: 数え3歳で、叔父の羽柴秀吉の猶子になり、4歳で養子になります。7歳で従五位下・侍従になり、秀俊と名乗り、丹波亀山10万石を与えられました。
+    card:
+      head: 7歳
+      body: 丹波亀山10万石
+  - 聞き: 7歳で、10万石の城主なの？ 小学生で、もう偉い人なんだ。
+    tone: 驚き
+    background:
+      image: paintings/sekigahara_screen_gifu_L.jpg
+      credit: 関ヶ原合戦図屏風（部分、岐阜市歴史博物館蔵、江戸後期）
+  - 語り: 10歳で参議、11歳で権中納言。肩書は、どんどん上がります。数え13歳の1594年ごろ、秀吉の命で、小早川隆景の養子になりました。
+    card:
+      head: 1594年ごろ
+      body: 小早川隆景の養子に
+  - 語り: 翌1595年、秀次事件に連座して、亀山領を改易されます。12月ごろ、隆景の隠居で、小早川領30万7千石を継ぎ、筑前国主になります。14歳でした。
+    card:
+      head: 1595年
+      body: 14歳で筑前国主に
+  - 聞き: 取られたり、もらったり、自分で決めたことって、あったのかな。
+    tone: 疑問
+    background:
+      image: paintings/sekigahara_zubyobu_p3a.jpg
+      credit: 関ヶ原合戦図屏風（部分、江戸時代）
+  - 語り: 養父の隆景が、数え16歳の6月に亡くなります。秀秋は朝鮮への出兵に加わり、のちに越前12万石へ減封されます。
+    card:
+      head: 数え16歳
+      body: 隆景が没、朝鮮出兵に加わる
+  - 語り: 秀吉が亡くなったのは、8月18日。翌年2月5日、五大老連署の知行宛行状で、筑前・筑後に復領し、59万石になります。
+    card:
+      head: 1599年2月5日
+      body: 筑前・筑後に復領、59万石
+  - 聞き: 出世して、減らされて、また戻って、周りの大人の都合で、動かされっぱなしだったんだね。自分で決めた経験が少ないまま、天下分け目に立ったって、重いなあ。
+    background:
+      image: paintings/sekigahara_zubyobu_p2b.jpg
+      credit: 関ヶ原合戦図屏風（部分、江戸時代）
+  - 語り: その秀秋が、数え19歳で、あの山にいました。次は、松尾山を下りた時期です。
+    hook: true
+  - 聞き: 動いたのは、いつなの？
+    tone: 疑問
+    hook: true
+- title: 慶長5年9月15日 小早川秀秋 松尾山を下りたのはいつか
+  background:
+    image: paintings/sekigahara_zubyobu_p3a.jpg
+    credit: 関ヶ原合戦図屏風（部分、江戸時代）
+  year: 1600
+  lines:
+  - 語り: 秀秋の兵は、書状では約8千です。ほかに、松尾山のふもとには、脇坂安治の約1千2百、小川祐忠の約2千5百らがいました。
+    background:
+      image: paintings/sekigahara_map_1926.jpg
+      credit: 関ヶ原の布陣図（午前なかば、藤井治左衛門、1926年）
+  - 聞き: 8千に、ふもとの隊を足したら、けっこうな数だね。山の上は、人でいっぱいだったんだ。
+  - 語り: 9月14日、秀秋は松尾山城に入ります。15日、西軍を離れ、大谷吉継の陣を攻めました。ここまでは、確かです。
+    background:
+      image: paintings/sekigahara_screen_gifu_L.jpg
+      credit: 関ヶ原合戦図屏風（部分、岐阜市歴史博物館蔵、江戸後期）
+    card:
+      head: 9月15日
+      body: 秀秋が西軍を離れる
+    short: s2
+  - 語り: 割れるのは、時期です。研究者の説は、3つあります。
+    figure: null
+    short: s2
+  - 語り: 1つ目は、白峰旬さん。開戦の午前10時ごろに、秀秋はすぐ山を下りた、とみます。
+    figure:
+      type: stats
+      title: 小早川秀秋の離反 3つの説
+      items:
+      - - 白峰旬
+        - 開戦直後
+        - 午前10時ごろ
+      - - 笠谷和比古
+        - 正午ごろ
+        - 数刻の戦いのあと
+      - - 渡邊大門
+        - 戦いの前
+        - 決定の可能性
+      upto: 1
+    short: s2
+  - 語り: 2つ目は、笠谷和比古さん。島津義弘の『惟新公御日記』が、数刻の戦いのあとの裏切りと書くことなどから、正午ごろとみます。
+    figure:
+      type: stats
+      title: 小早川秀秋の離反 3つの説
+      items:
+      - - 白峰旬
+        - 開戦直後
+        - 午前10時ごろ
+      - - 笠谷和比古
+        - 正午ごろ
+        - 数刻の戦いのあと
+      - - 渡邊大門
+        - 戦いの前
+        - 決定の可能性
+      upto: 2
+    short: s2
+    background:
+      image: paintings/sekigahara_zubyobu_p2a.jpg
+      credit: 関ヶ原合戦図屏風（部分、江戸時代）
+  - 語り: 3つ目は、渡邊大門さん。工作は8月28日以前からあり、戦いの前に、家中で裏切りが決まっていた可能性を示します。
+    figure:
+      type: stats
+      title: 小早川秀秋の離反 3つの説
+      items:
+      - - 白峰旬
+        - 開戦直後
+        - 午前10時ごろ
+      - - 笠谷和比古
+        - 正午ごろ
+        - 数刻の戦いのあと
+      - - 渡邊大門
+        - 戦いの前
+        - 決定の可能性
+      upto: 3
+    short: s2
+  - 聞き: 同じ山、同じ日なのに、朝と昼と、前の日まで割れるんだ。
+    tone: 驚き
+    short: s2
+  - 語り: 有名な『問鉄砲』も確かめます。家康が小早川の陣へ鉄砲を撃ち込み、決断を迫った、という話です。画面は、後世の屏風の一部です。
+    portrait: null
+    background:
+      image: paintings/sekigahara_senjinzu_toiteppo.jpg
+      credit: 関ヶ原戦陣図屏風（右隻の一部、19世紀）
+    card:
+      head: 問鉄砲
+      body: 江戸時代の二次史料にだけ出る
+    figure: null
+  - 語り: 初出は、1663年の『慶長軍記』です。続いて1688年の『黒田家譜』。同時代の史料では、確かめられていません。
+  - 聞き: ドラマの名場面が、後付けかもしれないんだ。
+    tone: 納得
+  - 語り: 一方、笠谷さんは、『備前老人物語』に秀秋が迷う様子があることから、迷った、という点は信じてよい、とみます。
+    portrait:
+      image: paintings/sekigahara_kobayakawa_hideaki_portrait_trim.jpg
+      caption: 小早川秀秋（17世紀前半の肖像）
+      age: false
+    background:
+      image: paintings/sekigahara_screen_gifu_L.jpg
+      credit: 関ヶ原合戦図屏風（部分、岐阜市歴史博物館蔵、江戸後期）
+  - 聞き: 迷ったのは、本当かもしれないんだね。迷って、もし動かなかったら……。
+    tone: しみじみ
+    hook: true
+  - 語り: その前に、動かなかった人たちを見ます。
+    hook: true
+- title: 南宮山の毛利勢と島津義弘 動かなかった味方
+  background:
+    image: paintings/sekigahara_zubyobu_p2a.jpg
+    credit: 関ヶ原合戦図屏風（部分、江戸時代）
+  year: 1600
+  lines:
+  - 語り: 南宮山には、毛利秀元、吉川広家、安国寺恵瓊らがいました。あわせて約4万1千5百、と書状にあります。
+    portrait:
+      image: paintings/sekigahara_kikkawa_hiroie.jpg
+      caption: 吉川広家（江戸時代の肖像）
+      age: false
+    card:
+      head: 南宮山
+      body: 毛利勢は約4万1千5百（書状の数）
+    short: s3
+  - 聞き: 4万って、家康の本隊より多いんじゃない？ それが、戦わなかったの？
+    tone: 驚き
+    short: s3
+  - 語り: 長宗我部盛親、長束正家も、南宮山のふもとにいました。どの隊も、戦いに加わっていません。経緯は分かっていません。
+  - 語り: 理由とされるのは、前日の9月14日の動きです。吉川広家は、黒田長政を通じて東軍と交渉し、本多忠勝と井伊直政の起請文を得ました。領国を守る代わりに、毛利勢は戦わない、という密約です。
+    card:
+      head: 9月14日
+      body: 吉川広家の密約
+    short: s3
+    background:
+      image: paintings/sekigahara_screen_gifu_L.jpg
+      credit: 関ヶ原合戦図屏風（部分、岐阜市歴史博物館蔵、江戸後期）
+  - 語り: 広家は、毛利の諸将と協議せず、結んだとされます。15日、広家の隊が前をふさぎ、毛利秀元は動けず、戦わずに退いた、とされます。
+    short: s3
+  - 聞き: 味方の前を、味方がふさいでるの？ 毛利の中でも、割れてたんだね。
+    tone: 驚き
+  - 語り: 総大将の毛利輝元は、大坂城にいました。西軍の取り決めでは、家康が西へ来たら、輝元が出陣して指揮する手はずでした。しかし、関ヶ原が終わるまで、大坂城を動いていません。
+    portrait:
+      image: paintings/sekigahara_mori_terumoto.jpg
+      caption: 毛利輝元（江戸初期の肖像）
+      age: false
+    card:
+      head: 毛利輝元
+      body: 大坂城から動かず
+    short: s3
+    background:
+      image: paintings/sekigahara_zubyobu_p3a.jpg
+      credit: 関ヶ原合戦図屏風（部分、江戸時代）
+  - 聞き: 総大将が、戦場にいなかったの？ それって、かなり痛くない？ 現場の人たちも、動きにくいよね。
+    tone: 疑問
+  - 語り: 島津義弘も、本戦では兵をほとんど動かさなかった、とされます。夜襲を進言した話は、1727年の『落穂集』にだけあり、島津側の史料には見えません。史実とは言えません。
+    portrait: null
+    background:
+      image: paintings/sekigahara_screen_gifu_L.jpg
+      credit: 関ヶ原合戦図屏風（部分、岐阜市歴史博物館蔵、江戸後期）
+    card:
+      head: 島津義弘
+      body: 夜襲の進言は『落穂集』だけ
+  - 語り: 9月15日、島津義弘の隊は、小早川の離反のあと、孤立します。そこから敵の中へ突き進み、戦場を離れました。島津の退き口です。
+    background:
+      image: paintings/sekigahara_zubyobu_p3a.jpg
+      credit: 関ヶ原合戦図屏風（部分、江戸時代）
+    card:
+      head: 島津の退き口
+      body: 生還は80数名と言われる
+    short: s5
+  - 語り: 生きて戻ったのは、80数名、と言われます。母数も、約300、約1千、約1千5百と、史料で割れます。後世の軍記には、別の数もあります。
+    short: s5
+  - 聞き: 80人しか戻れなかった、って……。数字が重いね。戦う気がなかったのか、様子を見てたのか、そこも気になるな。
+    tone: 重い
+    short: s5
+    background:
+      image: paintings/sekigahara_zubyobu_p2b.jpg
+      credit: 関ヶ原合戦図屏風（部分、江戸時代）
+  - 語り: 井伊直政と松平忠吉が負傷し、追撃が緩んだ、とも伝わります。島津は、のちに本領を安堵されました。
+    short: s5
+  - 聞き: じゃあ、史料に残る、別の道はあったの？
+    tone: 疑問
+    hook: true
+  - 語り: 次は、そこを掘ります。
+    hook: true
+- title: 9月25日と10月1日 関ヶ原のあと 約束は覆された
+  background:
+    image: paintings/sekigahara_zubyobu_p2a.jpg
+    credit: 関ヶ原合戦図屏風（部分、江戸時代）
+  year: 1600
+  lines:
+  - 語り: 戦いは、東軍の勝ちで終わりました。9月25日、毛利輝元は、領国を守るという条件で、大坂城を出ます。
+    portrait:
+      image: paintings/sekigahara_mori_terumoto.jpg
+      caption: 毛利輝元（江戸初期の肖像）
+      age: false
+    card:
+      head: 9月25日
+      body: 輝元が大坂城を退去
+  - 聞き: じゃあ、毛利は、守られたんじゃない？
+    tone: 疑問
+  - 語り: ところが、輝元が総大将として積極的に動いていたことが分かると、家康は約束を覆します。広家らの尽力で、取りつぶしは免れましたが、毛利は周防・長門の2か国に減らされます。
+    background:
+      image: paintings/sekigahara_screen_gifu_L.jpg
+      credit: 関ヶ原合戦図屏風（部分、岐阜市歴史博物館蔵、江戸後期）
+    card:
+      head: 毛利の減封
+      body: 約120万石から防長2か国へ
+  - 聞き: 密約で戦わなかったのに、守られなかったの？ 広家、かなり苦しい立場だね。
+    tone: 驚き
+  - 語り: 10月1日、石田三成、小西行長、安国寺恵瓊が、京都の六条河原で処刑されます。
+    portrait:
+      image: paintings/sekigahara_ishida_mitsunari.jpg
+      caption: 石田三成（18〜19世紀ごろの肖像）
+      age: false
+    background:
+      image: paintings/sekigahara_zubyobu_p3a.jpg
+      credit: 関ヶ原合戦図屏風（部分、江戸時代）
+    card:
+      head: 10月1日
+      body: 三成ら3人が処刑
+  - 聞き: 負けた側は、そうなるんだ。……重いね。
+  - 語り: 石高も動きました。家康は255万石から400万石へ、145万石の増加です。豊臣の直轄領は、222万石から約65万石へ減りました。
+    portrait: null
+    card:
+      head: 石高の移り変わり
+      body: 東軍が勝ち、領地が動いた
+    figure:
+      type: bars
+      title: 関ヶ原の前と後（万石）
+      bars:
+      - - 豊臣直轄領・前
+        - 222
+      - - 豊臣直轄領・後
+        - 65
+      - - 徳川家康・前
+        - 255
+      - - 徳川家康・後
+        - 400
+      - - 毛利・前
+        - 120
+      - - 毛利・後
+        - 30
+      labels:
+      - 222万石
+      - 約65万石
+      - 255万石
+      - 400万石
+      - 120万石
+      - 約30万石
+  - 聞き: 勝った側と負けた側で、領地が一気に入れ替わったんだ。上杉や佐竹も、ずいぶん減らされたって聞くよね。家康の増えかた、会社なら、とんでもない大型買収だよね。
+    tone: 驚き
+    background:
+      image: paintings/sekigahara_screen_gifu_L.jpg
+      credit: 関ヶ原合戦図屏風（部分、岐阜市歴史博物館蔵、江戸後期）
+  - 語り: 一方、立花宗茂や丹羽長重らは、のちに大名へ復帰します。負けた側が、全員、そのまま消えたわけではありません。
+    background:
+      image: paintings/sekigahara_zubyobu_p2a.jpg
+      credit: 関ヶ原合戦図屏風（部分、江戸時代）
+    figure: null
+  - 聞き: 負けた人が、また戻れる場合もあったんだね。全部が全部、終わりじゃなかったんだ。
+  - 語り: この結果を知っているから、私たちは、関ヶ原を、天下分け目、と呼びます。では、史料に残る別の道は、あったのか。
+    hook: true
+  - 聞き: 動かなかった選択肢が、本当にあったのか、気になるな。
+    tone: 疑問
+    hook: true
+    background:
+      image: paintings/sekigahara_zubyobu_p3a.jpg
+      credit: 関ヶ原合戦図屏風（部分、江戸時代）
+- title: 史料に残る別の道 迷い・出陣・密約
+  background:
+    image: paintings/sekigahara_screen_gifu_L.jpg
+    credit: 関ヶ原合戦図屏風（部分、岐阜市歴史博物館蔵、江戸後期）
+  year: 1600
+  lines:
+  - 語り: 想像の前に、史料に残る別の道を、3つ見ます。当時の人が実際に考えていた選択肢だけです。1つ目。秀秋が迷い続ける道。
+    portrait:
+      image: paintings/sekigahara_kobayakawa_hideaki_portrait_trim.jpg
+      caption: 小早川秀秋（17世紀前半の肖像）
+      age: false
+    card:
+      head: 別の道 1
+      body: 秀秋が迷い続ける
+  - 語り: 『備前老人物語』に、迷う様子が書かれ、笠谷さんは信じてよい、とみます。ただ、迷ったあと、山を下りたのが史実です。動かなかった記録は、今回の調査では見つかっていません。
+  - 聞き: 迷ったことは残ってるけど、動かない、は書いてないんだ。
+    background:
+      image: paintings/sekigahara_zubyobu_p2a.jpg
+      credit: 関ヶ原合戦図屏風（部分、江戸時代）
+  - 語り: 2つ目。毛利輝元が出陣する道です。取り決めは、輝元が大坂から出て指揮するものでした。実際には、動きませんでした。経緯は分かっていません。
+    portrait:
+      image: paintings/sekigahara_mori_terumoto.jpg
+      caption: 毛利輝元（江戸初期の肖像）
+      age: false
+    background:
+      image: paintings/sekigahara_zubyobu_p3a.jpg
+      credit: 関ヶ原合戦図屏風（部分、江戸時代）
+    card:
+      head: 別の道 2
+      body: 輝元が出陣する
+  - 語り: 3つ目。吉川広家の密約が、なかった道です。広家は、西軍の敗北を予想して交渉した、とされます。
+    portrait:
+      image: paintings/sekigahara_kikkawa_hiroie.jpg
+      caption: 吉川広家（江戸時代の肖像）
+      age: false
+    card:
+      head: 別の道 3
+      body: 広家の密約がない
+  - 聞き: どれも、実際に選べた道なんだね。どれか1つで、西軍は勝てたのかな？
+    tone: 疑問
+  - 語り: そこは分かりません。しかも、秀秋の離反は、戦前から工作されていた、とみる見方もあります。渡邊さんの見方です。動かない道は、史料では見えにくくなります。
+    portrait: null
+    background:
+      image: paintings/sekigahara_zubyobu_p2a.jpg
+      credit: 関ヶ原合戦図屏風（部分、江戸時代）
+  - 聞き: 史料が無いなら、どうやって考えるの？
+    tone: 疑問
+    hook: true
+  - 語り: 当時の人の選択肢を土台に、想像で掘ります。分岐点は、ひとつだけ。秀秋が、松尾山から動かないことです。
+    hook: true
+- title: 想像① 9月15日の昼ちかく 桃配山に動かない松尾山
+  background:
+    image: paintings/sekigahara_screen_gifu_L.jpg
+    credit: 関ヶ原合戦図屏風（部分、岐阜市歴史博物館蔵、江戸後期）
+  year: 1600
+  lines:
+  - 語り: ここから先は、想像です。仮定は、ひとつだけ。9月15日、小早川秀秋は、松尾山から動きません。西軍にも東軍にも、手を出さずに、山にいます。
+    portrait:
+      image: paintings/sekigahara_kobayakawa_hideaki_portrait_trim.jpg
+      caption: 小早川秀秋（17世紀前半の肖像）
+      age: false
+    card:
+      head: ここから想像
+      body: 秀秋は松尾山から動かない
+    short: s4
+  - 語り: ほかは史実のままです。毛利勢は戦わず、輝元は大坂城にいます。ここでいう西軍の勝ちは、東軍が攻め切れずに引くこと、とします。
+  - 語り: この場面を正面から論じた研究は、今回の調査では見つかっていません。
+    background:
+      image: paintings/sekigahara_zubyobu_p2a.jpg
+      credit: 関ヶ原合戦図屏風（部分、江戸時代）
+  - 語り: ただ、一つ、分かれ目があります。松尾山のふもとの脇坂安治ら4隊です。史実では、秀秋のあとに寝返った、と二次史料にあります。
+    background:
+      image: paintings/sekigahara_zubyobu_p2a.jpg
+      credit: 関ヶ原合戦図屏風（部分、江戸時代）
+    card:
+      head: 分かれ目
+      body: 松尾山のふもとの4隊
+  - 語り: 4隊が史実どおり寝返れば、大谷隊は持ちません。4隊も動かなければ、大谷隊は持ちます。どちらになるかは、材料がありません。
+  - 聞き: 秀秋が動かなくても、ほかの4隊が動いたら、結局、同じになっちゃうの？
+    tone: 疑問
+    background:
+      image: paintings/sekigahara_zubyobu_p3a.jpg
+      credit: 関ヶ原合戦図屏風（部分、江戸時代）
+  - 語り: はい。だから、ここは2つに分けて考えます。まず、家康の本陣から見ます。
+    portrait:
+      image: paintings/sekigahara_tokugawa_ieyasu.jpg
+      caption: 徳川家康（江戸前期の肖像、伝・狩野探幽）
+      age: false
+  - 語り: 想像劇場、第1幕です。9月15日の昼ちかく、桃配山の本陣。家康と井伊直政が、向き合います。
+    background:
+      image: paintings/sekigahara_zubyobu_p2a.jpg
+      credit: 関ヶ原合戦図屏風（部分、江戸時代）
+    card:
+      head: 想像劇場 第1幕
+      body: 9月15日昼ちかく 桃配山の本陣
+  - 語り: 本陣は、のちに前へ進んだとも言われますが、一次史料は未確認です。ここでは桃配山のままとします。
+  - 人物: 「直政、松尾山は、まだ動かぬか」
+    who: 家康想像
+    portrait:
+      image: paintings/sekigahara_tokugawa_ieyasu.jpg
+      caption: 徳川家康（江戸前期の肖像、伝・狩野探幽）
+      age: false
+    short: s4
+  - 人物: 「動きませぬ。大谷殿の陣へ向かう様子も、ありませぬ」
+    who: 直政想像
+    portrait:
+      image: paintings/sekigahara_ii_naomasa.jpg
+      caption: 井伊直政（江戸時代の肖像）
+      age: false
+    short: s4
+    background:
+      image: paintings/sekigahara_zubyobu_p2b.jpg
+      credit: 関ヶ原合戦図屏風（部分、江戸時代）
+  - 人物: 「あの若者は、何を考えておる」
+    who: 家康想像
+    portrait:
+      image: paintings/sekigahara_tokugawa_ieyasu.jpg
+      caption: 徳川家康（江戸前期の肖像、伝・狩野探幽）
+      age: false
+  - 人物: 「分かりませぬ。ただ、待つほど、ほかの隊が苦しくなります」
+    who: 直政想像
+    portrait:
+      image: paintings/sekigahara_ii_naomasa.jpg
+      caption: 井伊直政（江戸時代の肖像）
+      age: false
+    short: s4
+  - 人物: 「福島や黒田は、まだ戦えるか」
+    who: 家康想像
+    portrait:
+      image: paintings/sekigahara_tokugawa_ieyasu.jpg
+      caption: 徳川家康（江戸前期の肖像、伝・狩野探幽）
+      age: false
+  - 人物: 「戦えます。ただ、決め手がありませぬ」
+    who: 直政想像
+    portrait:
+      image: paintings/sekigahara_ii_naomasa.jpg
+      caption: 井伊直政（江戸時代の肖像）
+      age: false
+    background:
+      image: paintings/sekigahara_screen_gifu_R.jpg
+      credit: 関ヶ原合戦図屏風（部分、岐阜市歴史博物館蔵、江戸後期）
+  - 人物: 「決め手は、あの山にある。それを、わしは、待つしかないのか」
+    who: 家康想像
+    portrait:
+      image: paintings/sekigahara_tokugawa_ieyasu.jpg
+      caption: 徳川家康（江戸前期の肖像、伝・狩野探幽）
+      age: false
+    short: s4
+  - 聞き: 家康が、人に頼るしかない顔をしてる。……あーしなら、胃が痛くなりそう。
+    tone: しみじみ
+    portrait: null
+  - 語り: ここでは、戦いが昼を過ぎても続く、と想像します。決め手の離反が無ければ、東軍の攻めは、すぐには決まらないからです。可能性は、ありうる、です。
+    background:
+      image: paintings/sekigahara_zubyobu_p3a.jpg
+      credit: 関ヶ原合戦図屏風（部分、江戸時代）
+    card:
+      head: ありうる
+      body: 戦いは昼を過ぎて続く
+    short: s4
+  - 語り: ただ、続いた戦いが、どちらへ傾くか。秀忠は、史実で9月20日に家康と合流します。長引けば、合流の余地はあります。傾く先は、材料がなく、ほぼ妄想です。
+    card:
+      head: ほぼ妄想
+      body: どちらに傾くかは材料なし
+  - 聞き: 秀忠の軍は、5日後にやっと来るんだよね。それまで、持つのかな。
+    tone: 疑問
+    hook: true
+    background:
+      image: paintings/sekigahara_zubyobu_p3b.jpg
+      credit: 関ヶ原合戦図屏風（部分、江戸時代）
+  - 語り: 次は、秀秋のいる山のほうに、場面を移します。
+    hook: true
+- title: 想像② 午後の松尾山 三成と秀秋
+  background:
+    image: paintings/sekigahara_zubyobu_p2a.jpg
+    credit: 関ヶ原合戦図屏風（部分、江戸時代）
+  year: 1600
+  lines:
+  - 語り: 想像劇場、第2幕です。午後の松尾山。石田三成が、秀秋に直接、問いかけます。2人が会った記録は、ありません。
+    portrait:
+      image: paintings/sekigahara_ishida_mitsunari.jpg
+      caption: 石田三成（18〜19世紀ごろの肖像）
+      age: false
+    background:
+      image: paintings/sekigahara_zubyobu_p3a.jpg
+      credit: 関ヶ原合戦図屏風（部分、江戸時代）
+    card:
+      head: ここから想像
+      body: 第2幕 午後 松尾山
+  - 人物: 「内府殿に付くのか、わが方に付くのか。今、ここで答えてもらいたい」
+    who: 三成想像
+    portrait:
+      image: paintings/sekigahara_ishida_mitsunari.jpg
+      caption: 石田三成（18〜19世紀ごろの肖像）
+      age: false
+  - 人物: 「……わしは、どちらにも、味方せぬ。ここで、戦を見ておる」
+    who: 秀秋想像
+    portrait:
+      image: paintings/sekigahara_kobayakawa_hideaki_portrait_trim.jpg
+      caption: 小早川秀秋（17世紀前半の肖像）
+      age: false
+    background:
+      image: paintings/sekigahara_screen_gifu_L.jpg
+      credit: 関ヶ原合戦図屏風（部分、岐阜市歴史博物館蔵、江戸後期）
+  - 人物: 「見ておるだけで、よいのか。ここが動けば、勝負が決まる」
+    who: 三成想像
+    portrait:
+      image: paintings/sekigahara_ishida_mitsunari.jpg
+      caption: 石田三成（18〜19世紀ごろの肖像）
+      age: false
+  - 人物: 「決まるからこそ、動けぬのだ。どちらが勝つか、まだ分からぬ」
+    who: 秀秋想像
+    portrait:
+      image: paintings/sekigahara_kobayakawa_hideaki_portrait_trim.jpg
+      caption: 小早川秀秋（17世紀前半の肖像）
+      age: false
+  - 人物: 「ならば、せめて、大谷殿に、手を貸してもらいたい」
+    who: 三成想像
+    portrait:
+      image: paintings/sekigahara_ishida_mitsunari.jpg
+      caption: 石田三成（18〜19世紀ごろの肖像）
+      age: false
+    background:
+      image: paintings/sekigahara_zubyobu_p3a.jpg
+      credit: 関ヶ原合戦図屏風（部分、江戸時代）
+  - 人物: 「手を貸せば、内府殿が許さぬ。貸さねば、そなたが許さぬ。……わしは、まだ十九じゃ」
+    who: 秀秋想像
+    portrait:
+      image: paintings/sekigahara_kobayakawa_hideaki_portrait_trim.jpg
+      caption: 小早川秀秋（17世紀前半の肖像）
+      age: false
+  - 人物: 「十九の者が、天下の分かれ目に立っておる。腹をくくれ」
+    who: 三成想像
+    portrait:
+      image: paintings/sekigahara_ishida_mitsunari.jpg
+      caption: 石田三成（18〜19世紀ごろの肖像）
+      age: false
+  - 人物: 「くくれぬ。それが、わしの答えじゃ」
+    who: 秀秋想像
+    portrait:
+      image: paintings/sekigahara_kobayakawa_hideaki_portrait_trim.jpg
+      caption: 小早川秀秋（17世紀前半の肖像）
+      age: false
+    background:
+      image: paintings/sekigahara_zubyobu_p2b.jpg
+      credit: 関ヶ原合戦図屏風（部分、江戸時代）
+  - 聞き: 秀秋、ほんとに追い詰められてるね。あーしなら、動けないかも。どっちに付いても、誰かに恨まれるもんね。
+    tone: しみじみ
+    portrait: null
+  - 語り: ここでは、秀秋が最後まで動かない、と想像します。史料に残る迷いが、そのまま続く形です。可能性は、ありうる、です。
+    background:
+      image: paintings/sekigahara_screen_gifu_L.jpg
+      credit: 関ヶ原合戦図屏風（部分、岐阜市歴史博物館蔵、江戸後期）
+    card:
+      head: ありうる
+      body: 秀秋は最後まで迷い続ける
+  - 語り: 大谷吉継の隊は、書状で約1千2百、別の記述では約600です。4隊が史実どおり寝返れば、側面を攻められます。動かなければ、持ちこたえます。この分かれ目は、ほぼ妄想です。
+    background:
+      image: paintings/sekigahara_zubyobu_p2b.jpg
+      credit: 関ヶ原合戦図屏風（部分、江戸時代）
+    card:
+      head: ほぼ妄想
+      body: 大谷隊は4隊の動き次第
+  - 聞き: 持ちこたえるかどうかは、ふもとの4隊しだい、なんだね。西軍の本拠は、どうなってるんだろう。
+    tone: 疑問
+    hook: true
+  - 語り: 場面は、翌日の大坂城に移ります。
+    hook: true
+- title: 想像③ 9月16日 大坂城に届く口上
+  background:
+    image: paintings/sekigahara_zubyobu_p3a.jpg
+    credit: 関ヶ原合戦図屏風（部分、江戸時代）
+  year: 1600
+  lines:
+  - 語り: 想像劇場、第3幕です。9月16日、大坂城。輝元のもとへ、吉川広家の使者が着きます。広家は南宮山にいるので、使者が口上を伝える形にします。広家の言葉は、使者の口上として読みます。
+    portrait:
+      image: paintings/sekigahara_mori_terumoto.jpg
+      caption: 毛利輝元（江戸初期の肖像）
+      age: false
+    background:
+      image: paintings/sekigahara_osaka_castle_trim.jpg
+      credit: 《大坂夏の陣図屏風》大坂城の天守（部分、17世紀前半。1615年ごろの姿）
+    card:
+      head: ここから想像
+      body: 第3幕 9月16日 大坂城
+  - 人物: 「戦は、どうなった。秀秋は、どちらへ付いた」
+    who: 輝元想像
+    portrait:
+      image: paintings/sekigahara_mori_terumoto.jpg
+      caption: 毛利輝元（江戸初期の肖像）
+      age: false
+  - 人物: 「広家の言付けにござる。秀秋殿は、山を下りませなんだ。戦は、日が暮れても、決まっておりませぬ」
+    who: 広家想像
+    portrait:
+      image: paintings/sekigahara_kikkawa_hiroie.jpg
+      caption: 吉川広家（江戸時代の肖像）
+      age: false
+    background:
+      image: paintings/sekigahara_screen_gifu_L.jpg
+      credit: 関ヶ原合戦図屏風（部分、岐阜市歴史博物館蔵、江戸後期）
+  - 人物: 「ならば、秀元に伝えよ。討って出よ、と」
+    who: 輝元想像
+    portrait:
+      image: paintings/sekigahara_mori_terumoto.jpg
+      caption: 毛利輝元（江戸初期の肖像）
+      age: false
+  - 人物: 「それは、なりませぬ。徳川方との約束がござる。毛利の家を守る、約束にござる、とのこと」
+    who: 広家想像
+    portrait:
+      image: paintings/sekigahara_kikkawa_hiroie.jpg
+      caption: 吉川広家（江戸時代の肖像）
+      age: false
+  - 人物: 「約束は、勝負が決まる前のものじゃ。今は、勝負が分からぬ」
+    who: 輝元想像
+    portrait:
+      image: paintings/sekigahara_mori_terumoto.jpg
+      caption: 毛利輝元（江戸初期の肖像）
+      age: false
+    background:
+      image: paintings/sekigahara_zubyobu_p3a.jpg
+      credit: 関ヶ原合戦図屏風（部分、江戸時代）
+  - 人物: 「分からぬからこそ、動けば、毛利の百二十万石を賭けることになります、とのこと」
+    who: 広家想像
+    portrait:
+      image: paintings/sekigahara_kikkawa_hiroie.jpg
+      caption: 吉川広家（江戸時代の肖像）
+      age: false
+  - 人物: 「賭けぬ者に、天下は取れぬ。……だが、わしも、まだ大坂を出ておらぬな」
+    who: 輝元想像
+    portrait:
+      image: paintings/sekigahara_mori_terumoto.jpg
+      caption: 毛利輝元（江戸初期の肖像）
+      age: false
+  - 聞き: 毛利の中でも、攻めたい人と、守りたい人が割れてるんだね。輝元は攻めたいのに、広家に止められてる感じかな。
+    portrait: null
+    background:
+      image: paintings/sekigahara_zubyobu_p2b.jpg
+      credit: 関ヶ原合戦図屏風（部分、江戸時代）
+  - 語り: ここでは、毛利勢は動かない、と想像します。広家の密約は、前日の9月14日に結ばれ、秀秋の動きとは別のものだからです。可能性は、高い、です。
+    background:
+      image: paintings/sekigahara_zubyobu_p2a.jpg
+      credit: 関ヶ原合戦図屏風（部分、江戸時代）
+    card:
+      head: 高い
+      body: 南宮山の毛利勢は動かない
+  - 語り: 輝元が、大坂から出るか。取り決めは出陣でしたが、史実でも、動いていません。札は、ありうる、です。
+    portrait:
+      image: paintings/sekigahara_mori_terumoto.jpg
+      caption: 毛利輝元（江戸初期の肖像）
+      age: false
+    card:
+      head: ありうる
+      body: 輝元は大坂城に残る
+  - 聞き: 毛利が動かないなら、西軍は、勝ち切れないんじゃない？
+    tone: 疑問
+  - 語り: そう言い切れる材料も、ありません。勝ち切れるか、引き分けに近い形になるか。ここは、ほぼ妄想です。
+    portrait: null
+    background:
+      image: paintings/sekigahara_zubyobu_p3a.jpg
+      credit: 関ヶ原合戦図屏風（部分、江戸時代）
+    card:
+      head: ほぼ妄想
+      body: 西軍が勝ち切れるかは材料なし
+  - 聞き: 勝つ道は、細いけど、無くはないのかな。表で、人の動きをまとめて見たいな。
+    hook: true
+  - 語り: 次は、人の運命を、表にします。
+    hook: true
+- title: 想像④ 1600年 秀秋・毛利・大谷・家康の運命表
+  background:
+    image: paintings/sekigahara_screen_gifu_L.jpg
+    credit: 関ヶ原合戦図屏風（部分、岐阜市歴史博物館蔵、江戸後期）
+  year: 1600
+  lines:
+  - 語り: ここが、今日いちばんの見どころです。前提は、ひとつ。史実の秀秋は、山を下りました。もしも、動かなかったら。あの人たちは、どうなるのか。
+    portrait: null
+    card:
+      head: ここから想像
+      body: 人物の運命表
+  - 聞き: 誰がどうなるのか、一覧で見られるの？ この表も、研究はあるのかな。
+    tone: 疑問
+  - 語り: 材料は、これまで見た事実だけです。表は、4人にしぼります。
+    card:
+      head: 研究
+      body: 論じた研究は見つからない
+  - 語り: 1人目は、小早川秀秋。史実では、戦後は岡山55万石に移りますが、2年後に数え21歳で亡くなり、家は絶えます。もしもは、山にとどまり続けます。可能性は、ありうる、です。
+    portrait:
+      image: paintings/sekigahara_kobayakawa_hideaki_portrait_trim.jpg
+      caption: 小早川秀秋（17世紀前半の肖像）
+      age: false
+    figure:
+      type: table
+      title: 人物の運命表（史実ともしも）
+      cols:
+      - 史実
+      - もしも
+      rows:
+      - - 小早川秀秋
+        - 岡山55万石、2年後に没
+        - 山にとどまり続ける
+        - ありうる
+      - - 毛利勢（南宮山）
+        - 密約で戦わず、毛利家は減封
+        - 動かないまま
+        - 高い
+      - - 大谷吉継
+        - 秀秋の離反で側面を攻められた
+        - 4隊の動きしだい
+        - ほぼ妄想
+      - - 徳川家康
+        - 255万石が400万石に
+        - 勝敗が決まらない日が続く
+        - ほぼ妄想
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 1
+    background:
+      image: paintings/sekigahara_zubyobu_p2a.jpg
+      credit: 関ヶ原合戦図屏風（部分、江戸時代）
+  - 聞き: それを囲む人たちは、どうなるの？ 山に居続けた秀秋のその後も、気になるな。
+  - 語り: 2人目は、南宮山の毛利勢です。史実では、広家の密約で戦わず、毛利家は戦後、周防・長門の2か国に減らされます。もしもでも、南宮山の毛利勢は動きません。札は、高い、です。
+    portrait:
+      image: paintings/sekigahara_mori_terumoto.jpg
+      caption: 毛利輝元（江戸初期の肖像）
+      age: false
+    background:
+      image: paintings/sekigahara_zubyobu_p2a.jpg
+      credit: 関ヶ原合戦図屏風（部分、江戸時代）
+    figure:
+      type: table
+      title: 人物の運命表（史実ともしも）
+      cols:
+      - 史実
+      - もしも
+      rows:
+      - - 小早川秀秋
+        - 岡山55万石、2年後に没
+        - 山にとどまり続ける
+        - ありうる
+      - - 毛利勢（南宮山）
+        - 密約で戦わず、毛利家は減封
+        - 動かないまま
+        - 高い
+      - - 大谷吉継
+        - 秀秋の離反で側面を攻められた
+        - 4隊の動きしだい
+        - ほぼ妄想
+      - - 徳川家康
+        - 255万石が400万石に
+        - 勝敗が決まらない日が続く
+        - ほぼ妄想
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 2
+  - 聞き: 毛利は、動かなくても、動いても、どっちにしても重たい立場だね。
+  - 語り: 3人目は、大谷吉継。史実では、秀秋の離反で側面を攻められました。もしもは、脇坂ら4隊の動きしだいです。持つか、持たないか。ここは、ほぼ妄想です。
+    portrait: null
+    background:
+      image: paintings/sekigahara_zubyobu_p3a.jpg
+      credit: 関ヶ原合戦図屏風（部分、江戸時代）
+    figure:
+      type: table
+      title: 人物の運命表（史実ともしも）
+      cols:
+      - 史実
+      - もしも
+      rows:
+      - - 小早川秀秋
+        - 岡山55万石、2年後に没
+        - 山にとどまり続ける
+        - ありうる
+      - - 毛利勢（南宮山）
+        - 密約で戦わず、毛利家は減封
+        - 動かないまま
+        - 高い
+      - - 大谷吉継
+        - 秀秋の離反で側面を攻められた
+        - 4隊の動きしだい
+        - ほぼ妄想
+      - - 徳川家康
+        - 255万石が400万石に
+        - 勝敗が決まらない日が続く
+        - ほぼ妄想
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 3
+  - 語り: 4人目は、徳川家康。史実では、255万石が、400万石になります。もしもは、決まらない日が続いたかもしれません。その先は、ほぼ妄想です。
+    portrait:
+      image: paintings/sekigahara_tokugawa_ieyasu.jpg
+      caption: 徳川家康（江戸前期の肖像、伝・狩野探幽）
+      age: false
+    background:
+      image: paintings/sekigahara_screen_gifu_L.jpg
+      credit: 関ヶ原合戦図屏風（部分、岐阜市歴史博物館蔵、江戸後期）
+    figure:
+      type: table
+      title: 人物の運命表（史実ともしも）
+      cols:
+      - 史実
+      - もしも
+      rows:
+      - - 小早川秀秋
+        - 岡山55万石、2年後に没
+        - 山にとどまり続ける
+        - ありうる
+      - - 毛利勢（南宮山）
+        - 密約で戦わず、毛利家は減封
+        - 動かないまま
+        - 高い
+      - - 大谷吉継
+        - 秀秋の離反で側面を攻められた
+        - 4隊の動きしだい
+        - ほぼ妄想
+      - - 徳川家康
+        - 255万石が400万石に
+        - 勝敗が決まらない日が続く
+        - ほぼ妄想
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 4
+  - 聞き: 表で見ると、はっきりしてるのは、毛利だけなんだね。三成や島津は、どうなったのかな。
+    tone: しみじみ
+    hook: true
+  - 語り: 三成も島津も、この表の外です。次は、日本の形がどう変わるのか、変化点を見ます。
+    hook: true
+- title: 想像⑤ 日本の変化点と、現代につながる鎖
+  background:
+    image: paintings/sekigahara_zubyobu_p3a.jpg
+    credit: 関ヶ原合戦図屏風（部分、江戸時代）
+  year: 1600
+  lines:
+  - 語り: ここからは、さらに一歩、遠い想像です。西軍が勝ったなら、日本は、どう変わるのか。
+    portrait: null
+    card:
+      head: ここから想像
+      body: 西軍が勝ったなら
+  - 聞き: 勝ち切れるかが、ほぼ妄想なのに、その先も考えるの？ ちゃんと断ってくれるなら、聞いてみたいな。
+    tone: 疑問
+  - 語り: 史実の数字を、手短に確認します。家康は255万石から400万石へ。豊臣の直轄領は、222万石から約65万石へ。毛利は、約120万石から防長2か国へ。
+    background:
+      image: paintings/sekigahara_screen_gifu_L.jpg
+      credit: 関ヶ原合戦図屏風（部分、岐阜市歴史博物館蔵、江戸後期）
+    card:
+      head: 史実の確認
+      body: 石高が大きく動いた
+    figure:
+      type: bars
+      title: 関ヶ原の前と後（万石）
+      bars:
+      - - 豊臣直轄領・前
+        - 222
+      - - 豊臣直轄領・後
+        - 65
+      - - 徳川家康・前
+        - 255
+      - - 徳川家康・後
+        - 400
+      - - 毛利・前
+        - 120
+      - - 毛利・後
+        - 30
+      labels:
+      - 222万石
+      - 約65万石
+      - 255万石
+      - 400万石
+      - 120万石
+      - 約30万石
+  - 聞き: 東軍が勝つと、領地が一気に動くんだね。
+    tone: 驚き
+  - 語り: 1つ目は、豊臣政権です。西軍が勝てば、直轄領の減りかたは変わるかもしれません。ただ、その前提の勝ち切れるかが、材料なし。ほぼ妄想です。
+    portrait:
+      image: paintings/sekigahara_toyotomi_hideyori.jpg
+      caption: 豊臣秀頼（17世紀の肖像）
+      age: false
+    background:
+      image: paintings/sekigahara_screen_gifu_L.jpg
+      credit: 関ヶ原合戦図屏風（部分、岐阜市歴史博物館蔵、江戸後期）
+    card:
+      head: ほぼ妄想
+      body: 論じた研究は見つからない
+    figure:
+      type: table
+      title: 日本の変化点（史実ともしも）
+      cols:
+      - 史実
+      - もしも
+      rows:
+      - - 豊臣政権
+        - 直轄領が222万から約65万石に
+        - 直轄領は減らないかもしれない
+        - ほぼ妄想
+      - - 江戸幕府
+        - 1603年に家康が開く
+        - 開かれない道もある
+        - ほぼ妄想
+      - - 毛利家
+        - 120万石から防長の2か国に
+        - 減封されない道もある
+        - ほぼ妄想
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 1
+  - 聞き: 秀頼の側が守られる道も、あるかも、ってこと？
+  - 語り: 2つ目は、江戸幕府です。家康が開いたのは、1603年とされます。西軍が勝った世界で、その道が無くなるとは、材料がありません。ほぼ妄想です。
+    portrait:
+      image: paintings/sekigahara_tokugawa_ieyasu.jpg
+      caption: 徳川家康（江戸前期の肖像、伝・狩野探幽）
+      age: false
+    background:
+      image: paintings/ieyasu_edo_zu_byobu_castle_detail.jpg
+      credit: 江戸図屏風（江戸城の部分、17世紀。家康のころより後の姿）
+    card:
+      head: 江戸幕府
+      body: 1603年に家康が開く
+    figure:
+      type: table
+      title: 日本の変化点（史実ともしも）
+      cols:
+      - 史実
+      - もしも
+      rows:
+      - - 豊臣政権
+        - 直轄領が222万から約65万石に
+        - 直轄領は減らないかもしれない
+        - ほぼ妄想
+      - - 江戸幕府
+        - 1603年に家康が開く
+        - 開かれない道もある
+        - ほぼ妄想
+      - - 毛利家
+        - 120万石から防長の2か国に
+        - 減封されない道もある
+        - ほぼ妄想
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 2
+  - 語り: 3つ目は、毛利家です。西軍が勝った世界の毛利は、減封されない道もあります。ただ、勝ち切れるかが材料なしです。札は、ほぼ妄想です。
+    portrait:
+      image: paintings/sekigahara_mori_terumoto.jpg
+      caption: 毛利輝元（江戸初期の肖像）
+      age: false
+    background:
+      image: paintings/sekigahara_zubyobu_p2a.jpg
+      credit: 関ヶ原合戦図屏風（部分、江戸時代）
+    figure:
+      type: table
+      title: 日本の変化点（史実ともしも）
+      cols:
+      - 史実
+      - もしも
+      rows:
+      - - 豊臣政権
+        - 直轄領が222万から約65万石に
+        - 直轄領は減らないかもしれない
+        - ほぼ妄想
+      - - 江戸幕府
+        - 1603年に家康が開く
+        - 開かれない道もある
+        - ほぼ妄想
+      - - 毛利家
+        - 120万石から防長の2か国に
+        - 減封されない道もある
+        - ほぼ妄想
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 3
+  - 聞き: 毛利が減らされなかったら、その後の長州も、違ったのかな。
+    tone: 疑問
+  - 語り: 幕末の長州藩と、防長への減封を結びつける見方もあります。ただ、因果は断定できません。この点を論じた研究は、今回の調査では確かめていません。
+    portrait: null
+    background:
+      image: paintings/ryoma_choshu_hiroshige2_nagato.jpg
+      credit: 二代歌川広重《諸国六十八景 長門 赤間関》1862年
+    card:
+      head: ほぼ妄想
+      body: 長州への因果は材料なし
+    figure: null
+  - 語り: 現代への鎖も、考えます。家康は関東に移り、江戸城に入りました。いまの東京の前身です。ただ、勝敗と江戸の姿の関係は、材料がありません。
+    background:
+      image: paintings/ieyasu_edo_zu_byobu_castle_detail.jpg
+      credit: 江戸図屏風（江戸城の部分、17世紀。家康のころより後の姿）
+    card:
+      head: 現代への鎖
+      body: 江戸は、いまの東京の前身
+  - 聞き: 勝敗が変わると、東京の始まりまで変わるかも、ってこと？ そこは、ほぼ妄想だね。
+    tone: 疑問
+  - 語り: はい。この回の想像は、ほとんどが、ほぼ妄想です。だからこそ、史実のほうを、もう一度、確かめましょう。
+    hook: true
+    background:
+      image: paintings/sekigahara_zubyobu_p2a.jpg
+      credit: 関ヶ原合戦図屏風（部分、江戸時代）
+  - 聞き: 史実で、何が言えるのか、もう一回、整理してほしいな。
+    tone: 疑問
+    hook: true
+- title: まとめ：慶長5年9月15日 松尾山の分かれ道
+  background:
+    image: paintings/sekigahara_zubyobu_p3a.jpg
+    credit: 関ヶ原合戦図屏風（部分、江戸時代）
+  year: 1600
+  lines:
+  - 語り: 冒頭の3つの問いに答えます。1つ目。戦いは、続いたのか。想像では、昼を過ぎても続きます。可能性は、ありうる、です。
+    portrait: null
+    figure:
+      type: stats
+      title: 3つの問いの答え（想像）
+      items:
+      - - 戦いは？
+        - 昼を過ぎて続く
+        - ありうる
+      - - 西軍は？
+        - 勝てたかは不明
+        - ほぼ妄想
+      - - 毛利は？
+        - 動かない
+        - 高い
+      upto: 1
+  - 語り: 2つ目。西軍は、勝てたのか。大谷隊が持つかは、ふもとの4隊しだいです。勝ち切れたかは、ほぼ妄想です。
+    background:
+      image: paintings/sekigahara_screen_gifu_L.jpg
+      credit: 関ヶ原合戦図屏風（部分、岐阜市歴史博物館蔵、江戸後期）
+    figure:
+      type: stats
+      title: 3つの問いの答え（想像）
+      items:
+      - - 戦いは？
+        - 昼を過ぎて続く
+        - ありうる
+      - - 西軍は？
+        - 勝てたかは不明
+        - ほぼ妄想
+      - - 毛利は？
+        - 動かない
+        - 高い
+      upto: 2
+  - 語り: 3つ目。毛利勢は、動いたのか。想像でも、動きません。密約が、秀秋の動きとは別だからです。可能性は、高い、です。
+    background:
+      image: paintings/sekigahara_zubyobu_p2a.jpg
+      credit: 関ヶ原合戦図屏風（部分、江戸時代）
+    figure:
+      type: stats
+      title: 3つの問いの答え（想像）
+      items:
+      - - 戦いは？
+        - 昼を過ぎて続く
+        - ありうる
+      - - 西軍は？
+        - 勝てたかは不明
+        - ほぼ妄想
+      - - 毛利は？
+        - 動かない
+        - 高い
+      upto: 3
+  - 聞き: いちばん確からしいのは、毛利のところだけなんだ。あとは、どれも、細い道の話だったね。
+  - 語り: もう一度、要点を番号で。1つ目。秀秋が山を下りた時期は、研究で割れています。2つ目。問鉄砲は、江戸時代の二次史料にだけ出ます。
+    portrait:
+      image: paintings/sekigahara_kobayakawa_hideaki_portrait_trim.jpg
+      caption: 小早川秀秋（17世紀前半の肖像）
+      age: false
+    background:
+      image: paintings/sekigahara_zubyobu_p3a.jpg
+      credit: 関ヶ原合戦図屏風（部分、江戸時代）
+    figure: null
+  - 聞き: 1つ目は、時期が割れてること。2つ目は、名場面が後付けかもってことだね。
+  - 語り: 3つ目。毛利勢は、広家の密約で戦わず、輝元は大坂城を動きませんでした。4つ目。島津は孤立して退き、80数名が戻った、と言われます。
+    portrait:
+      image: paintings/sekigahara_mori_terumoto.jpg
+      caption: 毛利輝元（江戸初期の肖像）
+      age: false
+    background:
+      image: paintings/sekigahara_zubyobu_p2a.jpg
+      credit: 関ヶ原合戦図屏風（部分、江戸時代）
+  - 聞き: 毛利は密約で動けなくて、島津は孤立して……。西軍って、最初から足並みがそろってなかったんだ。
+    tone: しみじみ
+  - 語り: さきほどの3つの答えは、全部、想像です。史実で言えるのは、9月15日、秀秋が西軍を離れたこと。時期は、研究で割れていること。毛利勢が動かず、輝元が大坂城にいたことです。
+    portrait:
+      image: paintings/sekigahara_kobayakawa_hideaki_portrait_trim.jpg
+      caption: 小早川秀秋（17世紀前半の肖像）
+      age: false
+    background:
+      image: paintings/sekigahara_zubyobu_p3a.jpg
+      credit: 関ヶ原合戦図屏風（部分、江戸時代）
+    card:
+      head: 史実で言えること
+      body: 秀秋の離反の時期は割れている
+    figure: null
+  - 聞き: ここまでで、西軍の人たちの顔が、だいぶ見えてきたよ。最後に、人柄が分かる話は、ないの？
+    tone: 疑問
+  - 語り: 1人、挙げます。大谷吉継です。1594年10月、直江兼続に宛てた書状に、眼を患っているため印判を使う、とあります。同時代の史料に残る、吉継の姿です。
+    portrait: null
+    background:
+      image: paintings/sekigahara_screen_gifu_L.jpg
+      credit: 関ヶ原合戦図屏風（部分、岐阜市歴史博物館蔵、江戸後期）
+    card:
+      head: 大谷吉継
+      body: 眼の病は同時代の書状に残る
+  - 聞き: 眼を悪くしてたのに、前に出た人なんだね。印判を使うのは、自分で署名しにくかったからなのかな。
+  - 語り: 三成の挙兵を、吉継は最初、止めた。そのあと、同意した。この話は、江戸時代中期の『常山紀談』にあり、後世の話です。西軍に加わったのは、吉継自身の意向、とする研究もあります。
+    card:
+      head: 後世の話
+      body: 三成を止めた話は『常山紀談』
+    background:
+      image: paintings/sekigahara_zubyobu_p2a.jpg
+      credit: 関ヶ原合戦図屏風（部分、江戸時代）
+  - 聞き: 止めた話も、あとから付いたのかもしれないんだ。有名な友情エピソードほど、盛られてる感じ、あるよね。
+    tone: 納得
+  - 語り: 関ヶ原では、小早川の裏切りに備えて、直属の約600で迎えた、と後世の軍記にあります。茶会の逸話や白頭巾の姿も、典拠が分かりません。事実で言えるのは、9月15日に亡くなったことです。
+    card:
+      head: 事実
+      body: 9月15日に亡くなった
+  - 聞き: 友だちを止めたのに、最後は一緒に行ったのかな。後世の話でも、なんだか、切ないね。事実と後から付いた話を分けて聞くと、人物が少し近くなる気もする。
+    tone: しみじみ
+    background:
+      image: paintings/sekigahara_zubyobu_p3a.jpg
+      credit: 関ヶ原合戦図屏風（部分、江戸時代）
+  - 語り: 秀秋は、2年後の秋、数え21歳で亡くなります。短い生涯のなかで、いちばん重い一歩が、あの山の上でした。
+    background:
+      image: paintings/sekigahara_zubyobu_p2a.jpg
+      credit: 関ヶ原合戦図屏風（部分、江戸時代）
+    card:
+      head: 小早川秀秋
+      body: 1602年10月、数え21歳で没
+  - 聞き: 19歳で、天下の分かれ目に立たされたんだね。迷ったなら、あーしは、責められないな。
+    tone: しみじみ
+  - 語り: 分かれ道を二つ挙げるなら、史実で前日に動いていたのは、毛利の密約と、秀秋の松尾山への入城です。
+    portrait: null
+    background:
+      image: paintings/sekigahara_screen_gifu_L.jpg
+      credit: 関ヶ原合戦図屏風（部分、岐阜市歴史博物館蔵、江戸後期）
+  - 聞き: もしあのとき、山から動かなかったら……って、つい考えちゃうね。
+  - 語り: 今日の地層は、ここまでです。
+  - 聞き: 次の「もしも」は、誰の、どの分かれ道かな。
+    tone: 疑問
+  - 語り: あなたが気になる、歴史の分かれ道を、コメントで教えてください。
+  - 二人: また一緒に、掘りましょう！
+    tone: 明るい
+    background:
+      image: paintings/sekigahara_zubyobu_p2b.jpg
+      credit: 関ヶ原合戦図屏風（部分、江戸時代）

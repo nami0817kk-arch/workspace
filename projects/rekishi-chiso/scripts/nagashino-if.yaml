@@ -1,0 +1,1392 @@
+# B（歴史の転換点の if ストーリー）の5本目。型：事実（長篠・設楽原の戦い、決戦の理由の諸説、鉄砲三千挺・三段撃ちの通説と研究、鳶ヶ巣山奇襲、戦死者）→ 史料に残る別の道（撤退／決戦を避ける／別動隊を読む）→ 「こうなった可能性」（理由つき）。
+# 仮定はひとつだけ：天正3年5月21日、設楽原で武田が勝った（どう勝ったかは決めない）。研究が示す「鉄砲の優位だけでは決まらない」を根拠に、勝つことが全くの空想ではないとして置く。
+# 事実の出どころは dev/output/rekishi-chiso/research/nagashino_if_facts.md（確実／有力／説／未確認の区分もそこ）。絵の一覧は nagashino_if_assets.md。既存：mikata-if.yaml（三方ヶ原IF。信玄の死・西上の節は繰り返さない）
+# 決まり：B は昼12時・約30分／題名は「もし〇〇だったら｜…どうなったか」／再生リストは A と分ける（歴史のif）／想像の部分は画面に「ここから想像」の札
+#   人物のセリフは B では想像のセリフを入れてよい。「ここから想像」の札が出ている節（想像①〜④）だけ・字幕に「（想像）」（roles の勝頼想像・馬場想像・信長想像・忠次想像・家康想像・奥平想像）・記録のセリフは本編に置かない
+#   同じ幕で声が重ならない：第1幕＝勝頼（玄野武宏）と馬場（雀松朱司）／第2幕＝信長（青山龍星）と忠次（離途）／第3幕＝家康（麒ヶ島宗麟）と奥平（白上虎太郎）／第4幕＝勝頼（玄野武宏）と馬場（雀松朱司）。
+#   幕割り：想像①＝第1幕（5/21夕・武田の陣）／想像②＝第2幕（5/22・連合軍の陣）／想像③＝第3幕（岡崎と長篠城）／想像④＝第4幕（天正3年夏・甲府）。②③④の頭にも「ここから想像」の札を出す。
+# 想像の部分は言い切る。確かさは画面の札（高い／ありうる／ほぼ妄想）で正直に出す。声に出す型は「可能性は、〜、です」に統一。事実の部分は「分かっていません」「と伝わります」「とされます」を使い分ける。
+# 冒頭の強い一点：「宿老（内藤昌豊・山県昌景・馬場信春）3人が同じ日に亡くなった」。『甲陽軍鑑』『武家事紀』『常山紀談』の話は後世の書・二次と断る。馬場信春が殿に残った話・佐久間信盛の内通も同様。
+# 数字は「何の数か」を言う（連合軍・武田の兵は通説／高柳光寿の見積もり。鉄砲は書物ごとの記述／平山優の装備率。戦死者は書物ごとの記述）。「約2.5倍」と言い切らない。日付は和暦の月日、西暦は換算（天正3年5月21日＝1575年6月29日、ユリウス暦）。
+#   年齢は数え：勝頼30（1546生）・信長42（1534生）・家康34（1542生）。信玄の死（元亀4年4月12日）から約2年あまり。
+#   信長の本願寺との戦い・1582年の本能寺は一般的な整理で、日付は今回確かめていないので台本では年・月までに留める。
+# 使わない話：三段撃ち・鉄砲3千挺・馬防柵の一人一本を事実として／流血・遺体・首の描写／鳶ヶ巣山の「退路を断たれた」の断定／鳥居強右衛門の最期／佐久間信盛の内通を事実として／「勝てば武田は滅びなかった」「天下を取れた」の断定／信長の死の細かい日付。
+# 決めた札の理由：
+#   高い＝勝てば、長篠のあとに進んだ奥三河・遠江の奪回（史実）は同じ速さでは進まない（奪回は敗戦の結果として進んだという整理）。
+#   ありうる＝宿老の戦死が減る／勝頼が勢いを保つ（外交・高天神城）／信長は東に兵を割き続ける（畿内に本願寺という敵）／家康は奥平を見捨てず三河を固める（乃至政彦の指摘）／高天神の落城が遅れる／勝頼が追撃より長篠城と別動隊の固めを先にする。
+#   ほぼ妄想＝三河のどこまで進むか／信長がどこまで退くか／奥三河の国衆の動き／奥平が持ちこたえたか／武田氏の滅ぶ日が変わるか／日本全体の流れ（本能寺・天下）。
+#   研究は見つからない（正面から論じたもの）を冒頭で、評価の割れ（平山優・伊東潤・笹本正治・柴辻俊六）は想像④と第7節で論者名つきで断った。
+# 画面の決まり：背景に人物の肖像・拡大絵を使わない（肖像は額）／極端に横長の絵（縦横比2.4:1以上）は使わない／縦の継ぎ目のある三連絵は全面背景にしない／NDL系の色票・黒帯の絵は全面に敷かない／血・遺体の絵は使わない／
+#   現代の写真（長篠城跡・躑躅ヶ崎館）は credit に「現在の〜」と書き、語りでもその行で断る。岡崎城の古写真は天守が江戸期のものと断る（今回は断りを足すこと）。屏風・武者絵は後世の絵と断る。
+title: もし長篠の戦いで武田勝頼が勝っていたら｜武田は勢いを保てたか、信長と家康はどうしたか、そのあとどうなったか
+series: ''
+playlists:
+- 歴史のif（もしもの地層）
+- 戦国時代を掘る
+shorts_playlists:
+- 歴史のifショート
+shorts_badge: もしもの話
+tags:
+- もし長篠の戦いで武田勝頼が勝っていたら
+- もし武田勝頼が勝っていたら
+- 長篠の戦い
+- 設楽原
+- 武田勝頼
+- 織田信長
+- 徳川家康
+- 酒井忠次
+- 三段撃ち
+- 歴史if
+- 戦国時代
+- 日本史
+- 歴史解説
+- 歴史の地層
+en:
+  title: What If Takeda Katsuyori Had Won at Nagashino? | How Do Takeda, Nobunaga and Ieyasu Fare?
+  description: 'On the 21st day of the 5th month of Tensho 3 (June 29, 1575), three of Takeda''s senior retainers, Naito Masatoyo, Yamagata Masakage and Baba Nobuharu, died on the same day at Shitaragahara. Katsuyori, aged 30 by Japanese count, had chosen a decisive battle against the Oda-Tokugawa forces. This video asks: what if Takeda had won?
+
+
+    We keep records, theories and imagination apart. First, what the sources and historians say: why Katsuyori fought, the five competing explanations, the ''three volleys of 3,000 muskets'' story versus modern research (the 1,000 muskets of the printed Shincho-ko-ki, Takeda''s own muskets), the dawn raid on Tobigasuyama, the horse barricades, and the widely differing death tolls.
+
+
+    Then, clearly marked imagination with reasons: the evening at Shitaragahara, Nobunaga''s choices, Ieyasu and Okudaira Nobumasa at Nagashino Castle, Katsuyori''s diplomacy, a table of fates, and the chains to today.
+
+
+    In imagined parts we speak plainly, and the on-screen label tells you how likely it is: likely, possible, or nearly fantasy. We found no study that argues this counterfactual directly, and we say so.
+
+
+    The accounts of historians'' views follow summaries on Wikipedia and magazine articles; we have not checked the original texts.
+
+
+    A Japanese history video to listen to while you work (Japanese audio).'
+  chapters:
+  - 'May 21, 1575: Three Takeda Elders Die at Shitaragahara'
+  - 'April 1573: Shingen Dies, His Fourth Son Katsuyori Succeeds'
+  - '1573: Nobunaga Breaks the Western Encirclement'
+  - 'April 1575: Katsuyori Marches into Mikawa and Besieges Nagashino'
+  - 'May: The War Council, Retreat Advised, Battle Chosen'
+  - 'Three Thousand Muskets and the Volley Story: Legend versus Research'
+  - Dawn Raid on Tobigasuyama and the Horse Barricades
+  - 'May 21: The Elders'' Deaths and the Disputed Death Tolls'
+  - What Decided the Battle? Not Muskets Alone
+  - 'Other Paths in the Sources: Retreat, Avoiding Battle, Reading the Raid'
+  - 'Imagination 1: Evening at Shitaragahara, Fewer Elders Die'
+  - 'Imagination 2: Nobunaga and Sakai Tadatsugu on May 22'
+  - 'Imagination 3: Ieyasu and Okudaira Nobumasa at Nagashino Castle'
+  - 'Imagination 4: Katsuyori''s Diplomacy and the Fall of Takatenjin'
+  - 'Imagination 5: A Table of Fates'
+  - 'Imagination 6: How Japan Changes, and the Chains to Today'
+  - 'Summary: The Fork at Shitaragahara'
+texture: true
+recap: true
+timeline:
+  start: 1572
+  end: 1584
+  events:
+  - - 1573
+    - 信玄の死
+  - - 1575
+    - 長篠
+  - - 1581
+    - 高天神城
+  - - 1582
+    - 武田氏滅亡
+terms:
+  宿老: 家中で重い役目を負う、年長の重臣
+  設楽原: 長篠城の西の台地。連合軍が布陣した所
+  三段撃ち: 鉄砲を三列で交代して撃つ話。江戸期の創作とみられる
+  馬防柵: 騎馬の突進を防ぐ柵。実際の姿は割れている
+  鳶ヶ巣山: 長篠城を囲む武田の砦があった山
+  軍役定書: 兵と武器の数を定めた武田家の書き付け
+  後詰: 包囲された味方を救いに行く軍
+  甲越同盟: 勝頼と上杉の同盟
+shorts:
+  s1:
+    title: 設楽原の一日／勝頼の決断
+    yt_title: 武田勝頼が長篠で勝っていたら？｜宿老3人が同じ日に亡くなった設楽原
+    hook: 長篠の戦いで、／武田の宿老は何人亡くなった？
+    tease: じゃあ、勝頼は／なぜ決戦を選んだ？
+    lead: 設楽原の戦い、勝頼の決断の話です。
+    tags:
+    - もし長篠の戦いで武田勝頼が勝っていたら
+    - 武田勝頼
+    - 長篠の戦い
+    - 設楽原
+    - 歴史if
+  s2:
+    title: 信長公記の数字／三段撃ちの出どころ
+    yt_title: 長篠の鉄砲三千挺は本当？｜三段撃ちの出どころと信長公記の1千挺
+    hook: 長篠の鉄砲三千挺は、／本当に三千挺だった？
+    tease: じゃあ、武田には／鉄砲がなかったの？
+    lead: 長篠の戦い、鉄砲3千挺と三段撃ちの話です。
+    tags:
+    - 長篠の戦い
+    - 三段撃ち
+    - 鉄砲三千挺
+    - 信長公記
+    - 歴史if
+  s3:
+    title: もしも／設楽原の夕方
+    yt_title: もし長篠で武田勝頼が勝っていたら？｜勝頼と馬場信春の想像劇場
+    hook: 武田が勝った夕方、／勝頼は何を決める？
+    tease: じゃあ、信長は／どこまで退く？
+    lead: もし設楽原で武田が勝っていたら、の想像劇場です。
+    tags:
+    - もし武田勝頼が勝っていたら
+    - 馬場信春
+    - 武田勝頼
+    - 長篠の戦い
+    - 歴史if
+  s4:
+    title: 宿老の戦死／勝頼の評価
+    yt_title: 長篠で武田の宿老3人が戦死｜勝頼の評価はなぜ割れるのか
+    hook: 勝頼は、本当に／愚かな大将だった？
+    tease: じゃあ、勝頼の決戦には／ほかにどんな道があった？
+    lead: 勝頼の評価は、なぜ割れるのか、という話です。
+    tags:
+    - 武田勝頼
+    - 山県昌景
+    - 馬場信春
+    - 内藤昌豊
+    - 歴史if
+  s5:
+    title: 鳶ヶ巣山／夜明けの別動隊
+    yt_title: 酒井忠次の鳶ヶ巣山奇襲とは？｜長篠の夜明けに何が起きたか
+    hook: 信長が却下した作戦が、／長篠を動かした？
+    tease: じゃあ、武田が勝っていたら／信長はどう動いた？
+    lead: 長篠の戦い、5月21日の夜明けの話です。
+    tags:
+    - 酒井忠次
+    - 鳶ヶ巣山
+    - 長篠の戦い
+    - 織田信長
+    - 歴史if
+next:
+  title: 次の「もしも」
+  series: ''
+  teaser: あなたが気になる歴史の分かれ道を、コメントで教えてください。
+thumbnail:
+  layout: mask
+  image: paintings/nobunaga_katsuyori_portrait.jpg
+  top: 設楽原の決戦に勝った世界
+  main:
+  - もし勝頼が
+  - 長篠で勝ったら
+  blanks:
+  - - 武田は
+    - 5
+  - - 信長は
+    - 6
+  tags:
+  - 家康は？
+  - 宿老は？
+  name: 武田勝頼
+sections:
+- title: 天正3年5月21日 設楽原で武田の宿老が3人、同じ日に亡くなった
+  background:
+    image: paintings/nobunaga_nagashino_screen_full.jpg
+    credit: 長篠合戦図屏風（江戸時代）
+  year: 1575
+  lines:
+  - 語り: 天正3年5月21日、西暦では1575年6月29日。設楽原で、武田の宿老が3人、同じ日に亡くなります。内藤昌豊、山県昌景、馬場信春です。
+    card:
+      head: 天正3年5月21日
+      body: 長篠・設楽原の戦い
+    short: s1
+  - 語り: 武田の大将は、数え30歳の勝頼。重臣の一部が撤退を勧めたと伝わるのに、勝頼は、決戦を選びました。
+    portrait:
+      image: paintings/nobunaga_katsuyori_portrait.jpg
+      caption: 武田勝頼（高野山持明院本の部分、16世紀後半）
+      age: false
+    figure:
+      type: stats
+      title: 長篠の年（数え）
+      items: &id001
+      - - 勝頼
+        - 30歳
+        - 数え。武田
+      - - 信長
+        - 42歳
+        - 数え。織田
+      - - 家康
+        - 34歳
+        - 数え。徳川
+      upto: 1
+    short: s1
+  - 語り: 対する織田信長は数え42歳、徳川家康は数え34歳。この2人が組んだ連合軍です。
+    portrait: null
+    figure:
+      type: stats
+      title: 長篠の年（数え）
+      items: *id001
+      upto: 3
+    short: s1
+  - 聞き: 宿老が3人いっぺんに、って、会社でいえば、役員が一晩でごっそり抜けるみたいなもんだよね。
+    short: s1
+  - 語り: 父の信玄が亡くなって、2年あまり。勝頼は、信玄が落とせなかった高天神城も、天正2年6月に落としていました。勢いは、あったんです。
+    background:
+      image: paintings/shingen_takatenjin_zue.jpg
+      credit: 『遠江古蹟図会』高天神山之図（1803年）
+    card:
+      head: 天正2年6月
+      body: 勝頼、高天神城を落とす
+    figure: null
+    short: s1
+  - 聞き: 勢いがあったのに、負けたのか。あの日、何があったんだろう。
+    tone: 疑問
+  - 語り: 今日は、その日を分かれ道にします。仮定は、ひとつだけ。設楽原で、武田が勝った。連合軍が崩れた。
+    portrait: null
+    background:
+      image: paintings/akechi_nagashino_battle_screen.png
+      credit: 長篠合戦図屏風（長浜城歴史博物館蔵、江戸時代）
+  - 聞き: 勝った世界の長篠か。で、そこから、何を掘るの？
+  - 語り: 勝ったあとに、何が変わるのかです。
+    background:
+      image: paintings/nobunaga_nagashino_screen_toyota.jpg
+      credit: 長篠合戦図屏風（豊田市郷土資料館蔵、18世紀）
+  - 語り: 問いは3つあります。武田は、勢いを保てたのか。信長は、どうしたのか。家康は、三河を守れたのか。
+    card:
+      head: 今日の3つの問い
+      body: 武田は？ 信長は？ 家康は？
+  - 聞き: 歴史に「もしも」はない、ってよく言うけど……長篠の場合は、考える材料ってあるの？
+    tone: 疑問
+    background:
+      image: paintings/mikata_totomi_kuniezu_1838.jpg
+      credit: 《天保国絵図 遠江国》1838年（国立公文書館蔵）
+  - 語り: あります。ただ、先に断ります。長篠で武田が勝っていた場合を、正面から論じた学術研究は、今回の調査では見つかりませんでした。
+    card:
+      head: 最初の断り
+      body: 論じた研究は見つからない
+  - 聞き: 研究者もまだ、誰も触ってないの？ 逆にワクワクするじゃん。材料は、ちゃんと選ばなきゃだけど。
+  - 語り: 約束が2つ。事実と想像は分けます。想像のあいだは《ここから想像》の札を出し、可能性を3段階で示します。事実は、紹介記事で確かめたもので、原本は未確認です。
+    background:
+      image: paintings/mikata_mitsuke_tenryu_cleveland.jpg
+      credit: 歌川広重《東海道五十三次之内 見附 天竜川》1833年ごろ
+    card:
+      head: この回の約束
+      body: 事実と想像を分け、可能性を付ける
+  - 語り: まずは、勝頼という人から、掘ります。
+    hook: true
+  - 聞き: 四男だったんだっけ、確か。
+    hook: true
+- title: 元亀4年4月 信玄の死、四男の勝頼が継ぐ
+  background:
+    image: paintings/mikata_kofu_tsutsujigasaki_photo.jpg
+    credit: 前田左衛門佐 躑躅ヶ崎館（武田氏館跡、現在の写真、2005年）
+  year: 1573
+  lines:
+  - 語り: 勝頼は、天文15年、1546年の生まれです。信玄の四男で、母は諏訪御料人です。画面は、現在の躑躅ヶ崎館、武田氏館の跡です。
+    portrait:
+      image: paintings/nobunaga_katsuyori_portrait.jpg
+      caption: 武田勝頼（高野山持明院本の部分、16世紀後半）
+      age: false
+    card:
+      head: 勝頼の生まれ
+      body: 信玄の四男・母は諏訪御料人
+  - 聞き: 四男か。ふつうなら、跡を継ぐ立場じゃないよね。
+  - 語り: 兄の義信が、廃嫡されて幽閉され、1567年に亡くなります。そのあと、勝頼が後継と見なされました。
+    card:
+      head: 兄の義信
+      body: 廃嫡・幽閉のち死去
+  - 聞き: 兄がいなくなって、巡ってきた跡継ぎか。居場所は、ちょっと難しそう。
+    tone: しみじみ
+  - 語り: 元亀4年4月12日、信玄が西上の途中で病死します。勝頼が武田家を率いますが、表向きは、信玄が隠居したことにされていました。
+    card:
+      head: 元亀4年4月12日
+      body: 信玄が病死・表向きは隠居
+    background:
+      image: paintings/shingen_kai_fuji_hiroshige_1852.jpg
+      credit: 歌川広重《不二三十六景 甲斐 夢山裏富士》1852年
+  - 聞き: 亡くなったことは伏せて、隠居ってことにしたのか。前の三方ヶ原の回の、続きだね。
+  - 語り: 宿老たちと新しい当主の間に、距離があったのか。それは、史料から言い切れません。
+    portrait: null
+    background:
+      image: paintings/shingen_takatenjin_zue.jpg
+      credit: 『遠江古蹟図会』高天神山之図（1803年）
+  - 語り: 長篠の前に、もう一つ。同じ年の信長の動きを、見ておきます。
+    hook: true
+  - 聞き: 信長のほうは、どうだったの？
+    tone: 疑問
+    hook: true
+- title: 天正元年 信長は西の包囲網を崩した
+  background:
+    image: paintings/nobunaga_anegawa_screen.jpg
+    credit: 姉川合戦図屏風（部分、江戸時代）
+  year: 1573
+  lines:
+  - 語り: 信玄の死の約3か月後、元亀4年7月18日。信長は、槇島城で、足利義昭を降伏させます。室町幕府は、事実上、滅んだと見る向きもあります。
+    portrait:
+      image: paintings/nobunaga_portrait_eitoku_daitokuji.jpg
+      caption: 織田信長（狩野永徳（伝）画、大徳寺 総見院、1584年）
+      age: false
+    card:
+      head: 元亀4年7月18日
+      body: 信長、義昭を降伏させる
+  - 聞き: 将軍を追い出したってことか。信長、強いな。
+  - 語り: そして天正元年8月20日、朝倉義景が自刃します。浅井氏も、この月に滅びます。信長包囲網は、崩れました。
+    portrait: null
+    card:
+      head: 天正元年8月
+      body: 朝倉・浅井が滅びる
+  - 聞き: それなら、信長はもう、敵がいなくなったんじゃない？
+  - 語り: いいえ。畿内には、大坂の本願寺という大きな相手がいました。画面は、姉川の戦いの絵です。東には、勝頼がいます。
+    card:
+      head: 信長の状況
+      body: 西の包囲網は崩れたが本願寺と武田が残る
+    background:
+      image: paintings/hanbei_gifu_castle_zu.jpg
+      credit: 《岐阜城図》（江戸時代）
+  - 聞き: 東と西、両方に敵がいたのは、変わらないよね。
+  - 語り: この状況で、長篠を迎えます。
+    hook: true
+    background:
+      image: paintings/nobunaga_azuchi_castle_zu.jpg
+      credit: 近江国蒲生郡安土城之図（1855年原図・明治の写し）
+  - 聞き: じゃあ、あの決戦に、信長は何を賭けてたんだろう。
+    hook: true
+- title: 天正3年4月 勝頼は三河へ、奥平信昌の長篠城を囲む
+  background:
+    image: paintings/nagashino_castle_honmaru_photo.jpg
+    credit: 先従隗始 長篠城跡の本丸跡の碑（現在の写真、2021年）
+  year: 1575
+  lines:
+  - 語り: 勝頼が向かったのは、三河です。きっかけは、2年前。信玄の死の直後に、奥平の親子が武田を離れて、徳川につきました。勝頼は、この年のうちに、人質を処刑したとされます。
+    portrait:
+      image: paintings/nagashino_okudaira_nobumasa.jpg
+      caption: 奥平信昌（1615年ごろの肖像）
+      age: false
+    card:
+      head: 天正元年（1573）
+      body: 奥平親子が徳川につく
+  - 語り: 画面は、現在の長篠城跡です。
+  - 聞き: 裏切られたから、取り返しに行ったのかな。それとも、狙いは別にあったの？
+    tone: 疑問
+  - 語り: 勝頼の狙いは、三河と遠江だった、という見方があります。乃至政彦さんの見方です。
+    portrait: null
+    card:
+      head: 勝頼の狙い
+      body: 三河・遠江の回復（乃至政彦）
+  - 語り: それによると、岡崎城を内通で取る計画は、露見して失敗しました。それでも、徳川方を吉田城まで押し戻し、勢いは保っていました。
+    background:
+      image: paintings/mikata_okazaki_castle_photo_2012.jpg
+      credit: 《取り壊し前の岡崎城》（古写真、撮影年不詳）
+    figure: null
+  - 語り: 画面は、取り壊し前の岡崎城の古写真です。写る天守は江戸時代のもので、このころのものではありません。
+  - 聞き: 取り損ねたけど、押してはいたのか。そこで、長篠城が出てくるわけだ。
+  - 語り: 長篠城を放っては、三河に攻め入れません。城主の奥平信昌は、家康の長女との縁組の話が出ていた、とされます。婚姻は、1576年です。画面は、現在の長篠城跡の石碑です。
+    portrait:
+      image: paintings/nagashino_okudaira_nobumasa.jpg
+      caption: 奥平信昌（1615年ごろの肖像）
+      age: false
+    background:
+      image: paintings/nagashino_castle_stone_monument_photo.jpg
+      credit: MaedaAkihiko 長篠城跡の石碑（現在の写真、2024年）
+  - 語り: 家康が信昌を見捨てれば、三河の支配が崩れる。だから勝頼は、家康を長篠の近くへ引き出して、決戦するつもりだった。これが、その見方です。
+    card:
+      head: 乃至政彦の見方
+      body: 家康を引き出して決戦する
+  - 聞き: 家康も、見捨てられないのか。じゃあ、お互いに引けなかったのかな。
+  - 語り: やがて、織田信長と徳川家康の連合軍が、設楽原に布陣します。画面は、長篠合戦図屏風です。
+    portrait: null
+    background:
+      image: paintings/nobunaga_nagashino_screen_toyota.jpg
+      credit: 長篠合戦図屏風（豊田市郷土資料館蔵、18世紀）
+    card:
+      head: 連合軍が布陣
+      body: 場所は設楽原
+  - 語り: 設楽原は、「原」の名と違って、小川や沢に沿って丘が南北に続く、起伏の多い土地でした。敵陣の奥まで見通せなかったとされます。
+  - 聞き: 見通せないなら、相手の数も、分かりにくかっただろうね。向こうに何がいるのか。
+    hook: true
+  - 語り: 武田の陣では、軍議が開かれます。
+    hook: true
+- title: 5月 設楽原の軍議 撤退を勧めた宿老、決戦を選んだ勝頼
+  background:
+    image: paintings/akechi_nagashino_battle_screen.png
+    credit: 長篠合戦図屏風（長浜城歴史博物館蔵、江戸時代）
+  year: 1575
+  lines:
+  - 語り: 山県昌景、馬場信春、内藤昌豊の3人は、撤退を勧めたと伝わります。出どころは、『甲陽軍鑑』『常山紀談』など、後世の書です。
+    portrait:
+      image: paintings/mikata_yamagata_masakage_kuniyoshi2.jpg
+      caption: 山県昌景（歌川国芳画、後世の武者絵）
+      age: false
+    card:
+      head: 宿老の撤退論
+      body: 山県・馬場・内藤が進言と伝わる
+  - 聞き: 宿老が止めたのに、勝頼は聞かなかったの？
+  - 語り: 引けば、長篠城の奥平を、見捨てることになります。さっきの見方に立てば、勝頼には、簡単に引けない事情がありました。画面は、現在の長篠城跡の本丸跡です。
+    background:
+      image: paintings/nagashino_castle_honmaru_photo.jpg
+      credit: 先従隗始 長篠城跡の本丸跡の碑（現在の写真、2021年）
+  - 聞き: 取引先を見捨てて撤退したら、他の取引先もついてこなくなる、みたいな話かな。引けないの、分かる気がする。
+  - 語り: 『甲陽軍鑑』は、跡部勝資と長坂光堅が、決戦を唱えた、と伝えます。この書は年紀の誤りがあり、慎重に読む史料です。
+    portrait:
+      image: paintings/nobunaga_katsuyori_portrait.jpg
+      caption: 武田勝頼（高野山持明院本の部分、16世紀後半）
+      age: false
+    background:
+      image: paintings/akechi_nagashino_battle_screen.png
+      credit: 長篠合戦図屏風（長浜城歴史博物館蔵、江戸時代）
+  - 語り: 決戦の理由は、ひとつに決まりません。説は、少なくとも5つあります。1つ目。側近の主戦論。2つ目。前の年に高天神城を落とした勝利への、自信です。
+    portrait: null
+    card:
+      head: 決戦の理由 1・2
+      body: 側近の主戦論／勝利への自信
+  - 聞き: 勝ってる時って、引きどきが分からなくなるよね。
+    background:
+      image: paintings/ieyasu_nagashino_baba_nobuharu_screen.jpg
+      credit: 長篠合戦図屏風（徳川美術館蔵）の一場面
+  - 語り: 3つ目は、信長の謀略です。佐久間信盛が内通を約束していた、と『武家事紀』などにあります。ただ、これも後世の書で、同時代の裏づけは確かめられていません。
+    card:
+      head: 決戦の理由 3
+      body: 信盛の内通説（後世の書）
+  - 語り: 4つ目は、平山優さんの見方です。柵や鉄砲が待っていても、敵陣に突っ込むのは、当時の正攻法だった。無謀な突撃、という見方は、見直されています。
+    background:
+      image: paintings/akechi_nagashino_battle_screen.png
+      credit: 長篠合戦図屏風（長浜城歴史博物館蔵、江戸時代）
+    card:
+      head: 決戦の理由 4
+      body: 突入は当時の正攻法（平山優）
+  - 聞き: 突っ込むのが普通だったなら、無茶じゃなかった、ってこと？
+    tone: 疑問
+  - 語り: 5つ目は、高澤等さんの説です。日時と場所を、事前に決めて戦った、と考えます。決め手は、ありません。
+    card:
+      head: 決戦の理由 5
+      body: 事前の申し合わせ説（高澤等）
+  - 聞き: 5つも説があって、決め手はなし、か。でも、その決戦って、鉄砲三千挺の三段撃ちで終わったんでしょ？
+  - 語り: そこが、いちばん疑われている所です。
+    hook: true
+    background:
+      image: paintings/nobunaga_nagashino_screen_full.jpg
+      credit: 長篠合戦図屏風（江戸時代）
+  - 聞き: 教科書で習った話なのに？
+    tone: 驚き
+    hook: true
+- title: 鉄砲三千挺と三段撃ち 通説と研究のずれ
+  background:
+    image: paintings/nobunaga_nagashino_teppo_ashigaru.jpg
+    credit: 長篠合戦図屏風（部分、18世紀）
+  year: 1575
+  lines:
+  - 語り: 通説は、こうです。信長が、鉄砲3千挺を三列に並べ、交代しながら撃つ、三段撃ちで、武田の騎馬軍団を破った。
+    card:
+      head: 通説
+      body: 3千挺の三段撃ち
+    figure: null
+    detail:
+      box:
+      - 0.0
+      - 0.0
+      - 0.55
+      - 1.0
+      label: 鉄砲を構える足軽
+    short: s2
+  - 聞き: 教科書で習ったやつだ。違うの？
+    short: s2
+  - 語り: 研究では、見直されています。三段撃ちは、江戸時代の『甫庵信長記』などの創作から生まれたとみられる話で、明治の教科書が事実として載せて、広まったと紹介されます。
+    background:
+      image: paintings/nobunaga_teppo_sakai_gunsmith.jpg
+      credit: 『和泉名所図会』堺の鉄砲鍛冶（1796年）
+    card:
+      head: 三段撃ちの出どころ
+      body: 江戸時代の書物（創作とみられる）
+    short: s2
+  - 語り: 鈴木眞哉さんと藤本正行さんは、当時の鉄砲の仕組みと技量から、三段撃ちは不可能だと論じました。3千挺という数にも、疑問を示します。
+    short: s2
+  - 聞き: そもそも、ほんとに3千挺あったの？
+    tone: 疑問
+    short: s2
+  - 語り: 『信長公記』の刊本は、1千挺です。池田家本は、千の字の上に「三」が加えてあり、後の人の手が入った可能性が高い、とみられます。
+    figure:
+      type: bars
+      title: 鉄砲の数（書物ごとの記述）
+      bars:
+      - - 『信長公記』刊本
+        - 1000
+      - - 池田家本（三を加筆）
+        - 3000
+      - - 通説
+        - 3000
+      labels:
+      - 1,000挺
+      - 3,000挺
+      - 3,000挺
+    short: s2
+  - 聞き: 三倍も違う。しかも、後から書き足したかもしれないの？
+    background:
+      image: paintings/nobunaga_nagashino_screen_toyota.jpg
+      credit: 長篠合戦図屏風（豊田市郷土資料館蔵、18世紀）
+  - 語り: では、武田は鉄砲を持っていなかったのか。平山優さんによると、武田も鉄砲を重視していました。第二次川中島合戦で、鉄砲衆300挺。軍役定書では、鉄砲と弓を、軍役人数の約10%とします。
+    background:
+      image: paintings/nobunaga_nagashino_screen_full.jpg
+      credit: 長篠合戦図屏風（江戸時代）
+    card:
+      head: 武田の鉄砲
+      body: 川中島で300挺、定書は約10%
+    figure: null
+  - 聞き: 武田も、ちゃんと鉄砲を使ってたの？ 数はどれくらい？
+    tone: 疑問
+  - 語り: 連合軍の鉄砲は、本戦3千と別動隊500で、計3千5百挺。兵が3万5千なら、装備率は約10%。武田の定書と、ほぼ同じです。武田の鉄砲は、筆者の試算で、千から千5百挺です。
+    figure:
+      type: stats
+      title: 鉄砲の装備率（平山優の整理）
+      items:
+      - - 連合軍の装備率
+        - 約10%
+        - 3,500挺÷3万5千人
+      - - 武田の軍役定書
+        - 約10%
+        - 鉄砲と弓の合計
+      - - 武田の鉄砲
+        - 千〜千5百挺
+        - 試算（平山優）
+      upto: 3
+    background:
+      image: paintings/akechi_nagashino_battle_screen.png
+      credit: 長篠合戦図屏風（長浜城歴史博物館蔵、江戸時代）
+  - 聞き: じゃあ、鉄砲の数だけで、決まった戦じゃなさそう。
+    tone: 納得
+  - 語り: 乃至政彦さんは、騎馬隊が鉄砲に蹴散らされたからではなく、信長の周到な作戦に注目すべきだ、と書きます。その一つが、夜明けの別動隊です。
+    background:
+      image: paintings/nobunaga_nagashino_screen_toyota.jpg
+      credit: 長篠合戦図屏風（豊田市郷土資料館蔵、18世紀）
+    figure: null
+    hook: true
+  - 聞き: 夜明けの別動隊って？
+    tone: 疑問
+    hook: true
+- title: 5月20日の深夜 酒井忠次の鳶ヶ巣山奇襲と、馬防柵
+  background:
+    image: paintings/nobunaga_nagashino_screen_toyota.jpg
+    credit: 長篠合戦図屏風（豊田市郷土資料館蔵、18世紀）
+  year: 1575
+  lines:
+  - 語り: 5月20日の深夜。酒井忠次に、命令が出ます。21日の夜明け、鳶ヶ巣山の砦を、後ろから攻める。
+    portrait:
+      image: paintings/mikata_sakai_tadatsugu_portrait.jpg
+      caption: 酒井忠次（16世紀末〜17世紀初の肖像）
+      age: false
+    card:
+      head: 5月21日の夜明け
+      body: 鳶ヶ巣山の砦を後ろから攻める
+    short: s5
+  - 聞き: 夜のうちに回り込んで、朝に奇襲か。
+    short: s5
+  - 語り: 兵の数は、記事によって4千とも3千とも書かれます。徳川の弓と鉄砲が約2千、織田の鉄砲が500などです。鳶ヶ巣山と、周りの砦を押さえ、長篠城の包囲を解きました。
+    short: s5
+    background:
+      image: paintings/nobunaga_nagashino_screen_full.jpg
+      credit: 長篠合戦図屏風（江戸時代）
+  - 語り: この作戦は、忠次の発案で、信長は軍議で一度、却下した、とされます。のちに忠次を褒めた逸話もありますが、後世の書です。
+    short: s5
+  - 聞き: 却下された作戦が、決め手の一つだったかもしれないなんて。
+    short: s5
+    background:
+      image: paintings/akechi_nagashino_battle_screen.png
+      credit: 長篠合戦図屏風（長浜城歴史博物館蔵、江戸時代）
+  - 語り: 馬防柵も、見直されています。「兵一人に材木一本と縄一束」は、江戸時代の史料にある話ですが、信頼できる史料で裏が取れていません。
+    portrait: null
+    card:
+      head: 馬防柵
+      body: 一人一本の話は裏が取れない
+  - 語り: ただ、戦場に柵を設けること自体は、戦国時代によくありました。
+  - 聞き: 柵はあったかもしれないけど、お話は盛られてるのか。
+  - 語り: 兵の数も、割れます。通説は、連合軍が約3万8千、武田が約1万5千。高柳光寿さんの見積もりでは、武田は8千から1万で、設楽原にいたのは6千から7千です。
+    figure:
+      type: bars
+      title: 兵の数（何の数か：見積もりごと）
+      bars:
+      - - 連合軍（通説）
+        - 38000
+      - - 武田（通説）
+        - 15000
+      - - 武田・設楽原（高柳光寿）
+        - 6500
+      labels:
+      - 約3万8千
+      - 約1万5千
+      - 6千〜7千
+  - 聞き: 通説でも倍以上の差。でも、研究者の数だと、全体がもっと小さいよ。
+    background:
+      image: paintings/nobunaga_nagashino_screen_full.jpg
+      credit: 長篠合戦図屏風（江戸時代）
+  - 語り: 何の数かを分けると、「約2.5倍」とは言い切れません。ただ、多くの見積もりが、連合軍が数で上回ったことを示しています。
+    figure: null
+  - 聞き: 数字は、何の数かで、見え方が変わっちゃう。出どころを確かめるのって、大事だなあ。
+  - 語り: そして、迎えた5月21日。勝敗の結果を見ます。
+    hook: true
+  - 聞き: 負けた側の数字、どうなってるんだろ。
+    hook: true
+- title: 5月21日 設楽原の昼 宿老3人の戦死と、割れる死者の数
+  background:
+    image: paintings/ieyasu_nagashino_baba_nobuharu_screen.jpg
+    credit: 長篠合戦図屏風（徳川美術館蔵）の一場面
+  year: 1575
+  lines:
+  - 語り: 戦いは、5月21日。武田は敗れ、『信長公記』は、内藤昌豊、山県昌景、馬場信春の戦死を伝えます。
+    portrait:
+      image: paintings/shingen_naito_masatoyo_bm.jpg
+      caption: 内藤昌豊（歌川国芳画、後世の武者絵）
+      age: false
+    card:
+      head: 武田の宿老
+      body: 内藤・山県・馬場が戦死
+    short: s4
+    background:
+      image: paintings/akechi_nagashino_battle_screen.png
+      credit: 長篠合戦図屏風（長浜城歴史博物館蔵、江戸時代）
+  - 語り: 原昌胤、真田信綱、真田昌輝、土屋昌続らも、討たれます。信綱と昌輝は、のちの真田昌幸の兄です。
+    portrait: null
+    short: s4
+  - 聞き: 真田昌幸って、あの幸村のお父さんだよね。兄が2人も、ここで……。
+    tone: しみじみ
+    short: s4
+  - 語り: 武田の戦死者の数は、史料で大きく割れます。『信長公記』は1万以上、『多聞院日記』は甲斐国衆の千余人、『兼見卿記』は数千騎です。
+    figure:
+      type: stats
+      title: 武田の戦死者（書物ごとの記述）
+      items:
+      - - 『信長公記』
+        - 1万以上
+        - 通説
+      - - 『兼見卿記』
+        - 数千騎
+        - 討死
+      - - 『多聞院日記』
+        - 千余人
+        - 甲斐国衆（伝聞）
+    short: s4
+  - 聞き: 10倍も違うのか。数が割れるほど、混乱した戦だったってことかな。
+    short: s4
+    background:
+      image: paintings/nobunaga_nagashino_screen_full.jpg
+      credit: 長篠合戦図屏風（江戸時代）
+  - 語り: 連合軍の損害は、6千程度とされます。逃げた兵も含む数です。この数の出どころの『徳川実紀』は、約250年後の編纂です。
+    figure: null
+  - 聞き: 連合軍の方は、主な武将の戦死は、見られないんだよね。
+  - 語り: 長篠のあと、織田と徳川は、奥三河や遠江の城を取り返していき、二俣城も落ちます。勝敗は、そのあとの動きも決めました。
+    background:
+      image: paintings/mikata_mitsuke_tenryu_cleveland.jpg
+      credit: 歌川広重《東海道五十三次之内 見附 天竜川》1833年ごろ
+    card:
+      head: 長篠のあと
+      body: 奥三河・遠江の城を取り返す
+  - 聞き: 勝ったほうが、そのまま一気に取り返したのか。負けた側は、守りが一気に薄くなるよね。
+  - 語り: 馬場信春が、撤退する勝頼のために殿に残った、という話も語られます。ただ、出どころは、後の書と屏風絵で、確かめられていません。画面は、屏風の一場面です。
+    portrait:
+      image: paintings/mikata_baba_nobuharu_kuniyoshi_ndl.jpg
+      caption: 馬場信春（歌川国芳画、後世の武者絵）
+      age: false
+    card:
+      head: 馬場信春の最期
+      body: 出どころは後の書と屏風絵
+  - 語り: ここで、勝敗を分けたと言われるものを、整理します。
+    portrait: null
+    hook: true
+  - 聞き: 整理するって、何を並べるの？
+    tone: 疑問
+    hook: true
+    background:
+      image: paintings/akechi_nagashino_battle_screen.png
+      credit: 長篠合戦図屏風（長浜城歴史博物館蔵、江戸時代）
+- title: 5月21日 勝敗を分けたと言われるもの、鉄砲だけではない
+  background:
+    image: paintings/nobunaga_nagashino_screen_full.jpg
+    credit: 長篠合戦図屏風（江戸時代）
+  year: 1575
+  lines:
+  - 語り: ここまでの話を、いったん整理します。勝敗を分けたと言われるものは、鉄砲の数だけではありません。
+    portrait: null
+    card:
+      head: 勝敗を分けたもの
+      body: 鉄砲だけではない
+  - 語り: 1つ目は、兵の数です。見積もりは割れますが、多くが、連合軍が数で上回ったことを示します。
+    card:
+      head: 要因 1
+      body: 兵の数は連合軍が上回る
+  - 聞き: 数の差は、やっぱり大きいよね。ネットの人数対決でも、人数が多いほうが強いし。
+  - 語り: 2つ目は、地形です。小川や沢に沿った起伏の多い土地で、敵陣の奥が見えませんでした。馬防柵は、あったかどうかも含めて、研究で割れています。画面は、現在の長篠城跡です。
+    background:
+      image: paintings/nagashino_castle_honmaru_photo.jpg
+      credit: 先従隗始 長篠城跡の本丸跡の碑（現在の写真、2021年）
+    card:
+      head: 要因 2
+      body: 見通せない地形と柵
+  - 語り: 3つ目は、夜明けの別動隊です。長篠城の囲みを解き、武田は、背後を気にしたと考えられます。ただ、退路を断たれたと言い切る史料は、確かめられていません。
+    background:
+      image: paintings/nobunaga_nagashino_screen_toyota.jpg
+      credit: 長篠合戦図屏風（豊田市郷土資料館蔵、18世紀）
+    card:
+      head: 要因 3
+      body: 鳶ヶ巣山の別動隊
+  - 聞き: 背後が気になるって、戦ってる最中は、すごく嫌だろうね。
+  - 語り: 4つ目は、鉄砲です。装備率が両軍でほぼ同じなら、数だけで勝敗は決まりません。ただ、鉄砲と弓が待つ柵へ突っ込めば、損害は出ます。
+    background:
+      image: paintings/nobunaga_teppo_sakai_gunsmith.jpg
+      credit: 『和泉名所図会』堺の鉄砲鍛冶（1796年）
+    card:
+      head: 要因 4
+      body: 鉄砲と弓の迎撃
+  - 語り: 5つ目は、勝頼の判断です。突入は当時の正攻法でしたが、結果として、宿老を失いました。
+    portrait:
+      image: paintings/nobunaga_katsuyori_portrait.jpg
+      caption: 武田勝頼（高野山持明院本の部分、16世紀後半）
+      age: false
+    background:
+      image: paintings/akechi_nagashino_battle_screen.png
+      credit: 長篠合戦図屏風（長浜城歴史博物館蔵、江戸時代）
+    card:
+      head: 要因 5
+      body: 決戦に突入した判断
+  - 聞き: 5つ全部が揃って負けたなら、どれかが違えば、勝てたかもしれないね。
+    tone: 納得
+  - 語り: ただし、どれか1つが違えば勝てた、と言える材料は、ありません。それでも、当時の人が選べた道は、ありました。
+    hook: true
+  - 聞き: じゃあ、その別の道を、見てみようか。
+    hook: true
+- title: 天正3年5月 史料に残る別の道、撤退・決戦を避ける・別動隊を読む
+  background:
+    image: paintings/hanbei_gifu_castle_zu.jpg
+    credit: 《岐阜城図》（江戸時代）
+  year: 1575
+  lines:
+  - 語り: 1つ目の道。撤退です。宿老が勧めたと伝わる道です。画面は、現在の躑躅ヶ崎館、武田氏館の跡です。
+    background:
+      image: paintings/mikata_kofu_tsutsujigasaki_photo.jpg
+      credit: 前田左衛門佐 躑躅ヶ崎館（武田氏館跡、現在の写真、2005年）
+    card:
+      head: 別の道 1
+      body: 撤退して甲斐へ引く
+  - 聞き: 引いてたら、宿老は、生きてたってこと？
+  - 語り: 宿老3人の戦死は、決戦に出たから、とは言えます。ただ、その先に武田が安泰だったかは、別の話です。
+  - 語り: 平山優さんは、武田氏滅亡の主因を、北条氏との対立と見ます。伊東潤さんは、御館の乱の対応と、高天神城に後詰できなかったことが、長篠の敗戦より重い、と主張します。
+    background:
+      image: paintings/shingen_takatenjin_zue.jpg
+      credit: 『遠江古蹟図会』高天神山之図（1803年）
+    card:
+      head: 別の見方
+      body: 長篠だけでは決まらない
+  - 聞き: 長篠で負けただけで、武田が終わったわけじゃない、って読みか。
+  - 語り: 2つ目の道。決戦を避けて、長篠城の囲みを続ける道です。ただ、家康を引き出すのが狙いなら、決戦は避けにくい、という見方もあります。画面は、現在の長篠城跡の写真です。
+    background:
+      image: paintings/nagashino_castle_honmaru_photo.jpg
+      credit: 先従隗始 長篠城跡の本丸跡の碑（現在の写真、2021年）
+    card:
+      head: 別の道 2
+      body: 決戦を避けて包囲を続ける
+  - 語り: 3つ目の道。鳶ヶ巣山への迂回を、勝頼が察知していた、という説です。察知していたのか、していなかったのかは、分かっていません。
+    background:
+      image: paintings/nobunaga_nagashino_screen_toyota.jpg
+      credit: 長篠合戦図屏風（豊田市郷土資料館蔵、18世紀）
+    card:
+      head: 別の道 3
+      body: 別動隊を察知していた説
+  - 聞き: どの道も、相手の動き次第だなあ。あーしなら、撤退したくなっちゃうけど、それもそれで、怖いなあ。
+  - 語り: そして、武田が勝った場合を書いた史料は、見当たりません。
+    background:
+      image: paintings/mikata_totomi_kuniezu_1838.jpg
+      credit: 《天保国絵図 遠江国》1838年（国立公文書館蔵）
+    hook: true
+  - 聞き: 史料がないなら、どうやって考えるの？
+    tone: 疑問
+    hook: true
+  - 語り: 当時の人の選択肢を土台に、想像で掘ります。
+    hook: true
+- title: 想像① 5月21日の夕方 勝って武田の陣で決めること
+  background:
+    image: paintings/akechi_nagashino_battle_screen.png
+    credit: 長篠合戦図屏風（長浜城歴史博物館蔵、江戸時代）
+  year: 1575
+  lines:
+  - 語り: ここから先は、想像です。仮定は、ひとつだけ。5月21日、設楽原で、武田が連合軍の線を破って、勝ちます。
+    portrait:
+      image: paintings/nobunaga_katsuyori_portrait.jpg
+      caption: 武田勝頼（高野山持明院本の部分、16世紀後半）
+      age: false
+    card:
+      head: ここから想像
+      body: 武田が設楽原で勝つ
+    short: s3
+  - 語り: どうして勝てたのかは、決めません。冒頭で断ったとおり、この場面を論じた研究は、見つかっていません。細かい戦の描写もしません。大事なのは、勝ったあと、誰が何を決めるかです。
+  - 聞き: 勝った理由は決めずに、勝ったあとを考える、と。でも、勝つなんて、あり得たの？
+    tone: 疑問
+    background:
+      image: paintings/nobunaga_nagashino_screen_toyota.jpg
+      credit: 長篠合戦図屏風（豊田市郷土資料館蔵、18世紀）
+  - 語り: 鉄砲の優位だけでは決まらない、という研究があります。装備率は両軍でほぼ同じ、と平山優さんは見ます。だから、勝つ道が、全くの空想とは言えません。
+  - 聞き: なるほど。じゃあ、宿老は？
+    background:
+      image: paintings/ieyasu_nagashino_baba_nobuharu_screen.jpg
+      credit: 長篠合戦図屏風（徳川美術館蔵）の一場面
+  - 語り: 勝った世界では、内藤、山県、馬場の戦死が、減ります。ありうる話です。
+    card:
+      head: ありうる
+      body: 宿老の戦死が減る
+  - 語り: 想像劇場、第1幕です。5月21日の夕方、設楽原の武田の陣。勝頼と、馬場信春が、向き合います。
+    portrait: null
+    card:
+      head: 想像劇場 第1幕
+      body: 5月21日夕 武田の陣
+    short: s3
+    background:
+      image: paintings/nobunaga_nagashino_screen_full.jpg
+      credit: 長篠合戦図屏風（江戸時代）
+  - 人物: 「連合軍の線は崩れた。このまま三河へ踏み込むか」
+    who: 勝頼想像
+    portrait:
+      image: paintings/nobunaga_katsuyori_portrait.jpg
+      caption: 武田勝頼（高野山持明院本の部分、16世紀後半）
+      age: false
+    short: s3
+  - 人物: 「御屋形様、追う前に、砦を失った味方の背を、固めるべきかと」
+    who: 馬場想像
+    portrait:
+      image: paintings/mikata_baba_nobuharu_kuniyoshi_ndl.jpg
+      caption: 馬場信春（歌川国芳画、後世の武者絵）
+      age: false
+    short: s3
+  - 人物: 「奥平を落とさねば、三河には入れぬ。夜のうちに、長篠の囲みを張り直せ」
+    who: 勝頼想像
+    portrait:
+      image: paintings/nobunaga_katsuyori_portrait.jpg
+      caption: 武田勝頼（高野山持明院本の部分、16世紀後半）
+      age: false
+    short: s3
+    background:
+      image: paintings/nobunaga_nagashino_screen_toyota.jpg
+      credit: 長篠合戦図屏風（豊田市郷土資料館蔵、18世紀）
+  - 人物: 「承知いたしました。ただ、織田は引いても、また来ましょう。勝ちを、勝ちのまま終えねば」
+    who: 馬場想像
+    portrait:
+      image: paintings/mikata_baba_nobuharu_kuniyoshi_ndl.jpg
+      caption: 馬場信春（歌川国芳画、後世の武者絵）
+      age: false
+    short: s3
+  - 人物: 「分かっておる。勝ったからこそ、父上の遺したものを、守らねばならぬ」
+    who: 勝頼想像
+    portrait:
+      image: paintings/nobunaga_katsuyori_portrait.jpg
+      caption: 武田勝頼（高野山持明院本の部分、16世紀後半）
+      age: false
+    short: s3
+  - 聞き: 勝っても、慎重だなあ。
+    portrait: null
+    short: s3
+  - 語り: ここでは、勝頼が追撃より、長篠城の囲み直しと、背後の固めを先にする、と想像します。奥平を落とさずに、三河へ入れないという見方が材料です。ありうる、と見ます。
+    card:
+      head: ありうる
+      body: 追撃より囲み直しと背後の固め
+    background:
+      image: paintings/akechi_nagashino_battle_screen.png
+      credit: 長篠合戦図屏風（長浜城歴史博物館蔵、江戸時代）
+  - 語り: ただ、勝頼が三河のどこまで進むかは、根拠がありません。可能性は、ほぼ妄想、です。
+    card:
+      head: ほぼ妄想
+      body: 三河のどこまで進むかは材料なし
+  - 聞き: 武田は決まったね。じゃあ、負けた織田と徳川は、どうするの？
+    tone: 疑問
+    hook: true
+    background:
+      image: paintings/nobunaga_nagashino_screen_full.jpg
+      credit: 長篠合戦図屏風（江戸時代）
+  - 語り: 場面は、5月22日の連合軍の陣に移ります。
+    hook: true
+- title: 想像② 5月22日 連合軍の陣、信長と酒井忠次
+  background:
+    image: paintings/nobunaga_nagashino_screen_toyota.jpg
+    credit: 長篠合戦図屏風（豊田市郷土資料館蔵、18世紀）
+  year: 1575
+  lines:
+  - 語り: 想像劇場、第2幕です。5月22日、連合軍の陣。織田信長と、酒井忠次が、向き合います。
+    portrait: null
+    card:
+      head: ここから想像
+      body: 第2幕 5月22日 連合軍の陣
+  - 人物: 「武田が、柵の前の備えを破ったか。忠次、兵は、どれほど残った」
+    who: 信長想像
+    portrait:
+      image: paintings/nobunaga_portrait_eitoku_daitokuji.jpg
+      caption: 織田信長（狩野永徳（伝）画、大徳寺 総見院、1584年）
+      age: false
+  - 人物: 「まだ、数は保っております。ただ、長篠城の奥平殿が、持ちこたえるかは」
+    who: 忠次想像
+    portrait:
+      image: paintings/mikata_sakai_tadatsugu_portrait.jpg
+      caption: 酒井忠次（16世紀末〜17世紀初の肖像）
+      age: false
+  - 人物: 「奥平を見捨てれば、三河が揺れる。退きながら、拾え」
+    who: 信長想像
+    portrait:
+      image: paintings/nobunaga_portrait_eitoku_daitokuji.jpg
+      caption: 織田信長（狩野永徳（伝）画、大徳寺 総見院、1584年）
+      age: false
+  - 人物: 「鳶ヶ巣山を取った兵は、まだ動けまする。囲みが戻る前に、長篠城へ兵糧を入れられるかと」
+    who: 忠次想像
+    portrait:
+      image: paintings/mikata_sakai_tadatsugu_portrait.jpg
+      caption: 酒井忠次（16世紀末〜17世紀初の肖像）
+      age: false
+    background:
+      image: paintings/ieyasu_nagashino_baba_nobuharu_screen.jpg
+      credit: 長篠合戦図屏風（徳川美術館蔵）の一場面
+  - 人物: 「崩せるなら崩せ。ただし、深追いはするな。武田の宿老は、まだ残っておる」
+    who: 信長想像
+    portrait:
+      image: paintings/nobunaga_portrait_eitoku_daitokuji.jpg
+      caption: 織田信長（狩野永徳（伝）画、大徳寺 総見院、1584年）
+      age: false
+  - 人物: 「殿は、岡崎を固めるおつもりで」
+    who: 忠次想像
+    portrait:
+      image: paintings/mikata_sakai_tadatsugu_portrait.jpg
+      caption: 酒井忠次（16世紀末〜17世紀初の肖像）
+      age: false
+    background:
+      image: paintings/akechi_nagashino_battle_screen.png
+      credit: 長篠合戦図屏風（長浜城歴史博物館蔵、江戸時代）
+  - 人物: 「家康には、岡崎を固めさせよ。わしは、岐阜で兵を立て直す。畿内にも、敵がおる」
+    who: 信長想像
+    portrait:
+      image: paintings/nobunaga_portrait_eitoku_daitokuji.jpg
+      caption: 織田信長（狩野永徳（伝）画、大徳寺 総見院、1584年）
+      age: false
+    background:
+      image: paintings/hanbei_gifu_castle_zu.jpg
+      credit: 《岐阜城図》（江戸時代）
+  - 聞き: 信長も、東と西の両方で、手がいっぱいだったのか。
+    portrait: null
+  - 語り: 信長は、畿内で本願寺とも戦っていました。日付までは、今回は確かめていません。ここでは、信長が東の守りに、兵を割き続けると想像します。ありうる話です。
+    card:
+      head: ありうる
+      body: 信長は東に兵を割き続ける
+  - 語り: ただ、信長が自分の領国まで退くのか、岐阜まで下がるのかは、分かりません。可能性は、ほぼ妄想、です。
+    card:
+      head: ほぼ妄想
+      body: どこまで退くかは根拠なし
+  - 語り: 史実では、信長は翌年から、近江に安土城を築き始めます。勝った武田が東にいれば、その時期が変わったのか。これも、手がかりがありません。
+    background:
+      image: paintings/nobunaga_azuchi_castle_zu.jpg
+      credit: 近江国蒲生郡安土城之図（1855年原図・明治の写し）
+    card:
+      head: ほぼ妄想
+      body: 安土築城の時期は材料なし
+  - 聞き: 本拠地を移す話までずれたかも、と思うとドキドキする。じゃあ、家康は？ 奥平さんは、どうなるの？
+    tone: 疑問
+    hook: true
+  - 語り: 場面は、岡崎へ向かう家康に移ります。
+    background:
+      image: paintings/ieyasu_okazaki_castle_ryujo_zu.jpg
+      credit: 《龍城図》岡崎城（江戸時代）
+    hook: true
+- title: 想像③ 岡崎の家康と、長篠城の奥平信昌
+  background:
+    image: paintings/ieyasu_okazaki_castle_ryujo_zu.jpg
+    credit: 《龍城図》岡崎城（江戸時代）
+  year: 1575
+  lines:
+  - 語り: 想像劇場、第3幕です。岡崎に入った家康が、長篠城の奥平信昌へ、使いを出します。
+    portrait: null
+    card:
+      head: ここから想像
+      body: 第3幕 岡崎の家康と奥平
+  - 人物: 「信昌、長篠城は、まだ保てるか」
+    who: 家康想像
+    portrait:
+      image: paintings/ieyasu_yoshitora_mikawa_eiyuden.jpg
+      caption: 徳川家康（武将姿、歌川芳虎画）
+      age: false
+  - 人物: 「もう長くは、持ちませぬ。ただ、城は、渡しませぬ」
+    who: 奥平想像
+    portrait:
+      image: paintings/nagashino_okudaira_nobumasa.jpg
+      caption: 奥平信昌（1615年ごろの肖像）
+      age: false
+  - 人物: 「見捨てぬ。そなたを見捨てれば、三河は割れる。岡崎で兵を整え、必ず戻る」
+    who: 家康想像
+    portrait:
+      image: paintings/ieyasu_yoshitora_mikawa_eiyuden.jpg
+      caption: 徳川家康（武将姿、歌川芳虎画）
+      age: false
+  - 人物: 「その言葉を、城の者に伝えます。殿が戻ると聞けば、もう一晩は持ちましょう」
+    who: 奥平想像
+    portrait:
+      image: paintings/nagashino_okudaira_nobumasa.jpg
+      caption: 奥平信昌（1615年ごろの肖像）
+      age: false
+    background:
+      image: paintings/nobunaga_nagashino_screen_toyota.jpg
+      credit: 長篠合戦図屏風（豊田市郷土資料館蔵、18世紀）
+  - 人物: 「三河の国衆にも、書状を出す。武田に傾く者を、一人でも減らす」
+    who: 家康想像
+    portrait:
+      image: paintings/ieyasu_yoshitora_mikawa_eiyuden.jpg
+      caption: 徳川家康（武将姿、歌川芳虎画）
+      age: false
+  - 聞き: 家康は、見捨てない、って決めるのか。
+    portrait: null
+    background:
+      image: paintings/ieyasu_okazaki_castle_ryujo_zu.jpg
+      credit: 《龍城図》岡崎城（江戸時代）
+  - 語り: ここでは、家康が奥平を見捨てず、岡崎で守りを固めると想像します。奥平を見捨てれば三河の支配が崩れる、という指摘が、材料です。ありうる、と見ます。
+    card:
+      head: ありうる
+      body: 家康は奥平を見捨てず守りを固める
+  - 語り: ただ、奥三河の国衆が、また武田につくのかは、個別の記録がなく、根拠がありません。可能性は、ほぼ妄想、です。
+    card:
+      head: ほぼ妄想
+      body: 国衆の動きは材料なし
+    background:
+      image: paintings/akechi_nagashino_battle_screen.png
+      credit: 長篠合戦図屏風（長浜城歴史博物館蔵、江戸時代）
+  - 聞き: 三河の国衆が揺れたら、一気に変わりそうだね。
+    hook: true
+  - 語り: では、長い目で、勝った武田のその後を、見ます。
+    hook: true
+- title: 想像④ 勝頼の外交と、高天神城の落城
+  background:
+    image: paintings/mikata_kofu_tsutsujigasaki_photo.jpg
+    credit: 前田左衛門佐 躑躅ヶ崎館（武田氏館跡、現在の写真、2005年）
+  year: 1581
+  lines:
+  - 語り: 史実の勝頼は、長篠のあと、外交で立て直そうとしました。甲越同盟、甲佐同盟、甲芸同盟。上杉、佐竹、毛利と結びます。画面は、現在の躑躅ヶ崎館の跡です。
+    portrait:
+      image: paintings/nobunaga_katsuyori_portrait.jpg
+      caption: 武田勝頼（高野山持明院本の部分、16世紀後半）
+      age: false
+    card:
+      head: 長篠のあと
+      body: 上杉・佐竹・毛利と結ぶ
+  - 聞き: 負けてから、手を広げたのか。勝ってたら、どうなってたんだろう。
+  - 語り: 想像劇場、第4幕です。天正3年の夏、甲府。勝頼と、馬場信春が、向き合います。
+    portrait: null
+    card:
+      head: ここから想像
+      body: 第4幕 天正3年夏 甲府
+  - 人物: 「宿老が、まだ支えてくれる間に、上杉にも、佐竹にも、使いを出す」
+    who: 勝頼想像
+    portrait:
+      image: paintings/nobunaga_katsuyori_portrait.jpg
+      caption: 武田勝頼（高野山持明院本の部分、16世紀後半）
+      age: false
+  - 人物: 「勝った今こそ、同盟の話は、通りやすうございます」
+    who: 馬場想像
+    portrait:
+      image: paintings/mikata_baba_nobuharu_kuniyoshi_ndl.jpg
+      caption: 馬場信春（歌川国芳画、後世の武者絵）
+      age: false
+    background:
+      image: paintings/mikata_totomi_kuniezu_1838.jpg
+      credit: 《天保国絵図 遠江国》1838年（国立公文書館蔵）
+  - 人物: 「北条との糸は、切らぬように保て」
+    who: 勝頼想像
+    portrait:
+      image: paintings/nobunaga_katsuyori_portrait.jpg
+      caption: 武田勝頼（高野山持明院本の部分、16世紀後半）
+      age: false
+  - 人物: 「承知いたしました。長篠を、一度で終わらせてはなりませぬ」
+    who: 馬場想像
+    portrait:
+      image: paintings/mikata_baba_nobuharu_kuniyoshi_ndl.jpg
+      caption: 馬場信春（歌川国芳画、後世の武者絵）
+      age: false
+  - 聞き: 勝っても、外交は地道だなあ。
+    portrait: null
+  - 語り: 想像では、勝った勝頼は、同じ外交を、より有利に進めます。ありうる話です。
+    card:
+      head: ありうる
+      body: 外交がより有利に進む
+    background:
+      image: paintings/mikata_takeda_hatajirushi.jpg
+      credit: 戸澤盛徳《旗印図》1800年ごろ
+  - 語り: ただ、北条氏との対立は、御館の乱のあとに、甲相同盟が破れて起きました。平山優さんは、これを滅亡の主因と見ます。長篠の勝ち負けとは別の火種です。画面は、現在の武田氏館の跡です。
+    portrait: null
+    background:
+      image: paintings/mikata_kofu_tsutsujigasaki_photo.jpg
+      credit: 前田左衛門佐 躑躅ヶ崎館（武田氏館跡、現在の写真、2005年）
+  - 聞き: 勝っても、その火種は、残るわけだ。
+  - 語り: 高天神城は、史実では天正9年、徳川に攻められ、勝頼は救えず、落城しました。国衆の動揺を招いた、とされます。勝てば、この流れが遅れる。これも、ありうる話です。
+    background:
+      image: paintings/shingen_takatenjin_zue.jpg
+      credit: 『遠江古蹟図会』高天神山之図（1803年）
+    card:
+      head: ありうる
+      body: 高天神城の落城が遅れる
+  - 語り: そして、武田氏は、史実では天正10年3月11日、勝頼が37歳で自害して、滅びます。勝っていれば、この日が来なかったのか。それは、ほぼ妄想です。
+    card:
+      head: ほぼ妄想
+      body: 滅亡の日が変わるかは材料なし
+  - 聞き: 滅びた日付を知ってると、勝ってもやっぱり、って考えちゃうな。
+  - 語り: 勝頼の評価は、割れています。笹本正治さんは、勝頼の判断を愚策ではないと見ます。柴辻俊六さんは、典型的な三代目と見ます。
+    portrait:
+      image: paintings/nobunaga_katsuyori_portrait.jpg
+      caption: 武田勝頼（高野山持明院本の部分、16世紀後半）
+      age: false
+    card:
+      head: 勝頼の評価
+      body: 愚策ではない／典型的な三代目
+    short: s4
+  - 聞き: 評価が割れてるのは、材料が少ないからかもね。
+    short: s4
+    background:
+      image: paintings/shingen_kai_fuji_hiroshige_1852.jpg
+      credit: 歌川広重《不二三十六景 甲斐 夢山裏富士》1852年
+  - 語り: では、ここまでの想像を、一枚の表にまとめます。
+    hook: true
+  - 聞き: 誰がどうなるのか、一覧で見たい。
+    hook: true
+- title: 想像⑤ 武田が勝った世界の運命表
+  background:
+    image: paintings/mikata_totomi_kuniezu_1838.jpg
+    credit: 《天保国絵図 遠江国》1838年（国立公文書館蔵）
+  year: 1575
+  lines:
+  - 語り: ここが、今日いちばんの見どころです。前提は、ひとつ。史実の勝頼は、設楽原で敗れました。もしも、勝っていたら。あの人たちは、どうなるのか。
+    portrait: null
+    card:
+      head: ここから想像
+      body: 人物の運命表
+  - 聞き: 誰がどうなるのか、一覧で見られるの？ この表も、研究はあるのかな。
+    tone: 疑問
+  - 語り: この表を正面から論じた研究も、今回の調査では見つかっていません。材料は、これまで見た事実だけです。「ありうる」は表の札だけで、高い、とほぼ妄想は、声でも言います。
+  - 語り: 1人目は、内藤昌豊、山県昌景、馬場信春の3人。史実では、長篠で戦死しました。もしもは、戦死が減ります。
+    portrait:
+      image: paintings/mikata_yamagata_masakage_kuniyoshi2.jpg
+      caption: 山県昌景（歌川国芳画、後世の武者絵）
+      age: false
+    figure:
+      type: table
+      title: 人物の運命表（史実ともしも）
+      cols:
+      - 史実
+      - もしも
+      rows: &id002
+      - - 内藤・山県・馬場
+        - 長篠で戦死
+        - 戦死が減る
+        - ありうる
+      - - 武田勝頼
+        - 長篠で敗れる
+        - 勢いを保つ
+        - ありうる
+      - - 織田信長
+        - 連合軍が勝つ
+        - 東に兵を割き続ける
+        - ありうる
+      - - 徳川家康
+        - 奥三河を取り返す
+        - 守りに回る・守れたかは不明
+        - ほぼ妄想
+      - - 奥平信昌
+        - 長篠城を守りきる
+        - 持ちこたえるか不明
+        - ほぼ妄想
+      - - 奥三河の奪回
+        - 長篠のあとに進む
+        - 同じ速さでは進まない
+        - 高い
+      - - 高天神城
+        - 1581年に落城
+        - 落城が遅れる
+        - ありうる
+      - - 武田氏の滅亡
+        - 1582年3月に滅亡
+        - 滅ぶ日は変わるか不明
+        - ほぼ妄想
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 1
+  - 聞き: 宿老が残るのは大きいけど、織田と徳川の側は、どう変わるの？
+    background:
+      image: paintings/nobunaga_nagashino_screen_full.jpg
+      credit: 長篠合戦図屏風（江戸時代）
+  - 語り: 2人目は、武田勝頼。史実では、長篠で敗れます。もしもは、勢いを保ちます。
+    portrait:
+      image: paintings/nobunaga_katsuyori_portrait.jpg
+      caption: 武田勝頼（高野山持明院本の部分、16世紀後半）
+      age: false
+    figure:
+      type: table
+      title: 人物の運命表（史実ともしも）
+      cols:
+      - 史実
+      - もしも
+      rows: *id002
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 2
+  - 聞き: 勢いを保つ、まで。勝ち続けるとは、言ってないってことか。
+  - 語り: 3人目は、織田信長。史実では、連合軍が勝ちます。もしもは、東に兵を割き続けます。
+    portrait:
+      image: paintings/nobunaga_portrait_eitoku_daitokuji.jpg
+      caption: 織田信長（狩野永徳（伝）画、大徳寺 総見院、1584年）
+      age: false
+    figure:
+      type: table
+      title: 人物の運命表（史実ともしも）
+      cols:
+      - 史実
+      - もしも
+      rows: *id002
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 3
+  - 聞き: 信長は、東にずっと目を配る。大変そう。
+    background:
+      image: paintings/hanbei_gifu_castle_zu.jpg
+      credit: 《岐阜城図》（江戸時代）
+  - 語り: 4人目は、徳川家康。史実では、奥三河を取り返します。もしもは、三河の守りに回ります。守りきれたかは、ほぼ妄想、です。
+    portrait:
+      image: paintings/ieyasu_yoshitora_mikawa_eiyuden.jpg
+      caption: 徳川家康（武将姿、歌川芳虎画）
+      age: false
+    figure:
+      type: table
+      title: 人物の運命表（史実ともしも）
+      cols:
+      - 史実
+      - もしも
+      rows: *id002
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 4
+  - 聞き: 家康は、攻める側から守る側に回るのか。
+    background:
+      image: paintings/nobunaga_azuchi_castle_zu.jpg
+      credit: 近江国蒲生郡安土城之図（1855年原図・明治の写し）
+  - 語り: 5人目は、奥平信昌。史実では、長篠城を守りきります。もしもは、持ちこたえたかどうかが、分かりません。可能性は、ほぼ妄想、です。
+    portrait:
+      image: paintings/nagashino_okudaira_nobumasa.jpg
+      caption: 奥平信昌（1615年ごろの肖像）
+      age: false
+    figure:
+      type: table
+      title: 人物の運命表（史実ともしも）
+      cols:
+      - 史実
+      - もしも
+      rows: *id002
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 5
+  - 聞き: 奥平さんだけ、ほぼ妄想なの？ 理由があるの？
+    background:
+      image: paintings/nobunaga_nagashino_screen_toyota.jpg
+      credit: 長篠合戦図屏風（豊田市郷土資料館蔵、18世紀）
+  - 語り: 勝った世界の籠城の様子を考える手がかりは、ありません。
+  - 語り: 次は、奥三河の奪回です。史実では、織田・徳川が奥三河や遠江の城を、長篠のあとに取り返しました。もしもは、同じ速さでは進みません。可能性は、高い、です。
+    portrait: null
+    figure:
+      type: table
+      title: 人物の運命表（史実ともしも）
+      cols:
+      - 史実
+      - もしも
+      rows: *id002
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 6
+  - 聞き: 奥三河の城を奪い返したのは、長篠で勝ったあとだからだよね。そこが変わるのは、確かにありそう。
+  - 語り: 最後に、高天神城と、武田氏の滅亡。高天神の落城が遅れるのは、表のとおり。武田氏の滅ぶ日が変わるかは、ほぼ妄想、です。
+    portrait: null
+    figure:
+      type: table
+      title: 人物の運命表（史実ともしも）
+      cols:
+      - 史実
+      - もしも
+      rows: *id002
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 8
+    background:
+      image: paintings/mikata_mitsuke_tenryu_cleveland.jpg
+      credit: 歌川広重《東海道五十三次之内 見附 天竜川》1833年ごろ
+  - 聞き: 表を見ると、ありうると、ほぼ妄想ばっかりで、すっきりしないね。
+  - 語り: はっきり言えるのは、高い、がひとつだけだ、ということです。残りは、材料が足りません。
+    hook: true
+  - 聞き: じゃあ、日本全体では、何が変わるの？
+    tone: 疑問
+    hook: true
+- title: 想像⑥ 日本の変化点と、現代につながる鎖
+  background:
+    image: paintings/nobunaga_azuchi_castle_zu.jpg
+    credit: 近江国蒲生郡安土城之図（1855年原図・明治の写し）
+  year: 1582
+  lines:
+  - 語り: 最後に、日本全体の流れです。史実では、武田氏は天正10年3月に滅び、同じ年の6月に、信長は本能寺で亡くなります。
+    portrait: null
+    card:
+      head: 史実の1582年
+      body: 武田氏の滅亡と本能寺
+  - 聞き: 同じ年に、武田も信長も……。もし長篠で武田が勝ってたら、どっちも、ずれたのかな。
+  - 語り: ここから先は、想像です。ずれた、とも言えますが、手がかりがありません。信長の東の備えが、どれだけ重くなるか。武田が、どこまで持つか。可能性は、ほぼ妄想、です。
+    card:
+      head: ここから想像
+      body: 日本全体の流れ（ほぼ妄想）
+  - 聞き: まだ、天下人の話にはならないってことだね。
+  - 語り: 一方で、はっきり残っているものもあります。三段撃ちは、江戸時代の書物から生まれたとみられる話が、明治の教科書で広まり、今も語られます。画面は、現在の長篠城跡の石碑です。
+    portrait: null
+    background:
+      image: paintings/nagashino_castle_stone_monument_photo.jpg
+      credit: MaedaAkihiko 長篠城跡の石碑（現在の写真、2024年）
+  - 語り: ここで、想像は終わりです。まとめに入ります。
+    hook: true
+  - 聞き: まず、武田はどうなったんだっけ。
+    tone: 疑問
+    hook: true
+- title: まとめ：天正3年5月21日 設楽原の分かれ道
+  background:
+    image: paintings/nobunaga_nagashino_screen_full.jpg
+    credit: 長篠合戦図屏風（江戸時代）
+  year: 1575
+  lines:
+  - 語り: 冒頭の3つの問いに答えます。武田は、勢いを保ちます。宿老の戦死も減ります。信長は、東に兵を割き続けます。ここまでは、ありうる、です。
+    portrait: null
+    background:
+      image: paintings/akechi_nagashino_battle_screen.png
+      credit: 長篠合戦図屏風（長浜城歴史博物館蔵、江戸時代）
+    figure:
+      type: stats
+      title: 3つの問いの答え（想像）
+      items:
+      - - 武田は？
+        - 勢いを保つ
+        - ありうる
+      - - 信長は？
+        - 東に兵を割く
+        - ありうる
+      - - 家康は？
+        - 守れたかは不明
+        - ほぼ妄想
+  - 語り: 家康は、奥平を見捨てず、岡崎で守りに回ります。ただ、三河を守りきれたかは、ほぼ妄想です。武田氏の滅ぶ日、信長が退く先、奥三河の国衆の動きも、ほぼ妄想です。
+    background:
+      image: paintings/nobunaga_nagashino_screen_toyota.jpg
+      credit: 長篠合戦図屏風（豊田市郷土資料館蔵、18世紀）
+  - 聞き: 答えが全部、想像なのは、ちょっと悔しいなあ。確かなのは、史実のほうだけか。
+  - 語り: いまの3つの答えは、全部、想像です。史実で言えるのは、天正3年5月21日、設楽原で武田が敗れ、宿老3人を含む多くの重臣を失った、ということです。
+    background:
+      image: paintings/nobunaga_nagashino_screen_full.jpg
+      credit: 長篠合戦図屏風（江戸時代）
+    card:
+      head: 史実で言えること
+      body: 武田は敗れ、宿老3人を失った
+    figure: null
+  - 語り: 勝頼は、評価の割れる人です。決戦を選んだ理由も、少なくとも5つの説に割れたままです。
+    portrait:
+      image: paintings/nobunaga_katsuyori_portrait.jpg
+      caption: 武田勝頼（高野山持明院本の部分、16世紀後半）
+      age: false
+  - 語り: 史実の最期です。天正10年3月11日、勝頼は、嫡男の信勝と、北条から嫁いだ夫人とともに、田野で自害します。37歳でした。
+    card:
+      head: 天正10年3月11日
+      body: 勝頼、信勝・夫人とともに自害
+  - 聞き: 家族と一緒に、最期を迎えたのか。決戦を選んだ数え30歳の人が、そこまで走ったんだね。
+    tone: しみじみ
+  - 語り: 数え30歳の勝頼が、あの軍議の座にいた。その事実だけが、動きません。
+    background:
+      image: paintings/akechi_nagashino_battle_screen.png
+      credit: 長篠合戦図屏風（長浜城歴史博物館蔵、江戸時代）
+  - 聞き: 分かれ道を1つ挙げるなら、やっぱり、宿老が「引け」と言ったと伝わる、あの軍議だね。
+    portrait: null
+  - 語り: 今日の地層は、ここまでです。
+  - 聞き: 次の「もしも」は、誰の、どの分かれ道かな。
+    tone: 疑問
+  - 語り: あなたが気になる、歴史の分かれ道を、コメントで教えてください。
+    background:
+      image: paintings/nobunaga_nagashino_screen_toyota.jpg
+      credit: 長篠合戦図屏風（豊田市郷土資料館蔵、18世紀）
+  - 二人: また一緒に、掘りましょう！
+    tone: 明るい
