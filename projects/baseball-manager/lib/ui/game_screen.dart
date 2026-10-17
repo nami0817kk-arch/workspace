@@ -36,6 +36,10 @@ class GameScreen extends StatelessWidget {
         padding: const EdgeInsets.all(12),
         children: [
           _StatusCard(game: game),
+          if (controller.recent.isNotEmpty) ...[
+            const SizedBox(height: 8),
+            _RecentCard(lines: controller.recent),
+          ],
           const SizedBox(height: 8),
           _AbilityCard(controller: controller, game: game),
           const SizedBox(height: 8),
@@ -74,6 +78,20 @@ class _StatusCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Row(children: [
+              Text(game.slotName, style: Theme.of(context).textTheme.titleSmall),
+              const SizedBox(width: 8),
+              Expanded(
+                child: LinearProgressIndicator(
+                  value: game.slot / game.slotsInYear,
+                  minHeight: 6,
+                  borderRadius: BorderRadius.circular(3),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Text('${game.slot + 1}/${game.slotsInYear}'),
+            ]),
+            const SizedBox(height: 8),
             Row(children: [
               const Text('体力'),
               const SizedBox(width: 8),
@@ -140,10 +158,24 @@ class _AbilityCard extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 2),
                 child: Row(children: [
-                  SizedBox(width: 72, child: Text(abilityLabel(a))),
-                  SizedBox(width: 32, child: Text('${p.of(a)}', textAlign: TextAlign.right)),
+                  _RankBadge(value: p.of(a)),
+                  const SizedBox(width: 6),
+                  SizedBox(width: 60, child: Text(abilityLabel(a))),
+                  SizedBox(width: 28, child: Text('${p.of(a)}', textAlign: TextAlign.right)),
                   const SizedBox(width: 8),
-                  Expanded(child: LinearProgressIndicator(value: p.of(a) / 99, minHeight: 8)),
+                  Expanded(
+                    child: TweenAnimationBuilder<double>(
+                      tween: Tween(end: p.of(a) / 99),
+                      duration: const Duration(milliseconds: 450),
+                      curve: Curves.easeOut,
+                      builder: (context, v, _) => LinearProgressIndicator(
+                        value: v,
+                        minHeight: 10,
+                        color: rankColor(rankOf(p.of(a))),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                    ),
+                  ),
                   const SizedBox(width: 8),
                   SizedBox(
                     width: 84,
@@ -478,4 +510,51 @@ class EndingView extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 2),
         child: Row(children: [Expanded(child: Text(k)), Text(v)]),
       );
+}
+
+/// 能力のランク(G〜S)の丸いバッジ。
+class _RankBadge extends StatelessWidget {
+  const _RankBadge({required this.value});
+  final int value;
+
+  @override
+  Widget build(BuildContext context) {
+    final r = rankOf(value);
+    return Container(
+      width: 26,
+      height: 26,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(color: rankColor(r), shape: BoxShape.circle),
+      child: Text(r,
+          style: const TextStyle(
+              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14)),
+    );
+  }
+}
+
+/// 直前の操作で起きたこと。
+class _RecentCard extends StatelessWidget {
+  const _RecentCard({required this.lines});
+  final List<String> lines;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      key: const Key('recent'),
+      color: Theme.of(context).colorScheme.primaryContainer,
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            for (final l in lines)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 1),
+                child: Text(l, style: Theme.of(context).textTheme.bodyLarge),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
 }

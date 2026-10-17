@@ -7,6 +7,7 @@ import 'package:baseball_manager/game/path.dart';
 import 'package:baseball_manager/game/player.dart';
 import 'package:baseball_manager/ui/app.dart';
 import 'package:baseball_manager/ui/controller.dart';
+import 'package:baseball_manager/ui/labels.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -50,6 +51,7 @@ Game _until(bool Function(Game) stop, {int seed = 1, int? potential}) {
 }
 
 void main() {
+  _rankTests();
   testWidgets('はじめの画面から選手を作ると、6歳の春から始まる', (t) async {
     await _start(t);
     expect(find.text('はじめる'), findsOneWidget);
@@ -84,6 +86,18 @@ void main() {
     final sum = abilitiesOf(Role.batter).map(c.game!.player.of).reduce((a, b) => a + b);
     expect(sum, greaterThan(15 * 5));
     expect(c.game!.player.of(Ability.contact) >= before, isTrue);
+  });
+
+  testWidgets('練習のあと、「いまの結果」に貯まった経験点が出る。能力のランクが並ぶ', (t) async {
+    final c = await _start(t);
+    c.newGame('テスト', Role.batter);
+    await t.pumpAndSettle();
+    expect(find.byKey(const Key('recent')), findsNothing);
+    expect(find.text('G'), findsNWidgets(5)); // 15は全部Gランク
+    await t.tap(find.byKey(const Key('act-train')));
+    await t.pumpAndSettle();
+    expect(find.byKey(const Key('recent')), findsOneWidget);
+    expect(find.textContaining('練習: 打撃経験点 +'), findsOneWidget);
   });
 
   testWidgets('経験点が足りない能力の+1は押せない', (t) async {
@@ -200,5 +214,21 @@ void main() {
     await t.pumpAndSettle();
     expect(find.textContaining('4月'), findsWidgets);
     expect(find.textContaining('高校'), findsWidgets);
+  });
+}
+
+void _rankTests() {
+  test('ランクは10ごとに上がり、色が違う', () {
+    expect(rankOf(0), 'G');
+    expect(rankOf(29), 'G');
+    expect(rankOf(30), 'F');
+    expect(rankOf(49), 'E');
+    expect(rankOf(50), 'D');
+    expect(rankOf(60), 'C');
+    expect(rankOf(70), 'B');
+    expect(rankOf(80), 'A');
+    expect(rankOf(90), 'S');
+    expect(rankOf(99), 'S');
+    expect(['G', 'F', 'E', 'D', 'C', 'B', 'A', 'S'].map(rankColor).toSet().length, 8);
   });
 }

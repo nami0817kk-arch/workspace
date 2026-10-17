@@ -1,13 +1,15 @@
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart' hide Category;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../game/exp.dart';
 import '../game/game.dart';
 import '../game/life.dart';
 import '../game/path.dart';
 import '../game/player.dart';
+import 'labels.dart';
 
 const saveKey = 'baseball_manager_save_v1';
 
@@ -49,6 +51,9 @@ class GameController extends ChangeNotifier {
   final Random _rng;
   Game? game;
 
+  /// 直前の操作で増えた記録(画面の「いまの結果」に出す)。
+  List<String> recent = const [];
+
   /// いま重点にしている能力。
   Ability focus = Ability.contact;
 
@@ -67,6 +72,7 @@ class GameController extends ChangeNotifier {
 
   void newGame(String name, Role role) {
     game = Game.newGame(name: name.trim().isEmpty ? '名無し' : name.trim(), role: role, rng: _rng);
+    recent = const [];
     focus = abilitiesOf(role).first;
     _commit();
   }
@@ -88,8 +94,19 @@ class GameController extends ChangeNotifier {
     if (!abilitiesOf(g.player.role).contains(focus)) {
       focus = abilitiesOf(g.player.role).first;
     }
+    final start = g.log.length;
     g.choose(a, focus);
+    recent = [_summary(a, g), ...g.log.sublist(start)];
     _commit();
+  }
+
+  /// 「練習: 打撃経験点 +25 / …」のような、直前のターンの一行まとめ。
+  String _summary(Plan a, Game g) {
+    final gains = [
+      for (final c in Category.values)
+        if ((g.lastGain[c] ?? 0) > 0) '${c.label}経験点 +${g.lastGain[c]}',
+    ];
+    return gains.isEmpty ? '${actionLabel(a)}した' : '${actionLabel(a)}: ${gains.join(' / ')}';
   }
 
   void spend(Ability a) {
@@ -102,7 +119,9 @@ class GameController extends ChangeNotifier {
   }
 
   void chooseEvent(int i) {
+    final start = game!.log.length;
     game!.resolveEvent(i);
+    recent = game!.log.sublist(start);
     _commit();
   }
 

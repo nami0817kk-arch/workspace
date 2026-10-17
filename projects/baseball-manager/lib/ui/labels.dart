@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 import '../game/career.dart';
 import '../game/exp.dart';
 import '../game/life.dart';
@@ -51,3 +53,26 @@ String actionHint(Plan a) => switch (a) {
     };
 
 String categoryLabel(Category c) => c.label;
+
+/// 能力値のランク(G〜S)。パワプロのように、数字より先にランクで強さが分かる。
+String rankOf(int v) {
+  if (v >= 90) return 'S';
+  if (v >= 80) return 'A';
+  if (v >= 70) return 'B';
+  if (v >= 60) return 'C';
+  if (v >= 50) return 'D';
+  if (v >= 40) return 'E';
+  if (v >= 30) return 'F';
+  return 'G';
+}
+
+Color rankColor(String rank) => switch (rank) {
+      'S' => const Color(0xFFE53935),
+      'A' => const Color(0xFFFB8C00),
+      'B' => const Color(0xFFFDD835),
+      'C' => const Color(0xFF7CB342),
+      'D' => const Color(0xFF26A69A),
+      'E' => const Color(0xFF42A5F5),
+      'F' => const Color(0xFF7986CB),
+      _ => const Color(0xFF9E9E9E),
+    };
