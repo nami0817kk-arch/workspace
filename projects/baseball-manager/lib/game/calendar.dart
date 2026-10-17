@@ -15,5 +15,18 @@ const _seasons = ['春', '夏', '秋', '冬'];
 
 String slotLabel(Stage s, int slot) => isMonthly(s) ? _months[slot] : _seasons[slot];
 
+enum Season { spring, summer, autumn, winter }
+
+/// そのターンの季節(背景の絵に使う)。月単位は 4月始まりで、3〜5月が春。
+Season seasonOf(Stage s, int slot) {
+  if (!isMonthly(s)) return Season.values[slot.clamp(0, 3)];
+  const months = [4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3];
+  final m = months[slot.clamp(0, 11)];
+  if (m >= 3 && m <= 5) return Season.spring;
+  if (m >= 6 && m <= 8) return Season.summer;
+  if (m >= 9 && m <= 11) return Season.autumn;
+  return Season.winter;
+}
+
 /// 夏の大会のターン。月単位は7月、季節は夏。
 bool isTournamentSlot(Stage s, int slot) => slot == (isMonthly(s) ? 3 : 1);

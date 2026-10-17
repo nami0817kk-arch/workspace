@@ -13,6 +13,7 @@ Player _p([int v = 30, Role role = Role.batter]) => Player(
     );
 
 void main() {
+  _seasonTests();
   _roleFactorTests();
   test('全ての能力がどれかの種類に属し、役割の能力だけで種類が決まる', () {
     for (final a in Ability.values) {
@@ -124,5 +125,19 @@ void _roleFactorTests() {
     expect(perAbility(Role.pitcher), closeTo(perAbility(Role.batter), 1e-9));
     expect(perAbility(Role.twoWay), closeTo(perAbility(Role.batter), 1e-9));
     expect(roleExpFactor(Role.pitcher), lessThan(1.0));
+  });
+}
+
+void _seasonTests() {
+  test('季節: 月単位は4月始まり、季節ターンはそのまま', () {
+    final m = [for (var i = 0; i < 12; i++) seasonOf(Stage.highSchool, i)];
+    expect(m, [
+      Season.spring, Season.spring, // 4・5月
+      Season.summer, Season.summer, Season.summer, // 6〜8月
+      Season.autumn, Season.autumn, Season.autumn, // 9〜11月
+      Season.winter, Season.winter, Season.winter, // 12〜2月
+      Season.spring, // 3月
+    ]);
+    expect([for (var i = 0; i < 4; i++) seasonOf(Stage.youth, i)], Season.values);
   });
 }

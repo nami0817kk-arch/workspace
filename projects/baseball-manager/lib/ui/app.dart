@@ -24,11 +24,8 @@ class _BaseballManagerAppState extends State<BaseballManagerApp> {
     return MaterialApp(
       title: '野球育成',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorSchemeSeed: const Color(0xFF2E7D32),
-        useMaterial3: true,
-        fontFamily: 'NotoSansJP',
-      ),
+      theme: _theme(Brightness.light),
+      darkTheme: _theme(Brightness.dark),
       home: FutureBuilder<bool>(
         future: _loaded,
         builder: (context, snap) {
@@ -97,4 +94,39 @@ class _MilestoneHostState extends State<_MilestoneHost> {
 
   @override
   Widget build(BuildContext context) => widget.child;
+}
+
+ThemeData _theme(Brightness b) {
+  final scheme = ColorScheme.fromSeed(seedColor: const Color(0xFF2E7D32), brightness: b);
+  return ThemeData(
+    colorScheme: scheme,
+    useMaterial3: true,
+    fontFamily: 'NotoSansJP',
+    scaffoldBackgroundColor: b == Brightness.light ? const Color(0xFFF3F7EF) : scheme.surface,
+    appBarTheme: AppBarTheme(
+      backgroundColor: Colors.transparent,
+      scrolledUnderElevation: 0,
+      titleTextStyle: TextStyle(
+        fontFamily: 'NotoSansJP',
+        fontSize: 18,
+        fontWeight: FontWeight.bold,
+        color: scheme.onSurface,
+      ),
+    ),
+    cardTheme: CardThemeData(
+      elevation: 0,
+      margin: EdgeInsets.zero,
+      color: b == Brightness.light ? Colors.white : scheme.surfaceContainer,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(18),
+        side: BorderSide(color: scheme.outlineVariant.withValues(alpha: 0.6)),
+      ),
+    ),
+    filledButtonTheme: FilledButtonThemeData(
+      style: FilledButton.styleFrom(
+        minimumSize: const Size.fromHeight(48),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+      ),
+    ),
+  );
 }

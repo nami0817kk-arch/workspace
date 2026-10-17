@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../game/calendar.dart';
+import '../game/career.dart';
 import '../game/player.dart';
+import 'art/avatar.dart';
+import 'art/scene.dart';
 import 'controller.dart';
 import 'history.dart';
 import 'labels.dart';
@@ -41,6 +45,14 @@ class _HomeScreenState extends State<HomeScreen> {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
+          SceneBanner(
+            season: Season.spring,
+            stage: Stage.youth,
+            role: role,
+            mood: Mood.happy,
+            label: '6歳',
+          ),
+          const SizedBox(height: 16),
           Text('6歳から、プロを引退するまで。', style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 4),
           const Text('1人の選手を育てて、その一生を見届けるゲームです。'),

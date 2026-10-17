@@ -76,3 +76,6 @@ Color rankColor(String rank) => switch (rank) {
       'F' => const Color(0xFF7986CB),
       _ => const Color(0xFF9E9E9E),
     };
+
+/// 同梱の日本語フォント。`CustomPaint` の文字は Theme を引き継がないので、明示する。
+const kFont = 'NotoSansJP';

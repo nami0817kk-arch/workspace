@@ -66,8 +66,10 @@ class Game {
       abilities: {for (final a in abilitiesOf(role)) a: 15},
       traits: rollInnateTraits(rng),
     );
-    return Game._(rng, p, Cast.initial(rng, role, p.traits))
+    final g = Game._(rng, p, Cast.initial(rng, role, p.traits))
       .._wasTwoWay = role == Role.twoWay;
+    g.overallHistory.add(overall(p).round());
+    return g;
   }
 
   final Random rng;
@@ -94,6 +96,12 @@ class Game {
 
   /// 引退後、殿堂(過去の選手の記録)に書き込み済みか。
   bool archived = false;
+
+  /// 総合評価の推移。[0] が6歳の始まり、以降は年の終わりごとに1つずつ(人生のグラフ用)。
+  final List<int> overallHistory = [];
+
+  /// プロ入りした年齢。入っていなければ null。
+  int? proStartAge;
 
   Stage get stage =>
       phase == Phase.retired ? Stage.retired : stageOf(player.age, turnedPro: turnedPro);
@@ -328,6 +336,7 @@ class Game {
       condition = condition.copyWith(fatigue: condition.fatigue - 5); // 支えてくれる
     }
     peakOverall = max(peakOverall, overall(player).round());
+    overallHistory.add(overall(player).round());
 
     if (turnedPro) {
       proYears++;
@@ -354,6 +363,7 @@ class Game {
   void _draft() {
     if (isDrafted(player, recentAchievement, rng)) {
       turnedPro = true;
+      proStartAge = player.age;
       log.add('ドラフトで指名された!');
     } else if (route == null) {
       log.add('ドラフトで指名されなかった。');
@@ -416,6 +426,8 @@ class Game {
         'wasTwoWay': _wasTwoWay,
         'achievements': achievements,
         'archived': archived,
+        'overallHistory': overallHistory,
+        'proStartAge': proStartAge,
       };
 
   /// 項目を足すときは既定値を置く(既存セーブを壊さない)。
@@ -448,6 +460,8 @@ class Game {
     g.peakOverall = (j['peakOverall'] as num?)?.toInt() ?? 0;
     g.championships = (j['championships'] as num?)?.toInt() ?? 0;
     g.archived = (j['archived'] as bool?) ?? false;
+    g.overallHistory.addAll(((j['overallHistory'] as List?) ?? const []).map((e) => (e as num).toInt()));
+    g.proStartAge = (j['proStartAge'] as num?)?.toInt();
     g._wasTwoWay = (j['wasTwoWay'] as bool?) ?? g.player.role == Role.twoWay;
     g.achievements.addAll(
         ((j['achievements'] as List?) ?? const []).map((e) => (e as num).toDouble()));

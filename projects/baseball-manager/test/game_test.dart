@@ -38,6 +38,7 @@ Game _new(int seed, {int? potential, Role role = Role.batter}) => Game.newGame(
     name: 'テスト', role: role, rng: Random(seed), potential: potential);
 
 void main() {
+  _historyTests();
   test('どの乱数でも、6歳から引退まで必ず終わる', () {
     for (var s = 0; s < 60; s++) {
       final g = _new(s);
@@ -239,5 +240,31 @@ void main() {
     expect(g.phase, Phase.term);
     expect(g.player.age, startAge);
     expect(g.turnedPro, isFalse);
+  });
+}
+
+void _historyTests() {
+  test('総合評価の推移は、始まりと年ごとに記録され、保存して読み直せる', () {
+    final g = _new(7, potential: 70);
+    expect(g.overallHistory, hasLength(1)); // 6歳の始まり
+    _autoPlay(g, stop: (g) => g.player.age >= 12 && g.phase == Phase.term);
+    expect(g.overallHistory, hasLength(g.player.age - startAge + 1));
+    expect(g.overallHistory.last, greaterThan(g.overallHistory.first));
+    final q = Game.fromJson(jsonDecode(jsonEncode(g.toJson())) as Map<String, dynamic>, Random(1));
+    expect(q.overallHistory, g.overallHistory);
+    expect(Game.fromJson({}, Random(1)).overallHistory, isEmpty); // 古いセーブ
+  });
+
+  test('プロ入りした年齢が残る', () {
+    for (var s = 0; s < 60; s++) {
+      final g = _new(s, potential: 100);
+      _autoPlay(g);
+      if (g.ending!.madePro) {
+        expect(g.proStartAge, inInclusiveRange(19, 22));
+        return;
+      }
+      expect(g.proStartAge, isNull);
+    }
+    fail('プロになった選手がいない');
   });
 }

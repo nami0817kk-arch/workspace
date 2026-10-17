@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../game/calendar.dart';
 import '../game/career.dart';
 import '../game/characters.dart';
 import '../game/exp.dart';
@@ -7,8 +8,15 @@ import '../game/game.dart';
 import '../game/life.dart';
 import '../game/path.dart';
 import '../game/player.dart';
+import 'art/avatar.dart';
+import 'art/career_chart.dart';
+import 'art/radar.dart';
+import 'art/scene.dart';
 import 'controller.dart';
 import 'labels.dart';
+
+/// 画面の中身の最大幅。広い画面(Web・タブレット)では中央に寄せる。
+const contentMaxWidth = 560.0;
 
 class GameScreen extends StatelessWidget {
   const GameScreen({super.key, required this.controller, required this.game});
@@ -32,37 +40,81 @@ class GameScreen extends StatelessWidget {
           ],
         ),
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(12),
-        children: [
-          _StatusCard(game: game),
-          if (controller.recent.isNotEmpty) ...[
-            const SizedBox(height: 8),
-            _RecentCard(lines: controller.recent),
-          ],
-          const SizedBox(height: 8),
-          _AbilityCard(controller: controller, game: game),
-          const SizedBox(height: 8),
-          if (game.phase == Phase.event)
-            _EventCard(controller: controller, game: game)
-          else if (game.phase == Phase.pathChoice)
-            _PathCard(controller: controller)
-          else ...[
-            _ActionCard(controller: controller, game: game),
-            if (game.stage == Stage.pro) ...[
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: contentMaxWidth),
+          child: ListView(
+            padding: const EdgeInsets.fromLTRB(12, 4, 12, 24),
+            children: [
+              SceneBanner(
+                season: seasonOf(game.stage, game.slot),
+                stage: game.stage,
+                role: p.role,
+                mood: moodOf(game.motivation),
+                label: game.slotName,
+              ),
               const SizedBox(height: 8),
-              _ProCard(controller: controller, game: game),
+              _StatusCard(game: game),
+              if (controller.recent.isNotEmpty) ...[
+                const SizedBox(height: 8),
+                _RecentCard(lines: controller.recent),
+              ],
+              const SizedBox(height: 8),
+              _AbilityCard(controller: controller, game: game),
+              const SizedBox(height: 8),
+              AnimatedSize(
+                duration: const Duration(milliseconds: 250),
+                curve: Curves.easeOut,
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 300),
+                  child: KeyedSubtree(
+                    key: ValueKey(game.phase),
+                    child: _mainCard(),
+                  ),
+                ),
+              ),
+              if (game.phase == Phase.term && game.stage == Stage.pro) ...[
+                const SizedBox(height: 8),
+                _ProCard(controller: controller, game: game),
+              ],
+              const SizedBox(height: 8),
+              _CastCard(game: game),
+              const SizedBox(height: 8),
+              _LogCard(game: game),
             ],
-          ],
-          const SizedBox(height: 8),
-          _CastCard(game: game),
-          const SizedBox(height: 8),
-          _LogCard(game: game),
-        ],
+          ),
+        ),
       ),
     );
   }
+
+  Widget _mainCard() {
+    switch (game.phase) {
+      case Phase.event:
+        return _EventCard(controller: controller, game: game);
+      case Phase.pathChoice:
+        return _PathCard(controller: controller);
+      default:
+        return _ActionCard(controller: controller, game: game);
+    }
+  }
 }
+
+IconData _moodIcon(Motivation m) => switch (m) {
+      Motivation.terrible => Icons.sentiment_very_dissatisfied,
+      Motivation.bad => Icons.sentiment_dissatisfied,
+      Motivation.normal => Icons.sentiment_neutral,
+      Motivation.good => Icons.sentiment_satisfied,
+      Motivation.great => Icons.sentiment_very_satisfied,
+    };
+
+Color _moodColor(Motivation m) => switch (m) {
+      Motivation.terrible => const Color(0xFFD32F2F),
+      Motivation.bad => const Color(0xFFF57C00),
+      Motivation.normal => const Color(0xFF78909C),
+      Motivation.good => const Color(0xFF7CB342),
+      Motivation.great => const Color(0xFF2E9B3E),
+    };
 
 class _StatusCard extends StatelessWidget {
   const _StatusCard({required this.game});
@@ -72,6 +124,12 @@ class _StatusCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = game.condition;
     final stamina = (100 - c.fatigue) / 100;
+    final staminaColor = stamina > 0.55
+        ? const Color(0xFF43A047)
+        : stamina > 0.3
+            ? const Color(0xFFFB8C00)
+            : const Color(0xFFE53935);
+    final m = game.motivation;
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(12),
@@ -91,22 +149,39 @@ class _StatusCard extends StatelessWidget {
               const SizedBox(width: 8),
               Text('${game.slot + 1}/${game.slotsInYear}'),
             ]),
-            const SizedBox(height: 8),
+            const SizedBox(height: 10),
             Row(children: [
+              const Icon(Icons.favorite, size: 18, color: Color(0xFFE57373)),
+              const SizedBox(width: 6),
               const Text('体力'),
               const SizedBox(width: 8),
-              Expanded(child: LinearProgressIndicator(value: stamina, minHeight: 10)),
-            ]),
-            const SizedBox(height: 4),
-            Text('やる気: ${game.motivation.label}',
-                style: Theme.of(context).textTheme.titleSmall),
-            if (c.injured)
-              const Padding(
-                padding: EdgeInsets.only(top: 4),
-                child: Text('怪我で安静中', style: TextStyle(color: Colors.red)),
+              Expanded(
+                child: TweenAnimationBuilder<double>(
+                  tween: Tween(end: stamina),
+                  duration: const Duration(milliseconds: 400),
+                  builder: (context, v, _) => LinearProgressIndicator(
+                    value: v,
+                    minHeight: 12,
+                    color: staminaColor,
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                ),
               ),
-            const SizedBox(height: 4),
-            Wrap(spacing: 8, children: [
+            ]),
+            const SizedBox(height: 8),
+            Row(children: [
+              Icon(_moodIcon(m), color: _moodColor(m), size: 22),
+              const SizedBox(width: 6),
+              Text('やる気: ${m.label}', style: Theme.of(context).textTheme.titleSmall),
+              if (c.injured) ...[
+                const SizedBox(width: 12),
+                const Icon(Icons.healing, color: Color(0xFFD32F2F), size: 18),
+                const SizedBox(width: 4),
+                const Text('怪我で安静中', style: TextStyle(color: Color(0xFFD32F2F))),
+              ],
+            ]),
+            const SizedBox(height: 8),
+            Wrap(spacing: 8, runSpacing: 0, children: [
               for (final cat in Category.values)
                 Chip(
                   visualDensity: VisualDensity.compact,
@@ -123,6 +198,8 @@ class _StatusCard extends StatelessWidget {
                     message: t.description,
                     child: Chip(
                       visualDensity: VisualDensity.compact,
+                      avatar: Icon(t.positive ? Icons.auto_awesome : Icons.warning_amber_rounded,
+                          size: 16, color: t.positive ? const Color(0xFFF9A825) : const Color(0xFF607D8B)),
                       label: Text(t.label),
                       backgroundColor: t.positive ? Colors.amber.shade100 : Colors.blueGrey.shade100,
                     ),
@@ -154,6 +231,8 @@ class _AbilityCard extends StatelessWidget {
               const Spacer(),
               TextButton(onPressed: controller.autoSpend, child: const Text('おまかせ振り分け')),
             ]),
+            AbilityRadar(player: p),
+            const SizedBox(height: 4),
             for (final a in abilitiesOf(p.role))
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 2),
@@ -196,6 +275,16 @@ class _AbilityCard extends StatelessWidget {
   }
 }
 
+(IconData, Color) _planStyle(Plan a) => switch (a) {
+      Plan.train => (Icons.fitness_center, const Color(0xFF1E88E5)),
+      Plan.special => (Icons.local_fire_department, const Color(0xFFE53935)),
+      Plan.rest => (Icons.hotel, const Color(0xFF00897B)),
+      Plan.study => (Icons.menu_book, const Color(0xFF5E35B1)),
+      Plan.social => (Icons.favorite, const Color(0xFFD81B60)),
+      Plan.match => (Icons.sports_baseball, const Color(0xFF2E7D32)),
+      Plan.lesson => (Icons.school, const Color(0xFFF9A825)),
+    };
+
 class _ActionCard extends StatelessWidget {
   const _ActionCard({required this.controller, required this.game});
   final GameController controller;
@@ -223,27 +312,60 @@ class _ActionCard extends StatelessWidget {
                   onSelected: (_) => controller.setFocus(a),
                 ),
             ]),
-            const SizedBox(height: 8),
-            for (final a in Plan.values)
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 2),
-                child: FilledButton.tonal(
-                  key: Key('act-${a.name}'),
-                  onPressed: () => controller.act(a),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text.rich(TextSpan(children: [
-                      TextSpan(
-                          text: actionLabel(a),
-                          style: const TextStyle(fontWeight: FontWeight.bold)),
-                      TextSpan(
-                          text: '\n${actionHint(a)}',
-                          style: Theme.of(context).textTheme.bodySmall),
-                    ])),
-                  ),
-                ),
-              ),
+            const SizedBox(height: 10),
+            LayoutBuilder(builder: (context, box) {
+              final cols = box.maxWidth > 420 ? 2 : 1;
+              final w = (box.maxWidth - 8 * (cols - 1)) / cols;
+              return Wrap(spacing: 8, runSpacing: 8, children: [
+                for (final a in Plan.values) SizedBox(width: w, child: _PlanTile(plan: a, controller: controller)),
+              ]);
+            }),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _PlanTile extends StatelessWidget {
+  const _PlanTile({required this.plan, required this.controller});
+  final Plan plan;
+  final GameController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    final (icon, color) = _planStyle(plan);
+    final cs = Theme.of(context).colorScheme;
+    return Material(
+      key: Key('act-${plan.name}'),
+      color: color.withValues(alpha: 0.10),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(14),
+        side: BorderSide(color: color.withValues(alpha: 0.35)),
+      ),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(14),
+        onTap: () => controller.act(plan),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
+          child: Row(children: [
+            Container(
+              width: 38,
+              height: 38,
+              decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+              child: Icon(icon, color: Colors.white, size: 22),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(actionLabel(plan), style: const TextStyle(fontWeight: FontWeight.bold)),
+                  Text(actionHint(plan), style: Theme.of(context).textTheme.bodySmall?.copyWith(color: cs.onSurfaceVariant)),
+                ],
+              ),
+            ),
+          ]),
         ),
       ),
     );
@@ -467,51 +589,6 @@ class _LogCard extends StatelessWidget {
   }
 }
 
-/// 引退後の画面: エンディング。
-class EndingView extends StatelessWidget {
-  const EndingView({super.key, required this.controller, required this.game});
-  final GameController controller;
-  final Game game;
-
-  @override
-  Widget build(BuildContext context) {
-    final e = game.ending!;
-    final p = game.player;
-    return Scaffold(
-      appBar: AppBar(title: Text('${p.name} の一生')),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          Text(e.title, style: Theme.of(context).textTheme.headlineMedium),
-          const SizedBox(height: 8),
-          Text(e.madePro ? 'プロで${e.proYears}年間プレーした。' : 'プロの舞台には立てなかった。'),
-          const SizedBox(height: 16),
-          _row('最高の総合評価', '${e.peakOverall}'),
-          _row('優勝', '${e.championships}回'),
-          _row('ライバルとの対戦', '${e.rivalWins}勝 ${e.rivalLosses}敗'),
-          if (e.wasTwoWay) _row('二刀流', '挑戦した'),
-          if (e.married) _row('家族', '${e.partnerName} と結婚した'),
-          const SizedBox(height: 16),
-          Wrap(spacing: 6, children: [
-            for (final t in p.traits) Chip(label: Text(t.label)),
-          ]),
-          const SizedBox(height: 24),
-          FilledButton(
-            key: const Key('again'),
-            onPressed: controller.reset,
-            child: const Text('もう一度、別の選手で'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _row(String k, String v) => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 2),
-        child: Row(children: [Expanded(child: Text(k)), Text(v)]),
-      );
-}
-
 /// 能力のランク(G〜S)の丸いバッジ。
 class _RankBadge extends StatelessWidget {
   const _RankBadge({required this.value});
@@ -539,22 +616,117 @@ class _RecentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      key: const Key('recent'),
-      color: Theme.of(context).colorScheme.primaryContainer,
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            for (final l in lines)
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 1),
-                child: Text(l, style: Theme.of(context).textTheme.bodyLarge),
-              ),
-          ],
+    return TweenAnimationBuilder<double>(
+      key: ValueKey(lines.join('|')),
+      tween: Tween(begin: 0, end: 1),
+      duration: const Duration(milliseconds: 350),
+      curve: Curves.easeOutBack,
+      builder: (context, t, child) => Opacity(
+        opacity: t.clamp(0.0, 1.0),
+        child: Transform.translate(offset: Offset(0, (1 - t) * 10), child: child),
+      ),
+      child: Card(
+        key: const Key('recent'),
+        color: Theme.of(context).colorScheme.primaryContainer,
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              for (final l in lines)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 1),
+                  child: Text(l, style: Theme.of(context).textTheme.bodyLarge),
+                ),
+            ],
+          ),
         ),
       ),
     );
   }
+}
+
+/// 引退後の画面: エンディング。
+class EndingView extends StatelessWidget {
+  const EndingView({super.key, required this.controller, required this.game});
+  final GameController controller;
+  final Game game;
+
+  @override
+  Widget build(BuildContext context) {
+    final e = game.ending!;
+    final p = game.player;
+    final cs = Theme.of(context).colorScheme;
+    return Scaffold(
+      appBar: AppBar(title: Text('${p.name} の一生')),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: contentMaxWidth),
+          child: ListView(
+            padding: const EdgeInsets.all(16),
+            children: [
+              SceneBanner(
+                season: Season.autumn,
+                stage: e.madePro ? Stage.pro : Stage.pathChoice,
+                role: p.role,
+                mood: e.madePro ? Mood.happy : Mood.flat,
+                label: '${p.age}歳',
+              ),
+              const SizedBox(height: 16),
+              Text(e.title, style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold)),
+              const SizedBox(height: 4),
+              Text(e.madePro ? 'プロで${e.proYears}年間プレーした。' : 'プロの舞台には立てなかった。'),
+              const SizedBox(height: 16),
+              if (game.overallHistory.length >= 2)
+                Card(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(12, 12, 12, 8),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('総合評価の歩み', style: Theme.of(context).textTheme.titleSmall),
+                        const SizedBox(height: 8),
+                        CareerChart(history: game.overallHistory, proStartAge: game.proStartAge),
+                      ],
+                    ),
+                  ),
+                ),
+              const SizedBox(height: 8),
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Column(children: [
+                    _row('最高の総合評価', '${e.peakOverall}'),
+                    _row('優勝', '${e.championships}回'),
+                    _row('ライバルとの対戦', '${e.rivalWins}勝 ${e.rivalLosses}敗'),
+                    if (e.wasTwoWay) _row('二刀流', '挑戦した'),
+                    if (e.married) _row('家族', '${e.partnerName} と結婚した'),
+                  ]),
+                ),
+              ),
+              const SizedBox(height: 12),
+              Wrap(spacing: 6, children: [
+                for (final t in p.traits)
+                  Chip(
+                    avatar: Icon(Icons.auto_awesome, size: 16, color: cs.tertiary),
+                    label: Text(t.label),
+                  ),
+              ]),
+              const SizedBox(height: 24),
+              FilledButton(
+                key: const Key('again'),
+                onPressed: controller.reset,
+                child: const Text('もう一度、別の選手で'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _row(String k, String v) => Padding(
+        padding: const EdgeInsets.symmetric(vertical: 3),
+        child: Row(children: [Expanded(child: Text(k)), Text(v, style: const TextStyle(fontWeight: FontWeight.bold))]),
+      );
 }

@@ -120,3 +120,18 @@ soccer-manager / soccer-career の野球版。**中核は「試合中の采配�
 - **フォント**: NotoSansJP を同梱済み（`assets/fonts/`、soccer-* と同じファイル）。選手名は自由入力なのでサブセットは絞らない。
 - **アイコン**: `tool/icon_source.png`（野球ボール。実在のロゴ・意匠なし）から `python tool/make_icons.py` で全サイズを書き出す。
 - **アプリ名**: 「野球育成」。ID は `com.namiki.baseball_manager`（仮。ストアに出す前にユーザーが決める。`docs/public-identity.md` 参照）。
+
+### グラフィック（`lib/ui/art/`）
+
+画像素材は持たず、すべて `CustomPainter` で描く（ロゴ・実在チームの意匠は使わない）。
+
+- `avatar.dart`: 選手の絵。**段階**でユニフォームと背丈、**役割**で持ち物（バット / グラブ）、**やる気**で表情が変わる。
+- `scene.dart`: 季節で変わる球場の背景（春=桜、夏=入道雲、秋=落ち葉、冬=雪）。季節は `calendar.dart` の `seasonOf`。
+- `radar.dart`: 能力のレーダー。外枠は最高値の少し上（`radarScale`）で、序盤でも形が読める。値が変わるとなめらかに動く。
+- `career_chart.dart`: エンディングの「総合評価の歩み」（ランクの帯・プロ入りの縦線）。`Game.overallHistory` / `proStartAge` から描く。
+- `confetti.dart`: ドラフト指名・優勝のダイアログの紙吹雪。
+- **`CustomPaint` の文字は Theme を引き継がない**。`TextStyle` に `fontFamily: kFont` を必ず付ける（付けないと Web で豆腐になる）。
+- レーダーは役割が変わった直後に、アニメの始点が前の役割の長さで来る。長さが違えば現在値を使う（二刀流への転向で落ちた）。
+- 見た目を変えたら `tool/gallery.dart` で全段階・季節・表情を並べて見る:
+  `flutter build web --base-href / --no-web-resources-cdn -t tool/gallery.dart -o /tmp/gallery`
+- 広い画面（Web・タブレット）では中身を最大560pxに寄せる（`contentMaxWidth`）。ダークテーマにも対応。
