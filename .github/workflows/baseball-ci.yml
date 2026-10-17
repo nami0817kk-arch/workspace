@@ -1,9 +1,6 @@
 name: baseball-ci
 
-#
-# paths-ignore は意図的に置いていない。distribution_test.dart が
-# STORE_LISTING.md や legal/*.html を読んで整合性を検査しているので、
-# 「ドキュメントだけの変更」でも検証は回す必要がある。
+# baseball-manager の検証(analyze + test)。テストの合否は CI で判断する。
 
 on:
   push:
