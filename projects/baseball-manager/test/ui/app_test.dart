@@ -154,6 +154,8 @@ void main() {
     await t.pumpAndSettle();
     await t.tap(find.byKey(const Key('give-up')));
     await t.pumpAndSettle();
+    await t.tap(find.byKey(const Key('give-up-confirm')));
+    await t.pumpAndSettle();
     expect(find.text('プロにはなれなかった'), findsOneWidget);
     await t.tap(find.byKey(const Key('again')));
     await t.pumpAndSettle();
@@ -323,6 +325,8 @@ void _rankTests() {
     await t.pumpAndSettle();
     await t.tap(find.byKey(const Key('give-up')));
     await t.pumpAndSettle();
+    await t.tap(find.byKey(const Key('give-up-confirm')));
+    await t.pumpAndSettle();
     expect(c.history, hasLength(1));
     expect(c.history.first.title, 'プロにはなれなかった');
     await t.tap(find.byKey(const Key('again')));
@@ -340,6 +344,8 @@ void _rankTests() {
     c.adopt(_until((g) => g.phase == Phase.pathChoice, seed: 3, potential: 0));
     await t.pumpAndSettle();
     await t.tap(find.byKey(const Key('give-up')));
+    await t.pumpAndSettle();
+    await t.tap(find.byKey(const Key('give-up-confirm')));
     await t.pumpAndSettle();
     await t.tap(find.byKey(const Key('again')));
     await t.pumpAndSettle();
@@ -504,6 +510,8 @@ void _rankTests() {
     await t.pumpAndSettle();
     await t.tap(find.byKey(const Key('give-up')));
     await t.pumpAndSettle();
+    await t.tap(find.byKey(const Key('give-up-confirm')));
+    await t.pumpAndSettle();
     expect(find.text('年度別成績'), findsOneWidget);
     expect(find.text('獲得したタイトル'), findsNothing); // 無ければ出さない
     expect(c.history.first.summary, startsWith('大会通算'));
@@ -537,5 +545,52 @@ void _rankTests() {
     c.admin((g) => g.adminAddExp(-100000));
     await t.pumpAndSettle();
     expect(find.byKey(const Key('spend-hint')), findsNothing);
+  });
+
+  testWidgets('はじめの数ターンだけ案内が出て、1年たつと消える', (t) async {
+    final c = await _start(t);
+    c.newGame('テスト', Role.batter);
+    await t.pumpAndSettle();
+    expect(find.byKey(const Key('first-hint')), findsOneWidget);
+    c.adopt(_until((g) => g.player.age == 8 && g.phase == Phase.term));
+    await t.pumpAndSettle();
+    expect(find.byKey(const Key('first-hint')), findsNothing);
+  });
+
+  testWidgets('経験点が貯まったら、育成画面の上のほうで「おまかせ」ですぐ振り分けられる', (t) async {
+    final c = await _start(t);
+    c.newGame('テスト', Role.batter);
+    await t.pumpAndSettle();
+    expect(find.byKey(const Key('quick-spend')), findsNothing);
+    c.admin((g) => g.adminAddExp(3000));
+    await t.pumpAndSettle();
+    final before = c.game!.player.abilities.values.reduce((a, b) => a + b);
+    await t.tap(find.byKey(const Key('quick-spend')));
+    await t.pumpAndSettle();
+    expect(c.game!.player.abilities.values.reduce((a, b) => a + b),
+        greaterThan(before));
+    expect(find.byKey(const Key('quick-spend')), findsNothing); // 使い切ったら消える
+  });
+
+  testWidgets('操作のカードは、能力カードより上にある(スクロールせずに選べる)', (t) async {
+    final c = await _start(t);
+    c.newGame('テスト', Role.batter);
+    await t.pumpAndSettle();
+    final actY = t.getTopLeft(find.byKey(const Key('act-train'))).dy;
+    final abilityY = t.getTopLeft(find.byKey(const Key('buy-contact'))).dy;
+    expect(actY, lessThan(abilityY));
+  });
+
+  testWidgets('「プロは諦める」は確認が出て、やめるを選べば続けられる', (t) async {
+    final c = await _start(t);
+    c.adopt(_until((g) => g.phase == Phase.pathChoice, seed: 3, potential: 0));
+    await t.pumpAndSettle();
+    await t.tap(find.byKey(const Key('give-up')));
+    await t.pumpAndSettle();
+    expect(find.text('プロは諦めますか?'), findsOneWidget);
+    await t.tap(find.text('やめる'));
+    await t.pumpAndSettle();
+    expect(c.game!.phase, Phase.pathChoice); // まだ選べる
+    expect(find.byKey(const Key('route-university')), findsOneWidget);
   });
 }

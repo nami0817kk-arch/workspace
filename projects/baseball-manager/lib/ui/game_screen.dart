@@ -85,13 +85,16 @@ class GameScreen extends StatelessWidget {
                 label: game.slotName,
               ),
               const SizedBox(height: 8),
-              _StatusCard(game: game),
+              _StatusCard(game: game, controller: controller),
               if (controller.recent.isNotEmpty) ...[
                 const SizedBox(height: 8),
                 _RecentCard(lines: controller.recent),
               ],
               const SizedBox(height: 8),
-              _AbilityCard(controller: controller, game: game),
+              if (_isFirstTurn) ...[
+                const SizedBox(height: 8),
+                const _FirstHint(),
+              ],
               const SizedBox(height: 8),
               AnimatedSize(
                 duration: const Duration(milliseconds: 250),
@@ -104,6 +107,8 @@ class GameScreen extends StatelessWidget {
                   ),
                 ),
               ),
+              const SizedBox(height: 8),
+              _AbilityCard(controller: controller, game: game),
               if (game.phase == Phase.term && game.stage == Stage.pro) ...[
                 const SizedBox(height: 8),
                 _ProCard(controller: controller, game: game),
@@ -122,6 +127,10 @@ class GameScreen extends StatelessWidget {
       ),
     );
   }
+
+  /// 最初の数ターンだけ、遊び方の案内を出す。
+  bool get _isFirstTurn =>
+      game.records.isEmpty && game.player.age == startAge && game.slot < 2;
 
   Widget _mainCard() {
     switch (game.phase) {
@@ -152,12 +161,16 @@ Color _moodColor(Motivation m) => switch (m) {
     };
 
 class _StatusCard extends StatelessWidget {
-  const _StatusCard({required this.game});
+  const _StatusCard({required this.game, required this.controller});
   final Game game;
+  final GameController controller;
 
   @override
   Widget build(BuildContext context) {
     final c = game.condition;
+    final p = game.player;
+    final spendable =
+        abilitiesOf(p.role).any((a) => buy(p, game.exp, a) != null);
     final stamina = (100 - c.fatigue) / 100;
     final staminaColor = stamina > 0.55
         ? const Color(0xFF43A047)
@@ -218,6 +231,18 @@ class _StatusCard extends StatelessWidget {
                     style: TextStyle(color: Color(0xFFD32F2F))),
               ],
             ]),
+            if (spendable)
+              Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: FilledButton.tonalIcon(
+                  key: const Key('quick-spend'),
+                  style: FilledButton.styleFrom(
+                      minimumSize: const Size.fromHeight(40)),
+                  onPressed: controller.autoSpend,
+                  icon: const Icon(Icons.trending_up),
+                  label: const Text('貯めた経験点を、おまかせで振り分ける'),
+                ),
+              ),
             const SizedBox(height: 8),
             Wrap(spacing: 8, runSpacing: 0, children: [
               for (final cat in Category.values)
@@ -527,6 +552,27 @@ class _PathCard extends StatelessWidget {
   const _PathCard({required this.controller});
   final GameController controller;
 
+  Future<void> _confirmGiveUp(BuildContext context) async {
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('プロは諦めますか?'),
+        content: const Text('この選手の人生がここで終わります。'),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(ctx, false),
+              child: const Text('やめる')),
+          FilledButton(
+            key: const Key('give-up-confirm'),
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('諦める'),
+          ),
+        ],
+      ),
+    );
+    if (ok == true) controller.giveUp();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -555,7 +601,7 @@ class _PathCard extends StatelessWidget {
             const SizedBox(height: 4),
             OutlinedButton(
               key: const Key('give-up'),
-              onPressed: controller.giveUp,
+              onPressed: () => _confirmGiveUp(context),
               child: const Text('プロは諦める'),
             ),
           ],
@@ -867,6 +913,27 @@ class _RecentRecordCard extends StatelessWidget {
         trailing: const Icon(Icons.chevron_right),
         onTap: () => Navigator.of(context).push(
           MaterialPageRoute<void>(builder: (_) => RecordsScreen(game: game)),
+        ),
+      ),
+    );
+  }
+}
+
+/// はじめてのときの案内。
+class _FirstHint extends StatelessWidget {
+  const _FirstHint();
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      key: const Key('first-hint'),
+      color: Theme.of(context).colorScheme.secondaryContainer,
+      child: const Padding(
+        padding: EdgeInsets.all(12),
+        child: Text(
+          'はじめに: 下の「練習」などを選んで、季節を進めましょう。\n'
+          '練習すると「経験点」が貯まり、「+1」で能力に振り分けられます。\n'
+          '体力が減ったら休養も大切です。',
         ),
       ),
     );
