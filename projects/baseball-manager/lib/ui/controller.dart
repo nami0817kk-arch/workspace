@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart' hide Category;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../game/exp.dart';
+import '../game/career.dart';
 import '../game/game.dart';
 import '../game/life.dart';
 import '../game/path.dart';
@@ -12,6 +13,16 @@ import '../game/player.dart';
 import 'labels.dart';
 
 const saveKey = 'baseball_manager_save_v1';
+
+enum MilestoneKind { draft, champion, trait, stage }
+
+/// 人生の節目。ダイアログで大きく見せる。
+class Milestone {
+  const Milestone(this.kind, this.title, this.body);
+  final MilestoneKind kind;
+  final String title;
+  final String body;
+}
 
 /// セーブの読み書き。端末ごと(クラウド同期はしない)。
 class SaveStore {
@@ -50,6 +61,9 @@ class GameController extends ChangeNotifier {
   final SaveStore store;
   final Random _rng;
   Game? game;
+
+  /// まだ見せていない節目。画面が1つずつ取り出して見せる。
+  final List<Milestone> pending = [];
 
   /// 直前の操作で増えた記録(画面の「いまの結果」に出す)。
   List<String> recent = const [];
@@ -95,8 +109,10 @@ class GameController extends ChangeNotifier {
       focus = abilitiesOf(g.player.role).first;
     }
     final start = g.log.length;
+    final before = g.stage;
     g.choose(a, focus);
     recent = [_summary(a, g), ...g.log.sublist(start)];
+    _detect(before, g, g.log.sublist(start));
     _commit();
   }
 
@@ -107,6 +123,31 @@ class GameController extends ChangeNotifier {
         if ((g.lastGain[c] ?? 0) > 0) '${c.label}経験点 +${g.lastGain[c]}',
     ];
     return gains.isEmpty ? '${actionLabel(a)}した' : '${actionLabel(a)}: ${gains.join(' / ')}';
+  }
+
+  /// 今回のできごとから、見せる価値のある節目を拾う。
+  void _detect(Stage before, Game g, List<String> lines) {
+    final name = g.player.name;
+    if (lines.any((l) => l.contains('ドラフトで指名された'))) {
+      pending.add(Milestone(MilestoneKind.draft, 'ドラフト指名!', '$nameは、プロの世界へ飛び込む。'));
+    }
+    final after = g.stage;
+    if (after != before && g.phase != Phase.retired && after != Stage.pro && after != Stage.pathChoice) {
+      pending.add(Milestone(MilestoneKind.stage, '${stageLabel(after)}へ',
+          '${g.player.age}歳。新しい仲間とコーチが待っている。'));
+    }
+    if (lines.any((l) => l.contains('優勝'))) {
+      pending.add(Milestone(MilestoneKind.champion, '優勝!', '夏の大会を制した。'));
+    }
+    for (final l in lines.where((l) => l.contains('を習得'))) {
+      pending.add(Milestone(MilestoneKind.trait, 'コツをつかんだ!', l));
+    }
+  }
+
+  /// 見せ終わった節目を1つ取り除く。
+  void dismissMilestone() {
+    if (pending.isNotEmpty) pending.removeAt(0);
+    notifyListeners();
   }
 
   void spend(Ability a) {
@@ -120,8 +161,10 @@ class GameController extends ChangeNotifier {
 
   void chooseEvent(int i) {
     final start = game!.log.length;
+    final before = game!.stage;
     game!.resolveEvent(i);
     recent = game!.log.sublist(start);
+    _detect(before, game!, recent);
     _commit();
   }
 

@@ -231,4 +231,75 @@ void _rankTests() {
     expect(rankOf(99), 'S');
     expect(['G', 'F', 'E', 'D', 'C', 'B', 'A', 'S'].map(rankColor).toSet().length, 8);
   });
+
+  testWidgets('進学すると、ダイアログで知らせる', (t) async {
+    final c = await _start(t);
+    // 12歳の冬(最後のターン)まで進めておき、1手で13歳(中学)になるようにする。
+    c.adopt(_until((g) => g.player.age == 12 && g.slot == 3 && g.phase == Phase.term));
+    await t.pumpAndSettle();
+    await t.tap(find.byKey(const Key('act-rest')));
+    await t.pumpAndSettle();
+    if (c.game!.phase == Phase.event) {
+      await t.tap(find.byKey(const Key('event-0')));
+      await t.pumpAndSettle();
+    }
+    expect(find.text('中学へ'), findsOneWidget);
+    await t.tap(find.byKey(const Key('milestone-ok')));
+    await t.pumpAndSettle();
+    expect(find.text('中学へ'), findsNothing);
+    expect(c.pending, isEmpty);
+  });
+
+  testWidgets('ドラフトで指名されると、ダイアログで祝う', (t) async {
+    final c = await _start(t);
+    for (var s = 0; s < 60; s++) {
+      final g = _until((g) => g.player.age == 18 && g.slot == 11 && g.phase == Phase.term,
+          seed: s, potential: 100);
+      if (g.player.age != 18) continue;
+      c.adopt(g);
+      await t.pumpAndSettle();
+      await t.tap(find.byKey(const Key('act-rest')));
+      await t.pumpAndSettle();
+      if (c.game!.phase == Phase.event) {
+        await t.tap(find.byKey(const Key('event-0')));
+        await t.pumpAndSettle();
+      }
+      if (!c.game!.turnedPro) {
+        // 外れた年: 優勝などの節目が出ていれば閉じて、次の乱数へ。
+        while (find.byKey(const Key('milestone-ok')).evaluate().isNotEmpty) {
+          await t.tap(find.byKey(const Key('milestone-ok')));
+          await t.pumpAndSettle();
+        }
+        continue;
+      }
+      expect(find.text('ドラフト指名!'), findsOneWidget);
+      return;
+    }
+    fail('60人試して指名された選手がいない');
+  });
+
+  testWidgets('優勝すると、ダイアログで祝う', (t) async {
+    final c = await _start(t);
+    for (var s = 0; s < 80; s++) {
+      final g = _until((g) => g.player.age >= 12 && g.slot == 0 && g.phase == Phase.term,
+          seed: s, potential: 100);
+      c.adopt(g);
+      await t.pumpAndSettle();
+      // 夏(slot 1)まで進める。
+      await t.tap(find.byKey(const Key('act-rest')));
+      await t.pumpAndSettle();
+      if (c.game!.phase == Phase.event) {
+        await t.tap(find.byKey(const Key('event-0')));
+        await t.pumpAndSettle();
+      }
+      await t.tap(find.byKey(const Key('act-train')));
+      await t.pumpAndSettle();
+      if (find.text('優勝!').evaluate().isNotEmpty) return;
+      while (find.byKey(const Key('milestone-ok')).evaluate().isNotEmpty) {
+        await t.tap(find.byKey(const Key('milestone-ok')));
+        await t.pumpAndSettle();
+      }
+    }
+    fail('80人試して優勝した選手がいない');
+  });
 }

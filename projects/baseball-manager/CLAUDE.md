@@ -103,6 +103,8 @@ soccer-manager / soccer-career の野球版。**中核は「試合中の采配�
 - 画面は `phase` を見て出し分ける: 季節/月の選択 → 出来事 → 進路 → エンディング。**ロジックは画面に持たせない**（`game/` に置く）。
 - 日本語の表示名・能力のランク（G〜S、10ごと）は `labels.dart` に集める。
 - 直前の操作の結果（貯まった経験点・大会・出来事）は `GameController.recent` で「いまの結果」カードに出す。
+- **節目の演出**: ドラフト指名・優勝・進学（少年→中学→高校→進路）・コツの習得は、ダイアログで大きく見せる（`Milestone` / `MilestoneDialog`）。
+  拾うのは `GameController._detect`。ログの文言（「ドラフトで指名された」「優勝」「を習得」）に依存しているので、`game.dart` のログ文言を変えたら合わせる（`app_test.dart` が見張る）。
 - Flutter の `Category` とも衝突するので、`foundation.dart` を `hide Category` で読む。
 - 名前の衝突: Flutter に `Action` / `Route` があるので、ゲーム側は `Plan`（季節の過ごし方）/ `Course`（進路）。
 - **未対応**: 同梱フォント（CJK）。Web は OS のフォントに頼っている。ストアに出す前に `docs/app-pitfalls.md` の6番（円記号）も含めて確認する。
