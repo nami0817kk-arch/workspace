@@ -80,7 +80,7 @@
 1. https://apps.admob.com → アプリ → **アプリを追加** → iOS →「まだストアに公開されていない」→ 名前
 2. 広告ユニットは **リワード** を1つだけ（採掘の倍率・留守の3倍・代替わりの名声2倍・鉱脈の3倍はすべてこれを使う）
 3. アプリID（`ca-app-pub-…~…`）と広告ユニットID（`ca-app-pub-…/…`）を Secrets に入れる
-4. 広告のコンテンツの上限は **G（全年齢）** にする（年齢区分 4+ のため）
+4. 広告のコンテンツの上限は、アカウント全体の設定（アプリ単位には無い）。**2026-10-18 に MA のまま変えないと決めた**（G にするとサカマネ等にも効くため。広告があっても 4+ にできる）
 5. `app-ads.txt` は `site/app-ads.txt`（公開ページと一緒に出る）。AdMob のアプリ設定で、ストアのURLを結びつけた後に確認される
 
 ### 6. ビルドして TestFlight へ上げる
@@ -111,6 +111,7 @@ TestFlight で入れて、次を目で見る:
 **年齢区分**: 質問票の「広告」は「あり」。暴力・恐怖の表現はない（4+ の想定。答えはユーザー判断）。
 
 **掲載画像**: `store/screenshots/01〜06.png`（6.7インチ 1290×2796、`node tool/make_shots.js`）。
+**掲載画像の大きさ**: 必須の欄は iPhone 中型（1206×2622 か 1179×2556）。`DEVICE=iphone-m` で `store/screenshots/iphone-m/` に作る。1290×2796 は大型の任意の欄。
 **iPad**: Xcode の設定が iPhone・iPad 両対応（`TARGETED_DEVICE_FAMILY = "1,2"`、ほかのアプリと同じ）なので、App Store Connect が iPad の掲載画像（13インチ）を求めてきたら、
 iPad 用は `DEVICE=ipad node tool/make_shots.js` で `store/screenshots/ipad/01〜06.png`（2064×2752）に作る（CI の「tsuruhashi shots」が iPhone と iPad を撮る。2026-10-18 に作成済み・ユーザー選択で iPad 用を撮り足した）。
 

@@ -73,4 +73,4 @@ Before release, AdMob may not fill ads for this new app, so videos may be unavai
 
 ## 年齢区分
 
-4+（暴力・恐怖の表現なし。広告は全年齢向け G に限定する設定）
+4+（暴力・恐怖の表現なし）。広告の年齢上限はアカウント全体の設定で、今は MA のまま（2026-10-18 ユーザー判断。G にするとサカマネ等にも効くため変えない）
