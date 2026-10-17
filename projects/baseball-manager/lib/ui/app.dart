@@ -24,7 +24,11 @@ class _BaseballManagerAppState extends State<BaseballManagerApp> {
     return MaterialApp(
       title: '野球育成',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(colorSchemeSeed: const Color(0xFF2E7D32), useMaterial3: true),
+      theme: ThemeData(
+        colorSchemeSeed: const Color(0xFF2E7D32),
+        useMaterial3: true,
+        fontFamily: 'NotoSansJP',
+      ),
       home: FutureBuilder<bool>(
         future: _loaded,
         builder: (context, snap) {

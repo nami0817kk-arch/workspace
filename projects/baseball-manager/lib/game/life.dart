@@ -119,7 +119,7 @@ TermResult playTerm(
     final x = yearlyDelta(p, a, f) * e.scale * share;
     if (x >= 0) {
       final cat = categoryOf(a);
-      gained[cat] = (gained[cat] ?? 0) + (x * expPerPoint * motiv).round();
+      gained[cat] = (gained[cat] ?? 0) + (x * expPerPoint * motiv * roleExpFactor(p.role)).round();
     } else {
       // 衰えは経験点を通さず直接下がる。端数は確率で切り上げる。
       final whole = x.truncate();

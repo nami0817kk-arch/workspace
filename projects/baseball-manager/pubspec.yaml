@@ -18,3 +18,13 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  # 日本語フォントを同梱する(Web は足りない字形を外から取りに行って豆腐になる)。
+  # 選手名は自由入力なので、サブセットはソースの文字に絞らない。assets/fonts/README.md 参照。
+  fonts:
+    - family: NotoSansJP
+      fonts:
+        - asset: assets/fonts/NotoSansJP-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/NotoSansJP-Bold.ttf
+          weight: 700

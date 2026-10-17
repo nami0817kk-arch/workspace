@@ -10,9 +10,11 @@ import '../game/game.dart';
 import '../game/life.dart';
 import '../game/path.dart';
 import '../game/player.dart';
+import 'history.dart';
 import 'labels.dart';
 
 const saveKey = 'baseball_manager_save_v1';
+const historyKey = 'baseball_manager_history_v1';
 
 enum MilestoneKind { draft, champion, trait, stage }
 
@@ -44,6 +46,26 @@ class SaveStore {
     } catch (_) {}
   }
 
+  Future<List<HistoryEntry>> loadHistory() async {
+    try {
+      final p = await SharedPreferences.getInstance();
+      final s = p.getString(historyKey);
+      if (s == null) return [];
+      return [
+        for (final e in jsonDecode(s) as List) HistoryEntry.fromJson((e as Map).cast<String, dynamic>()),
+      ];
+    } catch (_) {
+      return [];
+    }
+  }
+
+  Future<void> saveHistory(List<HistoryEntry> h) async {
+    try {
+      final p = await SharedPreferences.getInstance();
+      await p.setString(historyKey, jsonEncode([for (final e in h) e.toJson()]));
+    } catch (_) {}
+  }
+
   Future<void> clear() async {
     try {
       final p = await SharedPreferences.getInstance();
@@ -71,7 +93,11 @@ class GameController extends ChangeNotifier {
   /// いま重点にしている能力。
   Ability focus = Ability.contact;
 
+  /// 殿堂(過去の選手)。新しい順。
+  List<HistoryEntry> history = const [];
+
   Future<bool> loadSaved() async {
+    history = await store.loadHistory();
     final j = await store.load();
     if (j == null) return false;
     try {
@@ -196,8 +222,14 @@ class GameController extends ChangeNotifier {
   }
 
   void _commit() {
-    notifyListeners();
     final g = game;
+    // 引退したら、殿堂に1度だけ書き込む。
+    if (g != null && g.phase == Phase.retired && !g.archived) {
+      g.archived = true;
+      history = [HistoryEntry.of(g), ...history].take(historyLimit).toList();
+      store.saveHistory(history);
+    }
+    notifyListeners();
     if (g != null) store.save(g.toJson());
   }
 }

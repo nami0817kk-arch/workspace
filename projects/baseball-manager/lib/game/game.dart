@@ -92,6 +92,9 @@ class Game {
   Map<Category, int> lastGain = const {}; // 直前のターンで貯まった経験点(保存しない・画面の表示用)
   Ending? ending;
 
+  /// 引退後、殿堂(過去の選手の記録)に書き込み済みか。
+  bool archived = false;
+
   Stage get stage =>
       phase == Phase.retired ? Stage.retired : stageOf(player.age, turnedPro: turnedPro);
 
@@ -412,6 +415,7 @@ class Game {
         'championships': championships,
         'wasTwoWay': _wasTwoWay,
         'achievements': achievements,
+        'archived': archived,
       };
 
   /// 項目を足すときは既定値を置く(既存セーブを壊さない)。
@@ -443,6 +447,7 @@ class Game {
     g.proYears = (j['proYears'] as num?)?.toInt() ?? 0;
     g.peakOverall = (j['peakOverall'] as num?)?.toInt() ?? 0;
     g.championships = (j['championships'] as num?)?.toInt() ?? 0;
+    g.archived = (j['archived'] as bool?) ?? false;
     g._wasTwoWay = (j['wasTwoWay'] as bool?) ?? g.player.role == Role.twoWay;
     g.achievements.addAll(
         ((j['achievements'] as List?) ?? const []).map((e) => (e as num).toDouble()));

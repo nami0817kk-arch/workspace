@@ -302,4 +302,48 @@ void _rankTests() {
     }
     fail('80人試して優勝した選手がいない');
   });
+
+  testWidgets('引退すると殿堂に残り、もう一度の画面に並ぶ。二重には残らない', (t) async {
+    final c = await _start(t);
+    c.adopt(_until((g) => g.phase == Phase.pathChoice, seed: 3, potential: 0));
+    await t.pumpAndSettle();
+    await t.tap(find.byKey(const Key('give-up')));
+    await t.pumpAndSettle();
+    expect(c.history, hasLength(1));
+    expect(c.history.first.title, 'プロにはなれなかった');
+    await t.tap(find.byKey(const Key('again')));
+    await t.pumpAndSettle();
+    expect(find.text('殿堂(これまでの選手)'), findsOneWidget);
+    expect(find.textContaining('プロ入りならず'), findsOneWidget);
+    // 同じ引退を読み直しても増えない。
+    c.adopt(c.game ?? _until((g) => g.phase == Phase.retired, seed: 3, potential: 0));
+    expect(c.history, hasLength(1));
+  });
+
+  testWidgets('殿堂は開き直しても残る', (t) async {
+    final c = await _start(t);
+    c.adopt(_until((g) => g.phase == Phase.pathChoice, seed: 3, potential: 0));
+    await t.pumpAndSettle();
+    await t.tap(find.byKey(const Key('give-up')));
+    await t.pumpAndSettle();
+    await t.tap(find.byKey(const Key('again')));
+    await t.pumpAndSettle();
+
+    final c2 = GameController(rng: Random(5));
+    await t.pumpWidget(BaseballManagerApp(key: UniqueKey(), controller: c2));
+    await t.pumpAndSettle();
+    expect(c2.history, hasLength(1));
+    expect(find.text('殿堂(これまでの選手)'), findsOneWidget);
+  });
+
+  testWidgets('あそびかたを開ける', (t) async {
+    await _start(t);
+    await t.tap(find.byKey(const Key('help')));
+    await t.pumpAndSettle();
+    expect(find.text('あそびかた'), findsWidgets);
+    expect(find.textContaining('経験点'), findsWidgets);
+    await t.tap(find.text('閉じる'));
+    await t.pumpAndSettle();
+    expect(find.text('閉じる'), findsNothing);
+  });
 }

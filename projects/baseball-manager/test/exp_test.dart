@@ -13,6 +13,7 @@ Player _p([int v = 30, Role role = Role.batter]) => Player(
     );
 
 void main() {
+  _roleFactorTests();
   test('全ての能力がどれかの種類に属し、役割の能力だけで種類が決まる', () {
     for (final a in Ability.values) {
       expect(Category.values, contains(categoryOf(a)));
@@ -108,5 +109,20 @@ void main() {
       final n = [for (var i = 0; i < slotsPerYear(s); i++) isTournamentSlot(s, i)];
       expect(n.where((x) => x).length, 1, reason: '$s');
     }
+  });
+}
+
+void _roleFactorTests() {
+  test('役割が違っても、1能力あたりの経験点の貯まり方が揃う', () {
+    // 重点1つ(1.0)とそれ以外(0.25)の合計を、能力の数で割った平均が打者と同じになる。
+    double perAbility(Role r) {
+      final n = abilitiesOf(r).length;
+      return (1 + 0.25 * (n - 1)) / n * roleExpFactor(r);
+    }
+
+    expect(roleExpFactor(Role.batter), closeTo(1.0, 1e-9));
+    expect(perAbility(Role.pitcher), closeTo(perAbility(Role.batter), 1e-9));
+    expect(perAbility(Role.twoWay), closeTo(perAbility(Role.batter), 1e-9));
+    expect(roleExpFactor(Role.pitcher), lessThan(1.0));
   });
 }

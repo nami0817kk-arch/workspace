@@ -16,6 +16,15 @@ Category categoryOf(Ability a) => switch (a) {
       Ability.stuff || Ability.control || Ability.stamina => Category.pitching,
     };
 
+/// 役割ごとの補正。能力が少ない投手は、重点以外に割く分が少なく、1能力あたりの伸びが
+/// 打者より速くなってしまう(重点1＋他0.25×(n-1) を n で割った値が、打者と揃うようにする)。
+/// 二刀流は逆に能力が多く薄まるので補正が上がるが、練習の分散(×0.6)は別に掛かる。
+double roleExpFactor(Role r) {
+  final n = abilitiesOf(r).length;
+  const batterShare = (1 + 0.25 * 4) / 5;
+  return batterShare / ((1 + 0.25 * (n - 1)) / n);
+}
+
 /// 能力1ぶん(基準)を経験点にしたときの量。練習の伸びはこれを掛けて貯まる。
 const expPerPoint = 8;
 

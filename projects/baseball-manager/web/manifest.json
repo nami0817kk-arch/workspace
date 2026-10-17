@@ -1,11 +1,11 @@
 {
-    "name": "baseball_manager",
-    "short_name": "baseball_manager",
+    "name": "野球育成",
+    "short_name": "野球育成",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "6歳から、プロを引退するまで。1人の野球選手を育てる一代記。",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
