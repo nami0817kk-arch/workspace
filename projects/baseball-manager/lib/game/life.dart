@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'player.dart';
+import 'exp.dart';
 import 'training.dart';
 import 'traits.dart';
 
@@ -70,47 +71,62 @@ double injuryChance(Condition c, Action a, [Set<Trait> traits = const {}]) =>
     (0.02 + c.fatigue / 100 * 0.15 + (a == Action.special ? 0.10 : 0.0)) *
     injuryMultiplier(traits);
 
-/// 1季節の結果。
+/// 1ターンの結果。能力は直接は上がらず、経験点が貯まる(衰える年だけ能力が直接下がる)。
 class TermResult {
-  const TermResult(this.player, this.condition, {this.gotInjured = false});
+  const TermResult(this.player, this.condition,
+      {this.gotInjured = false, this.exp = const {}});
   final Player player;
   final Condition condition;
   final bool gotInjured;
+
+  /// 今回貯まった経験点(種類ごと)。やる気の倍率はかけてある。
+  final Map<Category, int> exp;
 }
 
-/// 1季節を過ごす。年齢は進めない(年の終わりに `endOfYear`)。
-/// 怪我中は選択に関わらず安静になり、伸びない。
+/// 1ターンを過ごす。年齢は進めない(年の終わりに `endOfYear`)。
+/// `share` は季節に対する割合(月単位なら 1/3)。効果・疲労・怪我がその分小さくなる。
+/// 怪我中は選択に関わらず安静になり、経験点は貯まらない。
 TermResult playTerm(
   Player p,
   Condition c,
   Action action,
   Ability focus,
-  Random rng,
-) {
+  Random rng, {
+  double share = 1.0,
+}) {
   if (c.injured) {
     return TermResult(
       p,
-      c.copyWith(fatigue: c.fatigue - 20, injuredTerms: c.injuredTerms - 1),
+      c.copyWith(
+          fatigue: c.fatigue - (20 * share).round(),
+          injuredTerms: c.injuredTerms - 1),
     );
   }
   final e = effectOf(action);
+  final motiv = motivationOf(c.morale).expMultiplier;
   final next = Map<Ability, int>.of(p.abilities);
+  final gained = <Category, int>{};
   for (final a in abilitiesOf(p.role)) {
     // 練習試合は特定の能力に偏らない。
     final f = action == Action.match ? a : focus;
-    final x = yearlyDelta(p, a, f) * e.scale;
-    // 小さな値が毎回0に丸まらないよう、端数は確率で切り上げる。
-    final whole = x.floor();
-    final delta = whole + (rng.nextDouble() < x - whole ? 1 : 0);
-    next[a] = (p.of(a) + delta).clamp(0, abilityCap);
+    final x = yearlyDelta(p, a, f) * e.scale * share;
+    if (x >= 0) {
+      final cat = categoryOf(a);
+      gained[cat] = (gained[cat] ?? 0) + (x * expPerPoint * motiv).round();
+    } else {
+      // 衰えは経験点を通さず直接下がる。端数は確率で切り上げる。
+      final whole = x.truncate();
+      final delta = whole + (rng.nextDouble() < (whole - x) ? -1 : 0);
+      next[a] = (p.of(a) + delta).clamp(0, abilityCap);
+    }
   }
-  final hurt = rng.nextDouble() < injuryChance(c, action, p.traits);
+  final hurt = rng.nextDouble() < injuryChance(c, action, p.traits) * share;
   final dFatigue = e.fatigue > 0
-      ? (e.fatigue * fatigueMultiplier(p.traits)).round()
-      : e.fatigue;
+      ? (e.fatigue * fatigueMultiplier(p.traits) * share).round()
+      : (e.fatigue * share).round();
   final dMorale = e.morale > 0
-      ? (e.morale * moraleGainMultiplier(p.traits)).round()
-      : (e.morale * moraleLossMultiplier(p.traits)).round();
+      ? (e.morale * moraleGainMultiplier(p.traits) * share).round()
+      : (e.morale * moraleLossMultiplier(p.traits) * share).round();
   return TermResult(
     p.copyWith(abilities: next),
     c.copyWith(
@@ -119,6 +135,7 @@ TermResult playTerm(
       injuredTerms: hurt ? 1 + rng.nextInt(2) : 0,
     ),
     gotInjured: hurt,
+    exp: gained,
   );
 }
 
@@ -195,5 +212,5 @@ final List<GameEvent> events = [
 const eventChance = 0.4;
 
 /// 今季の出来事。起きなければ null。
-GameEvent? drawEvent(Random rng) =>
-    rng.nextDouble() < eventChance ? events[rng.nextInt(events.length)] : null;
+GameEvent? drawEvent(Random rng, {double share = 1.0}) =>
+    rng.nextDouble() < eventChance * share ? events[rng.nextInt(events.length)] : null;

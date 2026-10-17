@@ -2,25 +2,27 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:baseball_manager/game/career.dart';
+import 'package:baseball_manager/game/exp.dart';
 import 'package:baseball_manager/game/game.dart';
 import 'package:baseball_manager/game/life.dart';
 import 'package:baseball_manager/game/path.dart';
 import 'package:baseball_manager/game/player.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-/// 決まった方針で最後まで遊ぶ。春夏冬は練習、秋は休養。
+/// 決まった方針で最後まで遊ぶ。疲れたら休養、それ以外は練習。
 /// `stopAt` に達したらその都度の判断で止める(null なら引退まで)。
 void _autoPlay(Game g, {bool Function(Game)? stop, int proRetireAge = 40}) {
   var steps = 0;
   while (g.phase != Phase.retired) {
     if (++steps > 3000) fail('終わらない');
+    g.autoSpend(); // 貯めた経験点はおまかせで振り分ける
     if (stop != null && stop(g)) return;
     switch (g.phase) {
       case Phase.term:
         if (g.stage == Stage.pro && g.player.age >= proRetireAge) {
           g.retire();
         } else {
-          g.choose(g.term == Term.autumn ? Action.rest : Action.train, Ability.contact);
+          g.choose(g.condition.fatigue >= 60 ? Action.rest : Action.train, Ability.contact);
         }
       case Phase.event:
         g.resolveEvent(0);
@@ -80,17 +82,61 @@ void main() {
     expect(no, greaterThan(0));
   });
 
-  test('1年は4季節で、冬の次に年齢が1つ進む', () {
+  test('幼少期の1年は4ターン(季節)で、終わると年齢が1つ進む', () {
     final g = _new(1);
-    var guard = 0;
+    expect(g.slotsInYear, 4);
+    expect(g.slotName, '春');
+    var turns = 0;
     while (g.player.age == startAge) {
-      if (++guard > 50) fail('年が進まない');
+      if (++turns > 50) fail('年が進まない');
       g.phase == Phase.event
           ? g.resolveEvent(0)
           : g.choose(Action.rest, Ability.contact);
     }
     expect(g.player.age, startAge + 1);
-    expect(g.term, Term.spring);
+    expect(g.slot, 0);
+  });
+
+  test('高校は月単位(12ターン)で、4月から始まり7月に大会がある', () {
+    final g = _new(1);
+    _autoPlay(g, stop: (g) => g.stage == Stage.highSchool && g.phase == Phase.term);
+    expect(g.slotsInYear, 12);
+    expect(g.slotName, '4月');
+    final before = g.achievements.length;
+    var turns = 0;
+    var sawJuly = false;
+    while (g.stage == Stage.highSchool && g.player.age == 16) {
+      if (++turns > 100) fail('年が進まない');
+      if (g.phase == Phase.event) {
+        g.resolveEvent(0);
+        continue;
+      }
+      if (g.slotName == '7月') {
+        sawJuly = true;
+        expect(g.achievements.length, before);
+      }
+      g.choose(Action.rest, Ability.contact);
+    }
+    expect(sawJuly, isTrue);
+    expect(g.achievements.length, before + 1); // 大会は年に1回だけ
+  });
+
+  test('練習しても能力は直接は上がらず、経験点が貯まって振り分けられる', () {
+    final g = _new(4, potential: 80);
+    final before = g.player.of(Ability.contact);
+    g.choose(Action.train, Ability.contact);
+    if (g.phase == Phase.event) g.resolveEvent(0);
+    expect(g.player.of(Ability.contact), before);
+    expect(g.exp.of(Category.batting), greaterThan(0));
+    final n = g.spendAll(Ability.contact);
+    expect(g.player.of(Ability.contact), before + n);
+    expect(g.exp.of(Category.batting), lessThan(expCost(before + n)));
+  });
+
+  test('経験点は同じ種類の能力にしか使えない', () {
+    final g = _new(4, potential: 80);
+    g.choose(Action.train, Ability.contact);
+    expect(g.spend(Ability.stuff), isFalse); // 打者に投球の能力は無い
   });
 
   test('段階に合わない操作は拒否される', () {
@@ -152,6 +198,7 @@ void main() {
               if (g.stage == Stage.pro && g.player.age >= 38) {
                 g.retire();
               } else {
+                g.autoSpend();
                 g.choose(Action.train, abilitiesOf(role).last);
               }
             case Phase.event:

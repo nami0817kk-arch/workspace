@@ -1,6 +1,8 @@
 import 'dart:math';
 
+import 'calendar.dart';
 import 'career.dart';
+import 'exp.dart';
 import 'life.dart';
 import 'path.dart';
 import 'player.dart';
@@ -60,7 +62,8 @@ class Game {
   final Random rng;
   Player player;
   Condition condition = const Condition();
-  Term term = Term.spring;
+  int slot = 0; // 今年の何ターン目か(0始まり)。月単位か季節かは段階で決まる
+  ExpPool exp = const ExpPool(); // 貯めた経験点。`spend` で能力に振り分ける
   Phase phase = Phase.term;
   GameEvent? pendingEvent;
   Ability _eventFocus = Ability.contact;
@@ -88,24 +91,35 @@ class Game {
     return r.reduce((a, b) => a + b) / r.length;
   }
 
-  // ── 季節の選択 ──
+  // ── ターンの選択 ──
 
-  /// 今の季節の過ごし方を決める。`focus` は練習・特訓・研究で伸ばす能力。
+  /// 今のターンの表示名。月単位なら「7月」、季節なら「夏」。
+  String get slotName => slotLabel(stage, slot);
+
+  /// 今の年のターン数(12 または 4)。
+  int get slotsInYear => slotsPerYear(stage);
+
+  Motivation get motivation => motivationOf(condition.morale);
+
+  /// 今のターンの過ごし方を決める。`focus` は練習・特訓・研究で伸ばす能力。
+  /// 能力は直接は上がらず、経験点が貯まる。`spend` / `autoSpend` で振り分ける。
   void choose(Action action, [Ability? focus]) {
     _require(Phase.term);
     final f = focus ?? abilitiesOf(player.role).first;
     if (!abilitiesOf(player.role).contains(f)) {
       throw ArgumentError('${player.role.name} にその能力は無い: ${f.name}');
     }
-    final r = playTerm(player, condition, action, f, rng);
+    final share = slotShare(stage);
+    final r = playTerm(player, condition, action, f, rng, share: share);
     player = r.player;
     condition = r.condition;
+    exp = exp.add(r.exp);
     if (r.gotInjured) log.add('怪我をしてしまった。');
-    if (term == Term.summer) _playSummer();
+    if (isTournamentSlot(stage, slot)) _playSummer();
 
-    final e = drawEvent(rng);
+    final e = drawEvent(rng, share: share);
     if (e == null) {
-      _nextTerm();
+      _nextSlot();
     } else {
       pendingEvent = e;
       _eventFocus = f;
@@ -121,7 +135,33 @@ class Game {
     condition = r.condition;
     pendingEvent = null;
     phase = Phase.term;
-    _nextTerm();
+    _nextSlot();
+  }
+
+  // ── 経験点の振り分け ──
+
+  /// 能力を1つ上げる。足りなければ false。
+  bool spend(Ability a) {
+    final r = buy(player, exp, a);
+    if (r == null) return false;
+    player = r.player;
+    exp = r.pool;
+    return true;
+  }
+
+  /// 買えるだけ上げる。上がった数を返す。
+  int spendAll(Ability a) {
+    final r = buyAll(player, exp, a);
+    player = r.player;
+    exp = r.pool;
+    return r.bought;
+  }
+
+  /// おまかせ: 種類ごとに低い能力から順に振り分ける。
+  void autoSpend() {
+    final r = autoSpendExp(player, exp);
+    player = r.player;
+    exp = r.pool;
   }
 
   /// プロの間はいつでも役割を変えられる(二刀流にする/戻す)。
@@ -185,16 +225,16 @@ class Game {
     }
   }
 
-  void _nextTerm() {
-    if (term == Term.winter) {
+  void _nextSlot() {
+    if (slot + 1 >= slotsPerYear(stage)) {
       _endYear();
     } else {
-      term = Term.values[term.index + 1];
+      slot++;
     }
   }
 
   void _endYear() {
-    term = Term.spring;
+    slot = 0;
     player = endOfYear(player);
     condition = endOfYearCondition(condition);
     peakOverall = max(peakOverall, overall(player).round());
@@ -262,7 +302,8 @@ class Game {
   Map<String, dynamic> toJson() => {
         'player': player.toJson(),
         'condition': condition.toJson(),
-        'term': term.name,
+        'slot': slot,
+        'exp': exp.toJson(),
         'phase': phase.name,
         'pendingEvent': pendingEvent?.id,
         'eventFocus': _eventFocus.name,
@@ -287,7 +328,8 @@ class Game {
 
     final g = Game._(rng, Player.fromJson((j['player'] as Map?)?.cast<String, dynamic>() ?? {}));
     g.condition = Condition.fromJson((j['condition'] as Map?)?.cast<String, dynamic>() ?? {});
-    g.term = pick(Term.values, j['term'], Term.spring);
+    g.slot = (j['slot'] as num?)?.toInt() ?? 0;
+    g.exp = ExpPool.fromJson((j['exp'] as Map?)?.cast<String, dynamic>() ?? {});
     g.phase = pick(Phase.values, j['phase'], Phase.term);
     g.pendingEvent = events.where((e) => e.id == j['pendingEvent']).firstOrNull;
     if (g.phase == Phase.event && g.pendingEvent == null) g.phase = Phase.term;
@@ -301,6 +343,7 @@ class Game {
     g._wasTwoWay = (j['wasTwoWay'] as bool?) ?? g.player.role == Role.twoWay;
     g.achievements.addAll(
         ((j['achievements'] as List?) ?? const []).map((e) => (e as num).toDouble()));
+    g.slot = g.slot.clamp(0, slotsPerYear(g.stage) - 1);
     if (g.phase == Phase.retired) g.ending = g._buildEnding();
     return g;
   }

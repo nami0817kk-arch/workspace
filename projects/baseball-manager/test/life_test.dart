@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:baseball_manager/game/exp.dart';
 import 'package:baseball_manager/game/life.dart';
 import 'package:baseball_manager/game/player.dart';
 import 'package:baseball_manager/game/season.dart';
@@ -14,21 +15,17 @@ Player _p([int v = 40]) => Player(
       abilities: {for (final a in batterAbilities) a: v},
     );
 
-int _sum(Player p) => abilitiesOf(p.role).map(p.of).reduce((a, b) => a + b);
-
-/// 1年(4季節)を同じ過ごし方で n 回回した平均。
+/// 1年(4季節)を同じ過ごし方で n 回回して、貯まった経験点(全種類)の平均。
 double _gain(Action act, {int n = 300}) {
   var tot = 0.0;
   for (var s = 0; s < n; s++) {
     final rng = Random(s);
-    var p = _p();
     var c = const Condition();
     for (var t = 0; t < 4; t++) {
-      final r = playTerm(p, c, act, Ability.power, rng);
-      p = r.player;
+      final r = playTerm(_p(), c, act, Ability.power, rng);
       c = r.condition;
+      tot += r.exp.values.fold(0, (a, b) => a + b);
     }
-    tot += p.of(Ability.power) - 40;
   }
   return tot / n;
 }
@@ -49,9 +46,26 @@ void main() {
     expect(s.condition.morale, greaterThan(30));
   });
 
-  test('練習試合は重点を決めずに全体が伸びる', () {
+  test('練習試合は重点を決めず、全体に経験点が貯まる', () {
     final r = playTerm(_p(), const Condition(), Action.match, Ability.power, Random(3));
-    expect(_sum(r.player), greaterThanOrEqualTo(_sum(_p())));
+    expect(r.exp[Category.batting], greaterThan(0));
+    expect(r.exp[Category.running], greaterThan(0));
+  });
+
+  test('月単位(share=1/3)は効果・疲労が3分の1ぶんになる', () {
+    final season = playTerm(_p(), const Condition(), Action.train, Ability.power, Random(1));
+    final month = playTerm(_p(), const Condition(), Action.train, Ability.power, Random(1),
+        share: 1 / 3);
+    expect(month.condition.fatigue, season.condition.fatigue ~/ 3);
+    expect(month.exp[Category.batting]!, lessThan(season.exp[Category.batting]! / 2));
+  });
+
+  test('やる気が高いほど経験点が多く貯まる', () {
+    int exp(int morale) => playTerm(_p(), Condition(morale: morale), Action.train,
+            Ability.power, Random(1))
+        .exp[Category.batting]!;
+    expect(exp(90), greaterThan(exp(50)));
+    expect(exp(50), greaterThan(exp(10)));
   });
 
   test('疲れが溜まるほど怪我しやすく、特訓はさらに高い', () {
