@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'player.dart';
 import 'training.dart';
+import 'traits.dart';
 
 /// 1年は4つの季節。選択は季節ごとに行う。夏は大会の季節。
 enum Term { spring, summer, autumn, winter }
@@ -65,8 +66,9 @@ class Condition {
     };
 
 /// 怪我の確率。疲れているほど、特訓ほど高い。
-double injuryChance(Condition c, Action a) =>
-    0.02 + c.fatigue / 100 * 0.15 + (a == Action.special ? 0.10 : 0.0);
+double injuryChance(Condition c, Action a, [Set<Trait> traits = const {}]) =>
+    (0.02 + c.fatigue / 100 * 0.15 + (a == Action.special ? 0.10 : 0.0)) *
+    injuryMultiplier(traits);
 
 /// 1季節の結果。
 class TermResult {
@@ -102,12 +104,18 @@ TermResult playTerm(
     final delta = whole + (rng.nextDouble() < x - whole ? 1 : 0);
     next[a] = (p.of(a) + delta).clamp(0, abilityCap);
   }
-  final hurt = rng.nextDouble() < injuryChance(c, action);
+  final hurt = rng.nextDouble() < injuryChance(c, action, p.traits);
+  final dFatigue = e.fatigue > 0
+      ? (e.fatigue * fatigueMultiplier(p.traits)).round()
+      : e.fatigue;
+  final dMorale = e.morale > 0
+      ? (e.morale * moraleGainMultiplier(p.traits)).round()
+      : (e.morale * moraleLossMultiplier(p.traits)).round();
   return TermResult(
     p.copyWith(abilities: next),
     c.copyWith(
-      fatigue: c.fatigue + e.fatigue,
-      morale: c.morale + e.morale,
+      fatigue: c.fatigue + dFatigue,
+      morale: c.morale + dMorale,
       injuredTerms: hurt ? 1 + rng.nextInt(2) : 0,
     ),
     gotInjured: hurt,
@@ -162,6 +170,14 @@ final List<GameEvent> events = [
           player: _gain(p, f, 1),
           condition: c.copyWith(fatigue: c.fatigue + 15, morale: c.morale - 10)
         )),
+  ]),
+  GameEvent('winter-menu', '厳しい特別メニューを任された。', [
+    EventChoice('やり抜く', (p, c, f) => (
+          player: p.copyWith(traits: gain(p.traits, Trait.hardWorker)),
+          condition: c.copyWith(fatigue: c.fatigue + 20)
+        )),
+    EventChoice('無理はしない', (p, c, f) =>
+        (player: p, condition: c.copyWith(morale: c.morale + 5))),
   ]),
   GameEvent('friend', '友人が遊びに誘ってくれた。', [
     EventChoice('遊びに行く', (p, c, f) => (

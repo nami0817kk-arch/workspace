@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'career.dart';
 import 'player.dart';
+import 'traits.dart';
 
 const abilityCap = 99;
 
@@ -28,6 +29,6 @@ double yearlyDelta(Player p, Ability a, Ability focus) {
   final split = p.role == Role.twoWay ? 0.6 : 1.0;
   final share = a == focus ? 1.0 : 0.25;
   return g >= 0
-      ? 4.0 * g * talent * share * split
-      : 3.0 * g * (a == focus ? 0.5 : 1.0);
+      ? 4.0 * g * talent * share * split * growthMultiplier(p.traits, p.age)
+      : 3.0 * g * (a == focus ? 0.5 : 1.0) * declineMultiplier(p.traits);
 }

@@ -130,7 +130,7 @@ Tournament playTournament(
   for (final opp in opponents) {
     final g = playGame(p, opp, rng);
     line += g;
-    final pWin = (0.5 + (teamLevel - opp) / 100 + (g.rating - 50) / 200 + (condition - 50) / 500)
+    final pWin = (0.5 + (teamLevel - opp) / 100 + (g.rating - 50) / 200 + (condition + tournamentBonus(p.traits) - 50) / 500)
         .clamp(0.05, 0.95);
     if (rng.nextDouble() >= pWin) break;
     won++;

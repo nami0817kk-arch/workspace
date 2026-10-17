@@ -1,5 +1,6 @@
 import 'at_bat.dart';
 import 'career.dart';
+import 'traits.dart';
 
 /// `twoWay`(二刀流)は打者と投手の両方の能力を持つ。選べるのはプロの段階だけ(`switchRole`)。
 enum Role { batter, pitcher, twoWay }
@@ -45,6 +46,7 @@ class Player {
     required this.age,
     required this.potential,
     Map<Ability, int>? abilities,
+    this.traits = const {},
   }) : abilities = abilities ?? {for (final a in abilitiesOf(role)) a: 20};
 
   final String name;
@@ -55,14 +57,19 @@ class Player {
   final int potential;
   final Map<Ability, int> abilities;
 
+  /// 特性(個性)。能力とは別に効き方を変える。`traits.dart`。
+  final Set<Trait> traits;
+
   int of(Ability a) => abilities[a] ?? 0;
 
-  Player copyWith({int? age, Role? role, Map<Ability, int>? abilities}) => Player(
+  Player copyWith({int? age, Role? role, Map<Ability, int>? abilities, Set<Trait>? traits}) =>
+      Player(
         name: name,
         role: role ?? this.role,
         age: age ?? this.age,
         potential: potential,
         abilities: abilities ?? this.abilities,
+        traits: traits ?? this.traits,
       );
 
   Batter toBatter() =>
@@ -76,6 +83,7 @@ class Player {
         'age': age,
         'potential': potential,
         'abilities': {for (final e in abilities.entries) e.key.name: e.value},
+        'traits': [for (final t in traits) t.name],
       };
 
   /// 項目を足すときは既定値を置く(既存セーブを壊さない)。
@@ -96,6 +104,10 @@ class Player {
       age: (j['age'] as num?)?.toInt() ?? 6,
       potential: (j['potential'] as num?)?.toInt() ?? 50,
       abilities: ab.isEmpty ? null : ab,
+      traits: {
+        for (final s in (j['traits'] as List?) ?? const [])
+          if (Trait.parse(s as String) != null) Trait.parse(s)!,
+      },
     );
   }
 }

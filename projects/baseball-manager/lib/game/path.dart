@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'career.dart';
 import 'player.dart';
+import 'traits.dart';
 
 /// プロに入れなかったときの道。
 enum Route {
@@ -25,7 +26,7 @@ double overall(Player p) {
 
 /// 能力7割＋実績3割(0〜100)。実績は大会の成績などで積む(別途)。
 double draftScore(Player p, double achievement) =>
-    0.7 * overall(p) + 0.3 * achievement.clamp(0, 100);
+    0.7 * overall(p) + 0.3 * achievement.clamp(0, 100) + draftBonus(p.traits);
 
 const draftLine = 55.0; // 運を除いた合否ライン
 const draftLuck = 10.0; // 運の振れ幅(±)

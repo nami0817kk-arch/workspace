@@ -11,5 +11,6 @@
 - `lib/game/path.dart` — ドラフト判定・大学/社会人の再挑戦・戦力外/引退
 - `lib/game/season.dart` — 1試合の個人成績と勝ち抜き大会。結果の `achievement` がドラフトの実績に入る
 - `lib/game/life.dart` — 1年を4季節に分け、季節ごとの過ごし方(練習/特訓/休養/研究/交流/練習試合)・体調・怪我・出来事(選択つき)
+- `lib/game/traits.dart` — 特性(個性)。伸び・怪我・疲労・気持ち・大会・ドラフトへの効き方を1か所に集める
 - `lib/main.dart` — 起動確認用の最小画面
 - Android/iOS/web の各フォルダは未生成。`flutter create . --platforms=android,ios,web --project-name baseball_manager` で足す
