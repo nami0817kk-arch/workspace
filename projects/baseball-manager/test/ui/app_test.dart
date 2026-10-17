@@ -5,6 +5,7 @@ import 'package:baseball_manager/game/game.dart';
 import 'package:baseball_manager/game/life.dart';
 import 'package:baseball_manager/game/path.dart';
 import 'package:baseball_manager/game/player.dart';
+import 'package:baseball_manager/game/tactics.dart';
 import 'package:baseball_manager/game/traits.dart';
 import 'package:baseball_manager/ui/app.dart';
 import 'package:baseball_manager/ui/controller.dart';
@@ -505,7 +506,11 @@ void _rankTests() {
     await t.tap(find.byKey(const Key('records-open')));
     await t.pumpAndSettle();
     expect(find.textContaining('プロ通算'), findsOneWidget);
-    expect(find.textContaining('位'), findsWidgets);
+    // 順位(「3位」)か、優勝(「リーグ優勝」)のどちらかが表に出る。
+    expect(
+        find.byWidgetPredicate((w) =>
+            w is Text && RegExp(r'^(\d位|リーグ優勝)$').hasMatch(w.data ?? '')),
+        findsWidgets);
   });
 
   testWidgets('成績: エンディングにも成績表が出て、殿堂に通算成績が残る', (t) async {
@@ -742,5 +747,36 @@ void _rankTests() {
     expect(c.game, isNull);
     expect(find.text('はじめる'), findsOneWidget);
     expect(find.text('殿堂(これまでの選手)'), findsNothing);
+  });
+
+  testWidgets('作戦: 大会の前の季節と大会の季節にだけ選択肢が出て、選ぶと反映され、大会後に消える', (t) async {
+    final c = await _start(t);
+    c.newGame('テスト', Role.batter);
+    await t.pumpAndSettle();
+    expect(find.byKey(const Key('tactic-picker')), findsOneWidget); // 春(大会の前)
+    await t.tap(find.byKey(const Key('tactic-aggressive')));
+    await t.pumpAndSettle();
+    expect(c.game!.tactic, Tactic.aggressive);
+    expect(find.textContaining('長打・球威を重視'), findsOneWidget);
+    await t.tap(find.byKey(const Key('act-rest')));
+    await t.pumpAndSettle();
+    if (c.game!.phase == Phase.event) {
+      await t.tap(find.byKey(const Key('event-0')));
+      await t.pumpAndSettle();
+    }
+    expect(find.byKey(const Key('tactic-picker')), findsOneWidget); // 夏(大会)
+    await t.tap(find.byKey(const Key('act-rest')));
+    await t.pumpAndSettle();
+    if (c.game!.phase == Phase.event) {
+      await t.tap(find.byKey(const Key('event-0')));
+      await t.pumpAndSettle();
+    }
+    // 大会が終わった。ダイアログが出ていれば閉じる。
+    while (find.byKey(const Key('milestone-ok')).evaluate().isNotEmpty) {
+      await t.tap(find.byKey(const Key('milestone-ok')));
+      await t.pumpAndSettle();
+    }
+    expect(find.byKey(const Key('tactic-picker')), findsNothing); // 秋
+    expect(c.game!.tactic, Tactic.steady);
   });
 }

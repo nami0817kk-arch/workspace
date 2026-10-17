@@ -10,6 +10,7 @@ import 'player.dart';
 import 'life_log.dart';
 import 'records.dart';
 import 'season.dart';
+import 'tactics.dart';
 import 'traits.dart';
 
 /// いま何を待っているか。画面はこれを見て出すものを決める。
@@ -114,6 +115,9 @@ class Game {
   /// 年ごとの成績(大会・シーズン)。成績画面とエンディングに出す。
   final List<SeasonRecord> records = [];
 
+  /// 大会・シーズン最終月の作戦。その大会が終わると「堅実」に戻る。
+  Tactic tactic = Tactic.steady;
+
   /// 人生の節目(入学・進路・ドラフト・特性の習得・転向・引退)。経歴の年表に出す。
   final List<LifeEvent> lifeLog = [];
 
@@ -215,6 +219,17 @@ class Game {
     final r = autoSpendExp(player, exp);
     player = r.player;
     exp = r.pool;
+  }
+
+  /// 大会・シーズン最終月の作戦を選ぶ。
+  void setTactic(Tactic t) {
+    tactic = t;
+  }
+
+  /// 大会(プロはシーズン最終月)の前後か。作戦を選ぶ画面を出す目安。
+  bool get tacticRelevant {
+    final t = stage == Stage.pro ? 6 : (isMonthly(stage) ? 3 : 1);
+    return slot >= t - 1 && slot <= t;
   }
 
   /// プロの間はいつでも役割を変えられる(二刀流にする/戻す)。
@@ -365,19 +380,22 @@ class Game {
   void _playSummer() {
     final l = _league;
     final isPro = stage == Stage.pro;
+    // 作戦: その大会だけ能力が変わる。研究はチーム力が上がる。
+    final fighter = tacticAdjusted(player, tactic);
+    final team = l.team + tacticTeamBonus(tactic);
     final tournament = isPro
         ? null
         : playTournament(
-            player,
-            teamLevel: l.team,
+            fighter,
+            teamLevel: team,
             opponents: l.opponents,
             rng: rng,
             condition: condition.value,
           );
     final league = isPro
         ? playLeagueSeason(
-            player,
-            teamLevel: l.team,
+            fighter,
+            teamLevel: team,
             opponents: l.opponents,
             rng: rng,
             condition: condition.value,
@@ -404,6 +422,7 @@ class Game {
       rival.addBond(5);
     }
 
+    tactic = Tactic.steady;
     if (league != null) {
       final titles =
           titlesOf(league.line, games: league.games, rank: league.rank);
@@ -574,6 +593,7 @@ class Game {
         'proStartAge': proStartAge,
         'records': [for (final r in records) r.toJson()],
         'lifeLog': [for (final e in lifeLog) e.toJson()],
+        'tactic': tactic.name,
       };
 
   /// 項目を足すときは既定値を置く(既存セーブを壊さない)。
@@ -613,6 +633,8 @@ class Game {
     g.overallHistory.addAll(((j['overallHistory'] as List?) ?? const [])
         .map((e) => (e as num).toInt()));
     g.proStartAge = (j['proStartAge'] as num?)?.toInt();
+    g.tactic = Tactic.values
+        .firstWhere((t) => t.name == j['tactic'], orElse: () => Tactic.steady);
     g.lifeLog.addAll([
       for (final e in (j['lifeLog'] as List?) ?? const [])
         LifeEvent.fromJson((e as Map).cast<String, dynamic>()),

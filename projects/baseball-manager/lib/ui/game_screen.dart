@@ -16,6 +16,7 @@ import 'home_screen.dart' show showAdminToggled;
 import 'labels.dart';
 import '../game/records.dart';
 import '../game/snapshot.dart';
+import '../game/tactics.dart';
 import 'player_screen.dart';
 import 'records_screen.dart';
 import 'settings_screen.dart';
@@ -446,6 +447,10 @@ class _ActionCard extends StatelessWidget {
                   onSelected: (_) => controller.setFocus(a),
                 ),
             ]),
+            if (game.tacticRelevant) ...[
+              const SizedBox(height: 10),
+              _TacticPicker(controller: controller, game: game),
+            ],
             const SizedBox(height: 10),
             LayoutBuilder(builder: (context, box) {
               final cols = box.maxWidth > 420 ? 2 : 1;
@@ -925,6 +930,43 @@ class _FirstHint extends StatelessWidget {
           '体力が減ったら休養も大切です。',
         ),
       ),
+    );
+  }
+}
+
+/// 大会・シーズン最終月の作戦。
+class _TacticPicker extends StatelessWidget {
+  const _TacticPicker({required this.controller, required this.game});
+  final GameController controller;
+  final Game game;
+
+  @override
+  Widget build(BuildContext context) {
+    final isPro = game.stage == Stage.pro;
+    final now = game.tactic;
+    return Container(
+      key: const Key('tactic-picker'),
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.tertiaryContainer,
+        borderRadius: BorderRadius.circular(14),
+      ),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text(isPro ? 'ペナントの最終月に向けて、作戦を選ぼう' : '大会に向けて、作戦を選ぼう',
+            style: Theme.of(context).textTheme.titleSmall),
+        const SizedBox(height: 6),
+        Wrap(spacing: 6, children: [
+          for (final t in Tactic.values)
+            ChoiceChip(
+              key: Key('tactic-${t.name}'),
+              label: Text(t.label),
+              selected: t == now,
+              onSelected: (_) => controller.setTactic(t),
+            ),
+        ]),
+        const SizedBox(height: 4),
+        Text(now.description, style: Theme.of(context).textTheme.bodySmall),
+      ]),
     );
   }
 }
