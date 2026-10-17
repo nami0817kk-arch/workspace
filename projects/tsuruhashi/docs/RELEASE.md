@@ -112,7 +112,7 @@ TestFlight で入れて、次を目で見る:
 
 **掲載画像**: `store/screenshots/01〜06.png`（6.7インチ 1290×2796、`node tool/make_shots.js`）。
 **iPad**: Xcode の設定が iPhone・iPad 両対応（`TARGETED_DEVICE_FAMILY = "1,2"`、ほかのアプリと同じ）なので、App Store Connect が iPad の掲載画像（13インチ）を求めてきたら、
-`make_shots.js` の大きさを変えて撮るか、iPhone 専用（`"1"`）に変えるかをユーザーに聞く。
+iPad 用は `DEVICE=ipad node tool/make_shots.js` で `store/screenshots/ipad/01〜06.png`（2064×2752）に作る（CI の「tsuruhashi shots」が iPhone と iPad を撮る。2026-10-18 に作成済み・ユーザー選択で iPad 用を撮り足した）。
 
 **アプリの作り（審査 4.2 への備え）**: ゲーム本体は WebView で動くが、中身（絵・BGM 含む）はすべてアプリに同梱していて通信なしで遊べる。
 外部のページは、プライバシーポリシーなど決めた所だけを端末のブラウザで開く（`app/lib/game/bridge.dart` の `allowedHosts`）。
