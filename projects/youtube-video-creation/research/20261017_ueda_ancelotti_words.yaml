@@ -1,0 +1,134 @@
+# 日本人選手 の取材メモ（2026年10月17日・ショートだけ）
+# 取材: 2026-10-17。requests（ブラウザUA）で原文を読んだ。
+#   ・Le Petit Lillois 2026-10-16 13:20「« J'espère que ça ne sera pas long » : Davide Ancelotti fait le point sur les absences et Ayase Ueda avant LOSC – SB29」（フランス語の原文。全文を読んだ。research/raw/20261017_lpl_ueda.txt）
+#     → 監督の言葉の原文はここ。前日(16日・金)13時の会見。ブレスト戦は現地17日(土)20時45分、ドゥカトロン・アレーナ（同紙）。
+#   ・Le Petit Lillois 2026-10-15 10:14（会見の日時の告知）・10-16 14:34（「補強は可能性」。ジルー・若手の話）・10-16 21:01（ブレスト戦の10の予習。順位表）。
+#   ・サッカーキング 2026-10-16 21:33「上田綺世が負傷離脱へ…リール指揮官が言及『回復具合を予測するのは困難』」（本文を全部読んだ。Le Petit Lillois を引く日本語の孫引き）。
+#   ・NO FOOTY NO LIFE 2026-10-17「…上田綺世、長期離脱の可能性浮上…現地リールサポは悲鳴！」（海外の反応まとめ。リールのフォーラムの書き込みの日本語訳。research/raw/20261017_nfnl_9424.txt）。
+# 日付・場所: 会見は現地10月16日(金)13時、ドメーヌ・ド・リュシャン（同紙10/15の告知）。題材の一覧は「17日の会見」と書いていたが、原文は「金曜(16日)」。→ 16日が正しい。
+# 【題材の一覧の言葉を原文で引き直した点】
+#   ・一覧「監督『復帰時期は予測が難しい』」→ 原文は「難しいのは、時期を言うこと（donner un délai）」と「この種のケガの見通し（visibilité）」の2つ。
+#   ・一覧「やや珍しいケガ」はサッカーキングの訳。原文は « une blessure un peu particulière »（少し特殊なケガ）。GOAL の見出しは「かなり特殊」。→ 台本は原文から「少し特殊なケガ」と訳した。
+#   ・「足底筋膜の断裂」は監督の言葉ではない。原文の引用の中に « (déchirure de l'aponévrose plantaire) » とカッコで入っている（記者の補足とみられる。引用符の中だが監督の声かは判別できない）。
+#     → 台本は監督の言葉には入れず、「会見を伝えた地元紙は足底筋膜の断裂と書いています」と別の行にする。診断名・離脱期間は出典の言葉のまま。強めない。
+#   ・一覧の「ブラジル戦・アジア杯は絶望的」は推測。入れない。東スポ等の「約1か月」「11月の代表に暗雲」も監督の言葉ではないので入れない。
+# 【前の2本との重なり】10/15「左かかとに経験のない違和感」（かかと・検査・40歳のジルー）／10/16「月間MVP」（9月の3ゴール・1勝2敗。同日に「左足裏の断裂が疑われた・数週間」の報道も入れた）。
+#   → 今回は「監督が自分の言葉で語った」ことだけ。かかと・検査・ジルー・9月の1勝2敗・MVP は言わない。写真も10/15・10/16 のものは使わない。
+# 本人の言葉: 上田本人の今回の言葉はどの記事にも無かった → 入れない。
+# 自分で数えたもの（見立て）: 上田が出たリール加入後の公式戦は6試合（トゥールーズ・ベティス・トロワ・ニース・ル・アーヴル・アーセナル）。
+#   リーグ戦は第3節（9/3 デビュー）〜第6節＝4試合、CL2試合。リーグ戦は6節まで終え（同紙の順位表で全チーム6試合）、第7節がブレスト戦。
+#   リールの公式戦は第1・2節が加入前なので、加入後の全試合に出ている。出場は 10/16 の取材メモで losc.fr の各試合レポートで確かめ済み。3ゴールは losc.fr・同紙で確かめ済み。
+#   → ブレスト戦は加入後はじめて出ない試合。
+# 反応: NO FOOTY NO LIFE のリールサポーターの書き込み（日本語訳）から3件。匿名。元のフランス語の原文は未確認。切らずに全文。
+#   当たった先: 上のまとめ1本。X は個別URLが取れる題材ではないので当たっていない。まとめのコメント欄は日本人の書き込みで、リールの声ではないので使わない。
+#   「アジアカップ」「6週間〜3か月」など期間に触れる書き込みは、出典に無い期間を強めるので選ばなかった。
+# 写真: 配信写真（Getty。会見記事の主写真）は取り込まない。Le Petit Lillois が自社記事に載せた上田の写真（4枚。10/16 に使った Ayase-Ueda-4（月間MVP）は使わない）。
+#   assets/images/20261017_ueda_ancelotti_words/ に。会見記事の主写真・MVP の写真・losc.fr の選手ページの写真は使っていない。
+slot: japan
+date: "2026年10月17日"
+format: news
+no_main: true      # ニュースはショートだけ（2026-10-14）。締めで本編を案内しない
+people: [上田綺世, ダヴィデ・アンチェロッティ, リール]
+short_style: B
+short_photos:
+  - assets/images/20261017_ueda_ancelotti_words/05_v.jpg
+  - assets/images/20261017_ueda_ancelotti_words/06_v.jpg
+  - assets/images/20261017_ueda_ancelotti_words/13_v.jpg
+  - assets/images/20261017_ueda_ancelotti_words/14_v.jpg
+  - assets/images/20261017_ueda_ancelotti_words/20_v.jpg
+  - assets/images/20261017_ueda_ancelotti_words/21_v.jpg
+  - assets/images/20261017_ueda_ancelotti_words/22_v.jpg
+
+short_question: 上田綺世に、いちばん早く戻ってきてほしい試合はどれですか。
+short_hook: 上田綺世のケガ、監督が語りました。
+short_telops:
+  - {match: ブレスト戦。上田綺世は欠場, text: 現地17日/ブレスト戦を欠場の見通し}
+  - {match: 少し特殊なケガ, text: リール監督/少し特殊なケガ}
+  - {match: 足底筋膜の断裂と書いて, text: 地元紙は/足底筋膜の断裂と報道}
+  - {match: 見通しを立てるのは、とても難しい, text: 監督/見通しは「とても難しい」}
+  - {match: 6試合すべてに出て, text: 加入後の公式戦6試合/すべてに出場}
+  - {match: 加入後はじめて, text: ブレスト戦は/加入後はじめて出ない試合}
+  - {match: サントスと, text: ブレスト戦は/サントス・イガマネも欠場}
+
+theme:
+  id: ueda_ancelotti_words
+  league: france
+  prefix: ""
+  title: 上田綺世のケガ、リール監督が語った。復帰時期を言えない理由
+  hook: ""
+  question: 上田綺世の復帰時期を、監督はなぜ言えないのか
+  takeaway: 上田は加入後のリールの公式戦6試合すべてに出て3ゴール。ブレスト戦は加入後はじめて出られない試合になる
+
+thumbnail:
+  line1: 上田綺世のケガ
+  line2: リール監督が語った
+  tags: [上田綺世, リール]
+  photo: assets/images/20261017_ueda_ancelotti_words/01.jpg
+  short_photo: assets/images/20261017_ueda_ancelotti_words/05_v.jpg
+
+answer: 少し特殊なケガで、治療と痛みの具合に大きく左右されるから
+watch: 現地17日20時45分から、ホームでブレスト戦
+
+sections:
+  - id: what
+    main: true
+    heading: 何が起きたか
+    tier: 報道
+    telop: 監督が会見で語った。上田綺世は、17日のブレスト戦を欠場の見通し
+    say:
+      - 現地17日のリーグ・アン、ブレスト戦。上田綺世は欠場の見通しです。
+      - リール監督が、会見でこのケガに触れました。
+      - voice: アンチェロッティ監督
+        text: 上田については、復帰の時期を言うのは難しい。
+        short_voice: true
+      - voice: アンチェロッティ監督
+        text: 少し特殊なケガだからだ。
+        cont: true
+      - voice: アンチェロッティ監督
+        text: 治療と痛みの具合に、大きく左右される。
+        cont: true
+      - 会見を伝えた地元紙は、ケガを足の裏の足底筋膜の断裂と書いています。
+      - voice: アンチェロッティ監督
+        text: サッカーでこの種のケガの見通しを立てるのは、とても難しい。
+      - voice: アンチェロッティ監督
+        text: 時期は確かではないし、間違ったことは言いたくない。
+        cont: true
+      - voice: アンチェロッティ監督
+        text: 長くならないことを願っている。
+        cont: true
+    official: false
+    sources:
+      - https://lepetitlillois.com/2026/10/16/ancelotti-point-absences-ueda-losc-stade-brestois-29/
+      - https://www.soccer-king.jp/news/world/fra/20261016/2217460.html
+
+  - id: view
+    viewpoint: true
+    heading: 上田はリール加入後、全部の公式戦に出ていた
+    tier: 報道
+    telop: 加入後の公式戦6試合すべてに出場。ブレスト戦が初めての欠場
+    say:
+      - 上田は加入後、リールの公式戦6試合すべてに出て、3ゴールを決めました。
+      - ブレスト戦は、加入後はじめて出られない試合になります。
+      - リールはこの試合、右サイドバックのサントスと、FWのイガマネも欠きます。
+    official: false
+    sources:
+      - https://lepetitlillois.com/2026/10/16/losc-stade-bresois-29-dix-choses-a-savoir/
+      - https://www.losc.fr/actualites/2026-10-15/ayase-ueda-dogue-du-mois-de-septembre
+
+  # ネットの反応: 2026-10-17、NO FOOTY NO LIFE（海外の反応まとめ）が載せたリールのサポーターの書き込みの日本語訳。匿名。
+  # 元のフランス語の原文は未確認（まとめ側の訳）。1件ずつ、全文。切っていない。
+  - id: reactions
+    heading: ネットの反応
+    tier: 未確認
+    telop: 「どんだけ運がないんだ」
+    say:
+      - voice: ネット民
+        text: 前線で唯一有能な選手なのに
+        short_voice: true
+      - voice: ネット民
+        text: どんだけ運がないんだ
+        short_voice: true
+    official: false
+    sources:
+      - https://nofootynolife.net/blog-entry-9424.html
+short_title: "上田綺世のケガ、リール監督が語った。復帰時期を言えない理由"

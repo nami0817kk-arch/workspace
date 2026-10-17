@@ -1,0 +1,109 @@
+# 冨安健洋 の取材メモ（2026年10月17日）
+# 1本＝1テーマ。ショートだけ（no_main）。見せ方は G（切り抜き＋クラブ色の背景）。
+# 取材: 2026-10-17。requests（ブラウザUA）で原文を読んだ。
+#   ・サッカーキング（2026-10-17。https://www.soccer-king.jp/news/world/eng/20261017/2217481.html）: サージュ監督の16日の会見の言葉。記事は「プレミアリーグの公式サイトが同指揮官のコメントを伝えている」と書く。公式サイトの原文は未読（URLが見つからず）。→ 確度は「報道」、出典は記事。
+#   ・クリスタル・パレス公式（cpfc.co.uk「Sage reveals expectations & focus for Palace v Brighton rivalry」）: 同じ会見の公式記事。日曜（18日）のアミ・スタジアム遠征、ヘンダーソンらについて「会見のあとの練習を見て決める。明日の練習も見たいかもしれない」「期待はしている、分からない」と話した。**冨安の名前は出てこない**ので、冨安の言葉としては使わない（練習で見る、の一般論だけ背景に使う）。
+#   控えは research/raw/20261017_tomiyasu_sk.txt・20261017_cpfc_sage-reveals-expectations-focus-.txt。
+# 日付: 現地10月18日（日）、ブライトン戦、プレミアリーグ第7節（記事）。会見は16日（記事）。
+# 資料間のずれ: 無し。ただし記事の「同選手の復帰時期については、会見後にトレーニングがあるので〜評価する」の「同選手」は直前のGKヘンダーソンを指す（冨安ではない）。冨安・マテタ・チルウェルに向けた言葉は「可能性はある。1、2試合前にも〜」の方。台本ではこの区別を守る。
+# 自分で数えたこと: ①リヨン戦を欠いた4人（冨安・ヘンダーソン・マテタ・チルウェル。記事）のうち、18日に向けて「可能性はある」と言われたのは3人（冨安・マテタ・チルウェル）、ヘンダーソンは「現時点ではわからない」。②出られれば、直近2試合（11日・15日。記事）を欠いたあとの復帰戦。
+# 10/15 の冨安の回（リヨン戦の欠場）との違い: あちらは「リヨンに同行しない」。こちらは「18日の見通し」で、同じ文・同じ写真は使わない（写真は 10/15 のアヤックス時代の Commons を使わず、クラブ公式の写真に替えた）。
+# 本人の言葉: 無し（記事に冨安本人のコメントは無い。SNSは当たっていない＝ブラウザ禁止）。
+# 反応: 0件。当たった先: NO FOOTY NO LIFE のトップ（10/17 時点で鎌田・森保の記事のみ、冨安の記事なし）。検索（WebSearch）も新しい投稿に当たらず。Xは触っていない。作らない。
+# 写真: 配信写真（Getty）は取り込まない。assets/images/20261017_tomiyasu_brighton_return/ はクラブ公式サイトの選手紹介ページの2枚（出典は credits.json。許諾は得ていない＝引き受ける危険）。05_g_v.jpg は 04_flat.jpg（01.png の透過を白にしたもの）を G で切り抜いた版。06_v.jpg は 02.jpg の縦切り。3枚には届かず2枚（顔が検出できる別の写真が無い）。
+slot: japan
+date: "2026年10月17日"
+format: news
+no_main: true      # ニュースはショートだけ（2026-10-14）。締めで本編を案内しない
+people: [冨安健洋, クリスタル・パレス, ブライトン]
+
+short_style: G
+short_photos:
+  - assets/images/20261017_tomiyasu_brighton_return/05_g_v.jpg
+  - assets/images/20261017_tomiyasu_brighton_return/06_v.jpg
+
+short_question: 冨安健洋は、18日のブライトン戦に出られると思いますか。
+short_hook: 冨安健洋、18日のブライトン戦は。
+short_telops:
+  - {match: 冨安らの復帰を語りました, text: サージュ監督が/18日のブライトン戦を前に}
+  - {match: 第7節です, text: 18日/プレミアリーグ第7節ブライトン戦}
+  - {match: 可能性はある, text: 監督「可能性はある」}
+  - {match: 今のところ期待はしているが, text: 「期待はしているが/どうなるかはわからない」}
+  - {match: 会見は16日, text: 16日の会見/あとの練習で復帰の可能性を評価}
+  - {match: 復帰戦になります, text: 出られれば/2試合欠いたあとの復帰戦}
+  - {match: 計4人でした, text: リヨン戦を欠いたのは/冨安を含め4人}
+  - {match: 3人。, text: 「可能性はある」と言われたのは/4人のうち3人}
+
+theme:
+  id: tomiyasu_brighton_return
+  league: england
+  prefix: ""
+  title: 冨安健洋、18日の復帰は。監督「期待はしているが、どうなるかはわからない」
+  hook: ""
+  question: 冨安健洋は18日のブライトン戦に間に合うのか
+  takeaway: リヨン戦を欠いた4人のうち、監督が18日に向けて「可能性はある」と言ったのは3人。冨安はその1人で、答えは18日の試合前のメンバー表にある
+
+thumbnail:
+  line1: 冨安健洋、ブライトン戦
+  line2: 監督「どうなるかはわからない」
+  tags: [冨安健洋, パレス, ブライトン]
+  layout: face
+  photo: assets/images/20261017_tomiyasu_brighton_return/02.jpg
+  short_photo: assets/images/20261017_tomiyasu_brighton_return/05_g_v.jpg
+
+answer: 監督は「期待はしているが、どうなるかはわからない」と話した
+watch: 18日のブライトン戦のメンバー表
+
+sections:
+  - id: what
+    main: true
+    heading: 何が起きたか
+    tier: 報道
+    telop: パレスのサージュ監督が冨安の復帰の見通しを語った
+    say:
+      - パレスのサージュ監督が、18日のブライトン戦を前に、冨安らの復帰を語りました。
+      - voice: サージュ監督
+        text: 可能性はある。1、2試合前にも同じことを言ったが、
+        short_voice: true
+      - voice: サージュ監督
+        text: 結果的にそうはならなかった。今は様子を見たい。
+        cont: true
+      - voice: サージュ監督
+        text: 今のところ期待はしているが、どうなるかはわからない。
+        cont: true
+      - 会見は16日。監督は、そのあとの練習で復帰の可能性を評価すると話しました。
+      - ブライトン戦は、プレミアリーグ第7節です。
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/eng/20261017/2217481.html
+      - https://www.cpfc.co.uk/news/first-team/sage-reveals-expectations-focus-for-palace-v-brighton-rivalry/
+
+  - id: before
+    heading: 冨安のここまで
+    tier: 報道
+    telop: 冨安は今夏加入。ふくらはぎの負傷で直近2試合を欠場
+    say:
+      - 冨安は今夏パレスに加わり、ここまで公式戦に5試合出ています。
+      - ふくらはぎの負傷で、9月と10月の日本代表には参加できませんでした。
+      - 続く11日のフォレスト戦、15日のリヨン戦には出ていません。
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/eng/20261017/2217481.html
+
+  - id: view
+    viewpoint: true
+    heading: 18日、欠場組のうち誰が戻れるのか
+    tier: 報道
+    telop: リヨン戦を欠いた4人のうち、監督が可能性を口にしたのは3人
+    say:
+      - text: リヨン戦を欠いたのは、冨安、ヘンダーソン、マテタ、チルウェルの計4人でした。
+        card: none
+      - 監督が「可能性はある」と言ったのは、冨安、マテタ、チルウェルの3人。
+      - ゴールキーパーのヘンダーソンの見通しは、「現時点ではわからない」でした。
+      - 冨安が出られれば、フォレスト戦とリヨン戦を欠いたあとの復帰戦になります。
+      - 答えが出るのは、18日の試合前のメンバー表です。
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/eng/20261017/2217481.html
+      - https://www.cpfc.co.uk/news/first-team/sage-reveals-expectations-focus-for-palace-v-brighton-rivalry/
+short_title: "冨安健洋、18日の復帰は。監督「期待はしているが、どうなるかはわからない」"

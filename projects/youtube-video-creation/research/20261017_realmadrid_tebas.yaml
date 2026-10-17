@@ -1,0 +1,134 @@
+# レアル、ラ・リーガ会長テバスの即時辞任を要求 の取材メモ（2026年10月17日・ショートだけ）
+# **重い話題**（ナチスの宣伝大臣への言及）。テバス会長の言葉とレアルの声明は原文（スペイン語）から訳し、言い換えない。煽らない。断定しない。
+# 取材: 2026-10-17。requests（ブラウザUA）で原文を読んだ。
+#   ・Marca 10/16「El tuit de Tebas que incendió al Madrid」……テバス会長のXの投稿の全文（スペイン語）を載せている。
+#   ・Marca 10/16「El CSD estudia actuar de oficio…」……EFE の報。CSD が職権で動くことを検討（"según pudo saber Efe"）。
+#   ・Marca 10/16「Tebas responde a la petición de dimisión…」……テバス会長の返答の全文。
+#   ・Marca 10/16「Tebas, posible actuación del CSD: no doy crédito…」……CSD の報へのテバス会長の返答と、本人が自分の言葉を引き直している箇所。
+#   ・レアル・マドリード公式サイト「Comunicado Oficial 16/10/2026」……**声明の原文を読んだ（一次情報）**。
+#   ・同 22/09/2026 の声明（比べるために読んだ。「辞任」の語は1つも無い。grep で確認）。
+#   控えは research/raw/20261017_marca_*.txt・20261017_realmadrid_comunicado.txt・20261017_realmadrid_comunicado_0922.txt。
+# 出来事の順（すべて16日・金曜）: テバス会長が X に投稿（記者2人に宛てた長い文）→ レアルが声明（その日の午後）で即時辞任を要求
+#   → テバス会長が返答（「あらゆるこれには名前がある。威嚇だ」）→ EFE が「CSD が職権で動くことを検討」と報道 → テバス会長が「信じられない」と返答。
+# テバス会長の投稿のうち、ゲッベルスに触れる一文（原文）:
+#   "Ese método recuerda a mecanismos de propaganda que explotó Goebbels, ministro de Propaganda de la Alemania nazi: repetición sistemática, construcción de un enemigo y subordinación de los hechos al relato. La comparación es con esas técnicas de propaganda, no con una ideología ni, por supuesto, con la afición madridista."
+#   **この2文は両方入れる**（後ろの1文を落とすと、言っていないことを言ったことになる。レアルの声明も「その説明がある」ことを前提にしている）。
+# レアル声明の原文（該当）:
+#   "El Real Madrid C. F. considera absolutamente intolerable y de extraordinaria gravedad que quien ocupa dos cargos de máxima responsabilidad en el fútbol español recurra a una comparación con los métodos de propaganda del régimen nazi…"
+#   "La aclaración de que no se refiere a la ideología nazi no atenúa el carácter profundamente ofensivo, moralmente repugnante e institucionalmente indigno de sus manifestaciones."
+#   "…el Real Madrid C. F. exige su dimisión inmediata como presidente de LaLiga y vicepresidente de la Real Federación Española de Fútbol."
+# テバス会長の返答（原文）: "Todo esto tiene un nombre: intimidación."（返答の最後の一文）。→ **台本には入れていない**（他人の声が半分を超えるのを避けるため。ショート60秒に収まらない）。
+# 確度: レアルの声明は公式サイトの原文まで辿った＝確定。テバス会長の投稿は Marca が全文を載せ、本人が後の投稿で同じ文を引き直している＝報道（X の原文は読んでいない）。
+#   CSD は EFE 経由の報（CSD 自身の発表は無い）＝報道。
+# 数字（自分で数えた）: レアルの前回の声明は 9月22日。10月16日までは **24日**（30−22＋16）。前回の声明には「辞任」の語が無く、今回は「即時辞任」。
+# 本人の言葉: 双方とも原文から訳した。訳は日本語で通るように語順を整えたが、語は足していない。
+# メディア名は台本で言わない。「現地の報道」「通信社の報道」と言う。
+# 反応: **0件**。当たった先: NO FOOTY NO LIFE の一覧（レアル・マドリー、10/17 昼）に今回の件の記事はまだ無かった。この題材はナチスへの言及を含み、
+#   匿名の書き込みを引くと煽る形になりやすいので、反応なしで出すのが適切と判断（ユーザー確認事項）。
+# 写真: 代理店は使わない。assets/images/20261017_tebas_resign_demand/（出典は credits.json）。
+slot: laliga
+date: "2026年10月17日"
+format: news
+no_main: true
+people: [ハビエル・テバス, レアル・マドリード]
+short_style: X
+short_hook_word: 即時辞任要求
+
+short_question: ラ・リーガ会長とレアルの対立は、どう決着すると思いますか。
+short_hook: レアル、ラ・リーガ会長に辞任を要求。
+short_telops:
+  - {match: 16日、レアルのクラブ放送, text: ラ・リーガ会長テバス/16日 レアルのクラブ放送についてXに投稿}
+  - {match: 利用した宣伝の仕組み, text: テバス会長の投稿/「宣伝の仕組みを思わせる」}
+  - {match: 敵をつくり上げること, text: テバス会長の投稿/「敵をつくり上げること」}
+  - {match: 思想ではない, text: 同じ投稿の続き/「思想ではない」}
+  - {match: 即時辞任を求めました, text: 同じ日 レアルが声明/「即時辞任」を要求}
+  - {match: 侮辱的, text: レアルの声明}
+  - {match: 絶対に容認できない, text: レアルの声明/「絶対に容認できない」}
+  - {match: 訴えを待たず, text: 国のスポーツ機関（CSD）/自ら動くことを検討と報道}
+  - {match: 9月22日の声明では, text: 9/22 レアルの声明/「辞任」の語は無かった}
+  - {match: 24日後, text: 24日後の16日/声明の結びは「即時辞任」の要求}
+  - {match: 結論は出ていません, text: 国の機関が動くのか/結論はまだ}
+
+theme:
+  id: realmadrid_tebas
+  league: spain
+  prefix: ""
+  title: レアル、ラ・リーガ会長テバスの即時辞任を要求。発端となったXの投稿とは
+  hook: ""
+  question: レアルは、なぜテバス会長の即時辞任を求めたのか
+  takeaway: レアルの前回の声明は9月22日。24日後の今回は、声明の結びが「即時辞任」の要求に変わった
+
+thumbnail:
+  layout: face
+  line1: レアル、テバス会長に
+  line2: 即時辞任を要求
+  tags: [レアル・マドリード, テバス会長, ラ・リーガ]
+  photo: assets/images/20261017_tebas_resign_demand/01_w.jpg
+  short_photo: assets/images/20261017_tebas_resign_demand/01_v.jpg
+
+answer: 発端はテバス会長のXの投稿。レアルが同日の声明で即時辞任を求めた
+watch: 評議会が実際に動くかは、まだ分かっていない
+
+sections:
+  - id: what
+    main: true
+    heading: 何が起きたか
+    tier: 報道
+    telop: テバス会長がレアルのクラブ放送をめぐり投稿
+    say:
+      - text: ラ・リーガのテバス会長が16日、レアルのクラブ放送についてXに投稿しました。
+        image: assets/images/20261017_tebas_resign_demand/01.jpg
+      - voice: テバス会長
+        text: その手法は、ナチス・ドイツの宣伝大臣ゲッベルスが
+      - voice: テバス会長
+        text: 利用した宣伝の仕組みを思わせる。体系的な繰り返し、
+        cont: true
+      - voice: テバス会長
+        text: 敵をつくり上げること、事実を物語に従わせることだ。
+        cont: true
+      - voice: テバス会長
+        text: 比べているのは、そうした宣伝の技術であり、思想ではない。
+      - voice: テバス会長
+        text: もちろん、レアルのファンでもない。
+        cont: true
+    official: false
+    sources:
+      - https://www.marca.com/futbol/real-madrid/2026/10/16/tuit-tebas-incendio-madrid-ese-metodo-recuerda-mecanismos-propaganda-nazi.html
+      - https://www.marca.com/futbol/primera-division/2026/10/16/tebas-posible-actuacion-csd-doy-credito-noticia.html
+
+  - id: statement
+    heading: レアルは同じ日、何と言ったか
+    tier: 確定
+    telop: レアルが声明。テバス会長の即時辞任を要求
+    say:
+      - 同じ日、レアルは声明を出し、テバス会長の即時辞任を求めました。
+      - 声明は、ナチスの宣伝手法に例えたことを、「絶対に容認できない」としています。
+      - voice: レアルの声明
+        text: ナチスの思想を指していないという説明は、
+      - voice: レアルの声明
+        text: 深く侮辱的で、道徳的に嫌悪すべき、
+        cont: true
+      - voice: レアルの声明
+        text: 制度的に品位を欠く発言の性格を和らげない。
+        cont: true
+    official: true
+    sources:
+      - https://www.realmadrid.com/es-ES/noticias/club/comunicados/comunicado-oficial-16-10-2026
+      - https://www.marca.com/futbol/real-madrid/2026/10/16/tebas-responde-peticion-dimision-real-madrid-esto-nombre-intimidacion.html
+
+  - id: view
+    viewpoint: true
+    heading: レアルの要求は、9月の声明から何が変わったか
+    tier: 報道
+    telop: 9/22の声明に「辞任」の語は無し。24日後に要求
+    say:
+      - レアルは9月22日の声明では、「辞任」という言葉を使っていませんでした。
+      - 24日後の今回は、声明の結びが、テバス会長への「即時辞任」の要求でした。
+      - 国のスポーツ機関が、訴えを待たず自ら動くことを検討していると報じられています。
+      - 国の機関が実際に動くのか、結論は出ていません。
+    official: false
+    sources:
+      - https://www.marca.com/futbol/primera-division/2026/10/16/csd-estudia-actuar-oficio-manifestaciones-tebas-sobre-real-madrid.html
+      - https://www.realmadrid.com/es-ES/noticias/club/comunicados/comunicado-oficial-22-09-2026
+      - https://www.realmadrid.com/es-ES/noticias/club/comunicados/comunicado-oficial-16-10-2026
+short_title: "レアル、ラ・リーガ会長テバスの即時辞任を要求。発端となったXの投稿とは"

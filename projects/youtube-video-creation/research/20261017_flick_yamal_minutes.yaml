@@ -1,0 +1,128 @@
+# 取材メモ（2026年10月17日）フリック監督、ヤマルの出場時間を問われて（ニュースのショート。見せ方 Y＝本人の一言から始める）
+# 取材: 2026-10-17。requests（ブラウザUA）で原文を読んだ。控えは research/raw/20261017_flick_*・20261017_fcb_*。
+#   ・Foot Mercato（16/10 23:18、フランス語）— 会見の発言を全文で引いている。本文を全部読んだ。発言はここから訳した。
+#   ・FC Barcelona 公式（英語）「Hansi Flick: 'Raphinha and De Jong can play'」— 同じ会見。ヤマルの発言が英語で載っている。意味は Foot Mercato と一致。
+#   ・FC Barcelona 公式の日程ページ — ベティス戦 10/17（土）現地18:30、PSG戦 10/20（火）21:00、レアル・マドリード戦 10/25（日）21:00（カンプ・ノウ）。
+#   ・FC Barcelona 公式「Spectacular September for Lamine Yamal」(9/30) — 9月のバルセロナでの成績。
+# 発言（フランス語の原文のまま訳した。言い換えない）:
+#   「Pour Lamine Yamal et la gestion de son temps de jeu, ce n'est pas facile de répondre, car on parle de Lamine Yamal. C'est un joueur spécial. On doit faire attention à son temps de jeu」
+#   「Le plus important pour lui, c'est d'être sur le terrain et de prendre du plaisir. Et c'est le cas en ce moment, donc je n'ai pas envie de casser sa dynamique. Mais je sais aussi qu'il faut gérer son temps de jeu.」
+#   台本には「Mais je sais aussi…」の文は入れていない（前の発言と同じ内容で、冒頭へ移した文のあとに『でも』で続けると意味が変わるため）。入れた文は原文の文をそのまま訳したもの。
+#   公式の英語版は「the important thing is that he enjoys playing… I don't want to interrupt that」で、意味は一致。
+#   dynamique＝勢い（題材の一覧には『リズム』とあったが、原文の語に合わせて『勢い』）。
+# 冒頭に出す発言（short_hook_quote）: 「彼にとっていちばん大事なのは、ピッチに立って楽しむことです。／いまはそれができているので、彼の勢いを壊したくありません。」
+# 確度: 会見の発言は 報道（Foot Mercato と クラブ公式サイトが同じ内容）。9月の成績はクラブ公式の記事（確定）。見立ての節は 背景。
+# 日付: 会見は10/16（Foot Mercato 23:18 掲載。クラブ公式は「13 hrs ago」＝前日の会見）。3試合は 17日・20日・25日（日程ページ）。17日→25日は8日差（記事の「8日間」と一致）。
+# 自分で数えた比べ（見立て）: 9月はバルセロナで5試合に出て、6ゴール6アシスト（クラブ公式）→12の得点関与（6＋6）。5試合すべてで2つ以上（クラブ公式の記述どおり）。
+#   9月は5試合 vs 今週は8日間で3試合。ベティス戦の3日後がPSG戦、その5日後がクラシコ（17→20＝3日、20→25＝5日）。
+# 昨日（10/16）の raphinha_dejong_return と同じ『3連戦』は触れるが、中身（ラフィーニャ・デ・ヨング）は別。数字（14得点・10連勝）は使わない。
+# 反応: 取れなかった。まとめ4サイト（ヤマル／フリック ヤマル／ヤマル 出場時間／フリック 会見／バルセロナ ベティス）を --find で探した。会見への書き込みは無い
+#   （『ヤマル 出場時間』は書き込みが読めない記事のみ、10連勝の記事は書き込みが取り出せなかった）。X は使っていない。→ 0件。approve は --no-voices で。
+# 写真: クラブ公式サイト（fcbarcelona.com）の記事の主写真。Maxppp（代理店）の Foot Mercato の写真は使わない。出典は credits.json。
+slot: la_liga
+date: "2026年10月17日"
+format: news
+no_main: true      # ニュースはショートだけ（2026-10-14）。締めで本編を案内しない
+people: [ラミン・ヤマル, バルセロナ]
+
+short_style: Y
+short_hook_quote: 彼にとっていちばん大事なのは、
+short_question: あなたは、ベティス戦のヤマルは先発すると思いますか。
+short_hook: フリック監督、ヤマルの出場時間を問われて。
+short_telops:
+  - {match: 出場時間を問われました, text: ベティス戦の前の会見/ヤマルの出場時間を問われる}
+  - {match: 答えるのは簡単ではありません, text: フリック監督/「答えるのは簡単ではない」}
+  - {match: 出場時間には注意, text: 「特別な選手」/「出場時間には注意」}
+  - {match: 6ゴール6アシスト, text: 9月/バルセロナで6ゴール6アシスト}
+  - {match: 2つ以上の得点に絡, text: 9月の5試合すべてで/2つ以上の得点に関与}
+  - {match: 8日間で3試合です, text: 9月は5試合/今回は8日間で3試合}
+  - {match: 3日後, text: ベティスの3日後/パリ・サンジェルマン戦}
+  - {match: その5日後, text: その5日後/レアル・マドリードとのクラシコ}
+  - {match: 現地18時30分, text: ベティス戦は/現地17日18時30分}
+
+theme:
+  id: flick_yamal_minutes
+  league: spain
+  league_name: ラ・リーガ
+  prefix: ""
+  title: バルサは8日で3試合。フリック監督のヤマルへの答え
+  hook: ""
+  question: 8日間で3試合のバルセロナで、フリック監督はヤマルの出場時間について何と語ったのか
+  takeaway: 9月のヤマルは1か月で5試合、今回は8日間で3試合。試合の間隔は3日と5日
+
+thumbnail:
+  line1: フリック監督
+  line2: ヤマルの出場時間を語る
+  tags: [ラミン・ヤマル, バルセロナ]
+  layout: face
+  photo: assets/images/20261017_flick_yamal/01.jpg
+  short_photo: assets/images/20261017_flick_yamal/01_v.jpg
+
+answer: 監督は『特別な選手だから注意が必要』と話し、『勢いを壊したくない』とも話した
+watch: 17日（現地18時30分）のベティス戦のヤマル
+
+sections:
+  - id: what
+    main: true
+    heading: 何が起きたか
+    tier: 報道
+    telop: ヤマルの出場時間を問われたフリック監督
+    say:
+      - 17日のベティス戦を前に、フリック監督はヤマルの出場時間を問われました。
+      - voice: フリック監督
+        text: ヤマルの出場時間の管理について、
+      - voice: フリック監督
+        text: 答えるのは簡単ではありません。
+        cont: true
+      - voice: フリック監督
+        text: ヤマルのことを話しているのですから。
+        cont: true
+      - voice: フリック監督
+        text: 特別な選手です。
+        cont: true
+      - voice: フリック監督
+        text: 出場時間には注意しなければなりません。
+        cont: true
+      - voice: フリック監督
+        text: 彼にとっていちばん大事なのは、
+        short_voice: true
+      - voice: フリック監督
+        text: ピッチに立って楽しむことです。
+        cont: true
+      - voice: フリック監督
+        text: いまはそれができているので、
+        cont: true
+      - voice: フリック監督
+        text: 彼の勢いを壊したくありません。
+        cont: true
+    official: false
+    sources:
+      - https://www.footmercato.net/a7880963895869718208-barca-hansi-flick-galere-pour-gerer-le-temps-de-jeu-de-lamine-yamal
+      - https://www.fcbarcelona.com/en/football/first-team/news/4593204/hansi-flick-raphinha-and-de-jong-can-play
+
+  - id: september
+    heading: 9月のヤマル
+    tier: 確定
+    telop: 9月のバルセロナで6ゴール6アシスト
+    say:
+      - ヤマルは9月、バルセロナの5試合で、6ゴール6アシストでした。
+      - 5試合すべてで、2つ以上の得点に絡んでいます。
+    official: true
+    sources:
+      - https://www.fcbarcelona.com/en/football/first-team/news/4584279/spectacular-september-for-lamine-yamal
+
+  - id: view
+    viewpoint: true
+    heading: 9月と今週を数える
+    tier: 背景
+    telop: 9月は5試合。今回は8日間で3試合
+    say:
+      - 見立てです。ヤマルが9月に出たのは、1か月で5試合。今回は、8日間で3試合です。
+      - ベティスの3日後が、パリ・サンジェルマン。
+      - その5日後が、レアル・マドリードとのクラシコです。
+      - ベティス戦は、現地17日の18時30分に始まります。
+    official: false
+    sources:
+      - https://www.fcbarcelona.com/en/football/first-team/schedule
+      - https://www.fcbarcelona.com/en/football/first-team/news/4584279/spectacular-september-for-lamine-yamal
+short_title: "バルサは8日で3試合。フリック監督のヤマルへの答え"

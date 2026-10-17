@@ -1,0 +1,110 @@
+# 田中碧のリーズ、ファルケ監督と2029年まで契約延長で大筋合意か の取材メモ（2026年10月17日・ショートだけ）
+# 取材: 2026-10-17。requests（ブラウザUA）で原文を読んだ。
+#   ・サッカーキング 10/17「田中碧在籍のリーズ、ファルケ監督との契約延長で原則合意か」（本文を全部読んだ）。
+#     元の報道は『ジ・アスレティック』。原文（NYT・有料）は403で読めない → 確度は「報道」。媒体名は言わず「イギリスのスポーツメディア」。
+#   ・サッカーキング 9/11（エバンスMDの言葉）。原文は BBC Sport。Soccer News（soccernews.com）が BBC Sport の言葉を英語のまま載せていたので、
+#     そちらの原文から訳した。Yorkshire Post（9/11）の英語の引用とも一致。
+#   ・サッカーキング 10/10（アーセナル戦の試合記事）・10/11（採点）。4試合連続先発・次の試合の相手を確かめた。
+#   控えは research/raw/20261017_tanaka_sk*.txt・20261017_farke_yp.txt・20261017_farke_sn.txt。
+# 日付: 報道は10/17。エバンスMDの発言は 2026-09-11（BBC Sport）。
+# 数字（記事どおり）: ファルケ49歳／2023年夏就任／23-24 昇格プレーオフ敗退／24-25 チャンピオンシップ優勝（プレミア復帰）／25-26 14位／今季 2勝3分け1敗の7位。
+# 自分で数えた比べ: 就任2023年夏→2029年まで＝6年。就任から3シーズンを終えて今季が4シーズン目（Yorkshire Post も "starting his fourth season" と書いている）。
+# 資料間のずれ: 記事は「原則合意」と「契約の構成は双方で大筋の合意」の両方を使う。台本は「原則合意」と「大筋の合意」を記事どおりに使い、「決まった」とは言わない。
+#   英語圏の古い記事（9月）は「現行契約は2027年夏まで」と書く。サッカーキングは「今シーズン限り」。同じこと。2029年は英語の資料では確かめられなかった（アスレティック経由の報道のみ）。
+# 本人の言葉: 田中碧・ファルケ監督本人の今回の言葉は、記事には無かった → 入れない。クラブ幹部（エバンスMD）の9月の言葉は、同じ契約延長についての発言なので使う。
+# 反応: 当たった先は NO FOOTY NO LIFE（海外の反応まとめ）の最新の一覧のみ。この報道への反応記事はまだ無かった（10/17 の昼）。X は個別URLが取れる題材ではない。→ 反応は0件。
+# 写真: 配信写真（Getty）は取り込まない。assets/images/20261017_tanaka_falke_2029/ はリーズ公式サイトの写真（06=試合後に拍手するファルケ監督、02=アーセナル戦の田中碧）。
+slot: japan
+date: "2026年10月17日"
+format: news
+no_main: true
+people: [田中碧, ダニエル・ファルケ, リーズ]
+short_style: X
+short_hook_word: 2029年まで
+
+short_question: ファルケ監督との契約延長は、リーズにとって正解だと思いますか。
+short_hook: 田中碧のリーズ、ファルケ監督と契約延長へ。
+short_telops:
+  - {match: 原則合意したようです, text: リーズとファルケ監督/原則合意か 新契約は2029年まで}
+  - {match: 大筋で合意, text: 契約の構成は大筋合意/正式な手続きはこれから}
+  - {match: 素晴らしい働き, text: クラブ幹部エバンス氏（9月）/「素晴らしい働き」}
+  - {match: 取り組んでいる, text: 「長期的にここに/いてほしい」}
+  - {match: 今シーズン限り, text: 現行の契約は/今季限り}
+  - {match: 2023年の夏, text: 就任は2023年夏/今季が4シーズン目}
+  - {match: 昇格プレーオフ, text: 1年目 昇格プレーオフ敗退/2年目 2部優勝}
+  - {match: 7位です, text: 昨季14位/今季は7位}
+  - {match: 4シーズン目です, text: 就任から3シーズン/いまは4シーズン目}
+  - {match: 6年になります, text: 2029年まで続けば/就任から6年}
+  - {match: 4試合連続, text: 田中碧/アーセナル戦まで4試合連続先発}
+  - {match: マンチェスター・ユナイテッド, text: 次は18日/ホームでマンU戦}
+
+theme:
+  id: tanaka_falke_2029
+  league: england
+  prefix: ""
+  title: 田中碧のリーズ、ファルケ監督と2029年まで契約延長で大筋合意か
+  hook: ""
+  question: リーズとファルケ監督の契約延長は、どこまで進んでいるのか
+  takeaway: ファルケ監督は就任から3シーズンを終え、いまが4シーズン目。契約が2029年まで続けば、2023年の就任から6年になる
+
+thumbnail:
+  layout: face
+  line1: ファルケ監督、2029年まで
+  line2: リーズが契約延長で大筋合意か
+  tags: [田中碧, リーズ, ファルケ監督]
+  photo: assets/images/20261017_tanaka_falke_2029/06.jpg
+  short_photo: assets/images/20261017_tanaka_falke_2029/06_v.jpg
+
+answer: 契約の構成は双方で大筋合意。正式な手続きはこれからで、新契約は2029年まで
+watch: 次は18日、ホームでマンチェスター・ユナイテッド戦
+
+sections:
+  - id: what
+    main: true
+    heading: 何が起きたか
+    tier: 報道
+    telop: リーズとファルケ監督が契約延長で原則合意か
+    say:
+      - 田中碧のリーズが、ファルケ監督と原則合意したようです。契約は2029年まで。
+      - 契約の構成は大筋で合意。正式な手続きはこれからです。
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/eng/20261017/2217547.html
+
+  - id: evans
+    heading: クラブ幹部は9月に何と言っていたか
+    tier: 報道
+    telop: クラブ幹部「長期的にここにいてほしい」
+    say:
+      - 9月、エバンス氏はファルケ監督についてこう話しました。
+      - voice: ロビー・エバンス氏
+        text: 端的に言えば、彼は素晴らしい働きをしてくれている。
+      - voice: ロビー・エバンス氏
+        text: 長期的にここにいてほしいと考えていて、いま取り組んでいる。
+        cont: true
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/eng/20260911/2203741.html
+      - https://www.soccernews.com/farke-and-leeds-aligned-over-contract-discussions/404734
+      - https://www.yorkshirepost.co.uk/sport/football/leeds-united/robbie-evans-on-why-leeds-united-are-taking-time-over-daniel-farkes-new-contract-9013144
+
+  - id: view
+    viewpoint: true
+    heading: ファルケ監督は、リーズで何を積み上げてきたか
+    tier: 報道
+    telop: 就任から3シーズン。2029年まで続けば6年
+    say:
+      - ファルケ監督の現行の契約は、今シーズン限りです。
+      - 就任したのは、2023年の夏でした。
+      - 1年目は2部の昇格プレーオフで敗れ、2年目は2部を制してプレミアに復帰しました。
+      - 昨季は14位。今季は6試合で2勝3分け1敗、7位です。
+      - 就任から3シーズンを終え、いまは4シーズン目です。
+      - 2029年まで続けば、就任から6年になります。
+      - 田中碧は、アーセナル戦まで、リーグ戦4試合連続で先発していました。
+      - 次は18日、ホームでマンチェスター・ユナイテッドと戦います。
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/eng/20261017/2217547.html
+      - https://www.soccer-king.jp/news/world/eng/20261010/2215180.html
+      - https://www.yorkshirepost.co.uk/sport/football/leeds-united/robbie-evans-on-why-leeds-united-are-taking-time-over-daniel-farkes-new-contract-9013144
+short_title: "田中碧のリーズ、ファルケ監督と2029年まで契約延長で大筋合意か"

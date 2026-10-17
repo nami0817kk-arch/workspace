@@ -1,0 +1,129 @@
+# 取材メモ（2026年10月17日）チェルシー主将リース・ジェームズ、ひざの手術（ニュースのショート。見せ方 Y＝本人の一言から始める。発言は監督）
+# 怪我の話なので、敬意を持った言い方にする。離脱期間・手術の部位は出典の言葉のまま（強めない）。
+# 取材: 2026-10-17。requests（ブラウザUA）で原文を読んだ。控えは research/raw/20261017_james_*・20261017_chelsea_*。
+#   ・Chelsea 公式「Injury update: Reece James」（10/16）— クラブの発表文。全文を読んだ。「successful minor knee surgery」。期間は書かれていない。
+#   ・Chelsea 公式「Xabi Alonso on managing 'emotional' away games…」「Alonso: We have a good mix of personalities and leaders here」— 同じ会見の公式記事。
+#       「15 goals scored in our opening six top-flight games」、「James set for a spell on the sidelines」。
+#   ・Sky Sports（10/16）— 会見のアロンソの発言を英語で載せている。全文を読んだ。「around three months」「out until 2027」は Sky の『it is understood』『our understanding』（報道）。
+#       アロンソ本人は「We don't set timelines, but he will be out for several weeks」。期間を区切っていない。
+#   ・The Guardian（10/16）— 『faces up to the absence of Reece James for three months after knee surgery』。守備は『joint-worst defensive record』。無失点の発言も載せている。本文を全部読んだ。
+#   ・サッカーキング（10/16 2217427）— クラブ発表の日本語。『軽度の手術』『復帰時期は未定』。今季はプレミア4試合・カラバオ2試合に出場。10日のボーンマス戦は欠場。
+# 発言（英語の原文のまま訳した。言い換えない）:
+#   「We wanted to be cautious and wait to know the result of the tests, but now the surgery has gone well and has been successful. Keep supporting him.」（Sky）
+#       → 冒頭に出す発言は『but now…』以降の2文（『でも』は落とした。残した部分は原文の文）。
+#   「We don't set timelines, but he will be out for several weeks.」（Sky）
+#   「You need a lot of clean sheets to win trophies. But you [also] need to score a lot of goals.」（Guardian。ジェームズ個人の話ではなく、チームの課題として話した発言。ジェームズの怪我の原因や影響とは言っていない）
+# 冒頭に出す発言（short_hook_quote）: 「いま、手術はうまくいき、成功しました。／彼を応援し続けてください。」
+# 確度: クラブの発表（手術・軽度・成功・期間なし）は 確定。アロンソの発言・約3か月・年明けは 報道。見立ての節は 背景。
+# 日付: クラブの発表は10/16朝（Guardian『Chelsea announced on Friday morning』）。会見は10/16。エバートン戦は17日（土）昼（現地）。
+# 自分で数えた比べ（見立て）: プレミア6試合で15得点 → 15÷6＝2.5点（クラブ公式の『15 goals in six games』）。守備は Guardian の『joint-worst』（失点数は自分で数えていない。言わない）。
+#   ジェームズの出場試合数（4/6）は台本に入れない（欠場の多さを強調する言い方になり、題にも答えないため）。出られなかった2試合の勝敗も比べない。
+# 昨日（10/16）の『チェルシーの今夏の移籍』のシリーズ回とは別の話。数字（移籍金・順位）は使わない。
+# 反応: 取れなかった。まとめ4サイト（ジェームズ チェルシー／リース・ジェームズ／ジェームズ 手術／チェルシー 主将）を --find で探した。今回の手術への書き込みは無い
+#   （『公開練習を欠席』の記事は書き込みが読めない。別人の手術の記事だけ）。X は使っていない。→ 0件。approve は --no-voices で。
+# 写真: Chelsea 公式サイト（chelseafc.com）の記事の主写真。ジェームズ（背番号24・キャプテンマーク）と、アロンソ監督（練習中・真剣な顔）。
+#   アロンソの笑顔の写真は怪我の話に合わないので外した。公式サイトの写真は配信写真由来の可能性があり、透かしは見えなかった。出典は credits.json。
+slot: premier
+date: "2026年10月17日"
+format: news
+no_main: true      # ニュースはショートだけ（2026-10-14）。締めで本編を案内しない
+people: [リース・ジェームズ, チェルシー]
+
+short_style: Y
+short_hook_quote: いま、手術はうまくいき
+short_question: あなたは、ジェームズ不在のチェルシーは守備を立て直せると思いますか。
+short_hook: チェルシー主将の離脱について。
+short_telops:
+  - {match: ひざの手術を受けました, text: チェルシー主将/ジェームズがひざの手術}
+  - {match: 軽度だったと発表, text: クラブが16日に発表/手術は軽度}
+  - {match: 期間を区切りません, text: アロンソ監督/「期間は区切らない」}
+  - {match: 数週間は離脱, text: 「数週間は離脱」}
+  - {match: 約3か月, text: クラブは復帰時期を示さず/報道は約3か月}
+  - {match: 無失点の試合がたくさん, text: アロンソ監督/「無失点の試合がたくさん必要」}
+  - {match: 点もたくさん, text: 「点もたくさん取る必要がある」}
+  - {match: 攻撃と守備を, text: チェルシーの/攻撃と守備を数字で見る}
+  - {match: 15点, text: プレミア6試合で/15点（1試合2.5点）}
+  - {match: 失点の多さ, text: 守備は/失点がリーグで最多タイ}
+  - {match: エバートン戦, text: 17日/エバートン戦}
+
+theme:
+  id: james_surgery
+  league: england
+  league_name: プレミアリーグ
+  prefix: ""
+  title: チェルシー主将の離脱。アロンソ監督が求めたこと
+  hook: ""
+  question: ジェームズが離脱するチェルシーに、アロンソ監督は何を求めたのか
+  takeaway: 攻撃はプレミア6試合で15点（1試合2.5点）。守備は失点がリーグで最も多いチームと並ぶ。監督は無失点も得点も求めた
+
+thumbnail:
+  line1: ジェームズが手術
+  line2: アロンソ監督が語ったこと
+  tags: [リース・ジェームズ, チェルシー]
+  layout: face
+  photo: assets/images/20261017_james_surgery/01.jpg
+  short_photo: assets/images/20261017_james_surgery/01_v.jpg
+
+answer: 守備で無失点を増やし、点も取ること。離脱は約3か月と報じられた
+watch: 17日のエバートン戦
+
+sections:
+  - id: what
+    main: true
+    heading: 何が起きたか
+    tier: 報道
+    telop: チェルシー主将ジェームズがひざの手術
+    say:
+      - チェルシーのキャプテン、リース・ジェームズが、ひざの手術を受けました。
+      - クラブは16日、練習中のけがで受けた手術は軽度だったと発表しました。
+      - 17日のエバートン戦を前に、アロンソ監督が話しました。
+      - voice: アロンソ監督
+        text: 私たちは、期間を区切りません。
+      - voice: アロンソ監督
+        text: ただ、数週間は離脱します。
+        cont: true
+      - voice: アロンソ監督
+        text: いま、手術はうまくいき、
+        short_voice: true
+      - voice: アロンソ監督
+        text: 成功しました。
+        cont: true
+      - voice: アロンソ監督
+        text: 彼を応援し続けてください。
+        cont: true
+      - クラブは復帰の時期を示さず、報道では離脱は約3か月です。
+    official: false
+    sources:
+      - https://www.chelseafc.com/en/news/article/injury-update-reece-james
+      - https://www.skysports.com/football/news/13599896/reece-james-chelsea-captain-out-for-around-three-months-after-minor-surgery-on-knee-injury-picked-up-in-training
+      - https://www.soccer-king.jp/news/world/eng/20261016/2217427.html
+
+  - id: request
+    heading: アロンソ監督が求めたこと
+    tier: 報道
+    telop: 「無失点の試合がたくさん必要。点もたくさん」
+    say:
+      - ジェームズが離れるなか、アロンソ監督はチームの課題も話しました。
+      - voice: アロンソ監督
+        text: トロフィーを勝ち取るには、無失点の試合がたくさん必要です。
+      - voice: アロンソ監督
+        text: でも、点もたくさん取る必要があります。
+        cont: true
+    official: false
+    sources:
+      - https://www.theguardian.com/football/2026/oct/16/premier-league-news-go-bananas-maresca-loving-fans-show-of-defiance-james-injury-blow-for-blues
+
+  - id: view
+    viewpoint: true
+    heading: 攻撃と守備を数える
+    tier: 背景
+    telop: プレミア6試合で15点。守備は失点が最多タイ
+    say:
+      - 見立てです。チェルシーの攻撃と守備を、数字で見ます。
+      - ジェームズが出た試合も含め、プレミア6試合で15点、1試合平均2.5点です。
+      - 一方で、失点の多さは、リーグで最も多いチームと並びます。
+    official: false
+    sources:
+      - https://www.chelseafc.com/en/news/article/xabi-alonso-on-managing-emotional-away-games-and-formation-flexibility
+      - https://www.theguardian.com/football/2026/oct/16/premier-league-news-go-bananas-maresca-loving-fans-show-of-defiance-james-injury-blow-for-blues
+short_title: "チェルシー主将の離脱。アロンソ監督が求めたこと"
