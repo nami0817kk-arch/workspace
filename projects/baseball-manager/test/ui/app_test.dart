@@ -101,7 +101,11 @@ void main() {
     await t.tap(find.byKey(const Key('act-train')));
     await t.pumpAndSettle();
     expect(find.byKey(const Key('recent')), findsOneWidget);
-    expect(find.textContaining('練習: 打撃経験点 +'), findsOneWidget);
+    expect(
+        find.byWidgetPredicate((w) =>
+            w is Text &&
+            RegExp(r'^練習(\(.+\))?: 打撃経験点 \+').hasMatch(w.data ?? '')),
+        findsOneWidget);
   });
 
   testWidgets('経験点が足りない能力の+1は押せない', (t) async {

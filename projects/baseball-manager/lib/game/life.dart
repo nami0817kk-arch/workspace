@@ -79,16 +79,53 @@ double injuryChance(Condition c, Plan a, [Set<Trait> traits = const {}]) =>
     (0.02 + c.fatigue / 100 * 0.15 + (a == Plan.special ? 0.10 : 0.0)) *
     injuryMultiplier(traits);
 
+/// 練習の出来。同じ練習でも、うまくいく日と失敗する日がある。
+enum Outcome {
+  bad('失敗', 0.4),
+  normal('', 1.0),
+  good('好調', 1.25),
+  great('大成功', 1.8);
+
+  const Outcome(this.label, this.multiplier);
+  final String label;
+
+  /// 貯まる経験点にかかる倍率。
+  final double multiplier;
+}
+
+/// 出来が決まる過ごし方(練習・特訓・練習試合・コーチ)。休養・交流・研究は毎回ふつう。
+bool hasOutcome(Plan a) =>
+    a == Plan.train || a == Plan.special || a == Plan.match || a == Plan.lesson;
+
+/// 出来を決める。特訓は振れ幅が大きい(失敗も大成功も多い)。
+/// 平均の倍率は1.0前後になるようにしてある(全体のバランスは変えない)。
+Outcome rollOutcome(Plan a, Random rng) {
+  if (!hasOutcome(a)) return Outcome.normal;
+  final r = rng.nextDouble();
+  final bad = a == Plan.special ? 0.20 : 0.12;
+  final great = a == Plan.special ? 0.10 : 0.08;
+  final good = 0.20;
+  if (r < bad) return Outcome.bad;
+  if (r < bad + great) return Outcome.great;
+  if (r < bad + great + good) return Outcome.good;
+  return Outcome.normal;
+}
+
 /// 1ターンの結果。能力は直接は上がらず、経験点が貯まる(衰える年だけ能力が直接下がる)。
 class TermResult {
   const TermResult(this.player, this.condition,
-      {this.gotInjured = false, this.exp = const {}});
+      {this.gotInjured = false,
+      this.exp = const {},
+      this.outcome = Outcome.normal});
   final Player player;
   final Condition condition;
   final bool gotInjured;
 
-  /// 今回貯まった経験点(種類ごと)。やる気の倍率はかけてある。
+  /// 今回貯まった経験点(種類ごと)。やる気と出来の倍率はかけてある。
   final Map<Category, int> exp;
+
+  /// 今回の出来(失敗・好調・大成功など)。
+  final Outcome outcome;
 }
 
 /// 1ターンを過ごす。年齢は進めない(年の終わりに `endOfYear`)。
@@ -111,7 +148,8 @@ TermResult playTerm(
     );
   }
   final e = effectOf(action);
-  final motiv = motivationOf(c.morale).expMultiplier;
+  final outcome = rollOutcome(action, rng);
+  final motiv = motivationOf(c.morale).expMultiplier * outcome.multiplier;
   final next = Map<Ability, int>.of(p.abilities);
   final gained = <Category, int>{};
   for (final a in abilitiesOf(p.role)) {
@@ -129,22 +167,30 @@ TermResult playTerm(
       next[a] = (p.of(a) + delta).clamp(0, abilityCap);
     }
   }
-  final hurt = rng.nextDouble() < injuryChance(c, action, p.traits) * share;
+  // 失敗した日は怪我もしやすい。
+  final hurt = rng.nextDouble() <
+      injuryChance(c, action, p.traits) *
+          share *
+          (outcome == Outcome.bad ? 1.5 : 1.0);
   final dFatigue = e.fatigue > 0
       ? (e.fatigue * fatigueMultiplier(p.traits) * share).round()
       : (e.fatigue * share).round();
-  final dMorale = e.morale > 0
+  var dMorale = e.morale > 0
       ? (e.morale * moraleGainMultiplier(p.traits) * share).round()
       : (e.morale * moraleLossMultiplier(p.traits) * share).round();
+  // 大成功は気持ちが上がり、失敗は疲れが増える。
+  if (outcome == Outcome.great) dMorale += (6 * share).round();
+  final extraFatigue = outcome == Outcome.bad ? (6 * share).round() : 0;
   return TermResult(
     p.copyWith(abilities: next),
     c.copyWith(
-      fatigue: c.fatigue + dFatigue,
+      fatigue: c.fatigue + dFatigue + extraFatigue,
       morale: c.morale + dMorale,
       injuredTerms: hurt ? 1 + rng.nextInt(2) : 0,
     ),
     gotInjured: hurt,
     exp: gained,
+    outcome: outcome,
   );
 }
 

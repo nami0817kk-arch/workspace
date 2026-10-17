@@ -209,9 +209,12 @@ class GameController extends ChangeNotifier {
       for (final c in Category.values)
         if ((g.lastGain[c] ?? 0) > 0) '${c.label}経験点 +${g.lastGain[c]}',
     ];
+    final o = g.lastOutcome.label.isEmpty
+        ? ''
+        : '(${g.lastOutcome.label}${g.lastOutcome == Outcome.bad ? '…' : '!'})';
     return gains.isEmpty
         ? '${actionLabel(a)}した'
-        : '${actionLabel(a)}: ${gains.join(' / ')}';
+        : '${actionLabel(a)}$o: ${gains.join(' / ')}';
   }
 
   /// 今回のできごとから、見せる価値のある節目を拾う。

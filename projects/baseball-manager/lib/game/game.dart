@@ -98,6 +98,7 @@ class Game {
   bool _wasTwoWay = false;
   final List<double> achievements = []; // 夏の大会ごとの実績
   final List<String> log = []; // 画面に出す出来事の記録
+  Outcome lastOutcome = Outcome.normal; // 直前のターンの出来(保存しない・画面の表示用)
   Map<Category, int> lastGain = const {}; // 直前のターンで貯まった経験点(保存しない・画面の表示用)
   Ending? ending;
 
@@ -159,6 +160,7 @@ class Game {
     final gained = wasInjured ? r.exp : _afterCast(action, f, r.exp);
     exp = exp.add(gained);
     lastGain = gained;
+    lastOutcome = wasInjured ? Outcome.normal : r.outcome;
     if (r.gotInjured) log.add('怪我をしてしまった。');
     if (isTournamentSlot(stage, slot)) _playSummer();
 

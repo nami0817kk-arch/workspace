@@ -31,6 +31,7 @@ double _gain(Plan act, {int n = 300}) {
 }
 
 void main() {
+  _outcomeTests();
   test('特訓は練習より伸びるが、疲れる', () {
     expect(_gain(Plan.special), greaterThan(_gain(Plan.train)));
     final t =
@@ -145,4 +146,72 @@ void main() {
     expect((q.fatigue, q.morale, q.injuredTerms), (12, 80, 1));
     expect(Condition.fromJson({}).morale, 50);
   });
+}
+
+void _outcomeTests() {
+  test('練習の出来: 失敗・好調・大成功がときどき出る。休養・交流・研究は毎回ふつう', () {
+    final seen = <Outcome, int>{};
+    for (var s = 0; s < 3000; s++) {
+      final o = rollOutcome(Plan.train, Random(s));
+      seen.update(o, (v) => v + 1, ifAbsent: () => 1);
+    }
+    for (final o in Outcome.values) {
+      expect(seen[o], greaterThan(0), reason: o.name);
+    }
+    expect(seen[Outcome.normal]!, greaterThan(seen[Outcome.good]!));
+    for (final p in [Plan.rest, Plan.social, Plan.study]) {
+      expect(hasOutcome(p), isFalse);
+      expect(rollOutcome(p, Random(1)), Outcome.normal);
+    }
+  });
+
+  test('出来の倍率の平均は1前後(全体のバランスを変えない)。特訓は振れ幅が大きい', () {
+    double mean(Plan p) {
+      var t = 0.0;
+      for (var s = 0; s < 8000; s++) {
+        t += rollOutcome(p, Random(s)).multiplier;
+      }
+      return t / 8000;
+    }
+
+    double spread(Plan p) {
+      final m = mean(p);
+      var t = 0.0;
+      for (var s = 0; s < 8000; s++) {
+        final d = rollOutcome(p, Random(s)).multiplier - m;
+        t += d * d;
+      }
+      return t / 8000;
+    }
+
+    expect(mean(Plan.train), inInclusiveRange(0.97, 1.10));
+    expect(mean(Plan.special), inInclusiveRange(0.97, 1.10));
+    expect(spread(Plan.special), greaterThan(spread(Plan.train)));
+  });
+
+  test('大成功は経験点が多く気持ちが上がり、失敗は少なく疲れが増える', () {
+    PlayTermResult find(Outcome want) {
+      for (var s = 0; s < 500; s++) {
+        final r = playTerm(_p(), const Condition(morale: 50), Plan.train,
+            Ability.power, Random(s));
+        if (r.outcome == want) return PlayTermResult(r, s);
+      }
+      fail('${want.name} が出ない');
+    }
+
+    final great = find(Outcome.great);
+    final bad = find(Outcome.bad);
+    final normal = find(Outcome.normal);
+    int total(TermResult r) => r.exp.values.fold(0, (a, b) => a + b);
+    expect(total(great.r), greaterThan(total(normal.r)));
+    expect(total(bad.r), lessThan(total(normal.r)));
+    expect(great.r.condition.morale, greaterThan(normal.r.condition.morale));
+    expect(bad.r.condition.fatigue, greaterThan(normal.r.condition.fatigue));
+  });
+}
+
+class PlayTermResult {
+  PlayTermResult(this.r, this.seed);
+  final TermResult r;
+  final int seed;
 }
