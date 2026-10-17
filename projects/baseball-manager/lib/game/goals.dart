@@ -1,0 +1,146 @@
+import 'career.dart';
+import 'player.dart';
+import 'records.dart';
+
+/// 今年の目標の種類。
+enum GoalKind { rounds, rank, battingAverage, homeRuns, era, wins }
+
+/// 年ごとの目標。大会(プロはシーズン)の成績で、達成かどうかが決まる。
+/// 達成すると経験点と気持ち、届かなくても少し気持ちが下がるだけ。
+class Goal {
+  Goal(this.kind, this.target, {this.achieved});
+
+  final GoalKind kind;
+
+  /// 目標の値。回戦・順位・本数・勝利数は整数、打率・防御率は小数。
+  final double target;
+
+  /// 判定済みなら達成したか。まだなら null。
+  bool? achieved;
+
+  String get text => switch (kind) {
+        GoalKind.rounds => '夏の大会で${target.round()}勝以上',
+        GoalKind.rank => '${target.round()}位以内',
+        GoalKind.battingAverage => '打率${fmtRate(target)}以上',
+        GoalKind.homeRuns => '本塁打${target.round()}本以上',
+        GoalKind.era => '防御率${fmtEra(target)}以下',
+        GoalKind.wins => '${target.round()}勝以上',
+      };
+
+  /// 成績が目標に届いたか。
+  bool judge(SeasonRecord r) => switch (kind) {
+        GoalKind.rounds => r.roundsWon >= target,
+        GoalKind.rank => r.rank != null && r.rank! <= target,
+        GoalKind.battingAverage => (r.line.battingAverage ?? 0) >= target,
+        GoalKind.homeRuns => r.line.homeRuns >= target,
+        GoalKind.era => r.line.era != null && r.line.era! <= target,
+        GoalKind.wins => r.line.wins >= target,
+      };
+
+  Map<String, dynamic> toJson() =>
+      {'kind': kind.name, 'target': target, 'achieved': achieved};
+
+  /// 項目を足すときは既定値を置く。
+  static Goal? fromJson(Object? j) {
+    if (j is! Map) return null;
+    final kind = GoalKind.values.where((k) => k.name == j['kind']).firstOrNull;
+    if (kind == null) return null;
+    return Goal(kind, (j['target'] as num?)?.toDouble() ?? 1,
+        achieved: j['achieved'] as bool?);
+  }
+}
+
+/// 達成したときの経験点(種類ごと)。段階が上がるほど増える。
+int goalRewardExp(Stage s) => switch (s) {
+      Stage.youth => 60,
+      Stage.juniorHigh => 80,
+      Stage.highSchool => 100,
+      Stage.pathChoice => 120,
+      Stage.pro => 150,
+      Stage.retired => 0,
+    };
+
+const goalRewardMorale = 18;
+const goalMissMorale = -5;
+
+/// 折れ線の表から、`x` の値を補間する(端は外側に伸ばさない)。
+double _interp(List<(double, double)> table, double x) {
+  if (x <= table.first.$1) return table.first.$2;
+  for (var i = 1; i < table.length; i++) {
+    if (x <= table[i].$1) {
+      final (x0, y0) = table[i - 1];
+      final (x1, y1) = table[i];
+      return y0 + (y1 - y0) * (x - x0) / (x1 - x0);
+    }
+  }
+  return table.last.$2;
+}
+
+// 総合評価ごとの、プロの1シーズンの平均成績(tool/balance と test/goals_test の実測)。
+const _hrTable = [
+  (30.0, 6.6),
+  (45.0, 11.3),
+  (60.0, 17.1),
+  (75.0, 23.8),
+  (90.0, 31.3)
+];
+const _winsTable = [
+  (30.0, 0.9),
+  (45.0, 4.6),
+  (60.0, 11.1),
+  (75.0, 16.5),
+  (90.0, 18.7)
+];
+const _eraTable = [
+  (30.0, 6.34),
+  (45.0, 5.05),
+  (60.0, 3.87),
+  (75.0, 2.82),
+  (90.0, 1.91)
+];
+const _avgTable = [
+  (30.0, 0.194),
+  (45.0, 0.229),
+  (60.0, 0.264),
+  (75.0, 0.301),
+  (90.0, 0.338)
+];
+
+/// その年の目標を決める。いまの総合評価 `ov` から、届くか届かないか五分五分ぐらいの高さにする。
+/// 回戦数は `rounds`(大会の全体の回戦数)を超えない。`pick` は種類を選ぶ乱数(0〜1)。
+Goal makeGoal({
+  required Stage stage,
+  required Role role,
+  required double ov,
+  required int rounds,
+  required double pick,
+}) {
+  double round(double v, double step) => (v / step).round() * step;
+  if (stage == Stage.pro) {
+    final rank = Goal(GoalKind.rank, ov >= 75 ? 2 : (ov >= 60 ? 3 : 4));
+    final bats = role != Role.pitcher;
+    final pitches = role != Role.batter;
+    final personal = <Goal>[
+      if (bats) ...[
+        Goal(GoalKind.battingAverage,
+            round(_interp(_avgTable, ov) + 0.003, 0.005)),
+        Goal(GoalKind.homeRuns,
+            _interp(_hrTable, ov).roundToDouble().clamp(3, 60)),
+      ],
+      if (pitches) ...[
+        Goal(GoalKind.era,
+            round((_interp(_eraTable, ov) + 0.1).clamp(1.8, 6.0), 0.05)),
+        Goal(GoalKind.wins,
+            _interp(_winsTable, ov).roundToDouble().clamp(3, 25)),
+      ],
+    ];
+    final all = [rank, ...personal];
+    return all[(pick * all.length).floor().clamp(0, all.length - 1)];
+  }
+  final target = (1 + (ov / 25).floor()).clamp(1, rounds).toDouble();
+  final roundsGoal = Goal(GoalKind.rounds, target);
+  if (role != Role.pitcher && pick >= 0.5) {
+    return Goal(GoalKind.battingAverage, ov >= 60 ? 0.300 : 0.250);
+  }
+  return roundsGoal;
+}

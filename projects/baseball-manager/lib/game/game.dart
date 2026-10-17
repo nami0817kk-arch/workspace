@@ -7,6 +7,7 @@ import 'exp.dart';
 import 'life.dart';
 import 'path.dart';
 import 'player.dart';
+import 'goals.dart';
 import 'life_log.dart';
 import 'records.dart';
 import 'season.dart';
@@ -77,6 +78,7 @@ class Game {
       .._wasTwoWay = role == Role.twoWay;
     g.overallHistory.add(overall(p).round());
     g._note('stage', '${stageNameOf(Stage.youth)}を始めた');
+    g._newGoal();
     return g;
   }
 
@@ -114,6 +116,9 @@ class Game {
 
   /// 年ごとの成績(大会・シーズン)。成績画面とエンディングに出す。
   final List<SeasonRecord> records = [];
+
+  /// 今年の目標。年の初めに決まり、大会(プロはシーズン)の成績で達成かどうかが決まる。
+  Goal? goal;
 
   /// 大会・シーズン最終月の作戦。その大会が終わると「堅実」に戻る。
   Tactic tactic = Tactic.steady;
@@ -376,6 +381,35 @@ class Game {
         _ => (team: 65, opponents: const [55, 60, 66, 72, 78]),
       };
 
+  /// 年の初めに、今年の目標を決める。
+  void _newGoal() {
+    if (phase == Phase.retired) return;
+    goal = makeGoal(
+      stage: stage,
+      role: player.role,
+      ov: overall(player),
+      rounds: _league.opponents.length,
+      pick: rng.nextDouble(),
+    );
+  }
+
+  /// 成績が出たら、目標を判定して、達成なら経験点と気持ちをもらう。
+  void _judgeGoal(SeasonRecord r) {
+    final g = goal;
+    if (g == null || g.achieved != null) return;
+    g.achieved = g.judge(r);
+    if (g.achieved!) {
+      final n = goalRewardExp(stage);
+      exp = exp.add({for (final c in Category.values) c: n});
+      condition =
+          condition.copyWith(morale: condition.morale + goalRewardMorale);
+      log.add('今年の目標「${g.text}」を達成! 経験点+$n(全種類)');
+    } else {
+      condition = condition.copyWith(morale: condition.morale + goalMissMorale);
+      log.add('今年の目標「${g.text}」には届かなかった。');
+    }
+  }
+
   /// 大会(アマチュア)またはシーズン(プロ)を行い、成績を残す。
   void _playSummer() {
     final l = _league;
@@ -426,7 +460,7 @@ class Game {
     if (league != null) {
       final titles =
           titlesOf(league.line, games: league.games, rank: league.rank);
-      records.add(SeasonRecord(
+      final rec = SeasonRecord(
         age: player.age,
         stage: stage,
         line: league.line,
@@ -435,7 +469,9 @@ class Game {
         rank: league.rank,
         titles: titles,
         rivalWon: rivalWon,
-      ));
+      );
+      records.add(rec);
+      _judgeGoal(rec);
       if (league.rank == 1) {
         championships++;
         log.add('リーグ優勝!');
@@ -449,14 +485,16 @@ class Game {
       }
     } else if (tournament != null) {
       achievements.add(ach);
-      records.add(SeasonRecord(
+      final rec = SeasonRecord(
         age: player.age,
         stage: stage,
         line: tournament.line,
         roundsWon: tournament.roundsWon,
         rounds: tournament.rounds,
         rivalWon: rivalWon,
-      ));
+      );
+      records.add(rec);
+      _judgeGoal(rec);
       if (tournament.champion) {
         championships++;
         log.add('夏の大会で優勝した!');
@@ -502,6 +540,7 @@ class Game {
       _draft();
     }
     _rotateCast(before);
+    _newGoal();
   }
 
   /// 段階が変わったら、仲間とコーチが替わる(高校で恋人が現れる)。
@@ -594,6 +633,7 @@ class Game {
         'records': [for (final r in records) r.toJson()],
         'lifeLog': [for (final e in lifeLog) e.toJson()],
         'tactic': tactic.name,
+        'goal': goal?.toJson(),
       };
 
   /// 項目を足すときは既定値を置く(既存セーブを壊さない)。
@@ -633,6 +673,7 @@ class Game {
     g.overallHistory.addAll(((j['overallHistory'] as List?) ?? const [])
         .map((e) => (e as num).toInt()));
     g.proStartAge = (j['proStartAge'] as num?)?.toInt();
+    g.goal = Goal.fromJson(j['goal']);
     g.tactic = Tactic.values
         .firstWhere((t) => t.name == j['tactic'], orElse: () => Tactic.steady);
     g.lifeLog.addAll([

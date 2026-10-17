@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:baseball_manager/game/career.dart';
 import 'package:baseball_manager/game/game.dart';
+import 'package:baseball_manager/game/goals.dart';
 import 'package:baseball_manager/game/life.dart';
 import 'package:baseball_manager/game/path.dart';
 import 'package:baseball_manager/game/player.dart';
@@ -778,5 +779,30 @@ void _rankTests() {
     }
     expect(find.byKey(const Key('tactic-picker')), findsNothing); // 秋
     expect(c.game!.tactic, Tactic.steady);
+  });
+
+  testWidgets('今年の目標: 画面に出て、達成すると「達成!」になる', (t) async {
+    final c = await _start(t);
+    c.newGame('テスト', Role.batter);
+    await t.pumpAndSettle();
+    expect(find.byKey(const Key('goal-row')), findsOneWidget);
+    expect(find.textContaining('今年の目標:'), findsOneWidget);
+    expect(find.text('挑戦中'), findsOneWidget);
+    expect(find.textContaining('達成すると 経験点+'), findsOneWidget);
+    c.admin((g) => g.goal = Goal(GoalKind.rounds, 0));
+    for (var i = 0; i < 2; i++) {
+      await t.tap(find.byKey(const Key('act-rest')));
+      await t.pumpAndSettle();
+      if (c.game!.phase == Phase.event) {
+        await t.tap(find.byKey(const Key('event-0')));
+        await t.pumpAndSettle();
+      }
+    }
+    while (find.byKey(const Key('milestone-ok')).evaluate().isNotEmpty) {
+      await t.tap(find.byKey(const Key('milestone-ok')));
+      await t.pumpAndSettle();
+    }
+    expect(find.text('達成!'), findsOneWidget);
+    expect(find.text('ごほうびをもらった'), findsOneWidget);
   });
 }

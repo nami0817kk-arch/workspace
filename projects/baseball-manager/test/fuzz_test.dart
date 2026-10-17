@@ -47,6 +47,9 @@ void _checkInvariants(Game g, String where) {
   }
   if (g.phase == Phase.event) expect(g.pendingEvent, isNotNull, reason: where);
   if (g.phase == Phase.retired) expect(g.ending, isNotNull, reason: where);
+  if (g.phase != Phase.retired) {
+    expect(g.goal, isNotNull, reason: '$where: 今年の目標');
+  }
   // 段階と年齢の対応
   if (g.phase != Phase.retired) {
     expect(g.stage, stageOf(p.age, turnedPro: g.turnedPro),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../game/calendar.dart';
 import '../game/career.dart';
 import '../game/exp.dart';
+import '../game/goals.dart';
 import '../game/game.dart';
 import '../game/life.dart';
 import '../game/path.dart';
@@ -231,6 +232,10 @@ class _StatusCard extends StatelessWidget {
               const SizedBox(width: 8),
               Text('${game.slot + 1}/${game.slotsInYear}'),
             ]),
+            if (game.goal != null) ...[
+              const SizedBox(height: 8),
+              _GoalRow(game: game),
+            ],
             const SizedBox(height: 10),
             Row(children: [
               const Icon(Icons.favorite, size: 18, color: Color(0xFFE57373)),
@@ -966,6 +971,59 @@ class _TacticPicker extends StatelessWidget {
         ]),
         const SizedBox(height: 4),
         Text(now.description, style: Theme.of(context).textTheme.bodySmall),
+      ]),
+    );
+  }
+}
+
+/// 今年の目標と、その状態。
+class _GoalRow extends StatelessWidget {
+  const _GoalRow({required this.game});
+  final Game game;
+
+  @override
+  Widget build(BuildContext context) {
+    final g = game.goal!;
+    final (label, color) = switch (g.achieved) {
+      null => ('挑戦中', const Color(0xFF1E88E5)),
+      true => ('達成!', const Color(0xFF2E9B3E)),
+      false => ('未達', const Color(0xFF78909C)),
+    };
+    final reward = goalRewardExp(game.stage);
+    return Container(
+      key: const Key('goal-row'),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.10),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: color.withValues(alpha: 0.35)),
+      ),
+      child: Row(children: [
+        Icon(Icons.flag, color: color, size: 20),
+        const SizedBox(width: 8),
+        Expanded(
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text('今年の目標: ${g.text}',
+                style: const TextStyle(fontWeight: FontWeight.bold)),
+            Text(
+              g.achieved == null
+                  ? '達成すると 経験点+$reward(全種類)・気持ち+$goalRewardMorale'
+                  : (g.achieved! ? 'ごほうびをもらった' : '来年また挑戦しよう'),
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ]),
+        ),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+          decoration: BoxDecoration(
+              color: color, borderRadius: BorderRadius.circular(10)),
+          child: Text(label,
+              style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold)),
+        ),
       ]),
     );
   }
