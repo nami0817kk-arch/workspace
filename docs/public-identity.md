@@ -50,6 +50,7 @@ Email Routing は受信専用で `info@` から送り返せない。屋号名義
 |---|---|---|
 | `kabu.dailyquarry.com` | kabu-agari-ranking（**2026-10-07 終了。終了案内のみ**） | `projects/kabu-agari-ranking/closed/` |
 | `kakaku.dailyquarry.com` | price-tracker | `projects/price-tracker/config.json` |
+| `tsuruhashi.dailyquarry.com` | tsuruhashi（iOS アプリ「つるはし採掘」のプライバシーポリシー・サポート・規約・app-ads.txt。2026-10-17 公開） | `.github/workflows/tsuruhashi-site.yml` |
 
 新しいサイトを公開するときは、`<名前>.dailyquarry.com` を Cloudflare Pages の
 カスタムドメインに足す。DNS は Cloudflare が自動で引くので、こちらの作業は
