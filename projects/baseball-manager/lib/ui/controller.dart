@@ -20,6 +20,9 @@ import 'labels.dart';
 const saveKey = 'baseball_manager_save_v1';
 const historyKey = 'baseball_manager_history_v1';
 const adminKey = 'baseball_manager_admin_v1';
+
+/// テスト用ビルド(`--dart-define=TEST_BUILD=true`)。管理者モードが最初からオンになる。
+const kTestBuild = bool.fromEnvironment('TEST_BUILD');
 const achievementsKey = 'baseball_manager_achievements_v1';
 
 enum MilestoneKind { draft, champion, trait, stage, title, achievement }
@@ -100,7 +103,7 @@ class SaveStore {
   Future<bool> loadAdmin() async {
     try {
       final p = await SharedPreferences.getInstance();
-      return p.getBool(adminKey) ?? false;
+      return p.getBool(adminKey) ?? kTestBuild;
     } catch (_) {
       return false;
     }

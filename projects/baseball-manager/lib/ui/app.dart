@@ -22,7 +22,7 @@ class _BaseballManagerAppState extends State<BaseballManagerApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: '野球育成',
+      title: kTestBuild ? '野球育成(テスト版)' : '野球育成',
       debugShowCheckedModeBanner: false,
       theme: _theme(Brightness.light),
       darkTheme: _theme(Brightness.dark),

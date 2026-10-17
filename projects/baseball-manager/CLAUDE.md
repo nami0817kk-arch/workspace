@@ -201,3 +201,7 @@ soccer-manager / soccer-career の野球版。**中核は「試合中の采配�
 - 一覧は `AchievementsScreen`（ホームの `achievements-open` / 設定の `settings-achievements`）。「すべてのデータを消す」で実績も消える。
 - 新しい実績を足すときは、`PlayerSnapshot` に必要な値があるか確認（無ければ default 付きで足す。互換性維持）。
 - UIテスト: 引退/諦めた直後は祝いダイアログが出るので、`_dismissMilestones(t)` で閉じてから操作する。
+
+## テスト版ビルド
+
+`flutter build web --release --no-web-resources-cdn --pwa-strategy=none --dart-define=TEST_BUILD=true` で、管理者モードが最初からオンの「テスト版」になる（`kTestBuild`）。通常ビルドの挙動は変わらない。
