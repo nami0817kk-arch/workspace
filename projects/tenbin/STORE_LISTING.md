@@ -73,3 +73,18 @@ Stack hiragana letters one by one and make Japanese words with the letters that 
 | 製品ID | 種類 | 表示名 | 説明 | 価格 |
 |---|---|---|---|---|
 | mojitsumi_remove_ads | 非消耗型 | 広告を消す / Remove Ads | 全画面広告が出なくなり、つづける・アイテムも動画なしで使えます / No full-screen ads; continue and items without videos | **ユーザーが決める**（仮に370円） |
+
+## App Store Connect のそのほかの欄（2026-10-17）
+
+| 欄 | 入れるもの |
+|---|---|
+| カテゴリ | 主: ゲーム、副: パズル。ゲームのサブカテゴリは「ワード」と「パズル」 |
+| 著作権 | 2026 つるはし社 |
+| サポート URL | https://mojitsumi.pages.dev/support.html |
+| マーケティング URL | https://mojitsumi.pages.dev/ （app-ads.txt をここのドメインで読ませる） |
+| プライバシーポリシー URL | https://mojitsumi.pages.dev/privacy.html |
+| 年齢区分 | ユーザーが答える（広告「あり」。ほかは無し。4+ の見込み） |
+| 価格 | 無料（課金アイテムの値段はユーザーが決める） |
+| 配信地域 | すべて（ゲームは日本語。英語の説明文にそう書いてある） |
+| バージョン | 1.0（ビルドは app/pubspec.yaml の 1.0.0+1） |
+| 審査メモ | docs/RELEASE.md の「審査に出すときに書くこと」をそのまま |
