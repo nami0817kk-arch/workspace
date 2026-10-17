@@ -52,7 +52,7 @@ button:focus-visible{outline:3px solid var(--accent2);outline-offset:2px}
 .substats{flex:0 0 auto;display:flex;justify-content:space-between;gap:8px;padding:0 12px 8px;background:var(--hud);color:#d9c8ad;font-size:12px}
 .substats b{color:var(--hud-ink);font-size:14px;font-weight:800;font-variant-numeric:tabular-nums}
 
-.stage{flex:0 0 auto;position:relative;height:clamp(280px,46dvh,440px);overflow:hidden;background:#000;touch-action:manipulation}
+.stage{flex:0 0 auto;position:relative;height:clamp(200px,32dvh,320px);overflow:hidden;background:#000;touch-action:manipulation}
 .stage canvas{display:block;width:100%;height:100%}
 .chip{position:absolute;top:8px;left:8px;background:rgba(15,10,6,.72);color:#fff;border-radius:12px;padding:5px 10px;font-size:12px;pointer-events:none;max-width:62%;backdrop-filter:blur(2px)}
 .chip b{font-size:14px}
@@ -115,14 +115,14 @@ button:focus-visible{outline:3px solid var(--accent2);outline-offset:2px}
 @keyframes tin{from{transform:translateY(-14px) scale(.96);opacity:0}}
 @keyframes tout{to{transform:translateY(-10px);opacity:0}}
 
-.adbar{flex:0 0 auto;padding:8px 12px 0;display:flex;gap:8px}
+.adbar{flex:0 0 auto;padding:6px 12px 0;display:flex;gap:8px}
 .adbar .adbtn{flex:1 1 auto;min-width:0}
 .bentobtn{flex:0 0 auto;border:0;border-radius:14px;padding:6px 12px;background:linear-gradient(135deg,#c9772c,#e8a44a);color:#fff;font-weight:800;font-size:14px;line-height:1.2;box-shadow:0 3px 0 rgba(110,60,20,.35);text-align:center}
 .bentobtn small{display:block;font-weight:500;font-size:11px;opacity:.95}
 .bentobtn:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(110,60,20,.35)}
 .bentobtn:disabled{opacity:.6}
 .bentochip{position:absolute;top:40px;right:22px;background:linear-gradient(135deg,#c9772c,#e8a44a);color:#fff;border-radius:12px;padding:4px 10px;font-size:13px;font-weight:800;pointer-events:none;display:none;box-shadow:0 0 0 2px rgba(255,255,255,.25)}
-.adbtn{width:100%;border:0;border-radius:14px;padding:9px 12px;background:linear-gradient(135deg,#5646c2,#7a66e8);color:#fff;font-weight:800;font-size:15px;display:flex;align-items:center;gap:10px;text-align:left;line-height:1.25;box-shadow:0 3px 0 rgba(40,30,110,.35)}
+.adbtn{width:100%;border:0;border-radius:14px;padding:8px 12px;background:linear-gradient(135deg,#5646c2,#7a66e8);color:#fff;font-weight:800;font-size:15px;display:flex;align-items:center;gap:10px;text-align:left;line-height:1.25;box-shadow:0 3px 0 rgba(40,30,110,.35)}
 .adbtn small{display:block;font-weight:500;font-size:12px;opacity:.92}
 .adbtn .play{flex:0 0 32px;height:32px;border-radius:50%;background:rgba(255,255,255,.22);display:grid;place-items:center}
 .adbtn:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(40,30,110,.35)}
@@ -130,10 +130,10 @@ button:focus-visible{outline:3px solid var(--accent2);outline-offset:2px}
 
 .panel:not([hidden]){animation:pin .22s ease-out both}
 @keyframes pin{from{opacity:0;transform:translateY(6px)}}
-.panelwrap{flex:1 1 auto;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:8px 12px 12px;overscroll-behavior:contain}
-.tabs{flex:0 0 auto;display:flex;background:var(--panel);border-top:1px solid var(--line);padding:4px 6px calc(4px + env(safe-area-inset-bottom,0px))}
-.tabs button{flex:1;border:0;background:transparent;border-radius:12px;padding:5px 0 3px;font-weight:800;font-size:12px;color:var(--muted);position:relative;display:flex;flex-direction:column;align-items:center;gap:1px}
-.tabs button svg{width:24px;height:24px}
+.panelwrap{flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:8px 12px 16px;overscroll-behavior:contain}
+.tabs{flex:0 0 auto;display:flex;background:var(--panel);border-top:1px solid var(--line);padding:3px 6px calc(3px + env(safe-area-inset-bottom,0px))}
+.tabs button{flex:1;border:0;background:transparent;border-radius:12px;padding:4px 0 2px;min-height:48px;font-weight:800;font-size:12px;color:var(--muted);position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0}
+.tabs button svg{width:22px;height:22px}
 .tabs button[aria-selected="true"]{color:var(--accent);background:var(--accent-soft)}
 .tabs .dot{position:absolute;top:3px;right:calc(50% - 22px);min-width:9px;height:9px;border-radius:5px;background:var(--bad);display:none;box-shadow:0 0 0 2px var(--panel)}
 
@@ -141,9 +141,9 @@ button:focus-visible{outline:3px solid var(--accent2);outline-offset:2px}
 .phead{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:2px 2px 8px}
 .phead h2{margin:0;font-size:15px}
 .seg{display:inline-flex;background:var(--panel2);border-radius:10px;padding:3px}
-.seg button{border:0;background:transparent;border-radius:8px;padding:4px 10px;font-size:13px;font-weight:800;color:var(--muted);min-width:44px}
+.seg button{border:0;background:transparent;border-radius:8px;padding:8px 12px;font-size:14px;font-weight:800;color:var(--muted);min-width:48px}
 .seg button[aria-pressed="true"]{background:var(--panel);color:var(--ink);box-shadow:var(--shadow)}
-.card{display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:10px;margin-bottom:8px;box-shadow:var(--shadow)}
+.card{display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:12px 10px;margin-bottom:10px;box-shadow:var(--shadow)}
 .card .ic{flex:0 0 48px;height:48px;border-radius:12px;background:var(--panel2);display:grid;place-items:center}
 .card .body{flex:1;min-width:0}
 .card .nm{font-weight:800;font-size:15px}
@@ -152,7 +152,7 @@ button:focus-visible{outline:3px solid var(--accent2);outline-offset:2px}
 .card .ds b{color:var(--ink)}
 .card.pick{border:2px solid var(--accent2);background:linear-gradient(180deg,var(--panel),var(--accent-soft))}
 .card.pick .ic{flex-basis:56px;height:56px}
-.buy{flex:0 0 auto;border:0;border-radius:12px;background:linear-gradient(180deg,var(--accent2),var(--accent));color:var(--accent-ink);font-weight:800;padding:7px 10px;min-width:92px;font-size:14px;line-height:1.25;box-shadow:0 3px 0 rgba(120,60,0,.35)}
+.buy{flex:0 0 auto;border:0;border-radius:12px;background:linear-gradient(180deg,var(--accent2),var(--accent));color:var(--accent-ink);font-weight:800;padding:8px 10px;min-width:100px;min-height:48px;font-size:15px;line-height:1.25;box-shadow:0 3px 0 rgba(120,60,0,.35)}
 .buy small{display:block;font-size:12px;font-weight:500}
 .buy:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(120,60,0,.35)}
 .buy:disabled{background:var(--panel2);color:var(--muted);box-shadow:none;cursor:default;transform:none}
