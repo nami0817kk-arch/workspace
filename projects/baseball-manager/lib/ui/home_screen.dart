@@ -6,6 +6,8 @@ import '../game/difficulty.dart';
 import '../game/player.dart';
 import 'art/avatar.dart';
 import 'art/scene.dart';
+import '../game/achievements.dart';
+import 'achievements_screen.dart';
 import 'controller.dart';
 import 'history.dart';
 import 'player_screen.dart';
@@ -126,6 +128,24 @@ class _HomeScreenState extends State<HomeScreen> {
             onPressed: () =>
                 widget.controller.newGame(name.text, role, difficulty),
             child: const Text('はじめる'),
+          ),
+          const SizedBox(height: 16),
+          Card(
+            child: ListTile(
+              key: const Key('achievements-open'),
+              leading:
+                  const Icon(Icons.military_tech, color: Color(0xFFE53935)),
+              title: const Text('実績'),
+              subtitle: Text(
+                  '${widget.controller.unlocked.length} / ${achievements.length} 解除'),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) =>
+                      AchievementsScreen(controller: widget.controller),
+                ),
+              ),
+            ),
           ),
           if (widget.controller.history.isNotEmpty) ...[
             const SizedBox(height: 32),

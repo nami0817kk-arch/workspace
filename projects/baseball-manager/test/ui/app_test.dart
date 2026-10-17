@@ -56,6 +56,14 @@ Game _until(bool Function(Game) stop, {int seed = 1, int? potential}) {
   return g;
 }
 
+/// 引退直後は実績などの祝いダイアログが出るので、閉じてから先へ進む。
+Future<void> _dismissMilestones(WidgetTester t) async {
+  while (find.byKey(const Key('milestone-ok')).evaluate().isNotEmpty) {
+    await t.tap(find.byKey(const Key('milestone-ok')));
+    await t.pumpAndSettle();
+  }
+}
+
 void main() {
   _rankTests();
   testWidgets('はじめの画面から選手を作ると、6歳の春から始まる', (t) async {
@@ -164,6 +172,7 @@ void main() {
     await t.tap(find.byKey(const Key('give-up-confirm')));
     await t.pumpAndSettle();
     expect(find.text('プロにはなれなかった'), findsOneWidget);
+    await _dismissMilestones(t);
     await t.tap(find.byKey(const Key('again')));
     await t.pumpAndSettle();
     expect(find.text('はじめる'), findsOneWidget);
@@ -336,6 +345,7 @@ void _rankTests() {
     await t.pumpAndSettle();
     expect(c.history, hasLength(1));
     expect(c.history.first.title, 'プロにはなれなかった');
+    await _dismissMilestones(t);
     await t.tap(find.byKey(const Key('again')));
     await t.pumpAndSettle();
     expect(find.text('殿堂(これまでの選手)'), findsOneWidget);
@@ -354,6 +364,7 @@ void _rankTests() {
     await t.pumpAndSettle();
     await t.tap(find.byKey(const Key('give-up-confirm')));
     await t.pumpAndSettle();
+    await _dismissMilestones(t);
     await t.tap(find.byKey(const Key('again')));
     await t.pumpAndSettle();
 
@@ -526,6 +537,7 @@ void _rankTests() {
     expect(find.text('年度別成績'), findsOneWidget);
     expect(find.text('獲得したタイトル'), findsNothing); // 無ければ出さない
     expect(c.history.first.summary, startsWith('大会通算'));
+    await _dismissMilestones(t);
     await t.tap(find.byKey(const Key('again')));
     await t.pumpAndSettle();
     expect(find.textContaining('大会通算'), findsOneWidget);
@@ -676,6 +688,7 @@ void _rankTests() {
     await t.pumpAndSettle();
     await t.tap(find.byKey(const Key('give-up-confirm')));
     await t.pumpAndSettle();
+    await _dismissMilestones(t);
     await t.tap(find.byKey(const Key('again')));
     await t.pumpAndSettle();
 
@@ -734,6 +747,7 @@ void _rankTests() {
     await t.tap(find.byKey(const Key('give-up-confirm')));
     await t.pumpAndSettle();
     expect(c.history, hasLength(1));
+    await _dismissMilestones(t);
     await t.tap(find.byKey(const Key('settings-open')));
     await t.pumpAndSettle();
     await t.tap(find.byKey(const Key('erase-all')));
@@ -820,5 +834,67 @@ void _rankTests() {
     await t.tap(find.byKey(const Key('player-open')));
     await t.pumpAndSettle();
     expect(find.text('むずかしい'), findsOneWidget); // 選手情報に出る
+  });
+
+  testWidgets('実績: 一生が終わると解除され、ダイアログとエンディングで知らせる。保存されて、ホームと一覧に出る', (t) async {
+    final c = await _start(t);
+    Game? g;
+    for (var s = 0; s < 80 && g == null; s++) {
+      final x = _until((g) => g.stage == Stage.pro && g.phase == Phase.term,
+          seed: s, potential: 100);
+      if (x.stage == Stage.pro) g = x;
+    }
+    c.adopt(g!);
+    await t.pumpAndSettle();
+    expect(c.unlocked, isEmpty);
+    await t.tap(find.byKey(const Key('retire')));
+    await t.pumpAndSettle();
+    await t.tap(find.byKey(const Key('retire-confirm')));
+    await t.pumpAndSettle();
+    // 実績解除のダイアログ(プロ入りは必ず含まれる)。
+    expect(find.text('実績解除!'), findsWidgets);
+    expect(find.textContaining('プロの舞台へ'), findsWidgets);
+    while (find.byKey(const Key('milestone-ok')).evaluate().isNotEmpty) {
+      await t.tap(find.byKey(const Key('milestone-ok')));
+      await t.pumpAndSettle();
+    }
+    expect(c.unlocked, contains('first-pro'));
+    expect(find.byKey(const Key('new-achievements')), findsOneWidget);
+    expect(c.newlyUnlocked.map((a) => a.id), contains('first-pro'));
+
+    // 次の一生では、解除済みのものはもう「新しい」に出ない。
+    await _dismissMilestones(t);
+    await t.tap(find.byKey(const Key('again')));
+    await t.pumpAndSettle();
+    expect(find.textContaining('解除'), findsWidgets); // 「n / 19 解除」
+    // 開き直しても残っている。
+    final c2 = GameController(rng: Random(5));
+    await t.pumpWidget(BaseballManagerApp(key: UniqueKey(), controller: c2));
+    await t.pumpAndSettle();
+    expect(c2.unlocked, contains('first-pro'));
+    await t.tap(find.byKey(const Key('achievements-open')));
+    await t.pumpAndSettle();
+    expect(find.byKey(const Key('achievements-count')), findsOneWidget);
+    expect(find.textContaining('解除した実績 '), findsOneWidget);
+    expect(find.byKey(const Key('ach-first-pro')), findsOneWidget);
+    expect(find.byIcon(Icons.check_circle), findsWidgets);
+    expect(find.byIcon(Icons.lock_outline), findsWidgets);
+  });
+
+  testWidgets('実績: 設定からも開け、「すべてのデータを消す」で実績も消える', (t) async {
+    final c = await _start(t);
+    c.unlocked = {'first-pro'};
+    await t.tap(find.byKey(const Key('settings-open')));
+    await t.pumpAndSettle();
+    await t.tap(find.byKey(const Key('settings-achievements')));
+    await t.pumpAndSettle();
+    expect(find.byKey(const Key('ach-first-pro')), findsOneWidget);
+    await t.pageBack();
+    await t.pumpAndSettle();
+    await t.tap(find.byKey(const Key('erase-all')));
+    await t.pumpAndSettle();
+    await t.tap(find.byKey(const Key('erase-confirm')));
+    await t.pumpAndSettle();
+    expect(c.unlocked, isEmpty);
   });
 }

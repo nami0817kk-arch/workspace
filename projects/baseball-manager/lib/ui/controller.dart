@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/foundation.dart' hide Category;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../game/achievements.dart';
 import '../game/difficulty.dart';
 import '../game/exp.dart';
 import '../game/career.dart';
@@ -11,6 +12,7 @@ import '../game/game.dart';
 import '../game/life.dart';
 import '../game/path.dart';
 import '../game/player.dart';
+import '../game/snapshot.dart';
 import '../game/tactics.dart';
 import 'history.dart';
 import 'labels.dart';
@@ -18,8 +20,9 @@ import 'labels.dart';
 const saveKey = 'baseball_manager_save_v1';
 const historyKey = 'baseball_manager_history_v1';
 const adminKey = 'baseball_manager_admin_v1';
+const achievementsKey = 'baseball_manager_achievements_v1';
 
-enum MilestoneKind { draft, champion, trait, stage, title }
+enum MilestoneKind { draft, champion, trait, stage, title, achievement }
 
 /// 人生の節目。ダイアログで大きく見せる。
 class Milestone {
@@ -68,6 +71,29 @@ class SaveStore {
       final p = await SharedPreferences.getInstance();
       await p.setString(
           historyKey, jsonEncode([for (final e in h) e.toJson()]));
+    } catch (_) {}
+  }
+
+  Future<Set<String>> loadAchievements() async {
+    try {
+      final p = await SharedPreferences.getInstance();
+      return (p.getStringList(achievementsKey) ?? const []).toSet();
+    } catch (_) {
+      return {};
+    }
+  }
+
+  Future<void> saveAchievements(Set<String> ids) async {
+    try {
+      final p = await SharedPreferences.getInstance();
+      await p.setStringList(achievementsKey, ids.toList()..sort());
+    } catch (_) {}
+  }
+
+  Future<void> clearAchievements() async {
+    try {
+      final p = await SharedPreferences.getInstance();
+      await p.remove(achievementsKey);
     } catch (_) {}
   }
 
@@ -127,7 +153,14 @@ class GameController extends ChangeNotifier {
   /// 管理者モード(素質・特性・コツなどを自由に編集できる)。端末ごとに覚える。
   bool adminMode = false;
 
+  /// 解除した実績の id(何度遊んでも残る)。
+  Set<String> unlocked = {};
+
+  /// 直前の一生で、新しく解除した実績。エンディングに出す。
+  List<Achievement> newlyUnlocked = const [];
+
   Future<bool> loadSaved() async {
+    unlocked = await store.loadAchievements();
     adminMode = await store.loadAdmin();
     history = await store.loadHistory();
     final j = await store.load();
@@ -144,6 +177,7 @@ class GameController extends ChangeNotifier {
 
   void newGame(String name, Role role,
       [Difficulty difficulty = Difficulty.normal]) {
+    newlyUnlocked = const [];
     game = Game.newGame(
         difficulty: difficulty,
         name: name.trim().isEmpty ? '名無し' : name.trim(),
@@ -255,6 +289,23 @@ class GameController extends ChangeNotifier {
     }
   }
 
+  /// 一生が終わったとき、新しい実績を解除して保存し、ダイアログで知らせる。
+  void _unlockAchievements(Game g) {
+    final earned = earnedBy(PlayerSnapshot.fromGame(g));
+    final fresh = [
+      for (final a in achievements)
+        if (earned.contains(a.id) && !unlocked.contains(a.id)) a,
+    ];
+    newlyUnlocked = fresh;
+    if (fresh.isEmpty) return;
+    unlocked = {...unlocked, ...fresh.map((a) => a.id)};
+    store.saveAchievements(unlocked);
+    for (final a in fresh) {
+      pending.add(Milestone(
+          MilestoneKind.achievement, '実績解除!', '${a.title}\n${a.description}'));
+    }
+  }
+
   /// 見せ終わった節目を1つ取り除く。
   void dismissMilestone() {
     if (pending.isNotEmpty) pending.removeAt(0);
@@ -304,10 +355,13 @@ class GameController extends ChangeNotifier {
   Future<void> eraseAll() async {
     game = null;
     history = const [];
+    unlocked = {};
+    newlyUnlocked = const [];
     recent = const [];
     pending.clear();
     await store.clear();
     await store.clearHistory();
+    await store.clearAchievements();
     notifyListeners();
   }
 
@@ -324,6 +378,7 @@ class GameController extends ChangeNotifier {
       g.archived = true;
       history = [HistoryEntry.of(g), ...history].take(historyLimit).toList();
       store.saveHistory(history);
+      _unlockAchievements(g);
     }
     notifyListeners();
     if (g != null) store.save(g.toJson());

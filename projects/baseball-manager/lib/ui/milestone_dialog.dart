@@ -17,12 +17,17 @@ class MilestoneDialog extends StatelessWidget {
             Icons.workspace_premium,
             const Color(0xFFD4AF37)
           ),
+        MilestoneKind.achievement => (
+            Icons.military_tech,
+            const Color(0xFFE53935)
+          ),
       };
 
   bool get _celebrate =>
       milestone.kind == MilestoneKind.draft ||
       milestone.kind == MilestoneKind.champion ||
-      milestone.kind == MilestoneKind.title;
+      milestone.kind == MilestoneKind.title ||
+      milestone.kind == MilestoneKind.achievement;
 
   @override
   Widget build(BuildContext context) {

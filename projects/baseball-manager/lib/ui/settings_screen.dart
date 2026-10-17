@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../game/game.dart';
+import '../game/achievements.dart';
+import 'achievements_screen.dart';
 import 'admin_screen.dart';
 import 'controller.dart';
 import 'home_screen.dart' show showHelp;
@@ -51,6 +53,19 @@ class SettingsScreen extends StatelessWidget {
                           : null,
                     ),
                   const Divider(),
+                  ListTile(
+                    key: const Key('settings-achievements'),
+                    leading: const Icon(Icons.military_tech),
+                    title: const Text('実績'),
+                    subtitle: Text(
+                        '${controller.unlocked.length} / ${achievements.length} 解除'),
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (_) =>
+                            AchievementsScreen(controller: controller),
+                      ),
+                    ),
+                  ),
                   ListTile(
                     key: const Key('settings-help'),
                     leading: const Icon(Icons.help_outline),

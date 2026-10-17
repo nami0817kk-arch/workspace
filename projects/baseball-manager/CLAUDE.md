@@ -193,3 +193,11 @@ soccer-manager / soccer-career の野球版。**中核は「試合中の采配�
   出来事で能力を直接足すときは `_gain`（役割に無い能力は足さない。ランダムプレイの検査が、投手に打者の能力が付く不具合を見つけた）。
 - **難しさ**（`Difficulty`、`difficulty.dart`）: はじめに選ぶ（やさしい / ふつう / むずかしい）。経験点の倍率とドラフトの合格ラインが変わる。その選手の一生ずっと変わらない。
   `dart run tool/balance.dart 500 hard` で分布を見る。2026-10-17 の実測（プロ入り）: やさしい 65〜78% / ふつう 38〜50% / むずかしい 17〜24%。
+
+## 実績（一生を通した達成の記録）
+
+- `lib/game/achievements.dart` に19個。判定は `PlayerSnapshot` に対する述語（`earnedBy`）で、**引退時**に一括で解除する。
+- 解除済みは `SaveStore` の `achievements` キーに保存（端末単位）。引退直後に `Milestone(achievement)` のダイアログと、エンディングの `new-achievements` カードで知らせる。
+- 一覧は `AchievementsScreen`（ホームの `achievements-open` / 設定の `settings-achievements`）。「すべてのデータを消す」で実績も消える。
+- 新しい実績を足すときは、`PlayerSnapshot` に必要な値があるか確認（無ければ default 付きで足す。互換性維持）。
+- UIテスト: 引退/諦めた直後は祝いダイアログが出るので、`_dismissMilestones(t)` で閉じてから操作する。

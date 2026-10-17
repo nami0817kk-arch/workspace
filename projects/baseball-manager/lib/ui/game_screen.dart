@@ -847,6 +847,35 @@ class EndingView extends StatelessWidget {
               const SizedBox(height: 4),
               Text(e.madePro ? 'プロで${e.proYears}年間プレーした。' : 'プロの舞台には立てなかった。'),
               const SizedBox(height: 16),
+              if (controller.newlyUnlocked.isNotEmpty) ...[
+                Card(
+                  key: const Key('new-achievements'),
+                  color: Theme.of(context).colorScheme.tertiaryContainer,
+                  child: Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('新しく解除した実績',
+                              style: Theme.of(context).textTheme.titleSmall),
+                          const SizedBox(height: 6),
+                          for (final a in controller.newlyUnlocked)
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 2),
+                              child: Row(children: [
+                                const Icon(Icons.military_tech,
+                                    color: Color(0xFFE53935), size: 20),
+                                const SizedBox(width: 6),
+                                Expanded(
+                                    child:
+                                        Text('${a.title} ― ${a.description}')),
+                              ]),
+                            ),
+                        ]),
+                  ),
+                ),
+                const SizedBox(height: 8),
+              ],
               Card(
                 child: Padding(
                   padding: const EdgeInsets.all(12),

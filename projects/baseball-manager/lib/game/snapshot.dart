@@ -2,6 +2,7 @@ import 'career.dart';
 import 'difficulty.dart';
 import 'game.dart';
 import 'life_log.dart';
+import 'path.dart';
 import 'player.dart';
 import 'records.dart';
 import 'traits.dart';
@@ -25,6 +26,8 @@ class PlayerSnapshot {
     this.rivalWins = 0,
     this.rivalLosses = 0,
     this.difficulty = Difficulty.normal,
+    this.married = false,
+    this.route,
   });
 
   final String name;
@@ -46,6 +49,12 @@ class PlayerSnapshot {
   final int rivalLosses;
   final Difficulty difficulty;
 
+  /// 引退時に恋人と結婚していたか。
+  final bool married;
+
+  /// 選んだ進路(大学・社会人)。選んでいなければ null。
+  final Course? route;
+
   int of(Ability a) => abilities[a] ?? 0;
 
   factory PlayerSnapshot.fromGame(Game g) => PlayerSnapshot(
@@ -65,6 +74,8 @@ class PlayerSnapshot {
         rivalWins: g.cast.rivalWins,
         rivalLosses: g.cast.rivalLosses,
         difficulty: g.difficulty,
+        married: g.ending?.married ?? false,
+        route: g.route,
       );
 
   Map<String, dynamic> toJson() => {
@@ -84,6 +95,8 @@ class PlayerSnapshot {
         'rivalWins': rivalWins,
         'rivalLosses': rivalLosses,
         'difficulty': difficulty.name,
+        'married': married,
+        'route': route?.name,
       };
 
   /// 項目を足すときは既定値を置く(殿堂の古い記録を壊さない)。
@@ -124,6 +137,8 @@ class PlayerSnapshot {
       rivalWins: (j['rivalWins'] as num?)?.toInt() ?? 0,
       rivalLosses: (j['rivalLosses'] as num?)?.toInt() ?? 0,
       difficulty: Difficulty.parse(j['difficulty']),
+      married: (j['married'] as bool?) ?? false,
+      route: Course.values.where((c) => c.name == j['route']).firstOrNull,
     );
   }
 }
