@@ -1,0 +1,680 @@
+# ジネディーヌ・ジダン（元フランス代表・現フランス代表監督）の紹介。シリーズ「レジェンドの紹介」の試験1本目（2026-10-17 ユーザー決定）。
+# 引退した選手向けの8節の型：①フック ②基礎DATA ③歩んできた道と転機 ④プレースタイル（＋通算の表） ⑤あの試合 ⑥引退後・いま ⑦マル秘話 ⑧見立て。
+# **FotMob は使わない**。レーダー・シュートマップ・パーセンタイルは出さない。数字は基本の数と、自分で割った1試合あたり。Transfermarkt は2ページだけ（プロフィールの確認。成績表は JS で読めなかった）。
+#
+# **数字・出来事の出どころ（読んだもの）と確度**
+# - AFP 配信（Le Quotidien／L'essentiel 2026-07-28、franceinfo la1ere 2026-07-28）：フランス代表監督の発表（28日）、任期4年、デシャンの後任、本人の言葉「L'équipe de France, c'est la seule chose que je voulais faire」「C'est une continuité, quelque part un rêve」「refusées pour l'équipe de France」、
+#   CL3連覇は監督として「inédit」、代表108試合。→ 報道。FFF 公式（fff.fr）は 403 で読めなかった。
+# - ESPN（site.api.espn.com の試合記録）：フランス代表の4試合（9/25 トルコ 1-0 ・9/28 ベルギー 1-0 ・10/2 イタリア 1-1 ・10/5 ベルギー 4-1）、ムバッペ54分、次の日程（11/12 イタリア戦・11/15 トルコ戦）。
+#   決勝の得点者の時刻（1998・2002・2006）も突き合わせた（下の食い違いを見よ）。→ 報道（統計の出どころ）。
+# - 大会組織委員会の公式記録 france98.com（Wayback 2001-04-14 保存）：1998年決勝 ブラジル0-3フランス、ジダン27分と前半ロスタイム、プティ。→ 確定（大会の公式記録）。
+# - Real Madrid 公式（realmadrid.com 殿堂の頁・fr）：公式戦227試合49得点、6タイトル、2001年7月加入、加入時の言葉「Je voulais gagner la Coupe d'Europe, et je voulais le faire avec le Real Madrid」。→ 確定。
+# - Girondins 公式（girondins.com 2026 誕生日の記事）：ボルドー4季179試合13アシスト39得点、1995/96 インタートト・UEFAカップ決勝。→ 確定。
+# - Juventus 公式（juventus.com/hall-of-fame）：殿堂の最初の50人に Zidane。日付は Inside World Football 2025-09-11 と club の記事（2025-09-09 付とされる）。→ 確定（名簿）／報道（日付）。
+# - The Observer 2004-04-04（Andrew Hussey「ZZ top」。Guardian のアーカイブ）：本人の言葉（父・ラ・カステラーヌ・98年の「何も持たない家族」）、ジャケの評、カンヌの掃除係。→ 報道。
+# - ESPN Soccernet 2010-03-01（Wayback）：El País に答えた本人の言葉（2006年の決勝のあと）。→ 報道。
+# - Goal.com 2014-11-12（Wayback）：マラドーナについての本人の言葉。→ 報道。
+# - FourFourTwo（Yahoo Sports 配信 2026-06-27）：ジョルカエフの回想（1998決勝の2本目のコーナー）。→ 報道。記事は決勝のスコアを「3-1」と誤記している（実際は3-0）ので、逸話だけを使い数字は使わない。
+# - Transfermarkt（プロフィール1ページ）：1972-06-23・マルセイユ・1.85m・代表108試合31得点・現職＝フランス代表監督。→ 報道。
+# - 英語版 Wikipedia（本文・Honours・Career statistics）：上の出典で確かめられないものの背景（2006年決勝の経緯、出場停止、ゴールデンボール、ルーレット、受賞歴）。→ 背景。
+# - クラブ別のリーグ戦の試合・得点は、英・西・仏の3つの Wikipedia が一致（61/6・139/28・151/24・155/37）。**全大会の試合数は出典で割れる**ので表には出さない（食い違いを見よ）。
+#
+# **食い違いと台本での扱い**
+# - 1998年決勝の得点の時刻：大会公式記録＝ジダン27分・前半ロスタイム（記録上は46分の表記）／英語版 Wikipedia＝27分・45+1分／ESPN＝28分・45+2分。プティは公式記録「92分」・Wikipedia 90+3分・ESPN 90+1分。
+#   → 台本は大会公式記録の27分と「前半のロスタイム」に従い、「記録によって1分ほど違います」と断る。プティの時刻は言わず「試合終了間際」とする。
+# - ジダンの全大会の試合数：レアル＝英Wikipedia の表の合計230／季の合計231／西Wikipedia 227／クラブ公式227。ユヴェントス＝214と212。カンヌ＝71と70。→ 表はリーグ戦だけ（3つの Wikipedia が一致）、全大会はクラブ公式のある2つ（ボルドー179/39・レアル227/49）だけ語る。
+# - 2006年決勝で侮辱された家族：本人は2010年に「母」と語る（ESPN）／英語版 Wikipedia は「姉妹」（マテラッツィの発言として後に明かされた）。→ 台本では誰が何を言ったかに触れない。本人の謝罪の言葉（控室）だけを使う。
+# - 退場の回数：英Wikipedia 14回／仏Wikipedia 16回。→ 言わない。
+# - プロデビューの年齢：Wikipedia の日付（1989-05-18）からは16歳／Real Madrid 公式は「17歳でカンヌのトップ」。→ 年齢は言わず「1989年、まだ10代」。
+# - 凱旋のシャンゼリゼの人数：ジダンの記事「100万人超」／決勝の記事「数十万人」。→ 人数は言わない。
+# - 1998決勝の最初のコーナーの側：ジョルカエフは「左がプティ、右がジダン」と言い、Wikipedia は「プティが右から」。→ 側は言わない。
+# - 就任の効力：英Wikipedia＝契約は9月1日から／search の要約は8月1日（未確認）。FFF 公式が読めない。→ 発表日（7月28日）だけ言う。
+# - 移籍金：クラブ公式は金額を出さない。Wikipedia は1500億リラ＝約7750万ユーロ（当時の世界記録）。→ 「当時の世界最高額」とだけ言い、金額は出さない（為替で変わる）。
+# - ESPN の2002年決勝は会場が BayArena になっている（実際はグラスゴーのハムデン・パーク）→ 会場は言わない。
+#
+# **自分で数えた比べ（見立て）**
+# - CL決勝：選手＝1997（ユヴェントス 1-3 ドルトムント）負け・1998（0-1 レアル）負け・2002（レアル 2-1 レバークーゼン）勝ち＝3回で1勝2敗。監督＝2016（アトレティコにPK戦）・2017（ユヴェントスに4-1、ESPN）・2018（リバプールに3-1）＝3回で3勝。
+# - 国内リーグ優勝：選手＝セリエA 1996-97・97-98＋リーガ 2002-03＝3回／監督＝リーガ 2016-17・2019-20＝2回。
+# - 1試合あたりの得点（リーグ戦）：カンヌ 6÷61＝0.10／ボルドー 28÷139＝0.20／ユヴェントス 24÷151＝0.16／レアル 37÷155＝0.24。フランス代表 31÷108＝0.29（親善試合を含む全試合）。
+# - 通算：クラブのリーグ戦 61+139+151+155＝506試合・6+28+24+37＝95得点。
+# - 今季（フランス代表監督として）4試合：9/25 トルコ 1-0 ・9/28 ベルギー 1-0 ・10/2 イタリア 1-1 ・10/5 ベルギー 4-1＝3勝1分。
+# - 決勝の2発から28年：1998年7月→2026年7月。
+#
+# **入れなかったもの**：私生活（結婚・子ども）、カタール大使の件、「ブラックバーンのオーナーの発言」「ニューカッスルに断られた」（古い逸話で出典が代理人談・Wikipedia 経由のみ）、
+#   エリヌー家に預けられた話（Wikipedia の注の出典＝Observer を読んだが載っていなかった）、マテラッツィへの謝罪拒否（相手のある話で、控室の謝罪だけに絞る）、赤いカード回数。
+#
+# **日本語名・読みで怪しいもの**：ジネディーヌ・ジダン（Wikidata の日本語ラベル）。ジョルカエフ・プティ・ジャケ・デシャン・ソラリ・スタッド・ド・フランス・ラ・カステラーヌ・ムバッペ（kana 辞書は「エムバペ」）。
+date: 2026年10月17日
+slot: other_1
+format: news
+series: レジェンドの紹介
+people:
+- ジネディーヌ・ジダン
+theme:
+  end_bg: assets/images/20261018_zidane_legend/z18_coach_w.jpg
+  id: legend_zidane
+  league: france
+  league_name: フランス代表
+  kind: other
+  topic: フランス代表
+  title: ジダンってどんな選手だった？ 決勝の2発から28年、代表の監督になるまで
+  question: ワールドカップ決勝で2発を決めた司令塔は、どんな選手だったのか。いまは、何をしているのか
+  takeaway: CL決勝は選手で1勝2敗、監督で3戦3勝。1試合あたりの得点は、フランス代表（0.29）がクラブのどこよりも高い。次の節目は11月12日、監督として臨むイタリア戦
+  nameplate: ジダン｜元MF・フランス代表監督
+  opening_image: assets/images/20261018_zidane_legend/z13_portrait_w.jpg
+  bgm: assets/audio/bgm_calm.wav
+short_title: ジダンってどんな選手だった？
+thumbnail:
+  callouts:
+  - ワールドカップ優勝
+  - CL3連覇の監督
+  line1: ジダン、決勝の2発から
+  line2: 28年。代表監督へ
+  tags:
+  - フランス代表
+  - レアル・マドリード
+  - ユヴェントス
+  - ジダン
+  - レジェンド
+  - 選手紹介
+  photo: assets/images/20261018_zidane_legend/z18_coach_w.jpg
+  photos: []
+  short_photo: assets/images/20261018_zidane_legend/z18_coach_v.jpg
+sections:
+- id: hook
+  heading: 決勝で2発の司令塔は、いまどこにいるのか
+  tier: 報道
+  telop: ジダン、フランス代表の監督に
+  narrator: 解説
+  card:
+    type: stats
+    title: ジネディーヌ・ジダン 54歳
+    items:
+    - ['3', 回, FIFA最優秀選手（1998・2000・2003）]
+    - ['3', 連覇, 監督としてCL（2016〜18）]
+    - ['108', 試合, フランス代表。31得点]
+    focus: 0
+  say:
+  - text: ワールドカップの決勝で、頭で2ゴール。
+    image: assets/images/20261018_zidane_legend/z98_ballon_w.jpg
+    card: &hook_stats
+      type: stats
+      title: ジネディーヌ・ジダン 54歳
+      items:
+      - ['3', 回, FIFA最優秀選手（1998・2000・2003）]
+      - ['3', 連覇, 監督としてCL（2016〜18）]
+      - ['108', 試合, フランス代表。31得点]
+      focus: 0
+  - text: それが、ジダンの、大会で初めてのゴールでした。
+    emph: true
+    card: *hook_stats
+  - text: ジネディーヌ・ジダン、54歳。かつての名司令塔です。
+    card: *hook_stats
+  - text: いまは、フランス代表の監督。今年7月に決まりました。
+    image: assets/images/20261018_zidane_legend/z18_coach_w.jpg
+    card:
+      <<: *hook_stats
+      focus: 2
+  - text: 選手で世界最優秀選手に3回。監督でチャンピオンズリーグ3連覇。
+    card:
+      <<: *hook_stats
+      focus: 1
+  - text: 就任会見で、本人はこう話しました。
+    card: none
+  - voice: ジダン
+    text: フランス代表。それが、僕のやりたかった唯一のことでした。
+  - voice: ジダン
+    text: ある意味、夢でした。
+    cont: true
+    pause: 0.5
+  - text: その歩みを、順に追います。
+    card: none
+  quotes_from:
+  - https://www.lessentiel.lu/fr/story/football-zinedine-zidane-nomme-selectionneur-de-l-equipe-de-france-103609967
+  sources:
+  - https://www.lessentiel.lu/fr/story/football-zinedine-zidane-nomme-selectionneur-de-l-equipe-de-france-103609967
+  - https://la1ere.franceinfo.fr/football-zinedine-zidane-nomme-selectionneur-de-l-equipe-de-france-1723543.html
+  - https://en.wikipedia.org/wiki/Zinedine_Zidane
+- id: data
+  heading: ジダンは、いつ、どこで生まれた人なのか
+  tier: 報道
+  telop: ジダンの基礎DATA
+  narrator: 解説
+  card:
+    type: table
+    title: ジネディーヌ・ジダン
+    columns:
+    - 項目
+    - 内容
+    rows: &bdata
+    - - 生年月日
+      - 1972年6月23日（54歳）
+    - - 生まれ
+      - フランス・マルセイユ
+    - - 育った街
+      - ラ・カステラーヌ（北部の団地）
+    - - 身長・位置
+      - 1.85m・攻撃的MF
+    - - クラブ
+      - カンヌ→ボルドー→ユヴェントス→レアル
+    - - 優勝
+      - W杯1998・EURO2000
+    - - 個人賞
+      - バロンドール1998・FIFA最優秀選手3回
+    - - いま
+      - フランス代表監督
+    source: Transfermarkt・Wikipedia
+  say:
+  - text: ジダンは、1972年6月23日、マルセイユの生まれです。
+    image: assets/images/20261018_zidane_legend/z13_portrait_w.jpg
+    card: &data_card
+      type: table
+      title: ジネディーヌ・ジダン
+      columns: [項目, 内容]
+      rows: *bdata
+      source: Transfermarkt・Wikipedia
+      highlight_row: 0
+  - text: 育ったのは、北部のラ・カステラーヌ。団地が建ち並ぶ街です。
+    card:
+      <<: *data_card
+      highlight_row: 2
+  - text: 攻撃的ミッドフィルダー。所属したクラブは、カンヌ、ボルドー、ユヴェントス、レアル。
+    card:
+      <<: *data_card
+      highlight_row: 4
+  - text: そしてワールドカップと欧州選手権を、1回ずつ制しています。
+    emph: true
+    card:
+      <<: *data_card
+      highlight_row: 5
+  sources:
+  - https://www.transfermarkt.com/zinedine-zidane/profil/spieler/3111
+  - https://www.theguardian.com/football/2004/apr/04/sport.features
+  - https://en.wikipedia.org/wiki/Zinedine_Zidane
+- id: career
+  heading: 団地の少年は、どうやって世界一になったのか
+  tier: 報道
+  telop: カンヌ、ボルドー、ユヴェントス、レアル
+  narrator: 解説
+  card:
+    type: table
+    title: 歩んできた道
+    columns:
+    - 時期
+    - 所属
+    - できごと
+    rows: &career_rows
+    - - 〜1988
+      - マルセイユ
+      - 団地の広場でボールを蹴る
+    - - 1989〜92
+      - カンヌ
+      - 1989年にプロデビュー
+    - - 1992〜96
+      - ボルドー
+      - 179試合39得点。UEFAカップ決勝へ
+    - - 1996〜2001
+      - ユヴェントス
+      - セリエA優勝2回
+    - - 2001〜06
+      - レアル・マドリード
+      - CL優勝（2002）。6タイトル
+    source: クラブ公式・Wikipedia
+  say:
+  - text: 始まりは、団地の広場。5歳で、仲間とボールを蹴り始めます。
+    image: assets/images/20261018_zidane_legend/z13_portrait_w.jpg
+    card: &career_card
+      type: table
+      title: 歩んできた道
+      columns: [時期, 所属, できごと]
+      rows: *career_rows
+      source: クラブ公式・Wikipedia
+      highlight_row: 0
+  - text: 憧れたのは、1986年のマラドーナ。本人は、こう語ります。
+    card:
+      <<: *career_card
+      highlight_row: 0
+  - voice: ジダン
+    text: 彼は、影響を与えたわけじゃない。
+  - voice: ジダン
+    text: でも、僕の心に、跡を残した。特に1986年。驚異的だった。
+    cont: true
+    pause: 0.6
+  - text: カンヌで、1989年にプロデビュー。まだ10代でした。
+    card:
+      <<: *career_card
+      highlight_row: 1
+  - text: 1992年、ボルドーへ。4季で、179試合39得点です。
+    card:
+      <<: *career_card
+      highlight_row: 2
+  - text: 1996年、ユヴェントスへ。セリエAで、2回優勝します。
+    card:
+      <<: *career_card
+      highlight_row: 3
+  - text: ただ、チャンピオンズリーグの決勝は、2回続けて敗れます。
+    emph: true
+    card:
+      <<: *career_card
+      highlight_row: 3
+  - text: 転機は2001年。当時の世界最高額の移籍金で、レアルへ。本人の言葉です。
+    image: assets/images/20261018_zidane_legend/z02_solari_w.jpg
+    card:
+      <<: *career_card
+      highlight_row: 4
+  - voice: ジダン
+    text: ヨーロッパ王者に、なりたかった。
+  - voice: ジダン
+    text: それを、レアル・マドリードで、やりたかったんだ。
+    cont: true
+    pause: 0.6
+  quotes_from:
+  - https://web.archive.org/web/20201206013751/https://www.goal.com/en-gb/news/7138/goal-hall-of-fame/2014/11/12/6070971/maradona-was-on-another-level-zidane
+  - https://www.realmadrid.com/fr-FR/le-club/histoire/legendes-football/zinedine-zidane
+  sources:
+  - https://girondins.com/fr/news/38953/joyeux-anniversaire-zinedine-zidane
+  - https://www.realmadrid.com/fr-FR/le-club/histoire/legendes-football/zinedine-zidane
+  - https://www.theguardian.com/football/2004/apr/04/sport.features
+  - https://web.archive.org/web/20201206013751/https://www.goal.com/en-gb/news/7138/goal-hall-of-fame/2014/11/12/6070971/maradona-was-on-another-level-zidane
+  - https://en.wikipedia.org/wiki/Zinedine_Zidane
+- id: style
+  heading: ジダンのプレーは、何がすごかったのか
+  tier: 報道
+  telop: 吸いつくタッチと、決勝のボレー
+  narrator: 解説
+  card:
+    type: table
+    title: ジダンの通算（クラブはリーグ戦）
+    columns:
+    - 所属
+    - 試合
+    - 得点
+    rows: &total_rows
+    - [カンヌ, '61', '6']
+    - [ボルドー, '139', '28']
+    - [ユヴェントス, '151', '24']
+    - [レアル・マドリード, '155', '37']
+    - [クラブ計, '506', '95']
+    - [フランス代表, '108', '31']
+    source: Wikipedia・Transfermarkt
+  say:
+  - text: ジダンの武器は、ボールを扱う技術。吸いつくようなタッチでした。
+    image: assets/images/20261018_zidane_legend/z02_volley_w.jpg
+    card: none
+  - text: 回りながらボールを運ぶ「ルーレット」が、代名詞です。
+    card: none
+  - text: フランス代表を率いたジャケ監督は、こう評しました。
+    card: none
+  - voice: ジャケ
+    text: 彼には、内なるビジョンがある。
+  - voice: ジャケ
+    text: ボールを、思いのままに操れる。
+    cont: true
+    pause: 0.6
+  - text: 2002年、チャンピオンズリーグ決勝。レアル加入の1年目です。
+    card: none
+  - text: 前半の終わりぎわ、左足のボレー。これが決勝点でした。
+    emph: true
+    card: none
+  - text: 次に、通算の数字です。クラブのリーグ戦は、506試合95得点。
+    image: assets/images/20261018_zidane_legend/z06_final_w.jpg
+    card: &total_card
+      type: table
+      title: ジダンの通算（クラブはリーグ戦）
+      columns: [所属, 試合, 得点]
+      rows: *total_rows
+      source: Wikipedia・Transfermarkt
+      highlight_row: 4
+  - text: リーグ戦で、レアルは37点。カンヌの6点を、大きく超えます。
+    card:
+      <<: *total_card
+      highlight_row: 3
+  - text: フランス代表では、108試合で31得点を挙げました。
+    emph: true
+    card:
+      <<: *total_card
+      highlight_row: 5
+  - text: タイトルも数えます。フランス代表で、2つ。
+    image: assets/images/20261018_zidane_legend/z98_ballon_w.jpg
+    card: &title_stats
+      type: stats
+      title: ジダンが選手として獲ったもの
+      items:
+      - ['2', つ, フランス代表のタイトル]
+      - ['6', つ, レアルでのタイトル（クラブ公式）]
+      focus: 0
+  - text: レアルでは、5年間で6つ。代表の2つの、3倍です。
+    card:
+      <<: *title_stats
+      focus: 1
+  quotes_from:
+  - https://www.theguardian.com/football/2004/apr/04/sport.features
+  sources:
+  - https://www.theguardian.com/football/2004/apr/04/sport.features
+  - https://www.realmadrid.com/fr-FR/le-club/histoire/legendes-football/zinedine-zidane
+  - https://girondins.com/fr/news/38953/joyeux-anniversaire-zinedine-zidane
+  - https://en.wikipedia.org/wiki/2002_UEFA_Champions_League_final
+  - https://en.wikipedia.org/wiki/Zinedine_Zidane
+  - https://www.transfermarkt.com/zinedine-zidane/profil/spieler/3111
+- id: match
+  heading: 1998年7月12日、決勝の夜に何があったのか
+  tier: 報道
+  main: true
+  telop: 1998年7月12日、ワールドカップ決勝
+  narrator: 解説
+  card:
+    type: table
+    title: 1998年ワールドカップ決勝（大会の公式記録）
+    columns:
+    - 項目
+    - 内容
+    rows: &match_rows
+    - - 日付・会場
+      - 1998年7月12日・スタッド・ド・フランス
+    - - 対戦
+      - フランス 対 ブラジル
+    - - 結果
+      - 3対0（前半2対0）
+    - - ジダン
+      - 27分と前半ロスタイムにヘディング
+    - - 3点目
+      - プティ（試合終了間際）
+    source: 大会組織委員会の公式記録
+  say:
+  - text: ジダンは、フランス代表を、1998年のワールドカップ優勝へ導きました。
+    short_only: true
+    card: none
+  - text: ジダンを象徴する1試合は、1998年のワールドカップ決勝です。
+    image: assets/images/20261018_zidane_legend/z98_ballon_w.jpg
+    card: &match_card
+      type: table
+      title: 1998年ワールドカップ決勝（大会の公式記録）
+      columns: [項目, 内容]
+      rows: *match_rows
+      source: 大会組織委員会の公式記録
+      highlight_row: 0
+  - text: 相手は、前回王者のブラジル。開催国のフランスが迎え撃ちます。
+    card:
+      <<: *match_card
+      highlight_row: 1
+  - text: ただ、この大会のジダンは、まだ1点も取っていませんでした。
+    emph: true
+    card: none
+  - text: グループリーグのサウジアラビア戦で退場。続く試合を、欠場しました。
+    card: none
+  - text: 前半27分。コーナーキックに、頭で合わせます。
+    image: assets/images/20261018_zidane_legend/z02_volley_w.jpg
+    emph: true
+    card:
+      <<: *match_card
+      highlight_row: 3
+  - text: 前半のロスタイム。もう一度コーナーから、ヘディング。
+    card:
+      <<: *match_card
+      highlight_row: 3
+  - text: ゴールの時間は、大会の公式記録に従いました。記録によって、1分ほど違います。
+    card: none
+  - text: この2本目のコーナーは、ジダンが蹴る予定でした。
+    card: none
+  - text: けれど、チームメートのジョルカエフが、のちにこう明かしています。
+    card: none
+  - voice: ジョルカエフ
+    text: いや、これは俺が蹴る。
+  - voice: ジョルカエフ
+    text: お前は、ゴール前にいてくれ。
+    cont: true
+    pause: 0.6
+  - text: フランスは前半を2点リード。終了間際に、プティが3点目です。
+    card:
+      <<: *match_card
+      highlight_row: 2
+  - text: 3対0の勝ち。フランスにとって、初めてのワールドカップ優勝です。
+    emph: true
+    card: none
+  - text: 街には「ジズーを大統領に」の落書きが、広がりました。
+    card: none
+  - text: のちにジダンは、あの夜を、こう振り返ります。
+    card: none
+  - voice: ジダン
+    text: 僕らは、何も持たずに来た家族でした。
+  - voice: ジダン
+    text: それが、あらゆる種類のフランス人から、
+    cont: true
+  - voice: ジダン
+    text: 敬意を向けられるようになった。
+    cont: true
+    pause: 0.6
+  quotes_from:
+  - https://www.theguardian.com/football/2004/apr/04/sport.features
+  - https://sports.yahoo.com/articles/zinedine-zidane-supposed-corner-world-080000023.html
+  sources:
+  - https://web.archive.org/web/20010414012157/http://www.france98.com/english/competition/matchstat8886.htm
+  - https://sports.yahoo.com/articles/zinedine-zidane-supposed-corner-world-080000023.html
+  - https://www.theguardian.com/football/2004/apr/04/sport.features
+  - https://en.wikipedia.org/wiki/1998_FIFA_World_Cup_final
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/summary?event=198155
+- id: now
+  heading: 引退したジダンは、いま何をしているのか
+  tier: 報道
+  telop: レアルの監督から、フランス代表の監督へ
+  narrator: 解説
+  card:
+    type: timeline
+    title: 引退から、いままで
+    rows:
+    - ['2006年7月', ワールドカップ決勝で引退]
+    - ['2016年1月', レアルの監督に。CL3連覇]
+    - ['2021年5月', レアルを去る]
+    - ['2025年9月', ユヴェントスの殿堂入り]
+    - ['2026年7月', フランス代表の監督に決まる]
+    focus: 4
+    highlight_row: 4
+  say:
+  - text: ジダンの現役最後の試合は、2006年のワールドカップ決勝でした。
+    image: assets/images/20261018_zidane_legend/z06_final_w.jpg
+    card: &now_tl
+      type: timeline
+      title: 引退から、いままで
+      rows:
+      - ['2006年7月', ワールドカップ決勝で引退]
+      - ['2016年1月', レアルの監督に。CL3連覇]
+      - ['2021年5月', レアルを去る]
+      - ['2025年9月', ユヴェントスの殿堂入り]
+      - ['2026年7月', フランス代表の監督に決まる]
+      focus: 4
+      highlight_row: 0
+  - text: 次の舞台は、ベンチです。2016年1月、レアルの監督に。
+    image: assets/images/20261018_zidane_legend/z18_coach_w.jpg
+    card:
+      <<: *now_tl
+      highlight_row: 1
+  - text: 就任の年から、チャンピオンズリーグを3連覇。監督として、初めてでした。
+    emph: true
+    card:
+      <<: *now_tl
+      highlight_row: 1
+  - text: 2021年5月、レアルを去ります。
+    card:
+      <<: *now_tl
+      highlight_row: 2
+  - text: 2025年9月、ユヴェントスが殿堂を作り、最初の50人に名前がありました。
+    card:
+      <<: *now_tl
+      highlight_row: 3
+  - text: そして2026年7月28日。決勝の2発から、28年後です。
+    emph: true
+    card:
+      <<: *now_tl
+      highlight_row: 4
+  - text: フランス連盟が、新しい監督を発表。デシャン前監督の後任で、任期は4年です。
+    card: none
+  - text: 初陣は9月25日、トルコ戦。ムバッペのゴールで、1対0の勝ち。
+    card: none
+  - text: ここまで4試合を戦って、3勝1分けです。
+    card: none
+  quotes_from: []
+  sources:
+  - https://www.lessentiel.lu/fr/story/football-zinedine-zidane-nomme-selectionneur-de-l-equipe-de-france-103609967
+  - https://la1ere.franceinfo.fr/football-zinedine-zidane-nomme-selectionneur-de-l-equipe-de-france-1723543.html
+  - https://www.juventus.com/en/hall-of-fame
+  - https://www.insideworldfootball.com/2025/09/11/juventus-inaugurate-hall-fame-platini-baggio-zidane-inducted
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.nations/summary?event=401861053
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.nations/summary?event=401861129
+  - https://en.wikipedia.org/wiki/Zinedine_Zidane
+- id: story
+  heading: ジダンが掃除係から始めた理由と、決勝のあとの控室
+  tier: 報道
+  telop: マル秘話 カンヌの掃除係と、控室の「ごめん」
+  narrator: 解説
+  card:
+    type: table
+    title: マル秘話
+    columns: [いつ, 何があったか]
+    rows: &story_rows
+    - ['カンヌに入った頃', 最初の数週間は、掃除係だった]
+    - ['2006年7月', 決勝のあと、控室で仲間に謝った]
+    source: The Observer・ESPN
+  say:
+  - text: マル秘話を2つ。まずは、カンヌに入った頃の話です。
+    image: assets/images/20261018_zidane_legend/z13_portrait_w.jpg
+    card: &story_card
+      type: table
+      title: マル秘話
+      columns: [いつ, 何があったか]
+      rows: *story_rows
+      source: The Observer・ESPN
+      highlight_row: 0
+  - text: ジダンは、すぐに手が出る少年だったと、最初のコーチは語ります。
+    card:
+      <<: *story_card
+      highlight_row: 0
+  - text: 相手の選手に、育ちをからかわれて、殴ってしまいます。
+    card:
+      <<: *story_card
+      highlight_row: 0
+  - text: 罰として、最初の数週間は、掃除が主な仕事でした。
+    emph: true
+    card:
+      <<: *story_card
+      highlight_row: 0
+  - text: のちに本人は、育った街について、こう言っています。
+    card: none
+  - voice: ジダン
+    text: 難しい街の出身で、運がよかった。
+  - voice: ジダン
+    text: サッカーだけでなく、人生を教えてくれるから。
+    cont: true
+    pause: 0.6
+  - text: 2つ目は、2006年の決勝のあとです。
+    image: assets/images/20261018_zidane_legend/z06_final_w.jpg
+    card:
+      <<: *story_card
+      highlight_row: 1
+  - text: 延長戦で退場したジダンは、そのまま現役を終えました。
+    card:
+      <<: *story_card
+      highlight_row: 1
+  - text: ところが翌日、大会の最優秀選手、ゴールデンボールに選ばれます。
+    card: none
+  - text: のちに、スペインの新聞に、こう語っています。
+    card: none
+  - voice: ジダン
+    text: もちろん、自分を責めています。
+  - voice: ジダン
+    text: サッカーに、ファンに、チームに、謝ります。
+    cont: true
+  - voice: ジダン
+    text: 試合のあと、控室で、みんなに言いました。
+    cont: true
+  - voice: ジダン
+    text: 許してくれ。何も変わらないけど、みんな、ごめん、と。
+    cont: true
+    pause: 0.6
+  quotes_from:
+  - https://www.theguardian.com/football/2004/apr/04/sport.features
+  - https://web.archive.org/web/20100304145802/http://soccernet.espn.go.com/world-cup/story/_/id/749212/ce/uk/?cc=5739&ver=global
+  sources:
+  - https://www.theguardian.com/football/2004/apr/04/sport.features
+  - https://web.archive.org/web/20100304145802/http://soccernet.espn.go.com/world-cup/story/_/id/749212/ce/uk/?cc=5739&ver=global
+  - https://en.wikipedia.org/wiki/Zinedine_Zidane
+- id: view
+  heading: 選手の3回と、監督の3回を、数えて比べると
+  tier: 背景
+  viewpoint: true
+  narrator: 解説
+  telop: 11月12日、監督として臨むイタリア戦
+  card:
+    type: table
+    title: ジダンの選手時代と監督時代（自分で数えた比べ）
+    columns: [物差し, 選手時代, 監督時代]
+    rows: &cmp_rows
+    - ['CL決勝', '3回で1勝2敗', '3回で3勝']
+    - ['国内リーグ優勝', '3回', '2回']
+    source: Wikipedia・ESPN（数えたのは当チャンネル）
+  say:
+  - text: 最後に、ジダンを数えて、比べてみます。
+    image: assets/images/20261018_zidane_legend/z18_coach_w.jpg
+    card: &cmp_card
+      type: table
+      title: ジダンの選手時代と監督時代（自分で数えた比べ）
+      columns: [物差し, 選手時代, 監督時代]
+      rows: *cmp_rows
+      source: Wikipedia・ESPN（数えたのは当チャンネル）
+      highlight_row: 0
+  - text: チャンピオンズリーグの決勝。選手としては、3回出て、1勝2敗。
+    card:
+      <<: *cmp_card
+      highlight_row: 0
+  - text: 監督としては、3回出て、3勝です。
+    emph: true
+    card:
+      <<: *cmp_card
+      highlight_row: 0
+    mark: {kind: circle, row: 0}
+  - text: 1998年の決勝で負けた相手は、のちに率いるレアルでした。
+    card:
+      <<: *cmp_card
+      highlight_row: 0
+  - text: 2017年の決勝では、古巣のユヴェントスに、4対1で勝っています。
+    card:
+      <<: *cmp_card
+      highlight_row: 0
+  - text: 国内リーグの優勝は、選手でセリエA2回とリーガ1回の3回。監督はリーガ2回です。
+    card:
+      <<: *cmp_card
+      highlight_row: 1
+  - text: 次に、1試合あたりの得点を割ります。リーグ戦で最高なのは、レアルの0.24。
+    card: &rate_bars
+      type: bars
+      title: 1試合あたりの得点（クラブはリーグ戦・代表は全試合）
+      unit: 点
+      items:
+      - label: カンヌ
+        value: 0.10
+      - label: ボルドー
+        value: 0.20
+      - label: ユヴェントス
+        value: 0.16
+      - label: レアル
+        value: 0.24
+      - label: フランス代表
+        value: 0.29
+        highlight: true
+      source: 当チャンネルで割った値
+  - text: フランス代表は、0.29。クラブのどの数字も、上回ります。
+    emph: true
+    card: *rate_bars
+  - text: ただし、代表の数字は、親善試合も含みます。
+    card: *rate_bars
+  - text: 次の節目は、11月12日。監督として、イタリアに乗り込んで戦います。
+    card: none
+  - text: 選手で世界一を知る人が、いま、代表のベンチに座っています。
+    emph: true
+    card: none
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Zinedine_Zidane
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=48494
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20170603
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.nations/scoreboard?dates=20261112
+  - https://www.lessentiel.lu/fr/story/football-zinedine-zidane-nomme-selectionneur-de-l-equipe-de-france-103609967

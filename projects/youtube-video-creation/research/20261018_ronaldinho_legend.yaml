@@ -1,0 +1,632 @@
+# ロナウジーニョ（元バルセロナ／ブラジル代表）の紹介。新シリーズ「レジェンドの紹介」（引退した過去の選手の掘り下げ）の試験3本目（2026-10-17 ユーザー決定）。
+# 型は選手紹介の8節を引退した選手向けに変えた：①フック ②基礎DATA ③歩んできた道と転機（通算の表）④プレースタイル ⑤「あの試合」（2005-11-19 クラシコ）
+# ⑥引退後・いま ⑦マル秘話2つ ⑧見立て。**FotMob は使わない**（パーセンタイル・レーダー・シュートマップなし）。数字は基本の数と自分で割った値。
+# 公開予定は 10/18 以降。**台本は draft まで**（approve・build・screen・upload はしない）。
+#
+# **数字・出典の出どころ（本文を実際に読んだもの。取材は requests と WebFetch のみ。ブラウザの道具は不使用）**
+# - 英語版 Wikipedia（Ronaldinho 本文＋Career statistics の表、2026-10-17 取得）：クラブ別・代表の試合と得点（グレミオ125/58・PSG77/25・バルセロナ207/94・ミラン95/26・
+#   フラメンゴ72/28・アトレチコ・ミネイロ85/27・ケレタロ29/8・フルミネンセ9/0、クラブ合計699/266。ブラジル代表97試合33得点）、優勝歴・個人賞、移籍金（PSG500万・バルセロナ3000万ユーロ）、
+#   エラスチコ・プレースタイルの記述、2005/06 の大会別の得点（ラ・リーガ17・CL7・スペイン杯1・スーパーカップ1＝26）。**確度は 背景**（二次の整理）。
+# - FC バルセロナ公式（fcbarcelona.com / .es）：
+#   ・2020-11-19「15 años de un Clásico histórico」＝2005-11-19 の 0-3、エトー14分・ロナウジーニョ59分と77分、メッシ18歳で初のクラシコ（エトーの得点はメッシのパス）、
+#     両チームの先発（レアルはカシージャス・サルガド・セルヒオ・ラモス・ロベルト・カルロス・ジダン・ベッカム・ロビーニョ・ラウール・ロナウド）、ロナウジーニョ「左から、サルガドとセルヒオ・ラモスを抜く2点がほぼ同じ形」、
+#     ベルナベウが総立ち。2012-11 の「On this day」も 0-3・2得点・総立ち。
+#   ・2020-05-01／2025-05-01 の記事＝メッシの初ゴール（2005-05-01 アルバセテ戦、ロナウジーニョのパス、17歳10か月、ラ・リーガ最年少得点者）。87分交代（2020）／88分交代（2025）、91分のゴール。
+#   ・2013-07-19 のベストゴール特集＝2003年のセビージャ戦（午前0時5分、約25メートル、観測所の地震計が小さな揺れ）。2020-09-03 のドキュメンタリー紹介＝9月3日の水曜の深夜。
+#   ・2017-02-02／02-03 の公式アンバサダー就任の記事＝契約は「今後数年」、ロナウジーニョ本人のコメント（「帰ってきた」「アシストが本当に好き」「メッシの最初の一歩に関われた」「ベルナベウで拍手された」）。
+#   ・2013-07-19「Ronaldinho has left his mark」＝4年のタイトル無しのあとに来た／プジョル・メッシ・ロセイの言葉。**確度は 確定（クラブ公式の発言・記録）**。
+# - RSSSF（France Football #3112 の掲載、2005-11-29）：バロンドール2005の得点（ロナウジーニョ225点・ランパード148・ジェラード142、1位票33・投票者52人）。
+# - UEFA.com（2005年 FIFA 世界最優秀選手の記事、WebFetch で本文を読んだ）：ロナウジーニョ956点・ランパード306・エトー190、受賞の言葉。
+# - Transfermarkt（1ページだけ。/ronaldinho/profil/spieler/3373）：生年月日・身長1.82m・ブラジル代表97/33・現所属ラヴェンナ（2026-07-01 加入）。
+# - 2018-01-16〜17 の引退の報（theScore・Football España）：兄で代理人ロベルトが O Globo の「Gente Boa」欄で明かした。「He has stopped, it is ended.」
+# - ラヴェンナ関連（2026-06-23 Quotidiano Sportivo＝クラブ発表とロナウジーニョのコメント／2026-08-20 EFE＝入団会見・公式戦に1試合は出る予定／2026-10-08 Khel Now＝デビューは
+#   11/15 のフォルリ戦の見込み〈Il Resto del Carlino の報道〉）。**確度は 報道**。
+# - バルセロナの第4ユニフォーム（2025-11 SoccerBible）：2005年のクラシコの3ゴールがモチーフ。報道。
+# - 本人の言葉：FourFourTwo の2015年の取材（Soccer Laduma 転載 2015-12-14）。
+# - 取材はどれも「検索結果の要約は使わず、出典の本文を読んで確かめた」。FIFA・CBF（ブラジルサッカー連盟）の一次ページは検索で見つからず（読めなかった）。ブラジル代表の97/33 は
+#   Wikipedia と Transfermarkt が一致。Eurosport は 403、ESPN Deportes は空で読めなかった。
+#
+# **数字の食い違い・判断**
+# - ロナウジーニョの1点目の分：クラブ公式（2020）は59分、別の報道・ユニフォームの記事は58分。**クラブ公式を採った**（59分と77分）。エトーの先制もクラブ公式の14分
+#   （Soccer Laduma は15分）。
+# - セビージャ戦のシュートの距離：クラブ公式は25メートル、Wikipedia は30ヤード（約27メートル）。**クラブ公式の25メートル**。日付はクラブ公式の別の記事が「9月1日」と書くが、
+#   公式のドキュメンタリー紹介と Wikipedia は9月3日（水曜の深夜）。**9月3日**を採った。
+# - メッシの交代：クラブ公式の2つの記事が87分と88分。台本は「終盤」とだけ言う。
+# - 公式アンバサダーの契約：Wikipedia は10年、クラブ公式は「今後数年」。**クラブ公式に従う**。
+# - 移籍金：PSG500万・バルセロナ3000万ユーロは Wikipedia の記述（確かめたのは1社）。台本は「報じられた」で断る。
+# - 「六つ全部を持つのは彼だけ」（Wikipedia の冒頭）：自分で優勝・受賞を数え直した（W杯2002・コパ・アメリカ1999・コンフェデ杯2005・CL2005/06・リベルタドーレス2013・バロンドール2005）。
+#   「唯一」とは言わず、「六つ」と言う。
+# - 「最後の公式戦」：Khel Now は2015年9月24日（フルミネンセ対サントス）。Wikipedia は2015年9月28日にフルミネンセと契約解除。台本は「2015年9月」。
+# - ラヴェンナへの「復帰」：クラブの声明は「登録する」。ラヴェンナの0試合0得点（Wikipedia）。**デビュー日は未発表**。11月15日は報道（Il Resto del Carlino 経由の Khel Now）。
+#
+# **自分で数えた比べ（⑧）**
+# - バルセロナ5季：207試合94得点＝1試合0.454点。それ以外の7クラブ：492試合（125+77+95+72+85+29+9）172得点（58+25+26+28+27+8+0）＝0.350点。比＝1.30。
+#   バルセロナはクラブ通算699試合の29.6%、通算266得点の35.3%。
+# - 2005年の2つの賞：バロンドール225対148（1.52倍）、FIFA 956対306（3.12倍）。どちらも2位はランパード。
+# - 六つの勝利（優勝・受賞）のうち、バルセロナ在籍中は3つ（コンフェデ杯2005・CL2005/06・バロンドール2005）。
+# - 最後の公式戦（2015年9月）から11月15日までは11年2か月。引退の発表（2018年1月）は37歳、バロンドールは25歳。
+#
+# **入れなかったもの**：引退後の私生活・法的な問題・政治の話（brief の決まり）。夜遊びなど私生活の批判。ブラジル代表の2006年W杯の不振（シリーズの型に合わない）。
+#   2015年のメキシコ（アステカ）での2度目の総立ち（⑤と重なるので落とした）。グレミオ・PSG・2002年W杯の写真（Commons に使える写真が無かった。**材料が足りず言えなかったこと**）。
+#
+# **日本語名・読みで怪しいもの**：ロナウジーニョ・ガウーショ／ロナウド・デ・アシス・モレイラ／ポルトアレグレ／オ・ブルッショ／ライカールト／ルシェンブルゴ／エラスチコ（リベリーノ）／ラヴェンナ／フォルリ／
+#   ケレタロ／アトレチコ・ミネイロ／コパ・リベルタドーレス／セルヒオ・ラモス／サルガド／ラポルタ。
+#
+# 本人の言葉は5か所（自訳。原文は上の出典）：①フック「アシストが本当に好き」（クラブ公式2017）②「あの試合」FourFourTwo 2015 ③メッシの最初の一歩（クラブ公式2017）④ラヴェンナ（クラブ発表）
+# ⑤兄ロベルトの引退の言葉・UEFA 受賞の言葉。
+date: 2026年10月18日
+slot: other_1
+format: news
+series: レジェンドの紹介
+people:
+- ロナウジーニョ
+theme:
+  end_bg: assets/images/20261018_ronaldinho_legend/04_w.jpg
+  id: legend_ronaldinho
+  kind: other
+  topic: バルセロナ
+  title: ロナウジーニョってどんな選手だった？ 敵地が総立ちになった夜と、46歳の再出発
+  question: 世界最優秀選手を2度受けたブラジルの魔法使いは、どんな選手だったのか。なぜいま、46歳で名前が出るのか
+  takeaway: バルセロナの5季は1試合あたり0.45点、ほかの7クラブは0.35点。2005年の賞は2位に対して1.5倍（バロンドール）と3.1倍（FIFA）。次の節目は、報道では11月15日のラヴェンナでのデビュー
+  nameplate: ロナウジーニョ｜元バルセロナ／ブラジル代表
+  opening_image: assets/images/20261018_ronaldinho_legend/01_w.jpg
+  bgm: assets/audio/bgm_calm.wav
+short_title: ロナウジーニョってどんな選手だった？
+thumbnail:
+  layout: classic
+  callouts:
+  - セリーノCへ
+  - 引退から8年
+  line1: ロナウジーニョ
+  line2: 46歳の再出発
+  tags:
+  - バルセロナ
+  - ブラジル代表
+  - ラヴェンナ
+  - ロナウジーニョ
+  - レジェンド
+  - 選手紹介
+  photo: assets/images/20261018_ronaldinho_legend/01_w.jpg
+  photos: []
+sections:
+- id: hook
+  heading: 魔法使いと呼ばれた人は、どんな選手だったのか
+  tier: 報道
+  telop: ブラジルの魔法使い、ロナウジーニョ
+  narrator: 解説
+  card:
+    type: stats
+    title: ロナウジーニョ 46歳
+    items:
+    - ['225', 点, バロンドール2005の得点。2位は148点]
+    - ['6', つ, 手にした大きな優勝と賞]
+    - ['46', 歳, 2026年にセリエCのクラブへ]
+    focus: 0
+  say:
+  - text: ブラジルが生んだ魔法使い。ロナウジーニョ。
+    image: assets/images/20261018_ronaldinho_legend/01_w.jpg
+    card: &hook_stats
+      type: stats
+      title: ロナウジーニョ 46歳
+      items:
+      - ['225', 点, バロンドール2005の得点。2位は148点]
+      - ['6', つ, 手にした大きな優勝と賞]
+      - ['46', 歳, 2026年にセリエCのクラブへ]
+      focus: 0
+  - text: 2005年。ヨーロッパ最優秀選手の賞、バロンドールを受賞。
+    card: *hook_stats
+  - text: その年の11月、敵地ベルナベウで、2ゴール。
+    emph: true
+    card:
+      <<: *hook_stats
+      focus: 1
+  - text: ライバルのファンが、立ち上がって拍手を送りました。
+    card: none
+  - text: そして今年。46歳で、イタリア3部のクラブの選手になります。
+    card:
+      <<: *hook_stats
+      focus: 2
+  - text: ここから、人物像を追います。まず、本人の言葉から。
+    card: none
+  - voice: ロナウジーニョ
+    text: アシストをするのが、本当に好きなんです。
+    pause: 0.6
+  quotes_from:
+  - https://fcbarcelona.com/en/news/781521/ronaldinho-it-will-be-emotional-to-put-the-fc-barcelona-shirt-back-on
+  sources:
+  - https://fcbarcelona.com/en/news/781521/ronaldinho-it-will-be-emotional-to-put-the-fc-barcelona-shirt-back-on
+  - https://www.rsssf.org/miscellaneous/europa-poy05.html
+  - https://sport.quotidiano.net/en/ultimaora/ravenna-fc-ronaldinho-sara-tesserato-551baa12
+  - https://en.wikipedia.org/wiki/Ronaldinho
+- id: data
+  heading: ロナウジーニョは、どこで生まれ、いまはどこにいる人か
+  tier: 報道
+  telop: ロナウジーニョの基礎DATA
+  narrator: 解説
+  card:
+    type: table
+    title: ロナウジーニョ（ロナウド・デ・アシス・モレイラ）
+    columns:
+    - 項目
+    - 内容
+    rows: &bdata
+    - - 現在
+      - ラヴェンナ（セリエC）に登録
+    - - ポジション
+      - 攻撃的MF・左ウイング
+    - - 生年月日
+      - 1980年3月21日（46歳）
+    - - 生まれ
+      - ブラジル・ポルトアレグレ
+    - - 身長
+      - 1.82m
+    - - 愛称
+      - 魔法使い（オ・ブルッショ）
+    - - 代表
+      - ブラジル 97試合33得点
+    - - 最高の賞
+      - バロンドール（2005）
+    source: Transfermarkt・Wikipedia
+  say:
+  - text: ロナウジーニョのポジションは、攻撃的MF。左のウイングもこなしました。
+    image: assets/images/20261018_ronaldinho_legend/07.jpg
+    card: &data_card
+      type: table
+      title: ロナウジーニョ（ロナウド・デ・アシス・モレイラ）
+      columns: [項目, 内容]
+      rows: *bdata
+      source: Transfermarkt・Wikipedia
+      highlight_row: 1
+  - text: 1980年3月21日、ブラジル南部のポルトアレグレ生まれ。46歳です。
+    card:
+      <<: *data_card
+      highlight_row: 2
+  - text: 愛称は、魔法使い。ポルトガル語で、オ・ブルッショ。
+    card:
+      <<: *data_card
+      highlight_row: 5
+  - text: ブラジル代表では、97試合に出て、33得点。
+    card:
+      <<: *data_card
+      highlight_row: 6
+  - text: 2026年の所属は、イタリア3部のラヴェンナです。
+    emph: true
+    card:
+      <<: *data_card
+      highlight_row: 0
+  sources:
+  - https://www.transfermarkt.com/ronaldinho/profil/spieler/3373
+  - https://en.wikipedia.org/wiki/Ronaldinho
+- id: career
+  heading: グレミオの少年は、どうやってバルセロナの10番になったのか
+  tier: 報道
+  telop: 2003年、バルセロナへ
+  narrator: 解説
+  card:
+    type: table
+    title: 歩んできた道（クラブの全公式戦）
+    columns:
+    - 時期
+    - クラブ
+    - 試合
+    - 得点
+    rows: &career_rows
+    - ['1998〜2001', グレミオ, '125', '58']
+    - ['2001〜03', パリ・サンジェルマン, '77', '25']
+    - ['2003〜08', バルセロナ, '207', '94']
+    - ['2008〜11', ミラン, '95', '26']
+    - ['2011〜12', フラメンゴ, '72', '28']
+    - ['2012〜14', アトレチコ・ミネイロ, '85', '27']
+    - ['2014〜15', ケレタロ・フルミネンセ, '38', '8']
+    source: Wikipedia
+  say:
+  - text: ロナウジーニョは、8歳のころの呼び名です。いちばん小さかったから。
+    image: assets/images/20261018_ronaldinho_legend/04_w.jpg
+    card: &career_card
+      type: table
+      title: 歩んできた道（クラブの全公式戦）
+      columns: [時期, クラブ, 試合, 得点]
+      rows: *career_rows
+      source: Wikipedia
+      highlight_row: 0
+  - text: 前年は6得点。18歳の1999年は、22得点と3倍以上に。
+    card: *career_card
+  - text: 2001年、フランスへ。報じられた移籍金は、500万ユーロ。
+    card:
+      <<: *career_card
+      highlight_row: 1
+  - text: 転機は、2003年。バルセロナは、4年続いたタイトルなしの時代でした。
+    image: assets/images/20261018_ronaldinho_legend/12.jpg
+    card:
+      <<: *career_card
+      highlight_row: 2
+  - text: 報じられた移籍金は3000万ユーロ。前の移籍の6倍です。
+    card:
+      <<: *career_card
+      highlight_row: 2
+  - text: 当時のチームメート、プジョルは、こう振り返ります。
+    card: none
+  - voice: プジョル
+    text: 私たちは、タイトルどころか、戦ってすらいなかった。
+    pause: 0.6
+  - text: 5シーズンで、バルセロナの顔になります。
+    emph: true
+    card:
+      <<: *career_card
+      highlight_row: 2
+  - text: 2008年、「新しい挑戦」を口にした会長のもと、ミランへ。
+    image: assets/images/20261018_ronaldinho_legend/02_w.jpg
+    card:
+      <<: *career_card
+      highlight_row: 3
+  - text: 2010/11にセリエA優勝。2011年に母国へ戻り、フラメンゴへ。
+    card:
+      <<: *career_card
+      highlight_row: 4
+  - text: 2013年、33歳で、南米王者を決めるコパ・リベルタドーレスを制覇。
+    card:
+      <<: *career_card
+      highlight_row: 5
+  - text: メキシコとフルミネンセを経て、2015年が最後の季です。
+    card:
+      <<: *career_card
+      highlight_row: 6
+  quotes_from:
+  - https://www.fcbarcelona.com/en/news/1138422/ronaldinho-has-left-his-mark-on-the-barca-family
+  sources:
+  - https://en.wikipedia.org/wiki/Ronaldinho
+  - https://www.fcbarcelona.com/en/news/1138422/ronaldinho-has-left-his-mark-on-the-barca-family
+- id: style
+  heading: ボールの上で踊る。その武器は、何だったのか
+  tier: 背景
+  telop: 2005/06、26ゴール
+  narrator: 解説
+  card:
+    type: bars
+    title: 2005/06シーズン、大会別の得点（全公式戦45試合で26）
+    unit: 点
+    items:
+    - label: ラ・リーガ
+      value: 17
+      highlight: true
+    - label: チャンピオンズリーグ
+      value: 7
+    - label: スペイン杯・スーパーカップ
+      value: 2
+    source: Wikipedia
+  say:
+  - text: ロナウジーニョは、攻める人。左から中へ切り込み、右足でゴールを狙いました。
+    image: assets/images/20261018_ronaldinho_legend/02_w.jpg
+    card: &style_bars
+      type: bars
+      title: 2005/06シーズン、大会別の得点（全公式戦45試合で26）
+      unit: 点
+      items:
+      - label: ラ・リーガ
+        value: 17
+        highlight: true
+      - label: チャンピオンズリーグ
+        value: 7
+      - label: スペイン杯・スーパーカップ
+        value: 2
+      source: Wikipedia
+  - text: 頂点の季は、2005/06。45試合で26得点。1試合あたり、0.58点です。
+    emph: true
+    card: *style_bars
+  - text: 同じ季は、ラ・リーガとチャンピオンズリーグの、アシスト王でもありました。
+    card: none
+  - text: 代名詞のフェイント、エラスチコ。リベリーノの映像から学んだ、と伝わります。
+    card: none
+  - text: フリーキックの名手としても、知られています。
+    card: none
+  - text: 手にした優勝と賞を、数えます。コパ・アメリカ、ワールドカップ。
+    card: &honours
+      type: table
+      title: 手にした、六つの優勝と賞
+      columns: [年, 大会・賞]
+      rows:
+      - ['1999', コパ・アメリカ]
+      - ['2002', ワールドカップ]
+      - ['2005', コンフェデレーションズ杯]
+      - ['2005', バロンドール]
+      - ['2005/06', チャンピオンズリーグ]
+      - ['2013', コパ・リベルタドーレス]
+      source: Wikipedia
+      highlight_row: 0
+  - text: 2005年のバロンドールから、2013年のコパ・リベルタドーレスまで、六つ。
+    emph: true
+    card:
+      <<: *honours
+      highlight_row: 5
+  sources:
+  - https://en.wikipedia.org/wiki/Ronaldinho
+- id: match
+  heading: 2005年11月19日。ベルナベウは、なぜ立ち上がったのか
+  tier: 報道
+  main: true
+  telop: レアル0対3バルセロナ、2005年11月19日
+  narrator: 解説
+  card:
+    type: table
+    title: 2005年11月19日 ラ・リーガ第12節 レアル0-3バルセロナ
+    columns: [時刻, できごと]
+    rows:
+    - ['14分', エトーが先制（メッシのパスから）]
+    - ['59分', ロナウジーニョが追加点]
+    - ['77分', ロナウジーニョが3点目]
+    - ['試合後', ベルナベウが総立ちで拍手]
+  say:
+  - text: 2005年11月19日、ラ・リーガ第12節。伝統の一戦、クラシコです。
+    image: assets/images/20261018_ronaldinho_legend/12.jpg
+    card: &match_tl
+      type: table
+      title: 2005年11月19日 ラ・リーガ第12節 レアル0-3バルセロナ
+      columns: [時刻, できごと]
+      rows:
+      - ['14分', エトーが先制（メッシのパスから）]
+      - ['59分', ロナウジーニョが追加点]
+      - ['77分', ロナウジーニョが3点目]
+      - ['試合後', ベルナベウが総立ちで拍手]
+      highlight_row: 0
+  - text: 場所は、レアルの本拠地ベルナベウ。相手には、代表仲間のロナウドや、ジダン。
+    card: none
+  - text: バルセロナには、18歳のメッシ。初めてのクラシコでした。
+    card: none
+  - text: 14分、エトーが先制。パスを出したのは、そのメッシです。
+    card:
+      <<: *match_tl
+      highlight_row: 0
+  - text: 後半。ロナウジーニョが、左から運びます。
+    card:
+      <<: *match_tl
+      highlight_row: 1
+  - text: サルガドとセルヒオ・ラモスをかわして、ゴール。
+    emph: true
+    card:
+      <<: *match_tl
+      highlight_row: 1
+  - text: 77分。ほとんど同じ形で、もう1点。
+    card:
+      <<: *match_tl
+      highlight_row: 2
+  - text: 3対0。バルセロナの勝ちです。
+    card:
+      <<: *match_tl
+      highlight_row: 3
+  - text: ここで、本拠地の観客が立ち上がります。
+    callword: 総立ち
+    image: assets/images/20261018_ronaldinho_legend/09_w.jpg
+    card: none
+  - text: 敵の選手に、この拍手が送られるのは、とても珍しいこと。
+    card: none
+  - text: バルセロナの選手では、それまでマラドーナだけ、と伝わります。
+    card: none
+  - text: 2015年の取材で、本人は振り返ります。
+    card: none
+  - voice: ロナウジーニョ
+    text: 僕が知るかぎり、マドリードで、
+  - voice: ロナウジーニョ
+    text: これを受けたのは、マラドーナだけだ。
+    cont: true
+  - voice: ロナウジーニョ
+    text: 僕の英雄が、最後にその栄誉を受けた人だと知って、
+    cont: true
+  - voice: ロナウジーニョ
+    text: うれしさは2倍になった。
+    cont: true
+    pause: 0.6
+  - text: 9日後の11月28日、バロンドールの発表。
+    card: none
+  - text: 52人の投票で、225点。2位のランパードは、148点でした。
+    emph: true
+    card: none
+  quotes_from:
+  - https://soccerladuma.co.za/local/archive/ronaldinho-what-standing-ovation-at-the-santiago-bernabeu-meant-to-me-20151214
+  - https://www.soccerladuma.co.za/local/archive/ronaldinho-what-standing-ovation-at-the-santiago-bernabeu-meant-to-me-20151214
+  sources:
+  - https://www.fcbarcelona.es/es/noticias/1899174/15-anos-de-un-clasico-historico/amp
+  - https://www.fcbarcelona.com/en/news/1147476/on-this-day-standing-ovation-for-ronaldinho-at-santiago-bernabeu/amp
+  - https://www.voetbalkrant.com/spanje/la-liga/2005-2006/kalender/speeldag-12/real-madrid/barcelona
+  - https://amp.scroll.in/field/962053/scroll_in
+  - https://www.soccerladuma.co.za/local/archive/ronaldinho-what-standing-ovation-at-the-santiago-bernabeu-meant-to-me-20151214
+  - https://www.rsssf.org/miscellaneous/europa-poy05.html
+- id: after
+  heading: 引退した日と、いま、名前が出る理由
+  tier: 報道
+  telop: 2018年1月、引退。2026年、ラヴェンナへ
+  narrator: 解説
+  card:
+    type: table
+    title: 引退のあと
+    columns: [いつ, できごと]
+    rows:
+    - ['2017年2月', バルセロナの公式アンバサダーに]
+    - ['2018年1月', 兄が引退を明かす]
+    - ['2026年6月', ラヴェンナが登録を発表]
+    - ['2026年11月', デビューの見込み（報道）]
+  say:
+  - text: 最後のクラブは、フルミネンセ。2015年9月に、契約を解除します。
+    image: assets/images/20261018_ronaldinho_legend/11.jpg
+    card: &after_tl
+      type: table
+      title: 引退のあと
+      columns: [いつ, できごと]
+      rows:
+      - ['2017年2月', バルセロナの公式アンバサダーに]
+      - ['2018年1月', 兄が引退を明かす]
+      - ['2026年6月', ラヴェンナが登録を発表]
+      - ['2026年11月', デビューの見込み（報道）]
+      highlight_row: 0
+  - text: 2017年2月、バルセロナの公式アンバサダー、クラブの顔役に。就任の日の言葉です。
+    card:
+      <<: *after_tl
+      highlight_row: 0
+  - voice: ロナウジーニョ
+    text: 帰ってきた。言葉にならないほど、感謝している。
+    pause: 0.6
+  - text: 2018年1月16日。兄で代理人のロベルトが、引退を明かします。37歳でした。
+    image: assets/images/20261018_ronaldinho_legend/07.jpg
+    card:
+      <<: *after_tl
+      highlight_row: 1
+  - voice: ロベルト・アシス
+    text: もう止めた。終わったんだ。
+    pause: 0.6
+  - text: 2026年6月23日。イタリア3部のラヴェンナが、46歳の登録を発表。
+    image: assets/images/20261018_ronaldinho_legend/11.jpg
+    emph: true
+    card:
+      <<: *after_tl
+      highlight_row: 2
+  - text: 発表の場はマイアミ。本人は、こう話しました。
+    card: none
+  - voice: ロナウジーニョ
+    text: 新しい色で、同じ笑顔。ボールと踊るのが、待ちきれない。
+  - voice: ロナウジーニョ
+    text: さあ、魔法を始めよう。
+    cont: true
+    pause: 0.6
+  - text: デビューの日は未発表。クラブは、少なくとも1試合は出る、としています。
+    card: none
+  - text: 報道では、11月15日の地元ダービーが有力です。
+    card:
+      <<: *after_tl
+      highlight_row: 3
+  - text: 最後の公式戦から、11年余り。もう1つ、名前が出る理由。
+    image: assets/images/20261018_ronaldinho_legend/07.jpg
+    card: none
+  - text: 2025年11月、バルセロナの第4ユニフォームのモチーフは、このクラシコ。
+    card: none
+  quotes_from:
+  - https://fcbarcelona.com/en/news/781521/ronaldinho-it-will-be-emotional-to-put-the-fc-barcelona-shirt-back-on
+  - https://thescore.com/news/1468628
+  - https://sport.quotidiano.net/en/ultimaora/ravenna-fc-ronaldinho-sara-tesserato-551baa12
+  sources:
+  - https://www.fcbarcelona.com/en/news/781536/ronaldinho-new-fc-barcelona-ambassador
+  - https://fcbarcelona.com/en/news/781521/ronaldinho-it-will-be-emotional-to-put-the-fc-barcelona-shirt-back-on
+  - https://thescore.com/news/1468628
+  - https://www.football-espana.net/2018/01/17/former-barca-star-ronaldinho-retires
+  - https://sport.quotidiano.net/en/ultimaora/ravenna-fc-ronaldinho-sara-tesserato-551baa12
+  - https://www.laestrella.com.pa/deportes/ronaldinho-en-su-presentacion-con-el-ravenna-ganar-es-lo-que-he-venido-a-hacer-LC25056287
+  - https://khelnow.com/football/when-ronaldinho-debut-with-ravenna-serie-c-202610
+  - https://www.soccerbible.com/performance/football-apparel/2025/11/nike-barcelona-nod-to-2005-clásico-win-with-new-2526-fourth-kit/amp/
+- id: story
+  heading: 数字の外にある、2つの話
+  tier: 報道
+  telop: メッシの最初のゴールと、午前0時5分のゴール
+  narrator: 解説
+  card:
+    type: table
+    title: 数字の外にある、2つの話
+    columns: [いつ, 何があったか]
+    rows: &story_rows
+    - ['2005年5月', メッシの初ゴールを、パスで作った]
+    - ['2003年9月', 午前0時5分のキックオフで、初ゴール]
+    source: バルセロナ公式
+  say:
+  - text: ロナウジーニョの数字の外に、2つの話があります。
+    image: assets/images/20261018_ronaldinho_legend/12.jpg
+    card: &story_card
+      type: table
+      title: 数字の外にある、2つの話
+      columns: [いつ, 何があったか]
+      rows: *story_rows
+      source: バルセロナ公式
+      highlight_row: 0
+  - text: 1つ目は、メッシのゴール。2005年5月1日、アルバセテ戦です。
+    card:
+      <<: *story_card
+      highlight_row: 0
+  - text: 終盤、17歳のメッシが交代で入ります。最初のゴールは、オフサイドでした。
+    card: none
+  - text: 91分。もう一度、ロナウジーニョのパス。メッシが、ふわりと浮かせて決めます。
+    emph: true
+    card: none
+  - text: 17歳10か月。当時、ラ・リーガ最年少の得点者です。2017年の、本人の言葉。
+    card: none
+  - voice: ロナウジーニョ
+    text: あの瞬間、サッカー史の新しい章が生まれた。
+  - voice: ロナウジーニョ
+    text: メッシはとても若くて、すべてがそこから始まった。
+    cont: true
+  - voice: ロナウジーニョ
+    text: 彼の最初の一歩に関われて、すばらしい。
+    cont: true
+    pause: 0.6
+  - text: 2つ目は、その2年前。バルセロナでの、最初のゴールです。
+    image: assets/images/20261018_ronaldinho_legend/09_w.jpg
+    card:
+      <<: *story_card
+      highlight_row: 1
+  - text: 2003年9月3日、セビージャ戦。キックオフは、午前0時5分。
+    card: none
+  - text: ドリブルで運んで、約25メートルのシュート。クロスバーの下に当たって、ネット。
+    emph: true
+    card: none
+  - text: 観測所の地震計が、小さな揺れを記録した、とクラブは書いています。
+    card: none
+  quotes_from:
+  - https://fcbarcelona.com/en/news/781521/ronaldinho-it-will-be-emotional-to-put-the-fc-barcelona-shirt-back-on
+  sources:
+  - https://www.fcbarcelona.com/en/news/1655354/15-years-since-lionel-messis-first-official-goal/amp
+  - https://www.fcbarcelona.com/en/news/4256638/20-years-since-leo-messis-first-official-goal/amp
+  - https://fcbarcelona.com/en/news/781521/ronaldinho-it-will-be-emotional-to-put-the-fc-barcelona-shirt-back-on
+  - https://www.fcbarcelona.com/en/news/1138401/the-most-spectacular-goals-scored-by-ronaldinho-for-fc-barcelona
+  - https://www.fcbarcelona.com/en/news/1804243/ronaldinho-looks-back-at-his-days-at-fc-barcelona-in-a-new-episode-of-the-album-documentary-series-produced-by-barca-studios
+  - https://www.fcbarcelona.com/en/news/1138422/ronaldinho-has-left-his-mark-on-the-barca-family
+- id: view
+  heading: バルセロナの5季と、ほかの7クラブを、1試合あたりで数えると
+  tier: 背景
+  viewpoint: true
+  narrator: 解説
+  telop: 2005年、2つの賞と、1試合あたりの得点
+  card:
+    type: table
+    title: バルセロナと、ほかの7クラブ（クラブの全公式戦）
+    columns: [項目, バルセロナ, ほかの7クラブ]
+    rows: &cmp_rows
+    - ['試合', '207', '492']
+    - ['得点', '94', '172']
+    - ['1試合あたり', '0.45', '0.35']
+    source: Wikipedia・自分で割った値
+  say:
+  - text: 最後に、ロナウジーニョの数字を、自分で並べてみます。
+    image: assets/images/20261018_ronaldinho_legend/06.jpg
+    card: &cmp_card
+      type: table
+      title: バルセロナと、ほかの7クラブ（クラブの全公式戦）
+      columns: [項目, バルセロナ, ほかの7クラブ]
+      rows: *cmp_rows
+      source: Wikipedia・自分で割った値
+      highlight_row: 0
+  - text: バルセロナは、207試合で94得点。ほかの7クラブは、492試合で172得点。
+    card:
+      <<: *cmp_card
+      highlight_row: 1
+  - text: 1試合あたりは、0.45点と0.35点。バルセロナの5季は、3割ほど高い。
+    emph: true
+    card:
+      <<: *cmp_card
+      highlight_row: 2
+    mark: {kind: circle, row: 2}
+  - text: 賞でも、差は開きました。2005年のバロンドールは、2位の1.5倍。
+    image: assets/images/20261018_ronaldinho_legend/03_w.jpg
+    card: none
+  - text: 国際サッカー連盟の年間最優秀選手は、956点対306点。3倍を超えました。
+    card: none
+  - text: どちらも、2位はランパード。受賞式の言葉です。
+    card: none
+  - voice: ロナウジーニョ
+    text: チームメートと、代表のみんながいなければ、
+  - voice: ロナウジーニョ
+    text: 僕はここにいません。
+    cont: true
+    pause: 0.6
+  - text: 全盛期の5年が、キャリアの山。その頂点が、あの夜のベルナベウです。
+    card: none
+  quotes_from:
+  - https://www.uefa.com/uefachampionsleague/news/01b0-0e108f2a3e26-02aeb84ff529-1000--ronaldinho-is-world-s-best-again
+  sources:
+  - https://en.wikipedia.org/wiki/Ronaldinho
+  - https://www.rsssf.org/miscellaneous/europa-poy05.html
+  - https://www.uefa.com/uefachampionsleague/news/01b0-0e108f2a3e26-02aeb84ff529-1000--ronaldinho-is-world-s-best-again

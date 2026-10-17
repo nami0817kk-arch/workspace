@@ -1,0 +1,136 @@
+{{Pathnav|ペルージャ・カルチョ|frame=1}}
+{{Infobox football club season
+| クラブ = [[ペルージャ・カルチョ|ペルージャ]]
+| シーズン = [[セリエA (サッカー) 1998-1999|1998-99]]
+| 代表者 = {{Flagicon|ITA}} [[ルチアーノ・ガウチ]]
+| 監督 = {{Flagicon|ITA}} [[イラーリオ・カスタニェール]]<br>[[ヴヤディン・ボシュコヴ]]
+| スタジアム = [[スタディオ・レナト・クーリ]]
+| リーグ = [[セリエA (サッカー)|セリエA]]
+| リーグ成績 = 14位、セリエA残留<ref>{{Cite web|和書|url=https://www.soccer-king.jp/news/japan/20180913/829802.html|title=【再録】中田英寿、衝撃的なセリエAデビューでペルージャのアイドルになる|website=SOCCER KING|date=2018-9-13|accessdate=2023-9-10}}</ref>
+| カップ1 = [[コッパ・イタリア]]
+| カップ成績1 = 1回戦敗退
+| リーグ最多得点者 = [[中田英寿]] 10得点
+| シーズン最多得点者 = [[中田英寿]] 10得点
+| 最多観客動員 = 
+| 最少観客動員 = 
+| 平均観客動員 = 
+| 最大差勝利試合 = 
+| 最大差敗戦試合 = 
+| 前シーズン = [[1997-98シーズン ペルージャ・カルチョ|1997-98]]
+| 次シーズン = [[1999-00シーズン ペルージャ・カルチョ|1999-00]]
+}}
+'''1998-99シーズン ペルージャ・カルチョ(当時のチーム名はACペルージャ)'''は、[[ペルージャ・カルチョ|ペルージャ]]の1998-99シーズンの成績と所属選手を詳述する。
+
+== 概要 ==
+1996-97シーズンにセリエAからセリエBに降格したペルージャが、1997-98シーズンにセリエAの昇格を勝ち取り、2期振りにセリエAでプレーすることとなった。
+このシーズン、中田英寿が加入、イタリアではマーケティング目当ての獲得ではないのかと、懐疑的な見方も多かったが、すぐにその様な評価を覆す活躍を見せ<ref>{{cite web|url=https://www.goal.com/it/notizie/nakata-lantidivo-che-e-entrato-nella-storia-della-roma-quasi-senza-rendersene-conto/1trgymxbimza21jcs85uv4r1sg|title=Nakata, l'antidivo che è entrato nella storia della Roma quasi senza rendersene conto|website=GOAL|date=2023-1-22|accessdate=2023-9-10}}</ref>、チームもセリエA残留を果たした。
+
+== 所属選手 ==
+*<ref>{{cite web|url=https://www.transfermarkt.com/ac-perugia-calcio/startseite/verein/839?saison_id=1998|title=Perugia 1998/99|website=Transfermarkt|accessdate=2023-9-9}}</ref>
+* GK
+** [[アンドレア・マッツァンティーニ]] (1999年に冬の移籍市場で加入)
+** [[アンジェロ・パゴット]] (開幕後に移籍)
+** [[マルコ・ロカッティ]] (開幕後に加入)
+** [[ファン・カルロス・ドカーボ]]
+** [[ガブリエーレ・スピネッタ]]
+** [[アレクサンダル・コチッチ]]
+** [[シモーネ・モンタナーリ]] (1999年に冬の移籍市場で加入)
+* DF
+** [[サルヴァトーレ・マトレカーノ]] (キャプテン)
+** [[ジョゼ・マルセロ・フェレイラ|ゼ・マリア]]
+** [[パウロ・ダ・シルバ]]
+** [[ディエゴ・ペッレグリーニ]]
+** [[ジャンルカ・リッチ]]
+** [[マルティン・リヴァス]]
+** [[セアン・ソリアーノ]]
+** [[ルカ・メツッアーノ]]
+** [[ジャンルカ・コロネッロ]]
+** [[ガブリエーレ・グロッシ]]
+** [[アンドレア・スッシ]]
+** [[ロベルト・リーパ]]
+* MF
+** [[ミラン・ラパイッチ]]
+** [[中田英寿]]
+** [[レナト・オリーヴェ]]
+** [[ジャンルカ・ペトラーキ]]
+** [[アントニオ・マニコーネ]] (開幕後に移籍)
+** [[ジョヴァンニ・テデスコ]] (開幕後に加入)
+** [[アントニオ・ベルナルディーニ]] (1999年に冬の移籍市場で移籍)
+** [[ミカ・レーコスオ]]
+** [[リカルド・マスペーロ]] (1999年に冬の移籍市場で移籍)
+** [[ピエトロ・ストラーダ]]
+** [[ダヴィデ・テントーニ]]
+** [[パスクアーレ・ロッコ]]
+** [[ダヴィデ・バイコッコ]]
+** [[セルジオ・カンポーロ]]
+** [[ルカ・ボルディチーニ]]
+* FW
+** [[アレッサンドロ・メッリ]]
+** [[サンドロ・トヴァリエーリ]] (開幕後に移籍)
+** [[イバン・カビエデス]] (1999年に冬の移籍市場で加入)
+** [[トミスラフ・エルツェッグ]]
+** [[クリスティアン・ブッキ]]
+** [[エメルソン・ペレイラ]]
+
+== 順位表 ==
+<onlyinclude>{{#invoke:Sports table|main|style=WDL
+|source=[https://www.rsssf.org/tablesi/ital99.html RSSSF.com]
+|team1=MIL |team2=LAZ |team3=FIO |team4=PAR |team5=ROM |team6=UDI |team7=JUV |team8=INT |team9=BOL |team10=BAR |team11=VEN |team12=PIA |team13=CAG |team14=PER |team15=SAL |team16=SAM |team17=VIC |team18=EMP|
+
+
+|result1=CLGS |result2=CLGS |result3=CLQR |result4=CLQR |result5=UC |result6=UC |result7=UIC3 |result9=UC |result14=UIC2|result15=REL |result16=REL |result17=REL |result18=REL
+
+|win_BAR=9|draw_BAR=15 |loss_BAR=10 |gf_BAR=39|ga_BAR=44<!-- Bari -->
+|win_BOL=11|draw_BOL=11 |loss_BOL=12 |gf_BOL=44|ga_BOL=47<!-- Bologna -->
+|win_CAG=11|draw_CAG=8|loss_CAG=15|gf_CAG=49|ga_CAG=50<!-- Cagliari -->
+|win_EMP=4 |draw_EMP=10|loss_EMP=20|gf_EMP=26|ga_EMP=63<!-- Empoli -->|adjust_points_EMP=-2
+|win_FIO=16 |draw_FIO=8|loss_FIO=10|gf_FIO=55|ga_FIO=41<!-- Fiorentina -->
+|win_INT=13 |draw_INT=7|loss_INT=14|gf_INT=59|ga_INT=54<!-- Internazionale -->
+|win_JUV=15 |draw_JUV=9|loss_JUV=10|gf_JUV=42|ga_JUV=36<!-- Juventus -->
+|win_LAZ=20|draw_LAZ=9 |loss_LAZ=5|gf_LAZ=65|ga_LAZ=31<!-- Lazio -->
+|win_MIL=20|draw_MIL=10|loss_MIL=4 |gf_MIL=59|ga_MIL=34<!-- Milan -->
+|win_PIA=11|draw_PIA=8|loss_PIA=15|gf_PIA=48|ga_PIA=49<!-- Piacenza -->
+|win_PAR=15|draw_PAR=10|loss_PAR=9|gf_PAR=55|ga_PAR=36<!-- Parma -->
+|win_PER=11 |draw_PER=6|loss_PER=17|gf_PER=43|ga_PER=61<!-- Perugia -->
+|win_ROM=15|draw_ROM=9|loss_ROM=10 |gf_ROM=69|ga_ROM=49<!-- Roma-->
+|win_SAL=10 |draw_SAL=8|loss_SAL=16|gf_SAL=37|ga_SAL=51<!-- Salernitana -->
+|win_SAM=9|draw_SAM=10 |loss_SAM=15|gf_SAM=38|ga_SAM=55<!-- Sampdoria -->
+|win_UDI=16|draw_UDI=6|loss_UDI=12|gf_UDI=52|ga_UDI=52<!-- Udinese -->
+|win_VEN=11 |draw_VEN=9|loss_VEN=14|gf_VEN=38|ga_VEN=45<!-- Fiorentina -->
+|win_VIC=8|draw_VIC=9|loss_VIC=17|gf_VIC=27|ga_VIC=47<!-- Vicenza -->
+<!--Team definitions (wikilinks in table)-->
+|name_BAR=[[ASバーリ|バーリ]]
+|name_BOL=[[ボローニャFC|ボローニャ]]
+|name_CAG=[[カリアリ・カルチョ|カリアリ]]
+|name_FIO=[[ACFフィオレンティーナ|フィオレンティーナ]]
+|name_INT=[[インテルナツィオナーレ・ミラノ|インテル]]
+|name_JUV=[[ユヴェントスFC|ユヴェントス]]
+|name_LAZ=[[SSラツィオ|ラツィオ]]
+|name_MIL=[[ACミラン]]|status_MIL=C
+|name_PAR=[[パルマ・カルチョ1913|パルマ]]
+|name_PIA=[[ピアチェンツァ・カルチョ|ピアチェンツァ]]
+|name_ROM=[[ASローマ]]
+|name_UDI=[[ウディネーゼ・カルチョ|ウディネーゼ]]
+|name_VEN=[[ヴェネツィアFC|ヴェネツィア]]
+|name_PER=[[ペルージャ・カルチョ|ペルージャ]]|status_PER=|note_PER=[[インタートトカップ]]出場権
+|name_SAL=[[USサレルニターナ1919|サレルニターナ]]|status_SAL=R
+|name_SAM=[[UCサンプドリア|サンプドリア]]|status_SAM=R
+|name_VIC=[[ヴィチェンツァ・カルチョ|ヴィチェンツァ]]|status_VIC=R
+|name_EMP=[[エンポリFC|エンポリ]]|status_EMP=R
+|show_limit=5
+}}</onlyinclude>
+
+== リーグ戦得点ランキング ==
+* [[中田英寿]] : 10得点
+* [[ミラン・ラパイッチ]] : 9得点
+* [[ジャンルカ・ペトラーキ]] : 5得点
+* [[クリスティアン・ブッキ]] : 5得点
+
+== 脚注 ==
+{{脚注ヘルプ}}
+{{Reflist}}
+
+{{DEFAULTSORT:へるうしや}}
+[[Category:1998年のサッカー]]
+[[Category:1999年のサッカー]]
+[[Category:ペルージャ・カルチョ]]

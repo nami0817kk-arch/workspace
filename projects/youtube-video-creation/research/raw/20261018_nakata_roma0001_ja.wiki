@@ -1,0 +1,90 @@
+{{Pathnav|ASローマ|frame=1}}
+{{Infobox football club season
+| クラブ = [[ASローマ]]
+| シーズン = [[セリエA (サッカー) 2000-2001|2000-2001]]
+| 代表者 = {{Flagicon|ITA}} [[フランコ・センシ]]
+| 監督 = {{Flagicon|ITA}} [[ファビオ・カペッロ]]
+| スタジアム = [[スタディオ・オリンピコ・ディ・ローマ]]
+| リーグ = [[セリエA (サッカー)|セリエA]]
+| リーグ成績 = 1位<ref>{{cite web|url=https://www.tuttomercatoweb.com/calendario_classifica/serie_a/2000-2001|title=Serie A 2000/2001|website=Tutto Mercato Web|accessdate=2023-10-21}}</ref>
+| カップ1 = [[コッパ・イタリア]]
+| カップ成績1 = ベスト16
+| カップ2 = [[UEFAカップ]]
+| カップ成績2 = 4回戦
+| リーグ最多得点者 = [[ガブリエル・バティストゥータ]] 20得点
+| シーズン最多得点者 = [[ガブリエル・バティストゥータ]] 21得点
+| 最多観客動員 = 
+| 最少観客動員 = 
+| 平均観客動員 = 
+| 最大差勝利試合 = 
+| 最大差敗戦試合 = 
+| 前シーズン = [[ASローマ 1999-00シーズン|1999-00]]
+| 次シーズン = [[ASローマ 2001-02シーズン|2001-02]]
+}}
+'''ASローマ 2000-01シーズン'''は、[[ASローマ]]の2000-01シーズンの成績と所属選手を詳述する。このシーズン、ローマは、最終節の[[パルマ・カルチョ1913|パルマ]]戦に勝利し、[[ASローマ 1982-83シーズン|1982-83シーズン]]以来となる、3度目のリーグ優勝を果たした<ref>{{cite web|url=https://www.theworldmagazine.jp/20200617/01world/italy/286177|title=ASローマの歓喜の瞬間を覚えているか　“19年前の今日”の熱狂を振り返る|website=ザワールド|accessdate=2023-10-21}}</ref>
+
+== 所属選手 ==
+*<ref>{{cite web|url=https://www.transfermarkt.com/as-rom/startseite/verein/12/saison_id/2000|title=AS ROMA 2000/01|website=Transfermarkt|accessdate=2023-10-21}}</ref>
+{{Fs start}}
+{{Fs player|nat=ITA|pos=GK|name=[[フランチェスコ・アントニオーリ]]}}
+{{Fs player|nat=ITA|pos=GK|name=[[マルコ・アメリア]]}}
+{{Fs player|nat=ITA|pos=GK|name=[[クリスティアーノ・ルパテッリ]]}}
+{{Fs player|nat=BRA|pos=DF|name=[[カフー]]}}
+{{Fs player|nat=BRA|pos=DF|name=[[アントニオ・カルロス・ザーゴ]]}}
+{{Fs player|nat=BRA|pos=DF|name=[[アウダイール]]}}
+{{Fs player|nat=FRA|pos=DF|name=[[ジョナタン・ゼビナ]]}}
+{{Fs player|nat=ARG|pos=DF|name=[[ワルテル・サムエル]]}}
+{{Fs player|nat=ITA|pos=DF|name={{仮リンク|アレッサンドロ・リナルディ|en|Alessandro Rinaldi (footballer)}}}}
+{{Fs player|nat=ITA|pos=DF|name={{仮リンク|アメデオ・マンゴーネ|en|Amedeo Mangone}}}}
+{{Fs player|nat=FRA|pos=DF|name=[[ヴァンサン・カンデラ]]}}
+{{Fs player|nat=ITA|pos=MF|name=[[ダミアーノ・トンマージ]]}}
+{{fs mid}}
+{{Fs player|nat=JPN|pos=MF|name=[[中田英寿]]}}
+{{Fs player|nat=ITA|pos=MF|name=[[クリスティアーノ・ザネッティ]]}}
+{{Fs player|nat=BRA|pos=MF|name=[[マルコス・ドス・サントス・アスンソン|マルコス・アスンソン]]}}
+{{Fs player|nat=BRA|pos=MF|name=[[エメルソン・フェレイラ・ダ・ローザ|エメルソン]]}}
+{{Fs player|nat=ITA|pos=MF|name=[[ガエターノ・ダゴスティーノ]]}}
+{{Fs player|nat=URU|pos=MF|name=[[ジャンニ・ギグー]]}}
+{{Fs player|nat=ITA|pos=MF|name=[[エウゼビオ・ディ・フランチェスコ]]}}
+{{Fs player|nat=ITA|pos=FW|name=[[フランチェスコ・トッティ]]}}
+{{Fs player|nat=ITA|pos=FW|name=[[パオロ・ポッジ]]}}
+{{Fs player|nat=ARG|pos=FW|name=[[アベル・バルボ]]}}
+{{Fs player|nat=BRA|pos=FW|name=[[ファビオ・ジュニオール・ペレイラ]]}}
+{{Fs player|nat=ITA|pos=FW|name=[[マルコ・デルヴェッキオ]]}}
+{{Fs player|nat=ITA|pos=FW|name=[[ヴィンチェンツォ・モンテッラ]]}}
+{{Fs player|nat=ARG|pos=FW|name=[[ガブリエル・バティストゥータ]]}}
+{{Fs end}}
+
+== リーグ戦順位表 ==
+<onlyinclude>{{#invoke:Sports table|main|style=WDL
+|source= [https://www.rsssf.org/tablesi/ital01.html RSSSF.com]
+|team1=ROM
+|team2=JUV
+|team3=LAZ
+|team4=PAR
+|team5=INT
+
+|win_ROM=22|draw_ROM=9|loss_ROM=3|gf_ROM=68|ga_ROM=33|status_ROM=C, <!-- Roma -->
+|win_INT=14|draw_INT=9|loss_INT=11|gf_INT=47|ga_INT=47<!-- Internazionale -->
+|win_JUV=21|draw_JUV=10|loss_JUV=3|gf_JUV=61|ga_JUV=27<!-- Juventus -->
+|win_PAR=16|draw_PAR=8|loss_PAR=10|gf_PAR=51|ga_PAR=31<!-- Parma -->
+|win_LAZ=21|draw_LAZ=6|loss_LAZ=7|gf_LAZ=65|ga_LAZ=36<!-- Lazio -->
+
+|name_ROM=[[ASローマ]]
+|name_JUV=[[ユヴェントスFC|ユヴェントス]]
+|name_LAZ=[[SSラツィオ|ラツィオ]]
+|name_PAR=[[パルマ・カルチョ1913|パルマ]]
+|name_INT=[[インテルナツィオナーレ・ミラノ|インテル]]
+
+|update=complete
+}}</onlyinclude>
+== 脚注 ==
+{{脚注ヘルプ}}
+{{Reflist}}
+
+{{DEFAULTSORT:ろおま}}
+[[Category:2000年のサッカー]]
+[[Category:2001年のサッカー]]
+[[Category:2000年のイタリア]]
+[[Category:2001年のイタリア]]
+[[Category:ASローマ]]

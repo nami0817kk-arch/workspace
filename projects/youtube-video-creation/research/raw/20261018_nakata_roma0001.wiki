@@ -1,0 +1,1697 @@
+{{More citations needed|date=April 2026}}
+{{Infobox football club season
+| club               = [[AS Roma|Roma]]
+| season             = 2000–01
+| manager            = [[Fabio Capello]]
+| chairman           = [[Franco Sensi]]
+| chrtitle           = President
+| stadium            = [[Stadio Olimpico]]
+| league             = [[Serie A]]
+| league result      = [[2000–01 Serie A|'''1st''']]
+| cup1               = [[Coppa Italia]]
+| cup1 result        = [[2000–01 Coppa Italia|Round of 16]]
+| cup2               = [[UEFA Europa League|UEFA Cup]]
+| cup2 result        = [[2000–01 UEFA Cup|Fourth round]]
+| league topscorer   = <br />[[Gabriel Batistuta]] (20)
+| season topscorer   = <br />Gabriel Batistuta (21)
+| highest attendance = 77,120 vs [[SS Lazio|Lazio]]<br />(29 April 2001, Serie A)
+| lowest attendance  = 5,000 vs [[ND Gorica|HIT Gorica]]<br />(28 September 2000, UEFA Cup)
+| average attendance = 64,271<ref name="AttendanceStats">{{cite web |title=Attendance Statistics of Serie A 2000-2001 |url=http://www.stadiapostcards.com/a20002001.pdf |website=stadiapostcards.com}}</ref>
+
+|pattern_la1 = _roma0001h
+|leftarm1 = A00000
+|pattern_b1 = _roma0001h
+|body1 = A00000
+|pattern_ra1 = _roma0001h
+|pattern_sh1 = _roma0001h2
+|rightarm1 = A00000
+|shorts1 = FFFFFF
+|socks1 = a00000
+|pattern_b2 = _roma0001a
+|body2 = FFFFFF
+|pattern_la2 = _roma0001a
+|leftarm2 = FFFFFF
+|pattern_ra2 = _roma0001a
+|pattern_sh2 = _roma0001h
+|rightarm2 = FFFFFF
+|shorts2 = FFFFFF
+|socks2 = FFFFFF
+|pattern_la3 = _roma0001t
+|leftarm3 = 030347
+|pattern_b3 =_roma0001t
+|body3 = DC143C
+|pattern_ra3 = _roma0001t
+|rightarm3 = 030347
+|pattern_sh3 = _roma0001t
+|shorts3 = 030347
+|pattern_so3 =
+|socks3 = 030347
+| prevseason         = [[1999–2000 AS Roma season|1999–2000]]
+| nextseason         = [[2001–02 AS Roma season|2001–02]]
+}}
+During the 2000-01 season [[AS Roma]] competed in [[Serie A]], [[Coppa Italia]] and [[UEFA Europa League|UEFA Cup]].
+
+==Summary==
+In 2001, '''[[AS Roma|Associazione Sportiva Roma]]''' took its third league title (after 1942 and 1983), winning [[Serie A]] only a year after local rivals [[SS Lazio|Lazio]]. Important signings for the season were [[Argentina|Argentines]] [[Walter Samuel]], a [[Defender (association football)|defender]], and [[Gabriel Batistuta]], a top [[Forward (association football)|striker]]. Manager [[Fabio Capello]]'s line-up also included [[Cafu]], [[Vincent Candela]], [[Emerson (footballer, born 1976)|Emerson]], [[Vincenzo Montella]] and captain [[Francesco Totti]].
+
+Capello won [[Serie A]] once again when on the last matchday Roma defeated [[Parma AC|Parma]] 3–1 at home with Totti, Montella and Batistuta scoring.
+
+==Players==
+
+===Squad information===
+
+{| class="wikitable" style="text-align:left; font-size:100%; width:100%"
+|-
+! style="background:#B21B1C; color:#FFD700; text-align:center"| No.
+! style="background:#B21B1C; color:#FFD700; text-align:center"| Name
+! style="background:#B21B1C; color:#FFD700; text-align:center"| Nat
+! style="background:#B21B1C; color:#FFD700; text-align:center"| Position(s)
+! style="background:#B21B1C; color:#FFD700; text-align:center"| Date of birth (age)
+! style="background:#B21B1C; color:#FFD700; text-align:center"| Signed from
+|-
+! colspan="25"  style="background:#dcdcdc; text-align:center"| Goalkeepers
+|-
+| 1
+| [[Francesco Antonioli]]
+| {{flagicon|ITA}}
+| [[Goalkeeper (association football)|GK]]
+| {{birth date |df=yes|1969|9|14}} (aged {{Age|1969|9|14|2001|5|18}})
+| {{flagicon|ITA}} [[Bologna FC 1909|Bologna]]
+|-
+| 12
+| [[Marco Amelia]]
+| {{flagicon|ITA}}
+| [[Goalkeeper (association football)|GK]]
+| {{birth date |df=yes|1982|4|2}} (aged {{Age|1982|4|2|2001|5|18}}) 
+| {{flagicon|ITA}} [[AS Roma Youth Sector|Youth Sector]]
+|-
+| 22
+| [[Cristiano Lupatelli]]
+| {{flagicon|ITA}}
+| [[Goalkeeper (association football)|GK]]
+| {{birth date |df=yes|1978|6|21}} (aged {{Age|1978|6|21|2001|5|18}})
+| {{flagicon|ITA}} [[Fidelis Andria 2018|Fidelis Andria]]
+|-
+! colspan="25"  style="background:#dcdcdc; text-align:center"| Defenders
+|-
+| 2
+| [[Cafu]]
+| {{flagicon|BRA}}
+| [[Defender (association football)#Full-back|RB]]
+| {{birth date |df=yes|1970|6|7}} (aged {{Age|1970|6|7|2001|5|18}})
+| {{flagicon|BRA}} [[SE Palmeiras|Palmeiras]]
+|-
+| 3
+| [[Antônio Carlos Zago|Zago]]
+| {{flagicon|BRA}}
+| [[Defender (association football)#Centre-back|CB]]
+| {{birth date |df=yes|1969|3|14}} (aged {{Age|1969|3|14|2001|5|18}})
+| {{flagicon|BRA}} [[Sport Club Corinthians Paulista|Corinthians]]
+|-
+| 6
+| [[Aldair]]
+| {{flagicon|BRA}}
+| [[Defender (association football)#Centre-back|CB]]
+| {{birth date |df=yes|1965|11|30}} (aged {{Age|1965|11|30|2001|5|18}})
+| {{flagicon|POR}} [[S.L. Benfica|Benfica]]
+|-
+| 15
+| [[Jonathan Zebina]]
+| {{flagicon|FRA}}
+| [[Defender (association football)#Full-back|RB/CB]]
+| {{birth date |df=yes|1978|7|19}} (aged {{Age|1978|7|19|2001|5|18}})
+| {{flagicon|ITA}} [[Cagliari Calcio|Cagliari]]
+|-
+| 19
+| [[Walter Samuel]]
+| {{flagicon|ARG}}
+| [[Defender (association football)#Centre-back|CB]]
+| {{birth date |df=yes|1978|3|23}} (aged {{Age|1978|3|23|2001|5|18}})
+| {{flagicon|ARG}} [[Boca Juniors]]
+|-
+| 23
+| [[Alessandro Rinaldi (footballer)|Alessandro Rinaldi]]
+| {{flagicon|ITA}}
+| [[Defender (association football)#Centre-back|CB]]
+| {{birth date |df=yes|1974|11|23}} (aged {{Age|1974|11|23|2001|5|18}})
+| {{flagicon|ITA}} [[Bologna FC 1909|Bologna]]
+|-
+| 28
+| [[Amedeo Mangone]]
+| {{flagicon|ITA}}
+| [[Defender (association football)#Centre-back|CB]]
+| {{birth date |df=yes|1968|7|12}} (aged {{Age|1968|7|12|2001|5|18}})
+| {{flagicon|ITA}} [[Bologna FC 1909|Bologna]]
+|-
+| 32
+| [[Vincent Candela]]
+| {{flagicon|FRA}}
+| [[Defender (association football)#Full-back|LB]]
+| {{birth date |df=yes|1973|10|24}} (aged {{Age|1973|10|24|2001|5|18}})
+| {{flagicon|FRA}} [[En Avant Guingamp|Guingamp]]
+|-
+! colspan="25"  style="background:#dcdcdc; text-align:center"| Midfielders
+|-
+| 4
+| [[Cristiano Zanetti]]
+| {{flagicon|ITA}}
+| [[Midfielder#Defensive midfielder|DM]]
+| {{birth date |df=yes|1977|4|14}} (aged {{Age|1977|4|14|2001|5|18}})
+| {{flagicon|ITA}} [[Cagliari Calcio|Cagliari]]
+|-
+| 5
+| [[Marcos Assunção]]
+| {{flagicon|BRA}}
+| [[Midfielder#Central midfielder|CM]]
+| {{birth date |df=yes|1976|7|25}} (aged {{Age|1976|7|25|2001|5|18}})
+| {{flagicon|BRA}} [[Santos FC|Santos]]
+|-
+| 7
+| [[Eusebio Di Francesco]]
+| {{flagicon|ITA}}
+| [[Midfielder#Central midfielder|CM]]
+| {{birth date |df=yes|1969|9|8}} (aged {{Age|1969|9|8|2001|5|18}})
+| {{flagicon|ITA}} [[Piacenza Calcio 1919|Piacenza]]
+|-
+| 8
+| [[Hidetoshi Nakata]]
+| {{flagicon|JPN}}
+| [[Midfielder#Central midfielder|CM]]
+| {{birth date |df=yes|1977|1|22}} (aged {{Age|1977|1|22|2001|5|18}})
+| {{flagicon|ITA}} [[AC Perugia Calcio|Perugia]] 
+|-
+| 11
+| [[Emerson (footballer, born 1976)|Emerson]]
+| {{flagicon|BRA}}
+| [[Midfielder#Defensive midfielder|DM]]
+| {{birth date |df=yes|1976|10|4}} (aged {{Age|1976|10|4|2001|5|18}})
+| {{flagicon|GER}} [[Bayer 04 Leverkusen|Bayer Leverkusen]]
+|-
+| 16
+| [[Gaetano D'Agostino]]
+| {{flagicon|ITA}}
+| [[Midfielder#Central midfielder|CM]]
+| {{birth date |df=yes|1982|6|3}} (aged {{Age|1982|6|3|2001|5|18}})
+| {{flagicon|ITA}} [[AS Roma Youth Sector|Youth Sector]]
+|-
+| 17
+| [[Damiano Tommasi]]
+| {{flagicon|ITA}}
+| [[Midfielder#Defensive midfielder|DM]]
+| {{birth date |df=yes|1974|5|17}} (aged {{Age|1974|5|17|2001|5|18}})
+| {{flagicon|ITA}} [[Hellas Verona FC|Hellas Verona]]
+|-
+| 25
+| [[Gianni Guigou]]
+| {{flagicon|URU}}
+| [[Midfielder#Wide midfielder|LM]]
+| {{birth date |df=yes|1975|2|22}} (aged {{Age|1975|2|22|2001|5|18}})
+| {{flagicon|URU}} [[Club Nacional|Nacional]]
+|-
+! colspan="25"  style="background:#dcdcdc; text-align:center"| Forwards
+|-
+| 9
+| [[Vincenzo Montella]]
+| {{flagicon|ITA}}
+| [[Forward (association football)|CF]]
+| {{birth date |df=yes|1974|6|18}} (aged {{Age|1974|6|18|2002|5|18}})
+| {{flagicon|ITA}} [[UC Sampdoria|Sampdoria]]
+|-
+| 10
+| [[Francesco Totti]] ([[Captain (association football)|c]])
+| {{flagicon|ITA}}
+| [[Forward (association football)|FW]]
+| {{birth date |df=yes|1976|9|27}} (aged {{Age|1976|9|27|2001|5|18}})
+| {{flagicon|ITA}} [[AS Roma Youth Sector|Youth Sector]]
+|-
+| 18
+| [[Gabriel Batistuta]]
+| {{flagicon|ARG}}
+| [[Forward (association football)|CF]]
+| {{birth date |df=yes|1969|2|1}} (aged {{Age|1969|2|1|2001|5|18}})
+| {{flagicon|ITA}} [[ACF Fiorentina|Fiorentina]]
+|-
+| 21
+| [[Abel Balbo]]
+| {{flagicon|ARG}}
+| [[Forward (association football)|CF]]
+| {{birth date |df=yes|1966|6|1}} (aged {{Age|1966|6|1|2001|5|18}})
+| {{flagicon|ITA}} [[ACF Fiorentina|Fiorentina]]
+|-
+| 24
+| [[Marco Delvecchio]]
+| {{flagicon|ITA}}
+| [[Forward (association football)|CF]]
+| {{birth date |df=yes|1973|4|7}} (aged {{Age|1973|4|7|2001|5|18}})
+| {{flagicon|ITA}} [[Inter Milan]]
+|}
+
+===Reserve squad===
+{| class="wikitable" style="text-align:left; font-size:100%; width:100%"
+|-
+! style="background:#B21B1C; color:#FFD700; text-align:center"| No.
+! style="background:#B21B1C; color:#FFD700; text-align:center"| Name
+! style="background:#B21B1C; color:#FFD700; text-align:center"| Nat
+! style="background:#B21B1C; color:#FFD700; text-align:center"| Position(s)
+! style="background:#B21B1C; color:#FFD700; text-align:center"| Date of birth (age)
+|-
+| 33
+| [[Carlo Zotti]]
+| {{flagicon|ITA}}
+| [[Goalkeeper (association football)|GK]]
+| {{birth date |df=yes|1982|9|3}} (aged {{Age|1982|9|3|2001|5|18}}) 
+|-
+| 20
+| [[Damiano Ferronetti]]
+| {{flagicon|ITA}}
+| [[Left-back|LB]]
+| {{birth date |df=yes|1984|11|1}} (aged {{Age|1984|11|1|2001|5|18}})
+|-
+| 27
+| [[Alessandro Zamperini]]
+| {{flagicon|ITA}}
+| [[Centre-back|CB]]
+| {{birth date |df=yes|1982|8|15}} (aged {{Age|1982|8|15|2001|5|18}})
+|-
+| 30
+| [[Cesare Bovo]]
+| {{flagicon|ITA}}
+| [[Centre-back|CB]]
+| {{birth date |df=yes|1983|1|14}} (aged {{Age|1983|1|14|2001|5|18}})
+|-
+| 13
+| [[Massimo Bonanni]]
+| {{flagicon|ITA}}
+| [[Central midfielder|CM]]
+| {{birth date |df=yes|1982|6|10}} (aged {{Age|1982|6|10|2001|5|18}})
+|-
+| 26
+| [[Daniele De Rossi]]
+| {{flagicon|ITA}}
+| [[Midfielder|DM]]
+| {{birth date |df=yes|1983|7|24}} (aged {{Age|1983|7|27|2001|5|18}})
+|-
+| 29
+| [[Alessandro Tulli]]
+| {{flagicon|ITA}}
+| [[Forward (association football)|CF]]
+| {{birth date |df=yes|1982|6|10}} (aged {{Age|1982|6|10|2001|5|18}})
+|-
+|}
+
+==Transfers==
+
+===In===
+{| class="wikitable" style="text-align:left; font-size:100%; width:100%"
+|-
+!  style="background:#d5000; color:black; text-align:center"| Squad No.
+!  style="background:#d5000; color:black; text-align:center"| Name
+!  style="background:#d5000; color:black; text-align:center"| Age
+!  style="background:#d5000; color:black; text-align:center"| Position
+!  style="background:#d5000; color:black; text-align:center"| Transfer window
+!  style="background:#d5000; color:black; text-align:center"| From
+!  style="background:#d5000; color:black; text-align:center"| Type
+!  style="background:#d5000; color:black; text-align:center"| Fee
+|-
+| 18
+| {{flagicon|ARG}} [[Gabriel Batistuta]]
+| 31
+| [[Forward (association football)|CF]]
+| Summer
+| [[ACF Fiorentina|Fiorentina]]
+| Transfer
+| €36.15m
+|-
+| 19
+| {{flagicon|ARG}} [[Walter Samuel]]
+| 22
+| [[Defender (association football)#Centre-back|CB]]
+| Summer
+| {{flagicon|ARG}} [[Boca Juniors]]
+| Transfer
+| €20.8m
+|-
+| 15
+| {{flagicon|FRA}} [[Jonathan Zebina]]
+| 21
+| [[Defender (association football)#Full-back|RB/CB]]
+| Summer
+| [[Cagliari Calcio|Cagliari]]
+| Transfer
+| €18.4m
+|-
+| 11
+| {{flagicon|BRA}} [[Emerson (footballer, born 1976)|Emerson]]
+| 24
+| [[Midfielder#Defensive midfielder|DM]]
+| Summer
+| {{flagicon|GER}} [[Bayer 04 Leverkusen|Bayer Leverkusen]]
+| Transfer
+| €18m
+|-
+| 25
+| {{flagicon|URU}} [[Gianni Guigou]]
+| 25
+| [[Midfielder#Wide midfielder|LM]]
+| Winter
+| {{flagicon|URU}} [[Club Nacional|Nacional]]
+| Transfer
+| €4m
+|-
+| —
+| {{flagicon|ITA}} [[Franco Brienza]]
+| 21
+| [[Midfielder#Attacking midfielder|AM]]
+| Summer
+| [[Calcio Foggia 1920|Foggia]]
+| Transfer
+| €52,000
+|-
+| 33
+| {{flagicon|ITA}} [[Giuseppe Di Masi]]
+| 18
+| [[Goalkeeper (association football)|GK]]
+| Summer
+| [[Calcio Foggia 1920|Foggia]]
+| Transfer
+| —
+|-
+| 21
+| {{flagicon|ARG}} [[Abel Balbo]]
+| 34
+| [[Forward (association football)|CF]]
+| Summer
+| [[ACF Fiorentina|Fiorentina]]
+| Transfer
+| —
+|-
+| 16
+| {{flagicon|ITA}} [[Gaetano D'Agostino]]
+| 18
+| [[Midfielder#Central midfielder|CM]]
+| Summer
+| [[AS Roma Youth Sector|Youth Sector]]
+| Promotion
+| —
+|-
+| 12
+| {{flagicon|ITA}} [[Marco Amelia]]
+| 18
+| [[Goalkeeper (association football)|GK]]
+| Summer
+| [[AS Roma Youth Sector|Youth Sector]]
+| Promotion
+| —
+|-
+| —
+| {{flagicon|ITA}} [[Simone Farina]]
+| 18
+| [[Defender (association football)#Full-back|LB]]
+| Summer
+| [[AS Roma Youth Sector|Youth Sector]]
+| Promotion
+| —
+|-
+| 8
+| {{flagicon|RUS}} [[Dmitri Alenichev]]
+| 27
+| [[Midfielder#Central midfielder|CM]]
+| Summer
+| [[AC Perugia Calcio|Perugia]] 
+| Loan return
+| —
+|-
+| —
+| {{flagicon|ITA}} [[Daniele De Vezze]]
+| 20
+| [[Midfielder#Central midfielder|CM]]
+| Winter
+| [[US Città di Palermo|Palermo]] 
+| Loan return
+| —
+|-
+| —
+| {{flagicon|ITA}} [[Filippo Dal Moro]]
+| 29
+| [[Defender (association football)#Full-back|LB]]
+| Summer
+| {{flagicon|GRE}} [[AEK Athens F.C.|AEK Athens]] 
+| Loan return
+| —
+|-
+| —
+| {{flagicon|ITA}} [[Giuseppe Colucci (footballer)|Giuseppe Colucci]]
+| 19
+| [[Midfielder#Central midfielder|CM]]
+| Summer
+| {{flagicon|FRA}} [[FC Girondins de Bordeaux|Bordeaux]] 
+| Loan return
+| —
+|-
+| —
+| {{flagicon|ITA}} [[Daniele De Vezze]]
+| 20
+| [[Midfielder#Central midfielder|CM]]
+| Summer
+| [[US Città di Palermo|Palermo]] 
+| Loan return
+| —
+|-
+| 18
+| {{flagicon|ITA}} [[Alessandro Frau]]
+| 23
+| [[Midfielder#Attacking midfielder|AM]]
+| Summer
+| [[US Savoia 1908|Savoia]] 
+| Loan return
+| —
+|-
+| 27
+| {{flagicon|BRA}} [[Fábio Júnior (footballer, born 1977)|Fábio Júnior]]
+| 23
+| [[Forward (association football)|CF]]
+| Winter
+| {{flagicon|BRA}} [[Cruzeiro Esporte Clube|Cruzeiro]]
+| Loan return
+| —
+|}
+
+Total spending: {{loss}} 97,402,000€
+
+===Out===
+{| class="wikitable" style="text-align:left; font-size:100%; width:100%"
+|-
+!  style="background:#d5000; color:black; text-align:center"| Squad No.
+!  style="background:#d5000; color:black; text-align:center"| Name
+!  style="background:#d5000; color:black; text-align:center"| Age
+!  style="background:#d5000; color:black; text-align:center"| Position
+!  style="background:#d5000; color:black; text-align:center"| Transfer window
+!  style="background:#d5000; color:black; text-align:center"| To
+!  style="background:#d5000; color:black; text-align:center"| Type
+!  style="background:#d5000; color:black; text-align:center"| Fee
+|-
+| 33
+| {{flagicon|ITA}} [[Giuseppe Di Masi]]
+| 18
+| [[Goalkeeper (association football)|GK]]
+| Winter
+| [[US Città di Palermo|Palermo]]
+| Loan
+| —
+|-
+| 28
+| {{flagicon|ITA}} [[Maurizio Lanzaro]]
+| 18
+| [[Defender (association football)#Centre-back|CB]]
+| Winter
+| [[Hellas Verona FC|Hellas Verona]]
+| Loan
+| —
+|-
+| 19
+| {{flagicon|BLR}} [[Sergei Gurenko]]
+| 28
+| [[Defender (association football)#Centre-back|CB]]
+| Winter
+| {{flagicon|ESP}} [[Real Zaragoza|Zaragoza]]
+| Loan
+| €360,000
+|-
+| 26
+| {{flagicon|GNB}} [[Ednilson]]
+| 17
+| [[Midfielder#Defensive midfielder|DM]]
+| Summer
+| {{flagicon|POR}} [[S.L. Benfica|Benfica]]
+| Transfer
+| —
+|-
+| 25
+| {{flagicon|ITA}} [[Andrea Campagnolo]]
+| 21
+| [[Goalkeeper (association football)|GK]]
+| Summer
+| [[Genoa CFC|Genoa]]
+| Transfer
+| —
+|-
+| 7
+| {{flagicon|ITA}} [[Gustavo Bartelt]]
+| 25
+| [[Forward (association football)|CF]]
+| Summer
+| {{flagicon|ENG}} [[Aston Villa F.C.|Aston Villa]]
+| Transfer
+| —
+|-
+| 16
+| {{flagicon|FRY}} [[Ivan Tomić]]
+| 25
+| [[Midfielder#Central midfielder|CM]]
+| Summer
+| {{flagicon|ESP}} [[Deportivo Alavés|Alavés]]
+| Transfer
+| —
+|-
+| 13
+| {{flagicon|ITA}} [[Manuele Blasi]]
+| 19
+| [[Midfielder#Wide midfielder|LM]]
+| Summer
+| [[AC Perugia Calcio|Perugia]]
+| Transfer
+| —
+|-
+| 20
+| {{flagicon|ITA}} [[Paolo Poggi]]
+| 29
+| [[Forward (association football)|CF]]
+| Winter
+| [[AS Bari|Bari]]
+| Loan
+| —
+|-
+| 13
+| {{flagicon|ITA}} [[Manuele Blasi]]
+| 19
+| [[Midfielder#Wide midfielder|LM]]
+| Summer
+| [[AC Perugia Calcio|Perugia]]
+| Transfer
+| —
+|-
+| 30
+| {{flagicon|ITA}} [[Fabio Petruzzi]]
+| 29
+| [[Defender (association football)#Centre back|CB]]
+| Summer
+| [[Brescia Calcio|Brescia]] 
+| Transfer
+| —
+|-
+| 27
+| {{flagicon|BRA}} [[Fábio Júnior (footballer, born 1977)|Fábio Júnior]]
+| 23
+| [[Forward (association football)|CF]]
+| Summer
+| {{flagicon|BRA}} [[Cruzeiro Esporte Clube|Cruzeiro]]
+| Loan
+| —
+|-
+| 8
+| {{flagicon|RUS}} [[Dmitri Alenichev]]
+| 27
+| [[Midfielder#Central midfielder|CM]]
+| Summer
+| [[FC Porto|Porto]] 
+| Transfer
+| €3m
+|-
+| —
+| {{flagicon|ITA}} [[Filippo Dal Moro]]
+| 29
+| [[Defender (association football)#Full-back|LB]]
+| Summer
+| [[Ravenna FC|Ravenna]] 
+| Loan
+| —
+|-
+| 32
+| {{flagicon|ITA}} [[Giuseppe Colucci (footballer)|Giuseppe Colucci]]
+| 19
+| [[Midfielder#Central midfielder|CM]]
+| Summer
+| [[Hellas Verona FC|Hellas Verona]]
+| Transfer
+| —
+|-
+| 18
+| {{flagicon|ITA}} [[Alessandro Frau]]
+| 23
+| [[Midfielder#Attacking midfielder|AM]]
+| Summer
+| [[Pisa SC|Pisa]] 
+| Loan
+| —
+|-
+| 27
+| {{flagicon|BRA}} [[Fábio Júnior (footballer, born 1977)|Fábio Júnior]]
+| 23
+| [[Forward (association football)|CF]]
+| Winter
+| {{flagicon|BRA}} [[SE Palmeiras|Palmeiras]]
+| Loan
+| —
+|-
+|}
+
+Total income: {{gain}} 3,360,000€
+
+==Competitions==
+
+===Overall===
+{| class=wikitable style="text-align:center; width:730px"
+|-
+! style=text-align:center; width:150px; | Competition
+! style=text-align:center; width:100px; | Started round
+! style=text-align:center; width:100px; | Final position
+! style=text-align:center; width:150px; | First match
+! style=text-align:center; width:140px; | Last match
+|-
+| style=text-align:left; | [[2000–01 Serie A|Serie A]]
+| [[#Matches|Matchday 1]]
+| style=background:#FFD700;|Winners
+| 1 October 2000
+| 17 June 2001
+|-
+| style=text-align:left; | [[2000–01 Coppa Italia|Coppa Italia]]
+| [[2000–01 Coppa Italia#Round of 16|Round of 16]]
+| [[2000–01 Coppa Italia#Round of 16|Round of 16]]
+| 17 September 2000
+| 22 September 2000
+|-
+| style=text-align:left; | [[2000–01 UEFA Cup|UEFA Cup]]
+| [[2000–01 UEFA Cup first round|First round]]
+| [[2000–01 UEFA Cup#Fourth round|Fourth round]]
+| 14 September 2000
+| 22 February 2001
+|}
+<small>Last updated: 17 June 2001</small>
+
+===Serie A===
+{{main|2000–01 Serie A}}
+
+====League table====
+{{:2000–01 Serie A|showteam=ROM}}
+
+====Results summary====
+{{Fb_rs |hw=12 |hd=5 |hl=0 |hgf=33 |hga=14 |aw=10 |ad=4 |al=3 |agf=35 |aga=19}}
+{{Fb_rs_footer |u=17 June 2001 |s=[[#Matches|Competitive matches]]|date=July 2015}}
+
+====Results by round====
+{{#invoke:sports rbr table|table|legendpos=b
+|header=Round
+|label1= Ground
+|res1=H/A/H/A/A/H/A/H/A/H/A/H/A/H/A/H/A/A/H/A/H/H/A/H/A/H/A/H/A/H/A/H/A/H
+|label2= Result
+|res2=W/W/W/L/W/W/W/W/D/W/W/D/W/D/L/W/W/W/W/W/W/W/D/W/L/D/W/D/D/W/W/D/D/W
+|label3= Position
+|res3=1/1/1/3/2/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1
+<!-- -->
+|text_H=Home|text_A=Away|text_P=Postponed
+|color_W=green2|text_W=Win
+|color_D=yellow2|text_D=Draw
+|color_L=red2|text_L=Loss
+|color_1=1st
+|color_2=green4
+|color_3-4=green2
+|color_5-6=blue1
+|color_15-18=red1
+|text_1=[[2001–02 UEFA Champions League#Group stage|Leader]], [[2001–02 UEFA Champions League#Group stage|2001–02 UEFA Champions League Group stage]]
+|text_2=[[2001–02 UEFA Champions League#Group stage|2001–02 UEFA Champions League Group stage]]
+|text_3-4=[[2001–02 UEFA Champions League|2001–02 UEFA Champions League Qualifying round]]
+|text_5-6=[[2001–02 UEFA Cup#First round|2001–02 UEFA Cup First round]]
+|color_8-9=#CCCCFF |text_8-9=Qualification to [[2001 UEFA Intertoto Cup|Intertoto Cup]]
+|text_15-18=[[2001–02 Serie B]]
+|updated=complete
+|source=[[#Matches|Competitive matches]]
+|date=June 2021
+}}
+
+====Matches====
+{{football box collapsible
+|round      = 1
+|date       = 1 October 2000
+|time       = 15:00 [[Central European Summer Time|CEST]] ([[UTC+02:00]])
+|team1      = Roma
+|score      = 2–0
+|report     = http://www.legaseriea.it/en/serie-a-tim/match-report/2000-01/UNICO/UNI/1/ROMBOL
+|team2      = [[Bologna FC 1909|Bologna]]
+|goals1     = [[Francesco Totti|Totti]] {{goal|45+2}}<br />[[Marcello Castellini|Castellini]] {{goal|62|o.g.}}
+|goals2     = 
+|stadium    = [[Stadio Olimpico]]
+|location   = [[Rome]]
+|attendance = 59,769
+|referee    = [[Stefano Farina]]
+|result     = W
+}}
+{{football box collapsible
+|round      = 2
+|date       = 15 October 2000
+|time       = 20:30 [[Central European Summer Time|CEST]] ([[UTC+02:00]])
+|team1      = [[US Lecce|Lecce]]
+|score      = 0–4
+|report     = http://www.legaseriea.it/en/serie-a-tim/match-report/2000-01/UNICO/UNI/2/LECROM
+|team2      = Roma
+|goals1     = 
+|goals2     = [[Gabriel Batistuta|Batistuta]] {{goal|41||80}}<br />[[Damiano Tommasi|Tommasi]] {{goal|47}}<br />[[Francesco Totti|Totti]] {{goal|90+1|pen.}}
+|stadium    = [[Stadio Via del Mare]]
+|location   = [[Lecce]]
+|attendance = 18,332
+|referee    = [[Cosimo Bolognino]]
+|result     = W
+}}
+{{football box collapsible
+|round      = 3
+|date       = 22 October 2000
+|time       = 15:00 [[Central European Summer Time|CEST]] ([[UTC+02:00]])
+|team1      = Roma
+|score      = 3–1
+|report     = http://www.legaseriea.it/en/serie-a-tim/match-report/2000-01/UNICO/UNI/3/ROMVIC
+|team2      = [[Vicenza Calcio|Vicenza]]
+|goals1     = [[Francesco Totti|Totti]] {{goal|39}}<br />[[Vincenzo Montella|Montella]] {{goal|79}}<br />[[Gabriel Batistuta|Batistuta]] {{goal|86}}
+|goals2     = [[Mohamed Kallon|Kallon]] {{goal|85}}
+|stadium    = [[Stadio Olimpico]]
+|location   = [[Rome]]
+|attendance = 57,610
+|referee    = Fiorenzo Treossi
+|result     = W
+}}
+{{football box collapsible
+|round      = 4
+|date       = 1 November 2000
+|time       = 20:30 [[Central European Time|CET]] ([[UTC+01:00]])
+|team1      = [[Inter Milan|Internazionale]]
+|score      = 2–0
+|report     = http://www.legaseriea.it/en/serie-a-tim/match-report/2000-01/UNICO/UNI/4/INTROM
+|team2      = Roma
+|goals1     = [[Hakan Şükür|Şükür]] {{goal|19}}<br />[[Álvaro Recoba|Recoba]] {{goal|68}}
+|goals2     = 
+|stadium    = [[San Siro]]
+|location   = [[Milan]]
+|attendance = 70,121
+|referee    = [[Domenico Messina]]
+|result     = L
+}}
+{{football box collapsible
+|round      = 5
+|date       = 5 November 2000
+|time       = 15:00 [[Central European Time|CET]] ([[UTC+01:00]])
+|team1      = [[Brescia Calcio|Brescia]]
+|score      = 2–4
+|report     = http://www.legaseriea.it/en/serie-a-tim/match-report/2000-01/UNICO/UNI/5/BREROM
+|team2      = Roma
+|goals1     = [[Pierpaolo Bisoli|Bisoli]] {{goal|22}}<br />[[Dario Hübner|Hübner]] {{goal|45|pen.}}
+|goals2     = [[Vincent Candela|Candela]] {{goal|13}}<br />[[Gabriel Batistuta|Batistuta]] {{goal|60||78||90+1}}
+|stadium    = [[Stadio Mario Rigamonti]]
+|location   = [[Brescia]]
+|attendance = 16,619
+|referee    = Salvatore Racalbuto
+|result     = W
+}}
+{{football box collapsible
+|round      = 6
+|date       = 12 November 2000
+|time       = 15:00 [[Central European Time|CET]] ([[UTC+01:00]])
+|team1      = Roma
+|score      = 2–1
+|report     = http://www.legaseriea.it/en/serie-a-tim/match-report/2000-01/UNICO/UNI/6/ROMRGI
+|team2      = [[Reggina Calcio|Reggina]]
+|goals1     = [[Francesco Totti|Totti]] {{goal|30|pen.}}<br />[[Vincenzo Montella|Montella]] {{goal|71}}
+|goals2     = [[Erjon Bogdani|Bogdani]] {{goal|55}}
+|stadium    = [[Stadio Olimpico]]
+|location   = [[Rome]]
+|attendance = 60,740
+|referee    = [[Pierluigi Collina]]
+|result     = W
+}}
+{{football box collapsible
+|round      = 7
+|date       = 19 November 2000
+|time       = 15:00 [[Central European Time|CET]] ([[UTC+01:00]])
+|team1      = [[Hellas Verona FC|Hellas Verona]]
+|score      = 1–4
+|report     = http://www.legaseriea.it/en/serie-a-tim/match-report/2000-01/UNICO/UNI/7/VERROM
+|team2      = Roma
+|goals1     = [[Massimo Oddo|Oddo]] {{goal|4|pen.}}
+|goals2     = [[Vincent Candela|Candela]] {{goal|38}}<br />[[Francesco Totti|Totti]] {{goal|45}}<br />[[Gabriel Batistuta|Batistuta]] {{goal|58||90}}
+|stadium    = [[Stadio Marc'Antonio Bentegodi]]
+|location   = [[Verona]]
+|attendance = 20,053
+|referee    = Fiorenzo Treossi
+|result     = W
+}}
+{{football box collapsible
+|round      = 8
+|date       = 26 November 2000
+|time       = 20:30 [[Central European Time|CET]] ([[UTC+01:00]])
+|team1      = Roma
+|score      = 1–0
+|report     = http://www.legaseriea.it/en/serie-a-tim/match-report/2000-01/UNICO/UNI/8/ROMFIO
+|team2      = [[ACF Fiorentina|Fiorentina]]
+|goals1     = [[Gabriel Batistuta|Batistuta]] {{goal|83}}
+|goals2     = 
+|stadium    = [[Stadio Olimpico]]
+|location   = [[Rome]]
+|attendance = 65,787
+|referee    = [[Graziano Cesari]]
+|result     = W
+}}
+{{football box collapsible
+|round      = 9
+|date       = 3 December 2000
+|time       = 15:00 [[Central European Time|CET]] ([[UTC+01:00]])
+|team1      = [[AC Perugia Calcio|Perugia]]
+|score      = 0–0
+|report     = http://www.legaseriea.it/en/serie-a-tim/match-report/2000-01/UNICO/UNI/9/PERROM
+|team2      = Roma
+|goals1     = 
+|goals2     = 
+|stadium    = [[Stadio Renato Curi]]
+|location   = [[Perugia]]
+|attendance = 27,559
+|referee    = Gennaro Borriello
+|result     = D
+}}
+{{football box collapsible
+|round      = 10
+|date       = 10 December 2000
+|time       = 15:00 [[Central European Time|CET]] ([[UTC+01:00]])
+|team1      = Roma
+|score      = 2–1
+|report     = http://www.legaseriea.it/en/serie-a-tim/match-report/2000-01/UNICO/UNI/10/ROMUDI
+|team2      = [[Udinese Calcio|Udinese]]
+|goals1     = [[Gabriel Batistuta|Batistuta]] {{goal|20}}<br />[[Francesco Totti|Totti]] {{goal|34}}
+|goals2     = [[Roberto Muzzi|Muzzi]] {{goal|44}}
+|stadium    = [[Stadio Olimpico]]
+|location   = [[Rome]]
+|attendance = 59,223
+|referee    = Danilo Nucini
+|result     = W
+}}
+{{football box collapsible
+|round      = [[Derby della Capitale|11]]
+|date       = 17 December 2000
+|time       = 20:30 [[Central European Time|CET]] ([[UTC+01:00]])
+|team1      = [[SS Lazio|Lazio]]
+|score      = 0–1
+|report     = http://www.legaseriea.it/en/serie-a-tim/match-report/2000-01/UNICO/UNI/11/LAZROM
+|team2      = Roma
+|goals1     = 
+|goals2     = [[Paolo Negro|Negro]] {{goal|70|o.g.}}
+|stadium    = [[Stadio Olimpico]]
+|location   = [[Rome]]
+|attendance = 73,988
+|referee    = [[Graziano Cesari]]
+|result     = W
+}}
+{{football box collapsible
+|round      = 12
+|date       = 22 December 2000
+|time       = 20:30 [[Central European Time|CET]] ([[UTC+01:00]])
+|team1      = Roma
+|score      = 0–0
+|report     = http://www.legaseriea.it/en/serie-a-tim/match-report/2000-01/UNICO/UNI/12/ROMJUV
+|team2      = [[Juventus FC|Juventus]]
+|goals1     = 
+|goals2     = 
+|stadium    = [[Stadio Olimpico]]
+|location   = [[Rome]]
+|attendance = 73,411
+|referee    = Gennaro Borriello
+|result     = D
+}}
+{{football box collapsible
+|round      = 13
+|date       = 7 January 2001
+|time       = 15:00 [[Central European Time|CET]] ([[UTC+01:00]])
+|team1      = [[Atalanta BC|Atalanta]]
+|score      = 0–2
+|report     = http://www.legaseriea.it/en/serie-a-tim/match-report/2000-01/UNICO/UNI/13/ATAROM
+|team2      = Roma
+|goals1     = 
+|goals2     = [[Marco Delvecchio|Delvecchio]] {{goal|1}}<br />[[Damiano Tommasi|Tommasi]] {{goal|41}}
+|stadium    = [[Stadio Atleti Azzurri d'Italia]]
+|location   = [[Bergamo]]
+|attendance = 20,716
+|referee    = [[Roberto Rosetti]]
+|result     = W
+}}
+{{football box collapsible
+|round      = 14
+|date       = 14 January 2001
+|time       = 15:00 [[Central European Time|CET]] ([[UTC+01:00]])
+|team1      = Roma
+|score      = 1–1
+|report     = http://www.legaseriea.it/en/serie-a-tim/match-report/2000-01/UNICO/UNI/14/ROMBAR
+|team2      = [[AS Bari|Bari]]
+|goals1     = [[Francesco Totti|Totti]] {{goal|76|pen.}}
+|goals2     = [[Giuseppe Mazzarelli|Mazzarelli]] {{goal|69}}
+|stadium    = [[Stadio Olimpico]]
+|location   = [[Rome]]
+|attendance = 59,175
+|referee    = [[Cosimo Bolognino]]
+|result     = D
+}}
+{{football box collapsible
+|round      = 15
+|date       = 21 January 2001
+|time       = 20:30 [[Central European Time|CET]] ([[UTC+01:00]])
+|team1      = [[AC Milan|Milan]]
+|score      = 3–2
+|report     = http://www.legaseriea.it/en/serie-a-tim/match-report/2000-01/UNICO/UNI/15/MILROM
+|team2      = Roma
+|goals1     = [[Leonardo Araújo|Leonardo]] {{goal|3}}<br />[[Andriy Shevchenko|Shevchenko]] {{goal|22||44}}
+|goals2     = [[Francesco Totti|Totti]] {{goal|40||86|pen.}}
+|stadium    = [[San Siro]]
+|location   = [[Milan]]
+|attendance = 61,786
+|referee    = [[Roberto Rosetti]]
+|result     = L
+}}
+{{football box collapsible
+|round      = [[Derby del Sole|16]]
+|date       = 28 January 2001
+|time       = 15:00 [[Central European Time|CET]] ([[UTC+01:00]])
+|team1      = Roma
+|score      = 3–0
+|report     = http://www.legaseriea.it/en/serie-a-tim/match-report/2000-01/UNICO/UNI/16/ROMNAP
+|team2      = [[SSC Napoli|Napoli]]
+|goals1     = [[Marco Delvecchio|Delvecchio]] {{goal|18}}<br />[[Francesco Totti|Totti]] {{goal|40}}<br />[[Gabriel Batistuta|Batistuta]] {{goal|84}}
+|goals2     = 
+|stadium    = [[Stadio Olimpico]]
+|location   = [[Rome]]
+|attendance = 61,141
+|referee    = [[Alfredo Trentalange]]
+|result     = W
+}}
+{{football box collapsible
+|round      = 17
+|date       = 4 February 2001
+|time       = 15:00 [[Central European Time|CET]] ([[UTC+01:00]])
+|team1      = [[Parma AC|Parma]]
+|score      = 1–2
+|report     = http://www.legaseriea.it/en/serie-a-tim/match-report/2000-01/UNICO/UNI/17/PARROM
+|team2      = Roma
+|goals1     = [[Marco Di Vaio|Di Vaio]] {{goal|36}}
+|goals2     = [[Gabriel Batistuta|Batistuta]] {{goal|74||83}}
+|stadium    = [[Stadio Ennio Tardini]]
+|location   = [[Parma]]
+|attendance = 26,499
+|referee    = [[Stefano Farina]]
+|result     = W
+}}
+{{football box collapsible
+|round      = 18
+|date       = 11 February 2001
+|time       = 15:00 [[Central European Time|CET]] ([[UTC+01:00]])
+|team1      = [[Bologna FC 1909|Bologna]]
+|score      = 1–2
+|report     = http://www.legaseriea.it/en/serie-a-tim/match-report/2000-01/UNICO/UNI/18/BOLROM
+|team2      = Roma
+|goals1     = [[Emanuele Brioschi|Brioschi]] {{goal|51}}
+|goals2     = [[Gabriel Batistuta|Batistuta]] {{goal|11|pen.}}<br />[[Emerson (footballer, born 1976)|Emerson]] {{goal|35}}
+|stadium    = [[Stadio Renato Dall'Ara]]
+|location   = [[Bologna]]
+|attendance = 33,823
+|referee    = Salvatore Racalbuto
+|result     = W
+}}
+{{football box collapsible
+|round      = 19
+|date       = 18 February 2001
+|time       = 15:00 [[Central European Time|CET]] ([[UTC+01:00]])
+|team1      = Roma
+|score      = 1–0
+|report     = http://www.legaseriea.it/en/serie-a-tim/match-report/2000-01/UNICO/UNI/19/ROMLEC
+|team2      = [[US Lecce|Lecce]]
+|goals1     = [[Walter Samuel|Samuel]] {{goal|68}}
+|goals2     = 
+|stadium    = [[Stadio Olimpico]]
+|location   = [[Rome]]
+|attendance = 58,275
+|referee    = [[Domenico Messina]]
+|result     = W
+}}
+{{football box collapsible
+|round      = 20
+|date       = 25 February 2001
+|time       = 15:00 [[Central European Time|CET]] ([[UTC+01:00]])
+|team1      = [[Vicenza Calcio|Vicenza]]
+|score      = 0–2
+|report     = http://www.legaseriea.it/en/serie-a-tim/match-report/2000-01/UNICO/UNI/20/VICROM
+|team2      = Roma
+|goals1     = 
+|goals2     = [[Vincenzo Montella|Montella]] {{goal|80}}<br />[[Emerson (footballer, born 1976)|Emerson]] {{goal|84}}
+|stadium    = [[Stadio Friuli]]
+|location   = [[Udine]]<ref name="AttendanceStats" />
+|attendance = 12,000
+|referee    = [[Graziano Cesari]]
+|result     = W
+}}
+{{football box collapsible
+|round      = 21
+|date       = 4 March 2001
+|time       = 20:30 [[Central European Time|CET]] ([[UTC+01:00]])
+|team1      = Roma
+|score      = 3–2
+|report     = http://www.legaseriea.it/en/serie-a-tim/match-report/2000-01/UNICO/UNI/21/ROMINT
+|team2      = [[Inter Milan|Internazionale]]
+|goals1     = [[Marcos Assunção|Assunção]] {{goal|10}}<br />[[Vincenzo Montella|Montella]] {{goal|28||86}}
+|goals2     = [[Christian Vieri|Vieri]] {{goal|9||45+1}}
+|stadium    = [[Stadio Olimpico]]
+|location   = [[Rome]]
+|attendance = 66,212
+|referee    = [[Pierluigi Collina]]
+|result     = W
+}}
+{{football box collapsible
+|round      = 22
+|date       = 11 March 2001
+|time       = 15:00 [[Central European Time|CET]] ([[UTC+01:00]])
+|team1      = Roma
+|score      = 3–1
+|report     = http://www.legaseriea.it/en/serie-a-tim/match-report/2000-01/UNICO/UNI/22/ROMBRE
+|team2      = [[Brescia Calcio|Brescia]]
+|goals1     = [[Marcos Assunção|Assunção]] {{goal|21}}<br />[[Vincenzo Montella|Montella]] {{goal|69||89}}
+|goals2     = [[Andrés Yllana|Yllana]] {{goal|30}}
+|stadium    = [[Stadio Olimpico]]
+|location   = [[Rome]]
+|attendance = 60,586
+|referee    = [[Cosimo Bolognino]]
+|result     = W
+}}
+{{football box collapsible
+|round      = 23
+|date       = 18 March 2001
+|time       = 20:30 [[Central European Time|CET]] ([[UTC+01:00]])
+|team1      = [[Reggina Calcio|Reggina]]
+|score      = 0–0
+|report     = http://www.legaseriea.it/en/serie-a-tim/match-report/2000-01/UNICO/UNI/23/RGIROM
+|team2      = Roma
+|goals1     = 
+|goals2     = 
+|stadium    = [[Stadio Oreste Granillo]]
+|location   = [[Reggio Calabria]]
+|attendance = 25,072
+|referee    = [[Alfredo Trentalange]]
+|result     = D
+}}
+{{football box collapsible
+|round      = 24
+|date       = 1 April 2001
+|time       = 15:00 [[Central European Summer Time|CEST]] ([[UTC+02:00]])
+|team1      = Roma
+|score      = 3–1
+|report     = http://www.legaseriea.it/en/serie-a-tim/match-report/2000-01/UNICO/UNI/24/ROMVER
+|team2      = [[Hellas Verona FC|Hellas Verona]]
+|goals1     = [[Luigi Apolloni|Apolloni]] {{goal|55|o.g.}}<br />[[Gabriel Batistuta|Batistuta]] {{goal|60}}<br />[[Vincenzo Montella|Montella]] {{goal|71}}
+|goals2     = [[Mauro Camoranesi|Camoranesi]] {{goal|27}}
+|stadium    = [[Stadio Olimpico]]
+|location   = [[Rome]]
+|attendance = 62,235
+|referee    = [[Stefano Braschi]]
+|result     = W
+}}
+{{football box collapsible
+|round      = 25
+|date       = 9 April 2001
+|time       = 15:00 [[Central European Summer Time|CEST]] ([[UTC+02:00]])
+|team1      = [[ACF Fiorentina|Fiorentina]]
+|score      = 3–1
+|report     = http://www.legaseriea.it/en/serie-a-tim/match-report/2000-01/UNICO/UNI/25/FIOROM
+|team2      = Roma
+|goals1     = [[Enrico Chiesa|Chiesa]] {{goal|12||82}}<br />[[Vincent Candela|Candela]] {{goal|57|o.g.}}
+|goals2     = [[Emerson (footballer, born 1976)|Emerson]] {{goal|30}}
+|stadium    = [[Stadio Artemio Franchi]]
+|location   = [[Florence]]
+|attendance = 34,140
+|referee    = [[Stefano Farina]]
+|result     = L
+}}
+{{football box collapsible
+|round      = 26
+|date       = 14 April 2001
+|time       = 15:00 [[Central European Summer Time|CEST]] ([[UTC+02:00]])
+|team1      = Roma
+|score      = 2–2
+|report     = http://www.legaseriea.it/en/serie-a-tim/match-report/2000-01/UNICO/UNI/26/ROMPER
+|team2      = [[AC Perugia Calcio|Perugia]]
+|goals1     = [[Francesco Totti|Totti]] {{goal|53}}<br />[[Giovanni Tedesco|Tedesco]] {{goal|90|o.g.}}
+|goals2     = [[Davide Baiocco|Baiocco]] {{goal|44}}<br />[[Luca Saudati|Saudati]] {{goal|78}}
+|stadium    = [[Stadio Olimpico]]
+|location   = [[Rome]]
+|attendance = 61,128
+|referee    = [[Cosimo Bolognino]]
+|result     = D
+}}
+{{football box collapsible
+|round      = 27
+|date       = 22 April 2001
+|time       = 15:00 [[Central European Summer Time|CEST]] ([[UTC+02:00]])
+|team1      = [[Udinese Calcio|Udinese]]
+|score      = 1–3
+|report     = http://www.legaseriea.it/en/serie-a-tim/match-report/2000-01/UNICO/UNI/27/UDIROM
+|team2      = Roma
+|goals1     = [[Roberto Sosa (Argentine footballer)|Sosa]] {{goal|78}}
+|goals2     = {{goal|39}} [[Vincenzo Montella|Montella]] <br />{{goal|45+1}} [[Damiano Tommasi|Tommasi]] <br />{{goal|67}} [[Hidetoshi Nakata|Nakata]] <br />{{inj}} 88' Emerson
+|stadium    = [[Stadio Friuli]]
+|location   = [[Udine]]
+|attendance = 22,694
+|referee    = [[Stefano Farina]]
+|result     = W
+}}
+{{football box collapsible
+|round      = [[Derby della Capitale|28]]
+|date       = 29 April 2001
+|time       = 20:30 [[Central European Summer Time|CEST]] ([[UTC+02:00]])
+|team1      = Roma
+|score      = 2–2
+|report     = http://www.legaseriea.it/en/serie-a-tim/match-report/2000-01/UNICO/UNI/28/ROMLAZ
+|team2      = [[SS Lazio|Lazio]]
+|goals1     = [[Gabriel Batistuta|Batistuta]] {{goal|48}}<br />[[Marco Delvecchio|Delvecchio]] {{goal|54}}
+|goals2     = [[Pavel Nedvěd|Nedvěd]] {{goal|78}}<br />[[Lucas Castromán|Castromán]] {{goal|90+5}}
+|stadium    = [[Stadio Olimpico]]
+|location   = [[Rome]]
+|attendance = 77,120
+|referee    = [[Stefano Braschi]]
+|result     = D
+}}
+{{football box collapsible
+|round      = 29
+|date       = 6 May 2001
+|time       = 20:30 [[Central European Summer Time|CEST]] ([[UTC+02:00]])
+|team1      = [[Juventus FC|Juventus]]
+|score      = 2–2
+|report     = http://www.legaseriea.it/en/serie-a-tim/match-report/2000-01/UNICO/UNI/29/JUVROM
+|team2      = Roma
+|goals1     = [[Alessandro Del Piero|Del Piero]] {{goal|4}}<br />[[Zinedine Zidane|Zidane]] {{goal|6}}
+|goals2     = [[Hidetoshi Nakata|Nakata]] {{goal|79}}<br />[[Vincenzo Montella|Montella]] {{goal|90+1}}
+|stadium    = [[Stadio delle Alpi]]
+|location   = [[Turin]]
+|attendance = 63,548
+|referee    = [[Stefano Braschi]]
+|result     = D
+}}
+{{football box collapsible
+|round      = 30
+|date       = 12 May 2001
+|time       = 15:00 [[Central European Summer Time|CEST]] ([[UTC+02:00]])
+|team1      = Roma
+|score      = 1–0
+|report     = http://www.legaseriea.it/en/serie-a-tim/match-report/2000-01/UNICO/UNI/30/ROMATA
+|team2      = [[Atalanta BC|Atalanta]]
+|goals1     = Aldair {{inj}} 46'<br />[[Vincenzo Montella|Montella]] {{goal|63}}
+|goals2     = 
+|stadium    = [[Stadio Olimpico]]
+|location   = [[Rome]]
+|attendance = 64,013
+|referee    = Fiorenzo Treossi
+|result     = W
+}}
+{{football box collapsible
+|round      = 31
+|date       = 20 May 2001
+|time       = 15:00 [[Central European Summer Time|CEST]] ([[UTC+02:00]])
+|team1      = [[AS Bari|Bari]]
+|score      = 1–4
+|report     = http://www.legaseriea.it/en/serie-a-tim/match-report/2000-01/UNICO/UNI/31/BARROM
+|team2      = Roma
+|goals1     = [[Gionatha Spinesi|Spinesi]] {{goal|90}}
+|goals2     = [[Vincent Candela|Candela]] {{goal|29}}<br />[[Gabriel Batistuta|Batistuta]] {{goal|43||88}}<br />[[Cafu]] {{goal|70}}
+|stadium    = [[Stadio San Nicola]]
+|location   = [[Bari]]
+|attendance = 33,906
+|referee    = [[Stefano Farina]]
+|result     = W
+}}
+{{football box collapsible
+|round      = 32
+|date       = 27 May 2001
+|time       = 20:30 [[Central European Summer Time|CEST]] ([[UTC+02:00]])
+|team1      = Roma
+|score      = 1–1
+|report     = http://www.legaseriea.it/en/serie-a-tim/match-report/2000-01/UNICO/UNI/32/ROMMIL
+|team2      = [[AC Milan|Milan]]
+|goals1     = [[Vincenzo Montella|Montella]] {{goal|64}}
+|goals2     = [[Francesco Coco|Coco]] {{goal|45+1}}
+|stadium    = [[Stadio Olimpico]]
+|location   = [[Rome]]
+|attendance = 71,407
+|referee    = [[Graziano Cesari]]
+|result     = D
+}}
+{{football box collapsible
+|round      = [[Derby del Sole|33]]
+|date       = 10 June 2001
+|time       = 15:00 [[Central European Summer Time|CEST]] ([[UTC+02:00]])
+|team1      = [[SSC Napoli|Napoli]]
+|score      = 2–2
+|report     = http://www.legaseriea.it/en/serie-a-tim/match-report/2000-01/UNICO/UNI/33/NAPROM
+|team2      = Roma
+|goals1     = [[Nicola Amoruso|Amoruso]] {{goal|37}}<br />[[Fabio Pecchia|Pecchia]] {{goal|81}}
+|goals2     = [[Gabriel Batistuta|Batistuta]] {{goal|42}}<br />[[Francesco Totti|Totti]] {{goal|52}}
+|stadium    = [[Stadio San Paolo]]
+|location   = [[Naples]]
+|attendance = 52,734
+|referee    = Fiorenzo Treossi
+|result     = D
+}}
+{{football box collapsible
+|round      = 34
+|date       = 17 June 2001
+|time       = 15:00 [[Central European Summer Time|CEST]] ([[UTC+02:00]])
+|team1      = Roma
+|score      = 3–1
+|report     = http://www.legaseriea.it/en/serie-a-tim/match-report/2000-01/UNICO/UNI/34/ROMPAR
+|team2      = [[Parma AC|Parma]]
+|goals1     = [[Francesco Totti|Totti]] {{goal|19}}<br />[[Vincenzo Montella|Montella]] {{goal|39}}<br />[[Gabriel Batistuta|Batistuta]] {{goal|78}}
+|goals2     = [[Marco Di Vaio|Di Vaio]] {{goal|82}}
+|stadium    = [[Stadio Olimpico]]
+|location   = [[Rome]]
+|attendance = 74,773
+|referee    = [[Stefano Braschi]]
+|result     = W
+}}
+
+===Coppa Italia===
+{{main|2000–01 Coppa Italia}}
+
+====Round of 16====
+{{football box collapsible
+|round      = First leg
+|date       = 17 September 2000
+|time       = 20:30 [[Central European Summer Time|CEST]] ([[UTC+02:00]])
+|team1      = Roma
+|score      = 1–1
+|report     = 
+|team2      = [[Atalanta BC|Atalanta]]
+|goals1     = [[Vincenzo Montella|Montella]] {{goal|24}}
+|goals2     = [[Gianpaolo Bellini|Bellini]] {{goal|49}}
+|stadium    = [[Stadio Olimpico]]
+|location   = [[Rome]]
+|attendance = 21,671
+|referee    = Emilio Pellegrino
+|result     = D
+}}
+{{football box collapsible
+|round          = Second leg
+|date           = 22 September 2000
+|time           = 20:30 [[Central European Summer Time|CEST]] ([[UTC+02:00]])
+|team1          = [[Atalanta BC|Atalanta]]
+|score          = 4–2
+|aggregatescore = 5–3
+|report         = 
+|team2          = Roma
+|goals1         = [[Maurizio Ganz|Ganz]] {{goal|9||56}}<br />[[Gianpaolo Bellini|Bellini]] {{goal|63}}<br />[[Alex Pinardi|Pinardi]] {{goal|90+3}}
+|goals2         = [[Vincenzo Montella|Montella]] {{goal|20}}<br />[[Francesco Totti|Totti]] {{goal|90+1|pen.}}
+|stadium        = [[Stadio Atleti Azzurri d'Italia]]
+|location       = [[Bergamo]]
+|attendance     = 10,891
+|referee        = [[Pierluigi Collina]]
+|result         = L
+}}
+
+===UEFA Cup===
+{{main|2000–01 UEFA Cup}}
+
+====First round====
+{{main|2000–01 UEFA Cup first round}}
+{{football box collapsible
+|round      = [[2000–01 UEFA Cup first round#HIT Gorica v Roma|First leg]]
+|date       = 14 September 2000
+|time       = 15:45 [[Central European Summer Time|CEST]] ([[UTC+02:00]])
+|team1      = [[ND Gorica|HIT Gorica]] {{fbaicon|SLO}}
+|score      = 1–4
+|report     = http://www.uefa.com/uefaeuropaleague/season=2000/matches/round=1479/match=66074/postmatch/lineups/index.html
+|team2      = {{fbaicon|ITA}} Roma
+|goals1     = [[Anton Žlogar|Žlogar]] {{goal|29}}<br />[[Miha Pitamič|Pitamič]] {{yel|34}}<br />[[Miran Srebrnič|Srebrnič]] {{yel|44}}
+|goals2     = [[Marco Delvecchio|Delvecchio]] {{goal|17||19||49}}<br />[[Jonathan Zebina|Zebina]] {{yel|23}}<br />[[Walter Samuel|Samuel]] {{goal|41}}<br />[[Amedeo Mangone|Mangone]] {{yel|60}}<br />[[Aldair]] {{yel|88}}
+|stadium    = [[Nova Gorica Sports Park]]
+|location   = [[Nova Gorica]], [[Slovenia]]
+|attendance = 2,200
+|referee    = [[Constantin Zotta]] ([[Romanian Football Federation|Romania]])
+|result     = W
+}}
+{{football box collapsible
+|round          = [[2000–01 UEFA Cup first round#Roma v HIT Gorica|Second leg]]
+|date           = 28 September 2000
+|time           = 18:30 [[Central European Summer Time|CEST]] ([[UTC+02:00]])
+|team1          = Roma {{fbaicon|ITA}}
+|score          = 7–0
+|aggregatescore = 11–1
+|report         = http://www.uefa.com/uefaeuropaleague/season=2000/matches/round=1479/match=66075/postmatch/lineups/index.html
+|team2          = {{fbaicon|SLO}} [[ND Gorica|HIT Gorica]]
+|goals1         = [[Walter Samuel|Samuel]] {{goal|8}}<br />[[Vincenzo Montella|Montella]] {{goal|11||19}}<br />[[Marco Delvecchio|Delvecchio]] {{goal|23}}<br />[[Francesco Totti|Totti]] {{goal|41||47}}<br />[[Gabriel Batistuta|Batistuta]] {{goal|66}}
+|goals2         = [[Alen Šculac|Šculac]] {{yel|19}}
+|stadium        = [[Stadio Olimpico]]
+|location       = [[Rome]], [[Italy]]
+|attendance     = 5,000
+|referee        = [[Wolfgang Stark]] ([[German Football Association|Germany]])
+|result         = W
+}}
+
+====Second round====
+{{main|2000–01 UEFA Cup second round}}
+{{football box collapsible
+|round      = [[2000–01 UEFA Cup second round#Boavista v Roma|First leg]]
+|date       = 26 October 2000
+|time       = 22:30 [[Central European Summer Time|CEST]] ([[UTC+02:00]])
+|team1      = [[Boavista F.C.|Boavista]] {{fbaicon|POR}}
+|score      = 0–1
+|report     = http://www.uefa.com/uefaeuropaleague/season=2000/matches/round=1483/match=66208/postmatch/lineups/index.html
+|team2      = {{fbaicon|ITA}} Roma
+|goals1     = [[José Rogério de Melo|Rogério]] {{sent off|0|43}}<br />[[Duda (footballer, born 1974)|Duda]] {{yel|68}}
+|goals2     = [[Gianni Guigou|Guigou]] {{yel|13}}<br />[[Antônio Carlos Zago|Zago]] {{yel|65}}<br />[[Vincenzo Montella|Montella]] {{goal|73}}<br />[[Alessandro Rinaldi (footballer)|Rinaldi]] {{yel|80}}
+|stadium    = [[Estádio do Bessa]]
+|location   = [[Porto]], [[Portugal]]
+|attendance = 6,000
+|referee    = [[Frank De Bleeckere]] ([[Royal Belgian Football Association|Belgium]])
+|result     = W
+}}
+{{football box collapsible
+|round          = [[2000–01 UEFA Cup second round#Roma v Boavista|Second leg]]
+|date           = 9 November 2000
+|time           = 18:15 [[Central European Time|CET]] ([[UTC+01:00]])
+|team1          = Roma {{fbaicon|ITA}}
+|score          = 1–1
+|aggregatescore = 2–1
+|report         = http://www.uefa.com/uefaeuropaleague/season=2000/matches/round=1483/match=66209/postmatch/lineups/index.html
+|team2          = {{fbaicon|POR}} [[Boavista F.C.|Boavista]]
+|goals1         = [[Hidetoshi Nakata|Nakata]] {{goal|8}}<br />[[Damiano Tommasi|Tommasi]] {{yel|43}}<br />[[Gabriel Batistuta|Batistuta]] {{yel|56}}<br />[[Amedeo Mangone|Mangone]] {{yel|76}}
+|goals2         = [[Duda (footballer, born 1974)|Duda]] {{goal|54}}<br />[[Pedro Jorge Santos Santos|Pedro Jorge]] {{yel|57}}<br />[[Jorge Couto|Couto]] {{yel|87}}<br />[[Martelinho]] {{yel|90}}
+|stadium        = [[Stadio Olimpico]]
+|location       = [[Rome]], [[Italy]]
+|attendance     = 10,831
+|referee        = [[Éric Poulat]] ([[French Football Federation|France]])
+|result         = D
+}}
+
+====Third round====
+{{main|2000–01 UEFA Cup third round}}
+{{football box collapsible
+|round      = [[2000–01 UEFA Cup third round#Roma v Hamburg|First leg]]
+|date       = 23 November 2000
+|time       = 20:45 [[Central European Time|CET]] ([[UTC+01:00]])
+|team1      = Roma {{fbaicon|ITA}}
+|score      = 1–0
+|report     = http://www.uefa.com/uefaeuropaleague/season=2000/matches/round=1484/match=66378/postmatch/lineups/index.html
+|team2      = {{fbaicon|GER}} [[Hamburger SV|Hamburg]]
+|goals1     = [[Gianni Guigou|Guigou]] {{goal|32}}<br />[[Cristiano Zanetti|Zanetti]] {{yel|90}}
+|goals2     = [[Roy Präger|Präger]] {{yel|44}}<br />[[Mahmut Yılmaz]] {{yel|82}}
+|stadium    = [[Stadio Olimpico]]
+|location   = [[Rome]], [[Italy]]
+|attendance = 42,705
+|referee    = [[Alain Hamer]] ([[Luxembourg Football Federation|Luxembourg]])
+|result     = W
+}}
+{{football box collapsible
+|round          = [[2000–01 UEFA Cup third round#Hamburg v Roma|Second leg]]
+|date           = 7 December 2000
+|time           = 20:00 [[Central European Time|CET]] ([[UTC+01:00]])
+|team1          = [[Hamburger SV|Hamburg]] {{fbaicon|GER}}
+|score          = 0–3
+|aggregatescore = 0–4
+|report         = http://www.uefa.com/uefaeuropaleague/season=2000/matches/round=1484/match=66379/postmatch/lineups/index.html
+|team2          = {{fbaicon|ITA}} Roma
+|goals1         = [[Roy Präger|Präger]] {{yel|45}}
+|goals2         = [[Cafu]] {{yel|11}}<br />[[Aldair]] {{goal|28}}<br />[[Damiano Tommasi|Tommasi]] {{yel|37}}<br />[[Marco Delvecchio|Delvecchio]] {{goal|58}}<br />[[Walter Samuel|Samuel]] {{goal|60}}
+|stadium        = [[Volksparkstadion|HSH Nordbank Arena]]
+|location       = [[Hamburg]], [[Germany]]
+|attendance     = 48,500
+|referee        = [[Jan Wegereef]] ([[Royal Dutch Football Association|Netherlands]])
+|result         = W
+}}
+
+====Eightfinals====
+{{main|2000–01 UEFA Cup#Fourth round}}
+{{football box collapsible
+|round      = [[2000–01 UEFA Cup#Roma v Liverpool|First leg]]
+|date       = 15 February 2001
+|time       = 21:00 [[Central European Time|CET]] ([[UTC+01:00]])
+|team1      = Roma {{fbaicon|ITA}}
+|score      = 0–2
+|report     = http://www.uefa.com/uefaeuropaleague/season=2000/matches/round=1493/match=66908/postmatch/lineups/index.html
+|team2      = {{fbaicon|ENG}} [[Liverpool F.C.|Liverpool]]
+|goals1     = [[Amedeo Mangone|Mangone]] {{yel|79}}
+|goals2     = [[Michael Owen|Owen]] {{goal|46||72}}
+|stadium    = [[Stadio Olimpico]]
+|location   = [[Rome]], [[Italy]]
+|attendance = 59,718
+|referee    = [[Markus Merk]] ([[German Football Association|Germany]])
+|result     = L
+}}
+{{football box collapsible
+|round          = [[2000–01 UEFA Cup#Liverpool v Roma|Second leg]]
+|date           = 22 February 2001
+|time           = 21:05 [[Central European Time|CET]] ([[UTC+01:00]])
+|team1          = [[Liverpool F.C.|Liverpool]] {{fbaicon|ENG}}
+|score          = 0–1
+|aggregatescore = 2–1
+|report         = http://www.uefa.com/uefaeuropaleague/season=2000/matches/round=1493/match=66909/postmatch/lineups/index.html
+|team2          = {{fbaicon|ITA}} Roma
+|goals1         = 
+|goals2         = [[Vincenzo Montella|Montella]] {{yel|4}}<br />[[Marcos Assunção|Assunção]] {{yel|29}}<br />[[Jonathan Zebina|Zebina]] {{yel|36}}<br />[[Gianni Guigou|Guigou]] {{goal|69}}, {{sent off|2|90}}<br />[[Walter Samuel|Samuel]] {{yel|77}}<br />[[Damiano Tommasi|Tommasi]] {{sent off|2|84}}
+|stadium        = [[Anfield]]
+|location       = [[Liverpool]], [[England]]
+|attendance     = 43,688
+|referee        = [[José María García-Aranda]] ([[Royal Spanish Football Federation|Spain]])
+|result         = W
+}}
+
+==Statistics==
+
+===Appearances and goals===
+{{Extended football squad start|[[2000–01 Serie A|Serie A]]|[[2000–01 UEFA Cup|UEFA Cup]]}}
+{{Efs player|no= 1|name= [[Francesco Antonioli|Antonioli]]|nat= ITA|pos=GK|26|-28|6|-4|}}
+{{Efs player|no= 2|name= [[Cafu]]|nat=BRA|pos=DF|31|1|7|0|}}
+{{Efs player|no= 15|name= [[Jonathan Zebina|Zebina]]|nat=FRA|pos=DF|21+1|0|4|0|}}
+{{Efs player|no= 3|name= [[Antônio Carlos Zago|Zago]]|nat=BRA|pos=DF|28|0|3|0|}}
+{{Efs player|no= 19|name= [[Walter Samuel|Samuel]]|nat=ARG|pos=DF|31|1|8|3|}}
+{{Efs player|no= 32|name= [[Vincent Candela|Candela]]|nat=FRA|pos=DF|33|3|5|0|}}
+{{Efs player|no= 17|name= [[Damiano Tommasi|Tommasi]]|nat=ITA|pos=MF|31+3|3|7+1|0|}}
+{{Efs player|no= 4|name= [[Cristiano Zanetti|Zanetti]]|nat=ITA|pos=MF|20+7|0|0+3|0|}}
+{{Efs player|no= 10|name= [[Francesco Totti|Totti]] ([[Captain (association football)|c]])|nat=ITA|pos=MF|30|13|2+1|2|}}
+{{Efs player|no= 18|name= [[Gabriel Batistuta|Batistuta]]|nat=ARG|pos=FW|28|20|1+3|1|}}
+{{Efs player|no= 24|name= [[Marco Delvecchio|Delvecchio]]|nat=ITA|pos=FW|28+3|3|7+1|5|}}
+{{Efs player|no=22|name= [[Cristiano Lupatelli|Lupatelli]]|nat=ITA|pos=GK|8|-5|2|0|}}
+{{Efs player|no= 6|name= [[Aldair]]|nat=BRA|pos=DF|14+1|0|2+1|1|}}
+{{Efs player|no= 9|name= [[Vincenzo Montella|Montella]]|nat=ITA|pos=FW|12+16|13|8|3|}}
+{{Efs player|no= 11|name= [[Emerson (footballer, born 1976)|Emerson]]|nat=BRA|pos=MF|10+3|3|1|0|}}
+{{Efs player|no= 5|name= [[Marcos Assunção|Assunção]]|nat=BRA|pos=MF|6+6|2|4+1|0|}}
+{{Efs player|no= 8|name= [[Hidetoshi Nakata|Nakata]]|nat=JPN|pos=MF|5+10|2|5+2|1|}}
+{{Efs player|no=28|name= [[Amedeo Mangone|Mangone]]|nat=ITA|pos=DF|5+6|0|5|0|}}
+{{Efs player|no= 25|name= [[Gianni Guigou|Guigou]]|nat=URU|pos=MF|3+12|0|5+2|2|}}
+{{Efs player|no= 23|name= [[Alessandro Rinaldi (footballer)|Rinaldi]]|nat=ITA|pos=DF|3+6|0|4|0|}}
+{{Efs player|no= 7|name= [[Eusebio Di Francesco|Di Francesco]]|nat=ITA|pos=MF|1+4|0|1|0|}}
+{{Efs player|no= 21|name= [[Abel Balbo|Balbo]]|nat=ARG|pos=FW|0+2|0|0+3|0|}}
+{{Efs player|no= 16|name= [[Gaetano D'Agostino|D'Agostino]]|nat=ITA|pos=FW|0+1|0|1+1|0|}}
+{{Efs player|no= 14|name= [[Sergey Gurenko|Gurenko]]|nat=BLR|pos=DF|0|0|0+1|0|}}
+{{Efs player|no= 13|name= [[Maurizio Lanzaro|Lanzaro]]|nat=ITA|pos=DF|0|0|0+1|0|}}
+{{Efs player|no= 20|name=[[Paolo Poggi|Poggi]]|nat=ITA|pos=FW|0|0|}}
+{{Efs player|no= 30|name= [[Cesare Bovo|Bovo]]|nat=ITA|pos=DF|0|0|}}
+{{Efs player|no= 13|name= [[Massimo Bonanni|Bonanni]]|nat=ITA|pos=MF|0|0|}}
+{{Efs player|no= 26|name= [[Daniele De Rossi|De Rossi]]|nat=ITA|pos=MF|0|0|}}
+{{Efs player|no= 12|name= [[Marco Amelia|Amelia]]|nat=ITA|pos=GK|0|0|}}
+{{Efs end|date=November 2021|s=http://calcio-seriea.net/presenze/2000/1192/}}
+
+===Goalscorers===
+{| class="wikitable" style="text-align:center"
+|-
+!width=15|{{Tooltip|Rank|Rank}}
+!width=15|{{Tooltip|No.|Squad Number}}
+!width=15|{{Tooltip|Pos|Position}}
+!width=15|{{Tooltip|Nat|Nationality}}
+!width=145|Name
+!width=80|[[2000–01 Serie A|Serie A]]
+!width=80|[[2000–01 Coppa Italia|Coppa Italia]]
+!width=80|[[2000–01 UEFA Cup|UEFA Cup]]
+!width=80|Total
+|-
+|'''1'''
+|18
+|[[Forward (association football)|FW]]
+|{{flagicon|ARG}}
+|align=left|[[Gabriel Batistuta]]
+|20
+|0
+|1
+|'''21'''
+|-
+|'''2'''
+|9
+|[[Forward (association football)|FW]]
+|{{flagicon|ITA}}
+|align=left|[[Vincenzo Montella]]
+|13
+|2
+|3
+|'''18'''
+|-
+|'''3'''
+|10
+|[[Forward (association football)|FW]]
+|{{flagicon|ITA}}
+|align=left|[[Francesco Totti]]
+|13
+|1
+|2
+|'''16'''
+|-
+|'''4'''
+|24
+|[[Forward (association football)|FW]]
+|{{flagicon|ITA}}
+|align=left|[[Marco Delvecchio]]
+|3
+|0
+|5
+|'''8'''
+|-
+|'''5'''
+|19
+|[[Defender (association football)|DF]]
+|{{flagicon|ARG}}
+|align=left|[[Walter Samuel]]
+|1
+|0
+|3
+|'''4'''
+|-
+|rowspan=4|'''6'''
+|8
+|[[Midfielder|MF]]
+|{{flagicon|JPN}}
+|align=left|[[Hidetoshi Nakata]]
+|2
+|0
+|1
+|'''3'''
+|-
+|11
+|[[Midfielder|MF]]
+|{{flagicon|BRA}}
+|align=left|[[Emerson (footballer, born 1976)|Emerson]]
+|3
+|0
+|0
+|'''3'''
+|-
+|17
+|[[Midfielder|MF]]
+|{{flagicon|ITA}}
+|align=left|[[Damiano Tommasi]]
+|3
+|0
+|0
+|'''3'''
+|-
+|32
+|[[Defender (association football)|DF]]
+|{{flagicon|FRA}}
+|align=left|[[Vincent Candela]]
+|3
+|0
+|0
+|'''3'''
+|-
+|rowspan=2|'''10'''
+|5
+|[[Midfielder|MF]]
+|{{flagicon|BRA}}
+|align=left|[[Marcos Assunção]]
+|2
+|0
+|0
+|'''2'''
+|-
+|25
+|[[Midfielder|MF]]
+|{{flagicon|URU}}
+|align=left|[[Gianni Guigou]]
+|0
+|0
+|2
+|'''2'''
+|-
+|rowspan=2|'''12'''
+|2
+|[[Defender (association football)|DF]]
+|{{flagicon|BRA}}
+|align=left|[[Cafu]]
+|1
+|0
+|0
+|'''1'''
+|-
+|6
+|[[Defender (association football)|DF]]
+|{{flagicon|BRA}}
+|align=left|[[Aldair]]
+|0
+|0
+|1
+|'''1'''
+|-
+|colspan=5|'''Own goal'''
+|4
+|0
+|0
+|'''4'''
+|-
+|colspan=5|'''Totals'''
+|'''68'''
+|'''3'''
+|'''18'''
+|'''89'''
+|}
+
+<small>
+Last updated: 17 June 2001
+</small>
+
+
+===Clean sheets===
+{| class="wikitable" style="text-align:center"
+|-
+!width=15|{{Tooltip|Rank|Rank}}
+!width=15|{{Tooltip|No.|Squad Number}}
+!width=15|{{Tooltip|Pos|Position}}
+!width=15|{{Tooltip|Nat|Nationality}}
+!width=145|Name
+!width=80|[[2000–01 Serie A|Serie A]]
+!width=80|[[2000–01 Coppa Italia|Coppa Italia]]
+!width=80|[[2000–01 UEFA Cup|UEFA Cup]]
+!width=80|Total
+|-
+|'''1'''
+|1
+|[[Goalkeeper (association football)|GK]]
+|{{flagicon|ITA}}
+|align=left|[[Francesco Antonioli]]
+|7
+|0
+|3
+|'''10'''
+|-
+|'''2'''
+|22
+|[[Goalkeeper (association football)|GK]]
+|{{flagicon|ITA}}
+|align=left|[[Cristiano Lupatelli]]
+|5
+|0
+|2
+|'''7'''
+|-
+|colspan=5|'''Totals'''
+|'''12'''
+|'''0'''
+|'''5'''
+|'''17'''
+|}
+
+<small>
+Last updated: 17 June 2001
+</small>
+
+==References==
+{{reflist}}
+
+{{AS Roma seasons}}
+{{2000–01 in Italian football}}
+
+{{DEFAULTSORT:2000-01 AS Roma season}}
+[[Category:AS Roma seasons]]
+[[Category:Italian football clubs 2000–01 season|Roma]]
+[[Category:Italian football championship–winning seasons]]
