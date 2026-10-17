@@ -1,0 +1,54 @@
+# つるはし採掘の App Store 掲載画像（iPhone 1290×2796 と iPad 13インチ 2064×2752）を撮って成果物に出す。
+# ゲームの見た目や tool/make_shots.js を直したとき、または手で回したときだけ動く。
+name: tsuruhashi shots
+
+on:
+  push:
+    paths:
+      - "projects/tsuruhashi/tool/make_shots.js"
+      - ".github/workflows/tsuruhashi-shots.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  shots:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: projects/tsuruhashi
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: ブラウザを入れる
+        run: |
+          npm install --no-save --silent playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: iPhone 6.7インチ
+        run: node tool/make_shots.js
+      - name: iPad 13インチ
+        run: DEVICE=ipad node tool/make_shots.js
+      - name: 大きさと透過を確かめる
+        run: |
+          python3 - <<'PY'
+          import struct, glob
+          want = {"store/screenshots": (1290, 2796), "store/screenshots/ipad": (2064, 2752)}
+          for d, (w, h) in want.items():
+              files = sorted(glob.glob(d + "/*.png"))
+              assert len(files) == 6, (d, len(files))
+              for f in files:
+                  b = open(f, "rb").read(33)
+                  ww, hh = struct.unpack(">II", b[16:24])
+                  assert (ww, hh) == (w, h), (f, ww, hh)
+                  assert b[25] not in (4, 6), f + " に透過がある"
+              print(d, "ok", len(files))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tsuruhashi-shots
+          path: projects/tsuruhashi/store/screenshots
+          retention-days: 7

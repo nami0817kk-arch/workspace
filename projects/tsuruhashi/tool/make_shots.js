@@ -1,5 +1,6 @@
-// App Store の掲載画像（6.7インチ 1290×2796）を作る。上に見出し、下にゲームの画面。
+// App Store の掲載画像（6.7インチ 1290×2796。DEVICE=ipad なら iPad 13インチ 2064×2752）を作る。上に見出し、下にゲームの画面。
 //   node tool/make_shots.js   → store/screenshots/01〜06.png
+//   DEVICE=ipad node tool/make_shots.js   → store/screenshots/ipad/01〜06.png（ゲームは携帯の幅の画面なので、同じ画面を大きな台紙に置く）
 // ゲームは prototype/game.html をそのまま開き、状態だけ差し替えて撮る（撮るための写しを一時フォルダに置く）。
 // docs/app-pitfalls.md 4番: タイトル画面は撮らない。撮るたびに「中身が写っているか」を確かめる（白紙・読み込み中は止める）。
 const fs = require('fs'), os = require('os'), path = require('path');
@@ -7,7 +8,12 @@ let pw;
 try { pw = require('playwright'); } catch (e) { pw = require('/opt/node22/lib/node_modules/playwright'); }
 
 const ROOT = path.join(__dirname, '..');
-const OUT = path.join(ROOT, 'store', 'screenshots');
+const DEVICE = process.env.DEVICE === 'ipad' ? 'ipad' : 'iphone';
+// 台紙の大きさ・見出しの大きさ・ゲーム画面の大きさ（画面は 390×844 を撮った比のまま）
+const DIM = DEVICE === 'ipad'
+  ? { W: 2064, H: 2752, head: 560, h1: 118, sub: 52, pw: 976, ph: 2112, rad: 56, gap: 28 }
+  : { W: 1290, H: 2796, head: 610, h1: 104, sub: 46, pw: 1000, ph: 2164, rad: 64, gap: 26 };
+const OUT = DEVICE === 'ipad' ? path.join(ROOT, 'store', 'screenshots', 'ipad') : path.join(ROOT, 'store', 'screenshots');
 fs.mkdirSync(OUT, { recursive: true });
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'tsuru-shots-'));
 const game = fs.readFileSync(path.join(ROOT, 'prototype', 'game.html'), 'utf8')
@@ -63,17 +69,17 @@ const SHOTS = [
     if (!ok || shot.length < 150000) throw new Error(`${s.id} の画面に中身が写っていない（${shot.length} バイト）`);
     // 見出しを付けて 1290×2796 に組む（setContent の頁からは file:// を読めないので、画面は data URI で埋める）
     const page = `<html><head><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@800&display=swap"></head>
-      <body style="margin:0;width:1290px;height:2796px;overflow:hidden;background:linear-gradient(180deg,${s.bg[0]},${s.bg[1]});font-family:'M PLUS Rounded 1c','Hiragino Maru Gothic ProN',sans-serif;color:#fff">
-      <div style="height:610px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:26px;padding:0 60px">
-        <div style="font-size:104px;font-weight:800;line-height:1.18;letter-spacing:.02em;text-shadow:0 8px 0 rgba(0,0,0,.35);white-space:pre-line">${s.h1}</div>
-        <div style="font-size:46px;font-weight:800;color:#ffe2a8;opacity:.95">${s.sub}</div></div>
-      <div style="display:flex;justify-content:center"><img src="data:image/png;base64,${shot.toString('base64')}" style="width:1000px;height:2164px;border-radius:64px;box-shadow:0 30px 80px rgba(0,0,0,.55),0 0 0 14px rgba(255,255,255,.12)"></div>
+      <body style="margin:0;width:${DIM.W}px;height:${DIM.H}px;overflow:hidden;background:linear-gradient(180deg,${s.bg[0]},${s.bg[1]});font-family:'M PLUS Rounded 1c','Hiragino Maru Gothic ProN',sans-serif;color:#fff">
+      <div style="height:${DIM.head}px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:${DIM.gap}px;padding:0 60px">
+        <div style="font-size:${DIM.h1}px;font-weight:800;line-height:1.18;letter-spacing:.02em;text-shadow:0 8px 0 rgba(0,0,0,.35);white-space:pre-line">${s.h1}</div>
+        <div style="font-size:${DIM.sub}px;font-weight:800;color:#ffe2a8;opacity:.95">${s.sub}</div></div>
+      <div style="display:flex;justify-content:center"><img src="data:image/png;base64,${shot.toString('base64')}" style="width:${DIM.pw}px;height:${DIM.ph}px;border-radius:${DIM.rad}px;box-shadow:0 30px 80px rgba(0,0,0,.55),0 0 0 14px rgba(255,255,255,.12)"></div>
       </body></html>`;
-    const q = await b.newPage({ viewport: { width: 1290, height: 2796 }, deviceScaleFactor: 1 });
+    const q = await b.newPage({ viewport: { width: DIM.W, height: DIM.H }, deviceScaleFactor: 1 });
     await q.setContent(page, { waitUntil: 'networkidle' }).catch(() => q.setContent(page));
     await q.waitForTimeout(300);
     const out = path.join(OUT, s.id + '.png');
-    await q.screenshot({ path: out, clip: { x: 0, y: 0, width: 1290, height: 2796 } });
+    await q.screenshot({ path: out, clip: { x: 0, y: 0, width: DIM.W, height: DIM.H } });
     await q.close();
     const size = fs.statSync(out).size;
     if (size < 300000) throw new Error(`${s.id}.png が小さすぎる（${size} バイト）。白紙で撮れていないか見る`);
