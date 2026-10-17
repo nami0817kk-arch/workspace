@@ -35,8 +35,13 @@ void main() {
     for (var s = 0; s < 2000; s++) {
       final t = rollInnateTraits(Random(s));
       expect(t.length, inInclusiveRange(0, 2));
-      if (t.length == 2) {
-        expect(canGain({t.first}, t.last), isFalse, reason: '$t');
+      const bad = [
+        {Trait.lateBloomer, Trait.earlyBloomer},
+        {Trait.sturdy, Trait.glassBody},
+        {Trait.clutch, Trait.nervy},
+      ];
+      for (final pair in bad) {
+        expect(t.containsAll(pair), isFalse, reason: '$t');
       }
       for (final x in t) {
         x.positive ? pos++ : neg++;

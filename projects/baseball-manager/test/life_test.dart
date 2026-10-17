@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:baseball_manager/game/life.dart';
 import 'package:baseball_manager/game/player.dart';
 import 'package:baseball_manager/game/season.dart';
+import 'package:baseball_manager/game/training.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 Player _p([int v = 40]) => Player(

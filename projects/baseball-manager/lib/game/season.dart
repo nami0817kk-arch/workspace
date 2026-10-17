@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'at_bat.dart';
 import 'player.dart';
+import 'traits.dart';
 
 /// 1試合(または大会通算)の個人成績。打者として/投手として、それぞれ数える。
 class Line {
