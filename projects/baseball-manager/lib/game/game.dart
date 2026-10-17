@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'calendar.dart';
 import 'career.dart';
+import 'characters.dart';
 import 'exp.dart';
 import 'life.dart';
 import 'path.dart';
@@ -26,6 +27,9 @@ class Ending {
     required this.peakOverall,
     required this.championships,
     required this.wasTwoWay,
+    this.rivalWins = 0,
+    this.rivalLosses = 0,
+    this.partnerName,
   });
 
   final String title;
@@ -34,12 +38,18 @@ class Ending {
   final int peakOverall;
   final int championships;
   final bool wasTwoWay;
+  final int rivalWins;
+  final int rivalLosses;
+
+  /// 絆が深かった恋人の名前(いれば結婚した)。
+  final String? partnerName;
+  bool get married => partnerName != null;
 }
 
 /// 6歳から引退までの一代記を進める本体。画面には依存しない。
 /// 乱数は注入する(テストで再現できる)。
 class Game {
-  Game._(this.rng, this.player);
+  Game._(this.rng, this.player, this.cast);
 
   /// 新しい選手で始める。`potential` を省くと乱数で決まる。
   factory Game.newGame({
@@ -56,13 +66,15 @@ class Game {
       abilities: {for (final a in abilitiesOf(role)) a: 15},
       traits: rollInnateTraits(rng),
     );
-    return Game._(rng, p).._wasTwoWay = role == Role.twoWay;
+    return Game._(rng, p, Cast.initial(rng, role, p.traits))
+      .._wasTwoWay = role == Role.twoWay;
   }
 
   final Random rng;
   Player player;
   Condition condition = const Condition();
   int slot = 0; // 今年の何ターン目か(0始まり)。月単位か季節かは段階で決まる
+  Cast cast; // 家族・ライバル・仲間・コーチ・恋人
   ExpPool exp = const ExpPool(); // 貯めた経験点。`spend` で能力に振り分ける
   Phase phase = Phase.term;
   GameEvent? pendingEvent;
@@ -110,14 +122,17 @@ class Game {
       throw ArgumentError('${player.role.name} にその能力は無い: ${f.name}');
     }
     final share = slotShare(stage);
+    final wasInjured = condition.injured;
     final r = playTerm(player, condition, action, f, rng, share: share);
     player = r.player;
     condition = r.condition;
-    exp = exp.add(r.exp);
+    // _afterCast が経験点(コーチのボーナス)を直接足すことがあるので、先に評価する。
+    final gained = wasInjured ? r.exp : _afterCast(action, f, r.exp);
+    exp = exp.add(gained);
     if (r.gotInjured) log.add('怪我をしてしまった。');
     if (isTournamentSlot(stage, slot)) _playSummer();
 
-    final e = drawEvent(rng, share: share);
+    final e = drawEvent(rng, share: share, stage: stage, cast: cast);
     if (e == null) {
       _nextSlot();
     } else {
@@ -133,6 +148,8 @@ class Game {
     final r = ch.apply(player, condition, _eventFocus);
     player = r.player;
     condition = r.condition;
+    ch.onCast?.call(cast, rng);
+    _checkCoach();
     pendingEvent = null;
     phase = Phase.term;
     _nextSlot();
@@ -195,6 +212,53 @@ class Game {
 
   // ── 内部 ──
 
+  /// 友情タッグ・コーチ・恋人/家族への影響。経験点の量を返す。
+  Map<Category, int> _afterCast(Action action, Ability focus, Map<Category, int> gained) {
+    final out = Map<Category, int>.of(gained);
+    final trains = action == Action.train ||
+        action == Action.special ||
+        action == Action.match ||
+        action == Action.lesson;
+    if (trains && gained.isNotEmpty) {
+      final mate = cast.pickTagMate(focus, rng);
+      if (mate != null) {
+        for (final k in out.keys.toList()) {
+          out[k] = (out[k]! * tagMultiplier).round();
+        }
+        mate.addBond(8);
+        log.add('${mate.name}と友情タッグ練習!');
+      }
+    }
+    if (action == Action.lesson) {
+      final coach = cast.coach;
+      if (coach != null) {
+        coach.tips++;
+        _checkCoach();
+      }
+    }
+    if (action == Action.social) {
+      (cast.lover ?? cast.family)?.addBond(10);
+    }
+    return out;
+  }
+
+  /// コツが貯まったら、コーチの教える特性を習得する。
+  void _checkCoach() {
+    final coach = cast.coach;
+    if (coach == null || coach.tips < tipsNeeded) return;
+    coach.tips = 0;
+    final t = coach.teaches;
+    if (t != null && canGain(player.traits, t)) {
+      player = player.copyWith(traits: gain(player.traits, t));
+      log.add('${coach.name}のコツをつかんだ! 特性「${t.label}」を習得。');
+    } else {
+      exp = exp.add({
+        for (final c in Category.values) c: 40,
+      });
+      log.add('${coach.name}から多くを学んだ。(経験点を獲得)');
+    }
+  }
+
   void _require(Phase p) {
     if (phase != p) throw StateError('いまは ${phase.name} の段階: ${p.name} は選べない');
   }
@@ -216,7 +280,23 @@ class Game {
       rng: rng,
       condition: condition.value,
     );
-    achievements.add(t.achievement);
+    var ach = t.achievement;
+    final rival = cast.rival;
+    if (rival != null) {
+      final mine = overall(player) + (rng.nextDouble() * 2 - 1) * 8;
+      if (mine >= rivalLevel(rival, player.age)) {
+        cast.rivalWins++;
+        ach = min(100, ach + 5);
+        condition = condition.copyWith(morale: condition.morale + 10);
+        log.add('${rival.name}に勝った!');
+      } else {
+        cast.rivalLosses++;
+        condition = condition.copyWith(morale: condition.morale - 8);
+        log.add('${rival.name}に負けた…');
+      }
+      rival.addBond(5);
+    }
+    achievements.add(ach);
     if (t.champion) {
       championships++;
       log.add('夏の大会で優勝した!');
@@ -234,9 +314,14 @@ class Game {
   }
 
   void _endYear() {
+    final before = stage;
     slot = 0;
     player = endOfYear(player);
     condition = endOfYearCondition(condition);
+    final partner = cast.lover ?? cast.family;
+    if (partner != null && partner.bond >= 50) {
+      condition = condition.copyWith(fatigue: condition.fatigue - 5); // 支えてくれる
+    }
     peakOverall = max(peakOverall, overall(player).round());
 
     if (turnedPro) {
@@ -246,13 +331,19 @@ class Game {
         log.add(isReleased(lowYears) ? '戦力外になった。' : '年齢により引退した。');
         _retire();
       }
-      return;
-    }
-    if (route == null && player.age == proEntryAge + 1) {
+    } else if (route == null && player.age == proEntryAge + 1) {
       _draft();
     } else if (route != null && player.age == graduationAge(route!)) {
       _draft();
     }
+    _rotateCast(before);
+  }
+
+  /// 段階が変わったら、仲間とコーチが替わる(高校で恋人が現れる)。
+  void _rotateCast(Stage before) {
+    if (phase == Phase.retired) return;
+    final after = stage;
+    if (after != before) cast.rotate(after, rng, player.role, player.traits);
   }
 
   void _draft() {
@@ -294,6 +385,9 @@ class Game {
       peakOverall: peakOverall,
       championships: championships,
       wasTwoWay: _wasTwoWay,
+      rivalWins: cast.rivalWins,
+      rivalLosses: cast.rivalLosses,
+      partnerName: (cast.lover != null && cast.lover!.bond >= 80) ? cast.lover!.name : null,
     );
   }
 
@@ -304,6 +398,7 @@ class Game {
         'condition': condition.toJson(),
         'slot': slot,
         'exp': exp.toJson(),
+        'cast': cast.toJson(),
         'phase': phase.name,
         'pendingEvent': pendingEvent?.id,
         'eventFocus': _eventFocus.name,
@@ -326,7 +421,13 @@ class Game {
       return orElse;
     }
 
-    final g = Game._(rng, Player.fromJson((j['player'] as Map?)?.cast<String, dynamic>() ?? {}));
+    final player = Player.fromJson((j['player'] as Map?)?.cast<String, dynamic>() ?? {});
+    final castJson = (j['cast'] as Map?)?.cast<String, dynamic>();
+    final g = Game._(
+      rng,
+      player,
+      castJson != null ? Cast.fromJson(castJson) : Cast.initial(rng, player.role, player.traits),
+    );
     g.condition = Condition.fromJson((j['condition'] as Map?)?.cast<String, dynamic>() ?? {});
     g.slot = (j['slot'] as num?)?.toInt() ?? 0;
     g.exp = ExpPool.fromJson((j['exp'] as Map?)?.cast<String, dynamic>() ?? {});

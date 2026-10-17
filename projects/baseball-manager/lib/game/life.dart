@@ -1,6 +1,8 @@
 import 'dart:math';
 
 import 'player.dart';
+import 'characters.dart';
+import 'career.dart';
 import 'exp.dart';
 import 'training.dart';
 import 'traits.dart';
@@ -15,11 +17,15 @@ enum Action {
   rest, // 休養: 疲れを取る
   study, // 研究: 気持ちが乗り、重点が少し伸びる
   social, // 交流: 友人・家族と過ごして気持ちを上げる
-  match; // 練習試合・遠征: 全体が少し伸びる
+  match, // 練習試合・遠征: 全体が少し伸びる
+  lesson; // コーチに教わる: 少し伸び、コツが貯まる(貯まると特性を習得)
 
   /// 重点の能力が要るか。
   bool get needsFocus =>
-      this == Action.train || this == Action.special || this == Action.study;
+      this == Action.train ||
+      this == Action.special ||
+      this == Action.study ||
+      this == Action.lesson;
 }
 
 /// 年をまたいで持つ状態。能力と別に持つ(体調と気持ち)。
@@ -64,6 +70,7 @@ class Condition {
       Action.study => (scale: 0.12, fatigue: 5, morale: 10),
       Action.social => (scale: 0.03, fatigue: -10, morale: 20),
       Action.match => (scale: 0.17, fatigue: 20, morale: 0),
+      Action.lesson => (scale: 0.15, fatigue: 12, morale: 0),
     };
 
 /// 怪我の確率。疲れているほど、特訓ほど高い。
@@ -146,8 +153,11 @@ Condition endOfYearCondition(Condition c) => c.copyWith(fatigue: c.fatigue - 20)
 // ── 季節の途中で起きる出来事(選択つき) ──
 
 class EventChoice {
-  const EventChoice(this.label, this.apply);
+  const EventChoice(this.label, this.apply, [this.onCast]);
   final String label;
+
+  /// 登場人物への影響(絆・コツなど)。選んだ後に呼ばれる。
+  final void Function(Cast cast, Random rng)? onCast;
 
   /// 結果。能力・体調を返す。重点の能力 `focus` を使えるようにしてある。
   final ({Player player, Condition condition}) Function(
@@ -155,10 +165,13 @@ class EventChoice {
 }
 
 class GameEvent {
-  const GameEvent(this.id, this.text, this.choices);
+  const GameEvent(this.id, this.text, this.choices, {this.when});
   final String id;
   final String text;
   final List<EventChoice> choices;
+
+  /// 起きる条件。省略なら誰にでも起きうる。
+  final bool Function(Stage stage, Cast cast)? when;
 }
 
 Player _gain(Player p, Ability a, int n) => p.copyWith(
@@ -196,6 +209,78 @@ final List<GameEvent> events = [
     EventChoice('無理はしない', (p, c, f) =>
         (player: p, condition: c.copyWith(morale: c.morale + 5))),
   ]),
+  GameEvent('date', '恋人からデートに誘われた。', [
+    EventChoice(
+      '行く',
+      (p, c, f) => (
+        player: p,
+        condition: c.copyWith(fatigue: c.fatigue - 10, morale: c.morale + 15)
+      ),
+      (cast, rng) => cast.lover?.addBond(12),
+    ),
+    EventChoice(
+      '練習があるから断る',
+      (p, c, f) => (player: p, condition: c.copyWith(morale: c.morale - 3)),
+      (cast, rng) => cast.lover?.addBond(-6),
+    ),
+  ], when: (stage, cast) => cast.lover != null),
+  GameEvent('family', '母がお弁当を作って待っていた。', [
+    EventChoice(
+      '感謝して食べる',
+      (p, c, f) => (player: p, condition: c.copyWith(morale: c.morale + 10)),
+      (cast, rng) => cast.family?.addBond(10),
+    ),
+    EventChoice(
+      '急いで練習へ向かう',
+      (p, c, f) => (player: p, condition: c.copyWith(fatigue: c.fatigue + 5)),
+      (cast, rng) => cast.family?.addBond(-3),
+    ),
+  ], when: (stage, cast) => cast.family != null),
+  GameEvent('rival-talk', 'ライバルが勝負を挑んできた。', [
+    EventChoice(
+      '受けて立つ',
+      (p, c, f) => (player: _gain(p, f, 1), condition: c.copyWith(fatigue: c.fatigue + 10)),
+      (cast, rng) => cast.rival?.addBond(8),
+    ),
+    EventChoice(
+      '今は断る',
+      (p, c, f) => (player: p, condition: c.copyWith(morale: c.morale - 3)),
+    ),
+  ], when: (stage, cast) => cast.rival != null),
+  GameEvent('coach-extra', 'コーチが居残り練習に付き合ってくれると言う。', [
+    EventChoice(
+      '居残りする',
+      (p, c, f) => (player: p, condition: c.copyWith(fatigue: c.fatigue + 15)),
+      (cast, rng) => cast.coach?.tips += 1,
+    ),
+    EventChoice(
+      '今日は帰る',
+      (p, c, f) => (player: p, condition: c.copyWith(morale: c.morale + 3)),
+    ),
+  ], when: (stage, cast) => cast.coach != null),
+  GameEvent('mate-invite', '仲間が一緒に練習しようと誘ってきた。', [
+    EventChoice(
+      '一緒にやる',
+      (p, c, f) => (
+        player: p,
+        condition: c.copyWith(fatigue: c.fatigue + 8, morale: c.morale + 5)
+      ),
+      (cast, rng) {
+        for (final m in cast.teammates) {
+          m.addBond(4);
+        }
+      },
+    ),
+    EventChoice(
+      'ひとりで集中する',
+      (p, c, f) => (player: _gain(p, f, 1), condition: c),
+      (cast, rng) {
+        for (final m in cast.teammates) {
+          m.addBond(-2);
+        }
+      },
+    ),
+  ], when: (stage, cast) => cast.teammates.isNotEmpty),
   GameEvent('friend', '友人が遊びに誘ってくれた。', [
     EventChoice('遊びに行く', (p, c, f) => (
           player: p,
@@ -212,5 +297,12 @@ final List<GameEvent> events = [
 const eventChance = 0.4;
 
 /// 今季の出来事。起きなければ null。
-GameEvent? drawEvent(Random rng, {double share = 1.0}) =>
-    rng.nextDouble() < eventChance * share ? events[rng.nextInt(events.length)] : null;
+/// `stage` と `cast` を渡すと、条件のある出来事(恋人・ライバルなど)も候補に入る。
+GameEvent? drawEvent(Random rng, {double share = 1.0, Stage? stage, Cast? cast}) {
+  if (rng.nextDouble() >= eventChance * share) return null;
+  final pool = [
+    for (final e in events)
+      if (e.when == null || (stage != null && cast != null && e.when!(stage, cast))) e,
+  ];
+  return pool[rng.nextInt(pool.length)];
+}
