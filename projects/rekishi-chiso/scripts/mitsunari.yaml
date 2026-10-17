@@ -199,7 +199,6 @@ sections:
         detail: {box: [0.15, 0.15, 0.85, 0.75], label: 蒲生郡の絵図}
         short: s2
       - 聞き: 物差しがバラバラだと、お店ごとにレートが違う両替みたいになっちゃうもんね。
-        short: s2
       - 語り: 天正13年7月、秀吉が関白になったのにともない、26歳で、従五位下・治部少輔に叙任。呼び名の「治部少」は、この官職です。
         year: 1585
         background: {image: paintings/hideyoshi_jurakudai_screen_mitsui.jpg, credit: "《聚楽第図屏風》（桃山時代）"}
@@ -216,7 +215,6 @@ sections:
         figure: {type: stats, title: 三成の裏方の仕事, items: [[検地奉行, 天正12年, 近江の蒲生郡], [博多奉行, 6月7日, 天正15年], [兵站の担当, 天正15年, 九州征伐の兵糧と弾薬]]}
         short: s2
       - 聞き: 戦場でいちばん大事なのは、ご飯と弾ってことか。足りなくなったら、強くても動けないもんね。
-        short: s2
       - 語り: 同じ年の6月7日、博多奉行に任じられ、荒れた博多の町の再興にあたります。
         figure: null
         detail: {box: [0.05, 0.45, 0.95, 0.95], label: 博多湾}
@@ -392,7 +390,6 @@ sections:
         card: {head: 慶長4年閏3月3日, body: 前田利家が死去。七将襲撃事件}
         short: s4
       - 聞き: 七人の武将が、一人を襲うってこと？ かなり物騒じゃん。
-        short: s4
       - 語り: 顔ぶれは、史料で割れます。一般には、加藤清正、黒田長政、細川忠興、池田輝政、藤堂高虎、福島正則、浅野幸長の7人です。
         portrait: {image: paintings/kanbei_kato_kiyomasa_portrait.jpg, caption: "加藤清正の肖像（江戸時代とされる）", age: false}
         card: {head: 七将の顔ぶれ, body: 清正・長政・忠興・輝政・高虎・正則・幸長}

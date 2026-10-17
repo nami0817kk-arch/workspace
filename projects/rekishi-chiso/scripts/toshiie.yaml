@@ -460,7 +460,6 @@ sections:
         figure: null
         short: s5
       - 聞き: 刀で斬るなんて、すごい覚悟。でも前田家の本の話なんだよね。家の人を、よく書いてるのかも。
-        short: s5
       - 語り: 2月2日。利家を含む四大老と五奉行の9人と、家康が、誓紙を交わします。
         background: {image: paintings/nene_rakuchu_funaki_1.jpg, credit: "《洛中洛外図屏風》（江戸時代初期）"}
         card: {head: 慶長4年2月2日, body: 9人と家康が誓紙を交わす}
