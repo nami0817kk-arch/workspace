@@ -1,6 +1,8 @@
 import 'at_bat.dart';
+import 'career.dart';
 
-enum Role { batter, pitcher }
+/// `twoWay`(二刀流)は打者と投手の両方の能力を持つ。選べるのはプロの段階だけ(`switchRole`)。
+enum Role { batter, pitcher, twoWay }
 
 /// 能力。0〜99。野手と投手で使うものが違う。
 enum Ability {
@@ -30,8 +32,11 @@ const batterAbilities = [
 ];
 const pitcherAbilities = [Ability.stuff, Ability.control, Ability.stamina];
 
-List<Ability> abilitiesOf(Role r) =>
-    r == Role.batter ? batterAbilities : pitcherAbilities;
+List<Ability> abilitiesOf(Role r) => switch (r) {
+      Role.batter => batterAbilities,
+      Role.pitcher => pitcherAbilities,
+      Role.twoWay => [...batterAbilities, ...pitcherAbilities],
+    };
 
 class Player {
   Player({
@@ -43,7 +48,7 @@ class Player {
   }) : abilities = abilities ?? {for (final a in abilitiesOf(role)) a: 20};
 
   final String name;
-  final Role role;
+  final Role role; // 役割は `switchRole` 以外では変わらない
   final int age;
 
   /// 素質 0〜100。伸びの上限と速さに効く。生まれつきで変わらない。
@@ -52,9 +57,9 @@ class Player {
 
   int of(Ability a) => abilities[a] ?? 0;
 
-  Player copyWith({int? age, Map<Ability, int>? abilities}) => Player(
+  Player copyWith({int? age, Role? role, Map<Ability, int>? abilities}) => Player(
         name: name,
-        role: role,
+        role: role ?? this.role,
         age: age ?? this.age,
         potential: potential,
         abilities: abilities ?? this.abilities,
@@ -93,4 +98,19 @@ class Player {
       abilities: ab.isEmpty ? null : ab,
     );
   }
+}
+
+/// 転向で新しく持つ能力の初期値。ゼロからではないが、本職よりは低い。
+const switchStartLevel = 25;
+
+/// プロの段階でだけ役割を変えられる(二刀流にする/本職に戻す)。
+/// 新しく持つ能力は `switchStartLevel`、持たなくなる能力は消える。
+Player switchRole(Player p, Role to, Stage stage) {
+  if (stage != Stage.pro) {
+    throw StateError('役割を変えられるのはプロの段階だけ: $stage');
+  }
+  final ab = <Ability, int>{
+    for (final a in abilitiesOf(to)) a: p.abilities[a] ?? switchStartLevel,
+  };
+  return p.copyWith(role: to, abilities: ab);
 }

@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:baseball_manager/game/career.dart';
 import 'package:baseball_manager/game/player.dart';
 import 'package:baseball_manager/game/training.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -16,6 +17,7 @@ Player _years(Player p, Ability focus, int n, int seed) {
 }
 
 void main() {
+  _twoWayTests();
   test('1年で年齢が1つ進む', () {
     final p = advanceYear(_kid(), Ability.contact, Random(1));
     expect(p.age, 7);
@@ -67,5 +69,55 @@ void main() {
     final bare = Player.fromJson({'name': 'x'});
     expect(bare.age, 6);
     expect(bare.potential, 50);
+  });
+}
+
+void _twoWayTests() {
+  Player pro() => Player(
+        name: '投手',
+        role: Role.pitcher,
+        age: 20,
+        potential: 60,
+        abilities: {Ability.stuff: 70, Ability.control: 60, Ability.stamina: 55},
+      );
+
+  test('二刀流にできるのはプロの段階だけ', () {
+    expect(() => switchRole(pro(), Role.twoWay, Stage.highSchool), throwsStateError);
+    expect(() => switchRole(pro(), Role.twoWay, Stage.pathChoice), throwsStateError);
+    final t = switchRole(pro(), Role.twoWay, Stage.pro);
+    expect(t.role, Role.twoWay);
+  });
+
+  test('二刀流は両方の能力を持ち、元の能力は保たれる', () {
+    final t = switchRole(pro(), Role.twoWay, Stage.pro);
+    expect(t.abilities.keys.toSet(), abilitiesOf(Role.twoWay).toSet());
+    expect(t.of(Ability.stuff), 70);
+    expect(t.of(Ability.contact), switchStartLevel);
+  });
+
+  test('二刀流は本職より伸びが小さい(平均)', () {
+    var one = 0, two = 0;
+    for (var s = 0; s < 200; s++) {
+      final a = Player(name: 'a', role: Role.batter, age: 18, potential: 60);
+      final b = switchRole(a, Role.twoWay, Stage.pro).copyWith(role: Role.twoWay);
+      one += _years(a, Ability.contact, 4, s).of(Ability.contact);
+      two += _years(b, Ability.contact, 4, s).of(Ability.contact);
+    }
+    expect(two, lessThan(one));
+  });
+
+  test('二刀流は打者にも投手にもなれ、本職に戻せる', () {
+    final t = switchRole(pro(), Role.twoWay, Stage.pro);
+    expect(t.toBatter().contact, switchStartLevel);
+    expect(t.toPitcher().stuff, 70);
+    final back = switchRole(t, Role.batter, Stage.pro);
+    expect(back.abilities.keys.toSet(), batterAbilities.toSet());
+  });
+
+  test('二刀流も保存して読み直せる', () {
+    final t = switchRole(pro(), Role.twoWay, Stage.pro);
+    final q = Player.fromJson(t.toJson());
+    expect(q.role, Role.twoWay);
+    expect(q.abilities, t.abilities);
   });
 }
