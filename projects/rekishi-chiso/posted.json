@@ -910,5 +910,149 @@
     "video_id": "SI5Ynl6OmGE",
     "title": "三方ヶ原で家康が籠城していたら？｜史料に残る籠城の道",
     "publish_at": "2026-10-19 16:00"
+  },
+  {
+    "key": "nagashino-if:main",
+    "video_id": "57OFEjDz6hA",
+    "title": "もし長篠の戦いで武田勝頼が勝っていたら｜武田は勢いを保てたか、信長と家康はどうしたか、そのあとどうなったか",
+    "publish_at": "2026-10-19 12:00"
+  },
+  {
+    "key": "sanada:main",
+    "video_id": "4XxJWTg5CZ0",
+    "title": "真田幸村（真田信繁）｜「幸村」の名は、本人の書状に出てこない",
+    "publish_at": "2026-10-19 19:00"
+  },
+  {
+    "key": "nagashino-if:short:s1",
+    "video_id": "XZOYpIxcrbw",
+    "title": "武田勝頼が長篠で勝っていたら？｜宿老3人が同じ日に亡くなった設楽原",
+    "publish_at": "2026-10-20 11:00"
+  },
+  {
+    "key": "nagashino-if:short:s2",
+    "video_id": "uQ8trAFGYEw",
+    "title": "長篠の鉄砲三千挺は本当？｜三段撃ちの出どころと信長公記の1千挺",
+    "publish_at": "2026-10-20 12:00"
+  },
+  {
+    "key": "nagashino-if:short:s3",
+    "video_id": "JiNDN7SEMOA",
+    "title": "もし長篠で武田勝頼が勝っていたら？｜勝頼と馬場信春の想像劇場",
+    "publish_at": "2026-10-20 13:00"
+  },
+  {
+    "key": "nagashino-if:short:s4",
+    "video_id": "fBcCdBwN2M0",
+    "title": "長篠で武田の宿老3人が戦死｜勝頼の評価はなぜ割れるのか",
+    "publish_at": "2026-10-20 14:00"
+  },
+  {
+    "key": "nagashino-if:short:s5",
+    "video_id": "sOeNS_DAwEI",
+    "title": "酒井忠次の鳶ヶ巣山奇襲とは？｜長篠の夜明けに何が起きたか",
+    "publish_at": "2026-10-20 16:00"
+  },
+  {
+    "key": "sekigahara-if:main",
+    "video_id": "CTSrtLOHeSc",
+    "title": "もし関ヶ原で西軍が勝っていたら｜小早川秀秋が松尾山を動かなかった日、日本はどうなったか",
+    "publish_at": "2026-10-20 12:00"
+  },
+  {
+    "key": "chosen-if:main",
+    "video_id": "iO6y-Qls55c",
+    "title": "もし豊臣秀吉が朝鮮出兵をしなかったら｜名護屋の約120の陣屋と15万の兵は消え、豊臣政権と大名はどうなったか",
+    "publish_at": "2026-10-21 12:00"
+  },
+  {
+    "key": "sanada:short:s1",
+    "video_id": "BY7EHp_FFA4",
+    "title": "真田幸村の「幸村」は本人の名乗りだった？｜生前の書状は「信繁」、名の初出は軍記",
+    "publish_at": "2026-10-20 17:00"
+  },
+  {
+    "key": "sanada:short:s2",
+    "video_id": "VulXwnKTmmA",
+    "title": "真田昌幸は1,200人で徳川7,000人に勝った？｜第一次上田合戦の数字は割れている",
+    "publish_at": "2026-10-20 18:00"
+  },
+  {
+    "key": "sanada:short:s3",
+    "video_id": "Mr06HVy4WFI",
+    "title": "真田が秀忠軍を止めたから関ヶ原に遅れた？｜第二次上田合戦と、9月8日の上洛命令",
+    "publish_at": "2026-10-20 19:00"
+  },
+  {
+    "key": "sanada:short:s4",
+    "video_id": "o7x2tY0TrXI",
+    "title": "「真田丸」という名は当時からあった？｜大坂冬の陣の出丸と、割れている形",
+    "publish_at": "2026-10-20 20:00"
+  },
+  {
+    "key": "sanada:short:s5",
+    "video_id": "c8GYOjnCQVI",
+    "title": "家康は夏の陣で本当に切腹を覚悟した？｜天王寺・岡山の戦いを伝える記録",
+    "publish_at": "2026-10-20 21:00"
+  },
+  {
+    "key": "sekigahara-if:short:s1",
+    "video_id": "j320mWsbQY8",
+    "title": "関ヶ原の決め手は数え19歳？｜小早川秀秋と、もしも西軍が勝っていたら",
+    "publish_at": "2026-10-21 11:00"
+  },
+  {
+    "key": "sekigahara-if:short:s2",
+    "video_id": "f_FDLdYgVA8",
+    "title": "小早川秀秋はいつ寝返った？｜関ヶ原、研究者の3つの説",
+    "publish_at": "2026-10-21 12:00"
+  },
+  {
+    "key": "sekigahara-if:short:s3",
+    "video_id": "00WVucIScP0",
+    "title": "関ヶ原で毛利はなぜ戦わなかった？｜吉川広家の密約と、大坂城の輝元",
+    "publish_at": "2026-10-21 13:00"
+  },
+  {
+    "key": "sekigahara-if:short:s4",
+    "video_id": "ghhBWsKKfbs",
+    "title": "もし小早川秀秋が動かなかったら？｜家康と井伊直政の想像劇場",
+    "publish_at": "2026-10-21 14:00"
+  },
+  {
+    "key": "sekigahara-if:short:s5",
+    "video_id": "h1svBSwi3yk",
+    "title": "島津の退き口とは？｜関ヶ原で80数名が生還したと言われる",
+    "publish_at": "2026-10-21 16:00"
+  },
+  {
+    "key": "chosen-if:short:s1",
+    "video_id": "z7a0mimp5ww",
+    "title": "秀吉が築いた名護屋城とは？｜約120の陣屋と10万人の城下",
+    "publish_at": "2026-10-22 11:00"
+  },
+  {
+    "key": "chosen-if:short:s2",
+    "video_id": "5z6YRQ6Sw9c",
+    "title": "秀吉はなぜ明をめざした？｜唐入りの動機をめぐる説",
+    "publish_at": "2026-10-22 12:00"
+  },
+  {
+    "key": "chosen-if:short:s3",
+    "video_id": "qw7n1LszXLs",
+    "title": "文禄の役はどう始まった？｜釜山上陸から漢城まで",
+    "publish_at": "2026-10-22 13:00"
+  },
+  {
+    "key": "chosen-if:short:s4",
+    "video_id": "qc_c_wVtxfU",
+    "title": "豊臣秀次はなぜ切腹したのか？｜秀次事件の諸説",
+    "publish_at": "2026-10-22 14:00"
+  },
+  {
+    "key": "chosen-if:short:s5",
+    "video_id": "YhTLTvh2OfU",
+    "title": "秀吉の朝鮮渡海は止められた？｜史料に残る別の道",
+    "publish_at": "2026-10-22 16:00"
   }
 ]
