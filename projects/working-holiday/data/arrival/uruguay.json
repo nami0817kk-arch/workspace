@@ -1,0 +1,49 @@
+{
+  "id": "uruguay",
+  "steps": [
+    {
+      "title": "身分証（Documento Nacional de Identidad）を取得する",
+      "body": "内務省身分登録局（Dirección Nacional de Identificación Civil）によれば、移民局（Dirección Nacional de Migración）発行の在留証明書（Certificado de Residencia）と出生証明書（領事館で認証・スペイン語訳したもの）を持って、身分証を申請する。必要書類が揃わない場合は仮の身分証（documento de identidad provisorio）が発行される。手数料は456ウルグアイペソ（2026年7月1日時点）。",
+      "url": "https://www.gub.uy/tramites/documento-nacional-identidad-primera-vez-personas-nacidas-exterior-residencia-tramite-legal-definitiva-definitiva-mercosur"
+    },
+    {
+      "title": "銀行口座（BROU）を開設する",
+      "body": "国営銀行BROU（Banco de la República Oriental del Uruguay）の顧客になる手続きは無料。身分証明書（原本とコピー）と住所を示す請求書・領収書が必要。外国人・非居住者には追加の情報や書類を求められる場合がある。",
+      "url": "https://www.gub.uy/tramites/hacerse-cliente-brou"
+    },
+    {
+      "title": "在留届を提出する",
+      "body": "3か月以上海外に滞在する場合、外務省の在留届オンラインサービス（ORRネット）から住所や連絡先を届け出る。緊急時の安否確認や在ウルグアイ日本国大使館からの情報提供に使われる。",
+      "url": "https://www.ezairyu.mofa.go.jp/"
+    }
+  ],
+  "medical": {
+    "emergency": "911（警察・救急・消防共通の緊急通報番号、内務省が運用）",
+    "summary": "首都モンテビデオの一部私立総合病院は欧米諸国と遜色のない医療レベルが期待できるが、脳血管障害や虚血性心疾患など高度医療は特定の病院に集約されているため、総合病院でも対応できるとは限らない。公立病院の救急車は呼んでもすぐに来ないことがあり、中流層以上は民間の緊急搬送サービスに登録していることが多い。私立病院は契約会員制が基本で、会員以外が受診する場合は旅行者保険加入証明書やクレジットカードの提示を求められる。外務省によれば、ウルグアイ国内に日本人医師や日本語を理解する医師はいない。",
+    "hospitals": []
+  },
+  "jobs": {
+    "min_wage": "全国最低賃金（Salario Mínimo Nacional）月額25,383ウルグアイペソ（2026年7月1日適用開始。2026年1月1日時点は24,572ペソ）",
+    "min_wage_url": "https://www.gub.uy/ministerio-trabajo-seguridad-social/comunicacion/noticias/salario-minimo-nacional-24572-desde-1o-enero-2026",
+    "channels": [
+      {
+        "name": "VÍA TRABAJO（労働・社会保障省 雇用局 DINAE が運営する公的求人プラットフォーム）",
+        "url": "https://viatrabajo.mtss.gub.uy/viatrabajoweb/servlet/inicio",
+        "note": "職歴・希望条件を登録し求人に応募できる政府の求職プラットフォーム"
+      }
+    ],
+    "rules": [
+      "全国最低賃金（Salario Mínimo Nacional）は政令（デクレト）により改定され、月額を25で割ると日額、200で割ると時給になる",
+      "最低賃金は労働・社会保障省（MTSS）が発表する"
+    ]
+  },
+  "sources": [
+    {"title": "Documento Nacional de Identidad - Primera Vez (residencia en trámite / legal definitiva / Mercosur) - DNIC", "url": "https://www.gub.uy/tramites/documento-nacional-identidad-primera-vez-personas-nacidas-exterior-residencia-tramite-legal-definitiva-definitiva-mercosur", "checked": "2026-10-05"},
+    {"title": "Hacerse cliente BROU - Trámites GUB.UY", "url": "https://www.gub.uy/tramites/hacerse-cliente-brou", "checked": "2026-10-05"},
+    {"title": "Salario Mínimo Nacional: $ 24.572 desde el 1.º de enero de 2026 - MTSS", "url": "https://www.gub.uy/ministerio-trabajo-seguridad-social/comunicacion/noticias/salario-minimo-nacional-24572-desde-1o-enero-2026", "checked": "2026-10-05"},
+    {"title": "VÍA TRABAJO - MTSS", "url": "https://viatrabajo.mtss.gub.uy/viatrabajoweb/servlet/inicio", "checked": "2026-10-05"},
+    {"title": "Emergencia 9-1-1 - Ministerio del Interior", "url": "https://www.gub.uy/ministerio-interior/tramites-y-servicios/servicios/emergencia-9-1-1", "checked": "2026-10-05"},
+    {"title": "ウルグアイ｜外務省 世界の医療事情", "url": "https://www.mofa.go.jp/mofaj/toko/medi/cs_ame/uruguay.html", "checked": "2026-10-05"},
+    {"title": "外務省 在留届（ORRネット）", "url": "https://www.ezairyu.mofa.go.jp/", "checked": "2026-10-05"}
+  ]
+}

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../state/game_state.dart';
 import '../l10n/tr.dart';
+import 'achievement_badge.dart';
 
 /// 試合・シーズン終了・複数節まとめてシミュレーションなど、実績が新たに
 /// 解除されうるあらゆる操作の直後に呼び出す共通の通知処理。1件なら
@@ -33,7 +34,7 @@ void showAchievementUnlockNotification(
             for (final a in newly)
               ListTile(
                 contentPadding: EdgeInsets.zero,
-                leading: Icon(Icons.emoji_events, color: Colors.amber.shade700),
+                leading: AchievementBadge(achievement: a, unlocked: true, size: 40),
                 title: Text(a.name),
                 subtitle: Text(a.description),
               ),

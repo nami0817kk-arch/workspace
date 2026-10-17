@@ -1,0 +1,43 @@
+{
+  "id": "uruguay",
+  "name": "ウルグアイ",
+  "age": "申請時18歳以上30歳以下",
+  "stay": "滞在期間は本人の申告によるが、2年を超えることはできない",
+  "fee": "入国後にウルグアイ国内で一時滞在許可料557.30UI（ウルグアイの物価連動単位）、身分証明用の移民証明書手数料55.70UIを支払う（ビザ申請自体の手数料は原文に明記なし）",
+  "funds": "当初の生計を維持するための十分な経済的手段の証明（具体的な額は示されていない）",
+  "apply": "駐日ウルグアイ大使館（東京都港区芝大門1-2-1 大門KSビル7階）へ書類を提出して申請",
+  "timing": "申請承認の通知から180日以内にウルグアイへ入国する必要がある",
+  "work": "主たる目的は観光であること。一時的・付随的な就労活動が可能",
+  "study": "原文に明記なし",
+  "insurance": "包括的な医療保険（seguro de salud integral）への加入が必要",
+  "points": [
+    "滞在期間の上限が2年と、他の多くの協定国（1年）より長い",
+    "犯罪経歴証明書（過去5年分、直近6か月以内発行、アポスティーユ/認証と翻訳付き）が必要",
+    "現地の居住地証明書の発行後、滞在先国の医師による健康診断証明書も求められる",
+    "承認通知から180日以内にウルグアイへ入国しないと許可が失効する",
+    "入国後はウルグアイ移民局（Dirección Nacional de Migración）に本人が出頭し、一時滞在許可料557.30UI等を現地で支払う",
+    "扶養家族を同伴しての渡航は不可。原則、同一制度への再参加もできない"
+  ],
+  "sources": [
+    {
+      "title": "Vacaciones y Trabajo (Working Holiday) para ciudadanos extranjeros - GUB.UY (Ministerio de Relaciones Exteriores)",
+      "url": "https://www.gub.uy/tramites/vacaciones-trabajo-working-holiday-vacaciones-trabajo-working-holiday-ciudadanos-extranjeros",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "ワーキング・ホリデー制度（Working Holiday）| 在ウルグアイ日本国大使館",
+      "url": "https://www.uy.emb-japan.go.jp/itpr_ja/whuy.html",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "ワーキング・ホリデー制度｜外務省",
+      "url": "https://www.mofa.go.jp/mofaj/toko/visa/working_h.html",
+      "checked": "2026-10-05"
+    }
+  ],
+  "unverified": [
+    "fee（ビザ申請自体の手数料）",
+    "funds（必要資金の具体的な金額）",
+    "study（就学制限の具体的な条件）"
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "id": "uk",
+  "name": "英国",
+  "age": "申請時18歳以上30歳以下",
+  "stay": "最長24か月。オーストラリア・カナダ・ニュージーランド国籍者のみ2年経過後さらに1年延長可（日本は延長不可）",
+  "fee": "申請料 £340＋移民保健サージチャージ（Immigration Health Surcharge） 通常 年額£776",
+  "funds": "£2,530以上の預金（申請前28日間連続で保有している必要あり）",
+  "apply": "オンライン申請。渡航予定日の最大6か月前から申請可能",
+  "timing": "通年いつでも申請可能。日本国籍者は抽選（バロット）不要（抽選が必要なのは香港SAR旅券保持者・台湾のみ）",
+  "work": "ほとんどの職種で就労可。プロスポーツ選手（コーチ含む）としての就労は不可。自営業も設備価値£5,000以下・従業員なし等の条件付きで可",
+  "study": "就学可（一部コースはATAS証明書が必要）",
+  "insurance": "民間医療保険の加入義務はないが、NHS利用のため移民保健サージチャージ（IHS）の支払いが必須",
+  "points": [
+    "日本国籍者は年間6,000人の枠（2024年1月31日拡大）で、抽選（バロット）登録なしにいつでも申請できる",
+    "申請料£340に加え、移民保健サージチャージ（通常年額£776、2年分で約£1,552）が別途必要",
+    "£2,530以上の資金を申請前28日間連続で保有している証明が必要",
+    "18歳未満の同居する子、または経済的に扶養している子がいる場合は申請不可",
+    "滞在は最長24か月で、延長はオーストラリア・カナダ・ニュージーランド国籍者のみ可能（日本国籍者は延長不可、再度の本スキーム利用も不可）",
+    "家族を同じ申請に含めることはできず、別途各自で申請が必要"
+  ],
+  "sources": [
+    {"title": "Youth Mobility Scheme visa: Overview - GOV.UK", "url": "https://www.gov.uk/youth-mobility", "checked": "2026-10-05"},
+    {"title": "Youth Mobility Scheme visa: Eligibility - GOV.UK", "url": "https://www.gov.uk/youth-mobility/eligibility", "checked": "2026-10-05"},
+    {"title": "UK and Japan expand mobility schemes for young people - GOV.UK", "url": "https://www.gov.uk/government/news/uk-and-japan-expand-mobility-schemes-for-young-people", "checked": "2026-10-05"}
+  ],
+  "unverified": []
+}

@@ -53,34 +53,69 @@ class NextActionCard extends StatelessWidget {
     );
     if (action == null) return const SizedBox.shrink();
 
-    return Card(
-      margin: const EdgeInsets.only(bottom: 12),
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Row(
-          children: [
-            Icon(
-              action.urgent ? Icons.priority_high : Icons.lightbulb_outline,
-              size: 20,
-              color: action.urgent
-                  ? SemanticColors.negative(context)
-                  : SemanticColors.neutral(context),
-            ),
-            const SizedBox(width: 10),
-            Expanded(child: Text(action.message)),
-            const SizedBox(width: 8),
-            TextButton(
-              onPressed: () {
-                FeedbackService.tap();
-                Navigator.of(context).push(
-                  MaterialPageRoute<void>(
-                    builder: (_) => _screenFor(action.target),
+    final scheme = Theme.of(context).colorScheme;
+    final accent = action.urgent
+        ? SemanticColors.negative(context)
+        : scheme.primary;
+
+    void go() {
+      FeedbackService.tap();
+      Navigator.of(context).push(
+        MaterialPageRoute<void>(builder: (_) => _screenFor(action.target)),
+      );
+    }
+
+    // **行全体を押せるようにする。** 以前は薄い箱に文とボタンが並ぶだけで、
+    // 「次にやること」なのか単なるお知らせなのか見分けが付かなかった。
+    // 左に色の柱を立て、右に矢印を置いて、押す物だと分かる形にする。
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Material(
+        color: Color.alphaBlend(
+            accent.withValues(alpha: 0.07), scheme.surfaceContainerHigh),
+        borderRadius: BorderRadius.circular(16),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: go,
+          child: Row(
+            children: [
+              // 左の柱。急ぎかどうかを色で出す。
+              Container(width: 4, height: 62, color: accent),
+              const SizedBox(width: 12),
+              Icon(
+                action.urgent ? Icons.priority_high : Icons.lightbulb_outline,
+                size: 20,
+                color: accent,
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        action.message,
+                        style: const TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        _labelFor(action.target),
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: accent,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
                   ),
-                );
-              },
-              child: Text(_labelFor(action.target)),
-            ),
-          ],
+                ),
+              ),
+              Icon(Icons.chevron_right, color: scheme.onSurfaceVariant),
+              const SizedBox(width: 8),
+            ],
+          ),
         ),
       ),
     );

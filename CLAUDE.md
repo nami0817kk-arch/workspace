@@ -50,7 +50,8 @@ CI と Dependabot の増殖）を、この1本で構造的に解消する。
 
 ## 収益・運用に関わる注意
 
-- `projects/kabu-agari-ranking/` の取得は**このPCのタスクスケジューラ「kabu-daily-fetch」**
+- **`projects/kabu-agari-ranking/` は 2026-10-07 に終了**（取得タスクは無効化済み、サイトは終了案内のみ）。以下は当時の記録。
+  `projects/kabu-agari-ranking/` の取得は**このPCのタスクスケジューラ「kabu-daily-fetch」**
   （平日16:10、run-daily.ps1）が行う。kabutan は GitHub Actions の IP を 405 で
   ブロックするため、CI から取得する形に戻さない。CI は data/ push でビルド・公開、
   17:00 JST に鮮度監視（1営業日の欠測で Issue。休場日は数えない）。

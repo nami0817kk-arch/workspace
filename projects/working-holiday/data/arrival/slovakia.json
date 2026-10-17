@@ -1,0 +1,50 @@
+{
+  "id": "slovakia",
+  "steps": [
+    {
+      "title": "外国人警察署へ滞在先を届け出る",
+      "body": "ホテル等の宿泊施設以外に滞在する場合、入国から3日以内（週末・祝日を除く）に所轄の外国人警察署（cudzinecká polícia）へ滞在先を本人が直接届け出る必要がある。ホテル等に滞在する場合は施設側に届出義務があるため、宿泊者本人が届け出る必要はない。",
+      "url": "https://www.sk.emb-japan.go.jp/itpr_ja/00_000276.html"
+    },
+    {
+      "title": "健康保険への加入を証明する",
+      "body": "滞在証明書を受け取ってから3日以内（週末・祝日を除く）に、スロバキアの領域をカバーする健康保険に加入し、求められた際に加入を証明できるようにしておく必要がある。あわせて、警察官から求められた場合は有効な旅券と滞在証明書等の身分証明書を提示できるようにしておくこと。",
+      "url": "https://www.sk.emb-japan.go.jp/itpr_ja/00_000276.html"
+    },
+    {
+      "title": "在留届を提出する（ORRネット）",
+      "body": "スロバキアに3か月以上滞在する場合、旅券法第16条により、現地を管轄する在スロバキア日本国大使館に在留届を速やかに提出する義務がある。インターネットの在留届電子届出システム「ORRネット」から提出でき、緊急連絡や援護活動のほか在外選挙人名簿登録の確認書類にもなる。",
+      "url": "https://www.ezairyu.mofa.go.jp/"
+    }
+  ],
+  "medical": {
+    "emergency": "112（救急車・警察・消防共通の緊急通報番号）",
+    "summary": "スロバキアの医療施設は一応の水準に達しているが、英語が通じにくく病院のシステムやサービスはあまり合理的でなく、受診に長時間待たされることもある。医療費は健康保険未加入の外国人には実費請求となる。スロバキアの健康保険に加入している外国人は、国立診療所の一般・専門医療サービスも私立医療センターと同様に受けられる。在スロバキア日本国大使館が確認できた範囲では、日本語に対応すると明記された医療機関はなく、英語対応可の施設が中心（例: AMC、Nemocnica Bory、NUDCH等）。",
+    "hospitals": []
+  },
+  "jobs": {
+    "min_wage": "法定最低賃金 月額915ユーロ・時給5.259ユーロ（週40時間勤務基準、2026年1月1日適用開始）",
+    "min_wage_url": "https://www.employment.gov.sk/sk/praca-zamestnanost/vztah-zamestnanca-zamestnavatela/odmenovanie/minimalna-mzda/",
+    "channels": [
+      {
+        "name": "Služby zamestnanosti（労働・社会問題・家族省 ÚPSVaR運営の公的求人ポータル）",
+        "url": "https://www.sluzbyzamestnanosti.gov.sk/",
+        "note": "スロバキア全国の労働局・企業が掲載する求人を横断検索できる政府の公的求人サイト"
+      }
+    ],
+    "rules": [
+      "労働法典（Zákonník práce）第119条により、すべての労働者は最低賃金以上の賃金を受け取る権利がある（最低賃金法 663/2007 Z. z.）",
+      "2013年1月以降、雇用契約だけでなく、雇用関係以外の契約（委任契約・学生アルバイト契約等）に基づき働く者にも最低賃金制度が適用される",
+      "月給制の労働者には月額最低賃金、それ以外（時給制等）の労働者には時給最低賃金が適用される"
+    ]
+  },
+  "sources": [
+    {"title": "当地での滞在 - 在スロバキア日本国大使館", "url": "https://www.sk.emb-japan.go.jp/itpr_ja/00_000276.html", "checked": "2026-10-05"},
+    {"title": "医療情報 - 在スロバキア日本国大使館", "url": "https://www.sk.emb-japan.go.jp/itpr_ja/00_000274.html", "checked": "2026-10-05"},
+    {"title": "スロバキア｜外務省 世界の医療事情", "url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/slovak.html", "checked": "2026-10-05"},
+    {"title": "在留届 - 在スロバキア日本国大使館", "url": "https://www.sk.emb-japan.go.jp/itpr_ja/00_000277.html", "checked": "2026-10-05"},
+    {"title": "外務省 在留届（ORRネット）", "url": "https://www.ezairyu.mofa.go.jp/", "checked": "2026-10-05"},
+    {"title": "Minimálna mzda - MPSVR SR（労働・社会問題・家族省）", "url": "https://www.employment.gov.sk/sk/praca-zamestnanost/vztah-zamestnanca-zamestnavatela/odmenovanie/minimalna-mzda/", "checked": "2026-10-05"},
+    {"title": "Domovská stránka - Služby zamestnanosti（公的求人ポータル）", "url": "https://www.sluzbyzamestnanosti.gov.sk/", "checked": "2026-10-05"}
+  ]
+}

@@ -3,3 +3,7 @@ work/
 out/
 # 立ち絵・絵画などの素材はリポジトリに入れない（立ち絵は再配布禁止）
 assets/
+# 鍵と許可（本来の置き場はリポジトリの外。念のため）
+secrets/
+token.json
+client_secret*.json

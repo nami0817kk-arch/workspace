@@ -20,46 +20,58 @@ import yaml
 # 調子ごとの補正。pitch は足し算（VOICEVOX の pitchScale、±0.15 が上限の目安）、
 # それ以外は話者の基本値への掛け算。
 TONES: dict[str, dict[str, float]] = {
+    # 2026-10-03「もう少しリアクションや抑揚強め」で全体に強めた
     "普通": {},
-    "驚き": {"pitch": 0.06, "intonation": 1.45, "speed": 1.08, "volume": 1.12},
-    "疑問": {"pitch": 0.02, "intonation": 1.3, "speed": 1.0},
-    "強調": {"intonation": 1.3, "speed": 0.92, "volume": 1.1},
-    "しみじみ": {"pitch": -0.02, "intonation": 0.85, "speed": 0.9, "volume": 0.95},
-    "明るい": {"pitch": 0.03, "intonation": 1.25, "speed": 1.05},
-    "笑い": {"pitch": 0.04, "intonation": 1.35, "speed": 1.06},
-    "重い": {"pitch": -0.04, "intonation": 0.9, "speed": 0.88},
-    "ひそひそ": {"intonation": 0.8, "speed": 0.95, "volume": 0.75},
-    "納得": {"pitch": -0.01, "intonation": 1.1, "speed": 0.96},
+    "驚き": {"pitch": 0.09, "intonation": 1.65, "speed": 1.12, "volume": 1.2, "end_rise": 0.35},
+    "疑問": {"pitch": 0.04, "intonation": 1.45, "speed": 1.02, "end_rise": 0.25},
+    "強調": {"intonation": 1.45, "speed": 0.88, "volume": 1.15},
+    "しみじみ": {"pitch": -0.03, "intonation": 0.85, "speed": 0.86, "volume": 0.92},
+    "明るい": {"pitch": 0.05, "intonation": 1.4, "speed": 1.07, "volume": 1.05},
+    "笑い": {"pitch": 0.06, "intonation": 1.5, "speed": 1.1, "volume": 1.08},
+    "重い": {"pitch": -0.06, "intonation": 0.88, "speed": 0.84, "volume": 0.95},
+    "ひそひそ": {"intonation": 0.8, "speed": 0.95, "volume": 0.72},
+    "納得": {"pitch": -0.01, "intonation": 1.25, "speed": 0.95},
 }
 
 # 《》で囲んだ語の強調の強さ
-EMPHASIS_PITCH = 0.25        # 音の高さ（VOICEVOX の pitch は 5〜6 前後の対数値）に足す量
-EMPHASIS_LENGTH = 1.18       # 母音を伸ばす倍率
-EMPHASIS_VOLUME = 1.08
+EMPHASIS_PITCH = 0.35        # 音の高さ（VOICEVOX の pitch は 5〜6 前後の対数値）に足す量
+EMPHASIS_LENGTH = 1.25       # 母音を伸ばす倍率
+EMPHASIS_VOLUME = 1.12
 
 _EMPH = re.compile(r"《(.+?)》")
 
 
 @dataclass(frozen=True)
 class Voice:
-    """1人の話者の基本値。"""
+    """1人の話者の基本値。
+
+    tone_strength: 調子（驚き・疑問など）の効き方。1.0 で TONES のとおり、0.4 なら変化の幅を4割にする。
+    max_intonation / max_speed: 調子を掛けたあとの上限。高すぎる抑揚と早口はキンキンして聞こえる。
+    """
     style_id: int
     speed: float = 1.0
     pitch: float = 0.0
     intonation: float = 1.0
     volume: float = 1.0
+    tone_strength: float = 1.0
+    max_intonation: float = 2.0
+    max_speed: float = 2.0
+    emphasis: float = 1.0          # 《》の強調の効き（10-05「剣崎が色文字の時におかしな話かたになる」で話者ごとに）
 
 
 def tone_params(voice: Voice, tone: str) -> dict[str, float]:
     """話者の基本値に調子の補正を掛けた、VOICEVOX の audio_query に入れる値。"""
     if tone not in TONES:
         raise KeyError(f"調子「{tone}」は定義されていません")
+    k = voice.tone_strength
     t = TONES[tone]
+    mul = lambda key: 1.0 + (t.get(key, 1.0) - 1.0) * k   # 掛け算の補正を k 倍に縮める
     return {
-        "speedScale": round(voice.speed * t.get("speed", 1.0), 4),
-        "pitchScale": round(voice.pitch + t.get("pitch", 0.0), 4),
-        "intonationScale": round(voice.intonation * t.get("intonation", 1.0), 4),
-        "volumeScale": round(voice.volume * t.get("volume", 1.0), 4),
+        "speedScale": round(min(voice.max_speed, voice.speed * mul("speed")), 4),
+        "pitchScale": round(max(-0.15, min(0.15, voice.pitch + t.get("pitch", 0.0) * k)), 4),
+        # VOICEVOX の抑揚は 0〜2 まで。話者ごとの上限でも止める
+        "intonationScale": round(min(2.0, voice.max_intonation, voice.intonation * mul("intonation")), 4),
+        "volumeScale": round(voice.volume * mul("volume"), 4),
         "prePhonemeLength": 0.05,
         "postPhonemeLength": 0.08,
     }
@@ -103,11 +115,12 @@ def _kana(moras: list[dict]) -> str:
     return "".join(m.get("text", "") for m in moras)
 
 
-def emphasize(query: dict, word_kanas: list[str]) -> tuple[dict, list[str]]:
+def emphasize(query: dict, word_kanas: list[str], strength: float = 1.0) -> tuple[dict, list[str]]:
     """audio_query の結果のうち、強調する語の読み（カタカナ）に当たるモーラを持ち上げる。
 
     語の読みは、その語だけを audio_query にかけて得たモーラ列を渡す（漢字と読みの
     対応が分からないため）。見つからなかった語は2つ目の戻り値で返す。
+    strength は効きの強さ（1.0 で EMPHASIS_* のとおり、0.3 なら高さ・伸ばし・音量の変化を3割に）。
     """
     query = copy.deepcopy(query)
     moras = _moras(query)
@@ -128,12 +141,45 @@ def emphasize(query: dict, word_kanas: list[str]) -> tuple[dict, list[str]]:
         for i in targets:
             m = moras[i]
             if m.get("pitch", 0) > 0:          # 無声化したモーラ（pitch 0）は触らない
-                m["pitch"] = round(m["pitch"] + EMPHASIS_PITCH, 4)
+                m["pitch"] = round(m["pitch"] + EMPHASIS_PITCH * strength, 4)
             if m.get("vowel_length"):
-                m["vowel_length"] = round(m["vowel_length"] * EMPHASIS_LENGTH, 4)
+                m["vowel_length"] = round(m["vowel_length"] * (1 + (EMPHASIS_LENGTH - 1) * strength), 4)
     if word_kanas and len(missing) < len(word_kanas):
-        query["volumeScale"] = round(query.get("volumeScale", 1.0) * EMPHASIS_VOLUME, 4)
+        query["volumeScale"] = round(query.get("volumeScale", 1.0) * (1 + (EMPHASIS_VOLUME - 1) * strength), 4)
     return query, missing
+
+
+def join_n_phrases(accent_phrases: list) -> tuple[list, bool]:
+    """「ン」で始まる区切りを、前の言葉につなげる。
+
+    VOICEVOX は「言ってないんですか」を「イッテナイ／ンデスカ」と切り、頭の「ン」をいちばん高く読む。
+    「言ってない。ンですか？」と2つに切れて聞こえるので、前の言葉の続きにする（2026-10-04 指摘）。
+    間（読点）をはさむ場合はつなげない。つないだら高さは mora_data で計算し直す。
+    """
+    out: list = []
+    changed = False
+    for p in accent_phrases:
+        moras = p.get("moras") or []
+        if out and moras and moras[0].get("text") == "ン" and not out[-1].get("pause_mora"):
+            prev = out[-1]
+            prev["moras"] = prev["moras"] + copy.deepcopy(moras)
+            prev["is_interrogative"] = p.get("is_interrogative", False)
+            prev["pause_mora"] = p.get("pause_mora")
+            changed = True
+        else:
+            out.append(copy.deepcopy(p))
+    return out, changed
+
+
+def end_rise(query: dict, amount: float) -> dict:
+    """文の最後の言葉（最後のアクセント句）の終わり2モーラを持ち上げて、驚き・問いの尻上がりを強くする。"""
+    if amount <= 0 or not query.get("accent_phrases"):
+        return query
+    query = copy.deepcopy(query)
+    moras = [m for m in query["accent_phrases"][-1].get("moras", []) if m.get("pitch", 0) > 0]
+    for k, m in enumerate(moras[-2:]):
+        m["pitch"] = round(m["pitch"] + amount * (0.5 if k == 0 and len(moras) > 1 else 1.0), 4)
+    return query
 
 
 def kana_of(query: dict) -> str:
@@ -144,20 +190,22 @@ def kana_of(query: dict) -> str:
 
 GAP_SAME_SPEAKER = 0.38      # 同じ人が続けて話す
 GAP_TURN = 0.24              # 話者が替わる
-GAP_ANSWER = 0.18            # 問い（？で終わる）にすぐ答える
-GAP_REACTION = 0.10          # 驚きの反応は、ほぼ間を置かずにかぶせる
+GAP_ANSWER = 0.14            # 問い（？で終わる）にすぐ答える
+GAP_REACTION = 0.06          # 驚きの反応は、ほぼ間を置かずにかぶせる
 GAP_AFTER_HEAVY = 0.7        # 重い・しみじみの後は、余韻を残す
 GAP_SECTION = 1.2            # 節の切れ目
+GAP_RECAP = 3.0              # 節の切れ目に「ここまでの地層」の札が出るとき（10-09。1.2秒では札が読めなかった）
 
 
-def gap_before(prev, line) -> float:
-    """prev の行のあと、line を話し始めるまでの間（秒）。"""
+def gap_before(prev, line, recap=()) -> float:
+    """prev の行のあと、line を話し始めるまでの間（秒）。recap は「ここまでの地層」を出す節の番号
+    （その節の頭は長く空ける。台本の pause が優先）。"""
     if line.pause is not None:
         return line.pause
     if prev is None:
         return 0.3
     if prev.section != line.section:
-        return GAP_SECTION
+        return GAP_RECAP if line.section in recap else GAP_SECTION
     if prev.tone in ("重い", "しみじみ"):
         return GAP_AFTER_HEAVY
     if prev.speaker == line.speaker:

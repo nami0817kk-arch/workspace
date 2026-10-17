@@ -1,0 +1,99 @@
+{
+  "id": "italy",
+  "steps": [
+    {
+      "title": "滞在許可証（Permesso di soggiorno）を申請する",
+      "body": "イタリアに入国後8営業日以内に、滞在予定地を管轄する県警察本部（Questura）に滞在許可証を申請する必要がある。申請様式、有効なパスポートと入国ビザ、パスポートのコピー、証明写真4枚、手数料などが必要。発給までの標準処理期間は申請から平均60日とされている。",
+      "url": "https://www.poliziadistato.it/articolo/225"
+    },
+    {
+      "title": "税番号（Codice fiscale）を取得する",
+      "body": "イタリアで契約・銀行口座開設・住宅賃貸などを行うには税番号（Codice fiscale）が必要。非EU圏の外国人は税務署（Agenzia delle Entrate）または滞在許可証申請窓口（Questura／移民ワンストップ窓口）で取得でき、本人確認のため窓口への来訪（予約制）が必要。",
+      "url": "https://www.agenziaentrate.gov.it/portale/codice-fiscale-e-tessera-sanitaria/che-cos-cittadini"
+    },
+    {
+      "title": "居住地登録（Anagrafe／Residenza）を行う",
+      "body": "住む市区町村（Comune）の住民登録窓口（Ufficio Anagrafe）で居住登録を行う。本人が窓口に出向き、申請書に記入・署名する必要がある。登録により住民票（証明書）が発行され、国民保健サービス（SSN）への登録や各種契約に必要になる。",
+      "url": "https://www.anagrafenazionale.interno.it/"
+    },
+    {
+      "title": "在留届を提出する",
+      "body": "3か月以上海外に滞在する場合、外務省の在留届オンラインサービス（ORRネット）から住所や連絡先を届け出る。緊急時の安否確認や在イタリア日本国大使館・在ミラノ日本国総領事館からの情報提供に使われる。",
+      "url": "https://www.ezairyu.mofa.go.jp/"
+    },
+    {
+      "title": "基本口座（Conto di base）を開設する",
+      "body": "EU域内に合法的に滞在する人は誰でも、滞在資格の種類や証明書類にかかわらず基本口座（Conto di base）を開設する権利がある。銀行・郵便局（Poste Italiane）等は基本口座の提供を義務付けられており、ISEEが一定額未満なら無料で開設できる。",
+      "url": "https://economiapertutti.bancaditalia.it/aree-tematiche/conto-corrente/il-conto-di-base/index.html"
+    }
+  ],
+  "medical": {
+    "emergency": "112（欧州共通緊急通報番号）／118（公共救急車、全国共通）",
+    "summary": "イタリアの医療は医療技術・医薬品・医療設備ともに日本と同等の高水準とされる。国民皆保険制度（SSN）と私費診療（プライベートクリニック）が併存し、公立病院は混雑する一方、私立病院・クリニックは予約制で待ち時間が短い。医療機関での対応言語は基本的にイタリア語で、外務省「世界の医療事情」イタリアのページでは英語対応の医療機関（ローマのFirstMed、Mater Dei General Hospital等）は紹介されているが、日本語対応の医療機関の記載はない。",
+    "hospitals": []
+  },
+  "jobs": {
+    "min_wage": "",
+    "min_wage_url": "https://www.lavoro.gov.it/notizie/pagine/il-salario-giusto-e-legge",
+    "channels": [
+      {
+        "name": "Cliclavoro（労働・社会政策省の求人・労働市場情報ポータル）",
+        "url": "https://www.cliclavoro.gov.it/",
+        "note": "労働・社会政策省が運営する公式ポータル。求人企業情報へのリンクや労働市場の動向、行政手続き用ポータル（Servizi Lavoro）への案内を提供"
+      }
+    ],
+    "rules": [
+      "イタリアには一律の法定最低賃金（時給・月給での一律基準）は存在しない。2026年に成立した労働省の規定では、「正当な賃金（salario giusto）」は各業種で最も代表的な労使団体が締結する全国労働協約（CCNL）が定める総合的経済処遇（Trattamento Economico Complessivo）を基準とするとされている。",
+      "法定の一律最低賃金制度はなく、賃金は各業種の全国労働協約（CCNL）によって定められる",
+      "2026年の労働省令により、労働協約で定める総合的経済処遇（TEC）を下回らない賃金支払いが「正当な賃金」の原則として位置づけられている"
+    ],
+    "no_statutory": true
+  },
+  "sources": [
+    {
+      "title": "Il rilascio del permesso di soggiorno - Polizia di Stato",
+      "url": "https://www.poliziadistato.it/articolo/225",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Codice Fiscale - Agenzia delle Entrate",
+      "url": "https://www.agenziaentrate.gov.it/portale/codice-fiscale-e-tessera-sanitaria/che-cos-cittadini",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Anagrafe Nazionale della Popolazione Residente (ANPR) - Ministero dell'Interno",
+      "url": "https://www.anagrafenazionale.interno.it/",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "外務省 在留届（ORRネット）",
+      "url": "https://www.ezairyu.mofa.go.jp/",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Il conto di base - Banca d'Italia (Economia per tutti)",
+      "url": "https://economiapertutti.bancaditalia.it/aree-tematiche/conto-corrente/il-conto-di-base/index.html",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "イタリア｜外務省 世界の医療事情",
+      "url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/italia.html",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "領事情報 - 在イタリア日本国大使館",
+      "url": "https://www.it.emb-japan.go.jp/itpr_ja/b_000094.html",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Il salario giusto è legge - Ministero del Lavoro e delle Politiche Sociali",
+      "url": "https://www.lavoro.gov.it/notizie/pagine/il-salario-giusto-e-legge",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Cliclavoro - Ministero del Lavoro e delle Politiche Sociali",
+      "url": "https://www.cliclavoro.gov.it/",
+      "checked": "2026-10-05"
+    }
+  ]
+}

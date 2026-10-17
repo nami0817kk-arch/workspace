@@ -1,0 +1,25 @@
+name: yomi-lib tests
+
+# libs/yomi（合成音声の読み違いの点検）のテスト。VOICEVOX を使うテストは CI では飛ぶ（@pytest.mark.voicevox）。
+on:
+  push:
+    branches: ["**"]
+    paths: ["libs/yomi/**", ".github/workflows/yomi-lib-tests.yml"]
+  pull_request:
+    paths: ["libs/yomi/**", ".github/workflows/yomi-lib-tests.yml"]
+  workflow_dispatch: {}
+
+# 同じブランチで新しい実行が始まったら、古い方は打ち切る。
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  pytest:
+    uses: ./.github/workflows/python-tests.yml
+    with:
+      workdir: "libs/yomi"
+      install: "pip install -e .[dev]"

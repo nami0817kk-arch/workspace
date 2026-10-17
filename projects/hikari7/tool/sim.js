@@ -9,6 +9,22 @@ vm.runInThisContext('var FACE_IMG={m:new Array(46).fill("x"),f:new Array(71).fil
 const N = process.argv.includes('--quick') ? 20 : 200;
 // PERKS=all で心得を全部解放した状態、CHAL=poor などでチャレンジを付けて測れる
 if (process.env.PERKS === 'all') loadPerks = () => Object.fromEntries(PERKS.map((p) => [p.k, p.max]));
+// ABL=talk,event,... でその仕組みを切って測る（仕組みが最終評価にどれだけ効いているかを見る。2026-10-04）
+const ABL = (process.env.ABL || '').split(',').filter(Boolean);
+const OFF = {
+  talk: () => { apMax = () => 0; },                 // 関わる時間
+  event: () => { genEvents = () => []; },          // 出来事
+  trait: () => { gainTrait = () => ''; traitPerf = () => 1; },   // 特性
+  awaken: () => { awaken = () => {}; },            // 覚醒
+  bond: () => { addBond = () => {}; },             // 絆（ふたりの物語・コンビにも効く）
+  combo: () => { formCombo = () => {}; comboMul = () => 1; },
+  crit: () => { applyCritique = () => {}; },       // 講評
+  feat: () => { applyFeature = () => {}; },        // 大きく映す
+  center: () => { centersOf = () => []; },         // センター
+  tone: () => { applyTone = () => ''; },           // 気質による効き方
+  mission: () => { MISSION_PT = 0; },              // 依頼
+};
+ABL.forEach((k) => { if (!OFF[k]) throw new Error('ABL の名前が違う: ' + k); OFF[k](); });
 
 function pickIdx(pol, n) { return pol === 'random' ? ri(0, n - 1) : 0; }
 function play(g, pol) {
@@ -17,7 +33,7 @@ function play(g, pol) {
   if (pol === 'good') { c.sort((a, b) => (HINT_LINES.includes(b.line) - HINT_LINES.includes(a.line)) || b.popStar - a.popStar); if (typeof watchVideo === 'function') c.slice(0, 3).forEach(t => watchVideo(S, t.id)); c.sort((a, b) => ((b.potRev && b.pot >= 1.3) - (a.potRev && a.pot >= 1.3)) || (HINT_LINES.includes(b.line) - HINT_LINES.includes(a.line)) || b.popStar - a.popStar); }
   else shuffle(c);
   S.sel = c.slice(0, S.caps.sel).map(t => t.id); confirmSelect(S);
-  if (pol === 'random') S.fmt = shuffle(FMT_KEYS.filter(k => !S.locked || !S.locked[k]).slice()).slice(0, 4);
+  if (pol === 'random') S.fmt = shuffle((typeof fmtKeys==='function'?fmtKeys():FMT_KEYS).filter(k => !S.locked || !S.locked[k]).slice()).slice(0, 4);
   startSeason(S);
   for (let r = 1; r <= NROUND; r++) {
     if (S.phase !== 'plan') throw new Error('plan? ' + S.phase);
@@ -43,7 +59,7 @@ function play(g, pol) {
       doTalk(S, t.id);
       if (S.talk.kind === 'arc') talkChoose(S, pol === 'good' ? bestArc(S, t) : ri(0, 2));
       else if (S.talk.kind === 'honne') honneChoose(S, 0);
-      else if (S.talk.kind === 'free') freeChoose(S, pol === 'good' ? (t.temper === 'sensai' ? 0 : 1) : ri(0, 2));
+      else if (S.talk.kind === 'free') freeChoose(S, pol === 'good' ? (t.temper === 'sensai' ? 0 : t.temper === 'mypace' || t.temper === 'ochoshi' ? 2 : 1) : ri(0, 2));
       S.talk = null;
     }
     afterTalk(S);
@@ -54,7 +70,10 @@ function play(g, pol) {
       resolveEvent(S, ci); nextEvent(S); }
     if (S.phase !== 'show') throw new Error('show? ' + S.phase);
     S.phase = 'stage';
-    if (ROUNDS[r].crit) { if (pol === 'random') alive(S).forEach(t => S.crit[t.id] = ri(0, 2)); applyCritique(S); }
+    if (ROUNDS[r].crit) { if (pol === 'random') alive(S).forEach(t => S.crit[t.id] = ri(0, CRIT.length - 1)); applyCritique(S); }
+    if (pol !== 'naive') { S.feat = {}; const pr = popRankMap(S), B = alive(S), res = S.stage.res;
+      const cand = pol === 'good' ? B.filter((x) => pr[x.id] > 3).sort((x, y) => res[y.id].sc - res[x.id].sc) : shuffle(B.slice());
+      cand.slice(0, 3).forEach((x) => { S.feat[x.id] = true; }); }
     applyFeature(S);
     if (typeof toNight === 'function') { toNight(S); if (S.phase === 'night') { if (pol === 'naive') nightSkip(S); else answerReq(S, 0, pol === 'good' ? 1 : ri(0, 1)); S.phase = 'judge'; } }
     const B = alive(S), res = S.stage.res;
@@ -87,16 +106,16 @@ function bestArc(S, t) { // 気質が分かっていれば、合う語りかけ�
   const tones = ARC_TONE[t.arc.k][t.arc.step], sc = ARCS[t.arc.k].sc[t.arc.step];
   let best = 0, bv = -1e9;
   sc.ch.forEach((c, i) => { const tone = tones.charAt(i); let v = c[3] * 3;
-    if (t.temperRev) { if (t.temper === 'sensai' && tone === 'h') v -= 5; if (t.temper === 'makezu' && (tone === 'h' || tone === 'f')) v += 1; if (t.temper === 'sensai' && tone === 's') v += 1; }
+    if (t.temperRev) { if (t.temper === 'sensai' && tone === 'h') v -= 5; if (t.temper === 'makezu' && (tone === 'h' || tone === 'f')) v += 1; if (t.temper === 'sensai' && tone === 's') v += 1; if (t.temper === 'mypace') { if (tone === 'f') v += 1; if (tone === 'h' || tone === 'a') v -= 3; } if (t.temper === 'ochoshi') { if (tone === 'a') v += 1; if (tone === 'h') v -= 3; } }
     if (v > bv) { bv = v; best = i; } });
   return best;
 }
 const out = {};
 for (const pol of ['naive', 'random', 'good']) for (const g of ['m', 'f']) {
-  let tot = 0, gr = {}, bud = 0, mis = 0, err = 0, tg = 0, tb = 0, nd = 0, fe = 0, fn = 0, bev = 0, cmb = 0, cmbD = 0, awk = 0, mf = 0, inj = 0;
+  let cs = 0, cc = 0, cf = 0, cw = 0, tot = 0, gr = {}, bud = 0, mis = 0, err = 0, tg = 0, tb = 0, nd = 0, fe = 0, fn = 0, bev = 0, cmb = 0, cmbD = 0, awk = 0, mf = 0, inj = 0;
   for (let i = 0; i < N; i++) {
     let o; try { o = play(g, pol); } catch (e) { err++; if (err === 1) console.error(pol, g, e.stack); continue; }
-    tot += o.E.total; gr[o.E.grade] = (gr[o.E.grade] || 0) + 1; bud += o.S.budget; mis += (o.E.missions || []).filter(x => x.ok).length;
+    cs += o.E.song; cc += o.E.coh; cf += o.E.fanScore; cw += o.E.show; tot += o.E.total; gr[o.E.grade] = (gr[o.E.grade] || 0) + 1; bud += o.S.budget; mis += (o.E.missions || []).filter(x => x.ok).length;
     o.S.tr.filter(t => t.status === 'debut').forEach(t => { nd++; (t.traits || []).forEach(x => TRAITS[x].g ? tg++ : tb++); });
     mf += o.S._mf || 0; inj += o.S._inj || 0;
     bev += o.S._bev || 0; for (const k in (o.S.bond || {})) if (o.S.bond[k].combo) cmb++; cmbD += (o.E.combos || []).length; awk += o.S.tr.filter(t => t.awoke).length;
@@ -104,7 +123,7 @@ for (const pol of ['naive', 'random', 'good']) for (const g of ['m', 'f']) {
   }
   if (err) { console.error('失敗 ' + err + '件'); process.exitCode = 1; }
   const k = N - err;
-  console.log(pol.padEnd(6), g, '平均', (tot / k).toFixed(1), '評価', JSON.stringify(gr), '残り制作費', Math.round(bud / k), '依頼達成', (mis / k).toFixed(2),
+  console.log(pol.padEnd(6), g, '平均', (tot / k).toFixed(1), '内訳(曲/まとまり/ファン/視聴率)', [cs, cc, cf, cw].map((x) => (x / k).toFixed(0)).join('/'), '評価', JSON.stringify(gr), '残り制作費', Math.round(bud / k), '依頼達成', (mis / k).toFixed(2),
     '特性(デビュー組1人あたり 良/悪)', (tg / nd).toFixed(2) + '/' + (tb / nd).toFixed(2), '第3審査時点の評価からの伸び', fn ? (fe / fn).toFixed(1) : '-',
     'ふたりの物語', (bev / k).toFixed(1), 'コンビ(結成/デビュー)', (cmb / k).toFixed(2) + '/' + (cmbD / k).toFixed(2), '覚醒', (awk / k).toFixed(2), '疲れの最大', (mf / k).toFixed(0), 'けが', (inj / k).toFixed(2));
 }

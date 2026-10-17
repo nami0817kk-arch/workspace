@@ -1,0 +1,63 @@
+{
+  "id": "hungary",
+  "steps": [
+    {
+      "title": "滞在先（住居）をEnter Hungaryシステムで届け出る",
+      "body": "外国人（第三国籍者）はハンガリー国内の滞在先住所を、国家移民警察庁（National Directorate-General for Aliens Policing）が運用するオンラインシステム「Enter Hungary」で電子的に届け出る義務がある。氏名等の身分事項・旅券情報・滞在先住所・入国日と出国予定日・ビザ／在留許可番号を登録し、所有権証明書や賃貸契約書など滞在先を証明する書類を添付する。転居した場合は変更後3日以内に届出が必要。届出後に交付される宿泊証明書（accommodation certificate）は携帯しておく。",
+      "url": "https://oif.gov.hu/factsheets/reporting-obligations"
+    },
+    {
+      "title": "在留届を提出する",
+      "body": "旅券法第16条により、外国に3か月以上滞在する日本人は最寄りの在外公館に在留届の提出が義務付けられている。在ハンガリー日本国大使館（ブダペスト）へは、外務省の在留届オンラインサービス（ORRネット）から新規提出・住所変更等をオンラインで行えるほか、所定様式を印刷してメール（consul@bp.mofa.go.jp）や郵送でも提出できる。緊急時の安否確認や大使館からの情報提供に使われる。",
+      "url": "https://www.ezairyu.mofa.go.jp/"
+    },
+    {
+      "title": "納税者番号（adóazonosító jel）を取得する",
+      "body": "ハンガリーで就労する外国人は、国税関税庁（NAV）から10桁の納税者番号（adóazonosító jel）の交付を受ける必要がある。NAVが自動的に番号を付与していない外国人労働者は、申請書「T34」に旅券や身分証明書の写しを添えて郵送または窓口で申請する。雇用主は納税者番号の提示を受けるまで最初の給与を支払うことができない。",
+      "url": "https://nav.gov.hu/Elethelyzetek-adozasa/kezdetek/Adoazonosito-jel-es-adokartya"
+    },
+    {
+      "title": "社会保険番号（TAJ番号）を取得する",
+      "body": "ハンガリーで就労すると健康保険の適用対象となり、9桁の社会保険番号（TAJ szám）が必要になる。雇用主が就労開始前に、所定の申請書（Megrendelő）と本人確認書類・滞在先の証明・雇用契約書などを添えて、事業所所在地を管轄する官庁（kormányhivatal）の健康保険窓口に申請する。交付されたTAJカードは、国内のいずれの健康保険窓口でも本人または代理人が受け取れる。",
+      "url": "https://www.neak.gov.hu/felso_menu/lakossagnak/ellatas_magyarorszagon/jogosultsag_az_ellatasra/ellatasra_jogosultsag_igazolasa/taj_kartya"
+    }
+  ],
+  "medical": {
+    "emergency": "112（EU共通緊急通報番号）／個別番号は警察107・救急104・消防105",
+    "summary": "ハンガリーの医療水準は欧州地域の平均にほぼ達しているが、周辺の医療先進国と同等とは限らない。国公立病院では医師の多くは英語を理解するが、看護師や受付職員との意思疎通に戸惑うことがある。私立クリニックでは英語が通じ、日本語通訳者が勤務しているクリニックもあるとされる（保険は使えず治療費は高額）。万一の国外緊急搬送にも対応可能。",
+    "hospitals": []
+  },
+  "jobs": {
+    "min_wage": "法定最低賃金（minimálbér）月額322,800フォリント（HUF）、資格を要する職種の保証最低賃金（garantált bérminimum）月額373,200フォリント（いずれも2026年1月1日適用開始）",
+    "min_wage_url": "https://kormany.hu/hirek/2026-ban-11-szazalekkal-nott-a-minimalber-7-szazalekkal-a-garantalt-berminimum",
+    "channels": [
+      {
+        "name": "Nemzeti Foglalkoztatási Szolgálat（国立雇用サービス、NFSZ）",
+        "url": "https://nfsz.munka.hu/",
+        "note": "ハンガリー政府の公的雇用サービス。求職者向けの相談・職業紹介・給付金案内を行う"
+      },
+      {
+        "name": "Virtuális Munkaerőpiac Portál（VMP、仮想労働市場ポータル）",
+        "url": "https://vmp.munka.hu/",
+        "note": "NFSZが運営する求人検索サイト。求人への応募や履歴書の登録ができる"
+      }
+    ],
+    "rules": [
+      "最低賃金（minimálbér）・保証最低賃金（garantált bérminimum）は政府決定（Government Decree）により毎年1月に見直される",
+      "ハンガリーで就労するには納税者番号（adóazonosító jel）の取得が必要で、雇用主は番号提示前に給与を支払えない",
+      "就労開始に伴い健康保険の社会保険番号（TAJ番号）の取得・届出が必要になる"
+    ]
+  },
+  "sources": [
+    {"title": "Reporting obligations - National Directorate-General for Aliens Policing (oif.gov.hu)", "url": "https://oif.gov.hu/factsheets/reporting-obligations", "checked": "2026-10-05"},
+    {"title": "在留届、たびレジ - 在ハンガリー日本国大使館", "url": "https://www.hu.emb-japan.go.jp/itpr_ja/consul_residential.html", "checked": "2026-10-05"},
+    {"title": "外務省 在留届（ORRネット）", "url": "https://www.ezairyu.mofa.go.jp/", "checked": "2026-10-05"},
+    {"title": "緊急連絡先 - 在ハンガリー日本国大使館", "url": "https://www.hu.emb-japan.go.jp/itpr_ja/abouthungary.html", "checked": "2026-10-05"},
+    {"title": "ハンガリー｜外務省 世界の医療事情", "url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/hungary.html", "checked": "2026-10-05"},
+    {"title": "2026-ban 11 százalékkal nőtt a minimálbér, 7 százalékkal a garantált bérminimum - kormany.hu", "url": "https://kormany.hu/hirek/2026-ban-11-szazalekkal-nott-a-minimalber-7-szazalekkal-a-garantalt-berminimum", "checked": "2026-10-05"},
+    {"title": "Nemzeti Foglalkoztatási Szolgálat", "url": "https://nfsz.munka.hu/", "checked": "2026-10-05"},
+    {"title": "Virtuális Munkaerőpiac Portál", "url": "https://vmp.munka.hu/", "checked": "2026-10-05"},
+    {"title": "Adóazonosító jel és adókártya igénylése - NAV", "url": "https://nav.gov.hu/Elethelyzetek-adozasa/kezdetek/Adoazonosito-jel-es-adokartya", "checked": "2026-10-05"},
+    {"title": "TAJ kártya igénylés, kiadás - NEAK", "url": "https://www.neak.gov.hu/felso_menu/lakossagnak/ellatas_magyarorszagon/jogosultsag_az_ellatasra/ellatasra_jogosultsag_igazolasa/taj_kartya", "checked": "2026-10-05"}
+  ]
+}

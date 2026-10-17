@@ -1,0 +1,127 @@
+{
+  "id": "germany",
+  "steps": [
+    {
+      "title": "住所登録（Anmeldung）を行う",
+      "body": "ドイツに住む人は市区町村の市民局（Bürgeramt）で住所登録が義務付けられている。入居から14日以内にオンラインまたは窓口予約で登録する必要があり、登録証（Meldebestätigung）は銀行口座開設や滞在許可申請など他の手続きにも必要になる。",
+      "url": "https://willkommenszentrum.berlin.de/en/housing/anmeldung-residence-registration"
+    },
+    {
+      "title": "納税者番号（Steuer-ID）を確認する",
+      "body": "ドイツで初めて住所登録をすると、郵送で納税者番号（Steuer-Identifikationsnummer）が届く。雇用主や税務署（Finanzamt）とのやり取りに必要なため、郵便受けに自分の名前を表示しておくこと。3か月経っても届かない場合は連邦中央税務局に再発行を請求できる。",
+      "url": "https://willkommenszentrum.berlin.de/en/housing/anmeldung-residence-registration"
+    },
+    {
+      "title": "銀行口座（Basiskonto）を開設する",
+      "body": "EU域内に合法的に滞在する人は誰でも、定住先や滞在許可がなくても基本口座（Basiskonto）を開設する権利がある。銀行で「Basiskonto」の開設を申請すれば、法律で定められた正当な理由がない限り銀行は開設を拒否できない。",
+      "url": "https://www.bafin.de/SharedDocs/Veroeffentlichungen/DE/Verbrauchermitteilung/LeichteSprache/Kurzinfos/kurzinfo_basiskonto.html"
+    },
+    {
+      "title": "在留届を提出する",
+      "body": "3か月以上海外に滞在する場合、外務省の在留届オンラインサービス（ORRネット）から住所や連絡先を届け出る。緊急時の安否確認や在ドイツ日本国大使館・各総領事館からの情報提供に使われる。",
+      "url": "https://www.ezairyu.mofa.go.jp/"
+    }
+  ],
+  "medical": {
+    "emergency": "112（救急車・消防共通の緊急通報番号）",
+    "summary": "ドイツの医療水準は公立・私立とも非常に高いが、診察・入院費用は高額なため海外旅行保険への加入が強く推奨される。入院治療を行う病院（Krankenhaus/Klinik）と外来を扱う医院（Praxis）が区別されており、医薬分業のため処方箋を持って薬局で薬を購入する。デュッセルドルフやミュンヘンなど日本人の多い都市には日本語が通じる医院や病院がある。",
+    "hospitals": [
+      {
+        "name": "Hausarztpraxen Dres. Jessels-Loth / Loth（森川医師が勤務）",
+        "city": "ベルリン",
+        "japanese": "家庭医（ハウスアルツト）。森川医師が診療、予約は電話またはメール（ドイツ語・英語のみ）",
+        "url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/germany.html"
+      },
+      {
+        "name": "HNO IN BERLIN（耳鼻咽喉科、山内医師が勤務）",
+        "city": "ベルリン",
+        "japanese": "日本人医師Dr. Mie YAMANOUCHIが勤務",
+        "url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/germany.html"
+      },
+      {
+        "name": "Universitätsklinikum Düsseldorf（デュッセルドルフ大学病院）",
+        "city": "デュッセルドルフ",
+        "japanese": "ジャパンデスクあり、日本語通訳可能",
+        "url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/germany.html"
+      },
+      {
+        "name": "ノイゲバウア-馬場内科クリニック",
+        "city": "デュッセルドルフ",
+        "japanese": "内科全般、日本語での予約受付あり、公的保険・プライベート保険とも対応",
+        "url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/germany.html"
+      },
+      {
+        "name": "Gesundheitszentrum Venloer Straße（フェンローアー通り診療所）",
+        "city": "デュッセルドルフ",
+        "japanese": "篠田郁也医師が勤務、日本語直通電話あり",
+        "url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/germany.html"
+      },
+      {
+        "name": "ヒッツィガー診療所（Frau Dr. med. Reiko Hitziger）",
+        "city": "フランクフルト",
+        "japanese": "日本語対応の総合診療医院",
+        "url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/germany.html"
+      },
+      {
+        "name": "アム・ニッダタール診療所（Praxis am Niddatal）",
+        "city": "フランクフルト",
+        "japanese": "総合診療医2名、水曜日以外は日本語通訳が勤務。公的保険・民間保険とも対応、健康診断・予防接種可能",
+        "url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/germany.html"
+      },
+      {
+        "name": "エックハート・ナイマン総合ホームクリニック",
+        "city": "フランクフルト",
+        "japanese": "一般内科のほか婦人科・循環器科等の専門医が院内で診療。日本語通訳は火・木勤務",
+        "url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/germany.html"
+      }
+    ]
+  },
+  "jobs": {
+    "min_wage": "法定最低賃金 時給13.90ユーロ（2026年1月1日から）",
+    "min_wage_url": "https://www.bmas.de/DE/Arbeit/Arbeitsrecht/Mindestlohn/mindestlohn.html",
+    "channels": [
+      {
+        "name": "Jobbörse（連邦雇用エージェンシー Bundesagentur für Arbeit の求人検索）",
+        "url": "https://www.arbeitsagentur.de/jobsuche/",
+        "note": "ドイツ政府の公的雇用機関が運営する求人検索・応募サイト"
+      }
+    ],
+    "rules": [
+      "原則としてすべての労働者に法定最低賃金（Mindestlohn）が適用される",
+      "最低賃金は毎年1月に見直される（独立した最低賃金委員会の答申に基づき連邦政府が決定）",
+      "銀行口座開設にはAnmeldung（住所登録）の完了が前提となることが多い"
+    ]
+  },
+  "sources": [
+    {
+      "title": "Anmeldung (residence registration) - Willkommenszentrum Berlin",
+      "url": "https://willkommenszentrum.berlin.de/en/housing/anmeldung-residence-registration",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Mindestlohn: Höhe, Anspruch und aktuelle Regelungen - BMAS",
+      "url": "https://www.bmas.de/DE/Arbeit/Arbeitsrecht/Mindestlohn/mindestlohn.html",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Ein Bank-Konto für Jedermann: Basiskonto - BaFin",
+      "url": "https://www.bafin.de/SharedDocs/Veroeffentlichungen/DE/Verbrauchermitteilung/LeichteSprache/Kurzinfos/kurzinfo_basiskonto.html",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Jobbörse - Bundesagentur für Arbeit",
+      "url": "https://www.arbeitsagentur.de/jobsuche/",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "ドイツ｜外務省 世界の医療事情",
+      "url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/germany.html",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "外務省 在留届（ORRネット）",
+      "url": "https://www.ezairyu.mofa.go.jp/",
+      "checked": "2026-10-05"
+    }
+  ]
+}

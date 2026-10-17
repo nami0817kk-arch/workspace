@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% from "_macros.html" import brief, quota with context %}
+{% from "_viz.html" import world_map, quota_chart, timeline with context %}
+{% block title %}ワーホリ32か国の条件を比較｜年齢・期間・費用・資金・申請時期｜{{ SITE_NAME }}{% endblock %}
+{% block head %}<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"{{ SITE_NAME }}","url":"{{ SITE_URL }}/","inLanguage":"ja","publisher":{"@type":"Organization","name":"{{ OWNER }}"}}</script>{% endblock %}
+{% block content %}
+<h1>ワーホリに行ける32か国・地域の条件を1つの表で比べる</h1>
+<p class="lead">日本とワーキング・ホリデー制度がある国・地域は、{{ mofa.source.as_of }}現在で{{ mofa.countries|length }}あります。年齢・滞在できる期間・申請費用・必要な資金・申請の時期を、各国の政府や大使館の公式情報から書き写して並べました。</p>
+
+{{ world_map(world, countries, "ワーキング・ホリデーで行ける32か国・地域の世界地図") }}
+
+<div class="card">
+  <h2 style="margin-top:0">どの国にも共通すること</h2>
+  <ul>
+    <li><strong>年齢</strong>: 原則として申請時に18〜30歳。オーストラリア・カナダ・韓国・アイルランドは協定上18〜25歳で、相手国が認める場合は30歳まで。</li>
+    <li><strong>回数</strong>: 原則として1つの国で1回まで。カナダ・スロバキア・韓国・台湾は一生のうち2回まで参加でき、英国は最長2年間滞在できる。</li>
+    <li><strong>年間発給枠</strong>: 「上限なし」の国と、人数の枠がある国がある。枠が小さい国は早く埋まる。</li>
+    <li><strong>在留届</strong>: 3か月以上滞在するなら、現地の日本大使館・総領事館に在留届を出す義務がある（旅券法第16条。オンラインの「ORRネット」で出せる）。</li>
+  </ul>
+  <p class="small muted">出典: <a href="{{ mofa.source.url }}" rel="noopener">{{ mofa.source.title }}</a>（{{ mofa.source.as_of }}現在）</p>
+</div>
+
+<h2 id="quota">年間の発給枠（行ける人数の上限）</h2>
+<p>枠は国によって30人から1万人までと大きく違います。枠が小さい国は、受付が始まるとすぐ埋まることがあります。</p>
+{{ quota_chart(countries) }}
+
+<h2 id="history">制度が始まった年</h2>
+{{ timeline(countries) }}
+
+<h2 id="compare">32か国・地域の比較表</h2>
+<div class="search"><label for="q">国名で探す</label><input id="q" type="search" placeholder="例: カナダ" autocomplete="off"></div>
+<div class="filter" role="group" aria-label="地域で絞る">
+  <button type="button" data-region="" aria-pressed="true">すべて</button>
+  {% for region, list in by_region %}<button type="button" data-region="{{ region }}" aria-pressed="false">{{ region }}（{{ list|length }}）</button>{% endfor %}
+</div>
+<div class="table-wrap">
+<table class="compare">
+  <caption class="small muted" style="text-align:left;padding:0.5rem 0.7rem">見出しを押すと並べ替えられます。表は要点だけを短く載せています。</caption>
+  <thead>
+    <tr>
+      <th scope="col" data-sort="text">国・地域</th>
+      <th scope="col" data-sort="num">年間発給枠</th>
+      {% for key, label in FIELDS if key in TABLE_FIELDS %}<th scope="col">{{ label }}</th>{% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+  {% for c in countries %}
+    <tr data-region="{{ c.region }}" data-name="{{ c.name }}">
+      <th scope="row" data-v="{{ c.since }}"><img class="flag" src="static/flags/{{ c.flag }}.svg" alt="" width="20" height="15"><a href="country/{{ c.id }}.html">{{ c.name }}</a>{% if c.twice %} <span class="tag">2回OK</span>{% endif %}<br><span class="small muted">{{ c.region }}・{{ c.since }}年〜</span>
+        <span class="meter" title="公式情報で確かめられた項目 {{ c.verified }}/{{ FIELDS|length }}"><span style="width:{{ c.verified / FIELDS|length * 100 }}%"></span></span><span class="small muted"> 確認 {{ c.verified }}/{{ FIELDS|length }}</span></th>
+      <td data-v="{{ c.quota_n or 999999 }}">{{ quota(c) }}</td>
+      {% for key, label in FIELDS if key in TABLE_FIELDS %}<td>{{ brief(c, key) }}</td>{% endfor %}
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+<p class="small muted">「公式サイトで確認」は、公式の情報で確かめられなかった項目です。推測では埋めていません。表は要点だけを短く載せています。くわしい条件と、確かめた公式ページへのリンクは各国のページにあります。</p>
+
+<h2>国から探す</h2>
+{% for region, list in by_region %}
+<h3>{{ region }}</h3>
+{% if region == "ヨーロッパ" %}{{ world_map(europe, countries, "ヨーロッパの拡大図") }}{% endif %}
+<ul class="grid">
+  {% for c in list %}<li><a href="country/{{ c.id }}.html"><img class="flag" src="static/flags/{{ c.flag }}.svg" alt="" width="20" height="15">{{ c.name }}<span class="quota">{{ quota(c) }}</span></a></li>{% endfor %}
+</ul>
+{% endfor %}
+
+<h2>次に読む</h2>
+<ul>
+  <li><a href="junbi.html">出発までの準備の流れ</a></li>
+  <li><a href="genchi.html">現地に着いたら（手続き・病院・仕事探し）</a></li>
+  <li><a href="faq.html">よくある質問</a></li>
+  <li><a href="mochimono.html">ワーホリの持ち物リスト</a></li>
+</ul>
+
+<script>
+(function () {
+  var buttons = document.querySelectorAll('.filter button');
+  var tbody = document.querySelector('table.compare tbody');
+  var rows = Array.prototype.slice.call(tbody.querySelectorAll('tr'));
+  var q = document.getElementById('q');
+  var region = '';
+  function apply() {
+    var word = (q.value || '').trim();
+    rows.forEach(function (r) {
+      var okRegion = !region || r.getAttribute('data-region') === region;
+      var okWord = !word || r.getAttribute('data-name').indexOf(word) >= 0;
+      r.hidden = !(okRegion && okWord);
+    });
+  }
+  buttons.forEach(function (b) {
+    b.addEventListener('click', function () {
+      region = b.getAttribute('data-region');
+      buttons.forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+      apply();
+    });
+  });
+  q.addEventListener('input', apply);
+  // 見出しで並べ替え。数の列は data-v（上限なしは最大として扱う）、文字の列は表示の文字で比べる
+  document.querySelectorAll('table.compare thead th[data-sort]').forEach(function (th, col) {
+    th.tabIndex = 0;
+    function sort() {
+      var asc = th.getAttribute('aria-sort') !== 'ascending';
+      document.querySelectorAll('table.compare thead th').forEach(function (x) { x.removeAttribute('aria-sort'); });
+      th.setAttribute('aria-sort', asc ? 'ascending' : 'descending');
+      var num = th.getAttribute('data-sort') === 'num';
+      rows.sort(function (a, b) {
+        var ca = a.children[col], cb = b.children[col];
+        var va = num ? Number(ca.getAttribute('data-v')) : ca.textContent.trim();
+        var vb = num ? Number(cb.getAttribute('data-v')) : cb.textContent.trim();
+        var d = num ? va - vb : va.localeCompare(vb, 'ja');
+        return asc ? d : -d;
+      });
+      rows.forEach(function (r) { tbody.appendChild(r); });
+    }
+    th.addEventListener('click', sort);
+    th.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); sort(); } });
+  });
+})();
+</script>
+{% endblock %}

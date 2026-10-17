@@ -259,6 +259,9 @@ h1 .count { margin-left: 10px; font-size: 16px; font-weight: 500; color: var(--m
 /* 価格のすぐ下に置くほうの買う口。下にあるものと同じ見た目にする
    （読み終えた人向けのものは残す） */
 .cta.top { margin: 0 0 18px; }
+/* 同じ分類の中での位置。動いていない商品（71.6%）にも言えることを出す */
+.rankin { margin: 8px 0 0; }
+.rankin strong { font-size: 17px; }
 
 .static p, .static li { max-width: 62em; }
 
@@ -326,6 +329,10 @@ h1 .count { margin-left: 10px; font-size: 16px; font-weight: 500; color: var(--m
 .genre .terms a { position: relative; z-index: 1; font-weight: 400;
   color: var(--muted); text-decoration: none; }
 .genre .terms a:hover { color: var(--accent); text-decoration: underline; }
+/* 中分類は件数を添える（ページがあるので、押す前に手応えが分かる） */
+.genre .terms.subs a { color: var(--ink); }
+.genre .terms.subs .n { margin-left: 3px; font-size: 11px; color: var(--muted);
+  font-variant-numeric: tabular-nums; }
 
 /* 61. 一覧の頭に置く、語での絞り込み。価格.com のカテゴリページは
    「注目スペック」とメーカーを件数つきで並べていて、1,500件の中から1手で

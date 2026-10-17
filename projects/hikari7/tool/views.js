@@ -67,7 +67,7 @@ function season(g, diff, chal) {
     var pl=pairList(S)[0];if(pl&&S.ap>0){doPair(S,pl.a,pl.b);__shot();S.talk=null;}
     S.ap=0;afterTalk(S);__shot();if(S.phase==='interview'){__shot();applyInterview(S);}
     while(S.phase==='event'){__shot();resolveEvent(S,r%3);__shot();nextEvent(S);}
-    __shot();S.phase='stage';__shot();if(ROUNDS[r].crit){S.phase='critique';__shot();applyCritique(S);__shot();}
+    __shot();S.phase='stage';__shot();if(ROUNDS[r].crit){S.phase='critique';alive(S).forEach(function(t){S.crit[t.id]=ri(0,CRIT.length-1);});__shot();applyCritique(S);__shot();}
     applyFeature(S);toNight(S);if(S.phase==='night'){__shot();nightSkip(S);S.phase='judge';}
     var B=alive(S),res=S.stage.res,n=ROUNDS[r].fin?Math.min(6,S.caps.finMax,B.length):capOf(S);
     B.sort(function(a,b){return res[b.id].sc-res[a.id].sc;}).slice(0,n).forEach(function(t){S.pass[t.id]=true;});__shot();
@@ -78,7 +78,9 @@ function season(g, diff, chal) {
 }
 const cases = [['m', 'normal', null], ['f', 'hard', 'poor'], ['m', 'easy', 'small'], ['f', 'normal', 'busy'], ['m', 'normal', null]];
 for (const [g, d, c] of cases) season(g, d, c);
-run(`S=null;ui.settings=true;__shot();ui.settings=false;ui.gloss=true;__shot();ui.gloss=false;ui.hallAll=true;ui.meikanAll=true;__shot();`);
+// 結末の筋（C・D の解散・休止）のエンドロールと結果の画面も描く
+run(`['S','B','C','D','C','D'].forEach(function(gr){S.future=makeFuture(S,Object.assign({},finalEval(S),{grade:gr}));S.ending=true;__shot();S.ending=false;__shot();});`);
+run(`S=null;ui.tsub='new';__shot();ui.tsub='rec';__shot();ui.tsub=null;ui.settings=true;__shot();ui.settings=false;ui.gloss=true;__shot();ui.gloss=false;ui.hallAll=true;ui.meikanAll=true;__shot();`);
 run(`S=newGame('m','normal',null,todayKey());__shot();S=null;`);
 
 const need = ['title', 'select', 'format', 'plan', 'lesson', 'lres', 'talk', 'interview', 'event', 'stage', 'critique', 'judge', 'call', 'prep', 'month', 'result'];

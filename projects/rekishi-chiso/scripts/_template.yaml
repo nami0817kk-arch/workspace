@@ -1,0 +1,113 @@
+# 台本のひな形（10-08 に作り直し）。新しい回はこれを scripts/<題材>.yaml に写す。上から順に埋めれば、全部の道具が正しい既定で入る。
+# 全部の道具を実際に使った見本は scripts/_showcase.yaml（check・draft・qc を通してある）。決まりの「なぜ」は CLAUDE.md。
+#
+# 決まり（check が止めるもの）：最初の行は剣崎（語り）／最後の節は「まとめ：…」／導入とまとめ以外の節は終わり2行に hook: true／
+#   締めは 剣崎「今日の地層は、ここまでです」→ つむぎが次回を一言 → コメントへの誘い → 二人「また一緒に、掘りましょう！」／
+#   next・thumbnail は必須。事実は出典を控える（台本の頭のコメントか research/<題材>_facts.md）。言い伝えは「伝えられています」と言う。
+# 読み（10-10）：書き終えたら kana で全行（ショートの hook・tease も）を1行ずつ確かめ、check の「読み：」を片づける
+#   （× は readings.yaml に足して消す。読みが割れる語・人名地名の一覧は、少ない読みの行を耳で）。誤読を見つけたら readings.yaml と
+#   tests/test_reading.py の MISREADS に足す。終わったら reading-ok（approve はこの控えが無いと止まる）。手順はスキル voice-reading-check
+
+title: 人物名の49年｜見どころの場面・数字・謎（名前を先頭に。毎回同じ形にしない）
+series: ""                                   # シリーズの名（無ければ ""。次回予告の上に出る）
+playlists: [日本史を掘る（聞き流し）]          # 本編を入れる再生リスト（説明は playlists.yaml）
+shorts_playlists: [日本史ショート]
+tags: [人物名, 出来事の名]
+en:                                          # 英語の題名と説明（事実は台本にあることだけ）。chapters は節と同じ数
+  title: "Name: ..."
+  description: |-
+    Japanese-language history video to listen to while you work (Japanese audio).
+
+# --- 画面の道具（台本の一番上に書く。新しい回は入れる。前の回は書いていないので見た目が変わらない）--------------
+texture: true                                # 図の板・メモの札・額の台紙にうっすら紙の目
+recap: true                                  # 節の頭に、前の節のメモの札を3枚まで（最初とまとめの節の頭は出ない）
+
+timeline:                                    # 下の地層の年表。card の年（「1560年5月」）で印が動く
+  start: 1530
+  end: 1590
+  events: [[1534, 誕生], [1560, 桶狭間], [1582, 本能寺]]
+  # 紀元前は負の数：start: -259 / events: [[-259, 誕生], [-221, 統一]]。画面は「紀元前221年」、目盛りは「前221」。
+  # 札は「紀元前221年」「前221年」と書けば印が動く。節の year: も -221
+
+people:                                      # 肖像に「この時○歳」（生没は百科事典で確かめる。match は言い換え）
+  人物名: {born: 1534-06-23, died: 1582-06-21, match: [呼び名]}
+  # 紀元前：{born: -259, died: -210} か {born: "-259-01", died: "-0210-07-15"}（引用符で囲む）。月日が無ければ生まれは1月1日・没は12月31日。0年は無い（前259年生まれは前221年に38歳）
+terms:                                       # その回だけの用語（40字まで・事実だけ）。共通の言葉は terms.yaml へ
+  用語: 説明
+# 地名は places.yaml にあれば、初めて出た行から3行、右上に小さな地図が自動で出る（「江戸時代」の江戸は数えない）
+
+shorts:                                      # 行に short: s1 を付けた行を集める（各60秒以内・1本の本編から10本）
+  s1:                                        # hook・tease は問いの形（？で終わる）で必ず書く（10-08）。本文＋hook＋tease で約360字まで
+    title: "題の1行目／2行目"                 # ／で改行。画面の上のいつもの題
+    hook: "ナポレオンって／本当に背が低かったの？"      # 頭の問い。上半分に特大で出し、つむぎの声で読んでから本文へ
+    tease: "じゃあ、／『チビの独裁者』の絵を／描き続けたのは誰？"   # 最後のもう一つの問い。答えは本編の中に（ショートの外の行に）あること。
+                                             # つむぎが読み、画面に大きく＋「答えは本編で」「本編は概要欄から」。概要欄の頭にも出る
+
+next:                                        # 最後の12秒の次回予告（右側は終了画面のために空く）
+  title: 次の人物
+  teaser: 次回のひとこと。
+
+thumbnail:                                   # thumb --variants で3案も。同じ構図が3回続くと check が知らせる
+  layout: face                               # face 顔の大写し／scene 場面の全景／versus 2人／number 数字／map 道のり／（書かない＝classic）
+  image: paintings/xxx.jpg
+  crop: [0, 0, 1600, 900]                    # 絵のどこを使うか（左, 上, 右, 下）
+  name: 人物名
+  lead: その人を一言で（白）
+  main: 特大の語（黄）
+  # 引きの要素は1枚に1つか2つ。台本で答えが出ることだけ：
+  # reactor: {who: tsumugi, face: 驚き, side: left, size: medium}
+  # contrast: [前の語, 本当の語]               # lead・main の代わり
+  # hide: {box: [700, 40, 1180, 700], style: silhouette, mark: "？"}
+  # 細かい書き方（badge・arrow・circle・light・cutout・flip・flash・variants）は chiso/thumb.py・hooks.py・thumbfx.py の頭
+
+sections:
+  - title: 1582年 見どころの場面（年・人名・場所を入れる。概要欄の目次になる）
+    background: {image: paintings/xxx.jpg, credit: "画家《題》年"}
+    portrait: {image: paintings/yyy.jpg, caption: "人物名（画家画、年）"}   # 節が変わると消える。null で消す
+    year: 1582
+    lines:
+      - 語り: 冒頭15秒で、いちばん重い事実を1文（数字・年・人名を入れる）。
+        tone: 重い                            # 普通／驚き／疑問／強調／しみじみ／明るい／笑い／重い／ひそひそ／納得
+        short: s1
+      - 聞き: つむぎは予想・疑い・今への置き換え。驚くだけの返しは1節2回まで。
+        tone: 疑問
+      - 語り: 《強調したい語》は二重山かっこで（字幕で朱色）。
+        card: {head: "1560年5月", body: 札の本文（22字まで）}    # 左の「掘り出したメモ」。年があれば年表の印も動く
+      - 語り: 肖像が出ている行だけ吹き出しが出る。x, y は肖像の中の口のあたり（0〜1）
+        bubble: {text: "一言", x: 0.5, y: 0.3}
+      - 語り: 1文の挿絵（その行だけ、真ん中の丸い板）。名前は chiso/extras.py の ICON_HINTS。図の出ている行には出ない
+        icon: envelope-simple
+      - 語り: 本人の言葉の前置きは語りで。「こう言ったと伝えられています」
+      - 人物: 「記録に残る本人の言葉だけ」
+        who: 信長                             # config.yaml の roles の名前（声）
+
+  - title: 1560年 出来事の名
+    background: {image: paintings/zzz.jpg, credit: "…"}   # 肖像が無い間は、真ん中の額にこの絵が出る。同じ背景は40秒まで
+    lines:
+      # 図：節が変わるか figure: null まで出る。1本に3つ以上。detail を書いた行で図は終わる
+      - 語り: 1項目ずつ増やすときは、同じ図を行ごとに upto を 1 → 2（upto のほかは同じに書く）
+        figure: {type: bars, title: 題, bars: [[記録A, 1000], [記録B, 3000]], labels: [千ほど, 三千], upto: 1}
+      - 語り: 増えた行に赤ペンを足すと、図が伸びきってから描く
+        figure: {type: bars, title: 題, bars: [[記録A, 1000], [記録B, 3000]], labels: [千ほど, 三千], upto: 2}
+        mark: {type: strike, at: 2, text: 後の本}   # circle／arrow／underline／strike／note。図は「何番目」、絵は [x, y] か範囲
+      # ほかの図：map（route と places。地名は places.yaml）・pie・people（相関図）・compare（肖像を並べる）・
+      #   money（then・yen・basis 必須。当時の日当を今の1万円に）・stats・calc・numberline・line・versus（左右の全画面）。
+      #   書き方の例は chiso/figures.py の頭と scripts/_showcase.yaml
+      - 語り: 絵の一部を大きく（その行だけ。続けたい行は同じ detail を書く）。box は元の絵の画素か 0〜1 の割合
+        figure: null
+        detail: {box: [0.2, 0.15, 0.7, 0.85], label: 札の文字}
+      - 聞き: つむぎの寄り（数字の山場に1本2回まで。その行だけ。ショートには出ない）
+        tone: 驚き
+        reaction: {number: 約20億円, lead: 数字の上の見出し, say: 一言}
+      - 語り: 節の終わり2行のどこかに、次が気になる事実の一言
+        hook: true
+
+  - title: まとめ：人物名とは何者だったのか
+    lines:
+      - 語り: 要点を番号で。要点ごとにつむぎが置き換えるか言いかける。最後に人柄の場面を1つ
+      - 聞き: 最後につむぎが自分の言葉で、その人を言い直す
+      - 語り: 今日の地層は、ここまでです。
+      - 聞き: 次回は○○。〜って言われてるけど……本当？
+      - 語り: 知っている通説があれば、コメントで教えてください。
+      - 二人: また一緒に、掘りましょう！
+        tone: 明るい

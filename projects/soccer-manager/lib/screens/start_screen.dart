@@ -46,59 +46,121 @@ class _StartScreenState extends State<StartScreen> {
       visible: gameState.isBusy,
       label: Tr.pick('クラブを創設しています…', 'Founding your club…'),
       child: Scaffold(
-        body: SafeArea(
-          child: Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    Icons.sports_soccer,
-                    size: 72,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    context.l10n.appTitle,
-                    style: Theme.of(context).textTheme.headlineSmall,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    context.l10n.startTagline,
-                    style: Theme.of(context).textTheme.bodyMedium,
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 32),
-                  FutureBuilder<List<SaveSlotSummary>>(
-                    future: _slotsFuture,
-                    builder: (context, snapshot) {
-                      final slots = snapshot.data;
-                      if (slots == null) {
-                        return const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 24),
-                          child: CircularProgressIndicator(),
-                        );
-                      }
-                      return Column(
-                        children: [
-                          for (final slot in slots) ...[
-                            _SlotCard(
-                              slot: slot,
-                              onContinue: () => _continueSlot(context, slot),
-                              onCreate: () => _createInSlot(context, slot),
-                              onDelete: () => _confirmDeleteSlot(context, slot),
-                            ),
-                            const SizedBox(height: 12),
-                          ],
-                        ],
-                      );
-                    },
-                  ),
-                ],
+        // タイトル画面だけは絵を敷く。起動のたびに必ず見る画面で、
+        // ここだけはアイコン1個と文字しか無かった。絵は上35%が無地、
+        // 下は芝になっているので、題字を上に、保存枠を下に置く。
+        body: Stack(
+          fit: StackFit.expand,
+          children: [
+            // 右寄せで切る。絵の階段が右寄りにあり、中央で切ると
+            // 右端が欠ける。切り落とすのは左の空きスペース側にする。
+            Image.asset(
+              'assets/art/title_bg.jpg',
+              fit: BoxFit.cover,
+              alignment: Alignment.centerRight,
+            ),
+            // 下へ行くほど暗くする。芝の上にそのまま枠を置くと、
+            // 明るい緑と白いカードがぶつかって読みにくい。
+            const DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Color(0x00000000),
+                    Color(0x33000000),
+                    Color(0xCC08160E),
+                  ],
+                  stops: [0.0, 0.5, 0.86],
+                ),
               ),
             ),
-          ),
+            SafeArea(
+              child: LayoutBuilder(
+                builder: (context, constraints) => SingleChildScrollView(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(24, 28, 24, 20),
+                      child: Column(
+                        // 題字を上、保存枠を下に寄せて、あいだに絵を見せる。
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            children: [
+                              Text(
+                                context.l10n.appTitle,
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headlineSmall
+                                    ?.copyWith(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      shadows: const [
+                                        Shadow(
+                                            color: Color(0xCC000000),
+                                            blurRadius: 10),
+                                      ],
+                                    ),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                context.l10n.startTagline,
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.copyWith(
+                                      color: Colors.white.withValues(alpha: 0.9),
+                                      shadows: const [
+                                        Shadow(
+                                            color: Color(0xCC000000),
+                                            blurRadius: 8),
+                                      ],
+                                    ),
+                              ),
+                            ],
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 32),
+                            child: FutureBuilder<List<SaveSlotSummary>>(
+                              future: _slotsFuture,
+                              builder: (context, snapshot) {
+                                final slots = snapshot.data;
+                                if (slots == null) {
+                                  return const Padding(
+                                    padding: EdgeInsets.symmetric(vertical: 24),
+                                    child: CircularProgressIndicator(),
+                                  );
+                                }
+                                return Column(
+                                  children: [
+                                    for (final slot in slots) ...[
+                                      _SlotCard(
+                                        slot: slot,
+                                        onContinue: () =>
+                                            _continueSlot(context, slot),
+                                        onCreate: () =>
+                                            _createInSlot(context, slot),
+                                        onDelete: () =>
+                                            _confirmDeleteSlot(context, slot),
+                                      ),
+                                      const SizedBox(height: 12),
+                                    ],
+                                  ],
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

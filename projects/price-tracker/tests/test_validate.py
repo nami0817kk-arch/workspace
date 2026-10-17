@@ -2165,3 +2165,43 @@ class 検索結果での見え方Test(unittest.TestCase):
 
         eff = self.row(at_low=False, eff_at_low=True)
         self.assertNotIn("実質 0円", desc(eff))
+
+
+class 同じ分類の中での位置Test(unittest.TestCase):
+    """記録している13,544商品のうち **9,700件（71.6%）は価格も実質価格も
+    一度も動いていない**（2026-10-03 実測）。その商品ページには「ずっと同じ値段」
+    という情報しか無く、価格を追うサイトとして出せるものが何も無かった。
+
+    同じ分類の中での位置なら、動いていない商品にも言える。13,544商品ぶんの
+    価格を毎日持っているからこそ出せるもので、1商品だけを見ても分からない。
+    """
+
+    def setUp(self):
+        from src import theme
+        self.theme = theme
+
+    def row(self, **kw):
+        base = {"sub_name": "季節・空調家電", "sub_rank": 123, "sub_count": 614,
+                "sub_low": 980, "sub_mid": 12800, "sub_high": 198000,
+                "sub_path": "genre/562637/502823/"}
+        base.update(kw)
+        return base
+
+    def test_安い方にいるときは安い方から数える(self):
+        out = self.theme.sub_position(self.row(), "../../")
+
+        self.assertIn("安い方から <strong>123番目", out)
+        self.assertIn("614件", out)
+        self.assertIn('href="../../genre/562637/502823/"', out)
+
+    def test_高い方にいるときは高い方から数える(self):
+        # 614件中600番目を「安い方から600番目」と書かれても位置が分からない
+        out = self.theme.sub_position(self.row(sub_rank=600), "../../")
+
+        self.assertIn("高い方から <strong>15番目", out)
+
+    def test_件数が少ない分類では出さない(self):
+        self.assertEqual(self.theme.sub_position(self.row(sub_count=9)), "")
+
+    def test_位置が分からない商品では出さない(self):
+        self.assertEqual(self.theme.sub_position({}), "")

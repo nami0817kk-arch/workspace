@@ -1,0 +1,135 @@
+{
+  "id": "france",
+  "steps": [
+    {
+      "title": "長期ビザ（VLS-TS）のオンライン検証（到着後3か月以内）",
+      "body": "フランス入国後3か月以内に、内務省の外国人向けオンライン行政サイト「ANEF」でVLS-TSビザの検証（validation）手続きを行う必要があります。これを行わないと在留許可が無効となり、銀行口座開設や滞在延長などに支障が出ます。",
+      "url": "https://administration-etrangers-en-france.interieur.gouv.fr/"
+    },
+    {
+      "title": "社会保障番号（numéro de sécurité sociale）の取得",
+      "body": "フランスで就労する場合、雇用主が採用前申告（DPAE）をUrssafに行うとともに、本人は居住地を管轄するCPAM（疾病保険金庫）に申請して社会保障番号（NIR）の登録（immatriculation）を受ける必要があります。手続きはameli.frで案内されています。",
+      "url": "https://www.ameli.fr/"
+    },
+    {
+      "title": "納税者番号（numéro fiscal）の取得",
+      "body": "フランスで初めて納税者番号を取得する場合は、impots.gouv.frで「個人スペースを作成」→「フランスで一度も申告したことがない」を選択してオンライン申請するか、居住地を管轄する税務署（Centre des finances publiques／SIP）窓口で滞在許可証と住所証明を提示して取得します。",
+      "url": "https://www.impots.gouv.fr/"
+    },
+    {
+      "title": "在留届の提出（日本側の手続き）",
+      "body": "3か月以上海外に滞在する場合、外務省の「たびレジ／ORRネット」からオンラインで在留届を提出するか、在フランス日本国大使館・総領事館に届け出てください。緊急時の連絡や安全情報の受け取りに使われます。",
+      "url": "https://www.ezairyu.mofa.go.jp/"
+    }
+  ],
+  "medical": {
+    "emergency": "15（SAMU・救急医療）/ 17（警察）/ 18（消防）/ 112（EU共通緊急通報）",
+    "summary": "緊急時は全国共通の救急医療サービス「15」（SAMU）に電話します。往診が必要な場合はSOS Médecins（36 24 または 01 47 07 77 77）が夜間・休日も対応します。在フランス日本国大使館が「日本語の通じる医療機関・医師」のリストを公開しており、海外旅行傷害保険に加入していれば提携アシスタンス会社経由で日本語サービスを受けられる場合があります。",
+    "hospitals": [
+      {
+        "name": "HOPITAL AMERICAIN（アメリカン・ホスピタル）",
+        "city": "Neuilly-sur-Seine（パリ近郊）",
+        "japanese": "日本語の通じる医療機関として在仏日本大使館の医療情報ページに掲載",
+        "url": "https://www.american-hospital.org/ja"
+      },
+      {
+        "name": "Dr. Patrick DOUIEB（産婦人科）",
+        "city": "Boulogne-Billancourt",
+        "japanese": "日本語の通じる医師として掲載（産婦人科）",
+        "url": "https://www.fr.emb-japan.go.jp/itpr_ja/iryo.html"
+      },
+      {
+        "name": "Dr. Takeshi KONDO 近藤毅（循環器内科）",
+        "city": "Paris",
+        "japanese": "日本語の通じる医師として掲載（循環器内科）",
+        "url": "https://www.fr.emb-japan.go.jp/itpr_ja/iryo.html"
+      },
+      {
+        "name": "Dr. Remy TANIMURA 谷村レミー（一般歯科・インプラント）",
+        "city": "Paris",
+        "japanese": "日本語の通じる歯科医として掲載。電話連絡後、医師から折り返し対応",
+        "url": "https://www.fr.emb-japan.go.jp/itpr_ja/iryo.html"
+      },
+      {
+        "name": "Dr. BODIN／LEROUX／LARRAR 歯科医院（100 rue de Sèvres）",
+        "city": "Boulogne-Billancourt",
+        "japanese": "日本語専用電話あり。専属の日本人通訳が診療に立ち会い、説明・予約・保険書類作成を担当",
+        "url": "https://www.fr.emb-japan.go.jp/itpr_ja/iryo.html"
+      },
+      {
+        "name": "Dr. BAZENNERYE／MARCEL／DEMAISON 小児歯科（100 rue de Sèvres）",
+        "city": "Boulogne-Billancourt",
+        "japanese": "日本人通訳専用電話あり。診察料に通訳料込み",
+        "url": "https://www.fr.emb-japan.go.jp/itpr_ja/iryo.html"
+      }
+    ]
+  },
+  "jobs": {
+    "min_wage": "SMIC（全産業一律最低賃金）時給12.31ユーロ、月給（週35時間換算）1,867.02ユーロ（いずれも2026年6月1日適用の総支給額）",
+    "min_wage_url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F2300",
+    "channels": [
+      {
+        "name": "France Travail（旧Pôle emploi）",
+        "url": "https://www.francetravail.fr/",
+        "note": "フランスの公的雇用サービス機関。求人検索は国籍を問わず利用できるが、求職者登録（demandeur d'emploi）には就労可能な滞在許可証の提示が必要"
+      }
+    ],
+    "rules": [
+      "SMIC（最低賃金）は国籍を問わずすべての労働者に適用される",
+      "「vacances-travail」査証での就労は滞在の付随的な活動と位置づけられ、事前の労働許可なしに就労できるが、バー・キャバレー・ナイトクラブ・賭博施設など公序良俗に反する業種での就労は認められない",
+      "査証で認められた滞在期間を超える延長や、滞在中の在留資格変更はできない"
+    ]
+  },
+  "sources": [
+    {
+      "title": "医療情報｜在フランス日本国大使館",
+      "url": "https://www.fr.emb-japan.go.jp/itpr_ja/iryo.html",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Long-stay visa｜France-Visas",
+      "url": "https://www.france-visas.gouv.fr/en/visa-de-long-sejour",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Administration numérique pour les étrangers en France（ANEF）",
+      "url": "https://administration-etrangers-en-france.interieur.gouv.fr/",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Visa \"vacances-travail\"｜Ambassade de France au Japon",
+      "url": "https://jp.diplomatie.gouv.fr/fr/visa-vacances-travail",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Le SMIC revalorisé le 1er juin 2026｜info.gouv.fr",
+      "url": "https://www.info.gouv.fr/actualite/le-smic-revalorise-le-1er-juin-2026",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "France Travail",
+      "url": "https://www.francetravail.fr/",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "ameli.fr（Assurance Maladie）",
+      "url": "https://www.ameli.fr/",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "impots.gouv.fr（Direction générale des Finances publiques）",
+      "url": "https://www.impots.gouv.fr/",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "在留届（ORRネット）｜外務省",
+      "url": "https://www.ezairyu.mofa.go.jp/",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Montant du Smic（Service-Public.fr）",
+      "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F2300",
+      "checked": "2026-10-05"
+    }
+  ]
+}

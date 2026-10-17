@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon with context %}
+{% block title %}ワーホリのよくある質問｜何歳まで・何回・枠・費用・病院｜{{ SITE_NAME }}{% endblock %}
+{% block description %}ワーキング・ホリデーのよくある質問に、外務省と各国の公式情報から答えます。何歳まで行けるか、何回行けるか、枠に上限がない国、申請費用が無料の国、日本語が通じる病院がある国など。{% endblock %}
+{% block head %}<script type="application/ld+json">{{ faq_ld|safe }}</script>{% endblock %}
+{% block content %}
+<nav class="crumbs" aria-label="パンくず"><a href="index.html">トップ</a> › <span aria-current="page">よくある質問</span></nav>
+<h1>ワーホリのよくある質問</h1>
+<p class="lead">答えは外務省の「ワーキング・ホリデー制度」と、各国のページに載せた公式情報から作っています。国の数は{{ mofa.source.as_of }}現在です。</p>
+{% for q in faq %}
+<section class="card faq">
+  <h2 id="{{ q.id }}" style="margin-top:0">{{ q.q }}</h2>
+  <p>{{ q.a }}</p>
+  {% if q.countries %}<p class="chips">{% for c in q.countries %}<a href="country/{{ c.id }}.html"><img class="flag" src="static/flags/{{ c.flag }}.svg" alt="" width="20" height="15">{{ c.name }}</a>{% endfor %}</p>{% endif %}
+  {% if q.link %}<p class="small"><a href="{{ q.link[1] }}">{{ q.link[0] }}</a></p>{% endif %}
+</section>
+{% endfor %}
+<p class="small muted">出典: <a href="{{ mofa.source.url }}" rel="noopener">{{ mofa.source.title }}</a>、各国のページに載せた公式ページ</p>
+{% endblock %}

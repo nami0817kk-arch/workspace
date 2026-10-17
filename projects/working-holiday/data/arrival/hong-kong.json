@@ -1,0 +1,73 @@
+{
+  "id": "hong-kong",
+  "steps": [
+    {
+      "title": "香港身分証（HKID）を登録する",
+      "body": "香港の入境事務處（Immigration Department）によれば、11歳以上の香港居住者は、除外・免除される場合を除き、身分証の登録が義務付けられている。Registration of Persons Officesで申請する。",
+      "url": "https://www.immd.gov.hk/eng/services/hkid/general_info.html"
+    },
+    {
+      "title": "銀行口座を開設する",
+      "body": "香港金融管理局（HKMA）によれば、銀行は口座開設時に身分証明書（Identity card）や住所情報などの提出を求めることが一般的だが、必要書類は銀行ごとに方針が異なるため、複数の銀行に確認して比較することが勧められている。",
+      "url": "https://www.hkma.gov.hk/eng/smart-consumers/account-opening/information-required/"
+    },
+    {
+      "title": "在留届を提出する",
+      "body": "3か月以上海外に滞在する場合、外務省の在留届オンラインサービス（ORRネット）から住所や連絡先を届け出る。緊急時の安否確認や在香港日本国総領事館からの情報提供に使われる。",
+      "url": "https://www.ezairyu.mofa.go.jp/"
+    }
+  ],
+  "medical": {
+    "emergency": "999（救急車・警察・消防共通の緊急通報番号）",
+    "summary": "香港の医療水準は先進国と同様とされる。公立と私立の医療機関があり、公立病院は質が良いが予約が取りにくい。私立総合病院では専属の日本語通訳を置いている所もある。香港の身分証明書があれば公立病院を1日100香港ドル程度、無ければ1日1,000香港ドル程度で受診できる。私立病院は入院1日3万〜10万香港ドル程度と高額なため、海外旅行傷害保険への加入が勧められる。",
+    "hospitals": [
+      {
+        "name": "Hong Kong Adventist Hospital（アドベンティスト病院／港安醫院）",
+        "city": "香港島・跑馬地、九龍・荃灣",
+        "japanese": "日本語ホットラインあり（2835-0509、月〜金9:00〜17:30、日9:00〜17:00、土休み）",
+        "url": "https://www.mofa.go.jp/mofaj/toko/medi/asia/hongkong.html"
+      },
+      {
+        "name": "Canossa Hospital（カノッサ病院／嘉諾撤醫院）",
+        "city": "香港島ミッドレベルズ",
+        "japanese": "日本語ホットラインあり（2825-2150、月〜金9:00〜17:00、土9:00〜13:00）",
+        "url": "https://www.mofa.go.jp/mofaj/toko/medi/asia/hongkong.html"
+      },
+      {
+        "name": "Hong Kong Sanatorium & Hospital（香港サナトリウム／養和醫院）",
+        "city": "香港島・跑馬地",
+        "japanese": "日本語ホットラインあり（2835-8606、月〜金9:00〜17:00）",
+        "url": "https://www.mofa.go.jp/mofaj/toko/medi/asia/hongkong.html"
+      },
+      {
+        "name": "Matilda International Hospital（マチルダ国際病院／明德國際醫院）",
+        "city": "香港島・ザ・ピーク",
+        "japanese": "日本語ホットラインあり（2849-1573、月〜金9:00〜17:00）",
+        "url": "https://www.mofa.go.jp/mofaj/toko/medi/asia/hongkong.html"
+      }
+    ]
+  },
+  "jobs": {
+    "min_wage": "法定最低賃金 時給43.1香港ドル（2026年5月1日適用開始）",
+    "min_wage_url": "https://www.labour.gov.hk/eng/news/mwo.htm",
+    "channels": [
+      {
+        "name": "Interactive Employment Service（労工処 iES 求人検索）",
+        "url": "https://www.jobs.gov.hk/0/en",
+        "note": "香港政府労工処が運営する公的求人検索サイト"
+      }
+    ],
+    "rules": [
+      "香港で働く場合は法定最低賃金（Statutory Minimum Wage）が原則として適用される",
+      "最低賃金は労工処（Labour Department）が定期的に見直す"
+    ]
+  },
+  "sources": [
+    {"title": "Hong Kong Identity Cards - Immigration Department", "url": "https://www.immd.gov.hk/eng/services/hkid/general_info.html", "checked": "2026-10-05"},
+    {"title": "Account Opening and Maintenance - Information Required - HKMA", "url": "https://www.hkma.gov.hk/eng/smart-consumers/account-opening/information-required/", "checked": "2026-10-05"},
+    {"title": "Statutory Minimum Wage - Labour Department", "url": "https://www.labour.gov.hk/eng/news/mwo.htm", "checked": "2026-10-05"},
+    {"title": "Interactive Employment Service - Labour Department", "url": "https://www.jobs.gov.hk/0/en", "checked": "2026-10-05"},
+    {"title": "中国（香港）｜外務省 世界の医療事情", "url": "https://www.mofa.go.jp/mofaj/toko/medi/asia/hongkong.html", "checked": "2026-10-05"},
+    {"title": "外務省 在留届（ORRネット）", "url": "https://www.ezairyu.mofa.go.jp/", "checked": "2026-10-05"}
+  ]
+}

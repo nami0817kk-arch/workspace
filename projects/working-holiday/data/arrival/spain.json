@@ -1,0 +1,102 @@
+{
+  "id": "spain",
+  "steps": [
+    {
+      "title": "外国人識別番号（NIE）を取得する",
+      "body": "スペインに経済的・職業的・社会的利益で関わる外国人はNIE（Número de Identidad de Extranjero）の取得が必要。申請書式EX-15と納税証明（modelo 790 código 012の支払い）を用意し、国内なら警察本部・外国人事務所・警察署へ、国外からはスペイン領事館経由で申請する。決定まで最大5日。",
+      "url": "https://sede.policia.gob.es/portalCiudadano/_es/tramites_extranjeria_tramite_asignacion_nie.php"
+    },
+    {
+      "title": "市区町村で住民登録（Empadronamiento）をする",
+      "body": "スペインに居住する人は国籍や在留資格の有無にかかわらず、実際に住む市区町村の役所（Ayuntamiento）の住民登録簿（Padrón Municipal）に登録する義務がある。登録証明書（certificado de empadronamiento）は銀行口座開設や各種手続きの証明として使われる。手続き窓口は市区町村ごとに異なる（例：マドリード市役所）。",
+      "url": "https://sede.madrid.es/portal/site/tramites/menuitem.62876cb64654a55e2dbd7003a8a409a0/?vgnextoid=3e3debb41f6e2410VgnVCM2000000c205a0aRCRD&vgnextchannel=775ba38813180210VgnVCM100000c90da8c0RCRD&vgnextfmt=default"
+    },
+    {
+      "title": "社会保障番号（NUSS）を取得する",
+      "body": "就労する場合などに必要な社会保障番号（Número de la Seguridad Social、NUSS）は、社会保障庁（Tesorería General de la Seguridad Social）の電子窓口（Cl@veまたは電子証明書）か窓口でモデロTA.1を提出して申請する。DNI/NIEと連絡先、居住地の情報が必要。保有していない人は誰でも申請できる。",
+      "url": "https://portal.seg-social.gob.es/wps/portal/importass/importass/Categorias/Altas%2C+bajas+y+modificaciones/Altas+y+afiliacion+de+trabajadores/Solicitar+el+numero+de+la+Seguridad+Social"
+    },
+    {
+      "title": "銀行口座（cuenta de pago básica）を開設する",
+      "body": "スペインに他の決済口座を持たない人は誰でも、追加の商品契約を条件とされずに基本決済口座（cuenta de pago básica）を開設する権利がある。本人確認書類（旅券・NIE・TIE等）が必要。手数料は月額最大3ユーロだが、経済的に脆弱な状況にあると証明できれば無料になる制度もある。",
+      "url": "https://portal-cec.consumo.gob.es/es/comunicacion/noticias/2023/todos-los-consumidores-tienen-derecho-acceder-cuentas-bancarias-de-pago"
+    },
+    {
+      "title": "在留届を提出する",
+      "body": "3か月以上海外に滞在する場合、外務省の在留届オンラインサービス（ORRネット）から住所・連絡先を届け出る。事件・事故・災害時の安否確認や、在スペイン日本国大使館・在バルセロナ総領事館からの緊急連絡、各種証明書発行の確認資料としても使われる。",
+      "url": "https://www.ezairyu.mofa.go.jp/"
+    }
+  ],
+  "medical": {
+    "emergency": "112（欧州共通緊急通報番号。警察・消防・救急医療すべてに対応、携帯電話からも通報可）",
+    "summary": "スペインの医療水準・設備は他の西欧先進諸国とほぼ同水準にあり、一般的な内科・外科疾患や出産は現地の医療施設で治療・処置が可能。医師の受診には電話による事前予約が必要で、往診を依頼することもできる。",
+    "hospitals": []
+  },
+  "jobs": {
+    "min_wage": "法定最低賃金（Salario Mínimo Interprofesional、SMI）月額1,221ユーロ・日額40.70ユーロ（2026年、14か月払い換算で年額17,094ユーロ、所得税非課税。2026年1月1日から遡及適用、Real Decreto 126/2026）",
+    "min_wage_url": "https://sepe.es/noticia/SEPE/2026/Febrero/boe-publica-smi-2026",
+    "channels": [],
+    "rules": [
+      "最低賃金（SMI）は毎年、労使団体との協議を経て政府が決定する（消費者物価指数や生産性等を考慮）",
+      "最低賃金は業種・性別・年齢を問わず、農業・工業・サービス業などあらゆる業種の労働者に適用される",
+      "120日未満の有期雇用契約の場合、法定労働日あたり57.82ユーロを下回ってはならない（2026年）"
+    ]
+  },
+  "sources": [
+    {
+      "title": "Extranjería - Asignación de NIE a instancia de interesado - Sede Electrónica de la Policía Nacional",
+      "url": "https://sede.policia.gob.es/portalCiudadano/_es/tramites_extranjeria_tramite_asignacion_nie.php",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Padrón Municipal. Empadronamiento (altas y cambios de domicilio) - SEDE ELECTRÓNICA (Ayuntamiento de Madrid)",
+      "url": "https://sede.madrid.es/portal/site/tramites/menuitem.62876cb64654a55e2dbd7003a8a409a0/?vgnextoid=3e3debb41f6e2410VgnVCM2000000c205a0aRCRD&vgnextchannel=775ba38813180210VgnVCM100000c90da8c0RCRD&vgnextfmt=default",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Solicitar el Número de la Seguridad Social - Seguridad Social, Gobierno de España",
+      "url": "https://portal.seg-social.gob.es/wps/portal/importass/importass/Categorias/Altas%2C+bajas+y+modificaciones/Altas+y+afiliacion+de+trabajadores/Solicitar+el+numero+de+la+Seguridad+Social",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Todos los consumidores tienen derecho a acceder a cuentas bancarias de pago básicas - Centro Europeo del Consumidor, Ministerio de Consumo",
+      "url": "https://portal-cec.consumo.gob.es/es/comunicacion/noticias/2023/todos-los-consumidores-tienen-derecho-acceder-cuentas-bancarias-de-pago",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "外務省 在留届（ORRネット）",
+      "url": "https://www.ezairyu.mofa.go.jp/",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "El BOE publica el SMI para 2026 que se establece en 1.221 euros sin tributación - SEPE",
+      "url": "https://sepe.es/noticia/SEPE/2026/Febrero/boe-publica-smi-2026",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "生活情報 - 医療事情 | 在スペイン日本国大使館",
+      "url": "https://www.es.emb-japan.go.jp/itpr_ja/00_000061.html",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "盗難・事故・病気・けが | 在バルセロナ日本国総領事館",
+      "url": "https://www.barcelona.es.emb-japan.go.jp/itpr_ja/accident.html",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "在留届 | 在バルセロナ日本国総領事館",
+      "url": "https://www.barcelona.es.emb-japan.go.jp/itpr_ja/zairyutodoke.html",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "世界の医療事情（欧州地域一覧、スペインの個別ページは未掲載であることを確認）| 外務省",
+      "url": "https://www.mofa.go.jp/mofaj/toko/medi/index.html",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Programa de working holidays - Embajada de España en Japón",
+      "url": "https://www.exteriores.gob.es/Embajadas/tokio/es/Comunicacion/Noticias/Paginas/Articulos/20170703_NOT1.aspx",
+      "checked": "2026-10-05"
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-# ひかりの七席 — TestFlight と App Store への出し方
+# ひかりの指名 — TestFlight と App Store への出し方
 
 2026-10-02 作成。護送ボート（`projects/goso-boat/docs/RELEASE.md`）を写した。サカマネ・護送ボートと同じ Apple のチームで出す。
 
@@ -11,7 +11,7 @@
 | App Store Connect API キー | `APPSTORE_API_KEY_ID` / `APPSTORE_API_ISSUER_ID` / `APPSTORE_API_KEY_BASE64` | TestFlight へのアップロードに使う |
 | 有料App契約・銀行口座 | — | サカマネで有効化済み。課金アイテムをすぐ作れる |
 
-## 新しく要るもの（ひかりの七席だけ）
+## 新しく要るもの（ひかりの指名だけ）
 
 | もの | GitHub Secrets |
 |---|---|
@@ -41,7 +41,7 @@
 API では作れないので、画面で作る。
 
 1. https://appstoreconnect.apple.com/apps → **＋** → **新規App**
-2. プラットフォーム **iOS**、名前 **ひかりの七席**（正式名はユーザーが決める）、主言語 **日本語**
+2. プラットフォーム **iOS**、名前 **ひかりの指名**（正式名はユーザーが決める）、主言語 **日本語**
 3. バンドルID **com.namiki.hikari7**、SKU は `hikari7`、ユーザアクセスは「フルアクセス」
 
 ### 4. 課金アイテム「広告を消す」を作る
@@ -54,13 +54,13 @@ API では作れないので、画面で作る。
 
 ### 5. AdMob にアプリと広告ユニットを作る
 
-1. https://apps.admob.com → アプリ → **アプリを追加** → iOS →「まだストアに公開されていない」を選ぶ → 名前 `ひかりの七席`
-2. 広告ユニットを2つ: **リワード**（特訓の枠・制作費・再審査）と **インタースティシャル**（審査と審査の間）
+1. https://apps.admob.com → アプリ → **アプリを追加** → iOS →「まだストアに公開されていない」を選ぶ → 名前 `ひかりの指名`
+2. 広告ユニットを2つ: **リワード**（特訓の枠・制作費・再審査）と **インタースティシャル**（エンドロールの前に1シーズン1回）
 3. アプリID（`ca-app-pub-…~…`）と、2つの広告ユニットID（`ca-app-pub-…/…`）を控えて Secrets に入れる
 
 ### 6. ビルドして TestFlight へ上げる
 
-GitHub の Actions → **Build ひかりの七席 (iOS Release)** → Run workflow → `upload_to_testflight` に印。
+GitHub の Actions → **Build ひかりの指名 (iOS Release)** → Run workflow → `upload_to_testflight` に印。
 （手で回さなくても、`hikari7-v*` のタグで走る）
 
 - ビルド番号は `pubspec.yaml` の `version: 1.0.0+N` の N。同じ番号は二度上げられないので、上げ直すときは N を増やすか、入力欄 `build_number` で上書きする
@@ -81,10 +81,11 @@ No login is required. The app is in Japanese.
 The game runs fully offline inside the app (all content is bundled; no remote web content is loaded).
 In-app purchase: one non-consumable, "Remove Ads" (hikari7_remove_ads), on the title screen ("広告を消す"). The button appears once the App Store price has loaded.
 "Restore purchases" ("購入を復元") is on the title screen.
-Rewarded video ads unlock one bonus per audition (an extra intensive-lesson slot, extra budget, or a re-audition).
-Interstitial ads: between auditions, from the end of the second audition. Not shown after purchasing Remove Ads.
+Rewarded video ads are optional and always started by the player: an extra intensive-lesson slot or a re-audition (together once per audition), extra budget (up to 3 times per audition), and a one-week promotion boost after the debut (once).
+Interstitial ads: one per season, just before the end credits. Not shown after purchasing Remove Ads.
+Support (including reporting an inappropriate ad) and the privacy policy open from the title screen and from Settings.
 The app does not use App Tracking Transparency and does not track users.
-Privacy policy and licenses are on the title screen.
+Privacy policy, support and licenses are on the title screen.
 All characters, shows, and songs are fictional. Trainees are selected by the player's own judgment; there is no real-world voting.
 Before release, AdMob may not fill ads for this new app, so the video may be unavailable. The bonuses can be checked by purchasing "Remove Ads" (sandbox), which enables them without video.
 ```
@@ -97,3 +98,24 @@ Before release, AdMob may not fill ads for this new app, so the video may be una
 
 **アプリの作り（審査 4.2 への備え）**: ゲーム本体は WebView で動くが、中身はすべてアプリに同梱していて通信なしで遊べる。
 外部のページは、プライバシーポリシーなど決めた所だけを端末のブラウザで開く（`app/lib/game/bridge.dart` の `allowedHosts`）。
+
+
+## AdMob より先に TestFlight で試す（2026-10-04 追加）
+
+Actions → **Build ひかりの指名 (iOS Release)** → Run workflow で `upload_to_testflight` と **`test_ads`** に印を付ける。
+AdMob の Secrets が無くても、Google のテスト広告のまま作って TestFlight に上げる。
+- **このビルド番号は審査に出さない**。本番は AdMob の Secrets を入れてから、`pubspec.yaml` の `+N` を上げて作り直す
+- タグからのビルドでは選べない。TestFlight に上げないときは止まる
+
+
+## 追加パックの課金アイテム（2026-10-04 追加。**まだ作らない**）
+
+2026-10-04 ユーザー決定「今後の拡張性としておいて」で、1.0 では売らない。game.html の `PACK_SALE` を true にして売り出すときに、次の2つを作る。
+
+App Store Connect → アプリ → 収益化 → App内課金 → ＋ で、次の2つを「非消耗型」で作る（広告を消すと同じ手順）。
+| 参照名 | 製品ID | 価格（案） |
+|---|---|---|
+| Story Pack | `hikari7_story_pack` | 320円 |
+| Audition Pack | `hikari7_audition_pack` | 320円 |
+- 種類ごとの最初の課金アイテムは、アプリの新しいバージョンと同じ提出物で出す
+- TestFlight（Sandbox）で買って試すには、課金アイテムが作られていて、価格と表示名が入っている必要がある

@@ -1,0 +1,33 @@
+{
+  "id": "italy",
+  "name": "イタリア",
+  "age": "満18歳から満30歳まで",
+  "stay": "最大12か月間",
+  "fee": "",
+  "funds": "",
+  "apply": "居住地の領事管轄地域に応じて東京または大阪を選び、専用プラットフォームPrenot@mi（prenotami.esteri.it）から申請",
+  "timing": "2026年4月1日に日伊ワーキングホリデー協定が施行され、受付が開始済み",
+  "work": "",
+  "study": "",
+  "insurance": "",
+  "points": [
+    "2026年4月1日に協定が施行され、既に受付は開始されている（新規開始国）",
+    "申請はPrenot@mi（prenotami.esteri.it）という専用のオンライン予約プラットフォームから行う",
+    "居住地によって東京管轄か大阪管轄かが分かれるため、事前にどちらの領事管轄か確認が必要"
+  ],
+  "sources": [
+    {
+      "title": "日伊ワーキングホリデー協定の施行について - 在京イタリア大使館",
+      "url": "https://ambtokyo.esteri.it/ja/news/dall_ambasciata/2026/04/entrata-in-vigore-dellaccordo-vacanza-lavoro-tra-italia-e-giappone/",
+      "checked": "2026-10-05"
+    }
+  ],
+  "unverified": [
+    "fee（査証料）",
+    "funds（必要資金の金額）",
+    "work（就労期間の制限）",
+    "study（就学の可否）",
+    "insurance（保険加入の義務）",
+    "年間発給枠"
+  ]
+}

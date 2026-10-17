@@ -1,0 +1,77 @@
+{
+  "id": "chile",
+  "steps": [
+    {
+      "title": "外国人用の身分証（Cédula de Identidad／RUT）を取得する",
+      "body": "チリの民事登録庁（Registro Civil e Identificación）で、在留資格（ビザ）を持つ外国人向けの身分証（Cédula de Identidad para Extranjeros）を申請する。このカードに記載される番号がRUT（Rol Único Tributario）/RUN（Rol Único Nacional）として、銀行口座開設や契約など日常のあらゆる手続きで必要になる。",
+      "url": "https://www.registrocivil.cl/principal/servicios-en-linea/consulta-habilitado-obtener-renovar-cedula-identidad-y-pasaporte"
+    },
+    {
+      "title": "CuentaRUT（銀行口座）を開設する",
+      "body": "国営銀行BancoEstadoのCuentaRUTは、口座開設・維持とも無料のデビットカード付き決済口座（cuenta vista）。口座番号は本人のRUN（検証用数字を除く）がそのまま使われる。国外での利用にはアプリまたはウェブサイトで国際利用設定が必要。",
+      "url": "https://www.chileatiende.gob.cl/buscar?query=cuenta+rut+extranjeros"
+    },
+    {
+      "title": "在留届を提出する",
+      "body": "3か月以上海外に滞在する場合、外務省の在留届オンラインサービス（ORRネット）から住所や連絡先を届け出る。緊急時の安否確認や在チリ日本国大使館からの情報提供に使われる。",
+      "url": "https://www.ezairyu.mofa.go.jp/"
+    }
+  ],
+  "medical": {
+    "emergency": "133（カラビネロス＝警察の緊急通報番号）",
+    "summary": "サンティアゴには先進医療機器を完備した近代的な私立病院が複数あり、欧米先進国に近い水準の医療が受けられるが、病院間の医療レベルの差が大きい。私立病院の医療費は概して高額で、海外旅行傷害保険に未加入の場合は入院前にクレジットカードや小切手の提示を求められることがある。",
+    "hospitals": []
+  },
+  "jobs": {
+    "min_wage": "法定最低賃金（Ingreso Mínimo Mensual）月額553,553チリペソ（18歳以上65歳以下の労働者向け、2026年5月1日適用開始）",
+    "min_wage_url": "https://www.dt.gob.cl/portal/1626/w3-article-60141.html",
+    "channels": [
+      {
+        "name": "Bolsa Nacional de Empleo（BNE、労働・社会保障省系の公的求人サイト）",
+        "url": "https://www.bne.cl/",
+        "note": "チリ政府が運営する公的な求人・求職プラットフォーム"
+      }
+    ],
+    "rules": [
+      "法定最低賃金（Ingreso Mínimo Mensual）は法律により改定され、労働省（Dirección del Trabajo）が運用する",
+      "18歳未満・65歳超の労働者には別の最低賃金額が適用される"
+    ]
+  },
+  "sources": [
+    {
+      "title": "Consulte si está habilitado para obtener o renovar cédula extranjera - Registro Civil",
+      "url": "https://www.registrocivil.cl/principal/servicios-en-linea/consulta-habilitado-obtener-renovar-cedula-identidad-y-pasaporte",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "CuentaRUT BancoEstado - ChileAtiende",
+      "url": "https://www.chileatiende.gob.cl/buscar?query=cuenta+rut+extranjeros",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "¿Cuál es el valor del ingreso mínimo mensual? - Dirección del Trabajo",
+      "url": "https://www.dt.gob.cl/portal/1626/w3-article-60141.html",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Bolsa Nacional de Empleo",
+      "url": "https://www.bne.cl/",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Fono Informaciones 139 (menciona Fono de Emergencias 133) - ChileAtiende / Carabineros de Chile",
+      "url": "https://www.chileatiende.gob.cl/buscar?query=numeros+de+emergencia",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "チリ｜外務省 世界の医療事情",
+      "url": "https://www.mofa.go.jp/mofaj/toko/medi/cs_ame/chile.html",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "外務省 在留届（ORRネット）",
+      "url": "https://www.ezairyu.mofa.go.jp/",
+      "checked": "2026-10-05"
+    }
+  ]
+}

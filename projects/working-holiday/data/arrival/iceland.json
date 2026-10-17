@@ -1,0 +1,73 @@
+{
+  "id": "iceland",
+  "steps": [
+    {
+      "title": "ケンニタラ（kennitala, 個人番号）を登録する",
+      "body": "アイスランドに移住する人は国民登録局（Registers Iceland / Þjóðskrá）にケンニタラの発行を申請する。申請書と必要書類を提出する方式で、国籍（北欧諸国・EEA/EFTA加盟国・それ以外）によって必要書類が異なる。",
+      "url": "https://www.skra.is/english/people/change-of-address/moving-to-iceland/"
+    },
+    {
+      "title": "税番号・税カードについて税務当局に確認する",
+      "body": "就労する人は国税庁（Skatturinn/RSK）で税務上の登録状況を確認する。ケンニタラの取得が前提となる。",
+      "url": "https://www.skatturinn.is/english/individuals/"
+    },
+    {
+      "title": "在留届を提出する",
+      "body": "3か月以上海外に滞在する場合、外務省の在留届オンラインサービス（ORRネット）から住所や連絡先を届け出る。緊急時の安否確認や駐アイスランド日本国大使館（在ノルウェー大使館が兼轄）からの情報提供に使われる。",
+      "url": "https://www.ezairyu.mofa.go.jp/"
+    }
+  ],
+  "medical": {
+    "emergency": "112（警察・救急・消防共通）、1700（医療相談窓口、年中無休）、1770（レイキャビクの緊急医療クリニック Læknavaktin）",
+    "summary": "首都圏はアイスランド国立大学病院（Landspítali）が中心で、平日夜間・週末はレイキャビクの緊急医療クリニック（Læknavaktin）が対応する。地方には地域ごとの保健センター（Heilsugæsla）がある。",
+    "hospitals": []
+  },
+  "jobs": {
+    "min_wage": "",
+    "min_wage_url": "https://island.is/en/labour-market-collective-wage-agreements",
+    "channels": [
+      {
+        "name": "Directorate of Labour（アイスランド労働局）の求人検索",
+        "url": "https://island.is/en/o/directorate-of-labour/jobs",
+        "note": "アイスランド政府機関Directorate of Labourが運営する公的求人情報ページ"
+      }
+    ],
+    "rules": [
+      "アイスランドには法定最低賃金は無く、労働組合と雇用主が業種ごとに結ぶ労働協約（collective wage agreement）で賃金の最低基準が定められる",
+      "雇用主と従業員は労働協約で定められた基準より低い賃金・悪い労働条件で合意することはできない（協約を上回る条件での交渉は可能）"
+    ],
+    "no_statutory": true
+  },
+  "sources": [
+    {
+      "title": "Moving to Iceland - Registers Iceland (Þjóðskrá)",
+      "url": "https://www.skra.is/english/people/change-of-address/moving-to-iceland/",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Individuals - Skatturinn (Iceland Revenue and Customs)",
+      "url": "https://www.skatturinn.is/english/individuals/",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Labour market and collective wage agreements - island.is",
+      "url": "https://island.is/en/labour-market-collective-wage-agreements",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Jobs - Directorate of Labour (island.is)",
+      "url": "https://island.is/en/o/directorate-of-labour/jobs",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "アイスランド｜外務省 世界の医療事情",
+      "url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/iceland.html",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "外務省 在留届（ORRネット）",
+      "url": "https://www.ezairyu.mofa.go.jp/",
+      "checked": "2026-10-05"
+    }
+  ]
+}

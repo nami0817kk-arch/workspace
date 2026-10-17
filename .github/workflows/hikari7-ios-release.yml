@@ -1,10 +1,10 @@
-# ひかりの七席の App Store 提出用 iOS リリースビルド（goso-boat-ios-release.yml を写したもの）。
+# ひかりの指名の App Store 提出用 iOS リリースビルド（goso-boat-ios-release.yml を写したもの）。
 #
 # サカマネ・護送ボートと同じチームなので、配信用証明書（IOS_DIST_CERT_*）・チームID・App Store Connect API キーは共用。
 # アプリごとに違うのは、プロビジョニングプロファイルと AdMob のIDだけ（HIKARI7_ で始まる Secrets）。
 # ゲーム本体（prototype/game.html）は、ビルドの前に tool/build_app_web.py でアプリ用に組み立てる。
 # 鍵の作り方と Secrets の一覧は projects/hikari7/docs/RELEASE.md を参照。
-name: Build ひかりの七席 (iOS Release)
+name: Build ひかりの指名 (iOS Release)
 
 on:
   push:
@@ -18,6 +18,11 @@ on:
         default: ""
       upload_to_testflight:
         description: "ビルド後に TestFlight へアップロードする"
+        type: boolean
+        required: false
+        default: false
+      test_ads:
+        description: "AdMob のIDがまだ無いとき、Google のテスト広告のまま TestFlight 用に作る（このビルドは審査に出さない）"
         type: boolean
         required: false
         default: false
@@ -101,8 +106,15 @@ jobs:
           ADMOB_APP_ID: ${{ secrets.HIKARI7_ADMOB_APP_ID_IOS }}
           ADMOB_REWARDED: ${{ secrets.HIKARI7_ADMOB_REWARDED_IOS }}
           ADMOB_INTERSTITIAL: ${{ secrets.HIKARI7_ADMOB_INTERSTITIAL_IOS }}
+          TEST_ADS: ${{ github.event.inputs.test_ads }}
         run: |
           set -euo pipefail
+          # テスト広告のビルド（2026-10-04 追加）：AdMob の登録より先に、実機の TestFlight で試すためだけに使う。
+          # タグからのビルドでは選べない（workflow_dispatch の入力だけ）。TestFlight へ上げるときだけ許す。
+          if [ "${TEST_ADS:-false}" = "true" ]; then
+            [ "${{ github.event.inputs.upload_to_testflight }}" = "true" ] || { echo "::error::テスト広告のビルドは TestFlight で試すときだけ作れます。"; exit 1; }
+            echo "::warning::Google のテスト広告のまま作ります。このビルド番号は審査に出さないでください（本番のビルドは番号を上げて作り直す）。"
+          else
           missing=""
           [ -n "$ADMOB_APP_ID" ]   || missing="$missing HIKARI7_ADMOB_APP_ID_IOS"
           [ -n "$ADMOB_REWARDED" ] || missing="$missing HIKARI7_ADMOB_REWARDED_IOS"
@@ -134,12 +146,13 @@ jobs:
           fi
           [ "$(plutil -extract GADApplicationIdentifier raw -o - ios/Runner/Info.plist)" = "$ADMOB_APP_ID" ]             || { echo "::error::Info.plist の GADApplicationIdentifier が Secret と一致しません。"; exit 1; }
           echo "Info.plist の GADApplicationIdentifier を本番IDに置き換えました。"
+          fi
                     # タイトル画面のリンク先が開けて、中身が本物か（404 や別のページのまま出すと審査で却下される）
           for page in privacy support; do
             body=$(curl -fsSL "$LEGAL_BASE_URL/$page.html") \
               || { echo "::error::$LEGAL_BASE_URL/$page.html が開けません。法務ページを公開してから出してください。"; exit 1; }
-            grep -q "ひかりの七席" <<<"$body" \
-              || { echo "::error::$LEGAL_BASE_URL/$page.html の中身がひかりの七席のページではありません。"; exit 1; }
+            grep -q "ひかりの指名" <<<"$body" \
+              || { echo "::error::$LEGAL_BASE_URL/$page.html の中身がひかりの指名のページではありません。"; exit 1; }
           done
 
       - name: Import signing certificate into a temporary keychain
@@ -263,6 +276,7 @@ jobs:
           ADMOB_REWARDED: ${{ secrets.HIKARI7_ADMOB_REWARDED_IOS }}
           ADMOB_INTERSTITIAL: ${{ secrets.HIKARI7_ADMOB_INTERSTITIAL_IOS }}
           BUILD_NUMBER: ${{ github.event.inputs.build_number }}
+          TEST_ADS: ${{ github.event.inputs.test_ads }}
         run: |
           set -euo pipefail
           EXTRA=""
@@ -271,10 +285,12 @@ jobs:
             [[ "$BUILD_NUMBER" =~ ^[0-9]+$ ]] || { echo "::error::ビルド番号は数字だけで入れてください。"; exit 1; }
             EXTRA="--build-number=$BUILD_NUMBER"
           fi
+          ADS=(--dart-define=ADMOB_REWARDED_IOS="$ADMOB_REWARDED" --dart-define=ADMOB_INTERSTITIAL_IOS="$ADMOB_INTERSTITIAL")
+          # テスト広告のビルドでは広告IDを渡さない（空で渡すと既定のテスト用IDではなく空文字になる）
+          if [ "${TEST_ADS:-false}" = "true" ]; then ADS=(); fi
           flutter build ipa --release \
             --export-options-plist=ios/ExportOptions.plist $EXTRA \
-            --dart-define=ADMOB_REWARDED_IOS="$ADMOB_REWARDED" \
-            --dart-define=ADMOB_INTERSTITIAL_IOS="$ADMOB_INTERSTITIAL" \
+            ${ADS[@]+"${ADS[@]}"} \
             --dart-define=LEGAL_BASE_URL="$LEGAL_BASE_URL"
           ls -la build/ios/ipa/
 

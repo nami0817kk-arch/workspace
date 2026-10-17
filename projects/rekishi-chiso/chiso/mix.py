@@ -5,7 +5,7 @@ import wave
 from dataclasses import dataclass
 from pathlib import Path
 
-from .voice import display_text, gap_before
+from .voice import gap_before
 
 TAIL = 1.5        # 最後の行のあとに残す無音（秒）
 
@@ -18,22 +18,24 @@ class Cue:
     wav: Path
 
 
-def plan(lines: list, spoken: dict[int, object]) -> tuple[list[Cue], float]:
-    """行の並びと音声の長さから、各行の開始・終了時刻を決める。全体の長さも返す。"""
+def plan(lines: list, spoken: dict[int, object], recap=()) -> tuple[list[Cue], float]:
+    """行の並びと音声の長さから、各行の開始・終了時刻を決める。全体の長さも返す。
+    recap は「ここまでの地層」を出す節の番号（その節の頭の間を長くする。render.recap_sections）。"""
     cues: list[Cue] = []
     t = 0.0
     prev = None
     for line in lines:
         s = spoken[line.index]
-        t += gap_before(prev, line)
+        t += gap_before(prev, line, recap)
         cues.append(Cue(line, round(t, 3), round(t + s.seconds, 3), s.wav))
         t += s.seconds
         prev = line
     return cues, round(t + TAIL, 3)
 
 
-def write_audio(cues: list[Cue], total: float, target: Path) -> None:
-    """全行を1本の wav にする（VOICEVOX の出力はどれも同じ形式なので、そのまま並べる）。"""
+def write_audio(cues: list[Cue], total: float, target: Path, effects: list | None = None) -> None:
+    """全行を1本の wav にする（VOICEVOX の出力はどれも同じ形式なので、そのまま並べる）。
+    effects は (時刻, 音の名前) の並び（chiso/sfx.py）。あれば小さく重ねる。"""
     params = None
     chunks: list[bytes] = []
     cursor = 0  # フレーム数
@@ -54,10 +56,19 @@ def write_audio(cues: list[Cue], total: float, target: Path) -> None:
     end = int(round(total * params.framerate))
     if end > cursor:
         chunks.append(b"\x00" * ((end - cursor) * params.sampwidth * params.nchannels))
+    data = b"".join(chunks)
+    if effects:
+        from array import array
+        from . import sfx
+        if params.sampwidth != 2:
+            raise ValueError("効果音は 16bit の音声にだけ重ねられます")
+        samples = array("h")
+        samples.frombytes(data)
+        data = sfx.overlay(samples, params.framerate, params.nchannels, effects).tobytes()
     target.parent.mkdir(parents=True, exist_ok=True)
     with wave.open(str(target), "wb") as out:
         out.setparams(params)
-        out.writeframes(b"".join(chunks))
+        out.writeframes(data)
 
 
 def _srt_time(t: float) -> str:
@@ -70,10 +81,20 @@ def _srt_time(t: float) -> str:
 
 def srt(cues: list[Cue], names: dict[str, str]) -> str:
     """YouTube に渡す字幕。話者名を頭に付ける（掛け合いなので誰の言葉か分かるように）。"""
+    # 画面の字幕と同じかたまりで切り、時間は字数の割合で配る
+    from .subs import chunks, plain
     out = []
-    for i, cue in enumerate(cues, 1):
+    n = 0
+    for cue in cues:
         name = names.get(cue.line.speaker, cue.line.speaker)
-        out.append(f"{i}\n{_srt_time(cue.start)} --> {_srt_time(cue.end)}\n{name}：{display_text(cue.line.text)}\n")
+        cs = [plain(c) for c in chunks(cue.line.text)]
+        total = sum(len(c) for c in cs) or 1
+        t = cue.start
+        for c in cs:
+            d = (cue.end - cue.start) * len(c) / total
+            n += 1
+            out.append(f"{n}\n{_srt_time(t)} --> {_srt_time(t + d)}\n{name}：{c}\n")
+            t += d
     return "\n".join(out)
 
 

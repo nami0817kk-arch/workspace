@@ -22,7 +22,13 @@
             tone: 驚き
             short: s1
 
+人物の言葉は、話者を「人物」にして who に誰かを書く。声は config.yaml の roles で決める（2026-10-04）:
+
+          - 人物: 「ごめんなさい。わざとではないのよ」
+            who: マリー
+
 画面の指定（background / portrait / card / year）は「次に変えるまで続く」。
+紀元前の年は負の数で書く（year: -221、timeline も負、札は「紀元前221年」、people は born: -259。chiso/years.py）。
 portrait と card は節が変わると消える。null を書けばその行で消せる。
 """
 from __future__ import annotations
@@ -33,7 +39,8 @@ from pathlib import Path
 
 import yaml
 
-SPEAKERS = ("語り", "聞き")
+SPEAKERS = ("語り", "聞き", "人物", "二人")   # 二人＝語りと聞きが声を合わせる（締めの一言）
+CAST = ("語り", "聞き")      # 画面に立ち絵がいる2人。「人物」の行は who の名前が話者になる
 _UNSET = object()
 
 
@@ -42,6 +49,8 @@ class Picture:
     image: str
     credit: str = ""      # 背景の出典（画面の下に小さく出す）
     caption: str = ""     # 肖像の下に出す説明
+    who: str = ""         # 肖像の人物（people: の名前）。省けば caption の名前から探す
+    age: bool = True      # false で「この時○歳」を出さない（話の時代と絵の人物の年が離れるとき）
 
 
 @dataclass(frozen=True)
@@ -63,6 +72,114 @@ class Line:
     portrait: Picture | None = None
     card: Card | None = None
     year: int | None = None
+    memo: tuple = ()                  # その節で出た札（新しい順に最大3枚）。画面左の「掘り出したメモ」
+    figure: str | None = None         # 図（地図・グラフ・相関図）の指定。JSON の文字列（chiso/figures.py）
+    bubble: str | None = None         # 肖像の人物の吹き出し（その行だけ）。JSON の文字列（chiso/extras.py）
+    icon: str | None = None           # 1文の挿絵（その行だけ）。Phosphor のアイコン名
+    place: tuple | None = None        # 位置の小さな地図 (地名, 経度, 緯度)。places.yaml から自動で付く
+    term: tuple | None = None         # 用語の札 (言葉, 説明)。terms.yaml と台本の terms: から自動で付く
+    hook: bool = False                # 節の終わりの「引き」（次の節が気になる一言）。check が節ごとに確かめる
+    reaction: str | None = None       # つむぎの「寄り」（その行だけ）。JSON の文字列（chiso/reaction.py）
+    detail: str | None = None         # 絵の一部を大きく（その行だけ）。JSON の文字列（chiso/pen.py）
+    mark: str | None = None           # 赤ペンの書き込み。JSON {"items": [...], "from": n}（chiso/pen.py）
+
+
+MEMO_SIZE = 3
+LOOK_KEYS = ("texture", "recap")   # 台本の一番上に書くと config.yaml の同じ名前より優先（10-07）
+TERM_LINES = 3        # 用語の札を出しておく行数（初めて出た行から）
+TERM_MAX = 40         # 説明の字数の上限（右上の狭い札に収める）
+ERA_TAILS = ("時代", "幕府", "の初め", "初期", "前期", "中期", "後期", "末期", "の末", "っ子")   # 地名＋これは時代の名
+
+# --- 地名を場所として拾うか（10-09 点検。「江戸の浮世絵」「北京大学」「堺屋太一」で地図が出た）-------------
+# 地名のすぐ後がこれなら、地名ではなく人名・大学名の一部（堺屋太一・北京大学・京都大）
+NOT_PLACE_TAILS = ("屋", "大学", "大")
+NOT_PLACE_KEEP = ("屋敷", "大火", "大仏", "大地震", "大通り", "大路", "大坂", "大阪")   # 上の例外（場所の使い方）
+# 時代の名にもなる地名は、場所の使い方のときだけ拾う（10-09。「江戸」が時代の意味で出るほうが多い）
+ERA_PLACES = ("江戸",)
+PLACE_USES = ("城", "湾", "参府", "上り", "入り", "屋敷", "市中", "の町", "の屋敷", "の城", "の街", "の港", "の海",
+              "の中心", "の市中", "の郊外", "の北", "の南", "の東", "の西", "の将軍", "の大火", "の藩邸", "の上屋敷",
+              "へ", "に", "で", "から", "まで", "を")
+ERA_USES = ("時代", "幕府", "初期", "前期", "中期", "後期", "末期", "っ子", "の初め", "の初期", "の終わり", "の末",
+            "の世", "の頃", "のころ", "の昔", "の人", "の庶民", "の文化", "の浮世絵", "の軍記", "の読み物", "の本",
+            "の書物", "の物語", "の小説", "の学者", "の作家", "の芝居", "の歌舞伎", "の絵", "の記録", "の話",
+            "の日本", "の鎖国", "では", "にかけて", "から明治", "までの")   # 「江戸の＋これ」は時代
+
+
+def place_blank(text: str, places) -> str:
+    """地名として拾わない所を「＿」で消した文。字数は変えない（位置がそのまま使える）。
+    次の2つを消す：地名のすぐ後が「屋」「大学」「大」（堺屋太一・北京大学）／時代の名にもなる地名（江戸）で、
+    後ろが場所の使い方（江戸城・江戸へ・江戸の町…）でないもの（江戸の浮世絵・江戸時代）。"""
+    out = list(text)
+    for p in sorted(places, key=len, reverse=True):
+        start = 0
+        while True:
+            i = text.find(p, start)
+            if i < 0:
+                break
+            start = i + 1
+            tail = text[i + len(p):]
+            if p in ERA_PLACES:
+                drop = tail.startswith(ERA_USES) or not tail.startswith(PLACE_USES)
+            else:
+                drop = tail.startswith(NOT_PLACE_TAILS) and not tail.startswith(NOT_PLACE_KEEP)
+            if drop:
+                out[i:i + len(p)] = "＿" * len(p)
+    return "".join(out)
+
+
+# 場所の地図は、話している年（line.year）が変われば消す（10-09。小田原の地図が秀長の最期「1591年1月22日」の行まで残った）。
+# 行が自分で年を言い出したとき（「1591年」「翌年」）は1年でも、言わずに札だけ進んだときは10年以上で
+PLACE_YEAR_GAP = (1, 10)
+
+
+def says_year(text: str) -> bool:
+    """行が自分で年を言っているか（「1591年」「紀元前221年」「翌年」「その年」）。"""
+    from .match import years_in
+    return bool(years_in(text)) or any(w in text for w in ("翌年", "翌々年", "その年", "同じ年"))
+
+
+def attach_terms(lines: list, glossary: dict, attr: str = "term", value=None, mask=(), blank=None,
+                 year_gap: tuple | None = None) -> None:
+    """その回で初めて出た用語（地名）に、札（小さな地図）を付ける。新しい言葉が出たらすぐ差し替え、
+    同じ行に2つ以上あれば、前の札が終わってから順に出す。節が変わると札は消える。
+    blank は拾わない所を消す関数（地名なら place_blank）。year_gap=(近い, 遠い) を渡すと、札を出した行から
+    話している年（line.year）が「遠い」だけ変わった行、または行が自分で年を言い「近い」だけ変わった行で札を消す
+    （待っている次の地名の札も出さない）。"""
+    import re
+    if not glossary:
+        return
+    words = sorted(glossary, key=len, reverse=True)       # 長い言葉を先に（王太子妃の中の王太子より先に）
+    seen: set[str] = set()
+    pending: list[str] = []
+    cur, left, sec, since = None, 0, None, None
+    for line in lines:
+        if line.section != sec:
+            cur, left, sec, pending = None, 0, line.section, []
+        if year_gap is not None and (left > 0 or pending) and since is not None and line.year is not None:
+            moved = abs(line.year - since)
+            if moved >= year_gap[1] or (moved >= year_gap[0] and says_year(line.text)):
+                seen.difference_update(pending)            # まだ出していない地名は、あとで出てきたら出す
+                cur, left, pending = None, 0, []           # 話が別の年へ移った（同じ場面ではない）
+        plain = re.sub(r"[《》]", "", line.text)
+        for m in sorted(mask, key=len, reverse=True):      # 「神聖ローマ皇帝」の中の「ローマ」は地名にしない
+            plain = plain.replace(m, "＿" * len(m))
+        if blank is not None:
+            plain = blank(plain)
+        found = []
+        for w in words:
+            pos = plain.find(w)
+            if pos >= 0 and w not in seen and not any(w in f for _, f in found):
+                found.append((pos, w))
+        found = [w for _, w in sorted(found)]
+        seen.update(found)
+        if found:
+            cur, left, since = found[0], TERM_LINES, line.year
+            pending = found[1:] + pending
+        elif left <= 0 and pending:
+            cur, left, since = pending.pop(0), TERM_LINES, line.year
+        if cur is not None and left > 0:
+            setattr(line, attr, value(cur) if value else (cur, glossary[cur]))
+            left -= 1
 
 
 @dataclass
@@ -82,6 +199,28 @@ class Script:
     lines: list[Line]
     shorts: dict[str, dict] = field(default_factory=dict)
     path: Path | None = None
+    next: dict = field(default_factory=dict)        # 次回予告 {title, teaser}
+    thumbnail: dict = field(default_factory=dict)   # サムネイルの文字と絵（thumb.py）
+    people: dict = field(default_factory=dict)      # 人物の生没（肖像に「この時○歳」を出す）
+    tags: list = field(default_factory=list)        # YouTube のタグ（全ショートと本編に共通）
+    look: dict = field(default_factory=dict)        # 画面の道具の入り切り（texture・recap）。config より優先
+    playlists: list = field(default_factory=list)   # 本編を入れる再生リスト（省けば series:。chiso/channel.py）
+    shorts_playlists: list = field(default_factory=list)   # ショートを入れる再生リスト（省けば入れない）
+    en: dict = field(default_factory=dict)          # 英語の題名・説明・章の題 {title, description, chapters}
+
+    @property
+    def question(self) -> str:
+        """題名の問いの部分（「｜」より前）。冒頭で大きく出す。"""
+        return self.title.split("｜")[0]
+
+    @property
+    def roles(self) -> list[str]:
+        """人物の言葉を話す人（出てくる順）。"""
+        out: list[str] = []
+        for line in self.lines:
+            if line.speaker not in CAST + ("二人",) and line.speaker not in out:
+                out.append(line.speaker)
+        return out
 
     def short_lines(self, short_id: str) -> list[Line]:
         return [line for line in self.lines if short_id in line.shorts]
@@ -99,7 +238,16 @@ def _picture(raw, where: str) -> Picture | None:
     if not isinstance(raw, dict) or "image" not in raw:
         raise ScriptError(f"{where}: 絵の指定には image が要ります: {raw!r}")
     return Picture(image=str(raw["image"]), credit=str(raw.get("credit", "")),
-                   caption=str(raw.get("caption", "")))
+                   caption=str(raw.get("caption", "")), who=str(raw.get("who", "")),
+                   age=bool(raw.get("age", True)))
+
+
+def _card_year(card) -> int | None:
+    """札の見出しの年（「1774年5月」→1774、「紀元前221年」「前221年」→-221）。年で始まらない札（「首飾りの値段」）は None。
+    「1760年代半ば」は1つの年ではないので数えない（chiso/years.py）。"""
+    from .years import head_date
+    d = head_date(card.head) if card is not None else None
+    return d[0] if d else None
 
 
 def _card(raw, where: str) -> Card | None:
@@ -112,6 +260,140 @@ def _card(raw, where: str) -> Card | None:
     return Card(head=str(raw["head"]), body=str(raw.get("body", "")))
 
 
+FIGURE_TYPES = ("map", "pie", "bars", "people", "compare", "money", "stats", "calc", "numberline", "line", "versus")
+FIGURE_NEEDS = {"stats": ("items",), "calc": ("terms",), "numberline": ("items",), "line": ("points",),
+                "versus": ("left", "right"), "bars": ("bars",), "people": ("nodes",), "compare": ("people",),
+                "pie": ("parts",)}
+
+
+def _bubble(raw, where: str) -> str | None:
+    if raw is None:
+        return None
+    import json
+    if isinstance(raw, str):
+        raw = {"text": raw}
+    if not isinstance(raw, dict) or not raw.get("text"):
+        raise ScriptError(f"{where}: bubble には text が要ります: {raw!r}")
+    return json.dumps(raw, ensure_ascii=False, sort_keys=True)
+
+
+def _figure(raw, where: str) -> str | None:
+    if raw is None:
+        return None
+    import json
+    if not isinstance(raw, dict) or raw.get("type") not in FIGURE_TYPES:
+        raise ScriptError(f"{where}: figure の type は {' / '.join(FIGURE_TYPES)} のどれかです: {raw!r}")
+    if raw["type"] == "money" and not all(raw.get(k) for k in ("then", "yen", "basis")):
+        # 換算の前提（何を何に置き換えたか）を出さない金額は、根拠のない数字になる
+        raise ScriptError(f"{where}: money には then（当時の金額）・yen（円）・basis（置き換えの前提）が要ります")
+    missing = [k for k in FIGURE_NEEDS.get(raw["type"], ()) if not raw.get(k)]
+    if missing:
+        raise ScriptError(f"{where}: {raw['type']} には {'・'.join(missing)} が要ります")
+    if raw["type"] == "versus" and not all(isinstance(raw[k], dict) and raw[k].get("image") for k in ("left", "right")):
+        raise ScriptError(f"{where}: versus の left・right には image（絵）が要ります")
+    if "upto" in raw and (not isinstance(raw["upto"], int) or isinstance(raw["upto"], bool) or raw["upto"] < 1):
+        raise ScriptError(f"{where}: upto は1以上の整数です（先頭から何項目を出すか）: {raw['upto']!r}")
+    if "grow_from" in raw:
+        raise ScriptError(f"{where}: grow_from は自動で付きます（台本には upto だけを書く）")
+    return json.dumps(raw, ensure_ascii=False, sort_keys=True)
+
+
+def _grown(new: str | None, prev: str | None) -> str | None:
+    """同じ図に upto だけを変えて書いた行なら、前の行の upto を grow_from に入れる（新しい項目だけ描き進める）。"""
+    import json
+    if new is None or prev is None:
+        return new
+    a, b = json.loads(new), json.loads(prev)
+    if "upto" not in a:
+        return new
+    from .figures import base_key
+    if base_key(a) != base_key(b):
+        return new
+    before = b.get("upto")
+    if before == a["upto"]:
+        return prev                                   # 同じ図をそのまま書き直しただけ
+    a["grow_from"] = min(int(before), a["upto"]) if before is not None else a["upto"]
+    return json.dumps(a, ensure_ascii=False, sort_keys=True)
+
+
+def _reaction(raw, where: str) -> str | None:
+    """つむぎの「寄り」：{number: "100人", lead: "信長の供は", say: "少なっ！"}。number は必ず書く。"""
+    if raw is None:
+        return None
+    import json
+    if not isinstance(raw, dict) or not str(raw.get("number", "")).strip():
+        raise ScriptError(f"{where}: reaction には number（大きく出す数字）が要ります: {raw!r}")
+    return json.dumps({k: str(v) for k, v in raw.items()}, ensure_ascii=False, sort_keys=True)
+
+
+def _detail(raw, where: str, background) -> str | None:
+    """絵の一部を大きく：{box: [x0, y0, x1, y1], label: 鉄砲隊, image: (省けばその場面の背景)}。
+    box は元の絵の画素か、0〜1 の割合（4つとも1以下なら割合とみなす）。"""
+    if raw is None:
+        return None
+    import json
+    if not isinstance(raw, dict) or "box" not in raw:
+        raise ScriptError(f"{where}: detail には box（[左, 上, 右, 下]）が要ります: {raw!r}")
+    box = raw["box"]
+    if (not isinstance(box, (list, tuple)) or len(box) != 4
+            or not all(isinstance(v, (int, float)) and not isinstance(v, bool) for v in box)):
+        raise ScriptError(f"{where}: detail の box は数4つ [左, 上, 右, 下] です: {box!r}")
+    if not (box[0] < box[2] and box[1] < box[3]) or min(box) < 0:
+        raise ScriptError(f"{where}: detail の box は 左<右・上<下 の順に書きます: {box!r}")
+    image = raw.get("image") or (background.image if background is not None else None)
+    if not image:
+        raise ScriptError(f"{where}: detail は背景の絵があるときだけ使えます（別の絵なら image: を書く）")
+    unknown = set(raw) - {"box", "label", "image"}
+    if unknown:
+        raise ScriptError(f"{where}: detail に書けるのは box・label・image です: {sorted(unknown)}")
+    return json.dumps({"image": str(image), "box": [float(v) for v in box], "label": str(raw.get("label", ""))},
+                      ensure_ascii=False, sort_keys=True)
+
+
+MARK_TYPES = ("circle", "arrow", "underline", "strike", "note")
+
+
+def _marks(raw, where: str, figure: str | None) -> list[dict]:
+    """赤ペン：[{type: circle, at: 2}, {type: note, at: [0.6, 0.2], text: ここ}]。
+    at は図の何番目の項目（1から）か、絵の上の点 [x, y]・範囲 [x0, y0, x1, y1]（割合か元の絵の画素）。"""
+    if isinstance(raw, dict):
+        raw = [raw]
+    if not isinstance(raw, list):
+        raise ScriptError(f"{where}: mark は書き込みの並び（[{{type: circle, at: 2}}]）です: {raw!r}")
+    out = []
+    for m in raw:
+        if not isinstance(m, dict) or m.get("type") not in MARK_TYPES:
+            raise ScriptError(f"{where}: mark の type は {' / '.join(MARK_TYPES)} のどれかです: {m!r}")
+        at = m.get("at")
+        if isinstance(at, bool) or at is None:
+            raise ScriptError(f"{where}: mark には at（図の項目の番号か、絵の上の [x, y]・[x0, y0, x1, y1]）が要ります")
+        if isinstance(at, int):
+            if at < 1:
+                raise ScriptError(f"{where}: mark の at（項目の番号）は1からです: {at}")
+            if figure is None:
+                raise ScriptError(f"{where}: mark の at を番号で書けるのは図が出ているときだけです")
+        elif not (isinstance(at, (list, tuple)) and len(at) in (2, 4)
+                  and all(isinstance(v, (int, float)) and not isinstance(v, bool) for v in at)):
+            raise ScriptError(f"{where}: mark の at は番号か [x, y]・[x0, y0, x1, y1] です: {at!r}")
+        if m["type"] == "note" and not str(m.get("text", "")).strip():
+            raise ScriptError(f"{where}: note には text が要ります")
+        unknown = set(m) - {"type", "at", "text", "from"}
+        if unknown:
+            raise ScriptError(f"{where}: mark に書けるのは type・at・text・from です: {sorted(unknown)}")
+        out.append({k: (list(v) if isinstance(v, tuple) else v) for k, v in m.items()})
+    return out
+
+
+def _mark_target(detail, figure, background, portrait, section) -> str:
+    """書き込みが乗っているもの。これが替わると前の書き込みは消える。"""
+    from .figures import base_key
+    if detail:
+        return f"d{section}:{detail}"
+    if figure:
+        return f"f{section}:{base_key(figure)}"
+    return f"p{section}:{background.image if background else ''}:{portrait.image if portrait else ''}"
+
+
 def _speaker_and_text(raw: dict, where: str) -> tuple[str, str]:
     found = [(key, raw[key]) for key in SPEAKERS if key in raw]
     if len(found) != 1:
@@ -120,10 +402,18 @@ def _speaker_and_text(raw: dict, where: str) -> tuple[str, str]:
     text = str(text or "").strip()
     if not text:
         raise ScriptError(f"{where}: せりふが空です")
+    who = raw.get("who")
+    if speaker == "人物":
+        if not who or str(who) in SPEAKERS:
+            raise ScriptError(f"{where}: 「人物」の行には who（誰の言葉か。config.yaml の roles の名前）が要ります")
+        return str(who), text
+    if who:
+        raise ScriptError(f"{where}: who は「人物」の行にだけ書きます")
     return speaker, text
 
 
-def parse(data: dict, path: Path | None = None) -> Script:
+def parse(data: dict, path: Path | None = None, glossary: dict[str, str] | None = None,
+          places: dict | None = None) -> Script:
     if not isinstance(data, dict):
         raise ScriptError("台本の一番上は辞書（title / sections ...）にします")
     timeline = data.get("timeline") or {}
@@ -150,9 +440,15 @@ def parse(data: dict, path: Path | None = None) -> Script:
         card = _card(raw_section.get("card"), where_s)
         if raw_section.get("year") is not None:
             year = int(raw_section["year"])
+        elif _card_year(card) is not None:
+            year = _card_year(card)
+        memo: list[Card] = [card] if card is not None else []
+        figure = _figure(raw_section.get("figure"), where_s)
         raw_lines = raw_section.get("lines") or []
         if not raw_lines:
             raise ScriptError(f"{where_s}: lines がありません")
+        marks: list[dict] = []
+        mark_on = None
         for l_index, raw in enumerate(raw_lines):
             where = f"{where_s} {l_index + 1}行目"
             speaker, text = _speaker_and_text(raw, where)
@@ -160,10 +456,17 @@ def parse(data: dict, path: Path | None = None) -> Script:
                 background = _picture(raw["background"], where)
             if "portrait" in raw:
                 portrait = _picture(raw["portrait"], where)
+            if "figure" in raw:
+                figure = _grown(_figure(raw["figure"], where), figure)
             if "card" in raw:
                 card = _card(raw["card"], where)
+                if card is not None and (not memo or memo[-1] != card):
+                    memo.append(card)
             if raw.get("year") is not None:
                 year = int(raw["year"])
+            elif "card" in raw and _card_year(card) is not None:
+                # 札に年があれば、年表の印（と「この時○歳」）もその年へ（10-04 の確認で、札だけ進んで年齢がずれていた）
+                year = _card_year(card)
             tone = str(raw.get("tone", "普通"))
             if known_tones is not None and tone not in known_tones:
                 raise ScriptError(f"{where}: tone「{tone}」は定義されていません（{'、'.join(sorted(known_tones))}）")
@@ -171,10 +474,32 @@ def parse(data: dict, path: Path | None = None) -> Script:
             if isinstance(shorts, str):
                 shorts = (shorts,)
             pause = raw.get("pause")
+            detail = _detail(raw.get("detail"), where, background)
+            if detail and figure is not None and "figure" not in raw:
+                # 図のあいだに detail を書くと、その行だけ図が隠れて次の行でまた図が出ていた（10-08 見本の通し確認）。
+                # 絵の一部に移ったら図は終わりにする（続けたいときは detail のあとの行に同じ figure を書き直す）
+                figure = None
+            # 赤ペンは、同じもの（大きく見せた絵・図・背景）の上にいるあいだ足していく。替わると消える
+            target = _mark_target(detail, figure, background, portrait, s_index)
+            if target != mark_on:
+                marks, mark_on = [], target
+            start = len(marks)
+            if "mark" in raw:
+                if raw["mark"] in (None, []):
+                    marks = []
+                    start = 0
+                else:
+                    marks = marks + _marks(raw["mark"], where, figure if not detail else None)
+            import json as _json
+            mark = (_json.dumps({"items": marks, "from": start}, ensure_ascii=False, sort_keys=True)
+                    if marks else None)
             lines.append(Line(
                 index=len(lines), section=s_index, speaker=speaker, text=text, tone=tone,
                 pause=float(pause) if pause is not None else None, shorts=tuple(shorts),
                 background=background, portrait=portrait, card=card, year=year,
+                memo=tuple(reversed(memo[-MEMO_SIZE:])), figure=figure,
+                bubble=_bubble(raw.get("bubble"), where), hook=bool(raw.get("hook")), icon=(str(raw["icon"]) if raw.get("icon") else None),
+                reaction=_reaction(raw.get("reaction"), where), detail=detail, mark=mark,
             ))
     if not lines:
         raise ScriptError("せりふが1行もありません")
@@ -183,19 +508,125 @@ def parse(data: dict, path: Path | None = None) -> Script:
     missing = used - set(shorts_meta)
     if missing:
         raise ScriptError(f"shorts に定義のないショートが使われています: {sorted(missing)}")
+    gl = {**(glossary or {}), **{str(k): str(v) for k, v in (data.get("terms") or {}).items()}}
+    long = [k for k, v in gl.items() if len(v) > TERM_MAX]
+    if long:
+        raise ScriptError(f"用語の説明は{TERM_MAX}字までです: {long}")
+    attach_terms(lines, gl)
+    if places:
+        # 「江戸時代」「江戸の初め」の江戸は時代の名で、場所ではない（10-08 見本で、本の話に江戸の地図が出た）
+        eras = [p + t for p in places for t in ERA_TAILS]
+        # 次回予告の行（「次回は江戸の鎖国」）の地名は、いまの話の場所ではないので地図を出さない（10-08 ユーザー指摘）
+        from .match import is_teaser
+        attach_terms([l for l in lines if not is_teaser(l.text)], places, "place", lambda w: (w, *places[w]),
+                     mask=[k for k in gl if k not in places] + eras, blank=lambda t: place_blank(t, places),
+                     year_gap=PLACE_YEAR_GAP)
+    people = {}
+    for name, v in (data.get("people") or {}).items():
+        if not isinstance(v, dict) or "born" not in v:
+            raise ScriptError(f"people の {name} には born（生まれた日 YYYY-MM-DD。紀元前は -259 か \"-0259-01-01\"）が要ります")
+        from .years import parse_date
+        try:
+            parse_date(v["born"])
+            if v.get("died") not in (None, ""):
+                parse_date(v["died"], end=True)
+        except ValueError as e:
+            raise ScriptError(f"people の {name}: {e}") from None
+        people[str(name)] = {"born": str(v["born"]), "died": str(v.get("died", "")),
+                             "match": [str(name)] + [str(m) for m in v.get("match", [])]}
     return Script(
         title=str(data.get("title", "")), series=str(data.get("series", "")),
         timeline_start=timeline.get("start"), timeline_end=timeline.get("end"), events=events,
         sections=sections, lines=lines, shorts=shorts_meta, path=path,
+        next=dict(data.get("next") or {}), people=people, thumbnail=dict(data.get("thumbnail") or {}),
+        tags=[str(t) for t in (data.get("tags") or [])],
+        look={k: bool(data[k]) for k in LOOK_KEYS if k in data},
+        playlists=_names(data["playlists"]) if "playlists" in data else _names(data.get("series")),
+        shorts_playlists=_names(data.get("shorts_playlists")),
+        en=_english(data.get("en"), len(sections)),
     )
+
+
+def _names(v) -> list[str]:
+    """再生リストの名前の並び。1つなら文字列で書いてもよい。空・null は入れない。"""
+    if v is None or v == "":
+        return []
+    items = [v] if isinstance(v, str) else list(v)
+    out = [str(x).strip() for x in items if str(x or "").strip()]
+    long = [x for x in out if len(x) > 150]
+    if long:
+        raise ScriptError(f"再生リストの名前は150字までです: {long}")
+    return list(dict.fromkeys(out))
+
+
+def _english(v, n_sections: int) -> dict:
+    """en: {title, description, chapters}。章の題は節と同じ数（時刻は日本語の概要欄の目次から取る）。"""
+    if not v:
+        return {}
+    if not isinstance(v, dict) or not str(v.get("title", "")).strip():
+        raise ScriptError("en: には title（英語の題名）が要ります")
+    out = {"title": str(v["title"]).strip(), "description": str(v.get("description", "")).strip(),
+           "chapters": [str(c).strip() for c in (v.get("chapters") or [])]}
+    if len(out["title"]) > 100:
+        raise ScriptError(f"en.title は100字までです（{len(out['title'])}字）")
+    if any(c in out["title"] + out["description"] for c in "<>"):
+        raise ScriptError("en の題名・説明に < > は使えません（YouTube が受け付けない）")
+    if out["chapters"] and len(out["chapters"]) != n_sections:
+        raise ScriptError(f"en.chapters は節と同じ数にします（節 {n_sections}・章 {len(out['chapters'])}）")
+    return out
 
 
 def load(path: str | Path) -> Script:
     path = Path(path)
     with path.open(encoding="utf-8") as f:
-        return parse(yaml.safe_load(f), path)
+        data = yaml.safe_load(f)
+    gfile = path.resolve().parent.parent / "terms.yaml"       # scripts/ の隣
+    glossary = {}
+    if gfile.exists():
+        glossary = {str(k): str(v) for k, v in (yaml.safe_load(gfile.read_text(encoding="utf-8")) or {}).items()}
+    pfile = path.resolve().parent.parent / "places.yaml"
+    places = {}
+    if pfile.exists():
+        places = {str(k): (float(v[0]), float(v[1]))
+                  for k, v in (yaml.safe_load(pfile.read_text(encoding="utf-8")) or {}).items()}
+    return parse(data, path, glossary, places)
 
 
 def digest(path: str | Path) -> str:
     """台本ファイルの中身のハッシュ。承認（approve）はこの値に対して出す。"""
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+
+def person_of(people: dict, pic) -> str | None:
+    """肖像の人物。who があればそれ、無ければ caption の名前（「（」より前）が人物名か別名で終わるもの。"""
+    if pic is None or not getattr(pic, "age", True):
+        return None
+    if pic.who:
+        return pic.who if pic.who in people else None
+    name = pic.caption.partition("（")[0].strip()
+    for person, v in people.items():
+        if any(name == m or name.endswith(m) for m in v["match"]):
+            return person
+    return None
+
+
+def age_at(info: dict, year: int | None, card=None) -> int | None:
+    """その場面の年での満年齢。月は、同じ年の札（「1774年5月」「紀元前210年7月」など）があればそれを使い、無ければ年の半ば（7月1日）とみなす。
+    紀元前は負の年（0年は無いので、前259年生まれは前221年に38歳。chiso/years.py）。
+    生まれが年だけなら1月1日、亡くなったのが年だけなら12月31日とみなす。生まれる前・1歳未満・亡くなったあとは None。"""
+    from .years import astro, head_date, parse_date
+    if year is None:
+        return None
+    month, day = 7, 1
+    if card is not None:
+        d = head_date(card.head)
+        if d and d[0] == year and d[1]:
+            month, day = d[1], d[2] or 1
+    by, bm, bd = parse_date(info["born"])
+    y = astro(year)
+    if info.get("died"):
+        dy, dm, dd = parse_date(info["died"], end=True)
+        if (y, month, day) > (astro(dy), dm, dd):
+            return None
+    age = int(y - astro(by)) - (1 if (month, day) < (bm, bd) else 0)
+    return age if age >= 1 else None

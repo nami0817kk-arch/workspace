@@ -941,6 +941,9 @@ extension GameStateSeason on GameState {
     } else {
       lastDivisionChangeMessage = null;
     }
+    lastSeasonFinale = finalRank == 1
+        ? SeasonFinale.champion
+        : (newTier < playedTier ? SeasonFinale.promoted : SeasonFinale.none);
     _save!.currentDivisionTier = newTier;
     for (int tier = 1; tier <= totalDivisionTiers; tier++) {
       if (tier == newTier) {

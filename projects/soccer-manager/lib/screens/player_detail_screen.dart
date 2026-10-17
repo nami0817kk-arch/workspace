@@ -22,6 +22,7 @@ import '../widgets/growth_sparkline.dart';
 import '../widgets/player_face_avatar.dart';
 import '../widgets/stat_bar.dart';
 import '../l10n/tr.dart';
+import '../widgets/player_stat_chips.dart';
 
 class PlayerDetailScreen extends StatelessWidget {
   final String playerId;
@@ -304,9 +305,32 @@ class PlayerDetailScreen extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(
-                Tr.pick('総合力: ${p.overall}', 'Overall: ${p.overall}'),
-                style: Theme.of(context).textTheme.titleLarge,
+              // この画面の主役の数字。明朝の titleLarge に「総合力: 78」と
+              // 書いていた頃は、見出しの一部に見えて目が止まらなかった。
+              // 見出しを小さく上に置き、数字を大きく太く出す。
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    Tr.pick('総合力', 'Overall'),
+                    style: TextStyle(
+                        fontSize: 11,
+                        color: SemanticColors.subtleText(context)),
+                  ),
+                  Text(
+                    '${p.overall}',
+                    style: TextStyle(
+                      fontFamily: 'NotoSansJP',
+                      fontSize: 34,
+                      fontWeight: FontWeight.w800,
+                      height: 1.05,
+                      letterSpacing: -1,
+                      color: OverallBadge.colorFor(context, p.overall),
+                      fontFeatures: const [FontFeature.tabularFigures()],
+                    ),
+                  ),
+                ],
               ),
               if (latestGrowth != null && latestGrowth.overallDelta != 0) ...[
                 const SizedBox(width: 8),

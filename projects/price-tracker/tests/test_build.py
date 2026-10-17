@@ -852,3 +852,49 @@ class 下位のジャンルTest(unittest.TestCase):
             subs=[("季節・空調家電", 608, "genre/562637/208375/")])
 
         self.assertIn('href="../../../genre/562637/208375/"', html)
+
+
+class ジャンル索引の深さTest(unittest.TestCase):
+    """中分類（126枚）への入口がジャンルページの中にしか無く、トップからは
+    2クリック先にあった。`/genre/` に集めると1段縮み、その奥の商品ページまでの
+    深さも全部1段縮む。読み手が着けない場所にはクロールも届かない。
+    """
+
+    def test_ジャンル索引に中分類を出す(self):
+        from src import theme
+        html = theme.genre_index(
+            [{"genre_id": "562637", "name": "家電", "count": 2051,
+              "subs": [("季節・空調家電", 614, "genre/562637/502823/"),
+                       ("美容・健康家電", 488, "genre/562637/565105/")]}],
+            {"name": "テスト", "base_url": "https://e.dev"},
+            "https://e.dev/genre/", "2026-10-03", prefix="../")
+
+        self.assertIn("季節・空調家電", html)
+        self.assertIn("614", html)
+        self.assertIn('href="../genre/562637/502823/"', html)
+
+    def test_中分類が無いジャンルでも壊れない(self):
+        from src import theme
+        html = theme.genre_index(
+            [{"genre_id": "1", "name": "新しいジャンル", "count": 3}],
+            {"name": "テスト", "base_url": "https://e.dev"},
+            "https://e.dev/genre/", "2026-10-03", prefix="../")
+
+        self.assertIn("新しいジャンル", html)
+        self.assertNotIn("terms subs", html)
+
+
+class 同じ値段は同じ順位Test(unittest.TestCase):
+    """並べ替えの偶然で「9番目」「10番目」「11番目」と散ると、順位が何も
+    意味しなくなる（実測で、同じ2,980円の商品3件に別々の順位が付いていた）。
+    """
+
+    def test_同じ値段の商品は同じ順位になる(self):
+        prices = [1000, 2000, 2000, 2000, 3000]
+        rank_of = {}
+        for i, p in enumerate(sorted(prices), 1):
+            rank_of.setdefault(p, i)
+
+        self.assertEqual(rank_of[1000], 1)
+        self.assertEqual(rank_of[2000], 2)   # 2,3,4 ではなく 2
+        self.assertEqual(rank_of[3000], 5)   # 飛ばした分は戻さない

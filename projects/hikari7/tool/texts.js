@@ -74,7 +74,7 @@ function play(g, diff) {
     S.ap=0;afterTalk(S);if(S.phase==='interview'){__shot();applyInterview(S);}
     while(S.phase==='event'){__shot();resolveEvent(S,ri(0,2));__shot();nextEvent(S);}
     S.phase='show';__shot();if(S.show){S.show.seq=showSeq(S,'all');for(var q=0;q<S.show.seq.length;q++){S.show.pos=q;__shot();}}
-    S.phase='stage';if(ROUNDS[r].crit){S.phase='critique';applyCritique(S);}
+    S.phase='stage';if(ROUNDS[r].crit){S.phase='critique';alive(S).forEach(function(t){S.crit[t.id]=ri(0,CRIT.length-1);});__shot();applyCritique(S);__shot();}
     applyFeature(S);toNight(S);if(S.phase==='night'){__shot();nightSkip(S);S.phase='judge';}
     var B=alive(S),res=S.stage.res,n=ROUNDS[r].fin?Math.min(6,S.caps.finMax,B.length):capOf(S);
     B.sort(function(a,b){return res[b.id].sc-res[a.id].sc;}).slice(0,n).forEach(function(t){S.pass[t.id]=true;});

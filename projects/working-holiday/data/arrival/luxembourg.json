@@ -1,0 +1,89 @@
+{
+  "id": "luxembourg",
+  "steps": [
+    {
+      "title": "居住コミューンへの到着申告（déclaration d'arrivée）を行う",
+      "body": "ルクセンブルクに住居を定めた人は、居住するコミューン（commune）の住民課に到着申告を行う義務がある。身分証明書（パスポート）などを提示して申告すると、住民登録の手続きが行われる。住所変更時にも同様の届出が必要。",
+      "url": ""
+    },
+    {
+      "title": "就労する場合、社会保障（CCSS）への登録を確認する",
+      "body": "就労を始めると、雇用主が入社から8日以内に社会保障共通センター（CCSS）へ従業員の登録宣言を行う義務がある。この登録により、13桁の社会保障番号（matricule、国民識別番号）が発行される。登録状況は本人も確認できる。",
+      "url": "https://guichet.public.lu/fr/entreprises/ressources-humaines/securite-sociale/declaration-entree.html"
+    },
+    {
+      "title": "納税者番号を確認する",
+      "body": "就労して所得を得る場合、税務当局（Administration des contributions directes、ACD）が納税者番号（numéro d'identification fiscale）を割り当てる。この番号は所得申告や年間の納税義務の手続きに必要になる。",
+      "url": "https://impotsdirects.public.lu/fr/salpens/fiche/date_naiss.html"
+    },
+    {
+      "title": "在留届を提出する",
+      "body": "3か月以上海外に滞在する場合、外務省の在留届オンラインサービス（ORRネット）から住所や連絡先を届け出る。緊急時の安否確認や在ルクセンブルク日本国大使館からの情報提供に使われる。",
+      "url": "https://www.ezairyu.mofa.go.jp/"
+    },
+    {
+      "title": "基本口座（compte de paiement de base）を開設する",
+      "body": "EU域内に合法的に居住する消費者は誰でも、居住許可が無くても事実上退去できない状況にあれば、基本口座を開設する権利を持つ。取扱金融機関はBanque et Caisse d'Epargne de l'Etat、Banque Raiffeisen、BGL BNP Paribas、POST Luxembourgなど。申請から開設まで最大10営業日。",
+      "url": "https://www.cssf.lu/en/2024/06/press-release-relating-to-basic-payment-accounts/"
+    }
+  ],
+  "medical": {
+    "emergency": "112（消防・救急、休日当番医・当番薬局案内も兼ねる）、113（警察）",
+    "summary": "",
+    "hospitals": []
+  },
+  "jobs": {
+    "min_wage": "",
+    "min_wage_url": "",
+    "channels": [
+      {
+        "name": "ADEM JobBoard（雇用開発庁 Agence pour le développement de l'emploi の求人検索）",
+        "url": "https://adem.public.lu/fr/jobboard.html",
+        "note": "ルクセンブルク政府の雇用開発庁が運営する求人検索・応募サイト"
+      }
+    ],
+    "rules": [
+      "賃金は原則として雇用契約で自由に定められるが、雇用主は従業員の職業資格水準に応じた法定最低賃金（salaire social minimum、SSM）を下回ることはできない",
+      "有資格労働者向けのSSMは、無資格者向けの基本額から20％引き上げられる",
+      "17〜18歳は基本額の20％減、15〜17歳は25％減となる",
+      "SSMは物価指数の変動に応じて自動的に見直される（インデックス制度）"
+    ]
+  },
+  "sources": [
+    {
+      "title": "Déclaration d'entrée du salarié à la sécurité sociale - Guichet.lu",
+      "url": "https://guichet.public.lu/fr/entreprises/ressources-humaines/securite-sociale/declaration-entree.html",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Numéro d'identification nationale - Salarié et pensionné - Administration des contributions directes",
+      "url": "https://impotsdirects.public.lu/fr/salpens/fiche/date_naiss.html",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Salaire social minimum et indexation des salaires - Guichet.lu",
+      "url": "https://guichet.public.lu/fr/entreprises/ressources-humaines/remuneration/paiement-remunerations/salaire.html",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Press release relating to basic payment accounts - CSSF",
+      "url": "https://www.cssf.lu/en/2024/06/press-release-relating-to-basic-payment-accounts/",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "ADEM JobBoard",
+      "url": "https://adem.public.lu/fr/jobboard.html",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "ルクセンブルク 安全対策基礎データ 滞在時の留意事項・緊急連絡先 - 外務省海外安全ホームページ",
+      "url": "http://www.anzen.mofa.go.jp/m/mbemergencycontactnum_176.html",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "外務省 在留届（ORRネット）",
+      "url": "https://www.ezairyu.mofa.go.jp/",
+      "checked": "2026-10-05"
+    }
+  ]
+}

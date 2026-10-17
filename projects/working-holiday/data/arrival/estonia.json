@@ -1,0 +1,58 @@
+{
+  "id": "estonia",
+  "steps": [
+    {
+      "title": "ワーキング・ホリデー査証（D査証）で入国する",
+      "body": "日本とエストニアは2020年3月11日からワーキング・ホリデー制度を導入しており、有効な査証を所持していれば警察・国境警備局（PBGB）への就労の事前登録なしに働く権利が与えられる。申請条件は18歳以上30歳以下であること、入国日から主として1年間休暇を過ごす目的であること、往復航空券や当初の滞在資金があること、有効な医療・入院保険に加入していることなど。申請方法の詳細は在日エストニア大使館に確認する。",
+      "url": "https://tokyo.mfa.ee/ja/2364/"
+    },
+    {
+      "title": "短期就労の登録（雇用主が行う）を確認する",
+      "body": "エストニアで一時的に滞在しながら一定期間働く場合は「短期就労（lühiajaline töötamine）」として、雇用主が警察・国境警備局（PBGB）に登録する。査証なしまたは査証を使って入国し、雇用主がこの登録を行えば働くことができる。長期間の就労や短期就労の枠を超える場合は滞在許可（Residence Permit for employment）が必要になる。",
+      "url": "https://www.politsei.ee/en/instructions/working-in-estonia"
+    },
+    {
+      "title": "居住地登録を行い個人識別コード（isikukood）を取得する",
+      "body": "エストニアに居住する外国人は、居住する市区町村（Tallinnの場合は区政府）の住民登録窓口に居住地届（notice of residence）を提出して住所を登録する。これにより、銀行口座開設・保険加入・雇用登録などに必須の11桁の個人識別コード（isikukood）が付与される。申請は本人が窓口で行うか、必要書類を添えて郵送でも可能（自治体により手続きが異なる）。",
+      "url": "https://tartu.ee/en/isikukood-info"
+    },
+    {
+      "title": "在留届を提出する",
+      "body": "3か月以上海外に滞在する場合、外務省の在留届オンラインサービス（ORRネット）から住所や連絡先を届け出る。緊急時の安否確認や在エストニア日本国大使館からの情報提供に使われる。",
+      "url": "https://www.ezairyu.mofa.go.jp/"
+    }
+  ],
+  "medical": {
+    "emergency": "112（警察・消防・救急共通の緊急通報番号）",
+    "summary": "エストニアは旧ソ連諸国の中では衛生・医療面で最もよく整備された国のひとつで、医師の多くは英語を話すとされる。医療機関の衛生環境・医療水準・設備は通常の診療にはほぼ問題なく対応できる水準だが、日本や西欧諸国のような最新設備は期待できず、高度な治療が必要な場合はヘルシンキなど国外へ移送となることもある。医療費は高額になりうるため、充分な補償額の海外旅行傷害保険への加入が勧められる。公的救急車を呼ぶと規模の大きい公立病院に搬送される。",
+    "hospitals": []
+  },
+  "jobs": {
+    "min_wage": "法定最低賃金 月額946ユーロ・時給5.67ユーロ（2026年4月1日適用開始。2026年1月〜3月は月886ユーロ・時給5.31ユーロ）",
+    "min_wage_url": "https://www.riigiteataja.ee/akt/124032026005",
+    "channels": [
+      {
+        "name": "Töötukassa（エストニア失業保険基金の求人検索）",
+        "url": "https://www.tootukassa.ee/en/toootsijale/toootsing",
+        "note": "エストニア政府の公的雇用機関が運営する求人検索サイト。合法的にエストニアに居住していれば利用できる"
+      }
+    ],
+    "rules": [
+      "ワーキング・ホリデー査証（D査証）があれば、警察・国境警備局への就労の事前登録なしに働くことができる",
+      "それ以外の短期就労は雇用主が警察・国境警備局（PBGB）に登録する必要がある",
+      "短期就労の期間を超えて長期間働く場合は、滞在許可（Residence Permit for employment）の取得が必要",
+      "最低賃金（töötasu alammäär）は社会的パートナー（経営者団体・労働組合）の合意に基づき政府規則で毎年定められる"
+    ]
+  },
+  "sources": [
+    {"title": "ワーキング・ホリデー制度導入について - Embassy of Estonia in Tokyo", "url": "https://tokyo.mfa.ee/ja/2364/", "checked": "2026-10-05"},
+    {"title": "Working in Estonia - Police and Border Guard Board", "url": "https://www.politsei.ee/en/instructions/working-in-estonia", "checked": "2026-10-05"},
+    {"title": "Residence permit for employment - Police and Border Guard Board", "url": "https://www.politsei.ee/en/instructions/residence-permit-for-employment", "checked": "2026-10-05"},
+    {"title": "Personal identification code - Tartu City Government", "url": "https://tartu.ee/en/isikukood-info", "checked": "2026-10-05"},
+    {"title": "外務省 在留届（ORRネット）", "url": "https://www.ezairyu.mofa.go.jp/", "checked": "2026-10-05"},
+    {"title": "エストニア｜外務省 世界の医療事情", "url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/estonia.html", "checked": "2026-10-05"},
+    {"title": "Emergency number 112 - Police and Border Guard Board", "url": "https://www.politsei.ee/en/emergency-number-112", "checked": "2026-10-05"},
+    {"title": "Töötasu alammäära kehtestamine - Riigi Teataja", "url": "https://www.riigiteataja.ee/akt/124032026005", "checked": "2026-10-05"},
+    {"title": "Töötukassa job search", "url": "https://www.tootukassa.ee/en/toootsijale/toootsing", "checked": "2026-10-05"}
+  ]
+}

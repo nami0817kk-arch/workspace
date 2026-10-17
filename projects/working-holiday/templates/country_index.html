@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% from "_macros.html" import quota with context %}
+{% block title %}ワーホリに行ける国の一覧（32か国・地域）｜{{ SITE_NAME }}{% endblock %}
+{% block description %}日本とワーキング・ホリデー制度がある32か国・地域を、地域別に一覧にしました。年間発給枠つき。国を選ぶと、年齢・期間・費用・必要な資金・申請方法が見られます。{% endblock %}
+{% block content %}
+<nav class="crumbs" aria-label="パンくず"><a href="../index.html">トップ</a> › <span aria-current="page">国から探す</span></nav>
+<h1>ワーホリに行ける国・地域の一覧</h1>
+<p class="lead">{{ mofa.source.as_of }}現在、日本とワーキング・ホリデー制度がある国・地域は{{ mofa.countries|length }}です（外務省）。</p>
+{% for region, list in by_region %}
+<h2><a href="../region/{{ {"オセアニア": "oceania", "北米": "north-america", "アジア": "asia", "ヨーロッパ": "europe", "中南米": "latin-america"}[region] }}.html">{{ region }}（{{ list|length }}）</a></h2>
+<ul class="grid">
+  {% for c in list %}<li><a href="{{ c.id }}.html">{{ c.name }}<span class="quota">{{ quota(c) }}・{{ c.since }}年〜</span></a></li>{% endfor %}
+</ul>
+{% endfor %}
+<p class="small muted">出典: <a href="{{ mofa.source.url }}" rel="noopener">{{ mofa.source.title }}</a></p>
+{% endblock %}

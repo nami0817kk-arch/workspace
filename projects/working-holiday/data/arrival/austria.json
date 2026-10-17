@@ -1,0 +1,114 @@
+{
+  "id": "austria",
+  "steps": [
+    {
+      "title": "住所登録（Meldezettel／Anmeldung）を行う",
+      "body": "オーストリアに住居を定めた場合、入居から3日以内に管轄の登録当局（Meldebehörde、市区町村の役所）で住所登録を行う義務がある。登録を怠ると最大726ユーロ（繰り返すと最大2,180ユーロ）の罰金が科される。登録証（Meldebestätigung）は銀行口座開設など他の手続きにも必要になる。",
+      "url": "https://www.oesterreich.gv.at/de/themen/bauen_und_wohnen/umzug/2/1/Seite.180657"
+    },
+    {
+      "title": "社会保険番号（Sozialversicherungsnummer）とe-cardを確認する",
+      "body": "オーストリアで就労を始めると、雇用主が社会保険に加入手続きを行い、その時点からオーストリアの社会保険番号が発行される。雇用主はこの番号を本人に知らせる義務がある。e-card（医療機関受診用カード）は健康保険の加入があり本人の顔写真データが揃い次第、保険者から郵送される。",
+      "url": "https://www.sozialversicherung.gv.at/cdscontent/?contentid=10007.678576"
+    },
+    {
+      "title": "基本口座（Basiskonto）を開設する",
+      "body": "EU域内に合法的に滞在する人は誰でも、定住所がなくても基本口座（Basiskonto）を開設する権利を持つ。必要なのは公的な顔写真付き身分証明書で、開設には申請から最大10営業日かかる。年間費用は原則83.45ユーロ以下。",
+      "url": "https://www.fma.gv.at/konto/basiskonto/"
+    },
+    {
+      "title": "在留届を提出する",
+      "body": "3か月以上海外に滞在する場合、外務省の在留届オンラインサービス（ORRネット）から住所や連絡先を届け出る。緊急時の安否確認や在オーストリア日本国大使館からの情報提供に使われる。",
+      "url": "https://www.ezairyu.mofa.go.jp/"
+    }
+  ],
+  "medical": {
+    "emergency": "144（救急）、112（EU共通緊急通報番号）、133（警察）、122（消防）",
+    "summary": "オーストリアの医療水準は高く、衛生状況も良好で水道水はそのまま飲用できる。医師は英語に対応できる場合が多いが、医療従事者によってはドイツ語が必要になることもある。短期滞在でも治療費が高額になりやすいため、海外旅行傷害保険への加入が推奨される。保険未加入での救急車利用はウィーン市内で790ユーロ（2024年10月時点）かかる。",
+    "hospitals": [
+      {
+        "name": "Dr.矢本クリニック（Dr. Miki Sorz-Yamoto）",
+        "city": "ウィーン",
+        "japanese": "完全予約制。旅行者は旅行保険経由のみ対応",
+        "url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/austria.html"
+      },
+      {
+        "name": "Zentrum NOSOMI（望）",
+        "city": "ウィーン",
+        "japanese": "一般医。漢方・鍼灸も併用、予約必須",
+        "url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/austria.html"
+      },
+      {
+        "name": "岡本一郎教授皮膚科クリニック",
+        "city": "ウィーン",
+        "japanese": "皮膚疾患専門、予約制",
+        "url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/austria.html"
+      }
+    ]
+  },
+  "jobs": {
+    "min_wage": "",
+    "min_wage_url": "https://www.sozialministerium.gv.at/Themen/Arbeit/Arbeitsrecht/Entlohnung/Mindestlohn-in-OE.html",
+    "channels": [
+      {
+        "name": "eJob-Room（AMS＝公共職業安定所 Arbeitsmarktservice の求人検索）",
+        "url": "https://jobroom.ams.or.at/jobroom/login_as.jsp",
+        "note": "オーストリア政府の公共職業安定所が運営する求人検索・応募サイト。無料で利用できる"
+      }
+    ],
+    "rules": [
+      "オーストリアには全労働者に適用される法定最低賃金制度は無い。業種ごとの労働協約（Kollektivvertrag）で最低賃金が定められ、約800の労働協約がおよそ95％の労働者をカバーする。多くの労働協約は年14回払いで最低1,700ユーロ以上を定めている（社会省の公式記載）。",
+      "法定最低賃金は無く、業種ごとの労働協約（Kollektivvertrag）が定める最低賃金を下回ることはできない",
+      "労働協約で定められた最低賃金は雇用契約や事業所協定でも引き下げられず、労働・社会裁判所で執行可能",
+      "銀行口座開設には住所登録（Meldezettel）の完了が前提となることが多い"
+    ],
+    "no_statutory": true
+  },
+  "sources": [
+    {
+      "title": "Checkliste Meldepflicht in Österreich für Drittstaatsangehörige - oesterreich.gv.at",
+      "url": "https://www.oesterreich.gv.at/de/themen/bauen_und_wohnen/umzug/2/1/Seite.180657",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Versicherungsnummer - Sozialversicherung.gv.at",
+      "url": "https://www.sozialversicherung.gv.at/cdscontent/?contentid=10007.678576",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Basiskonto - FMA Österreich",
+      "url": "https://www.fma.gv.at/konto/basiskonto/",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Mindestlohn in Österreich - Sozialministerium",
+      "url": "https://www.sozialministerium.gv.at/Themen/Arbeit/Arbeitsrecht/Entlohnung/Mindestlohn-in-OE.html",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "eJob-Room - AMS Österreich",
+      "url": "https://jobroom.ams.or.at/jobroom/login_as.jsp",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "オーストリア｜外務省 世界の医療事情",
+      "url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/austria.html",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "オーストリアの渡航滞在にあたって - 在オーストリア日本国大使館",
+      "url": "https://www.at.emb-japan.go.jp/itpr_ja/tokotaizai.html",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Notrufnummern - oesterreich.gv.at",
+      "url": "https://www.oesterreich.gv.at/en/themen/notfaelle_unfaelle_und_kriminalitaet/notrufnummern",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "外務省 在留届（ORRネット）",
+      "url": "https://www.ezairyu.mofa.go.jp/",
+      "checked": "2026-10-05"
+    }
+  ]
+}

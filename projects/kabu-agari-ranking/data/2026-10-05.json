@@ -1,0 +1,764 @@
+{
+  "rec_date": "2026-10-05",
+  "stop_high": [
+    {
+      "rank": 1,
+      "code": "4884",
+      "name": "クリングル",
+      "close": 564.0,
+      "change_pct": 16.53,
+      "at_limit": true
+    },
+    {
+      "rank": 2,
+      "code": "4073",
+      "name": "ジィ・シィ",
+      "close": 780.0,
+      "change_pct": 14.2,
+      "at_limit": false
+    },
+    {
+      "rank": 3,
+      "code": "3634",
+      "name": "ソケッツ",
+      "close": 738.0,
+      "change_pct": 5.73,
+      "at_limit": false
+    },
+    {
+      "rank": 4,
+      "code": "476A",
+      "name": "辻本郷ＩＴＣ",
+      "close": 2520.0,
+      "change_pct": -1.56,
+      "at_limit": false
+    }
+  ],
+  "stop_low": [],
+  "gainers": [
+    {
+      "rank": 1,
+      "code": "3260",
+      "name": "エスポア",
+      "close": 40.0,
+      "change_pct": 17.65,
+      "metric_value": 1271900
+    },
+    {
+      "rank": 2,
+      "code": "4884",
+      "name": "クリングル",
+      "close": 564.0,
+      "change_pct": 16.53,
+      "metric_value": 688600
+    },
+    {
+      "rank": 3,
+      "code": "2467",
+      "name": "ＶＬＣセキュ",
+      "close": 237.0,
+      "change_pct": 16.18,
+      "metric_value": 799000
+    },
+    {
+      "rank": 4,
+      "code": "6664",
+      "name": "オプトエレ",
+      "close": 274.0,
+      "change_pct": 16.1,
+      "metric_value": 874200
+    },
+    {
+      "rank": 5,
+      "code": "593A",
+      "name": "ティアフォー",
+      "close": 2193.0,
+      "change_pct": 15.36,
+      "metric_value": 41287500
+    },
+    {
+      "rank": 6,
+      "code": "275A",
+      "name": "ハンワＨ",
+      "close": 405.0,
+      "change_pct": 14.73,
+      "metric_value": 12500
+    },
+    {
+      "rank": 7,
+      "code": "4073",
+      "name": "ジィ・シィ",
+      "close": 780.0,
+      "change_pct": 14.2,
+      "metric_value": 917500
+    },
+    {
+      "rank": 8,
+      "code": "6085",
+      "name": "アーキテクツ",
+      "close": 115.0,
+      "change_pct": 12.75,
+      "metric_value": 13957200
+    },
+    {
+      "rank": 9,
+      "code": "153A",
+      "name": "カウリス",
+      "close": 1713.0,
+      "change_pct": 10.95,
+      "metric_value": 1097200
+    },
+    {
+      "rank": 10,
+      "code": "196A",
+      "name": "ＭＦＳ",
+      "close": 363.0,
+      "change_pct": 10.33,
+      "metric_value": 206400
+    },
+    {
+      "rank": 11,
+      "code": "7089",
+      "name": "フォースタ",
+      "close": 1542.0,
+      "change_pct": 9.67,
+      "metric_value": 230500
+    },
+    {
+      "rank": 12,
+      "code": "8746",
+      "name": "ｕｎｂａｎｋ",
+      "close": 125.0,
+      "change_pct": 9.65,
+      "metric_value": 3479400
+    },
+    {
+      "rank": 13,
+      "code": "4461",
+      "name": "一工薬",
+      "close": 16220.0,
+      "change_pct": 9.23,
+      "metric_value": 221500
+    },
+    {
+      "rank": 14,
+      "code": "4477",
+      "name": "ＢＡＳＥ",
+      "close": 404.0,
+      "change_pct": 9.19,
+      "metric_value": 9147400
+    },
+    {
+      "rank": 15,
+      "code": "6832",
+      "name": "アオイ電子",
+      "close": 2749.0,
+      "change_pct": 8.91,
+      "metric_value": 69500
+    },
+    {
+      "rank": 16,
+      "code": "6866",
+      "name": "ＨＩＯＫＩ",
+      "close": 11810.0,
+      "change_pct": 8.55,
+      "metric_value": 78900
+    },
+    {
+      "rank": 17,
+      "code": "4588",
+      "name": "オンコリス",
+      "close": 6490.0,
+      "change_pct": 8.53,
+      "metric_value": 1470900
+    },
+    {
+      "rank": 18,
+      "code": "6723",
+      "name": "ルネサス",
+      "close": 3862.0,
+      "change_pct": 8.03,
+      "metric_value": 18812000
+    },
+    {
+      "rank": 19,
+      "code": "6762",
+      "name": "ＴＤＫ",
+      "close": 3447.0,
+      "change_pct": 7.79,
+      "metric_value": 22431900
+    },
+    {
+      "rank": 20,
+      "code": "4968",
+      "name": "荒川化",
+      "close": 2500.0,
+      "change_pct": 7.76,
+      "metric_value": 270700
+    },
+    {
+      "rank": 21,
+      "code": "7806",
+      "name": "ＭＴＧ",
+      "close": 9240.0,
+      "change_pct": 7.44,
+      "metric_value": 248600
+    },
+    {
+      "rank": 22,
+      "code": "4493",
+      "name": "サイバーセキ",
+      "close": 2118.0,
+      "change_pct": 7.35,
+      "metric_value": 745300
+    },
+    {
+      "rank": 23,
+      "code": "3692",
+      "name": "ＦＦＲＩ",
+      "close": 8150.0,
+      "change_pct": 7.24,
+      "metric_value": 556400
+    },
+    {
+      "rank": 24,
+      "code": "4099",
+      "name": "四国化ＨＤ",
+      "close": 2519.0,
+      "change_pct": 7.24,
+      "metric_value": 1147500
+    },
+    {
+      "rank": 25,
+      "code": "4616",
+      "name": "川上塗",
+      "close": 2925.0,
+      "change_pct": 7.1,
+      "metric_value": 10100
+    },
+    {
+      "rank": 26,
+      "code": "6336",
+      "name": "石井表記",
+      "close": 1728.0,
+      "change_pct": 7.06,
+      "metric_value": 215600
+    },
+    {
+      "rank": 27,
+      "code": "4973",
+      "name": "日本高純度",
+      "close": 5100.0,
+      "change_pct": 6.81,
+      "metric_value": 184500
+    },
+    {
+      "rank": 28,
+      "code": "6323",
+      "name": "ローツェ",
+      "close": 4495.0,
+      "change_pct": 6.57,
+      "metric_value": 2394000
+    },
+    {
+      "rank": 29,
+      "code": "6391",
+      "name": "加地テック",
+      "close": 5130.0,
+      "change_pct": 6.54,
+      "metric_value": 10500
+    },
+    {
+      "rank": 30,
+      "code": "7717",
+      "name": "Ｖテク",
+      "close": 6950.0,
+      "change_pct": 6.43,
+      "metric_value": 300600
+    }
+  ],
+  "losers": [
+    {
+      "rank": 1,
+      "code": "8798",
+      "name": "Ａクリエイト",
+      "close": 71.0,
+      "change_pct": -19.32,
+      "metric_value": 1558100
+    },
+    {
+      "rank": 2,
+      "code": "5076",
+      "name": "インフロニア",
+      "close": 2330.0,
+      "change_pct": -13.56,
+      "metric_value": 10031800
+    },
+    {
+      "rank": 3,
+      "code": "1401",
+      "name": "エムビーエス",
+      "close": 1500.0,
+      "change_pct": -13.54,
+      "metric_value": 154000
+    },
+    {
+      "rank": 4,
+      "code": "634A",
+      "name": "レイヤード",
+      "close": 2756.0,
+      "change_pct": -12.51,
+      "metric_value": 2448200
+    },
+    {
+      "rank": 5,
+      "code": "3133",
+      "name": "海帆",
+      "close": 35.0,
+      "change_pct": -12.5,
+      "metric_value": 2758200
+    },
+    {
+      "rank": 6,
+      "code": "4394",
+      "name": "エクスＭ",
+      "close": 728.0,
+      "change_pct": -9.0,
+      "metric_value": 236100
+    },
+    {
+      "rank": 7,
+      "code": "1783",
+      "name": "ファンタジス",
+      "close": 73.0,
+      "change_pct": -8.75,
+      "metric_value": 4005200
+    },
+    {
+      "rank": 8,
+      "code": "9632",
+      "name": "スバル",
+      "close": 4650.0,
+      "change_pct": -7.92,
+      "metric_value": 257200
+    },
+    {
+      "rank": 9,
+      "code": "9399",
+      "name": "ビート",
+      "close": 12.0,
+      "change_pct": -7.69,
+      "metric_value": 7229960
+    },
+    {
+      "rank": 10,
+      "code": "7957",
+      "name": "フジコピアン",
+      "close": 2063.0,
+      "change_pct": -7.11,
+      "metric_value": 399000
+    },
+    {
+      "rank": 11,
+      "code": "8105",
+      "name": "ＢＴＣＪＰＮ",
+      "close": 68.0,
+      "change_pct": -6.85,
+      "metric_value": 2881700
+    },
+    {
+      "rank": 12,
+      "code": "4833",
+      "name": "Ｄｅｆコン",
+      "close": 55.0,
+      "change_pct": -6.78,
+      "metric_value": 2322900
+    },
+    {
+      "rank": 13,
+      "code": "3672",
+      "name": "オルトＰＨＤ",
+      "close": 28.0,
+      "change_pct": -6.67,
+      "metric_value": 142000
+    },
+    {
+      "rank": 14,
+      "code": "4935",
+      "name": "リベルタ",
+      "close": 224.0,
+      "change_pct": -6.67,
+      "metric_value": 3223100
+    },
+    {
+      "rank": 15,
+      "code": "3024",
+      "name": "クリエイト",
+      "close": 1121.0,
+      "change_pct": -6.19,
+      "metric_value": 2700
+    },
+    {
+      "rank": 16,
+      "code": "519A",
+      "name": "ベーシック",
+      "close": 415.0,
+      "change_pct": -6.11,
+      "metric_value": 61900
+    },
+    {
+      "rank": 17,
+      "code": "142A",
+      "name": "ジンジブ",
+      "close": 1009.0,
+      "change_pct": -5.7,
+      "metric_value": 37100
+    },
+    {
+      "rank": 18,
+      "code": "402A",
+      "name": "アクセルＨＤ",
+      "close": 303.0,
+      "change_pct": -5.61,
+      "metric_value": 4284000
+    },
+    {
+      "rank": 19,
+      "code": "4976",
+      "name": "東洋ドライ",
+      "close": 1527.0,
+      "change_pct": -5.57,
+      "metric_value": 4900
+    },
+    {
+      "rank": 20,
+      "code": "5243",
+      "name": "ノート",
+      "close": 3880.0,
+      "change_pct": -5.37,
+      "metric_value": 602400
+    },
+    {
+      "rank": 21,
+      "code": "4060",
+      "name": "ｒａｋｕｍｏ",
+      "close": 1129.0,
+      "change_pct": -5.36,
+      "metric_value": 10400
+    },
+    {
+      "rank": 22,
+      "code": "6392",
+      "name": "ヤマダコーポ",
+      "close": 7450.0,
+      "change_pct": -5.34,
+      "metric_value": 1400
+    },
+    {
+      "rank": 23,
+      "code": "460A",
+      "name": "ＢＲＡＮＵ",
+      "close": 1160.0,
+      "change_pct": -5.31,
+      "metric_value": 87000
+    },
+    {
+      "rank": 24,
+      "code": "475A",
+      "name": "ギミック",
+      "close": 644.0,
+      "change_pct": -5.29,
+      "metric_value": 17500
+    },
+    {
+      "rank": 25,
+      "code": "7847",
+      "name": "グラファイト",
+      "close": 736.0,
+      "change_pct": -5.28,
+      "metric_value": 189600
+    },
+    {
+      "rank": 26,
+      "code": "5588",
+      "name": "ファーストＡ",
+      "close": 711.0,
+      "change_pct": -5.2,
+      "metric_value": 218900
+    },
+    {
+      "rank": 27,
+      "code": "4475",
+      "name": "ＨＥＮＮＧＥ",
+      "close": 1671.0,
+      "change_pct": -5.06,
+      "metric_value": 2401800
+    },
+    {
+      "rank": 28,
+      "code": "377A",
+      "name": "ＡＩＧＨＤ",
+      "close": 1130.0,
+      "change_pct": -4.96,
+      "metric_value": 3600
+    },
+    {
+      "rank": 29,
+      "code": "3192",
+      "name": "白鳩",
+      "close": 211.0,
+      "change_pct": -4.95,
+      "metric_value": 89500
+    },
+    {
+      "rank": 30,
+      "code": "4564",
+      "name": "オンコセラピ",
+      "close": 20.0,
+      "change_pct": -4.76,
+      "metric_value": 249549700
+    }
+  ],
+  "active": [
+    {
+      "rank": 1,
+      "code": "9984",
+      "name": "ＳＢＧ",
+      "close": 6497.0,
+      "change_pct": 2.96,
+      "metric_value": 111231
+    },
+    {
+      "rank": 2,
+      "code": "593A",
+      "name": "ティアフォー",
+      "close": 2193.0,
+      "change_pct": 15.36,
+      "metric_value": 108872
+    },
+    {
+      "rank": 3,
+      "code": "285A",
+      "name": "キオクシア",
+      "close": 19120.0,
+      "change_pct": -0.93,
+      "metric_value": 84452
+    },
+    {
+      "rank": 4,
+      "code": "6981",
+      "name": "村田製",
+      "close": 8745.0,
+      "change_pct": 3.28,
+      "metric_value": 80241
+    },
+    {
+      "rank": 5,
+      "code": "5803",
+      "name": "フジクラ",
+      "close": 5566.0,
+      "change_pct": -0.57,
+      "metric_value": 73139
+    },
+    {
+      "rank": 6,
+      "code": "8766",
+      "name": "東京海上",
+      "close": 509.5,
+      "change_pct": 0.41,
+      "metric_value": 60666
+    },
+    {
+      "rank": 7,
+      "code": "5801",
+      "name": "古河電",
+      "close": 4378.0,
+      "change_pct": -1.15,
+      "metric_value": 52335
+    },
+    {
+      "rank": 8,
+      "code": "6976",
+      "name": "太陽誘電",
+      "close": 10490.0,
+      "change_pct": 3.91,
+      "metric_value": 51416
+    },
+    {
+      "rank": 9,
+      "code": "5706",
+      "name": "三井金属",
+      "close": 2647.5,
+      "change_pct": 3.68,
+      "metric_value": 50974
+    },
+    {
+      "rank": 10,
+      "code": "6857",
+      "name": "アドテスト",
+      "close": 40300.0,
+      "change_pct": 4.32,
+      "metric_value": 50845
+    },
+    {
+      "rank": 11,
+      "code": "4062",
+      "name": "イビデン",
+      "close": 12265.0,
+      "change_pct": 1.36,
+      "metric_value": 39188
+    },
+    {
+      "rank": 12,
+      "code": "336A",
+      "name": "ダイナマップ",
+      "close": 1648.0,
+      "change_pct": 1.67,
+      "metric_value": 35336
+    },
+    {
+      "rank": 13,
+      "code": "6723",
+      "name": "ルネサス",
+      "close": 3862.0,
+      "change_pct": 8.03,
+      "metric_value": 33088
+    },
+    {
+      "rank": 14,
+      "code": "5802",
+      "name": "住友電",
+      "close": 2466.0,
+      "change_pct": 0.57,
+      "metric_value": 30613
+    },
+    {
+      "rank": 15,
+      "code": "6762",
+      "name": "ＴＤＫ",
+      "close": 3447.0,
+      "change_pct": 7.79,
+      "metric_value": 30589
+    },
+    {
+      "rank": 16,
+      "code": "8035",
+      "name": "東エレク",
+      "close": 12765.0,
+      "change_pct": 5.5,
+      "metric_value": 28231
+    },
+    {
+      "rank": 17,
+      "code": "3436",
+      "name": "ＳＵＭＣＯ",
+      "close": 3647.0,
+      "change_pct": 1.64,
+      "metric_value": 27923
+    },
+    {
+      "rank": 18,
+      "code": "627A",
+      "name": "アキッパ",
+      "close": 1691.0,
+      "change_pct": -4.89,
+      "metric_value": 16775
+    },
+    {
+      "rank": 19,
+      "code": "625A",
+      "name": "スカイフォル",
+      "close": 1775.0,
+      "change_pct": 3.74,
+      "metric_value": 15311
+    },
+    {
+      "rank": 20,
+      "code": "646A",
+      "name": "クラサス",
+      "close": 217.0,
+      "change_pct": 0.14,
+      "metric_value": 14530
+    },
+    {
+      "rank": 21,
+      "code": "4288",
+      "name": "アズジェント",
+      "close": 590.0,
+      "change_pct": 1.55,
+      "metric_value": 12536
+    },
+    {
+      "rank": 22,
+      "code": "634A",
+      "name": "レイヤード",
+      "close": 2756.0,
+      "change_pct": -12.51,
+      "metric_value": 11154
+    },
+    {
+      "rank": 23,
+      "code": "485A",
+      "name": "ＰｏｗｅｒＸ",
+      "close": 2191.0,
+      "change_pct": 2.96,
+      "metric_value": 11058
+    },
+    {
+      "rank": 24,
+      "code": "338A",
+      "name": "ゼンムテック",
+      "close": 4285.0,
+      "change_pct": 5.54,
+      "metric_value": 9749
+    },
+    {
+      "rank": 25,
+      "code": "3967",
+      "name": "エルテス",
+      "close": 800.0,
+      "change_pct": 3.49,
+      "metric_value": 8493
+    },
+    {
+      "rank": 26,
+      "code": "3905",
+      "name": "データセク",
+      "close": 1950.0,
+      "change_pct": -4.51,
+      "metric_value": 8115
+    },
+    {
+      "rank": 27,
+      "code": "6613",
+      "name": "ＱＤレーザ",
+      "close": 2265.0,
+      "change_pct": -1.26,
+      "metric_value": 7713
+    },
+    {
+      "rank": 28,
+      "code": "3103",
+      "name": "ユニチカ",
+      "close": 1498.0,
+      "change_pct": -0.13,
+      "metric_value": 7178
+    },
+    {
+      "rank": 29,
+      "code": "278A",
+      "name": "テラドローン",
+      "close": 9050.0,
+      "change_pct": -0.33,
+      "metric_value": 6738
+    },
+    {
+      "rank": 30,
+      "code": "153A",
+      "name": "カウリス",
+      "close": 1713.0,
+      "change_pct": 10.95,
+      "metric_value": 6201
+    }
+  ]
+}

@@ -8,6 +8,7 @@
 | 項目 | 内容 |
 |---|---|
 | アプリ名（正式） | サッカー経営マネージャー クラブ育成シミュレーション |
+| App Store のアプリID | 6809834913（アプリ内の「このアプリを評価する」がこのIDでページを開く） |
 | アプリ名（短縮・ホーム画面表示） | サカマネ |
 | カテゴリ | ゲーム > スポーツ / シミュレーション |
 | 対象年齢 | 全年齢（暴力表現・実写、ギャンブル要素なし。クラブ経営の「融資」「スポンサー契約」はすべて架空のゲーム内通貨） |
@@ -37,9 +38,17 @@
 
 ## 長い説明文（ストア掲載用）
 
+> **読まれるのは冒頭3行だけ。** その先は「もっと見る」を押さないと出ない。
+> ここに「本格サッカークラブ経営シミュレーション」とだけ書いていた頃は、
+> ジャンル名を名乗っているだけで、入れる理由になっていなかった。
+> **1行目に状況、2行目に何を決めるのか、3行目にどこまで行けるのか**を置く。
+> 説明文は検索順位には効かない（効くのはキーワード欄）ので、ここは
+> まるごと「入れてもらうための文」に使ってよい。
+
 ```
-弱小クラブのオーナー兼監督として、下部リーグからの成り上がりを目指す
-本格サッカークラブ経営シミュレーション。
+5部リーグの弱小クラブ。オーナー兼監督は、あなた一人。
+スタメンも、移籍も、クラブの金も、すべてあなたが決める。
+1部リーグの頂点まで勝ち上がる、本格サッカー経営シミュレーション。
 
 ■ クラブを育てる
 選手のトレーニング方針・強度を個別に設定し、メンター制度やピンポイント特訓で
@@ -86,6 +95,169 @@
 
 > **Android(Google Play)には出さない**(2026-09-26 決定)。以下に Play 向けの
 > 記述が残っているのは、出すことになったときのため。当面は iOS だけを見る。
+
+## このバージョンの新機能（1.1.8）
+
+**提出するのはこの版（ビルド13）。** 1.1.4〜1.1.7 はビルドだけ作って提出して
+いない。中身はすべてこの版に入っている。掲載画像も作り直してある。
+
+提出のときに一緒に入れるもの（1.1.7 の節と同じ）:
+- **プレビュー動画**（`marketing/preview/app_preview_{ja,en}.mp4`）を日本語・英語に
+- **掲載画像9枚×4組を差し替え**（画面を作り直したので、ja/en とも全部）
+- 日本語の説明文を差し替え
+
+### 日本語
+
+```
+・画面を一通り作り直しました。順位・勝点・総合力といった数字を大きく
+　見やすくし、どこを見ればよいかが分かる並びにしています
+・ホーム画面にクラブの色の見出しを置き、順位を大きく出しました
+・試合の途中経過を、左右に伸びるバーで見比べられるようにしました
+・順位表で自分のクラブの行が一目で分かるようにしました
+・選手一覧と移籍市場で、総合力や移籍金を札に分けて読みやすくしました
+・能力レーダーの軸の文字が、環境によっては表示されないことがあったのを
+　直しました
+・設定から、このアプリを評価できるようになりました
+・設定に、お問い合わせの窓口を置きました
+・タイトル画面に絵を入れました
+・リーグ優勝・昇格を決めたときに、その絵が出るようになりました
+・選手の似顔絵、ピッチ、クラブのエンブレム、実績の記章を描き直しました
+・シーズンの区切りで、評価のお願いを出すようにしました。理事会の目標を
+　達成したときだけで、何度も出ることはありません
+```
+
+### 英語
+
+```
+- The screens have been redesigned. Key numbers (position, points, overall)
+  are larger and easier to read.
+- The home screen now has a club-coloured header with your position in it.
+- Match stats are now a side-by-side comparison bar.
+- Your club's row now stands out in the league table.
+- Overall and fees are shown as chips in the squad and transfer lists.
+- Fixed the attribute radar labels not showing on some platforms.
+- You can now rate the app from Settings.
+- Settings now has a link to contact support.
+- The title screen now has artwork.
+- Winning the league or going up now has artwork of its own.
+- Player portraits, the pitch, club crests and achievement badges have all
+  been redrawn.
+- We now ask for a rating at the end of a season, and only when you have met
+  the board's target. It will not keep asking.
+```
+
+## このバージョンの新機能（1.1.7）
+
+**提出するのはこの版（ビルド12）。** 1.1.4〜1.1.6 はビルドを作っただけで
+提出していない。中身はすべてこの版に入っている。
+
+このとき一緒に入れるもの:
+
+- **プレビュー動画**（`marketing/preview/app_preview_{ja,en}.mp4`）を日本語・
+  英語それぞれにアップロードする。**いちばん大きな空き枠だった。**
+- **英語の掲載画像9枚を差し替える**（クラブ名が日本語のままだった）
+- 日本語の説明文を差し替える（冒頭3行を練り直した）
+
+### 日本語
+
+```
+・設定から、このアプリを評価できるようになりました
+・設定に、お問い合わせの窓口を置きました
+・タイトル画面に絵を入れました
+・リーグ優勝・昇格を決めたときに、その絵が出るようになりました
+・選手の似顔絵を描き直しました。首から上だけの平たい絵をやめ、
+　ユニフォームと陰影を入れています
+・ピッチの芝とラインを描き直しました。スタメン画面にゴールエリアや
+　ペナルティアークが入り、試合画面と見た目が揃いました
+・クラブのエンブレムに縁取りと立体感を入れました
+・実績に1件ずつの記章を付けました。これまでは33件すべて同じ絵でした
+・シーズンの区切りで、評価のお願いを出すようにしました。理事会の目標を
+　達成したときだけで、何度も出ることはありません
+```
+
+### 英語
+
+```
+- You can now rate the app from Settings.
+- Settings now has a link to contact support.
+- The title screen now has artwork.
+- Winning the league or going up now has artwork of its own.
+- Player portraits have been redrawn, with a shirt and proper shading
+  instead of a flat floating head.
+- The pitch has been redrawn. The lineup screen now has the goal areas and
+  penalty arcs, and matches the look of the match screen.
+- Club crests now have a border and some depth.
+- Every achievement has its own badge. They all used to share one icon.
+- We now ask for a rating at the end of a season, and only when you have met
+  the board's target. It will not keep asking.
+```
+
+## このバージョンの新機能（1.1.6）
+
+1.1.5 と同じ掲載画像で出せる（タイトル画面と演出は掲載画像に写らない）。
+**1.1.5 をまだ提出していなければ、この版に差し替えて1回で出す。**
+
+### 日本語
+
+```
+・タイトル画面に絵を入れました
+・リーグ優勝・昇格を決めたときに、その絵が出るようになりました
+・選手の似顔絵を描き直しました。首から上だけの平たい絵をやめ、
+　ユニフォームと陰影を入れています
+・ピッチの芝とラインを描き直しました。スタメン画面にゴールエリアや
+　ペナルティアークが入り、試合画面と見た目が揃いました
+・クラブのエンブレムに縁取りと立体感を入れました
+・実績に1件ずつの記章を付けました。これまでは33件すべて同じ絵でした
+・シーズンの区切りで、評価のお願いを出すようにしました。理事会の目標を
+　達成したときだけで、何度も出ることはありません
+```
+
+### 英語
+
+```
+- The title screen now has artwork.
+- Winning the league or going up now has artwork of its own.
+- Player portraits have been redrawn, with a shirt and proper shading
+  instead of a flat floating head.
+- The pitch has been redrawn. The lineup screen now has the goal areas and
+  penalty arcs, and matches the look of the match screen.
+- Club crests now have a border and some depth.
+- Every achievement has its own badge. They all used to share one icon.
+- We now ask for a rating at the end of a season, and only when you have met
+  the board's target. It will not keep asking.
+```
+
+## このバージョンの新機能（1.1.5）
+
+1.1.4 はビルドを作っただけで提出していない。掲載画像を差し替える版だったが、
+その直後にゲーム内の絵（似顔絵・ピッチ・エンブレム・実績の記章）を作り直した
+ため、1.1.4 の掲載画像では中身と見た目がずれる。**1本にまとめてこの版で出す。**
+
+### 日本語
+
+```
+・選手の似顔絵を描き直しました。首から上だけの平たい絵をやめ、
+　ユニフォームと陰影を入れています
+・ピッチの芝とラインを描き直しました。スタメン画面にゴールエリアや
+　ペナルティアークが入り、試合画面と見た目が揃いました
+・クラブのエンブレムに縁取りと立体感を入れました
+・実績に1件ずつの記章を付けました。これまでは33件すべて同じ絵でした
+・シーズンの区切りで、評価のお願いを出すようにしました。理事会の目標を
+　達成したときだけで、何度も出ることはありません
+```
+
+### 英語
+
+```
+- Player portraits have been redrawn, with a shirt and proper shading
+  instead of a flat floating head.
+- The pitch has been redrawn. The lineup screen now has the goal areas and
+  penalty arcs, and matches the look of the match screen.
+- Club crests now have a border and some depth.
+- Every achievement has its own badge. They all used to share one icon.
+- We now ask for a rating at the end of a season, and only when you have met
+  the board's target. It will not keep asking.
+```
 
 ## このバージョンの新機能（1.1.4）
 
@@ -392,6 +564,35 @@ iPad ぶんが要るのは、アプリが iPad でも動く設定になってい
 | `06_halftime.png` | ハーフタイム（檄・交代・戦術変更） | |
 | `07_scorers.png` | 得点・アシストランキング | |
 | `08_club.png` | クラブ施設・スタッフ | 能力と得意分野で人を選ぶ画面。スタッフを雇った状態で撮る（空席のままだと「就いている人がいない」の赤字だけが目立つ） |
+
+## プレビュー動画（App Preview）
+
+`marketing/preview/app_preview_ja.mp4` と `app_preview_en.mp4`（20秒・886x1920）。
+**検索結果でもページでも1枠目に出て、自動再生される。** ここが空のままだと、
+いちばん目立つ枠を静止画に使うことになる。
+
+```bash
+flutter test tool/preview/capture_frames_test.dart   # コマを書き出す
+python tool/preview/encode.py                        # 動画にまとめる
+```
+
+**撮った絵をつないでいるのではなく、動いているアプリをそのまま撮っている。**
+試合画面は時間で動くので、1コマ進めては書き出す、を繰り返すと実際の映像になる。
+App Preview は「アプリが動いている様子」であることを求められるので、静止画の
+紙芝居では出せない。試合以外の画面は自分では動かないため、ゆっくり送りながら撮る。
+
+守っている決まり（encode.py が検査する）:
+
+- 長さ 15〜30秒（いまは20秒）、H.264、500MB 以内（いまは約1.2MB）
+- iPhone 6.5インチ以上は 886x1920（縦）
+- `yuv420p`。外すと再生できない端末が出る
+- **無音でも音声トラックを1本入れる。** 音声トラックが無い動画が弾かれた事例がある
+
+踏んだ穴:
+- 20秒のうち10秒がハーフタイムの静止画だった。**止まった画面を何秒も映さない。**
+- 送り先に横並びの絞り込みを掴んで、一覧が横にずれた。**縦に動くものを選ぶ。**
+- 送った直後の未描画の状態を撮りにいって落ちた。**送ってから1コマ進めて撮る。**
+- 移籍ウィンドウを試合開始後に待とうとして固まった。**試合を始める前に開けておく。**
 
 フィーチャーグラフィック（Google Play 必須、1024x500）は
 `marketing/feature/feature_graphic.png`。背景の

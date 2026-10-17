@@ -1,0 +1,34 @@
+name: mojitsumi
+description: "もじつみ — ひらがな積み上げ ことばパズル"
+publish_to: 'none'
+
+# 版とビルド番号。App Store Connect は同じビルド番号を二度受け付けない
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.13.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+  shared_preferences: ^2.5.5
+  google_mobile_ads: ^9.1.0
+  in_app_review: ^2.0.10
+  in_app_purchase: ^3.3.1
+  in_app_purchase_storekit: ^0.4.13
+  url_launcher: ^6.3.2
+  share_plus: ^13.3.1
+  webview_flutter: ^4.13.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+  # ゲーム本体（試作をアプリ用に組み立てたもの）。tool/build_app_web.py が作る。手で直さない
+  assets:
+    - assets/web/index.html
+    - assets/licenses/
+    # BGM（tool/make_bgm.py）と台詞の声（tool/make_voice.py）。声は声ごとのフォルダ

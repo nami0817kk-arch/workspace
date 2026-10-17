@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon with context %}
+{% block title %}ワーホリの現地手続き早見表｜32か国の番号・登録の名前｜{{ SITE_NAME }}{% endblock %}
+{% block description %}ワーキング・ホリデーで着いてから行う手続きを32か国・地域で一覧に。TFN・SIN・National Insurance number・PPS・BSN・CPR・NIE など、国ごとの番号や登録の名前を公式情報からまとめました。{% endblock %}
+{% block content %}
+<nav class="crumbs" aria-label="パンくず"><a href="index.html">トップ</a> › <a href="genchi.html">現地に着いたら</a> › <span aria-current="page">手続き早見表</span></nav>
+<h1>現地での手続き早見表（32か国・地域）</h1>
+<p class="lead">国ごとに名前の違う「番号」や「登録」を、1つの表にまとめました。どの国でも、3か月以上いるなら日本大使館・総領事館への在留届も必要です（この表では省いています）。</p>
+<div class="table-wrap">
+<table>
+  <caption class="small muted" style="text-align:left;padding:0.5rem 0.7rem">着いてから行う公的な手続き（各国のページにくわしい説明と公式の案内へのリンクがあります）</caption>
+  <thead><tr><th scope="col">国・地域</th><th scope="col">手続き</th></tr></thead>
+  <tbody>
+  {% for c in countries if c.arrival %}
+  <tr>
+    <th scope="row" style="white-space:nowrap"><img class="flag" src="static/flags/{{ c.flag }}.svg" alt="" width="20" height="15"><a href="country/{{ c.id }}.html#genchi">{{ c.name }}</a></th>
+    <td><ul class="plain">{% for s in c.arrival.steps if "在留届" not in s.title %}<li>{{ icon(s.icon, 18) }} {{ s.title }}</li>{% endfor %}</ul></td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+<p class="small muted">出典: 各国のページに載せた公式ページ</p>
+{% endblock %}

@@ -14,6 +14,8 @@ class FakeAds implements AdService {
   bool rewardedReady = true;
   bool interstitialReady = true;
   int interstitials = 0;
+  int prepared = 0;
+  int rewardedShown = 0;
   Completer<RewardResult>? playing;
   RewardResult next = RewardResult.earned;
 
@@ -23,19 +25,28 @@ class FakeAds implements AdService {
   bool get isRewardedAdReady => rewardedReady;
   @override
   bool get isInterstitialReady => interstitialReady;
+  Completer<bool>? loading;
   @override
-  Future<bool> waitForRewarded(Duration max) async => rewardedReady;
+  Future<bool> waitForRewarded(Duration max) async => loading != null ? loading!.future : rewardedReady;
   @override
   void ensureLoaded() {}
   @override
-  Future<RewardResult> showRewardedAd() {
+  Future<RewardResult> showRewardedAd({void Function()? onShown}) {
+    rewardedShown++;
+    onShown?.call();
     if (playing != null) return playing!.future;
     return Future.value(next);
   }
 
   @override
-  Future<bool> showInterstitialAd() async {
+  void prepareInterstitial() => prepared++;
+  @override
+  Future<bool> waitForInterstitial(Duration max) async => interstitialReady;
+
+  @override
+  Future<bool> showInterstitialAd({void Function()? onShown}) async {
     if (!interstitialReady) return false;
+    onShown?.call();
     interstitials++;
     return true;
   }
@@ -50,6 +61,7 @@ class FakeStore implements PurchaseService {
   bool? entitlement;
   PurchaseOutcome buyResult = PurchaseOutcome.purchased;
   bool deliverBeforeReturn = true;
+  bool priceFails = false;
 
   @override
   set onDelivered(Future<void> Function(String productId)? cb) => delivered = cb;
@@ -59,18 +71,23 @@ class FakeStore implements PurchaseService {
   Future<void> initialize() async {}
   @override
   Future<bool> isAvailable() async => true;
+  Map<String, bool?> packEntitlement = {};
   @override
-  Future<String?> priceLabel() async => '¥370';
+  Future<String?> priceLabel([String productId = PurchaseService.removeAdsId]) async {
+    if (priceFails && productId == PurchaseService.removeAdsId) throw StateError('x');
+    return productId == PurchaseService.removeAdsId ? '¥370' : '¥320';
+  }
   @override
-  Future<PurchaseOutcome> buyRemoveAds() async {
-    if (buyResult == PurchaseOutcome.purchased && deliverBeforeReturn) await delivered?.call(PurchaseService.removeAdsId);
+  Future<PurchaseOutcome> buy(String productId) async {
+    if (buyResult == PurchaseOutcome.purchased && deliverBeforeReturn) await delivered?.call(productId);
     return buyResult;
   }
 
   @override
   Future<PurchaseOutcome> restore() async => PurchaseOutcome.unavailable;
   @override
-  Future<bool?> hasEntitlement() async => entitlement;
+  Future<bool?> hasEntitlement([String productId = PurchaseService.removeAdsId]) async =>
+      productId == PurchaseService.removeAdsId ? entitlement : packEntitlement[productId];
   @override
   void dispose() {}
 }
@@ -137,15 +154,104 @@ void main() {
     expect(js.last, startsWith('hikariAdResult(true,'));
   });
 
-  test('全画面広告は第2審査を終えた後から。第1審査の後と、広告を消した人には出さない', () async {
+  test('全画面広告はゲームが頼んだときに出し、広告を消した人には出さない', () async {
     final (b, money, ads, _, _) = await setup();
-    await b.handle('{"type":"between","rnd":1}');
-    expect(ads.interstitials, 0);
-    await b.handle('{"type":"between","rnd":2}');
+    await b.handle('{"type":"between","rnd":5}');
     expect(ads.interstitials, 1);
     await money.buy();
-    await b.handle('{"type":"between","rnd":3}');
+    await b.handle('{"type":"between","rnd":5}');
     expect(ads.interstitials, 1);
+  });
+
+  test('動画の返事には、頼みと同じ番号を付け、表示が始まったら知らせる', () async {
+    final (b, _, _, _, js) = await setup();
+    await b.handle('{"type":"reward","id":7}');
+    expect(js, contains('window.hikariAdShowing&&hikariAdShowing(7)'));
+    expect(js.last, startsWith('hikariAdResult(true,'));
+    expect(js.last, endsWith(',7)'));
+  });
+
+  test('「やめる」が押された動画は出さず、特典の返事も渡さない', () async {
+    final (b, _, ads, _, js) = await setup();
+    ads.rewardedReady = false;
+    ads.loading = Completer<bool>();
+    // 読み込みを待っている間に「やめる」が届く
+    final f = b.handle('{"type":"reward","id":3}');
+    await Future<void>.delayed(Duration.zero);
+    await b.handle('{"type":"rewardCancel","id":3}');
+    ads.loading!.complete(true);
+    await f;
+    expect(ads.rewardedShown, 0);
+    expect(js.last, startsWith('hikariAdResult(false,'));
+  });
+
+  test('動画の再生中に次の頼みが来たら、黙って捨てずに「使えなかった」と返す', () async {
+    final (b, _, ads, _, js) = await setup();
+    ads.playing = Completer<RewardResult>();
+    final f = b.handle('{"type":"reward","id":1}');
+    await Future<void>.delayed(Duration.zero);
+    await b.handle('{"type":"reward","id":2}');
+    expect(js.last, startsWith('hikariAdResult(false,'));
+    expect(js.last, endsWith(',2)'));
+    ads.playing!.complete(RewardResult.earned);
+    await f;
+    expect(js.last, startsWith('hikariAdResult(true,'));
+    expect(js.last, endsWith(',1)'));
+  });
+
+  test('全画面広告は、出しても出さなくても終わったらゲームに返し、出すときは表示の始まりも知らせる', () async {
+    final (b, _, ads, _, js) = await setup();
+    await b.handle('{"type":"between","rnd":2}');
+    expect(js, contains("window.hikariAdShowing&&hikariAdShowing('inter')"));
+    expect(js.last, 'window.hikariBetweenDone&&hikariBetweenDone()');
+    js.clear();
+    ads.interstitialReady = false;
+    await b.handle('{"type":"between","rnd":3}');
+    expect(js, ['window.hikariBetweenDone&&hikariBetweenDone()']);
+  });
+
+  test('全画面広告は、ゲームが頼んだときだけ読み込む。広告を消した人には読まない', () async {
+    final (b, money, ads, store, _) = await setup();
+    expect(ads.prepared, 0);
+    await b.handle('{"type":"prepInter"}');
+    expect(ads.prepared, 1);
+    await store.delivered!(PurchaseService.removeAdsId);
+    expect(money.adFree, isTrue);
+    await b.handle('{"type":"prepInter"}');
+    expect(ads.prepared, 1);
+  });
+
+  test('購入の結果が「成立」でも、通知が届かなければ持っている扱いにしない（入口は通知だけ）', () async {
+    final (_, money, _, store, _) = await setup();
+    store.deliverBeforeReturn = false;
+    expect(await money.buy(PurchaseService.storyPackId), PurchaseOutcome.purchased);
+    expect(money.owns(PurchaseService.storyPackId), isFalse);
+  });
+
+  test('値段の1つが取れなくても、ほかの値段とストアの状態は渡す', () async {
+    final (b, _, _, store, js) = await setup();
+    store.priceFails = true;
+    await b.pushApp();
+    final m = jsonDecode(js.last.substring(js.last.indexOf('(') + 1, js.last.lastIndexOf(')'))) as Map;
+    expect(m['price'], isNull);
+    expect(m['storeOk'], isTrue);
+    expect(m['prices'], {'story': '¥320', 'audition': '¥320'});
+  });
+
+  test('追加パックの承認待ちと、結果が届かないときは、それぞれの文で知らせる', () async {
+    final (b, _, _, store, js) = await setup();
+    store.buyResult = PurchaseOutcome.pending;
+    await b.handle('{"type":"buy","id":"hikari7_story_pack"}');
+    expect(js.last, contains('追加パックが入ります'));
+    store.buyResult = PurchaseOutcome.timedOut;
+    await b.handle('{"type":"buy","id":"hikari7_story_pack"}');
+    expect(js.last, contains('まだ届いていません'));
+  });
+
+  test('ショップを開いたら、最新の値段と持ち物を送り直す', () async {
+    final (b, _, _, _, js) = await setup();
+    await b.handle('{"type":"refresh"}');
+    expect(js.last, startsWith('window.hikariSetApp&&hikariSetApp('));
   });
 
   test('広告を消したら、動画なしで特典を渡す', () async {
@@ -160,6 +266,35 @@ void main() {
     final (_, money, _, store, _) = await setup();
     await store.delivered!(PurchaseService.removeAdsId);
     expect(money.adFree, isTrue);
+  });
+
+  test('追加パックは、待っている人がいなくても届けば持っている扱いになり、広告は消えない', () async {
+    final (b, money, _, store, js) = await setup();
+    await store.delivered!(PurchaseService.storyPackId);
+    expect(money.owns(PurchaseService.storyPackId), isTrue);
+    expect(money.owns(PurchaseService.auditionPackId), isFalse);
+    expect(money.adFree, isFalse);
+    await b.pushApp();
+    expect(js.last, contains('"owned":{"story":true,"audition":false}'));
+  });
+
+  test('追加パックはゲームから商品IDを指定して買え、知らない商品IDは広告を消すとして扱う', () async {
+    final (b, money, _, _, _) = await setup();
+    await b.handle('{"type":"buy","id":"hikari7_audition_pack"}');
+    expect(money.owns(PurchaseService.auditionPackId), isTrue);
+    expect(money.adFree, isFalse);
+    await b.handle('{"type":"buy","id":"other"}');
+    expect(money.adFree, isTrue);
+  });
+
+  test('再インストール後は、端末の購入記録から追加パックも戻す', () async {
+    SharedPreferences.setMockInitialValues({});
+    final p = await SharedPreferences.getInstance();
+    final store = FakeStore()..packEntitlement = {PurchaseService.storyPackId: true};
+    final money = Monetization(p, ads: FakeAds(), store: store);
+    await money.start();
+    expect(money.owns(PurchaseService.storyPackId), isTrue);
+    expect(money.adFree, isFalse);
   });
 
   test('再インストール後は、端末の購入記録から広告なしに戻す', () async {

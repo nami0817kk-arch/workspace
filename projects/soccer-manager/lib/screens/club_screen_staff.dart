@@ -129,17 +129,34 @@ class _StaffRow extends StatelessWidget {
                     ],
                   ],
                 ),
-                Text(
-                  [
+                // **1行につなげない。** 「指導 5 / 動機づけ 9 / 週俸13万円 /
+                // 契約2年」と並べると、どこが数字でどこが見出しなのか
+                // 目で切り分ける必要があった。雇うかどうかは能力で決めるので、
+                // 能力の数字だけを拾って読める形にする。
+                const SizedBox(height: 4),
+                Wrap(
+                  spacing: 6,
+                  runSpacing: 4,
+                  children: [
                     for (final a in weights.keys)
-                      '${a.label} ${staff.attribute(a)}',
-                    Tr.pick('週俸${staff.wage}万円', 'Wage ${staff.wage}'),
-                    Tr.pick(
-                        '契約${staff.contractYears}年', '${staff.contractYears}yr'),
-                  ].join(' / '),
-                  style: TextStyle(
-                      fontSize: 11,
-                      color: SemanticColors.subtleText(context)),
+                      StatChip(
+                        label: a.label,
+                        value: '${staff.attribute(a)}',
+                        // この役割で効く能力ほど濃く出す。
+                        color: (weights[a] ?? 0) >= 0.5
+                            ? Theme.of(context).colorScheme.primary
+                            : null,
+                      ),
+                    StatChip(
+                      label: Tr.pick('週俸', 'Wage'),
+                      value: Tr.pick('${staff.wage}万', '${staff.wage}'),
+                    ),
+                    StatChip(
+                      label: Tr.pick('契約', 'Deal'),
+                      value: Tr.pick('${staff.contractYears}年',
+                          '${staff.contractYears}y'),
+                    ),
+                  ],
                 ),
               ],
             ),

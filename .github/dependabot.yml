@@ -6,7 +6,6 @@ updates:
     open-pull-requests-limit: 3
   - package-ecosystem: pip
     directories:
-      - "/projects/kabu-agari-ranking"
       - "/projects/price-tracker"
       - "/projects/ai-side-business"
       - "/projects/youtube-video-creation"

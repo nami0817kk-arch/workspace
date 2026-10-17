@@ -37,8 +37,9 @@ String injectBoot(String html, Map<String, Object?> boot) {
 
 /// ゲーム本体から届く頼みごとを受けて、広告・課金・保存・外部リンクにつなぐ。
 ///
-/// 届く形は JSON 1つ: `{"type": "reward"|"between"|"store"|"buy"|"restore"|"open"|"licenses"|"haptic"|"review"|"theme"|"bgm"|"voice", ...}`。
-/// 返事は JS の関数を呼んで返す（`hikariAdResult` / `hikariSetApp`）。
+/// 届く形は JSON 1つ: `{"type": "reward"|"rewardCancel"|"between"|"prepInter"|"store"|"buy"|"restore"|"refresh"|"open"|"licenses"|"haptic"|"review"|"theme"|"bgm"|"voice", ...}`。
+/// 返事は JS の関数を呼んで返す（`hikariAdResult` / `hikariAdShowing` / `hikariBetweenDone` / `hikariSetApp`）。
+/// 動画の頼みには番号（id）が付き、返事にも同じ番号を付ける（「やめる」の後に届いた結果を、別の特典に入れないため）。
 class GameBridge {
   GameBridge({
     required this.money,
@@ -80,6 +81,9 @@ class GameBridge {
 
   bool _rewardBusy = false;
 
+  /// ゲームで「やめる」が押された動画の番号。
+  final _canceled = <Object?>{};
+
   /// 開いてよい外部ページ（プライバシーポリシーと問い合わせ先）。それ以外は開かない。
   static const allowedHosts = {'hikari7.pages.dev'};
 
@@ -95,11 +99,26 @@ class GameBridge {
         final k = m['k'];
         if (k is String) await store.set(k, m['v'] as String?);
       case 'reward':
-        await _reward();
+        await _reward(m['id']);
+      case 'rewardCancel':
+        _canceled.add(m['id']);
       case 'between':
-        await money.betweenRounds((m['rnd'] as num?)?.toInt() ?? 0);
+        try {
+          await money.betweenRounds(
+            (m['rnd'] as num?)?.toInt() ?? 0,
+            onShown: () => unawaited(runJs("window.hikariAdShowing&&hikariAdShowing('inter')")),
+          );
+        } finally {
+          // 広告を閉じてから次の審査へ進める（出さなかったときもすぐ返す）
+          await runJs('window.hikariBetweenDone&&hikariBetweenDone()');
+        }
+      case 'prepInter':
+        money.prepareInterstitial();
+      case 'refresh':
+        await pushApp();
       case 'buy':
-        await _buy();
+        final id = m['id'];
+        await _buy(id is String && PurchaseService.allIds.contains(id) ? id : PurchaseService.removeAdsId);
       case 'restore':
         await _restore();
       case 'open':
@@ -129,28 +148,40 @@ class GameBridge {
 
   /// 動画を見せて、見終えたかを返す。**ゲーム側は返事を受けてから特典を渡す**
   /// （返事は画面がどこにあっても届く。ゲーム本体の待ち手は消えない）。
-  Future<void> _reward() async {
-    if (_rewardBusy) return;
+  Future<void> _reward(Object? id) async {
+    final idJs = jsonEncode(id is num ? id : null);
+    if (_rewardBusy) {
+      // 前の動画をまだ扱っている。黙って捨てず、この頼みには「使えなかった」と返す
+      await runJs('hikariAdResult(false,${jsonEncode('前の動画を準備しています。少し待ってからもう一度お試しください')},$idJs)');
+      return;
+    }
     _rewardBusy = true;
     try {
-      final g = await money.beforeReward(onWaiting: () => unawaited(runJs('window.hikariAdWaiting&&hikariAdWaiting()')));
+      final g = await money.beforeReward(
+        onWaiting: () => unawaited(runJs('window.hikariAdWaiting&&hikariAdWaiting()')),
+        onShown: () => unawaited(runJs('window.hikariAdShowing&&hikariAdShowing($idJs)')),
+        canceled: () => _canceled.contains(id),
+      );
       final msg = switch (g) {
         RewardGate.granted => null,
         RewardGate.declined => '動画を最後まで見ると使えます',
         RewardGate.unavailable => '動画を読み込めませんでした。少し待ってからもう一度お試しください',
         RewardGate.showFailed => '動画を表示できませんでした。画面を全体表示にしてお試しください',
       };
-      await runJs('hikariAdResult(${g == RewardGate.granted},${jsonEncode(msg)})');
+      await runJs('hikariAdResult(${g == RewardGate.granted},${jsonEncode(msg)},$idJs)');
     } finally {
+      _canceled.remove(id);
       _rewardBusy = false;
     }
   }
 
-  Future<void> _buy() async {
-    final r = await money.buy();
+  Future<void> _buy(String id) async {
+    final r = await money.buy(id);
     await pushApp(msg: switch (r) {
-      PurchaseOutcome.purchased => '広告を消しました。ありがとうございます',
-      PurchaseOutcome.pending => '保護者の承認を待っています。承認されると広告が消えます',
+      PurchaseOutcome.purchased => id == PurchaseService.removeAdsId ? '広告を消しました。ありがとうございます' : '追加パックを入れました。ありがとうございます',
+      PurchaseOutcome.pending =>
+        id == PurchaseService.removeAdsId ? '保護者の承認を待っています。承認されると広告が消えます' : '保護者の承認を待っています。承認されると追加パックが入ります',
+      PurchaseOutcome.timedOut => '購入の結果がまだ届いていません。届きしだい自動で入ります',
       PurchaseOutcome.canceled => null,
       PurchaseOutcome.unavailable => 'ストアに接続できませんでした',
       PurchaseOutcome.failed => '購入できませんでした',
@@ -159,7 +190,8 @@ class GameBridge {
 
   Future<void> _restore() async {
     final r = await money.restore();
-    await pushApp(msg: r == PurchaseOutcome.purchased ? '購入を復元しました' : '復元できる購入が見つかりませんでした');
+    final any = money.adFree || Monetization.packIds.any(money.owns);
+    await pushApp(msg: r == PurchaseOutcome.purchased || any ? '購入を復元しました' : '復元できる購入が見つかりませんでした');
   }
 
   /// 広告を消したか・価格をゲーム本体に伝える（購入が後から届いたときにも呼ぶ）。
@@ -172,10 +204,29 @@ class GameBridge {
   Future<Map<String, Object?>> appState() async {
     String? price;
     var canBuy = false;
-    try {
-      price = await money.price.timeout(const Duration(seconds: 3));
-      canBuy = await money.canBuy.timeout(const Duration(seconds: 3));
-    } catch (_) {}
-    return {'adFree': money.adFree, 'price': price, 'canBuy': canBuy};
+    var avail = false;
+    final prices = <String, String?>{};
+    // 1つ取れなくても、ほかは渡す（まとめて try にすると、1つの失敗で全部の値段が消える）
+    Future<T?> get<T>(Future<T?> f) async {
+      try {
+        return await f.timeout(const Duration(seconds: 3));
+      } catch (_) {
+        return null;
+      }
+    }
+
+    price = await get<String>(money.price);
+    canBuy = await get<bool>(money.canBuy) ?? false;
+    avail = await get<bool>(money.storeAvailable) ?? false;
+    prices['story'] = await get<String>(money.priceOf(PurchaseService.storyPackId));
+    prices['audition'] = await get<String>(money.priceOf(PurchaseService.auditionPackId));
+    return {
+      'adFree': money.adFree,
+      'price': price,
+      'canBuy': canBuy,
+      'storeOk': avail,
+      'owned': {'story': money.owns(PurchaseService.storyPackId), 'audition': money.owns(PurchaseService.auditionPackId)},
+      'prices': prices,
+    };
   }
 }

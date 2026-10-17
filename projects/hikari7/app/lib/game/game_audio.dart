@@ -63,14 +63,11 @@ class GameAudio {
     _hidden = hidden;
     try {
       if (hidden) {
-        await _bgm.pause();
-        await _voice.stop();
+        // 裏に回ったら手放してメモリを空ける。iOS は大きなアプリから先に閉じる
+        await _bgm.release();
+        await _voice.release();
       } else if (_cur != null) {
-        if (_bgm.state == PlayerState.paused) {
-          await _bgm.resume();
-        } else {
-          await _bgm.play(AssetSource('audio/bgm/$_cur.mp3'), volume: _vol);
-        }
+        await _bgm.play(AssetSource('audio/bgm/$_cur.mp3'), volume: _vol);
       }
     } catch (_) {}
   }

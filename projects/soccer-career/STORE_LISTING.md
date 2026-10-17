@@ -308,6 +308,19 @@ python tool/preflight.py
 flutter build web --release && python tool/check_release.py
 ```
 
+## 公開した（2026-10-07）
+
+**1.0 が App Store で販売中。** https://apps.apple.com/jp/app/id6817971889
+10-02 提出 → 10-07 承認 → 自動リリースでそのまま公開。
+下のチェックリストは全部通った。**次に出すのは更新**なので、
+段取りは `docs/RELEASE.md` を見る。
+
+配信国は外から確かめてある（日本・米国・韓国・豪州は出ていて、EU・英国・中国本土は出ていない）:
+
+```bash
+curl -s "https://itunes.apple.com/lookup?id=6817971889&country=de" | head -c 60
+```
+
 ## 申請チェックリスト
 
 コンソール側の作業手順は [`docs/MONETIZATION.md`](docs/MONETIZATION.md) の

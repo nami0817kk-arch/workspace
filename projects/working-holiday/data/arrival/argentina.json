@@ -1,0 +1,86 @@
+{
+  "id": "argentina",
+  "steps": [
+    {
+      "title": "外国人用DNI（Documento Nacional de Identidad）を取得する",
+      "body": "アルゼンチン国家人口登録局（RENAPER）によれば、移民局（Dirección Nacional de Migraciones）発行の永住または一時滞在の在留資格（residencia permanente/temporaria）が有効であればDNIを申請できる。在留資格がまだ無い、または失効・60日以内に失効する場合は、先に移民局で在留手続きを済ませる必要がある。",
+      "url": "https://www.argentina.gob.ar/interior/dni/extranjeros"
+    },
+    {
+      "title": "CUIL（労務識別番号）を取得する",
+      "body": "ANSES（国家社会保障庁）によれば、CUILは社会保障の手続きや銀行などでの手続きに必要。18歳以上の外国人は、外国人用DNI（取得前は在留資格が確認できる移民局の書類）を持参し、予約なしでANSESの窓口へ行く。雇用主のもとで働く外国人はまずANSESで仮のCUILを取得し、DNI取得後に本CUILへの統合（unificación）手続きを行う。",
+      "url": "https://www.anses.gob.ar/cuil"
+    },
+    {
+      "title": "在留届を提出する",
+      "body": "3か月以上海外に滞在する場合、外務省の在留届オンラインサービス（ORRネット）から住所や連絡先を届け出る。緊急時の安否確認や在アルゼンチン日本国大使館からの情報提供に使われる。",
+      "url": "https://www.ezairyu.mofa.go.jp/"
+    }
+  ],
+  "medical": {
+    "emergency": "911（警察・救急・消防共通の緊急通報番号、無料・24時間）",
+    "summary": "ブエノスアイレス首都圏の一部私立総合病院は医療設備が整い欧米先進国と遜色のない水準が期待できる一方、公立病院は無料で混雑しやすく邦人の利用には適さない場合が多い。受診には事前予約が必要で、診察部門と検査部門が別々になっているなど手続きに手間がかかる。医療制度は公的医療制度・社会医療保険（Obra Social）・民間医療保険（Medicina Prepaga）からなり、保険外で私立病院を受診すると全額自費で高額になる。医師には英語を話せる者もいるが、事務職員・看護師はスペイン語のみのことが多いため、海外旅行傷害保険への加入が勧められる。",
+    "hospitals": [
+      {
+        "name": "Centro Medico Mutual Nikkai（セントロ・メディコ・ムトゥアル・ニッカイ／ニッカイ共済会）",
+        "city": "ブエノスアイレス",
+        "japanese": "日本語ができる職員がいる。予約制、外来診察のみ（入院設備なし）",
+        "url": "https://www.mofa.go.jp/mofaj/toko/medi/cs_ame/argentin.html"
+      },
+      {
+        "name": "Dra. Kyoko Nakamura（中村恭子医師、小児科・内科）",
+        "city": "ブエノスアイレス",
+        "japanese": "日本語で受診可能な医師。必要に応じて往診も対応",
+        "url": "https://www.mofa.go.jp/mofaj/toko/medi/cs_ame/argentin.html"
+      },
+      {
+        "name": "Dra. María Celeste Hori（堀真理亜セレステ医師、家庭医学・皮膚科）",
+        "city": "ブエノスアイレス",
+        "japanese": "日本語で受診可能な医師",
+        "url": "https://www.mofa.go.jp/mofaj/toko/medi/cs_ame/argentin.html"
+      },
+      {
+        "name": "Dra. Sakurako Oda（小田桜子医師、整形外科）",
+        "city": "ブエノスアイレス",
+        "japanese": "日本語で受診可能な医師",
+        "url": "https://www.mofa.go.jp/mofaj/toko/medi/cs_ame/argentin.html"
+      },
+      {
+        "name": "Dra. Tomoko Arakaki（新垣智子医師、神経内科）",
+        "city": "ブエノスアイレス",
+        "japanese": "日本語で受診可能な医師",
+        "url": "https://www.mofa.go.jp/mofaj/toko/medi/cs_ame/argentin.html"
+      },
+      {
+        "name": "Dra. Mónica Satonobu（里信モニカ歯科医師）",
+        "city": "ブエノスアイレス",
+        "japanese": "日本語で受診可能な歯科医師",
+        "url": "https://www.mofa.go.jp/mofaj/toko/medi/cs_ame/argentin.html"
+      }
+    ]
+  },
+  "jobs": {
+    "min_wage": "全国最低賃金（Salario Mínimo, Vital y Móvil）月額391,200アルゼンチンペソ（2026年10月1日適用開始、11月に398,800ペソ、12月に406,400ペソへの引き上げが既に決定）",
+    "min_wage_url": "https://www.argentina.gob.ar/trabajo/consejodelsalario",
+    "channels": [
+      {
+        "name": "Portal Empleo（労働・雇用・社会保障省が運営する公的求人プラットフォーム）",
+        "url": "https://portalempleo.gob.ar/",
+        "note": "公開・無料の求人・求職プラットフォーム。労働者・雇用主とも登録制"
+      }
+    ],
+    "rules": [
+      "全国最低賃金（Salario Mínimo, Vital y Móvil）は雇用・生産性・最低賃金全国評議会（Consejo Nacional del Empleo, la Productividad y el Salario Mínimo, Vital y Móvil）が決議で定める",
+      "雇用主のもとで働く外国人はANSESで仮のCUILを取得したうえで就労し、DNI取得後に本CUILへ統合する必要がある"
+    ]
+  },
+  "sources": [
+    {"title": "DNI para extranjeros en el país - Renaper", "url": "https://www.argentina.gob.ar/interior/dni/extranjeros", "checked": "2026-10-05"},
+    {"title": "Generación de CUIL - ANSES", "url": "https://www.anses.gob.ar/cuil", "checked": "2026-10-05"},
+    {"title": "Consejo Nacional del Empleo, la Productividad y el Salario Mínimo, Vital y Móvil - Resoluciones del SMVM", "url": "https://www.argentina.gob.ar/trabajo/consejodelsalario", "checked": "2026-10-05"},
+    {"title": "Trabajo, Empleo y Seguridad Social - Portal Empleo", "url": "https://www.argentina.gob.ar/trabajo/empleo", "checked": "2026-10-05"},
+    {"title": "Seguridad - línea 911", "url": "https://www.argentina.gob.ar/seguridad", "checked": "2026-10-05"},
+    {"title": "アルゼンチン｜外務省 世界の医療事情", "url": "https://www.mofa.go.jp/mofaj/toko/medi/cs_ame/argentin.html", "checked": "2026-10-05"},
+    {"title": "外務省 在留届（ORRネット）", "url": "https://www.ezairyu.mofa.go.jp/", "checked": "2026-10-05"}
+  ]
+}

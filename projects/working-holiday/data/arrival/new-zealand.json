@@ -1,0 +1,61 @@
+{
+  "id": "new-zealand",
+  "steps": [
+    {
+      "title": "在留届を提出する（ORRネット）",
+      "body": "3か月以上海外に滞在する場合は、外務省の在留届をオンラインで提出する必要があります。緊急時の安否確認や現地大使館・総領事館からの連絡に使われます。",
+      "url": "https://www.ezairyu.mofa.go.jp/"
+    },
+    {
+      "title": "銀行口座を開設する",
+      "body": "働き始める前にニュージーランドの銀行口座が必要です。銀行によっては来NZ前からオンラインで口座開設でき、到着後に本人確認書類と住所を提示して口座を有効化します。雇用主に口座番号を伝えておくと初回の給与を受け取りやすくなります。",
+      "url": "https://www.immigration.govt.nz/live/setting-up-your-life-in-new-zealand/managing-your-money-banking-and-taxes-in-new-zealand/banking-in-new-zealand/"
+    },
+    {
+      "title": "IRD番号（納税者番号）を申請する",
+      "body": "ニュージーランドで働くにはIRD番号が必要です。到着後、myIRアカウントを登録し「New arrival to New Zealand」の手続きでオンライン申請します。パスポート情報とビザの申請番号が必要で、承認されれば2日程度でメールやSMSで通知されます。",
+      "url": "https://www.ird.govt.nz/managing-my-tax/ird-numbers/ird-numbers-for-individuals/new-arrival-to-new-zealand---ird-number-application"
+    },
+    {
+      "title": "GP（ホームドクター）に登録する",
+      "body": "ニュージーランドはホームドクター制のため、住む地域が決まったら早めにGPに登録（enrol）しておくと、診察費が安くなります。登録は無料で、Healthpointのサイトから近くの受付可能なGPを検索できます。",
+      "url": "https://www.immigration.govt.nz/live/setting-up-your-life-in-new-zealand/getting-health-care-and-finding-a-doctor/"
+    }
+  ],
+  "medical": {
+    "emergency": "111（警察・消防・救急共通）",
+    "summary": "ニュージーランドはホームドクター（GP）制で、まずGPの予約・受診が基本となり、専門医にかかるにはGPの紹介状が必要です。公的医療保険（国民皆保険）はなく、ワーキングホリデー中は原則自己負担か海外旅行傷害保険でのカバーとなります。事故によるけがはACC（事故補償制度）の対象になりますが、海外旅行保険の代わりにはなりません。",
+    "hospitals": []
+  },
+  "jobs": {
+    "min_wage": "NZD 23.95/時（2026年4月1日から、成人の法定最低賃金）",
+    "min_wage_url": "https://www.employment.govt.nz/news-and-updates/minimum-wage-is-increasing-on-1-april-2026",
+    "channels": [
+      {
+        "name": "Work and Income - Finding seasonal work",
+        "url": "https://www.workandincome.govt.nz/work/find-jobs/where-to-look-for-jobs/finding-seasonal-work.html",
+        "note": "政府（Work and Income）が案内する季節労働・短期求人の探し方"
+      },
+      {
+        "name": "Work and Income - Where to look for jobs",
+        "url": "https://www.workandincome.govt.nz/work/find-jobs/where-to-look-for-jobs/index.html",
+        "note": "政府の求人検索サイトや求人情報の探し方の一覧"
+      }
+    ],
+    "rules": [
+      "働き始める前にニュージーランドの銀行口座とIRD番号を用意する",
+      "IRD番号を雇用主に伝えないと、より高い税率で源泉徴収される",
+      "ワーキングホリデービザでは永続的な仕事（permanent job）には就けない",
+      "法定最低賃金（成人はNZD 23.95/時）を下回る賃金での就労は違法"
+    ]
+  },
+  "sources": [
+    { "title": "在留届 ORRネット", "url": "https://www.ezairyu.mofa.go.jp/", "checked": "2026-10-05" },
+    { "title": "Banking in New Zealand :: Immigration New Zealand", "url": "https://www.immigration.govt.nz/live/setting-up-your-life-in-new-zealand/managing-your-money-banking-and-taxes-in-new-zealand/banking-in-new-zealand/", "checked": "2026-10-05" },
+    { "title": "New arrival to New Zealand - IRD number application | Inland Revenue", "url": "https://www.ird.govt.nz/managing-my-tax/ird-numbers/ird-numbers-for-individuals/new-arrival-to-new-zealand---ird-number-application", "checked": "2026-10-05" },
+    { "title": "Getting health care and finding a doctor :: Immigration New Zealand", "url": "https://www.immigration.govt.nz/live/setting-up-your-life-in-new-zealand/getting-health-care-and-finding-a-doctor/", "checked": "2026-10-05" },
+    { "title": "NZの医療｜在ニュージーランド日本国大使館", "url": "https://www.nz.emb-japan.go.jp/itpr_ja/ryouji-life-medical.html", "checked": "2026-10-05" },
+    { "title": "Minimum wage is increasing on 1 April 2026 | Employment New Zealand", "url": "https://www.employment.govt.nz/news-and-updates/minimum-wage-is-increasing-on-1-april-2026", "checked": "2026-10-05" },
+    { "title": "Finding short-term work when on a working holiday :: Immigration New Zealand", "url": "https://www.immigration.govt.nz/work/finding-work-in-new-zealand/finding-short-term-work-when-on-a-working-holiday/", "checked": "2026-10-05" }
+  ]
+}
