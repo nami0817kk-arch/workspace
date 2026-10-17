@@ -1,0 +1,76 @@
+# App Store の掲載文（下書き 2026-10-04、審査メモは 2026-10-05 に今の中身へ）
+
+名前は「つるはし採掘」、価格は社員食堂370円・大きな荷車250円・特製弁当3個160円・10個480円（2026-10-17 ユーザー決定）。既存の作品名・商標をキーワードや文に入れない（App Store 2.3.7・5.2.1）。
+掲載画像は `node tool/make_shots.js` で `store/screenshots/01〜06.png`（6.7インチ 1290×2796）。並び順はこの番号のとおり。
+**検索結果に出るのは先頭3枚**なので、1〜3枚目に「仲間が掘る」「お宝」「岩盤を割る」を置いた（タイトル画面は撮らない。docs/app-pitfalls.md 4番）。
+
+## 名前（30字まで）
+
+つるはし採掘
+
+（2026-10-17 ユーザー決定。後ろに検索語を付けない）
+
+## サブタイトル（30字まで）
+
+仲間と地の底へ。お宝発掘の放置ゲーム
+
+## プロモーション用テキスト（170字まで・審査なしで差し替えられる）
+
+仲間を雇って、地面をどこまでも掘り進めよう。モグラが顔を出す表土から、光る水晶の洞窟、溶岩、地底湖、そして星が瞬く地の底へ。寝ている間も仲間が掘り続けます。
+
+## キーワード（100字まで・カンマ区切り。名前とサブタイトルに入っている言葉は入れない）
+
+放置,穴掘り,化石,宝石,図鑑,コレクション,育成,地下,洞窟,鉱山,炭鉱,ドリル,クリッカー,ひまつぶし,オフライン,シミュレーション,簡単
+
+## 概要（4000字まで）
+
+つるはし一本から始まる、地の底への採掘ゲーム。
+
+仲間を雇い、つるはしを鍛えて、地面をどこまでも掘り進めよう。掘るのは仲間たち。あなたは社長として、誰を雇い、何を鍛え、いつ次の代に譲るかを決めます。アプリを閉じている間も、仲間は掘り続けます。
+
+■ 10の地層、見たことのない景色
+草の根が絡む表土、かたい岩石層、赤い筋が走る鉄鉱脈、紫に光る水晶洞、足もとが熱い溶岩層、誰かが先に来ていた古代層、光のない地底湖、光るきのこの森、巨人の骨、そして地の底なのに星が瞬く「星の核」。深く掘るほど、景色が変わります。
+
+■ 50のお宝を図鑑に
+化石、宝石、古代の遺物、そして初代社長の残した物――。地層ごとに眠るお宝を掘り当てて、図鑑を埋めよう。いちばん珍しい物は、層の終わり近くでしか見つかりません。同じ物が出たら「かけら」に。売るか、鑑定して新しいお宝を探すかはあなた次第。
+
+■ 岩盤を割れ！
+層と層の間には、かたい岩盤があります。つるはしを鍛えて、決まった強さに届いた瞬間――ドーン！ 仲間みんなで跳ねて喜びます。
+
+■ 仲間が増えるほど、竪坑が広がる
+雇った仲間は一人ひとり画面に現れ、竪坑はどんどん広く、足場は段々に高くなります。見習い坑夫からベテラン、発破係、そして掘削機や巨大な掘進機まで。
+
+■ 代替わりと、先代の家宝
+深く掘ったら、会社を次の代に譲りましょう。名声を得て仲間はもっと強くなり、先代は「家宝」を1つ残します。先代のつるはし、先代の地図、先代の名簿……どれも良い点と代償があります。隠居した先代は坑道で見守り、昔話をしてくれます。先代の記録を越えた瞬間は、ぜひその目で。
+
+■ 社訓を選ぶ
+代替わりのたびに、会社の方針「社訓」を選びます。人を育てるか、機械化するか。一攫千金を狙うか、堅実にいくか。選び方で掘り方が変わります。
+
+■ 眺めているだけで楽しい
+モグラが顔を出し、コウモリが横切り、迷い猫が歩いていく。仲間どうしの掛け合いや、鉱石を運ぶ桶。開いて眺めているだけで、地の底の毎日が見えてきます。
+
+■ 遊び方は自由
+・タップ連打は不要。仲間が自動で掘ります
+・動画広告を見ると、採掘が30分速くなります。見るたびに速さが上乗せされます。留守の分の3倍受け取りや、代替わりの名声2倍にも使えます（見たいときだけ。全画面広告・バナー広告はありません）
+・寝ている間・出かけている間の分は、戻ったときに受け取れます
+
+※ 記録は端末の中だけに保存されます。機種変更での引き継ぎはできません。
+※ アプリ内課金があります（社員食堂・大きな荷車・特製弁当）。
+
+## 審査へのメモ（App Review Information）
+
+```
+No login is required. The app is in Japanese.
+Idle digging game: the crew digs automatically; there is no tapping requirement.
+The game runs fully offline inside the app (all content, images and music are bundled; no remote web content is loaded). Only the privacy policy / support pages open in the system browser.
+Ads: rewarded video only, always optional. There are no full-screen or banner ads. A video gives one of: digging speed +1x for 30 minutes (stackable), 3x offline earnings, 2x fame when handing over the company, or 3x a tapped ore vein.
+In-app purchases (shop in the "社" (Company) tab): two non-consumables, "社員食堂" Staff Canteen (tsuruhashi_canteen, crew +25%) and "大きな荷車" Big Cart (tsuruhashi_cart, offline cap +4h); two consumables, "特製弁当" Special Bento x3 / x10 (tsuruhashi_bento3 / tsuruhashi_bento10, 30 minutes of crew x2 each, used when the player chooses).
+"購入を復元" (Restore Purchases) is in Settings (gear icon, top right). Bento boxes are consumable and are not restored.
+Local notifications only (one reminder when the offline cap is full), requested after the first return from being away.
+The app does not use App Tracking Transparency and does not track users.
+Before release, AdMob may not fill ads for this new app, so videos may be unavailable; all video bonuses are optional and the game is fully playable without them.
+```
+
+## 年齢区分
+
+4+（暴力・恐怖の表現なし。広告は全年齢向け G に限定する設定）

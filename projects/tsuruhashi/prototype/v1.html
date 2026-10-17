@@ -1,0 +1,1092 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>つるはし採掘</title>
+<style>
+:root{
+  --bg:#f4efe6; --panel:#fffaf2; --panel2:#f1e7d6; --ink:#2b2118; --muted:#7a6a58; --line:#e0d3bf;
+  --accent:#d9861c; --accent-ink:#fff; --accent-soft:#fbe6c4; --good:#2f8f5b; --bad:#b8452e;
+  --ad:#5b4bc4; --ad-ink:#fff; --ad-soft:#e7e3fb; --sky1:#8fd0f5; --sky2:#e3f4ff; --grass:#5fae4a; --shadow:0 2px 0 rgba(60,40,20,.12);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#15120f; --panel:#221d18; --panel2:#2c251e; --ink:#f3e9dc; --muted:#b2a08b; --line:#3a3128;
+    --accent:#f0a33a; --accent-ink:#1d140a; --accent-soft:#3b2a14; --good:#5cc98c; --bad:#f07a5f;
+    --ad:#a79bff; --ad-ink:#16122e; --ad-soft:#2a2545; --sky1:#0c1430; --sky2:#27335c; --grass:#3f7a33; --shadow:0 2px 0 rgba(0,0,0,.35);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#15120f; --panel:#221d18; --panel2:#2c251e; --ink:#f3e9dc; --muted:#b2a08b; --line:#3a3128;
+  --accent:#f0a33a; --accent-ink:#1d140a; --accent-soft:#3b2a14; --good:#5cc98c; --bad:#f07a5f;
+  --ad:#a79bff; --ad-ink:#16122e; --ad-soft:#2a2545; --sky1:#0c1430; --sky2:#27335c; --grass:#3f7a33; --shadow:0 2px 0 rgba(0,0,0,.35);
+  color-scheme: dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN","Hiragino Sans","Yu Gothic UI",system-ui,sans-serif;
+  -webkit-tap-highlight-color:transparent;overflow-x:hidden;line-height:1.5}
+button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
+.app{max-width:480px;margin:0 auto;padding:10px 16px 40px}
+header{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;padding-right:118px;min-height:40px}
+.brand{font-size:11px;color:var(--muted);letter-spacing:.08em}
+.brand b{color:var(--accent);font-weight:800}
+h1{margin:0;font-size:20px;font-weight:800;letter-spacing:.02em}
+.dev{position:fixed;top:10px;right:10px;z-index:30;font-size:11px;padding:6px 9px;border-radius:999px;border:1px dashed var(--muted);
+  background:var(--panel);color:var(--muted);box-shadow:var(--shadow)}
+.dev:active{transform:translateY(1px)}
+.stats{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:6px;margin:8px 0}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:6px 10px;min-width:0}
+.stat .k{font-size:10px;color:var(--muted)}
+.stat .v{font-size:15px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stat.ore .v{font-size:20px;color:var(--accent)}
+.stage{position:relative;border-radius:16px;overflow:hidden;height:340px;background:#000;touch-action:manipulation;user-select:none;-webkit-user-select:none;
+  box-shadow:0 0 0 1px var(--line), var(--shadow)}
+.stage canvas{display:block;width:100%;height:100%}
+.chip{position:absolute;top:8px;left:8px;background:rgba(0,0,0,.55);color:#fff;border-radius:10px;padding:4px 8px;font-size:11px;pointer-events:none;max-width:60%}
+.chip b{font-size:12px}
+.hpbar{height:5px;background:rgba(255,255,255,.22);border-radius:3px;margin-top:4px;overflow:hidden}
+.hpbar i{display:block;height:100%;width:100%;background:#ffd166;border-radius:3px}
+.boostchip{position:absolute;top:8px;right:22px;background:var(--ad);color:var(--ad-ink);border-radius:10px;padding:4px 8px;font-size:11px;font-weight:800;pointer-events:none;display:none}
+.lockmsg{position:absolute;left:8px;right:22px;bottom:8px;background:rgba(20,16,12,.78);color:#ffe3b0;border-radius:10px;padding:6px 10px;font-size:12px;pointer-events:none;display:none;line-height:1.4}
+.hint{position:absolute;left:0;right:14px;bottom:44%;text-align:center;color:#fff;font-weight:800;font-size:15px;text-shadow:0 2px 6px rgba(0,0,0,.6);pointer-events:none;transition:opacity .6s}
+.adrow{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+.adbtn{border:0;border-radius:12px;padding:8px 10px;background:var(--ad-soft);color:var(--ad);font-weight:800;font-size:13px;text-align:left;line-height:1.3;box-shadow:var(--shadow)}
+.adbtn small{display:block;font-weight:500;font-size:10px;opacity:.85}
+.adbtn:disabled{opacity:.55;cursor:default}
+.adbtn .tri{display:inline-block;width:0;height:0;border-left:8px solid currentColor;border-top:5px solid transparent;border-bottom:5px solid transparent;margin-right:5px;vertical-align:1px}
+.zukanbtn{border:1px solid var(--line);border-radius:12px;padding:8px 10px;background:var(--panel);font-size:13px;font-weight:800;text-align:left;line-height:1.3}
+.zukanbtn small{display:block;font-weight:500;font-size:10px;color:var(--muted)}
+.tabs{display:flex;gap:4px;background:var(--panel2);padding:4px;border-radius:12px}
+.tabs button{flex:1;border:0;background:transparent;border-radius:9px;padding:7px 0;font-weight:800;font-size:13px;color:var(--muted);position:relative}
+.tabs button[aria-selected="true"]{background:var(--panel);color:var(--ink);box-shadow:var(--shadow)}
+.tabs .dot{position:absolute;top:5px;right:12px;width:7px;height:7px;border-radius:50%;background:var(--bad);display:none}
+.panel{margin-top:8px}
+.card{display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px;margin-bottom:8px}
+.card .ic{flex:0 0 44px;height:44px;border-radius:10px;background:var(--panel2);display:grid;place-items:center}
+.card .body{flex:1;min-width:0}
+.card .nm{font-weight:800;font-size:14px}
+.card .nm span{font-weight:500;color:var(--muted);font-size:12px;margin-left:4px}
+.card .ds{font-size:11px;color:var(--muted)}
+.buy{flex:0 0 auto;border:0;border-radius:11px;background:var(--accent);color:var(--accent-ink);font-weight:800;padding:7px 10px;min-width:84px;font-size:12px;line-height:1.25;box-shadow:var(--shadow)}
+.buy small{display:block;font-size:10px;font-weight:500}
+.buy:disabled{background:var(--panel2);color:var(--muted);box-shadow:none;cursor:default}
+.buy.flash{animation:flash .25s}
+@keyframes flash{50%{transform:scale(1.06)}}
+.note{font-size:11px;color:var(--muted);margin:2px 2px 8px}
+.need{color:var(--bad);font-weight:800}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.cell{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:6px 4px;text-align:center;min-width:0;position:relative}
+.cell .nm{font-size:10px;font-weight:800;line-height:1.25;margin-top:2px;word-break:break-all}
+.cell .cnt{font-size:9px;color:var(--muted)}
+.cell.unk .nm{color:var(--muted);font-weight:500}
+.cell .rar{position:absolute;top:3px;right:5px;font-size:9px;color:var(--accent);font-weight:800}
+.cell.new{box-shadow:0 0 0 2px var(--accent)}
+.layerhead{font-size:12px;font-weight:800;margin:10px 2px 5px;display:flex;align-items:center;gap:6px}
+.layerhead i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.foot{margin-top:18px;display:flex;gap:8px;flex-wrap:wrap;justify-content:space-between;align-items:center;font-size:11px;color:var(--muted)}
+.foot button{border:1px solid var(--line);background:var(--panel);border-radius:9px;padding:5px 9px;font-size:11px;color:var(--muted)}
+.toastwrap{position:fixed;left:0;right:0;top:52px;display:flex;flex-direction:column;align-items:center;gap:6px;z-index:25;pointer-events:none;padding:0 16px}
+.toast{background:var(--panel);border:2px solid var(--accent);border-radius:14px;padding:8px 12px;display:flex;align-items:center;gap:10px;box-shadow:0 6px 20px rgba(0,0,0,.2);max-width:360px;width:100%;
+  animation:tin .35s ease-out both}
+.toast .t1{font-size:10px;color:var(--accent);font-weight:800}
+.toast .t2{font-size:14px;font-weight:800}
+.toast .t3{font-size:10px;color:var(--muted)}
+.toast.out{animation:tout .4s ease-in both}
+@keyframes tin{from{transform:translateY(-14px) scale(.96);opacity:0}}
+@keyframes tout{to{transform:translateY(-10px);opacity:0}}
+.modal{position:fixed;inset:0;background:rgba(10,8,5,.55);display:none;align-items:center;justify-content:center;z-index:40;padding:16px}
+.modal.on{display:flex}
+.sheet{background:var(--panel);border-radius:18px;padding:18px 16px;max-width:360px;width:100%;box-shadow:0 10px 40px rgba(0,0,0,.35);animation:tin .3s ease-out both}
+.sheet h2{margin:0 0 4px;font-size:17px}
+.sheet .big{font-size:26px;font-weight:800;color:var(--accent);margin:6px 0}
+.sheet p{margin:4px 0;font-size:13px}
+.sheet .sub{font-size:11px;color:var(--muted)}
+.sheet .row{display:grid;gap:8px;margin-top:14px}
+.sheet .ok{border:0;border-radius:12px;padding:11px;font-weight:800;background:var(--panel2)}
+.sheet .x2{border:0;border-radius:12px;padding:11px;font-weight:800;background:var(--ad);color:var(--ad-ink)}
+.sheet .x2 small{display:block;font-weight:500;font-size:10px;opacity:.85}
+.finds{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.finds span{font-size:11px;background:var(--accent-soft);border-radius:8px;padding:2px 7px}
+@media (prefers-reduced-motion: reduce){
+  .toast,.sheet,.buy.flash{animation:none}
+  .hint{transition:none}
+}
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;800&display=swap" rel="stylesheet">
+
+<button class="dev" id="devSkip" type="button">+1時間進める（試作用）</button>
+<div class="app">
+  <header>
+    <div>
+      <div class="brand"><b>つるはし社</b> の放置採掘</div>
+      <h1>つるはし採掘</h1>
+    </div>
+  </header>
+
+  <div class="stats">
+    <div class="stat ore"><div class="k">鉱石</div><div class="v" id="sOre">0</div></div>
+    <div class="stat"><div class="k">深さ</div><div class="v" id="sDepth">0m</div></div>
+    <div class="stat"><div class="k">仲間の力／秒</div><div class="v" id="sDps">0</div></div>
+  </div>
+
+  <div class="stage" id="stage">
+    <canvas id="cv" aria-label="地層の断面。タップすると掘る"></canvas>
+    <div class="chip"><b id="cLayer">第1層 表土</b> <span id="cDepth"></span><div class="hpbar"><i id="cHp"></i></div></div>
+    <div class="boostchip" id="boostChip">採掘2倍 5:00</div>
+    <div class="lockmsg" id="lockMsg"></div>
+    <div class="hint" id="hint">タップして掘る</div>
+  </div>
+
+  <div class="adrow">
+    <button class="adbtn" id="adBoost" type="button"><span class="tri"></span>採掘2倍を5分<small>本番は動画広告（試作は即効果）</small></button>
+    <button class="zukanbtn" id="zukanJump" type="button">図鑑 <span id="zCount">0</span>/20<small id="zBonus">1種ごとに鉱石+5%</small></button>
+  </div>
+
+  <div class="tabs" role="tablist">
+    <button role="tab" aria-selected="true" data-tab="tool">道具<span class="dot" id="dotTool"></span></button>
+    <button role="tab" aria-selected="false" data-tab="crew">仲間<span class="dot" id="dotCrew"></span></button>
+    <button role="tab" aria-selected="false" data-tab="book">図鑑<span class="dot" id="dotBook"></span></button>
+  </div>
+  <div class="panel" id="pTool"></div>
+  <div class="panel" id="pCrew" hidden></div>
+  <div class="panel" id="pBook" hidden></div>
+
+  <div class="foot">
+    <span>試作品 ／ つるはし社</span>
+    <span>
+      <button type="button" id="soundBtn">音：あり</button>
+      <button type="button" id="themeBtn">表示：自動</button>
+      <button type="button" id="resetBtn">最初から</button>
+    </span>
+  </div>
+</div>
+
+<div class="toastwrap" id="toasts"></div>
+
+<div class="modal" id="offModal" role="dialog" aria-modal="true" aria-labelledby="offTitle">
+  <div class="sheet">
+    <h2 id="offTitle">おかえりなさい</h2>
+    <p id="offWhen" class="sub"></p>
+    <p id="offText"></p>
+    <div class="big" id="offOre"></div>
+    <div id="offExtra"></div>
+    <div class="row">
+      <button class="x2" id="offX2" type="button">2倍で受け取る<small>本番は動画広告（試作は即効果）</small></button>
+      <button class="ok" id="offOk" type="button">受け取る</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+'use strict';
+// ================= 数値設計 =================
+const LAYER_LEN = 25;             // 1層 = 25m（1m = 1ブロック）
+const REQ = [0, 10, 22, 34, 46, 58]; // その層へ抜ける岩盤に必要なつるはしLv
+const SIDE = 0.8;                 // 岩盤で止まっている間の「横掘り」効率
+const OFFLINE_CAP = 8 * 3600;     // 留守の上限 8時間
+const CRIT_P = 0.08, CRIT_X = 5;  // 会心
+const DROP_P = 0.12;              // 1ブロックで何か出る確率（岩盤は必ず）
+const BOOST_SEC = 300;
+const isBed = d => d > 0 && d % LAYER_LEN === 0 && d / LAYER_LEN < 6;
+const baseHp = d => 30 * Math.pow(1.075, d);
+const hpOf = d => isBed(d) ? baseHp(d) * 12 : baseHp(d);
+const oreBase = d => Math.ceil(1.5 * Math.pow(1.072, d)) * (isBed(d) ? 5 : 1);
+const pickPow = l => l * Math.pow(2, Math.floor(l / 10));
+const pickCost = l => Math.ceil(12 * Math.pow(1.15, l - 1));
+const WK = [
+  { id:'minarai', name:'見習い坑夫', dps:1,    cost:15,   desc:'まずはこの子から。休まず掘る' },
+  { id:'veteran', name:'ベテラン坑夫', dps:9,   cost:160,  desc:'つるはし一筋三十年' },
+  { id:'happa',   name:'発破係',     dps:70,   cost:2000, desc:'ときどき派手に崩す' },
+  { id:'drill',   name:'掘削機',     dps:550,  cost:3e4,  desc:'つるはし社の自社製' },
+  { id:'robot',   name:'地底ロボ',   dps:4500, cost:5e5,  desc:'熱にも闇にも強い' },
+];
+const wkCost = (i, n) => Math.ceil(WK[i].cost * Math.pow(1.15, n));
+const PICK_TIER = [
+  ['石頭のつるはし', '#9a958c'], ['鉄のつるはし', '#b9c2cc'], ['鋼のつるはし', '#e4ebf2'], ['黒鉄のつるはし', '#4d525e'],
+  ['水晶のつるはし', '#b89cff'], ['紅蓮のつるはし', '#ff6a2a'], ['古代のつるはし', '#f2c43d'], ['伝説のつるはし', '#7ff0ff']
+];
+const tierOf = l => Math.min(PICK_TIER.length - 1, Math.floor(l / 10));
+
+const LAYERS = [
+  { name:'表土',   block:'#a4733f', wall:'#7b5330', hollow:'#35241a', speck:'#c99c63', glow:false },
+  { name:'岩石層', block:'#8e939a', wall:'#6a6e75', hollow:'#26282c', speck:'#b8bcc2', glow:false },
+  { name:'鉄鉱脈', block:'#7d5b4b', wall:'#583f33', hollow:'#221716', speck:'#d0693a', glow:false },
+  { name:'水晶洞', block:'#433f78', wall:'#2d2a55', hollow:'#15132b', speck:'#c3a8ff', glow:true },
+  { name:'溶岩層', block:'#5e2619', wall:'#3f1810', hollow:'#190a06', speck:'#ff7b2a', glow:true },
+  { name:'古代層', block:'#44503f', wall:'#2d372a', hollow:'#111710', speck:'#e6c96a', glow:true },
+];
+const layerIdxForDepth = d => Math.min(5, Math.floor(d / LAYER_LEN) - (isBed(d) ? 1 : 0));
+
+// ================= 図鑑（20種） =================
+function gearPath(){
+  let s = '';
+  for (let i = 0; i < 16; i++) {
+    const a = i / 16 * Math.PI * 2, r = i % 2 ? 12 : 17;
+    const a2 = (i + 1) / 16 * Math.PI * 2;
+    const p = (ang, rr) => (20 + Math.cos(ang) * rr).toFixed(1) + ' ' + (20 + Math.sin(ang) * rr).toFixed(1);
+    s += (i ? 'L' : 'M') + p(a, r) + 'L' + p(a2 - 0.001, r);
+  }
+  return s + 'Z M20 14a6 6 0 1 0 .01 0Z';
+}
+const SHAPES = {
+  coin:'M20 5a15 15 0 1 0 .01 0Z M16 16h8v8h-8z',
+  shard:'M6 14 L20 6 L34 12 L30 30 L12 34 Z M12 18 L28 16 L28 19 L12 21Z',
+  acorn:'M9 19 Q20 7 31 19 Z M12 20 Q12 34 20 36 Q28 34 28 20 Z M19 6h2.5v5h-2.5z',
+  spiral:'M20 4a16 16 0 1 0 .01 0Z M22 11a9 9 0 1 0 .01 0Z M21 16a4 4 0 1 0 .01 0Z',
+  trilo:'M20 4 Q32 8 30 22 Q28 34 20 36 Q12 34 10 22 Q8 8 20 4Z M11 14h18v2.5H11z M11 20h18v2.5H11z M12 26h16v2.5H12z',
+  tooth:'M13 4 L29 6 Q27 22 15 37 Q18 20 13 4Z',
+  rock:'M8 18 L14 8 L26 6 L34 16 L30 30 L16 34 L6 28Z M16 15a3 3 0 1 0 .01 0Z M24 22a2.5 2.5 0 1 0 .01 0Z',
+  lamp:'M14 10h12v4h-12z M12 14h16l-2 16h-12z M16 30h8v5h-8z M19 3h2v7h-2z',
+  nugget:'M8 24 Q10 12 20 12 Q32 10 32 22 Q30 32 18 30 Q8 32 8 24Z',
+  gem:'M7 35 L11 14 L15 5 L19 14 L18 35Z M19 35 L22 11 L26 3 L31 11 L31 35Z',
+  amber:'M20 4 Q34 20 28 30 Q20 38 12 30 Q6 20 20 4Z M18 19h4v7h-4z',
+  snow:'M20 4 L34 12 L34 28 L20 36 L6 28 L6 12Z M18.5 11h3v18h-3z',
+  moon:'M26 4 A16 16 0 1 0 26 36 A12 14 0 1 1 26 4Z',
+  arrow:'M20 2 L32 26 L22 24 L22 38 L18 38 L18 24 L8 26Z',
+  ruby:'M8 14 L14 6 L26 6 L32 14 L20 36Z M12 14h16v2H12z',
+  shell:'M4 28 Q6 10 20 8 Q34 10 36 28Z M14 26 L20 15 L26 26Z',
+  scale:'M20 4 Q34 10 34 22 Q30 34 20 36 Q10 34 6 22 Q6 10 20 4Z M20 12 Q28 18 20 30 Q12 18 20 12Z',
+  gear:gearPath(),
+  crown:'M6 32 L6 12 L14 20 L20 7 L26 20 L34 12 L34 32Z M10 26h20v2H10z',
+  pick:'M4 13 Q20 1 36 13 L34 16 Q20 7 6 16Z M18.5 9h3.5v29h-3.5z',
+};
+const RAR = { c:{w:6, label:''}, r:{w:3, label:'★'}, l:{w:1, label:'★★'} };
+const ITEMS = [
+  // 表土
+  { id:'kosen', L:0, r:'c', name:'錆びた古銭', shape:'coin', color:'#b08d57', desc:'誰かが落とした昔のお金' },
+  { id:'doki',  L:0, r:'c', name:'土器のかけら', shape:'shard', color:'#c0764a', desc:'縄の模様がうっすら残る' },
+  { id:'donguri',L:0,r:'r', name:'どんぐりの化石', shape:'acorn', color:'#8a6a3c', desc:'石になっても形はそのまま' },
+  // 岩石層
+  { id:'ammo',  L:1, r:'c', name:'アンモナイト', shape:'spiral', color:'#c9a46a', desc:'渦を巻いた太古の貝' },
+  { id:'sanyo', L:1, r:'r', name:'三葉虫', shape:'trilo', color:'#8b7a66', desc:'三つに分かれた背中' },
+  { id:'kyoryu',L:1, r:'l', name:'恐竜の歯', shape:'tooth', color:'#eadfc4', desc:'指ほどもある鋭い歯' },
+  // 鉄鉱脈
+  { id:'intetsu',L:2,r:'c', name:'隕鉄のかけら', shape:'rock', color:'#70747e', desc:'空から降ってきた鉄' },
+  { id:'lamp',  L:2, r:'r', name:'坑夫のランプ', shape:'lamp', color:'#d9a441', desc:'先輩たちの忘れ物' },
+  { id:'kin',   L:2, r:'l', name:'金の粒', shape:'nugget', color:'#f2c43d', desc:'ずしりと重い' },
+  // 水晶洞
+  { id:'murasaki',L:3,r:'c', name:'紫水晶', shape:'gem', color:'#9b6bd6', desc:'洞窟の壁に群れて生える' },
+  { id:'kohaku',L:3, r:'r', name:'虫入り琥珀', shape:'amber', color:'#e89a2c', desc:'中で虫が眠っている' },
+  { id:'sekka', L:3, r:'r', name:'雪花石', shape:'snow', color:'#bfe6f5', desc:'割ると雪の結晶の模様' },
+  { id:'gecchou',L:3,r:'l', name:'月長石', shape:'moon', color:'#dfe7ff', desc:'暗いところで青く光る' },
+  // 溶岩層
+  { id:'kokuyou',L:4,r:'c', name:'黒曜石の矢じり', shape:'arrow', color:'#3a3744', desc:'ガラスのように鋭い' },
+  { id:'kougyoku',L:4,r:'r', name:'紅玉', shape:'ruby', color:'#d8344a', desc:'溶岩の熱で育った宝石' },
+  { id:'kame',  L:4, r:'r', name:'溶岩亀の甲羅', shape:'shell', color:'#8a3b1f', desc:'熱いうちは触れない' },
+  { id:'karyu', L:4, r:'l', name:'火竜の鱗', shape:'scale', color:'#ff6a2a', desc:'まだほんのり温かい' },
+  // 古代層
+  { id:'haguruma',L:5,r:'c', name:'古代の歯車', shape:'gear', color:'#a8894e', desc:'誰が何のために作ったのか' },
+  { id:'kanmuri',L:5,r:'r', name:'地底王の冠', shape:'crown', color:'#f5c542', desc:'地の底にも王がいた' },
+  { id:'shodai',L:5, r:'l', name:'初代のつるはし', shape:'pick', color:'#c7ced8', desc:'つるはし社の始まりの一本' },
+];
+const ITEM_BY_ID = Object.fromEntries(ITEMS.map(it => [it.id, it]));
+const PATHS = {};
+function pathOf(shape){ return PATHS[shape] || (PATHS[shape] = new Path2D(SHAPES[shape])); }
+function iconSvg(it, size, unknown){
+  const fill = unknown ? 'var(--line)' : it.color;
+  return `<svg width="${size}" height="${size}" viewBox="0 0 40 40" aria-hidden="true"><path d="${SHAPES[it.shape]}" fill="${fill}" fill-rule="evenodd" stroke="${unknown ? 'none' : 'rgba(0,0,0,.35)'}" stroke-width="1.2"/></svg>`;
+}
+
+// ================= 状態と保存 =================
+const KEY = 'tsuruhashi-proto-v1';
+const fresh = () => ({ ore:0, total:0, depth:0, dmg:0, side:0, pick:1, w:[0,0,0,0,0], found:{}, seen:{}, boostUntil:0, last:Date.now(), sound:true, theme:'auto' });
+let S = fresh();
+function load(){
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (raw) { const o = JSON.parse(raw); S = Object.assign(fresh(), o); if (!Array.isArray(S.w) || S.w.length !== 5) S.w = [0,0,0,0,0]; return true; }
+  } catch (e) {}
+  return false;
+}
+function save(){
+  S.last = Date.now();
+  try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {}
+}
+const speciesCount = () => Object.keys(S.found).length;
+const bonus = () => 1 + 0.05 * speciesCount();
+const workerDps = () => S.w.reduce((a, n, i) => a + n * WK[i].dps, 0);
+const boostOn = () => Date.now() < S.boostUntil;
+const locked = st => isBed(st.depth) && st.pick < REQ[st.depth / LAYER_LEN];
+
+// ================= 採掘の中身（留守の計算と共通） =================
+function pickItem(li){
+  let L = li;
+  if (li > 0 && Math.random() < 0.25) L = Math.floor(Math.random() * li);
+  const pool = ITEMS.filter(it => it.L === L);
+  let tot = pool.reduce((a, it) => a + RAR[it.r].w, 0), x = Math.random() * tot;
+  for (const it of pool) { x -= RAR[it.r].w; if (x <= 0) return it; }
+  return pool[pool.length - 1];
+}
+function rollDrop(st, d, forced, out, fx){
+  if (!forced && Math.random() >= DROP_P) return;
+  const it = pickItem(layerIdxForDepth(d));
+  const isNew = !st.found[it.id];
+  st.found[it.id] = (st.found[it.id] || 0) + 1;
+  let extra = 0;
+  if (!isNew) { extra = Math.ceil(oreBase(d) * 3 * (1 + 0.05 * Object.keys(st.found).length)); st.ore += extra; st.total += extra; if (out) out.ore += extra; }
+  if (out) out.finds.push(it.id);
+  if (fx) fx.find(it, isNew, extra);
+}
+// dmg を与える。out は集計、fx は演出（留守の計算では null）
+function applyDamage(st, dmg, out, fx){
+  let guard = 0;
+  const b = 1 + 0.05 * Object.keys(st.found).length;
+  while (dmg > 1e-9 && guard++ < 20000) {
+    if (locked(st)) {
+      const pd = st.depth - 1, php = hpOf(pd);
+      const g = dmg / php * oreBase(pd) * SIDE * b;
+      st.ore += g; st.total += g; if (out) out.ore += g;
+      st.side += dmg;
+      let n = Math.floor(st.side / php); st.side -= n * php;
+      n = Math.min(n, 40);
+      for (let k = 0; k < n; k++) rollDrop(st, pd, false, out, fx);
+      if (fx) fx.side(g);
+      return;
+    }
+    const need = hpOf(st.depth) - st.dmg;
+    if (dmg >= need) {
+      dmg -= need; st.dmg = 0;
+      const d = st.depth, g = oreBase(d) * b;
+      st.ore += g; st.total += g; if (out) { out.ore += g; out.meters++; }
+      st.depth++;
+      if (fx) fx.brk(d, g);
+      rollDrop(st, d, isBed(d), out, fx);
+    } else { st.dmg += dmg; dmg = 0; }
+  }
+}
+function simulateAway(sec){
+  const st = JSON.parse(JSON.stringify(S));
+  const out = { ore:0, meters:0, finds:[], sec, stuck:false };
+  let dps = workerDps();
+  // 広告の2倍が残っていればその分だけ効かせる
+  const boostLeft = Math.max(0, Math.min(sec, (S.boostUntil - (Date.now() - sec * 1000)) / 1000));
+  const total = dps * (sec + boostLeft);
+  // 少しずつ与えて図鑑の抽選が偏らないようにする
+  const steps = 60;
+  for (let i = 0; i < steps; i++) applyDamage(st, total / steps, out, null);
+  out.stuck = locked(st);
+  out.state = st;
+  return out;
+}
+
+// ================= 画面：数字 =================
+const $ = id => document.getElementById(id);
+function fmt(n){
+  n = Math.floor(n);
+  if (n < 1e4) return n.toLocaleString('ja-JP');
+  const U = [['京',1e16],['兆',1e12],['億',1e8],['万',1e4]];
+  for (const [u, v] of U) if (n >= v) { const x = n / v; return (x < 10 ? x.toFixed(2) : x < 100 ? x.toFixed(1) : Math.floor(x).toLocaleString('ja-JP')) + u; }
+  return String(n);
+}
+function fmtDur(sec){
+  sec = Math.round(sec);
+  const h = Math.floor(sec / 3600), m = Math.floor(sec % 3600 / 60);
+  if (h) return h + '時間' + (m ? m + '分' : '');
+  if (m) return m + '分';
+  return sec + '秒';
+}
+
+// 道具・仲間のパネル
+function buildPanels(){
+  $('pTool').innerHTML = `
+    <div class="card">
+      <div class="ic" id="pickIc"></div>
+      <div class="body"><div class="nm" id="pickNm"></div><div class="ds" id="pickDs"></div></div>
+      <button class="buy" id="pickBuy" type="button"></button>
+    </div>
+    <div class="note" id="pickNote"></div>`;
+  $('pickBuy').addEventListener('click', buyPick);
+  $('pCrew').innerHTML = WK.map((w, i) => `
+    <div class="card">
+      <div class="ic">${crewIcon(i)}</div>
+      <div class="body"><div class="nm">${w.name}<span id="wN${i}"></span></div><div class="ds">${w.desc}／1人 毎秒${fmt(w.dps)}</div></div>
+      <button class="buy" id="wB${i}" type="button"></button>
+    </div>`).join('') + `<div class="note">仲間は画面を閉じている間も掘り続けます（最大8時間）。</div>`;
+  WK.forEach((w, i) => $('wB' + i).addEventListener('click', () => buyWorker(i)));
+}
+function pickIcon(l){
+  const c = PICK_TIER[tierOf(l)][1];
+  return `<svg width="34" height="34" viewBox="0 0 40 40" aria-hidden="true"><path d="M19 9h3.5v29H19z" fill="#8a5a2b"/><path d="${SHAPES.pick.split(' M')[0]}" fill="${c}" stroke="rgba(0,0,0,.35)" stroke-width="1.2"/></svg>`;
+}
+function crewIcon(i){
+  const hat = ['#f4f4f4', '#f08a24', '#d8344a', '#6f7b8a', '#58b7c9'][i];
+  if (i === 3) return `<svg width="34" height="34" viewBox="0 0 40 40" aria-hidden="true"><rect x="6" y="10" width="22" height="16" rx="3" fill="${hat}"/><path d="M28 12 L38 18 L28 24Z" fill="#c7ced8"/><circle cx="12" cy="30" r="4" fill="#333"/><circle cx="23" cy="30" r="4" fill="#333"/></svg>`;
+  if (i === 4) return `<svg width="34" height="34" viewBox="0 0 40 40" aria-hidden="true"><rect x="9" y="8" width="22" height="18" rx="5" fill="${hat}"/><rect x="13" y="13" width="14" height="6" rx="3" fill="#123"/><circle cx="20" cy="16" r="2" fill="#7ff0ff"/><rect x="12" y="27" width="6" height="8" fill="#555"/><rect x="22" y="27" width="6" height="8" fill="#555"/></svg>`;
+  return `<svg width="34" height="34" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="17" r="8" fill="#f1c9a0"/><path d="M11 15 A9 9 0 0 1 29 15Z" fill="${hat}"/><rect x="12" y="25" width="16" height="12" rx="4" fill="#3b6ea8"/></svg>`;
+}
+function buildBook(){
+  let h = `<div class="note">図鑑は1種そろうごとに、掘れる鉱石が5%ずつ増えます。同じ物が出たら鉱石に換えます。</div>`;
+  for (let L = 0; L < 6; L++) {
+    const reached = S.depth >= L * LAYER_LEN;
+    h += `<div class="layerhead"><i style="background:${LAYERS[L].block}"></i>第${L + 1}層 ${reached ? LAYERS[L].name : '？？？'}<span style="color:var(--muted);font-weight:500">（${L * LAYER_LEN}m〜）</span></div><div class="grid">`;
+    for (const it of ITEMS.filter(x => x.L === L)) {
+      const n = S.found[it.id] || 0;
+      const isNew = n && !S.seen[it.id];
+      h += n
+        ? `<div class="cell${isNew ? ' new' : ''}" title="${it.desc}"><span class="rar">${RAR[it.r].label}</span>${iconSvg(it, 34)}<div class="nm">${it.name}</div><div class="cnt">${n}個</div></div>`
+        : `<div class="cell unk"><span class="rar">${RAR[it.r].label}</span>${iconSvg(it, 34, true)}<div class="nm">？？？</div><div class="cnt">&nbsp;</div></div>`;
+    }
+    h += `</div>`;
+  }
+  $('pBook').innerHTML = h;
+}
+let tab = 'tool';
+function setTab(t){
+  tab = t;
+  document.querySelectorAll('.tabs button').forEach(b => b.setAttribute('aria-selected', b.dataset.tab === t ? 'true' : 'false'));
+  $('pTool').hidden = t !== 'tool'; $('pCrew').hidden = t !== 'crew'; $('pBook').hidden = t !== 'book';
+  if (t === 'book') { buildBook(); ITEMS.forEach(it => { if (S.found[it.id]) S.seen[it.id] = 1; }); }
+  updateUI(true);
+}
+document.querySelectorAll('.tabs button').forEach(b => b.addEventListener('click', () => { setTab(b.dataset.tab); sfx('ui'); }));
+$('zukanJump').addEventListener('click', () => { setTab('book'); $('pBook').scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' }); });
+
+function nextReq(){
+  const nextBed = (Math.floor(S.depth / LAYER_LEN) + (isBed(S.depth) ? 0 : 1)) * LAYER_LEN;
+  const k = nextBed / LAYER_LEN;
+  if (k < 1 || k > 5) return null;
+  return { at: nextBed, lv: REQ[k], k };
+}
+let lastBook = -1;
+function updateUI(force){
+  $('sOre').textContent = fmt(S.ore);
+  $('sDepth').textContent = S.depth + 'm';
+  $('sDps').textContent = fmt(workerDps() * (boostOn() ? 2 : 1));
+  const li = layerIdxForDepth(S.depth);
+  $('cLayer').textContent = isBed(S.depth) ? '岩盤' : `第${li + 1}層 ${LAYERS[li].name}`;
+  $('cDepth').textContent = S.depth + 'm';
+  $('cHp').style.width = Math.max(0, 100 - S.dmg / hpOf(S.depth) * 100).toFixed(1) + '%';
+  // つるはし
+  const l = S.pick, c = pickCost(l), tier = PICK_TIER[tierOf(l)];
+  $('pickIc').innerHTML = pickIcon(l);
+  $('pickNm').innerHTML = `${tier[0]}<span>Lv${l}</span>`;
+  const nextMile = (Math.floor(l / 10) + 1) * 10;
+  $('pickDs').textContent = `1打 ${fmt(pickPow(l))}（Lv${nextMile}で力が2倍）`;
+  $('pickBuy').innerHTML = `強くする<small>${fmt(c)} 鉱石</small>`;
+  $('pickBuy').disabled = S.ore < c;
+  const nr = nextReq();
+  const lk = locked(S);
+  $('pickNote').innerHTML = nr
+    ? `次の岩盤（${nr.at}m）を割るには <b class="${S.pick < nr.lv ? 'need' : ''}">Lv${nr.lv}</b> が必要${S.pick >= nr.lv ? '（足りています）' : ''}`
+    : '岩盤はもうありません。どこまでも掘り進めます。';
+  $('dotTool').style.display = S.ore >= c ? 'block' : 'none';
+  let anyCrew = false;
+  WK.forEach((w, i) => {
+    const cc = wkCost(i, S.w[i]);
+    $('wN' + i).textContent = S.w[i] ? `${S.w[i]}人` : '';
+    const b = $('wB' + i); b.innerHTML = `雇う<small>${fmt(cc)} 鉱石</small>`; b.disabled = S.ore < cc;
+    if (S.ore >= cc) anyCrew = true;
+  });
+  $('dotCrew').style.display = anyCrew ? 'block' : 'none';
+  const sc = speciesCount();
+  $('zCount').textContent = sc;
+  $('zBonus').textContent = `鉱石 +${sc * 5}%（1種ごとに+5%）`;
+  $('dotBook').style.display = ITEMS.some(it => S.found[it.id] && !S.seen[it.id]) ? 'block' : 'none';
+  if (tab === 'book' && (force || lastBook !== sc)) buildBook();
+  lastBook = sc;
+  // 岩盤
+  const lm = $('lockMsg');
+  if (lk) {
+    lm.style.display = 'block';
+    lm.innerHTML = `<b>岩盤！</b> つるはし <b>Lv${REQ[S.depth / LAYER_LEN]}</b> で割れる（今 Lv${S.pick}）<br>それまで仲間は横掘りで鉱石を集めています`;
+  } else lm.style.display = 'none';
+  // 広告
+  const bc = $('boostChip'), ab = $('adBoost');
+  if (boostOn()) {
+    const r = Math.ceil((S.boostUntil - Date.now()) / 1000);
+    bc.style.display = 'block'; bc.textContent = `採掘2倍 ${Math.floor(r / 60)}:${String(r % 60).padStart(2, '0')}`;
+    ab.disabled = true; ab.innerHTML = `<span class="tri"></span>採掘2倍 発動中<small>残り ${Math.floor(r / 60)}分${r % 60}秒</small>`;
+  } else {
+    bc.style.display = 'none';
+    ab.disabled = false; ab.innerHTML = `<span class="tri"></span>採掘2倍を5分<small>本番は動画広告（試作は即効果）</small>`;
+  }
+}
+
+function buyPick(){
+  const c = pickCost(S.pick);
+  if (S.ore < c) return;
+  S.ore -= c; S.pick++;
+  const tierUp = S.pick % 10 === 0;
+  sfx(tierUp ? 'tier' : 'buy');
+  flash($('pickBuy'));
+  if (tierUp) { toast('つるはしが進化', PICK_TIER[tierOf(S.pick)][0], `1打の力が2倍（${fmt(pickPow(S.pick))}）`, pickIcon(S.pick)); fxRing(); }
+  if (isBed(S.depth) && S.pick === REQ[S.depth / LAYER_LEN]) floatText(cx(), rowY(S.depth) + 16, '割れる！', '#ffd166', 22);
+  updateUI(); save();
+}
+function buyWorker(i){
+  const c = wkCost(i, S.w[i]);
+  if (S.ore < c) return;
+  S.ore -= c; S.w[i]++;
+  sfx('buy'); flash($('wB' + i));
+  if (S.w[i] === 1) toast('仲間が来た', WK[i].name, WK[i].desc, crewIcon(i));
+  updateUI(); save();
+}
+function flash(el){ if (reduced) return; el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash'); }
+
+// ================= トースト・おかえり =================
+// 一度に1枚だけ。たまったら順に出す（待たせるのは4件まで）
+const toastQ = []; let toastBusy = false;
+function toast(t1, t2, t3, icon){
+  toastQ.push({ t1, t2, t3, icon });
+  if (toastQ.length > 4) toastQ.splice(0, toastQ.length - 4);
+  if (!toastBusy) nextToast();
+}
+function nextToast(){
+  const q = toastQ.shift();
+  if (!q) { toastBusy = false; return; }
+  toastBusy = true;
+  const el = document.createElement('div');
+  el.className = 'toast';
+  el.innerHTML = `${q.icon || ''}<div><div class="t1">${q.t1}</div><div class="t2">${q.t2}</div><div class="t3">${q.t3 || ''}</div></div>`;
+  $('toasts').appendChild(el);
+  const stay = toastQ.length ? 1300 : 2300;
+  setTimeout(() => { el.classList.add('out'); setTimeout(() => { el.remove(); nextToast(); }, 380); }, stay);
+}
+let pendingAway = null;
+function showAway(sec, capped, isDev){
+  const r = simulateAway(sec);
+  pendingAway = r;
+  $('offTitle').textContent = isDev ? '1時間進めました（試作用）' : 'おかえりなさい';
+  $('offWhen').textContent = isDev ? '留守にしていたのと同じ計算です' : `留守の間 ${fmtDur(sec)}${capped ? '（上限の8時間まで数えました）' : ''}`;
+  const extra = $('offExtra');
+  if (workerDps() === 0) {
+    $('offText').textContent = '仲間がいないので、誰も掘っていませんでした。';
+    $('offOre').textContent = '0 個';
+    extra.innerHTML = '<p class="sub">「仲間」で見習い坑夫を雇うと、閉じている間も掘り進めます。</p>';
+    $('offX2').style.display = 'none';
+  } else {
+    $('offText').innerHTML = r.meters > 0 ? `仲間が <b>${r.meters}m</b> 掘り進んで、鉱石を掘りました` : `仲間は岩盤の前で横掘りを続けて、鉱石を集めました`;
+    $('offOre').textContent = `${fmt(r.ore)} 個`;
+    const uniq = [...new Set(r.finds)];
+    let h = '';
+    if (r.stuck) h += `<p class="sub">岩盤で止まり、途中から横掘りしていました（つるはし Lv${REQ[r.state.depth / LAYER_LEN]} が必要）</p>`;
+    if (uniq.length) {
+      const news = uniq.filter(id => !S.found[id]);
+      h += `<p class="sub">見つけた物 ${r.finds.length}個${news.length ? `（図鑑に新しく ${news.length}種）` : ''}</p><div class="finds">` +
+        uniq.map(id => `<span>${ITEM_BY_ID[id].name}${news.includes(id) ? ' 新' : ''}</span>`).join('') + '</div>';
+    }
+    extra.innerHTML = h;
+    $('offX2').style.display = r.ore > 0 ? 'block' : 'none';
+  }
+  $('offModal').classList.add('on');
+}
+function claimAway(mult){
+  const r = pendingAway; pendingAway = null;
+  $('offModal').classList.remove('on');
+  if (!r) return;
+  const before = speciesCount();
+  const beforeDepth = S.depth;
+  const keep = { pick:S.pick, w:S.w, boostUntil:S.boostUntil, sound:S.sound, theme:S.theme, seen:S.seen };
+  S = Object.assign(r.state, keep);
+  if (mult > 1) { S.ore += r.ore * (mult - 1); S.total += r.ore * (mult - 1); }
+  camY = Math.max(camY, S.depth - 6);
+  const gained = speciesCount() - before;
+  if (r.ore > 0) { sfx('find'); floatText(cx(), rowY(S.depth) - 40, '+' + fmt(r.ore * mult), '#ffd166', 24); burst(cx(), rowY(S.depth), 30, LAYERS[layerIdxForDepth(S.depth)].speck, 1.4); }
+  if (gained > 0) toast('図鑑に登録', `新しく ${gained}種`, '「図鑑」で確かめよう');
+  if (layerIdxForDepth(S.depth) !== layerIdxForDepth(beforeDepth)) banner(layerIdxForDepth(S.depth));
+  updateUI(true); save();
+}
+$('offOk').addEventListener('click', () => { claimAway(1); sfx('ui'); });
+$('offX2').addEventListener('click', () => claimAway(2));
+$('devSkip').addEventListener('click', () => { if (pendingAway) return; showAway(3600, false, true); });
+$('adBoost').addEventListener('click', () => {
+  if (boostOn()) return;
+  S.boostUntil = Date.now() + BOOST_SEC * 1000;
+  sfx('tier'); toast('採掘2倍', '5分間 すべての採掘が2倍', '本番は動画広告を見たあとに発動'); fxRing();
+  updateUI(); save();
+});
+let resetArm = 0;
+$('resetBtn').addEventListener('click', e => {
+  if (Date.now() - resetArm < 3000) {
+    try { localStorage.removeItem(KEY); } catch (err) {}
+    const keep = { sound:S.sound, theme:S.theme };
+    S = Object.assign(fresh(), keep); camY = -4; parts.length = 0; floats.length = 0;
+    e.target.textContent = '最初から'; resetArm = 0; buildPanels(); setTab('tool'); save(); return;
+  }
+  resetArm = Date.now(); e.target.textContent = 'もう一度押すと消えます';
+  setTimeout(() => { if (Date.now() - resetArm >= 3000) e.target.textContent = '最初から'; }, 3100);
+});
+$('soundBtn').addEventListener('click', () => { S.sound = !S.sound; $('soundBtn').textContent = '音：' + (S.sound ? 'あり' : 'なし'); save(); sfx('ui'); });
+function applyTheme(){
+  const r = document.documentElement;
+  if (S.theme === 'auto') r.removeAttribute('data-theme'); else r.setAttribute('data-theme', S.theme);
+  $('themeBtn').textContent = '表示：' + ({ auto:'自動', light:'明るい', dark:'暗い' })[S.theme];
+  readSky();
+}
+$('themeBtn').addEventListener('click', () => { S.theme = ({ auto:'light', light:'dark', dark:'auto' })[S.theme]; applyTheme(); save(); });
+
+// ================= 音（WebAudio で合成） =================
+let AC = null;
+function ac(){ if (!AC) { try { AC = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { AC = null; } } return AC; }
+function sfx(kind, strength){
+  if (!S.sound) return;
+  const a = ac(); if (!a) return;
+  if (a.state === 'suspended') a.resume();
+  const t = a.currentTime;
+  const noise = (dur, freq, q, gain) => {
+    const len = Math.floor(a.sampleRate * dur), buf = a.createBuffer(1, len, a.sampleRate), d = buf.getChannelData(0);
+    for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 3);
+    const src = a.createBufferSource(); src.buffer = buf;
+    const f = a.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = freq; f.Q.value = q;
+    const g = a.createGain(); g.gain.value = gain;
+    src.connect(f); f.connect(g); g.connect(a.destination); src.start(t);
+  };
+  const tone = (f0, f1, dur, gain, type, delay) => {
+    const o = a.createOscillator(), g = a.createGain(); o.type = type || 'sine';
+    const st = t + (delay || 0);
+    o.frequency.setValueAtTime(f0, st); o.frequency.exponentialRampToValueAtTime(f1, st + dur);
+    g.gain.setValueAtTime(gain, st); g.gain.exponentialRampToValueAtTime(0.0001, st + dur);
+    o.connect(g); g.connect(a.destination); o.start(st); o.stop(st + dur + 0.02);
+  };
+  if (kind === 'hit') { noise(0.07, 1800 + Math.random() * 900, 1.2, 0.5); tone(220 + Math.random() * 40, 90, 0.06, 0.18, 'triangle'); }
+  else if (kind === 'crit') { noise(0.1, 2600, 1, 0.6); tone(880, 440, 0.12, 0.12, 'square'); }
+  else if (kind === 'clank') { tone(1900, 1700, 0.18, 0.12, 'square'); tone(2600, 2500, 0.2, 0.06, 'sine'); }
+  else if (kind === 'break') { noise(0.22, 500, 0.8, 0.9); tone(140, 50, 0.2, 0.3, 'sine'); }
+  else if (kind === 'bed') { noise(0.5, 300, 0.6, 1.0); tone(90, 35, 0.5, 0.45, 'sine'); }
+  else if (kind === 'find') { [0, 0.08, 0.16].forEach((d, i) => tone([784, 988, 1319][i], [784, 988, 1319][i] * 1.01, 0.25, 0.12, 'triangle', d)); }
+  else if (kind === 'rare') { [0, 0.07, 0.14, 0.21].forEach((d, i) => tone([659, 880, 1109, 1568][i], [659, 880, 1109, 1568][i], 0.35, 0.12, 'triangle', d)); }
+  else if (kind === 'buy') { tone(520, 780, 0.09, 0.1, 'triangle'); }
+  else if (kind === 'tier') { tone(392, 784, 0.25, 0.12, 'triangle'); tone(588, 1176, 0.3, 0.08, 'sine', 0.06); }
+  else if (kind === 'ui') { tone(700, 700, 0.03, 0.05, 'sine'); }
+}
+
+// ================= 描画 =================
+const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const cv = $('cv'), ctx = cv.getContext('2d'), stage = $('stage');
+let W = 340, H = 340, DPR = 1, R = 34, camY = -4, sky1 = '#8fd0f5', sky2 = '#e3f4ff', grass = '#5fae4a', dark = false;
+function readSky(){
+  const cs = getComputedStyle(document.documentElement);
+  sky1 = cs.getPropertyValue('--sky1').trim() || sky1; sky2 = cs.getPropertyValue('--sky2').trim() || sky2;
+  grass = cs.getPropertyValue('--grass').trim() || grass;
+  dark = cs.getPropertyValue('color-scheme').trim() === 'dark';
+}
+function resize(){
+  const r = stage.getBoundingClientRect();
+  W = Math.max(200, r.width); H = Math.max(200, r.height);
+  DPR = Math.min(2.5, window.devicePixelRatio || 1);
+  cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR);
+}
+const MAP_W = 14;
+const shaftW = () => Math.min(W - MAP_W - 56, 270);
+const cx = () => (W - MAP_W) / 2;
+const baseY = () => H * 0.6;
+const rowY = m => baseY() + (m - camY) * R;
+function hash(n){ n = (n ^ 61) ^ (n >>> 16); n = n + (n << 3); n = n ^ (n >>> 4); n = Math.imul(n, 0x27d4eb2d); n = n ^ (n >>> 15); return n >>> 0; }
+function shade(hex, k){
+  const n = parseInt(hex.slice(1), 16); let r = n >> 16, g = n >> 8 & 255, b = n & 255;
+  const f = v => Math.max(0, Math.min(255, Math.round(k > 0 ? v + (255 - v) * k : v * (1 + k))));
+  return `rgb(${f(r)},${f(g)},${f(b)})`;
+}
+
+// 演出の状態
+const parts = [], floats = [], pops = [];
+let swingT = 9, shakeT = 0, blockHitT = 9, bannerT = 9, bannerL = 0, ringT = 9, clankT = 9, lastTapX = 0;
+const crew = WK.map((w, i) => ({ t: Math.random(), per: [0.95, 0.75, 1.3, 0.12, 0.5][i] }));
+function burst(x, y, n, color, power){
+  if (reduced) n = Math.ceil(n / 3);
+  for (let i = 0; i < n; i++) {
+    const a = -Math.PI / 2 + (Math.random() - 0.5) * Math.PI * 1.3;
+    const v = (90 + Math.random() * 220) * (power || 1);
+    parts.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, life: 0.6 + Math.random() * 0.6, max: 1.2, s: 2 + Math.random() * 4 * (power || 1), c: Math.random() < 0.3 ? shade(color, 0.3) : color, rot: Math.random() * 6, vr: (Math.random() - .5) * 14 });
+  }
+  if (parts.length > 400) parts.splice(0, parts.length - 400);
+}
+function sparks(x, y, n){
+  for (let i = 0; i < n; i++) {
+    const a = -Math.PI / 2 + (Math.random() - 0.5) * Math.PI * 1.6, v = 150 + Math.random() * 250;
+    parts.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, life: 0.25 + Math.random() * 0.25, max: 0.5, s: 1.5, c: '#ffe08a', spark: true });
+  }
+}
+function floatText(x, y, text, color, size){
+  floats.push({ x: x + (Math.random() - 0.5) * 16, y, text, color, size: size || 16, life: 1.1, max: 1.1 });
+  if (floats.length > 30) floats.shift();
+}
+function banner(li){ bannerL = li; bannerT = 0; }
+function fxRing(){ ringT = 0; }
+
+const FX = {
+  brk(d, g){
+    const L = LAYERS[layerIdxForDepth(d)];
+    const y = rowY(d) + R / 2, sw = shaftW();
+    for (let k = 0; k < 5; k++) burst(cx() - sw / 2 + sw * (k + 0.5) / 5, y, isBed(d) ? 12 : 6, isBed(d) ? '#55555f' : L.block, isBed(d) ? 1.5 : 1.1);
+    burst(cx(), y, isBed(d) ? 14 : 5, L.speck, 1.2);
+    floatText(cx() + 30, rowY(d) - 10, '+' + fmt(g), '#ffd166', isBed(d) ? 24 : 17);
+    if (!reduced) shakeT = isBed(d) ? 0.45 : 0.12;
+    sfx(isBed(d) ? 'bed' : 'break');
+    if (isBed(d)) { banner(layerIdxForDepth(d + 1)); }
+  },
+  side(g){ sideAcc += g; },
+  find(it, isNew, extra){
+    pops.push({ it, t: 0, x: cx() + (Math.random() - 0.5) * 60, y: rowY(S.depth) });
+    if (isNew) {
+      sfx(it.r === 'c' ? 'find' : 'rare');
+      toast(it.r === 'l' ? '大発見！ 図鑑に登録' : '発見！ 図鑑に登録', it.name, `${it.desc}／鉱石 +5%`, iconSvg(it, 40));
+    } else {
+      floatText(cx() - 40, rowY(S.depth) - 30, it.name + ' → +' + fmt(extra), '#fff2c9', 13);
+    }
+  },
+  layer(li){ banner(li); },
+};
+let sideAcc = 0, sideShowT = 0;
+
+function tap(ev){
+  ev.preventDefault();
+  $('hint').style.opacity = '0';
+  ac();
+  swingT = 0;
+  const x = cx() + 18, y = rowY(S.depth);
+  if (locked(S)) {
+    // 岩盤：はじかれるが、横掘りで少しだけ鉱石
+    clankT = 0; sparks(x, y + 2, reduced ? 4 : 12); sfx('clank');
+    if (Math.random() < 0.35) floatText(x, y - 20, 'カキン！', '#ffe08a', 15);
+    applyDamage(S, pickPow(S.pick) * (boostOn() ? 2 : 1), null, FX);
+    updateUI(); return;
+  }
+  const crit = Math.random() < CRIT_P;
+  const dmg = pickPow(S.pick) * (crit ? CRIT_X : 1) * (boostOn() ? 2 : 1);
+  blockHitT = 0;
+  const L = LAYERS[layerIdxForDepth(S.depth)];
+  burst(x, y + 2, crit ? 14 : 6, isBed(S.depth) ? '#55555f' : L.block, crit ? 1.2 : 0.8);
+  if (crit) { floatText(x, y - 26, '会心！', '#ff9f43', 20); sfx('crit'); if (!reduced) shakeT = Math.max(shakeT, 0.15); }
+  else sfx('hit');
+  applyDamage(S, dmg, null, FX);
+  updateUI();
+}
+stage.addEventListener('pointerdown', tap);
+stage.addEventListener('contextmenu', e => e.preventDefault());
+
+// ---- 人物 ----
+function drawPick(x, y, ang, len, headColor, sc){
+  ctx.save(); ctx.translate(x, y); ctx.rotate(ang);
+  ctx.strokeStyle = '#7a4d24'; ctx.lineWidth = 3.2 * sc; ctx.lineCap = 'round';
+  ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(len, 0); ctx.stroke();
+  ctx.translate(len, 0);
+  ctx.fillStyle = headColor; ctx.strokeStyle = 'rgba(0,0,0,.45)'; ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(-2 * sc, -13 * sc); ctx.quadraticCurveTo(7 * sc, 0, -2 * sc, 13 * sc);
+  ctx.lineTo(1 * sc, 13 * sc); ctx.quadraticCurveTo(11 * sc, 0, 1 * sc, -13 * sc); ctx.closePath();
+  ctx.fill(); ctx.stroke();
+  ctx.restore();
+}
+function drawPerson(x, y, sc, hat, face, ang, pickColor, lamp){
+  // y = 足元。face=1 右向き
+  ctx.save(); ctx.translate(x, y); ctx.scale(face * sc, sc);
+  ctx.fillStyle = 'rgba(0,0,0,.25)'; ctx.beginPath(); ctx.ellipse(0, 0, 11, 3, 0, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = '#2f3b52'; ctx.fillRect(-6, -12, 5, 12); ctx.fillRect(1, -12, 5, 12);
+  ctx.fillStyle = '#3b6ea8'; roundRect(-8, -30, 16, 20, 5); ctx.fill();
+  ctx.fillStyle = '#e8b44a'; ctx.fillRect(-8, -24, 16, 3);
+  ctx.fillStyle = '#f1c9a0'; ctx.beginPath(); ctx.arc(1, -37, 7.5, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = '#2b2118'; ctx.beginPath(); ctx.arc(4, -37, 1.2, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = hat; ctx.beginPath(); ctx.arc(1, -39, 8.5, Math.PI, 0); ctx.fill(); ctx.fillRect(-8, -40, 18, 2.5);
+  if (lamp) { ctx.fillStyle = '#fff6c4'; ctx.beginPath(); ctx.arc(8, -43, 2.4, 0, Math.PI * 2); ctx.fill(); }
+  drawPick(2, -27, ang, 22, pickColor, 1);
+  ctx.fillStyle = '#f1c9a0'; ctx.beginPath(); ctx.arc(2 + Math.cos(ang) * 8, -27 + Math.sin(ang) * 8, 3, 0, Math.PI * 2); ctx.fill();
+  ctx.restore();
+}
+function roundRect(x, y, w, h, r){ ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
+// 振り下ろし：構え -2.3rad → 打つ 0.75rad
+function swingAngle(t, per){
+  const up = -2.3, down = 0.75;
+  const hit = 0.07 * per, back = 0.3 * per;
+  if (t < hit) { const k = t / hit; return up + (down - up) * k * k; }
+  if (t < hit + back) { const k = (t - hit) / back; return down + (up - down) * (1 - Math.pow(1 - k, 3)); }
+  return up;
+}
+function drawDrill(x, y, face, t){
+  ctx.save(); ctx.translate(x, y); ctx.scale(face * 0.8, 0.8);
+  ctx.fillStyle = 'rgba(0,0,0,.25)'; ctx.beginPath(); ctx.ellipse(0, 0, 18, 3, 0, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = '#6f7b8a'; roundRect(-18, -26, 26, 18, 4); ctx.fill();
+  ctx.fillStyle = '#e8b44a'; ctx.fillRect(-18, -14, 26, 3);
+  ctx.fillStyle = '#9ad4ff'; ctx.fillRect(-12, -23, 8, 6);
+  ctx.fillStyle = '#333'; ctx.beginPath(); ctx.arc(-11, -5, 5, 0, 7); ctx.arc(3, -5, 5, 0, 7); ctx.fill();
+  // ドリル（回る縞）
+  ctx.save(); ctx.translate(8, -12); ctx.rotate(0.9);
+  ctx.fillStyle = '#c7ced8'; ctx.beginPath(); ctx.moveTo(0, -7); ctx.lineTo(22, 0); ctx.lineTo(0, 7); ctx.closePath(); ctx.fill();
+  ctx.strokeStyle = 'rgba(0,0,0,.35)'; ctx.lineWidth = 1.2;
+  for (let k = 0; k < 3; k++) { const px = ((t * 60 + k * 7) % 21); ctx.beginPath(); ctx.moveTo(px, -7 * (1 - px / 22)); ctx.lineTo(px + 3, 7 * (1 - (px + 3) / 22)); ctx.stroke(); }
+  ctx.restore(); ctx.restore();
+}
+function drawRobot(x, y, face, ang){
+  ctx.save(); ctx.translate(x, y); ctx.scale(face * 0.8, 0.8);
+  ctx.fillStyle = 'rgba(0,0,0,.25)'; ctx.beginPath(); ctx.ellipse(0, 0, 13, 3, 0, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = '#555'; ctx.fillRect(-8, -10, 6, 10); ctx.fillRect(2, -10, 6, 10);
+  ctx.fillStyle = '#58b7c9'; roundRect(-12, -36, 24, 26, 6); ctx.fill();
+  ctx.fillStyle = '#123'; roundRect(-8, -31, 16, 8, 4); ctx.fill();
+  ctx.fillStyle = '#7ff0ff'; ctx.beginPath(); ctx.arc(3, -27, 2.4, 0, 7); ctx.fill();
+  ctx.strokeStyle = '#58b7c9'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(0, -36); ctx.lineTo(0, -42); ctx.stroke();
+  ctx.fillStyle = '#ff5a5a'; ctx.beginPath(); ctx.arc(0, -43, 2, 0, 7); ctx.fill();
+  drawPick(4, -22, ang, 20, '#7ff0ff', 0.9);
+  ctx.restore();
+}
+
+let tAll = 0;
+function draw(dt){
+  tAll += dt;
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  // カメラ
+  const target = S.depth - 0.0;
+  camY = reduced ? target : camY + (target - camY) * Math.min(1, dt * 7);
+  let ox = 0, oy = 0;
+  if (shakeT > 0) { ox = (Math.random() - 0.5) * 7 * shakeT / 0.3; oy = (Math.random() - 0.5) * 7 * shakeT / 0.3; }
+  ctx.save(); ctx.translate(ox, oy);
+  // 空
+  const g = ctx.createLinearGradient(0, rowY(-8), 0, rowY(0));
+  g.addColorStop(0, sky1); g.addColorStop(1, sky2);
+  ctx.fillStyle = g; ctx.fillRect(-10, -10, W + 20, H + 20);
+  const top = Math.floor(camY - baseY() / R) - 1, bot = Math.ceil(camY + (H - baseY()) / R) + 1;
+  if (top < 0) drawSurface();
+  const sw = shaftW(), sx = cx() - sw / 2;
+  for (let m = Math.max(0, top); m <= bot; m++) {
+    const y = rowY(m), li = layerIdxForDepth(m), L = LAYERS[li], bed = isBed(m);
+    // 壁
+    ctx.fillStyle = bed ? '#2c2c33' : L.wall; ctx.fillRect(-10, y, W + 20, R + 0.6);
+    // 粒
+    for (let c = 0; c < Math.ceil((W + 20) / 16); c++) {
+      const h = hash(m * 7919 + c * 131);
+      if (h % 4 !== 0) continue;
+      const px = c * 16 + (h >>> 3) % 12 - 6, py = y + ((h >>> 8) % (R - 6)) + 2, s = 2 + (h >>> 12) % 3;
+      if (px > sx - 2 && px < sx + sw + 2 && m < S.depth) continue;
+      ctx.fillStyle = bed ? '#4a4a55' : L.speck;
+      if (L.glow && !bed) { ctx.globalAlpha = 0.55 + 0.45 * Math.sin(tAll * 2 + h % 7); }
+      ctx.fillRect(px, py, s, s);
+      ctx.globalAlpha = 1;
+    }
+    if (bed) { // 岩盤の斜線
+      ctx.strokeStyle = 'rgba(255,255,255,.06)'; ctx.lineWidth = 3;
+      for (let x = -R; x < W + R; x += 12) { ctx.beginPath(); ctx.moveTo(x, y + R); ctx.lineTo(x + R, y); ctx.stroke(); }
+    }
+    // 縦穴
+    if (m < S.depth) {
+      ctx.fillStyle = L.hollow; ctx.fillRect(sx, y - 0.3, sw, R + 0.9);
+      ctx.fillStyle = 'rgba(0,0,0,.18)'; ctx.fillRect(sx, y - 0.3, 6, R + 0.9); ctx.fillRect(sx + sw - 6, y - 0.3, 6, R + 0.9);
+      if (m % 5 === 0) { // 支柱と梁
+        ctx.fillStyle = '#6b4a2a'; ctx.fillRect(sx + 2, y, 5, R); ctx.fillRect(sx + sw - 7, y, 5, R);
+        ctx.fillStyle = '#7d5a35'; ctx.fillRect(sx, y, sw, 4);
+      }
+    } else if (m === S.depth) {
+      const hitOff = blockHitT < 0.08 && !reduced ? (Math.random() - 0.5) * 3 : 0;
+      ctx.save(); ctx.translate(hitOff, 0);
+      ctx.fillStyle = bed ? '#3a3a44' : L.block; ctx.fillRect(sx, y, sw, R);
+      ctx.fillStyle = 'rgba(255,255,255,.18)'; ctx.fillRect(sx, y, sw, 3);
+      if (bed) {
+        ctx.strokeStyle = 'rgba(255,255,255,.1)'; ctx.lineWidth = 4;
+        for (let x = sx; x < sx + sw; x += 14) { ctx.beginPath(); ctx.moveTo(x, y + R); ctx.lineTo(x + 14, y + 3); ctx.stroke(); }
+        ctx.fillStyle = '#8a8a99'; for (let x = sx + 10; x < sx + sw; x += 40) { ctx.beginPath(); ctx.arc(x, y + R / 2, 2.5, 0, 7); ctx.fill(); }
+      }
+      // ひび
+      const r = S.dmg / hpOf(m);
+      if (r > 0.02) {
+        ctx.strokeStyle = 'rgba(0,0,0,.55)'; ctx.lineWidth = 1.6; ctx.lineJoin = 'round';
+        const n = Math.min(9, Math.ceil(r * 9));
+        for (let k = 0; k < n; k++) {
+          const h = hash(m * 31 + k * 977);
+          let px = sx + 16 + (h % Math.max(1, (sw - 32))), py = y + 2;
+          ctx.beginPath(); ctx.moveTo(px, py);
+          for (let s = 0; s < 4; s++) { const hh = hash(h + s * 17); px += ((hh % 17) - 8); py += (R - 4) / 4; ctx.lineTo(px, py); }
+          ctx.stroke();
+        }
+      }
+      ctx.restore();
+    } else {
+      ctx.fillStyle = bed ? '#34343c' : shade(L.block, -0.12); ctx.fillRect(sx, y, sw, R);
+      ctx.fillStyle = 'rgba(0,0,0,.12)'; ctx.fillRect(sx, y, sw, 1);
+      for (let c = 0; c < 6; c++) { const h = hash(m * 313 + c * 71); if (h % 3) continue; ctx.fillStyle = bed ? '#4a4a55' : L.speck; ctx.globalAlpha = 0.8; ctx.fillRect(sx + 8 + (h >>> 4) % (sw - 16), y + 4 + (h >>> 9) % (R - 10), 3, 3); ctx.globalAlpha = 1; }
+    }
+    // 深さの目盛り
+    if (m % 5 === 0 && m > 0) {
+      ctx.fillStyle = 'rgba(255,255,255,.55)'; ctx.font = '700 10px "M PLUS Rounded 1c", sans-serif'; ctx.textAlign = 'left';
+      ctx.fillText(m + 'm', 5, y + 12);
+    }
+  }
+  // 暗い地下では明かり
+  if (S.depth > 8) {
+    const lx = cx(), ly = rowY(S.depth) - 30;
+    const rg = ctx.createRadialGradient(lx, ly, 20, lx, ly, Math.max(W, H) * 0.75);
+    rg.addColorStop(0, 'rgba(0,0,0,0)'); rg.addColorStop(1, `rgba(0,0,0,${Math.min(0.55, 0.15 + S.depth / 300)})`);
+    ctx.fillStyle = rg; ctx.fillRect(-10, -10, W + 20, H + 20);
+  }
+  // 仲間
+  const fy = rowY(S.depth);
+  const slots = [-0.3, 0.33, -0.44, 0.45, -0.16];
+  const lk = locked(S);
+  WK.forEach((w, i) => {
+    if (!S.w[i]) return;
+    const c = crew[i]; c.t += dt; if (c.t > c.per + 0.25) { c.t = 0; if (i !== 3) crewHit(i); }
+    const x = cx() + slots[i] * sw, face = slots[i] < 0 ? 1 : -1;
+    const ang = swingAngle(c.t, c.per > 0.6 ? 1 : 0.8);
+    if (i === 3) { drawDrill(x, fy, face, tAll); if (Math.random() < dt * 8) burst(x + face * 22, fy, 1, LAYERS[layerIdxForDepth(S.depth)].block, 0.5); }
+    else if (i === 4) drawRobot(x, fy, face, ang);
+    else drawPerson(x, fy, 0.72, ['#f4f4f4', '#f08a24', '#d8344a'][i], face, ang, '#b9c2cc', false);
+    if (S.w[i] > 1) {
+      ctx.font = '800 10px "M PLUS Rounded 1c", sans-serif'; ctx.textAlign = 'center';
+      ctx.fillStyle = 'rgba(0,0,0,.5)'; roundRect(x - 13, fy - 52, 26, 13, 6); ctx.fill();
+      ctx.fillStyle = '#fff'; ctx.fillText('×' + S.w[i], x, fy - 42);
+    }
+  });
+  // 主人公
+  swingT += dt;
+  const pang = swingT < 0.4 ? swingAngle(swingT, 1) : -2.3 + Math.sin(tAll * 2.2) * 0.06;
+  drawPerson(cx(), fy, 1, '#f2c230', 1, pang, PICK_TIER[tierOf(S.pick)][1], true);
+  // 粒子
+  for (let i = parts.length - 1; i >= 0; i--) {
+    const p = parts[i]; p.life -= dt;
+    if (p.life <= 0) { parts.splice(i, 1); continue; }
+    p.vy += 900 * dt; p.x += p.vx * dt; p.y += p.vy * dt;
+    if (p.vr) p.rot += p.vr * dt;
+    ctx.globalAlpha = Math.min(1, p.life / 0.3);
+    if (p.spark) { ctx.strokeStyle = p.c; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p.x - p.vx * 0.03, p.y - p.vy * 0.03); ctx.stroke(); }
+    else { ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot); ctx.fillStyle = p.c; ctx.fillRect(-p.s / 2, -p.s / 2, p.s, p.s); ctx.restore(); }
+  }
+  ctx.globalAlpha = 1;
+  // 出てきた宝
+  for (let i = pops.length - 1; i >= 0; i--) {
+    const p = pops[i]; p.t += dt;
+    if (p.t > 1.4) { pops.splice(i, 1); continue; }
+    const k = Math.min(1, p.t / 0.35), y = p.y - 20 - 50 * (1 - Math.pow(1 - k, 3));
+    ctx.globalAlpha = p.t > 1 ? (1.4 - p.t) / 0.4 : 1;
+    const rr = ctx.createRadialGradient(p.x, y, 2, p.x, y, 34);
+    rr.addColorStop(0, 'rgba(255,240,180,.9)'); rr.addColorStop(1, 'rgba(255,240,180,0)');
+    ctx.fillStyle = rr; ctx.beginPath(); ctx.arc(p.x, y, 34, 0, 7); ctx.fill();
+    ctx.save(); ctx.translate(p.x - 16, y - 16); ctx.scale(0.8, 0.8);
+    ctx.fillStyle = p.it.color; ctx.strokeStyle = 'rgba(0,0,0,.4)'; ctx.lineWidth = 1.5;
+    ctx.fill(pathOf(p.it.shape), 'evenodd'); ctx.stroke(pathOf(p.it.shape));
+    ctx.restore(); ctx.globalAlpha = 1;
+  }
+  // 数字
+  for (let i = floats.length - 1; i >= 0; i--) {
+    const f = floats[i]; f.life -= dt;
+    if (f.life <= 0) { floats.splice(i, 1); continue; }
+    f.y -= 38 * dt;
+    ctx.globalAlpha = Math.min(1, f.life / 0.4);
+    ctx.font = `800 ${f.size}px "M PLUS Rounded 1c", sans-serif`; ctx.textAlign = 'center';
+    ctx.lineWidth = 3.5; ctx.strokeStyle = 'rgba(0,0,0,.55)'; ctx.strokeText(f.text, f.x, f.y);
+    ctx.fillStyle = f.color; ctx.fillText(f.text, f.x, f.y);
+  }
+  ctx.globalAlpha = 1;
+  ctx.restore();
+  // 横掘りの鉱石まとめ表示
+  sideShowT += dt;
+  if (sideShowT > 1 && sideAcc > 0) { floatText(cx() - 60, rowY(S.depth) - 30, '横掘り +' + fmt(sideAcc), '#ffe3a3', 13); sideAcc = 0; sideShowT = 0; }
+  // 光の輪（強化・2倍）
+  if (ringT < 0.8) {
+    ringT += dt;
+    const k = ringT / 0.8;
+    ctx.strokeStyle = `rgba(255,209,102,${1 - k})`; ctx.lineWidth = 4 * (1 - k) + 1;
+    ctx.beginPath(); ctx.arc(cx(), fy - 25, 20 + k * 90, 0, 7); ctx.stroke();
+  }
+  // 2倍中の縁
+  if (boostOn()) { ctx.strokeStyle = `rgba(167,155,255,${0.45 + 0.25 * Math.sin(tAll * 5)})`; ctx.lineWidth = 4; ctx.strokeRect(2, 2, W - 4, H - 4); }
+  // 層の見出し
+  if (bannerT < 2.6) {
+    bannerT += dt;
+    const a = bannerT < 0.3 ? bannerT / 0.3 : bannerT > 2 ? (2.6 - bannerT) / 0.6 : 1;
+    ctx.globalAlpha = Math.max(0, a);
+    ctx.fillStyle = 'rgba(0,0,0,.55)'; ctx.fillRect(0, H * 0.2, W - MAP_W, 58);
+    ctx.textAlign = 'center'; ctx.fillStyle = LAYERS[bannerL].speck; ctx.font = '800 12px "M PLUS Rounded 1c", sans-serif';
+    ctx.fillText(bannerL === 0 ? "つるはし社 採掘はじめ" : `${bannerL * LAYER_LEN}m 到達`, (W - MAP_W) / 2, H * 0.2 + 20);
+    ctx.fillStyle = '#fff'; ctx.font = '800 22px "M PLUS Rounded 1c", sans-serif';
+    ctx.fillText(`第${bannerL + 1}層 ${LAYERS[bannerL].name}`, (W - MAP_W) / 2, H * 0.2 + 46);
+    ctx.globalAlpha = 1;
+  }
+  drawMap();
+  if (shakeT > 0) shakeT = Math.max(0, shakeT - dt);
+  blockHitT += dt; clankT += dt;
+}
+function crewHit(i){
+  const sw = shaftW(), slots = [-0.3, 0.33, -0.44, 0.45, -0.16];
+  const face = slots[i] < 0 ? 1 : -1;
+  const x = cx() + slots[i] * sw + face * 16, y = rowY(S.depth);
+  if (locked(S)) sparks(x, y, reduced ? 1 : 3);
+  else burst(x, y, i === 2 ? 8 : 3, LAYERS[layerIdxForDepth(S.depth)].block, i === 2 ? 1 : 0.6);
+  if (i === 2 && !reduced && !locked(S)) { shakeT = Math.max(shakeT, 0.06); burst(x, y, 4, '#ffb347', 1); }
+}
+function drawSurface(){
+  const y0 = rowY(0);
+  // 太陽 or 月と星
+  if (dark) {
+    ctx.fillStyle = 'rgba(255,255,255,.8)';
+    for (let i = 0; i < 26; i++) { const h = hash(i * 97 + 5); ctx.fillRect(h % Math.floor(W), y0 - 20 - (h >>> 8) % 240, 1.5, 1.5); }
+    ctx.fillStyle = '#f3ecc8'; ctx.beginPath(); ctx.arc(W - 60, y0 - 150, 14, 0, 7); ctx.fill();
+  } else {
+    ctx.fillStyle = 'rgba(255,236,150,.9)'; ctx.beginPath(); ctx.arc(W - 62, y0 - 150, 18, 0, 7); ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,255,.85)';
+    const cxl = ((tAll * 6) % (W + 120)) - 60;
+    ctx.beginPath(); ctx.arc(cxl, y0 - 120, 12, 0, 7); ctx.arc(cxl + 14, y0 - 124, 15, 0, 7); ctx.arc(cxl + 30, y0 - 118, 11, 0, 7); ctx.fill();
+  }
+  // 遠くの山
+  ctx.fillStyle = dark ? '#1c2748' : '#b8dcc0';
+  ctx.beginPath(); ctx.moveTo(-10, y0);
+  for (let x = -10; x <= W + 10; x += 20) ctx.lineTo(x, y0 - 30 - 18 * Math.sin(x * 0.02) - 10 * Math.sin(x * 0.05));
+  ctx.lineTo(W + 10, y0); ctx.fill();
+  // 草
+  ctx.fillStyle = grass; ctx.fillRect(-10, y0 - 7, W + 20, 8);
+  // つるはし社の看板
+  const bx = 18, by = y0 - 7;
+  ctx.fillStyle = '#6b4a2a'; ctx.fillRect(bx + 8, by - 32, 4, 32); ctx.fillRect(bx + 58, by - 32, 4, 32);
+  ctx.fillStyle = '#f5e6c8'; roundRect(bx, by - 50, 70, 24, 4); ctx.fill();
+  ctx.strokeStyle = '#6b4a2a'; ctx.lineWidth = 2; ctx.stroke();
+  ctx.fillStyle = '#6b3d14'; ctx.font = '800 12px "M PLUS Rounded 1c", sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText('つるはし社', bx + 35, by - 33);
+  // 滑車
+  const sw = shaftW(), sx = cx() - sw / 2;
+  ctx.strokeStyle = '#6b4a2a'; ctx.lineWidth = 4;
+  ctx.beginPath(); ctx.moveTo(sx + sw - 10, y0 - 7); ctx.lineTo(sx + sw - 30, y0 - 56); ctx.lineTo(sx + sw + 10, y0 - 56); ctx.lineTo(sx + sw - 10, y0 - 7); ctx.stroke();
+  ctx.strokeStyle = 'rgba(40,30,20,.6)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(sx + sw - 10, y0 - 56); ctx.lineTo(sx + sw - 10, rowY(S.depth) - 60); ctx.stroke();
+}
+function drawMap(){
+  const x = W - MAP_W, total = 150, h = H - 16;
+  ctx.fillStyle = 'rgba(0,0,0,.45)'; ctx.fillRect(x, 0, MAP_W, H);
+  for (let l = 0; l < 6; l++) {
+    ctx.fillStyle = LAYERS[l].block;
+    ctx.fillRect(x + 4, 8 + h * l * 25 / total, MAP_W - 8, h * 25 / total - 1);
+  }
+  const d = Math.min(total, S.depth), my = 8 + h * d / total;
+  ctx.fillStyle = '#ffd166';
+  ctx.beginPath(); ctx.moveTo(x + 1, my - 4); ctx.lineTo(x + 6, my); ctx.lineTo(x + 1, my + 4); ctx.fill();
+  ctx.fillRect(x + 4, my - 1, MAP_W - 6, 2);
+}
+
+// ================= ループ =================
+let lastFrame = performance.now(), uiT = 0, saveT = 0, lastSeen = Date.now(), awayChecked = false;
+function frame(now){
+  let dt = (now - lastFrame) / 1000; lastFrame = now;
+  const wall = Date.now();
+  const gap = (wall - lastSeen) / 1000; lastSeen = wall;
+  if (gap > 60 && !pendingAway) { showAway(Math.min(gap, OFFLINE_CAP), gap > OFFLINE_CAP, false); dt = 0; }
+  dt = Math.min(dt, 0.1);
+  if (!pendingAway) {
+    const d = workerDps() * (boostOn() ? 2 : 1) * dt;
+    if (d > 0) applyDamage(S, d, null, FX);
+  }
+  draw(dt);
+  uiT += dt; saveT += dt;
+  if (uiT > 0.2) { uiT = 0; updateUI(); }
+  if (saveT > 5) { saveT = 0; save(); }
+  requestAnimationFrame(frame);
+}
+document.addEventListener('visibilitychange', () => { if (document.hidden) save(); });
+window.addEventListener('pagehide', save);
+if (window.ResizeObserver) new ResizeObserver(resize).observe(stage); else window.addEventListener('resize', resize);
+if (window.matchMedia) { try { window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', readSky); } catch (e) {} }
+
+// 起動
+const had = load();
+applyTheme();
+$('soundBtn').textContent = '音：' + (S.sound ? 'あり' : 'なし');
+camY = S.depth > 0 ? S.depth : -4;
+if (S.depth > 0) $('hint').style.opacity = '0';
+resize(); buildPanels(); updateUI(true);
+if (had) {
+  const away = (Date.now() - (S.last || Date.now())) / 1000;
+  if (away > 60) showAway(Math.min(away, OFFLINE_CAP), away > OFFLINE_CAP, false);
+}
+lastSeen = Date.now();
+if (!had) setTimeout(() => banner(0), 400);
+requestAnimationFrame(frame);
+})();
+</script>
+
+</body></html>
