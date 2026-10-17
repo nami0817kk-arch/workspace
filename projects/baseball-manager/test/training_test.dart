@@ -81,6 +81,13 @@ void _twoWayTests() {
         abilities: {Ability.stuff: 70, Ability.control: 60, Ability.stamina: 55},
       );
 
+  test('プロなら何年目でも切り替えられる', () {
+    for (final age in [19, 25, 32, 40]) {
+      final p = pro().copyWith(age: age);
+      expect(switchRole(p, Role.twoWay, stageOf(age, turnedPro: true)).role, Role.twoWay);
+    }
+  });
+
   test('二刀流にできるのはプロの段階だけ', () {
     expect(() => switchRole(pro(), Role.twoWay, Stage.highSchool), throwsStateError);
     expect(() => switchRole(pro(), Role.twoWay, Stage.pathChoice), throwsStateError);
