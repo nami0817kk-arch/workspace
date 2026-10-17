@@ -16,6 +16,10 @@
 - **`tsuruhashi.dailyquarry.com` は 2026-10-17 につながった**: Pages 側のドメイン登録は API で済んでいたが DNS が無く、`dailyquarry.com` のゾーンに
   CNAME `tsuruhashi` → `tsuruhashi.pages.dev`（プロキシ済み）を足して解決した（kabu・shaho と同じ形）。
   privacy・support・terms・app-ads.txt・robots.txt が開け（`.html` は拡張子なしに転送）、robots.txt はテキスト、無いパスは 404。公開ワークフローも警告なしで成功
+- **2026-10-17 の進み**: App ID・配信用プロファイル（`TSURUHASHI_IOS_PROVISIONING_PROFILE_BASE64`）・有料App契約（Schedule 2）の更新への同意・App Store Connect のアプリ作成（App ID 6823969199）・課金アイテム4つ
+  （製品ID・種類・日本語の表示名と説明・日本 ¥370／250／160／480。**審査用スクリーンショットは未**）・AdMob のアプリと広告ユニット（リワード1つ）・Secrets 3つ（`TSURUHASHI_ADMOB_APP_ID_IOS`・`TSURUHASHI_ADMOB_REWARDED_IOS`）・
+  リリースビルドと TestFlight へのアップロード（1.0.0 ビルド1）まで済み。残り: TestFlight の実機確認（7）・課金の審査用スクリーンショット・提出前の確認。
+  AdMob のこのアカウントは Chrome の「tt」。AdMob の広告の年齢上限はアカウント単位の設定（今は MA）で、アプリ単位には無い（G にするかは未決）
 - 過去のアプリ（goso-boat・hikari7）は `*.pages.dev` のままで独自ドメインを使っていないので、この作業は今回だけ
 
 ## 使い回せるもの（登録済み・作り直さない）
