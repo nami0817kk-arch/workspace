@@ -28,19 +28,21 @@ double overall(Player p) {
 double draftScore(Player p, double achievement) =>
     0.7 * overall(p) + 0.3 * achievement.clamp(0, 100) + draftBonus(p.traits);
 
-const draftLine = 55.0; // 運を除いた合否ライン
+const draftLine = 58.0; // 運を除いた合否ライン
 const draftLuck = 10.0; // 運の振れ幅(±)
 
 /// ドラフトで指名されるか。能力と実績に運が乗る。
 /// 運の幅が決まっているので、大きく上回れば確実、大きく下回れば不可能。
-bool isDrafted(Player p, double achievement, Random rng) {
+/// `lineShift` は難しさによる合格ラインの上下(負なら指名されやすい)。
+bool isDrafted(Player p, double achievement, Random rng,
+    {double lineShift = 0}) {
   final luck = (rng.nextDouble() * 2 - 1) * draftLuck;
-  return draftScore(p, achievement) + luck >= draftLine;
+  return draftScore(p, achievement) + luck >= draftLine + lineShift;
 }
 
 /// 指名される確率の目安(画面に出す用)。0〜1。
-double draftChance(Player p, double achievement) {
-  final d = draftScore(p, achievement) - draftLine;
+double draftChance(Player p, double achievement, {double lineShift = 0}) {
+  final d = draftScore(p, achievement) - (draftLine + lineShift);
   return ((d + draftLuck) / (2 * draftLuck)).clamp(0.0, 1.0);
 }
 

@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:baseball_manager/game/career.dart';
 import 'package:baseball_manager/game/game.dart';
+import 'package:baseball_manager/game/difficulty.dart';
 import 'package:baseball_manager/game/goals.dart';
 import 'package:baseball_manager/game/life.dart';
 import 'package:baseball_manager/game/path.dart';
@@ -804,5 +805,20 @@ void _rankTests() {
     }
     expect(find.text('達成!'), findsOneWidget);
     expect(find.text('ごほうびをもらった'), findsOneWidget);
+  });
+
+  testWidgets('難しさ: はじめの画面で選べ、選んだものでその選手が始まる。説明が出る', (t) async {
+    final c = await _start(t);
+    expect(find.text('難しさ'), findsOneWidget);
+    expect(find.textContaining('ほどよい難しさ'), findsOneWidget);
+    await t.tap(find.text('むずかしい'));
+    await t.pumpAndSettle();
+    expect(find.textContaining('経験点が0.9倍'), findsOneWidget);
+    await t.tap(find.text('はじめる'));
+    await t.pumpAndSettle();
+    expect(c.game!.difficulty, Difficulty.hard);
+    await t.tap(find.byKey(const Key('player-open')));
+    await t.pumpAndSettle();
+    expect(find.text('むずかしい'), findsOneWidget); // 選手情報に出る
   });
 }

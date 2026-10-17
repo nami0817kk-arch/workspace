@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/foundation.dart' hide Category;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../game/difficulty.dart';
 import '../game/exp.dart';
 import '../game/career.dart';
 import '../game/game.dart';
@@ -141,9 +142,13 @@ class GameController extends ChangeNotifier {
     }
   }
 
-  void newGame(String name, Role role) {
+  void newGame(String name, Role role,
+      [Difficulty difficulty = Difficulty.normal]) {
     game = Game.newGame(
-        name: name.trim().isEmpty ? '名無し' : name.trim(), role: role, rng: _rng);
+        difficulty: difficulty,
+        name: name.trim().isEmpty ? '名無し' : name.trim(),
+        role: role,
+        rng: _rng);
     recent = const [];
     focus = abilitiesOf(role).first;
     _commit();

@@ -1,4 +1,5 @@
 import 'career.dart';
+import 'difficulty.dart';
 import 'game.dart';
 import 'life_log.dart';
 import 'player.dart';
@@ -23,6 +24,7 @@ class PlayerSnapshot {
     this.rivalName,
     this.rivalWins = 0,
     this.rivalLosses = 0,
+    this.difficulty = Difficulty.normal,
   });
 
   final String name;
@@ -42,6 +44,7 @@ class PlayerSnapshot {
   final String? rivalName;
   final int rivalWins;
   final int rivalLosses;
+  final Difficulty difficulty;
 
   int of(Ability a) => abilities[a] ?? 0;
 
@@ -61,6 +64,7 @@ class PlayerSnapshot {
         rivalName: g.cast.rival?.name,
         rivalWins: g.cast.rivalWins,
         rivalLosses: g.cast.rivalLosses,
+        difficulty: g.difficulty,
       );
 
   Map<String, dynamic> toJson() => {
@@ -79,6 +83,7 @@ class PlayerSnapshot {
         'rivalName': rivalName,
         'rivalWins': rivalWins,
         'rivalLosses': rivalLosses,
+        'difficulty': difficulty.name,
       };
 
   /// 項目を足すときは既定値を置く(殿堂の古い記録を壊さない)。
@@ -118,6 +123,7 @@ class PlayerSnapshot {
       rivalName: j['rivalName'] as String?,
       rivalWins: (j['rivalWins'] as num?)?.toInt() ?? 0,
       rivalLosses: (j['rivalLosses'] as num?)?.toInt() ?? 0,
+      difficulty: Difficulty.parse(j['difficulty']),
     );
   }
 }

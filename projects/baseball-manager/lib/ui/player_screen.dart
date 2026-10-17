@@ -171,6 +171,7 @@ class _ProfileTab extends StatelessWidget {
                     'プロ入り', s.proStartAge == null ? 'なし' : '${s.proStartAge}歳'),
                 _Fact('プロ年数', '$proYears年'),
                 _Fact('記録された年', '${s.records.length}年'),
+                _Fact('難しさ', s.difficulty.label),
               ]),
             ),
           ),

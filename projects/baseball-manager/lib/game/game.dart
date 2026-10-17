@@ -7,6 +7,7 @@ import 'exp.dart';
 import 'life.dart';
 import 'path.dart';
 import 'player.dart';
+import 'difficulty.dart';
 import 'goals.dart';
 import 'life_log.dart';
 import 'records.dart';
@@ -57,7 +58,8 @@ class Ending {
 /// 6歳から引退までの一代記を進める本体。画面には依存しない。
 /// 乱数は注入する(テストで再現できる)。
 class Game {
-  Game._(this.rng, this.player, this.cast);
+  Game._(this.rng, this.player, this.cast,
+      [this.difficulty = Difficulty.normal]);
 
   /// 新しい選手で始める。`potential` を省くと乱数で決まる。
   factory Game.newGame({
@@ -65,6 +67,7 @@ class Game {
     required Role role,
     required Random rng,
     int? potential,
+    Difficulty difficulty = Difficulty.normal,
   }) {
     final p = Player(
       name: name,
@@ -74,7 +77,7 @@ class Game {
       abilities: {for (final a in abilitiesOf(role)) a: 15},
       traits: rollInnateTraits(rng),
     );
-    final g = Game._(rng, p, Cast.initial(rng, role, p.traits))
+    final g = Game._(rng, p, Cast.initial(rng, role, p.traits), difficulty)
       .._wasTwoWay = role == Role.twoWay;
     g.overallHistory.add(overall(p).round());
     g._note('stage', '${stageNameOf(Stage.youth)}を始めた');
@@ -83,6 +86,9 @@ class Game {
   }
 
   final Random rng;
+
+  /// 難しさ。はじめに選び、その一生ずっと変わらない。
+  final Difficulty difficulty;
   Player player;
   Condition condition = const Condition();
   int slot = 0; // 今年の何ターン目か(0始まり)。月単位か季節かは段階で決まる
@@ -169,7 +175,13 @@ class Game {
     player = r.player;
     condition = r.condition;
     // _afterCast が経験点(コーチのボーナス)を直接足すことがあるので、先に評価する。
-    final gained = wasInjured ? r.exp : _afterCast(action, f, r.exp);
+    var gained = wasInjured ? r.exp : _afterCast(action, f, r.exp);
+    if (difficulty != Difficulty.normal) {
+      gained = {
+        for (final e in gained.entries)
+          e.key: (e.value * difficulty.expMultiplier).round(),
+      };
+    }
     exp = exp.add(gained);
     lastGain = gained;
     lastOutcome = wasInjured ? Outcome.normal : r.outcome;
@@ -563,7 +575,8 @@ class Game {
   }
 
   void _draft() {
-    if (isDrafted(player, recentAchievement, rng)) {
+    if (isDrafted(player, recentAchievement, rng,
+        lineShift: difficulty.draftShift)) {
       turnedPro = true;
       proStartAge = player.age;
       log.add('ドラフトで指名された!');
@@ -641,6 +654,7 @@ class Game {
         'lifeLog': [for (final e in lifeLog) e.toJson()],
         'tactic': tactic.name,
         'goal': goal?.toJson(),
+        'difficulty': difficulty.name,
       };
 
   /// 項目を足すときは既定値を置く(既存セーブを壊さない)。
@@ -661,6 +675,7 @@ class Game {
       castJson != null
           ? Cast.fromJson(castJson)
           : Cast.initial(rng, player.role, player.traits),
+      Difficulty.parse(j['difficulty']),
     );
     g.condition = Condition.fromJson(
         (j['condition'] as Map?)?.cast<String, dynamic>() ?? {});

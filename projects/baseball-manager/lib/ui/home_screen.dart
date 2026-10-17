@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../game/calendar.dart';
 import '../game/career.dart';
+import '../game/difficulty.dart';
 import '../game/player.dart';
 import 'art/avatar.dart';
 import 'art/scene.dart';
@@ -23,6 +24,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final name = TextEditingController(text: '');
   Role role = Role.batter;
+  Difficulty difficulty = Difficulty.normal;
 
   /// タイトルを素早く7回タップすると、管理者モードの入/切が切り替わる。
   void _tapTitle() {
@@ -104,9 +106,25 @@ class _HomeScreenState extends State<HomeScreen> {
             '二刀流は、プロになってからいつでも選べます。(いまは${roleLabel(role)}から)',
             style: Theme.of(context).textTheme.bodySmall,
           ),
+          const SizedBox(height: 16),
+          const Text('難しさ'),
+          const SizedBox(height: 8),
+          SegmentedButton<Difficulty>(
+            key: const Key('difficulty'),
+            segments: [
+              for (final d in Difficulty.values)
+                ButtonSegment(value: d, label: Text(d.label)),
+            ],
+            selected: {difficulty},
+            onSelectionChanged: (s) => setState(() => difficulty = s.first),
+          ),
+          const SizedBox(height: 8),
+          Text(difficulty.description,
+              style: Theme.of(context).textTheme.bodySmall),
           const SizedBox(height: 24),
           FilledButton(
-            onPressed: () => widget.controller.newGame(name.text, role),
+            onPressed: () =>
+                widget.controller.newGame(name.text, role, difficulty),
             child: const Text('はじめる'),
           ),
           if (widget.controller.history.isNotEmpty) ...[
@@ -133,6 +151,8 @@ class _HistoryTile extends StatelessWidget {
       if (e.madePro) 'プロ${e.proYears}年' else 'プロ入りならず',
       if (e.championships > 0) '優勝${e.championships}回',
       if (e.wasTwoWay) '二刀流',
+      if (e.snapshot != null && e.snapshot!.difficulty != Difficulty.normal)
+        e.snapshot!.difficulty.label,
       if (e.married) '結婚',
     ];
     return Card(

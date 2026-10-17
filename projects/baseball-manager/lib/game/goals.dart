@@ -50,13 +50,14 @@ class Goal {
   }
 }
 
-/// 達成したときの経験点(種類ごと)。段階が上がるほど増える。
+/// 達成したときの経験点(種類ごと)。1年ぶんの練習で貯まる量の1〜2割ほど。
+/// (プロは能力の伸びが小さいので、少なくしてある。多くすると全体のバランスが崩れる。)
 int goalRewardExp(Stage s) => switch (s) {
-      Stage.youth => 60,
-      Stage.juniorHigh => 80,
-      Stage.highSchool => 100,
-      Stage.pathChoice => 120,
-      Stage.pro => 150,
+      Stage.youth => 6,
+      Stage.juniorHigh => 8,
+      Stage.highSchool => 10,
+      Stage.pathChoice => 10,
+      Stage.pro => 6,
       Stage.retired => 0,
     };
 

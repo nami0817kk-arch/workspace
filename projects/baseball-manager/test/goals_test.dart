@@ -62,8 +62,18 @@ void main() {
       expect(Goal.fromJson({'kind': 'rank'})!.target, 1);
     });
 
-    test('ごほうびは段階が上がるほど増える', () {
-      expect(goalRewardExp(Stage.pro), greaterThan(goalRewardExp(Stage.youth)));
+    test('ごほうびは、どの段階でも正の値。プロは能力の伸びが小さいので、高校より少ない(全体のバランスのため)', () {
+      for (final st in [
+        Stage.youth,
+        Stage.juniorHigh,
+        Stage.highSchool,
+        Stage.pathChoice,
+        Stage.pro
+      ]) {
+        expect(goalRewardExp(st), greaterThan(0), reason: st.name);
+      }
+      expect(
+          goalRewardExp(Stage.pro), lessThan(goalRewardExp(Stage.highSchool)));
       expect(goalRewardExp(Stage.retired), 0);
     });
   });

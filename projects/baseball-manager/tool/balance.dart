@@ -2,6 +2,7 @@
 //
 //   dart run tool/balance.dart            # 全方針
 //   dart run tool/balance.dart 3000       # 人数を指定
+//   dart run tool/balance.dart 800 hard   # 難しさ(easy / normal / hard)を指定
 //
 // 「平凡」は練習と休養だけ、「上手い」は特訓・コーチ・交流・弱い能力の底上げを使う。
 // 実際の遊び方は両者の間〜上のはず。数字を変えたら、ここで分布を確かめる。
@@ -9,6 +10,7 @@
 import 'dart:math';
 
 import 'package:baseball_manager/game/career.dart';
+import 'package:baseball_manager/game/difficulty.dart';
 import 'package:baseball_manager/game/characters.dart';
 import 'package:baseball_manager/game/game.dart';
 import 'package:baseball_manager/game/life.dart';
@@ -58,8 +60,9 @@ class Result {
   final int leagueWins;
 }
 
-Result play(int seed, Policy policy, Role role) {
-  final g = Game.newGame(name: 't', role: role, rng: Random(seed));
+Result play(int seed, Policy policy, Role role, Difficulty difficulty) {
+  final g = Game.newGame(
+      name: 't', role: role, rng: Random(seed), difficulty: difficulty);
   var steps = 0;
   while (g.phase != Phase.retired) {
     if (++steps > 6000) throw StateError('終わらない seed=$seed');
@@ -86,9 +89,13 @@ Result play(int seed, Policy policy, Role role) {
 
 void main(List<String> args) {
   final n = args.isEmpty ? 1500 : int.parse(args.first);
+  final difficulty = Difficulty.parse(args.length > 1 ? args[1] : null);
+  print('難しさ: ${difficulty.label}');
   for (final entry in {'平凡': plain, '上手い': skilled}.entries) {
     for (final role in [Role.batter, Role.pitcher]) {
-      final rs = [for (var s = 0; s < n; s++) play(s, entry.value, role)];
+      final rs = [
+        for (var s = 0; s < n; s++) play(s, entry.value, role, difficulty)
+      ];
       final pro = rs.where((r) => r.madePro).toList();
       final titles = <String, int>{};
       for (final r in rs) {
