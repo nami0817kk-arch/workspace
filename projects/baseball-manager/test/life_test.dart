@@ -1,0 +1,124 @@
+import 'dart:math';
+
+import 'package:baseball_manager/game/life.dart';
+import 'package:baseball_manager/game/player.dart';
+import 'package:baseball_manager/game/season.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+Player _p([int v = 40]) => Player(
+      name: 't',
+      role: Role.batter,
+      age: 14,
+      potential: 60,
+      abilities: {for (final a in batterAbilities) a: v},
+    );
+
+int _sum(Player p) => abilitiesOf(p.role).map(p.of).reduce((a, b) => a + b);
+
+/// 1年(4季節)を同じ過ごし方で n 回回した平均。
+double _gain(Action act, {int n = 300}) {
+  var tot = 0.0;
+  for (var s = 0; s < n; s++) {
+    final rng = Random(s);
+    var p = _p();
+    var c = const Condition();
+    for (var t = 0; t < 4; t++) {
+      final r = playTerm(p, c, act, Ability.power, rng);
+      p = r.player;
+      c = r.condition;
+    }
+    tot += p.of(Ability.power) - 40;
+  }
+  return tot / n;
+}
+
+void main() {
+  test('特訓は練習より伸びるが、疲れる', () {
+    expect(_gain(Action.special), greaterThan(_gain(Action.train)));
+    final t = playTerm(_p(), const Condition(), Action.train, Ability.power, Random(1));
+    final s = playTerm(_p(), const Condition(), Action.special, Ability.power, Random(1));
+    expect(s.condition.fatigue, greaterThan(t.condition.fatigue));
+  });
+
+  test('休養と交流は疲れ・気持ちを回復させる', () {
+    const tired = Condition(fatigue: 80, morale: 30);
+    final r = playTerm(_p(), tired, Action.rest, Ability.power, Random(1));
+    expect(r.condition.fatigue, lessThan(80));
+    final s = playTerm(_p(), tired, Action.social, Ability.power, Random(1));
+    expect(s.condition.morale, greaterThan(30));
+  });
+
+  test('練習試合は重点を決めずに全体が伸びる', () {
+    final r = playTerm(_p(), const Condition(), Action.match, Ability.power, Random(3));
+    expect(_sum(r.player), greaterThanOrEqualTo(_sum(_p())));
+  });
+
+  test('疲れが溜まるほど怪我しやすく、特訓はさらに高い', () {
+    const lo = Condition(fatigue: 0), hi = Condition(fatigue: 90);
+    expect(injuryChance(hi, Action.train), greaterThan(injuryChance(lo, Action.train)));
+    expect(injuryChance(lo, Action.special), greaterThan(injuryChance(lo, Action.train)));
+  });
+
+  test('怪我中は選択に関わらず伸びず、季節が進むと治る', () {
+    const hurt = Condition(injuredTerms: 2);
+    final r = playTerm(_p(), hurt, Action.special, Ability.power, Random(1));
+    expect(r.player.abilities, _p().abilities);
+    expect(r.condition.injuredTerms, 1);
+    expect(r.gotInjured, isFalse);
+  });
+
+  test('体調は疲れ・気持ち・怪我で決まる', () {
+    expect(const Condition(fatigue: 0, morale: 100).value, 100);
+    expect(const Condition(fatigue: 100, morale: 0).value, 0);
+    expect(const Condition(fatigue: 0, morale: 100, injuredTerms: 1).value, 50);
+  });
+
+  test('体調が良いほど大会で勝ち上がる(平均)', () {
+    double avg(int cond) {
+      var s = 0.0;
+      for (var i = 0; i < 400; i++) {
+        s += playTournament(_p(60),
+                teamLevel: 50,
+                opponents: const [45, 50, 55, 60],
+                rng: Random(i),
+                condition: cond)
+            .roundsWon;
+      }
+      return s / 400;
+    }
+
+    expect(avg(100), greaterThan(avg(0)));
+  });
+
+  test('出来事はどれも選択肢が2つ以上あり、選ぶと状態が範囲内で動く', () {
+    for (final e in events) {
+      expect(e.choices.length, greaterThanOrEqualTo(2), reason: e.id);
+      for (final ch in e.choices) {
+        final r = ch.apply(_p(), const Condition(fatigue: 95, morale: 95), Ability.eye);
+        expect(r.condition.fatigue, inInclusiveRange(0, 100), reason: e.id);
+        expect(r.condition.morale, inInclusiveRange(0, 100), reason: e.id);
+        expect(r.player.of(Ability.eye), inInclusiveRange(0, abilityCap));
+      }
+    }
+  });
+
+  test('出来事は毎季節ではなく、ときどき起きる', () {
+    var n = 0;
+    for (var s = 0; s < 1000; s++) {
+      if (drawEvent(Random(s)) != null) n++;
+    }
+    expect(n, inExclusiveRange(250, 550));
+  });
+
+  test('年の終わりに年齢が進み、疲れが抜ける', () {
+    expect(endOfYear(_p()).age, 15);
+    expect(endOfYearCondition(const Condition(fatigue: 50)).fatigue, 30);
+  });
+
+  test('体調は保存して読み直せる。欠けた項目は既定値', () {
+    const c = Condition(fatigue: 12, morale: 80, injuredTerms: 1);
+    final q = Condition.fromJson(c.toJson());
+    expect((q.fatigue, q.morale, q.injuredTerms), (12, 80, 1));
+    expect(Condition.fromJson({}).morale, 50);
+  });
+}

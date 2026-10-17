@@ -116,19 +116,21 @@ class Tournament {
 }
 
 /// 自チームの強さ `teamLevel` で、`opponents` の順に戦う勝ち抜き戦。
-/// 勝つ確率は、チーム力の差と、その試合での個人の出来で決まる。負けたら終わり。
+/// 勝つ確率は、チーム力の差・その試合での個人の出来・体調 `condition`(0〜100、50が普通)で決まる。
+/// 負けたら終わり。
 Tournament playTournament(
   Player p, {
   required int teamLevel,
   required List<int> opponents,
   required Random rng,
+  int condition = 50,
 }) {
   var line = const Line();
   var won = 0;
   for (final opp in opponents) {
     final g = playGame(p, opp, rng);
     line += g;
-    final pWin = (0.5 + (teamLevel - opp) / 100 + (g.rating - 50) / 200)
+    final pWin = (0.5 + (teamLevel - opp) / 100 + (g.rating - 50) / 200 + (condition - 50) / 500)
         .clamp(0.05, 0.95);
     if (rng.nextDouble() >= pWin) break;
     won++;
