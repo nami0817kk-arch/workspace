@@ -56,7 +56,8 @@ class HistoryEntry {
   factory HistoryEntry.fromJson(Map<String, dynamic> j) => HistoryEntry(
         name: (j['name'] as String?) ?? '名無し',
         title: (j['title'] as String?) ?? '',
-        role: Role.values.firstWhere((r) => r.name == j['role'], orElse: () => Role.batter),
+        role: Role.values
+            .firstWhere((r) => r.name == j['role'], orElse: () => Role.batter),
         madePro: (j['madePro'] as bool?) ?? false,
         proYears: (j['proYears'] as num?)?.toInt() ?? 0,
         peakOverall: (j['peakOverall'] as num?)?.toInt() ?? 0,

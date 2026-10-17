@@ -18,20 +18,25 @@ import 'package:baseball_manager/game/player.dart';
 typedef Policy = void Function(Game g);
 
 void plain(Game g) {
-  g.choose(g.condition.fatigue >= 60 ? Plan.rest : Plan.train, abilitiesOf(g.player.role).first);
+  g.choose(g.condition.fatigue >= 60 ? Plan.rest : Plan.train,
+      abilitiesOf(g.player.role).first);
 }
 
 void skilled(Game g) {
   final abilities = abilitiesOf(g.player.role);
   // いちばん低い能力を重点にする(総合評価は平均なので、底上げが効率的)。
-  final focus = ([...abilities]..sort((a, b) => g.player.of(a).compareTo(g.player.of(b)))).first;
+  final focus = ([...abilities]
+        ..sort((a, b) => g.player.of(a).compareTo(g.player.of(b))))
+      .first;
   final c = g.condition;
   final Plan plan;
   if (c.fatigue >= 70) {
     plan = Plan.rest;
   } else if (c.morale < 35) {
     plan = Plan.social;
-  } else if (g.cast.coach != null && g.cast.coach!.tips < tipsNeeded && g.slot % 3 == 0) {
+  } else if (g.cast.coach != null &&
+      g.cast.coach!.tips < tipsNeeded &&
+      g.slot % 3 == 0) {
     plan = Plan.lesson;
   } else if (c.fatigue < 30) {
     plan = Plan.special;
@@ -89,7 +94,8 @@ void main(List<String> args) {
       print('${entry.key} / ${role.name}: プロ入り ${pct(pro.length)}%  '
           '平均プロ年数 ${pro.isEmpty ? '-' : (pro.map((r) => r.proYears).reduce((a, b) => a + b) / pro.length).toStringAsFixed(1)}  '
           '最高評価平均 ${pro.isEmpty ? '-' : (pro.map((r) => r.peak).reduce((a, b) => a + b) / pro.length).toStringAsFixed(1)}');
-      print('   ${titles.entries.map((e) => '${e.key} ${pct(e.value)}%').join('  ')}');
+      print(
+          '   ${titles.entries.map((e) => '${e.key} ${pct(e.value)}%').join('  ')}');
     }
   }
 }

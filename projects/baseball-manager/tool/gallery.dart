@@ -36,30 +36,80 @@ class _Gallery extends StatelessWidget {
       },
     );
     return MaterialApp(
-      theme: ThemeData(useMaterial3: true, colorSchemeSeed: const Color(0xFF2E7D32), fontFamily: 'NotoSansJP'),
+      theme: ThemeData(
+          useMaterial3: true,
+          colorSchemeSeed: const Color(0xFF2E7D32),
+          fontFamily: 'NotoSansJP'),
       home: Scaffold(
         body: ListView(padding: const EdgeInsets.all(12), children: [
           Wrap(spacing: 8, runSpacing: 8, children: [
-            for (final s in [Stage.youth, Stage.juniorHigh, Stage.highSchool, Stage.pathChoice, Stage.pro])
+            for (final s in [
+              Stage.youth,
+              Stage.juniorHigh,
+              Stage.highSchool,
+              Stage.pathChoice,
+              Stage.pro
+            ])
               Container(
                 color: const Color(0xFFE8F5E9),
-                child: PlayerAvatar(stage: s, role: s == Stage.pro ? Role.twoWay : Role.pitcher, mood: Mood.happy, height: 110),
+                child: PlayerAvatar(
+                    stage: s,
+                    role: s == Stage.pro ? Role.twoWay : Role.pitcher,
+                    mood: Mood.happy,
+                    height: 110),
               ),
             for (final m in Mood.values)
-              Container(color: const Color(0xFFE8F5E9), child: PlayerAvatar(stage: Stage.highSchool, role: Role.batter, mood: m, height: 110)),
+              Container(
+                  color: const Color(0xFFE8F5E9),
+                  child: PlayerAvatar(
+                      stage: Stage.highSchool,
+                      role: Role.batter,
+                      mood: m,
+                      height: 110)),
           ]),
           const SizedBox(height: 12),
           for (final s in Season.values)
             Padding(
               padding: const EdgeInsets.only(bottom: 8),
-              child: SceneBanner(season: s, stage: Stage.highSchool, role: Role.batter, mood: Mood.happy, label: s.name),
+              child: SceneBanner(
+                  season: s,
+                  stage: Stage.highSchool,
+                  role: Role.batter,
+                  mood: Mood.happy,
+                  label: s.name),
             ),
           AbilityRadar(player: p),
-          CareerChart(history: [10, 14, 19, 25, 28, 33, 38, 43, 47, 52, 55, 58, 62, 65, 70, 74, 79, 83, 81, 78, 75, 70, 66], proStartAge: 19),
+          CareerChart(history: [
+            10,
+            14,
+            19,
+            25,
+            28,
+            33,
+            38,
+            43,
+            47,
+            52,
+            55,
+            58,
+            62,
+            65,
+            70,
+            74,
+            79,
+            83,
+            81,
+            78,
+            75,
+            70,
+            66
+          ], proStartAge: 19),
           const SizedBox(height: 12),
           const SizedBox(
             height: 330,
-            child: MilestoneDialog(milestone: Milestone(MilestoneKind.draft, 'ドラフト指名!', 'ギャラリーは、プロの世界へ飛び込む。')),
+            child: MilestoneDialog(
+                milestone: Milestone(
+                    MilestoneKind.draft, 'ドラフト指名!', 'ギャラリーは、プロの世界へ飛び込む。')),
           ),
         ]),
       ),

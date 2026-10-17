@@ -22,6 +22,13 @@ class _HomeScreenState extends State<HomeScreen> {
   final name = TextEditingController(text: '');
   Role role = Role.batter;
 
+  /// タイトルを素早く7回タップすると、管理者モードの入/切が切り替わる。
+  void _tapTitle() {
+    if (widget.controller.tapTitle()) {
+      showAdminToggled(context, widget.controller);
+    }
+  }
+
   @override
   void dispose() {
     name.dispose();
@@ -32,7 +39,12 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('野球育成'),
+        title: GestureDetector(
+          key: const Key('title'),
+          behavior: HitTestBehavior.opaque,
+          onTap: _tapTitle,
+          child: const Text('野球育成'),
+        ),
         actions: [
           IconButton(
             key: const Key('help'),
@@ -53,13 +65,15 @@ class _HomeScreenState extends State<HomeScreen> {
             label: '6歳',
           ),
           const SizedBox(height: 16),
-          Text('6歳から、プロを引退するまで。', style: Theme.of(context).textTheme.titleMedium),
+          Text('6歳から、プロを引退するまで。',
+              style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 4),
           const Text('1人の選手を育てて、その一生を見届けるゲームです。'),
           const SizedBox(height: 24),
           TextField(
             controller: name,
-            decoration: const InputDecoration(labelText: '選手の名前', border: OutlineInputBorder()),
+            decoration: const InputDecoration(
+                labelText: '選手の名前', border: OutlineInputBorder()),
             maxLength: 10,
           ),
           const SizedBox(height: 8),
@@ -138,7 +152,17 @@ Future<void> showHelp(BuildContext context) {
           '・引退までの一生が、あなたの選手の物語です。',
         ),
       ),
-      actions: [TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('閉じる'))],
+      actions: [
+        TextButton(
+            onPressed: () => Navigator.pop(ctx), child: const Text('閉じる'))
+      ],
     ),
+  );
+}
+
+/// 管理者モードを切り替えた知らせ。
+void showAdminToggled(BuildContext context, GameController c) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(content: Text('管理者モード: ${c.adminMode ? 'オン' : 'オフ'}')),
   );
 }

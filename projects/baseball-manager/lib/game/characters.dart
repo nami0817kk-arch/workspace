@@ -85,8 +85,50 @@ double rivalLevel(Character r, int age) {
   return peak * grow * decline;
 }
 
-const _surnames = ['朝倉', '五十嵐', '岩井', '内藤', '大槻', '加賀', '桐生', '久保田', '小宮', '榊原', '白石', '須藤', '高梨', '辻', '長谷', '日向', '藤堂', '真壁', '宮坂', '八木'];
-const _given = ['蓮', '大地', '颯', '陽斗', '悠真', '樹', '航', '拓海', '隼', '凛', '奏', '湊', '璃央', '翼', '亮', '悠', '駿', '怜', '朔', '晴'];
+const _surnames = [
+  '朝倉',
+  '五十嵐',
+  '岩井',
+  '内藤',
+  '大槻',
+  '加賀',
+  '桐生',
+  '久保田',
+  '小宮',
+  '榊原',
+  '白石',
+  '須藤',
+  '高梨',
+  '辻',
+  '長谷',
+  '日向',
+  '藤堂',
+  '真壁',
+  '宮坂',
+  '八木'
+];
+const _given = [
+  '蓮',
+  '大地',
+  '颯',
+  '陽斗',
+  '悠真',
+  '樹',
+  '航',
+  '拓海',
+  '隼',
+  '凛',
+  '奏',
+  '湊',
+  '璃央',
+  '翼',
+  '亮',
+  '悠',
+  '駿',
+  '怜',
+  '朔',
+  '晴'
+];
 const _loverGiven = ['美咲', '葵', '陽菜', '凛', '紬', '詩織', '澪', '千夏', '彩', '楓'];
 
 String _name(Random rng, Set<String> used, {bool lover = false}) {
@@ -110,7 +152,10 @@ const _taught = <Stage, List<Trait>>{
 
 /// いま習得できるものから1つ。なければ null。
 Trait? teachableTrait(Stage s, Set<Trait> have, Random rng) {
-  final pool = [for (final t in _taught[s] ?? const <Trait>[]) if (canGain(have, t)) t];
+  final pool = [
+    for (final t in _taught[s] ?? const <Trait>[])
+      if (canGain(have, t)) t
+  ];
   return pool.isEmpty ? null : pool[rng.nextInt(pool.length)];
 }
 
@@ -136,7 +181,10 @@ class Cast {
   Character? get lover => _first(Kind.lover);
   Character? get family => _first(Kind.family);
   Character? get coach => _first(Kind.coach);
-  List<Character> get teammates => [for (final m in members) if (m.kind == Kind.teammate) m];
+  List<Character> get teammates => [
+        for (final m in members)
+          if (m.kind == Kind.teammate) m
+      ];
 
   /// 6歳の始まり: 家族・ライバル(同い年)・チームメイト・コーチ。
   factory Cast.initial(Random rng, Role role, Set<Trait> have) {
@@ -155,7 +203,8 @@ class Cast {
   }
 
   /// チームメイトとコーチを入れ替える。
-  void _cast(Stage s, Random rng, Role role, Set<Trait> have, Set<String> used) {
+  void _cast(
+      Stage s, Random rng, Role role, Set<Trait> have, Set<String> used) {
     members.removeWhere((m) => m.kind == Kind.teammate || m.kind == Kind.coach);
     final abilities = abilitiesOf(role == Role.twoWay ? Role.batter : role);
     for (var i = 0; i < 3; i++) {

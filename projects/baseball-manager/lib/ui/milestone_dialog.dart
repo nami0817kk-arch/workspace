@@ -16,7 +16,8 @@ class MilestoneDialog extends StatelessWidget {
       };
 
   bool get _celebrate =>
-      milestone.kind == MilestoneKind.draft || milestone.kind == MilestoneKind.champion;
+      milestone.kind == MilestoneKind.draft ||
+      milestone.kind == MilestoneKind.champion;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +38,8 @@ class MilestoneDialog extends StatelessWidget {
                   tween: Tween(begin: 0.2, end: 1),
                   duration: const Duration(milliseconds: 600),
                   curve: Curves.elasticOut,
-                  builder: (context, s, child) => Transform.scale(scale: s, child: child),
+                  builder: (context, s, child) =>
+                      Transform.scale(scale: s, child: child),
                   child: Container(
                     width: 88,
                     height: 88,
@@ -53,10 +55,15 @@ class MilestoneDialog extends StatelessWidget {
                 Text(
                   milestone.title,
                   textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+                  style: Theme.of(context)
+                      .textTheme
+                      .headlineSmall
+                      ?.copyWith(fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),
-                Text(milestone.body, textAlign: TextAlign.center, style: TextStyle(color: cs.onSurfaceVariant)),
+                Text(milestone.body,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: cs.onSurfaceVariant)),
                 const SizedBox(height: 20),
                 FilledButton(
                   key: const Key('milestone-ok'),

@@ -22,7 +22,8 @@ void _autoPlay(Game g, {bool Function(Game)? stop, int proRetireAge = 40}) {
         if (g.stage == Stage.pro && g.player.age >= proRetireAge) {
           g.retire();
         } else {
-          g.choose(g.condition.fatigue >= 60 ? Plan.rest : Plan.train, Ability.contact);
+          g.choose(g.condition.fatigue >= 60 ? Plan.rest : Plan.train,
+              Ability.contact);
         }
       case Phase.event:
         g.resolveEvent(0);
@@ -100,7 +101,8 @@ void main() {
 
   test('高校は月単位(12ターン)で、4月から始まり7月に大会がある', () {
     final g = _new(1);
-    _autoPlay(g, stop: (g) => g.stage == Stage.highSchool && g.phase == Phase.term);
+    _autoPlay(g,
+        stop: (g) => g.stage == Stage.highSchool && g.phase == Phase.term);
     expect(g.slotsInYear, 12);
     expect(g.slotName, '4月');
     final before = g.achievements.length;
@@ -159,7 +161,8 @@ void main() {
     g.chooseRoute(Course.corporate);
     expect(g.route, Course.corporate);
     _autoPlay(g);
-    expect(g.player.age, anyOf(graduationAge(Course.corporate), greaterThan(21)));
+    expect(
+        g.player.age, anyOf(graduationAge(Course.corporate), greaterThan(21)));
     expect(g.ending, isNotNull);
   });
 
@@ -230,7 +233,8 @@ void main() {
       if (++guard > 200) fail('出来事が起きない');
       g.choose(Plan.rest, Ability.contact);
     }
-    final b = Game.fromJson(jsonDecode(jsonEncode(g.toJson())) as Map<String, dynamic>, Random(1));
+    final b = Game.fromJson(
+        jsonDecode(jsonEncode(g.toJson())) as Map<String, dynamic>, Random(1));
     expect(b.phase, Phase.event);
     expect(b.pendingEvent!.id, g.pendingEvent!.id);
   });
@@ -250,7 +254,8 @@ void _historyTests() {
     _autoPlay(g, stop: (g) => g.player.age >= 12 && g.phase == Phase.term);
     expect(g.overallHistory, hasLength(g.player.age - startAge + 1));
     expect(g.overallHistory.last, greaterThan(g.overallHistory.first));
-    final q = Game.fromJson(jsonDecode(jsonEncode(g.toJson())) as Map<String, dynamic>, Random(1));
+    final q = Game.fromJson(
+        jsonDecode(jsonEncode(g.toJson())) as Map<String, dynamic>, Random(1));
     expect(q.overallHistory, g.overallHistory);
     expect(Game.fromJson({}, Random(1)).overallHistory, isEmpty); // 古いセーブ
   });

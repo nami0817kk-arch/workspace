@@ -37,7 +37,8 @@ void main() {
   });
 
   test('目安の確率は評価に沿って単調', () {
-    expect(draftChance(_batter(90), 80), greaterThan(draftChance(_batter(60), 30)));
+    expect(draftChance(_batter(90), 80),
+        greaterThan(draftChance(_batter(60), 30)));
     expect(draftChance(_batter(10), 0), 0.0);
   });
 

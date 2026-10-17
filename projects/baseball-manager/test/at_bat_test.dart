@@ -25,12 +25,14 @@ void main() {
   test('強打者のほうが本塁打が多い', () {
     final weak = _run(avgP, const Batter(contact: 50, power: 20, eye: 50));
     final strong = _run(avgP, const Batter(contact: 50, power: 90, eye: 50));
-    expect(strong[AtBatResult.homeRun]!, greaterThan(weak[AtBatResult.homeRun]!));
+    expect(
+        strong[AtBatResult.homeRun]!, greaterThan(weak[AtBatResult.homeRun]!));
   });
 
   test('球威の高い投手のほうが三振が多い', () {
     final low = _run(const Pitcher(control: 50, stuff: 20), avgB);
     final high = _run(const Pitcher(control: 50, stuff: 90), avgB);
-    expect(high[AtBatResult.strikeout]!, greaterThan(low[AtBatResult.strikeout]!));
+    expect(
+        high[AtBatResult.strikeout]!, greaterThan(low[AtBatResult.strikeout]!));
   });
 }

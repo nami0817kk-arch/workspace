@@ -35,12 +35,15 @@ void main() {
   });
 
   test('強い選手ほど実績が高い', () {
-    expect(_avgAch(_p(Role.batter, 85), 50), greaterThan(_avgAch(_p(Role.batter, 30), 50)));
-    expect(_avgAch(_p(Role.pitcher, 85), 50), greaterThan(_avgAch(_p(Role.pitcher, 30), 50)));
+    expect(_avgAch(_p(Role.batter, 85), 50),
+        greaterThan(_avgAch(_p(Role.batter, 30), 50)));
+    expect(_avgAch(_p(Role.pitcher, 85), 50),
+        greaterThan(_avgAch(_p(Role.pitcher, 30), 50)));
   });
 
   test('チームが強いほど勝ち上がる', () {
-    expect(_avgAch(_p(Role.batter, 60), 80), greaterThan(_avgAch(_p(Role.batter, 60), 30)));
+    expect(_avgAch(_p(Role.batter, 60), 80),
+        greaterThan(_avgAch(_p(Role.batter, 60), 30)));
   });
 
   test('打者は投手成績を、投手は打撃成績を持たない。二刀流は両方', () {
@@ -54,11 +57,28 @@ void main() {
   });
 
   test('スタミナが低い投手は対戦数が少ない', () {
-    final lo = Player(name: 'a', role: Role.pitcher, age: 17, potential: 50,
-        abilities: {Ability.stuff: 60, Ability.control: 60, Ability.stamina: 10});
-    final hi = Player(name: 'a', role: Role.pitcher, age: 17, potential: 50,
-        abilities: {Ability.stuff: 60, Ability.control: 60, Ability.stamina: 90});
-    expect(playGame(lo, 50, Random(1)).faced, lessThan(playGame(hi, 50, Random(1)).faced));
+    final lo = Player(
+        name: 'a',
+        role: Role.pitcher,
+        age: 17,
+        potential: 50,
+        abilities: {
+          Ability.stuff: 60,
+          Ability.control: 60,
+          Ability.stamina: 10
+        });
+    final hi = Player(
+        name: 'a',
+        role: Role.pitcher,
+        age: 17,
+        potential: 50,
+        abilities: {
+          Ability.stuff: 60,
+          Ability.control: 60,
+          Ability.stamina: 90
+        });
+    expect(playGame(lo, 50, Random(1)).faced,
+        lessThan(playGame(hi, 50, Random(1)).faced));
   });
 
   test('実績がドラフトに効く(同じ能力でも優勝した選手のほうが有利)', () {

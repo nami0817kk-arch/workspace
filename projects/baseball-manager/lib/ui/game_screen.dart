@@ -12,7 +12,9 @@ import 'art/avatar.dart';
 import 'art/career_chart.dart';
 import 'art/radar.dart';
 import 'art/scene.dart';
+import 'admin_screen.dart';
 import 'controller.dart';
+import 'home_screen.dart' show showAdminToggled;
 import 'labels.dart';
 
 /// 画面の中身の最大幅。広い画面(Web・タブレット)では中央に寄せる。
@@ -31,14 +33,33 @@ class GameScreen extends StatelessWidget {
     final p = game.player;
     return Scaffold(
       appBar: AppBar(
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('${p.name}  ${p.age}歳'),
-            Text('${stageLabel(game.stage)}  ${game.slotName}',
-                style: Theme.of(context).textTheme.bodySmall),
-          ],
+        title: GestureDetector(
+          key: const Key('title'),
+          behavior: HitTestBehavior.opaque,
+          onTap: () {
+            if (controller.tapTitle()) showAdminToggled(context, controller);
+          },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('${p.name}  ${p.age}歳'),
+              Text('${stageLabel(game.stage)}  ${game.slotName}',
+                  style: Theme.of(context).textTheme.bodySmall),
+            ],
+          ),
         ),
+        actions: [
+          if (controller.adminMode)
+            IconButton(
+              key: const Key('admin-open'),
+              tooltip: '管理者機能',
+              icon: const Icon(Icons.admin_panel_settings),
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                    builder: (_) => AdminScreen(controller: controller)),
+              ),
+            ),
+        ],
       ),
       body: Center(
         child: ConstrainedBox(
@@ -137,7 +158,8 @@ class _StatusCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(children: [
-              Text(game.slotName, style: Theme.of(context).textTheme.titleSmall),
+              Text(game.slotName,
+                  style: Theme.of(context).textTheme.titleSmall),
               const SizedBox(width: 8),
               Expanded(
                 child: LinearProgressIndicator(
@@ -172,12 +194,14 @@ class _StatusCard extends StatelessWidget {
             Row(children: [
               Icon(_moodIcon(m), color: _moodColor(m), size: 22),
               const SizedBox(width: 6),
-              Text('やる気: ${m.label}', style: Theme.of(context).textTheme.titleSmall),
+              Text('やる気: ${m.label}',
+                  style: Theme.of(context).textTheme.titleSmall),
               if (c.injured) ...[
                 const SizedBox(width: 12),
                 const Icon(Icons.healing, color: Color(0xFFD32F2F), size: 18),
                 const SizedBox(width: 4),
-                const Text('怪我で安静中', style: TextStyle(color: Color(0xFFD32F2F))),
+                const Text('怪我で安静中',
+                    style: TextStyle(color: Color(0xFFD32F2F))),
               ],
             ]),
             const SizedBox(height: 8),
@@ -198,10 +222,18 @@ class _StatusCard extends StatelessWidget {
                     message: t.description,
                     child: Chip(
                       visualDensity: VisualDensity.compact,
-                      avatar: Icon(t.positive ? Icons.auto_awesome : Icons.warning_amber_rounded,
-                          size: 16, color: t.positive ? const Color(0xFFF9A825) : const Color(0xFF607D8B)),
+                      avatar: Icon(
+                          t.positive
+                              ? Icons.auto_awesome
+                              : Icons.warning_amber_rounded,
+                          size: 16,
+                          color: t.positive
+                              ? const Color(0xFFF9A825)
+                              : const Color(0xFF607D8B)),
                       label: Text(t.label),
-                      backgroundColor: t.positive ? Colors.amber.shade100 : Colors.blueGrey.shade100,
+                      backgroundColor: t.positive
+                          ? Colors.amber.shade100
+                          : Colors.blueGrey.shade100,
                     ),
                   ),
               ]),
@@ -227,9 +259,12 @@ class _AbilityCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(children: [
-              Text('能力 (${roleLabel(p.role)})', style: Theme.of(context).textTheme.titleSmall),
+              Text('能力 (${roleLabel(p.role)})',
+                  style: Theme.of(context).textTheme.titleSmall),
               const Spacer(),
-              TextButton(onPressed: controller.autoSpend, child: const Text('おまかせ振り分け')),
+              TextButton(
+                  onPressed: controller.autoSpend,
+                  child: const Text('おまかせ振り分け')),
             ]),
             AbilityRadar(player: p),
             const SizedBox(height: 4),
@@ -240,7 +275,9 @@ class _AbilityCard extends StatelessWidget {
                   _RankBadge(value: p.of(a)),
                   const SizedBox(width: 6),
                   SizedBox(width: 60, child: Text(abilityLabel(a))),
-                  SizedBox(width: 28, child: Text('${p.of(a)}', textAlign: TextAlign.right)),
+                  SizedBox(
+                      width: 28,
+                      child: Text('${p.of(a)}', textAlign: TextAlign.right)),
                   const SizedBox(width: 8),
                   Expanded(
                     child: TweenAnimationBuilder<double>(
@@ -261,8 +298,11 @@ class _AbilityCard extends StatelessWidget {
                     child: OutlinedButton(
                       key: Key('buy-${a.name}'),
                       style: OutlinedButton.styleFrom(
-                          padding: EdgeInsets.zero, visualDensity: VisualDensity.compact),
-                      onPressed: buy(p, game.exp, a) == null ? null : () => controller.spend(a),
+                          padding: EdgeInsets.zero,
+                          visualDensity: VisualDensity.compact),
+                      onPressed: buy(p, game.exp, a) == null
+                          ? null
+                          : () => controller.spend(a),
                       child: Text('+1 (${expCost(p.of(a))})'),
                     ),
                   ),
@@ -293,14 +333,17 @@ class _ActionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final abilities = abilitiesOf(game.player.role);
-    final focus = abilities.contains(controller.focus) ? controller.focus : abilities.first;
+    final focus = abilities.contains(controller.focus)
+        ? controller.focus
+        : abilities.first;
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('${game.slotName}は何をする?', style: Theme.of(context).textTheme.titleSmall),
+            Text('${game.slotName}は何をする?',
+                style: Theme.of(context).textTheme.titleSmall),
             const SizedBox(height: 8),
             const Text('重点にする能力'),
             Wrap(spacing: 6, children: [
@@ -317,7 +360,10 @@ class _ActionCard extends StatelessWidget {
               final cols = box.maxWidth > 420 ? 2 : 1;
               final w = (box.maxWidth - 8 * (cols - 1)) / cols;
               return Wrap(spacing: 8, runSpacing: 8, children: [
-                for (final a in Plan.values) SizedBox(width: w, child: _PlanTile(plan: a, controller: controller)),
+                for (final a in Plan.values)
+                  SizedBox(
+                      width: w,
+                      child: _PlanTile(plan: a, controller: controller)),
               ]);
             }),
           ],
@@ -360,8 +406,13 @@ class _PlanTile extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(actionLabel(plan), style: const TextStyle(fontWeight: FontWeight.bold)),
-                  Text(actionHint(plan), style: Theme.of(context).textTheme.bodySmall?.copyWith(color: cs.onSurfaceVariant)),
+                  Text(actionLabel(plan),
+                      style: const TextStyle(fontWeight: FontWeight.bold)),
+                  Text(actionHint(plan),
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodySmall
+                          ?.copyWith(color: cs.onSurfaceVariant)),
                 ],
               ),
             ),
@@ -420,7 +471,8 @@ class _PathCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('ドラフトでは指名されなかった…', style: Theme.of(context).textTheme.titleMedium),
+            Text('ドラフトでは指名されなかった…',
+                style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 4),
             const Text('もう一度プロを目指す?  再挑戦のチャンスは1度だけ。'),
             const SizedBox(height: 8),
@@ -506,7 +558,9 @@ class _ProCard extends StatelessWidget {
         title: const Text('引退しますか?'),
         content: const Text('この選手の人生がここで終わります。'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('やめる')),
+          TextButton(
+              onPressed: () => Navigator.pop(ctx, false),
+              child: const Text('やめる')),
           FilledButton(
             key: const Key('retire-confirm'),
             onPressed: () => Navigator.pop(ctx, true),
@@ -557,7 +611,8 @@ class _CastCard extends StatelessWidget {
   }
 
   String _sub(Character m) => switch (m.kind) {
-        Kind.teammate => '得意: ${m.specialty == null ? '-' : abilityLabel(m.specialty!)}',
+        Kind.teammate =>
+          '得意: ${m.specialty == null ? '-' : abilityLabel(m.specialty!)}',
         Kind.coach => m.teaches == null
             ? 'コツ ${m.tips}/$tipsNeeded'
             : 'コツ ${m.tips}/$tipsNeeded → ${m.teaches!.label}',
@@ -623,7 +678,8 @@ class _RecentCard extends StatelessWidget {
       curve: Curves.easeOutBack,
       builder: (context, t, child) => Opacity(
         opacity: t.clamp(0.0, 1.0),
-        child: Transform.translate(offset: Offset(0, (1 - t) * 10), child: child),
+        child:
+            Transform.translate(offset: Offset(0, (1 - t) * 10), child: child),
       ),
       child: Card(
         key: const Key('recent'),
@@ -673,7 +729,11 @@ class EndingView extends StatelessWidget {
                 label: '${p.age}歳',
               ),
               const SizedBox(height: 16),
-              Text(e.title, style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold)),
+              Text(e.title,
+                  style: Theme.of(context)
+                      .textTheme
+                      .headlineMedium
+                      ?.copyWith(fontWeight: FontWeight.bold)),
               const SizedBox(height: 4),
               Text(e.madePro ? 'プロで${e.proYears}年間プレーした。' : 'プロの舞台には立てなかった。'),
               const SizedBox(height: 16),
@@ -684,9 +744,12 @@ class EndingView extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('総合評価の歩み', style: Theme.of(context).textTheme.titleSmall),
+                        Text('総合評価の歩み',
+                            style: Theme.of(context).textTheme.titleSmall),
                         const SizedBox(height: 8),
-                        CareerChart(history: game.overallHistory, proStartAge: game.proStartAge),
+                        CareerChart(
+                            history: game.overallHistory,
+                            proStartAge: game.proStartAge),
                       ],
                     ),
                   ),
@@ -708,7 +771,8 @@ class EndingView extends StatelessWidget {
               Wrap(spacing: 6, children: [
                 for (final t in p.traits)
                   Chip(
-                    avatar: Icon(Icons.auto_awesome, size: 16, color: cs.tertiary),
+                    avatar:
+                        Icon(Icons.auto_awesome, size: 16, color: cs.tertiary),
                     label: Text(t.label),
                   ),
               ]),
@@ -727,6 +791,9 @@ class EndingView extends StatelessWidget {
 
   Widget _row(String k, String v) => Padding(
         padding: const EdgeInsets.symmetric(vertical: 3),
-        child: Row(children: [Expanded(child: Text(k)), Text(v, style: const TextStyle(fontWeight: FontWeight.bold))]),
+        child: Row(children: [
+          Expanded(child: Text(k)),
+          Text(v, style: const TextStyle(fontWeight: FontWeight.bold))
+        ]),
       );
 }

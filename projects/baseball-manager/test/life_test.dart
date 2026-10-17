@@ -33,8 +33,10 @@ double _gain(Plan act, {int n = 300}) {
 void main() {
   test('特訓は練習より伸びるが、疲れる', () {
     expect(_gain(Plan.special), greaterThan(_gain(Plan.train)));
-    final t = playTerm(_p(), const Condition(), Plan.train, Ability.power, Random(1));
-    final s = playTerm(_p(), const Condition(), Plan.special, Ability.power, Random(1));
+    final t =
+        playTerm(_p(), const Condition(), Plan.train, Ability.power, Random(1));
+    final s = playTerm(
+        _p(), const Condition(), Plan.special, Ability.power, Random(1));
     expect(s.condition.fatigue, greaterThan(t.condition.fatigue));
   });
 
@@ -47,17 +49,21 @@ void main() {
   });
 
   test('練習試合は重点を決めず、全体に経験点が貯まる', () {
-    final r = playTerm(_p(), const Condition(), Plan.match, Ability.power, Random(3));
+    final r =
+        playTerm(_p(), const Condition(), Plan.match, Ability.power, Random(3));
     expect(r.exp[Category.batting], greaterThan(0));
     expect(r.exp[Category.running], greaterThan(0));
   });
 
   test('月単位(share=1/3)は効果・疲労が3分の1ぶんになる', () {
-    final season = playTerm(_p(), const Condition(), Plan.train, Ability.power, Random(1));
-    final month = playTerm(_p(), const Condition(), Plan.train, Ability.power, Random(1),
+    final season =
+        playTerm(_p(), const Condition(), Plan.train, Ability.power, Random(1));
+    final month = playTerm(
+        _p(), const Condition(), Plan.train, Ability.power, Random(1),
         share: 1 / 3);
     expect(month.condition.fatigue, season.condition.fatigue ~/ 3);
-    expect(month.exp[Category.batting]!, lessThan(season.exp[Category.batting]! / 2));
+    expect(month.exp[Category.batting]!,
+        lessThan(season.exp[Category.batting]! / 2));
   });
 
   test('やる気が高いほど経験点が多く貯まる', () {
@@ -70,8 +76,10 @@ void main() {
 
   test('疲れが溜まるほど怪我しやすく、特訓はさらに高い', () {
     const lo = Condition(fatigue: 0), hi = Condition(fatigue: 90);
-    expect(injuryChance(hi, Plan.train), greaterThan(injuryChance(lo, Plan.train)));
-    expect(injuryChance(lo, Plan.special), greaterThan(injuryChance(lo, Plan.train)));
+    expect(injuryChance(hi, Plan.train),
+        greaterThan(injuryChance(lo, Plan.train)));
+    expect(injuryChance(lo, Plan.special),
+        greaterThan(injuryChance(lo, Plan.train)));
   });
 
   test('怪我中は選択に関わらず伸びず、季節が進むと治る', () {
@@ -109,7 +117,8 @@ void main() {
     for (final e in events) {
       expect(e.choices.length, greaterThanOrEqualTo(2), reason: e.id);
       for (final ch in e.choices) {
-        final r = ch.apply(_p(), const Condition(fatigue: 95, morale: 95), Ability.eye);
+        final r = ch.apply(
+            _p(), const Condition(fatigue: 95, morale: 95), Ability.eye);
         expect(r.condition.fatigue, inInclusiveRange(0, 100), reason: e.id);
         expect(r.condition.morale, inInclusiveRange(0, 100), reason: e.id);
         expect(r.player.of(Ability.eye), inInclusiveRange(0, abilityCap));

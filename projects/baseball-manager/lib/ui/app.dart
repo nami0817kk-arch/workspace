@@ -30,7 +30,8 @@ class _BaseballManagerAppState extends State<BaseballManagerApp> {
         future: _loaded,
         builder: (context, snap) {
           if (snap.connectionState != ConnectionState.done) {
-            return const Scaffold(body: Center(child: CircularProgressIndicator()));
+            return const Scaffold(
+                body: Center(child: CircularProgressIndicator()));
           }
           return _MilestoneHost(
             controller: c,
@@ -48,7 +49,6 @@ class _BaseballManagerAppState extends State<BaseballManagerApp> {
     );
   }
 }
-
 
 /// 節目(ドラフト指名・優勝・進学・コツの習得)が起きたら、ダイアログで見せる。
 class _MilestoneHost extends StatefulWidget {
@@ -97,12 +97,14 @@ class _MilestoneHostState extends State<_MilestoneHost> {
 }
 
 ThemeData _theme(Brightness b) {
-  final scheme = ColorScheme.fromSeed(seedColor: const Color(0xFF2E7D32), brightness: b);
+  final scheme =
+      ColorScheme.fromSeed(seedColor: const Color(0xFF2E7D32), brightness: b);
   return ThemeData(
     colorScheme: scheme,
     useMaterial3: true,
     fontFamily: 'NotoSansJP',
-    scaffoldBackgroundColor: b == Brightness.light ? const Color(0xFFF3F7EF) : scheme.surface,
+    scaffoldBackgroundColor:
+        b == Brightness.light ? const Color(0xFFF3F7EF) : scheme.surface,
     appBarTheme: AppBarTheme(
       backgroundColor: Colors.transparent,
       scrolledUnderElevation: 0,

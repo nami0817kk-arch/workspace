@@ -21,9 +21,11 @@ class Batter {
 AtBatResult simulateAtBat(Pitcher p, Batter b, Random rng) {
   double d(int v) => (v - 50) / 100.0; // -0.5〜+0.5
 
-  final walkP = (0.08 + d(b.eye) * 0.10 - d(p.control) * 0.10).clamp(0.01, 0.25);
+  final walkP =
+      (0.08 + d(b.eye) * 0.10 - d(p.control) * 0.10).clamp(0.01, 0.25);
   final kP = (0.22 + d(p.stuff) * 0.20 - d(b.contact) * 0.15).clamp(0.05, 0.45);
-  final hitP = (0.24 + d(b.contact) * 0.20 - d(p.stuff) * 0.10).clamp(0.08, 0.45);
+  final hitP =
+      (0.24 + d(b.contact) * 0.20 - d(p.stuff) * 0.10).clamp(0.08, 0.45);
 
   final r = rng.nextDouble();
   if (r < walkP) return AtBatResult.walk;

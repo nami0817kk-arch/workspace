@@ -104,7 +104,8 @@ Line playGame(Player p, int opp, Random rng) {
 
 /// 大会(トーナメント)の結果。
 class Tournament {
-  const Tournament({required this.roundsWon, required this.rounds, required this.line});
+  const Tournament(
+      {required this.roundsWon, required this.rounds, required this.line});
   final int roundsWon;
   final int rounds;
   final Line line;
@@ -113,7 +114,8 @@ class Tournament {
 
   /// 実績 0〜100。大会の勝ち上がり6割・個人の評価4割。
   /// `isDrafted` / `draftScore` の `achievement` に渡す。
-  double get achievement => 100 * (0.6 * roundsWon / rounds) + 0.4 * line.rating;
+  double get achievement =>
+      100 * (0.6 * roundsWon / rounds) + 0.4 * line.rating;
 }
 
 /// 自チームの強さ `teamLevel` で、`opponents` の順に戦う勝ち抜き戦。
@@ -131,7 +133,10 @@ Tournament playTournament(
   for (final opp in opponents) {
     final g = playGame(p, opp, rng);
     line += g;
-    final pWin = (0.5 + (teamLevel - opp) / 100 + (g.rating - 50) / 200 + (condition + tournamentBonus(p.traits) - 50) / 500)
+    final pWin = (0.5 +
+            (teamLevel - opp) / 100 +
+            (g.rating - 50) / 200 +
+            (condition + tournamentBonus(p.traits) - 50) / 500)
         .clamp(0.05, 0.95);
     if (rng.nextDouble() >= pWin) break;
     won++;

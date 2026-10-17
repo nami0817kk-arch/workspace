@@ -53,8 +53,10 @@ void main() {
 
   test('大器晩成は若い間は伸びず、19歳以降に伸びる', () {
     double d(Player p) => yearlyDelta(p, Ability.power, Ability.power);
-    final base14 = d(_p(age: 14)), late14 = d(_p(age: 14, traits: {Trait.lateBloomer}));
-    final base20 = d(_p(age: 20)), late20 = d(_p(age: 20, traits: {Trait.lateBloomer}));
+    final base14 = d(_p(age: 14)),
+        late14 = d(_p(age: 14, traits: {Trait.lateBloomer}));
+    final base20 = d(_p(age: 20)),
+        late20 = d(_p(age: 20, traits: {Trait.lateBloomer}));
     expect(late14, lessThan(base14));
     expect(late20, greaterThan(base20));
   });
@@ -76,13 +78,15 @@ void main() {
   });
 
   test('鉄人は疲れにくく、前向きは気持ちが上がりやすい', () {
-    final plain = playTerm(_p(), const Condition(), Plan.train, Ability.power, Random(1));
-    final iron = playTerm(_p(traits: {Trait.ironMan}), const Condition(), Plan.train,
-        Ability.power, Random(1));
+    final plain =
+        playTerm(_p(), const Condition(), Plan.train, Ability.power, Random(1));
+    final iron = playTerm(_p(traits: {Trait.ironMan}), const Condition(),
+        Plan.train, Ability.power, Random(1));
     expect(iron.condition.fatigue, lessThan(plain.condition.fatigue));
-    final a = playTerm(_p(), const Condition(), Plan.social, Ability.power, Random(1));
-    final b = playTerm(_p(traits: {Trait.sunny}), const Condition(), Plan.social,
-        Ability.power, Random(1));
+    final a = playTerm(
+        _p(), const Condition(), Plan.social, Ability.power, Random(1));
+    final b = playTerm(_p(traits: {Trait.sunny}), const Condition(),
+        Plan.social, Ability.power, Random(1));
     expect(b.condition.morale, greaterThan(a.condition.morale));
   });
 
@@ -91,7 +95,9 @@ void main() {
       var s = 0.0;
       for (var i = 0; i < 500; i++) {
         s += playTournament(_p(age: 17, v: 60, traits: t),
-                teamLevel: 50, opponents: const [45, 50, 55, 60], rng: Random(i))
+                teamLevel: 50,
+                opponents: const [45, 50, 55, 60],
+                rng: Random(i))
             .roundsWon;
       }
       return s / 500;
@@ -103,14 +109,21 @@ void main() {
 
   test('華がある選手はドラフトの点数が5高い', () {
     final p = _p(age: 18, v: 60);
-    expect(draftScore(p.copyWith(traits: {Trait.starPower}), 50) - draftScore(p, 50), 5);
+    expect(
+        draftScore(p.copyWith(traits: {Trait.starPower}), 50) -
+            draftScore(p, 50),
+        5);
   });
 
   test('特性は保存して読み直せる。欠けていれば空、未知の名前は無視', () {
     final p = _p(traits: {Trait.genius, Trait.sturdy});
     expect(Player.fromJson(p.toJson()).traits, {Trait.genius, Trait.sturdy});
     expect(Player.fromJson({'name': 'x'}).traits, isEmpty);
-    expect(Player.fromJson({'traits': ['genius', 'nonexistent']}).traits, {Trait.genius});
+    expect(
+        Player.fromJson({
+          'traits': ['genius', 'nonexistent']
+        }).traits,
+        {Trait.genius});
   });
 
   test('役割を変えても特性は残る', () {
@@ -122,7 +135,11 @@ void main() {
     final e = events.firstWhere((e) => e.id == 'winter-menu');
     final r = e.choices.first.apply(_p(), const Condition(), Ability.power);
     expect(r.player.traits, {Trait.hardWorker});
-    expect(e.choices.last.apply(_p(), const Condition(), Ability.power).player.traits,
+    expect(
+        e.choices.last
+            .apply(_p(), const Condition(), Ability.power)
+            .player
+            .traits,
         isEmpty);
   });
 

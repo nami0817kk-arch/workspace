@@ -68,7 +68,8 @@ class ExpPool {
         for (final k in Category.values) k: of(k) - (k == c ? n : 0),
       });
 
-  Map<String, dynamic> toJson() => {for (final c in Category.values) c.name: of(c)};
+  Map<String, dynamic> toJson() =>
+      {for (final c in Category.values) c.name: of(c)};
 
   factory ExpPool.fromJson(Map<String, dynamic> j) => ExpPool({
         for (final c in Category.values) c: (j[c.name] as num?)?.toInt() ?? 0,
@@ -89,7 +90,8 @@ class ExpPool {
 }
 
 /// 買えるだけ買う。
-({Player player, ExpPool pool, int bought}) buyAll(Player p, ExpPool pool, Ability a) {
+({Player player, ExpPool pool, int bought}) buyAll(
+    Player p, ExpPool pool, Ability a) {
   var n = 0;
   for (;;) {
     final r = buy(p, pool, a);

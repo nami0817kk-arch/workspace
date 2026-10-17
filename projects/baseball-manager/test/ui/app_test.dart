@@ -5,6 +5,7 @@ import 'package:baseball_manager/game/game.dart';
 import 'package:baseball_manager/game/life.dart';
 import 'package:baseball_manager/game/path.dart';
 import 'package:baseball_manager/game/player.dart';
+import 'package:baseball_manager/game/traits.dart';
 import 'package:baseball_manager/ui/app.dart';
 import 'package:baseball_manager/ui/controller.dart';
 import 'package:baseball_manager/ui/labels.dart';
@@ -31,14 +32,16 @@ Future<GameController> _start(WidgetTester t, {int seed = 1}) async {
 
 /// 決まった方針で、指定の状態になるまでロジックだけ進める。
 Game _until(bool Function(Game) stop, {int seed = 1, int? potential}) {
-  final g = Game.newGame(name: 'テスト', role: Role.batter, rng: Random(seed), potential: potential);
+  final g = Game.newGame(
+      name: 'テスト', role: Role.batter, rng: Random(seed), potential: potential);
   var steps = 0;
   while (g.phase != Phase.retired && !stop(g)) {
     if (++steps > 4000) fail('届かない');
     g.autoSpend();
     switch (g.phase) {
       case Phase.term:
-        g.choose(g.condition.fatigue >= 60 ? Plan.rest : Plan.train, Ability.contact);
+        g.choose(g.condition.fatigue >= 60 ? Plan.rest : Plan.train,
+            Ability.contact);
       case Phase.event:
         g.resolveEvent(0);
       case Phase.pathChoice:
@@ -83,7 +86,8 @@ void main() {
     }
     await t.tap(find.text('おまかせ振り分け'));
     await t.pumpAndSettle();
-    final sum = abilitiesOf(Role.batter).map(c.game!.player.of).reduce((a, b) => a + b);
+    final sum =
+        abilitiesOf(Role.batter).map(c.game!.player.of).reduce((a, b) => a + b);
     expect(sum, greaterThan(15 * 5));
     expect(c.game!.player.of(Ability.contact) >= before, isTrue);
   });
@@ -136,7 +140,8 @@ void main() {
     final c = await _start(t);
     c.adopt(_until((g) => g.phase == Phase.pathChoice, seed: 3, potential: 0));
     await t.pumpAndSettle();
-    expect(find.byKey(const Key('route-corporate')), findsOneWidget); // 進路の選択が出ている
+    expect(
+        find.byKey(const Key('route-corporate')), findsOneWidget); // 進路の選択が出ている
     await t.tap(find.byKey(const Key('route-corporate')));
     await t.pumpAndSettle();
     expect(c.game!.route, Course.corporate);
@@ -203,14 +208,16 @@ void main() {
   testWidgets('壊れたセーブがあっても、最初の画面から始められる', (t) async {
     SharedPreferences.setMockInitialValues({saveKey: '{こわれた'});
     _tall(t);
-    await t.pumpWidget(BaseballManagerApp(controller: GameController(rng: Random(1))));
+    await t.pumpWidget(
+        BaseballManagerApp(controller: GameController(rng: Random(1))));
     await t.pumpAndSettle();
     expect(find.text('はじめる'), findsOneWidget);
   });
 
   testWidgets('高校では月の名前が出る', (t) async {
     final c = await _start(t);
-    c.adopt(_until((g) => g.stage == Stage.highSchool && g.phase == Phase.term));
+    c.adopt(
+        _until((g) => g.stage == Stage.highSchool && g.phase == Phase.term));
     await t.pumpAndSettle();
     expect(find.textContaining('4月'), findsWidgets);
     expect(find.textContaining('高校'), findsWidgets);
@@ -229,13 +236,16 @@ void _rankTests() {
     expect(rankOf(80), 'A');
     expect(rankOf(90), 'S');
     expect(rankOf(99), 'S');
-    expect(['G', 'F', 'E', 'D', 'C', 'B', 'A', 'S'].map(rankColor).toSet().length, 8);
+    expect(
+        ['G', 'F', 'E', 'D', 'C', 'B', 'A', 'S'].map(rankColor).toSet().length,
+        8);
   });
 
   testWidgets('進学すると、ダイアログで知らせる', (t) async {
     final c = await _start(t);
     // 12歳の冬(最後のターン)まで進めておき、1手で13歳(中学)になるようにする。
-    c.adopt(_until((g) => g.player.age == 12 && g.slot == 3 && g.phase == Phase.term));
+    c.adopt(_until(
+        (g) => g.player.age == 12 && g.slot == 3 && g.phase == Phase.term));
     await t.pumpAndSettle();
     await t.tap(find.byKey(const Key('act-rest')));
     await t.pumpAndSettle();
@@ -253,8 +263,10 @@ void _rankTests() {
   testWidgets('ドラフトで指名されると、ダイアログで祝う', (t) async {
     final c = await _start(t);
     for (var s = 0; s < 60; s++) {
-      final g = _until((g) => g.player.age == 18 && g.slot == 11 && g.phase == Phase.term,
-          seed: s, potential: 100);
+      final g = _until(
+          (g) => g.player.age == 18 && g.slot == 11 && g.phase == Phase.term,
+          seed: s,
+          potential: 100);
       if (g.player.age != 18) continue;
       c.adopt(g);
       await t.pumpAndSettle();
@@ -281,8 +293,10 @@ void _rankTests() {
   testWidgets('優勝すると、ダイアログで祝う', (t) async {
     final c = await _start(t);
     for (var s = 0; s < 80; s++) {
-      final g = _until((g) => g.player.age >= 12 && g.slot == 0 && g.phase == Phase.term,
-          seed: s, potential: 100);
+      final g = _until(
+          (g) => g.player.age >= 12 && g.slot == 0 && g.phase == Phase.term,
+          seed: s,
+          potential: 100);
       c.adopt(g);
       await t.pumpAndSettle();
       // 夏(slot 1)まで進める。
@@ -316,7 +330,8 @@ void _rankTests() {
     expect(find.text('殿堂(これまでの選手)'), findsOneWidget);
     expect(find.textContaining('プロ入りならず'), findsOneWidget);
     // 同じ引退を読み直しても増えない。
-    c.adopt(c.game ?? _until((g) => g.phase == Phase.retired, seed: 3, potential: 0));
+    c.adopt(c.game ??
+        _until((g) => g.phase == Phase.retired, seed: 3, potential: 0));
     expect(c.history, hasLength(1));
   });
 
@@ -345,5 +360,78 @@ void _rankTests() {
     await t.tap(find.text('閉じる'));
     await t.pumpAndSettle();
     expect(find.text('閉じる'), findsNothing);
+  });
+
+  testWidgets('タイトルを7回タップすると管理者モードが入り、素質・特性・コツを書き換えられる', (t) async {
+    final c = await _start(t);
+    c.newGame('テスト', Role.batter);
+    await t.pumpAndSettle();
+    expect(find.byKey(const Key('admin-open')), findsNothing);
+    for (var i = 0; i < 6; i++) {
+      await t.tap(find.byKey(const Key('title')));
+    }
+    await t.pump();
+    expect(c.adminMode, isFalse); // 6回ではまだ
+    await t.tap(find.byKey(const Key('title')));
+    await t.pumpAndSettle();
+    expect(c.adminMode, isTrue);
+    expect(find.text('管理者モード: オン'), findsOneWidget);
+
+    await t.tap(find.byKey(const Key('admin-open')));
+    await t.pumpAndSettle();
+    expect(find.text('管理者機能'), findsOneWidget);
+
+    // 素質をスライダーで最大に。
+    await t.drag(
+        find.byKey(const Key('admin-potential')), const Offset(2000, 0));
+    await t.pumpAndSettle();
+    expect(c.game!.player.potential, 100);
+
+    // 特性: 矛盾する2つを同時に付けられる。
+    await t.ensureVisible(find.byKey(const Key('admin-trait-lateBloomer')));
+    await t.tap(find.byKey(const Key('admin-trait-lateBloomer')));
+    await t.pumpAndSettle();
+    await t.ensureVisible(find.byKey(const Key('admin-trait-earlyBloomer')));
+    await t.tap(find.byKey(const Key('admin-trait-earlyBloomer')));
+    await t.pumpAndSettle();
+    expect(
+        c.game!.player.traits
+            .containsAll({Trait.lateBloomer, Trait.earlyBloomer}),
+        isTrue);
+
+    // コーチ: 教える特性を決めて、コツを満タンにすると習得する。
+    await t.ensureVisible(find.byKey(const Key('admin-teach-clutch')));
+    await t.tap(find.byKey(const Key('admin-teach-clutch')));
+    await t.pumpAndSettle();
+    await t.ensureVisible(find.byKey(const Key('admin-tips')));
+    await t.drag(find.byKey(const Key('admin-tips')), const Offset(2000, 0));
+    await t.pumpAndSettle();
+    expect(c.game!.player.traits, contains(Trait.clutch));
+  });
+
+  testWidgets('管理者モードは覚えていて、7回タップでもう一度切れる', (t) async {
+    final c = await _start(t);
+    for (var i = 0; i < 7; i++) {
+      await t.tap(find.byKey(const Key('title')));
+    }
+    await t.pumpAndSettle();
+    expect(c.adminMode, isTrue);
+
+    final c2 = GameController(rng: Random(3));
+    await t.pumpWidget(BaseballManagerApp(key: UniqueKey(), controller: c2));
+    await t.pumpAndSettle();
+    expect(c2.adminMode, isTrue); // 開き直しても残る
+    for (var i = 0; i < 7; i++) {
+      await t.tap(find.byKey(const Key('title')));
+    }
+    await t.pumpAndSettle();
+    expect(c2.adminMode, isFalse);
+  });
+
+  testWidgets('管理者モードでなければ、管理者ボタンは出ない', (t) async {
+    final c = await _start(t);
+    c.newGame('テスト', Role.batter);
+    await t.pumpAndSettle();
+    expect(find.byKey(const Key('admin-open')), findsNothing);
   });
 }

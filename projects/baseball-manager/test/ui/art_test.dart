@@ -10,7 +10,8 @@ import 'package:baseball_manager/ui/art/scene.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-Widget _wrap(Widget w) => MaterialApp(home: Scaffold(body: SingleChildScrollView(child: w)));
+Widget _wrap(Widget w) =>
+    MaterialApp(home: Scaffold(body: SingleChildScrollView(child: w)));
 
 Player _p(Role r, [int v = 40]) => Player(
       name: 't',
@@ -25,17 +26,27 @@ void main() {
     await t.pumpWidget(_wrap(Wrap(children: [
       for (final s in Stage.values)
         for (final r in Role.values)
-          for (final m in Mood.values) PlayerAvatar(stage: s, role: r, mood: m, height: 60),
+          for (final m in Mood.values)
+            PlayerAvatar(stage: s, role: r, mood: m, height: 60),
     ])));
     expect(tester(t), isNull);
-    expect(find.byType(PlayerAvatar), findsNWidgets(Stage.values.length * Role.values.length * Mood.values.length));
+    expect(
+        find.byType(PlayerAvatar),
+        findsNWidgets(
+            Stage.values.length * Role.values.length * Mood.values.length));
   });
 
   testWidgets('全ての季節・段階で背景が描ける', (t) async {
     await t.pumpWidget(_wrap(Column(children: [
       for (final se in Season.values)
         for (final st in Stage.values)
-          SceneBanner(season: se, stage: st, role: Role.batter, mood: Mood.flat, label: 'x', height: 120),
+          SceneBanner(
+              season: se,
+              stage: st,
+              role: Role.batter,
+              mood: Mood.flat,
+              label: 'x',
+              height: 120),
     ])));
     expect(tester(t), isNull);
   });
@@ -57,7 +68,8 @@ void main() {
   });
 
   testWidgets('人生のグラフは、データが2つあれば描ける。伸びる途中でも落ちない', (t) async {
-    await t.pumpWidget(_wrap(const CareerChart(history: [10, 30, 50, 80], proStartAge: 8)));
+    await t.pumpWidget(
+        _wrap(const CareerChart(history: [10, 30, 50, 80], proStartAge: 8)));
     await t.pump(const Duration(milliseconds: 300));
     expect(tester(t), isNull);
     await t.pumpAndSettle();
@@ -65,7 +77,8 @@ void main() {
   });
 
   testWidgets('紙吹雪は一度降って終わり、片付く', (t) async {
-    await t.pumpWidget(_wrap(const SizedBox(width: 200, height: 200, child: Confetti())));
+    await t.pumpWidget(
+        _wrap(const SizedBox(width: 200, height: 200, child: Confetti())));
     await t.pump(const Duration(milliseconds: 1000));
     await t.pumpAndSettle();
     expect(tester(t), isNull);

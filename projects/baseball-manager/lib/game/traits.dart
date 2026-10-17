@@ -40,8 +40,7 @@ const _conflicts = <Trait, Trait>{
   Trait.clutch: Trait.nervy,
 };
 
-bool _conflict(Trait a, Trait b) =>
-    _conflicts[a] == b || _conflicts[b] == a;
+bool _conflict(Trait a, Trait b) => _conflicts[a] == b || _conflicts[b] == a;
 
 /// `t` を新しく持てるか(重複・矛盾・上限)。
 bool canGain(Set<Trait> have, Trait t) =>
@@ -101,8 +100,10 @@ double injuryMultiplier(Set<Trait> t) {
 double fatigueMultiplier(Set<Trait> t) => t.contains(Trait.ironMan) ? 0.7 : 1.0;
 
 /// 気持ちの上がり方 / 下がり方。
-double moraleGainMultiplier(Set<Trait> t) => t.contains(Trait.sunny) ? 1.5 : 1.0;
-double moraleLossMultiplier(Set<Trait> t) => t.contains(Trait.sunny) ? 0.5 : 1.0;
+double moraleGainMultiplier(Set<Trait> t) =>
+    t.contains(Trait.sunny) ? 1.5 : 1.0;
+double moraleLossMultiplier(Set<Trait> t) =>
+    t.contains(Trait.sunny) ? 0.5 : 1.0;
 
 /// 大会の体調に足す値。
 int tournamentBonus(Set<Trait> t) =>

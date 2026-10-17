@@ -62,18 +62,26 @@ class Player {
 
   int of(Ability a) => abilities[a] ?? 0;
 
-  Player copyWith({int? age, Role? role, Map<Ability, int>? abilities, Set<Trait>? traits}) =>
+  Player copyWith({
+    int? age,
+    Role? role,
+    int? potential,
+    Map<Ability, int>? abilities,
+    Set<Trait>? traits,
+  }) =>
       Player(
         name: name,
         role: role ?? this.role,
         age: age ?? this.age,
-        potential: potential,
+        potential: potential ?? this.potential,
         abilities: abilities ?? this.abilities,
         traits: traits ?? this.traits,
       );
 
-  Batter toBatter() =>
-      Batter(contact: of(Ability.contact), power: of(Ability.power), eye: of(Ability.eye));
+  Batter toBatter() => Batter(
+      contact: of(Ability.contact),
+      power: of(Ability.power),
+      eye: of(Ability.eye));
   Pitcher toPitcher() =>
       Pitcher(control: of(Ability.control), stuff: of(Ability.stuff));
 

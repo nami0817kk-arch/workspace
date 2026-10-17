@@ -15,6 +15,7 @@ import 'labels.dart';
 
 const saveKey = 'baseball_manager_save_v1';
 const historyKey = 'baseball_manager_history_v1';
+const adminKey = 'baseball_manager_admin_v1';
 
 enum MilestoneKind { draft, champion, trait, stage }
 
@@ -52,7 +53,8 @@ class SaveStore {
       final s = p.getString(historyKey);
       if (s == null) return [];
       return [
-        for (final e in jsonDecode(s) as List) HistoryEntry.fromJson((e as Map).cast<String, dynamic>()),
+        for (final e in jsonDecode(s) as List)
+          HistoryEntry.fromJson((e as Map).cast<String, dynamic>()),
       ];
     } catch (_) {
       return [];
@@ -62,7 +64,24 @@ class SaveStore {
   Future<void> saveHistory(List<HistoryEntry> h) async {
     try {
       final p = await SharedPreferences.getInstance();
-      await p.setString(historyKey, jsonEncode([for (final e in h) e.toJson()]));
+      await p.setString(
+          historyKey, jsonEncode([for (final e in h) e.toJson()]));
+    } catch (_) {}
+  }
+
+  Future<bool> loadAdmin() async {
+    try {
+      final p = await SharedPreferences.getInstance();
+      return p.getBool(adminKey) ?? false;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  Future<void> saveAdmin(bool on) async {
+    try {
+      final p = await SharedPreferences.getInstance();
+      await p.setBool(adminKey, on);
     } catch (_) {}
   }
 
@@ -96,7 +115,11 @@ class GameController extends ChangeNotifier {
   /// 殿堂(過去の選手)。新しい順。
   List<HistoryEntry> history = const [];
 
+  /// 管理者モード(素質・特性・コツなどを自由に編集できる)。端末ごとに覚える。
+  bool adminMode = false;
+
   Future<bool> loadSaved() async {
+    adminMode = await store.loadAdmin();
     history = await store.loadHistory();
     final j = await store.load();
     if (j == null) return false;
@@ -111,7 +134,8 @@ class GameController extends ChangeNotifier {
   }
 
   void newGame(String name, Role role) {
-    game = Game.newGame(name: name.trim().isEmpty ? '名無し' : name.trim(), role: role, rng: _rng);
+    game = Game.newGame(
+        name: name.trim().isEmpty ? '名無し' : name.trim(), role: role, rng: _rng);
     recent = const [];
     focus = abilitiesOf(role).first;
     _commit();
@@ -122,6 +146,36 @@ class GameController extends ChangeNotifier {
     game = g;
     focus = abilitiesOf(g.player.role).first;
     notifyListeners();
+  }
+
+  int _titleTaps = 0;
+  DateTime _lastTitleTap = DateTime.fromMillisecondsSinceEpoch(0);
+
+  /// タイトルを素早く7回タップすると管理者モードの入/切が切り替わる。切り替えたら true。
+  bool tapTitle({DateTime? now}) {
+    final t = now ?? DateTime.now();
+    _titleTaps = t.difference(_lastTitleTap) > const Duration(seconds: 2)
+        ? 1
+        : _titleTaps + 1;
+    _lastTitleTap = t;
+    if (_titleTaps < 7) return false;
+    _titleTaps = 0;
+    toggleAdmin();
+    return true;
+  }
+
+  void toggleAdmin() {
+    adminMode = !adminMode;
+    store.saveAdmin(adminMode);
+    notifyListeners();
+  }
+
+  /// 管理者機能の操作。ゲームを書き換えて保存する。
+  void admin(void Function(Game g) edit) {
+    final g = game;
+    if (g == null || g.phase == Phase.retired) return;
+    edit(g);
+    _commit();
   }
 
   void setFocus(Ability a) {
@@ -148,17 +202,23 @@ class GameController extends ChangeNotifier {
       for (final c in Category.values)
         if ((g.lastGain[c] ?? 0) > 0) '${c.label}経験点 +${g.lastGain[c]}',
     ];
-    return gains.isEmpty ? '${actionLabel(a)}した' : '${actionLabel(a)}: ${gains.join(' / ')}';
+    return gains.isEmpty
+        ? '${actionLabel(a)}した'
+        : '${actionLabel(a)}: ${gains.join(' / ')}';
   }
 
   /// 今回のできごとから、見せる価値のある節目を拾う。
   void _detect(Stage before, Game g, List<String> lines) {
     final name = g.player.name;
     if (lines.any((l) => l.contains('ドラフトで指名された'))) {
-      pending.add(Milestone(MilestoneKind.draft, 'ドラフト指名!', '$nameは、プロの世界へ飛び込む。'));
+      pending
+          .add(Milestone(MilestoneKind.draft, 'ドラフト指名!', '$nameは、プロの世界へ飛び込む。'));
     }
     final after = g.stage;
-    if (after != before && g.phase != Phase.retired && after != Stage.pro && after != Stage.pathChoice) {
+    if (after != before &&
+        g.phase != Phase.retired &&
+        after != Stage.pro &&
+        after != Stage.pathChoice) {
       pending.add(Milestone(MilestoneKind.stage, '${stageLabel(after)}へ',
           '${g.player.age}歳。新しい仲間とコーチが待っている。'));
     }

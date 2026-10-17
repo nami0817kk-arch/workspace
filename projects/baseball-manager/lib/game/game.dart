@@ -103,8 +103,9 @@ class Game {
   /// プロ入りした年齢。入っていなければ null。
   int? proStartAge;
 
-  Stage get stage =>
-      phase == Phase.retired ? Stage.retired : stageOf(player.age, turnedPro: turnedPro);
+  Stage get stage => phase == Phase.retired
+      ? Stage.retired
+      : stageOf(player.age, turnedPro: turnedPro);
 
   /// ドラフトにかかるときの実績: 直近3回の大会の平均。
   double get recentAchievement {
@@ -223,10 +224,61 @@ class Game {
     _retire();
   }
 
+  // ── 管理者機能(調整・検証用。ホーム画面のタイトルを7回タップで有効) ──
+  //
+  // 通常の遊びでは使わない。上限(特性は4つまで)や矛盾(大器晩成と早熟など)も無視して書き換える。
+
+  /// 素質(0〜100)を書き換える。
+  void adminSetPotential(int v) {
+    player = player.copyWith(potential: v.clamp(0, 100));
+  }
+
+  /// 特性を、上限や矛盾を無視して丸ごと置き換える。
+  void adminSetTraits(Set<Trait> t) {
+    player = player.copyWith(traits: Set.of(t));
+  }
+
+  void adminSetAbility(Ability a, int v) {
+    if (!abilitiesOf(player.role).contains(a)) return;
+    player =
+        player.copyWith(abilities: {...player.abilities, a: v.clamp(0, 99)});
+  }
+
+  /// 経験点を全種類に足す(負でも可。0未満にはならない)。
+  void adminAddExp(int n) {
+    exp = ExpPool({for (final c in Category.values) c: max(0, exp.of(c) + n)});
+  }
+
+  /// コーチのコツを書き換える。`tipsNeeded` 以上にすると、その場で特性を習得する。
+  void adminSetCoachTips(int n) {
+    final coach = cast.coach;
+    if (coach == null) return;
+    coach.tips = n.clamp(0, tipsNeeded);
+    _checkCoach();
+  }
+
+  /// コーチが教える特性を差し替える(null なら教えられない)。
+  void adminSetCoachTeaches(Trait? t) {
+    final i = cast.members.indexWhere((m) => m.kind == Kind.coach);
+    if (i < 0) return;
+    final c = cast.members[i];
+    cast.members[i] = Character(
+      id: c.id,
+      name: c.name,
+      kind: c.kind,
+      bond: c.bond,
+      specialty: c.specialty,
+      teaches: t,
+      tips: c.tips,
+      talent: c.talent,
+    );
+  }
+
   // ── 内部 ──
 
   /// 友情タッグ・コーチ・恋人/家族への影響。経験点の量を返す。
-  Map<Category, int> _afterCast(Plan action, Ability focus, Map<Category, int> gained) {
+  Map<Category, int> _afterCast(
+      Plan action, Ability focus, Map<Category, int> gained) {
     final out = Map<Category, int>.of(gained);
     final trains = action == Plan.train ||
         action == Plan.special ||
@@ -402,7 +454,9 @@ class Game {
       wasTwoWay: _wasTwoWay,
       rivalWins: cast.rivalWins,
       rivalLosses: cast.rivalLosses,
-      partnerName: (cast.lover != null && cast.lover!.bond >= 80) ? cast.lover!.name : null,
+      partnerName: (cast.lover != null && cast.lover!.bond >= 80)
+          ? cast.lover!.name
+          : null,
     );
   }
 
@@ -439,14 +493,18 @@ class Game {
       return orElse;
     }
 
-    final player = Player.fromJson((j['player'] as Map?)?.cast<String, dynamic>() ?? {});
+    final player =
+        Player.fromJson((j['player'] as Map?)?.cast<String, dynamic>() ?? {});
     final castJson = (j['cast'] as Map?)?.cast<String, dynamic>();
     final g = Game._(
       rng,
       player,
-      castJson != null ? Cast.fromJson(castJson) : Cast.initial(rng, player.role, player.traits),
+      castJson != null
+          ? Cast.fromJson(castJson)
+          : Cast.initial(rng, player.role, player.traits),
     );
-    g.condition = Condition.fromJson((j['condition'] as Map?)?.cast<String, dynamic>() ?? {});
+    g.condition = Condition.fromJson(
+        (j['condition'] as Map?)?.cast<String, dynamic>() ?? {});
     g.slot = (j['slot'] as num?)?.toInt() ?? 0;
     g.exp = ExpPool.fromJson((j['exp'] as Map?)?.cast<String, dynamic>() ?? {});
     g.phase = pick(Phase.values, j['phase'], Phase.term);
@@ -460,11 +518,12 @@ class Game {
     g.peakOverall = (j['peakOverall'] as num?)?.toInt() ?? 0;
     g.championships = (j['championships'] as num?)?.toInt() ?? 0;
     g.archived = (j['archived'] as bool?) ?? false;
-    g.overallHistory.addAll(((j['overallHistory'] as List?) ?? const []).map((e) => (e as num).toInt()));
+    g.overallHistory.addAll(((j['overallHistory'] as List?) ?? const [])
+        .map((e) => (e as num).toInt()));
     g.proStartAge = (j['proStartAge'] as num?)?.toInt();
     g._wasTwoWay = (j['wasTwoWay'] as bool?) ?? g.player.role == Role.twoWay;
-    g.achievements.addAll(
-        ((j['achievements'] as List?) ?? const []).map((e) => (e as num).toDouble()));
+    g.achievements.addAll(((j['achievements'] as List?) ?? const [])
+        .map((e) => (e as num).toDouble()));
     g.slot = g.slot.clamp(0, slotsPerYear(g.stage) - 1);
     if (g.phase == Phase.retired) g.ending = g._buildEnding();
     return g;

@@ -36,8 +36,10 @@ void main() {
   test('素質が高いほど伸びる(平均)', () {
     var lo = 0, hi = 0;
     for (var s = 0; s < 200; s++) {
-      lo += _years(_kid(potential: 10), Ability.contact, 12, s).of(Ability.contact);
-      hi += _years(_kid(potential: 90), Ability.contact, 12, s).of(Ability.contact);
+      lo += _years(_kid(potential: 10), Ability.contact, 12, s)
+          .of(Ability.contact);
+      hi += _years(_kid(potential: 90), Ability.contact, 12, s)
+          .of(Ability.contact);
     }
     expect(hi, greaterThan(lo));
   });
@@ -78,19 +80,26 @@ void _twoWayTests() {
         role: Role.pitcher,
         age: 20,
         potential: 60,
-        abilities: {Ability.stuff: 70, Ability.control: 60, Ability.stamina: 55},
+        abilities: {
+          Ability.stuff: 70,
+          Ability.control: 60,
+          Ability.stamina: 55
+        },
       );
 
   test('プロなら何年目でも切り替えられる', () {
     for (final age in [19, 25, 32, 40]) {
       final p = pro().copyWith(age: age);
-      expect(switchRole(p, Role.twoWay, stageOf(age, turnedPro: true)).role, Role.twoWay);
+      expect(switchRole(p, Role.twoWay, stageOf(age, turnedPro: true)).role,
+          Role.twoWay);
     }
   });
 
   test('二刀流にできるのはプロの段階だけ', () {
-    expect(() => switchRole(pro(), Role.twoWay, Stage.highSchool), throwsStateError);
-    expect(() => switchRole(pro(), Role.twoWay, Stage.pathChoice), throwsStateError);
+    expect(() => switchRole(pro(), Role.twoWay, Stage.highSchool),
+        throwsStateError);
+    expect(() => switchRole(pro(), Role.twoWay, Stage.pathChoice),
+        throwsStateError);
     final t = switchRole(pro(), Role.twoWay, Stage.pro);
     expect(t.role, Role.twoWay);
   });
@@ -106,7 +115,8 @@ void _twoWayTests() {
     var one = 0, two = 0;
     for (var s = 0; s < 200; s++) {
       final a = Player(name: 'a', role: Role.batter, age: 18, potential: 60);
-      final b = switchRole(a, Role.twoWay, Stage.pro).copyWith(role: Role.twoWay);
+      final b =
+          switchRole(a, Role.twoWay, Stage.pro).copyWith(role: Role.twoWay);
       one += _years(a, Ability.contact, 4, s).of(Ability.contact);
       two += _years(b, Ability.contact, 4, s).of(Ability.contact);
     }

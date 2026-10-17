@@ -37,14 +37,19 @@ void main() {
   });
 
   test('足りない・種類が違う・役割に無い・上限のときは買えない', () {
-    expect(buy(_p(), const ExpPool({Category.batting: 1}), Ability.power), isNull);
-    expect(buy(_p(), const ExpPool({Category.pitching: 999}), Ability.power), isNull);
-    expect(buy(_p(), const ExpPool({Category.pitching: 999}), Ability.stuff), isNull);
-    expect(buy(_p(99), const ExpPool({Category.batting: 999}), Ability.power), isNull);
+    expect(
+        buy(_p(), const ExpPool({Category.batting: 1}), Ability.power), isNull);
+    expect(buy(_p(), const ExpPool({Category.pitching: 999}), Ability.power),
+        isNull);
+    expect(buy(_p(), const ExpPool({Category.pitching: 999}), Ability.stuff),
+        isNull);
+    expect(buy(_p(99), const ExpPool({Category.batting: 999}), Ability.power),
+        isNull);
   });
 
   test('買えるだけ買う。余りは次に持ち越せる', () {
-    final r = buyAll(_p(), const ExpPool({Category.batting: 100}), Ability.power);
+    final r =
+        buyAll(_p(), const ExpPool({Category.batting: 100}), Ability.power);
     expect(r.bought, greaterThan(1));
     expect(r.pool.of(Category.batting), lessThan(expCost(30 + r.bought)));
     expect(r.pool.of(Category.batting), greaterThanOrEqualTo(0));
@@ -67,7 +72,8 @@ void main() {
     final r = autoSpendExp(p, const ExpPool({Category.batting: 80}));
     expect(r.player.of(Ability.power), greaterThan(20));
     expect(r.player.of(Ability.contact), 60); // 低いほうを先に上げる
-    expect(r.pool.of(Category.batting), lessThan(expCost(r.player.of(Ability.power))));
+    expect(r.pool.of(Category.batting),
+        lessThan(expCost(r.player.of(Ability.power))));
   });
 
   test('やる気は気持ちで5段階に分かれ、高いほど倍率が大きい', () {
@@ -107,7 +113,9 @@ void main() {
     expect(slotLabel(Stage.highSchool, 3), '7月');
     expect(isTournamentSlot(Stage.youth, 1), isTrue);
     for (final s in [Stage.highSchool, Stage.youth]) {
-      final n = [for (var i = 0; i < slotsPerYear(s); i++) isTournamentSlot(s, i)];
+      final n = [
+        for (var i = 0; i < slotsPerYear(s); i++) isTournamentSlot(s, i)
+      ];
       expect(n.where((x) => x).length, 1, reason: '$s');
     }
   });
@@ -138,6 +146,7 @@ void _seasonTests() {
       Season.winter, Season.winter, Season.winter, // 12〜2月
       Season.spring, // 3月
     ]);
-    expect([for (var i = 0; i < 4; i++) seasonOf(Stage.youth, i)], Season.values);
+    expect(
+        [for (var i = 0; i < 4; i++) seasonOf(Stage.youth, i)], Season.values);
   });
 }
