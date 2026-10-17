@@ -9,5 +9,6 @@
 - `lib/game/player.dart` — 選手(役割・能力・素質)と保存/復元
 - `lib/game/training.dart` — `advanceYear`: 1年進めて練習方針に応じて能力を伸ばす/落とす
 - `lib/game/path.dart` — ドラフト判定・大学/社会人の再挑戦・戦力外/引退
+- `lib/game/season.dart` — 1試合の個人成績と勝ち抜き大会。結果の `achievement` がドラフトの実績に入る
 - `lib/main.dart` — 起動確認用の最小画面
 - Android/iOS/web の各フォルダは未生成。`flutter create . --platforms=android,ios,web --project-name baseball_manager` で足す
