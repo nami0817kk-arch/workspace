@@ -159,7 +159,6 @@ void main() {
       'rival-slump',
       'mate-quarrel',
       'lover-lunch',
-      'coach',
     };
     for (var s = 0; s < 3000; s++) {
       final e = drawEvent(Random(s), stage: Stage.youth, cast: bare);
