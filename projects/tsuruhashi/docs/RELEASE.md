@@ -10,6 +10,14 @@
 - **公開ページ**（2026-10-17 公開を了承）: `legal/`・`site/` は master に入れたときに `tsuruhashi-site.yml` が `tsuruhashi.dailyquarry.com` に出す。
   **リリースビルドはこのページが開けないと止まる**（設定の「プライバシー」のリンク先が 404 だと審査で却下されるため）
 
+## いまの状態（2026-10-17）
+
+- master に取り込み済み。公開ページは `https://tsuruhashi.pages.dev/`（privacy・support・terms・app-ads.txt・robots.txt）で開ける
+- **`tsuruhashi.dailyquarry.com` はまだつながっていない**: ワークフローの API でのドメイン追加が 400 を返し、DNS の記録も無い（名前が引けない）。
+  Cloudflare のダッシュボード → Workers & Pages → `tsuruhashi` → **Custom domains** → **Set up a custom domain** → `tsuruhashi.dailyquarry.com`
+  で一度足す（画面から足すと DNS の CNAME も自動で作られる）。足したら Actions の「つるはし採掘の公開ページ」を手で回し、警告が消えたのを見る
+- アプリのリンク・審査の URL 欄・リリースビルドの確認は `tsuruhashi.dailyquarry.com` を見るので、つながるまでリリースビルドは止まる
+
 ## 使い回せるもの（登録済み・作り直さない）
 
 | もの | GitHub Secrets | 備考 |
