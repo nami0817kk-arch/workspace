@@ -1,4 +1,4 @@
-# つるはし採掘の App Store 掲載画像（iPhone 1290×2796 と iPad 13インチ 2064×2752）を撮って成果物に出す。
+# つるはし採掘の App Store 掲載画像（iPhone 1290×2796・iPhone 中型 1206×2622・iPad 13インチ 2064×2752）を撮って成果物に出す。
 # ゲームの見た目や tool/make_shots.js を直したとき、または手で回したときだけ動く。
 name: tsuruhashi shots
 
@@ -30,13 +30,15 @@ jobs:
           npx playwright install --with-deps chromium
       - name: iPhone 6.7インチ
         run: node tool/make_shots.js
+      - name: iPhone 中型（必須の欄 1206×2622）
+        run: DEVICE=iphone-m node tool/make_shots.js
       - name: iPad 13インチ
         run: DEVICE=ipad node tool/make_shots.js
       - name: 大きさと透過を確かめる
         run: |
           python3 - <<'PY'
           import struct, glob
-          want = {"store/screenshots": (1290, 2796), "store/screenshots/ipad": (2064, 2752)}
+          want = {"store/screenshots": (1290, 2796), "store/screenshots/iphone-m": (1206, 2622), "store/screenshots/ipad": (2064, 2752)}
           for d, (w, h) in want.items():
               files = sorted(glob.glob(d + "/*.png"))
               assert len(files) == 6, (d, len(files))
