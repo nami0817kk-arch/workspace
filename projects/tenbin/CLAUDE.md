@@ -189,3 +189,8 @@ App Store の審査 4.1（Copycats）と評判で危ない。** 次のものは�
 Xcode の設定を触ったら workflow_dispatch で `build_ios` に印（macOS で署名なしビルドと ja.lproj の確かめ）。
 リリースは `tenbin-ios-release.yml`（`mojitsumi-v*` のタグか手で）、公開ページは `tenbin-site.yml`。
 合否はここで見る（手元で全部回さない）。手で1本だけ回すときは workflow_dispatch の target に `test/items.test.js` のように渡す。
+
+## リリースの進み具合（2026-10-17）
+
+App ID・プロファイル・ASC のアプリ（Apple ID 6823961034）・TestFlight 内部グループ「自分」まで済み、`1.0.0+1`（テスト広告）をアップロード済み。
+残りは 課金アイテム（値段はユーザー）・AdMob・本番 `1.0.0+2`。つまずいた点は `docs/RELEASE.md` の手順6。

@@ -69,6 +69,13 @@ API では作れないので、画面で作る。
 
 ### 6. ビルドして TestFlight へ上げる
 
+**実地の記録（2026-10-17）**
+- **手順3（App Store Connect にアプリを作る）を先に済ませる。** 無いと `Upload to TestFlight` が `Cannot determine the Apple ID from Bundle ID` で落ちる（署名・ビルドまでは通る）。
+- プロファイルの Base64 は **Git Bash の `base64 -w0 … | gh secret set`** で入れる。PowerShell のパイプだと末尾に CRLF が付き、CI の `Install provisioning profile` が `error decoding base64 input stream` で落ちた。
+- アプリ作成画面のプルダウンは、フォーム入力ツールでは値が反映されない。クリックで開いて `End` → `Return` で選ぶ。
+- アップロード成功: `1.0.0+1`（テスト広告ビルド。審査には出さない）。App Store Connect の Apple ID は 6823961034。
+- TestFlight の内部テストのグループ「自分」を作成し、Account Holder を追加済み（自動配信オン）。
+
 GitHub の Actions → **Build もじつみ (iOS Release)** → Run workflow → `upload_to_testflight` に印。
 （手で回さなくても、`mojitsumi-v*` のタグで走る）
 
