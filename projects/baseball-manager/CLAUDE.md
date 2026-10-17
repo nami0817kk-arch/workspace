@@ -65,3 +65,13 @@ soccer-manager / soccer-career の野球版。**中核は「試合中の采配�
 - **効き方は `traits.dart` の関数に集めてある**（`growthMultiplier` ほか）。他のファイルは特性の名前を直接見ない。
   特性を足すときは enum と、効く関数と、テストを足す。
 - 保存は名前の文字列。未知の名前は無視して読む（特性を消しても古いセーブが壊れない）。
+
+### ゲーム本体（`lib/game/game.dart`）
+
+- `Game` が全部をつなぐ。画面は `phase`（季節 / 出来事 / 進路 / 引退）を見て、対応する操作だけを呼ぶ:
+  `choose(action, focus)` → `resolveEvent(i)` → `chooseRoute` / `giveUp`、プロなら `changeRole` / `retire`。
+  段階に合わない操作は `StateError`。
+- 1年 = 春夏秋冬の4回の `choose`。夏の `choose` の中で大会が行われ、実績が積まれる。
+- ドラフトは **高校卒業（19歳になる時）** と、**大学22歳・社会人21歳の卒業時**。実績は直近3回の大会の平均。
+- リーグの強さは段階ごとに `_league` で決める（少年→プロで強くなる）。数字は仮置き。CI が通ったら実測して調整する。
+- 保存は `toJson` / `fromJson`。欠けた項目は既定値で読めること（`game_test.dart` が見張る）。

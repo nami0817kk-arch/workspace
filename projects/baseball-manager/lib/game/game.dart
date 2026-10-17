@@ -1,0 +1,307 @@
+import 'dart:math';
+
+import 'career.dart';
+import 'life.dart';
+import 'path.dart';
+import 'player.dart';
+import 'season.dart';
+import 'traits.dart';
+
+/// いま何を待っているか。画面はこれを見て出すものを決める。
+enum Phase {
+  term, // 季節の過ごし方を選ぶ
+  event, // 出来事の選択肢を選ぶ
+  pathChoice, // ドラフトに外れた。大学/社会人を選ぶか、諦めるか
+  retired, // 終わり
+}
+
+/// 引退時のまとめ。
+class Ending {
+  const Ending({
+    required this.title,
+    required this.madePro,
+    required this.proYears,
+    required this.peakOverall,
+    required this.championships,
+    required this.wasTwoWay,
+  });
+
+  final String title;
+  final bool madePro;
+  final int proYears;
+  final int peakOverall;
+  final int championships;
+  final bool wasTwoWay;
+}
+
+/// 6歳から引退までの一代記を進める本体。画面には依存しない。
+/// 乱数は注入する(テストで再現できる)。
+class Game {
+  Game._(this.rng, this.player);
+
+  /// 新しい選手で始める。`potential` を省くと乱数で決まる。
+  factory Game.newGame({
+    required String name,
+    required Role role,
+    required Random rng,
+    int? potential,
+  }) {
+    final p = Player(
+      name: name,
+      role: role,
+      age: startAge,
+      potential: potential ?? 30 + rng.nextInt(61),
+      abilities: {for (final a in abilitiesOf(role)) a: 15},
+      traits: rollInnateTraits(rng),
+    );
+    return Game._(rng, p).._wasTwoWay = role == Role.twoWay;
+  }
+
+  final Random rng;
+  Player player;
+  Condition condition = const Condition();
+  Term term = Term.spring;
+  Phase phase = Phase.term;
+  GameEvent? pendingEvent;
+  Ability _eventFocus = Ability.contact;
+
+  Route? route; // 大学/社会人を選んだか
+  bool turnedPro = false;
+  int lowYears = 0;
+  int proYears = 0;
+  int peakOverall = 0;
+  int championships = 0;
+  bool _wasTwoWay = false;
+  final List<double> achievements = []; // 夏の大会ごとの実績
+  final List<String> log = []; // 画面に出す出来事の記録
+  Ending? ending;
+
+  Stage get stage =>
+      phase == Phase.retired ? Stage.retired : stageOf(player.age, turnedPro: turnedPro);
+
+  /// ドラフトにかかるときの実績: 直近3回の大会の平均。
+  double get recentAchievement {
+    if (achievements.isEmpty) return 0;
+    final r = achievements.length > 3
+        ? achievements.sublist(achievements.length - 3)
+        : achievements;
+    return r.reduce((a, b) => a + b) / r.length;
+  }
+
+  // ── 季節の選択 ──
+
+  /// 今の季節の過ごし方を決める。`focus` は練習・特訓・研究で伸ばす能力。
+  void choose(Action action, [Ability? focus]) {
+    _require(Phase.term);
+    final f = focus ?? abilitiesOf(player.role).first;
+    if (!abilitiesOf(player.role).contains(f)) {
+      throw ArgumentError('${player.role.name} にその能力は無い: ${f.name}');
+    }
+    final r = playTerm(player, condition, action, f, rng);
+    player = r.player;
+    condition = r.condition;
+    if (r.gotInjured) log.add('怪我をしてしまった。');
+    if (term == Term.summer) _playSummer();
+
+    final e = drawEvent(rng);
+    if (e == null) {
+      _nextTerm();
+    } else {
+      pendingEvent = e;
+      _eventFocus = f;
+      phase = Phase.event;
+    }
+  }
+
+  void resolveEvent(int index) {
+    _require(Phase.event);
+    final ch = pendingEvent!.choices[index];
+    final r = ch.apply(player, condition, _eventFocus);
+    player = r.player;
+    condition = r.condition;
+    pendingEvent = null;
+    phase = Phase.term;
+    _nextTerm();
+  }
+
+  /// プロの間はいつでも役割を変えられる(二刀流にする/戻す)。
+  void changeRole(Role to) {
+    _require(Phase.term);
+    player = switchRole(player, to, stage);
+    if (to == Role.twoWay) _wasTwoWay = true;
+    log.add('${to.name} に転向した。');
+  }
+
+  /// プロの間は自分で引退を決められる。
+  void retire() {
+    _require(Phase.term);
+    if (!canChooseRetire(stage)) throw StateError('引退を選べるのはプロの間だけ');
+    _retire();
+  }
+
+  // ── ドラフトに外れたとき ──
+
+  void chooseRoute(Route r) {
+    _require(Phase.pathChoice);
+    route = r;
+    phase = Phase.term;
+    log.add('${r.name} で再挑戦する。');
+  }
+
+  void giveUp() {
+    _require(Phase.pathChoice);
+    _retire();
+  }
+
+  // ── 内部 ──
+
+  void _require(Phase p) {
+    if (phase != p) throw StateError('いまは ${phase.name} の段階: ${p.name} は選べない');
+  }
+
+  ({int team, List<int> opponents}) get _league => switch (stage) {
+        Stage.youth => (team: 35, opponents: const [25, 30, 35, 40]),
+        Stage.juniorHigh => (team: 42, opponents: const [32, 38, 44, 50]),
+        Stage.highSchool => (team: 50, opponents: const [40, 46, 52, 58, 64]),
+        Stage.pathChoice => (team: 58, opponents: const [48, 54, 60, 66]),
+        _ => (team: 65, opponents: const [55, 60, 66, 72, 78]),
+      };
+
+  void _playSummer() {
+    final l = _league;
+    final t = playTournament(
+      player,
+      teamLevel: l.team,
+      opponents: l.opponents,
+      rng: rng,
+      condition: condition.value,
+    );
+    achievements.add(t.achievement);
+    if (t.champion) {
+      championships++;
+      log.add('夏の大会で優勝した!');
+    } else {
+      log.add('夏の大会は${t.roundsWon}回戦突破。');
+    }
+  }
+
+  void _nextTerm() {
+    if (term == Term.winter) {
+      _endYear();
+    } else {
+      term = Term.values[term.index + 1];
+    }
+  }
+
+  void _endYear() {
+    term = Term.spring;
+    player = endOfYear(player);
+    condition = endOfYearCondition(condition);
+    peakOverall = max(peakOverall, overall(player).round());
+
+    if (turnedPro) {
+      proYears++;
+      lowYears = nextLowYears(player, lowYears);
+      if (mustRetire(player, lowYears)) {
+        log.add(isReleased(lowYears) ? '戦力外になった。' : '年齢により引退した。');
+        _retire();
+      }
+      return;
+    }
+    if (route == null && player.age == proEntryAge + 1) {
+      _draft();
+    } else if (route != null && player.age == graduationAge(route!)) {
+      _draft();
+    }
+  }
+
+  void _draft() {
+    if (isDrafted(player, recentAchievement, rng)) {
+      turnedPro = true;
+      log.add('ドラフトで指名された!');
+    } else if (route == null) {
+      log.add('ドラフトで指名されなかった。');
+      phase = Phase.pathChoice;
+    } else {
+      log.add('再挑戦も実らなかった。');
+      _retire();
+    }
+  }
+
+  void _retire() {
+    phase = Phase.retired;
+    pendingEvent = null;
+    ending = _buildEnding();
+  }
+
+  Ending _buildEnding() {
+    final String title;
+    if (!turnedPro && proYears == 0) {
+      title = 'プロにはなれなかった';
+    } else if (peakOverall >= 80) {
+      title = 'レジェンド';
+    } else if (peakOverall >= 65) {
+      title = '一流選手';
+    } else if (peakOverall >= 50) {
+      title = 'レギュラー';
+    } else {
+      title = '無名の選手';
+    }
+    return Ending(
+      title: title,
+      madePro: turnedPro,
+      proYears: proYears,
+      peakOverall: peakOverall,
+      championships: championships,
+      wasTwoWay: _wasTwoWay,
+    );
+  }
+
+  // ── 保存 ──
+
+  Map<String, dynamic> toJson() => {
+        'player': player.toJson(),
+        'condition': condition.toJson(),
+        'term': term.name,
+        'phase': phase.name,
+        'pendingEvent': pendingEvent?.id,
+        'eventFocus': _eventFocus.name,
+        'route': route?.name,
+        'turnedPro': turnedPro,
+        'lowYears': lowYears,
+        'proYears': proYears,
+        'peakOverall': peakOverall,
+        'championships': championships,
+        'wasTwoWay': _wasTwoWay,
+        'achievements': achievements,
+      };
+
+  /// 項目を足すときは既定値を置く(既存セーブを壊さない)。
+  factory Game.fromJson(Map<String, dynamic> j, Random rng) {
+    T pick<T extends Enum>(List<T> all, Object? name, T orElse) {
+      for (final v in all) {
+        if (v.name == name) return v;
+      }
+      return orElse;
+    }
+
+    final g = Game._(rng, Player.fromJson((j['player'] as Map?)?.cast<String, dynamic>() ?? {}));
+    g.condition = Condition.fromJson((j['condition'] as Map?)?.cast<String, dynamic>() ?? {});
+    g.term = pick(Term.values, j['term'], Term.spring);
+    g.phase = pick(Phase.values, j['phase'], Phase.term);
+    g.pendingEvent = events.where((e) => e.id == j['pendingEvent']).firstOrNull;
+    if (g.phase == Phase.event && g.pendingEvent == null) g.phase = Phase.term;
+    g._eventFocus = pick(Ability.values, j['eventFocus'], Ability.contact);
+    g.route = Route.values.where((r) => r.name == j['route']).firstOrNull;
+    g.turnedPro = (j['turnedPro'] as bool?) ?? false;
+    g.lowYears = (j['lowYears'] as num?)?.toInt() ?? 0;
+    g.proYears = (j['proYears'] as num?)?.toInt() ?? 0;
+    g.peakOverall = (j['peakOverall'] as num?)?.toInt() ?? 0;
+    g.championships = (j['championships'] as num?)?.toInt() ?? 0;
+    g._wasTwoWay = (j['wasTwoWay'] as bool?) ?? g.player.role == Role.twoWay;
+    g.achievements.addAll(
+        ((j['achievements'] as List?) ?? const []).map((e) => (e as num).toDouble()));
+    if (g.phase == Phase.retired) g.ending = g._buildEnding();
+    return g;
+  }
+}
