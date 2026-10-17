@@ -3,10 +3,15 @@
 //   flutter build web --base-href / --no-web-resources-cdn -t tool/gallery.dart
 //
 // アプリ本体には入らない。見た目を変えたら、これで一通り見る。
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 import 'package:baseball_manager/game/calendar.dart';
 import 'package:baseball_manager/game/career.dart';
+import 'package:baseball_manager/game/game.dart';
+import 'package:baseball_manager/game/life.dart';
+import 'package:baseball_manager/game/path.dart';
 import 'package:baseball_manager/game/player.dart';
 import 'package:baseball_manager/ui/art/avatar.dart';
 import 'package:baseball_manager/ui/art/career_chart.dart';
@@ -14,6 +19,35 @@ import 'package:baseball_manager/ui/art/radar.dart';
 import 'package:baseball_manager/ui/art/scene.dart';
 import 'package:baseball_manager/ui/controller.dart';
 import 'package:baseball_manager/ui/milestone_dialog.dart';
+import 'package:baseball_manager/ui/records_screen.dart';
+
+/// 成績画面の確認用に、強い選手を引退まで遊ばせる。
+Game _playedGame(Role role) {
+  for (var seed = 0; seed < 100; seed++) {
+    final g = Game.newGame(
+        name: 'ギャラリー', role: role, rng: Random(seed), potential: 100);
+    while (g.phase != Phase.retired) {
+      g.autoSpend();
+      switch (g.phase) {
+        case Phase.term:
+          if (g.stage == Stage.pro && g.player.age >= 34) {
+            g.retire();
+          } else {
+            g.choose(g.condition.fatigue >= 60 ? Plan.rest : Plan.train,
+                abilitiesOf(role).first);
+          }
+        case Phase.event:
+          g.resolveEvent(0);
+        case Phase.pathChoice:
+          g.chooseRoute(Course.university);
+        case Phase.retired:
+          break;
+      }
+    }
+    if (g.ending!.madePro) return g;
+  }
+  throw StateError('プロになった選手がいない');
+}
 
 void main() => runApp(const _Gallery());
 
@@ -104,6 +138,7 @@ class _Gallery extends StatelessWidget {
             70,
             66
           ], proStartAge: 19),
+          RecordsView(game: _playedGame(Role.batter)),
           const SizedBox(height: 12),
           const SizedBox(
             height: 330,

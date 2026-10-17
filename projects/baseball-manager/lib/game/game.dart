@@ -7,6 +7,7 @@ import 'exp.dart';
 import 'life.dart';
 import 'path.dart';
 import 'player.dart';
+import 'records.dart';
 import 'season.dart';
 import 'traits.dart';
 
@@ -30,6 +31,7 @@ class Ending {
     this.rivalWins = 0,
     this.rivalLosses = 0,
     this.partnerName,
+    this.titles = const [],
   });
 
   final String title;
@@ -44,6 +46,9 @@ class Ending {
   /// 絆が深かった恋人の名前(いれば結婚した)。
   final String? partnerName;
   bool get married => partnerName != null;
+
+  /// 獲得したタイトル(年ごとに1つずつ、重複あり)。
+  final List<String> titles;
 }
 
 /// 6歳から引退までの一代記を進める本体。画面には依存しない。
@@ -102,6 +107,9 @@ class Game {
 
   /// プロ入りした年齢。入っていなければ null。
   int? proStartAge;
+
+  /// 年ごとの成績(大会・シーズン)。成績画面とエンディングに出す。
+  final List<SeasonRecord> records = [];
 
   Stage get stage => phase == Phase.retired
       ? Stage.retired
@@ -336,37 +344,91 @@ class Game {
         _ => (team: 65, opponents: const [55, 60, 66, 72, 78]),
       };
 
+  /// 大会(アマチュア)またはシーズン(プロ)を行い、成績を残す。
   void _playSummer() {
     final l = _league;
-    final t = playTournament(
-      player,
-      teamLevel: l.team,
-      opponents: l.opponents,
-      rng: rng,
-      condition: condition.value,
-    );
-    var ach = t.achievement;
+    final isPro = stage == Stage.pro;
+    final tournament = isPro
+        ? null
+        : playTournament(
+            player,
+            teamLevel: l.team,
+            opponents: l.opponents,
+            rng: rng,
+            condition: condition.value,
+          );
+    final league = isPro
+        ? playLeagueSeason(
+            player,
+            teamLevel: l.team,
+            opponents: l.opponents,
+            rng: rng,
+            condition: condition.value,
+          )
+        : null;
+
+    var ach = tournament?.achievement ?? 0;
+    bool? rivalWon;
     final rival = cast.rival;
     if (rival != null) {
       final mine = overall(player) + (rng.nextDouble() * 2 - 1) * 8;
       if (mine >= rivalLevel(rival, player.age)) {
+        rivalWon = true;
         cast.rivalWins++;
         ach = min(100, ach + 5);
         condition = condition.copyWith(morale: condition.morale + 10);
         log.add('${rival.name}に勝った!');
       } else {
+        rivalWon = false;
         cast.rivalLosses++;
         condition = condition.copyWith(morale: condition.morale - 8);
         log.add('${rival.name}に負けた…');
       }
       rival.addBond(5);
     }
-    achievements.add(ach);
-    if (t.champion) {
-      championships++;
-      log.add('夏の大会で優勝した!');
-    } else {
-      log.add('夏の大会は${t.roundsWon}回戦突破。');
+
+    if (league != null) {
+      final titles =
+          titlesOf(league.line, games: league.games, rank: league.rank);
+      records.add(SeasonRecord(
+        age: player.age,
+        stage: stage,
+        line: league.line,
+        teamWins: league.wins,
+        teamLosses: league.losses,
+        rank: league.rank,
+        titles: titles,
+        rivalWon: rivalWon,
+      ));
+      if (league.rank == 1) {
+        championships++;
+        log.add('リーグ優勝!');
+      } else {
+        log.add('今季は${league.rank}位(${league.wins}勝${league.losses}敗)。');
+      }
+      final d = describeLine(league.line);
+      if (d.isNotEmpty) log.add('今季成績: $d');
+      for (final t in titles) {
+        log.add('タイトル獲得: $t!');
+      }
+    } else if (tournament != null) {
+      achievements.add(ach);
+      records.add(SeasonRecord(
+        age: player.age,
+        stage: stage,
+        line: tournament.line,
+        roundsWon: tournament.roundsWon,
+        rounds: tournament.rounds,
+        rivalWon: rivalWon,
+      ));
+      if (tournament.champion) {
+        championships++;
+        log.add('夏の大会で優勝した!');
+      } else {
+        log.add('夏の大会は${tournament.roundsWon}回戦突破。');
+      }
+      final d = describeLine(tournament.line);
+      if (d.isNotEmpty) log.add('大会成績: $d');
     }
   }
 
@@ -457,6 +519,7 @@ class Game {
       partnerName: (cast.lover != null && cast.lover!.bond >= 80)
           ? cast.lover!.name
           : null,
+      titles: [for (final r in records) ...r.titles],
     );
   }
 
@@ -482,6 +545,7 @@ class Game {
         'archived': archived,
         'overallHistory': overallHistory,
         'proStartAge': proStartAge,
+        'records': [for (final r in records) r.toJson()],
       };
 
   /// 項目を足すときは既定値を置く(既存セーブを壊さない)。
@@ -521,6 +585,10 @@ class Game {
     g.overallHistory.addAll(((j['overallHistory'] as List?) ?? const [])
         .map((e) => (e as num).toInt()));
     g.proStartAge = (j['proStartAge'] as num?)?.toInt();
+    g.records.addAll([
+      for (final r in (j['records'] as List?) ?? const [])
+        SeasonRecord.fromJson((r as Map).cast<String, dynamic>()),
+    ]);
     g._wasTwoWay = (j['wasTwoWay'] as bool?) ?? g.player.role == Role.twoWay;
     g.achievements.addAll(((j['achievements'] as List?) ?? const [])
         .map((e) => (e as num).toDouble()));

@@ -17,7 +17,7 @@ const saveKey = 'baseball_manager_save_v1';
 const historyKey = 'baseball_manager_history_v1';
 const adminKey = 'baseball_manager_admin_v1';
 
-enum MilestoneKind { draft, champion, trait, stage }
+enum MilestoneKind { draft, champion, trait, stage, title }
 
 /// 人生の節目。ダイアログで大きく見せる。
 class Milestone {
@@ -224,6 +224,10 @@ class GameController extends ChangeNotifier {
     }
     if (lines.any((l) => l.contains('優勝'))) {
       pending.add(Milestone(MilestoneKind.champion, '優勝!', '夏の大会を制した。'));
+    }
+    for (final l in lines.where((l) => l.startsWith('タイトル獲得'))) {
+      pending.add(Milestone(
+          MilestoneKind.title, 'タイトル獲得!', l.replaceFirst('タイトル獲得: ', '')));
     }
     for (final l in lines.where((l) => l.contains('を習得'))) {
       pending.add(Milestone(MilestoneKind.trait, 'コツをつかんだ!', l));

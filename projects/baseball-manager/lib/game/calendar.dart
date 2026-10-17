@@ -42,5 +42,6 @@ Season seasonOf(Stage s, int slot) {
   return Season.winter;
 }
 
-/// 夏の大会のターン。月単位は7月、季節は夏。
-bool isTournamentSlot(Stage s, int slot) => slot == (isMonthly(s) ? 3 : 1);
+/// 大会(シーズン成績が出る)のターン。月単位は7月(夏の大会)、ただしプロは10月(シーズン終了)。季節は夏。
+bool isTournamentSlot(Stage s, int slot) =>
+    slot == (s == Stage.pro ? 6 : (isMonthly(s) ? 3 : 1));

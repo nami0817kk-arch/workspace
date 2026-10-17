@@ -9,13 +9,14 @@ import '../game/life.dart';
 import '../game/path.dart';
 import '../game/player.dart';
 import 'art/avatar.dart';
-import 'art/career_chart.dart';
 import 'art/radar.dart';
 import 'art/scene.dart';
 import 'admin_screen.dart';
 import 'controller.dart';
 import 'home_screen.dart' show showAdminToggled;
 import 'labels.dart';
+import '../game/records.dart';
+import 'records_screen.dart';
 
 /// 画面の中身の最大幅。広い画面(Web・タブレット)では中央に寄せる。
 const contentMaxWidth = 560.0;
@@ -49,6 +50,15 @@ class GameScreen extends StatelessWidget {
           ),
         ),
         actions: [
+          IconButton(
+            key: const Key('records-open'),
+            tooltip: '成績',
+            icon: const Icon(Icons.bar_chart),
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                  builder: (_) => RecordsScreen(game: game)),
+            ),
+          ),
           if (controller.adminMode)
             IconButton(
               key: const Key('admin-open'),
@@ -97,6 +107,10 @@ class GameScreen extends StatelessWidget {
               if (game.phase == Phase.term && game.stage == Stage.pro) ...[
                 const SizedBox(height: 8),
                 _ProCard(controller: controller, game: game),
+              ],
+              if (game.records.isNotEmpty) ...[
+                const SizedBox(height: 8),
+                _RecentRecordCard(game: game),
               ],
               const SizedBox(height: 8),
               _CastCard(game: game),
@@ -266,6 +280,18 @@ class _AbilityCard extends StatelessWidget {
                   onPressed: controller.autoSpend,
                   child: const Text('おまかせ振り分け')),
             ]),
+            if (abilitiesOf(p.role).any((a) => buy(p, game.exp, a) != null))
+              Container(
+                key: const Key('spend-hint'),
+                margin: const EdgeInsets.only(bottom: 4),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.tertiaryContainer,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Text('経験点が貯まっています。「+1」で能力に振り分けましょう。'),
+              ),
             AbilityRadar(player: p),
             const SizedBox(height: 4),
             for (final a in abilitiesOf(p.role))
@@ -325,6 +351,14 @@ class _AbilityCard extends StatelessWidget {
       Plan.lesson => (Icons.school, const Color(0xFFF9A825)),
     };
 
+/// 今のおすすめ。疲れていれば休養、気持ちが沈んでいれば交流、それ以外は練習。
+Plan recommendedPlan(Game g) {
+  final c = g.condition;
+  if (c.fatigue >= 70) return Plan.rest;
+  if (c.morale < 35) return Plan.social;
+  return Plan.train;
+}
+
 class _ActionCard extends StatelessWidget {
   const _ActionCard({required this.controller, required this.game});
   final GameController controller;
@@ -363,7 +397,10 @@ class _ActionCard extends StatelessWidget {
                 for (final a in Plan.values)
                   SizedBox(
                       width: w,
-                      child: _PlanTile(plan: a, controller: controller)),
+                      child: _PlanTile(
+                          plan: a,
+                          controller: controller,
+                          recommended: a == recommendedPlan(game))),
               ]);
             }),
           ],
@@ -374,49 +411,77 @@ class _ActionCard extends StatelessWidget {
 }
 
 class _PlanTile extends StatelessWidget {
-  const _PlanTile({required this.plan, required this.controller});
+  const _PlanTile({
+    required this.plan,
+    required this.controller,
+    this.recommended = false,
+  });
   final Plan plan;
   final GameController controller;
+
+  /// 今のおすすめ(疲れ・気持ちから決める)。
+  final bool recommended;
 
   @override
   Widget build(BuildContext context) {
     final (icon, color) = _planStyle(plan);
     final cs = Theme.of(context).colorScheme;
-    return Material(
-      key: Key('act-${plan.name}'),
-      color: color.withValues(alpha: 0.10),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(14),
-        side: BorderSide(color: color.withValues(alpha: 0.35)),
-      ),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(14),
-        onTap: () => controller.act(plan),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
-          child: Row(children: [
-            Container(
-              width: 38,
-              height: 38,
-              decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-              child: Icon(icon, color: Colors.white, size: 22),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(actionLabel(plan),
-                      style: const TextStyle(fontWeight: FontWeight.bold)),
-                  Text(actionHint(plan),
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodySmall
-                          ?.copyWith(color: cs.onSurfaceVariant)),
-                ],
+    return Semantics(
+      button: true,
+      label:
+          '${actionLabel(plan)}。${actionHint(plan)}${recommended ? '。おすすめ' : ''}',
+      excludeSemantics: true,
+      child: Material(
+        key: Key('act-${plan.name}'),
+        color: color.withValues(alpha: 0.10),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(14),
+          side: BorderSide(color: color.withValues(alpha: 0.35)),
+        ),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(14),
+          onTap: () => controller.act(plan),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
+            child: Row(children: [
+              Container(
+                width: 38,
+                height: 38,
+                decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+                child: Icon(icon, color: Colors.white, size: 22),
               ),
-            ),
-          ]),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(actionLabel(plan),
+                        style: const TextStyle(fontWeight: FontWeight.bold)),
+                    Text(actionHint(plan),
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodySmall
+                            ?.copyWith(color: cs.onSurfaceVariant)),
+                  ],
+                ),
+              ),
+              if (recommended)
+                Container(
+                  key: Key('recommended-${plan.name}'),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                  decoration: BoxDecoration(
+                    color: color,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Text('おすすめ',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold)),
+                ),
+            ]),
+          ),
         ),
       ),
     );
@@ -737,36 +802,21 @@ class EndingView extends StatelessWidget {
               const SizedBox(height: 4),
               Text(e.madePro ? 'プロで${e.proYears}年間プレーした。' : 'プロの舞台には立てなかった。'),
               const SizedBox(height: 16),
-              if (game.overallHistory.length >= 2)
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(12, 12, 12, 8),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('総合評価の歩み',
-                            style: Theme.of(context).textTheme.titleSmall),
-                        const SizedBox(height: 8),
-                        CareerChart(
-                            history: game.overallHistory,
-                            proStartAge: game.proStartAge),
-                      ],
-                    ),
-                  ),
-                ),
-              const SizedBox(height: 8),
               Card(
                 child: Padding(
                   padding: const EdgeInsets.all(12),
                   child: Column(children: [
                     _row('最高の総合評価', '${e.peakOverall}'),
                     _row('優勝', '${e.championships}回'),
+                    _row('タイトル', '${e.titles.length}個'),
                     _row('ライバルとの対戦', '${e.rivalWins}勝 ${e.rivalLosses}敗'),
                     if (e.wasTwoWay) _row('二刀流', '挑戦した'),
                     if (e.married) _row('家族', '${e.partnerName} と結婚した'),
                   ]),
                 ),
               ),
+              const SizedBox(height: 8),
+              RecordsView(game: game),
               const SizedBox(height: 12),
               Wrap(spacing: 6, children: [
                 for (final t in p.traits)
@@ -796,4 +846,29 @@ class EndingView extends StatelessWidget {
           Text(v, style: const TextStyle(fontWeight: FontWeight.bold))
         ]),
       );
+}
+
+/// 最近の成績(直近1年)と、成績表への入口。
+class _RecentRecordCard extends StatelessWidget {
+  const _RecentRecordCard({required this.game});
+  final Game game;
+
+  @override
+  Widget build(BuildContext context) {
+    final r = game.records.last;
+    final d = describeLine(r.line);
+    return Card(
+      child: ListTile(
+        key: const Key('records-open-card'),
+        leading: const Icon(Icons.bar_chart),
+        title: Text('${r.age}歳の成績: ${r.resultText}'),
+        subtitle: Text(d.isEmpty ? '成績表を見る' : '$d\n成績表を見る'),
+        isThreeLine: d.isNotEmpty,
+        trailing: const Icon(Icons.chevron_right),
+        onTap: () => Navigator.of(context).push(
+          MaterialPageRoute<void>(builder: (_) => RecordsScreen(game: game)),
+        ),
+      ),
+    );
+  }
 }

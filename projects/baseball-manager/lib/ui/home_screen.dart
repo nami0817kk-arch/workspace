@@ -127,7 +127,9 @@ class _HistoryTile extends StatelessWidget {
       child: ListTile(
         dense: true,
         title: Text('${e.name}  ―  ${e.title}'),
-        subtitle: Text('${tags.join(' / ')}   最高評価 ${e.peakOverall}'),
+        subtitle: Text('${tags.join(' / ')}   最高評価 ${e.peakOverall}'
+            '${e.summary.isEmpty ? '' : '\n${e.summary}'}'),
+        isThreeLine: e.summary.isNotEmpty,
       ),
     );
   }
@@ -149,6 +151,7 @@ Future<void> showHelp(BuildContext context) {
           '・仲間と組むと友情タッグ練習、コーチに教わると特性を習得できます。\n'
           '・夏の大会の成績がドラフトの評価になります。高校卒業時に指名されなければ、大学か社会人で1度だけ再挑戦できます。\n'
           '・プロになったら二刀流にいつでも挑戦できます(伸びは0.6倍)。\n'
+          '・夏の大会(プロは10月のシーズン終了)のあとに、成績が記録されます。右上のグラフのボタンで、成績表を見られます。\n'
           '・引退までの一生が、あなたの選手の物語です。',
         ),
       ),

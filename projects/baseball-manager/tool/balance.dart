@@ -47,12 +47,15 @@ void skilled(Game g) {
 }
 
 class Result {
-  Result(this.madePro, this.proYears, this.peak, this.title, this.twoWay);
+  Result(this.madePro, this.proYears, this.peak, this.title, this.twoWay,
+      this.titles, this.leagueWins);
   final bool madePro;
   final int proYears;
   final int peak;
   final String title;
   final bool twoWay;
+  final List<String> titles;
+  final int leagueWins;
 }
 
 Result play(int seed, Policy policy, Role role) {
@@ -77,7 +80,8 @@ Result play(int seed, Policy policy, Role role) {
     }
   }
   final e = g.ending!;
-  return Result(e.madePro, e.proYears, e.peakOverall, e.title, e.wasTwoWay);
+  return Result(e.madePro, e.proYears, e.peakOverall, e.title, e.wasTwoWay,
+      e.titles, g.records.where((r) => r.isLeague && r.rank == 1).length);
 }
 
 void main(List<String> args) {
@@ -94,6 +98,13 @@ void main(List<String> args) {
       print('${entry.key} / ${role.name}: プロ入り ${pct(pro.length)}%  '
           '平均プロ年数 ${pro.isEmpty ? '-' : (pro.map((r) => r.proYears).reduce((a, b) => a + b) / pro.length).toStringAsFixed(1)}  '
           '最高評価平均 ${pro.isEmpty ? '-' : (pro.map((r) => r.peak).reduce((a, b) => a + b) / pro.length).toStringAsFixed(1)}');
+      final withTitle = pro.where((r) => r.titles.isNotEmpty).length;
+      double meanOf(int Function(Result) f) =>
+          pro.isEmpty ? 0 : pro.map(f).reduce((a, b) => a + b) / pro.length;
+      print(
+          '   タイトル: プロの${pro.isEmpty ? 0 : (100 * withTitle / pro.length).toStringAsFixed(0)}%が1度以上 / '
+          '平均${meanOf((r) => r.titles.length).toStringAsFixed(1)}個  '
+          'リーグ優勝 平均${meanOf((r) => r.leagueWins).toStringAsFixed(1)}回');
       print(
           '   ${titles.entries.map((e) => '${e.key} ${pct(e.value)}%').join('  ')}');
     }

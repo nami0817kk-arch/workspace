@@ -1,5 +1,6 @@
 import '../game/game.dart';
 import '../game/player.dart';
+import '../game/records.dart';
 
 /// 殿堂: 過去に育てた選手の記録。引退のたびに1件増える(端末ごと)。
 class HistoryEntry {
@@ -13,6 +14,7 @@ class HistoryEntry {
     required this.championships,
     required this.married,
     required this.wasTwoWay,
+    this.summary = '',
   });
 
   final String name;
@@ -24,6 +26,9 @@ class HistoryEntry {
   final int championships;
   final bool married;
   final bool wasTwoWay;
+
+  /// 通算成績の短い説明(プロ通算。プロに入れなければ大会通算)。
+  final String summary;
 
   factory HistoryEntry.of(Game g) {
     final e = g.ending!;
@@ -37,6 +42,7 @@ class HistoryEntry {
       championships: e.championships,
       married: e.married,
       wasTwoWay: e.wasTwoWay,
+      summary: careerSummary(g.records),
     );
   }
 
@@ -50,6 +56,7 @@ class HistoryEntry {
         'championships': championships,
         'married': married,
         'wasTwoWay': wasTwoWay,
+        'summary': summary,
       };
 
   /// 項目を足すときは既定値を置く。
@@ -64,6 +71,7 @@ class HistoryEntry {
         championships: (j['championships'] as num?)?.toInt() ?? 0,
         married: (j['married'] as bool?) ?? false,
         wasTwoWay: (j['wasTwoWay'] as bool?) ?? false,
+        summary: (j['summary'] as String?) ?? '',
       );
 }
 

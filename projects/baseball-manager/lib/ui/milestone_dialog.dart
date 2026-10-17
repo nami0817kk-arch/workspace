@@ -13,11 +13,16 @@ class MilestoneDialog extends StatelessWidget {
         MilestoneKind.champion => (Icons.emoji_events, const Color(0xFFF9A825)),
         MilestoneKind.trait => (Icons.auto_awesome, const Color(0xFF7E57C2)),
         MilestoneKind.stage => (Icons.school, const Color(0xFF2E7D32)),
+        MilestoneKind.title => (
+            Icons.workspace_premium,
+            const Color(0xFFD4AF37)
+          ),
       };
 
   bool get _celebrate =>
       milestone.kind == MilestoneKind.draft ||
-      milestone.kind == MilestoneKind.champion;
+      milestone.kind == MilestoneKind.champion ||
+      milestone.kind == MilestoneKind.title;
 
   @override
   Widget build(BuildContext context) {

@@ -434,4 +434,108 @@ void _rankTests() {
     await t.pumpAndSettle();
     expect(find.byKey(const Key('admin-open')), findsNothing);
   });
+
+  testWidgets('成績: 記録が無いうちは案内が出て、大会のあとは成績表が見られる', (t) async {
+    final c = await _start(t);
+    c.newGame('テスト', Role.batter);
+    await t.pumpAndSettle();
+    expect(find.byKey(const Key('records-open-card')), findsNothing);
+    await t.tap(find.byKey(const Key('records-open')));
+    await t.pumpAndSettle();
+    expect(find.textContaining('まだ成績がありません'), findsOneWidget);
+    await t.pageBack();
+    await t.pumpAndSettle();
+
+    // 大会を終えた選手に差し替える。
+    c.adopt(_until((g) => g.records.isNotEmpty && g.phase == Phase.term));
+    await t.pumpAndSettle();
+    expect(find.byKey(const Key('records-open-card')), findsOneWidget);
+    expect(find.textContaining('歳の成績'), findsOneWidget);
+    await t.tap(find.byKey(const Key('records-open-card')));
+    await t.pumpAndSettle();
+    expect(find.text('テスト の成績'), findsOneWidget);
+    expect(find.text('年度別成績'), findsOneWidget);
+    expect(find.text('打率'), findsWidgets);
+    expect(find.textContaining('通算'), findsWidgets);
+  });
+
+  testWidgets('成績: 投手は勝敗・防御率・奪三振の欄が出る。打者の欄は出ない', (t) async {
+    final c = await _start(t);
+    final g = Game.newGame(
+        name: '投手', role: Role.pitcher, rng: Random(2), potential: 70);
+    var steps = 0;
+    while (g.records.isEmpty) {
+      if (++steps > 100) fail('大会が進まない');
+      g.autoSpend();
+      g.phase == Phase.event
+          ? g.resolveEvent(0)
+          : g.choose(Plan.train, Ability.stuff);
+    }
+    c.adopt(g);
+    await t.pumpAndSettle();
+    await t.tap(find.byKey(const Key('records-open')));
+    await t.pumpAndSettle();
+    expect(find.text('防御率'), findsWidgets);
+    expect(find.text('奪三振'), findsWidgets);
+    expect(find.text('打率'), findsNothing);
+  });
+
+  testWidgets('成績: プロのシーズンは順位とプロ通算が出る', (t) async {
+    final c = await _start(t);
+    Game? g;
+    for (var s = 0; s < 80 && g == null; s++) {
+      final x = _until(
+          (g) => g.stage == Stage.pro && g.records.any((r) => r.isLeague),
+          seed: s,
+          potential: 100);
+      if (x.records.any((r) => r.isLeague)) g = x;
+    }
+    c.adopt(g!);
+    await t.pumpAndSettle();
+    await t.tap(find.byKey(const Key('records-open')));
+    await t.pumpAndSettle();
+    expect(find.textContaining('プロ通算'), findsOneWidget);
+    expect(find.textContaining('位'), findsWidgets);
+  });
+
+  testWidgets('成績: エンディングにも成績表が出て、殿堂に通算成績が残る', (t) async {
+    final c = await _start(t);
+    c.adopt(_until((g) => g.phase == Phase.pathChoice, seed: 3, potential: 0));
+    await t.pumpAndSettle();
+    await t.tap(find.byKey(const Key('give-up')));
+    await t.pumpAndSettle();
+    expect(find.text('年度別成績'), findsOneWidget);
+    expect(find.text('獲得したタイトル'), findsNothing); // 無ければ出さない
+    expect(c.history.first.summary, startsWith('大会通算'));
+    await t.tap(find.byKey(const Key('again')));
+    await t.pumpAndSettle();
+    expect(find.textContaining('大会通算'), findsOneWidget);
+  });
+
+  testWidgets('おすすめ: 疲れていれば休養、気持ちが沈んでいれば交流、普段は練習', (t) async {
+    final c = await _start(t);
+    c.newGame('テスト', Role.batter);
+    await t.pumpAndSettle();
+    expect(find.byKey(const Key('recommended-train')), findsOneWidget);
+    c.admin((g) => g.condition = const Condition(fatigue: 80, morale: 50));
+    await t.pumpAndSettle();
+    expect(find.byKey(const Key('recommended-rest')), findsOneWidget);
+    expect(find.byKey(const Key('recommended-train')), findsNothing);
+    c.admin((g) => g.condition = const Condition(fatigue: 10, morale: 20));
+    await t.pumpAndSettle();
+    expect(find.byKey(const Key('recommended-social')), findsOneWidget);
+  });
+
+  testWidgets('経験点が貯まったら、振り分けの案内が出る。使い切ると消える', (t) async {
+    final c = await _start(t);
+    c.newGame('テスト', Role.batter);
+    await t.pumpAndSettle();
+    expect(find.byKey(const Key('spend-hint')), findsNothing);
+    c.admin((g) => g.adminAddExp(5000));
+    await t.pumpAndSettle();
+    expect(find.byKey(const Key('spend-hint')), findsOneWidget);
+    c.admin((g) => g.adminAddExp(-100000));
+    await t.pumpAndSettle();
+    expect(find.byKey(const Key('spend-hint')), findsNothing);
+  });
 }
