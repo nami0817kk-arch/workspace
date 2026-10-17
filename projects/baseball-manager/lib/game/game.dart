@@ -7,6 +7,7 @@ import 'exp.dart';
 import 'life.dart';
 import 'path.dart';
 import 'player.dart';
+import 'life_log.dart';
 import 'records.dart';
 import 'season.dart';
 import 'traits.dart';
@@ -74,6 +75,7 @@ class Game {
     final g = Game._(rng, p, Cast.initial(rng, role, p.traits))
       .._wasTwoWay = role == Role.twoWay;
     g.overallHistory.add(overall(p).round());
+    g._note('stage', '${stageNameOf(Stage.youth)}を始めた');
     return g;
   }
 
@@ -110,6 +112,12 @@ class Game {
 
   /// 年ごとの成績(大会・シーズン)。成績画面とエンディングに出す。
   final List<SeasonRecord> records = [];
+
+  /// 人生の節目(入学・進路・ドラフト・特性の習得・転向・引退)。経歴の年表に出す。
+  final List<LifeEvent> lifeLog = [];
+
+  void _note(String kind, String text) =>
+      lifeLog.add(LifeEvent(player.age, kind, text));
 
   Stage get stage => phase == Phase.retired
       ? Stage.retired
@@ -167,10 +175,14 @@ class Game {
   void resolveEvent(int index) {
     _require(Phase.event);
     final ch = pendingEvent!.choices[index];
+    final before = player.traits;
     final r = ch.apply(player, condition, _eventFocus);
     player = r.player;
     condition = r.condition;
     ch.onCast?.call(cast, rng);
+    for (final t in player.traits.difference(before)) {
+      _note('trait', '特性「${t.label}」を習得');
+    }
     _checkCoach();
     pendingEvent = null;
     phase = Phase.term;
@@ -209,13 +221,14 @@ class Game {
     player = switchRole(player, to, stage);
     if (to == Role.twoWay) _wasTwoWay = true;
     log.add('${to.name} に転向した。');
+    _note('role', '${roleNameOf(to)}になった');
   }
 
   /// プロの間は自分で引退を決められる。
   void retire() {
     _require(Phase.term);
     if (!canChooseRetire(stage)) throw StateError('引退を選べるのはプロの間だけ');
-    _retire();
+    _retire('自ら引退を決めた');
   }
 
   // ── ドラフトに外れたとき ──
@@ -225,11 +238,12 @@ class Game {
     route = r;
     phase = Phase.term;
     log.add('${r.name} で再挑戦する。');
+    _note('route', '${courseNameOf(r)}で再挑戦');
   }
 
   void giveUp() {
     _require(Phase.pathChoice);
-    _retire();
+    _retire('プロを諦めた');
   }
 
   // ── 管理者機能(調整・検証用。ホーム画面のタイトルを7回タップで有効) ──
@@ -324,6 +338,7 @@ class Game {
     if (t != null && canGain(player.traits, t)) {
       player = player.copyWith(traits: gain(player.traits, t));
       log.add('${coach.name}のコツをつかんだ! 特性「${t.label}」を習得。');
+      _note('trait', '特性「${t.label}」を習得(コーチ ${coach.name})');
     } else {
       exp = exp.add({
         for (final c in Category.values) c: 40,
@@ -456,8 +471,9 @@ class Game {
       proYears++;
       lowYears = nextLowYears(player, lowYears);
       if (mustRetire(player, lowYears)) {
-        log.add(isReleased(lowYears) ? '戦力外になった。' : '年齢により引退した。');
-        _retire();
+        final why = isReleased(lowYears) ? '戦力外になった' : '年齢により引退した';
+        log.add('$why。');
+        _retire(isReleased(lowYears) ? '戦力外通告を受けて引退' : '年齢により引退');
       }
     } else if (route == null && player.age == proEntryAge + 1) {
       _draft();
@@ -471,7 +487,12 @@ class Game {
   void _rotateCast(Stage before) {
     if (phase == Phase.retired) return;
     final after = stage;
-    if (after != before) cast.rotate(after, rng, player.role, player.traits);
+    if (after != before) {
+      cast.rotate(after, rng, player.role, player.traits);
+      if (after != Stage.pro && after != Stage.pathChoice) {
+        _note('stage', '${stageNameOf(after)}に進んだ');
+      }
+    }
   }
 
   void _draft() {
@@ -479,16 +500,20 @@ class Game {
       turnedPro = true;
       proStartAge = player.age;
       log.add('ドラフトで指名された!');
+      _note('draft', 'ドラフトで指名され、プロ入り');
     } else if (route == null) {
       log.add('ドラフトで指名されなかった。');
+      _note('draft', 'ドラフトで指名されなかった');
       phase = Phase.pathChoice;
     } else {
       log.add('再挑戦も実らなかった。');
-      _retire();
+      _note('draft', '再挑戦のドラフトでも指名されなかった');
+      _retire('再挑戦も実らず引退');
     }
   }
 
-  void _retire() {
+  void _retire(String reason) {
+    _note('retire', reason);
     phase = Phase.retired;
     pendingEvent = null;
     ending = _buildEnding();
@@ -546,6 +571,7 @@ class Game {
         'overallHistory': overallHistory,
         'proStartAge': proStartAge,
         'records': [for (final r in records) r.toJson()],
+        'lifeLog': [for (final e in lifeLog) e.toJson()],
       };
 
   /// 項目を足すときは既定値を置く(既存セーブを壊さない)。
@@ -585,6 +611,10 @@ class Game {
     g.overallHistory.addAll(((j['overallHistory'] as List?) ?? const [])
         .map((e) => (e as num).toInt()));
     g.proStartAge = (j['proStartAge'] as num?)?.toInt();
+    g.lifeLog.addAll([
+      for (final e in (j['lifeLog'] as List?) ?? const [])
+        LifeEvent.fromJson((e as Map).cast<String, dynamic>()),
+    ]);
     g.records.addAll([
       for (final r in (j['records'] as List?) ?? const [])
         SeasonRecord.fromJson((r as Map).cast<String, dynamic>()),

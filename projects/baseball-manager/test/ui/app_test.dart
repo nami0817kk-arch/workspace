@@ -593,4 +593,150 @@ void _rankTests() {
     expect(c.game!.phase, Phase.pathChoice); // まだ選べる
     expect(find.byKey(const Key('route-university')), findsOneWidget);
   });
+
+  testWidgets('選手情報: アイコンでもバナーでも開け、プロフィール・成績・経歴の3つを見られる', (t) async {
+    final c = await _start(t);
+    c.newGame('ひなた', Role.pitcher);
+    await t.pumpAndSettle();
+    c.admin((g) => g.adminSetTraits({Trait.clutch, Trait.sturdy}));
+    c.admin((g) => g.adminSetPotential(80));
+    await t.pumpAndSettle();
+
+    await t.tap(find.byKey(const Key('player-open')));
+    await t.pumpAndSettle();
+    expect(find.text('プロフィール'), findsOneWidget);
+    expect(find.text('成績'), findsWidgets);
+    expect(find.text('経歴'), findsOneWidget);
+    expect(find.text('ひなた'), findsWidgets);
+    expect(find.textContaining('総合評価'), findsOneWidget);
+    expect(find.text('素質 ★★★★☆'), findsOneWidget);
+    expect(find.byKey(const Key('trait-clutch')), findsOneWidget);
+    expect(find.byKey(const Key('trait-sturdy')), findsOneWidget);
+    expect(find.textContaining('大会での体調が'), findsOneWidget); // 特性の説明が読める
+    expect(find.text('球威'), findsWidgets);
+    expect(find.text('いまの状態'), findsOneWidget); // 育成中だけ出る
+
+    await t.tap(find.byKey(const Key('tab-records')));
+    await t.pumpAndSettle();
+    expect(find.textContaining('まだ成績がありません'), findsOneWidget);
+
+    await t.tap(find.byKey(const Key('tab-career')));
+    await t.pumpAndSettle();
+    expect(find.byKey(const Key('timeline')), findsOneWidget);
+    expect(find.textContaining('少年野球を始めた'), findsOneWidget);
+
+    await t.pageBack();
+    await t.pumpAndSettle();
+    await t.tap(find.byKey(const Key('banner')));
+    await t.pumpAndSettle();
+    expect(find.text('プロフィール'), findsOneWidget);
+  });
+
+  testWidgets('選手情報: 成績が溜まると成績タブに表が出て、経歴に優勝やドラフトが並ぶ', (t) async {
+    final c = await _start(t);
+    Game? g;
+    for (var s = 0; s < 80 && g == null; s++) {
+      final x = _until(
+          (g) => g.stage == Stage.pro && g.records.any((r) => r.isLeague),
+          seed: s,
+          potential: 100);
+      if (x.records.any((r) => r.isLeague)) g = x;
+    }
+    c.adopt(g!);
+    await t.pumpAndSettle();
+    await t.tap(find.byKey(const Key('player-open')));
+    await t.pumpAndSettle();
+    await t.tap(find.byKey(const Key('tab-records')));
+    await t.pumpAndSettle();
+    expect(find.text('年度別成績'), findsOneWidget);
+    await t.tap(find.byKey(const Key('tab-career')));
+    await t.pumpAndSettle();
+    expect(find.textContaining('ドラフトで指名され、プロ入り'), findsOneWidget);
+    expect(find.textContaining('中学に進んだ'), findsOneWidget);
+  });
+
+  testWidgets('殿堂の選手をタップすると、その選手の情報(特性・成績・経歴)が見られる', (t) async {
+    final c = await _start(t);
+    final g = _until((g) => g.phase == Phase.pathChoice, seed: 3, potential: 0);
+    g.adminSetTraits({Trait.genius});
+    c.adopt(g);
+    await t.pumpAndSettle();
+    await t.tap(find.byKey(const Key('give-up')));
+    await t.pumpAndSettle();
+    await t.tap(find.byKey(const Key('give-up-confirm')));
+    await t.pumpAndSettle();
+    await t.tap(find.byKey(const Key('again')));
+    await t.pumpAndSettle();
+
+    await t.tap(find.textContaining('テスト  ―  プロにはなれなかった'));
+    await t.pumpAndSettle();
+    expect(find.text('称号: プロにはなれなかった'), findsOneWidget);
+    expect(find.byKey(const Key('trait-genius')), findsOneWidget);
+    expect(find.text('いまの状態'), findsNothing); // 過去の選手には出ない
+    await t.tap(find.byKey(const Key('tab-career')));
+    await t.pumpAndSettle();
+    expect(find.textContaining('プロを諦めた'), findsOneWidget);
+    await t.tap(find.byKey(const Key('tab-records')));
+    await t.pumpAndSettle();
+    expect(find.text('年度別成績'), findsOneWidget);
+  });
+
+  testWidgets('設定: ホームからも育成中からも開け、管理者モードをスイッチで切り替えられる', (t) async {
+    final c = await _start(t);
+    await t.tap(find.byKey(const Key('settings-open')));
+    await t.pumpAndSettle();
+    expect(find.text('管理者モード'), findsOneWidget);
+    expect(c.adminMode, isFalse);
+    await t.tap(find.byKey(const Key('admin-switch')));
+    await t.pumpAndSettle();
+    expect(c.adminMode, isTrue);
+    // 選手がいなければ、管理者機能は開けない。
+    expect(find.text('育成中の選手がいるときに開けます'), findsOneWidget);
+    await t.tap(find.byKey(const Key('admin-switch')));
+    await t.pumpAndSettle();
+    expect(c.adminMode, isFalse);
+  });
+
+  testWidgets('設定: 育成中に、スイッチ→管理者機能まで3タップで着く', (t) async {
+    final c = await _start(t);
+    c.newGame('テスト', Role.batter);
+    await t.pumpAndSettle();
+    await t.tap(find.byKey(const Key('settings-open')));
+    await t.pumpAndSettle();
+    await t.tap(find.byKey(const Key('admin-switch')));
+    await t.pumpAndSettle();
+    await t.tap(find.byKey(const Key('admin-open-settings')));
+    await t.pumpAndSettle();
+    expect(find.text('管理者機能'), findsOneWidget);
+    await t.drag(
+        find.byKey(const Key('admin-potential')), const Offset(2000, 0));
+    await t.pumpAndSettle();
+    expect(c.game!.player.potential, 100);
+  });
+
+  testWidgets('設定: すべてのデータを消す(確認つき)。殿堂も育成中の選手も消える', (t) async {
+    final c = await _start(t);
+    c.adopt(_until((g) => g.phase == Phase.pathChoice, seed: 3, potential: 0));
+    await t.pumpAndSettle();
+    await t.tap(find.byKey(const Key('give-up')));
+    await t.pumpAndSettle();
+    await t.tap(find.byKey(const Key('give-up-confirm')));
+    await t.pumpAndSettle();
+    expect(c.history, hasLength(1));
+    await t.tap(find.byKey(const Key('settings-open')));
+    await t.pumpAndSettle();
+    await t.tap(find.byKey(const Key('erase-all')));
+    await t.pumpAndSettle();
+    await t.tap(find.text('やめる')); // やめれば消えない
+    await t.pumpAndSettle();
+    expect(c.history, hasLength(1));
+    await t.tap(find.byKey(const Key('erase-all')));
+    await t.pumpAndSettle();
+    await t.tap(find.byKey(const Key('erase-confirm')));
+    await t.pumpAndSettle();
+    expect(c.history, isEmpty);
+    expect(c.game, isNull);
+    expect(find.text('はじめる'), findsOneWidget);
+    expect(find.text('殿堂(これまでの選手)'), findsNothing);
+  });
 }

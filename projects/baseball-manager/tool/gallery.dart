@@ -12,6 +12,7 @@ import 'package:baseball_manager/game/career.dart';
 import 'package:baseball_manager/game/game.dart';
 import 'package:baseball_manager/game/life.dart';
 import 'package:baseball_manager/game/path.dart';
+import 'package:baseball_manager/game/snapshot.dart';
 import 'package:baseball_manager/game/player.dart';
 import 'package:baseball_manager/ui/art/avatar.dart';
 import 'package:baseball_manager/ui/art/career_chart.dart';
@@ -138,7 +139,8 @@ class _Gallery extends StatelessWidget {
             70,
             66
           ], proStartAge: 19),
-          RecordsView(game: _playedGame(Role.batter)),
+          RecordsView(
+              snapshot: PlayerSnapshot.fromGame(_playedGame(Role.batter))),
           const SizedBox(height: 12),
           const SizedBox(
             height: 330,

@@ -1,6 +1,7 @@
 import '../game/game.dart';
 import '../game/player.dart';
 import '../game/records.dart';
+import '../game/snapshot.dart';
 
 /// 殿堂: 過去に育てた選手の記録。引退のたびに1件増える(端末ごと)。
 class HistoryEntry {
@@ -15,6 +16,7 @@ class HistoryEntry {
     required this.married,
     required this.wasTwoWay,
     this.summary = '',
+    this.snapshot,
   });
 
   final String name;
@@ -30,6 +32,9 @@ class HistoryEntry {
   /// 通算成績の短い説明(プロ通算。プロに入れなければ大会通算)。
   final String summary;
 
+  /// 選手情報の写し(能力・特性・成績・経歴)。古い記録には無い。
+  final PlayerSnapshot? snapshot;
+
   factory HistoryEntry.of(Game g) {
     final e = g.ending!;
     return HistoryEntry(
@@ -43,6 +48,7 @@ class HistoryEntry {
       married: e.married,
       wasTwoWay: e.wasTwoWay,
       summary: careerSummary(g.records),
+      snapshot: PlayerSnapshot.fromGame(g),
     );
   }
 
@@ -57,6 +63,7 @@ class HistoryEntry {
         'married': married,
         'wasTwoWay': wasTwoWay,
         'summary': summary,
+        'snapshot': snapshot?.toJson(),
       };
 
   /// 項目を足すときは既定値を置く。
@@ -72,6 +79,10 @@ class HistoryEntry {
         married: (j['married'] as bool?) ?? false,
         wasTwoWay: (j['wasTwoWay'] as bool?) ?? false,
         summary: (j['summary'] as String?) ?? '',
+        snapshot: j['snapshot'] is Map
+            ? PlayerSnapshot.fromJson(
+                (j['snapshot'] as Map).cast<String, dynamic>())
+            : null,
       );
 }
 

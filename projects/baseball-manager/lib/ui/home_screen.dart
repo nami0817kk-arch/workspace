@@ -7,6 +7,8 @@ import 'art/avatar.dart';
 import 'art/scene.dart';
 import 'controller.dart';
 import 'history.dart';
+import 'player_screen.dart';
+import 'settings_screen.dart';
 import 'labels.dart';
 
 /// はじまりの画面: 名前と、打者か投手かを選ぶ。
@@ -46,6 +48,16 @@ class _HomeScreenState extends State<HomeScreen> {
           child: const Text('野球育成'),
         ),
         actions: [
+          IconButton(
+            key: const Key('settings-open'),
+            tooltip: '設定',
+            icon: const Icon(Icons.settings),
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => SettingsScreen(controller: widget.controller),
+              ),
+            ),
+          ),
           IconButton(
             key: const Key('help'),
             tooltip: 'あそびかた',
@@ -130,6 +142,14 @@ class _HistoryTile extends StatelessWidget {
         subtitle: Text('${tags.join(' / ')}   最高評価 ${e.peakOverall}'
             '${e.summary.isEmpty ? '' : '\n${e.summary}'}'),
         isThreeLine: e.summary.isNotEmpty,
+        trailing: e.snapshot == null ? null : const Icon(Icons.chevron_right),
+        onTap: e.snapshot == null
+            ? null
+            : () => Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => PlayerScreen(snapshot: e.snapshot!),
+                  ),
+                ),
       ),
     );
   }
@@ -152,6 +172,7 @@ Future<void> showHelp(BuildContext context) {
           '・夏の大会の成績がドラフトの評価になります。高校卒業時に指名されなければ、大学か社会人で1度だけ再挑戦できます。\n'
           '・プロになったら二刀流にいつでも挑戦できます(伸びは0.6倍)。\n'
           '・夏の大会(プロは10月のシーズン終了)のあとに、成績が記録されます。右上のグラフのボタンで、成績表を見られます。\n'
+          '・右上の人型ボタンで選手情報(プロフィール・成績・経歴)を、歯車で設定(管理者モードなど)を開けます。殿堂の選手をタップすると、過去の選手の情報も見られます。\n'
           '・引退までの一生が、あなたの選手の物語です。',
         ),
       ),

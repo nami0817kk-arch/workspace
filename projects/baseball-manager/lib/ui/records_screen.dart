@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../game/career.dart';
 import '../game/game.dart';
+import '../game/snapshot.dart';
 import '../game/records.dart';
 import 'art/career_chart.dart';
 
@@ -19,7 +20,7 @@ class RecordsScreen extends StatelessWidget {
           constraints: const BoxConstraints(maxWidth: 720),
           child: ListView(
             padding: const EdgeInsets.all(12),
-            children: [RecordsView(game: game)],
+            children: [RecordsView(snapshot: PlayerSnapshot.fromGame(game))],
           ),
         ),
       ),
@@ -29,12 +30,12 @@ class RecordsScreen extends StatelessWidget {
 
 /// 成績の中身。成績画面とエンディングで共用する。
 class RecordsView extends StatelessWidget {
-  const RecordsView({super.key, required this.game});
-  final Game game;
+  const RecordsView({super.key, required this.snapshot});
+  final PlayerSnapshot snapshot;
 
   @override
   Widget build(BuildContext context) {
-    final rs = game.records;
+    final rs = snapshot.records;
     if (rs.isEmpty) {
       return const Card(
         child: Padding(
@@ -51,7 +52,7 @@ class RecordsView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        _Summary(game: game, pro: pro),
+        _Summary(records: rs, pro: pro),
         const SizedBox(height: 8),
         _Table(records: rs),
         if (titles.isNotEmpty) ...[
@@ -59,8 +60,8 @@ class RecordsView extends StatelessWidget {
           _Titles(titles: titles),
         ],
         const SizedBox(height: 8),
-        _RivalCard(game: game),
-        if (game.overallHistory.length >= 2) ...[
+        _RivalCard(snapshot: snapshot),
+        if (snapshot.overallHistory.length >= 2) ...[
           const SizedBox(height: 8),
           Card(
             child: Padding(
@@ -72,8 +73,8 @@ class RecordsView extends StatelessWidget {
                       style: Theme.of(context).textTheme.titleSmall),
                   const SizedBox(height: 8),
                   CareerChart(
-                      history: game.overallHistory,
-                      proStartAge: game.proStartAge),
+                      history: snapshot.overallHistory,
+                      proStartAge: snapshot.proStartAge),
                 ],
               ),
             ),
@@ -106,14 +107,14 @@ class _Stat extends StatelessWidget {
 }
 
 class _Summary extends StatelessWidget {
-  const _Summary({required this.game, required this.pro});
-  final Game game;
+  const _Summary({required this.records, required this.pro});
+  final List<SeasonRecord> records;
   final List<SeasonRecord> pro;
 
   @override
   Widget build(BuildContext context) {
     final isPro = pro.isNotEmpty;
-    final rs = isPro ? pro : game.records;
+    final rs = isPro ? pro : records;
     final l = totalOf(rs);
     final wins = rs.where((r) => r.champion).length;
     final titles = rs.fold<int>(0, (a, r) => a + r.titles.length);
@@ -307,18 +308,18 @@ class _Titles extends StatelessWidget {
 }
 
 class _RivalCard extends StatelessWidget {
-  const _RivalCard({required this.game});
-  final Game game;
+  const _RivalCard({required this.snapshot});
+  final PlayerSnapshot snapshot;
 
   @override
   Widget build(BuildContext context) {
-    final rival = game.cast.rival;
+    final rival = snapshot.rivalName;
     if (rival == null) return const SizedBox.shrink();
-    final w = game.cast.rivalWins, l = game.cast.rivalLosses;
+    final w = snapshot.rivalWins, l = snapshot.rivalLosses;
     return Card(
       child: ListTile(
         leading: const Icon(Icons.sports_kabaddi),
-        title: Text('ライバル ${rival.name}'),
+        title: Text('ライバル $rival'),
         subtitle: Text('通算 $w勝 $l敗'),
       ),
     );

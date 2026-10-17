@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../game/calendar.dart';
 import '../game/career.dart';
-import '../game/characters.dart';
 import '../game/exp.dart';
 import '../game/game.dart';
 import '../game/life.dart';
@@ -16,7 +15,11 @@ import 'controller.dart';
 import 'home_screen.dart' show showAdminToggled;
 import 'labels.dart';
 import '../game/records.dart';
+import '../game/snapshot.dart';
+import 'player_screen.dart';
 import 'records_screen.dart';
+import 'settings_screen.dart';
+import 'widgets.dart';
 
 /// 画面の中身の最大幅。広い画面(Web・タブレット)では中央に寄せる。
 const contentMaxWidth = 560.0;
@@ -51,12 +54,28 @@ class GameScreen extends StatelessWidget {
         ),
         actions: [
           IconButton(
+            key: const Key('player-open'),
+            tooltip: '選手情報',
+            icon: const Icon(Icons.person),
+            onPressed: () => _openPlayer(context),
+          ),
+          IconButton(
             key: const Key('records-open'),
             tooltip: '成績',
             icon: const Icon(Icons.bar_chart),
             onPressed: () => Navigator.of(context).push(
               MaterialPageRoute<void>(
                   builder: (_) => RecordsScreen(game: game)),
+            ),
+          ),
+          IconButton(
+            key: const Key('settings-open'),
+            tooltip: '設定',
+            icon: const Icon(Icons.settings),
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => SettingsScreen(controller: controller),
+              ),
             ),
           ),
           if (controller.adminMode)
@@ -77,12 +96,16 @@ class GameScreen extends StatelessWidget {
           child: ListView(
             padding: const EdgeInsets.fromLTRB(12, 4, 12, 24),
             children: [
-              SceneBanner(
-                season: seasonOf(game.stage, game.slot),
-                stage: game.stage,
-                role: p.role,
-                mood: moodOf(game.motivation),
-                label: game.slotName,
+              GestureDetector(
+                key: const Key('banner'),
+                onTap: () => _openPlayer(context),
+                child: SceneBanner(
+                  season: seasonOf(game.stage, game.slot),
+                  stage: game.stage,
+                  role: p.role,
+                  mood: moodOf(game.motivation),
+                  label: game.slotName,
+                ),
               ),
               const SizedBox(height: 8),
               _StatusCard(game: game, controller: controller),
@@ -118,12 +141,21 @@ class GameScreen extends StatelessWidget {
                 _RecentRecordCard(game: game),
               ],
               const SizedBox(height: 8),
-              _CastCard(game: game),
+              CastCard(game: game),
               const SizedBox(height: 8),
               _LogCard(game: game),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  void _openPlayer(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) =>
+            PlayerScreen(snapshot: PlayerSnapshot.fromGame(game), game: game),
       ),
     );
   }
@@ -323,7 +355,7 @@ class _AbilityCard extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 2),
                 child: Row(children: [
-                  _RankBadge(value: p.of(a)),
+                  RankBadge(value: p.of(a)),
                   const SizedBox(width: 6),
                   SizedBox(width: 60, child: Text(abilityLabel(a))),
                   SizedBox(
@@ -684,54 +716,6 @@ class _ProCard extends StatelessWidget {
   }
 }
 
-class _CastCard extends StatelessWidget {
-  const _CastCard({required this.game});
-  final Game game;
-
-  @override
-  Widget build(BuildContext context) {
-    final cast = game.cast;
-    final rows = <Character>[
-      if (cast.rival != null) cast.rival!,
-      if (cast.lover != null) cast.lover!,
-      if (cast.family != null) cast.family!,
-      if (cast.coach != null) cast.coach!,
-      ...cast.teammates,
-    ];
-    return Card(
-      child: ExpansionTile(
-        title: const Text('まわりの人たち'),
-        children: [
-          for (final m in rows)
-            ListTile(
-              dense: true,
-              title: Text('${m.name}  (${m.kind.label})'),
-              subtitle: Text(_sub(m)),
-              trailing: SizedBox(
-                width: 80,
-                child: LinearProgressIndicator(value: m.bond / 100),
-              ),
-            ),
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: Text('ライバルとの対戦: ${cast.rivalWins}勝 ${cast.rivalLosses}敗'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  String _sub(Character m) => switch (m.kind) {
-        Kind.teammate =>
-          '得意: ${m.specialty == null ? '-' : abilityLabel(m.specialty!)}',
-        Kind.coach => m.teaches == null
-            ? 'コツ ${m.tips}/$tipsNeeded'
-            : 'コツ ${m.tips}/$tipsNeeded → ${m.teaches!.label}',
-        Kind.rival => '強さの目安 ${rivalLevel(m, game.player.age).round()}',
-        _ => '絆 ${m.bond}',
-      };
-}
-
 class _LogCard extends StatelessWidget {
   const _LogCard({required this.game});
   final Game game;
@@ -751,26 +735,6 @@ class _LogCard extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-/// 能力のランク(G〜S)の丸いバッジ。
-class _RankBadge extends StatelessWidget {
-  const _RankBadge({required this.value});
-  final int value;
-
-  @override
-  Widget build(BuildContext context) {
-    final r = rankOf(value);
-    return Container(
-      width: 26,
-      height: 26,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(color: rankColor(r), shape: BoxShape.circle),
-      child: Text(r,
-          style: const TextStyle(
-              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14)),
     );
   }
 }
@@ -825,7 +789,32 @@ class EndingView extends StatelessWidget {
     final p = game.player;
     final cs = Theme.of(context).colorScheme;
     return Scaffold(
-      appBar: AppBar(title: Text('${p.name} の一生')),
+      appBar: AppBar(
+        title: Text('${p.name} の一生'),
+        actions: [
+          IconButton(
+            key: const Key('player-open'),
+            tooltip: '選手情報',
+            icon: const Icon(Icons.person),
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => PlayerScreen(
+                    snapshot: PlayerSnapshot.fromGame(game), game: game),
+              ),
+            ),
+          ),
+          IconButton(
+            key: const Key('settings-open'),
+            tooltip: '設定',
+            icon: const Icon(Icons.settings),
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => SettingsScreen(controller: controller),
+              ),
+            ),
+          ),
+        ],
+      ),
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: contentMaxWidth),
@@ -862,7 +851,7 @@ class EndingView extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 8),
-              RecordsView(game: game),
+              RecordsView(snapshot: PlayerSnapshot.fromGame(game)),
               const SizedBox(height: 12),
               Wrap(spacing: 6, children: [
                 for (final t in p.traits)

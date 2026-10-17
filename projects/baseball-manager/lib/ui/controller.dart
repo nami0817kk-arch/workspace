@@ -85,6 +85,13 @@ class SaveStore {
     } catch (_) {}
   }
 
+  Future<void> clearHistory() async {
+    try {
+      final p = await SharedPreferences.getInstance();
+      await p.remove(historyKey);
+    } catch (_) {}
+  }
+
   Future<void> clear() async {
     try {
       final p = await SharedPreferences.getInstance();
@@ -277,6 +284,17 @@ class GameController extends ChangeNotifier {
     game!.changeRole(r);
     if (!abilitiesOf(r).contains(focus)) focus = abilitiesOf(r).first;
     _commit();
+  }
+
+  /// 育成中の選手と殿堂の記録をすべて消す(設定画面から)。管理者モードの設定は残す。
+  Future<void> eraseAll() async {
+    game = null;
+    history = const [];
+    recent = const [];
+    pending.clear();
+    await store.clear();
+    await store.clearHistory();
+    notifyListeners();
   }
 
   Future<void> reset() async {
