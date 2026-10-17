@@ -69,6 +69,18 @@ API では作れないので、画面で作る。
 
 ### 6. ビルドして TestFlight へ上げる
 
+**実地の記録（2026-10-17）**
+- **手順3（App Store Connect にアプリを作る）を先に済ませる。** 無いと `Upload to TestFlight` が `Cannot determine the Apple ID from Bundle ID` で落ちる（署名・ビルドまでは通る）。
+- プロファイルの Base64 は **Git Bash の `base64 -w0 … | gh secret set`** で入れる。PowerShell のパイプだと末尾に CRLF が付き、CI の `Install provisioning profile` が `error decoding base64 input stream` で落ちた。
+- アプリ作成画面のプルダウンは、フォーム入力ツールでは値が反映されない。クリックで開いて `End` → `Return` で選ぶ。
+- アップロード成功: `1.0.0+1`（テスト広告ビルド。審査には出さない）。App Store Connect の Apple ID は 6823961034。
+- TestFlight の内部テストのグループ「自分」を作成し、Account Holder を追加済み（自動配信オン）。
+- 課金アイテム `mojitsumi_remove_ads`（Apple ID 6823968728）: 非消耗型・¥370（日本基準、他国は自動換算）・日英の表示名と説明を登録済み。配信国は既定の全国のまま（アプリ側の配信国を絞るなら揃える）。審査用スクリーンショットは未登録。
+- 価格の欄は ¥370 が一覧に出ないので、検索欄に 370 と入れて「他の価格を確認」を押す。
+- AdMob: ブラウザの Google アカウントが `nami.0817.tt`（authuser=2）でないと新規登録画面になる。アプリ「もじつみ」とリワード・インタースティシャルを作成し、3つの ID を Secrets に登録済み。
+- 本番ビルド `1.0.0+2`（test_ads なし）のアップロード成功。審査にはこちらを使う。
+- 年齢区分（2026-10-17、ユーザー決定）: 質問票は7ステップ。広告だけ「はい」、ほかはすべて「いいえ／なし」→ 4+。アプリ情報の「年齢制限指定を設定」から。画面は表示がとても遅いことがあり、空白なら再読み込みして10秒以上待つ。
+
 GitHub の Actions → **Build もじつみ (iOS Release)** → Run workflow → `upload_to_testflight` に印。
 （手で回さなくても、`mojitsumi-v*` のタグで走る）
 

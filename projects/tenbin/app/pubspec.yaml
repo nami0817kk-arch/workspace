@@ -3,7 +3,7 @@ description: "もじつみ — ひらがな積み上げ ことばパズル"
 publish_to: 'none'
 
 # 版とビルド番号。App Store Connect は同じビルド番号を二度受け付けない
-version: 1.0.0+1
+version: 1.0.0+2
 
 environment:
   sdk: ^3.13.2
