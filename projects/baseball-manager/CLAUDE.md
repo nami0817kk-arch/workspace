@@ -205,3 +205,7 @@ soccer-manager / soccer-career の野球版。**中核は「試合中の采配�
 ## テスト版ビルド
 
 `flutter build web --release --no-web-resources-cdn --pwa-strategy=none --dart-define=TEST_BUILD=true` で、管理者モードが最初からオンの「テスト版」になる（`kTestBuild`）。通常ビルドの挙動は変わらない。
+
+## 力の差の効き方（打席の結果）
+
+`simulateAtBat` は、投手と打者の力の差が大きく開いた(約32以上)ぶんだけ結果へ上乗せする。差が小さいプロ同士の勝負は従来どおりで、バランス(`tool/balance.dart`)は変わらない。小学生の相手(30前後)にS級(90台)の投手が打たれ続ける不自然さを防ぐための調整。確認は `dart run tool/matchup.dart`（K/BB/被安打の割合を出す）。

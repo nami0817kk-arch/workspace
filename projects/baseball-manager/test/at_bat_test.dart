@@ -35,4 +35,16 @@ void main() {
     expect(
         high[AtBatResult.strikeout]!, greaterThan(low[AtBatResult.strikeout]!));
   });
+
+  test('力の差が大きく開くと圧倒する(S級の投手は小学生にほとんど打たれない)', () {
+    const weak = Batter(contact: 30, power: 30, eye: 30);
+    final r = _run(const Pitcher(control: 90, stuff: 90), weak);
+    final n = r.values.fold<int>(0, (a, b) => a + b);
+    final hits = r[AtBatResult.single]! +
+        r[AtBatResult.double]! +
+        r[AtBatResult.triple]! +
+        r[AtBatResult.homeRun]!;
+    expect(hits / n, lessThan(0.10));
+    expect(r[AtBatResult.strikeout]! / n, greaterThan(0.40));
+  });
 }
