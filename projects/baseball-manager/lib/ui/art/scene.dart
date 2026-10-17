@@ -157,8 +157,9 @@ class ScenePainter extends CustomPainter {
           Colors.white.withValues(alpha: season == Season.winter ? 0.9 : 0.8);
     _cloud(canvas, Offset(w * 0.18, h * 0.18), 1.0, cloud);
     _cloud(canvas, Offset(w * 0.55, h * 0.12), 0.7, cloud);
-    if (season != Season.summer)
+    if (season != Season.summer) {
       _cloud(canvas, Offset(w * 0.40, h * 0.34), 0.6, cloud);
+    }
 
     // 遠くの山
     final hill = Path()
