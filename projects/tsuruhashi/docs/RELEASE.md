@@ -13,10 +13,10 @@
 ## いまの状態（2026-10-17）
 
 - master に取り込み済み。公開ページは `https://tsuruhashi.pages.dev/`（privacy・support・terms・app-ads.txt・robots.txt）で開ける
-- **`tsuruhashi.dailyquarry.com` はまだつながっていない**: ワークフローの API でのドメイン追加が 400 を返し、DNS の記録も無い（名前が引けない）。
-  Cloudflare のダッシュボード → Workers & Pages → `tsuruhashi` → **Custom domains** → **Set up a custom domain** → `tsuruhashi.dailyquarry.com`
-  で一度足す（画面から足すと DNS の CNAME も自動で作られる）。足したら Actions の「つるはし採掘の公開ページ」を手で回し、警告が消えたのを見る
-- アプリのリンク・審査の URL 欄・リリースビルドの確認は `tsuruhashi.dailyquarry.com` を見るので、つながるまでリリースビルドは止まる
+- **`tsuruhashi.dailyquarry.com` は 2026-10-17 につながった**: Pages 側のドメイン登録は API で済んでいたが DNS が無く、`dailyquarry.com` のゾーンに
+  CNAME `tsuruhashi` → `tsuruhashi.pages.dev`（プロキシ済み）を足して解決した（kabu・shaho と同じ形）。
+  privacy・support・terms・app-ads.txt・robots.txt が開け（`.html` は拡張子なしに転送）、robots.txt はテキスト、無いパスは 404。公開ワークフローも警告なしで成功
+- 過去のアプリ（goso-boat・hikari7）は `*.pages.dev` のままで独自ドメインを使っていないので、この作業は今回だけ
 
 ## 使い回せるもの（登録済み・作り直さない）
 
