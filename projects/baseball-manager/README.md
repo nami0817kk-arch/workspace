@@ -17,4 +17,5 @@
 - `lib/game/characters.dart` — 登場人物（仲間・ライバル・家族/恋人・コーチ）と絆
 - `lib/game/game.dart` — 本体 `Game`。季節の選択→大会→ドラフト→プロ→引退を進める。画面に依存せず、保存/復元もここ
 - `lib/main.dart` — 起動確認用の最小画面
-- Android/iOS/web の各フォルダは未生成。`flutter create . --platforms=android,ios,web --project-name baseball_manager` で足す
+- web のみ生成済み。Android/iOS は `flutter create . --platforms=android,ios --project-name baseball_manager` で足す
+- `lib/ui/` — 画面（はじめ / 育成 / エンディング）と、保存つきのコントローラ

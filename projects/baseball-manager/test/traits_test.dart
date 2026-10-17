@@ -70,18 +70,18 @@ void main() {
 
   test('頑丈は怪我しにくく、ガラスの肉体はしやすい', () {
     const c = Condition(fatigue: 50);
-    final base = injuryChance(c, Action.train);
-    expect(injuryChance(c, Action.train, {Trait.sturdy}), lessThan(base));
-    expect(injuryChance(c, Action.train, {Trait.glassBody}), greaterThan(base));
+    final base = injuryChance(c, Plan.train);
+    expect(injuryChance(c, Plan.train, {Trait.sturdy}), lessThan(base));
+    expect(injuryChance(c, Plan.train, {Trait.glassBody}), greaterThan(base));
   });
 
   test('鉄人は疲れにくく、前向きは気持ちが上がりやすい', () {
-    final plain = playTerm(_p(), const Condition(), Action.train, Ability.power, Random(1));
-    final iron = playTerm(_p(traits: {Trait.ironMan}), const Condition(), Action.train,
+    final plain = playTerm(_p(), const Condition(), Plan.train, Ability.power, Random(1));
+    final iron = playTerm(_p(traits: {Trait.ironMan}), const Condition(), Plan.train,
         Ability.power, Random(1));
     expect(iron.condition.fatigue, lessThan(plain.condition.fatigue));
-    final a = playTerm(_p(), const Condition(), Action.social, Ability.power, Random(1));
-    final b = playTerm(_p(traits: {Trait.sunny}), const Condition(), Action.social,
+    final a = playTerm(_p(), const Condition(), Plan.social, Ability.power, Random(1));
+    final b = playTerm(_p(traits: {Trait.sunny}), const Condition(), Plan.social,
         Ability.power, Random(1));
     expect(b.condition.morale, greaterThan(a.condition.morale));
   });

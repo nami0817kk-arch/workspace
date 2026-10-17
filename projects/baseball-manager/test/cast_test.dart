@@ -23,7 +23,7 @@ void _toHighSchool(Game g) {
     g.autoSpend();
     switch (g.phase) {
       case Phase.term:
-        g.choose(g.condition.fatigue >= 60 ? Action.rest : Action.train, Ability.contact);
+        g.choose(g.condition.fatigue >= 60 ? Plan.rest : Plan.train, Ability.contact);
       case Phase.event:
         g.resolveEvent(0);
       case Phase.pathChoice || Phase.retired:
@@ -174,7 +174,7 @@ void main() {
         g.resolveEvent(1);
         continue;
       }
-      g.choose(Action.lesson, Ability.contact);
+      g.choose(Plan.lesson, Ability.contact);
     }
     expect(g.player.traits, contains(teaches));
     expect(g.cast.coach!.tips, lessThan(tipsNeeded));
@@ -186,7 +186,7 @@ void main() {
     g.cast.members.removeWhere((m) => m.kind == Kind.coach);
     g.cast.members.add(Character(id: 'coach', name: '先生', kind: Kind.coach, tips: tipsNeeded - 1));
     final before = g.exp.total;
-    g.choose(Action.lesson, Ability.contact);
+    g.choose(Plan.lesson, Ability.contact);
     expect(g.exp.total - before, greaterThanOrEqualTo(120));
     expect(g.cast.coach!.tips, 0);
   });
@@ -201,11 +201,11 @@ void main() {
   test('交流を選ぶと、家族(高校からは恋人)との絆が上がる', () {
     final g = _game(2);
     final before = g.cast.family!.bond;
-    g.choose(Action.social);
+    g.choose(Plan.social);
     expect(g.cast.family!.bond, before + 10);
     _toHighSchool(g);
     final b2 = g.cast.lover!.bond;
-    g.choose(Action.social);
+    g.choose(Plan.social);
     expect(g.cast.lover!.bond, b2 + 10);
   });
 
@@ -215,7 +215,7 @@ void main() {
     while (g.achievements.length < 5) {
       if (++steps > 300) fail('大会が進まない');
       g.autoSpend();
-      g.phase == Phase.event ? g.resolveEvent(0) : g.choose(Action.train, Ability.contact);
+      g.phase == Phase.event ? g.resolveEvent(0) : g.choose(Plan.train, Ability.contact);
     }
     expect(g.cast.rivalWins + g.cast.rivalLosses, g.achievements.length);
   });
@@ -233,7 +233,7 @@ void main() {
           g.resolveEvent(0);
           continue;
         }
-        g.choose(Action.rest);
+        g.choose(Plan.rest);
       }
       expect(win ? g.cast.rivalWins : g.cast.rivalLosses, 1, reason: 'talent=$talent');
     }
@@ -250,7 +250,7 @@ void main() {
     var tagged = 0;
     for (var i = 0; i < 6; i++) {
       final before = g.log.length;
-      g.choose(Action.train, Ability.contact);
+      g.choose(Plan.train, Ability.contact);
       if (g.log.skip(before).any((l) => l.contains('友情タッグ'))) tagged++;
       if (g.phase == Phase.event) g.resolveEvent(0);
     }
@@ -267,11 +267,11 @@ void main() {
         g.autoSpend();
         switch (g.phase) {
           case Phase.term:
-            g.choose(g.condition.fatigue >= 60 ? Action.rest : Action.train, Ability.contact);
+            g.choose(g.condition.fatigue >= 60 ? Plan.rest : Plan.train, Ability.contact);
           case Phase.event:
             g.resolveEvent(0);
           case Phase.pathChoice:
-            g.chooseRoute(Route.university);
+            g.chooseRoute(Course.university);
           case Phase.retired:
             break;
         }
@@ -292,7 +292,7 @@ void main() {
     while (g.phase != Phase.pathChoice) {
       if (++steps > 3000) fail('終わらない');
       g.autoSpend();
-      g.phase == Phase.event ? g.resolveEvent(0) : g.choose(Action.train, Ability.contact);
+      g.phase == Phase.event ? g.resolveEvent(0) : g.choose(Plan.train, Ability.contact);
     }
     g.giveUp();
     expect(g.ending!.married, isFalse);

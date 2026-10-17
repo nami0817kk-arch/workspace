@@ -11,7 +11,7 @@ import 'traits.dart';
 enum Term { spring, summer, autumn, winter }
 
 /// 季節の過ごし方。
-enum Action {
+enum Plan {
   train, // 練習: 重点を伸ばす
   special, // 特訓: 大きく伸びるが疲れて怪我しやすい
   rest, // 休養: 疲れを取る
@@ -22,10 +22,10 @@ enum Action {
 
   /// 重点の能力が要るか。
   bool get needsFocus =>
-      this == Action.train ||
-      this == Action.special ||
-      this == Action.study ||
-      this == Action.lesson;
+      this == Plan.train ||
+      this == Plan.special ||
+      this == Plan.study ||
+      this == Plan.lesson;
 }
 
 /// 年をまたいで持つ状態。能力と別に持つ(体調と気持ち)。
@@ -63,19 +63,19 @@ class Condition {
 
 /// 季節ごとの効果: (伸びの倍率, 疲労の増減, 気持ちの増減)。
 /// 倍率は「1年ぶんの伸び」に対する割合で、通常の練習が 0.25(=4季節で1年)。
-({double scale, int fatigue, int morale}) effectOf(Action a) => switch (a) {
-      Action.train => (scale: 0.25, fatigue: 15, morale: 0),
-      Action.special => (scale: 0.45, fatigue: 35, morale: -5),
-      Action.rest => (scale: 0.05, fatigue: -40, morale: 5),
-      Action.study => (scale: 0.12, fatigue: 5, morale: 10),
-      Action.social => (scale: 0.03, fatigue: -10, morale: 20),
-      Action.match => (scale: 0.17, fatigue: 20, morale: 0),
-      Action.lesson => (scale: 0.15, fatigue: 12, morale: 0),
+({double scale, int fatigue, int morale}) effectOf(Plan a) => switch (a) {
+      Plan.train => (scale: 0.25, fatigue: 15, morale: 0),
+      Plan.special => (scale: 0.45, fatigue: 35, morale: -5),
+      Plan.rest => (scale: 0.05, fatigue: -40, morale: 5),
+      Plan.study => (scale: 0.12, fatigue: 5, morale: 10),
+      Plan.social => (scale: 0.03, fatigue: -10, morale: 20),
+      Plan.match => (scale: 0.17, fatigue: 20, morale: 0),
+      Plan.lesson => (scale: 0.15, fatigue: 12, morale: 0),
     };
 
 /// 怪我の確率。疲れているほど、特訓ほど高い。
-double injuryChance(Condition c, Action a, [Set<Trait> traits = const {}]) =>
-    (0.02 + c.fatigue / 100 * 0.15 + (a == Action.special ? 0.10 : 0.0)) *
+double injuryChance(Condition c, Plan a, [Set<Trait> traits = const {}]) =>
+    (0.02 + c.fatigue / 100 * 0.15 + (a == Plan.special ? 0.10 : 0.0)) *
     injuryMultiplier(traits);
 
 /// 1ターンの結果。能力は直接は上がらず、経験点が貯まる(衰える年だけ能力が直接下がる)。
@@ -96,7 +96,7 @@ class TermResult {
 TermResult playTerm(
   Player p,
   Condition c,
-  Action action,
+  Plan action,
   Ability focus,
   Random rng, {
   double share = 1.0,
@@ -115,7 +115,7 @@ TermResult playTerm(
   final gained = <Category, int>{};
   for (final a in abilitiesOf(p.role)) {
     // 練習試合は特定の能力に偏らない。
-    final f = action == Action.match ? a : focus;
+    final f = action == Plan.match ? a : focus;
     final x = yearlyDelta(p, a, f) * e.scale * share;
     if (x >= 0) {
       final cat = categoryOf(a);

@@ -42,8 +42,8 @@ void main() {
   });
 
   test('再挑戦は大学22歳・社会人21歳、機会は1度だけ', () {
-    expect(graduationAge(Route.university), 22);
-    expect(graduationAge(Route.corporate), 21);
+    expect(graduationAge(Course.university), 22);
+    expect(graduationAge(Course.corporate), 21);
     expect(hasSecondChance(alreadyRetried: false), isTrue);
     expect(hasSecondChance(alreadyRetried: true), isFalse);
   });

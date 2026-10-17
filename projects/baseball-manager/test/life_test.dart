@@ -16,7 +16,7 @@ Player _p([int v = 40]) => Player(
     );
 
 /// 1年(4季節)を同じ過ごし方で n 回回して、貯まった経験点(全種類)の平均。
-double _gain(Action act, {int n = 300}) {
+double _gain(Plan act, {int n = 300}) {
   var tot = 0.0;
   for (var s = 0; s < n; s++) {
     final rng = Random(s);
@@ -32,36 +32,36 @@ double _gain(Action act, {int n = 300}) {
 
 void main() {
   test('特訓は練習より伸びるが、疲れる', () {
-    expect(_gain(Action.special), greaterThan(_gain(Action.train)));
-    final t = playTerm(_p(), const Condition(), Action.train, Ability.power, Random(1));
-    final s = playTerm(_p(), const Condition(), Action.special, Ability.power, Random(1));
+    expect(_gain(Plan.special), greaterThan(_gain(Plan.train)));
+    final t = playTerm(_p(), const Condition(), Plan.train, Ability.power, Random(1));
+    final s = playTerm(_p(), const Condition(), Plan.special, Ability.power, Random(1));
     expect(s.condition.fatigue, greaterThan(t.condition.fatigue));
   });
 
   test('休養と交流は疲れ・気持ちを回復させる', () {
     const tired = Condition(fatigue: 80, morale: 30);
-    final r = playTerm(_p(), tired, Action.rest, Ability.power, Random(1));
+    final r = playTerm(_p(), tired, Plan.rest, Ability.power, Random(1));
     expect(r.condition.fatigue, lessThan(80));
-    final s = playTerm(_p(), tired, Action.social, Ability.power, Random(1));
+    final s = playTerm(_p(), tired, Plan.social, Ability.power, Random(1));
     expect(s.condition.morale, greaterThan(30));
   });
 
   test('練習試合は重点を決めず、全体に経験点が貯まる', () {
-    final r = playTerm(_p(), const Condition(), Action.match, Ability.power, Random(3));
+    final r = playTerm(_p(), const Condition(), Plan.match, Ability.power, Random(3));
     expect(r.exp[Category.batting], greaterThan(0));
     expect(r.exp[Category.running], greaterThan(0));
   });
 
   test('月単位(share=1/3)は効果・疲労が3分の1ぶんになる', () {
-    final season = playTerm(_p(), const Condition(), Action.train, Ability.power, Random(1));
-    final month = playTerm(_p(), const Condition(), Action.train, Ability.power, Random(1),
+    final season = playTerm(_p(), const Condition(), Plan.train, Ability.power, Random(1));
+    final month = playTerm(_p(), const Condition(), Plan.train, Ability.power, Random(1),
         share: 1 / 3);
     expect(month.condition.fatigue, season.condition.fatigue ~/ 3);
     expect(month.exp[Category.batting]!, lessThan(season.exp[Category.batting]! / 2));
   });
 
   test('やる気が高いほど経験点が多く貯まる', () {
-    int exp(int morale) => playTerm(_p(), Condition(morale: morale), Action.train,
+    int exp(int morale) => playTerm(_p(), Condition(morale: morale), Plan.train,
             Ability.power, Random(1))
         .exp[Category.batting]!;
     expect(exp(90), greaterThan(exp(50)));
@@ -70,13 +70,13 @@ void main() {
 
   test('疲れが溜まるほど怪我しやすく、特訓はさらに高い', () {
     const lo = Condition(fatigue: 0), hi = Condition(fatigue: 90);
-    expect(injuryChance(hi, Action.train), greaterThan(injuryChance(lo, Action.train)));
-    expect(injuryChance(lo, Action.special), greaterThan(injuryChance(lo, Action.train)));
+    expect(injuryChance(hi, Plan.train), greaterThan(injuryChance(lo, Plan.train)));
+    expect(injuryChance(lo, Plan.special), greaterThan(injuryChance(lo, Plan.train)));
   });
 
   test('怪我中は選択に関わらず伸びず、季節が進むと治る', () {
     const hurt = Condition(injuredTerms: 2);
-    final r = playTerm(_p(), hurt, Action.special, Ability.power, Random(1));
+    final r = playTerm(_p(), hurt, Plan.special, Ability.power, Random(1));
     expect(r.player.abilities, _p().abilities);
     expect(r.condition.injuredTerms, 1);
     expect(r.gotInjured, isFalse);

@@ -80,7 +80,7 @@ class Game {
   GameEvent? pendingEvent;
   Ability _eventFocus = Ability.contact;
 
-  Route? route; // 大学/社会人を選んだか
+  Course? route; // 大学/社会人を選んだか
   bool turnedPro = false;
   int lowYears = 0;
   int proYears = 0;
@@ -89,6 +89,7 @@ class Game {
   bool _wasTwoWay = false;
   final List<double> achievements = []; // 夏の大会ごとの実績
   final List<String> log = []; // 画面に出す出来事の記録
+  Map<Category, int> lastGain = const {}; // 直前のターンで貯まった経験点(保存しない・画面の表示用)
   Ending? ending;
 
   Stage get stage =>
@@ -115,7 +116,7 @@ class Game {
 
   /// 今のターンの過ごし方を決める。`focus` は練習・特訓・研究で伸ばす能力。
   /// 能力は直接は上がらず、経験点が貯まる。`spend` / `autoSpend` で振り分ける。
-  void choose(Action action, [Ability? focus]) {
+  void choose(Plan action, [Ability? focus]) {
     _require(Phase.term);
     final f = focus ?? abilitiesOf(player.role).first;
     if (!abilitiesOf(player.role).contains(f)) {
@@ -129,6 +130,7 @@ class Game {
     // _afterCast が経験点(コーチのボーナス)を直接足すことがあるので、先に評価する。
     final gained = wasInjured ? r.exp : _afterCast(action, f, r.exp);
     exp = exp.add(gained);
+    lastGain = gained;
     if (r.gotInjured) log.add('怪我をしてしまった。');
     if (isTournamentSlot(stage, slot)) _playSummer();
 
@@ -198,7 +200,7 @@ class Game {
 
   // ── ドラフトに外れたとき ──
 
-  void chooseRoute(Route r) {
+  void chooseRoute(Course r) {
     _require(Phase.pathChoice);
     route = r;
     phase = Phase.term;
@@ -213,12 +215,12 @@ class Game {
   // ── 内部 ──
 
   /// 友情タッグ・コーチ・恋人/家族への影響。経験点の量を返す。
-  Map<Category, int> _afterCast(Action action, Ability focus, Map<Category, int> gained) {
+  Map<Category, int> _afterCast(Plan action, Ability focus, Map<Category, int> gained) {
     final out = Map<Category, int>.of(gained);
-    final trains = action == Action.train ||
-        action == Action.special ||
-        action == Action.match ||
-        action == Action.lesson;
+    final trains = action == Plan.train ||
+        action == Plan.special ||
+        action == Plan.match ||
+        action == Plan.lesson;
     if (trains && gained.isNotEmpty) {
       final mate = cast.pickTagMate(focus, rng);
       if (mate != null) {
@@ -229,14 +231,14 @@ class Game {
         log.add('${mate.name}と友情タッグ練習!');
       }
     }
-    if (action == Action.lesson) {
+    if (action == Plan.lesson) {
       final coach = cast.coach;
       if (coach != null) {
         coach.tips++;
         _checkCoach();
       }
     }
-    if (action == Action.social) {
+    if (action == Plan.social) {
       (cast.lover ?? cast.family)?.addBond(10);
     }
     return out;
@@ -435,7 +437,7 @@ class Game {
     g.pendingEvent = events.where((e) => e.id == j['pendingEvent']).firstOrNull;
     if (g.phase == Phase.event && g.pendingEvent == null) g.phase = Phase.term;
     g._eventFocus = pick(Ability.values, j['eventFocus'], Ability.contact);
-    g.route = Route.values.where((r) => r.name == j['route']).firstOrNull;
+    g.route = Course.values.where((r) => r.name == j['route']).firstOrNull;
     g.turnedPro = (j['turnedPro'] as bool?) ?? false;
     g.lowYears = (j['lowYears'] as num?)?.toInt() ?? 0;
     g.proYears = (j['proYears'] as num?)?.toInt() ?? 0;

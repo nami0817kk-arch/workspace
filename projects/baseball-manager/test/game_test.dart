@@ -22,12 +22,12 @@ void _autoPlay(Game g, {bool Function(Game)? stop, int proRetireAge = 40}) {
         if (g.stage == Stage.pro && g.player.age >= proRetireAge) {
           g.retire();
         } else {
-          g.choose(g.condition.fatigue >= 60 ? Action.rest : Action.train, Ability.contact);
+          g.choose(g.condition.fatigue >= 60 ? Plan.rest : Plan.train, Ability.contact);
         }
       case Phase.event:
         g.resolveEvent(0);
       case Phase.pathChoice:
-        g.chooseRoute(Route.university);
+        g.chooseRoute(Course.university);
       case Phase.retired:
         break;
     }
@@ -91,7 +91,7 @@ void main() {
       if (++turns > 50) fail('年が進まない');
       g.phase == Phase.event
           ? g.resolveEvent(0)
-          : g.choose(Action.rest, Ability.contact);
+          : g.choose(Plan.rest, Ability.contact);
     }
     expect(g.player.age, startAge + 1);
     expect(g.slot, 0);
@@ -115,7 +115,7 @@ void main() {
         sawJuly = true;
         expect(g.achievements.length, before);
       }
-      g.choose(Action.rest, Ability.contact);
+      g.choose(Plan.rest, Ability.contact);
     }
     expect(sawJuly, isTrue);
     expect(g.achievements.length, before + 1); // 大会は年に1回だけ
@@ -124,7 +124,7 @@ void main() {
   test('練習しても能力は直接は上がらず、経験点が貯まって振り分けられる', () {
     final g = _new(4, potential: 80);
     final before = g.player.of(Ability.contact);
-    g.choose(Action.train, Ability.contact);
+    g.choose(Plan.train, Ability.contact);
     if (g.phase == Phase.event) g.resolveEvent(0);
     expect(g.player.of(Ability.contact), before);
     expect(g.exp.of(Category.batting), greaterThan(0));
@@ -135,18 +135,18 @@ void main() {
 
   test('経験点は同じ種類の能力にしか使えない', () {
     final g = _new(4, potential: 80);
-    g.choose(Action.train, Ability.contact);
+    g.choose(Plan.train, Ability.contact);
     expect(g.spend(Ability.stuff), isFalse); // 打者に投球の能力は無い
   });
 
   test('段階に合わない操作は拒否される', () {
     final g = _new(1);
     expect(() => g.resolveEvent(0), throwsStateError);
-    expect(() => g.chooseRoute(Route.university), throwsStateError);
+    expect(() => g.chooseRoute(Course.university), throwsStateError);
     expect(() => g.giveUp(), throwsStateError);
     expect(() => g.retire(), throwsStateError); // プロではない
     expect(() => g.changeRole(Role.twoWay), throwsStateError); // プロではない
-    expect(() => g.choose(Action.train, Ability.stuff), throwsArgumentError);
+    expect(() => g.choose(Plan.train, Ability.stuff), throwsArgumentError);
   });
 
   test('ドラフトに外れると進路を選べて、再挑戦が外れたら終わる', () {
@@ -155,10 +155,10 @@ void main() {
     _autoPlay(g, stop: (g) => g.phase == Phase.pathChoice);
     expect(g.phase, Phase.pathChoice);
     expect(g.stage, Stage.pathChoice);
-    g.chooseRoute(Route.corporate);
-    expect(g.route, Route.corporate);
+    g.chooseRoute(Course.corporate);
+    expect(g.route, Course.corporate);
     _autoPlay(g);
-    expect(g.player.age, anyOf(graduationAge(Route.corporate), greaterThan(21)));
+    expect(g.player.age, anyOf(graduationAge(Course.corporate), greaterThan(21)));
     expect(g.ending, isNotNull);
   });
 
@@ -199,12 +199,12 @@ void main() {
                 g.retire();
               } else {
                 g.autoSpend();
-                g.choose(Action.train, abilitiesOf(role).last);
+                g.choose(Plan.train, abilitiesOf(role).last);
               }
             case Phase.event:
               g.resolveEvent(0);
             case Phase.pathChoice:
-              g.chooseRoute(Route.corporate);
+              g.chooseRoute(Course.corporate);
             case Phase.retired:
               break;
           }
@@ -227,7 +227,7 @@ void main() {
     var guard = 0;
     while (g.phase != Phase.event) {
       if (++guard > 200) fail('出来事が起きない');
-      g.choose(Action.rest, Ability.contact);
+      g.choose(Plan.rest, Ability.contact);
     }
     final b = Game.fromJson(jsonDecode(jsonEncode(g.toJson())) as Map<String, dynamic>, Random(1));
     expect(b.phase, Phase.event);

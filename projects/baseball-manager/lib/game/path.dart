@@ -5,11 +5,11 @@ import 'player.dart';
 import 'traits.dart';
 
 /// プロに入れなかったときの道。
-enum Route {
+enum Course {
   university(4),
   corporate(3);
 
-  const Route(this.years);
+  const Course(this.years);
   final int years;
 }
 
@@ -45,7 +45,7 @@ double draftChance(Player p, double achievement) {
 }
 
 /// 進路を終えて再びドラフトにかかる年齢。高校卒業は18歳。
-int graduationAge(Route r) => proEntryAge + r.years;
+int graduationAge(Course r) => proEntryAge + r.years;
 
 /// 再挑戦の機会は1度だけ。外れたら引退(これも結末の一つ)。
 bool hasSecondChance({required bool alreadyRetried}) => !alreadyRetried;
