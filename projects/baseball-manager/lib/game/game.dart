@@ -117,6 +117,9 @@ class Game {
   /// 年ごとの成績(大会・シーズン)。成績画面とエンディングに出す。
   final List<SeasonRecord> records = [];
 
+  /// 直前に起きた出来事(同じものが続かないようにする)。
+  String? _lastEventId;
+
   /// 今年の目標。年の初めに決まり、大会(プロはシーズン)の成績で達成かどうかが決まる。
   Goal? goal;
 
@@ -173,11 +176,13 @@ class Game {
     if (r.gotInjured) log.add('怪我をしてしまった。');
     if (isTournamentSlot(stage, slot)) _playSummer();
 
-    final e = drawEvent(rng, share: share, stage: stage, cast: cast);
+    final e = drawEvent(rng,
+        share: share, stage: stage, cast: cast, exclude: _lastEventId);
     if (e == null) {
       _nextSlot();
     } else {
       pendingEvent = e;
+      _lastEventId = e.id;
       _eventFocus = f;
       phase = Phase.event;
     }
@@ -187,7 +192,9 @@ class Game {
     _require(Phase.event);
     final ch = pendingEvent!.choices[index];
     final before = player.traits;
-    final r = ch.apply(player, condition, _eventFocus);
+    final r = ch.risky != null
+        ? ch.risky!(player, condition, _eventFocus, rng)
+        : ch.apply(player, condition, _eventFocus);
     player = r.player;
     condition = r.condition;
     ch.onCast?.call(cast, rng);

@@ -201,9 +201,25 @@ Condition endOfYearCondition(Condition c) =>
 
 // ── 季節の途中で起きる出来事(選択つき) ──
 
+/// 出来事の結果(選手と体調)。
+typedef EventResult = ({Player player, Condition condition});
+
+/// 運が絡む出来事の結果。`rng` で成功か失敗かが決まる。
+typedef RiskyApply = EventResult Function(
+    Player p, Condition c, Ability focus, Random rng);
+
 class EventChoice {
-  const EventChoice(this.label, this.apply, [this.onCast]);
+  const EventChoice(this.label, this.apply, [this.onCast]) : risky = null;
+
+  /// 運しだいの選択肢。結果は `risky` が乱数で決める(`apply` は乱数を固定した見本)。
+  EventChoice.risky(this.label, RiskyApply fn, [this.onCast])
+      : risky = fn,
+        apply = ((p, c, f) => fn(p, c, f, Random(0)));
+
   final String label;
+
+  /// 運しだいなら、その結果を決める関数。普通の選択肢は null。
+  final RiskyApply? risky;
 
   /// 登場人物への影響(絆・コツなど)。選んだ後に呼ばれる。
   final void Function(Cast cast, Random rng)? onCast;
@@ -223,9 +239,20 @@ class GameEvent {
   final bool Function(Stage stage, Cast cast)? when;
 }
 
-Player _gain(Player p, Ability a, int n) => p.copyWith(
-      abilities: {...p.abilities, a: (p.of(a) + n).clamp(0, abilityCap)},
-    );
+Player _gain(Player p, Ability a, int n) {
+  // 役割に無い能力(打者の球威など)は増やさない。
+  if (!abilitiesOf(p.role).contains(a)) return p;
+  return p.copyWith(
+    abilities: {...p.abilities, a: (p.of(a) + n).clamp(0, abilityCap)},
+  );
+}
+
+/// 体が大きくなったときの伸び。役割に合う能力が育つ。
+Player _growthSpurt(Player p) => switch (p.role) {
+      Role.batter => _gain(_gain(p, Ability.power, 2), Ability.speed, 1),
+      Role.pitcher => _gain(_gain(p, Ability.stamina, 2), Ability.stuff, 1),
+      Role.twoWay => _gain(_gain(p, Ability.power, 2), Ability.stamina, 1),
+    };
 
 final List<GameEvent> events = [
   GameEvent('coach', '名のあるコーチが声をかけてきた。', [
@@ -388,6 +415,279 @@ final List<GameEvent> events = [
               condition: c.copyWith(fatigue: c.fatigue + 10)
             )),
   ]),
+  // ── 追加の出来事 ──
+  GameEvent(
+      'dad-catch',
+      '父がキャッチボールに誘ってきた。',
+      [
+        EventChoice(
+          '付き合う',
+          (p, c, f) => (
+            player: _gain(p, f, 1),
+            condition: c.copyWith(morale: c.morale + 8)
+          ),
+          (cast, rng) => cast.family?.addBond(10),
+        ),
+        EventChoice(
+          '友達と遊ぶ',
+          (p, c, f) => (
+            player: p,
+            condition: c.copyWith(morale: c.morale + 6, fatigue: c.fatigue - 5)
+          ),
+        ),
+      ],
+      when: (stage, cast) =>
+          (stage == Stage.youth || stage == Stage.juniorHigh) &&
+          cast.family != null),
+  GameEvent(
+      'growth-spurt',
+      '急に背が伸びてきた。',
+      [
+        EventChoice(
+          '体をたくさん動かす',
+          (p, c, f) => (
+            player: _growthSpurt(p),
+            condition: c.copyWith(fatigue: c.fatigue + 10)
+          ),
+        ),
+        EventChoice(
+          '休んで体を作る',
+          (p, c, f) => (
+            player: p,
+            condition: c.copyWith(fatigue: c.fatigue - 15, morale: c.morale + 3)
+          ),
+        ),
+      ],
+      when: (stage, cast) => stage == Stage.youth || stage == Stage.juniorHigh),
+  GameEvent(
+      'scout-visit',
+      'プロのスカウトが練習を見に来た。',
+      [
+        EventChoice.risky('全力でアピールする', (p, c, f, rng) {
+          if (rng.nextDouble() < 0.6) {
+            return (
+              player: _gain(p, f, 2),
+              condition:
+                  c.copyWith(morale: c.morale + 15, fatigue: c.fatigue + 10)
+            );
+          }
+          return (
+            player: p,
+            condition: c.copyWith(morale: c.morale - 8, fatigue: c.fatigue + 10)
+          );
+        }),
+        EventChoice(
+          'いつも通りにやる',
+          (p, c, f) => (player: p, condition: c.copyWith(morale: c.morale + 3)),
+        ),
+      ],
+      when: (stage, cast) =>
+          stage == Stage.highSchool || stage == Stage.pathChoice),
+  GameEvent('injury-scare', '体に違和感がある。', [
+    EventChoice(
+      'すぐ休んで様子を見る',
+      (p, c, f) => (
+        player: p,
+        condition: c.copyWith(fatigue: c.fatigue - 10, morale: c.morale - 3)
+      ),
+    ),
+    EventChoice.risky('我慢して続ける', (p, c, f, rng) {
+      if (rng.nextDouble() < 0.7) {
+        return (
+          player: _gain(p, f, 1),
+          condition: c.copyWith(fatigue: c.fatigue + 10)
+        );
+      }
+      return (
+        player: p,
+        condition: c.copyWith(morale: c.morale - 5, injuredTerms: 1)
+      );
+    }),
+  ]),
+  GameEvent('big-chance', '練習試合で先発のチャンスが回ってきた。', [
+    EventChoice.risky('挑む', (p, c, f, rng) {
+      if (rng.nextDouble() < 0.5) {
+        return (
+          player: _gain(p, f, 2),
+          condition: c.copyWith(morale: c.morale + 15)
+        );
+      }
+      return (
+        player: p,
+        condition: c.copyWith(morale: c.morale - 10, fatigue: c.fatigue + 10)
+      );
+    }),
+    EventChoice(
+      '今回は見送る',
+      (p, c, f) => (player: p, condition: c.copyWith(morale: c.morale - 2)),
+    ),
+  ]),
+  GameEvent('rain-day', '雨で外の練習が中止になった。', [
+    EventChoice(
+      'ゆっくり休む',
+      (p, c, f) => (player: p, condition: c.copyWith(fatigue: c.fatigue - 15)),
+    ),
+    EventChoice(
+      '室内で自主練する',
+      (p, c, f) => (
+        player: _gain(p, f, 1),
+        condition: c.copyWith(fatigue: c.fatigue + 5)
+      ),
+    ),
+  ]),
+  GameEvent(
+      'veteran-advice',
+      'ベテランが、体の使い方を教えてくれると言う。',
+      [
+        EventChoice(
+          '教えを聞く',
+          (p, c, f) => (
+            player: _gain(p, f, 2),
+            condition: c.copyWith(morale: c.morale + 5)
+          ),
+        ),
+        EventChoice(
+          '自分のやり方を貫く',
+          (p, c, f) => (player: p, condition: c.copyWith(morale: c.morale + 8)),
+        ),
+      ],
+      when: (stage, cast) => stage == Stage.pro),
+  GameEvent(
+      'fan-letter',
+      'ファンから手紙が届いた。',
+      [
+        EventChoice(
+          '返事を書く',
+          (p, c, f) => (
+            player: p,
+            condition: c.copyWith(morale: c.morale + 12, fatigue: c.fatigue + 3)
+          ),
+        ),
+        EventChoice(
+          '励みにして練習する',
+          (p, c, f) => (
+            player: _gain(p, f, 1),
+            condition: c.copyWith(morale: c.morale + 8)
+          ),
+        ),
+      ],
+      when: (stage, cast) => stage == Stage.pro),
+  GameEvent('diet', '食事や睡眠を見直すことにした。', [
+    EventChoice(
+      '食事を変えて体を大きくする',
+      (p, c, f) => (
+        player: _gain(p, f, 1),
+        condition: c.copyWith(fatigue: c.fatigue + 5)
+      ),
+    ),
+    EventChoice(
+      '睡眠をしっかりとる',
+      (p, c, f) => (
+        player: p,
+        condition: c.copyWith(fatigue: c.fatigue - 15, morale: c.morale + 3)
+      ),
+    ),
+  ]),
+  GameEvent(
+      'exam',
+      '学校のテストが近い。',
+      [
+        EventChoice(
+          'ちゃんと勉強する',
+          (p, c, f) => (
+            player: p,
+            condition: c.copyWith(morale: c.morale + 5, fatigue: c.fatigue - 5)
+          ),
+        ),
+        EventChoice.risky('練習を優先する', (p, c, f, rng) {
+          if (rng.nextDouble() < 0.5) {
+            return (player: _gain(p, f, 1), condition: c);
+          }
+          return (
+            player: p,
+            condition: c.copyWith(morale: c.morale - 10)
+          ); // 先生に叱られた
+        }),
+      ],
+      when: (stage, cast) =>
+          stage == Stage.juniorHigh ||
+          stage == Stage.highSchool ||
+          stage == Stage.youth),
+  GameEvent(
+      'rival-slump',
+      'ライバルが不調に苦しんでいる。',
+      [
+        EventChoice(
+          '声をかけて励ます',
+          (p, c, f) => (player: p, condition: c.copyWith(morale: c.morale + 3)),
+          (cast, rng) => cast.rival?.addBond(10),
+        ),
+        EventChoice(
+          '気にせず自分の練習をする',
+          (p, c, f) => (
+            player: _gain(p, f, 1),
+            condition: c.copyWith(fatigue: c.fatigue + 5)
+          ),
+        ),
+      ],
+      when: (stage, cast) => cast.rival != null),
+  GameEvent(
+      'mate-quarrel',
+      'チームメイトが言い争いを始めた。',
+      [
+        EventChoice(
+          '間に入って仲直りさせる',
+          (p, c, f) => (
+            player: p,
+            condition: c.copyWith(fatigue: c.fatigue + 5, morale: c.morale + 4)
+          ),
+          (cast, rng) {
+            for (final m in cast.teammates) {
+              m.addBond(6);
+            }
+          },
+        ),
+        EventChoice(
+          '放っておく',
+          (p, c, f) => (player: p, condition: c),
+          (cast, rng) {
+            for (final m in cast.teammates) {
+              m.addBond(-4);
+            }
+          },
+        ),
+      ],
+      when: (stage, cast) => cast.teammates.length >= 2),
+  GameEvent('old-bat', '古い道具を見つけた。', [
+    EventChoice(
+      '使ってみる',
+      (p, c, f) =>
+          (player: _gain(p, f, 1), condition: c.copyWith(morale: c.morale + 5)),
+    ),
+    EventChoice(
+      '大事にしまっておく',
+      (p, c, f) => (player: p, condition: c.copyWith(morale: c.morale + 3)),
+    ),
+  ]),
+  GameEvent(
+      'lover-lunch',
+      '恋人が手作りのお弁当を持ってきてくれた。',
+      [
+        EventChoice(
+          'ありがたくいただく',
+          (p, c, f) => (
+            player: p,
+            condition: c.copyWith(morale: c.morale + 12, fatigue: c.fatigue - 5)
+          ),
+          (cast, rng) => cast.lover?.addBond(8),
+        ),
+        EventChoice(
+          '気持ちだけ受け取る',
+          (p, c, f) => (player: p, condition: c.copyWith(morale: c.morale + 2)),
+          (cast, rng) => cast.lover?.addBond(-2),
+        ),
+      ],
+      when: (stage, cast) => cast.lover != null),
 ];
 
 /// 出来事の起きる確率(1季節あたり)。
@@ -396,7 +696,7 @@ const eventChance = 0.4;
 /// 今季の出来事。起きなければ null。
 /// `stage` と `cast` を渡すと、条件のある出来事(恋人・ライバルなど)も候補に入る。
 GameEvent? drawEvent(Random rng,
-    {double share = 1.0, Stage? stage, Cast? cast}) {
+    {double share = 1.0, Stage? stage, Cast? cast, String? exclude}) {
   if (rng.nextDouble() >= eventChance * share) return null;
   final pool = [
     for (final e in events)
@@ -404,5 +704,11 @@ GameEvent? drawEvent(Random rng,
           (stage != null && cast != null && e.when!(stage, cast)))
         e,
   ];
-  return pool[rng.nextInt(pool.length)];
+  // 直前と同じ出来事は避ける(候補がそれしか無ければ仕方ない)。
+  final fresh = [
+    for (final e in pool)
+      if (e.id != exclude) e
+  ];
+  final from = fresh.isEmpty ? pool : fresh;
+  return from[rng.nextInt(from.length)];
 }

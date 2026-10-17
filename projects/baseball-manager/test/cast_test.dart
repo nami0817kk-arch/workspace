@@ -148,9 +148,22 @@ void main() {
 
   test('条件のある出来事は、該当する相手が居るときだけ起きる', () {
     final bare = Cast([]);
+    // 誰も居なければ、人が要る出来事(恋人・家族・ライバル・コーチ・仲間)は起きない。
+    const needPeople = {
+      'date',
+      'family',
+      'rival-talk',
+      'coach-extra',
+      'mate-invite',
+      'dad-catch',
+      'rival-slump',
+      'mate-quarrel',
+      'lover-lunch',
+      'coach',
+    };
     for (var s = 0; s < 3000; s++) {
       final e = drawEvent(Random(s), stage: Stage.youth, cast: bare);
-      if (e != null) expect(e.when, isNull, reason: e.id);
+      if (e != null) expect(needPeople.contains(e.id), isFalse, reason: e.id);
     }
     final full = _cast()
       ..rotate(Stage.highSchool, Random(1), Role.batter, const {});
