@@ -297,6 +297,33 @@ roles:
     tone_strength: 0.5
     max_intonation: 1.3
     max_speed: 1.0
+  忠勝想像:                  # 10-17。Bの三方ヶ原IFの想像のセリフ（第1幕）。本多忠勝（数え25歳）は未使用の男声 黒沢冴白。同じ幕の忠次想像（離途）と重ならない
+    label: 本多忠勝（想像）
+    name: 黒沢冴白
+    style_id: 100
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  忠次想像:                  # 10-17。酒井忠次（数え46歳）は未使用の男声 離途。第1幕は忠勝想像（黒沢冴白）・第2幕は信康想像（満別花丸）・第3幕は信長想像（青山龍星）と重ならない
+    label: 酒井忠次（想像）
+    name: 離途
+    style_id: 99
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  信康想像:                  # 10-17。松平信康（数え14歳）は少年の声 満別花丸（ボーイ）。第2幕の忠次想像（離途）と重ならない
+    label: 松平信康（想像）
+    name: 満別花丸
+    style_id: 73
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
 
 character_credits:
   - "立ち絵：春日部つむぎ公式立ち絵素材（春日部つくし）"

@@ -258,7 +258,7 @@ def voicevox_guard(config) -> None:
           f"Where-Object {{ $_.CommandLine -like '*vv-engine*' -and $_.CommandLine -like '*{port}*' }} | Select-Object -First 1; "
           "if ($p) { '{0}|{1}|{2}' -f $p.ProcessId, $p.PrivatePageCount, $p.ExecutablePath }")
     try:
-        out = subprocess.run(["powershell", "-NoProfile", "-Command", ps], capture_output=True, text=True,
+        out = subprocess.run(["powershell", "-NoProfile", "-Command", ps], capture_output=True, text=True, encoding="utf-8", errors="replace",
                              timeout=60).stdout.strip()
     except Exception:
         return
