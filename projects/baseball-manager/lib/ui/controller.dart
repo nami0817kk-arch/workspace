@@ -406,10 +406,22 @@ class GameController extends ChangeNotifier {
     final g = game;
     if (g == null) return;
     final age = g.player.age;
+    final lines = <String>[];
+    var turns = 0;
     for (var i = 0; i < g.slotsInYear; i++) {
       if (game!.phase != Phase.term || game!.player.age != age) break;
       if (pending.isNotEmpty) break;
       act(recommendedPlan(game!));
+      turns++;
+      // 各ターンの「練習: …」の一行まとめ以外(怪我・大会・目標など)を集める。
+      lines.addAll(recent.skip(1));
+    }
+    if (turns > 1) {
+      recent = [
+        'おすすめの過ごし方で$turns回進めた。',
+        ...lines.reversed.take(8).toList().reversed,
+      ];
+      notifyListeners();
     }
   }
 

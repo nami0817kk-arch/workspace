@@ -915,6 +915,10 @@ void _rankTests() {
             c.pending.isNotEmpty ||
             g.slot > 0,
         isTrue);
+    // 何回進めたかが「いまの結果」に出る(1回しか進まなかったときは出ない)
+    if (g.slot > 1 || g.player.age > age) {
+      expect(c.recent.first, matches(RegExp(r'^おすすめの過ごし方で\d+回進めた。$')));
+    }
     // 何度押しても壊れず、出来事は自分で選ぶまで止まっている
     for (var i = 0; i < 30 && c.game!.phase != Phase.retired; i++) {
       await _dismissMilestones(t);
