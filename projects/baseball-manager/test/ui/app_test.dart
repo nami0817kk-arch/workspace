@@ -939,9 +939,13 @@ void _rankTests() {
     addTearDown(t.view.resetPhysicalSize);
     addTearDown(t.view.resetDevicePixelRatio);
     addTearDown(t.platformDispatcher.clearTextScaleFactorTestValue);
+    await SaveStore().saveHistory([
+      HistoryEntry.of(_until((g) => false, seed: 5, potential: 90)),
+    ]);
     final c = GameController(rng: Random(5));
     await t.pumpWidget(BaseballManagerApp(controller: c));
     await t.pumpAndSettle();
+    expect(t.takeException(), isNull, reason: 'ホーム(殿堂つき)');
     // ホーム → 実績 → 戻る
     await t.scrollUntilVisible(find.byKey(const Key('achievements-open')), 200,
         scrollable: find.byType(Scrollable).first);

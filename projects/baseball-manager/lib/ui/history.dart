@@ -47,7 +47,10 @@ class HistoryEntry {
       championships: e.championships,
       married: e.married,
       wasTwoWay: e.wasTwoWay,
-      summary: careerSummary(g.records),
+      summary: careerSummary(g.records) +
+          (careerEarnings(g.records) > 0
+              ? '\n通算収入 ${fmtSalary(careerEarnings(g.records))}'
+              : ''),
       snapshot: PlayerSnapshot.fromGame(g),
     );
   }
