@@ -159,6 +159,8 @@ class _ProfileTab extends StatelessWidget {
                               s.name,
                               proTeam: s.overseasTeam ?? s.proTeam),
                           key: const Key('profile-affiliation')),
+                      Text('出身: ${hometownOf(s.name)}',
+                          key: const Key('profile-hometown')),
                       Text(
                           playerCardLine(
                               s.stage == Stage.retired ? Stage.pro : s.stage,

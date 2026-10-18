@@ -202,3 +202,8 @@ int paradeCrowd(int popularity) => 2 + popularity ~/ 4;
 
 /// 子どもの人数(結婚した選手のみ。1〜3人)。名前から決まる。
 int childrenOf(String partnerName) => 1 + _hash(partnerName, 3) % 3;
+
+/// 人気に応じた、CM出演料(万円/年)。人気40以上から。
+int cmFeeOf(int popularity) => popularity >= 90
+    ? 15000
+    : (popularity >= 70 ? 5000 : (popularity >= 40 ? 1000 : 0));

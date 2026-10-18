@@ -891,6 +891,11 @@ class Game {
       log.add(coachWordOf(player));
       // 年俸が資産に入る。
       money += salaryOf(rec);
+      final cm = cmFeeOf(popularityOf(records, worldRecords));
+      if (cm > 0) {
+        money += cm;
+        log.add('CM出演料: ${fmtMoney(cm)}');
+      }
       // 契約更改(前の年からの増減)。保存はせず、成績から計算する。
       final pro = records.where((r) => r.stage == Stage.pro).toList();
       final now = salaryOf(rec);

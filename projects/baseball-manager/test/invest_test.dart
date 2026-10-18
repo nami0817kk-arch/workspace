@@ -128,7 +128,8 @@ void main() {
                 Ability.contact);
       }
       final pro = g.records.where((r) => r.stage == Stage.pro).toList();
-      expect(g.money, careerEarnings(pro));
+      // 年俸の合計に、人気しだいでCM出演料が加わる。
+      expect(g.money, greaterThanOrEqualTo(careerEarnings(pro)));
       expect(g.money, greaterThan(0));
     });
 

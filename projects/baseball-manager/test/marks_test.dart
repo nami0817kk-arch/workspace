@@ -1,4 +1,5 @@
 import 'package:baseball_manager/game/career.dart';
+import 'package:baseball_manager/game/flavor.dart';
 import 'package:baseball_manager/game/marks.dart';
 import 'package:baseball_manager/game/records.dart';
 import 'package:baseball_manager/game/rival_story.dart';
@@ -16,6 +17,7 @@ Player _p(Role r, Map<Ability, int> a) => Player(
 void main() {
   markTests2();
   markTests3();
+  markTests4();
   test('通算の節目: 越えた年にだけ出る', () {
     expect(careerMarks(const Line(), const Line(hits: 150, homeRuns: 20)),
         containsAll(['プロ初安打', 'プロ初本塁打', '通算100安打']));
@@ -110,5 +112,16 @@ void markTests3() {
     expect(wins, greaterThan(winsPoor));
     expect(paradeCrowd(80), greaterThan(paradeCrowd(0)));
     expect(childrenOf('みさき'), inInclusiveRange(1, 3));
+  });
+}
+
+void markTests4() {
+  test('CM出演料は人気が高いほど多い。出身地は名前で決まる', () {
+    expect(cmFeeOf(10), 0);
+    expect(cmFeeOf(40), 1000);
+    expect(cmFeeOf(95), greaterThan(cmFeeOf(75)));
+    expect(hometownOf('はると'), hometownOf('はると'));
+    expect(hometownOf('はると'),
+        endsWith(RegExp(r'[都道府県]').stringMatch(hometownOf('はると'))!));
   });
 }
