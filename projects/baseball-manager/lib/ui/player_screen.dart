@@ -155,7 +155,8 @@ class _ProfileTab extends StatelessWidget {
                                   role: s.role,
                                   age: s.age,
                                   potential: s.potential,
-                                  abilities: s.abilities)),
+                                  abilities: s.abilities),
+                              position: s.position),
                           key: const Key('profile-card'),
                           style: Theme.of(context).textTheme.bodySmall),
                       const SizedBox(height: 6),
@@ -234,6 +235,46 @@ class _ProfileTab extends StatelessWidget {
                           ),
                         ]),
                       ),
+                  ]),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Card(
+            key: const Key('aptitude-card'),
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('ポジション適性',
+                        style: Theme.of(context).textTheme.titleSmall),
+                    Text(
+                        '守っているのは「${positionOf(p, s.position)}」。'
+                        '適性は、そのポジションに必要な能力から決まります。',
+                        style: Theme.of(context).textTheme.bodySmall),
+                    const SizedBox(height: 6),
+                    Wrap(spacing: 6, runSpacing: 6, children: [
+                      for (final pos in positionsFor(s.role))
+                        Chip(
+                          visualDensity: VisualDensity.compact,
+                          avatar: CircleAvatar(
+                            radius: 10,
+                            backgroundColor:
+                                rankColor(rankOf(aptitudeOf(p, pos))),
+                            child: Text(rankOf(aptitudeOf(p, pos)),
+                                style: const TextStyle(
+                                    fontSize: 11,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold)),
+                          ),
+                          label: Text(pos.label),
+                          side: pos == effectivePosition(p, s.position)
+                              ? BorderSide(
+                                  color: Theme.of(context).colorScheme.primary,
+                                  width: 2)
+                              : null,
+                        ),
+                    ]),
                   ]),
             ),
           ),
@@ -339,6 +380,7 @@ class _CareerTab extends StatelessWidget {
         'role' => (Icons.swap_horiz, const Color(0xFF00897B)),
         'champion' => (Icons.emoji_events, const Color(0xFFF9A825)),
         'world' => (Icons.public, const Color(0xFFD32F2F)),
+        'position' => (Icons.sports_baseball, const Color(0xFF2E7D32)),
         'title' => (Icons.workspace_premium, const Color(0xFFD4AF37)),
         'retire' => (Icons.flag, const Color(0xFF546E7A)),
         _ => (Icons.circle, const Color(0xFF90A4AE)),

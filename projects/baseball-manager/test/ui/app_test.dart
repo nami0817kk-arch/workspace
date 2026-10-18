@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:baseball_manager/game/career.dart';
+import 'package:baseball_manager/game/flavor.dart';
 import 'package:baseball_manager/game/game.dart';
 import 'package:baseball_manager/game/difficulty.dart';
 import 'package:baseball_manager/game/goals.dart';
@@ -1246,6 +1247,41 @@ void _rankTests() {
       await t.tap(find.text('出塁率'));
       await t.pumpAndSettle();
       expect(find.textContaining('塁に出た割合'), findsOneWidget);
+    });
+  });
+
+  group('ポジション', () {
+    testWidgets('中学・高校の最初の年にだけ「ポジションを決めよう」が出て、選べる', (t) async {
+      final c = await _start(t);
+      c.newGame('テスト', Role.batter);
+      await t.pumpAndSettle();
+      expect(find.byKey(const Key('position-card')), findsNothing); // 少年野球
+      c.adopt(_until((g) => g.stage == Stage.highSchool, seed: 5));
+      await t.pumpAndSettle();
+      expect(find.byKey(const Key('position-card')), findsOneWidget);
+      expect(find.textContaining('(おすすめ)'), findsOneWidget);
+      // 捕手を選ぶと、選手カードの守備位置も変わる
+      await t.tap(find.byKey(const Key('pos-catcher')));
+      await t.pumpAndSettle();
+      expect(c.game!.position, Pos.catcher);
+      expect(find.textContaining('捕手'), findsWidgets);
+      // 年の途中では出ない
+      c.act(Plan.rest);
+      await t.pumpAndSettle();
+      expect(find.byKey(const Key('position-card')), findsNothing);
+    });
+
+    testWidgets('選手情報にポジション適性が並ぶ', (t) async {
+      final c = await _start(t);
+      c.adopt(_until((g) => g.stage == Stage.highSchool, seed: 5));
+      await t.pumpAndSettle();
+      await t.tap(find.byKey(const Key('player-open')).first);
+      await t.pumpAndSettle();
+      expect(find.byKey(const Key('aptitude-card')), findsOneWidget);
+      final p = c.game!.player;
+      for (final pos in positionsFor(p.role)) {
+        expect(find.text(pos.label), findsWidgets, reason: pos.label);
+      }
     });
   });
 }

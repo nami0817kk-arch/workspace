@@ -125,6 +125,10 @@ class GameScreen extends StatelessWidget {
                 const SizedBox(height: 8),
                 const _FirstHint(),
               ],
+              if (game.canChoosePosition) ...[
+                const SizedBox(height: 8),
+                _PositionCard(controller: controller, game: game),
+              ],
               const SizedBox(height: 8),
               AnimatedSize(
                 duration: const Duration(milliseconds: 250),
@@ -243,7 +247,7 @@ class _StatusCard extends StatelessWidget {
                             .textTheme
                             .titleSmall
                             ?.copyWith(fontWeight: FontWeight.bold)),
-                    Text(playerCardLine(game.stage, p),
+                    Text(playerCardLine(game.stage, p, position: game.position),
                         style: Theme.of(context).textTheme.bodySmall),
                   ]),
             ),
@@ -353,6 +357,58 @@ class _StatusCard extends StatelessWidget {
                     ),
                   ),
               ]),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// ポジションを決める(決められる時だけ出る)。適性はランクで見える。
+class _PositionCard extends StatelessWidget {
+  const _PositionCard({required this.controller, required this.game});
+  final GameController controller;
+  final Game game;
+
+  @override
+  Widget build(BuildContext context) {
+    final p = game.player;
+    final cs = Theme.of(context).colorScheme;
+    final now = game.effectivePos;
+    final best = bestPosition(p);
+    return Card(
+      key: const Key('position-card'),
+      color: cs.tertiaryContainer,
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('ポジションを決めよう', style: Theme.of(context).textTheme.titleSmall),
+            const SizedBox(height: 2),
+            Text(
+                '能力から見た適性は、おすすめが「${best.label}」。'
+                '適性の低い所を選ぶとチーム力が下がります。',
+                style: Theme.of(context).textTheme.bodySmall),
+            const SizedBox(height: 8),
+            Wrap(spacing: 6, runSpacing: 6, children: [
+              for (final pos in positionsFor(p.role))
+                ChoiceChip(
+                  key: Key('pos-${pos.name}'),
+                  selected: pos == now,
+                  avatar: CircleAvatar(
+                    radius: 10,
+                    backgroundColor: rankColor(rankOf(aptitudeOf(p, pos))),
+                    child: Text(rankOf(aptitudeOf(p, pos)),
+                        style: const TextStyle(
+                            fontSize: 11,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold)),
+                  ),
+                  label: Text(pos == best ? '${pos.label} (おすすめ)' : pos.label),
+                  onSelected: (_) => controller.choosePosition(pos),
+                ),
+            ]),
           ],
         ),
       ),

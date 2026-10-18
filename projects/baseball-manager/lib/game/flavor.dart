@@ -54,32 +54,119 @@ String handednessOf(String name) {
   return '左投右打';
 }
 
-/// 守備位置。投手は投手、野手は能力の組み合わせから決める。
-String positionOf(Player p) {
-  if (p.role == Role.pitcher) return '投手';
-  if (p.role == Role.twoWay) return '投手・指名打者';
-  int v(Ability a) => p.of(a);
-  final score = <String, double>{
-    '捕手': v(Ability.fielding) * 1.0 + v(Ability.power) * 0.5,
-    '一塁手': v(Ability.power) * 1.0 + v(Ability.contact) * 0.4,
-    '二塁手': v(Ability.contact) * 0.6 + v(Ability.fielding) * 0.8,
-    '三塁手': v(Ability.power) * 0.7 + v(Ability.fielding) * 0.7,
-    '遊撃手': v(Ability.fielding) * 1.0 + v(Ability.speed) * 0.7,
-    '左翼手': v(Ability.power) * 0.6 + v(Ability.contact) * 0.6,
-    '中堅手': v(Ability.speed) * 1.0 + v(Ability.fielding) * 0.6,
-    '右翼手': v(Ability.power) * 0.5 +
-        v(Ability.speed) * 0.5 +
-        v(Ability.fielding) * 0.3,
-  };
-  final order = score.keys.toList()
-    ..sort((a, b) {
-      final d = score[b]!.compareTo(score[a]!);
-      return d != 0
-          ? d
-          : _h(p.name, a.codeUnitAt(0)).compareTo(_h(p.name, b.codeUnitAt(0)));
-    });
-  return order.first;
+/// 守備位置・役割。ポジションごとに、必要な能力の組み合わせ(適性)が違う。
+enum Pos {
+  catcher('捕手', {
+    Ability.fielding: .5,
+    Ability.eye: .2,
+    Ability.power: .2,
+    Ability.contact: .1
+  }),
+  first('一塁手', {
+    Ability.power: .45,
+    Ability.contact: .3,
+    Ability.eye: .15,
+    Ability.fielding: .1
+  }),
+  second('二塁手', {
+    Ability.fielding: .4,
+    Ability.contact: .3,
+    Ability.speed: .2,
+    Ability.eye: .1
+  }),
+  third('三塁手', {
+    Ability.power: .3,
+    Ability.fielding: .35,
+    Ability.contact: .25,
+    Ability.speed: .1
+  }),
+  shortstop(
+      '遊撃手', {Ability.fielding: .5, Ability.speed: .3, Ability.contact: .2}),
+  left('左翼手', {
+    Ability.power: .4,
+    Ability.contact: .35,
+    Ability.eye: .15,
+    Ability.speed: .1
+  }),
+  center(
+      '中堅手', {Ability.speed: .4, Ability.fielding: .35, Ability.contact: .25}),
+  right('右翼手', {
+    Ability.power: .3,
+    Ability.speed: .25,
+    Ability.fielding: .25,
+    Ability.contact: .2
+  }),
+  dh('指名打者', {Ability.power: .4, Ability.contact: .4, Ability.eye: .2}),
+  starter('先発', {Ability.stamina: .4, Ability.control: .3, Ability.stuff: .3}),
+  reliever(
+      '中継ぎ', {Ability.stuff: .4, Ability.control: .35, Ability.stamina: .25}),
+  closer('抑え', {Ability.stuff: .55, Ability.control: .3, Ability.stamina: .15});
+
+  const Pos(this.label, this.weights);
+  final String label;
+
+  /// 適性に使う能力と重み(合計1)。
+  final Map<Ability, double> weights;
+
+  bool get isPitching =>
+      this == Pos.starter || this == Pos.reliever || this == Pos.closer;
+
+  static Pos? parse(String? s) {
+    for (final p in Pos.values) {
+      if (p.name == s) return p;
+    }
+    return null;
+  }
 }
+
+/// その役割の選手が選べるポジション。二刀流は先発と、打者のポジション全部。
+List<Pos> positionsFor(Role r) => switch (r) {
+      Role.batter => [
+          for (final p in Pos.values)
+            if (!p.isPitching) p
+        ],
+      Role.pitcher => const [Pos.starter, Pos.reliever, Pos.closer],
+      Role.twoWay => [
+          Pos.starter,
+          for (final p in Pos.values)
+            if (!p.isPitching) p
+        ],
+    };
+
+/// ポジションへの適性(0〜99)。そのポジションに必要な能力の重み付き平均。
+int aptitudeOf(Player p, Pos pos) {
+  var v = 0.0;
+  for (final e in pos.weights.entries) {
+    v += p.of(e.key) * e.value;
+  }
+  return v.round().clamp(0, 99);
+}
+
+/// いちばん適性が高いポジション(同点は名前から決めた順で、毎回同じ)。
+Pos bestPosition(Player p) {
+  final list = [...positionsFor(p.role)]..sort((a, b) {
+      final d = aptitudeOf(p, b).compareTo(aptitudeOf(p, a));
+      return d != 0 ? d : _h(p.name, a.index).compareTo(_h(p.name, b.index));
+    });
+  return list.first;
+}
+
+/// 実際に守るポジション。自分で決めていて、この役割で選べるならそれ。なければ適性が最も高いところ。
+Pos effectivePosition(Player p, Pos? chosen) =>
+    chosen != null && positionsFor(p.role).contains(chosen)
+        ? chosen
+        : bestPosition(p);
+
+/// 適性の低いポジションを選んだときの、チーム力の補正(0以下)。
+/// いちばん適性の高い場所を選べば0。適性が12下がるごとに-1(最大-6)。
+int positionTeamAdjust(Player p, Pos pos) {
+  final gap = aptitudeOf(p, bestPosition(p)) - aptitudeOf(p, pos);
+  return -(gap ~/ 12).clamp(0, 6);
+}
+
+/// 守備位置の名前(画面用)。
+String positionOf(Player p, [Pos? chosen]) =>
+    effectivePosition(p, chosen).label;
 
 /// 背番号。少年野球は付けない(null)。投手は1〜19、野手は2〜99。
 int? uniformNumberOf(Stage stage, Player p) {
@@ -93,11 +180,11 @@ int? uniformNumberOf(Stage stage, Player p) {
 }
 
 /// 1行の選手カード: 「背番号18 ・ 右投左打 ・ 遊撃手」。
-String playerCardLine(Stage stage, Player p) {
+String playerCardLine(Stage stage, Player p, {Pos? position}) {
   final n = uniformNumberOf(stage, p);
   return [
     if (n != null) '背番号$n',
     handednessOf(p.name),
-    positionOf(p),
+    positionOf(p, position),
   ].join(' ・ ');
 }

@@ -48,7 +48,7 @@ void main() {
         age: 17,
         potential: 50,
         abilities: {for (final x in pitcherAbilities) x: 50});
-    expect(positionOf(pitcher), '投手');
+    expect(['先発', '中継ぎ', '抑え'], contains(positionOf(pitcher)));
     final shortstop = _bat('a', {Ability.fielding: 80, Ability.speed: 75});
     expect(positionOf(shortstop), '遊撃手');
     final slugger = _bat('b', {Ability.power: 90, Ability.contact: 70});

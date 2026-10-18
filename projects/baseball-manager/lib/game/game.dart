@@ -11,6 +11,7 @@ import 'difficulty.dart';
 import 'goals.dart';
 import 'life_log.dart';
 import 'records.dart';
+import 'flavor.dart';
 import 'world.dart';
 import 'season.dart';
 import 'tactics.dart';
@@ -123,6 +124,34 @@ class Game {
 
   /// 入団した球団(架空)。プロ入りしてから。
   String? proTeam;
+
+  /// 自分で決めた守備位置・役割。決めていなければ null(適性がいちばん高い所を守る)。
+  Pos? position;
+
+  /// 実際に守るポジション。
+  Pos get effectivePos => effectivePosition(player, position);
+
+  /// ポジションを決められる時: 中学・高校・進路(大学・社会人)の最初の年と、プロの毎年の最初。
+  bool get canChoosePosition {
+    if (phase != Phase.term || slot != 0) return false;
+    if (stage == Stage.pro) return true;
+    if (stage == Stage.youth || stage == Stage.retired) return false;
+    return stageOf(player.age - 1) != stageOf(player.age);
+  }
+
+  /// ポジションを決める。決められる時だけ。選べないポジション(役割に合わない)は拒否。
+  void choosePosition(Pos pos) {
+    _require(Phase.term);
+    if (!canChoosePosition) throw StateError('いまはポジションを決められない');
+    if (!positionsFor(player.role).contains(pos)) {
+      throw ArgumentError('この役割では選べない: ${pos.label}');
+    }
+    position = pos;
+    final adj = positionTeamAdjust(player, pos);
+    log.add('ポジションを${pos.label}に決めた。'
+        '${adj == 0 ? '' : '(適性が低く、チーム力$adj)'}');
+    _note('position', 'ポジションを${pos.label}に決めた');
+  }
 
   /// 年ごとの成績(大会・シーズン)。成績画面とエンディングに出す。
   final List<SeasonRecord> records = [];
@@ -450,8 +479,10 @@ class Game {
     final isPro = stage == Stage.pro;
     // 作戦: その大会だけ能力が変わる。研究はチーム力が上がる。
     final fighter = traitAdjusted(tacticAdjusted(player, tactic));
-    final team =
-        l.team + tacticTeamBonus(tactic) + traitTeamBonus(player.traits);
+    final team = l.team +
+        tacticTeamBonus(tactic) +
+        traitTeamBonus(player.traits) +
+        positionTeamAdjust(player, effectivePos);
     final tournament = isPro
         ? null
         : playTournament(
@@ -575,7 +606,9 @@ class Game {
     _note('world', '${ev.name}の日本代表に選出');
     final t = playTournament(
       traitAdjusted(tacticAdjusted(player, Tactic.steady)),
-      teamLevel: ev.team + traitTeamBonus(player.traits),
+      teamLevel: ev.team +
+          traitTeamBonus(player.traits) +
+          positionTeamAdjust(player, effectivePos),
       opponents: ev.opponents,
       rng: rng,
       condition: condition.value + worldBonus(player.traits),
@@ -729,6 +762,7 @@ class Game {
         'overallHistory': overallHistory,
         'proStartAge': proStartAge,
         'proTeam': proTeam,
+        'position': position?.name,
         'records': [for (final r in records) r.toJson()],
         'worldRecords': [for (final r in worldRecords) r.toJson()],
         'lifeLog': [for (final e in lifeLog) e.toJson()],
@@ -776,6 +810,7 @@ class Game {
         .map((e) => (e as num).toInt()));
     g.proStartAge = (j['proStartAge'] as num?)?.toInt();
     g.proTeam = j['proTeam'] as String?;
+    g.position = Pos.parse(j['position'] as String?);
     g.goal = Goal.fromJson(j['goal']);
     g.tactic = Tactic.values
         .firstWhere((t) => t.name == j['tactic'], orElse: () => Tactic.steady);

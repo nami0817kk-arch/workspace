@@ -8,6 +8,7 @@ import '../game/achievements.dart';
 import '../game/difficulty.dart';
 import '../game/exp.dart';
 import '../game/career.dart';
+import '../game/flavor.dart';
 import '../game/game.dart';
 import '../game/life.dart';
 import '../game/path.dart';
@@ -188,6 +189,15 @@ class GameController extends ChangeNotifier {
 
   /// 殿堂(過去の選手)。新しい順。
   List<HistoryEntry> history = const [];
+
+  /// ポジションを決める(決められる時だけ)。
+  void choosePosition(Pos pos) {
+    final g = game!;
+    final start = g.log.length;
+    g.choosePosition(pos);
+    recent = g.log.sublist(start);
+    _commit();
+  }
 
   /// 管理者モード(素質・特性・コツなどを自由に編集できる)。端末ごとに覚える。
   bool adminMode = false;
