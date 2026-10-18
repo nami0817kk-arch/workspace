@@ -200,5 +200,19 @@ void main() {
       }
       expect(found, isTrue);
     });
+
+    test('プロの月ごとに、成績とチームの勝敗がログに出る', () {
+      final g = _proGame();
+      final re = RegExp(r'チームは\d+勝\d+敗。$');
+      for (var i = 0; i < 6; i++) {
+        final before = g.log.length;
+        g.choose(Plan.rest, Ability.contact);
+        while (g.phase == Phase.event) {
+          g.resolveEvent(0);
+        }
+        expect(g.log.skip(before).any(re.hasMatch), isTrue, reason: 'slot $i');
+        if (g.phase != Phase.term) break;
+      }
+    });
   });
 }

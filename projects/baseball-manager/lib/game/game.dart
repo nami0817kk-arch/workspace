@@ -614,9 +614,11 @@ class Game {
         tacticTeamBonus(tactic) +
         traitTeamBonus(player.traits) +
         positionTeamAdjust(player, effectivePos);
-    seasonProgress = playLeagueChunk(
+    final prev = seasonProgress ?? const LeagueProgress();
+    // この1か月だけの成績を出してから、これまでに足す(月間の成績を見せるため)。
+    final month = playLeagueChunk(
       traitAdjusted(tacticAdjusted(player, tactic)),
-      seasonProgress ?? const LeagueProgress(),
+      LeagueProgress(games: prev.games),
       teamLevel: team,
       opponents: l.opponents,
       rng: rng,
@@ -624,6 +626,33 @@ class Game {
       condition: condition.value,
       available: !condition.injured,
     );
+    seasonProgress = LeagueProgress(
+      games: month.games,
+      wins: prev.wins + month.wins,
+      losses: prev.losses + month.losses,
+      line: prev.line + month.line,
+      missed: prev.missed + month.missed,
+    );
+    _monthlyReport(month);
+  }
+
+  /// 月ごとの成績をログに残す。出来が飛び抜けていれば「月間MVP」。
+  void _monthlyReport(LeagueProgress m) {
+    final d = describeLine(m.line);
+    if (m.missed >= 20) {
+      log.add('$slotName: 怪我で全試合を欠場。チームは${m.wins}勝${m.losses}敗。');
+      return;
+    }
+    log.add('$slotName: ${d.isEmpty ? '' : '$d。'}チームは${m.wins}勝${m.losses}敗。');
+    final mvp = (m.line.hasBatting &&
+            m.line.atBats >= 50 &&
+            (m.line.ops ?? 0) >= 1.000) ||
+        (m.line.hasPitching && m.line.outs >= 18 && (m.line.era ?? 99) <= 1.50);
+    if (mvp) {
+      log.add('$slotNameの月間MVPに選ばれた!');
+      _note('title', '$slotNameの月間MVP');
+      condition = condition.copyWith(morale: condition.morale + 5);
+    }
   }
 
   /// シーズンの最後(10月)に、残りの試合を進めて、1年ぶんの結果にする。
