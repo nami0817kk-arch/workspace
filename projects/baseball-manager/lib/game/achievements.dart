@@ -1,6 +1,7 @@
 import 'career.dart';
 import 'difficulty.dart';
 import 'player.dart';
+import 'records.dart';
 import 'snapshot.dart';
 import 'traits.dart';
 
@@ -87,6 +88,10 @@ final List<Achievement> achievements = [
       (s) => s.abilities.values.any((v) => v >= 90)),
   Achievement('traits-full', 'こだわりの個性', '特性を4つ以上そろえる。',
       (s) => s.traits.length >= maxTraits),
+  Achievement('salary-oku', '億の男', '年俸が1億円を超える年を迎える。',
+      (s) => s.records.any((r) => salaryOf(r) >= 10000)),
+  Achievement('earnings-10', '一代で財を成す', 'プロ通算の収入が10億円を超える。',
+      (s) => careerEarnings(s.records) >= 100000),
   Achievement('hard-pro', '狭き門', '「むずかしい」で、プロ入りする。',
       (s) => s.difficulty == Difficulty.hard && s.proStartAge != null),
   Achievement('hard-legend', '不屈の伝説', '「むずかしい」で、レジェンドになる。',

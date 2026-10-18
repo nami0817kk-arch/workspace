@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../game/calendar.dart';
 import '../game/career.dart';
@@ -912,7 +913,20 @@ class EndingView extends StatelessWidget {
                     label: Text(t.label),
                   ),
               ]),
-              const SizedBox(height: 24),
+              const SizedBox(height: 16),
+              OutlinedButton.icon(
+                key: const Key('copy-result'),
+                icon: const Icon(Icons.copy, size: 18),
+                label: const Text('結果をコピーする'),
+                onPressed: () async {
+                  final messenger = ScaffoldMessenger.of(context);
+                  await Clipboard.setData(
+                      ClipboardData(text: endingShareText(game)));
+                  messenger.showSnackBar(
+                      const SnackBar(content: Text('コピーしました。友だちに見せよう')));
+                },
+              ),
+              const SizedBox(height: 8),
               FilledButton(
                 key: const Key('again'),
                 onPressed: controller.reset,
@@ -1069,4 +1083,19 @@ class _GoalRow extends StatelessWidget {
       ]),
     );
   }
+}
+
+/// 結果を共有するための短い文章。
+String endingShareText(Game game) {
+  final e = game.ending!;
+  final p = game.player;
+  final pro = game.records.where((r) => r.stage == Stage.pro).toList();
+  final lines = [
+    '【野球育成】${p.name} の一生: ${e.title}',
+    e.madePro ? 'プロで${e.proYears}年間プレー' : 'プロの舞台には立てなかった',
+    '最高の総合評価 ${e.peakOverall}・優勝${e.championships}回・タイトル${e.titles.length}個',
+    if (pro.isNotEmpty) careerSummary(game.records),
+    if (pro.isNotEmpty) 'プロ通算収入 ${fmtSalary(careerEarnings(pro))}',
+  ];
+  return lines.join('\n');
 }

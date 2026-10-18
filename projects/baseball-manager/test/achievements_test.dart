@@ -306,4 +306,28 @@ void main() {
     }
     expect(checked, 5);
   });
+
+  group('年俸の実績', () {
+    // 評価が高いほど年俸が高い。強い成績の1年を作る。
+    SeasonRecord star(int age) => SeasonRecord(
+        age: age,
+        stage: Stage.pro,
+        line: const Line(
+            games: 140, atBats: 500, hits: 190, totalBases: 360, walks: 90),
+        rank: 1,
+        titles: const ['首位打者', '本塁打王', 'MVP']);
+
+    test('年俸が1億円を超える年があれば解除、無ければ解除されない', () {
+      expect(salaryOf(star(28)), greaterThanOrEqualTo(10000));
+      expect(_has('salary-oku', _snap(records: [star(28)])), isTrue);
+      expect(_has('salary-oku', _snap(records: [_pro(28)])), isFalse);
+    });
+
+    test('通算10億円は、年俸の積み重ねで達成する', () {
+      final many = [for (var a = 22; a < 40; a++) star(a)];
+      final total = careerEarnings(many);
+      expect(_has('earnings-10', _snap(records: many)), total >= 100000);
+      expect(_has('earnings-10', _snap(records: [_pro(25)])), isFalse);
+    });
+  });
 }

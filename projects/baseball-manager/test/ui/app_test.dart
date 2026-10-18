@@ -11,8 +11,10 @@ import 'package:baseball_manager/game/tactics.dart';
 import 'package:baseball_manager/game/traits.dart';
 import 'package:baseball_manager/ui/app.dart';
 import 'package:baseball_manager/ui/controller.dart';
+import 'package:baseball_manager/ui/game_screen.dart' show endingShareText;
 import 'package:baseball_manager/ui/labels.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -970,5 +972,31 @@ void _rankTests() {
       }
     }
     expect(t.takeException(), isNull);
+  });
+
+  testWidgets('エンディングの「結果をコピーする」で文章が作られ、通知が出る', (t) async {
+    final c = await _start(t);
+    final g = _until((g) => false, seed: 5, potential: 90);
+    expect(g.phase, Phase.retired);
+    final text = endingShareText(g);
+    expect(text, contains('テスト'));
+    expect(text, contains('最高の総合評価'));
+    String? copied;
+    t.binding.defaultBinaryMessenger
+        .setMockMethodCallHandler(SystemChannels.platform, (call) async {
+      if (call.method == 'Clipboard.setData') {
+        copied = (call.arguments as Map)['text'] as String?;
+      }
+      return null;
+    });
+    addTearDown(() => t.binding.defaultBinaryMessenger
+        .setMockMethodCallHandler(SystemChannels.platform, null));
+    c.adopt(g);
+    await t.pumpAndSettle();
+    await _dismissMilestones(t);
+    await t.tap(find.byKey(const Key('copy-result')));
+    await t.pumpAndSettle();
+    expect(copied, text);
+    expect(find.text('コピーしました。友だちに見せよう'), findsOneWidget);
   });
 }
