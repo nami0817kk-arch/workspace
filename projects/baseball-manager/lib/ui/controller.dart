@@ -140,6 +140,25 @@ Plan recommendedPlan(Game g) {
   return Plan.train;
 }
 
+/// 出来事の選択の結果を、変わったところだけ短く言葉にする。「球威 +3 / 気持ち +8」。
+/// 何も変わらなければ空。
+String eventResultText(Player p0, Condition c0, Player p1, Condition c1) {
+  final parts = <String>[];
+  String sgn(int d) => d > 0 ? '+$d' : '$d';
+  for (final a in Ability.values) {
+    final d = p1.of(a) - p0.of(a);
+    if (d != 0 && p1.abilities.containsKey(a)) {
+      parts.add('${abilityLabel(a)} ${sgn(d)}');
+    }
+  }
+  final m = c1.morale - c0.morale;
+  if (m != 0) parts.add('気持ち ${sgn(m)}');
+  final f = c1.fatigue - c0.fatigue;
+  if (f != 0) parts.add('疲れ ${sgn(f)}');
+  if (c1.injuredTerms > c0.injuredTerms) parts.add('怪我');
+  return parts.join(' / ');
+}
+
 class GameController extends ChangeNotifier {
   GameController({SaveStore? store, Random? rng})
       : store = store ?? SaveStore(),
@@ -397,8 +416,14 @@ class GameController extends ChangeNotifier {
   void chooseEvent(int i) {
     final start = game!.log.length;
     final before = game!.stage;
+    final p0 = game!.player;
+    final c0 = game!.condition;
     game!.resolveEvent(i);
-    recent = game!.log.sublist(start);
+    final result = eventResultText(p0, c0, game!.player, game!.condition);
+    recent = [
+      if (result.isNotEmpty) '選んだ結果: $result',
+      ...game!.log.sublist(start),
+    ];
     _detect(before, game!, recent);
     _commit();
   }

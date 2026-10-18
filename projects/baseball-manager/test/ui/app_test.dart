@@ -1055,4 +1055,52 @@ void _rankTests() {
       expect(c.game, isNull);
     });
   });
+
+  group('出来事の結果', () {
+    test('変わったところだけ言葉にする。何も変わらなければ空', () {
+      final p0 = Player(
+          name: 't',
+          role: Role.pitcher,
+          age: 15,
+          potential: 50,
+          abilities: {for (final a in pitcherAbilities) a: 30});
+      const c0 = Condition(fatigue: 10, morale: 50);
+      final p1 = p0.copyWith(abilities: {...p0.abilities, Ability.stuff: 33});
+      final c1 = c0.copyWith(morale: 58, fatigue: 6);
+      expect(eventResultText(p0, c0, p1, c1), '球威 +3 / 気持ち +8 / 疲れ -4');
+      expect(eventResultText(p0, c0, p0, c0), '');
+      // 役割に無い能力(投手のミート)は出さない
+      expect(
+          eventResultText(p0, c0, p0.copyWith(abilities: {...p0.abilities}),
+              c0.copyWith(injuredTerms: 2)),
+          '怪我');
+    });
+
+    testWidgets('出来事を選ぶと「選んだ結果」が画面に出る', (t) async {
+      final c = await _start(t);
+      var shownOnce = false;
+      for (var seed = 1; seed < 40 && !shownOnce; seed++) {
+        final g = _until((g) => g.phase == Phase.event, seed: seed);
+        if (g.phase != Phase.event) {
+          continue;
+        }
+        final p0 = g.player;
+        final c0 = g.condition;
+        c.adopt(g);
+        await t.pumpAndSettle();
+        await _dismissMilestones(t);
+        await t.tap(find.byKey(const Key('event-0')));
+        await t.pumpAndSettle();
+        final expected = eventResultText(p0, c0, g.player, g.condition);
+        if (expected.isNotEmpty) {
+          expect(c.recent.first, '選んだ結果: $expected');
+          expect(find.textContaining('選んだ結果:'), findsOneWidget);
+          shownOnce = true;
+        } else {
+          expect(c.recent.any((l) => l.startsWith('選んだ結果:')), isFalse);
+        }
+      }
+      expect(shownOnce, isTrue);
+    });
+  });
 }
