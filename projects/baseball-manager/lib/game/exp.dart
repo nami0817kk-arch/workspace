@@ -16,6 +16,17 @@ Category categoryOf(Ability a) => switch (a) {
       Ability.stuff || Ability.control || Ability.stamina => Category.pitching,
     };
 
+/// その役割が実際に使える経験点の種類(投手の「打撃」のように、使い道が無いものは除く)。
+List<Category> usableCategories(Role r) => [
+      for (final c in Category.values)
+        if (abilitiesOf(r).any((a) => categoryOf(a) == c)) c
+    ];
+
+/// 「全種類に n」という報酬を、使える種類にだけ配る(使えない種類は増やさない)。
+/// 実際に使える量は変えない(バランスはそのまま)。
+Map<Category, int> spreadExp(Role r, int n) =>
+    {for (final c in usableCategories(r)) c: n};
+
 /// 役割ごとの補正。能力が少ない投手は、重点以外に割く分が少なく、1能力あたりの伸びが
 /// 打者より速くなってしまう(重点1＋他0.25×(n-1) を n で割った値が、打者と揃うようにする)。
 /// 二刀流は逆に能力が多く薄まるので補正が上がるが、練習の分散(×0.6)は別に掛かる。

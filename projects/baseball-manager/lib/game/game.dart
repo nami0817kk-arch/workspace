@@ -381,9 +381,7 @@ class Game {
       log.add('${coach.name}のコツをつかんだ! 特性「${t.label}」を習得。');
       _note('trait', '特性「${t.label}」を習得(コーチ ${coach.name})');
     } else {
-      exp = exp.add({
-        for (final c in Category.values) c: 40,
-      });
+      exp = exp.add(spreadExp(player.role, 40));
       log.add('${coach.name}から多くを学んだ。(経験点を獲得)');
     }
   }
@@ -419,7 +417,7 @@ class Game {
     g.achieved = g.judge(r);
     if (g.achieved!) {
       final n = goalRewardExp(stage);
-      exp = exp.add({for (final c in Category.values) c: n});
+      exp = exp.add(spreadExp(player.role, n));
       condition =
           condition.copyWith(morale: condition.morale + goalRewardMorale);
       log.add('今年の目標「${g.text}」を達成! 経験点+$n(全種類)');

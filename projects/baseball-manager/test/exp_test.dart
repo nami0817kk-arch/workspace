@@ -149,4 +149,20 @@ void _seasonTests() {
     expect(
         [for (var i = 0; i < 4; i++) seasonOf(Stage.youth, i)], Season.values);
   });
+
+  group('役割ごとに使える経験点', () {
+    test('投手に打撃の経験点は使えない。打者に投球は使えない。二刀流は全部', () {
+      expect(usableCategories(Role.pitcher), isNot(contains(Category.batting)));
+      expect(usableCategories(Role.batter), isNot(contains(Category.pitching)));
+      expect(usableCategories(Role.twoWay), Category.values);
+    });
+
+    test('「全種類に n」は使える種類にだけ配り、1種類あたりの量は変えない', () {
+      for (final r in Role.values) {
+        final m = spreadExp(r, 6);
+        expect(m.keys.toSet(), usableCategories(r).toSet());
+        expect(m.values.toSet(), {6});
+      }
+    });
+  });
 }

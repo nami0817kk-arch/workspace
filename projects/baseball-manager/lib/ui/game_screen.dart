@@ -289,7 +289,7 @@ class _StatusCard extends StatelessWidget {
                 crossAxisAlignment: WrapCrossAlignment.center,
                 children: [
                   Text('経験点', style: Theme.of(context).textTheme.labelLarge),
-                  for (final cat in Category.values)
+                  for (final cat in usableCategories(game.player.role))
                     Chip(
                       visualDensity: VisualDensity.compact,
                       label: Text(

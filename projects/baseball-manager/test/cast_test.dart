@@ -222,7 +222,8 @@ void main() {
         id: 'coach', name: '先生', kind: Kind.coach, tips: tipsNeeded - 1));
     final before = g.exp.total;
     g.choose(Plan.lesson, Ability.contact);
-    expect(g.exp.total - before, greaterThanOrEqualTo(120));
+    expect(g.exp.total - before,
+        greaterThanOrEqualTo(40 * usableCategories(g.player.role).length));
     expect(g.cast.coach!.tips, 0);
   });
 
