@@ -125,11 +125,53 @@ class Game {
   /// 入団した球団(架空)。プロ入りしてから。
   String? proTeam;
 
+  /// 海外(アメリカ)のリーグでプレーしているか。移籍の判断はプロの間、年の最初だけ。
+  bool overseas = false;
+
+  /// 海外での所属(架空の球団)。
+  String? overseasTeam;
+
   /// 自分で決めた守備位置・役割。決めていなければ null(適性がいちばん高い所を守る)。
   Pos? position;
 
   /// 実際に守るポジション。
   Pos get effectivePos => effectivePosition(player, position);
+
+  /// 海外(アメリカ)へ移籍できる時: プロの24歳以上・総合評価70以上・年の最初。すでに海外なら不可。
+  bool get canMoveOverseas =>
+      phase == Phase.term &&
+      slot == 0 &&
+      stage == Stage.pro &&
+      !overseas &&
+      player.age >= 24 &&
+      overall(player) >= 70;
+
+  /// 日本に戻れる時: 海外にいて、プロの年の最初。
+  bool get canReturnHome =>
+      phase == Phase.term && slot == 0 && stage == Stage.pro && overseas;
+
+  /// 海外のリーグへ移籍する。相手が強い環境で、年俸は桁違い(×2.5)。慣れない環境で気持ちが下がる。
+  void moveOverseas() {
+    _require(Phase.term);
+    if (!canMoveOverseas) throw StateError('いまは海外へ移籍できない');
+    overseas = true;
+    overseasTeam = overseasTeams[rng.nextInt(overseasTeams.length)];
+    condition = condition.copyWith(morale: condition.morale - 8);
+    log.add('海を渡った! アメリカの$overseasTeamに移籍する。');
+    _note('overseas', 'アメリカの$overseasTeamに移籍');
+    _newGoal(); // 相手が強くなるので、目標も立て直す
+  }
+
+  /// 日本のリーグに戻る。
+  void returnHome() {
+    _require(Phase.term);
+    if (!canReturnHome) throw StateError('いまは日本に戻れない');
+    overseas = false;
+    condition = condition.copyWith(morale: condition.morale + 6);
+    log.add('日本のリーグに復帰した。');
+    _note('overseas', '日本のリーグに復帰');
+    _newGoal();
+  }
 
   /// ポジションを決められる時: 中学・高校・進路(大学・社会人)の最初の年と、プロの毎年の最初。
   bool get canChoosePosition {
@@ -436,7 +478,21 @@ class Game {
     if (phase != p) throw StateError('いまは ${phase.name} の段階: ${p.name} は選べない');
   }
 
-  ({int team, List<int> opponents}) get _league => switch (stage) {
+  ({int team, List<int> opponents}) get _league => _leagueBase(stage);
+
+  ({int team, List<int> opponents}) _leagueBase(Stage st) {
+    final b = _leagueRaw(st);
+    if (overseas && st == Stage.pro) {
+      // 海外は相手が強く(+8)、自分のチームも少し弱い(-3)。
+      return (
+        team: b.team - 3,
+        opponents: [for (final o in b.opponents) o + 8]
+      );
+    }
+    return b;
+  }
+
+  ({int team, List<int> opponents}) _leagueRaw(Stage stage) => switch (stage) {
         Stage.youth => (team: 35, opponents: const [25, 30, 35, 40]),
         Stage.juniorHigh => (team: 42, opponents: const [32, 38, 44, 50]),
         Stage.highSchool => (team: 50, opponents: const [40, 46, 52, 58, 64]),
@@ -551,6 +607,7 @@ class Game {
         rank: league.rank,
         titles: titles,
         rivalWon: rivalWon,
+        overseas: overseas,
       );
       records.add(rec);
       _judgeGoal(rec);
@@ -798,6 +855,8 @@ class Game {
         'proStartAge': proStartAge,
         'proTeam': proTeam,
         'position': position?.name,
+        'overseas': overseas,
+        'overseasTeam': overseasTeam,
         'records': [for (final r in records) r.toJson()],
         'worldRecords': [for (final r in worldRecords) r.toJson()],
         'lifeLog': [for (final e in lifeLog) e.toJson()],
@@ -846,6 +905,8 @@ class Game {
     g.proStartAge = (j['proStartAge'] as num?)?.toInt();
     g.proTeam = j['proTeam'] as String?;
     g.position = Pos.parse(j['position'] as String?);
+    g.overseas = (j['overseas'] as bool?) ?? false;
+    g.overseasTeam = j['overseasTeam'] as String?;
     g.goal = Goal.fromJson(j['goal']);
     g.tactic = Tactic.values
         .firstWhere((t) => t.name == j['tactic'], orElse: () => Tactic.steady);

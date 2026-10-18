@@ -102,6 +102,10 @@ final List<Achievement> achievements = [
       'U-12・U-15・U-18・プロの世界大会すべてに、日本代表で出る。',
       (s) => const {'u12', 'u15', 'u18', 'pro'}
           .every((id) => s.worldRecords.any((r) => r.eventId == id))),
+  Achievement('overseas', '海を渡る', 'アメリカのリーグでプレーする。',
+      (s) => s.records.any((r) => r.overseas)),
+  Achievement('overseas-champion', 'アメリカの頂点', 'アメリカのリーグで優勝する。',
+      (s) => s.records.any((r) => r.overseas && r.rank == 1)),
   Achievement('hard-pro', '狭き門', '「むずかしい」で、プロ入りする。',
       (s) => s.difficulty == Difficulty.hard && s.proStartAge != null),
   Achievement('hard-legend', '不屈の伝説', '「むずかしい」で、レジェンドになる。',

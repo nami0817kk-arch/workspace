@@ -336,7 +336,8 @@ class _Table extends StatelessWidget {
                           : null,
                       cells: [
                         DataCell(Text('${r.age}')),
-                        DataCell(Text(_stageShort(r.stage))),
+                        DataCell(
+                            Text(r.overseas ? 'プロ(米)' : _stageShort(r.stage))),
                         DataCell(Text(
                           r.resultText,
                           style: r.champion

@@ -145,7 +145,7 @@ class _ProfileTab extends StatelessWidget {
                           affiliationOf(
                               s.stage == Stage.retired ? Stage.pro : s.stage,
                               s.name,
-                              proTeam: s.proTeam),
+                              proTeam: s.overseasTeam ?? s.proTeam),
                           key: const Key('profile-affiliation')),
                       Text(
                           playerCardLine(
@@ -381,6 +381,7 @@ class _CareerTab extends StatelessWidget {
         'champion' => (Icons.emoji_events, const Color(0xFFF9A825)),
         'world' => (Icons.public, const Color(0xFFD32F2F)),
         'position' => (Icons.sports_baseball, const Color(0xFF2E7D32)),
+        'overseas' => (Icons.flight, const Color(0xFF1E88E5)),
         'title' => (Icons.workspace_premium, const Color(0xFFD4AF37)),
         'retire' => (Icons.flag, const Color(0xFF546E7A)),
         _ => (Icons.circle, const Color(0xFF90A4AE)),

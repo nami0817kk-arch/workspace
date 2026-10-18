@@ -190,6 +190,24 @@ class GameController extends ChangeNotifier {
   /// 殿堂(過去の選手)。新しい順。
   List<HistoryEntry> history = const [];
 
+  /// 海外のリーグへ移籍する / 日本に戻る(プロの年の最初だけ)。
+  void moveOverseas() {
+    final g = game!;
+    final start = g.log.length;
+    g.moveOverseas();
+    recent = g.log.sublist(start);
+    _detect(g.stage, g, recent);
+    _commit();
+  }
+
+  void returnHome() {
+    final g = game!;
+    final start = g.log.length;
+    g.returnHome();
+    recent = g.log.sublist(start);
+    _commit();
+  }
+
   /// 今年の目標のむずかしさを選ぶ(年の最初の行動の前だけ)。
   void chooseGoalLevel(int level) {
     game!.chooseGoalLevel(level);
@@ -393,6 +411,8 @@ class GameController extends ChangeNotifier {
       if (l.contains('の日本代表に選ばれた')) {
         pending.add(Milestone(MilestoneKind.national, '日本代表に選出!',
             '$nameは、${l.replaceFirst('の日本代表に選ばれた!', '')}の日本代表に選ばれた。'));
+      } else if (l.contains('海を渡った')) {
+        pending.add(Milestone(MilestoneKind.world, '海を渡る!', l));
       } else if (l.contains('世界一になった')) {
         pending.add(Milestone(MilestoneKind.world, '世界一!', l));
       }

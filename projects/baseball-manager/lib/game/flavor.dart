@@ -229,3 +229,13 @@ String opponentName(Stage stage, int age, int round,
   }
   return pool[i];
 }
+
+/// 海外(アメリカ)のリーグの球団(架空)。
+const overseasTeams = [
+  'サンベイ・コンドルズ',
+  'ニューポート・ブレイカーズ',
+  'ミッドランド・グリズリーズ',
+  'レイクサイド・ジェッツ',
+  'デザートリッジ・コヨーテズ',
+  'ハーバーシティ・アンカーズ',
+];

@@ -792,6 +792,18 @@ class _ProCard extends StatelessWidget {
             Text('プロの決断', style: Theme.of(context).textTheme.titleSmall),
             const SizedBox(height: 4),
             Wrap(spacing: 8, children: [
+              if (game.canMoveOverseas)
+                OutlinedButton(
+                  key: const Key('move-overseas'),
+                  onPressed: () => _confirmOverseas(context),
+                  child: const Text('アメリカのリーグへ移籍する'),
+                ),
+              if (game.canReturnHome)
+                OutlinedButton(
+                  key: const Key('return-home'),
+                  onPressed: controller.returnHome,
+                  child: const Text('日本のリーグに戻る'),
+                ),
               if (r != Role.twoWay)
                 OutlinedButton(
                   key: const Key('role-twoway'),
@@ -824,6 +836,27 @@ class _ProCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _confirmOverseas(BuildContext context) async {
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('アメリカのリーグへ移籍しますか?'),
+        content: const Text('相手が強くなりますが、年俸は2.5倍になります。\n'
+            '慣れない環境で、最初は気持ちが下がります。日本には、年のはじめにいつでも戻れます。'),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(ctx, false),
+              child: const Text('やめる')),
+          FilledButton(
+              key: const Key('overseas-confirm'),
+              onPressed: () => Navigator.pop(ctx, true),
+              child: const Text('移籍する')),
+        ],
+      ),
+    );
+    if (ok == true) controller.moveOverseas();
   }
 
   Future<void> _confirmRetire(BuildContext context) async {
@@ -975,7 +1008,9 @@ class EndingView extends StatelessWidget {
                   epilogueOf(e, p.name,
                       worldChampion:
                           game.worldRecords.where((r) => r.champion).length,
-                      worldPlayed: game.worldRecords.length),
+                      worldPlayed: game.worldRecords.length,
+                      overseasYears:
+                          game.records.where((r) => r.overseas).length),
                   key: const Key('epilogue'),
                   style: Theme.of(context)
                       .textTheme

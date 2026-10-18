@@ -33,6 +33,7 @@ class PlayerSnapshot {
     this.route,
     this.worldRecords = const [],
     this.position,
+    this.overseasTeam,
   });
 
   final String name;
@@ -69,6 +70,9 @@ class PlayerSnapshot {
   /// 自分で決めた守備位置・役割(決めていなければ null)。
   final Pos? position;
 
+  /// 海外(アメリカ)でいま所属している球団。海外にいなければ null。
+  final String? overseasTeam;
+
   int of(Ability a) => abilities[a] ?? 0;
 
   factory PlayerSnapshot.fromGame(Game g) => PlayerSnapshot(
@@ -93,6 +97,7 @@ class PlayerSnapshot {
         route: g.route,
         worldRecords: List.of(g.worldRecords),
         position: g.position,
+        overseasTeam: g.overseas ? g.overseasTeam : null,
       );
 
   Map<String, dynamic> toJson() => {
@@ -117,6 +122,7 @@ class PlayerSnapshot {
         'route': route?.name,
         'worldRecords': [for (final r in worldRecords) r.toJson()],
         'position': position?.name,
+        'overseasTeam': overseasTeam,
       };
 
   /// 項目を足すときは既定値を置く(殿堂の古い記録を壊さない)。
@@ -165,6 +171,7 @@ class PlayerSnapshot {
           WorldRecord.fromJson((r as Map).cast<String, dynamic>()),
       ],
       position: Pos.parse(j['position'] as String?),
+      overseasTeam: j['overseasTeam'] as String?,
     );
   }
 }

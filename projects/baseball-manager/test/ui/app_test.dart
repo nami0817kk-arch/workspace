@@ -1305,4 +1305,36 @@ void _rankTests() {
       expect(find.byKey(const Key('goal-picker')), findsNothing);
     });
   });
+
+  group('海外移籍の画面', () {
+    testWidgets('強いプロ選手は、年の最初にアメリカへ移籍でき、日本にも戻れる', (t) async {
+      final c = await _start(t);
+      Game? g;
+      for (var sd = 0; sd < 60 && g == null; sd++) {
+        final x = _until(
+            (g) => g.stage == Stage.pro && g.player.age >= 24 && g.slot == 0,
+            seed: sd,
+            potential: 100);
+        if (x.stage == Stage.pro && x.phase == Phase.term && x.slot == 0) g = x;
+      }
+      for (final a in g!.player.abilities.keys) {
+        g.adminSetAbility(a, 80);
+      }
+      c.adopt(g);
+      await t.pumpAndSettle();
+      expect(find.byKey(const Key('move-overseas')), findsOneWidget);
+      await t.tap(find.byKey(const Key('move-overseas')));
+      await t.pumpAndSettle();
+      await t.tap(find.byKey(const Key('overseas-confirm')));
+      await t.pumpAndSettle();
+      await _dismissMilestones(t);
+      expect(c.game!.overseas, isTrue);
+      expect(find.textContaining(c.game!.overseasTeam!), findsWidgets);
+      expect(find.byKey(const Key('move-overseas')), findsNothing);
+      expect(find.byKey(const Key('return-home')), findsOneWidget);
+      await t.tap(find.byKey(const Key('return-home')));
+      await t.pumpAndSettle();
+      expect(c.game!.overseas, isFalse);
+    });
+  });
 }

@@ -16,6 +16,7 @@ class SeasonRecord {
     this.rank,
     this.titles = const [],
     this.rivalWon,
+    this.overseas = false,
   });
 
   final int age;
@@ -36,6 +37,9 @@ class SeasonRecord {
 
   /// ライバルとの勝負の結果(その年に勝負があれば)。
   final bool? rivalWon;
+
+  /// 海外(アメリカ)のリーグでの年か。
+  final bool overseas;
 
   bool get isLeague => rank != null;
   bool get champion =>
@@ -60,6 +64,7 @@ class SeasonRecord {
         'rank': rank,
         'titles': titles,
         'rivalWon': rivalWon,
+        'overseas': overseas,
       };
 
   /// 項目を足すときは既定値を置く。
@@ -77,6 +82,7 @@ class SeasonRecord {
           for (final t in (j['titles'] as List?) ?? const []) t as String
         ],
         rivalWon: j['rivalWon'] as bool?,
+        overseas: (j['overseas'] as bool?) ?? false,
       );
 }
 
@@ -168,8 +174,9 @@ String careerSummary(List<SeasonRecord> rs) {
 int salaryOf(SeasonRecord r) {
   if (r.stage != Stage.pro) return 0;
   final base = 500 * pow(1.065, r.line.rating - 30);
-  final v = base * (1 + 0.15 * r.titles.length);
-  return ((v.clamp(400, 80000) / 10).round() * 10).toInt();
+  // 海外のリーグは年俸が桁違い(×2.5)。
+  final v = base * (1 + 0.15 * r.titles.length) * (r.overseas ? 2.5 : 1.0);
+  return ((v.clamp(400, 200000) / 10).round() * 10).toInt();
 }
 
 /// 年俸の表記: 「1750万円」「2億3000万円」。
