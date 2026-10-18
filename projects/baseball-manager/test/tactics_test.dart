@@ -137,7 +137,11 @@ void main() {
       final relevant = <String>[];
       var guard = 0;
       while (g.slot < g.slotsInYear - 1 && guard++ < 40) {
-        if (g.tacticRelevant) relevant.add(g.slotName);
+        if (g.tacticRelevant &&
+            g.phase == Phase.term &&
+            (relevant.isEmpty || relevant.last != g.slotName)) {
+          relevant.add(g.slotName);
+        }
         g.phase == Phase.event
             ? g.resolveEvent(0)
             : g.choose(Plan.rest, Ability.contact);

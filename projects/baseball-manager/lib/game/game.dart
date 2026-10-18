@@ -278,7 +278,7 @@ class Game {
     _require(Phase.pathChoice);
     route = r;
     phase = Phase.term;
-    log.add('${r.name} で再挑戦する。');
+    log.add('${courseNameOf(r)}で再挑戦する。');
     _note('route', '${courseNameOf(r)}で再挑戦');
   }
 
@@ -518,7 +518,9 @@ class Game {
         championships++;
         log.add('夏の大会で優勝した!');
       } else {
-        log.add('夏の大会は${tournament.roundsWon}回戦突破。');
+        log.add(tournament.roundsWon == 0
+            ? '夏の大会は初戦で敗れた。'
+            : '夏の大会は${tournament.roundsWon}回戦突破。');
       }
       final d = describeLine(tournament.line);
       if (d.isNotEmpty) log.add('大会成績: $d');

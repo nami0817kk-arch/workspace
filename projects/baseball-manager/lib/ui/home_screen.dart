@@ -9,6 +9,7 @@ import 'art/scene.dart';
 import '../game/achievements.dart';
 import 'achievements_screen.dart';
 import 'controller.dart';
+import 'game_screen.dart' show contentMaxWidth;
 import 'history.dart';
 import 'player_screen.dart';
 import 'settings_screen.dart';
@@ -70,91 +71,97 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          SceneBanner(
-            season: Season.spring,
-            stage: Stage.youth,
-            role: role,
-            mood: Mood.happy,
-            label: '6歳',
-          ),
-          const SizedBox(height: 16),
-          Text('6歳から、プロを引退するまで。',
-              style: Theme.of(context).textTheme.titleMedium),
-          const SizedBox(height: 4),
-          const Text('1人の選手を育てて、その一生を見届けるゲームです。'),
-          const SizedBox(height: 24),
-          TextField(
-            controller: name,
-            decoration: const InputDecoration(
-                labelText: '選手の名前', border: OutlineInputBorder()),
-            maxLength: 10,
-          ),
-          const SizedBox(height: 8),
-          const Text('最初のポジション'),
-          const SizedBox(height: 8),
-          SegmentedButton<Role>(
-            segments: const [
-              ButtonSegment(value: Role.batter, label: Text('打者')),
-              ButtonSegment(value: Role.pitcher, label: Text('投手')),
-            ],
-            selected: {role},
-            onSelectionChanged: (s) => setState(() => role = s.first),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            '二刀流は、プロになってからいつでも選べます。(いまは${roleLabel(role)}から)',
-            style: Theme.of(context).textTheme.bodySmall,
-          ),
-          const SizedBox(height: 16),
-          const Text('難しさ'),
-          const SizedBox(height: 8),
-          SegmentedButton<Difficulty>(
-            key: const Key('difficulty'),
-            segments: [
-              for (final d in Difficulty.values)
-                ButtonSegment(value: d, label: Text(d.label)),
-            ],
-            selected: {difficulty},
-            onSelectionChanged: (s) => setState(() => difficulty = s.first),
-          ),
-          const SizedBox(height: 8),
-          Text(difficulty.description,
-              style: Theme.of(context).textTheme.bodySmall),
-          const SizedBox(height: 24),
-          FilledButton(
-            onPressed: () =>
-                widget.controller.newGame(name.text, role, difficulty),
-            child: const Text('はじめる'),
-          ),
-          const SizedBox(height: 16),
-          Card(
-            child: ListTile(
-              key: const Key('achievements-open'),
-              leading:
-                  const Icon(Icons.military_tech, color: Color(0xFFE53935)),
-              title: const Text('実績'),
-              subtitle: Text(
-                  '${widget.controller.unlocked.length} / ${achievements.length} 解除'),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: () => Navigator.of(context).push(
-                MaterialPageRoute<void>(
-                  builder: (_) =>
-                      AchievementsScreen(controller: widget.controller),
-                ),
-              ),
-            ),
-          ),
-          if (widget.controller.history.isNotEmpty) ...[
-            const SizedBox(height: 32),
-            Text('殿堂(これまでの選手)', style: Theme.of(context).textTheme.titleMedium),
-            const SizedBox(height: 4),
-            for (final h in widget.controller.history) _HistoryTile(entry: h),
-          ],
-        ],
-      ),
+      body: Center(
+          child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: contentMaxWidth),
+              child: ListView(
+                padding: const EdgeInsets.all(16),
+                children: [
+                  SceneBanner(
+                    season: Season.spring,
+                    stage: Stage.youth,
+                    role: role,
+                    mood: Mood.happy,
+                    label: '6歳',
+                  ),
+                  const SizedBox(height: 16),
+                  Text('6歳から、プロを引退するまで。',
+                      style: Theme.of(context).textTheme.titleMedium),
+                  const SizedBox(height: 4),
+                  const Text('1人の選手を育てて、その一生を見届けるゲームです。'),
+                  const SizedBox(height: 24),
+                  TextField(
+                    controller: name,
+                    decoration: const InputDecoration(
+                        labelText: '選手の名前', border: OutlineInputBorder()),
+                    maxLength: 10,
+                  ),
+                  const SizedBox(height: 8),
+                  const Text('最初のポジション'),
+                  const SizedBox(height: 8),
+                  SegmentedButton<Role>(
+                    segments: const [
+                      ButtonSegment(value: Role.batter, label: Text('打者')),
+                      ButtonSegment(value: Role.pitcher, label: Text('投手')),
+                    ],
+                    selected: {role},
+                    onSelectionChanged: (s) => setState(() => role = s.first),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    '二刀流は、プロになってからいつでも選べます。(いまは${roleLabel(role)}から)',
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                  const SizedBox(height: 16),
+                  const Text('難しさ'),
+                  const SizedBox(height: 8),
+                  SegmentedButton<Difficulty>(
+                    key: const Key('difficulty'),
+                    segments: [
+                      for (final d in Difficulty.values)
+                        ButtonSegment(value: d, label: Text(d.label)),
+                    ],
+                    selected: {difficulty},
+                    onSelectionChanged: (s) =>
+                        setState(() => difficulty = s.first),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(difficulty.description,
+                      style: Theme.of(context).textTheme.bodySmall),
+                  const SizedBox(height: 24),
+                  FilledButton(
+                    onPressed: () =>
+                        widget.controller.newGame(name.text, role, difficulty),
+                    child: const Text('はじめる'),
+                  ),
+                  const SizedBox(height: 16),
+                  Card(
+                    child: ListTile(
+                      key: const Key('achievements-open'),
+                      leading: const Icon(Icons.military_tech,
+                          color: Color(0xFFE53935)),
+                      title: const Text('実績'),
+                      subtitle: Text(
+                          '${widget.controller.unlocked.length} / ${achievements.length} 解除'),
+                      trailing: const Icon(Icons.chevron_right),
+                      onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute<void>(
+                          builder: (_) =>
+                              AchievementsScreen(controller: widget.controller),
+                        ),
+                      ),
+                    ),
+                  ),
+                  if (widget.controller.history.isNotEmpty) ...[
+                    const SizedBox(height: 32),
+                    Text('殿堂(これまでの選手)',
+                        style: Theme.of(context).textTheme.titleMedium),
+                    const SizedBox(height: 4),
+                    for (final h in widget.controller.history)
+                      _HistoryTile(entry: h),
+                  ],
+                ],
+              ))),
     );
   }
 }

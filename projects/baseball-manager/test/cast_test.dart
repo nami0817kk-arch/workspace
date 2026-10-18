@@ -444,4 +444,39 @@ void _adminTests() {
     expect(q.player.potential, 88);
     expect(q.player.traits, {Trait.clutch, Trait.genius});
   });
+
+  test('同じ顔ぶれの中で名字がかぶらない(見分けがつく)', () {
+    for (var seed = 0; seed < 100; seed++) {
+      final c = _cast(seed);
+      final sur = [
+        for (final m in c.members)
+          if (m.kind != Kind.family) m.name.split(' ').first
+      ];
+      expect(sur.toSet().length, sur.length, reason: 'seed $seed: $sur');
+    }
+  });
+
+  test('ログに英語の識別子や「0回戦」のような不自然な表記が出ない', () {
+    for (var seed = 0; seed < 30; seed++) {
+      final g = _game(seed, potential: 30);
+      var n = 0;
+      while (g.phase != Phase.retired && n++ < 3000) {
+        g.autoSpend();
+        switch (g.phase) {
+          case Phase.term:
+            g.choose(Plan.train, Ability.contact);
+          case Phase.event:
+            g.resolveEvent(0);
+          case Phase.pathChoice:
+            g.chooseRoute(Course.corporate);
+          case Phase.retired:
+            break;
+        }
+      }
+      for (final l in g.log) {
+        expect(l, isNot(contains('0回戦')));
+        expect(RegExp(r'[a-z]{4,}').hasMatch(l), isFalse, reason: l);
+      }
+    }
+  });
 }

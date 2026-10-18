@@ -132,11 +132,17 @@ const _given = [
 const _loverGiven = ['美咲', '葵', '陽菜', '凛', '紬', '詩織', '澪', '千夏', '彩', '楓'];
 
 String _name(Random rng, Set<String> used, {bool lover = false}) {
-  for (var i = 0; i < 50; i++) {
-    final n = lover
-        ? '${_surnames[rng.nextInt(_surnames.length)]} ${_loverGiven[rng.nextInt(_loverGiven.length)]}'
-        : '${_surnames[rng.nextInt(_surnames.length)]} ${_given[rng.nextInt(_given.length)]}';
-    if (used.add(n)) return n;
+  // 同じ顔ぶれの中で、名字がかぶらないようにする(見分けがつかなくなる)。
+  for (var i = 0; i < 80; i++) {
+    final sur = _surnames[rng.nextInt(_surnames.length)];
+    final given = lover
+        ? _loverGiven[rng.nextInt(_loverGiven.length)]
+        : _given[rng.nextInt(_given.length)];
+    if (used.contains('姓:$sur')) continue;
+    if (used.add('$sur $given')) {
+      used.add('姓:$sur');
+      return '$sur $given';
+    }
   }
   return '名無し';
 }
@@ -226,7 +232,9 @@ class Cast {
 
   /// 段階が変わったとき。仲間とコーチが替わり、高校で恋人が現れる。
   void rotate(Stage s, Random rng, Role role, Set<Trait> have) {
-    final used = {for (final m in members) m.name};
+    final used = {
+      for (final m in members) ...[m.name, '姓:${m.name.split(' ').first}'],
+    };
     _cast(s, rng, role, have, used);
     if (s == Stage.highSchool && lover == null) {
       members.add(Character(
