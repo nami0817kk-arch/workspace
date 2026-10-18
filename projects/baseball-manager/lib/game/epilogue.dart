@@ -1,4 +1,5 @@
 import 'game.dart';
+import 'marks.dart';
 
 /// 引退後のひとこと。結果(称号・プロ年数・結婚・二刀流・ライバル)から選ぶ。
 /// 乱数は使わず、同じ一生なら同じ文になる(共有しても同じ)。
@@ -6,7 +7,8 @@ String epilogueOf(Ending e, String name,
     {int worldChampion = 0,
     int worldPlayed = 0,
     int overseasYears = 0,
-    int popularity = 0}) {
+    int popularity = 0,
+    int? retiredNumber}) {
   final parts = <String>[];
   if (!e.madePro) {
     parts.add('$nameはプロの舞台には立てなかったが、野球で学んだことを胸に、新しい道を歩き始めた。');
@@ -26,6 +28,9 @@ String epilogueOf(Ending e, String name,
           : 'ライバルとの勝負は負け越したが、互いを高め合った日々は宝物だ。');
     }
   }
+  if (retiredNumber != null && e.title == 'レジェンド' && e.proYears >= 15) {
+    parts.add('背番号$retiredNumberは、永久欠番になった。');
+  }
   if (e.madePro && popularity >= 70) {
     parts.add('引退セレモニーには満員のファンが詰めかけ、$nameは花束と大きな拍手に包まれた。');
   }
@@ -38,7 +43,8 @@ String epilogueOf(Ending e, String name,
     parts.add('日本代表として世界と戦った日々は、$nameの野球人生の勲章になった。');
   }
   if (e.married) {
-    parts.add('引退後は、${e.partnerName}と、穏やかな毎日を送っている。');
+    final kids = childrenOf(e.partnerName!);
+    parts.add('引退後は、${e.partnerName}と$kids人の子どもに囲まれて、穏やかな毎日を送っている。');
   } else if (e.madePro && e.proYears >= 10) {
     parts.add('引退後は、少年野球の子どもたちに教える日々が待っている。');
   }

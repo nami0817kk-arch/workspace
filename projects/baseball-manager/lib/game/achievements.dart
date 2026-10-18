@@ -77,6 +77,8 @@ final List<Achievement> achievements = [
       (s) => s.records.any((r) => r.awards.contains('カムバック賞'))),
   Achievement('free-agent', 'FA宣言', 'FA権を使って、別のチームに移籍する。',
       (s) => s.events.any((e) => e.text.contains('FAで'))),
+  Achievement('japan-series', '日本一', '日本シリーズを制して、日本一になる。',
+      (s) => s.records.any((r) => r.awards.contains('日本一'))),
   Achievement('legend', '伝説', '称号「レジェンド」を得る。', (s) => s.endingTitle == 'レジェンド'),
   Achievement('iron-man', '鉄人', 'プロで15年以上プレーする。',
       (s) => s.records.where((r) => r.stage == Stage.pro).length >= 15),

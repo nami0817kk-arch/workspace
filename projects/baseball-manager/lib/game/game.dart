@@ -718,6 +718,10 @@ class Game {
       return;
     }
     log.add('$slotName: ${d.isEmpty ? '' : '$d。'}チームは${m.wins}勝${m.losses}敗。');
+    final rs = storyOfCharacter(cast.rival);
+    final duel =
+        rs == null ? null : rivalDuelLine(rs, player.age, slot, m.line);
+    if (duel != null) log.add(duel);
     final mvp = (m.line.hasBatting &&
             m.line.atBats >= 50 &&
             (m.line.ops ?? 0) >= 1.000) ||
@@ -836,6 +840,14 @@ class Game {
       if (league.rank == 1) {
         championships++;
         log.add('リーグ優勝!');
+        log.add(
+            '優勝パレードには${paradeCrowd(popularityOf(records, worldRecords))}万人が集まった。');
+        if (wonSeries(player.name, player.age, league.line)) {
+          log.add('日本シリーズを制して、日本一に輝いた!');
+          awards.add('日本一');
+        } else {
+          log.add('日本シリーズでは惜しくも敗れた。');
+        }
       } else {
         log.add('今季は${league.rank}位(${league.wins}勝${league.losses}敗)。');
       }

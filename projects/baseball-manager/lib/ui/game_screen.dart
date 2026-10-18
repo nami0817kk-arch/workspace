@@ -1134,7 +1134,7 @@ class EndingView extends StatelessWidget {
                   : 'プロの舞台には立てなかった。'),
               const SizedBox(height: 10),
               Text(
-                  '${epilogueOf(e, p.name, worldChampion: game.worldRecords.where((r) => r.champion).length, worldPlayed: game.worldRecords.length, overseasYears: game.records.where((r) => r.overseas).length, popularity: popularityOf(game.records, game.worldRecords))}'
+                  '${epilogueOf(e, p.name, worldChampion: game.worldRecords.where((r) => r.champion).length, worldPlayed: game.worldRecords.length, overseasYears: game.records.where((r) => r.overseas).length, popularity: popularityOf(game.records, game.worldRecords), retiredNumber: uniformNumberOf(Stage.pro, p))}'
                   '\nその後: ${afterCareerOf(title: e.title, proYears: e.proYears, popularity: popularityOf(game.records, game.worldRecords), money: game.money, madePro: e.madePro)}',
                   key: const Key('epilogue'),
                   style: Theme.of(context)

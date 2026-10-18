@@ -1,6 +1,7 @@
 import 'career.dart';
 import 'player.dart';
 import 'records.dart';
+import 'rival_story.dart';
 import 'season.dart';
 
 /// 通算の節目(初安打・通算100本塁打など)。`before` から `after` で越えたものを返す。
@@ -170,3 +171,34 @@ String afterCareerOf({
   if (proYears >= 10) return '野球教室を開き、子どもたちに野球の楽しさを伝える。';
   return '地元でスポーツ用品店を営み、野球を支え続ける。';
 }
+
+int _hash(String s, int salt) {
+  var v = 17 + salt;
+  for (final c in s.codeUnits) {
+    v = (v * 131 + c) & 0x7fffffff;
+  }
+  return v;
+}
+
+/// ライバルとの直接対決(月の一コマ)。結果は今月の成績から決める。プロ同士のときだけ。
+String? rivalDuelLine(RivalStory s, int age, int slot, Line month) {
+  final pa = s.proAge;
+  if (pa == null || age < pa || age > s.retireAge) return null;
+  if (slot != 1 && slot != 4) return null;
+  final good = (month.hasBatting && (month.ops ?? 0) >= 0.800) ||
+      (month.hasPitching && (month.era ?? 99) <= 3.00);
+  final n = s.name;
+  return good ? '${s.team}の$nとの直接対決。気迫で上回った!' : '${s.team}の$nとの直接対決。ここは競り負けた…';
+}
+
+/// 日本シリーズ(リーグ優勝のあと)。乱数は使わず、年齢と名前と今年の出来から決める。
+bool wonSeries(String name, int age, Line season) {
+  final bonus = ((season.rating - 50) / 2).round();
+  return _hash(name, age) % 100 < 50 + bonus;
+}
+
+/// 優勝パレードに集まった人数(万人)。人気から。
+int paradeCrowd(int popularity) => 2 + popularity ~/ 4;
+
+/// 子どもの人数(結婚した選手のみ。1〜3人)。名前から決まる。
+int childrenOf(String partnerName) => 1 + _hash(partnerName, 3) % 3;

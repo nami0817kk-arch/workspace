@@ -1,6 +1,7 @@
 import 'package:baseball_manager/game/career.dart';
 import 'package:baseball_manager/game/marks.dart';
 import 'package:baseball_manager/game/records.dart';
+import 'package:baseball_manager/game/rival_story.dart';
 import 'package:baseball_manager/game/player.dart';
 import 'package:baseball_manager/game/season.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -14,6 +15,7 @@ Player _p(Role r, Map<Ability, int> a) => Player(
 
 void main() {
   markTests2();
+  markTests3();
   test('通算の節目: 越えた年にだけ出る', () {
     expect(careerMarks(const Line(), const Line(hits: 150, homeRuns: 20)),
         containsAll(['プロ初安打', 'プロ初本塁打', '通算100安打']));
@@ -81,5 +83,32 @@ void markTests2() {
         afterCareerOf(
             title: 'x', proYears: 0, popularity: 0, money: 0, madePro: false),
         isNotEmpty);
+  });
+}
+
+void markTests3() {
+  test('ライバル対決・日本シリーズ・パレード・子ども', () {
+    final s = storyOf('ひかる', 90);
+    final good = rivalDuelLine(
+        s, 22, 1, const Line(atBats: 80, hits: 35, totalBases: 70, walks: 10));
+    final bad = rivalDuelLine(s, 22, 1, const Line(atBats: 80, hits: 10));
+    expect(good, contains('上回った'));
+    expect(bad, contains('競り負け'));
+    expect(rivalDuelLine(s, 22, 0, const Line()), isNull); // 対決は決まった月だけ
+    expect(rivalDuelLine(s, 15, 1, const Line()), isNull); // まだプロでない
+    // 同じ入力なら同じ結果。出来が良いほど勝ちやすい。
+    const great =
+        Line(games: 140, atBats: 500, hits: 190, totalBases: 380, walks: 90);
+    expect(wonSeries('t', 25, great), wonSeries('t', 25, great));
+    var wins = 0, winsPoor = 0;
+    for (var age = 20; age < 220; age++) {
+      if (wonSeries('t', age, great)) wins++;
+      if (wonSeries('t', age, const Line(games: 140, atBats: 500, hits: 90))) {
+        winsPoor++;
+      }
+    }
+    expect(wins, greaterThan(winsPoor));
+    expect(paradeCrowd(80), greaterThan(paradeCrowd(0)));
+    expect(childrenOf('みさき'), inInclusiveRange(1, 3));
   });
 }
