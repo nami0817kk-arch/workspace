@@ -11,6 +11,7 @@ import 'package:baseball_manager/game/tactics.dart';
 import 'package:baseball_manager/game/traits.dart';
 import 'package:baseball_manager/ui/app.dart';
 import 'package:baseball_manager/ui/controller.dart';
+import 'package:baseball_manager/ui/history.dart';
 import 'package:baseball_manager/ui/game_screen.dart' show endingShareText;
 import 'package:baseball_manager/ui/labels.dart';
 import 'package:flutter/material.dart';
@@ -998,5 +999,54 @@ void _rankTests() {
     await t.pumpAndSettle();
     expect(copied, text);
     expect(find.text('コピーしました。友だちに見せよう'), findsOneWidget);
+  });
+
+  group('バックアップ', () {
+    test('書き出して別のコントローラに読み込むと、選手・殿堂・実績が戻る', () async {
+      SharedPreferences.setMockInitialValues({});
+      final a = GameController(rng: Random(1));
+      a.adopt(_until((g) => g.stage == Stage.highSchool, seed: 5));
+      a.history = [HistoryEntry.of(_until((g) => false, seed: 6))];
+      a.unlocked = {'first-pro', 'title'};
+      final text = a.exportBackup();
+
+      SharedPreferences.setMockInitialValues({});
+      final b = GameController(rng: Random(2));
+      expect(await b.importBackup(text), isTrue);
+      expect(b.game!.player.name, a.game!.player.name);
+      expect(b.game!.player.age, a.game!.player.age);
+      expect(b.history, hasLength(1));
+      expect(b.unlocked, {'first-pro', 'title'});
+      // 読み込んだ内容は保存もされる
+      final c = GameController(rng: Random(3));
+      expect(await c.loadSaved(), isTrue);
+      expect(c.game!.player.age, a.game!.player.age);
+      expect(c.unlocked, {'first-pro', 'title'});
+    });
+
+    test('読めない文字列・別のアプリのデータは、何も変えず false', () async {
+      SharedPreferences.setMockInitialValues({});
+      final c = GameController(rng: Random(1));
+      c.adopt(_until((g) => g.stage == Stage.highSchool, seed: 5));
+      final age = c.game!.player.age;
+      expect(await c.importBackup('これは違う'), isFalse);
+      expect(await c.importBackup('{"app":"other"}'), isFalse);
+      expect(await c.importBackup('{"app":"baseball-manager","game":{"x":'),
+          isFalse);
+      expect(c.game!.player.age, age);
+    });
+
+    testWidgets('設定から開いて、読めない文字列だとお知らせが出る', (t) async {
+      final c = await _start(t);
+      await t.tap(find.byKey(const Key('settings-open')));
+      await t.pumpAndSettle();
+      await t.tap(find.byKey(const Key('backup-open')));
+      await t.pumpAndSettle();
+      await t.enterText(find.byKey(const Key('backup-text')), 'でたらめ');
+      await t.tap(find.byKey(const Key('backup-import')));
+      await t.pumpAndSettle();
+      expect(find.textContaining('読み込めませんでした'), findsOneWidget);
+      expect(c.game, isNull);
+    });
   });
 }

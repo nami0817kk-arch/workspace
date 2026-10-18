@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../game/game.dart';
 import '../game/achievements.dart';
@@ -73,6 +74,13 @@ class SettingsScreen extends StatelessWidget {
                     onTap: () => showHelp(context),
                   ),
                   ListTile(
+                    key: const Key('backup-open'),
+                    leading: const Icon(Icons.save_alt),
+                    title: const Text('バックアップ'),
+                    subtitle: const Text('データを文字列で書き出して控えを取る・読み込んで戻す。'),
+                    onTap: () => _backup(context),
+                  ),
+                  ListTile(
                     key: const Key('erase-all'),
                     leading: const Icon(Icons.delete_outline,
                         color: Color(0xFFD32F2F)),
@@ -87,6 +95,57 @@ class SettingsScreen extends StatelessWidget {
         );
       },
     );
+  }
+
+  Future<void> _backup(BuildContext context) async {
+    final text = TextEditingController();
+    await showDialog<void>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('バックアップ'),
+        content: SingleChildScrollView(
+          child: Column(mainAxisSize: MainAxisSize.min, children: [
+            const Text('「書き出す」で、いまのデータを文字列としてコピーします。'
+                'メモなどに貼っておけば、あとで「読み込む」で戻せます。'),
+            const SizedBox(height: 12),
+            TextField(
+              key: const Key('backup-text'),
+              controller: text,
+              minLines: 3,
+              maxLines: 6,
+              decoration: const InputDecoration(
+                  border: OutlineInputBorder(), hintText: '読み込むときは、ここに貼り付け'),
+            ),
+          ]),
+        ),
+        actions: [
+          TextButton(
+            key: const Key('backup-export'),
+            onPressed: () async {
+              final m = ScaffoldMessenger.of(context);
+              await Clipboard.setData(
+                  ClipboardData(text: controller.exportBackup()));
+              m.showSnackBar(const SnackBar(content: Text('コピーしました')));
+            },
+            child: const Text('書き出す'),
+          ),
+          FilledButton(
+            key: const Key('backup-import'),
+            onPressed: () async {
+              final m = ScaffoldMessenger.of(context);
+              final ok = await controller.importBackup(text.text);
+              m.showSnackBar(SnackBar(
+                  content: Text(ok ? '読み込みました' : '読み込めませんでした(文字列が違うかもしれません)')));
+              if (ok && ctx.mounted) Navigator.pop(ctx);
+            },
+            child: const Text('読み込む'),
+          ),
+          TextButton(
+              onPressed: () => Navigator.pop(ctx), child: const Text('閉じる')),
+        ],
+      ),
+    );
+    text.dispose();
   }
 
   Future<void> _confirmErase(BuildContext context) async {

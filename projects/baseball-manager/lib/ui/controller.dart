@@ -186,6 +186,52 @@ class GameController extends ChangeNotifier {
     }
   }
 
+  /// 育成中の選手・殿堂・実績を1つの文字列にまとめる(別の端末や、消える前の控えに)。
+  String exportBackup() => jsonEncode({
+        'app': 'baseball-manager',
+        'v': 1,
+        'game': game?.toJson(),
+        'history': [for (final e in history) e.toJson()],
+        'achievements': unlocked.toList()..sort(),
+      });
+
+  /// `exportBackup` の文字列から復元する。読めなければ何も変えず false。
+  Future<bool> importBackup(String text) async {
+    try {
+      final m = jsonDecode(text.trim()) as Map<String, dynamic>;
+      if (m['app'] != 'baseball-manager') return false;
+      final gj = m['game'];
+      final g = gj == null
+          ? null
+          : Game.fromJson((gj as Map).cast<String, dynamic>(), _rng);
+      final h = [
+        for (final e in (m['history'] as List?) ?? const [])
+          HistoryEntry.fromJson((e as Map).cast<String, dynamic>()),
+      ];
+      final a = {
+        for (final x in (m['achievements'] as List?) ?? const []) x as String,
+      };
+      game = g;
+      history = h;
+      unlocked = a;
+      pending.clear();
+      newlyUnlocked = const [];
+      recent = const [];
+      if (g != null) {
+        focus = abilitiesOf(g.player.role).first;
+        await store.save(g.toJson());
+      } else {
+        await store.clear();
+      }
+      await store.saveHistory(h);
+      await store.saveAchievements(a);
+      notifyListeners();
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
   void newGame(String name, Role role,
       [Difficulty difficulty = Difficulty.normal]) {
     newlyUnlocked = const [];
