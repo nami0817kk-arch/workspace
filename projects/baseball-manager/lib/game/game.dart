@@ -642,6 +642,7 @@ class Game {
 
   /// 月ごとの成績をログに残す。出来が飛び抜けていれば「月間MVP」。
   void _monthlyReport(LeagueProgress m) {
+    _allStar();
     final d = describeLine(m.line);
     if (m.missed >= 20) {
       log.add('$slotName: 怪我で全試合を欠場。チームは${m.wins}勝${m.losses}敗。');
@@ -657,6 +658,21 @@ class Game {
       _note('title', '$slotNameの月間MVP');
       condition = condition.copyWith(morale: condition.morale + 5);
     }
+  }
+
+  /// シーズン中盤(4か月目)に、ここまでの成績と人気でオールスターに選ばれることがある。
+  void _allStar() {
+    if (slot != 3 || condition.injured) return;
+    final prog = seasonProgress;
+    if (prog == null || prog.line.games < 40) return;
+    final l = prog.line;
+    final pop = popularityOf(records, worldRecords);
+    final good = (l.hasBatting && (l.ops ?? 0) >= 0.800) ||
+        (l.hasPitching && (l.era ?? 99) <= 3.00);
+    if (!good && pop < 55) return;
+    log.add('ファン投票とリーグ推薦で、オールスターに選ばれた!');
+    _note('title', 'オールスターに選出');
+    condition = condition.copyWith(morale: condition.morale + 6);
   }
 
   /// シーズンの最後(10月)に、残りの試合を進めて、1年ぶんの結果にする。
@@ -825,7 +841,7 @@ class Game {
       final d = describeGame(g.line);
       log.add('${g.won ? '○' : '●'} ${roundLabel(i, t.rounds)} vs $name'
           '${d.isEmpty ? '' : ' — $d'}'
-          '${isHeroGame(g.line, won: g.won) ? ' ★殊勲' : ''}');
+          '${isHeroGame(g.line, won: g.won) ? ' ★殊勲(${heroNoteOf(g.line)})' : ''}');
       if (i == t.rounds - 1 && g.won && isHeroGame(g.line, won: true)) {
         _note('title', '決勝で殊勲の活躍');
       }

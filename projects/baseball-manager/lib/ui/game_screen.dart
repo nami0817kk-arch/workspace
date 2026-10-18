@@ -6,6 +6,7 @@ import '../game/career.dart';
 import '../game/epilogue.dart';
 import '../game/exp.dart';
 import '../game/flavor.dart';
+import '../game/marks.dart';
 import '../game/goals.dart';
 import '../game/game.dart';
 import '../game/invest.dart';
@@ -1086,14 +1087,8 @@ class EndingView extends StatelessWidget {
                   : 'プロの舞台には立てなかった。'),
               const SizedBox(height: 10),
               Text(
-                  epilogueOf(e, p.name,
-                      worldChampion:
-                          game.worldRecords.where((r) => r.champion).length,
-                      worldPlayed: game.worldRecords.length,
-                      overseasYears:
-                          game.records.where((r) => r.overseas).length,
-                      popularity:
-                          popularityOf(game.records, game.worldRecords)),
+                  '${epilogueOf(e, p.name, worldChampion: game.worldRecords.where((r) => r.champion).length, worldPlayed: game.worldRecords.length, overseasYears: game.records.where((r) => r.overseas).length, popularity: popularityOf(game.records, game.worldRecords))}'
+                  '\nその後: ${afterCareerOf(title: e.title, proYears: e.proYears, popularity: popularityOf(game.records, game.worldRecords), money: game.money, madePro: e.madePro)}',
                   key: const Key('epilogue'),
                   style: Theme.of(context)
                       .textTheme

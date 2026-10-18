@@ -1,4 +1,6 @@
+import 'career.dart';
 import 'player.dart';
+import 'records.dart';
 import 'season.dart';
 
 /// 通算の節目(初安打・通算100本塁打など)。`before` から `after` で越えたものを返す。
@@ -92,4 +94,79 @@ String coachWordOf(Player p) {
   final weakest = abilitiesOf(p.role)
       .reduce((a, b) => (p.abilities[b] ?? 0) < (p.abilities[a] ?? 0) ? b : a);
   return 'コーチ「来年は${_abilityWord[weakest]}を磨こう」';
+}
+
+/// 殊勲の試合の理由(ログの「★殊勲(猛打賞)」)。試合の中身から決める。
+String heroNoteOf(Line g) {
+  if (g.homeRuns >= 2) return '${g.homeRuns}本塁打';
+  if (g.rbi >= 4) return '${g.rbi}打点';
+  if (g.hits >= 4) return '猛打賞';
+  if (g.strikeouts >= 10) return '二桁奪三振';
+  if (g.hasPitching && g.outs >= 21 && g.hitsAllowed <= 3) return '好投';
+  return '大活躍';
+}
+
+/// 自己ベスト(キャリアハイ)の年。成績表から、項目ごとに一番良かった年を選ぶ。
+List<({String label, String value, int age})> careerHighs(
+    Iterable<SeasonRecord> rs) {
+  final out = <({String label, String value, int age})>[];
+  void best(
+      String label, num? Function(SeasonRecord) f, String Function(num) fmt,
+      {bool lower = false, bool Function(SeasonRecord)? ok}) {
+    SeasonRecord? top;
+    num? topV;
+    for (final r in rs) {
+      if (ok != null && !ok(r)) continue;
+      final v = f(r);
+      if (v == null) continue;
+      if (topV == null || (lower ? v < topV : v > topV)) {
+        top = r;
+        topV = v;
+      }
+    }
+    if (top != null && topV != null && (lower || topV > 0)) {
+      out.add((label: label, value: fmt(topV), age: top.age));
+    }
+  }
+
+  best('打率', (r) => r.line.battingAverage, (v) => fmtRate(v.toDouble()),
+      ok: (r) => r.line.atBats >= 100);
+  best('本塁打', (r) => r.line.homeRuns, (v) => '$v本');
+  best('打点', (r) => r.line.rbi, (v) => '$v');
+  best('盗塁', (r) => r.line.stolenBases, (v) => '$v');
+  best('勝利', (r) => r.line.wins, (v) => '$v勝');
+  best('奪三振', (r) => r.line.strikeouts, (v) => '$v');
+  best('防御率', (r) => r.line.era, (v) => fmtEra(v.toDouble()),
+      lower: true, ok: (r) => r.line.outs >= 90);
+  return out;
+}
+
+/// 衰えが始まる年齢の目安(能力の伸びがマイナスになる年)。
+int declineAge() {
+  var a = 20;
+  while (growthFactor(a) >= 0) {
+    a++;
+  }
+  return a;
+}
+
+/// ファンクラブの会員数(万人)。人気から計算。人気0なら0。
+int fanClubOf(int popularity) => (popularity * popularity / 100).round() * 3;
+
+/// 引退後の進路。成績・資産・人気から決める(同じ一生なら同じ)。
+String afterCareerOf({
+  required String title,
+  required int proYears,
+  required int popularity,
+  required int money,
+  required bool madePro,
+}) {
+  if (!madePro) return '野球で学んだことを生かして、新しい仕事で活躍する。';
+  if (title == 'レジェンド' && popularity >= 60) {
+    return '解説者として人気を集め、のちに監督としてチームを率いる。';
+  }
+  if (money >= 50000) return '資産をもとに事業を起こし、実業家として成功する。';
+  if (title == 'レジェンド' || title == '一流選手') return '球団のコーチとして、次の世代の育成に力を注ぐ。';
+  if (proYears >= 10) return '野球教室を開き、子どもたちに野球の楽しさを伝える。';
+  return '地元でスポーツ用品店を営み、野球を支え続ける。';
 }

@@ -189,6 +189,13 @@ class _ProfileTab extends StatelessWidget {
                           '人気 ${rankOf(popularityOf(s.records, s.worldRecords))}'
                           '(${popularityOf(s.records, s.worldRecords)})',
                           key: const Key('popularity')),
+                      if (popularityOf(s.records, s.worldRecords) >= 20)
+                        Text(
+                            'ファンクラブ ${fanClubOf(popularityOf(s.records, s.worldRecords))}万人',
+                            key: const Key('fan-club')),
+                      Text('衰えが始まる目安: ${declineAge()}歳ごろ',
+                          key: const Key('decline-hint'),
+                          style: Theme.of(context).textTheme.bodySmall),
                       if (s.endingTitle != null)
                         Padding(
                           padding: const EdgeInsets.only(top: 4),

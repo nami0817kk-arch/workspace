@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../game/career.dart';
 import '../game/game.dart';
+import '../game/marks.dart';
 import '../game/snapshot.dart';
 import '../game/records.dart';
 import '../game/rival_story.dart';
@@ -66,6 +67,10 @@ class RecordsView extends StatelessWidget {
         if (titles.isNotEmpty) ...[
           const SizedBox(height: 8),
           _Titles(titles: titles),
+        ],
+        if (careerHighs(pro.isNotEmpty ? pro : rs).isNotEmpty) ...[
+          const SizedBox(height: 8),
+          _Highs(highs: careerHighs(pro.isNotEmpty ? pro : rs)),
         ],
         if (awards.isNotEmpty) ...[
           const SizedBox(height: 8),
@@ -406,6 +411,34 @@ class _Table extends StatelessWidget {
         Stage.pro => 'プロ',
         Stage.retired => '',
       };
+}
+
+/// キャリアハイ(項目ごとに一番良かった年)。
+class _Highs extends StatelessWidget {
+  const _Highs({required this.highs});
+  final List<({String label, String value, int age})> highs;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = Theme.of(context).textTheme;
+    return Card(
+      key: const Key('career-highs'),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('キャリアハイ', style: t.titleSmall),
+            const SizedBox(height: 6),
+            Wrap(spacing: 18, runSpacing: 6, children: [
+              for (final h in highs)
+                Text('${h.label} ${h.value}(${h.age}歳)', style: t.bodyMedium),
+            ]),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 class _Titles extends StatelessWidget {
