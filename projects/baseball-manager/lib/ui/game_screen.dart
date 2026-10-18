@@ -130,6 +130,10 @@ class GameScreen extends StatelessWidget {
                 const SizedBox(height: 8),
                 const _FirstHint(),
               ],
+              if (game.canChooseOffseason) ...[
+                const SizedBox(height: 8),
+                _OffseasonCard(controller: controller, game: game),
+              ],
               if (game.canChooseSchool) ...[
                 const SizedBox(height: 8),
                 _SchoolCard(controller: controller, game: game),
@@ -415,6 +419,50 @@ class _InvestRow extends StatelessWidget {
           ),
         ),
       ]),
+    );
+  }
+}
+
+class _OffseasonCard extends StatelessWidget {
+  const _OffseasonCard({required this.controller, required this.game});
+  final GameController controller;
+  final Game game;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      key: const Key('offseason-card'),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('オフの過ごし方', style: Theme.of(context).textTheme.titleSmall),
+            const SizedBox(height: 2),
+            Text('年に一度、選べます(選ばなくてもOK)。自主トレは、下で選んだ重点の能力を鍛えます。',
+                style: Theme.of(context).textTheme.bodySmall),
+            const SizedBox(height: 8),
+            Wrap(spacing: 6, runSpacing: 6, children: [
+              for (final o in Offseason.values)
+                Tooltip(
+                  message: o.description,
+                  child: OutlinedButton(
+                    key: Key('offseason-${o.name}'),
+                    onPressed: () => controller.chooseOffseason(o),
+                    child: Text(o.label),
+                  ),
+                ),
+            ]),
+            const SizedBox(height: 6),
+            Text(
+                [
+                  for (final o in Offseason.values)
+                    '${o.label}: ${o.description}'
+                ].join('\n'),
+                style: Theme.of(context).textTheme.bodySmall),
+          ],
+        ),
+      ),
     );
   }
 }

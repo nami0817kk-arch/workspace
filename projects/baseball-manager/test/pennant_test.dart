@@ -17,6 +17,8 @@ Player _bat(int v) => Player(
 
 const _opp = [55, 60, 66, 72, 78];
 
+Game proGameForTest() => _proGame();
+
 Game _proGame() {
   for (var s = 0; s < 60; s++) {
     final g = Game.newGame(

@@ -33,6 +33,17 @@ enum Phase {
 }
 
 /// 引退時のまとめ。
+/// プロの年のはじめの、オフの過ごし方。
+enum Offseason {
+  camp('自主トレ', '疲れ+12。重点の能力の経験点+8。'),
+  family('家族旅行', '疲れ-20、やる気+20。'),
+  rehab('治療・調整', '疲れ-15。怪我中なら治りが1か月早まる。');
+
+  const Offseason(this.label, this.description);
+  final String label;
+  final String description;
+}
+
 /// FA(フリーエージェント)の決断。
 enum FaChoice { stay, contender, cash }
 
@@ -269,6 +280,36 @@ class Game {
     school = s;
     log.add('${s.label}に進んだ。${s.description}');
     _note('stage', '${s.label}に入学');
+  }
+
+  bool offseasonDone = false;
+
+  bool get canChooseOffseason =>
+      phase == Phase.term && slot == 0 && stage == Stage.pro && !offseasonDone;
+
+  /// オフの過ごし方を決める(年に1度。選ばなくてもよい)。`focus` は自主トレで伸ばす能力。
+  void chooseOffseason(Offseason o, Ability focus) {
+    _require(Phase.term);
+    if (!canChooseOffseason) throw StateError('いまはオフの過ごし方を決められない');
+    offseasonDone = true;
+    switch (o) {
+      case Offseason.camp:
+        condition = condition.copyWith(fatigue: condition.fatigue + 12);
+        if (abilitiesOf(player.role).contains(focus)) {
+          exp = exp.add({categoryOf(focus): 8});
+        }
+        log.add('${_abilityJp(focus)}を鍛える自主トレに励んだ。');
+      case Offseason.family:
+        condition = condition.copyWith(
+            fatigue: condition.fatigue - 20, morale: condition.morale + 20);
+        log.add('家族とゆっくり過ごして、英気を養った。');
+      case Offseason.rehab:
+        condition = condition.copyWith(
+          fatigue: condition.fatigue - 15,
+          injuredTerms: max(0, condition.injuredTerms - 1),
+        );
+        log.add('体のケアと調整に専念した。');
+    }
   }
 
   /// 日本に戻れる時: 海外にいて、プロの年の最初。
@@ -1041,6 +1082,7 @@ class Game {
   void _endYear() {
     final before = stage;
     slot = 0;
+    offseasonDone = false;
     seasonProgress = null;
     player = endOfYear(player);
     condition = endOfYearCondition(condition);
@@ -1181,6 +1223,7 @@ class Game {
         'overseasTeam': overseasTeam,
         'teamBoost': teamBoost,
         'school': school.name,
+        'offseasonDone': offseasonDone,
         'faUsed': faUsed,
         'records': [for (final r in records) r.toJson()],
         'worldRecords': [for (final r in worldRecords) r.toJson()],
@@ -1250,6 +1293,7 @@ class Game {
     g.overseasTeam = j['overseasTeam'] as String?;
     g.teamBoost = (j['teamBoost'] as num?)?.toInt() ?? 0;
     g.school = School.parse(j['school']);
+    g.offseasonDone = (j['offseasonDone'] as bool?) ?? false;
     g.faUsed = (j['faUsed'] as bool?) ?? false;
     g.goal = Goal.fromJson(j['goal']);
     g.tactic = Tactic.values

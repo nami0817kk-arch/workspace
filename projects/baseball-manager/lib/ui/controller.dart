@@ -231,6 +231,15 @@ class GameController extends ChangeNotifier {
     _commit();
   }
 
+  /// オフの過ごし方を決める(プロの年のはじめ)。
+  void chooseOffseason(Offseason o) {
+    final g = game!;
+    final start = g.log.length;
+    g.chooseOffseason(o, focus);
+    recent = g.log.sublist(start);
+    _commit();
+  }
+
   /// 進学先を決める(入学の年だけ)。
   void chooseSchool(School sc) {
     final g = game!;
