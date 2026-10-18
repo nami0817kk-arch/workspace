@@ -134,6 +134,9 @@ String describeGame(Line g) {
   return parts.join(' / ');
 }
 
+/// 試合を決めた(勝ち+個人の出来が際立った)試合か。ログに「★殊勲」を付ける目安。
+bool isHeroGame(Line g, {required bool won}) => won && g.rating >= 75;
+
 /// 勝ち抜き戦の呼び名。最後は決勝、その前は準決勝、あとは「N回戦」。
 String roundLabel(int index, int total) {
   if (index == total - 1) return '決勝';

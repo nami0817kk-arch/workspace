@@ -798,7 +798,11 @@ class Game {
           corporate: route == Course.corporate, own: own);
       final d = describeGame(g.line);
       log.add('${g.won ? '○' : '●'} ${roundLabel(i, t.rounds)} vs $name'
-          '${d.isEmpty ? '' : ' — $d'}');
+          '${d.isEmpty ? '' : ' — $d'}'
+          '${isHeroGame(g.line, won: g.won) ? ' ★殊勲' : ''}');
+      if (i == t.rounds - 1 && g.won && isHeroGame(g.line, won: true)) {
+        _note('title', '決勝で殊勲の活躍');
+      }
     }
   }
 

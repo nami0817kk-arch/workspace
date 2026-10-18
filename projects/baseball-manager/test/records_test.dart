@@ -426,4 +426,13 @@ void main() {
           popularityOf(old, const []), lessThan(popularityOf(fresh, const [])));
     });
   });
+
+  test('殊勲の試合は、勝ち+個人の出来が高いときだけ', () {
+    const great =
+        Line(games: 1, atBats: 4, hits: 4, totalBases: 10, homeRuns: 2, rbi: 5);
+    const poor = Line(games: 1, atBats: 4, hits: 0);
+    expect(isHeroGame(great, won: true), isTrue);
+    expect(isHeroGame(great, won: false), isFalse);
+    expect(isHeroGame(poor, won: true), isFalse);
+  });
 }
