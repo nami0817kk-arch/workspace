@@ -13,6 +13,7 @@ import 'life_log.dart';
 import 'records.dart';
 import 'flavor.dart';
 import 'invest.dart';
+import 'rival_story.dart';
 import 'snapshot.dart';
 import 'world.dart';
 import 'season.dart';
@@ -797,6 +798,9 @@ class Game {
     }
     peakOverall = max(peakOverall, overall(player).round());
     overallHistory.add(overall(player).round());
+    // ライバルの人生の知らせ(進路・入団・活躍・引退)。
+    final rs = storyOfCharacter(cast.rival);
+    if (rs != null) log.addAll(rivalNews(rs, player.age));
 
     if (turnedPro) {
       proYears++;

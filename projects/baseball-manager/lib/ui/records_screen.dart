@@ -4,6 +4,7 @@ import '../game/career.dart';
 import '../game/game.dart';
 import '../game/snapshot.dart';
 import '../game/records.dart';
+import '../game/rival_story.dart';
 import '../game/world.dart';
 import 'art/career_chart.dart';
 
@@ -489,7 +490,11 @@ class _RivalCard extends StatelessWidget {
       child: ListTile(
         leading: const Icon(Icons.sports_kabaddi),
         title: Text('ライバル $rival'),
-        subtitle: Text('通算 $w勝 $l敗'),
+        subtitle: Text(
+            '通算 $w勝 $l敗'
+            '${snapshot.rivalTalent == null ? '' : '\n${rivalStatus(storyOf(rival, snapshot.rivalTalent!), snapshot.age)}'}',
+            key: const Key('rival-status')),
+        isThreeLine: snapshot.rivalTalent != null,
       ),
     );
   }

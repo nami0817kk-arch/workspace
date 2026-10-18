@@ -37,6 +37,7 @@ class PlayerSnapshot {
     this.parentName,
     this.money = 0,
     this.investTotal = 0,
+    this.rivalTalent,
   });
 
   final String name;
@@ -83,6 +84,9 @@ class PlayerSnapshot {
   final int money;
   final int investTotal;
 
+  /// ライバルの素質(物語を作るのに使う)。
+  final int? rivalTalent;
+
   int of(Ability a) => abilities[a] ?? 0;
 
   factory PlayerSnapshot.fromGame(Game g) => PlayerSnapshot(
@@ -111,6 +115,7 @@ class PlayerSnapshot {
         parentName: g.parentName,
         money: g.money,
         investTotal: g.invests.values.fold(0, (a, b) => a + b),
+        rivalTalent: g.cast.rival?.talent,
       );
 
   Map<String, dynamic> toJson() => {
@@ -139,6 +144,7 @@ class PlayerSnapshot {
         'parentName': parentName,
         'money': money,
         'investTotal': investTotal,
+        'rivalTalent': rivalTalent,
       };
 
   /// 項目を足すときは既定値を置く(殿堂の古い記録を壊さない)。
@@ -191,6 +197,7 @@ class PlayerSnapshot {
       parentName: j['parentName'] as String?,
       money: (j['money'] as num?)?.toInt() ?? 0,
       investTotal: (j['investTotal'] as num?)?.toInt() ?? 0,
+      rivalTalent: (j['rivalTalent'] as num?)?.toInt(),
     );
   }
 }
