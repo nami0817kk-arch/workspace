@@ -22,5 +22,6 @@ updates:
     directories:
       - "/projects/soccer-manager"
       - "/projects/soccer-career"
+      - "/projects/baseball-manager"
     schedule: { interval: weekly, day: monday }
     open-pull-requests-limit: 3
