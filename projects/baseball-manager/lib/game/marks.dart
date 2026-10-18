@@ -207,3 +207,76 @@ int childrenOf(String partnerName) => 1 + _hash(partnerName, 3) % 3;
 int cmFeeOf(int popularity) => popularity >= 90
     ? 15000
     : (popularity >= 70 ? 5000 : (popularity >= 40 ? 1000 : 0));
+
+const _slogans = [
+  '一丸',
+  '挑戦',
+  '突き進め',
+  '勝つ野球',
+  '全員野球',
+  '燃えろ',
+  '飛躍',
+  '不屈',
+  '前へ',
+  '頂点へ',
+];
+
+/// 球団の年間スローガン。球団名と年齢から決まる(年ごとに変わる)。
+String sloganOf(String team, int age) =>
+    _slogans[_hash(team, age) % _slogans.length];
+
+const _stadiums = [
+  '青波スタジアム',
+  '北斗ドーム',
+  '朱雀パーク',
+  '紅葉フィールド',
+  '銀嶺ドーム',
+  '黒潮スタジアム',
+  '碧海パーク',
+  '大和ドーム'
+];
+
+/// 本拠地の球場(球団名から決まる)。
+String stadiumOf(String team) => _stadiums[_hash(team, 9) % _stadiums.length];
+
+/// 身長・体重(名前から決まる体格に、年齢で成長する)。
+String bodyOf(String name, int age) {
+  final h = _hash(name, 11);
+  final base = 172 + h % 14; // 完成時 172〜185
+  final grow = age >= 18 ? 1.0 : (age - 6) / 12 * 0.5 + 0.5;
+  final cm = (base * (age >= 18 ? 1.0 : 0.72 + 0.28 * (age - 6) / 12)).round();
+  final kg = (cm - 100 + (h ~/ 7) % 10 - 2) * (age >= 18 ? 1.0 : grow);
+  return '身長${cm}cm 体重${kg.round()}kg';
+}
+
+const _hobbies = [
+  '釣り',
+  'ゲーム',
+  '読書',
+  '料理',
+  'ドライブ',
+  '映画鑑賞',
+  '筋トレ',
+  'サウナ',
+  '音楽',
+  '犬の散歩'
+];
+
+/// 趣味(名前から決まる)。
+String hobbyOf(String name) => _hobbies[_hash(name, 13) % _hobbies.length];
+
+/// 座右の銘。いちばん高い能力から。
+String mottoOf(Player p) {
+  final top =
+      p.abilities.entries.reduce((a, b) => b.value > a.value ? b : a).key;
+  return switch (top) {
+    Ability.contact => '「一球入魂」',
+    Ability.power => '「豪快に、大胆に」',
+    Ability.speed => '「足は裏切らない」',
+    Ability.fielding => '「守りは勝利の土台」',
+    Ability.eye => '「球をよく見よう」',
+    Ability.stuff => '「腕を振りきれ」',
+    Ability.control => '「丁寧に低めへ」',
+    Ability.stamina => '「最後に立っている者が勝つ」',
+  };
+}

@@ -161,6 +161,12 @@ class _ProfileTab extends StatelessWidget {
                           key: const Key('profile-affiliation')),
                       Text('出身: ${hometownOf(s.name)}',
                           key: const Key('profile-hometown')),
+                      Text('${bodyOf(s.name, s.age)} ・ 趣味: ${hobbyOf(s.name)}',
+                          key: const Key('profile-body'),
+                          style: Theme.of(context).textTheme.bodySmall),
+                      Text('座右の銘: ${mottoOf(_playerOf(s))}',
+                          key: const Key('profile-motto'),
+                          style: Theme.of(context).textTheme.bodySmall),
                       Text(
                           playerCardLine(
                               s.stage == Stage.retired ? Stage.pro : s.stage,

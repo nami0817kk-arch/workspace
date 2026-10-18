@@ -1039,6 +1039,11 @@ class Game {
     }
     _rotateCast(before);
     _newGoal();
+    if (turnedPro && phase != Phase.retired && proTeam != null) {
+      log.add('${player.age}歳シーズン開幕。${overseas ? overseasTeam : proTeam}'
+          'のスローガンは「${sloganOf(proTeam!, player.age)}」。'
+          '本拠地は${stadiumOf(proTeam!)}。');
+    }
   }
 
   /// 段階が変わったら、仲間とコーチが替わる(高校で恋人が現れる)。

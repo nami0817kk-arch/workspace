@@ -18,6 +18,7 @@ void main() {
   markTests2();
   markTests3();
   markTests4();
+  markTests5();
   test('通算の節目: 越えた年にだけ出る', () {
     expect(careerMarks(const Line(), const Line(hits: 150, homeRuns: 20)),
         containsAll(['プロ初安打', 'プロ初本塁打', '通算100安打']));
@@ -123,5 +124,18 @@ void markTests4() {
     expect(hometownOf('はると'), hometownOf('はると'));
     expect(hometownOf('はると'),
         endsWith(RegExp(r'[都道府県]').stringMatch(hometownOf('はると'))!));
+  });
+}
+
+void markTests5() {
+  test('スローガン・球場・体格・趣味・座右の銘は名前などから決まり、体格は成長する', () {
+    expect(sloganOf('青波ホークス', 20), sloganOf('青波ホークス', 20));
+    expect(stadiumOf('青波ホークス'), isNotEmpty);
+    expect(hobbyOf('はると'), isNotEmpty);
+    String cm(int age) =>
+        RegExp(r'身長(\d+)cm').firstMatch(bodyOf('はると', age))!.group(1)!;
+    expect(int.parse(cm(18)), greaterThan(int.parse(cm(8))));
+    expect(int.parse(cm(18)), inInclusiveRange(172, 185));
+    expect(mottoOf(_p(Role.batter, {Ability.power: 80})), contains('豪快'));
   });
 }
