@@ -945,7 +945,11 @@ class EndingView extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 3),
         child: Row(children: [
           Expanded(child: Text(k)),
-          Text(v, style: const TextStyle(fontWeight: FontWeight.bold))
+          const SizedBox(width: 8),
+          Flexible(
+              child: Text(v,
+                  textAlign: TextAlign.right,
+                  style: const TextStyle(fontWeight: FontWeight.bold)))
         ]),
       );
 }

@@ -959,6 +959,8 @@ void _rankTests() {
       _until((g) => g.stage == Stage.highSchool, seed: 5),
       _until((g) => g.stage == Stage.pro, seed: 5, potential: 90),
       _until((g) => false, seed: 5, potential: 90), // 引退まで
+      for (var sd = 1; sd <= 5; sd++)
+        _until((g) => false, seed: sd, potential: 70),
     ];
     for (final g in lives) {
       c.adopt(g);

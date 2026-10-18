@@ -15,6 +15,9 @@ void main(List<String> a) {
       name: 'ユウタ', role: Role.pitcher, rng: Random(seed), potential: 90);
   var n = 0;
   while (g.phase != Phase.retired && n++ < 4000) {
+    if (stage == 'pathChoice' && g.phase == Phase.pathChoice) {
+      break;
+    }
     if (stage != 'retired' &&
         g.phase == Phase.term &&
         g.stage.name == stage &&

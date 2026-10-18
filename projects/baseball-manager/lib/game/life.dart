@@ -856,7 +856,11 @@ const eventChance = 0.4;
 /// 今季の出来事。起きなければ null。
 /// `stage` と `cast` を渡すと、条件のある出来事(恋人・ライバルなど)も候補に入る。
 GameEvent? drawEvent(Random rng,
-    {double share = 1.0, Stage? stage, Cast? cast, String? exclude}) {
+    {double share = 1.0,
+    Stage? stage,
+    Cast? cast,
+    String? exclude,
+    Set<String> recent = const {}}) {
   if (rng.nextDouble() >= eventChance * share) return null;
   final pool = [
     for (final e in events)
@@ -864,11 +868,17 @@ GameEvent? drawEvent(Random rng,
           (stage != null && cast != null && e.when!(stage, cast)))
         e,
   ];
-  // 直前と同じ出来事は避ける(候補がそれしか無ければ仕方ない)。
-  final fresh = [
+  // 直前と同じ出来事、最近起きた出来事は避ける(候補が無くなるなら、避けるのをやめる)。
+  var fresh = [
     for (final e in pool)
-      if (e.id != exclude) e
+      if (e.id != exclude && !recent.contains(e.id)) e
   ];
+  if (fresh.length < 3) {
+    fresh = [
+      for (final e in pool)
+        if (e.id != exclude) e
+    ];
+  }
   final from = fresh.isEmpty ? pool : fresh;
   return from[rng.nextInt(from.length)];
 }

@@ -152,6 +152,46 @@ void main() {
       }
     });
 
+    test('最近起きた出来事は、他に候補があるうちは選ばれない', () {
+      final c = _cast();
+      final recent = {'rain-day', 'diet', 'friend', 'coach'};
+      for (var s = 0; s < 400; s++) {
+        final e = drawEvent(Random(s),
+            share: 10, stage: Stage.youth, cast: c, recent: recent);
+        if (e != null) expect(recent, isNot(contains(e.id)));
+      }
+    });
+
+    test('ゲーム中、直近3回のうちに同じ出来事が重ならない(プロ)', () {
+      for (var seed = 0; seed < 12; seed++) {
+        final g = Game.newGame(
+            name: 't', role: Role.batter, rng: Random(seed), potential: 95);
+        final seen = <String>[];
+        var steps = 0;
+        while (g.phase != Phase.retired && steps++ < 4000) {
+          g.autoSpend();
+          switch (g.phase) {
+            case Phase.term:
+              g.choose(g.condition.fatigue >= 60 ? Plan.rest : Plan.train,
+                  Ability.contact);
+              if (g.phase == Phase.event && g.stage == Stage.pro) {
+                final id = g.pendingEvent!.id;
+                final lastThree =
+                    seen.length < 3 ? seen : seen.sublist(seen.length - 3);
+                expect(lastThree, isNot(contains(id)), reason: 'seed $seed');
+                seen.add(id);
+              }
+            case Phase.event:
+              g.resolveEvent(0);
+            case Phase.pathChoice:
+              g.chooseRoute(Course.university);
+            case Phase.retired:
+              break;
+          }
+        }
+      }
+    });
+
     test('ゲーム中、続けて同じ出来事は起きない', () {
       for (var seed = 0; seed < 20; seed++) {
         final g = Game.newGame(

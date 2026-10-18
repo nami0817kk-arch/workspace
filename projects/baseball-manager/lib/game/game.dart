@@ -126,6 +126,9 @@ class Game {
   /// 直前に起きた出来事(同じものが続かないようにする)。
   String? _lastEventId;
 
+  /// 最近起きた出来事(同じものが続かないように。保存はしない)。
+  final List<String> _recentEvents = [];
+
   /// 今年の目標。年の初めに決まり、大会(プロはシーズン)の成績で達成かどうかが決まる。
   Goal? goal;
 
@@ -189,12 +192,18 @@ class Game {
     if (isTournamentSlot(stage, slot)) _playSummer();
 
     final e = drawEvent(rng,
-        share: share, stage: stage, cast: cast, exclude: _lastEventId);
+        share: share,
+        stage: stage,
+        cast: cast,
+        exclude: _lastEventId,
+        recent: _recentEvents.toSet());
     if (e == null) {
       _nextSlot();
     } else {
       pendingEvent = e;
       _lastEventId = e.id;
+      _recentEvents.add(e.id);
+      if (_recentEvents.length > 4) _recentEvents.removeAt(0);
       _eventFocus = f;
       phase = Phase.event;
     }
