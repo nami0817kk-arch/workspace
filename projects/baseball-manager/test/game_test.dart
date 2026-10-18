@@ -128,12 +128,13 @@ void main() {
     final g = _new(4, potential: 80);
     final before = g.player.of(Ability.contact);
     g.choose(Plan.train, Ability.contact);
+    expect(g.player.of(Ability.contact), before); // 出来事の前に確かめる
     if (g.phase == Phase.event) g.resolveEvent(0);
-    expect(g.player.of(Ability.contact), before);
+    final mid = g.player.of(Ability.contact);
     expect(g.exp.of(Category.batting), greaterThan(0));
     final n = g.spendAll(Ability.contact);
-    expect(g.player.of(Ability.contact), before + n);
-    expect(g.exp.of(Category.batting), lessThan(expCost(before + n)));
+    expect(g.player.of(Ability.contact), mid + n);
+    expect(g.exp.of(Category.batting), lessThan(expCost(mid + n)));
   });
 
   test('経験点は同じ種類の能力にしか使えない', () {

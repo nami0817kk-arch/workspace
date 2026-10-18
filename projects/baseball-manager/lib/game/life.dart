@@ -572,6 +572,166 @@ final List<GameEvent> events = [
         ),
       ],
       when: (stage, cast) => stage == Stage.pro),
+  GameEvent(
+      'media',
+      '雑誌の取材を受けることになった。',
+      [
+        EventChoice(
+          '堂々と答える',
+          (p, c, f) =>
+              (player: p, condition: c.copyWith(morale: c.morale + 12)),
+        ),
+        EventChoice(
+          '断って練習に集中する',
+          (p, c, f) => (
+            player: _gain(p, f, 1),
+            condition: c.copyWith(morale: c.morale + 2, fatigue: c.fatigue + 4)
+          ),
+        ),
+      ],
+      when: (stage, cast) => stage == Stage.pro),
+  GameEvent(
+      'trade-rumor',
+      'トレードの噂が耳に入ってきた。',
+      [
+        EventChoice(
+          '気にせず目の前に集中する',
+          (p, c, f) => (
+            player: _gain(p, f, 1),
+            condition: c.copyWith(morale: c.morale - 2)
+          ),
+        ),
+        EventChoice(
+          '球団に直接たずねる',
+          (p, c, f) => (player: p, condition: c.copyWith(morale: c.morale + 6)),
+        ),
+      ],
+      when: (stage, cast) => stage == Stage.pro),
+  GameEvent(
+      'rookie',
+      '期待の新人が入団してきた。',
+      [
+        EventChoice(
+          '負けじと練習量を増やす',
+          (p, c, f) => (
+            player: _gain(p, f, 2),
+            condition: c.copyWith(morale: c.morale + 4, fatigue: c.fatigue + 12)
+          ),
+        ),
+        EventChoice(
+          '面倒を見てやる',
+          (p, c, f) => (
+            player: p,
+            condition: c.copyWith(morale: c.morale + 10, fatigue: c.fatigue - 4)
+          ),
+        ),
+      ],
+      when: (stage, cast) => stage == Stage.pro),
+  GameEvent(
+      'sponsor',
+      '企業から広告のオファーが来た。',
+      [
+        EventChoice(
+          '受ける',
+          (p, c, f) => (
+            player: p,
+            condition: c.copyWith(morale: c.morale + 14, fatigue: c.fatigue + 8)
+          ),
+        ),
+        EventChoice(
+          '野球に専念したいと断る',
+          (p, c, f) => (
+            player: _gain(p, f, 1),
+            condition: c.copyWith(morale: c.morale + 4)
+          ),
+        ),
+      ],
+      when: (stage, cast) => stage == Stage.pro),
+  GameEvent(
+      'camp',
+      'オフに海外でのトレーニングに誘われた。',
+      [
+        EventChoice.risky('参加する', (p, c, f, rng) {
+          if (rng.nextDouble() < 0.7) {
+            return (
+              player: _gain(p, f, 3),
+              condition:
+                  c.copyWith(morale: c.morale + 8, fatigue: c.fatigue + 15)
+            );
+          }
+          return (
+            player: p,
+            condition: c.copyWith(morale: c.morale - 6, fatigue: c.fatigue + 18)
+          );
+        }),
+        EventChoice(
+          '体を休める',
+          (p, c, f) => (
+            player: p,
+            condition: c.copyWith(fatigue: c.fatigue - 15, morale: c.morale + 3)
+          ),
+        ),
+      ],
+      when: (stage, cast) => stage == Stage.pro),
+  GameEvent(
+      'hot-streak',
+      '調子がいい。バットも球も思い通りだ。',
+      [
+        EventChoice(
+          '勢いのまま攻める',
+          (p, c, f) => (
+            player: _gain(p, f, 2),
+            condition: c.copyWith(morale: c.morale + 8, fatigue: c.fatigue + 8)
+          ),
+        ),
+        EventChoice(
+          '落ち着いて基本に立ち返る',
+          (p, c, f) => (
+            player: _gain(p, f, 1),
+            condition: c.copyWith(morale: c.morale + 4)
+          ),
+        ),
+      ],
+      when: (stage, cast) => stage == Stage.pro || stage == Stage.highSchool),
+  GameEvent(
+      'school-trip',
+      '学校行事で、練習を休む日ができた。',
+      [
+        EventChoice(
+          '思いきり楽しむ',
+          (p, c, f) => (
+            player: p,
+            condition: c.copyWith(morale: c.morale + 14, fatigue: c.fatigue - 8)
+          ),
+        ),
+        EventChoice(
+          '朝だけ自主練をしておく',
+          (p, c, f) => (
+            player: _gain(p, f, 1),
+            condition: c.copyWith(morale: c.morale + 5)
+          ),
+        ),
+      ],
+      when: (stage, cast) =>
+          stage == Stage.juniorHigh || stage == Stage.highSchool),
+  GameEvent(
+      'new-glove',
+      '誕生日に、新しいグローブを買ってもらった。',
+      [
+        EventChoice(
+          '毎日手入れして使い込む',
+          (p, c, f) => (
+            player: _gain(p, Ability.fielding, 2),
+            condition: c.copyWith(morale: c.morale + 10)
+          ),
+        ),
+        EventChoice(
+          '友だちに自慢しにいく',
+          (p, c, f) =>
+              (player: p, condition: c.copyWith(morale: c.morale + 14)),
+        ),
+      ],
+      when: (stage, cast) => stage == Stage.youth),
   GameEvent('diet', '食事や睡眠を見直すことにした。', [
     EventChoice(
       '食事を変えて体を大きくする',
