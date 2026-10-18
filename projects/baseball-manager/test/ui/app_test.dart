@@ -965,6 +965,7 @@ void _rankTests() {
       _until((g) => g.stage == Stage.highSchool, seed: 5),
       _until((g) => g.stage == Stage.pro, seed: 5, potential: 90),
       _until((g) => false, seed: 5, potential: 90), // 引退まで
+      _until((g) => g.canUseFa, seed: 5, potential: 100), // FA権つきのプロ
       for (var sd = 1; sd <= 5; sd++)
         _until((g) => false, seed: sd, potential: 70),
     ];

@@ -21,6 +21,7 @@ import 'awards.dart';
 import 'marks.dart';
 import 'tactics.dart';
 import 'traits.dart';
+import 'training.dart' show abilityCap;
 
 /// いま何を待っているか。画面はこれを見て出すものを決める。
 enum Phase {
@@ -378,6 +379,15 @@ class Game {
     if (!wasInjured && (action == Plan.train || action == Plan.special)) {
       focusStreak = (lastFocus == f) ? focusStreak + 1 : 1;
       lastFocus = f;
+      if (focusStreak == 6 && rng.nextDouble() < 0.25) {
+        // 継続の先に開眼する(その能力が少し跳ねる)。
+        player = player.copyWith(abilities: {
+          ...player.abilities,
+          f: (player.of(f) + 2).clamp(0, abilityCap),
+        });
+        log.add('${_abilityJp(f)}を鍛え続けた先に、開眼した!(+2)');
+        _note('trait', '${_abilityJp(f)}に開眼');
+      }
       final k = categoryOf(f);
       if (streakBonus > 1 && gained[k] != null) {
         gained = {...gained, k: (gained[k]! * streakBonus).round()};
@@ -557,6 +567,17 @@ class Game {
   }
 
   // ── 内部 ──
+
+  String _abilityJp(Ability a) => switch (a) {
+        Ability.contact => 'ミート',
+        Ability.power => 'パワー',
+        Ability.speed => '走力',
+        Ability.fielding => '守備',
+        Ability.eye => '選球眼',
+        Ability.stuff => '球威',
+        Ability.control => '制球',
+        Ability.stamina => 'スタミナ',
+      };
 
   /// 友情タッグ・コーチ・恋人/家族への影響。経験点の量を返す。
   Map<Category, int> _afterCast(

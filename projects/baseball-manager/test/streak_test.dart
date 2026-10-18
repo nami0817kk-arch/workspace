@@ -46,4 +46,24 @@ void main() {
       ..remove('lastFocus');
     expect(Game.fromJson(j, Random(1)).focusStreak, 0);
   });
+  test('6回続けた先に、ときどき開眼する(+2)', () {
+    var found = false;
+    for (var sd = 0; sd < 60 && !found; sd++) {
+      final g = Game.newGame(
+          name: 't', role: Role.batter, rng: Random(sd), potential: 80);
+      var n = 0;
+      while (g.phase != Phase.retired && g.slot < 12 && n++ < 60 && !found) {
+        g.autoSpend();
+        if (g.phase == Phase.event) {
+          g.resolveEvent(0);
+          continue;
+        }
+        if (g.phase != Phase.term) break;
+        g.choose(g.condition.fatigue >= 60 ? Plan.rest : Plan.train,
+            Ability.contact);
+        found = g.log.any((l) => l.contains('開眼した'));
+      }
+    }
+    expect(found, isTrue);
+  });
 }
