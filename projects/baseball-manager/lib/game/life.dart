@@ -155,7 +155,10 @@ TermResult playTerm(
   for (final a in abilitiesOf(p.role)) {
     // 練習試合は特定の能力に偏らない。
     final f = action == Plan.match ? a : focus;
-    final x = yearlyDelta(p, a, f) * e.scale * share;
+    final x = yearlyDelta(p, a, f) *
+        e.scale *
+        share *
+        (action == Plan.study ? studyMultiplier(p.traits) : 1.0);
     if (x >= 0) {
       final cat = categoryOf(a);
       gained[cat] = (gained[cat] ?? 0) +
@@ -174,7 +177,7 @@ TermResult playTerm(
           (outcome == Outcome.bad ? 1.5 : 1.0);
   final dFatigue = e.fatigue > 0
       ? (e.fatigue * fatigueMultiplier(p.traits) * share).round()
-      : (e.fatigue * share).round();
+      : (e.fatigue * recoveryMultiplier(p.traits) * share).round();
   var dMorale = e.morale > 0
       ? (e.morale * moraleGainMultiplier(p.traits) * share).round()
       : (e.morale * moraleLossMultiplier(p.traits) * share).round();

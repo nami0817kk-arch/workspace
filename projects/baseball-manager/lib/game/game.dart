@@ -76,7 +76,7 @@ class Game {
       age: startAge,
       potential: potential ?? 30 + rng.nextInt(61),
       abilities: {for (final a in abilitiesOf(role)) a: 15},
-      traits: rollInnateTraits(rng),
+      traits: rollInnateTraits(rng, role),
     );
     final g = Game._(rng, p, Cast.initial(rng, role, p.traits), difficulty)
       .._wasTwoWay = role == Role.twoWay;
@@ -367,7 +367,8 @@ class Game {
       final mate = cast.pickTagMate(focus, rng);
       if (mate != null) {
         for (final k in out.keys.toList()) {
-          out[k] = (out[k]! * tagMultiplier).round();
+          out[k] = (out[k]! * tagMultiplier * tagTraitMultiplier(player.traits))
+              .round();
         }
         mate.addBond(8);
         log.add('${mate.name}と友情タッグ練習!');
@@ -448,8 +449,9 @@ class Game {
     final l = _league;
     final isPro = stage == Stage.pro;
     // 作戦: その大会だけ能力が変わる。研究はチーム力が上がる。
-    final fighter = tacticAdjusted(player, tactic);
-    final team = l.team + tacticTeamBonus(tactic);
+    final fighter = traitAdjusted(tacticAdjusted(player, tactic));
+    final team =
+        l.team + tacticTeamBonus(tactic) + traitTeamBonus(player.traits);
     final tournament = isPro
         ? null
         : playTournament(
@@ -572,11 +574,11 @@ class Game {
     log.add('${ev.name}の日本代表に選ばれた!');
     _note('world', '${ev.name}の日本代表に選出');
     final t = playTournament(
-      tacticAdjusted(player, Tactic.steady),
-      teamLevel: ev.team,
+      traitAdjusted(tacticAdjusted(player, Tactic.steady)),
+      teamLevel: ev.team + traitTeamBonus(player.traits),
       opponents: ev.opponents,
       rng: rng,
-      condition: condition.value,
+      condition: condition.value + worldBonus(player.traits),
     );
     final w = wrapWorld(event: ev, age: player.age, tournament: t);
     worldRecords.add(w.record);

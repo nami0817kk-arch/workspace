@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:baseball_manager/game/career.dart';
+import 'package:baseball_manager/game/characters.dart';
 import 'package:baseball_manager/game/life.dart';
 import 'package:baseball_manager/game/path.dart';
 import 'package:baseball_manager/game/player.dart';
@@ -148,5 +149,160 @@ void main() {
       expect(t.label, isNotEmpty);
       expect(t.description, isNotEmpty);
     }
+  });
+
+  group('増えた特性', () {
+    test('特性は24個以上。名前は重複せず、説明がある', () {
+      expect(Trait.values.length, greaterThanOrEqualTo(24));
+      expect(
+          Trait.values.map((t) => t.label).toSet().length, Trait.values.length);
+      for (final t in Trait.values) {
+        expect(t.label, isNotEmpty);
+        expect(t.description, isNotEmpty);
+        expect(RegExp(r'[a-z]{4,}').hasMatch(t.label + t.description), isFalse,
+            reason: t.name);
+      }
+    });
+
+    test('打者の特性は投手に、投手の特性は打者に与えない。二刀流は両方', () {
+      for (final t in Trait.values) {
+        if (t.forRole == TraitFor.batter) {
+          expect(t.appliesTo(Role.batter), isTrue);
+          expect(t.appliesTo(Role.pitcher), isFalse, reason: t.name);
+          expect(t.appliesTo(Role.twoWay), isTrue);
+        }
+        if (t.forRole == TraitFor.pitcher) {
+          expect(t.appliesTo(Role.pitcher), isTrue);
+          expect(t.appliesTo(Role.batter), isFalse, reason: t.name);
+          expect(t.appliesTo(Role.twoWay), isTrue);
+        }
+      }
+      for (var seed = 0; seed < 300; seed++) {
+        for (final role in Role.values) {
+          for (final t in rollInnateTraits(Random(seed), role)) {
+            expect(t.appliesTo(role), isTrue, reason: '${t.name} $role');
+          }
+        }
+      }
+    });
+
+    test('矛盾する組み合わせは同時に持てない', () {
+      expect(canGain({Trait.slugger}, Trait.contactHitter), isFalse);
+      expect(canGain({Trait.fireballer}, Trait.finesse), isFalse);
+      expect(canGain({Trait.quickRecovery}, Trait.slowRecovery), isFalse);
+      expect(canGain({Trait.moodMaker}, Trait.lonely), isFalse);
+      expect(canGain({Trait.leader}, Trait.lonely), isFalse);
+      expect(canGain({Trait.sunny}, Trait.moody), isFalse);
+      expect(canGain({Trait.slugger}, Trait.patient), isTrue);
+    });
+
+    test('試合用の能力: 特性ぶんだけ上がり下がりし、元の選手は変わらない', () {
+      final p = Player(
+        name: 't',
+        role: Role.batter,
+        age: 20,
+        potential: 50,
+        abilities: {for (final a in batterAbilities) a: 50},
+        traits: {Trait.slugger, Trait.speedster},
+      );
+      final adj = traitAdjusted(p);
+      expect(adj.of(Ability.power), 59);
+      expect(adj.of(Ability.contact), 48);
+      expect(adj.of(Ability.speed), 58);
+      expect(p.of(Ability.power), 50);
+      // 上限・下限
+      final top = p.copyWith(abilities: {
+        for (final a in batterAbilities) a: 98,
+      });
+      expect(traitAdjusted(top).of(Ability.power), 99);
+      // 特性が無ければ同じもの
+      expect(identical(traitAdjusted(p.copyWith(traits: {})), p), isFalse);
+      expect(traitAdjusted(p.copyWith(traits: {})).of(Ability.power), 50);
+    });
+
+    test('試合で実際に効く: 長距離砲は本塁打が増え、剛腕は三振が増える', () {
+      Player bat(Set<Trait> t) => Player(
+          name: 't',
+          role: Role.batter,
+          age: 22,
+          potential: 50,
+          abilities: {for (final a in batterAbilities) a: 55},
+          traits: t);
+      int hr(Player p) {
+        final rng = Random(5);
+        var n = 0;
+        for (var i = 0; i < 3000; i++) {
+          n += playGame(traitAdjusted(p), 60, rng).homeRuns;
+        }
+        return n;
+      }
+
+      expect(hr(bat({Trait.slugger})), greaterThan(hr(bat({}))));
+
+      Player pit(Set<Trait> t) => Player(
+          name: 't',
+          role: Role.pitcher,
+          age: 22,
+          potential: 50,
+          abilities: {for (final a in pitcherAbilities) a: 55},
+          traits: t);
+      int k(Player p) {
+        final rng = Random(5);
+        var n = 0;
+        for (var i = 0; i < 3000; i++) {
+          n += playGame(traitAdjusted(p), 60, rng).strikeouts;
+        }
+        return n;
+      }
+
+      expect(k(pit({Trait.fireballer})), greaterThan(k(pit({}))));
+    });
+
+    test('そのほかの効き方', () {
+      expect(traitTeamBonus({Trait.leader}), 3);
+      expect(traitTeamBonus({}), 0);
+      expect(recoveryMultiplier({Trait.quickRecovery}), 1.5);
+      expect(recoveryMultiplier({Trait.slowRecovery}), 0.6);
+      expect(recoveryMultiplier({}), 1.0);
+      expect(tagTraitMultiplier({Trait.moodMaker}), 1.5);
+      expect(tagTraitMultiplier({Trait.lonely}), 0.6);
+      expect(studyMultiplier({Trait.studious}), 1.4);
+      expect(worldBonus({Trait.worldStage}), 10);
+      expect(moraleGainMultiplier({Trait.moody}), greaterThan(1));
+      expect(moraleLossMultiplier({Trait.moody}), greaterThan(1));
+      // 一匹狼は練習の伸びが1割増える
+      expect(growthMultiplier({Trait.lonely}, 20), closeTo(1.1, 1e-9));
+    });
+
+    test('コーチは基本の特性を先に教え、覚えきったあとに個性派を教える', () {
+      final first =
+          teachableTrait(Stage.highSchool, {}, Random(1), Role.batter);
+      expect({Trait.clutch, Trait.genius, Trait.starPower}, contains(first));
+      // 基本の特性を3つとも持っていれば、個性派(長距離砲など)になる(上限4個の範囲で)
+      final later = teachableTrait(
+          Stage.highSchool,
+          {Trait.clutch, Trait.genius, Trait.starPower},
+          Random(1),
+          Role.batter);
+      expect(later, isNotNull);
+      expect({Trait.slugger, Trait.leader, Trait.moodMaker}, contains(later));
+    });
+
+    test('コーチは、役割に合わない特性を教えない', () {
+      for (var seed = 0; seed < 200; seed++) {
+        for (final stage in [
+          Stage.youth,
+          Stage.juniorHigh,
+          Stage.highSchool,
+          Stage.pathChoice,
+          Stage.pro
+        ]) {
+          final t = teachableTrait(stage, {}, Random(seed), Role.pitcher);
+          if (t != null) expect(t.appliesTo(Role.pitcher), isTrue);
+          final b = teachableTrait(stage, {}, Random(seed), Role.batter);
+          if (b != null) expect(b.appliesTo(Role.batter), isTrue);
+        }
+      }
+    });
   });
 }
