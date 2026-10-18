@@ -8,12 +8,39 @@ enum GoalKind { rounds, rank, battingAverage, homeRuns, era, wins }
 /// 年ごとの目標。大会(プロはシーズン)の成績で、達成かどうかが決まる。
 /// 達成すると経験点と気持ち、届かなくても少し気持ちが下がるだけ。
 class Goal {
-  Goal(this.kind, this.target, {this.achieved});
+  Goal(this.kind, this.target,
+      {this.achieved, this.level = 1, double? baseTarget})
+      : baseTarget = baseTarget ?? target;
 
   final GoalKind kind;
 
   /// 目標の値。回戦・順位・本数・勝利数は整数、打率・防御率は小数。
   final double target;
+
+  /// むずかしさ(0=やさしい / 1=ふつう / 2=むずかしい)。高いほど、達成のごほうびが大きい。
+  final int level;
+
+  /// 「ふつう」のときの値。やさしい・むずかしいは、ここから動かす。
+  final double baseTarget;
+
+  /// むずかしさを変えた目標。`maxRounds` は大会の全体の回戦数(回戦の目標の上限)。
+  Goal withLevel(int newLevel, {int maxRounds = 6}) {
+    final b = baseTarget;
+    final d = newLevel - 1; // -1, 0, +1
+    final t = switch (kind) {
+      GoalKind.rounds => (b + d).clamp(1, maxRounds).toDouble(),
+      GoalKind.rank => (b - d).clamp(1, 6).toDouble(),
+      GoalKind.battingAverage => (b + d * 0.020).clamp(0.150, 0.420),
+      GoalKind.homeRuns => d < 0
+          ? (b * 0.75).round().clamp(1, 60).toDouble()
+          : d > 0
+              ? (b * 1.3).ceil().clamp(1, 60).toDouble()
+              : b,
+      GoalKind.era => (b - d * 0.5).clamp(1.5, 7.0),
+      GoalKind.wins => (b + d * 3).clamp(1, 25).toDouble(),
+    };
+    return Goal(kind, t, level: newLevel, baseTarget: b);
+  }
 
   /// 判定済みなら達成したか。まだなら null。
   bool? achieved;
@@ -37,16 +64,24 @@ class Goal {
         GoalKind.wins => r.line.wins >= target,
       };
 
-  Map<String, dynamic> toJson() =>
-      {'kind': kind.name, 'target': target, 'achieved': achieved};
+  Map<String, dynamic> toJson() => {
+        'kind': kind.name,
+        'target': target,
+        'achieved': achieved,
+        'level': level,
+        'baseTarget': baseTarget,
+      };
 
   /// 項目を足すときは既定値を置く。
   static Goal? fromJson(Object? j) {
     if (j is! Map) return null;
     final kind = GoalKind.values.where((k) => k.name == j['kind']).firstOrNull;
     if (kind == null) return null;
-    return Goal(kind, (j['target'] as num?)?.toDouble() ?? 1,
-        achieved: j['achieved'] as bool?);
+    final target = (j['target'] as num?)?.toDouble() ?? 1;
+    return Goal(kind, target,
+        achieved: j['achieved'] as bool?,
+        level: ((j['level'] as num?)?.toInt() ?? 1).clamp(0, 2),
+        baseTarget: (j['baseTarget'] as num?)?.toDouble());
   }
 }
 
@@ -63,6 +98,17 @@ int goalRewardExp(Stage s) => switch (s) {
 
 const goalRewardMorale = 18;
 const goalMissMorale = -5;
+
+/// むずかしさごとの、ごほうびの倍率・気持ち。やさしいは少なく、むずかしいは多い。
+/// 達成のしやすさはおよそ 75% / 50% / 25% なので、期待値は やさしい<ふつう≒むずかしい。
+const goalExpScale = [0.5, 1.0, 2.0];
+const goalMoraleReward = [10, goalRewardMorale, 30];
+const goalMoraleMiss = [-3, goalMissMorale, -8];
+const goalLevelLabels = ['やさしい', 'ふつう', 'むずかしい'];
+
+/// その段階・むずかしさで達成したときの経験点(種類ごと)。
+int goalExpFor(Stage s, int level) =>
+    (goalRewardExp(s) * goalExpScale[level.clamp(0, 2)]).round();
 
 /// 折れ線の表から、`x` の値を補間する(端は外側に伸ばさない)。
 double _interp(List<(double, double)> table, double x) {

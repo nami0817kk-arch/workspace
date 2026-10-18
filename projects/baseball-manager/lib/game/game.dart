@@ -462,15 +462,31 @@ class Game {
     if (g == null || g.achieved != null) return;
     g.achieved = g.judge(r);
     if (g.achieved!) {
-      final n = goalRewardExp(stage);
+      final n = goalExpFor(stage, g.level);
       exp = exp.add(spreadExp(player.role, n));
-      condition =
-          condition.copyWith(morale: condition.morale + goalRewardMorale);
+      condition = condition.copyWith(
+          morale: condition.morale + goalMoraleReward[g.level]);
       log.add('今年の目標「${g.text}」を達成! 経験点+$n(全種類)');
     } else {
-      condition = condition.copyWith(morale: condition.morale + goalMissMorale);
+      condition = condition.copyWith(
+          morale: condition.morale + goalMoraleMiss[g.level]);
       log.add('今年の目標「${g.text}」には届かなかった。');
     }
+  }
+
+  /// 目標のむずかしさを選べる時(年の最初の行動の前)。
+  bool get canChooseGoal =>
+      goal != null &&
+      goal!.achieved == null &&
+      phase == Phase.term &&
+      slot == 0;
+
+  /// 目標のむずかしさを変える(0=やさしい / 1=ふつう / 2=むずかしい)。年の最初の行動の前だけ。
+  void chooseGoalLevel(int level) {
+    _require(Phase.term);
+    if (!canChooseGoal) throw StateError('いまは目標を選べない');
+    if (level < 0 || level > 2) throw ArgumentError('level $level');
+    goal = goal!.withLevel(level, maxRounds: _league.opponents.length);
   }
 
   /// 大会(アマチュア)またはシーズン(プロ)を行い、成績を残す。

@@ -1284,4 +1284,25 @@ void _rankTests() {
       }
     });
   });
+
+  group('目標のむずかしさの画面', () {
+    testWidgets('年の最初に3つから選べて、選ぶと目標が変わり、行動すると選べなくなる', (t) async {
+      final c = await _start(t);
+      c.newGame('テスト', Role.batter);
+      await t.pumpAndSettle();
+      expect(find.byKey(const Key('goal-picker')), findsOneWidget);
+      expect(find.byKey(const Key('goal-level-0')), findsOneWidget);
+      expect(find.byKey(const Key('goal-level-2')), findsOneWidget);
+      final normal = c.game!.goal!.target;
+      await t.tap(find.byKey(const Key('goal-level-2')));
+      await t.pumpAndSettle();
+      expect(c.game!.goal!.level, 2);
+      expect(c.game!.goal!.baseTarget, normal);
+      expect(find.textContaining('経験点+${goalExpFor(Stage.youth, 2)}(全種類)'),
+          findsOneWidget);
+      await t.tap(find.byKey(const Key('act-rest')));
+      await t.pumpAndSettle();
+      expect(find.byKey(const Key('goal-picker')), findsNothing);
+    });
+  });
 }

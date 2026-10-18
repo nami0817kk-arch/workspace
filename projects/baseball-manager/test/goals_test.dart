@@ -275,4 +275,149 @@ void main() {
       expect(old.goal, isNotNull); // 次の年から目標がつく
     });
   });
+
+  group('目標のむずかしさ', () {
+    final base = <Goal>[
+      Goal(GoalKind.rounds, 3),
+      Goal(GoalKind.rank, 3),
+      Goal(GoalKind.battingAverage, 0.280),
+      Goal(GoalKind.homeRuns, 20),
+      Goal(GoalKind.era, 3.50),
+      Goal(GoalKind.wins, 12),
+    ];
+
+    bool harderOrEqual(Goal hard, Goal easy) => switch (hard.kind) {
+          GoalKind.rank || GoalKind.era => hard.target <= easy.target,
+          _ => hard.target >= easy.target,
+        };
+
+    test('やさしい < ふつう < むずかしい(目標の値が動く)。ふつうは元のまま', () {
+      for (final g in base) {
+        final e = g.withLevel(0, maxRounds: 5);
+        final n = g.withLevel(1, maxRounds: 5);
+        final h = g.withLevel(2, maxRounds: 5);
+        expect(n.target, g.target, reason: g.kind.name);
+        expect(harderOrEqual(n, e), isTrue, reason: g.kind.name);
+        expect(harderOrEqual(h, n), isTrue, reason: g.kind.name);
+        expect(h.target == e.target, isFalse, reason: g.kind.name);
+        expect([e.level, n.level, h.level], [0, 1, 2]);
+        // 元の値を覚えているので、選び直しても元に戻れる
+        expect(h.withLevel(1, maxRounds: 5).target, g.target);
+        expect(e.withLevel(2, maxRounds: 5).target, h.target);
+      }
+    });
+
+    test('上限・下限を超えない(回戦数・順位・打率・防御率)', () {
+      expect(Goal(GoalKind.rounds, 5).withLevel(2, maxRounds: 5).target, 5);
+      expect(Goal(GoalKind.rounds, 1).withLevel(0, maxRounds: 5).target, 1);
+      expect(Goal(GoalKind.rank, 1).withLevel(2).target, 1);
+      expect(Goal(GoalKind.rank, 6).withLevel(0).target, 6);
+      expect(Goal(GoalKind.era, 1.6).withLevel(2).target, 1.5);
+      expect(Goal(GoalKind.homeRuns, 1).withLevel(0).target, 1);
+    });
+
+    test('ごほうびは むずかしいほど大きい(経験点・気持ち)', () {
+      for (final st in [Stage.youth, Stage.highSchool, Stage.pro]) {
+        expect(goalExpFor(st, 0), lessThan(goalExpFor(st, 1)));
+        expect(goalExpFor(st, 1), lessThan(goalExpFor(st, 2)));
+        expect(goalExpFor(st, 1), goalRewardExp(st)); // ふつうは従来どおり
+      }
+      expect(goalMoraleReward[1], goalRewardMorale);
+      expect(goalMoraleMiss[1], goalMissMorale);
+      expect(goalMoraleReward[0], lessThan(goalMoraleReward[2]));
+      expect(goalMoraleMiss[2], lessThan(goalMoraleMiss[0])); // 失敗の痛手も大きい
+    });
+
+    test('保存して読み直せる。古い保存(levelなし)はふつう', () {
+      final g = Goal(GoalKind.wins, 12).withLevel(2);
+      final back = Goal.fromJson(jsonDecode(jsonEncode(g.toJson())))!;
+      expect(back.level, 2);
+      expect(back.target, 15);
+      expect(back.baseTarget, 12);
+      final old = Goal.fromJson({'kind': 'wins', 'target': 12.0})!;
+      expect(old.level, 1);
+      expect(old.baseTarget, 12);
+    });
+
+    test('達成しやすさ: やさしい > ふつう > むずかしい(実際のシーズンで確かめる)', () {
+      final p = Player(
+          name: 't',
+          role: Role.batter,
+          age: 26,
+          potential: 50,
+          abilities: {for (final a in batterAbilities) a: 65});
+      final goals = [
+        Goal(GoalKind.battingAverage, 0.275),
+        Goal(GoalKind.homeRuns, 18),
+        Goal(GoalKind.rank, 3),
+      ];
+      for (final g in goals) {
+        final rate = <double>[];
+        for (var l = 0; l < 3; l++) {
+          var ok = 0;
+          const n = 200;
+          for (var seed = 0; seed < n; seed++) {
+            final ls = playLeagueSeason(p,
+                teamLevel: 65,
+                opponents: const [55, 60, 66, 72, 78],
+                rng: Random(seed));
+            final rec = SeasonRecord(
+                age: 26,
+                stage: Stage.pro,
+                line: ls.line,
+                teamWins: ls.wins,
+                teamLosses: ls.losses,
+                rank: ls.rank);
+            if (g.withLevel(l).judge(rec)) ok++;
+          }
+          rate.add(ok / n);
+        }
+        expect(rate[0], greaterThan(rate[1]), reason: '${g.kind.name} $rate');
+        expect(rate[1], greaterThan(rate[2]), reason: '${g.kind.name} $rate');
+      }
+    });
+
+    test('ゲームの中: 年の最初の行動の前だけ選べ、選ぶと目標とごほうびが変わる', () {
+      final g = Game.newGame(
+          name: 't', role: Role.batter, rng: Random(2), potential: 80);
+      expect(g.goal, isNotNull);
+      expect(g.canChooseGoal, isTrue);
+      final normal = g.goal!.target;
+      g.chooseGoalLevel(2);
+      expect(g.goal!.level, 2);
+      expect(g.goal!.baseTarget, normal);
+      g.chooseGoalLevel(0);
+      expect(g.goal!.level, 0);
+      expect(() => g.chooseGoalLevel(3), throwsArgumentError);
+      g.choose(Plan.rest, Ability.contact);
+      expect(g.canChooseGoal, isFalse);
+      expect(() => g.chooseGoalLevel(1), throwsStateError);
+    });
+
+    test('ゲームの中で大会が終わると、選んだむずかしさのごほうびが判定される', () {
+      for (final level in [0, 2]) {
+        for (var seed = 0; seed < 30; seed++) {
+          final g = Game.newGame(
+              name: 't', role: Role.batter, rng: Random(seed), potential: 80);
+          g.chooseGoalLevel(level);
+          final goalLevel = g.goal!.level;
+          var guard = 0;
+          while (g.records.isEmpty) {
+            if (++guard > 20) fail('大会が進まない');
+            g.phase == Phase.event
+                ? g.resolveEvent(0)
+                : g.choose(Plan.rest, Ability.contact);
+          }
+          expect(g.goal!.level, goalLevel);
+          expect(g.goal!.achieved, isNotNull);
+          final line = g.log.firstWhere((l) => l.startsWith('今年の目標'));
+          if (g.goal!.achieved!) {
+            expect(line, contains('経験点+${goalExpFor(Stage.youth, level)}'));
+            return;
+          }
+        }
+      }
+      fail('達成した年が見つからない');
+    });
+  });
 }

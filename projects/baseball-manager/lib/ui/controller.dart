@@ -190,6 +190,12 @@ class GameController extends ChangeNotifier {
   /// 殿堂(過去の選手)。新しい順。
   List<HistoryEntry> history = const [];
 
+  /// 今年の目標のむずかしさを選ぶ(年の最初の行動の前だけ)。
+  void chooseGoalLevel(int level) {
+    game!.chooseGoalLevel(level);
+    _commit();
+  }
+
   /// ポジションを決める(決められる時だけ)。
   void choosePosition(Pos pos) {
     final g = game!;

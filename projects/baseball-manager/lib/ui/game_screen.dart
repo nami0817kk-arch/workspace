@@ -268,6 +268,10 @@ class _StatusCard extends StatelessWidget {
             if (game.goal != null) ...[
               const SizedBox(height: 8),
               _GoalRow(game: game),
+              if (game.canChooseGoal) ...[
+                const SizedBox(height: 6),
+                _GoalPicker(game: game, controller: controller),
+              ],
             ],
             const SizedBox(height: 10),
             Row(children: [
@@ -1156,6 +1160,39 @@ class _TacticPicker extends StatelessWidget {
 }
 
 /// 今年の目標と、その状態。
+/// 目標のむずかしさを選ぶ。むずかしいほど、達成のごほうびが大きい。
+class _GoalPicker extends StatelessWidget {
+  const _GoalPicker({required this.game, required this.controller});
+  final Game game;
+  final GameController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    final g = game.goal!;
+    final maxRounds = game.stage == Stage.pro ? 6 : 5;
+    return Column(
+      key: const Key('goal-picker'),
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('目標のむずかしさ(むずかしいほど、ごほうびが大きい)',
+            style: Theme.of(context).textTheme.bodySmall),
+        const SizedBox(height: 4),
+        Wrap(spacing: 6, runSpacing: 4, children: [
+          for (var l = 0; l < 3; l++)
+            ChoiceChip(
+              key: Key('goal-level-$l'),
+              selected: g.level == l,
+              label: Text(
+                  '${goalLevelLabels[l]}: ${g.withLevel(l, maxRounds: maxRounds).text}'
+                  '(経験点+${goalExpFor(game.stage, l)})'),
+              onSelected: (_) => controller.chooseGoalLevel(l),
+            ),
+        ]),
+      ],
+    );
+  }
+}
+
 class _GoalRow extends StatelessWidget {
   const _GoalRow({required this.game});
   final Game game;
@@ -1168,7 +1205,7 @@ class _GoalRow extends StatelessWidget {
       true => ('達成!', const Color(0xFF2E9B3E)),
       false => ('未達', const Color(0xFF78909C)),
     };
-    final reward = goalRewardExp(game.stage);
+    final reward = goalExpFor(game.stage, g.level);
     return Container(
       key: const Key('goal-row'),
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
@@ -1187,7 +1224,7 @@ class _GoalRow extends StatelessWidget {
                 style: const TextStyle(fontWeight: FontWeight.bold)),
             Text(
               g.achieved == null
-                  ? '達成すると 経験点+$reward(全種類)・気持ち+$goalRewardMorale'
+                  ? '達成すると 経験点+$reward(全種類)・気持ち+${goalMoraleReward[g.level]}'
                   : (g.achieved! ? 'ごほうびをもらった' : '来年また挑戦しよう'),
               style: Theme.of(context).textTheme.bodySmall,
             ),
