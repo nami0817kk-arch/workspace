@@ -1,0 +1,104 @@
+# baseball-manager の Web版を Cloudflare Pages に公開する（soccer-career-pages.yml と同じ方針）。
+#
+# 公開されるのは **master に取り込まれたとき**（と、手で回したとき）だけ。
+# PR のブランチへの push では公開されない。
+#
+# 必要な Secrets: CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID
+# トークンは「アカウント / Cloudflare Pages / 編集」の権限が要る。
+#
+# 検証(analyze + test)は baseball-ci.yml が同じコミットに対して回すので、ここでは重複させない。
+name: baseball-manager Web版を公開する
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "projects/baseball-manager/**"
+      - ".github/workflows/baseball-pages.yml"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: baseball-pages
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: projects/baseball-manager
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      # Cloudflare Pages はプロジェクトのルートで配信するため base-href は "/"。
+      # 日本語フォントと CanvasKit は同梱のものを配る(外部CDNに頼らない)。
+      # **TEST_BUILD は付けない**(付けると管理者モードが最初からオンの「テスト版」になる)。
+      - name: Build web
+        run: flutter build web --release --base-href "/" --no-web-resources-cdn --pwa-strategy=none
+
+      # テスト版が公開に混ざっていないか。`kTestBuild` は const なので、入るかどうかは
+      # ビルド時に決まり、テストでは見えない。
+      - name: Check release build
+        run: |
+          # dart2js は日本語を \u エスケープで出すので、「テスト版」(U+30C6 30B9 30C8 7248)をその形で探す。
+          # 実測: TEST_BUILD 付きは 1 件、付けないビルドは 0 件。
+          if grep -q '\\u30c6\\u30b9\\u30c8\\u7248' build/web/main.dart.js; then
+            echo "::error::テスト版(TEST_BUILD)が公開ビルドに混ざっている"
+            exit 1
+          fi
+          test -s build/web/index.html
+          test -s build/web/main.dart.js
+
+      # 無ければ作る。既にあれば重複エラーが返るだけで、後続には影響しない。
+      # production_branch を master に固定するのが要点。デプロイ時の --branch と
+      # ずれると本番ではなくプレビュー用の別URLに出てしまう。
+      - name: Ensure Cloudflare Pages project exists
+        run: |
+          curl -s -o /dev/null -w "%{http_code}\n" -X POST \
+            "https://api.cloudflare.com/client/v4/accounts/${{ secrets.CLOUDFLARE_ACCOUNT_ID }}/pages/projects" \
+            -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            --data '{"name":"baseball-manager","production_branch":"master"}'
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: projects/baseball-manager
+          command: pages deploy build/web --project-name=baseball-manager --branch=master
+
+      # **配信されている中身を確かめる。** ファイルを置いたかどうかでは足りない。
+      # 公開URLはプロジェクトごとに決まる(名前が使われていると末尾に文字が付く)ので、
+      # API から取る。反映に少し間があるので、少し待ってから見る。
+      - name: Check the published site
+        run: |
+          set -euo pipefail
+          host=$(curl -sS --max-time 20 \
+            "https://api.cloudflare.com/client/v4/accounts/${{ secrets.CLOUDFLARE_ACCOUNT_ID }}/pages/projects/baseball-manager" \
+            -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
+            | python3 -c "import sys,json; print(json.load(sys.stdin)['result']['subdomain'])")
+          echo "公開先: https://$host"
+          sleep 20
+          fail=0
+          for p in "" main.dart.js flutter_bootstrap.js; do
+            code=$(curl -sS --max-time 30 -o /dev/null -w '%{http_code}' "https://$host/$p")
+            if [ "$code" = "200" ]; then echo "  OK  /$p"; else echo "::error::/$p が $code"; fail=1; fi
+          done
+          body=$(curl -sS --max-time 20 "https://$host/")
+          case "$body" in
+            *flutter_bootstrap.js*) echo "  OK  トップページがアプリの入口";;
+            *) echo "::error::トップページがアプリの入口ではない"; fail=1;;
+          esac
+          exit $fail

@@ -236,3 +236,12 @@ soccer-manager / soccer-career の野球版。**中核は「試合中の采配�
 ## エピローグ
 
 エンディングの称号の下に、引退後のひとこと(`epilogueOf`)が出る。称号・二刀流・ライバルとの勝敗・結婚から決まり、乱数は使わない(同じ一生なら同じ文)。
+
+## Web版の公開（2026-10-18 にユーザーが「誰でも開けるURLで」と決定）
+
+- `.github/workflows/baseball-pages.yml` が Cloudflare Pages（プロジェクト名 `baseball-manager`）へ公開する。**master に取り込まれたときと、手で回したときだけ**（PRのブランチでは公開されない）。
+- 必要な Secrets は他のサイトと同じ `CLOUDFLARE_API_TOKEN` / `CLOUDFLARE_ACCOUNT_ID`（Pages の編集権限）。
+- 公開ビルドは **`TEST_BUILD` を付けない**（付けると管理者モードが最初からオンのテスト版になる）。混ざっていないかはワークフローが検査する。
+- 公開URLは `https://<プロジェクトの subdomain>.pages.dev`（ワークフローのログに出る）。独自の `<名前>.dailyquarry.com` にするなら、Pages の Custom domains に足す（`docs/public-identity.md`）。
+- 公開物に個人名・連絡先を出さない（このアプリの画面には出していない）。広告・課金・法務ページはまだ無い。
+- 公開版でも管理者モード(設定から入れる)は使える。お金やランキングには絡まない単独プレイなので残しているが、残すかはユーザーが決める。
