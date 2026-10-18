@@ -349,10 +349,16 @@ Line playGame(
 /// 大会(トーナメント)の結果。
 class Tournament {
   const Tournament(
-      {required this.roundsWon, required this.rounds, required this.line});
+      {required this.roundsWon,
+      required this.rounds,
+      required this.line,
+      this.games = const []});
   final int roundsWon;
   final int rounds;
   final Line line;
+
+  /// 各試合の中身(相手の強さ・勝ったか・個人の成績)。
+  final List<TournamentGame> games;
 
   bool get champion => roundsWon == rounds;
 
@@ -360,6 +366,15 @@ class Tournament {
   /// `isDrafted` / `draftScore` の `achievement` に渡す。
   double get achievement =>
       100 * (0.6 * roundsWon / rounds) + 0.4 * line.rating;
+}
+
+/// 勝ち抜き戦の1試合。
+class TournamentGame {
+  const TournamentGame(
+      {required this.opponent, required this.won, required this.line});
+  final int opponent;
+  final bool won;
+  final Line line;
 }
 
 /// 自チームの強さ `teamLevel` で、`opponents` の順に戦う勝ち抜き戦。
@@ -374,6 +389,7 @@ Tournament playTournament(
 }) {
   var line = const Line();
   var won = 0;
+  final games = <TournamentGame>[];
   for (final opp in opponents) {
     final g = playGame(p, opp, rng);
     line += g;
@@ -382,10 +398,13 @@ Tournament playTournament(
             (g.rating - 50) / 200 +
             (condition + tournamentBonus(p.traits) - 50) / 500)
         .clamp(0.05, 0.95);
-    if (rng.nextDouble() >= pWin) break;
+    final win = rng.nextDouble() < pWin;
+    games.add(TournamentGame(opponent: opp, won: win, line: g));
+    if (!win) break;
     won++;
   }
-  return Tournament(roundsWon: won, rounds: opponents.length, line: line);
+  return Tournament(
+      roundsWon: won, rounds: opponents.length, line: line, games: games);
 }
 
 /// プロの1シーズン(リーグ戦)。

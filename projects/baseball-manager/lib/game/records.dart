@@ -113,6 +113,27 @@ String describeLine(Line l) {
   return parts.join(' / ');
 }
 
+/// 1試合の中身を短く(「3打数2安打 1本塁打」「6回 被安打2 奪三振7」)。
+String describeGame(Line g) {
+  final parts = <String>[];
+  if (g.atBats + g.walks > 0) {
+    parts.add('${g.atBats}打数${g.hits}安打'
+        '${g.homeRuns > 0 ? ' ${g.homeRuns}本塁打' : ''}'
+        '${g.rbi > 0 ? ' ${g.rbi}打点' : ''}');
+  }
+  if (g.faced > 0) {
+    parts.add('${g.inningsText}回 被安打${g.hitsAllowed} 奪三振${g.strikeouts}');
+  }
+  return parts.join(' / ');
+}
+
+/// 勝ち抜き戦の呼び名。最後は決勝、その前は準決勝、あとは「N回戦」。
+String roundLabel(int index, int total) {
+  if (index == total - 1) return '決勝';
+  if (index == total - 2 && total >= 3) return '準決勝';
+  return '${index + 1}回戦';
+}
+
 /// プロのシーズン成績からタイトルを決める。規定は試合数に比例(打席は3.1/試合、投球回は0.7/試合)。
 List<String> titlesOf(Line l, {required int games, required int rank}) {
   final t = <String>[];

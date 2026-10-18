@@ -576,6 +576,7 @@ class Game {
       );
       records.add(rec);
       _judgeGoal(rec);
+      _logRounds(tournament);
       if (tournament.champion) {
         championships++;
         log.add('夏の大会で優勝した!');
@@ -588,6 +589,19 @@ class Game {
       if (d.isNotEmpty) log.add('大会成績: $d');
     }
     _playWorld();
+  }
+
+  /// 勝ち抜き戦の各試合を、ログに残す(相手・勝ち負け・自分の出来)。
+  void _logRounds(Tournament t) {
+    final own = affiliationOf(stage, player.name, proTeam: proTeam);
+    for (var i = 0; i < t.games.length; i++) {
+      final g = t.games[i];
+      final name = opponentName(stage, player.age, i,
+          corporate: route == Course.corporate, own: own);
+      final d = describeGame(g.line);
+      log.add('${g.won ? '○' : '●'} ${roundLabel(i, t.rounds)} vs $name'
+          '${d.isEmpty ? '' : ' — $d'}');
+    }
   }
 
   /// この年に世界大会があれば、代表に選ばれたかを決め、選ばれたら日本代表として戦う。
@@ -614,6 +628,11 @@ class Game {
       condition: condition.value + worldBonus(player.traits),
     );
     final w = wrapWorld(event: ev, age: player.age, tournament: t);
+    for (var i = 0; i < t.games.length; i++) {
+      final d = describeGame(t.games[i].line);
+      log.add('${t.games[i].won ? '○' : '●'} ${roundLabel(i, t.rounds)} '
+          'vs ${ev.countries[i]}${d.isEmpty ? '' : ' — $d'}');
+    }
     worldRecords.add(w.record);
     final rec = w.record;
     if (rec.champion) {

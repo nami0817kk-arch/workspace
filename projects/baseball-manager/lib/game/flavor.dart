@@ -188,3 +188,44 @@ String playerCardLine(Stage stage, Player p, {Pos? position}) {
     positionOf(p, position),
   ].join(' ・ ');
 }
+
+const _oppYouth = ['北斗', '若葉', '黒潮', '大空', '赤城', '旭', '鷲羽', '松風', '蒼', '日向'];
+const _oppSchool = [
+  '桜丘',
+  '東雲',
+  '白鳳',
+  '岩城',
+  '翠嵐',
+  '天城',
+  '紫雲',
+  '栄光',
+  '潮見',
+  '雷鳴',
+  '鳳凰',
+  '明星'
+];
+const _oppUni = ['東都', '西海', '北辰', '南陵', '中京', '湘南', '浪速', '瀬戸'];
+const _oppCorp = ['大和製作所', '日の出重工', '三星ガス', '青空電機', '北辰食品', '新生運輸'];
+
+/// 勝ち抜き戦の相手の名前(架空)。同じ年・同じ回戦なら毎回同じ。自分の所属とは別の名前にする。
+String opponentName(Stage stage, int age, int round,
+    {bool corporate = false, String own = ''}) {
+  final pool = switch (stage) {
+    Stage.youth => _oppYouth.map((n) => '$nジュニアーズ').toList(),
+    Stage.juniorHigh => _oppSchool.map((n) => '$n中学').toList(),
+    Stage.highSchool => _oppSchool.map((n) => '$n高校').toList(),
+    Stage.pathChoice => corporate
+        ? List<String>.of(_oppCorp)
+        : _oppUni.map((n) => '$n大学').toList(),
+    _ => _oppSchool.map((n) => '$n高校').toList(),
+  };
+  var i = _h('$age/$round/${stage.index}') % pool.length;
+  // 自分の所属と同じ名前は避ける。
+  for (var k = 0;
+      k < pool.length &&
+          own.contains(pool[i].replaceAll(RegExp(r'(ジュニアーズ|中学|高校|大学)$'), ''));
+      k++) {
+    i = (i + 1) % pool.length;
+  }
+  return pool[i];
+}
