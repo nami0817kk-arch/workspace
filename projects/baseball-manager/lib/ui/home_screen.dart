@@ -29,6 +29,9 @@ class _HomeScreenState extends State<HomeScreen> {
   Role role = Role.batter;
   Difficulty difficulty = Difficulty.normal;
 
+  /// 二世として始めるときの親(殿堂の、結婚した選手)。なければ ふつうに始める。
+  HistoryEntry? heir;
+
   /// タイトルを素早く7回タップすると、管理者モードの入/切が切り替わる。
   void _tapTitle() {
     if (widget.controller.tapTitle()) {
@@ -41,6 +44,12 @@ class _HomeScreenState extends State<HomeScreen> {
     name.dispose();
     super.dispose();
   }
+
+  /// 二世の親にできる、殿堂の選手(結婚して引退した選手)。
+  List<HistoryEntry> get _heirCandidates => [
+        for (final e in widget.controller.history)
+          if (e.snapshot != null && e.snapshot!.married) e
+      ];
 
   @override
   Widget build(BuildContext context) {
@@ -128,10 +137,35 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox(height: 8),
                   Text(difficulty.description,
                       style: Theme.of(context).textTheme.bodySmall),
+                  if (_heirCandidates.isNotEmpty) ...[
+                    const SizedBox(height: 16),
+                    const Text('二世として始める'),
+                    const SizedBox(height: 8),
+                    DropdownButtonFormField<HistoryEntry?>(
+                      key: const Key('heir-select'),
+                      initialValue: heir,
+                      isExpanded: true,
+                      decoration: const InputDecoration(
+                          border: OutlineInputBorder(), isDense: true),
+                      items: [
+                        const DropdownMenuItem<HistoryEntry?>(
+                            value: null, child: Text('ふつうに始める')),
+                        for (final e in _heirCandidates)
+                          DropdownMenuItem<HistoryEntry?>(
+                              value: e,
+                              child: Text('${e.name}(${e.title})の子',
+                                  overflow: TextOverflow.ellipsis)),
+                      ],
+                      onChanged: (v) => setState(() => heir = v),
+                    ),
+                    const SizedBox(height: 4),
+                    Text('親の素質を受け継ぎ、良い特性をもらえることがあります。',
+                        style: Theme.of(context).textTheme.bodySmall),
+                  ],
                   const SizedBox(height: 24),
                   FilledButton(
-                    onPressed: () =>
-                        widget.controller.newGame(name.text, role, difficulty),
+                    onPressed: () => widget.controller
+                        .newGame(name.text, role, difficulty, heir?.snapshot),
                     child: const Text('はじめる'),
                   ),
                   const SizedBox(height: 16),

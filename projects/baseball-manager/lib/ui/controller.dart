@@ -295,10 +295,11 @@ class GameController extends ChangeNotifier {
   }
 
   void newGame(String name, Role role,
-      [Difficulty difficulty = Difficulty.normal]) {
+      [Difficulty difficulty = Difficulty.normal, PlayerSnapshot? parent]) {
     newlyUnlocked = const [];
     game = Game.newGame(
         difficulty: difficulty,
+        parent: parent,
         name: name.trim().isEmpty ? '名無し' : name.trim(),
         role: role,
         rng: _rng);

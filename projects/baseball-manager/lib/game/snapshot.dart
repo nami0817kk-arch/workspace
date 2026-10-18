@@ -34,6 +34,7 @@ class PlayerSnapshot {
     this.worldRecords = const [],
     this.position,
     this.overseasTeam,
+    this.parentName,
   });
 
   final String name;
@@ -73,6 +74,9 @@ class PlayerSnapshot {
   /// 海外(アメリカ)でいま所属している球団。海外にいなければ null。
   final String? overseasTeam;
 
+  /// 二世のとき、親の名前。
+  final String? parentName;
+
   int of(Ability a) => abilities[a] ?? 0;
 
   factory PlayerSnapshot.fromGame(Game g) => PlayerSnapshot(
@@ -98,6 +102,7 @@ class PlayerSnapshot {
         worldRecords: List.of(g.worldRecords),
         position: g.position,
         overseasTeam: g.overseas ? g.overseasTeam : null,
+        parentName: g.parentName,
       );
 
   Map<String, dynamic> toJson() => {
@@ -123,6 +128,7 @@ class PlayerSnapshot {
         'worldRecords': [for (final r in worldRecords) r.toJson()],
         'position': position?.name,
         'overseasTeam': overseasTeam,
+        'parentName': parentName,
       };
 
   /// 項目を足すときは既定値を置く(殿堂の古い記録を壊さない)。
@@ -172,6 +178,7 @@ class PlayerSnapshot {
       ],
       position: Pos.parse(j['position'] as String?),
       overseasTeam: j['overseasTeam'] as String?,
+      parentName: j['parentName'] as String?,
     );
   }
 }

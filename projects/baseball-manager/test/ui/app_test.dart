@@ -1337,4 +1337,42 @@ void _rankTests() {
       expect(c.game!.overseas, isFalse);
     });
   });
+
+  group('二世の画面', () {
+    Game marriedLife() {
+      for (var sd = 0; sd < 80; sd++) {
+        final g = _until((g) => false, seed: sd, potential: 90);
+        if (g.ending?.married ?? false) return g;
+      }
+      fail('結婚して引退した選手がいない');
+    }
+
+    testWidgets('殿堂に結婚した選手が居ると、二世として始められる', (t) async {
+      SharedPreferences.setMockInitialValues({});
+      final parent = marriedLife();
+      await SaveStore().saveHistory([HistoryEntry.of(parent)]);
+      final c = GameController(rng: Random(3));
+      _tall(t);
+      await t.pumpWidget(BaseballManagerApp(controller: c));
+      await t.pumpAndSettle();
+      expect(find.byKey(const Key('heir-select')), findsOneWidget);
+      await t.tap(find.byKey(const Key('heir-select')));
+      await t.pumpAndSettle();
+      await t.tap(find.textContaining('の子').last);
+      await t.pumpAndSettle();
+      await t.tap(find.text('はじめる'));
+      await t.pumpAndSettle();
+      expect(c.game!.parentName, parent.player.name);
+      // 選手情報に「○○の子(二世)」が出る
+      await t.tap(find.byKey(const Key('player-open')).first);
+      await t.pumpAndSettle();
+      expect(find.byKey(const Key('profile-parent')), findsOneWidget);
+    });
+
+    testWidgets('結婚した選手が居なければ、二世の選択は出ない', (t) async {
+      final c = await _start(t);
+      expect(c.history, isEmpty);
+      expect(find.byKey(const Key('heir-select')), findsNothing);
+    });
+  });
 }

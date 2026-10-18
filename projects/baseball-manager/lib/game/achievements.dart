@@ -106,6 +106,10 @@ final List<Achievement> achievements = [
       (s) => s.records.any((r) => r.overseas)),
   Achievement('overseas-champion', 'アメリカの頂点', 'アメリカのリーグで優勝する。',
       (s) => s.records.any((r) => r.overseas && r.rank == 1)),
+  Achievement(
+      'heir', '二世の誕生', '殿堂の選手の子(二世)として、一生を送る。', (s) => s.parentName != null),
+  Achievement('heir-legend', '親を超える', '二世で、レジェンドになる。',
+      (s) => s.parentName != null && s.endingTitle == 'レジェンド'),
   Achievement('hard-pro', '狭き門', '「むずかしい」で、プロ入りする。',
       (s) => s.difficulty == Difficulty.hard && s.proStartAge != null),
   Achievement('hard-legend', '不屈の伝説', '「むずかしい」で、レジェンドになる。',

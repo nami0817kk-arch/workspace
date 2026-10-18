@@ -12,6 +12,7 @@ import 'goals.dart';
 import 'life_log.dart';
 import 'records.dart';
 import 'flavor.dart';
+import 'snapshot.dart';
 import 'world.dart';
 import 'season.dart';
 import 'tactics.dart';
@@ -70,19 +71,41 @@ class Game {
     required Random rng,
     int? potential,
     Difficulty difficulty = Difficulty.normal,
+    PlayerSnapshot? parent,
   }) {
+    // 二世: 親の素質を受け継ぎ(半分は親ゆずり)、良い特性を1つもらえることがある。
+    final pot = potential ??
+        (parent == null
+            ? 30 + rng.nextInt(61)
+            : ((parent.potential * 0.5 + (30 + rng.nextInt(61)) * 0.5) + 8)
+                .round()
+                .clamp(0, 100));
+    var traits = rollInnateTraits(rng, role);
+    if (parent != null && rng.nextDouble() < 0.6) {
+      final cands = [
+        for (final t in parent.traits)
+          if (t.positive && t.appliesTo(role) && canGain(traits, t)) t
+      ];
+      if (cands.isNotEmpty) {
+        traits = gain(traits, cands[rng.nextInt(cands.length)]);
+      }
+    }
     final p = Player(
       name: name,
       role: role,
       age: startAge,
-      potential: potential ?? 30 + rng.nextInt(61),
+      potential: pot,
       abilities: {for (final a in abilitiesOf(role)) a: 15},
-      traits: rollInnateTraits(rng, role),
+      traits: traits,
     );
     final g = Game._(rng, p, Cast.initial(rng, role, p.traits), difficulty)
-      .._wasTwoWay = role == Role.twoWay;
+      .._wasTwoWay = role == Role.twoWay
+      ..parentName = parent?.name;
     g.overallHistory.add(overall(p).round());
     g._note('stage', '${stageNameOf(Stage.youth)}を始めた');
+    if (parent != null) {
+      g._note('stage', '${parent.name}の子として生まれた(二世)');
+    }
     g._newGoal();
     return g;
   }
@@ -124,6 +147,9 @@ class Game {
 
   /// 入団した球団(架空)。プロ入りしてから。
   String? proTeam;
+
+  /// 二世のとき、親の名前(殿堂の選手)。
+  String? parentName;
 
   /// 海外(アメリカ)のリーグでプレーしているか。移籍の判断はプロの間、年の最初だけ。
   bool overseas = false;
@@ -856,6 +882,7 @@ class Game {
         'proTeam': proTeam,
         'position': position?.name,
         'overseas': overseas,
+        'parentName': parentName,
         'overseasTeam': overseasTeam,
         'records': [for (final r in records) r.toJson()],
         'worldRecords': [for (final r in worldRecords) r.toJson()],
@@ -906,6 +933,7 @@ class Game {
     g.proTeam = j['proTeam'] as String?;
     g.position = Pos.parse(j['position'] as String?);
     g.overseas = (j['overseas'] as bool?) ?? false;
+    g.parentName = j['parentName'] as String?;
     g.overseasTeam = j['overseasTeam'] as String?;
     g.goal = Goal.fromJson(j['goal']);
     g.tactic = Tactic.values

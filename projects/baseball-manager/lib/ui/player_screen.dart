@@ -141,6 +141,9 @@ class _ProfileTab extends StatelessWidget {
                       Text(
                           '${s.age}歳  ${s.endingTitle == null ? stageNameOf(s.stage) : '引退'}'),
                       Text(roleNameOf(s.role)),
+                      if (s.parentName != null)
+                        Text('${s.parentName}の子(二世)',
+                            key: const Key('profile-parent')),
                       Text(
                           affiliationOf(
                               s.stage == Stage.retired ? Stage.pro : s.stage,
