@@ -322,9 +322,12 @@ class GameController extends ChangeNotifier {
   /// 今回のできごとから、見せる価値のある節目を拾う。
   void _detect(Stage before, Game g, List<String> lines) {
     final name = g.player.name;
-    if (lines.any((l) => l.contains('ドラフトで指名された'))) {
-      pending
-          .add(Milestone(MilestoneKind.draft, 'ドラフト指名!', '$nameは、プロの世界へ飛び込む。'));
+    final pick = lines.where((l) => l.contains('ドラフトで指名された')).firstOrNull;
+    if (pick != null) {
+      // 「ドラフトで指名された! ○○ から3位指名。」の後ろ(球団と順位)を添える。
+      final detail = pick.replaceFirst('ドラフトで指名された!', '').trim();
+      pending.add(Milestone(MilestoneKind.draft, 'ドラフト指名!',
+          '$nameは、プロの世界へ飛び込む。${detail.isEmpty ? '' : '\n$detail'}'));
     }
     final after = g.stage;
     if (after != before &&

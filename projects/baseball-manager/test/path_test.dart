@@ -1,6 +1,8 @@
 import 'dart:math';
 
 import 'package:baseball_manager/game/career.dart';
+import 'package:baseball_manager/game/game.dart';
+import 'package:baseball_manager/game/life.dart';
 import 'package:baseball_manager/game/path.dart';
 import 'package:baseball_manager/game/player.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -64,5 +66,55 @@ void main() {
     expect(mustRetire(_batter(80), 0), isFalse);
     expect(canChooseRetire(Stage.pro), isTrue);
     expect(canChooseRetire(Stage.highSchool), isFalse);
+  });
+
+  group('指名順位と球団', () {
+    test('余裕が大きいほど上位(1〜6位)', () {
+      var prev = 7;
+      for (var m = 0.0; m <= 40; m += 1) {
+        final r = draftRound(m);
+        expect(r, inInclusiveRange(1, 6));
+        expect(r, lessThanOrEqualTo(prev));
+        prev = r;
+      }
+      expect(draftRound(30), 1);
+      expect(draftRound(0), 6);
+    });
+
+    test('球団は架空の名前で、重複しない', () {
+      expect(draftTeams.toSet().length, draftTeams.length);
+      expect(draftTeams.length, greaterThanOrEqualTo(6));
+    });
+
+    test('指名されると、ログに球団と順位が出る', () {
+      var found = 0;
+      for (var seed = 0; seed < 40 && found < 3; seed++) {
+        final g = Game.newGame(
+            name: 't', role: Role.batter, rng: Random(seed), potential: 95);
+        var n = 0;
+        while (
+            g.phase != Phase.retired && g.proStartAge == null && n++ < 3000) {
+          g.autoSpend();
+          switch (g.phase) {
+            case Phase.term:
+              g.choose(g.condition.fatigue >= 60 ? Plan.rest : Plan.train,
+                  Ability.contact);
+            case Phase.event:
+              g.resolveEvent(0);
+            case Phase.pathChoice:
+              g.chooseRoute(Course.university);
+            case Phase.retired:
+              break;
+          }
+        }
+        if (g.proStartAge != null) {
+          found++;
+          final l = g.log.firstWhere((l) => l.contains('ドラフトで指名された'));
+          expect(draftTeams.any(l.contains), isTrue, reason: l);
+          expect(RegExp(r'[1-6]位指名').hasMatch(l), isTrue, reason: l);
+        }
+      }
+      expect(found, greaterThan(0));
+    });
   });
 }

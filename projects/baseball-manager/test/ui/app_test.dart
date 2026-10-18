@@ -677,7 +677,7 @@ void _rankTests() {
     expect(find.text('年度別成績'), findsOneWidget);
     await t.tap(find.byKey(const Key('tab-career')));
     await t.pumpAndSettle();
-    expect(find.textContaining('ドラフトで指名され、プロ入り'), findsOneWidget);
+    expect(find.textContaining('位指名を受けて、プロ入り'), findsOneWidget);
     expect(find.textContaining('中学に進んだ'), findsOneWidget);
   });
 

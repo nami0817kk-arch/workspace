@@ -68,3 +68,26 @@ bool mustRetire(Player p, int lowYears) =>
 
 /// 引退を自分で選べるのはプロの段階だけ。
 bool canChooseRetire(Stage s) => s == Stage.pro;
+
+/// ドラフトの指名順位(1〜6位)。判定の余裕(運を含む得点がラインをどれだけ上回ったか)が大きいほど上位。
+/// 結果の見せ方だけで、合否には関わらない。
+int draftRound(double margin) {
+  if (margin >= 25) return 1;
+  if (margin >= 18) return 2;
+  if (margin >= 12) return 3;
+  if (margin >= 7) return 4;
+  if (margin >= 3) return 5;
+  return 6;
+}
+
+/// 架空の球団名(実在の球団・商標は使わない)。
+const draftTeams = [
+  '青波ホークス',
+  '北斗ベアーズ',
+  '朱雀ファルコンズ',
+  '紅葉ジャガーズ',
+  '銀嶺ライオンズ',
+  '黒潮マリナーズ',
+  '碧海ドルフィンズ',
+  '大和スターズ',
+];

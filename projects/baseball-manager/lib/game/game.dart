@@ -584,12 +584,17 @@ class Game {
   }
 
   void _draft() {
-    if (isDrafted(player, recentAchievement, rng,
-        lineShift: difficulty.draftShift)) {
+    final luck = (rng.nextDouble() * 2 - 1) * draftLuck;
+    final margin = draftScore(player, recentAchievement) +
+        luck -
+        (draftLine + difficulty.draftShift);
+    if (margin >= 0) {
       turnedPro = true;
       proStartAge = player.age;
-      log.add('ドラフトで指名された!');
-      _note('draft', 'ドラフトで指名され、プロ入り');
+      final team = draftTeams[rng.nextInt(draftTeams.length)];
+      final round = draftRound(margin);
+      log.add('ドラフトで指名された! $team から$round位指名。');
+      _note('draft', '$team から$round位指名を受けて、プロ入り');
     } else if (route == null) {
       log.add('ドラフトで指名されなかった。');
       _note('draft', 'ドラフトで指名されなかった');
