@@ -87,6 +87,16 @@ String fmtRate(double? v) {
   return v < 1 ? s.substring(1) : s;
 }
 
+/// パーセント(0.123 → 12.3%)。
+String fmtPct(double? v) =>
+    v == null ? '-' : '${(v * 100).toStringAsFixed(1)}%';
+
+/// 小さい数(WHIPや9回あたり): 小数2桁。
+String fmt2(double? v) => v == null ? '-' : v.toStringAsFixed(2);
+
+/// 指標(整数。100が平均)。
+String fmtPlus(int? v) => v == null ? '-' : '$v';
+
 String fmtEra(double? v) => v == null ? '-' : v.toStringAsFixed(2);
 
 /// 成績の短い説明(画面のログ用)。打者・投手のどちらか、または両方。

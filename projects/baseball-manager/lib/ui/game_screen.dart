@@ -285,19 +285,22 @@ class _StatusCard extends StatelessWidget {
               ),
             ]),
             const SizedBox(height: 8),
-            Row(children: [
-              Icon(_moodIcon(m), color: _moodColor(m), size: 22),
-              const SizedBox(width: 6),
-              Text('やる気: ${m.label}',
-                  style: Theme.of(context).textTheme.titleSmall),
-              if (c.injured) ...[
-                const SizedBox(width: 12),
-                const Icon(Icons.healing, color: Color(0xFFD32F2F), size: 18),
-                const SizedBox(width: 4),
-                const Text('怪我で安静中',
-                    style: TextStyle(color: Color(0xFFD32F2F))),
-              ],
-            ]),
+            Wrap(
+                crossAxisAlignment: WrapCrossAlignment.center,
+                spacing: 6,
+                runSpacing: 4,
+                children: [
+                  Icon(_moodIcon(m), color: _moodColor(m), size: 22),
+                  Text('やる気: ${m.label}',
+                      style: Theme.of(context).textTheme.titleSmall),
+                  if (c.injured) ...[
+                    const SizedBox(width: 6),
+                    const Icon(Icons.healing,
+                        color: Color(0xFFD32F2F), size: 18),
+                    const Text('怪我で安静中',
+                        style: TextStyle(color: Color(0xFFD32F2F))),
+                  ],
+                ]),
             if (spendable)
               Padding(
                 padding: const EdgeInsets.only(top: 8),

@@ -521,7 +521,7 @@ void _rankTests() {
     await t.pumpAndSettle();
     await t.tap(find.byKey(const Key('records-open')));
     await t.pumpAndSettle();
-    expect(find.textContaining('プロ通算'), findsOneWidget);
+    expect(find.textContaining('プロ通算 ('), findsOneWidget);
     // 順位(「3位」)か、優勝(「リーグ優勝」)のどちらかが表に出る。
     expect(
         find.byWidgetPredicate((w) =>
@@ -1221,6 +1221,31 @@ void _rankTests() {
         }
       }
       expect(sawNational, isTrue);
+    });
+  });
+
+  group('指標の画面', () {
+    testWidgets('成績画面に指標のカードが出て、項目をタップすると意味が出る', (t) async {
+      final c = await _start(t);
+      Game? g;
+      for (var sd = 0; sd < 80 && g == null; sd++) {
+        final x = _until(
+            (g) => g.stage == Stage.pro && g.records.any((r) => r.isLeague),
+            seed: sd,
+            potential: 100);
+        if (x.records.any((r) => r.isLeague)) g = x;
+      }
+      c.adopt(g!);
+      await t.pumpAndSettle();
+      await t.tap(find.byKey(const Key('records-open')));
+      await t.pumpAndSettle();
+      expect(find.byKey(const Key('metrics')), findsOneWidget);
+      expect(find.text('出塁率'), findsOneWidget);
+      expect(find.text('OPS+'), findsWidgets); // 指標カードと表の見出し
+      expect(find.text('打点'), findsWidgets);
+      await t.tap(find.text('出塁率'));
+      await t.pumpAndSettle();
+      expect(find.textContaining('塁に出た割合'), findsOneWidget);
     });
   });
 }

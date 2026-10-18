@@ -23,6 +23,11 @@ class Line {
     this.starts = 0,
     this.wins = 0,
     this.losses = 0,
+    this.doubles = 0,
+    this.triples = 0,
+    this.battingStrikeouts = 0,
+    this.rbi = 0,
+    this.stolenBases = 0,
   });
 
   /// 出場した試合数(打者または投手として)。
@@ -30,6 +35,9 @@ class Line {
 
   // 打者
   final int atBats, hits, totalBases, walks, homeRuns;
+
+  /// 打者の詳しい記録: 二塁打・三塁打・三振・打点・盗塁。
+  final int doubles, triples, battingStrikeouts, rbi, stolenBases;
 
   // 投手
   final int faced, outs, strikeouts, walksGiven, hitsAllowed, homeRunsAllowed;
@@ -55,6 +63,11 @@ class Line {
         starts: starts + o.starts,
         wins: wins + o.wins,
         losses: losses + o.losses,
+        doubles: doubles + o.doubles,
+        triples: triples + o.triples,
+        battingStrikeouts: battingStrikeouts + o.battingStrikeouts,
+        rbi: rbi + o.rbi,
+        stolenBases: stolenBases + o.stolenBases,
       );
 
   Line withDecision({bool win = false, bool loss = false}) => Line(
@@ -74,6 +87,11 @@ class Line {
         starts: starts,
         wins: wins + (win ? 1 : 0),
         losses: losses + (loss ? 1 : 0),
+        doubles: doubles,
+        triples: triples,
+        battingStrikeouts: battingStrikeouts,
+        rbi: rbi,
+        stolenBases: stolenBases,
       );
 
   // ── 打者の指標 ──
@@ -84,6 +102,23 @@ class Line {
       plateAppearances == 0 ? null : (hits + walks) / plateAppearances;
   double? get slugging => atBats == 0 ? null : totalBases / atBats;
   double? get ops => hasBatting ? (onBase ?? 0) + (slugging ?? 0) : null;
+
+  /// 長打率 − 打率(長打を打つ力だけを見る)。
+  double? get isolatedPower =>
+      atBats == 0 ? null : (slugging ?? 0) - (battingAverage ?? 0);
+
+  /// 打席あたりの四球率・三振率。
+  double? get walkRate =>
+      plateAppearances == 0 ? null : walks / plateAppearances;
+  double? get strikeoutRate =>
+      plateAppearances == 0 ? null : battingStrikeouts / plateAppearances;
+
+  /// 三振1つあたりの四球(選球眼の指標)。
+  double? get walkPerStrikeout =>
+      battingStrikeouts == 0 ? null : walks / battingStrikeouts;
+
+  /// OPS+ ふうの指標。リーグ平均(OPS .720)を100として、何倍か。
+  int? get opsPlus => ops == null ? null : (100 * ops! / leagueOps).round();
 
   // ── 投手の指標 ──
   bool get hasPitching => faced > 0;
@@ -99,6 +134,32 @@ class Line {
   }
 
   double? get era => outs == 0 ? null : runsAllowed * 27 / outs;
+
+  /// WHIP(1回あたりに出した走者の数)。
+  double? get whip =>
+      outs == 0 ? null : (walksGiven + hitsAllowed) / inningsPitched;
+
+  /// 9回あたりの奪三振・与四球・被本塁打。
+  double? get strikeoutsPer9 => outs == 0 ? null : strikeouts * 27 / outs;
+  double? get walksPer9 => outs == 0 ? null : walksGiven * 27 / outs;
+  double? get homeRunsPer9 => outs == 0 ? null : homeRunsAllowed * 27 / outs;
+
+  /// 与四球1つあたりの奪三振。
+  double? get strikeoutPerWalk =>
+      walksGiven == 0 ? null : strikeouts / walksGiven;
+
+  /// 被打率(打者のうち、四球を除いた対戦での被安打の割合)。
+  double? get battingAverageAgainst {
+    final ab = faced - walksGiven;
+    return ab <= 0 ? null : hitsAllowed / ab;
+  }
+
+  /// 勝率。勝ち負けがあれば。
+  double? get winRate => wins + losses == 0 ? null : wins / (wins + losses);
+
+  /// ERA+ ふうの指標。リーグ平均(防御率3.90)を100として、何倍良いか。
+  int? get eraPlus =>
+      era == null || era! <= 0 ? null : (100 * leagueEra / era!).round();
 
   /// 打者としての評価 0〜100(50 が平均)。打席が無ければ null。
   double? get battingRating {
@@ -137,6 +198,11 @@ class Line {
         'starts': starts,
         'wins': wins,
         'losses': losses,
+        'doubles': doubles,
+        'triples': triples,
+        'battingStrikeouts': battingStrikeouts,
+        'rbi': rbi,
+        'stolenBases': stolenBases,
       };
 
   /// 項目を足すときは既定値を置く。
@@ -159,12 +225,33 @@ class Line {
       starts: i('starts'),
       wins: i('wins'),
       losses: i('losses'),
+      doubles: i('doubles'),
+      triples: i('triples'),
+      battingStrikeouts: i('battingStrikeouts'),
+      rbi: i('rbi'),
+      stolenBases: i('stolenBases'),
     );
   }
 }
 
+/// リーグ平均のOPSと防御率(OPS+・ERA+ の基準)。
+const leagueOps = 0.720;
+const leagueEra = 3.90;
+
 /// 1打席あたりに足す、失点推定の基準値(平均的な環境で防御率が4点前後になる値)。
 const runBaseline = 0.10;
+
+/// その打席の打点(走者の動きは再現しないので、結果ごとの確率で決める)。
+int _rbiOf(AtBatResult r, Random rng) {
+  final x = rng.nextDouble();
+  return switch (r) {
+    AtBatResult.homeRun => 1 + (x < 0.40 ? 1 : 0) + (x < 0.12 ? 1 : 0),
+    AtBatResult.triple => x < 0.55 ? 1 : 0,
+    AtBatResult.double => x < 0.50 ? (x < 0.12 ? 2 : 1) : 0,
+    AtBatResult.single => x < 0.28 ? (x < 0.05 ? 2 : 1) : 0,
+    _ => 0,
+  };
+}
 
 /// 結果ごとの得点価値(平均的なアウトとの差。アウトは負)。
 double _runValue(AtBatResult r) => switch (r) {
@@ -198,7 +285,18 @@ Line playGame(
     final foe = Pitcher(control: opp, stuff: opp);
     for (var i = 0; i < _batterTurns; i++) {
       final r = simulateAtBat(foe, p.toBatter(), rng);
+      final onBase = r == AtBatResult.walk || r == AtBatResult.single;
       line += Line(
+        doubles: r == AtBatResult.double ? 1 : 0,
+        triples: r == AtBatResult.triple ? 1 : 0,
+        battingStrikeouts: r == AtBatResult.strikeout ? 1 : 0,
+        rbi: _rbiOf(r, rng),
+        // 出塁したあとの盗塁。走力が高いほど走る。
+        stolenBases: onBase &&
+                rng.nextDouble() <
+                    ((p.of(Ability.speed) - 35) / 300).clamp(0.0, 0.2)
+            ? 1
+            : 0,
         atBats: r == AtBatResult.walk ? 0 : 1,
         hits: const {
           AtBatResult.single,

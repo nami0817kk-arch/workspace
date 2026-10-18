@@ -55,6 +55,8 @@ class RecordsView extends StatelessWidget {
       children: [
         _Summary(records: rs, pro: pro),
         const SizedBox(height: 8),
+        _Metrics(records: pro.isNotEmpty ? pro : rs, pro: pro.isNotEmpty),
+        const SizedBox(height: 8),
         _Table(records: rs),
         if (titles.isNotEmpty) ...[
           const SizedBox(height: 8),
@@ -91,23 +93,33 @@ class RecordsView extends StatelessWidget {
 }
 
 class _Stat extends StatelessWidget {
-  const _Stat(this.label, this.value);
+  const _Stat(this.label, this.value, {this.hint, this.small = false});
   final String label;
   final String value;
 
+  /// 指標の意味(タップ・長押しで出る)。
+  final String? hint;
+  final bool small;
+
   @override
   Widget build(BuildContext context) {
-    return Column(
+    final t = Theme.of(context).textTheme;
+    final body = Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         Text(value,
-            style: Theme.of(context)
-                .textTheme
-                .titleLarge
+            style: (small ? t.titleMedium : t.titleLarge)
                 ?.copyWith(fontWeight: FontWeight.bold)),
-        Text(label, style: Theme.of(context).textTheme.bodySmall),
+        Text(label, style: t.bodySmall),
       ],
     );
+    return hint == null
+        ? body
+        : Tooltip(
+            message: hint!,
+            triggerMode: TooltipTriggerMode.tap,
+            child: body,
+          );
   }
 }
 
@@ -176,6 +188,88 @@ class _Summary extends StatelessWidget {
   }
 }
 
+/// 指標: 打率・本塁打だけでは見えない、出塁・長打・選球眼・投球の中身。
+/// ラベルをタップすると意味が出る。
+class _Metrics extends StatelessWidget {
+  const _Metrics({required this.records, required this.pro});
+  final List<SeasonRecord> records;
+  final bool pro;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = totalOf(records);
+    if (!l.hasBatting && !l.hasPitching) return const SizedBox.shrink();
+    final t = Theme.of(context).textTheme;
+    return Card(
+      key: const Key('metrics'),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(pro ? '指標(プロ通算)' : '指標(大会通算)', style: t.titleSmall),
+            Text('項目をタップすると意味が出ます。100が平均の指標は、大きいほど良い。', style: t.bodySmall),
+            if (l.hasBatting) ...[
+              const SizedBox(height: 10),
+              Text('打者', style: t.labelLarge),
+              const SizedBox(height: 4),
+              Wrap(spacing: 18, runSpacing: 8, children: [
+                _Stat('出塁率', fmtRate(l.onBase),
+                    small: true, hint: '出塁率: 打席のうち、塁に出た割合(安打+四球)。'),
+                _Stat('長打率', fmtRate(l.slugging),
+                    small: true, hint: '長打率: 1打数あたりの塁打。長打を打つ力。'),
+                _Stat('OPS', fmtRate(l.ops),
+                    small: true, hint: 'OPS: 出塁率+長打率。打者の総合力の目安。'),
+                _Stat('OPS+', fmtPlus(l.opsPlus),
+                    small: true,
+                    hint: 'OPS+: リーグ平均(OPS .720)を100とした指標。120なら平均の2割増し。'),
+                _Stat('ISO', fmtRate(l.isolatedPower),
+                    small: true, hint: 'ISO: 長打率-打率。長打だけの力(.200超えは強打者)。'),
+                _Stat('四球率', fmtPct(l.walkRate),
+                    small: true, hint: '四球率: 打席のうち、四球を選んだ割合。'),
+                _Stat('三振率', fmtPct(l.strikeoutRate),
+                    small: true, hint: '三振率: 打席のうち、三振した割合。低いほど良い。'),
+                _Stat('BB/K', fmt2(l.walkPerStrikeout),
+                    small: true, hint: 'BB/K: 三振1つあたりの四球。1.0を超えると選球眼が良い。'),
+                _Stat('打点', '${l.rbi}',
+                    small: true, hint: '打点: 自分の打撃で返した走者の数。'),
+                _Stat('盗塁', '${l.stolenBases}',
+                    small: true, hint: '盗塁: 走力を生かして進んだ塁の数。'),
+                _Stat('二塁打', '${l.doubles}', small: true),
+                _Stat('三塁打', '${l.triples}', small: true),
+              ]),
+            ],
+            if (l.hasPitching) ...[
+              const SizedBox(height: 10),
+              Text('投手', style: t.labelLarge),
+              const SizedBox(height: 4),
+              Wrap(spacing: 18, runSpacing: 8, children: [
+                _Stat('WHIP', fmt2(l.whip),
+                    small: true, hint: 'WHIP: 1回あたりに出した走者(安打+四球)。1.00未満なら超一流。'),
+                _Stat('奪三振率', fmt2(l.strikeoutsPer9),
+                    small: true, hint: '奪三振率: 9回あたりの三振。高いほど支配的。'),
+                _Stat('与四球率', fmt2(l.walksPer9),
+                    small: true, hint: '与四球率: 9回あたりの四球。低いほど制球が良い。'),
+                _Stat('K/BB', fmt2(l.strikeoutPerWalk),
+                    small: true, hint: 'K/BB: 四球1つあたりの三振。3.0を超えると制球・奪三振とも優秀。'),
+                _Stat('被打率', fmtRate(l.battingAverageAgainst),
+                    small: true, hint: '被打率: 対戦した打者(四球を除く)に打たれた割合。'),
+                _Stat('被本塁打率', fmt2(l.homeRunsPer9),
+                    small: true, hint: '被本塁打率: 9回あたりに打たれた本塁打。'),
+                _Stat('勝率', fmtRate(l.winRate),
+                    small: true, hint: '勝率: 勝ち ÷ (勝ち+負け)。'),
+                _Stat('ERA+', fmtPlus(l.eraPlus),
+                    small: true,
+                    hint: 'ERA+: リーグ平均(防御率3.90)を100とした指標。大きいほど良い。'),
+              ]),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class _Table extends StatelessWidget {
   const _Table({required this.records});
   final List<SeasonRecord> records;
@@ -215,12 +309,17 @@ class _Table extends StatelessWidget {
                     col('試合', num: true),
                     col('打率', num: true),
                     col('本', num: true),
-                    col('OPS', num: true)
+                    col('OPS', num: true),
+                    col('OPS+', num: true),
+                    col('打点', num: true),
+                    col('盗塁', num: true),
                   ],
                   if (pit) ...[
                     col('登板', num: true),
                     col('勝敗'),
                     col('防御率', num: true),
+                    col('ERA+', num: true),
+                    col('WHIP', num: true),
                     col('奪三振', num: true)
                   ],
                   if (records.any((r) => r.stage == Stage.pro)) col('年俸'),
@@ -253,6 +352,12 @@ class _Table extends StatelessWidget {
                           DataCell(Text(
                               r.line.hasBatting ? '${r.line.homeRuns}' : '-')),
                           DataCell(Text(fmtRate(r.line.ops))),
+                          DataCell(Text(fmtPlus(r.line.opsPlus))),
+                          DataCell(
+                              Text(r.line.hasBatting ? '${r.line.rbi}' : '-')),
+                          DataCell(Text(r.line.hasBatting
+                              ? '${r.line.stolenBases}'
+                              : '-')),
                         ],
                         if (pit) ...[
                           DataCell(Text(
@@ -261,6 +366,8 @@ class _Table extends StatelessWidget {
                               ? '${r.line.wins}-${r.line.losses}'
                               : '-')),
                           DataCell(Text(fmtEra(r.line.era))),
+                          DataCell(Text(fmtPlus(r.line.eraPlus))),
+                          DataCell(Text(fmt2(r.line.whip))),
                           DataCell(Text(r.line.hasPitching
                               ? '${r.line.strikeouts}'
                               : '-')),
