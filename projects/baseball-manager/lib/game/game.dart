@@ -18,6 +18,7 @@ import 'snapshot.dart';
 import 'world.dart';
 import 'season.dart';
 import 'awards.dart';
+import 'marks.dart';
 import 'tactics.dart';
 import 'traits.dart';
 
@@ -325,7 +326,9 @@ class Game {
     exp = exp.add(gained);
     lastGain = gained;
     lastOutcome = wasInjured ? Outcome.normal : r.outcome;
-    if (r.gotInjured) log.add('怪我をしてしまった。');
+    if (r.gotInjured) {
+      log.add('怪我をしてしまった(${injuryNameOf(player.age, slot)})。');
+    }
     if (isTournamentSlot(stage, slot)) {
       _playSummer();
     } else if (stage == Stage.pro && slot < 6) {
@@ -759,6 +762,15 @@ class Game {
       for (final w in awards) {
         log.add('表彰: $w!');
       }
+      var careerBefore = const Line();
+      for (final r in proBefore) {
+        careerBefore += r.line;
+      }
+      for (final m in careerMarks(careerBefore, careerBefore + league.line)) {
+        log.add('記録達成: $m!');
+        _note('title', m);
+      }
+      log.add(coachWordOf(player));
       // 年俸が資産に入る。
       money += salaryOf(rec);
       // 契約更改(前の年からの増減)。保存はせず、成績から計算する。

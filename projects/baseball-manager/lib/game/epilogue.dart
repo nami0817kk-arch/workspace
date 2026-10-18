@@ -3,7 +3,10 @@ import 'game.dart';
 /// 引退後のひとこと。結果(称号・プロ年数・結婚・二刀流・ライバル)から選ぶ。
 /// 乱数は使わず、同じ一生なら同じ文になる(共有しても同じ)。
 String epilogueOf(Ending e, String name,
-    {int worldChampion = 0, int worldPlayed = 0, int overseasYears = 0}) {
+    {int worldChampion = 0,
+    int worldPlayed = 0,
+    int overseasYears = 0,
+    int popularity = 0}) {
   final parts = <String>[];
   if (!e.madePro) {
     parts.add('$nameはプロの舞台には立てなかったが、野球で学んだことを胸に、新しい道を歩き始めた。');
@@ -22,6 +25,9 @@ String epilogueOf(Ending e, String name,
           ? '最後まで競い合ったライバルとの勝負は、勝ち越しで終えた。'
           : 'ライバルとの勝負は負け越したが、互いを高め合った日々は宝物だ。');
     }
+  }
+  if (e.madePro && popularity >= 70) {
+    parts.add('引退セレモニーには満員のファンが詰めかけ、$nameは花束と大きな拍手に包まれた。');
   }
   if (overseasYears > 0) {
     parts.add('海を渡ってアメリカでも$overseasYears年戦った経験は、$nameを一回り大きくした。');

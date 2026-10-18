@@ -1091,7 +1091,9 @@ class EndingView extends StatelessWidget {
                           game.worldRecords.where((r) => r.champion).length,
                       worldPlayed: game.worldRecords.length,
                       overseasYears:
-                          game.records.where((r) => r.overseas).length),
+                          game.records.where((r) => r.overseas).length,
+                      popularity:
+                          popularityOf(game.records, game.worldRecords)),
                   key: const Key('epilogue'),
                   style: Theme.of(context)
                       .textTheme

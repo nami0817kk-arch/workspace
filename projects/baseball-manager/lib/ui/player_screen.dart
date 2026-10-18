@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../game/flavor.dart';
+import '../game/marks.dart';
 
 import '../game/career.dart';
 import '../game/exp.dart';
@@ -89,6 +90,13 @@ String potentialStars(int potential) {
   return '★' * n + '☆' * (5 - n);
 }
 
+Player _playerOf(PlayerSnapshot s) => Player(
+    name: s.name,
+    role: s.role,
+    age: s.age,
+    potential: s.potential,
+    abilities: s.abilities);
+
 class _ProfileTab extends StatelessWidget {
   const _ProfileTab({required this.snapshot, required this.game});
   final PlayerSnapshot snapshot;
@@ -154,14 +162,17 @@ class _ProfileTab extends StatelessWidget {
                       Text(
                           playerCardLine(
                               s.stage == Stage.retired ? Stage.pro : s.stage,
-                              Player(
-                                  name: s.name,
-                                  role: s.role,
-                                  age: s.age,
-                                  potential: s.potential,
-                                  abilities: s.abilities),
+                              _playerOf(s),
                               position: s.position),
                           key: const Key('profile-card'),
+                          style: Theme.of(context).textTheme.bodySmall),
+                      Text(
+                          [
+                            if (nicknameOf(_playerOf(s)).isNotEmpty)
+                              '「${nicknameOf(_playerOf(s))}」',
+                            lineupRoleOf(_playerOf(s)),
+                          ].join(' '),
+                          key: const Key('profile-role'),
                           style: Theme.of(context).textTheme.bodySmall),
                       const SizedBox(height: 6),
                       Wrap(
