@@ -37,6 +37,25 @@ void main() {
     }
   });
 
+  test('追加の出来事(取材・少年野球教室など)は、段階が合うときだけ、低い確率で起きる', () {
+    final cast = Cast([]);
+    for (final id in ['interview', 'baseball-class']) {
+      final e = _ev(id);
+      expect(e.weight, lessThan(1));
+      expect(e.when!(Stage.pro, cast), isTrue);
+      expect(e.when!(Stage.youth, cast), isFalse);
+    }
+    expect(_ev('school-festival').when!(Stage.juniorHigh, cast), isTrue);
+    expect(_ev('school-festival').when!(Stage.pro, cast), isFalse);
+    final seen = <String>{};
+    final rng = Random(1);
+    for (var k = 0; k < 4000; k++) {
+      final e = drawEvent(rng, stage: Stage.youth, cast: cast);
+      if (e != null) seen.add(e.id);
+    }
+    expect(seen, isNot(contains('interview')));
+  });
+
   test('どの選択肢も、極端な状態でも体調・能力が範囲内に収まる(運しだいの選択肢も)', () {
     for (final e in events) {
       for (final ch in e.choices) {

@@ -239,13 +239,17 @@ class EventChoice {
 }
 
 class GameEvent {
-  const GameEvent(this.id, this.text, this.choices, {this.when});
+  const GameEvent(this.id, this.text, this.choices,
+      {this.when, this.weight = 1.0});
   final String id;
   final String text;
   final List<EventChoice> choices;
 
   /// 起きる条件。省略なら誰にでも起きうる。
   final bool Function(Stage stage, Cast cast)? when;
+
+  /// 選ばれやすさ(既定1)。足した出来事は低くして、既存の出来事の頻度を薄めない。
+  final double weight;
 }
 
 Player _gain(Player p, Ability a, int n) {
@@ -857,6 +861,78 @@ final List<GameEvent> events = [
         ),
       ],
       when: (stage, cast) => cast.lover != null),
+  GameEvent(
+      'interview',
+      '雑誌の取材を申し込まれた。',
+      [
+        EventChoice(
+            '受ける',
+            (p, c, f) => (
+                  player: p,
+                  condition:
+                      c.copyWith(morale: c.morale + 8, fatigue: c.fatigue + 5)
+                )),
+        EventChoice(
+            '練習に集中する',
+            (p, c, f) =>
+                (player: p, condition: c.copyWith(morale: c.morale + 2))),
+      ],
+      when: (stage, cast) => stage == Stage.pro,
+      weight: 0.25),
+  GameEvent(
+      'baseball-class',
+      '少年野球教室に呼ばれた。',
+      [
+        EventChoice(
+            '喜んで行く',
+            (p, c, f) => (
+                  player: p,
+                  condition:
+                      c.copyWith(morale: c.morale + 12, fatigue: c.fatigue + 8)
+                )),
+        EventChoice(
+            'オフに回してもらう',
+            (p, c, f) =>
+                (player: p, condition: c.copyWith(fatigue: c.fatigue - 5))),
+      ],
+      when: (stage, cast) => stage == Stage.pro,
+      weight: 0.25),
+  GameEvent(
+      'old-coach',
+      '小さいころのコーチが、試合を見に来てくれた。',
+      [
+        EventChoice(
+            'お礼を伝える',
+            (p, c, f) =>
+                (player: p, condition: c.copyWith(morale: c.morale + 12))),
+        EventChoice(
+            'アドバイスをもらう',
+            (p, c, f) => (
+                  player: _gain(p, f, 1),
+                  condition: c.copyWith(morale: c.morale + 5)
+                )),
+      ],
+      when: (stage, cast) => stage == Stage.highSchool || stage == Stage.pro,
+      weight: 0.25),
+  GameEvent(
+      'school-festival',
+      '学校のお祭りで、友だちと思い出をつくった。',
+      [
+        EventChoice(
+            '思いきり楽しむ',
+            (p, c, f) => (
+                  player: p,
+                  condition:
+                      c.copyWith(morale: c.morale + 12, fatigue: c.fatigue + 5)
+                )),
+        EventChoice(
+            '少しだけ顔を出す',
+            (p, c, f) =>
+                (player: p, condition: c.copyWith(morale: c.morale + 4))),
+      ],
+      when: (stage, cast) =>
+          stage == Stage.juniorHigh || stage == Stage.highSchool,
+      weight: 0.25),
 ];
 
 /// 出来事の起きる確率(1季節あたり)。
@@ -889,5 +965,11 @@ GameEvent? drawEvent(Random rng,
     ];
   }
   final from = fresh.isEmpty ? pool : fresh;
-  return from[rng.nextInt(from.length)];
+  final total = from.fold<double>(0, (a, e) => a + e.weight);
+  var x = rng.nextDouble() * total;
+  for (final e in from) {
+    x -= e.weight;
+    if (x < 0) return e;
+  }
+  return from.last;
 }
