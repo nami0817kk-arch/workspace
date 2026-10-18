@@ -1,0 +1,120 @@
+# 見せ場(約11秒): にらみ合い → 突進をスローでかわす → 回し蹴り → 壁へ叩きつけ → 追って跳び、かかと落とし → 勝利
+# 2026-10-18 時点の blender_show9.py を台本に起こしたもの。
+name: showpiece
+fps: 30
+tau_end: 10.0
+actors:
+  A:
+    color: [0.3, 0.68, 0.1]
+    scale: 1.0
+    base_x: -2.0
+    facing: 1
+    weapon: sword
+  B:
+    color: [0.8, 0.1, 0.08]
+    scale: 1.45
+    base_x: 2.6
+    facing: -1
+    heavy: true
+stage: {wall_x: 7.0, style: cave}
+slow:
+- {start: 1.85, end: 2.4, rate: 0.35}
+hits:
+- tau: 2.7
+  hold: 0.09
+  kind: kick
+  contact:
+    striker: A
+    effector: foot
+    target: {actor: B, point: hip}
+    adjust_keys: [2.7, 2.82]
+    tol: 0.12
+- tau: 3.0
+  hold: 0.06
+  kind: wall
+  pos: [7.0, 1.6]
+- tau: 5.05
+  hold: 0.11
+  kind: heel
+  contact:
+    striker: A
+    effector: foot
+    height: false
+    target: {actor: B, point: chest}
+    adjust_keys: [5.05]
+    tol: 0.25
+    max_anticipation: 30
+puffs:
+- tau: 3.9
+  kind: land
+  pos: [4.8, 0.0]
+- tau: 5.25
+  kind: land2
+  pos: [4.4, 0.0]
+camera:
+- [0.0, -0.3, 8.6]
+- [1.4, -0.3, 8.0]
+- [1.85, -0.3, 7.6]
+- [2.4, -0.9, 7.3]
+- [2.65, -0.9, 7.2]
+- [2.95, 0.2, 7.4]
+- [3.2, 3.4, 9.0]
+- [3.9, 4.0, 9.0]
+- [4.4, 4.2, 8.6]
+- [4.85, 4.4, 7.6]
+- [5.2, 4.6, 7.2]
+- [5.9, 4.6, 7.8]
+- [7.0, 4.6, 8.4]
+- [10.0, 3.6, 11.0]
+keys:
+  A:
+  - {t: 0.0, dx: 0.2}
+  - {t: 1.0, dx: 0.2, lean: 0.12, hz: 0.83}
+  - {t: 1.4, dx: 0.2, fa: 0.9, fe: 1.9, ra: 0.8, re: 1.9, hz: 0.8}
+  - {t: 1.85, dx: 0.2, hz: 0.78, lean: 0.05}
+  - {t: 2.0, dx: -0.1, hz: 0.52, lean: 0.5, fa: 0.6, fe: 1.8, ra: 0.6, re: 1.8, fl: 0.8, fk: 0.9, rl: -0.9, rk: 0.9}
+  - {t: 2.3, dx: 0.0, hz: 0.46, lean: 0.55, fa: 0.6, fe: 1.8, ra: 0.6, re: 1.8, fl: 0.8, fk: 0.9, rl: -0.9, rk: 0.9}
+  - {t: 2.58, dx: 0.15, hz: 0.55, lean: 0.4, fa: 0.4, fe: 1.0, ra: -0.5, re: 0.3, fl: 0.4, fk: 0.5, rl: -0.3, rk: 0.6}
+  - {t: 2.7, dx: 0.8, hz: 0.95, fl: 2.0, fk: 0.0, rl: 0.0, rk: 0.0, lean: -0.25, fa: 1.3, fe: 0.0, ra: -1.3, re: 0.0, spin: 6.2832, lst: 0.18}
+  - {t: 2.82, dx: 0.9, hz: 0.95, fl: 2.0, fk: 0.0, rl: 0.0, rk: 0.0, lean: -0.25, fa: 1.3, fe: 0.0, ra: -1.3, re: 0.0, spin: 6.2832, lst: 0.18}
+  - {t: 2.95, dx: 0.6, hz: 0.82, fl: 0.6, fk: 0.7, rl: -0.2, rk: 0.4, lean: 0.0, fa: 0.7, fe: 1.3, ra: 0.5, re: 1.5, spin: 6.2832, lst: 0.0}
+  - {t: 3.15, dx: 1.2, run: 1.0, hz: 0.8, lean: 0.6, fa: 0.9, fe: 1.6, ra: 0.9, re: 1.6, spin: 6.2832}
+  - {t: 3.95, dx: 4.4, run: 1.0, hz: 0.8, lean: 0.6, fa: 0.9, fe: 1.6, ra: 0.9, re: 1.6, spin: 6.2832}
+  - {t: 4.2, run: 0.0, dx: 4.8, hz: 0.62, lean: 0.3, fl: 0.9, fk: 1.2, rl: -0.2, rk: 1.2, fa: 0.4, fe: 2.0, ra: 0.4, re: 2.0, spin: 6.2832}
+  - {t: 4.55, dx: 5.6, hz: 1.75, fl: 2.4, fk: 0.0, rl: 0.3, rk: 0.8, lean: -0.1, fa: 0.9, fe: 0.3, ra: -0.7, re: 0.0, spin: 6.2832, lst: 0.2}
+  - {t: 5.05, dx: 6.4, hz: 1.0, fl: -0.1, fk: 0.0, rl: 0.3, rk: 0.8, lean: 0.2, fa: 0.9, fe: 0.3, ra: -0.7, re: 0.0, spin: 6.2832, lst: 0.18}
+  - {t: 5.25, dx: 6.4, hz: 0.6, fl: 0.5, fk: 1.0, rl: -0.3, rk: 1.0, lean: 0.3, fa: 0.5, fe: 1.8, ra: 0.5, re: 1.8, spin: 6.2832, lst: 0.0}
+  - {t: 5.8, dx: 6.4, hz: 0.9, fl: 0.1, fk: 0.0, rl: -0.1, rk: 0.0, lean: 0.0, fa: 0.3, fe: 0.3, ra: 0.3, re: 0.3, spin: 6.2832}
+  - {t: 6.8, dx: 6.4, hz: 0.92, fl: 0.1, fk: 0.0, rl: -0.1, rk: 0.0, lean: -0.05, fa: 0.3, fe: 0.3, ra: 0.3, re: 0.3, spin: 6.2832, face: win}
+  - {t: 7.6, dx: 6.4, hz: 0.92, fl: 0.1, fk: 0.0, rl: -0.1, rk: 0.0, lean: -0.1, fa: 3.0, fe: 0.0, ra: 0.3, re: 0.3, spin: 6.2832, face: win}
+  - {t: 11.0, dx: 6.4, hz: 0.92, fl: 0.1, fk: 0.0, rl: -0.1, rk: 0.0, lean: -0.1, fa: 3.0, fe: 0.0, ra: 0.3, re: 0.3, spin: 6.2832, face: win}
+  B:
+  - {t: 0.0}
+  - {t: 1.4, dx: 0.2}
+  - {t: 1.7, dx: 0.15, lean: -0.25, hz: 0.7, fa: 0.3, fe: 2.1}
+  - {t: 1.85, dx: 3.5, lean: 0.5, hz: 0.8, fa: 1.57, fe: 0.0, fl: 1.0, fk: 0.2, rl: -0.8, rk: 0.2, run: 1.0, st: 0.18}
+  - {t: 2.1, dx: 3.75, lean: 0.4, hz: 0.8, fa: 1.57, fe: 0.0, fl: 0.7, fk: 0.2, rl: -0.5, rk: 0.2, st: 0.0, run: 0.0}
+  - {t: 2.5, dx: 3.1, lean: 0.2, hz: 0.85, fa: 0.9, fe: 1.5, ra: 0.9, re: 1.5}
+  - {t: 2.7, dx: 2.98, lean: 0.55, hz: 0.88, fa: 0.9, ra: 0.8, fe: 0.9, re: 0.9, ht: 0.5, face: pain}
+  - {t: 2.82, dx: 2.88, lean: 0.75, hz: 0.82, fa: 0.9, ra: 0.8, fe: 1.0, re: 1.0, ht: 0.7, face: pain}
+  - {t: 3.0, dx: -1.65, rz: 1.55, roll: 1.57, hz: 0.9, fa: -0.6, ra: -0.6, fe: 0.2, re: 0.2, fl: 0.0, fk: 0.0, rl: 0.0, rk: 0.0, lean: -0.2, ht: -0.7,
+    face: pain}
+  - {t: 3.5, dx: -1.2, rz: 0.9, roll: 1.57, hz: 0.9, fa: 0.2, ra: 0.2, fe: 0.2, re: 0.2, lean: 0.0, face: pain}
+  - {t: 3.9, dx: -1.0, rz: 0.12, roll: 1.57, hz: 0.9, fa: 0.4, ra: 0.4, fe: 0.2, re: 0.2, lean: 0.0, face: pain}
+  - {t: 4.4, dx: -1.0, rz: 0.0, roll: 1.0, hz: 0.9, fa: 0.9, ra: 0.9, fe: 0.6, re: 0.6, lean: 0.1, face: fight}
+  - {t: 4.9, dx: -1.0, rz: 0.0, roll: 0.75, hz: 0.9, fa: 0.9, ra: 0.9, fe: 0.6, re: 0.6, lean: 0.1, face: fight}
+  - {t: 5.05, dx: -1.0, rz: 0.1, roll: 1.57, hz: 0.9, fa: 0.4, ra: 0.4, fe: 0.2, re: 0.2, face: pain}
+  - {t: 5.3, dx: -1.0, rz: 0.3, roll: 1.45, hz: 0.9, fa: 0.5, ra: 0.5, fe: 0.2, re: 0.2, face: pain}
+  - {t: 5.6, dx: -1.0, rz: 0.1, roll: 1.57, hz: 0.9, fa: 0.4, ra: 0.4, fe: 0.2, re: 0.2, face: ko}
+  - {t: 11.0, dx: -1.0, rz: 0.1, roll: 1.57, hz: 0.9, fa: 0.4, ra: 0.4, fe: 0.2, re: 0.2, face: ko}
+fx:
+  trails:
+  - [1.85, 2.2]
+  - [2.5, 3.5]
+  - [4.2, 5.0]
+  speed_lines:
+  - [1.85, 2.15]
+  - [2.75, 3.3]
+  - [3.3, 3.9]
+  - [4.2, 4.6]
+  invert: [kick, heel]

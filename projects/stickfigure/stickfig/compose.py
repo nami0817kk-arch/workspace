@@ -1,0 +1,219 @@
+"""合成: コードで描く背景・壁・ひび・砂ぼこり・残像・衝撃のコマ・放射線・流線の上に、Blender の透過の人物を重ねる。
+
+入力: plan.json と、Blender が書き出した f_####.png(RGBA)。出力: 連番 PNG と mp4。
+"""
+from __future__ import annotations
+
+import math
+import random
+import subprocess
+from pathlib import Path
+from typing import Dict, List, Sequence, Tuple
+
+from PIL import Image, ImageDraw
+
+W, H, SS = 1280, 720, 2
+GROUND_Y = 560
+
+
+def _rng_data(seed: int = 9):
+    r = random.Random(seed)
+    rays = [(r.uniform(0, 2 * math.pi), r.uniform(0.6, 1.0), r.uniform(2.0, 5.0)) for _ in range(60)]
+    crack_wall = []
+    for _ in range(9):
+        a = r.uniform(-1.2, 1.2)
+        pts, x, z = [], 0.0, 0.0
+        for _ in range(7):
+            a = max(-1.3, min(1.3, a + r.uniform(-0.5, 0.5)))
+            x += math.cos(a) * r.uniform(0.18, 0.4)
+            z += math.sin(a) * r.uniform(0.18, 0.4)
+            pts.append((x, z))
+        crack_wall.append(pts)
+    crack_ground = []
+    for sgn in (-1, 1):
+        for _ in range(4):
+            x, pts = 0.0, []
+            for _ in range(6):
+                x += sgn * r.uniform(0.2, 0.5)
+                pts.append((x, r.uniform(-0.06, 0.06)))
+            crack_ground.append(pts)
+    debris = [(r.uniform(-3.0, -0.6), r.uniform(-0.5, 3.2), r.uniform(0.06, 0.16)) for _ in range(16)]
+    return rays, crack_wall, crack_ground, debris
+
+
+RAYS, CRACK_WALL, CRACK_GROUND, DEBRIS = _rng_data()
+
+
+def _h(i: int, j: int) -> float:
+    v = (i * 73856093) ^ (j * 19349663)
+    return ((v >> 3) & 255) / 255.0
+
+
+def to_px(wx: float, wz: float, cam: dict) -> Tuple[float, float]:
+    return 640 + (wx - cam["x"]) * cam["pxu"], GROUND_Y - wz * cam["pxu"] + cam["sz"] * cam["pxu"]
+
+
+def in_ranges(tau: float, ranges: Sequence[Sequence[float]]) -> bool:
+    return any(a <= tau <= b for a, b in ranges)
+
+
+def background(plan: dict, f: int) -> Image.Image:
+    fr = plan["frames"][f]
+    cam = fr["cam"]
+    pxu = cam["pxu"]
+    wall_x = plan.get("stage", {}).get("wall_x")
+    events = plan["events"]
+    im = Image.new("RGB", (W * SS, H * SS), (50, 50, 57))
+    d = ImageDraw.Draw(im)
+    gy = (GROUND_Y + cam["sz"] * pxu) * SS
+    # 奥の層: ゆっくり流れる石のブロック(視差 0.5)
+    bs = 0.64 * pxu
+    off = cam["x"] * 0.4 * pxu
+    i0 = int(math.floor((off - 40) / bs))
+    for i in range(i0, i0 + int(W / bs) + 3):
+        for jj in range(0, int(gy / SS / bs) + 2):
+            v = 44 + int(16 * _h(i, jj))
+            x0 = (i * bs - off) * SS
+            y0 = (gy / SS - (jj + 1) * bs) * SS
+            d.rectangle([x0, y0, x0 + bs * SS, y0 + bs * SS], fill=(v, v, v + 7))
+    # 手前の層: 木の足場の影(視差 0.8)
+    off2 = cam["x"] * 0.8 * pxu
+    for k in range(-2, 12):
+        px = (k * 2.6 * pxu - off2 % (2.6 * pxu)) * SS
+        d.rectangle([px, gy - 2.4 * pxu * SS, px + 0.16 * pxu * SS, gy], fill=(64, 52, 40))
+    if wall_x is not None:
+        wx0, _ = to_px(wall_x, 0, cam)
+        wx1, _ = to_px(wall_x + 2.5, 0, cam)
+        d.rectangle([wx0 * SS, 0, wx1 * SS, gy], fill=(118, 114, 110), outline=(18, 18, 22), width=4 * SS)
+        for k in range(1, 14):
+            yy = gy - k * 0.5 * pxu * SS
+            d.line([wx0 * SS, yy, wx1 * SS, yy], fill=(88, 84, 80), width=2 * SS)
+    d.rectangle([0, gy, W * SS, H * SS], fill=(86, 78, 68))
+    d.rectangle([0, gy, W * SS, gy + 8 * SS], fill=(124, 112, 92))
+    x = math.floor((cam["x"] - 8) / 1.0)
+    while x < cam["x"] + 8:
+        px, _ = to_px(x, 0, cam)
+        d.line([px * SS, gy + 8 * SS, px * SS, H * SS], fill=(66, 60, 52), width=3 * SS)
+        x += 1
+    for e in events:
+        if e["kind"] == "wall" and f >= e["frame"] and wall_x is not None:
+            cx, cy = to_px(wall_x, e["pos"][1], cam)
+            for pts in CRACK_WALL:
+                prev = (cx, cy)
+                for (ux, uz) in pts:
+                    nxt = (cx + ux * pxu, cy - uz * pxu)
+                    d.line([prev[0] * SS, prev[1] * SS, nxt[0] * SS, nxt[1] * SS], fill=(16, 16, 20), width=int(3 * SS))
+                    prev = nxt
+            age = (f - e["frame"]) / plan["fps"]
+            if age < 1.6:
+                for vx, vz, sz_ in DEBRIS:
+                    wxp = wall_x - 0.05 + vx * age * 0.9
+                    wzp = max(0.0, e["pos"][1] + vz * age - 4.9 * age * age * 0.5)
+                    px, py = to_px(wxp, wzp, cam)
+                    r = sz_ * pxu
+                    d.rectangle([(px - r) * SS, (py - r) * SS, (px + r) * SS, (py + r) * SS], fill=(150, 146, 140),
+                                outline=(20, 20, 24), width=2 * SS)
+        if e["kind"] == "heel" and f >= e["frame"]:
+            cx, cy = to_px(e["pos"][0], 0, cam)
+            for pts in CRACK_GROUND:
+                prev = (cx, cy)
+                for (ux, uz) in pts:
+                    nxt = (cx + ux * pxu * 0.8, cy + 4 - uz * pxu * 2.5)
+                    d.line([prev[0] * SS, prev[1] * SS, nxt[0] * SS, nxt[1] * SS], fill=(16, 16, 20), width=int(3 * SS))
+                    prev = nxt
+        if e["kind"] in ("land", "land2", "heel", "wall"):
+            age = (f - e["frame"]) / plan["fps"]
+            if 0 <= age < 0.7:
+                u = age / 0.7
+                cx, cy = to_px(e["pos"][0], e["pos"][1] if e["kind"] == "wall" else 0.0, cam)
+                big = 1.6 if e["kind"] == "heel" else 1.0
+                for k in range(4):
+                    r = (0.25 + 0.9 * u + 0.12 * k) * pxu * big
+                    ox = (k - 1.5) * 0.3 * pxu * u * big
+                    col = (int(190 - 60 * u), int(186 - 60 * u), int(178 - 60 * u))
+                    d.ellipse([(cx + ox - r) * SS, (cy - r * 0.6) * SS, (cx + ox + r) * SS, (cy + r * 0.25) * SS],
+                              outline=col, width=int(6 * SS * (1 - u)) + SS)
+    return im
+
+
+def silhouette(fig: Image.Image, col: Tuple[int, int, int]) -> Image.Image:
+    a = fig.split()[3]
+    solid = Image.new("RGBA", fig.size, (*col, 255))
+    out = Image.new("RGBA", fig.size, (*col, 0))
+    out.putalpha(a)
+    return Image.composite(solid, out, a)
+
+
+def radial(d_ov: ImageDraw.ImageDraw, cx: float, cy: float, u: float, big: float, col=(245, 245, 245)) -> None:
+    for ang, ln, wd in RAYS:
+        r0 = (24 + 46 * u) * big
+        r1 = r0 + (80 + 140 * ln) * big * (1 - 0.5 * u)
+        a = int(255 * (1 - u ** 2))
+        d_ov.line([(cx + math.cos(ang) * r0) * SS, (cy + math.sin(ang) * r0) * SS,
+                   (cx + math.cos(ang) * r1) * SS, (cy + math.sin(ang) * r1) * SS],
+                  fill=(*col, a), width=int(wd * SS * (1 - 0.4 * u) * (1 + 0.4 * big)))
+
+
+BIG = dict(kick=1.2, slash=1.2, wall=1.5, heel=1.8, hit=1.0)
+
+
+def compose_frame(plan: dict, f: int, figs: Dict[int, Image.Image]) -> Image.Image:
+    fr = plan["frames"][f]
+    cam = fr["cam"]
+    tau = fr["tau"]
+    fx = plan.get("scene", {}).get("fx", {})
+    base = background(plan, f).resize((W, H), Image.LANCZOS).convert("RGBA")
+    frozen = f > 0 and plan["frames"][f - 1]["tau"] == tau
+    if in_ranges(tau, fx.get("trails", [])) and not frozen:
+        for k, al in ((9, 0.10), (6, 0.18), (3, 0.30)):
+            if f - k >= 0:
+                ghost = silhouette(figs[f - k], (70, 110, 210))
+                ghost.putalpha(ghost.split()[3].point(lambda v, al=al: int(v * al)))
+                base.alpha_composite(ghost)
+    base.alpha_composite(figs[f])
+    ov = Image.new("RGBA", (W * SS, H * SS), (0, 0, 0, 0))
+    d = ImageDraw.Draw(ov)
+    if in_ranges(tau, fx.get("speed_lines", [])):
+        rnd = random.Random(f)
+        for _ in range(14):
+            y = rnd.uniform(40, 540)
+            x0 = rnd.uniform(0, W)
+            ln = rnd.uniform(120, 360)
+            d.line([x0 * SS, y * SS, (x0 + ln) * SS, y * SS], fill=(255, 255, 255, 55), width=2 * SS)
+    invert = None
+    invert_kinds = fx.get("invert", ["kick", "heel"])
+    for e in plan["events"]:
+        age = f - e["frame"]
+        if e["kind"] in BIG and 0 <= age <= 14:
+            cx, cy = to_px(e["pos"][0], e["pos"][1], cam)
+            radial(d, cx, cy, min(1.0, age / 14), BIG[e["kind"]])
+            if e["kind"] in invert_kinds and age in (0, 1):
+                invert = (age, cx, cy, BIG[e["kind"]])
+            if e["kind"] == "wall" and age <= 1:
+                d.rectangle([0, 0, W * SS, H * SS], fill=(255, 255, 255, 150 if age == 0 else 80))
+    base.alpha_composite(ov.resize((W, H), Image.LANCZOS))
+    frame = base.convert("RGB")
+    if invert is not None:
+        age, cx, cy, big = invert
+        bgc, fgc = ((255, 255, 255), (0, 0, 0)) if age == 0 else ((0, 0, 0), (255, 255, 255))
+        im = Image.new("RGBA", (W, H), (*bgc, 255))
+        im.alpha_composite(silhouette(figs[f], fgc))
+        ov2 = Image.new("RGBA", (W * SS, H * SS), (0, 0, 0, 0))
+        radial(ImageDraw.Draw(ov2), cx, cy, 0.15 if age == 0 else 0.3, big * 1.4, fgc)
+        im.alpha_composite(ov2.resize((W, H), Image.LANCZOS))
+        frame = im.convert("RGB")
+    return frame
+
+
+def compose(plan: dict, fig_dir, out_dir, mp4_path, ffmpeg: str) -> Path:
+    fig_dir, out_dir = Path(fig_dir), Path(out_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    for p in out_dir.glob("*.png"):
+        p.unlink()
+    n = plan["n"]
+    figs = {f: Image.open(fig_dir / f"f_{f + 1:04d}.png").convert("RGBA") for f in range(n)}
+    for f in range(n):
+        compose_frame(plan, f, figs).save(out_dir / f"{f + 1:04d}.png")
+    subprocess.run([ffmpeg, "-y", "-loglevel", "error", "-framerate", str(plan["fps"]), "-i", str(out_dir / "%04d.png"),
+                    "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "18", str(mp4_path)], check=True)
+    return Path(mp4_path)
