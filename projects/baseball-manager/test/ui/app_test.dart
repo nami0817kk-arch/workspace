@@ -1309,6 +1309,29 @@ void _rankTests() {
     });
   });
 
+  group('FAの画面', () {
+    testWidgets('プロ8年目以降は「FA権を使う」から移籍を決められる', (t) async {
+      final c = await _start(t);
+      Game? g;
+      for (var sd = 0; sd < 60 && g == null; sd++) {
+        final x = _until((g) => g.canUseFa, seed: sd, potential: 100);
+        if (x.canUseFa) g = x;
+      }
+      expect(g, isNotNull);
+      c.adopt(g!);
+      await t.pumpAndSettle();
+      expect(find.byKey(const Key('fa-open')), findsOneWidget);
+      await t.tap(find.byKey(const Key('fa-open')));
+      await t.pumpAndSettle();
+      await t.tap(find.byKey(const Key('fa-contender')));
+      await t.pumpAndSettle();
+      await _dismissMilestones(t);
+      expect(c.game!.faUsed, isTrue);
+      expect(c.game!.teamBoost, 3);
+      expect(find.byKey(const Key('fa-open')), findsNothing);
+    });
+  });
+
   group('海外移籍の画面', () {
     testWidgets('強いプロ選手は、年の最初にアメリカへ移籍でき、日本にも戻れる', (t) async {
       final c = await _start(t);

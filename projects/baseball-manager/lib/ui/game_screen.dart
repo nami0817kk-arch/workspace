@@ -859,6 +859,12 @@ class _ProCard extends StatelessWidget {
                   onPressed: () => _confirmOverseas(context),
                   child: const Text('アメリカのリーグへ移籍する'),
                 ),
+              if (game.canUseFa)
+                OutlinedButton(
+                  key: const Key('fa-open'),
+                  onPressed: () => _openFa(context),
+                  child: const Text('FA権を使う'),
+                ),
               if (game.canReturnHome)
                 OutlinedButton(
                   key: const Key('return-home'),
@@ -929,6 +935,36 @@ class _ProCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _openFa(BuildContext context) async {
+    final c = await showDialog<FaChoice>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('FA権を使いますか?'),
+        content: const Text('一生に一度だけ決められます。\n'
+            '・残留: 今のチームで、やる気が上がる\n'
+            '・強豪へ: チーム力+3、契約金4000万円(やる気は少し下がる)\n'
+            '・高額オファー: 再建中のチーム(チーム力-2)へ、契約金1億円'),
+        actions: [
+          TextButton(
+              key: const Key('fa-stay'),
+              onPressed: () => Navigator.pop(ctx, FaChoice.stay),
+              child: const Text('残留する')),
+          TextButton(
+              key: const Key('fa-contender'),
+              onPressed: () => Navigator.pop(ctx, FaChoice.contender),
+              child: const Text('強豪へ移籍')),
+          TextButton(
+              key: const Key('fa-cash'),
+              onPressed: () => Navigator.pop(ctx, FaChoice.cash),
+              child: const Text('高額オファーへ')),
+          TextButton(
+              onPressed: () => Navigator.pop(ctx), child: const Text('あとで')),
+        ],
+      ),
+    );
+    if (c != null) controller.useFa(c);
   }
 
   Future<void> _confirmOverseas(BuildContext context) async {

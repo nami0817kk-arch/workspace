@@ -201,6 +201,14 @@ class GameController extends ChangeNotifier {
     _commit();
   }
 
+  void useFa(FaChoice c) {
+    final g = game!;
+    final start = g.log.length;
+    g.useFa(c);
+    recent = g.log.sublist(start);
+    _commit();
+  }
+
   void returnHome() {
     final g = game!;
     final start = g.log.length;

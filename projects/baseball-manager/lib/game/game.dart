@@ -31,6 +31,9 @@ enum Phase {
 }
 
 /// 引退時のまとめ。
+/// FA(フリーエージェント)の決断。
+enum FaChoice { stay, contender, cash }
+
 class Ending {
   const Ending({
     required this.title,
@@ -201,6 +204,53 @@ class Game {
       !overseas &&
       player.age >= 24 &&
       overall(player) >= 70;
+
+  /// チーム移籍による、チーム力の増減(強豪へ+3、高額オファーの再建チーム-2)。
+  int teamBoost = 0;
+  bool faUsed = false;
+
+  int get _proYears => records.where((r) => r.stage == Stage.pro).length;
+
+  /// FA権を使える時: プロ8年目以降・国内・年の最初。一生に一度。
+  bool get canUseFa =>
+      phase == Phase.term &&
+      slot == 0 &&
+      stage == Stage.pro &&
+      !overseas &&
+      !faUsed &&
+      _proYears >= 8;
+
+  /// FA権を使う。残留(やる気+8)、強豪へ移籍(チーム力+3・契約金4000万・やる気-6)、
+  /// 高額オファー(再建中のチームへ・チーム力-2・契約金1億)。
+  void useFa(FaChoice c) {
+    _require(Phase.term);
+    if (!canUseFa) throw StateError('いまはFA権を使えない');
+    faUsed = true;
+    if (c == FaChoice.stay) {
+      condition = condition.copyWith(morale: condition.morale + 8);
+      log.add('FA権を行使せず、${proTeam ?? '今のチーム'}に残留した。');
+      _note('team', 'FA権を行使せず残留');
+      return;
+    }
+    final others = [
+      for (final t in draftTeams)
+        if (t != proTeam) t
+    ];
+    final next = others[rng.nextInt(others.length)];
+    proTeam = next;
+    if (c == FaChoice.contender) {
+      teamBoost = 3;
+      money += 4000;
+      condition = condition.copyWith(morale: condition.morale - 6);
+      log.add('FA宣言! 強豪の$nextに移籍した(契約金4000万円)。');
+    } else {
+      teamBoost = -2;
+      money += 10000;
+      log.add('FA宣言! 高額オファーを受けて$nextに移籍した(契約金1億円)。');
+    }
+    _note('team', 'FAで$nextに移籍');
+    _newGoal();
+  }
 
   /// 日本に戻れる時: 海外にいて、プロの年の最初。
   bool get canReturnHome =>
@@ -563,7 +613,10 @@ class Game {
   ({int team, List<int> opponents}) get _league => _leagueBase(stage);
 
   ({int team, List<int> opponents}) _leagueBase(Stage st) {
-    final b = _leagueRaw(st);
+    final raw = _leagueRaw(st);
+    final b = st == Stage.pro
+        ? (team: raw.team + teamBoost, opponents: raw.opponents)
+        : raw;
     if (overseas && st == Stage.pro) {
       // 海外は相手が強く(+8)、自分のチームも少し弱い(-3)。
       return (
@@ -1052,6 +1105,8 @@ class Game {
         'money': money,
         'invests': {for (final e in invests.entries) e.key.name: e.value},
         'overseasTeam': overseasTeam,
+        'teamBoost': teamBoost,
+        'faUsed': faUsed,
         'records': [for (final r in records) r.toJson()],
         'worldRecords': [for (final r in worldRecords) r.toJson()],
         'lifeLog': [for (final e in lifeLog) e.toJson()],
@@ -1118,6 +1173,8 @@ class Game {
       }
     }
     g.overseasTeam = j['overseasTeam'] as String?;
+    g.teamBoost = (j['teamBoost'] as num?)?.toInt() ?? 0;
+    g.faUsed = (j['faUsed'] as bool?) ?? false;
     g.goal = Goal.fromJson(j['goal']);
     g.tactic = Tactic.values
         .firstWhere((t) => t.name == j['tactic'], orElse: () => Tactic.steady);
