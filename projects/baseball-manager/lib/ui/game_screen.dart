@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import '../game/calendar.dart';
 import '../game/career.dart';
+import '../game/epilogue.dart';
 import '../game/exp.dart';
 import '../game/goals.dart';
 import '../game/game.dart';
@@ -865,6 +866,13 @@ class EndingView extends StatelessWidget {
               Text(e.madePro
                   ? '${game.proTeam == null ? '' : '${game.proTeam}で'}プロで${e.proYears}年間プレーした。'
                   : 'プロの舞台には立てなかった。'),
+              const SizedBox(height: 10),
+              Text(epilogueOf(e, p.name),
+                  key: const Key('epilogue'),
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium
+                      ?.copyWith(fontStyle: FontStyle.italic, height: 1.5)),
               const SizedBox(height: 16),
               if (controller.newlyUnlocked.isNotEmpty) ...[
                 Card(
