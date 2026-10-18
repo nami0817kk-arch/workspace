@@ -112,6 +112,12 @@ void main() {
           final l = g.log.firstWhere((l) => l.contains('ドラフトで指名された'));
           expect(draftTeams.any(l.contains), isTrue, reason: l);
           expect(RegExp(r'[1-6]位指名').hasMatch(l), isTrue, reason: l);
+          expect(draftTeams, contains(g.proTeam));
+          // 保存して読み直しても残る。古いセーブ(proTeamなし)は null。
+          final back = Game.fromJson(g.toJson(), Random(1));
+          expect(back.proTeam, g.proTeam);
+          final old = g.toJson()..remove('proTeam');
+          expect(Game.fromJson(old, Random(1)).proTeam, isNull);
         }
       }
       expect(found, greaterThan(0));

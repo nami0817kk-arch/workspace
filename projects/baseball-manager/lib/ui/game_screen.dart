@@ -50,7 +50,9 @@ class GameScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('${p.name}  ${p.age}歳'),
-              Text('${stageLabel(game.stage)}  ${game.slotName}',
+              Text(
+                  '${stageLabel(game.stage)}  ${game.slotName}'
+                  '${game.stage == Stage.pro && game.proTeam != null ? '  ${game.proTeam}' : ''}',
                   style: Theme.of(context).textTheme.bodySmall),
             ],
           ),
@@ -860,7 +862,9 @@ class EndingView extends StatelessWidget {
                       .headlineMedium
                       ?.copyWith(fontWeight: FontWeight.bold)),
               const SizedBox(height: 4),
-              Text(e.madePro ? 'プロで${e.proYears}年間プレーした。' : 'プロの舞台には立てなかった。'),
+              Text(e.madePro
+                  ? '${game.proTeam == null ? '' : '${game.proTeam}で'}プロで${e.proYears}年間プレーした。'
+                  : 'プロの舞台には立てなかった。'),
               const SizedBox(height: 16),
               if (controller.newlyUnlocked.isNotEmpty) ...[
                 Card(
@@ -1099,7 +1103,9 @@ String endingShareText(Game game) {
   final pro = game.records.where((r) => r.stage == Stage.pro).toList();
   final lines = [
     '【野球育成】${p.name} の一生: ${e.title}',
-    e.madePro ? 'プロで${e.proYears}年間プレー' : 'プロの舞台には立てなかった',
+    e.madePro
+        ? '${game.proTeam == null ? '' : '${game.proTeam}で'}プロで${e.proYears}年間プレー'
+        : 'プロの舞台には立てなかった',
     '最高の総合評価 ${e.peakOverall}・優勝${e.championships}回・タイトル${e.titles.length}個',
     if (pro.isNotEmpty) careerSummary(game.records),
     if (pro.isNotEmpty) 'プロ通算収入 ${fmtSalary(careerEarnings(pro))}',

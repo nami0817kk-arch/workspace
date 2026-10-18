@@ -120,6 +120,9 @@ class Game {
   /// プロ入りした年齢。入っていなければ null。
   int? proStartAge;
 
+  /// 入団した球団(架空)。プロ入りしてから。
+  String? proTeam;
+
   /// 年ごとの成績(大会・シーズン)。成績画面とエンディングに出す。
   final List<SeasonRecord> records = [];
 
@@ -592,6 +595,7 @@ class Game {
       turnedPro = true;
       proStartAge = player.age;
       final team = draftTeams[rng.nextInt(draftTeams.length)];
+      proTeam = team;
       final round = draftRound(margin);
       log.add('ドラフトで指名された! $team から$round位指名。');
       _note('draft', '$team から$round位指名を受けて、プロ入り');
@@ -664,6 +668,7 @@ class Game {
         'archived': archived,
         'overallHistory': overallHistory,
         'proStartAge': proStartAge,
+        'proTeam': proTeam,
         'records': [for (final r in records) r.toJson()],
         'lifeLog': [for (final e in lifeLog) e.toJson()],
         'tactic': tactic.name,
@@ -709,6 +714,7 @@ class Game {
     g.overallHistory.addAll(((j['overallHistory'] as List?) ?? const [])
         .map((e) => (e as num).toInt()));
     g.proStartAge = (j['proStartAge'] as num?)?.toInt();
+    g.proTeam = j['proTeam'] as String?;
     g.goal = Goal.fromJson(j['goal']);
     g.tactic = Tactic.values
         .firstWhere((t) => t.name == j['tactic'], orElse: () => Tactic.steady);
