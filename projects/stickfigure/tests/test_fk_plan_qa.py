@@ -81,7 +81,7 @@ def test_gate_catches_missing_contact():
 def test_gate_catches_long_hit_stop():
     scene = plan.load_scene(SCENE)
     scene = copy.deepcopy(scene)
-    scene["hits"][0]["hold"] = 0.4
+    next(h for h in scene["hits"] if h["kind"] == "kick")["hold"] = 0.4
     res = qa.run_gate(plan.build_plan(scene))
     assert "hit_stop@2.7" in res["failed"]
 

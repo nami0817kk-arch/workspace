@@ -52,9 +52,10 @@ def _skel(plan: dict, who: str, f: int) -> dict:
 
 
 def hold_frames_set(plan: dict) -> set:
+    """命中の前後(溜めの解放・ヒットストップ・直後)は、急な加速・折り返しが意図なので、カクつきの点検から外す。"""
     out = set()
     for e in plan["events"]:
-        for i in range(e["frame"], e["frame"] + max(e.get("hold_frames", 0), 1) + 2):
+        for i in range(e["frame"] - 5, e["frame"] + max(e.get("hold_frames", 0), 1) + 3):
             out.add(i)
     return out
 
