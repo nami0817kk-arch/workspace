@@ -140,12 +140,14 @@ class _ProfileTab extends StatelessWidget {
                           '${s.age}歳  ${s.endingTitle == null ? stageNameOf(s.stage) : '引退'}'),
                       Text(roleNameOf(s.role)),
                       const SizedBox(height: 6),
-                      Row(children: [
-                        RankBadge(value: ov),
-                        const SizedBox(width: 6),
-                        Text('総合評価 $ov',
-                            style: Theme.of(context).textTheme.titleSmall),
-                      ]),
+                      Wrap(
+                          spacing: 6,
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          children: [
+                            RankBadge(value: ov),
+                            Text('総合評価 $ov',
+                                style: Theme.of(context).textTheme.titleSmall),
+                          ]),
                       Text('素質 ${potentialStars(s.potential)}',
                           key: const Key('potential-stars')),
                       if (s.endingTitle != null)

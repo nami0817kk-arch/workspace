@@ -927,4 +927,48 @@ void _rankTests() {
     }
     expect(c.game!.player.age, greaterThan(age + 2));
   });
+
+  testWidgets('せまい画面(幅320)・大きい文字(1.6倍)でも、どの画面も溢れない', (t) async {
+    SharedPreferences.setMockInitialValues({});
+    t.view.physicalSize = const Size(320, 900);
+    t.view.devicePixelRatio = 1.0;
+    t.platformDispatcher.textScaleFactorTestValue = 1.6;
+    addTearDown(t.view.resetPhysicalSize);
+    addTearDown(t.view.resetDevicePixelRatio);
+    addTearDown(t.platformDispatcher.clearTextScaleFactorTestValue);
+    final c = GameController(rng: Random(5));
+    await t.pumpWidget(BaseballManagerApp(controller: c));
+    await t.pumpAndSettle();
+    // ホーム → 実績 → 戻る
+    await t.scrollUntilVisible(find.byKey(const Key('achievements-open')), 200,
+        scrollable: find.byType(Scrollable).first);
+    await t.tap(find.byKey(const Key('achievements-open')));
+    await t.pumpAndSettle();
+    await t.pageBack();
+    await t.pumpAndSettle();
+    final lives = <Game>[
+      Game.newGame(name: 'テスト', role: Role.pitcher, rng: Random(5)),
+      _until((g) => g.stage == Stage.juniorHigh, seed: 5),
+      _until((g) => g.stage == Stage.highSchool, seed: 5),
+      _until((g) => g.stage == Stage.pro, seed: 5, potential: 90),
+      _until((g) => false, seed: 5, potential: 90), // 引退まで
+    ];
+    for (final g in lives) {
+      c.adopt(g);
+      await t.pumpAndSettle();
+      expect(t.takeException(), isNull, reason: '${g.stage}');
+      for (final k in ['player-open', 'records-open', 'settings-open']) {
+        final f = find.byKey(Key(k));
+        if (f.evaluate().isEmpty) {
+          continue;
+        }
+        await t.tap(f.first);
+        await t.pumpAndSettle();
+        expect(t.takeException(), isNull, reason: '${g.stage} $k');
+        await t.pageBack();
+        await t.pumpAndSettle();
+      }
+    }
+    expect(t.takeException(), isNull);
+  });
 }
