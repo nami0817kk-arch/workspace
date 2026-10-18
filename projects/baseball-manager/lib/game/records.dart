@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'career.dart';
+import 'world.dart';
 import 'season.dart';
 
 /// 1年ぶんの成績(アマチュアは夏の大会、プロはシーズン通算)。
@@ -191,3 +192,28 @@ String fmtSalary(int man) {
 /// プロ通算の収入(万円)。
 int careerEarnings(List<SeasonRecord> rs) =>
     rs.fold(0, (a, r) => a + salaryOf(r));
+
+/// 人気(0〜100)。タイトル・優勝・日本代表・海外での活躍で上がる。古い年ほど薄れる。
+/// 保存せず、成績から計算する。
+int popularityOf(List<SeasonRecord> records, List<WorldRecord> world) {
+  if (records.isEmpty && world.isEmpty) return 0;
+  final last = [
+    ...records.map((r) => r.age),
+    ...world.map((w) => w.age),
+  ].reduce(max);
+  double fade(int age) => last - age <= 8 ? 1.0 : 0.5;
+  var v = 0.0;
+  for (final r in records) {
+    var x = 0.0;
+    x += r.titles.length * 4;
+    if (r.champion) x += r.isLeague ? 4 : 2;
+    if (r.isLeague && r.rank != null && r.rank! <= 3) x += 1;
+    if (r.overseas) x += 1;
+    if (r.stage == Stage.pro) x += 0.5; // プロにいるだけで知名度が少しある
+    v += x * fade(r.age);
+  }
+  for (final w in world) {
+    v += (w.champion ? 9 : 3) * fade(w.age);
+  }
+  return v.round().clamp(0, 100);
+}

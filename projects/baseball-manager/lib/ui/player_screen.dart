@@ -8,6 +8,7 @@ import '../game/game.dart';
 import '../game/life_log.dart';
 import '../game/path.dart' show overall;
 import '../game/player.dart';
+import '../game/records.dart';
 import '../game/snapshot.dart';
 import 'art/avatar.dart';
 import 'art/radar.dart';
@@ -173,6 +174,10 @@ class _ProfileTab extends StatelessWidget {
                           ]),
                       Text('素質 ${potentialStars(s.potential)}',
                           key: const Key('potential-stars')),
+                      Text(
+                          '人気 ${rankOf(popularityOf(s.records, s.worldRecords))}'
+                          '(${popularityOf(s.records, s.worldRecords)})',
+                          key: const Key('popularity')),
                       if (s.endingTitle != null)
                         Padding(
                           padding: const EdgeInsets.only(top: 4),

@@ -8,6 +8,7 @@ import 'package:baseball_manager/game/path.dart';
 import 'package:baseball_manager/game/player.dart';
 import 'package:baseball_manager/game/records.dart';
 import 'package:baseball_manager/game/season.dart';
+import 'package:baseball_manager/game/world.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 Player _p(Role r, int v) => Player(
@@ -364,6 +365,65 @@ void main() {
       expect(fmtSalary(1750), '1750万円');
       expect(fmtSalary(10000), '1億円');
       expect(fmtSalary(23000), '2億3000万円');
+    });
+  });
+
+  group('人気', () {
+    SeasonRecord rec(int age,
+            {List<String> titles = const [],
+            int rank = 4,
+            Stage stage = Stage.pro,
+            bool overseas = false}) =>
+        SeasonRecord(
+            age: age,
+            stage: stage,
+            line: const Line(),
+            rank: stage == Stage.pro ? rank : null,
+            titles: titles,
+            overseas: overseas);
+    WorldRecord world(int age, bool champion) => WorldRecord(
+        age: age,
+        eventId: 'pro',
+        eventName: '世界大会',
+        roundsWon: champion ? 4 : 1,
+        rounds: 4,
+        line: const Line());
+
+    test('記録が無ければ0。0〜100に収まる', () {
+      expect(popularityOf(const [], const []), 0);
+      final many = [
+        for (var a = 22; a < 40; a++)
+          rec(a, titles: ['MVP', '最多勝', '首位打者'], rank: 1)
+      ];
+      expect(popularityOf(many, [world(30, true)]), 100);
+    });
+
+    test('タイトル・優勝・日本代表・海外で上がる', () {
+      final base = popularityOf([rec(25)], const []);
+      expect(
+          popularityOf([
+            rec(25, titles: ['最多勝'])
+          ], const []),
+          greaterThan(base));
+      expect(popularityOf([rec(25, rank: 1)], const []), greaterThan(base));
+      expect(
+          popularityOf([rec(25, overseas: true)], const []), greaterThan(base));
+      expect(popularityOf([rec(25)], [world(25, false)]), greaterThan(base));
+      expect(popularityOf([rec(25)], [world(25, true)]),
+          greaterThan(popularityOf([rec(25)], [world(25, false)])));
+    });
+
+    test('昔の活躍は薄れる(8年より前は半分)', () {
+      final old = [
+        rec(22, titles: ['MVP', '最多勝']),
+        rec(40)
+      ];
+      final fresh = [
+        rec(32, titles: ['MVP', '最多勝']),
+        rec(40)
+      ];
+      expect(
+          popularityOf(old, const []), lessThan(popularityOf(fresh, const [])));
     });
   });
 }

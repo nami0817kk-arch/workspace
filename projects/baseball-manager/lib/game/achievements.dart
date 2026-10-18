@@ -113,6 +113,8 @@ final List<Achievement> achievements = [
   Achievement('rich', '資産家', '資産が10億円を超えて引退する。', (s) => s.money >= 100000),
   Achievement('full-support', '万全の体制', '3つの投資をすべて最大(Lv3)にする。',
       (s) => s.investTotal >= 9),
+  Achievement('superstar', '国民的スター', '人気が90以上(Sランク)になる。',
+      (s) => popularityOf(s.records, s.worldRecords) >= 90),
   Achievement('hard-pro', '狭き門', '「むずかしい」で、プロ入りする。',
       (s) => s.difficulty == Difficulty.hard && s.proStartAge != null),
   Achievement('hard-legend', '不屈の伝説', '「むずかしい」で、レジェンドになる。',
