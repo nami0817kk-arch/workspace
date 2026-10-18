@@ -908,7 +908,11 @@ class EndingView extends StatelessWidget {
                   ? '${game.proTeam == null ? '' : '${game.proTeam}で'}プロで${e.proYears}年間プレーした。'
                   : 'プロの舞台には立てなかった。'),
               const SizedBox(height: 10),
-              Text(epilogueOf(e, p.name),
+              Text(
+                  epilogueOf(e, p.name,
+                      worldChampion:
+                          game.worldRecords.where((r) => r.champion).length,
+                      worldPlayed: game.worldRecords.length),
                   key: const Key('epilogue'),
                   style: Theme.of(context)
                       .textTheme
@@ -1158,6 +1162,8 @@ String endingShareText(Game game) {
     '最高の総合評価 ${e.peakOverall}・優勝${e.championships}回・タイトル${e.titles.length}個',
     if (pro.isNotEmpty) careerSummary(game.records),
     if (pro.isNotEmpty) 'プロ通算収入 ${fmtSalary(careerEarnings(pro))}',
+    if (game.worldRecords.isNotEmpty)
+      '日本代表: 世界大会${game.worldRecords.length}回出場・優勝${game.worldRecords.where((r) => r.champion).length}回',
   ];
   return lines.join('\n');
 }

@@ -60,6 +60,7 @@ List<TimelineEntry> timelineOf(
     'draft': 2,
     'role': 3,
     'trait': 4,
+    'world': 5,
     'champion': 5,
     'title': 6,
     'retire': 9,

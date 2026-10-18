@@ -4,6 +4,7 @@ import '../game/career.dart';
 import '../game/game.dart';
 import '../game/snapshot.dart';
 import '../game/records.dart';
+import '../game/world.dart';
 import 'art/career_chart.dart';
 
 /// 成績画面: 通算・年度別の成績表・タイトル・ライバルとの対戦・総合評価の推移。
@@ -58,6 +59,10 @@ class RecordsView extends StatelessWidget {
         if (titles.isNotEmpty) ...[
           const SizedBox(height: 8),
           _Titles(titles: titles),
+        ],
+        if (snapshot.worldRecords.isNotEmpty) ...[
+          const SizedBox(height: 8),
+          _WorldCard(records: snapshot.worldRecords),
         ],
         const SizedBox(height: 8),
         _RivalCard(snapshot: snapshot),
@@ -309,6 +314,53 @@ class _Titles extends StatelessWidget {
                   label: Text('$age歳 $t'),
                 ),
             ]),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// 日本代表として出た世界大会の一覧。
+class _WorldCard extends StatelessWidget {
+  const _WorldCard({required this.records});
+  final List<WorldRecord> records;
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return Card(
+      key: const Key('world-records'),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(children: [
+              const Icon(Icons.public, size: 18, color: Color(0xFFD32F2F)),
+              const SizedBox(width: 6),
+              Text('世界大会(日本代表)', style: Theme.of(context).textTheme.titleSmall),
+            ]),
+            const SizedBox(height: 6),
+            for (final r in records)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 3),
+                child: Text.rich(TextSpan(children: [
+                  TextSpan(text: '${r.age}歳  ${r.eventName}  '),
+                  TextSpan(
+                      text: r.resultText,
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: r.champion
+                              ? const Color(0xFFB8860B)
+                              : cs.onSurface)),
+                  if (r.lostTo != null) TextSpan(text: '(${r.lostTo}に敗れる)'),
+                  if (describeLine(r.line).isNotEmpty)
+                    TextSpan(
+                        text: '\n${describeLine(r.line)}',
+                        style: Theme.of(context).textTheme.bodySmall),
+                ])),
+              ),
           ],
         ),
       ),

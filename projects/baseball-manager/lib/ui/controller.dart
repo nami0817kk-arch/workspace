@@ -25,7 +25,16 @@ const adminKey = 'baseball_manager_admin_v1';
 const kTestBuild = bool.fromEnvironment('TEST_BUILD');
 const achievementsKey = 'baseball_manager_achievements_v1';
 
-enum MilestoneKind { draft, champion, trait, stage, title, achievement }
+enum MilestoneKind {
+  draft,
+  champion,
+  trait,
+  stage,
+  title,
+  achievement,
+  national,
+  world
+}
 
 /// 人生の節目。ダイアログで大きく見せる。
 class Milestone {
@@ -362,6 +371,15 @@ class GameController extends ChangeNotifier {
       final detail = pick.replaceFirst('ドラフトで指名された!', '').trim();
       pending.add(Milestone(MilestoneKind.draft, 'ドラフト指名!',
           '$nameは、プロの世界へ飛び込む。${detail.isEmpty ? '' : '\n$detail'}'));
+    }
+    // 世界大会: 日本代表に選ばれた / 世界一になった
+    for (final l in lines) {
+      if (l.contains('の日本代表に選ばれた')) {
+        pending.add(Milestone(MilestoneKind.national, '日本代表に選出!',
+            '$nameは、${l.replaceFirst('の日本代表に選ばれた!', '')}の日本代表に選ばれた。'));
+      } else if (l.contains('世界一になった')) {
+        pending.add(Milestone(MilestoneKind.world, '世界一!', l));
+      }
     }
     final after = g.stage;
     if (after != before &&

@@ -1169,4 +1169,58 @@ void _rankTests() {
       expect(c.abilityGains, isEmpty);
     });
   });
+
+  group('世界大会の画面', () {
+    Game withWorld() {
+      for (var seed = 0; seed < 60; seed++) {
+        final g = _until((g) => false, seed: seed, potential: 100);
+        if (g.worldRecords.isNotEmpty) return g;
+      }
+      fail('世界大会に出た選手がいない');
+    }
+
+    testWidgets('エンディングの成績に世界大会の一覧が出て、結果コピーにも入る', (t) async {
+      final c = await _start(t);
+      final g = withWorld();
+      c.adopt(g);
+      await t.pumpAndSettle();
+      await _dismissMilestones(t);
+      expect(find.byKey(const Key('world-records')), findsOneWidget);
+      expect(find.textContaining(g.worldRecords.first.eventName), findsWidgets);
+      expect(endingShareText(g),
+          contains('日本代表: 世界大会${g.worldRecords.length}回出場'));
+    });
+
+    test('代表に選ばれた・世界一になったとき、節目のダイアログが積まれる', () async {
+      SharedPreferences.setMockInitialValues({});
+      var sawNational = false;
+      for (var seed = 0; seed < 40 && !sawNational; seed++) {
+        final c = GameController(rng: Random(seed));
+        c.newGame('テスト', Role.batter);
+        var n = 0;
+        while (c.game!.phase != Phase.retired && n++ < 4000) {
+          c.autoSpend();
+          switch (c.game!.phase) {
+            case Phase.term:
+              c.act(c.game!.condition.fatigue >= 60 ? Plan.rest : Plan.train);
+            case Phase.event:
+              c.chooseEvent(0);
+            case Phase.pathChoice:
+              c.chooseRoute(Course.university);
+            case Phase.retired:
+              break;
+          }
+          if (c.pending.any((m) => m.kind == MilestoneKind.national)) {
+            sawNational = true;
+            final m =
+                c.pending.firstWhere((m) => m.kind == MilestoneKind.national);
+            expect(m.title, '日本代表に選出!');
+            expect(m.body, contains('世界大会'));
+            break;
+          }
+        }
+      }
+      expect(sawNational, isTrue);
+    });
+  });
 }

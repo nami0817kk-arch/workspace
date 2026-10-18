@@ -338,6 +338,7 @@ class _CareerTab extends StatelessWidget {
         'trait' => (Icons.auto_awesome, const Color(0xFF7E57C2)),
         'role' => (Icons.swap_horiz, const Color(0xFF00897B)),
         'champion' => (Icons.emoji_events, const Color(0xFFF9A825)),
+        'world' => (Icons.public, const Color(0xFFD32F2F)),
         'title' => (Icons.workspace_premium, const Color(0xFFD4AF37)),
         'retire' => (Icons.flag, const Color(0xFF546E7A)),
         _ => (Icons.circle, const Color(0xFF90A4AE)),

@@ -6,6 +6,7 @@ import 'path.dart';
 import 'player.dart';
 import 'records.dart';
 import 'traits.dart';
+import 'world.dart';
 
 /// 選手情報の写し。育成中の選手も、殿堂に残った過去の選手も、同じ画面で見られるようにする。
 class PlayerSnapshot {
@@ -29,6 +30,7 @@ class PlayerSnapshot {
     this.difficulty = Difficulty.normal,
     this.married = false,
     this.route,
+    this.worldRecords = const [],
   });
 
   final String name;
@@ -59,6 +61,9 @@ class PlayerSnapshot {
   /// 選んだ進路(大学・社会人)。選んでいなければ null。
   final Course? route;
 
+  /// 日本代表として出た世界大会の結果。
+  final List<WorldRecord> worldRecords;
+
   int of(Ability a) => abilities[a] ?? 0;
 
   factory PlayerSnapshot.fromGame(Game g) => PlayerSnapshot(
@@ -81,6 +86,7 @@ class PlayerSnapshot {
         difficulty: g.difficulty,
         married: g.ending?.married ?? false,
         route: g.route,
+        worldRecords: List.of(g.worldRecords),
       );
 
   Map<String, dynamic> toJson() => {
@@ -103,6 +109,7 @@ class PlayerSnapshot {
         'difficulty': difficulty.name,
         'married': married,
         'route': route?.name,
+        'worldRecords': [for (final r in worldRecords) r.toJson()],
       };
 
   /// 項目を足すときは既定値を置く(殿堂の古い記録を壊さない)。
@@ -146,6 +153,10 @@ class PlayerSnapshot {
       difficulty: Difficulty.parse(j['difficulty']),
       married: (j['married'] as bool?) ?? false,
       route: Course.values.where((c) => c.name == j['route']).firstOrNull,
+      worldRecords: [
+        for (final r in (j['worldRecords'] as List?) ?? const [])
+          WorldRecord.fromJson((r as Map).cast<String, dynamic>()),
+      ],
     );
   }
 }

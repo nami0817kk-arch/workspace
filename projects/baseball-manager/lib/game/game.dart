@@ -11,6 +11,7 @@ import 'difficulty.dart';
 import 'goals.dart';
 import 'life_log.dart';
 import 'records.dart';
+import 'world.dart';
 import 'season.dart';
 import 'tactics.dart';
 import 'traits.dart';
@@ -125,6 +126,9 @@ class Game {
 
   /// 年ごとの成績(大会・シーズン)。成績画面とエンディングに出す。
   final List<SeasonRecord> records = [];
+
+  /// 日本代表として出た世界大会(U-12・U-15・U-18・U-23・プロ)の結果。
+  final List<WorldRecord> worldRecords = [];
 
   /// 直前に起きた出来事(同じものが続かないようにする)。
   String? _lastEventId;
@@ -550,6 +554,45 @@ class Game {
       final d = describeLine(tournament.line);
       if (d.isNotEmpty) log.add('大会成績: $d');
     }
+    _playWorld();
+  }
+
+  /// この年に世界大会があれば、代表に選ばれたかを決め、選ばれたら日本代表として戦う。
+  /// 選ばれるのは総合評価が目安を上回る選手(運±6)。怪我中は辞退。
+  void _playWorld() {
+    final ev =
+        worldEventFor(stage: stage, age: player.age, hasRoute: route != null);
+    if (ev == null) return;
+    if (condition.injured) {
+      log.add('${ev.name}の代表候補だったが、怪我で辞退した。');
+      return;
+    }
+    final score = overall(player) + (rng.nextDouble() * 2 - 1) * 6;
+    if (score < ev.selectLine) return;
+    log.add('${ev.name}の日本代表に選ばれた!');
+    _note('world', '${ev.name}の日本代表に選出');
+    final t = playTournament(
+      tacticAdjusted(player, Tactic.steady),
+      teamLevel: ev.team,
+      opponents: ev.opponents,
+      rng: rng,
+      condition: condition.value,
+    );
+    final w = wrapWorld(event: ev, age: player.age, tournament: t);
+    worldRecords.add(w.record);
+    final rec = w.record;
+    if (rec.champion) {
+      log.add('${ev.name}で優勝! 日本が世界一になった!');
+      _note('world', '${ev.name}で優勝(世界一)');
+      condition = condition.copyWith(morale: condition.morale + 25);
+      exp = exp.add(spreadExp(player.role, goalRewardExp(stage)));
+    } else {
+      log.add('${ev.name}は${rec.lostTo}に敗れ、${rec.resultText}。');
+      _note('world', '${ev.name} ${rec.resultText}');
+      condition = condition.copyWith(morale: condition.morale + 8);
+    }
+    final d = describeLine(rec.line);
+    if (d.isNotEmpty) log.add('${ev.name}の成績: $d');
   }
 
   void _nextSlot() {
@@ -685,6 +728,7 @@ class Game {
         'proStartAge': proStartAge,
         'proTeam': proTeam,
         'records': [for (final r in records) r.toJson()],
+        'worldRecords': [for (final r in worldRecords) r.toJson()],
         'lifeLog': [for (final e in lifeLog) e.toJson()],
         'tactic': tactic.name,
         'goal': goal?.toJson(),
@@ -736,6 +780,10 @@ class Game {
     g.lifeLog.addAll([
       for (final e in (j['lifeLog'] as List?) ?? const [])
         LifeEvent.fromJson((e as Map).cast<String, dynamic>()),
+    ]);
+    g.worldRecords.addAll([
+      for (final r in (j['worldRecords'] as List?) ?? const [])
+        WorldRecord.fromJson((r as Map).cast<String, dynamic>()),
     ]);
     g.records.addAll([
       for (final r in (j['records'] as List?) ?? const [])

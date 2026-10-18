@@ -92,6 +92,16 @@ final List<Achievement> achievements = [
       (s) => s.records.any((r) => salaryOf(r) >= 10000)),
   Achievement('earnings-10', '一代で財を成す', 'プロ通算の収入が10億円を超える。',
       (s) => careerEarnings(s.records) >= 100000),
+  Achievement('national-team', '日の丸を背負う', '世界大会の日本代表に選ばれる。',
+      (s) => s.worldRecords.isNotEmpty),
+  Achievement('world-champion', '世界一', '世界大会で優勝する。',
+      (s) => s.worldRecords.any((r) => r.champion)),
+  Achievement(
+      'all-ages',
+      '全世代の日本代表',
+      'U-12・U-15・U-18・プロの世界大会すべてに、日本代表で出る。',
+      (s) => const {'u12', 'u15', 'u18', 'pro'}
+          .every((id) => s.worldRecords.any((r) => r.eventId == id))),
   Achievement('hard-pro', '狭き門', '「むずかしい」で、プロ入りする。',
       (s) => s.difficulty == Difficulty.hard && s.proStartAge != null),
   Achievement('hard-legend', '不屈の伝説', '「むずかしい」で、レジェンドになる。',
