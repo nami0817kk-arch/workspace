@@ -150,6 +150,9 @@ class Game {
   /// 入団した球団(架空)。プロ入りしてから。
   String? proTeam;
 
+  /// プロのシーズンの途中経過(月ごとに進む)。シーズンが終わったら null に戻る。
+  LeagueProgress? seasonProgress;
+
   /// 資産(万円)。プロの年俸が貯まり、投資に使える。
   int money = 0;
 
@@ -322,7 +325,11 @@ class Game {
     lastGain = gained;
     lastOutcome = wasInjured ? Outcome.normal : r.outcome;
     if (r.gotInjured) log.add('怪我をしてしまった。');
-    if (isTournamentSlot(stage, slot)) _playSummer();
+    if (isTournamentSlot(stage, slot)) {
+      _playSummer();
+    } else if (stage == Stage.pro && slot < 6) {
+      _playLeagueMonth();
+    }
 
     final e = drawEvent(rng,
         share: share,
@@ -600,6 +607,45 @@ class Game {
     goal = goal!.withLevel(level, maxRounds: _league.opponents.length);
   }
 
+  /// プロのシーズンの1か月ぶん(約20試合)を進める。怪我中は自分は出られない。
+  void _playLeagueMonth() {
+    final l = _league;
+    final team = l.team +
+        tacticTeamBonus(tactic) +
+        traitTeamBonus(player.traits) +
+        positionTeamAdjust(player, effectivePos);
+    seasonProgress = playLeagueChunk(
+      traitAdjusted(tacticAdjusted(player, tactic)),
+      seasonProgress ?? const LeagueProgress(),
+      teamLevel: team,
+      opponents: l.opponents,
+      rng: rng,
+      count: 20,
+      condition: condition.value,
+      available: !condition.injured,
+    );
+  }
+
+  /// シーズンの最後(10月)に、残りの試合を進めて、1年ぶんの結果にする。
+  LeagueSeason _finishLeague(Player fighter, int team, List<int> opponents) {
+    var prog = seasonProgress ?? const LeagueProgress();
+    final rest = leagueGames - prog.games;
+    if (rest > 0) {
+      prog = playLeagueChunk(
+        fighter,
+        prog,
+        teamLevel: team,
+        opponents: opponents,
+        rng: rng,
+        count: rest,
+        condition: condition.value,
+        available: !condition.injured,
+      );
+    }
+    seasonProgress = null;
+    return prog.toSeason();
+  }
+
   /// 大会(アマチュア)またはシーズン(プロ)を行い、成績を残す。
   void _playSummer() {
     final l = _league;
@@ -619,15 +665,7 @@ class Game {
             rng: rng,
             condition: condition.value,
           );
-    final league = isPro
-        ? playLeagueSeason(
-            fighter,
-            teamLevel: team,
-            opponents: l.opponents,
-            rng: rng,
-            condition: condition.value,
-          )
-        : null;
+    final league = isPro ? _finishLeague(fighter, team, l.opponents) : null;
 
     var ach = tournament?.achievement ?? 0;
     bool? rivalWon;
@@ -666,6 +704,7 @@ class Game {
       );
       records.add(rec);
       _judgeGoal(rec);
+      if (league.missed > 0) log.add('怪我で${league.missed}試合を欠場した。');
       if (league.rank == 1) {
         championships++;
         log.add('リーグ優勝!');
@@ -790,6 +829,7 @@ class Game {
   void _endYear() {
     final before = stage;
     slot = 0;
+    seasonProgress = null;
     player = endOfYear(player);
     condition = endOfYearCondition(condition);
     final partner = cast.lover ?? cast.family;
@@ -916,6 +956,7 @@ class Game {
         'proTeam': proTeam,
         'position': position?.name,
         'overseas': overseas,
+        'seasonProgress': seasonProgress?.toJson(),
         'parentName': parentName,
         'money': money,
         'invests': {for (final e in invests.entries) e.key.name: e.value},
@@ -970,6 +1011,10 @@ class Game {
     g.position = Pos.parse(j['position'] as String?);
     g.overseas = (j['overseas'] as bool?) ?? false;
     g.parentName = j['parentName'] as String?;
+    final sp = j['seasonProgress'];
+    if (sp is Map) {
+      g.seasonProgress = LeagueProgress.fromJson(sp.cast<String, dynamic>());
+    }
     g.money = (j['money'] as num?)?.toInt() ?? 0;
     for (final e in ((j['invests'] as Map?) ?? const {}).entries) {
       final i = Invest.parse(e.key as String);

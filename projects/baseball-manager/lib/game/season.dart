@@ -414,12 +414,16 @@ class LeagueSeason {
     required this.wins,
     required this.losses,
     required this.line,
+    this.missed = 0,
   });
 
   final int games;
   final int wins;
   final int losses;
   final Line line;
+
+  /// 自分が出られなかった試合数(怪我)。
+  final int missed;
 
   double get winPct => games == 0 ? 0 : wins / games;
 
@@ -437,6 +441,97 @@ int leagueRank(double winPct) {
   return 6;
 }
 
+/// シーズンの途中経過。月ごとに少しずつ進め、最後に [LeagueSeason] になる。
+class LeagueProgress {
+  const LeagueProgress({
+    this.games = 0,
+    this.wins = 0,
+    this.losses = 0,
+    this.line = const Line(),
+    this.missed = 0,
+  });
+
+  final int games;
+  final int wins;
+  final int losses;
+  final Line line;
+
+  /// 怪我などで、自分は出られなかった試合数。
+  final int missed;
+
+  double get winPct => games == 0 ? 0 : wins / games;
+
+  /// 暫定の順位(いまの勝率から)。
+  int get rank => leagueRank(winPct);
+
+  LeagueSeason toSeason() => LeagueSeason(
+      games: games, wins: wins, losses: losses, line: line, missed: missed);
+
+  Map<String, dynamic> toJson() => {
+        'games': games,
+        'wins': wins,
+        'losses': losses,
+        'line': line.toJson(),
+        'missed': missed,
+      };
+
+  factory LeagueProgress.fromJson(Map<String, dynamic> j) => LeagueProgress(
+        games: (j['games'] as num?)?.toInt() ?? 0,
+        wins: (j['wins'] as num?)?.toInt() ?? 0,
+        losses: (j['losses'] as num?)?.toInt() ?? 0,
+        line: Line.fromJson((j['line'] as Map?)?.cast<String, dynamic>() ?? {}),
+        missed: (j['missed'] as num?)?.toInt() ?? 0,
+      );
+}
+
+/// シーズンの続きを `count` 試合ぶん進める。`available` が false(怪我)なら、自分は出ず、
+/// チーム力だけで勝ち負けが決まる。試合の決め方は [playLeagueSeason] と同じ。
+LeagueProgress playLeagueChunk(
+  Player p,
+  LeagueProgress prog, {
+  required int teamLevel,
+  required List<int> opponents,
+  required Random rng,
+  required int count,
+  int condition = 50,
+  bool available = true,
+}) {
+  var line = prog.line;
+  var wins = prog.wins, losses = prog.losses, missed = prog.missed;
+  for (var i = 0; i < count; i++) {
+    final g = prog.games + i;
+    final opp = opponents[g % opponents.length];
+    if (!available) {
+      final pWin = (0.5 + (teamLevel - opp) / 100).clamp(0.05, 0.95);
+      rng.nextDouble() < pWin ? wins++ : losses++;
+      missed++;
+      continue;
+    }
+    final starts = p.role != Role.batter && g % startInterval == 0;
+    final game = playGame(p, opp, rng,
+        bat: p.role != Role.pitcher, pitch: starts, facedBase: 27);
+    final pWin = (0.5 +
+            (teamLevel - opp) / 100 +
+            (game.rating - 50) / 400 +
+            (condition + tournamentBonus(p.traits) - 50) / 800)
+        .clamp(0.05, 0.95);
+    final won = rng.nextDouble() < pWin;
+    won ? wins++ : losses++;
+    line += (starts && game.outs >= 15)
+        ? game.withDecision(win: won, loss: !won)
+        : game;
+  }
+  return LeagueProgress(
+      games: prog.games + count,
+      wins: wins,
+      losses: losses,
+      line: line,
+      missed: missed);
+}
+
+/// プロの1シーズンの試合数。
+const leagueGames = 143;
+
 /// 先発の登板間隔(試合数)。5試合に1度、先発する。
 const startInterval = 5;
 
@@ -448,7 +543,7 @@ LeagueSeason playLeagueSeason(
   required List<int> opponents,
   required Random rng,
   int condition = 50,
-  int games = 143,
+  int games = leagueGames,
 }) {
   var line = const Line();
   var wins = 0, losses = 0;

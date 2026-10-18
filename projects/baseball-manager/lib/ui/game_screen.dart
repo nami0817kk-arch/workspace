@@ -20,6 +20,7 @@ import 'controller.dart';
 import 'home_screen.dart' show showAdminToggled;
 import 'labels.dart';
 import '../game/records.dart';
+import '../game/season.dart';
 import '../game/snapshot.dart';
 import '../game/tactics.dart';
 import 'player_screen.dart';
@@ -266,6 +267,10 @@ class _StatusCard extends StatelessWidget {
               const SizedBox(width: 8),
               Text('${game.slot + 1}/${game.slotsInYear}'),
             ]),
+            if (game.stage == Stage.pro && game.seasonProgress != null) ...[
+              const SizedBox(height: 8),
+              _PennantRow(progress: game.seasonProgress!),
+            ],
             if (game.goal != null) ...[
               const SizedBox(height: 8),
               _GoalRow(game: game),
@@ -1273,6 +1278,39 @@ class _TacticPicker extends StatelessWidget {
 
 /// 今年の目標と、その状態。
 /// 目標のむずかしさを選ぶ。むずかしいほど、達成のごほうびが大きい。
+/// ペナントの途中経過(プロ)。月ごとに進む。
+class _PennantRow extends StatelessWidget {
+  const _PennantRow({required this.progress});
+  final LeagueProgress progress;
+
+  @override
+  Widget build(BuildContext context) {
+    final p = progress;
+    final d = describeLine(p.line);
+    final cs = Theme.of(context).colorScheme;
+    return Container(
+      key: const Key('pennant'),
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+      decoration: BoxDecoration(
+        color: cs.secondaryContainer,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text(
+            'ペナント(${p.games}/$leagueGames試合): ${p.wins}勝${p.losses}敗 '
+            '${fmtRate(p.winPct)}  暫定${p.rank}位',
+            style: const TextStyle(fontWeight: FontWeight.bold)),
+        if (d.isNotEmpty)
+          Text('今季ここまで: $d', style: Theme.of(context).textTheme.bodySmall),
+        if (p.missed > 0)
+          Text('怪我で${p.missed}試合を欠場',
+              style: const TextStyle(color: Color(0xFFD32F2F), fontSize: 12)),
+      ]),
+    );
+  }
+}
+
 class _GoalPicker extends StatelessWidget {
   const _GoalPicker({required this.game, required this.controller});
   final Game game;

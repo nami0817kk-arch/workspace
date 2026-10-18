@@ -1412,4 +1412,29 @@ void _rankTests() {
       expect(find.byKey(const Key('invest-open')), findsNothing);
     });
   });
+
+  group('ペナントの画面', () {
+    testWidgets('プロでは、月が進むごとに途中経過(勝敗・順位・今季の成績)が出る', (t) async {
+      final c = await _start(t);
+      Game? g;
+      for (var sd = 0; sd < 60 && g == null; sd++) {
+        final x = _until((g) => g.stage == Stage.pro && g.slot == 0,
+            seed: sd, potential: 100);
+        if (x.stage == Stage.pro && x.phase == Phase.term && x.slot == 0) g = x;
+      }
+      c.adopt(g!);
+      await t.pumpAndSettle();
+      expect(find.byKey(const Key('pennant')), findsNothing); // 開幕前
+      c.act(Plan.rest);
+      await t.pumpAndSettle();
+      await _dismissMilestones(t);
+      if (c.game!.phase == Phase.event) {
+        c.chooseEvent(0);
+        await t.pumpAndSettle();
+      }
+      expect(find.byKey(const Key('pennant')), findsOneWidget);
+      expect(find.textContaining('ペナント(20/143試合)'), findsOneWidget);
+      expect(find.textContaining('暫定'), findsOneWidget);
+    });
+  });
 }
