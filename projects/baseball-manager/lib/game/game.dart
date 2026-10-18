@@ -14,6 +14,7 @@ import 'records.dart';
 import 'flavor.dart';
 import 'invest.dart';
 import 'rival_story.dart';
+import 'school.dart';
 import 'snapshot.dart';
 import 'world.dart';
 import 'season.dart';
@@ -253,6 +254,23 @@ class Game {
     _newGoal();
   }
 
+  /// 進学先(中学・高校)。入学の年に選ぶ。段階が変わると地元の学校に戻る。
+  School school = School.local;
+
+  bool get canChooseSchool =>
+      phase == Phase.term &&
+      slot == 0 &&
+      (stage == Stage.juniorHigh || stage == Stage.highSchool) &&
+      stageOf(player.age - 1) != stage;
+
+  void chooseSchool(School s) {
+    _require(Phase.term);
+    if (!canChooseSchool) throw StateError('いまは進学先を決められない');
+    school = s;
+    log.add('${s.label}に進んだ。${s.description}');
+    _note('stage', '${s.label}に入学');
+  }
+
   /// 日本に戻れる時: 海外にいて、プロの年の最初。
   bool get canReturnHome =>
       phase == Phase.term && slot == 0 && stage == Stage.pro && overseas;
@@ -376,6 +394,16 @@ class Game {
     condition = r.condition;
     // _afterCast が経験点(コーチのボーナス)を直接足すことがあるので、先に評価する。
     var gained = wasInjured ? r.exp : _afterCast(action, f, r.exp);
+    if (school.expMultiplier != 1.0 && gained.isNotEmpty) {
+      gained = {
+        for (final e in gained.entries)
+          e.key: (e.value * school.expMultiplier).round(),
+      };
+    }
+    if (school.fatigue > 0) {
+      condition =
+          condition.copyWith(fatigue: condition.fatigue + school.fatigue);
+    }
     if (!wasInjured && (action == Plan.train || action == Plan.special)) {
       focusStreak = (lastFocus == f) ? focusStreak + 1 : 1;
       lastFocus = f;
@@ -637,7 +665,9 @@ class Game {
     final raw = _leagueRaw(st);
     final b = st == Stage.pro
         ? (team: raw.team + teamBoost, opponents: raw.opponents)
-        : raw;
+        : (st == Stage.juniorHigh || st == Stage.highSchool)
+            ? (team: raw.team + school.teamAdjust, opponents: raw.opponents)
+            : raw;
     if (overseas && st == Stage.pro) {
       // 海外は相手が強く(+8)、自分のチームも少し弱い(-3)。
       return (
@@ -1052,6 +1082,7 @@ class Game {
     final after = stage;
     if (after != before) {
       cast.rotate(after, rng, player.role, player.traits);
+      school = School.local;
       if (after != Stage.pro && after != Stage.pathChoice) {
         _note('stage', '${stageNameOf(after)}に進んだ');
       }
@@ -1149,6 +1180,7 @@ class Game {
         'invests': {for (final e in invests.entries) e.key.name: e.value},
         'overseasTeam': overseasTeam,
         'teamBoost': teamBoost,
+        'school': school.name,
         'faUsed': faUsed,
         'records': [for (final r in records) r.toJson()],
         'worldRecords': [for (final r in worldRecords) r.toJson()],
@@ -1217,6 +1249,7 @@ class Game {
     }
     g.overseasTeam = j['overseasTeam'] as String?;
     g.teamBoost = (j['teamBoost'] as num?)?.toInt() ?? 0;
+    g.school = School.parse(j['school']);
     g.faUsed = (j['faUsed'] as bool?) ?? false;
     g.goal = Goal.fromJson(j['goal']);
     g.tactic = Tactic.values

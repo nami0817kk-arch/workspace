@@ -10,6 +10,7 @@ import '../game/exp.dart';
 import '../game/career.dart';
 import '../game/flavor.dart';
 import '../game/game.dart';
+import '../game/school.dart';
 import '../game/invest.dart';
 import '../game/life.dart';
 import '../game/path.dart';
@@ -227,6 +228,15 @@ class GameController extends ChangeNotifier {
   /// 今年の目標のむずかしさを選ぶ(年の最初の行動の前だけ)。
   void chooseGoalLevel(int level) {
     game!.chooseGoalLevel(level);
+    _commit();
+  }
+
+  /// 進学先を決める(入学の年だけ)。
+  void chooseSchool(School sc) {
+    final g = game!;
+    final start = g.log.length;
+    g.chooseSchool(sc);
+    recent = g.log.sublist(start);
     _commit();
   }
 

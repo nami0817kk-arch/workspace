@@ -6,6 +6,8 @@ import '../game/career.dart';
 import '../game/epilogue.dart';
 import '../game/exp.dart';
 import '../game/flavor.dart';
+import '../game/life_log.dart';
+import '../game/school.dart';
 import '../game/marks.dart';
 import '../game/goals.dart';
 import '../game/game.dart';
@@ -127,6 +129,10 @@ class GameScreen extends StatelessWidget {
               if (_isFirstTurn) ...[
                 const SizedBox(height: 8),
                 const _FirstHint(),
+              ],
+              if (game.canChooseSchool) ...[
+                const SizedBox(height: 8),
+                _SchoolCard(controller: controller, game: game),
               ],
               if (game.canChoosePosition) ...[
                 const SizedBox(height: 8),
@@ -409,6 +415,47 @@ class _InvestRow extends StatelessWidget {
           ),
         ),
       ]),
+    );
+  }
+}
+
+class _SchoolCard extends StatelessWidget {
+  const _SchoolCard({required this.controller, required this.game});
+  final GameController controller;
+  final Game game;
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return Card(
+      key: const Key('school-card'),
+      color: cs.secondaryContainer,
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('進学先を決めよう', style: Theme.of(context).textTheme.titleSmall),
+            const SizedBox(height: 2),
+            Text('この${stageNameOf(game.stage)}の間、ずっと続きます。選ばなければ地元の学校です。',
+                style: Theme.of(context).textTheme.bodySmall),
+            const SizedBox(height: 8),
+            Wrap(spacing: 6, runSpacing: 6, children: [
+              for (final s in School.values)
+                ChoiceChip(
+                  key: Key('school-${s.name}'),
+                  selected: s == game.school,
+                  label: Text(s.label),
+                  onSelected: (_) => controller.chooseSchool(s),
+                ),
+            ]),
+            const SizedBox(height: 6),
+            Text(game.school.description,
+                key: const Key('school-desc'),
+                style: Theme.of(context).textTheme.bodySmall),
+          ],
+        ),
+      ),
     );
   }
 }
