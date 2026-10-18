@@ -313,7 +313,9 @@ class _StatusCard extends StatelessWidget {
                           color: t.positive
                               ? const Color(0xFFF9A825)
                               : const Color(0xFF607D8B)),
-                      label: Text(t.label),
+                      // 明るい背景には暗い文字(ダークテーマでも読める)
+                      label: Text(t.label,
+                          style: const TextStyle(color: Color(0xFF263238))),
                       backgroundColor: t.positive
                           ? Colors.amber.shade100
                           : Colors.blueGrey.shade100,
@@ -957,12 +959,13 @@ class _RecentRecordCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final r = game.records.last;
     final d = describeLine(r.line);
+    final pay = salaryOf(r) > 0 ? '  年俸 ${fmtSalary(salaryOf(r))}' : '';
     return Card(
       child: ListTile(
         key: const Key('records-open-card'),
         leading: const Icon(Icons.bar_chart),
         title: Text('${r.age}歳の成績: ${r.resultText}'),
-        subtitle: Text(d.isEmpty ? '成績表を見る' : '$d\n成績表を見る'),
+        subtitle: Text(d.isEmpty ? '成績表を見る' : '$d$pay\n成績表を見る'),
         isThreeLine: d.isNotEmpty,
         trailing: const Icon(Icons.chevron_right),
         onTap: () => Navigator.of(context).push(

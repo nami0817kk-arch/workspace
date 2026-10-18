@@ -226,7 +226,9 @@ class _Table extends StatelessWidget {
                     DataRow(
                       color: r.champion
                           ? WidgetStatePropertyAll(
-                              const Color(0xFFFFF8E1).withValues(alpha: 0.9))
+                              Theme.of(context).brightness == Brightness.dark
+                                  ? const Color(0x33FFC107)
+                                  : const Color(0xE6FFF8E1))
                           : null,
                       cells: [
                         DataCell(Text('${r.age}')),
