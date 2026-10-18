@@ -138,6 +138,9 @@ TermResult playTerm(
   Ability focus,
   Random rng, {
   double share = 1.0,
+  double trainBonus = 1.0,
+  double recoveryBonus = 1.0,
+  double injuryFactor = 1.0,
 }) {
   if (c.injured) {
     return TermResult(
@@ -155,10 +158,11 @@ TermResult playTerm(
   for (final a in abilitiesOf(p.role)) {
     // 練習試合は特定の能力に偏らない。
     final f = action == Plan.match ? a : focus;
-    final x = yearlyDelta(p, a, f) *
+    var x = yearlyDelta(p, a, f) *
         e.scale *
         share *
         (action == Plan.study ? studyMultiplier(p.traits) : 1.0);
+    if (x > 0) x *= trainBonus; // 投資(専属トレーナー)
     if (x >= 0) {
       final cat = categoryOf(a);
       gained[cat] = (gained[cat] ?? 0) +
@@ -173,11 +177,13 @@ TermResult playTerm(
   // 失敗した日は怪我もしやすい。
   final hurt = rng.nextDouble() <
       injuryChance(c, action, p.traits) *
+          injuryFactor *
           share *
           (outcome == Outcome.bad ? 1.5 : 1.0);
   final dFatigue = e.fatigue > 0
       ? (e.fatigue * fatigueMultiplier(p.traits) * share).round()
-      : (e.fatigue * recoveryMultiplier(p.traits) * share).round();
+      : (e.fatigue * recoveryMultiplier(p.traits) * recoveryBonus * share)
+          .round();
   var dMorale = e.morale > 0
       ? (e.morale * moraleGainMultiplier(p.traits) * share).round()
       : (e.morale * moraleLossMultiplier(p.traits) * share).round();

@@ -35,6 +35,8 @@ class PlayerSnapshot {
     this.position,
     this.overseasTeam,
     this.parentName,
+    this.money = 0,
+    this.investTotal = 0,
   });
 
   final String name;
@@ -77,6 +79,10 @@ class PlayerSnapshot {
   /// 二世のとき、親の名前。
   final String? parentName;
 
+  /// 資産(万円)と、投資のレベルの合計(最大9)。
+  final int money;
+  final int investTotal;
+
   int of(Ability a) => abilities[a] ?? 0;
 
   factory PlayerSnapshot.fromGame(Game g) => PlayerSnapshot(
@@ -103,6 +109,8 @@ class PlayerSnapshot {
         position: g.position,
         overseasTeam: g.overseas ? g.overseasTeam : null,
         parentName: g.parentName,
+        money: g.money,
+        investTotal: g.invests.values.fold(0, (a, b) => a + b),
       );
 
   Map<String, dynamic> toJson() => {
@@ -129,6 +137,8 @@ class PlayerSnapshot {
         'position': position?.name,
         'overseasTeam': overseasTeam,
         'parentName': parentName,
+        'money': money,
+        'investTotal': investTotal,
       };
 
   /// 項目を足すときは既定値を置く(殿堂の古い記録を壊さない)。
@@ -179,6 +189,8 @@ class PlayerSnapshot {
       position: Pos.parse(j['position'] as String?),
       overseasTeam: j['overseasTeam'] as String?,
       parentName: j['parentName'] as String?,
+      money: (j['money'] as num?)?.toInt() ?? 0,
+      investTotal: (j['investTotal'] as num?)?.toInt() ?? 0,
     );
   }
 }

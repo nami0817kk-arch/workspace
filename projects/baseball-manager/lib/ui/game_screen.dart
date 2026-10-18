@@ -8,6 +8,7 @@ import '../game/exp.dart';
 import '../game/flavor.dart';
 import '../game/goals.dart';
 import '../game/game.dart';
+import '../game/invest.dart';
 import '../game/life.dart';
 import '../game/path.dart';
 import '../game/player.dart';
@@ -369,6 +370,43 @@ class _StatusCard extends StatelessWidget {
 }
 
 /// ポジションを決める(決められる時だけ出る)。適性はランクで見える。
+class _InvestRow extends StatelessWidget {
+  const _InvestRow(
+      {required this.game, required this.controller, required this.item});
+  final Game game;
+  final GameController controller;
+  final Invest item;
+
+  @override
+  Widget build(BuildContext context) {
+    final lv = game.investLevel(item);
+    final cost = investCost(lv);
+    final can = cost != null && game.money >= cost;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Row(children: [
+        Expanded(
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text('${item.label}  Lv$lv/$maxInvestLevel',
+                style: const TextStyle(fontWeight: FontWeight.bold)),
+            Text(item.description, style: const TextStyle(fontSize: 12)),
+          ]),
+        ),
+        const SizedBox(width: 8),
+        SizedBox(
+          width: 112,
+          child: FilledButton.tonal(
+            key: Key('invest-${item.name}'),
+            onPressed: can ? () => controller.buyInvest(item) : null,
+            child: Text(cost == null ? '最大' : fmtMoney(cost)),
+          ),
+        ),
+      ]),
+    );
+  }
+}
+
 class _PositionCard extends StatelessWidget {
   const _PositionCard({required this.controller, required this.game});
   final GameController controller;
@@ -792,6 +830,12 @@ class _ProCard extends StatelessWidget {
             Text('プロの決断', style: Theme.of(context).textTheme.titleSmall),
             const SizedBox(height: 4),
             Wrap(spacing: 8, children: [
+              OutlinedButton.icon(
+                key: const Key('invest-open'),
+                icon: const Icon(Icons.savings, size: 18),
+                onPressed: () => _openInvest(context),
+                label: Text('投資(資産 ${fmtMoney(game.money)})'),
+              ),
               if (game.canMoveOverseas)
                 OutlinedButton(
                   key: const Key('move-overseas'),
@@ -832,6 +876,38 @@ class _ProCard extends StatelessWidget {
                 child: Text('二刀流は両方を使えるが、練習が分散して伸びが0.6倍になる。',
                     style: TextStyle(fontSize: 12)),
               ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _openInvest(BuildContext context) {
+    return showDialog<void>(
+      context: context,
+      builder: (ctx) => ListenableBuilder(
+        listenable: controller,
+        builder: (ctx, _) => AlertDialog(
+          title: const Text('投資'),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('資産: ${fmtMoney(game.money)}',
+                    key: const Key('money'),
+                    style: const TextStyle(fontWeight: FontWeight.bold)),
+                const Text('年俸は資産になります。練習環境や体のケアに使って、選手を支えましょう。',
+                    style: TextStyle(fontSize: 12)),
+                const SizedBox(height: 8),
+                for (final i in Invest.values)
+                  _InvestRow(game: game, controller: controller, item: i),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+                onPressed: () => Navigator.pop(ctx), child: const Text('閉じる')),
           ],
         ),
       ),
@@ -1055,6 +1131,7 @@ class EndingView extends StatelessWidget {
                     _row('タイトル', '${e.titles.length}個'),
                     _row('ライバルとの対戦', '${e.rivalWins}勝 ${e.rivalLosses}敗'),
                     if (e.wasTwoWay) _row('二刀流', '挑戦した'),
+                    if (game.money > 0) _row('最終資産', fmtMoney(game.money)),
                     if (e.married) _row('家族', '${e.partnerName} と結婚した'),
                   ]),
                 ),
@@ -1292,7 +1369,8 @@ String endingShareText(Game game) {
         : 'プロの舞台には立てなかった',
     '最高の総合評価 ${e.peakOverall}・優勝${e.championships}回・タイトル${e.titles.length}個',
     if (pro.isNotEmpty) careerSummary(game.records),
-    if (pro.isNotEmpty) 'プロ通算収入 ${fmtSalary(careerEarnings(pro))}',
+    if (pro.isNotEmpty)
+      'プロ通算収入 ${fmtSalary(careerEarnings(pro))}(最終資産 ${fmtMoney(game.money)})',
     if (game.worldRecords.isNotEmpty)
       '日本代表: 世界大会${game.worldRecords.length}回出場・優勝${game.worldRecords.where((r) => r.champion).length}回',
   ];

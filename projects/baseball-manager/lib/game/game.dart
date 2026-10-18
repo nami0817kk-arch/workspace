@@ -12,6 +12,7 @@ import 'goals.dart';
 import 'life_log.dart';
 import 'records.dart';
 import 'flavor.dart';
+import 'invest.dart';
 import 'snapshot.dart';
 import 'world.dart';
 import 'season.dart';
@@ -148,6 +149,29 @@ class Game {
   /// 入団した球団(架空)。プロ入りしてから。
   String? proTeam;
 
+  /// 資産(万円)。プロの年俸が貯まり、投資に使える。
+  int money = 0;
+
+  /// 投資のレベル(0〜3)。
+  final Map<Invest, int> invests = {};
+
+  int investLevel(Invest i) => invests[i] ?? 0;
+
+  /// 投資できる時: プロの間の、行動を選ぶ時。
+  bool get canInvest => stage == Stage.pro && phase == Phase.term;
+
+  /// 投資する。資産が足りない・最大レベルなら false。
+  bool buyInvest(Invest i) {
+    if (!canInvest) throw StateError('いまは投資できない');
+    final cost = investCost(investLevel(i));
+    if (cost == null || money < cost) return false;
+    money -= cost;
+    invests[i] = investLevel(i) + 1;
+    log.add('${i.label}に投資した(Lv${invests[i]})。');
+    _note('invest', '${i.label}に投資(Lv${invests[i]})');
+    return true;
+  }
+
   /// 二世のとき、親の名前(殿堂の選手)。
   String? parentName;
 
@@ -278,7 +302,11 @@ class Game {
     }
     final share = slotShare(stage);
     final wasInjured = condition.injured;
-    final r = playTerm(player, condition, action, f, rng, share: share);
+    final r = playTerm(player, condition, action, f, rng,
+        share: share,
+        trainBonus: trainerMultiplier(investLevel(Invest.trainer)),
+        recoveryBonus: dietitianMultiplier(investLevel(Invest.dietitian)),
+        injuryFactor: medicalFactor(investLevel(Invest.medical)));
     player = r.player;
     condition = r.condition;
     // _afterCast が経験点(コーチのボーナス)を直接足すことがあるので、先に評価する。
@@ -648,6 +676,8 @@ class Game {
       for (final t in titles) {
         log.add('タイトル獲得: $t!');
       }
+      // 年俸が資産に入る。
+      money += salaryOf(rec);
       // 契約更改(前の年からの増減)。保存はせず、成績から計算する。
       final pro = records.where((r) => r.stage == Stage.pro).toList();
       final now = salaryOf(rec);
@@ -883,6 +913,8 @@ class Game {
         'position': position?.name,
         'overseas': overseas,
         'parentName': parentName,
+        'money': money,
+        'invests': {for (final e in invests.entries) e.key.name: e.value},
         'overseasTeam': overseasTeam,
         'records': [for (final r in records) r.toJson()],
         'worldRecords': [for (final r in worldRecords) r.toJson()],
@@ -934,6 +966,13 @@ class Game {
     g.position = Pos.parse(j['position'] as String?);
     g.overseas = (j['overseas'] as bool?) ?? false;
     g.parentName = j['parentName'] as String?;
+    g.money = (j['money'] as num?)?.toInt() ?? 0;
+    for (final e in ((j['invests'] as Map?) ?? const {}).entries) {
+      final i = Invest.parse(e.key as String);
+      if (i != null) {
+        g.invests[i] = (e.value as num).toInt().clamp(0, maxInvestLevel);
+      }
+    }
     g.overseasTeam = j['overseasTeam'] as String?;
     g.goal = Goal.fromJson(j['goal']);
     g.tactic = Tactic.values

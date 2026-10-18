@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:baseball_manager/game/career.dart';
 import 'package:baseball_manager/game/flavor.dart';
+import 'package:baseball_manager/game/invest.dart';
 import 'package:baseball_manager/game/game.dart';
 import 'package:baseball_manager/game/difficulty.dart';
 import 'package:baseball_manager/game/goals.dart';
@@ -1373,6 +1374,42 @@ void _rankTests() {
       final c = await _start(t);
       expect(c.history, isEmpty);
       expect(find.byKey(const Key('heir-select')), findsNothing);
+    });
+  });
+
+  group('投資の画面', () {
+    testWidgets('プロで資産があれば投資でき、買うと資産が減ってレベルが上がる', (t) async {
+      final c = await _start(t);
+      Game? g;
+      for (var sd = 0; sd < 60 && g == null; sd++) {
+        final x = _until((g) => g.stage == Stage.pro, seed: sd, potential: 100);
+        if (x.stage == Stage.pro && x.phase == Phase.term) g = x;
+      }
+      g!.money = 10000;
+      c.adopt(g);
+      await t.pumpAndSettle();
+      await t.tap(find.byKey(const Key('invest-open')));
+      await t.pumpAndSettle();
+      expect(find.byKey(const Key('money')), findsOneWidget);
+      await t.tap(find.byKey(const Key('invest-trainer')));
+      await t.pumpAndSettle();
+      expect(g.investLevel(Invest.trainer), 1);
+      expect(g.money, 8000);
+      expect(find.textContaining('Lv1/3'), findsOneWidget);
+      // 資産が足りない投資は押せない(最大・足りない)
+      g.money = 100;
+      c.adopt(g);
+      await t.pumpAndSettle();
+      final btn =
+          t.widget<FilledButton>(find.byKey(const Key('invest-medical')));
+      expect(btn.onPressed, isNull);
+    });
+
+    testWidgets('アマチュアには投資のボタンが出ない', (t) async {
+      final c = await _start(t);
+      c.newGame('テスト', Role.batter);
+      await t.pumpAndSettle();
+      expect(find.byKey(const Key('invest-open')), findsNothing);
     });
   });
 }

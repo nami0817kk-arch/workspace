@@ -10,6 +10,7 @@ import '../game/exp.dart';
 import '../game/career.dart';
 import '../game/flavor.dart';
 import '../game/game.dart';
+import '../game/invest.dart';
 import '../game/life.dart';
 import '../game/path.dart';
 import '../game/player.dart';
@@ -206,6 +207,13 @@ class GameController extends ChangeNotifier {
     g.returnHome();
     recent = g.log.sublist(start);
     _commit();
+  }
+
+  /// 投資する(プロの間)。買えたら true。
+  bool buyInvest(Invest i) {
+    final ok = game!.buyInvest(i);
+    if (ok) _commit();
+    return ok;
   }
 
   /// 今年の目標のむずかしさを選ぶ(年の最初の行動の前だけ)。
