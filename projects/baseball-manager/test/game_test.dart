@@ -183,6 +183,7 @@ void main() {
       if (g.stage != Stage.pro) continue;
       g.changeRole(Role.twoWay);
       expect(g.player.role, Role.twoWay);
+      expect(g.log.last, '二刀流に転向した。'); // 英語の識別子を出さない
       g.retire();
       expect(g.ending!.wasTwoWay, isTrue);
       expect(g.ending!.madePro, isTrue);

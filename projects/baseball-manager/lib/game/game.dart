@@ -273,7 +273,7 @@ class Game {
     _require(Phase.term);
     player = switchRole(player, to, stage);
     if (to == Role.twoWay) _wasTwoWay = true;
-    log.add('${to.name} に転向した。');
+    log.add('${roleNameOf(to)}に転向した。');
     _note('role', '${roleNameOf(to)}になった');
   }
 
