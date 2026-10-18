@@ -269,6 +269,14 @@ class Game {
   /// 大会・シーズン最終月の作戦。その大会が終わると「堅実」に戻る。
   Tactic tactic = Tactic.steady;
 
+  /// 同じ能力を重点に練習・特訓を続けた回数(継続は力なり)。
+  int focusStreak = 0;
+  Ability? lastFocus;
+
+  /// 継続ボーナスの倍率: 3回続けて+2%、6回続けて+4%。
+  double get streakBonus =>
+      focusStreak >= 6 ? 1.04 : (focusStreak >= 3 ? 1.02 : 1.0);
+
   /// 人生の節目(入学・進路・ドラフト・特性の習得・転向・引退)。経歴の年表に出す。
   final List<LifeEvent> lifeLog = [];
 
@@ -317,6 +325,14 @@ class Game {
     condition = r.condition;
     // _afterCast が経験点(コーチのボーナス)を直接足すことがあるので、先に評価する。
     var gained = wasInjured ? r.exp : _afterCast(action, f, r.exp);
+    if (!wasInjured && (action == Plan.train || action == Plan.special)) {
+      focusStreak = (lastFocus == f) ? focusStreak + 1 : 1;
+      lastFocus = f;
+      final k = categoryOf(f);
+      if (streakBonus > 1 && gained[k] != null) {
+        gained = {...gained, k: (gained[k]! * streakBonus).round()};
+      }
+    }
     if (difficulty != Difficulty.normal) {
       gained = {
         for (final e in gained.entries)
@@ -1040,6 +1056,8 @@ class Game {
         'worldRecords': [for (final r in worldRecords) r.toJson()],
         'lifeLog': [for (final e in lifeLog) e.toJson()],
         'tactic': tactic.name,
+        'focusStreak': focusStreak,
+        'lastFocus': lastFocus?.name,
         'goal': goal?.toJson(),
         'difficulty': difficulty.name,
       };
@@ -1067,6 +1085,8 @@ class Game {
     g.condition = Condition.fromJson(
         (j['condition'] as Map?)?.cast<String, dynamic>() ?? {});
     g.slot = (j['slot'] as num?)?.toInt() ?? 0;
+    g.focusStreak = (j['focusStreak'] as num?)?.toInt() ?? 0;
+    g.lastFocus = Ability.parse((j['lastFocus'] as String?) ?? '');
     g.exp = ExpPool.fromJson((j['exp'] as Map?)?.cast<String, dynamic>() ?? {});
     g.phase = pick(Phase.values, j['phase'], Phase.term);
     g.pendingEvent = events.where((e) => e.id == j['pendingEvent']).firstOrNull;

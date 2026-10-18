@@ -605,6 +605,17 @@ class _ActionCard extends StatelessWidget {
                   onSelected: (_) => controller.setFocus(a),
                 ),
             ]),
+            if (game.focusStreak >= 2)
+              Padding(
+                padding: const EdgeInsets.only(top: 4),
+                child: Text(
+                    game.lastFocus == focus
+                        ? '${abilityLabel(focus)}を${game.focusStreak}回連続で鍛えている'
+                            '${game.streakBonus > 1 ? '(経験点+${((game.streakBonus - 1) * 100).round()}%)' : '(あと${3 - game.focusStreak}回で経験点+2%)'}'
+                        : '重点を変えると、連続はリセットされる',
+                    key: const Key('focus-streak'),
+                    style: Theme.of(context).textTheme.bodySmall),
+              ),
             if (game.tacticRelevant) ...[
               const SizedBox(height: 10),
               _TacticPicker(controller: controller, game: game),
