@@ -17,6 +17,7 @@ import 'rival_story.dart';
 import 'snapshot.dart';
 import 'world.dart';
 import 'season.dart';
+import 'awards.dart';
 import 'tactics.dart';
 import 'traits.dart';
 
@@ -720,6 +721,15 @@ class Game {
     if (league != null) {
       final titles =
           titlesOf(league.line, games: league.games, rank: league.rank);
+      final proBefore = records.where((r) => r.stage == Stage.pro).toList();
+      final awards = awardsOf(
+        league.line,
+        games: league.games,
+        firstYear: proBefore.isEmpty,
+        prevGames: proBefore.isEmpty ? null : proBefore.last.line.games,
+        fielding: player.abilities[Ability.fielding] ?? 0,
+        isBatter: league.line.hasBatting && !league.line.hasPitching,
+      );
       final rec = SeasonRecord(
         age: player.age,
         stage: stage,
@@ -730,6 +740,7 @@ class Game {
         titles: titles,
         rivalWon: rivalWon,
         overseas: overseas,
+        awards: awards,
       );
       records.add(rec);
       _judgeGoal(rec);
@@ -744,6 +755,9 @@ class Game {
       if (d.isNotEmpty) log.add('今季成績: $d');
       for (final t in titles) {
         log.add('タイトル獲得: $t!');
+      }
+      for (final w in awards) {
+        log.add('表彰: $w!');
       }
       // 年俸が資産に入る。
       money += salaryOf(rec);

@@ -71,6 +71,7 @@ List<TimelineEntry> timelineOf(
       if (r.champion)
         TimelineEntry(r.age, 'champion', r.isLeague ? 'リーグ優勝' : '大会で優勝'),
       for (final t in r.titles) TimelineEntry(r.age, 'title', 'タイトル獲得: $t'),
+      for (final w in r.awards) TimelineEntry(r.age, 'title', '表彰: $w'),
     ],
   ];
   // 同じ年の中は、節目→成績→引退の順。元の順序は保つ。

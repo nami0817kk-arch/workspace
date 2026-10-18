@@ -51,6 +51,10 @@ class RecordsView extends StatelessWidget {
       for (final r in rs)
         for (final t in r.titles) (r.age, t),
     ];
+    final awards = [
+      for (final r in rs)
+        for (final t in r.awards) (r.age, t),
+    ];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -62,6 +66,10 @@ class RecordsView extends StatelessWidget {
         if (titles.isNotEmpty) ...[
           const SizedBox(height: 8),
           _Titles(titles: titles),
+        ],
+        if (awards.isNotEmpty) ...[
+          const SizedBox(height: 8),
+          _Titles(titles: awards, heading: '表彰', icon: Icons.military_tech),
         ],
         if (snapshot.worldRecords.isNotEmpty) ...[
           const SizedBox(height: 8),
@@ -401,8 +409,13 @@ class _Table extends StatelessWidget {
 }
 
 class _Titles extends StatelessWidget {
-  const _Titles({required this.titles});
+  const _Titles(
+      {required this.titles,
+      this.heading = '獲得したタイトル',
+      this.icon = Icons.workspace_premium});
   final List<(int, String)> titles;
+  final String heading;
+  final IconData icon;
 
   @override
   Widget build(BuildContext context) {
@@ -412,14 +425,13 @@ class _Titles extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('獲得したタイトル', style: Theme.of(context).textTheme.titleSmall),
+            Text(heading, style: Theme.of(context).textTheme.titleSmall),
             const SizedBox(height: 6),
             Wrap(spacing: 6, runSpacing: 0, children: [
               for (final (age, t) in titles)
                 Chip(
                   visualDensity: VisualDensity.compact,
-                  avatar: const Icon(Icons.workspace_premium,
-                      size: 16, color: Color(0xFFD4AF37)),
+                  avatar: Icon(icon, size: 16, color: const Color(0xFFD4AF37)),
                   label: Text('$age歳 $t'),
                 ),
             ]),
