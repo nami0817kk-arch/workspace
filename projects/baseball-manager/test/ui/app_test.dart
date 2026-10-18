@@ -897,4 +897,34 @@ void _rankTests() {
     await t.pumpAndSettle();
     expect(c.unlocked, isEmpty);
   });
+
+  testWidgets('おすすめで年末まで進める: 年が変わるか、出来事・節目で止まる', (t) async {
+    final c = await _start(t);
+    c.newGame('テスト', Role.batter);
+    await t.pumpAndSettle();
+    final age = c.game!.player.age;
+    await t.tap(find.byKey(const Key('auto-year')));
+    await t.pumpAndSettle();
+    final g = c.game!;
+    expect(
+        g.player.age > age ||
+            g.phase != Phase.term ||
+            c.pending.isNotEmpty ||
+            g.slot > 0,
+        isTrue);
+    // 何度押しても壊れず、出来事は自分で選ぶまで止まっている
+    for (var i = 0; i < 30 && c.game!.phase != Phase.retired; i++) {
+      await _dismissMilestones(t);
+      if (c.game!.phase == Phase.event) {
+        c.chooseEvent(0);
+      } else if (c.game!.phase == Phase.pathChoice) {
+        c.chooseRoute(Course.university);
+      } else {
+        c.autoYear();
+      }
+      c.autoSpend();
+      await t.pumpAndSettle();
+    }
+    expect(c.game!.player.age, greaterThan(age + 2));
+  });
 }

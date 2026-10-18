@@ -419,14 +419,6 @@ class _AbilityCard extends StatelessWidget {
       Plan.lesson => (Icons.school, const Color(0xFFF9A825)),
     };
 
-/// 今のおすすめ。疲れていれば休養、気持ちが沈んでいれば交流、それ以外は練習。
-Plan recommendedPlan(Game g) {
-  final c = g.condition;
-  if (c.fatigue >= 70) return Plan.rest;
-  if (c.morale < 35) return Plan.social;
-  return Plan.train;
-}
-
 class _ActionCard extends StatelessWidget {
   const _ActionCard({required this.controller, required this.game});
   final GameController controller;
@@ -475,6 +467,16 @@ class _ActionCard extends StatelessWidget {
                           recommended: a == recommendedPlan(game))),
               ]);
             }),
+            const SizedBox(height: 8),
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton.icon(
+                key: const Key('auto-year'),
+                onPressed: controller.autoYear,
+                icon: const Icon(Icons.fast_forward, size: 18),
+                label: const Text('おすすめで年末まで進める'),
+              ),
+            ),
           ],
         ),
       ),

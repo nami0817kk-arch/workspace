@@ -132,6 +132,14 @@ class SaveStore {
 }
 
 /// 画面とゲームをつなぐ。操作のたびに保存する。
+/// 今のおすすめ。疲れていれば休養、気持ちが沈んでいれば交流、それ以外は練習。
+Plan recommendedPlan(Game g) {
+  final c = g.condition;
+  if (c.fatigue >= 70) return Plan.rest;
+  if (c.morale < 35) return Plan.social;
+  return Plan.train;
+}
+
 class GameController extends ChangeNotifier {
   GameController({SaveStore? store, Random? rng})
       : store = store ?? SaveStore(),
@@ -322,6 +330,19 @@ class GameController extends ChangeNotifier {
   void autoSpend() {
     game!.autoSpend();
     _commit();
+  }
+
+  /// おすすめの過ごし方で、今年(年が変わるまで)を進める。
+  /// 出来事・進路の選択・節目の演出が出たらそこで止まる(選ぶのは本人)。
+  void autoYear() {
+    final g = game;
+    if (g == null) return;
+    final age = g.player.age;
+    for (var i = 0; i < g.slotsInYear; i++) {
+      if (game!.phase != Phase.term || game!.player.age != age) break;
+      if (pending.isNotEmpty) break;
+      act(recommendedPlan(game!));
+    }
   }
 
   void chooseEvent(int i) {
