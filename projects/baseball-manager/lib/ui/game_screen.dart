@@ -282,16 +282,21 @@ class _StatusCard extends StatelessWidget {
                 ),
               ),
             const SizedBox(height: 8),
-            Wrap(spacing: 8, runSpacing: 0, children: [
-              for (final cat in Category.values)
-                Chip(
-                  visualDensity: VisualDensity.compact,
-                  label: Text(
-                    '${cat.label}経験点 ${game.exp.of(cat)}'
-                    '${(game.lastGain[cat] ?? 0) > 0 ? '  (+${game.lastGain[cat]})' : ''}',
-                  ),
-                ),
-            ]),
+            Wrap(
+                spacing: 6,
+                runSpacing: 0,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: [
+                  Text('経験点', style: Theme.of(context).textTheme.labelLarge),
+                  for (final cat in Category.values)
+                    Chip(
+                      visualDensity: VisualDensity.compact,
+                      label: Text(
+                        '${cat.label} ${game.exp.of(cat)}'
+                        '${(game.lastGain[cat] ?? 0) > 0 ? ' (+${game.lastGain[cat]})' : ''}',
+                      ),
+                    ),
+                ]),
             if (game.player.traits.isNotEmpty)
               Wrap(spacing: 6, children: [
                 for (final t in game.player.traits)
@@ -980,6 +985,7 @@ class _TacticPicker extends StatelessWidget {
     final now = game.tactic;
     return Container(
       key: const Key('tactic-picker'),
+      width: double.infinity,
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.tertiaryContainer,
