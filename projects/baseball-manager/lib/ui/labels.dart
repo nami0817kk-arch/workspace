@@ -17,6 +17,18 @@ String abilityLabel(Ability a) => switch (a) {
       Ability.stamina => 'スタミナ',
     };
 
+/// 能力が何に効くかの説明(ラベルの長押し・タップで出す)。
+String abilityHint(Ability a) => switch (a) {
+      Ability.contact => 'ミート: 球に当てる力。ヒットが出やすくなる。',
+      Ability.power => 'パワー: 長打・ホームランの出やすさ。',
+      Ability.speed => '走力: 足の速さ。二塁打・三塁打に効く。',
+      Ability.fielding => '守備: 捕って投げる力。',
+      Ability.eye => '選球眼: 球を見きわめる力。四球が増える。',
+      Ability.stuff => '球威: 球の威力。三振が増え、打たれにくくなる。',
+      Ability.control => '制球: 狙ったところへ投げる力。四球が減る。',
+      Ability.stamina => 'スタミナ: 長く投げられる。疲れにくくもなる。',
+    };
+
 String roleLabel(Role r) => switch (r) {
       Role.batter => '打者',
       Role.pitcher => '投手',

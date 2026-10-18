@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'career.dart';
 import 'season.dart';
 
@@ -128,3 +130,26 @@ String careerSummary(List<SeasonRecord> rs) {
   final d = describeLine(l);
   return '${pro.isNotEmpty ? 'プロ通算' : '大会通算'} $d';
 }
+
+/// プロの年俸(万円)。保存せず、その年の成績から計算する。
+/// 評価50で約1750万、70で約6000万、90で約2億。タイトルを獲るごとに +15%。
+/// プロ以外の年は 0。
+int salaryOf(SeasonRecord r) {
+  if (r.stage != Stage.pro) return 0;
+  final base = 500 * pow(1.065, r.line.rating - 30);
+  final v = base * (1 + 0.15 * r.titles.length);
+  return ((v.clamp(400, 80000) / 10).round() * 10).toInt();
+}
+
+/// 年俸の表記: 「1750万円」「2億3000万円」。
+String fmtSalary(int man) {
+  if (man <= 0) return '-';
+  final oku = man ~/ 10000;
+  final rest = man % 10000;
+  if (oku == 0) return '$rest万円';
+  return rest == 0 ? '$oku億円' : '$oku億$rest万円';
+}
+
+/// プロ通算の収入(万円)。
+int careerEarnings(List<SeasonRecord> rs) =>
+    rs.fold(0, (a, r) => a + salaryOf(r));

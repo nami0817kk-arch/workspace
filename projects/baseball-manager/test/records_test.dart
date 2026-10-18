@@ -339,4 +339,31 @@ void main() {
       expect(g.championships, g.records.where((r) => r.champion).length);
     });
   });
+
+  group('年俸', () {
+    SeasonRecord rec(Player p,
+        {Stage stage = Stage.pro, List<String> t = const []}) {
+      final line = _season(p, 3).line;
+      return SeasonRecord(
+          age: 26, stage: stage, line: line, rank: 2, titles: t);
+    }
+
+    test('強い選手ほど高い。タイトルでも上がる。プロ以外は0', () {
+      final lo = salaryOf(rec(_p(Role.batter, 40)));
+      final hi = salaryOf(rec(_p(Role.batter, 85)));
+      expect(hi, greaterThan(lo));
+      final p = _p(Role.batter, 70);
+      expect(salaryOf(rec(p, t: ['首位打者'])), greaterThan(salaryOf(rec(p))));
+      expect(salaryOf(rec(p, stage: Stage.highSchool)), 0);
+      expect(lo, inInclusiveRange(400, 80000));
+      expect(hi, inInclusiveRange(400, 80000));
+    });
+
+    test('表記: 万円と億円', () {
+      expect(fmtSalary(0), '-');
+      expect(fmtSalary(1750), '1750万円');
+      expect(fmtSalary(10000), '1億円');
+      expect(fmtSalary(23000), '2億3000万円');
+    });
+  });
 }

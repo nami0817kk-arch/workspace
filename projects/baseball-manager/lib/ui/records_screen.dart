@@ -144,6 +144,10 @@ class _Summary extends StatelessWidget {
                 _Stat('奪三振', '${l.strikeouts}'),
                 _Stat('投球回', l.inningsText),
               ]),
+            if (isPro) ...[
+              const SizedBox(height: 10),
+              _Stat('通算収入', fmtSalary(careerEarnings(pro))),
+            ],
             const SizedBox(height: 10),
             Wrap(spacing: 8, children: [
               Chip(
@@ -214,6 +218,7 @@ class _Table extends StatelessWidget {
                     col('防御率', num: true),
                     col('奪三振', num: true)
                   ],
+                  if (records.any((r) => r.stage == Stage.pro)) col('年俸'),
                   col('タイトル'),
                 ],
                 rows: [
@@ -253,6 +258,8 @@ class _Table extends StatelessWidget {
                               ? '${r.line.strikeouts}'
                               : '-')),
                         ],
+                        if (records.any((r) => r.stage == Stage.pro))
+                          DataCell(Text(fmtSalary(salaryOf(r)))),
                         DataCell(Text(
                             r.titles.isEmpty ? '' : r.titles.join('・'),
                             style: TextStyle(color: cs.tertiary))),

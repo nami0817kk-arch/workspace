@@ -368,7 +368,12 @@ class _AbilityCard extends StatelessWidget {
                 child: Row(children: [
                   RankBadge(value: p.of(a)),
                   const SizedBox(width: 6),
-                  SizedBox(width: 60, child: Text(abilityLabel(a))),
+                  SizedBox(
+                      width: 60,
+                      child: Tooltip(
+                          message: abilityHint(a),
+                          triggerMode: TooltipTriggerMode.tap,
+                          child: Text(abilityLabel(a)))),
                   SizedBox(
                       width: 28,
                       child: Text('${p.of(a)}', textAlign: TextAlign.right)),

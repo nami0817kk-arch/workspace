@@ -194,7 +194,12 @@ class _ProfileTab extends StatelessWidget {
                         child: Row(children: [
                           RankBadge(value: s.of(a)),
                           const SizedBox(width: 6),
-                          SizedBox(width: 60, child: Text(abilityLabel(a))),
+                          SizedBox(
+                              width: 60,
+                              child: Tooltip(
+                                  message: abilityHint(a),
+                                  triggerMode: TooltipTriggerMode.tap,
+                                  child: Text(abilityLabel(a)))),
                           SizedBox(
                               width: 28,
                               child: Text('${s.of(a)}',
