@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../game/flavor.dart';
+
 import '../game/career.dart';
 import '../game/exp.dart';
 import '../game/game.dart';
@@ -139,6 +141,23 @@ class _ProfileTab extends StatelessWidget {
                       Text(
                           '${s.age}歳  ${s.endingTitle == null ? stageNameOf(s.stage) : '引退'}'),
                       Text(roleNameOf(s.role)),
+                      Text(
+                          affiliationOf(
+                              s.stage == Stage.retired ? Stage.pro : s.stage,
+                              s.name,
+                              proTeam: s.proTeam),
+                          key: const Key('profile-affiliation')),
+                      Text(
+                          playerCardLine(
+                              s.stage == Stage.retired ? Stage.pro : s.stage,
+                              Player(
+                                  name: s.name,
+                                  role: s.role,
+                                  age: s.age,
+                                  potential: s.potential,
+                                  abilities: s.abilities)),
+                          key: const Key('profile-card'),
+                          style: Theme.of(context).textTheme.bodySmall),
                       const SizedBox(height: 6),
                       Wrap(
                           spacing: 6,

@@ -311,11 +311,27 @@ class GameController extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// このターンの始まりの能力値。いまとの差が「今回の上昇」(次の行動で更新)。
+  Map<Ability, int>? _turnBase;
+
+  /// 今回(前の行動から今まで)に上がった能力と、その上昇値。
+  Map<Ability, int> get abilityGains {
+    final g = game;
+    final base = _turnBase;
+    if (g == null || base == null) return const {};
+    return {
+      for (final a in abilitiesOf(g.player.role))
+        if (base.containsKey(a) && g.player.of(a) > base[a]!)
+          a: g.player.of(a) - base[a]!,
+    };
+  }
+
   void act(Plan a) {
     final g = game!;
     if (!abilitiesOf(g.player.role).contains(focus)) {
       focus = abilitiesOf(g.player.role).first;
     }
+    _turnBase = {for (final x in abilitiesOf(g.player.role)) x: g.player.of(x)};
     final start = g.log.length;
     final before = g.stage;
     g.choose(a, focus);
@@ -333,9 +349,8 @@ class GameController extends ChangeNotifier {
     final o = g.lastOutcome.label.isEmpty
         ? ''
         : '(${g.lastOutcome.label}${g.lastOutcome == Outcome.bad ? '…' : '!'})';
-    return gains.isEmpty
-        ? '${actionLabel(a)}した'
-        : '${actionLabel(a)}$o: ${gains.join(' / ')}';
+    final name = planTitle(a, focus);
+    return gains.isEmpty ? '$nameをした' : '$name$o: ${gains.join(' / ')}';
   }
 
   /// 今回のできごとから、見せる価値のある節目を拾う。
@@ -392,12 +407,34 @@ class GameController extends ChangeNotifier {
   }
 
   void spend(Ability a) {
-    if (game!.spend(a)) _commit();
+    final before = _ranks();
+    if (game!.spend(a)) {
+      _noteRankUps(before);
+      _commit();
+    }
   }
 
   void autoSpend() {
+    final before = _ranks();
     game!.autoSpend();
+    _noteRankUps(before);
     _commit();
+  }
+
+  Map<Ability, String> _ranks() => {
+        for (final a in abilitiesOf(game!.player.role))
+          a: rankOf(game!.player.of(a)),
+      };
+
+  /// ランクが上がった能力を「いまの結果」に足す(パワプロのランクアップの気持ちよさ)。
+  void _noteRankUps(Map<Ability, String> before) {
+    final g = game!;
+    final ups = [
+      for (final a in abilitiesOf(g.player.role))
+        if (before[a] != null && before[a] != rankOf(g.player.of(a)))
+          '${abilityLabel(a)}が ${rankOf(g.player.of(a))}ランクに上がった!',
+    ];
+    if (ups.isNotEmpty) recent = [...recent, ...ups];
   }
 
   /// おすすめの過ごし方で、今年(年が変わるまで)を進める。

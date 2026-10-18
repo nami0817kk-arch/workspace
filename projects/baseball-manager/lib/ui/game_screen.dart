@@ -5,6 +5,7 @@ import '../game/calendar.dart';
 import '../game/career.dart';
 import '../game/epilogue.dart';
 import '../game/exp.dart';
+import '../game/flavor.dart';
 import '../game/goals.dart';
 import '../game/game.dart';
 import '../game/life.dart';
@@ -222,6 +223,30 @@ class _StatusCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // 選手カード: 所属・背番号・投打・守備位置
+            Container(
+              key: const Key('player-card'),
+              width: double.infinity,
+              margin: const EdgeInsets.only(bottom: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primaryContainer,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                        affiliationOf(game.stage, p.name,
+                            proTeam: game.proTeam),
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleSmall
+                            ?.copyWith(fontWeight: FontWeight.bold)),
+                    Text(playerCardLine(game.stage, p),
+                        style: Theme.of(context).textTheme.bodySmall),
+                  ]),
+            ),
             Row(children: [
               Text(game.slotName,
                   style: Theme.of(context).textTheme.titleSmall),
@@ -381,8 +406,21 @@ class _AbilityCard extends StatelessWidget {
                           triggerMode: TooltipTriggerMode.tap,
                           child: Text(abilityLabel(a)))),
                   SizedBox(
-                      width: 28,
-                      child: Text('${p.of(a)}', textAlign: TextAlign.right)),
+                      width: 54,
+                      child: Text.rich(
+                        TextSpan(children: [
+                          if ((controller.abilityGains[a] ?? 0) > 0)
+                            TextSpan(
+                                text: '+${controller.abilityGains[a]} ',
+                                style: const TextStyle(
+                                    color: Color(0xFF2E9B3E),
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.bold)),
+                          TextSpan(text: '${p.of(a)}'),
+                        ]),
+                        key: Key('gain-${a.name}'),
+                        textAlign: TextAlign.right,
+                      )),
                   const SizedBox(width: 8),
                   Expanded(
                     child: TweenAnimationBuilder<double>(
@@ -474,6 +512,7 @@ class _ActionCard extends StatelessWidget {
                       width: w,
                       child: _PlanTile(
                           plan: a,
+                          focus: focus,
                           controller: controller,
                           recommended: a == recommendedPlan(game))),
               ]);
@@ -498,10 +537,12 @@ class _ActionCard extends StatelessWidget {
 class _PlanTile extends StatelessWidget {
   const _PlanTile({
     required this.plan,
+    required this.focus,
     required this.controller,
     this.recommended = false,
   });
   final Plan plan;
+  final Ability focus;
   final GameController controller;
 
   /// 今のおすすめ(疲れ・気持ちから決める)。
@@ -514,7 +555,7 @@ class _PlanTile extends StatelessWidget {
     return Semantics(
       button: true,
       label:
-          '${actionLabel(plan)}。${actionHint(plan)}${recommended ? '。おすすめ' : ''}',
+          '${planTitle(plan, focus)}。${planHint(plan, focus)}${recommended ? '。おすすめ' : ''}',
       excludeSemantics: true,
       child: Material(
         key: Key('act-${plan.name}'),
@@ -540,9 +581,9 @@ class _PlanTile extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(actionLabel(plan),
+                    Text(planTitle(plan, focus),
                         style: const TextStyle(fontWeight: FontWeight.bold)),
-                    Text(actionHint(plan),
+                    Text(planHint(plan, focus),
                         style: Theme.of(context)
                             .textTheme
                             .bodySmall

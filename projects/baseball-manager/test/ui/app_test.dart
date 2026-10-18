@@ -118,7 +118,7 @@ void main() {
     expect(
         find.byWidgetPredicate((w) =>
             w is Text &&
-            RegExp(r'^練習(\(.+\))?: 打撃経験点 \+').hasMatch(w.data ?? '')),
+            RegExp(r'^素振りとティー打撃(\(.+\))?: 打撃経験点 \+').hasMatch(w.data ?? '')),
         findsOneWidget);
   });
 
@@ -1105,6 +1105,68 @@ void _rankTests() {
         }
       }
       expect(shownOnce, isTrue);
+    });
+  });
+
+  group('育成の手ごたえ', () {
+    testWidgets('選手カードに所属・背番号(少年野球は無し)・投打・守備位置が出る', (t) async {
+      final c = await _start(t);
+      c.newGame('テスト', Role.batter);
+      await t.pumpAndSettle();
+      expect(find.byKey(const Key('player-card')), findsOneWidget);
+      expect(find.textContaining('ジュニアーズ'), findsOneWidget);
+      expect(find.textContaining('背番号'), findsNothing); // 少年野球
+      c.adopt(_until((g) => g.stage == Stage.highSchool, seed: 5));
+      await t.pumpAndSettle();
+      expect(find.textContaining('高校 野球部'), findsOneWidget);
+      expect(find.textContaining('背番号'), findsOneWidget);
+    });
+
+    testWidgets('選手情報にも所属と背番号・投打・守備位置が出る', (t) async {
+      final c = await _start(t);
+      c.adopt(_until((g) => g.stage == Stage.highSchool, seed: 5));
+      await t.pumpAndSettle();
+      await t.tap(find.byKey(const Key('player-open')).first);
+      await t.pumpAndSettle();
+      expect(find.byKey(const Key('profile-affiliation')), findsOneWidget);
+      final line = t.widget<Text>(find.byKey(const Key('profile-card'))).data!;
+      expect(line, contains('背番号'));
+      expect(line, contains('投'));
+    });
+
+    testWidgets('練習の名前は重点の能力で変わる(素振り→ノック)', (t) async {
+      final c = await _start(t);
+      c.newGame('テスト', Role.batter);
+      await t.pumpAndSettle();
+      expect(find.text('素振りとティー打撃'), findsOneWidget);
+      await t.tap(find.byKey(const Key('focus-fielding')));
+      await t.pumpAndSettle();
+      expect(find.text('ノック(守備練習)'), findsOneWidget);
+      expect(find.text('特訓: ノック(守備練習)'), findsOneWidget);
+    });
+
+    testWidgets('経験点で能力を上げると、今回の上昇とランクアップが出る', (t) async {
+      final c = await _start(t);
+      c.newGame('テスト', Role.batter);
+      await t.pumpAndSettle();
+      c.act(Plan.rest);
+      c.game!.adminAddExp(400);
+      await t.pumpAndSettle();
+      var guard = 0;
+      while (!c.recent.any((l) => l.contains('ランクに上がった')) && guard++ < 60) {
+        c.spend(Ability.contact);
+      }
+      await t.pumpAndSettle();
+      expect(c.recent.any((l) => l.contains('ミートが Fランクに上がった!')), isTrue,
+          reason: '${c.recent}');
+      expect(c.abilityGains[Ability.contact], greaterThan(0));
+      final gainText =
+          t.widget<Text>(find.byKey(const Key('gain-contact'))).textSpan!;
+      expect(gainText.toPlainText(), contains('+'));
+      // 次の行動で「今回の上昇」は消える
+      c.act(Plan.rest);
+      await t.pumpAndSettle();
+      expect(c.abilityGains, isEmpty);
     });
   });
 }

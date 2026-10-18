@@ -274,4 +274,19 @@ void _historyTests() {
     }
     fail('プロになった選手がいない');
   });
+
+  test('プロの毎年に契約更改のログが出る(2年目からは前の年との増減つき)', () {
+    for (var s = 0; s < 60; s++) {
+      final g = _new(s, potential: 100);
+      _autoPlay(g, stop: (g) => g.phase == Phase.retired);
+      final pro = g.records.where((r) => r.stage == Stage.pro).length;
+      if (pro < 3) continue;
+      final lines = g.log.where((l) => l.startsWith('契約更改')).toList();
+      expect(lines.length, pro);
+      expect(lines.first, isNot(contains('→')));
+      expect(lines.skip(1).every((l) => l.contains('→')), isTrue);
+      return;
+    }
+    fail('3年以上プロにいた選手がいない');
+  });
 }

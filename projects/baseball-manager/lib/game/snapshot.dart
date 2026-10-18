@@ -21,6 +21,7 @@ class PlayerSnapshot {
     required this.events,
     required this.overallHistory,
     this.proStartAge,
+    this.proTeam,
     this.endingTitle,
     this.rivalName,
     this.rivalWins = 0,
@@ -41,6 +42,9 @@ class PlayerSnapshot {
   final List<LifeEvent> events;
   final List<int> overallHistory;
   final int? proStartAge;
+
+  /// 入団した球団(架空)。プロ入りしていなければ null。
+  final String? proTeam;
 
   /// 引退済みなら称号(「一流選手」など)。
   final String? endingTitle;
@@ -69,6 +73,7 @@ class PlayerSnapshot {
         events: List.of(g.lifeLog),
         overallHistory: List.of(g.overallHistory),
         proStartAge: g.proStartAge,
+        proTeam: g.proTeam,
         endingTitle: g.ending?.title,
         rivalName: g.cast.rival?.name,
         rivalWins: g.cast.rivalWins,
@@ -90,6 +95,7 @@ class PlayerSnapshot {
         'events': [for (final e in events) e.toJson()],
         'overallHistory': overallHistory,
         'proStartAge': proStartAge,
+        'proTeam': proTeam,
         'endingTitle': endingTitle,
         'rivalName': rivalName,
         'rivalWins': rivalWins,
@@ -132,6 +138,7 @@ class PlayerSnapshot {
           (v as num).toInt(),
       ],
       proStartAge: (j['proStartAge'] as num?)?.toInt(),
+      proTeam: j['proTeam'] as String?,
       endingTitle: j['endingTitle'] as String?,
       rivalName: j['rivalName'] as String?,
       rivalWins: (j['rivalWins'] as num?)?.toInt() ?? 0,

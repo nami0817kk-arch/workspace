@@ -512,6 +512,21 @@ class Game {
       for (final t in titles) {
         log.add('タイトル獲得: $t!');
       }
+      // 契約更改(前の年からの増減)。保存はせず、成績から計算する。
+      final pro = records.where((r) => r.stage == Stage.pro).toList();
+      final now = salaryOf(rec);
+      if (pro.length >= 2) {
+        final prev = salaryOf(pro[pro.length - 2]);
+        final diff = now - prev;
+        final mark = diff > 0
+            ? '(アップ)'
+            : diff < 0
+                ? '(ダウン)'
+                : '(現状維持)';
+        log.add('契約更改: 年俸 ${fmtSalary(prev)} → ${fmtSalary(now)} $mark');
+      } else {
+        log.add('契約更改: 年俸 ${fmtSalary(now)}');
+      }
     } else if (tournament != null) {
       achievements.add(ach);
       final rec = SeasonRecord(

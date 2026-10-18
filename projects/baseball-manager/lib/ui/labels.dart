@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../game/flavor.dart';
+
 import '../game/career.dart';
 import '../game/exp.dart';
 import '../game/life.dart';
@@ -52,6 +54,20 @@ String actionLabel(Plan a) => switch (a) {
       Plan.social => '交流',
       Plan.match => '練習試合',
       Plan.lesson => 'コーチに教わる',
+    };
+
+/// 重点の能力に合わせた、練習の名前。「練習」なら素振りやノックなど、具体的な内容になる。
+String planTitle(Plan a, Ability focus) => switch (a) {
+      Plan.train => trainingMenu(focus),
+      Plan.special => '特訓: ${trainingMenu(focus)}',
+      _ => actionLabel(a),
+    };
+
+/// 重点の能力に合わせた、ひとこと。
+String planHint(Plan a, Ability focus) => switch (a) {
+      Plan.train => '${abilityLabel(focus)}の経験点が貯まる',
+      Plan.special => '${abilityLabel(focus)}がたくさん貯まる。疲れて怪我しやすい',
+      _ => actionHint(a),
     };
 
 String actionHint(Plan a) => switch (a) {
