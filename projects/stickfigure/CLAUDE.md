@@ -43,6 +43,26 @@ Blender は `STICKFIG_BLENDER`(blender.exe の場所)、無ければ標準の場
 - `fx`: 残像(`trails`)・流線(`speed_lines`)・白黒反転にする命中の種類(`invert`)
 - `qa`: 点検のしきい値の上書き
 
+## モーションキャプチャを使う(2026-10-19、作り方の見直し)
+
+要の姿勢を数字で書く方式では、全コマを描いた参考(Alan Becker)の手足の弧・先端の遅れ・重心移動に届かない。
+そこで **人間の実際の動き(CMU Motion Capture Database、cgspeed の BVH 変換版)を、棒人間に写す**。
+
+```bash
+python scripts/fetch_cmu.py                  # 15本(走り・剣・蹴り・突き・武術・転倒)を取得して clips/ に変換
+python scripts/make_gallery.py 09_01:2.4 135_07_s1:3.6   # clip を順に再生する確認用の台本(scenes/_gallery.yaml)
+```
+
+- `stickfig/mocap.py`: BVH を読む → 順運動学で3D位置 → **人物の向きで決めた縦の平面に射影** → 角度(真下から前へ)→ 30fps。
+  平面の決め方 `heading`: `face`(つま先)/`travel`(腰の進行方向、走り)/`strike`(突く・蹴る手足の動く向き)。`mirror` で左右を入れ替える(左で突く動きも前の腕として使う)
+- `find_strikes`: 手首・足首の最大速度から、突く・蹴る瞬間を自動で見つける(先頭・末尾の0.5秒は、データの継ぎ目の乱れで除く)。clip にその時刻を記録する
+- 台本の `clips`: `{file, strike_at: 2.7, start, end, in, out, amp, loop, speed}`。
+  **`strike_at` で、clip の「突く・蹴る瞬間」を、台本の命中の時刻に合わせる**。区間ではキーの姿勢と混ざり(in/out 秒でなめらかに)、バネはキー側にだけ掛かる
+- clip を使う攻めの接触は、`contact` が **anchor_dx(前後)と hz_off(腰の高さ、±0.3まで)** で合わせる(clip の姿勢そのものは変えない)
+- **BVH と clips/ はリポジトリに入れない**(clips/ は gitignore)。出典: CMU Graphics Lab Motion Capture Database(mocap.cs.cmu.edu、NSF EIA-0196217)。
+  cgspeed の変換版(github.com/Shriinivas/cmubvh)の説明は「CMU は元データの利用に制限を置かない」。CMU 公式の原文は、サイトの証明書エラーで未確認(2026-10-19)。公開の動画の概要欄に出典を書く
+- 見た目の確認用に `scenes/showpiece_mocap.yaml`(回し蹴りだけモーションキャプチャに置き換えた版)
+
 ## 決まり・つまずき所(実際に踏んだもの)
 
 1. **参考動画のファイル・切り出した画像は、リポジトリに入れない**(workspace は public、他人の作品)。入れてよいのは数字と読み取った角度だけ(`reference/`)。
@@ -57,6 +77,8 @@ Blender は `STICKFIG_BLENDER`(blender.exe の場所)、無ければ標準の場
 8. 画像の色から人物の速度を測る方法(`reference/` の数字の出し方)は、人物が重なる・画面外へ出る場面でぶれる。
    自作の評価には使わず、plan の数字(`qa.py`)で見る。参考との比較は目安。
 9. `blender_player.py` は bpy が要るので CI では回らない。形(寸法)を変えたら `fk.py` の定数も同じに直す。
+10. 動画の「合成だけ」やり直すなら `build --reuse-figs`(人物PNGを再利用。plan が同じときだけ)。
+11. 連続する命中は、放射線が重なって騒がしい。`compose.py` の `BURST_FRAMES`(斬りは7コマ)で調整する。
 
 ## 改善の回し方
 

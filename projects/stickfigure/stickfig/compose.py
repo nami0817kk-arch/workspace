@@ -155,6 +155,7 @@ def radial(d_ov: ImageDraw.ImageDraw, cx: float, cy: float, u: float, big: float
 
 
 BIG = dict(kick=1.2, slash=1.2, wall=1.5, heel=1.8, hit=1.0)
+BURST_FRAMES = dict(slash=7, hit=9, kick=14, wall=14, heel=14)   # 放射線が残るコマ数。連続する命中で重ならないよう、斬りは短く
 
 
 def compose_frame(plan: dict, f: int, figs: Dict[int, Image.Image]) -> Image.Image:
@@ -184,9 +185,10 @@ def compose_frame(plan: dict, f: int, figs: Dict[int, Image.Image]) -> Image.Ima
     invert_kinds = fx.get("invert", ["kick", "heel"])
     for e in plan["events"]:
         age = f - e["frame"]
-        if e["kind"] in BIG and 0 <= age <= 14:
+        nb = BURST_FRAMES.get(e["kind"], 14)
+        if e["kind"] in BIG and 0 <= age <= nb:
             cx, cy = to_px(e["pos"][0], e["pos"][1], cam)
-            radial(d, cx, cy, min(1.0, age / 14), BIG[e["kind"]])
+            radial(d, cx, cy, min(1.0, age / nb), BIG[e["kind"]])
             if e["kind"] in invert_kinds and age in (0, 1):
                 invert = (age, cx, cy, BIG[e["kind"]])
             if e["kind"] == "wall" and age <= 1:

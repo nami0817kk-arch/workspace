@@ -1,0 +1,31 @@
+# 自動生成(make_gallery.py)。clip の確認用
+name: gallery
+fps: 30
+tau_end: 22.7
+actors:
+  A:
+    color: [0.3, 0.68, 0.1]
+    scale: 1.0
+    base_x: -3.0
+    facing: 1
+    weapon: sword
+stage: {}
+camera:
+- [0.0, -3.0, 8.0]
+- [1.7, 2.461, 8.0]
+- [4.7, 7.375, 8.0]
+- [8.3, 8.528, 8.0]
+- [11.7, 10.274, 8.0]
+- [15.8, 11.327, 8.0]
+- [20.5, 11.37, 8.0]
+clips:
+  A:
+  - {file: 09_01, start: 0.5, end: 2.9, loop: true, anchor_dx: 0.0, in: 0.08, out: 0.08}
+  - {file: '135_04', start: 3.1, end: 6.3, loop: false, anchor_dx: 8.923, in: 0.08, out: 0.08}
+  - {file: '135_07', start: 6.5, end: 10.1, loop: false, anchor_dx: 9.828, in: 0.08, out: 0.08}
+  - {file: '75_16', start: 10.3, end: 13.1, loop: false, anchor_dx: 11.227, in: 0.08, out: 0.08}
+  - {file: '02_07', start: 13.3, end: 18.3, loop: false, anchor_dx: 13.322, in: 0.08, out: 0.08}
+  - {file: '76_01', start: 18.5, end: 22.5, loop: false, anchor_dx: 13.333, in: 0.08, out: 0.08}
+keys:
+  A:
+  - {t: 0.0, dx: 0.0}

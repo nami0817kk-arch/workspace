@@ -93,7 +93,10 @@ def cmd_build(a) -> int:
         print("\n点検に通らないので、書き出さずに止める(--force で続ける)")
         return 1
     figs = out / "figs"
-    render_figures(plan_path, figs)
+    if a.reuse_figs and len(list(figs.glob("f_*.png"))) == pl["n"]:
+        print("書き出し済みの人物を再利用する(--reuse-figs)")
+    else:
+        render_figures(plan_path, figs)
     ff = find_ffmpeg()
     mp4 = compose.compose(pl, figs, out / "frames", out / f"{scene.get('name', 'scene')}.mp4", ff)
     holds = []
@@ -117,7 +120,7 @@ def main(argv=None) -> int:
     sub = ap.add_subparsers(dest="cmd", required=True)
     p = sub.add_parser("plan"); p.add_argument("scene"); p.add_argument("--out", required=True); p.set_defaults(fn=cmd_plan)
     p = sub.add_parser("check"); p.add_argument("scene"); p.add_argument("--report"); p.set_defaults(fn=cmd_check)
-    p = sub.add_parser("build"); p.add_argument("scene"); p.add_argument("--out", required=True); p.add_argument("--force", action="store_true"); p.set_defaults(fn=cmd_build)
+    p = sub.add_parser("build"); p.add_argument("scene"); p.add_argument("--out", required=True); p.add_argument("--force", action="store_true"); p.add_argument("--reuse-figs", action="store_true", help="書き出し済みの人物PNGを再利用(plan が同じときだけ)"); p.set_defaults(fn=cmd_build)
     p = sub.add_parser("video-check"); p.add_argument("video"); p.add_argument("--out"); p.add_argument("--fps", type=float, default=30.0); p.set_defaults(fn=cmd_video_check)
     a = ap.parse_args(argv)
     return a.fn(a)

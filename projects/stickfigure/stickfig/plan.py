@@ -8,13 +8,14 @@ from __future__ import annotations
 import copy
 import json
 import math
+import os
 from pathlib import Path
 from typing import Dict, List, Optional
 
 import yaml
 
-from . import fk
-from .interp import build_timeline
+from . import fk, mocap
+from .interp import build_timeline, smoothstep
 from .interp import Spring
 from .pose import KeyTrack, Smoother, STANCE_A, STANCE_B, apply_run
 
@@ -56,6 +57,80 @@ def make_tracks(scene: dict) -> Dict[str, KeyTrack]:
     return {who: KeyTrack(scene["keys"][who], _stance(a)) for who, a in scene["actors"].items()}
 
 
+class ClipBank:
+    """台本の clips(キャラごとの clip の区間)を持ち、tau の姿勢に混ぜる。
+
+    clips:
+      A: [{file: run_09_01, start: 3.0, end: 4.0, loop: true, speed: 1.0, anchor_dx: 1.0, offset: 0.0,
+           in: 0.1, out: 0.1, amp: {fa: 1.5, ra: 1.5}, flip: false}]
+    clip の中身は mocap.py が作る姿勢の列。区間では、キーの姿勢と混ぜる(in/out 秒でなめらかに入り・出る)。
+    """
+
+    def __init__(self, scene: dict):
+        self.scene = scene
+        self.defs = scene.get("clips", {})
+        self.cache: Dict[str, "mocap.Clip"] = {}
+        self.dir = Path(scene.get("clips_dir") or os.environ.get("STICKFIG_CLIPS", Path(__file__).resolve().parents[1] / "clips"))
+        # strike_at: clip の「突く・蹴る瞬間」を、台本の時刻に合わせる(start/end は区間。省略時は clip の全体)
+        for who, lst in self.defs.items():
+            for c in lst:
+                if "strike_at" in c:
+                    clip = self._clip(c["file"])
+                    if clip.strike is None:
+                        raise ValueError(f"{c['file']} には strike の記録がない(find_strikes で作った clip を使う)")
+                    sp = c.get("speed", 1.0)
+                    c.setdefault("start", c["strike_at"] - clip.strike["t"] / sp)
+                    c.setdefault("end", c["start"] + clip.duration / sp)
+                    c["offset"] = clip.strike["t"] - (c["strike_at"] - c["start"]) * sp
+
+    def _clip(self, name: str) -> "mocap.Clip":
+        if name not in self.cache:
+            self.cache[name] = mocap.Clip(mocap.load_clip(self.dir / f"{name}.json"))
+        return self.cache[name]
+
+    def weight(self, c: dict, tau: float) -> float:
+        a, b = c["start"], c["end"]
+        w_in = smoothstep(tau, a - c.get("in", 0.1), a) if c.get("in", 0.1) > 0 else (1.0 if tau >= a else 0.0)
+        w_out = 1.0 - (smoothstep(tau, b, b + c.get("out", 0.1)) if c.get("out", 0.1) > 0 else (1.0 if tau > b else 0.0))
+        return max(0.0, min(1.0, w_in * w_out))
+
+    def active(self, who: str, tau: float, min_w: float = 0.5) -> Optional[dict]:
+        best = None
+        for c in self.defs.get(who, []):
+            w = self.weight(c, tau)
+            if w >= min_w and (best is None or w > best[0]):
+                best = (w, c)
+        return best[1] if best else None
+
+    def sample(self, c: dict, tau: float) -> Dict[str, float]:
+        clip = self._clip(c["file"])
+        speed = c.get("speed", 1.0)
+        u = (tau - c["start"]) * speed + c.get("offset", 0.0)
+        v = clip.sample(u, c.get("loop", False))
+        if c.get("loop", False) and clip.duration > 0:
+            cycles = math.floor(u / clip.duration)
+            v["dx"] += cycles * (clip.params["dx"][-1] - clip.params["dx"][0])
+        v["hz"] = v["hz"] + c.get("hz_off", 0.0)
+        v["dx"] = c.get("anchor_dx", 0.0) + (v["dx"] - clip.params["dx"][int(min(clip.n - 1, max(0.0, c.get("offset", 0.0)) * clip.fps))]) * c.get("dx_scale", 1.0)
+        for k, amp in (c.get("amp") or {}).items():
+            if k in v and k != "dx":
+                mean = float(clip.params[k].mean())
+                v[k] = mean + (v[k] - mean) * amp
+        return v
+
+    def apply(self, who: str, p: Dict[str, float], tau: float) -> Dict[str, float]:
+        for c in self.defs.get(who, []):
+            w = self.weight(c, tau)
+            if w <= 0.0:
+                continue
+            v = self.sample(c, tau)
+            p = dict(p)
+            for k in mocap.CLIP_KEYS:
+                if k in v:
+                    p[k] = (1 - w) * p[k] + w * v[k]
+        return p
+
+
 def _sign(actor: dict) -> int:
     return 1 if actor.get("facing", 1) >= 0 else -1
 
@@ -66,7 +141,11 @@ def _root_x(actor: dict, p: Dict[str, float]) -> float:
 
 def skeleton_at(scene: dict, tracks: Dict[str, KeyTrack], who: str, tau: float, pose: Optional[dict] = None) -> dict:
     a = scene["actors"][who]
-    p = pose or apply_run(tracks[who].at(tau), tau, scene.get("run"))
+    if pose is None:
+        pose = apply_run(tracks[who].at(tau), tau, scene.get("run"))
+        if scene.get("_bank") is not None:
+            pose = scene["_bank"].apply(who, pose, tau)
+    p = pose
     return fk.skeleton(p, _sign(a), _root_x(a, p), a.get("scale", 1.0))
 
 
@@ -90,6 +169,26 @@ def solve_contact(scene: dict, tracks: Dict[str, KeyTrack], hit: dict) -> dict:
     s = _sign(sa)
     off = c.get("offset", [0.0, 0.0])      # 当て先の点から (x, z) ずらした所を狙う(体に少しめり込ませるなど)
     adj = c.get("adjust_keys", [tau])
+    bank = scene.get("_bank")
+    clip = bank.active(striker, tau) if bank is not None else None
+    if clip is not None:       # clip(モーションキャプチャ)は高さを変えられない。位置だけ anchor_dx で合わせる
+        if c.get("height", True):          # 高さは腰の上げ下げで合わせる(±0.3 まで)
+            eff = skeleton_at(scene, tracks, striker, tau)[eff_key]
+            tp = fk.target_point(skeleton_at(scene, tracks, tgt, tau), c["target"].get("point", "hip"))
+            clip["hz_off"] = max(-0.3, min(0.3, clip.get("hz_off", 0.0) + (tp[1] + off[1]) - eff[1]))
+        for _ in range(8):
+            eff = skeleton_at(scene, tracks, striker, tau)[eff_key]
+            tp = fk.target_point(skeleton_at(scene, tracks, tgt, tau), c["target"].get("point", "hip"))
+            dxw = (tp[0] + off[0]) - eff[0]
+            clip["anchor_dx"] = clip.get("anchor_dx", 0.0) + dxw / s
+            if abs(dxw) < 1e-4:
+                break
+        eff = skeleton_at(scene, tracks, striker, tau)[eff_key]
+        sk_t = skeleton_at(scene, tracks, tgt, tau)
+        tp = fk.target_point(sk_t, c["target"].get("point", "hip"))
+        return dict(tau=tau, striker=striker, target=tgt, effector=c.get("effector", "foot"),
+                    distance_to_point=math.hypot(eff[0] - tp[0] - off[0], eff[1] - tp[1] - off[1]),
+                    distance_to_body=fk.dist_to_body(eff, sk_t), effector_pos=list(eff), target_pos=list(tp))
     # 1) 高さ: 角度パラメータを二分法で合わせる(height: false なら飛ばす)
     for _ in range(40 if c.get("height", True) else 0):
         mid = 0.5 * (lo + hi)
@@ -182,6 +281,7 @@ def build_plan(scene: dict, solve: bool = True) -> dict:
     scene = copy.deepcopy(scene)
     fps = int(scene["fps"])
     tracks = make_tracks(scene)
+    scene["_bank"] = ClipBank(scene) if scene.get("clips") else None
     contacts = []
     if solve:
         for h in scene.get("hits", []):
@@ -206,6 +306,8 @@ def build_plan(scene: dict, solve: bool = True) -> dict:
         for who, a in scene["actors"].items():
             p = smoothers[who].step(tau, dtau)
             p = apply_run(p, tau, scene.get("run"))
+            if scene["_bank"] is not None:
+                p = scene["_bank"].apply(who, p, tau)
             if who in planters:
                 p = planters[who].apply(p, dtau)
             s = _sign(a)
