@@ -3,7 +3,6 @@ import 'dart:math';
 
 import 'package:basketball_career/game/game.dart';
 import 'package:basketball_career/game/life.dart';
-import 'package:basketball_career/game/path.dart';
 import 'package:basketball_career/game/player.dart';
 import 'package:basketball_career/game/rival.dart';
 import 'package:basketball_career/ui/app.dart';
