@@ -190,6 +190,10 @@ class _SeasonView extends StatelessWidget {
                           Text(a.label,
                               style: const TextStyle(
                                   fontWeight: FontWeight.bold)),
+                          if (g.isRut(a))
+                            const Text('マンネリ気味(伸びが少し落ちる)',
+                                style: TextStyle(
+                                    fontSize: 11, color: Color(0xFFC62828))),
                           Text(a.description,
                               style: const TextStyle(fontSize: 12)),
                         ],

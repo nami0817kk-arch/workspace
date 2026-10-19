@@ -1713,4 +1713,58 @@ void main() {
       expect(t, contains('#バスケ育成'));
     });
   });
+
+  group('マンネリ', () {
+    Game g0() => Game(
+        eventsEnabled: false,
+        player: Player(name: 'a', age: 12, potential: 60, heightCm: 150, heightGenes: 0.5),
+        rng: Random(1));
+
+    test('同じ練習を3回続けるとマンネリ。休養・交流は対象外', () {
+      final g = g0();
+      expect(g.isRut(Action.practice), isFalse);
+      g.choose(Action.practice, Ability.pass);
+      expect(g.isRut(Action.practice), isFalse, reason: '2回目まではまだ');
+      g.choose(Action.practice, Ability.pass);
+      expect(g.isRut(Action.practice), isTrue);
+      expect(g.isRut(Action.intense), isFalse, reason: '違う練習なら大丈夫');
+      expect(g.isRut(Action.rest), isFalse);
+      expect(g.isRut(Action.social), isFalse);
+    });
+
+    test('マンネリの回は伸びが小さい。別の練習を挟めば戻る', () {
+      double grow(List<Action> before, Action a) {
+        var total = 0;
+        for (var seed = 0; seed < 120; seed++) {
+          final g = Game(
+              eventsEnabled: false,
+              player: Player(name: 'a', age: 12, potential: 60, heightCm: 150, heightGenes: 0.5),
+              rng: Random(seed));
+          g.recentActions.addAll(before);
+          final b = Ability.values.fold(0, (s, x) => s + g.player.of(x));
+          g.choose(a, Ability.threePoint);
+          total += Ability.values.fold(0, (s, x) => s + g.player.of(x)) - b;
+        }
+        return total / 120;
+      }
+
+      final rut = grow([Action.practice, Action.practice], Action.practice);
+      final fresh = grow([Action.practice, Action.intense], Action.practice);
+      expect(rut, lessThan(fresh));
+    });
+
+    test('直近3つだけ覚え、保存される。マンネリの知らせが出る', () {
+      final g = g0();
+      for (final a in [Action.practice, Action.intense, Action.study, Action.rest]) {
+        g.choose(a, Ability.pass);
+      }
+      expect(g.recentActions.length, lessThanOrEqualTo(3));
+      expect(Game.fromJson(g.toJson()).recentActions, g.recentActions);
+      final h = g0();
+      h.choose(Action.practice, Ability.pass);
+      h.choose(Action.practice, Ability.pass);
+      h.choose(Action.practice, Ability.pass);
+      expect(h.lastWasRut, isTrue);
+    });
+  });
 }

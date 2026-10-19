@@ -148,6 +148,7 @@ class Game {
     this.recoveredThisTerm = false,
     this.teamwork = 40,
     this.coachBond = 20,
+    List<Action>? recentActions,
     this.schoolBonus = 0,
     this.schoolLabel = '',
     List<String>? recentEventIds,
@@ -175,6 +176,7 @@ class Game {
         rival = rival ?? Rival(name: 'ライバル', potential: 60),
         recentEventIds = recentEventIds ?? [],
         growthLog = growthLog ?? [],
+        recentActions = recentActions ?? [],
         goalOptions = goalOptions ?? [],
         goalStart = goalStart ?? {},
         recentAchievements = recentAchievements ?? [],
@@ -269,6 +271,23 @@ class Game {
   /// 直近に終えたターンの結果(勝負どころで止まった後、続きを終えたときの結果もここに入る)。
   TermReport? lastReport;
   int slot;
+
+  /// 直前のターンがマンネリだったか(画面の知らせ用)。
+  bool lastWasRut = false;
+
+  /// 直近の過ごし方(同じ練習が続くと効きが落ちる「マンネリ」の判定に使う)。
+  final List<Action> recentActions;
+
+  /// 同じ練習を3回続けると、伸びが0.85倍になる。
+  static const slumpScale = 0.85;
+
+  /// 次に `a` を選ぶとマンネリか(練習・特訓・研究・練習試合を、直近2回と同じで選ぶ)。
+  bool isRut(Action a) =>
+      a != Action.rest &&
+      a != Action.social &&
+      recentActions.length >= 2 &&
+      recentActions[recentActions.length - 1] == a &&
+      recentActions[recentActions.length - 2] == a;
 
   /// 年ごとの成長の記録(年末に1つ足す)。
   final List<GrowthPoint> growthLog;
@@ -373,8 +392,14 @@ class Game {
     lastFocus = focus;
     recoveredThisTerm = false;
     lastGoalMessage = null;
+    final rut = isRut(action);
     final r = playTerm(player, condition, action, focus, rng,
-        growthScale: difficulty.growth * coachBoost);
+        growthScale: difficulty.growth * coachBoost * (rut ? slumpScale : 1.0));
+    recentActions.add(action);
+    while (recentActions.length > 3) {
+      recentActions.removeAt(0);
+    }
+    lastWasRut = rut;
     player = r.player;
     condition = r.condition;
     termAction = action;
@@ -843,6 +868,7 @@ class Game {
         'recoveredThisTerm': recoveredThisTerm,
         'teamwork': teamwork,
         'coachBond': coachBond,
+        'recentActions': [for (final a in recentActions) a.name],
         'schoolBonus': schoolBonus,
         'schoolLabel': schoolLabel,
         'recentEventIds': recentEventIds,
@@ -887,6 +913,11 @@ class Game {
         recoveredThisTerm: (j['recoveredThisTerm'] as bool?) ?? false,
         teamwork: (j['teamwork'] as num?)?.toInt() ?? 40,
         coachBond: (j['coachBond'] as num?)?.toInt() ?? 20,
+        recentActions: [
+          for (final v in (j['recentActions'] as List?) ?? const [])
+            if (Action.values.any((a) => a.name == v))
+              Action.values.firstWhere((a) => a.name == v)
+        ],
         schoolBonus: (j['schoolBonus'] as num?)?.toDouble() ?? 0,
         schoolLabel: (j['schoolLabel'] as String?) ?? '',
         growthLog: [
