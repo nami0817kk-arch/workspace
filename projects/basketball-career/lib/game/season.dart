@@ -40,6 +40,17 @@ class TournamentResult {
   /// 実績 0〜100。勝ち上がり6割・個人の評価4割。進路の評価に入る。
   final double achievement;
 
+  /// 個人の評価(得点・リバウンド・アシストから)。
+  double get individual => individualRating(ppg, rpg, apg);
+
+  /// 大会の個人賞。優勝して個人評価が高ければ最優秀選手、個人評価だけ高ければベスト5。
+  String? get award {
+    if (games < 2) return null;
+    if (champion && individual >= 72) return '最優秀選手';
+    if (individual >= 80) return 'ベスト5';
+    return null;
+  }
+
   int get games => matches.length;
   bool get champion => wins == league.rounds;
   double get ppg => games == 0 ? 0 : matches.fold(0, (s, m) => s + m.points) / games;

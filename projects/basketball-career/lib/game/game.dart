@@ -31,6 +31,7 @@ class YearRecord {
     required this.champion,
     required this.achievement,
     this.winter = false,
+    this.award,
   });
 
   final int age;
@@ -46,8 +47,12 @@ class YearRecord {
   /// 冬の大会の記録か。
   final bool winter;
 
+  /// その大会の個人賞(最優秀選手・ベスト5)。なければ null。
+  final String? award;
+
   Map<String, dynamic> toJson() => {
         'winter': winter,
+        'award': award,
         'age': age,
         'league': league.name,
         'wins': wins,
@@ -73,6 +78,7 @@ class YearRecord {
         champion: (j['champion'] as bool?) ?? false,
         achievement: (j['achievement'] as num?)?.toDouble() ?? 0,
         winter: (j['winter'] as bool?) ?? false,
+        award: j['award'] as String?,
       );
 }
 
@@ -528,6 +534,7 @@ class Game {
       champion: t.champion,
       achievement: t.achievement,
       winter: winter,
+      award: t.award,
     ));
     recentAchievements.add(t.achievement);
     while (recentAchievements.length > _recentCount) {

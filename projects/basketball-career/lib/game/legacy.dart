@@ -143,6 +143,10 @@ final achievements = <Achievement>[
       (g) => g.abroad && g.player.heightCm <= 175),
   Achievement('hard_pro', '険しい道を', 'むずかしいでプロになった。',
       (g) => g.difficulty == Difficulty.hard && _wentPro(g)),
+  Achievement('mvp', '最優秀選手', '大会で最優秀選手に選ばれた。',
+      (g) => g.records.any((r) => r.award == '最優秀選手')),
+  Achievement('best5_x3', 'ベスト5の常連', '個人賞(最優秀選手・ベスト5)を3回受けた。',
+      (g) => g.records.where((r) => r.award != null).length >= 3),
   Achievement('veteran', '息の長い選手', '35歳までプロで戦った。',
       (g) => g.player.age >= 35 && _wentPro(g)),
 ];
