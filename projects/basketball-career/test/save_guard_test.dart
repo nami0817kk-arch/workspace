@@ -20,6 +20,8 @@ void step(Game g) {
         askClutch: true,
       );
       if (g.canGoAbroad) g.goAbroad();
+    case Phase.halftime:
+      g.resolveHalftime(Halftime.values[g.player.age % Halftime.values.length]);
     case Phase.clutch:
       g.resolveClutch(Clutch.values[g.player.age % Clutch.values.length]);
     case Phase.event:

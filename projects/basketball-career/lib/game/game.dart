@@ -14,7 +14,7 @@ import 'season.dart';
 import 'traits.dart';
 
 /// 画面が見る局面。対応する操作だけを呼ぶ。
-enum Phase { season, clutch, event, path, retired }
+enum Phase { season, halftime, clutch, event, path, retired }
 
 /// どこでプレーしているか。
 enum Track { school, university, corporate, pro }
@@ -358,11 +358,13 @@ class Game {
       ? Phase.retired
       : pathPending
           ? Phase.path
-          : (run?.pending != null)
-              ? Phase.clutch
-              : pendingEventId != null
-                  ? Phase.event
-                  : Phase.season;
+          : (run?.pendingHalf != null)
+              ? Phase.halftime
+              : (run?.pending != null)
+                  ? Phase.clutch
+                  : pendingEventId != null
+                      ? Phase.event
+                      : Phase.season;
 
   /// 出来事の文中の {rival} をライバルの名前にする。
   String fill(String s) => s
@@ -443,6 +445,7 @@ class Game {
     Ability focus, {
     Clutch Function(int margin)? chooseClutch,
     bool askClutch = false,
+    bool askHalftime = false,
   }) {
     if (phase != Phase.season) throw StateError('今は季節を選べない: $phase');
     lastFocus = focus;
@@ -483,7 +486,9 @@ class Game {
       if (condition.injured) {
         satOut = true;
       } else {
-        final cr = TournamentRun(league, teamBonus: teamBonus + schoolBonus);
+        final cr = TournamentRun(league,
+            teamBonus: teamBonus + schoolBonus,
+            askHalftime: askHalftime && chooseClutch == null);
         cr.advance(
           player,
           form: formNow,
@@ -492,8 +497,8 @@ class Game {
           askClutch: askClutch && chooseClutch == null,
           pickOpponent: _pickOpponent,
         );
-        if (cr.pending != null) {
-          // 勝負どころで止まる。選ぶまで季節は進まない(`resolveClutch`)。
+        if (cr.pending != null || cr.pendingHalf != null) {
+          // ハーフタイムの作戦か勝負どころで止まる。選ぶまで季節は進まない(`resolveHalftime` / `resolveClutch`)。
           run = cr;
           runWinter = winter;
           lastReport = null;
@@ -515,7 +520,23 @@ class Game {
     }
     cr.resolve(player, choice,
         form: formNow, rng: rng, pickOpponent: _pickOpponent);
-    if (cr.pending != null) {
+    return _afterRun(cr);
+  }
+
+  /// ハーフタイムで止まっている試合に、選んだ作戦を渡して続きを進める。
+  TermReport resolveHalftime(Halftime choice) {
+    final cr = run;
+    if (phase != Phase.halftime || cr == null) {
+      throw StateError('今はハーフタイムではない: $phase');
+    }
+    cr.resolveHalftime(player, choice,
+        form: formNow, rng: rng, pickOpponent: _pickOpponent);
+    return _afterRun(cr);
+  }
+
+  /// 大会を進めたあと: また止まっていれば `paused`、終わっていれば記録してターンを締める。
+  TermReport _afterRun(TournamentRun cr) {
+    if (cr.pending != null || cr.pendingHalf != null) {
       return TermReport(
           action: termAction, gotInjured: termInjured, paused: true);
     }
@@ -524,6 +545,9 @@ class Game {
     _record(t, winter: runWinter);
     return lastReport = _finishTerm(termAction, termInjured, t, false);
   }
+
+  /// ハーフタイムで止まっている試合の前半の結果と点差。
+  MatchHalf? get halftimeInfo => run?.pendingHalf;
 
   /// 勝負どころで止まっている試合の選択肢と成功率。
   ({int margin, double oppStrength, Map<Clutch, double> chances})? get clutchInfo {

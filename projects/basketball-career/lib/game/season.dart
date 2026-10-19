@@ -83,10 +83,15 @@ class TournamentRun {
       this.round = 0,
       this.wins = 0,
       this.pending,
+      this.pendingHalf,
+      this.askHalftime = false,
       this.teamBonus = 0})
       : matches = matches ?? [];
 
   final League league;
+
+  /// ハーフタイムの作戦を自分で選ぶ大会か(続きの試合でも同じ)。
+  final bool askHalftime;
 
   /// チームワークによる、味方の強さへの上乗せ(−4〜+4くらい)。
   final double teamBonus;
@@ -97,13 +102,17 @@ class TournamentRun {
   /// 勝負どころで選択を待っている試合。null なら止まっていない。
   MatchState? pending;
 
+  /// ハーフタイムの作戦を選ぶのを待っている試合。null なら止まっていない。
+  MatchHalf? pendingHalf;
+
   bool get finished =>
       pending == null &&
+      pendingHalf == null &&
       (round >= league.rounds ||
           (league.elimination && matches.isNotEmpty && !matches.last.won));
 
   /// 次の試合の対戦相手の名前(待機中はその試合の相手)。
-  String? get nextOpponent => pending?.opponent;
+  String? get nextOpponent => pending?.opponent ?? pendingHalf?.opponent;
 
   /// 進められるところまで進める。勝負どころで `chooseClutch` が null を返す(または与えない)
   /// と、`askClutch` が true の場合はそこで止まる([pending])。
@@ -115,15 +124,16 @@ class TournamentRun {
     Clutch? Function(int margin)? chooseClutch,
     bool askClutch = false,
     OpponentPicker? pickOpponent,
+    Halftime? Function(int margin)? chooseHalftime,
   }) {
-    while (pending == null && !finished) {
+    while (pending == null && pendingHalf == null && !finished) {
       final isFinal = round == league.rounds - 1;
       final opp = pickOpponent?.call(round, isFinal);
       final strength = league.oppBase +
           round * 2.5 +
           (rng.nextDouble() - 0.5) * 8 +
           (opp?.bonus ?? 0);
-      final s = playQuarters(
+      final h = playFirstHalf(
         p,
         teamStrength: league.teamStrength + teamBonus,
         oppStrength: strength,
@@ -132,16 +142,54 @@ class TournamentRun {
         opponent: opp?.name ?? '',
         vsRival: opp?.rival ?? false,
       );
-      Clutch? choice;
-      if (s.needsClutch) {
-        choice = chooseClutch?.call(s.margin);
-        if (choice == null && askClutch) {
-          pending = s;
+      Halftime? hc;
+      if (h.needsDecision) {
+        hc = chooseHalftime?.call(h.margin);
+        if (hc == null && askHalftime) {
+          pendingHalf = h; // 作戦を選ぶまで止まる
           return;
         }
       }
-      _finish(p, s, choice, rng);
+      if (!_secondHalf(p, h, hc ?? bestHalftime(p, h), rng, chooseClutch, askClutch)) {
+        return;
+      }
     }
+  }
+
+  /// 後半を進め、勝負どころなら(選ばせるときは)止まる。試合が終われば true。
+  bool _secondHalf(Player p, MatchHalf h, Halftime hc, Random rng,
+      Clutch? Function(int margin)? chooseClutch, bool askClutch) {
+    final s = playSecondHalf(p, h, hc, rng);
+    Clutch? choice;
+    if (s.needsClutch) {
+      choice = chooseClutch?.call(s.margin);
+      if (choice == null && askClutch) {
+        pending = s;
+        return false;
+      }
+    }
+    _finish(p, s, choice, rng);
+    return true;
+  }
+
+  /// 止まっていたハーフタイムを `choice` で決め、続きを進める。
+  void resolveHalftime(
+    Player p,
+    Halftime choice, {
+    required double form,
+    required Random rng,
+    OpponentPicker? pickOpponent,
+    bool askClutch = true,
+  }) {
+    final h = pendingHalf;
+    if (h == null) throw StateError('ハーフタイムで止まっていない');
+    pendingHalf = null;
+    if (!_secondHalf(p, h, choice, rng, null, askClutch)) return;
+    advance(p,
+        form: form,
+        rng: rng,
+        askClutch: askClutch,
+        pickOpponent: pickOpponent);
   }
 
   /// 止まっていた勝負どころを `choice` で決め、続きを進める。
@@ -158,7 +206,10 @@ class TournamentRun {
     pending = null;
     _finish(p, s, choice, rng);
     advance(p,
-        form: form, rng: rng, askClutch: askClutch, pickOpponent: pickOpponent);
+        form: form,
+        rng: rng,
+        askClutch: askClutch,
+        pickOpponent: pickOpponent);
   }
 
   void _finish(Player p, MatchState s, Clutch? choice, Random rng) {
@@ -190,6 +241,8 @@ class TournamentRun {
         'wins': wins,
         'teamBonus': teamBonus,
         'pending': pending?.toJson(),
+        'pendingHalf': pendingHalf?.toJson(),
+        'askHalftime': askHalftime,
       };
 
   factory TournamentRun.fromJson(Map<String, dynamic> j) => TournamentRun(
@@ -204,9 +257,14 @@ class TournamentRun {
         round: (j['round'] as num?)?.toInt() ?? 0,
         wins: (j['wins'] as num?)?.toInt() ?? 0,
         teamBonus: (j['teamBonus'] as num?)?.toDouble() ?? 0,
+        askHalftime: (j['askHalftime'] as bool?) ?? false,
         pending: j['pending'] == null
             ? null
             : MatchState.fromJson((j['pending'] as Map).cast<String, dynamic>()),
+        pendingHalf: j['pendingHalf'] == null
+            ? null
+            : MatchHalf.fromJson(
+                (j['pendingHalf'] as Map).cast<String, dynamic>()),
       );
 }
 

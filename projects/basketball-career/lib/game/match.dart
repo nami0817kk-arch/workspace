@@ -244,11 +244,110 @@ double clutchChance(Player p, Clutch c, double oppDefense, double form) {
       .clamp(0.03, 0.9);
 }
 
-/// 4クォーターを進める。点差が近ければ [MatchState.needsClutch]。
+/// ハーフタイムの作戦。後半(第3・第4クォーター)の流れが変わる。
+enum Halftime {
+  keep('このまま続ける', '作戦は変えない。'),
+  tempo('ペースを上げる', '走って点を取り合う。点差がつきやすい(追う側向き)。'),
+  defense('守りを固める', '失点を抑えてロースコアに。点差がつきにくい(リード側向き)。'),
+  star('エースに任せる', '自分にボールを集める。得点が増え、チームも乗る(スタミナと総合力が要る)。');
+
+  const Halftime(this.label, this.description);
+  final String label;
+  final String description;
+
+  static Halftime? parse(String? s) {
+    for (final h in Halftime.values) {
+      if (h.name == s) return h;
+    }
+    return null;
+  }
+}
+
+/// 前半(第2クォーター)が終わった時点の試合。点差が近ければ、ここで作戦を選ぶ。
+class MatchHalf {
+  const MatchHalf({
+    required this.team,
+    required this.opp,
+    required this.teamQuarters,
+    required this.oppQuarters,
+    required this.mine,
+    required this.oppStrength,
+    required this.form,
+    required this.share,
+    required this.rebounds,
+    required this.assists,
+    required this.steals,
+    required this.blocks,
+    this.opponent = '',
+    this.vsRival = false,
+  });
+
+  final int team;
+  final int opp;
+  final List<int> teamQuarters;
+  final List<int> oppQuarters;
+  final double mine;
+  final double oppStrength;
+  final double form;
+  final double share;
+  final int rebounds;
+  final int assists;
+  final int steals;
+  final int blocks;
+  final String opponent;
+  final bool vsRival;
+
+  int get margin => team - opp;
+
+  /// 作戦を選ぶ価値がある点差(12点以内)。大差なら自動で進む。
+  bool get needsDecision => margin.abs() <= 12;
+
+  Map<String, dynamic> toJson() => {
+        'team': team,
+        'opp': opp,
+        'teamQuarters': teamQuarters,
+        'oppQuarters': oppQuarters,
+        'mine': mine,
+        'oppStrength': oppStrength,
+        'form': form,
+        'share': share,
+        'rebounds': rebounds,
+        'assists': assists,
+        'steals': steals,
+        'blocks': blocks,
+        'opponent': opponent,
+        'vsRival': vsRival,
+      };
+
+  factory MatchHalf.fromJson(Map<String, dynamic> j) => MatchHalf(
+        team: (j['team'] as num?)?.toInt() ?? 0,
+        opp: (j['opp'] as num?)?.toInt() ?? 0,
+        teamQuarters: [
+          for (final v in (j['teamQuarters'] as List?) ?? const [])
+            (v as num).toInt()
+        ],
+        oppQuarters: [
+          for (final v in (j['oppQuarters'] as List?) ?? const [])
+            (v as num).toInt()
+        ],
+        mine: (j['mine'] as num?)?.toDouble() ?? 50,
+        oppStrength: (j['oppStrength'] as num?)?.toDouble() ?? 50,
+        form: (j['form'] as num?)?.toDouble() ?? 1,
+        share: (j['share'] as num?)?.toDouble() ?? 0.15,
+        rebounds: (j['rebounds'] as num?)?.toInt() ?? 0,
+        assists: (j['assists'] as num?)?.toInt() ?? 0,
+        steals: (j['steals'] as num?)?.toInt() ?? 0,
+        blocks: (j['blocks'] as num?)?.toInt() ?? 0,
+        opponent: (j['opponent'] as String?) ?? '',
+        vsRival: (j['vsRival'] as bool?) ?? false,
+      );
+}
+
+/// 前半(第1・第2クォーター)を進める。
 ///
 /// - `teamStrength` は味方(本人を除く)、`oppStrength` は相手の強さ(0〜100、50が平均)。
 /// - `form` は体調(`Condition.form`)。
-MatchState playQuarters(
+MatchHalf playFirstHalf(
   Player p, {
   required double teamStrength,
   required double oppStrength,
@@ -260,7 +359,7 @@ MatchState playQuarters(
   final mine = teamStrength * 0.6 + p.overall * form * 0.4;
   var team = 0, opp = 0;
   final tq = <int>[], oq = <int>[];
-  for (var q = 0; q < 4; q++) {
+  for (var q = 0; q < 2; q++) {
     final t = max(8, (18 + (mine - 50) * 0.12 + _noise(rng) * 5).round());
     final o = max(8, (18 + (oppStrength - 50) * 0.12 + _noise(rng) * 5).round());
     tq.add(t);
@@ -268,45 +367,22 @@ MatchState playQuarters(
     team += t;
     opp += o;
   }
-
-  // 個人成績。得点の取り分は攻撃力で、リバウンド・アシストは能力と身長で。
+  // 個人成績の素(得点の取り分・リバウンド・アシスト・スティール・ブロック)。
   final offense = (p.effective(Ability.threePoint) +
           p.effective(Ability.midRange) +
           p.effective(Ability.inside)) /
       3;
   final share =
       (0.10 + (offense - 30) / 300 + _noise(rng) * 0.03).clamp(0.04, 0.45);
-  final pts = (team * share * form).round();
-  // 3Pの本数: 得点のうち外から決める割合(3P、ミドル、ゴール下の比)。
-  final tp = p.effective(Ability.threePoint);
-  final mid = p.effective(Ability.midRange);
-  final ins = p.effective(Ability.inside);
-  final threeShare = tp / (tp + mid + ins + 1);
-  final threes = max(0, (pts * threeShare * 0.55 / 3 + _noise(rng) * 0.6).round());
-  // スティール(読みと足)・ブロック(守りと高さ)。
-  final steals = max(
-      0,
-      (((p.effective(Ability.defense) + p.effective(Ability.speed)) / 2) /
-                  45 *
-                  form +
-              _noise(rng) * 0.8)
-          .round()
-          .clamp(0, 6));
-  final blocks = max(
-      0,
-      ((p.effective(Ability.defense) / 70) *
-                  (0.2 + max(0.0, p.heightCm - 180) / 35) *
-                  form +
-              _noise(rng) * 0.6)
-          .round()
-          .clamp(0, 6));
-  return MatchState(
+  return MatchHalf(
     team: team,
     opp: opp,
-    points: pts,
-    steals: steals,
-    blocks: blocks,
-    threes: threes,
+    teamQuarters: tq,
+    oppQuarters: oq,
+    mine: mine,
+    oppStrength: oppStrength,
+    form: form,
+    share: share,
     rebounds: max(
         0,
         (p.effective(Ability.rebound) /
@@ -317,14 +393,120 @@ MatchState playQuarters(
             .round()),
     assists:
         max(0, (p.effective(Ability.pass) / 14 * form + _noise(rng)).round()),
-    teamStrength: mine,
-    oppStrength: oppStrength,
-    form: form,
-    teamQuarters: tq,
-    oppQuarters: oq,
+    steals: max(
+        0,
+        (((p.effective(Ability.defense) + p.effective(Ability.speed)) / 2) /
+                    45 *
+                    form +
+                _noise(rng) * 0.8)
+            .round()
+            .clamp(0, 6)),
+    blocks: max(
+        0,
+        ((p.effective(Ability.defense) / 70) *
+                    (0.2 + max(0.0, p.heightCm - 180) / 35) *
+                    form +
+                _noise(rng) * 0.6)
+            .round()
+            .clamp(0, 6)),
     opponent: opponent,
     vsRival: vsRival,
   );
+}
+
+/// 作戦の効きの強さ(エースに任せる)。スタミナと総合力があるほど大きい。
+double starPower(Player p) =>
+    ((p.effective(Ability.stamina) / 70) * 0.6 + (p.overall / 70) * 0.4)
+        .clamp(0.4, 1.4);
+
+/// 後半(第3・第4クォーター)を進め、4クォーター終了時点にする。
+MatchState playSecondHalf(Player p, MatchHalf h, Halftime choice, Random rng) {
+  var shift = 0.0, noiseMul = 1.0, boost = 0.0, shareAdd = 0.0;
+  switch (choice) {
+    case Halftime.keep:
+      break;
+    case Halftime.tempo:
+      shift = 2.5;
+      noiseMul = 1.5;
+    case Halftime.defense:
+      shift = -2.5;
+      noiseMul = 0.7;
+    case Halftime.star:
+      final k = starPower(p);
+      boost = (p.overall - 50) * 0.05 * k + 1.0 * k;
+      shareAdd = 0.08 * k;
+  }
+  var team = h.team, opp = h.opp;
+  final tq = [...h.teamQuarters], oq = [...h.oppQuarters];
+  for (var q = 0; q < 2; q++) {
+    final t = max(
+        8,
+        (18 + (h.mine - 50) * 0.12 + shift + boost + _noise(rng) * 5 * noiseMul)
+            .round());
+    final o = max(
+        8,
+        (18 + (h.oppStrength - 50) * 0.12 + shift + _noise(rng) * 5 * noiseMul)
+            .round());
+    tq.add(t);
+    oq.add(o);
+    team += t;
+    opp += o;
+  }
+  final pts = (team * (h.share + shareAdd).clamp(0.04, 0.55) * h.form).round();
+  // 3Pの本数: 得点のうち外から決める割合(3P、ミドル、ゴール下の比)。
+  final tp = p.effective(Ability.threePoint);
+  final mid = p.effective(Ability.midRange);
+  final ins = p.effective(Ability.inside);
+  final threeShare = tp / (tp + mid + ins + 1);
+  final threes =
+      max(0, (pts * threeShare * 0.55 / 3 + _noise(rng) * 0.6).round());
+  return MatchState(
+    team: team,
+    opp: opp,
+    points: pts,
+    steals: h.steals,
+    blocks: h.blocks,
+    threes: threes,
+    rebounds: h.rebounds,
+    assists: h.assists,
+    teamStrength: h.mine,
+    oppStrength: h.oppStrength,
+    form: h.form,
+    teamQuarters: tq,
+    oppQuarters: oq,
+    opponent: h.opponent,
+    vsRival: h.vsRival,
+  );
+}
+
+/// 自動で選ぶ作戦。追っていればペース、リードしていれば守り、僅差でエースが強ければエース。
+Halftime bestHalftime(Player p, MatchHalf h) {
+  final m = h.margin;
+  if (m <= -4) return Halftime.tempo;
+  if (m >= 6) return Halftime.defense;
+  if (m <= 2 && starPower(p) >= 1.0 && p.overall >= 60) return Halftime.star;
+  return Halftime.keep;
+}
+
+/// 4クォーターを通して進める(作戦は `halftime`、省略すると自動)。点差が近ければ [MatchState.needsClutch]。
+MatchState playQuarters(
+  Player p, {
+  required double teamStrength,
+  required double oppStrength,
+  required double form,
+  required Random rng,
+  String opponent = '',
+  bool vsRival = false,
+  Halftime? halftime,
+}) {
+  final h = playFirstHalf(p,
+      teamStrength: teamStrength,
+      oppStrength: oppStrength,
+      form: form,
+      rng: rng,
+      opponent: opponent,
+      vsRival: vsRival);
+  return playSecondHalf(p, h, halftime ?? bestHalftime(p, h), rng);
 }
 
 /// 試合を締める。勝負どころなら `choice`(null なら成功率の高いプレーを自動で選ぶ)で決める。
