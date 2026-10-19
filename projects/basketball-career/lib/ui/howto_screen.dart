@@ -1,0 +1,77 @@
+import 'package:flutter/material.dart';
+
+/// 遊び方。はじめて始めるときに1度見せ、はじめの画面と設定からいつでも開ける。
+class HowToScreen extends StatelessWidget {
+  const HowToScreen({super.key, this.onStart});
+
+  /// はじめて始めるときだけ渡す(「はじめる」ボタンが出る)。
+  final VoidCallback? onStart;
+
+  static const items = <(String, String)>[
+    ('1年は春夏秋冬の4回', '季節ごとに過ごし方を選ぶ。練習・特訓は伸びる代わりに疲れ、休養・交流は疲れと気持ちを戻す。疲れが溜まると動きが落ちて、怪我もしやすい。'),
+    ('重点の能力は ★ を目安に', 'ポジションに効く能力のうち、いま伸ばすと得なものに ★ が付く。能力の ◎○△ は、いまのポジションで効く度合い。'),
+    ('夏と冬に大会', '勝ち抜きで、負けたら終わり。点差が3点以内で終わりそうなら「勝負どころ」。成功率を見て、最後のプレーを自分で選ぶ。'),
+    ('目標を立てよう', '年のはじめに「確実」と「挑戦」の目標が出る。年末に達成していれば、能力と気持ちのごほうびがある。'),
+    ('チームワークとコーチ', '交流・練習試合でチームワークが上がり、大会の味方が強くなる。練習を重ねるとコーチとの信頼が増え、伸びが良くなる。'),
+    ('進路は19歳', '能力・実績・身長がプロ契約の評価になる。70点以上なら確実、35点未満は難しい。外れても大学・実業団からもう一度挑戦できる。'),
+    ('育てた選手は殿堂へ', '引退すると称号がつき、実績が解除される。実績が増えるほど、次の選手の初期能力が上がる。'),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return Scaffold(
+      appBar: AppBar(title: const Text('遊び方')),
+      body: SafeArea(
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 560),
+            child: ListView(
+              padding: const EdgeInsets.all(16),
+              children: [
+                for (var i = 0; i < items.length; i++)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            CircleAvatar(
+                              radius: 14,
+                              backgroundColor: cs.primary,
+                              child: Text('${i + 1}',
+                                  style: TextStyle(
+                                      color: cs.onPrimary,
+                                      fontWeight: FontWeight.bold)),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(items[i].$1,
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16)),
+                                  const SizedBox(height: 4),
+                                  Text(items[i].$2),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                if (onStart != null)
+                  FilledButton(onPressed: onStart, child: const Text('はじめる')),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

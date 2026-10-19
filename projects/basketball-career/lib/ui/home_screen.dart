@@ -4,6 +4,7 @@ import '../game/difficulty.dart';
 import '../game/legacy.dart';
 import 'controller.dart';
 import 'history_screen.dart';
+import 'howto_screen.dart';
 import 'settings_screen.dart';
 
 /// はじめの画面。名前を決めて、6歳から始める。
@@ -18,6 +19,26 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final _name = TextEditingController();
   Difficulty _difficulty = Difficulty.normal;
+
+  /// はじめて始めるときは、先に遊び方を見せる。
+  void _start() {
+    final c = widget.controller;
+    if (c.howtoSeen) {
+      c.newGame(_name.text, _difficulty);
+      return;
+    }
+    final name = _name.text;
+    final difficulty = _difficulty;
+    Navigator.of(context).push(MaterialPageRoute<void>(
+      builder: (ctx) => HowToScreen(
+        onStart: () {
+          c.markHowtoSeen();
+          Navigator.of(ctx).pop();
+          c.newGame(name, difficulty);
+        },
+      ),
+    ));
+  }
 
   @override
   void dispose() {
@@ -87,8 +108,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             fontWeight: FontWeight.bold)),
                   ),
                 FilledButton(
-                  onPressed: () =>
-                      widget.controller.newGame(_name.text, _difficulty),
+                  onPressed: _start,
                   child: const Text('6歳から始める'),
                 ),
                 const SizedBox(height: 8),
@@ -100,6 +120,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       '殿堂・実績(${widget.controller.history.length}人)'),
                 ),
                 const SizedBox(height: 8),
+                TextButton(
+                  onPressed: () => Navigator.of(context).push(
+                      MaterialPageRoute<void>(builder: (_) => const HowToScreen())),
+                  child: const Text('遊び方'),
+                ),
                 TextButton(
                   onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(
                       builder: (_) =>

@@ -8,6 +8,7 @@ import 'package:basketball_career/game/rival.dart';
 import 'package:basketball_career/ui/app.dart';
 import 'package:basketball_career/ui/controller.dart';
 import 'package:basketball_career/ui/history_screen.dart';
+import 'package:basketball_career/ui/howto_screen.dart';
 import 'package:basketball_career/ui/settings_screen.dart';
 import 'package:flutter/material.dart' hide Action, Route;
 import 'package:flutter_test/flutter_test.dart';
@@ -51,6 +52,13 @@ void main() {
       testWidgets('はじめの画面', (t) async {
         phone(t, width: width);
         await show(t, GameController(store: _NullStore(), rng: Random(1)));
+      });
+
+      testWidgets('遊び方', (t) async {
+        phone(t, width: width);
+        await t.pumpWidget(MaterialApp(home: HowToScreen(onStart: () {})));
+        await t.pumpAndSettle();
+        expect(t.takeException(), isNull);
       });
 
       testWidgets('育成の画面(体調が悪い・怪我・目標あり)', (t) async {
