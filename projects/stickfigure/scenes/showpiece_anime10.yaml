@@ -1,0 +1,275 @@
+# 周9: 終わりの決めのカット(Aの低い角度)・不要な閃光を外す・終わりを詰める
+name: showpiece_anime10
+fps: 30
+tau_end: 7.2
+actors:
+  A:
+    color: [0.3, 0.68, 0.1]
+    scale: 1.0
+    base_x: -2.0
+    facing: 1
+    weapon: sword
+  B:
+    color: [0.8, 0.1, 0.08]
+    scale: 1.0
+    base_x: 2.4
+    facing: -1
+stage: {wall_x: 6.0, style: cave}
+slow:
+- {start: 1.85, end: 2.4, rate: 0.35}
+hits:
+- {tau: 1.66, hold: 0.13, kind: pose}
+- tau: 1.9
+  hold: 0.09
+  kind: kick
+  contact:
+    striker: A
+    effector: foot
+    target: {actor: B, point: hip}
+    tol: 0.2
+- tau: 2.25
+  hold: 0.06
+  kind: wall
+  pos: [6.0, 1.6]
+- {tau: 4.3, hold: 0.11, kind: pose}
+- tau: 4.4
+  hold: 0.05
+  kind: slash
+  pos: [3.7, 1.25]
+- tau: 4.98
+  hold: 0.05
+  kind: slash
+  pos: [3.5, 1.1]
+- tau: 5.4
+  hold: 0.08
+  kind: slash
+  contact:
+    striker: A
+    effector: tip
+    target: {actor: B, point: chest}
+    tol: 0.3
+    max_anticipation: 50
+- tau: 4.68
+  hold: 0.05
+  kind: hit
+  contact:
+    striker: B
+    effector: hand
+    target: {actor: A, point: chest}
+    tol: 0.3
+    max_anticipation: 50
+puffs:
+- tau: 3.0
+  kind: land
+  pos: [4.6, 0.0]
+- tau: 6.2
+  kind: land2
+  pos: [5.2, 0.0]
+camera:
+- [0.0, -0.4, 8.4]
+- [1.6, -0.1, 7.0]
+- [2.2, 1.6, 8.2]
+- [3.2, 3.0, 9.0]
+- [4.2, 3.4, 8.0]
+- [4.8, 3.6, 7.2]
+- [7.0, 3.2, 8.6]
+keys:
+  A:
+  - {t: 0.0, dx: 0.2, hz: 0.84}
+  - {t: 0.6, dx: 0.2, lean: 0.12, hz: 0.83}
+  - {t: 2.7, dx: 3.4, hz: 0.9}
+  - {t: 3.2, dx: 3.4, hz: 0.9}
+  - {t: 4.2, dx: 4.6, hz: 0.9}
+  - {t: 4.75, dx: 4.45, lean: -0.2, hz: 0.9}
+  - {t: 4.95, dx: 4.6, lean: 0.15, hz: 0.9}
+  - {t: 5.4, dx: 5.0, hz: 0.9}
+  - {t: 8.0, dx: 5.7, hz: 0.9, face: win}
+  B:
+  - {t: 0.0}
+  - {t: 1.0, dx: 0.35}
+  - {t: 1.9, dx: 0.35}
+  - {t: 1.95, dx: 0.3, lean: 0.55, hz: 0.88, fa: 0.9, ra: 0.8, fe: 0.9, re: 0.9, ht: 0.5, face: pain}
+  - {t: 2.25, dx: -1.5, rz: 1.45, roll: 1.57, hz: 0.9, fa: -0.6, ra: -0.6, fe: 0.2, re: 0.2, fl: 0.0, fk: 0.0, rl: 0.0, rk: 0.0, lean: -0.2, ht: -0.7,
+    face: pain}
+  - {t: 2.6, dx: -1.2, rz: 0.9, roll: 1.57, hz: 0.9, lean: 0.0}
+  - {t: 3.0, dx: -1.3, rz: 0.21, roll: 1.57, hz: 0.9, fa: 0.4, ra: 0.4, face: ko}
+  - {t: 3.5, dx: -1.3, rz: 0.21, roll: 1.57, hz: 0.9, face: ko}
+  - {t: 4.0, dx: -1.5, rz: 0.0, roll: 0.5, hz: 0.85, lean: 0.15, fa: 0.9, ra: 0.9, fe: 1.0, re: 1.0, face: fight}
+  - {t: 4.4, dx: -1.7, rz: 0.0, roll: 0.0, hz: 0.82, lean: 0.1, fa: 0.9, fe: 1.4, ra: 0.7, re: 1.5, fl: 0.45, fk: 0.3, rl: -0.45, rk: 0.4, face: fight}
+  - {t: 4.47, dx: -1.85, lean: -0.3, fa: 0.4, ra: 0.4, ht: -0.4, face: pain}
+  - {t: 4.62, dx: -1.85, lean: 0.1, fa: 0.9, fe: 1.4, ra: 0.7, re: 1.5, ht: 0.0, face: fight}
+  - {t: 4.8, dx: -1.85, lean: 0.1, fa: 0.9, fe: 1.4, ra: 0.7, re: 1.5, ht: 0.0, face: fight}
+  - {t: 5.06, dx: -2.1, lean: -0.45, fa: 0.35, ra: 0.35, ht: -0.55, face: pain}
+  - {t: 5.2, dx: -2.1, lean: 0.1, fa: 0.9, fe: 1.4, ra: 0.7, re: 1.5, ht: 0.0, face: fight}
+  - {t: 5.46, dx: -2.25, lean: -0.6, fa: 0.3, ra: 0.3, fe: 0.6, re: 0.6, ht: -0.8, face: pain}
+  - {t: 5.85, dx: -2.7, rz: 0.5, roll: 1.2, hz: 0.9, lean: -0.2, fl: 0.0, fk: 0.0, rl: 0.0, rk: 0.0, face: pain}
+  - {t: 6.2, dx: -2.8, rz: 0.21, roll: 1.57, hz: 0.9, fa: 0.3, ra: 0.3, face: ko}
+  - {t: 8.0, dx: -2.8, rz: 0.21, roll: 1.57, hz: 0.9, face: ko}
+fx:
+  trails: []
+  speed_lines:
+  - [0.5, 1.3]
+  - [3.3, 4.1]
+  - [4.4, 5.5]
+  invert: [kick, heel, wall]
+  flashes: [1.0, 1.45, 3.35, 3.8, 4.1, 4.4, 4.68, 4.98, 5.4]
+  charge:
+  - start: 3.95
+    end: 4.3
+    who: A
+    color: [120, 230, 255]
+  - start: 1.3
+    end: 1.7
+    who: A
+    color: [255, 170, 60]
+clips:
+  A:
+  - {file: 09_01, start: 0.6, end: 1.55, loop: true, anchor_dx: 0.2, in: 0.12, out: 0.2}
+  - {file: 135_07_s1, strike_at: 1.9, start: 1.5, end: 2.7, in: 0.2, out: 0.3}
+  - {file: 09_01, start: 3.2, end: 4.0, loop: true, anchor_dx: 3.4, in: 0.15, out: 0.2}
+  - {file: 02_08_s1, strike_at: 4.4, start: 4.0, end: 4.58, anchor_dx: 4.3, in: 0.12, out: 0.08}
+  - {file: 02_09_s1, strike_at: 4.98, start: 4.82, end: 5.2, anchor_dx: 4.8, in: 0.08, out: 0.08}
+  - {file: 02_07_s2, strike_at: 5.4, start: 5.2, end: 6.0, in: 0.08, out: 0.3}
+  B:
+  - {file: 13_17_s1, strike_at: 4.68, start: 4.48, end: 4.95, in: 0.06, out: 0.1}
+qa: {max_cross_frames: 400, max_stops: 3, max_anticipation_frames: 14, max_jerk: 1.3}
+tempo: 1.35
+anime: {trails: true, sfx: true, zoom_blur: true, grade: true, roll: true, smear: true}
+shots:
+- t: 0.0
+  follow: mid
+  scale:
+  - [0.0, 8.8]
+  - [1.0, 7.6]
+  yaw:
+  - [0.0, 12.0]
+  - [1.0, 22.0]
+  pitch: 9.0
+  lens: 40.0
+- t: 1.0
+  follow: A
+  scale:
+  - [1.0, 5.2]
+  - [1.85, 4.2]
+  yaw:
+  - [1.0, -28.0]
+  - [1.85, -14.0]
+  pitch: 5.0
+  lens: 32.0
+  target_z: 1.0
+  lag: 0.3
+- t: 1.85
+  follow: mid
+  scale:
+  - [1.85, 3.2]
+  - [2.1, 3.6]
+  yaw:
+  - [1.85, 38.0]
+  - [2.1, 46.0]
+  pitch: -9.0
+  lens: 28.0
+  target_z: 1.15
+  dutch: -4.0
+- t: 2.1
+  follow: B
+  scale: 6.0
+  yaw:
+  - [2.1, 62.0]
+  - [2.9, 50.0]
+  pitch: 3.0
+  lens: 40.0
+  target_z: 1.2
+  lag: 0.35
+- t: 2.9
+  follow: mid
+  scale:
+  - [2.9, 8.5]
+  - [3.6, 9.5]
+  yaw:
+  - [2.9, 15.0]
+  - [3.6, 25.0]
+  pitch:
+  - [2.9, 30.0]
+  - [3.6, 22.0]
+  lens: 40.0
+  target_z: 0.7
+- t: 3.6
+  follow: A
+  scale:
+  - [3.6, 5.6]
+  - [4.4, 4.4]
+  yaw:
+  - [3.6, -38.0]
+  - [4.4, -20.0]
+  pitch: 4.0
+  lens: 30.0
+  target_z: 1.0
+  lag: 0.3
+- t: 4.4
+  follow: mid
+  scale:
+  - [4.4, 3.6]
+  - [5.2, 4.2]
+  yaw:
+  - [4.4, 30.0]
+  - [5.2, 52.0]
+  pitch:
+  - [4.4, 2.0]
+  - [5.2, 10.0]
+  lens: 30.0
+  target_z: 1.2
+  dutch: 3.0
+- t: 5.2
+  follow: mid
+  scale:
+  - [5.2, 5.0]
+  - [7.0, 9.0]
+  yaw:
+  - [5.2, 52.0]
+  - [7.0, -15.0]
+  pitch:
+  - [5.2, 10.0]
+  - [7.0, 22.0]
+  lens: 40.0
+  target_z: 0.9
+stepping:
+  hold: 2
+  ones_around_hits: 4
+  ranges:
+  - [0.6, 1.5, 2]
+  - [3.1, 4.0, 2]
+  - [6.2, 7.6, 2]
+impact_cuts:
+  kinds: [kick, heel, wall]
+  hold: 0.2
+  angles:
+  - {yaw: 35, pitch: 4, scale: 3.0, lens: 28, hue: 0}
+  - {yaw: -40, pitch: -6, scale: 2.6, lens: 26, dutch: 6.0, hue: 1}
+  - {yaw: 5, pitch: 12, scale: 3.4, lens: 34, hue: 2}
+  per_kind:
+    wall:
+    - {yaw: -30, pitch: 6, scale: 5.0, lens: 30}
+    - {yaw: 10, pitch: 18, scale: 6.0, lens: 34}
+    - {yaw: -55, pitch: 3, scale: 4.2, lens: 28, dutch: -5.0}
+flurry:
+- start: 1.12
+  end: 1.64
+  every: 4
+  angles:
+  - &id001 {target: A, z: 1.5, yaw: 12, pitch: 2, scale: 1.5, lens: 40, hue: 0}
+  - &id002 {target: B, z: 1.5, yaw: -14, pitch: 3, scale: 1.5, lens: 40, hue: 1}
+  - {target: A, z: 0.5, ox: 0.3, yaw: 35, pitch: 4, scale: 1.6, lens: 22, hue: 0, dutch: -6.0}
+  - *id001
+- start: 3.9
+  end: 4.3
+  every: 4
+  angles:
+  - *id002
+  - *id001
+  - {target: A, z: 1.1, ox: 0.5, yaw: 30, pitch: -6, scale: 1.2, lens: 24, hue: 3, dutch: 7.0}
+- start: 6.45
+  end: 6.9
+  every: 5
+  angles:
+  - {target: A, z: 1.35, yaw: 18, pitch: -6, scale: 3.3, lens: 24, streak: false, dutch: -4.0}
+  - {target: A, z: 1.35, yaw: -25, pitch: -5, scale: 3.3, lens: 26, streak: false}
