@@ -165,7 +165,7 @@ def ground_fx(plan: dict, f: int) -> Image.Image:
         sc = a.get("scale", 1.0)
         lying = abs(p.get("lean", 0)) > 1.0 or abs(p.get("roll", 0)) > 0.5
         lift = 0.0 if lying else max(0.0, (p["hz"] - 0.92) * sc)
-        al = int(120 / (1 + 1.5 * lift))
+        al = int((95 if plan.get('scene', {}).get('style') == 'flat2d' else 120) / (1 + 1.5 * lift))
         hx = p["root_x"]
         ts = [i * math.pi / 12 for i in range(24)]
         if lying:
@@ -173,7 +173,8 @@ def ground_fx(plan: dict, f: int) -> Image.Image:
         else:
             ell = [(hx + 0.5 * sc / (1 + lift) * math.cos(t), 0.38 * sc * math.sin(t) / (1 + lift)) for t in ts]
         poly(ds, [P3(cam, x, y, 0.0) for x, y in ell], fill=(0, 0, 0, al))
-    sh = sh.filter(ImageFilter.GaussianBlur(7 * SS))
+    if plan.get("scene", {}).get("style") != "flat2d":       # 2D は、ぼかさない平らな影(セル画の落ち影)
+        sh = sh.filter(ImageFilter.GaussianBlur(7 * SS))
     for e in plan["events"]:
         age = (f - e["frame"]) / plan["fps"]
         if e["kind"] == "wall" and f >= e["frame"] and wall_x is not None:
