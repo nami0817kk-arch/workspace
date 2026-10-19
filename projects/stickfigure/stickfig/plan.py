@@ -157,7 +157,36 @@ class ClipBank:
             if k in v and k != "dx":
                 mean = float(clip.params[k].mean())
                 v[k] = mean + (v[k] - mean) * amp
+        pull, over = self.antic_phase(c, tau)
+        if pull or over:                                   # 振りかぶりの引き・振り抜きの行き過ぎ(打つ手足と体に上乗せ)
+            tm = c.get("timing", self.scene.get("clip_timing")) or {}
+            foot = (clip.strike or {}).get("kind") == "foot"
+            ap, ov = float(tm.get("antic", 0.45)), float(tm.get("over", 0.3))
+            if foot:
+                v["fl"] = v.get("fl", 0.0) - ap * pull + ov * over
+                v["fk"] = v.get("fk", 0.0) + 0.6 * ap * pull
+            else:
+                v["fa"] = v.get("fa", 0.0) - ap * pull + ov * over
+                v["fe"] = v.get("fe", 0.0) + 0.5 * ap * pull - 0.3 * ov * over
+            v["lean"] = v.get("lean", 0.0) - 0.28 * ap * pull + 0.3 * ov * over
+            v["hz"] = v.get("hz", 0.0) - 0.1 * ap * pull
         return v
+
+    def antic_phase(self, c: dict, tau: float):
+        """(引き, 行き過ぎ) の重み 0〜1。clip_timing が効く clip だけ。
+        引き: 命中の前 pre 秒のうち、溜めの区間(s 0.25〜0.65)で 1。入りは s 0.85 から、抜け(振り)は s 0.12 で 0。
+        行き過ぎ: 命中の直後、r/post 0.2 で山、0.7 で 0 に戻る。"""
+        tm = c.get("timing", self.scene.get("clip_timing"))
+        if not tm or "strike_at" not in c or c.get("loop"):
+            return 0.0, 0.0
+        pre, post = float(tm.get("pre", 0.4)), float(tm.get("post", 0.3))
+        r = tau - c["strike_at"]
+        if -pre <= r < 0:
+            s = -r / pre
+            return self._pw(s, [(0.0, 0.0), (0.12, 0.0), (0.25, 1.0), (0.65, 1.0), (0.85, 0.0)]), 0.0
+        if 0 <= r <= post:
+            return 0.0, self._pw(r / post, [(0.0, 0.0), (0.2, 1.0), (0.7, 0.0)])
+        return 0.0, 0.0
 
     def apply(self, who: str, p: Dict[str, float], tau: float) -> Dict[str, float]:
         for c in self.defs.get(who, []):

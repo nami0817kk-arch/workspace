@@ -38,6 +38,7 @@ DEFAULTS = dict(
     mix_kick=True,           # 連打の途中(防がれない1発)を蹴りにする(hits≧3、seed があれば半々)
     b_first=True,            # 蹴り無しのとき、B が先に2発仕掛ける(A がかわし→受け止め)。攻守の入れ替わり
     riposte=True,            # 受け止めた直後に、相手(B)が打ち返し、こちら(A)が受け止める(鍔迫り合いの往復)
+    camera=None,             # "fixed" で検証用の固定カメラ(カット・寄り・連打カット・決めの引きを無くす)
     timing=True,             # アニメの間: clip の時間配分を「溜め→一気→振り抜き」に(plan.ClipBank.warped_u)
     exaggerate=1.25,         # 振りの誇張: 命中の clip の腕の角度を、平均からの差で 1.25 倍
     footwork=True,           # 足運び: 接地した足を滑らせず、体が動いた分だけ踏み替える(plan._footwork)
@@ -386,6 +387,11 @@ def build_fight(spec: dict) -> dict:
     keysB.append(dict(t=end, dx=keysB[-1].get("dx", -3.0), rz=0.21, roll=1.57, hz=0.9, face="ko"))
     flurry.append(dict(start=_r(ko_t + 0.4), end=_r(ko_t + 0.8), every=5, angles=HERO))
     shots.append(dict(t=_r(hl + 0.0), follow="mid", scale=[[_r(hl), 5.0], [end, 9.0]], yaw=[[_r(hl), 52.0], [end, -15.0]], pitch=[[_r(hl), 10.0], [end, 22.0]], lens=40.0, target_z=0.9))
+
+    if s["camera"] == "fixed":
+        shots = [dict(t=0.0, follow="mid", scale=3.4, yaw=0.0, pitch=0.0, lens=50.0)]
+        flurry = []
+        impact_cuts = None
 
     ex = float(s["exaggerate"])
     if ex and ex != 1.0:                                 # 振りの誇張: 腕の角度を平均からの差で ex 倍(clip ごと。体・脚は変えない)

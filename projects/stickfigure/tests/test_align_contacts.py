@@ -59,3 +59,19 @@ def test_align_is_idempotent(tmp_path):
     planmod._align_keys_to_clips(sc, planmod.make_tracks(sc))
     k2 = [(k["t"], k.get("dx")) for k in sc["keys"]["A"]]
     assert k1 == k2
+
+
+def test_clip_timing_keeps_strike_and_is_monotone(tmp_path):
+    _make_clip(tmp_path / "poke.json")
+    sc = _scene(tmp_path, 0.0)
+    sc["clip_timing"] = dict(pre=0.4, post=0.3)
+    bank = planmod.ClipBank(sc)
+    c = sc["clips"]["A"][0]
+    raw = lambda tau: (tau - c["start"]) * c.get("speed", 1.0) + c.get("offset", 0.0)
+    assert abs(bank.warped_u(c, 1.5) - raw(1.5)) < 1e-9                # 命中の瞬間は元のまま
+    us = [bank.warped_u(c, 1.0 + i * 0.01) for i in range(101)]
+    assert all(b >= a - 1e-9 for a, b in zip(us, us[1:]))               # 戻らない
+    assert abs(us[0] - raw(1.0)) < 1e-9 and abs(us[-1] - raw(2.0)) < 1e-9   # 両端は元の時間につながる
+    pulls = [bank.antic_phase(c, 1.5 - x)[0] for x in (0.04, 0.2, 0.38)]
+    assert pulls[0] == 0.0 and pulls[1] == 1.0 and pulls[2] < 0.5      # 振りの最中は引かない、溜めで引く
+    assert bank.antic_phase(c, 1.56)[1] == 1.0 and bank.antic_phase(c, 1.8)[1] == 0.0
