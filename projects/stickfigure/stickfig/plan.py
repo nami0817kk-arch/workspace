@@ -1003,8 +1003,8 @@ def build_plan(scene: dict, solve: bool = True) -> dict:
         for e in events:
             d = f - e["frame"]
             amp = SHAKE.get(e["kind"], 0.0)
-            if amp and 0 <= d < 6:                       # 揺れは 6 コマ(参考: 画面が揺れているコマは 3〜17%)
-                shake += amp * 0.7 * (1 - d / 6)
+            if amp and 0 <= d < 4:                       # 揺れは 4 コマ(6 コマだと動画で測った「揺れているコマ」が 21% で、参考の 3〜17% を超えた)
+                shake += amp * 0.8 * (1 - d / 4)
         sx, sz = shake * math.sin(f * 2.9), shake * math.cos(f * 2.3)
         # アニメの演出: 命中の瞬間に「寄って」(ズームパンチ)、画面が傾いて揺れる
         zp, roll = 0.0, 0.0
@@ -1012,8 +1012,8 @@ def build_plan(scene: dict, solve: bool = True) -> dict:
             for i, e in enumerate(events):
                 d = f - e["frame"]
                 zk = anime.ZOOM_PUNCH.get(e["kind"], 0.0) * 0.8
-                if zk and 0 <= d < 7:                   # ズームパンチは 7 コマで戻す(12 コマだと「揺れているコマ」が参考の 17% を超える)
-                    dec = (1 - d / 7) ** 2
+                if zk and 0 <= d < 5:                   # ズームパンチは 5 コマで戻す(7 コマでも「揺れているコマ」が 21% だった)
+                    dec = (1 - d / 5) ** 2
                     zp += zk * dec
                     roll += anime.ROLL_SHAKE.get(e["kind"], 0.0) * dec * math.cos(d * 1.2) * (1 if i % 2 == 0 else -1)
         for e in events:                       # 溜めの止め絵(kind: pose): 止めている間、じわっと寄る
