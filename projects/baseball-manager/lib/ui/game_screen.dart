@@ -412,78 +412,85 @@ class _Header extends StatelessWidget {
     final t = Theme.of(context).textTheme;
     final u = untilTournament(game.stage, game.slot);
     // 絵と文字は重ねず、左に絵・右に所属などを並べる。
-    return GestureDetector(
-      key: const Key('banner'),
-      onTap: onTap,
-      child: IntrinsicHeight(
-        child: Row(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-          SizedBox(
-            width: MediaQuery.sizeOf(context).width * 0.36,
-            height: 96,
-            child: SceneBanner(
-              season: seasonOf(game.stage, game.slot),
-              stage: game.stage,
-              role: p.role,
-              mood: moodOf(game.motivation),
-              label: '', // 月・季節は、上のバーと行動カードに出ている
-
+    return Semantics(
+      button: true,
+      label: '選手の詳細を開く',
+      child: GestureDetector(
+        key: const Key('banner'),
+        onTap: onTap,
+        child: IntrinsicHeight(
+          child: Row(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+            SizedBox(
+              width: MediaQuery.sizeOf(context).width * 0.36,
               height: 96,
-            ),
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Container(
-              key: const Key('player-card'),
-              constraints: const BoxConstraints(minHeight: 96),
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-              decoration: BoxDecoration(
-                color: cs.primaryContainer,
-                borderRadius: BorderRadius.circular(16),
+              child: SceneBanner(
+                season: seasonOf(game.stage, game.slot),
+                stage: game.stage,
+                role: p.role,
+                mood: moodOf(game.motivation),
+                label: '', // 月・季節は、上のバーと行動カードに出ている
+
+                height: 96,
               ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(affiliationOf(game.stage, p.name, proTeam: game.proTeam),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style:
-                          t.titleSmall?.copyWith(fontWeight: FontWeight.bold)),
-                  Text(
-                      playerCardLine(game.stage, p,
-                          position: game.position,
-                          numberOverride:
-                              specialNumberOf(p.role, game.records)),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: t.bodySmall),
-                  const SizedBox(height: 6),
-                  Row(children: [
-                    Expanded(
-                      child: LinearProgressIndicator(
-                        value: game.slot / game.slotsInYear,
-                        minHeight: 5,
-                        borderRadius: BorderRadius.circular(3),
-                      ),
-                    ),
-                    const SizedBox(width: 6),
-                    Text('${game.slot + 1}/${game.slotsInYear}',
-                        style: t.bodySmall),
-                  ]),
-                  if (u != null)
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Container(
+                key: const Key('player-card'),
+                constraints: const BoxConstraints(minHeight: 96),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                decoration: BoxDecoration(
+                  color: cs.primaryContainer,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                     Text(
-                        u.left == 0
-                            ? '今が${u.name}'
-                            : '${u.name}まであと${u.left}${u.unit}',
-                        key: const Key('until-tournament'),
+                        affiliationOf(game.stage, p.name,
+                            proTeam: game.proTeam),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: t.titleSmall
+                            ?.copyWith(fontWeight: FontWeight.bold)),
+                    Text(
+                        playerCardLine(game.stage, p,
+                            position: game.position,
+                            numberOverride:
+                                specialNumberOf(p.role, game.records)),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: t.bodySmall),
-                ],
+                    const SizedBox(height: 6),
+                    Row(children: [
+                      Expanded(
+                        child: LinearProgressIndicator(
+                          value: game.slot / game.slotsInYear,
+                          minHeight: 5,
+                          borderRadius: BorderRadius.circular(3),
+                        ),
+                      ),
+                      const SizedBox(width: 6),
+                      Text('${game.slot + 1}/${game.slotsInYear}',
+                          style: t.bodySmall),
+                    ]),
+                    if (u != null)
+                      Text(
+                          u.left == 0
+                              ? '今が${u.name}'
+                              : '${u.name}まであと${u.left}${u.unit}',
+                          key: const Key('until-tournament'),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: t.bodySmall),
+                  ],
+                ),
               ),
             ),
-          ),
-        ]),
+          ]),
+        ),
       ),
     );
   }
