@@ -189,11 +189,13 @@ def build_fight(spec: dict) -> dict:
         keysA += [dict(t=2.45, dx=3.3, hz=0.76, lean=0.18), dict(t=2.7, dx=3.4, hz=0.9), dict(t=3.2, dx=3.4, hz=0.9)]   # 着地で沈んで立つ
         keysB += [dict(t=1.9, dx=0.35),
                   dict(t=1.95, dx=0.3, lean=0.55, hz=0.88, fa=0.9, ra=0.8, fe=0.9, re=0.9, ht=0.5, face="pain"),
-                  dict(t=2.25, dx=-1.5, rz=1.45, roll=1.57, hz=0.9, fa=-0.6, ra=-0.6, fe=0.2, re=0.2, fl=0.0, fk=0.0, rl=0.0, rk=0.0, lean=-0.2, ht=-0.7, face="pain"),
-                  dict(t=2.6, dx=-1.2, rz=0.9, roll=1.57, hz=0.9, lean=0.0),
-                  dict(t=3.0, dx=-1.3, rz=0.21, roll=1.57, hz=0.9, fa=0.4, ra=0.4, face="ko"),
-                  dict(t=3.5, dx=-1.3, rz=0.21, roll=1.57, hz=0.9, face="ko"),
-                  dict(t=4.0, dx=-1.5, rz=0.0, roll=0.5, hz=0.85, lean=0.15, fa=0.9, ra=0.9, fe=1.0, re=1.0, face="fight"),
+                  # 壁(x=6.0)まで飛んで(前は dx -1.5 で壁の 2 単位手前に浮いたまま止まっていた)、壁に背中から叩きつけられ、ずり落ちて倒れる
+                  dict(t=2.25, dx=-3.45, rz=1.35, roll=0.3, hz=0.9, fa=-0.9, ra=-0.9, fe=0.3, re=0.3, fl=0.6, fk=0.3, rl=-0.3, rk=0.4, lean=-0.35, ht=-0.7, face="pain"),
+                  dict(t=2.42, dx=-3.45, rz=1.25, roll=0.35, hz=0.9, lean=-0.3, face="pain"),          # 壁に張りついて一瞬止まる
+                  dict(t=2.75, dx=-3.3, rz=0.55, roll=1.2, hz=0.9, lean=0.0, fa=0.2, ra=0.2, face="pain"),   # ずり落ちる
+                  dict(t=3.0, dx=-3.25, rz=0.21, roll=1.57, hz=0.9, fa=0.4, ra=0.4, fl=0.0, fk=0.0, rl=0.0, rk=0.0, face="ko"),
+                  dict(t=3.5, dx=-3.25, rz=0.21, roll=1.57, hz=0.9, face="ko"),
+                  dict(t=4.0, dx=-2.4, rz=0.0, roll=0.5, hz=0.85, lean=0.15, fa=0.9, ra=0.9, fe=1.0, re=1.0, face="fight"),   # よろけながら前へ出て立つ
                   dict(t=4.4, dx=-1.7, rz=0.0, roll=0.0, hz=0.82, lean=0.1, fa=0.9, fe=1.4, ra=0.7, re=1.5, fl=0.45, fk=0.3, rl=-0.45, rk=0.4, face="fight")]
         shots += [
             dict(t=1.0, follow="A", scale=[[1.0, 5.2], [1.85, 4.2]], yaw=[[1.0, -28.0], [1.85, -14.0]], pitch=5.0, lens=32.0, target_z=1.0, lag=0.3),
