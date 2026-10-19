@@ -178,6 +178,8 @@ python scripts/make_gallery.py 09_01:2.4 135_07_s1:3.6   # clip を順に再生�
 - 光線は `fx.beams: [{start, end, who, color, x_end}]` として compose が人物の上に描く。壁の位置(`wall_x`)は飛ばす前の B の位置から決めて固定(`wall_lock`)。見本 `scenes/fight_beam.yaml`
 - **気弾(`finisher: blast`)**: 片手を高く上げて光の玉を膨らませ(`fx.orbs`: 手に付く玉、0.65 秒で r 0.08→0.42)→ 予備動作でさらに引き → 2 コマで振り下ろして投げる(`throw`、擬音「シュッ」)→ 玉が少し山なりに飛ぶ(`fx.projectiles`、0.2 秒、後ろに流れる筋)→ 着弾で爆発(`blast`: 放射線・衝撃の輪・閃光・「ドガァァン!!」)→ 壁まで吹き飛ぶ(beam と同じ)。色は `beam_color`(既定は橙)。見本 `scenes/fight_blast.yaml`
 - **衝撃波(`finisher: wave`)**: 沈んで(予備動作)→ 跳び上がって拳を振り上げ(rz 1.6)→ 落ちながらさらに振りかぶり → 拳を地面に叩きつけ(`slam`: つぶれ・放射線・閃光・「ズドォン!!」)→ 地面を走る波(`fx.waves`、`look.ground_wave`: 先頭の土の山と砂ぼこり、跡の山とひび。0.28 秒で相手へ)→ 相手を下から突き上げて 1.2 身長打ち上げ(`wave`「ドゴッ!!」)→ 落ちて跳ねて倒れる。見本 `scenes/fight_wave.yaml`
+- **光線の撃ち合い(`finisher: beam_clash`、B の色は `beam_color_b`)**: 2 人とも跳んで下がり(A 3.3・B は 1.2 下がる)、同時に構えて 1.2 秒溜め、同時に発射。光線は中央でぶつかり(`fx.beams` の `x_end` を `[[tau, x], ...]` の折れ線で書く。ぶつかる点に `fx.orbs` の `path` 付きの白い玉)、初め A が押され(踏ん張って沈む)、一歩踏み込んで押し返し、B の光線が折れて A の光線が壁まで伸び、B は壁へ。カメラは溜めを横から、踏ん張る A に寄り、勝つ瞬間に引く。見本 `scenes/fight_beam_clash.yaml`。下がるのに 0.6 秒要る(0.4 だと 1 コマ 0.93 飛ぶ)
+- 衝撃波の跳びは rz 1.25・カメラは target_z 1.5 で少し引く(1.6 だと画面の上に切れた)
 - 光線・気弾とも、技の前に A が跳んで下がり(dx 3.7〜3.9)、B もよろけて 0.7 下がる(光線・玉の飛ぶ長さを取る)。壁はよろけた B より 1.3 奥(`wall_lock`)。光線は壁を 1.2 突き抜ける長さ
 - 技を足すときの型: fight の finisher 分岐(キー・hits・fx・shots・ko_t)+ plan の SHAKE + anime の SFX/SFX_SIZE/ZOOM_PUNCH/ROLL_SHAKE + compose の BIG/BURST_FRAMES と描画 + sfx の音 + テスト
 
