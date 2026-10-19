@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart' hide Action, Route;
 import 'package:flutter/services.dart';
 
+import '../game/advice.dart';
 import '../game/epilogue.dart';
 import '../game/game.dart';
 import '../game/life.dart';
@@ -181,23 +182,12 @@ class _SeasonView extends StatelessWidget {
                 for (final a in Action.values)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 8),
-                    child: FilledButton.tonal(
-                      onPressed:
-                          canChoose(a, cond) ? () => c.play(a) : null,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(a.label,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold)),
-                          if (g.isRut(a))
-                            const Text('マンネリ気味(伸びが少し落ちる)',
-                                style: TextStyle(
-                                    fontSize: 11, color: Color(0xFFC62828))),
-                          Text(a.description,
-                              style: const TextStyle(fontSize: 12)),
-                        ],
-                      ),
+                    child: _ActionButton(
+                      action: a,
+                      recommended: a == recommendedAction(g),
+                      enabled: canChoose(a, cond),
+                      rut: g.isRut(a),
+                      onPressed: () => c.play(a),
                     ),
                   ),
                 OutlinedButton(
@@ -334,6 +324,43 @@ class _PlayerCard extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+/// 過ごし方のボタン。おすすめは濃く塗って「おすすめ」と添える。
+class _ActionButton extends StatelessWidget {
+  const _ActionButton({
+    required this.action,
+    required this.recommended,
+    required this.enabled,
+    required this.rut,
+    required this.onPressed,
+  });
+  final Action action;
+  final bool recommended;
+  final bool enabled;
+  final bool rut;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final child = Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(recommended ? '${action.label}  (おすすめ)' : action.label,
+            style: const TextStyle(fontWeight: FontWeight.bold)),
+        if (rut)
+          Text('マンネリ気味(伸びが少し落ちる)',
+              style: TextStyle(
+                  fontSize: 11,
+                  color: recommended ? Colors.white : const Color(0xFFC62828))),
+        Text(action.description, style: const TextStyle(fontSize: 12)),
+      ],
+    );
+    final cb = enabled ? onPressed : null;
+    return recommended
+        ? FilledButton(onPressed: cb, child: child)
+        : FilledButton.tonal(onPressed: cb, child: child);
   }
 }
 
