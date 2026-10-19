@@ -52,6 +52,17 @@ void studyOnly(Game g) {
       abilitiesOf(g.player.role).first);
 }
 
+/// 今年の目標を毎年「むずかしい」「やさしい」にして、上手い遊び方をする。
+void skilledHardGoal(Game g) {
+  if (g.canChooseGoal) g.chooseGoalLevel(2);
+  skilled(g);
+}
+
+void skilledEasyGoal(Game g) {
+  if (g.canChooseGoal) g.chooseGoalLevel(0);
+  skilled(g);
+}
+
 void skilled(Game g) {
   final abilities = abilitiesOf(g.player.role);
   // いちばん低い能力を重点にする(総合評価は平均なので、底上げが効率的)。
@@ -164,6 +175,8 @@ void main(List<String> args) {
     if (extra) '練習試合ばかり': matches,
     if (extra) 'コーチばかり': coachOnly,
     if (extra) '研究ばかり': studyOnly,
+    if (extra) '目標むずかしい': skilledHardGoal,
+    if (extra) '目標やさしい': skilledEasyGoal,
   }.entries) {
     for (final role in [Role.batter, Role.pitcher]) {
       final rs = [
