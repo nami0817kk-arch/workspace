@@ -38,6 +38,8 @@ class PlayerSnapshot {
     this.money = 0,
     this.investTotal = 0,
     this.rivalTalent,
+    this.gifts = const {},
+    this.awakened = false,
   });
 
   final String name;
@@ -87,6 +89,12 @@ class PlayerSnapshot {
   /// ライバルの素質(物語を作るのに使う)。
   final int? rivalTalent;
 
+  /// 天賦(能力ごとの才能の偏り)。古い記録は空。
+  final Map<Ability, int> gifts;
+
+  /// 一生のうちに特性が覚醒したか。
+  final bool awakened;
+
   int of(Ability a) => abilities[a] ?? 0;
 
   factory PlayerSnapshot.fromGame(Game g) => PlayerSnapshot(
@@ -116,6 +124,8 @@ class PlayerSnapshot {
         money: g.money,
         investTotal: g.invests.values.fold(0, (a, b) => a + b),
         rivalTalent: g.cast.rival?.talent,
+        gifts: Map.of(g.player.gifts),
+        awakened: g.awakened,
       );
 
   Map<String, dynamic> toJson() => {
@@ -145,6 +155,8 @@ class PlayerSnapshot {
         'money': money,
         'investTotal': investTotal,
         'rivalTalent': rivalTalent,
+        'gifts': {for (final e in gifts.entries) e.key.name: e.value},
+        'awakened': awakened,
       };
 
   /// 項目を足すときは既定値を置く(殿堂の古い記録を壊さない)。
@@ -198,6 +210,8 @@ class PlayerSnapshot {
       money: (j['money'] as num?)?.toInt() ?? 0,
       investTotal: (j['investTotal'] as num?)?.toInt() ?? 0,
       rivalTalent: (j['rivalTalent'] as num?)?.toInt(),
+      gifts: giftsFromJson(j['gifts']),
+      awakened: j['awakened'] == true,
     );
   }
 }

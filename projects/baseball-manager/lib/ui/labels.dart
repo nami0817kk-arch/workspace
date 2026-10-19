@@ -6,6 +6,7 @@ import '../game/career.dart';
 import '../game/exp.dart';
 import '../game/life.dart';
 import '../game/player.dart';
+import '../game/traits.dart';
 
 /// 画面に出す日本語。ゲームのロジックは名前を持たないので、ここに集める。
 String abilityLabel(Ability a) => switch (a) {
@@ -93,6 +94,16 @@ String rankOf(int v) {
   if (v >= 30) return 'F';
   return 'G';
 }
+
+/// 特性のアイコンの色。レアは赤みの金、良いものは金、代償のあるものは灰青。
+Color traitIconColor(Trait t) => t.rare
+    ? const Color(0xFFD84315)
+    : (t.positive ? const Color(0xFFF9A825) : const Color(0xFF607D8B));
+
+/// 特性チップの背景色(明るい色。文字は暗い色で読める)。
+Color traitChipColor(Trait t) => t.rare
+    ? const Color(0xFFFFCCBC)
+    : (t.positive ? Colors.amber.shade100 : Colors.blueGrey.shade100);
 
 Color rankColor(String rank) => switch (rank) {
       'S' => const Color(0xFFE53935),

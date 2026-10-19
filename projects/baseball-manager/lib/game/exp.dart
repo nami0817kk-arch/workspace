@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'player.dart';
+import 'talent.dart';
 
 /// 経験点の種類。練習で貯まり、同じ種類の能力にだけ振り分けられる。
 enum Category {
@@ -40,7 +43,9 @@ double roleExpFactor(Role r) {
 const expPerPoint = 8;
 
 /// 能力を現在値 `value` から1上げるのに要る経験点。高いほど上がりにくい。
-int expCost(int value) => 6 + value ~/ 6;
+/// `gift` はその能力の天賦(-2〜+2。得意なほど安い。`talent.dart`)。
+int expCost(int value, [int gift = 0]) =>
+    max(1, ((6 + value ~/ 6) * giftCostMultiplier(gift)).round());
 
 /// やる気。気持ち(0〜100)から決まり、練習で貯まる経験点の量が変わる。
 enum Motivation {
@@ -91,7 +96,7 @@ class ExpPool {
 ({Player player, ExpPool pool})? buy(Player p, ExpPool pool, Ability a) {
   if (!abilitiesOf(p.role).contains(a)) return null;
   final v = p.of(a);
-  final cost = expCost(v);
+  final cost = expCost(v, p.gift(a));
   final c = categoryOf(a);
   if (v >= 99 || pool.of(c) < cost) return null;
   return (

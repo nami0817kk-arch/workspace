@@ -4,6 +4,7 @@ import 'marks.dart';
 import 'player.dart';
 import 'records.dart';
 import 'snapshot.dart';
+import 'talent.dart';
 import 'traits.dart';
 
 /// 実績。一生が終わったときに調べ、何度遊んでも残る(端末ごと)。
@@ -121,6 +122,12 @@ final List<Achievement> achievements = [
       (s) => s.abilities.values.any((v) => v >= 90)),
   Achievement('traits-full', 'こだわりの個性', '特性を4つ以上そろえる。',
       (s) => s.traits.length >= maxTraits),
+  Achievement('rare-trait', '選ばれし者', 'レア特性を持って引退する(生まれつき、または覚醒)。',
+      (s) => s.traits.any((t) => t.rare)),
+  Achievement('awakening', '眠れる才能', '節目の「覚醒」で、特性に目覚める。',
+      (s) => s.awakened),
+  Achievement('gifted', '才能の塊', '使う能力のうち、天賦が最大(+2)のものを3つ以上持つ。',
+      (s) => topGifts(s.role, s.gifts) >= 3),
   Achievement('salary-oku', '億の男', '年俸が1億円を超える年を迎える。',
       (s) => s.records.any((r) => salaryOf(r) >= 10000)),
   Achievement('earnings-10', '一代で財を成す', 'プロ通算の収入が10億円を超える。',
