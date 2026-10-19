@@ -296,6 +296,10 @@ class Clip:
         self.fps = data["fps"]
         self.n = data["n"]
         self.params = {k: np.array(v) for k, v in data["params"].items()}
+        for k, v in self.params.items():          # 角度は 2π ずれても同じ姿勢。平均が ±π に入るよう整える(clip 同士のつなぎで 2π の飛びが出る)
+            if k not in ("hz", "dx"):                # 角度は 2π ずれても同じ姿勢。円の平均を中心に ±π へ収める(切れ目をデータの外に置く)
+                c = math.atan2(float(np.sin(v).mean()), float(np.cos(v).mean()))
+                self.params[k] = (v - c + math.pi) % (2 * math.pi) - math.pi + c
         self.duration = (self.n - 1) / self.fps
         self.strike = data.get("strike")
         self.loopable = bool(data.get("loop"))
