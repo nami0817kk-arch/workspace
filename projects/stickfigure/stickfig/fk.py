@@ -164,7 +164,7 @@ def dist_to_body(p: Pt, sk: Dict[str, object]) -> float:
 
 
 def target_point(sk: Dict[str, object], name: str) -> Pt:
-    """当てる先の点。hip / chest(胴の真ん中) / head / neck。"""
+    """当てる先の点。hip / chest(胴の真ん中) / head / neck / hand(前の手) / blade(剣の中ほど)。"""
     if name == "hip":
         return sk["hip"]  # type: ignore[return-value]
     if name == "neck":
@@ -174,6 +174,11 @@ def target_point(sk: Dict[str, object], name: str) -> Pt:
     if name == "chest":
         a, b = sk["torso"]  # type: ignore[misc]
         return ((a[0] + b[0]) / 2, (a[1] + b[1]) / 2)
+    if name == "hand":                                   # 受け止め: 相手の前の手(腕で受ける)
+        return sk["hand"]  # type: ignore[return-value]
+    if name == "blade":                                  # 受け止め: 相手の剣の中ほど(剣で受ける)
+        h, tp = sk["hand"], sk["tip"]  # type: ignore[misc]
+        return ((h[0] + tp[0]) / 2, (h[1] + tp[1]) / 2)
     raise ValueError(f"知らない当て先: {name}")
 
 
