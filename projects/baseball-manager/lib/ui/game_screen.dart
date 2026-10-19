@@ -66,11 +66,14 @@ class _GameScreenState extends State<GameScreen> {
       .any((a) => buy(game.player, game.exp, a) != null);
   bool get _careerMark => game.canUseFa || game.canMoveOverseas;
 
-  Widget _tabIcon(IconData icon, bool mark, String name) => Badge(
-        key: mark ? Key('mark-$name') : null,
-        smallSize: 9,
-        isLabelVisible: mark,
-        child: Icon(icon),
+  Widget _tabIcon(IconData icon, bool mark, String name) => Semantics(
+        label: mark ? '手をつけられることがあります' : null,
+        child: Badge(
+          key: mark ? Key('mark-$name') : null,
+          smallSize: 9,
+          isLabelVisible: mark,
+          child: Icon(icon),
+        ),
       );
 
   GameController get controller => widget.controller;
@@ -192,23 +195,44 @@ class _GameScreenState extends State<GameScreen> {
             ),
         ],
       ),
-      body: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: contentMaxWidth),
-          child: ListView(
-            key: ValueKey('tab-$_tab'),
-            padding: const EdgeInsets.fromLTRB(12, 4, 12, 16),
-            children: switch (_tab) {
-              1 => _abilityTab(),
-              2 => _careerTab(context),
-              3 => _relationsTab(),
-              _ => _trainTab(context, p),
-            },
-          ),
-        ),
-      ),
+      body: _wide(context)
+          ? Row(children: [
+              for (final tab in [_trainTab(context, p), _abilityTab()])
+                Expanded(
+                  child: Center(
+                    child: ConstrainedBox(
+                      constraints:
+                          const BoxConstraints(maxWidth: contentMaxWidth),
+                      child: ListView(
+                        key: ValueKey('wide-${identityHashCode(tab)}'),
+                        padding: const EdgeInsets.fromLTRB(12, 4, 12, 16),
+                        children: tab,
+                      ),
+                    ),
+                  ),
+                ),
+            ])
+          : Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: contentMaxWidth),
+                child: ListView(
+                  key: ValueKey('tab-$_tab'),
+                  padding: const EdgeInsets.fromLTRB(12, 4, 12, 16),
+                  children: switch (_tab) {
+                    1 => _abilityTab(),
+                    2 => _careerTab(context),
+                    3 => _relationsTab(),
+                    _ => _trainTab(context, p),
+                  },
+                ),
+              ),
+            ),
     );
   }
+
+  /// 広い画面(パソコン)では、育成と能力を横に並べて出す。
+  bool _wide(BuildContext context) =>
+      MediaQuery.sizeOf(context).width >= 1000 && (_tab == 0 || _tab == 1);
 
   List<Widget> _trainTab(BuildContext context, Player p) => [
         _Header(game: game, onTap: _openPlayer),

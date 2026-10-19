@@ -31,9 +31,10 @@ class _BaseballManagerAppState extends State<BaseballManagerApp> {
         themeMode: c.themeMode,
         builder: (context, child) {
           final mq = MediaQuery.of(context);
-          if (c.textScale == 1.0) return child!;
+          if (c.textScale == 1.0 && !c.reduceMotion) return child!;
           return MediaQuery(
             data: mq.copyWith(
+                disableAnimations: c.reduceMotion || mq.disableAnimations,
                 textScaler:
                     TextScaler.linear(mq.textScaler.scale(1) * c.textScale)),
             child: child!,

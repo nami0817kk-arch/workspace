@@ -95,6 +95,51 @@ class SettingsScreen extends StatelessWidget {
                           controller.setThemeMode(s.first),
                     ),
                   ),
+                  SwitchListTile(
+                    key: const Key('reduce-motion'),
+                    secondary: const Icon(Icons.motion_photos_off),
+                    title: const Text('アニメーションを減らす'),
+                    subtitle: const Text('画面の動きを止めます。'),
+                    value: controller.reduceMotion,
+                    onChanged: (v) => controller.setFlags(reduceMotion: v),
+                  ),
+                  SwitchListTile(
+                    key: const Key('haptics-switch'),
+                    secondary: const Icon(Icons.vibration),
+                    title: const Text('触覚フィードバック'),
+                    subtitle: const Text('行動や振り分けのとき、軽く振動します(対応する端末のみ)。'),
+                    value: controller.haptics,
+                    onChanged: (v) => controller.setFlags(haptics: v),
+                  ),
+                  SwitchListTile(
+                    key: const Key('toasts-switch'),
+                    secondary: const Icon(Icons.notifications_none),
+                    title: const Text('行動の結果を画面の下に出す'),
+                    subtitle: const Text('「戻す」ボタンもここに出ます。'),
+                    value: controller.toasts,
+                    onChanged: (v) => controller.setFlags(toasts: v),
+                  ),
+                  ListTile(
+                    key: const Key('keys-open'),
+                    leading: const Icon(Icons.keyboard),
+                    title: const Text('キーボード操作'),
+                    onTap: () => showDialog<void>(
+                      context: context,
+                      builder: (ctx) => AlertDialog(
+                        title: const Text('キーボード操作'),
+                        content: const Text('Enter: おすすめの行動\n'
+                            'R: 休養\n'
+                            '1〜7: 練習・特訓・休養・研究・交流・練習試合・コーチ\n'
+                            'Z: ひとつ前に戻す\n'
+                            '(パソコンのブラウザなどで使えます)'),
+                        actions: [
+                          TextButton(
+                              onPressed: () => Navigator.pop(ctx),
+                              child: const Text('閉じる'))
+                        ],
+                      ),
+                    ),
+                  ),
                   const Divider(),
                   ListTile(
                     key: const Key('settings-achievements'),

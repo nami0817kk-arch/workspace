@@ -30,6 +30,7 @@ const appVersion = '0.1.0';
 const adminKey = 'baseball_manager_admin_v1';
 const textScaleKey = 'baseball_manager_text_scale_v1';
 const themeKey = 'baseball_manager_theme_v1';
+const flagsKey = 'baseball_manager_flags_v1';
 const corruptKey = 'baseball_manager_corrupt_save_v1';
 
 /// テスト用ビルド(`--dart-define=TEST_BUILD=true`)。管理者モードが最初からオンになる。
@@ -159,6 +160,29 @@ class SaveStore {
       final p = await SharedPreferences.getInstance();
       await p.setDouble(textScaleKey, scale);
       await p.setString(themeKey, theme.name);
+    } catch (_) {}
+  }
+
+  /// 動きを減らす・触覚・結果の知らせ(画面の下)。保存は 'm,h,t' の形。
+  Future<({bool reduceMotion, bool haptics, bool toasts})> loadFlags() async {
+    try {
+      final p = await SharedPreferences.getInstance();
+      final v = (p.getString(flagsKey) ?? '').split(',');
+      bool at(int i, bool d) => v.length > i ? v[i] == '1' : d;
+      return (
+        reduceMotion: at(0, false),
+        haptics: at(1, true),
+        toasts: at(2, true)
+      );
+    } catch (_) {
+      return (reduceMotion: false, haptics: true, toasts: true);
+    }
+  }
+
+  Future<void> saveFlags(bool m, bool h, bool t) async {
+    try {
+      final p = await SharedPreferences.getInstance();
+      await p.setString(flagsKey, '${m ? 1 : 0},${h ? 1 : 0},${t ? 1 : 0}');
     } catch (_) {}
   }
 
@@ -371,6 +395,19 @@ class GameController extends ChangeNotifier {
   double textScale = 1.0;
   ThemeMode themeMode = ThemeMode.system;
 
+  /// 動きを減らす(アニメーションを止める)・触覚・結果の知らせ。端末ごとに覚える。
+  bool reduceMotion = false;
+  bool haptics = true;
+  bool toasts = true;
+
+  void setFlags({bool? reduceMotion, bool? haptics, bool? toasts}) {
+    this.reduceMotion = reduceMotion ?? this.reduceMotion;
+    this.haptics = haptics ?? this.haptics;
+    this.toasts = toasts ?? this.toasts;
+    store.saveFlags(this.reduceMotion, this.haptics, this.toasts);
+    notifyListeners();
+  }
+
   void setTextScale(double v) {
     textScale = v;
     store.saveDisplay(textScale, themeMode);
@@ -395,6 +432,10 @@ class GameController extends ChangeNotifier {
     final disp = await store.loadDisplay();
     textScale = disp.scale;
     themeMode = disp.theme;
+    final fl = await store.loadFlags();
+    reduceMotion = fl.reduceMotion;
+    haptics = fl.haptics;
+    toasts = fl.toasts;
     history = await store.loadHistory();
     final j = await store.load();
     if (store.loadFailed) {
@@ -539,13 +580,13 @@ class GameController extends ChangeNotifier {
       focus = abilitiesOf(g.player.role).first;
     }
     _rememberForUndo();
-    HapticFeedback.selectionClick();
+    if (haptics) HapticFeedback.selectionClick();
     _turnBase = {for (final x in abilitiesOf(g.player.role)) x: g.player.of(x)};
     final start = g.log.length;
     final before = g.stage;
     g.choose(a, focus);
     recent = [_summary(a, g), ...g.log.sublist(start)];
-    toast = recent.first;
+    toast = toasts ? recent.first : null;
     toastTone = g.condition.injured || g.lastOutcome == Outcome.bad
         ? -1
         : (g.lastOutcome == Outcome.good || g.lastOutcome == Outcome.great
@@ -635,7 +676,7 @@ class GameController extends ChangeNotifier {
   void spend(Ability a) {
     final before = _ranks();
     if (game!.spend(a)) {
-      HapticFeedback.selectionClick();
+      if (haptics) HapticFeedback.selectionClick();
       _noteRankUps(before);
       _commit();
     }

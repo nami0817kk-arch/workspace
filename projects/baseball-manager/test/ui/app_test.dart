@@ -1632,6 +1632,50 @@ void _rankTests() {
     });
   });
 
+  group('設定の追加と広い画面(第3弾)', () {
+    testWidgets('触覚・結果の知らせ・動きを減らすを切り替えられ、端末に覚えられる', (t) async {
+      final c = await _start(t);
+      await t.tap(find.byKey(const Key('settings-open')));
+      await t.pumpAndSettle();
+      await t.tap(find.byKey(const Key('toasts-switch')));
+      await t.pumpAndSettle();
+      await t.tap(find.byKey(const Key('haptics-switch')));
+      await t.pumpAndSettle();
+      await t.tap(find.byKey(const Key('reduce-motion')));
+      await t.pumpAndSettle();
+      expect(c.toasts, isFalse);
+      expect(c.haptics, isFalse);
+      expect(c.reduceMotion, isTrue);
+      final f = await SaveStore().loadFlags();
+      expect((f.toasts, f.haptics, f.reduceMotion), (false, false, true));
+      await t.tap(find.byKey(const Key('keys-open')));
+      await t.pumpAndSettle();
+      expect(find.textContaining('Enter'), findsOneWidget);
+    });
+
+    testWidgets('結果の知らせを切ると、トーストは出ない', (t) async {
+      final c = await _start(t);
+      c.setFlags(toasts: false);
+      c.newGame('テスト', Role.batter);
+      await t.pumpAndSettle();
+      await t.tap(find.byKey(const Key('act-rest')));
+      await t.pump();
+      await t.pump(const Duration(milliseconds: 500));
+      expect(find.byKey(const Key('result-toast')), findsNothing);
+    });
+
+    testWidgets('広い画面(幅1200)では、育成と能力が横に並ぶ', (t) async {
+      final c = await _start(t);
+      t.view.physicalSize = const Size(1200, 900);
+      c.newGame('テスト', Role.batter);
+      await t.pumpAndSettle();
+      expect(find.byKey(const Key('act-train')), findsOneWidget);
+      expect(find.byKey(const Key('buy-contact')), findsOneWidget);
+      await _tab(t, 'career');
+      expect(find.byKey(const Key('act-train')), findsNothing);
+    });
+  });
+
   group('表示の設定とホームのカード', () {
     testWidgets('文字の大きさと画面の色を選べて、端末に覚えられる', (t) async {
       final c = await _start(t);
