@@ -26,7 +26,7 @@ DEFAULTS = dict(
     hits=3,                  # 連打の回数(1〜4)
     counter=True,            # 1発目のあと、相手の反撃
     finisher="launch_slash", # launch_slash(決めの斬りで打ち上げ→空中斬り→叩きつけ) / launch_kick(決めは高い蹴りで打ち上げ) / beam(気の光線: 溜め→発射→壁まで吹き飛ばす) / blast(気弾: 片手に玉を膨らませて投げる→着弾で爆発) / wave(衝撃波: 跳んで拳を地面に叩きつけ→地面を走る波で打ち上げる) / beam_clash(光線の撃ち合い: 2 人が同時に撃ち、中央でぶつかり、A が押し勝つ。B の色は beam_color_b) / random(seed で選ぶ) / none(まっすぐ倒れる)
-    opening=None,            # 出だしの技: blast(走り出す前に気弾を投げ、B がかわし、壁で爆発) / teleport(走らず一瞬で相手の目の前に現れる)。kick: true とは併用しない
+    opening=None,            # 出だしの技: blast(走り出す前に気弾を投げ、B がかわし、壁で爆発) / teleport(走らず一瞬で相手の目の前に現れる) / fly(跳び上がって水平に飛び、急降下して着地)。kick: true とは併用しない
     beam_color=None,         # beam の色 [r,g,b](0〜255)。既定は水色
     beam_color_b=None,       # beam_clash の B の光線の色。既定は赤
     palette="warm",          # warm / cool
@@ -159,6 +159,7 @@ def build_fight(spec: dict) -> dict:
     bfirst = bool(s["b_first"]) and not kick and s["weapon"] not in ("staff", "spear")
     open_blast = (s["opening"] == "blast") and not kick  # 出だしの技: 走り出す前に気弾を投げ、B がかわし、壁で爆発
     open_tp = (s["opening"] == "teleport") and not kick  # 出だしの技: 走らず一瞬で相手の目の前に現れる
+    open_fly = (s["opening"] == "fly") and not kick      # 出だしの技: 跳び上がって水平に飛び、急降下して相手の前に着地
     o = 0.0 if kick else (-2.4 + (0.95 if bfirst else 0.0))          # 蹴りが無いぶん、連打の開始が早まる(B が先に仕掛けるなら、その分を空ける)
     if open_blast:
         o += 1.0                                         # 気弾のぶん、走り出しが 1.0 秒遅れる
@@ -236,6 +237,30 @@ def build_fight(spec: dict) -> dict:
         a_dx = (4.0 if sword else 4.6) if bfirst else 3.4   # B が先に仕掛けるときは、B の拳が届く所まで寄る(剣なら、そのあと剣の間合いへ戻る分を小さく)
         clipsA[0].update(end=_r(ta))
         keysA.append(dict(t=_r(ta), dx=a_dx, hz=0.9))
+        if open_fly:                                     # 飛行: 0.6 しゃがむ → 0.75 跳び上がる → 0.9〜1.3 水平に飛ぶ → 1.45 急降下 → ta に着地(つぶれ)
+            t_land = _r(ta)
+            t_up = _r(t_land - 0.95)
+            clipsA.pop(0)                                # 走りは使わない
+            keysA = [k for k in keysA if k["t"] not in (0.6, _r(ta))]
+            fly_pose = dict(lean=1.25, fa=2.95, fe=0.1, ra=-0.6, re=0.4, fl=-0.25, fk=0.08, rl=-0.45, rk=0.1, ht=-0.55, hz=0.9, face="fight")   # 体を水平に、前の腕を突き出し、脚をまっすぐ後ろへ
+            keysA += [dict(t=0.6, dx=0.2, hz=0.84, lean=0.1, fa=0.9, fe=1.4, ra=0.7, re=1.5, face="fight"),
+                      dict(t=_r(t_up - 0.12), dx=0.2, hz=0.62, lean=0.35, fl=1.0, fk=1.7, rl=-0.3, rk=1.3, fa=-0.5, fe=1.0, ra=-0.5, re=1.0),   # しゃがむ(予備動作)
+                      dict(t=_r(t_up), dx=0.3, rz=0.6, hz=0.95, lean=-0.15, fa=2.6, fe=0.3, ra=2.2, re=0.4, fl=0.3, fk=0.2, rl=-0.3, rk=0.2),   # 伸び上がって跳ぶ(腕を上へ)
+                      dict(t=_r(t_up + 0.15), dx=0.8, rz=1.9, **fly_pose),                                                                   # 高く上がり水平に
+                      dict(t=_r(t_up + 0.55), dx=_r(a_dx - 1.4), rz=2.2, **fly_pose),                                                        # 飛ぶ(頂点)
+                      dict(t=_r(t_land - 0.14), dx=_r(a_dx - 0.4), rz=1.0, **dict(fly_pose, lean=0.9, ht=-0.3)),                              # 急降下
+                      dict(t=_r(t_land), dx=a_dx, rz=0.0, hz=0.6, lean=0.35, fl=1.1, fk=1.9, rl=-0.3, rk=1.4, fa=0.3, fe=1.2, ra=0.3, re=1.2),   # 着地のつぶれ
+                      dict(t=_r(t_land + 0.14), dx=a_dx, hz=0.9, lean=0.1, fa=0.9, fe=1.4, ra=0.7, re=1.5)]
+            hits += [dict(tau=_r(t_up), hold=0.0, kind="launch", by="A", pos=[-2.0 + 0.3, 0.0]),
+                     dict(tau=_r(t_land), hold=0.03, kind="land", by="A", pos=[_r(-2.0 + a_dx), 0.0])]
+            puffs.append(dict(tau=_r(t_up + 0.03), kind="land", pos=[-2.0 + 0.3, 0.0]))
+            speed.append([_r(t_up), _r(t_land)])
+            fx_after.append(dict(start=_r(t_up + 0.12), end=_r(t_land - 0.1), who="A", trail=True, n=4))     # 体の後ろに流れる残像
+            keysB += [dict(t=_r(t_land - 0.2), dx=-1.7, lean=-0.15, ht=-0.45, fa=0.6, ra=0.5, fe=1.2, re=1.3, face="fight"),   # 見上げる
+                      dict(t=_r(t_land + 0.15), dx=-1.7, lean=0.05, ht=0.0, fa=0.9, fe=1.4, ra=0.7, re=1.5, face="fight")]
+            shots.insert(0, dict(t=0.55, follow="A", scale=[[0.55, 4.6], [t_up, 4.2]], yaw=[[0.55, -26.0], [t_up, -14.0]], pitch=6.0, lens=32.0, target_z=1.1, lag=0.25))
+            shots.append(dict(t=_r(t_up + 0.05), follow="A", scale=5.0, yaw=-10.0, pitch=-6.0, lens=36.0, target_z=2.0, lag=0.15))      # 飛行は少し下から見上げる
+            shots.append(dict(t=_r(t_land - 0.05), follow="B", scale=4.0, yaw=18.0, pitch=8.0, lens=32.0, target_z=1.0, lag=0.0))      # 着地は B 寄りで
         if open_tp:                                      # 瞬間移動: 1.0 まで構え → 1.05 沈む(予備動作) → 1.1 消える → 1.2 相手の目の前に現れる → 1.3 構え直して連打へ
             t_go = _r(ta - 0.1)
             clipsA.pop(0)                                # 走りは使わない(長さ 0 で残すと継ぎ目合わせが狂い、連打の途中で A が 1.9 戻った)

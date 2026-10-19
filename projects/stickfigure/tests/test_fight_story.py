@@ -237,3 +237,12 @@ def test_opening_teleport_builds():
     assert "vanish" in kinds and "appear" in kinds
     assert sc["fx"]["afterimages"]
     planmod.validate_scene(sc)
+
+
+def test_opening_fly_builds():
+    sc = fight.build_fight(dict(weapon="none", kick=False, opening="fly", hits=2, finisher="none"))
+    kinds = [h["kind"] for h in sc["hits"] if h["tau"] < 3.0]
+    assert "launch" in kinds and "land" in kinds
+    top = max(k.get("rz", 0.0) for k in sc["keys"]["A"] if k["t"] < 3.0)
+    assert top >= 2.0                                                   # 身長以上の高さを飛ぶ
+    planmod.validate_scene(sc)
