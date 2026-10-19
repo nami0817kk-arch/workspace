@@ -162,23 +162,25 @@ def build_fight(spec: dict) -> dict:
             dict(t=2.1, follow="B", scale=6.0, yaw=[[2.1, 62.0], [2.9, 50.0]], pitch=3.0, lens=40.0, target_z=1.2, lag=0.35),
             dict(t=2.9, follow="mid", scale=[[2.9, 8.5], [3.6, 9.5]], yaw=[[2.9, 15.0], [3.6, 25.0]], pitch=[[2.9, 30.0], [3.6, 22.0]], lens=40.0, target_z=0.7),
             dict(t=3.6, follow="A", scale=[[3.6, 5.6], [4.4, 4.4]], yaw=[[3.6, -38.0], [4.4, -20.0]], pitch=4.0, lens=30.0, target_z=1.0, lag=0.3)]
-        clipsA.append(dict(file="09_01", start=3.2, end=4.0, loop=True, anchor_dx=3.4, **{"in": 0.15, "out": 0.2}))
+        clipsA.append(dict(file="09_01", start=3.2, end=3.52, loop=True, anchor_dx=3.4, **{"in": 0.15, "out": 0.2}))   # 0.32 秒 ≒ 1.2 単位(dx 3.4 → 4.6)。長いと B を追い越して戻る
+        keysA.append(dict(t=3.55, dx=4.6, hz=0.9))
         speed.append([3.3, 4.1])
         a_dx0 = 3.4
     else:                                                # 蹴り無し: B は最初から構えの位置に立つ(以前は 0.6 秒で 2 単位後ろへ滑っていた)
         keysB = [dict(t=0.0, dx=-1.7), dict(t=tc, dx=-1.7, rz=0.0, roll=0.0, hz=0.82, lean=0.1, fa=0.9, fe=1.4, ra=0.7, re=1.5, fl=0.45, fk=0.3, rl=-0.45, rk=0.4, face="fight")]
         ta = tc - 0.95 if bfirst else tc                 # A が構えの位置に着く時刻
+        a_dx = 4.6 if bfirst else 3.4                    # B が先に仕掛けるときは、B の間合い(0.8)まで寄る
         clipsA[0].update(end=_r(ta))
-        keysA.append(dict(t=_r(ta), dx=3.4, hz=0.9))
+        keysA.append(dict(t=_r(ta), dx=a_dx, hz=0.9))
         if bfirst:                                       # B が先に仕掛ける: 1発目は A が沈んでかわし(miss)、2発目は A が受け止める(clash)
             tb1, tb2 = tc - 0.78, tc - 0.40
             keysB = [dict(t=0.0, dx=-1.7), dict(t=_r(tc - 1.2), dx=-1.7, **GUARD), dict(t=_r(tb1 - 0.15), dx=-1.0, **GUARD),
                      dict(t=_r(tc - 0.18), dx=-1.4, **GUARD), keysB[-1]]
             clipsB += [dict(file=cclip, strike_at=_r(tb1), start=_r(tb1 - 0.2), end=_r(tb1 + 0.17), anchor_dx=-1.0, **{"in": 0.06, "out": 0.08}),
                        dict(file=cclip, strike_at=_r(tb2), start=_r(tb2 - 0.17), end=_r(tb2 + 0.25), **{"in": 0.06, "out": 0.1})]
-            hits += [dict(tau=_r(tb1), hold=0.0, kind="miss", by="B", pos=[1.75, 1.25]),
+            hits += [dict(tau=_r(tb1), hold=0.0, kind="miss", by="B", pos=[2.9, 1.25]),
                      dict(tau=_r(tb2), hold=0.07, kind="clash", by="B", contact=dict(striker="B", effector="hand", target=dict(actor="A", point="chest"), tol=0.45, max_anticipation=50))]
-            keysA += [dict(t=_r(tb2 - 0.14), dx=3.4, **BLOCK), dict(t=_r(tb2 + 0.08), dx=3.4, **BLOCK), dict(t=_r(tb2 + 0.26), dx=3.4, **GUARD_A)]
+            keysA += [dict(t=_r(tb2 - 0.14), dx=4.6, **BLOCK), dict(t=_r(tb2 + 0.08), dx=4.6, **BLOCK), dict(t=_r(tb2 + 0.26), dx=4.6, **GUARD_A)]
             speed.append([_r(tb1 - 0.3), _r(tb2 + 0.1)])
         shots.append(dict(t=1.0, follow="A", scale=[[1.0, 4.8], [tc + 0.4, 3.9]], yaw=[[1.0, -38.0], [tc + 0.4, -20.0]], pitch=4.0, lens=30.0, target_z=1.0, lag=0.3))
         speed.append([tc - 0.7, tc + 0.1])
@@ -239,23 +241,30 @@ def build_fight(spec: dict) -> dict:
             flashes.append(_r(t))
         if defend.get(i) == "clash":
             dxB -= 0.10
-            keysB += [dict(t=_r(t - 0.14), dx=_r(dxB + 0.10), **BLOCK), dict(t=_r(t + 0.08), dx=_r(dxB), **BLOCK),
-                      dict(t=_r(t + 0.24), dx=_r(dxB), **GUARD)]
+            fwd = 0.6                                    # 受け止めは間合いを詰めて(体がぶつかる距離)。打ち返しもそこから
+            keysB += [dict(t=_r(t - 0.16), dx=_r(dxB + 0.10 + fwd), **BLOCK), dict(t=_r(t + 0.08), dx=_r(dxB + fwd), **BLOCK)]
             if rip_i == i:                               # 受けて返す: B が打ち返し、A が受け止める
                 tr = t + 0.30
                 clipsB.append(dict(file=cclip, strike_at=_r(tr), start=_r(tr - 0.2), end=_r(tr + 0.26), **{"in": 0.06, "out": 0.1}))
                 hits.append(dict(tau=_r(tr), hold=0.07, kind="clash", by="B", contact=dict(striker="B", effector="hand", target=dict(actor="A", point="chest"), tol=0.45, max_anticipation=50)))
                 keysA += [dict(t=_r(tr - 0.14), **BLOCK), dict(t=_r(tr + 0.08), **BLOCK), dict(t=_r(tr + 0.26), **GUARD_A)]
+                keysB += [dict(t=_r(tr + 0.3), dx=_r(dxB + fwd), **GUARD), dict(t=_r(tr + 0.5), dx=_r(dxB), **GUARD)]
+            else:
+                keysB += [dict(t=_r(t + 0.24), dx=_r(dxB + fwd * 0.5), **GUARD), dict(t=_r(t + 0.4), dx=_r(dxB), **GUARD)]
         elif defend.get(i) == "miss":
             dxB -= 0.05
             keysB += [dict(t=_r(t - 0.2), dx=_r(dxB + 0.05), **GUARD), dict(t=_r(t + 0.3), dx=_r(dxB), **GUARD)]
         else:
             dxB -= 0.25
         if not last and i not in defend:
-            keysB += [dict(t=_r(t + 0.07), dx=_r(dxB), lean=-0.3 - 0.07 * i, fa=0.4, ra=0.4, ht=-0.4 - 0.1 * i, face="pain"),
-                      dict(t=_r(t + 0.2), dx=_r(dxB), **GUARD)]
+            keysB.append(dict(t=_r(t + 0.07), dx=_r(dxB), lean=-0.3 - 0.07 * i, fa=0.4, ra=0.4, ht=-0.4 - 0.1 * i, face="pain"))
+            if not (i == 0 and s["counter"] and n > 1):                       # 反撃するときは、反撃の踏み込みのキーが続く(戻りのキーと重ねない)
+                keysB.append(dict(t=_r(t + 0.2), dx=_r(dxB), **GUARD))
         if i == 0 and s["counter"] and n > 1:
             tcn = t + 0.28
+            keysB += [dict(t=_r(tcn - 0.12), dx=_r(dxB + 0.7), **GUARD), dict(t=_r(tcn + 0.1), dx=_r(dxB + 0.7), **GUARD)]   # 踏み込んで打つ
+            if defend.get(i + 1) != "clash":                                  # 次が受け止めなら、その間合いのまま(戻らない)
+                keysB.append(dict(t=_r(tcn + 0.32), dx=_r(dxB), **GUARD))
             clipsB.append(dict(file=cclip, strike_at=_r(tcn), start=_r(tcn - 0.2), end=_r(tcn + 0.27), **{"in": 0.06, "out": 0.1}))
             hits.append(dict(tau=_r(tcn), hold=0.05, kind="hit", by="B", contact=dict(striker="B", effector="hand", target=dict(actor="A", point="chest"), tol=0.3, max_anticipation=50)))
             keysA += [dict(t=_r(tcn + 0.07), dx=4.45, lean=-0.2, hz=0.9), dict(t=_r(tcn + 0.27), dx=4.6, lean=0.15, hz=0.9)]

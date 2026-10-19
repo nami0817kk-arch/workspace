@@ -109,6 +109,8 @@ class ClipBank:
         clip = self._clip(c["file"])
         speed = c.get("speed", 1.0)
         u = (tau - c["start"]) * speed + c.get("offset", 0.0)
+        if c.get("loop", False) and tau > c["end"]:
+            u = (c["end"] - c["start"]) * speed + c.get("offset", 0.0)     # 走りは区間の終わりで止める(out の混ぜる間に前へ出ない)
         v = clip.sample(u, c.get("loop", False))
         if c.get("loop", False) and clip.loopable:
             cycles = math.floor(u * clip.fps / clip.n)
@@ -183,6 +185,7 @@ def solve_contact(scene: dict, tracks: Dict[str, KeyTrack], hit: dict) -> dict:
             tp = fk.target_point(skeleton_at(scene, tracks, tgt, tau), c["target"].get("point", "hip"))
             hr = float(c.get("hz_range", 0.3))      # 腰の上げ下げの幅(長い武器は大きく)
             clip["hz_off"] = max(-hr, min(hr, clip.get("hz_off", 0.0) + (tp[1] + off[1]) - eff[1]))
+        clip["_solved"] = True                 # 位置は接触で決めた(キー合わせでは動かさない)
         for _ in range(8):
             eff = skeleton_at(scene, tracks, striker, tau)[eff_key]
             tp = fk.target_point(skeleton_at(scene, tracks, tgt, tau), c["target"].get("point", "hip"))
@@ -413,6 +416,73 @@ def _footwork(scene: dict, frames: List[dict]) -> None:
                 p[ang], p[knee] = round(r[0], 6), round(r[1], 6)
                 last[key] = (p[ang], p[knee])
             fr["actors"][who] = p
+
+
+def _align_keys_to_clips(scene: dict, tracks: Dict[str, KeyTrack]) -> Dict[str, KeyTrack]:
+    """clip とキーの位置(dx)を継ぎ目でそろえる(測ると 1 コマ 1.8 単位の瞬間移動があった)。
+
+    - 接触で位置を決めていない clip(走り・pos 指定の斬り)は、anchor_dx を直前のキーの位置に合わせる(clip がキーに寄る)。
+      その clip の区間にある pos 指定の命中は、同じ分だけずらす
+    - 接触で決めた clip(_solved)は動かさず、clip が終わった位置から先のキーを、その差だけ平行移動する(キーが clip に寄る)
+    - clip の区間の中のキーは clip の値に、始点・終点にはキーを置く(混ぜる区間で差が無いように)
+    2 回呼ぶ: 接触を解く前(全部の clip をキーに寄せる)と、解いた後(解いた clip から先を平行移動)。"""
+    bank = scene.get("_bank")
+    if bank is None:
+        return tracks
+    for who, lst in bank.defs.items():
+        keys = scene["keys"].get(who)
+        if not keys or not lst:
+            continue
+        a = scene["actors"][who]
+        s = _sign(a)
+        base = KeyTrack(copy.deepcopy(keys), _stance(a))
+        clips = sorted(lst, key=lambda c: c["start"])
+        delta, shifts, windows = 0.0, [], []
+        for c in clips:
+            w0, w1 = c["start"] - c.get("in", 0.1), c["end"] + c.get("out", 0.1)
+            v0 = bank.sample(c, c["start"])["dx"]
+            exp0 = base.at(c["start"])["dx"] + delta
+            if not c.get("_solved"):
+                d = exp0 - v0
+                if abs(d) > 1e-6:
+                    c["anchor_dx"] = c.get("anchor_dx", 0.0) + d
+                    for h in scene.get("hits", []):
+                        if "pos" in h and c["start"] - 0.05 <= h["tau"] <= c["end"] + 0.05 and h.get("by") == who:
+                            h["pos"] = [h["pos"][0] + s * d, h["pos"][1]]
+            v1 = bank.sample(c, c["end"])["dx"]
+            delta = v1 - base.at(c["end"])["dx"]
+            shifts.append((w1, delta))
+            windows.append((w0, w1, c))
+
+        def shift_at(tt: float) -> float:
+            dd = 0.0
+            for w1, dl in shifts:
+                if w1 < tt:
+                    dd = dl
+            return dd
+
+        for k in keys:
+            tt = float(k["t"])
+            inside = [c for (w0, w1, c) in windows if w0 <= tt <= w1]
+            if inside:
+                c = inside[-1]
+                k["dx"] = round(bank.sample(c, min(max(tt, c["start"]), c["end"]))["dx"], 4)
+            else:
+                k["dx"] = round(base.at(tt)["dx"] + shift_at(tt), 4)
+        for (w0, w1, c) in windows:                      # 接触で決めた clip へは、0.3 秒前から助走のキーを置く(いきなり飛ばない)
+            if c.get("_solved"):
+                t0 = w0 - 0.3
+                if t0 > 0 and not any(t0 - 0.05 <= float(k["t"]) <= w0 for k in keys) and not any(o is not c and w0o <= t0 <= w1o for (w0o, w1o, o) in windows):
+                    keys.append(dict(t=round(t0, 3), dx=round(base.at(t0)["dx"] + shift_at(t0), 4)))
+        for (w0, w1, c) in windows:
+            for tt in (c["start"], c["end"]):
+                if any(abs(float(k["t"]) - tt) < 0.05 for k in keys):
+                    continue
+                if any(o is not c and w0o - 0.02 <= tt <= w1o + 0.02 for (w0o, w1o, o) in windows):
+                    continue                   # 隣の clip の区間の中(混ぜる区間が重なる所)には置かない
+                keys.append(dict(t=round(float(tt), 3), dx=round(bank.sample(c, tt)["dx"], 4)))
+        keys.sort(key=lambda k: float(k["t"]))
+    return make_tracks(scene)
 
 
 def _ground_fix(scene: dict, frames: List[dict]) -> None:
@@ -654,11 +724,15 @@ def build_plan(scene: dict, solve: bool = True) -> dict:
     fps = int(scene["fps"])
     tracks = make_tracks(scene)
     scene["_bank"] = ClipBank(scene) if scene.get("clips") else None
+    if scene.get("align_clips", True) and scene.get("physics") is None and scene.get("_bank") is not None:
+        tracks = _align_keys_to_clips(scene, tracks)
     contacts = []
     if solve:
         for h in scene.get("hits", []):
             if h.get("contact"):
                 contacts.append(solve_contact(scene, tracks, h))
+    if scene.get("align_clips", True) and scene.get("physics") is None:
+        tracks = _align_keys_to_clips(scene, tracks)
     phys = None
     if scene.get("physics") is not None:
         phys = run_physics(scene, tracks)
