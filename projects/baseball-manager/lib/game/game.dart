@@ -1030,9 +1030,13 @@ class Game {
         championships++;
         log.add('夏の大会で優勝した!');
       } else {
+        // 負けた試合(次の試合)の名前で、どこまで行ったかを伝える。
+        final lost = roundLabel(tournament.roundsWon, tournament.rounds);
         log.add(tournament.roundsWon == 0
             ? '夏の大会は初戦で敗れた。'
-            : '夏の大会は${tournament.roundsWon}回戦突破。');
+            : tournament.roundsWon == tournament.rounds - 1
+                ? '夏の大会は準優勝。'
+                : '夏の大会は$lostで敗れた。');
       }
       final d = describeLine(tournament.line);
       if (d.isNotEmpty) log.add('大会成績: $d');
