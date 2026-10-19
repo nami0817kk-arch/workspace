@@ -84,6 +84,8 @@ def check_hit_stop(plan: dict, cfg: dict) -> List[dict]:
         limit = cfg["max_hold_frames"]
         if e["kind"] in ic.get("kinds", []):       # 多角度のカットを入れる命中は、止めている間もカメラが動くので、長くてよい
             limit = max(limit, int(round(ic.get("hold", 0.2) * plan["fps"])) + 1)
+        if e["kind"] == "pose":                    # 溜めの止め絵(決めポーズ)は、少し長くてよい
+            limit = max(limit, 6)
         ok = hf <= limit
         res.append(_check(f"hit_stop@{e['tau']}", ok, hf, limit,
                           f"{e['kind']} のヒットストップ {hf} コマ" + ("" if ok else "。長すぎる(参考は1〜3コマが9割)")))

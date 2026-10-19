@@ -272,6 +272,7 @@ def compose_frame(plan: dict, f: int, figs: Dict[int, Image.Image], stages: Opti
             al = int(rnd.uniform(35, 90))
             d.line([cx_ * SS, cy_ * SS, (cx_ - ux * ln) * SS, (cy_ - uy * ln) * SS], fill=(255, 255, 255, al), width=int(rnd.choice((1, 2, 2, 3)) * SS))
     invert = None
+    kind_of_invert = None
     invert_kinds = fx.get("invert", ["kick", "heel"])
     for e in plan["events"]:
         age = f - e["frame"]
@@ -281,13 +282,15 @@ def compose_frame(plan: dict, f: int, figs: Dict[int, Image.Image], stages: Opti
             radial(d, cx, cy, min(1.0, age / nb), BIG[e["kind"]])
             if e["kind"] in invert_kinds and age in (0, 1):
                 invert = (age, cx, cy, BIG[e["kind"]])
+                kind_of_invert = e["kind"]
             if e["kind"] == "wall" and age <= 1:
                 d.rectangle([0, 0, W * SS, H * SS], fill=(255, 255, 255, 150 if age == 0 else 80))
     base.alpha_composite(ov.resize((W, H), Image.LANCZOS))
     frame = base.convert("RGB")
     if invert is not None:
         age, cx, cy, big = invert
-        bgc, fgc = ((255, 255, 255), (0, 0, 0)) if age == 0 else ((0, 0, 0), (255, 255, 255))
+        second_bg = dict(wall=(150, 22, 30), heel=(20, 45, 150), slash=(10, 30, 60)).get(kind_of_invert, (0, 0, 0))
+        bgc, fgc = ((255, 255, 255), (0, 0, 0)) if age == 0 else (second_bg, (255, 255, 255))
         im = Image.new("RGBA", (W, H), (*bgc, 255))
         im.alpha_composite(silhouette(figs[f], fgc))
         ov2 = Image.new("RGBA", (W * SS, H * SS), (0, 0, 0, 0))

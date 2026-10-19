@@ -315,6 +315,24 @@ def _follow_x(follow, actors: dict, scene: dict) -> float:
     return sum(xs.values()) / len(xs)
 
 
+def _auto_smear(scene: dict, frames: List[dict]) -> None:
+    """スミア: 前の手・足が速く動くコマで、その手足を進行方向へ引き伸ばす(st/lst)。使いすぎないよう上限は 0.32。"""
+    for who, a in scene["actors"].items():
+        sc, s = a.get("scale", 1.0), _sign(a)
+        hand, foot = [], []
+        for fr in frames:
+            p = fr["actors"][who]
+            sk = fk.skeleton(p, s, p["root_x"], sc)
+            hand.append(sk["hand"])
+            foot.append(sk["foot"])
+        for i, fr in enumerate(frames):
+            if i == 0:
+                continue
+            for key, pts in (("st", hand), ("lst", foot)):
+                v = math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]) / (1.9 * sc)
+                fr["actors"][who][key] = round(max(fr["actors"][who].get(key, 0.0), max(0.0, min(0.32, (v - 0.09) * 1.5))), 4)
+
+
 def _apply_stepping(cfg: dict, frames: List[dict], events: List[dict]) -> None:
     """アニメの「n コマ撮り」: 人物の姿勢を hold コマに1回だけ更新し、間は同じ絵を続ける(カメラはなめらかなまま)。
 
@@ -520,6 +538,10 @@ def build_plan(scene: dict, solve: bool = True) -> dict:
                     dec = (1 - d / 12) ** 2
                     zp += zk * dec
                     roll += anime.ROLL_SHAKE.get(e["kind"], 0.0) * dec * math.cos(d * 1.2) * (1 if i % 2 == 0 else -1)
+        for e in events:                       # 溜めの止め絵(kind: pose): 止めている間、じわっと寄る
+            hf = e.get("hold_frames", 0)
+            if e["kind"] == "pose" and hf >= 2 and e["frame"] <= f <= e["frame"] + hf:
+                zp += 0.14 * min(1.0, (f - e["frame"]) / hf)
         cams_eff = cams * (1 - min(zp, 0.3))
         pxu = VIEW["width"] / cams_eff
         cut = None
@@ -527,7 +549,7 @@ def build_plan(scene: dict, solve: bool = True) -> dict:
             for e in events:
                 hf = e.get("hold_frames", 0)
                 if e["kind"] in ic.get("kinds", []) and hf >= 2 and e["frame"] <= f < e["frame"] + hf:
-                    angs = ic["angles"]
+                    angs = ic.get("per_kind", {}).get(e["kind"], ic["angles"])
                     cut = (e, angs[((f - e["frame"]) * len(angs)) // hf % len(angs)])
         if cut is not None:
             e, ang = cut
@@ -553,6 +575,8 @@ def build_plan(scene: dict, solve: bool = True) -> dict:
                              z=round((VIEW["ground_y"] - VIEW["height"] / 2) / pxu + sz, 5))
         fr["cam"]["roll"] = round(roll + fr["cam"].get("dutch", 0.0), 4)
         frames.append(fr)
+    if (scene.get("anime") or {}).get("smear", False):
+        _auto_smear(scene, frames)
     if scene.get("stepping"):
         _apply_stepping(scene["stepping"], frames, events)
     if phys is not None:
