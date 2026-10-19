@@ -87,3 +87,15 @@ def test_series_plan_is_varied_and_valid():
         for it in ep["items"]:
             if "scene" in it:
                 planmod.validate_scene(fight.expand(dict(it["scene"])))
+
+
+def test_review_caption_rules():
+    from stickfig import review
+    ok = [dict(kind="say", who="A", text="行くぞ！", t0=1.0, t1=2.2)]
+    assert review.check_captions(ok, 5.0) == []
+    long = [dict(kind="say", who="A", text="あ" * 30, t0=1.0, t1=4.0)]
+    assert any("長い" in m for m in review.check_captions(long, 5.0))
+    short = [dict(kind="say", who="A", text="これは少し長めの台詞です。", t0=1.0, t1=1.4)]
+    assert any("短い" in m for m in review.check_captions(short, 5.0))
+    over = [dict(kind="narr", text="終わり。", t0=4.0, t1=6.0)]
+    assert any("はみ出す" in m for m in review.check_captions(over, 5.0))

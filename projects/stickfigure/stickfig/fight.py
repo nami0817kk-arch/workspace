@@ -224,7 +224,11 @@ def build_fight(spec: dict) -> dict:
     caps = []
     for ln in s["lines"]:
         t0 = marks[ln.get("at", "opening")] + float(ln.get("dt", 0.0))
-        c = dict(kind=ln.get("kind", "say"), text=ln["text"], t0=_r(t0), t1=_r(t0 + float(ln.get("dur", 1.6))))
+        need = min(2.2, 0.6 + 0.14 * len(ln["text"])) * float(s["tempo"])     # 読む時間(1文字 0.14秒+0.6秒、最大2.2秒)を、テンポで設計時間に直す。dur は最低の長さ
+        dur = max(float(ln.get("dur", 1.6)), need)
+        t1 = min(t0 + dur, end - 0.05)                       # 場面の終わりをはみ出さない。はみ出すなら、出だしを早める
+        t0 = max(0.0, min(t0, t1 - dur))
+        c = dict(kind=ln.get("kind", "say"), text=ln["text"], t0=_r(t0), t1=_r(t1))
         for k in ("who", "color", "size", "y", "max_w"):
             if k in ln:
                 c[k] = ln[k]

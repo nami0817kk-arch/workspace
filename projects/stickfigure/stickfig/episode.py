@@ -97,6 +97,13 @@ def build_episode(ep: dict, out: Path, reuse_figs: bool = False, force: bool = F
     from . import cli
     out = Path(out)
     out.mkdir(parents=True, exist_ok=True)
+    from . import review
+    r = review.review_episode(ep)                       # 書き出す前の自動点検(字幕の読みやすさ・話の筋)。直すところがあれば止める
+    for n in r["notes"]:
+        print("  " + n)
+    if not r["ok"] and not force:
+        print("自動点検で直すところがあるので、書き出さずに止める(--force で続ける)")
+        return None
     ff = cli.find_ffmpeg()
     segs = []
     for i, it in enumerate(ep["items"]):
