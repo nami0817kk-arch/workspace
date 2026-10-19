@@ -202,4 +202,48 @@ void main() {
       expect(strong.rbi / 40, inInclusiveRange(40, 160));
     });
   });
+
+  test('プロで全能力99の打者は、毎年ほぼ4割を打つ。90でも4割には届かない', () {
+    double mean(int v) {
+      final p = Player(
+          name: 't',
+          role: Role.batter,
+          age: 26,
+          potential: 50,
+          abilities: {for (final a in batterAbilities) a: v});
+      final r = Random(3);
+      var xs = <double>[];
+      for (var i = 0; i < 60; i++) {
+        xs.add(playLeagueSeason(p,
+                teamLevel: 65, opponents: const [55, 60, 66, 72, 78], rng: r)
+            .line
+            .battingAverage!);
+      }
+      return xs.reduce((a, b) => a + b) / xs.length;
+    }
+
+    expect(mean(99), greaterThan(0.42));
+    expect(mean(90), lessThan(0.40));
+    expect(mean(70), inInclusiveRange(0.26, 0.32)); // ふつうの一流は変わらない
+  });
+
+  test('チームの力が桁違い(99と10)なら、トーナメントもシーズンも必ず勝つ', () {
+    final p = Player(
+        name: 't',
+        role: Role.batter,
+        age: 26,
+        potential: 50,
+        abilities: {for (final a in batterAbilities) a: 50});
+    for (var s = 0; s < 20; s++) {
+      final t = playTournament(p,
+          teamLevel: 99, opponents: const [10, 10, 10, 10], rng: Random(s));
+      expect(t.champion, isTrue, reason: 'seed=$s');
+      final lg = playLeagueSeason(p,
+          teamLevel: 99, opponents: const [10, 10, 10], rng: Random(s));
+      expect(lg.losses, 0, reason: 'seed=$s');
+      final lose = playLeagueSeason(p,
+          teamLevel: 10, opponents: const [99, 99, 99], rng: Random(s));
+      expect(lose.wins, 0, reason: 'seed=$s');
+    }
+  });
 }

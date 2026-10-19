@@ -47,4 +47,53 @@ void main() {
     expect(hits / n, lessThan(0.10));
     expect(r[AtBatResult.strikeout]! / n, greaterThan(0.40));
   });
+
+  test('力の差が大きく開くと圧倒する(オールSの打者は小学生の投手をほとんど打ち取らせない)', () {
+    const star = Batter(contact: 95, power: 95, eye: 95);
+    final r = _run(const Pitcher(control: 30, stuff: 30), star);
+    final n = r.values.fold<int>(0, (a, b) => a + b);
+    final walks = r[AtBatResult.walk] ?? 0;
+    final hits = r[AtBatResult.single]! +
+        r[AtBatResult.double]! +
+        r[AtBatResult.triple]! +
+        r[AtBatResult.homeRun]!;
+    expect(hits / (n - walks), greaterThan(0.65)); // 打率6割5分以上
+    expect((r[AtBatResult.strikeout] ?? 0) / n, lessThan(0.08));
+  });
+
+  test('同じくらいの力の対戦は、従来どおり(打率2割台〜3割)', () {
+    final r = _run(avgP, avgB);
+    final n = r.values.fold<int>(0, (a, b) => a + b);
+    final walks = r[AtBatResult.walk] ?? 0;
+    final hits = r[AtBatResult.single]! +
+        r[AtBatResult.double]! +
+        r[AtBatResult.triple]! +
+        r[AtBatResult.homeRun]!;
+    expect(hits / (n - walks), inInclusiveRange(0.22, 0.31));
+  });
+
+  test('99と10のように力が桁違いなら、強いほうが必ず勝つ', () {
+    // 打者99 vs 投手10: 凡退も三振もない(四球かヒット)
+    final bat = _run(const Pitcher(control: 10, stuff: 10),
+        const Batter(contact: 99, power: 99, eye: 99));
+    expect(bat[AtBatResult.out] ?? 0, 0);
+    expect(bat[AtBatResult.strikeout] ?? 0, 0);
+    // 投手99 vs 打者10: 四球もヒットもない(三振かアウト)
+    final pit = _run(const Pitcher(control: 99, stuff: 99),
+        const Batter(contact: 10, power: 10, eye: 10));
+    expect(pit[AtBatResult.walk] ?? 0, 0);
+    for (final r in [
+      AtBatResult.single,
+      AtBatResult.double,
+      AtBatResult.triple,
+      AtBatResult.homeRun
+    ]) {
+      expect(pit[r] ?? 0, 0, reason: r.name);
+    }
+    // 差が小さければ、結果は混ざる(必ず勝つわけではない)
+    final close = _run(const Pitcher(control: 60, stuff: 60),
+        const Batter(contact: 55, power: 55, eye: 55));
+    expect(close[AtBatResult.out]!, greaterThan(1000));
+    expect(close[AtBatResult.single]!, greaterThan(1000));
+  });
 }

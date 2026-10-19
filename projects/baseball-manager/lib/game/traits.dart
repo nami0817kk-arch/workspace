@@ -19,7 +19,7 @@ enum Trait {
   longevity('長持ち', '衰えがゆるやか。', true),
 
   // ── 打者の特性 ──
-  slugger('長距離砲', '試合でパワー+9、ミート-2。一発がある。', true, TraitFor.batter),
+  slugger('長距離砲', '試合でパワー+9、ミート-1。一発がある。', true, TraitFor.batter),
   contactHitter('アベレージヒッター', '試合でミート+9、パワー-2。当てるのがうまい。', true, TraitFor.batter),
   patient('選球眼の鬼', '試合で選球眼+10、ミート+2。四球を選べる。', true, TraitFor.batter),
   speedster('俊足', '試合で走力+8。二塁打・三塁打と盗塁が増える。', true, TraitFor.batter),
@@ -179,7 +179,7 @@ Map<Ability, int> traitAbilityDelta(Set<Trait> t) {
   void add(Ability a, int n) => d[a] = (d[a] ?? 0) + n;
   if (t.contains(Trait.slugger)) {
     add(Ability.power, 9);
-    add(Ability.contact, -2);
+    add(Ability.contact, -1);
   }
   if (t.contains(Trait.contactHitter)) {
     add(Ability.contact, 9);
@@ -199,13 +199,16 @@ Map<Ability, int> traitAbilityDelta(Set<Trait> t) {
   return d;
 }
 
+/// 試合の間だけ、特性で能力が上限(99)を超えられる。能力が99でも、特性の上乗せが消えないように。
+const gameAbilityCap = 120;
+
 /// 特性を反映した、試合用の選手。元の選手は変えない。
 Player traitAdjusted(Player p) {
   final d = traitAbilityDelta(p.traits);
   if (d.isEmpty) return p;
   return p.copyWith(abilities: {
     for (final e in p.abilities.entries)
-      e.key: (e.value + (d[e.key] ?? 0)).clamp(0, 99),
+      e.key: (e.value + (d[e.key] ?? 0)).clamp(0, gameAbilityCap),
   });
 }
 

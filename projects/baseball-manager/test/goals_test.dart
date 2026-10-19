@@ -168,8 +168,10 @@ void main() {
           age: 26,
           potential: 50,
           abilities: {for (final a in abilitiesOf(r)) a: v});
-      for (final v in [45, 60, 75, 90]) {
+      for (final v in [45, 60, 75, 90, 99]) {
         for (final role in [Role.batter, Role.pitcher]) {
+          // 投手の目標(防御率・勝ち星)の表は90までしか測っていない
+          if (v > 90 && role == Role.pitcher) continue;
           final kinds = role == Role.batter
               ? [GoalKind.rank, GoalKind.battingAverage, GoalKind.homeRuns]
               : [GoalKind.rank, GoalKind.era, GoalKind.wins];
