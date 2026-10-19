@@ -1,0 +1,3 @@
+# 技の組み合わせの見本: 瞬間移動で現れて連打、決めは光線の撃ち合い
+name: fight_showcase
+fight: {weapon: none, kick: false, opening: teleport, hits: 3, counter: true, finisher: beam_clash, palette: cool, stage: night, mood: battle, seed: 7, beam_color: [120, 230, 255], beam_color_b: [255, 120, 80]}

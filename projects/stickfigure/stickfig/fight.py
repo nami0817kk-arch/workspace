@@ -245,7 +245,7 @@ def build_fight(spec: dict) -> dict:
                       dict(t=_r(ta), dx=a_dx, hz=0.9, lean=0.1, fa=0.9, fe=1.4, ra=0.7, re=1.5)]
             snaps.append(dict(who="A", t0=_r(t_go - 0.12), t1=_r(t_go + 0.001), dx=0.2))             # 消えるまでは位置を固定(PCHIP の先回りとバネで 3 コマに伸びていた)
             snaps.append(dict(who="A", t0=_r(t_go + 0.001), t1=_r(t_go + 0.1), dx=_r(a_dx - 0.3)))  # 現れた直後も固定
-            fx_after.append(dict(start=_r(t_go), end=_r(t_go + 0.2), who="A", x0=-2.0 + 0.2, x1=-2.0 + a_dx - 0.3, n=6))
+            fx_after.append(dict(start=_r(t_go), end=_r(t_go + 0.12), who="A", x0=-2.0 + 0.2, x1=-2.0 + a_dx - 0.3, n=6))   # 0.2 秒だと現れた後も残像が残った
             hits += [dict(tau=_r(t_go), hold=0.0, kind="vanish", by="A", pos=[-2.0 + 0.2, 1.0]),
                      dict(tau=_r(t_go + 0.034), hold=0.04, kind="appear", by="A", pos=[_r(-2.0 + a_dx - 0.3), 1.0])]
             flashes.append(_r(t_go + 0.034))
