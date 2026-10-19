@@ -6,6 +6,7 @@ import 'package:basketball_career/game/life.dart';
 import 'package:basketball_career/game/player.dart';
 import 'package:basketball_career/game/rival.dart';
 import 'package:basketball_career/ui/app.dart';
+import 'package:basketball_career/ui/art/court.dart';
 import 'package:basketball_career/ui/controller.dart';
 import 'package:basketball_career/ui/history_screen.dart';
 import 'package:basketball_career/ui/howto_screen.dart';
@@ -52,6 +53,19 @@ void main() {
       testWidgets('はじめの画面', (t) async {
         phone(t, width: width);
         await show(t, GameController(store: _NullStore(), rng: Random(1)));
+      });
+
+      testWidgets('ライバルとの対決の絵', (t) async {
+        phone(t, width: width);
+        final g = Game(eventsEnabled: false, player: star(), rng: Random(1));
+        await t.pumpWidget(MaterialApp(
+            home: Scaffold(
+                body: ListView(children: [
+          CourtHeader(game: g, height: 110, versus: true),
+          CourtHeader(game: g, height: 110),
+        ]))));
+        await t.pumpAndSettle();
+        expect(t.takeException(), isNull);
       });
 
       testWidgets('遊び方', (t) async {
