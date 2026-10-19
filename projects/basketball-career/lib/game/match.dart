@@ -311,29 +311,29 @@ enum OppStyle {
         return 0;
       case OppStyle.fastBreak:
         return switch (choice) {
-          Halftime.defense => 1.5,
-          Halftime.tempo => -1.5,
+          Halftime.defense => 1.0,
+          Halftime.tempo => -1.0,
           _ => 0,
         };
       case OppStyle.inside:
-        final tall = ((p.heightCm - 188) / 10).clamp(-1.5, 1.5).toDouble();
+        final tall = ((p.heightCm - 188) / 12).clamp(-1.0, 1.0).toDouble();
         return tall +
             switch (choice) {
-              Halftime.star => -1.0,
-              Halftime.tempo => 0.5,
+              Halftime.star => -0.7,
+              Halftime.tempo => 0.3,
               _ => 0,
             };
       case OppStyle.outside:
         return switch (choice) {
-          Halftime.defense => 1.5,
-          Halftime.tempo => -1.0,
+          Halftime.defense => 1.0,
+          Halftime.tempo => -0.7,
           _ => 0,
         };
       case OppStyle.stout:
         return switch (choice) {
-          Halftime.tempo => 1.5,
-          Halftime.defense => -1.5,
-          Halftime.star => 0.5,
+          Halftime.tempo => 1.0,
+          Halftime.defense => -1.0,
+          Halftime.star => 0.3,
           _ => 0,
         };
     }
@@ -520,7 +520,7 @@ MatchState playSecondHalf(Player p, MatchHalf h, Halftime choice, Random rng) {
       noiseMul = 0.7;
     case Halftime.star:
       final k = starPower(p);
-      boost = (p.overall - 50) * 0.05 * k + 1.0 * k;
+      boost = ((p.overall - 50) * 0.05 + 1.0) * k - 0.8;
       shareAdd = 0.08 * k;
   }
   final fit = h.style.fit(choice, p);
@@ -596,7 +596,7 @@ Halftime bestHalftime(Player p, MatchHalf h) {
   var bestScore = -99.0;
   for (final c in Halftime.values) {
     final score =
-        (c == base ? 2.0 : (c == Halftime.keep ? 0.5 : 0.0)) + h.style.fit(c, p);
+        (c == base ? 0.6 : (c == Halftime.keep ? 0.3 : 0.0)) + h.style.fit(c, p);
     if (score > bestScore) {
       best = c;
       bestScore = score;
