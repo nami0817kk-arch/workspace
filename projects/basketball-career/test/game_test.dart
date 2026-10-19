@@ -2223,6 +2223,81 @@ void main() {
       expect(bestHalftime(p, h(40, 30)), Halftime.defense);
     });
 
+    test('相手の持ち味は同じチーム・同じ回戦ならいつも同じで、5種類すべて出る', () {
+      expect(OppStyle.forTeam('東風高校', 2), OppStyle.forTeam('東風高校', 2));
+      final seen = <OppStyle>{
+        for (var r = 0; r < 6; r++)
+          for (final n in ['北高', '南学園', '西クラブ', '東風高校', 'ファルコンズ'])
+            OppStyle.forTeam(n, r),
+      };
+      expect(seen, OppStyle.values.toSet());
+    });
+
+    test('持ち味と作戦の相性: 速攻型には守り、堅守型にはペース、外角型には守りが効く', () {
+      final p = pl();
+      double mean(OppStyle st, Halftime h) {
+        var sum = 0;
+        for (var i = 0; i < 600; i++) {
+          final f = playFirstHalf(p,
+              teamStrength: 55, oppStrength: 55, form: 1, rng: Random(i), style: st);
+          final s = playSecondHalf(p, f, h, Random(7000 + i));
+          sum += (s.team - s.opp) - f.margin;
+        }
+        return sum / 600;
+      }
+
+      expect(mean(OppStyle.fastBreak, Halftime.defense),
+          greaterThan(mean(OppStyle.fastBreak, Halftime.tempo) + 1));
+      expect(mean(OppStyle.stout, Halftime.tempo),
+          greaterThan(mean(OppStyle.stout, Halftime.defense) + 1));
+      expect(mean(OppStyle.outside, Halftime.defense),
+          greaterThan(mean(OppStyle.outside, Halftime.tempo) + 1));
+    });
+
+    test('高さ型は背が高い選手に有利、低い選手に不利', () {
+      Player tall(int cm) => Player(
+            name: 'a', age: 17, potential: 70, heightCm: cm, heightGenes: 0.5,
+            abilities: {for (final a in Ability.values) a: 60},
+          );
+      expect(OppStyle.inside.fit(Halftime.keep, tall(200)),
+          greaterThan(OppStyle.inside.fit(Halftime.keep, tall(172))));
+    });
+
+    test('速攻型は両チームの合計点が多く、堅守型は少ない', () {
+      final p = pl();
+      double total(OppStyle st) {
+        var sum = 0;
+        for (var i = 0; i < 400; i++) {
+          final f = playFirstHalf(p,
+              teamStrength: 55, oppStrength: 55, form: 1, rng: Random(i), style: st);
+          final s = playSecondHalf(p, f, Halftime.keep, Random(3000 + i));
+          sum += s.team + s.opp;
+        }
+        return sum / 400;
+      }
+
+      expect(total(OppStyle.fastBreak), greaterThan(total(OppStyle.balanced) + 8));
+      expect(total(OppStyle.stout), lessThan(total(OppStyle.balanced) - 8));
+    });
+
+    test('自動の作戦は持ち味を踏まえる(速攻型に追っていても、守りが選ばれることがある)', () {
+      final p = pl(ovr: 40, stamina: 40);
+      MatchHalf h(OppStyle st) => MatchHalf(
+          team: 30, opp: 40, teamQuarters: const [], oppQuarters: const [],
+          mine: 50, oppStrength: 50, form: 1, share: 0.15,
+          rebounds: 0, assists: 0, steals: 0, blocks: 0, style: st);
+      expect(bestHalftime(p, h(OppStyle.balanced)), Halftime.tempo);
+      expect(bestHalftime(p, h(OppStyle.fastBreak)), Halftime.defense);
+      expect(bestHalftime(p, h(OppStyle.stout)), Halftime.tempo);
+    });
+
+    test('持ち味も前半の保存・復元で変わらない', () {
+      final f = playFirstHalf(pl(),
+          teamStrength: 55, oppStrength: 55, form: 1, rng: Random(2), style: OppStyle.outside);
+      expect(MatchHalf.fromJson(f.toJson()).style, OppStyle.outside);
+      expect(MatchHalf.fromJson({}).style, OppStyle.balanced);
+    });
+
     test('前半の保存・復元で値が変わらない', () {
       final h = half(pl(), 5);
       final j = MatchHalf.fromJson(h.toJson());

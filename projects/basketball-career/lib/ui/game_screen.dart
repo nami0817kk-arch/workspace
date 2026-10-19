@@ -803,6 +803,13 @@ class _HalftimeView extends StatelessWidget {
                   Text(h.vsRival
                       ? '相手: ライバル ${h.opponent}  (通算 ${game.rival.wins}勝${game.rival.losses}敗)'
                       : '相手: ${h.opponent}'),
+                if (h.style != OppStyle.balanced)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4),
+                    child: Text('持ち味: ${h.style.label}
+${h.style.description}',
+                        style: const TextStyle(fontSize: 12)),
+                  ),
                 const SizedBox(height: 8),
                 Text(_scoreRow('自チーム', h.teamQuarters, h.team)),
                 Text(_scoreRow('相手    ', h.oppQuarters, h.opp)),

@@ -66,6 +66,7 @@ class MatchResult {
   /// 相手の名前(ライバルなら本人の名前)。
   final String opponent;
   final bool vsRival;
+  final OppStyle style;
 
   int get margin => teamScore - oppScore;
 
@@ -130,6 +131,7 @@ class MatchState {
     required this.oppQuarters,
     this.opponent = '',
     this.vsRival = false,
+    this.style = OppStyle.balanced,
   });
 
   final int team;
@@ -263,6 +265,83 @@ enum Halftime {
   }
 }
 
+/// 相手チームの持ち味。ハーフタイムの作戦との相性が変わる(`fit`)。
+/// 同じチーム名・同じ回戦なら、いつも同じ持ち味(乱数を使わないので保存・再現に影響しない)。
+enum OppStyle {
+  balanced('バランス型', '目立った特徴はない。作戦の相性は無い。'),
+  fastBreak('速攻型', '走って点を取り合うチーム。守りを固めて速い展開を止めると有利、ペースを上げると相手の土俵になる。'),
+  inside('高さ型', '大きい選手でゴール下を固める。背が高い選手は有利、低いと苦戦。エースに任せると囲まれる。'),
+  outside('外角型', '3Pをよく打つチーム。守りを固めて外を打たせないと有利、ペースを上げても噛み合わない。'),
+  stout('堅守型', '守りが堅くロースコアになる。ペースを上げて崩すと有利、守りの勝負は不利。');
+
+  const OppStyle(this.label, this.description);
+  final String label;
+  final String description;
+
+  static OppStyle? parse(String? s) {
+    for (final k in OppStyle.values) {
+      if (k.name == s) return k;
+    }
+    return null;
+  }
+
+  /// チーム名と回戦から決める(毎回同じ)。バランス型が3分の1。
+  static OppStyle forTeam(String name, int round) {
+    final h = name.codeUnits.fold(0, (a, c) => (a * 31 + c) & 0xFFFF) + round * 7;
+    const table = [
+      OppStyle.balanced,
+      OppStyle.fastBreak,
+      OppStyle.inside,
+      OppStyle.balanced,
+      OppStyle.outside,
+      OppStyle.stout,
+    ];
+    return table[h % table.length];
+  }
+
+  /// 4クォーター全部での点の出方(両チームに同じだけ足す)。速攻型は多く、堅守型は少ない。
+  double get pace => switch (this) {
+        OppStyle.fastBreak => 1.5,
+        OppStyle.stout => -1.5,
+        _ => 0.0,
+      };
+
+  /// 後半、こちらのクォーターごとの点への加算(作戦との相性)。
+  double fit(Halftime choice, Player p) {
+    switch (this) {
+      case OppStyle.balanced:
+        return 0;
+      case OppStyle.fastBreak:
+        return switch (choice) {
+          Halftime.defense => 1.5,
+          Halftime.tempo => -1.5,
+          _ => 0,
+        };
+      case OppStyle.inside:
+        final tall = ((p.heightCm - 188) / 10).clamp(-1.5, 1.5).toDouble();
+        return tall +
+            switch (choice) {
+              Halftime.star => -1.0,
+              Halftime.tempo => 0.5,
+              _ => 0,
+            };
+      case OppStyle.outside:
+        return switch (choice) {
+          Halftime.defense => 1.5,
+          Halftime.tempo => -1.0,
+          _ => 0,
+        };
+      case OppStyle.stout:
+        return switch (choice) {
+          Halftime.tempo => 1.5,
+          Halftime.defense => -1.5,
+          Halftime.star => 0.5,
+          _ => 0,
+        };
+    }
+  }
+}
+
 /// 前半(第2クォーター)が終わった時点の試合。点差が近ければ、ここで作戦を選ぶ。
 class MatchHalf {
   const MatchHalf({
@@ -317,6 +396,7 @@ class MatchHalf {
         'blocks': blocks,
         'opponent': opponent,
         'vsRival': vsRival,
+        'style': style.name,
       };
 
   factory MatchHalf.fromJson(Map<String, dynamic> j) => MatchHalf(
@@ -340,6 +420,7 @@ class MatchHalf {
         blocks: (j['blocks'] as num?)?.toInt() ?? 0,
         opponent: (j['opponent'] as String?) ?? '',
         vsRival: (j['vsRival'] as bool?) ?? false,
+        style: OppStyle.parse(j['style'] as String?) ?? OppStyle.balanced,
       );
 }
 
@@ -355,13 +436,18 @@ MatchHalf playFirstHalf(
   required Random rng,
   String opponent = '',
   bool vsRival = false,
+  OppStyle style = OppStyle.balanced,
 }) {
   final mine = teamStrength * 0.6 + p.overall * form * 0.4;
   var team = 0, opp = 0;
   final tq = <int>[], oq = <int>[];
   for (var q = 0; q < 2; q++) {
-    final t = max(8, (18 + (mine - 50) * 0.12 + _noise(rng) * 5).round());
-    final o = max(8, (18 + (oppStrength - 50) * 0.12 + _noise(rng) * 5).round());
+    final t = max(8,
+        (18 + (mine - 50) * 0.12 + style.pace + _noise(rng) * 5).round());
+    final o = max(
+        8,
+        (18 + (oppStrength - 50) * 0.12 + style.pace + _noise(rng) * 5)
+            .round());
     tq.add(t);
     oq.add(o);
     team += t;
@@ -411,6 +497,7 @@ MatchHalf playFirstHalf(
             .clamp(0, 6)),
     opponent: opponent,
     vsRival: vsRival,
+    style: style,
   );
 }
 
@@ -436,16 +523,27 @@ MatchState playSecondHalf(Player p, MatchHalf h, Halftime choice, Random rng) {
       boost = (p.overall - 50) * 0.05 * k + 1.0 * k;
       shareAdd = 0.08 * k;
   }
+  final fit = h.style.fit(choice, p);
   var team = h.team, opp = h.opp;
   final tq = [...h.teamQuarters], oq = [...h.oppQuarters];
   for (var q = 0; q < 2; q++) {
     final t = max(
         8,
-        (18 + (h.mine - 50) * 0.12 + shift + boost + _noise(rng) * 5 * noiseMul)
+        (18 +
+                (h.mine - 50) * 0.12 +
+                shift +
+                boost +
+                fit +
+                h.style.pace +
+                _noise(rng) * 5 * noiseMul)
             .round());
     final o = max(
         8,
-        (18 + (h.oppStrength - 50) * 0.12 + shift + _noise(rng) * 5 * noiseMul)
+        (18 +
+                (h.oppStrength - 50) * 0.12 +
+                shift +
+                h.style.pace +
+                _noise(rng) * 5 * noiseMul)
             .round());
     tq.add(t);
     oq.add(o);
@@ -480,12 +578,31 @@ MatchState playSecondHalf(Player p, MatchHalf h, Halftime choice, Random rng) {
 }
 
 /// 自動で選ぶ作戦。追っていればペース、リードしていれば守り、僅差でエースが強ければエース。
+/// 相手の持ち味との相性(`OppStyle.fit`)も足して、いちばん点が取れる作戦を選ぶ。
 Halftime bestHalftime(Player p, MatchHalf h) {
   final m = h.margin;
-  if (m <= -4) return Halftime.tempo;
-  if (m >= 6) return Halftime.defense;
-  if (m <= 2 && starPower(p) >= 1.0 && p.overall >= 60) return Halftime.star;
-  return Halftime.keep;
+  Halftime base;
+  if (m <= -4) {
+    base = Halftime.tempo;
+  } else if (m >= 6) {
+    base = Halftime.defense;
+  } else if (m <= 2 && starPower(p) >= 1.0 && p.overall >= 60) {
+    base = Halftime.star;
+  } else {
+    base = Halftime.keep;
+  }
+  if (h.style == OppStyle.balanced) return base;
+  var best = base;
+  var bestScore = -99.0;
+  for (final c in Halftime.values) {
+    final score =
+        (c == base ? 2.0 : (c == Halftime.keep ? 0.5 : 0.0)) + h.style.fit(c, p);
+    if (score > bestScore) {
+      best = c;
+      bestScore = score;
+    }
+  }
+  return best;
 }
 
 /// 4クォーターを通して進める(作戦は `halftime`、省略すると自動)。点差が近ければ [MatchState.needsClutch]。
@@ -498,6 +615,7 @@ MatchState playQuarters(
   String opponent = '',
   bool vsRival = false,
   Halftime? halftime,
+  OppStyle style = OppStyle.balanced,
 }) {
   final h = playFirstHalf(p,
       teamStrength: teamStrength,
@@ -505,7 +623,8 @@ MatchState playQuarters(
       form: form,
       rng: rng,
       opponent: opponent,
-      vsRival: vsRival);
+      vsRival: vsRival,
+      style: style);
   return playSecondHalf(p, h, halftime ?? bestHalftime(p, h), rng);
 }
 
