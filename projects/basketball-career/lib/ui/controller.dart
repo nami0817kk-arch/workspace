@@ -363,7 +363,7 @@ class GameController extends ChangeNotifier {
       pending.add(Milestone(
           MilestoneKind.rival,
           'ライバル登場!',
-          '同い年の${rv.name}と、はじめて戦った。\nこの先も、大会の準決勝あたりで立ちはだかる。'));
+          '同い年の${rv.name}と、はじめて戦った。\nこの先も、準決勝で立ちはだかる。'));
     }
     if (t != null && t.champion) {
       pending.add(Milestone(
