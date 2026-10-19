@@ -81,6 +81,7 @@ class _MilestoneHostState extends State<_MilestoneHost> {
   void initState() {
     super.initState();
     widget.controller.addListener(_check);
+    _check(); // 起動時に出したい知らせ(読み込めなかった保存データなど)
   }
 
   @override

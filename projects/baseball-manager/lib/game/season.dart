@@ -118,7 +118,8 @@ class Line {
       battingStrikeouts == 0 ? null : walks / battingStrikeouts;
 
   /// OPS+ ふうの指標。リーグ平均(OPS .720)を100として、何倍か。
-  int? get opsPlus => ops == null ? null : (100 * ops! / leagueOps).round();
+  int? get opsPlus =>
+      ops == null ? null : (100 * ops! / leagueOps).round().clamp(0, 999);
 
   // ── 投手の指標 ──
   bool get hasPitching => faced > 0;
@@ -158,8 +159,9 @@ class Line {
   double? get winRate => wins + losses == 0 ? null : wins / (wins + losses);
 
   /// ERA+ ふうの指標。リーグ平均(防御率3.90)を100として、何倍良いか。
-  int? get eraPlus =>
-      era == null || era! <= 0 ? null : (100 * leagueEra / era!).round();
+  int? get eraPlus => era == null || era! <= 0
+      ? null
+      : (100 * leagueEra / era!).round().clamp(0, 999);
 
   /// 打者としての評価 0〜100(50 が平均)。打席が無ければ null。
   double? get battingRating {

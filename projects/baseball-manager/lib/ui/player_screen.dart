@@ -163,8 +163,7 @@ class _ProfileTab extends StatelessWidget {
                               ?.copyWith(fontWeight: FontWeight.bold)),
                       const SizedBox(height: 2),
                       Text(
-                          '${s.age}歳  ${s.endingTitle == null ? stageNameOf(s.stage) : '引退'}'),
-                      Text(roleNameOf(s.role)),
+                          '${s.age}歳 ${s.endingTitle == null ? stageNameOf(s.stage) : '引退'} ・ ${roleNameOf(s.role)}'),
                       if (s.parentName != null)
                         Text('${s.parentName}の子(二世)',
                             key: const Key('profile-parent')),
@@ -174,14 +173,6 @@ class _ProfileTab extends StatelessWidget {
                               s.name,
                               proTeam: s.overseasTeam ?? s.proTeam),
                           key: const Key('profile-affiliation')),
-                      Text('出身: ${hometownOf(s.name)}',
-                          key: const Key('profile-hometown')),
-                      Text('${bodyOf(s.name, s.age)} ・ 趣味: ${hobbyOf(s.name)}',
-                          key: const Key('profile-body'),
-                          style: Theme.of(context).textTheme.bodySmall),
-                      Text('座右の銘: ${mottoOf(_playerOf(s))}',
-                          key: const Key('profile-motto'),
-                          style: Theme.of(context).textTheme.bodySmall),
                       Text(
                           playerCardLine(
                               s.stage == Stage.retired ? Stage.pro : s.stage,
@@ -191,23 +182,6 @@ class _ProfileTab extends StatelessWidget {
                                   specialNumberOf(s.role, s.records)),
                           key: const Key('profile-card'),
                           style: Theme.of(context).textTheme.bodySmall),
-                      Text(
-                          [
-                            if (nicknameOf(_playerOf(s)).isNotEmpty)
-                              '「${nicknameOf(_playerOf(s))}」',
-                            lineupRoleOf(_playerOf(s)),
-                          ].join(' '),
-                          key: const Key('profile-role'),
-                          style: Theme.of(context).textTheme.bodySmall),
-                      Text(
-                          '得意: ${abilityLabel(_best(s))} ・ 苦手: ${abilityLabel(_worst(s))}',
-                          key: const Key('profile-strengths'),
-                          style: Theme.of(context).textTheme.bodySmall),
-                      if (s.endingTitle == null && s.age < 40)
-                        Text(
-                            '弱点を鍛え続けると、${_toAge(s.age)}歳で総合${projectedOverall(_playerOf(s), _worst(s), _toAge(s.age))}ほど(めやす)',
-                            key: const Key('projection'),
-                            style: Theme.of(context).textTheme.bodySmall),
                       const SizedBox(height: 6),
                       Wrap(
                           spacing: 6,
@@ -223,13 +197,6 @@ class _ProfileTab extends StatelessWidget {
                           '人気 ${rankOf(popularityOf(s.records, s.worldRecords))}'
                           '(${popularityOf(s.records, s.worldRecords)})',
                           key: const Key('popularity')),
-                      if (popularityOf(s.records, s.worldRecords) >= 20)
-                        Text(
-                            'ファンクラブ ${fanClubOf(popularityOf(s.records, s.worldRecords))}万人',
-                            key: const Key('fan-club')),
-                      Text('衰えが始まる目安: ${declineAge()}歳ごろ',
-                          key: const Key('decline-hint'),
-                          style: Theme.of(context).textTheme.bodySmall),
                       if (s.endingTitle != null)
                         Padding(
                           padding: const EdgeInsets.only(top: 4),
@@ -241,6 +208,40 @@ class _ProfileTab extends StatelessWidget {
                   ),
                 ),
               ]),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Card(
+            child: ExpansionTile(
+              key: const Key('profile-details'),
+              shape: const Border(),
+              collapsedShape: const Border(),
+              title: const Text('くわしいプロフィール'),
+              subtitle: Text(
+                  '「${nicknameOf(_playerOf(s)).isEmpty ? '無し' : nicknameOf(_playerOf(s))}」 ・ ${lineupRoleOf(_playerOf(s))}'),
+              childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+              expandedCrossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('出身: ${hometownOf(s.name)}',
+                    key: const Key('profile-hometown')),
+                Text('${bodyOf(s.name, s.age)} ・ 趣味: ${hobbyOf(s.name)}',
+                    key: const Key('profile-body')),
+                Text('座右の銘: ${mottoOf(_playerOf(s))}',
+                    key: const Key('profile-motto')),
+                Text(
+                    '得意: ${abilityLabel(_best(s))} ・ 苦手: ${abilityLabel(_worst(s))}',
+                    key: const Key('profile-strengths')),
+                if (s.endingTitle == null && s.age < 40)
+                  Text(
+                      '弱点を鍛え続けると、${_toAge(s.age)}歳で総合${projectedOverall(_playerOf(s), _worst(s), _toAge(s.age))}ほど(めやす)',
+                      key: const Key('projection')),
+                if (popularityOf(s.records, s.worldRecords) >= 20)
+                  Text(
+                      'ファンクラブ ${fanClubOf(popularityOf(s.records, s.worldRecords))}万人',
+                      key: const Key('fan-club')),
+                Text('衰えが始まる目安: ${declineAge()}歳ごろ',
+                    key: const Key('decline-hint')),
+              ],
             ),
           ),
           const SizedBox(height: 8),

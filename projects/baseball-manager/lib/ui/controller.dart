@@ -27,6 +27,7 @@ const historyKey = 'baseball_manager_history_v1';
 const adminKey = 'baseball_manager_admin_v1';
 const textScaleKey = 'baseball_manager_text_scale_v1';
 const themeKey = 'baseball_manager_theme_v1';
+const corruptKey = 'baseball_manager_corrupt_save_v1';
 
 /// テスト用ビルド(`--dart-define=TEST_BUILD=true`)。管理者モードが最初からオンになる。
 const kTestBuild = bool.fromEnvironment('TEST_BUILD');
@@ -53,14 +54,24 @@ class Milestone {
 
 /// セーブの読み書き。端末ごと(クラウド同期はしない)。
 class SaveStore {
+  /// 直近の読み込みで、保存データが壊れていたか。
+  bool loadFailed = false;
+
   Future<Map<String, dynamic>?> load() async {
     try {
       final p = await SharedPreferences.getInstance();
       final s = p.getString(saveKey);
       if (s == null) return null;
-      return jsonDecode(s) as Map<String, dynamic>;
+      try {
+        return jsonDecode(s) as Map<String, dynamic>;
+      } catch (_) {
+        // 壊れたセーブは無いものとして扱うが、消さずに控えを残す。
+        loadFailed = true;
+        await p.setString(corruptKey, s);
+        return null;
+      }
     } catch (_) {
-      return null; // 壊れたセーブは無いものとして扱う
+      return null;
     }
   }
 
@@ -145,6 +156,14 @@ class SaveStore {
       final p = await SharedPreferences.getInstance();
       await p.setDouble(textScaleKey, scale);
       await p.setString(themeKey, theme.name);
+    } catch (_) {}
+  }
+
+  /// 読み込めなかったセーブを、消さずに別の場所へ控えておく。
+  Future<void> keepCorrupt(Map<String, dynamic> json) async {
+    try {
+      final p = await SharedPreferences.getInstance();
+      await p.setString(corruptKey, jsonEncode(json));
     } catch (_) {}
   }
 
@@ -353,6 +372,9 @@ class GameController extends ChangeNotifier {
     themeMode = disp.theme;
     history = await store.loadHistory();
     final j = await store.load();
+    if (store.loadFailed) {
+      toast = '保存データを読み込めませんでした。控えは残してあります。';
+    }
     if (j == null) return false;
     try {
       game = Game.fromJson(j, _rng);
@@ -360,6 +382,9 @@ class GameController extends ChangeNotifier {
       notifyListeners();
       return true;
     } catch (_) {
+      // 壊れたセーブは消さずに控えを残し、知らせる。
+      await store.keepCorrupt(j);
+      toast = '保存データを読み込めませんでした。控えは残してあります。';
       return false;
     }
   }

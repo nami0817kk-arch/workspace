@@ -1373,6 +1373,20 @@ void _rankTests() {
       expect(c.game!.log.length, greaterThan(n));
     });
 
+    testWidgets('選手情報の「くわしいプロフィール」は、タップで開く', (t) async {
+      final c = await _start(t);
+      c.newGame('テスト', Role.batter);
+      await t.pumpAndSettle();
+      await t.tap(find.byKey(const Key('player-open')).first);
+      await t.pumpAndSettle();
+      expect(find.byKey(const Key('profile-card')), findsOneWidget);
+      expect(find.byKey(const Key('profile-hometown')), findsNothing);
+      await t.tap(find.byKey(const Key('profile-details')));
+      await t.pumpAndSettle();
+      expect(find.byKey(const Key('profile-hometown')), findsOneWidget);
+      expect(find.byKey(const Key('profile-strengths')), findsOneWidget);
+    });
+
     testWidgets('名前はおまかせで入れられ、Enterではじめられる', (t) async {
       final c = await _start(t);
       await t.tap(find.byKey(const Key('random-name')));

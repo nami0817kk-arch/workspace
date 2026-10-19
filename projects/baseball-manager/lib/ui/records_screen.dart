@@ -317,6 +317,12 @@ class _Table extends StatelessWidget {
               child:
                   Text('年度別成績', style: Theme.of(context).textTheme.titleSmall),
             ),
+            Padding(
+              padding: const EdgeInsets.only(left: 8, bottom: 4),
+              child: Text('表は横にスクロールできます(右にまだ項目があります)',
+                  key: const Key('table-hint'),
+                  style: Theme.of(context).textTheme.bodySmall),
+            ),
             SingleChildScrollView(
               key: const Key('records-table'),
               scrollDirection: Axis.horizontal,
@@ -479,8 +485,10 @@ class _Highlights extends StatelessWidget {
         for (final (label, count) in items)
           Chip(
               visualDensity: VisualDensity.compact,
-              avatar:
-                  const Icon(Icons.star, size: 16, color: Color(0xFFD4AF37)),
+              avatar: label == '怪我'
+                  ? const Icon(Icons.healing,
+                      size: 16, color: Color(0xFFE53935))
+                  : const Icon(Icons.star, size: 16, color: Color(0xFFD4AF37)),
               label: Text('$label $count回')),
       ]),
     );

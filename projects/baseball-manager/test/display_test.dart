@@ -2,9 +2,12 @@ import 'dart:math';
 
 import 'package:baseball_manager/game/career.dart';
 import 'package:baseball_manager/game/marks.dart';
+import 'package:baseball_manager/ui/controller.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
+  corruptTests();
   tournamentTests();
   nameTests();
   test('今日のヒントは日付で決まり、同じ日は同じ。種類が12ある', () {
@@ -50,5 +53,18 @@ void nameTests() {
       expect(n, isNotEmpty);
       expect(n.length, lessThanOrEqualTo(10));
     }
+  });
+}
+
+void corruptTests() {
+  test('壊れた保存データは、消さずに控えを残して新しく始められる', () async {
+    SharedPreferences.setMockInitialValues({saveKey: '{こわれた'});
+    final c = GameController();
+    final ok = await c.loadSaved();
+    expect(ok, isFalse);
+    expect(c.game, isNull);
+    expect(c.toast, contains('読み込めません'));
+    final p = await SharedPreferences.getInstance();
+    expect(p.getString(corruptKey), '{こわれた');
   });
 }

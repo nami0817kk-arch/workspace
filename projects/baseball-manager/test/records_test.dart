@@ -27,6 +27,7 @@ LeagueSeason _season(Player p, int seed) => playLeagueSeason(
     );
 
 void main() {
+  main2();
   group('Line', () {
     test('打率・出塁率・長打率・OPS', () {
       const l = Line(atBats: 400, hits: 120, totalBases: 200, walks: 50);
@@ -434,5 +435,14 @@ void main() {
     expect(isHeroGame(great, won: true), isTrue);
     expect(isHeroGame(great, won: false), isFalse);
     expect(isHeroGame(poor, won: true), isFalse);
+  });
+}
+
+void main2() {
+  test('ERA+・OPS+は、投球回・打席が少なくても極端な値にならない(上限999)', () {
+    const p = Line(faced: 10, outs: 6, runsRaw: -50);
+    expect(p.eraPlus == null || p.eraPlus! <= 999, isTrue);
+    const b = Line(atBats: 1, hits: 1, totalBases: 4);
+    expect(b.opsPlus! <= 999, isTrue);
   });
 }
