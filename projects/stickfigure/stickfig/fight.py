@@ -379,7 +379,9 @@ def build_fight(spec: dict) -> dict:
         keysA += [dict(t=_r(hl + 0.22), dx=5.3, hz=0.7, lean=0.3),
                   dict(t=_r(hl + 0.42), dx=5.7, rz=1.9, hz=0.9, lean=0.2, fa=2.4, fe=0.4, ra=1.4, re=1.0, fl=0.8, fk=0.9, rl=-0.6, rk=0.7),   # 追って跳ぶ(相手の打ち上げに合わせて高く)
                   dict(t=_r(hl + 0.58), dx=5.9, rz=1.8, hz=0.9, lean=0.45, fa=-0.3, fe=0.2, ra=-0.2, re=0.5, fl=0.5, fk=0.6, rl=-0.4, rk=0.5),
-                  dict(t=_r(hl + 0.95), dx=6.0, rz=0.0, hz=0.78, lean=0.25), dict(t=_r(hl + 1.3), dx=6.0, hz=0.9, lean=0.1)]
+                  dict(t=_r(hl + 0.88), dx=5.98, rz=0.35, hz=0.96, lean=0.1, fl=0.9, fk=0.5, rl=-0.5, rk=0.3),   # 落ちる(伸び: 脚を下へ伸ばす)
+                  dict(t=_r(hl + 0.95), dx=6.0, rz=0.0, hz=0.64, lean=0.38, fl=1.1, fk=1.9, rl=-0.3, rk=1.4),    # 着地のつぶれ(2 コマ深く沈む)
+                  dict(t=_r(hl + 1.08), dx=6.0, hz=0.84, lean=0.2), dict(t=_r(hl + 1.3), dx=6.0, hz=0.9, lean=0.1)]
         hits += [dict(tau=_r(hl + 0.55), hold=0.1, kind="slash" if sword else "hit", by="A", pos=[4.9, 2.7]), dict(tau=_r(hl + 0.95), hold=0.1, kind="heel", by="A", pos=[5.6, 0.0])]
         puffs.append(dict(tau=_r(hl + 1.02), kind="land2", pos=[5.6, 0.0]))
         slow.append(dict(start=_r(hl + 0.4), end=_r(hl + 0.65), rate=0.4))
