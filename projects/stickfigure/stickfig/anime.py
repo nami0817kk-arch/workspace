@@ -76,8 +76,12 @@ def trails(plan: dict, f: int, cfg: dict, cache: Dict[Tuple[str, int], dict]) ->
     for who in plan["actors"]:
         # 打つ側の、命中の前後だけ(走りで剣先が速いだけの所に出ると、床にジグザグの線が残る。2026-10-19 fight_mix の冒頭で確認)
         strikers = [e for e in plan.get("events", []) if e.get("by")]
-        if strikers and not any(e["by"] == who and e["frame"] - 8 <= f <= e["frame"] + 3 for e in strikers):
+        mine = [e for e in strikers if e["by"] == who and e["frame"] - 8 <= f <= e["frame"] + 3]
+        if strikers and not mine:
             continue
+        want = None
+        if mine:                                          # 打つ手足だけ(蹴りは足、斬り・拳は手と剣先。踏み込みの足に出ると床にジグザグが残る)
+            want = {"foot"} if any(e["kind"] in ("kick", "heel") for e in mine) else {"hand", "tip"}
         sc = plan["actors"][who].get("scale", 1.0)
         pts: Dict[str, List[Tuple[float, float]]] = {}
         for k in range(max(0, f - n), f + 1):
@@ -87,7 +91,7 @@ def trails(plan: dict, f: int, cfg: dict, cache: Dict[Tuple[str, int], dict]) ->
             for name, p in cache[key].items():
                 pts.setdefault(name, []).append(p)
         for name, path in pts.items():
-            if len(path) < 3:
+            if len(path) < 3 or (want is not None and name not in want):
                 continue
             speed = math.hypot(path[-1][0] - path[-2][0], path[-1][1] - path[-2][1]) / (1.9 * sc)
             if speed < thr:

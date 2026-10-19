@@ -179,7 +179,8 @@ class ClipBank:
             u0 = c.get("offset", 0.0)
             u_s = (c["strike_at"] - c["start"]) * speed + u0
             q = 0.0 if u_s <= u0 else max(0.0, min(1.0, (u - u0) / (u_s - u0)))
-            v["dx"] = v["dx"] - step * (1.0 - q) * (1 if True else 0)
+            q = max(0.0, (q - 0.5) / 0.5)                # 溜め(振りかぶりの 53% で止まる)の間は丸ごと手前。振り(最後の半分)で一気に入る
+            v["dx"] = v["dx"] - step * (1.0 - q)
         for k, dv in (c.get("add") or {}).items():         # 上乗せ(走りの前傾など。amp は平均からの差を倍にするだけなので、平均 0 の lean には効かない)
             if k in v and k != "dx":
                 v[k] = v[k] + float(dv)
