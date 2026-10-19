@@ -147,6 +147,8 @@ final achievements = <Achievement>[
       (g) => g.records.any((r) => r.award == '最優秀選手')),
   Achievement('best5_x3', 'ベスト5の常連', '個人賞(最優秀選手・ベスト5)を3回受けた。',
       (g) => g.records.where((r) => r.award != null).length >= 3),
+  Achievement('skills5', '技の百貨店', '得意技を5つ身につけた。',
+      (g) => g.player.skills.length >= 5),
   Achievement('veteran', '息の長い選手', '35歳までプロで戦った。',
       (g) => g.player.age >= 35 && _wentPro(g)),
 ];

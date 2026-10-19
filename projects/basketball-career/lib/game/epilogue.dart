@@ -34,6 +34,9 @@ String shareText(Game g) {
     ..writeln('${p.heightCm.toStringAsFixed(0)}cm ${positionNickname(p.position)} 総合${p.overall.round()}  ${p.age}歳で引退')
     ..writeln('通算 ${g.totalGames}試合 ${g.totalPoints}得点 ${g.totalRebounds}リバウンド ${g.totalAssists}アシスト')
     ..writeln('優勝${g.titles}回 個人賞${g.awardCount}回${g.abroad ? ' 海外挑戦' : ''}');
+  if (p.skills.isNotEmpty) {
+    b.writeln('得意技: ${p.skills.map((k) => k.label).join('・')}');
+  }
   if (g.rival.games > 0) {
     b.writeln('宿敵${g.rival.name}との通算 ${g.rival.wins}勝${g.rival.losses}敗');
   }
@@ -88,6 +91,10 @@ List<String> epilogueLines(Game g) {
     } else {
       lines.add('宿敵${r.name}との対戦は${r.wins}勝${r.losses}敗。届かなかったが、あの存在が自分を強くした。');
     }
+  }
+
+  if (p.skills.isNotEmpty) {
+    lines.add('得意技は「${p.skills.map((k) => k.label).join('」「')}」。');
   }
 
   if (r.games > 0) lines.add(r.fate);

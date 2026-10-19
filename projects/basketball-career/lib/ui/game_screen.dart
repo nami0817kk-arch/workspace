@@ -291,6 +291,26 @@ class _PlayerCard extends StatelessWidget {
                 ],
               ),
             ],
+            if (p.skills.isNotEmpty) ...[
+              const SizedBox(height: 6),
+              Wrap(
+                spacing: 6,
+                runSpacing: 4,
+                children: [
+                  for (final k in p.skills)
+                    Tooltip(
+                      message: k.description,
+                      child: Chip(
+                        avatar: const Icon(Icons.auto_awesome, size: 16),
+                        label: Text(k.label),
+                        labelStyle: const TextStyle(color: Colors.black87),
+                        visualDensity: VisualDensity.compact,
+                        backgroundColor: Colors.amber.shade200,
+                      ),
+                    ),
+                ],
+              ),
+            ],
             const SizedBox(height: 8),
             _Meter(label: '疲れ', value: cond.fatigue, bad: true),
             _Meter(label: '気持ち', value: cond.morale),
@@ -788,7 +808,7 @@ class _ClutchView extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                              '${k.label}  成功率 ${(info.chances[k]! * 100).round()}%',
+                              '${k.label}  成功率 ${(info.chances[k]! * 100).round()}%${game.player.skills.any((s) => s.clutchBonus(k) > 0) ? '  [得意技]' : ''}',
                               style: const TextStyle(
                                   fontWeight: FontWeight.bold)),
                           Text(k.description,
