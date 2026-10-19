@@ -80,8 +80,10 @@ def _limb_smear(plan: dict, f: int, cam: dict) -> Image.Image:
     drew = False
     for who, a in plan["actors"].items():
         # 打つ側の、振りの瞬間だけ(命中の 4 コマ前〜命中)。押されて下がる足などには出さない
-        if not any(e.get("by") == who and e["frame"] - 4 <= f <= e["frame"] for e in plan["events"]):
+        kinds = {e["kind"] for e in plan["events"] if e.get("by") == who and e["frame"] - 4 <= f <= e["frame"]}
+        if not kinds:
             continue
+        want = {"foot"} if kinds & {"kick", "heel"} else {"hand"}      # 蹴りは足、斬り・拳は手(踏み込みの脚には出さない)
         sc = a.get("scale", 1.0)
         s = 1 if a.get("facing", 1) >= 0 else -1
         p1, p0 = plan["frames"][f]["actors"][who], plan["frames"][g]["actors"][who]
@@ -91,7 +93,9 @@ def _limb_smear(plan: dict, f: int, cam: dict) -> Image.Image:
         sk0 = fk.skeleton(p0, s, p0["root_x"], sc)
         col = tuple(int(255 * c) for c in a.get("color", [0.5, 0.5, 0.5]))
         lw = max(3, int(0.09 * ppu))
-        for key, lim, root in (("hand", "front_arm", "tip" if a.get("weapon") else None), ("foot", "front_leg", None)):
+        for key, lim in (("hand", "front_arm"), ("foot", "front_leg")):
+            if key not in want:
+                continue
             e0, e1 = sk0[key], sk1[key]
             mv = math.hypot(e1[0] - e0[0], e1[1] - e0[1]) / (1.9 * sc)
             if a.get("weapon") and key == "hand":

@@ -87,6 +87,9 @@ PUNCH_POOL = ["02_08_s1", "02_09_s1", "76_01_s1", "90_05_s2", "13_17_s2"]   # �
 LONG_POOL = ["76_01_s1", "90_05_s2"]                                  # 棍・槍(先端。長いので低めの軌道だけ)
 
 
+RUN_LOOK = dict(amp=dict(fa=1.35, ra=1.35, fl=1.2, rl=1.2), add=dict(lean=0.2, hz=-0.03))   # 走りの誇張(アニメの走り: 前傾・腕を大きく振る。mocap は直立で腕が低い)
+
+
 def _pt(clip_name: str, eff: str) -> str:
     key = {"tip": "tip", "hand": "hand"}.get(eff, "hand")
     return STRIKES.get(clip_name, {}).get(key, "chest")
@@ -152,7 +155,7 @@ def build_fight(spec: dict) -> dict:
 
     keysA: List[dict] = [dict(t=0.0, dx=0.2, hz=0.84), dict(t=0.6, dx=0.2, lean=0.12, hz=0.83)]
     keysB: List[dict] = [dict(t=0.0)]
-    clipsA: List[dict] = [dict(file="09_01", start=0.6, end=1.55, loop=True, anchor_dx=0.2, **{"in": 0.12, "out": 0.2})]
+    clipsA: List[dict] = [dict(file="09_01", start=0.6, end=1.55, loop=True, anchor_dx=0.2, **RUN_LOOK, **{"in": 0.12, "out": 0.2})]
     clipsB: List[dict] = []
     hits: List[dict] = []
     puffs: List[dict] = []
@@ -196,7 +199,7 @@ def build_fight(spec: dict) -> dict:
             dict(t=2.1, follow="B", scale=6.0, yaw=[[2.1, 62.0], [2.9, 50.0]], pitch=3.0, lens=40.0, target_z=1.2, lag=0.35),
             dict(t=2.9, follow="mid", scale=[[2.9, 8.5], [3.6, 9.5]], yaw=[[2.9, 15.0], [3.6, 25.0]], pitch=[[2.9, 30.0], [3.6, 22.0]], lens=40.0, target_z=0.7),
             dict(t=3.6, follow="A", scale=[[3.6, 5.6], [4.4, 4.4]], yaw=[[3.6, -38.0], [4.4, -20.0]], pitch=4.0, lens=30.0, target_z=1.0, lag=0.3)]
-        clipsA.append(dict(file="09_01", start=3.2, end=3.52, loop=True, anchor_dx=3.4, **{"in": 0.15, "out": 0.2}))   # 0.32 秒 ≒ 1.2 単位(dx 3.4 → 4.6)。長いと B を追い越して戻る
+        clipsA.append(dict(file="09_01", start=3.2, end=3.52, loop=True, anchor_dx=3.4, **RUN_LOOK, **{"in": 0.15, "out": 0.2}))   # 0.32 秒 ≒ 1.2 単位(dx 3.4 → 4.6)。長いと B を追い越して戻る
         keysA.append(dict(t=3.55, dx=4.6, hz=0.9))
         speed.append([3.3, 4.1])
         a_dx0 = 3.4

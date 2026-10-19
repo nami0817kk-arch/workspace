@@ -174,6 +174,9 @@ class ClipBank:
             if k in v and k != "dx":
                 mean = float(clip.params[k].mean())
                 v[k] = mean + (v[k] - mean) * amp
+        for k, dv in (c.get("add") or {}).items():         # 上乗せ(走りの前傾など。amp は平均からの差を倍にするだけなので、平均 0 の lean には効かない)
+            if k in v and k != "dx":
+                v[k] = v[k] + float(dv)
         pull, over = self.antic_phase(c, tau)
         if pull or over:                                   # 振りかぶりの引き・振り抜きの行き過ぎ(打つ手足と体に上乗せ)
             tm = c.get("timing", self.scene.get("clip_timing")) or {}
