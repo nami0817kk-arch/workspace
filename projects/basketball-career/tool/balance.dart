@@ -12,7 +12,8 @@ import 'package:basketball_career/game/player.dart';
 void main(List<String> args) {
   const n = 1000;
   final smart = args.contains('--smart');
-  final spec = args.contains('--spec');
+  final spec = args.contains('--spec') || args.contains('--team');
+  final team = args.contains('--team');
   var pro = 0, direct = 0, abroad = 0, titles = 0, rw = 0, rl = 0;
   var ovrAt18 = 0.0, heightAt18 = 0.0;
   for (var seed = 0; seed < n; seed++) {
@@ -36,9 +37,13 @@ void main(List<String> args) {
                 w[a]! * (100 - g.player.of(a)) >= w[b]! * (100 - g.player.of(b))
                     ? a
                     : b);
-            final act = rest
+            var act = rest
                 ? Action.rest
                 : (g.condition.fatigue < 25 ? Action.intense : Action.practice);
+            // チームワークを保つため、年に2回は交流する。
+            if (team && !g.condition.injured && (g.slot == 0 || g.slot == 2)) {
+              act = Action.social;
+            }
             g.choose(act, focus);
           } else if (smart) {
             // 一番低い能力を重点にし、疲れが軽いうちは特訓を混ぜる。

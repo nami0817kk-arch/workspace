@@ -123,6 +123,7 @@ class Game {
     this.lowYears = 0,
     this.archived = false,
     this.recoveredThisTerm = false,
+    this.teamwork = 40,
     this.run,
     this.runWinter = false,
     this.termAction = Action.practice,
@@ -210,6 +211,10 @@ class Game {
   /// このターンに回復を使ったか(1ターンに1回まで)。
   bool recoveredThisTerm;
 
+  /// チームワーク 0〜100。仲間との息の合い方で、大会での味方の強さが±4ほど変わる。
+  /// 交流・練習試合で上がり、進学・移籍で新しいチームになると40に戻る。
+  int teamwork;
+
   /// 進行中の大会(勝負どころで止まっているときだけ残る)。
   TournamentRun? run;
   bool runWinter;
@@ -268,6 +273,10 @@ class Game {
         _ => League.highSchool,
       };
 
+  /// チームワークによる味方の強さの上乗せ。パスが上手いほど効きが大きい。
+  double get teamBonus =>
+      (teamwork - 50) * 0.07 * (0.7 + player.of(Ability.pass) / 200);
+
   /// 冬の大会(全国選手権)がある段階。高校と大学・実業団。
   bool get hasWinterCup => stage == Stage.highSchool || stage == Stage.college;
 
@@ -307,6 +316,15 @@ class Game {
     condition = r.condition;
     termAction = action;
     termInjured = r.gotInjured;
+    // 何もしなければ少しずつ薄れる(毎ターン -2)。交流・練習試合で保つ。
+    teamwork = (teamwork +
+            switch (action) {
+              Action.social => 12,
+              Action.scrimmage => 6,
+              _ => 0,
+            } -
+            2)
+        .clamp(0, 100);
 
     final winter = slot == 3 && hasWinterCup;
     TournamentResult? t;
@@ -315,7 +333,7 @@ class Game {
       if (condition.injured) {
         satOut = true;
       } else {
-        final cr = TournamentRun(league);
+        final cr = TournamentRun(league, teamBonus: teamBonus);
         cr.advance(
           player,
           form: condition.form,
@@ -438,6 +456,7 @@ class Game {
 
   void _endYear() {
     _evaluateGoal();
+    final stageBefore = stage;
     slot = 0;
     player = ageUp(player, rng);
     switch (track) {
@@ -457,6 +476,8 @@ class Game {
           _retire('${maxProAge + 1}歳で現役を退いた');
         }
     }
+    // 中学・高校に上がると新しいチーム(進路の選択は chooseRoute で)。
+    if (!pathPending && !retired && stage != stageBefore) teamwork = 40;
   }
 
   // ── 回復 ──
@@ -496,6 +517,7 @@ class Game {
     player = r.player;
     condition = r.condition;
     pendingEventId = null;
+    teamwork = (teamwork + opt.effect.teamwork).clamp(0, 100);
     if (opt.effect.achievement != 0) {
       final base = recentAchievements.isEmpty ? 30.0 : recentAchievements.removeLast();
       recentAchievements.add((base + opt.effect.achievement).clamp(0, 100).toDouble());
@@ -518,6 +540,9 @@ class Game {
     }
     if (r.gotInjured) lines.add('怪我をした');
     if (opt.effect.achievement != 0) lines.add('評価が上がった');
+    if (opt.effect.teamwork != 0) {
+      lines.add('チームワーク ${opt.effect.teamwork > 0 ? '+' : ''}${opt.effect.teamwork}');
+    }
     return lines;
   }
 
@@ -597,6 +622,7 @@ class Game {
       final win = winsContract(player, achievement, rng);
       if (win) {
         track = Track.pro;
+        teamwork = 40;
         pathPending = false;
         proRejected = false;
         return true;
@@ -609,6 +635,7 @@ class Game {
       return false;
     }
     track = route == Route.university ? Track.university : Track.corporate;
+    teamwork = 40;
     collegeYearsLeft = route.years;
     secondChance = true;
     pathPending = false;
@@ -665,6 +692,7 @@ class Game {
         'lowYears': lowYears,
         'archived': archived,
         'recoveredThisTerm': recoveredThisTerm,
+        'teamwork': teamwork,
         'difficulty': difficulty.name,
         'goalOptions': [for (final g in goalOptions) g.toJson()],
         'goal': goal?.toJson(),
@@ -703,6 +731,7 @@ class Game {
         lowYears: (j['lowYears'] as num?)?.toInt() ?? 0,
         archived: (j['archived'] as bool?) ?? false,
         recoveredThisTerm: (j['recoveredThisTerm'] as bool?) ?? false,
+        teamwork: (j['teamwork'] as num?)?.toInt() ?? 40,
         difficulty: Difficulty.parse(j['difficulty'] as String?),
         goalOptions: [
           for (final g in (j['goalOptions'] as List?) ?? const [])

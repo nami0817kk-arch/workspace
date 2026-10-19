@@ -15,6 +15,7 @@ class Effect {
     this.trait,
     this.heightCm = 0,
     this.achievement = 0,
+    this.teamwork = 0,
   });
 
   /// 能力の増減(決まった能力)。
@@ -34,6 +35,9 @@ class Effect {
 
   /// 直近の実績に足す点(スカウトの目に留まる等)。
   final double achievement;
+
+  /// チームワーク(0〜100)への加算。
+  final int teamwork;
 }
 
 class EventOption {
@@ -115,7 +119,7 @@ const events = <EventDef>[
     title: '友だちの誘い',
     body: '友だちが「たまには遊びに行こうぜ」と誘ってきた。',
     options: [
-      EventOption('遊びに行く', Effect(morale: 15, fatigue: -10)),
+      EventOption('遊びに行く', Effect(morale: 15, fatigue: -10, teamwork: 6)),
       EventOption('断って練習する', Effect(focusBonus: 1, morale: -3)),
     ],
   ),
@@ -174,8 +178,8 @@ const events = <EventDef>[
     body: 'チームメイトと意見がぶつかった。ベンチの空気が重い。',
     minAge: 12,
     options: [
-      EventOption('話し合う', Effect(abilities: {Ability.pass: 2}, morale: 5, fatigue: 5)),
-      EventOption('黙って練習する', Effect(focusBonus: 1, morale: -6)),
+      EventOption('話し合う', Effect(abilities: {Ability.pass: 2}, morale: 5, fatigue: 5, teamwork: 12)),
+      EventOption('黙って練習する', Effect(focusBonus: 1, morale: -6, teamwork: -10)),
     ],
   ),
   EventDef(

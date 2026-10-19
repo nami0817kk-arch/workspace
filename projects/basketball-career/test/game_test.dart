@@ -10,6 +10,7 @@ import 'package:basketball_career/game/life.dart';
 import 'package:basketball_career/game/match.dart';
 import 'package:basketball_career/game/path.dart';
 import 'package:basketball_career/game/rival.dart';
+import 'package:basketball_career/ui/labels.dart';
 import 'package:basketball_career/game/player.dart';
 import 'package:basketball_career/game/season.dart';
 import 'package:basketball_career/game/traits.dart';
@@ -829,6 +830,112 @@ void main() {
       expect(h.goal!.label, g.goal!.label);
       expect(h.goalOptions, hasLength(2));
       expect(h.goalStart.length, g.goalStart.length);
+    });
+  });
+
+  group('チームワークと過ごし方の役割', () {
+    Game g0() => Game(
+        eventsEnabled: false, player: strong().copyWith(age: 15), rng: Random(1));
+
+    test('交流で大きく上がり、何もしないと薄れる', () {
+      final g = g0();
+      final t0 = g.teamwork;
+      g.choose(Action.social, Ability.pass);
+      expect(g.teamwork, greaterThan(t0));
+      final t1 = g.teamwork;
+      g.choose(Action.rest, Ability.pass);
+      expect(g.teamwork, lessThan(t1));
+    });
+
+    test('チームワークが高いと味方が強くなり、低いと弱くなる', () {
+      final g = g0();
+      g.teamwork = 100;
+      final hi = g.teamBonus;
+      g.teamwork = 0;
+      final lo = g.teamBonus;
+      expect(hi, greaterThan(0));
+      expect(lo, lessThan(0));
+      expect(hi - lo, lessThan(10), reason: '効きすぎない');
+    });
+
+    test('中学に上がると新しいチームでチームワークが40に戻る', () {
+      final g = Game(
+        eventsEnabled: false,
+        player: Player(
+            name: 'a', age: 12, potential: 50, heightCm: 150, heightGenes: 0.5),
+        rng: Random(1),
+        teamwork: 90,
+      );
+      for (var i = 0; i < 4; i++) {
+        g.choose(Action.rest, Ability.pass);
+      }
+      expect(g.stage, Stage.juniorHigh);
+      expect(g.teamwork, 40);
+    });
+
+    test('保存して読み戻せる', () {
+      final g = g0()..teamwork = 77;
+      expect(Game.fromJson(g.toJson()).teamwork, 77);
+      expect(Game.fromJson({'player': {'name': 'old'}}).teamwork, 40);
+    });
+
+    test('大会の味方の強さにチームワークが入る', () {
+      final run = TournamentRun(League.highSchool, teamBonus: 3.5);
+      expect(TournamentRun.fromJson(run.toJson()).teamBonus, 3.5);
+    });
+
+    /// 伸びの合計(重点1・他9を0.25の重み)と疲れで、役割を比べる。
+    double growthOf(Action a) {
+      final p = Player(
+          name: 'a', age: 14, potential: 60, heightCm: 160, heightGenes: 0.5);
+      var total = 0;
+      for (var seed = 0; seed < 80; seed++) {
+        final r = playTerm(p, const Condition(), a, Ability.threePoint, Random(seed));
+        for (final ab in Ability.values) {
+          total += r.player.of(ab) - p.of(ab);
+        }
+      }
+      return total / 80;
+    }
+
+    test('どの過ごし方も他の完全な上位互換ではない', () {
+      final practice = growthOf(Action.practice);
+      final intense = growthOf(Action.intense);
+      final study = growthOf(Action.study);
+      final social = growthOf(Action.social);
+      final scrimmage = growthOf(Action.scrimmage);
+      expect(intense, greaterThan(practice), reason: '特訓は伸びる(代わりに疲れる)');
+      expect(practice, greaterThan(social), reason: '練習は交流より伸びる');
+      expect(social, greaterThan(0));
+      // 練習は交流より疲れる、特訓は練習より疲れる
+      final c = const Condition();
+      Condition after(Action a) =>
+          playTerm(strong(), c, a, Ability.pass, Random(1)).condition;
+      expect(after(Action.intense).fatigue, greaterThan(after(Action.practice).fatigue));
+      expect(after(Action.practice).fatigue, greaterThan(after(Action.social).fatigue));
+      expect(study, greaterThan(social));
+      expect(scrimmage, greaterThan(social));
+    });
+
+    test('試合の流れを一言にする', () {
+      MatchResult m(bool won, List<int> t, List<int> o, {Clutch? c, bool? ok}) =>
+          MatchResult(
+              won: won,
+              teamScore: t.reduce((a, b) => a + b),
+              oppScore: o.reduce((a, b) => a + b),
+              points: 10,
+              rebounds: 3,
+              assists: 2,
+              teamQuarters: t,
+              oppQuarters: o,
+              clutch: c,
+              clutchSuccess: ok);
+      expect(matchStory(m(true, [10, 10, 20, 20], [20, 15, 12, 12])), contains('逆転'));
+      expect(matchStory(m(false, [20, 20, 10, 10], [10, 10, 20, 20])), contains('リード'));
+      expect(matchStory(m(true, [25, 25, 25, 25], [10, 10, 10, 10])), contains('圧勝'));
+      expect(matchStory(m(true, [15, 15, 15, 17], [15, 15, 15, 15], c: Clutch.threePoint, ok: true)),
+          contains('3P'));
+      expect(matchStory(const MatchResult(won: true, teamScore: 1, oppScore: 0, points: 0, rebounds: 0, assists: 0)), isNull);
     });
   });
 }
