@@ -68,7 +68,7 @@ def trails(plan: dict, f: int, cfg: dict, cache: Dict[Tuple[str, int], dict]) ->
     """速く動く剣先・足・手の、光る弧。RGB の加算用の層を返す(黒地)。"""
     fps = plan["fps"]
     n = int(cfg.get("trail_frames", 9))
-    thr = cfg.get("trail_speed", 0.09)            # 身長/コマ。これより速い間だけ描く
+    thr = cfg.get("trail_speed", 0.15)            # 身長/コマ。これより速い間だけ描く(走りでは出ず、蹴り・斬りで出る)
     layer = Image.new("RGB", (W, H), (0, 0, 0))
     d = ImageDraw.Draw(layer)
     drew = False
@@ -95,12 +95,12 @@ def trails(plan: dict, f: int, cfg: dict, cache: Dict[Tuple[str, int], dict]) ->
             m = len(scr)
             for i in range(m - 1):
                 u = (i + 1) / (m - 1)               # 古い所は細く暗く
-                w = 2 + 26 * u * min(1.0, speed / 0.3)
+                w = (2 + 11 * u * min(1.0, speed / 0.35)) * min(1.0, camera.px_per_unit(cam) / 200.0)     # 画面の大きさに合わせる(近いカメラで太くなりすぎない)
                 a = (u ** 1.4)
                 c = tuple(int(v * a) for v in col)
                 d.line([scr[i], scr[i + 1]], fill=c, width=int(w))
                 cw = tuple(int(255 * a) for _ in range(3))        # 芯は白
-                d.line([scr[i], scr[i + 1]], fill=cw, width=max(1, int(w * 0.35)))
+                d.line([scr[i], scr[i + 1]], fill=cw, width=max(1, int(w * 0.28)))
             drew = True
     if not drew:
         return None

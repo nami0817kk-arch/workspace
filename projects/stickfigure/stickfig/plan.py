@@ -280,6 +280,41 @@ class Planter:
         return q
 
 
+def _curve_or_const(v, default: float):
+    """数値か、[[時刻, 値], ...] の列を、tau → 値 の関数にする。"""
+    if v is None:
+        v = default
+    if isinstance(v, (int, float)):
+        return lambda t, _v=float(v): _v
+    from .interp import Curve
+    c = Curve([k[0] for k in v], [k[1] for k in v])
+    return c
+
+
+def _compile_shots(scene: dict) -> List[dict]:
+    """台本の shots(カットの列)を、使いやすい形にする。
+
+    shots: [{t: 開始, follow: A|B|mid|数値, scale: 幅(数値か[[t,v],..]), yaw, pitch, lens, target_z, lag, dutch}, ...]
+    次のショットの t で、前のショットは終わる(切り替わりは、つなぎ無しのカット)。
+    """
+    out = []
+    for sh in sorted(scene["shots"], key=lambda s: s["t"]):
+        out.append(dict(t=float(sh["t"]), follow=sh.get("follow", "mid"), scale=_curve_or_const(sh.get("scale"), 8.0),
+                        yaw=_curve_or_const(sh.get("yaw"), 15.0), pitch=_curve_or_const(sh.get("pitch"), 8.0),
+                        lens=float(sh.get("lens", 40.0)), target_z=sh.get("target_z"), lag=float(sh.get("lag", 0.22)),
+                        dutch=float(sh.get("dutch", 0.0))))
+    return out
+
+
+def _follow_x(follow, actors: dict, scene: dict) -> float:
+    if isinstance(follow, (int, float)):
+        return float(follow)
+    xs = {w: a["root_x"] for w, a in actors.items()}
+    if follow in xs:
+        return xs[follow]
+    return sum(xs.values()) / len(xs)
+
+
 def _lift_to_ground(scene: dict, frames: List[dict]) -> None:
     """物理は2節の折れ線、rig は6節の曲線なので、深く折れた姿勢で曲線が地面に潜ることがある。
     潜る分だけ根元を持ち上げる。持ち上げは急に変えず(戻りは1コマ0.02まで)、ぴくつかせない。"""
@@ -362,6 +397,8 @@ def build_plan(scene: dict, solve: bool = True) -> dict:
     camx, cams = cx_curve(0.0), cs_curve(0.0)
     v3 = scene.get("view3d")
     yaw_curve = Curve([k[0] for k in v3["yaw"]], [k[1] for k in v3["yaw"]]) if v3 else None
+    shots = _compile_shots(scene) if scene.get("shots") else None
+    cur_shot = {"i": -1, "x": 0.0}
     hold_frames = set()
     for e in events:
         for i in range(e["frame"] + 1, e["frame"] + e.get("hold_frames", 0)):
@@ -397,6 +434,19 @@ def build_plan(scene: dict, solve: bool = True) -> dict:
         tx, ts = cx_curve(tau), cs_curve(tau)
         camx += (tx - camx) * 0.22
         cams += (ts - cams) * 0.30
+        shot_cam = None
+        if shots is not None:
+            si = max(i for i, sh in enumerate(shots) if sh["t"] <= tau + 1e-9) if any(sh["t"] <= tau + 1e-9 for sh in shots) else 0
+            sh = shots[si]
+            tgt = _follow_x(sh["follow"], fr["actors"], scene)
+            if si != cur_shot["i"]:                 # カット: 前のカメラの位置を引き継がない
+                cur_shot["x"] = tgt
+                cur_shot["i"] = si
+            else:
+                cur_shot["x"] += (tgt - cur_shot["x"]) * sh["lag"]
+            shot_cam = dict(x=cur_shot["x"], scale=sh["scale"](tau), yaw=sh["yaw"](tau), pitch=sh["pitch"](tau), lens=sh["lens"],
+                            target_z=sh["target_z"], dutch=sh["dutch"])
+            camx, cams = shot_cam["x"], shot_cam["scale"]
         shake = 0.0
         for e in events:
             d = f - e["frame"]
@@ -416,7 +466,12 @@ def build_plan(scene: dict, solve: bool = True) -> dict:
                     roll += anime.ROLL_SHAKE.get(e["kind"], 0.0) * dec * math.cos(d * 1.2) * (1 if i % 2 == 0 else -1)
         cams_eff = cams * (1 - min(zp, 0.3))
         pxu = VIEW["width"] / cams_eff
-        if v3 is not None:
+        if shot_cam is not None:
+            fr["cam"] = {k: (round(v, 5) if isinstance(v, float) else v) for k, v in
+                         camera.make_cam(shot_cam["x"], 0.0, cams_eff, shot_cam["yaw"], shot_cam["pitch"], shot_cam["lens"], sx, sz,
+                                         target_z=shot_cam["target_z"], dutch=shot_cam["dutch"]).items()}
+            fr["cam"]["z"] = fr["cam"]["tz"]
+        elif v3 is not None:
             # 遠近のあるカメラ: 斜めの角度(yaw)でゆっくり回り込み、少し上から見る
             fr["cam"] = {k: (round(v, 5) if isinstance(v, float) else v) for k, v in
                          camera.make_cam(camx, 0.0, cams_eff, yaw_curve(tau), v3.get("pitch", 7.0), v3.get("lens", 40.0), sx, sz).items()}
@@ -424,7 +479,7 @@ def build_plan(scene: dict, solve: bool = True) -> dict:
         else:
             fr["cam"] = dict(x=round(camx + sx, 5), scale=round(cams_eff, 5), pxu=round(pxu, 4), sx=round(sx, 5), sz=round(sz, 5),
                              z=round((VIEW["ground_y"] - VIEW["height"] / 2) / pxu + sz, 5))
-        fr["cam"]["roll"] = round(roll, 4)
+        fr["cam"]["roll"] = round(roll + fr["cam"].get("dutch", 0.0), 4)
         frames.append(fr)
     if phys is not None:
         _lift_to_ground(scene, frames)
@@ -442,8 +497,8 @@ def build_plan(scene: dict, solve: bool = True) -> dict:
             p = next((x for x in scene.get("puffs", []) if x["tau"] == e["tau"]), {})
             e["pos"] = list(p.get("pos", [0.0, 0.0]))
         e["fx"] = dict(h.get("fx", {}))
-    return dict(version=1, fps=fps, n=len(frames), view=dict(VIEW, persp=bool(scene.get("view3d")), lens=(scene.get("view3d") or {}).get("lens", 40.0)), actors=scene["actors"], stage=scene.get("stage", {}),
-                events=events, contacts=contacts, frames=frames, scene={k: scene[k] for k in ("hits", "slow", "camera", "fx", "tempo", "view3d", "anime") if k in scene})
+    return dict(version=1, fps=fps, n=len(frames), view=dict(VIEW, persp=bool(scene.get("view3d") or scene.get("shots")), lens=(scene.get("view3d") or {}).get("lens", 40.0)), actors=scene["actors"], stage=scene.get("stage", {}),
+                events=events, contacts=contacts, frames=frames, scene={k: scene[k] for k in ("hits", "slow", "camera", "fx", "tempo", "view3d", "anime", "shots") if k in scene})
 
 
 def save_plan(plan: dict, path) -> None:

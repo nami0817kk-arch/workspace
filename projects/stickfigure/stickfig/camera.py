@@ -62,12 +62,24 @@ def px_per_unit(cam: Dict[str, float], depth: float = None) -> float:
     return f_px(cam["lens"]) / (depth or cam["dist"])
 
 
+MIN_CAM_Z = 0.3       # カメラが床の下に潜らない高さ
+
+
 def make_cam(tx: float, tz: float, scale: float, yaw_deg: float, pitch_deg: float, lens: float, sx: float = 0.0, sz: float = 0.0,
-             ground_px: float = 560.0) -> Dict[str, float]:
-    """カメラ1コマぶん。tz は「画面の中心が向く高さ」で、従来と同じく、地面(z=0)が画面の ground_px に来るように置く。"""
+             ground_px: float = 560.0, target_z: float = None, dutch: float = 0.0) -> Dict[str, float]:
+    """カメラ1コマぶん。
+
+    target_z を省くと、従来と同じく、地面(z=0)が画面の ground_px に来るように、向ける高さを決める。
+    target_z を与えると、その高さを向く(寄り・低い位置・俯瞰のカットで使う)。pitch が負(下から見上げる)でも、
+    カメラの高さが MIN_CAM_Z を下回らないよう、仰角を浅くする。dutch は画面の傾き(度、合成で回す)。
+    """
     dist = dist_for_scale(scale, lens)
     pxu = f_px(lens) / dist
-    # 地面が画面の ground_px に来る高さ(従来の ortho の cam.z と同じ式)
-    tz0 = (ground_px - H / 2) / pxu
-    return dict(persp=True, tx=tx + sx, ty=0.0, tz=tz0 + sz, dist=dist, yaw=yaw_deg, pitch=pitch_deg, lens=lens,
-                x=tx + sx, scale=scale, pxu=pxu, sx=sx, sz=sz)
+    tz0 = (ground_px - H / 2) / pxu if target_z is None else target_z
+    pitch = pitch_deg
+    low = tz0 + sz + dist * math.sin(math.radians(pitch))
+    if low < MIN_CAM_Z:
+        s = (MIN_CAM_Z - (tz0 + sz)) / dist
+        pitch = math.degrees(math.asin(max(-1.0, min(1.0, s))))
+    return dict(persp=True, tx=tx + sx, ty=0.0, tz=tz0 + sz, dist=dist, yaw=yaw_deg, pitch=pitch, lens=lens,
+                x=tx + sx, scale=scale, pxu=pxu, sx=sx, sz=sz, dutch=dutch)

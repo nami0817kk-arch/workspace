@@ -52,3 +52,27 @@ def test_tempo_speeds_up_timeline():
     a, _ = build_timeline(3.0, 30, [])
     b, _ = build_timeline(3.0, 30, [], tempo=1.5)
     assert len(b) == pytest.approx(len(a) / 1.5, abs=2)
+
+
+def test_make_cam_never_goes_below_floor():
+    """下から見上げるカット(pitch が負)でも、カメラは床の下に潜らない。"""
+    cam = camera.make_cam(0.0, 0.0, 3.0, 20.0, -25.0, 28.0, target_z=0.8)
+    assert camera.position(cam)[2] >= camera.MIN_CAM_Z - 1e-6
+
+
+def test_target_z_is_looked_at():
+    cam = camera.make_cam(1.0, 0.0, 4.0, 30.0, 5.0, 35.0, target_z=1.2)
+    _, py, _ = camera.project(cam, 1.0, 0.0, 1.2)
+    assert py == pytest.approx(360.0, abs=0.5)            # 向けた高さが画面の縦の中心
+
+
+def test_shots_compile_and_follow():
+    from stickfig import plan
+    shots = plan._compile_shots({"shots": [{"t": 2.0, "follow": "B", "scale": 5.0}, {"t": 0.0, "follow": "A", "yaw": [[0, 10], [1, 30]]}]})
+    assert [s["t"] for s in shots] == [0.0, 2.0]          # 時刻順
+    assert shots[0]["yaw"](0.5) == pytest.approx(20.0)    # 数値の列は補間、数値は定数
+    assert shots[1]["scale"](1.0) == 5.0
+    actors = {"A": {"root_x": 1.0}, "B": {"root_x": 5.0}}
+    assert plan._follow_x("A", actors, {}) == 1.0
+    assert plan._follow_x("mid", actors, {}) == 3.0
+    assert plan._follow_x(2.5, actors, {}) == 2.5
