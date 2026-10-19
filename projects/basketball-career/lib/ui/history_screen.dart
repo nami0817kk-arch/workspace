@@ -114,6 +114,8 @@ class _HistoryRow extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          if (e.title.isNotEmpty)
+            Text(e.title, style: const TextStyle(fontSize: 12)),
           Text('${e.name}  ${e.age}歳  ${e.position}  '
               '${e.heightCm.toStringAsFixed(1)}cm  総合${e.overall}',
               style: const TextStyle(fontWeight: FontWeight.bold)),

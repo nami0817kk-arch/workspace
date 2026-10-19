@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:basketball_career/game/career.dart';
 import 'package:basketball_career/game/difficulty.dart';
+import 'package:basketball_career/game/epilogue.dart';
 import 'package:basketball_career/game/events.dart';
 import 'package:basketball_career/game/game.dart';
 import 'package:basketball_career/game/goals.dart';
@@ -997,6 +998,142 @@ void main() {
       }
 
       expect(winRate(6), greaterThan(0.45));
+    });
+  });
+
+  group('出来事の内容とコーチとの信頼', () {
+    test('出来事の id は重複せず、どれも2択以上で、選択肢に何か効果がある', () {
+      final ids = events.map((e) => e.id).toList();
+      expect(ids.toSet().length, ids.length);
+      for (final e in events) {
+        expect(e.options.length, greaterThanOrEqualTo(2), reason: e.id);
+        expect(e.title, isNotEmpty);
+        expect(e.body, isNotEmpty);
+      }
+      expect(events.length, greaterThanOrEqualTo(20));
+    });
+
+    test('どの年齢・段階でも、出来事の候補が十分にある', () {
+      for (var age = 6; age <= maxProAge; age++) {
+        for (final pro in [false, true]) {
+          final p = Player(
+              name: 'a', age: age, potential: 50, heightCm: 150, heightGenes: 0.5);
+          final pool = [
+            for (final e in events)
+              if (age >= e.minAge && age <= e.maxAge && (!e.proOnly || pro)) e
+          ];
+          expect(pool.length, greaterThanOrEqualTo(6), reason: '$age歳 pro=$pro');
+          expect(p.age, age);
+        }
+      }
+    });
+
+    test('ライバルの名前が文中に入る', () {
+      final g = Game(
+        eventsEnabled: false,
+        player: strong().copyWith(age: 14),
+        rng: Random(1),
+        rival: Rival(name: '神谷リョウ', potential: 70),
+        pendingEventId: 'rival_talk',
+      );
+      expect(g.fill(g.pendingEvent!.body), contains('神谷リョウ'));
+      expect(g.fill(g.pendingEvent!.body), isNot(contains('{rival}')));
+    });
+
+    test('コーチとの面談で信頼が上がり、上限は100', () {
+      final g = Game(
+        eventsEnabled: false,
+        player: strong().copyWith(age: 14),
+        rng: Random(1),
+        coachBond: 95,
+        pendingEventId: 'coach_talk',
+      );
+      g.resolveEvent(0);
+      expect(g.coachBond, 100);
+    });
+
+    test('信頼が高いほど伸びが大きい', () {
+      double grow(int bond) {
+        var total = 0;
+        for (var seed = 0; seed < 80; seed++) {
+          final g = Game(
+            eventsEnabled: false,
+            player: Player(
+                name: 'a', age: 14, potential: 60, heightCm: 160, heightGenes: 0.5),
+            rng: Random(seed),
+            coachBond: bond,
+          );
+          final before = g.player.of(Ability.threePoint);
+          g.choose(Action.practice, Ability.threePoint);
+          total += g.player.of(Ability.threePoint) - before;
+        }
+        return total / 80;
+      }
+
+      expect(grow(100), greaterThan(grow(0)));
+    });
+
+    test('練習で信頼が増え、進学で新しいコーチに戻る。保存もされる', () {
+      final g = Game(
+        eventsEnabled: false,
+        player: Player(
+            name: 'a', age: 12, potential: 50, heightCm: 150, heightGenes: 0.5),
+        rng: Random(1),
+        coachBond: 60,
+      );
+      g.choose(Action.practice, Ability.pass);
+      expect(g.coachBond, 61);
+      expect(Game.fromJson(g.toJson()).coachBond, 61);
+      for (var i = 0; i < 3; i++) {
+        g.choose(Action.rest, Ability.pass);
+      }
+      expect(g.stage, Stage.juniorHigh);
+      expect(g.coachBond, 20);
+    });
+  });
+
+  group('エンディング', () {
+    Game finished({bool abroad = false, bool pro = true}) {
+      final g = Game(
+        eventsEnabled: false,
+        player: strong(height: 205).copyWith(age: 26),
+        rng: Random(1),
+        track: pro ? Track.pro : Track.school,
+        abroad: abroad,
+        rival: Rival(name: '神谷リョウ', potential: 70, wins: 4, losses: 2),
+      );
+      if (pro) {
+        g.choose(Action.rest, Ability.pass);
+        g.choose(Action.rest, Ability.pass);
+        g.retire();
+      } else {
+        g.pathPending = true;
+        g.giveUp();
+      }
+      return g;
+    }
+
+    test('称号は到達点で決まる', () {
+      expect(careerTitle(finished(abroad: true)), contains('世界'));
+      expect(careerTitle(finished()), contains('プロ'));
+      expect(careerTitle(finished()), contains(positionNickname(Position.center)));
+    });
+
+    test('文章に生い立ち・ライバル・結末が入る', () {
+      final g = finished();
+      final lines = epilogueLines(g);
+      final all = lines.join(' ');
+      expect(all, contains('205cm'));
+      expect(all, contains('神谷リョウ'));
+      expect(all, contains('${g.rival.wins}勝${g.rival.losses}敗'));
+      expect(all, contains('越えた'));
+      expect(lines.length, greaterThanOrEqualTo(4));
+    });
+
+    test('殿堂に称号が残り、古い記録でも読める', () {
+      final h = HistoryEntry.of(finished(abroad: true));
+      expect(HistoryEntry.fromJson(h.toJson()).title, h.title);
+      expect(HistoryEntry.fromJson({}).title, '');
     });
   });
 }

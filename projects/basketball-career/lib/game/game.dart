@@ -124,6 +124,7 @@ class Game {
     this.archived = false,
     this.recoveredThisTerm = false,
     this.teamwork = 40,
+    this.coachBond = 20,
     List<String>? recentEventIds,
     this.run,
     this.runWinter = false,
@@ -217,6 +218,13 @@ class Game {
   /// 交流・練習試合で上がり、進学・移籍で新しいチームになると40に戻る。
   int teamwork;
 
+  /// コーチとの信頼 0〜100。練習・特訓で少しずつ増え、高いと伸びに最大+20%。
+  /// 進学・移籍で新しいコーチになると20に戻る。
+  int coachBond;
+
+  /// 信頼による伸びの倍率。
+  double get coachBoost => 1 + coachBond / 500;
+
   /// 進行中の大会(勝負どころで止まっているときだけ残る)。
   TournamentRun? run;
   bool runWinter;
@@ -254,6 +262,9 @@ class Game {
               : pendingEventId != null
                   ? Phase.event
                   : Phase.season;
+
+  /// 出来事の文中の {rival} をライバルの名前にする。
+  String fill(String s) => s.replaceAll('{rival}', rival.name);
 
   EventDef? get pendingEvent =>
       pendingEventId == null ? null : eventById(pendingEventId!);
@@ -316,7 +327,7 @@ class Game {
     recoveredThisTerm = false;
     lastGoalMessage = null;
     final r = playTerm(player, condition, action, focus, rng,
-        growthScale: difficulty.growth);
+        growthScale: difficulty.growth * coachBoost);
     player = r.player;
     condition = r.condition;
     termAction = action;
@@ -330,6 +341,9 @@ class Game {
             } -
             2)
         .clamp(0, 100);
+    if (action == Action.practice || action == Action.intense) {
+      coachBond = (coachBond + 1).clamp(0, 100);
+    }
 
     final winter = slot == 3 && hasWinterCup;
     TournamentResult? t;
@@ -494,7 +508,10 @@ class Game {
         }
     }
     // 中学・高校に上がると新しいチーム(進路の選択は chooseRoute で)。
-    if (!pathPending && !retired && stage != stageBefore) teamwork = 40;
+    if (!pathPending && !retired && stage != stageBefore) {
+      teamwork = 40;
+      coachBond = 20;
+    }
   }
 
   // ── 回復 ──
@@ -535,6 +552,7 @@ class Game {
     condition = r.condition;
     pendingEventId = null;
     teamwork = (teamwork + opt.effect.teamwork).clamp(0, 100);
+    coachBond = (coachBond + opt.effect.coach).clamp(0, 100);
     if (opt.effect.achievement != 0) {
       final base = recentAchievements.isEmpty ? 30.0 : recentAchievements.removeLast();
       recentAchievements.add((base + opt.effect.achievement).clamp(0, 100).toDouble());
@@ -557,6 +575,9 @@ class Game {
     }
     if (r.gotInjured) lines.add('怪我をした');
     if (opt.effect.achievement != 0) lines.add('評価が上がった');
+    if (opt.effect.coach != 0) {
+      lines.add('コーチとの信頼 ${opt.effect.coach > 0 ? '+' : ''}${opt.effect.coach}');
+    }
     if (opt.effect.teamwork != 0) {
       lines.add('チームワーク ${opt.effect.teamwork > 0 ? '+' : ''}${opt.effect.teamwork}');
     }
@@ -640,6 +661,7 @@ class Game {
       if (win) {
         track = Track.pro;
         teamwork = 40;
+        coachBond = 20;
         pathPending = false;
         proRejected = false;
         return true;
@@ -653,6 +675,7 @@ class Game {
     }
     track = route == Route.university ? Track.university : Track.corporate;
     teamwork = 40;
+    coachBond = 20;
     collegeYearsLeft = route.years;
     secondChance = true;
     pathPending = false;
@@ -710,6 +733,7 @@ class Game {
         'archived': archived,
         'recoveredThisTerm': recoveredThisTerm,
         'teamwork': teamwork,
+        'coachBond': coachBond,
         'recentEventIds': recentEventIds,
         'difficulty': difficulty.name,
         'goalOptions': [for (final g in goalOptions) g.toJson()],
@@ -750,6 +774,7 @@ class Game {
         archived: (j['archived'] as bool?) ?? false,
         recoveredThisTerm: (j['recoveredThisTerm'] as bool?) ?? false,
         teamwork: (j['teamwork'] as num?)?.toInt() ?? 40,
+        coachBond: (j['coachBond'] as num?)?.toInt() ?? 20,
         recentEventIds: [
           for (final v in (j['recentEventIds'] as List?) ?? const []) v as String
         ],

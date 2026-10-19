@@ -16,6 +16,7 @@ class Effect {
     this.heightCm = 0,
     this.achievement = 0,
     this.teamwork = 0,
+    this.coach = 0,
   });
 
   /// 能力の増減(決まった能力)。
@@ -38,6 +39,9 @@ class Effect {
 
   /// チームワーク(0〜100)への加算。
   final int teamwork;
+
+  /// コーチとの信頼(0〜100)への加算。
+  final int coach;
 }
 
 class EventOption {
@@ -72,7 +76,7 @@ const events = <EventDef>[
     title: 'コーチの特別メニュー',
     body: 'コーチが「お前だけ特別メニューをやってみるか」と声をかけてきた。',
     options: [
-      EventOption('受ける', Effect(focusBonus: 3, fatigue: 15, trait: Trait.hardWorker)),
+      EventOption('受ける', Effect(focusBonus: 3, fatigue: 15, trait: Trait.hardWorker, coach: 6)),
       EventOption('今日は遠慮する', Effect(morale: -3)),
     ],
   ),
@@ -191,6 +195,117 @@ const events = <EventDef>[
     options: [
       EventOption('受ける', Effect(morale: 10, fatigue: 8, trait: Trait.starPower)),
       EventOption('断って調整する', Effect(fatigue: -10)),
+    ],
+  ),
+  EventDef(
+    id: 'rival_talk',
+    title: 'ライバルとの会話',
+    body: '試合のあと、{rival}が声をかけてきた。「次は負けない」',
+    minAge: 12,
+    options: [
+      EventOption('握手して健闘をたたえる', Effect(morale: 8, abilities: {Ability.pass: 1})),
+      EventOption('「こっちこそ」と言い返す', Effect(focusBonus: 2, morale: 4, fatigue: 5)),
+    ],
+  ),
+  EventDef(
+    id: 'coach_talk',
+    title: 'コーチとの面談',
+    body: 'コーチが「最近どうだ」と声をかけてくれた。',
+    options: [
+      EventOption('悩みを正直に話す', Effect(morale: 6, coach: 12)),
+      EventOption('「大丈夫です」と答える', Effect(morale: 2, coach: -3)),
+    ],
+  ),
+  EventDef(
+    id: 'family',
+    title: '家族の応援',
+    body: '家族が毎週、遠くから応援に来てくれている。',
+    options: [
+      EventOption('期待に応えたいと奮起する', Effect(focusBonus: 1, morale: 10)),
+      EventOption('感謝を伝えて、ゆっくり休む', Effect(fatigue: -12, morale: 8)),
+    ],
+  ),
+  EventDef(
+    id: 'captain',
+    title: 'キャプテンに指名',
+    body: 'チームのキャプテンを任されることになった。',
+    minAge: 12,
+    options: [
+      EventOption('引き受ける', Effect(teamwork: 15, abilities: {Ability.pass: 1}, fatigue: 8, coach: 5)),
+      EventOption('プレーに集中したいと断る', Effect(focusBonus: 2, teamwork: -4)),
+    ],
+  ),
+  EventDef(
+    id: 'kouhai',
+    title: '後輩の指導',
+    body: '入ってきたばかりの後輩が、基本を教えてほしいと頼んできた。',
+    minAge: 13,
+    options: [
+      EventOption('丁寧に教える', Effect(abilities: {Ability.defense: 1, Ability.pass: 1}, teamwork: 8, fatigue: 5)),
+      EventOption('自分の練習を優先する', Effect(focusBonus: 2, teamwork: -3)),
+    ],
+  ),
+  EventDef(
+    id: 'body_making',
+    title: '体づくり',
+    body: 'トレーナーから、体づくりのメニューを勧められた。',
+    minAge: 12,
+    options: [
+      EventOption('食事と筋トレを徹底する', Effect(abilities: {Ability.physical: 3}, fatigue: 8, morale: -2)),
+      EventOption('今のペースを守る', Effect(fatigue: -4)),
+    ],
+  ),
+  EventDef(
+    id: 'overseas_camp',
+    title: '海外キャンプへの招待',
+    body: '海外の強豪が開くキャンプに招待された。世界の速さと高さを知る機会だ。',
+    minAge: 17,
+    options: [
+      EventOption('参加する', Effect(abilities: {Ability.speed: 2, Ability.physical: 2, Ability.defense: 1}, fatigue: 20, morale: 6, achievement: 4)),
+      EventOption('見送る', Effect(fatigue: -6)),
+    ],
+  ),
+  EventDef(
+    id: 'injury_comeback',
+    title: '復帰を支えた人',
+    body: '辛いリハビリの間、ずっと支えてくれた人がいる。',
+    minAge: 12,
+    options: [
+      EventOption('その人のためにも頑張ると誓う', Effect(morale: 12, trait: Trait.sunny)),
+      EventOption('自分の力だけで乗り越えたと考える', Effect(abilities: {Ability.stamina: 2}, morale: 3)),
+    ],
+  ),
+  EventDef(
+    id: 'sponsor',
+    title: 'スポンサーの打診',
+    body: '地元の企業が、応援したいと申し出てきた。',
+    minAge: 19,
+    proOnly: true,
+    options: [
+      EventOption('受ける', Effect(morale: 10, achievement: 3, fatigue: 5)),
+      EventOption('練習に集中するため断る', Effect(focusBonus: 2)),
+    ],
+  ),
+  EventDef(
+    id: 'veteran_advice',
+    title: 'ベテランの教え',
+    body: '長く第一線で戦うベテランが、コツを教えてくれた。',
+    minAge: 19,
+    proOnly: true,
+    options: [
+      EventOption('学ぶ姿勢で聞く', Effect(abilities: {Ability.midRange: 2, Ability.defense: 2}, coach: 4)),
+      EventOption('自分のやり方を貫く', Effect(morale: 5)),
+    ],
+  ),
+  EventDef(
+    id: 'study_balance',
+    title: '勉強との両立',
+    body: '部活と勉強の両立に悩んでいる。',
+    minAge: 12,
+    maxAge: 18,
+    options: [
+      EventOption('勉強の時間を確保する', Effect(morale: 4, fatigue: -5)),
+      EventOption('バスケを優先する', Effect(focusBonus: 2, morale: -3, fatigue: 5)),
     ],
   ),
 ];
