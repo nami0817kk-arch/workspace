@@ -236,7 +236,7 @@ class _ProfileTab extends StatelessWidget {
               collapsedShape: const Border(),
               title: const Text('くわしいプロフィール'),
               subtitle: Text(
-                  '「${nicknameOf(_playerOf(s)).isEmpty ? '無し' : nicknameOf(_playerOf(s))}」 ・ ${lineupRoleOf(_playerOf(s))}'),
+                  '「${nicknameOf(_playerOf(s)).isEmpty ? '無し' : nicknameOf(_playerOf(s))}」 ・ ${s.role == Role.pitcher ? positionOf(_playerOf(s), s.position) : lineupRoleOf(_playerOf(s))}'),
               childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
               expandedCrossAxisAlignment: CrossAxisAlignment.start,
               children: [

@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'calendar.dart';
 import 'career.dart';
+import 'flavor.dart' show positionOf;
 import 'path.dart' show overall;
 import 'player.dart';
 import 'training.dart' show abilityCap, yearlyDelta;
@@ -541,7 +542,8 @@ String profileText(PlayerSnapshot s) {
   return [
     '【野球育成】${s.name} (${s.age}歳)',
     '総合評価 $ov ・ 素質 ${'★' * (s.potential ~/ 20)}',
-    if (nicknameOf(p).isNotEmpty) '「${nicknameOf(p)}」 ${lineupRoleOf(p)}',
+    if (nicknameOf(p).isNotEmpty)
+      '「${nicknameOf(p)}」 ${s.role == Role.pitcher ? positionOf(p, s.position) : lineupRoleOf(p)}',
     if (s.traits.isNotEmpty) '特性: ${s.traits.map((t) => t.label).join('・')}',
     if (s.endingTitle != null) '称号: ${s.endingTitle}',
   ].join('\n');

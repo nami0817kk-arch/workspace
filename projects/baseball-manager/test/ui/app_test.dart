@@ -1760,6 +1760,22 @@ void _rankTests() {
       expect(find.text('── 7歳 ──'), findsOneWidget);
     });
 
+    testWidgets('投手の役割は、選手カードとくわしいプロフィールで同じ(先発/中継ぎ/抑え)', (t) async {
+      final c = await _start(t);
+      c.newGame('テスト', Role.pitcher);
+      await t.pumpAndSettle();
+      final pos = positionOf(c.game!.player, c.game!.position);
+      await t.tap(find.byKey(const Key('player-open')).first);
+      await t.pumpAndSettle();
+      expect(t.widget<Text>(find.byKey(const Key('profile-card'))).data,
+          contains(pos));
+      expect(
+          find.descendant(
+              of: find.byKey(const Key('profile-details')),
+              matching: find.textContaining(pos)),
+          findsOneWidget);
+    });
+
     testWidgets('実績の絞りこみ', (t) async {
       final c = await _start(t);
       c.unlocked = {'first-pro'};
