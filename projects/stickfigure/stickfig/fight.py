@@ -369,7 +369,7 @@ def build_fight(spec: dict) -> dict:
         stage=dict(wall_x=6.0, style="flat", theme=s["stage"]), slow=slow, hits=hits, puffs=puffs,
         camera=[[0.0, -0.4, 8.4], [_r(end), 3.2, 8.6]],
         keys=keys,
-        fx=dict(trails=[], speed_lines=speed, invert=["kick", "heel", "wall"], flashes=sorted(set(flashes)), charge=charge, color_script=color_script),
+        fx=dict(trails=[], speed_lines=speed, invert=["kick", "heel", "wall"], flashes=sorted(set(flashes)), charge=charge, color_script=color_script, weapon_glow=bool(sword)),
         clips=dict(A=clipsA, **({"B": clipsB} if clipsB else {})),
         qa=dict(max_cross_frames=400, max_stops=3, max_anticipation_frames=14, max_jerk=1.3),
         tempo=s["tempo"], anime=dict(trails=True, sfx=True, zoom_blur=True, grade=True, roll=True, smear=True),
@@ -378,7 +378,8 @@ def build_fight(spec: dict) -> dict:
                                                                          dict(yaw=5, pitch=12, scale=3.4, lens=34, hue=2)],
                          per_kind=dict(wall=[dict(yaw=-30, pitch=6, scale=5.0, lens=30), dict(yaw=10, pitch=18, scale=6.0, lens=34), dict(yaw=-55, pitch=3, scale=4.2, lens=28, dutch=-5.0)],
                                        clash=[dict(yaw=28, pitch=2, scale=2.4, lens=30, hue=3), dict(yaw=-32, pitch=-8, scale=2.0, lens=26, dutch=7.0, hue=0)])),
-        flurry=flurry, body_drive=({"strength": float(s["body"])} if s["body"] else None), footwork=({} if s["footwork"] else None), style="flat2d", captions=caps, audio=(False if s["mood"] == "none" else dict(mood=s["mood"])), _marks={k: _r(v) for k, v in marks.items()})
+        flurry=flurry, body_drive=({"strength": float(s["body"])} if s["body"] else None), footwork=({} if s["footwork"] else None), style="flat2d",
+        limb=dict(base=0.055, tip=0.03, tip_color=[0.08, 0.08, 0.1]), captions=caps, audio=(False if s["mood"] == "none" else dict(mood=s["mood"])), _marks={k: _r(v) for k, v in marks.items()})
     return scene
 
 
