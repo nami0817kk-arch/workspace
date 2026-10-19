@@ -647,7 +647,7 @@ class _OverallHeader extends StatelessWidget {
             Flexible(
               child: Text(
                   '素質 ${potentialStars(game.player.potential)}'
-                  '${delta == null || delta == 0 ? '' : '  今年 ${delta > 0 ? '+' : ''}$delta'}',
+                  '${delta == null || delta == 0 ? '' : '\n今年 ${delta > 0 ? '+' : ''}$delta'}',
                   key: const Key('overall-delta'),
                   textAlign: TextAlign.right),
             ),
