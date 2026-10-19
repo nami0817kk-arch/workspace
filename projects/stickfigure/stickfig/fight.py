@@ -265,7 +265,7 @@ def build_fight(spec: dict) -> dict:
     tb_off = 0.0
     if bc:                                               # B の連打は、A の n-1 発目のあと(受け返しがあればその後)に入れる。決めの1発までを空ける
         tb_off = 1.0 if rip_i == n - 2 else 0.5
-        gaps[n - 2] = round(max(gaps[n - 2], tb_off + 0.45 * (bc - 1) + 0.6), 2)
+        gaps[n - 2] = round(max(gaps[n - 2], tb_off + 0.45 * (bc - 1) + (0.78 if s["timing"] else 0.6)), 2)   # 間を作るときは、受け止めてから決めの振りかぶりまでを長く(0.6 だとキレ 2.3)
     ts = [h0]
     for i in range(1, n):
         ts.append(ts[-1] + gaps[i - 1])
@@ -285,6 +285,9 @@ def build_fight(spec: dict) -> dict:
             clip = dict(file="135_07_s1", strike_at=_r(t), start=_r(t - 0.36), end=_r(t + 0.3), **{"in": 0.12, "out": 0.12})
         if not sword:
             clip["reach"] = True                         # 命中は手(足)が伸び切ったコマで(胴が重ならない間合いになる)
+        if last and s["timing"]:                         # 決めの 1 発は間をいちばん強く: 溜めを長く(0.45 秒)、振りは最後の 12%(1 コマ)で半分進める
+            clip["timing"] = dict(pre=0.45, post=0.3, pre_curve=[(0.0, 0.0), (0.12, 0.5), (0.65, 0.55), (1.0, 1.0)], antic=0.55, over=0.35)
+            clip["start"] = _r(min(clip["start"], t - 0.45))
         if not last and kick_i != i and defend.get(i) != "miss":
             clip["anchor_dx"] = round(anchor, 2)
         clipsA.append(clip)
