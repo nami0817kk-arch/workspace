@@ -56,12 +56,12 @@ class SceneBanner extends StatelessWidget {
                 ),
               ),
               Positioned(
-                right: 14,
-                top: 10,
+                left: 14,
+                top: 8,
                 child: Text(
                   label,
                   style: const TextStyle(
-                    fontSize: 30,
+                    fontSize: 26,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                     shadows: [Shadow(blurRadius: 6, color: Color(0x66000000))],

@@ -34,15 +34,32 @@ import 'widgets.dart';
 /// 画面の中身の最大幅。広い画面(Web・タブレット)では中央に寄せる。
 const contentMaxWidth = 560.0;
 
-class GameScreen extends StatelessWidget {
+class GameScreen extends StatefulWidget {
   const GameScreen({super.key, required this.controller, required this.game});
   final GameController controller;
   final Game game;
 
   @override
+  State<GameScreen> createState() => _GameScreenState();
+}
+
+class _GameScreenState extends State<GameScreen> {
+  /// 下のタブ: 0 育成 / 1 能力 / 2 キャリア。
+  int _tab = 0;
+  Phase? _lastPhase;
+
+  GameController get controller => widget.controller;
+  Game get game => widget.game;
+
+  @override
   Widget build(BuildContext context) {
     if (game.phase == Phase.retired) {
       return EndingView(controller: controller, game: game);
+    }
+    // 出来事・進路の選択が出たら、育成タブに戻して見せる。
+    if (game.phase != _lastPhase) {
+      if (game.phase != Phase.term) _tab = 0;
+      _lastPhase = game.phase;
     }
     final p = game.player;
     return CallbackShortcuts(
@@ -62,9 +79,28 @@ class GameScreen extends StatelessWidget {
 
   Widget _scaffold(BuildContext context, Player p) {
     return Scaffold(
-      bottomNavigationBar: game.phase == Phase.term
-          ? _QuickBar(controller: controller, game: game)
-          : null,
+      bottomNavigationBar: NavigationBar(
+        height: 64,
+        selectedIndex: _tab,
+        onDestinationSelected: (i) => setState(() => _tab = i),
+        destinations: const [
+          NavigationDestination(
+              key: Key('tab-train'),
+              icon: Icon(Icons.sports_baseball_outlined),
+              selectedIcon: Icon(Icons.sports_baseball),
+              label: '育成'),
+          NavigationDestination(
+              key: Key('tab-ability'),
+              icon: Icon(Icons.insights_outlined),
+              selectedIcon: Icon(Icons.insights),
+              label: '能力'),
+          NavigationDestination(
+              key: Key('tab-career'),
+              icon: Icon(Icons.timeline_outlined),
+              selectedIcon: Icon(Icons.timeline),
+              label: 'キャリア'),
+        ],
+      ),
       appBar: AppBar(
         title: GestureDetector(
           key: const Key('title'),
@@ -88,7 +124,7 @@ class GameScreen extends StatelessWidget {
             key: const Key('player-open'),
             tooltip: '選手情報',
             icon: const Icon(Icons.person),
-            onPressed: () => _openPlayer(context),
+            onPressed: () => _openPlayer(),
           ),
           IconButton(
             key: const Key('records-open'),
@@ -125,77 +161,83 @@ class GameScreen extends StatelessWidget {
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: contentMaxWidth),
           child: ListView(
-            padding: const EdgeInsets.fromLTRB(12, 4, 12, 24),
-            children: [
-              GestureDetector(
-                key: const Key('banner'),
-                onTap: () => _openPlayer(context),
-                child: SceneBanner(
-                  season: seasonOf(game.stage, game.slot),
-                  stage: game.stage,
-                  role: p.role,
-                  mood: moodOf(game.motivation),
-                  label: game.slotName,
-                ),
-              ),
-              const SizedBox(height: 8),
-              _StatusCard(game: game, controller: controller),
-              if (controller.recent.isNotEmpty) ...[
-                const SizedBox(height: 8),
-                _RecentCard(lines: controller.recent),
-              ],
-              const SizedBox(height: 8),
-              if (_isFirstTurn) ...[
-                const SizedBox(height: 8),
-                const _FirstHint(),
-              ],
-              _TodoChips(game: game, controller: controller),
-              if (game.canChooseOffseason) ...[
-                const SizedBox(height: 8),
-                _OffseasonCard(controller: controller, game: game),
-              ],
-              if (game.canChooseSchool) ...[
-                const SizedBox(height: 8),
-                _SchoolCard(controller: controller, game: game),
-              ],
-              if (game.canChoosePosition) ...[
-                const SizedBox(height: 8),
-                _PositionCard(controller: controller, game: game),
-              ],
-              const SizedBox(height: 8),
-              AnimatedSize(
-                duration: const Duration(milliseconds: 250),
-                curve: Curves.easeOut,
-                child: AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 300),
-                  child: KeyedSubtree(
-                    key: ValueKey(game.phase),
-                    child: _mainCard(),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 8),
-              _AbilityCard(controller: controller, game: game),
-              if (game.phase == Phase.term && game.stage == Stage.pro) ...[
-                const SizedBox(height: 8),
-                _ProCard(controller: controller, game: game),
-              ],
-              if (game.records.isNotEmpty) ...[
-                const SizedBox(height: 8),
-                _RecentRecordCard(game: game),
-              ],
-              const SizedBox(height: 8),
-              CastCard(game: game),
-              const SizedBox(height: 8),
-              _LogCard(game: game),
-            ],
+            key: ValueKey('tab-$_tab'),
+            padding: const EdgeInsets.fromLTRB(12, 4, 12, 16),
+            children: switch (_tab) {
+              1 => _abilityTab(),
+              2 => _careerTab(context),
+              _ => _trainTab(context, p),
+            },
           ),
         ),
       ),
     );
   }
 
-  void _openPlayer(BuildContext context) {
+  List<Widget> _trainTab(BuildContext context, Player p) => [
+        _Header(game: game, onTap: _openPlayer),
+        const SizedBox(height: 6),
+        _StatusCard(game: game, controller: controller),
+        if (controller.recent.isNotEmpty) ...[
+          const SizedBox(height: 6),
+          _RecentCard(lines: controller.recent, limit: 2),
+        ],
+        if (_isFirstTurn) ...[
+          const SizedBox(height: 6),
+          const _FirstHint(),
+        ],
+        _TodoChips(game: game),
+        if (game.canChooseOffseason) ...[
+          const SizedBox(height: 6),
+          _OffseasonCard(controller: controller, game: game),
+        ],
+        if (game.canChooseSchool) ...[
+          const SizedBox(height: 6),
+          _SchoolCard(controller: controller, game: game),
+        ],
+        if (game.canChoosePosition) ...[
+          const SizedBox(height: 6),
+          _PositionCard(controller: controller, game: game),
+        ],
+        const SizedBox(height: 6),
+        AnimatedSize(
+          duration: const Duration(milliseconds: 250),
+          curve: Curves.easeOut,
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 300),
+            child: KeyedSubtree(
+              key: ValueKey(game.phase),
+              child: _mainCard(),
+            ),
+          ),
+        ),
+      ];
+
+  List<Widget> _abilityTab() => [
+        _TraitChips(game: game),
+        _AbilityCard(controller: controller, game: game),
+      ];
+
+  List<Widget> _careerTab(BuildContext context) => [
+        if (controller.recent.length > 2) ...[
+          _RecentCard(
+              lines: controller.recent, cardKey: const Key('recent-full')),
+          const SizedBox(height: 8),
+        ],
+        if (game.phase == Phase.term && game.stage == Stage.pro) ...[
+          _ProCard(controller: controller, game: game),
+          const SizedBox(height: 8),
+        ],
+        if (game.records.isNotEmpty) ...[
+          _RecentRecordCard(game: game),
+          const SizedBox(height: 8),
+        ],
+        CastCard(game: game),
+        const SizedBox(height: 8),
+        _LogCard(game: game),
+      ];
+
+  void _openPlayer() {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
         builder: (_) =>
@@ -238,6 +280,99 @@ Color _moodColor(Motivation m) => switch (m) {
       Motivation.great => const Color(0xFF2E9B3E),
     };
 
+/// 背景の絵・所属・背番号・1年の進み具合を、1枚にまとめた見出し。
+class _Header extends StatelessWidget {
+  const _Header({required this.game, required this.onTap});
+  final Game game;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final p = game.player;
+    return GestureDetector(
+      key: const Key('banner'),
+      onTap: onTap,
+      child: Stack(children: [
+        SceneBanner(
+          season: seasonOf(game.stage, game.slot),
+          stage: game.stage,
+          role: p.role,
+          mood: moodOf(game.motivation),
+          label: game.slotName,
+          height: 96,
+        ),
+        Positioned(
+          right: 8,
+          bottom: 8,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+                maxWidth: MediaQuery.sizeOf(context).width * 0.52),
+            child: Container(
+              key: const Key('player-card'),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+              decoration: BoxDecoration(
+                color: Colors.black.withValues(alpha: 0.55),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(affiliationOf(game.stage, p.name, proTeam: game.proTeam),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 13)),
+                  Text(
+                      playerCardLine(game.stage, p,
+                          position: game.position,
+                          numberOverride:
+                              specialNumberOf(p.role, game.records)),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style:
+                          const TextStyle(color: Colors.white, fontSize: 11)),
+                  const SizedBox(height: 3),
+                  Row(children: [
+                    Expanded(
+                      child: LinearProgressIndicator(
+                        value: game.slot / game.slotsInYear,
+                        minHeight: 4,
+                        color: Colors.white,
+                        backgroundColor: Colors.white24,
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    Text('${game.slot + 1}/${game.slotsInYear}',
+                        style:
+                            const TextStyle(color: Colors.white, fontSize: 11)),
+                  ]),
+                  if (untilTournament(game.stage, game.slot) != null)
+                    Builder(builder: (context) {
+                      final u = untilTournament(game.stage, game.slot)!;
+                      return Text(
+                          u.left == 0
+                              ? '今が${u.name}'
+                              : '${u.name}まであと${u.left}${u.unit}',
+                          key: const Key('until-tournament'),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                              color: Colors.white, fontSize: 10));
+                    }),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ]),
+    );
+  }
+}
+
 class _StatusCard extends StatelessWidget {
   const _StatusCard({required this.game, required this.controller});
   final Game game;
@@ -258,113 +393,70 @@ class _StatusCard extends StatelessWidget {
     final m = game.motivation;
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 選手カード: 所属・背番号・投打・守備位置
-            Container(
-              key: const Key('player-card'),
-              width: double.infinity,
-              margin: const EdgeInsets.only(bottom: 10),
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primaryContainer,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                        affiliationOf(game.stage, p.name,
-                            proTeam: game.proTeam),
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleSmall
-                            ?.copyWith(fontWeight: FontWeight.bold)),
-                    Text(
-                        playerCardLine(game.stage, p,
-                            position: game.position,
-                            numberOverride:
-                                specialNumberOf(p.role, game.records)),
-                        style: Theme.of(context).textTheme.bodySmall),
-                  ]),
-            ),
-            Row(children: [
-              Text(game.slotName,
-                  style: Theme.of(context).textTheme.titleSmall),
-              const SizedBox(width: 8),
-              Expanded(
-                child: LinearProgressIndicator(
-                  value: game.slot / game.slotsInYear,
-                  minHeight: 6,
-                  borderRadius: BorderRadius.circular(3),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Text('${game.slot + 1}/${game.slotsInYear}'),
-            ]),
             if (game.stage == Stage.pro && game.seasonProgress != null) ...[
-              const SizedBox(height: 8),
               _PennantRow(progress: game.seasonProgress!),
+              const SizedBox(height: 6),
             ],
-            if (game.goal != null) ...[
-              const SizedBox(height: 8),
-              _GoalRow(game: game),
-              if (game.canChooseGoal) ...[
-                const SizedBox(height: 6),
-                _GoalPicker(game: game, controller: controller),
-              ],
-            ],
-            const SizedBox(height: 10),
+            if (game.goal != null)
+              _GoalRow(
+                  game: game,
+                  onChange: game.canChooseGoal
+                      ? () => _openGoalSheet(context, controller)
+                      : null),
+            const SizedBox(height: 6),
             Row(children: [
               const Icon(Icons.favorite, size: 18, color: Color(0xFFE57373)),
-              const SizedBox(width: 6),
+              const SizedBox(width: 4),
               const Text('体力'),
-              const SizedBox(width: 8),
+              const SizedBox(width: 6),
               Expanded(
                 child: TweenAnimationBuilder<double>(
                   tween: Tween(end: stamina),
                   duration: const Duration(milliseconds: 400),
                   builder: (context, v, _) => LinearProgressIndicator(
                     value: v,
-                    minHeight: 12,
+                    minHeight: 10,
                     color: staminaColor,
-                    borderRadius: BorderRadius.circular(6),
+                    borderRadius: BorderRadius.circular(5),
                   ),
                 ),
               ),
+              const SizedBox(width: 10),
+              Icon(_moodIcon(m), color: _moodColor(m), size: 20),
+              const SizedBox(width: 2),
+              Flexible(
+                child: Text('やる気: ${m.label}',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.titleSmall),
+              ),
             ]),
-            const SizedBox(height: 8),
-            Wrap(
-                crossAxisAlignment: WrapCrossAlignment.center,
-                spacing: 6,
-                runSpacing: 4,
-                children: [
-                  Icon(_moodIcon(m), color: _moodColor(m), size: 22),
-                  Text('やる気: ${m.label}',
-                      style: Theme.of(context).textTheme.titleSmall),
-                  if (c.injured) ...[
-                    const SizedBox(width: 6),
-                    const Icon(Icons.healing,
-                        color: Color(0xFFD32F2F), size: 18),
-                    const Text('怪我で安静中',
-                        style: TextStyle(color: Color(0xFFD32F2F))),
-                  ],
+            if (c.injured)
+              const Padding(
+                padding: EdgeInsets.only(top: 4),
+                child: Row(children: [
+                  Icon(Icons.healing, color: Color(0xFFD32F2F), size: 18),
+                  SizedBox(width: 4),
+                  Text('怪我で安静中', style: TextStyle(color: Color(0xFFD32F2F))),
                 ]),
+              ),
             if (spendable)
               Padding(
-                padding: const EdgeInsets.only(top: 8),
+                padding: const EdgeInsets.only(top: 6),
                 child: FilledButton.tonalIcon(
                   key: const Key('quick-spend'),
                   style: FilledButton.styleFrom(
-                      minimumSize: const Size.fromHeight(40)),
+                      minimumSize: const Size.fromHeight(36)),
                   onPressed: controller.autoSpend,
                   icon: const Icon(Icons.trending_up),
                   label: const Text('貯めた経験点を、おまかせで振り分ける'),
                 ),
               ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 4),
             Wrap(
                 spacing: 6,
                 runSpacing: 0,
@@ -380,30 +472,6 @@ class _StatusCard extends StatelessWidget {
                       ),
                     ),
                 ]),
-            if (game.player.traits.isNotEmpty)
-              Wrap(spacing: 6, children: [
-                for (final t in game.player.traits)
-                  Tooltip(
-                    message: t.description,
-                    child: Chip(
-                      visualDensity: VisualDensity.compact,
-                      avatar: Icon(
-                          t.positive
-                              ? Icons.auto_awesome
-                              : Icons.warning_amber_rounded,
-                          size: 16,
-                          color: t.positive
-                              ? const Color(0xFFF9A825)
-                              : const Color(0xFF607D8B)),
-                      // 明るい背景には暗い文字(ダークテーマでも読める)
-                      label: Text(t.label,
-                          style: const TextStyle(color: Color(0xFF263238))),
-                      backgroundColor: t.positive
-                          ? Colors.amber.shade100
-                          : Colors.blueGrey.shade100,
-                    ),
-                  ),
-              ]),
           ],
         ),
       ),
@@ -412,6 +480,40 @@ class _StatusCard extends StatelessWidget {
 }
 
 /// ポジションを決める(決められる時だけ出る)。適性はランクで見える。
+/// 特性のチップ(能力タブの上に出す)。
+class _TraitChips extends StatelessWidget {
+  const _TraitChips({required this.game});
+  final Game game;
+
+  @override
+  Widget build(BuildContext context) {
+    if (game.player.traits.isEmpty) return const SizedBox.shrink();
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Wrap(spacing: 6, children: [
+        for (final t in game.player.traits)
+          Tooltip(
+            message: t.description,
+            child: Chip(
+              visualDensity: VisualDensity.compact,
+              avatar: Icon(
+                  t.positive ? Icons.auto_awesome : Icons.warning_amber_rounded,
+                  size: 16,
+                  color: t.positive
+                      ? const Color(0xFFF9A825)
+                      : const Color(0xFF607D8B)),
+              // 明るい背景には暗い文字(ダークテーマでも読める)
+              label: Text(t.label,
+                  style: const TextStyle(color: Color(0xFF263238))),
+              backgroundColor:
+                  t.positive ? Colors.amber.shade100 : Colors.blueGrey.shade100,
+            ),
+          ),
+      ]),
+    );
+  }
+}
+
 class _InvestRow extends StatelessWidget {
   const _InvestRow(
       {required this.game, required this.controller, required this.item});
@@ -451,9 +553,8 @@ class _InvestRow extends StatelessWidget {
 
 /// いま決められることのお知らせ(選んでも選ばなくてもよい)。
 class _TodoChips extends StatelessWidget {
-  const _TodoChips({required this.game, required this.controller});
+  const _TodoChips({required this.game});
   final Game game;
-  final GameController controller;
 
   @override
   Widget build(BuildContext context) {
@@ -464,67 +565,48 @@ class _TodoChips extends StatelessWidget {
       if (game.canUseFa) 'FA権を使える',
       if (game.canMoveOverseas) '海外へ移籍できる',
     ];
+    if (items.isEmpty) return const SizedBox.shrink();
     return Padding(
-      padding: const EdgeInsets.only(top: 8),
+      padding: const EdgeInsets.only(top: 6),
       child: Wrap(
         key: const Key('todo-chips'),
         spacing: 6,
         runSpacing: 2,
-        crossAxisAlignment: WrapCrossAlignment.center,
         children: [
-          if (untilTournament(game.stage, game.slot) != null)
-            Builder(builder: (context) {
-              final u = untilTournament(game.stage, game.slot)!;
-              return Text(
-                  u.left == 0
-                      ? '今が${u.name}'
-                      : '${u.name}まであと${u.left}${u.unit}',
-                  key: const Key('until-tournament'),
-                  style: Theme.of(context).textTheme.bodySmall);
-            }),
           for (final i in items)
             Chip(
                 visualDensity: VisualDensity.compact,
                 avatar: const Icon(Icons.flag, size: 16),
                 label: Text(i)),
-          if (controller.canUndo)
-            TextButton.icon(
-              key: const Key('undo'),
-              onPressed: controller.undo,
-              icon: const Icon(Icons.undo, size: 18),
-              label: const Text('ひとつ前に戻す'),
-            ),
-          TextButton.icon(
-            key: const Key('year-plan'),
-            onPressed: () => showDialog<void>(
-              context: context,
-              builder: (ctx) => AlertDialog(
-                title: const Text('今年の予定'),
-                content: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    for (final p in yearPlanOf(game.stage, game.player.age))
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 2),
-                        child: Text('・$p'),
-                      ),
-                  ],
-                ),
-                actions: [
-                  TextButton(
-                      onPressed: () => Navigator.pop(ctx),
-                      child: const Text('閉じる'))
-                ],
-              ),
-            ),
-            icon: const Icon(Icons.event_note, size: 18),
-            label: const Text('今年の予定'),
-          ),
         ],
       ),
     );
   }
+}
+
+/// 今年の予定を開く。
+void _showYearPlan(BuildContext context, Game game) {
+  showDialog<void>(
+    context: context,
+    builder: (ctx) => AlertDialog(
+      title: const Text('今年の予定'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          for (final p in yearPlanOf(game.stage, game.player.age))
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 2),
+              child: Text('・$p'),
+            ),
+        ],
+      ),
+      actions: [
+        TextButton(
+            onPressed: () => Navigator.pop(ctx), child: const Text('閉じる'))
+      ],
+    ),
+  );
 }
 
 class _OffseasonCard extends StatelessWidget {
@@ -677,14 +759,16 @@ class _AbilityCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(children: [
-              Text('能力 (${roleLabel(p.role)})',
-                  style: Theme.of(context).textTheme.titleSmall),
-              const Spacer(),
-              TextButton(
-                  onPressed: controller.autoSpend,
-                  child: const Text('おまかせ振り分け')),
-            ]),
+            Wrap(
+                alignment: WrapAlignment.spaceBetween,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: [
+                  Text('能力 (${roleLabel(p.role)})',
+                      style: Theme.of(context).textTheme.titleSmall),
+                  TextButton(
+                      onPressed: controller.autoSpend,
+                      child: const Text('おまかせ振り分け')),
+                ]),
             if (abilitiesOf(p.role).any((a) => buy(p, game.exp, a) != null))
               Container(
                 key: const Key('spend-hint'),
@@ -710,23 +794,29 @@ class _AbilityCard extends StatelessWidget {
                       child: Tooltip(
                           message: abilityHint(a),
                           triggerMode: TooltipTriggerMode.tap,
-                          child: Text(abilityLabel(a)))),
+                          child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              alignment: Alignment.centerLeft,
+                              child: Text(abilityLabel(a))))),
                   SizedBox(
                       width: 54,
-                      child: Text.rich(
-                        TextSpan(children: [
-                          if ((controller.abilityGains[a] ?? 0) > 0)
-                            TextSpan(
-                                text: '+${controller.abilityGains[a]} ',
-                                style: const TextStyle(
-                                    color: Color(0xFF2E9B3E),
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.bold)),
-                          TextSpan(text: '${p.of(a)}'),
-                        ]),
-                        key: Key('gain-${a.name}'),
-                        textAlign: TextAlign.right,
-                      )),
+                      child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          alignment: Alignment.centerRight,
+                          child: Text.rich(
+                            TextSpan(children: [
+                              if ((controller.abilityGains[a] ?? 0) > 0)
+                                TextSpan(
+                                    text: '+${controller.abilityGains[a]} ',
+                                    style: const TextStyle(
+                                        color: Color(0xFF2E9B3E),
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.bold)),
+                              TextSpan(text: '${p.of(a)}'),
+                            ]),
+                            key: Key('gain-${a.name}'),
+                            textAlign: TextAlign.right,
+                          ))),
                   const SizedBox(width: 8),
                   Expanded(
                     child: TweenAnimationBuilder<double>(
@@ -752,7 +842,9 @@ class _AbilityCard extends StatelessWidget {
                       onPressed: buy(p, game.exp, a) == null
                           ? null
                           : () => controller.spend(a),
-                      child: Text('+1 (${expCost(p.of(a))})'),
+                      child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text('+1 (${expCost(p.of(a))})')),
                     ),
                   ),
                 ]),
@@ -787,26 +879,60 @@ class _ActionCard extends StatelessWidget {
         : abilities.first;
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('${game.slotName}は何をする?',
-                style: Theme.of(context).textTheme.titleSmall),
-            Text('おすすめの理由: ${recommendReason(game)}',
-                key: const Key('recommend-reason'),
-                style: Theme.of(context).textTheme.bodySmall),
-            const SizedBox(height: 8),
-            const Text('重点にする能力'),
-            Wrap(spacing: 6, children: [
-              for (final a in abilities)
-                ChoiceChip(
-                  key: Key('focus-${a.name}'),
-                  label: Text(abilityLabel(a)),
-                  selected: a == focus,
-                  onSelected: (_) => controller.setFocus(a),
+            Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Expanded(
+                child: Text.rich(
+                    TextSpan(children: [
+                      TextSpan(
+                          text: '${game.slotName}は何をする? ',
+                          style: const TextStyle(fontWeight: FontWeight.bold)),
+                      TextSpan(text: recommendReason(game)),
+                    ]),
+                    key: const Key('recommend-reason'),
+                    style: Theme.of(context).textTheme.bodySmall),
+              ),
+              if (controller.canUndo)
+                IconButton(
+                  key: const Key('undo'),
+                  tooltip: 'ひとつ前に戻す',
+                  visualDensity: VisualDensity.compact,
+                  constraints:
+                      const BoxConstraints.tightFor(width: 36, height: 32),
+                  padding: EdgeInsets.zero,
+                  icon: const Icon(Icons.undo, size: 20),
+                  onPressed: controller.undo,
                 ),
+              IconButton(
+                key: const Key('year-plan'),
+                tooltip: '今年の予定',
+                visualDensity: VisualDensity.compact,
+                constraints:
+                    const BoxConstraints.tightFor(width: 36, height: 32),
+                padding: EdgeInsets.zero,
+                icon: const Icon(Icons.event_note, size: 20),
+                onPressed: () => _showYearPlan(context, game),
+              ),
             ]),
+            Wrap(
+                spacing: 4,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: [
+                  Text('重点', style: Theme.of(context).textTheme.labelMedium),
+                  for (final a in abilities)
+                    ChoiceChip(
+                      key: Key('focus-${a.name}'),
+                      visualDensity: VisualDensity.compact,
+                      showCheckmark: false,
+                      labelPadding: EdgeInsets.zero,
+                      label: Text(abilityLabel(a)),
+                      selected: a == focus,
+                      onSelected: (_) => controller.setFocus(a),
+                    ),
+                ]),
             if (game.focusStreak >= 2)
               Padding(
                 padding: const EdgeInsets.only(top: 4),
@@ -819,13 +945,13 @@ class _ActionCard extends StatelessWidget {
                     style: Theme.of(context).textTheme.bodySmall),
               ),
             if (game.tacticRelevant) ...[
-              const SizedBox(height: 10),
+              const SizedBox(height: 6),
               _TacticPicker(controller: controller, game: game),
             ],
-            const SizedBox(height: 10),
+            const SizedBox(height: 8),
             LayoutBuilder(builder: (context, box) {
-              final cols = box.maxWidth > 420 ? 2 : 1;
-              final w = (box.maxWidth - 8 * (cols - 1)) / cols;
+              // 4列の小さなタイルにして、スクロールなしで全部の行動を見せる。
+              final w = (box.maxWidth - 8 * 3) / 4;
               return Wrap(spacing: 8, runSpacing: 8, children: [
                 for (final a in Plan.values)
                   SizedBox(
@@ -835,24 +961,35 @@ class _ActionCard extends StatelessWidget {
                           focus: focus,
                           controller: controller,
                           recommended: a == recommendedPlan(game))),
+                SizedBox(
+                    width: w, child: _AutoYearTile(controller: controller)),
               ]);
             }),
-            const SizedBox(height: 8),
-            Align(
-              alignment: Alignment.centerRight,
-              child: TextButton.icon(
-                key: const Key('auto-year'),
-                onPressed: controller.autoYear,
-                icon: const Icon(Icons.fast_forward, size: 18),
-                label: const Text('おすすめで年末まで進める'),
-              ),
-            ),
           ],
         ),
       ),
     );
   }
 }
+
+String _planShort(Plan p) => switch (p) {
+      Plan.train => '練習',
+      Plan.special => '特訓',
+      Plan.rest => '休養',
+      Plan.study => '研究',
+      Plan.social => '交流',
+      Plan.match => '練習試合',
+      Plan.lesson => 'コーチ',
+    };
+
+/// タイルの2行目(重点の能力が効く行動は、その能力名)。
+String _planSub(Plan p, Ability focus) => switch (p) {
+      Plan.train || Plan.special || Plan.study => abilityLabel(focus),
+      Plan.rest => '疲れを取る',
+      Plan.social => 'やる気',
+      Plan.match => '全体',
+      Plan.lesson => 'コツ',
+    };
 
 class _PlanTile extends StatelessWidget {
   const _PlanTile({
@@ -871,61 +1008,115 @@ class _PlanTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final (icon, color) = _planStyle(plan);
-    final cs = Theme.of(context).colorScheme;
     return Semantics(
       button: true,
       label:
           '${planTitle(plan, focus)}。${planHint(plan, focus)}${recommended ? '。おすすめ' : ''}',
       excludeSemantics: true,
+      child: Tooltip(
+        // 長押しで、行動の説明が出る。
+        message: '${planTitle(plan, focus)}: ${planHint(plan, focus)}',
+        child: Material(
+          key: Key('act-${plan.name}'),
+          color: color.withValues(alpha: recommended ? 0.22 : 0.10),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+            side: BorderSide(
+                color: color.withValues(alpha: recommended ? 0.9 : 0.35),
+                width: recommended ? 2 : 1),
+          ),
+          child: InkWell(
+            borderRadius: BorderRadius.circular(14),
+            onTap: () => controller.act(plan),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 7),
+              child: Column(mainAxisSize: MainAxisSize.min, children: [
+                Stack(clipBehavior: Clip.none, children: [
+                  Container(
+                    width: 32,
+                    height: 32,
+                    decoration:
+                        BoxDecoration(color: color, shape: BoxShape.circle),
+                    child: Icon(icon, color: Colors.white, size: 19),
+                  ),
+                  if (recommended)
+                    Positioned(
+                      key: Key('recommended-${plan.name}'),
+                      right: -6,
+                      top: -6,
+                      child: const Icon(Icons.star,
+                          size: 16, color: Color(0xFFF9A825)),
+                    ),
+                ]),
+                const SizedBox(height: 4),
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(_planShort(plan),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 13)),
+                ),
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(_planSub(plan, focus),
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodySmall
+                          ?.copyWith(fontSize: 10)),
+                ),
+              ]),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// 「おすすめで年末まで進める」を、行動と同じ大きさのタイルにしたもの。
+class _AutoYearTile extends StatelessWidget {
+  const _AutoYearTile({required this.controller});
+  final GameController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return Tooltip(
+      message: 'おすすめの過ごし方で年末まで進める(出来事や節目では止まる)',
       child: Material(
-        key: Key('act-${plan.name}'),
-        color: color.withValues(alpha: 0.10),
+        key: const Key('auto-year'),
+        color: cs.surfaceContainerHighest,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(14),
-          side: BorderSide(color: color.withValues(alpha: 0.35)),
+          side: BorderSide(color: cs.outlineVariant),
         ),
         child: InkWell(
           borderRadius: BorderRadius.circular(14),
-          onTap: () => controller.act(plan),
+          onTap: controller.autoYear,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
-            child: Row(children: [
+            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 7),
+            child: Column(mainAxisSize: MainAxisSize.min, children: [
               Container(
-                width: 38,
-                height: 38,
-                decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-                child: Icon(icon, color: Colors.white, size: 22),
+                width: 32,
+                height: 32,
+                decoration:
+                    BoxDecoration(color: cs.primary, shape: BoxShape.circle),
+                child: Icon(Icons.fast_forward, color: cs.onPrimary, size: 19),
               ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(planTitle(plan, focus),
-                        style: const TextStyle(fontWeight: FontWeight.bold)),
-                    Text(planHint(plan, focus),
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodySmall
-                            ?.copyWith(color: cs.onSurfaceVariant)),
-                  ],
-                ),
+              const SizedBox(height: 4),
+              const FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text('年末まで',
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
               ),
-              if (recommended)
-                Container(
-                  key: Key('recommended-${plan.name}'),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                  decoration: BoxDecoration(
-                    color: color,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: const Text('おすすめ',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 11,
-                          fontWeight: FontWeight.bold)),
-                ),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text('おすすめで',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall
+                        ?.copyWith(fontSize: 10)),
+              ),
             ]),
           ),
         ),
@@ -1263,8 +1454,12 @@ class _LogCard extends StatelessWidget {
 
 /// 直前の操作で起きたこと。
 class _RecentCard extends StatelessWidget {
-  const _RecentCard({required this.lines});
+  const _RecentCard({required this.lines, this.limit, this.cardKey});
   final List<String> lines;
+
+  /// 指定すると、その行数までにして「ほかN行」と出す。
+  final int? limit;
+  final Key? cardKey;
 
   @override
   Widget build(BuildContext context) {
@@ -1279,18 +1474,21 @@ class _RecentCard extends StatelessWidget {
             Transform.translate(offset: Offset(0, (1 - t) * 10), child: child),
       ),
       child: Card(
-        key: const Key('recent'),
+        key: cardKey ?? const Key('recent'),
         color: Theme.of(context).colorScheme.primaryContainer,
         child: Padding(
           padding: const EdgeInsets.all(12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              for (final l in lines)
+              for (final l in limit == null ? lines : lines.take(limit!))
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 1),
                   child: Text(l, style: Theme.of(context).textTheme.bodyLarge),
                 ),
+              if (limit != null && lines.length > limit!)
+                Text('ほか${lines.length - limit!}行(「キャリア」で全部見られます)',
+                    style: Theme.of(context).textTheme.bodySmall),
             ],
           ),
         ),
@@ -1507,16 +1705,16 @@ class _FirstHint extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
+    return Container(
       key: const Key('first-hint'),
-      color: Theme.of(context).colorScheme.secondaryContainer,
-      child: const Padding(
-        padding: EdgeInsets.all(12),
-        child: Text(
-          'はじめに: 下の「練習」などを選んで、季節を進めましょう。\n'
-          '練習すると「経験点」が貯まり、「+1」で能力に振り分けられます。\n'
-          '体力が減ったら休養も大切です。',
-        ),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.secondaryContainer,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: const Text(
+        'はじめに: 下の行動を選んで季節を進めよう。経験点は「能力」タブで振り分け。',
+        style: TextStyle(fontSize: 12),
       ),
     );
   }
@@ -1535,25 +1733,28 @@ class _TacticPicker extends StatelessWidget {
     return Container(
       key: const Key('tactic-picker'),
       width: double.infinity,
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.tertiaryContainer,
         borderRadius: BorderRadius.circular(14),
       ),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text(isPro ? 'ペナントの最終月に向けて、作戦を選ぼう' : '大会に向けて、作戦を選ぼう',
-            style: Theme.of(context).textTheme.titleSmall),
-        const SizedBox(height: 6),
-        Wrap(spacing: 6, children: [
-          for (final t in Tactic.values)
-            ChoiceChip(
-              key: Key('tactic-${t.name}'),
-              label: Text(t.label),
-              selected: t == now,
-              onSelected: (_) => controller.setTactic(t),
-            ),
-        ]),
-        const SizedBox(height: 4),
+        Wrap(
+            spacing: 6,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              Text(isPro ? '最終月の作戦' : '大会の作戦',
+                  style: Theme.of(context).textTheme.titleSmall),
+              for (final t in Tactic.values)
+                ChoiceChip(
+                  key: Key('tactic-${t.name}'),
+                  visualDensity: VisualDensity.compact,
+                  showCheckmark: false,
+                  label: Text(t.label),
+                  selected: t == now,
+                  onSelected: (_) => controller.setTactic(t),
+                ),
+            ]),
         Text(now.description, style: Theme.of(context).textTheme.bodySmall),
       ]),
     );
@@ -1595,69 +1796,6 @@ class _PennantRow extends StatelessWidget {
   }
 }
 
-String _shortPlan(Plan p, Ability focus) => switch (p) {
-      Plan.train => '練習',
-      Plan.rest => '休養',
-      Plan.social => '交流',
-      _ => planTitle(p, focus),
-    };
-
-/// 画面の下に固定する、いちばんよく使う操作(おすすめの行動・休養)。
-class _QuickBar extends StatelessWidget {
-  const _QuickBar({required this.controller, required this.game});
-  final GameController controller;
-  final Game game;
-
-  @override
-  Widget build(BuildContext context) {
-    final rec = recommendedPlan(game);
-    final focus = abilitiesOf(game.player.role).contains(controller.focus)
-        ? controller.focus
-        : abilitiesOf(game.player.role).first;
-    final cs = Theme.of(context).colorScheme;
-    return Material(
-      color: cs.surface,
-      elevation: 6,
-      child: SafeArea(
-        top: false,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
-          child: Center(
-            heightFactor: 1,
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: contentMaxWidth),
-              child: Row(children: [
-                Expanded(
-                  flex: 3,
-                  child: FilledButton.icon(
-                    key: const Key('quick-recommended'),
-                    onPressed: () => controller.act(rec),
-                    icon: const Icon(Icons.bolt, size: 20),
-                    label: Text('おすすめ: ${_shortPlan(rec, focus)}',
-                        maxLines: 1, overflow: TextOverflow.ellipsis),
-                  ),
-                ),
-                if (rec != Plan.rest) ...[
-                  const SizedBox(width: 8),
-                  Expanded(
-                    flex: 2,
-                    child: OutlinedButton.icon(
-                      key: const Key('quick-rest'),
-                      onPressed: () => controller.act(Plan.rest),
-                      icon: const Icon(Icons.hotel, size: 18),
-                      label: const Text('休む', maxLines: 1),
-                    ),
-                  ),
-                ],
-              ]),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 class _GoalPicker extends StatelessWidget {
   const _GoalPicker({required this.game, required this.controller});
   final Game game;
@@ -1692,9 +1830,45 @@ class _GoalPicker extends StatelessWidget {
   }
 }
 
+/// 今年の目標のむずかしさを選ぶ(画面を占領しないよう、必要なときだけ開く)。
+Future<void> _openGoalSheet(BuildContext context, GameController controller) {
+  return showModalBottomSheet<void>(
+    context: context,
+    builder: (ctx) => ListenableBuilder(
+      listenable: controller,
+      builder: (ctx, _) {
+        final g = controller.game;
+        if (g == null || g.goal == null) return const SizedBox.shrink();
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('今年の目標', style: Theme.of(ctx).textTheme.titleSmall),
+                const SizedBox(height: 8),
+                _GoalPicker(game: g, controller: controller),
+                const SizedBox(height: 8),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton(
+                      onPressed: () => Navigator.pop(ctx),
+                      child: const Text('閉じる')),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    ),
+  );
+}
+
 class _GoalRow extends StatelessWidget {
-  const _GoalRow({required this.game});
+  const _GoalRow({required this.game, this.onChange});
   final Game game;
+  final VoidCallback? onChange;
 
   @override
   Widget build(BuildContext context) {
@@ -1715,7 +1889,7 @@ class _GoalRow extends StatelessWidget {
       ),
       child: Row(children: [
         Icon(Icons.flag, color: color, size: 20),
-        const SizedBox(width: 8),
+        const SizedBox(width: 6),
         Expanded(
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -1739,6 +1913,16 @@ class _GoalRow extends StatelessWidget {
                   fontSize: 12,
                   fontWeight: FontWeight.bold)),
         ),
+        if (onChange != null)
+          IconButton(
+            key: const Key('goal-change'),
+            tooltip: '目標のむずかしさを変える',
+            visualDensity: VisualDensity.compact,
+            constraints: const BoxConstraints.tightFor(width: 36, height: 36),
+            padding: EdgeInsets.zero,
+            icon: Icon(Icons.tune, color: color, size: 20),
+            onPressed: onChange,
+          ),
       ]),
     );
   }
