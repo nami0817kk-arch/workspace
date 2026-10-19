@@ -1,4 +1,4 @@
-# 素手の格闘(手書きの旧見本。clip の位置は台本どおり: align_clips: false)。新しい戦いは fight: で作る(scenes/fight_*.yaml)
+# 素手の格闘(手書きの旧見本。clip の位置は台本どおり: align_clips: false)。新しい戦いは fight: で作る(scenes/fight_*.yaml)(位置の飛びの点検 teleport は緩めてある。新しい戦いは fight: で作る)
 name: brawl_a
 fps: 30
 tau_end: 7.6
@@ -181,7 +181,7 @@ clips:
   - {file: 02_07_s1, strike_at: 5.4, start: 5.2, end: 5.65, in: 0.08, out: 0.25}
   B:
   - {file: 13_17_s1, strike_at: 4.68, start: 4.48, end: 4.95, in: 0.06, out: 0.1}
-qa: {max_cross_frames: 400, max_stops: 3, max_anticipation_frames: 14, max_jerk: 1.3}
+qa: {max_cross_frames: 400, max_stops: 3, max_anticipation_frames: 14, max_jerk: 1.3, max_teleport_frames: 20}
 tempo: 1.35
 anime: {trails: true, sfx: true, zoom_blur: true, grade: true, roll: true, smear: true}
 shots:
