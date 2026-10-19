@@ -155,6 +155,9 @@ class Player {
   }
 }
 
+/// ポジションごとの能力の重み(総合評価に効く度合い)。
+Map<Ability, int> weightsOf(Position p) => _weights[p]!;
+
 const _weights = <Position, Map<Ability, int>>{
   Position.pointGuard: {
     Ability.dribble: 3,

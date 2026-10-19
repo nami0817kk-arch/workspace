@@ -13,6 +13,13 @@ enum Clutch {
   const Clutch(this.label, this.description);
   final String label;
   final String description;
+
+  static Clutch? parse(String? s) {
+    for (final c in Clutch.values) {
+      if (c.name == s) return c;
+    }
+    return null;
+  }
 }
 
 /// 試合の結果。
@@ -26,6 +33,10 @@ class MatchResult {
     required this.assists,
     this.clutch,
     this.clutchSuccess,
+    this.teamQuarters = const [],
+    this.oppQuarters = const [],
+    this.opponent = '',
+    this.vsRival = false,
   });
 
   final bool won;
@@ -39,7 +50,123 @@ class MatchResult {
   final Clutch? clutch;
   final bool? clutchSuccess;
 
+  /// クォーターごとの得点(4つ)。延長・勝負どころの得点は含まない。
+  final List<int> teamQuarters;
+  final List<int> oppQuarters;
+
+  /// 相手の名前(ライバルなら本人の名前)。
+  final String opponent;
+  final bool vsRival;
+
   int get margin => teamScore - oppScore;
+
+  Map<String, dynamic> toJson() => {
+        'won': won,
+        'teamScore': teamScore,
+        'oppScore': oppScore,
+        'points': points,
+        'rebounds': rebounds,
+        'assists': assists,
+        'clutch': clutch?.name,
+        'clutchSuccess': clutchSuccess,
+        'teamQuarters': teamQuarters,
+        'oppQuarters': oppQuarters,
+        'opponent': opponent,
+        'vsRival': vsRival,
+      };
+
+  factory MatchResult.fromJson(Map<String, dynamic> j) => MatchResult(
+        won: (j['won'] as bool?) ?? false,
+        teamScore: (j['teamScore'] as num?)?.toInt() ?? 0,
+        oppScore: (j['oppScore'] as num?)?.toInt() ?? 0,
+        points: (j['points'] as num?)?.toInt() ?? 0,
+        rebounds: (j['rebounds'] as num?)?.toInt() ?? 0,
+        assists: (j['assists'] as num?)?.toInt() ?? 0,
+        clutch: Clutch.parse(j['clutch'] as String?),
+        clutchSuccess: j['clutchSuccess'] as bool?,
+        teamQuarters: [
+          for (final v in (j['teamQuarters'] as List?) ?? const [])
+            (v as num).toInt()
+        ],
+        oppQuarters: [
+          for (final v in (j['oppQuarters'] as List?) ?? const [])
+            (v as num).toInt()
+        ],
+        opponent: (j['opponent'] as String?) ?? '',
+        vsRival: (j['vsRival'] as bool?) ?? false,
+      );
+}
+
+/// 4クォーターが終わった時点の試合。勝負どころが訪れるなら、ここで止まって選ぶ。
+class MatchState {
+  const MatchState({
+    required this.team,
+    required this.opp,
+    required this.points,
+    required this.rebounds,
+    required this.assists,
+    required this.teamStrength,
+    required this.oppStrength,
+    required this.form,
+    required this.teamQuarters,
+    required this.oppQuarters,
+    this.opponent = '',
+    this.vsRival = false,
+  });
+
+  final int team;
+  final int opp;
+  final int points;
+  final int rebounds;
+  final int assists;
+  final double teamStrength;
+  final double oppStrength;
+  final double form;
+  final List<int> teamQuarters;
+  final List<int> oppQuarters;
+  final String opponent;
+  final bool vsRival;
+
+  int get margin => team - opp;
+
+  /// 点差が近く、最後の攻防を選べるか。
+  bool get needsClutch => margin.abs() <= clutchWindow;
+
+  Map<String, dynamic> toJson() => {
+        'team': team,
+        'opp': opp,
+        'points': points,
+        'rebounds': rebounds,
+        'assists': assists,
+        'teamStrength': teamStrength,
+        'oppStrength': oppStrength,
+        'form': form,
+        'teamQuarters': teamQuarters,
+        'oppQuarters': oppQuarters,
+        'opponent': opponent,
+        'vsRival': vsRival,
+      };
+
+  factory MatchState.fromJson(Map<String, dynamic> j) => MatchState(
+        team: (j['team'] as num?)?.toInt() ?? 0,
+        opp: (j['opp'] as num?)?.toInt() ?? 0,
+        points: (j['points'] as num?)?.toInt() ?? 0,
+        rebounds: (j['rebounds'] as num?)?.toInt() ?? 0,
+        assists: (j['assists'] as num?)?.toInt() ?? 0,
+        teamStrength: (j['teamStrength'] as num?)?.toDouble() ?? 50,
+        oppStrength: (j['oppStrength'] as num?)?.toDouble() ?? 50,
+        form: (j['form'] as num?)?.toDouble() ?? 1,
+        teamQuarters: [
+          for (final v in (j['teamQuarters'] as List?) ?? const [])
+            (v as num).toInt()
+        ],
+        oppQuarters: [
+          for (final v in (j['oppQuarters'] as List?) ?? const [])
+            (v as num).toInt()
+        ],
+        opponent: (j['opponent'] as String?) ?? '',
+        vsRival: (j['vsRival'] as bool?) ?? false,
+      );
 }
 
 /// 勝負どころに入る点差(最終クォーター終了時、この点差以内)。
@@ -64,25 +191,29 @@ double clutchChance(Player p, Clutch c, double oppDefense, double form) {
   return (raw * (0.8 + form * 0.2) + clutchBonus(p.traits)).clamp(0.03, 0.9);
 }
 
-/// 1試合を進める。
+/// 4クォーターを進める。点差が近ければ [MatchState.needsClutch]。
 ///
 /// - `teamStrength` は味方(本人を除く)、`oppStrength` は相手の強さ(0〜100、50が平均)。
 /// - `form` は体調(`Condition.form`)。
-/// - 最終クォーター終了時に点差が `clutchWindow` 以内なら勝負どころ。
-///   `chooseClutch` が選ぶ(null なら成功率が最も高いプレーを自動で選ぶ)。
-MatchResult simulateMatch(
+MatchState playQuarters(
   Player p, {
   required double teamStrength,
   required double oppStrength,
   required double form,
   required Random rng,
-  Clutch Function(int margin)? chooseClutch,
+  String opponent = '',
+  bool vsRival = false,
 }) {
-  final mine = teamStrength * 0.7 + p.overall * form * 0.3;
+  final mine = teamStrength * 0.6 + p.overall * form * 0.4;
   var team = 0, opp = 0;
+  final tq = <int>[], oq = <int>[];
   for (var q = 0; q < 4; q++) {
-    team += max(8, (18 + (mine - 50) * 0.12 + _noise(rng) * 5).round());
-    opp += max(8, (18 + (oppStrength - 50) * 0.12 + _noise(rng) * 5).round());
+    final t = max(8, (18 + (mine - 50) * 0.12 + _noise(rng) * 5).round());
+    final o = max(8, (18 + (oppStrength - 50) * 0.12 + _noise(rng) * 5).round());
+    tq.add(t);
+    oq.add(o);
+    team += t;
+    opp += o;
   }
 
   // 個人成績。得点の取り分は攻撃力で、リバウンド・アシストは能力と身長で。
@@ -90,19 +221,37 @@ MatchResult simulateMatch(
           p.effective(Ability.midRange) +
           p.effective(Ability.inside)) /
       3;
-  final share = (0.10 + (offense - 30) / 300 + _noise(rng) * 0.03).clamp(0.04, 0.45);
-  var points = (team * share * form).round();
-  var rebounds = max(0, (p.effective(Ability.rebound) / 8 * form + _noise(rng) * 2).round());
-  var assists = max(0, (p.effective(Ability.pass) / 14 * form + _noise(rng)).round());
+  final share =
+      (0.10 + (offense - 30) / 300 + _noise(rng) * 0.03).clamp(0.04, 0.45);
+  return MatchState(
+    team: team,
+    opp: opp,
+    points: (team * share * form).round(),
+    rebounds:
+        max(0, (p.effective(Ability.rebound) / 8 * form + _noise(rng) * 2).round()),
+    assists:
+        max(0, (p.effective(Ability.pass) / 14 * form + _noise(rng)).round()),
+    teamStrength: mine,
+    oppStrength: oppStrength,
+    form: form,
+    teamQuarters: tq,
+    oppQuarters: oq,
+    opponent: opponent,
+    vsRival: vsRival,
+  );
+}
 
+/// 試合を締める。勝負どころなら `choice`(null なら成功率の高いプレーを自動で選ぶ)で決める。
+MatchResult finishMatch(Player p, MatchState s, Clutch? choice, Random rng) {
+  var team = s.team, opp = s.opp, points = s.points, assists = s.assists;
   Clutch? used;
   bool? ok;
-  if ((team - opp).abs() <= clutchWindow) {
-    final choice = chooseClutch?.call(team - opp) ?? _bestClutch(p, oppStrength, form);
-    used = choice;
-    final success = rng.nextDouble() < clutchChance(p, choice, oppStrength, form);
+  if (s.needsClutch) {
+    final c = choice ?? bestClutch(p, s.oppStrength, s.form);
+    used = c;
+    final success = rng.nextDouble() < clutchChance(p, c, s.oppStrength, s.form);
     ok = success;
-    switch (choice) {
+    switch (c) {
       case Clutch.drive:
         if (success) {
           team += 2;
@@ -126,7 +275,7 @@ MatchResult simulateMatch(
 
   final bool won;
   if (team == opp) {
-    won = rng.nextDouble() < 0.5 + (mine - oppStrength) / 200;
+    won = rng.nextDouble() < 0.5 + (s.teamStrength - s.oppStrength) / 200;
     if (won) {
       team += 2;
     } else {
@@ -141,19 +290,46 @@ MatchResult simulateMatch(
     teamScore: team,
     oppScore: opp,
     points: points,
-    rebounds: rebounds,
+    rebounds: s.rebounds,
     assists: assists,
     clutch: used,
     clutchSuccess: ok,
+    teamQuarters: s.teamQuarters,
+    oppQuarters: s.oppQuarters,
+    opponent: s.opponent,
+    vsRival: s.vsRival,
   );
 }
 
-Clutch _bestClutch(Player p, double oppStrength, double form) {
+/// 1試合を通して進める(勝負どころは `chooseClutch` が選ぶ。null なら自動)。
+MatchResult simulateMatch(
+  Player p, {
+  required double teamStrength,
+  required double oppStrength,
+  required double form,
+  required Random rng,
+  Clutch Function(int margin)? chooseClutch,
+  String opponent = '',
+  bool vsRival = false,
+}) {
+  final s = playQuarters(p,
+      teamStrength: teamStrength,
+      oppStrength: oppStrength,
+      form: form,
+      rng: rng,
+      opponent: opponent,
+      vsRival: vsRival);
+  final choice = s.needsClutch ? chooseClutch?.call(s.margin) : null;
+  return finishMatch(p, s, choice, rng);
+}
+
+/// 期待値がいちばん高いプレー。3P は成功率が低くても点が大きいので重みを付ける。
+Clutch bestClutch(Player p, double oppStrength, double form) {
   Clutch best = Clutch.drive;
   var bestScore = -1.0;
   for (final c in Clutch.values) {
-    // 3P は成功率が低くても点が大きいので、期待値で比べる。
-    final value = clutchChance(p, c, oppStrength, form) * (c == Clutch.threePoint ? 1.5 : 1.0);
+    final value = clutchChance(p, c, oppStrength, form) *
+        (c == Clutch.threePoint ? 1.5 : 1.0);
     if (value > bestScore) {
       bestScore = value;
       best = c;

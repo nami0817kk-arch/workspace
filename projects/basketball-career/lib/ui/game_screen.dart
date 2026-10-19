@@ -49,6 +49,7 @@ class GameScreen extends StatelessWidget {
             constraints: const BoxConstraints(maxWidth: 560),
             child: switch (game.phase) {
               Phase.season => _SeasonView(controller: controller, game: game),
+              Phase.clutch => _ClutchView(controller: controller, game: game),
               Phase.event => _EventView(controller: controller, game: game),
               Phase.path => _PathView(controller: controller, game: game),
               Phase.retired => _EndingView(controller: controller, game: game),
@@ -103,6 +104,8 @@ class _SeasonView extends StatelessWidget {
         const SizedBox(height: 12),
         _PlayerCard(game: g),
         const SizedBox(height: 12),
+        _GoalCard(controller: c, game: g),
+        const SizedBox(height: 12),
         if (c.pathMessage != null) ...[
           _Note(text: c.pathMessage!),
           const SizedBox(height: 12),
@@ -126,14 +129,16 @@ class _SeasonView extends StatelessWidget {
                     child: Text(summer ? 'この季節に大会がある。' : 'この季節に冬の全国選手権がある。'),
                   ),
                 const SizedBox(height: 12),
-                const Text('重点にする能力'),
+                const Text('重点にする能力  (★ ＝ いま伸ばすのがおすすめ)'),
                 const SizedBox(height: 4),
                 Wrap(
                   spacing: 6,
                   children: [
                     for (final a in Ability.values)
                       ChoiceChip(
-                        label: Text(a.label),
+                        label: Text(a == recommendedFocus(g.player)
+                            ? '★${a.label}'
+                            : a.label),
                         selected: c.focus == a,
                         onSelected: (_) => c.setFocus(a),
                       ),
@@ -146,8 +151,13 @@ class _SeasonView extends StatelessWidget {
                   spacing: 6,
                   children: [
                     ChoiceChip(
+                      label: const Text('その場で選ぶ'),
+                      selected: c.askClutch,
+                      onSelected: (_) => c.setAskClutch(),
+                    ),
+                    ChoiceChip(
                       label: const Text('おまかせ'),
-                      selected: c.clutchPolicy == null,
+                      selected: !c.askClutch && c.clutchPolicy == null,
                       onSelected: (_) => c.setClutchPolicy(null),
                     ),
                     for (final k in Clutch.values)
@@ -188,6 +198,10 @@ class _SeasonView extends StatelessWidget {
         if (g.canRecover || c.recoverMessage != null) ...[
           const SizedBox(height: 12),
           _RecoverCard(controller: c, game: g),
+        ],
+        if (g.rival.activeAt(g.player.age)) ...[
+          const SizedBox(height: 12),
+          _RivalCard(game: g),
         ],
         const SizedBox(height: 12),
         _AbilityCard(game: g),
@@ -280,6 +294,66 @@ class _PlayerCard extends StatelessWidget {
   }
 }
 
+/// 今年の目標。まだ選んでいなければ2つの候補を出す。
+class _GoalCard extends StatelessWidget {
+  const _GoalCard({required this.controller, required this.game});
+  final GameController controller;
+  final Game game;
+
+  @override
+  Widget build(BuildContext context) {
+    final g = game;
+    if (g.goal != null) {
+      return Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('今年の目標', style: TextStyle(fontWeight: FontWeight.bold)),
+              const SizedBox(height: 4),
+              Text(g.goal!.label, style: const TextStyle(fontSize: 16)),
+              Text(g.goalProgress ?? '', style: const TextStyle(fontSize: 12)),
+            ],
+          ),
+        ),
+      );
+    }
+    if (g.goalOptions.isEmpty || g.slot > 2) return const SizedBox.shrink();
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('今年の目標を選ぼう(年末に判定)',
+                style: TextStyle(fontWeight: FontWeight.bold)),
+            const SizedBox(height: 8),
+            for (var i = 0; i < g.goalOptions.length; i++)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: OutlinedButton(
+                  onPressed: () => controller.adoptGoal(i),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                          '${g.goalOptions[i].stretch ? '【挑戦】' : '【確実】'}${g.goalOptions[i].label}',
+                          style:
+                              const TextStyle(fontWeight: FontWeight.bold)),
+                      Text(g.goalOptions[i].rewardText,
+                          style: const TextStyle(fontSize: 12)),
+                    ],
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 /// 動画を見て元気になる。広告を消した人は動画なしで使える。1ターンに1回。
 class _RecoverCard extends StatelessWidget {
   const _RecoverCard({required this.controller, required this.game});
@@ -326,6 +400,43 @@ class _RecoverCard extends StatelessWidget {
   }
 }
 
+/// ライバルの紹介と通算成績。
+class _RivalCard extends StatelessWidget {
+  const _RivalCard({required this.game});
+  final Game game;
+
+  @override
+  Widget build(BuildContext context) {
+    final r = game.rival;
+    final level = r.levelAt(game.league, game.player.age);
+    final mine = game.player.overall.round();
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('ライバル', style: TextStyle(fontWeight: FontWeight.bold)),
+            const SizedBox(height: 4),
+            Text(r.name, style: const TextStyle(fontSize: 18)),
+            Text('通算 ${r.wins}勝${r.losses}敗  /  強さの目安 $level (自分 $mine)'),
+            const Text('大会の準決勝あたりで立ちはだかる。',
+                style: TextStyle(fontSize: 12)),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// 能力の重みの印。無印は総合評価に効かない。
+String _mark(int? w) => switch (w) {
+      null => '',
+      >= 3 => '◎',
+      2 => '○',
+      _ => '△',
+    };
+
 class _AbilityCard extends StatelessWidget {
   const _AbilityCard({required this.game});
   final Game game;
@@ -339,14 +450,17 @@ class _AbilityCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('能力', style: TextStyle(fontWeight: FontWeight.bold)),
+            Text('能力  (◎○△ ＝ ${p.position.label} で効く度合い)',
+                style: const TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 6),
             for (final a in Ability.values)
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 2),
                 child: Row(
                   children: [
-                    SizedBox(width: 108, child: Text(a.label)),
+                    SizedBox(
+                        width: 124,
+                        child: Text('${a.label} ${_mark(weightsOf(p.position)[a])}')),
                     Expanded(
                       child: LinearProgressIndicator(
                         value: p.of(a) / abilityCap,
@@ -432,6 +546,96 @@ class _Note extends StatelessWidget {
         color: Theme.of(context).colorScheme.primaryContainer,
         child: Padding(padding: const EdgeInsets.all(16), child: Text(text)),
       );
+}
+
+// ── 勝負どころ ──
+
+String _scoreRow(String label, List<int> q, int total) =>
+    '$label  ${q.join(' - ')}  計 $total';
+
+class _ClutchView extends StatelessWidget {
+  const _ClutchView({required this.controller, required this.game});
+  final GameController controller;
+  final Game game;
+
+  @override
+  Widget build(BuildContext context) {
+    final run = game.run!;
+    final s = run.pending!;
+    final info = game.clutchInfo!;
+    final m = s.margin;
+    final situation = m == 0
+        ? '同点。残りはあと1回の攻防。'
+        : m > 0
+            ? '$m点リード。守り切れば勝ち。'
+            : '${-m}点ビハインド。決めれば逆転だ。';
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        CourtHeader(game: game, height: 110),
+        const SizedBox(height: 12),
+        Card(
+          color: Theme.of(context).colorScheme.primaryContainer,
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('勝負どころ!  ${run.league.label} ${run.round + 1}回戦',
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold)),
+                if (s.opponent.isNotEmpty)
+                  Text(s.vsRival
+                      ? '相手: ライバル ${s.opponent}  (通算 ${game.rival.wins}勝${game.rival.losses}敗)'
+                      : '相手: ${s.opponent}'),
+                const SizedBox(height: 8),
+                Text(_scoreRow('自チーム', s.teamQuarters, s.team)),
+                Text(_scoreRow('相手    ', s.oppQuarters, s.opp)),
+                const SizedBox(height: 8),
+                Text(situation,
+                    style: const TextStyle(fontWeight: FontWeight.bold)),
+                const SizedBox(height: 12),
+                for (final k in Clutch.values)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: FilledButton(
+                      onPressed: () => controller.playClutch(k),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                              '${k.label}  成功率 ${(info.chances[k]! * 100).round()}%',
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold)),
+                          Text(k.description,
+                              style: const TextStyle(fontSize: 12)),
+                        ],
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ),
+        if (controller.recent.isNotEmpty) ...[
+          const SizedBox(height: 12),
+          _RecentCard(lines: controller.recent),
+        ],
+        if (run.matches.isNotEmpty) ...[
+          const SizedBox(height: 12),
+          _RecentCard(lines: [
+            'ここまでの試合',
+            for (var i = 0; i < run.matches.length; i++)
+              matchLine(i, run.matches[i].won, run.matches[i].teamScore,
+                  run.matches[i].oppScore, run.matches[i].points,
+                  run.matches[i].rebounds, run.matches[i].assists,
+                  opponent: run.matches[i].opponent,
+                  rival: run.matches[i].vsRival),
+          ]),
+        ],
+      ],
+    );
+  }
 }
 
 // ── 出来事 ──
@@ -571,12 +775,14 @@ class _EndingView extends StatelessWidget {
                     style: const TextStyle(
                         fontSize: 20, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 8),
-                Text('${p.age}歳。${g.retiredReason ?? '現役を退いた'}。'),
+                Text('${p.age}歳。${g.retiredReason ?? '現役を退いた'}。(${g.difficulty.label})'),
                 const SizedBox(height: 8),
                 Text(_epilogue(g)),
                 const Divider(height: 24),
                 Text('最終身長 ${p.heightCm.toStringAsFixed(1)}cm / '
                     'ポジション ${p.position.label} / 総合 ${p.overall.round()}'),
+                if (g.rival.games > 0)
+                  Text('宿敵 ${g.rival.name}との通算: ${g.rival.wins}勝${g.rival.losses}敗'),
                 Text('通算 ${g.totalGames}試合 平均${g.careerPpg.toStringAsFixed(1)}得点'
                     ' / 優勝 ${g.titles}回'),
                 if (g.abroad) const Text('海外プロでプレーした。'),

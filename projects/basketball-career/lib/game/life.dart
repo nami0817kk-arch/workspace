@@ -80,6 +80,13 @@ double yearlyDelta(Player p, Ability a, Ability focus) {
   return 3.0 * g * (a == focus ? 0.5 : 1.0) * aging * declineMultiplier(p.traits);
 }
 
+/// 今の重点のおすすめ。ポジションに効く能力のうち、伸びしろ(重み × (100 − 今の値))が最も大きいもの。
+Ability recommendedFocus(Player p) {
+  final w = weightsOf(p.position);
+  return w.keys.reduce((a, b) =>
+      w[a]! * (100 - p.of(a)) >= w[b]! * (100 - p.of(b)) ? a : b);
+}
+
 /// 小数を確率で丸める(期待値が保たれる)。小さな伸びが消えないようにする。
 int _stochasticRound(double v, Random rng) {
   final f = v.floor();
@@ -109,8 +116,9 @@ int _stochasticRound(double v, Random rng) {
   Condition c,
   Action action,
   Ability focus,
-  Random rng,
-) {
+  Random rng, {
+  double growthScale = 1.0,
+}) {
   if (!canChoose(action, c)) {
     throw StateError('怪我中に選べない過ごし方: $action');
   }
@@ -125,7 +133,7 @@ int _stochasticRound(double v, Random rng) {
       // 伸びない過ごし方(休養)は、伸びる年には何も動かさない。衰えは止まらない。
       if (mult == 0 && yearly >= 0) continue;
       final base = yearly / 4 * (yearly < 0 ? 1.0 : mult);
-      final scaled = base >= 0 ? base * tired * mood : base;
+      final scaled = base >= 0 ? base * tired * mood * growthScale : base;
       final noise = (rng.nextDouble() - 0.5) * 0.6;
       next[a] = (p.of(a) + _stochasticRound(scaled + noise, rng))
           .clamp(0, abilityCap);

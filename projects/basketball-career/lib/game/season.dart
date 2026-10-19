@@ -53,6 +53,135 @@ double individualRating(double ppg, double rpg, double apg) =>
         .clamp(0, 100)
         .toDouble();
 
+/// 対戦相手の名前と、ライバルかどうかを決める。
+typedef OpponentPicker = ({String name, bool rival, double bonus}) Function(
+    int round, bool isFinal);
+
+/// 進行中の大会。試合を1つずつ進め、勝負どころで止まって選択を待てる。
+class TournamentRun {
+  TournamentRun(this.league,
+      {List<MatchResult>? matches, this.round = 0, this.wins = 0, this.pending})
+      : matches = matches ?? [];
+
+  final League league;
+  final List<MatchResult> matches;
+  int round;
+  int wins;
+
+  /// 勝負どころで選択を待っている試合。null なら止まっていない。
+  MatchState? pending;
+
+  bool get finished =>
+      pending == null &&
+      (round >= league.rounds ||
+          (league.elimination && matches.isNotEmpty && !matches.last.won));
+
+  /// 次の試合の対戦相手の名前(待機中はその試合の相手)。
+  String? get nextOpponent => pending?.opponent;
+
+  /// 進められるところまで進める。勝負どころで `chooseClutch` が null を返す(または与えない)
+  /// と、`askClutch` が true の場合はそこで止まる([pending])。
+  /// `askClutch` が false なら、勝負どころは自動で選ぶ。
+  void advance(
+    Player p, {
+    required double form,
+    required Random rng,
+    Clutch? Function(int margin)? chooseClutch,
+    bool askClutch = false,
+    OpponentPicker? pickOpponent,
+  }) {
+    while (pending == null && !finished) {
+      final isFinal = round == league.rounds - 1;
+      final opp = pickOpponent?.call(round, isFinal);
+      final strength = league.oppBase +
+          round * 2.5 +
+          (rng.nextDouble() - 0.5) * 8 +
+          (opp?.bonus ?? 0);
+      final s = playQuarters(
+        p,
+        teamStrength: league.teamStrength,
+        oppStrength: strength,
+        form: form,
+        rng: rng,
+        opponent: opp?.name ?? '',
+        vsRival: opp?.rival ?? false,
+      );
+      Clutch? choice;
+      if (s.needsClutch) {
+        choice = chooseClutch?.call(s.margin);
+        if (choice == null && askClutch) {
+          pending = s;
+          return;
+        }
+      }
+      _finish(p, s, choice, rng);
+    }
+  }
+
+  /// 止まっていた勝負どころを `choice` で決め、続きを進める。
+  void resolve(
+    Player p,
+    Clutch choice, {
+    required double form,
+    required Random rng,
+    OpponentPicker? pickOpponent,
+    bool askClutch = true,
+  }) {
+    final s = pending;
+    if (s == null) throw StateError('勝負どころで止まっていない');
+    pending = null;
+    _finish(p, s, choice, rng);
+    advance(p,
+        form: form, rng: rng, askClutch: askClutch, pickOpponent: pickOpponent);
+  }
+
+  void _finish(Player p, MatchState s, Clutch? choice, Random rng) {
+    final m = finishMatch(p, s, choice, rng);
+    matches.add(m);
+    if (m.won) wins++;
+    round++;
+  }
+
+  TournamentResult result() {
+    final n = matches.length;
+    final ppg = n == 0 ? 0.0 : matches.fold(0, (s, m) => s + m.points) / n;
+    final rpg = n == 0 ? 0.0 : matches.fold(0, (s, m) => s + m.rebounds) / n;
+    final apg = n == 0 ? 0.0 : matches.fold(0, (s, m) => s + m.assists) / n;
+    final achievement =
+        wins / league.rounds * 60 + individualRating(ppg, rpg, apg) * 0.4;
+    return TournamentResult(
+      league: league,
+      matches: matches,
+      wins: wins,
+      achievement: achievement.clamp(0, 100).toDouble(),
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        'league': league.name,
+        'matches': [for (final m in matches) m.toJson()],
+        'round': round,
+        'wins': wins,
+        'pending': pending?.toJson(),
+      };
+
+  factory TournamentRun.fromJson(Map<String, dynamic> j) => TournamentRun(
+        League.values.firstWhere(
+          (l) => l.name == j['league'],
+          orElse: () => League.minibasket,
+        ),
+        matches: [
+          for (final m in (j['matches'] as List?) ?? const [])
+            MatchResult.fromJson((m as Map).cast<String, dynamic>()),
+        ],
+        round: (j['round'] as num?)?.toInt() ?? 0,
+        wins: (j['wins'] as num?)?.toInt() ?? 0,
+        pending: j['pending'] == null
+            ? null
+            : MatchState.fromJson((j['pending'] as Map).cast<String, dynamic>()),
+      );
+}
+
 /// 大会を戦う。勝ち抜きは負けたら終わり。
 /// `chooseClutch` が null なら勝負どころは自動で選ぶ。
 TournamentResult playTournament(
@@ -61,33 +190,13 @@ TournamentResult playTournament(
   required double form,
   required Random rng,
   Clutch Function(int margin)? chooseClutch,
+  OpponentPicker? pickOpponent,
 }) {
-  final matches = <MatchResult>[];
-  var wins = 0;
-  for (var r = 0; r < league.rounds; r++) {
-    final opp = league.oppBase + r * 3 + (rng.nextDouble() - 0.5) * 8;
-    final m = simulateMatch(
-      p,
-      teamStrength: league.teamStrength,
-      oppStrength: opp,
+  final run = TournamentRun(league);
+  run.advance(p,
       form: form,
       rng: rng,
       chooseClutch: chooseClutch,
-    );
-    matches.add(m);
-    if (m.won) wins++;
-    if (league.elimination && !m.won) break;
-  }
-  final n = matches.length;
-  final ppg = matches.fold(0, (s, m) => s + m.points) / n;
-  final rpg = matches.fold(0, (s, m) => s + m.rebounds) / n;
-  final apg = matches.fold(0, (s, m) => s + m.assists) / n;
-  final achievement =
-      wins / league.rounds * 60 + individualRating(ppg, rpg, apg) * 0.4;
-  return TournamentResult(
-    league: league,
-    matches: matches,
-    wins: wins,
-    achievement: achievement.clamp(0, 100).toDouble(),
-  );
+      pickOpponent: pickOpponent);
+  return run.result();
 }

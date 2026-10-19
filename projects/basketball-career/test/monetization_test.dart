@@ -277,6 +277,7 @@ void main() {
     test('大会を3回終えた次の操作で、全画面広告が1回出る', () async {
       final (m, ads, _) = await open();
       final c = GameController(rng: Random(1), events: false, money: m);
+      c.setClutchPolicy(null); // 勝負どころは自動で選ぶ(止まらない)
       c.game = Game(
         eventsEnabled: false,
         player: kid(),

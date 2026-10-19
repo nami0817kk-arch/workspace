@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../game/difficulty.dart';
 import '../game/game.dart';
 import '../game/legacy.dart';
 import '../monetization/monetization.dart';
@@ -126,8 +127,11 @@ class GameController extends ChangeNotifier {
   /// いま重点にしている能力。
   Ability focus = Ability.threePoint;
 
-  /// 勝負どころの方針。null なら成功率の高いプレーを自動で選ぶ。
+  /// 勝負どころの方針。null なら成功率の高いプレーを自動で選ぶ(`askClutch` が false のとき)。
   Clutch? clutchPolicy;
+
+  /// 勝負どころをその場で選ぶか(既定)。
+  bool askClutch = true;
 
   /// 直前の操作で起きたこと(画面の「いまの結果」に出す)。
   List<String> recent = const [];
@@ -158,10 +162,11 @@ class GameController extends ChangeNotifier {
     }
   }
 
-  void newGame(String name) {
+  void newGame(String name, [Difficulty difficulty = Difficulty.normal]) {
     final n = name.trim().isEmpty ? '名無し' : name.trim();
     newlyUnlocked = const [];
-    game = Game.start(n, rng: _rng, events: events);
+    game = Game.start(n, rng: _rng, events: events, difficulty: difficulty);
+    focus = recommendedFocus(game!.player);
     recent = const [];
     pathMessage = null;
     _commit();
@@ -172,23 +177,78 @@ class GameController extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// 年の目標を選ぶ。
+  void adoptGoal(int i) {
+    game!.adoptGoal(i);
+    _commit();
+  }
+
+  /// 勝負どころの方針を決める。null で「おまかせ」(成功率の高いプレーを自動で選ぶ)。
   void setClutchPolicy(Clutch? c) {
     clutchPolicy = c;
+    askClutch = false;
     notifyListeners();
   }
 
-  /// 過ごし方を1つ選んで季節を進める。
-  TermReport act(Action a) {
+  /// 勝負どころをその場で選ぶ(既定)。
+  void setAskClutch() {
+    clutchPolicy = null;
+    askClutch = true;
+    notifyListeners();
+  }
+
+  /// 大会の途中(勝負どころ)で止まっているターンの、これまでの結果の行。
+  List<String> _pendingLines = const [];
+
+  /// 過ごし方を1つ選んで季節を進める。勝負どころが来て止まったら、その場で選ぶ(`playClutch`)。
+  /// [ask] が false なら、勝負どころでは止まらず自動で選ぶ(「おすすめで1年進める」など)。
+  TermReport act(Action a, {bool ask = true}) {
     final g = game!;
+    final before = Map<Ability, int>.of(g.player.abilities);
     final ageBefore = g.player.age;
     final wasWinter = g.slot == 3;
     final r = g.choose(
       a,
       focus,
       chooseClutch: clutchPolicy == null ? null : (_) => clutchPolicy!,
+      askClutch: ask && askClutch && clutchPolicy == null,
     );
-    final lines = <String>['${a.label}した。'];
-    if (r.gotInjured) lines.add('怪我をしてしまった…');
+    final lines = <String>[
+      '${a.label}した。',
+      ..._gainLines(before, g.player),
+      if (r.gotInjured) '怪我をしてしまった…',
+    ];
+    if (r.paused) {
+      _pendingLines = lines;
+      recent = lines;
+    } else {
+      recent = _termLines(lines, r, wasWinter, ageBefore);
+    }
+    pathMessage = null;
+    recoverMessage = null;
+    _commit();
+    return r;
+  }
+
+  /// 能力の増減を「3Pシュート +2」の形で。
+  List<String> _gainLines(Map<Ability, int> before, Player now) {
+    final up = <String>[], down = <String>[];
+    for (final a in Ability.values) {
+      final d = now.of(a) - (before[a] ?? 0);
+      if (d > 0) up.add('${a.label} +$d');
+      if (d < 0) down.add('${a.label} $d');
+    }
+    return [
+      if (up.isNotEmpty) '成長: ${up.join(' / ')}',
+      if (down.isNotEmpty) '衰え: ${down.join(' / ')}',
+    ];
+  }
+
+  /// 大会の結果と年末の知らせを足した、いまの結果の行。
+  List<String> _termLines(
+      List<String> head, TermReport r, bool wasWinter, int ageBefore) {
+    final g = game!;
+    final lines = [...head];
     if (r.satOut) lines.add('怪我で大会に出られなかった。');
     final t = r.tournament;
     if (t != null) {
@@ -198,25 +258,42 @@ class GameController extends ChangeNotifier {
         final m = t.matches[i];
         lines.add(matchLine(i, m.won, m.teamScore, m.oppScore, m.points,
             m.rebounds, m.assists,
+            opponent: m.opponent,
+            rival: m.vsRival,
             clutch: m.clutch == null
                 ? null
                 : '${m.clutch!.label}${m.clutchSuccess == true ? '成功' : '失敗'}'));
       }
     }
+    if (r.yearEnded && g.lastGoalMessage != null) lines.add(g.lastGoalMessage!);
     if (r.yearEnded && g.player.age != ageBefore) {
       lines.add('${g.player.age}歳になった。身長 ${g.player.heightCm.toStringAsFixed(1)}cm。');
     }
-    recent = lines;
-    pathMessage = null;
-    recoverMessage = null;
+    return lines;
+  }
+
+  /// 勝負どころで止まっている大会に、選んだプレーを渡す。大会が終われば広告の数えも進める。
+  Future<void> playClutch(Clutch c) async {
+    final g = game;
+    if (g == null || g.phase != Phase.clutch) return;
+    final wasWinter = g.runWinter;
+    final ageBefore = g.player.age;
+    final r = g.resolveClutch(c);
+    if (r.paused) {
+      recent = _pendingLines;
+    } else {
+      recent = _termLines(_pendingLines, r, wasWinter, ageBefore);
+      _pendingLines = const [];
+    }
     _commit();
-    return r;
+    if (!r.paused) await money?.tournamentPlayed();
   }
 
   /// 広告つきで過ごし方を選ぶ。大会が終わった後の次の操作で、番なら全画面広告が出る。
   Future<void> play(Action a) async {
     await money?.beforeAction();
     final r = act(a);
+    if (r.paused) return; // 大会はまだ終わっていない(広告の数えは `playClutch` で)
     if (r.tournament != null || r.satOut) await money?.tournamentPlayed();
   }
 
@@ -255,8 +332,11 @@ class GameController extends ChangeNotifier {
     final age = g.player.age;
     final lines = <String>[];
     await money?.beforeAction();
+    // 目標は確実なほうを自動で選ぶ(選ぶ前なら)。
+    if (g.goal == null && g.goalOptions.isNotEmpty && g.slot <= 2) g.adoptGoal(0);
     while (g.phase == Phase.season && g.player.age == age) {
-      final r = act(recommendedAction(g));
+      focus = recommendedFocus(g.player);
+      final r = act(recommendedAction(g), ask: false);
       if (r.tournament != null || r.satOut) await money?.tournamentPlayed();
       lines.addAll(recent.skip(1));
     }
