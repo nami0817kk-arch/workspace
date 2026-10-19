@@ -114,6 +114,12 @@ python scripts/make_gallery.py 09_01:2.4 135_07_s1:3.6   # clip を順に再生�
 - `rhythm.py`: 参考6本の範囲との比較。`check` が書き出す前に見積もり、`python -m stickfig rhythm 動画.mp4` が実測
 - `build_scene(scene, out)`: cli の中核(台本 dict → 動画)。episode も使う
 
+## Becker 風の見た目(2026-10-19、最近作を見て。観察は reference/becker_recent.md)
+
+- 台本 `limb: {base: 0.055, tip: 0.03, tip_color: [r,g,b]}`: 手足が根元太→先細り、先の2節が暗色(Blender で作る。形を変えたら fk.py の寸法は影響しない太さだけ)
+- `fx.weapon_glow: true`(`weapon_glow_color`): 刃の水色の画素から発光の縁を作る。fk の剣の線(`sk["sword"]`)は Blender の刃と向きがずれる場面があるので、描画の画素から取る
+- 見本 `scenes/fight_becker.yaml`。fight の `fx` などは、台本で書いた分が土台に足し合わされる(`fight.expand`)
+
 ## 決まり・つまずき所(実際に踏んだもの)
 
 1. **参考動画のファイル・切り出した画像は、リポジトリに入れない**(workspace は public、他人の作品)。入れてよいのは数字と読み取った角度だけ(`reference/`)。

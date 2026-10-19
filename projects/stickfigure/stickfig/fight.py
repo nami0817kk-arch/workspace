@@ -297,7 +297,11 @@ def expand(data: dict, verify: bool = False) -> dict:
         spec = _first_passing_seed(spec, data)
     base = build_fight(spec)
     over = {k: v for k, v in data.items() if k != "fight"}
-    base.update(over)
+    for k, v in over.items():                       # fx・anime などの辞書は、上書きでなく足し合わせる(周りの演出を消さない)
+        if isinstance(v, dict) and isinstance(base.get(k), dict) and k in ("fx", "anime", "stage"):
+            base[k] = dict(base[k], **v)
+        else:
+            base[k] = v
     return base
 
 

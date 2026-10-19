@@ -604,7 +604,7 @@ def build_plan(scene: dict, solve: bool = True) -> dict:
         _lift_to_ground(scene, frames)
     _assign_event_pos(scene, tracks, events)
     return dict(version=1, fps=fps, n=len(frames), view=dict(VIEW, persp=bool(scene.get("view3d") or scene.get("shots")), lens=(scene.get("view3d") or {}).get("lens", 40.0)), actors=scene["actors"], stage=scene.get("stage", {}),
-                events=events, contacts=contacts, frames=frames, scene={k: scene[k] for k in ("hits", "slow", "camera", "fx", "tempo", "view3d", "anime", "shots", "stepping", "impact_cuts", "flurry", "style", "captions", "output") if k in scene})
+                events=events, contacts=contacts, frames=frames, scene={k: scene[k] for k in ("hits", "slow", "camera", "fx", "tempo", "view3d", "anime", "shots", "stepping", "impact_cuts", "flurry", "style", "captions", "output", "limb") if k in scene})
 
 
 def save_plan(plan: dict, path) -> None:

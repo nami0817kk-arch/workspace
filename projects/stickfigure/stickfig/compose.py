@@ -12,7 +12,7 @@ from typing import Dict, List, Optional, Sequence, Tuple
 
 from PIL import Image, ImageDraw, ImageFilter
 
-from . import anime, camera, captions, look
+from . import anime, camera, captions, fk, look
 
 W, H, SS = 1280, 720, 2
 GROUND_Y = 560
@@ -269,6 +269,16 @@ def compose_frame(plan: dict, f: int, figs: Dict[int, Image.Image], stages: Opti
         ink = Image.new("RGBA", figs[f].size, (18, 14, 24, 0))
         ink.putalpha(grow)
         base.alpha_composite(ink)
+    if fx.get("weapon_glow"):                    # 武器の発光する縁取り(Alan Becker の剣は水色の縁が光る)。描かれた刃の水色の画素から作る
+        import numpy as np
+        arr = np.asarray(figs[f], dtype=np.int16)
+        blade = (arr[..., 3] > 150) & (arr[..., 1] > 190) & (arr[..., 2] > 190) & (arr[..., 0] < arr[..., 1] - 40)
+        if blade.any():
+            m = Image.fromarray((blade * 255).astype("uint8"))
+            wide = m.filter(ImageFilter.MaxFilter(9)).filter(ImageFilter.GaussianBlur(5))
+            col = Image.new("RGBA", (W, H), tuple(fx.get("weapon_glow_color", (60, 190, 255))) + (0,))
+            col.putalpha(wide.point(lambda v: min(255, int(v * 1.6))))
+            base.alpha_composite(col)
     base.alpha_composite(figs[f])
     # 顔(目)は描かない(2026-10-19 ユーザー指示)
     for e in plan["events"]:                   # 特大の効果: 斬撃の弧・衝撃の輪

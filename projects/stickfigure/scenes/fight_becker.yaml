@@ -1,0 +1,19 @@
+# Becker 風の線(根元太→先細り・先は暗色)と武器の発光
+name: fight_becker
+fight:
+  weapon: sword
+  kick: false
+  hits: 3
+  counter: true
+  finisher: launch_slash
+  palette: warm
+  seed: 7
+limb:
+  base: 0.055
+  tip: 0.03
+  tip_color:
+  - 0.08
+  - 0.08
+  - 0.1
+fx:
+  weapon_glow: true

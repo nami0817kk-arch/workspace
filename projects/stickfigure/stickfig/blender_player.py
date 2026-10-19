@@ -79,11 +79,17 @@ def limb(name, parent, length, ink, loc=(0, 0, 0), r=0.036):
     return j
 
 
+LIMB = PLAN.get("scene", {}).get("limb") or {}        # 線の太さ: {base: 根元の半径, tip: 先の半径, tip_color: 先の2節の色}(Alan Becker は根元が太く先が細い。手足の先は暗い色)
+
+
 def chain(name, parent, total, ink):
     seg = total / NSEG
     js, par, pos = [], parent, (0, 0, 0)
+    rb, rt = LIMB.get("base", 0.036), LIMB.get("tip", 0.036)
+    tip_ink = mat(LIMB["tip_color"]) if LIMB.get("tip_color") else ink
     for i in range(NSEG):
-        j = limb(f"{name}{i}", par, seg, ink, pos)
+        r = rb + (rt - rb) * (i / (NSEG - 1))
+        j = limb(f"{name}{i}", par, seg, tip_ink if i >= NSEG - 2 else ink, pos, r)
         js.append(j)
         par, pos = j, (0, 0, -seg)
     return js, seg
