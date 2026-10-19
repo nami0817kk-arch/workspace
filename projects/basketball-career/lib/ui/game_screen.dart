@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart' hide Action, Route;
+import 'package:flutter/services.dart';
 
 import '../game/epilogue.dart';
 import '../game/game.dart';
@@ -944,7 +945,8 @@ class _EndingView extends StatelessWidget {
                 if (g.rival.games > 0)
                   Text('宿敵 ${g.rival.name}との通算: ${g.rival.wins}勝${g.rival.losses}敗'),
                 Text('通算 ${g.totalGames}試合 平均${g.careerPpg.toStringAsFixed(1)}得点'
-                    ' / 優勝 ${g.titles}回'),
+                    ' / 優勝 ${g.titles}回 / 個人賞 ${g.awardCount}回'),
+                Text('通算 ${g.totalPoints}得点 ${g.totalRebounds}リバウンド ${g.totalAssists}アシスト'),
                 if (g.abroad) const Text('海外プロでプレーした。'),
                 if (p.traits.isNotEmpty)
                   Text('特性: ${p.traits.map((t) => t.label).join('・')}'),
@@ -994,6 +996,22 @@ class _EndingView extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 16),
+        OutlinedButton.icon(
+          onPressed: () async {
+            final messenger = ScaffoldMessenger.of(context);
+            try {
+              await Clipboard.setData(ClipboardData(text: shareText(g)));
+              messenger.showSnackBar(
+                  const SnackBar(content: Text('結果をコピーした。好きな場所に貼り付けて共有できる。')));
+            } catch (_) {
+              messenger.showSnackBar(
+                  const SnackBar(content: Text('コピーできなかった。')));
+            }
+          },
+          icon: const Icon(Icons.copy),
+          label: const Text('結果をコピー'),
+        ),
+        const SizedBox(height: 8),
         FilledButton(
           onPressed: controller.reset,
           child: const Text('新しい選手を育てる'),

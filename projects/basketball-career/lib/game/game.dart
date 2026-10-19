@@ -812,6 +812,15 @@ class Game {
   // ── 通算 ──
 
   int get totalGames => records.fold(0, (s, r) => s + r.games);
+
+  /// 通算の得点・リバウンド・アシスト(年ごとの平均×試合数の合計)。
+  int get totalPoints =>
+      records.fold(0.0, (s, r) => s + r.ppg * r.games).round();
+  int get totalRebounds =>
+      records.fold(0.0, (s, r) => s + r.rpg * r.games).round();
+  int get totalAssists =>
+      records.fold(0.0, (s, r) => s + r.apg * r.games).round();
+  int get awardCount => records.where((r) => r.award != null).length;
   double get careerPpg => totalGames == 0
       ? 0
       : records.fold(0.0, (s, r) => s + r.ppg * r.games) / totalGames;

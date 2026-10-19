@@ -24,6 +24,22 @@ String careerTitle(Game g) {
   return '情熱の$nick';
 }
 
+/// 共有用の短い文章(「結果をコピー」で使う)。
+String shareText(Game g) {
+  final p = g.player;
+  final b = StringBuffer()
+    ..writeln('バスケ育成: ${p.name}の物語')
+    ..writeln('称号「${careerTitle(g)}」(${g.difficulty.label})')
+    ..writeln('${p.heightCm.toStringAsFixed(0)}cm ${positionNickname(p.position)} 総合${p.overall.round()}  ${p.age}歳で引退')
+    ..writeln('通算 ${g.totalGames}試合 ${g.totalPoints}得点 ${g.totalRebounds}リバウンド ${g.totalAssists}アシスト')
+    ..writeln('優勝${g.titles}回 個人賞${g.awardCount}回${g.abroad ? ' 海外挑戦' : ''}');
+  if (g.rival.games > 0) {
+    b.writeln('宿敵${g.rival.name}との通算 ${g.rival.wins}勝${g.rival.losses}敗');
+  }
+  b.write('#バスケ育成');
+  return b.toString();
+}
+
 String _talent(int potential) {
   if (potential >= 80) return '天賦の才に恵まれた';
   if (potential >= 60) return '確かな素質を持った';
