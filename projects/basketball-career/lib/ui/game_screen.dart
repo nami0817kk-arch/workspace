@@ -831,6 +831,13 @@ class _HalftimeView extends StatelessWidget {
                                   fontWeight: FontWeight.bold)),
                           Text(k.description,
                               style: const TextStyle(fontSize: 12)),
+                          if (h.style.fit(k, game.player) >= 0.5)
+                            const Text('相手との相性: 良い',
+                                style: TextStyle(
+                                    fontSize: 12, fontWeight: FontWeight.bold))
+                          else if (h.style.fit(k, game.player) <= -0.5)
+                            const Text('相手との相性: 悪い',
+                                style: TextStyle(fontSize: 12)),
                         ],
                       ),
                     ),
