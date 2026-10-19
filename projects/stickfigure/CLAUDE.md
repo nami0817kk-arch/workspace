@@ -176,6 +176,8 @@ python scripts/make_gallery.py 09_01:2.4 135_07_s1:3.6   # clip を順に再生�
 
 - **気の光線(fight の `finisher: beam`、色は `beam_color: [r,g,b]`)**: 決めの 1 発でよろけた相手に、一歩下がって構え(両手を腰の脇・腰を落とす)→ 1.1 秒の溜め(`fx.charge`: 暗転・光の柱・粒・輪)→ 溜めの終わりにさらに沈み(予備動作)→ 2 コマで両腕を突き出して発射 → 光線(`look.beam`: 手から壁まで、白い芯+色の光、揺らぐ縁、根元の光の玉、流れる粒。3 コマで太くなり最後の 25% で細って消える)→ 相手は光線を受けてのけぞり、体を後ろへ倒して壁まで飛び、張りついて、ずり落ちる(`wall` の命中)→ 腕を下ろして勝ち名乗り。擬音「ドォォォン!!」、音は低いうなり+ノイズ+boom、発射で閃光と 0.55 倍のスロー。カメラは溜めで A に寄り、発射で手から壁まで入る引き(scale 7.2)、そのあと A に戻る
 - 光線は `fx.beams: [{start, end, who, color, x_end}]` として compose が人物の上に描く。壁の位置(`wall_x`)は飛ばす前の B の位置から決めて固定(`wall_lock`)。見本 `scenes/fight_beam.yaml`
+- **気弾(`finisher: blast`)**: 片手を高く上げて光の玉を膨らませ(`fx.orbs`: 手に付く玉、0.65 秒で r 0.08→0.42)→ 予備動作でさらに引き → 2 コマで振り下ろして投げる(`throw`、擬音「シュッ」)→ 玉が少し山なりに飛ぶ(`fx.projectiles`、0.2 秒、後ろに流れる筋)→ 着弾で爆発(`blast`: 放射線・衝撃の輪・閃光・「ドガァァン!!」)→ 壁まで吹き飛ぶ(beam と同じ)。色は `beam_color`(既定は橙)。見本 `scenes/fight_blast.yaml`
+- 光線・気弾とも、技の前に A が跳んで下がり(dx 3.7〜3.9)、B もよろけて 0.7 下がる(光線・玉の飛ぶ長さを取る)。壁はよろけた B より 1.3 奥(`wall_lock`)。光線は壁を 1.2 突き抜ける長さ
 - 技を足すときの型: fight の finisher 分岐(キー・hits・fx・shots・ko_t)+ plan の SHAKE + anime の SFX/SFX_SIZE/ZOOM_PUNCH/ROLL_SHAKE + compose の BIG/BURST_FRAMES と描画 + sfx の音 + テスト
 
 ## 決まり・つまずき所(実際に踏んだもの)
