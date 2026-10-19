@@ -501,7 +501,10 @@ class Game {
     }
     if (eventsEnabled && phase == Phase.season) {
       pendingEventId = rollEvent(player,
-              pro: track == Track.pro, rng: rng, recent: recentEventIds)
+              pro: track == Track.pro,
+              abroad: abroad,
+              rng: rng,
+              recent: recentEventIds)
           ?.id;
       if (pendingEventId != null) {
         recentEventIds.add(pendingEventId!);

@@ -1010,7 +1010,7 @@ void main() {
         expect(e.title, isNotEmpty);
         expect(e.body, isNotEmpty);
       }
-      expect(events.length, greaterThanOrEqualTo(20));
+      expect(events.length, greaterThanOrEqualTo(30));
     });
 
     test('どの年齢・段階でも、出来事の候補が十分にある', () {
@@ -1486,6 +1486,34 @@ void main() {
       expect(sf.formNow, sf.condition.form + 0.03);
       final pg = Game(eventsEnabled: false, player: at(Position.pointGuard), rng: Random(1));
       expect(pg.formNow, pg.condition.form);
+    });
+  });
+
+  group('プロ・海外の出来事', () {
+    test('海外限定の出来事は、国内プロや学生には出ない', () {
+      final rng = Random(5);
+      final p = strong().copyWith(age: 25);
+      var seenAbroad = false;
+      for (var i = 0; i < 3000; i++) {
+        final dom = rollEvent(p, pro: true, abroad: false, rng: rng);
+        expect(dom?.abroadOnly ?? false, isFalse);
+        final stu = rollEvent(p, pro: false, abroad: false, rng: rng);
+        expect(stu?.proOnly ?? false, isFalse);
+        final ab = rollEvent(p, pro: true, abroad: true, rng: rng);
+        if (ab?.abroadOnly ?? false) seenAbroad = true;
+      }
+      expect(seenAbroad, isTrue);
+    });
+
+    test('30歳以上のプロには「衰えとの向き合い」が出うる。若いうちは出ない', () {
+      final rng = Random(6);
+      var old = false;
+      for (var i = 0; i < 3000; i++) {
+        final y = rollEvent(strong().copyWith(age: 24), pro: true, rng: rng);
+        expect(y?.id == 'aging', isFalse);
+        if (rollEvent(strong().copyWith(age: 33), pro: true, rng: rng)?.id == 'aging') old = true;
+      }
+      expect(old, isTrue);
     });
   });
 }
