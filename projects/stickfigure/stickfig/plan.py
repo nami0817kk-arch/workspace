@@ -353,7 +353,7 @@ def _footwork(scene: dict, frames: List[dict]) -> None:
                 for ang, knee, _ in legs:
                     p[ang], p[knee] = q[ang], q[knee]
                 continue
-            free = abs(p.get("rz", 0.0)) > 0.04 * sc or abs(p.get("roll", 0.0)) > 0.3 or p.get("run", 0) > 0.3 or p.get("periodic")
+            free = abs(p.get("rz", 0.0)) > 0.2 * sc or abs(p.get("roll", 0.0)) > 0.3 or p.get("run", 0) > 0.3 or p.get("periodic")     # rz は Planter が少し持ち上げることがある(0.1 前後)。空中は 0.2 以上
             if free:
                 planted = {"foot": None, "rear_foot": None}
                 swing = None
@@ -409,6 +409,34 @@ def _footwork(scene: dict, frames: List[dict]) -> None:
                 p[ang], p[knee] = round(r[0], 6), round(r[1], 6)
                 last[key] = (p[ang], p[knee])
             fr["actors"][who] = p
+
+
+def _ground_fix(scene: dict, frames: List[dict]) -> None:
+    """最後の保険: 脚が地面より下に出ていたら、足を地面の高さへ IK で合わせ直す。届かなければ根元を持ち上げる。
+    (速いしゃがみ(かわす)で、Planter のバネが間に合わず潜ることがある)"""
+    for who, a in scene["actors"].items():
+        sc, s = a.get("scale", 1.0), _sign(a)
+        for fr in frames:
+            p = fr["actors"][who]
+            if abs(p.get("roll", 0.0)) > 0.3 or not a.get("plant", True):       # plant: false は「足を触らない」指定
+                continue
+            for _ in range(2):
+                sk = fk.skeleton(p, s, p["root_x"], sc)
+                fixed = False
+                for ang, knee, key, leg in (("fl", "fk", "foot", "front_leg"), ("rl", "rk", "rear_foot", "rear_leg")):
+                    zmin = min(pt[1] for pt in sk[leg])
+                    if zmin < -0.02:
+                        r = fk.leg_ik(p, s, p["root_x"], sc, (sk[key][0], 0.0))
+                        if r is not None:
+                            p[ang], p[knee] = round(r[0], 6), round(r[1], 6)
+                            fixed = True
+                if not fixed:
+                    break
+            sk = fk.skeleton(p, s, p["root_x"], sc)
+            zmin = min(min(pt[1] for pt in sk[leg]) for leg in ("front_leg", "rear_leg"))
+            if zmin < -0.02:
+                p["rz"] = round(p["rz"] - zmin, 6)
+                p["root_z"] = round(p.get("root_z", p["rz"]) - zmin, 6)
 
 
 def _auto_smear(scene: dict, frames: List[dict]) -> None:
@@ -763,6 +791,7 @@ def build_plan(scene: dict, solve: bool = True) -> dict:
         frames.append(fr)
     if phys is None:
         _footwork(scene, frames)
+        _ground_fix(scene, frames)
     if (scene.get("anime") or {}).get("smear", False):
         _auto_smear(scene, frames)
     if scene.get("stepping"):

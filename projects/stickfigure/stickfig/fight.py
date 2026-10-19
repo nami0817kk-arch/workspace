@@ -34,6 +34,7 @@ DEFAULTS = dict(
     stage="cave",            # 舞台の色の組: cave / dojo / field / night / sunset
     ally=None,               # 3人目(味方): {color, x(置く位置), y(奥行き。+で奥), facing(+1右向き/-1左向き), scale, cheer(勝ったら万歳 true/負けたらうなだれる false)}。戦わず、見守る
     block=True,              # 連打の途中を相手が防ぐ(hits が3以上): 2発目は 受け止め(clash) か かわす(miss)。seed があれば選ぶ、無ければ受け止め。hits≧4 なら3発目にもう一方
+    b_first=True,            # 蹴り無しのとき、B が先に2発仕掛ける(A がかわし→受け止め)。攻守の入れ替わり
     riposte=True,            # 受け止めた直後に、相手(B)が打ち返し、こちら(A)が受け止める(鍔迫り合いの往復)
     footwork=True,           # 足運び: 接地した足を滑らせず、体が動いた分だけ踏み替える(plan._footwork)
     body=1.7,                # 全身の動きの強さ(0 で切る)。命中ごとに、攻める側のひねり込み・踏み込み、受ける側ののけぞり・押される動き
@@ -110,7 +111,8 @@ def build_fight(spec: dict) -> dict:
     n = max(1, min(4, int(s["hits"])))
     kick = bool(s["kick"])
     fin = s["finisher"] == "launch_slash"
-    o = 0.0 if kick else -2.4          # 蹴りが無いぶん、連打の開始が早まる
+    bfirst = bool(s["b_first"]) and not kick
+    o = 0.0 if kick else (-2.4 + (0.95 if bfirst else 0.0))          # 蹴りが無いぶん、連打の開始が早まる(B が先に仕掛けるなら、その分を空ける)
     tc = 4.0 + o                       # 連打の準備(起き上がり)の終わり
 
     keysA: List[dict] = [dict(t=0.0, dx=0.2, hz=0.84), dict(t=0.6, dx=0.2, lean=0.12, hz=0.83)]
@@ -161,8 +163,20 @@ def build_fight(spec: dict) -> dict:
         a_dx0 = 3.4
     else:                                                # 蹴り無し: B は最初から構えの位置に立つ(以前は 0.6 秒で 2 単位後ろへ滑っていた)
         keysB = [dict(t=0.0, dx=-1.7), dict(t=tc, dx=-1.7, rz=0.0, roll=0.0, hz=0.82, lean=0.1, fa=0.9, fe=1.4, ra=0.7, re=1.5, fl=0.45, fk=0.3, rl=-0.45, rk=0.4, face="fight")]
-        clipsA[0].update(end=tc)
-        keysA.append(dict(t=tc, dx=3.4, hz=0.9))
+        ta = tc - 0.95 if bfirst else tc                 # A が構えの位置に着く時刻
+        clipsA[0].update(end=_r(ta))
+        keysA.append(dict(t=_r(ta), dx=3.4, hz=0.9))
+        if bfirst:                                       # B が先に仕掛ける: 1発目は A が沈んでかわし(miss)、2発目は A が受け止める(clash)
+            tb1, tb2 = tc - 0.78, tc - 0.40
+            keysB = [dict(t=0.0, dx=-1.7), dict(t=_r(tc - 1.2), dx=-1.7, **GUARD), dict(t=_r(tb1 - 0.15), dx=-1.0, **GUARD),
+                     dict(t=_r(tc - 0.18), dx=-1.4, **GUARD), keysB[-1]]
+            clipsB += [dict(file=COUNTER_CLIP, strike_at=_r(tb1), start=_r(tb1 - 0.2), end=_r(tb1 + 0.17), anchor_dx=-1.0, **{"in": 0.06, "out": 0.08}),
+                       dict(file=COUNTER_CLIP, strike_at=_r(tb2), start=_r(tb2 - 0.17), end=_r(tb2 + 0.25), **{"in": 0.06, "out": 0.1})]
+            hits += [dict(tau=_r(tb1), hold=0.0, kind="miss", by="B", pos=[1.75, 1.25]),
+                     dict(tau=_r(tb2), hold=0.07, kind="clash", by="B", contact=dict(striker="B", effector="hand", target=dict(actor="A", point="chest"), tol=0.45, max_anticipation=50))]
+            keysA += [dict(t=_r(tb2 - 0.14), dx=3.4, **BLOCK), dict(t=_r(tb2 + 0.08), dx=3.4, **BLOCK), dict(t=_r(tb2 + 0.26), dx=3.4, **GUARD_A)]
+            flashes.append(_r(tb2))
+            speed.append([_r(tb1 - 0.3), _r(tb2 + 0.1)])
         shots.append(dict(t=1.0, follow="A", scale=[[1.0, 5.6], [tc + 0.4, 4.4]], yaw=[[1.0, -38.0], [tc + 0.4, -20.0]], pitch=4.0, lens=30.0, target_z=1.0, lag=0.3))
         speed.append([tc - 0.7, tc + 0.1])
         a_dx0 = 3.4

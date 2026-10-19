@@ -145,3 +145,12 @@ def test_riposte_adds_a_block_by_b():
     ts = [h["tau"] for h in sc["hits"] if h.get("by") == "A" and h["kind"] in ("slash", "clash", "miss")]
     assert ts == sorted(ts)
     assert fight.build_fight(dict(hits=3, riposte=False))["hits"] and not [h for h in fight.build_fight(dict(hits=3, riposte=False))["hits"] if h.get("by") == "B" and h["kind"] == "clash"]
+
+
+def test_b_first_opening_only_without_kick():
+    sc = fight.build_fight(dict(kick=False, hits=3))
+    early = [h for h in sc["hits"] if h.get("by") == "B" and h["tau"] < min(x["tau"] for x in sc["hits"] if x.get("by") == "A")]
+    assert [h["kind"] for h in early] == ["miss", "clash"]
+    sc2 = fight.build_fight(dict(kick=True, hits=3))
+    assert not [h for h in sc2["hits"] if h.get("by") == "B" and h["tau"] < 4.0]
+    planmod.validate_scene(sc)
