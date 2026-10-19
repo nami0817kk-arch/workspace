@@ -921,9 +921,10 @@ def build_plan(scene: dict, solve: bool = True) -> dict:
                     break
         if cut is not None:
             e, ang = cut
+            vsc = 1.6 if (scene.get("output") or {}).get("aspect") == "vertical" else 1.0     # 縦画面は中央を切り出すので、寄りのカットは引く(頭で画面が埋まる)
             fr["look"] = (ang.get("hue", (f // 4) % 4)) if ang.get("streak", True) else None
             fr["cam"] = {k: (round(v, 5) if isinstance(v, float) else v) for k, v in
-                         camera.make_cam(e["pos"][0], 0.0, ang.get("scale", 3.0), ang.get("yaw", 30.0), ang.get("pitch", 4.0),
+                         camera.make_cam(e["pos"][0], 0.0, ang.get("scale", 3.0) * vsc, ang.get("yaw", 30.0), ang.get("pitch", 4.0),
                                          ang.get("lens", 30.0), sx, sz, target_z=max(0.8, e["pos"][1]), dutch=ang.get("dutch", 0.0)).items()}
             fr["cam"] = camera.keep_out_of_walls(fr["cam"], scene.get("stage", {}).get("wall_x"))
             fr["cam"]["z"] = fr["cam"]["tz"]

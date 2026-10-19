@@ -417,6 +417,9 @@ def crop_centers(plan: dict, cw: int) -> List[float]:
 def compose_vertical(plan: dict, f: int, figs, stages, cx: float) -> Image.Image:
     """16:9 のコマから、縦(9:16)を切り出して 720x1280 に拡大し、その上に字幕を重ねる。"""
     plan["_vertical"] = True
+    an = plan.get("scene", {}).get("anime")
+    if isinstance(an, dict) and an.get("sfx", True):           # 縦画面は効果音の文字を出さない(切り出しで切れる・大きすぎる)
+        plan["scene"]["anime"] = dict(an, sfx=False)
     base = compose_frame(plan, f, figs, stages)
     cw = int(H * 9 / 16)
     x0 = int(round(cx - cw / 2))
