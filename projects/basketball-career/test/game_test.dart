@@ -1516,4 +1516,69 @@ void main() {
       expect(old, isTrue);
     });
   });
+
+  group('怪我の種類', () {
+    test('軽い怪我ほど多く、骨折はまれ', () {
+      final rng = Random(3);
+      final count = <Injury, int>{for (final i in Injury.values) i: 0};
+      for (var i = 0; i < 5000; i++) {
+        final k = rollInjury(rng);
+        count[k] = count[k]! + 1;
+      }
+      expect(count[Injury.sprain]!, greaterThan(count[Injury.strain]!));
+      expect(count[Injury.strain]!, greaterThan(count[Injury.fracture]!));
+      expect(count[Injury.fracture]!, greaterThan(0));
+    });
+
+    test('休む期間は種類ごとの範囲に入る', () {
+      final rng = Random(4);
+      for (final k in Injury.values) {
+        for (var i = 0; i < 200; i++) {
+          final t = k.terms(rng);
+          expect(t, inInclusiveRange(k.minTerms, k.maxTerms));
+        }
+      }
+      expect(Injury.fracture.minTerms, greaterThan(Injury.strain.maxTerms - 1));
+    });
+
+    test('大怪我の後遺症: スピードとフィジカルが落ちる。ほかは変わらない', () {
+      final a = {for (final x in Ability.values) x: 70};
+      final b = applyLastingInjury(a);
+      expect(b[Ability.speed], 67);
+      expect(b[Ability.physical], 67);
+      expect(b[Ability.pass], 70);
+      expect(Injury.fracture.lasting, isTrue);
+      expect(Injury.sprain.lasting, isFalse);
+    });
+
+    test('怪我をすると名前が付き、治ると消える。保存される', () {
+      var injured = false;
+      for (var seed = 0; seed < 400 && !injured; seed++) {
+        final p = strong();
+        final r = playTerm(
+            p,
+            const Condition(fatigue: 90),
+            Action.intense,
+            Ability.pass,
+            Random(seed));
+        if (r.gotInjured) {
+          injured = true;
+          expect(r.condition.injured, isTrue);
+          expect(r.condition.injuryName, isNotEmpty);
+          expect(
+              Condition.fromJson(r.condition.toJson()).injuryName,
+              r.condition.injuryName);
+          final healed = r.condition.copyWith(injuredTerms: 0);
+          expect(healed.injuryName, '');
+        }
+      }
+      expect(injured, isTrue);
+    });
+
+    test('古いセーブ(怪我の名前なし)でも読める', () {
+      final c = Condition.fromJson({'fatigue': 5, 'morale': 50, 'injuredTerms': 2});
+      expect(c.injured, isTrue);
+      expect(c.injuryName, '');
+    });
+  });
 }

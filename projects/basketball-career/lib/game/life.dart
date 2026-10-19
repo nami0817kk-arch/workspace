@@ -23,8 +23,52 @@ enum Action {
 }
 
 /// 体調。年をまたいで持ち、大会の動きに効く。
+/// 怪我の種類。重いほど長く休み、大怪我は後に響く(スピードとフィジカルが落ちる)。
+enum Injury {
+  sprain('捻挫', 1, 2, 60),
+  strain('肉離れ', 2, 3, 32),
+  fracture('骨折', 4, 6, 8);
+
+  const Injury(this.label, this.minTerms, this.maxTerms, this.weight);
+  final String label;
+  final int minTerms;
+  final int maxTerms;
+  final int weight;
+
+  /// 後遺症があるか(大怪我だけ)。
+  bool get lasting => this == Injury.fracture;
+
+  int terms(Random rng) => minTerms + rng.nextInt(maxTerms - minTerms + 1);
+}
+
+/// 怪我の種類を引く(軽い怪我ほど起きやすい)。
+Injury rollInjury(Random rng) {
+  var x = rng.nextInt(Injury.values.fold(0, (s, i) => s + i.weight));
+  for (final i in Injury.values) {
+    x -= i.weight;
+    if (x < 0) return i;
+  }
+  return Injury.sprain;
+}
+
+/// 大怪我の後遺症: スピードとフィジカルが少し落ちる。
+Map<Ability, int> applyLastingInjury(Map<Ability, int> abilities) {
+  final next = Map<Ability, int>.of(abilities);
+  for (final a in [Ability.speed, Ability.physical]) {
+    next[a] = ((next[a] ?? 0) - 3).clamp(0, abilityCap);
+  }
+  return next;
+}
+
 class Condition {
-  const Condition({this.fatigue = 0, this.morale = 50, this.injuredTerms = 0});
+  const Condition(
+      {this.fatigue = 0,
+      this.morale = 50,
+      this.injuredTerms = 0,
+      this.injuryName = ''});
+
+  /// いまの怪我の名前(健康なら空)。
+  final String injuryName;
 
   /// 疲労 0〜100(高いほど悪い)。
   final int fatigue;
@@ -43,20 +87,29 @@ class Condition {
     return (injured ? f * 0.6 : f).clamp(0.5, 1.2);
   }
 
-  Condition copyWith({int? fatigue, int? morale, int? injuredTerms}) =>
-      Condition(
-        fatigue: (fatigue ?? this.fatigue).clamp(0, 100),
-        morale: (morale ?? this.morale).clamp(0, 100),
-        injuredTerms: max(0, injuredTerms ?? this.injuredTerms),
-      );
+  Condition copyWith(
+      {int? fatigue, int? morale, int? injuredTerms, String? injuryName}) {
+    final terms = max(0, injuredTerms ?? this.injuredTerms);
+    return Condition(
+      fatigue: (fatigue ?? this.fatigue).clamp(0, 100),
+      morale: (morale ?? this.morale).clamp(0, 100),
+      injuredTerms: terms,
+      injuryName: terms == 0 ? '' : (injuryName ?? this.injuryName),
+    );
+  }
 
-  Map<String, dynamic> toJson() =>
-      {'fatigue': fatigue, 'morale': morale, 'injuredTerms': injuredTerms};
+  Map<String, dynamic> toJson() => {
+        'fatigue': fatigue,
+        'morale': morale,
+        'injuredTerms': injuredTerms,
+        'injuryName': injuryName,
+      };
 
   factory Condition.fromJson(Map<String, dynamic>? j) => Condition(
         fatigue: (j?['fatigue'] as num?)?.toInt() ?? 0,
         morale: (j?['morale'] as num?)?.toInt() ?? 50,
         injuredTerms: (j?['injuredTerms'] as num?)?.toInt() ?? 0,
+        injuryName: (j?['injuryName'] as String?) ?? '',
       );
 }
 
@@ -125,7 +178,7 @@ int _stochasticRound(double v, Random rng) {
   final e = _effect(action);
   final tired = c.fatigue >= 70 ? 0.7 : 1.0;
   final mood = 0.85 + c.morale / 333; // 0.85〜1.15
-  final next = Map<Ability, int>.of(p.abilities);
+  var next = Map<Ability, int>.of(p.abilities);
   if (!c.injured) {
     for (final a in Ability.values) {
       final mult = a == focus ? e.focus : e.other;
@@ -150,13 +203,17 @@ int _stochasticRound(double v, Random rng) {
       : (dm * moraleLossMultiplier(p.traits)).round();
 
   var injured = max(0, c.injuredTerms - 1);
+  var injuryName = c.injuryName;
   var gotInjured = false;
   if (!c.injured) {
     final risk = e.injury *
         injuryMultiplier(p.traits) *
         (c.fatigue >= 70 ? 2.0 : 1.0);
     if (rng.nextDouble() < risk) {
-      injured = 1 + rng.nextInt(3);
+      final kind = rollInjury(rng);
+      injured = kind.terms(rng);
+      injuryName = kind.label;
+      if (kind.lasting) next = applyLastingInjury(next);
       gotInjured = true;
       morale -= 10;
     }
@@ -168,6 +225,7 @@ int _stochasticRound(double v, Random rng) {
       fatigue: fatigue,
       morale: morale,
       injuredTerms: injured,
+      injuryName: injuryName,
     ),
     gotInjured: gotInjured,
   );

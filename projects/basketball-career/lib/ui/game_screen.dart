@@ -315,7 +315,7 @@ class _PlayerCard extends StatelessWidget {
             if (cond.injured)
               Padding(
                 padding: const EdgeInsets.only(top: 4),
-                child: Text('怪我中(あと${cond.injuredTerms}ターン)',
+                child: Text('${cond.injuryName.isEmpty ? '怪我' : cond.injuryName}で療養中(あと${cond.injuredTerms}ターン)',
                     style: const TextStyle(color: Colors.red)),
               ),
           ],
