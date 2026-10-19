@@ -32,6 +32,8 @@ void main() {
             g.goAbroad();
             abroad++;
           }
+        case Phase.event:
+          g.resolveEvent(0);
         case Phase.path:
           final first = !g.secondChance;
           final ok = g.chooseRoute(Route.pro);

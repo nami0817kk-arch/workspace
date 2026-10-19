@@ -22,7 +22,7 @@ void main() {
 
   testWidgets('はじめの画面から始めて、季節を進められる', (tester) async {
     tall(tester);
-    final c = GameController(rng: Random(1));
+    final c = GameController(rng: Random(1), events: false);
     await tester.pumpWidget(BasketballCareerApp(controller: c));
     await tester.pumpAndSettle();
     expect(find.text('6歳から始める'), findsOneWidget);
@@ -40,7 +40,7 @@ void main() {
   });
 
   testWidgets('進路の画面から契約を選べる', (tester) async {
-    final c = GameController(rng: Random(1));
+    final c = GameController(rng: Random(1), events: false);
     tall(tester);
     c.game = Game(
       player: Player(
@@ -64,7 +64,7 @@ void main() {
   });
 
   testWidgets('引退するとエンディングが出て、新しい選手を始められる', (tester) async {
-    final c = GameController(rng: Random(1));
+    final c = GameController(rng: Random(1), events: false);
     c.game = Game(
       player: Player(
         name: 'ユウ',
@@ -87,7 +87,7 @@ void main() {
   });
 
   test('操作のたびに保存され、読み戻せる', () async {
-    final c = GameController(rng: Random(2));
+    final c = GameController(rng: Random(2), events: false);
     c.newGame('セーブ');
     c.act(Action.practice);
     await pumpEventQueue();
@@ -97,8 +97,23 @@ void main() {
     expect(d.game!.player.name, 'セーブ');
   });
 
+  testWidgets('出来事が起きたら選べて、結果が出る', (tester) async {
+    tall(tester);
+    final c = GameController(rng: Random(1), events: false);
+    c.game = Game.start('イベント', rng: Random(1), events: false)
+      ..pendingEventId = 'friends';
+    await tester.pumpWidget(BasketballCareerApp(controller: c));
+    await tester.pumpAndSettle();
+    expect(find.text('友だちの誘い'), findsOneWidget);
+    await tester.tap(find.text('遊びに行く'));
+    await tester.pumpAndSettle();
+    expect(c.game!.pendingEventId, isNull);
+    expect(find.textContaining('「遊びに行く」を選んだ'), findsOneWidget);
+    expect(find.text('春の過ごし方'), findsOneWidget);
+  });
+
   test('おすすめで1年進める', () {
-    final c = GameController(rng: Random(4));
+    final c = GameController(rng: Random(4), events: false);
     c.newGame('オート');
     c.autoYear();
     expect(c.game!.player.age, 7);

@@ -35,7 +35,7 @@ bool winsContract(Player p, double achievement, Random rng) {
   final s = offerScore(p, achievement);
   if (s >= _sureLine) return true;
   if (s < _neverLine) return false;
-  return s + (rng.nextDouble() * 20 - 10) >= 50;
+  return s + (rng.nextDouble() * 20 - 10) >= 55;
 }
 
 /// 海外挑戦の条件。21歳以上で総合評価が一定以上。

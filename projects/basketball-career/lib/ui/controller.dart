@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../game/game.dart';
+import '../game/legacy.dart';
 import '../game/life.dart';
 import '../game/match.dart';
 import '../game/path.dart';
@@ -12,6 +13,9 @@ import '../game/player.dart';
 import 'labels.dart';
 
 const saveKey = 'basketball_career_save_v1';
+const historyKey = 'basketball_career_history_v1';
+const achievementsKey = 'basketball_career_achievements_v1';
+const historyLimit = 30;
 
 /// セーブの読み書き。端末ごと(クラウド同期はしない)。
 class SaveStore {
@@ -24,6 +28,44 @@ class SaveStore {
     } catch (_) {
       return null; // 壊れたセーブは無いものとして扱う
     }
+  }
+
+  Future<List<HistoryEntry>> loadHistory() async {
+    try {
+      final p = await SharedPreferences.getInstance();
+      final s = p.getString(historyKey);
+      if (s == null) return [];
+      return [
+        for (final e in jsonDecode(s) as List)
+          HistoryEntry.fromJson((e as Map).cast<String, dynamic>()),
+      ];
+    } catch (_) {
+      return [];
+    }
+  }
+
+  Future<void> saveHistory(List<HistoryEntry> h) async {
+    try {
+      final p = await SharedPreferences.getInstance();
+      await p.setString(
+          historyKey, jsonEncode([for (final e in h) e.toJson()]));
+    } catch (_) {}
+  }
+
+  Future<Set<String>> loadAchievements() async {
+    try {
+      final p = await SharedPreferences.getInstance();
+      return (p.getStringList(achievementsKey) ?? const []).toSet();
+    } catch (_) {
+      return {};
+    }
+  }
+
+  Future<void> saveAchievements(Set<String> ids) async {
+    try {
+      final p = await SharedPreferences.getInstance();
+      await p.setStringList(achievementsKey, ids.toList()..sort());
+    } catch (_) {}
   }
 
   // 書き込みは順番に行う。操作が速いと古い状態が後から書かれて、新しい方を上書きしてしまう。
@@ -59,9 +101,12 @@ Action recommendedAction(Game g) {
 
 /// 画面とゲームをつなぐ。操作のたびに保存する。
 class GameController extends ChangeNotifier {
-  GameController({SaveStore? store, Random? rng})
+  GameController({SaveStore? store, Random? rng, this.events = true})
       : store = store ?? SaveStore(),
         _rng = rng ?? Random();
+
+  /// 出来事を起こすか(テストで切る)。
+  final bool events;
 
   final SaveStore store;
   final Random _rng;
@@ -76,10 +121,21 @@ class GameController extends ChangeNotifier {
   /// 直前の操作で起きたこと(画面の「いまの結果」に出す)。
   List<String> recent = const [];
 
+  /// 殿堂(過去の選手)。新しい順。
+  List<HistoryEntry> history = const [];
+
+  /// 解除した実績の id(何度遊んでも残る)。
+  Set<String> unlocked = {};
+
+  /// 直前の一生で、新しく解除した実績。エンディングに出す。
+  List<Achievement> newlyUnlocked = const [];
+
   /// 直前の進路選択の結果メッセージ。
   String? pathMessage;
 
   Future<bool> loadSaved() async {
+    history = await store.loadHistory();
+    unlocked = await store.loadAchievements();
     final j = await store.load();
     if (j == null) return false;
     try {
@@ -93,7 +149,8 @@ class GameController extends ChangeNotifier {
 
   void newGame(String name) {
     final n = name.trim().isEmpty ? '名無し' : name.trim();
-    game = Game.start(n, rng: _rng);
+    newlyUnlocked = const [];
+    game = Game.start(n, rng: _rng, events: events);
     recent = const [];
     pathMessage = null;
     _commit();
@@ -113,6 +170,7 @@ class GameController extends ChangeNotifier {
   void act(Action a) {
     final g = game!;
     final ageBefore = g.player.age;
+    final wasWinter = g.slot == 3;
     final r = g.choose(
       a,
       focus,
@@ -123,7 +181,7 @@ class GameController extends ChangeNotifier {
     if (r.satOut) lines.add('怪我で大会に出られなかった。');
     final t = r.tournament;
     if (t != null) {
-      lines.add('【${leagueLabel(t.league)}の大会】${t.wins}勝${t.games - t.wins}敗'
+      lines.add('【${leagueLabel(t.league)}の${wasWinter ? '冬' : '夏'}の大会】${t.wins}勝${t.games - t.wins}敗'
           '${t.champion ? ' 優勝!' : ''}  実績 ${t.achievement.round()}(${achievementWord(t.achievement)})');
       for (var i = 0; i < t.matches.length; i++) {
         final m = t.matches[i];
@@ -154,6 +212,19 @@ class GameController extends ChangeNotifier {
     }
     recent = ['おすすめの過ごし方で1年進めた。', ...lines];
     notifyListeners();
+  }
+
+  /// 出来事の選択肢を選ぶ。
+  void chooseEvent(int i) {
+    final g = game!;
+    final e = g.pendingEvent!;
+    final label = e.options[i].label;
+    final lines = g.resolveEvent(i);
+    recent = [
+      '${e.title}: 「$label」を選んだ。',
+      if (lines.isNotEmpty) lines.join(' / '),
+    ];
+    _commit();
   }
 
   void chooseRoute(Route r) {
@@ -197,8 +268,23 @@ class GameController extends ChangeNotifier {
   }
 
   void _commit() {
-    notifyListeners();
     final g = game;
+    // 引退したら、殿堂に1度だけ書き込み、実績を解除する。
+    if (g != null && g.phase == Phase.retired && !g.archived) {
+      g.archived = true;
+      history = [HistoryEntry.of(g), ...history].take(historyLimit).toList();
+      store.saveHistory(history);
+      final earned = earnedBy(g);
+      newlyUnlocked = [
+        for (final a in achievements)
+          if (earned.contains(a.id) && !unlocked.contains(a.id)) a,
+      ];
+      if (newlyUnlocked.isNotEmpty) {
+        unlocked = {...unlocked, ...newlyUnlocked.map((a) => a.id)};
+        store.saveAchievements(unlocked);
+      }
+    }
+    notifyListeners();
     if (g != null) store.save(g.toJson());
   }
 }

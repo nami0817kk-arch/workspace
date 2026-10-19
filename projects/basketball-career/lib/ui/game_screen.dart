@@ -4,7 +4,9 @@ import '../game/game.dart';
 import '../game/life.dart';
 import '../game/match.dart';
 import '../game/player.dart';
+import 'art/court.dart';
 import 'controller.dart';
+import 'history_screen.dart';
 import 'labels.dart';
 
 /// 局面(季節 / 進路 / 引退)に合わせて画面を切り替える。
@@ -16,13 +18,31 @@ class GameScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('${game.player.name}  ${game.player.age}歳')),
+      appBar: AppBar(
+        title: Text('${game.player.name}  ${game.player.age}歳'),
+        actions: [
+          IconButton(
+            tooltip: '殿堂・実績',
+            icon: const Icon(Icons.emoji_events_outlined),
+            onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                    builder: (_) => HistoryScreen(controller: controller))),
+          ),
+          if (game.phase != Phase.retired)
+            IconButton(
+              tooltip: '最初からやり直す',
+              icon: const Icon(Icons.restart_alt),
+              onPressed: () => _confirmRestart(context),
+            ),
+        ],
+      ),
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 560),
             child: switch (game.phase) {
               Phase.season => _SeasonView(controller: controller, game: game),
+              Phase.event => _EventView(controller: controller, game: game),
               Phase.path => _PathView(controller: controller, game: game),
               Phase.retired => _EndingView(controller: controller, game: game),
             },
@@ -30,6 +50,27 @@ class GameScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+extension on GameScreen {
+  Future<void> _confirmRestart(BuildContext context) async {
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('最初からやり直しますか?'),
+        content: const Text('いまの選手の記録は消えます(殿堂には残りません)。'),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(ctx, false),
+              child: const Text('やめる')),
+          FilledButton(
+              onPressed: () => Navigator.pop(ctx, true),
+              child: const Text('やり直す')),
+        ],
+      ),
+    );
+    if (ok == true) controller.reset();
   }
 }
 
@@ -51,6 +92,8 @@ class _SeasonView extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
+        CourtHeader(game: g),
+        const SizedBox(height: 12),
         _PlayerCard(game: g),
         const SizedBox(height: 12),
         if (c.pathMessage != null) ...[
@@ -70,10 +113,10 @@ class _SeasonView extends StatelessWidget {
                 Text('${_seasonNames[g.slot]}の過ごし方',
                     style: const TextStyle(
                         fontSize: 16, fontWeight: FontWeight.bold)),
-                if (summer)
-                  const Padding(
-                    padding: EdgeInsets.only(top: 4),
-                    child: Text('この季節に大会がある。'),
+                if (summer || (g.slot == 3 && g.hasWinterCup))
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4),
+                    child: Text(summer ? 'この季節に大会がある。' : 'この季節に冬の全国選手権がある。'),
                   ),
                 const SizedBox(height: 12),
                 const Text('重点にする能力'),
@@ -135,6 +178,8 @@ class _SeasonView extends StatelessWidget {
             ),
           ),
         ),
+        const SizedBox(height: 12),
+        _AbilityCard(game: g),
         if (g.canGoAbroad) ...[
           const SizedBox(height: 12),
           FilledButton(
@@ -217,7 +262,28 @@ class _PlayerCard extends StatelessWidget {
                 child: Text('怪我中(あと${cond.injuredTerms}ターン)',
                     style: const TextStyle(color: Colors.red)),
               ),
-            const Divider(height: 24),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _AbilityCard extends StatelessWidget {
+  const _AbilityCard({required this.game});
+  final Game game;
+
+  @override
+  Widget build(BuildContext context) {
+    final p = game.player;
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('能力', style: TextStyle(fontWeight: FontWeight.bold)),
+            const SizedBox(height: 6),
             for (final a in Ability.values)
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 2),
@@ -311,6 +377,59 @@ class _Note extends StatelessWidget {
       );
 }
 
+// ── 出来事 ──
+
+class _EventView extends StatelessWidget {
+  const _EventView({required this.controller, required this.game});
+  final GameController controller;
+  final Game game;
+
+  @override
+  Widget build(BuildContext context) {
+    final e = game.pendingEvent!;
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        CourtHeader(game: game, height: 110),
+        const SizedBox(height: 12),
+        Card(
+          color: Theme.of(context).colorScheme.primaryContainer,
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(e.title,
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 8),
+                Text(e.body),
+                const SizedBox(height: 16),
+                for (var i = 0; i < e.options.length; i++)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: FilledButton(
+                      onPressed: () => controller.chooseEvent(i),
+                      child: Text(e.options[i].label),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ),
+        if (controller.recent.isNotEmpty) ...[
+          const SizedBox(height: 12),
+          _RecentCard(lines: controller.recent),
+        ],
+        const SizedBox(height: 12),
+        _PlayerCard(game: game),
+        const SizedBox(height: 12),
+        _AbilityCard(game: game),
+      ],
+    );
+  }
+}
+
 // ── 進路 ──
 
 class _PathView extends StatelessWidget {
@@ -383,6 +502,8 @@ class _EndingView extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
+        CourtHeader(game: g, height: 120),
+        const SizedBox(height: 12),
         Card(
           child: Padding(
             padding: const EdgeInsets.all(16),
@@ -408,6 +529,24 @@ class _EndingView extends StatelessWidget {
             ),
           ),
         ),
+        if (controller.newlyUnlocked.isNotEmpty) ...[
+          const SizedBox(height: 12),
+          Card(
+            color: Theme.of(context).colorScheme.primaryContainer,
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('実績解除!',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  for (final a in controller.newlyUnlocked)
+                    Text('${a.title}: ${a.description}'),
+                ],
+              ),
+            ),
+          ),
+        ],
         const SizedBox(height: 12),
         Card(
           child: Padding(
@@ -419,7 +558,7 @@ class _EndingView extends StatelessWidget {
                     style: TextStyle(fontWeight: FontWeight.bold)),
                 const SizedBox(height: 6),
                 for (final r in g.records)
-                  Text('${r.age}歳 ${leagueLabel(r.league)} '
+                  Text('${r.age}歳 ${leagueLabel(r.league)}${r.winter ? '(冬)' : ''} '
                       '${r.wins}勝${r.games - r.wins}敗'
                       '${r.champion ? ' 優勝' : ''}  '
                       '${r.ppg.toStringAsFixed(1)}点 '

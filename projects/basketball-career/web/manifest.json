@@ -1,11 +1,11 @@
 {
-    "name": "basketball_career",
-    "short_name": "basketball_career",
+    "name": "バスケ育成",
+    "short_name": "バスケ育成",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "バスケットボールの選手育成シミュレーション。",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

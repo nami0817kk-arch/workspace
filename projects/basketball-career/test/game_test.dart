@@ -1,7 +1,9 @@
 import 'dart:math';
 
 import 'package:basketball_career/game/career.dart';
+import 'package:basketball_career/game/events.dart';
 import 'package:basketball_career/game/game.dart';
+import 'package:basketball_career/game/legacy.dart';
 import 'package:basketball_career/game/life.dart';
 import 'package:basketball_career/game/match.dart';
 import 'package:basketball_career/game/path.dart';
@@ -217,7 +219,7 @@ void main() {
   });
 
   group('Game', () {
-    Game fresh({int seed = 7}) => Game.start('テスト', rng: Random(seed));
+    Game fresh({int seed = 7}) => Game.start('テスト', rng: Random(seed), events: false);
 
     test('1年は4回の choose で進む。夏に大会が行われる', () {
       final g = fresh();
@@ -256,6 +258,7 @@ void main() {
 
     test('プロに落ちたら大学・実業団だけ。卒業後はプロだけで、落ちたら引退', () {
       final g = Game(
+          eventsEnabled: false,
           player: weak().copyWith(age: 19), rng: Random(1), pathPending: true);
       expect(g.chooseRoute(Route.pro), isFalse);
       expect(g.proRejected, isTrue);
@@ -275,6 +278,7 @@ void main() {
 
     test('強い選手はプロ契約を取れ、プロの段階で海外挑戦・引退ができる', () {
       final g = Game(
+          eventsEnabled: false,
           player: strong(height: 205).copyWith(age: 21),
           rng: Random(1),
           pathPending: true);
@@ -292,6 +296,7 @@ void main() {
 
     test('プロで評価が低い年が続くと戦力外', () {
       final g = Game(
+        eventsEnabled: false,
         player: weak().copyWith(age: 20),
         rng: Random(1),
         track: Track.pro,
@@ -304,6 +309,7 @@ void main() {
 
     test('40歳を超えたら強制引退', () {
       final g = Game(
+        eventsEnabled: false,
         player: strong().copyWith(age: maxProAge),
         rng: Random(1),
         track: Track.pro,
@@ -316,6 +322,7 @@ void main() {
 
     test('怪我で大会に出られない年は記録が残らない', () {
       final g = Game(
+        eventsEnabled: false,
         player: strong().copyWith(age: 12),
         rng: Random(1),
         condition: const Condition(injuredTerms: 5),
@@ -343,7 +350,7 @@ void main() {
 
     test('最後まで通しで遊べる(どの乱数でも止まらず、引退に着く)', () {
       for (var seed = 0; seed < 40; seed++) {
-        final g = Game.start('ファズ', rng: Random(seed));
+        final g = Game.start('ファズ', rng: Random(seed), events: false);
         var guard = 0;
         while (g.phase != Phase.retired && guard++ < 400) {
           switch (g.phase) {
@@ -355,13 +362,170 @@ void main() {
               if (g.canGoAbroad) g.goAbroad();
             case Phase.path:
               g.chooseRoute(g.availableRoutes.first);
-            case Phase.retired:
+            case Phase.event || Phase.retired:
               break;
           }
         }
         expect(g.phase, Phase.retired, reason: 'seed=$seed');
         expect(g.player.age, lessThanOrEqualTo(maxProAge + 2));
       }
+    });
+  });
+
+  group('events', () {
+    Game withEvent(String id) => Game(
+          player: strong().copyWith(age: 12),
+          rng: Random(1),
+          eventsEnabled: false,
+          pendingEventId: id,
+        );
+
+    test('出来事が起きている間は季節を進められない', () {
+      final g = withEvent('friends');
+      expect(g.phase, Phase.event);
+      expect(() => g.choose(Action.rest, Ability.pass), throwsStateError);
+      g.resolveEvent(0);
+      expect(g.phase, Phase.season);
+      expect(() => g.resolveEvent(0), throwsStateError);
+    });
+
+    test('選択の結果が当たる(友だち: 気持ちが上がり疲れが取れる)', () {
+      final g = withEvent('friends');
+      g.condition = const Condition(fatigue: 40, morale: 40);
+      final lines = g.resolveEvent(0);
+      expect(g.condition.morale, greaterThan(40));
+      expect(g.condition.fatigue, lessThan(40));
+      expect(lines, isNotEmpty);
+    });
+
+    test('重点の能力に足す出来事は、直近に選んだ重点に効く', () {
+      final g = withEvent('coach_menu');
+      g.lastFocus = Ability.pass;
+      final before = g.player.of(Ability.pass);
+      g.resolveEvent(0);
+      expect(g.player.of(Ability.pass), before + 3);
+    });
+
+    test('特性を得られる。矛盾するものは得られない', () {
+      final g = Game(
+        player: strong().copyWith(age: 18, traits: {Trait.nervy}),
+        rng: Random(1),
+        eventsEnabled: false,
+        pendingEventId: 'scout',
+      );
+      g.resolveEvent(1); // 勝負強い(ノミの心臓と矛盾)
+      expect(g.player.traits.contains(Trait.clutch), isFalse);
+    });
+
+    test('年齢に合わない出来事は引かれない', () {
+      final rng = Random(5);
+      final young = Player(
+          name: 'a', age: 7, potential: 50, heightCm: 120, heightGenes: 0.5);
+      for (var i = 0; i < 500; i++) {
+        final e = rollEvent(young, pro: false, rng: rng);
+        if (e != null) {
+          expect(e.minAge, lessThanOrEqualTo(7));
+          expect(e.proOnly, isFalse);
+        }
+      }
+    });
+
+    test('出来事つきでも最後まで遊べる(毎回最初の選択肢を選ぶ)', () {
+      for (var seed = 0; seed < 30; seed++) {
+        final g = Game.start('ファズ', rng: Random(seed));
+        var guard = 0;
+        var sawEvent = false;
+        while (g.phase != Phase.retired && guard++ < 600) {
+          switch (g.phase) {
+            case Phase.season:
+              g.choose(
+                  g.condition.fatigue >= 60 || g.condition.injured
+                      ? Action.rest
+                      : Action.practice,
+                  Ability.values[guard % Ability.values.length]);
+            case Phase.event:
+              sawEvent = true;
+              g.resolveEvent(0);
+            case Phase.path:
+              g.chooseRoute(g.availableRoutes.first);
+            case Phase.retired:
+              break;
+          }
+        }
+        expect(g.phase, Phase.retired, reason: 'seed=$seed');
+        expect(sawEvent, isTrue);
+      }
+    });
+
+    test('出来事の途中でも保存して読み戻せる', () {
+      final g = withEvent('rival');
+      g.lastFocus = Ability.speed;
+      final h = Game.fromJson(g.toJson());
+      expect(h.phase, Phase.event);
+      expect(h.pendingEventId, 'rival');
+      expect(h.lastFocus, Ability.speed);
+    });
+  });
+
+  group('winter / legacy', () {
+    test('高校では冬にも大会があり、ミニバスにはない', () {
+      final hs = Game(
+        eventsEnabled: false,
+        player: strong().copyWith(age: 16),
+        rng: Random(1),
+        slot: 3,
+      );
+      expect(hs.hasWinterCup, isTrue);
+      final r = hs.choose(Action.rest, Ability.pass);
+      expect(r.tournament, isNotNull);
+      expect(hs.records.single.winter, isTrue);
+      final kid = Game(
+        eventsEnabled: false,
+        player: strong().copyWith(age: 8),
+        rng: Random(1),
+        slot: 3,
+      );
+      expect(kid.hasWinterCup, isFalse);
+      expect(kid.choose(Action.rest, Ability.pass).tournament, isNull);
+    });
+
+    test('殿堂の記録は保存して読み戻せる', () {
+      final g = Game(
+        eventsEnabled: false,
+        player: strong(height: 205).copyWith(age: 25),
+        rng: Random(1),
+        track: Track.pro,
+      );
+      g.choose(Action.rest, Ability.pass);
+      g.choose(Action.rest, Ability.pass);
+      g.retire();
+      final h = HistoryEntry.of(g);
+      final j = HistoryEntry.fromJson(h.toJson());
+      expect(j.name, h.name);
+      expect(j.pro, isTrue);
+      expect(j.reason, g.retiredReason);
+      expect(HistoryEntry.fromJson({}).name, '名無し');
+    });
+
+    test('実績の判定(巨人・3Pの名手・プロの扉)', () {
+      final p = strong(height: 207)
+          .copyWith(abilities: {for (final a in Ability.values) a: 91});
+      final g = Game(
+        eventsEnabled: false,
+        player: p.copyWith(age: 25),
+        rng: Random(1),
+        track: Track.pro,
+      );
+      g.choose(Action.rest, Ability.pass);
+      g.choose(Action.rest, Ability.pass);
+      final got = earnedBy(g);
+      expect(got, containsAll(['giant', 'sniper', 'wall', 'allround']));
+      expect(got.contains('late_pro'), isFalse);
+    });
+
+    test('実績の id は重複しない', () {
+      final ids = achievements.map((a) => a.id).toList();
+      expect(ids.toSet().length, ids.length);
     });
   });
 }

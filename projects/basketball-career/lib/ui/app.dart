@@ -47,8 +47,9 @@ class _BasketballCareerAppState extends State<BasketballCareerApp> {
 }
 
 ThemeData _theme(Brightness b) {
-  final scheme =
-      ColorScheme.fromSeed(seedColor: const Color(0xFFE65100), brightness: b);
+  final scheme = ColorScheme.fromSeed(
+          seedColor: const Color(0xFFE65100), brightness: b)
+      .copyWith(primary: const Color(0xFFE65100), onPrimary: Colors.white);
   return ThemeData(
     colorScheme: scheme,
     useMaterial3: true,

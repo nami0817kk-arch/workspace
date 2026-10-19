@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'career.dart';
+import 'events.dart';
 import 'life.dart';
 import 'match.dart';
 import 'path.dart';
@@ -9,7 +10,7 @@ import 'season.dart';
 import 'traits.dart';
 
 /// 画面が見る局面。対応する操作だけを呼ぶ。
-enum Phase { season, path, retired }
+enum Phase { season, event, path, retired }
 
 /// どこでプレーしているか。
 enum Track { school, university, corporate, pro }
@@ -26,6 +27,7 @@ class YearRecord {
     required this.apg,
     required this.champion,
     required this.achievement,
+    this.winter = false,
   });
 
   final int age;
@@ -38,7 +40,11 @@ class YearRecord {
   final bool champion;
   final double achievement;
 
+  /// 冬の大会の記録か。
+  final bool winter;
+
   Map<String, dynamic> toJson() => {
+        'winter': winter,
         'age': age,
         'league': league.name,
         'wins': wins,
@@ -63,6 +69,7 @@ class YearRecord {
         apg: (j['apg'] as num?)?.toDouble() ?? 0,
         champion: (j['champion'] as bool?) ?? false,
         achievement: (j['achievement'] as num?)?.toDouble() ?? 0,
+        winter: (j['winter'] as bool?) ?? false,
       );
 }
 
@@ -87,7 +94,7 @@ class TermReport {
   final bool yearEnded;
 }
 
-const _recentCount = 3;
+const _recentCount = 4;
 
 /// 選手育成ゲームの本体。画面に依存しない。
 ///
@@ -107,7 +114,11 @@ class Game {
     this.pathPending = false,
     this.retiredReason,
     this.lowYears = 0,
+    this.archived = false,
     this.slot = 0,
+    this.pendingEventId,
+    this.lastFocus = Ability.threePoint,
+    this.eventsEnabled = true,
     List<double>? recentAchievements,
     List<YearRecord>? records,
   })  : rng = rng ?? Random(),
@@ -115,12 +126,13 @@ class Game {
         records = records ?? [];
 
   /// 新しく始める。素質・身長の素質・生まれつきの特性を引く。
-  factory Game.start(String name, {Random? rng}) {
+  factory Game.start(String name, {Random? rng, bool events = true}) {
     final r = rng ?? Random();
     final potential = (30 + r.nextInt(40) + r.nextInt(31)).clamp(30, 100);
     return Game(
       player: newPlayer(name, potential, r.nextDouble(), rollInnateTraits(r)),
       rng: r,
+      eventsEnabled: events,
     );
   }
 
@@ -139,7 +151,19 @@ class Game {
   bool pathPending;
   String? retiredReason;
   int lowYears;
+
+  /// 殿堂に書き込み済みか(引退のとき1度だけ)。
+  bool archived;
   int slot;
+
+  /// 起きている出来事(選ぶまで次へ進めない)。
+  String? pendingEventId;
+
+  /// 直近に重点にした能力(出来事の効果で使う)。
+  Ability lastFocus;
+
+  /// 出来事を起こすか。テストでは切って、出来事なしの流れを固定する。
+  final bool eventsEnabled;
   final List<double> recentAchievements;
   final List<YearRecord> records;
 
@@ -147,7 +171,14 @@ class Game {
 
   Phase get phase => retired
       ? Phase.retired
-      : (pathPending ? Phase.path : Phase.season);
+      : pathPending
+          ? Phase.path
+          : pendingEventId != null
+              ? Phase.event
+              : Phase.season;
+
+  EventDef? get pendingEvent =>
+      pendingEventId == null ? null : eventById(pendingEventId!);
 
   Stage get stage {
     if (retired) return Stage.retired;
@@ -168,6 +199,9 @@ class Game {
         Stage.pro => abroad ? League.proAbroad : League.proDomestic,
         _ => League.highSchool,
       };
+
+  /// 冬の大会(全国選手権)がある段階。高校と大学・実業団。
+  bool get hasWinterCup => stage == Stage.highSchool || stage == Stage.college;
 
   /// 直近の大会の実績の平均(進路の評価に使う)。まだ無ければ 30。
   double get achievement => recentAchievements.isEmpty
@@ -195,13 +229,15 @@ class Game {
     Clutch Function(int margin)? chooseClutch,
   }) {
     if (phase != Phase.season) throw StateError('今は季節を選べない: $phase');
+    lastFocus = focus;
     final r = playTerm(player, condition, action, focus, rng);
     player = r.player;
     condition = r.condition;
 
     TournamentResult? t;
     var satOut = false;
-    if (slot == 1) {
+    final winter = slot == 3 && hasWinterCup;
+    if (slot == 1 || winter) {
       if (condition.injured) {
         satOut = true;
       } else {
@@ -212,7 +248,7 @@ class Game {
           rng: rng,
           chooseClutch: chooseClutch,
         );
-        _record(t);
+        _record(t, winter: winter);
       }
     }
 
@@ -221,6 +257,9 @@ class Game {
     if (slot >= 4) {
       _endYear();
       yearEnded = true;
+    }
+    if (eventsEnabled && phase == Phase.season) {
+      pendingEventId = rollEvent(player, pro: track == Track.pro, rng: rng)?.id;
     }
     return TermReport(
       action: action,
@@ -231,7 +270,7 @@ class Game {
     );
   }
 
-  void _record(TournamentResult t) {
+  void _record(TournamentResult t, {bool winter = false}) {
     records.add(YearRecord(
       age: player.age,
       league: t.league,
@@ -242,6 +281,7 @@ class Game {
       apg: t.apg,
       champion: t.champion,
       achievement: t.achievement,
+      winter: winter,
     ));
     recentAchievements.add(t.achievement);
     while (recentAchievements.length > _recentCount) {
@@ -269,6 +309,47 @@ class Game {
           _retire('${maxProAge + 1}歳で現役を退いた');
         }
     }
+  }
+
+  // ── 出来事 ──
+
+  /// 起きている出来事の選択肢 `i` を選ぶ。結果を行にして返す。
+  List<String> resolveEvent(int i) {
+    final e = pendingEvent;
+    if (phase != Phase.event || e == null) {
+      throw StateError('今は出来事が無い: $phase');
+    }
+    if (i < 0 || i >= e.options.length) throw RangeError.index(i, e.options);
+    final opt = e.options[i];
+    final before = player;
+    final c0 = condition;
+    final r = applyEffect(player, condition, opt.effect, lastFocus, rng);
+    player = r.player;
+    condition = r.condition;
+    pendingEventId = null;
+    if (opt.effect.achievement != 0) {
+      final base = recentAchievements.isEmpty ? 30.0 : recentAchievements.removeLast();
+      recentAchievements.add((base + opt.effect.achievement).clamp(0, 100).toDouble());
+    }
+    final lines = <String>[];
+    String sgn(num d) => d > 0 ? '+$d' : '$d';
+    for (final a in Ability.values) {
+      final d = player.of(a) - before.of(a);
+      if (d != 0) lines.add('${a.label} ${sgn(d)}');
+    }
+    final dm = condition.morale - c0.morale;
+    if (dm != 0) lines.add('気持ち ${sgn(dm)}');
+    final df = condition.fatigue - c0.fatigue;
+    if (df != 0) lines.add('疲れ ${sgn(df)}');
+    if (player.heightCm != before.heightCm) {
+      lines.add('身長 ${sgn(double.parse((player.heightCm - before.heightCm).toStringAsFixed(1)))}cm');
+    }
+    for (final t in player.traits.difference(before.traits)) {
+      lines.add('特性「${t.label}」を得た');
+    }
+    if (r.gotInjured) lines.add('怪我をした');
+    if (opt.effect.achievement != 0) lines.add('評価が上がった');
+    return lines;
   }
 
   // ── 進路 ──
@@ -349,7 +430,10 @@ class Game {
         'pathPending': pathPending,
         'retiredReason': retiredReason,
         'lowYears': lowYears,
+        'archived': archived,
         'slot': slot,
+        'pendingEventId': pendingEventId,
+        'lastFocus': lastFocus.name,
         'recentAchievements': recentAchievements,
         'records': [for (final r in records) r.toJson()],
       };
@@ -370,7 +454,11 @@ class Game {
         pathPending: (j['pathPending'] as bool?) ?? false,
         retiredReason: j['retiredReason'] as String?,
         lowYears: (j['lowYears'] as num?)?.toInt() ?? 0,
+        archived: (j['archived'] as bool?) ?? false,
         slot: (j['slot'] as num?)?.toInt() ?? 0,
+        pendingEventId: j['pendingEventId'] as String?,
+        lastFocus: Ability.parse((j['lastFocus'] as String?) ?? '') ??
+            Ability.threePoint,
         recentAchievements: [
           for (final v in (j['recentAchievements'] as List?) ?? const [])
             (v as num).toDouble(),
