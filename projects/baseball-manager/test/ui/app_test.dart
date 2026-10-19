@@ -1785,6 +1785,20 @@ void _rankTests() {
       expect(find.byKey(const Key('goal-row')), findsNothing);
     });
 
+    testWidgets('年のはじめのお知らせは、キャリアでしか決められないものだけ(カードと重複しない)', (t) async {
+      final c = await _start(t);
+      Game? g;
+      for (var sd = 0; sd < 60 && g == null; sd++) {
+        final x = _until((g) => g.canUseFa, seed: sd, potential: 100);
+        if (x.canUseFa) g = x;
+      }
+      c.adopt(g!);
+      await t.pumpAndSettle();
+      expect(find.byKey(const Key('offseason-card')), findsOneWidget);
+      expect(find.text('オフの過ごし方を選べる'), findsNothing); // カードが出ているので不要
+      expect(find.textContaining('FA権を使える'), findsOneWidget);
+    });
+
     testWidgets('実績の絞りこみ', (t) async {
       final c = await _start(t);
       c.unlocked = {'first-pro'};

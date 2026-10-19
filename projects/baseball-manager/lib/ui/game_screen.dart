@@ -722,12 +722,11 @@ class _TodoChips extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // 進学先・ポジション・オフは、このタブの下にカードが出るので、お知らせは要らない。
+    // キャリアタブでしか決められないものだけ知らせる。
     final items = <String>[
-      if (game.canChooseSchool) '進学先を決められる',
-      if (game.canChoosePosition) 'ポジションを決められる',
-      if (game.canChooseOffseason) 'オフの過ごし方を選べる',
-      if (game.canUseFa) 'FA権を使える',
-      if (game.canMoveOverseas) '海外へ移籍できる',
+      if (game.canUseFa) 'FA権を使える(キャリア)',
+      if (game.canMoveOverseas) '海外へ移籍できる(キャリア)',
     ];
     final outlook = game.draftOutlook;
     final release = game.releaseWarning;
@@ -799,6 +798,12 @@ void _showYearPlan(BuildContext context, Game game) {
   );
 }
 
+String _offShort(Offseason o) => switch (o) {
+      Offseason.camp => '(疲れ↑)',
+      Offseason.family => '(やる気↑)',
+      Offseason.rehab => '(疲れ↓)',
+    };
+
 class _OffseasonCard extends StatelessWidget {
   const _OffseasonCard({required this.controller, required this.game});
   final GameController controller;
@@ -815,7 +820,7 @@ class _OffseasonCard extends StatelessWidget {
           children: [
             Text('オフの過ごし方', style: Theme.of(context).textTheme.titleSmall),
             const SizedBox(height: 2),
-            Text('年に一度、選べます(選ばなくてもOK)。自主トレは、下で選んだ重点の能力を鍛えます。',
+            Text('年に一度、選べます(選ばなくてもOK)。長押しで説明が出ます。',
                 style: Theme.of(context).textTheme.bodySmall),
             const SizedBox(height: 8),
             Wrap(spacing: 6, runSpacing: 6, children: [
@@ -825,17 +830,10 @@ class _OffseasonCard extends StatelessWidget {
                   child: OutlinedButton(
                     key: Key('offseason-${o.name}'),
                     onPressed: () => controller.chooseOffseason(o),
-                    child: Text(o.label),
+                    child: Text('${o.label} ${_offShort(o)}'),
                   ),
                 ),
             ]),
-            const SizedBox(height: 6),
-            Text(
-                [
-                  for (final o in Offseason.values)
-                    '${o.label}: ${o.description}'
-                ].join('\n'),
-                style: Theme.of(context).textTheme.bodySmall),
           ],
         ),
       ),

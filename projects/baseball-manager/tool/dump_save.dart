@@ -20,8 +20,16 @@ void main(List<String> a) {
     if (stage == 'pathChoice' && g.phase == Phase.pathChoice) {
       break;
     }
+    if (stage == 'event' && g.phase == Phase.event && g.player.age >= 14) {
+      break;
+    }
+    if (stage == 'fa' && g.canUseFa) {
+      break;
+    }
     if (stage != 'retired' &&
         stage != 'history' &&
+        stage != 'event' &&
+        stage != 'fa' &&
         g.phase == Phase.term &&
         g.stage.name == stage &&
         g.slot == 5) {
