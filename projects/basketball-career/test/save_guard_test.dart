@@ -21,7 +21,7 @@ void step(Game g) {
       );
       if (g.canGoAbroad) g.goAbroad();
     case Phase.clutch:
-      g.resolveClutch(Clutch.values[g.player.age % 4]);
+      g.resolveClutch(Clutch.values[g.player.age % Clutch.values.length]);
     case Phase.event:
       g.resolveEvent(g.player.age % 2);
     case Phase.path:

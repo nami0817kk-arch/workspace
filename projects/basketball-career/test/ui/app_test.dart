@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:basketball_career/game/game.dart';
 import 'package:basketball_career/game/life.dart';
+import 'package:basketball_career/game/match.dart';
 import 'package:basketball_career/game/path.dart';
 import 'package:basketball_career/game/player.dart';
 import 'package:basketball_career/game/rival.dart';
@@ -180,7 +181,7 @@ void main() {
     await tester.pumpWidget(BasketballCareerApp(controller: c!));
     await tester.pumpAndSettle();
     expect(find.textContaining('勝負どころ!'), findsOneWidget);
-    expect(find.textContaining('成功率'), findsNWidgets(4));
+    expect(find.textContaining('成功率'), findsNWidgets(Clutch.values.length));
     // 大会の途中でまた勝負どころが来ることもある。終わるまで選び続ける。
     var guard = 0;
     while (c.game!.phase == Phase.clutch && guard++ < 10) {

@@ -483,6 +483,16 @@ const events = <EventDef>[
     ],
   ),
   EventDef(
+    id: 'ft_practice',
+    title: '居残りのフリースロー',
+    body: '練習後の体育館。{mate}が「勝負どころで決めるのは、フリースローだ」と言って、黙々と打ち続けている。',
+    minAge: 9,
+    options: [
+      EventOption('一緒に100本打つ', Effect(abilities: {Ability.freeThrow: 4}, fatigue: 8, teamwork: 5)),
+      EventOption('フォームの確認だけして帰る', Effect(abilities: {Ability.freeThrow: 2}, fatigue: -3)),
+    ],
+  ),
+  EventDef(
     id: 'breakthrough',
     title: '突然のひらめき',
     body: '練習中、これまで掴めなかった感覚が突然わかった。体が勝手に動く。',

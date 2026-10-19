@@ -8,7 +8,8 @@ enum Clutch {
   drive('ドライブ', '切り込んで決める。ゴール下とドリブルが効く。2点。'),
   threePoint('3P', '外から狙う。成功すれば3点。'),
   pass('パス', '味方に任せる。パス力が効く。2点。'),
-  defend('ディフェンス', '最後の相手の攻撃を止める。');
+  defend('ディフェンス', '最後の相手の攻撃を止める。'),
+  drawFoul('ファウルをもらう', '強く当たってファウルを誘い、フリースロー2本を決める。フリースローが効く。');
 
   const Clutch(this.label, this.description);
   final String label;
@@ -175,7 +176,20 @@ const clutchWindow = 3;
 double _noise(Random rng) =>
     (rng.nextDouble() + rng.nextDouble() + rng.nextDouble() - 1.5) / 1.5;
 
+/// ファウルを誘える確率(強く当たる・切り込む力と、相手の守備)。
+double foulDrawChance(Player p, double oppDefense) =>
+    (0.30 +
+            0.35 * ((p.effective(Ability.physical) + p.effective(Ability.dribble)) / 200) -
+            0.10 * (oppDefense / 100))
+        .clamp(0.1, 0.8);
+
+/// フリースロー1本が入る確率。
+double freeThrowChance(Player p, double form) =>
+    (0.40 + 0.50 * (p.effective(Ability.freeThrow) / 100) + (form - 1) * 0.1 + clutchBonus(p.traits) * 0.5)
+        .clamp(0.2, 0.95);
+
 /// 勝負どころの成功率(0〜1)。`oppDefense` は相手の守備の強さ(0〜100)。
+/// ファウルをもらうは「ファウルを誘って、2本とも決める」確率(1本だけでも1点は入る)。
 double clutchChance(Player p, Clutch c, double oppDefense, double form) {
   final opp = oppDefense / 100;
   final double raw = switch (c) {
@@ -187,6 +201,8 @@ double clutchChance(Player p, Clutch c, double oppDefense, double form) {
       0.28 + 0.45 * (p.effective(Ability.pass) / 100) - 0.12 * opp,
     Clutch.defend =>
       0.25 + 0.50 * (p.effective(Ability.defense) / 100) - 0.15 * opp,
+    Clutch.drawFoul => foulDrawChance(p, oppDefense) *
+        pow(freeThrowChance(p, form), 2).toDouble(),
   };
   // ポジションの持ち味。
   final perk = switch ((p.position, c)) {
@@ -195,6 +211,7 @@ double clutchChance(Player p, Clutch c, double oppDefense, double form) {
     (Position.center, Clutch.defend) => 0.08,
     _ => 0.0,
   };
+  if (c == Clutch.drawFoul) return raw.clamp(0.03, 0.9);
   return (raw * (0.8 + form * 0.2) + clutchBonus(p.traits) + perk)
       .clamp(0.03, 0.9);
 }
@@ -263,7 +280,20 @@ MatchResult finishMatch(Player p, MatchState s, Clutch? choice, Random rng) {
   if (s.needsClutch) {
     final c = choice ?? bestClutch(p, s.oppStrength, s.form);
     used = c;
-    final success = rng.nextDouble() < clutchChance(p, c, s.oppStrength, s.form);
+    var success = rng.nextDouble() < clutchChance(p, c, s.oppStrength, s.form);
+    if (c == Clutch.drawFoul) {
+      // ファウルを誘えたか→フリースロー2本。入った本数だけ得点(2本とも入れば成功)。
+      var made = 0;
+      if (rng.nextDouble() < foulDrawChance(p, s.oppStrength)) {
+        final ft = freeThrowChance(p, s.form);
+        for (var i = 0; i < 2; i++) {
+          if (rng.nextDouble() < ft) made++;
+        }
+      }
+      team += made;
+      points += made;
+      success = made == 2;
+    }
     ok = success;
     switch (c) {
       case Clutch.drive:
@@ -284,6 +314,8 @@ MatchResult finishMatch(Player p, MatchState s, Clutch? choice, Random rng) {
       case Clutch.defend:
         // 守れなければ、相手が最後に決める。
         if (!success) opp += 2;
+      case Clutch.drawFoul:
+        break; // 得点は上で加算済み
     }
   }
 
@@ -342,8 +374,11 @@ Clutch bestClutch(Player p, double oppStrength, double form) {
   Clutch best = Clutch.drive;
   var bestScore = -1.0;
   for (final c in Clutch.values) {
-    final value = clutchChance(p, c, oppStrength, form) *
-        (c == Clutch.threePoint ? 1.5 : 1.0);
+    // 期待値(2点を1とする)。ファウルは1本でも点になるので、成功率ではなく期待本数で比べる。
+    final value = c == Clutch.drawFoul
+        ? foulDrawChance(p, oppStrength) * freeThrowChance(p, form)
+        : clutchChance(p, c, oppStrength, form) *
+            (c == Clutch.threePoint ? 1.5 : 1.0);
     if (value > bestScore) {
       bestScore = value;
       best = c;

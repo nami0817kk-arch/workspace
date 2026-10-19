@@ -1891,4 +1891,63 @@ void main() {
       expect(text, contains('海外プロ'));
     });
   });
+
+  group('フリースローとファウルをもらう', () {
+    Player shooter(int ft) => strong().copyWith(abilities: {
+          for (final a in Ability.values) a: 70,
+          Ability.freeThrow: ft,
+        });
+
+    test('フリースロー力が高いほど入り、ファウルをもらうの成功率が上がる', () {
+      expect(freeThrowChance(shooter(90), 1), greaterThan(freeThrowChance(shooter(30), 1)));
+      expect(clutchChance(shooter(90), Clutch.drawFoul, 50, 1),
+          greaterThan(clutchChance(shooter(30), Clutch.drawFoul, 50, 1)));
+    });
+
+    test('相手の守備が強いほどファウルを誘いにくい', () {
+      final p = shooter(70);
+      expect(foulDrawChance(p, 30), greaterThan(foulDrawChance(p, 90)));
+    });
+
+    test('フリースロー2本の結果が得点に入る(0〜2点)。2本とも入れば成功', () {
+      final s = MatchState(
+        team: 60, opp: 61, points: 10, rebounds: 4, assists: 3,
+        teamStrength: 60, oppStrength: 60, form: 1,
+        teamQuarters: const [15, 15, 15, 15], oppQuarters: const [15, 15, 15, 16],
+      );
+      final scored = <int>{};
+      var okCount = 0;
+      for (var seed = 0; seed < 300; seed++) {
+        final r = finishMatch(shooter(90), s, Clutch.drawFoul, Random(seed));
+        final gained = r.points - s.points;
+        scored.add(gained);
+        expect(gained, inInclusiveRange(0, 2));
+        if (r.clutchSuccess == true) {
+          okCount++;
+          expect(gained, 2);
+        }
+      }
+      expect(scored, {0, 1, 2}, reason: '0・1・2点のどれも起きる');
+      expect(okCount, greaterThan(0));
+    });
+
+    test('おまかせでは、フリースローが上手く外が苦手な選手はファウルを選ぶことがある', () {
+      final p = strong(height: 180).copyWith(abilities: {
+        for (final a in Ability.values) a: 40,
+        Ability.freeThrow: 99,
+        Ability.physical: 99,
+        Ability.dribble: 99,
+      });
+      expect(bestClutch(p, 50, 1), Clutch.drawFoul);
+    });
+
+    test('フリースローは能力に加わり、古いセーブでは初期値になる', () {
+      expect(Ability.freeThrow.label, 'フリースロー');
+      final old = Player.fromJson({
+        'name': 'old',
+        'abilities': {'pass': 50},
+      });
+      expect(old.of(Ability.freeThrow), startLevel);
+    });
+  });
 }
