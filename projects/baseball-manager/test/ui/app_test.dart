@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:baseball_manager/game/career.dart';
+import 'package:baseball_manager/game/childhood.dart';
 import 'package:baseball_manager/game/flavor.dart';
 import 'package:baseball_manager/game/invest.dart';
 import 'package:baseball_manager/game/game.dart';
@@ -994,6 +995,15 @@ void _rankTests() {
     await t.pumpAndSettle();
     await t.pageBack();
     await t.pumpAndSettle();
+    // 分かれ道(全部)の出来事カードも、狭い画面・大きい文字で溢れない
+    for (final st in childhoodSteps) {
+      final k = Game.newGame(name: 'テスト', role: Role.batter, rng: Random(2))
+        ..pendingEvent = st.event
+        ..phase = Phase.event;
+      c.adopt(k);
+      await t.pumpAndSettle();
+      expect(t.takeException(), isNull, reason: st.id);
+    }
     final lives = <Game>[
       Game.newGame(name: 'テスト', role: Role.pitcher, rng: Random(5)),
       _until((g) => g.stage == Stage.juniorHigh, seed: 5),
