@@ -25,6 +25,7 @@ from PIL import Image, ImageDraw
 from . import anime, camera, fight, plan as planmod, sfx
 
 W, H = camera.W, camera.H
+LOUDNORM = "loudnorm=I=-15:TP=-1.5:LRA=12"       # 音量をそろえ、ピークの頭打ち(YouTube は約 -14 LUFS に合わせる。ピークが 0 を越えると再エンコードで歪む)
 
 
 def load_episode(path) -> dict:
@@ -132,6 +133,6 @@ def build_episode(ep: dict, out: Path, reuse_figs: bool = False, force: bool = F
     lst.write_text("".join(f"file '{Path(s).resolve().as_posix()}'\n" for s in segs), encoding="utf-8")
     final = out / f"{ep.get('name', 'episode')}{'_preview' if preview else ''}.mp4"
     subprocess.run([ff, "-y", "-loglevel", "error", "-f", "concat", "-safe", "0", "-i", str(lst), "-c:v", "libx264", "-pix_fmt", "yuv420p",
-                    "-crf", "18", "-c:a", "aac", "-b:a", "192k", "-ar", "44100", "-ac", "2", str(final)], check=True)
+                    "-crf", "18", "-af", LOUDNORM, "-c:a", "aac", "-b:a", "192k", "-ar", "44100", "-ac", "2", str(final)], check=True)
     print(f"\n【エピソード】{final}({len(segs)} 区間)")
     return final
