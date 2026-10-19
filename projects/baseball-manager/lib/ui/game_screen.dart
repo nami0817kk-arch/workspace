@@ -593,7 +593,7 @@ class _StatusCard extends StatelessWidget {
                       minimumSize: const Size.fromHeight(36)),
                   onPressed: controller.autoSpend,
                   icon: const Icon(Icons.trending_up),
-                  label: const Text('貯めた経験点を、おまかせで振り分ける'),
+                  label: const Text('経験点をおまかせで振り分け'),
                 ),
               ),
             const SizedBox(height: 4),
@@ -739,8 +739,8 @@ class _TodoChips extends StatelessWidget {
     // 進学先・ポジション・オフは、このタブの下にカードが出るので、お知らせは要らない。
     // キャリアタブでしか決められないものだけ知らせる。
     final items = <String>[
-      if (game.canUseFa) 'FA権を使える(キャリア)',
-      if (game.canMoveOverseas) '海外へ移籍できる(キャリア)',
+      if (game.canUseFa) 'FA権あり(キャリア)',
+      if (game.canMoveOverseas) '海外移籍可(キャリア)',
     ];
     final outlook = game.draftOutlook;
     final release = game.releaseWarning;

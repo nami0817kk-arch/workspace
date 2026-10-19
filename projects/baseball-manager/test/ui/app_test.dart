@@ -1801,7 +1801,7 @@ void _rankTests() {
       await t.pumpAndSettle();
       expect(find.byKey(const Key('offseason-card')), findsOneWidget);
       expect(find.text('オフの過ごし方を選べる'), findsNothing); // カードが出ているので不要
-      expect(find.textContaining('FA権を使える'), findsOneWidget);
+      expect(find.textContaining('FA権あり'), findsOneWidget);
     });
 
     testWidgets('実績の絞りこみ', (t) async {
