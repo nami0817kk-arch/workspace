@@ -115,6 +115,26 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
+      // 「はじめる」は低い画面でもスクロールせずに押せるよう、下に固定する。
+      bottomNavigationBar: SafeArea(
+        child: Center(
+          heightFactor: 1,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: contentMaxWidth),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+              child: SizedBox(
+                width: double.infinity,
+                child: FilledButton(
+                  key: const Key('start'),
+                  onPressed: _start,
+                  child: const Text('はじめる'),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
       body: Center(
           child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: contentMaxWidth),
@@ -209,12 +229,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     Text('親の素質を受け継ぎ、良い特性をもらえることがあります。',
                         style: Theme.of(context).textTheme.bodySmall),
                   ],
-                  const SizedBox(height: 24),
-                  FilledButton(
-                    key: const Key('start'),
-                    onPressed: _start,
-                    child: const Text('はじめる'),
-                  ),
                   const SizedBox(height: 16),
                   Card(
                     key: const Key('daily-tip'),
