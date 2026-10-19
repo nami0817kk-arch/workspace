@@ -19,8 +19,12 @@ description: 棒人間のアクション動画（戦い・物語つき）を、�
 ## 作る順
 
 ```
-物語の型 or fight の指定 → check(数秒) → build(数分) → コマで目視 → 動画を送る
+物語の型 or fight の指定 → review(数秒・字幕と筋) → preview(下書き・数十秒) → build(本番・数分/場面) → コマで目視 → 動画を送る
 ```
+
+- `python -m stickfig review scenes/episodes/ep.yaml`: 字幕の長さ・読む時間・場面からのはみ出し・倒れた人物の台詞(最後の一言は `last_words: true`)・リズムの目安。`episode` は書き出す前に自動でこれを通し、直すところがあれば止まる(`--force` で続ける)
+- `python -m stickfig episode … --preview`(または `preview scenes/x.yaml --out x.mp4`): **Blender なしの線画の下書き**。台本・字幕・カメラのカット・命中・音のタイミングを、本番を待たずに確かめる。見た目(陰影・輪郭・光の演出)は本番と違う
+- 台詞は `lines`（`dur` は最低の長さ。読む時間は自動で確保し、しゃべる系は重ならないよう順に並べ、収まらなければ場面の終わりを延ばす）
 
 1. **一番速いのは物語の型**: `scenes/episodes/*.yaml` に `story: {arc: revenge|tournament|duel|protect|mentor, hero: 名前, rival: 名前}` と書く
    → `python -m stickfig episode scenes/episodes/ep_revenge.yaml --out out/ep_revenge`（約25秒。場面ごとに点検→書き出し→連結）

@@ -26,10 +26,12 @@ def _proj(cam: dict, x: float, z: float):
 
 
 def _floor(d: ImageDraw.ImageDraw, cam: dict, wall_x) -> None:
-    pts = [camera.project(cam, x, y, 0.0)[:2] for x, y in ((-60, -10), (60, -10), (60, 16), (-60, 16))]
+    cx = int(cam.get("tx", cam.get("x", 0.0)))
+    x0, x1 = cx - 16, cx + 17                           # 見える範囲だけ描く(画面の外へ伸びる長い線は、PIL で極端に遅い)
+    pts = [camera.project(cam, x, y, 0.0)[:2] for x, y in ((x0, -4), (x1, -4), (x1, 12), (x0, 12))]
     d.polygon(pts, fill=(150, 130, 105))
-    for k in range(-30, 40, 2):                      # 床の目地
-        a, b = camera.project(cam, k, -10, 0.0)[:2], camera.project(cam, k, 16, 0.0)[:2]
+    for k in range(x0, x1, 2):                          # 床の目地
+        a, b = camera.project(cam, k, -4, 0.0)[:2], camera.project(cam, k, 12, 0.0)[:2]
         d.line([a, b], fill=(120, 104, 84), width=1)
     if wall_x is not None:
         pts = [camera.project(cam, wall_x, y, z)[:2] for y, z in ((-5, 0), (9, 0), (9, 6.5), (-5, 6.5))]
