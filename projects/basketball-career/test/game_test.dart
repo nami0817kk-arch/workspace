@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:basketball_career/game/advice.dart';
 import 'package:basketball_career/game/career.dart';
 import 'package:basketball_career/game/difficulty.dart';
 import 'package:basketball_career/game/epilogue.dart';
@@ -1639,6 +1640,41 @@ void main() {
 
       expect(epilogueLines(ended(2)).join(' '), contains('世界最高峰'));
       expect(epilogueLines(ended(0)).join(' '), isNot(contains('氷室シン')));
+    });
+  });
+
+  group('おすすめの過ごし方', () {
+    Game g({Condition c = const Condition(), int tw = 50, int slot = 1, int age = 12}) =>
+        Game(
+          eventsEnabled: false,
+          player: Player(
+              name: 'a', age: age, potential: 60, heightCm: 150, heightGenes: 0.5),
+          rng: Random(1),
+          condition: c,
+          teamwork: tw,
+          slot: slot,
+        );
+
+    test('怪我・疲れなら休養、気持ちが沈めば交流', () {
+      expect(recommendedAction(g(c: const Condition(injuredTerms: 2))), Action.rest);
+      expect(recommendedAction(g(c: const Condition(fatigue: 80))), Action.rest);
+      expect(recommendedAction(g(c: const Condition(morale: 20))), Action.social);
+    });
+
+    test('チームワークが薄れたら、練習試合(疲れていれば交流)', () {
+      expect(recommendedAction(g(tw: 10)), Action.scrimmage);
+      expect(recommendedAction(g(tw: 10, c: const Condition(fatigue: 55))), Action.social);
+    });
+
+    test('疲れが軽ければ特訓。ただし大会の前の季節は避ける', () {
+      expect(recommendedAction(g(slot: 1)), Action.intense);
+      expect(recommendedAction(g(slot: 0)), Action.practice);
+      expect(recommendedAction(g(slot: 2, age: 17)), Action.practice, reason: '高校は冬の大会がある');
+      expect(recommendedAction(g(slot: 2, age: 12)), Action.intense, reason: '小学生は冬の大会がない');
+    });
+
+    test('それ以外は練習', () {
+      expect(recommendedAction(g(c: const Condition(fatigue: 40), slot: 1)), Action.practice);
     });
   });
 }
