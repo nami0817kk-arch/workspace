@@ -16,6 +16,7 @@ import '../game/path.dart';
 import '../game/player.dart';
 import '../game/season.dart';
 import 'labels.dart';
+import 'milestone_dialog.dart';
 
 const saveKey = 'basketball_career_save_v1';
 const historyKey = 'basketball_career_history_v1';
@@ -155,6 +156,15 @@ class GameController extends ChangeNotifier {
 
   /// 直前の操作で起きたこと(画面の「いまの結果」に出す)。
   List<String> recent = const [];
+
+  /// まだ見せていない節目。画面が1つずつ取り出してダイアログで見せる。
+  final List<Milestone> pending = [];
+
+  /// 見せ終わった節目を1つ取り除く。
+  void dismissMilestone() {
+    if (pending.isNotEmpty) pending.removeAt(0);
+    notifyListeners();
+  }
 
   /// 殿堂(過去の選手)。新しい順。
   List<HistoryEntry> history = const [];
@@ -342,6 +352,23 @@ class GameController extends ChangeNotifier {
         g.phase != Phase.path &&
         g.phase != Phase.retired) {
       lines.add('${stageLabel(g.stage)}になった。新しい仲間とチームワークを築こう。');
+      pending.add(Milestone(MilestoneKind.stage, '${stageLabel(g.stage)}へ',
+          '${g.player.age}歳。新しい仲間とコーチが待っている。'));
+    }
+    // 節目の演出。
+    if (t != null && t.champion) {
+      pending.add(Milestone(
+          MilestoneKind.champion,
+          '優勝!',
+          '${leagueLabel(t.league)}の${wasWinter ? '冬' : '夏'}の大会を制した。'
+              '${t.award == null ? '' : '\n個人賞: ${t.award}'}'));
+    } else if (t != null && t.award != null) {
+      pending.add(Milestone(MilestoneKind.award, '個人賞: ${t.award}',
+          '${leagueLabel(t.league)}の大会で、素晴らしい活躍だった。'));
+    }
+    final goal = g.lastGoalMessage;
+    if (r.yearEnded && goal != null && goal.startsWith('目標達成')) {
+      pending.add(Milestone(MilestoneKind.goal, '目標達成!', goal.replaceFirst('目標達成!', '').trim()));
     }
     return lines;
   }
@@ -442,6 +469,10 @@ class GameController extends ChangeNotifier {
   void chooseRoute(Route r) {
     final g = game!;
     final ok = g.chooseRoute(r);
+    if (r == Route.pro && ok) {
+      pending.add(Milestone(MilestoneKind.contract, 'プロ契約!',
+          '${g.player.name}は、プロの世界へ飛び込む。'));
+    }
     pathMessage = switch ((r, ok)) {
       (Route.pro, true) => 'プロ契約を勝ち取った!',
       (Route.pro, false) => g.retired
@@ -461,6 +492,8 @@ class GameController extends ChangeNotifier {
 
   void goAbroad() {
     game!.goAbroad();
+    pending.add(Milestone(MilestoneKind.abroad, '海外挑戦!',
+        '世界最高峰の舞台へ。相手は格段に強い。'));
     recent = ['海外挑戦を決めた。相手は格段に強い。'];
     _commit();
   }

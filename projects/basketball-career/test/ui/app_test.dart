@@ -6,6 +6,7 @@ import 'package:basketball_career/game/path.dart';
 import 'package:basketball_career/game/player.dart';
 import 'package:basketball_career/ui/app.dart';
 import 'package:basketball_career/ui/controller.dart';
+import 'package:basketball_career/ui/milestone_dialog.dart';
 import 'package:flutter/material.dart' hide Action, Route;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -208,6 +209,61 @@ void main() {
       saw = c.recent.any((l) => l.startsWith('ランクアップ!'));
     }
     expect(saw, isTrue);
+  });
+
+  testWidgets('節目はダイアログで見せ、閉じると次の節目が出る', (tester) async {
+    tall(tester);
+    final c = GameController(store: _NullStore(), rng: Random(1), events: false);
+    c.game = Game.start('ケイ', rng: Random(2), events: false);
+    c.pending.addAll(const [
+      Milestone(MilestoneKind.champion, '優勝!', '夏の大会を制した。'),
+      Milestone(MilestoneKind.goal, '目標達成!', 'ごほうび'),
+    ]);
+    await tester.pumpWidget(BasketballCareerApp(controller: c));
+    await tester.pumpAndSettle();
+    c.notifyListeners();
+    await tester.pumpAndSettle();
+    expect(find.text('優勝!'), findsOneWidget);
+    await tester.tap(find.text('つぎへ'));
+    await tester.pumpAndSettle();
+    expect(find.text('目標達成!'), findsOneWidget);
+    await tester.tap(find.text('つぎへ'));
+    await tester.pumpAndSettle();
+    expect(find.text('つぎへ'), findsNothing);
+    expect(c.pending, isEmpty);
+  });
+
+  test('中学に上がると進学の節目が出る。プロ契約・海外挑戦も', () {
+    final c = GameController(store: _NullStore(), rng: Random(1), events: false);
+    c.game = Game(
+      eventsEnabled: false,
+      player: Player(
+          name: 'ケイ', age: 12, potential: 50, heightCm: 150, heightGenes: 0.5),
+      rng: Random(1),
+    );
+    for (var i = 0; i < 4; i++) {
+      c.act(Action.rest, ask: false);
+    }
+    expect(c.pending.any((m) => m.kind == MilestoneKind.stage), isTrue);
+
+    final p = GameController(store: _NullStore(), rng: Random(1), events: false);
+    p.game = Game(
+      eventsEnabled: false,
+      player: Player(
+        name: 'ユウ',
+        age: 21,
+        potential: 90,
+        heightCm: 205,
+        heightGenes: 0.9,
+        abilities: {for (final a in Ability.values) a: 90},
+      ),
+      rng: Random(1),
+      pathPending: true,
+    );
+    p.chooseRoute(Route.pro);
+    expect(p.pending.any((m) => m.kind == MilestoneKind.contract), isTrue);
+    p.goAbroad();
+    expect(p.pending.any((m) => m.kind == MilestoneKind.abroad), isTrue);
   });
 
   test('おすすめで1年進める', () async {
