@@ -6,6 +6,7 @@ import '../game/career.dart';
 import '../game/epilogue.dart';
 import '../game/exp.dart';
 import '../game/flavor.dart';
+import '../game/characters.dart' show tipsNeeded;
 import '../game/life_log.dart';
 import '../game/school.dart';
 import '../game/marks.dart';
@@ -32,6 +33,16 @@ import 'widgets.dart';
 
 /// 画面の中身の最大幅。広い画面(Web・タブレット)では中央に寄せる。
 const contentMaxWidth = 560.0;
+
+const _digitKeys = [
+  LogicalKeyboardKey.digit1,
+  LogicalKeyboardKey.digit2,
+  LogicalKeyboardKey.digit3,
+  LogicalKeyboardKey.digit4,
+  LogicalKeyboardKey.digit5,
+  LogicalKeyboardKey.digit6,
+  LogicalKeyboardKey.digit7,
+];
 
 class GameScreen extends StatefulWidget {
   const GameScreen({super.key, required this.controller, required this.game});
@@ -82,6 +93,10 @@ class _GameScreenState extends State<GameScreen> {
               controller.act(recommendedPlan(game)),
           const SingleActivator(LogicalKeyboardKey.keyR): () =>
               controller.act(Plan.rest),
+          // 数字キー1〜7: 行動のタイルの順(練習・特訓・休養・研究・交流・練習試合・コーチ)
+          for (var i = 0; i < Plan.values.length; i++)
+            SingleActivator(_digitKeys[i]): () =>
+                controller.act(Plan.values[i]),
         },
         if (controller.canUndo)
           const SingleActivator(LogicalKeyboardKey.keyZ): controller.undo,
@@ -197,7 +212,10 @@ class _GameScreenState extends State<GameScreen> {
   List<Widget> _trainTab(BuildContext context, Player p) => [
         _Header(game: game, onTap: _openPlayer),
         const SizedBox(height: 6),
-        _StatusCard(game: game, controller: controller),
+        _StatusCard(
+            game: game,
+            controller: controller,
+            onOpenAbility: () => setState(() => _tab = 1)),
         if (controller.recent.isNotEmpty) ...[
           const SizedBox(height: 6),
           _RecentCard(lines: controller.recent, limit: 2),
@@ -393,9 +411,13 @@ class _Header extends StatelessWidget {
 }
 
 class _StatusCard extends StatelessWidget {
-  const _StatusCard({required this.game, required this.controller});
+  const _StatusCard(
+      {required this.game, required this.controller, this.onOpenAbility});
   final Game game;
   final GameController controller;
+
+  /// 経験点をタップしたとき、能力タブへ移る。
+  final VoidCallback? onOpenAbility;
 
   @override
   Widget build(BuildContext context) {
@@ -483,7 +505,10 @@ class _StatusCard extends StatelessWidget {
                 children: [
                   Text('経験点', style: Theme.of(context).textTheme.labelLarge),
                   for (final cat in usableCategories(game.player.role))
-                    Chip(
+                    ActionChip(
+                      key: Key('exp-${cat.name}'),
+                      onPressed: onOpenAbility,
+                      tooltip: '能力タブで振り分ける',
                       visualDensity: VisualDensity.compact,
                       label: Text(
                         '${cat.label} ${game.exp.of(cat)}'
@@ -764,6 +789,18 @@ class _PositionCard extends StatelessWidget {
   }
 }
 
+Ability _weakest(Player p) =>
+    abilitiesOf(p.role).reduce((x, y) => p.of(y) < p.of(x) ? y : x);
+
+/// 能力の行の小さな注記: いちばん低い能力は「伸ばしどころ」、他は次のランクまでの差。
+String _abilityNote(Player p, Ability a) {
+  if (a == _weakest(p) && abilitiesOf(p.role).length > 1) return '伸ばしどころ';
+  final v = p.of(a);
+  if (v >= 90) return 'S';
+  final next = (v ~/ 10 + 1) * 10;
+  return 'あと+${next - v}';
+}
+
 class _AbilityCard extends StatelessWidget {
   const _AbilityCard({required this.controller, required this.game});
   final GameController controller;
@@ -813,10 +850,24 @@ class _AbilityCard extends StatelessWidget {
                       child: Tooltip(
                           message: abilityHint(a),
                           triggerMode: TooltipTriggerMode.tap,
-                          child: FittedBox(
-                              fit: BoxFit.scaleDown,
-                              alignment: Alignment.centerLeft,
-                              child: Text(abilityLabel(a))))),
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(abilityLabel(a))),
+                                FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(_abilityNote(p, a),
+                                        key: Key('note-${a.name}'),
+                                        style: TextStyle(
+                                            fontSize: 9,
+                                            color: a == _weakest(p)
+                                                ? const Color(0xFFEF6C00)
+                                                : Colors.grey))),
+                              ]))),
                   SizedBox(
                       width: 54,
                       child: FittedBox(
@@ -975,7 +1026,12 @@ class _ActionCard extends StatelessWidget {
                           plan: a,
                           focus: focus,
                           controller: controller,
-                          recommended: a == recommendedPlan(game))),
+                          recommended: a == recommendedPlan(game),
+                          danger: game.condition.fatigue >= 70 &&
+                              (a == Plan.special || a == Plan.match),
+                          sub: a == Plan.lesson && game.cast.coach != null
+                              ? 'コツ ${game.cast.coach!.tips}/$tipsNeeded'
+                              : null)),
                 SizedBox(
                     width: w, child: _AutoYearTile(controller: controller)),
               ]);
@@ -1012,6 +1068,8 @@ class _PlanTile extends StatelessWidget {
     required this.focus,
     required this.controller,
     this.recommended = false,
+    this.sub,
+    this.danger = false,
   });
   final Plan plan;
   final Ability focus;
@@ -1019,6 +1077,12 @@ class _PlanTile extends StatelessWidget {
 
   /// 今のおすすめ(疲れ・気持ちから決める)。
   final bool recommended;
+
+  /// 2行目の文字(省略すると既定)。
+  final String? sub;
+
+  /// 疲れているのにこの行動をすると危ない(怪我しやすい)。
+  final bool danger;
 
   @override
   Widget build(BuildContext context) {
@@ -1054,6 +1118,14 @@ class _PlanTile extends StatelessWidget {
                         BoxDecoration(color: color, shape: BoxShape.circle),
                     child: Icon(icon, color: Colors.white, size: 19),
                   ),
+                  if (danger)
+                    Positioned(
+                      key: Key('danger-${plan.name}'),
+                      left: -6,
+                      top: -6,
+                      child: const Icon(Icons.error,
+                          size: 16, color: Color(0xFFD32F2F)),
+                    ),
                   if (recommended)
                     Positioned(
                       key: Key('recommended-${plan.name}'),
@@ -1072,7 +1144,7 @@ class _PlanTile extends StatelessWidget {
                 ),
                 FittedBox(
                   fit: BoxFit.scaleDown,
-                  child: Text(_planSub(plan, focus),
+                  child: Text(sub ?? _planSub(plan, focus),
                       style: Theme.of(context)
                           .textTheme
                           .bodySmall

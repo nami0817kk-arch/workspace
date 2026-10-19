@@ -242,6 +242,9 @@ class GameController extends ChangeNotifier {
   /// 直前の行動の結果を、短く知らせる文(画面の下に一瞬出す)。出したら null に戻す。
   String? toast;
 
+  /// 結果の調子: 1=好調・大成功 / -1=失敗・怪我 / 0=ふつう。トーストの色と印に使う。
+  int toastTone = 0;
+
   /// ひとつ前の行動の直前のセーブ(「ひとつ前に戻す」用)。行動のたびに1件だけ持つ。
   String? _undo;
   bool _auto = false;
@@ -520,6 +523,11 @@ class GameController extends ChangeNotifier {
     g.choose(a, focus);
     recent = [_summary(a, g), ...g.log.sublist(start)];
     toast = recent.first;
+    toastTone = g.condition.injured || g.lastOutcome == Outcome.bad
+        ? -1
+        : (g.lastOutcome == Outcome.good || g.lastOutcome == Outcome.great
+            ? 1
+            : 0);
     _detect(before, g, g.log.sublist(start));
     _commit();
   }
@@ -604,6 +612,7 @@ class GameController extends ChangeNotifier {
   void spend(Ability a) {
     final before = _ranks();
     if (game!.spend(a)) {
+      HapticFeedback.selectionClick();
       _noteRankUps(before);
       _commit();
     }

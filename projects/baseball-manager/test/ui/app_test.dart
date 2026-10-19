@@ -1453,6 +1453,55 @@ void _rankTests() {
     });
   });
 
+  group('操作の手ごたえ(第3弾)', () {
+    testWidgets('結果のトーストから「戻す」で取り消せる', (t) async {
+      final c = await _start(t);
+      c.newGame('テスト', Role.batter);
+      await t.pumpAndSettle();
+      await t.tap(find.byKey(const Key('act-special')));
+      await t.pump();
+      await t.pump(const Duration(milliseconds: 1000));
+      expect(find.byKey(const Key('toast-undo')), findsOneWidget);
+      expect(c.canUndo, isTrue);
+      // (テストの大きな画面では押下位置がずれるので、ボタンの処理を直接呼ぶ)
+      t.widget<SnackBarAction>(find.byKey(const Key('toast-undo'))).onPressed();
+      await t.pumpAndSettle();
+      expect(c.canUndo, isFalse);
+      expect(c.game!.exp.total, 0);
+    });
+
+    testWidgets('経験点のチップをタップすると能力タブへ。最も低い能力に「伸ばしどころ」', (t) async {
+      final c = await _start(t);
+      c.newGame('テスト', Role.batter);
+      await t.pumpAndSettle();
+      await t.tap(find.byKey(const Key('exp-batting')));
+      await t.pumpAndSettle();
+      expect(find.byKey(const Key('buy-contact')), findsOneWidget);
+      expect(find.text('伸ばしどころ'), findsOneWidget);
+      expect(find.textContaining('あと+'), findsWidgets);
+    });
+
+    testWidgets('疲れが高いと特訓・練習試合に危険の印。数字キーで行動できる', (t) async {
+      final c = await _start(t);
+      c.newGame('テスト', Role.batter);
+      await t.pumpAndSettle();
+      expect(find.byKey(const Key('danger-special')), findsNothing);
+      c.game!.condition = c.game!.condition.copyWith(fatigue: 80);
+      c.notifyListeners();
+      await t.pumpAndSettle();
+      expect(find.byKey(const Key('danger-special')), findsOneWidget);
+      expect(find.byKey(const Key('danger-match')), findsOneWidget);
+      expect(find.byKey(const Key('danger-train')), findsNothing);
+      c.game!.condition = c.game!.condition.copyWith(fatigue: 0);
+      c.notifyListeners();
+      await t.pumpAndSettle();
+      expect(c.recent, isEmpty);
+      await t.sendKeyEvent(LogicalKeyboardKey.digit3); // 休養
+      await t.pumpAndSettle();
+      expect(c.recent.first, contains('休養'));
+    });
+  });
+
   group('表示の設定とホームのカード', () {
     testWidgets('文字の大きさと画面の色を選べて、端末に覚えられる', (t) async {
       final c = await _start(t);
