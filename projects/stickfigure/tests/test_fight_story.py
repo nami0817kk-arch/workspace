@@ -33,7 +33,7 @@ def test_lines_become_captions_in_order():
     assert all(c["t1"] > c["t0"] for c in caps)
 
 
-@pytest.mark.parametrize("arc", ["revenge", "tournament", "duel"])
+@pytest.mark.parametrize("arc", ["revenge", "tournament", "duel", "protect", "mentor"])
 def test_story_arcs_build_valid_episodes(arc):
     ep = story.build_story(dict(arc=arc, hero="X", rival="Y"))
     assert ep["items"][0].get("card") and ep["items"][-1].get("card")

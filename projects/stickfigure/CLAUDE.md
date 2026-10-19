@@ -105,7 +105,9 @@ python scripts/make_gallery.py 09_01:2.4 135_07_s1:3.6   # clip を順に再生�
 - `captions.py`: 台詞の吹き出し(`say`)・ナレーション(`narr`)・叫び文字(`shout`)。台本の `captions` か fight の `lines`
 - `sfx.py`: 効果音と BGM を計算で作って動画に付ける(外部の音源は使わない)。台本の `audio: false` で無音、`mood` で雰囲気
 - `episode.py`: 複数の場面+カード(タイトル・「一か月後」)を1本に連結。`python -m stickfig episode scenes/episodes/ep_revenge.yaml --out out/…`
-- `story.py`: 物語の型(`revenge` 雪辱戦 / `tournament` 勝ち上がり / `duel` 一騎打ち)。episode.yaml に `story: {arc, hero, rival}`
+- `story.py`: 物語の型(`revenge` 雪辱戦 / `tournament` 勝ち上がり / `duel` 一騎打ち / `protect` 守る戦い / `mentor` 師の教え)。episode.yaml に `story: {arc, hero, rival}`
+- 舞台の色の組: 台本 `stage: {theme: cave|dojo|field|night|sunset}`(fight の `stage:`)。`blender_player.THEMES`
+- 縦画面(ショート): 台本 `output: {aspect: vertical}`(720x1280。2人の中間を切り出し、字幕は切り出し後)
 - `rhythm.py`: 参考6本の範囲との比較。`check` が書き出す前に見積もり、`python -m stickfig rhythm 動画.mp4` が実測
 - `build_scene(scene, out)`: cli の中核(台本 dict → 動画)。episode も使う
 

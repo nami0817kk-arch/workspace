@@ -9,6 +9,8 @@ arc:
     revenge     雪辱戦(敗北 → 修行 → 再戦で勝つ)。約 35 秒
     tournament  勝ち上がり(1回戦 → 準決勝 → 決勝。相手が強くなる)。約 40 秒
     duel        一騎打ち(因縁の相手に挑む。1本)。約 15 秒
+    protect     守る戦い(追い詰められる → 守るために立ち上がる)。約 25 秒
+    mentor      師の教え(稽古で負ける → 教えを胸に強敵を倒す)。約 25 秒
 """
 from __future__ import annotations
 
@@ -95,7 +97,55 @@ def duel(hero: str, rival: str, hero_color=GREEN, rival_color=RED, **_) -> dict:
     return dict(name="ep_duel", mood_cards="sad", items=items)
 
 
-ARCS = dict(revenge=revenge, tournament=tournament, duel=duel)
+def protect(hero: str, rival: str, hero_color=GREEN, rival_color=RED, **_) -> dict:
+    items: List[dict] = [
+        _card("守る者", f"{hero}の戦い", 2.2),
+        dict(scene=dict(name="p1_corner", fight=dict(
+            weapon="sword", kick=False, hits=2, counter=False, finisher="none", palette="cool", mood="tense", stage="sunset",
+            colors=dict(A=rival_color, B=hero_color),
+            lines=[dict(at="opening", dur=1.8, kind="narr", text=f"村を襲う{rival}の前に、{hero}がひとり立ちはだかった。"),
+                   dict(at="rise", dt=-0.3, dur=1.2, kind="say", who="A", text="どけ。邪魔をするな。"),
+                   dict(at="last", dur=1.2, kind="say", who="B", text="ぐっ……！"),
+                   ]))),
+        _card("それでも", "", 1.5, "time"),
+        dict(scene=dict(name="p2_stand", fight=dict(
+            weapon="sword", kick=True, hits=4, counter=False, finisher="launch_slash", palette="warm", mood="battle", stage="sunset",
+            colors=dict(A=hero_color, B=rival_color),
+            lines=[dict(at="opening", dur=1.6, kind="narr", text="背中には、守るべき人たちがいる。"),
+                   dict(at="kick", dt=-0.5, dur=1.1, kind="say", who="A", text="ここは、通さない！"),
+                   dict(at="finisher", dt=-0.25, dur=1.1, kind="shout", text="守り抜く！"),
+                   dict(at="ko", dt=0.5, dur=1.8, kind="narr", text="朝日が、村を照らした。"),
+                   ]))),
+        _card("完", "", 2.0),
+    ]
+    return dict(name="ep_protect", mood_cards="sad", items=items)
+
+
+def mentor(hero: str, rival: str, hero_color=GREEN, rival_color=RED, **_) -> dict:
+    items: List[dict] = [
+        _card("師の教え", f"{hero}と、師匠", 2.2),
+        dict(scene=dict(name="m1_spar", fight=dict(
+            weapon="sword", kick=False, hits=3, counter=False, finisher="none", palette="cool", mood="calm", stage="dojo",
+            colors=dict(A=BLUE, B=hero_color),
+            lines=[dict(at="opening", dur=1.8, kind="narr", text=f"道場。{hero}は、師匠に稽古をつけてもらっていた。"),
+                   dict(at="rise", dt=-0.3, dur=1.2, kind="say", who="A", text="力任せでは、勝てぬ。"),
+                   dict(at="last", dur=1.2, kind="say", who="B", text="まだ、届かない……！"),
+                   ]))),
+        _card("旅立ちの日", "", 1.6, "time"),
+        dict(scene=dict(name="m2_boss", fight=dict(
+            weapon="sword", kick=True, hits=3, counter=True, finisher="launch_slash", palette="warm", mood="battle", stage="field",
+            colors=dict(A=hero_color, B=rival_color),
+            lines=[dict(at="opening", dur=1.6, kind="narr", text=f"旅の果て、{rival}との決戦。"),
+                   dict(at="counter", dt=0.15, dur=1.0, kind="say", who="B", text="力で、ねじ伏せてやる！"),
+                   dict(at="last", dt=0.1, dur=1.0, kind="say", who="A", text="力じゃない……見切るんだ！"),
+                   dict(at="finisher", dt=-0.25, dur=1.1, kind="shout", text="師の一閃！"),
+                   ]))),
+        _card("完", f"教えは、{hero}の中に生きている。", 2.4),
+    ]
+    return dict(name="ep_mentor", mood_cards="calm", items=items)
+
+
+ARCS = dict(revenge=revenge, tournament=tournament, duel=duel, protect=protect, mentor=mentor)
 
 
 def build_story(spec: dict) -> dict:
