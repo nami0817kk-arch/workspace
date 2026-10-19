@@ -886,7 +886,7 @@ final List<GameEvent> events = [
                 (player: p, condition: c.copyWith(morale: c.morale + 2))),
       ],
       when: (stage, cast) => stage == Stage.pro,
-      weight: 0.25),
+      weight: 0.5),
   GameEvent(
       'baseball-class',
       '少年野球教室に呼ばれた。',
@@ -904,7 +904,7 @@ final List<GameEvent> events = [
                 (player: p, condition: c.copyWith(fatigue: c.fatigue - 5))),
       ],
       when: (stage, cast) => stage == Stage.pro,
-      weight: 0.25),
+      weight: 0.5),
   GameEvent(
       'old-coach',
       '小さいころのコーチが、試合を見に来てくれた。',
@@ -921,7 +921,7 @@ final List<GameEvent> events = [
                 )),
       ],
       when: (stage, cast) => stage == Stage.highSchool || stage == Stage.pro,
-      weight: 0.25),
+      weight: 0.5),
   GameEvent(
       'school-festival',
       '学校のお祭りで、友だちと思い出をつくった。',
@@ -940,7 +940,7 @@ final List<GameEvent> events = [
       ],
       when: (stage, cast) =>
           stage == Stage.juniorHigh || stage == Stage.highSchool,
-      weight: 0.25),
+      weight: 0.5),
   GameEvent(
       'captain',
       '最上級生になり、主将に推薦された。',
@@ -958,7 +958,7 @@ final List<GameEvent> events = [
                 (player: p, condition: c.copyWith(morale: c.morale + 2))),
       ],
       when: (stage, cast) => stage == Stage.highSchool,
-      weight: 0.25),
+      weight: 0.5),
   GameEvent(
       'summer-camp',
       '夏の合宿に誘われた。',
@@ -980,7 +980,7 @@ final List<GameEvent> events = [
           stage == Stage.youth ||
           stage == Stage.juniorHigh ||
           stage == Stage.highSchool,
-      weight: 0.25),
+      weight: 0.5),
   GameEvent(
       'road-trip',
       '遠征先で、地元の名物をごちそうになった。',
@@ -1001,7 +1001,7 @@ final List<GameEvent> events = [
                 )),
       ],
       when: (stage, cast) => stage == Stage.pro,
-      weight: 0.25),
+      weight: 0.5),
   GameEvent(
       'junior-advice',
       '後輩が悩みを相談してきた。',
@@ -1019,7 +1019,7 @@ final List<GameEvent> events = [
                 (player: p, condition: c.copyWith(morale: c.morale + 1))),
       ],
       when: (stage, cast) => stage == Stage.pro || stage == Stage.highSchool,
-      weight: 0.25),
+      weight: 0.5),
   GameEvent(
       'form-change',
       'フォームを思い切って変えてみないかと言われた。',
@@ -1043,7 +1043,7 @@ final List<GameEvent> events = [
                 (player: p, condition: c.copyWith(morale: c.morale + 4))),
       ],
       when: (stage, cast) => stage != Stage.youth,
-      weight: 0.25),
+      weight: 0.5),
 ];
 
 /// 出来事の起きる確率(1季節あたり)。
