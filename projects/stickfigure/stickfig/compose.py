@@ -255,12 +255,22 @@ def compose_frame(plan: dict, f: int, figs: Dict[int, Image.Image], stages: Opti
     ov = Image.new("RGBA", (W * SS, H * SS), (0, 0, 0, 0))
     d = ImageDraw.Draw(ov)
     if in_ranges(tau, fx.get("speed_lines", [])):
-        rnd = random.Random(f)
-        for _ in range(14):
-            y = rnd.uniform(40, 540)
-            x0 = rnd.uniform(0, W)
-            ln = rnd.uniform(120, 360)
-            d.line([x0 * SS, y * SS, (x0 + ln) * SS, y * SS], fill=(255, 255, 255, 55), width=2 * SS)
+        # 流線: 主役の動く向き(画面上)に平行な線。2コマごとに入れ替わり(ちらつき)、長さ・位置・濃さはばらつく
+        a_who = next(iter(plan["actors"]))
+        ang = 0.0
+        if f > 0:
+            pa, pb = plan["frames"][f - 1]["actors"][a_who], plan["frames"][f]["actors"][a_who]
+            x0_, y0_ = P3(plan["frames"][f - 1]["cam"], pa["root_x"], 0.0, 1.0)
+            x1_, y1_ = P3(cam, pb["root_x"], 0.0, 1.0)
+            if abs(x1_ - x0_) + abs(y1_ - y0_) > 0.5:
+                ang = math.atan2(y1_ - y0_, x1_ - x0_)
+        rnd = random.Random(f // 2)
+        ux, uy = math.cos(ang), math.sin(ang)
+        for _ in range(16):
+            cx_, cy_ = rnd.uniform(0, W), rnd.uniform(30, 560)
+            ln = rnd.uniform(140, 420)
+            al = int(rnd.uniform(35, 90))
+            d.line([cx_ * SS, cy_ * SS, (cx_ - ux * ln) * SS, (cy_ - uy * ln) * SS], fill=(255, 255, 255, al), width=int(rnd.choice((1, 2, 2, 3)) * SS))
     invert = None
     invert_kinds = fx.get("invert", ["kick", "heel"])
     for e in plan["events"]:

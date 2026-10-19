@@ -315,6 +315,56 @@ def _follow_x(follow, actors: dict, scene: dict) -> float:
     return sum(xs.values()) / len(xs)
 
 
+def _apply_stepping(cfg: dict, frames: List[dict], events: List[dict]) -> None:
+    """アニメの「n コマ撮り」: 人物の姿勢を hold コマに1回だけ更新し、間は同じ絵を続ける(カメラはなめらかなまま)。
+
+    cfg: {hold: 2, ones_around_hits: 4, ranges: [[tau_a, tau_b, hold], ...]}
+    命中の前後 ones_around_hits コマは1コマごと(インパクトのキレを残す)。ranges を書くと、その区間だけ hold を変える/適用する。
+    """
+    hold_default = int(cfg.get("hold", 2))
+    ones = int(cfg.get("ones_around_hits", 4))
+    near = set()
+    for e in events:
+        for i in range(e["frame"] - ones, e["frame"] + max(e.get("hold_frames", 0), 1) + ones + 1):
+            near.add(i)
+    ranges = cfg.get("ranges")
+    base = None
+    for f, fr in enumerate(frames):
+        h = hold_default
+        if ranges:
+            h = 1
+            for a, b, hh in ranges:
+                if a <= fr["tau"] <= b:
+                    h = int(hh)
+        if f in near or h <= 1:
+            base = None
+            continue
+        if base is None or f - base >= h:
+            base = f
+            continue
+        src = frames[base]["actors"]
+        for who in fr["actors"]:
+            keep = {k: fr["actors"][who][k] for k in ("jit",) if k in fr["actors"][who]}
+            fr["actors"][who] = dict(src[who], **keep, stepped=1.0)
+
+
+def _assign_event_pos(scene: dict, tracks: Dict[str, KeyTrack], events: List[dict]) -> None:
+    """出来事の位置(世界座標)。命中は hits の pos か、contact の当て先。"""
+    hit_by_tau = {h["tau"]: h for h in scene.get("hits", [])}
+    for e in events:
+        h = hit_by_tau.get(e["tau"], {})
+        if "pos" in h:
+            e["pos"] = list(h["pos"])
+        elif h.get("contact"):
+            c = h["contact"]
+            sk = skeleton_at(scene, tracks, c["target"]["actor"], e["tau"])
+            e["pos"] = list(fk.target_point(sk, c["target"].get("point", "hip")))
+        else:
+            q = next((x for x in scene.get("puffs", []) if x["tau"] == e["tau"]), {})
+            e["pos"] = list(q.get("pos", [0.0, 0.0]))
+        e["fx"] = dict(h.get("fx", {}))
+
+
 def _lift_to_ground(scene: dict, frames: List[dict]) -> None:
     """物理は2節の折れ線、rig は6節の曲線なので、深く折れた姿勢で曲線が地面に潜ることがある。
     潜る分だけ根元を持ち上げる。持ち上げは急に変えず(戻りは1コマ0.02まで)、ぴくつかせない。"""
@@ -387,7 +437,13 @@ def build_plan(scene: dict, solve: bool = True) -> dict:
         phys = run_physics(scene, tracks)
         scene["hits"], scene["puffs"] = phys["hits"], phys["puffs"]
         contacts = []
+    ic = scene.get("impact_cuts")
+    if ic:
+        for h in scene.get("hits", []):
+            if h.get("kind") in ic.get("kinds", []):
+                h["hold"] = max(h.get("hold", 0.0), ic.get("hold", 0.2))     # 多角度のカットを入れるため、止める時間を延ばす
     taus, events = build_timeline(scene["tau_end"], fps, scene.get("hits", []), scene.get("slow", []), scene.get("puffs", []), float(scene.get("tempo", 1.0)))
+    _assign_event_pos(scene, tracks, events)
     smoothers = {who: Smoother(tr) for who, tr in tracks.items()}
     planters = {who: Planter(a) for who, a in scene["actors"].items() if a.get("plant", True)}
     cam_keys = scene["camera"]
@@ -466,39 +522,44 @@ def build_plan(scene: dict, solve: bool = True) -> dict:
                     roll += anime.ROLL_SHAKE.get(e["kind"], 0.0) * dec * math.cos(d * 1.2) * (1 if i % 2 == 0 else -1)
         cams_eff = cams * (1 - min(zp, 0.3))
         pxu = VIEW["width"] / cams_eff
-        if shot_cam is not None:
+        cut = None
+        if ic:
+            for e in events:
+                hf = e.get("hold_frames", 0)
+                if e["kind"] in ic.get("kinds", []) and hf >= 2 and e["frame"] <= f < e["frame"] + hf:
+                    angs = ic["angles"]
+                    cut = (e, angs[((f - e["frame"]) * len(angs)) // hf % len(angs)])
+        if cut is not None:
+            e, ang = cut
+            fr["cam"] = {k: (round(v, 5) if isinstance(v, float) else v) for k, v in
+                         camera.make_cam(e["pos"][0], 0.0, ang.get("scale", 3.0), ang.get("yaw", 30.0), ang.get("pitch", 4.0),
+                                         ang.get("lens", 30.0), sx, sz, target_z=max(0.8, e["pos"][1]), dutch=ang.get("dutch", 0.0)).items()}
+            fr["cam"] = camera.keep_out_of_walls(fr["cam"], scene.get("stage", {}).get("wall_x"))
+            fr["cam"]["z"] = fr["cam"]["tz"]
+        elif shot_cam is not None:
             fr["cam"] = {k: (round(v, 5) if isinstance(v, float) else v) for k, v in
                          camera.make_cam(shot_cam["x"], 0.0, cams_eff, shot_cam["yaw"], shot_cam["pitch"], shot_cam["lens"], sx, sz,
                                          target_z=shot_cam["target_z"], dutch=shot_cam["dutch"]).items()}
+            fr["cam"] = camera.keep_out_of_walls(fr["cam"], scene.get("stage", {}).get("wall_x"))
             fr["cam"]["z"] = fr["cam"]["tz"]
         elif v3 is not None:
             # 遠近のあるカメラ: 斜めの角度(yaw)でゆっくり回り込み、少し上から見る
             fr["cam"] = {k: (round(v, 5) if isinstance(v, float) else v) for k, v in
                          camera.make_cam(camx, 0.0, cams_eff, yaw_curve(tau), v3.get("pitch", 7.0), v3.get("lens", 40.0), sx, sz).items()}
+            fr["cam"] = camera.keep_out_of_walls(fr["cam"], scene.get("stage", {}).get("wall_x"))
             fr["cam"]["z"] = fr["cam"]["tz"]
         else:
             fr["cam"] = dict(x=round(camx + sx, 5), scale=round(cams_eff, 5), pxu=round(pxu, 4), sx=round(sx, 5), sz=round(sz, 5),
                              z=round((VIEW["ground_y"] - VIEW["height"] / 2) / pxu + sz, 5))
         fr["cam"]["roll"] = round(roll + fr["cam"].get("dutch", 0.0), 4)
         frames.append(fr)
+    if scene.get("stepping"):
+        _apply_stepping(scene["stepping"], frames, events)
     if phys is not None:
         _lift_to_ground(scene, frames)
-    # 出来事の位置(世界座標)
-    hit_by_tau = {h["tau"]: h for h in scene.get("hits", [])}
-    for e in events:
-        h = hit_by_tau.get(e["tau"], {})
-        if "pos" in h:
-            e["pos"] = list(h["pos"])
-        elif h.get("contact"):
-            c = h["contact"]
-            sk = skeleton_at(scene, tracks, c["target"]["actor"], e["tau"])
-            e["pos"] = list(fk.target_point(sk, c["target"].get("point", "hip")))
-        else:
-            p = next((x for x in scene.get("puffs", []) if x["tau"] == e["tau"]), {})
-            e["pos"] = list(p.get("pos", [0.0, 0.0]))
-        e["fx"] = dict(h.get("fx", {}))
+    _assign_event_pos(scene, tracks, events)
     return dict(version=1, fps=fps, n=len(frames), view=dict(VIEW, persp=bool(scene.get("view3d") or scene.get("shots")), lens=(scene.get("view3d") or {}).get("lens", 40.0)), actors=scene["actors"], stage=scene.get("stage", {}),
-                events=events, contacts=contacts, frames=frames, scene={k: scene[k] for k in ("hits", "slow", "camera", "fx", "tempo", "view3d", "anime", "shots") if k in scene})
+                events=events, contacts=contacts, frames=frames, scene={k: scene[k] for k in ("hits", "slow", "camera", "fx", "tempo", "view3d", "anime", "shots", "stepping", "impact_cuts") if k in scene})
 
 
 def save_plan(plan: dict, path) -> None:

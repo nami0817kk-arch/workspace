@@ -76,12 +76,16 @@ def check_contacts(plan: dict, cfg: dict) -> List[dict]:
 
 def check_hit_stop(plan: dict, cfg: dict) -> List[dict]:
     res = []
+    ic = plan["scene"].get("impact_cuts") or {}
     for e in plan["events"]:
         hf = e.get("hold_frames", 0)
         if hf == 0:
             continue
-        ok = hf <= cfg["max_hold_frames"]
-        res.append(_check(f"hit_stop@{e['tau']}", ok, hf, cfg["max_hold_frames"],
+        limit = cfg["max_hold_frames"]
+        if e["kind"] in ic.get("kinds", []):       # 多角度のカットを入れる命中は、止めている間もカメラが動くので、長くてよい
+            limit = max(limit, int(round(ic.get("hold", 0.2) * plan["fps"])) + 1)
+        ok = hf <= limit
+        res.append(_check(f"hit_stop@{e['tau']}", ok, hf, limit,
                           f"{e['kind']} のヒットストップ {hf} コマ" + ("" if ok else "。長すぎる(参考は1〜3コマが9割)")))
     return res
 
@@ -138,6 +142,8 @@ def check_stops_and_jerk(plan: dict, cfg: dict) -> List[dict]:
             for i in range(2, len(v) - 2):
                 if i in skip or (i + 1) in skip:
                     continue
+                if any(plan["frames"][j]["actors"][who].get("stepped") for j in (i - 1, i, i + 1, i + 2) if 0 <= j < plan["n"]):
+                    continue          # n コマ撮りは、同じ絵を続けるのが意図(速度0・更新時の大きな変化が出る)
                 if plan["frames"][i]["actors"][who].get("run", 0) > 0.3 or plan["frames"][i]["actors"][who].get("periodic"):
                     continue          # 走りは周期運動で、折り返しに速度0が出るのが自然
                 slow = abs(v[i]) < 0.06 * pk

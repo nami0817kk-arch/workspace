@@ -65,6 +65,22 @@ def px_per_unit(cam: Dict[str, float], depth: float = None) -> float:
 MIN_CAM_Z = 0.3       # カメラが床の下に潜らない高さ
 
 
+def keep_out_of_walls(cam: Dict[str, float], wall_x: float = None, margin: float = 0.7) -> Dict[str, float]:
+    """カメラが壁(x=wall_x より右)の向こう側・中に入らないようにする。
+
+    入りそうなら、反対側(左斜め)に回る(yaw の符号を反転)。それでも越えるなら、距離を縮める。"""
+    if wall_x is None:
+        return cam
+    limit = wall_x - margin
+    if position(cam)[0] <= limit:
+        return cam
+    out = dict(cam)
+    out["yaw"] = -abs(cam["yaw"])
+    if position(out)[0] > limit:           # 対象そのものが壁に近すぎる: 真横から(yaw=0)に寄せる
+        out["yaw"] = 0.0
+    return out
+
+
 def make_cam(tx: float, tz: float, scale: float, yaw_deg: float, pitch_deg: float, lens: float, sx: float = 0.0, sz: float = 0.0,
              ground_px: float = 560.0, target_z: float = None, dutch: float = 0.0) -> Dict[str, float]:
     """カメラ1コマぶん。

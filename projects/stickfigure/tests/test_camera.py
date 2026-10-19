@@ -76,3 +76,15 @@ def test_shots_compile_and_follow():
     assert plan._follow_x("A", actors, {}) == 1.0
     assert plan._follow_x("mid", actors, {}) == 3.0
     assert plan._follow_x(2.5, actors, {}) == 2.5
+
+
+def test_camera_stays_in_front_of_the_wall():
+    """右側の壁の向こう(壁の中)に、カメラが入らない。入りそうなら反対側(左斜め)へ回る。"""
+    cam = camera.make_cam(4.4, 0.0, 6.0, 60.0, 3.0, 40.0, target_z=1.2)
+    assert camera.position(cam)[0] > 6.0                       # そのままだと壁の向こう
+    fixed = camera.keep_out_of_walls(cam, 6.0)
+    assert camera.position(fixed)[0] <= 6.0 - 0.7 + 1e-6
+    assert fixed["yaw"] < 0
+    ok = camera.make_cam(0.0, 0.0, 6.0, 30.0, 3.0, 40.0)
+    assert camera.keep_out_of_walls(ok, 6.0) is ok               # 問題なければ触らない
+    assert camera.keep_out_of_walls(cam, None) is cam
