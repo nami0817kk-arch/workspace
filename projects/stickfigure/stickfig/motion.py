@@ -26,7 +26,7 @@ def metrics(plan: dict) -> Dict[str, object]:
             k = f"{e['by']}:{e['kind']}"
             kinds[k] = kinds.get(k, 0) + 1
     out["exchanges"] = kinds
-    out["contacts"] = [round(c["distance_to_body"], 2) for c in plan.get("contacts", [])]
+    out["contacts"] = [("miss" if c.get("kind") == "miss" else round(c["distance_to_body"], 2)) for c in plan.get("contacts", [])]   # かわし(miss)は当たらないのが正しい
     for who, a in plan["actors"].items():
         s = 1 if a.get("facing", 1) >= 0 else -1
         spin = [x["actors"][who]["spin"] for x in fr]
