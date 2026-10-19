@@ -172,7 +172,8 @@ def ground_fx(plan: dict, f: int) -> Image.Image:
             ell = [(hx + 0.9 * sc * math.cos(t) * 1.3, 0.35 * sc * math.sin(t)) for t in ts]
         else:
             ell = [(hx + 0.5 * sc / (1 + lift) * math.cos(t), 0.38 * sc * math.sin(t) / (1 + lift)) for t in ts]
-        poly(ds, [P3(cam, x, y, 0.0) for x, y in ell], fill=(0, 0, 0, al))
+        ay = a.get("y", 0.0)                           # 奥行きをずらした人物(味方など)の影
+        poly(ds, [P3(cam, x, y + ay, 0.0) for x, y in ell], fill=(0, 0, 0, al))
     if plan.get("scene", {}).get("style") != "flat2d":       # 2D は、ぼかさない平らな影(セル画の落ち影)
         sh = sh.filter(ImageFilter.GaussianBlur(7 * SS))
     for e in plan["events"]:
@@ -375,7 +376,7 @@ def crop_centers(plan: dict, cw: int) -> List[float]:
     for f, fr in enumerate(plan["frames"]):
         cam = fr["cam"]
         pts = []
-        for who, a in plan["actors"].items():
+        for who in list(plan["actors"])[:2]:         # 戦う2人(味方などの3人目は数えない)
             p = fr["actors"][who]
             pts.append(P3(cam, p["root_x"], 0.0, 0.95)[0])
         tgt = sum(pts) / len(pts)

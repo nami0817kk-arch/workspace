@@ -42,7 +42,7 @@ def _head_px(plan: dict, f: int, who: str, xf=None) -> Tuple[float, float, float
     sk = fk.skeleton(p, s, p["root_x"], a.get("scale", 1.0))
     hx, hz = sk["head"]
     cam = plan["frames"][f]["cam"]
-    x, y = camera.project(cam, hx, 0.0, hz)[:2]
+    x, y = camera.project(cam, hx, a.get("y", 0.0), hz)[:2]
     r = sk["head_r"] * camera.px_per_unit(cam)
     if xf is not None:                                 # 縦画面: 切り出しの左端 x0 と拡大 k
         x, y, r = (x - xf[0]) * xf[1], y * xf[1], r * xf[1]

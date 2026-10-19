@@ -20,8 +20,8 @@ from . import camera, captions, compose, fk, look, sfx
 W, H = camera.W, camera.H
 
 
-def _proj(cam: dict, x: float, z: float):
-    px, py = camera.project(cam, x, 0.0, z)[:2]
+def _proj(cam: dict, x: float, z: float, y: float = 0.0):
+    px, py = camera.project(cam, x, y, z)[:2]
     return px, py
 
 
@@ -56,11 +56,11 @@ def draw_frame(plan: dict, f: int) -> Image.Image:
         col = tuple(int(255 * c) for c in a["color"])
         w = max(3, int(0.075 * u * a.get("scale", 1.0)))
         for key in ("rear_arm", "rear_leg", "torso", "front_leg", "front_arm"):
-            pts = [_proj(cam, x, z) for x, z in sk[key]]
+            pts = [_proj(cam, x, z, a.get("y", 0.0)) for x, z in sk[key]]
             d.line(pts, fill=col, width=w, joint="curve")
         if a.get("weapon"):
-            d.line([_proj(cam, *sk["sword"][0]), _proj(cam, *sk["sword"][1])], fill=(120, 200, 220), width=max(3, w // 2))
-        hx, hy = _proj(cam, *sk["head"])
+            d.line([_proj(cam, *sk["sword"][0], a.get("y", 0.0)), _proj(cam, *sk["sword"][1], a.get("y", 0.0))], fill=(120, 200, 220), width=max(3, w // 2))
+        hx, hy = _proj(cam, *sk["head"], a.get("y", 0.0))
         r = sk["head_r"] * u
         d.ellipse([hx - r, hy - r, hx + r, hy + r], fill=col, outline=(20, 16, 26), width=2)
     for e in plan["events"]:                          # 命中の瞬間: 放射線

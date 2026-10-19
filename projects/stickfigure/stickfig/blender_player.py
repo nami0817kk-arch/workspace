@@ -240,7 +240,7 @@ for f, fr in enumerate(PLAN["frames"], start=1):
     for who, R in RIG.items():
         p, F, s, fa, ra, sca = fr["actors"][who], R["F"], R["s"], R["front"], R["rear"], R["scale"]
         F["root"].scale = (sca, sca, sca)
-        F["root"].location = (p["root_x"], 0, p["root_z"])
+        F["root"].location = (p["root_x"], PLAN["actors"][who].get("y", 0.0), p["root_z"])
         F["root"].rotation_euler = (0, -p["roll"] * s, 0)
         F["hip"].location = (0, 0, p["hz"])
         F["chest"].rotation_euler = (0, p["lean"] * s, p["spin"])

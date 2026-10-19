@@ -22,6 +22,7 @@ RED = [0.8, 0.1, 0.08]
 BLUE = [0.15, 0.4, 0.9]
 GRAY = [0.55, 0.55, 0.58]
 PURPLE = [0.55, 0.2, 0.7]
+ALLY = [0.95, 0.8, 0.2]
 
 
 _RNG = random.Random(0)
@@ -119,18 +120,22 @@ def protect(hero: str, rival: str, hero_color=GREEN, rival_color=RED, **_) -> di
         _card("守る者", f"{hero}の戦い", 2.2),
         dict(scene=dict(name="p1_corner", fight=dict(
             weapon="sword", kick=False, hits=2, counter=False, finisher="none", palette="cool", mood="tense", stage="sunset", a_scale=1.25,
+            ally=dict(color=ALLY, x=4.4, y=1.6, facing=-1, cheer=False),
             colors=dict(A=rival_color, B=hero_color),
             lines=[dict(at="opening", dur=1.8, kind="narr", text=f"村を襲う{rival}の前に、{hero}がひとり立ちはだかった。"),
+                   dict(at="opening", dt=1.0, dur=1.2, kind="say", who="C", text=_p(["たすけて…！", "こわいよ…！", "おねがい、にげて…！"])),
                    dict(at="rise", dt=-0.3, dur=1.2, kind="say", who="A", text=_p(["どけ。邪魔をするな。", "村ごと潰してやる。", "無駄な抵抗だ。"])),
                    dict(at="last", dur=1.2, kind="say", who="B", last_words=True, text="ぐっ……！"),
                    ]))),
         _card("それでも", "", 1.5, "time"),
         dict(scene=dict(name="p2_stand", fight=dict(
             weapon="sword", kick=True, hits=4, counter=False, finisher="launch_slash", palette="warm", mood="battle", stage="sunset", b_scale=1.25,
+            ally=dict(color=ALLY, x=-3.6, y=1.6, facing=1, cheer=True),
             colors=dict(A=hero_color, B=rival_color),
             lines=[dict(at="opening", dur=1.6, kind="narr", text="背中には、守るべき人たちがいる。"),
                    dict(at="kick", dt=-0.5, dur=1.1, kind="say", who="A", text=_p(["ここは、通さない！", "一歩も、退かない！", "守ってみせる！"])),
                    dict(at="finisher", dt=-0.25, dur=1.1, kind="shout", text="守り抜く！"),
+                   dict(at="ko", dt=0.3, dur=1.2, kind="say", who="C", text=_p(["ありがとう！", "やったぁ！", "ほんとうに、守ってくれた…！"])),
                    dict(at="ko", dt=0.5, dur=1.8, kind="narr", text="朝日が、村を照らした。"),
                    ]))),
         _card("完", "", 2.0),

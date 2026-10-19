@@ -32,6 +32,7 @@ DEFAULTS = dict(
     a_scale=1.0,             # こちら側(A)の大きさ。負け場面で相手(A)を大柄にするとき
     b_scale=1.0,             # 相手の大きさ(1.3 で大柄のボス)。連打の位置は固定なので 1.15〜1.35 まで
     stage="cave",            # 舞台の色の組: cave / dojo / field / night / sunset
+    ally=None,               # 3人目(味方): {color, x(置く位置), y(奥行き。+で奥), facing(+1右向き/-1左向き), scale, cheer(勝ったら万歳 true/負けたらうなだれる false)}。戦わず、見守る
     seed=None,               # 数字を入れると、連打の clip・間・溜めの色・カットの順を、その数字で変える(同じ数字なら同じ戦い)
     mood="battle",           # BGM の雰囲気: battle / tense / calm / sad / none
     lines=[],                # 台詞・ナレーション: [{at: opening|kick|rise|combo|counter|last|finisher|ko|end, dt: 0, dur: 1.6, kind: say|narr|shout, who: A, text: "…"}]
@@ -257,11 +258,20 @@ def build_fight(spec: dict) -> dict:
     marks = dict(opening=0.3, kick=1.9, rise=tc, combo=h0, last=hl, finisher=hl + 0.55, ko=ko_t, end=end - 1.2)
     marks["counter"] = ts[0] + 0.28
     caps = _layout_captions(s["lines"], marks, end, float(s["tempo"]))
+    keys = dict(A=sorted(keysA, key=lambda k: k["t"]), B=sorted(keysB, key=lambda k: k["t"]))
+    if s["ally"]:                                       # 味方: 戦いの間は不安げに見守り、決着で万歳(か、うなだれる)。奥行き y をずらして置く
+        al = s["ally"]
+        actors["C"] = dict(color=al.get("color", [0.95, 0.8, 0.2]), scale=al.get("scale", 0.8), base_x=al.get("x", 4.4), y=al.get("y", 1.6), facing=al.get("facing", -1))
+        worry = dict(dx=0.0, hz=0.84, lean=0.05, fa=1.4, fe=2.0, ra=1.4, re=2.0, face="pain")
+        keys["C"] = [dict(t=0.0, **worry), dict(t=_r(ko_t), **worry)] + (
+            [dict(t=_r(ko_t + 0.25), dx=0.0, hz=0.86, lean=-0.1, fa=2.7, fe=0.3, ra=2.7, re=0.3, face="win"), dict(t=end, dx=0.0, hz=0.86, lean=-0.1, fa=2.7, fe=0.3, ra=2.7, re=0.3, face="win")]
+            if al.get("cheer", True) else
+            [dict(t=_r(ko_t + 0.3), dx=0.0, hz=0.78, lean=0.3, fa=0.15, fe=0.2, ra=0.15, re=0.2, face="pain"), dict(t=end, dx=0.0, hz=0.78, lean=0.3, fa=0.15, fe=0.2, ra=0.15, re=0.2, face="pain")])
     scene = dict(
         name=spec.get("name", "fight") if isinstance(spec, dict) else "fight", fps=30, tau_end=end, actors=actors,
         stage=dict(wall_x=6.0, style="cave", theme=s["stage"]), slow=slow, hits=hits, puffs=puffs,
         camera=[[0.0, -0.4, 8.4], [_r(end), 3.2, 8.6]],
-        keys=dict(A=sorted(keysA, key=lambda k: k["t"]), B=sorted(keysB, key=lambda k: k["t"])),
+        keys=keys,
         fx=dict(trails=[], speed_lines=speed, invert=["kick", "heel", "wall"], flashes=sorted(set(flashes)), charge=charge, color_script=color_script),
         clips=dict(A=clipsA, **({"B": clipsB} if clipsB else {})),
         qa=dict(max_cross_frames=400, max_stops=3, max_anticipation_frames=14, max_jerk=1.3),
