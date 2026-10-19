@@ -1,11 +1,14 @@
 import 'dart:math';
 
 import 'career.dart';
+import 'difficulty.dart';
 import 'events.dart';
+import 'goals.dart';
 import 'life.dart';
 import 'match.dart';
 import 'path.dart';
 import 'player.dart';
+import 'rival.dart';
 import 'season.dart';
 import 'traits.dart';
 
@@ -125,27 +128,67 @@ class Game {
     this.termAction = Action.practice,
     this.termInjured = false,
     this.slot = 0,
+    Rival? rival,
+    this.difficulty = Difficulty.normal,
+    List<Goal>? goalOptions,
+    this.goal,
+    Map<Ability, int>? goalStart,
+    this.goalRivalWins = 0,
+    this.yearBestWins = 0,
+    this.yearBestPpg = 0,
+    this.lastGoalMessage,
     this.pendingEventId,
     this.lastFocus = Ability.threePoint,
     this.eventsEnabled = true,
     List<double>? recentAchievements,
     List<YearRecord>? records,
   })  : rng = rng ?? Random(),
+        rival = rival ?? Rival(name: 'ライバル', potential: 60),
+        goalOptions = goalOptions ?? [],
+        goalStart = goalStart ?? {},
         recentAchievements = recentAchievements ?? [],
         records = records ?? [];
 
   /// 新しく始める。素質・身長の素質・生まれつきの特性を引く。
-  factory Game.start(String name, {Random? rng, bool events = true}) {
+  factory Game.start(String name,
+      {Random? rng,
+      bool events = true,
+      Difficulty difficulty = Difficulty.normal}) {
     final r = rng ?? Random();
     final potential = (30 + r.nextInt(40) + r.nextInt(31)).clamp(30, 100);
-    return Game(
+    final g = Game(
       player: newPlayer(name, potential, r.nextDouble(), rollInnateTraits(r)),
+      rival: Rival.random(r),
+      difficulty: difficulty,
       rng: r,
       eventsEnabled: events,
     );
+    g._rollGoalOptions();
+    return g;
   }
 
   final Random rng;
+
+  /// 同じ時代を走るライバル。
+  final Rival rival;
+
+  /// 難しさ(始めるときに決める)。
+  final Difficulty difficulty;
+
+  /// 年のはじめに出る目標の候補。選ぶと `goal` になる(選ばなくてもよい)。
+  List<Goal> goalOptions;
+  Goal? goal;
+
+  /// 目標を選んだ時点の能力・ライバルへの勝ち数(達成の判定に使う)。
+  Map<Ability, int> goalStart;
+  int goalRivalWins;
+
+  /// 今年の大会での最多勝ち数・最高の平均得点(目標の判定に使う)。
+  int yearBestWins;
+  double yearBestPpg;
+
+  /// 直近の年末の、目標の結果の言葉(画面が見せたら消す)。
+  String? lastGoalMessage;
   Player player;
   Condition condition;
   Track track;
@@ -257,7 +300,9 @@ class Game {
     if (phase != Phase.season) throw StateError('今は季節を選べない: $phase');
     lastFocus = focus;
     recoveredThisTerm = false;
-    final r = playTerm(player, condition, action, focus, rng);
+    lastGoalMessage = null;
+    final r = playTerm(player, condition, action, focus, rng,
+        growthScale: difficulty.growth);
     player = r.player;
     condition = r.condition;
     termAction = action;
@@ -277,6 +322,7 @@ class Game {
           rng: rng,
           chooseClutch: chooseClutch,
           askClutch: askClutch && chooseClutch == null,
+          pickOpponent: _pickOpponent,
         );
         if (cr.pending != null) {
           // 勝負どころで止まる。選ぶまで季節は進まない(`resolveClutch`)。
@@ -299,7 +345,8 @@ class Game {
     if (phase != Phase.clutch || cr == null) {
       throw StateError('今は勝負どころではない: $phase');
     }
-    cr.resolve(player, choice, form: condition.form, rng: rng);
+    cr.resolve(player, choice,
+        form: condition.form, rng: rng, pickOpponent: _pickOpponent);
     if (cr.pending != null) {
       return TermReport(
           action: termAction, gotInjured: termInjured, paused: true);
@@ -333,6 +380,7 @@ class Game {
       _endYear();
       yearEnded = true;
     }
+    if (yearEnded && !retired) _rollGoalOptions();
     if (eventsEnabled && phase == Phase.season) {
       pendingEventId = rollEvent(player, pro: track == Track.pro, rng: rng)?.id;
     }
@@ -345,7 +393,31 @@ class Game {
     );
   }
 
+  /// 大会の対戦相手を決める。準決勝のあたりでライバルが現れ、あとは架空のチーム。
+  ({String name, bool rival, double bonus}) _pickOpponent(int round, bool isFinal) {
+    final l = league;
+    final rivalRound = max(1, l.rounds - 2);
+    if (round == rivalRound && rival.activeAt(player.age)) {
+      return (
+          name: rival.name,
+          rival: true,
+          bonus: rival.edgeAt(player.age) + difficulty.opponent);
+    }
+    return (
+        name: opponentTeamName(l, rng), rival: false, bonus: difficulty.opponent);
+  }
+
   void _record(TournamentResult t, {bool winter = false}) {
+    yearBestWins = max(yearBestWins, t.wins);
+    yearBestPpg = max(yearBestPpg, t.ppg);
+    for (final m in t.matches) {
+      if (!m.vsRival) continue;
+      if (m.won) {
+        rival.wins++;
+      } else {
+        rival.losses++;
+      }
+    }
     records.add(YearRecord(
       age: player.age,
       league: t.league,
@@ -365,6 +437,7 @@ class Game {
   }
 
   void _endYear() {
+    _evaluateGoal();
     slot = 0;
     player = ageUp(player, rng);
     switch (track) {
@@ -448,6 +521,70 @@ class Game {
     return lines;
   }
 
+  // ── 目標 ──
+
+  /// 選んだ目標の進み具合(「いま +2 / 目標 +3」など)。目標が無ければ null。
+  String? get goalProgress {
+    final g = goal;
+    if (g == null) return null;
+    return switch (g.kind) {
+      GoalKind.abilityUp =>
+        'いま +${player.of(g.ability!) - (goalStart[g.ability!] ?? player.of(g.ability!))} / 目標 +${g.target}',
+      GoalKind.tournamentWins => '今年の最多 $yearBestWins勝 / 目標 ${g.target}勝',
+      GoalKind.beatRival => rival.wins > goalRivalWins ? '勝った!' : 'まだ勝てていない',
+      GoalKind.scorer =>
+        '今年の最高 ${yearBestPpg.toStringAsFixed(1)}点 / 目標 ${g.target}点',
+    };
+  }
+
+  /// 年のはじめの目標を選ぶ(選ばなくてもよい)。
+  void adoptGoal(int i) {
+    if (goal != null || i < 0 || i >= goalOptions.length) {
+      throw StateError('今は目標を選べない');
+    }
+    goal = goalOptions[i];
+    goalStart = Map<Ability, int>.of(player.abilities);
+    goalRivalWins = rival.wins;
+  }
+
+  bool _goalMet(Goal g) => switch (g.kind) {
+        GoalKind.abilityUp =>
+          player.of(g.ability!) - (goalStart[g.ability!] ?? player.of(g.ability!)) >=
+              g.target,
+        GoalKind.tournamentWins => yearBestWins >= g.target,
+        GoalKind.beatRival => rival.wins > goalRivalWins,
+        GoalKind.scorer => yearBestPpg >= g.target,
+      };
+
+  /// 年末に目標を判定し、達成ならごほうびを当てる。そのあと次の年の候補を引く。
+  void _evaluateGoal() {
+    final g = goal;
+    if (g != null) {
+      if (_goalMet(g)) {
+        final r = applyEffect(player, condition, g.reward, lastFocus, rng);
+        player = r.player;
+        condition = r.condition;
+        lastGoalMessage = '目標達成!「${g.label}」  ${g.rewardText}';
+      } else {
+        lastGoalMessage = '目標に届かなかった…「${g.label}」';
+      }
+    }
+    goal = null;
+    yearBestWins = 0;
+    yearBestPpg = 0;
+  }
+
+  /// 次の年の目標の候補を引く(年が明けて、舞台が決まってから)。
+  void _rollGoalOptions() {
+    goalOptions = rollGoals(
+      player,
+      league: league,
+      rivalActive: rival.activeAt(player.age),
+      focus: lastFocus,
+      rng: rng,
+    );
+  }
+
   // ── 進路 ──
 
   /// 進路を選ぶ。プロ契約を取れたら true。落ちたら false(再挑戦なら引退)。
@@ -528,6 +665,15 @@ class Game {
         'lowYears': lowYears,
         'archived': archived,
         'recoveredThisTerm': recoveredThisTerm,
+        'difficulty': difficulty.name,
+        'goalOptions': [for (final g in goalOptions) g.toJson()],
+        'goal': goal?.toJson(),
+        'goalStart': {for (final e in goalStart.entries) e.key.name: e.value},
+        'goalRivalWins': goalRivalWins,
+        'yearBestWins': yearBestWins,
+        'yearBestPpg': yearBestPpg,
+        'lastGoalMessage': lastGoalMessage,
+        'rival': rival.toJson(),
         'run': run?.toJson(),
         'runWinter': runWinter,
         'termAction': termAction.name,
@@ -557,6 +703,26 @@ class Game {
         lowYears: (j['lowYears'] as num?)?.toInt() ?? 0,
         archived: (j['archived'] as bool?) ?? false,
         recoveredThisTerm: (j['recoveredThisTerm'] as bool?) ?? false,
+        difficulty: Difficulty.parse(j['difficulty'] as String?),
+        goalOptions: [
+          for (final g in (j['goalOptions'] as List?) ?? const [])
+            Goal.fromJson((g as Map).cast<String, dynamic>()),
+        ],
+        goal: j['goal'] == null
+            ? null
+            : Goal.fromJson((j['goal'] as Map).cast<String, dynamic>()),
+        goalStart: {
+          for (final e in ((j['goalStart'] as Map?) ?? const {}).entries)
+            if (Ability.parse(e.key as String) != null)
+              Ability.parse(e.key as String)!: (e.value as num).toInt(),
+        },
+        goalRivalWins: (j['goalRivalWins'] as num?)?.toInt() ?? 0,
+        yearBestWins: (j['yearBestWins'] as num?)?.toInt() ?? 0,
+        yearBestPpg: (j['yearBestPpg'] as num?)?.toDouble() ?? 0,
+        lastGoalMessage: j['lastGoalMessage'] as String?,
+        rival: j['rival'] == null
+            ? null
+            : Rival.fromJson((j['rival'] as Map).cast<String, dynamic>()),
         run: j['run'] == null
             ? null
             : TournamentRun.fromJson((j['run'] as Map).cast<String, dynamic>()),

@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../game/difficulty.dart';
 import '../game/game.dart';
 import '../game/legacy.dart';
 import '../monetization/monetization.dart';
@@ -161,10 +162,11 @@ class GameController extends ChangeNotifier {
     }
   }
 
-  void newGame(String name) {
+  void newGame(String name, [Difficulty difficulty = Difficulty.normal]) {
     final n = name.trim().isEmpty ? '名無し' : name.trim();
     newlyUnlocked = const [];
-    game = Game.start(n, rng: _rng, events: events);
+    game = Game.start(n, rng: _rng, events: events, difficulty: difficulty);
+    focus = recommendedFocus(game!.player);
     recent = const [];
     pathMessage = null;
     _commit();
@@ -173,6 +175,12 @@ class GameController extends ChangeNotifier {
   void setFocus(Ability a) {
     focus = a;
     notifyListeners();
+  }
+
+  /// 年の目標を選ぶ。
+  void adoptGoal(int i) {
+    game!.adoptGoal(i);
+    _commit();
   }
 
   /// 勝負どころの方針を決める。null で「おまかせ」(成功率の高いプレーを自動で選ぶ)。
@@ -251,11 +259,13 @@ class GameController extends ChangeNotifier {
         lines.add(matchLine(i, m.won, m.teamScore, m.oppScore, m.points,
             m.rebounds, m.assists,
             opponent: m.opponent,
+            rival: m.vsRival,
             clutch: m.clutch == null
                 ? null
                 : '${m.clutch!.label}${m.clutchSuccess == true ? '成功' : '失敗'}'));
       }
     }
+    if (r.yearEnded && g.lastGoalMessage != null) lines.add(g.lastGoalMessage!);
     if (r.yearEnded && g.player.age != ageBefore) {
       lines.add('${g.player.age}歳になった。身長 ${g.player.heightCm.toStringAsFixed(1)}cm。');
     }
@@ -322,7 +332,10 @@ class GameController extends ChangeNotifier {
     final age = g.player.age;
     final lines = <String>[];
     await money?.beforeAction();
+    // 目標は確実なほうを自動で選ぶ(選ぶ前なら)。
+    if (g.goal == null && g.goalOptions.isNotEmpty && g.slot <= 2) g.adoptGoal(0);
     while (g.phase == Phase.season && g.player.age == age) {
+      focus = recommendedFocus(g.player);
       final r = act(recommendedAction(g), ask: false);
       if (r.tournament != null || r.satOut) await money?.tournamentPlayed();
       lines.addAll(recent.skip(1));

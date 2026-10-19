@@ -119,6 +119,8 @@ class _HistoryRow extends StatelessWidget {
               style: const TextStyle(fontWeight: FontWeight.bold)),
           Text('${e.reason}${tags.isEmpty ? '' : '  ${tags.join('・')}'}'
               '  平均${e.careerPpg.toStringAsFixed(1)}点'),
+          if (e.rivalName.isNotEmpty && e.rivalWins + e.rivalLosses > 0)
+            Text('宿敵 ${e.rivalName} ${e.rivalWins}勝${e.rivalLosses}敗'),
         ],
       ),
     );

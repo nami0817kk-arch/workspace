@@ -138,8 +138,12 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.textContaining('勝負どころ!'), findsOneWidget);
     expect(find.textContaining('成功率'), findsNWidgets(4));
-    await tester.tap(find.textContaining('ドライブ  成功率'));
-    await tester.pumpAndSettle();
+    // 大会の途中でまた勝負どころが来ることもある。終わるまで選び続ける。
+    var guard = 0;
+    while (c.game!.phase == Phase.clutch && guard++ < 10) {
+      await tester.tap(find.textContaining('ドライブ  成功率'));
+      await tester.pumpAndSettle();
+    }
     expect(c.game!.records, isNotEmpty);
     expect(find.textContaining('の夏の大会'), findsWidgets);
   });

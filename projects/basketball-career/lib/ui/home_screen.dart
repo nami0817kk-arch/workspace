@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../game/difficulty.dart';
 import 'controller.dart';
 import 'history_screen.dart';
 import 'settings_screen.dart';
@@ -15,6 +16,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final _name = TextEditingController();
+  Difficulty _difficulty = Difficulty.normal;
 
   @override
   void dispose() {
@@ -56,9 +58,26 @@ class _HomeScreenState extends State<HomeScreen> {
                     border: OutlineInputBorder(),
                   ),
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 4),
+                Wrap(
+                  spacing: 8,
+                  children: [
+                    for (final d in Difficulty.values)
+                      ChoiceChip(
+                        label: Text(d.label),
+                        selected: _difficulty == d,
+                        onSelected: (_) => setState(() => _difficulty = d),
+                      ),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 4, bottom: 12),
+                  child: Text(_difficulty.description,
+                      style: const TextStyle(fontSize: 12)),
+                ),
                 FilledButton(
-                  onPressed: () => widget.controller.newGame(_name.text),
+                  onPressed: () =>
+                      widget.controller.newGame(_name.text, _difficulty),
                   child: const Text('6歳から始める'),
                 ),
                 const SizedBox(height: 8),

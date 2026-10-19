@@ -55,8 +55,8 @@ String achievementWord(double a) {
 
 /// 大会の1試合を一行に。「○ 62-58 (得点 12 / リバウンド 5 / アシスト 3)」。
 String matchLine(int index, bool won, int team, int opp, int pts, int reb, int ast,
-        {String? clutch, String? opponent}) =>
-    '${index + 1}試合目${opponent == null || opponent.isEmpty ? '' : '(vs $opponent)'} ${won ? '○' : '●'} $team-$opp  得点$pts リバウンド$reb アシスト$ast'
+        {String? clutch, String? opponent, bool rival = false}) =>
+    '${index + 1}試合目${opponent == null || opponent.isEmpty ? '' : '(vs ${rival ? 'ライバル ' : ''}$opponent)'} ${won ? '○' : '●'} $team-$opp  得点$pts リバウンド$reb アシスト$ast'
     '${clutch == null ? '' : '  勝負どころ: $clutch'}';
 
 String leagueLabel(League l) => l.label;

@@ -14,6 +14,10 @@ class HistoryEntry {
     required this.abroad,
     required this.pro,
     required this.reason,
+    this.difficulty = '',
+    this.rivalName = '',
+    this.rivalWins = 0,
+    this.rivalLosses = 0,
   });
 
   final String name;
@@ -26,6 +30,10 @@ class HistoryEntry {
   final bool abroad;
   final bool pro;
   final String reason;
+  final String difficulty;
+  final String rivalName;
+  final int rivalWins;
+  final int rivalLosses;
 
   factory HistoryEntry.of(Game g) => HistoryEntry(
         name: g.player.name,
@@ -38,6 +46,10 @@ class HistoryEntry {
         abroad: g.abroad,
         pro: g.records.any((r) => r.league.name.startsWith('pro')),
         reason: g.retiredReason ?? '',
+        difficulty: g.difficulty.label,
+        rivalName: g.rival.name,
+        rivalWins: g.rival.wins,
+        rivalLosses: g.rival.losses,
       );
 
   Map<String, dynamic> toJson() => {
@@ -51,6 +63,10 @@ class HistoryEntry {
         'abroad': abroad,
         'pro': pro,
         'reason': reason,
+        'difficulty': difficulty,
+        'rivalName': rivalName,
+        'rivalWins': rivalWins,
+        'rivalLosses': rivalLosses,
       };
 
   factory HistoryEntry.fromJson(Map<String, dynamic> j) => HistoryEntry(
@@ -64,6 +80,10 @@ class HistoryEntry {
         abroad: (j['abroad'] as bool?) ?? false,
         pro: (j['pro'] as bool?) ?? false,
         reason: (j['reason'] as String?) ?? '',
+        difficulty: (j['difficulty'] as String?) ?? '',
+        rivalName: (j['rivalName'] as String?) ?? '',
+        rivalWins: (j['rivalWins'] as num?)?.toInt() ?? 0,
+        rivalLosses: (j['rivalLosses'] as num?)?.toInt() ?? 0,
       );
 }
 
@@ -96,6 +116,8 @@ final achievements = <Achievement>[
       (g) => Ability.values.every((a) => g.player.of(a) >= 70)),
   Achievement('scorer', 'エース', '通算の平均得点が15点以上。',
       (g) => g.totalGames >= 10 && g.careerPpg >= 15),
+  Achievement('rival_beat', '宿敵に勝ち越し', 'ライバルとの通算で勝ち越した(3戦以上)。',
+      (g) => g.rival.games >= 3 && g.rival.wins > g.rival.losses),
   Achievement('veteran', '息の長い選手', '35歳までプロで戦った。',
       (g) => g.player.age >= 35 && _wentPro(g)),
 ];

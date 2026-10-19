@@ -1,12 +1,15 @@
 import 'dart:math';
 
 import 'package:basketball_career/game/career.dart';
+import 'package:basketball_career/game/difficulty.dart';
 import 'package:basketball_career/game/events.dart';
 import 'package:basketball_career/game/game.dart';
+import 'package:basketball_career/game/goals.dart';
 import 'package:basketball_career/game/legacy.dart';
 import 'package:basketball_career/game/life.dart';
 import 'package:basketball_career/game/match.dart';
 import 'package:basketball_career/game/path.dart';
+import 'package:basketball_career/game/rival.dart';
 import 'package:basketball_career/game/player.dart';
 import 'package:basketball_career/game/season.dart';
 import 'package:basketball_career/game/traits.dart';
@@ -29,6 +32,9 @@ Player weak() => Player(
       heightGenes: 0.5,
       abilities: {for (final a in Ability.values) a: 20},
     );
+
+Player kidPlayer() => Player(
+    name: 'キッズ', age: 8, potential: 50, heightCm: 130, heightGenes: 0.5);
 
 void main() {
   group('career', () {
@@ -613,6 +619,216 @@ void main() {
       expect(s.teamQuarters, hasLength(4));
       expect(s.teamQuarters.reduce((a, b) => a + b), s.team);
       expect(s.oppQuarters.reduce((a, b) => a + b), s.opp);
+    });
+  });
+
+  group('ライバル', () {
+    test('9歳から現れ、素質が高いほど強い。30歳を過ぎると衰える', () {
+      final r = Rival(name: '神谷リョウ', potential: 80);
+      final low = Rival(name: 'x', potential: 40);
+      expect(r.activeAt(8), isFalse);
+      expect(r.activeAt(9), isTrue);
+      expect(r.activeAt(37), isFalse);
+      expect(r.edgeAt(14), greaterThan(low.edgeAt(14)));
+      expect(r.edgeAt(34), lessThan(r.edgeAt(28)));
+    });
+
+    test('準決勝のあたりで現れ、勝ち負けが通算に残る', () {
+      final g = Game(
+        eventsEnabled: false,
+        player: strong().copyWith(age: 15),
+        rng: Random(2),
+        slot: 1,
+        rival: Rival(name: '黒瀬ツバサ', potential: 60),
+      );
+      g.choose(Action.rest, Ability.pass);
+      final t = g.records.single;
+      expect(t.games, greaterThan(0));
+      final rivalRound = max(1, League.juniorHigh.rounds - 2);
+      // 3試合以上戦ったなら、ライバル戦が1つ入っている
+      if (t.games > rivalRound) {
+        expect(g.rival.games, 1);
+      }
+    });
+
+    test('負けたライバル戦は敗数に、勝てば勝数に入る', () {
+      var wins = 0, losses = 0;
+      for (var seed = 0; seed < 60; seed++) {
+        final g = Game(
+          eventsEnabled: false,
+          player: strong().copyWith(age: 18),
+          rng: Random(seed),
+          slot: 1,
+          rival: Rival(name: '氷室シン', potential: 70),
+        );
+        g.choose(Action.rest, Ability.pass);
+        wins += g.rival.wins;
+        losses += g.rival.losses;
+      }
+      expect(wins + losses, greaterThan(0));
+      expect(wins, greaterThan(0), reason: '強い選手は勝つこともある');
+      expect(losses, greaterThan(0), reason: 'ライバルは強く、負けることもある');
+    });
+
+    test('9歳より前には現れない', () {
+      final g = Game(
+        eventsEnabled: false,
+        player: Player(
+            name: 'a', age: 7, potential: 50, heightCm: 125, heightGenes: 0.5),
+        rng: Random(1),
+        slot: 1,
+      );
+      g.choose(Action.rest, Ability.pass);
+      expect(g.rival.games, 0);
+    });
+
+    test('保存して読み戻せる', () {
+      final g = Game(
+        eventsEnabled: false,
+        player: strong(),
+        rng: Random(1),
+        rival: Rival(name: '桐生レン', potential: 77, wins: 3, losses: 2),
+      );
+      final h = Game.fromJson(g.toJson());
+      expect(h.rival.name, '桐生レン');
+      expect(h.rival.potential, 77);
+      expect(h.rival.wins, 3);
+      expect(h.rival.losses, 2);
+      expect(Game.fromJson({'player': {'name': 'old'}}).rival.name, 'ライバル');
+    });
+
+    test('対戦チームの名前は段階に合う', () {
+      final rng = Random(1);
+      expect(opponentTeamName(League.highSchool, rng), endsWith('高校'));
+      expect(opponentTeamName(League.juniorHigh, rng), endsWith('中学'));
+      expect(opponentTeamName(League.proAbroad, rng), endsWith('タイタンズ'));
+    });
+  });
+
+  group('難易度とおすすめ', () {
+    int grown(Difficulty d) {
+      var total = 0;
+      for (var seed = 0; seed < 60; seed++) {
+        final p = Player(
+            name: 'a', age: 12, potential: 60, heightCm: 150, heightGenes: 0.5);
+        final r = playTerm(p, const Condition(), Action.practice,
+            Ability.threePoint, Random(seed),
+            growthScale: d.growth);
+        total += r.player.of(Ability.threePoint) - p.of(Ability.threePoint);
+      }
+      return total;
+    }
+
+    test('やさしいほどよく伸び、むずかしいほど伸びない', () {
+      expect(grown(Difficulty.easy), greaterThan(grown(Difficulty.normal)));
+      expect(grown(Difficulty.normal), greaterThan(grown(Difficulty.hard)));
+    });
+
+    test('難易度は保存され、古いセーブは「ふつう」になる', () {
+      final g = Game.start('a', rng: Random(1), difficulty: Difficulty.hard);
+      expect(Game.fromJson(g.toJson()).difficulty, Difficulty.hard);
+      expect(Game.fromJson({'player': {'name': 'old'}}).difficulty,
+          Difficulty.normal);
+    });
+
+    test('おすすめの重点は、ポジションに効く伸びしろの大きい能力', () {
+      final p = strong(height: 208).copyWith(abilities: {
+        for (final a in Ability.values) a: 80,
+        Ability.inside: 30,
+        Ability.threePoint: 10, // センターには効かない
+      });
+      expect(p.position, Position.center);
+      expect(recommendedFocus(p), Ability.inside);
+    });
+  });
+
+  group('年の目標', () {
+    Game fresh() => Game.start('目標', rng: Random(5), events: false);
+
+    test('始めると候補が2つ出る(確実と挑戦)', () {
+      final g = fresh();
+      expect(g.goalOptions, hasLength(2));
+      expect(g.goalOptions[0].stretch, isFalse);
+      expect(g.goalOptions[1].stretch, isTrue);
+      expect(g.goal, isNull);
+    });
+
+    test('選ぶと目標になり、二重には選べない', () {
+      final g = fresh();
+      g.adoptGoal(0);
+      expect(g.goal, isNotNull);
+      expect(g.goalProgress, isNotNull);
+      expect(() => g.adoptGoal(1), throwsStateError);
+    });
+
+    test('能力の目標を達成すると、年末にごほうびが入る', () {
+      final g = Game(
+        eventsEnabled: false,
+        player: kidPlayer(),
+        rng: Random(1),
+        goalOptions: const [
+          Goal(kind: GoalKind.abilityUp, ability: Ability.pass, target: 1)
+        ],
+      );
+      g.adoptGoal(0);
+      g.player = g.player.copyWith(abilities: {
+        for (final a in Ability.values) a: g.player.of(a),
+        Ability.pass: g.player.of(Ability.pass) + 5,
+      });
+      final before = g.player.of(Ability.pass);
+      for (var i = 0; i < 4; i++) {
+        g.choose(Action.rest, Ability.pass);
+      }
+      expect(g.lastGoalMessage, contains('目標達成'));
+      expect(g.player.of(Ability.pass), greaterThanOrEqualTo(before + 2));
+      expect(g.goal, isNull, reason: '年が明けたら次の目標を選び直す');
+    });
+
+    test('届かなければ、ごほうびなしで終わる', () {
+      final g = Game(
+        eventsEnabled: false,
+        player: kidPlayer(),
+        rng: Random(1),
+        goalOptions: const [
+          Goal(kind: GoalKind.tournamentWins, target: 99, stretch: true)
+        ],
+      );
+      g.adoptGoal(0);
+      for (var i = 0; i < 4; i++) {
+        g.choose(Action.rest, Ability.pass);
+      }
+      expect(g.lastGoalMessage, contains('届かなかった'));
+    });
+
+    test('年が明けると次の年の候補が出る', () {
+      final g = fresh();
+      for (var i = 0; i < 4; i++) {
+        g.choose(Action.rest, Ability.pass);
+      }
+      expect(g.goalOptions, hasLength(2));
+      expect(g.goal, isNull);
+    });
+
+    test('勝ち数の目標は、その年の大会の最多勝で判定する', () {
+      final g = Game(
+        eventsEnabled: false,
+        player: strong().copyWith(age: 12),
+        rng: Random(3),
+        slot: 1,
+        goalOptions: const [Goal(kind: GoalKind.tournamentWins, target: 1)],
+      );
+      g.adoptGoal(0);
+      g.choose(Action.rest, Ability.pass);
+      expect(g.yearBestWins, g.records.single.wins);
+    });
+
+    test('保存して読み戻せる', () {
+      final g = fresh();
+      g.adoptGoal(1);
+      final h = Game.fromJson(g.toJson());
+      expect(h.goal!.label, g.goal!.label);
+      expect(h.goalOptions, hasLength(2));
+      expect(h.goalStart.length, g.goalStart.length);
     });
   });
 }

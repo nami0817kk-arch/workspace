@@ -94,7 +94,7 @@ class TournamentRun {
       final isFinal = round == league.rounds - 1;
       final opp = pickOpponent?.call(round, isFinal);
       final strength = league.oppBase +
-          round * 3 +
+          round * 2.5 +
           (rng.nextDouble() - 0.5) * 8 +
           (opp?.bonus ?? 0);
       final s = playQuarters(

@@ -204,7 +204,7 @@ MatchState playQuarters(
   String opponent = '',
   bool vsRival = false,
 }) {
-  final mine = teamStrength * 0.7 + p.overall * form * 0.3;
+  final mine = teamStrength * 0.6 + p.overall * form * 0.4;
   var team = 0, opp = 0;
   final tq = <int>[], oq = <int>[];
   for (var q = 0; q < 4; q++) {
