@@ -251,6 +251,7 @@ def flat_bg(plan: dict, f: int) -> Image.Image:
         if -60 < X < W + 60:
             wpx = max(6, int(0.18 * u))
             d.rectangle([X - wpx / 2, y_top + (y_h - y_top) * 0.15, X + wpx / 2, y_h], fill=th["prop"])
+    _flat_props(d, cam, plan.get("stage", {}).get("theme", "cave"), th, tx, y_top, y_h, u)
     wall_x = plan.get("stage", {}).get("wall_x")
     if wall_x is not None:
         X = camera.project(cam, wall_x, 0.0, 0.0)[0]
@@ -262,3 +263,62 @@ def flat_bg(plan: dict, f: int) -> Image.Image:
                 if yy > 0:
                     d.line([(X, yy), (W, yy)], fill=th["line"], width=1)
     return img.convert("RGBA")
+
+
+def _mix(a, b, k):
+    return tuple(int(a[i] * (1 - k) + b[i] * k) for i in range(3))
+
+
+def _flat_props(d: ImageDraw.ImageDraw, cam: dict, theme: str, th: dict, tx: float, y_top: float, y_h: float, u: float) -> None:
+    """舞台ごとの、平らな飾り(2D の切り絵)。奥の壁(y=9 の面)に貼る: 遠景なのでパンに対してゆっくり動く。"""
+    def bx(x):                                           # 奥の壁の面での画面 x
+        return camera.project(cam, x, 9.0, 0.0)[0]
+    span = y_h - y_top
+    if theme == "field":                                 # 丘と木
+        hill = _mix(th["wall"], th["floor"], 0.55)
+        for k, (cx, w_, hgt) in enumerate(((-14, 16, 0.45), (-2, 20, 0.6), (12, 18, 0.5), (26, 16, 0.42), (40, 20, 0.55))):
+            X0, X1 = bx(cx - w_ / 2), bx(cx + w_ / 2)
+            d.ellipse([X0, y_h - span * hgt, X1, y_h + span * hgt], fill=hill)
+        tree = _mix(th["prop"], (40, 90, 40), 0.6)
+        for cx in range(-20, 50, 5):
+            X = bx(cx + 1.3)
+            r = span * 0.11
+            d.rectangle([X - r * 0.12, y_h - r * 1.2, X + r * 0.12, y_h], fill=th["prop"])
+            d.ellipse([X - r, y_h - r * 2.3, X + r, y_h - r * 0.6], fill=tree)
+    elif theme == "night":                               # 月と星
+        X = bx(tx + 6.0)
+        r = span * 0.16
+        d.ellipse([X - r, y_top + span * 0.12, X + r, y_top + span * 0.12 + 2 * r], fill=(240, 236, 210))
+        d.ellipse([X - r * 0.55, y_top + span * 0.06, X + r * 1.1, y_top + span * 0.06 + 2 * r * 0.95], fill=th["sky"])
+        rnd = random.Random(5)
+        for _ in range(60):
+            sx, sy = rnd.uniform(-30, 60), rnd.uniform(0.02, 0.6)
+            X = bx(sx)
+            if -5 < X < W + 5:
+                rr = rnd.choice((1, 1, 2))
+                d.ellipse([X - rr, y_top + span * sy - rr, X + rr, y_top + span * sy + rr], fill=(230, 230, 240))
+    elif theme == "sunset":                              # 夕日と遠い山
+        X = bx(tx - 4.0)
+        r = span * 0.22
+        d.ellipse([X - r, y_h - r * 1.1, X + r, y_h + r * 0.9], fill=(255, 214, 120))
+        mount = _mix(th["wall"], (60, 30, 50), 0.5)
+        pts = []
+        for k, cx in enumerate(range(-30, 60, 6)):
+            pts.append((bx(cx), y_h - span * (0.25 + 0.2 * ((k * 7) % 5) / 4.0)))
+        d.polygon([(bx(-40), y_h + 2)] + pts + [(bx(70), y_h + 2)], fill=mount)
+    elif theme == "dojo":                                # 障子の格子
+        for cx in range(-24, 54, 4):
+            X0, X1 = bx(cx), bx(cx + 3.2)
+            d.rectangle([X0, y_top + span * 0.12, X1, y_h - span * 0.08], outline=th["line"], width=3)
+            for k in range(1, 4):
+                yy = y_top + span * 0.12 + (span * 0.8) * k / 4
+                d.line([(X0, yy), (X1, yy)], fill=th["line"], width=1)
+            xm = (X0 + X1) / 2
+            d.line([(xm, y_top + span * 0.12), (xm, y_h - span * 0.08)], fill=th["line"], width=1)
+    else:                                                # 洞窟: つらら岩
+        rock = _mix(th["wall"], (0, 0, 0), 0.35)
+        for k, cx in enumerate(range(-24, 54, 3)):
+            X = bx(cx)
+            hw = span * 0.05
+            hh = span * (0.18 + 0.14 * ((k * 5) % 4) / 3.0)
+            d.polygon([(X - hw, y_top - 2), (X + hw, y_top - 2), (X, y_top + hh)], fill=rock)
