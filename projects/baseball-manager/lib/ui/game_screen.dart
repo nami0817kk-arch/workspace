@@ -644,18 +644,24 @@ class _OverallHeader extends StatelessWidget {
         key: const Key('overall-header'),
         child: Padding(
           padding: const EdgeInsets.all(12),
-          child: Row(children: [
-            RankBadge(value: ov),
-            const SizedBox(width: 8),
-            Text('総合評価 $ov', style: Theme.of(context).textTheme.titleMedium),
-            const Spacer(),
-            Flexible(
-              child: Text(
-                  '素質 ${potentialStars(game.player.potential)}'
-                  '${delta == null || delta == 0 ? '' : '\n今年 ${delta > 0 ? '+' : ''}$delta'}',
-                  key: const Key('overall-delta'),
-                  textAlign: TextAlign.right),
-            ),
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Row(children: [
+              RankBadge(value: ov),
+              const SizedBox(width: 8),
+              Flexible(
+                child: Text('総合評価 $ov',
+                    style: Theme.of(context).textTheme.titleMedium),
+              ),
+            ]),
+            const SizedBox(height: 4),
+            // 素質の星は途中で折れないよう、「素質」と「今年」を別の塊にして並べる
+            Wrap(spacing: 14, children: [
+              Text('素質 ${potentialStars(game.player.potential)}',
+                  key: const Key('overall-delta')),
+              if (delta != null && delta != 0)
+                Text('今年 ${delta > 0 ? '+' : ''}$delta'),
+            ]),
           ]),
         ),
       ),
