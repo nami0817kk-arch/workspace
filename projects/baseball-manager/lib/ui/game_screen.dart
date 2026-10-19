@@ -541,6 +541,7 @@ class _StatusCard extends StatelessWidget {
               const Text('体力'),
               const SizedBox(width: 6),
               Expanded(
+                flex: 2,
                 child: TweenAnimationBuilder<double>(
                   tween: Tween(end: stamina),
                   duration: const Duration(milliseconds: 400),
@@ -556,6 +557,7 @@ class _StatusCard extends StatelessWidget {
               Icon(_moodIcon(m), color: _moodColor(m), size: 20),
               const SizedBox(width: 2),
               Flexible(
+                flex: 3,
                 child: Text('やる気: ${m.label}',
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
