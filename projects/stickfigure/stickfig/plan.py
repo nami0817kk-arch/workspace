@@ -27,6 +27,9 @@ EFFECTOR = dict(foot=("foot", "fl", (0.2, 2.6)), rear_foot=("rear_foot", "rl", (
 
 def load_scene(path) -> dict:
     scene = yaml.safe_load(Path(path).read_text(encoding="utf-8"))
+    if "fight" in scene:                     # 数行の指定から、戦いの台本を自動で組む(fight.py)
+        from . import fight
+        scene = fight.expand(scene)
     validate_scene(scene)
     return scene
 

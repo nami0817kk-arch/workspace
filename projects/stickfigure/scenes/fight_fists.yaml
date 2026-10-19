@@ -1,0 +1,3 @@
+# 自動で組む戦い(素手・蹴りなし・4連打・反撃なし・冷たい色)
+name: fight_fists
+fight: {weapon: none, kick: false, hits: 4, counter: false, finisher: none, palette: cool}

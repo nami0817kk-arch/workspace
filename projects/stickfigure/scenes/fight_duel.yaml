@@ -1,0 +1,3 @@
+# 自動で組む戦い(剣・蹴りあり・2連打・反撃あり・大技)
+name: fight_duel
+fight: {weapon: sword, kick: true, hits: 2, counter: true, finisher: launch_slash, palette: cool}
