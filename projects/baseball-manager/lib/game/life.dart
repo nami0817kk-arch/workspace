@@ -70,7 +70,7 @@ class Condition {
       Plan.rest => (scale: 0.05, fatigue: -40, morale: 5),
       Plan.study => (scale: 0.12, fatigue: 5, morale: 10),
       Plan.social => (scale: 0.03, fatigue: -10, morale: 20),
-      Plan.match => (scale: 0.12, fatigue: 20, morale: 0),
+      Plan.match => (scale: 0.11, fatigue: 20, morale: 0),
       Plan.lesson => (scale: 0.15, fatigue: 12, morale: 0),
     };
 
