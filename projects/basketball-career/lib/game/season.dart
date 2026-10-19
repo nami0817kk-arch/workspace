@@ -22,6 +22,12 @@ enum League {
   final double oppBase;
 
   bool get elimination => this != proDomestic && this != proAbroad;
+
+  /// レギュラーシーズンの後のプレーオフの試合数(プロだけ。準決勝・決勝の2つ)。
+  int get playoffRounds => elimination ? 0 : 2;
+
+  /// プレーオフに進める勝ち数(レギュラーシーズンの半分)。
+  int get qualifyWins => (rounds + 1) ~/ 2;
 }
 
 /// 大会(1シーズン)の結果。
@@ -60,10 +66,34 @@ class TournamentResult {
   }
 
   int get games => matches.length;
-  bool get champion => wins == league.rounds;
+
+  /// レギュラーシーズン(プロ以外は大会全体)の勝ち数。
+  int get regularWins =>
+      matches.take(league.rounds).where((m) => m.won).length;
+
+  /// プレーオフの試合(プロだけ)。
+  List<MatchResult> get playoffMatches => matches.skip(league.rounds).toList();
+  int get playoffWins => playoffMatches.where((m) => m.won).length;
+
+  /// プレーオフに進んだか。
+  bool get reachedPlayoffs => playoffMatches.isNotEmpty;
+
+  /// 優勝。プロはプレーオフ(準決勝・決勝)を勝ち抜いたとき。
+  bool get champion => league.playoffRounds == 0
+      ? wins == league.rounds
+      : playoffMatches.length == league.playoffRounds &&
+          playoffMatches.every((m) => m.won);
   double get ppg => games == 0 ? 0 : matches.fold(0, (s, m) => s + m.points) / games;
   double get rpg => games == 0 ? 0 : matches.fold(0, (s, m) => s + m.rebounds) / games;
   double get apg => games == 0 ? 0 : matches.fold(0, (s, m) => s + m.assists) / games;
+}
+
+/// 回戦の呼び名。
+String roundLabelOf(League league, int r) {
+  if (league.playoffRounds > 0 && r >= league.rounds) {
+    return r == league.rounds ? 'プレーオフ準決勝' : 'プレーオフ決勝';
+  }
+  return '${r + 1}回戦';
 }
 
 /// 個人の評価 0〜100(50 が平均)。得点・リバウンド・アシストの1試合平均から。
@@ -105,11 +135,25 @@ class TournamentRun {
   /// ハーフタイムの作戦を選ぶのを待っている試合。null なら止まっていない。
   MatchHalf? pendingHalf;
 
-  bool get finished =>
-      pending == null &&
-      pendingHalf == null &&
-      (round >= league.rounds ||
-          (league.elimination && matches.isNotEmpty && !matches.last.won));
+  bool get finished {
+    if (pending != null || pendingHalf != null) return false;
+    if (league.playoffRounds == 0) {
+      return round >= league.rounds ||
+          (league.elimination && matches.isNotEmpty && !matches.last.won);
+    }
+    // プロ: レギュラーシーズン→(半分以上勝てば)プレーオフ。プレーオフは負けたら終わり。
+    final total = league.rounds + league.playoffRounds;
+    if (round >= total) return true;
+    if (round == league.rounds) {
+      final regular = matches.where((m) => m.won).length;
+      return regular < league.qualifyWins;
+    }
+    if (round > league.rounds) return !matches.last.won;
+    return false;
+  }
+
+  /// その回戦の呼び名(プロのプレーオフは「プレーオフ準決勝」「プレーオフ決勝」)。
+  String roundLabel(int r) => roundLabelOf(league, r);
 
   /// 次の試合の対戦相手の名前(待機中はその試合の相手)。
   String? get nextOpponent => pending?.opponent ?? pendingHalf?.opponent;
@@ -224,8 +268,11 @@ class TournamentRun {
     final ppg = n == 0 ? 0.0 : matches.fold(0, (s, m) => s + m.points) / n;
     final rpg = n == 0 ? 0.0 : matches.fold(0, (s, m) => s + m.rebounds) / n;
     final apg = n == 0 ? 0.0 : matches.fold(0, (s, m) => s + m.assists) / n;
-    final achievement =
-        wins / league.rounds * 60 + individualRating(ppg, rpg, apg) * 0.4;
+    final regular = matches.take(league.rounds).where((m) => m.won).length;
+    final playoff = matches.skip(league.rounds).where((m) => m.won).length;
+    final achievement = regular / league.rounds * 60 +
+        individualRating(ppg, rpg, apg) * 0.4 +
+        playoff * 6;
     return TournamentResult(
       league: league,
       matches: matches,
