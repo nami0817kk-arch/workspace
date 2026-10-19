@@ -1,3 +1,3 @@
 # 出だしの技の見本 2: 瞬間移動。走らず一瞬で相手の目の前に現れて連打、決めは衝撃波
 name: fight_teleport
-fight: {weapon: sword, kick: false, opening: teleport, hits: 3, counter: true, finisher: launch_slash, palette: cool, stage: cave, mood: battle, seed: 13}
+fight: {weapon: sword, kick: false, opening: teleport, hits: 3, counter: true, finisher: launch_slash, palette: cool, stage: cave, mood: battle, seed: 7}   # seed 13 は 13_17_s2 が 2 回並び継ぎ目で 1.4 飛ぶ(瞬間移動とは無関係。series は _first_passing_seed で避ける)

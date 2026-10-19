@@ -378,7 +378,7 @@ def compose_frame(plan: dict, f: int, figs: Dict[int, Image.Image], stages: Opti
         if ai["start"] <= tau <= ai["end"] and f > 0:
             q = (tau - ai["start"]) / max(1e-6, ai["end"] - ai["start"])
             g = _prev_frame(plan, f) or f
-            src = figs[max(0, min(len(figs) - 1, int(ai.get("src_frame", g))))]
+            src = figs[max(0, min(plan["n"] - 1, int(ai.get("src_frame", g))))]
             n_ = int(ai.get("n", 6))
             who_a = ai.get("who", "A")
             x_now = plan["frames"][f]["actors"][who_a]["root_x"]
