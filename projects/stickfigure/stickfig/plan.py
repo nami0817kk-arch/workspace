@@ -473,30 +473,44 @@ def _align_keys_to_clips(scene: dict, tracks: Dict[str, KeyTrack]) -> Dict[str, 
         for (w0, w1, c) in windows:
             pts = [c["start"], c["end"]]
             if c.get("_solved") or c.get("_chained"):
-                pts += [w0 - 0.3, w1 + 0.3]
+                pts += [w0 - 0.3]
             for tt in pts:
                 if tt <= 0 or any(abs(float(k["t"]) - tt) < 0.05 for k in keys) or in_other(tt, c):
                     continue
                 keys.append(dict(t=round(float(tt), 3), dx=round(base.at(tt)["dx"], 4), _dx0=round(base.at(tt)["dx"], 4)))
         keys.sort(key=lambda k: float(k["t"]))
-        gaps = []                                        # 続けざまの clip(間が 0.6 秒未満)の間は、前の終点から次の始点へ直線で動く(台本の位置へ戻る暇が無い)
+        shifts = []                                      # 接触で決めた clip のあと: 台本の位置(_dx0)を、clip が終わった位置との差だけ平行移動(差は台本の元の値から測るので、何度呼んでも同じ)
+        for (w0, w1, c) in windows:
+            if c.get("_solved") or c.get("_chained"):
+                shifts.append((w1, bank.sample(c, c["end"])["dx"] - base.at(c["end"])["dx"]))
+
+        def shift_at(tt: float) -> float:
+            dd = 0.0
+            for w1s, dl in shifts:
+                if w1s <= tt:
+                    dd = dl
+            return dd
+
+        gaps = []                                        # 続けざまの clip(間が 0.6 秒未満、重なりも含む)の間は、前の終点から次の始点へ直線で動く(台本の位置へ戻る暇が無い)
         for (w0, w1, c), (w0n, w1n, cn) in zip(windows, windows[1:]):
-            if 0 < w0n - w1 < 0.6:
-                gaps.append((w1, w0n, bank.sample(c, c["end"])["dx"], bank.sample(cn, cn["start"])["dx"]))
+            if w0n - w1 < 0.6:
+                lo, hi = min(c["end"], w0n), max(cn["start"], w1)
+                if hi - lo > 1e-6:
+                    gaps.append((lo, hi, bank.sample(c, c["end"])["dx"], bank.sample(cn, cn["start"])["dx"]))
         for k in keys:
             tt = float(k["t"])
             dx0 = float(k.get("_dx0", base.at(tt)["dx"]))
+            g = next((g for g in gaps if g[0] < tt < g[1]), None)
+            if g is not None:                                              # 継ぎ目(重なりも): 直線
+                u = (tt - g[0]) / (g[1] - g[0])
+                k["dx"] = round((1 - u) * g[2] + u * g[3], 4)
+                continue
             inside = [c for (w0, w1, c) in windows if w0 <= tt <= w1]
             if inside:
                 c = inside[-1]
                 k["dx"] = round(bank.sample(c, min(max(tt, c["start"]), c["end"]))["dx"], 4)
                 continue
-            g = next((g for g in gaps if g[0] < tt < g[1]), None)
-            if g is not None:
-                u = (tt - g[0]) / (g[1] - g[0])
-                k["dx"] = round((1 - u) * g[2] + u * g[3], 4)
-                continue
-            val = dx0
+            val = dx0 + shift_at(tt)
             for (w0, w1, c) in windows:
                 if not (c.get("_solved") or c.get("_chained")):
                     continue
@@ -504,16 +518,9 @@ def _align_keys_to_clips(scene: dict, tracks: Dict[str, KeyTrack]) -> Dict[str, 
                 for pt in protected:
                     if t0 <= pt < w0:
                         t0 = max(t0, pt + 0.04)
-                if t0 < tt < w0 and w0 - t0 > 0.04:                     # 助走: 台本の位置 → 始点
+                if t0 < tt < w0 and w0 - t0 > 0.04:                     # 助走: (平行移動した)台本の位置 → 始点
                     u = (tt - t0) / (w0 - t0)
-                    val = (1 - u) * dx0 + u * bank.sample(c, c["start"])["dx"]
-                t1 = w1 + 0.3
-                for pt in protected:
-                    if w1 < pt <= t1:
-                        t1 = min(t1, pt - 0.04)
-                if w1 < tt < t1 and t1 - w1 > 0.04:                     # 戻り: 終点 → 台本の位置
-                    u = (tt - w1) / (t1 - w1)
-                    val = (1 - u) * bank.sample(c, c["end"])["dx"] + u * dx0
+                    val = (1 - u) * (dx0 + shift_at(tt)) + u * bank.sample(c, c["start"])["dx"]
             k["dx"] = round(val, 4)
     return make_tracks(scene)
 
