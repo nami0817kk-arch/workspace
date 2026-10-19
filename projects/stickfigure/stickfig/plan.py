@@ -774,18 +774,34 @@ def build_plan(scene: dict, solve: bool = True) -> dict:
         tracks = _align_keys_to_clips(scene, tracks)
     contacts = []
     if solve:
-        rounds = 12 if (scene.get("align_clips", True) and scene.get("physics") is None and scene.get("_bank") is not None) else 1
+        rounds = 16 if (scene.get("align_clips", True) and scene.get("physics") is None and scene.get("_bank") is not None) else 1
+        all_clips = [c for lst in scene["_bank"].defs.values() for c in lst] if rounds > 1 else []
+        prev_delta = None
         for it in range(rounds):
-            before = [c.get("anchor_dx", 0.0) for lst in scene["_bank"].defs.values() for c in lst] if rounds > 1 else []
+            before = [c.get("anchor_dx", 0.0) for c in all_clips]
             contacts = []
             for h in scene.get("hits", []):
                 if h.get("contact"):
                     contacts.append(solve_contact(scene, tracks, h))
             if rounds > 1:                              # 解いた位置に合わせてキーを動かし、動いた相手に合わせてもう一度解く。anchor が動かなくなるまで(命中が連鎖するので数回かかる)
+                after_solve = [c.get("anchor_dx", 0.0) for c in all_clips]
+                delta = [x - y for x, y in zip(after_solve, before)]
+                if prev_delta is not None and any(x * y < -1e-4 for x, y in zip(delta, prev_delta)):     # 行ったり来たり(2 人が互いの位置を追いかけ合う): 半分だけ動かす
+                    for c, b_, a_ in zip(all_clips, before, after_solve):
+                        if "anchor_dx" in c:
+                            c["anchor_dx"] = 0.5 * (a_ + b_)
+                    delta = [0.5 * d for d in delta]
+                prev_delta = delta
                 tracks = _align_keys_to_clips(scene, tracks)
-                after = [c.get("anchor_dx", 0.0) for lst in scene["_bank"].defs.values() for c in lst]
+                after = [c.get("anchor_dx", 0.0) for c in all_clips]
                 if max((abs(x - y) for x, y in zip(before, after)), default=0.0) < 0.02 and it >= 1:
                     break
+        if rounds > 1:                                  # 最後に、落ち着いた位置でもう一度だけ解く(半分だけ動かしたまま終わらない)
+            contacts = []
+            for h in scene.get("hits", []):
+                if h.get("contact"):
+                    contacts.append(solve_contact(scene, tracks, h))
+            tracks = _align_keys_to_clips(scene, tracks)
     phys = None
     if scene.get("physics") is not None:
         phys = run_physics(scene, tracks)
