@@ -80,6 +80,23 @@ python scripts/make_gallery.py 09_01:2.4 135_07_s1:3.6   # clip を順に再生�
 - 落とし穴: **Chipmunk の回転バネは角度を `a - b` で測る**(RotaryLimitJoint は `b - a`)。目標の符号を逆に入れる。
   剛体の質量は Body に直接与える(`shape.density = 0` を書くと質量が0になって落ちる)。腕の `fa` は胴からの相対角
 
+## アニメの演出(2026-10-19、参考6本の実測から)
+
+参考(戦闘アニメ6本)は、カット中央値0.13秒・2コマ撮りが2〜3割・閃光が2秒に1回・画面の揺れが3〜17%のコマ(数字は `reference/anime_rhythm.md`)。
+絵は寄りと彩度の高い色、特大の効果が主役だった。台本の `scenes/showpiece_anime14.yaml` が最新の見本(周13)。
+
+- `style: flat2d`: **2Dの見た目**(ユーザー指示)。平らな塗り・人物の外形に輪郭線・斜め/見下ろしを弱める(`flat_k` .3)・望遠(`flat_lens` 1.9)・影はぼかさない。3D感を足す提案はしない
+- `flurry`: 山場の前に、4〜5コマごとに角度を変える連打カット。angle は `target`(A/B)・`z`・`ox`・`yaw/pitch/scale/lens/dutch`・`hue`(色つき流線の背景。`streak: false` なら舞台のまま)
+- `impact_cuts`: 命中のヒットストップ中に、角度を回す。`hue` で背景色
+- `fx.charge`: 必殺技の溜め(`start/end/who/color`)。背景を暗くし、光の柱・粒・足もとの輪(`look.py`)
+- `fx.flashes`: 1コマだけの白い閃光(tau のリスト)。多すぎるとうるさい(参考は2秒に1回)
+- `fx.color_script`: `[[tau, [r,g,b], 強さ], ...]` 場面ごとの色味
+- `stepping: {hold: 2, hold_camera: true, ranges: [[a,b,hold],...]}`: 絵ごとの2コマ撮り。命中の前後 `ones_around_hits` コマは1コマごと
+- 斬りの連続・反撃は、clip を `strike_at` で並べ、非接触の命中は `pos` を書く。最後の1発だけ `contact`(位置は anchor_dx で合わせる)
+- **顔(目)は描かない**(ユーザー指示)。`look.eyes` は残してあるが呼ばない
+- 落とし穴: モーションキャプチャの clip の角度は、関節ごとに 2π ずれて入っている(`np.unwrap`)。**読み込みで円の平均を中心に ±π へ収めてある**(`mocap.Clip`)。
+  やらないと clip 同士・キーとのつなぎで 2π の飛びが出る。clip を選ぶときは、命中時に相手との間隔(root_x の差)が 0.7〜1.0 になる手の clip を試して選ぶ(02_07_s1 は届かず、13_17_s1 が届いた)
+
 ## 決まり・つまずき所(実際に踏んだもの)
 
 1. **参考動画のファイル・切り出した画像は、リポジトリに入れない**(workspace は public、他人の作品)。入れてよいのは数字と読み取った角度だけ(`reference/`)。
