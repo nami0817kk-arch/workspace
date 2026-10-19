@@ -56,7 +56,14 @@ Player _gain(Player p, Ability a, int n) {
 Player _byRole(Player p, Ability bat, Ability pit, int n) =>
     _gain(_gain(p, bat, n), pit, n);
 
-Player _trait(Player p, Trait t) => p.copyWith(traits: gain(p.traits, t));
+/// 特性を足す。持てない(もう上限・重複・矛盾)ときは、選んだことが無駄にならないよう、
+/// いちばん低い能力を+1にする。
+Player _trait(Player p, Trait t) {
+  if (canGain(p.traits, t)) return p.copyWith(traits: gain(p.traits, t));
+  final abilities = [...abilitiesOf(p.role)]
+    ..sort((a, b) => p.of(a).compareTo(p.of(b)));
+  return _gain(p, abilities.first, 1);
+}
 
 /// 役割に合う特性を1つ。打者向け・投手向けのどちらかを与える。
 Player _roleTrait(Player p, Trait bat, Trait pit) =>
@@ -86,7 +93,9 @@ final List<ChildhoodStep> childhoodSteps = [
       _c('壁に向かって、ひとりで投げる・打つ',
           (p) => _byRole(p, Ability.contact, Ability.control, 1)),
       _c('鬼ごっこで、走り回る', (p) => _byRole(p, Ability.speed, Ability.stamina, 1)),
-      _c('図鑑や本を読んで、野球のことを調べる', (p) => _trait(p, Trait.studious), morale: 5),
+      _c('図鑑や本を読んで、野球のことを調べる',
+          (p) => _byRole(p, Ability.eye, Ability.control, 1),
+          morale: 8),
     ]),
     const ['壁あてが好きな子だった', '走り回るのが好きな子だった', '野球のことを調べるのが好きな子だった'],
   ),
@@ -99,7 +108,7 @@ final List<ChildhoodStep> childhoodSteps = [
       _c('空手(頑丈になる)', (p) => _trait(_gain(p, Ability.power, 1), Trait.sturdy),
           fatigue: 5),
       _c('書道・そろばん(集中力がつく)', (p) => _byRole(p, Ability.eye, Ability.control, 1)),
-      _c('習い事はせず、好きなだけ遊ぶ', (p) => _trait(p, Trait.sunny), morale: 10),
+      _c('習い事はせず、好きなだけ遊ぶ', (p) => p, morale: 20),
     ]),
     const ['水泳を習っていた', '空手を習っていた', '書道・そろばんを習っていた', '習い事はせず、のびのび育った'],
   ),
@@ -108,7 +117,7 @@ final List<ChildhoodStep> childhoodSteps = [
     GameEvent('kid-promise', '毎日の約束を決めよう。', [
       _c('毎日30分、素振り(投球)をする', (p) => _byRole(p, Ability.power, Ability.stuff, 1),
           fatigue: 8),
-      _c('宿題を終えたら、思いきり遊ぶ', (p) => _trait(p, Trait.quickRecovery), morale: 8),
+      _c('宿題を終えたら、思いきり遊ぶ', (p) => p, morale: 12, fatigue: -8),
       _c('家族でキャッチボールをする日を作る', (p) => p,
           morale: 8, onCast: (cast, rng) => cast.family?.addBond(15)),
     ]),
@@ -133,7 +142,12 @@ final List<ChildhoodStep> childhoodSteps = [
   ChildhoodStep(
     10,
     GameEvent('kid-team', 'チームでの立ち回りを決めるときが来た。', [
-      _c('みんなをまとめるキャプテンになる', (p) => _trait(p, Trait.leader), fatigue: 5),
+      _c('みんなをまとめるキャプテンになる', (p) => p, fatigue: 5, morale: 8,
+          onCast: (cast, rng) {
+        for (final m in cast.teammates) {
+          m.addBond(10);
+        }
+      }),
       _c('場を明るくするムードメーカーになる', (p) => p, morale: 15, fatigue: -5),
       _c('自分の練習に集中して、技をみがく',
           (p) => _byRole(p, Ability.contact, Ability.stuff, 1),
@@ -145,8 +159,8 @@ final List<ChildhoodStep> childhoodSteps = [
     11,
     GameEvent('kid-defeat', '大事な試合に負けて、悔し涙が止まらない。', [
       _c('「次は絶対に勝つ」と決める', (p) => _trait(p, Trait.clutch), morale: -5),
-      _c('友だちと笑って、気持ちを切り替える', (p) => _trait(p, Trait.sunny), morale: 12),
-      _c('負けた原因を、ひとりで考え抜く', (p) => _trait(p, Trait.studious), morale: 2),
+      _c('友だちと笑って、気持ちを切り替える', (p) => p, morale: 20),
+      _c('負けた原因を、ひとりで考え抜く', (p) => p, morale: 2),
     ]),
     const ['負けて、次こそ勝つと決めた', '負けても笑って切り替えた', '負けた原因を考え抜いた'],
   ),
@@ -154,8 +168,10 @@ final List<ChildhoodStep> childhoodSteps = [
     12,
     GameEvent('kid-dream', '卒団の日。みんなの前で、将来の夢を語る。', [
       _c('「プロ野球選手になる!」', (p) => p, morale: 20),
-      _c('「日本代表で世界一になる!」', (p) => _trait(p, Trait.worldStage), morale: 8),
-      _c('「ずっと野球を楽しみたい」', (p) => _trait(p, Trait.longevity), morale: 8),
+      _c('「日本代表で世界一になる!」', (p) => _byRole(p, Ability.power, Ability.stuff, 1),
+          morale: 12),
+      _c('「ずっと野球を楽しみたい」', (p) => _byRole(p, Ability.speed, Ability.stamina, 1),
+          morale: 12),
     ]),
     const ['プロ野球選手になると語った', '世界一になると語った', '一生、野球を楽しむと語った'],
   ),
@@ -171,7 +187,7 @@ final List<ChildhoodStep> childhoodSteps = [
           m.addBond(8);
         }
       }),
-      _c('勉強と野球を、両立させる', (p) => _trait(p, Trait.studious), morale: 3),
+      _c('勉強と野球を、両立させる', (p) => p, morale: 8),
     ]),
     const ['強豪の硬式クラブで鍛えた', '学校の野球部で仲間と楽しんだ', '勉強と野球を両立した'],
     const [_none, Lasting(spirit: 1), _none],
@@ -181,8 +197,10 @@ final List<ChildhoodStep> childhoodSteps = [
     GameEvent('turn-jh-body', '体が大きく変わる時期。まず何を大切にする?', [
       _c('食事とトレーニングを徹底する', (p) => _byRole(p, Ability.power, Ability.stamina, 1),
           fatigue: 8),
-      _c('しっかり寝て、体を休める', (p) => _trait(p, Trait.quickRecovery), fatigue: -10),
-      _c('ストレッチで、体のケアを覚える', (p) => _trait(p, Trait.sturdy)),
+      _c('しっかり寝て、体を休める', (p) => p, fatigue: -20, morale: 3),
+      _c('ストレッチで、体のケアを覚える',
+          (p) => _byRole(p, Ability.speed, Ability.stamina, 1),
+          morale: 3),
     ]),
     const ['食事とトレーニングで体をつくった', '睡眠を大切にした', '体のケアを覚えた'],
   ),
@@ -225,7 +243,7 @@ final List<ChildhoodStep> childhoodSteps = [
       _c('互いに高め合う仲間として、話しかける', (p) => p, morale: 8, onCast: (cast, rng) {
         cast.rival?.addBond(15);
       }),
-      _c('気にせず、自分の野球に集中する', (p) => _trait(p, Trait.clutch), morale: 3),
+      _c('気にせず、自分の野球に集中する', (p) => p, morale: 3),
     ]),
     const ['ライバルに真っ向勝負を挑んだ', 'ライバルと高め合った', '自分の野球に集中した'],
   ),
@@ -249,7 +267,7 @@ final List<ChildhoodStep> childhoodSteps = [
           fatigue: 8, morale: -3),
       _c('寮生活で、体づくりに専念する', (p) => _byRole(p, Ability.power, Ability.stamina, 1),
           fatigue: 5),
-      _c('勉強や仕事も、きちんとこなす', (p) => _trait(p, Trait.studious), morale: 5),
+      _c('勉強や仕事も、きちんとこなす', (p) => p, morale: 8),
     ]),
     const ['1年目から主力を狙った', '寮で体づくりに専念した', '勉強や仕事と野球を両立した'],
   ),
@@ -270,7 +288,7 @@ final List<ChildhoodStep> childhoodSteps = [
           (p) => _byRole(p, Ability.power, Ability.stuff, 1),
           fatigue: 5),
       _c('スカウトとの面談に力を入れる', (p) => p, morale: 3),
-      _c('いつも通りの自分で、勝負する', (p) => _trait(p, Trait.clutch), morale: 5),
+      _c('いつも通りの自分で、勝負する', (p) => p, morale: 12),
     ]),
     const ['ドラフトの年、結果に集中した', 'ドラフトの年、スカウトに力を入れた', 'ドラフトの年、いつも通りで勝負した'],
     const [_none, _none, _none],
@@ -294,8 +312,7 @@ final List<ChildhoodStep> childhoodSteps = [
   ChildhoodStep(
     12,
     GameEvent('kid-friend', 'いちばんの親友と、ケンカをしてしまった。どうする?', [
-      _c('自分から謝って、仲直りする', (p) => _trait(p, Trait.sunny), morale: 3,
-          onCast: (cast, rng) {
+      _c('自分から謝って、仲直りする', (p) => p, morale: 10, onCast: (cast, rng) {
         for (final m in cast.teammates) {
           m.addBond(6);
         }
@@ -365,7 +382,8 @@ final List<ChildhoodStep> childhoodSteps = [
   ChildhoodStep(
     20,
     GameEvent('turn-route-money', '野球だけでなく、お金のことも考える年になった。', [
-      _c('アルバイトで、生活を支える', (p) => _trait(p, Trait.hardWorker), fatigue: 10),
+      _c('アルバイトで、生活を支える', (p) => _byRole(p, Ability.speed, Ability.stamina, 1),
+          fatigue: 10),
       _c('仕送りや支援に感謝して、野球に専念する',
           (p) => _byRole(p, Ability.power, Ability.stamina, 1),
           morale: 3, onCast: (cast, rng) => cast.family?.addBond(10)),
