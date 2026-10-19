@@ -45,6 +45,22 @@ class GameScreen extends StatelessWidget {
       return EndingView(controller: controller, game: game);
     }
     final p = game.player;
+    return CallbackShortcuts(
+      bindings: {
+        if (game.phase == Phase.term) ...{
+          const SingleActivator(LogicalKeyboardKey.enter): () =>
+              controller.act(recommendedPlan(game)),
+          const SingleActivator(LogicalKeyboardKey.keyR): () =>
+              controller.act(Plan.rest),
+        },
+        if (controller.canUndo)
+          const SingleActivator(LogicalKeyboardKey.keyZ): controller.undo,
+      },
+      child: Focus(autofocus: true, child: _scaffold(context, p)),
+    );
+  }
+
+  Widget _scaffold(BuildContext context, Player p) {
     return Scaffold(
       bottomNavigationBar: game.phase == Phase.term
           ? _QuickBar(controller: controller, game: game)
@@ -133,7 +149,7 @@ class GameScreen extends StatelessWidget {
                 const SizedBox(height: 8),
                 const _FirstHint(),
               ],
-              _TodoChips(game: game),
+              _TodoChips(game: game, controller: controller),
               if (game.canChooseOffseason) ...[
                 const SizedBox(height: 8),
                 _OffseasonCard(controller: controller, game: game),
@@ -435,8 +451,9 @@ class _InvestRow extends StatelessWidget {
 
 /// いま決められることのお知らせ(選んでも選ばなくてもよい)。
 class _TodoChips extends StatelessWidget {
-  const _TodoChips({required this.game});
+  const _TodoChips({required this.game, required this.controller});
   final Game game;
+  final GameController controller;
 
   @override
   Widget build(BuildContext context) {
@@ -470,6 +487,13 @@ class _TodoChips extends StatelessWidget {
                 visualDensity: VisualDensity.compact,
                 avatar: const Icon(Icons.flag, size: 16),
                 label: Text(i)),
+          if (controller.canUndo)
+            TextButton.icon(
+              key: const Key('undo'),
+              onPressed: controller.undo,
+              icon: const Icon(Icons.undo, size: 18),
+              label: const Text('ひとつ前に戻す'),
+            ),
           TextButton.icon(
             key: const Key('year-plan'),
             onPressed: () => showDialog<void>(
@@ -1571,6 +1595,13 @@ class _PennantRow extends StatelessWidget {
   }
 }
 
+String _shortPlan(Plan p, Ability focus) => switch (p) {
+      Plan.train => '練習',
+      Plan.rest => '休養',
+      Plan.social => '交流',
+      _ => planTitle(p, focus),
+    };
+
 /// 画面の下に固定する、いちばんよく使う操作(おすすめの行動・休養)。
 class _QuickBar extends StatelessWidget {
   const _QuickBar({required this.controller, required this.game});
@@ -1602,7 +1633,7 @@ class _QuickBar extends StatelessWidget {
                     key: const Key('quick-recommended'),
                     onPressed: () => controller.act(rec),
                     icon: const Icon(Icons.bolt, size: 20),
-                    label: Text('おすすめ: ${planTitle(rec, focus)}',
+                    label: Text('おすすめ: ${_shortPlan(rec, focus)}',
                         maxLines: 1, overflow: TextOverflow.ellipsis),
                   ),
                 ),

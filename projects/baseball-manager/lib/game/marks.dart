@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'calendar.dart';
 import 'career.dart';
 import 'path.dart' show overall;
@@ -497,3 +499,29 @@ List<String> yearPlanOf(Stage stage, int age) => switch (stage) {
     unit: isMonthly(stage) ? 'か月' : '季節',
   );
 }
+
+const _names = [
+  'はると',
+  'そうた',
+  'れん',
+  'あおい',
+  'かいと',
+  'ゆうま',
+  'りく',
+  'いつき',
+  'ひなた',
+  'こうき',
+  'たいが',
+  'ゆうせい',
+  'みなと',
+  'しょう',
+  'けんた',
+  'だいき',
+  'つばさ',
+  'ひろと',
+  'りょう',
+  'まさき',
+];
+
+/// 名前のおまかせ(ランダム)。
+String randomNameOf(Random rng) => _names[rng.nextInt(_names.length)];

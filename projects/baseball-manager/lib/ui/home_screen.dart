@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 import '../game/calendar.dart';
@@ -52,6 +54,9 @@ class _HomeScreenState extends State<HomeScreen> {
           if (e.snapshot != null && e.snapshot!.married) e
       ];
 
+  void _start() =>
+      widget.controller.newGame(name.text, role, difficulty, heir?.snapshot);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -101,9 +106,21 @@ class _HomeScreenState extends State<HomeScreen> {
                   const Text('1人の選手を育てて、その一生を見届けるゲームです。'),
                   const SizedBox(height: 24),
                   TextField(
+                    key: const Key('name-field'),
                     controller: name,
-                    decoration: const InputDecoration(
-                        labelText: '選手の名前', border: OutlineInputBorder()),
+                    textInputAction: TextInputAction.done,
+                    onSubmitted: (_) => _start(),
+                    decoration: InputDecoration(
+                      labelText: '選手の名前',
+                      border: const OutlineInputBorder(),
+                      suffixIcon: IconButton(
+                        key: const Key('random-name'),
+                        tooltip: '名前をおまかせ',
+                        icon: const Icon(Icons.casino),
+                        onPressed: () =>
+                            setState(() => name.text = randomNameOf(Random())),
+                      ),
+                    ),
                     maxLength: 10,
                   ),
                   const SizedBox(height: 8),
@@ -165,8 +182,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                   const SizedBox(height: 24),
                   FilledButton(
-                    onPressed: () => widget.controller
-                        .newGame(name.text, role, difficulty, heir?.snapshot),
+                    key: const Key('start'),
+                    onPressed: _start,
                     child: const Text('はじめる'),
                   ),
                   const SizedBox(height: 16),

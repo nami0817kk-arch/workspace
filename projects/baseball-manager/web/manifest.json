@@ -3,10 +3,10 @@
     "short_name": "野球育成",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
+    "background_color": "#F3F7EF",
+    "theme_color": "#2E7D32",
     "description": "6歳から、プロを引退するまで。1人の野球選手を育てる一代記。",
-    "orientation": "portrait-primary",
+    "orientation": "any",
     "prefer_related_applications": false,
     "icons": [
         {

@@ -1336,6 +1336,60 @@ void _rankTests() {
     });
   });
 
+  group('操作性', () {
+    testWidgets('「ひとつ前に戻す」で、直前の行動を取り消せる', (t) async {
+      final c = await _start(t);
+      c.newGame('テスト', Role.batter);
+      await t.pumpAndSettle();
+      expect(find.byKey(const Key('undo')), findsNothing);
+      final fatigue = c.game!.condition.fatigue;
+      await t.tap(find.byKey(const Key('act-special')));
+      await t.pumpAndSettle();
+      await _dismissMilestones(t);
+      if (c.game!.phase == Phase.event) c.game!.resolveEvent(0);
+      c.notifyListeners();
+      await t.pumpAndSettle();
+      expect(find.byKey(const Key('undo')), findsOneWidget);
+      await t.tap(find.byKey(const Key('undo')));
+      await t.pumpAndSettle();
+      expect(c.game!.condition.fatigue, fatigue);
+      expect(c.game!.exp.total, 0);
+      expect(find.byKey(const Key('undo')), findsNothing);
+    });
+
+    testWidgets('キーボード: Enterでおすすめ、Rで休養', (t) async {
+      final c = await _start(t);
+      c.newGame('テスト', Role.batter);
+      await t.pumpAndSettle();
+      await t.sendKeyEvent(LogicalKeyboardKey.enter);
+      await t.pumpAndSettle();
+      expect(c.recent, isNotEmpty);
+      if (c.game!.phase == Phase.event) c.game!.resolveEvent(0);
+      c.notifyListeners();
+      await t.pumpAndSettle();
+      final n = c.game!.log.length;
+      await t.sendKeyEvent(LogicalKeyboardKey.keyR);
+      await t.pumpAndSettle();
+      expect(c.game!.log.length, greaterThan(n));
+    });
+
+    testWidgets('名前はおまかせで入れられ、Enterではじめられる', (t) async {
+      final c = await _start(t);
+      await t.tap(find.byKey(const Key('random-name')));
+      await t.pumpAndSettle();
+      final name = t
+          .widget<TextField>(find.byKey(const Key('name-field')))
+          .controller!
+          .text;
+      expect(name, isNotEmpty);
+      await t.tap(find.byKey(const Key('name-field')));
+      await t.testTextInput.receiveAction(TextInputAction.done);
+      await t.pumpAndSettle();
+      expect(c.game, isNotNull);
+      expect(c.game!.player.name, name);
+    });
+  });
+
   group('表示の設定とホームのカード', () {
     testWidgets('文字の大きさと画面の色を選べて、端末に覚えられる', (t) async {
       final c = await _start(t);

@@ -1,9 +1,12 @@
+import 'dart:math';
+
 import 'package:baseball_manager/game/career.dart';
 import 'package:baseball_manager/game/marks.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   tournamentTests();
+  nameTests();
   test('今日のヒントは日付で決まり、同じ日は同じ。種類が12ある', () {
     final d = DateTime(2026, 10, 19);
     expect(tipOf(d), tipOf(d));
@@ -37,5 +40,15 @@ void tournamentTests() {
     expect(untilTournament(Stage.highSchool, 5), isNull);
     expect(untilTournament(Stage.youth, 0)!.unit, '季節');
     expect(untilTournament(Stage.retired, 0), isNull);
+  });
+}
+
+void nameTests() {
+  test('おまかせの名前は空でなく、10文字以内', () {
+    for (var i = 0; i < 30; i++) {
+      final n = randomNameOf(Random(i));
+      expect(n, isNotEmpty);
+      expect(n.length, lessThanOrEqualTo(10));
+    }
   });
 }

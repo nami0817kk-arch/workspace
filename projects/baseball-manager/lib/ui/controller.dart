@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/foundation.dart' hide Category;
+import 'package:flutter/services.dart' show HapticFeedback;
 import 'package:flutter/material.dart' show ThemeMode;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -223,6 +224,30 @@ class GameController extends ChangeNotifier {
   /// 直前の行動の結果を、短く知らせる文(画面の下に一瞬出す)。出したら null に戻す。
   String? toast;
 
+  /// ひとつ前の行動の直前のセーブ(「ひとつ前に戻す」用)。行動のたびに1件だけ持つ。
+  String? _undo;
+  bool _auto = false;
+
+  bool get canUndo =>
+      _undo != null && game != null && game!.phase != Phase.retired;
+
+  /// ひとつ前の行動(練習・出来事の選択・おすすめで進める)を取り消す。
+  /// 乱数は引き継がないので、やり直すと結果が変わることがある。
+  void undo() {
+    final u = _undo;
+    if (u == null || game == null) return;
+    game = Game.fromJson((jsonDecode(u) as Map).cast<String, dynamic>(), _rng);
+    _undo = null;
+    toast = null;
+    recent = const ['ひとつ前の行動を取り消した。'];
+    _commit();
+  }
+
+  void _rememberForUndo() {
+    if (_auto || game == null || game!.phase == Phase.retired) return;
+    _undo = jsonEncode(game!.toJson());
+  }
+
   /// いま重点にしている能力。
   Ability focus = Ability.contact;
 
@@ -388,6 +413,7 @@ class GameController extends ChangeNotifier {
   void newGame(String name, Role role,
       [Difficulty difficulty = Difficulty.normal, PlayerSnapshot? parent]) {
     newlyUnlocked = const [];
+    _undo = null;
     game = Game.newGame(
         difficulty: difficulty,
         parent: parent,
@@ -402,6 +428,7 @@ class GameController extends ChangeNotifier {
   /// 進行中のゲームを差し込む(続きから・テスト用)。
   void adopt(Game g) {
     game = g;
+    _undo = null;
     focus = abilitiesOf(g.player.role).first;
     notifyListeners();
   }
@@ -466,6 +493,8 @@ class GameController extends ChangeNotifier {
     if (!abilitiesOf(g.player.role).contains(focus)) {
       focus = abilitiesOf(g.player.role).first;
     }
+    _rememberForUndo();
+    HapticFeedback.selectionClick();
     _turnBase = {for (final x in abilitiesOf(g.player.role)) x: g.player.of(x)};
     final start = g.log.length;
     final before = g.stage;
@@ -592,6 +621,8 @@ class GameController extends ChangeNotifier {
     final age = g.player.age;
     final lines = <String>[];
     var turns = 0;
+    _rememberForUndo();
+    _auto = true;
     for (var i = 0; i < g.slotsInYear; i++) {
       if (game!.phase != Phase.term || game!.player.age != age) break;
       if (pending.isNotEmpty) break;
@@ -600,16 +631,19 @@ class GameController extends ChangeNotifier {
       // 各ターンの「練習: …」の一行まとめ以外(怪我・大会・目標など)を集める。
       lines.addAll(recent.skip(1));
     }
+    _auto = false;
     if (turns > 1) {
       recent = [
         'おすすめの過ごし方で$turns回進めた。',
         ...lines.reversed.take(8).toList().reversed,
       ];
+      toast = recent.first;
       notifyListeners();
     }
   }
 
   void chooseEvent(int i) {
+    _rememberForUndo();
     final start = game!.log.length;
     final before = game!.stage;
     final p0 = game!.player;
