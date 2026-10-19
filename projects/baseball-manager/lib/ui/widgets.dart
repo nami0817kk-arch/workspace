@@ -46,6 +46,8 @@ class CastCard extends StatelessWidget {
     return Card(
       child: ExpansionTile(
         initiallyExpanded: expanded,
+        shape: const Border(),
+        collapsedShape: const Border(),
         title: const Text('まわりの人たち'),
         children: [
           for (final m in rows)

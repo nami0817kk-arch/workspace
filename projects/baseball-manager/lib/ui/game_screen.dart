@@ -295,10 +295,8 @@ class _GameScreenState extends State<GameScreen> {
             key: const Key('career-summary'),
             child: ListTile(
               leading: const Icon(Icons.bar_chart),
-              title: Text(game.records.any((r) => r.stage == Stage.pro)
-                  ? 'プロ通算'
-                  : '大会通算'),
-              subtitle: Text(careerSummary(game.records)),
+              title: Text(careerSummary(game.records)),
+              subtitle: Text('${game.records.length}年ぶんの成績'),
             ),
           ),
           const SizedBox(height: 8),
