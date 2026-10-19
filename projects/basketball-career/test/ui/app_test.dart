@@ -10,6 +10,16 @@ import 'package:flutter/material.dart' hide Action, Route;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+/// 何も保存しない(探索の途中の保存が、あとから起動時に読み込まれないように)。
+class _NullStore extends SaveStore {
+  @override
+  Future<void> save(Map<String, dynamic> json) async {}
+  @override
+  Future<void> clear() async {}
+  @override
+  Future<Map<String, dynamic>?> load() async => null;
+}
+
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
@@ -64,6 +74,7 @@ void main() {
   });
 
   testWidgets('引退するとエンディングが出て、新しい選手を始められる', (tester) async {
+    tall(tester);
     final c = GameController(rng: Random(1), events: false);
     c.game = Game(
       player: Player(
@@ -116,7 +127,8 @@ void main() {
     tall(tester);
     GameController? c;
     for (var seed = 0; seed < 400 && c == null; seed++) {
-      final t = GameController(rng: Random(seed), events: false);
+      final t = GameController(
+          store: _NullStore(), rng: Random(seed), events: false);
       t.game = Game(
         eventsEnabled: false,
         player: Player(

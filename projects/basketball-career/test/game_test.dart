@@ -1136,4 +1136,42 @@ void main() {
       expect(HistoryEntry.fromJson({}).title, '');
     });
   });
+
+  group('成長の軌跡と実績', () {
+    test('年末ごとに総合評価と身長が記録され、保存される', () {
+      final g = Game(
+        eventsEnabled: false,
+        player: Player(
+            name: 'a', age: 12, potential: 50, heightCm: 150, heightGenes: 0.5),
+        rng: Random(1),
+      );
+      for (var i = 0; i < 8; i++) {
+        g.choose(Action.rest, Ability.pass);
+      }
+      expect(g.growthLog.length, 2);
+      expect(g.growthLog.first.age, 12);
+      expect(g.growthLog.last.age, 13);
+      expect(g.growthLog.last.heightCm, greaterThan(g.growthLog.first.heightCm));
+      final h = Game.fromJson(g.toJson());
+      expect(h.growthLog.length, 2);
+      expect(Game.fromJson({'player': {'name': 'old'}}).growthLog, isEmpty);
+    });
+
+    test('実績は20個以上で、id が重複しない', () {
+      expect(achievements.length, greaterThanOrEqualTo(20));
+      final ids = achievements.map((a) => a.id).toList();
+      expect(ids.toSet().length, ids.length);
+    });
+
+    test('全制覇はミニバス・中学・高校の優勝がそろったときだけ', () {
+      YearRecord rec(League l, bool champion) => YearRecord(
+          age: 12, league: l, wins: 3, games: 3, ppg: 10, rpg: 3, apg: 2,
+          champion: champion, achievement: 80);
+      final g = Game(eventsEnabled: false, player: strong(), rng: Random(1));
+      g.records.addAll([rec(League.minibasket, true), rec(League.juniorHigh, true)]);
+      expect(earnedBy(g).contains('grand_slam'), isFalse);
+      g.records.add(rec(League.highSchool, true));
+      expect(earnedBy(g).containsAll(['grand_slam', 'mini_king', 'jh_king', 'hs_king']), isTrue);
+    });
+  });
 }

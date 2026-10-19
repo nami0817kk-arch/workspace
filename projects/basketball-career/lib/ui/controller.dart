@@ -13,6 +13,7 @@ import '../game/life.dart';
 import '../game/match.dart';
 import '../game/path.dart';
 import '../game/player.dart';
+import '../game/season.dart';
 import 'labels.dart';
 
 const saveKey = 'basketball_career_save_v1';
@@ -146,6 +147,10 @@ class GameController extends ChangeNotifier {
   /// 直前の一生で、新しく解除した実績。エンディングに出す。
   List<Achievement> newlyUnlocked = const [];
 
+  /// 直前に終えた大会の結果(画面にカードで出す)と、それが冬の大会か。
+  TournamentResult? lastTournament;
+  bool lastTournamentWinter = false;
+
   /// 直前の進路選択の結果メッセージ。
   String? pathMessage;
 
@@ -214,6 +219,7 @@ class GameController extends ChangeNotifier {
   /// [ask] が false なら、勝負どころでは止まらず自動で選ぶ(「おすすめで1年進める」など)。
   TermReport act(Action a, {bool ask = true}) {
     final g = game!;
+    lastTournament = null;
     final before = Map<Ability, int>.of(g.player.abilities);
     final ageBefore = g.player.age;
     final stageBefore = g.stage;
@@ -265,20 +271,8 @@ class GameController extends ChangeNotifier {
     if (r.satOut) lines.add('怪我で大会に出られなかった。');
     final t = r.tournament;
     if (t != null) {
-      lines.add('【${leagueLabel(t.league)}の${wasWinter ? '冬' : '夏'}の大会】${t.wins}勝${t.games - t.wins}敗'
-          '${t.champion ? ' 優勝!' : ''}  実績 ${t.achievement.round()}(${achievementWord(t.achievement)})');
-      for (var i = 0; i < t.matches.length; i++) {
-        final m = t.matches[i];
-        lines.add(matchLine(i, m.won, m.teamScore, m.oppScore, m.points,
-            m.rebounds, m.assists,
-            opponent: m.opponent,
-            rival: m.vsRival,
-            clutch: m.clutch == null
-                ? null
-                : '${m.clutch!.label}${m.clutchSuccess == true ? '成功' : '失敗'}'));
-        final story = matchStory(m);
-        if (story != null) lines.add('　└ $story');
-      }
+      lastTournament = t;
+      lastTournamentWinter = wasWinter;
     }
     if (r.yearEnded && g.lastGoalMessage != null) lines.add(g.lastGoalMessage!);
     if (r.yearEnded && g.player.age != ageBefore) {
