@@ -21,6 +21,7 @@ const saveKey = 'basketball_career_save_v1';
 const historyKey = 'basketball_career_history_v1';
 const achievementsKey = 'basketball_career_achievements_v1';
 const historyLimit = 30;
+const howtoKey = 'basketball_career_howto_seen_v1';
 
 /// セーブの読み書き。端末ごと(クラウド同期はしない)。
 class SaveStore {
@@ -54,6 +55,22 @@ class SaveStore {
       final p = await SharedPreferences.getInstance();
       await p.setString(
           historyKey, jsonEncode([for (final e in h) e.toJson()]));
+    } catch (_) {}
+  }
+
+  Future<bool> loadHowtoSeen() async {
+    try {
+      final p = await SharedPreferences.getInstance();
+      return p.getBool(howtoKey) ?? false;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  Future<void> saveHowtoSeen() async {
+    try {
+      final p = await SharedPreferences.getInstance();
+      await p.setBool(howtoKey, true);
     } catch (_) {}
   }
 
@@ -142,6 +159,9 @@ class GameController extends ChangeNotifier {
   /// 殿堂(過去の選手)。新しい順。
   List<HistoryEntry> history = const [];
 
+  /// 遊び方を見たことがあるか(はじめて始めるときだけ見せる)。
+  bool howtoSeen = true;
+
   /// 解除した実績の id(何度遊んでも残る)。
   Set<String> unlocked = {};
 
@@ -158,6 +178,7 @@ class GameController extends ChangeNotifier {
   Future<bool> loadSaved() async {
     history = await store.loadHistory();
     unlocked = await store.loadAchievements();
+    howtoSeen = await store.loadHowtoSeen();
     final j = await store.load();
     if (j == null) return false;
     try {
@@ -186,6 +207,12 @@ class GameController extends ChangeNotifier {
 
   /// 重点をおすすめに自動で合わせるか(自分で選ぶと止まる。「おすすめ」を押すと戻る)。
   bool focusAuto = true;
+
+  /// 遊び方を見せた。
+  void markHowtoSeen() {
+    howtoSeen = true;
+    store.saveHowtoSeen();
+  }
 
   void setFocus(Ability a) {
     focus = a;

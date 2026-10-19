@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../app/links.dart';
 import '../monetization/monetization.dart';
+import 'howto_screen.dart';
 import '../monetization/purchase_service.dart';
 
 /// 設定。広告を消す・購入の復元・プライバシー・問い合わせ・ライセンス。
@@ -126,6 +127,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 Card(
                   child: Column(
                     children: [
+                      ListTile(
+                        leading: const Icon(Icons.help_outline),
+                        title: const Text('遊び方'),
+                        onTap: () => Navigator.of(context).push(
+                            MaterialPageRoute<void>(
+                                builder: (_) => const HowToScreen())),
+                      ),
                       // プライバシーポリシーはアプリの中からも開けること(Apple 5.1.1)
                       ListTile(
                         leading: const Icon(Icons.privacy_tip_outlined),

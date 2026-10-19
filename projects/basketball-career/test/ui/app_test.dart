@@ -40,6 +40,10 @@ void main() {
     await tester.enterText(find.byType(TextField), 'ミナト');
     await tester.tap(find.text('6歳から始める'));
     await tester.pumpAndSettle();
+    // はじめてなら、先に遊び方が出る。
+    expect(find.text('遊び方'), findsOneWidget);
+    await tester.tap(find.text('はじめる'));
+    await tester.pumpAndSettle();
     expect(find.textContaining('ミナト'), findsWidgets);
     expect(find.text('春の過ごし方'), findsOneWidget);
 
@@ -47,6 +51,29 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('夏の過ごし方'), findsOneWidget);
     expect(find.text('いまの結果'), findsOneWidget);
+  });
+
+  testWidgets('遊び方は1度だけ自動で出て、あとはいつでも開ける', (tester) async {
+    tall(tester);
+    SharedPreferences.setMockInitialValues({howtoKey: true});
+    final c = GameController(rng: Random(1), events: false);
+    await tester.pumpWidget(BasketballCareerApp(controller: c));
+    await tester.pumpAndSettle();
+    // 見たことがあるので、すぐ始まる。
+    await tester.tap(find.text('6歳から始める'));
+    await tester.pumpAndSettle();
+    expect(find.text('春の過ごし方'), findsOneWidget);
+  });
+
+  testWidgets('はじめの画面から遊び方をいつでも開ける', (tester) async {
+    tall(tester);
+    final c = GameController(rng: Random(1), events: false);
+    await tester.pumpWidget(BasketballCareerApp(controller: c));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('遊び方'));
+    await tester.pumpAndSettle();
+    expect(find.text('1年は春夏秋冬の4回'), findsOneWidget);
+    expect(find.text('はじめる'), findsNothing, reason: 'いつでも開く場合は開始ボタンを出さない');
   });
 
   testWidgets('進路の画面から契約を選べる', (tester) async {
