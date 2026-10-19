@@ -38,6 +38,8 @@ DEFAULTS = dict(
     mix_kick=True,           # 連打の途中(防がれない1発)を蹴りにする(hits≧3、seed があれば半々)
     b_first=True,            # 蹴り無しのとき、B が先に2発仕掛ける(A がかわし→受け止め)。攻守の入れ替わり
     riposte=True,            # 受け止めた直後に、相手(B)が打ち返し、こちら(A)が受け止める(鍔迫り合いの往復)
+    timing=True,             # アニメの間: clip の時間配分を「溜め→一気→振り抜き」に(plan.ClipBank.warped_u)
+    exaggerate=1.25,         # 振りの誇張: 命中の clip の腕の角度を、平均からの差で 1.25 倍
     footwork=True,           # 足運び: 接地した足を滑らせず、体が動いた分だけ踏み替える(plan._footwork)
     body=1.7,                # 全身の動きの強さ(0 で切る)。命中ごとに、攻める側のひねり込み・踏み込み、受ける側ののけぞり・押される動き
     seed=None,               # 数字を入れると、連打の clip・間・溜めの色・カットの順を、その数字で変える(同じ数字なら同じ戦い)
@@ -385,6 +387,13 @@ def build_fight(spec: dict) -> dict:
     flurry.append(dict(start=_r(ko_t + 0.4), end=_r(ko_t + 0.8), every=5, angles=HERO))
     shots.append(dict(t=_r(hl + 0.0), follow="mid", scale=[[_r(hl), 5.0], [end, 9.0]], yaw=[[_r(hl), 52.0], [end, -15.0]], pitch=[[_r(hl), 10.0], [end, 22.0]], lens=40.0, target_z=0.9))
 
+    ex = float(s["exaggerate"])
+    if ex and ex != 1.0:                                 # 振りの誇張: 腕の角度を平均からの差で ex 倍(clip ごと。体・脚は変えない)
+        for lst in (clipsA, clipsB):
+            for c in lst:
+                if "strike_at" in c and not c.get("loop"):
+                    c.setdefault("amp", {}).update(fa=ex, ra=min(ex, 1.15), fe=ex)
+
     # ---- 色・リズム ----
     pal = PALETTES.get(s["palette"], PALETTES["warm"])
     marks = [0.0, 1.2, 1.9, 2.6, tc - 0.6, tc - 0.05, tc + 0.4, hl, hl + 0.8, end] if kick else \
@@ -422,6 +431,7 @@ def build_fight(spec: dict) -> dict:
                          per_kind=dict(wall=[dict(yaw=-30, pitch=6, scale=5.0, lens=30), dict(yaw=10, pitch=18, scale=6.0, lens=34), dict(yaw=-55, pitch=3, scale=4.2, lens=28, dutch=-5.0)],
                                        clash=[dict(yaw=28, pitch=2, scale=2.4, lens=30, hue=3), dict(yaw=-32, pitch=-8, scale=2.0, lens=26, dutch=7.0, hue=0)])),
         flurry=flurry, body_drive=({"strength": float(s["body"])} if s["body"] else None), footwork=({} if s["footwork"] else None), style="flat2d",
+        clip_timing=({"pre": 0.4, "post": 0.3} if s["timing"] else None),
         limb=dict(base=0.055, tip=0.03, tip_color=[0.08, 0.08, 0.1]), captions=caps, audio=(False if s["mood"] == "none" else dict(mood=s["mood"])), _marks={k: _r(v) for k, v in marks.items()})
     return scene
 

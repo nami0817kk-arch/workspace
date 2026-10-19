@@ -57,10 +57,46 @@ def metrics(plan: dict) -> Dict[str, object]:
     return out
 
 
+def snap(plan: dict) -> Dict[str, object]:
+    """キレ: 命中(接触を解いた by 付き)ごとに、先端の速さの山(直前 2 コマの最大)÷ 直前 12〜3 コマの平均。
+    アニメは溜めてから一気に振るので大きい(目安 4 以上)。あわせて、直前 12 コマのうち先端がほぼ止まっているコマ数(待ち)。"""
+    fr = plan["frames"]
+    out = []
+    for e in plan["events"]:
+        if not e.get("by") or e["kind"] not in ("slash", "hit", "kick", "clash", "heel", "miss"):
+            continue
+        who = e["by"]
+        a = plan["actors"][who]
+        s = 1 if a.get("facing", 1) >= 0 else -1
+        key = "foot" if e["kind"] in ("kick", "heel") else ("tip" if a.get("weapon") else "hand")
+        f0 = e["frame"]
+        pts = []
+        for f in range(max(0, f0 - 14), min(len(fr) - 1, f0 + 1) + 1):
+            p = fr[f]["actors"][who]
+            sk = fk.skeleton(p, s, p["root_x"], a.get("scale", 1.0))
+            pts.append((f, sk[key]))
+        sp = {}
+        for (fa_, pa), (fb_, pb) in zip(pts, pts[1:]):
+            if fr[fb_]["tau"] == fr[fa_]["tau"]:
+                continue
+            sp[fb_] = ((pb[0] - pa[0]) ** 2 + (pb[1] - pa[1]) ** 2) ** 0.5
+        pre = [sp[f] for f in range(f0 - 12, f0 - 2) if f in sp]
+        peak = max([sp[f] for f in (f0 - 1, f0) if f in sp] or [0.0])
+        mean = sum(pre) / len(pre) if pre else 0.0
+        waiting = sum(1 for v in pre if v < 0.012)
+        out.append(dict(kind=e["kind"], by=who, frame=f0, snap=round(peak / mean, 1) if mean > 1e-6 else None, peak=round(peak, 3), wait=waiting))
+    return dict(strikes=out)
+
+
 def report(plan: dict) -> str:
     m = metrics(plan)
     lines = ["# 動きの数字", "", f"- 攻防: {m['exchanges']}", f"- 接触の距離: {m['contacts']}"]
     for who in plan["actors"]:
         v = m[who]
         lines.append(f"- {who}: ひねり sd {v['spin_sd']} / 足滑り {v['slide']} / 歩数 {v['steps']} / 1コマの最大移動 {v['max_jump']}")
+    sn = snap(plan)["strikes"]
+    if sn:
+        lines.append("- キレ(山÷直前の平均。目安 4 以上)と待ち(直前 12 コマで止まっているコマ数):")
+        for x in sn:
+            lines.append(f"    {x['by']}:{x['kind']}@{x['frame']}  キレ {x['snap']}  山 {x['peak']}  待ち {x['wait']}")
     return chr(10).join(lines)

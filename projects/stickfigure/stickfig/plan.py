@@ -105,10 +105,43 @@ class ClipBank:
                 best = (w, c)
         return best[1] if best else None
 
+    @staticmethod
+    def _pw(x: float, pts) -> float:
+        """区分線形(pts は (x, y) の昇順)。"""
+        if x <= pts[0][0]:
+            return pts[0][1]
+        for (x0, y0), (x1, y1) in zip(pts, pts[1:]):
+            if x <= x1:
+                return y0 + (y1 - y0) * (x - x0) / (x1 - x0)
+        return pts[-1][1]
+
+    def warped_u(self, c: dict, tau: float) -> float:
+        """clip の時間 u(tau)。strike_at のある clip に「アニメの間」を掛ける(scene の clip_timing、または c["timing"])。
+
+        命中の前 pre 秒: 実時間の最初の 35% で振りかぶりの 65% まで進み、次の 47% はほぼ止め(溜め、5% だけ進む)、
+        最後の 18%(約 2 コマ)で残り 30%(振り)を一気に進む。命中の後 post 秒: 最初の 25% で 55% 進み(振り抜き)、あとはゆっくり。
+        命中の瞬間の u は変えない(接触の解きと一致)。前後の端で元の時間につながる。"""
+        speed = c.get("speed", 1.0)
+        u = (tau - c["start"]) * speed + c.get("offset", 0.0)
+        tm = c.get("timing", self.scene.get("clip_timing"))
+        if not tm or "strike_at" not in c or c.get("loop"):
+            return u
+        pre, post = float(tm.get("pre", 0.4)), float(tm.get("post", 0.3))
+        r = tau - c["strike_at"]
+        u_s = (c["strike_at"] - c["start"]) * speed + c.get("offset", 0.0)
+        if -pre <= r < 0:
+            s = -r / pre
+            p = self._pw(s, tm.get("pre_curve", [(0.0, 0.0), (0.18, 0.30), (0.65, 0.35), (1.0, 1.0)]))
+            return u_s - p * pre * speed
+        if 0 <= r <= post:
+            q = self._pw(r / post, tm.get("post_curve", [(0.0, 0.0), (0.25, 0.55), (1.0, 1.0)]))
+            return u_s + q * post * speed
+        return u
+
     def sample(self, c: dict, tau: float) -> Dict[str, float]:
         clip = self._clip(c["file"])
         speed = c.get("speed", 1.0)
-        u = (tau - c["start"]) * speed + c.get("offset", 0.0)
+        u = self.warped_u(c, tau)
         if c.get("loop", False) and tau > c["end"]:
             u = (c["end"] - c["start"]) * speed + c.get("offset", 0.0)     # 走りは区間の終わりで止める(out の混ぜる間に前へ出ない)
         v = clip.sample(u, c.get("loop", False))
@@ -967,7 +1000,7 @@ def build_plan(scene: dict, solve: bool = True) -> dict:
         c["distance_to_body"] = fk.dist_to_body(eff, sk_t)
         c["effector_pos"] = list(eff)
     return dict(version=1, fps=fps, n=len(frames), view=dict(VIEW, persp=bool(scene.get("view3d") or scene.get("shots")), lens=(scene.get("view3d") or {}).get("lens", 40.0)), actors=scene["actors"], stage=scene.get("stage", {}),
-                events=events, contacts=contacts, frames=frames, scene={k: scene[k] for k in ("hits", "slow", "camera", "fx", "tempo", "view3d", "anime", "shots", "stepping", "impact_cuts", "flurry", "style", "captions", "output", "limb", "body_drive") if k in scene})
+                events=events, contacts=contacts, frames=frames, scene={k: scene[k] for k in ("hits", "slow", "camera", "fx", "tempo", "view3d", "anime", "shots", "stepping", "impact_cuts", "flurry", "style", "captions", "output", "limb", "body_drive", "clip_timing") if k in scene})
 
 
 def save_plan(plan: dict, path) -> None:

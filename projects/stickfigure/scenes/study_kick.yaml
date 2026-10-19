@@ -1,0 +1,8 @@
+# 動きの検証用: 蹴り 1 回だけ(連打の中の蹴り)。カット・効果無し
+name: study_kick
+fight: {weapon: none, kick: false, hits: 2, counter: false, finisher: none, b_first: false, b_combo: 0, block: false, mix_kick: true, stage: dojo, mood: none}
+stepping: {hold: 1}
+impact_cuts: {kinds: [], hold: 0.0, angles: [{yaw: 0, scale: 3}]}
+flurry: []
+anime: {sfx: false, trails: false, zoom_blur: false, grade: false, roll: false, smear: true}
+fx: {flashes: [], speed_lines: [], charge: []}

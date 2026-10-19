@@ -1,0 +1,8 @@
+# 動きの検証用(2D アニメの質): 斬り 1 回だけ。カット・効果音の文字・2コマ撮り無し。コマ送りで見るための場面
+name: study_slash
+fight: {weapon: sword, kick: false, hits: 1, counter: false, finisher: none, b_first: false, b_combo: 0, block: false, mix_kick: false, stage: dojo, mood: none}
+stepping: {hold: 1}
+impact_cuts: {kinds: [], hold: 0.0, angles: [{yaw: 0, scale: 3}]}
+flurry: []
+anime: {sfx: false, trails: false, zoom_blur: false, grade: false, roll: false, smear: true}
+fx: {flashes: [], speed_lines: [], charge: [], weapon_glow: true}
