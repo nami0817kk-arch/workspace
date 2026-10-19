@@ -103,6 +103,8 @@ class _MilestoneHostState extends State<_MilestoneHost> {
           content: Text(t),
           duration: const Duration(seconds: 3),
           behavior: SnackBarBehavior.floating,
+          // 広い画面では、操作バーと同じ幅に収める。
+          width: MediaQuery.sizeOf(context).width > 560 ? 520 : null,
         ));
       });
     }
