@@ -75,7 +75,8 @@ def trails(plan: dict, f: int, cfg: dict, cache: Dict[Tuple[str, int], dict]) ->
     cam = plan["frames"][f]["cam"]
     for who in plan["actors"]:
         # 打つ側の、命中の前後だけ(走りで剣先が速いだけの所に出ると、床にジグザグの線が残る。2026-10-19 fight_mix の冒頭で確認)
-        if not any(e.get("by") == who and e["frame"] - 8 <= f <= e["frame"] + 3 for e in plan["events"]):
+        strikers = [e for e in plan.get("events", []) if e.get("by")]
+        if strikers and not any(e["by"] == who and e["frame"] - 8 <= f <= e["frame"] + 3 for e in strikers):
             continue
         sc = plan["actors"][who].get("scale", 1.0)
         pts: Dict[str, List[Tuple[float, float]]] = {}
