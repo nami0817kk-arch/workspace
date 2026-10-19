@@ -67,6 +67,7 @@ class EventDef {
     this.proOnly = false,
     this.abroadOnly = false,
     this.forced = false,
+    this.weight = 1.0,
   });
 
   final String id;
@@ -82,6 +83,9 @@ class EventDef {
 
   /// 段階が変わるときに必ず起きる出来事(進学先の選択)。ふだんの抽選には出ない。
   final bool forced;
+
+  /// 起きやすさ(1.0 が普通、小さいほどまれ)。
+  final double weight;
 }
 
 /// 進学先の選択(中学・高校に上がるとき必ず起きる)。
@@ -479,6 +483,28 @@ const events = <EventDef>[
     ],
   ),
   EventDef(
+    id: 'breakthrough',
+    title: '突然のひらめき',
+    body: '練習中、これまで掴めなかった感覚が突然わかった。体が勝手に動く。',
+    minAge: 10,
+    weight: 0.25,
+    options: [
+      EventOption('この感覚を逃さず、練習で定着させる', Effect(focusBonus: 4, fatigue: 12, morale: 8)),
+      EventOption('次の試合で試してみる', Effect(focusBonus: 2, morale: 14, trait: Trait.clutch)),
+    ],
+  ),
+  EventDef(
+    id: 'legend_visit',
+    title: '伝説の選手との出会い',
+    body: '偶然、往年の名選手と話す機会があった。「お前のプレー、悪くないな」',
+    minAge: 12,
+    weight: 0.25,
+    options: [
+      EventOption('教えを乞う', Effect(abilities: {Ability.midRange: 2, Ability.threePoint: 2, Ability.dribble: 2}, coach: 8, morale: 6)),
+      EventOption('自分の目で盗む', Effect(abilities: {Ability.defense: 2, Ability.pass: 2}, trait: Trait.genius)),
+    ],
+  ),
+  EventDef(
     id: 'study_balance',
     title: '勉強との両立',
     body: '部活と勉強の両立に悩んでいる。',
@@ -520,7 +546,14 @@ EventDef? rollEvent(Player p,
   final fresh = [for (final e in all) if (!recent.contains(e.id)) e];
   final pool = fresh.isEmpty ? all : fresh;
   if (pool.isEmpty) return null;
-  return pool[rng.nextInt(pool.length)];
+  // 重みに応じて引く(まれな出来事は少なく)。
+  final total = pool.fold(0.0, (s, e) => s + e.weight);
+  var x = rng.nextDouble() * total;
+  for (final e in pool) {
+    x -= e.weight;
+    if (x < 0) return e;
+  }
+  return pool.last;
 }
 
 /// 選んだ結果を選手・体調に当てる。achievement は呼び出し側が扱う。
