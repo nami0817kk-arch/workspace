@@ -892,9 +892,9 @@ def build_plan(scene: dict, solve: bool = True) -> dict:
         if scene.get("anime") is not None:
             for i, e in enumerate(events):
                 d = f - e["frame"]
-                zk = anime.ZOOM_PUNCH.get(e["kind"], 0.0)
-                if zk and 0 <= d < 12:
-                    dec = (1 - d / 12) ** 2
+                zk = anime.ZOOM_PUNCH.get(e["kind"], 0.0) * 0.8
+                if zk and 0 <= d < 7:                   # ズームパンチは 7 コマで戻す(12 コマだと「揺れているコマ」が参考の 17% を超える)
+                    dec = (1 - d / 7) ** 2
                     zp += zk * dec
                     roll += anime.ROLL_SHAKE.get(e["kind"], 0.0) * dec * math.cos(d * 1.2) * (1 if i % 2 == 0 else -1)
         for e in events:                       # 溜めの止め絵(kind: pose): 止めている間、じわっと寄る
