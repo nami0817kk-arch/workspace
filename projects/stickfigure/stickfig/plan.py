@@ -864,8 +864,8 @@ def build_plan(scene: dict, solve: bool = True) -> dict:
         for e in events:
             d = f - e["frame"]
             amp = SHAKE.get(e["kind"], 0.0)
-            if amp and 0 <= d < 10:
-                shake += amp * (1 - d / 10)
+            if amp and 0 <= d < 6:                       # 揺れは 6 コマ(参考: 画面が揺れているコマは 3〜17%)
+                shake += amp * 0.7 * (1 - d / 6)
         sx, sz = shake * math.sin(f * 2.9), shake * math.cos(f * 2.3)
         # アニメの演出: 命中の瞬間に「寄って」(ズームパンチ)、画面が傾いて揺れる
         zp, roll = 0.0, 0.0

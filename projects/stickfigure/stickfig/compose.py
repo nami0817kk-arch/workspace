@@ -232,7 +232,7 @@ def radial(d_ov: ImageDraw.ImageDraw, cx: float, cy: float, u: float, big: float
                   fill=(*col, a), width=int(wd * SS * (1 - 0.4 * u) * (1 + 0.4 * big)))
 
 
-BIG = dict(kick=1.2, slash=1.2, wall=1.5, heel=1.8, hit=1.0, clash=1.3)
+BIG = dict(kick=1.2, slash=0.7, wall=1.5, heel=1.8, hit=0.8, clash=0.9)     # 放射線の大きさ。斬り・受け止めは控えめ(白い面積が増えると、閃光が参考の 2 倍以上になる)
 BURST_FRAMES = dict(slash=7, hit=9, kick=14, wall=14, heel=14, clash=8, miss=4)   # 放射線が残るコマ数。連続する命中で重ならないよう、斬りは短く
 
 
@@ -242,8 +242,11 @@ def compose_frame(plan: dict, f: int, figs: Dict[int, Image.Image], stages: Opti
     tau = fr["tau"]
     fx = plan.get("scene", {}).get("fx", {})
     lk = fr.get("look")
-    if lk is not None:                         # 色つき流線の背景のカット(参考の寄り・色の画)
+    if lk is not None:                         # 色つき流線の背景のカット(参考の寄り・色の画)。舞台の色で少し落として、明るさの跳ねを抑える
         base = look.streak_bg(f, int(lk))
+        th = look.FLAT_THEMES.get(plan.get("stage", {}).get("theme", "cave"), look.FLAT_THEMES["cave"])
+        dark = tuple(int(v * 0.5) for v in th["sky"])
+        base = Image.blend(base, Image.new("RGBA", base.size, dark + (255,)), 0.6)
     elif plan["view"].get("persp") and plan.get("stage", {}).get("style") == "flat":       # 2D の舞台(ユーザー「フィールドも2d」)
         base = look.flat_bg(plan, f)
         if lk is None:
@@ -337,7 +340,7 @@ def compose_frame(plan: dict, f: int, figs: Dict[int, Image.Image], stages: Opti
         if e["kind"] in BIG and 0 <= age <= nb:
             cx, cy = to_px(e["pos"][0], e["pos"][1], cam)
             radial(d, cx, cy, min(1.0, age / nb), BIG[e["kind"]])
-            if e["kind"] in invert_kinds and age in (0, 1):
+            if e["kind"] in invert_kinds and age == 0:                   # 衝撃のコマは 1 コマだけ(2 コマ目の色つきは閃光が増える)
                 invert = (age, cx, cy, BIG[e["kind"]])
                 kind_of_invert = e["kind"]
             if e["kind"] == "wall" and age <= 1:
@@ -442,9 +445,21 @@ def _init_worker(plan, fig_dir, stage_dir, out_dir, vertical, cxs):
     _W.update(plan=plan, figs=_Lazy(fig_dir, "RGBA"), stages=_Lazy(stage_dir, "RGB") if stage_dir else None, out=Path(out_dir), vertical=vertical, cxs=cxs)
 
 
+def _held_source(plan: dict, f: int) -> int:
+    """2コマ撮りで止めているコマは、前のコマと同じ絵にする(効果・揺れ・火花も止める=本当の「同じ絵」)。その元のコマ番号を返す。"""
+    while f > 0:
+        fr, pv = plan["frames"][f], plan["frames"][f - 1]
+        if all(fr["actors"][w].get("stepped") for w in fr["actors"]) and fr["cam"] == pv["cam"]:
+            f -= 1
+        else:
+            break
+    return f
+
+
 def _render_one(f: int) -> int:
     plan, figs, stages = _W["plan"], _W["figs"], _W["stages"]
-    img = compose_vertical(plan, f, figs, stages, _W["cxs"][f]) if _W["vertical"] else compose_frame(plan, f, figs, stages)
+    src = _held_source(plan, f)
+    img = compose_vertical(plan, src, figs, stages, _W["cxs"][src]) if _W["vertical"] else compose_frame(plan, src, figs, stages)
     img.save(_W["out"] / f"{f + 1:04d}.png")
     return f
 

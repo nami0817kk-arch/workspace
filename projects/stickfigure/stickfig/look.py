@@ -58,7 +58,7 @@ def slash_arc(cx: float, cy: float, age: int, nb: int, flip: int = 1, col=(170, 
     """特大の斬撃の弧(三日月)。age が進むと、振り抜く向きに回りながら薄れる。"""
     ov = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     t = min(1.0, age / nb)
-    R = 430 + 90 * t
+    R = 320 + 70 * t
     a0 = math.radians(-100 + 80 * t) * flip
     a1 = math.radians(40 + 80 * t) * flip
     n = 40
@@ -70,7 +70,7 @@ def slash_arc(cx: float, cy: float, age: int, nb: int, flip: int = 1, col=(170, 
         outer.append((cx + math.cos(a) * (R + th * 0.4), cy + math.sin(a) * (R + th * 0.4) * 0.55))
         inner.append((cx + math.cos(a) * (R - th), cy + math.sin(a) * (R - th) * 0.55))
     poly = outer + inner[::-1]
-    al = int(255 * (1 - t) ** 0.6)
+    al = int(170 * (1 - t) ** 0.6)
     glow = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     ImageDraw.Draw(glow).polygon(poly, fill=(*col, int(al * 0.9)))
     glow = glow.filter(ImageFilter.GaussianBlur(26))
@@ -181,7 +181,7 @@ def sweep_arc(pts: list, age: int, nb: int, col=(170, 245, 255)) -> Image.Image:
         left.append((x + nx * w, y + ny * w))
         right.append((x - nx * w * 0.35, y - ny * w * 0.35))
     poly = left + right[::-1]
-    al = int(255 * (1 - t) ** 0.6)
+    al = int(170 * (1 - t) ** 0.6)
     glow = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     ImageDraw.Draw(glow).polygon(poly, fill=(*col, int(al * 0.9)))
     glow = glow.filter(ImageFilter.GaussianBlur(18))
