@@ -90,6 +90,21 @@ class _MilestoneHostState extends State<_MilestoneHost> {
   }
 
   void _check() {
+    final t = widget.controller.toast;
+    if (t != null) {
+      widget.controller.toast = null;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        final m = ScaffoldMessenger.maybeOf(context);
+        m?.hideCurrentSnackBar();
+        m?.showSnackBar(SnackBar(
+          key: const Key('result-toast'),
+          content: Text(t),
+          duration: const Duration(seconds: 3),
+          behavior: SnackBarBehavior.floating,
+        ));
+      });
+    }
     if (_showing || widget.controller.pending.isEmpty) return;
     _showing = true;
     WidgetsBinding.instance.addPostFrameCallback((_) async {

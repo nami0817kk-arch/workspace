@@ -46,6 +46,9 @@ class GameScreen extends StatelessWidget {
     }
     final p = game.player;
     return Scaffold(
+      bottomNavigationBar: game.phase == Phase.term
+          ? _QuickBar(controller: controller, game: game)
+          : null,
       appBar: AppBar(
         title: GestureDetector(
           key: const Key('title'),
@@ -192,7 +195,9 @@ class GameScreen extends StatelessWidget {
   Widget _mainCard() {
     switch (game.phase) {
       case Phase.event:
-        return _EventCard(controller: controller, game: game);
+        return _AutoReveal(
+            key: ValueKey('event-${game.pendingEvent?.id}'),
+            child: _EventCard(controller: controller, game: game));
       case Phase.pathChoice:
         return _PathCard(controller: controller);
       default:
@@ -905,6 +910,32 @@ class _PlanTile extends StatelessWidget {
   }
 }
 
+/// 出てきた瞬間に、画面のスクロール位置に関わらず見える所まで動かす。
+class _AutoReveal extends StatefulWidget {
+  const _AutoReveal({super.key, required this.child});
+  final Widget child;
+
+  @override
+  State<_AutoReveal> createState() => _AutoRevealState();
+}
+
+class _AutoRevealState extends State<_AutoReveal> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      Scrollable.ensureVisible(context,
+          duration: const Duration(milliseconds: 300),
+          alignment: 0.1,
+          curve: Curves.easeOut);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) => widget.child;
+}
+
 class _EventCard extends StatelessWidget {
   const _EventCard({required this.controller, required this.game});
   final GameController controller;
@@ -1540,6 +1571,62 @@ class _PennantRow extends StatelessWidget {
   }
 }
 
+/// 画面の下に固定する、いちばんよく使う操作(おすすめの行動・休養)。
+class _QuickBar extends StatelessWidget {
+  const _QuickBar({required this.controller, required this.game});
+  final GameController controller;
+  final Game game;
+
+  @override
+  Widget build(BuildContext context) {
+    final rec = recommendedPlan(game);
+    final focus = abilitiesOf(game.player.role).contains(controller.focus)
+        ? controller.focus
+        : abilitiesOf(game.player.role).first;
+    final cs = Theme.of(context).colorScheme;
+    return Material(
+      color: cs.surface,
+      elevation: 6,
+      child: SafeArea(
+        top: false,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
+          child: Center(
+            heightFactor: 1,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: contentMaxWidth),
+              child: Row(children: [
+                Expanded(
+                  flex: 3,
+                  child: FilledButton.icon(
+                    key: const Key('quick-recommended'),
+                    onPressed: () => controller.act(rec),
+                    icon: const Icon(Icons.bolt, size: 20),
+                    label: Text('おすすめ: ${planTitle(rec, focus)}',
+                        maxLines: 1, overflow: TextOverflow.ellipsis),
+                  ),
+                ),
+                if (rec != Plan.rest) ...[
+                  const SizedBox(width: 8),
+                  Expanded(
+                    flex: 2,
+                    child: OutlinedButton.icon(
+                      key: const Key('quick-rest'),
+                      onPressed: () => controller.act(Plan.rest),
+                      icon: const Icon(Icons.hotel, size: 18),
+                      label: const Text('休む', maxLines: 1),
+                    ),
+                  ),
+                ],
+              ]),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class _GoalPicker extends StatelessWidget {
   const _GoalPicker({required this.game, required this.controller});
   final Game game;
@@ -1558,13 +1645,15 @@ class _GoalPicker extends StatelessWidget {
         const SizedBox(height: 4),
         Wrap(spacing: 6, runSpacing: 4, children: [
           for (var l = 0; l < 3; l++)
-            ChoiceChip(
-              key: Key('goal-level-$l'),
-              selected: g.level == l,
-              label: Text(
-                  '${goalLevelLabels[l]}: ${g.withLevel(l, maxRounds: maxRounds).text}'
-                  '(経験点+${goalExpFor(game.stage, l)})'),
-              onSelected: (_) => controller.chooseGoalLevel(l),
+            Tooltip(
+              message: g.withLevel(l, maxRounds: maxRounds).text,
+              child: ChoiceChip(
+                key: Key('goal-level-$l'),
+                selected: g.level == l,
+                label: Text(
+                    '${goalLevelLabels[l]}(経験点+${goalExpFor(game.stage, l)})'),
+                onSelected: (_) => controller.chooseGoalLevel(l),
+              ),
             ),
         ]),
       ],

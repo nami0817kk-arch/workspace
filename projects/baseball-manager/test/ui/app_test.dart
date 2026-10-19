@@ -118,10 +118,34 @@ void main() {
     await t.pumpAndSettle();
     expect(find.byKey(const Key('recent')), findsOneWidget);
     expect(
-        find.byWidgetPredicate((w) =>
-            w is Text &&
-            RegExp(r'^素振りとティー打撃(\(.+\))?: 打撃経験点 \+').hasMatch(w.data ?? '')),
+        find.descendant(
+            of: find.byKey(const Key('recent')),
+            matching: find.byWidgetPredicate((w) =>
+                w is Text &&
+                RegExp(r'^素振りとティー打撃(\(.+\))?: 打撃経験点 \+')
+                    .hasMatch(w.data ?? ''))),
         findsOneWidget);
+    // 画面の下に、結果が一瞬出る(どこまでスクロールしていても見える)
+    expect(find.byKey(const Key('result-toast')), findsOneWidget);
+  });
+
+  testWidgets('画面の下の「おすすめ」「休む」で、スクロールしなくても行動できる', (t) async {
+    final c = await _start(t);
+    c.newGame('テスト', Role.batter);
+    await t.pumpAndSettle();
+    expect(find.byKey(const Key('quick-recommended')), findsOneWidget);
+    expect(c.recent, isEmpty);
+    await t.tap(find.byKey(const Key('quick-recommended')));
+    await t.pumpAndSettle();
+    await _dismissMilestones(t);
+    expect(c.recent, isNotEmpty);
+    // 疲れていれば、おすすめが休養になり、休むボタンは出ない
+    if (c.game!.phase == Phase.event) c.game!.resolveEvent(0);
+    c.game!.condition = c.game!.condition.copyWith(fatigue: 90);
+    c.notifyListeners();
+    await t.pumpAndSettle();
+    expect(find.text('おすすめ: 休養'), findsOneWidget);
+    expect(find.byKey(const Key('quick-rest')), findsNothing);
   });
 
   testWidgets('経験点が足りない能力の+1は押せない', (t) async {

@@ -220,6 +220,9 @@ class GameController extends ChangeNotifier {
   /// 直前の操作で増えた記録(画面の「いまの結果」に出す)。
   List<String> recent = const [];
 
+  /// 直前の行動の結果を、短く知らせる文(画面の下に一瞬出す)。出したら null に戻す。
+  String? toast;
+
   /// いま重点にしている能力。
   Ability focus = Ability.contact;
 
@@ -468,6 +471,7 @@ class GameController extends ChangeNotifier {
     final before = g.stage;
     g.choose(a, focus);
     recent = [_summary(a, g), ...g.log.sublist(start)];
+    toast = recent.first;
     _detect(before, g, g.log.sublist(start));
     _commit();
   }
