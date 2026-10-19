@@ -26,7 +26,7 @@ def test_build_fight_is_valid_scene(spec):
     assert kinds.count(main) + kinds.count("clash") + kinds.count("miss") >= spec["hits"]        # 連打の途中は受け止め(clash)・かわし(miss)になることがある
     by_a = [h["kind"] for h in sc["hits"] if h.get("by") == "A"]
     assert (by_a.count("clash") + by_a.count("miss")) == (0 if spec["hits"] < 3 else (1 if spec["hits"] == 3 else 2))
-    assert ("kick" in kinds) == spec["kick"]
+    assert ("wall" in kinds) == spec["kick"]            # 冒頭の蹴り→壁。連打の中の蹴り(mix_kick)は壁に当てない
     assert (("heel" in kinds) == (spec["finisher"] == "launch_slash"))
     assert sc["tau_end"] > max(h["tau"] for h in sc["hits"])
 

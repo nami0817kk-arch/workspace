@@ -107,7 +107,7 @@ def build_scene(scene: dict, out: Path, reuse_figs: bool = False, force: bool = 
     else:
         render_figures(plan_path, figs)
     stage = None
-    if pl["view"].get("persp"):          # 遠近のカメラのときは、舞台(床・壁・柱)も立体で別に書き出す
+    if pl["view"].get("persp") and pl.get("stage", {}).get("style") != "flat":          # 遠近のカメラのときは、舞台(床・壁・柱)も立体で別に書き出す(2D の舞台 flat は PIL で描く)
         stage = out / "stage"
         if not (reuse_figs and len(list(stage.glob("f_*.png"))) == pl["n"]):
             render_figures(plan_path, stage, "stage")

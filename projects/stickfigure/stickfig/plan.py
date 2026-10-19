@@ -373,7 +373,7 @@ def _footwork(scene: dict, frames: List[dict]) -> None:
                     u = min(1.0, (f - swing["f0"]) / max(1, swing["n"]))
                     x = swing["x0"] + (swing["x1"] - swing["x0"]) * smoothstep(u, 0.0, 1.0)
                     z = lift * sc * math.sin(math.pi * u)
-                    r = fk.leg_ik(p, s, p["root_x"], sc, (x, z))
+                    r = fk.leg_ik(p, s, p["root_x"], sc, (x, z), prefer=("front" if key == "foot" else "rear"))
                     if r is not None:
                         p[ang], p[knee] = round(r[0], 6), round(r[1], 6)
                         last[key] = (p[ang], p[knee])
@@ -393,17 +393,21 @@ def _footwork(scene: dict, frames: List[dict]) -> None:
                     continue
                 gap = (nx - planted[key]) * s                                     # 体の進みに対して、固定した足がどれだけ後ろに残ったか(前が正)
                 if abs(gap) > stride_e and swing is None:                        # 開きすぎ: 踏み替える(もう片方は接地したまま)
-                    swing = dict(key=key, f0=f, n=nfr_e, x0=planted[key], x1=nx + s * lead_e * (1 if gap > 0 else -1))
+                    x1 = nx + s * lead_e * (1 if gap > 0 else -1)
+                    if fk.leg_ik(p, s, p["root_x"], sc, (x1, 0.0), prefer=("front" if key == "foot" else "rear")) is None:
+                        x1 = nx                                                   # 前に置くと届かない(腰が高い)ときは、自然な位置へ
+                    swing = dict(key=key, f0=f, n=nfr_e, x0=planted[key], x1=x1)
                     planted[key] = None
-                    r = fk.leg_ik(p, s, p["root_x"], sc, (swing["x0"], 0.0))
+                    r = fk.leg_ik(p, s, p["root_x"], sc, (swing["x0"], 0.0), prefer=("front" if key == "foot" else "rear"))
                     if r is not None:
                         p[ang], p[knee] = round(r[0], 6), round(r[1], 6)
                         last[key] = (p[ang], p[knee])
                     continue
-                r = fk.leg_ik(p, s, p["root_x"], sc, (planted[key], 0.0))       # 固定: 足を世界座標に留める
-                if r is None:                                                     # 届かない(体が速い): 短い踏み替え
-                    swing = dict(key=key, f0=f, n=max(2, nfr_e - 2), x0=planted[key], x1=nx + s * lead_e)
-                    planted[key] = None
+                r = fk.leg_ik(p, s, p["root_x"], sc, (planted[key], 0.0), prefer=("front" if key == "foot" else "rear"))       # 固定: 足を世界座標に留める
+                if r is None:                                                     # 届かない
+                    if fast:                                                      # 体が速い: 短い踏み替え
+                        swing = dict(key=key, f0=f, n=max(2, nfr_e - 2), x0=planted[key], x1=nx)
+                    planted[key] = None                                           # 遅いのに届かない(腰が上がった・伸び上がった): 固定を解いて自然な脚へ寄せる
                     settle(p, ang, knee, key)
                     continue
                 p[ang], p[knee] = round(r[0], 6), round(r[1], 6)
@@ -426,7 +430,7 @@ def _ground_fix(scene: dict, frames: List[dict]) -> None:
                 for ang, knee, key, leg in (("fl", "fk", "foot", "front_leg"), ("rl", "rk", "rear_foot", "rear_leg")):
                     zmin = min(pt[1] for pt in sk[leg])
                     if zmin < -0.02:
-                        r = fk.leg_ik(p, s, p["root_x"], sc, (sk[key][0], 0.0))
+                        r = fk.leg_ik(p, s, p["root_x"], sc, (sk[key][0], 0.0), prefer=("front" if key == "foot" else "rear"))
                         if r is not None:
                             p[ang], p[knee] = round(r[0], 6), round(r[1], 6)
                             fixed = True
@@ -593,6 +597,9 @@ def _body_drive(p: dict, who: str, f: int, events: List[dict], cfg: dict, sign: 
             elif 0 < d <= 12:                            # 振り抜き: ひねりが余り、戻る
                 u = 1 - d / 12.0
                 dspin += 0.60 * k * u * u; dlean += 0.12 * k * u * u; dhz += -0.05 * k * u
+            if e.get("lunge") and -3 <= d <= 14:         # 踏み込み(接触を解いていない命中だけ): 命中で前へ出て、そのまま残る
+                u = min(1.0, (d + 3) / 4.0)
+                ddx += 0.22 * k * (u * u * (3 - 2 * u)) * (1.0 if d <= 8 else 1 - (d - 8) / 7.0)
         elif e["kind"] == "miss":                        # かわす側: 直前に沈み込んでくぐる(頭を下げ、前へ倒し、膝を深く)、または後ろへ跳ぶ。命中の瞬間が最も低い/遠い
             duck = e.get("pos", [0, 1.0])[1] >= 0.95
             if -6 <= d <= 10:

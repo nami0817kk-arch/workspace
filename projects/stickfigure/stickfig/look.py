@@ -215,3 +215,50 @@ def sparks(cx: float, cy: float, age: int, u: float, seed: int, col=(255, 230, 1
     out.alpha_composite(glow)
     out.alpha_composite(ov)
     return out
+
+
+# 2D の舞台の色(上の帯=空/天井, 奥の壁, 床, 床の線, 柱, 右の壁)。名前は blender_player.THEMES と同じ
+FLAT_THEMES = {
+    "cave": dict(sky=(38, 38, 48), wall=(70, 68, 78), floor=(96, 88, 78), line=(78, 70, 62), prop=(58, 46, 36), side=(84, 82, 86)),
+    "dojo": dict(sky=(236, 226, 200), wall=(222, 206, 172), floor=(176, 124, 74), line=(150, 104, 60), prop=(96, 58, 34), side=(214, 196, 160)),
+    "field": dict(sky=(150, 200, 245), wall=(178, 214, 240), floor=(104, 150, 76), line=(92, 134, 66), prop=(84, 60, 36), side=(140, 142, 148)),
+    "night": dict(sky=(14, 14, 34), wall=(30, 30, 60), floor=(40, 42, 66), line=(30, 32, 54), prop=(66, 66, 96), side=(54, 54, 84)),
+    "sunset": dict(sky=(246, 150, 92), wall=(226, 120, 86), floor=(132, 90, 82), line=(112, 74, 68), prop=(96, 74, 74), side=(118, 92, 94)),
+}
+
+
+def flat_bg(plan: dict, f: int) -> Image.Image:
+    """平らな2Dの背景: 上の帯・奥の壁・床の帯・床の横線・柱(単色の長方形)・右の壁。遠近の床の目地は描かない。
+    位置はカメラの投影で決める(人物と同じ座標系で、パン・寄りに合わせて動く)が、形は正面向きの平らな図形。"""
+    cam = plan["frames"][f]["cam"]
+    th = FLAT_THEMES.get(plan.get("stage", {}).get("theme", "cave"), FLAT_THEMES["cave"])
+    img = Image.new("RGB", (W, H), th["sky"])
+    d = ImageDraw.Draw(img)
+    tx = cam.get("tx", cam.get("x", 0.0))
+    y_floor = camera.project(cam, tx, 0.0, 0.0)[1]              # 人物の足もとの線(y=0 の面の地面)
+    y_back = camera.project(cam, tx, 9.0, 0.0)[1]               # 奥の壁の根元
+    y_top = camera.project(cam, tx, 9.0, 6.0)[1]                # 奥の壁の上端
+    y_h = min(y_back, y_floor - 4)
+    d.rectangle([0, y_top, W, y_h], fill=th["wall"])
+    d.rectangle([0, y_h, W, H], fill=th["floor"])
+    u = camera.px_per_unit(cam)
+    for k in range(1, 4):                                       # 床の横線(平行。奥ほど詰まる)
+        yy = y_h + (y_floor - y_h) * (k / 4.0) ** 1.6
+        d.line([(0, yy), (W, yy)], fill=th["line"], width=2)
+    x_left, _ = camera.project(cam, tx - 12, 0.0, 0.0)[:2]
+    for n, px in enumerate(range(-18, 48, 3)):                  # 柱: 正面向きの長方形(幅は一定、奥行きで小さくしない)
+        X = camera.project(cam, px, 3.5, 0.0)[0]
+        if -60 < X < W + 60:
+            wpx = max(6, int(0.18 * u))
+            d.rectangle([X - wpx / 2, y_top + (y_h - y_top) * 0.15, X + wpx / 2, y_h], fill=th["prop"])
+    wall_x = plan.get("stage", {}).get("wall_x")
+    if wall_x is not None:
+        X = camera.project(cam, wall_x, 0.0, 0.0)[0]
+        if X < W:
+            d.rectangle([X, 0, W, y_floor + 4], fill=th["side"])
+            d.line([(X, 0), (X, y_floor + 4)], fill=th["line"], width=3)
+            for k in range(1, 9):                               # 壁の横線
+                yy = y_floor - k * 0.6 * u
+                if yy > 0:
+                    d.line([(X, yy), (W, yy)], fill=th["line"], width=1)
+    return img.convert("RGBA")

@@ -177,7 +177,7 @@ def target_point(sk: Dict[str, object], name: str) -> Pt:
     raise ValueError(f"知らない当て先: {name}")
 
 
-def leg_ik(pose: Dict[str, float], s: int, root_x: float, scale: float, target: Pt, max_bend: float = 2.6):
+def leg_ik(pose: Dict[str, float], s: int, root_x: float, scale: float, target: Pt, max_bend: float = 2.6, prefer: str = None):
     """脚の IK: 足先(鎖の端)が世界座標 target に来る (太ももの角 t, 膝の曲げ k) を返す。届かなければ None。
 
     鎖は hip から base_rot=0 で始まるので、t を変えると鎖全体が股を軸に回る(剛体回転)。
@@ -207,12 +207,16 @@ def leg_ik(pose: Dict[str, float], s: int, root_x: float, scale: float, target: 
     e0 = end(0.0, k)
     a0 = math.atan2(e0[0] - hip[0], -(e0[1] - hip[1]))
     aT = math.atan2(dx, -dz)
-    best = None
+    cands = []
     for tt in ((aT - a0) * s, (a0 - aT) * s):
         e = end(tt, k)
-        err = math.hypot(e[0] - xl, e[1] - zl)
-        if best is None or err < best[0]:
-            best = (err, tt)
-    if best[0] > 0.02:
+        cands.append((math.hypot(e[0] - xl, e[1] - zl), tt))
+    ok = [c for c in cands if c[0] <= 0.02]
+    if not ok:
         return None
-    return best[1], k
+    cur = pose.get("fl" if prefer == "front" else "rl", 0.0) if prefer else None
+    if cur is not None and len(ok) > 1:                # 両方届くなら、今の角度に近いほう(コマごとに解が入れ替わって飛ばないように)
+        ok.sort(key=lambda c: abs(c[1] - cur))
+    else:
+        ok.sort(key=lambda c: c[0])
+    return ok[0][1], k

@@ -1,0 +1,5 @@
+# 連打に蹴りを混ぜた見本(seed なし: 1発目が蹴り)
+name: fight_mix
+fight: {weapon: sword, kick: false, hits: 3, counter: true, finisher: launch_slash, stage: night, palette: cool}
+limb: {base: 0.055, tip: 0.03, tip_color: [0.08, 0.08, 0.1]}
+fx: {weapon_glow: true}

@@ -244,6 +244,10 @@ def compose_frame(plan: dict, f: int, figs: Dict[int, Image.Image], stages: Opti
     lk = fr.get("look")
     if lk is not None:                         # 色つき流線の背景のカット(参考の寄り・色の画)
         base = look.streak_bg(f, int(lk))
+    elif plan["view"].get("persp") and plan.get("stage", {}).get("style") == "flat":       # 2D の舞台(ユーザー「フィールドも2d」)
+        base = look.flat_bg(plan, f)
+        if lk is None:
+            base.alpha_composite(ground_fx(plan, f))
     elif plan["view"].get("persp"):
         base = stages[f].convert("RGBA") if stages is not None else Image.new("RGBA", (W, H), (30, 30, 34, 255))
         if lk is None:

@@ -112,7 +112,7 @@ def build_timeline(tau_end: float, fps: int, hits: Sequence[dict], slow: Sequenc
                 hold = h.get("hold", 0.0)
                 done.add(key)
                 events.append(dict(frame=f, kind=h.get("kind", "hit"), tau=h["tau"],
-                                   hold_frames=max(0, int(round(hold * fps))), by=h.get("by")))
+                                   hold_frames=max(0, int(round(hold * fps))), by=h.get("by"), lunge=h.get("lunge", False)))
         for p in puffs:
             key = ("p", p["tau"])
             if key not in done and tau >= p["tau"]:

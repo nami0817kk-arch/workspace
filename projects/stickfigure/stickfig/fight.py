@@ -34,6 +34,7 @@ DEFAULTS = dict(
     stage="cave",            # 舞台の色の組: cave / dojo / field / night / sunset
     ally=None,               # 3人目(味方): {color, x(置く位置), y(奥行き。+で奥), facing(+1右向き/-1左向き), scale, cheer(勝ったら万歳 true/負けたらうなだれる false)}。戦わず、見守る
     block=True,              # 連打の途中を相手が防ぐ(hits が3以上): 2発目は 受け止め(clash) か かわす(miss)。seed があれば選ぶ、無ければ受け止め。hits≧4 なら3発目にもう一方
+    mix_kick=True,           # 連打の途中(防がれない1発)を蹴りにする(hits≧3、seed があれば半々)
     b_first=True,            # 蹴り無しのとき、B が先に2発仕掛ける(A がかわし→受け止め)。攻守の入れ替わり
     riposte=True,            # 受け止めた直後に、相手(B)が打ち返し、こちら(A)が受け止める(鍔迫り合いの往復)
     footwork=True,           # 足運び: 接地した足を滑らせず、体が動いた分だけ踏み替える(plan._footwork)
@@ -204,6 +205,9 @@ def build_fight(spec: dict) -> dict:
         if n >= 4:
             defend[2] = "miss" if first == "clash" else "clash"
     rip_i = next((i for i, v in defend.items() if v == "clash" and i + 1 < n), None) if s["riposte"] else None
+    kick_i = -1                                          # 連打の中の蹴り: 防がれず・最後でもない1発(hits≧3 では index 0 が候補。seed があれば半々)
+    if s["mix_kick"] and n >= 3 and (rng is None or rng.random() < 0.5):
+        kick_i = next((i for i in range(n - 1) if i not in defend), -1)
     if rip_i is not None:
         gaps[rip_i] = round(gaps[rip_i] + 0.40, 2)       # 打ち返しの分、次の1発までを空ける
     ts = [h0]
@@ -216,7 +220,9 @@ def build_fight(spec: dict) -> dict:
         pre, post = (0.4, 0.18) if i == 0 else (0.16, 0.22)
         anchor = 4.3 if i == 0 else 4.3 + 0.5 * i
         clip = dict(file=(mid_clips[i] if not last else "02_07_s2") if rng is not None else HIT_CLIPS[i % len(HIT_CLIPS)], strike_at=_r(t), start=_r(t - pre), end=_r(t + post), **{"in": 0.12 if i == 0 else 0.08, "out": 0.25 if last else 0.08})
-        if not last:
+        if kick_i == i:
+            clip = dict(file="135_07_s1", strike_at=_r(t), start=_r(t - 0.36), end=_r(t + 0.3), **{"in": 0.12, "out": 0.12})
+        if not last and kick_i != i:
             clip["anchor_dx"] = round(anchor, 2)
         clipsA.append(clip)
         if last:
@@ -226,7 +232,10 @@ def build_fight(spec: dict) -> dict:
         elif defend.get(i) == "miss":                    # かわす: 空振り。高い斬りはくぐり、低い斬りは後ろへ跳ぶ(plan._body_drive が pos の高さで決める)
             hits.append(dict(tau=_r(t), hold=0.0, kind="miss", by="A", pos=[_r(3.7 - 0.2 * i), 1.2 if (i % 2 == 1) else 0.8]))
         else:
-            hits.append(dict(tau=_r(t), hold=0.05, kind=kind_hit, by="A", pos=[_r(3.7 - 0.2 * i), _r(1.25 - 0.1 * i)]))
+            if kick_i == i:                              # 連打の中の蹴り(足→相手の腰。接触を解く)
+                hits.append(dict(tau=_r(t), hold=0.06, kind="kick", by="A", contact=dict(striker="A", effector="foot", target=dict(actor="B", point="hip"), tol=0.3, max_anticipation=50)))
+            else:
+                hits.append(dict(tau=_r(t), hold=0.05, kind=kind_hit, by="A", lunge=True, pos=[_r(3.7 - 0.2 * i), _r(1.25 - 0.1 * i)]))
         if defend.get(i) != "miss":
             flashes.append(_r(t))
         if defend.get(i) == "clash":
@@ -321,7 +330,7 @@ def build_fight(spec: dict) -> dict:
             [dict(t=_r(ko_t + 0.3), dx=0.0, hz=0.78, lean=0.3, fa=0.15, fe=0.2, ra=0.15, re=0.2, face="pain"), dict(t=end, dx=0.0, hz=0.78, lean=0.3, fa=0.15, fe=0.2, ra=0.15, re=0.2, face="pain")])
     scene = dict(
         name=spec.get("name", "fight") if isinstance(spec, dict) else "fight", fps=30, tau_end=end, actors=actors,
-        stage=dict(wall_x=6.0, style="cave", theme=s["stage"]), slow=slow, hits=hits, puffs=puffs,
+        stage=dict(wall_x=6.0, style="flat", theme=s["stage"]), slow=slow, hits=hits, puffs=puffs,
         camera=[[0.0, -0.4, 8.4], [_r(end), 3.2, 8.6]],
         keys=keys,
         fx=dict(trails=[], speed_lines=speed, invert=["kick", "heel", "wall"], flashes=sorted(set(flashes)), charge=charge, color_script=color_script),
