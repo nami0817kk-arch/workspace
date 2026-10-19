@@ -335,7 +335,7 @@ class _PlayerCard extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(top: 2),
               child: Text(
-                  'チームワーク: 大会の味方の強さ ${game.teamBonus >= 0 ? '+' : ''}${game.teamBonus.toStringAsFixed(1)}  (交流・練習試合で上がる)',
+                  'チームワーク: 味方の強さ ${game.teamBonus >= 0 ? '+' : ''}${game.teamBonus.toStringAsFixed(1)} (交流・練習試合で上がる)',
                   style: const TextStyle(fontSize: 12)),
             ),
             if (cond.injured)
@@ -1111,7 +1111,7 @@ class _EndingView extends StatelessWidget {
                     style: const TextStyle(
                         fontSize: 20, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 4),
-                Text('称号「${careerTitle(g)}」  (${g.difficulty.label})${g.number > 0 ? '  背番号${g.number}${retiredNumber(g) ? '(永久欠番)' : ''}' : ''}',
+                Text('称号「${careerTitle(g)}」  (${g.difficulty.label})${g.number > 0 ? '\n背番号${g.number}${retiredNumber(g) ? '(永久欠番)' : ''}' : ''}',
                     style: TextStyle(
                         color: Theme.of(context).colorScheme.primary,
                         fontWeight: FontWeight.bold)),
