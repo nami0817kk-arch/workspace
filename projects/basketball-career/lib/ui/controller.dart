@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../game/game.dart';
 import '../game/legacy.dart';
+import '../monetization/monetization.dart';
 import '../game/life.dart';
 import '../game/match.dart';
 import '../game/path.dart';
@@ -101,12 +102,22 @@ Action recommendedAction(Game g) {
 
 /// 画面とゲームをつなぐ。操作のたびに保存する。
 class GameController extends ChangeNotifier {
-  GameController({SaveStore? store, Random? rng, this.events = true})
+  GameController(
+      {SaveStore? store, Random? rng, this.events = true, this.money})
       : store = store ?? SaveStore(),
         _rng = rng ?? Random();
 
   /// 出来事を起こすか(テストで切る)。
   final bool events;
+
+  /// 広告と課金。null なら広告なし(テスト・Web)。
+  final Monetization? money;
+
+  /// 動画を待っている間(ボタンを押せなくする)。
+  bool recoverBusy = false;
+
+  /// 回復の結果メッセージ(画面に1度出す)。
+  String? recoverMessage;
 
   final SaveStore store;
   final Random _rng;
@@ -167,7 +178,7 @@ class GameController extends ChangeNotifier {
   }
 
   /// 過ごし方を1つ選んで季節を進める。
-  void act(Action a) {
+  TermReport act(Action a) {
     final g = game!;
     final ageBefore = g.player.age;
     final wasWinter = g.slot == 3;
@@ -197,17 +208,56 @@ class GameController extends ChangeNotifier {
     }
     recent = lines;
     pathMessage = null;
+    recoverMessage = null;
     _commit();
+    return r;
+  }
+
+  /// 広告つきで過ごし方を選ぶ。大会が終わった後の次の操作で、番なら全画面広告が出る。
+  Future<void> play(Action a) async {
+    await money?.beforeAction();
+    final r = act(a);
+    if (r.tournament != null || r.satOut) await money?.tournamentPlayed();
+  }
+
+  /// 動画を見て(広告を消した人はそのまま)元気になる。
+  Future<void> recover() async {
+    final g = game;
+    if (g == null || !g.canRecover || recoverBusy) return;
+    final m = money;
+    if (m == null) return; // 広告の無い環境ではタダで回復させない
+    recoverBusy = true;
+    recoverMessage = null;
+    notifyListeners();
+    RecoverGate gate;
+    try {
+      gate = await m.beforeRecover();
+    } catch (_) {
+      gate = RecoverGate.unavailable;
+    }
+    recoverBusy = false;
+    if (gate == RecoverGate.granted && game == g && g.canRecover) {
+      g.recover();
+      recoverMessage = '元気になった。疲れが取れ、気持ちが上がった。';
+      _commit();
+      return;
+    }
+    recoverMessage = gate == RecoverGate.declined
+        ? '動画を最後まで見ると回復できる。'
+        : '動画を読み込めなかった。あとでもう一度。';
+    notifyListeners();
   }
 
   /// おすすめの過ごし方で、今年(年が変わるまで)を進める。
-  void autoYear() {
+  Future<void> autoYear() async {
     final g = game;
     if (g == null) return;
     final age = g.player.age;
     final lines = <String>[];
+    await money?.beforeAction();
     while (g.phase == Phase.season && g.player.age == age) {
-      act(recommendedAction(g));
+      final r = act(recommendedAction(g));
+      if (r.tournament != null || r.satOut) await money?.tournamentPlayed();
       lines.addAll(recent.skip(1));
     }
     recent = ['おすすめの過ごし方で1年進めた。', ...lines];

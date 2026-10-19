@@ -112,10 +112,10 @@ void main() {
     expect(find.text('春の過ごし方'), findsOneWidget);
   });
 
-  test('おすすめで1年進める', () {
+  test('おすすめで1年進める', () async {
     final c = GameController(rng: Random(4), events: false);
     c.newGame('オート');
-    c.autoYear();
+    await c.autoYear();
     expect(c.game!.player.age, 7);
     expect(c.recent.first, contains('1年進めた'));
   });

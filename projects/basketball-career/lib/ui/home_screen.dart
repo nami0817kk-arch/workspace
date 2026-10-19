@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'controller.dart';
 import 'history_screen.dart';
+import 'settings_screen.dart';
 
 /// はじめの画面。名前を決めて、6歳から始める。
 class HomeScreen extends StatefulWidget {
@@ -67,6 +68,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           HistoryScreen(controller: widget.controller))),
                   child: Text(
                       '殿堂・実績(${widget.controller.history.length}人)'),
+                ),
+                const SizedBox(height: 8),
+                TextButton(
+                  onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(
+                      builder: (_) =>
+                          SettingsScreen(money: widget.controller.money))),
+                  child: const Text('設定(広告を消す・プライバシー)'),
                 ),
               ],
             ),
