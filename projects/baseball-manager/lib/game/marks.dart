@@ -355,3 +355,44 @@ List<StandingRow> standingsOf({
   }
   return rows;
 }
+
+const _kohai = [
+  'ひなた',
+  'そうた',
+  'れん',
+  'あおい',
+  'かいと',
+  'ゆうま',
+  'りく',
+  'はると',
+  'さくら',
+  'いつき'
+];
+
+/// 新入団選手(後輩)の名前。年齢から決まる。
+String kohaiOf(String team, int age) =>
+    _kohai[_hash(team, age) % _kohai.length];
+
+/// 同期(同じドラフトで入団した選手)。名前と順位は名前と球団から決まる。
+List<(String, int)> classmatesOf(String name, String team) => [
+      for (var i = 0; i < 3; i++)
+        (
+          _kohai[_hash(name + team, i) % _kohai.length],
+          1 + _hash(team, i + 20) % 6
+        ),
+    ];
+
+/// 節目の年齢のひとこと(なければ null)。
+String? ageNote(int age) => switch (age) {
+      12 => '12歳。来年は中学生だ。',
+      15 => '15歳。高校でどこを目指すか考える時期だ。',
+      18 => '18歳。高校最後の年。進路を決める時が来た。',
+      22 => '22歳。大学・社会人の最終年。プロ入りの最後のチャンスが近い。',
+      30 => '30歳になった。ここから体の衰えと向き合っていく。',
+      35 => '35歳。ベテランと呼ばれるようになった。',
+      40 => '40歳。まだ現役でいられることに感謝している。',
+      _ => null,
+    };
+
+/// 1年間の練習と休養の回数のまとめ。
+String yearSummaryOf(int trains, int rests) => 'この1年: 練習・特訓$trains回、休養$rests回。';

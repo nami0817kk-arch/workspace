@@ -21,6 +21,7 @@ void main() {
   markTests5();
   markTests6();
   markTests7();
+  markTests8();
   test('通算の節目: 越えた年にだけ出る', () {
     expect(careerMarks(const Line(), const Line(hits: 150, homeRuns: 20)),
         containsAll(['プロ初安打', 'プロ初本塁打', '通算100安打']));
@@ -197,5 +198,17 @@ void markTests7() {
       }
       expect({for (final r in t) r.team}.length, 6);
     }
+  });
+}
+
+void markTests8() {
+  test('後輩・同期・年齢の節目・1年のまとめ', () {
+    expect(kohaiOf('青波ホークス', 25), kohaiOf('青波ホークス', 25));
+    final m = classmatesOf('はると', '青波ホークス');
+    expect(m.length, 3);
+    expect(m.every((e) => e.$2 >= 1 && e.$2 <= 6), isTrue);
+    expect(ageNote(18), contains('進路'));
+    expect(ageNote(19), isNull);
+    expect(yearSummaryOf(7, 3), contains('7回'));
   });
 }

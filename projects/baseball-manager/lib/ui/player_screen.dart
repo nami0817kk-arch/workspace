@@ -417,6 +417,7 @@ class _CareerTab extends StatelessWidget {
         'position' => (Icons.sports_baseball, const Color(0xFF2E7D32)),
         'overseas' => (Icons.flight, const Color(0xFF1E88E5)),
         'team' => (Icons.swap_horizontal_circle, const Color(0xFF1E88E5)),
+        'injury' => (Icons.healing, const Color(0xFFE53935)),
         'title' => (Icons.workspace_premium, const Color(0xFFD4AF37)),
         'retire' => (Icons.flag, const Color(0xFF546E7A)),
         _ => (Icons.circle, const Color(0xFF90A4AE)),

@@ -379,6 +379,10 @@ class Game {
   /// 大会・シーズン最終月の作戦。その大会が終わると「堅実」に戻る。
   Tactic tactic = Tactic.steady;
 
+  /// 今年の練習(練習・特訓)と休養の回数。年末にログに出して戻す。
+  int trainCount = 0;
+  int restCount = 0;
+
   /// 同じ能力を重点に練習・特訓を続けた回数(継続は力なり)。
   int focusStreak = 0;
   Ability? lastFocus;
@@ -471,6 +475,11 @@ class Game {
     exp = exp.add(gained);
     lastGain = gained;
     lastOutcome = wasInjured ? Outcome.normal : r.outcome;
+    if (action == Plan.train || action == Plan.special) trainCount++;
+    if (action == Plan.rest) restCount++;
+    if (r.gotInjured) {
+      _note('injury', injuryNameOf(player.age, slot));
+    }
     if (r.gotInjured) {
       log.add('怪我をしてしまった(${injuryNameOf(player.age, slot)})。');
     }
@@ -810,6 +819,10 @@ class Game {
       return;
     }
     log.add('$slotName: ${d.isEmpty ? '' : '$d。'}チームは${m.wins}勝${m.losses}敗。');
+    final crowd = (1.5 +
+        popularityOf(records, worldRecords) * 0.04 +
+        (m.wins + m.losses == 0 ? 0 : m.wins / (m.wins + m.losses)) * 1.5);
+    log.add('観客動員: 平均${crowd.toStringAsFixed(1)}万人。');
     final rs = storyOfCharacter(cast.rival);
     final duel =
         rs == null ? null : rivalDuelLine(rs, player.age, slot, m.line);
@@ -1090,13 +1103,23 @@ class Game {
     if (partner != null && partner.bond >= 50) {
       condition = condition.copyWith(fatigue: condition.fatigue - 5); // 支えてくれる
     }
+    if (trainCount + restCount > 0) {
+      log.add(yearSummaryOf(trainCount, restCount));
+    }
+    trainCount = 0;
+    restCount = 0;
     peakOverall = max(peakOverall, overall(player).round());
     overallHistory.add(overall(player).round());
     // ライバルの人生の知らせ(進路・入団・活躍・引退)。
     final rs = storyOfCharacter(cast.rival);
     if (rs != null) log.addAll(rivalNews(rs, player.age));
 
+    final an = ageNote(player.age);
+    if (an != null && phase != Phase.retired) log.add(an);
     if (turnedPro) {
+      if (proTeam != null && proYears >= 1 && proYears % 3 == 0) {
+        log.add('新人の${kohaiOf(proTeam!, player.age)}が入団してきた。');
+      }
       proYears++;
       lowYears = nextLowYears(player, lowYears);
       if (mustRetire(player, lowYears)) {
@@ -1143,6 +1166,9 @@ class Game {
       proTeam = team;
       final round = draftRound(margin);
       log.add('ドラフトで指名された! $team から$round位指名。');
+      final mates = classmatesOf(player.name, team);
+      log.add(
+          '同期入団: ${[for (final m in mates) '${m.$1}(${m.$2}位)'].join('・')}');
       _note('draft', '$team から$round位指名を受けて、プロ入り');
     } else if (route == null) {
       log.add('ドラフトで指名されなかった。');
@@ -1230,6 +1256,8 @@ class Game {
         'lifeLog': [for (final e in lifeLog) e.toJson()],
         'tactic': tactic.name,
         'focusStreak': focusStreak,
+        'trainCount': trainCount,
+        'restCount': restCount,
         'lastFocus': lastFocus?.name,
         'goal': goal?.toJson(),
         'difficulty': difficulty.name,
@@ -1259,6 +1287,8 @@ class Game {
         (j['condition'] as Map?)?.cast<String, dynamic>() ?? {});
     g.slot = (j['slot'] as num?)?.toInt() ?? 0;
     g.focusStreak = (j['focusStreak'] as num?)?.toInt() ?? 0;
+    g.trainCount = (j['trainCount'] as num?)?.toInt() ?? 0;
+    g.restCount = (j['restCount'] as num?)?.toInt() ?? 0;
     g.lastFocus = Ability.parse((j['lastFocus'] as String?) ?? '');
     g.exp = ExpPool.fromJson((j['exp'] as Map?)?.cast<String, dynamic>() ?? {});
     g.phase = pick(Phase.values, j['phase'], Phase.term);

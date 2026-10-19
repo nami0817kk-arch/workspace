@@ -933,6 +933,106 @@ final List<GameEvent> events = [
       when: (stage, cast) =>
           stage == Stage.juniorHigh || stage == Stage.highSchool,
       weight: 0.25),
+  GameEvent(
+      'captain',
+      '最上級生になり、主将に推薦された。',
+      [
+        EventChoice(
+            '引き受ける',
+            (p, c, f) => (
+                  player: p,
+                  condition:
+                      c.copyWith(morale: c.morale + 10, fatigue: c.fatigue + 8)
+                )),
+        EventChoice(
+            'プレーに専念したい',
+            (p, c, f) =>
+                (player: p, condition: c.copyWith(morale: c.morale + 2))),
+      ],
+      when: (stage, cast) => stage == Stage.highSchool,
+      weight: 0.25),
+  GameEvent(
+      'summer-camp',
+      '夏の合宿に誘われた。',
+      [
+        EventChoice(
+            '最後まで参加する',
+            (p, c, f) => (
+                  player: _gain(p, f, 2),
+                  condition: c.copyWith(fatigue: c.fatigue + 15)
+                )),
+        EventChoice(
+            '一部だけ参加する',
+            (p, c, f) => (
+                  player: _gain(p, f, 1),
+                  condition: c.copyWith(fatigue: c.fatigue + 5)
+                )),
+      ],
+      when: (stage, cast) =>
+          stage == Stage.youth ||
+          stage == Stage.juniorHigh ||
+          stage == Stage.highSchool,
+      weight: 0.25),
+  GameEvent(
+      'road-trip',
+      '遠征先で、地元の名物をごちそうになった。',
+      [
+        EventChoice(
+            'おいしくいただく',
+            (p, c, f) => (
+                  player: p,
+                  condition:
+                      c.copyWith(morale: c.morale + 10, fatigue: c.fatigue - 5)
+                )),
+        EventChoice(
+            '体調管理のため控える',
+            (p, c, f) =>
+                (player: p, condition: c.copyWith(morale: c.morale + 3))),
+      ],
+      when: (stage, cast) => stage == Stage.pro,
+      weight: 0.25),
+  GameEvent(
+      'junior-advice',
+      '後輩が悩みを相談してきた。',
+      [
+        EventChoice(
+            'じっくり話を聞く',
+            (p, c, f) => (
+                  player: p,
+                  condition:
+                      c.copyWith(morale: c.morale + 8, fatigue: c.fatigue + 3)
+                )),
+        EventChoice(
+            '自分で考えろと伝える',
+            (p, c, f) =>
+                (player: p, condition: c.copyWith(morale: c.morale + 1))),
+      ],
+      when: (stage, cast) => stage == Stage.pro || stage == Stage.highSchool,
+      weight: 0.25),
+  GameEvent(
+      'form-change',
+      'フォームを思い切って変えてみないかと言われた。',
+      [
+        EventChoice.risky('挑戦する', (p, c, f, rng) {
+          if (rng.nextDouble() < 0.5) {
+            return (
+              player: _gain(p, f, 3),
+              condition:
+                  c.copyWith(morale: c.morale + 8, fatigue: c.fatigue + 8)
+            );
+          }
+          return (
+            player: p,
+            condition: c.copyWith(morale: c.morale - 8, fatigue: c.fatigue + 8)
+          );
+        }),
+        EventChoice(
+            '今のフォームを信じる',
+            (p, c, f) =>
+                (player: p, condition: c.copyWith(morale: c.morale + 4))),
+      ],
+      when: (stage, cast) => stage != Stage.youth,
+      weight: 0.25),
 ];
 
 /// 出来事の起きる確率(1季節あたり)。
