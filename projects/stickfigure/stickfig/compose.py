@@ -351,7 +351,7 @@ def _color_script(frame: Image.Image, plan: dict, tau: float, fx: dict) -> Image
         s = keys[i][2] * (1 - u) + keys[i + 1][2] * u
     arr = np.asarray(frame, dtype=np.float32)
     tint = np.array(col, dtype=np.float32) / 255.0
-    out = arr * (1 - s) + arr * tint * 1.7 * s
+    out = arr * (1 - s) + arr * tint * 1.45 * s
     return Image.fromarray(np.clip(out, 0, 255).astype(np.uint8))
 
 
