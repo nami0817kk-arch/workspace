@@ -329,7 +329,10 @@ final List<GameEvent> events = [
         ),
         EventChoice(
           '練習があるから断る',
-          (p, c, f) => (player: p, condition: c.copyWith(morale: c.morale - 3)),
+          (p, c, f) => (
+            player: _gain(p, f, 1),
+            condition: c.copyWith(fatigue: c.fatigue + 8, morale: c.morale - 3)
+          ),
           (cast, rng) => cast.lover?.addBond(-6),
         ),
       ],
@@ -346,8 +349,10 @@ final List<GameEvent> events = [
         ),
         EventChoice(
           '急いで練習へ向かう',
-          (p, c, f) =>
-              (player: p, condition: c.copyWith(fatigue: c.fatigue + 5)),
+          (p, c, f) => (
+            player: _gain(p, f, 1),
+            condition: c.copyWith(fatigue: c.fatigue + 5)
+          ),
           (cast, rng) => cast.family?.addBond(-3),
         ),
       ],
@@ -839,7 +844,7 @@ final List<GameEvent> events = [
     ),
     EventChoice(
       '大事にしまっておく',
-      (p, c, f) => (player: p, condition: c.copyWith(morale: c.morale + 3)),
+      (p, c, f) => (player: p, condition: c.copyWith(morale: c.morale + 8)),
     ),
   ]),
   GameEvent(
@@ -856,7 +861,10 @@ final List<GameEvent> events = [
         ),
         EventChoice(
           '気持ちだけ受け取る',
-          (p, c, f) => (player: p, condition: c.copyWith(morale: c.morale + 2)),
+          (p, c, f) => (
+            player: _gain(p, f, 1),
+            condition: c.copyWith(fatigue: c.fatigue + 3, morale: c.morale + 2)
+          ),
           (cast, rng) => cast.lover?.addBond(-2),
         ),
       ],
@@ -986,8 +994,11 @@ final List<GameEvent> events = [
                 )),
         EventChoice(
             '体調管理のため控える',
-            (p, c, f) =>
-                (player: p, condition: c.copyWith(morale: c.morale + 3))),
+            (p, c, f) => (
+                  player: p,
+                  condition:
+                      c.copyWith(fatigue: c.fatigue - 8, morale: c.morale + 3)
+                )),
       ],
       when: (stage, cast) => stage == Stage.pro,
       weight: 0.25),

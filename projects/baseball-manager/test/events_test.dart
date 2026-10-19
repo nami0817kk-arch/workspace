@@ -56,6 +56,43 @@ void main() {
     expect(seen, isNot(contains('interview')));
   });
 
+  test('どの出来事も、どちらかの選択肢が全面的に有利にならない(特性・コツ・絆の利益があるものを除く)', () {
+    // 特性の獲得(winter-menu)やコーチのコツ(coach-extra)は、ここで測れない利益がある。
+    const exempt = {'winter-menu', 'coach-extra'};
+    final p = _p();
+    const c = Condition(fatigue: 50, morale: 50);
+    for (final e in events) {
+      if (exempt.contains(e.id)) continue;
+      final scores = <List<double>>[];
+      for (final ch in e.choices) {
+        var ab = 0.0, fa = 0.0, mo = 0.0;
+        const n = 100;
+        for (var i = 0; i < n; i++) {
+          final r = ch.risky != null
+              ? ch.risky!(p, c, Ability.contact, Random(i))
+              : ch.apply(p, c, Ability.contact);
+          ab += abilitiesOf(Role.batter)
+              .fold<int>(0, (s, a) => s + r.player.of(a) - p.of(a));
+          fa += r.condition.fatigue - c.fatigue;
+          mo += r.condition.morale - c.morale;
+        }
+        scores.add([ab / n, -fa / n, mo / n]);
+      }
+      for (var i = 0; i < scores.length; i++) {
+        for (var j = 0; j < scores.length; j++) {
+          if (i == j) continue;
+          final geq = [
+            for (var k = 0; k < 3; k++) scores[i][k] >= scores[j][k]
+          ];
+          final gt = [for (var k = 0; k < 3; k++) scores[i][k] > scores[j][k]];
+          expect(geq.every((x) => x) && gt.any((x) => x), isFalse,
+              reason:
+                  '${e.id}: 「${e.choices[j].label}」は「${e.choices[i].label}」より全部で劣る');
+        }
+      }
+    }
+  });
+
   test('どの選択肢も、極端な状態でも体調・能力が範囲内に収まる(運しだいの選択肢も)', () {
     for (final e in events) {
       for (final ch in e.choices) {
