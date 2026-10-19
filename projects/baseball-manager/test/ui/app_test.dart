@@ -1747,6 +1747,19 @@ void _rankTests() {
       expect(find.byKey(const Key('start')), findsOneWidget);
     });
 
+    testWidgets('キャリアタブのログは「ぜんぶ見る」で一生ぶんを読める', (t) async {
+      final c = await _start(t);
+      c.adopt(
+          _until((g) => g.player.age >= 10 && g.phase == Phase.term, seed: 5));
+      await t.pumpAndSettle();
+      await _tab(t, 'career');
+      expect(find.byKey(const Key('log-card')), findsOneWidget);
+      await t.tap(find.byKey(const Key('log-all')));
+      await t.pumpAndSettle();
+      expect(find.byKey(const Key('log-dialog')), findsOneWidget);
+      expect(find.text('── 7歳 ──'), findsOneWidget);
+    });
+
     testWidgets('実績の絞りこみ', (t) async {
       final c = await _start(t);
       c.unlocked = {'first-pro'};

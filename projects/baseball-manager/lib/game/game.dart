@@ -1124,6 +1124,7 @@ class Game {
     final rs = storyOfCharacter(cast.rival);
     if (rs != null) log.addAll(rivalNews(rs, player.age));
 
+    if (phase != Phase.retired) log.add('── ${player.age}歳 ──');
     final an = ageNote(player.age);
     if (an != null && phase != Phase.retired) log.add(an);
     if (turnedPro) {

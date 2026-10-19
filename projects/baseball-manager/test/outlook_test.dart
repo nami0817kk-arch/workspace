@@ -29,6 +29,7 @@ Game _until(bool Function(Game) stop, {int seed = 1}) {
 }
 
 void main() {
+  logTests();
   test('ドラフトの見込みは、高校2年(17歳)から出て、能力で変わる', () {
     final y = Game.newGame(name: 't', role: Role.batter, rng: Random(1));
     expect(y.draftOutlook, isNull);
@@ -55,5 +56,15 @@ void main() {
     g.lowYears = 1;
     expect(g.releaseWarning, releaseYears - 1);
     expect(g.draftOutlook, isNull); // プロになったら出ない
+  });
+}
+
+void logTests() {
+  test('年が変わるたびに、ログに「── N歳 ──」の見出しが入る', () {
+    final g = _until((g) => g.player.age >= 9);
+    final heads = g.log.where((l) => l.startsWith('── ')).toList();
+    expect(heads, contains('── 7歳 ──'));
+    expect(heads, contains('── 8歳 ──'));
+    expect(heads.length, g.player.age - 6);
   });
 }

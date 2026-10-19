@@ -1667,22 +1667,71 @@ class _ProCard extends StatelessWidget {
   }
 }
 
+/// ログの1行。「── 9歳 ──」の見出しは目立たせ、それ以外は「・」つき。
+Widget _logLine(BuildContext context, String l) {
+  if (l.startsWith('── ')) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 6),
+      child: Text(l,
+          style: Theme.of(context)
+              .textTheme
+              .labelMedium
+              ?.copyWith(color: Theme.of(context).colorScheme.primary)),
+    );
+  }
+  return Text('・$l');
+}
+
+/// 一生のログを、古いほうから全部見る。
+void _showAllLog(BuildContext context, Game game) {
+  showDialog<void>(
+    context: context,
+    builder: (ctx) => AlertDialog(
+      key: const Key('log-dialog'),
+      title: const Text('これまでのできごと'),
+      content: SizedBox(
+        width: double.maxFinite,
+        child: ListView(
+          shrinkWrap: true,
+          children: [for (final l in game.log) _logLine(ctx, l)],
+        ),
+      ),
+      actions: [
+        TextButton(
+            onPressed: () => Navigator.pop(ctx), child: const Text('閉じる'))
+      ],
+    ),
+  );
+}
+
 class _LogCard extends StatelessWidget {
   const _LogCard({required this.game});
   final Game game;
 
   @override
   Widget build(BuildContext context) {
-    final recent = game.log.reversed.take(6).toList();
+    final recent = game.log.reversed.take(10).toList();
     if (recent.isEmpty) return const SizedBox.shrink();
     return Card(
+      key: const Key('log-card'),
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('できごと', style: Theme.of(context).textTheme.titleSmall),
-            for (final l in recent) Text('・$l'),
+            Row(children: [
+              Expanded(
+                child:
+                    Text('できごと', style: Theme.of(context).textTheme.titleSmall),
+              ),
+              if (game.log.length > recent.length)
+                TextButton(
+                  key: const Key('log-all'),
+                  onPressed: () => _showAllLog(context, game),
+                  child: const Text('ぜんぶ見る'),
+                ),
+            ]),
+            for (final l in recent) _logLine(context, l),
           ],
         ),
       ),
