@@ -51,7 +51,7 @@ description: 棒人間のアクション動画（戦い・物語つき）を、�
 | 蹴りを混ぜる・踏み込み | `mix_kick: true` | 連打の中の1発を蹴りに（seed で半々）。接触を解かない命中では踏み込んで前へ出る（lunge） |
 | Becker 風の線 | 台本 `limb: {base: 0.055, tip: 0.03, tip_color: [0.08,0.08,0.1]}`, `fx: {weapon_glow: true}` | 手足が根元太→先細り・先が暗色、剣が水色に光る。観察は `reference/becker_recent.md` |
 
-測り方（plan から）: 体のひねり `spin` の標準偏差、足滑り（接地した足が 1 コマ 0.035 以上動く割合）、歩数、攻防の内訳（by:A / by:B の命中の種類）。改善前→後で A の spin_sd 0→0.45、歩数 4→11、攻防 A:slash×5 → A:slash×3＋clash/miss＋B の miss/clash/hit。
+測り方: `python -m stickfig motion scenes/x.yaml`（体のひねり `spin` の標準偏差、足滑り、歩数、1コマの最大移動、攻防の内訳、接触の距離）。改善前→後で A の spin_sd 0→0.45、歩数 4→11、攻防 A:slash×5 → A:slash×3＋clash/miss＋B の miss/clash/hit。
 
 ## 縦画面（ショート）
 
