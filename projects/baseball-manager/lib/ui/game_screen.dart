@@ -1236,6 +1236,18 @@ class EndingView extends StatelessWidget {
                       .textTheme
                       .bodyMedium
                       ?.copyWith(fontStyle: FontStyle.italic, height: 1.5)),
+              Builder(builder: (context) {
+                final vote = hallOfFameVote(
+                    records: game.records, title: e.title, madePro: e.madePro);
+                if (vote == null) return const SizedBox.shrink();
+                return Padding(
+                  padding: const EdgeInsets.only(top: 8),
+                  child: Text(
+                      '殿堂入り投票: 得票率$vote%${inHallOfFame(vote) ? '(殿堂入り!)' : '(75%に届かず)'}',
+                      key: const Key('hof-vote'),
+                      style: const TextStyle(fontWeight: FontWeight.bold)),
+                );
+              }),
               const SizedBox(height: 16),
               if (controller.newlyUnlocked.isNotEmpty) ...[
                 Card(
@@ -1550,6 +1562,9 @@ String endingShareText(Game game) {
       'プロ通算収入 ${fmtSalary(careerEarnings(pro))}(最終資産 ${fmtMoney(game.money)})',
     if (game.worldRecords.isNotEmpty)
       '日本代表: 世界大会${game.worldRecords.length}回出場・優勝${game.worldRecords.where((r) => r.champion).length}回',
+    if (inHallOfFame(hallOfFameVote(
+        records: game.records, title: e.title, madePro: e.madePro)))
+      '殿堂入り!',
   ];
   return lines.join('\n');
 }

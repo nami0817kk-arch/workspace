@@ -1010,6 +1010,8 @@ void _rankTests() {
     await _dismissMilestones(t);
     await t.scrollUntilVisible(find.byKey(const Key('copy-result')), 300,
         scrollable: find.byType(Scrollable).first);
+    await t.ensureVisible(find.byKey(const Key('copy-result')));
+    await t.pumpAndSettle();
     await t.tap(find.byKey(const Key('copy-result')));
     await t.pumpAndSettle();
     expect(copied, text);

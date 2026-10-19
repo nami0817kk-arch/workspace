@@ -280,3 +280,31 @@ String mottoOf(Player p) {
     Ability.stamina => '「最後に立っている者が勝つ」',
   };
 }
+
+/// 殿堂入り投票の得票率(%)。プロ10年以上の選手だけ資格がある(なければ null)。
+/// 称号・タイトル・優勝・通算記録から計算する(保存せず、記録から出す)。
+int? hallOfFameVote({
+  required List<SeasonRecord> records,
+  required String title,
+  required bool madePro,
+}) {
+  final pro = records.where((r) => r.stage == Stage.pro).toList();
+  if (!madePro || pro.length < 10) return null;
+  final total = totalOf(pro);
+  var v = switch (title) {
+    'レジェンド' => 70.0,
+    '一流選手' => 48.0,
+    'レギュラー' => 28.0,
+    _ => 12.0,
+  };
+  v += pro.fold<int>(0, (a, r) => a + r.titles.length) * 3;
+  v += pro.where((r) => r.champion).length * 1.5;
+  v += pro.fold<int>(0, (a, r) => a + r.awards.length) * 0.8;
+  if (total.hits >= 2000) v += 8;
+  if (total.homeRuns >= 400) v += 8;
+  if (total.wins >= 200) v += 8;
+  if (total.strikeouts >= 2500) v += 6;
+  return v.round().clamp(0, 100);
+}
+
+bool inHallOfFame(int? vote) => vote != null && vote >= 75;

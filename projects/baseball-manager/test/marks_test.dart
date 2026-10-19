@@ -19,6 +19,7 @@ void main() {
   markTests3();
   markTests4();
   markTests5();
+  markTests6();
   test('通算の節目: 越えた年にだけ出る', () {
     expect(careerMarks(const Line(), const Line(hits: 150, homeRuns: 20)),
         containsAll(['プロ初安打', 'プロ初本塁打', '通算100安打']));
@@ -137,5 +138,31 @@ void markTests5() {
     expect(int.parse(cm(18)), greaterThan(int.parse(cm(8))));
     expect(int.parse(cm(18)), inInclusiveRange(172, 185));
     expect(mottoOf(_p(Role.batter, {Ability.power: 80})), contains('豪快'));
+  });
+}
+
+void markTests6() {
+  SeasonRecord yr(int age, {List<String> titles = const [], int rank = 3}) =>
+      SeasonRecord(
+          age: age,
+          stage: Stage.pro,
+          line: const Line(games: 140, atBats: 500, hits: 150),
+          rank: rank,
+          titles: titles);
+  test('殿堂入り投票: 10年未満は資格なし。レジェンドは入り、平凡は届かない', () {
+    final short = [for (var a = 20; a < 26; a++) yr(a)];
+    expect(
+        hallOfFameVote(records: short, title: 'レジェンド', madePro: true), isNull);
+    final legend = [
+      for (var a = 20; a < 36; a++) yr(a, titles: ['本塁打王'], rank: 1)
+    ];
+    final v = hallOfFameVote(records: legend, title: 'レジェンド', madePro: true);
+    expect(inHallOfFame(v), isTrue);
+    final plain = [for (var a = 20; a < 32; a++) yr(a)];
+    expect(
+        inHallOfFame(
+            hallOfFameVote(records: plain, title: '一流選手', madePro: true)),
+        isFalse);
+    expect(hallOfFameVote(records: legend, title: 'x', madePro: false), isNull);
   });
 }

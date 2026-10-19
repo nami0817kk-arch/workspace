@@ -1,5 +1,6 @@
 import 'career.dart';
 import 'difficulty.dart';
+import 'marks.dart';
 import 'player.dart';
 import 'records.dart';
 import 'snapshot.dart';
@@ -79,6 +80,14 @@ final List<Achievement> achievements = [
       (s) => s.events.any((e) => e.text.contains('FAで'))),
   Achievement('japan-series', '日本一', '日本シリーズを制して、日本一になる。',
       (s) => s.records.any((r) => r.awards.contains('日本一'))),
+  Achievement(
+      'hall-of-fame',
+      '殿堂入り',
+      '引退後の殿堂入り投票で、75%以上の票を集める。',
+      (s) => inHallOfFame(hallOfFameVote(
+          records: s.records,
+          title: s.endingTitle ?? '',
+          madePro: s.proStartAge != null))),
   Achievement('legend', '伝説', '称号「レジェンド」を得る。', (s) => s.endingTitle == 'レジェンド'),
   Achievement('iron-man', '鉄人', 'プロで15年以上プレーする。',
       (s) => s.records.where((r) => r.stage == Stage.pro).length >= 15),
