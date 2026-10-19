@@ -248,7 +248,7 @@ def build_fight(spec: dict) -> dict:
                      dict(tau=1.55, hold=0.05, kind="blast", by="A", pos=[6.0, 1.25], to_wall=True)]
             flashes.append(1.55)
             shots.insert(0, dict(t=0.55, follow="A", scale=[[0.55, 4.2], [1.15, 3.6]], yaw=[[0.55, -26.0], [1.15, -14.0]], pitch=6.0, lens=32.0, target_z=1.2, lag=0.25))
-            shots.append(dict(t=1.15, follow="mid", scale=6.4, yaw=4.0, pitch=3.0, lens=44.0, target_z=1.2))
+            shots.append(dict(t=1.15, follow="B", scale=5.2, yaw=4.0, pitch=3.0, lens=44.0, target_z=1.3))   # 玉が B を越えて壁で爆発するまで入れる(mid だと壁が画面外で爆発が見えなかった)
             shots.append(dict(t=1.7, follow="A", scale=[[1.7, 4.8], [tc + 0.4, 3.9]], yaw=[[1.7, -38.0], [tc + 0.4, -20.0]], pitch=4.0, lens=30.0, target_z=1.0, lag=0.3))
         if bfirst:                                       # B が先に仕掛ける: 1発目は A が沈んでかわし(miss)、2発目は A が受け止める(clash)
             tb1, tb2 = tc - 0.78, tc - 0.40
