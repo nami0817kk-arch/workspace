@@ -126,6 +126,10 @@ python scripts/make_gallery.py 09_01:2.4 135_07_s1:3.6   # clip を順に再生�
 - `fx.weapon_glow: true`(`weapon_glow_color`): 刃の水色の画素から発光の縁を作る。fk の剣の線(`sk["sword"]`)は Blender の刃と向きがずれる場面があるので、描画の画素から取る
 - 見本 `scenes/fight_becker.yaml`。fight の `fx` などは、台本で書いた分が土台に足し合わされる(`fight.expand`)
 
+- **舞台も2D**(2026-10-19 ユーザー「フィールドも2d」): `stage: {style: flat, theme: …}`(fight では既定)。Blender の立体の舞台を使わず、`look.flat_bg` が平らな帯・単色の柱・右の壁と、舞台ごとの切り絵の飾り(草原=丘と木、夜=月と星、夕焼け=夕日と山、道場=障子、洞窟=つらら岩。`_flat_props`)を PIL で描く(色は `look.FLAT_THEMES`)。stage の書き出しも飛ばす
+- 演出のリズムは参考の範囲に入れてある(fight の既定): 閃光は決めの1発と大技だけ(`fx.flashes`)、2コマ撮りは全体(`stepping` に ranges なし、命中の前後 3 コマは 1 コマごと)。`check` の「演出のリズム」で見る
+- 場面カードの色は、次の場面の舞台の色を暗くしたもの(`episode.build_episode`)
+
 ## 決まり・つまずき所(実際に踏んだもの)
 
 1. **参考動画のファイル・切り出した画像は、リポジトリに入れない**(workspace は public、他人の作品)。入れてよいのは数字と読み取った角度だけ(`reference/`)。
