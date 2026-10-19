@@ -5,20 +5,31 @@ import 'package:baseball_manager/game/game.dart';
 import 'package:baseball_manager/game/life.dart';
 import 'package:baseball_manager/game/path.dart';
 import 'package:baseball_manager/game/player.dart';
+import 'package:baseball_manager/ui/history.dart';
 
 /// 指定の段階まで進めた保存データ(JSON)を出す。画面確認用。
 /// 使い方: dart run tool/dump_save.dart [stage名: youth, juniorHigh, highSchool, pro, retired] [seed]
 void main(List<String> a) {
   final stage = a.isEmpty ? 'pro' : a[0];
   final seed = a.length > 1 ? int.parse(a[1]) : 5;
+  final potential = a.length > 2 ? int.parse(a[2]) : 90;
   final g = Game.newGame(
-      name: 'ユウタ', role: Role.pitcher, rng: Random(seed), potential: 90);
+      name: 'ユウタ', role: Role.pitcher, rng: Random(seed), potential: potential);
   var n = 0;
   while (g.phase != Phase.retired && n++ < 4000) {
     if (stage == 'pathChoice' && g.phase == Phase.pathChoice) {
       break;
     }
+    if (stage == 'event' && g.phase == Phase.event && g.player.age >= 14) {
+      break;
+    }
+    if (stage == 'fa' && g.canUseFa) {
+      break;
+    }
     if (stage != 'retired' &&
+        stage != 'history' &&
+        stage != 'event' &&
+        stage != 'fa' &&
         g.phase == Phase.term &&
         g.stage.name == stage &&
         g.slot == 5) {
@@ -36,6 +47,10 @@ void main(List<String> a) {
       case Phase.retired:
         break;
     }
+  }
+  if (stage == 'history') {
+    print(jsonEncode([HistoryEntry.of(g).toJson()]));
+    return;
   }
   print(jsonEncode(g.toJson()));
 }

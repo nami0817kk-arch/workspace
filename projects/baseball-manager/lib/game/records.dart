@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'career.dart';
+import 'world.dart';
 import 'season.dart';
 
 /// 1年ぶんの成績(アマチュアは夏の大会、プロはシーズン通算)。
@@ -16,6 +17,10 @@ class SeasonRecord {
     this.rank,
     this.titles = const [],
     this.rivalWon,
+    this.overseas = false,
+    this.awards = const [],
+    this.months = const [],
+    this.twoWay = false,
   });
 
   final int age;
@@ -36,6 +41,18 @@ class SeasonRecord {
 
   /// ライバルとの勝負の結果(その年に勝負があれば)。
   final bool? rivalWon;
+
+  /// 海外(アメリカ)のリーグでの年か。
+  final bool overseas;
+
+  /// この年の表彰(新人王・ベストナインなど。タイトルとは別)。
+  final List<String> awards;
+
+  /// プロのシーズンの月ごとの成績(4〜9月)。
+  final List<String> months;
+
+  /// 二刀流で戦った年か(スター性: 年俸×1.4・人気+1)。
+  final bool twoWay;
 
   bool get isLeague => rank != null;
   bool get champion =>
@@ -60,6 +77,10 @@ class SeasonRecord {
         'rank': rank,
         'titles': titles,
         'rivalWon': rivalWon,
+        'overseas': overseas,
+        'awards': awards,
+        'months': months,
+        'twoWay': twoWay,
       };
 
   /// 項目を足すときは既定値を置く。
@@ -77,6 +98,14 @@ class SeasonRecord {
           for (final t in (j['titles'] as List?) ?? const []) t as String
         ],
         rivalWon: j['rivalWon'] as bool?,
+        overseas: (j['overseas'] as bool?) ?? false,
+        awards: [
+          for (final t in (j['awards'] as List?) ?? const []) t as String
+        ],
+        months: [
+          for (final t in (j['months'] as List?) ?? const []) t as String
+        ],
+        twoWay: (j['twoWay'] as bool?) ?? false,
       );
 }
 
@@ -86,6 +115,16 @@ String fmtRate(double? v) {
   final s = v.toStringAsFixed(3);
   return v < 1 ? s.substring(1) : s;
 }
+
+/// パーセント(0.123 → 12.3%)。
+String fmtPct(double? v) =>
+    v == null ? '-' : '${(v * 100).toStringAsFixed(1)}%';
+
+/// 小さい数(WHIPや9回あたり): 小数2桁。
+String fmt2(double? v) => v == null ? '-' : v.toStringAsFixed(2);
+
+/// 指標(整数。100が平均)。
+String fmtPlus(int? v) => v == null ? '-' : '$v';
 
 String fmtEra(double? v) => v == null ? '-' : v.toStringAsFixed(2);
 
@@ -101,6 +140,30 @@ String describeLine(Line l) {
     parts.add('$wl防御率${fmtEra(l.era)} 奪三振${l.strikeouts}');
   }
   return parts.join(' / ');
+}
+
+/// 1試合の中身を短く(「3打数2安打 1本塁打」「6回 被安打2 奪三振7」)。
+String describeGame(Line g) {
+  final parts = <String>[];
+  if (g.atBats + g.walks > 0) {
+    parts.add('${g.atBats}打数${g.hits}安打'
+        '${g.homeRuns > 0 ? ' ${g.homeRuns}本塁打' : ''}'
+        '${g.rbi > 0 ? ' ${g.rbi}打点' : ''}');
+  }
+  if (g.faced > 0) {
+    parts.add('${g.inningsText}回 被安打${g.hitsAllowed} 奪三振${g.strikeouts}');
+  }
+  return parts.join(' / ');
+}
+
+/// 試合を決めた(勝ち+個人の出来が際立った)試合か。ログに「★殊勲」を付ける目安。
+bool isHeroGame(Line g, {required bool won}) => won && g.rating >= 75;
+
+/// 勝ち抜き戦の呼び名。最後は決勝、その前は準決勝、あとは「N回戦」。
+String roundLabel(int index, int total) {
+  if (index == total - 1) return '決勝';
+  if (index == total - 2 && total >= 3) return '準決勝';
+  return '${index + 1}回戦';
 }
 
 /// プロのシーズン成績からタイトルを決める。規定は試合数に比例(打席は3.1/試合、投球回は0.7/試合)。
@@ -137,8 +200,12 @@ String careerSummary(List<SeasonRecord> rs) {
 int salaryOf(SeasonRecord r) {
   if (r.stage != Stage.pro) return 0;
   final base = 500 * pow(1.065, r.line.rating - 30);
-  final v = base * (1 + 0.15 * r.titles.length);
-  return ((v.clamp(400, 80000) / 10).round() * 10).toInt();
+  // 海外のリーグは年俸が桁違い(×2.5)。
+  final v = base *
+      (1 + 0.15 * r.titles.length) *
+      (r.overseas ? 2.5 : 1.0) *
+      (r.twoWay ? 1.4 : 1.0); // 二刀流は話題性で年俸が高い
+  return ((v.clamp(400, 200000) / 10).round() * 10).toInt();
 }
 
 /// 年俸の表記: 「1750万円」「2億3000万円」。
@@ -153,3 +220,29 @@ String fmtSalary(int man) {
 /// プロ通算の収入(万円)。
 int careerEarnings(List<SeasonRecord> rs) =>
     rs.fold(0, (a, r) => a + salaryOf(r));
+
+/// 人気(0〜100)。タイトル・優勝・日本代表・海外での活躍で上がる。古い年ほど薄れる。
+/// 保存せず、成績から計算する。
+int popularityOf(List<SeasonRecord> records, List<WorldRecord> world) {
+  if (records.isEmpty && world.isEmpty) return 0;
+  final last = [
+    ...records.map((r) => r.age),
+    ...world.map((w) => w.age),
+  ].reduce(max);
+  double fade(int age) => last - age <= 8 ? 1.0 : 0.5;
+  var v = 0.0;
+  for (final r in records) {
+    var x = 0.0;
+    x += r.titles.length * 4;
+    if (r.champion) x += r.isLeague ? 4 : 2;
+    if (r.isLeague && r.rank != null && r.rank! <= 3) x += 1;
+    if (r.overseas) x += 1;
+    if (r.twoWay) x += 1; // 二刀流はそれだけで注目される
+    if (r.stage == Stage.pro) x += 0.5; // プロにいるだけで知名度が少しある
+    v += x * fade(r.age);
+  }
+  for (final w in world) {
+    v += (w.champion ? 9 : 3) * fade(w.age);
+  }
+  return v.round().clamp(0, 100);
+}

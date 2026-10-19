@@ -6,6 +6,8 @@ import 'path.dart';
 import 'player.dart';
 import 'records.dart';
 import 'traits.dart';
+import 'flavor.dart';
+import 'world.dart';
 
 /// 選手情報の写し。育成中の選手も、殿堂に残った過去の選手も、同じ画面で見られるようにする。
 class PlayerSnapshot {
@@ -21,6 +23,7 @@ class PlayerSnapshot {
     required this.events,
     required this.overallHistory,
     this.proStartAge,
+    this.proTeam,
     this.endingTitle,
     this.rivalName,
     this.rivalWins = 0,
@@ -28,6 +31,13 @@ class PlayerSnapshot {
     this.difficulty = Difficulty.normal,
     this.married = false,
     this.route,
+    this.worldRecords = const [],
+    this.position,
+    this.overseasTeam,
+    this.parentName,
+    this.money = 0,
+    this.investTotal = 0,
+    this.rivalTalent,
   });
 
   final String name;
@@ -42,6 +52,9 @@ class PlayerSnapshot {
   final List<int> overallHistory;
   final int? proStartAge;
 
+  /// 入団した球団(架空)。プロ入りしていなければ null。
+  final String? proTeam;
+
   /// 引退済みなら称号(「一流選手」など)。
   final String? endingTitle;
   final String? rivalName;
@@ -54,6 +67,25 @@ class PlayerSnapshot {
 
   /// 選んだ進路(大学・社会人)。選んでいなければ null。
   final Course? route;
+
+  /// 日本代表として出た世界大会の結果。
+  final List<WorldRecord> worldRecords;
+
+  /// 自分で決めた守備位置・役割(決めていなければ null)。
+  final Pos? position;
+
+  /// 海外(アメリカ)でいま所属している球団。海外にいなければ null。
+  final String? overseasTeam;
+
+  /// 二世のとき、親の名前。
+  final String? parentName;
+
+  /// 資産(万円)と、投資のレベルの合計(最大9)。
+  final int money;
+  final int investTotal;
+
+  /// ライバルの素質(物語を作るのに使う)。
+  final int? rivalTalent;
 
   int of(Ability a) => abilities[a] ?? 0;
 
@@ -69,6 +101,7 @@ class PlayerSnapshot {
         events: List.of(g.lifeLog),
         overallHistory: List.of(g.overallHistory),
         proStartAge: g.proStartAge,
+        proTeam: g.proTeam,
         endingTitle: g.ending?.title,
         rivalName: g.cast.rival?.name,
         rivalWins: g.cast.rivalWins,
@@ -76,6 +109,13 @@ class PlayerSnapshot {
         difficulty: g.difficulty,
         married: g.ending?.married ?? false,
         route: g.route,
+        worldRecords: List.of(g.worldRecords),
+        position: g.position,
+        overseasTeam: g.overseas ? g.overseasTeam : null,
+        parentName: g.parentName,
+        money: g.money,
+        investTotal: g.invests.values.fold(0, (a, b) => a + b),
+        rivalTalent: g.cast.rival?.talent,
       );
 
   Map<String, dynamic> toJson() => {
@@ -90,6 +130,7 @@ class PlayerSnapshot {
         'events': [for (final e in events) e.toJson()],
         'overallHistory': overallHistory,
         'proStartAge': proStartAge,
+        'proTeam': proTeam,
         'endingTitle': endingTitle,
         'rivalName': rivalName,
         'rivalWins': rivalWins,
@@ -97,6 +138,13 @@ class PlayerSnapshot {
         'difficulty': difficulty.name,
         'married': married,
         'route': route?.name,
+        'worldRecords': [for (final r in worldRecords) r.toJson()],
+        'position': position?.name,
+        'overseasTeam': overseasTeam,
+        'parentName': parentName,
+        'money': money,
+        'investTotal': investTotal,
+        'rivalTalent': rivalTalent,
       };
 
   /// 項目を足すときは既定値を置く(殿堂の古い記録を壊さない)。
@@ -132,6 +180,7 @@ class PlayerSnapshot {
           (v as num).toInt(),
       ],
       proStartAge: (j['proStartAge'] as num?)?.toInt(),
+      proTeam: j['proTeam'] as String?,
       endingTitle: j['endingTitle'] as String?,
       rivalName: j['rivalName'] as String?,
       rivalWins: (j['rivalWins'] as num?)?.toInt() ?? 0,
@@ -139,6 +188,16 @@ class PlayerSnapshot {
       difficulty: Difficulty.parse(j['difficulty']),
       married: (j['married'] as bool?) ?? false,
       route: Course.values.where((c) => c.name == j['route']).firstOrNull,
+      worldRecords: [
+        for (final r in (j['worldRecords'] as List?) ?? const [])
+          WorldRecord.fromJson((r as Map).cast<String, dynamic>()),
+      ],
+      position: Pos.parse(j['position'] as String?),
+      overseasTeam: j['overseasTeam'] as String?,
+      parentName: j['parentName'] as String?,
+      money: (j['money'] as num?)?.toInt() ?? 0,
+      investTotal: (j['investTotal'] as num?)?.toInt() ?? 0,
+      rivalTalent: (j['rivalTalent'] as num?)?.toInt(),
     );
   }
 }

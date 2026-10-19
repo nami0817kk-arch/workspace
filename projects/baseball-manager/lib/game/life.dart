@@ -70,13 +70,13 @@ class Condition {
       Plan.rest => (scale: 0.05, fatigue: -40, morale: 5),
       Plan.study => (scale: 0.12, fatigue: 5, morale: 10),
       Plan.social => (scale: 0.03, fatigue: -10, morale: 20),
-      Plan.match => (scale: 0.17, fatigue: 20, morale: 0),
+      Plan.match => (scale: 0.11, fatigue: 20, morale: 0),
       Plan.lesson => (scale: 0.15, fatigue: 12, morale: 0),
     };
 
 /// 怪我の確率。疲れているほど、特訓ほど高い。
 double injuryChance(Condition c, Plan a, [Set<Trait> traits = const {}]) =>
-    (0.02 + c.fatigue / 100 * 0.15 + (a == Plan.special ? 0.10 : 0.0)) *
+    (0.02 + c.fatigue / 100 * 0.15 + (a == Plan.special ? 0.30 : 0.0)) *
     injuryMultiplier(traits);
 
 /// 練習の出来。同じ練習でも、うまくいく日と失敗する日がある。
@@ -138,6 +138,9 @@ TermResult playTerm(
   Ability focus,
   Random rng, {
   double share = 1.0,
+  double trainBonus = 1.0,
+  double recoveryBonus = 1.0,
+  double injuryFactor = 1.0,
 }) {
   if (c.injured) {
     return TermResult(
@@ -155,7 +158,11 @@ TermResult playTerm(
   for (final a in abilitiesOf(p.role)) {
     // 練習試合は特定の能力に偏らない。
     final f = action == Plan.match ? a : focus;
-    final x = yearlyDelta(p, a, f) * e.scale * share;
+    var x = yearlyDelta(p, a, f) *
+        e.scale *
+        share *
+        (action == Plan.study ? studyMultiplier(p.traits) : 1.0);
+    if (x > 0) x *= trainBonus; // 投資(専属トレーナー)
     if (x >= 0) {
       final cat = categoryOf(a);
       gained[cat] = (gained[cat] ?? 0) +
@@ -170,11 +177,13 @@ TermResult playTerm(
   // 失敗した日は怪我もしやすい。
   final hurt = rng.nextDouble() <
       injuryChance(c, action, p.traits) *
+          injuryFactor *
           share *
           (outcome == Outcome.bad ? 1.5 : 1.0);
   final dFatigue = e.fatigue > 0
       ? (e.fatigue * fatigueMultiplier(p.traits) * share).round()
-      : (e.fatigue * share).round();
+      : (e.fatigue * recoveryMultiplier(p.traits) * recoveryBonus * share)
+          .round();
   var dMorale = e.morale > 0
       ? (e.morale * moraleGainMultiplier(p.traits) * share).round()
       : (e.morale * moraleLossMultiplier(p.traits) * share).round();
@@ -230,13 +239,17 @@ class EventChoice {
 }
 
 class GameEvent {
-  const GameEvent(this.id, this.text, this.choices, {this.when});
+  const GameEvent(this.id, this.text, this.choices,
+      {this.when, this.weight = 1.0});
   final String id;
   final String text;
   final List<EventChoice> choices;
 
   /// 起きる条件。省略なら誰にでも起きうる。
   final bool Function(Stage stage, Cast cast)? when;
+
+  /// 選ばれやすさ(既定1)。足した出来事は低くして、既存の出来事の頻度を薄めない。
+  final double weight;
 }
 
 Player _gain(Player p, Ability a, int n) {
@@ -316,7 +329,10 @@ final List<GameEvent> events = [
         ),
         EventChoice(
           '練習があるから断る',
-          (p, c, f) => (player: p, condition: c.copyWith(morale: c.morale - 3)),
+          (p, c, f) => (
+            player: _gain(p, f, 1),
+            condition: c.copyWith(fatigue: c.fatigue + 8, morale: c.morale - 3)
+          ),
           (cast, rng) => cast.lover?.addBond(-6),
         ),
       ],
@@ -333,8 +349,10 @@ final List<GameEvent> events = [
         ),
         EventChoice(
           '急いで練習へ向かう',
-          (p, c, f) =>
-              (player: p, condition: c.copyWith(fatigue: c.fatigue + 5)),
+          (p, c, f) => (
+            player: _gain(p, f, 1),
+            condition: c.copyWith(fatigue: c.fatigue + 5)
+          ),
           (cast, rng) => cast.family?.addBond(-3),
         ),
       ],
@@ -826,7 +844,7 @@ final List<GameEvent> events = [
     ),
     EventChoice(
       '大事にしまっておく',
-      (p, c, f) => (player: p, condition: c.copyWith(morale: c.morale + 3)),
+      (p, c, f) => (player: p, condition: c.copyWith(morale: c.morale + 8)),
     ),
   ]),
   GameEvent(
@@ -843,11 +861,189 @@ final List<GameEvent> events = [
         ),
         EventChoice(
           '気持ちだけ受け取る',
-          (p, c, f) => (player: p, condition: c.copyWith(morale: c.morale + 2)),
+          (p, c, f) => (
+            player: _gain(p, f, 1),
+            condition: c.copyWith(fatigue: c.fatigue + 3, morale: c.morale + 2)
+          ),
           (cast, rng) => cast.lover?.addBond(-2),
         ),
       ],
       when: (stage, cast) => cast.lover != null),
+  GameEvent(
+      'interview',
+      '雑誌の取材を申し込まれた。',
+      [
+        EventChoice(
+            '受ける',
+            (p, c, f) => (
+                  player: p,
+                  condition:
+                      c.copyWith(morale: c.morale + 8, fatigue: c.fatigue + 5)
+                )),
+        EventChoice(
+            '練習に集中する',
+            (p, c, f) =>
+                (player: p, condition: c.copyWith(morale: c.morale + 2))),
+      ],
+      when: (stage, cast) => stage == Stage.pro,
+      weight: 0.5),
+  GameEvent(
+      'baseball-class',
+      '少年野球教室に呼ばれた。',
+      [
+        EventChoice(
+            '喜んで行く',
+            (p, c, f) => (
+                  player: p,
+                  condition:
+                      c.copyWith(morale: c.morale + 12, fatigue: c.fatigue + 8)
+                )),
+        EventChoice(
+            'オフに回してもらう',
+            (p, c, f) =>
+                (player: p, condition: c.copyWith(fatigue: c.fatigue - 5))),
+      ],
+      when: (stage, cast) => stage == Stage.pro,
+      weight: 0.5),
+  GameEvent(
+      'old-coach',
+      '小さいころのコーチが、試合を見に来てくれた。',
+      [
+        EventChoice(
+            'お礼を伝える',
+            (p, c, f) =>
+                (player: p, condition: c.copyWith(morale: c.morale + 12))),
+        EventChoice(
+            'アドバイスをもらう',
+            (p, c, f) => (
+                  player: _gain(p, f, 1),
+                  condition: c.copyWith(morale: c.morale + 5)
+                )),
+      ],
+      when: (stage, cast) => stage == Stage.highSchool || stage == Stage.pro,
+      weight: 0.5),
+  GameEvent(
+      'school-festival',
+      '学校のお祭りで、友だちと思い出をつくった。',
+      [
+        EventChoice(
+            '思いきり楽しむ',
+            (p, c, f) => (
+                  player: p,
+                  condition:
+                      c.copyWith(morale: c.morale + 12, fatigue: c.fatigue + 5)
+                )),
+        EventChoice(
+            '少しだけ顔を出す',
+            (p, c, f) =>
+                (player: p, condition: c.copyWith(morale: c.morale + 4))),
+      ],
+      when: (stage, cast) =>
+          stage == Stage.juniorHigh || stage == Stage.highSchool,
+      weight: 0.5),
+  GameEvent(
+      'captain',
+      '最上級生になり、主将に推薦された。',
+      [
+        EventChoice(
+            '引き受ける',
+            (p, c, f) => (
+                  player: p,
+                  condition:
+                      c.copyWith(morale: c.morale + 10, fatigue: c.fatigue + 8)
+                )),
+        EventChoice(
+            'プレーに専念したい',
+            (p, c, f) =>
+                (player: p, condition: c.copyWith(morale: c.morale + 2))),
+      ],
+      when: (stage, cast) => stage == Stage.highSchool,
+      weight: 0.5),
+  GameEvent(
+      'summer-camp',
+      '夏の合宿に誘われた。',
+      [
+        EventChoice(
+            '最後まで参加する',
+            (p, c, f) => (
+                  player: _gain(p, f, 2),
+                  condition: c.copyWith(fatigue: c.fatigue + 15)
+                )),
+        EventChoice(
+            '一部だけ参加する',
+            (p, c, f) => (
+                  player: _gain(p, f, 1),
+                  condition: c.copyWith(fatigue: c.fatigue + 5)
+                )),
+      ],
+      when: (stage, cast) =>
+          stage == Stage.youth ||
+          stage == Stage.juniorHigh ||
+          stage == Stage.highSchool,
+      weight: 0.5),
+  GameEvent(
+      'road-trip',
+      '遠征先で、地元の名物をごちそうになった。',
+      [
+        EventChoice(
+            'おいしくいただく',
+            (p, c, f) => (
+                  player: p,
+                  condition:
+                      c.copyWith(morale: c.morale + 10, fatigue: c.fatigue - 5)
+                )),
+        EventChoice(
+            '体調管理のため控える',
+            (p, c, f) => (
+                  player: p,
+                  condition:
+                      c.copyWith(fatigue: c.fatigue - 8, morale: c.morale + 3)
+                )),
+      ],
+      when: (stage, cast) => stage == Stage.pro,
+      weight: 0.5),
+  GameEvent(
+      'junior-advice',
+      '後輩が悩みを相談してきた。',
+      [
+        EventChoice(
+            'じっくり話を聞く',
+            (p, c, f) => (
+                  player: p,
+                  condition:
+                      c.copyWith(morale: c.morale + 8, fatigue: c.fatigue + 3)
+                )),
+        EventChoice(
+            '自分で考えろと伝える',
+            (p, c, f) =>
+                (player: p, condition: c.copyWith(morale: c.morale + 1))),
+      ],
+      when: (stage, cast) => stage == Stage.pro || stage == Stage.highSchool,
+      weight: 0.5),
+  GameEvent(
+      'form-change',
+      'フォームを思い切って変えてみないかと言われた。',
+      [
+        EventChoice.risky('挑戦する', (p, c, f, rng) {
+          if (rng.nextDouble() < 0.5) {
+            return (
+              player: _gain(p, f, 3),
+              condition:
+                  c.copyWith(morale: c.morale + 8, fatigue: c.fatigue + 8)
+            );
+          }
+          return (
+            player: p,
+            condition: c.copyWith(morale: c.morale - 8, fatigue: c.fatigue + 8)
+          );
+        }),
+        EventChoice(
+            '今のフォームを信じる',
+            (p, c, f) =>
+                (player: p, condition: c.copyWith(morale: c.morale + 4))),
+      ],
+      when: (stage, cast) => stage != Stage.youth,
+      weight: 0.5),
 ];
 
 /// 出来事の起きる確率(1季節あたり)。
@@ -880,5 +1076,11 @@ GameEvent? drawEvent(Random rng,
     ];
   }
   final from = fresh.isEmpty ? pool : fresh;
-  return from[rng.nextInt(from.length)];
+  final total = from.fold<double>(0, (a, e) => a + e.weight);
+  var x = rng.nextDouble() * total;
+  for (final e in from) {
+    x -= e.weight;
+    if (x < 0) return e;
+  }
+  return from.last;
 }

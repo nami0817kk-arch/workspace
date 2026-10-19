@@ -4,9 +4,20 @@ import '../game/achievements.dart';
 import 'controller.dart';
 
 /// 実績の一覧。解除したものは色がつき、未解除は条件を見せたまま灰色。
-class AchievementsScreen extends StatelessWidget {
+class AchievementsScreen extends StatefulWidget {
   const AchievementsScreen({super.key, required this.controller});
   final GameController controller;
+
+  @override
+  State<AchievementsScreen> createState() => _AchievementsScreenState();
+}
+
+/// 表示の絞りこみ。
+enum _Filter { all, done, todo }
+
+class _AchievementsScreenState extends State<AchievementsScreen> {
+  _Filter _filter = _Filter.all;
+  GameController get controller => widget.controller;
 
   @override
   Widget build(BuildContext context) {
@@ -42,8 +53,23 @@ class AchievementsScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 8),
+                  SegmentedButton<_Filter>(
+                    key: const Key('ach-filter'),
+                    showSelectedIcon: false,
+                    segments: const [
+                      ButtonSegment(value: _Filter.all, label: Text('すべて')),
+                      ButtonSegment(value: _Filter.done, label: Text('解除済み')),
+                      ButtonSegment(value: _Filter.todo, label: Text('未解除')),
+                    ],
+                    selected: {_filter},
+                    onSelectionChanged: (s) =>
+                        setState(() => _filter = s.first),
+                  ),
+                  const SizedBox(height: 8),
                   for (final a in achievements)
-                    _Tile(a: a, unlocked: done.contains(a.id)),
+                    if (_filter == _Filter.all ||
+                        (_filter == _Filter.done) == done.contains(a.id))
+                      _Tile(a: a, unlocked: done.contains(a.id)),
                 ],
               ),
             ),

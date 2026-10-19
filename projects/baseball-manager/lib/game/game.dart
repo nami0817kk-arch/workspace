@@ -11,9 +11,18 @@ import 'difficulty.dart';
 import 'goals.dart';
 import 'life_log.dart';
 import 'records.dart';
+import 'flavor.dart';
+import 'childhood.dart';
+import 'invest.dart';
+import 'rival_story.dart';
+import 'school.dart';
+import 'snapshot.dart';
+import 'world.dart';
 import 'season.dart';
-import 'tactics.dart';
+import 'awards.dart';
+import 'marks.dart';
 import 'traits.dart';
+import 'training.dart' show abilityCap;
 
 /// いま何を待っているか。画面はこれを見て出すものを決める。
 enum Phase {
@@ -24,6 +33,20 @@ enum Phase {
 }
 
 /// 引退時のまとめ。
+/// プロの年のはじめの、オフの過ごし方。
+enum Offseason {
+  camp('自主トレ', '疲れ+12。重点の能力の経験点+8。'),
+  family('家族旅行', '疲れ-20、やる気+20。'),
+  rehab('治療・調整', '疲れ-15。怪我中なら治りが1か月早まる。');
+
+  const Offseason(this.label, this.description);
+  final String label;
+  final String description;
+}
+
+/// FA(フリーエージェント)の決断。
+enum FaChoice { stay, contender, cash }
+
 class Ending {
   const Ending({
     required this.title,
@@ -68,19 +91,41 @@ class Game {
     required Random rng,
     int? potential,
     Difficulty difficulty = Difficulty.normal,
+    PlayerSnapshot? parent,
   }) {
+    // 二世: 親の素質を受け継ぎ(半分は親ゆずり)、良い特性を1つもらえることがある。
+    final pot = potential ??
+        (parent == null
+            ? 30 + rng.nextInt(61)
+            : ((parent.potential * 0.5 + (30 + rng.nextInt(61)) * 0.5) + 8)
+                .round()
+                .clamp(0, 100));
+    var traits = rollInnateTraits(rng, role);
+    if (parent != null && rng.nextDouble() < 0.6) {
+      final cands = [
+        for (final t in parent.traits)
+          if (t.positive && t.appliesTo(role) && canGain(traits, t)) t
+      ];
+      if (cands.isNotEmpty) {
+        traits = gain(traits, cands[rng.nextInt(cands.length)]);
+      }
+    }
     final p = Player(
       name: name,
       role: role,
       age: startAge,
-      potential: potential ?? 30 + rng.nextInt(61),
+      potential: pot,
       abilities: {for (final a in abilitiesOf(role)) a: 15},
-      traits: rollInnateTraits(rng),
+      traits: traits,
     );
     final g = Game._(rng, p, Cast.initial(rng, role, p.traits), difficulty)
-      .._wasTwoWay = role == Role.twoWay;
+      .._wasTwoWay = role == Role.twoWay
+      ..parentName = parent?.name;
     g.overallHistory.add(overall(p).round());
     g._note('stage', '${stageNameOf(Stage.youth)}を始めた');
+    if (parent != null) {
+      g._note('stage', '${parent.name}の子として生まれた(二世)');
+    }
     g._newGoal();
     return g;
   }
@@ -123,8 +168,204 @@ class Game {
   /// 入団した球団(架空)。プロ入りしてから。
   String? proTeam;
 
+  /// プロのシーズンの途中経過(月ごとに進む)。シーズンが終わったら null に戻る。
+  LeagueProgress? seasonProgress;
+
+  /// 資産(万円)。プロの年俸が貯まり、投資に使える。
+  int money = 0;
+
+  /// 投資のレベル(0〜3)。
+  final Map<Invest, int> invests = {};
+
+  int investLevel(Invest i) => invests[i] ?? 0;
+
+  /// 投資できる時: プロの間の、行動を選ぶ時。
+  bool get canInvest => stage == Stage.pro && phase == Phase.term;
+
+  /// 投資する。資産が足りない・最大レベルなら false。
+  bool buyInvest(Invest i) {
+    if (!canInvest) throw StateError('いまは投資できない');
+    final cost = investCost(investLevel(i));
+    if (cost == null || money < cost) return false;
+    money -= cost;
+    invests[i] = investLevel(i) + 1;
+    log.add('${i.label}に投資した(Lv${invests[i]})。');
+    _note('invest', '${i.label}に投資(Lv${invests[i]})');
+    return true;
+  }
+
+  /// 二世のとき、親の名前(殿堂の選手)。
+  String? parentName;
+
+  /// 海外(アメリカ)のリーグでプレーしているか。移籍の判断はプロの間、年の最初だけ。
+  bool overseas = false;
+
+  /// 海外での所属(架空の球団)。
+  String? overseasTeam;
+
+  /// 自分で決めた守備位置・役割。決めていなければ null(適性がいちばん高い所を守る)。
+  Pos? position;
+
+  /// 実際に守るポジション。
+  Pos get effectivePos => effectivePosition(player, position);
+
+  /// 海外(アメリカ)へ移籍できる時: プロの24歳以上・総合評価70以上・年の最初。すでに海外なら不可。
+  bool get canMoveOverseas =>
+      phase == Phase.term &&
+      slot == 0 &&
+      stage == Stage.pro &&
+      !overseas &&
+      player.age >= 24 &&
+      overall(player) >= 70;
+
+  /// チーム移籍による、チーム力の増減(強豪へ+3、高額オファーの再建チーム-2)。
+  int teamBoost = 0;
+  bool faUsed = false;
+
+  int get _proYears => records.where((r) => r.stage == Stage.pro).length;
+
+  /// FA権を使える時: プロ8年目以降・国内・年の最初。一生に一度。
+  bool get canUseFa =>
+      phase == Phase.term &&
+      slot == 0 &&
+      stage == Stage.pro &&
+      !overseas &&
+      !faUsed &&
+      _proYears >= 8;
+
+  /// FA権を使う。残留(やる気+8)、強豪へ移籍(チーム力+3・契約金4000万・やる気-6)、
+  /// 高額オファー(再建中のチームへ・チーム力-2・契約金1億)。
+  void useFa(FaChoice c) {
+    _require(Phase.term);
+    if (!canUseFa) throw StateError('いまはFA権を使えない');
+    faUsed = true;
+    if (c == FaChoice.stay) {
+      condition = condition.copyWith(morale: condition.morale + 8);
+      log.add('FA権を行使せず、${proTeam ?? '今のチーム'}に残留した。');
+      _note('team', 'FA権を行使せず残留');
+      return;
+    }
+    final others = [
+      for (final t in draftTeams)
+        if (t != proTeam) t
+    ];
+    final next = others[rng.nextInt(others.length)];
+    proTeam = next;
+    if (c == FaChoice.contender) {
+      teamBoost = 3;
+      money += 4000;
+      condition = condition.copyWith(morale: condition.morale - 6);
+      log.add('FA宣言! 強豪の$nextに移籍した(契約金4000万円)。');
+    } else {
+      teamBoost = -2;
+      money += 10000;
+      log.add('FA宣言! 高額オファーを受けて$nextに移籍した(契約金1億円)。');
+    }
+    _note('team', 'FAで$nextに移籍');
+    _newGoal();
+  }
+
+  /// 進学先(中学・高校)。入学の年に選ぶ。段階が変わると地元の学校に戻る。
+  School school = School.local;
+
+  bool get canChooseSchool =>
+      phase == Phase.term &&
+      slot == 0 &&
+      (stage == Stage.juniorHigh || stage == Stage.highSchool) &&
+      stageOf(player.age - 1) != stage;
+
+  void chooseSchool(School s) {
+    _require(Phase.term);
+    if (!canChooseSchool) throw StateError('いまは進学先を決められない');
+    school = s;
+    log.add('${s.label}に進んだ。${s.description}');
+    _note('stage', '${s.label}に入学');
+  }
+
+  bool offseasonDone = false;
+
+  bool get canChooseOffseason =>
+      phase == Phase.term && slot == 0 && stage == Stage.pro && !offseasonDone;
+
+  /// オフの過ごし方を決める(年に1度。選ばなくてもよい)。`focus` は自主トレで伸ばす能力。
+  void chooseOffseason(Offseason o, Ability focus) {
+    _require(Phase.term);
+    if (!canChooseOffseason) throw StateError('いまはオフの過ごし方を決められない');
+    offseasonDone = true;
+    switch (o) {
+      case Offseason.camp:
+        condition = condition.copyWith(fatigue: condition.fatigue + 12);
+        if (abilitiesOf(player.role).contains(focus)) {
+          exp = exp.add({categoryOf(focus): 8});
+        }
+        log.add('${_abilityJp(focus)}を鍛える自主トレに励んだ。');
+      case Offseason.family:
+        condition = condition.copyWith(
+            fatigue: condition.fatigue - 20, morale: condition.morale + 20);
+        log.add('家族とゆっくり過ごして、英気を養った。');
+      case Offseason.rehab:
+        condition = condition.copyWith(
+          fatigue: condition.fatigue - 15,
+          injuredTerms: max(0, condition.injuredTerms - 1),
+        );
+        log.add('体のケアと調整に専念した。');
+    }
+  }
+
+  /// 日本に戻れる時: 海外にいて、プロの年の最初。
+  bool get canReturnHome =>
+      phase == Phase.term && slot == 0 && stage == Stage.pro && overseas;
+
+  /// 海外のリーグへ移籍する。相手が強い環境で、年俸は桁違い(×2.5)。慣れない環境で気持ちが下がる。
+  void moveOverseas() {
+    _require(Phase.term);
+    if (!canMoveOverseas) throw StateError('いまは海外へ移籍できない');
+    overseas = true;
+    overseasTeam = overseasTeams[rng.nextInt(overseasTeams.length)];
+    condition = condition.copyWith(morale: condition.morale - 8);
+    log.add('海を渡った! アメリカの$overseasTeamに移籍する。');
+    _note('overseas', 'アメリカの$overseasTeamに移籍');
+    _newGoal(); // 相手が強くなるので、目標も立て直す
+  }
+
+  /// 日本のリーグに戻る。
+  void returnHome() {
+    _require(Phase.term);
+    if (!canReturnHome) throw StateError('いまは日本に戻れない');
+    overseas = false;
+    condition = condition.copyWith(morale: condition.morale + 6);
+    log.add('日本のリーグに復帰した。');
+    _note('overseas', '日本のリーグに復帰');
+    _newGoal();
+  }
+
+  /// ポジションを決められる時: 中学・高校・進路(大学・社会人)の最初の年と、プロの毎年の最初。
+  bool get canChoosePosition {
+    if (phase != Phase.term || slot != 0) return false;
+    if (stage == Stage.pro) return true;
+    if (stage == Stage.youth || stage == Stage.retired) return false;
+    return stageOf(player.age - 1) != stageOf(player.age);
+  }
+
+  /// ポジションを決める。決められる時だけ。選べないポジション(役割に合わない)は拒否。
+  void choosePosition(Pos pos) {
+    _require(Phase.term);
+    if (!canChoosePosition) throw StateError('いまはポジションを決められない');
+    if (!positionsFor(player.role).contains(pos)) {
+      throw ArgumentError('この役割では選べない: ${pos.label}');
+    }
+    position = pos;
+    final adj = positionTeamAdjust(player, pos);
+    log.add('ポジションを${pos.label}に決めた。'
+        '${adj == 0 ? '' : '(適性が低く、チーム力$adj)'}');
+    _note('position', 'ポジションを${pos.label}に決めた');
+  }
+
   /// 年ごとの成績(大会・シーズン)。成績画面とエンディングに出す。
   final List<SeasonRecord> records = [];
+
+  /// 日本代表として出た世界大会(U-12・U-15・U-18・U-23・プロ)の結果。
+  final List<WorldRecord> worldRecords = [];
 
   /// 直前に起きた出来事(同じものが続かないようにする)。
   String? _lastEventId;
@@ -135,8 +376,26 @@ class Game {
   /// 今年の目標。年の初めに決まり、大会(プロはシーズン)の成績で達成かどうかが決まる。
   Goal? goal;
 
-  /// 大会・シーズン最終月の作戦。その大会が終わると「堅実」に戻る。
-  Tactic tactic = Tactic.steady;
+  /// これまでに行動した回数と、コーチから「多くを学んだ」ときの回数(ボーナスの大きさに使う)。
+  int turnCount = 0;
+  int lastCoachTurn = 0;
+
+  /// 今年の練習(練習・特訓)と休養の回数。年末にログに出して戻す。
+  /// 今季ここまでの月ごとの成績(4〜9月)。シーズンの記録に写して空にする。
+  List<String> monthRows = [];
+  int trainCount = 0;
+
+  /// 幼少期の分かれ道で選んだもの(出来事のid → 選択肢の番号)。
+  final Map<String, int> childhood = {};
+  int restCount = 0;
+
+  /// 同じ能力を重点に練習・特訓を続けた回数(継続は力なり)。
+  int focusStreak = 0;
+  Ability? lastFocus;
+
+  /// 継続ボーナスの倍率: 3回続けて+2%、6回続けて+4%。
+  double get streakBonus =>
+      focusStreak >= 6 ? 1.04 : (focusStreak >= 3 ? 1.02 : 1.0);
 
   /// 人生の節目(入学・進路・ドラフト・特性の習得・転向・引退)。経歴の年表に出す。
   final List<LifeEvent> lifeLog = [];
@@ -155,6 +414,28 @@ class Game {
         ? achievements.sublist(achievements.length - 3)
         : achievements;
     return r.reduce((a, b) => a + b) / r.length;
+  }
+
+  /// ドラフトの見込み(運は含めない目安)。指名の前の年・再挑戦の間だけ。
+  String? get draftOutlook {
+    if (turnedPro || phase != Phase.term) return null;
+    final inWindow =
+        route != null || (stage == Stage.highSchool && player.age >= 17);
+    if (!inWindow) return null;
+    final margin = draftScore(player, recentAchievement) +
+        draftImpression(childhood) -
+        (draftLine + difficulty.draftShift);
+    if (margin >= 10) return 'ほぼ確実';
+    if (margin >= 3) return '有望';
+    if (margin >= -3) return '五分五分';
+    if (margin >= -10) return '厳しい';
+    return 'かなり厳しい';
+  }
+
+  /// プロで、総合が低い年が続いているときの、戦力外までの残り年数。なければ null。
+  int? get releaseWarning {
+    if (!turnedPro || lowYears <= 0 || phase == Phase.retired) return null;
+    return releaseYears - lowYears;
   }
 
   // ── ターンの選択 ──
@@ -177,11 +458,43 @@ class Game {
     }
     final share = slotShare(stage);
     final wasInjured = condition.injured;
-    final r = playTerm(player, condition, action, f, rng, share: share);
+    turnCount++;
+    final r = playTerm(player, condition, action, f, rng,
+        share: share,
+        trainBonus: trainerMultiplier(investLevel(Invest.trainer)),
+        recoveryBonus: dietitianMultiplier(investLevel(Invest.dietitian)),
+        injuryFactor: medicalFactor(investLevel(Invest.medical)));
     player = r.player;
     condition = r.condition;
     // _afterCast が経験点(コーチのボーナス)を直接足すことがあるので、先に評価する。
     var gained = wasInjured ? r.exp : _afterCast(action, f, r.exp);
+    if (school.expMultiplier != 1.0 && gained.isNotEmpty) {
+      gained = {
+        for (final e in gained.entries)
+          e.key: (e.value * school.expMultiplier).round(),
+      };
+    }
+    if (school.fatigue > 0) {
+      condition =
+          condition.copyWith(fatigue: condition.fatigue + school.fatigue);
+    }
+    if (!wasInjured && (action == Plan.train || action == Plan.special)) {
+      focusStreak = (lastFocus == f) ? focusStreak + 1 : 1;
+      lastFocus = f;
+      if (focusStreak == 6 && rng.nextDouble() < 0.25) {
+        // 継続の先に開眼する(その能力が少し跳ねる)。
+        player = player.copyWith(abilities: {
+          ...player.abilities,
+          f: (player.of(f) + 2).clamp(0, abilityCap),
+        });
+        log.add('${_abilityJp(f)}を鍛え続けた先に、開眼した!(+2)');
+        _note('trait', '${_abilityJp(f)}に開眼');
+      }
+      final k = categoryOf(f);
+      if (streakBonus > 1 && gained[k] != null) {
+        gained = {...gained, k: (gained[k]! * streakBonus).round()};
+      }
+    }
     if (difficulty != Difficulty.normal) {
       gained = {
         for (final e in gained.entries)
@@ -191,15 +504,31 @@ class Game {
     exp = exp.add(gained);
     lastGain = gained;
     lastOutcome = wasInjured ? Outcome.normal : r.outcome;
-    if (r.gotInjured) log.add('怪我をしてしまった。');
-    if (isTournamentSlot(stage, slot)) _playSummer();
+    if (action == Plan.train || action == Plan.special) trainCount++;
+    if (action == Plan.rest) restCount++;
+    if (r.gotInjured) {
+      _note('injury', injuryNameOf(player.age, slot));
+    }
+    if (r.gotInjured) {
+      log.add('怪我をしてしまった(${injuryNameOf(player.age, slot)})。');
+    }
+    if (isTournamentSlot(stage, slot)) {
+      _playSummer();
+    } else if (stage == Stage.pro && slot < 6) {
+      _playLeagueMonth();
+    }
 
-    final e = drawEvent(rng,
-        share: share,
-        stage: stage,
-        cast: cast,
-        exclude: _lastEventId,
-        recent: _recentEvents.toSet());
+    // 幼少期の分かれ道は、その歳の2回目の行動のあとに必ず出る(くじでは出ない)。
+    final kid = stage != Stage.pro && stage != Stage.retired
+        ? childhoodStepFor(player.age, childhood, slot)?.event
+        : null;
+    final e = kid ??
+        drawEvent(rng,
+            share: share,
+            stage: stage,
+            cast: cast,
+            exclude: _lastEventId,
+            recent: _recentEvents.toSet());
     if (e == null) {
       _nextSlot();
     } else {
@@ -215,6 +544,12 @@ class Game {
   void resolveEvent(int index) {
     _require(Phase.event);
     final ch = pendingEvent!.choices[index];
+    if (childhoodStepById(pendingEvent!.id) != null) {
+      childhood[pendingEvent!.id] = index;
+      final note = childhoodStepById(pendingEvent!.id)!.notes[index];
+      _note('childhood', note);
+      log.add('${player.age}歳の分かれ道: $note。');
+    }
     final before = player.traits;
     final r = ch.risky != null
         ? ch.risky!(player, condition, _eventFocus, rng)
@@ -255,17 +590,6 @@ class Game {
     final r = autoSpendExp(player, exp);
     player = r.player;
     exp = r.pool;
-  }
-
-  /// 大会・シーズン最終月の作戦を選ぶ。
-  void setTactic(Tactic t) {
-    tactic = t;
-  }
-
-  /// 大会(プロはシーズン最終月)の前後か。作戦を選ぶ画面を出す目安。
-  bool get tacticRelevant {
-    final t = stage == Stage.pro ? 6 : (isMonthly(stage) ? 3 : 1);
-    return slot >= t - 1 && slot <= t;
   }
 
   /// プロの間はいつでも役割を変えられる(二刀流にする/戻す)。
@@ -351,6 +675,17 @@ class Game {
 
   // ── 内部 ──
 
+  String _abilityJp(Ability a) => switch (a) {
+        Ability.contact => 'ミート',
+        Ability.power => 'パワー',
+        Ability.speed => '走力',
+        Ability.fielding => '守備',
+        Ability.eye => '選球眼',
+        Ability.stuff => '球威',
+        Ability.control => '制球',
+        Ability.stamina => 'スタミナ',
+      };
+
   /// 友情タッグ・コーチ・恋人/家族への影響。経験点の量を返す。
   Map<Category, int> _afterCast(
       Plan action, Ability focus, Map<Category, int> gained) {
@@ -363,7 +698,8 @@ class Game {
       final mate = cast.pickTagMate(focus, rng);
       if (mate != null) {
         for (final k in out.keys.toList()) {
-          out[k] = (out[k]! * tagMultiplier).round();
+          out[k] = (out[k]! * tagMultiplier * tagTraitMultiplier(player.traits))
+              .round();
         }
         mate.addBond(8);
         log.add('${mate.name}と友情タッグ練習!');
@@ -393,7 +729,10 @@ class Game {
       log.add('${coach.name}のコツをつかんだ! 特性「${t.label}」を習得。');
       _note('trait', '特性「${t.label}」を習得(コーチ ${coach.name})');
     } else {
-      exp = exp.add(spreadExp(player.role, 40));
+      // 学びのボーナスは、前の学びからの間があくほど大きい(コーチばかりが最善にならないように)。
+      final bonus = min(40, 3 * (turnCount - lastCoachTurn));
+      lastCoachTurn = turnCount;
+      exp = exp.add(spreadExp(player.role, bonus));
       log.add('${coach.name}から多くを学んだ。(経験点を獲得)');
     }
   }
@@ -402,7 +741,26 @@ class Game {
     if (phase != p) throw StateError('いまは ${phase.name} の段階: ${p.name} は選べない');
   }
 
-  ({int team, List<int> opponents}) get _league => switch (stage) {
+  ({int team, List<int> opponents}) get _league => _leagueBase(stage);
+
+  ({int team, List<int> opponents}) _leagueBase(Stage st) {
+    final raw = _leagueRaw(st);
+    final b = st == Stage.pro
+        ? (team: raw.team + teamBoost, opponents: raw.opponents)
+        : (st == Stage.juniorHigh || st == Stage.highSchool)
+            ? (
+                team: raw.team + school.teamAdjust + spiritBoost(childhood),
+                opponents: raw.opponents
+              )
+            : raw;
+    if (overseas && st == Stage.pro) {
+      // 海外は相手が強く(+3)。
+      return (team: b.team, opponents: [for (final o in b.opponents) o + 3]);
+    }
+    return b;
+  }
+
+  ({int team, List<int> opponents}) _leagueRaw(Stage stage) => switch (stage) {
         Stage.youth => (team: 35, opponents: const [25, 30, 35, 40]),
         Stage.juniorHigh => (team: 42, opponents: const [32, 38, 44, 50]),
         Stage.highSchool => (team: 50, opponents: const [40, 46, 52, 58, 64]),
@@ -428,24 +786,135 @@ class Game {
     if (g == null || g.achieved != null) return;
     g.achieved = g.judge(r);
     if (g.achieved!) {
-      final n = goalRewardExp(stage);
+      final n = goalExpFor(stage, g.level);
       exp = exp.add(spreadExp(player.role, n));
-      condition =
-          condition.copyWith(morale: condition.morale + goalRewardMorale);
+      condition = condition.copyWith(
+          morale: condition.morale + goalMoraleReward[g.level]);
       log.add('今年の目標「${g.text}」を達成! 経験点+$n(全種類)');
     } else {
-      condition = condition.copyWith(morale: condition.morale + goalMissMorale);
+      condition = condition.copyWith(
+          morale: condition.morale + goalMoraleMiss[g.level]);
       log.add('今年の目標「${g.text}」には届かなかった。');
     }
+  }
+
+  /// 目標のむずかしさを選べる時(年の最初の行動の前)。
+  bool get canChooseGoal =>
+      goal != null &&
+      goal!.achieved == null &&
+      phase == Phase.term &&
+      slot == 0;
+
+  /// 目標のむずかしさを変える(0=やさしい / 1=ふつう / 2=むずかしい)。年の最初の行動の前だけ。
+  void chooseGoalLevel(int level) {
+    _require(Phase.term);
+    if (!canChooseGoal) throw StateError('いまは目標を選べない');
+    if (level < 0 || level > 2) throw ArgumentError('level $level');
+    goal = goal!.withLevel(level, maxRounds: _league.opponents.length);
+  }
+
+  /// プロのシーズンの1か月ぶん(約20試合)を進める。怪我中は自分は出られない。
+  void _playLeagueMonth() {
+    final l = _league;
+    final team = l.team +
+        traitTeamBonus(player.traits) +
+        positionTeamAdjust(player, effectivePos);
+    final prev = seasonProgress ?? const LeagueProgress();
+    // この1か月だけの成績を出してから、これまでに足す(月間の成績を見せるため)。
+    final month = playLeagueChunk(
+      traitAdjusted(player),
+      LeagueProgress(games: prev.games),
+      teamLevel: team,
+      opponents: l.opponents,
+      rng: rng,
+      count: 20,
+      condition: condition.value,
+      available: !condition.injured,
+    );
+    seasonProgress = LeagueProgress(
+      games: month.games,
+      wins: prev.wins + month.wins,
+      losses: prev.losses + month.losses,
+      line: prev.line + month.line,
+      missed: prev.missed + month.missed,
+    );
+    _monthlyReport(month);
+  }
+
+  /// 月ごとの成績をログに残す。出来が飛び抜けていれば「月間MVP」。
+  void _monthlyReport(LeagueProgress m) {
+    _allStar();
+    final d = describeLine(m.line);
+    if (m.missed >= 20) {
+      monthRows.add('$slotName: 怪我で全休 / ${m.wins}勝${m.losses}敗');
+      log.add('$slotName: 怪我で全試合を欠場。チームは${m.wins}勝${m.losses}敗。');
+      return;
+    }
+    log.add('$slotName: ${d.isEmpty ? '' : '$d。'}チームは${m.wins}勝${m.losses}敗。');
+    monthRows
+        .add('$slotName: ${d.isEmpty ? '出場なし' : d} / ${m.wins}勝${m.losses}敗');
+    final crowd = (1.5 +
+        popularityOf(records, worldRecords) * 0.04 +
+        (m.wins + m.losses == 0 ? 0 : m.wins / (m.wins + m.losses)) * 1.5);
+    log.add('観客動員: 平均${crowd.toStringAsFixed(1)}万人。');
+    final rs = storyOfCharacter(cast.rival)?.avoiding(proTeam);
+    final duel =
+        rs == null ? null : rivalDuelLine(rs, player.age, slot, m.line);
+    if (duel != null) log.add(duel);
+    final mvp = (m.line.hasBatting &&
+            m.line.atBats >= 50 &&
+            (m.line.ops ?? 0) >= 1.000) ||
+        (m.line.hasPitching && m.line.outs >= 18 && (m.line.era ?? 99) <= 1.50);
+    if (mvp) {
+      log.add('$slotNameの月間MVPに選ばれた!');
+      _note('title', '$slotNameの月間MVP');
+      condition = condition.copyWith(morale: condition.morale + 5);
+    }
+  }
+
+  /// シーズン中盤(4か月目)に、ここまでの成績と人気でオールスターに選ばれることがある。
+  void _allStar() {
+    if (slot != 3 || condition.injured) return;
+    final prog = seasonProgress;
+    if (prog == null || prog.line.games < 40) return;
+    final l = prog.line;
+    final pop = popularityOf(records, worldRecords);
+    final good = (l.hasBatting && (l.ops ?? 0) >= 0.800) ||
+        (l.hasPitching && (l.era ?? 99) <= 3.00);
+    if (!good && pop < 55) return;
+    log.add('ファン投票とリーグ推薦で、オールスターに選ばれた!');
+    _note('title', 'オールスターに選出');
+    condition = condition.copyWith(morale: condition.morale + 6);
+  }
+
+  /// シーズンの最後(10月)に、残りの試合を進めて、1年ぶんの結果にする。
+  LeagueSeason _finishLeague(Player fighter, int team, List<int> opponents) {
+    var prog = seasonProgress ?? const LeagueProgress();
+    final rest = leagueGames - prog.games;
+    if (rest > 0) {
+      prog = playLeagueChunk(
+        fighter,
+        prog,
+        teamLevel: team,
+        opponents: opponents,
+        rng: rng,
+        count: rest,
+        condition: condition.value,
+        available: !condition.injured,
+      );
+    }
+    seasonProgress = null;
+    return prog.toSeason();
   }
 
   /// 大会(アマチュア)またはシーズン(プロ)を行い、成績を残す。
   void _playSummer() {
     final l = _league;
     final isPro = stage == Stage.pro;
-    // 作戦: その大会だけ能力が変わる。研究はチーム力が上がる。
-    final fighter = tacticAdjusted(player, tactic);
-    final team = l.team + tacticTeamBonus(tactic);
+    final fighter = traitAdjusted(player);
+    final team = l.team +
+        traitTeamBonus(player.traits) +
+        positionTeamAdjust(player, effectivePos);
     final tournament = isPro
         ? null
         : playTournament(
@@ -455,15 +924,7 @@ class Game {
             rng: rng,
             condition: condition.value,
           );
-    final league = isPro
-        ? playLeagueSeason(
-            fighter,
-            teamLevel: team,
-            opponents: l.opponents,
-            rng: rng,
-            condition: condition.value,
-          )
-        : null;
+    final league = isPro ? _finishLeague(fighter, team, l.opponents) : null;
 
     var ach = tournament?.achievement ?? 0;
     bool? rivalWon;
@@ -485,10 +946,18 @@ class Game {
       rival.addBond(5);
     }
 
-    tactic = Tactic.steady;
     if (league != null) {
       final titles =
           titlesOf(league.line, games: league.games, rank: league.rank);
+      final proBefore = records.where((r) => r.stage == Stage.pro).toList();
+      final awards = awardsOf(
+        league.line,
+        games: league.games,
+        firstYear: proBefore.isEmpty,
+        prevGames: proBefore.isEmpty ? null : proBefore.last.line.games,
+        fielding: player.abilities[Ability.fielding] ?? 0,
+        isBatter: league.line.hasBatting && !league.line.hasPitching,
+      );
       final rec = SeasonRecord(
         age: player.age,
         stage: stage,
@@ -498,12 +967,26 @@ class Game {
         rank: league.rank,
         titles: titles,
         rivalWon: rivalWon,
+        overseas: overseas,
+        awards: awards,
+        months: List.of(monthRows),
+        twoWay: player.role == Role.twoWay,
       );
+      monthRows = [];
       records.add(rec);
       _judgeGoal(rec);
+      if (league.missed > 0) log.add('怪我で${league.missed}試合を欠場した。');
       if (league.rank == 1) {
         championships++;
         log.add('リーグ優勝!');
+        log.add(
+            '優勝パレードには${paradeCrowd(popularityOf(records, worldRecords))}万人が集まった。');
+        if (wonSeries(player.name, player.age, league.line)) {
+          log.add('日本シリーズを制して、日本一に輝いた!');
+          awards.add('日本一');
+        } else {
+          log.add('日本シリーズでは惜しくも敗れた。');
+        }
       } else {
         log.add('今季は${league.rank}位(${league.wins}勝${league.losses}敗)。');
       }
@@ -511,6 +994,40 @@ class Game {
       if (d.isNotEmpty) log.add('今季成績: $d');
       for (final t in titles) {
         log.add('タイトル獲得: $t!');
+      }
+      for (final w in awards) {
+        log.add('表彰: $w!');
+      }
+      var careerBefore = const Line();
+      for (final r in proBefore) {
+        careerBefore += r.line;
+      }
+      for (final m in careerMarks(careerBefore, careerBefore + league.line)) {
+        log.add('記録達成: $m!');
+        _note('title', m);
+      }
+      log.add(coachWordOf(player));
+      // 年俸が資産に入る。
+      money += salaryOf(rec);
+      final cm = cmFeeOf(popularityOf(records, worldRecords));
+      if (cm > 0) {
+        money += cm;
+        log.add('CM出演料: ${fmtMoney(cm)}');
+      }
+      // 契約更改(前の年からの増減)。保存はせず、成績から計算する。
+      final pro = records.where((r) => r.stage == Stage.pro).toList();
+      final now = salaryOf(rec);
+      if (pro.length >= 2) {
+        final prev = salaryOf(pro[pro.length - 2]);
+        final diff = now - prev;
+        final mark = diff > 0
+            ? '(アップ)'
+            : diff < 0
+                ? '(ダウン)'
+                : '(現状維持)';
+        log.add('契約更改: 年俸 ${fmtSalary(prev)} → ${fmtSalary(now)} $mark');
+      } else {
+        log.add('契約更改: 年俸 ${fmtSalary(now)}');
       }
     } else if (tournament != null) {
       achievements.add(ach);
@@ -524,17 +1041,85 @@ class Game {
       );
       records.add(rec);
       _judgeGoal(rec);
+      _logRounds(tournament);
       if (tournament.champion) {
         championships++;
         log.add('夏の大会で優勝した!');
       } else {
+        // 負けた試合(次の試合)の名前で、どこまで行ったかを伝える。
+        final lost = roundLabel(tournament.roundsWon, tournament.rounds);
         log.add(tournament.roundsWon == 0
             ? '夏の大会は初戦で敗れた。'
-            : '夏の大会は${tournament.roundsWon}回戦突破。');
+            : tournament.roundsWon == tournament.rounds - 1
+                ? '夏の大会は準優勝。'
+                : '夏の大会は$lostで敗れた。');
       }
       final d = describeLine(tournament.line);
       if (d.isNotEmpty) log.add('大会成績: $d');
     }
+    _playWorld();
+  }
+
+  /// 勝ち抜き戦の各試合を、ログに残す(相手・勝ち負け・自分の出来)。
+  void _logRounds(Tournament t) {
+    final own = affiliationOf(stage, player.name, proTeam: proTeam);
+    for (var i = 0; i < t.games.length; i++) {
+      final g = t.games[i];
+      final name = opponentName(stage, player.age, i,
+          corporate: route == Course.corporate, own: own);
+      final d = describeGame(g.line);
+      log.add('${g.won ? '○' : '●'} ${roundLabel(i, t.rounds)} vs $name'
+          '${d.isEmpty ? '' : ' — $d'}'
+          '${isHeroGame(g.line, won: g.won) ? ' ★殊勲(${heroNoteOf(g.line)})' : ''}');
+      if (i == t.rounds - 1 && g.won && isHeroGame(g.line, won: true)) {
+        _note('title', '決勝で殊勲の活躍');
+      }
+    }
+  }
+
+  /// この年に世界大会があれば、代表に選ばれたかを決め、選ばれたら日本代表として戦う。
+  /// 選ばれるのは総合評価が目安を上回る選手(運±6)。怪我中は辞退。
+  void _playWorld() {
+    final ev =
+        worldEventFor(stage: stage, age: player.age, hasRoute: route != null);
+    if (ev == null) return;
+    if (condition.injured) {
+      log.add('${ev.name}の代表候補だったが、怪我で辞退した。');
+      return;
+    }
+    final score = overall(player) + (rng.nextDouble() * 2 - 1) * 6;
+    if (score < ev.selectLine) return;
+    log.add('${ev.name}の日本代表に選ばれた!');
+    _note('world', '${ev.name}の日本代表に選出');
+    final t = playTournament(
+      traitAdjusted(player),
+      teamLevel: ev.team +
+          traitTeamBonus(player.traits) +
+          positionTeamAdjust(player, effectivePos),
+      opponents: ev.opponents,
+      rng: rng,
+      condition: condition.value + worldBonus(player.traits),
+    );
+    final w = wrapWorld(event: ev, age: player.age, tournament: t);
+    for (var i = 0; i < t.games.length; i++) {
+      final d = describeGame(t.games[i].line);
+      log.add('${t.games[i].won ? '○' : '●'} ${roundLabel(i, t.rounds)} '
+          'vs ${ev.countries[i]}${d.isEmpty ? '' : ' — $d'}');
+    }
+    worldRecords.add(w.record);
+    final rec = w.record;
+    if (rec.champion) {
+      log.add('${ev.name}で優勝! 日本が世界一になった!');
+      _note('world', '${ev.name}で優勝(世界一)');
+      condition = condition.copyWith(morale: condition.morale + 25);
+      exp = exp.add(spreadExp(player.role, goalRewardExp(stage)));
+    } else {
+      log.add('${ev.name}は${rec.lostTo}に敗れ、${rec.resultText}。');
+      _note('world', '${ev.name} ${rec.resultText}');
+      condition = condition.copyWith(morale: condition.morale + 8);
+    }
+    final d = describeLine(rec.line);
+    if (d.isNotEmpty) log.add('${ev.name}の成績: $d');
   }
 
   void _nextSlot() {
@@ -548,16 +1133,33 @@ class Game {
   void _endYear() {
     final before = stage;
     slot = 0;
+    offseasonDone = false;
+    monthRows = [];
+    seasonProgress = null;
     player = endOfYear(player);
     condition = endOfYearCondition(condition);
     final partner = cast.lover ?? cast.family;
     if (partner != null && partner.bond >= 50) {
       condition = condition.copyWith(fatigue: condition.fatigue - 5); // 支えてくれる
     }
+    if (trainCount + restCount > 0) {
+      log.add(yearSummaryOf(trainCount, restCount));
+    }
+    trainCount = 0;
+    restCount = 0;
     peakOverall = max(peakOverall, overall(player).round());
     overallHistory.add(overall(player).round());
+    // ライバルの人生の知らせ(進路・入団・活躍・引退)。
+    final rs = storyOfCharacter(cast.rival)?.avoiding(proTeam);
+    if (rs != null) log.addAll(rivalNews(rs, player.age));
 
+    if (phase != Phase.retired) log.add('── ${player.age}歳 ──');
+    final an = ageNote(player.age);
+    if (an != null && phase != Phase.retired) log.add(an);
     if (turnedPro) {
+      if (proTeam != null && proYears >= 1 && proYears % 3 == 0) {
+        log.add('新人の${kohaiOf(proTeam!, player.age)}が入団してきた。');
+      }
       proYears++;
       lowYears = nextLowYears(player, lowYears);
       if (mustRetire(player, lowYears)) {
@@ -572,6 +1174,11 @@ class Game {
     }
     _rotateCast(before);
     _newGoal();
+    if (turnedPro && phase != Phase.retired && proTeam != null) {
+      log.add('${player.age}歳シーズン開幕。${overseas ? overseasTeam : proTeam}'
+          'のスローガンは「${sloganOf(proTeam!, player.age)}」。'
+          '本拠地は${stadiumOf(proTeam!)}。');
+    }
   }
 
   /// 段階が変わったら、仲間とコーチが替わる(高校で恋人が現れる)。
@@ -580,6 +1187,7 @@ class Game {
     final after = stage;
     if (after != before) {
       cast.rotate(after, rng, player.role, player.traits);
+      school = School.local;
       if (after != Stage.pro && after != Stage.pathChoice) {
         _note('stage', '${stageNameOf(after)}に進んだ');
       }
@@ -589,6 +1197,7 @@ class Game {
   void _draft() {
     final luck = (rng.nextDouble() * 2 - 1) * draftLuck;
     final margin = draftScore(player, recentAchievement) +
+        draftImpression(childhood) +
         luck -
         (draftLine + difficulty.draftShift);
     if (margin >= 0) {
@@ -598,6 +1207,9 @@ class Game {
       proTeam = team;
       final round = draftRound(margin);
       log.add('ドラフトで指名された! $team から$round位指名。');
+      final mates = classmatesOf(player.name, team);
+      log.add(
+          '同期入団: ${[for (final m in mates) '${m.$1}(${m.$2}位)'].join('・')}');
       _note('draft', '$team から$round位指名を受けて、プロ入り');
     } else if (route == null) {
       log.add('ドラフトで指名されなかった。');
@@ -669,9 +1281,28 @@ class Game {
         'overallHistory': overallHistory,
         'proStartAge': proStartAge,
         'proTeam': proTeam,
+        'position': position?.name,
+        'overseas': overseas,
+        'seasonProgress': seasonProgress?.toJson(),
+        'parentName': parentName,
+        'money': money,
+        'invests': {for (final e in invests.entries) e.key.name: e.value},
+        'overseasTeam': overseasTeam,
+        'teamBoost': teamBoost,
+        'school': school.name,
+        'offseasonDone': offseasonDone,
+        'faUsed': faUsed,
         'records': [for (final r in records) r.toJson()],
+        'worldRecords': [for (final r in worldRecords) r.toJson()],
         'lifeLog': [for (final e in lifeLog) e.toJson()],
-        'tactic': tactic.name,
+        'focusStreak': focusStreak,
+        'turnCount': turnCount,
+        'lastCoachTurn': lastCoachTurn,
+        'monthRows': monthRows,
+        'trainCount': trainCount,
+        'childhood': childhood,
+        'restCount': restCount,
+        'lastFocus': lastFocus?.name,
         'goal': goal?.toJson(),
         'difficulty': difficulty.name,
       };
@@ -699,9 +1330,23 @@ class Game {
     g.condition = Condition.fromJson(
         (j['condition'] as Map?)?.cast<String, dynamic>() ?? {});
     g.slot = (j['slot'] as num?)?.toInt() ?? 0;
+    g.focusStreak = (j['focusStreak'] as num?)?.toInt() ?? 0;
+    g.turnCount = (j['turnCount'] as num?)?.toInt() ?? 0;
+    g.lastCoachTurn = (j['lastCoachTurn'] as num?)?.toInt() ?? 0;
+    g.monthRows = [
+      for (final t in (j['monthRows'] as List?) ?? const []) t as String
+    ];
+    g.trainCount = (j['trainCount'] as num?)?.toInt() ?? 0;
+    for (final e in ((j['childhood'] as Map?) ?? const {}).entries) {
+      g.childhood[e.key as String] = (e.value as num).toInt();
+    }
+    g.restCount = (j['restCount'] as num?)?.toInt() ?? 0;
+    g.lastFocus = Ability.parse((j['lastFocus'] as String?) ?? '');
     g.exp = ExpPool.fromJson((j['exp'] as Map?)?.cast<String, dynamic>() ?? {});
     g.phase = pick(Phase.values, j['phase'], Phase.term);
-    g.pendingEvent = events.where((e) => e.id == j['pendingEvent']).firstOrNull;
+    g.pendingEvent =
+        events.where((e) => e.id == j['pendingEvent']).firstOrNull ??
+            childhoodStepById(j['pendingEvent'] as String?)?.event;
     if (g.phase == Phase.event && g.pendingEvent == null) g.phase = Phase.term;
     g._eventFocus = pick(Ability.values, j['eventFocus'], Ability.contact);
     g.route = Course.values.where((r) => r.name == j['route']).firstOrNull;
@@ -715,12 +1360,33 @@ class Game {
         .map((e) => (e as num).toInt()));
     g.proStartAge = (j['proStartAge'] as num?)?.toInt();
     g.proTeam = j['proTeam'] as String?;
+    g.position = Pos.parse(j['position'] as String?);
+    g.overseas = (j['overseas'] as bool?) ?? false;
+    g.parentName = j['parentName'] as String?;
+    final sp = j['seasonProgress'];
+    if (sp is Map) {
+      g.seasonProgress = LeagueProgress.fromJson(sp.cast<String, dynamic>());
+    }
+    g.money = (j['money'] as num?)?.toInt() ?? 0;
+    for (final e in ((j['invests'] as Map?) ?? const {}).entries) {
+      final i = Invest.parse(e.key as String);
+      if (i != null) {
+        g.invests[i] = (e.value as num).toInt().clamp(0, maxInvestLevel);
+      }
+    }
+    g.overseasTeam = j['overseasTeam'] as String?;
+    g.teamBoost = (j['teamBoost'] as num?)?.toInt() ?? 0;
+    g.school = School.parse(j['school']);
+    g.offseasonDone = (j['offseasonDone'] as bool?) ?? false;
+    g.faUsed = (j['faUsed'] as bool?) ?? false;
     g.goal = Goal.fromJson(j['goal']);
-    g.tactic = Tactic.values
-        .firstWhere((t) => t.name == j['tactic'], orElse: () => Tactic.steady);
     g.lifeLog.addAll([
       for (final e in (j['lifeLog'] as List?) ?? const [])
         LifeEvent.fromJson((e as Map).cast<String, dynamic>()),
+    ]);
+    g.worldRecords.addAll([
+      for (final r in (j['worldRecords'] as List?) ?? const [])
+        WorldRecord.fromJson((r as Map).cast<String, dynamic>()),
     ]);
     g.records.addAll([
       for (final r in (j['records'] as List?) ?? const [])

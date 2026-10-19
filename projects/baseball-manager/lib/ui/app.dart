@@ -21,30 +21,52 @@ class _BaseballManagerAppState extends State<BaseballManagerApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: kTestBuild ? '野球育成(テスト版)' : '野球育成',
-      debugShowCheckedModeBanner: false,
-      theme: _theme(Brightness.light),
-      darkTheme: _theme(Brightness.dark),
-      home: FutureBuilder<bool>(
-        future: _loaded,
-        builder: (context, snap) {
-          if (snap.connectionState != ConnectionState.done) {
-            return const Scaffold(
-                body: Center(child: CircularProgressIndicator()));
-          }
-          return _MilestoneHost(
-            controller: c,
-            child: ListenableBuilder(
-              listenable: c,
-              builder: (context, _) {
-                final g = c.game;
-                if (g == null) return HomeScreen(controller: c);
-                return GameScreen(controller: c, game: g);
-              },
-            ),
+    return ListenableBuilder(
+      listenable: c,
+      builder: (context, _) => MaterialApp(
+        title: kTestBuild ? '野球育成(テスト版)' : '野球育成',
+        debugShowCheckedModeBanner: false,
+        theme: _theme(Brightness.light),
+        darkTheme: _theme(Brightness.dark),
+        themeMode: c.themeMode,
+        builder: (context, child) {
+          final mq = MediaQuery.of(context);
+          if (c.textScale == 1.0 && !c.reduceMotion) return child!;
+          return MediaQuery(
+            data: mq.copyWith(
+                disableAnimations: c.reduceMotion || mq.disableAnimations,
+                textScaler:
+                    TextScaler.linear(mq.textScaler.scale(1) * c.textScale)),
+            child: child!,
           );
         },
+        home: FutureBuilder<bool>(
+          future: _loaded,
+          builder: (context, snap) {
+            if (snap.connectionState != ConnectionState.done) {
+              return const Scaffold(
+                  body: Center(
+                      child: Column(mainAxisSize: MainAxisSize.min, children: [
+                Text('野球育成',
+                    style:
+                        TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
+                SizedBox(height: 16),
+                CircularProgressIndicator(),
+              ])));
+            }
+            return _MilestoneHost(
+              controller: c,
+              child: ListenableBuilder(
+                listenable: c,
+                builder: (context, _) {
+                  final g = c.game;
+                  if (g == null) return HomeScreen(controller: c);
+                  return GameScreen(controller: c, game: g);
+                },
+              ),
+            );
+          },
+        ),
       ),
     );
   }
@@ -67,6 +89,7 @@ class _MilestoneHostState extends State<_MilestoneHost> {
   void initState() {
     super.initState();
     widget.controller.addListener(_check);
+    _check(); // 起動時に出したい知らせ(読み込めなかった保存データなど)
   }
 
   @override
@@ -76,6 +99,40 @@ class _MilestoneHostState extends State<_MilestoneHost> {
   }
 
   void _check() {
+    final t = widget.controller.toast;
+    if (t != null) {
+      widget.controller.toast = null;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        final m = ScaffoldMessenger.maybeOf(context);
+        m?.hideCurrentSnackBar();
+        final tone = widget.controller.toastTone;
+        final c = widget.controller;
+        m?.showSnackBar(SnackBar(
+          key: const Key('result-toast'),
+          content: Row(children: [
+            Icon(
+                tone > 0
+                    ? Icons.trending_up
+                    : (tone < 0 ? Icons.warning_amber_rounded : Icons.check),
+                size: 20,
+                color: tone > 0
+                    ? const Color(0xFF81C784)
+                    : (tone < 0 ? const Color(0xFFFFB74D) : Colors.white70)),
+            const SizedBox(width: 8),
+            Expanded(child: Text(t)),
+          ]),
+          action: c.canUndo
+              ? SnackBarAction(
+                  key: const Key('toast-undo'), label: '戻す', onPressed: c.undo)
+              : null,
+          duration: const Duration(seconds: 3),
+          behavior: SnackBarBehavior.floating,
+          // 広い画面では、操作バーと同じ幅に収める。
+          width: MediaQuery.sizeOf(context).width > 560 ? 520 : null,
+        ));
+      });
+    }
     if (_showing || widget.controller.pending.isEmpty) return;
     _showing = true;
     WidgetsBinding.instance.addPostFrameCallback((_) async {

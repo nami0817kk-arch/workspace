@@ -67,8 +67,8 @@ SeasonRecord _ama(int age, Stage st, {bool champion = false}) => SeasonRecord(
 bool _has(String id, PlayerSnapshot s) => earnedBy(s).contains(id);
 
 void main() {
-  test('実績は20個前後で、idは重複せず、名前と説明がある', () {
-    expect(achievements.length, inInclusiveRange(15, 30));
+  test('実績は十数個から数十個で、idは重複せず、名前と説明がある', () {
+    expect(achievements.length, inInclusiveRange(15, 60));
     expect(achievements.map((a) => a.id).toSet().length, achievements.length);
     for (final a in achievements) {
       expect(a.title, isNotEmpty, reason: a.id);

@@ -40,6 +40,21 @@ Game _new(int seed, {int? potential, Role role = Role.batter}) => Game.newGame(
 
 void main() {
   _historyTests();
+  test('大会の結果の文は、負けた試合の位置と合っている(決勝で負ければ準優勝)', () {
+    var seen = 0;
+    for (var s = 0; s < 40; s++) {
+      final g = _new(s, potential: 80);
+      _autoPlay(g);
+      for (final l in g.log.where((l) => l.startsWith('夏の大会は'))) {
+        seen++;
+        expect(l, isNot(contains('回戦突破')));
+        expect(
+            RegExp(r'^夏の大会は(初戦で敗れた|準優勝|(\d+回戦|準決勝)で敗れた)。$').hasMatch(l), isTrue,
+            reason: l);
+      }
+    }
+    expect(seen, greaterThan(50));
+  });
   test('どの乱数でも、6歳から引退まで必ず終わる', () {
     for (var s = 0; s < 60; s++) {
       final g = _new(s);
@@ -273,5 +288,20 @@ void _historyTests() {
       expect(g.proStartAge, isNull);
     }
     fail('プロになった選手がいない');
+  });
+
+  test('プロの毎年に契約更改のログが出る(2年目からは前の年との増減つき)', () {
+    for (var s = 0; s < 60; s++) {
+      final g = _new(s, potential: 100);
+      _autoPlay(g, stop: (g) => g.phase == Phase.retired);
+      final pro = g.records.where((r) => r.stage == Stage.pro).length;
+      if (pro < 3) continue;
+      final lines = g.log.where((l) => l.startsWith('契約更改')).toList();
+      expect(lines.length, pro);
+      expect(lines.first, isNot(contains('→')));
+      expect(lines.skip(1).every((l) => l.contains('→')), isTrue);
+      return;
+    }
+    fail('3年以上プロにいた選手がいない');
   });
 }

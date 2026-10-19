@@ -8,6 +8,7 @@ import 'package:baseball_manager/game/path.dart';
 import 'package:baseball_manager/game/player.dart';
 import 'package:baseball_manager/game/records.dart';
 import 'package:baseball_manager/game/season.dart';
+import 'package:baseball_manager/game/world.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 Player _p(Role r, int v) => Player(
@@ -26,6 +27,8 @@ LeagueSeason _season(Player p, int seed) => playLeagueSeason(
     );
 
 void main() {
+  main2();
+  twoWayChecks();
   group('Line', () {
     test('打率・出塁率・長打率・OPS', () {
       const l = Line(atBats: 400, hits: 120, totalBases: 200, walks: 50);
@@ -365,5 +368,105 @@ void main() {
       expect(fmtSalary(10000), '1億円');
       expect(fmtSalary(23000), '2億3000万円');
     });
+  });
+
+  group('人気', () {
+    SeasonRecord rec(int age,
+            {List<String> titles = const [],
+            int rank = 4,
+            Stage stage = Stage.pro,
+            bool overseas = false}) =>
+        SeasonRecord(
+            age: age,
+            stage: stage,
+            line: const Line(),
+            rank: stage == Stage.pro ? rank : null,
+            titles: titles,
+            overseas: overseas);
+    WorldRecord world(int age, bool champion) => WorldRecord(
+        age: age,
+        eventId: 'pro',
+        eventName: '世界大会',
+        roundsWon: champion ? 4 : 1,
+        rounds: 4,
+        line: const Line());
+
+    test('記録が無ければ0。0〜100に収まる', () {
+      expect(popularityOf(const [], const []), 0);
+      final many = [
+        for (var a = 22; a < 40; a++)
+          rec(a, titles: ['MVP', '最多勝', '首位打者'], rank: 1)
+      ];
+      expect(popularityOf(many, [world(30, true)]), 100);
+    });
+
+    test('タイトル・優勝・日本代表・海外で上がる', () {
+      final base = popularityOf([rec(25)], const []);
+      expect(
+          popularityOf([
+            rec(25, titles: ['最多勝'])
+          ], const []),
+          greaterThan(base));
+      expect(popularityOf([rec(25, rank: 1)], const []), greaterThan(base));
+      expect(
+          popularityOf([rec(25, overseas: true)], const []), greaterThan(base));
+      expect(popularityOf([rec(25)], [world(25, false)]), greaterThan(base));
+      expect(popularityOf([rec(25)], [world(25, true)]),
+          greaterThan(popularityOf([rec(25)], [world(25, false)])));
+    });
+
+    test('昔の活躍は薄れる(8年より前は半分)', () {
+      final old = [
+        rec(22, titles: ['MVP', '最多勝']),
+        rec(40)
+      ];
+      final fresh = [
+        rec(32, titles: ['MVP', '最多勝']),
+        rec(40)
+      ];
+      expect(
+          popularityOf(old, const []), lessThan(popularityOf(fresh, const [])));
+    });
+  });
+
+  test('殊勲の試合は、勝ち+個人の出来が高いときだけ', () {
+    const great =
+        Line(games: 1, atBats: 4, hits: 4, totalBases: 10, homeRuns: 2, rbi: 5);
+    const poor = Line(games: 1, atBats: 4, hits: 0);
+    expect(isHeroGame(great, won: true), isTrue);
+    expect(isHeroGame(great, won: false), isFalse);
+    expect(isHeroGame(poor, won: true), isFalse);
+  });
+}
+
+void main2() {
+  test('ERA+・OPS+は、投球回・打席が少ないと出さず、十分あれば上限999までの値', () {
+    const few = Line(faced: 10, outs: 6, runsRaw: -50);
+    expect(few.eraPlus, isNull);
+    const fewBat = Line(atBats: 1, hits: 1, totalBases: 4);
+    expect(fewBat.opsPlus, isNull);
+    const pitcher = Line(faced: 120, outs: 90, runsRaw: 0);
+    expect(pitcher.eraPlus! <= 999, isTrue);
+    const bat = Line(atBats: 40, hits: 40, totalBases: 160);
+    expect(bat.opsPlus! <= 999, isTrue);
+  });
+}
+
+void twoWayChecks() {
+  SeasonRecord rec({required bool twoWay}) => SeasonRecord(
+      age: 25,
+      stage: Stage.pro,
+      line: const Line(
+          games: 140, atBats: 500, hits: 150, totalBases: 240, walks: 50),
+      rank: 3,
+      twoWay: twoWay);
+  test('二刀流の年は、年俸が1.4倍・人気が+1。保存で残る', () {
+    final a = rec(twoWay: false), b = rec(twoWay: true);
+    expect(salaryOf(b), greaterThan(salaryOf(a)));
+    expect((salaryOf(b) / salaryOf(a) - 1.4).abs(), lessThan(0.02));
+    expect(popularityOf([b], const []),
+        greaterThanOrEqualTo(popularityOf([a], const [])));
+    expect(SeasonRecord.fromJson(b.toJson()).twoWay, isTrue);
+    expect(SeasonRecord.fromJson({'age': 20}).twoWay, isFalse);
   });
 }

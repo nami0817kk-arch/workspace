@@ -3,6 +3,9 @@ import 'dart:math';
 
 import 'package:baseball_manager/game/career.dart';
 import 'package:baseball_manager/game/exp.dart';
+import 'package:baseball_manager/game/flavor.dart';
+import 'package:baseball_manager/game/invest.dart';
+import 'package:baseball_manager/game/school.dart';
 import 'package:baseball_manager/game/game.dart';
 import 'package:baseball_manager/game/life.dart';
 import 'package:baseball_manager/game/path.dart';
@@ -103,6 +106,26 @@ void main() {
                   : Trait.values[rng.nextInt(Trait.values.length)]);
             case 5:
               g.adminSetCoachTips(rng.nextInt(8) - 2);
+          }
+        }
+        // ときどき: 任意の決断(進学先・ポジション・オフ・FA・海外・目標・投資)。選べない時は選ばない。
+        if (g.phase == Phase.term && rng.nextInt(3) == 0) {
+          if (g.canChooseSchool) g.chooseSchool(School.values[rng.nextInt(3)]);
+          if (g.canChoosePosition) {
+            final ps = positionsFor(g.player.role);
+            g.choosePosition(ps[rng.nextInt(ps.length)]);
+          }
+          if (g.canChooseOffseason) {
+            final as = abilitiesOf(g.player.role);
+            g.chooseOffseason(
+                Offseason.values[rng.nextInt(3)], as[rng.nextInt(as.length)]);
+          }
+          if (g.canUseFa) g.useFa(FaChoice.values[rng.nextInt(3)]);
+          if (g.canMoveOverseas && rng.nextInt(2) == 0) g.moveOverseas();
+          if (g.canReturnHome && rng.nextInt(2) == 0) g.returnHome();
+          if (g.canChooseGoal) g.chooseGoalLevel(rng.nextInt(3));
+          for (final i in Invest.values) {
+            if (g.stage == Stage.pro && rng.nextInt(4) == 0) g.buyInvest(i);
           }
         }
         switch (g.phase) {

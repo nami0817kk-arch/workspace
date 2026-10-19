@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+import '../game/flavor.dart';
+import '../game/marks.dart';
 
 import '../game/career.dart';
 import '../game/exp.dart';
@@ -6,6 +10,7 @@ import '../game/game.dart';
 import '../game/life_log.dart';
 import '../game/path.dart' show overall;
 import '../game/player.dart';
+import '../game/records.dart';
 import '../game/snapshot.dart';
 import 'art/avatar.dart';
 import 'art/radar.dart';
@@ -36,11 +41,34 @@ class PlayerScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Text(snapshot.name),
+          actions: [
+            Builder(
+              builder: (context) => IconButton(
+                key: const Key('copy-profile'),
+                tooltip: '選手カードをコピー',
+                icon: const Icon(Icons.copy),
+                onPressed: () async {
+                  final m = ScaffoldMessenger.of(context);
+                  await Clipboard.setData(
+                      ClipboardData(text: profileText(snapshot)));
+                  m.showSnackBar(
+                      const SnackBar(content: Text('選手カードをコピーしました')));
+                },
+              ),
+            ),
+          ],
           bottom: const TabBar(
             tabs: [
-              Tab(key: Key('tab-profile'), text: 'プロフィール'),
-              Tab(key: Key('tab-records'), text: '成績'),
-              Tab(key: Key('tab-career'), text: '経歴'),
+              Tab(
+                  key: Key('tab-profile'),
+                  child:
+                      FittedBox(fit: BoxFit.scaleDown, child: Text('プロフィール'))),
+              Tab(
+                  key: Key('tab-records'),
+                  child: FittedBox(fit: BoxFit.scaleDown, child: Text('成績'))),
+              Tab(
+                  key: Key('tab-career'),
+                  child: FittedBox(fit: BoxFit.scaleDown, child: Text('経歴'))),
             ],
           ),
         ),
@@ -85,6 +113,28 @@ String potentialStars(int potential) {
   final n = (potential / 20).ceil().clamp(1, 5);
   return '★' * n + '☆' * (5 - n);
 }
+
+Player _playerOf(PlayerSnapshot s) => Player(
+    name: s.name,
+    role: s.role,
+    age: s.age,
+    potential: s.potential,
+    abilities: s.abilities);
+
+Ability _best(PlayerSnapshot s) {
+  final a = abilitiesOf(s.role);
+  return a
+      .reduce((x, y) => (s.abilities[y] ?? 0) > (s.abilities[x] ?? 0) ? y : x);
+}
+
+Ability _worst(PlayerSnapshot s) {
+  final a = abilitiesOf(s.role);
+  return a
+      .reduce((x, y) => (s.abilities[y] ?? 0) < (s.abilities[x] ?? 0) ? y : x);
+}
+
+/// 先の見通しを出す年齢(5年先、ただし25歳か30歳の区切りまで)。
+int _toAge(int age) => age < 25 ? 25 : (age < 30 ? 30 : age + 5);
 
 class _ProfileTab extends StatelessWidget {
   const _ProfileTab({required this.snapshot, required this.game});
@@ -137,8 +187,25 @@ class _ProfileTab extends StatelessWidget {
                               ?.copyWith(fontWeight: FontWeight.bold)),
                       const SizedBox(height: 2),
                       Text(
-                          '${s.age}歳  ${s.endingTitle == null ? stageNameOf(s.stage) : '引退'}'),
-                      Text(roleNameOf(s.role)),
+                          '${s.age}歳 ${s.endingTitle == null ? stageNameOf(s.stage) : '引退'} ・ ${roleNameOf(s.role)}'),
+                      if (s.parentName != null)
+                        Text('${s.parentName}の子(二世)',
+                            key: const Key('profile-parent')),
+                      Text(
+                          affiliationOf(
+                              s.stage == Stage.retired ? Stage.pro : s.stage,
+                              s.name,
+                              proTeam: s.overseasTeam ?? s.proTeam),
+                          key: const Key('profile-affiliation')),
+                      Text(
+                          playerCardLine(
+                              s.stage == Stage.retired ? Stage.pro : s.stage,
+                              _playerOf(s),
+                              position: s.position,
+                              numberOverride:
+                                  specialNumberOf(s.role, s.records)),
+                          key: const Key('profile-card'),
+                          style: Theme.of(context).textTheme.bodySmall),
                       const SizedBox(height: 6),
                       Wrap(
                           spacing: 6,
@@ -150,6 +217,10 @@ class _ProfileTab extends StatelessWidget {
                           ]),
                       Text('素質 ${potentialStars(s.potential)}',
                           key: const Key('potential-stars')),
+                      Text(
+                          '人気 ${rankOf(popularityOf(s.records, s.worldRecords))}'
+                          '(${popularityOf(s.records, s.worldRecords)})',
+                          key: const Key('popularity')),
                       if (s.endingTitle != null)
                         Padding(
                           padding: const EdgeInsets.only(top: 4),
@@ -161,6 +232,41 @@ class _ProfileTab extends StatelessWidget {
                   ),
                 ),
               ]),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Card(
+            child: ExpansionTile(
+              key: const Key('profile-details'),
+              initiallyExpanded: snapshot.endingTitle != null,
+              shape: const Border(),
+              collapsedShape: const Border(),
+              title: const Text('くわしいプロフィール'),
+              subtitle: Text(
+                  '「${nicknameOf(_playerOf(s)).isEmpty ? '無し' : nicknameOf(_playerOf(s))}」 ・ ${s.role == Role.pitcher ? positionOf(_playerOf(s), s.position) : lineupRoleOf(_playerOf(s))}'),
+              childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+              expandedCrossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('出身: ${hometownOf(s.name)}',
+                    key: const Key('profile-hometown')),
+                Text('${bodyOf(s.name, s.age)} ・ 趣味: ${hobbyOf(s.name)}',
+                    key: const Key('profile-body')),
+                Text('座右の銘: ${mottoOf(_playerOf(s))}',
+                    key: const Key('profile-motto')),
+                Text(
+                    '得意: ${abilityLabel(_best(s))} ・ 苦手: ${abilityLabel(_worst(s))}',
+                    key: const Key('profile-strengths')),
+                if (s.endingTitle == null && s.age < 40)
+                  Text(
+                      '弱点を鍛え続けると、${_toAge(s.age)}歳で総合${projectedOverall(_playerOf(s), _worst(s), _toAge(s.age))}ほど(めやす)',
+                      key: const Key('projection')),
+                if (popularityOf(s.records, s.worldRecords) >= 20)
+                  Text(
+                      'ファンクラブ ${fanClubOf(popularityOf(s.records, s.worldRecords))}万人',
+                      key: const Key('fan-club')),
+                Text('衰えが始まる目安: ${declineAge()}歳ごろ',
+                    key: const Key('decline-hint')),
+              ],
             ),
           ),
           const SizedBox(height: 8),
@@ -179,6 +285,7 @@ class _ProfileTab extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           _Traits(snapshot: s),
+          _Upbringing(snapshot: s),
           const SizedBox(height: 8),
           Card(
             child: Padding(
@@ -215,6 +322,46 @@ class _ProfileTab extends StatelessWidget {
                           ),
                         ]),
                       ),
+                  ]),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Card(
+            key: const Key('aptitude-card'),
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('ポジション適性',
+                        style: Theme.of(context).textTheme.titleSmall),
+                    Text(
+                        '守っているのは「${positionOf(p, s.position)}」。'
+                        '適性は、そのポジションに必要な能力から決まります。',
+                        style: Theme.of(context).textTheme.bodySmall),
+                    const SizedBox(height: 6),
+                    Wrap(spacing: 6, runSpacing: 6, children: [
+                      for (final pos in positionsFor(s.role))
+                        Chip(
+                          visualDensity: VisualDensity.compact,
+                          avatar: CircleAvatar(
+                            radius: 10,
+                            backgroundColor:
+                                rankColor(rankOf(aptitudeOf(p, pos))),
+                            child: Text(rankOf(aptitudeOf(p, pos)),
+                                style: const TextStyle(
+                                    fontSize: 11,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold)),
+                          ),
+                          label: Text(pos.label),
+                          side: pos == effectivePosition(p, s.position)
+                              ? BorderSide(
+                                  color: Theme.of(context).colorScheme.primary,
+                                  width: 2)
+                              : null,
+                        ),
+                    ]),
                   ]),
             ),
           ),
@@ -282,6 +429,39 @@ class _Traits extends StatelessWidget {
   }
 }
 
+/// 幼少期の分かれ道で選んだこと(「育ち」)。選んでいなければ何も出さない。
+class _Upbringing extends StatelessWidget {
+  const _Upbringing({required this.snapshot});
+  final PlayerSnapshot snapshot;
+
+  @override
+  Widget build(BuildContext context) {
+    final notes = [
+      for (final e in snapshot.events)
+        if (e.kind == 'childhood') e,
+    ];
+    if (notes.isEmpty) return const SizedBox.shrink();
+    return Padding(
+        padding: const EdgeInsets.only(top: 8),
+        child: Card(
+          key: const Key('upbringing'),
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text('育ち(幼少期)', style: Theme.of(context).textTheme.titleSmall),
+              const SizedBox(height: 4),
+              for (final e in notes)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 2),
+                  child: Text('${e.age}歳: ${e.text}'),
+                ),
+            ]),
+          ),
+        ));
+  }
+}
+
 class _Condition extends StatelessWidget {
   const _Condition({required this.game});
   final Game game;
@@ -308,17 +488,31 @@ class _Condition extends StatelessWidget {
 }
 
 /// 経歴: 入学・進路・ドラフト・特性の習得・優勝・タイトル・引退を年表で。
-class _CareerTab extends StatelessWidget {
+class _CareerTab extends StatefulWidget {
   const _CareerTab({required this.snapshot});
   final PlayerSnapshot snapshot;
+
+  @override
+  State<_CareerTab> createState() => _CareerTabState();
+}
+
+class _CareerTabState extends State<_CareerTab> {
+  PlayerSnapshot get snapshot => widget.snapshot;
+  String _filter = 'all';
 
   static (IconData, Color) _style(String kind) => switch (kind) {
         'stage' => (Icons.school, const Color(0xFF2E7D32)),
         'route' => (Icons.alt_route, const Color(0xFF5E35B1)),
         'draft' => (Icons.star, const Color(0xFFFB8C00)),
         'trait' => (Icons.auto_awesome, const Color(0xFF7E57C2)),
+        'childhood' => (Icons.child_care, const Color(0xFFFB8C00)),
         'role' => (Icons.swap_horiz, const Color(0xFF00897B)),
         'champion' => (Icons.emoji_events, const Color(0xFFF9A825)),
+        'world' => (Icons.public, const Color(0xFFD32F2F)),
+        'position' => (Icons.sports_baseball, const Color(0xFF2E7D32)),
+        'overseas' => (Icons.flight, const Color(0xFF1E88E5)),
+        'team' => (Icons.swap_horizontal_circle, const Color(0xFF1E88E5)),
+        'injury' => (Icons.healing, const Color(0xFFE53935)),
         'title' => (Icons.workspace_premium, const Color(0xFFD4AF37)),
         'retire' => (Icons.flag, const Color(0xFF546E7A)),
         _ => (Icons.circle, const Color(0xFF90A4AE)),
@@ -326,8 +520,17 @@ class _CareerTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final entries = timelineOf(snapshot.events, snapshot.records);
-    if (entries.isEmpty) {
+    final all = timelineOf(snapshot.events, snapshot.records);
+    final entries = [
+      for (final e in all)
+        if (_filter == 'all' ||
+            (_filter == 'title' &&
+                (e.kind == 'title' || e.kind == 'champion')) ||
+            (_filter == 'world' && e.kind == 'world') ||
+            (_filter == 'injury' && e.kind == 'injury'))
+          e
+    ];
+    if (all.isEmpty) {
       return const Card(
           child:
               Padding(padding: EdgeInsets.all(16), child: Text('まだ経歴がありません。')));
@@ -337,6 +540,27 @@ class _CareerTab extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
         child: Column(children: [
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Wrap(spacing: 6, children: [
+              for (final (k, label) in const [
+                ('all', 'すべて'),
+                ('title', '優勝・表彰'),
+                ('world', '世界大会'),
+                ('injury', '怪我'),
+              ])
+                ChoiceChip(
+                  key: Key('timeline-$k'),
+                  visualDensity: VisualDensity.compact,
+                  label: Text(label),
+                  selected: _filter == k,
+                  onSelected: (_) => setState(() => _filter = k),
+                ),
+            ]),
+          ),
+          if (entries.isEmpty)
+            const Padding(
+                padding: EdgeInsets.all(12), child: Text('この種類の経歴はありません。')),
           for (var i = 0; i < entries.length; i++)
             _row(context, entries[i],
                 first: i == 0, last: i == entries.length - 1),

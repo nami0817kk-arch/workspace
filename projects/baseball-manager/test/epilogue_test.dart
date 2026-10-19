@@ -80,4 +80,17 @@ void main() {
       expect(RegExp(r'[a-z]{3,}').hasMatch(t), isFalse, reason: t);
     }
   });
+
+  test('幼いころの憧れ・夢が、結果とつながる', () {
+    final t = epilogueOf(_e(title: '一流選手'), 'ユウタ',
+        childhood: {'kid-idol': 0, 'kid-dream': 1}, worldChampion: 1);
+    expect(t, contains('幼いころ、豪快な選手に憧れた'));
+    expect(t, contains('「世界一」という夢を、ユウタは本当に叶えた'));
+    // 夢が叶っていなければ、夢の一文は出さない
+    final no =
+        epilogueOf(_e(title: '一流選手'), 'ユウタ', childhood: {'kid-dream': 1});
+    expect(no, isNot(contains('という夢')));
+    // 分かれ道を選んでいない古い記録では、何も足さない
+    expect(epilogueOf(_e(), 'ユウタ'), isNot(contains('幼いころ')));
+  });
 }

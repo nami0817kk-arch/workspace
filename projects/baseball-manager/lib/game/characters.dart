@@ -147,7 +147,7 @@ String _name(Random rng, Set<String> used, {bool lover = false}) {
   return '名無し';
 }
 
-/// 段階ごとにコーチが教えうる特性。
+/// 段階ごとにコーチが教えうる、基本の特性。
 const _taught = <Stage, List<Trait>>{
   Stage.youth: [Trait.hardWorker, Trait.sunny, Trait.ironMan],
   Stage.juniorHigh: [Trait.sturdy, Trait.ironMan, Trait.hardWorker],
@@ -156,13 +156,48 @@ const _taught = <Stage, List<Trait>>{
   Stage.pro: [Trait.longevity, Trait.genius, Trait.clutch, Trait.starPower],
 };
 
+/// 基本の特性を覚えきったあとに、コーチが教える個性派の特性。
+/// (先に基本のほうを教える。バランスのため、個性派は「余った分」で教わる。)
+const _taughtExtra = <Stage, List<Trait>>{
+  Stage.youth: [Trait.contactHitter, Trait.finesse, Trait.quickRecovery],
+  Stage.juniorHigh: [
+    Trait.patient,
+    Trait.speedster,
+    Trait.workhorse,
+    Trait.studious,
+  ],
+  Stage.highSchool: [
+    Trait.slugger,
+    Trait.fireballer,
+    Trait.leader,
+    Trait.moodMaker,
+  ],
+  Stage.pathChoice: [
+    Trait.leader,
+    Trait.studious,
+    Trait.contactHitter,
+    Trait.finesse
+  ],
+  Stage.pro: [
+    Trait.worldStage,
+    Trait.slugger,
+    Trait.fireballer,
+    Trait.leader,
+    Trait.workhorse,
+  ],
+};
+
 /// いま習得できるものから1つ。なければ null。
-Trait? teachableTrait(Stage s, Set<Trait> have, Random rng) {
-  final pool = [
-    for (final t in _taught[s] ?? const <Trait>[])
-      if (canGain(have, t)) t
-  ];
-  return pool.isEmpty ? null : pool[rng.nextInt(pool.length)];
+/// 基本の特性が先で、それが無いときだけ個性派を教える。`role` に合わない特性は教えない。
+Trait? teachableTrait(Stage s, Set<Trait> have, Random rng, [Role? role]) {
+  List<Trait> pick(Map<Stage, List<Trait>> m) => [
+        for (final t in m[s] ?? const <Trait>[])
+          if (canGain(have, t) && (role == null || t.appliesTo(role))) t
+      ];
+  final basic = pick(_taught);
+  if (basic.isNotEmpty) return basic[rng.nextInt(basic.length)];
+  final extra = pick(_taughtExtra);
+  return extra.isEmpty ? null : extra[rng.nextInt(extra.length)];
 }
 
 /// 友情タッグ練習で経験点が増える倍率。
@@ -226,7 +261,7 @@ class Cast {
       id: 'coach',
       name: _name(rng, used),
       kind: Kind.coach,
-      teaches: teachableTrait(s, have, rng),
+      teaches: teachableTrait(s, have, rng, role),
     ));
   }
 

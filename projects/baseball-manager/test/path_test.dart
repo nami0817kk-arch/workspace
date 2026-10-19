@@ -24,6 +24,7 @@ double _rate(Player p, double ach) {
 }
 
 void main() {
+  twoWayOverallTests();
   test('一番上は確実に、一番下は絶対に指名されない', () {
     expect(_rate(_batter(95), 90), 1.0);
     expect(_rate(_batter(10), 5), 0.0);
@@ -121,6 +122,28 @@ void main() {
         }
       }
       expect(found, greaterThan(0));
+    });
+  });
+}
+
+void twoWayOverallTests() {
+  group('二刀流の総合評価', () {
+    Player two(int bat, int pit) => Player(
+          name: 't',
+          role: Role.twoWay,
+          age: 25,
+          potential: 50,
+          abilities: {
+            for (final a in batterAbilities) a: bat,
+            for (final a in pitcherAbilities) a: pit,
+          },
+        );
+
+    test('片方だけ高くても上乗せされず、両方育つほど上乗せされる(上限あり)', () {
+      expect(overall(two(70, 30)), 70);
+      expect(overall(two(70, 60)), greaterThan(overall(two(70, 50))));
+      expect(overall(two(70, 70)), 82);
+      expect(overall(two(90, 90)), 100);
     });
   });
 }

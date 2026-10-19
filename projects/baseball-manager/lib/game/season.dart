@@ -23,6 +23,11 @@ class Line {
     this.starts = 0,
     this.wins = 0,
     this.losses = 0,
+    this.doubles = 0,
+    this.triples = 0,
+    this.battingStrikeouts = 0,
+    this.rbi = 0,
+    this.stolenBases = 0,
   });
 
   /// 出場した試合数(打者または投手として)。
@@ -30,6 +35,9 @@ class Line {
 
   // 打者
   final int atBats, hits, totalBases, walks, homeRuns;
+
+  /// 打者の詳しい記録: 二塁打・三塁打・三振・打点・盗塁。
+  final int doubles, triples, battingStrikeouts, rbi, stolenBases;
 
   // 投手
   final int faced, outs, strikeouts, walksGiven, hitsAllowed, homeRunsAllowed;
@@ -55,6 +63,11 @@ class Line {
         starts: starts + o.starts,
         wins: wins + o.wins,
         losses: losses + o.losses,
+        doubles: doubles + o.doubles,
+        triples: triples + o.triples,
+        battingStrikeouts: battingStrikeouts + o.battingStrikeouts,
+        rbi: rbi + o.rbi,
+        stolenBases: stolenBases + o.stolenBases,
       );
 
   Line withDecision({bool win = false, bool loss = false}) => Line(
@@ -74,6 +87,11 @@ class Line {
         starts: starts,
         wins: wins + (win ? 1 : 0),
         losses: losses + (loss ? 1 : 0),
+        doubles: doubles,
+        triples: triples,
+        battingStrikeouts: battingStrikeouts,
+        rbi: rbi,
+        stolenBases: stolenBases,
       );
 
   // ── 打者の指標 ──
@@ -84,6 +102,26 @@ class Line {
       plateAppearances == 0 ? null : (hits + walks) / plateAppearances;
   double? get slugging => atBats == 0 ? null : totalBases / atBats;
   double? get ops => hasBatting ? (onBase ?? 0) + (slugging ?? 0) : null;
+
+  /// 長打率 − 打率(長打を打つ力だけを見る)。
+  double? get isolatedPower =>
+      atBats == 0 ? null : (slugging ?? 0) - (battingAverage ?? 0);
+
+  /// 打席あたりの四球率・三振率。
+  double? get walkRate =>
+      plateAppearances == 0 ? null : walks / plateAppearances;
+  double? get strikeoutRate =>
+      plateAppearances == 0 ? null : battingStrikeouts / plateAppearances;
+
+  /// 三振1つあたりの四球(選球眼の指標)。
+  double? get walkPerStrikeout =>
+      battingStrikeouts == 0 ? null : walks / battingStrikeouts;
+
+  /// OPS+ ふうの指標。リーグ平均(OPS .720)を100として、何倍か。
+  /// 打席が少ない(20未満)と、指標が極端になるので出さない。
+  int? get opsPlus => ops == null || plateAppearances < 20
+      ? null
+      : (100 * ops! / leagueOps).round().clamp(0, 999);
 
   // ── 投手の指標 ──
   bool get hasPitching => faced > 0;
@@ -99,6 +137,34 @@ class Line {
   }
 
   double? get era => outs == 0 ? null : runsAllowed * 27 / outs;
+
+  /// WHIP(1回あたりに出した走者の数)。
+  double? get whip =>
+      outs == 0 ? null : (walksGiven + hitsAllowed) / inningsPitched;
+
+  /// 9回あたりの奪三振・与四球・被本塁打。
+  double? get strikeoutsPer9 => outs == 0 ? null : strikeouts * 27 / outs;
+  double? get walksPer9 => outs == 0 ? null : walksGiven * 27 / outs;
+  double? get homeRunsPer9 => outs == 0 ? null : homeRunsAllowed * 27 / outs;
+
+  /// 与四球1つあたりの奪三振。
+  double? get strikeoutPerWalk =>
+      walksGiven == 0 ? null : strikeouts / walksGiven;
+
+  /// 被打率(打者のうち、四球を除いた対戦での被安打の割合)。
+  double? get battingAverageAgainst {
+    final ab = faced - walksGiven;
+    return ab <= 0 ? null : hitsAllowed / ab;
+  }
+
+  /// 勝率。勝ち負けがあれば。
+  double? get winRate => wins + losses == 0 ? null : wins / (wins + losses);
+
+  /// ERA+ ふうの指標。リーグ平均(防御率3.90)を100として、何倍良いか。
+  /// 投球回が少ない(9回未満)と、指標が極端になるので出さない。
+  int? get eraPlus => era == null || era! <= 0 || outs < 27
+      ? null
+      : (100 * leagueEra / era!).round().clamp(0, 999);
 
   /// 打者としての評価 0〜100(50 が平均)。打席が無ければ null。
   double? get battingRating {
@@ -137,6 +203,11 @@ class Line {
         'starts': starts,
         'wins': wins,
         'losses': losses,
+        'doubles': doubles,
+        'triples': triples,
+        'battingStrikeouts': battingStrikeouts,
+        'rbi': rbi,
+        'stolenBases': stolenBases,
       };
 
   /// 項目を足すときは既定値を置く。
@@ -159,12 +230,33 @@ class Line {
       starts: i('starts'),
       wins: i('wins'),
       losses: i('losses'),
+      doubles: i('doubles'),
+      triples: i('triples'),
+      battingStrikeouts: i('battingStrikeouts'),
+      rbi: i('rbi'),
+      stolenBases: i('stolenBases'),
     );
   }
 }
 
+/// リーグ平均のOPSと防御率(OPS+・ERA+ の基準)。
+const leagueOps = 0.720;
+const leagueEra = 3.90;
+
 /// 1打席あたりに足す、失点推定の基準値(平均的な環境で防御率が4点前後になる値)。
 const runBaseline = 0.10;
+
+/// その打席の打点(走者の動きは再現しないので、結果ごとの確率で決める)。
+int _rbiOf(AtBatResult r, Random rng) {
+  final x = rng.nextDouble();
+  return switch (r) {
+    AtBatResult.homeRun => 1 + (x < 0.40 ? 1 : 0) + (x < 0.12 ? 1 : 0),
+    AtBatResult.triple => x < 0.55 ? 1 : 0,
+    AtBatResult.double => x < 0.50 ? (x < 0.12 ? 2 : 1) : 0,
+    AtBatResult.single => x < 0.28 ? (x < 0.05 ? 2 : 1) : 0,
+    _ => 0,
+  };
+}
 
 /// 結果ごとの得点価値(平均的なアウトとの差。アウトは負)。
 double _runValue(AtBatResult r) => switch (r) {
@@ -198,7 +290,18 @@ Line playGame(
     final foe = Pitcher(control: opp, stuff: opp);
     for (var i = 0; i < _batterTurns; i++) {
       final r = simulateAtBat(foe, p.toBatter(), rng);
+      final onBase = r == AtBatResult.walk || r == AtBatResult.single;
       line += Line(
+        doubles: r == AtBatResult.double ? 1 : 0,
+        triples: r == AtBatResult.triple ? 1 : 0,
+        battingStrikeouts: r == AtBatResult.strikeout ? 1 : 0,
+        rbi: _rbiOf(r, rng),
+        // 出塁したあとの盗塁。走力が高いほど走る。
+        stolenBases: onBase &&
+                rng.nextDouble() <
+                    ((p.of(Ability.speed) - 35) / 300).clamp(0.0, 0.2)
+            ? 1
+            : 0,
         atBats: r == AtBatResult.walk ? 0 : 1,
         hits: const {
           AtBatResult.single,
@@ -251,10 +354,16 @@ Line playGame(
 /// 大会(トーナメント)の結果。
 class Tournament {
   const Tournament(
-      {required this.roundsWon, required this.rounds, required this.line});
+      {required this.roundsWon,
+      required this.rounds,
+      required this.line,
+      this.games = const []});
   final int roundsWon;
   final int rounds;
   final Line line;
+
+  /// 各試合の中身(相手の強さ・勝ったか・個人の成績)。
+  final List<TournamentGame> games;
 
   bool get champion => roundsWon == rounds;
 
@@ -262,6 +371,15 @@ class Tournament {
   /// `isDrafted` / `draftScore` の `achievement` に渡す。
   double get achievement =>
       100 * (0.6 * roundsWon / rounds) + 0.4 * line.rating;
+}
+
+/// 勝ち抜き戦の1試合。
+class TournamentGame {
+  const TournamentGame(
+      {required this.opponent, required this.won, required this.line});
+  final int opponent;
+  final bool won;
+  final Line line;
 }
 
 /// 自チームの強さ `teamLevel` で、`opponents` の順に戦う勝ち抜き戦。
@@ -276,6 +394,7 @@ Tournament playTournament(
 }) {
   var line = const Line();
   var won = 0;
+  final games = <TournamentGame>[];
   for (final opp in opponents) {
     final g = playGame(p, opp, rng);
     line += g;
@@ -284,10 +403,13 @@ Tournament playTournament(
             (g.rating - 50) / 200 +
             (condition + tournamentBonus(p.traits) - 50) / 500)
         .clamp(0.05, 0.95);
-    if (rng.nextDouble() >= pWin) break;
+    final win = rng.nextDouble() < pWin;
+    games.add(TournamentGame(opponent: opp, won: win, line: g));
+    if (!win) break;
     won++;
   }
-  return Tournament(roundsWon: won, rounds: opponents.length, line: line);
+  return Tournament(
+      roundsWon: won, rounds: opponents.length, line: line, games: games);
 }
 
 /// プロの1シーズン(リーグ戦)。
@@ -297,12 +419,16 @@ class LeagueSeason {
     required this.wins,
     required this.losses,
     required this.line,
+    this.missed = 0,
   });
 
   final int games;
   final int wins;
   final int losses;
   final Line line;
+
+  /// 自分が出られなかった試合数(怪我)。
+  final int missed;
 
   double get winPct => games == 0 ? 0 : wins / games;
 
@@ -320,6 +446,97 @@ int leagueRank(double winPct) {
   return 6;
 }
 
+/// シーズンの途中経過。月ごとに少しずつ進め、最後に [LeagueSeason] になる。
+class LeagueProgress {
+  const LeagueProgress({
+    this.games = 0,
+    this.wins = 0,
+    this.losses = 0,
+    this.line = const Line(),
+    this.missed = 0,
+  });
+
+  final int games;
+  final int wins;
+  final int losses;
+  final Line line;
+
+  /// 怪我などで、自分は出られなかった試合数。
+  final int missed;
+
+  double get winPct => games == 0 ? 0 : wins / games;
+
+  /// 暫定の順位(いまの勝率から)。
+  int get rank => leagueRank(winPct);
+
+  LeagueSeason toSeason() => LeagueSeason(
+      games: games, wins: wins, losses: losses, line: line, missed: missed);
+
+  Map<String, dynamic> toJson() => {
+        'games': games,
+        'wins': wins,
+        'losses': losses,
+        'line': line.toJson(),
+        'missed': missed,
+      };
+
+  factory LeagueProgress.fromJson(Map<String, dynamic> j) => LeagueProgress(
+        games: (j['games'] as num?)?.toInt() ?? 0,
+        wins: (j['wins'] as num?)?.toInt() ?? 0,
+        losses: (j['losses'] as num?)?.toInt() ?? 0,
+        line: Line.fromJson((j['line'] as Map?)?.cast<String, dynamic>() ?? {}),
+        missed: (j['missed'] as num?)?.toInt() ?? 0,
+      );
+}
+
+/// シーズンの続きを `count` 試合ぶん進める。`available` が false(怪我)なら、自分は出ず、
+/// チーム力だけで勝ち負けが決まる。試合の決め方は [playLeagueSeason] と同じ。
+LeagueProgress playLeagueChunk(
+  Player p,
+  LeagueProgress prog, {
+  required int teamLevel,
+  required List<int> opponents,
+  required Random rng,
+  required int count,
+  int condition = 50,
+  bool available = true,
+}) {
+  var line = prog.line;
+  var wins = prog.wins, losses = prog.losses, missed = prog.missed;
+  for (var i = 0; i < count; i++) {
+    final g = prog.games + i;
+    final opp = opponents[g % opponents.length];
+    if (!available) {
+      final pWin = (0.5 + (teamLevel - opp) / 100).clamp(0.05, 0.95);
+      rng.nextDouble() < pWin ? wins++ : losses++;
+      missed++;
+      continue;
+    }
+    final starts = p.role != Role.batter && g % startInterval == 0;
+    final game = playGame(p, opp, rng,
+        bat: p.role != Role.pitcher, pitch: starts, facedBase: 27);
+    final pWin = (0.5 +
+            (teamLevel - opp) / 100 +
+            (game.rating - 50) / 400 +
+            (condition + tournamentBonus(p.traits) - 50) / 800)
+        .clamp(0.05, 0.95);
+    final won = rng.nextDouble() < pWin;
+    won ? wins++ : losses++;
+    line += (starts && game.outs >= 15)
+        ? game.withDecision(win: won, loss: !won)
+        : game;
+  }
+  return LeagueProgress(
+      games: prog.games + count,
+      wins: wins,
+      losses: losses,
+      line: line,
+      missed: missed);
+}
+
+/// プロの1シーズンの試合数。
+const leagueGames = 143;
+
 /// 先発の登板間隔(試合数)。5試合に1度、先発する。
 const startInterval = 5;
 
@@ -331,7 +548,7 @@ LeagueSeason playLeagueSeason(
   required List<int> opponents,
   required Random rng,
   int condition = 50,
-  int games = 143,
+  int games = leagueGames,
 }) {
   var line = const Line();
   var wins = 0, losses = 0;

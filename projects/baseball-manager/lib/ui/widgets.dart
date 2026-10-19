@@ -27,8 +27,11 @@ class RankBadge extends StatelessWidget {
 }
 
 class CastCard extends StatelessWidget {
-  const CastCard({super.key, required this.game});
+  const CastCard({super.key, required this.game, this.expanded = false});
   final Game game;
+
+  /// 最初から開いておく(関係タブ)。
+  final bool expanded;
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +45,9 @@ class CastCard extends StatelessWidget {
     ];
     return Card(
       child: ExpansionTile(
+        initiallyExpanded: expanded,
+        shape: const Border(),
+        collapsedShape: const Border(),
         title: const Text('まわりの人たち'),
         children: [
           for (final m in rows)
@@ -51,7 +57,10 @@ class CastCard extends StatelessWidget {
               subtitle: Text(_sub(m)),
               trailing: SizedBox(
                 width: 80,
-                child: LinearProgressIndicator(value: m.bond / 100),
+                child: LinearProgressIndicator(
+                    value: m.kind == Kind.coach
+                        ? (m.tips / tipsNeeded).clamp(0.0, 1.0)
+                        : m.bond / 100),
               ),
             ),
           Padding(

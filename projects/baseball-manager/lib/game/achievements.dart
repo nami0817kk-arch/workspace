@@ -1,5 +1,6 @@
 import 'career.dart';
 import 'difficulty.dart';
+import 'marks.dart';
 import 'player.dart';
 import 'records.dart';
 import 'snapshot.dart';
@@ -67,6 +68,38 @@ final List<Achievement> achievements = [
           s.records.any((r) => r.titles.where((t) => t != 'MVP').length >= 2)),
   Achievement('mvp', 'MVP', 'MVPに選ばれる。',
       (s) => s.records.any((r) => r.titles.contains('MVP'))),
+  Achievement('rookie', '新人王', '新人王に選ばれる。',
+      (s) => s.records.any((r) => r.awards.contains('新人王'))),
+  Achievement('best-nine', 'ベストナイン', 'ベストナインに選ばれる。',
+      (s) => s.records.any((r) => r.awards.contains('ベストナイン'))),
+  Achievement('golden-glove', '守備の名手', 'ゴールデングラブ賞を受ける。',
+      (s) => s.records.any((r) => r.awards.contains('ゴールデングラブ'))),
+  Achievement('comeback-award', '不死鳥', '大怪我のあと、カムバック賞を受ける。',
+      (s) => s.records.any((r) => r.awards.contains('カムバック賞'))),
+  Achievement('free-agent', 'FA宣言', 'FA権を使って、別のチームに移籍する。',
+      (s) => s.events.any((e) => e.text.contains('FAで'))),
+  Achievement('japan-series', '日本一', '日本シリーズを制して、日本一になる。',
+      (s) => s.records.any((r) => r.awards.contains('日本一'))),
+  Achievement(
+      'hall-of-fame',
+      '殿堂入り',
+      '引退後の殿堂入り投票で、75%以上の票を集める。',
+      (s) => inHallOfFame(hallOfFameVote(
+          records: s.records,
+          title: s.endingTitle ?? '',
+          madePro: s.proStartAge != null))),
+  Achievement('month-mvp-3', '月の主役', '月間MVPに3回選ばれる。',
+      (s) => s.events.where((e) => e.text.contains('の月間MVP')).length >= 3),
+  Achievement('all-star-5', '夢の球宴', 'オールスターに5回選ばれる。',
+      (s) => s.events.where((e) => e.text.contains('オールスターに選出')).length >= 5),
+  Achievement(
+      'triple-awards',
+      '栄誉の三冠',
+      '新人王・ベストナイン・ゴールデングラブをすべて受ける。',
+      (s) => const {'新人王', 'ベストナイン', 'ゴールデングラブ'}
+          .every((a) => s.records.any((r) => r.awards.contains(a)))),
+  Achievement('japan-series-3', '常勝軍団', '日本一を3回経験する。',
+      (s) => s.records.where((r) => r.awards.contains('日本一')).length >= 3),
   Achievement('legend', '伝説', '称号「レジェンド」を得る。', (s) => s.endingTitle == 'レジェンド'),
   Achievement('iron-man', '鉄人', 'プロで15年以上プレーする。',
       (s) => s.records.where((r) => r.stage == Stage.pro).length >= 15),
@@ -92,6 +125,29 @@ final List<Achievement> achievements = [
       (s) => s.records.any((r) => salaryOf(r) >= 10000)),
   Achievement('earnings-10', '一代で財を成す', 'プロ通算の収入が10億円を超える。',
       (s) => careerEarnings(s.records) >= 100000),
+  Achievement('national-team', '日の丸を背負う', '世界大会の日本代表に選ばれる。',
+      (s) => s.worldRecords.isNotEmpty),
+  Achievement('world-champion', '世界一', '世界大会で優勝する。',
+      (s) => s.worldRecords.any((r) => r.champion)),
+  Achievement(
+      'all-ages',
+      '全世代の日本代表',
+      'U-12・U-15・U-18・プロの世界大会すべてに、日本代表で出る。',
+      (s) => const {'u12', 'u15', 'u18', 'pro'}
+          .every((id) => s.worldRecords.any((r) => r.eventId == id))),
+  Achievement('overseas', '海を渡る', 'アメリカのリーグでプレーする。',
+      (s) => s.records.any((r) => r.overseas)),
+  Achievement('overseas-champion', 'アメリカの頂点', 'アメリカのリーグで優勝する。',
+      (s) => s.records.any((r) => r.overseas && r.rank == 1)),
+  Achievement(
+      'heir', '二世の誕生', '殿堂の選手の子(二世)として、一生を送る。', (s) => s.parentName != null),
+  Achievement('heir-legend', '親を超える', '二世で、レジェンドになる。',
+      (s) => s.parentName != null && s.endingTitle == 'レジェンド'),
+  Achievement('rich', '資産家', '資産が10億円を超えて引退する。', (s) => s.money >= 100000),
+  Achievement('full-support', '万全の体制', '3つの投資をすべて最大(Lv3)にする。',
+      (s) => s.investTotal >= 9),
+  Achievement('superstar', '国民的スター', '人気が90以上(Sランク)になる。',
+      (s) => popularityOf(s.records, s.worldRecords) >= 90),
   Achievement('hard-pro', '狭き門', '「むずかしい」で、プロ入りする。',
       (s) => s.difficulty == Difficulty.hard && s.proStartAge != null),
   Achievement('hard-legend', '不屈の伝説', '「むずかしい」で、レジェンドになる。',

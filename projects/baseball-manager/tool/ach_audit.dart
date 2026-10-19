@@ -1,0 +1,94 @@
+// 実績が実際に取れるかを調べる: いろいろな遊び方で何人も遊ばせ、一度も取れなかった実績を出す
+// (dart run tool/ach_audit.dart [人数])。
+// ignore_for_file: avoid_print
+import 'dart:math';
+
+import 'package:baseball_manager/game/achievements.dart';
+import 'package:baseball_manager/game/career.dart';
+import 'package:baseball_manager/game/difficulty.dart';
+import 'package:baseball_manager/game/game.dart';
+import 'package:baseball_manager/game/invest.dart';
+import 'package:baseball_manager/game/life.dart';
+import 'package:baseball_manager/game/path.dart';
+import 'package:baseball_manager/game/player.dart';
+import 'package:baseball_manager/game/snapshot.dart';
+
+void main(List<String> a) {
+  final n = a.isEmpty ? 600 : int.parse(a.first);
+  final got = <String, int>{for (final x in achievements) x.id: 0};
+  PlayerSnapshot? parent;
+  for (var s = 0; s < n; s++) {
+    final r = Random(s);
+    final role = [Role.batter, Role.pitcher][r.nextInt(2)];
+    final d = Difficulty.values[r.nextInt(Difficulty.values.length)];
+    final g = Game.newGame(
+        name: 't',
+        role: role,
+        rng: Random(s),
+        difficulty: d,
+        potential: 40 + r.nextInt(60),
+        parent: r.nextInt(4) == 0 ? parent : null);
+    final wantTwoWay = r.nextInt(5) == 0;
+    final wantOverseas = r.nextInt(4) == 0;
+    final invest = r.nextBool();
+    final retireAge = 33 + r.nextInt(10);
+    var steps = 0;
+    while (g.phase != Phase.retired) {
+      if (++steps > 6000) throw StateError('終わらない seed=$s');
+      g.autoSpend();
+      switch (g.phase) {
+        case Phase.term:
+          if (g.stage == Stage.pro && g.player.age >= retireAge) {
+            g.retire();
+            break;
+          }
+          if (g.stage == Stage.pro) {
+            if (wantTwoWay && g.player.role != Role.twoWay) {
+              g.changeRole(Role.twoWay);
+            }
+            if (wantOverseas && g.canMoveOverseas) g.moveOverseas();
+            if (g.canUseFa) {
+              g.useFa(FaChoice.values[r.nextInt(FaChoice.values.length)]);
+            }
+            if (invest) {
+              for (final i in Invest.values) {
+                g.buyInvest(i);
+              }
+            }
+          }
+          if (g.canChooseGoal && r.nextInt(3) == 0) {
+            g.chooseGoalLevel(r.nextInt(3));
+          }
+          final ab = abilitiesOf(g.player.role);
+          final plan = g.condition.fatigue >= 60
+              ? Plan.rest
+              : [
+                  Plan.train,
+                  Plan.special,
+                  Plan.lesson,
+                  Plan.social
+                ][r.nextInt(4)];
+          g.choose(plan, ab[r.nextInt(ab.length)]);
+        case Phase.event:
+          g.resolveEvent(r.nextInt(g.pendingEvent!.choices.length));
+        case Phase.pathChoice:
+          g.chooseRoute(r.nextBool() ? Course.university : Course.corporate);
+        case Phase.retired:
+          break;
+      }
+    }
+    final snap = PlayerSnapshot.fromGame(g);
+    parent = snap;
+    for (final id in earnedBy(snap)) {
+      got[id] = got[id]! + 1;
+    }
+  }
+  final never = got.entries.where((e) => e.value == 0).toList();
+  print('実績 ${got.length}個 / $n人。一度も取れなかった: ${never.length}個');
+  for (final e in never) {
+    final x = achievements.firstWhere((x) => x.id == e.key);
+    print('  ${x.id}  ${x.title}: ${x.description}');
+  }
+  final rare = got.entries.where((e) => e.value > 0 && e.value < n * 0.01);
+  print('1%未満: ${rare.map((e) => '${e.key}(${e.value})').join(', ')}');
+}

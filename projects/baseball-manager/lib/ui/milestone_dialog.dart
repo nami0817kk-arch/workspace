@@ -21,13 +21,17 @@ class MilestoneDialog extends StatelessWidget {
             Icons.military_tech,
             const Color(0xFFE53935)
           ),
+        MilestoneKind.national => (Icons.flag, const Color(0xFFD32F2F)),
+        MilestoneKind.world => (Icons.public, const Color(0xFFF9A825)),
       };
 
   bool get _celebrate =>
       milestone.kind == MilestoneKind.draft ||
       milestone.kind == MilestoneKind.champion ||
       milestone.kind == MilestoneKind.title ||
-      milestone.kind == MilestoneKind.achievement;
+      milestone.kind == MilestoneKind.achievement ||
+      milestone.kind == MilestoneKind.national ||
+      milestone.kind == MilestoneKind.world;
 
   @override
   Widget build(BuildContext context) {
