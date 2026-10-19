@@ -31,6 +31,7 @@ double _gain(Plan act, {int n = 300}) {
 }
 
 void main() {
+  balanceChecks();
   _outcomeTests();
   test('特訓は練習より伸びるが、疲れる', () {
     expect(_gain(Plan.special), greaterThan(_gain(Plan.train)));
@@ -214,4 +215,13 @@ class PlayTermResult {
   PlayTermResult(this.r, this.seed);
   final TermResult r;
   final int seed;
+}
+
+void balanceChecks() {
+  test('練習試合は、特訓より経験点が少なく、練習より疲れる(特訓の上位互換にならない)', () {
+    expect(effectOf(Plan.match).scale, lessThan(effectOf(Plan.special).scale));
+    expect(effectOf(Plan.match).scale, lessThan(effectOf(Plan.train).scale));
+    expect(effectOf(Plan.match).fatigue,
+        greaterThan(effectOf(Plan.train).fatigue));
+  });
 }
