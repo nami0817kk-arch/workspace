@@ -12,7 +12,8 @@ enum Ability {
   rebound('リバウンド'),
   speed('スピード'),
   physical('フィジカル'),
-  stamina('スタミナ');
+  stamina('スタミナ'),
+  freeThrow('フリースロー');
 
   const Ability(this.label);
   final String label;
@@ -177,6 +178,7 @@ const _weights = <Position, Map<Ability, int>>{
     Ability.speed: 2,
     Ability.defense: 1,
     Ability.stamina: 1,
+    Ability.freeThrow: 1,
   },
   Position.shootingGuard: {
     Ability.threePoint: 3,
@@ -185,6 +187,7 @@ const _weights = <Position, Map<Ability, int>>{
     Ability.speed: 2,
     Ability.defense: 1,
     Ability.stamina: 1,
+    Ability.freeThrow: 2,
   },
   Position.smallForward: {
     Ability.midRange: 2,
@@ -195,6 +198,7 @@ const _weights = <Position, Map<Ability, int>>{
     Ability.speed: 1,
     Ability.physical: 1,
     Ability.stamina: 1,
+    Ability.freeThrow: 1,
   },
   Position.powerForward: {
     Ability.inside: 3,
@@ -202,6 +206,7 @@ const _weights = <Position, Map<Ability, int>>{
     Ability.physical: 2,
     Ability.defense: 2,
     Ability.midRange: 1,
+    Ability.freeThrow: 1,
   },
   Position.center: {
     Ability.inside: 3,
@@ -209,6 +214,7 @@ const _weights = <Position, Map<Ability, int>>{
     Ability.defense: 3,
     Ability.physical: 3,
     Ability.stamina: 1,
+    Ability.freeThrow: 1,
   },
 };
 
