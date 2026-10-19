@@ -264,7 +264,7 @@ class _PlayerCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('${trackLabel(game)}  ${p.position.label}  '
+            Text('${trackLabel(game)}  ${game.number > 0 ? '#${game.number}  ' : ''}${p.position.label}  '
                 '${p.heightCm.toStringAsFixed(1)}cm  総合 ${p.overall.round()}'),
             Text('持ち味: ${p.position.perk}', style: const TextStyle(fontSize: 12)),
             if (game.track == Track.school && p.age >= 15 ||
@@ -1091,7 +1091,7 @@ class _EndingView extends StatelessWidget {
                     style: const TextStyle(
                         fontSize: 20, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 4),
-                Text('称号「${careerTitle(g)}」  (${g.difficulty.label})',
+                Text('称号「${careerTitle(g)}」  (${g.difficulty.label})${g.number > 0 ? '  背番号${g.number}${retiredNumber(g) ? '(永久欠番)' : ''}' : ''}',
                     style: TextStyle(
                         color: Theme.of(context).colorScheme.primary,
                         fontWeight: FontWeight.bold)),

@@ -25,12 +25,18 @@ String careerTitle(Game g) {
   return '情熱の$nick';
 }
 
+/// 背番号が永久欠番になるか(プロで長く活躍し、優勝や個人賞を重ねたとき)。
+bool retiredNumber(Game g) =>
+    g.number > 0 &&
+    _wentPro(g) &&
+    (g.titles >= 3 || (g.abroad && g.titles >= 1) || g.awardCount >= 4);
+
 /// 共有用の短い文章(「結果をコピー」で使う)。
 String shareText(Game g) {
   final p = g.player;
   final b = StringBuffer()
     ..writeln('バスケ育成: ${p.name}の物語')
-    ..writeln('称号「${careerTitle(g)}」(${g.difficulty.label})')
+    ..writeln('称号「${careerTitle(g)}」(${g.difficulty.label})${g.number > 0 ? ' 背番号${g.number}${retiredNumber(g) ? '(永久欠番)' : ''}' : ''}')
     ..writeln('${p.heightCm.toStringAsFixed(0)}cm ${positionNickname(p.position)} 総合${p.overall.round()}  ${p.age}歳で引退')
     ..writeln('通算 ${g.totalGames}試合 ${g.totalPoints}得点 ${g.totalRebounds}リバウンド ${g.totalAssists}アシスト')
     ..writeln('スティール${g.totalSteals} ブロック${g.totalBlocks} 3P${g.totalThrees}本${g.careerHigh == null ? '' : ' キャリアハイ${g.careerHigh!.points}点'}')
@@ -92,6 +98,12 @@ List<String> epilogueLines(Game g) {
     } else {
       lines.add('宿敵${r.name}との対戦は${r.wins}勝${r.losses}敗。届かなかったが、あの存在が自分を強くした。');
     }
+  }
+
+  if (retiredNumber(g)) {
+    lines.add('背番号${g.number}は、永久欠番になった。');
+  } else if (g.number > 0 && _wentPro(g)) {
+    lines.add('背番号${g.number}を背負って、プロの舞台に立った。');
   }
 
   if (p.skills.isNotEmpty) {

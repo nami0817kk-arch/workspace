@@ -18,6 +18,8 @@ class HistoryEntry {
     required this.reason,
     this.difficulty = '',
     this.title = '',
+    this.number = 0,
+    this.retiredNumber = false,
     this.rivalName = '',
     this.rivalWins = 0,
     this.rivalLosses = 0,
@@ -35,6 +37,8 @@ class HistoryEntry {
   final String reason;
   final String difficulty;
   final String title;
+  final int number;
+  final bool retiredNumber;
   final String rivalName;
   final int rivalWins;
   final int rivalLosses;
@@ -52,6 +56,8 @@ class HistoryEntry {
         reason: g.retiredReason ?? '',
         difficulty: g.difficulty.label,
         title: careerTitle(g),
+        number: g.number,
+        retiredNumber: retiredNumberOf(g),
         rivalName: g.rival.name,
         rivalWins: g.rival.wins,
         rivalLosses: g.rival.losses,
@@ -70,6 +76,8 @@ class HistoryEntry {
         'reason': reason,
         'difficulty': difficulty,
         'title': title,
+        'number': number,
+        'retiredNumber': retiredNumber,
         'rivalName': rivalName,
         'rivalWins': rivalWins,
         'rivalLosses': rivalLosses,
@@ -88,6 +96,8 @@ class HistoryEntry {
         reason: (j['reason'] as String?) ?? '',
         difficulty: (j['difficulty'] as String?) ?? '',
         title: (j['title'] as String?) ?? '',
+        number: (j['number'] as num?)?.toInt() ?? 0,
+        retiredNumber: (j['retiredNumber'] as bool?) ?? false,
         rivalName: (j['rivalName'] as String?) ?? '',
         rivalWins: (j['rivalWins'] as num?)?.toInt() ?? 0,
         rivalLosses: (j['rivalLosses'] as num?)?.toInt() ?? 0,
@@ -147,6 +157,7 @@ final achievements = <Achievement>[
       (g) => g.records.any((r) => r.award == '最優秀選手')),
   Achievement('best5_x3', 'ベスト5の常連', '個人賞(最優秀選手・ベスト5)を3回受けた。',
       (g) => g.records.where((r) => r.award != null).length >= 3),
+  Achievement('retired_number', '永久欠番', '背番号が永久欠番になった。', retiredNumberOf),
   Achievement('big_game', '一夜の爆発', '1試合で30得点以上を取った。',
       (g) => (g.careerHigh?.points ?? 0) >= 30),
   Achievement('skills5', '技の百貨店', '得意技を5つ身につけた。',
@@ -154,6 +165,8 @@ final achievements = <Achievement>[
   Achievement('veteran', '息の長い選手', '35歳までプロで戦った。',
       (g) => g.player.age >= 35 && _wentPro(g)),
 ];
+
+bool retiredNumberOf(Game g) => retiredNumber(g);
 
 /// 解除した実績の数から、次の選手に引き継ぐ初期能力の加算(5個で+1、最大+5)。
 int legacyBonusFor(int unlockedCount) => (unlockedCount ~/ 5).clamp(0, 5);

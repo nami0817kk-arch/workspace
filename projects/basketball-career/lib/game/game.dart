@@ -145,6 +145,9 @@ class TermReport {
 
 const _recentCount = 4;
 
+/// 人気の背番号(はじめの画面の候補と、ランダムの抽選に使う)。
+const popularNumbers = [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 23, 24, 30, 32, 33, 34];
+
 /// 選手育成ゲームの本体。画面に依存しない。
 ///
 /// 1年 = 春夏秋冬の4回の `choose`。夏(slot 1)の `choose` の中で大会が行われる。
@@ -168,6 +171,7 @@ class Game {
     this.teamwork = 40,
     this.coachBond = 20,
     this.rivalMet = false,
+    this.number = 0,
     this.mate = '',
     this.coachLabel = '',
     List<Action>? recentActions,
@@ -209,7 +213,8 @@ class Game {
       {Random? rng,
       bool events = true,
       Difficulty difficulty = Difficulty.normal,
-      int legacyBonus = 0}) {
+      int legacyBonus = 0,
+      int? number}) {
     final r = rng ?? Random();
     final potential = (30 + r.nextInt(40) + r.nextInt(31)).clamp(30, 100);
     final g = Game(
@@ -219,6 +224,7 @@ class Game {
       difficulty: difficulty,
       rng: r,
       eventsEnabled: events,
+      number: number ?? popularNumbers[r.nextInt(popularNumbers.length)],
     );
     g._rollGoalOptions();
     g._newTeamNames();
@@ -298,6 +304,9 @@ class Game {
   /// チームメイトの名前とコーチの名前(段階が変わると替わる。出来事の文に入る)。
   String mate;
   String coachLabel;
+
+  /// 背番号(0〜99)。ユニフォームに付き、活躍すると永久欠番になる。
+  int number;
 
   /// ライバルとはじめて対戦したか(出会いの演出を1度だけ出すため)。
   bool rivalMet;
@@ -980,6 +989,7 @@ class Game {
         'teamwork': teamwork,
         'coachBond': coachBond,
         'rivalMet': rivalMet,
+        'number': number,
         'mate': mate,
         'coachLabel': coachLabel,
         'recentActions': [for (final a in recentActions) a.name],
@@ -1027,6 +1037,7 @@ class Game {
         recoveredThisTerm: (j['recoveredThisTerm'] as bool?) ?? false,
         teamwork: (j['teamwork'] as num?)?.toInt() ?? 40,
         coachBond: (j['coachBond'] as num?)?.toInt() ?? 20,
+        number: (j['number'] as num?)?.toInt() ?? 0,
         mate: (j['mate'] as String?) ?? '',
         coachLabel: (j['coachLabel'] as String?) ?? '',
         rivalMet: (j['rivalMet'] as bool?) ?? (((j['rival'] as Map?)?['wins'] as num? ?? 0) + ((j['rival'] as Map?)?['losses'] as num? ?? 0) > 0),

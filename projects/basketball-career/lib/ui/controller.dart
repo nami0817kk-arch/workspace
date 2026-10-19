@@ -193,14 +193,16 @@ class GameController extends ChangeNotifier {
     }
   }
 
-  void newGame(String name, [Difficulty difficulty = Difficulty.normal]) {
+  void newGame(String name,
+      [Difficulty difficulty = Difficulty.normal, int? number]) {
     final n = name.trim().isEmpty ? '名無し' : name.trim();
     newlyUnlocked = const [];
     game = Game.start(n,
         rng: _rng,
         events: events,
         difficulty: difficulty,
-        legacyBonus: legacyBonusFor(unlocked.length));
+        legacyBonus: legacyBonusFor(unlocked.length),
+        number: number);
     focus = recommendedFocus(game!.player);
     focusAuto = true;
     recent = const [];

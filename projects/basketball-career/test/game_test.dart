@@ -2411,4 +2411,73 @@ void main() {
       expect(champ, greaterThan(0));
     });
   });
+
+  group('背番号と永久欠番', () {
+    Game proLife({int number = 23, int titles = 0, int awards = 0, bool abroad = false}) {
+      final g = Game(
+        eventsEnabled: false,
+        player: strong().copyWith(age: 33),
+        rng: Random(1),
+        track: Track.pro,
+        number: number,
+        abroad: abroad,
+      );
+      for (var i = 0; i < titles; i++) {
+        g.records.add(YearRecord(age: 25 + i, league: League.proDomestic, wins: 8, games: 8, ppg: 15, rpg: 5, apg: 4, champion: true, achievement: 90));
+      }
+      for (var i = 0; i < awards; i++) {
+        g.records.add(YearRecord(age: 20 + i, league: League.proDomestic, wins: 4, games: 6, ppg: 15, rpg: 5, apg: 4, champion: false, achievement: 70, award: 'ベスト5'));
+      }
+      if (titles + awards == 0) {
+        g.records.add(YearRecord(age: 25, league: League.proDomestic, wins: 3, games: 6, ppg: 9, rpg: 3, apg: 2, champion: false, achievement: 50));
+      }
+      g.retire();
+      return g;
+    }
+
+    test('始めると背番号がつく。指定すればその番号。保存される', () {
+      final a = Game.start('a', rng: Random(1), number: 7);
+      expect(a.number, 7);
+      final b = Game.start('b', rng: Random(2));
+      expect(popularNumbers, contains(b.number));
+      expect(Game.fromJson(a.toJson()).number, 7);
+      expect(Game.fromJson({'player': {'name': 'old'}}).number, 0, reason: '古いセーブは番号なし');
+    });
+
+    test('永久欠番: 優勝3回・海外で優勝・個人賞4回のどれか(プロで)', () {
+      expect(retiredNumber(proLife(titles: 3)), isTrue);
+      expect(retiredNumber(proLife(titles: 1, abroad: true)), isTrue);
+      expect(retiredNumber(proLife(awards: 4)), isTrue);
+      expect(retiredNumber(proLife(titles: 2)), isFalse);
+      expect(retiredNumber(proLife()), isFalse);
+    });
+
+    test('番号なし(古いセーブ)や学生では永久欠番にならない', () {
+      expect(retiredNumber(proLife(number: 0, titles: 3)), isFalse);
+      final student = Game(
+        eventsEnabled: false,
+        player: strong().copyWith(age: 18),
+        rng: Random(1),
+        number: 10,
+      );
+      student.pathPending = true;
+      student.giveUp();
+      expect(retiredNumber(student), isFalse);
+    });
+
+    test('エンディング・共有文・殿堂・実績に出る', () {
+      final g = proLife(titles: 3);
+      expect(epilogueLines(g).join(' '), contains('背番号23は、永久欠番になった'));
+      expect(shareText(g), contains('背番号23(永久欠番)'));
+      final h = HistoryEntry.of(g);
+      expect(h.number, 23);
+      expect(h.retiredNumber, isTrue);
+      expect(HistoryEntry.fromJson(h.toJson()).retiredNumber, isTrue);
+      expect(HistoryEntry.fromJson({}).number, 0);
+      expect(earnedBy(g), contains('retired_number'));
+      final plain = proLife();
+      expect(epilogueLines(plain).join(' '), contains('背番号23を背負って'));
+      expect(earnedBy(plain).contains('retired_number'), isFalse);
+    });
+  });
 }

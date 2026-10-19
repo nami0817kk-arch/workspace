@@ -28,6 +28,7 @@ class CourtHeader extends StatelessWidget {
             jersey: jerseyColor(game.track, game.player.age),
             slot: game.slot,
             versus: versus,
+            number: game.number,
           ),
         ),
       ),
@@ -52,11 +53,13 @@ class _CourtPainter extends CustomPainter {
       {required this.heightCm,
       required this.jersey,
       required this.slot,
-      this.versus = false});
+      this.versus = false,
+      this.number = 0});
   final double heightCm;
   final Color jersey;
   final int slot;
   final bool versus;
+  final int number;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -121,7 +124,8 @@ class _CourtPainter extends CustomPainter {
     final scale = (heightCm / 210).clamp(0.5, 1.05);
     final figureH = h * 0.78 * scale;
     final baseY = h * 0.92;
-    _figure(canvas, Offset(w * (versus ? 0.22 : 0.30), baseY), figureH);
+    _figure(canvas, Offset(w * (versus ? 0.22 : 0.30), baseY), figureH,
+        number: number);
     if (versus) {
       // 向かい合うライバル(暗い色のユニフォーム、やや大きく)。
       _figure(canvas, Offset(w * 0.52, baseY), h * 0.78 * 0.98,
@@ -157,7 +161,7 @@ class _CourtPainter extends CustomPainter {
 
   /// 足元 `foot` を基準に、高さ `fh` の選手を描く(ボールを突いている)。
   void _figure(Canvas canvas, Offset foot, double fh,
-      {Color? color, bool flip = false}) {
+      {Color? color, bool flip = false, int number = 0}) {
     if (flip) {
       // 左右を反転して描く(足元を軸に)。
       canvas.save();
@@ -193,6 +197,23 @@ class _CourtPainter extends CustomPainter {
       ..lineTo(hip.dx - fh * 0.10, hip.dy + fh * 0.04)
       ..close();
     canvas.drawPath(body, shirt);
+    // 背番号(胴の中央)。
+    if (number > 0 && !flip) {
+      final tp = TextPainter(
+        text: TextSpan(
+          text: '$number',
+          style: TextStyle(
+            fontFamily: 'NotoSansJP',
+            color: Colors.white,
+            fontSize: fh * 0.14,
+            fontWeight: FontWeight.w900,
+          ),
+        ),
+        textDirection: TextDirection.ltr,
+      )..layout();
+      tp.paint(canvas,
+          Offset(neck.dx - tp.width / 2, neck.dy + bodyH * 0.12));
+    }
 
     // 腕と、ボール。
     final hand = Offset(foot.dx + fh * 0.24, hip.dy + fh * 0.12);
@@ -226,5 +247,6 @@ class _CourtPainter extends CustomPainter {
       old.heightCm != heightCm ||
       old.jersey != jersey ||
       old.slot != slot ||
-      old.versus != versus;
+      old.versus != versus ||
+      old.number != number;
 }
