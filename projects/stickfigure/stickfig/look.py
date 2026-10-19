@@ -121,3 +121,43 @@ def eyes(plan: dict, f: int, img: Image.Image) -> None:
                 d.line([X - 3.5 * k, Z + 3.5 * k, X + 3.5 * k, Z - 3.5 * k], fill=(10, 10, 10), width=max(2, int(1.8 * k)))
             else:
                 d.arc([X - 4 * k, Z - 3 * k, X + 4 * k, Z + 3 * k], 200, 340, fill=(10, 10, 10), width=max(2, int(1.8 * k)))
+
+
+def charge_aura(plan: dict, f: int, who: str, age01: float, col=(120, 230, 255)) -> Tuple[Image.Image, float]:
+    """必殺技の溜め: 人物のまわりに光の柱と上昇する粒、広がる輪。age01=0→1(溜めの進み)。返り値は(重ねる画像, 背景を暗くする量)。"""
+    cam = plan["frames"][f]["cam"]
+    a = plan["actors"][who]
+    p = plan["frames"][f]["actors"][who]
+    s = 1 if a.get("facing", 1) >= 0 else -1
+    sk = fk.skeleton(p, s, p["root_x"], a.get("scale", 1.0))
+    hx, hz = sk["hip"]
+    cx, cy = camera.project(cam, hx, 0.0, hz + 0.1)[:2]
+    u = camera.px_per_unit(cam)
+    rnd = random.Random(f)
+    ov = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    d = ImageDraw.Draw(ov)
+    pulse = 0.75 + 0.25 * math.sin(f * 1.7)
+    for i in range(34):                                   # 上へ立つ光の筋
+        x = cx + rnd.uniform(-0.55, 0.55) * u
+        h = rnd.uniform(0.8, 2.6) * u * (0.4 + age01)
+        y0 = cy + rnd.uniform(0.0, 0.9) * u
+        w = rnd.choice((2, 3, 5, 8))
+        d.line([x, y0, x + rnd.uniform(-10, 10), y0 - h], fill=(*col, int(rnd.uniform(90, 220) * pulse)), width=w)
+    for i in range(26):                                   # 上昇する粒
+        x = cx + rnd.uniform(-0.9, 0.9) * u
+        y = cy - ((rnd.random() + f * 0.05 * rnd.uniform(0.6, 1.4)) % 1.0) * 2.4 * u + 0.5 * u
+        r = rnd.uniform(2, 6)
+        d.ellipse([x - r, y - r, x + r, y + r], fill=(255, 255, 255, 230))
+    glow = ov.filter(ImageFilter.GaussianBlur(10))
+    out = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    halo = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    r0 = (0.9 + 0.5 * age01) * u * pulse
+    ImageDraw.Draw(halo).ellipse([cx - r0, cy - r0 * 1.6, cx + r0, cy + r0 * 0.9], fill=(*col, int(60 + 60 * age01)))
+    out.alpha_composite(halo.filter(ImageFilter.GaussianBlur(40)))
+    out.alpha_composite(glow)
+    out.alpha_composite(ov)
+    for k in range(2):                                    # 足もとから広がる輪
+        t = (age01 * 1.6 + k * 0.5) % 1.0
+        rr = (0.4 + 1.8 * t) * u
+        ImageDraw.Draw(out).ellipse([cx - rr, cy + 0.85 * u - rr * 0.3, cx + rr, cy + 0.85 * u + rr * 0.3], outline=(*col, int(230 * (1 - t))), width=4)
+    return out, 0.55 * min(1.0, age01 * 3)
