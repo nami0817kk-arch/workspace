@@ -181,6 +181,7 @@ python scripts/make_gallery.py 09_01:2.4 135_07_s1:3.6   # clip を順に再生�
 - **光線の撃ち合い(`finisher: beam_clash`、B の色は `beam_color_b`)**: 2 人とも跳んで下がり(A 3.3・B は 1.2 下がる)、同時に構えて 1.2 秒溜め、同時に発射。光線は中央でぶつかり(`fx.beams` の `x_end` を `[[tau, x], ...]` の折れ線で書く。ぶつかる点に `fx.orbs` の `path` 付きの白い玉)、初め A が押され(踏ん張って沈む)、一歩踏み込んで押し返し、B の光線が折れて A の光線が壁まで伸び、B は壁へ。カメラは溜めを横から、踏ん張る A に寄り、勝つ瞬間に引く。見本 `scenes/fight_beam_clash.yaml`。下がるのに 0.6 秒要る(0.4 だと 1 コマ 0.93 飛ぶ)
 - 衝撃波の跳びは rz 1.25・カメラは target_z 1.5 で少し引く(1.6 だと画面の上に切れた)
 - 光線・気弾とも、技の前に A が跳んで下がり(dx 3.7〜3.9)、B もよろけて 0.7 下がる(光線・玉の飛ぶ長さを取る)。壁はよろけた B より 1.3 奥(`wall_lock`)。光線は壁を 1.2 突き抜ける長さ
+- **出だしの技(`opening: blast`、kick なしのとき)**: 走り出す前(0.6〜1.6 秒)に片手の玉を投げ、B がくぐってかわし(`miss` の pos の高さ≥0.95 で body_drive が沈ませる)、玉は壁で爆発(`to_wall` の印で壁の位置に置き換える)。そのあと走って連打へ(走り出しと連打の開始が 1.0 秒遅れる)。見本 `scenes/fight_open_blast.yaml`
 - 技を足すときの型: fight の finisher 分岐(キー・hits・fx・shots・ko_t)+ plan の SHAKE + anime の SFX/SFX_SIZE/ZOOM_PUNCH/ROLL_SHAKE + compose の BIG/BURST_FRAMES と描画 + sfx の音 + テスト
 
 ## 決まり・つまずき所(実際に踏んだもの)
