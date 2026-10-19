@@ -86,29 +86,30 @@ def render_figures(plan_path: Path, out_dir: Path, mode: str = "figs") -> None:
         raise SystemExit("Blender の書き出しに失敗した")
 
 
-def cmd_build(a) -> int:
+def build_scene(scene: dict, out: Path, reuse_figs: bool = False, force: bool = False, quiet: bool = False):
+    """台本(dict)から動画まで。通れば mp4 の Path、点検で止まれば None。episode.py からも使う。"""
     from . import compose, video_check
-    scene = planmod.load_scene(a.scene)
-    out = Path(a.out)
+    out = Path(out)
     out.mkdir(parents=True, exist_ok=True)
     pl = planmod.build_plan(scene)
     plan_path = out / "plan.json"
     planmod.save_plan(pl, plan_path)
     res = qa.run_gate(pl, scene.get("qa"))
     (out / "gate_report.md").write_text(qa.format_report(res), encoding="utf-8")
-    print(qa.format_report(res))
-    if not res["passed"] and not a.force:
+    if not quiet:
+        print(qa.format_report(res))
+    if not res["passed"] and not force:
         print("\n点検に通らないので、書き出さずに止める(--force で続ける)")
-        return 1
+        return None
     figs = out / "figs"
-    if a.reuse_figs and len(list(figs.glob("f_*.png"))) == pl["n"]:
+    if reuse_figs and len(list(figs.glob("f_*.png"))) == pl["n"]:
         print("書き出し済みの人物を再利用する(--reuse-figs)")
     else:
         render_figures(plan_path, figs)
     stage = None
     if pl["view"].get("persp"):          # 遠近のカメラのときは、舞台(床・壁・柱)も立体で別に書き出す
         stage = out / "stage"
-        if not (a.reuse_figs and len(list(stage.glob("f_*.png"))) == pl["n"]):
+        if not (reuse_figs and len(list(stage.glob("f_*.png"))) == pl["n"]):
             render_figures(plan_path, stage, "stage")
     ff = find_ffmpeg()
     mp4 = compose.compose(pl, figs, out / "frames", out / f"{scene.get('name', 'scene')}.mp4", ff, stage)
@@ -119,14 +120,26 @@ def cmd_build(a) -> int:
         sfx.render(pl, wav, (au or {}).get("mood", "battle"), float((au or {}).get("bgm_gain", 0.5)))
         silent = Path(mp4).with_name(Path(mp4).stem + "_silent.mp4")
         Path(mp4).replace(silent)
-        subprocess.run([ff, "-y", "-loglevel", "error", "-i", str(silent), "-i", str(wav), "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-shortest", str(mp4)], check=True)
+        subprocess.run([ff, "-y", "-loglevel", "error", "-i", str(silent), "-i", str(wav), "-c:v", "copy", "-c:a", "aac", "-b:a", "192k",
+                        "-ar", "44100", "-ac", "2", "-shortest", str(mp4)], check=True)
         silent.unlink()
     holds = []
     for e in pl["events"]:
         holds += list(range(e["frame"], e["frame"] + e.get("hold_frames", 0) + 1))
     vres = video_check.check_video(ff, mp4, out / "check", holds, pl["fps"])
     print(f"\n動画: {mp4}\n動画の点検: 静止 {len(vres['static'])} / 急な変化 {len(vres['pops'])} / 白黒 {len(vres['flashes'])}")
-    return 0
+    return Path(mp4)
+
+
+def cmd_build(a) -> int:
+    scene = planmod.load_scene(a.scene)
+    return 0 if build_scene(scene, Path(a.out), a.reuse_figs, a.force) else 1
+
+
+def cmd_episode(a) -> int:
+    from . import episode
+    mp4 = episode.build_episode(episode.load_episode(a.episode), Path(a.out), a.reuse_figs, a.force)
+    return 0 if mp4 else 1
 
 
 def cmd_video_check(a) -> int:
@@ -143,6 +156,7 @@ def main(argv=None) -> int:
     p = sub.add_parser("plan"); p.add_argument("scene"); p.add_argument("--out", required=True); p.set_defaults(fn=cmd_plan)
     p = sub.add_parser("check"); p.add_argument("scene"); p.add_argument("--report"); p.set_defaults(fn=cmd_check)
     p = sub.add_parser("build"); p.add_argument("scene"); p.add_argument("--out", required=True); p.add_argument("--force", action="store_true"); p.add_argument("--reuse-figs", action="store_true", help="書き出し済みの人物PNGを再利用(plan が同じときだけ)"); p.set_defaults(fn=cmd_build)
+    p = sub.add_parser("episode"); p.add_argument("episode"); p.add_argument("--out", required=True); p.add_argument("--force", action="store_true"); p.add_argument("--reuse-figs", action="store_true"); p.set_defaults(fn=cmd_episode)
     p = sub.add_parser("rhythm"); p.add_argument("video"); p.set_defaults(fn=cmd_rhythm)
     p = sub.add_parser("video-check"); p.add_argument("video"); p.add_argument("--out"); p.add_argument("--fps", type=float, default=30.0); p.set_defaults(fn=cmd_video_check)
     a = ap.parse_args(argv)

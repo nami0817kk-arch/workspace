@@ -97,6 +97,18 @@ python scripts/make_gallery.py 09_01:2.4 135_07_s1:3.6   # clip を順に再生�
 - 落とし穴: モーションキャプチャの clip の角度は、関節ごとに 2π ずれて入っている(`np.unwrap`)。**読み込みで円の平均を中心に ±π へ収めてある**(`mocap.Clip`)。
   やらないと clip 同士・キーとのつなぎで 2π の飛びが出る。clip を選ぶときは、命中時に相手との間隔(root_x の差)が 0.7〜1.0 になる手の clip を試して選ぶ(02_07_s1 は届かず、13_17_s1 が届いた)
 
+## 量産の道具(2026-10-19、「作品でなくスキルの向上」「YouTubeで継続」の指示から)
+
+使う順番は、スキル `stickfigure-action`(`~/.claude/skills`、バックアップは `claude-skills/`)。ここは部品の一覧。
+
+- `fight.py`: 戦いの台本を数行の指定から自動で組む(`fight: {weapon, kick, hits, counter, finisher, palette, mood, colors, lines}`)。見本 `scenes/fight_*.yaml`
+- `captions.py`: 台詞の吹き出し(`say`)・ナレーション(`narr`)・叫び文字(`shout`)。台本の `captions` か fight の `lines`
+- `sfx.py`: 効果音と BGM を計算で作って動画に付ける(外部の音源は使わない)。台本の `audio: false` で無音、`mood` で雰囲気
+- `episode.py`: 複数の場面+カード(タイトル・「一か月後」)を1本に連結。`python -m stickfig episode scenes/episodes/ep_revenge.yaml --out out/…`
+- `story.py`: 物語の型(`revenge` 雪辱戦 / `tournament` 勝ち上がり / `duel` 一騎打ち)。episode.yaml に `story: {arc, hero, rival}`
+- `rhythm.py`: 参考6本の範囲との比較。`check` が書き出す前に見積もり、`python -m stickfig rhythm 動画.mp4` が実測
+- `build_scene(scene, out)`: cli の中核(台本 dict → 動画)。episode も使う
+
 ## 決まり・つまずき所(実際に踏んだもの)
 
 1. **参考動画のファイル・切り出した画像は、リポジトリに入れない**(workspace は public、他人の作品)。入れてよいのは数字と読み取った角度だけ(`reference/`)。
