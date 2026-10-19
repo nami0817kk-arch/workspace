@@ -29,7 +29,7 @@ description: 棒人間のアクション動画（戦い・物語つき）を、�
 1. **一番速いのは物語の型**: `scenes/episodes/*.yaml` に `story: {arc: revenge|tournament|duel|protect|mentor, hero: 名前, rival: 名前}` と書く
    → `python -m stickfig episode scenes/episodes/ep_revenge.yaml --out out/ep_revenge`（約25秒。場面ごとに点検→書き出し→連結）
 1b. **まとめて量産**: `python -m stickfig series --n 5 --out out/series --seed 100 [--vertical] [--build]`。型・名前・色・seed を回して、エピソード・サムネ・投稿の下書きを順に作る（`--build` なしは指定の yaml だけ。1本 約3〜8分）。story に `seed: 数字` を入れると、台詞の言い回し・技名・連打の clip・溜めの色が変わる（同じ数字は同じ内容）
-2. **1本の戦い**: `scenes/x.yaml` に `fight: {weapon: sword|dagger|staff|spear|none, kick: true, hits: 1〜4, counter: true, finisher: launch_slash|none, palette: warm|cool, stage: cave|dojo|field|night|sunset, mood: battle|tense|calm|sad, colors: {A:[r,g,b], B:[...]}, lines: [...]}`
+2. **1本の戦い**: `scenes/x.yaml` に `fight: {weapon: sword|dagger|staff|spear|none, kick: true, hits: 1〜4, counter: true, finisher: launch_slash|none, palette: warm|cool, stage: cave|dojo|field|night|sunset, mood: battle|tense|calm|sad, colors: {A:[r,g,b], B:[...]}, ally: {color, x, y, facing, cheer}（3人目の味方。奥行き y で後ろに置き、戦わず見守る。台詞は who: C）, a_scale/b_scale（体格）, seed, lines: [...]}`
    → `python -m stickfig check scenes/x.yaml`（合否＋演出のリズムの見積もり。Blender 不要・数秒）→ `build scenes/x.yaml --out out/x`
    - `lines`: `{at: opening|kick|rise|combo|counter|last|finisher|ko|end, dt, dur, kind: say|narr|shout, who: A|B, text}`（台詞・ナレーション・叫び文字）
 3. 点検の「演出のリズム」が **低い→足す／高い→減らす** なら、台本の `fx.flashes`・`stepping.ranges` で調整。動画ができたら `python -m stickfig rhythm out/x/x.mp4` で実測
@@ -55,4 +55,4 @@ description: 棒人間のアクション動画（戦い・物語つき）を、�
 
 ## まだ無い（次の改善候補）
 
-別の武器の種類を増やす(いまは剣・短剣・棍・槍)／3人以上の戦い／空中戦・追いかけっこ／3人以上の戦い／音の聴き比べ（いまは計算で作った効果音とBGM）／縦画面のSFX文字の位置（いまは切り出しで大きく出る）
+別の武器の種類を増やす(いまは剣・短剣・棍・槍)／3人以上が戦う場面（3人目の味方は置ける: `ally`）／空中戦・追いかけっこ／3人以上が戦う場面（3人目の味方は置ける: `ally`）／音の聴き比べ（いまは計算で作った効果音とBGM）／縦画面のSFX文字の位置（いまは切り出しで大きく出る）
