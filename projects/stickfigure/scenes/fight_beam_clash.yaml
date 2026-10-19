@@ -1,0 +1,3 @@
+# 必殺技の見本 4: 光線の撃ち合い。2 人が同時に撃ち、中央でぶつかり、A が押し勝つ
+name: fight_beam_clash
+fight: {weapon: none, kick: false, hits: 2, counter: true, finisher: beam_clash, palette: cool, stage: cave, mood: battle, seed: 3}

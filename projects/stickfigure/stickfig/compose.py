@@ -57,6 +57,19 @@ def to_px(wx: float, wz: float, cam: dict) -> Tuple[float, float]:
     return px, py
 
 
+def _pw_at(v, tau: float) -> float:
+    """数ならそのまま、[[tau, x], ...] なら折れ線で補間。"""
+    if isinstance(v, (int, float)):
+        return float(v)
+    pts = sorted((float(a), float(b)) for a, b in v)
+    if tau <= pts[0][0]:
+        return pts[0][1]
+    for (t0, x0), (t1, x1) in zip(pts, pts[1:]):
+        if tau <= t1:
+            return x0 + (x1 - x0) * (tau - t0) / max(1e-6, t1 - t0)
+    return pts[-1][1]
+
+
 def _prev_frame(plan: dict, f: int) -> Optional[int]:
     """tau が違う直前のコマ(2 コマ撮りの同じ絵は飛ばす)。"""
     t = plan["frames"][f]["tau"]
@@ -363,7 +376,10 @@ def compose_frame(plan: dict, f: int, figs: Dict[int, Image.Image], stages: Opti
     for ob in fx.get("orbs", []):              # 手に付いて膨らむ光の玉(溜め)
         if ob["start"] <= tau < ob["end"]:          # 終わり(投げる瞬間)は含めない(飛ぶ玉と二重になる)
             who_o = ob.get("who", "A")
-            hx, hz = anime.effector_world(plan, who_o, f)["hand"]
+            if ob.get("path"):                         # path があれば手でなくその位置(光線のぶつかる点など)
+                hx, hz = _pw_at(ob["path"], tau), float(ob.get("z", 1.3))
+            else:
+                hx, hz = anime.effector_world(plan, who_o, f)["hand"]
             px_, py_ = to_px(hx, hz, cam)
             q = (tau - ob["start"]) / max(1e-6, ob["end"] - ob["start"])
             r_u = ob["r0"] + (ob["r1"] - ob["r0"]) * (q ** 1.3)      # 早めに見える大きさに(q² だと溜めの 6 割まで見えなかった)
@@ -376,9 +392,9 @@ def compose_frame(plan: dict, f: int, figs: Dict[int, Image.Image], stages: Opti
             px_, py_ = to_px(wx, wz, cam)
             qx, qy = to_px(wx - (pj["x1"] - pj["x0"]) * 0.05, wz, cam)
             base.alpha_composite(look.ki_ball(px_, py_, pj["r"] * camera.px_per_unit(cam), f, tuple(pj.get("color", (255, 190, 70))), trail=(px_ - qx, py_ - qy)))
-    for bm in fx.get("beams", []):             # 気の光線(人物の上に描く。手の先から壁まで)
+    for bm in fx.get("beams", []):             # 気の光線(人物の上に描く。手の先から壁まで。x_end は数か [[tau, x], ...] の折れ線)
         if bm["start"] <= tau <= bm["end"]:
-            base.alpha_composite(look.beam(plan, f, bm.get("who", "A"), float(bm["x_end"]), tau - bm["start"], bm["end"] - bm["start"], tuple(bm.get("color", (120, 230, 255)))))
+            base.alpha_composite(look.beam(plan, f, bm.get("who", "A"), _pw_at(bm["x_end"], tau), tau - bm["start"], bm["end"] - bm["start"], tuple(bm.get("color", (120, 230, 255)))))
     # 顔(目)は描かない(2026-10-19 ユーザー指示)
     for e in plan["events"]:                   # 特大の効果: 斬撃の弧・衝撃の輪
         age = f - e["frame"]

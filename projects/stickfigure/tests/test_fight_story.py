@@ -210,3 +210,13 @@ def test_wave_finisher_builds():
     wv = sc["fx"]["waves"][0]
     assert wv["x1"] > wv["x0"]
     planmod.validate_scene(sc)
+
+
+def test_beam_clash_builds():
+    sc = fight.build_fight(dict(weapon="none", kick=False, hits=2, finisher="beam_clash"))
+    bms = sc["fx"]["beams"]
+    assert {b["who"] for b in bms} == {"A", "B"}
+    assert len(sc["fx"]["charge"]) >= 2
+    a_end = next(b for b in bms if b["who"] == "A")["x_end"]
+    assert isinstance(a_end, list) and a_end[-1][1] > a_end[0][1]        # A の光線は最後に壁まで伸びる
+    planmod.validate_scene(sc)
