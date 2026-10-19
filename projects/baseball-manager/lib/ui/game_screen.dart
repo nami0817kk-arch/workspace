@@ -257,17 +257,24 @@ class _GameScreenState extends State<GameScreen> {
           const _FirstHint(),
         ],
         _TodoChips(game: game),
-        if (game.canChooseOffseason) ...[
-          const SizedBox(height: 6),
-          _OffseasonCard(controller: controller, game: game),
-        ],
         if (game.canChooseSchool) ...[
           const SizedBox(height: 6),
           _SchoolCard(controller: controller, game: game),
         ],
-        if (game.canChoosePosition) ...[
+        if (game.stage == Stage.pro &&
+            (game.canChooseOffseason || game.canChoosePosition)) ...[
+          // プロは毎年のことなので、1枚にたたんで場所を取らない(開くと選べる)。
           const SizedBox(height: 6),
-          _PositionCard(controller: controller, game: game),
+          _ProDecisions(controller: controller, game: game),
+        ] else ...[
+          if (game.canChooseOffseason) ...[
+            const SizedBox(height: 6),
+            _OffseasonCard(controller: controller, game: game),
+          ],
+          if (game.canChoosePosition) ...[
+            const SizedBox(height: 6),
+            _PositionCard(controller: controller, game: game),
+          ],
         ],
         const SizedBox(height: 6),
         AnimatedSize(
@@ -803,6 +810,41 @@ String _offShort(Offseason o) => switch (o) {
       Offseason.family => '(やる気↑)',
       Offseason.rehab => '(疲れ↓)',
     };
+
+/// プロの年のはじめの任意の決めごと(オフの過ごし方・ポジション)を、たたんでまとめる。
+class _ProDecisions extends StatelessWidget {
+  const _ProDecisions({required this.controller, required this.game});
+  final GameController controller;
+  final Game game;
+
+  @override
+  Widget build(BuildContext context) {
+    final todo = [
+      if (game.canChooseOffseason) 'オフの過ごし方',
+      if (game.canChoosePosition) 'ポジション',
+    ];
+    return Card(
+      key: const Key('pro-decisions'),
+      child: ExpansionTile(
+        shape: const Border(),
+        collapsedShape: const Border(),
+        leading: const Icon(Icons.flag_outlined),
+        title: const Text('年のはじめの決めごと'),
+        subtitle: Text(
+            '${todo.join('・')}(任意)。ポジション: ${positionOf(game.player, game.position)}'),
+        childrenPadding: const EdgeInsets.fromLTRB(4, 0, 4, 8),
+        children: [
+          if (game.canChooseOffseason)
+            _OffseasonCard(controller: controller, game: game),
+          if (game.canChooseOffseason && game.canChoosePosition)
+            const SizedBox(height: 6),
+          if (game.canChoosePosition)
+            _PositionCard(controller: controller, game: game),
+        ],
+      ),
+    );
+  }
+}
 
 class _OffseasonCard extends StatelessWidget {
   const _OffseasonCard({required this.controller, required this.game});

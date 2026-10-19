@@ -1794,6 +1794,11 @@ void _rankTests() {
       }
       c.adopt(g!);
       await t.pumpAndSettle();
+      // プロの任意の決めごとは、たたまれて1枚。開くとカードが出る
+      expect(find.byKey(const Key('pro-decisions')), findsOneWidget);
+      expect(find.byKey(const Key('offseason-card')), findsNothing);
+      await t.tap(find.byKey(const Key('pro-decisions')));
+      await t.pumpAndSettle();
       expect(find.byKey(const Key('offseason-card')), findsOneWidget);
       expect(find.text('オフの過ごし方を選べる'), findsNothing); // カードが出ているので不要
       expect(find.textContaining('FA権を使える'), findsOneWidget);
