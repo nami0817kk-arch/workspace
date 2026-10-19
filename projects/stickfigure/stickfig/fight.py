@@ -194,15 +194,15 @@ def build_fight(spec: dict) -> dict:
     else:                                                # 蹴り無し: B は最初から構えの位置に立つ(以前は 0.6 秒で 2 単位後ろへ滑っていた)
         keysB = [dict(t=0.0, dx=-1.7), dict(t=tc, dx=-1.7, rz=0.0, roll=0.0, hz=0.82, lean=0.1, fa=0.9, fe=1.4, ra=0.7, re=1.5, fl=0.45, fk=0.3, rl=-0.45, rk=0.4, face="fight")]
         ta = tc - 0.95 if bfirst else tc                 # A が構えの位置に着く時刻
-        a_dx = 4.6 if bfirst else 3.4                    # B が先に仕掛けるときは、B の間合い(0.8)まで寄る
+        a_dx = (4.0 if sword else 4.6) if bfirst else 3.4   # B が先に仕掛けるときは、B の拳が届く所まで寄る(剣なら、そのあと剣の間合いへ戻る分を小さく)
         clipsA[0].update(end=_r(ta))
         keysA.append(dict(t=_r(ta), dx=a_dx, hz=0.9))
         if bfirst:                                       # B が先に仕掛ける: 1発目は A が沈んでかわし(miss)、2発目は A が受け止める(clash)
             tb1, tb2 = tc - 0.78, tc - 0.40
             keysB = [dict(t=0.0, dx=-1.7), dict(t=_r(tc - 1.2), dx=-1.7, **GUARD), dict(t=_r(tb1 - 0.15), dx=-1.0, **GUARD),
                      dict(t=_r(tc - 0.18), dx=-1.4, **GUARD), keysB[-1]]
-            clipsB += [dict(file=cclip, strike_at=_r(tb1), start=_r(tb1 - 0.2), end=_r(tb1 + 0.17), **{"in": 0.06, "out": 0.08}),
-                       dict(file=cclip, strike_at=_r(tb2), start=_r(tb2 - 0.17), end=_r(tb2 + 0.25), **{"in": 0.06, "out": 0.1})]
+            clipsB += [dict(file=cclip, dx_scale=0.3, strike_at=_r(tb1), start=_r(tb1 - 0.2), end=_r(tb1 + 0.17), **{"in": 0.06, "out": 0.08}),
+                       dict(file=cclip, dx_scale=0.3, strike_at=_r(tb2), start=_r(tb2 - 0.17), end=_r(tb2 + 0.25), **{"in": 0.06, "out": 0.1})]
             hits += [dict(tau=_r(tb1), hold=0.0, kind="miss", by="B", pos=[2.9, 1.25],
                           contact=dict(striker="B", effector="hand", target=dict(actor="A", point="head"), offset=[0.0, 0.22], tol=1.5, max_anticipation=50)),
                      dict(tau=_r(tb2), hold=0.07, kind="clash", by="B", contact=dict(striker="B", effector="hand", target=dict(actor="A", point=_pt(cclip, "hand")), tol=0.45, max_anticipation=50, hz_range=0.5))]
@@ -228,7 +228,7 @@ def build_fight(spec: dict) -> dict:
     bc = int(s["b_combo"]) if (s["b_combo"] and n >= 2 and not long_w) else 0
     if bc and n <= 2:
         s["counter"] = False                             # 2 発しか無いときは、反撃と B の連打が重なるので反撃は無し
-    gaps = [0.58, 0.46, 0.46, 0.46] if s["counter"] else [0.46, 0.46, 0.46, 0.46]      # clip の区間(前 0.16+後 0.14+混ぜ 0.12)が重ならない間隔
+    gaps = [0.72, 0.46, 0.46, 0.46] if s["counter"] else [0.46, 0.46, 0.46, 0.46]      # clip の区間(前 0.16+後 0.14+混ぜ 0.12)が重ならない間隔
     if rng is not None:
         gaps = [round(g + rng.uniform(-0.05, 0.07), 2) for g in gaps]
     defend = {}                                          # 何発目を、どう防ぐか: index → "clash" / "miss"
@@ -242,12 +242,12 @@ def build_fight(spec: dict) -> dict:
     if s["mix_kick"] and n >= 3 and (rng is None or rng.random() < 0.5):
         kick_i = next((i for i in range(n - 1) if i not in defend), -1)
     if rip_i is not None:
-        gaps[rip_i] = round(gaps[rip_i] + 0.55, 2)       # 打ち返しの分、次の1発までを空ける(受けてから次の踏み込みまで 0.3 秒は要る)
+        gaps[rip_i] = round(gaps[rip_i] + 0.67, 2)       # 打ち返しの分、次の1発までを空ける(受けてから次の踏み込みまで 0.3 秒は要る)
     if 0 <= kick_i < n - 1:
         gaps[kick_i] = round(gaps[kick_i] + 0.35, 2)     # 蹴りの clip は長い(命中の後 0.3 秒)。次の clip と重ならないよう空ける
     tb_off = 0.0
     if bc:                                               # B の連打は、A の n-1 発目のあと(受け返しがあればその後)に入れる。決めの1発までを空ける
-        tb_off = 0.9 if rip_i == n - 2 else 0.5
+        tb_off = 1.0 if rip_i == n - 2 else 0.5
         gaps[n - 2] = round(max(gaps[n - 2], tb_off + 0.45 * (bc - 1) + 0.6), 2)
     ts = [h0]
     for i in range(1, n):
@@ -284,8 +284,8 @@ def build_fight(spec: dict) -> dict:
             fwd = 0.0                                    # 受け止めの間合いは接触で決まる(B が踏み込むと、長い剣の A が 2 単位も下がることになる)
             keysB += [dict(t=_r(t - 0.16), dx=_r(dxB + 0.10 + fwd), **BLOCK), dict(t=_r(t + 0.08), dx=_r(dxB + fwd), **BLOCK)]
             if rip_i == i:                               # 受けて返す: B が打ち返し、A が受け止める
-                tr = t + 0.30
-                clipsB.append(dict(file=cclip, strike_at=_r(tr), start=_r(tr - 0.2), end=_r(tr + 0.26), **{"in": 0.06, "out": 0.1}))
+                tr = t + 0.42
+                clipsB.append(dict(file=cclip, dx_scale=0.3, strike_at=_r(tr), start=_r(tr - 0.2), end=_r(tr + 0.26), **{"in": 0.06, "out": 0.1}))
                 hits.append(dict(tau=_r(tr), hold=0.07, kind="clash", by="B", contact=dict(striker="B", effector="hand", target=dict(actor="A", point=_pt(cclip, "hand")), tol=0.45, max_anticipation=50, hz_range=0.5)))
                 keysA += [dict(t=_r(tr - 0.14), **BLOCK), dict(t=_r(tr + 0.08), **BLOCK), dict(t=_r(tr + 0.26), **GUARD_A)]
                 dxB += fwd                               # 受け返したあとも、その間合いのまま(下がると次の1発まで A が追いかけることになる)
@@ -307,7 +307,7 @@ def build_fight(spec: dict) -> dict:
             for j in range(bc):
                 tbj = tb + 0.45 * j
                 keysB += [dict(t=_r(tbj - 0.14), dx=_r(dxB + 0.7), **GUARD), dict(t=_r(tbj + 0.1), dx=_r(dxB + 0.7), **GUARD)]
-                clipsB.append(dict(file=cclip, strike_at=_r(tbj), start=_r(tbj - 0.2), end=_r(tbj + 0.2), **{"in": 0.06, "out": 0.06}))
+                clipsB.append(dict(file=cclip, dx_scale=0.3, strike_at=_r(tbj), start=_r(tbj - 0.2), end=_r(tbj + 0.2), **{"in": 0.06, "out": 0.06}))
                 if j == 0 and bc >= 2:                   # かわされる1発: 位置は接触で決める(狙いは頭の少し上。A がくぐるので当たらない)
                     hits.append(dict(tau=_r(tbj), hold=0.0, kind="miss", by="B", pos=[2.9, 1.25],
                                      contact=dict(striker="B", effector="hand", target=dict(actor="A", point="head"), offset=[0.0, 0.22], tol=1.5, max_anticipation=50)))
@@ -316,11 +316,11 @@ def build_fight(spec: dict) -> dict:
                     keysA += [dict(t=_r(tbj - 0.14), **BLOCK), dict(t=_r(tbj + 0.08), **BLOCK), dict(t=_r(tbj + 0.26), **GUARD_A)]
             keysB.append(dict(t=_r(tb + 0.45 * (bc - 1) + 0.32), dx=_r(dxB), **GUARD))
         if i == 0 and s["counter"] and n > 1:
-            tcn = t + 0.28
+            tcn = t + 0.40                               # A の命中のあと、B が踏み込む時間(0.3 秒前からの助走)を取ってから打つ
             keysB += [dict(t=_r(tcn - 0.12), dx=_r(dxB + 0.7), **GUARD), dict(t=_r(tcn + 0.1), dx=_r(dxB + 0.7), **GUARD)]   # 踏み込んで打つ
             if defend.get(i + 1) != "clash":                                  # 次が受け止めなら、その間合いのまま(戻らない)
                 keysB.append(dict(t=_r(tcn + 0.32), dx=_r(dxB), **GUARD))
-            clipsB.append(dict(file=cclip, strike_at=_r(tcn), start=_r(tcn - 0.2), end=_r(tcn + 0.27), **{"in": 0.06, "out": 0.1}))
+            clipsB.append(dict(file=cclip, dx_scale=0.3, strike_at=_r(tcn), start=_r(tcn - 0.2), end=_r(tcn + 0.27), **{"in": 0.06, "out": 0.1}))
             hits.append(dict(tau=_r(tcn), hold=0.05, kind="hit", by="B", contact=dict(striker="B", effector="hand", target=dict(actor="A", point=_pt(cclip, "hand")), tol=0.42, max_anticipation=50, hz_range=0.5)))
             keysA += [dict(t=_r(tcn + 0.07), lean=-0.2, hz=0.9), dict(t=_r(tcn + 0.27), lean=0.15, hz=0.9)]   # 位置(dx)は書かない: 押される分は body_drive、位置は clip の継ぎ目合わせに任せる
     hl = ts[-1]

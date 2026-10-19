@@ -491,12 +491,16 @@ def _align_keys_to_clips(scene: dict, tracks: Dict[str, KeyTrack]) -> Dict[str, 
                     dd = dl
             return dd
 
-        gaps = []                                        # 続けざまの clip(間が 0.6 秒未満、重なりも含む)の間は、前の終点から次の始点へ直線で動く(台本の位置へ戻る暇が無い)
+        gaps = []                                        # 続けざまの clip(間が 0.6 秒未満、重なりも含む)の間: 前の終点の位置を保ち、次の始点の 0.3 秒前から直線で動く
         for (w0, w1, c), (w0n, w1n, cn) in zip(windows, windows[1:]):
             if w0n - w1 < 0.6:
-                lo, hi = min(c["end"], w0n), max(cn["start"], w1)
-                if hi - lo > 1e-6:
-                    gaps.append((lo, hi, bank.sample(c, c["end"])["dx"], bank.sample(cn, cn["start"])["dx"]))
+                lo, hi = max(min(c["end"], w0n), w0n - 0.3), max(cn["start"], w1)
+                for pt in protected:                     # この人物が関わる命中の瞬間はまたがない(そこで動くと、解いた接触が崩れる)
+                    if lo <= pt < hi:
+                        lo = max(lo, pt + 0.04)
+                if hi - lo < 0.03:
+                    hi = lo + 0.03
+                gaps.append((lo, hi, bank.sample(c, c["end"])["dx"], bank.sample(cn, cn["start"])["dx"]))
         for k in keys:
             tt = float(k["t"])
             dx0 = float(k.get("_dx0", base.at(tt)["dx"]))
