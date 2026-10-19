@@ -512,3 +512,9 @@ soccer-manager / soccer-career の野球版。**中核は「試合中の采配�
 ### 38. 対戦テスト（管理者モード・バランス確認用の画面）
 - 設定 → 管理者モード(テスト版は最初からオン) → 「対戦テスト」(`lib/ui/versus_screen.dart`)。能力(打者: ミート/パワー/選球眼、投手: 球威/制球)と特性(長距離砲・アベレージヒッター・選球眼の鬼・俊足、剛腕・精密機械・スタミナお化け)をスライダーとチップで決め、1000/5000/2万打席を対戦させて、出塁・打率・長打率・三振・四球・凡退・本塁打・長打の割合を出す。プリセット: 打者99 vs 投手10 ／ 50 vs 50 ／ 打者10 vs 投手99 ／ 99 vs 99。チーム同士の試合(チーム力の差だけで決まる勝つ確率)も試せる。
 - 育成中の選手・セーブには一切影響しない(`runVersus` / `teamWinChance` は純粋な計算)。特性の上乗せは試合用の能力(`traitAbilityDelta`、上限`gameAbilityCap`)で足す。`test/versus_test.dart`(99 vs 10の必勝・特性の上乗せ・画面の操作)。
+
+### 39. TestFlight（iOS）で実機に出す準備
+- ワークフロー `.github/workflows/baseball-ios-release.yml`(macOS ランナー。もじつみ `tenbin-ios-release.yml` から AdMob・法務ページ・課金の確認を除いた形)と、手順書 `docs/RELEASE.md`。`pubspec.yaml` を `1.0.0+1` に、`Info.plist` に `ITSAppUsesNonExemptEncryption=false`(輸出コンプライアンスの質問を省く)。
+- 使い回す Secrets(登録済み)は `IOS_DIST_CERT_*` / `IOS_TEAM_ID` / `APPSTORE_API_*`。**このアプリだけ新しく要る** `BASEBALL_IOS_PROVISIONING_PROFILE_BASE64` と、Apple Developer での App ID 登録(`com.namiki.baseballManager`)・App Store Connect でのアプリ作成は、自分の Apple アカウントでしかできない。
+- 手で回すとき `test_build` に印(既定オン)を付けると、`--dart-define=TEST_BUILD=true` で管理者モードが最初からオンのテスト版(対戦テストが使える)。タグ `baseball-v*` から走るビルドは必ず通常版。
+- **iOS のビルド・署名はまだ一度も通していない**(この環境は Linux)。初回は CI のログを見て直す。
