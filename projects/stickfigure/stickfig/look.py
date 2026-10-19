@@ -123,6 +123,38 @@ def eyes(plan: dict, f: int, img: Image.Image) -> None:
                 d.arc([X - 4 * k, Z - 3 * k, X + 4 * k, Z + 3 * k], 200, 340, fill=(10, 10, 10), width=max(2, int(1.8 * k)))
 
 
+def ki_ball(cx: float, cy: float, r: float, f: int, col=(255, 190, 70), trail: Tuple[float, float] = None) -> Image.Image:
+    """気の玉: 白い芯+色の光、周りに回る粒。trail=(dx, dy)(画面の進行方向)があれば、後ろに流れる筋。"""
+    ov = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    if r < 1:
+        return ov
+    rnd = random.Random(f * 7 + 1)
+    glow = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    g = ImageDraw.Draw(glow)
+    g.ellipse([cx - r * 1.7, cy - r * 1.7, cx + r * 1.7, cy + r * 1.7], fill=(*col, 150))
+    if trail is not None:
+        tx, ty = trail
+        ln = math.hypot(tx, ty) or 1.0
+        ux, uy = -tx / ln, -ty / ln
+        for i in range(14):
+            k = rnd.uniform(0.3, 1.0)
+            off = rnd.uniform(-0.8, 0.8) * r
+            x0, y0 = cx + (-uy) * off, cy + ux * off
+            g.line([x0, y0, x0 + ux * r * 4.5 * k, y0 + uy * r * 4.5 * k], fill=(*col, int(90 + 120 * k)), width=max(2, int(r * 0.18)))
+    ov.alpha_composite(glow.filter(ImageFilter.GaussianBlur(max(4, int(r * 0.5)))))
+    d = ImageDraw.Draw(ov)
+    wob = 1.0 + 0.06 * math.sin(f * 1.9)
+    d.ellipse([cx - r * wob, cy - r * wob, cx + r * wob, cy + r * wob], fill=(*col, 235))
+    d.ellipse([cx - r * 0.62, cy - r * 0.62, cx + r * 0.62, cy + r * 0.62], fill=(255, 255, 255, 245))
+    for i in range(10):                                   # 回る粒
+        ang = f * 0.35 + i * 0.63
+        rr = r * rnd.uniform(1.1, 1.6)
+        x, y = cx + math.cos(ang) * rr, cy + math.sin(ang) * rr * 0.6
+        pr = rnd.uniform(1.5, 3.5)
+        d.ellipse([x - pr, y - pr, x + pr, y + pr], fill=(255, 255, 255, 220))
+    return ov
+
+
 def beam(plan: dict, f: int, who: str, x_end: float, age: float, dur: float, col=(120, 230, 255)) -> Image.Image:
     """気の光線: 手(前の手と後ろの手の間)から x_end(壁)まで、白い芯+色の光。age(秒)で 3 コマで太くなり、終わりの 25% で細って消える。
     縁は揺らぎ(コマごとに乱れる)、根元に光の玉、周りに流れる粒。"""

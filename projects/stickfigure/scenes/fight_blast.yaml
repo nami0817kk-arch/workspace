@@ -1,0 +1,3 @@
+# 必殺技の見本 2: 気弾。片手に玉を膨らませて投げ、着弾で爆発して壁まで吹き飛ばす
+name: fight_blast
+fight: {weapon: none, kick: false, hits: 3, counter: true, finisher: blast, palette: warm, stage: sunset, mood: battle, seed: 11}

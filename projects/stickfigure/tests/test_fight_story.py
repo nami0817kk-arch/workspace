@@ -191,3 +191,13 @@ def test_beam_finisher_builds_and_flies_to_wall():
     t_wall = next(h["tau"] for h in sc["hits"] if h["kind"] == "wall" and h["tau"] > t_beam)
     assert 0.2 <= t_wall - t_beam <= 0.5
     planmod.validate_scene(sc)
+
+
+def test_blast_finisher_builds():
+    sc = fight.build_fight(dict(weapon="none", kick=False, hits=2, finisher="blast"))
+    kinds = [h["kind"] for h in sc["hits"]]
+    assert "throw" in kinds and "blast" in kinds and "wall" in kinds
+    assert sc["fx"]["orbs"] and sc["fx"]["projectiles"]
+    pj = sc["fx"]["projectiles"][0]
+    assert pj["x1"] > pj["x0"] and 0.1 <= pj["end"] - pj["start"] <= 0.3
+    planmod.validate_scene(sc)

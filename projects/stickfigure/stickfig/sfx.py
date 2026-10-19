@@ -123,6 +123,11 @@ def se(plan: dict, seed: int = 7) -> np.ndarray:
             _add(buf, boom(rng), t, 0.45)
         elif k == "wall":
             _add(buf, boom(rng), t, 1.0)
+        elif k == "throw":
+            _add(buf, whoosh(rng, 0.22), t - 0.05, 0.8)
+        elif k == "blast":                              # 気弾の爆発
+            _add(buf, boom(rng), t, 1.1)
+            _add(buf, thump(rng, 110, 0.4, 0.5), t, 0.7)
         elif k == "beam":                               # 気の光線: 低いうなり+ノイズの持続(0.8 秒)、頭に boom
             n_ = int(SR * 0.85)
             tt = np.arange(n_) / SR
