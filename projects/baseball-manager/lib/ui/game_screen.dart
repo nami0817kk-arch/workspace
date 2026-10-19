@@ -1848,6 +1848,39 @@ class EndingView extends StatelessWidget {
     final p = game.player;
     final cs = Theme.of(context).colorScheme;
     return Scaffold(
+      // 次へ進むボタンは、長い画面の下までスクロールしなくても押せるよう下に固定する。
+      bottomNavigationBar: SafeArea(
+        child: Center(
+          heightFactor: 1,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: contentMaxWidth),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+              child: Column(mainAxisSize: MainAxisSize.min, children: [
+                if (game.ending?.married ?? false) ...[
+                  SizedBox(
+                    width: double.infinity,
+                    child: FilledButton.tonal(
+                      key: const Key('continue-heir'),
+                      onPressed: controller.continueAsHeir,
+                      child: const Text('この選手の子(二世)で続ける'),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                ],
+                SizedBox(
+                  width: double.infinity,
+                  child: FilledButton(
+                    key: const Key('again'),
+                    onPressed: controller.reset,
+                    child: const Text('もう一度、別の選手で'),
+                  ),
+                ),
+              ]),
+            ),
+          ),
+        ),
+      ),
       appBar: AppBar(
         title: Text('${p.name} の一生'),
         actions: [
@@ -1999,20 +2032,6 @@ class EndingView extends StatelessWidget {
                   messenger.showSnackBar(
                       const SnackBar(content: Text('コピーしました。友だちに見せよう')));
                 },
-              ),
-              const SizedBox(height: 8),
-              if (game.ending?.married ?? false) ...[
-                FilledButton.tonal(
-                  key: const Key('continue-heir'),
-                  onPressed: controller.continueAsHeir,
-                  child: const Text('この選手の子(二世)で続ける'),
-                ),
-                const SizedBox(height: 8),
-              ],
-              FilledButton(
-                key: const Key('again'),
-                onPressed: controller.reset,
-                child: const Text('もう一度、別の選手で'),
               ),
             ],
           ),
