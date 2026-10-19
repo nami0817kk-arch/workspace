@@ -454,12 +454,15 @@ def _body_drive(p: dict, who: str, f: int, events: List[dict], cfg: dict, sign: 
     k = float(cfg.get("strength", 1.0))
     kinds = cfg.get("kinds", ["slash", "hit", "kick", "heel"])
     p = dict(p)
-    dspin = dlean = dhz = ddx = dht = 0.0
+    dspin = dlean = dhz = ddx = dht = dfl = drl = dfk = 0.0
     for e in events:
         if e["kind"] not in kinds or not e.get("by"):
             continue
         d = f - e["frame"]
         if e["by"] == who:                               # 攻める側
+            if -6 <= d <= 8:                             # 踏み込みの構え: 前脚を大きく出して膝を曲げ、後ろ脚を引いて伸ばす(弓足)。山は命中の少し前
+                w_ = math.sin(math.pi * (d + 6) / 14.0)
+                dfl += 0.55 * k * w_; dfk += 0.45 * k * w_; drl += -0.45 * k * w_; dhz += -0.10 * k * w_
             if -12 <= d < -4:                            # 溜め: 後ろへひねり、沈み、少し引く
                 u = (d + 12) / 8.0
                 s = math.sin(math.pi * 0.5 * u)
@@ -482,6 +485,9 @@ def _body_drive(p: dict, who: str, f: int, events: List[dict], cfg: dict, sign: 
     p["hz"] = p.get("hz", 0.9) + dhz
     p["dx"] = p.get("dx", 0.0) + ddx
     p["ht"] = p.get("ht", 0.0) + dht
+    p["fl"] = p.get("fl", 0.0) + dfl
+    p["fk"] = p.get("fk", 0.0) + dfk
+    p["rl"] = p.get("rl", 0.0) + drl
     return p
 
 
