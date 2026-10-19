@@ -120,7 +120,7 @@ def build_scene(scene: dict, out: Path, reuse_figs: bool = False, force: bool = 
         sfx.render(pl, wav, (au or {}).get("mood", "battle"), float((au or {}).get("bgm_gain", 0.5)))
         silent = Path(mp4).with_name(Path(mp4).stem + "_silent.mp4")
         Path(mp4).replace(silent)
-        subprocess.run([ff, "-y", "-loglevel", "error", "-i", str(silent), "-i", str(wav), "-c:v", "copy", "-af", "alimiter=limit=0.84", "-c:a", "aac", "-b:a", "192k",
+        subprocess.run([ff, "-y", "-loglevel", "error", "-i", str(silent), "-i", str(wav), "-c:v", "copy", "-af", "alimiter=limit=0.84:level=0", "-c:a", "aac", "-b:a", "192k",
                         "-ar", "44100", "-ac", "2", "-shortest", str(mp4)], check=True)
         silent.unlink()
     holds = []

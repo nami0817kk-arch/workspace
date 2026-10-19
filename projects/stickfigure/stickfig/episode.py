@@ -25,7 +25,7 @@ from PIL import Image, ImageDraw
 from . import anime, camera, fight, plan as planmod, sfx
 
 W, H = camera.W, camera.H
-LOUDNORM = "loudnorm=I=-15:TP=-1.5:LRA=12"       # 音量をそろえ、ピークの頭打ち(YouTube は約 -14 LUFS に合わせる。ピークが 0 を越えると再エンコードで歪む)
+LOUDNORM = "loudnorm=I=-16:TP=-2:LRA=12"       # 音量をそろえ、ピークの頭打ち(YouTube は約 -14 LUFS に合わせる。ピークが 0 を越えると再エンコードで歪む)
 
 
 def load_episode(path) -> dict:
