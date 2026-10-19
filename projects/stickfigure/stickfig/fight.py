@@ -440,7 +440,7 @@ def build_fight(spec: dict) -> dict:
     stepping = dict(hold=2, ones_around_hits=3, hold_camera=True)        # 2コマ撮りを全体に(命中の前後 3 コマは 1 コマごと)。参考の同じ絵の割合 17〜33% に寄せる
     actors = dict(A=dict(color=s["colors"]["A"], scale=float(s["a_scale"]), base_x=-2.0, facing=1), B=dict(color=s["colors"]["B"], scale=float(s["b_scale"]), base_x=2.4, facing=-1))
     b_far = max(2.4 - float(k["dx"]) for k in keysB if "dx" in k)              # B が最も下がる根元の位置(B は base 2.4 で左向き)
-    wall_x = 6.0 if kick else round(max(6.0, b_far + 0.9), 2)                  # 壁は B より奥に(素手の連打で B が 6.5 まで押され、壁の向こうに立っていた)。飛び蹴りの壁は 6.0 固定
+    wall_x = 6.0 if kick else round(max(6.0, b_far + 1.3), 2)                  # 壁は B より奥に(素手の連打で B が 6.5 まで押され、壁の向こうに立っていた)。飛び蹴りの壁は 6.0 固定
     if sword:
         actors["A"]["weapon"] = s["weapon"]
     marks = dict(opening=0.3, kick=1.9, rise=tc, combo=h0, last=hl, finisher=hl + 0.55, ko=ko_t, end=end - 1.2)
