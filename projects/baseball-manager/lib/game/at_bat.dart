@@ -40,7 +40,11 @@ AtBatResult simulateAtBat(Pitcher p, Batter b, Random rng) {
       .clamp(0.05, 0.55);
   // 打者が投手を大きく上回るとき(S級の打者と小学生の投手)は、ヒットが大きく増える。
   // 逆に投手が上回るときの減り方より強め(上限 .75)。同レベル同士は従来どおり。
+  // ミートが90台のずば抜けた打者は、プロの相手にも4割に届くよう、上のほうだけ上乗せする
+  // (能力75未満は0、99で+.045。3乗なので90でもわずか)。
+  final topContact = pow(((b.contact - 75) / 24).clamp(0.0, 1.0), 3) * 0.045;
   final hitP = (0.24 +
+          topContact +
           d(b.contact) * 0.20 -
           d(p.stuff) * 0.10 -
           eo * (eo < 0 ? 0.40 : 0.16))
