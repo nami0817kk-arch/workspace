@@ -938,4 +938,65 @@ void main() {
       expect(matchStory(const MatchResult(won: true, teamScore: 1, oppScore: 0, points: 0, rebounds: 0, assists: 0)), isNull);
     });
   });
+
+  group('序盤とイベントの偏り', () {
+    test('同じ出来事は続けて起きない', () {
+      final rng = Random(9);
+      final p = Player(
+          name: 'a', age: 14, potential: 50, heightCm: 160, heightGenes: 0.5);
+      final recent = <String>[];
+      var repeats = 0;
+      String? prev;
+      for (var i = 0; i < 2000; i++) {
+        final e = rollEvent(p, pro: false, rng: rng, recent: recent);
+        if (e == null) continue;
+        if (e.id == prev) repeats++;
+        prev = e.id;
+        recent.add(e.id);
+        while (recent.length > 5) {
+          recent.removeAt(0);
+        }
+      }
+      expect(repeats, 0);
+    });
+
+    test('ゲームが最近の出来事を覚え、保存される', () {
+      final g = Game(
+        eventsEnabled: true,
+        player: strong().copyWith(age: 14),
+        rng: Random(2),
+      );
+      for (var i = 0; i < 40 && g.phase != Phase.retired; i++) {
+        if (g.phase == Phase.event) g.resolveEvent(0);
+        if (g.phase == Phase.season) g.choose(Action.rest, Ability.pass);
+      }
+      expect(g.recentEventIds.length, lessThanOrEqualTo(5));
+      expect(Game.fromJson(g.toJson()).recentEventIds, g.recentEventIds);
+    });
+
+    test('ミニバスは年齢が低いほど勝ちやすい(序盤を勝てないままにしない)', () {
+      double winRate(int age) {
+        var wins = 0, games = 0;
+        for (var seed = 0; seed < 300; seed++) {
+          final g = Game(
+            eventsEnabled: false,
+            player: Player(
+                name: 'a',
+                age: age,
+                potential: 50,
+                heightCm: 110.0 + age * 5,
+                heightGenes: 0.5),
+            rng: Random(seed),
+            slot: 1,
+          );
+          g.choose(Action.rest, Ability.pass);
+          wins += g.records.single.wins;
+          games += g.records.single.games;
+        }
+        return wins / games;
+      }
+
+      expect(winRate(6), greaterThan(0.45));
+    });
+  });
 }

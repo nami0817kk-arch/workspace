@@ -124,6 +124,7 @@ class Game {
     this.archived = false,
     this.recoveredThisTerm = false,
     this.teamwork = 40,
+    List<String>? recentEventIds,
     this.run,
     this.runWinter = false,
     this.termAction = Action.practice,
@@ -145,6 +146,7 @@ class Game {
     List<YearRecord>? records,
   })  : rng = rng ?? Random(),
         rival = rival ?? Rival(name: 'ライバル', potential: 60),
+        recentEventIds = recentEventIds ?? [],
         goalOptions = goalOptions ?? [],
         goalStart = goalStart ?? {},
         recentAchievements = recentAchievements ?? [],
@@ -226,6 +228,9 @@ class Game {
   /// 直近に終えたターンの結果(勝負どころで止まった後、続きを終えたときの結果もここに入る)。
   TermReport? lastReport;
   int slot;
+
+  /// 最近起きた出来事の id(同じものが続かないように)。
+  final List<String> recentEventIds;
 
   /// 起きている出来事(選ぶまで次へ進めない)。
   String? pendingEventId;
@@ -400,7 +405,15 @@ class Game {
     }
     if (yearEnded && !retired) _rollGoalOptions();
     if (eventsEnabled && phase == Phase.season) {
-      pendingEventId = rollEvent(player, pro: track == Track.pro, rng: rng)?.id;
+      pendingEventId = rollEvent(player,
+              pro: track == Track.pro, rng: rng, recent: recentEventIds)
+          ?.id;
+      if (pendingEventId != null) {
+        recentEventIds.add(pendingEventId!);
+        while (recentEventIds.length > 5) {
+          recentEventIds.removeAt(0);
+        }
+      }
     }
     return TermReport(
       action: action,
@@ -415,14 +428,18 @@ class Game {
   ({String name, bool rival, double bonus}) _pickOpponent(int round, bool isFinal) {
     final l = league;
     final rivalRound = max(1, l.rounds - 2);
+    // 小さいうちは勝てないと面白くないので、ミニバスの相手は年齢が低いほど弱い。
+    final ease = l == League.minibasket ? min(0, (player.age - 11) * 1.5) : 0.0;
     if (round == rivalRound && rival.activeAt(player.age)) {
       return (
           name: rival.name,
           rival: true,
-          bonus: rival.edgeAt(player.age) + difficulty.opponent);
+          bonus: rival.edgeAt(player.age) + difficulty.opponent + ease);
     }
     return (
-        name: opponentTeamName(l, rng), rival: false, bonus: difficulty.opponent);
+        name: opponentTeamName(l, rng),
+        rival: false,
+        bonus: difficulty.opponent + ease);
   }
 
   void _record(TournamentResult t, {bool winter = false}) {
@@ -693,6 +710,7 @@ class Game {
         'archived': archived,
         'recoveredThisTerm': recoveredThisTerm,
         'teamwork': teamwork,
+        'recentEventIds': recentEventIds,
         'difficulty': difficulty.name,
         'goalOptions': [for (final g in goalOptions) g.toJson()],
         'goal': goal?.toJson(),
@@ -732,6 +750,9 @@ class Game {
         archived: (j['archived'] as bool?) ?? false,
         recoveredThisTerm: (j['recoveredThisTerm'] as bool?) ?? false,
         teamwork: (j['teamwork'] as num?)?.toInt() ?? 40,
+        recentEventIds: [
+          for (final v in (j['recentEventIds'] as List?) ?? const []) v as String
+        ],
         difficulty: Difficulty.parse(j['difficulty'] as String?),
         goalOptions: [
           for (final g in (j['goalOptions'] as List?) ?? const [])

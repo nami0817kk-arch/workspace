@@ -168,13 +168,19 @@ class GameController extends ChangeNotifier {
     newlyUnlocked = const [];
     game = Game.start(n, rng: _rng, events: events, difficulty: difficulty);
     focus = recommendedFocus(game!.player);
+    focusAuto = true;
     recent = const [];
     pathMessage = null;
     _commit();
   }
 
+  /// 重点をおすすめに自動で合わせるか(自分で選ぶと止まる。「おすすめ」を押すと戻る)。
+  bool focusAuto = true;
+
   void setFocus(Ability a) {
     focus = a;
+    // おすすめを選び直したら、自動の追従に戻る。
+    focusAuto = game != null && a == recommendedFocus(game!.player);
     notifyListeners();
   }
 
@@ -414,6 +420,7 @@ class GameController extends ChangeNotifier {
 
   void _commit() {
     final g = game;
+    if (g != null && focusAuto) focus = recommendedFocus(g.player);
     // 引退したら、殿堂に1度だけ書き込み、実績を解除する。
     if (g != null && g.phase == Phase.retired && !g.archived) {
       g.archived = true;
