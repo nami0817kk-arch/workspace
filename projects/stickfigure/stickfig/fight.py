@@ -28,6 +28,7 @@ DEFAULTS = dict(
     palette="warm",          # warm / cool
     colors=dict(A=[0.3, 0.68, 0.1], B=[0.8, 0.1, 0.08]),
     tempo=1.35,
+    mood="battle",           # BGM の雰囲気: battle / tense / calm / sad / none
     lines=[],                # 台詞・ナレーション: [{at: opening|kick|rise|combo|counter|last|finisher|ko|end, dt: 0, dur: 1.6, kind: say|narr|shout, who: A, text: "…"}]
 )
 
@@ -222,7 +223,7 @@ def build_fight(spec: dict) -> dict:
         impact_cuts=dict(kinds=["kick", "heel", "wall"], hold=0.2, angles=[dict(yaw=35, pitch=4, scale=3.0, lens=28, hue=0), dict(yaw=-40, pitch=-6, scale=2.6, lens=26, dutch=6.0, hue=1),
                                                                          dict(yaw=5, pitch=12, scale=3.4, lens=34, hue=2)],
                          per_kind=dict(wall=[dict(yaw=-30, pitch=6, scale=5.0, lens=30), dict(yaw=10, pitch=18, scale=6.0, lens=34), dict(yaw=-55, pitch=3, scale=4.2, lens=28, dutch=-5.0)])),
-        flurry=flurry, style="flat2d", captions=caps, _marks={k: _r(v) for k, v in marks.items()})
+        flurry=flurry, style="flat2d", captions=caps, audio=(False if s["mood"] == "none" else dict(mood=s["mood"])), _marks={k: _r(v) for k, v in marks.items()})
     return scene
 
 

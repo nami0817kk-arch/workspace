@@ -112,6 +112,15 @@ def cmd_build(a) -> int:
             render_figures(plan_path, stage, "stage")
     ff = find_ffmpeg()
     mp4 = compose.compose(pl, figs, out / "frames", out / f"{scene.get('name', 'scene')}.mp4", ff, stage)
+    au = scene.get("audio", {})
+    if au is not False:                       # 効果音+BGM(計算で作る)を付ける
+        from . import sfx
+        wav = out / f"{scene.get('name', 'scene')}.wav"
+        sfx.render(pl, wav, (au or {}).get("mood", "battle"), float((au or {}).get("bgm_gain", 0.5)))
+        silent = Path(mp4).with_name(Path(mp4).stem + "_silent.mp4")
+        Path(mp4).replace(silent)
+        subprocess.run([ff, "-y", "-loglevel", "error", "-i", str(silent), "-i", str(wav), "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-shortest", str(mp4)], check=True)
+        silent.unlink()
     holds = []
     for e in pl["events"]:
         holds += list(range(e["frame"], e["frame"] + e.get("hold_frames", 0) + 1))

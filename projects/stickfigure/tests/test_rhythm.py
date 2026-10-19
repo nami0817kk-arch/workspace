@@ -17,3 +17,15 @@ def test_plan_metrics_keys_and_ranges():
 def test_reference_ranges_are_ordered():
     for lo, hi, _ in rhythm.REFERENCE.values():
         assert lo < hi
+
+
+def test_sfx_renders_and_peaks_at_events(tmp_path):
+    import wave
+    import numpy as np
+    from stickfig import sfx
+    pl = planmod.build_plan(planmod.load_scene(ROOT / "scenes" / "showpiece.yaml"))
+    path = sfx.render(pl, tmp_path / "a.wav", "battle")
+    w = wave.open(path)
+    x = np.frombuffer(w.readframes(w.getnframes()), dtype=np.int16)
+    assert not np.isnan(x).any() and np.abs(x).max() > 3000
+    assert abs(w.getnframes() / w.getframerate() - pl["n"] / pl["fps"]) < 0.1
