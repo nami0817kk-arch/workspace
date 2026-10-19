@@ -514,7 +514,7 @@ class _StatusCard extends StatelessWidget {
               _PennantRow(progress: game.seasonProgress!),
               const SizedBox(height: 6),
             ],
-            if (game.goal != null)
+            if (game.goal != null && game.phase != Phase.pathChoice)
               _GoalRow(
                   game: game,
                   onChange: game.canChooseGoal

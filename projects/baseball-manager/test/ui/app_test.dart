@@ -1776,6 +1776,15 @@ void _rankTests() {
           findsOneWidget);
     });
 
+    testWidgets('進路を選ぶ画面では、今年の目標を出さない(まだ年が始まっていない)', (t) async {
+      final c = await _start(t);
+      c.adopt(
+          _until((g) => g.phase == Phase.pathChoice, seed: 3, potential: 0));
+      await t.pumpAndSettle();
+      expect(find.byKey(const Key('route-university')), findsOneWidget);
+      expect(find.byKey(const Key('goal-row')), findsNothing);
+    });
+
     testWidgets('実績の絞りこみ', (t) async {
       final c = await _start(t);
       c.unlocked = {'first-pro'};

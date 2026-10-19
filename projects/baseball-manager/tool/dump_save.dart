@@ -11,8 +11,9 @@ import 'package:baseball_manager/game/player.dart';
 void main(List<String> a) {
   final stage = a.isEmpty ? 'pro' : a[0];
   final seed = a.length > 1 ? int.parse(a[1]) : 5;
+  final potential = a.length > 2 ? int.parse(a[2]) : 90;
   final g = Game.newGame(
-      name: 'ユウタ', role: Role.pitcher, rng: Random(seed), potential: 90);
+      name: 'ユウタ', role: Role.pitcher, rng: Random(seed), potential: potential);
   var n = 0;
   while (g.phase != Phase.retired && n++ < 4000) {
     if (stage == 'pathChoice' && g.phase == Phase.pathChoice) {
