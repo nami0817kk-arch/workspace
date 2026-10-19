@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../game/flavor.dart';
 import '../game/marks.dart';
@@ -40,6 +41,22 @@ class PlayerScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Text(snapshot.name),
+          actions: [
+            Builder(
+              builder: (context) => IconButton(
+                key: const Key('copy-profile'),
+                tooltip: '選手カードをコピー',
+                icon: const Icon(Icons.copy),
+                onPressed: () async {
+                  final m = ScaffoldMessenger.of(context);
+                  await Clipboard.setData(
+                      ClipboardData(text: profileText(snapshot)));
+                  m.showSnackBar(
+                      const SnackBar(content: Text('選手カードをコピーしました')));
+                },
+              ),
+            ),
+          ],
           bottom: const TabBar(
             tabs: [
               Tab(key: Key('tab-profile'), text: 'プロフィール'),

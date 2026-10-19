@@ -8,6 +8,7 @@ import '../game/exp.dart';
 import '../game/flavor.dart';
 import '../game/characters.dart' show tipsNeeded;
 import '../game/life_log.dart';
+import '../game/rival_story.dart';
 import '../game/school.dart';
 import '../game/marks.dart';
 import '../game/goals.dart';
@@ -262,6 +263,20 @@ class _GameScreenState extends State<GameScreen> {
               lines: controller.recent, cardKey: const Key('recent-full')),
           const SizedBox(height: 8),
         ],
+        if (game.stage == Stage.pro)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: Card(
+              key: const Key('money-card'),
+              child: ListTile(
+                leading: const Icon(Icons.savings, color: Color(0xFF2E7D32)),
+                title: Text('資産 ${fmtMoney(game.money)}'),
+                subtitle: Text(game.records.any((r) => r.stage == Stage.pro)
+                    ? '昨年の年俸 ${fmtSalary(salaryOf(game.records.lastWhere((r) => r.stage == Stage.pro)))}'
+                    : '年俸はシーズンのあとに決まります'),
+              ),
+            ),
+          ),
         if (game.phase == Phase.term && game.stage == Stage.pro) ...[
           _ProCard(controller: controller, game: game),
           const SizedBox(height: 8),
@@ -274,6 +289,19 @@ class _GameScreenState extends State<GameScreen> {
       ];
 
   List<Widget> _relationsTab() => [
+        if (game.cast.rival != null)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: Card(
+              key: const Key('rival-line'),
+              child: ListTile(
+                leading: const Icon(Icons.sports_kabaddi),
+                title: Text('ライバル ${game.cast.rival!.name}'),
+                subtitle: Text(rivalStatus(
+                    storyOfCharacter(game.cast.rival!)!, game.player.age)),
+              ),
+            ),
+          ),
         CastCard(game: game, expanded: true),
       ];
 
@@ -1735,6 +1763,14 @@ class EndingView extends StatelessWidget {
                 },
               ),
               const SizedBox(height: 8),
+              if (game.ending?.married ?? false) ...[
+                FilledButton.tonal(
+                  key: const Key('continue-heir'),
+                  onPressed: controller.continueAsHeir,
+                  child: const Text('この選手の子(二世)で続ける'),
+                ),
+                const SizedBox(height: 8),
+              ],
               FilledButton(
                 key: const Key('again'),
                 onPressed: controller.reset,

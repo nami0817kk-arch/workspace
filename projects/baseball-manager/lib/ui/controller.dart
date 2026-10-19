@@ -11,6 +11,7 @@ import '../game/difficulty.dart';
 import '../game/exp.dart';
 import '../game/career.dart';
 import '../game/flavor.dart';
+import '../game/marks.dart';
 import '../game/game.dart';
 import '../game/school.dart';
 import '../game/invest.dart';
@@ -23,6 +24,9 @@ import 'labels.dart';
 
 const saveKey = 'baseball_manager_save_v1';
 const historyKey = 'baseball_manager_history_v1';
+
+/// 表示するバージョン(pubspec.yaml の version と合わせる)。
+const appVersion = '0.1.0';
 const adminKey = 'baseball_manager_admin_v1';
 const textScaleKey = 'baseball_manager_text_scale_v1';
 const themeKey = 'baseball_manager_theme_v1';
@@ -244,6 +248,25 @@ class GameController extends ChangeNotifier {
 
   /// 結果の調子: 1=好調・大成功 / -1=失敗・怪我 / 0=ふつう。トーストの色と印に使う。
   int toastTone = 0;
+
+  /// 殿堂から、選手を1人消す。
+  void deleteHistory(HistoryEntry e) {
+    history = [
+      for (final h in history)
+        if (!identical(h, e)) h
+    ];
+    store.saveHistory(history);
+    notifyListeners();
+  }
+
+  /// 引退した選手の子(二世)として、すぐ次の選手を始める。
+  void continueAsHeir() {
+    final g = game;
+    if (g == null || g.phase != Phase.retired) return;
+    final parent = PlayerSnapshot.fromGame(g);
+    final role = g.player.role == Role.twoWay ? Role.batter : g.player.role;
+    newGame(randomNameOf(_rng), role, g.difficulty, parent);
+  }
 
   /// ひとつ前の行動の直前のセーブ(「ひとつ前に戻す」用)。行動のたびに1件だけ持つ。
   String? _undo;

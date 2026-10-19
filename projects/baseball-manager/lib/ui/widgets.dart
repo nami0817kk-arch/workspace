@@ -55,7 +55,10 @@ class CastCard extends StatelessWidget {
               subtitle: Text(_sub(m)),
               trailing: SizedBox(
                 width: 80,
-                child: LinearProgressIndicator(value: m.bond / 100),
+                child: LinearProgressIndicator(
+                    value: m.kind == Kind.coach
+                        ? (m.tips / tipsNeeded).clamp(0.0, 1.0)
+                        : m.bond / 100),
               ),
             ),
           Padding(

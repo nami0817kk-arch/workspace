@@ -319,7 +319,7 @@ class _Table extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.only(left: 8, bottom: 4),
-              child: Text('表は横にスクロールできます(右にまだ項目があります)',
+              child: Text('表は横にスクロールできます。行をタップすると、その年の詳しい成績。',
                   key: const Key('table-hint'),
                   style: Theme.of(context).textTheme.bodySmall),
             ),
@@ -327,6 +327,7 @@ class _Table extends StatelessWidget {
               key: const Key('records-table'),
               scrollDirection: Axis.horizontal,
               child: DataTable(
+                showCheckboxColumn: false,
                 columnSpacing: 14,
                 horizontalMargin: 8,
                 headingRowHeight: 36,
@@ -359,6 +360,7 @@ class _Table extends StatelessWidget {
                 rows: [
                   for (final r in records)
                     DataRow(
+                      onSelectChanged: (_) => _showSeason(context, r),
                       color: r.champion
                           ? WidgetStatePropertyAll(
                               Theme.of(context).brightness == Brightness.dark
@@ -419,16 +421,16 @@ class _Table extends StatelessWidget {
       ),
     );
   }
-
-  String _stageShort(Stage s) => switch (s) {
-        Stage.youth => '少年',
-        Stage.juniorHigh => '中学',
-        Stage.highSchool => '高校',
-        Stage.pathChoice => '大学/社会人',
-        Stage.pro => 'プロ',
-        Stage.retired => '',
-      };
 }
+
+String _stageShort(Stage s) => switch (s) {
+      Stage.youth => '少年',
+      Stage.juniorHigh => '中学',
+      Stage.highSchool => '高校',
+      Stage.pathChoice => '大学/社会人',
+      Stage.pro => 'プロ',
+      Stage.retired => '',
+    };
 
 /// 年ごとの評価(その年の成績から、ランクで)。
 class _Grades extends StatelessWidget {
@@ -576,6 +578,53 @@ class _Highs extends StatelessWidget {
       ),
     );
   }
+}
+
+/// 1年ぶんの成績の詳しい中身(表の行をタップ)。
+void _showSeason(BuildContext context, SeasonRecord r) {
+  final lines = <String>[
+    '${r.age}歳 ${r.overseas ? 'プロ(米)' : _stageShort(r.stage)}  ${r.resultText}',
+    if (r.isLeague) 'チーム ${r.teamWins}勝${r.teamLosses}敗 ${r.rank}位',
+    if (describeLine(r.line).isNotEmpty) describeLine(r.line),
+    if (r.line.hasBatting)
+      'OPS+ ${fmtPlus(r.line.opsPlus)} ・ 打点 ${r.line.rbi} ・ 盗塁 ${r.line.stolenBases}',
+    if (r.line.hasPitching)
+      'ERA+ ${fmtPlus(r.line.eraPlus)} ・ WHIP ${fmt2(r.line.whip)} ・ 奪三振 ${r.line.strikeouts}',
+    if (r.titles.isNotEmpty) 'タイトル: ${r.titles.join('・')}',
+    if (r.awards.isNotEmpty) '表彰: ${r.awards.join('・')}',
+    if (r.rivalWon != null) 'ライバル対決: ${r.rivalWon! ? '勝ち' : '負け'}',
+    if (r.stage == Stage.pro) '年俸 ${fmtSalary(salaryOf(r))}',
+  ];
+  showDialog<void>(
+    context: context,
+    builder: (ctx) => AlertDialog(
+      key: const Key('season-detail'),
+      title: Text('${r.age}歳のシーズン'),
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            for (final l in lines)
+              Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 2),
+                  child: Text(l)),
+            if (r.months.isNotEmpty) ...[
+              const SizedBox(height: 8),
+              const Text('月ごとの成績',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+              for (final m in r.months)
+                Text(m, style: Theme.of(ctx).textTheme.bodySmall),
+            ],
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+            onPressed: () => Navigator.pop(ctx), child: const Text('閉じる'))
+      ],
+    ),
+  );
 }
 
 class _Titles extends StatelessWidget {

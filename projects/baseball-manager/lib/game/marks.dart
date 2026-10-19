@@ -6,6 +6,7 @@ import 'path.dart' show overall;
 import 'player.dart';
 import 'training.dart' show abilityCap, yearlyDelta;
 import 'records.dart';
+import 'snapshot.dart';
 import 'rival_story.dart';
 import 'season.dart';
 
@@ -525,3 +526,21 @@ const _names = [
 
 /// 名前のおまかせ(ランダム)。
 String randomNameOf(Random rng) => _names[rng.nextInt(_names.length)];
+
+/// 選手カードの文章(コピーして友だちに見せる用)。
+String profileText(PlayerSnapshot s) {
+  final p = Player(
+      name: s.name,
+      role: s.role,
+      age: s.age,
+      potential: s.potential,
+      abilities: s.abilities);
+  final ov = overall(p).round();
+  return [
+    '【野球育成】${s.name} (${s.age}歳)',
+    '総合評価 $ov ・ 素質 ${'★' * (s.potential ~/ 20)}',
+    if (nicknameOf(p).isNotEmpty) '「${nicknameOf(p)}」 ${lineupRoleOf(p)}',
+    if (s.traits.isNotEmpty) '特性: ${s.traits.map((t) => t.label).join('・')}',
+    if (s.endingTitle != null) '称号: ${s.endingTitle}',
+  ].join('\n');
+}

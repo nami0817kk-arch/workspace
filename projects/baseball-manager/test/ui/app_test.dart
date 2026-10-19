@@ -972,6 +972,8 @@ void _rankTests() {
     // ホーム → 実績 → 戻る
     await t.scrollUntilVisible(find.byKey(const Key('achievements-open')), 200,
         scrollable: find.byType(Scrollable).first);
+    await t.ensureVisible(find.byKey(const Key('achievements-open')));
+    await t.pumpAndSettle();
     await t.tap(find.byKey(const Key('achievements-open')));
     await t.pumpAndSettle();
     await t.pageBack();
@@ -1499,6 +1501,100 @@ void _rankTests() {
       await t.sendKeyEvent(LogicalKeyboardKey.digit3); // 休養
       await t.pumpAndSettle();
       expect(c.recent.first, contains('休養'));
+    });
+  });
+
+  group('記録・殿堂まわり(第3弾)', () {
+    testWidgets('成績表の行をタップすると、その年の詳しい成績が開く', (t) async {
+      final c = await _start(t);
+      c.adopt(_until((g) => g.records.length >= 3 && g.phase == Phase.term,
+          seed: 5, potential: 90));
+      await t.pumpAndSettle();
+      await t.tap(find.byKey(const Key('records-open')));
+      await t.pumpAndSettle();
+      await t.scrollUntilVisible(find.byKey(const Key('records-table')), 300,
+          scrollable: find.byType(Scrollable).first);
+      await t.tap(find.text('少年').first);
+      await t.pumpAndSettle();
+      expect(find.byKey(const Key('season-detail')), findsOneWidget);
+      expect(find.textContaining('歳のシーズン'), findsOneWidget);
+    });
+
+    testWidgets('殿堂は評価順に並べ替えでき、長押しで消せる。ヒントは更新できる', (t) async {
+      final c = await _start(t);
+      final a = HistoryEntry.of(_until((g) => false, seed: 5, potential: 90));
+      final b = HistoryEntry.of(_until((g) => false, seed: 6, potential: 40));
+      c.history = [b, a];
+      c.notifyListeners();
+      await t.pumpAndSettle();
+      await t.scrollUntilVisible(find.byKey(const Key('history-sort')), 300,
+          scrollable: find.byType(Scrollable).first);
+      await t.tap(find.text('評価順'));
+      await t.pumpAndSettle();
+      expect(find.byKey(const Key('history-sort')), findsOneWidget);
+      await t.longPress(find.textContaining('―').first);
+      await t.pumpAndSettle();
+      await t.tap(find.byKey(const Key('history-delete-confirm')));
+      await t.pumpAndSettle();
+      expect(c.history.length, 1);
+    });
+
+    testWidgets('結婚して引退したら、そのまま二世で続けられる', (t) async {
+      final c = await _start(t);
+      Game? g;
+      for (var sd = 0; sd < 400 && g == null; sd++) {
+        final x = _until((g) => false, seed: sd, potential: 90);
+        if (x.ending?.married ?? false) g = x;
+      }
+      expect(g, isNotNull);
+      c.adopt(g!);
+      await t.pumpAndSettle();
+      await _dismissMilestones(t);
+      await t.scrollUntilVisible(find.byKey(const Key('continue-heir')), 300,
+          scrollable: find.byType(Scrollable).first);
+      await t.tap(find.byKey(const Key('continue-heir')));
+      await t.pumpAndSettle();
+      expect(c.game!.phase, isNot(Phase.retired));
+      expect(c.game!.parentName, g.player.name);
+    });
+
+    testWidgets('育成中: キャリアに資産、関係にライバル。選手情報から選手カードをコピーできる', (t) async {
+      final c = await _start(t);
+      String? copied;
+      t.binding.defaultBinaryMessenger
+          .setMockMethodCallHandler(SystemChannels.platform, (call) async {
+        if (call.method == 'Clipboard.setData') {
+          copied = (call.arguments as Map)['text'] as String?;
+        }
+        return null;
+      });
+      addTearDown(() => t.binding.defaultBinaryMessenger
+          .setMockMethodCallHandler(SystemChannels.platform, null));
+      c.adopt(_until((g) => g.stage == Stage.pro && g.phase == Phase.term,
+          seed: 5, potential: 100));
+      await t.pumpAndSettle();
+      await _tab(t, 'career');
+      expect(find.byKey(const Key('money-card')), findsOneWidget);
+      await _tab(t, 'relations');
+      if (c.game!.cast.rival != null) {
+        expect(find.byKey(const Key('rival-line')), findsOneWidget);
+      }
+      await t.tap(find.byKey(const Key('player-open')).first);
+      await t.pumpAndSettle();
+      await t.tap(find.byKey(const Key('copy-profile')));
+      await t.pumpAndSettle();
+      expect(copied, contains('総合評価'));
+    });
+
+    testWidgets('設定に「このアプリについて」。実績に進み具合のバーが出る', (t) async {
+      final c = await _start(t);
+      expect(c.game, isNull);
+      expect(find.byKey(const Key('achievements-progress')), findsOneWidget);
+      await t.tap(find.byKey(const Key('settings-open')));
+      await t.pumpAndSettle();
+      await t.tap(find.byKey(const Key('about-open')));
+      await t.pumpAndSettle();
+      expect(find.text(appVersion), findsWidgets);
     });
   });
 

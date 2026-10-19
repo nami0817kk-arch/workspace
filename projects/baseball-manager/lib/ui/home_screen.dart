@@ -54,6 +54,35 @@ class _HomeScreenState extends State<HomeScreen> {
           if (e.snapshot != null && e.snapshot!.married) e
       ];
 
+  int _tipShift = 0;
+  bool _byScore = false;
+
+  List<HistoryEntry> get _sortedHistory {
+    final h = [...widget.controller.history];
+    if (_byScore) h.sort((a, b) => b.peakOverall.compareTo(a.peakOverall));
+    return h;
+  }
+
+  Future<void> _confirmDelete(BuildContext context, HistoryEntry e) async {
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('${e.name}を殿堂から消しますか?'),
+        content: const Text('この選手の記録が消えます。元には戻せません。'),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(ctx, false),
+              child: const Text('やめる')),
+          FilledButton(
+              key: const Key('history-delete-confirm'),
+              onPressed: () => Navigator.pop(ctx, true),
+              child: const Text('消す')),
+        ],
+      ),
+    );
+    if (ok == true) widget.controller.deleteHistory(e);
+  }
+
   void _start() =>
       widget.controller.newGame(name.text, role, difficulty, heir?.snapshot);
 
@@ -193,7 +222,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       leading: const Icon(Icons.lightbulb_outline,
                           color: Color(0xFFF9A825)),
                       title: const Text('今日のヒント'),
-                      subtitle: Text(tipOf(DateTime.now())),
+                      subtitle: Text(
+                          tipOf(DateTime.now().add(Duration(days: _tipShift)))),
+                      trailing: const Icon(Icons.refresh),
+                      onTap: () => setState(() => _tipShift++),
                     ),
                   ),
                   if (widget.controller.history.isNotEmpty) ...[
@@ -206,8 +238,19 @@ class _HomeScreenState extends State<HomeScreen> {
                       leading: const Icon(Icons.military_tech,
                           color: Color(0xFFE53935)),
                       title: const Text('実績'),
-                      subtitle: Text(
-                          '${widget.controller.unlocked.length} / ${achievements.length} 解除'),
+                      subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                                '${widget.controller.unlocked.length} / ${achievements.length} 解除'),
+                            const SizedBox(height: 4),
+                            LinearProgressIndicator(
+                              key: const Key('achievements-progress'),
+                              value: widget.controller.unlocked.length /
+                                  achievements.length,
+                              borderRadius: BorderRadius.circular(3),
+                            ),
+                          ]),
                       trailing: const Icon(Icons.chevron_right),
                       onTap: () => Navigator.of(context).push(
                         MaterialPageRoute<void>(
@@ -219,11 +262,30 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   if (widget.controller.history.isNotEmpty) ...[
                     const SizedBox(height: 32),
-                    Text('殿堂(これまでの選手)',
-                        style: Theme.of(context).textTheme.titleMedium),
+                    Row(children: [
+                      Expanded(
+                        child: Text('殿堂(これまでの選手)',
+                            style: Theme.of(context).textTheme.titleMedium),
+                      ),
+                      if (widget.controller.history.length >= 2)
+                        SegmentedButton<bool>(
+                          key: const Key('history-sort'),
+                          showSelectedIcon: false,
+                          style: const ButtonStyle(
+                              visualDensity: VisualDensity.compact),
+                          segments: const [
+                            ButtonSegment(value: false, label: Text('新しい順')),
+                            ButtonSegment(value: true, label: Text('評価順')),
+                          ],
+                          selected: {_byScore},
+                          onSelectionChanged: (s) =>
+                              setState(() => _byScore = s.first),
+                        ),
+                    ]),
                     const SizedBox(height: 4),
-                    for (final h in widget.controller.history)
-                      _HistoryTile(entry: h),
+                    for (final h in _sortedHistory)
+                      _HistoryTile(
+                          entry: h, onDelete: () => _confirmDelete(context, h)),
                   ],
                 ],
               ))),
@@ -304,8 +366,11 @@ class _TitleBook extends StatelessWidget {
 }
 
 class _HistoryTile extends StatelessWidget {
-  const _HistoryTile({required this.entry});
+  const _HistoryTile({required this.entry, this.onDelete});
   final HistoryEntry entry;
+
+  /// 長押しで、殿堂から消す。
+  final VoidCallback? onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -326,6 +391,7 @@ class _HistoryTile extends StatelessWidget {
         subtitle: Text('${tags.join(' / ')}   最高評価 ${e.peakOverall}'
             '${e.summary.isEmpty ? '' : '\n${e.summary}'}'),
         isThreeLine: e.summary.isNotEmpty,
+        onLongPress: onDelete,
         trailing: e.snapshot == null ? null : const Icon(Icons.chevron_right),
         onTap: e.snapshot == null
             ? null

@@ -123,6 +123,20 @@ class SettingsScreen extends StatelessWidget {
                     onTap: () => _backup(context),
                   ),
                   ListTile(
+                    key: const Key('about-open'),
+                    leading: const Icon(Icons.info_outline),
+                    title: const Text('このアプリについて'),
+                    onTap: () => showAboutDialog(
+                      context: context,
+                      applicationName: '野球育成',
+                      applicationVersion: appVersion,
+                      children: const [
+                        Text('6歳から、プロを引退するまで。1人の野球選手を育てる一代記。\n'
+                            'データはこの端末にだけ保存されます。'),
+                      ],
+                    ),
+                  ),
+                  ListTile(
                     key: const Key('erase-all'),
                     leading: const Icon(Icons.delete_outline,
                         color: Color(0xFFD32F2F)),
