@@ -806,8 +806,7 @@ class _HalftimeView extends StatelessWidget {
                 if (h.style != OppStyle.balanced)
                   Padding(
                     padding: const EdgeInsets.only(top: 4),
-                    child: Text('持ち味: ${h.style.label}
-${h.style.description}',
+                    child: Text('持ち味: ${h.style.label}\n${h.style.description}',
                         style: const TextStyle(fontSize: 12)),
                   ),
                 const SizedBox(height: 8),

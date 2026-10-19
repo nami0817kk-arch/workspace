@@ -66,7 +66,6 @@ class MatchResult {
   /// 相手の名前(ライバルなら本人の名前)。
   final String opponent;
   final bool vsRival;
-  final OppStyle style;
 
   int get margin => teamScore - oppScore;
 
@@ -131,7 +130,6 @@ class MatchState {
     required this.oppQuarters,
     this.opponent = '',
     this.vsRival = false,
-    this.style = OppStyle.balanced,
   });
 
   final int team;
@@ -359,6 +357,7 @@ class MatchHalf {
     required this.blocks,
     this.opponent = '',
     this.vsRival = false,
+    this.style = OppStyle.balanced,
   });
 
   final int team;
@@ -375,6 +374,7 @@ class MatchHalf {
   final int blocks;
   final String opponent;
   final bool vsRival;
+  final OppStyle style;
 
   int get margin => team - opp;
 
