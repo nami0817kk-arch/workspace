@@ -298,6 +298,13 @@ class _PlayerCard extends StatelessWidget {
             _Meter(label: '気持ち', value: cond.morale),
             _Meter(label: 'チーム', value: game.teamwork),
             _Meter(label: 'コーチ', value: game.coachBond),
+            if (game.schoolLabel.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(top: 2),
+                child: Text(
+                    '環境: ${game.schoolLabel} (大会の味方の強さ ${game.schoolBonus >= 0 ? '+' : ''}${game.schoolBonus.toStringAsFixed(0)})',
+                    style: const TextStyle(fontSize: 12)),
+              ),
             Padding(
               padding: const EdgeInsets.only(top: 2),
               child: Text(

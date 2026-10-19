@@ -1204,4 +1204,88 @@ void main() {
       expect(g.outlook, outlookOf(g.offerNow));
     });
   });
+
+  group('進学先の選択', () {
+    Game at12({bool events = true}) => Game(
+          eventsEnabled: events,
+          player: Player(
+              name: 'a', age: 12, potential: 60, heightCm: 150, heightGenes: 0.5),
+          rng: Random(1),
+        );
+
+    void finishYear(Game g) {
+      for (var i = 0; i < 4; i++) {
+        if (g.phase == Phase.event) g.resolveEvent(0);
+        g.choose(Action.rest, Ability.pass);
+      }
+    }
+
+    test('中学に上がるとき、進学先の選択が必ず起きる', () {
+      final g = at12();
+      finishYear(g);
+      expect(g.player.age, 13);
+      // 年末の出来事(ランダム)が先に起きていても、解決すれば進学先が出る
+      var guard = 0;
+      while (g.pendingEventId != 'school_jh' && g.phase == Phase.event && guard++ < 5) {
+        g.resolveEvent(0);
+      }
+      expect(g.pendingEventId, 'school_jh');
+      expect(g.pendingEvent!.options.length, 3);
+    });
+
+    test('出来事を切っているときは起きない', () {
+      final g = at12(events: false);
+      finishYear(g);
+      expect(g.phase, Phase.season);
+    });
+
+    test('強豪校は味方が強く、地元の学校は伸びのびやれる(気持ち・チームワーク)', () {
+      final a = Game(
+          eventsEnabled: false,
+          player: strong().copyWith(age: 13),
+          rng: Random(1),
+          pendingEventId: 'school_jh');
+      a.resolveEvent(0);
+      expect(a.schoolBonus, greaterThan(0));
+      expect(a.schoolLabel, '強豪校');
+      final b = Game(
+          eventsEnabled: false,
+          player: strong().copyWith(age: 13),
+          rng: Random(1),
+          pendingEventId: 'school_jh');
+      b.resolveEvent(1);
+      expect(b.schoolBonus, lessThan(0));
+      expect(b.teamwork, greaterThan(a.teamwork));
+      expect(b.condition.morale, greaterThan(a.condition.morale));
+    });
+
+    test('環境は大会の味方の強さに入り、保存され、段階が変わると決め直しになる', () {
+      final g = Game(
+        eventsEnabled: false,
+        player: Player(
+            name: 'a', age: 12, potential: 50, heightCm: 150, heightGenes: 0.5),
+        rng: Random(1),
+        schoolBonus: 4,
+        schoolLabel: '強豪校',
+      );
+      expect(Game.fromJson(g.toJson()).schoolBonus, 4);
+      expect(Game.fromJson(g.toJson()).schoolLabel, '強豪校');
+      for (var i = 0; i < 4; i++) {
+        g.choose(Action.rest, Ability.pass);
+      }
+      expect(g.stage, Stage.juniorHigh);
+      expect(g.schoolBonus, 0);
+      expect(g.schoolLabel, '');
+    });
+
+    test('進学先の出来事はふだんの抽選には出ない', () {
+      final rng = Random(4);
+      final p = Player(
+          name: 'a', age: 13, potential: 50, heightCm: 160, heightGenes: 0.5);
+      for (var i = 0; i < 2000; i++) {
+        final e = rollEvent(p, pro: false, rng: rng);
+        expect(e?.forced ?? false, isFalse);
+      }
+    });
+  });
 }

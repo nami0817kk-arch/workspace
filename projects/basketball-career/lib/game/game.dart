@@ -142,6 +142,8 @@ class Game {
     this.recoveredThisTerm = false,
     this.teamwork = 40,
     this.coachBond = 20,
+    this.schoolBonus = 0,
+    this.schoolLabel = '',
     List<String>? recentEventIds,
     List<GrowthPoint>? growthLog,
     this.run,
@@ -240,6 +242,10 @@ class Game {
   /// コーチとの信頼 0〜100。練習・特訓で少しずつ増え、高いと伸びに最大+20%。
   /// 進学・移籍で新しいコーチになると20に戻る。
   int coachBond;
+
+  /// 進学先の環境(大会の味方の強さへの上乗せ)と、その呼び名。段階が変わると決め直す。
+  double schoolBonus;
+  String schoolLabel;
 
   /// 信頼による伸びの倍率。
   double get coachBoost => 1 + coachBond / 500;
@@ -378,7 +384,7 @@ class Game {
       if (condition.injured) {
         satOut = true;
       } else {
-        final cr = TournamentRun(league, teamBonus: teamBonus);
+        final cr = TournamentRun(league, teamBonus: teamBonus + schoolBonus);
         cr.advance(
           player,
           form: condition.form,
@@ -444,6 +450,24 @@ class Game {
       yearEnded = true;
     }
     if (yearEnded && !retired) _rollGoalOptions();
+    // 中学・高校に上がるときは、進学先を選ぶ(出来事が有効なときだけ)。
+    if (eventsEnabled && yearEnded && !retired && phase == Phase.season) {
+      final forced = switch (stage) {
+        Stage.juniorHigh when player.age == 13 => 'school_jh',
+        Stage.highSchool when player.age == 16 => 'school_hs',
+        _ => null,
+      };
+      if (forced != null) {
+        pendingEventId = forced;
+        return TermReport(
+          action: action,
+          gotInjured: gotInjured,
+          tournament: t,
+          satOut: satOut,
+          yearEnded: yearEnded,
+        );
+      }
+    }
     if (eventsEnabled && phase == Phase.season) {
       pendingEventId = rollEvent(player,
               pro: track == Track.pro, rng: rng, recent: recentEventIds)
@@ -538,6 +562,8 @@ class Game {
     if (!pathPending && !retired && stage != stageBefore) {
       teamwork = 40;
       coachBond = 20;
+      schoolBonus = 0;
+      schoolLabel = '';
     }
   }
 
@@ -580,6 +606,10 @@ class Game {
     pendingEventId = null;
     teamwork = (teamwork + opt.effect.teamwork).clamp(0, 100);
     coachBond = (coachBond + opt.effect.coach).clamp(0, 100);
+    if (opt.effect.school != null) {
+      schoolBonus = opt.effect.school!;
+      schoolLabel = opt.effect.schoolLabel ?? '';
+    }
     if (opt.effect.achievement != 0) {
       final base = recentAchievements.isEmpty ? 30.0 : recentAchievements.removeLast();
       recentAchievements.add((base + opt.effect.achievement).clamp(0, 100).toDouble());
@@ -602,6 +632,9 @@ class Game {
     }
     if (r.gotInjured) lines.add('怪我をした');
     if (opt.effect.achievement != 0) lines.add('評価が上がった');
+    if (opt.effect.schoolLabel != null) {
+      lines.add('進学先: ${opt.effect.schoolLabel}');
+    }
     if (opt.effect.coach != 0) {
       lines.add('コーチとの信頼 ${opt.effect.coach > 0 ? '+' : ''}${opt.effect.coach}');
     }
@@ -689,6 +722,8 @@ class Game {
         track = Track.pro;
         teamwork = 40;
         coachBond = 20;
+        schoolBonus = 0;
+        schoolLabel = '';
         pathPending = false;
         proRejected = false;
         return true;
@@ -703,6 +738,8 @@ class Game {
     track = route == Route.university ? Track.university : Track.corporate;
     teamwork = 40;
     coachBond = 20;
+    schoolBonus = 0;
+    schoolLabel = '';
     collegeYearsLeft = route.years;
     secondChance = true;
     pathPending = false;
@@ -761,6 +798,8 @@ class Game {
         'recoveredThisTerm': recoveredThisTerm,
         'teamwork': teamwork,
         'coachBond': coachBond,
+        'schoolBonus': schoolBonus,
+        'schoolLabel': schoolLabel,
         'recentEventIds': recentEventIds,
         'growthLog': [for (final p in growthLog) p.toJson()],
         'difficulty': difficulty.name,
@@ -803,6 +842,8 @@ class Game {
         recoveredThisTerm: (j['recoveredThisTerm'] as bool?) ?? false,
         teamwork: (j['teamwork'] as num?)?.toInt() ?? 40,
         coachBond: (j['coachBond'] as num?)?.toInt() ?? 20,
+        schoolBonus: (j['schoolBonus'] as num?)?.toDouble() ?? 0,
+        schoolLabel: (j['schoolLabel'] as String?) ?? '',
         growthLog: [
           for (final p in (j['growthLog'] as List?) ?? const [])
             GrowthPoint.fromJson((p as Map).cast<String, dynamic>()),

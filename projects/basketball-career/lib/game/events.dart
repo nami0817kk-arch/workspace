@@ -17,6 +17,8 @@ class Effect {
     this.achievement = 0,
     this.teamwork = 0,
     this.coach = 0,
+    this.school,
+    this.schoolLabel,
   });
 
   /// 能力の増減(決まった能力)。
@@ -42,6 +44,10 @@ class Effect {
 
   /// コーチとの信頼(0〜100)への加算。
   final int coach;
+
+  /// 進学先の環境(大会の味方の強さへの上乗せ)。null なら変えない。
+  final double? school;
+  final String? schoolLabel;
 }
 
 class EventOption {
@@ -59,6 +65,7 @@ class EventDef {
     this.minAge = 6,
     this.maxAge = 40,
     this.proOnly = false,
+    this.forced = false,
   });
 
   final String id;
@@ -68,7 +75,71 @@ class EventDef {
   final int minAge;
   final int maxAge;
   final bool proOnly;
+
+  /// 段階が変わるときに必ず起きる出来事(進学先の選択)。ふだんの抽選には出ない。
+  final bool forced;
 }
+
+/// 進学先の選択(中学・高校に上がるとき必ず起きる)。
+const schoolEvents = <EventDef>[
+  EventDef(
+    id: 'school_jh',
+    title: '中学の部活選び',
+    body: '小学校を卒業する。どこでバスケを続けようか。',
+    forced: true,
+    options: [
+      EventOption(
+          '強豪の中学へ。厳しい環境に飛び込む',
+          Effect(
+              school: 4,
+              schoolLabel: '強豪校',
+              coach: 15,
+              teamwork: -10,
+              fatigue: 8,
+              morale: -3)),
+      EventOption(
+          '地元の中学で、のびのびやる',
+          Effect(
+              school: -2,
+              schoolLabel: '地元の学校',
+              teamwork: 15,
+              morale: 8,
+              focusBonus: 2)),
+      EventOption(
+          '少数精鋭のクラブチームへ',
+          Effect(school: 2, schoolLabel: 'クラブチーム', coach: 10, abilities: {Ability.dribble: 1, Ability.pass: 1})),
+    ],
+  ),
+  EventDef(
+    id: 'school_hs',
+    title: '高校の進路',
+    body: '中学を卒業する。三年間をどこで戦おう。',
+    forced: true,
+    options: [
+      EventOption(
+          '全国常連の強豪校へ',
+          Effect(
+              school: 5,
+              schoolLabel: '強豪校',
+              coach: 15,
+              teamwork: -12,
+              fatigue: 10,
+              morale: -4,
+              achievement: 3)),
+      EventOption(
+          '地元の公立校で、エースを目指す',
+          Effect(
+              school: -3,
+              schoolLabel: '地元の学校',
+              teamwork: 15,
+              morale: 10,
+              focusBonus: 3)),
+      EventOption(
+          '指導に定評のある私立校へ',
+          Effect(school: 2, schoolLabel: '私立校', coach: 12, abilities: {Ability.defense: 1, Ability.midRange: 1})),
+    ],
+  ),
+];
 
 const events = <EventDef>[
   EventDef(
@@ -311,7 +382,7 @@ const events = <EventDef>[
 ];
 
 EventDef? eventById(String id) {
-  for (final e in events) {
+  for (final e in [...events, ...schoolEvents]) {
     if (e.id == id) return e;
   }
   return null;
