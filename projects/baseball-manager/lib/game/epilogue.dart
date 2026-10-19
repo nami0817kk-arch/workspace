@@ -1,3 +1,4 @@
+import 'childhood.dart';
 import 'game.dart';
 import 'marks.dart';
 
@@ -8,7 +9,8 @@ String epilogueOf(Ending e, String name,
     int worldPlayed = 0,
     int overseasYears = 0,
     int popularity = 0,
-    int? retiredNumber}) {
+    int? retiredNumber,
+    Map<String, int> childhood = const {}}) {
   final parts = <String>[];
   if (!e.madePro) {
     parts.add('$nameはプロの舞台には立てなかったが、野球で学んだことを胸に、新しい道を歩き始めた。');
@@ -27,6 +29,20 @@ String epilogueOf(Ending e, String name,
           ? '最後まで競い合ったライバルとの勝負は、勝ち越しで終えた。'
           : 'ライバルとの勝負は負け越したが、互いを高め合った日々は宝物だ。');
     }
+  }
+  // 幼いころの選択(憧れ・卒団の夢)を、結果とつなげる。
+  final idol = childhood['kid-idol'];
+  if (e.madePro && idol != null) {
+    parts.add(
+        '幼いころ、${childhoodStepById('kid-idol')!.notes[idol]}。その憧れは、最後まで$nameの原点だった。');
+  }
+  final dream = childhood['kid-dream'];
+  if (dream == 0 && e.madePro) {
+    parts.add('卒団の日に語った「プロ野球選手になる」という夢を、$nameは本当に叶えた。');
+  } else if (dream == 1 && worldChampion > 0) {
+    parts.add('卒団の日に語った「世界一」という夢を、$nameは本当に叶えた。');
+  } else if (dream == 2 && e.madePro && e.proYears >= 15) {
+    parts.add('卒団の日に語った「ずっと野球を楽しむ」という夢のとおり、$nameは長く野球を楽しみ続けた。');
   }
   if (retiredNumber != null && e.title == 'レジェンド' && e.proYears >= 15) {
     parts.add('背番号$retiredNumberは、永久欠番になった。');

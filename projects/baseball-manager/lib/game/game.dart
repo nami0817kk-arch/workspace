@@ -546,7 +546,9 @@ class Game {
     final ch = pendingEvent!.choices[index];
     if (childhoodStepById(pendingEvent!.id) != null) {
       childhood[pendingEvent!.id] = index;
-      _note('childhood', childhoodStepById(pendingEvent!.id)!.notes[index]);
+      final note = childhoodStepById(pendingEvent!.id)!.notes[index];
+      _note('childhood', note);
+      log.add('${player.age}歳の分かれ道: $note。');
     }
     final before = player.traits;
     final r = ch.risky != null
