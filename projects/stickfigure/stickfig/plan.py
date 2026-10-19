@@ -551,6 +551,14 @@ def build_plan(scene: dict, solve: bool = True) -> dict:
                 if e["kind"] in ic.get("kinds", []) and hf >= 2 and e["frame"] <= f < e["frame"] + hf:
                     angs = ic.get("per_kind", {}).get(e["kind"], ic["angles"])
                     cut = (e, angs[((f - e["frame"]) * len(angs)) // hf % len(angs)])
+        if cut is None:                        # 連打カット(flurry): 山場の前に、4コマごとに角度を変える(参考のカット中央値 0.13 秒)
+            for fl in scene.get("flurry", []):
+                if fl["start"] <= tau < fl["end"]:
+                    k = int((f - fl.get("f0", 0)) // fl.get("every", 4))
+                    angs = fl["angles"]
+                    who = fl.get("target", "A")
+                    cut = ({"pos": (fr["actors"][who]["root_x"], fl.get("z", 1.0))}, angs[k % len(angs)])
+                    break
         if cut is not None:
             e, ang = cut
             fr["cam"] = {k: (round(v, 5) if isinstance(v, float) else v) for k, v in
@@ -583,7 +591,7 @@ def build_plan(scene: dict, solve: bool = True) -> dict:
         _lift_to_ground(scene, frames)
     _assign_event_pos(scene, tracks, events)
     return dict(version=1, fps=fps, n=len(frames), view=dict(VIEW, persp=bool(scene.get("view3d") or scene.get("shots")), lens=(scene.get("view3d") or {}).get("lens", 40.0)), actors=scene["actors"], stage=scene.get("stage", {}),
-                events=events, contacts=contacts, frames=frames, scene={k: scene[k] for k in ("hits", "slow", "camera", "fx", "tempo", "view3d", "anime", "shots", "stepping", "impact_cuts") if k in scene})
+                events=events, contacts=contacts, frames=frames, scene={k: scene[k] for k in ("hits", "slow", "camera", "fx", "tempo", "view3d", "anime", "shots", "stepping", "impact_cuts", "flurry") if k in scene})
 
 
 def save_plan(plan: dict, path) -> None:

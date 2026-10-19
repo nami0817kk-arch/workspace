@@ -285,6 +285,10 @@ def compose_frame(plan: dict, f: int, figs: Dict[int, Image.Image], stages: Opti
                 kind_of_invert = e["kind"]
             if e["kind"] == "wall" and age <= 1:
                 d.rectangle([0, 0, W * SS, H * SS], fill=(255, 255, 255, 150 if age == 0 else 80))
+    for ft in fx.get("flashes", []):          # 1コマだけの閃光(参考: 2秒に1回前後)
+        if plan["frames"][f]["tau"] >= ft > plan["frames"][max(0, f - 1)]["tau"] or (f == 0 and ft <= 0):
+            fl = Image.new("RGBA", (W, H), (255, 255, 255, 120))
+            base.alpha_composite(fl)
     base.alpha_composite(ov.resize((W, H), Image.LANCZOS))
     frame = base.convert("RGB")
     if invert is not None:
