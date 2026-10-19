@@ -39,14 +39,73 @@ Player star() => Player(
       abilities: {for (final a in Ability.values) a: 75},
     );
 
-Future<void> show(WidgetTester t, GameController c) async {
-  await t.pumpWidget(BasketballCareerApp(controller: c));
+Future<void> show(WidgetTester t, GameController c, {double textScale = 1.0}) async {
+  await t.pumpWidget(MediaQuery(
+    data: MediaQueryData(
+        size: t.view.physicalSize, textScaler: TextScaler.linear(textScale)),
+    child: BasketballCareerApp(controller: c),
+  ));
   await t.pumpAndSettle();
   expect(t.takeException(), isNull);
 }
 
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
+
+  // 端末の文字サイズを大きくしている人でも、はみ出さないこと。
+  for (final scale in [1.3, 1.6, 2.0]) {
+    group('文字の大きさ x$scale (幅360)', () {
+      testWidgets('育成の画面', (t) async {
+        phone(t, width: 360, height: 5200);
+        final c = GameController(store: _NullStore(), rng: Random(1), events: false);
+        c.game = Game.start('ミナトヨシタカ', rng: Random(2), events: false)
+          ..condition = const Condition(fatigue: 85, morale: 20, injuredTerms: 2, injuryName: '肉離れ');
+        c.game!.adoptGoal(1);
+        await show(t, c, textScale: scale);
+      });
+
+      testWidgets('はじめの画面', (t) async {
+        phone(t, width: 360, height: 5200);
+        await show(t, GameController(store: _NullStore(), rng: Random(1)), textScale: scale);
+      });
+
+      testWidgets('出来事・勝負どころ・進路', (t) async {
+        phone(t, width: 360, height: 5200);
+        final ev = GameController(store: _NullStore(), rng: Random(1), events: false);
+        ev.game = Game(
+          eventsEnabled: false,
+          player: star(),
+          rng: Random(1),
+          rival: Rival(name: '一ノ瀬ツバサ', potential: 80),
+          pendingEventId: 'school_hs',
+        );
+        await show(t, ev, textScale: scale);
+
+        GameController? found;
+        for (var seed = 0; seed < 400 && found == null; seed++) {
+          final c = GameController(store: _NullStore(), rng: Random(seed), events: false);
+          c.game = Game(
+            eventsEnabled: false,
+            player: star().copyWith(age: 15),
+            rng: Random(seed),
+            slot: 1,
+          );
+          c.act(Action.rest);
+          if (c.game!.phase == Phase.clutch) found = c;
+        }
+        await show(t, found!, textScale: scale);
+
+        final path = GameController(store: _NullStore(), rng: Random(1), events: false);
+        path.game = Game(
+          eventsEnabled: false,
+          player: star().copyWith(age: 19),
+          rng: Random(1),
+          pathPending: true,
+        );
+        await show(t, path, textScale: scale);
+      });
+    });
+  }
 
   for (final width in [360.0, 390.0, 430.0]) {
     group('幅 $width', () {
