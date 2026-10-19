@@ -13,6 +13,7 @@ import 'package:baseball_manager/game/career.dart';
 import 'package:baseball_manager/game/difficulty.dart';
 import 'package:baseball_manager/game/characters.dart';
 import 'package:baseball_manager/game/game.dart';
+import 'package:baseball_manager/game/invest.dart';
 import 'package:baseball_manager/game/life.dart';
 import 'package:baseball_manager/game/path.dart';
 import 'package:baseball_manager/game/player.dart';
@@ -87,7 +88,8 @@ class Result {
   final int leagueWins;
 }
 
-Result play(int seed, Policy policy, Role role, Difficulty difficulty) {
+Result play(int seed, Policy policy, Role role, Difficulty difficulty,
+    [Policy? proHook]) {
   final g = Game.newGame(
       name: 't', role: role, rng: Random(seed), difficulty: difficulty);
   var steps = 0;
@@ -99,7 +101,8 @@ Result play(int seed, Policy policy, Role role, Difficulty difficulty) {
         if (g.stage == Stage.pro && g.player.age >= 36) {
           g.retire();
         } else {
-          policy(g);
+          if (g.stage == Stage.pro && proHook != null) proHook(g);
+          if (g.phase == Phase.term) policy(g);
         }
       case Phase.event:
         g.resolveEvent(0);
@@ -114,7 +117,42 @@ Result play(int seed, Policy policy, Role role, Difficulty difficulty) {
       e.titles, g.records.where((r) => r.isLeague && r.rank == 1).length);
 }
 
+/// プロでの選択(二刀流・海外・投資)を変えたときの差を見る(dart run tool/balance.dart 600 normal pro)。
+final Map<String, Policy?> proVariants = {
+  'そのまま': null,
+  '二刀流': (g) {
+    if (g.player.role != Role.twoWay) g.changeRole(Role.twoWay);
+  },
+  '海外へ': (g) {
+    if (g.canMoveOverseas) g.moveOverseas();
+  },
+  '投資ぜんぶ': (g) {
+    for (final i in Invest.values) {
+      while (g.money >= (investCost(g.investLevel(i)) ?? 1 << 30)) {
+        if (!g.buyInvest(i)) break;
+      }
+    }
+  },
+};
+
 void main(List<String> args) {
+  if (args.length > 2 && args[2] == 'pro') {
+    final n = int.parse(args.first);
+    final d = Difficulty.parse(args[1]);
+    for (final e in proVariants.entries) {
+      for (final role in [Role.batter, Role.pitcher]) {
+        final rs = [
+          for (var s = 0; s < n; s++) play(s, skilled, role, d, e.value)
+        ];
+        final pro = rs.where((r) => r.madePro).toList();
+        double mean(num Function(Result) f) =>
+            pro.isEmpty ? 0 : pro.map(f).reduce((a, b) => a + b) / pro.length;
+        print(
+            '${e.key} / ${role.name}: プロ${pro.length}人  最高評価 ${mean((r) => r.peak).toStringAsFixed(1)}  タイトル ${mean((r) => r.titles.length).toStringAsFixed(1)}個  リーグ優勝 ${mean((r) => r.leagueWins).toStringAsFixed(1)}回  レジェンド ${(100 * pro.where((r) => r.title == 'レジェンド').length / (pro.isEmpty ? 1 : pro.length)).toStringAsFixed(0)}%');
+      }
+    }
+    return;
+  }
   final n = args.isEmpty ? 1500 : int.parse(args.first);
   final difficulty = Difficulty.parse(args.length > 1 ? args[1] : null);
   print('難しさ: ${difficulty.label}');

@@ -20,6 +20,7 @@ class SeasonRecord {
     this.overseas = false,
     this.awards = const [],
     this.months = const [],
+    this.twoWay = false,
   });
 
   final int age;
@@ -50,6 +51,9 @@ class SeasonRecord {
   /// プロのシーズンの月ごとの成績(4〜9月)。
   final List<String> months;
 
+  /// 二刀流で戦った年か(スター性: 年俸×1.4・人気+1)。
+  final bool twoWay;
+
   bool get isLeague => rank != null;
   bool get champion =>
       isLeague ? rank == 1 : (rounds > 0 && roundsWon == rounds);
@@ -76,6 +80,7 @@ class SeasonRecord {
         'overseas': overseas,
         'awards': awards,
         'months': months,
+        'twoWay': twoWay,
       };
 
   /// 項目を足すときは既定値を置く。
@@ -100,6 +105,7 @@ class SeasonRecord {
         months: [
           for (final t in (j['months'] as List?) ?? const []) t as String
         ],
+        twoWay: (j['twoWay'] as bool?) ?? false,
       );
 }
 
@@ -195,7 +201,10 @@ int salaryOf(SeasonRecord r) {
   if (r.stage != Stage.pro) return 0;
   final base = 500 * pow(1.065, r.line.rating - 30);
   // 海外のリーグは年俸が桁違い(×2.5)。
-  final v = base * (1 + 0.15 * r.titles.length) * (r.overseas ? 2.5 : 1.0);
+  final v = base *
+      (1 + 0.15 * r.titles.length) *
+      (r.overseas ? 2.5 : 1.0) *
+      (r.twoWay ? 1.4 : 1.0); // 二刀流は話題性で年俸が高い
   return ((v.clamp(400, 200000) / 10).round() * 10).toInt();
 }
 
@@ -228,6 +237,7 @@ int popularityOf(List<SeasonRecord> records, List<WorldRecord> world) {
     if (r.champion) x += r.isLeague ? 4 : 2;
     if (r.isLeague && r.rank != null && r.rank! <= 3) x += 1;
     if (r.overseas) x += 1;
+    if (r.twoWay) x += 1; // 二刀流はそれだけで注目される
     if (r.stage == Stage.pro) x += 0.5; // プロにいるだけで知名度が少しある
     v += x * fade(r.age);
   }

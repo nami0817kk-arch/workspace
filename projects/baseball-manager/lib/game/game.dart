@@ -954,6 +954,7 @@ class Game {
         overseas: overseas,
         awards: awards,
         months: List.of(monthRows),
+        twoWay: player.role == Role.twoWay,
       );
       monthRows = [];
       records.add(rec);

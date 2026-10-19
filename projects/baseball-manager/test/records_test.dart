@@ -28,6 +28,7 @@ LeagueSeason _season(Player p, int seed) => playLeagueSeason(
 
 void main() {
   main2();
+  twoWayChecks();
   group('Line', () {
     test('打率・出塁率・長打率・OPS', () {
       const l = Line(atBats: 400, hits: 120, totalBases: 200, walks: 50);
@@ -448,5 +449,24 @@ void main2() {
     expect(pitcher.eraPlus! <= 999, isTrue);
     const bat = Line(atBats: 40, hits: 40, totalBases: 160);
     expect(bat.opsPlus! <= 999, isTrue);
+  });
+}
+
+void twoWayChecks() {
+  SeasonRecord rec({required bool twoWay}) => SeasonRecord(
+      age: 25,
+      stage: Stage.pro,
+      line: const Line(
+          games: 140, atBats: 500, hits: 150, totalBases: 240, walks: 50),
+      rank: 3,
+      twoWay: twoWay);
+  test('二刀流の年は、年俸が1.4倍・人気が+1。保存で残る', () {
+    final a = rec(twoWay: false), b = rec(twoWay: true);
+    expect(salaryOf(b), greaterThan(salaryOf(a)));
+    expect((salaryOf(b) / salaryOf(a) - 1.4).abs(), lessThan(0.02));
+    expect(popularityOf([b], const []),
+        greaterThanOrEqualTo(popularityOf([a], const [])));
+    expect(SeasonRecord.fromJson(b.toJson()).twoWay, isTrue);
+    expect(SeasonRecord.fromJson({'age': 20}).twoWay, isFalse);
   });
 }
