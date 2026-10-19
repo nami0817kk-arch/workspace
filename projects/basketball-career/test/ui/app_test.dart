@@ -80,6 +80,20 @@ void main() {
     expect(find.text('はじめる'), findsNothing, reason: 'いつでも開く場合は開始ボタンを出さない');
   });
 
+  testWidgets('はじめの画面で背番号を選べる', (tester) async {
+    tall(tester);
+    SharedPreferences.setMockInitialValues({howtoKey: true});
+    final c = GameController(rng: Random(1), events: false);
+    await tester.pumpWidget(BasketballCareerApp(controller: c));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(ChoiceChip, '23'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('6歳から始める'));
+    await tester.pumpAndSettle();
+    expect(c.game!.number, 23);
+    expect(find.textContaining('#23'), findsOneWidget);
+  });
+
   testWidgets('進路の画面から契約を選べる', (tester) async {
     final c = GameController(rng: Random(1), events: false);
     tall(tester);
