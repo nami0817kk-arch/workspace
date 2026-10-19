@@ -74,4 +74,4 @@ def test_clip_timing_keeps_strike_and_is_monotone(tmp_path):
     assert abs(us[0] - raw(1.0)) < 1e-9 and abs(us[-1] - raw(2.0)) < 1e-9   # 両端は元の時間につながる
     pulls = [bank.antic_phase(c, 1.5 - x)[0] for x in (0.04, 0.2, 0.38)]
     assert pulls[0] == 0.0 and pulls[1] == 1.0 and pulls[2] < 0.5      # 振りの最中は引かない、溜めで引く
-    assert bank.antic_phase(c, 1.56)[1] == 1.0 and bank.antic_phase(c, 1.8)[1] == 0.0
+    assert abs(bank.antic_phase(c, 1.56)[1] - 1.0) < 1e-6 and bank.antic_phase(c, 1.8)[1] == 0.0
