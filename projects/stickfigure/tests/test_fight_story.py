@@ -29,7 +29,7 @@ def test_build_fight_is_valid_scene(spec):
 
 
 def test_lines_become_captions_in_order():
-    sc = fight.build_fight(dict(lines=[dict(at="opening", text="a"), dict(at="finisher", dt=-0.2, kind="shout", text="b")]))
+    sc = fight.build_fight(dict(captions=True, lines=[dict(at="opening", text="a"), dict(at="finisher", dt=-0.2, kind="shout", text="b")]))
     caps = sc["captions"]
     assert [c["text"] for c in caps] == ["a", "b"] and caps[0]["t0"] < caps[1]["t0"] < sc["tau_end"]
     assert all(c["t1"] > c["t0"] for c in caps)
@@ -114,3 +114,8 @@ def test_weapon_tip_lengths_match_between_fk_and_blender():
         assert m, name
         extra = 0.18 if "head=True" in m.group(2) else 0.0          # 槍の穂先
         assert abs(0.115 + float(m.group(1)) + extra - tip) < 0.01, name
+
+
+def test_captions_are_off_by_default():
+    sc = fight.build_fight(dict(lines=[dict(at="opening", text="a")]))
+    assert sc["captions"] == []

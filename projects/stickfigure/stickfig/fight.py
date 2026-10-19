@@ -35,6 +35,7 @@ DEFAULTS = dict(
     ally=None,               # 3人目(味方): {color, x(置く位置), y(奥行き。+で奥), facing(+1右向き/-1左向き), scale, cheer(勝ったら万歳 true/負けたらうなだれる false)}。戦わず、見守る
     seed=None,               # 数字を入れると、連打の clip・間・溜めの色・カットの順を、その数字で変える(同じ数字なら同じ戦い)
     mood="battle",           # BGM の雰囲気: battle / tense / calm / sad / none
+    captions=False,          # 字幕(lines)を出すか。既定は出さない(2026-10-19 ユーザー「字幕はいらない」)。True で lines を字幕にする
     lines=[],                # 台詞・ナレーション: [{at: opening|kick|rise|combo|counter|last|finisher|ko|end, dt: 0, dur: 1.6, kind: say|narr|shout, who: A, text: "…"}]
 )
 
@@ -236,7 +237,7 @@ def build_fight(spec: dict) -> dict:
     end = _r(tail + 0.6)
     # 台詞が収まらないときは、終わりを延ばす(最後の台詞の終わり+0.3秒)。延ばした間は、勝者が立ち・敗者が倒れたまま
     pm = dict(opening=0.3, kick=1.9, rise=tc, combo=h0, last=hl, finisher=hl + 0.55, ko=ko_t, end=end - 1.2, counter=ts[0] + 0.28)
-    prov = _layout_captions(s["lines"], pm, 1e9, float(s["tempo"]))
+    prov = _layout_captions(s["lines"], pm, 1e9, float(s["tempo"])) if s["captions"] else []
     if prov:
         end = max(end, _r(max(c["t1"] for c in prov) + 0.3))
     keysA.append(dict(t=end, dx=keysA[-1]["dx"], hz=0.9, face="win"))
@@ -257,7 +258,7 @@ def build_fight(spec: dict) -> dict:
         actors["A"]["weapon"] = s["weapon"]
     marks = dict(opening=0.3, kick=1.9, rise=tc, combo=h0, last=hl, finisher=hl + 0.55, ko=ko_t, end=end - 1.2)
     marks["counter"] = ts[0] + 0.28
-    caps = _layout_captions(s["lines"], marks, end, float(s["tempo"]))
+    caps = _layout_captions(s["lines"], marks, end, float(s["tempo"])) if s["captions"] else []
     keys = dict(A=sorted(keysA, key=lambda k: k["t"]), B=sorted(keysB, key=lambda k: k["t"]))
     if s["ally"]:                                       # 味方: 戦いの間は不安げに見守り、決着で万歳(か、うなだれる)。奥行き y をずらして置く
         al = s["ally"]
