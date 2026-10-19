@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../game/advice.dart';
 import '../game/career.dart';
 import '../game/difficulty.dart';
 import '../game/game.dart';
@@ -112,14 +113,6 @@ class SaveStore {
       } catch (_) {}
     });
   }
-}
-
-/// 今のおすすめ。怪我・疲れていれば休養、気持ちが沈んでいれば交流、それ以外は練習。
-Action recommendedAction(Game g) {
-  final c = g.condition;
-  if (c.injured || c.fatigue >= 70) return Action.rest;
-  if (c.morale < 35) return Action.social;
-  return Action.practice;
 }
 
 /// 画面とゲームをつなぐ。操作のたびに保存する。

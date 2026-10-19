@@ -3,6 +3,7 @@
 // 練習中心(疲れたら休養)で 1000 人を最後まで進め、進路と結末の割合を数える。
 import 'dart:math';
 
+import 'package:basketball_career/game/advice.dart';
 import 'package:basketball_career/game/game.dart';
 import 'package:basketball_career/game/life.dart';
 import 'package:basketball_career/game/match.dart';
@@ -12,6 +13,7 @@ import 'package:basketball_career/game/player.dart';
 void main(List<String> args) {
   const n = 1000;
   final smart = args.contains('--smart');
+  final auto = args.contains('--auto');
   final spec = args.contains('--spec') || args.contains('--team');
   final team = args.contains('--team');
   var pro = 0, direct = 0, abroad = 0, titles = 0, rw = 0, rl = 0, awards = 0;
@@ -30,7 +32,10 @@ void main(List<String> args) {
         case Phase.season:
           final rest = g.condition.fatigue >= 60 || g.condition.injured;
           // 重点は今いちばん低い能力ではなく、ポジションに効く能力を順に回す。
-          if (spec) {
+          if (auto) {
+            // 画面の「おすすめで1年進める」と同じ方針。
+            g.choose(recommendedAction(g), recommendedFocus(g.player));
+          } else if (spec) {
             // ポジションに効く能力のうち、重み×(100-今の値)がいちばん大きいものを重点にする。
             final w = weightsOf(g.player.position);
             final focus = w.keys.reduce((a, b) =>
