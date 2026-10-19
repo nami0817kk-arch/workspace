@@ -59,9 +59,16 @@ class PlayerScreen extends StatelessWidget {
           ],
           bottom: const TabBar(
             tabs: [
-              Tab(key: Key('tab-profile'), text: 'プロフィール'),
-              Tab(key: Key('tab-records'), text: '成績'),
-              Tab(key: Key('tab-career'), text: '経歴'),
+              Tab(
+                  key: Key('tab-profile'),
+                  child:
+                      FittedBox(fit: BoxFit.scaleDown, child: Text('プロフィール'))),
+              Tab(
+                  key: Key('tab-records'),
+                  child: FittedBox(fit: BoxFit.scaleDown, child: Text('成績'))),
+              Tab(
+                  key: Key('tab-career'),
+                  child: FittedBox(fit: BoxFit.scaleDown, child: Text('経歴'))),
             ],
           ),
         ),
