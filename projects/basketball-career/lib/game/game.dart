@@ -76,6 +76,23 @@ class YearRecord {
       );
 }
 
+/// 年ごとの成長の記録(成長の軌跡のグラフに使う)。
+class GrowthPoint {
+  const GrowthPoint(this.age, this.overall, this.heightCm);
+  final int age;
+  final double overall;
+  final double heightCm;
+
+  Map<String, dynamic> toJson() =>
+      {'age': age, 'overall': overall, 'heightCm': heightCm};
+
+  factory GrowthPoint.fromJson(Map<String, dynamic> j) => GrowthPoint(
+        (j['age'] as num?)?.toInt() ?? 0,
+        (j['overall'] as num?)?.toDouble() ?? 0,
+        (j['heightCm'] as num?)?.toDouble() ?? 0,
+      );
+}
+
 /// `choose` 1回の結果。画面はこれを見て演出する。
 class TermReport {
   const TermReport({
@@ -126,6 +143,7 @@ class Game {
     this.teamwork = 40,
     this.coachBond = 20,
     List<String>? recentEventIds,
+    List<GrowthPoint>? growthLog,
     this.run,
     this.runWinter = false,
     this.termAction = Action.practice,
@@ -148,6 +166,7 @@ class Game {
   })  : rng = rng ?? Random(),
         rival = rival ?? Rival(name: 'ライバル', potential: 60),
         recentEventIds = recentEventIds ?? [],
+        growthLog = growthLog ?? [],
         goalOptions = goalOptions ?? [],
         goalStart = goalStart ?? {},
         recentAchievements = recentAchievements ?? [],
@@ -236,6 +255,9 @@ class Game {
   /// 直近に終えたターンの結果(勝負どころで止まった後、続きを終えたときの結果もここに入る)。
   TermReport? lastReport;
   int slot;
+
+  /// 年ごとの成長の記録(年末に1つ足す)。
+  final List<GrowthPoint> growthLog;
 
   /// 最近起きた出来事の id(同じものが続かないように)。
   final List<String> recentEventIds;
@@ -487,6 +509,7 @@ class Game {
 
   void _endYear() {
     _evaluateGoal();
+    growthLog.add(GrowthPoint(player.age, player.overall, player.heightCm));
     final stageBefore = stage;
     slot = 0;
     player = ageUp(player, rng);
@@ -735,6 +758,7 @@ class Game {
         'teamwork': teamwork,
         'coachBond': coachBond,
         'recentEventIds': recentEventIds,
+        'growthLog': [for (final p in growthLog) p.toJson()],
         'difficulty': difficulty.name,
         'goalOptions': [for (final g in goalOptions) g.toJson()],
         'goal': goal?.toJson(),
@@ -775,6 +799,10 @@ class Game {
         recoveredThisTerm: (j['recoveredThisTerm'] as bool?) ?? false,
         teamwork: (j['teamwork'] as num?)?.toInt() ?? 40,
         coachBond: (j['coachBond'] as num?)?.toInt() ?? 20,
+        growthLog: [
+          for (final p in (j['growthLog'] as List?) ?? const [])
+            GrowthPoint.fromJson((p as Map).cast<String, dynamic>()),
+        ],
         recentEventIds: [
           for (final v in (j['recentEventIds'] as List?) ?? const []) v as String
         ],

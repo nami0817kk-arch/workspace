@@ -5,7 +5,9 @@ import '../game/game.dart';
 import '../game/life.dart';
 import '../game/match.dart';
 import '../game/player.dart';
+import '../game/season.dart';
 import 'art/court.dart';
+import 'art/growth_chart.dart';
 import 'controller.dart';
 import 'history_screen.dart';
 import 'settings_screen.dart';
@@ -111,6 +113,11 @@ class _SeasonView extends StatelessWidget {
           _Note(text: c.pathMessage!),
           const SizedBox(height: 12),
         ],
+        if (c.lastTournament != null) ...[
+          _TournamentCard(
+              result: c.lastTournament!, winter: c.lastTournamentWinter),
+          const SizedBox(height: 12),
+        ],
         if (c.recent.isNotEmpty) ...[
           _RecentCard(lines: c.recent),
           const SizedBox(height: 12),
@@ -206,6 +213,8 @@ class _SeasonView extends StatelessWidget {
         ],
         const SizedBox(height: 12),
         _AbilityCard(game: g),
+        const SizedBox(height: 12),
+        _GrowthCard(game: g),
         if (g.canGoAbroad) ...[
           const SizedBox(height: 12),
           FilledButton(
@@ -446,6 +455,28 @@ String _mark(int? w) => switch (w) {
       _ => '△',
     };
 
+/// 成長の軌跡(総合評価と身長の推移)。
+class _GrowthCard extends StatelessWidget {
+  const _GrowthCard({required this.game});
+  final Game game;
+
+  @override
+  Widget build(BuildContext context) => Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('成長の軌跡  (太線: 総合 / 細線: 身長)',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+              const SizedBox(height: 8),
+              GrowthChart(points: game.growthLog),
+            ],
+          ),
+        ),
+      );
+}
+
 class _AbilityCard extends StatelessWidget {
   const _AbilityCard({required this.game});
   final Game game;
@@ -515,6 +546,91 @@ class _Meter extends StatelessWidget {
           ),
           const SizedBox(width: 8),
           SizedBox(width: 32, child: Text('$value', textAlign: TextAlign.right)),
+        ],
+      ),
+    );
+  }
+}
+
+/// 大会の結果。試合ごとに ○● と得点・個人成績・流れの一言を並べる。
+class _TournamentCard extends StatelessWidget {
+  const _TournamentCard({required this.result, required this.winter});
+  final TournamentResult result;
+  final bool winter;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = result;
+    final cs = Theme.of(context).colorScheme;
+    return Card(
+      color: t.champion ? cs.primaryContainer : null,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+                '${leagueLabel(t.league)}の${winter ? '冬' : '夏'}の大会  '
+                '${t.wins}勝${t.games - t.wins}敗${t.champion ? '  優勝!' : ''}',
+                style:
+                    const TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+            Text('実績 ${t.achievement.round()}(${achievementWord(t.achievement)})  '
+                '平均 ${t.ppg.toStringAsFixed(1)}点 ${t.rpg.toStringAsFixed(1)}R ${t.apg.toStringAsFixed(1)}A',
+                style: const TextStyle(fontSize: 12)),
+            const SizedBox(height: 8),
+            for (var i = 0; i < t.matches.length; i++)
+              _MatchRow(index: i, m: t.matches[i]),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _MatchRow extends StatelessWidget {
+  const _MatchRow({required this.index, required this.m});
+  final int index;
+  final MatchResult m;
+
+  @override
+  Widget build(BuildContext context) {
+    final story = matchStory(m);
+    final color = m.won ? const Color(0xFF2E7D32) : const Color(0xFFC62828);
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 26,
+            height: 26,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+            child: Text(m.won ? '勝' : '負',
+                style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12)),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                    '${index + 1}試合目  ${m.teamScore}-${m.oppScore}'
+                    '${m.opponent.isEmpty ? '' : '  vs ${m.vsRival ? 'ライバル ' : ''}${m.opponent}'}',
+                    style: const TextStyle(fontWeight: FontWeight.bold)),
+                Text('得点${m.points} リバウンド${m.rebounds} アシスト${m.assists}'
+                    '${m.clutch == null ? '' : '  勝負どころ:${m.clutch!.label}${m.clutchSuccess == true ? '成功' : '失敗'}'}',
+                    style: const TextStyle(fontSize: 12)),
+                if (story != null)
+                  Text(story,
+                      style: const TextStyle(
+                          fontSize: 12, fontStyle: FontStyle.italic)),
+              ],
+            ),
+          ),
         ],
       ),
     );
@@ -808,6 +924,8 @@ class _EndingView extends StatelessWidget {
             ),
           ),
         ),
+        const SizedBox(height: 12),
+        _GrowthCard(game: g),
         if (controller.newlyUnlocked.isNotEmpty) ...[
           const SizedBox(height: 12),
           Card(

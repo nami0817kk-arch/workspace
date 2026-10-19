@@ -1,3 +1,4 @@
+import 'difficulty.dart';
 import 'epilogue.dart';
 import 'game.dart';
 import 'player.dart';
@@ -124,6 +125,24 @@ final achievements = <Achievement>[
       (g) => g.totalGames >= 10 && g.careerPpg >= 15),
   Achievement('rival_beat', '宿敵に勝ち越し', 'ライバルとの通算で勝ち越した(3戦以上)。',
       (g) => g.rival.games >= 3 && g.rival.wins > g.rival.losses),
+  Achievement('mini_king', 'ミニバスの王者', 'ミニバスの大会で優勝した。',
+      (g) => g.records.any((r) => r.league.name == 'minibasket' && r.champion)),
+  Achievement('jh_king', '中学の王者', '中学の大会で優勝した。',
+      (g) => g.records.any((r) => r.league.name == 'juniorHigh' && r.champion)),
+  Achievement('hs_king', '高校の王者', '高校の大会で優勝した。',
+      (g) => g.records.any((r) => r.league.name == 'highSchool' && r.champion)),
+  Achievement('grand_slam', '全制覇', 'ミニバス・中学・高校のすべてで優勝した。', (g) {
+    bool king(String l) => g.records.any((r) => r.league.name == l && r.champion);
+    return king('minibasket') && king('juniorHigh') && king('highSchool');
+  }),
+  Achievement('rebounder', 'ボードの支配者', '大会の平均リバウンドが8以上の年があった。',
+      (g) => g.records.any((r) => r.rpg >= 8)),
+  Achievement('playmaker', '名司令塔', '大会の平均アシストが7以上の年があった。',
+      (g) => g.records.any((r) => r.apg >= 7)),
+  Achievement('underdog', '小さな巨人', '身長175cm以下で海外に挑戦した。',
+      (g) => g.abroad && g.player.heightCm <= 175),
+  Achievement('hard_pro', '険しい道を', 'むずかしいでプロになった。',
+      (g) => g.difficulty == Difficulty.hard && _wentPro(g)),
   Achievement('veteran', '息の長い選手', '35歳までプロで戦った。',
       (g) => g.player.age >= 35 && _wentPro(g)),
 ];
