@@ -184,11 +184,13 @@ class Game {
   factory Game.start(String name,
       {Random? rng,
       bool events = true,
-      Difficulty difficulty = Difficulty.normal}) {
+      Difficulty difficulty = Difficulty.normal,
+      int legacyBonus = 0}) {
     final r = rng ?? Random();
     final potential = (30 + r.nextInt(40) + r.nextInt(31)).clamp(30, 100);
     final g = Game(
-      player: newPlayer(name, potential, r.nextDouble(), rollInnateTraits(r)),
+      player: newPlayer(name, potential, r.nextDouble(), rollInnateTraits(r),
+          bonus: legacyBonus),
       rival: Rival.random(r),
       difficulty: difficulty,
       rng: r,
