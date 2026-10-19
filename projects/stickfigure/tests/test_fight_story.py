@@ -76,3 +76,14 @@ def test_story_lines_vary_with_seed_but_not_without():
     assert a == texts(story.build_story(dict(arc="revenge")))
     variants = {tuple(texts(story.build_story(dict(arc="revenge", seed=s)))) for s in range(1, 8)}
     assert len(variants) > 1
+
+
+def test_series_plan_is_varied_and_valid():
+    from stickfig import series, episode
+    sp = series.plan_series(6, 100)
+    assert len({s["name"] for s in sp}) == 6 and len({s["story"]["seed"] for s in sp}) == 6
+    for s in sp:
+        ep = story.build_story(s["story"])
+        for it in ep["items"]:
+            if "scene" in it:
+                planmod.validate_scene(fight.expand(dict(it["scene"])))

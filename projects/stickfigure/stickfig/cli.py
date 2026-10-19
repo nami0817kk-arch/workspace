@@ -143,6 +143,16 @@ def cmd_kit(a) -> int:
     return 0
 
 
+def cmd_series(a) -> int:
+    from . import series
+    out = Path(a.out)
+    if not a.build:
+        for p in series.write_specs(a.n, out, a.seed):
+            print(p)
+        return 0
+    return 0 if series.build_series(a.n, out, a.seed, a.vertical) else 1
+
+
 def cmd_episode(a) -> int:
     from . import episode
     mp4 = episode.build_episode(episode.load_episode(a.episode), Path(a.out), a.reuse_figs, a.force, a.vertical)
@@ -165,6 +175,7 @@ def main(argv=None) -> int:
     p = sub.add_parser("build"); p.add_argument("scene"); p.add_argument("--out", required=True); p.add_argument("--force", action="store_true"); p.add_argument("--reuse-figs", action="store_true", help="書き出し済みの人物PNGを再利用(plan が同じときだけ)"); p.set_defaults(fn=cmd_build)
     p = sub.add_parser("episode"); p.add_argument("episode"); p.add_argument("--out", required=True); p.add_argument("--force", action="store_true"); p.add_argument("--reuse-figs", action="store_true"); p.add_argument("--vertical", action="store_true", help="縦画面(ショート用 720x1280)で作る"); p.set_defaults(fn=cmd_episode)
     p = sub.add_parser("kit"); p.add_argument("ep_dir"); p.add_argument("--title", required=True); p.add_argument("--hero", default="ミドリ"); p.add_argument("--rival"); p.add_argument("--arc"); p.set_defaults(fn=cmd_kit)
+    p = sub.add_parser("series"); p.add_argument("--n", type=int, default=5); p.add_argument("--out", required=True); p.add_argument("--seed", type=int, default=100); p.add_argument("--vertical", action="store_true"); p.add_argument("--build", action="store_true"); p.set_defaults(fn=cmd_series)
     p = sub.add_parser("rhythm"); p.add_argument("video"); p.set_defaults(fn=cmd_rhythm)
     p = sub.add_parser("video-check"); p.add_argument("video"); p.add_argument("--out"); p.add_argument("--fps", type=float, default=30.0); p.set_defaults(fn=cmd_video_check)
     a = ap.parse_args(argv)
