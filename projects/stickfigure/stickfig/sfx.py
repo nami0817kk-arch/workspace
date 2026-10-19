@@ -120,6 +120,26 @@ def se(plan: dict, seed: int = 7) -> np.ndarray:
             _add(buf, boom(rng), t, 1.0)
         elif k in ("land", "land2"):
             _add(buf, land(rng), t, 0.8)
+    # 足音: 足が浮いてから床に着いたコマで、小さく低い音(踏み込み・踏み替えが聞こえると、体が動いて見える)
+    try:
+        from . import fk
+        for who, a in plan["actors"].items():
+            sg = 1 if a.get("facing", 1) >= 0 else -1
+            was_up = {"foot": False, "rear_foot": False}
+            for f, frm in enumerate(plan["frames"]):
+                if f > 0 and plan["frames"][f - 1]["tau"] == frm["tau"]:
+                    continue
+                pa = frm["actors"][who]
+                sk = fk.skeleton(pa, sg, pa["root_x"], a.get("scale", 1.0))
+                for key in ("foot", "rear_foot"):
+                    z = sk[key][1]
+                    if z > 0.10:
+                        was_up[key] = True
+                    elif z < 0.05 and was_up[key]:
+                        was_up[key] = False
+                        _add(buf, thump(rng, 95, 0.09, 0.6), f / fps, 0.22)
+    except Exception:
+        pass
     fx = plan.get("scene", {}).get("fx", {})
     for c in fx.get("charge", []):
         f0 = next((i for i, fr in enumerate(plan["frames"]) if fr["tau"] >= c["start"]), None)
