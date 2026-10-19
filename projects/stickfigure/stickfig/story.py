@@ -50,7 +50,7 @@ def _card(text: str, sub: str = "", dur: float = 2.0, style: str = "title") -> d
 
 def revenge(hero: str, rival: str, hero_color=GREEN, rival_color=RED, **_) -> dict:
     items: List[dict] = [
-        _card("雪辱戦", f"{hero} vs {rival}", 2.4),
+        _card("雪辱戦", f"{hero} vs {rival}", 2.0),
         dict(scene=dict(name="s1_defeat", fight=dict(
             weapon="sword", kick=False, hits=3, counter=False, finisher="none", palette="cool", mood="tense", stage="night",
             colors=dict(A=rival_color, B=hero_color),
@@ -78,7 +78,7 @@ def revenge(hero: str, rival: str, hero_color=GREEN, rival_color=RED, **_) -> di
                    dict(at="finisher", dt=-0.25, dur=1.1, kind="shout", text=f"必殺・{_move()}！"),
                    dict(at="ko", dt=0.5, dur=1.8, kind="say", who="B", last_words=True, text=_p(["見事だ…", "まさか……", "強く、なったな……"])),
                    ]))),
-        _card("完", f"{hero}は、もっと強くなる。", 2.4),
+        _card("完", f"{hero}は、もっと強くなる。", 2.0),
     ]
     return dict(name="ep_revenge", mood_cards="sad", items=items)
 
@@ -95,7 +95,7 @@ def tournament(hero: str, rival: str, hero_color=GREEN, rival_color=RED, **_) ->
                [dict(at="opening", dur=1.8, kind="narr", text=f"決勝の相手は、無敗の王者{rival}。"),
                 dict(at="finisher", dt=-0.25, dur=1.1, kind="shout", text="これが、俺の全力だ！"),
                 dict(at="ko", dt=0.5, dur=1.8, kind="narr", text=f"{hero}が、優勝を決めた。")])]
-    items: List[dict] = [_card("勝ち上がり", f"{hero}の挑戦", 2.2)]
+    items: List[dict] = [_card("勝ち上がり", f"{hero}の挑戦", 2.0)]
     for i, (name, col, spec, lines) in enumerate(rounds):
         items.append(_card(name, "", 1.5))
         items.append(dict(scene=dict(name=f"r{i + 1}", fight=dict(spec, colors=dict(A=hero_color, B=col), lines=lines))))
@@ -117,7 +117,7 @@ def duel(hero: str, rival: str, hero_color=GREEN, rival_color=RED, **_) -> dict:
 
 def protect(hero: str, rival: str, hero_color=GREEN, rival_color=RED, **_) -> dict:
     items: List[dict] = [
-        _card("守る者", f"{hero}の戦い", 2.2),
+        _card("守る者", f"{hero}の戦い", 2.0),
         dict(scene=dict(name="p1_corner", fight=dict(
             weapon="sword", kick=False, hits=2, counter=False, finisher="none", palette="cool", mood="tense", stage="sunset", a_scale=1.25,
             ally=dict(color=ALLY, x=4.4, y=1.6, facing=-1, cheer=False),
@@ -145,7 +145,7 @@ def protect(hero: str, rival: str, hero_color=GREEN, rival_color=RED, **_) -> di
 
 def mentor(hero: str, rival: str, hero_color=GREEN, rival_color=RED, **_) -> dict:
     items: List[dict] = [
-        _card("師の教え", f"{hero}と、師匠", 2.2),
+        _card("師の教え", f"{hero}と、師匠", 2.0),
         dict(scene=dict(name="m1_spar", fight=dict(
             weapon="sword", kick=False, hits=3, counter=False, finisher="none", palette="cool", mood="calm", stage="dojo",
             colors=dict(A=BLUE, B=hero_color),
@@ -162,7 +162,7 @@ def mentor(hero: str, rival: str, hero_color=GREEN, rival_color=RED, **_) -> dic
                    dict(at="last", dt=0.1, dur=1.0, kind="say", who="A", text="力じゃない……見切るんだ！"),
                    dict(at="finisher", dt=-0.25, dur=1.1, kind="shout", text="師の一閃！"),
                    ]))),
-        _card("完", f"教えは、{hero}の中に生きている。", 2.4),
+        _card("完", f"教えは、{hero}の中に生きている。", 2.0),
     ]
     return dict(name="ep_mentor", mood_cards="calm", items=items)
 
