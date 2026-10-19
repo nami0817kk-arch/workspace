@@ -7,9 +7,13 @@ import '../../game/game.dart';
 /// 育成画面の上に出す絵。体育館の床・ゴール・選手をコードで描く(画像は使わない)。
 /// 選手の大きさは身長に比例し、ユニフォームの色は所属で変わる。
 class CourtHeader extends StatelessWidget {
-  const CourtHeader({super.key, required this.game, this.height = 150});
+  const CourtHeader(
+      {super.key, required this.game, this.height = 150, this.versus = false});
   final Game game;
   final double height;
+
+  /// ライバルとの対決で、向かい合う相手を描く。
+  final bool versus;
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +27,7 @@ class CourtHeader extends StatelessWidget {
             heightCm: game.player.heightCm,
             jersey: jerseyColor(game.track, game.player.age),
             slot: game.slot,
+            versus: versus,
           ),
         ),
       ),
@@ -44,10 +49,14 @@ Color jerseyColor(Track t, int age) => switch (t) {
 
 class _CourtPainter extends CustomPainter {
   _CourtPainter(
-      {required this.heightCm, required this.jersey, required this.slot});
+      {required this.heightCm,
+      required this.jersey,
+      required this.slot,
+      this.versus = false});
   final double heightCm;
   final Color jersey;
   final int slot;
+  final bool versus;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -112,7 +121,23 @@ class _CourtPainter extends CustomPainter {
     final scale = (heightCm / 210).clamp(0.5, 1.05);
     final figureH = h * 0.78 * scale;
     final baseY = h * 0.92;
-    _figure(canvas, Offset(w * 0.30, baseY), figureH);
+    _figure(canvas, Offset(w * (versus ? 0.22 : 0.30), baseY), figureH);
+    if (versus) {
+      // 向かい合うライバル(暗い色のユニフォーム、やや大きく)。
+      _figure(canvas, Offset(w * 0.52, baseY), h * 0.78 * 0.98,
+          color: const Color(0xFF263238), flip: true);
+      final tp = TextPainter(
+        text: const TextSpan(
+          text: 'VS',
+          style: TextStyle(
+              color: Color(0xFFC62828),
+              fontSize: 22,
+              fontWeight: FontWeight.w900),
+        ),
+        textDirection: TextDirection.ltr,
+      )..layout();
+      tp.paint(canvas, Offset(w * 0.37 - tp.width / 2, h * 0.28));
+    }
 
     // 身長の目盛り(右下)。
     final tp = TextPainter(
@@ -127,10 +152,17 @@ class _CourtPainter extends CustomPainter {
   }
 
   /// 足元 `foot` を基準に、高さ `fh` の選手を描く(ボールを突いている)。
-  void _figure(Canvas canvas, Offset foot, double fh) {
+  void _figure(Canvas canvas, Offset foot, double fh,
+      {Color? color, bool flip = false}) {
+    if (flip) {
+      // 左右を反転して描く(足元を軸に)。
+      canvas.save();
+      canvas.translate(foot.dx * 2, 0);
+      canvas.scale(-1, 1);
+    }
     final skin = Paint()..color = const Color(0xFFFFCC99);
     final dark = Paint()..color = const Color(0xFF37474F);
-    final shirt = Paint()..color = jersey;
+    final shirt = Paint()..color = color ?? jersey;
     final head = fh * 0.13;
     final legH = fh * 0.40;
     final bodyH = fh * 0.33;
@@ -182,9 +214,13 @@ class _CourtPainter extends CustomPainter {
       true,
       Paint()..color = const Color(0xFF3E2723),
     );
+    if (flip) canvas.restore();
   }
 
   @override
   bool shouldRepaint(_CourtPainter old) =>
-      old.heightCm != heightCm || old.jersey != jersey || old.slot != slot;
+      old.heightCm != heightCm ||
+      old.jersey != jersey ||
+      old.slot != slot ||
+      old.versus != versus;
 }

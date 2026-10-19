@@ -715,7 +715,7 @@ class _ClutchView extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        CourtHeader(game: game, height: 110),
+        CourtHeader(game: game, height: 110, versus: s.vsRival),
         const SizedBox(height: 12),
         Card(
           color: Theme.of(context).colorScheme.primaryContainer,
