@@ -250,6 +250,37 @@ def retarget(b: Bvh, out_fps: int = 30, heading_frame: int = 0, flip: bool = Fal
     return dict(fps=out_fps, n=len(tt), scale=s, params={k: [round(x, 5) for x in v] for k, v in res.items()}, **meta)
 
 
+LOOP_KEYS = ("fa", "fe", "ra", "re", "fl", "fk", "rl", "rk", "lean")
+
+
+def find_loop(clip: dict, min_sec: float = 0.45, max_start: int = 8) -> Optional[dict]:
+    """走りなどの周期運動で、姿勢と速度がいちばん合う区間を探し、ぴったり輪にした clip を返す。
+
+    先頭の数コマは、データの継ぎ目の乱れがあるので始点に使わない。区間 [s, e) を切り出し、dx の1周期ぶんを dx_cycle に記録する。
+    """
+    P = {k: np.array(clip["params"][k]) for k in LOOP_KEYS}
+    n, fps = clip["n"], clip["fps"]
+    X = np.stack([P[k] for k in LOOP_KEYS], axis=1)
+    V = np.gradient(X, axis=0)
+    best = None
+    for s0 in range(1, min(max_start, n)):
+        for e in range(s0 + int(min_sec * fps), n):
+            d = float(np.sum((X[s0] - X[e]) ** 2) + 4.0 * np.sum((V[s0] - V[e]) ** 2))
+            if best is None or d < best[0]:
+                best = (d, s0, e)
+    if best is None:
+        return None
+    _, s0, e = best
+    out = dict(clip)
+    out["params"] = {k: v[s0:e] for k, v in clip["params"].items()}
+    out["n"] = e - s0
+    dx = clip["params"]["dx"]
+    out["dx_cycle"] = round(float(dx[e] - dx[s0]), 5)
+    out["loop"] = True
+    out["loop_error"] = round(best[0], 5)
+    return out
+
+
 def save_clip(clip: dict, path) -> None:
     Path(path).write_text(json.dumps(clip), encoding="utf-8")
 
@@ -267,8 +298,16 @@ class Clip:
         self.params = {k: np.array(v) for k, v in data["params"].items()}
         self.duration = (self.n - 1) / self.fps
         self.strike = data.get("strike")
+        self.loopable = bool(data.get("loop"))
+        self.dx_cycle = data.get("dx_cycle")
 
     def sample(self, t: float, loop: bool = False) -> Dict[str, float]:
+        if loop and self.loopable and self.n > 1:      # ぴったり輪にした clip は、最後のコマから最初のコマへ補間する
+            x = (t * self.fps) % self.n
+            i = int(math.floor(x))
+            j = (i + 1) % self.n
+            u = x - i
+            return {k: float(v[i] * (1 - u) + v[j] * u) for k, v in self.params.items()}
         if loop and self.duration > 0:
             t = t % self.duration
         t = max(0.0, min(self.duration, t))

@@ -97,3 +97,20 @@ def test_clipbank_strike_alignment_and_blend(tmp_path):
     p0 = dict(fa=0.0, fe=0, ra=0, re=0, fl=0, fk=0, rl=0, rk=0, lean=0, hz=0.8, dx=0.0)
     assert bank.apply("A", p0, 5.0)["fa"] == pytest.approx(1.0)
     assert bank.apply("A", p0, 1.0)["fa"] == pytest.approx(0.0)  # 区間の外では混ざらない
+
+
+def test_find_loop_closes_a_periodic_clip_and_skips_the_seam():
+    """走りの周期を輪にする。先頭1コマ(データの継ぎ目の乱れ)は始点に使わない。"""
+    n, fps = 60, 30
+    t = np.arange(n) / fps
+    params = {k: (0.8 * np.sin(2 * math.pi * 1.5 * t + i)).tolist() for i, k in enumerate(mocap.CLIP_KEYS)}
+    params["dx"] = (3.0 * t).tolist()
+    for k in ("fa", "fe", "ra", "re", "fl", "fk", "rl", "rk", "lean"):
+        params[k][0] = 9.0                                   # 先頭の乱れ
+    loop = mocap.find_loop(dict(fps=fps, n=n, params=params))
+    assert loop["loop"] and 18 <= loop["n"] <= 22             # 周期は 1/1.5 秒 = 20 コマ
+    assert loop["dx_cycle"] == pytest.approx(2.0, abs=0.25)   # 1周期で進む距離
+    assert max(abs(v) for v in loop["params"]["fa"]) < 2.0    # 乱れたコマが入っていない
+    c = mocap.Clip(loop)
+    a, b = c.sample(0.0, loop=True), c.sample(loop["n"] / fps, loop=True)
+    assert a["fa"] == pytest.approx(b["fa"], abs=1e-6)        # 周期で元に戻る

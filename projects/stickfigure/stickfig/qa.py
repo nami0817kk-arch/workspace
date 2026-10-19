@@ -136,7 +136,7 @@ def check_stops_and_jerk(plan: dict, cfg: dict) -> List[dict]:
             for i in range(2, len(v) - 2):
                 if i in skip or (i + 1) in skip:
                     continue
-                if plan["frames"][i]["actors"][who].get("run", 0) > 0.3:
+                if plan["frames"][i]["actors"][who].get("run", 0) > 0.3 or plan["frames"][i]["actors"][who].get("periodic"):
                     continue          # 走りは周期運動で、折り返しに速度0が出るのが自然
                 slow = abs(v[i]) < 0.06 * pk
                 moving = abs(v[i - 1]) > 0.25 * pk and abs(v[i + 1]) > 0.25 * pk

@@ -45,8 +45,11 @@ def convert(bvh: Path, name: str, clips: Path) -> None:
     p = mocap.world_positions(b)
     if name in RUNS:
         c = mocap.retarget(b, heading="travel", p=p)
+        loop = mocap.find_loop(c)
+        if loop is not None:
+            c = loop
         mocap.save_clip(c, clips / f"{name}.json")
-        print(name, "走り", c["n"], "コマ")
+        print(name, "走り", c["n"], "コマ", f"輪の誤差 {c.get('loop_error')}" if loop else "")
         return
     strikes = mocap.find_strikes(b, p, top=2)
     for i, st in enumerate(strikes, 1):

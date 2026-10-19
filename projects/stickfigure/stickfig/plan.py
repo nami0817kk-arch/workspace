@@ -107,7 +107,10 @@ class ClipBank:
         speed = c.get("speed", 1.0)
         u = (tau - c["start"]) * speed + c.get("offset", 0.0)
         v = clip.sample(u, c.get("loop", False))
-        if c.get("loop", False) and clip.duration > 0:
+        if c.get("loop", False) and clip.loopable:
+            cycles = math.floor(u * clip.fps / clip.n)
+            v["dx"] += cycles * clip.dx_cycle
+        elif c.get("loop", False) and clip.duration > 0:
             cycles = math.floor(u / clip.duration)
             v["dx"] += cycles * (clip.params["dx"][-1] - clip.params["dx"][0])
         v["hz"] = v["hz"] + c.get("hz_off", 0.0)
@@ -374,6 +377,9 @@ def build_plan(scene: dict, solve: bool = True) -> dict:
                 p = apply_run(p, tau, scene.get("run"))
                 if scene["_bank"] is not None:
                     p = scene["_bank"].apply(who, p, tau)
+                    act = scene["_bank"].active(who, tau, 0.3)
+                    if act is not None and act.get("loop"):
+                        p = dict(p, periodic=1.0)          # 周期運動(走り)の区間。点検の「途中で止まる」から外す
                 if who in planters:
                     p = planters[who].apply(p, dtau)
             s = _sign(a)

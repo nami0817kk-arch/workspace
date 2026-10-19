@@ -1,0 +1,72 @@
+# 比較用: 同じ大きさの2人が、同じ振り付け(接近→蹴り→敵が壁まで飛ぶ)を、3つの作り方で作る
+# A: 要の姿勢だけ(従来)
+name: variant_a_keys
+fps: 30
+tau_end: 5.5
+actors:
+  A:
+    color: [0.3, 0.68, 0.1]
+    scale: 1.0
+    base_x: -2.0
+    facing: 1
+  B:
+    color: [0.8, 0.1, 0.08]
+    scale: 1.0
+    base_x: 2.4
+    facing: -1
+stage: {wall_x: 6.0, style: cave}
+slow:
+- {start: 1.85, end: 2.4, rate: 0.35}
+hits:
+- tau: 1.9
+  hold: 0.09
+  kind: kick
+  contact:
+    striker: A
+    effector: foot
+    target: {actor: B, point: hip}
+    adjust_keys: [1.9]
+    tol: 0.2
+- tau: 2.25
+  hold: 0.06
+  kind: wall
+  pos: [6.0, 1.6]
+puffs:
+- tau: 3.0
+  kind: land
+  pos: [4.6, 0.0]
+camera:
+- [0.0, -0.4, 8.6]
+- [1.6, -0.2, 7.4]
+- [2.2, 1.5, 8.6]
+- [3.2, 3.0, 9.4]
+- [5.5, 3.2, 9.4]
+keys:
+  A:
+  - {t: 0.0, dx: 0.2, hz: 0.84}
+  - {t: 1.0, dx: 0.2, lean: 0.12, hz: 0.83}
+  - {t: 1.7, dx: 0.35, hz: 0.55, lean: 0.4, fa: 0.4, fe: 1.0, ra: -0.5, re: 0.3, fl: 0.4, fk: 0.5, rl: -0.3, rk: 0.6}
+  - {t: 1.9, dx: 0.8, hz: 0.95, fl: 2.0, fk: 0.0, rl: 0.0, rk: 0.0, lean: -0.25, fa: 1.3, fe: 0.0, ra: -1.3, re: 0.0, spin: 6.2832, lst: 0.18}
+  - {t: 2.15, dx: 0.9, hz: 0.82, fl: 0.6, fk: 0.7, rl: -0.2, rk: 0.4, lean: 0.0, fa: 0.7, fe: 1.3, ra: 0.5, re: 1.5, spin: 6.2832, lst: 0.0}
+  - {t: 2.6, dx: 0.9, hz: 0.9, spin: 6.2832}
+  - {t: 3.5, dx: 0.9, spin: 6.2832}
+  B:
+  - {t: 0.0}
+  - {t: 1.0, dx: 0.35}
+  - {t: 1.9, dx: 0.35}
+  - {t: 1.95, dx: 0.3, lean: 0.55, hz: 0.88, fa: 0.9, ra: 0.8, fe: 0.9, re: 0.9, ht: 0.5, face: pain}
+  - {t: 2.25, dx: -1.5, rz: 1.45, roll: 1.57, hz: 0.9, fa: -0.6, ra: -0.6, fe: 0.2, re: 0.2, fl: 0.0, fk: 0.0, rl: 0.0, rk: 0.0, lean: -0.2, ht: -0.7,
+    face: pain}
+  - {t: 2.6, dx: -1.2, rz: 0.9, roll: 1.57, hz: 0.9, lean: 0.0}
+  - {t: 3.0, dx: -1.3, rz: 0.12, roll: 1.57, hz: 0.9, fa: 0.4, ra: 0.4, face: ko}
+  - {t: 5.5, dx: -1.3, rz: 0.12, roll: 1.57, hz: 0.9, face: ko}
+fx:
+  trails:
+  - [1.4, 2.3]
+  speed_lines:
+  - [1.9, 2.9]
+  invert: [kick]
+clips:
+  A:
+  - {file: 135_07_s1, strike_at: 1.9, start: 1.4, end: 2.6, in: 0.25, out: 0.3}
+qa: {max_cross_frames: 400, max_stops: 2}
