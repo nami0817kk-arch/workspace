@@ -54,7 +54,7 @@ def _say(img: Image.Image, plan: dict, f: int, c: dict, age: int, xf=None) -> No
     d = ImageDraw.Draw(img)
     size = int(c.get("size", 34) * (1.3 if W < 1000 else 1.0))
     font = anime._font(size)
-    lines = _wrap(d, c["text"], font, int(c.get("max_w", 520) * (0.72 if W < 1000 else 1.0)))
+    lines = _wrap(d, c["text"], font, int(c.get("max_w", 520) * (0.95 if W < 1000 else 1.0)))
     tw = max(d.textlength(l, font=font) for l in lines)
     lh = int(size * 1.25)
     bw, bh = tw + 44, lh * len(lines) + 30

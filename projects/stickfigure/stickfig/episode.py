@@ -37,22 +37,24 @@ def load_episode(path) -> dict:
     return ep
 
 
-def _card_frame(text: str, sub: str, style: str, color, alpha: float) -> Image.Image:
+def _card_frame(text: str, sub: str, style: str, color, alpha: float, size=(W, H)) -> Image.Image:
+    W, H = size
+    k = 0.6 if W < H else 1.0                 # 縦画面は文字を小さめに
     bg = Image.new("RGB", (W, H), tuple(color))
     img = bg.copy()
     d = ImageDraw.Draw(img)
     if style == "time":          # 場面の転換: 右下に小さく
-        f = anime._font(64)
+        f = anime._font(int(64 * k))
         tw = d.textlength(text, font=f)
-        d.text((W - tw - 90, H - 140), text, font=f, fill=(235, 235, 235))
+        d.text((W - tw - 60, H - 140), text, font=f, fill=(235, 235, 235))
     else:
-        f = anime._font(110)
+        f = anime._font(int(110 * k))
         tw = d.textlength(text, font=f)
         d.text(((W - tw) / 2, H * 0.36), text, font=f, fill=(255, 255, 255), stroke_width=6, stroke_fill=(10, 10, 16))
         if sub:
-            f2 = anime._font(46)
+            f2 = anime._font(int(46 * k))
             tw2 = d.textlength(sub, font=f2)
-            d.text(((W - tw2) / 2, H * 0.36 + 150), sub, font=f2, fill=(220, 220, 230))
+            d.text(((W - tw2) / 2, H * 0.36 + 150 * k), sub, font=f2, fill=(220, 220, 230))
     return Image.blend(bg, img, max(0.0, min(1.0, alpha)))
 
 
@@ -65,7 +67,7 @@ def _write_wav(path: Path, snd: np.ndarray) -> None:
         w.writeframes(pcm.tobytes())
 
 
-def card_segment(c: dict, out: Path, ff: str, mood: Optional[str], fps: int = 30) -> Path:
+def card_segment(c: dict, out: Path, ff: str, mood: Optional[str], fps: int = 30, size=(W, H)) -> Path:
     out.mkdir(parents=True, exist_ok=True)
     dur = float(c.get("dur", 2.0))
     n = int(dur * fps)
@@ -75,7 +77,7 @@ def card_segment(c: dict, out: Path, ff: str, mood: Optional[str], fps: int = 30
     for i in range(n):
         t = i / fps
         a = min(1.0, t / 0.3, (dur - t) / 0.3)
-        _card_frame(c["text"], c.get("sub", ""), c.get("style", "title"), color, a).save(out / f"{i + 1:04d}.png")
+        _card_frame(c["text"], c.get("sub", ""), c.get("style", "title"), color, a, size).save(out / f"{i + 1:04d}.png")
     silent = out / "card_silent.mp4"
     subprocess.run([ff, "-y", "-loglevel", "error", "-framerate", str(fps), "-i", str(out / "%04d.png"),
                     "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "18", str(silent)], check=True)
@@ -91,7 +93,7 @@ def card_segment(c: dict, out: Path, ff: str, mood: Optional[str], fps: int = 30
     return mp4
 
 
-def build_episode(ep: dict, out: Path, reuse_figs: bool = False, force: bool = False) -> Optional[Path]:
+def build_episode(ep: dict, out: Path, reuse_figs: bool = False, force: bool = False, vertical: bool = False) -> Optional[Path]:
     from . import cli
     out = Path(out)
     out.mkdir(parents=True, exist_ok=True)
@@ -100,7 +102,7 @@ def build_episode(ep: dict, out: Path, reuse_figs: bool = False, force: bool = F
     for i, it in enumerate(ep["items"]):
         seg_dir = out / f"seg{i + 1:02d}"
         if "card" in it:
-            segs.append(card_segment(it["card"], seg_dir, ff, ep.get("mood_cards", "sad")))
+            segs.append(card_segment(it["card"], seg_dir, ff, ep.get("mood_cards", "sad"), size=((720, 1280) if vertical else (W, H))))
             continue
         sc = it["scene"]
         if isinstance(sc, str):
@@ -108,6 +110,8 @@ def build_episode(ep: dict, out: Path, reuse_figs: bool = False, force: bool = F
         else:
             scene = fight.expand(dict(sc), verify=True)
             planmod.validate_scene(scene)
+        if vertical:
+            scene["output"] = {"aspect": "vertical"}
         mp4 = cli.build_scene(scene, seg_dir, reuse_figs, force, quiet=True)
         if mp4 is None:
             print(f"場面 {i + 1} が点検で止まった")
