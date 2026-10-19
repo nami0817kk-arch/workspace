@@ -139,12 +139,13 @@ def test_leg_ik_reaches_target():
 
 
 def test_riposte_adds_a_block_by_b():
-    sc = fight.build_fight(dict(hits=3, counter=True))
+    sc = fight.build_fight(dict(hits=3, counter=True, b_combo=0))
     by_b = [h for h in sc["hits"] if h.get("kind") == "clash" and h.get("by") == "B"]
     assert len(by_b) == 1
     ts = [h["tau"] for h in sc["hits"] if h.get("by") == "A" and h["kind"] in ("slash", "clash", "miss")]
     assert ts == sorted(ts)
-    assert fight.build_fight(dict(hits=3, riposte=False))["hits"] and not [h for h in fight.build_fight(dict(hits=3, riposte=False))["hits"] if h.get("by") == "B" and h["kind"] == "clash"]
+    off = fight.build_fight(dict(hits=3, riposte=False, b_combo=0))["hits"]
+    assert off and not [h for h in off if h.get("by") == "B" and h["kind"] == "clash"]
 
 
 def test_b_first_opening_only_without_kick():
@@ -153,4 +154,16 @@ def test_b_first_opening_only_without_kick():
     assert [h["kind"] for h in early] == ["miss", "clash"]
     sc2 = fight.build_fight(dict(kick=True, hits=3))
     assert not [h for h in sc2["hits"] if h.get("by") == "B" and h["tau"] < 4.0]
+    planmod.validate_scene(sc)
+
+
+def test_b_combo_adds_b_strikes_before_last_hit():
+    sc = fight.build_fight(dict(hits=3, counter=True))
+    a_last = max(h["tau"] for h in sc["hits"] if h.get("by") == "A" and h["kind"] in ("slash", "hit"))
+    bs = [h for h in sc["hits"] if h.get("by") == "B" and h["tau"] < a_last]
+    sc0 = fight.build_fight(dict(hits=3, counter=True, b_combo=0))
+    a_last0 = max(h["tau"] for h in sc0["hits"] if h.get("by") == "A" and h["kind"] in ("slash", "hit"))
+    bs0 = [h for h in sc0["hits"] if h.get("by") == "B" and h["tau"] < a_last0]
+    assert len(bs) == len(bs0) + 2
+    assert [h["kind"] for h in bs[-2:]] == ["miss", "clash"]
     planmod.validate_scene(sc)

@@ -68,6 +68,8 @@ def check_contacts(plan: dict, cfg: dict) -> List[dict]:
     res = []
     scene_hits = {h["tau"]: h for h in plan["scene"].get("hits", [])}
     for c in plan.get("contacts", []):
+        if c.get("kind") == "miss":            # かわし: 位置を決めるためだけに解いた接触。当たらないのが正しい
+            continue
         tol = scene_hits.get(c["tau"], {}).get("contact", {}).get("tol", cfg["contact_tol"])
         ok = c["distance_to_body"] <= tol
         res.append(_check(f"contact@{c['tau']}", ok, round(c["distance_to_body"], 3), tol,

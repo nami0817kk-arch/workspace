@@ -196,7 +196,7 @@ def solve_contact(scene: dict, tracks: Dict[str, KeyTrack], hit: dict) -> dict:
         eff = skeleton_at(scene, tracks, striker, tau)[eff_key]
         sk_t = skeleton_at(scene, tracks, tgt, tau)
         tp = fk.target_point(sk_t, c["target"].get("point", "hip"))
-        return dict(tau=tau, striker=striker, target=tgt, effector=c.get("effector", "foot"),
+        return dict(tau=tau, kind=hit.get("kind"), striker=striker, target=tgt, effector=c.get("effector", "foot"),
                     distance_to_point=math.hypot(eff[0] - tp[0] - off[0], eff[1] - tp[1] - off[1]),
                     distance_to_body=fk.dist_to_body(eff, sk_t), effector_pos=list(eff), target_pos=list(tp))
     # 1) 高さ: 角度パラメータを二分法で合わせる(height: false なら飛ばす)
@@ -228,7 +228,7 @@ def solve_contact(scene: dict, tracks: Dict[str, KeyTrack], hit: dict) -> dict:
     eff = skeleton_at(scene, tracks, striker, tau)[eff_key]
     sk_t = skeleton_at(scene, tracks, tgt, tau)
     tp = fk.target_point(sk_t, c["target"].get("point", "hip"))
-    return dict(tau=tau, striker=striker, target=tgt, effector=c.get("effector", "foot"),
+    return dict(tau=tau, kind=hit.get("kind"), striker=striker, target=tgt, effector=c.get("effector", "foot"),
                 distance_to_point=math.hypot(eff[0] - tp[0] - off[0], eff[1] - tp[1] - off[1]),
                 distance_to_body=fk.dist_to_body(eff, sk_t), effector_pos=list(eff), target_pos=list(tp))
 
