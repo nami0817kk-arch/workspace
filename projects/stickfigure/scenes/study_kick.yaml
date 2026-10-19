@@ -4,4 +4,4 @@ fight: {weapon: none, kick: false, hits: 3, counter: false, finisher: none, b_fi
 stepping: {hold: 1}
 anime: {sfx: false, trails: false, zoom_blur: false, grade: false, roll: false, smear: true}
 fx: {flashes: [], speed_lines: [], charge: []}
-qa: {max_stops: 5}   # 1コマ撮りなので、2コマ撮りの本番では飛ばされる 1 コマの止まりも数えられる
+qa: {max_stops: 5, max_cross_frames: 400, max_anticipation_frames: 14, max_jerk: 1.3}   # fight の qa を上書きするので全部書く。1コマ撮りなので、2コマ撮りの本番では飛ばされる 1 コマの止まりも数えられる

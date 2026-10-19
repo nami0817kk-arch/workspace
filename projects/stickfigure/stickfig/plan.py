@@ -174,6 +174,12 @@ class ClipBank:
             if k in v and k != "dx":
                 mean = float(clip.params[k].mean())
                 v[k] = mean + (v[k] - mean) * amp
+        step = float(c.get("step_in", 0.0))
+        if step and "strike_at" in c and not c.get("loop") and tau < c["strike_at"]:   # 踏み込み: 溜めの間は step だけ手前に立ち、振りの瞬間に一気に間合いへ入る(命中のコマは変えない)
+            u0 = c.get("offset", 0.0)
+            u_s = (c["strike_at"] - c["start"]) * speed + u0
+            q = 0.0 if u_s <= u0 else max(0.0, min(1.0, (u - u0) / (u_s - u0)))
+            v["dx"] = v["dx"] - step * (1.0 - q) * (1 if True else 0)
         for k, dv in (c.get("add") or {}).items():         # 上乗せ(走りの前傾など。amp は平均からの差を倍にするだけなので、平均 0 の lean には効かない)
             if k in v and k != "dx":
                 v[k] = v[k] + float(dv)
