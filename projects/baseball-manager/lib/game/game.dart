@@ -375,6 +375,10 @@ class Game {
   /// 今年の目標。年の初めに決まり、大会(プロはシーズン)の成績で達成かどうかが決まる。
   Goal? goal;
 
+  /// これまでに行動した回数と、コーチから「多くを学んだ」ときの回数(ボーナスの大きさに使う)。
+  int turnCount = 0;
+  int lastCoachTurn = 0;
+
   /// 今年の練習(練習・特訓)と休養の回数。年末にログに出して戻す。
   /// 今季ここまでの月ごとの成績(4〜9月)。シーズンの記録に写して空にする。
   List<String> monthRows = [];
@@ -449,6 +453,7 @@ class Game {
     }
     final share = slotShare(stage);
     final wasInjured = condition.injured;
+    turnCount++;
     final r = playTerm(player, condition, action, f, rng,
         share: share,
         trainBonus: trainerMultiplier(investLevel(Invest.trainer)),
@@ -708,7 +713,10 @@ class Game {
       log.add('${coach.name}のコツをつかんだ! 特性「${t.label}」を習得。');
       _note('trait', '特性「${t.label}」を習得(コーチ ${coach.name})');
     } else {
-      exp = exp.add(spreadExp(player.role, 40));
+      // 学びのボーナスは、前の学びからの間があくほど大きい(コーチばかりが最善にならないように)。
+      final bonus = min(40, 3 * (turnCount - lastCoachTurn));
+      lastCoachTurn = turnCount;
+      exp = exp.add(spreadExp(player.role, bonus));
       log.add('${coach.name}から多くを学んだ。(経験点を獲得)');
     }
   }
@@ -1266,6 +1274,8 @@ class Game {
         'worldRecords': [for (final r in worldRecords) r.toJson()],
         'lifeLog': [for (final e in lifeLog) e.toJson()],
         'focusStreak': focusStreak,
+        'turnCount': turnCount,
+        'lastCoachTurn': lastCoachTurn,
         'monthRows': monthRows,
         'trainCount': trainCount,
         'restCount': restCount,
@@ -1298,6 +1308,8 @@ class Game {
         (j['condition'] as Map?)?.cast<String, dynamic>() ?? {});
     g.slot = (j['slot'] as num?)?.toInt() ?? 0;
     g.focusStreak = (j['focusStreak'] as num?)?.toInt() ?? 0;
+    g.turnCount = (j['turnCount'] as num?)?.toInt() ?? 0;
+    g.lastCoachTurn = (j['lastCoachTurn'] as num?)?.toInt() ?? 0;
     g.monthRows = [
       for (final t in (j['monthRows'] as List?) ?? const []) t as String
     ];

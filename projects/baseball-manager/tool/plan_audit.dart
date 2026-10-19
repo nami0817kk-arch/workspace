@@ -1,7 +1,6 @@
 // ignore_for_file: avoid_print
 // 行動(練習・特訓…)ごとの、経験点・疲れ・やる気の変化を比べる(dart run tool/plan_audit.dart)。
 import 'dart:math';
-import 'package:baseball_manager/game/career.dart';
 import 'package:baseball_manager/game/game.dart';
 import 'package:baseball_manager/game/life.dart';
 import 'package:baseball_manager/game/path.dart';
@@ -9,7 +8,7 @@ import 'package:baseball_manager/game/player.dart';
 
 void main() {
   for (final stage in [13, 17, 22]) {
-    print('--- ${stage}歳ごろ');
+    print('--- $stage歳ごろ');
     for (final plan in Plan.values) {
       var exp = 0.0, fat = 0.0, mor = 0.0, inj = 0;
       const n = 300;

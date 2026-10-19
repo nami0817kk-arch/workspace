@@ -220,11 +220,28 @@ void main() {
     g.cast.members.removeWhere((m) => m.kind == Kind.coach);
     g.cast.members.add(Character(
         id: 'coach', name: '先生', kind: Kind.coach, tips: tipsNeeded - 1));
+    g.turnCount = 20; // 間があいているので、ボーナスは満額(40)
     final before = g.exp.total;
     g.choose(Plan.lesson, Ability.contact);
     expect(g.exp.total - before,
         greaterThanOrEqualTo(40 * usableCategories(g.player.role).length));
     expect(g.cast.coach!.tips, 0);
+  });
+
+  test('コーチの学びのボーナスは、前の学びからの間が短いと小さい(コーチばかりが最善にならない)', () {
+    int bonusAfter(int gap) {
+      final g = _game(5);
+      g.cast.members.removeWhere((m) => m.kind == Kind.coach);
+      g.cast.members.add(Character(
+          id: 'coach', name: '先生', kind: Kind.coach, tips: tipsNeeded - 1));
+      g.turnCount = 20;
+      g.lastCoachTurn = 20 - gap + 1; // この行動で turnCount が1増える
+      final before = g.exp.total;
+      g.choose(Plan.lesson, Ability.contact);
+      return g.exp.total - before;
+    }
+
+    expect(bonusAfter(4), lessThan(bonusAfter(14)));
   });
 
   test('高校に入ると恋人が現れる', () {

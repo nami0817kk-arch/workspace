@@ -39,6 +39,18 @@ void matches(Game g) {
       abilitiesOf(g.player.role).first);
 }
 
+/// コーチに教わってばかり(疲れたら休む)。特性を早く集める。
+void coachOnly(Game g) {
+  g.choose(g.condition.fatigue >= 60 ? Plan.rest : Plan.lesson,
+      abilitiesOf(g.player.role).first);
+}
+
+/// 研究(気持ちが上がり少し貯まる)ばかり。
+void studyOnly(Game g) {
+  g.choose(g.condition.fatigue >= 60 ? Plan.rest : Plan.study,
+      abilitiesOf(g.player.role).first);
+}
+
 void skilled(Game g) {
   final abilities = abilitiesOf(g.player.role);
   // いちばん低い能力を重点にする(総合評価は平均なので、底上げが効率的)。
@@ -112,6 +124,8 @@ void main(List<String> args) {
     '上手い': skilled,
     if (extra) '特訓ばかり': grind,
     if (extra) '練習試合ばかり': matches,
+    if (extra) 'コーチばかり': coachOnly,
+    if (extra) '研究ばかり': studyOnly,
   }.entries) {
     for (final role in [Role.batter, Role.pitcher]) {
       final rs = [
