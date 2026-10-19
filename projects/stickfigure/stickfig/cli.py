@@ -67,8 +67,9 @@ def cmd_check(a) -> int:
     pl = planmod.build_plan(scene)
     res = qa.run_gate(pl, scene.get("qa"))
     print(qa.format_report(res))
-    from . import rhythm
+    from . import rhythm, motion
     print(rhythm.plan_report(pl))
+    print(motion.report(pl))
     if a.report:
         Path(a.report).write_text(qa.format_report(res), encoding="utf-8")
     return 0 if res["passed"] else 1

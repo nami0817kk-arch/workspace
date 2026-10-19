@@ -114,3 +114,19 @@ def test_find_loop_closes_a_periodic_clip_and_skips_the_seam():
     c = mocap.Clip(loop)
     a, b = c.sample(0.0, loop=True), c.sample(loop["n"] / fps, loop=True)
     assert a["fa"] == pytest.approx(b["fa"], abs=1e-6)        # 周期で元に戻る
+
+
+
+def test_loop_clip_dx_is_continuous_across_seam():
+    """輪にした clip の継ぎ目(最後→最初のコマ)で、dx が 1 周ぶん後ろへ飛ばない(2026-10-19 の不具合)。"""
+    import numpy as np
+    from stickfig.mocap import Clip
+    n = 10
+    data = dict(fps=30, n=n, scale=0.06, loop=True, dx_cycle=1.0, params=dict(dx=[i / n for i in range(n)], fa=[0.0] * n))
+    clip = Clip(data)
+    ts = [(n - 1 + k * 0.25) / 30 for k in range(0, 9)]            # 最後のコマの前後をまたぐ
+    xs = [clip.sample(t, loop=True)["dx"] + (1.0 if t * 30 >= n else 0.0) for t in ts]
+    diffs = [b - a for a, b in zip(xs, xs[1:])]
+    assert all(0.0 <= d < 0.06 for d in diffs), diffs
+    before = clip.sample(-0.5 / 30, loop=True)["dx"]              # 始まりの少し前(区間に入る混ぜのコマ)
+    assert 0.9 < before <= 1.0
