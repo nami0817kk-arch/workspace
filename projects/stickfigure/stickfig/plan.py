@@ -818,7 +818,7 @@ def _body_drive(p: dict, who: str, f: int, events: List[dict], cfg: dict, sign: 
             if -6 <= d <= 10:
                 u = math.sin(math.pi * (d + 6) / 16.0)
                 if duck:
-                    dhz += -0.42 * k * u; dlean += 0.55 * k * u; dht += 0.5 * k * u; dfl += 0.6 * k * u; dfk += 0.9 * k * u; drl += -0.2 * k * u; dfk += 0.0
+                    dhz += -0.25 * k * u; dlean += 0.55 * k * u; dht += 0.5 * k * u; dfl += 0.6 * k * u; dfk += 0.9 * k * u; drl += -0.2 * k * u   # 沈みは 0.25×強さ(0.42 だと腰 0.16 まで沈み、脚が畳めず根元が 0.2 浮いた)
                 else:
                     ddx += -0.55 * k * u; dlean += -0.15 * k * u; dhz += 0.06 * k * math.sin(math.pi * min(1.0, max(0.0, (d + 4) / 8.0)))
         elif e["kind"] == "clash":                       # 受け止める側: 直前に脚だけ構え(体は動かさない=接触の位置を崩さない)、当たってから腰を落として押し合い、踏ん張って戻る
