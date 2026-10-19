@@ -207,7 +207,7 @@ void main() {
       );
       final adj = traitAdjusted(p);
       expect(adj.of(Ability.power), 59);
-      expect(adj.of(Ability.contact), 48);
+      expect(adj.of(Ability.contact), 49);
       expect(adj.of(Ability.speed), 58);
       expect(p.of(Ability.power), 50);
       // 能力が99でも、試合の間は特性の上乗せが消えない(上限は試合用の120)
@@ -215,7 +215,7 @@ void main() {
         for (final a in batterAbilities) a: 99,
       });
       expect(traitAdjusted(top).of(Ability.power), 108);
-      expect(traitAdjusted(top).of(Ability.contact), 97);
+      expect(traitAdjusted(top).of(Ability.contact), 98);
       expect(top.of(Ability.power), 99); // 元の選手は変えない
       // 特性が無ければ同じもの
       expect(identical(traitAdjusted(p.copyWith(traits: {})), p), isFalse);
