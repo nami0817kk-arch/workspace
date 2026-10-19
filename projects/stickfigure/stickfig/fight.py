@@ -185,8 +185,8 @@ def build_fight(spec: dict) -> dict:
                  dict(tau=2.25, hold=0.06, kind="wall", pos=[6.0, 1.6])]
         slow += [dict(start=1.85, end=2.4, rate=0.35), dict(start=2.5, end=3.15, rate=2.2)]
         puffs.append(dict(tau=3.0, kind="land", pos=[4.6, 0.0]))
-        clipsA.append(dict(file="135_07_s1", strike_at=1.9, start=1.5, end=2.7, **{"in": 0.2, "out": 0.3}))
-        keysA += [dict(t=2.7, dx=3.4, hz=0.9), dict(t=3.2, dx=3.4, hz=0.9)]
+        clipsA.append(dict(file="135_07_s1", strike_at=1.9, start=1.5, end=2.3, **{"in": 0.2, "out": 0.25}))   # 蹴ったら脚を戻す(2.7 まで clip を続けると、スローの間ずっと脚を上げたまま固まって見えた)
+        keysA += [dict(t=2.45, dx=3.3, hz=0.76, lean=0.18), dict(t=2.7, dx=3.4, hz=0.9), dict(t=3.2, dx=3.4, hz=0.9)]   # 着地で沈んで立つ
         keysB += [dict(t=1.9, dx=0.35),
                   dict(t=1.95, dx=0.3, lean=0.55, hz=0.88, fa=0.9, ra=0.8, fe=0.9, re=0.9, ht=0.5, face="pain"),
                   dict(t=2.25, dx=-1.5, rz=1.45, roll=1.57, hz=0.9, fa=-0.6, ra=-0.6, fe=0.2, re=0.2, fl=0.0, fk=0.0, rl=0.0, rk=0.0, lean=-0.2, ht=-0.7, face="pain"),
@@ -198,8 +198,8 @@ def build_fight(spec: dict) -> dict:
         shots += [
             dict(t=1.0, follow="A", scale=[[1.0, 5.2], [1.85, 4.2]], yaw=[[1.0, -28.0], [1.85, -14.0]], pitch=5.0, lens=32.0, target_z=1.0, lag=0.3),
             dict(t=1.85, follow="mid", scale=[[1.85, 3.2], [2.1, 3.6]], yaw=[[1.85, 38.0], [2.1, 46.0]], pitch=-9.0, lens=28.0, target_z=1.15, dutch=-4.0),
-            dict(t=2.1, follow="B", scale=6.0, yaw=[[2.1, 62.0], [2.9, 50.0]], pitch=3.0, lens=40.0, target_z=1.2, lag=0.35),
-            dict(t=2.9, follow="mid", scale=[[2.9, 8.5], [3.6, 9.5]], yaw=[[2.9, 15.0], [3.6, 25.0]], pitch=[[2.9, 30.0], [3.6, 22.0]], lens=40.0, target_z=0.7),
+            dict(t=2.1, follow="B", scale=4.6, yaw=[[2.1, 62.0], [2.9, 50.0]], pitch=3.0, lens=40.0, target_z=1.2, lag=0.35),           # 吹き飛ぶ B に寄る(6.0 だと人物が 1/4)
+            dict(t=2.9, follow="mid", scale=[[2.9, 6.8], [3.6, 7.6]], yaw=[[2.9, 15.0], [3.6, 25.0]], pitch=[[2.9, 30.0], [3.6, 22.0]], lens=40.0, target_z=0.7),
             dict(t=3.6, follow="A", scale=[[3.6, 5.6], [4.4, 4.4]], yaw=[[3.6, -38.0], [4.4, -20.0]], pitch=4.0, lens=30.0, target_z=1.0, lag=0.3)]
         clipsA.append(dict(file="09_01", start=3.2, end=3.52, loop=True, anchor_dx=3.4, **RUN_LOOK, **{"in": 0.15, "out": 0.2}))   # 0.32 秒 ≒ 1.2 単位(dx 3.4 → 4.6)。長いと B を追い越して戻る
         keysA.append(dict(t=3.55, dx=4.6, hz=0.9))
