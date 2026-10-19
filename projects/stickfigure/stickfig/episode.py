@@ -93,7 +93,7 @@ def card_segment(c: dict, out: Path, ff: str, mood: Optional[str], fps: int = 30
     return mp4
 
 
-def build_episode(ep: dict, out: Path, reuse_figs: bool = False, force: bool = False, vertical: bool = False) -> Optional[Path]:
+def build_episode(ep: dict, out: Path, reuse_figs: bool = False, force: bool = False, vertical: bool = False, preview: bool = False) -> Optional[Path]:
     from . import cli
     out = Path(out)
     out.mkdir(parents=True, exist_ok=True)
@@ -119,6 +119,10 @@ def build_episode(ep: dict, out: Path, reuse_figs: bool = False, force: bool = F
             planmod.validate_scene(scene)
         if vertical:
             scene["output"] = {"aspect": "vertical"}
+        if preview:                                   # 下書き: Blender を使わない線画(数秒/場面)。台本・字幕・カメラ・音のタイミングを先に見る
+            from . import preview as prev
+            segs.append(prev.preview_scene(scene, seg_dir / f"{scene.get('name', 'scene')}_prev.mp4", ff))
+            continue
         mp4 = cli.build_scene(scene, seg_dir, reuse_figs, force, quiet=True)
         if mp4 is None:
             print(f"場面 {i + 1} が点検で止まった")
@@ -126,7 +130,7 @@ def build_episode(ep: dict, out: Path, reuse_figs: bool = False, force: bool = F
         segs.append(mp4)
     lst = out / "concat.txt"
     lst.write_text("".join(f"file '{Path(s).resolve().as_posix()}'\n" for s in segs), encoding="utf-8")
-    final = out / f"{ep.get('name', 'episode')}.mp4"
+    final = out / f"{ep.get('name', 'episode')}{'_preview' if preview else ''}.mp4"
     subprocess.run([ff, "-y", "-loglevel", "error", "-f", "concat", "-safe", "0", "-i", str(lst), "-c:v", "libx264", "-pix_fmt", "yuv420p",
                     "-crf", "18", "-c:a", "aac", "-b:a", "192k", "-ar", "44100", "-ac", "2", str(final)], check=True)
     print(f"\n【エピソード】{final}({len(segs)} 区間)")

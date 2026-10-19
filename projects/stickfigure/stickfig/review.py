@@ -2,8 +2,8 @@
 
     python -m stickfig review scenes/episodes/ep_revenge.yaml
 
-- 字幕: 吹き出しは 22 文字まで(2行まで)、ナレーションは 44 文字まで。読む時間は 1 文字 0.14 秒+0.6 秒
-- 筋: 倒れている(face: ko)人物が、台詞をしゃべっていないか
+- 字幕: 吹き出しは 22 文字まで(2行まで)、ナレーションは 44 文字まで。読む時間は 1 文字 0.10 秒+0.5 秒(最大2秒。実際の秒で数える)
+- 筋: 倒れている(face: ko)人物が、台詞をしゃべっていないか(最後の一言は台詞に last_words: true を付ければ許す)
 - リズム: 場面ごとの見積もり(rhythm.plan_metrics)が参考6本の範囲に入っているか(目安)
 - 長さ: 全体の秒数(ショートは 60 秒まで)
 """
@@ -24,7 +24,7 @@ def check_captions(caps: List[dict], tau_end: float) -> List[str]:
         n = len(c["text"])
         if n > LIMIT.get(k, 30):
             bad.append(f"「{c['text']}」は長い({n}文字。{k}は {LIMIT.get(k, 30)} 文字まで)")
-        need = 0.6 + 0.14 * n
+        need = 0.5 + 0.10 * n
         if c["t1"] - c["t0"] < min(need, 2.0) - 0.2:
             bad.append(f"「{c['text']}」は出ている時間が短い({c['t1'] - c['t0']:.1f}秒。読むのに約 {min(need, 2.0):.1f}秒)")
         if c["t1"] > tau_end + 0.05:
@@ -36,7 +36,7 @@ def check_story(plan: dict) -> List[str]:
     """倒れている人物がしゃべらない。"""
     bad = []
     for c in plan.get("scene", {}).get("captions") or []:
-        if c.get("kind", "say") != "say":
+        if c.get("kind", "say") != "say" or c.get("last_words"):       # last_words: 倒れた人物の最後の一言は、筋として許す
             continue
         f = next((i for i, fr in enumerate(plan["frames"]) if fr["tau"] >= c["t0"] + 0.2), None)
         if f is not None and plan["frames"][f]["actors"][c["who"]].get("face") == "ko":

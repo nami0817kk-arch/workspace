@@ -62,6 +62,35 @@ def _r(x: float) -> float:
     return round(x, 3)
 
 
+def _layout_captions(lines: List[dict], marks: Dict[str, float], end: float, tempo: float) -> List[dict]:
+    """台詞の並べ方: 読む時間(1文字 0.10秒+0.5秒、最大2秒を、テンポで設計時間に直す)を確保し、
+    吹き出し・叫び(しゃべる系)どうしは重ならないよう順に並べる(前の台詞が終わるまで待つ。間に合わないときは、読む時間の75%まで縮める)。
+    ナレーションは別の帯なので、しゃべる系とは重なってよい。"""
+    items = []
+    for ln in lines:
+        t0 = marks[ln.get("at", "opening")] + float(ln.get("dt", 0.0))
+        need = min(2.0, 0.5 + 0.10 * len(ln["text"])) * tempo
+        items.append((t0, ln, max(float(ln.get("dur", 1.0)), need), need))
+    items.sort(key=lambda x: x[0])
+    caps, cursor = [], {"say": -9.0, "narr": -9.0}
+    for t0, ln, dur, need in items:
+        k = ln.get("kind", "say")
+        cls = "narr" if k == "narr" else "say"
+        t0 = max(0.0, t0, cursor[cls] + 0.06)
+        t1 = t0 + dur
+        if t1 > end - 0.05:                                  # はみ出すときは、まず縮め(最小で読む時間の75%)、それでも足りなければ出だしを早める
+            t1 = end - 0.05
+            if t1 - t0 < need * 0.75:
+                t0 = max(0.0, t1 - need * 0.75)
+        cursor[cls] = t1
+        c = dict(kind=k, text=ln["text"], t0=_r(t0), t1=_r(t1))
+        for key in ("who", "color", "size", "y", "max_w", "last_words"):
+            if key in ln:
+                c[key] = ln[key]
+        caps.append(c)
+    return caps
+
+
 def build_fight(spec: dict) -> dict:
     s = copy.deepcopy(DEFAULTS)
     s.update({k: v for k, v in (spec or {}).items() if k in DEFAULTS})
@@ -204,6 +233,11 @@ def build_fight(spec: dict) -> dict:
         ko_t = hl + 0.8
     tail = t_end + 0.3
     end = _r(tail + 0.6)
+    # 台詞が収まらないときは、終わりを延ばす(最後の台詞の終わり+0.3秒)。延ばした間は、勝者が立ち・敗者が倒れたまま
+    pm = dict(opening=0.3, kick=1.9, rise=tc, combo=h0, last=hl, finisher=hl + 0.55, ko=ko_t, end=end - 1.2, counter=ts[0] + 0.28)
+    prov = _layout_captions(s["lines"], pm, 1e9, float(s["tempo"]))
+    if prov:
+        end = max(end, _r(max(c["t1"] for c in prov) + 0.3))
     keysA.append(dict(t=end, dx=keysA[-1]["dx"], hz=0.9, face="win"))
     keysB.append(dict(t=end, dx=keysB[-1].get("dx", -3.0), rz=0.21, roll=1.57, hz=0.9, face="ko"))
     flurry.append(dict(start=_r(ko_t + 0.4), end=_r(ko_t + 0.8), every=5, angles=HERO))
@@ -221,18 +255,7 @@ def build_fight(spec: dict) -> dict:
         actors["A"]["weapon"] = "sword"
     marks = dict(opening=0.3, kick=1.9, rise=tc, combo=h0, last=hl, finisher=hl + 0.55, ko=ko_t, end=end - 1.2)
     marks["counter"] = ts[0] + 0.28
-    caps = []
-    for ln in s["lines"]:
-        t0 = marks[ln.get("at", "opening")] + float(ln.get("dt", 0.0))
-        need = min(2.2, 0.6 + 0.14 * len(ln["text"])) * float(s["tempo"])     # 読む時間(1文字 0.14秒+0.6秒、最大2.2秒)を、テンポで設計時間に直す。dur は最低の長さ
-        dur = max(float(ln.get("dur", 1.6)), need)
-        t1 = min(t0 + dur, end - 0.05)                       # 場面の終わりをはみ出さない。はみ出すなら、出だしを早める
-        t0 = max(0.0, min(t0, t1 - dur))
-        c = dict(kind=ln.get("kind", "say"), text=ln["text"], t0=_r(t0), t1=_r(t1))
-        for k in ("who", "color", "size", "y", "max_w"):
-            if k in ln:
-                c[k] = ln[k]
-        caps.append(c)
+    caps = _layout_captions(s["lines"], marks, end, float(s["tempo"]))
     scene = dict(
         name=spec.get("name", "fight") if isinstance(spec, dict) else "fight", fps=30, tau_end=end, actors=actors,
         stage=dict(wall_x=6.0, style="cave", theme=s["stage"]), slow=slow, hits=hits, puffs=puffs,

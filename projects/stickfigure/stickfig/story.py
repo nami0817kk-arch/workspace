@@ -75,7 +75,7 @@ def revenge(hero: str, rival: str, hero_color=GREEN, rival_color=RED, **_) -> di
                    dict(at="kick", dt=-0.5, dur=1.0, kind="say", who="A", text=_p(["今度は、負けない！", "もう、逃げない！", "一か月前の俺とは違う！"])),
                    dict(at="counter", dt=0.15, dur=1.0, kind="say", who="B", text="なに…！？"),
                    dict(at="finisher", dt=-0.25, dur=1.1, kind="shout", text=f"必殺・{_move()}！"),
-                   dict(at="ko", dt=0.5, dur=1.8, kind="say", who="B", text=_p(["見事だ…", "まさか……", "強く、なったな……"])),
+                   dict(at="ko", dt=0.5, dur=1.8, kind="say", who="B", last_words=True, text=_p(["見事だ…", "まさか……", "強く、なったな……"])),
                    ]))),
         _card("完", f"{hero}は、もっと強くなる。", 2.4),
     ]
@@ -122,7 +122,7 @@ def protect(hero: str, rival: str, hero_color=GREEN, rival_color=RED, **_) -> di
             colors=dict(A=rival_color, B=hero_color),
             lines=[dict(at="opening", dur=1.8, kind="narr", text=f"村を襲う{rival}の前に、{hero}がひとり立ちはだかった。"),
                    dict(at="rise", dt=-0.3, dur=1.2, kind="say", who="A", text=_p(["どけ。邪魔をするな。", "村ごと潰してやる。", "無駄な抵抗だ。"])),
-                   dict(at="last", dur=1.2, kind="say", who="B", text="ぐっ……！"),
+                   dict(at="last", dur=1.2, kind="say", who="B", last_words=True, text="ぐっ……！"),
                    ]))),
         _card("それでも", "", 1.5, "time"),
         dict(scene=dict(name="p2_stand", fight=dict(
@@ -146,7 +146,7 @@ def mentor(hero: str, rival: str, hero_color=GREEN, rival_color=RED, **_) -> dic
             colors=dict(A=BLUE, B=hero_color),
             lines=[dict(at="opening", dur=1.8, kind="narr", text=f"道場。{hero}は、師匠に稽古をつけてもらっていた。"),
                    dict(at="rise", dt=-0.3, dur=1.2, kind="say", who="A", text=_p(["力任せでは、勝てぬ。", "刀は、心で振るものだ。", "相手をよく見るのだ。"])),
-                   dict(at="last", dur=1.2, kind="say", who="B", text="まだ、届かない……！"),
+                   dict(at="last", dur=1.2, kind="say", who="B", last_words=True, text="まだ、届かない……！"),
                    ]))),
         _card("旅立ちの日", "", 1.6, "time"),
         dict(scene=dict(name="m2_boss", fight=dict(
