@@ -162,6 +162,8 @@ def build_fight(spec: dict) -> dict:
     o = 0.0 if kick else (-2.4 + (0.95 if bfirst else 0.0))          # 蹴りが無いぶん、連打の開始が早まる(B が先に仕掛けるなら、その分を空ける)
     if open_blast:
         o += 1.0                                         # 気弾のぶん、走り出しが 1.0 秒遅れる
+    if open_tp:
+        o -= 0.4                                         # 瞬間移動は走らないぶん早く(立っている時間が長かった)
     tc = 4.0 + o                       # 連打の準備(起き上がり)の終わり
 
     keysA: List[dict] = [dict(t=0.0, dx=0.2, hz=0.84), dict(t=0.6, dx=0.2, lean=0.12, hz=0.83)]
@@ -573,7 +575,7 @@ def build_fight(spec: dict) -> dict:
         fx_orbs.append(dict(start=_r(t_fire), end=_r(t_win), who="A", r0=0.26, r1=0.38, color=[255, 255, 255], path=meet))   # ぶつかる点の白い玉(手でなく path の位置。0.5〜0.7 だと人物より大きかった)
         flashes += [_r(t_fire), _r(t_win)]
         slow += [dict(start=_r(t_fire - 0.05), end=_r(t_fire + 0.2), rate=0.55), dict(start=_r(t_win - 0.05), end=_r(t_win + 0.25), rate=0.5)]
-        shots += [dict(t=_r(t_c0 - 0.1), follow="mid", scale=[[_r(t_c0 - 0.1), 6.0], [_r(t_fire), 5.4]], yaw=[[_r(t_c0 - 0.1), 10.0], [_r(t_fire), 4.0]], pitch=5.0, lens=40.0, target_z=1.1),   # 2 人の溜めを横から
+        shots += [dict(t=_r(t_c0 - 0.1), follow="mid", scale=[[_r(t_c0 - 0.1), 5.0], [_r(t_fire), 4.6]], yaw=[[_r(t_c0 - 0.1), 10.0], [_r(t_fire), 4.0]], pitch=5.0, lens=40.0, target_z=1.1),   # 2 人の溜めを横から(6.0 だと人物が 1/4)
                   dict(t=_r(t_fire), follow="mid", scale=5.4, yaw=4.0, pitch=3.0, lens=44.0, target_z=1.3),
                   dict(t=_r(t_fire + 0.6), follow="A", scale=4.2, yaw=-20.0, pitch=4.0, lens=32.0, target_z=1.1, lag=0.2),   # 踏ん張る A に寄る(ぶつかる点も入る程度)
                   dict(t=_r(t_win - 0.1), follow="mid", scale=5.4, yaw=4.0, pitch=3.0, lens=44.0, target_z=1.3),
