@@ -7,7 +7,7 @@ import 'package:url_launcher/url_launcher.dart';
 /// (**公開の判断はユーザー**。ページの原稿は `legal/`)。
 class Links {
   static const _base = String.fromEnvironment('LEGAL_BASE_URL',
-      defaultValue: 'https://basketball-career.pages.dev');
+      defaultValue: 'https://basketball-ikusei.pages.dev');
 
   static Uri get privacy => Uri.parse('$_base/privacy.html');
 
