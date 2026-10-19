@@ -269,6 +269,7 @@ class GameController extends ChangeNotifier {
       '${a.label}した。',
       ..._gainLines(before, g.player),
       ..._rankUpLines(before, g.player),
+      if (g.lastWasRut) '同じ練習が続いてマンネリ気味…(伸びが少し落ちた)',
       if (r.gotInjured)
         '${g.condition.injuryName}をしてしまった…(あと${g.condition.injuredTerms}ターン)',
     ];
