@@ -1,0 +1,211 @@
+import 'career.dart';
+import 'traits.dart';
+
+/// 能力。0〜99。
+enum Ability {
+  threePoint('3Pシュート'),
+  midRange('ミドル'),
+  inside('ゴール下'),
+  dribble('ドリブル'),
+  pass('パス'),
+  defense('ディフェンス'),
+  rebound('リバウンド'),
+  speed('スピード'),
+  physical('フィジカル'),
+  stamina('スタミナ');
+
+  const Ability(this.label);
+  final String label;
+
+  static Ability? parse(String s) {
+    for (final a in Ability.values) {
+      if (a.name == s) return a;
+    }
+    return null;
+  }
+}
+
+/// ポジション。身長と能力から決まる(選べない)。
+enum Position {
+  pointGuard('PG'),
+  shootingGuard('SG'),
+  smallForward('SF'),
+  powerForward('PF'),
+  center('C');
+
+  const Position(this.label);
+  final String label;
+}
+
+const abilityCap = 99;
+const startLevel = 20;
+
+class Player {
+  Player({
+    required this.name,
+    required this.age,
+    required this.potential,
+    required this.heightCm,
+    required this.heightGenes,
+    Map<Ability, int>? abilities,
+    this.traits = const {},
+  }) : abilities = abilities ?? {for (final a in Ability.values) a: startLevel};
+
+  final String name;
+  final int age;
+
+  /// 素質 0〜100。伸びの上限と速さに効く。生まれつきで変わらない。
+  final int potential;
+
+  /// 今の身長(cm)。
+  final double heightCm;
+
+  /// 最終身長の素質 0〜1。生まれつきで変わらない。
+  final double heightGenes;
+  final Map<Ability, int> abilities;
+  final Set<Trait> traits;
+
+  int of(Ability a) => abilities[a] ?? 0;
+
+  Player copyWith({
+    int? age,
+    double? heightCm,
+    Map<Ability, int>? abilities,
+    Set<Trait>? traits,
+  }) =>
+      Player(
+        name: name,
+        age: age ?? this.age,
+        potential: potential,
+        heightCm: heightCm ?? this.heightCm,
+        heightGenes: heightGenes,
+        abilities: abilities ?? this.abilities,
+        traits: traits ?? this.traits,
+      );
+
+  /// 身長が効く補正つきの能力(リバウンド・ゴール下は高いほど、ドリブル・スピードは低いほど有利)。
+  /// 基準は 185cm。1cm あたり 0.4。
+  double effective(Ability a) {
+    final tall = (heightCm - 185) * 0.4;
+    final v = of(a) +
+        switch (a) {
+          Ability.rebound || Ability.inside => tall,
+          Ability.dribble || Ability.speed => -tall * 0.5,
+          _ => 0,
+        };
+    return v.clamp(0, 120).toDouble();
+  }
+
+  Position get position {
+    if (heightCm >= 202) return Position.center;
+    if (heightCm >= 195) {
+      return of(Ability.inside) >= of(Ability.threePoint)
+          ? Position.center
+          : Position.powerForward;
+    }
+    if (heightCm >= 188) return Position.smallForward;
+    if (of(Ability.pass) >= of(Ability.threePoint) &&
+        of(Ability.dribble) >= of(Ability.midRange)) {
+      return Position.pointGuard;
+    }
+    return heightCm >= 182 ? Position.shootingGuard : Position.pointGuard;
+  }
+
+  /// 総合評価(0〜99 付近)。ポジションごとに重みが違う。
+  double get overall {
+    final w = _weights[position]!;
+    var sum = 0.0, total = 0.0;
+    for (final e in w.entries) {
+      sum += effective(e.key) * e.value;
+      total += e.value;
+    }
+    return (sum / total).clamp(0, 99).toDouble();
+  }
+
+  Map<String, dynamic> toJson() => {
+        'name': name,
+        'age': age,
+        'potential': potential,
+        'heightCm': heightCm,
+        'heightGenes': heightGenes,
+        'abilities': {for (final e in abilities.entries) e.key.name: e.value},
+        'traits': [for (final t in traits) t.name],
+      };
+
+  /// 項目を足すときは既定値を置く(既存セーブを壊さない)。
+  factory Player.fromJson(Map<String, dynamic> j) {
+    final raw = (j['abilities'] as Map?) ?? const {};
+    final ab = <Ability, int>{for (final a in Ability.values) a: startLevel};
+    for (final e in raw.entries) {
+      final a = Ability.parse(e.key as String);
+      if (a != null) ab[a] = (e.value as num).toInt();
+    }
+    return Player(
+      name: (j['name'] as String?) ?? '名無し',
+      age: (j['age'] as num?)?.toInt() ?? startAge,
+      potential: (j['potential'] as num?)?.toInt() ?? 50,
+      heightCm: (j['heightCm'] as num?)?.toDouble() ?? 118,
+      heightGenes: (j['heightGenes'] as num?)?.toDouble() ?? 0.5,
+      abilities: ab,
+      traits: {
+        for (final s in (j['traits'] as List?) ?? const [])
+          if (Trait.parse(s as String) != null) Trait.parse(s)!,
+      },
+    );
+  }
+}
+
+const _weights = <Position, Map<Ability, int>>{
+  Position.pointGuard: {
+    Ability.dribble: 3,
+    Ability.pass: 3,
+    Ability.threePoint: 2,
+    Ability.speed: 2,
+    Ability.defense: 1,
+    Ability.stamina: 1,
+  },
+  Position.shootingGuard: {
+    Ability.threePoint: 3,
+    Ability.midRange: 3,
+    Ability.dribble: 2,
+    Ability.speed: 2,
+    Ability.defense: 1,
+    Ability.stamina: 1,
+  },
+  Position.smallForward: {
+    Ability.midRange: 2,
+    Ability.threePoint: 2,
+    Ability.defense: 2,
+    Ability.inside: 1,
+    Ability.rebound: 1,
+    Ability.speed: 1,
+    Ability.physical: 1,
+    Ability.stamina: 1,
+  },
+  Position.powerForward: {
+    Ability.inside: 3,
+    Ability.rebound: 3,
+    Ability.physical: 2,
+    Ability.defense: 2,
+    Ability.midRange: 1,
+  },
+  Position.center: {
+    Ability.inside: 3,
+    Ability.rebound: 3,
+    Ability.defense: 3,
+    Ability.physical: 3,
+    Ability.stamina: 1,
+  },
+};
+
+/// 生まれの選手を作る。身長は 6歳で 112〜124cm。
+Player newPlayer(
+        String name, int potential, double heightGenes, Set<Trait> traits) =>
+    Player(
+      name: name,
+      age: startAge,
+      potential: potential.clamp(0, 100),
+      heightCm: 112 + heightGenes.clamp(0, 1) * 12,
+      heightGenes: heightGenes.clamp(0, 1).toDouble(),
+      traits: traits,
+    );
