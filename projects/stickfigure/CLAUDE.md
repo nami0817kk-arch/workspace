@@ -129,6 +129,7 @@ python scripts/make_gallery.py 09_01:2.4 135_07_s1:3.6   # clip を順に再生�
 - **舞台も2D**(2026-10-19 ユーザー「フィールドも2d」): `stage: {style: flat, theme: …}`(fight では既定)。Blender の立体の舞台を使わず、`look.flat_bg` が平らな帯・単色の柱・右の壁と、舞台ごとの切り絵の飾り(草原=丘と木、夜=月と星、夕焼け=夕日と山、道場=障子、洞窟=つらら岩。`_flat_props`)を PIL で描く(色は `look.FLAT_THEMES`)。stage の書き出しも飛ばす
 - 演出のリズムは参考の範囲に入れてある(fight の既定): 閃光は決めの1発と大技だけ(`fx.flashes`)、2コマ撮りは全体(`stepping` に ranges なし、命中の前後 3 コマは 1 コマごと)。`check` の「演出のリズム」で見る
 - 場面カードの色は、次の場面の舞台の色を暗くしたもの(`episode.build_episode`)
+- **clip の継ぎ目の位置合わせ**(`plan._align_keys_to_clips`、`align_clips: false` で切る): 接触で決めていない clip は anchor をキーに寄せ、接触で決めた clip(`_solved`)から先はキーを平行移動し、0.3 秒前から助走のキーを置く。点検 `teleport`(1 コマ 0.8 単位以上の移動は 0 まで)。走りの clip は区間の終わりで位置を止める
 
 ## 決まり・つまずき所(実際に踏んだもの)
 

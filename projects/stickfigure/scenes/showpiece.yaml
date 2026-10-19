@@ -130,4 +130,4 @@ fx:
   - [3.3, 3.9]
   - [4.2, 4.6]
   invert: [kick, heel]
-qa: {max_cross_frames: 300}
+qa: {max_cross_frames: 300, max_teleport_frames: 8}   # 旧方式(要の姿勢だけ)の見本。吹き飛びを 1 コマで大きく動かしてある

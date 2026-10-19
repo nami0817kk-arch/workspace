@@ -437,12 +437,23 @@ def _align_keys_to_clips(scene: dict, tracks: Dict[str, KeyTrack]) -> Dict[str, 
         s = _sign(a)
         base = KeyTrack(copy.deepcopy(keys), _stance(a))
         clips = sorted(lst, key=lambda c: c["start"])
+        for ci in range(len(clips) - 2, -1, -1):        # 後ろから: 接触で決めた clip のすぐ前(0.3 秒以内)の、位置が自由な clip は、終わりを次の始まりに合わせる
+            c, nxt = clips[ci], clips[ci + 1]
+            if c.get("_solved") or not (nxt.get("_solved") or nxt.get("_chained")) or nxt["start"] - c["end"] > 0.3:
+                continue
+            d = bank.sample(nxt, nxt["start"])["dx"] - bank.sample(c, c["end"])["dx"]
+            if abs(d) > 1e-6:
+                c["anchor_dx"] = c.get("anchor_dx", 0.0) + d
+                for h in scene.get("hits", []):
+                    if "pos" in h and c["start"] - 0.05 <= h["tau"] <= c["end"] + 0.05 and h.get("by") == who:
+                        h["pos"] = [h["pos"][0] + s * d, h["pos"][1]]
+            c["_chained"] = True
         delta, shifts, windows = 0.0, [], []
         for c in clips:
             w0, w1 = c["start"] - c.get("in", 0.1), c["end"] + c.get("out", 0.1)
             v0 = bank.sample(c, c["start"])["dx"]
             exp0 = base.at(c["start"])["dx"] + delta
-            if not c.get("_solved"):
+            if not c.get("_solved") and not c.get("_chained"):
                 d = exp0 - v0
                 if abs(d) > 1e-6:
                     c["anchor_dx"] = c.get("anchor_dx", 0.0) + d
@@ -469,11 +480,24 @@ def _align_keys_to_clips(scene: dict, tracks: Dict[str, KeyTrack]) -> Dict[str, 
                 k["dx"] = round(bank.sample(c, min(max(tt, c["start"]), c["end"]))["dx"], 4)
             else:
                 k["dx"] = round(base.at(tt)["dx"] + shift_at(tt), 4)
-        for (w0, w1, c) in windows:                      # 接触で決めた clip へは、0.3 秒前から助走のキーを置く(いきなり飛ばない)
-            if c.get("_solved"):
+        protected = sorted(h["tau"] for h in scene.get("hits", []) if h.get("contact") and who in (h["contact"].get("striker"), h["contact"]["target"].get("actor")))
+        for (w0, w1, c) in windows:                      # 接触で決めた clip へは、0.3 秒前から助走(その間のキーを、clip の始点の値へ寄せていく)
+            if c.get("_solved") or c.get("_chained"):
                 t0 = w0 - 0.3
-                if t0 > 0 and not any(t0 - 0.05 <= float(k["t"]) <= w0 for k in keys) and not any(o is not c and w0o <= t0 <= w1o for (w0o, w1o, o) in windows):
+                for pt in protected:                     # ただし、この人物が関わる別の命中の瞬間はまたがない(そこを動かすと、解いた接触が崩れる)
+                    if t0 <= pt < w0:
+                        t0 = max(t0, pt + 0.04)
+                if t0 >= w0 - 0.04:
+                    continue
+                span = w0 - t0
+                v0 = bank.sample(c, c["start"])["dx"]
+                if t0 > 0 and not any(abs(float(k["t"]) - t0) < 0.05 for k in keys) and not any(o is not c and w0o <= t0 <= w1o for (w0o, w1o, o) in windows):
                     keys.append(dict(t=round(t0, 3), dx=round(base.at(t0)["dx"] + shift_at(t0), 4)))
+                for k in keys:
+                    tt = float(k["t"])
+                    if t0 < tt < w0 and not any(o is not c and w0o <= tt <= w1o for (w0o, w1o, o) in windows):
+                        u = (tt - t0) / span
+                        k["dx"] = round((1 - u) * float(k["dx"]) + u * v0, 4)
         for (w0, w1, c) in windows:
             for tt in (c["start"], c["end"]):
                 if any(abs(float(k["t"]) - tt) < 0.05 for k in keys):
@@ -649,27 +673,32 @@ def _body_drive(p: dict, who: str, f: int, events: List[dict], cfg: dict, sign: 
     kinds = cfg.get("kinds", ["slash", "hit", "kick", "heel", "clash", "miss"])
     p = dict(p)
     dspin = dlean = dhz = ddx = dht = dfl = drl = dfk = 0.0
+    hit_list = sorted(e2["frame"] for e2 in events if e2["kind"] in kinds and e2.get("by"))
     for e in events:
         if e["kind"] not in kinds or not e.get("by"):
             continue
         d = f - e["frame"]
+        nxt = next((x for x in hit_list if x > e["frame"]), None)
+        L = 14 if nxt is None else max(4, min(14, nxt - e["frame"] - 2))     # 位置の変化(前進・押され)は、次の命中の 2 コマ前までに戻す
+        ret = 1.0 if d <= L - 4 else max(0.0, (L - d) / 4.0)             # 終わりの 4 コマで 0 へ
         if e["by"] == who:                               # 攻める側
             if -6 <= d <= 8:                             # 踏み込みの構え: 前脚を大きく出して膝を曲げ、後ろ脚を引いて伸ばす(弓足)。山は命中の少し前
                 w_ = math.sin(math.pi * (d + 6) / 14.0)
-                dfl += 0.55 * k * w_; dfk += 0.45 * k * w_; drl += -0.45 * k * w_; dhz += -0.10 * k * w_
+                dfl += 0.55 * k * w_; dfk += 0.45 * k * w_; drl += -0.45 * k * w_
+                dhz += -0.10 * k * w_ * min(1.0, abs(d) / 4.0)          # 腰の沈みは命中のコマでは 0(接触を解いた高さを崩さない)
             if -12 <= d < -4:                            # 溜め: 後ろへひねり、沈み、少し引く
                 u = (d + 12) / 8.0
                 s = math.sin(math.pi * 0.5 * u)
                 dspin += -0.55 * k * s; dlean += -0.10 * k * s; dhz += -0.07 * k * s; ddx += -0.10 * k * s
-            elif -4 <= d <= 0:                           # 打ち込み: ひねり戻して前へ(命中で前進分は 0 に戻る)
+            elif -4 <= d <= 0:                           # 打ち込み: ひねり戻して前へ(命中のコマでは、傾き・腰・前進を 0 に戻す。接触を解いた姿勢を崩さない)
                 u = (d + 4) / 4.0
-                dspin += (-0.55 + 1.15 * u) * k; dlean += (-0.10 + 0.22 * u) * k; dhz += (-0.07 - 0.03 * u) * k; ddx += (-0.10 + 0.10 * u) * k
+                dspin += (-0.55 + 1.15 * u) * k; dlean += (-0.10 + 0.10 * u) * k; dhz += (-0.07 + 0.07 * u) * k; ddx += (-0.10 + 0.10 * u) * k
             elif 0 < d <= 12:                            # 振り抜き: ひねりが余り、戻る
                 u = 1 - d / 12.0
                 dspin += 0.60 * k * u * u; dlean += 0.12 * k * u * u; dhz += -0.05 * k * u
-            if e.get("lunge") and -3 <= d <= 14:         # 踏み込み(接触を解いていない命中だけ): 命中で前へ出て、そのまま残る
-                u = min(1.0, (d + 3) / 4.0)
-                ddx += 0.22 * k * (u * u * (3 - 2 * u)) * (1.0 if d <= 8 else 1 - (d - 8) / 7.0)
+            if e.get("lunge") and 0 < d <= L:            # 踏み込み: 命中のあとに前へ出て、次の命中までに戻す(命中のコマは動かさない)
+                u = min(1.0, d / 4.0)
+                ddx += 0.22 * k * (u * u * (3 - 2 * u)) * ret
         elif e["kind"] == "miss":                        # かわす側: 直前に沈み込んでくぐる(頭を下げ、前へ倒し、膝を深く)、または後ろへ跳ぶ。命中の瞬間が最も低い/遠い
             duck = e.get("pos", [0, 1.0])[1] >= 0.95
             if -6 <= d <= 10:
@@ -678,21 +707,22 @@ def _body_drive(p: dict, who: str, f: int, events: List[dict], cfg: dict, sign: 
                     dhz += -0.42 * k * u; dlean += 0.55 * k * u; dht += 0.5 * k * u; dfl += 0.6 * k * u; dfk += 0.9 * k * u; drl += -0.2 * k * u; dfk += 0.0
                 else:
                     ddx += -0.55 * k * u; dlean += -0.15 * k * u; dhz += 0.06 * k * math.sin(math.pi * min(1.0, max(0.0, (d + 4) / 8.0)))
-        elif e["kind"] == "clash":                       # 受け止める側: 直前に腰を落として構え、押し合いで少し押され、踏ん張って戻る(のけぞらない)
+        elif e["kind"] == "clash":                       # 受け止める側: 直前に脚だけ構え(体は動かさない=接触の位置を崩さない)、当たってから腰を落として押し合い、踏ん張って戻る
             if -5 <= d < 0:
                 u = (d + 5) / 5.0
-                dhz += -0.10 * k * u; dlean += 0.12 * k * u; dfl += 0.35 * k * u; dfk += 0.35 * k * u; drl += -0.30 * k * u
+                dfl += 0.35 * k * u; dfk += 0.35 * k * u; drl += -0.30 * k * u
             elif 0 <= d <= 14:
                 u = 1 - d / 14.0
-                dhz += -0.12 * k * u; dlean += 0.10 * k * u; ddx += -0.16 * k * (1 - (1 - min(1.0, d / 5.0)) ** 2) * (0.3 + 0.7 * u)
+                r0 = min(1.0, d / 3.0)
+                dhz += -0.12 * k * u * r0; dlean += 0.10 * k * u * r0; ddx += -0.16 * k * (1 - (1 - min(1.0, d / 5.0)) ** 2) * (0.3 + 0.7 * u) * (ret if d <= L else 0.0)
                 dfl += 0.35 * k * u; dfk += 0.35 * k * u; drl += -0.30 * k * u; dspin += 0.25 * k * u
-        else:                                            # 受ける側(命中の瞬間から)
+        else:                                            # 受ける側(命中の次のコマから。命中のコマは接触を解いた姿勢のまま)
             if 0 <= d <= 16:
                 u = 1 - d / 16.0
                 pk = e["kind"] in ("kick", "heel")
-                amp = (1.4 if pk else 1.0) * k
+                amp = (1.4 if pk else 1.0) * k * min(1.0, d / 2.0)
                 dspin += -0.75 * amp * u * u; dlean += -0.30 * amp * u; dhz += -0.12 * amp * math.sin(math.pi * min(1.0, d / 6.0)) * u
-                ddx += -0.34 * amp * (1 - u * u) * 0 + (-0.30 * amp) * (1 - (1 - min(1.0, d / 5.0)) ** 2) * (0.35 + 0.65 * u); dht += -0.35 * amp * u
+                ddx += (-0.30 * amp) * (1 - (1 - min(1.0, d / 5.0)) ** 2) * (0.35 + 0.65 * u) * (ret if d <= L else 0.0); dht += -0.35 * amp * u
     hit_frames = [e["frame"] for e in events if e["kind"] in kinds and e.get("by")]
     if hit_frames:                                       # 体が弾む(足でリズムを取る・構えが揺れる)。戦いの間は強く、離れた所でも呼吸ぶんは揺れる(棒立ちにしない)
         near = min(abs(f - h) for h in hit_frames)
@@ -728,11 +758,14 @@ def build_plan(scene: dict, solve: bool = True) -> dict:
         tracks = _align_keys_to_clips(scene, tracks)
     contacts = []
     if solve:
-        for h in scene.get("hits", []):
-            if h.get("contact"):
-                contacts.append(solve_contact(scene, tracks, h))
-    if scene.get("align_clips", True) and scene.get("physics") is None:
-        tracks = _align_keys_to_clips(scene, tracks)
+        rounds = 4 if (scene.get("align_clips", True) and scene.get("physics") is None and scene.get("_bank") is not None) else 1
+        for it in range(rounds):
+            contacts = []
+            for h in scene.get("hits", []):
+                if h.get("contact"):
+                    contacts.append(solve_contact(scene, tracks, h))
+            if rounds > 1:                              # 解いた位置に合わせてキーを動かし、動いた相手に合わせてもう一度解く(3 回で落ち着く。最後の合わせでずれる分は許容の中)
+                tracks = _align_keys_to_clips(scene, tracks)
     phys = None
     if scene.get("physics") is not None:
         phys = run_physics(scene, tracks)
@@ -881,6 +914,17 @@ def build_plan(scene: dict, solve: bool = True) -> dict:
     if phys is not None:
         _lift_to_ground(scene, frames)
     _assign_event_pos(scene, tracks, events)
+    for c in contacts:                                   # 接触の距離を、出来上がりのコマで測り直す(位置合わせでキーが動いたあとの値)
+        f = next((i for i, fr_ in enumerate(frames) if fr_["tau"] >= c["tau"] - 1e-9), None)
+        if f is None:
+            continue
+        ps, pt = frames[f]["actors"][c["striker"]], frames[f]["actors"][c["target"]]
+        sa, ta = scene["actors"][c["striker"]], scene["actors"][c["target"]]
+        sk_s = fk.skeleton(ps, _sign(sa), ps["root_x"], sa.get("scale", 1.0))
+        sk_t = fk.skeleton(pt, _sign(ta), pt["root_x"], ta.get("scale", 1.0))
+        eff = sk_s[{"foot": "foot", "rear_foot": "rear_foot", "hand": "hand", "tip": "tip"}[c["effector"]]]
+        c["distance_to_body"] = fk.dist_to_body(eff, sk_t)
+        c["effector_pos"] = list(eff)
     return dict(version=1, fps=fps, n=len(frames), view=dict(VIEW, persp=bool(scene.get("view3d") or scene.get("shots")), lens=(scene.get("view3d") or {}).get("lens", 40.0)), actors=scene["actors"], stage=scene.get("stage", {}),
                 events=events, contacts=contacts, frames=frames, scene={k: scene[k] for k in ("hits", "slow", "camera", "fx", "tempo", "view3d", "anime", "shots", "stepping", "impact_cuts", "flurry", "style", "captions", "output", "limb", "body_drive") if k in scene})
 

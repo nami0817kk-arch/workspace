@@ -112,6 +112,7 @@ def build_fight(spec: dict) -> dict:
         mid_clips = rng.sample(POOL_MID, 3) + ["02_07_s2"]       # 最後の1発は、命中の位置を解く clip(届く 02_07_s2)に固定
         cclip = rng.choice(COUNTER_CLIPS)
     sword = s["weapon"] in ("sword", "dagger", "staff", "spear")      # 武器あり(斬りの弧・剣先の接触)
+    long_w = s["weapon"] in ("staff", "spear")                        # 長い武器: 途中の打ち・受け止めは手の位置で合わせる(先端は大きく振れて解けない)
     n = max(1, min(4, int(s["hits"])))
     kick = bool(s["kick"])
     fin = s["finisher"] == "launch_slash"
@@ -142,7 +143,7 @@ def build_fight(spec: dict) -> dict:
             rng.shuffle(fa)
         flurry.append(dict(start=1.12, end=1.64, every=4, angles=fa))
         hits += [dict(tau=1.66, hold=0.13, kind="pose"),
-                 dict(tau=1.9, hold=0.09, kind="kick", by="A", contact=dict(striker="A", effector="foot", target=dict(actor="B", point="hip"), tol=0.2)),
+                 dict(tau=1.9, hold=0.09, kind="kick", by="A", contact=dict(striker="A", effector="foot", target=dict(actor="B", point="hip"), tol=0.26)),
                  dict(tau=2.25, hold=0.06, kind="wall", pos=[6.0, 1.6])]
         slow += [dict(start=1.85, end=2.4, rate=0.35), dict(start=2.5, end=3.15, rate=2.2)]
         puffs.append(dict(tau=3.0, kind="land", pos=[4.6, 0.0]))
@@ -195,6 +196,7 @@ def build_fight(spec: dict) -> dict:
     flurry.append(dict(start=_r(tc - 0.1), end=_r(tc + 0.3), every=4, angles=fb))
     kind_hit = "slash" if sword else "hit"
     eff = "tip" if sword else "hand"
+    eff_mid = "hand" if (long_w or not sword) else "tip"
     h0 = tc + 0.4
     gaps = [0.58, 0.42, 0.4, 0.4] if s["counter"] else [0.4, 0.4, 0.4, 0.4]
     if rng is not None:
@@ -210,7 +212,7 @@ def build_fight(spec: dict) -> dict:
     if s["mix_kick"] and n >= 3 and (rng is None or rng.random() < 0.5):
         kick_i = next((i for i in range(n - 1) if i not in defend), -1)
     if rip_i is not None:
-        gaps[rip_i] = round(gaps[rip_i] + 0.40, 2)       # 打ち返しの分、次の1発までを空ける
+        gaps[rip_i] = round(gaps[rip_i] + 0.55, 2)       # 打ち返しの分、次の1発までを空ける(受けてから次の踏み込みまで 0.3 秒は要る)
     ts = [h0]
     for i in range(1, n):
         ts.append(ts[-1] + gaps[i - 1])
@@ -228,15 +230,15 @@ def build_fight(spec: dict) -> dict:
         clipsA.append(clip)
         if last:
             hits.append(dict(tau=_r(t), hold=0.08, kind=kind_hit, by="A", contact=dict(striker="A", effector=eff, target=dict(actor="B", point="chest"), tol=round(0.3 + 0.6 * max(0.0, float(s["b_scale"]) - 1.0), 2), max_anticipation=50, hz_range=dict(sword=0.3, dagger=0.3, staff=0.6, spear=0.9).get(s["weapon"], 0.3))))
-        elif defend.get(i) == "clash":                   # 受け止め(鍔迫り合い): 命中の種類 clash、相手は腕を上げて受け、少しだけ押される
-            hits.append(dict(tau=_r(t), hold=0.07, kind="clash", by="A", pos=[_r(3.7 - 0.2 * i), _r(1.3 - 0.1 * i)]))
+        elif defend.get(i) == "clash":                   # 受け止め(鍔迫り合い): 命中の種類 clash、相手は腕を上げて受け、少しだけ押される。位置は接触で決める(腕で受けるので許容は広め)
+            hits.append(dict(tau=_r(t), hold=0.07, kind="clash", by="A", contact=dict(striker="A", effector=eff_mid, target=dict(actor="B", point="chest"), tol=0.6, max_anticipation=50)))
         elif defend.get(i) == "miss":                    # かわす: 空振り。高い斬りはくぐり、低い斬りは後ろへ跳ぶ(plan._body_drive が pos の高さで決める)
             hits.append(dict(tau=_r(t), hold=0.0, kind="miss", by="A", pos=[_r(3.7 - 0.2 * i), 1.2 if (i % 2 == 1) else 0.8]))
         else:
             if kick_i == i:                              # 連打の中の蹴り(足→相手の腰。接触を解く)
-                hits.append(dict(tau=_r(t), hold=0.06, kind="kick", by="A", contact=dict(striker="A", effector="foot", target=dict(actor="B", point="hip"), tol=0.3, max_anticipation=50)))
-            else:
-                hits.append(dict(tau=_r(t), hold=0.05, kind=kind_hit, by="A", lunge=True, pos=[_r(3.7 - 0.2 * i), _r(1.25 - 0.1 * i)]))
+                hits.append(dict(tau=_r(t), hold=0.06, kind="kick", by="A", contact=dict(striker="A", effector="foot", target=dict(actor="B", point="hip"), tol=0.42, max_anticipation=50)))
+            else:                                        # 途中の斬り: 位置は接触で決める(以前は pos 固定で、相手との間合いが 1.5〜1.8 あり、clip の継ぎ目で飛んでいた)
+                hits.append(dict(tau=_r(t), hold=0.05, kind=kind_hit, by="A", lunge=True, contact=dict(striker="A", effector=eff_mid, target=dict(actor="B", point="chest"), tol=0.45, max_anticipation=50)))
         if last:                                          # 閃光は決めの1発だけ(途中の連打・受け止めでは出さない。参考は 2 秒に 1 回)
             flashes.append(_r(t))
         if defend.get(i) == "clash":
@@ -248,9 +250,11 @@ def build_fight(spec: dict) -> dict:
                 clipsB.append(dict(file=cclip, strike_at=_r(tr), start=_r(tr - 0.2), end=_r(tr + 0.26), **{"in": 0.06, "out": 0.1}))
                 hits.append(dict(tau=_r(tr), hold=0.07, kind="clash", by="B", contact=dict(striker="B", effector="hand", target=dict(actor="A", point="chest"), tol=0.45, max_anticipation=50)))
                 keysA += [dict(t=_r(tr - 0.14), **BLOCK), dict(t=_r(tr + 0.08), **BLOCK), dict(t=_r(tr + 0.26), **GUARD_A)]
-                keysB += [dict(t=_r(tr + 0.3), dx=_r(dxB + fwd), **GUARD), dict(t=_r(tr + 0.5), dx=_r(dxB), **GUARD)]
+                dxB += fwd                               # 受け返したあとも、その間合いのまま(下がると次の1発まで A が追いかけることになる)
+                keysB += [dict(t=_r(tr + 0.3), dx=_r(dxB), **GUARD)]
             else:
-                keysB += [dict(t=_r(t + 0.24), dx=_r(dxB + fwd * 0.5), **GUARD), dict(t=_r(t + 0.4), dx=_r(dxB), **GUARD)]
+                dxB += fwd * 0.5
+                keysB += [dict(t=_r(t + 0.24), dx=_r(dxB), **GUARD)]
         elif defend.get(i) == "miss":
             dxB -= 0.05
             keysB += [dict(t=_r(t - 0.2), dx=_r(dxB + 0.05), **GUARD), dict(t=_r(t + 0.3), dx=_r(dxB), **GUARD)]

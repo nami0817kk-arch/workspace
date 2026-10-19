@@ -33,6 +33,8 @@ DEFAULTS = dict(
     max_cross_frames=2,          # 2人の線が交差してよいコマ数(命中の一瞬の接触を除く)
     run_arm_swing=3.5,           # 腕の振り(最大-最小)。参考は約3.9(-125°〜+100°)
     run_leg_swing=1.6,           # 太ももの振り。参考は約1.9(-40°〜+70°)
+    max_teleport=0.8,            # 1コマで根元が動いてよい距離(単位)。clip の継ぎ目で位置が飛ぶと、滑って見える
+    max_teleport_frames=0,
 )
 
 
@@ -233,6 +235,7 @@ def run_gate(plan: dict, cfg: Optional[dict] = None) -> dict:
     checks.append(check_ground(plan, cfg))
     checks += check_interpenetration(plan, cfg)
     checks += check_run_range(plan, cfg)
+    checks += check_teleport(plan, cfg)
     failed = [c for c in checks if not c["passed"]]
     return dict(passed=not failed, checks=checks, failed=[c["name"] for c in failed])
 
@@ -242,3 +245,20 @@ def format_report(result: dict) -> str:
     for c in result["checks"]:
         lines.append(f"- {'OK ' if c['passed'] else 'NG '} {c['message']}")
     return "\n".join(lines)
+
+
+def check_teleport(plan: dict, cfg: dict) -> List[dict]:
+    """瞬間移動: tau が進んだコマで、根元(root_x)が 1 コマに max_teleport 以上動いた所。
+    clip とキーの位置の食い違い(anchor_dx とキーの dx)が原因で、混ぜる数コマのあいだに 1〜2 単位すべって見えた(2026-10-19)。"""
+    bad = []
+    fr = plan["frames"]
+    for who in plan["actors"]:
+        for f in range(1, plan["n"]):
+            if fr[f - 1]["tau"] == fr[f]["tau"]:
+                continue
+            d = abs(fr[f]["actors"][who]["root_x"] - fr[f - 1]["actors"][who]["root_x"])
+            if d > cfg["max_teleport"]:
+                bad.append(f"{who}@{f}({d:.2f})")
+    ok = len(bad) <= cfg["max_teleport_frames"]
+    return [_check("teleport", ok, len(bad), cfg["max_teleport_frames"],
+                   f"1コマで根元が {cfg['max_teleport']} 以上動いた所 {len(bad)}" + (f"(例: {', '.join(bad[:3])})" if bad else "") + ("" if ok else "。clip の継ぎ目で位置が飛んでいる"))]
