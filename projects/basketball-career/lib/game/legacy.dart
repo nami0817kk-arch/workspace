@@ -1,3 +1,4 @@
+import 'epilogue.dart';
 import 'game.dart';
 import 'player.dart';
 
@@ -15,6 +16,7 @@ class HistoryEntry {
     required this.pro,
     required this.reason,
     this.difficulty = '',
+    this.title = '',
     this.rivalName = '',
     this.rivalWins = 0,
     this.rivalLosses = 0,
@@ -31,6 +33,7 @@ class HistoryEntry {
   final bool pro;
   final String reason;
   final String difficulty;
+  final String title;
   final String rivalName;
   final int rivalWins;
   final int rivalLosses;
@@ -47,6 +50,7 @@ class HistoryEntry {
         pro: g.records.any((r) => r.league.name.startsWith('pro')),
         reason: g.retiredReason ?? '',
         difficulty: g.difficulty.label,
+        title: careerTitle(g),
         rivalName: g.rival.name,
         rivalWins: g.rival.wins,
         rivalLosses: g.rival.losses,
@@ -64,6 +68,7 @@ class HistoryEntry {
         'pro': pro,
         'reason': reason,
         'difficulty': difficulty,
+        'title': title,
         'rivalName': rivalName,
         'rivalWins': rivalWins,
         'rivalLosses': rivalLosses,
@@ -81,6 +86,7 @@ class HistoryEntry {
         pro: (j['pro'] as bool?) ?? false,
         reason: (j['reason'] as String?) ?? '',
         difficulty: (j['difficulty'] as String?) ?? '',
+        title: (j['title'] as String?) ?? '',
         rivalName: (j['rivalName'] as String?) ?? '',
         rivalWins: (j['rivalWins'] as num?)?.toInt() ?? 0,
         rivalLosses: (j['rivalLosses'] as num?)?.toInt() ?? 0,

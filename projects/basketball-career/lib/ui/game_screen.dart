@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart' hide Action, Route;
 
+import '../game/epilogue.dart';
 import '../game/game.dart';
 import '../game/life.dart';
 import '../game/match.dart';
@@ -282,6 +283,7 @@ class _PlayerCard extends StatelessWidget {
             _Meter(label: '疲れ', value: cond.fatigue, bad: true),
             _Meter(label: '気持ち', value: cond.morale),
             _Meter(label: 'チーム', value: game.teamwork),
+            _Meter(label: 'コーチ', value: game.coachBond),
             Padding(
               padding: const EdgeInsets.only(top: 2),
               child: Text(
@@ -671,7 +673,7 @@ class _EventView extends StatelessWidget {
                     style: const TextStyle(
                         fontSize: 18, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 8),
-                Text(e.body),
+                Text(game.fill(e.body)),
                 const SizedBox(height: 16),
                 for (var i = 0; i < e.options.length; i++)
                   Padding(
@@ -781,10 +783,17 @@ class _EndingView extends StatelessWidget {
                 Text('${p.name}の物語',
                     style: const TextStyle(
                         fontSize: 20, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 8),
-                Text('${p.age}歳。${g.retiredReason ?? '現役を退いた'}。(${g.difficulty.label})'),
-                const SizedBox(height: 8),
-                Text(_epilogue(g)),
+                const SizedBox(height: 4),
+                Text('称号「${careerTitle(g)}」  (${g.difficulty.label})',
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.primary,
+                        fontWeight: FontWeight.bold)),
+                const SizedBox(height: 10),
+                for (final line in epilogueLines(g))
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 6),
+                    child: Text(line),
+                  ),
                 const Divider(height: 24),
                 Text('最終身長 ${p.heightCm.toStringAsFixed(1)}cm / '
                     'ポジション ${p.position.label} / 総合 ${p.overall.round()}'),
@@ -845,18 +854,5 @@ class _EndingView extends StatelessWidget {
         ),
       ],
     );
-  }
-
-  /// 結末の一文。到達点で決める。
-  String _epilogue(Game g) {
-    if (g.abroad && g.titles > 0) return '世界の舞台で戦い、勝ち取った栄光。語り継がれる選手になった。';
-    if (g.abroad) return '海を渡り、世界最高峰に挑んだ。その経験は消えない。';
-    if (g.track == Track.pro) {
-      return g.titles > 0
-          ? 'プロとして頂点を知った。ファンの記憶に残る選手だった。'
-          : 'プロの世界で戦い抜いた。コートに立ち続けた誇りがある。';
-    }
-    if (g.records.isEmpty) return '大きな舞台には届かなかった。それでも、バスケは好きなままだ。';
-    return 'プロの扉は開かなかった。それでも、仲間とコートを駆けた日々は本物だった。';
   }
 }
