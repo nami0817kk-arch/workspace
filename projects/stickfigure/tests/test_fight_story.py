@@ -67,3 +67,12 @@ def test_seed_changes_details_but_is_reproducible():
     ep = story.build_story(dict(arc="revenge", seed=3))
     seeds = [it["scene"]["fight"]["seed"] for it in ep["items"] if "scene" in it]
     assert len(set(seeds)) == len(seeds)
+
+
+def test_story_lines_vary_with_seed_but_not_without():
+    def texts(ep):
+        return [l["text"] for it in ep["items"] if "scene" in it for l in it["scene"]["fight"]["lines"]]
+    a = texts(story.build_story(dict(arc="revenge")))
+    assert a == texts(story.build_story(dict(arc="revenge")))
+    variants = {tuple(texts(story.build_story(dict(arc="revenge", seed=s)))) for s in range(1, 8)}
+    assert len(variants) > 1
