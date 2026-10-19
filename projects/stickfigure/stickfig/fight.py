@@ -361,13 +361,17 @@ def build_fight(spec: dict) -> dict:
         keysB += [dict(t=_r(hl + 0.06), dx=_r(dxB), lean=-0.6, fa=0.3, ra=0.3, fe=0.6, re=0.6, ht=-0.8, face="pain"),
                   dict(t=_r(hl + 0.22), dx=-2.5, rz=0.9, roll=0.5, hz=0.9, lean=-0.5, fl=0.3, fk=0.2, rl=-0.2, rk=0.3, face="pain"),
                   dict(t=_r(hl + 0.55), dx=-2.9, rz=1.9, roll=1.6, hz=0.9, lean=-0.2, fa=-0.4, ra=-0.4, fe=0.3, re=0.3, face="pain"),
-                  dict(t=_r(hl + 0.95), dx=-3.2, rz=0.21, roll=1.57, hz=0.9, fa=0.3, ra=0.3, fl=0.0, fk=0.0, rl=0.0, rk=0.0, face="ko")]
+                  dict(t=_r(hl + 0.80), dx=-3.1, rz=1.05, roll=1.57, hz=0.9, lean=-0.1, fa=-0.2, ra=-0.2, face="pain"),   # 落ちてくる(叩きつけの前はまだ空中。前は 0.95 に着地のキーがあり、かかとが落ちる 2〜4 コマ前に床に着いていた)
+                  dict(t=_r(hl + 0.95), dx=-3.2, rz=0.5, roll=1.57, hz=0.9, fa=0.1, ra=0.1, face="pain"),                     # かかとが当たる瞬間: 空中で受ける
+                  dict(t=_r(hl + 1.02), dx=-3.25, rz=0.21, roll=1.57, hz=0.9, fa=0.3, ra=0.3, fl=0.0, fk=0.0, rl=0.0, rk=0.0, face="ko"),   # 叩きつけられて床へ(2 コマで落ちる)
+                  dict(t=_r(hl + 1.14), dx=-3.25, rz=0.27, roll=1.57, hz=0.9, face="ko"),                                        # 床で小さく跳ね返る
+                  dict(t=_r(hl + 1.26), dx=-3.25, rz=0.21, roll=1.57, hz=0.9, face="ko")]
         keysA += [dict(t=_r(hl + 0.22), dx=5.3, hz=0.7, lean=0.3),
                   dict(t=_r(hl + 0.42), dx=5.7, rz=1.1, hz=0.9, lean=0.2, fa=2.4, fe=0.4, ra=1.4, re=1.0, fl=0.8, fk=0.9, rl=-0.6, rk=0.7),
                   dict(t=_r(hl + 0.58), dx=5.9, rz=1.0, hz=0.9, lean=0.45, fa=-0.3, fe=0.2, ra=-0.2, re=0.5, fl=0.5, fk=0.6, rl=-0.4, rk=0.5),
                   dict(t=_r(hl + 0.95), dx=6.0, rz=0.0, hz=0.78, lean=0.25), dict(t=_r(hl + 1.3), dx=6.0, hz=0.9, lean=0.1)]
         hits += [dict(tau=_r(hl + 0.55), hold=0.1, kind="slash" if sword else "hit", by="A", pos=[4.9, 1.9]), dict(tau=_r(hl + 0.95), hold=0.1, kind="heel", by="A", pos=[5.6, 0.0])]
-        puffs.append(dict(tau=_r(hl + 0.98), kind="land2", pos=[5.6, 0.0]))
+        puffs.append(dict(tau=_r(hl + 1.02), kind="land2", pos=[5.6, 0.0]))
         slow.append(dict(start=_r(hl + 0.4), end=_r(hl + 0.65), rate=0.4))
         flashes.append(_r(hl + 0.55))
         t_end = hl + 1.3
