@@ -203,7 +203,7 @@ class _SeasonView extends StatelessWidget {
             ),
           ),
         ),
-        if (g.canRecover || c.recoverMessage != null) ...[
+        if ((g.canRecover && c.money != null) || c.recoverMessage != null) ...[
           const SizedBox(height: 12),
           _RecoverCard(controller: c, game: g),
         ],
