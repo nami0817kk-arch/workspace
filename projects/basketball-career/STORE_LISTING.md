@@ -49,8 +49,11 @@
 【勝負どころは自分で決める】
 夏と冬の大会は勝ち抜き。点差が3点以内で終わりそうなら「勝負どころ」。ドライブ、3P、パス、ディフェンス。成功率を見て、最後のプレーを自分で選ぶ。
 
+【ハーフタイムの作戦と、得意技】
+前半が終わったら、後半の作戦を選ぶ。ペースを上げるか、守りを固めるか、エースに任せるか。ステップバック、ダンク、ブロック名人などの得意技は、条件を満たすと身につく。フリースローでファウルをもらう選択も。
+
 【ライバル、進学、移籍、そして海外へ】
-同じ時代を走るライバルが、準決勝で毎年立ちはだかる。進学先を選び、プロ契約を勝ち取り、チームを移り、世界に挑む。
+同じ時代を走るライバルが、準決勝で毎年立ちはだかる。進学先を選び、プロ契約を勝ち取り、プレーオフを戦い、日本代表として世界大会へ。海を渡る道もある。
 外れたら大学や実業団からもう一度。どんな結末も、ひとつの物語。
 
 【育てた選手は殿堂へ】
@@ -74,8 +77,11 @@ Train, push hard, study, scrimmage, hang out, or rest. Watch fatigue, morale and
 [You make the clutch call]
 Tournaments are single elimination. When the game is within 3 points at the end, choose the last play yourself: drive, three, pass or defend, with the odds in front of you.
 
+[Halftime plans and signature moves]
+At the half, pick your plan: push the pace, lock down on defense, or give the ball to your ace. Signature moves such as the step-back, the dunk and the shot-blocker unlock when you meet the conditions. You can even draw a foul and go to the line.
+
 [Rivals, schools, transfers and overseas]
-A rival stands in your way almost every year. Pick your school, win a pro contract, switch teams, challenge the world. If you miss, try again from university or the corporate league.
+A rival stands in your way almost every year. Pick your school, win a pro contract, fight through the playoffs, wear the national jersey, or cross the ocean. If you miss, try again from university or the corporate league.
 
 All leagues, teams, players and tournaments are fictional. Contains ads. The in-app purchase Remove Ads turns off full-screen ads and lets you recover without watching videos.
 
