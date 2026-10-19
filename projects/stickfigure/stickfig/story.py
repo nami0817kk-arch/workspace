@@ -59,7 +59,7 @@ def revenge(hero: str, rival: str, hero_color=GREEN, rival_color=RED, **_) -> di
                    dict(at="last", dt=0.0, dur=1.2, kind="say", who="B", text="くっ…！"),
                    dict(at="ko", dt=0.2, dur=1.8, kind="narr", text=f"{hero}は、敗れた。"),
                    ]))),
-        _card("一か月後", "", 1.6, "time"),
+        _card("一か月後", "", 1.3, "time"),
         dict(scene=dict(name="s2_training", fight=dict(
             weapon="sword", kick=False, hits=4, counter=False, finisher="none", palette="cool", mood="calm", stage="dojo",
             colors=dict(A=hero_color, B=GRAY),
@@ -67,7 +67,7 @@ def revenge(hero: str, rival: str, hero_color=GREEN, rival_color=RED, **_) -> di
                    dict(at="combo", dt=0.0, dur=1.0, kind="say", who="A", text="もっと…速く！"),
                    dict(at="last", dt=0.1, dur=1.2, kind="say", who="A", text="見えた…！"),
                    ]))),
-        _card("決戦の日", "", 1.6, "time"),
+        _card("決戦の日", "", 1.3, "time"),
         dict(scene=dict(name="s3_rematch", fight=dict(
             weapon="sword", kick=True, hits=3, counter=True, finisher="random", palette="warm", mood="battle", stage="sunset",
             colors=dict(A=hero_color, B=rival_color),
@@ -127,7 +127,7 @@ def protect(hero: str, rival: str, hero_color=GREEN, rival_color=RED, **_) -> di
                    dict(at="rise", dt=-0.3, dur=1.2, kind="say", who="A", text=_p(["どけ。邪魔をするな。", "村ごと潰してやる。", "無駄な抵抗だ。"])),
                    dict(at="last", dur=1.2, kind="say", who="B", last_words=True, text="ぐっ……！"),
                    ]))),
-        _card("それでも", "", 1.5, "time"),
+        _card("それでも", "", 1.3, "time"),
         dict(scene=dict(name="p2_stand", fight=dict(
             weapon="sword", kick=True, hits=4, counter=False, finisher="random", palette="warm", mood="battle", stage="sunset", b_scale=1.25,
             ally=dict(color=ALLY, x=-3.6, y=1.6, facing=1, cheer=True),
@@ -153,7 +153,7 @@ def mentor(hero: str, rival: str, hero_color=GREEN, rival_color=RED, **_) -> dic
                    dict(at="rise", dt=-0.3, dur=1.2, kind="say", who="A", text=_p(["力任せでは、勝てぬ。", "刀は、心で振るものだ。", "相手をよく見るのだ。"])),
                    dict(at="last", dur=1.2, kind="say", who="B", last_words=True, text="まだ、届かない……！"),
                    ]))),
-        _card("旅立ちの日", "", 1.6, "time"),
+        _card("旅立ちの日", "", 1.3, "time"),
         dict(scene=dict(name="m2_boss", fight=dict(
             weapon="sword", kick=True, hits=3, counter=True, finisher="random", palette="warm", mood="battle", stage="field", b_scale=1.3,
             colors=dict(A=hero_color, B=rival_color),
