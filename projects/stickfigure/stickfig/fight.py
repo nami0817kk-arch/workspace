@@ -462,7 +462,7 @@ def build_fight(spec: dict) -> dict:
                   dict(t=_r(t_throw), dx=4.1, **throw_pose),                                                  # 2 コマで振り下ろす
                   dict(t=_r(t_throw + 0.3), dx=4.1, **dict(throw_pose, lean=0.3, hz=0.84)),
                   dict(t=_r(t_hit + 0.9), dx=4.1, hz=0.88, lean=0.1, fa=0.9, fe=1.4, ra=0.7, re=1.5, ht=0.0, face="fight")]
-        fx_orbs.append(dict(start=_r(t_c0), end=_r(t_throw), who="A", r0=0.08, r1=0.42, color=col))
+        fx_orbs.append(dict(start=_r(t_c0), end=_r(t_throw), who="A", r0=0.14, r1=0.42, color=col))
         fx_proj.append(dict(start=_r(t_throw), end=_r(t_hit), x0=_r(a_root + 0.9), z0=1.5, x1=_r(b_root - 0.15), z1=1.25, r=0.42, color=col))
         charge.append(dict(start=_r(t_c0), end=_r(t_throw), who="A", color=col))
         hits += [dict(tau=_r(hl + 0.5), hold=0.0, kind="pose"),

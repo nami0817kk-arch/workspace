@@ -361,12 +361,12 @@ def compose_frame(plan: dict, f: int, figs: Dict[int, Image.Image], stages: Opti
             q = (tau - wv["start"]) / max(1e-6, wv["end"] - wv["start"])
             base.alpha_composite(look.ground_wave(plan, f, float(wv["x0"]), float(wv["x1"]), min(1.0, q), tuple(wv.get("color", (255, 220, 120)))))
     for ob in fx.get("orbs", []):              # 手に付いて膨らむ光の玉(溜め)
-        if ob["start"] <= tau <= ob["end"]:
+        if ob["start"] <= tau < ob["end"]:          # 終わり(投げる瞬間)は含めない(飛ぶ玉と二重になる)
             who_o = ob.get("who", "A")
             hx, hz = anime.effector_world(plan, who_o, f)["hand"]
             px_, py_ = to_px(hx, hz, cam)
             q = (tau - ob["start"]) / max(1e-6, ob["end"] - ob["start"])
-            r_u = ob["r0"] + (ob["r1"] - ob["r0"]) * (q * q)
+            r_u = ob["r0"] + (ob["r1"] - ob["r0"]) * (q ** 1.3)      # 早めに見える大きさに(q² だと溜めの 6 割まで見えなかった)
             base.alpha_composite(look.ki_ball(px_, py_, r_u * camera.px_per_unit(cam), f, tuple(ob.get("color", (255, 190, 70)))))
     for pj in fx.get("projectiles", []):       # 飛ぶ玉(少し山なり)
         if pj["start"] <= tau <= pj["end"]:
