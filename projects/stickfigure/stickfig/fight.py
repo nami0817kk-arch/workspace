@@ -160,8 +160,11 @@ def build_fight(spec: dict) -> dict:
     speed: List[list] = [[0.5, 1.3]]
     shots: List[dict] = []
 
-    # ---- 冒頭 ----
+    # ---- 冒頭: 対峙(2人が一歩ずつ踏み出し、見合って止まる。止めの間にカメラが寄る) ----
     shots.append(dict(t=0.0, follow="mid", scale=[[0.0, 7.4], [1.0, 6.4]], yaw=[[0.0, 12.0], [1.0, 22.0]], pitch=9.0, lens=40.0))
+    keysA.insert(1, dict(t=0.42, dx=0.36, hz=0.84, lean=0.1))
+    keysB.append(dict(t=0.42, dx=(0.15 if kick else -1.55)))
+    hits.append(dict(tau=0.5, hold=0.12, kind="pose"))
     keysB.append(dict(t=1.0, dx=0.35))
     if kick:
         charge.append(dict(start=1.3, end=1.7, who="A", color=[255, 170, 60]))

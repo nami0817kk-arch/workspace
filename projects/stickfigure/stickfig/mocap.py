@@ -311,7 +311,12 @@ class Clip:
             i = int(math.floor(x))
             j = (i + 1) % self.n
             u = x - i
-            return {k: float(v[i] * (1 - u) + v[j] * u) for k, v in self.params.items()}
+            out = {k: float(v[i] * (1 - u) + v[j] * u) for k, v in self.params.items()}
+            if j == 0 and "dx" in self.params and self.dx_cycle is not None:
+                # 輪の継ぎ目: 最初のコマの dx は 1 周ぶん進んだ値として補間する(そのまま混ぜると、1 周ごとに 1 コマだけ後ろへ飛ぶ)
+                dxs = self.params["dx"]
+                out["dx"] = float(dxs[i] * (1 - u) + (dxs[0] + self.dx_cycle) * u)
+            return out
         if loop and self.duration > 0:
             t = t % self.duration
         t = max(0.0, min(self.duration, t))
