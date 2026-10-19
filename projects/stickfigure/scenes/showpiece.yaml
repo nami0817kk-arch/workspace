@@ -1,5 +1,6 @@
 # 見せ場(約11秒): にらみ合い → 突進をスローでかわす → 回し蹴り → 壁へ叩きつけ → 追って跳び、かかと落とし → 勝利
 # 2026-10-18 時点の blender_show9.py を台本に起こしたもの。
+# 注: 要の姿勢で書く旧方式の見本。2人の線がすり抜けて交差する(max_cross_frames を緩めてある)。物理版(physics_kick.yaml)で解消する
 name: showpiece
 fps: 30
 tau_end: 10.0
@@ -129,3 +130,4 @@ fx:
   - [3.3, 3.9]
   - [4.2, 4.6]
   invert: [kick, heel]
+qa: {max_cross_frames: 300}

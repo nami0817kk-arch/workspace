@@ -1,4 +1,5 @@
 # showpiece の回し蹴りを、モーションキャプチャ(135_07 の蹴り)に置き換えた版。clips/ に clip が要る(scripts/fetch_cmu.py)
+# 注: 要の姿勢で書く旧方式の見本。2人の線がすり抜けて交差する(max_cross_frames を緩めてある)。物理版(physics_kick.yaml)で解消する
 name: showpiece_mocap
 fps: 30
 tau_end: 10.0
@@ -131,3 +132,4 @@ fx:
 clips:
   A:
   - {file: 135_07_s1, strike_at: 2.7, start: 2.52, end: 3.2, in: 0.07, out: 0.2}
+qa: {max_cross_frames: 300}

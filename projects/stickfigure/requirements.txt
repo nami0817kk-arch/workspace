@@ -2,3 +2,4 @@ PyYAML>=6.0
 Pillow>=10.1
 numpy>=1.26
 imageio-ffmpeg>=0.5     # ffmpeg が無い環境用(動画の書き出し・点検)
+pymunk>=7.0         # 2D物理(接触を衝突で決める)

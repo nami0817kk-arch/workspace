@@ -14,7 +14,7 @@ from typing import Dict, List, Optional
 
 import yaml
 
-from . import fk, mocap
+from . import fk, mocap, physics
 from .interp import build_timeline, smoothstep
 from .interp import Spring
 from .pose import KeyTrack, Smoother, STANCE_A, STANCE_B, apply_run
@@ -277,6 +277,63 @@ class Planter:
         return q
 
 
+def _lift_to_ground(scene: dict, frames: List[dict]) -> None:
+    """物理は2節の折れ線、rig は6節の曲線なので、深く折れた姿勢で曲線が地面に潜ることがある。
+    潜る分だけ根元を持ち上げる。持ち上げは急に変えず(戻りは1コマ0.02まで)、ぴくつかせない。"""
+    for who, a in scene["actors"].items():
+        sc, s = a.get("scale", 1.0), _sign(a)
+        lift = 0.0
+        for fr in frames:
+            p = fr["actors"][who]
+            sk = fk.skeleton(dict(p, rz=p["rz"]), s, p["root_x"], sc)
+            low = min(min(pt[1] for pt in ln) for ln in fk.body_lines(sk))
+            low = min(low, sk["head"][1] - sk["head_r"])
+            need = max(0.0, -low + 0.01 * sc)
+            lift = max(need, lift - 0.02)
+            p["rz"] = p["rz"] + lift
+            p["root_z"] = p["root_z"] + lift
+
+
+def run_physics(scene: dict, tracks: Dict[str, KeyTrack]) -> dict:
+    """姿勢の計画(キー・clip・走り)を目標に、物理で動かす。命中は衝突から出す。
+
+    scene['physics']: {wall はstage.wall_x, knockable: [倒される側], knock_seconds, holds: {kick: 0.09, ...}, thresholds: {...}}
+    戻り値: states/taus(細かい時間の姿勢の列), hits(命中を timeline 用に整えたもの), puffs(着地など)
+    """
+    ph = scene["physics"] or {}
+    planters = {w: Planter(a) for w, a in scene["actors"].items() if a.get("plant", True)}
+    memo: Dict[tuple, dict] = {}
+    last_tau: Dict[str, float] = {}
+
+    def target(who: str, tau: float) -> dict:
+        key = (who, round(tau / physics.DT))
+        if key in memo:
+            return dict(memo[key])
+        p = apply_run(tracks[who].at(tau), tau, scene.get("run"))
+        if scene.get("_bank") is not None:
+            p = scene["_bank"].apply(who, p, tau)
+        if who in planters:
+            dt = tau - last_tau.get(who, tau)
+            p = planters[who].apply(p, dt)
+            last_tau[who] = tau
+        memo[key] = dict(p)
+        if len(memo) > 4000:
+            memo.pop(next(iter(memo)))
+        return dict(p)
+
+    res = physics.simulate(scene, target, scene["tau_end"] + 0.5)
+    holds = dict(kick=0.09, slash=0.04, hit=0.06, wall=0.06)
+    holds.update(ph.get("holds", {}))
+    hits, puffs = [], []
+    for e in res["events"]:
+        if e.kind in holds:
+            hits.append(dict(tau=round(e.tau, 4), hold=holds[e.kind], kind=e.kind, pos=[e.pos[0], e.pos[1]], impulse=round(e.impulse, 2)))
+        else:
+            puffs.append(dict(tau=round(e.tau, 4), kind=e.kind, pos=[e.pos[0], 0.0]))
+    res["hits"], res["puffs"] = hits, puffs
+    return res
+
+
 def build_plan(scene: dict, solve: bool = True) -> dict:
     scene = copy.deepcopy(scene)
     fps = int(scene["fps"])
@@ -287,6 +344,11 @@ def build_plan(scene: dict, solve: bool = True) -> dict:
         for h in scene.get("hits", []):
             if h.get("contact"):
                 contacts.append(solve_contact(scene, tracks, h))
+    phys = None
+    if scene.get("physics") is not None:
+        phys = run_physics(scene, tracks)
+        scene["hits"], scene["puffs"] = phys["hits"], phys["puffs"]
+        contacts = []
     taus, events = build_timeline(scene["tau_end"], fps, scene.get("hits", []), scene.get("slow", []), scene.get("puffs", []))
     smoothers = {who: Smoother(tr) for who, tr in tracks.items()}
     planters = {who: Planter(a) for who, a in scene["actors"].items() if a.get("plant", True)}
@@ -304,19 +366,23 @@ def build_plan(scene: dict, solve: bool = True) -> dict:
         dtau = tau - taus[f - 1] if f > 0 else 0.0
         fr = dict(tau=tau, actors={})
         for who, a in scene["actors"].items():
-            p = smoothers[who].step(tau, dtau)
-            p = apply_run(p, tau, scene.get("run"))
-            if scene["_bank"] is not None:
-                p = scene["_bank"].apply(who, p, tau)
-            if who in planters:
-                p = planters[who].apply(p, dtau)
+            if phys is not None:
+                p = physics.sample(phys["states"][who], phys["taus"], min(tau, phys["taus"][-1]), a)
+                p["face"] = tracks[who].at(tau)["face"]
+            else:
+                p = smoothers[who].step(tau, dtau)
+                p = apply_run(p, tau, scene.get("run"))
+                if scene["_bank"] is not None:
+                    p = scene["_bank"].apply(who, p, tau)
+                if who in planters:
+                    p = planters[who].apply(p, dtau)
             s = _sign(a)
             jit = 0.0
             if f > 0 and dtau == 0.0:
                 jit = (0.014 if a.get("heavy") else 0.007) * math.sin(f * 7.3)
             p = dict(p)
             p["jit"] = jit
-            p["root_x"] = _root_x(a, p) + jit
+            p["root_x"] = (p["root_x"] if phys is not None else _root_x(a, p)) + jit
             p["root_z"] = p["rz"] + abs(jit) * 0.5
             fr["actors"][who] = {k: (round(v, 6) if isinstance(v, float) else v) for k, v in p.items()}
         # カメラ: 目標へなめらかに追従 + 命中の揺れ
@@ -334,6 +400,8 @@ def build_plan(scene: dict, solve: bool = True) -> dict:
         fr["cam"] = dict(x=round(camx + sx, 5), scale=round(cams, 5), pxu=round(pxu, 4), sx=round(sx, 5), sz=round(sz, 5),
                          z=round((VIEW["ground_y"] - VIEW["height"] / 2) / pxu + sz, 5))
         frames.append(fr)
+    if phys is not None:
+        _lift_to_ground(scene, frames)
     # 出来事の位置(世界座標)
     hit_by_tau = {h["tau"]: h for h in scene.get("hits", [])}
     for e in events:

@@ -208,19 +208,6 @@ def retarget(b: Bvh, out_fps: int = 30, heading_frame: int = 0, flip: bool = Fal
         return _unwrap(_angle_down(pf(c) - pf(a), pu(c) - pu(a)))
 
     out: Dict[str, np.ndarray] = {}
-    swap = {"Right": "Left", "Left": "Right"} if mirror else {"Right": "Right", "Left": "Left"}
-    for side, (u, e) in (("R", ("fa", "fe")), ("L", ("ra", "re"))):
-        long = swap["Right" if side == "R" else "Left"]
-        up_ang = ang(f"{long}Arm", f"{long}ForeArm")
-        fo_ang = ang(f"{long}ForeArm", f"{long}Hand")
-        out[u] = up_ang
-        out[e] = _unwrap(fo_ang - up_ang)
-    for side, (t, k) in (("R", ("fl", "fk")), ("L", ("rl", "rk"))):
-        long = swap["Right" if side == "R" else "Left"]
-        th = ang(f"{long}UpLeg", f"{long}Leg")
-        sh = ang(f"{long}Leg", f"{long}Foot")
-        out[t] = th
-        out[k] = _unwrap(th - sh)
     # 股関節の中点(骨盤の根元 Hips は股関節より高いので、股関節の高さを腰とする)
     hip_f = (pf("LeftUpLeg") + pf("RightUpLeg")) / 2
     hip_u = (pu("LeftUpLeg") + pu("RightUpLeg")) / 2
@@ -228,6 +215,19 @@ def retarget(b: Bvh, out_fps: int = 30, heading_frame: int = 0, flip: bool = Fal
     sh_f = (pf("LeftArm") + pf("RightArm")) / 2
     sh_u = (pu("LeftArm") + pu("RightArm")) / 2
     out["lean"] = _unwrap(np.arctan2(sh_f - hip_f, sh_u - hip_u))
+    swap = {"Right": "Left", "Left": "Right"} if mirror else {"Right": "Right", "Left": "Left"}
+    for side, (u, e) in (("R", ("fa", "fe")), ("L", ("ra", "re"))):
+        long = swap["Right" if side == "R" else "Left"]
+        up_ang = ang(f"{long}Arm", f"{long}ForeArm")
+        fo_ang = ang(f"{long}ForeArm", f"{long}Hand")
+        out[u] = up_ang + out["lean"]                  # リグでは腕が胴の子。胴の傾きに合わせて回る(胴からの相対角)
+        out[e] = _unwrap(fo_ang - up_ang)
+    for side, (t, k) in (("R", ("fl", "fk")), ("L", ("rl", "rk"))):
+        long = swap["Right" if side == "R" else "Left"]
+        th = ang(f"{long}UpLeg", f"{long}Leg")
+        sh = ang(f"{long}Leg", f"{long}Foot")
+        out[t] = th
+        out[k] = _unwrap(th - sh)
     # 腰の高さ(足首が最も低い所を地面として、脚の長さで自作の寸法に直す)
     leg = np.median(np.linalg.norm(p[:, ix["RightUpLeg"]] - p[:, ix["RightLeg"]], axis=1)
                     + np.linalg.norm(p[:, ix["RightLeg"]] - p[:, ix["RightFoot"]], axis=1))

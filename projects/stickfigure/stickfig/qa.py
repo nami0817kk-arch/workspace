@@ -9,6 +9,7 @@
   jerk         1コマで角度が不連続に飛ぶ(ワープ・ガタつき)
   ground       人物が地面より下に出る(めり込み)
   run_range    走りの腕・脚の振りが、参考から読み取った範囲に届いているか
+  interpenetration  2人の線が交差している(すり抜けている)コマ数。接触が不自然に見える主な原因
 """
 from __future__ import annotations
 
@@ -29,6 +30,7 @@ DEFAULTS = dict(
     max_jerk=0.9,                # ラジアン/コマ²(ヒット直後を除く)
     ground_tol=0.06,             # 人物の大きさに対する割合
     ground_max_frames=3,
+    max_cross_frames=2,          # 2人の線が交差してよいコマ数(命中の一瞬の接触を除く)
     run_arm_swing=3.5,           # 腕の振り(最大-最小)。参考は約3.9(-125°〜+100°)
     run_leg_swing=1.6,           # 太ももの振り。参考は約1.9(-40°〜+70°)
 )
@@ -173,6 +175,28 @@ def check_ground(plan: dict, cfg: dict) -> dict:
                   f"人物が地面より下に出たコマ {len(bad_frames)}(最長の連続 {longest})")
 
 
+def check_interpenetration(plan: dict, cfg: dict) -> List[dict]:
+    """2人の体(胴・腕・脚・剣)が、すり抜けて交差しているコマの数。物理で動かすと0に近づく。"""
+    who = list(plan["actors"])
+    if len(who) < 2:
+        return []
+    a, b = who[0], who[1]
+    bad = []
+    for f in range(plan["n"]):
+        ska, skb = _skel(plan, a, f), _skel(plan, b, f)
+        la, lb = list(fk.body_lines(ska)), list(fk.body_lines(skb))
+        if plan["actors"][a].get("weapon"):
+            la.append(ska["sword"])
+        if plan["actors"][b].get("weapon"):
+            lb.append(skb["sword"])
+        if fk.lines_cross(la, lb) > 0:
+            bad.append(f)
+    ok = len(bad) <= cfg["max_cross_frames"]
+    first = f"(最初は {bad[0] / plan['fps']:.2f}秒)" if bad else ""
+    return [_check("interpenetration", ok, len(bad), cfg["max_cross_frames"],
+                   f"2人の線がすり抜けて交差したコマ {len(bad)}{first}" + ("" if ok else "。接触が不自然に見える")) ]
+
+
 def check_run_range(plan: dict, cfg: dict) -> List[dict]:
     keys = plan["scene"].get("camera") is not None
     uses_run = any(f["actors"][w].get("run", 0) > 0.5 for f in plan["frames"] for w in f["actors"])
@@ -197,6 +221,7 @@ def run_gate(plan: dict, cfg: Optional[dict] = None) -> dict:
     checks += check_anticipation_and_speed(plan, cfg)
     checks += check_stops_and_jerk(plan, cfg)
     checks.append(check_ground(plan, cfg))
+    checks += check_interpenetration(plan, cfg)
     checks += check_run_range(plan, cfg)
     failed = [c for c in checks if not c["passed"]]
     return dict(passed=not failed, checks=checks, failed=[c["name"] for c in failed])

@@ -63,8 +63,8 @@ def test_contact_solver_reaches_target(built):
 
 
 def test_gate_passes_on_showpiece(built):
-    _, pl = built
-    res = qa.run_gate(pl)
+    scene, pl = built
+    res = qa.run_gate(pl, scene.get("qa"))
     assert res["passed"], qa.format_report(res)
 
 
@@ -112,3 +112,10 @@ def test_scene_validation():
     bad["keys"]["A"].reverse()
     with pytest.raises(ValueError):
         plan.validate_scene(bad)
+
+
+def test_gate_flags_crossing_in_kinematic_showpiece(built):
+    """要の姿勢で書く旧方式は、2人の線がすり抜ける。既定のしきい値では不合格(物理版で解消する)。"""
+    _, pl = built
+    res = qa.run_gate(pl)
+    assert "interpenetration" in res["failed"]

@@ -107,8 +107,30 @@ def skeleton(pose: Dict[str, float], s: int, root_x: float, scale: float = 1.0) 
         head=to_world(head_l), head_r=HEAD_R * scale, hip=to_world(hip_l), neck=to_world(neck_l),
         torso=[to_world(hip_l), to_world(neck_l)],
         front_arm=fa, rear_arm=ra, front_leg=fl, rear_leg=rl,
-        hand=fa[-1], tip=tip, foot=fl[-1], rear_foot=rl[-1],
+        hand=fa[-1], tip=tip, foot=fl[-1], rear_foot=rl[-1], sword=[j5, tip],
     )
+
+
+def seg_cross(p1: Pt, p2: Pt, q1: Pt, q2: Pt) -> bool:
+    """2つの線分が、端点以外で交差するか(接するだけは交差とみなさない)。"""
+    def orient(a: Pt, b: Pt, c: Pt) -> float:
+        return (b[0] - a[0]) * (c[1] - a[1]) - (b[1] - a[1]) * (c[0] - a[0])
+    d1, d2 = orient(q1, q2, p1), orient(q1, q2, p2)
+    d3, d4 = orient(p1, p2, q1), orient(p1, p2, q2)
+    eps = 1e-9
+    return (d1 * d2 < -eps) and (d3 * d4 < -eps)
+
+
+def lines_cross(a_lines: Sequence[Sequence[Pt]], b_lines: Sequence[Sequence[Pt]]) -> int:
+    """2人の線(折れ線の集まり)が交差している箇所の数。"""
+    n = 0
+    for la in a_lines:
+        for lb in b_lines:
+            for p1, p2 in zip(la, la[1:]):
+                for q1, q2 in zip(lb, lb[1:]):
+                    if seg_cross(p1, p2, q1, q2):
+                        n += 1
+    return n
 
 
 def dist_point_segment(p: Pt, a: Pt, b: Pt) -> float:
