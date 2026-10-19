@@ -578,7 +578,8 @@ def _align_keys_to_clips(scene: dict, tracks: Dict[str, KeyTrack]) -> Dict[str, 
         gaps = []                                        # 続けざまの clip(間が 0.6 秒未満、重なりも含む)の間: 前の終点の位置を保ち、次の始点の 0.3 秒前から直線で動く
         for (w0, w1, c), (w0n, w1n, cn) in zip(windows, windows[1:]):
             if w0n - w1 < 0.6:
-                lo, hi = max(min(c["end"], w0n), w0n - 0.3), max(cn["start"], w1)
+                d_move = abs(bank.sample(cn, cn["start"])["dx"] - bank.sample(c, c["end"])["dx"])
+                lo, hi = max(min(c["end"], w0n), w0n - max(0.3, d_move / 3.0)), max(cn["start"], w1)   # 助走は秒速 3 まで(槍: 蹴りの間合い 0.9 → 突きの 1.8 へ 2 単位下がるのに 0.3 秒では 1 コマ 0.95 飛んだ)
                 for pt in protected:                     # この人物が関わる命中の瞬間はまたがない(そこで動くと、解いた接触が崩れる)
                     if lo <= pt < hi:
                         lo = max(lo, pt + 0.04)
@@ -602,7 +603,7 @@ def _align_keys_to_clips(scene: dict, tracks: Dict[str, KeyTrack]) -> Dict[str, 
             for (w0, w1, c) in windows:
                 if not (c.get("_solved") or c.get("_chained")):
                     continue
-                t0 = w0 - 0.3
+                t0 = w0 - max(0.3, abs(bank.sample(c, c["start"])["dx"] - (dx0 + shift_at(w0))) / 3.0)
                 for pt in protected:
                     if t0 <= pt < w0:
                         t0 = max(t0, pt + 0.04)
