@@ -1412,4 +1412,80 @@ void main() {
       }
     });
   });
+
+  group('ポジションの持ち味', () {
+    Player at(Position pos) {
+      final h = switch (pos) {
+        Position.center => 208.0,
+        Position.powerForward => 197.0,
+        Position.smallForward => 190.0,
+        Position.shootingGuard => 184.0,
+        Position.pointGuard => 176.0,
+      };
+      var p = strong(height: h);
+      if (pos == Position.powerForward) {
+        p = p.copyWith(abilities: {
+          for (final a in Ability.values) a: 80,
+          Ability.inside: 90,
+          Ability.threePoint: 40,
+        });
+      }
+      if (pos == Position.shootingGuard) {
+        p = p.copyWith(abilities: {
+          for (final a in Ability.values) a: 80,
+          Ability.pass: 40,
+          Ability.dribble: 60,
+          Ability.threePoint: 90,
+        });
+      }
+      return p;
+    }
+
+    test('身長と能力から5つのポジションそれぞれに当たる', () {
+      for (final pos in Position.values) {
+        expect(at(pos).position, pos, reason: pos.label);
+        expect(pos.perk, isNotEmpty);
+      }
+    });
+
+    test('シューターは3Pの勝負どころ、PFはドライブ、Cはディフェンスが決まりやすい', () {
+      double chance(Position pos, Clutch c) =>
+          clutchChance(at(pos), c, 50, 1) -
+          clutchChance(at(pos).copyWith(heightCm: pos == Position.shootingGuard ? 184 : 200), c, 50, 1);
+      // 持ち味の分は、同じ能力でも他ポジションより高い
+      final sg = clutchChance(at(Position.shootingGuard), Clutch.threePoint, 50, 1);
+      final sgOther = clutchChance(
+          at(Position.shootingGuard).copyWith(heightCm: 190), Clutch.threePoint, 50, 1);
+      expect(sg, greaterThan(sgOther));
+      expect(chance(Position.center, Clutch.defend), isNotNull);
+      final cDef = clutchChance(at(Position.center), Clutch.defend, 50, 1);
+      final cNoPerk = clutchChance(at(Position.center).copyWith(heightCm: 190), Clutch.defend, 50, 1);
+      expect(cDef, greaterThan(cNoPerk));
+    });
+
+    test('PGはチームワークの効きが大きい', () {
+      final pg = Game(eventsEnabled: false, player: at(Position.pointGuard), rng: Random(1), teamwork: 100);
+      final sf = Game(eventsEnabled: false, player: at(Position.smallForward), rng: Random(1), teamwork: 100);
+      expect(pg.teamBonus, greaterThan(sf.teamBonus));
+    });
+
+    test('センターはリバウンドが多い', () {
+      double rpg(Position pos) {
+        var total = 0;
+        for (var i = 0; i < 200; i++) {
+          total += playQuarters(at(pos), teamStrength: 50, oppStrength: 50, form: 1, rng: Random(i)).rebounds;
+        }
+        return total / 200;
+      }
+
+      expect(rpg(Position.center), greaterThan(rpg(Position.pointGuard)));
+    });
+
+    test('SFは大会での動きの良さに加算がある', () {
+      final sf = Game(eventsEnabled: false, player: at(Position.smallForward), rng: Random(1));
+      expect(sf.formNow, sf.condition.form + 0.03);
+      final pg = Game(eventsEnabled: false, player: at(Position.pointGuard), rng: Random(1));
+      expect(pg.formNow, pg.condition.form);
+    });
+  });
 }

@@ -325,9 +325,16 @@ class Game {
         _ => League.highSchool,
       };
 
+  /// 大会での動きの良さ(体調に、SFの持ち味を足す)。
+  double get formNow =>
+      condition.form + (player.position == Position.smallForward ? 0.03 : 0.0);
+
   /// チームワークによる味方の強さの上乗せ。パスが上手いほど効きが大きい。
   double get teamBonus =>
-      (teamwork - 50) * 0.07 * (0.7 + player.of(Ability.pass) / 200);
+      (teamwork - 50) *
+      0.07 *
+      (0.7 + player.of(Ability.pass) / 200) *
+      (player.position == Position.pointGuard ? 1.4 : 1.0);
 
   /// 冬の大会(全国選手権)がある段階。高校と大学・実業団。
   bool get hasWinterCup => stage == Stage.highSchool || stage == Stage.college;
@@ -395,7 +402,7 @@ class Game {
         final cr = TournamentRun(league, teamBonus: teamBonus + schoolBonus);
         cr.advance(
           player,
-          form: condition.form,
+          form: formNow,
           rng: rng,
           chooseClutch: chooseClutch,
           askClutch: askClutch && chooseClutch == null,
@@ -423,7 +430,7 @@ class Game {
       throw StateError('今は勝負どころではない: $phase');
     }
     cr.resolve(player, choice,
-        form: condition.form, rng: rng, pickOpponent: _pickOpponent);
+        form: formNow, rng: rng, pickOpponent: _pickOpponent);
     if (cr.pending != null) {
       return TermReport(
           action: termAction, gotInjured: termInjured, paused: true);

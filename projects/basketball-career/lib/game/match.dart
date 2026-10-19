@@ -188,7 +188,15 @@ double clutchChance(Player p, Clutch c, double oppDefense, double form) {
     Clutch.defend =>
       0.25 + 0.50 * (p.effective(Ability.defense) / 100) - 0.15 * opp,
   };
-  return (raw * (0.8 + form * 0.2) + clutchBonus(p.traits)).clamp(0.03, 0.9);
+  // ポジションの持ち味。
+  final perk = switch ((p.position, c)) {
+    (Position.shootingGuard, Clutch.threePoint) => 0.08,
+    (Position.powerForward, Clutch.drive) => 0.07,
+    (Position.center, Clutch.defend) => 0.08,
+    _ => 0.0,
+  };
+  return (raw * (0.8 + form * 0.2) + clutchBonus(p.traits) + perk)
+      .clamp(0.03, 0.9);
 }
 
 /// 4クォーターを進める。点差が近ければ [MatchState.needsClutch]。
@@ -227,8 +235,14 @@ MatchState playQuarters(
     team: team,
     opp: opp,
     points: (team * share * form).round(),
-    rebounds:
-        max(0, (p.effective(Ability.rebound) / 8 * form + _noise(rng) * 2).round()),
+    rebounds: max(
+        0,
+        (p.effective(Ability.rebound) /
+                    8 *
+                    form *
+                    (p.position == Position.center ? 1.2 : 1.0) +
+                _noise(rng) * 2)
+            .round()),
     assists:
         max(0, (p.effective(Ability.pass) / 14 * form + _noise(rng)).round()),
     teamStrength: mine,
