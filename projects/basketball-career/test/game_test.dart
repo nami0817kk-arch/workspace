@@ -1581,4 +1581,34 @@ void main() {
       expect(c.injuryName, '');
     });
   });
+
+  group('まれな出来事', () {
+    test('重みの小さい出来事は、普通の出来事より少ない', () {
+      final rng = Random(12);
+      final p = strong().copyWith(age: 16);
+      final count = <String, int>{};
+      for (var i = 0; i < 20000; i++) {
+        final e = rollEvent(p, pro: false, rng: rng);
+        if (e != null) count[e.id] = (count[e.id] ?? 0) + 1;
+      }
+      final rare = (count['breakthrough'] ?? 0) + (count['legend_visit'] ?? 0);
+      final normal = (count['friends'] ?? 0) + (count['video'] ?? 0);
+      expect(rare, greaterThan(0));
+      expect(rare, lessThan(normal), reason: 'まれ');
+      expect(events.where((e) => e.weight < 1).length, greaterThanOrEqualTo(2));
+    });
+
+    test('ひらめきで重点の能力が大きく伸びる', () {
+      final g = Game(
+        eventsEnabled: false,
+        player: strong().copyWith(age: 15),
+        rng: Random(1),
+        pendingEventId: 'breakthrough',
+      );
+      g.lastFocus = Ability.dribble;
+      final before = g.player.of(Ability.dribble);
+      g.resolveEvent(0);
+      expect(g.player.of(Ability.dribble), before + 4);
+    });
+  });
 }
