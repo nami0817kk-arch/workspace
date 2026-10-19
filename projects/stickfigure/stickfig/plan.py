@@ -85,6 +85,23 @@ class ClipBank:
                     c.setdefault("start", c["strike_at"] - clip.strike["t"] / sp)
                     c.setdefault("end", c["start"] + clip.duration / sp)
                     c["offset"] = clip.strike["t"] - (c["strike_at"] - c["start"]) * sp
+                    if c.get("reach"):                   # 命中の瞬間を、手(足)が最も前へ伸びたコマに(mocap の strike は最大速度のコマで、伸び切る前)
+                        c["offset"] += self.reach_shift(clip)
+
+    @staticmethod
+    def reach_shift(clip: "mocap.Clip", window: float = 0.2) -> float:
+        """clip の strike の前後 window 秒で、前の手(足の clip なら前の足)の根元からの前方距離が最大のコマまでの時刻差(秒)。"""
+        from . import fk
+        kind = (clip.strike or {}).get("kind", "hand")
+        key = "foot" if kind == "foot" else "hand"
+        i0 = int(round(clip.strike["t"] * clip.fps))
+        best, best_i = -1e9, i0
+        for i in range(max(0, i0 - int(window * clip.fps)), min(clip.n - 1, i0 + int(window * clip.fps)) + 1):
+            pose = {k: float(clip.params[k][i]) if k in clip.params else 0.0 for k in ("fa", "fe", "ra", "re", "fl", "fk", "rl", "rk", "lean", "hz", "rz", "roll", "ht")}
+            pt = fk.skeleton(pose, 1, 0.0, 1.0)[key]
+            if pt[0] > best:
+                best, best_i = pt[0], i
+        return (best_i - i0) / clip.fps
 
     def _clip(self, name: str) -> "mocap.Clip":
         if name not in self.cache:

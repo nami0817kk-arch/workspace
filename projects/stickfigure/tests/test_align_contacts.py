@@ -75,3 +75,20 @@ def test_clip_timing_keeps_strike_and_is_monotone(tmp_path):
     pulls = [bank.antic_phase(c, 1.5 - x)[0] for x in (0.04, 0.2, 0.38)]
     assert pulls[0] == 0.0 and pulls[1] == 1.0 and pulls[2] < 0.5      # 振りの最中は引かない、溜めで引く
     assert abs(bank.antic_phase(c, 1.56)[1] - 1.0) < 1e-6 and bank.antic_phase(c, 1.8)[1] == 0.0
+
+
+def test_reach_shift_picks_max_extension(tmp_path):
+    import json
+    _make_clip(tmp_path / "poke.json")
+    d = json.loads((tmp_path / "poke.json").read_text(encoding="utf-8"))
+    d["strike"]["t"] = 0.9                                              # 伸び切る 3 コマ前を strike にしてみる
+    (tmp_path / "poke2.json").write_text(json.dumps(d), encoding="utf-8")
+    from stickfig import mocap
+    clip = mocap.Clip(mocap.load_clip(tmp_path / "poke2.json"))
+    assert abs(planmod.ClipBank.reach_shift(clip) - 0.1) < 1e-6
+    sc = _scene(tmp_path, 0.0)
+    sc["clips"]["A"][0]["file"] = "poke2"
+    sc["clips"]["A"][0]["reach"] = True
+    bank = planmod.ClipBank(sc)
+    c = sc["clips"]["A"][0]
+    assert abs(((c["strike_at"] - c["start"]) + c["offset"]) - 1.0) < 1e-6   # 命中の瞬間に clip の 1.0 秒(伸び切り)が来る

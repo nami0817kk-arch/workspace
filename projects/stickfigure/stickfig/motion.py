@@ -81,7 +81,7 @@ def snap(plan: dict) -> Dict[str, object]:
                 continue
             sp[fb_] = ((pb[0] - pa[0]) ** 2 + (pb[1] - pa[1]) ** 2) ** 0.5
         pre = [sp[f] for f in range(f0 - 12, f0 - 2) if f in sp]
-        peak = max([sp[f] for f in (f0 - 1, f0) if f in sp] or [0.0])
+        peak = max([sp[f] for f in (f0 - 2, f0 - 1, f0) if f in sp] or [0.0])   # 伸び切りの命中は f0 で速さ 0 に近い
         mean = sum(pre) / len(pre) if pre else 0.0
         waiting = sum(1 for v in pre if v < 0.012)
         out.append(dict(kind=e["kind"], by=who, frame=f0, snap=round(peak / mean, 1) if mean > 1e-6 else None, peak=round(peak, 3), wait=waiting))

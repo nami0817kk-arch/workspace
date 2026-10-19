@@ -238,6 +238,8 @@ def build_fight(spec: dict) -> dict:
     if bc and n <= 2:
         s["counter"] = False                             # 2 発しか無いときは、反撃と B の連打が重なるので反撃は無し
     gaps = [0.72, 0.46, 0.46, 0.46] if s["counter"] else [0.46, 0.46, 0.46, 0.46]      # clip の区間(前 0.16+後 0.14+混ぜ 0.12)が重ならない間隔
+    if s["timing"]:
+        gaps = [round(g + 0.12, 2) for g in gaps]        # 前 0.30 に延ばした分
     if rng is not None:
         gaps = [round(g + rng.uniform(-0.05, 0.07), 2) for g in gaps]
     defend = {}                                          # 何発目を、どう防ぐか: index → "clash" / "miss"
@@ -265,16 +267,18 @@ def build_fight(spec: dict) -> dict:
     dxB = -1.7
     for i, t in enumerate(ts):
         last = i == n - 1
-        pre, post = (0.4, 0.14) if i == 0 else (0.16, 0.14)
+        pre, post = (0.4, 0.14) if i == 0 else ((0.3, 0.14) if s["timing"] else (0.16, 0.14))   # 間を作るときは 2 発目以降も振りかぶりの分を取る
         anchor = 4.3 if i == 0 else 4.3 + 0.5 * i
         cf = last_clip if last else mid_clips[i]
-        clip = dict(file=cf, strike_at=_r(t), start=_r(t - pre), end=_r(t + post), **{"in": 0.12 if i == 0 else 0.06, "out": 0.25 if last else 0.06})
+        clip = dict(file=cf, strike_at=_r(t), start=_r(t - pre), end=_r(t + post), **{"in": 0.12 if (i == 0 or s["timing"]) else 0.06, "out": 0.25 if last else 0.06})   # 間を作るときは入りも 4 コマ(蹴りの後の構えと拳の clip は後ろ腕が 3 rad 違う。2 コマだと飛ぶ)
         pt = _pt(cf, eff)
         if last and fin_kick:                            # 決めが蹴り上げ: 高い蹴りの clip(足が胸の高さに届く)で、相手の胸を蹴る
             cf = "75_16_s1"
             clip = dict(file=cf, strike_at=_r(t), start=_r(t - 0.4), end=_r(t + 0.25), **{"in": 0.12, "out": 0.25})
         if kick_i == i:
             clip = dict(file="135_07_s1", strike_at=_r(t), start=_r(t - 0.36), end=_r(t + 0.3), **{"in": 0.12, "out": 0.12})
+        if not sword:
+            clip["reach"] = True                         # 命中は手(足)が伸び切ったコマで(胴が重ならない間合いになる)
         if not last and kick_i != i and defend.get(i) != "miss":
             clip["anchor_dx"] = round(anchor, 2)
         clipsA.append(clip)
@@ -388,10 +392,16 @@ def build_fight(spec: dict) -> dict:
     flurry.append(dict(start=_r(ko_t + 0.4), end=_r(ko_t + 0.8), every=5, angles=HERO))
     shots.append(dict(t=_r(hl + 0.0), follow="mid", scale=[[_r(hl), 5.0], [end, 9.0]], yaw=[[_r(hl), 52.0], [end, -15.0]], pitch=[[_r(hl), 10.0], [end, 22.0]], lens=40.0, target_z=0.9))
 
-    if s["camera"] == "fixed":
+    impact_cuts = dict(kinds=["kick", "heel", "wall", "clash"], hold=0.2, angles=[dict(yaw=35, pitch=4, scale=3.0, lens=28, hue=0), dict(yaw=-40, pitch=-6, scale=2.6, lens=26, dutch=6.0, hue=1),
+                                                                      dict(yaw=5, pitch=12, scale=3.4, lens=34, hue=2)],
+                       per_kind=dict(wall=[dict(yaw=-30, pitch=6, scale=5.0, lens=30), dict(yaw=10, pitch=18, scale=6.0, lens=34), dict(yaw=-55, pitch=3, scale=4.2, lens=28, dutch=-5.0)],
+                                     clash=[dict(yaw=28, pitch=2, scale=2.4, lens=30, hue=3), dict(yaw=-32, pitch=-8, scale=2.0, lens=26, dutch=7.0, hue=0)]))
+    invert = ["kick", "heel", "wall"]
+    if s["camera"] == "fixed":                           # 検証用: カット・連打カット・反転の 1 コマも無し(動きだけを見る)
         shots = [dict(t=0.0, follow="mid", scale=3.4, yaw=0.0, pitch=0.0, lens=50.0)]
         flurry = []
         impact_cuts = None
+        invert = []
 
     ex = float(s["exaggerate"])
     if ex and ex != 1.0:                                 # 振りの誇張: 腕の角度を平均からの差で ex 倍(clip ごと。体・脚は変えない)
@@ -427,15 +437,12 @@ def build_fight(spec: dict) -> dict:
         stage=dict(wall_x=6.0, style="flat", theme=s["stage"]), slow=slow, hits=hits, puffs=puffs,
         camera=[[0.0, -0.4, 8.4], [_r(end), 3.2, 8.6]],
         keys=keys,
-        fx=dict(trails=[], speed_lines=speed, invert=["kick", "heel", "wall"], flashes=sorted(set(flashes)), charge=charge, color_script=color_script, weapon_glow=bool(sword)),
+        fx=dict(trails=[], speed_lines=speed, invert=invert, flashes=sorted(set(flashes)), charge=charge, color_script=color_script, weapon_glow=bool(sword)),
         clips=dict(A=clipsA, **({"B": clipsB} if clipsB else {})),
         qa=dict(max_cross_frames=400, max_stops=3, max_anticipation_frames=14, max_jerk=1.3),
         tempo=s["tempo"], anime=dict(trails=True, sfx=True, zoom_blur=True, grade=True, roll=True, smear=True),
         shots=shots, stepping=stepping,
-        impact_cuts=dict(kinds=["kick", "heel", "wall", "clash"], hold=0.2, angles=[dict(yaw=35, pitch=4, scale=3.0, lens=28, hue=0), dict(yaw=-40, pitch=-6, scale=2.6, lens=26, dutch=6.0, hue=1),
-                                                                         dict(yaw=5, pitch=12, scale=3.4, lens=34, hue=2)],
-                         per_kind=dict(wall=[dict(yaw=-30, pitch=6, scale=5.0, lens=30), dict(yaw=10, pitch=18, scale=6.0, lens=34), dict(yaw=-55, pitch=3, scale=4.2, lens=28, dutch=-5.0)],
-                                       clash=[dict(yaw=28, pitch=2, scale=2.4, lens=30, hue=3), dict(yaw=-32, pitch=-8, scale=2.0, lens=26, dutch=7.0, hue=0)])),
+        impact_cuts=impact_cuts,
         flurry=flurry, body_drive=({"strength": float(s["body"])} if s["body"] else None), footwork=({} if s["footwork"] else None), style="flat2d",
         clip_timing=({"pre": 0.4, "post": 0.3} if s["timing"] else None),
         limb=dict(base=0.055, tip=0.03, tip_color=[0.08, 0.08, 0.1]), captions=caps, audio=(False if s["mood"] == "none" else dict(mood=s["mood"])), _marks={k: _r(v) for k, v in marks.items()})
