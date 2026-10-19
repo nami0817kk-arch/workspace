@@ -469,6 +469,7 @@ class _Highlights extends StatelessWidget {
     final items = <(String, int)>[
       ('月間MVP', n('の月間MVP')),
       ('オールスター', n('オールスターに選出')),
+      ('怪我', snapshot.events.where((e) => e.kind == 'injury').length),
       ('表彰', awards),
     ].where((e) => e.$2 > 0).toList();
     if (items.isEmpty) return const SizedBox.shrink();

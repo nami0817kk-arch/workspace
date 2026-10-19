@@ -3,6 +3,7 @@ import 'package:baseball_manager/game/marks.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  tournamentTests();
   test('今日のヒントは日付で決まり、同じ日は同じ。種類が12ある', () {
     final d = DateTime(2026, 10, 19);
     expect(tipOf(d), tipOf(d));
@@ -23,5 +24,18 @@ void main() {
     }
     expect(yearPlanOf(Stage.pro, 26).any((e) => e.contains('世界大会')), isTrue);
     expect(yearPlanOf(Stage.pro, 27).any((e) => e.contains('世界大会')), isFalse);
+  });
+}
+
+void tournamentTests() {
+  test('次の大会までの残り。過ぎていれば来年まで出さない', () {
+    final u = untilTournament(Stage.pro, 4)!;
+    expect(u.left, 2);
+    expect(u.name, 'シーズン終了');
+    expect(u.unit, 'か月');
+    expect(untilTournament(Stage.highSchool, 3)!.left, 0);
+    expect(untilTournament(Stage.highSchool, 5), isNull);
+    expect(untilTournament(Stage.youth, 0)!.unit, '季節');
+    expect(untilTournament(Stage.retired, 0), isNull);
   });
 }

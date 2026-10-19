@@ -178,6 +178,14 @@ Plan recommendedPlan(Game g) {
   return Plan.train;
 }
 
+/// おすすめの理由(画面に出す)。
+String recommendReason(Game g) {
+  final c = g.condition;
+  if (c.fatigue >= 70) return '疲れが${c.fatigue}と高いので、休養で回復しよう。';
+  if (c.morale < 35) return 'やる気が${c.morale}と低いので、交流で気持ちを上げよう。';
+  return '体調は十分。練習で重点の能力を伸ばそう。';
+}
+
 /// 出来事の選択の結果を、変わったところだけ短く言葉にする。「球威 +3 / 気持ち +8」。
 /// 何も変わらなければ空。
 String eventResultText(Player p0, Condition c0, Player p1, Condition c1) {

@@ -450,6 +450,16 @@ class _TodoChips extends StatelessWidget {
         runSpacing: 2,
         crossAxisAlignment: WrapCrossAlignment.center,
         children: [
+          if (untilTournament(game.stage, game.slot) != null)
+            Builder(builder: (context) {
+              final u = untilTournament(game.stage, game.slot)!;
+              return Text(
+                  u.left == 0
+                      ? '今が${u.name}'
+                      : '${u.name}まであと${u.left}${u.unit}',
+                  key: const Key('until-tournament'),
+                  style: Theme.of(context).textTheme.bodySmall);
+            }),
           for (final i in items)
             Chip(
                 visualDensity: VisualDensity.compact,
@@ -754,6 +764,9 @@ class _ActionCard extends StatelessWidget {
           children: [
             Text('${game.slotName}は何をする?',
                 style: Theme.of(context).textTheme.titleSmall),
+            Text('おすすめの理由: ${recommendReason(game)}',
+                key: const Key('recommend-reason'),
+                style: Theme.of(context).textTheme.bodySmall),
             const SizedBox(height: 8),
             const Text('重点にする能力'),
             Wrap(spacing: 6, children: [

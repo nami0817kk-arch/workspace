@@ -1,3 +1,4 @@
+import 'calendar.dart';
 import 'career.dart';
 import 'path.dart' show overall;
 import 'player.dart';
@@ -484,3 +485,15 @@ List<String> yearPlanOf(Stage stage, int age) => switch (stage) {
         ],
       Stage.retired => const [],
     };
+
+/// 次の大会(プロはシーズン終了)までの残り。大会のターンを過ぎていれば null(来年)。
+({int left, String name, String unit})? untilTournament(Stage stage, int slot) {
+  if (stage == Stage.retired) return null;
+  final t = stage == Stage.pro ? 6 : (isMonthly(stage) ? 3 : 1);
+  if (slot > t) return null;
+  return (
+    left: t - slot,
+    name: stage == Stage.pro ? 'シーズン終了' : '夏の大会',
+    unit: isMonthly(stage) ? 'か月' : '季節',
+  );
+}
