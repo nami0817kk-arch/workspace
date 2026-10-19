@@ -186,7 +186,7 @@ class ClipBank:
                 v["fa"] = v.get("fa", 0.0) - ap * pull + ov * over
                 v["fe"] = v.get("fe", 0.0) + 0.5 * ap * pull - 0.3 * ov * over
             v["lean"] = v.get("lean", 0.0) - 0.28 * ap * pull + 0.3 * ov * over
-            v["hz"] = v.get("hz", 0.0) - 0.1 * ap * pull
+            v["hz"] = v.get("hz", 0.0) - 0.05 * ap * pull
         return v
 
     def antic_phase(self, c: dict, tau: float):
@@ -790,14 +790,14 @@ def _body_drive(p: dict, who: str, f: int, events: List[dict], cfg: dict, sign: 
             if -6 <= d <= 8:                             # 踏み込みの構え: 前脚を大きく出して膝を曲げ、後ろ脚を引いて伸ばす(弓足)。山は命中の少し前
                 w_ = math.sin(math.pi * (d + 6) / 14.0)
                 dfl += 0.55 * k * w_; dfk += 0.45 * k * w_; drl += -0.45 * k * w_
-                dhz += -0.10 * k * w_ * min(1.0, abs(d) / 4.0)          # 腰の沈みは命中のコマでは 0(接触を解いた高さを崩さない)
+                dhz += -0.05 * k * w_ * min(1.0, abs(d) / 4.0)          # 腰の沈みは命中のコマでは 0(接触を解いた高さを崩さない)。0.10 だと溜め・引きと重なって腰 0.48 まで沈んだ
             if -12 <= d < -4:                            # 溜め: 後ろへひねり、沈み、少し引く
                 u = (d + 12) / 8.0
                 s = math.sin(math.pi * 0.5 * u)
-                dspin += -0.55 * k * s; dlean += -0.10 * k * s; dhz += -0.07 * k * s; ddx += -0.10 * k * s
+                dspin += -0.55 * k * s; dlean += -0.06 * k * s; dhz += -0.04 * k * s; ddx += -0.10 * k * s
             elif -4 <= d <= 0:                           # 打ち込み: ひねり戻して前へ(命中のコマでは、傾き・腰・前進を 0 に戻す。接触を解いた姿勢を崩さない)
                 u = (d + 4) / 4.0
-                dspin += (-0.55 + 1.15 * u) * k; dlean += (-0.10 + 0.10 * u) * k; dhz += (-0.07 + 0.07 * u) * k; ddx += (-0.10 + 0.10 * u) * k
+                dspin += (-0.55 + 1.15 * u) * k; dlean += (-0.06 + 0.06 * u) * k; dhz += (-0.04 + 0.04 * u) * k; ddx += (-0.10 + 0.10 * u) * k
             elif 0 < d <= 12:                            # 振り抜き: ひねりが余り、戻る
                 u = 1 - d / 12.0
                 dspin += 0.60 * k * u * u; dlean += 0.12 * k * u * u; dhz += -0.05 * k * u
