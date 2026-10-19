@@ -33,7 +33,7 @@ sh.light = "STUDIO" if PERSP else "FLAT"           # 遠近のときは陰影を
 sh.color_type = "MATERIAL"
 if PERSP:
     sh.show_specular_highlight = False
-    sh.show_object_outline = MODE == "figs"        # 人物には細い輪郭
+    sh.show_object_outline = False                 # 輪郭線は付けない(節ごとの縁取りが竹のように見える)
     try:
         sh.object_outline_color = (0.02, 0.02, 0.03)
     except Exception:
@@ -68,7 +68,7 @@ def sphere(r, parent, loc, m, seg=24, scale=(1, 1, 1)):
     return o
 
 
-def limb(name, parent, length, ink, loc=(0, 0, 0), r=0.030):
+def limb(name, parent, length, ink, loc=(0, 0, 0), r=0.036):
     j = empty(name, parent, loc)
     bpy.ops.mesh.primitive_cone_add(vertices=16, radius1=r, radius2=r, depth=length)
     c = bpy.context.object
@@ -94,24 +94,20 @@ def make_figure(tag, color, weapon, front):
     F["root"] = root = empty(tag + "root", None)
     F["hip"] = hip = empty(tag + "hip", root, (0, 0, 0.92))
     F["chest"] = chest = empty(tag + "chest", hip)
-    bpy.ops.mesh.primitive_cylinder_add(radius=0.030, depth=0.66, vertices=16)
+    bpy.ops.mesh.primitive_cylinder_add(radius=0.042, depth=0.66, vertices=20)
     tor = bpy.context.object
     tor.parent, tor.location = chest, (0, 0, 0.33)
     tor.data.materials.append(ink)
     F["neck"] = neck = empty(tag + "neck", chest, (0, 0, 0.66))
     F["head"] = head = empty(tag + "head", neck)
-    bpy.ops.mesh.primitive_torus_add(major_radius=0.2, minor_radius=0.03, major_segments=36, minor_segments=10)
-    ring = bpy.context.object
-    ring.rotation_euler = (math.pi / 2, 0, 0)
-    ring.parent, ring.location = head, (0, 0, 0.24)
-    ring.data.materials.append(ink)
-    for side, x in (("L", -0.115), ("R", 0.115)):
-        s = empty(tag + "sh" + side, chest, (x, 0, 0.6))
+    sphere(0.215, head, (0, 0, 0.215), ink, 32)        # 頭は中まで塗りつぶした球(首の位置に重ねて、すき間を無くす)
+    for side, y in (("L", 0.07), ("R", -0.07)):          # 付け根は胴の線の真上。左右は奥行きだけずらす
+        s = empty(tag + "sh" + side, chest, (0, y, 0.6))
         js, seg = chain(tag + "arm" + side, s, 0.66, ink)
         sphere(0.034, js[-1], (0, 0, -seg), ink, 12)
         F["arm" + side] = js
-    for side, x in (("L", -0.07), ("R", 0.07)):
-        h = empty(tag + "hp" + side, hip, (x, 0, 0))
+    for side, y in (("L", 0.05), ("R", -0.05)):
+        h = empty(tag + "hp" + side, hip, (0, y, 0))
         js, seg = chain(tag + "leg" + side, h, 0.90, ink)
         sphere(0.032, js[-1], (0.04, 0, -seg + 0.01), ink, 12, (1.7, 0.9, 0.6))
         F["leg" + side] = js
