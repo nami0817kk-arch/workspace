@@ -42,7 +42,7 @@ def write_specs(n: int, out: Path, seed: int = 100) -> List[Path]:
     return paths
 
 
-def build_series(n: int, out: Path, seed: int = 100, vertical: bool = False, reuse: bool = False) -> List[Path]:
+def build_series(n: int, out: Path, seed: int = 100, vertical: bool = False, reuse: bool = False, compile_all: bool = False) -> List[Path]:
     from . import episode, kit
     out = Path(out)
     done = []
@@ -56,4 +56,24 @@ def build_series(n: int, out: Path, seed: int = 100, vertical: bool = False, reu
         st = spec["story"]
         kit.make_kit(d, spec["title"], st["hero"], st["rival"], st["arc"])
         done.append(mp4)
+    if compile_all and done:
+        compile_series(done, out, vertical)
     return done
+
+
+def compile_series(mp4s: List[Path], out: Path, vertical: bool = False, title: str = "棒人間バトル") -> Path:
+    """何本かのエピソードを、冒頭の題名カードつきで 1 本につなぐ(長尺用。各エピソードは同じ設定の mp4 なので再エンコードして連結)。"""
+    import subprocess
+    from . import cli, episode
+    out = Path(out)
+    ff = cli.find_ffmpeg()
+    size = (720, 1280) if vertical else (1280, 720)
+    card = episode.card_segment(dict(text=title, sub=f"全{len(mp4s)}話", dur=2.4), out / "_card_all", ff, "calm", size=size)
+    lst = out / "concat_all.txt"
+    lines = [f"file '{Path(x).resolve().as_posix()}'" for x in [card] + list(mp4s)]
+    lst.write_text(chr(10).join(lines) + chr(10), encoding="utf-8")
+    final = out / ("all_vertical.mp4" if vertical else "all.mp4")
+    subprocess.run([ff, "-y", "-loglevel", "error", "-f", "concat", "-safe", "0", "-i", str(lst), "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "18",
+                    "-af", episode.LOUDNORM, "-c:a", "aac", "-b:a", "192k", "-ar", "44100", "-ac", "2", str(final)], check=True)
+    print(f"【まとめ】{final}({len(mp4s)} 話)")
+    return final

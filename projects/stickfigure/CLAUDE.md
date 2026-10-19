@@ -115,7 +115,8 @@ python scripts/make_gallery.py 09_01:2.4 135_07_s1:3.6   # clip を順に再生�
 - 舞台の色の組: 台本 `stage: {theme: cave|dojo|field|night|sunset}`(fight の `stage:`)。`blender_player.THEMES`
 - 縦画面(ショート): 台本 `output: {aspect: vertical}`(720x1280。2人の中間を切り出し、字幕は切り出し後)
 - `kit.py`: サムネイル(1280x720、字幕なしの見せ場のコマ+題名)と投稿の下書き(題名候補・概要欄・タグ。CMU 出典入り)。`python -m stickfig kit out/ep --title …`
-- `series.py`: 何本ものエピソードを、型・名前・色・seed を変えてまとめて作る(`python -m stickfig series --n 5 --out out/series --build`)
+- `series.py`: 何本ものエピソードを、型・名前・色・seed を変えてまとめて作る(`python -m stickfig series --n 5 --out out/series --build`)。`--compile` で全話を題名カードつきの 1 本(`all.mp4`、長尺用)にもする。作成済みなら `--compile-only`
+- 決め技(`fight` の `finisher`): `launch_slash`(決めの斬りで打ち上げ→空中斬り→叩きつけ)/`launch_kick`(決めは高い蹴り 75_16_s1 で胸を蹴り上げる)/`random`(seed で選ぶ。物語の型の決戦はこれ)/`none`
 - `review.py`: 書き出す前の自動点検(字幕の読む時間・筋・リズム。episode が自動で通す)。`preview.py`: Blender なしの線画の下書き(`episode --preview`)
 - `motion.py`: 動きの数字(`python -m stickfig motion scenes/x.yaml`): ひねり sd・足滑り・歩数・1コマの最大移動・攻防の内訳・接触の距離。「手だけ動いている」を数字で見つける
 - `rhythm.py`: 参考6本の範囲との比較。`check` が書き出す前に見積もり、`python -m stickfig rhythm 動画.mp4` が実測
