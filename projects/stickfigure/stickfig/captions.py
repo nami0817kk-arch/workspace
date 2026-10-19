@@ -97,6 +97,10 @@ def _shout(img: Image.Image, c: dict, age: int) -> None:
     size = int(c.get("size", 150) * (0.55 if W < 1000 else 1.0) * (0.7 + 0.3 * min(1.0, (age + 1) / 4) + (0.08 if age < 3 else 0)))
     font = anime._font(size)
     tw = d.textlength(c["text"], font=font)
+    while tw > W - 80 and size > 30:                   # 長い文は、画面に収まる大きさまで縮める
+        size = int(size * 0.92)
+        font = anime._font(size)
+        tw = d.textlength(c["text"], font=font)
     col = tuple(c.get("color", (255, 226, 60)))
     x, y = (W - tw) / 2, c.get("y", H * 0.36)
     d.text((x, y), c["text"], font=font, fill=col, stroke_width=max(6, size // 14), stroke_fill=(15, 12, 20))
