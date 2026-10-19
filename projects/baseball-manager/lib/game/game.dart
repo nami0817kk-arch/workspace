@@ -12,6 +12,7 @@ import 'goals.dart';
 import 'life_log.dart';
 import 'records.dart';
 import 'flavor.dart';
+import 'childhood.dart';
 import 'invest.dart';
 import 'rival_story.dart';
 import 'school.dart';
@@ -383,6 +384,9 @@ class Game {
   /// 今季ここまでの月ごとの成績(4〜9月)。シーズンの記録に写して空にする。
   List<String> monthRows = [];
   int trainCount = 0;
+
+  /// 幼少期の分かれ道で選んだもの(出来事のid → 選択肢の番号)。
+  final Map<String, int> childhood = {};
   int restCount = 0;
 
   /// 同じ能力を重点に練習・特訓を続けた回数(継続は力なり)。
@@ -513,12 +517,17 @@ class Game {
       _playLeagueMonth();
     }
 
-    final e = drawEvent(rng,
-        share: share,
-        stage: stage,
-        cast: cast,
-        exclude: _lastEventId,
-        recent: _recentEvents.toSet());
+    // 幼少期の分かれ道は、その歳の2回目の行動のあとに必ず出る(くじでは出ない)。
+    final kid = stage == Stage.youth && slot >= 1
+        ? childhoodStepFor(player.age, childhood)?.event
+        : null;
+    final e = kid ??
+        drawEvent(rng,
+            share: share,
+            stage: stage,
+            cast: cast,
+            exclude: _lastEventId,
+            recent: _recentEvents.toSet());
     if (e == null) {
       _nextSlot();
     } else {
@@ -534,6 +543,10 @@ class Game {
   void resolveEvent(int index) {
     _require(Phase.event);
     final ch = pendingEvent!.choices[index];
+    if (childhoodStepById(pendingEvent!.id) != null) {
+      childhood[pendingEvent!.id] = index;
+      _note('childhood', childhoodStepById(pendingEvent!.id)!.notes[index]);
+    }
     final before = player.traits;
     final r = ch.risky != null
         ? ch.risky!(player, condition, _eventFocus, rng)
@@ -1280,6 +1293,7 @@ class Game {
         'lastCoachTurn': lastCoachTurn,
         'monthRows': monthRows,
         'trainCount': trainCount,
+        'childhood': childhood,
         'restCount': restCount,
         'lastFocus': lastFocus?.name,
         'goal': goal?.toJson(),
@@ -1316,11 +1330,16 @@ class Game {
       for (final t in (j['monthRows'] as List?) ?? const []) t as String
     ];
     g.trainCount = (j['trainCount'] as num?)?.toInt() ?? 0;
+    for (final e in ((j['childhood'] as Map?) ?? const {}).entries) {
+      g.childhood[e.key as String] = (e.value as num).toInt();
+    }
     g.restCount = (j['restCount'] as num?)?.toInt() ?? 0;
     g.lastFocus = Ability.parse((j['lastFocus'] as String?) ?? '');
     g.exp = ExpPool.fromJson((j['exp'] as Map?)?.cast<String, dynamic>() ?? {});
     g.phase = pick(Phase.values, j['phase'], Phase.term);
-    g.pendingEvent = events.where((e) => e.id == j['pendingEvent']).firstOrNull;
+    g.pendingEvent =
+        events.where((e) => e.id == j['pendingEvent']).firstOrNull ??
+            childhoodStepById(j['pendingEvent'] as String?)?.event;
     if (g.phase == Phase.event && g.pendingEvent == null) g.phase = Phase.term;
     g._eventFocus = pick(Ability.values, j['eventFocus'], Ability.contact);
     g.route = Course.values.where((r) => r.name == j['route']).firstOrNull;

@@ -285,6 +285,7 @@ class _ProfileTab extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           _Traits(snapshot: s),
+          _Upbringing(snapshot: s),
           const SizedBox(height: 8),
           Card(
             child: Padding(
@@ -428,6 +429,39 @@ class _Traits extends StatelessWidget {
   }
 }
 
+/// 幼少期の分かれ道で選んだこと(「育ち」)。選んでいなければ何も出さない。
+class _Upbringing extends StatelessWidget {
+  const _Upbringing({required this.snapshot});
+  final PlayerSnapshot snapshot;
+
+  @override
+  Widget build(BuildContext context) {
+    final notes = [
+      for (final e in snapshot.events)
+        if (e.kind == 'childhood') e,
+    ];
+    if (notes.isEmpty) return const SizedBox.shrink();
+    return Padding(
+        padding: const EdgeInsets.only(top: 8),
+        child: Card(
+          key: const Key('upbringing'),
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text('育ち(幼少期)', style: Theme.of(context).textTheme.titleSmall),
+              const SizedBox(height: 4),
+              for (final e in notes)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 2),
+                  child: Text('${e.age}歳: ${e.text}'),
+                ),
+            ]),
+          ),
+        ));
+  }
+}
+
 class _Condition extends StatelessWidget {
   const _Condition({required this.game});
   final Game game;
@@ -471,6 +505,7 @@ class _CareerTabState extends State<_CareerTab> {
         'route' => (Icons.alt_route, const Color(0xFF5E35B1)),
         'draft' => (Icons.star, const Color(0xFFFB8C00)),
         'trait' => (Icons.auto_awesome, const Color(0xFF7E57C2)),
+        'childhood' => (Icons.child_care, const Color(0xFFFB8C00)),
         'role' => (Icons.swap_horiz, const Color(0xFF00897B)),
         'champion' => (Icons.emoji_events, const Color(0xFFF9A825)),
         'world' => (Icons.public, const Color(0xFFD32F2F)),

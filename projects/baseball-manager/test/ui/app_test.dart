@@ -669,6 +669,22 @@ void _rankTests() {
     expect(find.byKey(const Key('route-university')), findsOneWidget);
   });
 
+  testWidgets('幼少期の分かれ道: 見出しが出て、選ぶと選手情報の「育ち」に載る', (t) async {
+    final c = await _start(t);
+    final g = _until((g) => g.pendingEvent?.id == 'kid-first-play', seed: 4);
+    c.adopt(g);
+    await t.pumpAndSettle();
+    await _dismissMilestones(t);
+    expect(find.text('幼少期の分かれ道'), findsOneWidget);
+    await t.tap(find.byKey(const Key('event-1')));
+    await t.pumpAndSettle();
+    expect(c.game!.childhood['kid-first-play'], 1);
+    await t.tap(find.byKey(const Key('player-open')));
+    await t.pumpAndSettle();
+    expect(find.byKey(const Key('upbringing')), findsOneWidget);
+    expect(find.textContaining('6歳: 走り回るのが好きな子だった'), findsOneWidget);
+  });
+
   testWidgets('選手情報: アイコンでもバナーでも開け、プロフィール・成績・経歴の3つを見られる', (t) async {
     final c = await _start(t);
     c.newGame('ひなた', Role.pitcher);

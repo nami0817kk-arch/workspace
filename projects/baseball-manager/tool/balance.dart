@@ -7,6 +7,7 @@
 // 「平凡」は練習と休養だけ、「上手い」は特訓・コーチ・交流・弱い能力の底上げを使う。
 // 実際の遊び方は両者の間〜上のはず。数字を変えたら、ここで分布を確かめる。
 // ignore_for_file: avoid_print
+import 'dart:io';
 import 'dart:math';
 
 import 'package:baseball_manager/game/career.dart';
@@ -116,7 +117,10 @@ Result play(int seed, Policy policy, Role role, Difficulty difficulty,
           if (g.phase == Phase.term) policy(g);
         }
       case Phase.event:
-        g.resolveEvent(0);
+        // BAL_EVENT=random で、出来事の選択肢をでたらめに選ぶ(既定は先頭)。
+        g.resolveEvent(Platform.environment['BAL_EVENT'] == 'random'
+            ? Random(seed * 31 + steps).nextInt(g.pendingEvent!.choices.length)
+            : 0);
       case Phase.pathChoice:
         g.chooseRoute(Course.university);
       case Phase.retired:

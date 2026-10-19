@@ -1457,7 +1457,9 @@ class _EventCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('出来事', style: Theme.of(context).textTheme.labelMedium),
+            Text(e.id.startsWith('kid-') ? '幼少期の分かれ道' : '出来事',
+                key: const Key('event-kind'),
+                style: Theme.of(context).textTheme.labelMedium),
             const SizedBox(height: 4),
             Text(e.text, style: Theme.of(context).textTheme.titleMedium),
             Text(
