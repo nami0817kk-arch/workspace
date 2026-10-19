@@ -204,7 +204,7 @@ def build_fight(spec: dict) -> dict:
             dict(t=1.0, follow="A", scale=[[1.0, 5.2], [1.85, 4.2]], yaw=[[1.0, -28.0], [1.85, -14.0]], pitch=5.0, lens=32.0, target_z=1.0, lag=0.3),
             dict(t=1.85, follow="mid", scale=[[1.85, 3.2], [2.1, 3.6]], yaw=[[1.85, 38.0], [2.1, 46.0]], pitch=-9.0, lens=28.0, target_z=1.15, dutch=-4.0),
             dict(t=2.1, follow="B", scale=4.6, yaw=[[2.1, 62.0], [2.9, 50.0]], pitch=3.0, lens=40.0, target_z=1.2, lag=0.35),           # 吹き飛ぶ B に寄る(6.0 だと人物が 1/4)
-            dict(t=2.9, follow="mid", scale=[[2.9, 6.8], [3.6, 7.6]], yaw=[[2.9, 15.0], [3.6, 25.0]], pitch=[[2.9, 30.0], [3.6, 22.0]], lens=40.0, target_z=0.7),
+            dict(t=2.9, follow="mid", scale=[[2.9, 5.4], [3.6, 6.0]], yaw=[[2.9, 15.0], [3.6, 25.0]], pitch=[[2.9, 30.0], [3.6, 22.0]], lens=40.0, target_z=0.7),   # 倒れた相手と A の引きの画。6.8 だと人物が 1/5
             dict(t=3.6, follow="A", scale=[[3.6, 5.6], [4.4, 4.4]], yaw=[[3.6, -38.0], [4.4, -20.0]], pitch=4.0, lens=30.0, target_z=1.0, lag=0.3)]
         clipsA.append(dict(file="09_01", start=3.2, end=3.52, loop=True, anchor_dx=3.4, **RUN_LOOK, **{"in": 0.15, "out": 0.2}))   # 0.32 秒 ≒ 1.2 単位(dx 3.4 → 4.6)。長いと B を追い越して戻る
         keysA.append(dict(t=3.55, dx=4.6, hz=0.9))
