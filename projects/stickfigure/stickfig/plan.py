@@ -480,6 +480,16 @@ def _body_drive(p: dict, who: str, f: int, events: List[dict], cfg: dict, sign: 
                 amp = (1.4 if pk else 1.0) * k
                 dspin += -0.75 * amp * u * u; dlean += -0.30 * amp * u; dhz += -0.12 * amp * math.sin(math.pi * min(1.0, d / 6.0)) * u
                 ddx += -0.34 * amp * (1 - u * u) * 0 + (-0.30 * amp) * (1 - (1 - min(1.0, d / 5.0)) ** 2) * (0.35 + 0.65 * u); dht += -0.35 * amp * u
+    hit_frames = [e["frame"] for e in events if e["kind"] in kinds and e.get("by")]
+    if hit_frames and min(hit_frames) - 36 <= f <= max(hit_frames) + 14:       # 戦いの間は、2人とも体が弾む(足でリズムを取る・構えが揺れる)。命中の前後は強く、間は軽く
+        near = min(abs(f - h) for h in hit_frames)
+        g = 0.5 + 0.5 * max(0.0, 1 - near / 18.0)
+        ph = f * 0.62 + (0.0 if who == "A" else 1.9)
+        dhz += 0.022 * k * g * math.sin(ph)
+        dlean += 0.025 * k * g * math.sin(ph + 0.8)
+        ddx += 0.035 * k * g * math.sin(ph * 0.5)
+        dfl += 0.10 * k * g * math.sin(ph)
+        drl += -0.10 * k * g * math.sin(ph)
     p["spin"] = p.get("spin", 0.0) + dspin * sign
     p["lean"] = p.get("lean", 0.0) + dlean
     p["hz"] = p.get("hz", 0.9) + dhz
