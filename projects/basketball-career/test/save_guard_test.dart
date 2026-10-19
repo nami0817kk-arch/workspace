@@ -41,6 +41,7 @@ String fingerprint(Game g) => jsonEncode({
       'slot': g.slot,
       'tw': g.teamwork,
       'coach': g.coachBond,
+      'met': g.rivalMet,
       'school': g.schoolLabel,
       'ach': g.recentAchievements,
       'reason': g.retiredReason,
@@ -112,5 +113,19 @@ void main() {
     final g = Game.fromJson(j, rng: Random(1));
     expect(g.player.of(Ability.pass), 50);
     expect(g.track, Track.school);
+  });
+
+  test('古いセーブ: ライバルとの対戦があれば「出会い済み」、無ければ未出会い', () {
+    final met = Game.fromJson({
+      'player': {'name': 'a'},
+      'rival': {'name': 'x', 'potential': 60, 'wins': 1, 'losses': 2},
+    });
+    expect(met.rivalMet, isTrue);
+    final fresh = Game.fromJson({
+      'player': {'name': 'a'},
+      'rival': {'name': 'x', 'potential': 60},
+    });
+    expect(fresh.rivalMet, isFalse);
+    expect(Game.fromJson({'player': {'name': 'a'}}).rivalMet, isFalse);
   });
 }

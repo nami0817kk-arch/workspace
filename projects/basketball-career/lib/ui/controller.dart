@@ -358,6 +358,13 @@ class GameController extends ChangeNotifier {
           '${g.player.age}歳。新しい仲間とコーチが待っている。'));
     }
     // 節目の演出。
+    if (g.lastMetRival) {
+      final rv = g.rival;
+      pending.add(Milestone(
+          MilestoneKind.rival,
+          'ライバル登場!',
+          '同い年の${rv.name}と、はじめて戦った。\nこの先も、大会の準決勝あたりで立ちはだかる。'));
+    }
     if (t != null && t.champion) {
       pending.add(Milestone(
           MilestoneKind.champion,

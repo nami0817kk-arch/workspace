@@ -4,6 +4,7 @@ import 'package:basketball_career/game/game.dart';
 import 'package:basketball_career/game/life.dart';
 import 'package:basketball_career/game/path.dart';
 import 'package:basketball_career/game/player.dart';
+import 'package:basketball_career/game/rival.dart';
 import 'package:basketball_career/ui/app.dart';
 import 'package:basketball_career/ui/controller.dart';
 import 'package:basketball_career/ui/milestone_dialog.dart';
@@ -219,6 +220,49 @@ void main() {
     expect(copied, contains('ユウの物語'));
     expect(copied, contains('#バスケ育成'));
     expect(find.textContaining('結果をコピーした'), findsOneWidget);
+  });
+
+  test('ライバルとはじめて戦うと出会いの節目が1度だけ出る', () {
+    final c = GameController(store: _NullStore(), rng: Random(2), events: false);
+    c.game = Game(
+      eventsEnabled: false,
+      player: Player(
+        name: 'ケイ', age: 13, potential: 80, heightCm: 170, heightGenes: 0.5,
+        abilities: {for (final a in Ability.values) a: 70}),
+      rng: Random(2),
+      slot: 1,
+      rival: Rival(name: '黒瀬ユウマ', potential: 70),
+    );
+    // 準決勝(2戦目)まで勝ち上がれるまで、乱数を変えて探す。
+    var met = false;
+    for (var seed = 0; seed < 60 && !met; seed++) {
+      final t = GameController(store: _NullStore(), rng: Random(seed), events: false);
+      t.game = Game(
+        eventsEnabled: false,
+        player: Player(
+          name: 'ケイ', age: 13, potential: 80, heightCm: 170, heightGenes: 0.5,
+          abilities: {for (final a in Ability.values) a: 90}),
+        rng: Random(seed),
+        slot: 1,
+        rival: Rival(name: '黒瀬ユウマ', potential: 70),
+      );
+      t.act(Action.rest, ask: false);
+      if (t.game!.rivalMet) {
+        met = true;
+        expect(t.pending.where((m) => m.kind == MilestoneKind.rival).length, 1);
+        expect(t.pending.firstWhere((m) => m.kind == MilestoneKind.rival).body,
+            contains('黒瀬ユウマ'));
+        // 次の年の対戦では、もう出ない。
+        t.pending.clear();
+        for (var i = 0; i < 4; i++) {
+          t.act(Action.rest, ask: false);
+        }
+        t.act(Action.rest, ask: false);
+        expect(t.pending.where((m) => m.kind == MilestoneKind.rival), isEmpty);
+      }
+    }
+    expect(met, isTrue);
+    expect(c.pending, isEmpty);
   });
 
   test('能力のランクが上がると知らせる', () {
