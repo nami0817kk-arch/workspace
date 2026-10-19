@@ -81,11 +81,23 @@ void main() {
     expect(g.childhood['kid-idol'], 0);
     expect(g.player.traits.map((t) => t.name), contains('fireballer'));
     final kid = g.lifeLog.where((e) => e.kind == 'childhood').toList();
-    expect(kid.length, 7);
-    expect(kid.map((e) => e.age).toList(), [6, 7, 8, 9, 10, 11, 12]);
+    expect(kid.length, 9);
+    expect(kid.map((e) => e.age).toList(), [6, 7, 8, 9, 9, 10, 11, 12, 12]);
     // 打者の憧れは打者向けの特性になる
     final b = _kidYears(3, (id, n) => id == 'kid-idol' ? 0 : 1);
     expect(b.player.traits.map((t) => t.name), contains('slugger'));
+  });
+
+  test('分かれ道は全部で20以上あり、どれも選択肢が3つ前後で記録の文がそろっている', () {
+    expect(childhoodSteps.length, greaterThanOrEqualTo(20));
+    final ids = childhoodSteps.map((s) => s.id).toSet();
+    expect(ids.length, childhoodSteps.length);
+    for (final s in childhoodSteps) {
+      expect(s.event.choices.length, inInclusiveRange(2, 4), reason: s.id);
+      expect(s.notes.length, s.event.choices.length, reason: s.id);
+      expect(s.extras.isEmpty || s.extras.length == s.notes.length, isTrue,
+          reason: s.id);
+    }
   });
 
   test('出来事の最中に保存しても読み直せて、選んだ記録も残る', () {

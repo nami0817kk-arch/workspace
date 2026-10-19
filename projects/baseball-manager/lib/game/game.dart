@@ -519,8 +519,8 @@ class Game {
     }
 
     // 幼少期の分かれ道は、その歳の2回目の行動のあとに必ず出る(くじでは出ない)。
-    final kid = stage != Stage.pro && stage != Stage.retired && slot >= 1
-        ? childhoodStepFor(player.age, childhood)?.event
+    final kid = stage != Stage.pro && stage != Stage.retired
+        ? childhoodStepFor(player.age, childhood, slot)?.event
         : null;
     final e = kid ??
         drawEvent(rng,

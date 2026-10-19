@@ -12,10 +12,14 @@ import 'traits.dart';
 /// `events`(ふだんの出来事)とは別の一覧で、くじでは出ない。
 class ChildhoodStep {
   const ChildhoodStep(this.age, this.event, this.notes,
-      [this.extras = const []]);
+      [this.extras = const [], this.minSlot = 1]);
 
-  /// この年(歳)の、年の途中(2回目の行動のあと)に出る。
+  /// この年(歳)の、年の途中に出る。
   final int age;
+
+  /// この年の何回目の行動のあとから出るか(0始まりの番号)。同じ歳に2つある分かれ道の
+  /// 2つ目は、1つ目より後ろに置く。
+  final int minSlot;
   final GameEvent event;
 
   /// 選択肢ごとの、あとで見返す短い記録(「育ち」に出す)。選択肢と同じ順。
@@ -160,7 +164,7 @@ final List<ChildhoodStep> childhoodSteps = [
   ChildhoodStep(
     13,
     GameEvent('turn-jh-club', 'いよいよ中学生。野球は、どこでやる?', [
-      _c('強豪の硬式クラブに入る', (p) => _byRole(p, Ability.contact, Ability.stuff, 2),
+      _c('強豪の硬式クラブに入る', (p) => _byRole(p, Ability.contact, Ability.stuff, 1),
           fatigue: 10, morale: -3),
       _c('学校の野球部で、仲間と楽しむ', (p) => p, morale: 12, onCast: (cast, rng) {
         for (final m in cast.teammates) {
@@ -175,7 +179,7 @@ final List<ChildhoodStep> childhoodSteps = [
   ChildhoodStep(
     14,
     GameEvent('turn-jh-body', '体が大きく変わる時期。まず何を大切にする?', [
-      _c('食事とトレーニングを徹底する', (p) => _byRole(p, Ability.power, Ability.stamina, 2),
+      _c('食事とトレーニングを徹底する', (p) => _byRole(p, Ability.power, Ability.stamina, 1),
           fatigue: 8),
       _c('しっかり寝て、体を休める', (p) => _trait(p, Trait.quickRecovery), fatigue: -10),
       _c('ストレッチで、体のケアを覚える', (p) => _trait(p, Trait.sturdy)),
@@ -186,7 +190,7 @@ final List<ChildhoodStep> childhoodSteps = [
     15,
     GameEvent('turn-jh-exam', '中学最後の年。受験と野球、どうする?', [
       _c('野球は減らさず、受験に挑む',
-          (p) => _byRole(p, Ability.contact, Ability.control, 2),
+          (p) => _byRole(p, Ability.contact, Ability.control, 1),
           morale: -8, fatigue: 5),
       _c('勉強に集中して、野球は短く', (p) => p, morale: 5, fatigue: -5),
       _c('先輩やコーチに、進路を相談する', (p) => p, morale: 5, onCast: (cast, rng) {
@@ -201,7 +205,7 @@ final List<ChildhoodStep> childhoodSteps = [
     16,
     GameEvent('turn-hs-first', '高校の野球部に入部した。最初の目標は?', [
       _c('1年からレギュラーを狙って、猛アピール',
-          (p) => _byRole(p, Ability.fielding, Ability.stamina, 2),
+          (p) => _byRole(p, Ability.fielding, Ability.stamina, 1),
           fatigue: 10, morale: -3),
       _c('1年生の雑用もこなして、チームに溶け込む', (p) => p, morale: 3, onCast: (cast, rng) {
         for (final m in cast.teammates) {
@@ -216,7 +220,7 @@ final List<ChildhoodStep> childhoodSteps = [
   ChildhoodStep(
     17,
     GameEvent('turn-hs-rival', '同じ学年に、気になる選手が現れた。どう向き合う?', [
-      _c('真っ向勝負で、負けないと決める', (p) => _byRole(p, Ability.power, Ability.stuff, 2),
+      _c('真っ向勝負で、負けないと決める', (p) => _byRole(p, Ability.power, Ability.stuff, 1),
           morale: -5),
       _c('互いに高め合う仲間として、話しかける', (p) => p, morale: 8, onCast: (cast, rng) {
         cast.rival?.addBond(15);
@@ -241,9 +245,9 @@ final List<ChildhoodStep> childhoodSteps = [
   ChildhoodStep(
     19,
     GameEvent('turn-route-new', '新しい環境での生活が始まった。何を大切にする?', [
-      _c('1年目から主力を狙う', (p) => _byRole(p, Ability.contact, Ability.control, 2),
+      _c('1年目から主力を狙う', (p) => _byRole(p, Ability.contact, Ability.control, 1),
           fatigue: 8, morale: -3),
-      _c('寮生活で、体づくりに専念する', (p) => _byRole(p, Ability.power, Ability.stamina, 2),
+      _c('寮生活で、体づくりに専念する', (p) => _byRole(p, Ability.power, Ability.stamina, 1),
           fatigue: 5),
       _c('勉強や仕事も、きちんとこなす', (p) => _trait(p, Trait.studious), morale: 5),
     ]),
@@ -252,7 +256,7 @@ final List<ChildhoodStep> childhoodSteps = [
   ChildhoodStep(
     20,
     GameEvent('turn-route-slump', '思うように結果が出ない時期が来た。どうする?', [
-      _c('原因を分析して、フォームを見直す', (p) => _byRole(p, Ability.eye, Ability.control, 2),
+      _c('原因を分析して、フォームを見直す', (p) => _byRole(p, Ability.eye, Ability.control, 1),
           morale: -3),
       _c('仲間と話して、気分を変える', (p) => p, morale: 12),
       _c('量をこなして、乗り越える', (p) => _trait(p, Trait.hardWorker), fatigue: 12),
@@ -270,6 +274,106 @@ final List<ChildhoodStep> childhoodSteps = [
     ]),
     const ['ドラフトの年、結果に集中した', 'ドラフトの年、スカウトに力を入れた', 'ドラフトの年、いつも通りで勝負した'],
     const [_none, _none, _none],
+  ),
+
+  // ── 同じ歳に2つめの分かれ道(後ろの回に出る) ──
+  ChildhoodStep(
+    9,
+    GameEvent('kid-stadium', '家族が、球場に試合を見に連れて行ってくれた。何をする?', [
+      _c('グラウンドの動きを、食い入るように見る',
+          (p) => _byRole(p, Ability.eye, Ability.control, 1),
+          morale: 3),
+      _c('大声で応援して、思いきり楽しむ', (p) => p, morale: 15),
+      _c('帰り道に、家族とたくさん話す', (p) => p,
+          morale: 5, onCast: (cast, rng) => cast.family?.addBond(12)),
+    ]),
+    const ['球場で試合を食い入るように見た', '球場で思いきり応援した', '球場の帰り道、家族と野球の話をした'],
+    const [],
+    2,
+  ),
+  ChildhoodStep(
+    12,
+    GameEvent('kid-friend', 'いちばんの親友と、ケンカをしてしまった。どうする?', [
+      _c('自分から謝って、仲直りする', (p) => _trait(p, Trait.sunny), morale: 3,
+          onCast: (cast, rng) {
+        for (final m in cast.teammates) {
+          m.addBond(6);
+        }
+      }),
+      _c('お互い頭が冷えるまで、野球に打ち込む',
+          (p) => _byRole(p, Ability.power, Ability.stuff, 1),
+          morale: -5, fatigue: 5),
+      _c('コーチに間に入ってもらう', (p) => p, morale: 5, onCast: (cast, rng) {
+        cast.coach?.tips += 1;
+      }),
+    ]),
+    const ['親友とケンカして、自分から謝った', '親友とケンカして、野球に打ち込んだ', '親友とのケンカを、コーチに助けてもらった'],
+    const [],
+    2,
+  ),
+  ChildhoodStep(
+    14,
+    GameEvent('turn-jh-friend', '同級生に「野球より、遊びに行こうよ」と誘われた。', [
+      _c('断って、練習に行く', (p) => _byRole(p, Ability.contact, Ability.control, 1),
+          morale: -5, fatigue: 5),
+      _c('たまには一緒に遊んで、気分転換', (p) => p, morale: 15, fatigue: -8),
+      _c('友だちを、野球に誘ってみる', (p) => p, morale: 5, onCast: (cast, rng) {
+        for (final m in cast.teammates) {
+          m.addBond(8);
+        }
+      }),
+    ]),
+    const ['遊びの誘いを断って練習に行った', '友だちと遊んで気分転換した', '友だちを野球に誘った'],
+    const [],
+    2,
+  ),
+  ChildhoodStep(
+    17,
+    GameEvent('turn-hs-love', '気になる人ができた。野球との向き合い方は?', [
+      _c('野球が一番。気持ちは胸にしまう',
+          (p) => _byRole(p, Ability.speed, Ability.stamina, 1),
+          morale: -5),
+      _c('試合を見に来てもらえるよう、誘ってみる', (p) => p,
+          morale: 12, onCast: (cast, rng) => cast.lover?.addBond(15)),
+      _c('友だちに相談して、背中を押してもらう', (p) => p, morale: 8, onCast: (cast, rng) {
+        cast.lover?.addBond(8);
+        for (final m in cast.teammates) {
+          m.addBond(5);
+        }
+      }),
+    ]),
+    const ['気になる人への想いを胸にしまい、野球に打ち込んだ', '気になる人を試合に誘った', '友だちに背中を押してもらった'],
+    const [],
+    5,
+  ),
+  ChildhoodStep(
+    18,
+    GameEvent('turn-hs-future', '卒業後の進路を、本気で考えるときが来た。', [
+      _c('プロ一本。覚悟を決めて練習に打ち込む',
+          (p) => _byRole(p, Ability.contact, Ability.stuff, 1),
+          fatigue: 8, morale: 3),
+      _c('大学や社会人でじっくり力をつける道も考える', (p) => p, morale: 5, onCast: (cast, rng) {
+        cast.coach?.tips += 1;
+      }),
+      _c('家族に、正直な気持ちを話す', (p) => p,
+          morale: 8, onCast: (cast, rng) => cast.family?.addBond(15)),
+    ]),
+    const ['卒業後はプロ一本と覚悟を決めた', '大学や社会人の道も考えた', '家族に進路の気持ちを話した'],
+    const [],
+    7,
+  ),
+  ChildhoodStep(
+    20,
+    GameEvent('turn-route-money', '野球だけでなく、お金のことも考える年になった。', [
+      _c('アルバイトで、生活を支える', (p) => _trait(p, Trait.hardWorker), fatigue: 10),
+      _c('仕送りや支援に感謝して、野球に専念する',
+          (p) => _byRole(p, Ability.power, Ability.stamina, 1),
+          morale: 3, onCast: (cast, rng) => cast.family?.addBond(10)),
+      _c('スポンサーや後援会に、あいさつに回る', (p) => p, morale: 5, fatigue: 5),
+    ]),
+    const ['アルバイトで生活を支えた', '支援に感謝して野球に専念した', '後援会にあいさつに回った'],
+    const [],
+    2,
   ),
 ];
 
@@ -294,9 +398,11 @@ int spiritBoost(Map<String, int> picked) {
 }
 
 /// その歳に出す分かれ道(まだ選んでいなければ)。
-ChildhoodStep? childhoodStepFor(int age, Map<String, int> picked) {
+ChildhoodStep? childhoodStepFor(int age, Map<String, int> picked, int slot) {
   for (final s in childhoodSteps) {
-    if (s.age == age && !picked.containsKey(s.id)) return s;
+    if (s.age == age && slot >= s.minSlot && !picked.containsKey(s.id)) {
+      return s;
+    }
   }
   return null;
 }

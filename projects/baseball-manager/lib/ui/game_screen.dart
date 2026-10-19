@@ -573,9 +573,11 @@ class _StatusCard extends StatelessWidget {
                 child: Row(children: [
                   const Icon(Icons.healing, color: Color(0xFFD32F2F), size: 18),
                   const SizedBox(width: 4),
-                  Text('怪我で安静中(あと${c.injuredTerms}回で復帰)',
-                      key: const Key('injury-left'),
-                      style: const TextStyle(color: Color(0xFFD32F2F))),
+                  Expanded(
+                    child: Text('怪我で安静中(あと${c.injuredTerms}回で復帰)',
+                        key: const Key('injury-left'),
+                        style: const TextStyle(color: Color(0xFFD32F2F))),
+                  ),
                 ]),
               )
             else if (c.fatigue >= 70)
@@ -584,9 +586,11 @@ class _StatusCard extends StatelessWidget {
                 child: Row(children: [
                   Icon(Icons.battery_alert, color: Color(0xFFEF6C00), size: 18),
                   SizedBox(width: 4),
-                  Text('疲れがたまっています。休養がおすすめ',
-                      key: Key('tired-note'),
-                      style: TextStyle(color: Color(0xFFEF6C00))),
+                  Expanded(
+                    child: Text('疲れがたまっています。休養がおすすめ',
+                        key: Key('tired-note'),
+                        style: TextStyle(color: Color(0xFFEF6C00))),
+                  ),
                 ]),
               ),
             if (spendable)
