@@ -45,6 +45,8 @@ String fingerprint(Game g) => jsonEncode({
       'coach': g.coachBond,
       'met': g.rivalMet,
       'number': g.number,
+      'caps': g.caps,
+      'nat': g.nationalPending,
       'stats': [g.totalSteals, g.totalBlocks, g.totalThrees, g.careerHigh?.points],
       'skills': [for (final k in g.player.skills) k.name]..sort(),
       'mate': g.mate,

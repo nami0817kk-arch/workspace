@@ -171,6 +171,8 @@ class Game {
     this.teamwork = 40,
     this.coachBond = 20,
     this.rivalMet = false,
+    this.nationalPending = false,
+    this.caps = 0,
     this.number = 0,
     this.mate = '',
     this.coachLabel = '',
@@ -304,6 +306,12 @@ class Game {
   /// チームメイトの名前とコーチの名前(段階が変わると替わる。出来事の文に入る)。
   String mate;
   String coachLabel;
+
+  /// 日本代表に参加することにした(次の冬に世界大会に出る)。
+  bool nationalPending;
+
+  /// 日本代表として出た世界大会の回数。
+  int caps;
 
   /// 背番号(0〜99)。ユニフォームに付き、活躍すると永久欠番になる。
   int number;
@@ -488,14 +496,16 @@ class Game {
       coachBond = (coachBond + 1).clamp(0, 100);
     }
 
-    final winter = slot == 3 && hasWinterCup;
+    final national = slot == 3 && nationalPending && track == Track.pro;
+    final winter = slot == 3 && (hasWinterCup || national);
     TournamentResult? t;
     var satOut = false;
     if (slot == 1 || winter) {
       if (condition.injured) {
         satOut = true;
+        if (national) nationalPending = false; // 怪我で代表を辞退
       } else {
-        final cr = TournamentRun(league,
+        final cr = TournamentRun(national ? League.national : league,
             teamBonus: teamBonus + schoolBonus,
             askHalftime: askHalftime && chooseClutch == null);
         cr.advance(
@@ -504,7 +514,7 @@ class Game {
           rng: rng,
           chooseClutch: chooseClutch,
           askClutch: askClutch && chooseClutch == null,
-          pickOpponent: _pickOpponent,
+          pickOpponent: _picker(cr.league),
         );
         if (cr.pending != null || cr.pendingHalf != null) {
           // ハーフタイムの作戦か勝負どころで止まる。選ぶまで季節は進まない(`resolveHalftime` / `resolveClutch`)。
@@ -528,7 +538,7 @@ class Game {
       throw StateError('今は勝負どころではない: $phase');
     }
     cr.resolve(player, choice,
-        form: formNow, rng: rng, pickOpponent: _pickOpponent);
+        form: formNow, rng: rng, pickOpponent: _picker(cr.league));
     return _afterRun(cr);
   }
 
@@ -539,7 +549,7 @@ class Game {
       throw StateError('今はハーフタイムではない: $phase');
     }
     cr.resolveHalftime(player, choice,
-        form: formNow, rng: rng, pickOpponent: _pickOpponent);
+        form: formNow, rng: rng, pickOpponent: _picker(cr.league));
     return _afterRun(cr);
   }
 
@@ -582,6 +592,24 @@ class Game {
       yearEnded = true;
     }
     if (yearEnded && !retired) _rollGoalOptions();
+    // プロでは、24・28・32歳(総合60以上)で日本代表に招集される(出来事が有効なときだけ)。
+    if (eventsEnabled &&
+        yearEnded &&
+        !retired &&
+        phase == Phase.season &&
+        track == Track.pro &&
+        !nationalPending &&
+        const {24, 28, 32}.contains(player.age) &&
+        player.overall >= 60) {
+      pendingEventId = 'national_call';
+      return TermReport(
+        action: action,
+        gotInjured: gotInjured,
+        tournament: t,
+        satOut: satOut,
+        yearEnded: yearEnded,
+      );
+    }
     // プロでは、23・27・31歳で移籍のオファーが届く(出来事が有効なときだけ)。
     if (eventsEnabled &&
         yearEnded &&
@@ -640,11 +668,19 @@ class Game {
   }
 
   /// 大会の対戦相手を決める。準決勝のあたりでライバルが現れ、あとは架空のチーム。
-  ({String name, bool rival, double bonus}) _pickOpponent(int round, bool isFinal) {
-    final l = league;
+  OpponentPicker _picker(League l) => (round, isFinal) => _pickOpponent(l, round);
+
+  ({String name, bool rival, double bonus}) _pickOpponent(League l, int round) {
     final rivalRound = max(1, l.rounds - 2);
     // 小さいうちは勝てないと面白くないので、ミニバスの相手は年齢が低いほど弱い。
     final ease = l == League.minibasket ? min(0, (player.age - 11) * 1.5) : 0.0;
+    if (l == League.national) {
+      // 世界大会の相手は各国代表。強さは回戦ごとに上がる(ライバルは出ない)。
+      return (
+          name: opponentTeamName(l, rng),
+          rival: false,
+          bonus: difficulty.opponent);
+    }
     if (round == rivalRound && rival.activeAt(player.age)) {
       return (
           name: rival.name,
@@ -658,6 +694,10 @@ class Game {
   }
 
   void _record(TournamentResult t, {bool winter = false}) {
+    if (t.league == League.national) {
+      nationalPending = false;
+      caps++;
+    }
     yearBestWins = max(yearBestWins, t.wins);
     yearBestPpg = max(yearBestPpg, t.ppg);
     for (final m in t.matches) {
@@ -769,6 +809,7 @@ class Game {
     _learnSkills();
     teamwork = (teamwork + opt.effect.teamwork).clamp(0, 100);
     coachBond = (coachBond + opt.effect.coach).clamp(0, 100);
+    if (opt.effect.national) nationalPending = true;
     if (opt.effect.school != null) {
       schoolBonus = opt.effect.school!;
       schoolLabel = opt.effect.schoolLabel ?? '';
@@ -795,6 +836,7 @@ class Game {
     }
     if (r.gotInjured) lines.add('${condition.injuryName}をした');
     if (opt.effect.achievement != 0) lines.add('評価が上がった');
+    if (opt.effect.national) lines.add('日本代表に参加する(次の冬に世界大会)');
     if (opt.effect.schoolLabel != null) {
       lines.add('進学先: ${opt.effect.schoolLabel}');
     }
@@ -989,6 +1031,8 @@ class Game {
         'teamwork': teamwork,
         'coachBond': coachBond,
         'rivalMet': rivalMet,
+        'nationalPending': nationalPending,
+        'caps': caps,
         'number': number,
         'mate': mate,
         'coachLabel': coachLabel,
@@ -1038,6 +1082,8 @@ class Game {
         teamwork: (j['teamwork'] as num?)?.toInt() ?? 40,
         coachBond: (j['coachBond'] as num?)?.toInt() ?? 20,
         number: (j['number'] as num?)?.toInt() ?? 0,
+        nationalPending: (j['nationalPending'] as bool?) ?? false,
+        caps: (j['caps'] as num?)?.toInt() ?? 0,
         mate: (j['mate'] as String?) ?? '',
         coachLabel: (j['coachLabel'] as String?) ?? '',
         rivalMet: (j['rivalMet'] as bool?) ?? (((j['rival'] as Map?)?['wins'] as num? ?? 0) + ((j['rival'] as Map?)?['losses'] as num? ?? 0) > 0),

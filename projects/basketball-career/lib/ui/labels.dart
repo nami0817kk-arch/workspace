@@ -62,6 +62,10 @@ String matchLine(int index, bool won, int team, int opp, int pts, int reb, int a
 
 String leagueLabel(League l) => l.label;
 
+/// 大会の名前(日本代表は世界大会、ほかは季節つき)。
+String tournamentName(League l, bool winter) =>
+    l == League.national ? '日本代表の世界大会' : '${l.label}の${winter ? '冬' : '夏'}の大会';
+
 /// 試合の流れを一言で。クォーターの得点から読み取る。無ければ null。
 String? matchStory(MatchResult m) {
   if (m.teamQuarters.length < 4 || m.oppQuarters.length < 4) return null;

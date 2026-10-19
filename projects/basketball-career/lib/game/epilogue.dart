@@ -13,9 +13,14 @@ String positionNickname(Position p) => switch (p) {
 
 bool _wentPro(Game g) => g.records.any((r) => r.league.name.startsWith('pro'));
 
+/// 日本代表で世界大会を制したか。
+bool worldChampion(Game g) =>
+    g.records.any((r) => r.league == League.national && r.champion);
+
 /// 一生につく称号。到達点で決まる。
 String careerTitle(Game g) {
   final nick = positionNickname(g.player.position);
+  if (worldChampion(g)) return '世界王者の$nick';
   if (g.abroad && g.titles > 0) return '世界を制した$nick';
   if (g.abroad) return '世界に挑んだ$nick';
   if (_wentPro(g) && g.titles >= 3) return '常勝の$nick';
@@ -60,6 +65,7 @@ double _leagueWeight(League l) => switch (l) {
       League.corporate => 24,
       League.proDomestic => 36,
       League.proAbroad => 48,
+      League.national => 44,
     };
 
 String _talent(int potential) {
@@ -98,6 +104,12 @@ List<String> epilogueLines(Game g) {
     } else {
       lines.add('宿敵${r.name}との対戦は${r.wins}勝${r.losses}敗。届かなかったが、あの存在が自分を強くした。');
     }
+  }
+
+  if (g.caps > 0) {
+    lines.add(worldChampion(g)
+        ? '日本代表として世界の頂点に立った。${g.caps}度の代表の舞台は、誇りだった。'
+        : '日本代表として${g.caps}度、世界の舞台に立った。');
   }
 
   if (retiredNumber(g)) {
