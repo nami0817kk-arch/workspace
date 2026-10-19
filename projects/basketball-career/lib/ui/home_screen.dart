@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../game/difficulty.dart';
 import '../game/legacy.dart';
+import 'art/title_art.dart';
 import 'controller.dart';
 import 'history_screen.dart';
 import 'howto_screen.dart';
@@ -48,7 +49,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -58,8 +58,8 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: const EdgeInsets.all(24),
               shrinkWrap: true,
               children: [
-                Icon(Icons.sports_basketball, size: 72, color: cs.primary),
-                const SizedBox(height: 12),
+                const TitleArt(),
+                const SizedBox(height: 16),
                 Text('バスケ育成',
                     textAlign: TextAlign.center,
                     style: Theme.of(context)
