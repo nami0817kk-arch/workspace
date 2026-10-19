@@ -538,7 +538,7 @@ def build_fight(spec: dict) -> dict:
                   dict(t=_r(t_win + 0.87), dx=_r(2.4 - (b_wall - 0.45)), rz=0.55, roll=1.2, hz=0.9, lean=0.0, fa=0.2, ra=0.2, face="pain"),
                   dict(t=_r(t_win + 1.07), dx=_r(2.4 - (b_wall - 0.5)), rz=0.21, roll=1.57, hz=0.9, fa=0.4, ra=0.4, fl=0.0, fk=0.0, rl=0.0, rk=0.0, face="ko")]
         charge += [dict(start=_r(t_c0), end=_r(t_fire), who="A", color=col_a), dict(start=_r(t_c0), end=_r(t_fire), who="B", color=col_b)]
-        meet = [[_r(t_fire), x_mid], [_r(t_fire + 0.5), x_mid - 0.5], [_r(t_fire + 0.9), x_mid - 0.3], [_r(t_win - 0.1), x_mid + 0.9], [_r(t_win), b_root - 0.3]]   # ぶつかる点: 初めは A が押され、踏ん張って押し返す
+        meet = [[_r(t_fire), x_mid + 0.2], [_r(t_fire + 0.5), x_mid - 0.2], [_r(t_fire + 0.9), x_mid - 0.05], [_r(t_win - 0.1), x_mid + 0.9], [_r(t_win), b_root - 0.3]]   # ぶつかる点: 初めは A が押され(0.4 だけ。0.5 以上だと A の光線が手元だけになる)、踏ん張って押し返す
         fx_beams += [dict(start=_r(t_fire), end=_r(t_win + 0.8), who="A", color=col_a, x_end=meet + [[_r(t_win + 0.02), b_wall + 1.2]]),
                      dict(start=_r(t_fire), end=_r(t_win), who="B", color=col_b, x_end=meet),
                      ]
