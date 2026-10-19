@@ -32,7 +32,7 @@ def revenge(hero: str, rival: str, hero_color=GREEN, rival_color=RED, **_) -> di
     items: List[dict] = [
         _card("雪辱戦", f"{hero} vs {rival}", 2.4),
         dict(scene=dict(name="s1_defeat", fight=dict(
-            weapon="sword", kick=False, hits=3, counter=False, finisher="none", palette="cool", mood="tense",
+            weapon="sword", kick=False, hits=3, counter=False, finisher="none", palette="cool", mood="tense", stage="night",
             colors=dict(A=rival_color, B=hero_color),
             lines=[dict(at="opening", dur=1.8, kind="narr", text=f"最強を名乗る剣士{hero}は、宿敵{rival}に挑んだ。"),
                    dict(at="rise", dt=-0.3, dur=1.2, kind="say", who="A", text="その程度か？"),
@@ -41,7 +41,7 @@ def revenge(hero: str, rival: str, hero_color=GREEN, rival_color=RED, **_) -> di
                    ]))),
         _card("一か月後", "", 1.6, "time"),
         dict(scene=dict(name="s2_training", fight=dict(
-            weapon="sword", kick=False, hits=4, counter=False, finisher="none", palette="cool", mood="calm",
+            weapon="sword", kick=False, hits=4, counter=False, finisher="none", palette="cool", mood="calm", stage="dojo",
             colors=dict(A=hero_color, B=GRAY),
             lines=[dict(at="opening", dur=1.8, kind="narr", text="来る日も、来る日も、ただ剣を振った。"),
                    dict(at="combo", dt=0.0, dur=1.0, kind="say", who="A", text="もっと…速く！"),
@@ -49,7 +49,7 @@ def revenge(hero: str, rival: str, hero_color=GREEN, rival_color=RED, **_) -> di
                    ]))),
         _card("決戦の日", "", 1.6, "time"),
         dict(scene=dict(name="s3_rematch", fight=dict(
-            weapon="sword", kick=True, hits=3, counter=True, finisher="launch_slash", palette="warm", mood="battle",
+            weapon="sword", kick=True, hits=3, counter=True, finisher="launch_slash", palette="warm", mood="battle", stage="sunset",
             colors=dict(A=hero_color, B=rival_color),
             lines=[dict(at="opening", dur=1.6, kind="narr", text=f"再び、{rival}の前に立った。"),
                    dict(at="opening", dt=1.0, dur=1.2, kind="say", who="B", text="また来たのか。"),
@@ -64,14 +64,14 @@ def revenge(hero: str, rival: str, hero_color=GREEN, rival_color=RED, **_) -> di
 
 
 def tournament(hero: str, rival: str, hero_color=GREEN, rival_color=RED, **_) -> dict:
-    rounds = [("第1回戦", BLUE, dict(weapon="none", kick=False, hits=2, counter=False, finisher="none", palette="cool", mood="battle"),
+    rounds = [("第1回戦", BLUE, dict(weapon="none", kick=False, hits=2, counter=False, finisher="none", palette="cool", mood="battle", stage="field"),
                [dict(at="opening", dur=1.6, kind="narr", text=f"勝ち上がりの大会。{hero}の最初の相手は、素手の格闘家。"),
                 dict(at="last", dur=1.0, kind="say", who="A", text="まずは一勝！")]),
-              ("準決勝", PURPLE, dict(weapon="sword", kick=True, hits=2, counter=True, finisher="none", palette="warm", mood="battle"),
+              ("準決勝", PURPLE, dict(weapon="sword", kick=True, hits=2, counter=True, finisher="none", palette="warm", mood="battle", stage="dojo"),
                [dict(at="opening", dur=1.6, kind="narr", text="相手は、剣の使い手。簡単には勝たせてくれない。"),
                 dict(at="counter", dt=0.15, dur=1.0, kind="say", who="B", text="やるな！"),
                 dict(at="last", dur=1.0, kind="say", who="A", text="まだまだ！")]),
-              ("決勝", rival_color, dict(weapon="sword", kick=True, hits=3, counter=True, finisher="launch_slash", palette="warm", mood="battle"),
+              ("決勝", rival_color, dict(weapon="sword", kick=True, hits=3, counter=True, finisher="launch_slash", palette="warm", mood="battle", stage="sunset"),
                [dict(at="opening", dur=1.8, kind="narr", text=f"決勝の相手は、無敗の王者{rival}。"),
                 dict(at="finisher", dt=-0.25, dur=1.1, kind="shout", text="これが、俺の全力だ！"),
                 dict(at="ko", dt=0.5, dur=1.8, kind="narr", text=f"{hero}が、優勝を決めた。")])]
@@ -86,7 +86,7 @@ def tournament(hero: str, rival: str, hero_color=GREEN, rival_color=RED, **_) ->
 def duel(hero: str, rival: str, hero_color=GREEN, rival_color=RED, **_) -> dict:
     items = [_card("一騎打ち", f"{hero} vs {rival}", 2.0),
              dict(scene=dict(name="duel", fight=dict(
-                 weapon="sword", kick=True, hits=3, counter=True, finisher="launch_slash", palette="warm", mood="battle",
+                 weapon="sword", kick=True, hits=3, counter=True, finisher="launch_slash", palette="warm", mood="battle", stage="night",
                  colors=dict(A=hero_color, B=rival_color),
                  lines=[dict(at="opening", dur=1.8, kind="narr", text=f"因縁の決着。{hero}は、{rival}の前に立った。"),
                         dict(at="kick", dt=-0.5, dur=1.0, kind="say", who="A", text="ここで終わらせる！"),

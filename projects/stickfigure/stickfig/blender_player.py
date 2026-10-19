@@ -22,7 +22,7 @@ bpy.ops.wm.read_factory_settings(use_empty=True)
 sc = bpy.context.scene
 sc.render.resolution_x, sc.render.resolution_y = VIEW["width"], VIEW["height"]
 sc.render.fps = PLAN["fps"]
-sc.frame_start, sc.frame_end = 1, PLAN["n"]
+sc.frame_start, sc.frame_end = 1, int(__import__("os").environ.get("STICKFIG_FRAMES", PLAN["n"]))   # STICKFIG_FRAMES: 見た目の確認用に先頭だけ書き出す
 sc.render.engine = "BLENDER_WORKBENCH"
 sc.render.filepath = OUT
 sc.render.image_settings.file_format = "PNG"
@@ -154,33 +154,49 @@ def box(name, x0, x1, y0, y1, z0, z1, color):
     return o
 
 
+# 舞台の色の組(theme)。台本の stage: {theme: dojo} で選ぶ。cave が既定
+THEMES = {
+    "cave": dict(floor=(0.34, 0.31, 0.27), joint=(0.24, 0.22, 0.18), joint2=(0.26, 0.24, 0.20), back=(0.17, 0.17, 0.20), ledge=(0.13, 0.13, 0.16),
+                 pillar=(0.28, 0.21, 0.14), crate=(0.22, 0.20, 0.17), wall=(0.27, 0.26, 0.25), wall_line=(0.18, 0.17, 0.16), world=(0.10, 0.10, 0.12)),
+    "dojo": dict(floor=(0.55, 0.38, 0.22), joint=(0.42, 0.28, 0.15), joint2=(0.46, 0.31, 0.17), back=(0.82, 0.76, 0.62), ledge=(0.55, 0.42, 0.28),
+                 pillar=(0.33, 0.18, 0.09), crate=(0.45, 0.30, 0.18), wall=(0.80, 0.72, 0.58), wall_line=(0.55, 0.42, 0.28), world=(0.30, 0.25, 0.2)),
+    "field": dict(floor=(0.36, 0.52, 0.26), joint=(0.31, 0.46, 0.22), joint2=(0.33, 0.49, 0.24), back=(0.55, 0.76, 0.95), ledge=(0.6, 0.8, 0.97),
+                  pillar=(0.28, 0.2, 0.12), crate=(0.5, 0.5, 0.52), wall=(0.5, 0.5, 0.52), wall_line=(0.38, 0.38, 0.4), world=(0.55, 0.75, 0.95)),
+    "night": dict(floor=(0.13, 0.14, 0.22), joint=(0.09, 0.10, 0.17), joint2=(0.10, 0.11, 0.18), back=(0.05, 0.05, 0.12), ledge=(0.16, 0.16, 0.32),
+                  pillar=(0.22, 0.22, 0.34), crate=(0.16, 0.16, 0.24), wall=(0.2, 0.2, 0.3), wall_line=(0.12, 0.12, 0.2), world=(0.03, 0.03, 0.08)),
+    "sunset": dict(floor=(0.50, 0.34, 0.30), joint=(0.40, 0.26, 0.24), joint2=(0.42, 0.28, 0.25), back=(0.96, 0.55, 0.34), ledge=(0.85, 0.42, 0.28),
+                   pillar=(0.38, 0.30, 0.30), crate=(0.4, 0.3, 0.28), wall=(0.42, 0.34, 0.34), wall_line=(0.3, 0.24, 0.24), world=(0.9, 0.5, 0.3)),
+}
+TH = THEMES.get(PLAN.get("stage", {}).get("theme", "cave"), THEMES["cave"])
+
+
 def build_stage():
-    """床・奥の壁・柱・壁(あれば)を、立体で置く。遠近カメラで見ると、奥行きが出る。"""
+    """床・奥の壁・柱・壁(あれば)を、立体で置く。遠近カメラで見ると、奥行きが出る。色は THEMES。"""
     wall_x = PLAN.get("stage", {}).get("wall_x")
-    box("floor", -60, 60, -10, 16, -0.3, 0.0, (0.34, 0.31, 0.27))
+    box("floor", -60, 60, -10, 16, -0.3, 0.0, TH["floor"])
     for i in range(-40, 60):                           # 床の目地(奥へ伸びる線)
-        box("fl", i - 0.015, i + 0.015, -10, 16, 0.0, 0.004, (0.24, 0.22, 0.18))
+        box("fl", i - 0.015, i + 0.015, -10, 16, 0.0, 0.004, TH["joint"])
     for j in range(-10, 16, 2):                        # 手前から奥への横の目地
-        box("fy", -60, 60, j - 0.015, j + 0.015, 0.0, 0.004, (0.26, 0.24, 0.20))
-    box("back", -60, 60, 9, 9.4, 0.0, 14, (0.17, 0.17, 0.20))          # 奥の壁
+        box("fy", -60, 60, j - 0.015, j + 0.015, 0.0, 0.004, TH["joint2"])
+    box("back", -60, 60, 9, 9.4, 0.0, 14, TH["back"])          # 奥の壁
     for k in range(1, 12):
-        box("ledge", -60, 60, 8.9, 9.0, k * 1.2, k * 1.2 + 0.05, (0.13, 0.13, 0.16))
+        box("ledge", -60, 60, 8.9, 9.0, k * 1.2, k * 1.2 + 0.05, TH["ledge"])
     for n, x in enumerate(range(-16, 40, 3)):          # 柱(奥行きが違う)
         y = 3.5 + (n % 4) * 1.4
-        box("pillar", x, x + 0.22, y, y + 0.22, 0.0, 3.0, (0.28, 0.21, 0.14))
+        box("pillar", x, x + 0.22, y, y + 0.22, 0.0, 3.0, TH["pillar"])
     for n, x in enumerate(range(-14, 40, 4)):          # 手前の低い箱(奥行きの手がかり)
-        box("crate", x, x + 0.7, -3.2 - (n % 3) * 0.5, -2.5 - (n % 3) * 0.5, 0.0, 0.5, (0.22, 0.2, 0.17))
+        box("crate", x, x + 0.7, -3.2 - (n % 3) * 0.5, -2.5 - (n % 3) * 0.5, 0.0, 0.5, TH["crate"])
     if wall_x is not None:
-        box("wall", wall_x, wall_x + 2.5, -5, 9, 0.0, 6.5, (0.27, 0.26, 0.25))
+        box("wall", wall_x, wall_x + 2.5, -5, 9, 0.0, 6.5, TH["wall"])
         for k in range(1, 12):
-            box("wl", wall_x - 0.02, wall_x + 0.02, -5, 9, k * 0.55, k * 0.55 + 0.03, (0.18, 0.17, 0.16))
+            box("wl", wall_x - 0.02, wall_x + 0.02, -5, 9, k * 0.55, k * 0.55 + 0.03, TH["wall_line"])
 
 
 RIG = {}
 if MODE == "stage":
     build_stage()
     world = bpy.data.worlds.new("w")
-    world.color = (0.10, 0.10, 0.12)
+    world.color = TH["world"]
     sc.world = world
 for who, a in (PLAN["actors"].items() if MODE == "figs" else []):
     s = 1 if a.get("facing", 1) >= 0 else -1

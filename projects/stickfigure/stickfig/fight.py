@@ -28,6 +28,7 @@ DEFAULTS = dict(
     palette="warm",          # warm / cool
     colors=dict(A=[0.3, 0.68, 0.1], B=[0.8, 0.1, 0.08]),
     tempo=1.35,
+    stage="cave",            # 舞台の色の組: cave / dojo / field / night / sunset
     mood="battle",           # BGM の雰囲気: battle / tense / calm / sad / none
     lines=[],                # 台詞・ナレーション: [{at: opening|kick|rise|combo|counter|last|finisher|ko|end, dt: 0, dur: 1.6, kind: say|narr|shout, who: A, text: "…"}]
 )
@@ -212,7 +213,7 @@ def build_fight(spec: dict) -> dict:
         caps.append(c)
     scene = dict(
         name=spec.get("name", "fight") if isinstance(spec, dict) else "fight", fps=30, tau_end=end, actors=actors,
-        stage=dict(wall_x=6.0, style="cave"), slow=slow, hits=hits, puffs=puffs,
+        stage=dict(wall_x=6.0, style="cave", theme=s["stage"]), slow=slow, hits=hits, puffs=puffs,
         camera=[[0.0, -0.4, 8.4], [_r(end), 3.2, 8.6]],
         keys=dict(A=sorted(keysA, key=lambda k: k["t"]), B=sorted(keysB, key=lambda k: k["t"])),
         fx=dict(trails=[], speed_lines=speed, invert=["kick", "heel", "wall"], flashes=sorted(set(flashes)), charge=charge, color_script=color_script),
