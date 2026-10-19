@@ -735,10 +735,10 @@ class Game {
             ? (team: raw.team + school.teamAdjust, opponents: raw.opponents)
             : raw;
     if (overseas && st == Stage.pro) {
-      // 海外は相手が強く(+8)、自分のチームも少し弱い(-3)。
+      // 海外は相手が強く(+3)。
       return (
-        team: b.team - 3,
-        opponents: [for (final o in b.opponents) o + 8]
+        team: b.team,
+        opponents: [for (final o in b.opponents) o + 3]
       );
     }
     return b;
