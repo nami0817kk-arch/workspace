@@ -49,7 +49,7 @@ def _head_px(plan: dict, f: int, who: str, xf=None) -> Tuple[float, float, float
     return x, y, r
 
 
-def _say(img: Image.Image, plan: dict, f: int, c: dict, age: int, xf=None) -> None:
+def _say(img: Image.Image, plan: dict, f: int, c: dict, age: int, xf=None, placed=None) -> None:
     W, H = img.size
     d = ImageDraw.Draw(img)
     size = int(c.get("size", 34) * (1.3 if W < 1000 else 1.0))
@@ -67,6 +67,14 @@ def _say(img: Image.Image, plan: dict, f: int, c: dict, age: int, xf=None) -> No
         top = 12
     x0, x1 = cx - bw / 2 * k, cx + bw / 2 * k
     y0, y1 = top, top + bh * k
+    for _ in range(4):                                 # 先に置いた吹き出しと重なるときは、少しずつ上へずらす(上端を越えるなら、下へ)
+        hit = next((r for r in (placed or []) if x0 < r[2] and x1 > r[0] and y0 < r[3] and y1 > r[1]), None)
+        if hit is None:
+            break
+        dy = (hit[1] - 10) - y1 if hit[1] - 10 - (y1 - y0) > 8 else (hit[3] + 10) - y0
+        y0, y1 = y0 + dy, y1 + dy
+    if placed is not None:
+        placed.append((x0, y0, x1, y1))
     d.rounded_rectangle([x0, y0, x1, y1], radius=26, fill=(255, 255, 255), outline=(15, 15, 20), width=4)
     tx = min(max(hx, x0 + 30), x1 - 30)
     d.polygon([(tx - 16, y1 - 2), (tx + 16, y1 - 2), (hx, min(hy - hr - 6, y1 + 46))], fill=(255, 255, 255), outline=(15, 15, 20))
@@ -112,6 +120,7 @@ def draw(frame: Image.Image, plan: dict, f: int, xf=None) -> Image.Image:
         return frame
     tau = plan["frames"][f]["tau"]
     img = frame.copy()
+    placed = []
     for c in caps:
         if not (c["t0"] <= tau < c["t1"]):
             continue
@@ -120,7 +129,7 @@ def draw(frame: Image.Image, plan: dict, f: int, xf=None) -> Image.Image:
             age += 1
         k = c.get("kind", "say")
         if k == "say":
-            _say(img, plan, f, c, age, xf)
+            _say(img, plan, f, c, age, xf, placed)
         elif k == "narr":
             _narr(img, c)
         elif k == "shout":
