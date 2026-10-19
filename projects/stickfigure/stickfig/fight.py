@@ -285,7 +285,7 @@ def build_fight(spec: dict) -> dict:
         if last and fin_kick:
             hits.append(dict(tau=_r(t), hold=0.08, kind="kick", by="A", contact=dict(striker="A", effector="foot", target=dict(actor="B", point="chest"), tol=round(0.32 + 0.6 * max(0.0, float(s["b_scale"]) - 1.0), 2), max_anticipation=50, hz_range=0.5)))
         elif last:
-            hits.append(dict(tau=_r(t), hold=0.08, kind=kind_hit, by="A", contact=dict(striker="A", effector=eff, target=dict(actor="B", point=pt), tol=round(0.3 + 0.6 * max(0.0, float(s["b_scale"]) - 1.0), 2), max_anticipation=50, hz_range=dict(sword=0.4, dagger=0.4, staff=0.6, spear=0.9).get(s["weapon"], 0.4))))
+            hits.append(dict(tau=_r(t), hold=0.08, kind=kind_hit, by="A", contact=dict(striker="A", effector=eff, target=dict(actor="B", point=pt), tol=round(0.3 + 0.6 * max(0.0, float(s["b_scale"]) - 1.0), 2), max_anticipation=50, hz_range=dict(sword=0.4, dagger=0.4, staff=0.6, spear=0.9).get(s["weapon"], 0.4), surface=0.0 if sword else 0.16)))
         elif defend.get(i) == "clash":                   # 受け止め(鍔迫り合い): 命中の種類 clash、相手は腕を上げて受け、少しだけ押される。位置は接触で決める(腕で受けるので許容は広め)
             hits.append(dict(tau=_r(t), hold=0.07, kind="clash", by="A", contact=dict(striker="A", effector=eff, target=dict(actor="B", point=pt), tol=0.6, max_anticipation=50, hz_range=0.45)))
         elif defend.get(i) == "miss":                    # かわす: 空振り。位置は接触で決める(狙いは頭の少し先の上=くぐられる。plan._body_drive は pos の高さで くぐる/跳ぶ を決める)
@@ -295,7 +295,7 @@ def build_fight(spec: dict) -> dict:
             if kick_i == i:                              # 連打の中の蹴り(足→相手の腰。接触を解く)
                 hits.append(dict(tau=_r(t), hold=0.06, kind="kick", by="A", contact=dict(striker="A", effector="foot", target=dict(actor="B", point="hip"), tol=0.42, max_anticipation=50)))
             else:                                        # 途中の斬り: 位置は接触で決める(以前は pos 固定で、相手との間合いが 1.5〜1.8 あり、clip の継ぎ目で飛んでいた)
-                hits.append(dict(tau=_r(t), hold=0.05, kind=kind_hit, by="A", lunge=True, contact=dict(striker="A", effector=eff, target=dict(actor="B", point=pt), tol=0.45, max_anticipation=50, hz_range=0.45 if sword else 0.25)))
+                hits.append(dict(tau=_r(t), hold=0.05, kind=kind_hit, by="A", lunge=True, contact=dict(striker="A", effector=eff, target=dict(actor="B", point=pt), tol=0.45, max_anticipation=50, hz_range=0.45 if sword else 0.25, surface=0.0 if sword else 0.16)))
         if last:                                          # 閃光は決めの1発だけ(途中の連打・受け止めでは出さない。参考は 2 秒に 1 回)
             flashes.append(_r(t))
         if defend.get(i) == "clash":
@@ -341,7 +341,7 @@ def build_fight(spec: dict) -> dict:
             if defend.get(i + 1) != "clash":                                  # 次が受け止めなら、その間合いのまま(戻らない)
                 keysB.append(dict(t=_r(tcn + 0.32), dx=_r(dxB), **GUARD))
             clipsB.append(dict(file=cclip, dx_scale=0.3, strike_at=_r(tcn), start=_r(tcn - 0.2), end=_r(tcn + 0.27), **{"in": 0.06, "out": 0.1}))
-            hits.append(dict(tau=_r(tcn), hold=0.05, kind="hit", by="B", contact=dict(striker="B", effector="hand", target=dict(actor="A", point=_pt(cclip, "hand")), tol=0.42, max_anticipation=50, hz_range=0.5)))
+            hits.append(dict(tau=_r(tcn), hold=0.05, kind="hit", by="B", contact=dict(striker="B", effector="hand", target=dict(actor="A", point=_pt(cclip, "hand")), tol=0.42, max_anticipation=50, hz_range=0.5, surface=0.16)))
             keysA += [dict(t=_r(tcn + 0.07), lean=-0.2, hz=0.9), dict(t=_r(tcn + 0.27), lean=0.15, hz=0.9)]   # 位置(dx)は書かない: 押される分は body_drive、位置は clip の継ぎ目合わせに任せる
     hl = ts[-1]
     speed.append([_r(h0), _r(hl + 0.5)])

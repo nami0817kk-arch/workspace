@@ -254,7 +254,8 @@ def solve_contact(scene: dict, tracks: Dict[str, KeyTrack], hit: dict) -> dict:
     eff_key, param, (lo, hi) = EFFECTOR[c.get("effector", "foot")]
     sa = scene["actors"][striker]
     s = _sign(sa)
-    off = c.get("offset", [0.0, 0.0])      # 当て先の点から (x, z) ずらした所を狙う(体に少しめり込ませるなど)
+    off = list(c.get("offset", [0.0, 0.0]))      # 当て先の点から (x, z) ずらした所を狙う(体に少しめり込ませるなど)
+    off[0] -= _sign(scene["actors"][c["striker"]]) * float(c.get("surface", 0.0))   # surface: 体の中心でなく手前の表面を狙う(拳が胴に潜らず、腕が伸び切った間合いになる)
     adj = c.get("adjust_keys", [tau])
     bank = scene.get("_bank")
     clip = bank.active(striker, tau) if bank is not None else None
