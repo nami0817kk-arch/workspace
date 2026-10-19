@@ -1,0 +1,3 @@
+# 出だしの技の見本: 走り出す前に気弾を投げ、相手がくぐってかわし、壁で爆発。そのあと連打→決め技(光線)
+name: fight_open_blast
+fight: {weapon: none, kick: false, opening: blast, hits: 3, counter: true, finisher: beam, palette: cool, stage: night, mood: battle, seed: 21}

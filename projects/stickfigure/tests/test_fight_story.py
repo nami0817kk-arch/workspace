@@ -220,3 +220,12 @@ def test_beam_clash_builds():
     a_end = next(b for b in bms if b["who"] == "A")["x_end"]
     assert isinstance(a_end, list) and a_end[-1][1] > a_end[0][1]        # A の光線は最後に壁まで伸びる
     planmod.validate_scene(sc)
+
+
+def test_opening_blast_builds():
+    sc = fight.build_fight(dict(weapon="none", kick=False, opening="blast", hits=2, finisher="none"))
+    kinds = [h["kind"] for h in sc["hits"] if h["tau"] < 2.0]
+    assert "throw" in kinds and "miss" in kinds and "blast" in kinds
+    pj = sc["fx"]["projectiles"][0]
+    assert abs(pj["x1"] - sc["stage"]["wall_x"]) < 1e-6                 # 玉は壁で爆発
+    planmod.validate_scene(sc)
