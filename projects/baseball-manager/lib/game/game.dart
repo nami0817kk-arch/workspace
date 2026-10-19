@@ -422,7 +422,8 @@ class Game {
     final inWindow =
         route != null || (stage == Stage.highSchool && player.age >= 17);
     if (!inWindow) return null;
-    final margin = draftScore(player, recentAchievement) -
+    final margin = draftScore(player, recentAchievement) +
+        draftImpression(childhood) -
         (draftLine + difficulty.draftShift);
     if (margin >= 10) return 'ほぼ確実';
     if (margin >= 3) return '有望';
@@ -518,7 +519,7 @@ class Game {
     }
 
     // 幼少期の分かれ道は、その歳の2回目の行動のあとに必ず出る(くじでは出ない)。
-    final kid = stage == Stage.youth && slot >= 1
+    final kid = stage != Stage.pro && stage != Stage.retired && slot >= 1
         ? childhoodStepFor(player.age, childhood)?.event
         : null;
     final e = kid ??
@@ -745,7 +746,10 @@ class Game {
     final b = st == Stage.pro
         ? (team: raw.team + teamBoost, opponents: raw.opponents)
         : (st == Stage.juniorHigh || st == Stage.highSchool)
-            ? (team: raw.team + school.teamAdjust, opponents: raw.opponents)
+            ? (
+                team: raw.team + school.teamAdjust + spiritBoost(childhood),
+                opponents: raw.opponents
+              )
             : raw;
     if (overseas && st == Stage.pro) {
       // 海外は相手が強く(+3)。
@@ -1191,6 +1195,7 @@ class Game {
   void _draft() {
     final luck = (rng.nextDouble() * 2 - 1) * draftLuck;
     final margin = draftScore(player, recentAchievement) +
+        draftImpression(childhood) +
         luck -
         (draftLine + difficulty.draftShift);
     if (margin >= 0) {

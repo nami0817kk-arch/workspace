@@ -1442,6 +1442,13 @@ class _AutoRevealState extends State<_AutoReveal> {
   Widget build(BuildContext context) => widget.child;
 }
 
+/// 出来事カードの見出し。段階ごとの分かれ道は「中学の分かれ道」のように出す。
+String _eventKind(String id, Stage stage) {
+  if (id.startsWith('kid-')) return '幼少期の分かれ道';
+  if (id.startsWith('turn-')) return '${stageLabel(stage)}の分かれ道';
+  return '出来事';
+}
+
 class _EventCard extends StatelessWidget {
   const _EventCard({required this.controller, required this.game});
   final GameController controller;
@@ -1457,7 +1464,7 @@ class _EventCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(e.id.startsWith('kid-') ? '幼少期の分かれ道' : '出来事',
+            Text(_eventKind(e.id, game.stage),
                 key: const Key('event-kind'),
                 style: Theme.of(context).textTheme.labelMedium),
             const SizedBox(height: 4),
