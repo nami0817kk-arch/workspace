@@ -408,6 +408,27 @@ class Game {
     return r.reduce((a, b) => a + b) / r.length;
   }
 
+  /// ドラフトの見込み(運は含めない目安)。指名の前の年・再挑戦の間だけ。
+  String? get draftOutlook {
+    if (turnedPro || phase != Phase.term) return null;
+    final inWindow =
+        route != null || (stage == Stage.highSchool && player.age >= 17);
+    if (!inWindow) return null;
+    final margin = draftScore(player, recentAchievement) -
+        (draftLine + difficulty.draftShift);
+    if (margin >= 10) return 'ほぼ確実';
+    if (margin >= 3) return '有望';
+    if (margin >= -3) return '五分五分';
+    if (margin >= -10) return '厳しい';
+    return 'かなり厳しい';
+  }
+
+  /// プロで、総合が低い年が続いているときの、戦力外までの残り年数。なければ null。
+  int? get releaseWarning {
+    if (!turnedPro || lowYears <= 0 || phase == Phase.retired) return null;
+    return releaseYears - lowYears;
+  }
+
   // ── ターンの選択 ──
 
   /// 今のターンの表示名。月単位なら「7月」、季節なら「夏」。

@@ -121,7 +121,7 @@ void main() {
     await t.pumpAndSettle();
     expect(find.byKey(const Key('recent')), findsNothing);
     await _tab(t, 'ability');
-    expect(find.text('G'), findsNWidgets(5)); // 15は全部Gランク
+    expect(find.text('G'), findsNWidgets(6)); // 15は全部Gランク(5能力+総合)
     await _tab(t, 'train');
     await t.tap(find.byKey(const Key('act-train')));
     await t.pumpAndSettle();
@@ -1595,6 +1595,40 @@ void _rankTests() {
       await t.tap(find.byKey(const Key('about-open')));
       await t.pumpAndSettle();
       expect(find.text(appVersion), findsWidgets);
+    });
+  });
+
+  group('状況の知らせ(第3弾)', () {
+    testWidgets('高校の終わりごろはドラフトの見込み、疲れの警告、能力タブに総合評価', (t) async {
+      final c = await _start(t);
+      c.adopt(_until(
+          (g) =>
+              g.stage == Stage.highSchool &&
+              g.player.age == 17 &&
+              g.phase == Phase.term,
+          seed: 5,
+          potential: 90));
+      await t.pumpAndSettle();
+      expect(find.byKey(const Key('draft-outlook')), findsOneWidget);
+      expect(find.byKey(const Key('tired-note')), findsNothing);
+      c.game!.condition = c.game!.condition.copyWith(fatigue: 85);
+      c.notifyListeners();
+      await t.pumpAndSettle();
+      expect(find.byKey(const Key('tired-note')), findsOneWidget);
+      await _tab(t, 'ability');
+      expect(find.byKey(const Key('overall-header')), findsOneWidget);
+      expect(find.textContaining('総合評価'), findsWidgets);
+    });
+
+    testWidgets('怪我のあいだは復帰までの回数が出る。出来事には体力ややる気の目安が出る', (t) async {
+      final c = await _start(t);
+      c.newGame('テスト', Role.batter);
+      await t.pumpAndSettle();
+      c.game!.condition = c.game!.condition.copyWith(injuredTerms: 2);
+      c.notifyListeners();
+      await t.pumpAndSettle();
+      expect(find.byKey(const Key('injury-left')), findsOneWidget);
+      expect(find.textContaining('あと2回で復帰'), findsOneWidget);
     });
   });
 

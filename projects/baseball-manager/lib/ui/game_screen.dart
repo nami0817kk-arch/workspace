@@ -253,6 +253,7 @@ class _GameScreenState extends State<GameScreen> {
       ];
 
   List<Widget> _abilityTab() => [
+        _OverallHeader(game: game),
         _TraitChips(game: game),
         _AbilityCard(controller: controller, game: game),
       ];
@@ -505,12 +506,25 @@ class _StatusCard extends StatelessWidget {
               ),
             ]),
             if (c.injured)
+              Padding(
+                padding: const EdgeInsets.only(top: 4),
+                child: Row(children: [
+                  const Icon(Icons.healing, color: Color(0xFFD32F2F), size: 18),
+                  const SizedBox(width: 4),
+                  Text('怪我で安静中(あと${c.injuredTerms}回で復帰)',
+                      key: const Key('injury-left'),
+                      style: const TextStyle(color: Color(0xFFD32F2F))),
+                ]),
+              )
+            else if (c.fatigue >= 70)
               const Padding(
                 padding: EdgeInsets.only(top: 4),
                 child: Row(children: [
-                  Icon(Icons.healing, color: Color(0xFFD32F2F), size: 18),
+                  Icon(Icons.battery_alert, color: Color(0xFFEF6C00), size: 18),
                   SizedBox(width: 4),
-                  Text('怪我で安静中', style: TextStyle(color: Color(0xFFD32F2F))),
+                  Text('疲れがたまっています。休養がおすすめ',
+                      key: Key('tired-note'),
+                      style: TextStyle(color: Color(0xFFEF6C00))),
                 ]),
               ),
             if (spendable)
@@ -552,6 +566,41 @@ class _StatusCard extends StatelessWidget {
 }
 
 /// ポジションを決める(決められる時だけ出る)。適性はランクで見える。
+/// 能力タブの先頭: 総合評価・素質・今年の伸び。
+class _OverallHeader extends StatelessWidget {
+  const _OverallHeader({required this.game});
+  final Game game;
+
+  @override
+  Widget build(BuildContext context) {
+    final ov = overall(game.player).round();
+    final hist = game.overallHistory;
+    final delta = hist.isEmpty ? null : ov - hist.last;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Card(
+        key: const Key('overall-header'),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Row(children: [
+            RankBadge(value: ov),
+            const SizedBox(width: 8),
+            Text('総合評価 $ov', style: Theme.of(context).textTheme.titleMedium),
+            const Spacer(),
+            Flexible(
+              child: Text(
+                  '素質 ${potentialStars(game.player.potential)}'
+                  '${delta == null || delta == 0 ? '' : '  今年 ${delta > 0 ? '+' : ''}$delta'}',
+                  key: const Key('overall-delta'),
+                  textAlign: TextAlign.right),
+            ),
+          ]),
+        ),
+      ),
+    );
+  }
+}
+
 /// 特性のチップ(能力タブの上に出す)。
 class _TraitChips extends StatelessWidget {
   const _TraitChips({required this.game});
@@ -637,7 +686,12 @@ class _TodoChips extends StatelessWidget {
       if (game.canUseFa) 'FA権を使える',
       if (game.canMoveOverseas) '海外へ移籍できる',
     ];
-    if (items.isEmpty) return const SizedBox.shrink();
+    final outlook = game.draftOutlook;
+    final release = game.releaseWarning;
+    final late = game.stage == Stage.pro && game.player.age >= 40;
+    if (items.isEmpty && outlook == null && release == null && !late) {
+      return const SizedBox.shrink();
+    }
     return Padding(
       padding: const EdgeInsets.only(top: 6),
       child: Wrap(
@@ -650,6 +704,27 @@ class _TodoChips extends StatelessWidget {
                 visualDensity: VisualDensity.compact,
                 avatar: const Icon(Icons.flag, size: 16),
                 label: Text(i)),
+          if (outlook != null)
+            Chip(
+                key: const Key('draft-outlook'),
+                visualDensity: VisualDensity.compact,
+                avatar: const Icon(Icons.star_border, size: 16),
+                label: Text('ドラフトの見込み: $outlook')),
+          if (release != null)
+            Chip(
+                key: const Key('release-warning'),
+                visualDensity: VisualDensity.compact,
+                backgroundColor: const Color(0xFFFFCDD2),
+                avatar: const Icon(Icons.warning_amber_rounded,
+                    size: 16, color: Color(0xFFC62828)),
+                label: Text('総合が低い状態が続くと、あと$release年で戦力外',
+                    style: const TextStyle(color: Color(0xFF263238)))),
+          if (late)
+            const Chip(
+                key: Key('late-career'),
+                visualDensity: VisualDensity.compact,
+                avatar: Icon(Icons.hourglass_bottom, size: 16),
+                label: Text('現役の終わりが近い')),
         ],
       ),
     );
@@ -1284,6 +1359,10 @@ class _EventCard extends StatelessWidget {
             Text('出来事', style: Theme.of(context).textTheme.labelMedium),
             const SizedBox(height: 4),
             Text(e.text, style: Theme.of(context).textTheme.titleMedium),
+            Text(
+                'いまの体力 ${100 - game.condition.fatigue} ・ やる気 ${game.motivation.label}',
+                key: const Key('event-context'),
+                style: Theme.of(context).textTheme.bodySmall),
             const SizedBox(height: 8),
             for (var i = 0; i < e.choices.length; i++)
               Padding(
