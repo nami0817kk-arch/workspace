@@ -58,7 +58,7 @@ void main() {
         r[AtBatResult.triple]! +
         r[AtBatResult.homeRun]!;
     expect(hits / (n - walks), greaterThan(0.65)); // 打率6割5分以上
-    expect(r[AtBatResult.strikeout]! / n, lessThan(0.08));
+    expect((r[AtBatResult.strikeout] ?? 0) / n, lessThan(0.08));
   });
 
   test('同じくらいの力の対戦は、従来どおり(打率2割台〜3割)', () {
@@ -70,5 +70,30 @@ void main() {
         r[AtBatResult.triple]! +
         r[AtBatResult.homeRun]!;
     expect(hits / (n - walks), inInclusiveRange(0.22, 0.31));
+  });
+
+  test('99と10のように力が桁違いなら、強いほうが必ず勝つ', () {
+    // 打者99 vs 投手10: 凡退も三振もない(四球かヒット)
+    final bat = _run(const Pitcher(control: 10, stuff: 10),
+        const Batter(contact: 99, power: 99, eye: 99));
+    expect(bat[AtBatResult.out] ?? 0, 0);
+    expect(bat[AtBatResult.strikeout] ?? 0, 0);
+    // 投手99 vs 打者10: 四球もヒットもない(三振かアウト)
+    final pit = _run(const Pitcher(control: 99, stuff: 99),
+        const Batter(contact: 10, power: 10, eye: 10));
+    expect(pit[AtBatResult.walk] ?? 0, 0);
+    for (final r in [
+      AtBatResult.single,
+      AtBatResult.double,
+      AtBatResult.triple,
+      AtBatResult.homeRun
+    ]) {
+      expect(pit[r] ?? 0, 0, reason: r.name);
+    }
+    // 差が小さければ、結果は混ざる(必ず勝つわけではない)
+    final close = _run(const Pitcher(control: 60, stuff: 60),
+        const Batter(contact: 55, power: 55, eye: 55));
+    expect(close[AtBatResult.out]!, greaterThan(1000));
+    expect(close[AtBatResult.single]!, greaterThan(1000));
   });
 }

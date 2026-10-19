@@ -402,7 +402,7 @@ Tournament playTournament(
             (teamLevel - opp) / 100 +
             (g.rating - 50) / 200 +
             (condition + tournamentBonus(p.traits) - 50) / 500)
-        .clamp(0.05, 0.95);
+        .clamp(0.0, 1.0);
     final win = rng.nextDouble() < pWin;
     games.add(TournamentGame(opponent: opp, won: win, line: g));
     if (!win) break;
@@ -507,7 +507,7 @@ LeagueProgress playLeagueChunk(
     final g = prog.games + i;
     final opp = opponents[g % opponents.length];
     if (!available) {
-      final pWin = (0.5 + (teamLevel - opp) / 100).clamp(0.05, 0.95);
+      final pWin = (0.5 + (teamLevel - opp) / 100).clamp(0.0, 1.0);
       rng.nextDouble() < pWin ? wins++ : losses++;
       missed++;
       continue;
@@ -519,7 +519,7 @@ LeagueProgress playLeagueChunk(
             (teamLevel - opp) / 100 +
             (game.rating - 50) / 400 +
             (condition + tournamentBonus(p.traits) - 50) / 800)
-        .clamp(0.05, 0.95);
+        .clamp(0.0, 1.0);
     final won = rng.nextDouble() < pWin;
     won ? wins++ : losses++;
     line += (starts && game.outs >= 15)
@@ -561,7 +561,7 @@ LeagueSeason playLeagueSeason(
             (teamLevel - opp) / 100 +
             (game.rating - 50) / 400 +
             (condition + tournamentBonus(p.traits) - 50) / 800)
-        .clamp(0.05, 0.95);
+        .clamp(0.0, 1.0);
     final won = rng.nextDouble() < pWin;
     won ? wins++ : losses++;
     line += (starts && game.outs >= 15)

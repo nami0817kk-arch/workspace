@@ -226,4 +226,24 @@ void main() {
     expect(mean(90), lessThan(0.40));
     expect(mean(70), inInclusiveRange(0.26, 0.32)); // ふつうの一流は変わらない
   });
+
+  test('チームの力が桁違い(99と10)なら、トーナメントもシーズンも必ず勝つ', () {
+    final p = Player(
+        name: 't',
+        role: Role.batter,
+        age: 26,
+        potential: 50,
+        abilities: {for (final a in batterAbilities) a: 50});
+    for (var s = 0; s < 20; s++) {
+      final t = playTournament(p,
+          teamLevel: 99, opponents: const [10, 10, 10, 10], rng: Random(s));
+      expect(t.champion, isTrue, reason: 'seed=$s');
+      final lg = playLeagueSeason(p,
+          teamLevel: 99, opponents: const [10, 10, 10], rng: Random(s));
+      expect(lg.losses, 0, reason: 'seed=$s');
+      final lose = playLeagueSeason(p,
+          teamLevel: 10, opponents: const [99, 99, 99], rng: Random(s));
+      expect(lose.wins, 0, reason: 'seed=$s');
+    }
+  });
 }
