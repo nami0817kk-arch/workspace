@@ -73,7 +73,7 @@ def tournament(hero: str, rival: str, hero_color=GREEN, rival_color=RED, **_) ->
                [dict(at="opening", dur=1.6, kind="narr", text="相手は、剣の使い手。簡単には勝たせてくれない。"),
                 dict(at="counter", dt=0.15, dur=1.0, kind="say", who="B", text="やるな！"),
                 dict(at="last", dur=1.0, kind="say", who="A", text="まだまだ！")]),
-              ("決勝", rival_color, dict(weapon="sword", kick=True, hits=3, counter=True, finisher="launch_slash", palette="warm", mood="battle", stage="sunset"),
+              ("決勝", rival_color, dict(weapon="sword", kick=True, hits=3, counter=True, finisher="launch_slash", palette="warm", mood="battle", stage="sunset", b_scale=1.25),
                [dict(at="opening", dur=1.8, kind="narr", text=f"決勝の相手は、無敗の王者{rival}。"),
                 dict(at="finisher", dt=-0.25, dur=1.1, kind="shout", text="これが、俺の全力だ！"),
                 dict(at="ko", dt=0.5, dur=1.8, kind="narr", text=f"{hero}が、優勝を決めた。")])]
@@ -101,7 +101,7 @@ def protect(hero: str, rival: str, hero_color=GREEN, rival_color=RED, **_) -> di
     items: List[dict] = [
         _card("守る者", f"{hero}の戦い", 2.2),
         dict(scene=dict(name="p1_corner", fight=dict(
-            weapon="sword", kick=False, hits=2, counter=False, finisher="none", palette="cool", mood="tense", stage="sunset",
+            weapon="sword", kick=False, hits=2, counter=False, finisher="none", palette="cool", mood="tense", stage="sunset", a_scale=1.25,
             colors=dict(A=rival_color, B=hero_color),
             lines=[dict(at="opening", dur=1.8, kind="narr", text=f"村を襲う{rival}の前に、{hero}がひとり立ちはだかった。"),
                    dict(at="rise", dt=-0.3, dur=1.2, kind="say", who="A", text="どけ。邪魔をするな。"),
@@ -109,7 +109,7 @@ def protect(hero: str, rival: str, hero_color=GREEN, rival_color=RED, **_) -> di
                    ]))),
         _card("それでも", "", 1.5, "time"),
         dict(scene=dict(name="p2_stand", fight=dict(
-            weapon="sword", kick=True, hits=4, counter=False, finisher="launch_slash", palette="warm", mood="battle", stage="sunset",
+            weapon="sword", kick=True, hits=4, counter=False, finisher="launch_slash", palette="warm", mood="battle", stage="sunset", b_scale=1.25,
             colors=dict(A=hero_color, B=rival_color),
             lines=[dict(at="opening", dur=1.6, kind="narr", text="背中には、守るべき人たちがいる。"),
                    dict(at="kick", dt=-0.5, dur=1.1, kind="say", who="A", text="ここは、通さない！"),
@@ -133,7 +133,7 @@ def mentor(hero: str, rival: str, hero_color=GREEN, rival_color=RED, **_) -> dic
                    ]))),
         _card("旅立ちの日", "", 1.6, "time"),
         dict(scene=dict(name="m2_boss", fight=dict(
-            weapon="sword", kick=True, hits=3, counter=True, finisher="launch_slash", palette="warm", mood="battle", stage="field",
+            weapon="sword", kick=True, hits=3, counter=True, finisher="launch_slash", palette="warm", mood="battle", stage="field", b_scale=1.3,
             colors=dict(A=hero_color, B=rival_color),
             lines=[dict(at="opening", dur=1.6, kind="narr", text=f"旅の果て、{rival}との決戦。"),
                    dict(at="counter", dt=0.15, dur=1.0, kind="say", who="B", text="力で、ねじ伏せてやる！"),

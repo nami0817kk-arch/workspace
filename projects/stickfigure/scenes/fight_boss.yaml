@@ -1,0 +1,2 @@
+name: fight_boss
+fight: {weapon: sword, kick: false, hits: 3, counter: true, finisher: launch_slash, palette: warm, stage: field, b_scale: 1.3}

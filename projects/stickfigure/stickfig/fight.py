@@ -28,6 +28,8 @@ DEFAULTS = dict(
     palette="warm",          # warm / cool
     colors=dict(A=[0.3, 0.68, 0.1], B=[0.8, 0.1, 0.08]),
     tempo=1.35,
+    a_scale=1.0,             # こちら側(A)の大きさ。負け場面で相手(A)を大柄にするとき
+    b_scale=1.0,             # 相手の大きさ(1.3 で大柄のボス)。連打の位置は固定なので 1.15〜1.35 まで
     stage="cave",            # 舞台の色の組: cave / dojo / field / night / sunset
     mood="battle",           # BGM の雰囲気: battle / tense / calm / sad / none
     lines=[],                # 台詞・ナレーション: [{at: opening|kick|rise|combo|counter|last|finisher|ko|end, dt: 0, dur: 1.6, kind: say|narr|shout, who: A, text: "…"}]
@@ -139,7 +141,7 @@ def build_fight(spec: dict) -> dict:
             clip["anchor_dx"] = round(anchor, 2)
         clipsA.append(clip)
         if last:
-            hits.append(dict(tau=_r(t), hold=0.08, kind=kind_hit, contact=dict(striker="A", effector=eff, target=dict(actor="B", point="chest"), tol=0.3, max_anticipation=50)))
+            hits.append(dict(tau=_r(t), hold=0.08, kind=kind_hit, contact=dict(striker="A", effector=eff, target=dict(actor="B", point="chest"), tol=round(0.3 + 0.6 * max(0.0, float(s["b_scale"]) - 1.0), 2), max_anticipation=50)))
         else:
             hits.append(dict(tau=_r(t), hold=0.05, kind=kind_hit, pos=[_r(3.7 - 0.2 * i), _r(1.25 - 0.1 * i)]))
         flashes.append(_r(t))
@@ -198,7 +200,7 @@ def build_fight(spec: dict) -> dict:
     color_script = [[_r(t), [c[0], c[1], c[2]], c[3]] for t, c in zip(marks, pal)]
     stepping = dict(hold=2, ones_around_hits=4, hold_camera=True,
                     ranges=[[0.0, 1.1, 2], [_r(tc - 0.9), _r(tc), 2], [_r(h0 + 0.5), _r(h0 + 1.1), 2], [_r(ko_t + 0.3), _r(end), 2]])
-    actors = dict(A=dict(color=s["colors"]["A"], scale=1.0, base_x=-2.0, facing=1), B=dict(color=s["colors"]["B"], scale=1.0, base_x=2.4, facing=-1))
+    actors = dict(A=dict(color=s["colors"]["A"], scale=float(s["a_scale"]), base_x=-2.0, facing=1), B=dict(color=s["colors"]["B"], scale=float(s["b_scale"]), base_x=2.4, facing=-1))
     if sword:
         actors["A"]["weapon"] = "sword"
     marks = dict(opening=0.3, kick=1.9, rise=tc, combo=h0, last=hl, finisher=hl + 0.55, ko=ko_t, end=end - 1.2)
