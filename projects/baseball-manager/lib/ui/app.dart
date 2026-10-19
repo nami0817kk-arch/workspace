@@ -45,7 +45,14 @@ class _BaseballManagerAppState extends State<BaseballManagerApp> {
           builder: (context, snap) {
             if (snap.connectionState != ConnectionState.done) {
               return const Scaffold(
-                  body: Center(child: CircularProgressIndicator()));
+                  body: Center(
+                      child: Column(mainAxisSize: MainAxisSize.min, children: [
+                Text('野球育成',
+                    style:
+                        TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
+                SizedBox(height: 16),
+                CircularProgressIndicator(),
+              ])));
             }
             return _MilestoneHost(
               controller: c,

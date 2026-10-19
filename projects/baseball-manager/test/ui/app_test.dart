@@ -1676,6 +1676,123 @@ void _rankTests() {
     });
   });
 
+  group('仕上げ(第3弾)', () {
+    testWidgets('コーチのコツが貯まりきっていなければ、3回に1回は「教わる」がおすすめ', (t) async {
+      final c = await _start(t);
+      c.newGame('テスト', Role.batter);
+      await t.pumpAndSettle();
+      final g = c.game!;
+      expect(g.cast.coach, isNotNull);
+      g.slot = 2;
+      expect(recommendedPlan(g), Plan.lesson);
+      expect(recommendReason(g), contains('コツ'));
+      g.slot = 0;
+      expect(recommendedPlan(g), Plan.train);
+      g.slot = 2;
+      g.condition = g.condition.copyWith(fatigue: 90);
+      expect(recommendedPlan(g), Plan.rest); // 疲れていれば休養が先
+    });
+
+    testWidgets('おすすめで年末まで進めると、経験点の合計が知らせに出る', (t) async {
+      final c = await _start(t);
+      c.newGame('テスト', Role.batter);
+      await t.pumpAndSettle();
+      for (var i = 0;
+          i < 12 && !(c.recent.isNotEmpty && c.recent.first.contains('回進めた'));
+          i++) {
+        if (c.game!.phase == Phase.event) c.chooseEvent(0);
+        c.autoYear();
+      }
+      await t.pumpAndSettle();
+      expect(c.recent.first, contains('回進めた'));
+      expect(c.recent.first, contains('経験点'));
+    });
+
+    testWidgets('能力タブの印に、振り分けられる能力の数が出る', (t) async {
+      final c = await _start(t);
+      c.newGame('テスト', Role.batter);
+      await t.pumpAndSettle();
+      c.admin((g) => g.adminAddExp(5000));
+      await t.pumpAndSettle();
+      expect(
+          find.descendant(
+              of: find.byKey(const Key('mark-ability')),
+              matching: find.text('5')),
+          findsOneWidget);
+    });
+
+    testWidgets('引退後の画面にベストシーズン。実績は解除済み・未解除で絞れる', (t) async {
+      final c = await _start(t);
+      c.adopt(_until((g) => false, seed: 5, potential: 90));
+      await t.pumpAndSettle();
+      await _dismissMilestones(t);
+      expect(find.byKey(const Key('best-season')), findsOneWidget);
+    });
+
+    testWidgets('育成中は設定から「はじめから」にできる。殿堂は残る', (t) async {
+      final c = await _start(t);
+      c.history = [
+        HistoryEntry.of(_until((g) => false, seed: 5, potential: 90))
+      ];
+      c.newGame('テスト', Role.batter);
+      await t.pumpAndSettle();
+      await t.tap(find.byKey(const Key('settings-open')));
+      await t.pumpAndSettle();
+      await t.tap(find.byKey(const Key('restart-open')));
+      await t.pumpAndSettle();
+      await t.tap(find.byKey(const Key('restart-confirm')));
+      await t.pumpAndSettle();
+      expect(c.game, isNull);
+      expect(c.history.length, 1);
+      expect(find.byKey(const Key('start')), findsOneWidget);
+    });
+
+    testWidgets('実績の絞りこみ', (t) async {
+      final c = await _start(t);
+      c.unlocked = {'first-pro'};
+      await t.tap(find.byKey(const Key('achievements-open')));
+      await t.pumpAndSettle();
+      expect(find.byKey(const Key('ach-first-pro')), findsOneWidget);
+      await t.tap(find.text('未解除'));
+      await t.pumpAndSettle();
+      expect(find.byKey(const Key('ach-first-pro')), findsNothing);
+      await t.tap(find.text('解除済み'));
+      await t.pumpAndSettle();
+      expect(find.byKey(const Key('ach-first-pro')), findsOneWidget);
+    });
+
+    testWidgets('経歴は種類で絞れ、成績の詳細は前後の年へ移れる', (t) async {
+      final c = await _start(t);
+      c.adopt(_until(
+          (g) =>
+              g.records.where((r) => r.stage == Stage.pro).length >= 2 &&
+              g.phase == Phase.term,
+          seed: 5,
+          potential: 100));
+      await t.pumpAndSettle();
+      final pro = c.game!.records.where((r) => r.stage == Stage.pro).toList();
+      await t.tap(find.byKey(const Key('player-open')).first);
+      await t.pumpAndSettle();
+      await t.tap(find.byKey(const Key('tab-career')).last);
+      await t.pumpAndSettle();
+      await t.tap(find.byKey(const Key('timeline-injury')));
+      await t.pumpAndSettle();
+      expect(find.byKey(const Key('timeline')), findsOneWidget);
+      await t.pageBack();
+      await t.pumpAndSettle();
+      await t.tap(find.byKey(const Key('records-open')));
+      await t.pumpAndSettle();
+      await t.tap(find.byKey(Key('grade-${pro.last.age}')));
+      await t.pumpAndSettle();
+      expect(find.byKey(const Key('season-detail')), findsOneWidget);
+      await t.tap(find.byKey(const Key('season-prev')));
+      await t.pumpAndSettle();
+      expect(
+          find.text('${c.game!.records[c.game!.records.length - 2].age}歳のシーズン'),
+          findsOneWidget);
+    });
+  });
+
   group('表示の設定とホームのカード', () {
     testWidgets('文字の大きさと画面の色を選べて、端末に覚えられる', (t) async {
       final c = await _start(t);

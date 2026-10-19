@@ -10,6 +10,7 @@ import '../game/achievements.dart';
 import '../game/difficulty.dart';
 import '../game/exp.dart';
 import '../game/career.dart';
+import '../game/characters.dart' show tipsNeeded;
 import '../game/flavor.dart';
 import '../game/marks.dart';
 import '../game/game.dart';
@@ -79,11 +80,16 @@ class SaveStore {
     }
   }
 
+  /// 直近の保存に失敗したか(ブラウザの設定で保存が禁止されているときなど)。
+  bool saveFailed = false;
+
   Future<void> save(Map<String, dynamic> json) async {
     try {
       final p = await SharedPreferences.getInstance();
-      await p.setString(saveKey, jsonEncode(json));
-    } catch (_) {}
+      saveFailed = !await p.setString(saveKey, jsonEncode(json));
+    } catch (_) {
+      saveFailed = true;
+    }
   }
 
   Future<List<HistoryEntry>> loadHistory() async {
@@ -222,6 +228,11 @@ Plan recommendedPlan(Game g) {
   final c = g.condition;
   if (c.fatigue >= 70) return Plan.rest;
   if (c.morale < 35) return Plan.social;
+  // コーチのコツが貯まりきっていなければ、3回に1回は教わる(特性の習得につながる)。
+  final coach = g.cast.coach;
+  if (coach != null && coach.tips < tipsNeeded && g.slot % 3 == 2) {
+    return Plan.lesson;
+  }
   return Plan.train;
 }
 
@@ -230,6 +241,9 @@ String recommendReason(Game g) {
   final c = g.condition;
   if (c.fatigue >= 70) return '疲れが${c.fatigue}と高いので、休養で回復しよう。';
   if (c.morale < 35) return 'やる気が${c.morale}と低いので、交流で気持ちを上げよう。';
+  if (recommendedPlan(g) == Plan.lesson) {
+    return 'コーチのコツを貯めると、特性を習得できる。今回は教わろう。';
+  }
   return '体調は十分。練習で重点の能力を伸ばそう。';
 }
 
@@ -712,6 +726,7 @@ class GameController extends ChangeNotifier {
     if (g == null) return;
     final age = g.player.age;
     final lines = <String>[];
+    final gained = <Category, int>{};
     var turns = 0;
     _rememberForUndo();
     _auto = true;
@@ -720,13 +735,20 @@ class GameController extends ChangeNotifier {
       if (pending.isNotEmpty) break;
       act(recommendedPlan(game!));
       turns++;
+      for (final e in g.lastGain.entries) {
+        gained[e.key] = (gained[e.key] ?? 0) + e.value;
+      }
       // 各ターンの「練習: …」の一行まとめ以外(怪我・大会・目標など)を集める。
       lines.addAll(recent.skip(1));
     }
     _auto = false;
     if (turns > 1) {
       recent = [
-        'おすすめの過ごし方で$turns回進めた。',
+        'おすすめの過ごし方で$turns回進めた。'
+            '${gained.values.any((v) => v > 0) ? '(経験点 ${[
+                for (final e in gained.entries)
+                  if (e.value > 0) '${e.key.label}+${e.value}'
+              ].join(' / ')})' : ''}',
         ...lines.reversed.take(8).toList().reversed,
       ];
       toast = recent.first;
@@ -791,6 +813,10 @@ class GameController extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// 最後に保存した時刻(設定に出す)。
+  DateTime? lastSaved;
+  bool _saveWarned = false;
+
   void _commit() {
     final g = game;
     // 引退したら、殿堂に1度だけ書き込む。
@@ -801,6 +827,15 @@ class GameController extends ChangeNotifier {
       _unlockAchievements(g);
     }
     notifyListeners();
-    if (g != null) store.save(g.toJson());
+    if (g != null) {
+      store.save(g.toJson()).then((_) {
+        if (!store.saveFailed) lastSaved = DateTime.now();
+        if (store.saveFailed && !_saveWarned) {
+          _saveWarned = true;
+          toast = '保存できませんでした。この環境では続きから遊べないかもしれません。';
+          notifyListeners();
+        }
+      });
+    }
   }
 }

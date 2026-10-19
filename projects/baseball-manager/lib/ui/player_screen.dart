@@ -231,6 +231,7 @@ class _ProfileTab extends StatelessWidget {
           Card(
             child: ExpansionTile(
               key: const Key('profile-details'),
+              initiallyExpanded: snapshot.endingTitle != null,
               shape: const Border(),
               collapsedShape: const Border(),
               title: const Text('くわしいプロフィール'),
@@ -446,9 +447,17 @@ class _Condition extends StatelessWidget {
 }
 
 /// 経歴: 入学・進路・ドラフト・特性の習得・優勝・タイトル・引退を年表で。
-class _CareerTab extends StatelessWidget {
+class _CareerTab extends StatefulWidget {
   const _CareerTab({required this.snapshot});
   final PlayerSnapshot snapshot;
+
+  @override
+  State<_CareerTab> createState() => _CareerTabState();
+}
+
+class _CareerTabState extends State<_CareerTab> {
+  PlayerSnapshot get snapshot => widget.snapshot;
+  String _filter = 'all';
 
   static (IconData, Color) _style(String kind) => switch (kind) {
         'stage' => (Icons.school, const Color(0xFF2E7D32)),
@@ -469,8 +478,17 @@ class _CareerTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final entries = timelineOf(snapshot.events, snapshot.records);
-    if (entries.isEmpty) {
+    final all = timelineOf(snapshot.events, snapshot.records);
+    final entries = [
+      for (final e in all)
+        if (_filter == 'all' ||
+            (_filter == 'title' &&
+                (e.kind == 'title' || e.kind == 'champion')) ||
+            (_filter == 'world' && e.kind == 'world') ||
+            (_filter == 'injury' && e.kind == 'injury'))
+          e
+    ];
+    if (all.isEmpty) {
       return const Card(
           child:
               Padding(padding: EdgeInsets.all(16), child: Text('まだ経歴がありません。')));
@@ -480,6 +498,27 @@ class _CareerTab extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
         child: Column(children: [
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Wrap(spacing: 6, children: [
+              for (final (k, label) in const [
+                ('all', 'すべて'),
+                ('title', '優勝・表彰'),
+                ('world', '世界大会'),
+                ('injury', '怪我'),
+              ])
+                ChoiceChip(
+                  key: Key('timeline-$k'),
+                  visualDensity: VisualDensity.compact,
+                  label: Text(label),
+                  selected: _filter == k,
+                  onSelected: (_) => setState(() => _filter = k),
+                ),
+            ]),
+          ),
+          if (entries.isEmpty)
+            const Padding(
+                padding: EdgeInsets.all(12), child: Text('この種類の経歴はありません。')),
           for (var i = 0; i < entries.length; i++)
             _row(context, entries[i],
                 first: i == 0, last: i == entries.length - 1),

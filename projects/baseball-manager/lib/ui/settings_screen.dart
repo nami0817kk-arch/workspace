@@ -167,6 +167,17 @@ class SettingsScreen extends StatelessWidget {
                     subtitle: const Text('データを文字列で書き出して控えを取る・読み込んで戻す。'),
                     onTap: () => _backup(context),
                   ),
+                  if (controller.game != null &&
+                      controller.game!.phase != Phase.retired)
+                    ListTile(
+                      key: const Key('restart-open'),
+                      leading: const Icon(Icons.restart_alt),
+                      title: const Text('この選手をやめて、はじめから'),
+                      subtitle: Text(controller.lastSaved == null
+                          ? '殿堂の記録は消えません。'
+                          : '殿堂の記録は消えません。さいごの保存 ${controller.lastSaved!.hour.toString().padLeft(2, '0')}:${controller.lastSaved!.minute.toString().padLeft(2, '0')}'),
+                      onTap: () => _confirmRestart(context),
+                    ),
                   ListTile(
                     key: const Key('about-open'),
                     leading: const Icon(Icons.info_outline),
@@ -247,6 +258,29 @@ class SettingsScreen extends StatelessWidget {
       ),
     );
     text.dispose();
+  }
+
+  Future<void> _confirmRestart(BuildContext context) async {
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('この選手をやめますか?'),
+        content: const Text('育成中の選手はここで終わり、殿堂には残りません。\n新しい選手を最初から始められます。'),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(ctx, false),
+              child: const Text('やめる')),
+          FilledButton(
+              key: const Key('restart-confirm'),
+              onPressed: () => Navigator.pop(ctx, true),
+              child: const Text('はじめから')),
+        ],
+      ),
+    );
+    if (ok == true) {
+      await controller.reset();
+      if (context.mounted) Navigator.of(context).pop();
+    }
   }
 
   Future<void> _confirmErase(BuildContext context) async {

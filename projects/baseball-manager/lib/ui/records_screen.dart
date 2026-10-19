@@ -360,7 +360,8 @@ class _Table extends StatelessWidget {
                 rows: [
                   for (final r in records)
                     DataRow(
-                      onSelectChanged: (_) => _showSeason(context, r),
+                      onSelectChanged: (_) =>
+                          _showSeason(context, r, all: records),
                       color: r.champion
                           ? WidgetStatePropertyAll(
                               Theme.of(context).brightness == Brightness.dark
@@ -368,7 +369,10 @@ class _Table extends StatelessWidget {
                                   : const Color(0xE6FFF8E1))
                           : null,
                       cells: [
-                        DataCell(Text('${r.age}')),
+                        DataCell(Text('${r.age}',
+                            style: r == records.last
+                                ? const TextStyle(fontWeight: FontWeight.bold)
+                                : null)),
                         DataCell(
                             Text(r.overseas ? 'プロ(米)' : _stageShort(r.stage))),
                         DataCell(Text(
@@ -451,11 +455,15 @@ class _Grades extends StatelessWidget {
             const SizedBox(height: 6),
             Wrap(spacing: 10, runSpacing: 6, children: [
               for (final r in records)
-                Row(mainAxisSize: MainAxisSize.min, children: [
-                  RankBadge(value: r.line.rating.round()),
-                  const SizedBox(width: 4),
-                  Text('${r.age}歳', style: t.bodySmall),
-                ]),
+                InkWell(
+                  key: Key('grade-${r.age}'),
+                  onTap: () => _showSeason(context, r, all: records),
+                  child: Row(mainAxisSize: MainAxisSize.min, children: [
+                    RankBadge(value: r.line.rating.round()),
+                    const SizedBox(width: 4),
+                    Text('${r.age}歳', style: t.bodySmall),
+                  ]),
+                ),
             ]),
           ],
         ),
@@ -581,49 +589,72 @@ class _Highs extends StatelessWidget {
 }
 
 /// 1年ぶんの成績の詳しい中身(表の行をタップ)。
-void _showSeason(BuildContext context, SeasonRecord r) {
-  final lines = <String>[
-    '${r.age}歳 ${r.overseas ? 'プロ(米)' : _stageShort(r.stage)}  ${r.resultText}',
-    if (r.isLeague) 'チーム ${r.teamWins}勝${r.teamLosses}敗 ${r.rank}位',
-    if (describeLine(r.line).isNotEmpty) describeLine(r.line),
-    if (r.line.hasBatting)
-      'OPS+ ${fmtPlus(r.line.opsPlus)} ・ 打点 ${r.line.rbi} ・ 盗塁 ${r.line.stolenBases}',
-    if (r.line.hasPitching)
-      'ERA+ ${fmtPlus(r.line.eraPlus)} ・ WHIP ${fmt2(r.line.whip)} ・ 奪三振 ${r.line.strikeouts}',
-    if (r.titles.isNotEmpty) 'タイトル: ${r.titles.join('・')}',
-    if (r.awards.isNotEmpty) '表彰: ${r.awards.join('・')}',
-    if (r.rivalWon != null) 'ライバル対決: ${r.rivalWon! ? '勝ち' : '負け'}',
-    if (r.stage == Stage.pro) '年俸 ${fmtSalary(salaryOf(r))}',
-  ];
+void _showSeason(BuildContext context, SeasonRecord start,
+    {List<SeasonRecord> all = const []}) {
+  final list = all.isEmpty ? [start] : all;
   showDialog<void>(
     context: context,
-    builder: (ctx) => AlertDialog(
-      key: const Key('season-detail'),
-      title: Text('${r.age}歳のシーズン'),
-      content: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            for (final l in lines)
-              Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 2),
-                  child: Text(l)),
-            if (r.months.isNotEmpty) ...[
-              const SizedBox(height: 8),
-              const Text('月ごとの成績',
-                  style: TextStyle(fontWeight: FontWeight.bold)),
-              for (final m in r.months)
-                Text(m, style: Theme.of(ctx).textTheme.bodySmall),
-            ],
+    builder: (ctx) {
+      var i = list.indexOf(start).clamp(0, list.length - 1);
+      return StatefulBuilder(builder: (ctx, setState) {
+        final r = list[i];
+        final lines = <String>[
+          '${r.age}歳 ${r.overseas ? 'プロ(米)' : _stageShort(r.stage)}  ${r.resultText}',
+          if (r.isLeague) 'チーム ${r.teamWins}勝${r.teamLosses}敗 ${r.rank}位',
+          if (describeLine(r.line).isNotEmpty) describeLine(r.line),
+          if (r.line.hasBatting)
+            'OPS+ ${fmtPlus(r.line.opsPlus)} ・ 打点 ${r.line.rbi} ・ 盗塁 ${r.line.stolenBases}',
+          if (r.line.hasPitching)
+            'ERA+ ${fmtPlus(r.line.eraPlus)} ・ WHIP ${fmt2(r.line.whip)} ・ 奪三振 ${r.line.strikeouts}',
+          if (r.titles.isNotEmpty) 'タイトル: ${r.titles.join('・')}',
+          if (r.awards.isNotEmpty) '表彰: ${r.awards.join('・')}',
+          if (r.rivalWon != null) 'ライバル対決: ${r.rivalWon! ? '勝ち' : '負け'}',
+          if (r.stage == Stage.pro) '年俸 ${fmtSalary(salaryOf(r))}',
+        ];
+        return AlertDialog(
+          key: const Key('season-detail'),
+          title: Row(children: [
+            IconButton(
+              key: const Key('season-prev'),
+              tooltip: '前の年',
+              onPressed: i > 0 ? () => setState(() => i--) : null,
+              icon: const Icon(Icons.chevron_left),
+            ),
+            Expanded(
+                child: Text('${r.age}歳のシーズン', textAlign: TextAlign.center)),
+            IconButton(
+              key: const Key('season-next'),
+              tooltip: '次の年',
+              onPressed: i < list.length - 1 ? () => setState(() => i++) : null,
+              icon: const Icon(Icons.chevron_right),
+            ),
+          ]),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                for (final l in lines)
+                  Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 2),
+                      child: Text(l)),
+                if (r.months.isNotEmpty) ...[
+                  const SizedBox(height: 8),
+                  const Text('月ごとの成績',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  for (final m in r.months)
+                    Text(m, style: Theme.of(ctx).textTheme.bodySmall),
+                ],
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+                onPressed: () => Navigator.pop(ctx), child: const Text('閉じる'))
           ],
-        ),
-      ),
-      actions: [
-        TextButton(
-            onPressed: () => Navigator.pop(ctx), child: const Text('閉じる'))
-      ],
-    ),
+        );
+      });
+    },
   );
 }
 

@@ -64,13 +64,18 @@ class _GameScreenState extends State<GameScreen> {
       game.canChooseSchool || game.canChoosePosition || game.canChooseOffseason;
   bool get _abilityMark => abilitiesOf(game.player.role)
       .any((a) => buy(game.player, game.exp, a) != null);
+  int get _abilityCount => abilitiesOf(game.player.role)
+      .where((a) => buy(game.player, game.exp, a) != null)
+      .length;
   bool get _careerMark => game.canUseFa || game.canMoveOverseas;
 
-  Widget _tabIcon(IconData icon, bool mark, String name) => Semantics(
+  Widget _tabIcon(IconData icon, bool mark, String name, {int? count}) =>
+      Semantics(
         label: mark ? '手をつけられることがあります' : null,
         child: Badge(
           key: mark ? Key('mark-$name') : null,
           smallSize: 9,
+          label: count == null ? null : Text('$count'),
           isLabelVisible: mark,
           child: Icon(icon),
         ),
@@ -124,8 +129,10 @@ class _GameScreenState extends State<GameScreen> {
               label: '育成'),
           NavigationDestination(
               key: const Key('tab-ability'),
-              icon: _tabIcon(Icons.insights_outlined, _abilityMark, 'ability'),
-              selectedIcon: _tabIcon(Icons.insights, _abilityMark, 'ability'),
+              icon: _tabIcon(Icons.insights_outlined, _abilityMark, 'ability',
+                  count: _abilityCount),
+              selectedIcon: _tabIcon(Icons.insights, _abilityMark, 'ability',
+                  count: _abilityCount),
               label: '能力'),
           NavigationDestination(
               key: const Key('tab-career'),
@@ -283,6 +290,19 @@ class _GameScreenState extends State<GameScreen> {
       ];
 
   List<Widget> _careerTab(BuildContext context) => [
+        if (game.records.isNotEmpty) ...[
+          Card(
+            key: const Key('career-summary'),
+            child: ListTile(
+              leading: const Icon(Icons.bar_chart),
+              title: Text(game.records.any((r) => r.stage == Stage.pro)
+                  ? 'プロ通算'
+                  : '大会通算'),
+              subtitle: Text(careerSummary(game.records)),
+            ),
+          ),
+          const SizedBox(height: 8),
+        ],
         if (controller.recent.length > 2) ...[
           _RecentCard(
               lines: controller.recent, cardKey: const Key('recent-full')),
@@ -1785,6 +1805,20 @@ class EndingView extends StatelessWidget {
                       .textTheme
                       .bodyMedium
                       ?.copyWith(fontStyle: FontStyle.italic, height: 1.5)),
+              Builder(builder: (context) {
+                final pool = game.records.any((r) => r.stage == Stage.pro)
+                    ? game.records.where((r) => r.stage == Stage.pro)
+                    : game.records;
+                if (pool.isEmpty) return const SizedBox.shrink();
+                final best = pool
+                    .reduce((a, b) => b.line.rating > a.line.rating ? b : a);
+                return Padding(
+                  padding: const EdgeInsets.only(top: 8),
+                  child: Text(
+                      'ベストシーズン: ${best.age}歳 ${describeLine(best.line)}',
+                      key: const Key('best-season')),
+                );
+              }),
               Builder(builder: (context) {
                 final vote = hallOfFameVote(
                     records: game.records, title: e.title, madePro: e.madePro);
