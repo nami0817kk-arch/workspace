@@ -976,6 +976,10 @@ def build_plan(scene: dict, solve: bool = True) -> dict:
             jit = 0.0
             if f > 0 and dtau == 0.0:
                 jit = (0.014 if a.get("heavy") else 0.007) * math.sin(f * 7.3)
+            for ch in (scene.get("fx") or {}).get("charge", []):          # 必殺技の溜め: 力を込めて小刻みに震える(終わりほど強く)
+                if ch.get("who", "A") == who and ch["start"] <= tau < ch["end"]:
+                    q = (tau - ch["start"]) / max(1e-6, ch["end"] - ch["start"])
+                    jit += (0.006 + 0.014 * q) * math.sin(f * 9.1)
             p = dict(p)
             p["wl"] = fk.WEAPON_TIP.get(a.get("weapon"), fk.SWORD_TIP)
             p["jit"] = jit
