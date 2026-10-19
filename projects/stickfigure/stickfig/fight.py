@@ -195,7 +195,9 @@ def build_fight(spec: dict) -> dict:
                   dict(t=2.75, dx=-3.3, rz=0.55, roll=1.2, hz=0.9, lean=0.0, fa=0.2, ra=0.2, face="pain"),   # ずり落ちる
                   dict(t=3.0, dx=-3.25, rz=0.21, roll=1.57, hz=0.9, fa=0.4, ra=0.4, fl=0.0, fk=0.0, rl=0.0, rk=0.0, face="ko"),
                   dict(t=3.5, dx=-3.25, rz=0.21, roll=1.57, hz=0.9, face="ko"),
-                  dict(t=4.0, dx=-2.4, rz=0.0, roll=0.5, hz=0.85, lean=0.15, fa=0.9, ra=0.9, fe=1.0, re=1.0, face="fight"),   # よろけながら前へ出て立つ
+                  dict(t=3.72, dx=-3.1, rz=0.0, roll=0.45, hz=0.55, lean=0.55, fa=1.3, fe=0.6, ra=0.9, re=0.8, fl=1.3, fk=2.1, rl=-0.2, rk=0.6, face="pain"),   # 起き上がり: 手をついて膝を抱える(板のように回って立つのをやめた)
+                  dict(t=3.95, dx=-2.8, rz=0.0, roll=0.25, hz=0.56, lean=0.4, fa=0.9, fe=1.0, ra=0.6, re=1.0, fl=1.0, fk=1.6, rl=-0.5, rk=0.9, face="pain"),       # 片膝立ち
+                  dict(t=4.15, dx=-2.4, rz=0.0, roll=0.0, hz=0.8, lean=0.2, fa=0.9, ra=0.9, fe=1.0, re=1.0, face="fight"),   # よろけながら前へ出て立つ
                   dict(t=4.4, dx=-1.7, rz=0.0, roll=0.0, hz=0.82, lean=0.1, fa=0.9, fe=1.4, ra=0.7, re=1.5, fl=0.45, fk=0.3, rl=-0.45, rk=0.4, face="fight")]
         shots += [
             dict(t=1.0, follow="A", scale=[[1.0, 5.2], [1.85, 4.2]], yaw=[[1.0, -28.0], [1.85, -14.0]], pitch=5.0, lens=32.0, target_z=1.0, lag=0.3),
