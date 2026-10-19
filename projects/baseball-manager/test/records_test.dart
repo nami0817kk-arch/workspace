@@ -444,7 +444,7 @@ void main2() {
     expect(few.eraPlus, isNull);
     const fewBat = Line(atBats: 1, hits: 1, totalBases: 4);
     expect(fewBat.opsPlus, isNull);
-    const pitcher = Line(faced: 120, outs: 90, runsRaw: -300);
+    const pitcher = Line(faced: 120, outs: 90, runsRaw: 0);
     expect(pitcher.eraPlus! <= 999, isTrue);
     const bat = Line(atBats: 40, hits: 40, totalBases: 160);
     expect(bat.opsPlus! <= 999, isTrue);
