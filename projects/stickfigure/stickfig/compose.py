@@ -374,6 +374,9 @@ def compose_frame(plan: dict, f: int, figs: Dict[int, Image.Image], stages: Opti
             base.alpha_composite(col)
     if (plan.get("scene", {}).get("anime") or {}).get("smear", False):
         base.alpha_composite(_limb_smear(plan, f, cam))   # 振りの 1〜2 コマの間を埋めるスミア(人物の下に描く)
+    for bm in fx.get("beams", []):             # 気の光線(人物の下に描く: 上だと撃ち合いで 2 人が光線に隠れた。手の先から壁まで。x_end は数か [[tau, x], ...] の折れ線)
+        if bm["start"] <= tau <= bm["end"]:
+            base.alpha_composite(look.beam(plan, f, bm.get("who", "A"), _pw_at(bm["x_end"], tau), tau - bm["start"], bm["end"] - bm["start"], tuple(bm.get("color", (120, 230, 255)))))
     base.alpha_composite(figs[f])
     for wv in fx.get("waves", []):             # 地面を走る衝撃波(人物の上。土の山が手前を通る)
         if wv["start"] <= tau <= wv["end"]:
@@ -398,9 +401,6 @@ def compose_frame(plan: dict, f: int, figs: Dict[int, Image.Image], stages: Opti
             px_, py_ = to_px(wx, wz, cam)
             qx, qy = to_px(wx - (pj["x1"] - pj["x0"]) * 0.05, wz, cam)
             base.alpha_composite(look.ki_ball(px_, py_, pj["r"] * camera.px_per_unit(cam), f, tuple(pj.get("color", (255, 190, 70))), trail=(px_ - qx, py_ - qy)))
-    for bm in fx.get("beams", []):             # 気の光線(人物の上に描く。手の先から壁まで。x_end は数か [[tau, x], ...] の折れ線)
-        if bm["start"] <= tau <= bm["end"]:
-            base.alpha_composite(look.beam(plan, f, bm.get("who", "A"), _pw_at(bm["x_end"], tau), tau - bm["start"], bm["end"] - bm["start"], tuple(bm.get("color", (120, 230, 255)))))
     # 顔(目)は描かない(2026-10-19 ユーザー指示)
     for e in plan["events"]:                   # 特大の効果: 斬撃の弧・衝撃の輪
         age = f - e["frame"]
