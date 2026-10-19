@@ -9,7 +9,6 @@ import 'package:baseball_manager/game/goals.dart';
 import 'package:baseball_manager/game/life.dart';
 import 'package:baseball_manager/game/path.dart';
 import 'package:baseball_manager/game/player.dart';
-import 'package:baseball_manager/game/tactics.dart';
 import 'package:baseball_manager/game/traits.dart';
 import 'package:baseball_manager/ui/app.dart';
 import 'package:baseball_manager/ui/controller.dart';
@@ -817,37 +816,6 @@ void _rankTests() {
     expect(find.text('殿堂(これまでの選手)'), findsNothing);
   });
 
-  testWidgets('作戦: 大会の前の季節と大会の季節にだけ選択肢が出て、選ぶと反映され、大会後に消える', (t) async {
-    final c = await _start(t);
-    c.newGame('テスト', Role.batter);
-    await t.pumpAndSettle();
-    expect(find.byKey(const Key('tactic-picker')), findsOneWidget); // 春(大会の前)
-    await t.tap(find.byKey(const Key('tactic-aggressive')));
-    await t.pumpAndSettle();
-    expect(c.game!.tactic, Tactic.aggressive);
-    expect(find.textContaining('長打・球威を重視'), findsOneWidget);
-    await t.tap(find.byKey(const Key('act-rest')));
-    await t.pumpAndSettle();
-    if (c.game!.phase == Phase.event) {
-      await t.tap(find.byKey(const Key('event-0')));
-      await t.pumpAndSettle();
-    }
-    expect(find.byKey(const Key('tactic-picker')), findsOneWidget); // 夏(大会)
-    await t.tap(find.byKey(const Key('act-rest')));
-    await t.pumpAndSettle();
-    if (c.game!.phase == Phase.event) {
-      await t.tap(find.byKey(const Key('event-0')));
-      await t.pumpAndSettle();
-    }
-    // 大会が終わった。ダイアログが出ていれば閉じる。
-    while (find.byKey(const Key('milestone-ok')).evaluate().isNotEmpty) {
-      await t.tap(find.byKey(const Key('milestone-ok')));
-      await t.pumpAndSettle();
-    }
-    expect(find.byKey(const Key('tactic-picker')), findsNothing); // 秋
-    expect(c.game!.tactic, Tactic.steady);
-  });
-
   testWidgets('今年の目標: 画面に出て、達成すると「達成!」になる', (t) async {
     final c = await _start(t);
     c.newGame('テスト', Role.batter);
@@ -1549,7 +1517,7 @@ void _rankTests() {
 
   group('二世の画面', () {
     Game marriedLife() {
-      for (var sd = 0; sd < 80; sd++) {
+      for (var sd = 0; sd < 400; sd++) {
         final g = _until((g) => false, seed: sd, potential: 90);
         if (g.ending?.married ?? false) return g;
       }

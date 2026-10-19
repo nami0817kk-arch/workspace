@@ -20,7 +20,6 @@ import 'world.dart';
 import 'season.dart';
 import 'awards.dart';
 import 'marks.dart';
-import 'tactics.dart';
 import 'traits.dart';
 import 'training.dart' show abilityCap;
 
@@ -376,9 +375,6 @@ class Game {
   /// 今年の目標。年の初めに決まり、大会(プロはシーズン)の成績で達成かどうかが決まる。
   Goal? goal;
 
-  /// 大会・シーズン最終月の作戦。その大会が終わると「堅実」に戻る。
-  Tactic tactic = Tactic.steady;
-
   /// 今年の練習(練習・特訓)と休養の回数。年末にログに出して戻す。
   /// 今季ここまでの月ごとの成績(4〜9月)。シーズンの記録に写して空にする。
   List<String> monthRows = [];
@@ -552,17 +548,6 @@ class Game {
     final r = autoSpendExp(player, exp);
     player = r.player;
     exp = r.pool;
-  }
-
-  /// 大会・シーズン最終月の作戦を選ぶ。
-  void setTactic(Tactic t) {
-    tactic = t;
-  }
-
-  /// 大会(プロはシーズン最終月)の前後か。作戦を選ぶ画面を出す目安。
-  bool get tacticRelevant {
-    final t = stage == Stage.pro ? 6 : (isMonthly(stage) ? 3 : 1);
-    return slot >= t - 1 && slot <= t;
   }
 
   /// プロの間はいつでも役割を変えられる(二刀流にする/戻す)。
@@ -787,13 +772,12 @@ class Game {
   void _playLeagueMonth() {
     final l = _league;
     final team = l.team +
-        tacticTeamBonus(tactic) +
         traitTeamBonus(player.traits) +
         positionTeamAdjust(player, effectivePos);
     final prev = seasonProgress ?? const LeagueProgress();
     // この1か月だけの成績を出してから、これまでに足す(月間の成績を見せるため)。
     final month = playLeagueChunk(
-      traitAdjusted(tacticAdjusted(player, tactic)),
+      traitAdjusted(player),
       LeagueProgress(games: prev.games),
       teamLevel: team,
       opponents: l.opponents,
@@ -882,10 +866,8 @@ class Game {
   void _playSummer() {
     final l = _league;
     final isPro = stage == Stage.pro;
-    // 作戦: その大会だけ能力が変わる。研究はチーム力が上がる。
-    final fighter = traitAdjusted(tacticAdjusted(player, tactic));
+    final fighter = traitAdjusted(player);
     final team = l.team +
-        tacticTeamBonus(tactic) +
         traitTeamBonus(player.traits) +
         positionTeamAdjust(player, effectivePos);
     final tournament = isPro
@@ -919,7 +901,6 @@ class Game {
       rival.addBond(5);
     }
 
-    tactic = Tactic.steady;
     if (league != null) {
       final titles =
           titlesOf(league.line, games: league.games, rank: league.rank);
@@ -1061,7 +1042,7 @@ class Game {
     log.add('${ev.name}の日本代表に選ばれた!');
     _note('world', '${ev.name}の日本代表に選出');
     final t = playTournament(
-      traitAdjusted(tacticAdjusted(player, Tactic.steady)),
+      traitAdjusted(player),
       teamLevel: ev.team +
           traitTeamBonus(player.traits) +
           positionTeamAdjust(player, effectivePos),
@@ -1262,7 +1243,6 @@ class Game {
         'records': [for (final r in records) r.toJson()],
         'worldRecords': [for (final r in worldRecords) r.toJson()],
         'lifeLog': [for (final e in lifeLog) e.toJson()],
-        'tactic': tactic.name,
         'focusStreak': focusStreak,
         'monthRows': monthRows,
         'trainCount': trainCount,
@@ -1338,8 +1318,6 @@ class Game {
     g.offseasonDone = (j['offseasonDone'] as bool?) ?? false;
     g.faUsed = (j['faUsed'] as bool?) ?? false;
     g.goal = Goal.fromJson(j['goal']);
-    g.tactic = Tactic.values
-        .firstWhere((t) => t.name == j['tactic'], orElse: () => Tactic.steady);
     g.lifeLog.addAll([
       for (final e in (j['lifeLog'] as List?) ?? const [])
         LifeEvent.fromJson((e as Map).cast<String, dynamic>()),

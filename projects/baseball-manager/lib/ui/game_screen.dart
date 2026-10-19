@@ -25,7 +25,6 @@ import 'labels.dart';
 import '../game/records.dart';
 import '../game/season.dart';
 import '../game/snapshot.dart';
-import '../game/tactics.dart';
 import 'player_screen.dart';
 import 'records_screen.dart';
 import 'settings_screen.dart';
@@ -944,10 +943,6 @@ class _ActionCard extends StatelessWidget {
                     key: const Key('focus-streak'),
                     style: Theme.of(context).textTheme.bodySmall),
               ),
-            if (game.tacticRelevant) ...[
-              const SizedBox(height: 6),
-              _TacticPicker(controller: controller, game: game),
-            ],
             const SizedBox(height: 8),
             LayoutBuilder(builder: (context, box) {
               // 4列の小さなタイルにして、スクロールなしで全部の行動を見せる。
@@ -1716,47 +1711,6 @@ class _FirstHint extends StatelessWidget {
         'はじめに: 下の行動を選んで季節を進めよう。経験点は「能力」タブで振り分け。',
         style: TextStyle(fontSize: 12),
       ),
-    );
-  }
-}
-
-/// 大会・シーズン最終月の作戦。
-class _TacticPicker extends StatelessWidget {
-  const _TacticPicker({required this.controller, required this.game});
-  final GameController controller;
-  final Game game;
-
-  @override
-  Widget build(BuildContext context) {
-    final isPro = game.stage == Stage.pro;
-    final now = game.tactic;
-    return Container(
-      key: const Key('tactic-picker'),
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.tertiaryContainer,
-        borderRadius: BorderRadius.circular(14),
-      ),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Wrap(
-            spacing: 6,
-            crossAxisAlignment: WrapCrossAlignment.center,
-            children: [
-              Text(isPro ? '最終月の作戦' : '大会の作戦',
-                  style: Theme.of(context).textTheme.titleSmall),
-              for (final t in Tactic.values)
-                ChoiceChip(
-                  key: Key('tactic-${t.name}'),
-                  visualDensity: VisualDensity.compact,
-                  showCheckmark: false,
-                  label: Text(t.label),
-                  selected: t == now,
-                  onSelected: (_) => controller.setTactic(t),
-                ),
-            ]),
-        Text(now.description, style: Theme.of(context).textTheme.bodySmall),
-      ]),
     );
   }
 }

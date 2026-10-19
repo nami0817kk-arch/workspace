@@ -18,7 +18,6 @@ import '../game/life.dart';
 import '../game/path.dart';
 import '../game/player.dart';
 import '../game/snapshot.dart';
-import '../game/tactics.dart';
 import 'history.dart';
 import 'labels.dart';
 
@@ -485,11 +484,6 @@ class GameController extends ChangeNotifier {
     final g = game;
     if (g == null || g.phase == Phase.retired) return;
     edit(g);
-    _commit();
-  }
-
-  void setTactic(Tactic t) {
-    game!.setTactic(t);
     _commit();
   }
 
