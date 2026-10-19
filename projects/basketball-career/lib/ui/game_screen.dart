@@ -659,8 +659,16 @@ class _TournamentCard extends StatelessWidget {
                 '平均 ${t.ppg.toStringAsFixed(1)}点 ${t.rpg.toStringAsFixed(1)}R ${t.apg.toStringAsFixed(1)}A',
                 style: const TextStyle(fontSize: 12)),
             const SizedBox(height: 8),
+            if (t.league.playoffRounds > 0)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 4),
+                child: Text(
+                    'レギュラーシーズン ${t.regularWins}勝${t.league.rounds - t.regularWins}敗'
+                    '${t.reachedPlayoffs ? '  →  プレーオフ ${t.playoffWins}勝${t.playoffMatches.length - t.playoffWins}敗' : '  (プレーオフ進出ならず。${t.league.qualifyWins}勝が必要)'}',
+                    style: const TextStyle(fontWeight: FontWeight.bold)),
+              ),
             for (var i = 0; i < t.matches.length; i++)
-              _MatchRow(index: i, m: t.matches[i]),
+              _MatchRow(index: i, m: t.matches[i], league: t.league),
           ],
         ),
       ),
@@ -669,9 +677,10 @@ class _TournamentCard extends StatelessWidget {
 }
 
 class _MatchRow extends StatelessWidget {
-  const _MatchRow({required this.index, required this.m});
+  const _MatchRow({required this.index, required this.m, required this.league});
   final int index;
   final MatchResult m;
+  final League league;
 
   @override
   Widget build(BuildContext context) {
@@ -699,7 +708,7 @@ class _MatchRow extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                    '${index + 1}試合目  ${m.teamScore}-${m.oppScore}'
+                    '${league.playoffRounds > 0 && index >= league.rounds ? roundLabelOf(league, index) : '${index + 1}試合目'}  ${m.teamScore}-${m.oppScore}'
                     '${m.opponent.isEmpty ? '' : '  vs ${m.vsRival ? 'ライバル ' : ''}${m.opponent}'}',
                     style: const TextStyle(fontWeight: FontWeight.bold)),
                 Text('得点${m.points} リバウンド${m.rebounds} アシスト${m.assists}'
@@ -787,7 +796,7 @@ class _HalftimeView extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('ハーフタイム  ${run.league.label} ${run.round + 1}回戦',
+                Text('ハーフタイム  ${run.league.label} ${run.roundLabel(run.round)}',
                     style: const TextStyle(
                         fontSize: 18, fontWeight: FontWeight.bold)),
                 if (h.opponent.isNotEmpty)
@@ -878,7 +887,7 @@ class _ClutchView extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('勝負どころ!  ${run.league.label} ${run.round + 1}回戦',
+                Text('勝負どころ!  ${run.league.label} ${run.roundLabel(run.round)}',
                     style: const TextStyle(
                         fontSize: 18, fontWeight: FontWeight.bold)),
                 if (s.opponent.isNotEmpty)
