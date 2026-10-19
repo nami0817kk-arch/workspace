@@ -49,3 +49,10 @@ def test_story_arcs_build_valid_episodes(arc):
 def test_unknown_arc_is_rejected():
     with pytest.raises(ValueError):
         story.build_story(dict(arc="nope"))
+
+
+def test_kit_titles_and_description_have_credit():
+    from stickfig import kit
+    assert all(kit.titles(a, "H", "R") for a in story.ARCS)
+    d = kit.description("雪辱戦", "H", "R")
+    assert "CMU" in d and "mocap.cs.cmu.edu" in d
