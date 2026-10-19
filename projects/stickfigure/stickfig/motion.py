@@ -58,8 +58,8 @@ def metrics(plan: dict) -> Dict[str, object]:
 
 
 def snap(plan: dict) -> Dict[str, object]:
-    """キレ: 命中(接触を解いた by 付き)ごとに、先端の速さの山(直前 2 コマの最大)÷ 直前 12〜3 コマの平均。
-    アニメは溜めてから一気に振るので大きい(目安 4 以上)。あわせて、直前 12 コマのうち先端がほぼ止まっているコマ数(待ち)。"""
+    """キレ: 命中(by 付き)ごとに、先端の速さの山(命中の 5 コマ前〜命中の最大)÷ 溜めの区間(16〜7 コマ前)の平均。
+    アニメは溜めてから一気に振るので大きい(目安 4 以上)。あわせて、溜めの区間のうち先端がほぼ止まっているコマ数(待ち)。"""
     fr = plan["frames"]
     out = []
     for e in plan["events"]:
@@ -80,11 +80,15 @@ def snap(plan: dict) -> Dict[str, object]:
             if fr[fb_]["tau"] == fr[fa_]["tau"]:
                 continue
             sp[fb_] = ((pb[0] - pa[0]) ** 2 + (pb[1] - pa[1]) ** 2) ** 0.5
-        pre = [sp[f] for f in range(f0 - 12, f0 - 2) if f in sp]
-        peak = max([sp[f] for f in (f0 - 2, f0 - 1, f0) if f in sp] or [0.0])   # 伸び切りの命中は f0 で速さ 0 に近い
+        pre = [sp[f] for f in range(f0 - 16, f0 - 6) if f in sp]              # 溜めの区間(命中の 16〜7 コマ前)
+        peak = max([sp[f] for f in range(f0 - 5, f0 + 1) if f in sp] or [0.0])   # 振りの区間(命中の 5 コマ前〜命中。伸び切りの命中は f0 で速さ 0 に近い)
         mean = sum(pre) / len(pre) if pre else 0.0
         waiting = sum(1 for v in pre if v < 0.012)
-        out.append(dict(kind=e["kind"], by=who, frame=f0, snap=round(peak / mean, 1) if mean > 1e-6 else None, peak=round(peak, 3), wait=waiting))
+        other = next((w2 for w2 in ("A", "B") if w2 != who and w2 in plan["actors"]), None)
+        sep = None
+        if other is not None and e["kind"] in ("hit", "kick", "slash", "heel"):   # 命中後 10 コマの 2 人の根元の距離の最小(0.55 を切ると胴が重なって見える)
+            sep = round(min(abs(fr[f]["actors"][who]["root_x"] - fr[f]["actors"][other]["root_x"]) for f in range(f0, min(len(fr), f0 + 11))), 2)
+        out.append(dict(kind=e["kind"], by=who, frame=f0, snap=round(peak / mean, 1) if mean > 1e-6 else None, peak=round(peak, 3), wait=waiting, sep=sep))
     return dict(strikes=out)
 
 
@@ -98,5 +102,5 @@ def report(plan: dict) -> str:
     if sn:
         lines.append("- キレ(山÷直前の平均。目安 4 以上)と待ち(直前 12 コマで止まっているコマ数):")
         for x in sn:
-            lines.append(f"    {x['by']}:{x['kind']}@{x['frame']}  キレ {x['snap']}  山 {x['peak']}  待ち {x['wait']}")
+            lines.append(f"    {x['by']}:{x['kind']}@{x['frame']}  キレ {x['snap']}  山 {x['peak']}  待ち {x['wait']}" + (f"  間合い {x['sep']}" if x.get('sep') is not None else ""))
     return chr(10).join(lines)

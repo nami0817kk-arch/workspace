@@ -92,3 +92,14 @@ def test_reach_shift_picks_max_extension(tmp_path):
     bank = planmod.ClipBank(sc)
     c = sc["clips"]["A"][0]
     assert abs(((c["strike_at"] - c["start"]) + c["offset"]) - 1.0) < 1e-6   # 命中の瞬間に clip の 1.0 秒(伸び切り)が来る
+
+
+def test_auto_point_picks_nearest_height(tmp_path):
+    _make_clip(tmp_path / "poke.json")
+    sc = _scene(tmp_path, 0.0)
+    sc["hits"][0]["contact"]["target"]["point"] = "auto"
+    pl = planmod.build_plan(sc)
+    assert pl["scene"]["hits"][0]["contact"]["target"]["point"] in ("hip", "chest", "head")   # build_plan は台本を写して解く
+    f = pl["contacts"][0]["frame"] if "frame" in pl["contacts"][0] else next(e["frame"] for e in pl["events"] if e["kind"] == "hit")
+    assert pl["frames"][f]["actors"]["A"]["hz"] > 0.65                           # 腰を大きく沈めずに届く
+    assert pl["contacts"][0]["distance_to_body"] < 0.3

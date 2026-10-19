@@ -271,7 +271,7 @@ def build_fight(spec: dict) -> dict:
         anchor = 4.3 if i == 0 else 4.3 + 0.5 * i
         cf = last_clip if last else mid_clips[i]
         clip = dict(file=cf, strike_at=_r(t), start=_r(t - pre), end=_r(t + post), **{"in": 0.12 if (i == 0 or s["timing"]) else 0.06, "out": 0.25 if last else 0.06})   # 間を作るときは入りも 4 コマ(蹴りの後の構えと拳の clip は後ろ腕が 3 rad 違う。2 コマだと飛ぶ)
-        pt = _pt(cf, eff)
+        pt = _pt(cf, eff) if sword else "auto"          # 素手は伸び切りのコマで当てる(reach)ので、当て先は手の高さから自動で選ぶ
         if last and fin_kick:                            # 決めが蹴り上げ: 高い蹴りの clip(足が胸の高さに届く)で、相手の胸を蹴る
             cf = "75_16_s1"
             clip = dict(file=cf, strike_at=_r(t), start=_r(t - 0.4), end=_r(t + 0.25), **{"in": 0.12, "out": 0.25})
@@ -295,7 +295,7 @@ def build_fight(spec: dict) -> dict:
             if kick_i == i:                              # 連打の中の蹴り(足→相手の腰。接触を解く)
                 hits.append(dict(tau=_r(t), hold=0.06, kind="kick", by="A", contact=dict(striker="A", effector="foot", target=dict(actor="B", point="hip"), tol=0.42, max_anticipation=50)))
             else:                                        # 途中の斬り: 位置は接触で決める(以前は pos 固定で、相手との間合いが 1.5〜1.8 あり、clip の継ぎ目で飛んでいた)
-                hits.append(dict(tau=_r(t), hold=0.05, kind=kind_hit, by="A", lunge=True, contact=dict(striker="A", effector=eff, target=dict(actor="B", point=pt), tol=0.45, max_anticipation=50, hz_range=0.45)))
+                hits.append(dict(tau=_r(t), hold=0.05, kind=kind_hit, by="A", lunge=True, contact=dict(striker="A", effector=eff, target=dict(actor="B", point=pt), tol=0.45, max_anticipation=50, hz_range=0.45 if sword else 0.25)))
         if last:                                          # 閃光は決めの1発だけ(途中の連打・受け止めでは出さない。参考は 2 秒に 1 回)
             flashes.append(_r(t))
         if defend.get(i) == "clash":

@@ -135,8 +135,8 @@ class ClipBank:
     def warped_u(self, c: dict, tau: float) -> float:
         """clip の時間 u(tau)。strike_at のある clip に「アニメの間」を掛ける(scene の clip_timing、または c["timing"])。
 
-        命中の前 pre 秒: 実時間の最初の 35% で振りかぶりの 65% まで進み、次の 47% はほぼ止め(溜め、5% だけ進む)、
-        最後の 18%(約 2 コマ)で残り 30%(振り)を一気に進む。命中の後 post 秒: 最初の 25% で 55% 進み(振り抜き)、あとはゆっくり。
+        命中の前 pre 秒: 実時間の最初の 35% で振りかぶりの 53% まで進み、次の 50% はほぼ止め(溜め、5% だけ進む)、
+        最後の 15%(pre 0.3 なら 1〜2 コマ)で残り 42%(振り)を一気に進む。命中の後 post 秒: 最初の 25% で 55% 進み(振り抜き)、あとはゆっくり。
         命中の瞬間の u は変えない(接触の解きと一致)。前後の端で元の時間につながる。"""
         speed = c.get("speed", 1.0)
         u = (tau - c["start"]) * speed + c.get("offset", 0.0)
@@ -148,7 +148,7 @@ class ClipBank:
         u_s = (c["strike_at"] - c["start"]) * speed + c.get("offset", 0.0)
         if -pre <= r < 0:
             s = -r / pre
-            p = self._pw(s, tm.get("pre_curve", [(0.0, 0.0), (0.18, 0.30), (0.65, 0.35), (1.0, 1.0)]))
+            p = self._pw(s, tm.get("pre_curve", [(0.0, 0.0), (0.15, 0.42), (0.65, 0.47), (1.0, 1.0)]))
             return u_s - p * pre * speed
         if 0 <= r <= post:
             q = self._pw(r / post, tm.get("post_curve", [(0.0, 0.0), (0.25, 0.55), (1.0, 1.0)]))
@@ -261,7 +261,11 @@ def solve_contact(scene: dict, tracks: Dict[str, KeyTrack], hit: dict) -> dict:
     if clip is not None:       # clip(モーションキャプチャ)は高さを変えられない。位置だけ anchor_dx で合わせる
         if c.get("height", True):          # 高さは腰の上げ下げで合わせる(±0.3 まで)
             eff = skeleton_at(scene, tracks, striker, tau)[eff_key]
-            tp = fk.target_point(skeleton_at(scene, tracks, tgt, tau), c["target"].get("point", "hip"))
+            sk_t0 = skeleton_at(scene, tracks, tgt, tau)
+            if c["target"].get("point") == "auto":      # 当て先は、手(先端)の今の高さに最も近い所(腰を沈めて合わせない)
+                base = eff[1] - clip.get("hz_off", 0.0)
+                c["target"]["point"] = min(("hip", "chest", "head"), key=lambda q: abs(fk.target_point(sk_t0, q)[1] + off[1] - base))
+            tp = fk.target_point(sk_t0, c["target"].get("point", "hip"))
             hr = float(c.get("hz_range", 0.3))      # 腰の上げ下げの幅(長い武器は大きく)
             clip["hz_off"] = max(-hr, min(hr, clip.get("hz_off", 0.0) + (tp[1] + off[1]) - eff[1]))
         clip["_solved"] = True                 # 位置は接触で決めた(キー合わせでは動かさない)
@@ -797,7 +801,7 @@ def _body_drive(p: dict, who: str, f: int, events: List[dict], cfg: dict, sign: 
                 dspin += 0.60 * k * u * u; dlean += 0.12 * k * u * u; dhz += -0.05 * k * u
             if e.get("lunge") and 0 < d <= L:            # 踏み込み: 命中のあとに前へ出て、次の命中までに戻す(命中のコマは動かさない)
                 u = min(1.0, d / 4.0)
-                ddx += 0.22 * k * (u * u * (3 - 2 * u)) * ret
+                ddx += 0.08 * k * (u * u * (3 - 2 * u)) * ret   # 0.22 だと、押される相手(0.3)に追いついて胴が重なった(study_kick 2026-10-19)
         elif e["kind"] == "miss":                        # かわす側: 直前に沈み込んでくぐる(頭を下げ、前へ倒し、膝を深く)、または後ろへ跳ぶ。命中の瞬間が最も低い/遠い
             duck = e.get("pos", [0, 1.0])[1] >= 0.95
             if -6 <= d <= 10:
@@ -821,7 +825,7 @@ def _body_drive(p: dict, who: str, f: int, events: List[dict], cfg: dict, sign: 
                 pk = e["kind"] in ("kick", "heel")
                 amp = (1.4 if pk else 1.0) * k * min(1.0, d / 2.0)
                 dspin += -0.75 * amp * u * u; dlean += -0.30 * amp * u; dhz += -0.12 * amp * math.sin(math.pi * min(1.0, d / 6.0)) * u
-                ddx += (-0.30 * amp) * (1 - (1 - min(1.0, d / 5.0)) ** 2) * (0.35 + 0.65 * u) * (ret if d <= L else 0.0); dht += -0.35 * amp * u
+                ddx += (-0.42 * amp) * (1 - (1 - min(1.0, d / 5.0)) ** 2) * (0.35 + 0.65 * u) * (ret if d <= L else 0.0); dht += -0.35 * amp * u   # 当たった側は離れる(攻め側の前進 0.08 より十分大きく)
     hit_frames = [e["frame"] for e in events if e["kind"] in kinds and e.get("by")]
     if hit_frames:                                       # 体が弾む(足でリズムを取る・構えが揺れる)。戦いの間は強く、離れた所でも呼吸ぶんは揺れる(棒立ちにしない)
         near = min(abs(f - h) for h in hit_frames)
