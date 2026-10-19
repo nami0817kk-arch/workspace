@@ -950,8 +950,19 @@ def build_plan(scene: dict, solve: bool = True) -> dict:
                     act = scene["_bank"].active(who, tau, 0.3)
                     if act is not None and act.get("loop"):
                         p = dict(p, periodic=1.0)          # 周期運動(走り)の区間。点検の「途中で止まる」から外す
-                if scene.get("body_drive") and abs(p.get("rz", 0.0)) < 0.05 and abs(p.get("roll", 0.0)) < 0.3:     # 倒れている・空中の間は足さない
-                    p = _body_drive(p, who, f, events, scene["body_drive"], _sign(a), taus)
+                if scene.get("body_drive"):                  # 倒れている・空中の間は足さない。ただし境目で急に消えないよう、浮き始め・倒れ始めで薄くする(前は rz 0.05 で切っていて、蹴られて浮く瞬間に押され 0.3 ぶん戻っていた)
+                    wgt = max(0.0, 1.0 - max(abs(p.get("rz", 0.0)) / 0.35, abs(p.get("roll", 0.0)) / 0.6))
+                    if wgt > 0.0:
+                        q = _body_drive(p, who, f, events, scene["body_drive"], _sign(a), taus)
+                        if wgt >= 1.0:
+                            p = q
+                        else:
+                            p = dict(p)
+                            for k, v in q.items():
+                                if isinstance(v, float) and isinstance(p.get(k, 0.0), float) and k in p:
+                                    p[k] = p[k] + (v - p[k]) * wgt
+                                elif k not in p:
+                                    p[k] = v * wgt if isinstance(v, float) else v
                 if who in planters:
                     p = planters[who].apply(p, dtau)
             s = _sign(a)
