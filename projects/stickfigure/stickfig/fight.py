@@ -179,7 +179,6 @@ def build_fight(spec: dict) -> dict:
             hits += [dict(tau=_r(tb1), hold=0.0, kind="miss", by="B", pos=[1.75, 1.25]),
                      dict(tau=_r(tb2), hold=0.07, kind="clash", by="B", contact=dict(striker="B", effector="hand", target=dict(actor="A", point="chest"), tol=0.45, max_anticipation=50))]
             keysA += [dict(t=_r(tb2 - 0.14), dx=3.4, **BLOCK), dict(t=_r(tb2 + 0.08), dx=3.4, **BLOCK), dict(t=_r(tb2 + 0.26), dx=3.4, **GUARD_A)]
-            flashes.append(_r(tb2))
             speed.append([_r(tb1 - 0.3), _r(tb2 + 0.1)])
         shots.append(dict(t=1.0, follow="A", scale=[[1.0, 4.8], [tc + 0.4, 3.9]], yaw=[[1.0, -38.0], [tc + 0.4, -20.0]], pitch=4.0, lens=30.0, target_z=1.0, lag=0.3))
         speed.append([tc - 0.7, tc + 0.1])
@@ -236,7 +235,7 @@ def build_fight(spec: dict) -> dict:
                 hits.append(dict(tau=_r(t), hold=0.06, kind="kick", by="A", contact=dict(striker="A", effector="foot", target=dict(actor="B", point="hip"), tol=0.3, max_anticipation=50)))
             else:
                 hits.append(dict(tau=_r(t), hold=0.05, kind=kind_hit, by="A", lunge=True, pos=[_r(3.7 - 0.2 * i), _r(1.25 - 0.1 * i)]))
-        if defend.get(i) != "miss":
+        if last:                                          # 閃光は決めの1発だけ(途中の連打・受け止めでは出さない。参考は 2 秒に 1 回)
             flashes.append(_r(t))
         if defend.get(i) == "clash":
             dxB -= 0.10
@@ -247,7 +246,6 @@ def build_fight(spec: dict) -> dict:
                 clipsB.append(dict(file=cclip, strike_at=_r(tr), start=_r(tr - 0.2), end=_r(tr + 0.26), **{"in": 0.06, "out": 0.1}))
                 hits.append(dict(tau=_r(tr), hold=0.07, kind="clash", by="B", contact=dict(striker="B", effector="hand", target=dict(actor="A", point="chest"), tol=0.45, max_anticipation=50)))
                 keysA += [dict(t=_r(tr - 0.14), **BLOCK), dict(t=_r(tr + 0.08), **BLOCK), dict(t=_r(tr + 0.26), **GUARD_A)]
-                flashes.append(_r(tr))
         elif defend.get(i) == "miss":
             dxB -= 0.05
             keysB += [dict(t=_r(t - 0.2), dx=_r(dxB + 0.05), **GUARD), dict(t=_r(t + 0.3), dx=_r(dxB), **GUARD)]
@@ -261,7 +259,6 @@ def build_fight(spec: dict) -> dict:
             clipsB.append(dict(file=cclip, strike_at=_r(tcn), start=_r(tcn - 0.2), end=_r(tcn + 0.27), **{"in": 0.06, "out": 0.1}))
             hits.append(dict(tau=_r(tcn), hold=0.05, kind="hit", by="B", contact=dict(striker="B", effector="hand", target=dict(actor="A", point="chest"), tol=0.3, max_anticipation=50)))
             keysA += [dict(t=_r(tcn + 0.07), dx=4.45, lean=-0.2, hz=0.9), dict(t=_r(tcn + 0.27), dx=4.6, lean=0.15, hz=0.9)]
-            flashes.append(_r(tcn))
     hl = ts[-1]
     speed.append([_r(h0), _r(hl + 0.5)])
     shots.append(dict(t=_r(h0), follow="mid", scale=[[_r(h0), 3.1], [_r(hl), 3.6]], yaw=[[_r(h0), 30.0], [_r(hl), 52.0]],
