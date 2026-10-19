@@ -22,9 +22,9 @@ from . import camera, fk
 
 W, H = 1280, 720
 FONT = "C:/Windows/Fonts/YuGothB.ttc"
-SFX = dict(kick="ドガッ!!", slash="ザンッ!", hit="バシッ!", wall="ドゴォォン!!", land="ズサァッ", land2="ズザッ", heel="ドガァッ!!", clash="ガキィン!", miss="ヒュッ", beam="ドォォォン!!", blast="ドガァァン!!", throw="シュッ", slam="ズドォン!!", wave="ドゴッ!!", vanish="シュン", appear="ッ!", launch="ヒュッ")
+SFX = dict(kick="ドガッ!!", slash="ザンッ!", hit="バシッ!", wall="ドゴォォン!!", land="ズサァッ", land2="ズザッ", heel="ドガァッ!!", clash="ガキィン!", miss="ヒュッ", beam="ドォォォン!!", blast="ドガァァン!!", throw="シュッ", slam="ズドォン!!", wave="ドゴッ!!", vanish="シュン", appear="ッ!")
 SFX_COLOR = dict(kick=(255, 226, 60), slash=(120, 235, 255), hit=(255, 226, 60), wall=(255, 150, 60), land=(235, 235, 235), land2=(235, 235, 235), heel=(255, 110, 70), clash=(255, 250, 200), miss=(210, 210, 220))
-SFX_SIZE = dict(kick=140, slash=120, hit=110, wall=140, land=85, land2=75, heel=150, clash=125, miss=70, beam=160, blast=150, throw=70, slam=150, wave=130, vanish=80, appear=110, launch=75)
+SFX_SIZE = dict(kick=140, slash=120, hit=110, wall=140, land=85, land2=75, heel=150, clash=125, miss=70, beam=160, blast=150, throw=70, slam=150, wave=130, vanish=80, appear=110)
 TRAIL_COLOR = dict(A=(150, 255, 200), B=(255, 140, 110))
 # カメラの演出(plan.py が使う): 命中の種類ごとの「寄る量」と「傾き(度)」
 ZOOM_PUNCH = dict(kick=0.13, slash=0.07, hit=0.06, wall=0.09, heel=0.12, clash=0.09, miss=0.02, beam=0.1, blast=0.11, slam=0.12, wave=0.1, appear=0.08)
@@ -77,10 +77,12 @@ def trails(plan: dict, f: int, cfg: dict, cache: Dict[Tuple[str, int], dict]) ->
         # 打つ側の、命中の前後だけ(走りで剣先が速いだけの所に出ると、床にジグザグの線が残る。2026-10-19 fight_mix の冒頭で確認)
         strikers = [e for e in plan.get("events", []) if e.get("by")]
         mine = [e for e in strikers if e["by"] == who and e["frame"] - 8 <= f <= e["frame"] + 3]
-        if strikers and not mine:
+        tau_f = plan["frames"][f]["tau"]
+        glide = any(r[0] <= tau_f <= r[1] and (len(r) < 3 or r[2] == who) for r in (plan.get("scene", {}).get("fx") or {}).get("glide", []))   # 飛行中: 手足の光の尾を全部出す
+        if strikers and not mine and not glide:
             continue
         want = None
-        if mine:                                          # 打つ手足だけ(蹴りは足、斬り・拳は手と剣先。踏み込みの足に出ると床にジグザグが残る)
+        if mine and not glide:                            # 打つ手足だけ(蹴りは足、斬り・拳は手と剣先。踏み込みの足に出ると床にジグザグが残る)
             want = {"foot"} if any(e["kind"] in ("kick", "heel") for e in mine) else {"hand", "tip"}
         sc = plan["actors"][who].get("scale", 1.0)
         pts: Dict[str, List[Tuple[float, float]]] = {}
