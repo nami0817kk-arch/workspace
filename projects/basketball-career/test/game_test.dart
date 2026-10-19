@@ -2255,12 +2255,12 @@ void main() {
     });
 
     test('高さ型は背が高い選手に有利、低い選手に不利', () {
-      Player tall(int cm) => Player(
+      Player tall(double cm) => Player(
             name: 'a', age: 17, potential: 70, heightCm: cm, heightGenes: 0.5,
             abilities: {for (final a in Ability.values) a: 60},
           );
-      expect(OppStyle.inside.fit(Halftime.keep, tall(200)),
-          greaterThan(OppStyle.inside.fit(Halftime.keep, tall(172))));
+      expect(OppStyle.inside.fit(Halftime.keep, tall(200.0)),
+          greaterThan(OppStyle.inside.fit(Halftime.keep, tall(172.0))));
     });
 
     test('速攻型は両チームの合計点が多く、堅守型は少ない', () {
