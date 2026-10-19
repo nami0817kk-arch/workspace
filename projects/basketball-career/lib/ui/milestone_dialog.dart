@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-enum MilestoneKind { champion, award, goal, stage, contract, abroad, rank }
+enum MilestoneKind { champion, award, goal, stage, contract, abroad, rank, rival }
 
 /// 人生の節目。ダイアログで大きく見せる。
 class Milestone {
@@ -18,6 +18,7 @@ IconData _icon(MilestoneKind k) => switch (k) {
       MilestoneKind.contract => Icons.handshake,
       MilestoneKind.abroad => Icons.flight_takeoff,
       MilestoneKind.rank => Icons.trending_up,
+      MilestoneKind.rival => Icons.local_fire_department,
     };
 
 class MilestoneDialog extends StatelessWidget {

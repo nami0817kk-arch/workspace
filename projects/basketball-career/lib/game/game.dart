@@ -148,6 +148,7 @@ class Game {
     this.recoveredThisTerm = false,
     this.teamwork = 40,
     this.coachBond = 20,
+    this.rivalMet = false,
     List<Action>? recentActions,
     this.schoolBonus = 0,
     this.schoolLabel = '',
@@ -272,6 +273,12 @@ class Game {
   TermReport? lastReport;
   int slot;
 
+  /// ライバルとはじめて対戦したか(出会いの演出を1度だけ出すため)。
+  bool rivalMet;
+
+  /// 直前のターンで、ライバルとはじめて出会った。
+  bool lastMetRival = false;
+
   /// 直前のターンがマンネリだったか(画面の知らせ用)。
   bool lastWasRut = false;
 
@@ -392,6 +399,7 @@ class Game {
     lastFocus = focus;
     recoveredThisTerm = false;
     lastGoalMessage = null;
+    lastMetRival = false;
     final rut = isRut(action);
     final r = playTerm(player, condition, action, focus, rng,
         growthScale: difficulty.growth * coachBoost * (rut ? slumpScale : 1.0));
@@ -570,6 +578,10 @@ class Game {
     yearBestPpg = max(yearBestPpg, t.ppg);
     for (final m in t.matches) {
       if (!m.vsRival) continue;
+      if (!rivalMet) {
+        rivalMet = true;
+        lastMetRival = true;
+      }
       if (m.won) {
         rival.wins++;
       } else {
@@ -868,6 +880,7 @@ class Game {
         'recoveredThisTerm': recoveredThisTerm,
         'teamwork': teamwork,
         'coachBond': coachBond,
+        'rivalMet': rivalMet,
         'recentActions': [for (final a in recentActions) a.name],
         'schoolBonus': schoolBonus,
         'schoolLabel': schoolLabel,
@@ -913,6 +926,7 @@ class Game {
         recoveredThisTerm: (j['recoveredThisTerm'] as bool?) ?? false,
         teamwork: (j['teamwork'] as num?)?.toInt() ?? 40,
         coachBond: (j['coachBond'] as num?)?.toInt() ?? 20,
+        rivalMet: (j['rivalMet'] as bool?) ?? (((j['rival'] as Map?)?['wins'] as num? ?? 0) + ((j['rival'] as Map?)?['losses'] as num? ?? 0) > 0),
         recentActions: [
           for (final v in (j['recentActions'] as List?) ?? const [])
             if (Action.values.any((a) => a.name == v))
