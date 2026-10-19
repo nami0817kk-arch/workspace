@@ -265,6 +265,21 @@ void main() {
     expect(c.pending, isEmpty);
   });
 
+  testWidgets('おすすめの過ごし方に印が付き、状態で変わる', (tester) async {
+    tall(tester);
+    final c = GameController(store: _NullStore(), rng: Random(1), events: false);
+    c.game = Game.start('ケイ', rng: Random(2), events: false);
+    await tester.pumpWidget(BasketballCareerApp(controller: c));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('(おすすめ)'), findsOneWidget);
+    // 疲れていれば休養がおすすめになる。
+    c.game!.condition = const Condition(fatigue: 90);
+    c.notifyListeners();
+    await tester.pumpAndSettle();
+    expect(find.text('休養  (おすすめ)'), findsOneWidget);
+    expect(find.textContaining('(おすすめ)'), findsOneWidget);
+  });
+
   test('能力のランクが上がると知らせる', () {
     final c = GameController(store: _NullStore(), rng: Random(3), events: false);
     c.game = Game(
