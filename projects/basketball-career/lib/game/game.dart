@@ -10,7 +10,7 @@ import 'season.dart';
 import 'traits.dart';
 
 /// 画面が見る局面。対応する操作だけを呼ぶ。
-enum Phase { season, event, path, retired }
+enum Phase { season, clutch, event, path, retired }
 
 /// どこでプレーしているか。
 enum Track { school, university, corporate, pro }
@@ -81,6 +81,7 @@ class TermReport {
     this.tournament,
     this.satOut = false,
     this.yearEnded = false,
+    this.paused = false,
   });
 
   final Action action;
@@ -92,6 +93,9 @@ class TermReport {
   /// 怪我で大会に出られなかった。
   final bool satOut;
   final bool yearEnded;
+
+  /// 勝負どころで止まっている(大会はまだ終わっていない)。
+  final bool paused;
 }
 
 const _recentCount = 4;
@@ -116,6 +120,10 @@ class Game {
     this.lowYears = 0,
     this.archived = false,
     this.recoveredThisTerm = false,
+    this.run,
+    this.runWinter = false,
+    this.termAction = Action.practice,
+    this.termInjured = false,
     this.slot = 0,
     this.pendingEventId,
     this.lastFocus = Ability.threePoint,
@@ -158,6 +166,17 @@ class Game {
 
   /// このターンに回復を使ったか(1ターンに1回まで)。
   bool recoveredThisTerm;
+
+  /// 進行中の大会(勝負どころで止まっているときだけ残る)。
+  TournamentRun? run;
+  bool runWinter;
+
+  /// 大会の途中で止まっているターンの過ごし方と、そのターンの怪我。
+  Action termAction;
+  bool termInjured;
+
+  /// 直近に終えたターンの結果(勝負どころで止まった後、続きを終えたときの結果もここに入る)。
+  TermReport? lastReport;
   int slot;
 
   /// 起きている出来事(選ぶまで次へ進めない)。
@@ -177,9 +196,11 @@ class Game {
       ? Phase.retired
       : pathPending
           ? Phase.path
-          : pendingEventId != null
-              ? Phase.event
-              : Phase.season;
+          : (run?.pending != null)
+              ? Phase.clutch
+              : pendingEventId != null
+                  ? Phase.event
+                  : Phase.season;
 
   EventDef? get pendingEvent =>
       pendingEventId == null ? null : eventById(pendingEventId!);
@@ -231,6 +252,7 @@ class Game {
     Action action,
     Ability focus, {
     Clutch Function(int margin)? chooseClutch,
+    bool askClutch = false,
   }) {
     if (phase != Phase.season) throw StateError('今は季節を選べない: $phase');
     lastFocus = focus;
@@ -238,25 +260,73 @@ class Game {
     final r = playTerm(player, condition, action, focus, rng);
     player = r.player;
     condition = r.condition;
+    termAction = action;
+    termInjured = r.gotInjured;
 
+    final winter = slot == 3 && hasWinterCup;
     TournamentResult? t;
     var satOut = false;
-    final winter = slot == 3 && hasWinterCup;
     if (slot == 1 || winter) {
       if (condition.injured) {
         satOut = true;
       } else {
-        t = playTournament(
+        final cr = TournamentRun(league);
+        cr.advance(
           player,
-          league,
           form: condition.form,
           rng: rng,
           chooseClutch: chooseClutch,
+          askClutch: askClutch && chooseClutch == null,
         );
+        if (cr.pending != null) {
+          // 勝負どころで止まる。選ぶまで季節は進まない(`resolveClutch`)。
+          run = cr;
+          runWinter = winter;
+          lastReport = null;
+          return TermReport(action: action, gotInjured: r.gotInjured, paused: true);
+        }
+        t = cr.result();
         _record(t, winter: winter);
       }
     }
+    return lastReport = _finishTerm(action, r.gotInjured, t, satOut);
+  }
 
+  /// 勝負どころで止まっている大会に、選んだプレーを渡して続きを進める。
+  /// 大会が終われば、そのターンの結果を返す。また勝負どころが来たら止まる(`paused`)。
+  TermReport resolveClutch(Clutch choice) {
+    final cr = run;
+    if (phase != Phase.clutch || cr == null) {
+      throw StateError('今は勝負どころではない: $phase');
+    }
+    cr.resolve(player, choice, form: condition.form, rng: rng);
+    if (cr.pending != null) {
+      return TermReport(
+          action: termAction, gotInjured: termInjured, paused: true);
+    }
+    run = null;
+    final t = cr.result();
+    _record(t, winter: runWinter);
+    return lastReport = _finishTerm(termAction, termInjured, t, false);
+  }
+
+  /// 勝負どころで止まっている試合の選択肢と成功率。
+  ({int margin, double oppStrength, Map<Clutch, double> chances})? get clutchInfo {
+    final s = run?.pending;
+    if (s == null) return null;
+    return (
+      margin: s.margin,
+      oppStrength: s.oppStrength,
+      chances: {
+        for (final c in Clutch.values)
+          c: clutchChance(player, c, s.oppStrength, s.form),
+      },
+    );
+  }
+
+  /// ターンの締め: 季節を進め、年末の処理と出来事の抽選をする。
+  TermReport _finishTerm(
+      Action action, bool gotInjured, TournamentResult? t, bool satOut) {
     slot++;
     var yearEnded = false;
     if (slot >= 4) {
@@ -268,7 +338,7 @@ class Game {
     }
     return TermReport(
       action: action,
-      gotInjured: r.gotInjured,
+      gotInjured: gotInjured,
       tournament: t,
       satOut: satOut,
       yearEnded: yearEnded,
@@ -458,6 +528,10 @@ class Game {
         'lowYears': lowYears,
         'archived': archived,
         'recoveredThisTerm': recoveredThisTerm,
+        'run': run?.toJson(),
+        'runWinter': runWinter,
+        'termAction': termAction.name,
+        'termInjured': termInjured,
         'slot': slot,
         'pendingEventId': pendingEventId,
         'lastFocus': lastFocus.name,
@@ -483,6 +557,15 @@ class Game {
         lowYears: (j['lowYears'] as num?)?.toInt() ?? 0,
         archived: (j['archived'] as bool?) ?? false,
         recoveredThisTerm: (j['recoveredThisTerm'] as bool?) ?? false,
+        run: j['run'] == null
+            ? null
+            : TournamentRun.fromJson((j['run'] as Map).cast<String, dynamic>()),
+        runWinter: (j['runWinter'] as bool?) ?? false,
+        termAction: Action.values.firstWhere(
+          (a) => a.name == j['termAction'],
+          orElse: () => Action.practice,
+        ),
+        termInjured: (j['termInjured'] as bool?) ?? false,
         slot: (j['slot'] as num?)?.toInt() ?? 0,
         pendingEventId: j['pendingEventId'] as String?,
         lastFocus: Ability.parse((j['lastFocus'] as String?) ?? '') ??

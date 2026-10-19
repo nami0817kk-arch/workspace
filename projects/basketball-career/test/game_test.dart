@@ -362,7 +362,7 @@ void main() {
               if (g.canGoAbroad) g.goAbroad();
             case Phase.path:
               g.chooseRoute(g.availableRoutes.first);
-            case Phase.event || Phase.retired:
+            case Phase.clutch || Phase.event || Phase.retired:
               break;
           }
         }
@@ -443,6 +443,8 @@ void main() {
                       ? Action.rest
                       : Action.practice,
                   Ability.values[guard % Ability.values.length]);
+            case Phase.clutch:
+              g.resolveClutch(Clutch.drive);
             case Phase.event:
               sawEvent = true;
               g.resolveEvent(0);
@@ -526,6 +528,91 @@ void main() {
     test('実績の id は重複しない', () {
       final ids = achievements.map((a) => a.id).toList();
       expect(ids.toSet().length, ids.length);
+    });
+  });
+
+  group('勝負どころをその場で選ぶ', () {
+    /// 勝負どころが必ず来る試合(同点付近)になる乱数を探す。
+    Game summerGame(int seed) => Game(
+          eventsEnabled: false,
+          player: strong().copyWith(age: 15),
+          rng: Random(seed),
+          slot: 1,
+        );
+
+    int findSeed() {
+      for (var seed = 0; seed < 400; seed++) {
+        final g = summerGame(seed);
+        g.choose(Action.rest, Ability.pass, askClutch: true);
+        if (g.phase == Phase.clutch) return seed;
+      }
+      throw StateError('勝負どころになる乱数が見つからない');
+    }
+
+    test('askClutch なら勝負どころで止まり、選ぶまで季節は進まない', () {
+      final g = summerGame(findSeed());
+      final r = g.choose(Action.rest, Ability.pass, askClutch: true);
+      expect(r.paused, isTrue);
+      expect(g.phase, Phase.clutch);
+      expect(g.slot, 1, reason: '大会が終わるまで季節は進まない');
+      expect(() => g.choose(Action.rest, Ability.pass), throwsStateError);
+      final info = g.clutchInfo!;
+      expect(info.chances.keys, containsAll(Clutch.values));
+      expect(info.margin.abs(), lessThanOrEqualTo(clutchWindow));
+    });
+
+    test('選ぶと続きが進み、大会が終わると季節が進んで記録が残る', () {
+      final g = summerGame(findSeed());
+      g.choose(Action.rest, Ability.pass, askClutch: true);
+      var guard = 0;
+      TermReport? done;
+      while (g.phase == Phase.clutch && guard++ < 10) {
+        final r = g.resolveClutch(Clutch.drive);
+        if (!r.paused) done = r;
+      }
+      expect(done, isNotNull);
+      expect(g.phase, isNot(Phase.clutch));
+      expect(g.slot, 2);
+      expect(g.records, hasLength(1));
+      expect(g.lastReport, done);
+      expect(done!.tournament!.matches.any((m) => m.clutch == Clutch.drive),
+          isTrue);
+    });
+
+    test('止まっていないときに選ぶと StateError', () {
+      final g = summerGame(0);
+      expect(() => g.resolveClutch(Clutch.drive), throwsStateError);
+    });
+
+    test('勝負どころで止まっていても、保存して読み戻して続けられる', () {
+      final g = summerGame(findSeed());
+      g.choose(Action.rest, Ability.pass, askClutch: true);
+      final h = Game.fromJson(g.toJson());
+      expect(h.phase, Phase.clutch);
+      expect(h.run!.pending!.team, g.run!.pending!.team);
+      expect(h.run!.matches.length, g.run!.matches.length);
+      var guard = 0;
+      while (h.phase == Phase.clutch && guard++ < 10) {
+        h.resolveClutch(Clutch.threePoint);
+      }
+      expect(h.slot, 2);
+      expect(h.records, hasLength(1));
+    });
+
+    test('chooseClutch を渡せば止まらない(askClutch は無視)', () {
+      final g = summerGame(findSeed());
+      final r = g.choose(Action.rest, Ability.pass,
+          askClutch: true, chooseClutch: (_) => Clutch.pass);
+      expect(r.paused, isFalse);
+      expect(g.phase, isNot(Phase.clutch));
+    });
+
+    test('クォーターごとの得点が残り、合計と一致する', () {
+      final s = playQuarters(strong(),
+          teamStrength: 50, oppStrength: 50, form: 1, rng: Random(3));
+      expect(s.teamQuarters, hasLength(4));
+      expect(s.teamQuarters.reduce((a, b) => a + b), s.team);
+      expect(s.oppQuarters.reduce((a, b) => a + b), s.opp);
     });
   });
 }

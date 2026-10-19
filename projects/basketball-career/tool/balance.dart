@@ -5,6 +5,7 @@ import 'dart:math';
 
 import 'package:basketball_career/game/game.dart';
 import 'package:basketball_career/game/life.dart';
+import 'package:basketball_career/game/match.dart';
 import 'package:basketball_career/game/path.dart';
 import 'package:basketball_career/game/player.dart';
 
@@ -32,6 +33,8 @@ void main() {
             g.goAbroad();
             abroad++;
           }
+        case Phase.clutch:
+          g.resolveClutch(bestClutch(g.player, g.run!.pending!.oppStrength, g.run!.pending!.form));
         case Phase.event:
           g.resolveEvent(0);
         case Phase.path:

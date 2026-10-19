@@ -49,6 +49,7 @@ class GameScreen extends StatelessWidget {
             constraints: const BoxConstraints(maxWidth: 560),
             child: switch (game.phase) {
               Phase.season => _SeasonView(controller: controller, game: game),
+              Phase.clutch => _ClutchView(controller: controller, game: game),
               Phase.event => _EventView(controller: controller, game: game),
               Phase.path => _PathView(controller: controller, game: game),
               Phase.retired => _EndingView(controller: controller, game: game),
@@ -146,8 +147,13 @@ class _SeasonView extends StatelessWidget {
                   spacing: 6,
                   children: [
                     ChoiceChip(
+                      label: const Text('その場で選ぶ'),
+                      selected: c.askClutch,
+                      onSelected: (_) => c.setAskClutch(),
+                    ),
+                    ChoiceChip(
                       label: const Text('おまかせ'),
-                      selected: c.clutchPolicy == null,
+                      selected: !c.askClutch && c.clutchPolicy == null,
                       onSelected: (_) => c.setClutchPolicy(null),
                     ),
                     for (final k in Clutch.values)
@@ -432,6 +438,91 @@ class _Note extends StatelessWidget {
         color: Theme.of(context).colorScheme.primaryContainer,
         child: Padding(padding: const EdgeInsets.all(16), child: Text(text)),
       );
+}
+
+// ── 勝負どころ ──
+
+String _scoreRow(String label, List<int> q, int total) =>
+    '$label  ${q.join(' - ')}  計 $total';
+
+class _ClutchView extends StatelessWidget {
+  const _ClutchView({required this.controller, required this.game});
+  final GameController controller;
+  final Game game;
+
+  @override
+  Widget build(BuildContext context) {
+    final run = game.run!;
+    final s = run.pending!;
+    final info = game.clutchInfo!;
+    final m = s.margin;
+    final situation = m == 0
+        ? '同点。残りはあと1回の攻防。'
+        : m > 0
+            ? '$m点リード。守り切れば勝ち。'
+            : '${-m}点ビハインド。決めれば逆転だ。';
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        CourtHeader(game: game, height: 110),
+        const SizedBox(height: 12),
+        Card(
+          color: Theme.of(context).colorScheme.primaryContainer,
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('勝負どころ!  ${run.league.label} ${run.round + 1}回戦',
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold)),
+                if (s.opponent.isNotEmpty) Text('相手: ${s.opponent}'),
+                const SizedBox(height: 8),
+                Text(_scoreRow('自チーム', s.teamQuarters, s.team)),
+                Text(_scoreRow('相手    ', s.oppQuarters, s.opp)),
+                const SizedBox(height: 8),
+                Text(situation,
+                    style: const TextStyle(fontWeight: FontWeight.bold)),
+                const SizedBox(height: 12),
+                for (final k in Clutch.values)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: FilledButton(
+                      onPressed: () => controller.playClutch(k),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                              '${k.label}  成功率 ${(info.chances[k]! * 100).round()}%',
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold)),
+                          Text(k.description,
+                              style: const TextStyle(fontSize: 12)),
+                        ],
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ),
+        if (controller.recent.isNotEmpty) ...[
+          const SizedBox(height: 12),
+          _RecentCard(lines: controller.recent),
+        ],
+        if (run.matches.isNotEmpty) ...[
+          const SizedBox(height: 12),
+          _RecentCard(lines: [
+            'ここまでの試合',
+            for (var i = 0; i < run.matches.length; i++)
+              matchLine(i, run.matches[i].won, run.matches[i].teamScore,
+                  run.matches[i].oppScore, run.matches[i].points,
+                  run.matches[i].rebounds, run.matches[i].assists),
+          ]),
+        ],
+      ],
+    );
+  }
 }
 
 // ── 出来事 ──

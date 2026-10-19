@@ -112,6 +112,38 @@ void main() {
     expect(find.text('春の過ごし方'), findsOneWidget);
   });
 
+  testWidgets('勝負どころで止まり、その場でプレーを選べる', (tester) async {
+    tall(tester);
+    GameController? c;
+    for (var seed = 0; seed < 400 && c == null; seed++) {
+      final t = GameController(rng: Random(seed), events: false);
+      t.game = Game(
+        eventsEnabled: false,
+        player: Player(
+          name: 'ケイ',
+          age: 15,
+          potential: 80,
+          heightCm: 195,
+          heightGenes: 0.5,
+          abilities: {for (final a in Ability.values) a: 80},
+        ),
+        rng: Random(seed),
+        slot: 1,
+      );
+      t.act(Action.rest);
+      if (t.game!.phase == Phase.clutch) c = t;
+    }
+    expect(c, isNotNull, reason: '勝負どころになる乱数が見つからない');
+    await tester.pumpWidget(BasketballCareerApp(controller: c!));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('勝負どころ!'), findsOneWidget);
+    expect(find.textContaining('成功率'), findsNWidgets(4));
+    await tester.tap(find.textContaining('ドライブ  成功率'));
+    await tester.pumpAndSettle();
+    expect(c.game!.records, isNotEmpty);
+    expect(find.textContaining('の夏の大会'), findsWidgets);
+  });
+
   test('おすすめで1年進める', () async {
     final c = GameController(rng: Random(4), events: false);
     c.newGame('オート');
