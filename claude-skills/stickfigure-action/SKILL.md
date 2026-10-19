@@ -54,6 +54,8 @@ description: 棒人間のアクション動画（戦い・物語つき）を、�
 | Becker 風の線 | 台本 `limb: {base: 0.055, tip: 0.03, tip_color: [0.08,0.08,0.1]}`, `fx: {weapon_glow: true}` | 手足が根元太→先細り・先が暗色、剣が水色に光る。観察は `reference/becker_recent.md` |
 
 | アニメの間 | `timing: true`, `exaggerate: 1.25` | 命中の clip を「素早く振りかぶり→溜めて止め→1〜2 コマで一気→振り抜いてゆっくり戻る」の時間配分に。溜めで腕を引き体を反らし、直後は行き過ぎる。命中は手足が伸び切ったコマ(`reach`)、当て先は手の高さから自動(`auto`)、体の表面を狙う(`surface`) |
+| スミア・残像 | `anime: {smear: true, trails: true}`(既定) | どちらも**打つ側の命中の前後だけ**(走りの剣先に残像が出ると床にジグザグが残る)。スミアは振りの 1〜2 コマの間の中割り 3 枚 |
+| 走りの誇張 | `fight.RUN_LOOK`(clip の `amp`+`add`) | 前傾 0.2・腕振り 1.35 倍(mocap の走りは直立で腕が低い) |
 | 検証用の固定カメラ | `camera: fixed` | カット・反転・連打カットを切って動きだけ見る(`scenes/study_slash.yaml`・`study_kick.yaml`)。**直しは台本でなく fight の既定・plan に入れる**(2026-10-19「一つの作品の質を上げるのではない、スキルとして向上させる」) |
 
 測り方: `python -m stickfig motion scenes/x.yaml`、`check` の「キレ」(先端の速さの山÷溜めの平均。目安 4 以上)・「待ち」・「間合い」(命中後の 2 人の距離の最小。0.55 未満は胴が重なる)。コマ送りで見る: ffmpeg の `select+tile` でコマ表(CLAUDE.md「2D アニメの動きの質」)。（体のひねり `spin` の標準偏差、足滑り、歩数、1コマの最大移動、攻防の内訳、接触の距離）。改善前→後で A の spin_sd 0→0.45、歩数 4→11、攻防 A:slash×5 → A:slash×3＋clash/miss＋B の miss/clash/hit。
