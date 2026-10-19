@@ -349,6 +349,7 @@ def build_fight(spec: dict) -> dict:
                 else:
                     hits.append(dict(tau=_r(tbj), hold=0.07, kind="clash", by="B", contact=dict(striker="B", effector="hand", target=dict(actor="A", point=_pt(cclip, "hand")), tol=0.45, max_anticipation=50, hz_range=0.5, surface=0.38)))
                     keysA += [dict(t=_r(tbj - 0.14), **BLOCK), dict(t=_r(tbj + 0.08), **BLOCK), dict(t=_r(tbj + 0.26), **GUARD_A)]
+            dxB += 0.7                                   # 連打のあと B はその場に残る(0.7 戻していたので、A が決めの前に 2 コマで 1.0 追いかけて重なり、2 人とも壁へ流れていた)
             keysB.append(dict(t=_r(tb + 0.45 * (bc - 1) + 0.32), dx=_r(dxB), **GUARD))
         if i == 0 and s["counter"] and n > 1:
             tcn = t + 0.40                               # A の命中のあと、B が踏み込む時間(0.3 秒前からの助走)を取ってから打つ
