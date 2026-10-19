@@ -421,11 +421,12 @@ def _footwork(scene: dict, frames: List[dict]) -> None:
 def _align_keys_to_clips(scene: dict, tracks: Dict[str, KeyTrack]) -> Dict[str, KeyTrack]:
     """clip とキーの位置(dx)を継ぎ目でそろえる(測ると 1 コマ 1.8 単位の瞬間移動があった)。
 
-    - 接触で位置を決めていない clip(走り・pos 指定の斬り)は、anchor_dx を直前のキーの位置に合わせる(clip がキーに寄る)。
-      その clip の区間にある pos 指定の命中は、同じ分だけずらす
-    - 接触で決めた clip(_solved)は動かさず、clip が終わった位置から先のキーを、その差だけ平行移動する(キーが clip に寄る)
-    - clip の区間の中のキーは clip の値に、始点・終点にはキーを置く(混ぜる区間で差が無いように)
-    2 回呼ぶ: 接触を解く前(全部の clip をキーに寄せる)と、解いた後(解いた clip から先を平行移動)。"""
+    - 位置が自由な clip(走り・接触を解かない打ち)は、anchor_dx をキーの位置に合わせる(clip がキーに寄る)。
+      接触で決めた clip のすぐ前に続くものは、終わりを次の始まりに合わせる(鎖)
+    - 接触で決めた clip(_solved)は動かさない。その区間の中のキーは clip の値にし、
+      前 0.3 秒は台本の位置から始点へ、後 0.3 秒は終点から台本の位置へ、なめらかに寄せる(助走と戻り)。
+      台本の位置はキーに `_dx0` として覚えておき、毎回そこから寄せる(何度呼んでも同じ結果=解く→合わせる の繰り返しが収束する)
+    - この人物が関わる別の命中の瞬間は、助走・戻りでまたがない(解いた接触を崩さない)"""
     bank = scene.get("_bank")
     if bank is None:
         return tracks
@@ -435,9 +436,13 @@ def _align_keys_to_clips(scene: dict, tracks: Dict[str, KeyTrack]) -> Dict[str, 
             continue
         a = scene["actors"][who]
         s = _sign(a)
-        base = KeyTrack(copy.deepcopy(keys), _stance(a))
+        for k in keys:
+            if "_dx0" not in k and "dx" in k:
+                k["_dx0"] = float(k["dx"])
+        base_keys = [dict({kk: v for kk, v in k.items() if kk != "_dx0"}, **({"dx": k["_dx0"]} if "_dx0" in k else {})) for k in keys]
+        base = KeyTrack(copy.deepcopy(base_keys), _stance(a))
         clips = sorted(lst, key=lambda c: c["start"])
-        for ci in range(len(clips) - 2, -1, -1):        # 後ろから: 接触で決めた clip のすぐ前(0.3 秒以内)の、位置が自由な clip は、終わりを次の始まりに合わせる
+        for ci in range(len(clips) - 2, -1, -1):        # 鎖: 接触で決めた clip のすぐ前(0.3 秒以内)の自由な clip は、終わりを次の始まりに合わせる
             c, nxt = clips[ci], clips[ci + 1]
             if c.get("_solved") or not (nxt.get("_solved") or nxt.get("_chained")) or nxt["start"] - c["end"] > 0.3:
                 continue
@@ -448,64 +453,59 @@ def _align_keys_to_clips(scene: dict, tracks: Dict[str, KeyTrack]) -> Dict[str, 
                     if "pos" in h and c["start"] - 0.05 <= h["tau"] <= c["end"] + 0.05 and h.get("by") == who:
                         h["pos"] = [h["pos"][0] + s * d, h["pos"][1]]
             c["_chained"] = True
-        delta, shifts, windows = 0.0, [], []
+        windows = []
         for c in clips:
             w0, w1 = c["start"] - c.get("in", 0.1), c["end"] + c.get("out", 0.1)
-            v0 = bank.sample(c, c["start"])["dx"]
-            exp0 = base.at(c["start"])["dx"] + delta
-            if not c.get("_solved") and not c.get("_chained"):
-                d = exp0 - v0
+            if not c.get("_solved") and not c.get("_chained"):      # 自由な clip: 台本の位置に寄せる
+                d = base.at(c["start"])["dx"] - bank.sample(c, c["start"])["dx"]
                 if abs(d) > 1e-6:
                     c["anchor_dx"] = c.get("anchor_dx", 0.0) + d
                     for h in scene.get("hits", []):
                         if "pos" in h and c["start"] - 0.05 <= h["tau"] <= c["end"] + 0.05 and h.get("by") == who:
                             h["pos"] = [h["pos"][0] + s * d, h["pos"][1]]
-            v1 = bank.sample(c, c["end"])["dx"]
-            delta = v1 - base.at(c["end"])["dx"]
-            shifts.append((w1, delta))
             windows.append((w0, w1, c))
+        protected = sorted(h["tau"] for h in scene.get("hits", []) if h.get("contact") and who in (h["contact"].get("striker"), h["contact"]["target"].get("actor")))
 
-        def shift_at(tt: float) -> float:
-            dd = 0.0
-            for w1, dl in shifts:
-                if w1 < tt:
-                    dd = dl
-            return dd
+        def in_other(tt, c):
+            return any(o is not c and w0o <= tt <= w1o for (w0o, w1o, o) in windows)
 
+        # 始点・終点・助走の始まりにキーを置く(無ければ)
+        for (w0, w1, c) in windows:
+            pts = [c["start"], c["end"]]
+            if c.get("_solved") or c.get("_chained"):
+                pts += [w0 - 0.3, w1 + 0.3]
+            for tt in pts:
+                if tt <= 0 or any(abs(float(k["t"]) - tt) < 0.05 for k in keys) or in_other(tt, c):
+                    continue
+                keys.append(dict(t=round(float(tt), 3), dx=round(base.at(tt)["dx"], 4), _dx0=round(base.at(tt)["dx"], 4)))
+        keys.sort(key=lambda k: float(k["t"]))
         for k in keys:
             tt = float(k["t"])
+            dx0 = float(k.get("_dx0", base.at(tt)["dx"]))
             inside = [c for (w0, w1, c) in windows if w0 <= tt <= w1]
             if inside:
                 c = inside[-1]
                 k["dx"] = round(bank.sample(c, min(max(tt, c["start"]), c["end"]))["dx"], 4)
-            else:
-                k["dx"] = round(base.at(tt)["dx"] + shift_at(tt), 4)
-        protected = sorted(h["tau"] for h in scene.get("hits", []) if h.get("contact") and who in (h["contact"].get("striker"), h["contact"]["target"].get("actor")))
-        for (w0, w1, c) in windows:                      # 接触で決めた clip へは、0.3 秒前から助走(その間のキーを、clip の始点の値へ寄せていく)
-            if c.get("_solved") or c.get("_chained"):
+                continue
+            val = dx0
+            for (w0, w1, c) in windows:
+                if not (c.get("_solved") or c.get("_chained")):
+                    continue
                 t0 = w0 - 0.3
-                for pt in protected:                     # ただし、この人物が関わる別の命中の瞬間はまたがない(そこを動かすと、解いた接触が崩れる)
+                for pt in protected:
                     if t0 <= pt < w0:
                         t0 = max(t0, pt + 0.04)
-                if t0 >= w0 - 0.04:
-                    continue
-                span = w0 - t0
-                v0 = bank.sample(c, c["start"])["dx"]
-                if t0 > 0 and not any(abs(float(k["t"]) - t0) < 0.05 for k in keys) and not any(o is not c and w0o <= t0 <= w1o for (w0o, w1o, o) in windows):
-                    keys.append(dict(t=round(t0, 3), dx=round(base.at(t0)["dx"] + shift_at(t0), 4)))
-                for k in keys:
-                    tt = float(k["t"])
-                    if t0 < tt < w0 and not any(o is not c and w0o <= tt <= w1o for (w0o, w1o, o) in windows):
-                        u = (tt - t0) / span
-                        k["dx"] = round((1 - u) * float(k["dx"]) + u * v0, 4)
-        for (w0, w1, c) in windows:
-            for tt in (c["start"], c["end"]):
-                if any(abs(float(k["t"]) - tt) < 0.05 for k in keys):
-                    continue
-                if any(o is not c and w0o - 0.02 <= tt <= w1o + 0.02 for (w0o, w1o, o) in windows):
-                    continue                   # 隣の clip の区間の中(混ぜる区間が重なる所)には置かない
-                keys.append(dict(t=round(float(tt), 3), dx=round(bank.sample(c, tt)["dx"], 4)))
-        keys.sort(key=lambda k: float(k["t"]))
+                if t0 < tt < w0 and w0 - t0 > 0.04:                     # 助走: 台本の位置 → 始点
+                    u = (tt - t0) / (w0 - t0)
+                    val = (1 - u) * dx0 + u * bank.sample(c, c["start"])["dx"]
+                t1 = w1 + 0.3
+                for pt in protected:
+                    if w1 < pt <= t1:
+                        t1 = min(t1, pt - 0.04)
+                if w1 < tt < t1 and t1 - w1 > 0.04:                     # 戻り: 終点 → 台本の位置
+                    u = (tt - w1) / (t1 - w1)
+                    val = (1 - u) * bank.sample(c, c["end"])["dx"] + u * dx0
+            k["dx"] = round(val, 4)
     return make_tracks(scene)
 
 
@@ -758,14 +758,18 @@ def build_plan(scene: dict, solve: bool = True) -> dict:
         tracks = _align_keys_to_clips(scene, tracks)
     contacts = []
     if solve:
-        rounds = 4 if (scene.get("align_clips", True) and scene.get("physics") is None and scene.get("_bank") is not None) else 1
+        rounds = 12 if (scene.get("align_clips", True) and scene.get("physics") is None and scene.get("_bank") is not None) else 1
         for it in range(rounds):
+            before = [c.get("anchor_dx", 0.0) for lst in scene["_bank"].defs.values() for c in lst] if rounds > 1 else []
             contacts = []
             for h in scene.get("hits", []):
                 if h.get("contact"):
                     contacts.append(solve_contact(scene, tracks, h))
-            if rounds > 1:                              # 解いた位置に合わせてキーを動かし、動いた相手に合わせてもう一度解く(3 回で落ち着く。最後の合わせでずれる分は許容の中)
+            if rounds > 1:                              # 解いた位置に合わせてキーを動かし、動いた相手に合わせてもう一度解く。anchor が動かなくなるまで(命中が連鎖するので数回かかる)
                 tracks = _align_keys_to_clips(scene, tracks)
+                after = [c.get("anchor_dx", 0.0) for lst in scene["_bank"].defs.values() for c in lst]
+                if max((abs(x - y) for x, y in zip(before, after)), default=0.0) < 0.02 and it >= 1:
+                    break
     phys = None
     if scene.get("physics") is not None:
         phys = run_physics(scene, tracks)
