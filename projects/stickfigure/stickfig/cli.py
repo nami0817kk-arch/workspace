@@ -56,11 +56,19 @@ def cmd_plan(a) -> int:
     return 0
 
 
+def cmd_rhythm(a) -> int:
+    from . import rhythm
+    print(rhythm.report(a.video))
+    return 0
+
+
 def cmd_check(a) -> int:
     scene = planmod.load_scene(a.scene)
     pl = planmod.build_plan(scene)
     res = qa.run_gate(pl, scene.get("qa"))
     print(qa.format_report(res))
+    from . import rhythm
+    print(rhythm.plan_report(pl))
     if a.report:
         Path(a.report).write_text(qa.format_report(res), encoding="utf-8")
     return 0 if res["passed"] else 1
@@ -126,6 +134,7 @@ def main(argv=None) -> int:
     p = sub.add_parser("plan"); p.add_argument("scene"); p.add_argument("--out", required=True); p.set_defaults(fn=cmd_plan)
     p = sub.add_parser("check"); p.add_argument("scene"); p.add_argument("--report"); p.set_defaults(fn=cmd_check)
     p = sub.add_parser("build"); p.add_argument("scene"); p.add_argument("--out", required=True); p.add_argument("--force", action="store_true"); p.add_argument("--reuse-figs", action="store_true", help="書き出し済みの人物PNGを再利用(plan が同じときだけ)"); p.set_defaults(fn=cmd_build)
+    p = sub.add_parser("rhythm"); p.add_argument("video"); p.set_defaults(fn=cmd_rhythm)
     p = sub.add_parser("video-check"); p.add_argument("video"); p.add_argument("--out"); p.add_argument("--fps", type=float, default=30.0); p.set_defaults(fn=cmd_video_check)
     a = ap.parse_args(argv)
     return a.fn(a)
