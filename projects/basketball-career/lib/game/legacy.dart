@@ -151,6 +151,9 @@ final achievements = <Achievement>[
       (g) => g.player.age >= 35 && _wentPro(g)),
 ];
 
+/// 解除した実績の数から、次の選手に引き継ぐ初期能力の加算(5個で+1、最大+5)。
+int legacyBonusFor(int unlockedCount) => (unlockedCount ~/ 5).clamp(0, 5);
+
 /// 一生が終わった `g` が満たす実績の id。
 Set<String> earnedBy(Game g) => {
       for (final a in achievements)

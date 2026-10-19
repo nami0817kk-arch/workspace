@@ -1338,4 +1338,22 @@ void main() {
       expect(earnedBy(g).containsAll(['best5_x3', 'mvp']), isTrue);
     });
   });
+
+  group('殿堂からの引き継ぎ', () {
+    test('実績5個ごとに初期能力が+1(最大+5)', () {
+      expect(legacyBonusFor(0), 0);
+      expect(legacyBonusFor(4), 0);
+      expect(legacyBonusFor(5), 1);
+      expect(legacyBonusFor(12), 2);
+      expect(legacyBonusFor(100), 5);
+    });
+
+    test('新しい選手の初期能力に加わる', () {
+      final a = Game.start('a', rng: Random(1), legacyBonus: 0);
+      final b = Game.start('a', rng: Random(1), legacyBonus: 3);
+      for (final ab in Ability.values) {
+        expect(b.player.of(ab), a.player.of(ab) + 3);
+      }
+    });
+  });
 }

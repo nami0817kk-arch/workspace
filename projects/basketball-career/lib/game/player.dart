@@ -203,7 +203,8 @@ const _weights = <Position, Map<Ability, int>>{
 
 /// 生まれの選手を作る。身長は 6歳で 112〜124cm。
 Player newPlayer(
-        String name, int potential, double heightGenes, Set<Trait> traits) =>
+        String name, int potential, double heightGenes, Set<Trait> traits,
+        {int bonus = 0}) =>
     Player(
       name: name,
       age: startAge,
@@ -211,4 +212,6 @@ Player newPlayer(
       heightCm: 112 + heightGenes.clamp(0, 1) * 12,
       heightGenes: heightGenes.clamp(0, 1).toDouble(),
       traits: traits,
+      // 殿堂の実績から引き継ぐ初期能力。
+      abilities: {for (final a in Ability.values) a: startLevel + bonus},
     );

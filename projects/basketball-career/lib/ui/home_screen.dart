@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../game/difficulty.dart';
+import '../game/legacy.dart';
 import 'controller.dart';
 import 'history_screen.dart';
 import 'settings_screen.dart';
@@ -75,6 +76,16 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Text(_difficulty.description,
                       style: const TextStyle(fontSize: 12)),
                 ),
+                if (legacyBonusFor(widget.controller.unlocked.length) > 0)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: Text(
+                        '殿堂からの引き継ぎ: 全能力 +${legacyBonusFor(widget.controller.unlocked.length)}(実績 ${widget.controller.unlocked.length}個)',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.primary,
+                            fontWeight: FontWeight.bold)),
+                  ),
                 FilledButton(
                   onPressed: () =>
                       widget.controller.newGame(_name.text, _difficulty),
