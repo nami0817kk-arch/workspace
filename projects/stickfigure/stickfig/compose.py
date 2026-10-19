@@ -233,7 +233,7 @@ def radial(d_ov: ImageDraw.ImageDraw, cx: float, cy: float, u: float, big: float
 
 
 BIG = dict(kick=1.2, slash=1.2, wall=1.5, heel=1.8, hit=1.0, clash=1.3)
-BURST_FRAMES = dict(slash=7, hit=9, kick=14, wall=14, heel=14, clash=8)   # 放射線が残るコマ数。連続する命中で重ならないよう、斬りは短く
+BURST_FRAMES = dict(slash=7, hit=9, kick=14, wall=14, heel=14, clash=8, miss=4)   # 放射線が残るコマ数。連続する命中で重ならないよう、斬りは短く
 
 
 def compose_frame(plan: dict, f: int, figs: Dict[int, Image.Image], stages: Optional[Dict[int, Image.Image]] = None) -> Image.Image:

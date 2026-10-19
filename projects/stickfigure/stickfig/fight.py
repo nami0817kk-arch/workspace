@@ -33,7 +33,7 @@ DEFAULTS = dict(
     b_scale=1.0,             # 相手の大きさ(1.3 で大柄のボス)。連打の位置は固定なので 1.15〜1.35 まで
     stage="cave",            # 舞台の色の組: cave / dojo / field / night / sunset
     ally=None,               # 3人目(味方): {color, x(置く位置), y(奥行き。+で奥), facing(+1右向き/-1左向き), scale, cheer(勝ったら万歳 true/負けたらうなだれる false)}。戦わず、見守る
-    block=True,              # 連打の途中の1発(2発目)を、相手が剣(腕)で受け止める(鍔迫り合い)。hits が3以上のとき
+    block=True,              # 連打の途中を相手が防ぐ(hits が3以上): 2発目は 受け止め(clash) か かわす(miss)。seed があれば選ぶ、無ければ受け止め。hits≧4 なら3発目にもう一方
     body=1.7,                # 全身の動きの強さ(0 で切る)。命中ごとに、攻める側のひねり込み・踏み込み、受ける側ののけぞり・押される動き
     seed=None,               # 数字を入れると、連打の clip・間・溜めの色・カットの順を、その数字で変える(同じ数字なら同じ戦い)
     mood="battle",           # BGM の雰囲気: battle / tense / calm / sad / none
@@ -182,7 +182,13 @@ def build_fight(spec: dict) -> dict:
         ts.append(ts[-1] + gaps[i - 1])
     keysA.append(dict(t=_r(h0 - 0.2), dx=4.6, hz=0.9))
     dxB = -1.7
-    blocked_i = 1 if (s["block"] and n >= 3) else -1     # 受け止めるのは2発目(1発目は当たり、最後は決め)
+    defend = {}                                          # 何発目を、どう防ぐか: index → "clash" / "miss"
+    if s["block"] and n >= 3:
+        first = (rng.choice(["clash", "miss"]) if rng is not None else "clash")
+        defend[1] = first
+        if n >= 4:
+            defend[2] = "miss" if first == "clash" else "clash"
+    blocked_i = -1
     for i, t in enumerate(ts):
         last = i == n - 1
         pre, post = (0.4, 0.18) if i == 0 else (0.16, 0.22)
@@ -193,18 +199,24 @@ def build_fight(spec: dict) -> dict:
         clipsA.append(clip)
         if last:
             hits.append(dict(tau=_r(t), hold=0.08, kind=kind_hit, by="A", contact=dict(striker="A", effector=eff, target=dict(actor="B", point="chest"), tol=round(0.3 + 0.6 * max(0.0, float(s["b_scale"]) - 1.0), 2), max_anticipation=50, hz_range=dict(sword=0.3, dagger=0.3, staff=0.6, spear=0.9).get(s["weapon"], 0.3))))
-        elif blocked_i == i:                             # 受け止め(鍔迫り合い): 命中の種類 clash、相手は腕を上げて受け、少しだけ押される
+        elif defend.get(i) == "clash":                   # 受け止め(鍔迫り合い): 命中の種類 clash、相手は腕を上げて受け、少しだけ押される
             hits.append(dict(tau=_r(t), hold=0.07, kind="clash", by="A", pos=[_r(3.7 - 0.2 * i), _r(1.3 - 0.1 * i)]))
+        elif defend.get(i) == "miss":                    # かわす: 空振り。高い斬りはくぐり、低い斬りは後ろへ跳ぶ(plan._body_drive が pos の高さで決める)
+            hits.append(dict(tau=_r(t), hold=0.0, kind="miss", by="A", pos=[_r(3.7 - 0.2 * i), 1.2 if (i % 2 == 1) else 0.8]))
         else:
             hits.append(dict(tau=_r(t), hold=0.05, kind=kind_hit, by="A", pos=[_r(3.7 - 0.2 * i), _r(1.25 - 0.1 * i)]))
-        flashes.append(_r(t))
-        if blocked_i == i:
+        if defend.get(i) != "miss":
+            flashes.append(_r(t))
+        if defend.get(i) == "clash":
             dxB -= 0.10
             keysB += [dict(t=_r(t - 0.14), dx=_r(dxB + 0.10), **BLOCK), dict(t=_r(t + 0.08), dx=_r(dxB), **BLOCK),
                       dict(t=_r(t + 0.24), dx=_r(dxB), **GUARD)]
+        elif defend.get(i) == "miss":
+            dxB -= 0.05
+            keysB += [dict(t=_r(t - 0.2), dx=_r(dxB + 0.05), **GUARD), dict(t=_r(t + 0.3), dx=_r(dxB), **GUARD)]
         else:
             dxB -= 0.25
-        if not last and blocked_i != i:
+        if not last and i not in defend:
             keysB += [dict(t=_r(t + 0.07), dx=_r(dxB), lean=-0.3 - 0.07 * i, fa=0.4, ra=0.4, ht=-0.4 - 0.1 * i, face="pain"),
                       dict(t=_r(t + 0.2), dx=_r(dxB), **GUARD)]
         if i == 0 and s["counter"] and n > 1:

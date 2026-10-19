@@ -101,7 +101,7 @@ python scripts/make_gallery.py 09_01:2.4 135_07_s1:3.6   # clip を順に再生�
 
 使う順番は、スキル `stickfigure-action`(`~/.claude/skills`、バックアップは `claude-skills/`)。ここは部品の一覧。
 
-- 受け止め(`fight` の `block`、既定 true、hits≧3 で2発目): 命中の種類 `clash`(ガキィン・金属音・放射線)。受ける側は両腕を上げて受け(BLOCK 姿勢)、腰を落として踏ん張り、少しだけ押される
+- 防御(`fight` の `block`、既定 true、hits≧3): 2発目を 受け止め `clash`(ガキィン・金属音・放射線。両腕を上げ腰を落として踏ん張り、少し押される)か かわし `miss`(風切りだけ。高い斬りは沈んでくぐり、低い斬りは後ろへ跳ぶ)。seed があれば選び、hits≧4 なら3発目にもう一方。見本 scenes/fight_dodge.yaml
 - 全身の動き(`body_drive`、fight の `body`、既定1.7): 命中ごとに、攻め側は溜め(後ろへひねり・沈む)→ひねり込み・体重移動、受け側はのけぞり・ひねられ・腰が落ち・押される。ユーザー指摘「手だけ動いている」(2026-10-19)への対応。hits に by: A/B を書く(fight は自動)
 - `fight.py`: 戦いの台本を数行の指定から自動で組む(`fight: {weapon(sword/dagger/staff/spear/none), kick, hits, counter, finisher, palette, stage, mood, colors, a_scale/b_scale, ally, seed, lines}`)。見本 `scenes/fight_*.yaml`。3人目の味方 `ally` は actors に C を足し、奥行き `y` をずらして置く(blender_player・影・字幕が y を見る。戦う2人の点検・カメラ追従は A/B だけ)
 - `captions.py`(既定 off。fight の `captions: true` で出す。ユーザー指示で字幕なし): 台詞の吹き出し(`say`)・ナレーション(`narr`)・叫び文字(`shout`)。台本の `captions` か fight の `lines`

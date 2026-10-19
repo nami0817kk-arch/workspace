@@ -23,8 +23,8 @@ def test_build_fight_is_valid_scene(spec):
     _times_sorted(sc)
     kinds = [h["kind"] for h in sc["hits"]]
     main = "hit" if spec["weapon"] == "none" else "slash"
-    assert kinds.count(main) + kinds.count("clash") >= spec["hits"]        # 連打の途中の1発は受け止め(clash)になることがある
-    assert kinds.count("clash") == (1 if spec["hits"] >= 3 else 0)
+    assert kinds.count(main) + kinds.count("clash") + kinds.count("miss") >= spec["hits"]        # 連打の途中は受け止め(clash)・かわし(miss)になることがある
+    assert (kinds.count("clash") + kinds.count("miss")) == (0 if spec["hits"] < 3 else (1 if spec["hits"] == 3 else 2))
     assert ("kick" in kinds) == spec["kick"]
     assert (("heel" in kinds) == (spec["finisher"] == "launch_slash"))
     assert sc["tau_end"] > max(h["tau"] for h in sc["hits"])

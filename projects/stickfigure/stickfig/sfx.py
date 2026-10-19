@@ -105,6 +105,8 @@ def se(plan: dict, seed: int = 7) -> np.ndarray:
         elif k in ("kick", "hit"):
             _add(buf, whoosh(rng, 0.16), t - 0.12, 0.6)
             _add(buf, thump(rng, 160 if k == "kick" else 200, 0.3, 0.45), t, 1.0)
+        elif k == "miss":
+            _add(buf, whoosh(rng, 0.26), t - 0.14, 0.9)
         elif k == "clash":                              # 金属どうし: 高い倍音の鳴り + 短い打撃
             n_ = int(SR * 0.55)
             tt = np.arange(n_) / SR

@@ -452,7 +452,7 @@ def _body_drive(p: dict, who: str, f: int, events: List[dict], cfg: dict, sign: 
     受ける側は 衝撃で体がのけぞり・ひねられ・腰が落ち・後ろへ押される(root_x)→ 踏ん張って戻る。
     cfg(台本 body_drive): {strength: 1.0, kinds: [slash, hit, kick, heel]}。命中の瞬間のつながりを保つため、攻め側の前進は命中時に 0 へ戻す。"""
     k = float(cfg.get("strength", 1.0))
-    kinds = cfg.get("kinds", ["slash", "hit", "kick", "heel", "clash"])
+    kinds = cfg.get("kinds", ["slash", "hit", "kick", "heel", "clash", "miss"])
     p = dict(p)
     dspin = dlean = dhz = ddx = dht = dfl = drl = dfk = 0.0
     for e in events:
@@ -473,6 +473,14 @@ def _body_drive(p: dict, who: str, f: int, events: List[dict], cfg: dict, sign: 
             elif 0 < d <= 12:                            # 振り抜き: ひねりが余り、戻る
                 u = 1 - d / 12.0
                 dspin += 0.60 * k * u * u; dlean += 0.12 * k * u * u; dhz += -0.05 * k * u
+        elif e["kind"] == "miss":                        # かわす側: 直前に沈み込んでくぐる(頭を下げ、前へ倒し、膝を深く)、または後ろへ跳ぶ。命中の瞬間が最も低い/遠い
+            duck = e.get("pos", [0, 1.0])[1] >= 0.95
+            if -6 <= d <= 10:
+                u = math.sin(math.pi * (d + 6) / 16.0)
+                if duck:
+                    dhz += -0.42 * k * u; dlean += 0.55 * k * u; dht += 0.5 * k * u; dfl += 0.6 * k * u; dfk += 0.9 * k * u; drl += -0.2 * k * u; dfk += 0.0
+                else:
+                    ddx += -0.55 * k * u; dlean += -0.15 * k * u; dhz += 0.06 * k * math.sin(math.pi * min(1.0, max(0.0, (d + 4) / 8.0)))
         elif e["kind"] == "clash":                       # 受け止める側: 直前に腰を落として構え、押し合いで少し押され、踏ん張って戻る(のけぞらない)
             if -5 <= d < 0:
                 u = (d + 5) / 5.0

@@ -1,0 +1,5 @@
+# 防御の見本: 4連打で、受け止めとかわすの両方が出る
+name: fight_dodge
+fight: {weapon: sword, kick: false, hits: 4, counter: true, finisher: launch_slash, seed: 2, stage: dojo}
+limb: {base: 0.055, tip: 0.03, tip_color: [0.08, 0.08, 0.1]}
+fx: {weapon_glow: true}
