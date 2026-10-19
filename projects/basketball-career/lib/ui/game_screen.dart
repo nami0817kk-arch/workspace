@@ -304,6 +304,13 @@ class _PlayerCard extends StatelessWidget {
             _Meter(label: '気持ち', value: cond.morale),
             _Meter(label: 'チーム', value: game.teamwork),
             _Meter(label: 'コーチ', value: game.coachBond),
+            if (game.mate.isNotEmpty || game.coachLabel.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(top: 2),
+                child: Text(
+                    'コーチ: ${game.coachLabel.isEmpty ? '-' : game.coachLabel}  /  仲間: ${game.mate.isEmpty ? '-' : game.mate}',
+                    style: const TextStyle(fontSize: 12)),
+              ),
             if (game.schoolLabel.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.only(top: 2),

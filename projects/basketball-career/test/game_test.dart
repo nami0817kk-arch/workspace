@@ -1774,4 +1774,42 @@ void main() {
       expect(h.lastWasRut, isTrue);
     });
   });
+
+  group('チームメイトとコーチの名前', () {
+    test('始めると名前がつき、出来事の文に入る', () {
+      final g = Game.start('a', rng: Random(3), events: false);
+      expect(g.mate, isNotEmpty);
+      expect(g.coachLabel, isNotEmpty);
+      g.pendingEventId = 'friends';
+      expect(g.fill(g.pendingEvent!.body), contains(g.mate));
+      g.pendingEventId = 'coach_talk';
+      expect(g.fill(g.pendingEvent!.body), contains('${g.coachLabel}コーチ'));
+      for (final e in events) {
+        expect(g.fill(e.body), isNot(contains('{')), reason: e.id);
+      }
+    });
+
+    test('名前が無い古いセーブでも自然な文になる', () {
+      final g = Game.fromJson({'player': {'name': 'old'}, 'pendingEventId': 'friends'});
+      expect(g.fill(g.pendingEvent!.body), contains('仲間'));
+      expect(g.fill('{coach}'), 'コーチ');
+    });
+
+    test('進学すると新しい名前になり、保存される', () {
+      final g = Game(
+        eventsEnabled: false,
+        player: Player(name: 'a', age: 12, potential: 50, heightCm: 150, heightGenes: 0.5),
+        rng: Random(4),
+        mate: '旧チーム',
+        coachLabel: '旧',
+      );
+      for (var i = 0; i < 4; i++) {
+        g.choose(Action.rest, Ability.pass);
+      }
+      expect(g.stage, Stage.juniorHigh);
+      expect(g.mate, isNot('旧チーム'));
+      expect(Game.fromJson(g.toJson()).mate, g.mate);
+      expect(Game.fromJson(g.toJson()).coachLabel, g.coachLabel);
+    });
+  });
 }

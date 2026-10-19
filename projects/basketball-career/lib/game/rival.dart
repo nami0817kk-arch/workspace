@@ -85,6 +85,21 @@ const _given = [
 String _rivalName(Random rng) =>
     '${_surnames[rng.nextInt(_surnames.length)]}${_given[rng.nextInt(_given.length)]}';
 
+const _mateGiven = [
+  'タクミ', 'ダイキ', 'ショウ', 'ナオキ', 'リク', 'ハルト', 'コウタ', 'ユキト', 'マサキ', 'トモヤ',
+];
+const _mateSurnames = [
+  '佐野', '岡本', '村上', '木下', '石川', '森田', '清水', '前田', '藤井', '三浦',
+];
+const _coachSurnames = ['大島', '西村', '宮本', '高橋', '松岡', '青木', '堀内', '長谷川'];
+
+/// チームメイトの名前(姓＋名)。
+String mateName(Random rng) =>
+    '${_mateSurnames[rng.nextInt(_mateSurnames.length)]}${_mateGiven[rng.nextInt(_mateGiven.length)]}';
+
+/// コーチの名前(姓)。
+String coachName(Random rng) => _coachSurnames[rng.nextInt(_coachSurnames.length)];
+
 const _teamPrefix = [
   '北嶺', '南陽', '東雲', '西浜', '青葉', '白鷺', '紅葉', '朝日', '双葉', '桜台',
   '星丘', '翠山', '蒼海', '大和', '緑風',

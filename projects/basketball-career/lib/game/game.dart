@@ -149,6 +149,8 @@ class Game {
     this.teamwork = 40,
     this.coachBond = 20,
     this.rivalMet = false,
+    this.mate = '',
+    this.coachLabel = '',
     List<Action>? recentActions,
     this.schoolBonus = 0,
     this.schoolLabel = '',
@@ -200,6 +202,7 @@ class Game {
       eventsEnabled: events,
     );
     g._rollGoalOptions();
+    g._newTeamNames();
     return g;
   }
 
@@ -273,6 +276,10 @@ class Game {
   TermReport? lastReport;
   int slot;
 
+  /// チームメイトの名前とコーチの名前(段階が変わると替わる。出来事の文に入る)。
+  String mate;
+  String coachLabel;
+
   /// ライバルとはじめて対戦したか(出会いの演出を1度だけ出すため)。
   bool rivalMet;
 
@@ -326,7 +333,16 @@ class Game {
                   : Phase.season;
 
   /// 出来事の文中の {rival} をライバルの名前にする。
-  String fill(String s) => s.replaceAll('{rival}', rival.name);
+  String fill(String s) => s
+      .replaceAll('{rival}', rival.name)
+      .replaceAll('{mate}', mate.isEmpty ? '仲間' : mate)
+      .replaceAll('{coach}', coachLabel.isEmpty ? 'コーチ' : '$coachLabelコーチ');
+
+  /// 新しいチームになったときに、チームメイトとコーチの名前を引き直す。
+  void _newTeamNames() {
+    mate = mateName(rng);
+    coachLabel = coachName(rng);
+  }
 
   EventDef? get pendingEvent =>
       pendingEventId == null ? null : eventById(pendingEventId!);
@@ -636,6 +652,7 @@ class Game {
       coachBond = 20;
       schoolBonus = 0;
       schoolLabel = '';
+      _newTeamNames();
     }
   }
 
@@ -796,6 +813,7 @@ class Game {
         coachBond = 20;
         schoolBonus = 0;
         schoolLabel = '';
+        _newTeamNames();
         if (eventsEnabled) pendingEventId = 'pro_join';
         pathPending = false;
         proRejected = false;
@@ -813,6 +831,7 @@ class Game {
     coachBond = 20;
     schoolBonus = 0;
     schoolLabel = '';
+    _newTeamNames();
     collegeYearsLeft = route.years;
     secondChance = true;
     pathPending = false;
@@ -881,6 +900,8 @@ class Game {
         'teamwork': teamwork,
         'coachBond': coachBond,
         'rivalMet': rivalMet,
+        'mate': mate,
+        'coachLabel': coachLabel,
         'recentActions': [for (final a in recentActions) a.name],
         'schoolBonus': schoolBonus,
         'schoolLabel': schoolLabel,
@@ -926,6 +947,8 @@ class Game {
         recoveredThisTerm: (j['recoveredThisTerm'] as bool?) ?? false,
         teamwork: (j['teamwork'] as num?)?.toInt() ?? 40,
         coachBond: (j['coachBond'] as num?)?.toInt() ?? 20,
+        mate: (j['mate'] as String?) ?? '',
+        coachLabel: (j['coachLabel'] as String?) ?? '',
         rivalMet: (j['rivalMet'] as bool?) ?? (((j['rival'] as Map?)?['wins'] as num? ?? 0) + ((j['rival'] as Map?)?['losses'] as num? ?? 0) > 0),
         recentActions: [
           for (final v in (j['recentActions'] as List?) ?? const [])
