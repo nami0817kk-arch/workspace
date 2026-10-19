@@ -15,6 +15,7 @@ import 'package:baseball_manager/ui/controller.dart';
 import 'package:baseball_manager/ui/history.dart';
 import 'package:baseball_manager/ui/game_screen.dart' show endingShareText;
 import 'package:baseball_manager/ui/labels.dart';
+import 'package:baseball_manager/ui/widgets.dart' show CastCard;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -990,7 +991,7 @@ void _rankTests() {
       await t.pumpAndSettle();
       expect(t.takeException(), isNull, reason: '${g.stage}');
       // 3つのタブ(育成・能力・キャリア)も溢れない
-      for (final tab in ['ability', 'career', 'train']) {
+      for (final tab in ['ability', 'career', 'relations', 'train']) {
         if (find.byKey(Key('tab-$tab')).evaluate().isEmpty) continue;
         await _tab(t, tab);
         expect(t.takeException(), isNull, reason: '${g.stage} tab-$tab');
@@ -1409,6 +1410,46 @@ void _rankTests() {
       await t.pumpAndSettle();
       expect(c.game, isNotNull);
       expect(c.game!.player.name, name);
+    });
+  });
+
+  group('下のタブ', () {
+    testWidgets('育成・能力・キャリア・関係の4つ。関係タブに仲間が出る', (t) async {
+      final c = await _start(t);
+      c.newGame('テスト', Role.batter);
+      await t.pumpAndSettle();
+      for (final k in ['train', 'ability', 'career', 'relations']) {
+        expect(find.byKey(Key('tab-$k')), findsOneWidget, reason: k);
+      }
+      expect(find.text('関係'), findsOneWidget);
+      expect(find.byType(CastCard), findsNothing);
+      await _tab(t, 'relations');
+      expect(find.byType(CastCard), findsOneWidget);
+      await _tab(t, 'career');
+      expect(find.byType(CastCard), findsNothing);
+    });
+
+    testWidgets('手をつけられることがあるタブには、赤い点の印が付く', (t) async {
+      final c = await _start(t);
+      c.newGame('テスト', Role.batter);
+      await t.pumpAndSettle();
+      expect(find.byKey(const Key('mark-ability')), findsNothing);
+      c.admin((g) => g.adminAddExp(5000));
+      await t.pumpAndSettle();
+      expect(find.byKey(const Key('mark-ability')), findsOneWidget);
+      await _tab(t, 'ability');
+      c.admin((g) => g.adminAddExp(-100000));
+      await t.pumpAndSettle();
+      expect(find.byKey(const Key('mark-ability')), findsNothing);
+      // プロ8年目のFA権・海外移籍は、キャリアに印
+      Game? g;
+      for (var sd = 0; sd < 60 && g == null; sd++) {
+        final x = _until((g) => g.canUseFa, seed: sd, potential: 100);
+        if (x.canUseFa) g = x;
+      }
+      c.adopt(g!);
+      await t.pumpAndSettle();
+      expect(find.byKey(const Key('mark-career')), findsOneWidget);
     });
   });
 

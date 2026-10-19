@@ -43,9 +43,23 @@ class GameScreen extends StatefulWidget {
 }
 
 class _GameScreenState extends State<GameScreen> {
-  /// 下のタブ: 0 育成 / 1 能力 / 2 キャリア。
+  /// 下のタブ: 0 育成 / 1 能力 / 2 キャリア / 3 関係。
   int _tab = 0;
   Phase? _lastPhase;
+
+  /// タブの印(赤い点): いま手をつけられることがあるとき。
+  bool get _trainMark =>
+      game.canChooseSchool || game.canChoosePosition || game.canChooseOffseason;
+  bool get _abilityMark => abilitiesOf(game.player.role)
+      .any((a) => buy(game.player, game.exp, a) != null);
+  bool get _careerMark => game.canUseFa || game.canMoveOverseas;
+
+  Widget _tabIcon(IconData icon, bool mark, String name) => Badge(
+        key: mark ? Key('mark-$name') : null,
+        smallSize: 9,
+        isLabelVisible: mark,
+        child: Icon(icon),
+      );
 
   GameController get controller => widget.controller;
   Game get game => widget.game;
@@ -82,22 +96,28 @@ class _GameScreenState extends State<GameScreen> {
         height: 64,
         selectedIndex: _tab,
         onDestinationSelected: (i) => setState(() => _tab = i),
-        destinations: const [
+        destinations: [
           NavigationDestination(
-              key: Key('tab-train'),
-              icon: Icon(Icons.sports_baseball_outlined),
-              selectedIcon: Icon(Icons.sports_baseball),
+              key: const Key('tab-train'),
+              icon:
+                  _tabIcon(Icons.sports_baseball_outlined, _trainMark, 'train'),
+              selectedIcon: const Icon(Icons.sports_baseball),
               label: '育成'),
           NavigationDestination(
-              key: Key('tab-ability'),
-              icon: Icon(Icons.insights_outlined),
-              selectedIcon: Icon(Icons.insights),
+              key: const Key('tab-ability'),
+              icon: _tabIcon(Icons.insights_outlined, _abilityMark, 'ability'),
+              selectedIcon: _tabIcon(Icons.insights, _abilityMark, 'ability'),
               label: '能力'),
           NavigationDestination(
-              key: Key('tab-career'),
-              icon: Icon(Icons.timeline_outlined),
-              selectedIcon: Icon(Icons.timeline),
+              key: const Key('tab-career'),
+              icon: _tabIcon(Icons.timeline_outlined, _careerMark, 'career'),
+              selectedIcon: _tabIcon(Icons.timeline, _careerMark, 'career'),
               label: 'キャリア'),
+          const NavigationDestination(
+              key: Key('tab-relations'),
+              icon: Icon(Icons.groups_outlined),
+              selectedIcon: Icon(Icons.groups),
+              label: '関係'),
         ],
       ),
       appBar: AppBar(
@@ -165,6 +185,7 @@ class _GameScreenState extends State<GameScreen> {
             children: switch (_tab) {
               1 => _abilityTab(),
               2 => _careerTab(context),
+              3 => _relationsTab(),
               _ => _trainTab(context, p),
             },
           ),
@@ -231,9 +252,11 @@ class _GameScreenState extends State<GameScreen> {
           _RecentRecordCard(game: game),
           const SizedBox(height: 8),
         ],
-        CastCard(game: game),
-        const SizedBox(height: 8),
         _LogCard(game: game),
+      ];
+
+  List<Widget> _relationsTab() => [
+        CastCard(game: game, expanded: true),
       ];
 
   void _openPlayer() {
