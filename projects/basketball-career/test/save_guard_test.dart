@@ -42,6 +42,8 @@ String fingerprint(Game g) => jsonEncode({
       'tw': g.teamwork,
       'coach': g.coachBond,
       'met': g.rivalMet,
+      'mate': g.mate,
+      'coachLabel': g.coachLabel,
       'school': g.schoolLabel,
       'ach': g.recentAchievements,
       'reason': g.retiredReason,

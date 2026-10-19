@@ -191,7 +191,7 @@ const events = <EventDef>[
   EventDef(
     id: 'coach_menu',
     title: 'コーチの特別メニュー',
-    body: 'コーチが「お前だけ特別メニューをやってみるか」と声をかけてきた。',
+    body: '{coach}が「お前だけ特別メニューをやってみるか」と声をかけてきた。',
     options: [
       EventOption('受ける', Effect(focusBonus: 3, fatigue: 15, trait: Trait.hardWorker, coach: 6)),
       EventOption('今日は遠慮する', Effect(morale: -3)),
@@ -220,7 +220,7 @@ const events = <EventDef>[
   EventDef(
     id: 'senior_advice',
     title: '先輩のアドバイス',
-    body: '先輩がシュートフォームを見てくれた。「肘の向きを直すといい」',
+    body: '先輩の{mate}がシュートフォームを見てくれた。「肘の向きを直すといい」',
     options: [
       EventOption('素直に聞く', Effect(abilities: {Ability.threePoint: 2, Ability.midRange: 2})),
       EventOption('自分流を貫く', Effect(morale: 6)),
@@ -229,7 +229,7 @@ const events = <EventDef>[
   EventDef(
     id: 'night_practice',
     title: '夜の自主練',
-    body: '体育館の灯りがまだついている。ボールの音が聞こえる。',
+    body: '体育館の灯りがまだついている。{mate}がひとりでシュートを打っている。',
     options: [
       EventOption('自分もやる', Effect(abilities: {Ability.stamina: 3}, fatigue: 15, injuryChance: 0.10)),
       EventOption('今日は帰る', Effect(fatigue: -5)),
@@ -238,7 +238,7 @@ const events = <EventDef>[
   EventDef(
     id: 'friends',
     title: '友だちの誘い',
-    body: '友だちが「たまには遊びに行こうぜ」と誘ってきた。',
+    body: '{mate}が「たまには遊びに行こうぜ」と誘ってきた。',
     options: [
       EventOption('遊びに行く', Effect(morale: 15, fatigue: -10, teamwork: 6)),
       EventOption('断って練習する', Effect(focusBonus: 1, morale: -3)),
@@ -296,7 +296,7 @@ const events = <EventDef>[
   EventDef(
     id: 'teammate_trouble',
     title: 'チームの不協和音',
-    body: 'チームメイトと意見がぶつかった。ベンチの空気が重い。',
+    body: '{mate}と意見がぶつかった。ベンチの空気が重い。',
     minAge: 12,
     options: [
       EventOption('話し合う', Effect(abilities: {Ability.pass: 2}, morale: 5, fatigue: 5, teamwork: 12)),
@@ -327,7 +327,7 @@ const events = <EventDef>[
   EventDef(
     id: 'coach_talk',
     title: 'コーチとの面談',
-    body: 'コーチが「最近どうだ」と声をかけてくれた。',
+    body: '{coach}が「最近どうだ」と声をかけてくれた。',
     options: [
       EventOption('悩みを正直に話す', Effect(morale: 6, coach: 12)),
       EventOption('「大丈夫です」と答える', Effect(morale: 2, coach: -3)),
