@@ -335,6 +335,17 @@ def _footwork(scene: dict, frames: List[dict]) -> None:
         sc, s = a.get("scale", 1.0), _sign(a)
         planted = {"foot": None, "rear_foot": None}
         swing = None
+        last = {"foot": None, "rear_foot": None}          # 直前のコマで上書きした脚の角度(自然な姿勢へ戻るときに、ここから数コマで寄せる)
+
+        def settle(p, ang, knee, key):
+            """上書きをやめるコマ: 前の上書き角度から自然な角度へ、1コマ 45% ずつ寄せる(1コマで飛ばない)。"""
+            if last[key] is None:
+                return
+            t0, k0 = last[key]
+            na, nk = p[ang], p[knee]
+            p[ang], p[knee] = round(t0 + (na - t0) * 0.45, 6), round(k0 + (nk - k0) * 0.45, 6)
+            last[key] = None if (abs(p[ang] - na) < 0.02 and abs(p[knee] - nk) < 0.02) else (p[ang], p[knee])
+
         for f, fr in enumerate(frames):
             p = fr["actors"][who]
             if f > 0 and frames[f - 1]["tau"] == fr["tau"]:                      # ヒットストップ: 前のコマの脚を写す
@@ -346,6 +357,8 @@ def _footwork(scene: dict, frames: List[dict]) -> None:
             if free:
                 planted = {"foot": None, "rear_foot": None}
                 swing = None
+                for ang, knee, key in legs:
+                    settle(p, ang, knee, key)
                 continue
             sk = fk.skeleton(p, s, p["root_x"], sc)
             nat = {"foot": sk["foot"], "rear_foot": sk["rear_foot"]}
@@ -363,27 +376,38 @@ def _footwork(scene: dict, frames: List[dict]) -> None:
                     r = fk.leg_ik(p, s, p["root_x"], sc, (x, z))
                     if r is not None:
                         p[ang], p[knee] = round(r[0], 6), round(r[1], 6)
+                        last[key] = (p[ang], p[knee])
+                    else:
+                        settle(p, ang, knee, key)
                     if u >= 1.0:
                         planted[key] = swing["x1"]
                         swing = None
                     continue
                 if not grounded:                                                 # 姿勢の都合で浮いている(蹴りなど): 固定を解く
                     planted[key] = None
+                    settle(p, ang, knee, key)
                     continue
                 if planted[key] is None:                                         # 今、接地した: ここに固定
                     planted[key] = nx
+                    settle(p, ang, knee, key)
                     continue
                 gap = (nx - planted[key]) * s                                     # 体の進みに対して、固定した足がどれだけ後ろに残ったか(前が正)
                 if abs(gap) > stride_e and swing is None:                        # 開きすぎ: 踏み替える(もう片方は接地したまま)
                     swing = dict(key=key, f0=f, n=nfr_e, x0=planted[key], x1=nx + s * lead_e * (1 if gap > 0 else -1))
                     planted[key] = None
+                    r = fk.leg_ik(p, s, p["root_x"], sc, (swing["x0"], 0.0))
+                    if r is not None:
+                        p[ang], p[knee] = round(r[0], 6), round(r[1], 6)
+                        last[key] = (p[ang], p[knee])
                     continue
                 r = fk.leg_ik(p, s, p["root_x"], sc, (planted[key], 0.0))       # 固定: 足を世界座標に留める
                 if r is None:                                                     # 届かない(体が速い): 短い踏み替え
                     swing = dict(key=key, f0=f, n=max(2, nfr_e - 2), x0=planted[key], x1=nx + s * lead_e)
                     planted[key] = None
+                    settle(p, ang, knee, key)
                     continue
                 p[ang], p[knee] = round(r[0], 6), round(r[1], 6)
+                last[key] = (p[ang], p[knee])
             fr["actors"][who] = p
 
 

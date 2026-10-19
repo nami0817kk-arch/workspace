@@ -24,7 +24,8 @@ def test_build_fight_is_valid_scene(spec):
     kinds = [h["kind"] for h in sc["hits"]]
     main = "hit" if spec["weapon"] == "none" else "slash"
     assert kinds.count(main) + kinds.count("clash") + kinds.count("miss") >= spec["hits"]        # 連打の途中は受け止め(clash)・かわし(miss)になることがある
-    assert (kinds.count("clash") + kinds.count("miss")) == (0 if spec["hits"] < 3 else (1 if spec["hits"] == 3 else 2))
+    by_a = [h["kind"] for h in sc["hits"] if h.get("by") == "A"]
+    assert (by_a.count("clash") + by_a.count("miss")) == (0 if spec["hits"] < 3 else (1 if spec["hits"] == 3 else 2))
     assert ("kick" in kinds) == spec["kick"]
     assert (("heel" in kinds) == (spec["finisher"] == "launch_slash"))
     assert sc["tau_end"] > max(h["tau"] for h in sc["hits"])
@@ -135,3 +136,12 @@ def test_leg_ik_reaches_target():
             foot = fk.skeleton(q, s, 2.0, 1.0)["foot"]
             assert math.hypot(foot[0] - (2.0 + tx), foot[1]) < 0.03
     assert fk.leg_ik(pose, 1, 0.0, 1.0, (3.0, 0.0)) is None        # 届かない
+
+
+def test_riposte_adds_a_block_by_b():
+    sc = fight.build_fight(dict(hits=3, counter=True))
+    by_b = [h for h in sc["hits"] if h.get("kind") == "clash" and h.get("by") == "B"]
+    assert len(by_b) == 1
+    ts = [h["tau"] for h in sc["hits"] if h.get("by") == "A" and h["kind"] in ("slash", "clash", "miss")]
+    assert ts == sorted(ts)
+    assert fight.build_fight(dict(hits=3, riposte=False))["hits"] and not [h for h in fight.build_fight(dict(hits=3, riposte=False))["hits"] if h.get("by") == "B" and h["kind"] == "clash"]

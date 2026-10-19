@@ -101,6 +101,7 @@ python scripts/make_gallery.py 09_01:2.4 135_07_s1:3.6   # clip を順に再生�
 
 使う順番は、スキル `stickfigure-action`(`~/.claude/skills`、バックアップは `claude-skills/`)。ここは部品の一覧。
 
+- 受けて返す(`fight` の `riposte`、既定 true): 受け止めの直後に B が打ち返し(clash by B、接触は contact で解く)、A が BLOCK で受ける。次の1発までの間を 0.40 空ける
 - 足運び(`footwork`、fight では既定 on): 接地した足を世界座標に固定(`fk.leg_ik`)し、股が stride(0.42)を越えたら 5 コマで踏み替える。足滑りが A 37%/B 57% → 22%/21%(fight_dodge で測定)。空中・倒れ・走りの周期は触らない
 - 防御(`fight` の `block`、既定 true、hits≧3): 2発目を 受け止め `clash`(ガキィン・金属音・放射線。両腕を上げ腰を落として踏ん張り、少し押される)か かわし `miss`(風切りだけ。高い斬りは沈んでくぐり、低い斬りは後ろへ跳ぶ)。seed があれば選び、hits≧4 なら3発目にもう一方。見本 scenes/fight_dodge.yaml
 - 全身の動き(`body_drive`、fight の `body`、既定1.7): 命中ごとに、攻め側は溜め(後ろへひねり・沈む)→ひねり込み・体重移動、受け側はのけぞり・ひねられ・腰が落ち・押される。ユーザー指摘「手だけ動いている」(2026-10-19)への対応。hits に by: A/B を書く(fight は自動)

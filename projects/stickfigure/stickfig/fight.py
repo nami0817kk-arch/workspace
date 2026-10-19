@@ -34,6 +34,7 @@ DEFAULTS = dict(
     stage="cave",            # 舞台の色の組: cave / dojo / field / night / sunset
     ally=None,               # 3人目(味方): {color, x(置く位置), y(奥行き。+で奥), facing(+1右向き/-1左向き), scale, cheer(勝ったら万歳 true/負けたらうなだれる false)}。戦わず、見守る
     block=True,              # 連打の途中を相手が防ぐ(hits が3以上): 2発目は 受け止め(clash) か かわす(miss)。seed があれば選ぶ、無ければ受け止め。hits≧4 なら3発目にもう一方
+    riposte=True,            # 受け止めた直後に、相手(B)が打ち返し、こちら(A)が受け止める(鍔迫り合いの往復)
     footwork=True,           # 足運び: 接地した足を滑らせず、体が動いた分だけ踏み替える(plan._footwork)
     body=1.7,                # 全身の動きの強さ(0 で切る)。命中ごとに、攻める側のひねり込み・踏み込み、受ける側ののけぞり・押される動き
     seed=None,               # 数字を入れると、連打の clip・間・溜めの色・カットの順を、その数字で変える(同じ数字なら同じ戦い)
@@ -51,6 +52,7 @@ PALETTES = {
 
 GUARD = dict(lean=0.1, fa=0.9, fe=1.4, ra=0.7, re=1.5, ht=0.0, face="fight")
 BLOCK = dict(lean=0.18, fa=1.75, fe=0.55, ra=1.45, re=0.8, ht=-0.1, face="fight")      # 受け止め: 両腕を上げて剣(腕)を前に
+GUARD_A = dict(lean=0.1, fa=0.7, fe=1.6, ra=0.5, re=1.7, ht=0.0, face="fight")
 A_FACE = dict(target="A", z=1.5, yaw=12, pitch=2, scale=1.5, lens=40, hue=0)
 B_FACE = dict(target="B", z=1.5, yaw=-14, pitch=3, scale=1.5, lens=40, hue=1)
 A_HAND = dict(target="A", z=1.1, ox=0.5, yaw=30, pitch=-6, scale=1.2, lens=24, hue=3, dutch=7.0)
@@ -178,18 +180,20 @@ def build_fight(spec: dict) -> dict:
     gaps = [0.58, 0.42, 0.4, 0.4] if s["counter"] else [0.4, 0.4, 0.4, 0.4]
     if rng is not None:
         gaps = [round(g + rng.uniform(-0.05, 0.07), 2) for g in gaps]
-    ts = [h0]
-    for i in range(1, n):
-        ts.append(ts[-1] + gaps[i - 1])
-    keysA.append(dict(t=_r(h0 - 0.2), dx=4.6, hz=0.9))
-    dxB = -1.7
     defend = {}                                          # 何発目を、どう防ぐか: index → "clash" / "miss"
     if s["block"] and n >= 3:
         first = (rng.choice(["clash", "miss"]) if rng is not None else "clash")
         defend[1] = first
         if n >= 4:
             defend[2] = "miss" if first == "clash" else "clash"
-    blocked_i = -1
+    rip_i = next((i for i, v in defend.items() if v == "clash" and i + 1 < n), None) if s["riposte"] else None
+    if rip_i is not None:
+        gaps[rip_i] = round(gaps[rip_i] + 0.40, 2)       # 打ち返しの分、次の1発までを空ける
+    ts = [h0]
+    for i in range(1, n):
+        ts.append(ts[-1] + gaps[i - 1])
+    keysA.append(dict(t=_r(h0 - 0.2), dx=4.6, hz=0.9))
+    dxB = -1.7
     for i, t in enumerate(ts):
         last = i == n - 1
         pre, post = (0.4, 0.18) if i == 0 else (0.16, 0.22)
@@ -212,6 +216,12 @@ def build_fight(spec: dict) -> dict:
             dxB -= 0.10
             keysB += [dict(t=_r(t - 0.14), dx=_r(dxB + 0.10), **BLOCK), dict(t=_r(t + 0.08), dx=_r(dxB), **BLOCK),
                       dict(t=_r(t + 0.24), dx=_r(dxB), **GUARD)]
+            if rip_i == i:                               # 受けて返す: B が打ち返し、A が受け止める
+                tr = t + 0.30
+                clipsB.append(dict(file=COUNTER_CLIP, strike_at=_r(tr), start=_r(tr - 0.2), end=_r(tr + 0.26), **{"in": 0.06, "out": 0.1}))
+                hits.append(dict(tau=_r(tr), hold=0.07, kind="clash", by="B", contact=dict(striker="B", effector="hand", target=dict(actor="A", point="chest"), tol=0.45, max_anticipation=50)))
+                keysA += [dict(t=_r(tr - 0.14), **BLOCK), dict(t=_r(tr + 0.08), **BLOCK), dict(t=_r(tr + 0.26), **GUARD_A)]
+                flashes.append(_r(tr))
         elif defend.get(i) == "miss":
             dxB -= 0.05
             keysB += [dict(t=_r(t - 0.2), dx=_r(dxB + 0.05), **GUARD), dict(t=_r(t + 0.3), dx=_r(dxB), **GUARD)]
