@@ -247,9 +247,9 @@ double clutchChance(Player p, Clutch c, double oppDefense, double form) {
 /// ハーフタイムの作戦。後半(第3・第4クォーター)の流れが変わる。
 enum Halftime {
   keep('このまま続ける', '作戦は変えない。'),
-  tempo('ペースを上げる', '走って点を取り合う。点差がつきやすい(追う側向き)。'),
-  defense('守りを固める', '失点を抑えてロースコアに。点差がつきにくい(リード側向き)。'),
-  star('エースに任せる', '自分にボールを集める。得点が増え、チームも乗る(スタミナと総合力が要る)。');
+  tempo('ペースを上げる', '走って点を取り合う。追う側向き。'),
+  defense('守りを固める', '失点を抑えてロースコアに。リード側向き。'),
+  star('エースに任せる', '自分にボールを集める。力のある選手向き。');
 
   const Halftime(this.label, this.description);
   final String label;
