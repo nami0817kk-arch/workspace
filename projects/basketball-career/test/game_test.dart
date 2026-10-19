@@ -203,7 +203,7 @@ void main() {
         expect(t.games, t.wins + 1 > t.games ? t.games : t.wins + 1);
         final p = playTournament(weak(), League.proDomestic,
             form: 1, rng: Random(i));
-        expect(p.games, League.proDomestic.rounds);
+        expect(p.games, greaterThanOrEqualTo(League.proDomestic.rounds));
       }
     });
   });
@@ -2302,6 +2302,113 @@ void main() {
         }
       }
       expect(h.slot, 2);
+    });
+  });
+
+  group('プロのプレーオフ', () {
+    MatchResult m(bool won) => MatchResult(
+        won: won, teamScore: won ? 80 : 70, oppScore: won ? 70 : 80, points: 12,
+        rebounds: 4, assists: 3);
+
+    TournamentResult res(List<bool> ws, {League l = League.proDomestic}) =>
+        TournamentResult(
+            league: l,
+            matches: [for (final w in ws) m(w)],
+            wins: ws.where((w) => w).length,
+            achievement: 70);
+
+    test('呼び名: 7・8戦目はプレーオフの準決勝・決勝、学生の大会は回戦', () {
+      expect(roundLabelOf(League.proDomestic, 5), '6回戦');
+      expect(roundLabelOf(League.proDomestic, 6), 'プレーオフ準決勝');
+      expect(roundLabelOf(League.proDomestic, 7), 'プレーオフ決勝');
+      expect(roundLabelOf(League.highSchool, 3), '4回戦');
+      expect(League.highSchool.playoffRounds, 0);
+      expect(League.proAbroad.playoffRounds, 2);
+      expect(League.proDomestic.qualifyWins, 3);
+    });
+
+    test('レギュラーシーズンとプレーオフの勝ち数を分けて数える。優勝はプレーオフを勝ち抜いたとき', () {
+      final champ = res([true, true, true, false, true, false, true, true]);
+      expect(champ.regularWins, 4);
+      expect(champ.playoffWins, 2);
+      expect(champ.reachedPlayoffs, isTrue);
+      expect(champ.champion, isTrue);
+      final semiLoss = res([true, true, true, true, true, true, false]);
+      expect(semiLoss.champion, isFalse, reason: 'レギュラー全勝でも、プレーオフで負ければ優勝ではない');
+      final out = res([false, true, false, false, true, false]);
+      expect(out.reachedPlayoffs, isFalse);
+      expect(out.champion, isFalse);
+    });
+
+    test('プレーオフの勝ちは実績に加点される', () {
+      final run = TournamentRun(League.proDomestic);
+      run.matches.addAll([for (final w in [true, true, true, true, false, false, true, true]) m(w)]);
+      final a = run.result().achievement;
+      final run2 = TournamentRun(League.proDomestic);
+      run2.matches.addAll([for (final w in [true, true, true, true, false, false]) m(w)]);
+      expect(a, greaterThan(run2.result().achievement));
+    });
+
+    test('弱い選手はプレーオフに進めず(6試合で終わり)、強い選手は進む(7〜8試合)', () {
+      final weakP = Player(name: 'w', age: 25, potential: 20, heightCm: 170, heightGenes: 0.5,
+          abilities: {for (final a in Ability.values) a: 15});
+      final strongP = Player(name: 's', age: 25, potential: 99, heightCm: 200, heightGenes: 0.5,
+          abilities: {for (final a in Ability.values) a: 97});
+      var weakOut = 0, strongIn = 0, champs = 0;
+      for (var seed = 0; seed < 120; seed++) {
+        final w = playTournament(weakP, League.proDomestic, form: 1, rng: Random(seed));
+        if (!w.reachedPlayoffs) {
+          weakOut++;
+          expect(w.games, League.proDomestic.rounds);
+        }
+        final st = playTournament(strongP, League.proDomestic, form: 1, rng: Random(seed));
+        if (st.reachedPlayoffs) {
+          strongIn++;
+          expect(st.games, inInclusiveRange(7, 8));
+        }
+        if (st.champion) champs++;
+      }
+      expect(weakOut, greaterThan(100));
+      expect(strongIn, greaterThan(60));
+      expect(champs, greaterThan(0));
+    });
+
+    test('プレーオフで負けると、そこで大会が終わる', () {
+      final strongP = Player(name: 's', age: 25, potential: 99, heightCm: 200, heightGenes: 0.5,
+          abilities: {for (final a in Ability.values) a: 90});
+      for (var seed = 0; seed < 200; seed++) {
+        final t = playTournament(strongP, League.proAbroad, form: 1, rng: Random(seed));
+        final po = t.playoffMatches;
+        if (po.isNotEmpty && !po.first.won) {
+          expect(po, hasLength(1), reason: '準決勝で負けたら決勝は無い');
+        }
+        if (po.length == 2) expect(po.first.won, isTrue);
+      }
+    });
+
+    test('学生の大会は従来どおり(プレーオフなし)', () {
+      final t = playTournament(strong(), League.highSchool, form: 1, rng: Random(2));
+      expect(t.reachedPlayoffs, isFalse);
+      expect(t.games, lessThanOrEqualTo(League.highSchool.rounds));
+    });
+
+    test('プロの一生で、優勝の記録が付きうる(プレーオフ優勝)', () {
+      var champ = 0;
+      for (var seed = 0; seed < 25; seed++) {
+        final g = Game(
+          eventsEnabled: false,
+          player: Player(name: 'a', age: 24, potential: 99, heightCm: 200, heightGenes: 0.5,
+              abilities: {for (final a in Ability.values) a: 92}),
+          rng: Random(seed),
+          track: Track.pro,
+        );
+        for (var i = 0; i < 12; i++) {
+          if (g.phase == Phase.retired) break;
+          g.choose(Action.rest, Ability.pass);
+        }
+        champ += g.titles;
+      }
+      expect(champ, greaterThan(0));
     });
   });
 }
