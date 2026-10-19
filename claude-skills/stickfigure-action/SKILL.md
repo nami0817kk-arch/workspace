@@ -58,7 +58,7 @@ description: 棒人間のアクション動画（戦い・物語つき）を、�
 | 走りの誇張 | `fight.RUN_LOOK`(clip の `amp`+`add`) | 前傾 0.2・腕振り 1.35 倍(mocap の走りは直立で腕が低い) |
 | 検証用の固定カメラ | `camera: fixed` | カット・反転・連打カットを切って動きだけ見る(`scenes/study_slash.yaml`・`study_kick.yaml`)。**直しは台本でなく fight の既定・plan に入れる**(2026-10-19「一つの作品の質を上げるのではない、スキルとして向上させる」) |
 
-測り方: `python -m stickfig motion scenes/x.yaml`、`check` の「キレ」(先端の速さの山÷溜めの平均。目安 4 以上)・「待ち」・「間合い」(命中後の 2 人の距離の最小。0.55 未満は胴が重なる)。コマ送りで見る: ffmpeg の `select+tile` でコマ表(CLAUDE.md「2D アニメの動きの質」)。（体のひねり `spin` の標準偏差、足滑り、歩数、1コマの最大移動、攻防の内訳、接触の距離）。改善前→後で A の spin_sd 0→0.45、歩数 4→11、攻防 A:slash×5 → A:slash×3＋clash/miss＋B の miss/clash/hit。
+測り方: `build` が出す「人物の高さ/画面」(中央値 0.5〜0.65、1/3 未満のコマ 15% 以下が目安。参考は 1/3〜1/2)、`python -m stickfig motion scenes/x.yaml`、`check` の「キレ」(先端の速さの山÷溜めの平均。目安 4 以上)・「待ち」・「間合い」(命中後の 2 人の距離の最小。0.55 未満は胴が重なる)。コマ送りで見る: ffmpeg の `select+tile` でコマ表(CLAUDE.md「2D アニメの動きの質」)。（体のひねり `spin` の標準偏差、足滑り、歩数、1コマの最大移動、攻防の内訳、接触の距離）。改善前→後で A の spin_sd 0→0.45、歩数 4→11、攻防 A:slash×5 → A:slash×3＋clash/miss＋B の miss/clash/hit。
 
 ## 縦画面（ショート）
 
