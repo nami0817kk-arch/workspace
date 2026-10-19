@@ -141,6 +141,44 @@ const schoolEvents = <EventDef>[
   ),
 ];
 
+/// プロの入団先・移籍先の選択(入団時と、23・27・31歳で起きる)。
+const proEvents = <EventDef>[
+  EventDef(
+    id: 'pro_join',
+    title: '入団先の選択',
+    body: 'いくつかのチームから声がかかった。どこで戦う？',
+    forced: true,
+    options: [
+      EventOption(
+          '常勝の強豪チーム。試合に出るのが先決だ',
+          Effect(school: 5, schoolLabel: '強豪チーム', coach: 12, teamwork: -12, fatigue: 8, morale: -3)),
+      EventOption(
+          '育成に定評のあるチーム',
+          Effect(school: 1, schoolLabel: '育成型のチーム', coach: 20, abilities: {Ability.midRange: 1, Ability.defense: 1})),
+      EventOption(
+          '地元のチームで、中心選手として',
+          Effect(school: -2, schoolLabel: '地元のチーム', teamwork: 20, morale: 10, focusBonus: 2)),
+    ],
+  ),
+  EventDef(
+    id: 'pro_move',
+    title: '移籍のオファー',
+    body: '契約の更新の時期。移籍のオファーも届いている。',
+    forced: true,
+    options: [
+      EventOption(
+          '強豪チームへ移籍する',
+          Effect(school: 5, schoolLabel: '強豪チーム', coach: -5, teamwork: -15, fatigue: 8, morale: 2, achievement: 3)),
+      EventOption(
+          '今のチームに残る',
+          Effect(teamwork: 12, morale: 6, coach: 8)),
+      EventOption(
+          '新天地で一から挑戦する',
+          Effect(school: -1, schoolLabel: '新天地のチーム', teamwork: -8, morale: 8, abilities: {Ability.speed: 1, Ability.threePoint: 1})),
+    ],
+  ),
+];
+
 const events = <EventDef>[
   EventDef(
     id: 'coach_menu',
@@ -382,7 +420,7 @@ const events = <EventDef>[
 ];
 
 EventDef? eventById(String id) {
-  for (final e in [...events, ...schoolEvents]) {
+  for (final e in [...events, ...schoolEvents, ...proEvents]) {
     if (e.id == id) return e;
   }
   return null;

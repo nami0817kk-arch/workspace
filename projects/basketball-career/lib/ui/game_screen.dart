@@ -795,6 +795,10 @@ class _EventView extends StatelessWidget {
       children: [
         CourtHeader(game: game, height: 110),
         const SizedBox(height: 12),
+        if (controller.pathMessage != null) ...[
+          _Note(text: controller.pathMessage!),
+          const SizedBox(height: 12),
+        ],
         Card(
           color: Theme.of(context).colorScheme.primaryContainer,
           child: Padding(
