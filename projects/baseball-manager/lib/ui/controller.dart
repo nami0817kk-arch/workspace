@@ -240,14 +240,14 @@ Plan recommendedPlan(Game g) {
 String recommendReason(Game g) {
   final c = g.condition;
   if (c.fatigue >= 70) return '疲れが${c.fatigue}と高いので、休養で回復しよう。';
-  if (c.morale < 35) return 'やる気が${c.morale}と低いので、交流で気持ちを上げよう。';
+  if (c.morale < 35) return 'やる気が${c.morale}と低いので、交流でやる気を上げよう。';
   if (recommendedPlan(g) == Plan.lesson) {
     return 'コーチのコツを貯めると、特性を習得できる。今回は教わろう。';
   }
   return '体調は十分。練習で重点の能力を伸ばそう。';
 }
 
-/// 出来事の選択の結果を、変わったところだけ短く言葉にする。「球威 +3 / 気持ち +8」。
+/// 出来事の選択の結果を、変わったところだけ短く言葉にする。「球威 +3 / やる気 +8」。
 /// 何も変わらなければ空。
 String eventResultText(Player p0, Condition c0, Player p1, Condition c1) {
   final parts = <String>[];
@@ -259,7 +259,7 @@ String eventResultText(Player p0, Condition c0, Player p1, Condition c1) {
     }
   }
   final m = c1.morale - c0.morale;
-  if (m != 0) parts.add('気持ち ${sgn(m)}');
+  if (m != 0) parts.add('やる気 ${sgn(m)}');
   final f = c1.fatigue - c0.fatigue;
   if (f != 0) parts.add('疲れ ${sgn(f)}');
   if (c1.injuredTerms > c0.injuredTerms) parts.add('怪我');

@@ -74,8 +74,8 @@ String actionHint(Plan a) => switch (a) {
       Plan.train => '重点の経験点が貯まる',
       Plan.special => 'たくさん貯まる。疲れて怪我しやすい',
       Plan.rest => '疲れを取る',
-      Plan.study => '気持ちが上がり、少し貯まる',
-      Plan.social => '気持ちが上がる。家族・恋人との絆',
+      Plan.study => 'やる気が上がり、少し貯まる',
+      Plan.social => 'やる気が上がる。家族・恋人との絆',
       Plan.match => '全体に少し貯まる',
       Plan.lesson => 'コツが貯まる(4回で特性を習得)',
     };

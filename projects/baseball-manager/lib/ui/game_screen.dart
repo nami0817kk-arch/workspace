@@ -2204,7 +2204,7 @@ class _GoalRow extends StatelessWidget {
                 style: const TextStyle(fontWeight: FontWeight.bold)),
             Text(
               g.achieved == null
-                  ? '達成すると 経験点+$reward(全種類)・気持ち+${goalMoraleReward[g.level]}'
+                  ? '達成すると 経験点+$reward(全種類)・やる気+${goalMoraleReward[g.level]}'
                   : (g.achieved! ? 'ごほうびをもらった' : '来年また挑戦しよう'),
               style: Theme.of(context).textTheme.bodySmall,
             ),
