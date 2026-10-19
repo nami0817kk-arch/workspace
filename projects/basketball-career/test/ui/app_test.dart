@@ -175,6 +175,9 @@ void main() {
         slot: 1,
       );
       t.act(Action.rest);
+      while (t.game!.phase == Phase.halftime) {
+        t.game!.resolveHalftime(Halftime.keep);
+      }
       if (t.game!.phase == Phase.clutch) c = t;
     }
     expect(c, isNotNull, reason: '勝負どころになる乱数が見つからない');
@@ -184,12 +187,48 @@ void main() {
     expect(find.textContaining('成功率'), findsNWidgets(Clutch.values.length));
     // 大会の途中でまた勝負どころが来ることもある。終わるまで選び続ける。
     var guard = 0;
-    while (c.game!.phase == Phase.clutch && guard++ < 10) {
-      await tester.tap(find.textContaining('ドライブ  成功率'));
+    while ((c.game!.phase == Phase.clutch || c.game!.phase == Phase.halftime) &&
+        guard++ < 20) {
+      if (c.game!.phase == Phase.halftime) {
+        await tester.tap(find.textContaining('このまま続ける'));
+      } else {
+        await tester.tap(find.textContaining('ドライブ  成功率'));
+      }
       await tester.pumpAndSettle();
     }
     expect(c.game!.records, isNotEmpty);
     expect(find.textContaining('の夏の大会'), findsWidgets);
+  });
+
+  testWidgets('ハーフタイムで作戦を選べる', (tester) async {
+    tall(tester);
+    GameController? c;
+    for (var seed = 0; seed < 400 && c == null; seed++) {
+      final t = GameController(store: _NullStore(), rng: Random(seed), events: false);
+      t.game = Game(
+        eventsEnabled: false,
+        player: Player(
+          name: 'ケイ', age: 15, potential: 80, heightCm: 195, heightGenes: 0.5,
+          abilities: {for (final a in Ability.values) a: 70}),
+        rng: Random(seed),
+        slot: 1,
+      );
+      t.act(Action.rest);
+      if (t.game!.phase == Phase.halftime) c = t;
+    }
+    expect(c, isNotNull, reason: 'ハーフタイムで止まる乱数が見つからない');
+    await tester.pumpWidget(BasketballCareerApp(controller: c!));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('ハーフタイム'), findsWidgets);
+    expect(find.textContaining('後半の作戦を選ぼう'), findsOneWidget);
+    for (final h in Halftime.values) {
+      expect(find.textContaining(h.label), findsWidgets);
+    }
+    expect(find.textContaining('(おすすめ)'), findsOneWidget);
+    await tester.tap(find.textContaining('守りを固める'));
+    await tester.pumpAndSettle();
+    // 作戦を選んだので、次の止まりどころ(勝負どころか次の試合のハーフタイム)か終了へ進む。
+    expect(c.game!.run?.matches.length ?? c.game!.records.length, greaterThan(0));
   });
 
   testWidgets('エンディングで結果をコピーできる', (tester) async {

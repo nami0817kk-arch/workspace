@@ -54,6 +54,8 @@ class GameScreen extends StatelessWidget {
             constraints: const BoxConstraints(maxWidth: 560),
             child: switch (game.phase) {
               Phase.season => _SeasonView(controller: controller, game: game),
+              Phase.halftime =>
+                _HalftimeView(controller: controller, game: game),
               Phase.clutch => _ClutchView(controller: controller, game: game),
               Phase.event => _EventView(controller: controller, game: game),
               Phase.path => _PathView(controller: controller, game: game),
@@ -753,6 +755,94 @@ class _Note extends StatelessWidget {
         color: Theme.of(context).colorScheme.primaryContainer,
         child: Padding(padding: const EdgeInsets.all(16), child: Text(text)),
       );
+}
+
+// ── ハーフタイム ──
+
+class _HalftimeView extends StatelessWidget {
+  const _HalftimeView({required this.controller, required this.game});
+  final GameController controller;
+  final Game game;
+
+  @override
+  Widget build(BuildContext context) {
+    final run = game.run!;
+    final h = run.pendingHalf!;
+    final m = h.margin;
+    final situation = m == 0
+        ? '同点で折り返した。'
+        : m > 0
+            ? '$m点リードで折り返した。'
+            : '${-m}点ビハインドで折り返した。';
+    final rec = bestHalftime(game.player, h);
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        CourtHeader(game: game, height: 110, versus: h.vsRival),
+        const SizedBox(height: 12),
+        Card(
+          color: Theme.of(context).colorScheme.primaryContainer,
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('ハーフタイム  ${run.league.label} ${run.round + 1}回戦',
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold)),
+                if (h.opponent.isNotEmpty)
+                  Text(h.vsRival
+                      ? '相手: ライバル ${h.opponent}  (通算 ${game.rival.wins}勝${game.rival.losses}敗)'
+                      : '相手: ${h.opponent}'),
+                const SizedBox(height: 8),
+                Text(_scoreRow('自チーム', h.teamQuarters, h.team)),
+                Text(_scoreRow('相手    ', h.oppQuarters, h.opp)),
+                const SizedBox(height: 8),
+                Text(situation,
+                    style: const TextStyle(fontWeight: FontWeight.bold)),
+                const SizedBox(height: 4),
+                const Text('後半の作戦を選ぼう。'),
+                const SizedBox(height: 12),
+                for (final k in Halftime.values)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: FilledButton(
+                      onPressed: () => controller.playHalftime(k),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(k == rec ? '${k.label}  (おすすめ)' : k.label,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold)),
+                          Text(k.description,
+                              style: const TextStyle(fontSize: 12)),
+                        ],
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ),
+        if (controller.recent.isNotEmpty) ...[
+          const SizedBox(height: 12),
+          _RecentCard(lines: controller.recent),
+        ],
+        if (run.matches.isNotEmpty) ...[
+          const SizedBox(height: 12),
+          _RecentCard(lines: [
+            'ここまでの試合',
+            for (var i = 0; i < run.matches.length; i++)
+              matchLine(i, run.matches[i].won, run.matches[i].teamScore,
+                  run.matches[i].oppScore, run.matches[i].points,
+                  run.matches[i].rebounds, run.matches[i].assists,
+                  opponent: run.matches[i].opponent,
+                  rival: run.matches[i].vsRival),
+          ]),
+        ],
+      ],
+    );
+  }
 }
 
 // ── 勝負どころ ──

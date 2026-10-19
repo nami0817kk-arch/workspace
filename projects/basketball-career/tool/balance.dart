@@ -66,6 +66,8 @@ void main(List<String> args) {
             g.goAbroad();
             abroad++;
           }
+        case Phase.halftime:
+          g.resolveHalftime(bestHalftime(g.player, g.halftimeInfo!));
         case Phase.clutch:
           g.resolveClutch(bestClutch(g.player, g.run!.pending!.oppStrength, g.run!.pending!.form));
         case Phase.event:

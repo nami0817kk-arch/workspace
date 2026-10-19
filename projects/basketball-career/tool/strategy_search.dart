@@ -73,6 +73,8 @@ class Policy {
             g.goAbroad();
             wentAbroad = true;
           }
+        case Phase.halftime:
+          g.resolveHalftime(bestHalftime(g.player, g.halftimeInfo!));
         case Phase.clutch:
           g.resolveClutch(bestClutch(g.player, g.run!.pending!.oppStrength, g.run!.pending!.form));
         case Phase.event:

@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:basketball_career/game/game.dart';
 import 'package:basketball_career/game/life.dart';
+import 'package:basketball_career/game/match.dart';
 import 'package:basketball_career/game/player.dart';
 import 'package:basketball_career/game/rival.dart';
 import 'package:basketball_career/ui/app.dart';
@@ -91,6 +92,9 @@ void main() {
             slot: 1,
           );
           c.act(Action.rest);
+          while (c.game!.phase == Phase.halftime) {
+            c.game!.resolveHalftime(Halftime.keep);
+          }
           if (c.game!.phase == Phase.clutch) found = c;
         }
         await show(t, found!, textScale: scale);
@@ -169,6 +173,9 @@ void main() {
             slot: 1,
           );
           c.act(Action.rest);
+          while (c.game!.phase == Phase.halftime) {
+            c.game!.resolveHalftime(Halftime.keep);
+          }
           if (c.game!.phase == Phase.clutch) found = c;
         }
         await show(t, found!);

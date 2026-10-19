@@ -264,6 +264,7 @@ class GameController extends ChangeNotifier {
       focus,
       chooseClutch: clutchPolicy == null ? null : (_) => clutchPolicy!,
       askClutch: ask && askClutch && clutchPolicy == null,
+      askHalftime: ask && askClutch && clutchPolicy == null,
     );
     final lines = <String>[
       '${a.label}した。',
@@ -389,6 +390,23 @@ class GameController extends ChangeNotifier {
   }
 
   /// 勝負どころで止まっている大会に、選んだプレーを渡す。大会が終われば広告の数えも進める。
+  /// ハーフタイムの作戦を選ぶ。
+  Future<void> playHalftime(Halftime h) async {
+    final g = game;
+    if (g == null || g.phase != Phase.halftime) return;
+    final wasWinter = g.runWinter;
+    final ageBefore = g.player.age;
+    final r = g.resolveHalftime(h);
+    if (r.paused) {
+      recent = _pendingLines;
+    } else {
+      recent = _termLines(_pendingLines, r, wasWinter, ageBefore, _pendingStage);
+      _pendingLines = const [];
+    }
+    _commit();
+    if (!r.paused) await money?.tournamentPlayed();
+  }
+
   Future<void> playClutch(Clutch c) async {
     final g = game;
     if (g == null || g.phase != Phase.clutch) return;

@@ -179,6 +179,8 @@ void _play(Game g, {required int untilAge}) {
         }
         g.choose(recommendedAction(g), recommendedFocus(g.player));
         if (g.canGoAbroad) g.goAbroad();
+      case Phase.halftime:
+        g.resolveHalftime(bestHalftime(g.player, g.halftimeInfo!));
       case Phase.clutch:
         g.resolveClutch(Clutch.drive);
       case Phase.event:

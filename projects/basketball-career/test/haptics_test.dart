@@ -28,6 +28,8 @@ void main() {
         switch (c.game!.phase) {
           case Phase.season:
             c.act(Action.practice);
+          case Phase.halftime:
+            await c.playHalftime(Halftime.keep);
           case Phase.clutch:
             await c.playClutch(Clutch.drive);
           case Phase.event:

@@ -372,7 +372,7 @@ void main() {
               if (g.canGoAbroad) g.goAbroad();
             case Phase.path:
               g.chooseRoute(g.availableRoutes.first);
-            case Phase.clutch || Phase.event || Phase.retired:
+            case Phase.halftime || Phase.clutch || Phase.event || Phase.retired:
               break;
           }
         }
@@ -453,6 +453,8 @@ void main() {
                       ? Action.rest
                       : Action.practice,
                   Ability.values[guard % Ability.values.length]);
+            case Phase.halftime:
+              g.resolveHalftime(Halftime.keep);
             case Phase.clutch:
               g.resolveClutch(Clutch.drive);
             case Phase.event:
@@ -2146,6 +2148,160 @@ void main() {
       g.retire();
       expect(epilogueLines(g).join(' '), contains('キャリアハイは27歳の34得点'));
       expect(shareText(g), contains('キャリアハイ34点'));
+    });
+  });
+
+  group('ハーフタイムの作戦', () {
+    Player pl({int ovr = 60, int stamina = 60}) => Player(
+          name: 'a', age: 17, potential: 70, heightCm: 188, heightGenes: 0.5,
+          abilities: {for (final a in Ability.values) a: ovr, Ability.stamina: stamina},
+        );
+
+    MatchHalf half(Player p, int seed, {double opp = 55}) => playFirstHalf(p,
+        teamStrength: 55, oppStrength: opp, form: 1, rng: Random(seed));
+
+    ({double mean, double sd, double pts}) second(Player p, Halftime h) {
+      final margins = <int>[];
+      var pts = 0;
+      for (var i = 0; i < 600; i++) {
+        final f = half(p, i);
+        final s = playSecondHalf(p, f, h, Random(10000 + i));
+        margins.add((s.team - s.opp) - f.margin); // 後半だけの点差
+        pts += s.points;
+      }
+      final mean = margins.reduce((a, b) => a + b) / margins.length;
+      final v = margins.fold(0.0, (a, m) => a + (m - mean) * (m - mean)) / margins.length;
+      return (mean: mean, sd: sqrt(v), pts: pts / 600);
+    }
+
+    test('ペースを上げるとばらつきが大きく、守りを固めると小さい', () {
+      final p = pl();
+      final keep = second(p, Halftime.keep).sd;
+      expect(second(p, Halftime.tempo).sd, greaterThan(keep));
+      expect(second(p, Halftime.defense).sd, lessThan(keep));
+    });
+
+    test('エースに任せると、自分の得点とチームの点差が伸びる(スタミナと総合力があるほど)', () {
+      final strongP = pl(ovr: 80, stamina: 85);
+      final keep = second(strongP, Halftime.keep);
+      final star = second(strongP, Halftime.star);
+      expect(star.pts, greaterThan(keep.pts));
+      expect(star.mean, greaterThan(keep.mean));
+      // 力のない選手は、効きが小さい
+      final weakP = pl(ovr: 35, stamina: 30);
+      expect(starPower(weakP), lessThan(starPower(strongP)));
+    });
+
+    test('前半だけ進めても、前半の得点・点差が決まり、後半で4クォーターになる', () {
+      final p = pl();
+      final h = half(p, 3);
+      expect(h.teamQuarters, hasLength(2));
+      final s = playSecondHalf(p, h, Halftime.keep, Random(1));
+      expect(s.teamQuarters, hasLength(4));
+      expect(s.teamQuarters.take(2), h.teamQuarters);
+      expect(s.team, s.teamQuarters.reduce((a, b) => a + b));
+    });
+
+    test('点差が12点以内のときだけ作戦を選ぶ価値がある', () {
+      MatchHalf h(int t, int o) => MatchHalf(
+          team: t, opp: o, teamQuarters: const [], oppQuarters: const [],
+          mine: 50, oppStrength: 50, form: 1, share: 0.15,
+          rebounds: 0, assists: 0, steals: 0, blocks: 0);
+      expect(h(40, 30).needsDecision, isTrue);
+      expect(h(40, 28).needsDecision, isTrue);
+      expect(h(45, 28).needsDecision, isFalse);
+      expect(h(20, 40).needsDecision, isFalse);
+    });
+
+    test('自動の作戦: 追っていればペース、リードなら守り', () {
+      final p = pl(ovr: 40, stamina: 40);
+      MatchHalf h(int t, int o) => MatchHalf(
+          team: t, opp: o, teamQuarters: const [], oppQuarters: const [],
+          mine: 50, oppStrength: 50, form: 1, share: 0.15,
+          rebounds: 0, assists: 0, steals: 0, blocks: 0);
+      expect(bestHalftime(p, h(30, 40)), Halftime.tempo);
+      expect(bestHalftime(p, h(40, 30)), Halftime.defense);
+    });
+
+    test('前半の保存・復元で値が変わらない', () {
+      final h = half(pl(), 5);
+      final j = MatchHalf.fromJson(h.toJson());
+      expect(j.team, h.team);
+      expect(j.share, h.share);
+      expect(j.teamQuarters, h.teamQuarters);
+      expect(Halftime.parse('tempo'), Halftime.tempo);
+      expect(Halftime.parse('なにか'), isNull);
+    });
+
+    Game summer(int seed) => Game(
+          eventsEnabled: false,
+          player: strong().copyWith(age: 15),
+          rng: Random(seed),
+          slot: 1,
+        );
+
+    int halftimeSeed() {
+      for (var seed = 0; seed < 400; seed++) {
+        final g = summer(seed);
+        g.choose(Action.rest, Ability.pass, askClutch: true, askHalftime: true);
+        if (g.phase == Phase.halftime) return seed;
+      }
+      throw StateError('ハーフタイムで止まる乱数が見つからない');
+    }
+
+    test('askHalftime なら点差が近い試合のハーフタイムで止まり、選ぶと続く', () {
+      final g = summer(halftimeSeed());
+      final r = g.choose(Action.rest, Ability.pass, askClutch: true, askHalftime: true);
+      expect(r.paused, isTrue);
+      expect(g.phase, Phase.halftime);
+      expect(g.slot, 1);
+      expect(g.halftimeInfo!.margin.abs(), lessThanOrEqualTo(12));
+      expect(() => g.choose(Action.rest, Ability.pass), throwsStateError);
+      var guard = 0;
+      while ((g.phase == Phase.halftime || g.phase == Phase.clutch) && guard++ < 30) {
+        if (g.phase == Phase.halftime) {
+          g.resolveHalftime(Halftime.tempo);
+        } else {
+          g.resolveClutch(Clutch.drive);
+        }
+      }
+      expect(g.slot, 2);
+      expect(g.records, hasLength(1));
+    });
+
+    test('止まっていないときに選ぶと StateError', () {
+      expect(() => summer(0).resolveHalftime(Halftime.keep), throwsStateError);
+    });
+
+    test('askHalftime を指定しなければ止まらない。勝負どころを固定した場合も止まらない', () {
+      for (var seed = 0; seed < 60; seed++) {
+        final g = summer(seed);
+        g.choose(Action.rest, Ability.pass, askClutch: true);
+        expect(g.phase, isNot(Phase.halftime));
+        final h = summer(seed);
+        h.choose(Action.rest, Ability.pass,
+            askClutch: true, askHalftime: true, chooseClutch: (_) => Clutch.pass);
+        expect(h.phase, isNot(Phase.halftime));
+        expect(h.phase, isNot(Phase.clutch));
+      }
+    });
+
+    test('ハーフタイムで止まっていても、保存して読み戻して続けられる(大会の設定も保つ)', () {
+      final g = summer(halftimeSeed());
+      g.choose(Action.rest, Ability.pass, askClutch: true, askHalftime: true);
+      final h = Game.fromJson(g.toJson());
+      expect(h.phase, Phase.halftime);
+      expect(h.run!.pendingHalf!.team, g.run!.pendingHalf!.team);
+      expect(h.run!.askHalftime, isTrue);
+      var guard = 0;
+      while ((h.phase == Phase.halftime || h.phase == Phase.clutch) && guard++ < 30) {
+        if (h.phase == Phase.halftime) {
+          h.resolveHalftime(Halftime.defense);
+        } else {
+          h.resolveClutch(Clutch.pass);
+        }
+      }
+      expect(h.slot, 2);
     });
   });
 }
