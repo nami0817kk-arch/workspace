@@ -1288,4 +1288,54 @@ void main() {
       }
     });
   });
+
+  group('個人賞', () {
+    MatchResult m(bool won, int pts, int reb, int ast) => MatchResult(
+        won: won,
+        teamScore: 70,
+        oppScore: 60,
+        points: pts,
+        rebounds: reb,
+        assists: ast);
+
+    TournamentResult t(List<MatchResult> ms, {League l = League.highSchool}) =>
+        TournamentResult(
+            league: l,
+            matches: ms,
+            wins: ms.where((x) => x.won).length,
+            achievement: 70);
+
+    test('優勝して個人も高ければ最優秀選手、個人だけ高ければベスト5', () {
+      final all = List.generate(5, (_) => m(true, 18, 7, 5));
+      expect(t(all).champion, isTrue);
+      expect(t(all).award, '最優秀選手');
+      final lost = [...List.generate(3, (_) => m(true, 20, 8, 6)), m(false, 20, 8, 6)];
+      expect(t(lost).champion, isFalse);
+      expect(t(lost).award, 'ベスト5');
+    });
+
+    test('平凡な成績や1試合だけでは賞は出ない', () {
+      expect(t(List.generate(3, (_) => m(true, 6, 2, 1))).award, isNull);
+      expect(t([m(false, 30, 10, 8)]).award, isNull);
+    });
+
+    test('個人賞は年の記録に残り、保存される', () {
+      final r = YearRecord(
+          age: 17, league: League.highSchool, wins: 5, games: 5, ppg: 18, rpg: 7,
+          apg: 5, champion: true, achievement: 90, award: '最優秀選手');
+      expect(YearRecord.fromJson(r.toJson()).award, '最優秀選手');
+      expect(YearRecord.fromJson({}).award, isNull);
+    });
+
+    test('実績: 最優秀選手・ベスト5の常連', () {
+      YearRecord rec(String? a) => YearRecord(
+          age: 15, league: League.juniorHigh, wins: 3, games: 3, ppg: 10, rpg: 3,
+          apg: 2, champion: false, achievement: 60, award: a);
+      final g = Game(eventsEnabled: false, player: strong(), rng: Random(1));
+      g.records.addAll([rec('ベスト5'), rec('ベスト5')]);
+      expect(earnedBy(g).contains('best5_x3'), isFalse);
+      g.records.add(rec('最優秀選手'));
+      expect(earnedBy(g).containsAll(['best5_x3', 'mvp']), isTrue);
+    });
+  });
 }

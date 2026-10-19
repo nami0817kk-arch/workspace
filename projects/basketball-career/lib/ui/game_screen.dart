@@ -586,6 +586,11 @@ class _TournamentCard extends StatelessWidget {
                 '${t.wins}勝${t.games - t.wins}敗${t.champion ? '  優勝!' : ''}',
                 style:
                     const TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+            if (t.award != null)
+              Text('個人賞: ${t.award}',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.primary)),
             Text('実績 ${t.achievement.round()}(${achievementWord(t.achievement)})  '
                 '平均 ${t.ppg.toStringAsFixed(1)}点 ${t.rpg.toStringAsFixed(1)}R ${t.apg.toStringAsFixed(1)}A',
                 style: const TextStyle(fontSize: 12)),
@@ -975,7 +980,7 @@ class _EndingView extends StatelessWidget {
                 for (final r in g.records)
                   Text('${r.age}歳 ${leagueLabel(r.league)}${r.winter ? '(冬)' : ''} '
                       '${r.wins}勝${r.games - r.wins}敗'
-                      '${r.champion ? ' 優勝' : ''}  '
+                      '${r.champion ? ' 優勝' : ''}${r.award == null ? '' : ' [${r.award}]'}  '
                       '${r.ppg.toStringAsFixed(1)}点 '
                       '${r.rpg.toStringAsFixed(1)}R '
                       '${r.apg.toStringAsFixed(1)}A'),
