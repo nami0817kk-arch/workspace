@@ -107,6 +107,11 @@ def se(plan: dict, seed: int = 7) -> np.ndarray:
             _add(buf, thump(rng, 160 if k == "kick" else 200, 0.3, 0.45), t, 1.0)
         elif k == "miss":
             _add(buf, whoosh(rng, 0.26), t - 0.14, 0.9)
+        elif k == "pose":                               # 止め絵(溜め・対峙): 短い低い唸り(間を音で支える)
+            n_ = int(SR * 0.5)
+            tt = np.arange(n_) / SR
+            drone = (np.sin(2 * np.pi * 62 * tt) + 0.5 * np.sin(2 * np.pi * 93 * tt)) * _env(n_, 0.02, 0.3)
+            _add(buf, drone, t - 0.05, 0.28)
         elif k == "clash":                              # 金属どうし: 高い倍音の鳴り + 短い打撃
             n_ = int(SR * 0.55)
             tt = np.arange(n_) / SR
