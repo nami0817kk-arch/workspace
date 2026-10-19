@@ -20,7 +20,7 @@ from .interp import Spring
 from .pose import KeyTrack, Smoother, STANCE_A, STANCE_B, apply_run
 
 VIEW = dict(width=1280, height=720, ground_y=560, px_per_unit=150.0)
-SHAKE = dict(kick=0.10, slash=0.10, wall=0.14, heel=0.18, hit=0.08)   # 命中の種類ごとのカメラの揺れ(単位)
+SHAKE = dict(kick=0.10, slash=0.10, wall=0.14, heel=0.18, hit=0.08, clash=0.12)   # 命中の種類ごとのカメラの揺れ(単位)
 EFFECTOR = dict(foot=("foot", "fl", (0.2, 2.6)), rear_foot=("rear_foot", "rl", (-0.8, 2.6)),
                 hand=("hand", "fa", (-0.5, 3.0)), tip=("tip", "fa", (-0.5, 3.0)))
 
@@ -452,7 +452,7 @@ def _body_drive(p: dict, who: str, f: int, events: List[dict], cfg: dict, sign: 
     受ける側は 衝撃で体がのけぞり・ひねられ・腰が落ち・後ろへ押される(root_x)→ 踏ん張って戻る。
     cfg(台本 body_drive): {strength: 1.0, kinds: [slash, hit, kick, heel]}。命中の瞬間のつながりを保つため、攻め側の前進は命中時に 0 へ戻す。"""
     k = float(cfg.get("strength", 1.0))
-    kinds = cfg.get("kinds", ["slash", "hit", "kick", "heel"])
+    kinds = cfg.get("kinds", ["slash", "hit", "kick", "heel", "clash"])
     p = dict(p)
     dspin = dlean = dhz = ddx = dht = dfl = drl = dfk = 0.0
     for e in events:
@@ -473,6 +473,14 @@ def _body_drive(p: dict, who: str, f: int, events: List[dict], cfg: dict, sign: 
             elif 0 < d <= 12:                            # 振り抜き: ひねりが余り、戻る
                 u = 1 - d / 12.0
                 dspin += 0.60 * k * u * u; dlean += 0.12 * k * u * u; dhz += -0.05 * k * u
+        elif e["kind"] == "clash":                       # 受け止める側: 直前に腰を落として構え、押し合いで少し押され、踏ん張って戻る(のけぞらない)
+            if -5 <= d < 0:
+                u = (d + 5) / 5.0
+                dhz += -0.10 * k * u; dlean += 0.12 * k * u; dfl += 0.35 * k * u; dfk += 0.35 * k * u; drl += -0.30 * k * u
+            elif 0 <= d <= 14:
+                u = 1 - d / 14.0
+                dhz += -0.12 * k * u; dlean += 0.10 * k * u; ddx += -0.16 * k * (1 - (1 - min(1.0, d / 5.0)) ** 2) * (0.3 + 0.7 * u)
+                dfl += 0.35 * k * u; dfk += 0.35 * k * u; drl += -0.30 * k * u; dspin += 0.25 * k * u
         else:                                            # 受ける側(命中の瞬間から)
             if 0 <= d <= 16:
                 u = 1 - d / 16.0
