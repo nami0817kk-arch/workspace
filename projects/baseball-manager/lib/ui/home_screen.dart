@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../game/calendar.dart';
 import '../game/career.dart';
 import '../game/difficulty.dart';
+import '../game/marks.dart';
 import '../game/player.dart';
 import 'art/avatar.dart';
 import 'art/scene.dart';
@@ -170,6 +171,19 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   const SizedBox(height: 16),
                   Card(
+                    key: const Key('daily-tip'),
+                    child: ListTile(
+                      leading: const Icon(Icons.lightbulb_outline,
+                          color: Color(0xFFF9A825)),
+                      title: const Text('今日のヒント'),
+                      subtitle: Text(tipOf(DateTime.now())),
+                    ),
+                  ),
+                  if (widget.controller.history.isNotEmpty) ...[
+                    _LifeStats(history: widget.controller.history),
+                    _TitleBook(history: widget.controller.history),
+                  ],
+                  Card(
                     child: ListTile(
                       key: const Key('achievements-open'),
                       leading: const Icon(Icons.military_tech,
@@ -196,6 +210,78 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ],
               ))),
+    );
+  }
+}
+
+/// 殿堂の通算(これまでの人生の合計)。
+class _LifeStats extends StatelessWidget {
+  const _LifeStats({required this.history});
+  final List<HistoryEntry> history;
+
+  @override
+  Widget build(BuildContext context) {
+    final pros = history.where((h) => h.madePro).length;
+    final best =
+        history.fold<int>(0, (a, h) => h.peakOverall > a ? h.peakOverall : a);
+    final titles = history.fold<int>(0, (a, h) => a + h.championships);
+    final t = Theme.of(context).textTheme;
+    return Card(
+      key: const Key('life-stats'),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('これまでの通算', style: t.titleSmall),
+            const SizedBox(height: 6),
+            Wrap(spacing: 18, runSpacing: 6, children: [
+              Text('育てた選手 ${history.length}人'),
+              Text('プロ入り $pros人(${(pros * 100 / history.length).round()}%)'),
+              Text('最高の総合評価 $best'),
+              Text('優勝 合計$titles回'),
+            ]),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// 称号の図鑑。手に入れた称号は色がつく。
+class _TitleBook extends StatelessWidget {
+  const _TitleBook({required this.history});
+  final List<HistoryEntry> history;
+
+  static const all = ['レジェンド', '一流選手', 'レギュラー', '無名の選手', 'プロにはなれなかった'];
+
+  @override
+  Widget build(BuildContext context) {
+    final got = {for (final h in history) h.title};
+    final t = Theme.of(context).textTheme;
+    return Card(
+      key: const Key('title-book'),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('称号図鑑 (${all.where(got.contains).length}/${all.length})',
+                style: t.titleSmall),
+            const SizedBox(height: 6),
+            Wrap(spacing: 6, runSpacing: 4, children: [
+              for (final a in all)
+                Chip(
+                  visualDensity: VisualDensity.compact,
+                  label: Text(got.contains(a) ? a : '???'),
+                  backgroundColor: got.contains(a)
+                      ? Theme.of(context).colorScheme.tertiaryContainer
+                      : null,
+                ),
+            ]),
+          ],
+        ),
+      ),
     );
   }
 }

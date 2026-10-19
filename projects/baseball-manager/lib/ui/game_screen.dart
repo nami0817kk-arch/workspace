@@ -130,6 +130,7 @@ class GameScreen extends StatelessWidget {
                 const SizedBox(height: 8),
                 const _FirstHint(),
               ],
+              _TodoChips(game: game),
               if (game.canChooseOffseason) ...[
                 const SizedBox(height: 8),
                 _OffseasonCard(controller: controller, game: game),
@@ -423,6 +424,66 @@ class _InvestRow extends StatelessWidget {
           ),
         ),
       ]),
+    );
+  }
+}
+
+/// いま決められることのお知らせ(選んでも選ばなくてもよい)。
+class _TodoChips extends StatelessWidget {
+  const _TodoChips({required this.game});
+  final Game game;
+
+  @override
+  Widget build(BuildContext context) {
+    final items = <String>[
+      if (game.canChooseSchool) '進学先を決められる',
+      if (game.canChoosePosition) 'ポジションを決められる',
+      if (game.canChooseOffseason) 'オフの過ごし方を選べる',
+      if (game.canUseFa) 'FA権を使える',
+      if (game.canMoveOverseas) '海外へ移籍できる',
+    ];
+    return Padding(
+      padding: const EdgeInsets.only(top: 8),
+      child: Wrap(
+        key: const Key('todo-chips'),
+        spacing: 6,
+        runSpacing: 2,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        children: [
+          for (final i in items)
+            Chip(
+                visualDensity: VisualDensity.compact,
+                avatar: const Icon(Icons.flag, size: 16),
+                label: Text(i)),
+          TextButton.icon(
+            key: const Key('year-plan'),
+            onPressed: () => showDialog<void>(
+              context: context,
+              builder: (ctx) => AlertDialog(
+                title: const Text('今年の予定'),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    for (final p in yearPlanOf(game.stage, game.player.age))
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 2),
+                        child: Text('・$p'),
+                      ),
+                  ],
+                ),
+                actions: [
+                  TextButton(
+                      onPressed: () => Navigator.pop(ctx),
+                      child: const Text('閉じる'))
+                ],
+              ),
+            ),
+            icon: const Icon(Icons.event_note, size: 18),
+            label: const Text('今年の予定'),
+          ),
+        ],
+      ),
     );
   }
 }

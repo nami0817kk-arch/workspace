@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/foundation.dart' hide Category;
+import 'package:flutter/material.dart' show ThemeMode;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../game/achievements.dart';
@@ -23,6 +24,8 @@ import 'labels.dart';
 const saveKey = 'baseball_manager_save_v1';
 const historyKey = 'baseball_manager_history_v1';
 const adminKey = 'baseball_manager_admin_v1';
+const textScaleKey = 'baseball_manager_text_scale_v1';
+const themeKey = 'baseball_manager_theme_v1';
 
 /// テスト用ビルド(`--dart-define=TEST_BUILD=true`)。管理者モードが最初からオンになる。
 const kTestBuild = bool.fromEnvironment('TEST_BUILD');
@@ -119,6 +122,29 @@ class SaveStore {
     } catch (_) {
       return false;
     }
+  }
+
+  /// 表示の設定(文字の大きさ、テーマ)。
+  Future<({double scale, ThemeMode theme})> loadDisplay() async {
+    try {
+      final p = await SharedPreferences.getInstance();
+      final t = p.getString(themeKey);
+      return (
+        scale: p.getDouble(textScaleKey) ?? 1.0,
+        theme: ThemeMode.values
+            .firstWhere((m) => m.name == t, orElse: () => ThemeMode.system),
+      );
+    } catch (_) {
+      return (scale: 1.0, theme: ThemeMode.system);
+    }
+  }
+
+  Future<void> saveDisplay(double scale, ThemeMode theme) async {
+    try {
+      final p = await SharedPreferences.getInstance();
+      await p.setDouble(textScaleKey, scale);
+      await p.setString(themeKey, theme.name);
+    } catch (_) {}
   }
 
   Future<void> saveAdmin(bool on) async {
@@ -261,6 +287,22 @@ class GameController extends ChangeNotifier {
   /// 管理者モード(素質・特性・コツなどを自由に編集できる)。端末ごとに覚える。
   bool adminMode = false;
 
+  /// 文字の大きさ(1.0が標準)とテーマ。端末ごとに覚える。
+  double textScale = 1.0;
+  ThemeMode themeMode = ThemeMode.system;
+
+  void setTextScale(double v) {
+    textScale = v;
+    store.saveDisplay(textScale, themeMode);
+    notifyListeners();
+  }
+
+  void setThemeMode(ThemeMode m) {
+    themeMode = m;
+    store.saveDisplay(textScale, themeMode);
+    notifyListeners();
+  }
+
   /// 解除した実績の id(何度遊んでも残る)。
   Set<String> unlocked = {};
 
@@ -270,6 +312,9 @@ class GameController extends ChangeNotifier {
   Future<bool> loadSaved() async {
     unlocked = await store.loadAchievements();
     adminMode = await store.loadAdmin();
+    final disp = await store.loadDisplay();
+    textScale = disp.scale;
+    themeMode = disp.theme;
     history = await store.loadHistory();
     final j = await store.load();
     if (j == null) return false;

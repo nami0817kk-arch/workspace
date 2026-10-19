@@ -389,3 +389,8 @@ soccer-manager / soccer-career の野球版。**中核は「試合中の采配�
 - シーズンの記録に月ごとの成績(`SeasonRecord.months`、`Game.monthRows`保存)。成績画面の順位表カードに表示。
 - 成績画面: ハイライト(月間MVP/オールスター/表彰の回数)、年ごとの評価バッジ。選手情報: 得意/苦手、弱点を鍛え続けた場合の総合のめやす(`projectedOverall`、乱数なし)、タイトルを取ると背番号が格上げ(投手18/打者3、`specialNumberOf`)。
 - ライバルのプロ通算のめやす(`rivalStatsOf`)、引退後のコーチは球団名つき、実績を4つ追加（月の主役/夢の球宴/栄誉の三冠/常勝軍団）。
+
+### 27. 表示の設定・ホーム・やること（バッチ3）
+- 設定に「文字の大きさ(小/標準/大/特大)」と「画面の色(自動/明るい/暗い)」（`GameController.textScale/themeMode`、`SaveStore.loadDisplay/saveDisplay`、端末ごと）。`app.dart` の `MaterialApp` を `ListenableBuilder` で包み、`builder` で文字倍率を掛ける。
+- ホーム: 今日のヒント(`tipOf`、日付で決まる)、殿堂があれば通算(`_LifeStats`)と称号図鑑(`_TitleBook`)。
+- 育成画面: 決められることのチップ(`_TodoChips`)と「今年の予定」(`yearPlanOf`)。

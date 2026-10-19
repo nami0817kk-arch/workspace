@@ -21,30 +21,44 @@ class _BaseballManagerAppState extends State<BaseballManagerApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: kTestBuild ? '野球育成(テスト版)' : '野球育成',
-      debugShowCheckedModeBanner: false,
-      theme: _theme(Brightness.light),
-      darkTheme: _theme(Brightness.dark),
-      home: FutureBuilder<bool>(
-        future: _loaded,
-        builder: (context, snap) {
-          if (snap.connectionState != ConnectionState.done) {
-            return const Scaffold(
-                body: Center(child: CircularProgressIndicator()));
-          }
-          return _MilestoneHost(
-            controller: c,
-            child: ListenableBuilder(
-              listenable: c,
-              builder: (context, _) {
-                final g = c.game;
-                if (g == null) return HomeScreen(controller: c);
-                return GameScreen(controller: c, game: g);
-              },
-            ),
+    return ListenableBuilder(
+      listenable: c,
+      builder: (context, _) => MaterialApp(
+        title: kTestBuild ? '野球育成(テスト版)' : '野球育成',
+        debugShowCheckedModeBanner: false,
+        theme: _theme(Brightness.light),
+        darkTheme: _theme(Brightness.dark),
+        themeMode: c.themeMode,
+        builder: (context, child) {
+          final mq = MediaQuery.of(context);
+          if (c.textScale == 1.0) return child!;
+          return MediaQuery(
+            data: mq.copyWith(
+                textScaler:
+                    TextScaler.linear(mq.textScaler.scale(1) * c.textScale)),
+            child: child!,
           );
         },
+        home: FutureBuilder<bool>(
+          future: _loaded,
+          builder: (context, snap) {
+            if (snap.connectionState != ConnectionState.done) {
+              return const Scaffold(
+                  body: Center(child: CircularProgressIndicator()));
+            }
+            return _MilestoneHost(
+              controller: c,
+              child: ListenableBuilder(
+                listenable: c,
+                builder: (context, _) {
+                  final g = c.game;
+                  if (g == null) return HomeScreen(controller: c);
+                  return GameScreen(controller: c, game: g);
+                },
+              ),
+            );
+          },
+        ),
       ),
     );
   }

@@ -54,6 +54,48 @@ class SettingsScreen extends StatelessWidget {
                           : null,
                     ),
                   const Divider(),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+                    child: Text('文字の大きさ',
+                        style: Theme.of(context).textTheme.titleSmall),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 6, 16, 8),
+                    child: SegmentedButton<double>(
+                      key: const Key('text-scale'),
+                      segments: const [
+                        ButtonSegment(value: 0.9, label: Text('小')),
+                        ButtonSegment(value: 1.0, label: Text('標準')),
+                        ButtonSegment(value: 1.2, label: Text('大')),
+                        ButtonSegment(value: 1.4, label: Text('特大')),
+                      ],
+                      selected: {controller.textScale},
+                      onSelectionChanged: (s) =>
+                          controller.setTextScale(s.first),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+                    child: Text('画面の色',
+                        style: Theme.of(context).textTheme.titleSmall),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 6, 16, 8),
+                    child: SegmentedButton<ThemeMode>(
+                      key: const Key('theme-mode'),
+                      segments: const [
+                        ButtonSegment(
+                            value: ThemeMode.system, label: Text('自動')),
+                        ButtonSegment(
+                            value: ThemeMode.light, label: Text('明るい')),
+                        ButtonSegment(value: ThemeMode.dark, label: Text('暗い')),
+                      ],
+                      selected: {controller.themeMode},
+                      onSelectionChanged: (s) =>
+                          controller.setThemeMode(s.first),
+                    ),
+                  ),
+                  const Divider(),
                   ListTile(
                     key: const Key('settings-achievements'),
                     leading: const Icon(Icons.military_tech),

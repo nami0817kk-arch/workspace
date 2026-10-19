@@ -1312,6 +1312,52 @@ void _rankTests() {
     });
   });
 
+  group('表示の設定とホームのカード', () {
+    testWidgets('文字の大きさと画面の色を選べて、端末に覚えられる', (t) async {
+      final c = await _start(t);
+      expect(c.textScale, 1.0);
+      await t.tap(find.byKey(const Key('settings-open')));
+      await t.pumpAndSettle();
+      await t.tap(find.descendant(
+          of: find.byKey(const Key('text-scale')), matching: find.text('大')));
+      await t.pumpAndSettle();
+      expect(c.textScale, 1.2);
+      await t.tap(find.descendant(
+          of: find.byKey(const Key('theme-mode')), matching: find.text('暗い')));
+      await t.pumpAndSettle();
+      expect(c.themeMode, ThemeMode.dark);
+      final saved = await SaveStore().loadDisplay();
+      expect(saved.scale, 1.2);
+      expect(saved.theme, ThemeMode.dark);
+    });
+
+    testWidgets('ホームに今日のヒントが出る。殿堂があれば通算と称号図鑑も出る', (t) async {
+      final c = await _start(t);
+      expect(find.byKey(const Key('daily-tip')), findsOneWidget);
+      expect(find.byKey(const Key('life-stats')), findsNothing);
+      c.history = [
+        HistoryEntry.of(_until((g) => false, seed: 5, potential: 90)),
+      ];
+      c.notifyListeners();
+      await t.pumpAndSettle();
+      await t.scrollUntilVisible(find.byKey(const Key('title-book')), 200,
+          scrollable: find.byType(Scrollable).first);
+      expect(find.byKey(const Key('life-stats')), findsOneWidget);
+      expect(find.byKey(const Key('title-book')), findsOneWidget);
+    });
+
+    testWidgets('育成中は「今年の予定」が開ける。決められることはチップで出る', (t) async {
+      final c = await _start(t);
+      c.newGame('テスト', Role.batter, Difficulty.normal, null);
+      await t.pumpAndSettle();
+      await _dismissMilestones(t);
+      await t.tap(find.byKey(const Key('year-plan')));
+      await t.pumpAndSettle();
+      expect(find.text('今年の予定'), findsWidgets);
+      expect(find.textContaining('少年野球の大会'), findsOneWidget);
+    });
+  });
+
   group('FAの画面', () {
     testWidgets('プロ8年目以降は「FA権を使う」から移籍を決められる', (t) async {
       final c = await _start(t);
