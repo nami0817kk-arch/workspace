@@ -177,14 +177,14 @@ def sweep_arc(pts: list, age: int, nb: int, col=(170, 245, 255)) -> Image.Image:
         dx, dy = x1 - x0, y1 - y0
         ln = math.hypot(dx, dy) or 1.0
         nx, ny = -dy / ln, dx / ln
-        w = math.sin(math.pi * (i + 0.5) / n) * (46 * (1 - 0.7 * t)) + 2
+        w = math.sin(math.pi * (i + 0.5) / n) * (24 * (1 - 0.7 * t)) + 1.5      # 三日月: 細く鋭く(46 だと引きの画で床に白い塊に見えた)
         left.append((x + nx * w, y + ny * w))
-        right.append((x - nx * w * 0.35, y - ny * w * 0.35))
+        right.append((x - nx * w * 0.25, y - ny * w * 0.25))
     poly = left + right[::-1]
-    al = int(170 * (1 - t) ** 0.6)
+    al = int(190 * (1 - t) ** 0.6)
     glow = Image.new("RGBA", (W, H), (0, 0, 0, 0))
-    ImageDraw.Draw(glow).polygon(poly, fill=(*col, int(al * 0.9)))
-    glow = glow.filter(ImageFilter.GaussianBlur(18))
+    ImageDraw.Draw(glow).polygon(poly, fill=(*col, int(al * 0.7)))
+    glow = glow.filter(ImageFilter.GaussianBlur(7))
     ov.alpha_composite(glow)
     ImageDraw.Draw(ov).polygon(poly, fill=(255, 255, 255, al))
     return ov

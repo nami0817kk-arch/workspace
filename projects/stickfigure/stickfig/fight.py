@@ -171,6 +171,9 @@ def build_fight(spec: dict) -> dict:
     keysA.insert(1, dict(t=0.42, dx=0.36, hz=0.84, lean=0.1))
     keysB.append(dict(t=0.42, dx=(0.15 if kick else -1.55)))
     hits.append(dict(tau=0.5, hold=0.12, kind="pose"))
+    keysA.insert(2, dict(t=0.5, dx=0.34, hz=0.66, lean=0.26))   # 走り出しの溜め: 見合いの止め絵で沈んで前へ傾き(予備動作)、そのまま蹴り出して走りの clip へ
+    keysA.insert(3, dict(t=0.6, dx=0.3, hz=0.66, lean=0.34))    # (0.56 の 1 点だけだと止め絵の間に埋もれて腰が 0.77 までしか沈まなかった)
+    puffs.append(dict(tau=0.64, kind="land", pos=[-1.5, 0.0]))  # 蹴り出しの砂ぼこり
     keysB.append(dict(t=1.0, dx=0.35))
     if kick:
         charge.append(dict(start=1.3, end=1.7, who="A", color=[255, 170, 60]))
