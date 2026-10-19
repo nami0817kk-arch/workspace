@@ -293,17 +293,24 @@ class GameController extends ChangeNotifier {
     return r;
   }
 
+  /// 触覚を鳴らす。対応しない環境(Web・テストなど)の失敗は、非同期でも握りつぶす。
+  void _buzz(Future<void> Function() f) {
+    try {
+      f().catchError((Object _) {});
+    } catch (_) {}
+  }
+
   /// 手応えを手に伝える(対応しない端末では何も起きない)。
   /// 勝負どころの成功は強く、失敗は重く。優勝は強く。ふだんは軽く。
   void _haptic(TermReport r) {
     try {
       final t = r.tournament;
       if (t != null && t.champion) {
-        HapticFeedback.heavyImpact();
+        _buzz(HapticFeedback.heavyImpact);
       } else if (t != null && t.matches.any((m) => m.clutchSuccess == true)) {
-        HapticFeedback.mediumImpact();
+        _buzz(HapticFeedback.mediumImpact);
       } else {
-        HapticFeedback.selectionClick();
+        _buzz(HapticFeedback.selectionClick);
       }
     } catch (_) {}
   }
@@ -392,9 +399,9 @@ class GameController extends ChangeNotifier {
     try {
       final m = game?.run?.matches.lastOrNull ?? game?.lastReport?.tournament?.matches.lastOrNull;
       if (m?.clutchSuccess == true) {
-        HapticFeedback.mediumImpact();
+        _buzz(HapticFeedback.mediumImpact);
       } else if (m?.clutchSuccess == false) {
-        HapticFeedback.heavyImpact();
+        _buzz(HapticFeedback.heavyImpact);
       }
     } catch (_) {}
   }
