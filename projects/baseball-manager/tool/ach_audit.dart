@@ -47,8 +47,9 @@ void main(List<String> a) {
               g.changeRole(Role.twoWay);
             }
             if (wantOverseas && g.canMoveOverseas) g.moveOverseas();
-            if (g.canUseFa)
+            if (g.canUseFa) {
               g.useFa(FaChoice.values[r.nextInt(FaChoice.values.length)]);
+            }
             if (invest) {
               for (final i in Invest.values) {
                 g.buyInvest(i);
