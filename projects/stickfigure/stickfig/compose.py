@@ -299,8 +299,8 @@ def radial(d_ov: ImageDraw.ImageDraw, cx: float, cy: float, u: float, big: float
                   fill=(*col, a), width=int(wd * SS * (1 - 0.4 * u) * (1 + 0.4 * big)))
 
 
-BIG = dict(kick=1.2, slash=0.7, wall=1.5, heel=1.8, hit=0.8, clash=0.9, beam=1.6)     # 放射線の大きさ。斬り・受け止めは控えめ(白い面積が増えると、閃光が参考の 2 倍以上になる)
-BURST_FRAMES = dict(slash=7, hit=9, kick=14, wall=14, heel=14, clash=8, miss=4, beam=12)   # 放射線が残るコマ数。連続する命中で重ならないよう、斬りは短く
+BIG = dict(kick=1.2, slash=0.7, wall=1.5, heel=1.8, hit=0.8, clash=0.9, beam=0.8)     # 放射線の大きさ。斬り・受け止めは控えめ(白い面積が増えると、閃光が参考の 2 倍以上になる)
+BURST_FRAMES = dict(slash=7, hit=9, kick=14, wall=14, heel=14, clash=8, miss=4, beam=5)   # 放射線が残るコマ数。連続する命中で重ならないよう、斬りは短く
 
 
 def compose_frame(plan: dict, f: int, figs: Dict[int, Image.Image], stages: Optional[Dict[int, Image.Image]] = None) -> Image.Image:

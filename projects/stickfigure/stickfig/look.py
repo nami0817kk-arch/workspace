@@ -163,7 +163,7 @@ def beam(plan: dict, f: int, who: str, x_end: float, age: float, dur: float, col
     core = [(x, y + (y0 - y) * 0.0 - (yy - y) * 0.45) for (x, yy), (_, y) in zip(top, [((tx + bx) / 2, (ty + by) / 2) for (tx, ty), (bx, by) in zip(top, bot)])]
     core_b = [(x, y + (yy - y) * 0.45) for (x, yy), (_, y) in zip(bot, [((tx + bx) / 2, (ty + by) / 2) for (tx, ty), (bx, by) in zip(top, bot)])]
     d.polygon(core + core_b[::-1], fill=(255, 255, 255, int(250 * fade)))
-    r0 = wid * 1.6 * (0.8 + 0.2 * math.sin(f * 2.1))                 # 根元の光の玉
+    r0 = wid * 0.95 * (0.8 + 0.2 * math.sin(f * 2.1))                # 根元の光の玉(1.6 だと光線より玉が目立った)
     ball = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     ImageDraw.Draw(ball).ellipse([x0 - r0, y0 - r0, x0 + r0, y0 + r0], fill=(*col, int(220 * fade)))
     ov.alpha_composite(ball.filter(ImageFilter.GaussianBlur(int(r0 * 0.5) + 2)))

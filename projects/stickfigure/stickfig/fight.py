@@ -394,38 +394,39 @@ def build_fight(spec: dict) -> dict:
         ko_t = hl + 0.95
     elif beam:
         # 決めの 1 発でよろけた B を、気の光線で壁まで吹き飛ばす
-        b_wall = round(max(6.0, 2.4 - min(float(k["dx"]) for k in keysB if "dx" in k) + 1.3), 2)   # 壁の位置(あとで wall_x に使う。飛ぶキーは含めない)
+        b_wall = round(max(6.0, 2.4 - min(float(k["dx"]) for k in keysB if "dx" in k) + 1.3, 2.4 - (dxB - 0.45) + 1.3), 2)   # 壁の位置(あとで wall_x に使う。よろけて下がる分は含め、飛ぶキーは含めない)
         wall_lock = b_wall
-        b_root = 2.4 - (dxB + 0.25)                      # よろけている B の根元
+        b_root = 2.4 - (dxB - 0.45)                      # よろけて下がった B の根元
         t_c0, t_fire = _r(hl + 0.35), _r(hl + 1.45)      # 構え → 1.1 秒溜めて発射
         beam_col = list(s.get("beam_color") or [120, 230, 255])
         keysB += [dict(t=_r(hl + 0.1), dx=_r(dxB + 0.25), lean=-0.6, fa=0.3, ra=0.3, fe=0.6, re=0.6, ht=-0.8, face="pain"),
-                  dict(t=_r(hl + 0.5), dx=_r(dxB + 0.15), lean=-0.25, hz=0.84, fa=0.6, ra=0.5, fe=1.0, re=1.1, ht=-0.3, face="pain"),   # よろけて立っている
-                  dict(t=_r(t_fire - 0.04), dx=_r(dxB + 0.15), lean=-0.2, hz=0.85, fa=0.8, ra=0.6, fe=1.2, re=1.2, ht=-0.1, face="pain"),
-                  dict(t=_r(t_fire + 0.05), dx=_r(dxB + 0.05), lean=-0.7, hz=0.9, fa=-0.9, ra=-0.9, fe=0.3, re=0.3, ht=-0.8, face="pain"),   # 光線を受けてのけぞる
+                  dict(t=_r(hl + 0.5), dx=_r(dxB - 0.45), lean=-0.25, hz=0.84, fa=0.6, ra=0.5, fe=1.0, re=1.1, ht=-0.3, face="pain"),   # よろけて 0.7 下がる(光線の長さを取る)
+                  dict(t=_r(t_fire - 0.04), dx=_r(dxB - 0.45), lean=-0.2, hz=0.85, fa=0.8, ra=0.6, fe=1.2, re=1.2, ht=-0.1, face="pain"),
+                  dict(t=_r(t_fire + 0.05), dx=_r(dxB - 0.55), lean=-0.7, hz=0.9, fa=-0.9, ra=-0.9, fe=0.3, re=0.3, ht=-0.8, face="pain"),   # 光線を受けてのけぞる
                   dict(t=_r(t_fire + 0.2), dx=_r(2.4 - (b_wall - 1.4)), rz=1.3, roll=1.0, hz=0.9, fa=-1.1, ra=-0.9, fe=0.2, re=0.3, fl=0.9, fk=0.4, rl=0.2, rk=0.3, lean=-0.3, ht=-0.6, face="pain"),   # 吹き飛ぶ
                   dict(t=_r(t_fire + 0.34), dx=_r(2.4 - (b_wall - 0.3)), rz=1.35, roll=0.3, hz=0.9, fa=-0.9, ra=-0.9, fe=0.3, re=0.3, fl=0.6, fk=0.3, rl=-0.3, rk=0.4, lean=-0.35, ht=-0.7, face="pain"),   # 壁に張りつく
                   dict(t=_r(t_fire + 0.55), dx=_r(2.4 - (b_wall - 0.3)), rz=1.25, roll=0.35, hz=0.9, lean=-0.3, face="pain"),
                   dict(t=_r(t_fire + 0.85), dx=_r(2.4 - (b_wall - 0.45)), rz=0.55, roll=1.2, hz=0.9, lean=0.0, fa=0.2, ra=0.2, face="pain"),   # ずり落ちる
                   dict(t=_r(t_fire + 1.05), dx=_r(2.4 - (b_wall - 0.5)), rz=0.21, roll=1.57, hz=0.9, fa=0.4, ra=0.4, fl=0.0, fk=0.0, rl=0.0, rk=0.0, face="ko")]
-        charge_pose = dict(hz=0.74, lean=0.12, fa=-0.75, fe=1.35, ra=-0.7, re=1.35, ht=0.05, fl=0.55, fk=0.5, rl=-0.5, rk=0.35, face="fight")   # 両手を腰の脇に引いて腰を落とす
+        charge_pose = dict(hz=0.74, lean=0.12, fa=-0.3, fe=2.3, ra=-0.25, re=2.3, ht=0.05, fl=0.55, fk=0.5, rl=-0.5, rk=0.35, face="fight")   # 肘を畳んで両手を腰の脇に、腰を落とす(腕を後ろへ回すと横からは腕が見えない)
         fire_pose = dict(hz=0.82, lean=0.38, fa=1.6, fe=0.05, ra=1.55, re=0.08, ht=-0.05, fl=0.9, fk=0.45, rl=-0.55, rk=0.2, face="fight")        # 両腕をまっすぐ突き出す
         keysA += [dict(t=_r(hl + 0.12), dx=5.0, hz=0.9, lean=0.15),
-                  dict(t=_r(t_c0), dx=4.55, **charge_pose),                                                   # 一歩下がって構える
-                  dict(t=_r(t_fire - 0.07), dx=4.55, **dict(charge_pose, hz=0.70, lean=0.05)),               # 溜めの終わり: さらに沈む(予備動作)
-                  dict(t=_r(t_fire), dx=4.75, **fire_pose),                                                   # 2 コマで突き出す
-                  dict(t=_r(t_fire + 0.12), dx=4.6, **dict(fire_pose, lean=0.3, hz=0.78)),                    # 反動で少し押し戻される
-                  dict(t=_r(t_fire + 0.75), dx=4.6, **dict(fire_pose, lean=0.25, hz=0.84)),
-                  dict(t=_r(t_fire + 1.0), dx=4.6, hz=0.88, lean=0.1, fa=0.9, fe=1.4, ra=0.7, re=1.5, ht=0.0, face="fight")]   # 腕を下ろす
+                  dict(t=_r(hl + 0.24), dx=4.4, rz=0.3, hz=0.9, lean=-0.1, fl=0.6, fk=0.9, rl=-0.4, rk=0.6),   # 跳んで下がる(光線の長さを取る)
+                  dict(t=_r(t_c0), dx=3.7, **charge_pose),                                                    # 着地して構える
+                  dict(t=_r(t_fire - 0.07), dx=3.7, **dict(charge_pose, hz=0.70, lean=0.05)),                # 溜めの終わり: さらに沈む(予備動作)
+                  dict(t=_r(t_fire), dx=3.9, **fire_pose),                                                    # 2 コマで突き出す
+                  dict(t=_r(t_fire + 0.12), dx=3.75, **dict(fire_pose, lean=0.3, hz=0.78)),                   # 反動で少し押し戻される
+                  dict(t=_r(t_fire + 0.75), dx=3.75, **dict(fire_pose, lean=0.25, hz=0.84)),
+                  dict(t=_r(t_fire + 1.0), dx=3.75, hz=0.88, lean=0.1, fa=0.9, fe=1.4, ra=0.7, re=1.5, ht=0.0, face="fight")]   # 腕を下ろす
         charge.append(dict(start=_r(t_c0), end=_r(t_fire), who="A", color=beam_col))
         hits += [dict(tau=_r(hl + 0.5), hold=0.0, kind="pose"),
                  dict(tau=_r(t_fire), hold=0.08, kind="beam", by="A", pos=[_r(b_root - 0.15), 1.3]),
                  dict(tau=_r(t_fire + 0.34), hold=0.06, kind="wall", pos=[b_wall, 1.6])]
-        fx_beams.append(dict(start=_r(t_fire), end=_r(t_fire + 0.75), who="A", color=beam_col, x_end=b_wall))
+        fx_beams.append(dict(start=_r(t_fire), end=_r(t_fire + 0.75), who="A", color=beam_col, x_end=b_wall + 1.2))   # 光線は壁を突き抜ける長さ
         flashes.append(_r(t_fire))
         slow.append(dict(start=_r(t_fire - 0.05), end=_r(t_fire + 0.25), rate=0.55))
         shots += [dict(t=_r(t_c0 - 0.1), follow="A", scale=[[_r(t_c0 - 0.1), 4.0], [_r(t_fire), 3.2]], yaw=[[_r(t_c0 - 0.1), -30.0], [_r(t_fire), -12.0]], pitch=6.0, lens=32.0, target_z=1.0, lag=0.25),   # 溜め: A に寄っていく
-                  dict(t=_r(t_fire), follow="mid", scale=7.2, yaw=4.0, pitch=3.0, lens=44.0, target_z=1.3),    # 発射: 手から壁まで入る引きの画
+                  dict(t=_r(t_fire), follow="mid", scale=5.8, yaw=4.0, pitch=3.0, lens=44.0, target_z=1.3),    # 発射: 手から壁まで入る引きの画
                   dict(t=_r(t_fire + 0.95), follow="A", scale=[[_r(t_fire + 0.95), 4.6], [_r(t_fire + 2.4), 5.6]], yaw=[[_r(t_fire + 0.95), 30.0], [_r(t_fire + 2.4), -15.0]], pitch=8.0, lens=40.0, target_z=0.9)]
         puffs.append(dict(tau=_r(t_fire + 1.08), kind="land2", pos=[_r(b_wall - 0.5), 0.0]))
         t_end = t_fire + 1.1

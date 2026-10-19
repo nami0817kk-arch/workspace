@@ -186,7 +186,7 @@ def test_beam_finisher_builds_and_flies_to_wall():
     assert "beam" in kinds and "wall" in kinds
     assert sc["fx"]["beams"] and sc["fx"]["charge"]
     bm = sc["fx"]["beams"][0]
-    assert bm["x_end"] == sc["stage"]["wall_x"]                       # 光線は壁まで。壁は飛ぶ前の位置で決めてある
+    assert abs(bm["x_end"] - (sc["stage"]["wall_x"] + 1.2)) < 1e-6   # 光線は壁を突き抜ける長さ。壁は飛ぶ前の位置で決めてある
     t_beam = next(h["tau"] for h in sc["hits"] if h["kind"] == "beam")
     t_wall = next(h["tau"] for h in sc["hits"] if h["kind"] == "wall" and h["tau"] > t_beam)
     assert 0.2 <= t_wall - t_beam <= 0.5
