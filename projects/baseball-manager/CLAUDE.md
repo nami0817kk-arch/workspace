@@ -517,4 +517,4 @@ soccer-manager / soccer-career の野球版。**中核は「試合中の采配�
 - ワークフロー `.github/workflows/baseball-ios-release.yml`(macOS ランナー。もじつみ `tenbin-ios-release.yml` から AdMob・法務ページ・課金の確認を除いた形)と、手順書 `docs/RELEASE.md`。`pubspec.yaml` を `1.0.0+1` に、`Info.plist` に `ITSAppUsesNonExemptEncryption=false`(輸出コンプライアンスの質問を省く)。
 - 使い回す Secrets(登録済み)は `IOS_DIST_CERT_*` / `IOS_TEAM_ID` / `APPSTORE_API_*`。**このアプリだけ新しく要る** `BASEBALL_IOS_PROVISIONING_PROFILE_BASE64` と、Apple Developer での App ID 登録(`com.namiki.baseballManager`)・App Store Connect でのアプリ作成は、自分の Apple アカウントでしかできない。
 - 手で回すとき `test_build` に印(既定オン)を付けると、`--dart-define=TEST_BUILD=true` で管理者モードが最初からオンのテスト版(対戦テストが使える)。タグ `baseball-v*` から走るビルドは必ず通常版。
-- **iOS のビルド・署名はまだ一度も通していない**(この環境は Linux)。初回は CI のログを見て直す。
+- **iOS のビルド・署名・TestFlight へのアップロードは 2026-10-19 に初回で通った**(Actions run 39270851413、ビルド番号1、テスト版)。実機の見た目(ノッチ・横向き・iPad)は未確認。
