@@ -772,7 +772,7 @@ def run_physics(scene: dict, tracks: Dict[str, KeyTrack]) -> dict:
     return res
 
 
-def _body_drive(p: dict, who: str, f: int, events: List[dict], cfg: dict, sign: int) -> dict:
+def _body_drive(p: dict, who: str, f: int, events: List[dict], cfg: dict, sign: int, taus: Optional[List[float]] = None) -> dict:
     """全身の「戦っている感」: 手だけでなく、体が動く。命中ごとに、
     攻める側(by)は 溜め(体を後ろへひねり・沈む)→ 踏み込んで体をひねり込む(spin・lean・腰・前への体重移動)、
     受ける側は 衝撃で体がのけぞり・ひねられ・腰が落ち・後ろへ押される(root_x)→ 踏ん張って戻る。
@@ -787,7 +787,13 @@ def _body_drive(p: dict, who: str, f: int, events: List[dict], cfg: dict, sign: 
             continue
         d = f - e["frame"]
         nxt = next((x for x in hit_list if x > e["frame"]), None)
-        L = 14 if nxt is None else max(4, min(14, nxt - e["frame"] - 2))     # 位置の変化(前進・押され)は、次の命中の 2 コマ前までに戻す
+        if taus is not None:                             # ヒットストップ(tau が止まっているコマ)は数えない: 止め絵の間は命中の絵のまま。前はコマ数で進めていたので、止め絵の間に相手が 0.75 も飛んで、動き出すと戻っていた(fight_default の飛び蹴り)
+            if d > 0:
+                d = sum(1 for g in range(e["frame"] + 1, f + 1) if taus[g] > taus[g - 1])
+            span = None if nxt is None else sum(1 for g in range(e["frame"] + 1, nxt + 1) if taus[g] > taus[g - 1])
+        else:
+            span = None if nxt is None else nxt - e["frame"]
+        L = 14 if span is None else max(4, min(14, span - 2))     # 位置の変化(前進・押され)は、次の命中の 2 コマ前までに戻す(動いているコマで数える)
         ret = 1.0 if d <= L - 4 else max(0.0, (L - d) / 4.0)             # 終わりの 4 コマで 0 へ
         if e["by"] == who:                               # 攻める側
             if -6 <= d <= 8:                             # 踏み込みの構え: 前脚を大きく出して膝を曲げ、後ろ脚を引いて伸ばす(弓足)。山は命中の少し前
@@ -832,7 +838,8 @@ def _body_drive(p: dict, who: str, f: int, events: List[dict], cfg: dict, sign: 
                 head = big * (min(1.0, d / 1.5) if d <= 2 else max(0.0, 0.6 + 0.4 * (1 - (d - 2) / 3.0)) if d <= 5 else 0.6 * u / (11 / 16.0))
                 body = big * min(1.0, d / 4.0)
                 dspin += -0.75 * body * u * u; dlean += -0.34 * body * u; dhz += -0.12 * big * math.sin(math.pi * min(1.0, d / 6.0)) * u
-                ddx += (-0.42 * big * min(1.0, d / 2.0)) * (1 - (1 - min(1.0, d / 5.0)) ** 2) * (0.35 + 0.65 * u) * (ret if d <= L else 0.0)
+                up = min(1.0, d / 5.0)
+                ddx += (-0.30 * big) * (up * up * (3 - 2 * up)) * (0.35 + 0.65 * u) * (ret if d <= L else 0.0)   # 押され: 5 コマでなめらかに(前は 0.42×2 コマで、蹴りでは 1 コマ 0.55 飛んだ)
                 dht += -0.35 * head                      # 頭が先に飛ぶ(命中の次のコマで既に 2/3)。0.45 は首が抜けて見えた
                 arm = big * math.sin(math.pi * min(1.0, d / 10.0))   # 腕は跳ね上がり(前腕は後ろ上へ、後ろ腕は前へ)、10 コマで落ちる
                 p["fa"] = p.get("fa", 0.0) - 0.5 * arm; p["fe"] = p.get("fe", 0.0) - 0.2 * arm
@@ -944,7 +951,7 @@ def build_plan(scene: dict, solve: bool = True) -> dict:
                     if act is not None and act.get("loop"):
                         p = dict(p, periodic=1.0)          # 周期運動(走り)の区間。点検の「途中で止まる」から外す
                 if scene.get("body_drive") and abs(p.get("rz", 0.0)) < 0.05 and abs(p.get("roll", 0.0)) < 0.3:     # 倒れている・空中の間は足さない
-                    p = _body_drive(p, who, f, events, scene["body_drive"], _sign(a))
+                    p = _body_drive(p, who, f, events, scene["body_drive"], _sign(a), taus)
                 if who in planters:
                     p = planters[who].apply(p, dtau)
             s = _sign(a)
