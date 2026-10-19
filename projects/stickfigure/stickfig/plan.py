@@ -479,6 +479,10 @@ def _align_keys_to_clips(scene: dict, tracks: Dict[str, KeyTrack]) -> Dict[str, 
                     continue
                 keys.append(dict(t=round(float(tt), 3), dx=round(base.at(tt)["dx"], 4), _dx0=round(base.at(tt)["dx"], 4)))
         keys.sort(key=lambda k: float(k["t"]))
+        gaps = []                                        # 続けざまの clip(間が 0.6 秒未満)の間は、前の終点から次の始点へ直線で動く(台本の位置へ戻る暇が無い)
+        for (w0, w1, c), (w0n, w1n, cn) in zip(windows, windows[1:]):
+            if 0 < w0n - w1 < 0.6:
+                gaps.append((w1, w0n, bank.sample(c, c["end"])["dx"], bank.sample(cn, cn["start"])["dx"]))
         for k in keys:
             tt = float(k["t"])
             dx0 = float(k.get("_dx0", base.at(tt)["dx"]))
@@ -486,6 +490,11 @@ def _align_keys_to_clips(scene: dict, tracks: Dict[str, KeyTrack]) -> Dict[str, 
             if inside:
                 c = inside[-1]
                 k["dx"] = round(bank.sample(c, min(max(tt, c["start"]), c["end"]))["dx"], 4)
+                continue
+            g = next((g for g in gaps if g[0] < tt < g[1]), None)
+            if g is not None:
+                u = (tt - g[0]) / (g[1] - g[0])
+                k["dx"] = round((1 - u) * g[2] + u * g[3], 4)
                 continue
             val = dx0
             for (w0, w1, c) in windows:

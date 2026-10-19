@@ -271,7 +271,7 @@ def build_fight(spec: dict) -> dict:
                 keysB.append(dict(t=_r(tcn + 0.32), dx=_r(dxB), **GUARD))
             clipsB.append(dict(file=cclip, strike_at=_r(tcn), start=_r(tcn - 0.2), end=_r(tcn + 0.27), **{"in": 0.06, "out": 0.1}))
             hits.append(dict(tau=_r(tcn), hold=0.05, kind="hit", by="B", contact=dict(striker="B", effector="hand", target=dict(actor="A", point="chest"), tol=0.35, max_anticipation=50)))
-            keysA += [dict(t=_r(tcn + 0.07), dx=4.45, lean=-0.2, hz=0.9), dict(t=_r(tcn + 0.27), dx=4.6, lean=0.15, hz=0.9)]
+            keysA += [dict(t=_r(tcn + 0.07), lean=-0.2, hz=0.9), dict(t=_r(tcn + 0.27), lean=0.15, hz=0.9)]   # 位置(dx)は書かない: 押される分は body_drive、位置は clip の継ぎ目合わせに任せる
     hl = ts[-1]
     speed.append([_r(h0), _r(hl + 0.5)])
     shots.append(dict(t=_r(h0), follow="mid", scale=[[_r(h0), 3.1], [_r(hl), 3.6]], yaw=[[_r(h0), 30.0], [_r(hl), 52.0]],

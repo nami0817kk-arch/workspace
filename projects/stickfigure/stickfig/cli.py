@@ -150,6 +150,12 @@ def cmd_preview(a) -> int:
     return 0
 
 
+def cmd_motion(a) -> int:
+    from . import motion
+    print(motion.report(planmod.build_plan(planmod.load_scene(a.scene))))
+    return 0
+
+
 def cmd_review(a) -> int:
     from . import episode, review
     print(review.report(episode.load_episode(a.episode)))
@@ -190,6 +196,7 @@ def main(argv=None) -> int:
     p = sub.add_parser("kit"); p.add_argument("ep_dir"); p.add_argument("--title", required=True); p.add_argument("--hero", default="ミドリ"); p.add_argument("--rival"); p.add_argument("--arc"); p.set_defaults(fn=cmd_kit)
     p = sub.add_parser("series"); p.add_argument("--n", type=int, default=5); p.add_argument("--out", required=True); p.add_argument("--seed", type=int, default=100); p.add_argument("--vertical", action="store_true"); p.add_argument("--build", action="store_true"); p.set_defaults(fn=cmd_series)
     p = sub.add_parser("preview"); p.add_argument("scene"); p.add_argument("--out", required=True); p.set_defaults(fn=cmd_preview)
+    p = sub.add_parser("motion"); p.add_argument("scene"); p.set_defaults(fn=cmd_motion)
     p = sub.add_parser("review"); p.add_argument("episode"); p.set_defaults(fn=cmd_review)
     p = sub.add_parser("rhythm"); p.add_argument("video"); p.set_defaults(fn=cmd_rhythm)
     p = sub.add_parser("video-check"); p.add_argument("video"); p.add_argument("--out"); p.add_argument("--fps", type=float, default=30.0); p.set_defaults(fn=cmd_video_check)
