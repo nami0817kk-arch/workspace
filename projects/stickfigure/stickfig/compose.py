@@ -273,8 +273,19 @@ def compose_frame(plan: dict, f: int, figs: Dict[int, Image.Image], stages: Opti
     for e in plan["events"]:                   # 特大の効果: 斬撃の弧・衝撃の輪
         age = f - e["frame"]
         if e["kind"] == "slash" and 0 <= age <= 9:
-            cxy = to_px(e["pos"][0], e["pos"][1], cam)
-            base.alpha_composite(look.slash_arc(cxy[0], cxy[1], age, 9))
+            who_s = next((w for w, ac in plan["actors"].items() if ac.get("weapon")), None)
+            path = []
+            if who_s is not None:                  # 剣先が実際に通った道に沿わせる(命中の前後)
+                for ff in range(max(0, e["frame"] - 7), min(plan["n"] - 1, e["frame"] + 3) + 1):
+                    tip = anime.effector_world(plan, who_s, ff).get("tip")
+                    if tip is not None:
+                        path.append(to_px(tip[0], tip[1], cam))
+            span = sum(math.hypot(path[i + 1][0] - path[i][0], path[i + 1][1] - path[i][1]) for i in range(len(path) - 1)) if len(path) > 2 else 0
+            if span > 90:
+                base.alpha_composite(look.sweep_arc(path, age, 9))
+            else:
+                cxy = to_px(e["pos"][0], e["pos"][1], cam)
+                base.alpha_composite(look.slash_arc(cxy[0], cxy[1], age, 9))
         elif e["kind"] in ("kick", "heel", "wall") and 0 <= age <= 8:
             cxy = to_px(e["pos"][0], e["pos"][1], cam)
             base.alpha_composite(look.shock_ring(cxy[0], cxy[1], age, 8))

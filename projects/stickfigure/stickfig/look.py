@@ -161,3 +161,30 @@ def charge_aura(plan: dict, f: int, who: str, age01: float, col=(120, 230, 255))
         rr = (0.4 + 1.8 * t) * u
         ImageDraw.Draw(out).ellipse([cx - rr, cy + 0.85 * u - rr * 0.3, cx + rr, cy + 0.85 * u + rr * 0.3], outline=(*col, int(230 * (1 - t))), width=4)
     return out, 0.55 * min(1.0, age01 * 3)
+
+
+def sweep_arc(pts: list, age: int, nb: int, col=(170, 245, 255)) -> Image.Image:
+    """剣先が実際に通った道(画面上の点列)に沿う、特大の斬撃の弧。中ほどが太く、端は細い。"""
+    ov = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    if len(pts) < 3:
+        return ov
+    t = min(1.0, age / nb)
+    n = len(pts)
+    left, right = [], []
+    for i, (x, y) in enumerate(pts):
+        x0, y0 = pts[max(0, i - 1)]
+        x1, y1 = pts[min(n - 1, i + 1)]
+        dx, dy = x1 - x0, y1 - y0
+        ln = math.hypot(dx, dy) or 1.0
+        nx, ny = -dy / ln, dx / ln
+        w = math.sin(math.pi * (i + 0.5) / n) * (46 * (1 - 0.7 * t)) + 2
+        left.append((x + nx * w, y + ny * w))
+        right.append((x - nx * w * 0.35, y - ny * w * 0.35))
+    poly = left + right[::-1]
+    al = int(255 * (1 - t) ** 0.6)
+    glow = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    ImageDraw.Draw(glow).polygon(poly, fill=(*col, int(al * 0.9)))
+    glow = glow.filter(ImageFilter.GaussianBlur(18))
+    ov.alpha_composite(glow)
+    ImageDraw.Draw(ov).polygon(poly, fill=(255, 255, 255, al))
+    return ov
