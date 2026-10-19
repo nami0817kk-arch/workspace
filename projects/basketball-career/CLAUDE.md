@@ -136,6 +136,6 @@ baseball-manager の骨格（年齢で局面が変わる一代記・季節ごと
 1. **公開ページの置き場所**: `legal/` を公開する（Cloudflare Pages など。名義は `docs/public-identity.md`）。公開はユーザーの判断。決まったら `LEGAL_BASE_URL` を合わせる。
 2. **AdMob**: アプリを登録して本物の広告ユニットID・アプリIDを取り、CI の Secrets に入れる（`app-ads.txt` も）。
 3. **App Store Connect**: App ID・アプリ作成・アプリ内課金（`basketball_career_remove_ads`、370円）の登録。
-4. **App Store 提出**: `ios-app-release` スキルを読んでから。掲載文・スクリーンショット（落とし穴 #4: 読み込み中を撮らない）・
-   `ja.lproj/InfoPlist.strings`（落とし穴 #5）・プライバシーの答え。
+4. **App Store 提出**: `ios-app-release` スキルを読んでから。掲載文・スクリーンショット（落とし穴 #4: 読み込み中を撮らない）・プライバシーの答え。
+   （`ja.lproj/InfoPlist.strings`（落とし穴 #5）は登録済み。`test/ios_localization_test.dart` が検査。**ビルドした IPA で `Payload/Runner.app/ja.lproj` を目で見る**のは提出時に必要）
 5. バランス調整（実際に遊んでから）。難易度の選択は未実装。
