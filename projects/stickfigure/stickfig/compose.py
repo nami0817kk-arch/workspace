@@ -12,7 +12,7 @@ from typing import Dict, List, Optional, Sequence, Tuple
 
 from PIL import Image, ImageDraw, ImageFilter
 
-from . import camera
+from . import anime, camera
 
 W, H, SS = 1280, 720, 2
 GROUND_Y = 560
@@ -284,6 +284,9 @@ def compose_frame(plan: dict, f: int, figs: Dict[int, Image.Image], stages: Opti
         radial(ImageDraw.Draw(ov2), cx, cy, 0.15 if age == 0 else 0.3, big * 1.4, fgc)
         im.alpha_composite(ov2.resize((W, H), Image.LANCZOS))
         frame = im.convert("RGB")
+    acfg = plan.get("scene", {}).get("anime")
+    if acfg is not None and invert is None:
+        frame = anime.apply(plan, f, frame, acfg if isinstance(acfg, dict) else {}, plan.setdefault("_anime_cache", {}))
     return frame
 
 

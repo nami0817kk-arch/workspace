@@ -14,7 +14,7 @@ from typing import Dict, List, Optional
 
 import yaml
 
-from . import camera, fk, mocap, physics
+from . import anime, camera, fk, mocap, physics
 from .interp import build_timeline, smoothstep
 from .interp import Spring
 from .pose import KeyTrack, Smoother, STANCE_A, STANCE_B, apply_run
@@ -404,15 +404,27 @@ def build_plan(scene: dict, solve: bool = True) -> dict:
             if amp and 0 <= d < 10:
                 shake += amp * (1 - d / 10)
         sx, sz = shake * math.sin(f * 2.9), shake * math.cos(f * 2.3)
-        pxu = VIEW["width"] / cams
+        # アニメの演出: 命中の瞬間に「寄って」(ズームパンチ)、画面が傾いて揺れる
+        zp, roll = 0.0, 0.0
+        if scene.get("anime") is not None:
+            for i, e in enumerate(events):
+                d = f - e["frame"]
+                zk = anime.ZOOM_PUNCH.get(e["kind"], 0.0)
+                if zk and 0 <= d < 12:
+                    dec = (1 - d / 12) ** 2
+                    zp += zk * dec
+                    roll += anime.ROLL_SHAKE.get(e["kind"], 0.0) * dec * math.cos(d * 1.2) * (1 if i % 2 == 0 else -1)
+        cams_eff = cams * (1 - min(zp, 0.3))
+        pxu = VIEW["width"] / cams_eff
         if v3 is not None:
             # 遠近のあるカメラ: 斜めの角度(yaw)でゆっくり回り込み、少し上から見る
             fr["cam"] = {k: (round(v, 5) if isinstance(v, float) else v) for k, v in
-                         camera.make_cam(camx, 0.0, cams, yaw_curve(tau), v3.get("pitch", 7.0), v3.get("lens", 40.0), sx, sz).items()}
+                         camera.make_cam(camx, 0.0, cams_eff, yaw_curve(tau), v3.get("pitch", 7.0), v3.get("lens", 40.0), sx, sz).items()}
             fr["cam"]["z"] = fr["cam"]["tz"]
         else:
-            fr["cam"] = dict(x=round(camx + sx, 5), scale=round(cams, 5), pxu=round(pxu, 4), sx=round(sx, 5), sz=round(sz, 5),
+            fr["cam"] = dict(x=round(camx + sx, 5), scale=round(cams_eff, 5), pxu=round(pxu, 4), sx=round(sx, 5), sz=round(sz, 5),
                              z=round((VIEW["ground_y"] - VIEW["height"] / 2) / pxu + sz, 5))
+        fr["cam"]["roll"] = round(roll, 4)
         frames.append(fr)
     if phys is not None:
         _lift_to_ground(scene, frames)
@@ -431,7 +443,7 @@ def build_plan(scene: dict, solve: bool = True) -> dict:
             e["pos"] = list(p.get("pos", [0.0, 0.0]))
         e["fx"] = dict(h.get("fx", {}))
     return dict(version=1, fps=fps, n=len(frames), view=dict(VIEW, persp=bool(scene.get("view3d")), lens=(scene.get("view3d") or {}).get("lens", 40.0)), actors=scene["actors"], stage=scene.get("stage", {}),
-                events=events, contacts=contacts, frames=frames, scene={k: scene[k] for k in ("hits", "slow", "camera", "fx", "tempo", "view3d") if k in scene})
+                events=events, contacts=contacts, frames=frames, scene={k: scene[k] for k in ("hits", "slow", "camera", "fx", "tempo", "view3d", "anime") if k in scene})
 
 
 def save_plan(plan: dict, path) -> None:
