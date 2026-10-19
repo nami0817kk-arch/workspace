@@ -665,7 +665,7 @@ class Game {
     for (final t in player.traits.difference(before.traits)) {
       lines.add('特性「${t.label}」を得た');
     }
-    if (r.gotInjured) lines.add('怪我をした');
+    if (r.gotInjured) lines.add('${condition.injuryName}をした');
     if (opt.effect.achievement != 0) lines.add('評価が上がった');
     if (opt.effect.schoolLabel != null) {
       lines.add('進学先: ${opt.effect.schoolLabel}');

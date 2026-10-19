@@ -548,10 +548,18 @@ EventDef? rollEvent(Player p,
       : (e.morale * moraleLossMultiplier(p.traits)).round();
 
   var injured = c.injuredTerms;
+  var injuryName = c.injuryName;
   var gotInjured = false;
   if (!c.injured && e.injuryChance > 0) {
     if (rng.nextDouble() < e.injuryChance * injuryMultiplier(p.traits)) {
-      injured = 1 + rng.nextInt(3);
+      final kind = rollInjury(rng);
+      injured = kind.terms(rng);
+      injuryName = kind.label;
+      if (kind.lasting) {
+        for (final x in applyLastingInjury(ab).entries) {
+          ab[x.key] = x.value;
+        }
+      }
       gotInjured = true;
       morale -= 10;
     }
@@ -568,6 +576,7 @@ EventDef? rollEvent(Player p,
       fatigue: fatigue,
       morale: morale,
       injuredTerms: injured,
+      injuryName: injuryName,
     ),
     gotInjured: gotInjured,
   );

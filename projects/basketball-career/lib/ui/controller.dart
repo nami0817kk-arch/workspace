@@ -276,7 +276,8 @@ class GameController extends ChangeNotifier {
       '${a.label}した。',
       ..._gainLines(before, g.player),
       ..._rankUpLines(before, g.player),
-      if (r.gotInjured) '怪我をしてしまった…',
+      if (r.gotInjured)
+        '${g.condition.injuryName}をしてしまった…(あと${g.condition.injuredTerms}ターン)',
     ];
     if (r.paused) {
       _pendingLines = lines;
