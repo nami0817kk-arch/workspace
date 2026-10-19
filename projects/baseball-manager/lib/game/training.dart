@@ -22,11 +22,11 @@ Player advanceYear(Player p, Ability focus, Random rng) {
 
 /// 能力 `a` が1年で動く量(ノイズ抜き)。1年を季節に分けるときはこれを割って使う。
 /// 伸びる年は素質が効き、下る年は重点を置いた能力が落ちにくい。
-/// 二刀流は練習が分散する。伸びは4割減(衰えは変わらない)。
+/// 二刀流は練習が分散する。伸びは25%減(衰えは変わらない)。
 double yearlyDelta(Player p, Ability a, Ability focus) {
   final g = growthFactor(p.age);
   final talent = 0.5 + p.potential / 100; // 0.5〜1.5
-  final split = p.role == Role.twoWay ? 0.6 : 1.0;
+  final split = p.role == Role.twoWay ? 0.75 : 1.0;
   final share = a == focus ? 1.0 : 0.25;
   return g >= 0
       ? 4.0 * g * talent * share * split * growthMultiplier(p.traits, p.age)

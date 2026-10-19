@@ -20,8 +20,15 @@ double overall(Player p) {
   return switch (p.role) {
     Role.batter => avg(batterAbilities),
     Role.pitcher => avg(pitcherAbilities),
-    Role.twoWay => max(avg(batterAbilities), avg(pitcherAbilities)),
+    Role.twoWay => _twoWayOverall(avg(batterAbilities), avg(pitcherAbilities)),
   };
+}
+
+/// 二刀流の総合評価。得意な方が土台で、もう一方も育っているほど上乗せされる
+/// (両方を高い水準で使えるのが二刀流の値打ち。練習が分散する分の見返り)。
+double _twoWayOverall(double a, double b) {
+  final hi = max(a, b), lo = min(a, b);
+  return min(100.0, hi + ((lo - 40) * 0.5).clamp(0.0, 12.0));
 }
 
 /// 能力7割＋実績3割(0〜100)。実績は大会の成績などで積む(別途)。

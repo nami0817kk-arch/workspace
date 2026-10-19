@@ -1599,7 +1599,8 @@ class _ProCard extends StatelessWidget {
             if (r != Role.twoWay)
               const Padding(
                 padding: EdgeInsets.only(top: 4),
-                child: Text('二刀流は両方を使えるが、練習が分散して伸びが0.6倍になる(話題性で年俸1.4倍・人気も上がる)。',
+                child: Text(
+                    '二刀流は両方を使えるが、練習が分散して伸びが0.75倍になる。両方を伸ばせば評価が上乗せされ、年俸1.4倍・人気も上がる。',
                     style: TextStyle(fontSize: 12)),
               ),
           ],
