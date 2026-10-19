@@ -1,0 +1,3 @@
+# 必殺技の見本: 連打のあと、気の光線(カメハメ波の型)で壁まで吹き飛ばす
+name: fight_beam
+fight: {weapon: none, kick: false, hits: 3, counter: true, finisher: beam, palette: cool, stage: night, mood: battle, seed: 7}

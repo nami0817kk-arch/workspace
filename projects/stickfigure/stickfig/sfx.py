@@ -123,6 +123,13 @@ def se(plan: dict, seed: int = 7) -> np.ndarray:
             _add(buf, boom(rng), t, 0.45)
         elif k == "wall":
             _add(buf, boom(rng), t, 1.0)
+        elif k == "beam":                               # 気の光線: 低いうなり+ノイズの持続(0.8 秒)、頭に boom
+            n_ = int(SR * 0.85)
+            tt = np.arange(n_) / SR
+            hum = (np.sin(2 * np.pi * 55 * tt) + 0.6 * np.sin(2 * np.pi * 110 * tt + 0.3) + 0.3 * np.sin(2 * np.pi * 220 * tt)) * _env(n_, 0.01, 0.35)
+            noise = rng.standard_normal(n_) * _env(n_, 0.02, 0.4) * 0.5
+            _add(buf, hum + noise, t, 0.9)
+            _add(buf, boom(rng), t, 0.6)
         elif k in ("land", "land2"):
             _add(buf, land(rng), t, 0.8)
     # 足音: 足が浮いてから床に着いたコマで、小さく低い音(踏み込み・踏み替えが聞こえると、体が動いて見える)

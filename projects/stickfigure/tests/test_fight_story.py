@@ -178,3 +178,16 @@ def test_launch_kick_finisher_and_random():
     planmod.validate_scene(sc)
     kinds = {fight.build_fight(dict(hits=3, finisher="random", seed=s))["hits"][-2]["kind"] for s in range(6)}
     assert kinds                                              # seed で選ばれる(どちらかは出る)
+
+
+def test_beam_finisher_builds_and_flies_to_wall():
+    sc = fight.build_fight(dict(weapon="none", kick=False, hits=2, finisher="beam"))
+    kinds = [h["kind"] for h in sc["hits"]]
+    assert "beam" in kinds and "wall" in kinds
+    assert sc["fx"]["beams"] and sc["fx"]["charge"]
+    bm = sc["fx"]["beams"][0]
+    assert bm["x_end"] == sc["stage"]["wall_x"]                       # 光線は壁まで。壁は飛ぶ前の位置で決めてある
+    t_beam = next(h["tau"] for h in sc["hits"] if h["kind"] == "beam")
+    t_wall = next(h["tau"] for h in sc["hits"] if h["kind"] == "wall" and h["tau"] > t_beam)
+    assert 0.2 <= t_wall - t_beam <= 0.5
+    planmod.validate_scene(sc)

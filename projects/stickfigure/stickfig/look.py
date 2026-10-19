@@ -123,6 +123,60 @@ def eyes(plan: dict, f: int, img: Image.Image) -> None:
                 d.arc([X - 4 * k, Z - 3 * k, X + 4 * k, Z + 3 * k], 200, 340, fill=(10, 10, 10), width=max(2, int(1.8 * k)))
 
 
+def beam(plan: dict, f: int, who: str, x_end: float, age: float, dur: float, col=(120, 230, 255)) -> Image.Image:
+    """気の光線: 手(前の手と後ろの手の間)から x_end(壁)まで、白い芯+色の光。age(秒)で 3 コマで太くなり、終わりの 25% で細って消える。
+    縁は揺らぎ(コマごとに乱れる)、根元に光の玉、周りに流れる粒。"""
+    cam = plan["frames"][f]["cam"]
+    a = plan["actors"][who]
+    p = plan["frames"][f]["actors"][who]
+    s = 1 if a.get("facing", 1) >= 0 else -1
+    sk = fk.skeleton(p, s, p["root_x"], a.get("scale", 1.0))
+    hx, hz = sk["hand"]
+    u = camera.px_per_unit(cam)
+    x0, y0 = camera.project(cam, hx, 0.0, hz)[:2]
+    x1, y1 = camera.project(cam, x_end, 0.0, hz)[:2]
+    t01 = age / max(dur, 1e-6)
+    grow = min(1.0, age * 30 / 3.0)                                   # 3 コマで太くなる
+    fade = 1.0 if t01 < 0.75 else max(0.0, (1 - t01) / 0.25)
+    wid = 0.42 * u * grow * (0.35 + 0.65 * fade)
+    ov = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    if wid < 1 or abs(x1 - x0) < 2:
+        return ov
+    rnd = random.Random(f * 13 + 5)
+    n = 28
+    top, bot = [], []
+    for i in range(n + 1):
+        q = i / n
+        x = x0 + (x1 - x0) * q
+        y = y0 + (y1 - y0) * q
+        wob = 1.0 + 0.12 * math.sin(q * 11 + f * 1.3) + rnd.uniform(-0.08, 0.08)
+        ww = wid * wob * (0.55 + 0.45 * min(1.0, q * 4))              # 根元は細く広がる
+        top.append((x, y - ww))
+        bot.append((x, y + ww))
+    poly = top + bot[::-1]
+    glow = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    ImageDraw.Draw(glow).polygon(poly, fill=(*col, int(200 * fade)))
+    glow = glow.filter(ImageFilter.GaussianBlur(max(6, int(wid * 0.9))))
+    ov.alpha_composite(glow)
+    d = ImageDraw.Draw(ov)
+    d.polygon(poly, fill=(*col, int(235 * fade)))
+    core = [(x, y + (y0 - y) * 0.0 - (yy - y) * 0.45) for (x, yy), (_, y) in zip(top, [((tx + bx) / 2, (ty + by) / 2) for (tx, ty), (bx, by) in zip(top, bot)])]
+    core_b = [(x, y + (yy - y) * 0.45) for (x, yy), (_, y) in zip(bot, [((tx + bx) / 2, (ty + by) / 2) for (tx, ty), (bx, by) in zip(top, bot)])]
+    d.polygon(core + core_b[::-1], fill=(255, 255, 255, int(250 * fade)))
+    r0 = wid * 1.6 * (0.8 + 0.2 * math.sin(f * 2.1))                 # 根元の光の玉
+    ball = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    ImageDraw.Draw(ball).ellipse([x0 - r0, y0 - r0, x0 + r0, y0 + r0], fill=(*col, int(220 * fade)))
+    ov.alpha_composite(ball.filter(ImageFilter.GaussianBlur(int(r0 * 0.5) + 2)))
+    d.ellipse([x0 - r0 * 0.55, y0 - r0 * 0.55, x0 + r0 * 0.55, y0 + r0 * 0.55], fill=(255, 255, 255, int(240 * fade)))
+    for i in range(40):                                               # 光線に沿って流れる粒・筋
+        q = (rnd.random() + f * 0.09) % 1.0
+        x = x0 + (x1 - x0) * q
+        y = y0 + (y1 - y0) * q + rnd.uniform(-1.6, 1.6) * wid
+        ln = rnd.uniform(0.2, 0.9) * u * 0.6
+        d.line([x, y, x + math.copysign(ln, x1 - x0), y], fill=(255, 255, 255, int(rnd.uniform(60, 200) * fade)), width=rnd.choice((1, 2, 3)))
+    return ov
+
+
 def charge_aura(plan: dict, f: int, who: str, age01: float, col=(120, 230, 255)) -> Tuple[Image.Image, float]:
     """必殺技の溜め: 人物のまわりに光の柱と上昇する粒、広がる輪。age01=0→1(溜めの進み)。返り値は(重ねる画像, 背景を暗くする量)。"""
     cam = plan["frames"][f]["cam"]
