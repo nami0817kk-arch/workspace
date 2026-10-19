@@ -65,6 +65,7 @@ HIT_CLIPS = ["02_08_s1", "02_09_s1", "02_07_s2", "02_07_s1"]
 POOL_MID = ["02_08_s1", "02_09_s1", "02_07_s1", "02_08_s2", "02_09_s2", "02_07_s2"]     # 途中の連打(位置を台本で与える)に使える clip
 CHARGE_COLORS = [[120, 230, 255], [255, 170, 60], [255, 90, 200], [170, 255, 120]]
 COUNTER_CLIP = "13_17_s1"
+COUNTER_CLIPS = ["13_17_s1", "13_17_s2", "90_05_s2", "90_16_s1"]      # 届く手の clip(命中時の間隔 0.45〜0.75)。seed で選ぶ
 
 
 def _r(x: float) -> float:
@@ -105,8 +106,10 @@ def build_fight(spec: dict) -> dict:
     s.update({k: v for k, v in (spec or {}).items() if k in DEFAULTS})
     rng = random.Random(s["seed"]) if s["seed"] is not None else None
     mid_clips = list(HIT_CLIPS)
+    cclip = COUNTER_CLIP
     if rng is not None:
         mid_clips = rng.sample(POOL_MID, 3) + ["02_07_s2"]       # 最後の1発は、命中の位置を解く clip(届く 02_07_s2)に固定
+        cclip = rng.choice(COUNTER_CLIPS)
     sword = s["weapon"] in ("sword", "dagger", "staff", "spear")      # 武器あり(斬りの弧・剣先の接触)
     n = max(1, min(4, int(s["hits"])))
     kick = bool(s["kick"])
@@ -170,8 +173,8 @@ def build_fight(spec: dict) -> dict:
             tb1, tb2 = tc - 0.78, tc - 0.40
             keysB = [dict(t=0.0, dx=-1.7), dict(t=_r(tc - 1.2), dx=-1.7, **GUARD), dict(t=_r(tb1 - 0.15), dx=-1.0, **GUARD),
                      dict(t=_r(tc - 0.18), dx=-1.4, **GUARD), keysB[-1]]
-            clipsB += [dict(file=COUNTER_CLIP, strike_at=_r(tb1), start=_r(tb1 - 0.2), end=_r(tb1 + 0.17), anchor_dx=-1.0, **{"in": 0.06, "out": 0.08}),
-                       dict(file=COUNTER_CLIP, strike_at=_r(tb2), start=_r(tb2 - 0.17), end=_r(tb2 + 0.25), **{"in": 0.06, "out": 0.1})]
+            clipsB += [dict(file=cclip, strike_at=_r(tb1), start=_r(tb1 - 0.2), end=_r(tb1 + 0.17), anchor_dx=-1.0, **{"in": 0.06, "out": 0.08}),
+                       dict(file=cclip, strike_at=_r(tb2), start=_r(tb2 - 0.17), end=_r(tb2 + 0.25), **{"in": 0.06, "out": 0.1})]
             hits += [dict(tau=_r(tb1), hold=0.0, kind="miss", by="B", pos=[1.75, 1.25]),
                      dict(tau=_r(tb2), hold=0.07, kind="clash", by="B", contact=dict(striker="B", effector="hand", target=dict(actor="A", point="chest"), tol=0.45, max_anticipation=50))]
             keysA += [dict(t=_r(tb2 - 0.14), dx=3.4, **BLOCK), dict(t=_r(tb2 + 0.08), dx=3.4, **BLOCK), dict(t=_r(tb2 + 0.26), dx=3.4, **GUARD_A)]
@@ -232,7 +235,7 @@ def build_fight(spec: dict) -> dict:
                       dict(t=_r(t + 0.24), dx=_r(dxB), **GUARD)]
             if rip_i == i:                               # 受けて返す: B が打ち返し、A が受け止める
                 tr = t + 0.30
-                clipsB.append(dict(file=COUNTER_CLIP, strike_at=_r(tr), start=_r(tr - 0.2), end=_r(tr + 0.26), **{"in": 0.06, "out": 0.1}))
+                clipsB.append(dict(file=cclip, strike_at=_r(tr), start=_r(tr - 0.2), end=_r(tr + 0.26), **{"in": 0.06, "out": 0.1}))
                 hits.append(dict(tau=_r(tr), hold=0.07, kind="clash", by="B", contact=dict(striker="B", effector="hand", target=dict(actor="A", point="chest"), tol=0.45, max_anticipation=50)))
                 keysA += [dict(t=_r(tr - 0.14), **BLOCK), dict(t=_r(tr + 0.08), **BLOCK), dict(t=_r(tr + 0.26), **GUARD_A)]
                 flashes.append(_r(tr))
@@ -246,7 +249,7 @@ def build_fight(spec: dict) -> dict:
                       dict(t=_r(t + 0.2), dx=_r(dxB), **GUARD)]
         if i == 0 and s["counter"] and n > 1:
             tcn = t + 0.28
-            clipsB.append(dict(file=COUNTER_CLIP, strike_at=_r(tcn), start=_r(tcn - 0.2), end=_r(tcn + 0.27), **{"in": 0.06, "out": 0.1}))
+            clipsB.append(dict(file=cclip, strike_at=_r(tcn), start=_r(tcn - 0.2), end=_r(tcn + 0.27), **{"in": 0.06, "out": 0.1}))
             hits.append(dict(tau=_r(tcn), hold=0.05, kind="hit", by="B", contact=dict(striker="B", effector="hand", target=dict(actor="A", point="chest"), tol=0.3, max_anticipation=50)))
             keysA += [dict(t=_r(tcn + 0.07), dx=4.45, lean=-0.2, hz=0.9), dict(t=_r(tcn + 0.27), dx=4.6, lean=0.15, hz=0.9)]
             flashes.append(_r(tcn))
