@@ -130,6 +130,7 @@ class _CourtPainter extends CustomPainter {
         text: const TextSpan(
           text: 'VS',
           style: TextStyle(
+              fontFamily: 'NotoSansJP',
               color: Color(0xFFC62828),
               fontSize: 22,
               fontWeight: FontWeight.w900),
@@ -144,7 +145,10 @@ class _CourtPainter extends CustomPainter {
       text: TextSpan(
         text: '${heightCm.toStringAsFixed(1)}cm',
         style: const TextStyle(
-            color: Colors.black54, fontSize: 12, fontWeight: FontWeight.bold),
+            fontFamily: 'NotoSansJP',
+            color: Colors.black54,
+            fontSize: 12,
+            fontWeight: FontWeight.bold),
       ),
       textDirection: TextDirection.ltr,
     )..layout();

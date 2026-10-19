@@ -1839,4 +1839,56 @@ void main() {
       expect(end(coach: 90, tw: 90, mate: '', label: ''), isNot(contains('感謝')));
     });
   });
+
+  group('エンディングの文章の質', () {
+    test('年齢が重複しない(「41歳、41歳で…」にならない)', () {
+      final g = Game(
+        eventsEnabled: false,
+        player: strong().copyWith(age: maxProAge),
+        rng: Random(1),
+        track: Track.pro,
+      );
+      for (var i = 0; i < 4; i++) {
+        g.choose(Action.rest, Ability.pass);
+      }
+      expect(g.phase, Phase.retired);
+      final text = epilogueLines(g).join(' ');
+      final age = g.player.age;
+      expect(RegExp('$age歳、$age歳').hasMatch(text), isFalse);
+      expect('歳'.allMatches(text).length, greaterThan(0));
+    });
+
+    test('古いセーブの理由(年齢入り)でも重複しない', () {
+      final g = Game(
+        eventsEnabled: false,
+        player: strong().copyWith(age: 41),
+        rng: Random(1),
+        track: Track.pro,
+        retiredReason: '41歳で現役を退いた',
+      );
+      final text = epilogueLines(g).join(' ');
+      expect(text.contains('41歳、41歳'), isFalse);
+      expect(text, contains('41歳で現役を退いた'));
+    });
+
+    test('全盛期は、実績が同程度なら格上の舞台を選ぶ', () {
+      YearRecord rec(int age, League l, double ach) => YearRecord(
+          age: age, league: l, wins: 3, games: 4, ppg: 12, rpg: 4, apg: 3,
+          champion: false, achievement: ach);
+      final g = Game(
+        eventsEnabled: false,
+        player: strong().copyWith(age: 30),
+        rng: Random(1),
+        track: Track.pro,
+      );
+      g.records.addAll([
+        rec(10, League.minibasket, 70),
+        rec(26, League.proAbroad, 60),
+      ]);
+      g.retire();
+      final text = epilogueLines(g).join(' ');
+      expect(text, contains('26歳'));
+      expect(text, contains('海外プロ'));
+    });
+  });
 }
