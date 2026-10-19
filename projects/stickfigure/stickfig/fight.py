@@ -272,7 +272,7 @@ def build_fight(spec: dict) -> dict:
             clip = dict(file=cf, strike_at=_r(t), start=_r(t - 0.4), end=_r(t + 0.25), **{"in": 0.12, "out": 0.25})
         if kick_i == i:
             clip = dict(file="135_07_s1", strike_at=_r(t), start=_r(t - 0.36), end=_r(t + 0.3), **{"in": 0.12, "out": 0.12})
-        if not last and kick_i != i:
+        if not last and kick_i != i and defend.get(i) != "miss":
             clip["anchor_dx"] = round(anchor, 2)
         clipsA.append(clip)
         if last and fin_kick:
@@ -281,8 +281,9 @@ def build_fight(spec: dict) -> dict:
             hits.append(dict(tau=_r(t), hold=0.08, kind=kind_hit, by="A", contact=dict(striker="A", effector=eff, target=dict(actor="B", point=pt), tol=round(0.3 + 0.6 * max(0.0, float(s["b_scale"]) - 1.0), 2), max_anticipation=50, hz_range=dict(sword=0.4, dagger=0.4, staff=0.6, spear=0.9).get(s["weapon"], 0.4))))
         elif defend.get(i) == "clash":                   # 受け止め(鍔迫り合い): 命中の種類 clash、相手は腕を上げて受け、少しだけ押される。位置は接触で決める(腕で受けるので許容は広め)
             hits.append(dict(tau=_r(t), hold=0.07, kind="clash", by="A", contact=dict(striker="A", effector=eff, target=dict(actor="B", point=pt), tol=0.6, max_anticipation=50, hz_range=0.45)))
-        elif defend.get(i) == "miss":                    # かわす: 空振り。高い斬りはくぐり、低い斬りは後ろへ跳ぶ(plan._body_drive が pos の高さで決める)
-            hits.append(dict(tau=_r(t), hold=0.0, kind="miss", by="A", pos=[_r(3.7 - 0.2 * i), 1.2 if (i % 2 == 1) else 0.8]))
+        elif defend.get(i) == "miss":                    # かわす: 空振り。位置は接触で決める(狙いは頭の少し先の上=くぐられる。plan._body_drive は pos の高さで くぐる/跳ぶ を決める)
+            hits.append(dict(tau=_r(t), hold=0.0, kind="miss", by="A", pos=[_r(3.7 - 0.2 * i), 1.2 if (i % 2 == 1) else 0.8],
+                             contact=dict(striker="A", effector=eff, target=dict(actor="B", point="head"), offset=[0.25, 0.22], tol=1.5, max_anticipation=50, hz_range=0.5)))
         else:
             if kick_i == i:                              # 連打の中の蹴り(足→相手の腰。接触を解く)
                 hits.append(dict(tau=_r(t), hold=0.06, kind="kick", by="A", contact=dict(striker="A", effector="foot", target=dict(actor="B", point="hip"), tol=0.42, max_anticipation=50)))
@@ -315,6 +316,7 @@ def build_fight(spec: dict) -> dict:
                 keysB.append(dict(t=_r(t + 0.2), dx=_r(dxB), **GUARD))
         if bc and i == n - 2:                            # 相手の連打: 1 発目は A がくぐってかわす(miss)、2 発目以降は A が受け止める(clash)
             tb = t + tb_off
+            flurry.append(dict(start=_r(tb - 0.36), end=_r(tb - 0.06), every=4, angles=[B_FACE, A_FACE]))     # 攻守交代の前に、2 人の顔の寄り
             for j in range(bc):
                 tbj = tb + 0.45 * j
                 keysB += [dict(t=_r(tbj - 0.14), dx=_r(dxB + 0.7), **GUARD), dict(t=_r(tbj + 0.1), dx=_r(dxB + 0.7), **GUARD)]
