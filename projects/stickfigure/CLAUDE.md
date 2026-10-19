@@ -101,6 +101,7 @@ python scripts/make_gallery.py 09_01:2.4 135_07_s1:3.6   # clip を順に再生�
 
 使う順番は、スキル `stickfigure-action`(`~/.claude/skills`、バックアップは `claude-skills/`)。ここは部品の一覧。
 
+- 全身の動き(`body_drive`、fight の `body`、既定1.7): 命中ごとに、攻め側は溜め(後ろへひねり・沈む)→ひねり込み・体重移動、受け側はのけぞり・ひねられ・腰が落ち・押される。ユーザー指摘「手だけ動いている」(2026-10-19)への対応。hits に by: A/B を書く(fight は自動)
 - `fight.py`: 戦いの台本を数行の指定から自動で組む(`fight: {weapon(sword/dagger/staff/spear/none), kick, hits, counter, finisher, palette, stage, mood, colors, a_scale/b_scale, ally, seed, lines}`)。見本 `scenes/fight_*.yaml`。3人目の味方 `ally` は actors に C を足し、奥行き `y` をずらして置く(blender_player・影・字幕が y を見る。戦う2人の点検・カメラ追従は A/B だけ)
 - `captions.py`(既定 off。fight の `captions: true` で出す。ユーザー指示で字幕なし): 台詞の吹き出し(`say`)・ナレーション(`narr`)・叫び文字(`shout`)。台本の `captions` か fight の `lines`
 - `sfx.py`: 効果音と BGM を計算で作って動画に付ける(外部の音源は使わない)。台本の `audio: false` で無音、`mood` で雰囲気

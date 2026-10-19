@@ -446,6 +446,45 @@ def run_physics(scene: dict, tracks: Dict[str, KeyTrack]) -> dict:
     return res
 
 
+def _body_drive(p: dict, who: str, f: int, events: List[dict], cfg: dict, sign: int) -> dict:
+    """全身の「戦っている感」: 手だけでなく、体が動く。命中ごとに、
+    攻める側(by)は 溜め(体を後ろへひねり・沈む)→ 踏み込んで体をひねり込む(spin・lean・腰・前への体重移動)、
+    受ける側は 衝撃で体がのけぞり・ひねられ・腰が落ち・後ろへ押される(root_x)→ 踏ん張って戻る。
+    cfg(台本 body_drive): {strength: 1.0, kinds: [slash, hit, kick, heel]}。命中の瞬間のつながりを保つため、攻め側の前進は命中時に 0 へ戻す。"""
+    k = float(cfg.get("strength", 1.0))
+    kinds = cfg.get("kinds", ["slash", "hit", "kick", "heel"])
+    p = dict(p)
+    dspin = dlean = dhz = ddx = dht = 0.0
+    for e in events:
+        if e["kind"] not in kinds or not e.get("by"):
+            continue
+        d = f - e["frame"]
+        if e["by"] == who:                               # 攻める側
+            if -12 <= d < -4:                            # 溜め: 後ろへひねり、沈み、少し引く
+                u = (d + 12) / 8.0
+                s = math.sin(math.pi * 0.5 * u)
+                dspin += -0.55 * k * s; dlean += -0.10 * k * s; dhz += -0.07 * k * s; ddx += -0.10 * k * s
+            elif -4 <= d <= 0:                           # 打ち込み: ひねり戻して前へ(命中で前進分は 0 に戻る)
+                u = (d + 4) / 4.0
+                dspin += (-0.55 + 1.15 * u) * k; dlean += (-0.10 + 0.22 * u) * k; dhz += (-0.07 - 0.03 * u) * k; ddx += (-0.10 + 0.10 * u) * k
+            elif 0 < d <= 12:                            # 振り抜き: ひねりが余り、戻る
+                u = 1 - d / 12.0
+                dspin += 0.60 * k * u * u; dlean += 0.12 * k * u * u; dhz += -0.05 * k * u
+        else:                                            # 受ける側(命中の瞬間から)
+            if 0 <= d <= 16:
+                u = 1 - d / 16.0
+                pk = e["kind"] in ("kick", "heel")
+                amp = (1.4 if pk else 1.0) * k
+                dspin += -0.75 * amp * u * u; dlean += -0.30 * amp * u; dhz += -0.12 * amp * math.sin(math.pi * min(1.0, d / 6.0)) * u
+                ddx += -0.34 * amp * (1 - u * u) * 0 + (-0.30 * amp) * (1 - (1 - min(1.0, d / 5.0)) ** 2) * (0.35 + 0.65 * u); dht += -0.35 * amp * u
+    p["spin"] = p.get("spin", 0.0) + dspin * sign
+    p["lean"] = p.get("lean", 0.0) + dlean
+    p["hz"] = p.get("hz", 0.9) + dhz
+    p["dx"] = p.get("dx", 0.0) + ddx
+    p["ht"] = p.get("ht", 0.0) + dht
+    return p
+
+
 def build_plan(scene: dict, solve: bool = True) -> dict:
     scene = copy.deepcopy(scene)
     if scene.get("style") == "flat2d":
@@ -503,6 +542,8 @@ def build_plan(scene: dict, solve: bool = True) -> dict:
                     act = scene["_bank"].active(who, tau, 0.3)
                     if act is not None and act.get("loop"):
                         p = dict(p, periodic=1.0)          # 周期運動(走り)の区間。点検の「途中で止まる」から外す
+                if scene.get("body_drive") and abs(p.get("rz", 0.0)) < 0.05 and abs(p.get("roll", 0.0)) < 0.3:     # 倒れている・空中の間は足さない
+                    p = _body_drive(p, who, f, events, scene["body_drive"], _sign(a))
                 if who in planters:
                     p = planters[who].apply(p, dtau)
             s = _sign(a)
@@ -604,7 +645,7 @@ def build_plan(scene: dict, solve: bool = True) -> dict:
         _lift_to_ground(scene, frames)
     _assign_event_pos(scene, tracks, events)
     return dict(version=1, fps=fps, n=len(frames), view=dict(VIEW, persp=bool(scene.get("view3d") or scene.get("shots")), lens=(scene.get("view3d") or {}).get("lens", 40.0)), actors=scene["actors"], stage=scene.get("stage", {}),
-                events=events, contacts=contacts, frames=frames, scene={k: scene[k] for k in ("hits", "slow", "camera", "fx", "tempo", "view3d", "anime", "shots", "stepping", "impact_cuts", "flurry", "style", "captions", "output", "limb") if k in scene})
+                events=events, contacts=contacts, frames=frames, scene={k: scene[k] for k in ("hits", "slow", "camera", "fx", "tempo", "view3d", "anime", "shots", "stepping", "impact_cuts", "flurry", "style", "captions", "output", "limb", "body_drive") if k in scene})
 
 
 def save_plan(plan: dict, path) -> None:

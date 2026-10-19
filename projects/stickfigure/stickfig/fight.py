@@ -33,6 +33,7 @@ DEFAULTS = dict(
     b_scale=1.0,             # 相手の大きさ(1.3 で大柄のボス)。連打の位置は固定なので 1.15〜1.35 まで
     stage="cave",            # 舞台の色の組: cave / dojo / field / night / sunset
     ally=None,               # 3人目(味方): {color, x(置く位置), y(奥行き。+で奥), facing(+1右向き/-1左向き), scale, cheer(勝ったら万歳 true/負けたらうなだれる false)}。戦わず、見守る
+    body=1.7,                # 全身の動きの強さ(0 で切る)。命中ごとに、攻める側のひねり込み・踏み込み、受ける側ののけぞり・押される動き
     seed=None,               # 数字を入れると、連打の clip・間・溜めの色・カットの順を、その数字で変える(同じ数字なら同じ戦い)
     mood="battle",           # BGM の雰囲気: battle / tense / calm / sad / none
     captions=False,          # 字幕(lines)を出すか。既定は出さない(2026-10-19 ユーザー「字幕はいらない」)。True で lines を字幕にする
@@ -130,7 +131,7 @@ def build_fight(spec: dict) -> dict:
             rng.shuffle(fa)
         flurry.append(dict(start=1.12, end=1.64, every=4, angles=fa))
         hits += [dict(tau=1.66, hold=0.13, kind="pose"),
-                 dict(tau=1.9, hold=0.09, kind="kick", contact=dict(striker="A", effector="foot", target=dict(actor="B", point="hip"), tol=0.2)),
+                 dict(tau=1.9, hold=0.09, kind="kick", by="A", contact=dict(striker="A", effector="foot", target=dict(actor="B", point="hip"), tol=0.2)),
                  dict(tau=2.25, hold=0.06, kind="wall", pos=[6.0, 1.6])]
         slow += [dict(start=1.85, end=2.4, rate=0.35), dict(start=2.5, end=3.15, rate=2.2)]
         puffs.append(dict(tau=3.0, kind="land", pos=[4.6, 0.0]))
@@ -188,9 +189,9 @@ def build_fight(spec: dict) -> dict:
             clip["anchor_dx"] = round(anchor, 2)
         clipsA.append(clip)
         if last:
-            hits.append(dict(tau=_r(t), hold=0.08, kind=kind_hit, contact=dict(striker="A", effector=eff, target=dict(actor="B", point="chest"), tol=round(0.3 + 0.6 * max(0.0, float(s["b_scale"]) - 1.0), 2), max_anticipation=50, hz_range=dict(sword=0.3, dagger=0.3, staff=0.6, spear=0.9).get(s["weapon"], 0.3))))
+            hits.append(dict(tau=_r(t), hold=0.08, kind=kind_hit, by="A", contact=dict(striker="A", effector=eff, target=dict(actor="B", point="chest"), tol=round(0.3 + 0.6 * max(0.0, float(s["b_scale"]) - 1.0), 2), max_anticipation=50, hz_range=dict(sword=0.3, dagger=0.3, staff=0.6, spear=0.9).get(s["weapon"], 0.3))))
         else:
-            hits.append(dict(tau=_r(t), hold=0.05, kind=kind_hit, pos=[_r(3.7 - 0.2 * i), _r(1.25 - 0.1 * i)]))
+            hits.append(dict(tau=_r(t), hold=0.05, kind=kind_hit, by="A", pos=[_r(3.7 - 0.2 * i), _r(1.25 - 0.1 * i)]))
         flashes.append(_r(t))
         dxB -= 0.25
         if not last:
@@ -199,7 +200,7 @@ def build_fight(spec: dict) -> dict:
         if i == 0 and s["counter"] and n > 1:
             tcn = t + 0.28
             clipsB.append(dict(file=COUNTER_CLIP, strike_at=_r(tcn), start=_r(tcn - 0.2), end=_r(tcn + 0.27), **{"in": 0.06, "out": 0.1}))
-            hits.append(dict(tau=_r(tcn), hold=0.05, kind="hit", contact=dict(striker="B", effector="hand", target=dict(actor="A", point="chest"), tol=0.3, max_anticipation=50)))
+            hits.append(dict(tau=_r(tcn), hold=0.05, kind="hit", by="B", contact=dict(striker="B", effector="hand", target=dict(actor="A", point="chest"), tol=0.3, max_anticipation=50)))
             keysA += [dict(t=_r(tcn + 0.07), dx=4.45, lean=-0.2, hz=0.9), dict(t=_r(tcn + 0.27), dx=4.6, lean=0.15, hz=0.9)]
             flashes.append(_r(tcn))
     hl = ts[-1]
@@ -219,7 +220,7 @@ def build_fight(spec: dict) -> dict:
                   dict(t=_r(hl + 0.42), dx=5.7, rz=1.1, hz=0.9, lean=0.2, fa=2.4, fe=0.4, ra=1.4, re=1.0, fl=0.8, fk=0.9, rl=-0.6, rk=0.7),
                   dict(t=_r(hl + 0.58), dx=5.9, rz=1.0, hz=0.9, lean=0.45, fa=-0.3, fe=0.2, ra=-0.2, re=0.5, fl=0.5, fk=0.6, rl=-0.4, rk=0.5),
                   dict(t=_r(hl + 0.95), dx=6.0, rz=0.0, hz=0.78, lean=0.25), dict(t=_r(hl + 1.3), dx=6.0, hz=0.9, lean=0.1)]
-        hits += [dict(tau=_r(hl + 0.55), hold=0.1, kind="slash" if sword else "hit", pos=[4.9, 1.9]), dict(tau=_r(hl + 0.95), hold=0.1, kind="heel", pos=[5.6, 0.0])]
+        hits += [dict(tau=_r(hl + 0.55), hold=0.1, kind="slash" if sword else "hit", by="A", pos=[4.9, 1.9]), dict(tau=_r(hl + 0.95), hold=0.1, kind="heel", by="A", pos=[5.6, 0.0])]
         puffs.append(dict(tau=_r(hl + 0.98), kind="land2", pos=[5.6, 0.0]))
         slow.append(dict(start=_r(hl + 0.4), end=_r(hl + 0.65), rate=0.4))
         flashes.append(_r(hl + 0.55))
@@ -281,7 +282,7 @@ def build_fight(spec: dict) -> dict:
         impact_cuts=dict(kinds=["kick", "heel", "wall"], hold=0.2, angles=[dict(yaw=35, pitch=4, scale=3.0, lens=28, hue=0), dict(yaw=-40, pitch=-6, scale=2.6, lens=26, dutch=6.0, hue=1),
                                                                          dict(yaw=5, pitch=12, scale=3.4, lens=34, hue=2)],
                          per_kind=dict(wall=[dict(yaw=-30, pitch=6, scale=5.0, lens=30), dict(yaw=10, pitch=18, scale=6.0, lens=34), dict(yaw=-55, pitch=3, scale=4.2, lens=28, dutch=-5.0)])),
-        flurry=flurry, style="flat2d", captions=caps, audio=(False if s["mood"] == "none" else dict(mood=s["mood"])), _marks={k: _r(v) for k, v in marks.items()})
+        flurry=flurry, body_drive=({"strength": float(s["body"])} if s["body"] else None), style="flat2d", captions=caps, audio=(False if s["mood"] == "none" else dict(mood=s["mood"])), _marks={k: _r(v) for k, v in marks.items()})
     return scene
 
 
