@@ -830,7 +830,7 @@ def _body_drive(p: dict, who: str, f: int, events: List[dict], cfg: dict, sign: 
                 body = big * min(1.0, d / 4.0)
                 dspin += -0.75 * body * u * u; dlean += -0.34 * body * u; dhz += -0.12 * big * math.sin(math.pi * min(1.0, d / 6.0)) * u
                 ddx += (-0.42 * big * min(1.0, d / 2.0)) * (1 - (1 - min(1.0, d / 5.0)) ** 2) * (0.35 + 0.65 * u) * (ret if d <= L else 0.0)
-                dht += -0.45 * head                      # 頭が先に飛ぶ(命中の次のコマで既に 2/3)
+                dht += -0.35 * head                      # 頭が先に飛ぶ(命中の次のコマで既に 2/3)。0.45 は首が抜けて見えた
                 arm = big * math.sin(math.pi * min(1.0, d / 10.0))   # 腕は跳ね上がり(前腕は後ろ上へ、後ろ腕は前へ)、10 コマで落ちる
                 p["fa"] = p.get("fa", 0.0) - 0.5 * arm; p["fe"] = p.get("fe", 0.0) - 0.2 * arm
                 p["ra"] = p.get("ra", 0.0) + 0.4 * arm
