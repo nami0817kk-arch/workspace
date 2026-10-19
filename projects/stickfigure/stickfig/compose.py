@@ -261,6 +261,12 @@ def compose_frame(plan: dict, f: int, figs: Dict[int, Image.Image], stages: Opti
         aura, dim = look.charge_aura(plan, f, ch.get("who", "A"), age01, tuple(ch.get("color", (120, 230, 255))))
         base = Image.blend(base.convert("RGBA"), Image.new("RGBA", (W, H), (5, 8, 20, 255)), dim)
         base.alpha_composite(aura)
+    if plan.get("scene", {}).get("style") == "flat2d":        # セル画の見た目: 人物の外形に、濃い輪郭線
+        al = figs[f].split()[3]
+        grow = al.filter(ImageFilter.MaxFilter(7))
+        ink = Image.new("RGBA", figs[f].size, (18, 14, 24, 0))
+        ink.putalpha(grow)
+        base.alpha_composite(ink)
     base.alpha_composite(figs[f])
     # 顔(目)は描かない(2026-10-19 ユーザー指示)
     for e in plan["events"]:                   # 特大の効果: 斬撃の弧・衝撃の輪
@@ -323,7 +329,29 @@ def compose_frame(plan: dict, f: int, figs: Dict[int, Image.Image], stages: Opti
     acfg = plan.get("scene", {}).get("anime")
     if acfg is not None and invert is None:
         frame = anime.apply(plan, f, frame, acfg if isinstance(acfg, dict) else {}, plan.setdefault("_anime_cache", {}))
-    return frame
+    return _color_script(frame, plan, tau, fx)
+
+
+def _color_script(frame: Image.Image, plan: dict, tau: float, fx: dict) -> Image.Image:
+    """色の台本(fx.color_script: [[tau, [r,g,b], 強さ], ...])。場面ごとに全体の色味を変える(静かな所は冷たく、攻めは暖かく)。"""
+    keys = fx.get("color_script")
+    if not keys:
+        return frame
+    import numpy as np
+    ts = [k[0] for k in keys]
+    if tau <= ts[0]:
+        col, s = keys[0][1], keys[0][2]
+    elif tau >= ts[-1]:
+        col, s = keys[-1][1], keys[-1][2]
+    else:
+        i = max(j for j in range(len(ts)) if ts[j] <= tau)
+        u = (tau - ts[i]) / (ts[i + 1] - ts[i])
+        col = [keys[i][1][k] * (1 - u) + keys[i + 1][1][k] * u for k in range(3)]
+        s = keys[i][2] * (1 - u) + keys[i + 1][2] * u
+    arr = np.asarray(frame, dtype=np.float32)
+    tint = np.array(col, dtype=np.float32) / 255.0
+    out = arr * (1 - s) + arr * tint * 1.7 * s
+    return Image.fromarray(np.clip(out, 0, 255).astype(np.uint8))
 
 
 def compose(plan: dict, fig_dir, out_dir, mp4_path, ffmpeg: str, stage_dir=None) -> Path:

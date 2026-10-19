@@ -62,6 +62,8 @@ def px_per_unit(cam: Dict[str, float], depth: float = None) -> float:
     return f_px(cam["lens"]) / (depth or cam["dist"])
 
 
+FLAT = dict(k=1.0, lens=1.0)     # 2D の見た目(style: flat2d)では、斜め・見下ろしの角度を弱め、望遠にして遠近を消す
+
 MIN_CAM_Z = 0.3       # カメラが床の下に潜らない高さ
 
 
@@ -89,6 +91,7 @@ def make_cam(tx: float, tz: float, scale: float, yaw_deg: float, pitch_deg: floa
     target_z を与えると、その高さを向く(寄り・低い位置・俯瞰のカットで使う)。pitch が負(下から見上げる)でも、
     カメラの高さが MIN_CAM_Z を下回らないよう、仰角を浅くする。dutch は画面の傾き(度、合成で回す)。
     """
+    yaw_deg, pitch_deg, lens = yaw_deg * FLAT["k"], pitch_deg * FLAT["k"], lens * FLAT["lens"]
     dist = dist_for_scale(scale, lens)
     pxu = f_px(lens) / dist
     tz0 = (ground_px - H / 2) / pxu if target_z is None else target_z

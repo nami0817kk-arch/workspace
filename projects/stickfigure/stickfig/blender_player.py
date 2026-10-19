@@ -29,7 +29,8 @@ sc.render.image_settings.file_format = "PNG"
 sc.render.image_settings.color_mode = "RGBA"
 sc.render.film_transparent = MODE == "figs"
 sh = sc.display.shading
-sh.light = "STUDIO" if PERSP else "FLAT"           # 遠近のときは陰影を付ける(立体に見える)
+FLAT2D = PLAN.get("scene", {}).get("style") == "flat2d"
+sh.light = "STUDIO" if (PERSP and not FLAT2D) else "FLAT"           # 遠近のときは陰影を付ける(立体に見える)
 sh.color_type = "MATERIAL"
 if PERSP:
     sh.show_specular_highlight = False
