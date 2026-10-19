@@ -1673,6 +1673,13 @@ void main() {
       expect(recommendedAction(g(slot: 2, age: 12)), Action.intense, reason: '小学生は冬の大会がない');
     });
 
+    test('同じ練習が続いてマンネリなら別の練習に替える', () {
+      final x = g(c: const Condition(fatigue: 40), slot: 1);
+      x.recentActions.addAll([Action.practice, Action.practice]);
+      expect(recommendedAction(x), isNot(Action.practice));
+      expect(x.isRut(recommendedAction(x)), isFalse);
+    });
+
     test('それ以外は練習', () {
       expect(recommendedAction(g(c: const Condition(fatigue: 40), slot: 1)), Action.practice);
     });
