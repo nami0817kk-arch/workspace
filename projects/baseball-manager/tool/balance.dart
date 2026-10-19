@@ -24,6 +24,21 @@ void plain(Game g) {
       abilitiesOf(g.player.role).first);
 }
 
+/// 特訓ばかり(疲れたら休む)。極端な遊び方でも、普通より大きく有利にならないかを見る。
+void grind(Game g) {
+  final abilities = abilitiesOf(g.player.role);
+  final focus = ([...abilities]
+        ..sort((a, b) => g.player.of(a).compareTo(g.player.of(b))))
+      .first;
+  g.choose(g.condition.fatigue >= 55 ? Plan.rest : Plan.special, focus);
+}
+
+/// 練習試合ばかり(疲れたら休む)。
+void matches(Game g) {
+  g.choose(g.condition.fatigue >= 60 ? Plan.rest : Plan.match,
+      abilitiesOf(g.player.role).first);
+}
+
 void skilled(Game g) {
   final abilities = abilitiesOf(g.player.role);
   // いちばん低い能力を重点にする(総合評価は平均なので、底上げが効率的)。
@@ -91,7 +106,13 @@ void main(List<String> args) {
   final n = args.isEmpty ? 1500 : int.parse(args.first);
   final difficulty = Difficulty.parse(args.length > 1 ? args[1] : null);
   print('難しさ: ${difficulty.label}');
-  for (final entry in {'平凡': plain, '上手い': skilled}.entries) {
+  final extra = args.length > 2 && args[2] == 'extreme';
+  for (final entry in {
+    '平凡': plain,
+    '上手い': skilled,
+    if (extra) '特訓ばかり': grind,
+    if (extra) '練習試合ばかり': matches,
+  }.entries) {
     for (final role in [Role.batter, Role.pitcher]) {
       final rs = [
         for (var s = 0; s < n; s++) play(s, entry.value, role, difficulty)

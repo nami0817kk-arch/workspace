@@ -76,7 +76,7 @@ class Condition {
 
 /// 怪我の確率。疲れているほど、特訓ほど高い。
 double injuryChance(Condition c, Plan a, [Set<Trait> traits = const {}]) =>
-    (0.02 + c.fatigue / 100 * 0.15 + (a == Plan.special ? 0.10 : 0.0)) *
+    (0.02 + c.fatigue / 100 * 0.15 + (a == Plan.special ? 0.30 : 0.0)) *
     injuryMultiplier(traits);
 
 /// 練習の出来。同じ練習でも、うまくいく日と失敗する日がある。

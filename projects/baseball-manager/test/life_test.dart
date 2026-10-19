@@ -32,6 +32,7 @@ double _gain(Plan act, {int n = 300}) {
 
 void main() {
   balanceChecks();
+  injuryChecks();
   _outcomeTests();
   test('特訓は練習より伸びるが、疲れる', () {
     expect(_gain(Plan.special), greaterThan(_gain(Plan.train)));
@@ -223,5 +224,13 @@ void balanceChecks() {
     expect(effectOf(Plan.match).scale, lessThan(effectOf(Plan.train).scale));
     expect(effectOf(Plan.match).fatigue,
         greaterThan(effectOf(Plan.train).fatigue));
+  });
+}
+
+void injuryChecks() {
+  test('特訓は、練習より怪我の確率がはっきり高い(特訓ばかりが最善にならない)', () {
+    const c = Condition(fatigue: 30);
+    expect(injuryChance(c, Plan.special),
+        greaterThan(injuryChance(c, Plan.train) + 0.2));
   });
 }

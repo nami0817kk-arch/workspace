@@ -15,13 +15,15 @@ void main() {
       const n = 300;
       var cnt = 0;
       for (var s = 0; s < n; s++) {
-        final g = Game.newGame(name: 't', role: Role.batter, rng: Random(s), potential: 70);
+        final g = Game.newGame(
+            name: 't', role: Role.batter, rng: Random(s), potential: 70);
         var k = 0;
         while (g.player.age < stage && g.phase != Phase.retired && k++ < 3000) {
           g.autoSpend();
           switch (g.phase) {
             case Phase.term:
-              g.choose(g.condition.fatigue >= 60 ? Plan.rest : Plan.train, Ability.contact);
+              g.choose(g.condition.fatigue >= 60 ? Plan.rest : Plan.train,
+                  Ability.contact);
             case Phase.event:
               g.resolveEvent(0);
             case Phase.pathChoice:
@@ -39,7 +41,8 @@ void main() {
         if (g.condition.injured) inj++;
         cnt++;
       }
-      print('${plan.name.padRight(8)} 経験点${(exp / cnt).toStringAsFixed(1).padLeft(6)}  疲れ${(fat / cnt).toStringAsFixed(1).padLeft(6)}  やる気${(mor / cnt).toStringAsFixed(1).padLeft(6)}  怪我${(inj * 100 / cnt).toStringAsFixed(1)}%');
+      print(
+          '${plan.name.padRight(8)} 経験点${(exp / cnt).toStringAsFixed(1).padLeft(6)}  疲れ${(fat / cnt).toStringAsFixed(1).padLeft(6)}  やる気${(mor / cnt).toStringAsFixed(1).padLeft(6)}  怪我${(inj * 100 / cnt).toStringAsFixed(1)}%');
     }
   }
 }
