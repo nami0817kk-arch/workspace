@@ -63,6 +63,7 @@ class SettingsScreen extends StatelessWidget {
                     padding: const EdgeInsets.fromLTRB(16, 6, 16, 8),
                     child: SegmentedButton<double>(
                       key: const Key('text-scale'),
+                      showSelectedIcon: false,
                       segments: const [
                         ButtonSegment(value: 0.9, label: Text('小')),
                         ButtonSegment(value: 1.0, label: Text('標準')),
@@ -83,6 +84,7 @@ class SettingsScreen extends StatelessWidget {
                     padding: const EdgeInsets.fromLTRB(16, 6, 16, 8),
                     child: SegmentedButton<ThemeMode>(
                       key: const Key('theme-mode'),
+                      showSelectedIcon: false,
                       segments: const [
                         ButtonSegment(
                             value: ThemeMode.system, label: Text('自動')),
