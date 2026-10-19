@@ -269,6 +269,7 @@ class _PlayerCard extends StatelessWidget {
           children: [
             Text('${trackLabel(game)}  ${p.position.label}  '
                 '${p.heightCm.toStringAsFixed(1)}cm  総合 ${p.overall.round()}'),
+            Text('持ち味: ${p.position.perk}', style: const TextStyle(fontSize: 12)),
             if (game.track == Track.school && p.age >= 15 ||
                 game.track == Track.university ||
                 game.track == Track.corporate)

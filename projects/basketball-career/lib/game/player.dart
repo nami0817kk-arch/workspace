@@ -35,6 +35,15 @@ enum Position {
 
   const Position(this.label);
   final String label;
+
+  /// ポジションの持ち味(試合での効き方)。
+  String get perk => switch (this) {
+        Position.pointGuard => 'チームワークの効きが1.4倍',
+        Position.shootingGuard => '勝負どころの3Pが決まりやすい(+8%)',
+        Position.smallForward => '体調が崩れにくい(動きの良さ+0.03)',
+        Position.powerForward => '勝負どころのドライブが決まりやすい(+7%)',
+        Position.center => '勝負どころのディフェンスが決まりやすい(+8%)・リバウンド1.2倍',
+      };
 }
 
 const abilityCap = 99;
@@ -97,11 +106,13 @@ class Player {
   }
 
   Position get position {
-    if (heightCm >= 202) return Position.center;
+    if (heightCm >= 203) return Position.center;
     if (heightCm >= 195) {
-      return of(Ability.inside) >= of(Ability.threePoint)
-          ? Position.center
-          : Position.powerForward;
+      // 内側が得意なら 199cm からセンター、それ未満はパワーフォワード。
+      // 外が得意な大型は、199cm 以上ならパワーフォワード(ストレッチ)、未満はスモールフォワード。
+      final inside = of(Ability.inside) >= of(Ability.threePoint);
+      if (inside) return heightCm >= 199 ? Position.center : Position.powerForward;
+      return heightCm >= 199 ? Position.powerForward : Position.smallForward;
     }
     if (heightCm >= 188) return Position.smallForward;
     if (of(Ability.pass) >= of(Ability.threePoint) &&
