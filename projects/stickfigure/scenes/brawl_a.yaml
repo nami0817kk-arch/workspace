@@ -1,4 +1,4 @@
-# 素手の格闘(第2の見本): 剣なしでの連打・反撃・打ち上げ
+# 素手の格闘(手書きの旧見本。clip の位置は台本どおり: align_clips: false)。新しい戦いは fight: で作る(scenes/fight_*.yaml)
 name: brawl_a
 fps: 30
 tau_end: 7.6
@@ -325,3 +325,4 @@ flurry:
   - {target: A, z: 1.35, yaw: 18, pitch: -6, scale: 3.3, lens: 24, streak: false, dutch: -4.0}
   - {target: A, z: 1.35, yaw: -25, pitch: -5, scale: 3.3, lens: 26, streak: false}
 style: flat2d
+align_clips: false

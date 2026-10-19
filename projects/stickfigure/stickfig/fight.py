@@ -369,7 +369,13 @@ def build_fight(spec: dict) -> dict:
     prov = _layout_captions(s["lines"], pm, 1e9, float(s["tempo"])) if s["captions"] else []
     if prov:
         end = max(end, _r(max(c["t1"] for c in prov) + 0.3))
-    keysA.append(dict(t=end, dx=keysA[-1]["dx"], hz=0.9, face="win"))
+    # 勝ち名乗り: 倒したあと、武器(拳)を高く掲げて止め、ゆっくり下ろす(Becker の決着のあとの「間」)。寄りのカット(HERO)はこの間に入る
+    end = max(end, _r(ko_t + 1.75))
+    raise_pose = dict(lean=-0.08, fa=2.75, fe=0.25, ra=0.6, re=1.4, ht=-0.15, face="win")
+    keysA += [dict(t=_r(ko_t + 0.5), **raise_pose), dict(t=_r(ko_t + 1.05), **raise_pose),
+              dict(t=_r(ko_t + 1.4), lean=0.05, fa=0.5, fe=1.2, ra=0.4, re=1.5, ht=0.0, face="win")]
+    last_dx = next(k["dx"] for k in reversed(keysA) if "dx" in k)
+    keysA.append(dict(t=end, dx=last_dx, hz=0.9, face="win"))
     keysB.append(dict(t=end, dx=keysB[-1].get("dx", -3.0), rz=0.21, roll=1.57, hz=0.9, face="ko"))
     flurry.append(dict(start=_r(ko_t + 0.4), end=_r(ko_t + 0.8), every=5, angles=HERO))
     shots.append(dict(t=_r(hl + 0.0), follow="mid", scale=[[_r(hl), 5.0], [end, 9.0]], yaw=[[_r(hl), 52.0], [end, -15.0]], pitch=[[_r(hl), 10.0], [end, 22.0]], lens=40.0, target_z=0.9))
