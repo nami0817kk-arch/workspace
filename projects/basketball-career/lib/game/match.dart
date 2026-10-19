@@ -507,7 +507,9 @@ double starPower(Player p) =>
         .clamp(0.4, 1.4);
 
 /// 後半(第3・第4クォーター)を進め、4クォーター終了時点にする。
-MatchState playSecondHalf(Player p, MatchHalf h, Halftime choice, Random rng) {
+/// `scout` は直前に研究(映像分析)をしていたときの上乗せ。相性が良い作戦にだけ足す。
+MatchState playSecondHalf(Player p, MatchHalf h, Halftime choice, Random rng,
+    {double scout = 0}) {
   var shift = 0.0, noiseMul = 1.0, boost = 0.0, shareAdd = 0.0;
   switch (choice) {
     case Halftime.keep:
@@ -523,7 +525,8 @@ MatchState playSecondHalf(Player p, MatchHalf h, Halftime choice, Random rng) {
       boost = ((p.overall - 50) * 0.05 + 1.0) * k - 0.8;
       shareAdd = 0.08 * k;
   }
-  final fit = h.style.fit(choice, p);
+  var fit = h.style.fit(choice, p);
+  if (fit > 0) fit += scout;
   var team = h.team, opp = h.opp;
   final tq = [...h.teamQuarters], oq = [...h.oppQuarters];
   for (var q = 0; q < 2; q++) {
