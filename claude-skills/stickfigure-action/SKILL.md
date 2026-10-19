@@ -30,7 +30,7 @@ description: 棒人間のアクション動画（戦い・物語つき）を、�
 
 1. **一番速いのは物語の型**: `scenes/episodes/*.yaml` に `story: {arc: revenge|tournament|duel|protect|mentor, hero: 名前, rival: 名前}` と書く
    → `python -m stickfig episode scenes/episodes/ep_revenge.yaml --out out/ep_revenge`（約25秒。場面ごとに点検→書き出し→連結）
-1b. **まとめて量産**: `python -m stickfig series --n 5 --out out/series --seed 100 [--vertical] [--build]`。型・名前・色・seed を回して、エピソード・サムネ・投稿の下書きを順に作る（`--build` なしは指定の yaml だけ。1本 約3〜8分）。story に `seed: 数字` を入れると、台詞の言い回し・技名・連打の clip・溜めの色が変わる（同じ数字は同じ内容）
+1b. **まとめて量産**: `python -m stickfig series --n 5 --out out/series --seed 100 [--vertical] [--build] [--compile]`（`--compile` で全話を題名カードつきの 1 本 `all.mp4` にもする。作成済みなら `--compile-only`）。型・名前・色・seed を回して、エピソード・サムネ・投稿の下書きを順に作る（`--build` なしは指定の yaml だけ。1本 約3〜8分）。story に `seed: 数字` を入れると、台詞の言い回し・技名・連打の clip・溜めの色が変わる（同じ数字は同じ内容）
 2. **1本の戦い**: `scenes/x.yaml` に `fight: {weapon: sword|dagger|staff|spear|none, kick: true, hits: 1〜4, counter: true, finisher: launch_slash|launch_kick|random|none, palette: warm|cool, stage: cave|dojo|field|night|sunset, mood: battle|tense|calm|sad, colors: {A:[r,g,b], B:[...]}, ally: {color, x, y, facing, cheer}（3人目の味方。奥行き y で後ろに置き、戦わず見守る。台詞は who: C）, a_scale/b_scale（体格）, seed, lines: [...]}`
    → `python -m stickfig check scenes/x.yaml`（合否＋演出のリズムの見積もり。Blender 不要・数秒）→ `build scenes/x.yaml --out out/x`
    - `lines`: `{at: opening|kick|rise|combo|counter|last|finisher|ko|end, dt, dur, kind: say|narr|shout, who: A|B, text}`（台詞・ナレーション・叫び文字）
@@ -49,6 +49,7 @@ description: 棒人間のアクション動画（戦い・物語つき）を、�
 | 受けて返す | `riposte: true` | 受け止めの直後に相手が打ち返し、こちらが受け止める |
 | 相手から仕掛ける | `b_first: true`（蹴り無しのとき） | 相手が先に2発（かわし→受け止め）→ こちらの溜め→連打 |
 | 蹴りを混ぜる・踏み込み | `mix_kick: true` | 連打の中の1発を蹴りに（seed で半々）。接触を解かない命中では踏み込んで前へ出る（lunge） |
+| 決め技 | `finisher: launch_slash／launch_kick／random／none` | 打ち上げ斬り／蹴り上げ／seed で選ぶ。決めたあとは勝ち名乗り（武器を掲げて止め、下ろす） |
 | 相手の連打 | `b_combo: 2` | A の決めの1発の前に、B が 2 発打ち返す（A はくぐってかわし→受け止め）。長い武器では無し |
 | Becker 風の線 | 台本 `limb: {base: 0.055, tip: 0.03, tip_color: [0.08,0.08,0.1]}`, `fx: {weapon_glow: true}` | 手足が根元太→先細り・先が暗色、剣が水色に光る。観察は `reference/becker_recent.md` |
 
