@@ -181,7 +181,10 @@ void main() {
 
   testWidgets('出来事が起きると選択肢が出て、選ぶと進む', (t) async {
     final c = await _start(t);
-    c.adopt(_until((g) => g.phase == Phase.event));
+    // 幼少期などの「分かれ道」(見出しが別)ではなく、ふつうの出来事で止める。
+    c.adopt(_until((g) =>
+        g.phase == Phase.event &&
+        !childhoodSteps.any((s) => s.event == g.pendingEvent)));
     await t.pumpAndSettle();
     expect(find.text('出来事'), findsOneWidget);
     expect(find.byKey(const Key('event-0')), findsOneWidget);
@@ -1241,7 +1244,8 @@ void _rankTests() {
       final gainText =
           t.widget<Text>(find.byKey(const Key('gain-contact'))).textSpan!;
       expect(gainText.toPlainText(), contains('+'));
-      // 次の行動で「今回の上昇」は消える
+      // 次の行動で「今回の上昇」は消える(出来事が起きていたら先に選ぶ)
+      if (c.game!.phase == Phase.event) c.chooseEvent(0);
       c.act(Plan.rest);
       await t.pumpAndSettle();
       expect(c.abilityGains, isEmpty);
@@ -1653,7 +1657,9 @@ void _rankTests() {
       await t.pumpAndSettle();
       expect(find.byKey(const Key('draft-outlook')), findsOneWidget);
       expect(find.byKey(const Key('tired-note')), findsNothing);
-      c.game!.condition = c.game!.condition.copyWith(fatigue: 85);
+      // 怪我中は別の表示になるので、怪我のない状態で疲れだけ上げる。
+      c.game!.condition =
+          c.game!.condition.copyWith(fatigue: 85, injuredTerms: 0);
       c.notifyListeners();
       await t.pumpAndSettle();
       expect(find.byKey(const Key('tired-note')), findsOneWidget);
