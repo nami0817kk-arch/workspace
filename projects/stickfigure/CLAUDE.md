@@ -83,7 +83,7 @@ python scripts/make_gallery.py 09_01:2.4 135_07_s1:3.6   # clip を順に再生�
 ## アニメの演出(2026-10-19、参考6本の実測から)
 
 参考(戦闘アニメ6本)は、カット中央値0.13秒・2コマ撮りが2〜3割・閃光が2秒に1回・画面の揺れが3〜17%のコマ(数字は `reference/anime_rhythm.md`)。
-絵は寄りと彩度の高い色、特大の効果が主役だった。台本の `scenes/showpiece_anime14.yaml` が最新の見本(周13)。
+絵は寄りと彩度の高い色、特大の効果が主役だった。台本の `scenes/showpiece_anime15.yaml`(剣)と `scenes/brawl_a.yaml`(素手)が最新の見本(周14。打ち上げ→空中斬り→叩きつけの大技まで入り)。
 
 - `style: flat2d`: **2Dの見た目**(ユーザー指示)。平らな塗り・人物の外形に輪郭線・斜め/見下ろしを弱める(`flat_k` .3)・望遠(`flat_lens` 1.9)・影はぼかさない。3D感を足す提案はしない
 - `flurry`: 山場の前に、4〜5コマごとに角度を変える連打カット。angle は `target`(A/B)・`z`・`ox`・`yaw/pitch/scale/lens/dutch`・`hue`(色つき流線の背景。`streak: false` なら舞台のまま)
