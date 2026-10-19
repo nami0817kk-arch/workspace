@@ -12,7 +12,7 @@ from typing import Dict, List, Optional, Sequence, Tuple
 
 from PIL import Image, ImageDraw, ImageFilter
 
-from . import anime, camera
+from . import anime, camera, look
 
 W, H, SS = 1280, 720, 2
 GROUND_Y = 560
@@ -239,9 +239,13 @@ def compose_frame(plan: dict, f: int, figs: Dict[int, Image.Image], stages: Opti
     cam = fr["cam"]
     tau = fr["tau"]
     fx = plan.get("scene", {}).get("fx", {})
-    if plan["view"].get("persp"):
+    lk = fr.get("look")
+    if lk is not None:                         # 色つき流線の背景のカット(参考の寄り・色の画)
+        base = look.streak_bg(f, int(lk))
+    elif plan["view"].get("persp"):
         base = stages[f].convert("RGBA") if stages is not None else Image.new("RGBA", (W, H), (30, 30, 34, 255))
-        base.alpha_composite(ground_fx(plan, f))
+        if lk is None:
+            base.alpha_composite(ground_fx(plan, f))
     else:
         base = background(plan, f).resize((W, H), Image.LANCZOS).convert("RGBA")
     frozen = f > 0 and plan["frames"][f - 1]["tau"] == tau
@@ -252,6 +256,15 @@ def compose_frame(plan: dict, f: int, figs: Dict[int, Image.Image], stages: Opti
                 ghost.putalpha(ghost.split()[3].point(lambda v, al=al: int(v * al)))
                 base.alpha_composite(ghost)
     base.alpha_composite(figs[f])
+    # 顔(目)は描かない(2026-10-19 ユーザー指示)
+    for e in plan["events"]:                   # 特大の効果: 斬撃の弧・衝撃の輪
+        age = f - e["frame"]
+        if e["kind"] == "slash" and 0 <= age <= 9:
+            cxy = to_px(e["pos"][0], e["pos"][1], cam)
+            base.alpha_composite(look.slash_arc(cxy[0], cxy[1], age, 9))
+        elif e["kind"] in ("kick", "heel", "wall") and 0 <= age <= 8:
+            cxy = to_px(e["pos"][0], e["pos"][1], cam)
+            base.alpha_composite(look.shock_ring(cxy[0], cxy[1], age, 8))
     ov = Image.new("RGBA", (W * SS, H * SS), (0, 0, 0, 0))
     d = ImageDraw.Draw(ov)
     if in_ranges(tau, fx.get("speed_lines", [])):

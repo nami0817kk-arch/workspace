@@ -556,11 +556,13 @@ def build_plan(scene: dict, solve: bool = True) -> dict:
                 if fl["start"] <= tau < fl["end"]:
                     k = int((f - fl.get("f0", 0)) // fl.get("every", 4))
                     angs = fl["angles"]
-                    who = fl.get("target", "A")
-                    cut = ({"pos": (fr["actors"][who]["root_x"], fl.get("z", 1.0))}, angs[k % len(angs)])
+                    ang_k = angs[k % len(angs)]
+                    who = ang_k.get("target", fl.get("target", "A"))
+                    cut = ({"pos": (fr["actors"][who]["root_x"] + ang_k.get("ox", 0.0), ang_k.get("z", fl.get("z", 1.0)))}, ang_k)
                     break
         if cut is not None:
             e, ang = cut
+            fr["look"] = (ang.get("hue", (f // 4) % 4)) if ang.get("streak", True) else None
             fr["cam"] = {k: (round(v, 5) if isinstance(v, float) else v) for k, v in
                          camera.make_cam(e["pos"][0], 0.0, ang.get("scale", 3.0), ang.get("yaw", 30.0), ang.get("pitch", 4.0),
                                          ang.get("lens", 30.0), sx, sz, target_z=max(0.8, e["pos"][1]), dutch=ang.get("dutch", 0.0)).items()}
