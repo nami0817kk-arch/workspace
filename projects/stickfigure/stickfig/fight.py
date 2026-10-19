@@ -167,7 +167,7 @@ def build_fight(spec: dict) -> dict:
     shots: List[dict] = []
 
     # ---- 冒頭: 対峙(2人が一歩ずつ踏み出し、見合って止まる。止めの間にカメラが寄る) ----
-    shots.append(dict(t=0.0, follow="mid", scale=[[0.0, 7.4], [1.0, 6.4]], yaw=[[0.0, 12.0], [1.0, 22.0]], pitch=9.0, lens=40.0))
+    shots.append(dict(t=0.0, follow="mid", scale=[[0.0, 6.2], [1.0, 5.2]], yaw=[[0.0, 12.0], [1.0, 22.0]], pitch=9.0, lens=40.0))   # 冒頭は人物が画面の 1/4 だった(参考は 1/3〜1/2)。7.4/6.4 → 6.2/5.2
     keysA.insert(1, dict(t=0.42, dx=0.36, hz=0.84, lean=0.1))
     keysB.append(dict(t=0.42, dx=(0.15 if kick else -1.55)))
     hits.append(dict(tau=0.5, hold=0.12, kind="pose"))
@@ -400,7 +400,7 @@ def build_fight(spec: dict) -> dict:
     keysA.append(dict(t=end, dx=last_dx, hz=0.9, face="win"))
     keysB.append(dict(t=end, dx=keysB[-1].get("dx", -3.0), rz=0.21, roll=1.57, hz=0.9, face="ko"))
     flurry.append(dict(start=_r(ko_t + 0.4), end=_r(ko_t + 0.8), every=5, angles=HERO))
-    shots.append(dict(t=_r(hl + 0.0), follow="mid", scale=[[_r(hl), 5.0], [end, 9.0]], yaw=[[_r(hl), 52.0], [end, -15.0]], pitch=[[_r(hl), 10.0], [end, 22.0]], lens=40.0, target_z=0.9))
+    shots.append(dict(t=_r(hl + 0.0), follow="mid", scale=[[_r(hl), 4.4], [_r(ko_t + 0.3), 5.6], [end, 7.5]], yaw=[[_r(hl), 52.0], [end, -15.0]], pitch=[[_r(hl), 10.0], [end, 22.0]], lens=40.0, target_z=0.9))   # 決め技の間は寄ったまま(5.0→9.0 だと叩きつけで 0.3 まで小さくなった)、倒してから引く
 
     impact_cuts = dict(kinds=["kick", "heel", "wall", "clash"], hold=0.2, angles=[dict(yaw=35, pitch=4, scale=3.0, lens=28, hue=0), dict(yaw=-40, pitch=-6, scale=2.6, lens=26, dutch=6.0, hue=1),
                                                                       dict(yaw=5, pitch=12, scale=3.4, lens=34, hue=2)],
