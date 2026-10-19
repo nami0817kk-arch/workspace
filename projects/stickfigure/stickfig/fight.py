@@ -367,17 +367,17 @@ def build_fight(spec: dict) -> dict:
     if fin:
         keysB += [dict(t=_r(hl + 0.06), dx=_r(dxB), lean=-0.6, fa=0.3, ra=0.3, fe=0.6, re=0.6, ht=-0.8, face="pain"),
                   dict(t=_r(hl + 0.22), dx=-2.5, rz=0.9, roll=0.5, hz=0.9, lean=-0.5, fl=0.3, fk=0.2, rl=-0.2, rk=0.3, face="pain"),
-                  dict(t=_r(hl + 0.55), dx=-2.9, rz=1.9, roll=1.6, hz=0.9, lean=-0.2, fa=-0.4, ra=-0.4, fe=0.3, re=0.3, face="pain"),
+                  dict(t=_r(hl + 0.55), dx=-2.9, rz=2.7, roll=1.6, hz=0.9, lean=-0.2, fa=-0.4, ra=-0.4, fe=0.3, re=0.3, face="pain"),   # 打ち上げは 1.5 身長の高さ(1.9 だと頭の高さで浮いているだけに見えた)
                   dict(t=_r(hl + 0.80), dx=-3.1, rz=1.05, roll=1.57, hz=0.9, lean=-0.1, fa=-0.2, ra=-0.2, face="pain"),   # 落ちてくる(叩きつけの前はまだ空中。前は 0.95 に着地のキーがあり、かかとが落ちる 2〜4 コマ前に床に着いていた)
                   dict(t=_r(hl + 0.95), dx=-3.2, rz=0.5, roll=1.57, hz=0.9, fa=0.1, ra=0.1, face="pain"),                     # かかとが当たる瞬間: 空中で受ける
                   dict(t=_r(hl + 1.02), dx=-3.25, rz=0.21, roll=1.57, hz=0.9, fa=0.3, ra=0.3, fl=0.0, fk=0.0, rl=0.0, rk=0.0, face="ko"),   # 叩きつけられて床へ(2 コマで落ちる)
                   dict(t=_r(hl + 1.14), dx=-3.25, rz=0.27, roll=1.57, hz=0.9, face="ko"),                                        # 床で小さく跳ね返る
                   dict(t=_r(hl + 1.26), dx=-3.25, rz=0.21, roll=1.57, hz=0.9, face="ko")]
         keysA += [dict(t=_r(hl + 0.22), dx=5.3, hz=0.7, lean=0.3),
-                  dict(t=_r(hl + 0.42), dx=5.7, rz=1.1, hz=0.9, lean=0.2, fa=2.4, fe=0.4, ra=1.4, re=1.0, fl=0.8, fk=0.9, rl=-0.6, rk=0.7),
-                  dict(t=_r(hl + 0.58), dx=5.9, rz=1.0, hz=0.9, lean=0.45, fa=-0.3, fe=0.2, ra=-0.2, re=0.5, fl=0.5, fk=0.6, rl=-0.4, rk=0.5),
+                  dict(t=_r(hl + 0.42), dx=5.7, rz=1.9, hz=0.9, lean=0.2, fa=2.4, fe=0.4, ra=1.4, re=1.0, fl=0.8, fk=0.9, rl=-0.6, rk=0.7),   # 追って跳ぶ(相手の打ち上げに合わせて高く)
+                  dict(t=_r(hl + 0.58), dx=5.9, rz=1.8, hz=0.9, lean=0.45, fa=-0.3, fe=0.2, ra=-0.2, re=0.5, fl=0.5, fk=0.6, rl=-0.4, rk=0.5),
                   dict(t=_r(hl + 0.95), dx=6.0, rz=0.0, hz=0.78, lean=0.25), dict(t=_r(hl + 1.3), dx=6.0, hz=0.9, lean=0.1)]
-        hits += [dict(tau=_r(hl + 0.55), hold=0.1, kind="slash" if sword else "hit", by="A", pos=[4.9, 1.9]), dict(tau=_r(hl + 0.95), hold=0.1, kind="heel", by="A", pos=[5.6, 0.0])]
+        hits += [dict(tau=_r(hl + 0.55), hold=0.1, kind="slash" if sword else "hit", by="A", pos=[4.9, 2.7]), dict(tau=_r(hl + 0.95), hold=0.1, kind="heel", by="A", pos=[5.6, 0.0])]
         puffs.append(dict(tau=_r(hl + 1.02), kind="land2", pos=[5.6, 0.0]))
         slow.append(dict(start=_r(hl + 0.4), end=_r(hl + 0.65), rate=0.4))
         flashes.append(_r(hl + 0.55))
@@ -407,7 +407,9 @@ def build_fight(spec: dict) -> dict:
     keysA.append(dict(t=end, dx=last_dx, hz=0.9, face="win"))
     keysB.append(dict(t=end, dx=keysB[-1].get("dx", -3.0), rz=0.21, roll=1.57, hz=0.9, face="ko"))
     flurry.append(dict(start=_r(ko_t + 0.4), end=_r(ko_t + 0.8), every=5, angles=HERO))
-    shots.append(dict(t=_r(hl + 0.0), follow="mid", scale=[[_r(hl), 4.4], [_r(ko_t + 0.3), 5.6], [end, 7.5]], yaw=[[_r(hl), 52.0], [end, -15.0]], pitch=[[_r(hl), 10.0], [end, 22.0]], lens=40.0, target_z=0.9))   # 決め技の間は寄ったまま(5.0→9.0 だと叩きつけで 0.3 まで小さくなった)、倒してから引く
+    if fin:                                              # 打ち上げ〜空中斬りの間は、2 人の高さの中ほどを狙って少し引く(高く上げたので上に切れないように)
+        shots.append(dict(t=_r(hl + 0.18), follow="mid", scale=5.2, yaw=[[_r(hl + 0.18), 40.0], [_r(hl + 0.9), 30.0]], pitch=6.0, lens=40.0, target_z=1.6))
+    shots.append(dict(t=_r(hl + 0.95 if fin else hl), follow="mid", scale=[[_r(hl), 4.4], [_r(ko_t + 0.3), 5.6], [end, 7.5]], yaw=[[_r(hl), 52.0], [end, -15.0]], pitch=[[_r(hl), 10.0], [end, 22.0]], lens=40.0, target_z=0.9))   # 決め技の間は寄ったまま(5.0→9.0 だと叩きつけで 0.3 まで小さくなった)、倒してから引く
 
     impact_cuts = dict(kinds=["kick", "heel", "wall", "clash"], hold=0.2, angles=[dict(yaw=35, pitch=4, scale=3.0, lens=28, hue=0), dict(yaw=-40, pitch=-6, scale=2.6, lens=26, dutch=6.0, hue=1),
                                                                       dict(yaw=5, pitch=12, scale=3.4, lens=34, hue=2)],
