@@ -1356,4 +1356,60 @@ void main() {
       }
     });
   });
+
+  group('プロの入団先・移籍', () {
+    Game proGame({int age = 21, bool events = true}) => Game(
+          eventsEnabled: events,
+          player: strong(height: 205).copyWith(age: age),
+          rng: Random(1),
+          pathPending: true,
+        );
+
+    test('プロ契約を勝ち取ると入団先を選ぶ', () {
+      final g = proGame();
+      expect(g.chooseRoute(Route.pro), isTrue);
+      expect(g.pendingEventId, 'pro_join');
+      expect(g.pendingEvent!.options.length, 3);
+      g.resolveEvent(0);
+      expect(g.schoolLabel, '強豪チーム');
+      expect(g.phase, Phase.season);
+    });
+
+    test('出来事を切っていれば選ばない', () {
+      final g = proGame(events: false);
+      g.chooseRoute(Route.pro);
+      expect(g.pendingEventId, isNull);
+    });
+
+    test('23歳で移籍のオファーが届き、選ぶと環境が変わる', () {
+      final g = Game(
+        eventsEnabled: true,
+        player: strong(height: 205).copyWith(age: 22),
+        rng: Random(1),
+        track: Track.pro,
+      );
+      for (var i = 0; i < 4; i++) {
+        if (g.phase == Phase.event) g.resolveEvent(1);
+        if (g.phase == Phase.clutch) g.resolveClutch(Clutch.drive);
+        g.choose(Action.rest, Ability.pass);
+      }
+      var guard = 0;
+      while (g.pendingEventId != 'pro_move' && g.phase == Phase.event && guard++ < 5) {
+        g.resolveEvent(1);
+      }
+      expect(g.player.age, 23);
+      expect(g.pendingEventId, 'pro_move');
+      g.resolveEvent(0);
+      expect(g.schoolLabel, '強豪チーム');
+    });
+
+    test('入団・移籍の出来事はふだんの抽選に出ない', () {
+      final rng = Random(8);
+      final p = strong().copyWith(age: 25);
+      for (var i = 0; i < 2000; i++) {
+        final e = rollEvent(p, pro: true, rng: rng);
+        expect(e?.forced ?? false, isFalse);
+      }
+    });
+  });
 }

@@ -458,6 +458,22 @@ class Game {
       yearEnded = true;
     }
     if (yearEnded && !retired) _rollGoalOptions();
+    // プロでは、23・27・31歳で移籍のオファーが届く(出来事が有効なときだけ)。
+    if (eventsEnabled &&
+        yearEnded &&
+        !retired &&
+        phase == Phase.season &&
+        track == Track.pro &&
+        const {23, 27, 31}.contains(player.age)) {
+      pendingEventId = 'pro_move';
+      return TermReport(
+        action: action,
+        gotInjured: gotInjured,
+        tournament: t,
+        satOut: satOut,
+        yearEnded: yearEnded,
+      );
+    }
     // 中学・高校に上がるときは、進学先を選ぶ(出来事が有効なときだけ)。
     if (eventsEnabled && yearEnded && !retired && phase == Phase.season) {
       final forced = switch (stage) {
@@ -733,6 +749,7 @@ class Game {
         coachBond = 20;
         schoolBonus = 0;
         schoolLabel = '';
+        if (eventsEnabled) pendingEventId = 'pro_join';
         pathPending = false;
         proRejected = false;
         return true;

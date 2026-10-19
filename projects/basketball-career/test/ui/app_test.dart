@@ -62,6 +62,7 @@ void main() {
         abilities: {for (final a in Ability.values) a: 90},
       ),
       rng: Random(1),
+      eventsEnabled: false,
       pathPending: true,
     );
     await tester.pumpWidget(BasketballCareerApp(controller: c));
