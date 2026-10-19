@@ -308,3 +308,50 @@ int? hallOfFameVote({
 }
 
 bool inHallOfFame(int? vote) => vote != null && vote >= 75;
+
+/// 順位表の1行。
+typedef StandingRow = ({String team, int wins, int losses, bool mine});
+
+/// プロの1シーズンの順位表(6球団)。自分の球団を `rank` 位に置き、他球団は名前から決まる。
+/// 他球団の勝敗は自分の勝敗と矛盾しない(順位どおりに並ぶ)。
+List<StandingRow> standingsOf({
+  required String team,
+  required int rank,
+  required int wins,
+  required int losses,
+  required int age,
+  required List<String> league,
+}) {
+  final others = [
+    for (final t in league)
+      if (t != team) t
+  ]..sort((a, b) => _hash(a, age).compareTo(_hash(b, age)));
+  final total = wins + losses;
+  final w = <int>[];
+  for (var r = 1; r <= 6; r++) {
+    var v = (total * (0.62 - 0.05 * (r - 1))).round();
+    if (r < rank) v = v < wins + 1 ? wins + 1 : v;
+    if (r > rank) v = v > wins - 1 ? wins - 1 : v;
+    w.add(v.clamp(0, total));
+  }
+  // 順位どおりに並び替わらないよう、単調に直す(上から)。
+  for (var r = 1; r < 6; r++) {
+    if (r + 1 == rank || r == rank) continue;
+    if (w[r] > w[r - 1]) w[r] = w[r - 1];
+  }
+  final rows = <StandingRow>[];
+  var oi = 0;
+  for (var r = 1; r <= 6; r++) {
+    if (r == rank) {
+      rows.add((team: team, wins: wins, losses: losses, mine: true));
+    } else {
+      rows.add((
+        team: others[oi++ % others.length],
+        wins: w[r - 1],
+        losses: total - w[r - 1],
+        mine: false
+      ));
+    }
+  }
+  return rows;
+}

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../game/career.dart';
 import '../game/game.dart';
 import '../game/marks.dart';
+import '../game/path.dart' show draftTeams;
 import '../game/snapshot.dart';
 import '../game/records.dart';
 import '../game/rival_story.dart';
@@ -67,6 +68,10 @@ class RecordsView extends StatelessWidget {
         if (titles.isNotEmpty) ...[
           const SizedBox(height: 8),
           _Titles(titles: titles),
+        ],
+        if (pro.isNotEmpty && pro.last.rank != null) ...[
+          const SizedBox(height: 8),
+          _Standings(snapshot: snapshot, record: pro.last),
         ],
         if (careerHighs(pro.isNotEmpty ? pro : rs).isNotEmpty) ...[
           const SizedBox(height: 8),
@@ -411,6 +416,54 @@ class _Table extends StatelessWidget {
         Stage.pro => 'プロ',
         Stage.retired => '',
       };
+}
+
+/// 直近のプロのシーズンの順位表。
+class _Standings extends StatelessWidget {
+  const _Standings({required this.snapshot, required this.record});
+  final PlayerSnapshot snapshot;
+  final SeasonRecord record;
+
+  @override
+  Widget build(BuildContext context) {
+    final team = (record.overseas ? snapshot.overseasTeam : snapshot.proTeam) ??
+        'あなたのチーム';
+    final rows = standingsOf(
+        team: team,
+        rank: record.rank!,
+        wins: record.teamWins,
+        losses: record.teamLosses,
+        age: record.age,
+        league: draftTeams);
+    final t = Theme.of(context).textTheme;
+    return Card(
+      key: const Key('standings'),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('${record.age}歳シーズンの順位表', style: t.titleSmall),
+            const SizedBox(height: 6),
+            for (var i = 0; i < rows.length; i++)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 1),
+                child: Row(children: [
+                  SizedBox(width: 24, child: Text('${i + 1}')),
+                  Expanded(
+                      child: Text(rows[i].team,
+                          style: rows[i].mine
+                              ? t.bodyMedium
+                                  ?.copyWith(fontWeight: FontWeight.bold)
+                              : t.bodyMedium)),
+                  Text('${rows[i].wins}勝${rows[i].losses}敗'),
+                ]),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 /// キャリアハイ(項目ごとに一番良かった年)。

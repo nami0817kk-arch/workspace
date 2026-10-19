@@ -20,6 +20,7 @@ void main() {
   markTests4();
   markTests5();
   markTests6();
+  markTests7();
   test('通算の節目: 越えた年にだけ出る', () {
     expect(careerMarks(const Line(), const Line(hits: 150, homeRuns: 20)),
         containsAll(['プロ初安打', 'プロ初本塁打', '通算100安打']));
@@ -164,5 +165,37 @@ void markTests6() {
             hallOfFameVote(records: plain, title: '一流選手', madePro: true)),
         isFalse);
     expect(hallOfFameVote(records: legend, title: 'x', madePro: false), isNull);
+  });
+}
+
+void markTests7() {
+  test('順位表: 自分は指定の順位に居て、勝ち数は順位どおりに並ぶ', () {
+    const league = [
+      '青波ホークス',
+      '北斗ベアーズ',
+      '朱雀ファルコンズ',
+      '紅葉ジャガーズ',
+      '銀嶺ライオンズ',
+      '黒潮マリナーズ',
+    ];
+    for (var rank = 1; rank <= 6; rank++) {
+      final wins = 100 - rank * 9;
+      final t = standingsOf(
+          team: '大和スターズ',
+          rank: rank,
+          wins: wins,
+          losses: 143 - wins,
+          age: 25,
+          league: league);
+      expect(t.length, 6);
+      expect(t[rank - 1].mine, isTrue);
+      expect(t[rank - 1].wins, wins);
+      expect(t.where((r) => r.mine).length, 1);
+      for (var i = 1; i < 6; i++) {
+        expect(t[i].wins, lessThanOrEqualTo(t[i - 1].wins),
+            reason: 'rank $rank');
+      }
+      expect({for (final r in t) r.team}.length, 6);
+    }
   });
 }
