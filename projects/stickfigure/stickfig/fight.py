@@ -157,8 +157,8 @@ def build_fight(spec: dict) -> dict:
         clipsA.append(dict(file="09_01", start=3.2, end=4.0, loop=True, anchor_dx=3.4, **{"in": 0.15, "out": 0.2}))
         speed.append([3.3, 4.1])
         a_dx0 = 3.4
-    else:
-        keysB += [dict(t=tc, dx=-1.7, rz=0.0, roll=0.0, hz=0.82, lean=0.1, fa=0.9, fe=1.4, ra=0.7, re=1.5, fl=0.45, fk=0.3, rl=-0.45, rk=0.4, face="fight")]
+    else:                                                # 蹴り無し: B は最初から構えの位置に立つ(以前は 0.6 秒で 2 単位後ろへ滑っていた)
+        keysB = [dict(t=0.0, dx=-1.7), dict(t=tc, dx=-1.7, rz=0.0, roll=0.0, hz=0.82, lean=0.1, fa=0.9, fe=1.4, ra=0.7, re=1.5, fl=0.45, fk=0.3, rl=-0.45, rk=0.4, face="fight")]
         clipsA[0].update(end=tc)
         keysA.append(dict(t=tc, dx=3.4, hz=0.9))
         shots.append(dict(t=1.0, follow="A", scale=[[1.0, 5.6], [tc + 0.4, 4.4]], yaw=[[1.0, -38.0], [tc + 0.4, -20.0]], pitch=4.0, lens=30.0, target_z=1.0, lag=0.3))

@@ -349,6 +349,9 @@ def _footwork(scene: dict, frames: List[dict]) -> None:
                 continue
             sk = fk.skeleton(p, s, p["root_x"], sc)
             nat = {"foot": sk["foot"], "rear_foot": sk["rear_foot"]}
+            v = abs(p["root_x"] - frames[f - 1]["actors"][who]["root_x"]) if f > 0 else 0.0
+            fast = v > 0.14 * sc                                                 # 速い(1コマに身長の 1/7 以上): 小刻みに踏み替える
+            stride_e, nfr_e, lead_e = (0.22 * sc, 3, 0.30 * sc) if fast else (stride * sc, nfr, lead * sc)
             for ang, knee, key in legs:
                 other = "rear_foot" if key == "foot" else "foot"
                 nx, nz = nat[key]
@@ -371,13 +374,13 @@ def _footwork(scene: dict, frames: List[dict]) -> None:
                     planted[key] = nx
                     continue
                 gap = (nx - planted[key]) * s                                     # 体の進みに対して、固定した足がどれだけ後ろに残ったか(前が正)
-                if abs(gap) > stride * sc and swing is None:                      # 開きすぎ: 踏み替える(もう片方は接地したまま)
-                    swing = dict(key=key, f0=f, n=nfr, x0=planted[key], x1=nx + s * lead * sc * (1 if gap > 0 else -1))
+                if abs(gap) > stride_e and swing is None:                        # 開きすぎ: 踏み替える(もう片方は接地したまま)
+                    swing = dict(key=key, f0=f, n=nfr_e, x0=planted[key], x1=nx + s * lead_e * (1 if gap > 0 else -1))
                     planted[key] = None
                     continue
                 r = fk.leg_ik(p, s, p["root_x"], sc, (planted[key], 0.0))       # 固定: 足を世界座標に留める
                 if r is None:                                                     # 届かない(体が速い): 短い踏み替え
-                    swing = dict(key=key, f0=f, n=max(2, nfr - 2), x0=planted[key], x1=nx + s * lead * sc)
+                    swing = dict(key=key, f0=f, n=max(2, nfr_e - 2), x0=planted[key], x1=nx + s * lead_e)
                     planted[key] = None
                     continue
                 p[ang], p[knee] = round(r[0], 6), round(r[1], 6)
