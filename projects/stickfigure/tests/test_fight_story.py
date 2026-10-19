@@ -56,3 +56,14 @@ def test_kit_titles_and_description_have_credit():
     assert all(kit.titles(a, "H", "R") for a in story.ARCS)
     d = kit.description("雪辱戦", "H", "R")
     assert "CMU" in d and "mocap.cs.cmu.edu" in d
+
+
+def test_seed_changes_details_but_is_reproducible():
+    a1 = fight.build_fight(dict(seed=1))
+    a2 = fight.build_fight(dict(seed=1))
+    b = fight.build_fight(dict(seed=2))
+    assert a1 == a2
+    assert a1["clips"] != b["clips"] or a1["hits"] != b["hits"] or a1["fx"]["charge"] != b["fx"]["charge"]
+    ep = story.build_story(dict(arc="revenge", seed=3))
+    seeds = [it["scene"]["fight"]["seed"] for it in ep["items"] if "scene" in it]
+    assert len(set(seeds)) == len(seeds)

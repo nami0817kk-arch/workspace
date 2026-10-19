@@ -106,7 +106,7 @@ def build_episode(ep: dict, out: Path, reuse_figs: bool = False, force: bool = F
         if isinstance(sc, str):
             scene = planmod.load_scene(sc)
         else:
-            scene = fight.expand(dict(sc))
+            scene = fight.expand(dict(sc), verify=True)
             planmod.validate_scene(scene)
         mp4 = cli.build_scene(scene, seg_dir, reuse_figs, force, quiet=True)
         if mp4 is None:

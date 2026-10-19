@@ -17,6 +17,7 @@
 from __future__ import annotations
 
 import copy
+import random
 from typing import Dict, List
 
 DEFAULTS = dict(
@@ -31,6 +32,7 @@ DEFAULTS = dict(
     a_scale=1.0,             # こちら側(A)の大きさ。負け場面で相手(A)を大柄にするとき
     b_scale=1.0,             # 相手の大きさ(1.3 で大柄のボス)。連打の位置は固定なので 1.15〜1.35 まで
     stage="cave",            # 舞台の色の組: cave / dojo / field / night / sunset
+    seed=None,               # 数字を入れると、連打の clip・間・溜めの色・カットの順を、その数字で変える(同じ数字なら同じ戦い)
     mood="battle",           # BGM の雰囲気: battle / tense / calm / sad / none
     lines=[],                # 台詞・ナレーション: [{at: opening|kick|rise|combo|counter|last|finisher|ko|end, dt: 0, dur: 1.6, kind: say|narr|shout, who: A, text: "…"}]
 )
@@ -51,6 +53,8 @@ HERO = [dict(target="A", z=1.35, yaw=18, pitch=-6, scale=3.3, lens=24, streak=Fa
         dict(target="A", z=1.35, yaw=-25, pitch=-5, scale=3.3, lens=26, streak=False)]
 # 連打に使う clip(モーションキャプチャ)。命中時に相手との間隔が合うものを、周8で選んだ
 HIT_CLIPS = ["02_08_s1", "02_09_s1", "02_07_s2", "02_07_s1"]
+POOL_MID = ["02_08_s1", "02_09_s1", "02_07_s1", "02_08_s2", "02_09_s2", "02_07_s2"]     # 途中の連打(位置を台本で与える)に使える clip
+CHARGE_COLORS = [[120, 230, 255], [255, 170, 60], [255, 90, 200], [170, 255, 120]]
 COUNTER_CLIP = "13_17_s1"
 
 
@@ -61,6 +65,10 @@ def _r(x: float) -> float:
 def build_fight(spec: dict) -> dict:
     s = copy.deepcopy(DEFAULTS)
     s.update({k: v for k, v in (spec or {}).items() if k in DEFAULTS})
+    rng = random.Random(s["seed"]) if s["seed"] is not None else None
+    mid_clips = list(HIT_CLIPS)
+    if rng is not None:
+        mid_clips = rng.sample(POOL_MID, 3) + ["02_07_s2"]       # 最後の1発は、命中の位置を解く clip(届く 02_07_s2)に固定
     sword = s["weapon"] == "sword"
     n = max(1, min(4, int(s["hits"])))
     kick = bool(s["kick"])
@@ -86,7 +94,10 @@ def build_fight(spec: dict) -> dict:
     keysB.append(dict(t=1.0, dx=0.35))
     if kick:
         charge.append(dict(start=1.3, end=1.7, who="A", color=[255, 170, 60]))
-        flurry.append(dict(start=1.12, end=1.64, every=4, angles=[A_FACE, B_FACE, A_FOOT, A_FACE]))
+        fa = [A_FACE, B_FACE, A_FOOT, A_FACE]
+        if rng is not None:
+            rng.shuffle(fa)
+        flurry.append(dict(start=1.12, end=1.64, every=4, angles=fa))
         hits += [dict(tau=1.66, hold=0.13, kind="pose"),
                  dict(tau=1.9, hold=0.09, kind="kick", contact=dict(striker="A", effector="foot", target=dict(actor="B", point="hip"), tol=0.2)),
                  dict(tau=2.25, hold=0.06, kind="wall", pos=[6.0, 1.6])]
@@ -120,13 +131,18 @@ def build_fight(spec: dict) -> dict:
         a_dx0 = 3.4
 
     # ---- 連打 ----
-    charge.append(dict(start=tc - 0.05, end=tc + 0.3, who="A", color=[120, 230, 255]))
+    charge.append(dict(start=tc - 0.05, end=tc + 0.3, who="A", color=(rng.choice(CHARGE_COLORS) if rng is not None else [120, 230, 255])))
     hits.append(dict(tau=_r(tc + 0.3), hold=0.11, kind="pose"))
-    flurry.append(dict(start=_r(tc - 0.1), end=_r(tc + 0.3), every=4, angles=[B_FACE, A_FACE, A_HAND]))
+    fb = [B_FACE, A_FACE, A_HAND]
+    if rng is not None:
+        rng.shuffle(fb)
+    flurry.append(dict(start=_r(tc - 0.1), end=_r(tc + 0.3), every=4, angles=fb))
     kind_hit = "slash" if sword else "hit"
     eff = "tip" if sword else "hand"
     h0 = tc + 0.4
     gaps = [0.58, 0.42, 0.4, 0.4] if s["counter"] else [0.4, 0.4, 0.4, 0.4]
+    if rng is not None:
+        gaps = [round(g + rng.uniform(-0.05, 0.07), 2) for g in gaps]
     ts = [h0]
     for i in range(1, n):
         ts.append(ts[-1] + gaps[i - 1])
@@ -136,7 +152,7 @@ def build_fight(spec: dict) -> dict:
         last = i == n - 1
         pre, post = (0.4, 0.18) if i == 0 else (0.16, 0.22)
         anchor = 4.3 if i == 0 else 4.3 + 0.5 * i
-        clip = dict(file=HIT_CLIPS[i % len(HIT_CLIPS)], strike_at=_r(t), start=_r(t - pre), end=_r(t + post), **{"in": 0.12 if i == 0 else 0.08, "out": 0.25 if last else 0.08})
+        clip = dict(file=(mid_clips[i] if not last else "02_07_s2") if rng is not None else HIT_CLIPS[i % len(HIT_CLIPS)], strike_at=_r(t), start=_r(t - pre), end=_r(t + post), **{"in": 0.12 if i == 0 else 0.08, "out": 0.25 if last else 0.08})
         if not last:
             clip["anchor_dx"] = round(anchor, 2)
         clipsA.append(clip)
@@ -230,13 +246,31 @@ def build_fight(spec: dict) -> dict:
     return scene
 
 
-def expand(data: dict) -> dict:
-    """台本の dict に fight: があれば、自動で組んだ台本を土台にして、ほかのキーで上書きする。"""
+def expand(data: dict, verify: bool = False) -> dict:
+    """台本の dict に fight: があれば、自動で組んだ台本を土台にして、ほかのキーで上書きする。
+
+    verify=True で seed があるとき、点検(qa)に通らない seed は、次の seed に替えて組み直す(最大8回。clips/ が無いときは何もしない)。"""
     if "fight" not in data:
         return data
     spec = dict(data["fight"] or {})
     spec.setdefault("name", data.get("name", "fight"))
+    if verify and spec.get("seed") is not None:
+        spec = _first_passing_seed(spec, data)
     base = build_fight(spec)
     over = {k: v for k, v in data.items() if k != "fight"}
     base.update(over)
     return base
+
+
+def _first_passing_seed(spec: dict, data: dict) -> dict:
+    from . import plan as planmod, qa
+    for k in range(8):
+        sp = dict(spec, seed=int(spec["seed"]) + k)
+        sc = dict(build_fight(sp), **{x: v for x, v in data.items() if x != "fight"})
+        try:
+            pl = planmod.build_plan(sc)
+        except Exception:                                  # clips が無い等。点検できない環境では、そのまま使う
+            return spec
+        if qa.run_gate(pl, sc.get("qa"))["passed"]:
+            return sp
+    return spec

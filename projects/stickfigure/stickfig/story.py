@@ -153,7 +153,11 @@ def build_story(spec: dict) -> dict:
     if arc not in ARCS:
         raise ValueError(f"物語の型 {arc} はない。使えるのは {', '.join(ARCS)}")
     kw = {k: v for k, v in spec.items() if k != "arc"}
+    seed = kw.pop("seed", None)               # 数字を入れると、場面ごとに戦いの細部(連打の clip・間・溜めの色・カットの順)が変わる
     ep = ARCS[arc](hero=kw.pop("hero", "ミドリ"), rival=kw.pop("rival", "アカ"), **kw)
+    if seed is not None:
+        for i, it in enumerate(x for x in ep["items"] if "scene" in x):
+            it["scene"]["fight"]["seed"] = int(seed) * 10 + i
     if "name" in spec:
         ep["name"] = spec["name"]
     return ep
