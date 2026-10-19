@@ -28,6 +28,7 @@ DEFAULTS = dict(
     palette="warm",          # warm / cool
     colors=dict(A=[0.3, 0.68, 0.1], B=[0.8, 0.1, 0.08]),
     tempo=1.35,
+    lines=[],                # 台詞・ナレーション: [{at: opening|kick|rise|combo|counter|last|finisher|ko|end, dt: 0, dur: 1.6, kind: say|narr|shout, who: A, text: "…"}]
 )
 
 PALETTES = {
@@ -198,6 +199,16 @@ def build_fight(spec: dict) -> dict:
     actors = dict(A=dict(color=s["colors"]["A"], scale=1.0, base_x=-2.0, facing=1), B=dict(color=s["colors"]["B"], scale=1.0, base_x=2.4, facing=-1))
     if sword:
         actors["A"]["weapon"] = "sword"
+    marks = dict(opening=0.3, kick=1.9, rise=tc, combo=h0, last=hl, finisher=hl + 0.55, ko=ko_t, end=end - 1.2)
+    marks["counter"] = ts[0] + 0.28
+    caps = []
+    for ln in s["lines"]:
+        t0 = marks[ln.get("at", "opening")] + float(ln.get("dt", 0.0))
+        c = dict(kind=ln.get("kind", "say"), text=ln["text"], t0=_r(t0), t1=_r(t0 + float(ln.get("dur", 1.6))))
+        for k in ("who", "color", "size", "y", "max_w"):
+            if k in ln:
+                c[k] = ln[k]
+        caps.append(c)
     scene = dict(
         name=spec.get("name", "fight") if isinstance(spec, dict) else "fight", fps=30, tau_end=end, actors=actors,
         stage=dict(wall_x=6.0, style="cave"), slow=slow, hits=hits, puffs=puffs,
@@ -211,7 +222,7 @@ def build_fight(spec: dict) -> dict:
         impact_cuts=dict(kinds=["kick", "heel", "wall"], hold=0.2, angles=[dict(yaw=35, pitch=4, scale=3.0, lens=28, hue=0), dict(yaw=-40, pitch=-6, scale=2.6, lens=26, dutch=6.0, hue=1),
                                                                          dict(yaw=5, pitch=12, scale=3.4, lens=34, hue=2)],
                          per_kind=dict(wall=[dict(yaw=-30, pitch=6, scale=5.0, lens=30), dict(yaw=10, pitch=18, scale=6.0, lens=34), dict(yaw=-55, pitch=3, scale=4.2, lens=28, dutch=-5.0)])),
-        flurry=flurry, style="flat2d")
+        flurry=flurry, style="flat2d", captions=caps, _marks={k: _r(v) for k, v in marks.items()})
     return scene
 
 

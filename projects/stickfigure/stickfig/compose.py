@@ -12,7 +12,7 @@ from typing import Dict, List, Optional, Sequence, Tuple
 
 from PIL import Image, ImageDraw, ImageFilter
 
-from . import anime, camera, look
+from . import anime, camera, captions, look
 
 W, H, SS = 1280, 720, 2
 GROUND_Y = 560
@@ -341,7 +341,7 @@ def compose_frame(plan: dict, f: int, figs: Dict[int, Image.Image], stages: Opti
     acfg = plan.get("scene", {}).get("anime")
     if acfg is not None and invert is None:
         frame = anime.apply(plan, f, frame, acfg if isinstance(acfg, dict) else {}, plan.setdefault("_anime_cache", {}))
-    return _color_script(frame, plan, tau, fx)
+    return captions.draw(_color_script(frame, plan, tau, fx), plan, f)
 
 
 def _color_script(frame: Image.Image, plan: dict, tau: float, fx: dict) -> Image.Image:
