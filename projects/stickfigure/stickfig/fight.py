@@ -190,6 +190,7 @@ def build_fight(spec: dict) -> dict:
         keysB += [dict(t=1.9, dx=0.35),
                   dict(t=1.95, dx=0.3, lean=0.55, hz=0.88, fa=0.9, ra=0.8, fe=0.9, re=0.9, ht=0.5, face="pain"),
                   # 壁(x=6.0)まで飛んで(前は dx -1.5 で壁の 2 単位手前に浮いたまま止まっていた)、壁に背中から叩きつけられ、ずり落ちて倒れる
+                  dict(t=2.1, dx=-2.5, rz=1.3, roll=1.0, hz=0.9, fa=-1.1, ra=-0.9, fe=0.2, re=0.3, fl=0.9, fk=0.4, rl=0.2, rk=0.3, lean=-0.3, ht=-0.6, face="pain"),   # 飛んでいる間は体を後ろへ倒し(頭が遅れ、脚が先行)、手足を後ろへ流す(立ったまま浮いて見えていた)
                   dict(t=2.25, dx=-3.45, rz=1.35, roll=0.3, hz=0.9, fa=-0.9, ra=-0.9, fe=0.3, re=0.3, fl=0.6, fk=0.3, rl=-0.3, rk=0.4, lean=-0.35, ht=-0.7, face="pain"),
                   dict(t=2.42, dx=-3.45, rz=1.25, roll=0.35, hz=0.9, lean=-0.3, face="pain"),          # 壁に張りついて一瞬止まる
                   dict(t=2.75, dx=-3.3, rz=0.55, roll=1.2, hz=0.9, lean=0.0, fa=0.2, ra=0.2, face="pain"),   # ずり落ちる
