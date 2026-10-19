@@ -110,6 +110,8 @@ String heroNoteOf(Line g) {
   if (g.hits >= 4) return '猛打賞';
   if (g.strikeouts >= 10) return '二桁奪三振';
   if (g.hasPitching && g.outs >= 21 && g.hitsAllowed <= 3) return '好投';
+  if (g.hasPitching && g.outs >= 6 && g.hitsAllowed <= 1) return '無安打に近い好投';
+  if (g.strikeouts >= 5) return '${g.strikeouts}奪三振';
   return '大活躍';
 }
 

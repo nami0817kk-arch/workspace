@@ -62,6 +62,12 @@ void markTests2() {
     expect(heroNoteOf(const Line(atBats: 4, hits: 2, homeRuns: 2)), '2本塁打');
     expect(heroNoteOf(const Line(atBats: 5, hits: 4)), '猛打賞');
     expect(heroNoteOf(const Line(atBats: 4, hits: 1)), '大活躍');
+    expect(
+        heroNoteOf(const Line(faced: 12, outs: 9, hitsAllowed: 1)), '無安打に近い好投');
+    expect(
+        heroNoteOf(
+            const Line(faced: 12, outs: 9, hitsAllowed: 3, strikeouts: 6)),
+        '6奪三振');
     final rs = [
       SeasonRecord(
           age: 24,
