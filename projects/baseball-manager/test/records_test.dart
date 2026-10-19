@@ -439,10 +439,14 @@ void main() {
 }
 
 void main2() {
-  test('ERA+・OPS+は、投球回・打席が少なくても極端な値にならない(上限999)', () {
-    const p = Line(faced: 10, outs: 6, runsRaw: -50);
-    expect(p.eraPlus == null || p.eraPlus! <= 999, isTrue);
-    const b = Line(atBats: 1, hits: 1, totalBases: 4);
-    expect(b.opsPlus! <= 999, isTrue);
+  test('ERA+・OPS+は、投球回・打席が少ないと出さず、十分あれば上限999までの値', () {
+    const few = Line(faced: 10, outs: 6, runsRaw: -50);
+    expect(few.eraPlus, isNull);
+    const fewBat = Line(atBats: 1, hits: 1, totalBases: 4);
+    expect(fewBat.opsPlus, isNull);
+    const pitcher = Line(faced: 120, outs: 90, runsRaw: -300);
+    expect(pitcher.eraPlus! <= 999, isTrue);
+    const bat = Line(atBats: 40, hits: 40, totalBases: 160);
+    expect(bat.opsPlus! <= 999, isTrue);
   });
 }
