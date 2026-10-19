@@ -45,7 +45,7 @@ baseball-manager の骨格（年齢で局面が変わる一代記・季節ごと
 
 ## 現状（2026-10-19）
 
-**ゲームとして完成。** 残りは広告・課金とストア提出（ユーザーの判断が要る）。
+**ゲームと広告・課金まで実装済み。** 残りはストア側の登録と提出（ユーザーの判断・作業が要る）。
 
 - エンジン（`lib/game/`）: 成長・身長・試合・勝負どころ・進路・海外・特性に加え、
   - `events.dart` — 出来事13個（コーチ・ライバル・スランプ・成長痛・スカウトなど）。1ターン35%で起き、選ぶまで進めない（`Phase.event`）。効果は `Effect` のデータで、`applyEffect` が当てる。
@@ -55,15 +55,28 @@ baseball-manager の骨格（年齢で局面が変わる一代記・季節ごと
   `art/court.dart` が体育館と選手をコードで描く（身長で選手の大きさが変わり、所属でユニフォームの色が変わる）。
   `controller.dart` は操作のたびに保存（書き込みは順番に行う）。殿堂と実績も端末に保存。
 - Flutter の `Action` / `Route` と名前が衝突するので、画面側は `hide Action, Route` する。
-- テスト46件（CI で回す）。`tool/balance.dart` で目安が出る: 練習中心の素朴な遊び方で
+- テスト72件（CI で回す）。`tool/balance.dart` で目安が出る: 練習中心の素朴な遊び方で
   プロ入り約49%（高校から直接約14%）・海外挑戦約8%。数字は仮置きで、遊んでから調整する。
 - アイコン（`tool/icon_source.png` → `tool/make_icons.py`）・表示名「バスケ育成」・iOS は縦向きのみ。
 - ブラウザで通しの動作と見た目を確認済み（育成・出来事・大会の結果）。実機（iOS）は未確認。
 
-## 未着手（ユーザーの判断が要る）
+## 広告と課金（2026-10-19 実装・ユーザー決定: 無料＋広告＋広告を消す370円。護送ボートと同じ形）
 
-1. **広告・課金**: 着手前に `docs/app-pitfalls.md` を読む。課金・広告の有無と価格は必ずユーザーに確認する
-   （既存アプリは「無料＋広告＋広告を消す370円」）。
-2. **App Store 提出**: `ios-app-release` スキルを読んでから。ストア掲載文・スクリーンショット・プライバシーの答えが要る。
-   バンドルID `com.namiki.basketballCareer`。Apple 側の登録（App ID・アプリ作成）が未。
-3. バランス調整（実際に遊んでから）。難易度の選択は未実装。
+`lib/monetization/`（`ad_service.dart` / `purchase_service.dart` は goso-boat から。`monetization.dart` がこのアプリの決まり）。
+
+- **全画面広告**: 大会を3回終えた**次の操作の前**に1回（大会の直後には出さない）。出せなければ進行を止めず次に回す。広告を消した人には出ない。
+- **動画広告**: 見ると**回復**（疲れ -40・気持ち +10・怪我が1ターン早く治る）。1ターンに1回。読み込めなければ**タダでは回復させない**。
+- **広告を消す**: 買い切り・非消費型、**370円**。商品ID `basketball_career_remove_ads`。設定画面に「購入を復元」（審査要件）・プライバシー・問い合わせ/広告の報告・ライセンス。
+- 広告ユニットIDは `--dart-define=ADMOB_REWARDED_IOS` / `ADMOB_INTERSTITIAL_IOS`。**既定は Google のテスト用ID**。アプリIDは Info.plist の `GADApplicationIdentifier`（今はテスト用）。
+- 報酬の受け取りは `GameController.recover`（画面の `mounted` に依存しない）。広告の読み込みは `await` で待たず `Completer`（`docs/app-pitfalls.md` #1〜#3 を `test/monetization_test.dart` が検査）。
+- Web・テストでは NoOp（広告も課金も出ない）。
+- `legal/` に**プライバシーポリシー・サポート・利用規約の原稿**（日英）。置き場所は `Links`（既定 `https://basketball-career.pages.dev`、`--dart-define=LEGAL_BASE_URL` で差し替え）。
+
+## 未着手（ユーザーの判断・作業が要る）
+
+1. **公開ページの置き場所**: `legal/` を公開する（Cloudflare Pages など。名義は `docs/public-identity.md`）。公開はユーザーの判断。決まったら `LEGAL_BASE_URL` を合わせる。
+2. **AdMob**: アプリを登録して本物の広告ユニットID・アプリIDを取り、CI の Secrets に入れる（`app-ads.txt` も）。
+3. **App Store Connect**: App ID・アプリ作成・アプリ内課金（`basketball_career_remove_ads`、370円）の登録。
+4. **App Store 提出**: `ios-app-release` スキルを読んでから。掲載文・スクリーンショット（落とし穴 #4: 読み込み中を撮らない）・
+   `ja.lproj/InfoPlist.strings`（落とし穴 #5）・プライバシーの答え。
+5. バランス調整（実際に遊んでから）。難易度の選択は未実装。

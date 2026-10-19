@@ -7,6 +7,7 @@ import '../game/player.dart';
 import 'art/court.dart';
 import 'controller.dart';
 import 'history_screen.dart';
+import 'settings_screen.dart';
 import 'labels.dart';
 
 /// 局面(季節 / 進路 / 引退)に合わせて画面を切り替える。
@@ -27,6 +28,12 @@ class GameScreen extends StatelessWidget {
             onPressed: () => Navigator.of(context).push(
                 MaterialPageRoute<void>(
                     builder: (_) => HistoryScreen(controller: controller))),
+          ),
+          IconButton(
+            tooltip: '設定',
+            icon: const Icon(Icons.settings_outlined),
+            onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(
+                builder: (_) => SettingsScreen(money: controller.money))),
           ),
           if (game.phase != Phase.retired)
             IconButton(
@@ -157,7 +164,7 @@ class _SeasonView extends StatelessWidget {
                     padding: const EdgeInsets.only(bottom: 8),
                     child: FilledButton.tonal(
                       onPressed:
-                          canChoose(a, cond) ? () => c.act(a) : null,
+                          canChoose(a, cond) ? () => c.play(a) : null,
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -178,6 +185,10 @@ class _SeasonView extends StatelessWidget {
             ),
           ),
         ),
+        if (g.canRecover || c.recoverMessage != null) ...[
+          const SizedBox(height: 12),
+          _RecoverCard(controller: c, game: g),
+        ],
         const SizedBox(height: 12),
         _AbilityCard(game: g),
         if (g.canGoAbroad) ...[
@@ -261,6 +272,52 @@ class _PlayerCard extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 4),
                 child: Text('怪我中(あと${cond.injuredTerms}ターン)',
                     style: const TextStyle(color: Colors.red)),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// 動画を見て元気になる。広告を消した人は動画なしで使える。1ターンに1回。
+class _RecoverCard extends StatelessWidget {
+  const _RecoverCard({required this.controller, required this.game});
+  final GameController controller;
+  final Game game;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = controller;
+    final needsAd = c.money?.recoverNeedsAd ?? true;
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (game.canRecover && c.money != null)
+              OutlinedButton.icon(
+                onPressed: c.recoverBusy ? null : c.recover,
+                icon: Icon(needsAd
+                    ? Icons.smart_display_outlined
+                    : Icons.favorite_border),
+                label: Text(c.recoverBusy
+                    ? '読み込み中…'
+                    : needsAd
+                        ? '動画を見て元気になる'
+                        : '元気になる'),
+              ),
+            if (game.canRecover && c.money != null)
+              const Padding(
+                padding: EdgeInsets.only(top: 6),
+                child: Text('疲れ -40 / 気持ち +10 / 怪我が1ターン早く治る(1ターンに1回)',
+                    style: TextStyle(fontSize: 12)),
+              ),
+            if (c.recoverMessage != null)
+              Padding(
+                padding: const EdgeInsets.only(top: 6),
+                child: Text(c.recoverMessage!),
               ),
           ],
         ),

@@ -4,12 +4,16 @@ publish_to: 'none'
 version: 0.1.0+1
 
 environment:
-  sdk: ^3.5.0
+  sdk: ^3.13.2
 
 dependencies:
   flutter:
     sdk: flutter
-  shared_preferences: ^2.3.0
+  shared_preferences: ^2.5.5
+  google_mobile_ads: ^9.1.0
+  in_app_purchase: ^3.3.1
+  url_launcher: ^6.3.2
+  in_app_purchase_storekit: ^0.4.13
 
 dev_dependencies:
   flutter_test:
@@ -18,6 +22,9 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  assets:
+    - assets/fonts/OFL-NotoSansJP.txt
 
   # 日本語フォントを同梱する(Web は足りない字形を外から取りに行って豆腐になる)。
   fonts:

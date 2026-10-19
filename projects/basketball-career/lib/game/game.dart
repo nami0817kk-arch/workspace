@@ -115,6 +115,7 @@ class Game {
     this.retiredReason,
     this.lowYears = 0,
     this.archived = false,
+    this.recoveredThisTerm = false,
     this.slot = 0,
     this.pendingEventId,
     this.lastFocus = Ability.threePoint,
@@ -154,6 +155,9 @@ class Game {
 
   /// 殿堂に書き込み済みか(引退のとき1度だけ)。
   bool archived;
+
+  /// このターンに回復を使ったか(1ターンに1回まで)。
+  bool recoveredThisTerm;
   int slot;
 
   /// 起きている出来事(選ぶまで次へ進めない)。
@@ -230,6 +234,7 @@ class Game {
   }) {
     if (phase != Phase.season) throw StateError('今は季節を選べない: $phase');
     lastFocus = focus;
+    recoveredThisTerm = false;
     final r = playTerm(player, condition, action, focus, rng);
     player = r.player;
     condition = r.condition;
@@ -309,6 +314,27 @@ class Game {
           _retire('${maxProAge + 1}歳で現役を退いた');
         }
     }
+  }
+
+  // ── 回復 ──
+
+  /// 回復の対象か(疲れ・気持ち・怪我のどれかが悪い)。
+  bool get needsRecovery =>
+      condition.fatigue >= 30 || condition.morale < 45 || condition.injured;
+
+  /// 回復を使えるか。1ターンに1回まで、季節の局面だけ。
+  bool get canRecover =>
+      phase == Phase.season && !recoveredThisTerm && needsRecovery;
+
+  /// 動画広告と引き換えの回復。疲れ -40・気持ち +10・怪我が1ターン早く治る。
+  void recover() {
+    if (!canRecover) throw StateError('今は回復できない');
+    condition = condition.copyWith(
+      fatigue: condition.fatigue - 40,
+      morale: condition.morale + 10,
+      injuredTerms: condition.injuredTerms - 1,
+    );
+    recoveredThisTerm = true;
   }
 
   // ── 出来事 ──
@@ -431,6 +457,7 @@ class Game {
         'retiredReason': retiredReason,
         'lowYears': lowYears,
         'archived': archived,
+        'recoveredThisTerm': recoveredThisTerm,
         'slot': slot,
         'pendingEventId': pendingEventId,
         'lastFocus': lastFocus.name,
@@ -455,6 +482,7 @@ class Game {
         retiredReason: j['retiredReason'] as String?,
         lowYears: (j['lowYears'] as num?)?.toInt() ?? 0,
         archived: (j['archived'] as bool?) ?? false,
+        recoveredThisTerm: (j['recoveredThisTerm'] as bool?) ?? false,
         slot: (j['slot'] as num?)?.toInt() ?? 0,
         pendingEventId: j['pendingEventId'] as String?,
         lastFocus: Ability.parse((j['lastFocus'] as String?) ?? '') ??
