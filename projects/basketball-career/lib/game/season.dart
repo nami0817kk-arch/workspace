@@ -186,6 +186,7 @@ class TournamentRun {
         rng: rng,
         opponent: opp?.name ?? '',
         vsRival: opp?.rival ?? false,
+        style: OppStyle.forTeam(opp?.name ?? '', round),
       );
       Halftime? hc;
       if (h.needsDecision) {
