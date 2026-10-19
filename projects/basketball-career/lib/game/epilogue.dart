@@ -1,4 +1,5 @@
 import 'game.dart';
+import 'season.dart';
 import 'player.dart';
 
 /// ポジションの呼び名。
@@ -40,6 +41,17 @@ String shareText(Game g) {
   return b.toString();
 }
 
+/// 舞台の格(全盛期を選ぶときの加点)。
+double _leagueWeight(League l) => switch (l) {
+      League.minibasket => 0,
+      League.juniorHigh => 8,
+      League.highSchool => 16,
+      League.university => 24,
+      League.corporate => 24,
+      League.proDomestic => 36,
+      League.proAbroad => 48,
+    };
+
 String _talent(int potential) {
   if (potential >= 80) return '天賦の才に恵まれた';
   if (potential >= 60) return '確かな素質を持った';
@@ -59,7 +71,9 @@ List<String> epilogueLines(Game g) {
       '${p.heightCm.toStringAsFixed(0)}cmの${positionNickname(p.position)}になった。$traits');
 
   if (g.records.isNotEmpty) {
-    final best = g.records.reduce((a, b) => b.achievement > a.achievement ? b : a);
+    // 全盛期: 実績に、舞台の格(ミニバスより海外プロ)を加えて比べる。
+    double score(YearRecord r) => r.achievement + _leagueWeight(r.league);
+    final best = g.records.reduce((a, b) => score(b) > score(a) ? b : a);
     lines.add('いちばん輝いたのは${best.age}歳、${best.league.label}'
         '${best.winter ? 'の冬' : ''}の大会。'
         '${best.champion ? '頂点に立ち、' : ''}平均${best.ppg.toStringAsFixed(1)}得点を記録した。');
@@ -88,7 +102,9 @@ List<String> epilogueLines(Game g) {
   }
   if (thanks.isNotEmpty) lines.add(thanks.join(''));
 
-  lines.add('${p.age}歳、${g.retiredReason ?? '現役を退いた'}。');
+  final reason = g.retiredReason ?? '現役を退いた';
+  // 古いセーブの理由は「41歳で…」と年齢を含んでいる(重ねない)。
+  lines.add(reason.startsWith('${p.age}歳') ? '$reason。' : '${p.age}歳、$reason。');
 
   lines.add(_closing(g));
   return lines;

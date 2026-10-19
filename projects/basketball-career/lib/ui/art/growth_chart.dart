@@ -108,7 +108,10 @@ class _ChartPainter extends CustomPainter {
 
   void _label(Canvas canvas, String s, Offset at, double size) {
     final tp = TextPainter(
-      text: TextSpan(text: s, style: TextStyle(color: text, fontSize: size)),
+      text: TextSpan(
+          text: s,
+          style: TextStyle(
+              fontFamily: 'NotoSansJP', color: text, fontSize: size)),
       textDirection: TextDirection.ltr,
     )..layout();
     tp.paint(canvas, at);

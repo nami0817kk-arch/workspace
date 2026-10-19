@@ -643,7 +643,7 @@ class Game {
         if (lowYears >= releaseYears) {
           _retire('戦力外通告を受けた');
         } else if (player.age > maxProAge) {
-          _retire('${maxProAge + 1}歳で現役を退いた');
+          _retire('年齢を重ね、現役を退いた');
         }
     }
     // 中学・高校に上がると新しいチーム(進路の選択は chooseRoute で)。
