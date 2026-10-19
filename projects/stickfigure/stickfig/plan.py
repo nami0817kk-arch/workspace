@@ -364,6 +364,8 @@ def _apply_stepping(cfg: dict, frames: List[dict], events: List[dict]) -> None:
         for who in fr["actors"]:
             keep = {k: fr["actors"][who][k] for k in ("jit",) if k in fr["actors"][who]}
             fr["actors"][who] = dict(src[who], **keep, stepped=1.0)
+        if cfg.get("hold_camera", False) and "cam" in frames[base]:      # カメラも同じ絵を続ける(参考は絵ごと2コマ撮りが2〜3割)
+            fr["cam"] = frames[base]["cam"]
 
 
 def _assign_event_pos(scene: dict, tracks: Dict[str, KeyTrack], events: List[dict]) -> None:
