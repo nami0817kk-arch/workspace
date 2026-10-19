@@ -1,0 +1,2 @@
+name: fight_spear
+fight: {weapon: spear, kick: false, hits: 3, counter: true, finisher: launch_slash, stage: field, palette: cool, seed: 4}

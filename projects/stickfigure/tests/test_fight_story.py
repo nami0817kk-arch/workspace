@@ -14,13 +14,15 @@ def _times_sorted(scene):
     dict(weapon="sword", kick=True, hits=3, counter=True, finisher="launch_slash"),
     dict(weapon="none", kick=False, hits=4, counter=False, finisher="none", palette="cool"),
     dict(weapon="sword", kick=False, hits=1, counter=True, finisher="launch_slash"),
+    dict(weapon="spear", kick=True, hits=3, counter=True, finisher="launch_slash", seed=4),
+    dict(weapon="staff", kick=False, hits=2, counter=False, finisher="none", stage="dojo"),
 ])
 def test_build_fight_is_valid_scene(spec):
     sc = fight.build_fight(spec)
     planmod.validate_scene(sc)
     _times_sorted(sc)
     kinds = [h["kind"] for h in sc["hits"]]
-    assert kinds.count("slash" if spec["weapon"] == "sword" else "hit") >= spec["hits"]
+    assert kinds.count("hit" if spec["weapon"] == "none" else "slash") >= spec["hits"]
     assert ("kick" in kinds) == spec["kick"]
     assert (("heel" in kinds) == (spec["finisher"] == "launch_slash"))
     assert sc["tau_end"] > max(h["tau"] for h in sc["hits"])
@@ -99,3 +101,16 @@ def test_review_caption_rules():
     assert any("短い" in m for m in review.check_captions(short, 5.0))
     over = [dict(kind="narr", text="終わり。", t0=4.0, t1=6.0)]
     assert any("はみ出す" in m for m in review.check_captions(over, 5.0))
+
+
+def test_weapon_tip_lengths_match_between_fk_and_blender():
+    """fk.WEAPON_TIP と blender_player.WEAPONS の長さ(0.115 + len)は、片方だけ直すとずれる。ソースの文字列から突き合わせる。"""
+    import re
+    from pathlib import Path
+    from stickfig import fk
+    src = (Path(__file__).resolve().parent.parent / "stickfig" / "blender_player.py").read_text(encoding="utf-8")
+    for name, tip in fk.WEAPON_TIP.items():
+        m = re.search(r'"%s": dict\(len=([0-9.]+)([^\n]*)' % name, src)
+        assert m, name
+        extra = 0.18 if "head=True" in m.group(2) else 0.0          # 槍の穂先
+        assert abs(0.115 + float(m.group(1)) + extra - tip) < 0.01, name

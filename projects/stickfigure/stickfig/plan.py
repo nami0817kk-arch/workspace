@@ -151,7 +151,7 @@ def skeleton_at(scene: dict, tracks: Dict[str, KeyTrack], who: str, tau: float, 
         pose = apply_run(tracks[who].at(tau), tau, scene.get("run"))
         if scene.get("_bank") is not None:
             pose = scene["_bank"].apply(who, pose, tau)
-    p = pose
+    p = dict(pose, wl=fk.WEAPON_TIP.get(a.get("weapon"), fk.SWORD_TIP))
     return fk.skeleton(p, _sign(a), _root_x(a, p), a.get("scale", 1.0))
 
 
@@ -181,7 +181,8 @@ def solve_contact(scene: dict, tracks: Dict[str, KeyTrack], hit: dict) -> dict:
         if c.get("height", True):          # 高さは腰の上げ下げで合わせる(±0.3 まで)
             eff = skeleton_at(scene, tracks, striker, tau)[eff_key]
             tp = fk.target_point(skeleton_at(scene, tracks, tgt, tau), c["target"].get("point", "hip"))
-            clip["hz_off"] = max(-0.3, min(0.3, clip.get("hz_off", 0.0) + (tp[1] + off[1]) - eff[1]))
+            hr = float(c.get("hz_range", 0.3))      # 腰の上げ下げの幅(長い武器は大きく)
+            clip["hz_off"] = max(-hr, min(hr, clip.get("hz_off", 0.0) + (tp[1] + off[1]) - eff[1]))
         for _ in range(8):
             eff = skeleton_at(scene, tracks, striker, tau)[eff_key]
             tp = fk.target_point(skeleton_at(scene, tracks, tgt, tau), c["target"].get("point", "hip"))
@@ -509,6 +510,7 @@ def build_plan(scene: dict, solve: bool = True) -> dict:
             if f > 0 and dtau == 0.0:
                 jit = (0.014 if a.get("heavy") else 0.007) * math.sin(f * 7.3)
             p = dict(p)
+            p["wl"] = fk.WEAPON_TIP.get(a.get("weapon"), fk.SWORD_TIP)
             p["jit"] = jit
             p["root_x"] = (p["root_x"] if phys is not None else _root_x(a, p)) + jit
             p["root_z"] = p["rz"] + abs(jit) * 0.5

@@ -21,7 +21,7 @@ import random
 from typing import Dict, List
 
 DEFAULTS = dict(
-    weapon="sword",          # sword / none(素手)
+    weapon="sword",          # sword / dagger / staff / spear / none(素手)
     kick=True,               # 冒頭の蹴り → 壁
     hits=3,                  # 連打の回数(1〜4)
     counter=True,            # 1発目のあと、相手の反撃
@@ -98,7 +98,7 @@ def build_fight(spec: dict) -> dict:
     mid_clips = list(HIT_CLIPS)
     if rng is not None:
         mid_clips = rng.sample(POOL_MID, 3) + ["02_07_s2"]       # 最後の1発は、命中の位置を解く clip(届く 02_07_s2)に固定
-    sword = s["weapon"] == "sword"
+    sword = s["weapon"] in ("sword", "dagger", "staff", "spear")      # 武器あり(斬りの弧・剣先の接触)
     n = max(1, min(4, int(s["hits"])))
     kick = bool(s["kick"])
     fin = s["finisher"] == "launch_slash"
@@ -186,7 +186,7 @@ def build_fight(spec: dict) -> dict:
             clip["anchor_dx"] = round(anchor, 2)
         clipsA.append(clip)
         if last:
-            hits.append(dict(tau=_r(t), hold=0.08, kind=kind_hit, contact=dict(striker="A", effector=eff, target=dict(actor="B", point="chest"), tol=round(0.3 + 0.6 * max(0.0, float(s["b_scale"]) - 1.0), 2), max_anticipation=50)))
+            hits.append(dict(tau=_r(t), hold=0.08, kind=kind_hit, contact=dict(striker="A", effector=eff, target=dict(actor="B", point="chest"), tol=round(0.3 + 0.6 * max(0.0, float(s["b_scale"]) - 1.0), 2), max_anticipation=50, hz_range=dict(sword=0.3, dagger=0.3, staff=0.6, spear=0.9).get(s["weapon"], 0.3))))
         else:
             hits.append(dict(tau=_r(t), hold=0.05, kind=kind_hit, pos=[_r(3.7 - 0.2 * i), _r(1.25 - 0.1 * i)]))
         flashes.append(_r(t))
@@ -253,7 +253,7 @@ def build_fight(spec: dict) -> dict:
                     ranges=[[0.0, 1.1, 2], [_r(tc - 0.9), _r(tc), 2], [_r(h0 + 0.5), _r(h0 + 1.1), 2], [_r(ko_t + 0.3), _r(end), 2]])
     actors = dict(A=dict(color=s["colors"]["A"], scale=float(s["a_scale"]), base_x=-2.0, facing=1), B=dict(color=s["colors"]["B"], scale=float(s["b_scale"]), base_x=2.4, facing=-1))
     if sword:
-        actors["A"]["weapon"] = "sword"
+        actors["A"]["weapon"] = s["weapon"]
     marks = dict(opening=0.3, kick=1.9, rise=tc, combo=h0, last=hl, finisher=hl + 0.55, ko=ko_t, end=end - 1.2)
     marks["counter"] = ts[0] + 0.28
     caps = _layout_captions(s["lines"], marks, end, float(s["tempo"]))

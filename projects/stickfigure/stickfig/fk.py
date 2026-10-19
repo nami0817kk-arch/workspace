@@ -20,6 +20,8 @@ HEAD_R = 0.20
 ARM_TOTAL, LEG_TOTAL, NSEG = 0.66, 0.90, 6
 HAND_R = 0.034
 SWORD_TIP = 0.965     # 手の節の原点から剣先まで(blender_player.py の blade の位置と長さ)
+# 武器ごとの、手の節の原点から先端まで(blender_player.py の WEAPONS と同じ: 0.115 + 長さ)。姿勢 pose["wl"] が無ければ剣
+WEAPON_TIP = dict(sword=0.965, dagger=0.535, staff=1.615, spear=1.795)  # 槍は軸 1.5 + 穂先(中心 +0.05・高さ 0.26 の半分 0.13)
 
 
 def chain_angles(th_up: float, th_low: float, n: int = NSEG) -> List[float]:
@@ -102,7 +104,8 @@ def skeleton(pose: Dict[str, float], s: int, root_x: float, scale: float = 1.0) 
     dwz = (-d[0] * sr + d[1] * cr)
     seg = ARM_TOTAL / NSEG
     j5 = fa[-2]
-    tip = (j5[0] + dwx * SWORD_TIP * scale, j5[1] + dwz * SWORD_TIP * scale)
+    wl = pose.get("wl", SWORD_TIP)
+    tip = (j5[0] + dwx * wl * scale, j5[1] + dwz * wl * scale)
     return dict(
         head=to_world(head_l), head_r=HEAD_R * scale, hip=to_world(hip_l), neck=to_world(neck_l),
         torso=[to_world(hip_l), to_world(neck_l)],

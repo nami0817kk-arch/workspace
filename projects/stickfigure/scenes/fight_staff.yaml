@@ -1,0 +1,2 @@
+name: fight_staff
+fight: {weapon: staff, kick: false, hits: 3, counter: true, finisher: launch_slash, stage: dojo, seed: 5}

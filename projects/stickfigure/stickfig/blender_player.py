@@ -89,6 +89,15 @@ def chain(name, parent, total, ink):
     return js, seg
 
 
+# 武器(fk.WEAPON_TIP と長さをそろえる: 先端 = 0.115 + len)。w, t は太さ、guard は鍔、head は穂先
+WEAPONS = {
+    "sword": dict(len=0.85, w=0.045, t=0.02, guard=True),
+    "dagger": dict(len=0.42, w=0.04, t=0.02, guard=True),
+    "staff": dict(len=1.5, w=0.04, t=0.04, color=(0.45, 0.3, 0.15)),
+    "spear": dict(len=1.5, w=0.035, t=0.035, color=(0.45, 0.3, 0.15), head=True),
+}
+
+
 def make_figure(tag, color, weapon, front):
     ink = mat(color)
     F = {}
@@ -112,19 +121,30 @@ def make_figure(tag, color, weapon, front):
         js, seg = chain(tag + "leg" + side, h, 0.90, ink)
         sphere(0.032, js[-1], (0.04, 0, -seg + 0.01), ink, 12, (1.7, 0.9, 0.6))
         F["leg" + side] = js
-    if weapon == "sword":
+    if weapon in WEAPONS:
+        W_ = WEAPONS[weapon]
+        L = W_["len"]
         hand = F["arm" + front][-1]
         bpy.ops.mesh.primitive_cube_add(size=1)
         blade = bpy.context.object
-        blade.scale = (0.045, 0.02, 0.85)
-        blade.parent, blade.location = hand, (0, 0, -0.11 - 0.43)
-        blade.data.materials.append(DIAM)
-        bpy.ops.mesh.primitive_cube_add(size=1)
-        guard = bpy.context.object
-        guard.scale = (0.18, 0.03, 0.04)
-        guard.parent, guard.location = hand, (0, 0, -0.13)
-        guard.data.materials.append(DIAM)
-        F["extra"] = [blade, guard]
+        blade.scale = (W_["w"], W_["t"], L)
+        blade.parent, blade.location = hand, (0, 0, -0.115 - L / 2)
+        blade.data.materials.append(mat(W_["color"]) if W_.get("color") else DIAM)
+        F["extra"] = [blade]
+        if W_.get("guard"):
+            bpy.ops.mesh.primitive_cube_add(size=1)
+            guard = bpy.context.object
+            guard.scale = (0.18, 0.03, 0.04)
+            guard.parent, guard.location = hand, (0, 0, -0.13)
+            guard.data.materials.append(DIAM)
+            F["extra"].append(guard)
+        if W_.get("head"):                              # 槍の穂先
+            bpy.ops.mesh.primitive_cube_add(size=1)
+            head_ = bpy.context.object
+            head_.scale = (0.09, 0.025, 0.26)
+            head_.parent, head_.location = hand, (0, 0, -0.115 - L - 0.05)
+            head_.data.materials.append(DIAM)
+            F["extra"].append(head_)
     F["objs"] = [v for k, v in F.items() if k in ("root", "hip", "chest", "neck", "head")]
     for k in ("armL", "armR", "legL", "legR"):
         F["objs"] += F[k]
