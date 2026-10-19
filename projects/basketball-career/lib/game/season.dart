@@ -116,6 +116,7 @@ class TournamentRun {
       this.pending,
       this.pendingHalf,
       this.askHalftime = false,
+      this.scout = 0,
       this.teamBonus = 0})
       : matches = matches ?? [];
 
@@ -126,6 +127,9 @@ class TournamentRun {
 
   /// チームワークによる、味方の強さへの上乗せ(−4〜+4くらい)。
   final double teamBonus;
+
+  /// 直前に研究(映像分析)をしたときの、相手との相性への上乗せ(0 か 0.6)。
+  final double scout;
   final List<MatchResult> matches;
   int round;
   int wins;
@@ -205,7 +209,7 @@ class TournamentRun {
   /// 後半を進め、勝負どころなら(選ばせるときは)止まる。試合が終われば true。
   bool _secondHalf(Player p, MatchHalf h, Halftime hc, Random rng,
       Clutch? Function(int margin)? chooseClutch, bool askClutch) {
-    final s = playSecondHalf(p, h, hc, rng);
+    final s = playSecondHalf(p, h, hc, rng, scout: scout);
     Clutch? choice;
     if (s.needsClutch) {
       choice = chooseClutch?.call(s.margin);
@@ -289,6 +293,7 @@ class TournamentRun {
         'round': round,
         'wins': wins,
         'teamBonus': teamBonus,
+        'scout': scout,
         'pending': pending?.toJson(),
         'pendingHalf': pendingHalf?.toJson(),
         'askHalftime': askHalftime,
@@ -306,6 +311,7 @@ class TournamentRun {
         round: (j['round'] as num?)?.toInt() ?? 0,
         wins: (j['wins'] as num?)?.toInt() ?? 0,
         teamBonus: (j['teamBonus'] as num?)?.toDouble() ?? 0,
+        scout: (j['scout'] as num?)?.toDouble() ?? 0,
         askHalftime: (j['askHalftime'] as bool?) ?? false,
         pending: j['pending'] == null
             ? null

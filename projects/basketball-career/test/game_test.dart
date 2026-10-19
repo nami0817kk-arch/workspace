@@ -2291,6 +2291,40 @@ void main() {
       expect(bestHalftime(p, h(OppStyle.stout)), Halftime.tempo);
     });
 
+    test('分析(scout)は相性の良い作戦だけを強くし、悪い作戦は変えない', () {
+      final p = pl();
+      double mean(Halftime h, double scout) {
+        var sum = 0;
+        for (var i = 0; i < 600; i++) {
+          final f = playFirstHalf(p,
+              teamStrength: 55, oppStrength: 55, form: 1, rng: Random(i), style: OppStyle.fastBreak);
+          final s = playSecondHalf(p, f, h, Random(5000 + i), scout: scout);
+          sum += (s.team - s.opp) - f.margin;
+        }
+        return sum / 600;
+      }
+
+      expect(mean(Halftime.defense, 0.6), greaterThan(mean(Halftime.defense, 0) + 0.8));
+      expect(mean(Halftime.tempo, 0.6), mean(Halftime.tempo, 0));
+    });
+
+    test('研究をした季節か次の季節の大会は「分析済み」になる', () {
+      final g = Game.start('x', rng: Random(1), events: false);
+      expect(g.scoutBonus, 0);
+      g.choose(Action.study, Ability.values.first);
+      expect(g.scoutBonus, 0.6);
+      g.choose(Action.rest, Ability.values.first);
+      expect(g.scoutBonus, 0.6); // 1つ前の季節まで
+      g.choose(Action.rest, Ability.values.first);
+      expect(g.scoutBonus, 0);
+    });
+
+    test('大会の分析の値は保存・復元で変わらない', () {
+      final r = TournamentRun(League.national, scout: 0.6);
+      expect(TournamentRun.fromJson(r.toJson()).scout, 0.6);
+      expect(TournamentRun.fromJson({...r.toJson()}..remove('scout')).scout, 0);
+    });
+
     test('持ち味も前半の保存・復元で変わらない', () {
       final f = playFirstHalf(pl(),
           teamStrength: 55, oppStrength: 55, form: 1, rng: Random(2), style: OppStyle.outside);

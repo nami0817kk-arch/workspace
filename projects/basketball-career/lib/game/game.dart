@@ -423,6 +423,10 @@ class Game {
       condition.form + (player.position == Position.smallForward ? 0.03 : 0.0);
 
   /// チームワークによる味方の強さの上乗せ。パスが上手いほど効きが大きい。
+  /// 大会の直前(この季節か前の季節)に研究をしていれば、相手を分析済み(相性の良い作戦が +0.6)。
+  double get scoutBonus =>
+      recentActions.reversed.take(2).contains(Action.study) ? 0.6 : 0.0;
+
   double get teamBonus =>
       (teamwork - 50) *
       0.07 *
@@ -507,6 +511,7 @@ class Game {
       } else {
         final cr = TournamentRun(national ? League.national : league,
             teamBonus: teamBonus + schoolBonus,
+            scout: scoutBonus,
             askHalftime: askHalftime && chooseClutch == null);
         cr.advance(
           player,
