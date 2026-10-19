@@ -206,12 +206,18 @@ EventDef? eventById(String id) {
 const eventChance = 0.35;
 
 /// 出来事を引く(起きなければ null)。年齢・段階に合うものから選ぶ。
-EventDef? rollEvent(Player p, {required bool pro, required Random rng}) {
+EventDef? rollEvent(Player p,
+    {required bool pro,
+    required Random rng,
+    List<String> recent = const []}) {
   if (rng.nextDouble() >= eventChance) return null;
-  final pool = [
+  final all = [
     for (final e in events)
       if (p.age >= e.minAge && p.age <= e.maxAge && (!e.proOnly || pro)) e,
   ];
+  // 最近起きたものは避ける(同じ出来事ばかりにならないように)。
+  final fresh = [for (final e in all) if (!recent.contains(e.id)) e];
+  final pool = fresh.isEmpty ? all : fresh;
   if (pool.isEmpty) return null;
   return pool[rng.nextInt(pool.length)];
 }
