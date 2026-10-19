@@ -132,7 +132,7 @@ def build_fight(spec: dict) -> dict:
     shots: List[dict] = []
 
     # ---- 冒頭 ----
-    shots.append(dict(t=0.0, follow="mid", scale=[[0.0, 8.8], [1.0, 7.6]], yaw=[[0.0, 12.0], [1.0, 22.0]], pitch=9.0, lens=40.0))
+    shots.append(dict(t=0.0, follow="mid", scale=[[0.0, 7.4], [1.0, 6.4]], yaw=[[0.0, 12.0], [1.0, 22.0]], pitch=9.0, lens=40.0))
     keysB.append(dict(t=1.0, dx=0.35))
     if kick:
         charge.append(dict(start=1.3, end=1.7, who="A", color=[255, 170, 60]))
@@ -180,7 +180,7 @@ def build_fight(spec: dict) -> dict:
             keysA += [dict(t=_r(tb2 - 0.14), dx=3.4, **BLOCK), dict(t=_r(tb2 + 0.08), dx=3.4, **BLOCK), dict(t=_r(tb2 + 0.26), dx=3.4, **GUARD_A)]
             flashes.append(_r(tb2))
             speed.append([_r(tb1 - 0.3), _r(tb2 + 0.1)])
-        shots.append(dict(t=1.0, follow="A", scale=[[1.0, 5.6], [tc + 0.4, 4.4]], yaw=[[1.0, -38.0], [tc + 0.4, -20.0]], pitch=4.0, lens=30.0, target_z=1.0, lag=0.3))
+        shots.append(dict(t=1.0, follow="A", scale=[[1.0, 4.8], [tc + 0.4, 3.9]], yaw=[[1.0, -38.0], [tc + 0.4, -20.0]], pitch=4.0, lens=30.0, target_z=1.0, lag=0.3))
         speed.append([tc - 0.7, tc + 0.1])
         a_dx0 = 3.4
 
@@ -255,7 +255,7 @@ def build_fight(spec: dict) -> dict:
             flashes.append(_r(tcn))
     hl = ts[-1]
     speed.append([_r(h0), _r(hl + 0.5)])
-    shots.append(dict(t=_r(h0), follow="mid", scale=[[_r(h0), 3.6], [_r(hl), 4.2]], yaw=[[_r(h0), 30.0], [_r(hl), 52.0]],
+    shots.append(dict(t=_r(h0), follow="mid", scale=[[_r(h0), 3.1], [_r(hl), 3.6]], yaw=[[_r(h0), 30.0], [_r(hl), 52.0]],
                       pitch=[[_r(h0), 2.0], [_r(hl), 10.0]], lens=30.0, target_z=1.2, dutch=3.0))
     keysA.append(dict(t=_r(hl), dx=5.0, hz=0.9))
     dxB -= 0.25
