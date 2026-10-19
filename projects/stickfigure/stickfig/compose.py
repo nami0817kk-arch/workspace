@@ -57,6 +57,69 @@ def to_px(wx: float, wz: float, cam: dict) -> Tuple[float, float]:
     return px, py
 
 
+def _prev_frame(plan: dict, f: int) -> Optional[int]:
+    """tau が違う直前のコマ(2 コマ撮りの同じ絵は飛ばす)。"""
+    t = plan["frames"][f]["tau"]
+    g = f - 1
+    while g >= 0 and plan["frames"][g]["tau"] == t:
+        g -= 1
+    return g if g >= 0 else None
+
+
+def _limb_smear(plan: dict, f: int, cam: dict) -> Image.Image:
+    """スミア: 剣・手・足が 1 コマで大きく動いたとき(振りの瞬間)、前のコマの位置から今の位置までを面で埋める。
+    アニメの「振りの 1 枚」。剣は 手→剣先 の扇形(刃の色)、手・足は太い線(人物の色)。人物の下に描く。しきい値は身長比 0.3/コマ。"""
+    ov = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    g = _prev_frame(plan, f)
+    if g is None:
+        return ov
+    d = ImageDraw.Draw(ov)
+    glow = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    dg = ImageDraw.Draw(glow)
+    ppu = camera.px_per_unit(cam)
+    drew = False
+    for who, a in plan["actors"].items():
+        # 打つ側の、振りの瞬間だけ(命中の 4 コマ前〜命中)。押されて下がる足などには出さない
+        if not any(e.get("by") == who and e["frame"] - 4 <= f <= e["frame"] for e in plan["events"]):
+            continue
+        sc = a.get("scale", 1.0)
+        s = 1 if a.get("facing", 1) >= 0 else -1
+        p1, p0 = plan["frames"][f]["actors"][who], plan["frames"][g]["actors"][who]
+        if abs(p1.get("roll", 0.0)) > 0.5:
+            continue
+        sk1 = fk.skeleton(p1, s, p1["root_x"], sc)
+        sk0 = fk.skeleton(p0, s, p0["root_x"], sc)
+        col = tuple(int(255 * c) for c in a.get("color", [0.5, 0.5, 0.5]))
+        lw = max(3, int(0.09 * ppu))
+        for key, lim, root in (("hand", "front_arm", "tip" if a.get("weapon") else None), ("foot", "front_leg", None)):
+            e0, e1 = sk0[key], sk1[key]
+            mv = math.hypot(e1[0] - e0[0], e1[1] - e0[1]) / (1.9 * sc)
+            if a.get("weapon") and key == "hand":
+                t0, t1 = sk0["tip"], sk1["tip"]
+                mv = max(mv, math.hypot(t1[0] - t0[0], t1[1] - t0[1]) / (1.9 * sc))
+            if mv <= 0.12:                                   # 身長比 0.12/コマ以上(突きの剣先は 0.17〜0.19)
+                continue
+            j0 = sk0[lim][len(sk0[lim]) // 2]                # 肘・膝
+            j1 = sk1[lim][len(sk1[lim]) // 2]
+            n = 3                                            # 前の位置と今の位置の間に、薄い中割りを 3 枚(多重のスミア)
+            for i in range(1, n + 1):
+                u = i / (n + 1)
+                al = int(60 + 70 * u)
+                jm = (j0[0] + (j1[0] - j0[0]) * u, j0[1] + (j1[1] - j0[1]) * u)
+                em = (e0[0] + (e1[0] - e0[0]) * u, e0[1] + (e1[1] - e0[1]) * u)
+                d.line([to_px(*jm, cam), to_px(*em, cam)], fill=col + (al,), width=lw)
+                if a.get("weapon") and key == "hand":
+                    tm = (t0[0] + (t1[0] - t0[0]) * u, t0[1] + (t1[1] - t0[1]) * u)
+                    dg.line([to_px(*em, cam), to_px(*tm, cam)], fill=(120, 220, 255, al + 40), width=lw + 6)
+                    d.line([to_px(*em, cam), to_px(*tm, cam)], fill=(210, 245, 255, al + 20), width=max(2, lw - 2))
+            drew = True
+    if not drew:
+        return ov
+    glow = glow.filter(ImageFilter.GaussianBlur(8))
+    glow.alpha_composite(ov)
+    return glow
+
+
 def P3(cam: dict, x: float, y: float, z: float) -> Tuple[float, float]:
     px, py, _ = camera.project(cam, x, y, z)
     return px, py
@@ -286,6 +349,8 @@ def compose_frame(plan: dict, f: int, figs: Dict[int, Image.Image], stages: Opti
             col = Image.new("RGBA", (W, H), tuple(fx.get("weapon_glow_color", (60, 190, 255))) + (0,))
             col.putalpha(wide.point(lambda v: min(255, int(v * 1.6))))
             base.alpha_composite(col)
+    if (plan.get("scene", {}).get("anime") or {}).get("smear", False):
+        base.alpha_composite(_limb_smear(plan, f, cam))   # 振りの 1〜2 コマの間を埋めるスミア(人物の下に描く)
     base.alpha_composite(figs[f])
     # 顔(目)は描かない(2026-10-19 ユーザー指示)
     for e in plan["events"]:                   # 特大の効果: 斬撃の弧・衝撃の輪
