@@ -525,13 +525,13 @@ def build_fight(spec: dict) -> dict:
                  dict(tau=_r(t_win), hold=0.08, kind="beam", by="A", pos=[_r(b_root - 0.3), 1.3]),
                  dict(tau=_r(t_win + 0.36), hold=0.06, kind="wall", pos=[b_wall, 1.6])]
         fx_clash_ball = dict(start=_r(t_fire), end=_r(t_win), path=meet, color=[255, 255, 255], r=0.5)
-        fx_orbs.append(dict(start=_r(t_fire), end=_r(t_win), who="A", r0=0.5, r1=0.7, color=[255, 255, 255], path=meet))   # ぶつかる点の白い玉(手でなく path の位置)
+        fx_orbs.append(dict(start=_r(t_fire), end=_r(t_win), who="A", r0=0.26, r1=0.38, color=[255, 255, 255], path=meet))   # ぶつかる点の白い玉(手でなく path の位置。0.5〜0.7 だと人物より大きかった)
         flashes += [_r(t_fire), _r(t_win)]
         slow += [dict(start=_r(t_fire - 0.05), end=_r(t_fire + 0.2), rate=0.55), dict(start=_r(t_win - 0.05), end=_r(t_win + 0.25), rate=0.5)]
         shots += [dict(t=_r(t_c0 - 0.1), follow="mid", scale=[[_r(t_c0 - 0.1), 6.0], [_r(t_fire), 5.4]], yaw=[[_r(t_c0 - 0.1), 10.0], [_r(t_fire), 4.0]], pitch=5.0, lens=40.0, target_z=1.1),   # 2 人の溜めを横から
-                  dict(t=_r(t_fire), follow="mid", scale=6.2, yaw=4.0, pitch=3.0, lens=44.0, target_z=1.3),
-                  dict(t=_r(t_fire + 0.6), follow="A", scale=3.6, yaw=-20.0, pitch=4.0, lens=32.0, target_z=1.1, lag=0.2),   # 踏ん張る A に寄る
-                  dict(t=_r(t_win - 0.1), follow="mid", scale=6.2, yaw=4.0, pitch=3.0, lens=44.0, target_z=1.3),
+                  dict(t=_r(t_fire), follow="mid", scale=5.4, yaw=4.0, pitch=3.0, lens=44.0, target_z=1.3),
+                  dict(t=_r(t_fire + 0.6), follow="A", scale=4.2, yaw=-20.0, pitch=4.0, lens=32.0, target_z=1.1, lag=0.2),   # 踏ん張る A に寄る(ぶつかる点も入る程度)
+                  dict(t=_r(t_win - 0.1), follow="mid", scale=5.4, yaw=4.0, pitch=3.0, lens=44.0, target_z=1.3),
                   dict(t=_r(t_win + 0.95), follow="A", scale=[[_r(t_win + 0.95), 4.6], [_r(t_win + 2.4), 5.6]], yaw=[[_r(t_win + 0.95), 30.0], [_r(t_win + 2.4), -15.0]], pitch=8.0, lens=40.0, target_z=0.9)]
         puffs.append(dict(tau=_r(t_win + 1.1), kind="land2", pos=[_r(b_wall - 0.5), 0.0]))
         t_end = t_win + 1.15

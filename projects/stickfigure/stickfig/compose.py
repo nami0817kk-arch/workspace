@@ -344,12 +344,18 @@ def compose_frame(plan: dict, f: int, figs: Dict[int, Image.Image], stages: Opti
                 ghost = silhouette(figs[f - k], (70, 110, 210))
                 ghost.putalpha(ghost.split()[3].point(lambda v, al=al: int(v * al)))
                 base.alpha_composite(ghost)
-    ch = next((r for r in fx.get("charge", []) if r["start"] <= tau < r["end"]), None) if lk is None else None
-    if ch is not None:                         # 必殺技の溜め: 背景を暗くし、光の柱・粒・輪で包む
-        age01 = (tau - ch["start"]) / (ch["end"] - ch["start"])
-        aura, dim = look.charge_aura(plan, f, ch.get("who", "A"), age01, tuple(ch.get("color", (120, 230, 255))))
+    chs = [r for r in fx.get("charge", []) if r["start"] <= tau < r["end"]] if lk is None else []
+    if chs:                                    # 必殺技の溜め: 背景を暗くし、光の柱・粒・輪で包む(2 人同時の溜めは両方描く)
+        auras = []
+        dim = 0.0
+        for ch in chs:
+            age01 = (tau - ch["start"]) / (ch["end"] - ch["start"])
+            aura, d_ = look.charge_aura(plan, f, ch.get("who", "A"), age01, tuple(ch.get("color", (120, 230, 255))))
+            auras.append(aura)
+            dim = max(dim, d_)
         base = Image.blend(base.convert("RGBA"), Image.new("RGBA", (W, H), (5, 8, 20, 255)), dim)
-        base.alpha_composite(aura)
+        for aura in auras:
+            base.alpha_composite(aura)
     if plan.get("scene", {}).get("style") == "flat2d":        # セル画の見た目: 人物の外形に、濃い輪郭線
         al = figs[f].split()[3]
         grow = al.filter(ImageFilter.MaxFilter(7))
