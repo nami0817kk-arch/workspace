@@ -115,13 +115,16 @@ def sfx_overlay(plan: dict, f: int, cfg: dict) -> Optional[Image.Image]:
     """命中の擬音。命中から約0.45秒、ぽんと大きく出て、少し傾いて消える。RGBA。"""
     texts = dict(SFX, **cfg.get("sfx_text", {}))
     fps = plan["fps"]
-    life = int(0.45 * fps)
+    life_max = int(0.3 * fps)                       # 0.45 秒だと次の動作(かわし等)の上に前の擬音が残っていた(fight_dodge 2026-10-19)
     cam = plan["frames"][f]["cam"]
     out = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     any_ = False
+    sfx_frames = sorted(e2["frame"] for e2 in plan["events"] if e2["kind"] in texts)
     for idx, e in enumerate(plan["events"]):
         age = f - e["frame"]
         kind = e["kind"]
+        nxt = next((x for x in sfx_frames if x > e["frame"]), None)
+        life = life_max if nxt is None else max(4, min(life_max, nxt - e["frame"] - 1))   # 次の擬音が出る前に消す
         if kind not in texts or not (0 <= age < life):
             continue
         # 同じ種類の短い間隔の連続は、最初だけ出す
