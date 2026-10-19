@@ -210,11 +210,13 @@ void main() {
       expect(adj.of(Ability.contact), 48);
       expect(adj.of(Ability.speed), 58);
       expect(p.of(Ability.power), 50);
-      // 上限・下限
+      // 能力が99でも、試合の間は特性の上乗せが消えない(上限は試合用の120)
       final top = p.copyWith(abilities: {
-        for (final a in batterAbilities) a: 98,
+        for (final a in batterAbilities) a: 99,
       });
-      expect(traitAdjusted(top).of(Ability.power), 99);
+      expect(traitAdjusted(top).of(Ability.power), 108);
+      expect(traitAdjusted(top).of(Ability.contact), 97);
+      expect(top.of(Ability.power), 99); // 元の選手は変えない
       // 特性が無ければ同じもの
       expect(identical(traitAdjusted(p.copyWith(traits: {})), p), isFalse);
       expect(traitAdjusted(p.copyWith(traits: {})).of(Ability.power), 50);
@@ -304,5 +306,26 @@ void main() {
         }
       }
     });
+  });
+
+  test('能力が全部99でも、打者の特性は試合で上乗せされる(アベレージヒッターは打率が上がる)', () {
+    double avg(Set<Trait> t) {
+      final p = Player(
+          name: 't',
+          role: Role.batter,
+          age: 26,
+          potential: 50,
+          abilities: {for (final a in batterAbilities) a: 99},
+          traits: t);
+      final rng = Random(7);
+      var line = const Line();
+      for (var i = 0; i < 20000; i++) {
+        line += playGame(traitAdjusted(p), 65, rng);
+      }
+      return line.battingAverage!;
+    }
+
+    expect(avg({Trait.contactHitter}), greaterThan(avg({}) + 0.02));
+    expect(avg({Trait.patient}), greaterThan(avg({})));
   });
 }

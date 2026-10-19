@@ -199,13 +199,16 @@ Map<Ability, int> traitAbilityDelta(Set<Trait> t) {
   return d;
 }
 
+/// 試合の間だけ、特性で能力が上限(99)を超えられる。能力が99でも、特性の上乗せが消えないように。
+const gameAbilityCap = 120;
+
 /// 特性を反映した、試合用の選手。元の選手は変えない。
 Player traitAdjusted(Player p) {
   final d = traitAbilityDelta(p.traits);
   if (d.isEmpty) return p;
   return p.copyWith(abilities: {
     for (final e in p.abilities.entries)
-      e.key: (e.value + (d[e.key] ?? 0)).clamp(0, 99),
+      e.key: (e.value + (d[e.key] ?? 0)).clamp(0, gameAbilityCap),
   });
 }
 
