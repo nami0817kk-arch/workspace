@@ -28,8 +28,9 @@ description: 棒人間のアクション動画（戦い・物語つき）を、�
    → `python -m stickfig check scenes/x.yaml`（合否＋演出のリズムの見積もり。Blender 不要・数秒）→ `build scenes/x.yaml --out out/x`
    - `lines`: `{at: opening|kick|rise|combo|counter|last|finisher|ko|end, dt, dur, kind: say|narr|shout, who: A|B, text}`（台詞・ナレーション・叫び文字）
 3. 点検の「演出のリズム」が **低い→足す／高い→減らす** なら、台本の `fx.flashes`・`stepping.ranges` で調整。動画ができたら `python -m stickfig rhythm out/x/x.mp4` で実測
-4. **目視**: `out/<名前>/frames` から、命中の前後・寄りのカット・字幕を数枚見る（機械の点検は不具合を先に潰すだけ。気持ちよさは目）
-5. 見せる前に、公開用なら CLAUDE.md の「動画を見せる関門」（別チャンネルの決まり）と同じく、**ユーザーが見てから投稿**。投稿・公開・課金は勝手にしない
+4. **投稿の道具**: `python -m stickfig kit out/<エピソード> --title 雪辱戦 --hero ミドリ --rival アカ --arc revenge` → `kit/thumb.png`(1280x720)と `投稿の下書き.md`(題名候補・概要欄・タグ。**CMU の出典入り**)。投稿はしない
+5. **目視**: `out/<名前>/frames` から、命中の前後・寄りのカット・字幕を数枚見る（機械の点検は不具合を先に潰すだけ。気持ちよさは目）
+6. 見せる前に、公開用なら CLAUDE.md の「動画を見せる関門」（別チャンネルの決まり）と同じく、**ユーザーが見てから投稿**。投稿・公開・課金は勝手にしない
 
 ## 縦画面（ショート）
 

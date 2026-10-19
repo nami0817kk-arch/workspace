@@ -108,6 +108,7 @@ python scripts/make_gallery.py 09_01:2.4 135_07_s1:3.6   # clip を順に再生�
 - `story.py`: 物語の型(`revenge` 雪辱戦 / `tournament` 勝ち上がり / `duel` 一騎打ち / `protect` 守る戦い / `mentor` 師の教え)。episode.yaml に `story: {arc, hero, rival}`
 - 舞台の色の組: 台本 `stage: {theme: cave|dojo|field|night|sunset}`(fight の `stage:`)。`blender_player.THEMES`
 - 縦画面(ショート): 台本 `output: {aspect: vertical}`(720x1280。2人の中間を切り出し、字幕は切り出し後)
+- `kit.py`: サムネイル(1280x720、字幕なしの見せ場のコマ+題名)と投稿の下書き(題名候補・概要欄・タグ。CMU 出典入り)。`python -m stickfig kit out/ep --title …`
 - `rhythm.py`: 参考6本の範囲との比較。`check` が書き出す前に見積もり、`python -m stickfig rhythm 動画.mp4` が実測
 - `build_scene(scene, out)`: cli の中核(台本 dict → 動画)。episode も使う
 
