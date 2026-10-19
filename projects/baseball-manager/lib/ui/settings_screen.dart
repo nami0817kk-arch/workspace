@@ -7,6 +7,7 @@ import 'achievements_screen.dart';
 import 'admin_screen.dart';
 import 'controller.dart';
 import 'home_screen.dart' show showHelp;
+import 'versus_screen.dart';
 
 /// 設定: 管理者モード・あそびかた・データの削除。
 class SettingsScreen extends StatelessWidget {
@@ -52,6 +53,19 @@ class SettingsScreen extends StatelessWidget {
                                         AdminScreen(controller: controller)),
                               )
                           : null,
+                    ),
+                  if (controller.adminMode)
+                    ListTile(
+                      key: const Key('versus-open'),
+                      leading: const Icon(Icons.sports_baseball),
+                      title: const Text('対戦テスト'),
+                      subtitle: const Text(
+                          '能力と特性を決めて、打者と投手を何千回も対戦させる(育成中の選手には影響しない)'),
+                      trailing: const Icon(Icons.chevron_right),
+                      onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute<void>(
+                            builder: (_) => const VersusScreen()),
+                      ),
                     ),
                   const Divider(),
                   Padding(
