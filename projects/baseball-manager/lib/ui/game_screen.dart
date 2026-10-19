@@ -469,7 +469,7 @@ class _Header extends StatelessWidget {
                             ? '今が${u.name}'
                             : '${u.name}まであと${u.left}${u.unit}',
                         key: const Key('until-tournament'),
-                        maxLines: 1,
+                        maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: t.bodySmall),
                 ],
@@ -543,7 +543,7 @@ class _StatusCard extends StatelessWidget {
               const SizedBox(width: 2),
               Flexible(
                 child: Text('やる気: ${m.label}',
-                    maxLines: 1,
+                    maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.titleSmall),
               ),

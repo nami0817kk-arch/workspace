@@ -229,9 +229,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   if (widget.controller.history.isNotEmpty) ...[
+                    const SizedBox(height: 8),
                     _LifeStats(history: widget.controller.history),
+                    const SizedBox(height: 8),
                     _TitleBook(history: widget.controller.history),
                   ],
+                  const SizedBox(height: 8),
                   Card(
                     child: ListTile(
                       key: const Key('achievements-open'),

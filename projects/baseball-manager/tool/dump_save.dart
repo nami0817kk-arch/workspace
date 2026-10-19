@@ -5,6 +5,7 @@ import 'package:baseball_manager/game/game.dart';
 import 'package:baseball_manager/game/life.dart';
 import 'package:baseball_manager/game/path.dart';
 import 'package:baseball_manager/game/player.dart';
+import 'package:baseball_manager/ui/history.dart';
 
 /// 指定の段階まで進めた保存データ(JSON)を出す。画面確認用。
 /// 使い方: dart run tool/dump_save.dart [stage名: youth, juniorHigh, highSchool, pro, retired] [seed]
@@ -20,6 +21,7 @@ void main(List<String> a) {
       break;
     }
     if (stage != 'retired' &&
+        stage != 'history' &&
         g.phase == Phase.term &&
         g.stage.name == stage &&
         g.slot == 5) {
@@ -37,6 +39,10 @@ void main(List<String> a) {
       case Phase.retired:
         break;
     }
+  }
+  if (stage == 'history') {
+    print(jsonEncode([HistoryEntry.of(g).toJson()]));
+    return;
   }
   print(jsonEncode(g.toJson()));
 }
