@@ -341,7 +341,10 @@ def compose_frame(plan: dict, f: int, figs: Dict[int, Image.Image], stages: Opti
     acfg = plan.get("scene", {}).get("anime")
     if acfg is not None and invert is None:
         frame = anime.apply(plan, f, frame, acfg if isinstance(acfg, dict) else {}, plan.setdefault("_anime_cache", {}))
-    return captions.draw(_color_script(frame, plan, tau, fx), plan, f)
+    out = _color_script(frame, plan, tau, fx)
+    if plan.get("_vertical"):                 # 縦画面は、切り出してから字幕を重ねる(compose 側)
+        return out
+    return captions.draw(out, plan, f)
 
 
 def _color_script(frame: Image.Image, plan: dict, tau: float, fx: dict) -> Image.Image:
@@ -366,6 +369,36 @@ def _color_script(frame: Image.Image, plan: dict, tau: float, fx: dict) -> Image
     return Image.fromarray(np.clip(out, 0, 255).astype(np.uint8))
 
 
+def crop_centers(plan: dict, cw: int) -> List[float]:
+    """縦画面の切り出しの中心 x(画面の画素)。2人の中間を追い、カットでは飛び、同じカットの中では1コマ 70px まで。"""
+    xs, prev_cam, cur = [], None, None
+    for f, fr in enumerate(plan["frames"]):
+        cam = fr["cam"]
+        pts = []
+        for who, a in plan["actors"].items():
+            p = fr["actors"][who]
+            pts.append(P3(cam, p["root_x"], 0.0, 0.95)[0])
+        tgt = sum(pts) / len(pts)
+        for e in plan["events"]:                       # 命中の瞬間は、命中の位置を中心に
+            if e["frame"] <= f <= e["frame"] + max(1, e.get("hold_frames", 0)):
+                tgt = to_px(e["pos"][0], e["pos"][1], cam)[0]
+        cut = prev_cam is None or abs(cam.get("scale", 1) - prev_cam.get("scale", 1)) > 0.3 * prev_cam.get("scale", 1) or abs(cam.get("yaw", 0) - prev_cam.get("yaw", 0)) > 8
+        cur = tgt if (cut or cur is None) else cur + max(-70.0, min(70.0, tgt - cur))
+        xs.append(min(max(cur, cw / 2), W - cw / 2))
+        prev_cam = cam
+    return xs
+
+
+def compose_vertical(plan: dict, f: int, figs, stages, cx: float) -> Image.Image:
+    """16:9 のコマから、縦(9:16)を切り出して 720x1280 に拡大し、その上に字幕を重ねる。"""
+    plan["_vertical"] = True
+    base = compose_frame(plan, f, figs, stages)
+    cw = int(H * 9 / 16)
+    x0 = int(round(cx - cw / 2))
+    crop = base.crop((x0, 0, x0 + cw, H)).resize((720, 1280), Image.LANCZOS)
+    return captions.draw(crop, plan, f, xf=(x0, 1280 / H))
+
+
 def compose(plan: dict, fig_dir, out_dir, mp4_path, ffmpeg: str, stage_dir=None) -> Path:
     fig_dir, out_dir = Path(fig_dir), Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -376,8 +409,10 @@ def compose(plan: dict, fig_dir, out_dir, mp4_path, ffmpeg: str, stage_dir=None)
     stages = None
     if plan["view"].get("persp") and stage_dir is not None:
         stages = {f: Image.open(Path(stage_dir) / f"f_{f + 1:04d}.png").convert("RGB") for f in range(n)}
+    vertical = (plan.get("scene", {}).get("output") or {}).get("aspect") == "vertical"
+    cxs = crop_centers(plan, int(H * 9 / 16)) if vertical else None
     for f in range(n):
-        compose_frame(plan, f, figs, stages).save(out_dir / f"{f + 1:04d}.png")
+        (compose_vertical(plan, f, figs, stages, cxs[f]) if vertical else compose_frame(plan, f, figs, stages)).save(out_dir / f"{f + 1:04d}.png")
     subprocess.run([ffmpeg, "-y", "-loglevel", "error", "-framerate", str(plan["fps"]), "-i", str(out_dir / "%04d.png"),
                     "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "18", str(mp4_path)], check=True)
     return Path(mp4_path)

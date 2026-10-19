@@ -1,0 +1,15 @@
+name: fight_story_vertical
+output: {aspect: vertical}
+fight:
+  weapon: sword
+  kick: false
+  hits: 3
+  counter: true
+  finisher: launch_slash
+  palette: warm
+  lines:
+  - {at: opening, dt: 0.0, dur: 1.5, kind: narr, text: "決戦の朝。ミドリは、宿敵アカの前に立っていた。"}
+  - {at: rise, dt: -0.4, dur: 1.2, kind: say, who: B, text: "今日こそ、決着をつける！"}
+  - {at: combo, dt: 0.0, dur: 1.0, kind: say, who: A, text: "うおおおお！"}
+  - {at: counter, dt: 0.15, dur: 1.0, kind: say, who: B, text: "まだだ！"}
+  - {at: finisher, dt: -0.2, dur: 1.0, kind: shout, text: "必殺・燕返し！"}

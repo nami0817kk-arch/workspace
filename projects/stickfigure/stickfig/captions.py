@@ -35,7 +35,7 @@ def _wrap(d: ImageDraw.ImageDraw, text: str, font, max_w: int) -> List[str]:
     return lines
 
 
-def _head_px(plan: dict, f: int, who: str) -> Tuple[float, float, float]:
+def _head_px(plan: dict, f: int, who: str, xf=None) -> Tuple[float, float, float]:
     a = plan["actors"][who]
     p = plan["frames"][f]["actors"][who]
     s = 1 if a.get("facing", 1) >= 0 else -1
@@ -43,18 +43,22 @@ def _head_px(plan: dict, f: int, who: str) -> Tuple[float, float, float]:
     hx, hz = sk["head"]
     cam = plan["frames"][f]["cam"]
     x, y = camera.project(cam, hx, 0.0, hz)[:2]
-    return x, y, sk["head_r"] * camera.px_per_unit(cam)
+    r = sk["head_r"] * camera.px_per_unit(cam)
+    if xf is not None:                                 # 縦画面: 切り出しの左端 x0 と拡大 k
+        x, y, r = (x - xf[0]) * xf[1], y * xf[1], r * xf[1]
+    return x, y, r
 
 
-def _say(img: Image.Image, plan: dict, f: int, c: dict, age: int) -> None:
+def _say(img: Image.Image, plan: dict, f: int, c: dict, age: int, xf=None) -> None:
+    W, H = img.size
     d = ImageDraw.Draw(img)
-    size = int(c.get("size", 34))
+    size = int(c.get("size", 34) * (1.3 if W < 1000 else 1.0))
     font = anime._font(size)
-    lines = _wrap(d, c["text"], font, int(c.get("max_w", 520)))
+    lines = _wrap(d, c["text"], font, int(c.get("max_w", 520) * (0.72 if W < 1000 else 1.0)))
     tw = max(d.textlength(l, font=font) for l in lines)
     lh = int(size * 1.25)
     bw, bh = tw + 44, lh * len(lines) + 30
-    hx, hy, hr = _head_px(plan, f, c["who"])
+    hx, hy, hr = _head_px(plan, f, c["who"], xf)
     pop = min(1.0, (age + 1) / 4)                      # 出だしの数コマで、少し弾む
     k = 0.75 + 0.25 * pop + (0.06 * math.sin(pop * math.pi) if pop < 1 else 0)
     cx = min(max(hx, bw / 2 * k + 12), W - bw / 2 * k - 12)
@@ -72,9 +76,10 @@ def _say(img: Image.Image, plan: dict, f: int, c: dict, age: int) -> None:
 
 
 def _narr(img: Image.Image, c: dict) -> None:
+    W, H = img.size
     ov = Image.new("RGBA", img.size, (0, 0, 0, 0))
     d = ImageDraw.Draw(ov)
-    size = int(c.get("size", 36))
+    size = int(c.get("size", 36) * (0.8 if W < 1000 else 1.0))
     font = anime._font(size)
     lines = _wrap(d, c["text"], font, W - 160)
     lh = int(size * 1.3)
@@ -87,8 +92,9 @@ def _narr(img: Image.Image, c: dict) -> None:
 
 
 def _shout(img: Image.Image, c: dict, age: int) -> None:
+    W, H = img.size
     d = ImageDraw.Draw(img)
-    size = int(c.get("size", 150) * (0.7 + 0.3 * min(1.0, (age + 1) / 4) + (0.08 if age < 3 else 0)))
+    size = int(c.get("size", 150) * (0.55 if W < 1000 else 1.0) * (0.7 + 0.3 * min(1.0, (age + 1) / 4) + (0.08 if age < 3 else 0)))
     font = anime._font(size)
     tw = d.textlength(c["text"], font=font)
     col = tuple(c.get("color", (255, 226, 60)))
@@ -96,7 +102,7 @@ def _shout(img: Image.Image, c: dict, age: int) -> None:
     d.text((x, y), c["text"], font=font, fill=col, stroke_width=max(6, size // 14), stroke_fill=(15, 12, 20))
 
 
-def draw(frame: Image.Image, plan: dict, f: int) -> Image.Image:
+def draw(frame: Image.Image, plan: dict, f: int, xf=None) -> Image.Image:
     caps = plan.get("scene", {}).get("captions")
     if not caps:
         return frame
@@ -110,7 +116,7 @@ def draw(frame: Image.Image, plan: dict, f: int) -> Image.Image:
             age += 1
         k = c.get("kind", "say")
         if k == "say":
-            _say(img, plan, f, c, age)
+            _say(img, plan, f, c, age, xf)
         elif k == "narr":
             _narr(img, c)
         elif k == "shout":
