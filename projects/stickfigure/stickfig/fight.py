@@ -290,7 +290,7 @@ def build_fight(spec: dict) -> dict:
         if not sword:
             clip["reach"] = True                         # 命中は手(足)が伸び切ったコマで(胴が重ならない間合いになる)
         if s["timing"] and kick_i != i:
-            clip["step_in"] = 0.3                        # 溜めの間は 0.3 手前に立ち、振りと同時に踏み込む(素手の決めの前に 12 コマ重なって立っていた)
+            clip["step_in"] = 0.3 if sword else 0.45     # 溜めの間は手前に立ち、振りと同時に踏み込む(素手の決めの前に 12 コマ重なって立っていた)。素手は腕が短いぶん大きく(0.3 だと根元 0.75 で頭が触れていた)
         if last and s["timing"]:                         # 決めの 1 発は間をいちばん強く: 溜めを長く(0.45 秒)、振りは最後の 12%(1 コマ)で半分進める
             clip["timing"] = dict(pre=0.45, post=0.3, pre_curve=[(0.0, 0.0), (0.12, 0.5), (0.65, 0.55), (1.0, 1.0)], antic=0.55, over=0.35)
             clip["start"] = _r(min(clip["start"], t - 0.45))
