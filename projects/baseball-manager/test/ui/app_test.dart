@@ -1105,6 +1105,10 @@ void _rankTests() {
       final c1 = c0.copyWith(morale: 58, fatigue: 6);
       expect(eventResultText(p0, c0, p1, c1), '球威 +3 / やる気 +8 / 疲れ -4');
       expect(eventResultText(p0, c0, p0, c0), '');
+      expect(
+          eventResultText(p0, c0, p0.copyWith(traits: {Trait.hardWorker}), c0,
+              tips0: 1, tips1: 2),
+          '特性「努力家」 / コーチのコツ +1');
       // 役割に無い能力(投手のミート)は出さない
       expect(
           eventResultText(p0, c0, p0.copyWith(abilities: {...p0.abilities}),

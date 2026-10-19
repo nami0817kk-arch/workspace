@@ -249,7 +249,8 @@ String recommendReason(Game g) {
 
 /// 出来事の選択の結果を、変わったところだけ短く言葉にする。「球威 +3 / やる気 +8」。
 /// 何も変わらなければ空。
-String eventResultText(Player p0, Condition c0, Player p1, Condition c1) {
+String eventResultText(Player p0, Condition c0, Player p1, Condition c1,
+    {int tips0 = 0, int tips1 = 0}) {
   final parts = <String>[];
   String sgn(int d) => d > 0 ? '+$d' : '$d';
   for (final a in Ability.values) {
@@ -263,6 +264,10 @@ String eventResultText(Player p0, Condition c0, Player p1, Condition c1) {
   final f = c1.fatigue - c0.fatigue;
   if (f != 0) parts.add('疲れ ${sgn(f)}');
   if (c1.injuredTerms > c0.injuredTerms) parts.add('怪我');
+  for (final t in p1.traits) {
+    if (!p0.traits.contains(t)) parts.add('特性「${t.label}」');
+  }
+  if (tips1 > tips0) parts.add('コーチのコツ +${tips1 - tips0}');
   return parts.join(' / ');
 }
 
@@ -762,8 +767,10 @@ class GameController extends ChangeNotifier {
     final before = game!.stage;
     final p0 = game!.player;
     final c0 = game!.condition;
+    final tips0 = game!.cast.coach?.tips ?? 0;
     game!.resolveEvent(i);
-    final result = eventResultText(p0, c0, game!.player, game!.condition);
+    final result = eventResultText(p0, c0, game!.player, game!.condition,
+        tips0: tips0, tips1: game!.cast.coach?.tips ?? 0);
     recent = [
       if (result.isNotEmpty) '選んだ結果: $result',
       ...game!.log.sublist(start),
