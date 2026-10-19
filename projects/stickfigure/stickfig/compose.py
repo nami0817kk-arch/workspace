@@ -405,7 +405,7 @@ def crop_centers(plan: dict, cw: int) -> List[float]:
             if e["frame"] <= f <= e["frame"] + max(1, e.get("hold_frames", 0)):
                 tgt = to_px(e["pos"][0], e["pos"][1], cam)[0]
         cut = prev_cam is None or abs(cam.get("scale", 1) - prev_cam.get("scale", 1)) > 0.3 * prev_cam.get("scale", 1) or abs(cam.get("yaw", 0) - prev_cam.get("yaw", 0)) > 8
-        cur = tgt if (cut or cur is None) else cur + max(-70.0, min(70.0, tgt - cur))
+        cur = tgt if (cut or cur is None) else cur + max(-120.0, min(120.0, tgt - cur))
         xs.append(min(max(cur, cw / 2), W - cw / 2))
         prev_cam = cam
     return xs
