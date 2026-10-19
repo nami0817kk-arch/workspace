@@ -188,3 +188,30 @@ def sweep_arc(pts: list, age: int, nb: int, col=(170, 245, 255)) -> Image.Image:
     ov.alpha_composite(glow)
     ImageDraw.Draw(ov).polygon(poly, fill=(255, 255, 255, al))
     return ov
+
+
+def sparks(cx: float, cy: float, age: int, u: float, seed: int, col=(255, 230, 120), n: int = 16, spread: float = 1.0) -> Image.Image:
+    """火花: 命中点から飛び散る短い筋。放物線で落ち、尾を引いて消える。u は 1 単位の画素数(距離の基準)。"""
+    ov = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    if age < 0:
+        return ov
+    d = ImageDraw.Draw(ov)
+    rnd = random.Random(seed)
+    tt = age / 30.0
+    for i in range(n):
+        ang = rnd.uniform(-math.pi, math.pi)
+        sp = rnd.uniform(0.9, 2.6) * u * spread
+        vx, vy = math.cos(ang) * sp, math.sin(ang) * sp * 0.7 - 0.6 * u
+        life = rnd.uniform(0.26, 0.46)
+        if tt > life:
+            continue
+        x = cx + vx * tt
+        y = cy + vy * tt + 0.5 * 9.0 * u * tt * tt
+        px, py = cx + vx * max(0.0, tt - 0.05), cy + vy * max(0.0, tt - 0.05) + 0.5 * 9.0 * u * max(0.0, tt - 0.05) ** 2
+        al = int(255 * (1 - tt / life))
+        d.line([(px, py), (x, y)], fill=(*col, al), width=max(2, int(0.028 * u * (1 - tt / life)) + 1))
+    glow = ov.filter(ImageFilter.GaussianBlur(3))
+    out = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    out.alpha_composite(glow)
+    out.alpha_composite(ov)
+    return out

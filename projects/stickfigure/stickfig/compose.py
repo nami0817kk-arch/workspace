@@ -300,6 +300,11 @@ def compose_frame(plan: dict, f: int, figs: Dict[int, Image.Image], stages: Opti
         elif e["kind"] in ("kick", "heel", "wall") and 0 <= age <= 8:
             cxy = to_px(e["pos"][0], e["pos"][1], cam)
             base.alpha_composite(look.shock_ring(cxy[0], cxy[1], age, 8))
+        if e["kind"] in ("clash", "slash", "hit", "kick", "heel", "wall") and 0 <= age <= 14:                                        # ヒットストップ中も描く(止め絵に火花が散っているのが衝撃のコマ)
+            cxy = to_px(e["pos"][0], e["pos"][1], cam)                   # 火花(金属は多め・白黄、打撃は少なめ・橙)
+            metal = e["kind"] in ("clash", "slash")
+            base.alpha_composite(look.sparks(cxy[0], cxy[1], age, camera.px_per_unit(cam), e["frame"] * 7 + 3,
+                                             (255, 240, 160) if metal else (255, 170, 90), 18 if metal else 9, 1.0 if metal else 0.7))
     ov = Image.new("RGBA", (W * SS, H * SS), (0, 0, 0, 0))
     d = ImageDraw.Draw(ov)
     if in_ranges(tau, fx.get("speed_lines", [])):
