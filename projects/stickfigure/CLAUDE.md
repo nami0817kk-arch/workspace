@@ -183,6 +183,7 @@ python scripts/make_gallery.py 09_01:2.4 135_07_s1:3.6   # clip を順に再生�
 - 光線・気弾とも、技の前に A が跳んで下がり(dx 3.7〜3.9)、B もよろけて 0.7 下がる(光線・玉の飛ぶ長さを取る)。壁はよろけた B より 1.3 奥(`wall_lock`)。光線は壁を 1.2 突き抜ける長さ
 - **出だしの技(`opening: blast`、kick なしのとき)**: 走り出す前(0.6〜1.6 秒)に片手の玉を投げ、B がくぐってかわし(`miss` の pos の高さ≥0.95 で body_drive が沈ませる)、玉は壁で爆発(`to_wall` の印で壁の位置に置き換える)。そのあと走って連打へ(走り出しと連打の開始が 1.0 秒遅れる)。見本 `scenes/fight_open_blast.yaml`
 - **出だしの技 2(`opening: teleport`)**: 走らずに、沈んで(予備動作)→ 消え(`vanish`「シュン」、残像の列 `fx.afterimages`: 消えた位置から現れた位置まで薄い人影を 6 体並べてすぐ消す)→ 1 コマで相手の目の前に現れ(`appear`、閃光、B はのけぞって驚く)→ 構え直して連打へ。1 コマの移動は意図なので qa の `max_teleport_frames: 2`・`max_jerk: 9.0`。走りの clip は外す(長さ 0 で残すと継ぎ目合わせが狂い、連打の途中で A が 1.9 戻った)
+- **出だしの技 3(`opening: fly`)**: しゃがむ(予備動作)→ 腕を上げて伸び上がり跳ぶ(`launch`「ヒュッ」、砂ぼこり)→ 高さ 2.2 で体を水平(lean 1.25・前腕を突き出し・脚をまっすぐ後ろ)にして相手へ飛ぶ(風の筋、`fx.afterimages` の `trail: true`: 進行方向の後ろに今の絵をずらして薄く並べる尾)→ 急降下 → 相手の前に着地してつぶれ(`land`、揺れ 0.08)→ 連打へ。B は見上げる。カメラは飛行を少し下から(pitch −6・target_z 2.0)、着地は B 寄り。走りはこれまでどおり出だしの既定(`RUN_LOOK`)
 - **`snaps: [{who, t0, t1, dx}]`(plan)**: 区間で位置を固定する。キーで 1 コマの飛びを書いても PCHIP の先回りとバネで 3 コマに伸びるので、消えるまでと現れた直後を固定して 1 コマにする
 - 見本の seed は点検に通るものを選ぶ: 剣で seed 13 は 13_17_s2 が 2 回並び、2 回目の clip の継ぎ目で A が 1.4 飛ぶ(技とは無関係。`_first_passing_seed` が避ける種類)。組み合わせの見本 `scenes/fight_showcase.yaml`(瞬間移動→連打→撃ち合い)
 - 技を足すときの型: fight の finisher 分岐(キー・hits・fx・shots・ko_t)+ plan の SHAKE + anime の SFX/SFX_SIZE/ZOOM_PUNCH/ROLL_SHAKE + compose の BIG/BURST_FRAMES と描画 + sfx の音 + テスト
