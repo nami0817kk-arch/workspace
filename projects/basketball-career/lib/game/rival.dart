@@ -45,6 +45,14 @@ class Rival {
 
   int get games => wins + losses;
 
+  /// ライバルのその後(エンディングで語る)。素質で決まる。
+  String get fate {
+    if (potential >= 82) return '$nameは世界最高峰の舞台に立ち、語り継がれる選手になった。';
+    if (potential >= 68) return '$nameはプロの第一線で長く活躍した。';
+    if (potential >= 52) return '$nameは実業団で活躍し、後に指導者の道へ進んだ。';
+    return '$nameは大学でバスケを続け、いまは地元で子どもたちに教えている。';
+  }
+
   Map<String, dynamic> toJson() => {
         'name': name,
         'potential': potential,

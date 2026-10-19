@@ -1611,4 +1611,34 @@ void main() {
       expect(g.player.of(Ability.dribble), before + 4);
     });
   });
+
+  group('ライバルのその後', () {
+    test('素質で結末が変わり、名前が入る', () {
+      final fates = {
+        for (final pot in [90, 75, 60, 40])
+          Rival(name: '神谷リョウ', potential: pot).fate
+      };
+      expect(fates.length, 4, reason: '4通り');
+      for (final f in fates) {
+        expect(f, contains('神谷リョウ'));
+      }
+    });
+
+    test('対戦があったときだけ、エンディングで語られる', () {
+      Game ended(int wins) {
+        final g = Game(
+          eventsEnabled: false,
+          player: strong().copyWith(age: 25),
+          rng: Random(1),
+          track: Track.pro,
+          rival: Rival(name: '氷室シン', potential: 90, wins: wins, losses: 0),
+        );
+        g.retire();
+        return g;
+      }
+
+      expect(epilogueLines(ended(2)).join(' '), contains('世界最高峰'));
+      expect(epilogueLines(ended(0)).join(' '), isNot(contains('氷室シン')));
+    });
+  });
 }
