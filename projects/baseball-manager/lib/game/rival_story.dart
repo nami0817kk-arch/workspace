@@ -25,6 +25,21 @@ class RivalStory {
   final int retireAge;
   final String team;
   final int draftRound;
+
+  /// 自分と同じ球団に居るのは不自然なので、同じなら隣の球団に替える(ライバルは別のチームで戦う)。
+  RivalStory avoiding(String? mine) {
+    if (mine == null || mine != team) return this;
+    final i = draftTeams.indexOf(team);
+    return RivalStory(
+      name: name,
+      talent: talent,
+      proAge: proAge,
+      college: college,
+      retireAge: retireAge,
+      team: draftTeams[(i + 1) % draftTeams.length],
+      draftRound: draftRound,
+    );
+  }
 }
 
 int _h(String s) {

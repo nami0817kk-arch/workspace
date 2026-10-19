@@ -833,7 +833,7 @@ class Game {
         popularityOf(records, worldRecords) * 0.04 +
         (m.wins + m.losses == 0 ? 0 : m.wins / (m.wins + m.losses)) * 1.5);
     log.add('観客動員: 平均${crowd.toStringAsFixed(1)}万人。');
-    final rs = storyOfCharacter(cast.rival);
+    final rs = storyOfCharacter(cast.rival)?.avoiding(proTeam);
     final duel =
         rs == null ? null : rivalDuelLine(rs, player.age, slot, m.line);
     if (duel != null) log.add(duel);
@@ -1121,7 +1121,7 @@ class Game {
     peakOverall = max(peakOverall, overall(player).round());
     overallHistory.add(overall(player).round());
     // ライバルの人生の知らせ(進路・入団・活躍・引退)。
-    final rs = storyOfCharacter(cast.rival);
+    final rs = storyOfCharacter(cast.rival)?.avoiding(proTeam);
     if (rs != null) log.addAll(rivalNews(rs, player.age));
 
     if (phase != Phase.retired) log.add('── ${player.age}歳 ──');

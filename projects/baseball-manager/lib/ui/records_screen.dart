@@ -754,7 +754,7 @@ class _RivalCard extends StatelessWidget {
         title: Text('ライバル $rival'),
         subtitle: Text(
             '通算 $w勝 $l敗'
-            '${snapshot.rivalTalent == null ? '' : '\n${rivalStatus(storyOf(rival, snapshot.rivalTalent!), snapshot.age)}'}'
+            '${snapshot.rivalTalent == null ? '' : '\n${rivalStatus(storyOf(rival, snapshot.rivalTalent!).avoiding(snapshot.proTeam), snapshot.age)}'}'
             '${snapshot.rivalTalent == null ? '' : (rivalStatsOf(storyOf(rival, snapshot.rivalTalent!), snapshot.age) == null ? '' : '\n${rivalStatsOf(storyOf(rival, snapshot.rivalTalent!), snapshot.age)}')}',
             key: const Key('rival-status')),
         isThreeLine: snapshot.rivalTalent != null,

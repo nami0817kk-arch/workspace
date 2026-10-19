@@ -343,7 +343,8 @@ class _GameScreenState extends State<GameScreen> {
                 leading: const Icon(Icons.sports_kabaddi),
                 title: Text('ライバル ${game.cast.rival!.name}'),
                 subtitle: Text(rivalStatus(
-                    storyOfCharacter(game.cast.rival!)!, game.player.age)),
+                    storyOfCharacter(game.cast.rival!)!.avoiding(game.proTeam),
+                    game.player.age)),
               ),
             ),
           ),

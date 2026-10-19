@@ -5,6 +5,7 @@ import 'package:baseball_manager/game/game.dart';
 import 'package:baseball_manager/game/life.dart';
 import 'package:baseball_manager/game/path.dart';
 import 'package:baseball_manager/game/player.dart';
+import 'package:baseball_manager/game/rival_story.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 Game _until(bool Function(Game) stop, {int seed = 1}) {
@@ -29,6 +30,7 @@ Game _until(bool Function(Game) stop, {int seed = 1}) {
 }
 
 void main() {
+  rivalTests();
   logTests();
   test('ドラフトの見込みは、高校2年(17歳)から出て、能力で変わる', () {
     final y = Game.newGame(name: 't', role: Role.batter, rng: Random(1));
@@ -66,5 +68,17 @@ void logTests() {
     expect(heads, contains('── 7歳 ──'));
     expect(heads, contains('── 8歳 ──'));
     expect(heads.length, g.player.age - 6);
+  });
+}
+
+void rivalTests() {
+  test('ライバルの球団は、自分と同じなら別の球団に替わる', () {
+    final s = storyOf('ひかる', 90);
+    expect(s.avoiding(null).team, s.team);
+    expect(s.avoiding('べつの球団').team, s.team);
+    final other = s.avoiding(s.team);
+    expect(other.team, isNot(s.team));
+    expect(draftTeams, contains(other.team));
+    expect(other.name, s.name);
   });
 }
