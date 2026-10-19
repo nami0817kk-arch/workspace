@@ -368,7 +368,7 @@ def build_fight(spec: dict) -> dict:
 
     # ---- 最後の一撃 ----
     if fin:
-        keysB += [dict(t=_r(hl + 0.06), dx=_r(dxB), lean=-0.6, fa=0.3, ra=0.3, fe=0.6, re=0.6, ht=-0.8, face="pain"),
+        keysB += [dict(t=_r(hl + 0.06), dx=_r(dxB + 0.25), lean=-0.6, fa=0.3, ra=0.3, fe=0.6, re=0.6, ht=-0.8, face="pain"),   # 決めの直後はまだその場(0.25 下がるのは飛んでから。前は決めの溜めの間に B が 0.4 下がり、踏み込んだ A と重なっていた)
                   dict(t=_r(hl + 0.22), dx=-2.5, rz=0.9, roll=0.5, hz=0.9, lean=-0.5, fl=0.3, fk=0.2, rl=-0.2, rk=0.3, face="pain"),
                   dict(t=_r(hl + 0.55), dx=-2.9, rz=2.7, roll=1.6, hz=0.9, lean=-0.2, fa=-0.4, ra=-0.4, fe=0.3, re=0.3, face="pain"),   # 打ち上げは 1.5 身長の高さ(1.9 だと頭の高さで浮いているだけに見えた)
                   dict(t=_r(hl + 0.80), dx=-3.1, rz=1.05, roll=1.57, hz=0.9, lean=-0.1, fa=-0.2, ra=-0.2, face="pain"),   # 落ちてくる(叩きつけの前はまだ空中。前は 0.95 に着地のキーがあり、かかとが落ちる 2〜4 コマ前に床に着いていた)
@@ -389,7 +389,7 @@ def build_fight(spec: dict) -> dict:
         t_end = hl + 1.3
         ko_t = hl + 0.95
     else:
-        keysB += [dict(t=_r(hl + 0.1), dx=_r(dxB), lean=-0.6, fa=0.3, ra=0.3, fe=0.6, re=0.6, ht=-0.8, face="pain"),
+        keysB += [dict(t=_r(hl + 0.1), dx=_r(dxB + 0.25), lean=-0.6, fa=0.3, ra=0.3, fe=0.6, re=0.6, ht=-0.8, face="pain"),
                   dict(t=_r(hl + 0.45), dx=-2.9, rz=0.5, roll=1.2, hz=0.9, lean=-0.2, fl=0.0, fk=0.0, rl=0.0, rk=0.0, face="pain"),
                   dict(t=_r(hl + 0.8), dx=-3.0, rz=0.21, roll=1.57, hz=0.9, fa=0.3, ra=0.3, face="ko")]
         keysA.append(dict(t=_r(hl + 1.0), dx=5.4, hz=0.9, lean=0.1))
