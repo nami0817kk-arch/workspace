@@ -318,6 +318,10 @@ class Game {
   /// 冬の大会(全国選手権)がある段階。高校と大学・実業団。
   bool get hasWinterCup => stage == Stage.highSchool || stage == Stage.college;
 
+  /// いまのプロ契約の評価点と見込み(進路の前に位置を伝える)。
+  double get offerNow => offerScore(player, achievement);
+  Outlook get outlook => outlookOf(offerNow);
+
   /// 直近の大会の実績の平均(進路の評価に使う)。まだ無ければ 30。
   double get achievement => recentAchievements.isEmpty
       ? 30

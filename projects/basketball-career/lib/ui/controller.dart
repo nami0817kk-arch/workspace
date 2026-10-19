@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../game/career.dart';
@@ -233,6 +234,7 @@ class GameController extends ChangeNotifier {
     final lines = <String>[
       '${a.label}した。',
       ..._gainLines(before, g.player),
+      ..._rankUpLines(before, g.player),
       if (r.gotInjured) '怪我をしてしまった…',
     ];
     if (r.paused) {
@@ -245,7 +247,23 @@ class GameController extends ChangeNotifier {
     pathMessage = null;
     recoverMessage = null;
     _commit();
+    _haptic(r);
     return r;
+  }
+
+  /// 手応えを手に伝える(対応しない端末では何も起きない)。
+  /// 勝負どころの成功は強く、失敗は重く。優勝は強く。ふだんは軽く。
+  void _haptic(TermReport r) {
+    try {
+      final t = r.tournament;
+      if (t != null && t.champion) {
+        HapticFeedback.heavyImpact();
+      } else if (t != null && t.matches.any((m) => m.clutchSuccess == true)) {
+        HapticFeedback.mediumImpact();
+      } else {
+        HapticFeedback.selectionClick();
+      }
+    } catch (_) {}
   }
 
   /// 能力の増減を「3Pシュート +2」の形で。
@@ -260,6 +278,16 @@ class GameController extends ChangeNotifier {
       if (up.isNotEmpty) '成長: ${up.join(' / ')}',
       if (down.isNotEmpty) '衰え: ${down.join(' / ')}',
     ];
+  }
+
+  /// ランクが上がった能力を「ランクアップ! 3Pシュート D→C」の形で。
+  List<String> _rankUpLines(Map<Ability, int> before, Player now) {
+    final ups = <String>[];
+    for (final a in Ability.values) {
+      final b = rankOf(before[a] ?? 0), n = rankOf(now.of(a));
+      if (b != n && now.of(a) > (before[a] ?? 0)) ups.add('${a.label} $b→$n');
+    }
+    return [if (ups.isNotEmpty) 'ランクアップ! ${ups.join(' / ')}'];
   }
 
   /// 大会の結果と年末の知らせを足した、いまの結果の行。
@@ -302,6 +330,14 @@ class GameController extends ChangeNotifier {
     }
     _commit();
     if (!r.paused) await money?.tournamentPlayed();
+    try {
+      final m = game?.run?.matches.lastOrNull ?? game?.lastReport?.tournament?.matches.lastOrNull;
+      if (m?.clutchSuccess == true) {
+        HapticFeedback.mediumImpact();
+      } else if (m?.clutchSuccess == false) {
+        HapticFeedback.heavyImpact();
+      }
+    } catch (_) {}
   }
 
   /// 広告つきで過ごし方を選ぶ。大会が終わった後の次の操作で、番なら全画面広告が出る。

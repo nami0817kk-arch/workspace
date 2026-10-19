@@ -160,6 +160,28 @@ void main() {
     expect(find.textContaining('の夏の大会'), findsWidgets);
   });
 
+  test('能力のランクが上がると知らせる', () {
+    final c = GameController(store: _NullStore(), rng: Random(3), events: false);
+    c.game = Game(
+      eventsEnabled: false,
+      player: Player(
+        name: 'ケイ',
+        age: 12,
+        potential: 90,
+        heightCm: 150,
+        heightGenes: 0.5,
+        abilities: {for (final a in Ability.values) a: 39},
+      ),
+      rng: Random(3),
+    );
+    var saw = false;
+    for (var i = 0; i < 6 && !saw; i++) {
+      c.act(Action.practice, ask: false);
+      saw = c.recent.any((l) => l.startsWith('ランクアップ!'));
+    }
+    expect(saw, isTrue);
+  });
+
   test('おすすめで1年進める', () async {
     final c = GameController(rng: Random(4), events: false);
     c.newGame('オート');
