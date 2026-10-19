@@ -204,7 +204,7 @@ def build_fight(spec: dict) -> dict:
             clipsB += [dict(file=cclip, dx_scale=0.3, strike_at=_r(tb1), start=_r(tb1 - 0.2), end=_r(tb1 + 0.17), **{"in": 0.06, "out": 0.08}),
                        dict(file=cclip, dx_scale=0.3, strike_at=_r(tb2), start=_r(tb2 - 0.17), end=_r(tb2 + 0.25), **{"in": 0.06, "out": 0.1})]
             hits += [dict(tau=_r(tb1), hold=0.0, kind="miss", by="B", pos=[2.9, 1.25],
-                          contact=dict(striker="B", effector="hand", target=dict(actor="A", point="head"), offset=[0.0, 0.22], tol=1.5, max_anticipation=50)),
+                          contact=dict(striker="B", effector="hand", target=dict(actor="A", point="head"), offset=[-0.25, 0.22], tol=1.5, max_anticipation=50)),
                      dict(tau=_r(tb2), hold=0.07, kind="clash", by="B", contact=dict(striker="B", effector="hand", target=dict(actor="A", point=_pt(cclip, "hand")), tol=0.45, max_anticipation=50, hz_range=0.5))]
             keysA += [dict(t=_r(tb2 - 0.14), dx=4.6, **BLOCK), dict(t=_r(tb2 + 0.08), dx=4.6, **BLOCK), dict(t=_r(tb2 + 0.26), dx=4.6, **GUARD_A)]
             speed.append([_r(tb1 - 0.3), _r(tb2 + 0.1)])
@@ -310,7 +310,7 @@ def build_fight(spec: dict) -> dict:
                 clipsB.append(dict(file=cclip, dx_scale=0.3, strike_at=_r(tbj), start=_r(tbj - 0.2), end=_r(tbj + 0.2), **{"in": 0.06, "out": 0.06}))
                 if j == 0 and bc >= 2:                   # かわされる1発: 位置は接触で決める(狙いは頭の少し上。A がくぐるので当たらない)
                     hits.append(dict(tau=_r(tbj), hold=0.0, kind="miss", by="B", pos=[2.9, 1.25],
-                                     contact=dict(striker="B", effector="hand", target=dict(actor="A", point="head"), offset=[0.0, 0.22], tol=1.5, max_anticipation=50)))
+                                     contact=dict(striker="B", effector="hand", target=dict(actor="A", point="head"), offset=[-0.25, 0.22], tol=1.5, max_anticipation=50)))
                 else:
                     hits.append(dict(tau=_r(tbj), hold=0.07, kind="clash", by="B", contact=dict(striker="B", effector="hand", target=dict(actor="A", point=_pt(cclip, "hand")), tol=0.45, max_anticipation=50, hz_range=0.5)))
                     keysA += [dict(t=_r(tbj - 0.14), **BLOCK), dict(t=_r(tbj + 0.08), **BLOCK), dict(t=_r(tbj + 0.26), **GUARD_A)]
