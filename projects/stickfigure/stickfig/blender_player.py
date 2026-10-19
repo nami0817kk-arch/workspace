@@ -11,8 +11,12 @@ import bpy
 argv = sys.argv[sys.argv.index("--") + 1:]
 PLAN = json.load(open(argv[0], encoding="utf-8"))
 OUT = argv[1].rstrip("/\\") + "/f_"
+MODE = argv[2] if len(argv) > 2 else "figs"      # figs=人物だけ(透過) / stage=舞台だけ(遠近のとき)
 VIEW = PLAN["view"]
+PERSP = bool(VIEW.get("persp"))
 NSEG = 6
+sys.path.insert(0, __import__("os").path.dirname(__import__("os").path.dirname(__import__("os").path.abspath(__file__))))
+from stickfig import camera as cam_math  # noqa: E402  (純粋な Python。Blender の Python から読める)
 
 bpy.ops.wm.read_factory_settings(use_empty=True)
 sc = bpy.context.scene
@@ -23,10 +27,17 @@ sc.render.engine = "BLENDER_WORKBENCH"
 sc.render.filepath = OUT
 sc.render.image_settings.file_format = "PNG"
 sc.render.image_settings.color_mode = "RGBA"
-sc.render.film_transparent = True
+sc.render.film_transparent = MODE == "figs"
 sh = sc.display.shading
-sh.light = "FLAT"
+sh.light = "STUDIO" if PERSP else "FLAT"           # 遠近のときは陰影を付ける(立体に見える)
 sh.color_type = "MATERIAL"
+if PERSP:
+    sh.show_specular_highlight = False
+    sh.show_object_outline = MODE == "figs"        # 人物には細い輪郭
+    try:
+        sh.object_outline_color = (0.02, 0.02, 0.03)
+    except Exception:
+        pass
 sc.display.render_aa = "8"
 sc.view_settings.view_transform = "Standard"
 
@@ -136,17 +147,61 @@ def set_chain(js, th_up, th_low):
         prev = ang
 
 
+def box(name, x0, x1, y0, y1, z0, z1, color):
+    bpy.ops.mesh.primitive_cube_add(size=1)
+    o = bpy.context.object
+    o.name = name
+    o.scale = (x1 - x0, y1 - y0, z1 - z0)
+    o.location = ((x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2)
+    o.data.materials.append(mat(color))
+    return o
+
+
+def build_stage():
+    """床・奥の壁・柱・壁(あれば)を、立体で置く。遠近カメラで見ると、奥行きが出る。"""
+    wall_x = PLAN.get("stage", {}).get("wall_x")
+    box("floor", -60, 60, -10, 16, -0.3, 0.0, (0.34, 0.31, 0.27))
+    for i in range(-40, 60):                           # 床の目地(奥へ伸びる線)
+        box("fl", i - 0.015, i + 0.015, -10, 16, 0.0, 0.004, (0.24, 0.22, 0.18))
+    for j in range(-10, 16, 2):                        # 手前から奥への横の目地
+        box("fy", -60, 60, j - 0.015, j + 0.015, 0.0, 0.004, (0.26, 0.24, 0.20))
+    box("back", -60, 60, 9, 9.4, 0.0, 14, (0.17, 0.17, 0.20))          # 奥の壁
+    for k in range(1, 12):
+        box("ledge", -60, 60, 8.9, 9.0, k * 1.2, k * 1.2 + 0.05, (0.13, 0.13, 0.16))
+    for n, x in enumerate(range(-16, 40, 3)):          # 柱(奥行きが違う)
+        y = 3.5 + (n % 4) * 1.4
+        box("pillar", x, x + 0.22, y, y + 0.22, 0.0, 3.0, (0.28, 0.21, 0.14))
+    for n, x in enumerate(range(-14, 40, 4)):          # 手前の低い箱(奥行きの手がかり)
+        box("crate", x, x + 0.7, -3.2 - (n % 3) * 0.5, -2.5 - (n % 3) * 0.5, 0.0, 0.5, (0.22, 0.2, 0.17))
+    if wall_x is not None:
+        box("wall", wall_x, wall_x + 2.5, -5, 9, 0.0, 6.5, (0.27, 0.26, 0.25))
+        for k in range(1, 12):
+            box("wl", wall_x - 0.02, wall_x + 0.02, -5, 9, k * 0.55, k * 0.55 + 0.03, (0.18, 0.17, 0.16))
+
+
 RIG = {}
-for who, a in PLAN["actors"].items():
+if MODE == "stage":
+    build_stage()
+    world = bpy.data.worlds.new("w")
+    world.color = (0.10, 0.10, 0.12)
+    sc.world = world
+for who, a in (PLAN["actors"].items() if MODE == "figs" else []):
     s = 1 if a.get("facing", 1) >= 0 else -1
     front, rear = ("R", "L") if s == 1 else ("L", "R")
     RIG[who] = dict(F=make_figure(who + "_", a["color"], a.get("weapon"), front), s=s, front=front, rear=rear, scale=a.get("scale", 1.0))
 
 cam = bpy.data.cameras.new("cam")
-cam.type = "ORTHO"
+cam.type = "PERSP" if PERSP else "ORTHO"
+if PERSP:
+    cam.lens = VIEW.get("lens", 40.0)
+    cam.sensor_width = 36.0
+    cam.sensor_fit = "HORIZONTAL"
+    cam.clip_end = 400.0
 co = bpy.data.objects.new("cam", cam)
 sc.collection.objects.link(co)
 sc.camera = co
+if PERSP:
+    co.rotation_mode = "QUATERNION"
 
 for f, fr in enumerate(PLAN["frames"], start=1):
     for who, R in RIG.items():
@@ -168,11 +223,19 @@ for f, fr in enumerate(PLAN["frames"], start=1):
             o.keyframe_insert("rotation_euler", frame=f)
             o.keyframe_insert("scale", frame=f)
     c = fr["cam"]
-    cam.ortho_scale = c["scale"]
-    cam.keyframe_insert("ortho_scale", frame=f)
-    co.location = (c["x"], -10.0, c["z"])
-    co.rotation_euler = (math.radians(90), 0, 0)
-    co.keyframe_insert("location", frame=f)
-    co.keyframe_insert("rotation_euler", frame=f)
+    if PERSP:
+        from mathutils import Vector
+        pos = Vector(cam_math.position(c))
+        co.location = pos
+        co.rotation_quaternion = (Vector((c["tx"], c["ty"], c["tz"])) - pos).to_track_quat("-Z", "Y")
+        co.keyframe_insert("location", frame=f)
+        co.keyframe_insert("rotation_quaternion", frame=f)
+    else:
+        cam.ortho_scale = c["scale"]
+        cam.keyframe_insert("ortho_scale", frame=f)
+        co.location = (c["x"], -10.0, c["z"])
+        co.rotation_euler = (math.radians(90), 0, 0)
+        co.keyframe_insert("location", frame=f)
+        co.keyframe_insert("rotation_euler", frame=f)
 
 bpy.ops.render.render(animation=True)

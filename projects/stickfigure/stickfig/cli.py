@@ -66,12 +66,12 @@ def cmd_check(a) -> int:
     return 0 if res["passed"] else 1
 
 
-def render_figures(plan_path: Path, out_dir: Path) -> None:
+def render_figures(plan_path: Path, out_dir: Path, mode: str = "figs") -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
     for p in out_dir.glob("*.png"):
         p.unlink()
     r = subprocess.run([find_blender(), "-b", "-P", str(HERE / "blender_player.py"), "--", str(Path(plan_path).resolve()),
-                        str(out_dir.resolve())], capture_output=True, text=True)
+                        str(out_dir.resolve()), mode], capture_output=True, text=True)
     n = len(list(out_dir.glob("f_*.png")))
     if r.returncode != 0 or n == 0:
         sys.stderr.write((r.stdout or "")[-2000:] + (r.stderr or "")[-2000:])
@@ -97,8 +97,13 @@ def cmd_build(a) -> int:
         print("書き出し済みの人物を再利用する(--reuse-figs)")
     else:
         render_figures(plan_path, figs)
+    stage = None
+    if pl["view"].get("persp"):          # 遠近のカメラのときは、舞台(床・壁・柱)も立体で別に書き出す
+        stage = out / "stage"
+        if not (a.reuse_figs and len(list(stage.glob("f_*.png"))) == pl["n"]):
+            render_figures(plan_path, stage, "stage")
     ff = find_ffmpeg()
-    mp4 = compose.compose(pl, figs, out / "frames", out / f"{scene.get('name', 'scene')}.mp4", ff)
+    mp4 = compose.compose(pl, figs, out / "frames", out / f"{scene.get('name', 'scene')}.mp4", ff, stage)
     holds = []
     for e in pl["events"]:
         holds += list(range(e["frame"], e["frame"] + e.get("hold_frames", 0) + 1))

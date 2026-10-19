@@ -88,12 +88,13 @@ class Spring:
 
 
 def build_timeline(tau_end: float, fps: int, hits: Sequence[dict], slow: Sequence[dict] = (),
-                   puffs: Sequence[dict] = ()) -> Tuple[List[float], List[dict]]:
+                   puffs: Sequence[dict] = (), tempo: float = 1.0) -> Tuple[List[float], List[dict]]:
     """実時間のコマごとに設計時間 tau を返す。
 
     hits: [{tau, hold(秒), kind}] その tau に達したら hold 秒だけ止める(ヒットストップ)
     slow: [{start, end, rate}] その tau の区間は rate 倍速(出入りは滑らか)
     puffs: [{tau, kind}] 止めずに印だけ付ける(砂ぼこりなど)
+    tempo: 全体の再生の速さ(1.3 なら 1.3 倍速。ヒットストップの長さは変えない)
     戻り値: (tau の列, events) events は {frame, kind, tau, hold_frames}
     """
     dt = 1.0 / fps
@@ -121,12 +122,12 @@ def build_timeline(tau_end: float, fps: int, hits: Sequence[dict], slow: Sequenc
             rate = 0.0
             hold -= dt
         else:
-            rate = 1.0
+            rate = tempo
             for s in slow:
                 r = s["rate"]
                 a, b = s["start"], s["end"]
-                rate = min(rate, 1.0 - (1.0 - r) * smoothstep(tau, a - 0.12, a + 0.04)
-                           * (1.0 - smoothstep(tau, b - 0.04, b + 0.14)))
+                rate = min(rate, tempo * (1.0 - (1.0 - r) * smoothstep(tau, a - 0.12, a + 0.04)
+                           * (1.0 - smoothstep(tau, b - 0.04, b + 0.14))))
         out.append(tau)
         tau += rate * dt
     return out, events

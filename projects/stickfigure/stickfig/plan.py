@@ -14,7 +14,7 @@ from typing import Dict, List, Optional
 
 import yaml
 
-from . import fk, mocap, physics
+from . import camera, fk, mocap, physics
 from .interp import build_timeline, smoothstep
 from .interp import Spring
 from .pose import KeyTrack, Smoother, STANCE_A, STANCE_B, apply_run
@@ -352,7 +352,7 @@ def build_plan(scene: dict, solve: bool = True) -> dict:
         phys = run_physics(scene, tracks)
         scene["hits"], scene["puffs"] = phys["hits"], phys["puffs"]
         contacts = []
-    taus, events = build_timeline(scene["tau_end"], fps, scene.get("hits", []), scene.get("slow", []), scene.get("puffs", []))
+    taus, events = build_timeline(scene["tau_end"], fps, scene.get("hits", []), scene.get("slow", []), scene.get("puffs", []), float(scene.get("tempo", 1.0)))
     smoothers = {who: Smoother(tr) for who, tr in tracks.items()}
     planters = {who: Planter(a) for who, a in scene["actors"].items() if a.get("plant", True)}
     cam_keys = scene["camera"]
@@ -360,6 +360,8 @@ def build_plan(scene: dict, solve: bool = True) -> dict:
     cx_curve = Curve([k[0] for k in cam_keys], [k[1] for k in cam_keys])
     cs_curve = Curve([k[0] for k in cam_keys], [k[2] for k in cam_keys])
     camx, cams = cx_curve(0.0), cs_curve(0.0)
+    v3 = scene.get("view3d")
+    yaw_curve = Curve([k[0] for k in v3["yaw"]], [k[1] for k in v3["yaw"]]) if v3 else None
     hold_frames = set()
     for e in events:
         for i in range(e["frame"] + 1, e["frame"] + e.get("hold_frames", 0)):
@@ -403,8 +405,14 @@ def build_plan(scene: dict, solve: bool = True) -> dict:
                 shake += amp * (1 - d / 10)
         sx, sz = shake * math.sin(f * 2.9), shake * math.cos(f * 2.3)
         pxu = VIEW["width"] / cams
-        fr["cam"] = dict(x=round(camx + sx, 5), scale=round(cams, 5), pxu=round(pxu, 4), sx=round(sx, 5), sz=round(sz, 5),
-                         z=round((VIEW["ground_y"] - VIEW["height"] / 2) / pxu + sz, 5))
+        if v3 is not None:
+            # 遠近のあるカメラ: 斜めの角度(yaw)でゆっくり回り込み、少し上から見る
+            fr["cam"] = {k: (round(v, 5) if isinstance(v, float) else v) for k, v in
+                         camera.make_cam(camx, 0.0, cams, yaw_curve(tau), v3.get("pitch", 7.0), v3.get("lens", 40.0), sx, sz).items()}
+            fr["cam"]["z"] = fr["cam"]["tz"]
+        else:
+            fr["cam"] = dict(x=round(camx + sx, 5), scale=round(cams, 5), pxu=round(pxu, 4), sx=round(sx, 5), sz=round(sz, 5),
+                             z=round((VIEW["ground_y"] - VIEW["height"] / 2) / pxu + sz, 5))
         frames.append(fr)
     if phys is not None:
         _lift_to_ground(scene, frames)
@@ -422,8 +430,8 @@ def build_plan(scene: dict, solve: bool = True) -> dict:
             p = next((x for x in scene.get("puffs", []) if x["tau"] == e["tau"]), {})
             e["pos"] = list(p.get("pos", [0.0, 0.0]))
         e["fx"] = dict(h.get("fx", {}))
-    return dict(version=1, fps=fps, n=len(frames), view=VIEW, actors=scene["actors"], stage=scene.get("stage", {}),
-                events=events, contacts=contacts, frames=frames, scene={k: scene[k] for k in ("hits", "slow", "camera", "fx") if k in scene})
+    return dict(version=1, fps=fps, n=len(frames), view=dict(VIEW, persp=bool(scene.get("view3d")), lens=(scene.get("view3d") or {}).get("lens", 40.0)), actors=scene["actors"], stage=scene.get("stage", {}),
+                events=events, contacts=contacts, frames=frames, scene={k: scene[k] for k in ("hits", "slow", "camera", "fx", "tempo", "view3d") if k in scene})
 
 
 def save_plan(plan: dict, path) -> None:

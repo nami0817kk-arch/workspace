@@ -8,9 +8,11 @@ import math
 import random
 import subprocess
 from pathlib import Path
-from typing import Dict, List, Sequence, Tuple
+from typing import Dict, List, Optional, Sequence, Tuple
 
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFilter
+
+from . import camera
 
 W, H, SS = 1280, 720, 2
 GROUND_Y = 560
@@ -50,7 +52,14 @@ def _h(i: int, j: int) -> float:
 
 
 def to_px(wx: float, wz: float, cam: dict) -> Tuple[float, float]:
-    return 640 + (wx - cam["x"]) * cam["pxu"], GROUND_Y - wz * cam["pxu"] + cam["sz"] * cam["pxu"]
+    """y=0 の面の点(x, z)を画面へ。遠近のあるカメラにも、従来の真横のカメラにも使える。"""
+    px, py, _ = camera.project(cam, wx, 0.0, wz)
+    return px, py
+
+
+def P3(cam: dict, x: float, y: float, z: float) -> Tuple[float, float]:
+    px, py, _ = camera.project(cam, x, y, z)
+    return px, py
 
 
 def in_ranges(tau: float, ranges: Sequence[Sequence[float]]) -> bool:
@@ -136,6 +145,73 @@ def background(plan: dict, f: int) -> Image.Image:
     return im
 
 
+def ground_fx(plan: dict, f: int) -> Image.Image:
+    """遠近のカメラ用: 影・壁と地面のひび・破片・砂ぼこりを、舞台の上に重ねる層(RGBA)。人物より下に敷く。"""
+    fr = plan["frames"][f]
+    cam = fr["cam"]
+    wall_x = plan.get("stage", {}).get("wall_x")
+    ov = Image.new("RGBA", (W * SS, H * SS), (0, 0, 0, 0))
+    sh = Image.new("RGBA", (W * SS, H * SS), (0, 0, 0, 0))
+    d, ds = ImageDraw.Draw(ov), ImageDraw.Draw(sh)
+
+    def poly(dr, pts, **kw):
+        dr.polygon([(x * SS, y * SS) for x, y in pts], **kw)
+
+    def line(pts, col, w):
+        d.line([(x * SS, y * SS) for x, y in pts], fill=col, width=int(w * SS))
+
+    for who, a in plan["actors"].items():          # 足元の影(空中では薄く小さく)
+        p = fr["actors"][who]
+        sc = a.get("scale", 1.0)
+        lying = abs(p.get("lean", 0)) > 1.0 or abs(p.get("roll", 0)) > 0.5
+        lift = 0.0 if lying else max(0.0, (p["hz"] - 0.92) * sc)
+        al = int(120 / (1 + 1.5 * lift))
+        hx = p["root_x"]
+        ts = [i * math.pi / 12 for i in range(24)]
+        if lying:
+            ell = [(hx + 0.9 * sc * math.cos(t) * 1.3, 0.35 * sc * math.sin(t)) for t in ts]
+        else:
+            ell = [(hx + 0.5 * sc / (1 + lift) * math.cos(t), 0.38 * sc * math.sin(t) / (1 + lift)) for t in ts]
+        poly(ds, [P3(cam, x, y, 0.0) for x, y in ell], fill=(0, 0, 0, al))
+    sh = sh.filter(ImageFilter.GaussianBlur(7 * SS))
+    for e in plan["events"]:
+        age = (f - e["frame"]) / plan["fps"]
+        if e["kind"] == "wall" and f >= e["frame"] and wall_x is not None:
+            z0 = e["pos"][1]
+            for pts in CRACK_WALL:
+                path = [P3(cam, wall_x - 0.01, 0.0, z0)]
+                for (ux, uz) in pts:
+                    path.append(P3(cam, wall_x - 0.01, ux * 1.1, z0 + uz))
+                line(path, (16, 16, 20, 255), 3)
+            if age < 1.6:
+                for i, (vx, vz, sz_) in enumerate(DEBRIS):
+                    x = wall_x - 0.05 + vx * age * 0.9
+                    z = max(0.0, z0 + vz * age - 4.9 * age * age * 0.5)
+                    y = (i % 5 - 2) * 0.25
+                    cx_, cy_ = P3(cam, x, y, z)
+                    r = sz_ * camera.px_per_unit(cam)
+                    d.rectangle([(cx_ - r) * SS, (cy_ - r) * SS, (cx_ + r) * SS, (cy_ + r) * SS],
+                                fill=(150, 146, 140, 255), outline=(20, 20, 24, 255), width=2 * SS)
+        if e["kind"] == "heel" and f >= e["frame"]:
+            for pts in CRACK_GROUND:
+                path = [P3(cam, e["pos"][0], 0.0, 0.0)] + [P3(cam, e["pos"][0] + ux * 0.8, uz * 2.5, 0.0) for ux, uz in pts]
+                line(path, (16, 16, 20, 255), 3)
+        if e["kind"] in ("land", "land2", "heel", "wall") and 0 <= age < 0.7:
+            u = age / 0.7
+            cx0 = e["pos"][0] if e["kind"] != "wall" else wall_x - 0.3
+            big = 1.6 if e["kind"] == "heel" else 1.0
+            for k in range(4):
+                r = (0.25 + 0.9 * u + 0.12 * k) * big
+                col = (int(190 - 60 * u), int(186 - 60 * u), int(178 - 60 * u), int(255 * (1 - 0.6 * u)))
+                ring = [P3(cam, cx0 + (k - 1.5) * 0.3 * u * big + r * math.cos(t), r * 0.55 * math.sin(t), 0.0)
+                        for t in [i * math.pi / 14 for i in range(29)]]
+                line(ring, col, max(1.0, 6 * (1 - u)))
+    out = Image.new("RGBA", (W * SS, H * SS), (0, 0, 0, 0))
+    out.alpha_composite(sh)
+    out.alpha_composite(ov)
+    return out.resize((W, H), Image.LANCZOS)
+
+
 def silhouette(fig: Image.Image, col: Tuple[int, int, int]) -> Image.Image:
     a = fig.split()[3]
     solid = Image.new("RGBA", fig.size, (*col, 255))
@@ -158,12 +234,16 @@ BIG = dict(kick=1.2, slash=1.2, wall=1.5, heel=1.8, hit=1.0)
 BURST_FRAMES = dict(slash=7, hit=9, kick=14, wall=14, heel=14)   # 放射線が残るコマ数。連続する命中で重ならないよう、斬りは短く
 
 
-def compose_frame(plan: dict, f: int, figs: Dict[int, Image.Image]) -> Image.Image:
+def compose_frame(plan: dict, f: int, figs: Dict[int, Image.Image], stages: Optional[Dict[int, Image.Image]] = None) -> Image.Image:
     fr = plan["frames"][f]
     cam = fr["cam"]
     tau = fr["tau"]
     fx = plan.get("scene", {}).get("fx", {})
-    base = background(plan, f).resize((W, H), Image.LANCZOS).convert("RGBA")
+    if plan["view"].get("persp"):
+        base = stages[f].convert("RGBA") if stages is not None else Image.new("RGBA", (W, H), (30, 30, 34, 255))
+        base.alpha_composite(ground_fx(plan, f))
+    else:
+        base = background(plan, f).resize((W, H), Image.LANCZOS).convert("RGBA")
     frozen = f > 0 and plan["frames"][f - 1]["tau"] == tau
     if in_ranges(tau, fx.get("trails", [])) and not frozen:
         for k, al in ((9, 0.10), (6, 0.18), (3, 0.30)):
@@ -207,15 +287,18 @@ def compose_frame(plan: dict, f: int, figs: Dict[int, Image.Image]) -> Image.Ima
     return frame
 
 
-def compose(plan: dict, fig_dir, out_dir, mp4_path, ffmpeg: str) -> Path:
+def compose(plan: dict, fig_dir, out_dir, mp4_path, ffmpeg: str, stage_dir=None) -> Path:
     fig_dir, out_dir = Path(fig_dir), Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     for p in out_dir.glob("*.png"):
         p.unlink()
     n = plan["n"]
     figs = {f: Image.open(fig_dir / f"f_{f + 1:04d}.png").convert("RGBA") for f in range(n)}
+    stages = None
+    if plan["view"].get("persp") and stage_dir is not None:
+        stages = {f: Image.open(Path(stage_dir) / f"f_{f + 1:04d}.png").convert("RGB") for f in range(n)}
     for f in range(n):
-        compose_frame(plan, f, figs).save(out_dir / f"{f + 1:04d}.png")
+        compose_frame(plan, f, figs, stages).save(out_dir / f"{f + 1:04d}.png")
     subprocess.run([ffmpeg, "-y", "-loglevel", "error", "-framerate", str(plan["fps"]), "-i", str(out_dir / "%04d.png"),
                     "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "18", str(mp4_path)], check=True)
     return Path(mp4_path)

@@ -125,6 +125,8 @@ def check_anticipation_and_speed(plan: dict, cfg: dict) -> List[dict]:
 def check_stops_and_jerk(plan: dict, cfg: dict) -> List[dict]:
     skip = hold_frames_set(plan)
     stops_total, jerk_bad = 0, []
+    tempo = float(plan["scene"].get("tempo", 1.0))
+    max_jerk = cfg["max_jerk"] * tempo * tempo          # 倍速にすると、1コマあたりの角度の変化も加速度も大きくなる
     detail = []
     for who in plan["actors"]:
         for k in ANGLE_KEYS:
@@ -144,7 +146,7 @@ def check_stops_and_jerk(plan: dict, cfg: dict) -> List[dict]:
                     stops_total += 1
                     detail.append(f"{who}.{k}@{i}")
                 acc = abs(v[i] - v[i - 1])
-                if acc > cfg["max_jerk"]:
+                if acc > max_jerk:
                     jerk_bad.append(f"{who}.{k}@{i}({acc:.2f})")
     return [
         _check("stops", stops_total <= cfg["max_stops"], stops_total, cfg["max_stops"],
