@@ -69,7 +69,7 @@ def revenge(hero: str, rival: str, hero_color=GREEN, rival_color=RED, **_) -> di
                    ]))),
         _card("決戦の日", "", 1.6, "time"),
         dict(scene=dict(name="s3_rematch", fight=dict(
-            weapon="sword", kick=True, hits=3, counter=True, finisher="launch_slash", palette="warm", mood="battle", stage="sunset",
+            weapon="sword", kick=True, hits=3, counter=True, finisher="random", palette="warm", mood="battle", stage="sunset",
             colors=dict(A=hero_color, B=rival_color),
             lines=[dict(at="opening", dur=1.6, kind="narr", text=f"再び、{rival}の前に立った。"),
                    dict(at="opening", dt=1.0, dur=1.2, kind="say", who="B", text=_p(["また来たのか。", "懲りない奴だ。", "逃げ出したと思ったが。"])),
@@ -91,7 +91,7 @@ def tournament(hero: str, rival: str, hero_color=GREEN, rival_color=RED, **_) ->
                [dict(at="opening", dur=1.6, kind="narr", text="相手は、剣の使い手。簡単には勝たせてくれない。"),
                 dict(at="counter", dt=0.15, dur=1.0, kind="say", who="B", text="やるな！"),
                 dict(at="last", dur=1.0, kind="say", who="A", text="まだまだ！")]),
-              ("決勝", rival_color, dict(weapon="sword", kick=True, hits=3, counter=True, finisher="launch_slash", palette="warm", mood="battle", stage="sunset", b_scale=1.25),
+              ("決勝", rival_color, dict(weapon="sword", kick=True, hits=3, counter=True, finisher="random", palette="warm", mood="battle", stage="sunset", b_scale=1.25),
                [dict(at="opening", dur=1.8, kind="narr", text=f"決勝の相手は、無敗の王者{rival}。"),
                 dict(at="finisher", dt=-0.25, dur=1.1, kind="shout", text="これが、俺の全力だ！"),
                 dict(at="ko", dt=0.5, dur=1.8, kind="narr", text=f"{hero}が、優勝を決めた。")])]
@@ -106,7 +106,7 @@ def tournament(hero: str, rival: str, hero_color=GREEN, rival_color=RED, **_) ->
 def duel(hero: str, rival: str, hero_color=GREEN, rival_color=RED, **_) -> dict:
     items = [_card("一騎打ち", f"{hero} vs {rival}", 2.0),
              dict(scene=dict(name="duel", fight=dict(
-                 weapon="sword", kick=True, hits=3, counter=True, finisher="launch_slash", palette="warm", mood="battle", stage="night",
+                 weapon="sword", kick=True, hits=3, counter=True, finisher="random", palette="warm", mood="battle", stage="night",
                  colors=dict(A=hero_color, B=rival_color),
                  lines=[dict(at="opening", dur=1.8, kind="narr", text=f"因縁の決着。{hero}は、{rival}の前に立った。"),
                         dict(at="kick", dt=-0.5, dur=1.0, kind="say", who="A", text=_p(["ここで終わらせる！", "決着の時だ！", "因縁は、今日で終わりだ！"])),
@@ -129,7 +129,7 @@ def protect(hero: str, rival: str, hero_color=GREEN, rival_color=RED, **_) -> di
                    ]))),
         _card("それでも", "", 1.5, "time"),
         dict(scene=dict(name="p2_stand", fight=dict(
-            weapon="sword", kick=True, hits=4, counter=False, finisher="launch_slash", palette="warm", mood="battle", stage="sunset", b_scale=1.25,
+            weapon="sword", kick=True, hits=4, counter=False, finisher="random", palette="warm", mood="battle", stage="sunset", b_scale=1.25,
             ally=dict(color=ALLY, x=-3.6, y=1.6, facing=1, cheer=True),
             colors=dict(A=hero_color, B=rival_color),
             lines=[dict(at="opening", dur=1.6, kind="narr", text="背中には、守るべき人たちがいる。"),
@@ -155,7 +155,7 @@ def mentor(hero: str, rival: str, hero_color=GREEN, rival_color=RED, **_) -> dic
                    ]))),
         _card("旅立ちの日", "", 1.6, "time"),
         dict(scene=dict(name="m2_boss", fight=dict(
-            weapon="sword", kick=True, hits=3, counter=True, finisher="launch_slash", palette="warm", mood="battle", stage="field", b_scale=1.3,
+            weapon="sword", kick=True, hits=3, counter=True, finisher="random", palette="warm", mood="battle", stage="field", b_scale=1.3,
             colors=dict(A=hero_color, B=rival_color),
             lines=[dict(at="opening", dur=1.6, kind="narr", text=f"旅の果て、{rival}との決戦。"),
                    dict(at="counter", dt=0.15, dur=1.0, kind="say", who="B", text=_p(["力で、ねじ伏せてやる！", "小細工は通じんぞ！", "叩き潰してやる！"])),

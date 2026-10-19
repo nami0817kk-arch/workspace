@@ -25,7 +25,7 @@ DEFAULTS = dict(
     kick=True,               # 冒頭の蹴り → 壁
     hits=3,                  # 連打の回数(1〜4)
     counter=True,            # 1発目のあと、相手の反撃
-    finisher="launch_slash", # launch_slash / none
+    finisher="launch_slash", # launch_slash(決めの斬りで打ち上げ→空中斬り→叩きつけ) / launch_kick(決めは高い蹴りで打ち上げ) / random(seed で選ぶ) / none(まっすぐ倒れる)
     palette="warm",          # warm / cool
     colors=dict(A=[0.3, 0.68, 0.1], B=[0.8, 0.1, 0.08]),
     tempo=1.35,
@@ -139,7 +139,10 @@ def build_fight(spec: dict) -> dict:
     long_w = s["weapon"] in ("staff", "spear")                        # 長い武器: 途中の打ち・受け止めは手の位置で合わせる(先端は大きく振れて解けない)
     n = max(1, min(4, int(s["hits"])))
     kick = bool(s["kick"])
-    fin = s["finisher"] == "launch_slash"
+    if s["finisher"] == "random":
+        s["finisher"] = (rng.choice(["launch_slash", "launch_kick"]) if rng is not None else "launch_slash")
+    fin = s["finisher"] in ("launch_slash", "launch_kick")
+    fin_kick = s["finisher"] == "launch_kick"
     bfirst = bool(s["b_first"]) and not kick and s["weapon"] not in ("staff", "spear")
     o = 0.0 if kick else (-2.4 + (0.95 if bfirst else 0.0))          # 蹴りが無いぶん、連打の開始が早まる(B が先に仕掛けるなら、その分を空ける)
     tc = 4.0 + o                       # 連打の準備(起き上がり)の終わり
@@ -261,12 +264,17 @@ def build_fight(spec: dict) -> dict:
         cf = last_clip if last else mid_clips[i]
         clip = dict(file=cf, strike_at=_r(t), start=_r(t - pre), end=_r(t + post), **{"in": 0.12 if i == 0 else 0.06, "out": 0.25 if last else 0.06})
         pt = _pt(cf, eff)
+        if last and fin_kick:                            # 決めが蹴り上げ: 高い蹴りの clip(足が胸の高さに届く)で、相手の胸を蹴る
+            cf = "75_16_s1"
+            clip = dict(file=cf, strike_at=_r(t), start=_r(t - 0.4), end=_r(t + 0.25), **{"in": 0.12, "out": 0.25})
         if kick_i == i:
             clip = dict(file="135_07_s1", strike_at=_r(t), start=_r(t - 0.36), end=_r(t + 0.3), **{"in": 0.12, "out": 0.12})
         if not last and kick_i != i:
             clip["anchor_dx"] = round(anchor, 2)
         clipsA.append(clip)
-        if last:
+        if last and fin_kick:
+            hits.append(dict(tau=_r(t), hold=0.08, kind="kick", by="A", contact=dict(striker="A", effector="foot", target=dict(actor="B", point="chest"), tol=round(0.32 + 0.6 * max(0.0, float(s["b_scale"]) - 1.0), 2), max_anticipation=50, hz_range=0.5)))
+        elif last:
             hits.append(dict(tau=_r(t), hold=0.08, kind=kind_hit, by="A", contact=dict(striker="A", effector=eff, target=dict(actor="B", point=pt), tol=round(0.3 + 0.6 * max(0.0, float(s["b_scale"]) - 1.0), 2), max_anticipation=50, hz_range=dict(sword=0.4, dagger=0.4, staff=0.6, spear=0.9).get(s["weapon"], 0.4))))
         elif defend.get(i) == "clash":                   # 受け止め(鍔迫り合い): 命中の種類 clash、相手は腕を上げて受け、少しだけ押される。位置は接触で決める(腕で受けるので許容は広め)
             hits.append(dict(tau=_r(t), hold=0.07, kind="clash", by="A", contact=dict(striker="A", effector=eff, target=dict(actor="B", point=pt), tol=0.6, max_anticipation=50, hz_range=0.45)))

@@ -167,3 +167,14 @@ def test_b_combo_adds_b_strikes_before_last_hit():
     assert len(bs) == len(bs0) + 2
     assert [h["kind"] for h in bs[-2:]] == ["miss", "clash"]
     planmod.validate_scene(sc)
+
+
+def test_launch_kick_finisher_and_random():
+    sc = fight.build_fight(dict(hits=3, finisher="launch_kick"))
+    a_hits = [h for h in sc["hits"] if h.get("by") == "A" and h["kind"] in ("slash", "hit", "kick")]
+    launcher = max(a_hits, key=lambda h: h["tau"] if h.get("contact") else -1)
+    assert launcher["kind"] == "kick" and launcher["contact"]["effector"] == "foot"
+    assert "heel" in [h["kind"] for h in sc["hits"]]
+    planmod.validate_scene(sc)
+    kinds = {fight.build_fight(dict(hits=3, finisher="random", seed=s))["hits"][-2]["kind"] for s in range(6)}
+    assert kinds                                              # seed で選ばれる(どちらかは出る)
