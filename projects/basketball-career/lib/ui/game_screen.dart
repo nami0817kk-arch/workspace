@@ -701,6 +701,9 @@ class _MatchRow extends StatelessWidget {
                     '${m.opponent.isEmpty ? '' : '  vs ${m.vsRival ? 'ライバル ' : ''}${m.opponent}'}',
                     style: const TextStyle(fontWeight: FontWeight.bold)),
                 Text('得点${m.points} リバウンド${m.rebounds} アシスト${m.assists}'
+                    '${m.steals > 0 ? ' スティール${m.steals}' : ''}'
+                    '${m.blocks > 0 ? ' ブロック${m.blocks}' : ''}'
+                    '${m.threes > 0 ? ' 3P${m.threes}本' : ''}'
                     '${m.clutch == null ? '' : '  勝負どころ:${m.clutch!.label}${m.clutchSuccess == true ? '成功' : '失敗'}'}',
                     style: const TextStyle(fontSize: 12)),
                 if (story != null)
@@ -1007,6 +1010,9 @@ class _EndingView extends StatelessWidget {
                 Text('通算 ${g.totalGames}試合 平均${g.careerPpg.toStringAsFixed(1)}得点'
                     ' / 優勝 ${g.titles}回 / 個人賞 ${g.awardCount}回'),
                 Text('通算 ${g.totalPoints}得点 ${g.totalRebounds}リバウンド ${g.totalAssists}アシスト'),
+                Text('スティール ${g.totalSteals} / ブロック ${g.totalBlocks} / 3P ${g.totalThrees}本'),
+                if (g.careerHigh != null)
+                  Text('キャリアハイ ${g.careerHigh!.points}得点(${g.careerHigh!.age}歳)'),
                 if (g.abroad) const Text('海外プロでプレーした。'),
                 if (p.traits.isNotEmpty)
                   Text('特性: ${p.traits.map((t) => t.label).join('・')}'),

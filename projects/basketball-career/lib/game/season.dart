@@ -40,6 +40,14 @@ class TournamentResult {
   /// 実績 0〜100。勝ち上がり6割・個人の評価4割。進路の評価に入る。
   final double achievement;
 
+  int get steals => matches.fold(0, (s, m) => s + m.steals);
+  int get blocks => matches.fold(0, (s, m) => s + m.blocks);
+  int get threes => matches.fold(0, (s, m) => s + m.threes);
+
+  /// 1試合の最多得点。
+  int get highPoints =>
+      matches.fold(0, (s, m) => m.points > s ? m.points : s);
+
   /// 個人の評価(得点・リバウンド・アシストから)。
   double get individual => individualRating(ppg, rpg, apg);
 
