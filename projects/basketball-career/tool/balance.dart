@@ -1,3 +1,4 @@
+// ignore_for_file: avoid_print
 // バランスの目安を出す: dart run tool/balance.dart
 // 練習中心(疲れたら休養)で 1000 人を最後まで進め、進路と結末の割合を数える。
 import 'dart:math';
