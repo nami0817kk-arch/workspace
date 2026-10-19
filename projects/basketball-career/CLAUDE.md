@@ -153,7 +153,7 @@ baseball-manager の骨格（年齢で局面が変わる一代記・季節ごと
 - 広告ユニットIDは `--dart-define=ADMOB_REWARDED_IOS` / `ADMOB_INTERSTITIAL_IOS`。**既定は Google のテスト用ID**。アプリIDは Info.plist の `GADApplicationIdentifier`（今はテスト用）。
 - 報酬の受け取りは `GameController.recover`（画面の `mounted` に依存しない）。広告の読み込みは `await` で待たず `Completer`（`docs/app-pitfalls.md` #1〜#3 を `test/monetization_test.dart` が検査）。
 - Web・テストでは NoOp（広告も課金も出ない）。
-- `legal/` に**プライバシーポリシー・サポート・利用規約の原稿**（日英）。置き場所は `Links`（既定 `https://basketball-career.pages.dev`、`--dart-define=LEGAL_BASE_URL` で差し替え）。
+- `legal/` に**プライバシーポリシー・サポート・利用規約の原稿**（日英）。置き場所は `Links`（既定 `https://basketball-ikusei.pages.dev`、`--dart-define=LEGAL_BASE_URL` で差し替え）。
 
 ## 未着手（ユーザーの判断・作業が要る）
 
