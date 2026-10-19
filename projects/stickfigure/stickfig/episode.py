@@ -110,7 +110,18 @@ def build_episode(ep: dict, out: Path, reuse_figs: bool = False, force: bool = F
     for i, it in enumerate(ep["items"]):
         seg_dir = out / f"seg{i + 1:02d}"
         if "card" in it:
-            segs.append(card_segment(it["card"], seg_dir, ff, ep.get("mood_cards", "sad"), size=((720, 1280) if vertical else (W, H))))
+            card = dict(it["card"])
+            if "color" not in card:                                   # カードの色: 次の場面の舞台の色を暗くしたもの(2D の舞台とつながる)
+                nxt = next((x["scene"] for x in ep["items"][i + 1:] if "scene" in x), None)
+                if nxt is not None:
+                    try:
+                        from . import look
+                        scn = fight.expand(dict(nxt)) if not isinstance(nxt, str) else planmod.load_scene(nxt)
+                        sky = look.FLAT_THEMES.get(scn.get("stage", {}).get("theme", "cave"), look.FLAT_THEMES["cave"])["sky"]
+                        card["color"] = tuple(int(c * 0.35) for c in sky)
+                    except Exception:
+                        pass
+            segs.append(card_segment(card, seg_dir, ff, ep.get("mood_cards", "sad"), size=((720, 1280) if vertical else (W, H))))
             continue
         sc = it["scene"]
         if isinstance(sc, str):
