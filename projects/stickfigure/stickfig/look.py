@@ -123,6 +123,41 @@ def eyes(plan: dict, f: int, img: Image.Image) -> None:
                 d.arc([X - 4 * k, Z - 3 * k, X + 4 * k, Z + 3 * k], 200, 340, fill=(10, 10, 10), width=max(2, int(1.8 * k)))
 
 
+def ground_wave(plan: dict, f: int, x0: float, x1: float, q: float, col=(255, 220, 120)) -> Image.Image:
+    """地面を走る衝撃波: 先頭に盛り上がる土の山(半円)と砂ぼこり、通った跡にひび。q=0→1 で x0 から x1 へ。"""
+    cam = plan["frames"][f]["cam"]
+    u = camera.px_per_unit(cam)
+    ov = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    d = ImageDraw.Draw(ov)
+    rnd = random.Random(f * 3 + 11)
+    xh = x0 + (x1 - x0) * q
+    s = 1 if x1 >= x0 else -1
+    hx, hy = camera.project(cam, xh, 0.0, 0.0)[:2]
+    r = 0.42 * u * (0.6 + 0.4 * min(1.0, q * 4))
+    for k in range(5):                                    # 通った跡の土の山(小さく、後ろほど低い)
+        qq = q - (k + 1) * 0.09
+        if qq < 0:
+            break
+        bx, by = camera.project(cam, x0 + (x1 - x0) * qq, 0.0, 0.0)[:2]
+        rr = r * (0.75 - k * 0.1)
+        d.chord([bx - rr, by - rr * 0.9, bx + rr, by + rr * 0.3], 180, 360, fill=(120, 90, 60, 230), outline=(40, 28, 20, 255), width=3)
+    d.chord([hx - r * 1.1, hy - r * 1.1, hx + r * 1.1, hy + r * 0.35], 180, 360, fill=(*col, 200))      # 先頭の光
+    d.chord([hx - r, hy - r, hx + r, hy + r * 0.3], 180, 360, fill=(135, 100, 65, 255), outline=(40, 28, 20, 255), width=4)
+    for i in range(16):                                   # 砂ぼこり・土の粒
+        px = hx + rnd.uniform(-1.2, 1.2) * r
+        py = hy - rnd.uniform(0.2, 2.2) * r
+        pr = rnd.uniform(3, 9)
+        d.ellipse([px - pr, py - pr, px + pr, py + pr], fill=(170, 140, 100, int(rnd.uniform(120, 220))))
+    for i in range(6):                                    # ひび
+        cx = x0 + (x1 - x0) * rnd.uniform(0.0, max(0.01, q))
+        cxp, cyp = camera.project(cam, cx, 0.0, 0.0)[:2]
+        pts = [(cxp, cyp)]
+        for k in range(4):
+            pts.append((pts[-1][0] + rnd.uniform(-0.3, 0.3) * u, pts[-1][1] + rnd.uniform(0.02, 0.12) * u))
+        d.line(pts, fill=(30, 22, 18, 220), width=2)
+    return ov
+
+
 def ki_ball(cx: float, cy: float, r: float, f: int, col=(255, 190, 70), trail: Tuple[float, float] = None) -> Image.Image:
     """気の玉: 白い芯+色の光、周りに回る粒。trail=(dx, dy)(画面の進行方向)があれば、後ろに流れる筋。"""
     ov = Image.new("RGBA", (W, H), (0, 0, 0, 0))

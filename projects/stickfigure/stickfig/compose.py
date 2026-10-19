@@ -299,8 +299,8 @@ def radial(d_ov: ImageDraw.ImageDraw, cx: float, cy: float, u: float, big: float
                   fill=(*col, a), width=int(wd * SS * (1 - 0.4 * u) * (1 + 0.4 * big)))
 
 
-BIG = dict(kick=1.2, slash=0.7, wall=1.5, heel=1.8, hit=0.8, clash=0.9, beam=0.8, blast=1.5)     # 放射線の大きさ。斬り・受け止めは控えめ(白い面積が増えると、閃光が参考の 2 倍以上になる)
-BURST_FRAMES = dict(slash=7, hit=9, kick=14, wall=14, heel=14, clash=8, miss=4, beam=5, blast=12)   # 放射線が残るコマ数。連続する命中で重ならないよう、斬りは短く
+BIG = dict(kick=1.2, slash=0.7, wall=1.5, heel=1.8, hit=0.8, clash=0.9, beam=0.8, blast=1.5, slam=1.4, wave=1.1)     # 放射線の大きさ。斬り・受け止めは控えめ(白い面積が増えると、閃光が参考の 2 倍以上になる)
+BURST_FRAMES = dict(slash=7, hit=9, kick=14, wall=14, heel=14, clash=8, miss=4, beam=5, blast=12, slam=10, wave=10)   # 放射線が残るコマ数。連続する命中で重ならないよう、斬りは短く
 
 
 def compose_frame(plan: dict, f: int, figs: Dict[int, Image.Image], stages: Optional[Dict[int, Image.Image]] = None) -> Image.Image:
@@ -356,6 +356,10 @@ def compose_frame(plan: dict, f: int, figs: Dict[int, Image.Image], stages: Opti
     if (plan.get("scene", {}).get("anime") or {}).get("smear", False):
         base.alpha_composite(_limb_smear(plan, f, cam))   # 振りの 1〜2 コマの間を埋めるスミア(人物の下に描く)
     base.alpha_composite(figs[f])
+    for wv in fx.get("waves", []):             # 地面を走る衝撃波(人物の上。土の山が手前を通る)
+        if wv["start"] <= tau <= wv["end"]:
+            q = (tau - wv["start"]) / max(1e-6, wv["end"] - wv["start"])
+            base.alpha_composite(look.ground_wave(plan, f, float(wv["x0"]), float(wv["x1"]), min(1.0, q), tuple(wv.get("color", (255, 220, 120)))))
     for ob in fx.get("orbs", []):              # 手に付いて膨らむ光の玉(溜め)
         if ob["start"] <= tau <= ob["end"]:
             who_o = ob.get("who", "A")
@@ -395,10 +399,10 @@ def compose_frame(plan: dict, f: int, figs: Dict[int, Image.Image], stages: Opti
         elif e["kind"] in ("kick", "heel", "wall") and 0 <= age <= 8:
             cxy = to_px(e["pos"][0], e["pos"][1], cam)
             base.alpha_composite(look.shock_ring(cxy[0], cxy[1], age, 8))
-        if e["kind"] in ("kick", "heel", "wall", "blast") and 0 <= age <= 8 and e["kind"] == "blast":
+        if e["kind"] in ("blast", "slam", "wave") and 0 <= age <= 8:
             cxy = to_px(e["pos"][0], e["pos"][1], cam)
             base.alpha_composite(look.shock_ring(cxy[0], cxy[1], age, 8))
-        if e["kind"] in ("clash", "slash", "hit", "kick", "heel", "wall", "beam", "blast") and 0 <= age <= 14:                                        # ヒットストップ中も描く(止め絵に火花が散っているのが衝撃のコマ)
+        if e["kind"] in ("clash", "slash", "hit", "kick", "heel", "wall", "beam", "blast", "slam", "wave") and 0 <= age <= 14:                                        # ヒットストップ中も描く(止め絵に火花が散っているのが衝撃のコマ)
             cxy = to_px(e["pos"][0], e["pos"][1], cam)                   # 火花(金属は多め・白黄、打撃は少なめ・橙)
             metal = e["kind"] in ("clash", "slash")
             base.alpha_composite(look.sparks(cxy[0], cxy[1], age, camera.px_per_unit(cam), e["frame"] * 7 + 3,

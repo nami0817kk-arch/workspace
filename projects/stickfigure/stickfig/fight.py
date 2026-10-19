@@ -25,7 +25,7 @@ DEFAULTS = dict(
     kick=True,               # 冒頭の蹴り → 壁
     hits=3,                  # 連打の回数(1〜4)
     counter=True,            # 1発目のあと、相手の反撃
-    finisher="launch_slash", # launch_slash(決めの斬りで打ち上げ→空中斬り→叩きつけ) / launch_kick(決めは高い蹴りで打ち上げ) / beam(気の光線: 溜め→発射→壁まで吹き飛ばす) / blast(気弾: 片手に玉を膨らませて投げる→着弾で爆発) / random(seed で選ぶ) / none(まっすぐ倒れる)
+    finisher="launch_slash", # launch_slash(決めの斬りで打ち上げ→空中斬り→叩きつけ) / launch_kick(決めは高い蹴りで打ち上げ) / beam(気の光線: 溜め→発射→壁まで吹き飛ばす) / blast(気弾: 片手に玉を膨らませて投げる→着弾で爆発) / wave(衝撃波: 跳んで拳を地面に叩きつけ→地面を走る波で打ち上げる) / random(seed で選ぶ) / none(まっすぐ倒れる)
     beam_color=None,         # beam の色 [r,g,b](0〜255)。既定は水色
     palette="warm",          # warm / cool
     colors=dict(A=[0.3, 0.68, 0.1], B=[0.8, 0.1, 0.08]),
@@ -150,6 +150,7 @@ def build_fight(spec: dict) -> dict:
         s["finisher"] = (rng.choice(["launch_slash", "launch_kick"]) if rng is not None else "launch_slash")
     beam = s["finisher"] == "beam"                       # 必殺技: 気の光線(溜め → 発射 → 壁まで吹き飛ばす)
     blast = s["finisher"] == "blast"                     # 必殺技: 気弾(片手に玉を膨らませて投げる → 着弾で爆発 → 壁まで吹き飛ばす)
+    wave = s["finisher"] == "wave"                       # 必殺技: 衝撃波(跳んで拳を地面に叩きつけ → 地面を走る波 → 相手を打ち上げる)
     fin = s["finisher"] in ("launch_slash", "launch_kick")
     fin_kick = s["finisher"] == "launch_kick"
     bfirst = bool(s["b_first"]) and not kick and s["weapon"] not in ("staff", "spear")
@@ -165,6 +166,7 @@ def build_fight(spec: dict) -> dict:
     fx_beams: List[dict] = []                            # 気の光線(finisher: beam)
     fx_orbs: List[dict] = []                             # 手に付く光の玉(finisher: blast の溜め)
     fx_proj: List[dict] = []                             # 飛ぶ玉(finisher: blast)
+    fx_waves: List[dict] = []                            # 地面を走る衝撃波(finisher: wave)
     wall_lock = None                                     # beam のときは壁の位置を先に決める
     slow: List[dict] = []
     flurry: List[dict] = []
@@ -475,6 +477,41 @@ def build_fight(spec: dict) -> dict:
         puffs.append(dict(tau=_r(t_hit + 1.08), kind="land2", pos=[_r(b_wall - 0.5), 0.0]))
         t_end = t_hit + 1.1
         ko_t = t_hit + 1.05
+    elif wave:
+        b_root = 2.4 - (dxB - 0.45)
+        a_root = -2.0 + 4.0
+        t_jump, t_slam = _r(hl + 0.45), _r(hl + 0.95)    # 跳ぶ → 0.5 秒で落ちて叩きつけ
+        t_hit = _r(t_slam + 0.28)                        # 波が B に届く
+        col = list(s.get("beam_color") or [255, 220, 120])
+        keysB += [dict(t=_r(hl + 0.1), dx=_r(dxB + 0.25), lean=-0.6, fa=0.3, ra=0.3, fe=0.6, re=0.6, ht=-0.8, face="pain"),
+                  dict(t=_r(hl + 0.5), dx=_r(dxB - 0.45), lean=-0.25, hz=0.84, fa=0.6, ra=0.5, fe=1.0, re=1.1, ht=-0.3, face="pain"),
+                  dict(t=_r(t_hit - 0.04), dx=_r(dxB - 0.45), lean=-0.2, hz=0.85, fa=0.8, ra=0.6, fe=1.2, re=1.2, ht=-0.1, face="pain"),
+                  dict(t=_r(t_hit + 0.06), dx=_r(dxB - 0.5), rz=0.5, roll=0.2, hz=0.9, lean=-0.5, fa=-0.9, ra=-0.9, fe=0.3, re=0.3, fl=0.7, fk=0.8, rl=0.3, rk=0.6, ht=-0.7, face="pain"),   # 下から突き上げられる
+                  dict(t=_r(t_hit + 0.32), dx=_r(dxB - 0.7), rz=2.2, roll=1.1, hz=0.9, lean=-0.3, fa=-1.0, ra=-0.8, fe=0.2, re=0.3, fl=0.9, fk=0.3, rl=0.1, rk=0.3, ht=-0.6, face="pain"),   # 打ち上がる(頂点)
+                  dict(t=_r(t_hit + 0.48), dx=_r(dxB - 0.85), rz=1.9, roll=1.4, hz=0.9, face="pain"),
+                  dict(t=_r(t_hit + 0.78), dx=_r(dxB - 1.0), rz=0.55, roll=1.57, hz=0.9, lean=0.0, fa=0.0, ra=0.0, face="pain"),   # 落ちる
+                  dict(t=_r(t_hit + 0.88), dx=_r(dxB - 1.0), rz=0.21, roll=1.57, hz=0.9, fa=0.4, ra=0.4, fl=0.0, fk=0.0, rl=0.0, rk=0.0, face="ko"),
+                  dict(t=_r(t_hit + 0.98), dx=_r(dxB - 1.0), rz=0.3, roll=1.57, hz=0.9, face="ko"),                                   # 床で跳ねる
+                  dict(t=_r(t_hit + 1.1), dx=_r(dxB - 1.0), rz=0.21, roll=1.57, hz=0.9, face="ko")]
+        keysA += [dict(t=_r(hl + 0.12), dx=5.0, hz=0.9, lean=0.15),
+                  dict(t=_r(hl + 0.3), dx=4.3, hz=0.66, lean=0.3, fa=-0.4, fe=1.2, ra=-0.4, re=1.2, fl=0.9, fk=1.6, rl=-0.4, rk=1.2),   # 沈んで(予備動作)
+                  dict(t=_r(t_jump), dx=4.1, rz=1.6, hz=0.95, lean=-0.1, fa=2.7, fe=0.4, ra=2.4, re=0.5, fl=0.5, fk=1.2, rl=-0.3, rk=0.9),   # 跳び上がって拳を振り上げる
+                  dict(t=_r(t_slam - 0.1), dx=4.05, rz=1.1, hz=0.95, lean=0.25, fa=2.9, fe=0.3, ra=2.5, re=0.4, fl=0.6, fk=1.0, rl=-0.4, rk=0.8),   # 落ちながらさらに振りかぶる
+                  dict(t=_r(t_slam), dx=4.0, rz=0.0, hz=0.5, lean=0.55, fa=-1.1, fe=0.2, ra=-0.9, re=0.3, fl=1.1, fk=2.0, rl=-0.2, rk=1.6, ht=0.1),   # 拳を地面に叩きつける(つぶれ)
+                  dict(t=_r(t_slam + 0.3), dx=4.0, hz=0.52, lean=0.5, fa=-1.0, fe=0.2, ra=-0.8, re=0.4),
+                  dict(t=_r(t_hit + 0.9), dx=4.0, hz=0.88, lean=0.1, fa=0.9, fe=1.4, ra=0.7, re=1.5, ht=0.0, face="fight")]
+        fx_waves.append(dict(start=_r(t_slam), end=_r(t_hit + 0.1), x0=_r(a_root + 0.55), x1=_r(b_root + 0.3), color=col))
+        hits += [dict(tau=_r(hl + 0.5), hold=0.0, kind="pose"),
+                 dict(tau=_r(t_slam), hold=0.08, kind="slam", by="A", pos=[_r(a_root + 0.55), 0.05]),
+                 dict(tau=_r(t_hit), hold=0.08, kind="wave", by="A", pos=[_r(b_root - 0.1), 0.6]),
+                 dict(tau=_r(t_hit + 0.88), hold=0.06, kind="land2", pos=[_r(2.4 - (dxB - 1.0)), 0.0])]
+        flashes.append(_r(t_slam))
+        slow.append(dict(start=_r(t_hit - 0.03), end=_r(t_hit + 0.3), rate=0.5))
+        shots += [dict(t=_r(hl + 0.3), follow="A", scale=[[_r(hl + 0.3), 4.4], [_r(t_slam), 4.0]], yaw=[[_r(hl + 0.3), -28.0], [_r(t_slam), -14.0]], pitch=10.0, lens=34.0, target_z=1.1, lag=0.2),
+                  dict(t=_r(t_slam + 0.03), follow="mid", scale=5.4, yaw=6.0, pitch=14.0, lens=40.0, target_z=0.8),
+                  dict(t=_r(t_hit + 0.9), follow="A", scale=[[_r(t_hit + 0.9), 4.6], [_r(t_hit + 2.4), 5.6]], yaw=[[_r(t_hit + 0.9), 30.0], [_r(t_hit + 2.4), -15.0]], pitch=8.0, lens=40.0, target_z=0.9)]
+        t_end = t_hit + 1.15
+        ko_t = t_hit + 0.88
     else:
         keysB += [dict(t=_r(hl + 0.1), dx=_r(dxB + 0.25), lean=-0.6, fa=0.3, ra=0.3, fe=0.6, re=0.6, ht=-0.8, face="pain"),
                   dict(t=_r(hl + 0.45), dx=-2.9, rz=0.5, roll=1.2, hz=0.9, lean=-0.2, fl=0.0, fk=0.0, rl=0.0, rk=0.0, face="pain"),
@@ -501,7 +538,7 @@ def build_fight(spec: dict) -> dict:
     flurry.append(dict(start=_r(ko_t + 0.4), end=_r(ko_t + 0.8), every=5, angles=HERO))
     if fin:                                              # 打ち上げ〜空中斬りの間は、2 人の高さの中ほどを狙って少し引く(高く上げたので上に切れないように)
         shots.append(dict(t=_r(hl + 0.18), follow="mid", scale=5.2, yaw=[[_r(hl + 0.18), 40.0], [_r(hl + 0.9), 30.0]], pitch=6.0, lens=40.0, target_z=1.6))
-    if not beam and not blast:
+    if not beam and not blast and not wave:
         shots.append(dict(t=_r(hl + 0.95 if fin else hl), follow="mid", scale=[[_r(hl), 4.4], [_r(ko_t + 0.3), 5.6], [end, 7.5]], yaw=[[_r(hl), 52.0], [end, -15.0]], pitch=[[_r(hl), 10.0], [end, 22.0]], lens=40.0, target_z=0.9))   # 決め技の間は寄ったまま(5.0→9.0 だと叩きつけで 0.3 まで小さくなった)、倒してから引く
 
     impact_cuts = dict(kinds=["kick", "heel", "wall", "clash"], hold=0.2, angles=[dict(yaw=35, pitch=4, scale=3.0, lens=28, hue=0), dict(yaw=-40, pitch=-6, scale=2.6, lens=26, dutch=6.0, hue=1),
@@ -551,7 +588,7 @@ def build_fight(spec: dict) -> dict:
         stage=dict(wall_x=wall_x, style="flat", theme=s["stage"]), slow=slow, hits=hits, puffs=puffs,
         camera=[[0.0, -0.4, 8.4], [_r(end), 3.2, 8.6]],
         keys=keys,
-        fx=dict(trails=[], speed_lines=speed, invert=invert, flashes=sorted(set(flashes)), charge=charge, color_script=color_script, weapon_glow=bool(sword), beams=fx_beams, orbs=fx_orbs, projectiles=fx_proj),
+        fx=dict(trails=[], speed_lines=speed, invert=invert, flashes=sorted(set(flashes)), charge=charge, color_script=color_script, weapon_glow=bool(sword), beams=fx_beams, orbs=fx_orbs, projectiles=fx_proj, waves=fx_waves),
         clips=dict(A=clipsA, **({"B": clipsB} if clipsB else {})),
         qa=dict(max_cross_frames=400, max_stops=3, max_anticipation_frames=14, max_jerk=1.3),
         tempo=s["tempo"], anime=dict(trails=True, sfx=True, zoom_blur=True, grade=True, roll=True, smear=True),

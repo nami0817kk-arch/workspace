@@ -1,0 +1,3 @@
+# 必殺技の見本 3: 衝撃波。跳んで拳を地面に叩きつけ、地面を走る波で相手を打ち上げる
+name: fight_wave
+fight: {weapon: none, kick: false, hits: 3, counter: true, finisher: wave, palette: warm, stage: field, mood: battle, seed: 5}

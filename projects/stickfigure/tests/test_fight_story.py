@@ -201,3 +201,12 @@ def test_blast_finisher_builds():
     pj = sc["fx"]["projectiles"][0]
     assert pj["x1"] > pj["x0"] and 0.1 <= pj["end"] - pj["start"] <= 0.3
     planmod.validate_scene(sc)
+
+
+def test_wave_finisher_builds():
+    sc = fight.build_fight(dict(weapon="none", kick=False, hits=2, finisher="wave"))
+    kinds = [h["kind"] for h in sc["hits"]]
+    assert "slam" in kinds and "wave" in kinds
+    wv = sc["fx"]["waves"][0]
+    assert wv["x1"] > wv["x0"]
+    planmod.validate_scene(sc)

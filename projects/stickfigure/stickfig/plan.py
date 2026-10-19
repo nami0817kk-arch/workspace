@@ -20,7 +20,7 @@ from .interp import Spring
 from .pose import KeyTrack, Smoother, STANCE_A, STANCE_B, apply_run
 
 VIEW = dict(width=1280, height=720, ground_y=560, px_per_unit=150.0)
-SHAKE = dict(kick=0.10, slash=0.10, wall=0.14, heel=0.18, hit=0.08, clash=0.12, beam=0.16, blast=0.15)   # 命中の種類ごとのカメラの揺れ(単位)
+SHAKE = dict(kick=0.10, slash=0.10, wall=0.14, heel=0.18, hit=0.08, clash=0.12, beam=0.16, blast=0.15, slam=0.2, wave=0.14)   # 命中の種類ごとのカメラの揺れ(単位)
 EFFECTOR = dict(foot=("foot", "fl", (0.2, 2.6)), rear_foot=("rear_foot", "rl", (-0.8, 2.6)),
                 hand=("hand", "fa", (-0.5, 3.0)), tip=("tip", "fa", (-0.5, 3.0)))
 
