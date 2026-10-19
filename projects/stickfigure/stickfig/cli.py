@@ -16,6 +16,7 @@ import shutil
 import subprocess
 import sys
 from pathlib import Path
+from typing import Optional
 
 from . import plan as planmod
 from . import qa
@@ -129,7 +130,29 @@ def build_scene(scene: dict, out: Path, reuse_figs: bool = False, force: bool = 
         holds += list(range(e["frame"], e["frame"] + e.get("hold_frames", 0) + 1))
     vres = video_check.check_video(ff, mp4, out / "check", holds, pl["fps"])
     print(f"\n動画: {mp4}\n動画の点検: 静止 {len(vres['static'])} / 急な変化 {len(vres['pops'])} / 白黒 {len(vres['flashes'])}")
+    fh = figure_height(figs)
+    if fh:
+        print(f"人物の高さ/画面: 中央値 {fh['median']:.2f} / 1/3 未満のコマ {fh['small']:.0%}(参考は 1/3〜1/2)")
     return Path(mp4)
+
+
+def figure_height(figs: Path, step: int = 5) -> Optional[dict]:
+    """人物 PNG のアルファの縦幅(画面の高さに対する比)。参考(Becker・アニメ)は 1/3〜1/2。1/4 以下が続く区間はカメラが遠い。"""
+    import numpy as np
+    from PIL import Image
+    files = sorted(figs.glob("f_*.png"))
+    if not files:
+        return None
+    hs = []
+    for p in files[::step]:
+        a = np.array(Image.open(p).split()[-1])
+        ys = np.where(a.max(axis=1) > 40)[0]
+        if len(ys):
+            hs.append((ys.max() - ys.min()) / a.shape[0])
+    if not hs:
+        return None
+    hs.sort()
+    return dict(median=hs[len(hs) // 2], small=sum(1 for h in hs if h < 1 / 3) / len(hs))
 
 
 def cmd_build(a) -> int:
