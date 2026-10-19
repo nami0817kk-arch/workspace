@@ -64,7 +64,9 @@ void main(List<String> args) {
         case Phase.clutch:
           g.resolveClutch(bestClutch(g.player, g.run!.pending!.oppStrength, g.run!.pending!.form));
         case Phase.event:
-          g.resolveEvent(0);
+          // --local: 進学先は地元の学校、--club: 少数精鋭。ほかの出来事は最初の選択肢。
+          final school = g.pendingEventId?.startsWith('school_') ?? false;
+          g.resolveEvent(school ? (args.contains('--local') ? 1 : args.contains('--club') ? 2 : 0) : 0);
         case Phase.path:
           final first = !g.secondChance;
           final ok = g.chooseRoute(Route.pro);
