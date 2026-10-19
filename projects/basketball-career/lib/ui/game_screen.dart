@@ -281,9 +281,11 @@ class _PlayerCard extends StatelessWidget {
                       child: Chip(
                         label: Text(t.label),
                         visualDensity: VisualDensity.compact,
+                        // 明るい地に濃い字(ダークテーマでも読める)。
+                        labelStyle: const TextStyle(color: Colors.black87),
                         backgroundColor: t.positive
-                            ? Colors.orange.shade100
-                            : Colors.blueGrey.shade100,
+                            ? Colors.orange.shade200
+                            : Colors.blueGrey.shade200,
                       ),
                     ),
                 ],
