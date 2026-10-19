@@ -105,6 +105,14 @@ const _teamPrefix = [
   '星丘', '翠山', '蒼海', '大和', '緑風',
 ];
 
+/// 代表戦の対戦相手(実在の国名。国名は実在のものを使ってよい)。
+const _countries = [
+  'アメリカ', 'スペイン', 'フランス', 'オーストラリア', 'セルビア', 'カナダ',
+  'ドイツ', 'アルゼンチン', 'リトアニア', 'スロベニア', 'ブラジル', 'イタリア',
+];
+
+String countryName(Random rng) => _countries[rng.nextInt(_countries.length)];
+
 /// リーグに合った、架空の対戦チーム名。
 String opponentTeamName(League league, Random rng) {
   final p = _teamPrefix[rng.nextInt(_teamPrefix.length)];
@@ -116,5 +124,6 @@ String opponentTeamName(League league, Random rng) {
     League.corporate => '$pスチール',
     League.proDomestic => '$pホークス',
     League.proAbroad => '$pタイタンズ',
+    League.national => countryName(rng),
   };
 }

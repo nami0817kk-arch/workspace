@@ -157,6 +157,8 @@ final achievements = <Achievement>[
       (g) => g.records.any((r) => r.award == '最優秀選手')),
   Achievement('best5_x3', 'ベスト5の常連', '個人賞(最優秀選手・ベスト5)を3回受けた。',
       (g) => g.records.where((r) => r.award != null).length >= 3),
+  Achievement('national_cap', '日の丸', '日本代表として世界大会に出た。', (g) => g.caps > 0),
+  Achievement('world_champ', '世界王者', '日本代表で世界大会を制した。', worldChampion),
   Achievement('retired_number', '永久欠番', '背番号が永久欠番になった。', retiredNumberOf),
   Achievement('big_game', '一夜の爆発', '1試合で30得点以上を取った。',
       (g) => (g.careerHigh?.points ?? 0) >= 30),

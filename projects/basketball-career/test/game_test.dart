@@ -2480,4 +2480,173 @@ void main() {
       expect(earnedBy(plain).contains('retired_number'), isFalse);
     });
   });
+
+  group('日本代表(世界大会)', () {
+    Player star(int ovr) => Player(
+          name: 'a', age: 23, potential: 90, heightCm: 195, heightGenes: 0.5,
+          abilities: {for (final a in Ability.values) a: ovr},
+        );
+
+    Game proAt(int age, {int ovr = 80, bool events = true}) => Game(
+          eventsEnabled: events,
+          player: star(ovr).copyWith(age: age),
+          rng: Random(3),
+          track: Track.pro,
+        );
+
+    void toYearEnd(Game g) {
+      var guard = 0;
+      final start = g.player.age;
+      while (g.player.age == start && g.phase != Phase.retired && guard++ < 30) {
+        switch (g.phase) {
+          case Phase.season:
+            g.choose(Action.rest, Ability.pass);
+          case Phase.event:
+            g.resolveEvent(1);
+          case Phase.halftime:
+            g.resolveHalftime(Halftime.keep);
+          case Phase.clutch:
+            g.resolveClutch(Clutch.drive);
+          case Phase.path:
+          case Phase.retired:
+            break;
+        }
+      }
+    }
+
+    test('24歳・総合60以上のプロに、日本代表の招集が必ず届く(出来事が有効なとき)', () {
+      final g = proAt(23);
+      toYearEnd(g);
+      expect(g.player.age, 24);
+      // 年末の他の出来事を解決しても、招集が出る
+      var guard = 0;
+      while (g.pendingEventId != 'national_call' && g.phase == Phase.event && guard++ < 5) {
+        g.resolveEvent(1);
+      }
+      expect(g.pendingEventId, 'national_call');
+    });
+
+    test('総合が低い・学生・出来事なしでは届かない', () {
+      final low = proAt(23, ovr: 30);
+      toYearEnd(low);
+      expect(low.pendingEventId, isNot('national_call'));
+      final off = proAt(23, events: false);
+      toYearEnd(off);
+      expect(off.pendingEventId, isNull);
+    });
+
+    test('参加すると、次の冬に世界大会(各国代表)に出て、回数が増える', () {
+      final g = Game(
+        eventsEnabled: false,
+        player: star(85).copyWith(age: 25),
+        rng: Random(2),
+        track: Track.pro,
+        pendingEventId: 'national_call',
+      );
+      g.resolveEvent(0);
+      expect(g.nationalPending, isTrue);
+      // 春・夏・秋を過ごして、冬へ。
+      g.choose(Action.rest, Ability.pass);
+      g.choose(Action.rest, Ability.pass);
+      g.choose(Action.rest, Ability.pass);
+      expect(g.slot, 3);
+      final before = g.records.length;
+      g.choose(Action.rest, Ability.pass); // 冬 = 世界大会
+      expect(g.records.length, before + 1);
+      final r = g.records.last;
+      expect(r.league, League.national);
+      expect(g.caps, 1);
+      expect(g.nationalPending, isFalse);
+    });
+
+    test('辞退すると世界大会には出ない', () {
+      final g = Game(
+        eventsEnabled: false,
+        player: star(85).copyWith(age: 25),
+        rng: Random(2),
+        track: Track.pro,
+        pendingEventId: 'national_call',
+      );
+      g.resolveEvent(1);
+      expect(g.nationalPending, isFalse);
+      for (var i = 0; i < 4; i++) {
+        g.choose(Action.rest, Ability.pass);
+      }
+      expect(g.caps, 0);
+    });
+
+    test('冬に怪我をしていたら代表を辞退する(フラグは消える)', () {
+      final g = Game(
+        eventsEnabled: false,
+        player: star(85).copyWith(age: 25),
+        rng: Random(2),
+        track: Track.pro,
+        nationalPending: true,
+        slot: 3,
+        condition: const Condition(injuredTerms: 3, injuryName: '骨折'),
+      );
+      g.choose(Action.rest, Ability.pass);
+      expect(g.nationalPending, isFalse);
+      expect(g.caps, 0);
+    });
+
+    test('世界大会の相手は各国代表で、ライバルは出ない', () {
+      final names = <String>{};
+      var rivalSeen = false;
+      for (var seed = 0; seed < 80; seed++) {
+        final t = playTournament(star(85), League.national, form: 1, rng: Random(seed),
+            pickOpponent: (round, isFinal) => (name: countryName(Random(seed + round)), rival: false, bonus: 0));
+        for (final m in t.matches) {
+          names.add(m.opponent);
+          if (m.vsRival) rivalSeen = true;
+        }
+      }
+      expect(names.length, greaterThan(3));
+      expect(rivalSeen, isFalse);
+      expect(opponentTeamName(League.national, Random(1)), isNotEmpty);
+    });
+
+    test('世界大会は勝ち抜き(負けたら終わり)で4回戦。名前は日本代表', () {
+      expect(League.national.elimination, isTrue);
+      expect(League.national.rounds, 4);
+      expect(League.national.label, '日本代表');
+    });
+
+    test('世界王者の称号・エンディング・実績', () {
+      final g = Game(
+        eventsEnabled: false,
+        player: star(85).copyWith(age: 33),
+        rng: Random(1),
+        track: Track.pro,
+        caps: 2,
+      );
+      g.records.add(YearRecord(age: 28, league: League.national, wins: 4, games: 4, ppg: 18, rpg: 5, apg: 4, champion: true, achievement: 95));
+      g.retire();
+      expect(worldChampion(g), isTrue);
+      expect(careerTitle(g), contains('世界王者'));
+      expect(epilogueLines(g).join(' '), contains('世界の頂点'));
+      expect(earnedBy(g), containsAll(['national_cap', 'world_champ']));
+    });
+
+    test('保存して読み戻せる。古いセーブでは未参加', () {
+      final g = Game(eventsEnabled: false, player: star(80), rng: Random(1), nationalPending: true, caps: 3);
+      final h = Game.fromJson(g.toJson());
+      expect(h.nationalPending, isTrue);
+      expect(h.caps, 3);
+      expect(Game.fromJson({'player': {'name': 'old'}}).caps, 0);
+    });
+
+    test('世界王者になるのは難しいが、強い選手にはありうる', () {
+      var champs = 0;
+      var cur = 0;
+      for (var seed = 0; seed < 200; seed++) {
+        final t = playTournament(star(92), League.national, form: 1, rng: Random(seed));
+        if (t.champion) champs++;
+        if (t.games >= 2) cur++;
+      }
+      expect(champs, greaterThan(0));
+      expect(champs, lessThan(100), reason: '世界王者は簡単ではない');
+      expect(cur, greaterThan(100));
+    });
+  });
 }

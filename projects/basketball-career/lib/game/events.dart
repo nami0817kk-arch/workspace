@@ -19,6 +19,7 @@ class Effect {
     this.coach = 0,
     this.school,
     this.schoolLabel,
+    this.national = false,
   });
 
   /// 能力の増減(決まった能力)。
@@ -48,6 +49,9 @@ class Effect {
   /// 進学先の環境(大会の味方の強さへの上乗せ)。null なら変えない。
   final double? school;
   final String? schoolLabel;
+
+  /// 日本代表に参加する(次の冬に世界大会に出る)。
+  final bool national;
 }
 
 class EventOption {
@@ -183,6 +187,20 @@ const proEvents = <EventDef>[
       EventOption(
           '新天地で一から挑戦する',
           Effect(school: -1, schoolLabel: '新天地のチーム', teamwork: -8, morale: 8, abilities: {Ability.speed: 1, Ability.threePoint: 1})),
+    ],
+  ),
+];
+
+/// 日本代表の招集(プロで24・28・32歳、総合60以上のときに必ず届く)。
+const nationalEvents = <EventDef>[
+  EventDef(
+    id: 'national_call',
+    title: '日本代表に選ばれた',
+    body: '日本代表の強化合宿に招集された。次の冬、世界の舞台が待っている。',
+    forced: true,
+    options: [
+      EventOption('日の丸を背負って戦う', Effect(national: true, fatigue: 10, morale: 12, teamwork: 4)),
+      EventOption('所属チームに専念する', Effect(coach: 6, morale: 2)),
     ],
   ),
 ];
@@ -528,7 +546,7 @@ const events = <EventDef>[
 ];
 
 EventDef? eventById(String id) {
-  for (final e in [...events, ...schoolEvents, ...proEvents]) {
+  for (final e in [...events, ...schoolEvents, ...proEvents, ...nationalEvents]) {
     if (e.id == id) return e;
   }
   return null;

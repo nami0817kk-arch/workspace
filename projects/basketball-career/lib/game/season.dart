@@ -11,7 +11,8 @@ enum League {
   university('大学', 4, 56, 58),
   corporate('実業団', 4, 55, 57),
   proDomestic('国内プロ', 6, 62, 64),
-  proAbroad('海外プロ', 6, 72, 76);
+  proAbroad('海外プロ', 6, 72, 76),
+  national('日本代表', 4, 66, 78);
 
   const League(this.label, this.rounds, this.teamStrength, this.oppBase);
   final String label;

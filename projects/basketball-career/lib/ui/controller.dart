@@ -375,10 +375,11 @@ class GameController extends ChangeNotifier {
           '同い年の${rv.name}と、はじめて戦った。\nこの先も、準決勝で立ちはだかる。'));
     }
     if (t != null && t.champion) {
+      final world = t.league == League.national;
       pending.add(Milestone(
           MilestoneKind.champion,
-          '優勝!',
-          '${leagueLabel(t.league)}の${wasWinter ? '冬' : '夏'}の大会を制した。'
+          world ? '世界王者!' : '優勝!',
+          '${world ? '日本代表として、世界の頂点に立った。' : '${tournamentName(t.league, wasWinter)}を制した。'}'
               '${t.award == null ? '' : '\n個人賞: ${t.award}'}'));
     } else if (t != null && t.award != null) {
       pending.add(Milestone(MilestoneKind.award, '個人賞: ${t.award}',

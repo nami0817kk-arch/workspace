@@ -646,7 +646,7 @@ class _TournamentCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-                '${leagueLabel(t.league)}の${winter ? '冬' : '夏'}の大会  '
+                '${tournamentName(t.league, winter)}  '
                 '${t.wins}勝${t.games - t.wins}敗${t.champion ? '  優勝!' : ''}',
                 style:
                     const TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
