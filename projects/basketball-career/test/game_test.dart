@@ -15,6 +15,7 @@ import 'package:basketball_career/game/rival.dart';
 import 'package:basketball_career/ui/labels.dart';
 import 'package:basketball_career/game/player.dart';
 import 'package:basketball_career/game/season.dart';
+import 'package:basketball_career/game/skills.dart';
 import 'package:basketball_career/game/traits.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -1948,6 +1949,113 @@ void main() {
         'abilities': {'pass': 50},
       });
       expect(old.of(Ability.freeThrow), startLevel);
+    });
+  });
+
+  group('得意技', () {
+    Player build({double h = 190, Map<Ability, int> ab = const {}}) => Player(
+          name: 'a', age: 17, potential: 70, heightCm: h, heightGenes: 0.5,
+          abilities: {for (final a in Ability.values) a: 40, ...ab},
+        );
+
+    test('条件を満たす得意技だけが身につく', () {
+      final shooter = build(ab: {Ability.threePoint: 82, Ability.dribble: 60});
+      final got = newlyQualified(shooter);
+      expect(got, containsAll([Skill.stepBack, Skill.sniper]));
+      expect(got.contains(Skill.postHook), isFalse);
+      expect(newlyQualified(build()), isEmpty, reason: '能力が低ければ何も無い');
+    });
+
+    test('身長で分かれる: フローターは低め、ポストフックは高さが要る', () {
+      final ab = {Ability.inside: 70, Ability.dribble: 65};
+      expect(Skill.floater.qualifies(build(h: 185, ab: ab)), isTrue);
+      expect(Skill.floater.qualifies(build(h: 205, ab: ab)), isFalse);
+      expect(Skill.postHook.qualifies(build(h: 205, ab: ab)), isTrue);
+      expect(Skill.postHook.qualifies(build(h: 185, ab: ab)), isFalse);
+    });
+
+    test('得意技は対応する勝負どころの成功率を上げる。関係ないものは変えない', () {
+      final base = build(ab: {Ability.threePoint: 70, Ability.dribble: 60});
+      final withSkill = base.copyWith(skills: {Skill.stepBack});
+      expect(clutchChance(withSkill, Clutch.threePoint, 50, 1),
+          greaterThan(clutchChance(base, Clutch.threePoint, 50, 1)));
+      expect(clutchChance(withSkill, Clutch.pass, 50, 1),
+          clutchChance(base, Clutch.pass, 50, 1));
+      final ft = build(ab: {Ability.freeThrow: 80}).copyWith(skills: {Skill.clutchShooter});
+      expect(clutchChance(ft, Clutch.drawFoul, 50, 1),
+          greaterThan(clutchChance(ft.copyWith(skills: {}), Clutch.drawFoul, 50, 1)));
+    });
+
+    test('ハンドラーは大会の味方の強さに効く', () {
+      final g = Game(eventsEnabled: false, player: build(), rng: Random(1));
+      final h = Game(
+          eventsEnabled: false,
+          player: build().copyWith(skills: {Skill.handler}),
+          rng: Random(1));
+      expect(h.teamBonus - g.teamBonus, closeTo(1.0, 1e-9));
+    });
+
+    test('ターンの終わりに条件を満たしたら身につき、知らせが残る。保存もされる', () {
+      final g = Game(
+        eventsEnabled: false,
+        player: build(ab: {Ability.threePoint: 79, Ability.dribble: 60}),
+        rng: Random(1),
+      );
+      // 3P を重点に練習して 80 に届くまで。
+      var learned = false;
+      for (var i = 0; i < 12 && !learned; i++) {
+        g.choose(Action.practice, Ability.threePoint);
+        if (g.lastNewSkills.isNotEmpty) learned = true;
+        if (g.phase == Phase.clutch) g.resolveClutch(Clutch.drive);
+      }
+      expect(g.player.skills, isNotEmpty);
+      expect(Game.fromJson(g.toJson()).player.skills, g.player.skills);
+    });
+
+    test('出来事で能力が上がって得意技が身につく', () {
+      final g = Game(
+        eventsEnabled: false,
+        player: build(ab: {Ability.freeThrow: 73}),
+        rng: Random(1),
+        pendingEventId: 'ft_practice',
+      );
+      g.resolveEvent(0);
+      expect(g.player.skills, contains(Skill.clutchShooter));
+      expect(g.lastNewSkills, contains(Skill.clutchShooter));
+    });
+
+    test('古いセーブ(得意技なし)でも読める。得意技の名前が不明でも落ちない', () {
+      expect(Player.fromJson({'name': 'old'}).skills, isEmpty);
+      expect(Player.fromJson({'name': 'x', 'skills': ['stepBack', 'ふめい']}).skills, {Skill.stepBack});
+    });
+
+    test('エンディングと共有の文に得意技が入る', () {
+      final g = Game(
+        eventsEnabled: false,
+        player: build().copyWith(age: 30, skills: {Skill.stepBack, Skill.sniper}),
+        rng: Random(1),
+        track: Track.pro,
+      )..retire();
+      expect(epilogueLines(g).join(' '), contains('ステップバック3'));
+      expect(shareText(g), contains('得意技'));
+    });
+
+    test('5つで実績「技の百貨店」', () {
+      final g = Game(
+        eventsEnabled: false,
+        player: build().copyWith(skills: {...Skill.values.take(5)}),
+        rng: Random(1),
+      );
+      expect(earnedBy(g), contains('skills5'));
+    });
+
+    test('どの得意技にも条件・説明・効果がある', () {
+      for (final k in Skill.values) {
+        expect(k.label, isNotEmpty);
+        expect(k.description, isNotEmpty);
+        final hasEffect = Clutch.values.any((c) => k.clutchBonus(c) > 0) || k.teamBonus > 0;
+        expect(hasEffect, isTrue, reason: k.name);
+      }
     });
   });
 }

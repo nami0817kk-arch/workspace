@@ -357,6 +357,12 @@ class GameController extends ChangeNotifier {
       pending.add(Milestone(MilestoneKind.stage, '${stageLabel(g.stage)}へ',
           '${g.player.age}歳。新しい仲間とコーチが待っている。'));
     }
+    // 新しい得意技。
+    for (final k in g.lastNewSkills) {
+      lines.add('得意技を習得!「${k.label}」');
+      pending.add(Milestone(MilestoneKind.skill, '得意技を習得!',
+          '${k.label}\n${k.description}'));
+    }
     // 節目の演出。
     if (g.lastMetRival) {
       final rv = g.rival;

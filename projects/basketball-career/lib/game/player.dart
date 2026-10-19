@@ -1,4 +1,5 @@
 import 'career.dart';
+import 'skills.dart';
 import 'traits.dart';
 
 /// 能力。0〜99。
@@ -59,6 +60,7 @@ class Player {
     required this.heightGenes,
     Map<Ability, int>? abilities,
     this.traits = const {},
+    this.skills = const {},
   }) : abilities = abilities ?? {for (final a in Ability.values) a: startLevel};
 
   final String name;
@@ -75,6 +77,9 @@ class Player {
   final Map<Ability, int> abilities;
   final Set<Trait> traits;
 
+  /// 得意技(条件を満たすと身につく)。
+  final Set<Skill> skills;
+
   int of(Ability a) => abilities[a] ?? 0;
 
   Player copyWith({
@@ -82,6 +87,7 @@ class Player {
     double? heightCm,
     Map<Ability, int>? abilities,
     Set<Trait>? traits,
+    Set<Skill>? skills,
   }) =>
       Player(
         name: name,
@@ -91,6 +97,7 @@ class Player {
         heightGenes: heightGenes,
         abilities: abilities ?? this.abilities,
         traits: traits ?? this.traits,
+        skills: skills ?? this.skills,
       );
 
   /// 身長が効く補正つきの能力(リバウンド・ゴール下は高いほど、ドリブル・スピードは低いほど有利)。
@@ -142,6 +149,7 @@ class Player {
         'heightGenes': heightGenes,
         'abilities': {for (final e in abilities.entries) e.key.name: e.value},
         'traits': [for (final t in traits) t.name],
+        'skills': [for (final k in skills) k.name],
       };
 
   /// 項目を足すときは既定値を置く(既存セーブを壊さない)。
@@ -162,6 +170,10 @@ class Player {
       traits: {
         for (final s in (j['traits'] as List?) ?? const [])
           if (Trait.parse(s as String) != null) Trait.parse(s)!,
+      },
+      skills: {
+        for (final s in (j['skills'] as List?) ?? const [])
+          if (Skill.parse(s as String) != null) Skill.parse(s)!,
       },
     );
   }

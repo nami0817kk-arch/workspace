@@ -16,7 +16,7 @@ void main(List<String> args) {
   final auto = args.contains('--auto');
   final spec = args.contains('--spec') || args.contains('--team');
   final team = args.contains('--team');
-  var pro = 0, direct = 0, abroad = 0, titles = 0, rw = 0, rl = 0, awards = 0;
+  var pro = 0, direct = 0, abroad = 0, titles = 0, rw = 0, rl = 0, awards = 0, skills = 0;
   var ovrAt18 = 0.0, heightAt18 = 0.0;
   for (var seed = 0; seed < n; seed++) {
     final g = Game.start('x', rng: Random(seed));
@@ -83,6 +83,7 @@ void main(List<String> args) {
     }
     if (g.records.any((r) => r.league.name.startsWith('pro'))) pro++;
     titles += g.titles;
+    skills += g.player.skills.length;
     awards += g.records.where((r) => r.award != null).length;
     rw += g.rival.wins;
     rl += g.rival.losses;
@@ -91,6 +92,7 @@ void main(List<String> args) {
   print('プロ入り: ${pct(pro)}(高校から直接 ${pct(direct)})');
   print('海外挑戦: ${pct(abroad)}');
   print('ライバルとの通算: ${(rw / n).toStringAsFixed(1)}勝 ${(rl / n).toStringAsFixed(1)}敗(1人あたり)');
+  print('平均の得意技: ${(skills / n).toStringAsFixed(1)}個');
   print('平均の個人賞: ${(awards / n).toStringAsFixed(2)}回');
   print('平均タイトル数: ${(titles / n).toStringAsFixed(2)}');
   print('18歳の平均 総合 ${(ovrAt18 / n).toStringAsFixed(1)} / 身長 ${(heightAt18 / n).toStringAsFixed(1)}cm');

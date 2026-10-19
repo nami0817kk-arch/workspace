@@ -9,6 +9,7 @@ import 'match.dart';
 import 'path.dart';
 import 'player.dart';
 import 'rival.dart';
+import 'skills.dart';
 import 'season.dart';
 import 'traits.dart';
 
@@ -286,6 +287,19 @@ class Game {
   /// 直前のターンで、ライバルとはじめて出会った。
   bool lastMetRival = false;
 
+  /// 直前の操作で新しく身についた得意技(画面が知らせたら使い終わり)。
+  Set<Skill> lastNewSkills = {};
+
+  /// 条件を満たした得意技を身につける。新しく身についたものを返す。
+  Set<Skill> _learnSkills() {
+    final n = newlyQualified(player);
+    if (n.isNotEmpty) {
+      player = player.copyWith(skills: {...player.skills, ...n});
+      lastNewSkills = {...lastNewSkills, ...n};
+    }
+    return n;
+  }
+
   /// 直前のターンがマンネリだったか(画面の知らせ用)。
   bool lastWasRut = false;
 
@@ -376,7 +390,8 @@ class Game {
       (teamwork - 50) *
       0.07 *
       (0.7 + player.of(Ability.pass) / 200) *
-      (player.position == Position.pointGuard ? 1.4 : 1.0);
+      (player.position == Position.pointGuard ? 1.4 : 1.0) +
+      player.skills.fold(0.0, (s, k) => s + k.teamBonus);
 
   /// 冬の大会(全国選手権)がある段階。高校と大学・実業団。
   bool get hasWinterCup => stage == Stage.highSchool || stage == Stage.college;
@@ -416,6 +431,7 @@ class Game {
     recoveredThisTerm = false;
     lastGoalMessage = null;
     lastMetRival = false;
+    lastNewSkills = {};
     final rut = isRut(action);
     final r = playTerm(player, condition, action, focus, rng,
         growthScale: difficulty.growth * coachBoost * (rut ? slumpScale : 1.0));
@@ -428,6 +444,7 @@ class Game {
     condition = r.condition;
     termAction = action;
     termInjured = r.gotInjured;
+    _learnSkills();
     // 何もしなければ少しずつ薄れる(毎ターン -2)。交流・練習試合で保つ。
     teamwork = (teamwork +
             switch (action) {
@@ -693,6 +710,8 @@ class Game {
     player = r.player;
     condition = r.condition;
     pendingEventId = null;
+    lastNewSkills = {};
+    _learnSkills();
     teamwork = (teamwork + opt.effect.teamwork).clamp(0, 100);
     coachBond = (coachBond + opt.effect.coach).clamp(0, 100);
     if (opt.effect.school != null) {

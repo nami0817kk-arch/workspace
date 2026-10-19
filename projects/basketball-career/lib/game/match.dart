@@ -211,8 +211,10 @@ double clutchChance(Player p, Clutch c, double oppDefense, double form) {
     (Position.center, Clutch.defend) => 0.08,
     _ => 0.0,
   };
-  if (c == Clutch.drawFoul) return raw.clamp(0.03, 0.9);
-  return (raw * (0.8 + form * 0.2) + clutchBonus(p.traits) + perk)
+  // 得意技の加算。
+  final skill = p.skills.fold(0.0, (s, k) => s + k.clutchBonus(c));
+  if (c == Clutch.drawFoul) return (raw + skill).clamp(0.03, 0.9);
+  return (raw * (0.8 + form * 0.2) + clutchBonus(p.traits) + perk + skill)
       .clamp(0.03, 0.9);
 }
 
