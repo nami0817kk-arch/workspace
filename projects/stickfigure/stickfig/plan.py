@@ -822,12 +822,18 @@ def _body_drive(p: dict, who: str, f: int, events: List[dict], cfg: dict, sign: 
                 dhz += -0.12 * k * u * r0; dlean += 0.10 * k * u * r0; ddx += -0.16 * k * (1 - (1 - min(1.0, d / 5.0)) ** 2) * (0.3 + 0.7 * u) * (ret if d <= L else 0.0)
                 dfl += 0.35 * k * u; dfk += 0.35 * k * u; drl += -0.30 * k * u; dspin += 0.25 * k * u
         else:                                            # 受ける側(命中の次のコマから。命中のコマは接触を解いた姿勢のまま)
-            if 0 <= d <= 16:
+            if 0 <= d <= 16:                             # 部位ごとに時間差(重なり): 頭が先に飛び(1〜2 コマで山)、胴の反りが続き(4 コマ)、腰の押されは 5 コマで山。腕は跳ね上がって遅れて落ちる
                 u = 1 - d / 16.0
                 pk = e["kind"] in ("kick", "heel")
-                amp = (1.4 if pk else 1.0) * k * min(1.0, d / 2.0)
-                dspin += -0.75 * amp * u * u; dlean += -0.30 * amp * u; dhz += -0.12 * amp * math.sin(math.pi * min(1.0, d / 6.0)) * u
-                ddx += (-0.42 * amp) * (1 - (1 - min(1.0, d / 5.0)) ** 2) * (0.35 + 0.65 * u) * (ret if d <= L else 0.0); dht += -0.35 * amp * u   # 当たった側は離れる(攻め側の前進 0.08 より十分大きく)
+                big = (1.4 if pk else 1.0) * k
+                head = big * (min(1.0, d / 1.5) if d <= 2 else max(0.0, 0.6 + 0.4 * (1 - (d - 2) / 3.0)) if d <= 5 else 0.6 * u / (11 / 16.0))
+                body = big * min(1.0, d / 4.0)
+                dspin += -0.75 * body * u * u; dlean += -0.34 * body * u; dhz += -0.12 * big * math.sin(math.pi * min(1.0, d / 6.0)) * u
+                ddx += (-0.42 * big * min(1.0, d / 2.0)) * (1 - (1 - min(1.0, d / 5.0)) ** 2) * (0.35 + 0.65 * u) * (ret if d <= L else 0.0)
+                dht += -0.45 * head                      # 頭が先に飛ぶ(命中の次のコマで既に 2/3)
+                arm = big * math.sin(math.pi * min(1.0, d / 10.0))   # 腕は跳ね上がり(前腕は後ろ上へ、後ろ腕は前へ)、10 コマで落ちる
+                p["fa"] = p.get("fa", 0.0) - 0.5 * arm; p["fe"] = p.get("fe", 0.0) - 0.2 * arm
+                p["ra"] = p.get("ra", 0.0) + 0.4 * arm
     hit_frames = [e["frame"] for e in events if e["kind"] in kinds and e.get("by")]
     if hit_frames:                                       # 体が弾む(足でリズムを取る・構えが揺れる)。戦いの間は強く、離れた所でも呼吸ぶんは揺れる(棒立ちにしない)
         near = min(abs(f - h) for h in hit_frames)
