@@ -269,6 +269,11 @@ class _PlayerCard extends StatelessWidget {
           children: [
             Text('${trackLabel(game)}  ${p.position.label}  '
                 '${p.heightCm.toStringAsFixed(1)}cm  総合 ${p.overall.round()}'),
+            if (game.track == Track.school && p.age >= 15 ||
+                game.track == Track.university ||
+                game.track == Track.corporate)
+              Text('プロ契約の見込み: ${game.outlook.label}  (評価点 ${game.offerNow.round()})',
+                  style: const TextStyle(fontSize: 12)),
             if (p.traits.isNotEmpty) ...[
               const SizedBox(height: 4),
               Wrap(
@@ -848,6 +853,12 @@ class _PathView extends StatelessWidget {
                 Text('総合 ${g.player.overall.round()} / '
                     '身長 ${g.player.heightCm.toStringAsFixed(1)}cm / '
                     '実績 ${g.achievement.round()}(${achievementWord(g.achievement)})'),
+                const SizedBox(height: 8),
+                Text('プロ契約の評価点 ${g.offerNow.round()}  →  見込み: ${g.outlook.label}',
+                    style: const TextStyle(fontWeight: FontWeight.bold)),
+                Text(g.outlook.description, style: const TextStyle(fontSize: 12)),
+                const Text('(70点以上なら確実、35点未満は難しい。間は運しだい)',
+                    style: TextStyle(fontSize: 12)),
               ],
             ),
           ),

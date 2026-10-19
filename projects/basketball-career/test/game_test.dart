@@ -1174,4 +1174,34 @@ void main() {
       expect(earnedBy(g).containsAll(['grand_slam', 'mini_king', 'jh_king', 'hs_king']), isTrue);
     });
   });
+
+  group('契約の見込み', () {
+    test('評価点で見込みが分かれる', () {
+      expect(outlookOf(75), Outlook.sure);
+      expect(outlookOf(65), Outlook.good);
+      expect(outlookOf(57), Outlook.even);
+      expect(outlookOf(45), Outlook.low);
+      expect(outlookOf(20), Outlook.none);
+    });
+
+    test('見込みと実際の契約が食い違わない(確実なら必ず、難しいなら絶対に無理)', () {
+      for (var i = 0; i < 100; i++) {
+        final g = Game(
+            eventsEnabled: false, player: strong(height: 205), rng: Random(i));
+        if (g.outlook == Outlook.sure) {
+          expect(winsContract(g.player, g.achievement, Random(i)), isTrue);
+        }
+        final w = Game(eventsEnabled: false, player: weak(), rng: Random(i));
+        if (w.outlook == Outlook.none) {
+          expect(winsContract(w.player, w.achievement, Random(i)), isFalse);
+        }
+      }
+    });
+
+    test('ゲームが現在の評価点と見込みを出す', () {
+      final g = Game(eventsEnabled: false, player: strong(height: 205), rng: Random(1));
+      expect(g.offerNow, offerScore(g.player, g.achievement));
+      expect(g.outlook, outlookOf(g.offerNow));
+    });
+  });
 }

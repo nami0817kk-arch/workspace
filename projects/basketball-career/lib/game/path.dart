@@ -29,13 +29,35 @@ double offerScore(Player p, double achievement) =>
 
 const _sureLine = 70.0;
 const _neverLine = 35.0;
+const _passLine = 57.0; // 運の分を引いたときの合格点
+
+/// プロ契約の見込み(進路の前に、いまの位置を伝える)。
+enum Outlook {
+  sure('ほぼ確実', '評価点が高く、プロ契約はほぼ確実。'),
+  good('有望', '合格ラインを超えている。運が味方すれば契約できる。'),
+  even('五分', '合格ラインのあたり。運しだい。'),
+  low('厳しい', '合格ラインに届いていない。もう少し力をつけたい。'),
+  none('難しい', '評価点が低すぎる。まず大学・実業団で力をつけよう。');
+
+  const Outlook(this.label, this.description);
+  final String label;
+  final String description;
+}
+
+Outlook outlookOf(double score) {
+  if (score >= _sureLine) return Outlook.sure;
+  if (score < _neverLine) return Outlook.none;
+  if (score >= _passLine + 5) return Outlook.good;
+  if (score >= _passLine - 5) return Outlook.even;
+  return Outlook.low;
+}
 
 /// プロ契約を勝ち取れるか。**一番上は確実、一番下は絶対に無理**、間は運しだい(±10)。
 bool winsContract(Player p, double achievement, Random rng) {
   final s = offerScore(p, achievement);
   if (s >= _sureLine) return true;
   if (s < _neverLine) return false;
-  return s + (rng.nextDouble() * 20 - 10) >= 57;
+  return s + (rng.nextDouble() * 20 - 10) >= _passLine;
 }
 
 /// 海外挑戦の条件。21歳以上で総合評価が一定以上。
