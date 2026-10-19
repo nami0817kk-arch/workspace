@@ -33,6 +33,10 @@ class YearRecord {
     required this.achievement,
     this.winter = false,
     this.award,
+    this.steals = 0,
+    this.blocks = 0,
+    this.threes = 0,
+    this.highPoints = 0,
   });
 
   final int age;
@@ -51,9 +55,19 @@ class YearRecord {
   /// その大会の個人賞(最優秀選手・ベスト5)。なければ null。
   final String? award;
 
+  /// その大会の合計(スティール・ブロック・3P)と、1試合の最多得点。
+  final int steals;
+  final int blocks;
+  final int threes;
+  final int highPoints;
+
   Map<String, dynamic> toJson() => {
         'winter': winter,
         'award': award,
+        'steals': steals,
+        'blocks': blocks,
+        'threes': threes,
+        'highPoints': highPoints,
         'age': age,
         'league': league.name,
         'wins': wins,
@@ -80,6 +94,10 @@ class YearRecord {
         achievement: (j['achievement'] as num?)?.toDouble() ?? 0,
         winter: (j['winter'] as bool?) ?? false,
         award: j['award'] as String?,
+        steals: (j['steals'] as num?)?.toInt() ?? 0,
+        blocks: (j['blocks'] as num?)?.toInt() ?? 0,
+        threes: (j['threes'] as num?)?.toInt() ?? 0,
+        highPoints: (j['highPoints'] as num?)?.toInt() ?? 0,
       );
 }
 
@@ -633,6 +651,10 @@ class Game {
       achievement: t.achievement,
       winter: winter,
       award: t.award,
+      steals: t.steals,
+      blocks: t.blocks,
+      threes: t.threes,
+      highPoints: t.highPoints,
     ));
     recentAchievements.add(t.achievement);
     while (recentAchievements.length > _recentCount) {
@@ -895,6 +917,21 @@ class Game {
       records.fold(0.0, (s, r) => s + r.rpg * r.games).round();
   int get totalAssists =>
       records.fold(0.0, (s, r) => s + r.apg * r.games).round();
+  int get totalSteals => records.fold(0, (s, r) => s + r.steals);
+  int get totalBlocks => records.fold(0, (s, r) => s + r.blocks);
+  int get totalThrees => records.fold(0, (s, r) => s + r.threes);
+
+  /// キャリアハイ(1試合の最多得点)とその年齢。記録が無ければ null。
+  ({int points, int age})? get careerHigh {
+    ({int points, int age})? best;
+    for (final r in records) {
+      if (r.highPoints > (best?.points ?? 0)) {
+        best = (points: r.highPoints, age: r.age);
+      }
+    }
+    return best;
+  }
+
   int get awardCount => records.where((r) => r.award != null).length;
   double get careerPpg => totalGames == 0
       ? 0

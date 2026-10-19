@@ -2058,4 +2058,94 @@ void main() {
       }
     });
   });
+
+  group('スタッツ(スティール・ブロック・3P・キャリアハイ)', () {
+    double avg(Player p, int Function(MatchState) pick) {
+      var t = 0;
+      for (var i = 0; i < 400; i++) {
+        t += pick(playQuarters(p, teamStrength: 55, oppStrength: 55, form: 1, rng: Random(i)));
+      }
+      return t / 400;
+    }
+
+    Player build(double h, Map<Ability, int> ab) => Player(
+          name: 'a', age: 20, potential: 70, heightCm: h, heightGenes: 0.5,
+          abilities: {for (final a in Ability.values) a: 50, ...ab},
+        );
+
+    test('背が高く守りが強いほどブロックが多い', () {
+      final big = build(208, {Ability.defense: 85});
+      final guard = build(176, {Ability.defense: 85});
+      expect(avg(big, (s) => s.blocks), greaterThan(avg(guard, (s) => s.blocks)));
+    });
+
+    test('守りと足があるほどスティールが多い', () {
+      final thief = build(180, {Ability.defense: 85, Ability.speed: 85});
+      final slow = build(180, {Ability.defense: 30, Ability.speed: 30});
+      expect(avg(thief, (s) => s.steals), greaterThan(avg(slow, (s) => s.steals)));
+    });
+
+    test('3Pが得意な選手ほど3Pを多く決め、センターは少ない', () {
+      final sniper = build(188, {Ability.threePoint: 90, Ability.inside: 40});
+      final post = build(208, {Ability.threePoint: 30, Ability.inside: 90});
+      expect(avg(sniper, (s) => s.threes), greaterThan(avg(post, (s) => s.threes)));
+    });
+
+    test('勝負どころで3Pを決めると3P本数に1加わる', () {
+      final s = MatchState(
+        team: 60, opp: 61, points: 10, rebounds: 4, assists: 3, threes: 2,
+        teamStrength: 60, oppStrength: 60, form: 1,
+        teamQuarters: const [15, 15, 15, 15], oppQuarters: const [15, 15, 15, 16],
+      );
+      final p = build(190, {Ability.threePoint: 99});
+      for (var seed = 0; seed < 100; seed++) {
+        final r = finishMatch(p, s, Clutch.threePoint, Random(seed));
+        expect(r.threes, r.clutchSuccess == true ? 3 : 2);
+      }
+    });
+
+    test('年の記録に集計され、キャリアハイと通算が出る。保存される', () {
+      final g = Game(eventsEnabled: false, player: strong(), rng: Random(1));
+      g.records.addAll([
+        YearRecord(age: 15, league: League.juniorHigh, wins: 3, games: 3, ppg: 10, rpg: 3, apg: 2, champion: false, achievement: 60, steals: 4, blocks: 1, threes: 6, highPoints: 18),
+        YearRecord(age: 16, league: League.highSchool, wins: 3, games: 4, ppg: 12, rpg: 4, apg: 2, champion: false, achievement: 65, steals: 5, blocks: 2, threes: 7, highPoints: 31),
+      ]);
+      expect(g.totalSteals, 9);
+      expect(g.totalBlocks, 3);
+      expect(g.totalThrees, 13);
+      expect(g.careerHigh, (points: 31, age: 16));
+      expect(earnedBy(g), contains('big_game'));
+      final h = Game.fromJson(g.toJson());
+      expect(h.careerHigh, g.careerHigh);
+      expect(Game.fromJson({'player': {'name': 'old'}}).careerHigh, isNull);
+    });
+
+    test('大会の合計は試合の合計。1試合の最多得点が入る', () {
+      MatchResult m(int pts, int st, int bl, int th) => MatchResult(
+          won: true, teamScore: 70, oppScore: 60, points: pts, rebounds: 3,
+          assists: 2, steals: st, blocks: bl, threes: th);
+      final t = TournamentResult(
+          league: League.highSchool,
+          matches: [m(8, 2, 0, 1), m(24, 1, 3, 4), m(12, 0, 1, 0)],
+          wins: 3,
+          achievement: 70);
+      expect(t.steals, 3);
+      expect(t.blocks, 4);
+      expect(t.threes, 5);
+      expect(t.highPoints, 24);
+    });
+
+    test('エンディングにキャリアハイが入る(20点以上のとき)', () {
+      final g = Game(
+        eventsEnabled: false,
+        player: strong().copyWith(age: 30),
+        rng: Random(1),
+        track: Track.pro,
+      );
+      g.records.add(YearRecord(age: 27, league: League.proDomestic, wins: 4, games: 6, ppg: 15, rpg: 5, apg: 3, champion: false, achievement: 70, highPoints: 34));
+      g.retire();
+      expect(epilogueLines(g).join(' '), contains('キャリアハイは27歳の34得点'));
+      expect(shareText(g), contains('キャリアハイ34点'));
+    });
+  });
 }

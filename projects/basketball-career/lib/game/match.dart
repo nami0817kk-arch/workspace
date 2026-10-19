@@ -32,6 +32,9 @@ class MatchResult {
     required this.points,
     required this.rebounds,
     required this.assists,
+    this.steals = 0,
+    this.blocks = 0,
+    this.threes = 0,
     this.clutch,
     this.clutchSuccess,
     this.teamQuarters = const [],
@@ -46,6 +49,11 @@ class MatchResult {
   final int points;
   final int rebounds;
   final int assists;
+  final int steals;
+  final int blocks;
+
+  /// 決めた3Pの本数。
+  final int threes;
 
   /// 勝負どころが訪れたときの選択と成否。訪れなければ null。
   final Clutch? clutch;
@@ -68,6 +76,9 @@ class MatchResult {
         'points': points,
         'rebounds': rebounds,
         'assists': assists,
+        'steals': steals,
+        'blocks': blocks,
+        'threes': threes,
         'clutch': clutch?.name,
         'clutchSuccess': clutchSuccess,
         'teamQuarters': teamQuarters,
@@ -83,6 +94,9 @@ class MatchResult {
         points: (j['points'] as num?)?.toInt() ?? 0,
         rebounds: (j['rebounds'] as num?)?.toInt() ?? 0,
         assists: (j['assists'] as num?)?.toInt() ?? 0,
+        steals: (j['steals'] as num?)?.toInt() ?? 0,
+        blocks: (j['blocks'] as num?)?.toInt() ?? 0,
+        threes: (j['threes'] as num?)?.toInt() ?? 0,
         clutch: Clutch.parse(j['clutch'] as String?),
         clutchSuccess: j['clutchSuccess'] as bool?,
         teamQuarters: [
@@ -106,6 +120,9 @@ class MatchState {
     required this.points,
     required this.rebounds,
     required this.assists,
+    this.steals = 0,
+    this.blocks = 0,
+    this.threes = 0,
     required this.teamStrength,
     required this.oppStrength,
     required this.form,
@@ -120,6 +137,9 @@ class MatchState {
   final int points;
   final int rebounds;
   final int assists;
+  final int steals;
+  final int blocks;
+  final int threes;
   final double teamStrength;
   final double oppStrength;
   final double form;
@@ -139,6 +159,9 @@ class MatchState {
         'points': points,
         'rebounds': rebounds,
         'assists': assists,
+        'steals': steals,
+        'blocks': blocks,
+        'threes': threes,
         'teamStrength': teamStrength,
         'oppStrength': oppStrength,
         'form': form,
@@ -154,6 +177,9 @@ class MatchState {
         points: (j['points'] as num?)?.toInt() ?? 0,
         rebounds: (j['rebounds'] as num?)?.toInt() ?? 0,
         assists: (j['assists'] as num?)?.toInt() ?? 0,
+        steals: (j['steals'] as num?)?.toInt() ?? 0,
+        blocks: (j['blocks'] as num?)?.toInt() ?? 0,
+        threes: (j['threes'] as num?)?.toInt() ?? 0,
         teamStrength: (j['teamStrength'] as num?)?.toDouble() ?? 50,
         oppStrength: (j['oppStrength'] as num?)?.toDouble() ?? 50,
         form: (j['form'] as num?)?.toDouble() ?? 1,
@@ -250,10 +276,37 @@ MatchState playQuarters(
       3;
   final share =
       (0.10 + (offense - 30) / 300 + _noise(rng) * 0.03).clamp(0.04, 0.45);
+  final pts = (team * share * form).round();
+  // 3Pの本数: 得点のうち外から決める割合(3P、ミドル、ゴール下の比)。
+  final tp = p.effective(Ability.threePoint);
+  final mid = p.effective(Ability.midRange);
+  final ins = p.effective(Ability.inside);
+  final threeShare = tp / (tp + mid + ins + 1);
+  final threes = max(0, (pts * threeShare * 0.55 / 3 + _noise(rng) * 0.6).round());
+  // スティール(読みと足)・ブロック(守りと高さ)。
+  final steals = max(
+      0,
+      (((p.effective(Ability.defense) + p.effective(Ability.speed)) / 2) /
+                  45 *
+                  form +
+              _noise(rng) * 0.8)
+          .round()
+          .clamp(0, 6));
+  final blocks = max(
+      0,
+      ((p.effective(Ability.defense) / 70) *
+                  (0.2 + max(0.0, p.heightCm - 180) / 35) *
+                  form +
+              _noise(rng) * 0.6)
+          .round()
+          .clamp(0, 6));
   return MatchState(
     team: team,
     opp: opp,
-    points: (team * share * form).round(),
+    points: pts,
+    steals: steals,
+    blocks: blocks,
+    threes: threes,
     rebounds: max(
         0,
         (p.effective(Ability.rebound) /
@@ -340,6 +393,9 @@ MatchResult finishMatch(Player p, MatchState s, Clutch? choice, Random rng) {
     points: points,
     rebounds: s.rebounds,
     assists: assists,
+    steals: s.steals,
+    blocks: s.blocks,
+    threes: s.threes + (used == Clutch.threePoint && ok == true ? 1 : 0),
     clutch: used,
     clutchSuccess: ok,
     teamQuarters: s.teamQuarters,
