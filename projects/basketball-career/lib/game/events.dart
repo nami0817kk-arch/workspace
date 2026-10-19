@@ -65,6 +65,7 @@ class EventDef {
     this.minAge = 6,
     this.maxAge = 40,
     this.proOnly = false,
+    this.abroadOnly = false,
     this.forced = false,
   });
 
@@ -75,6 +76,9 @@ class EventDef {
   final int minAge;
   final int maxAge;
   final bool proOnly;
+
+  /// 海外プロでだけ起きる。
+  final bool abroadOnly;
 
   /// 段階が変わるときに必ず起きる出来事(進学先の選択)。ふだんの抽選には出ない。
   final bool forced;
@@ -407,6 +411,74 @@ const events = <EventDef>[
     ],
   ),
   EventDef(
+    id: 'contract_talk',
+    title: '契約更改',
+    body: '来季の契約についての話し合い。評価は上々だ。',
+    minAge: 19,
+    proOnly: true,
+    options: [
+      EventOption('長期契約で腰を据える', Effect(morale: 8, coach: 6, fatigue: -5)),
+      EventOption('短い契約で、次の挑戦に備える', Effect(focusBonus: 2, morale: 3)),
+    ],
+  ),
+  EventDef(
+    id: 'fan_event',
+    title: 'ファン感謝祭',
+    body: 'ファンとの交流イベントがあった。大きな声援を浴びた。',
+    minAge: 19,
+    proOnly: true,
+    options: [
+      EventOption('笑顔で応える', Effect(morale: 14, teamwork: 5, fatigue: 5, trait: Trait.starPower)),
+      EventOption('早めに帰って体を休める', Effect(fatigue: -12)),
+    ],
+  ),
+  EventDef(
+    id: 'young_rise',
+    title: '若手の台頭',
+    body: '同じポジションに、期待の若手が入ってきた。',
+    minAge: 24,
+    proOnly: true,
+    options: [
+      EventOption('負けじと自分を磨く', Effect(focusBonus: 3, fatigue: 10, morale: -2)),
+      EventOption('先輩として育てる', Effect(teamwork: 12, abilities: {Ability.pass: 1, Ability.defense: 1}, coach: 5)),
+    ],
+  ),
+  EventDef(
+    id: 'aging',
+    title: '衰えとの向き合い',
+    body: '以前のようには体が動かない。どう向き合う？',
+    minAge: 30,
+    proOnly: true,
+    options: [
+      EventOption('トレーニングで体を守る', Effect(abilities: {Ability.speed: 2, Ability.stamina: 2}, fatigue: 12, morale: -2)),
+      EventOption('技術と経験で補う', Effect(abilities: {Ability.midRange: 2, Ability.pass: 2, Ability.defense: 1}, morale: 4)),
+    ],
+  ),
+  EventDef(
+    id: 'language_wall',
+    title: '言葉の壁',
+    body: '海外のチームで、言葉が通じずに戸惑う場面が続く。',
+    minAge: 21,
+    proOnly: true,
+    abroadOnly: true,
+    options: [
+      EventOption('通訳に頼らず、自分から話しかける', Effect(teamwork: 14, morale: -3, fatigue: 6, abilities: {Ability.pass: 1})),
+      EventOption('プレーで語ると割り切る', Effect(focusBonus: 2, teamwork: -4, morale: 3)),
+    ],
+  ),
+  EventDef(
+    id: 'world_stage',
+    title: '世界の舞台',
+    body: '世界最高峰のスーパースターと、コートで向き合う機会が来た。',
+    minAge: 21,
+    proOnly: true,
+    abroadOnly: true,
+    options: [
+      EventOption('真っ向から挑む', Effect(abilities: {Ability.physical: 2, Ability.defense: 2}, fatigue: 15, achievement: 5)),
+      EventOption('技を盗むつもりで観察する', Effect(abilities: {Ability.dribble: 2, Ability.threePoint: 2}, morale: 4)),
+    ],
+  ),
+  EventDef(
     id: 'study_balance',
     title: '勉強との両立',
     body: '部活と勉強の両立に悩んでいる。',
@@ -433,11 +505,16 @@ const eventChance = 0.35;
 EventDef? rollEvent(Player p,
     {required bool pro,
     required Random rng,
+    bool abroad = false,
     List<String> recent = const []}) {
   if (rng.nextDouble() >= eventChance) return null;
   final all = [
     for (final e in events)
-      if (p.age >= e.minAge && p.age <= e.maxAge && (!e.proOnly || pro)) e,
+      if (p.age >= e.minAge &&
+          p.age <= e.maxAge &&
+          (!e.proOnly || pro) &&
+          (!e.abroadOnly || abroad))
+        e,
   ];
   // 最近起きたものは避ける(同じ出来事ばかりにならないように)。
   final fresh = [for (final e in all) if (!recent.contains(e.id)) e];
