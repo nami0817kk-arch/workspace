@@ -399,20 +399,55 @@ def compose_vertical(plan: dict, f: int, figs, stages, cx: float) -> Image.Image
     return captions.draw(crop, plan, f, xf=(x0, 1280 / H))
 
 
+class _Lazy:
+    """コマ番号で引くと、その場でファイルから読む(最近の分だけ覚える)。並列の合成で、全コマを各プロセスに送らないため。"""
+
+    def __init__(self, dir_, mode: str, keep: int = 24):
+        self.dir, self.mode, self.keep, self.cache = Path(dir_), mode, keep, {}
+
+    def __getitem__(self, f: int) -> Image.Image:
+        if f not in self.cache:
+            if len(self.cache) >= self.keep:
+                self.cache.pop(next(iter(self.cache)))
+            self.cache[f] = Image.open(self.dir / f"f_{f + 1:04d}.png").convert(self.mode)
+        return self.cache[f]
+
+
+_W = {}
+
+
+def _init_worker(plan, fig_dir, stage_dir, out_dir, vertical, cxs):
+    _W.update(plan=plan, figs=_Lazy(fig_dir, "RGBA"), stages=_Lazy(stage_dir, "RGB") if stage_dir else None, out=Path(out_dir), vertical=vertical, cxs=cxs)
+
+
+def _render_one(f: int) -> int:
+    plan, figs, stages = _W["plan"], _W["figs"], _W["stages"]
+    img = compose_vertical(plan, f, figs, stages, _W["cxs"][f]) if _W["vertical"] else compose_frame(plan, f, figs, stages)
+    img.save(_W["out"] / f"{f + 1:04d}.png")
+    return f
+
+
 def compose(plan: dict, fig_dir, out_dir, mp4_path, ffmpeg: str, stage_dir=None) -> Path:
+    import multiprocessing
+    import os
     fig_dir, out_dir = Path(fig_dir), Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     for p in out_dir.glob("*.png"):
         p.unlink()
     n = plan["n"]
-    figs = {f: Image.open(fig_dir / f"f_{f + 1:04d}.png").convert("RGBA") for f in range(n)}
-    stages = None
-    if plan["view"].get("persp") and stage_dir is not None:
-        stages = {f: Image.open(Path(stage_dir) / f"f_{f + 1:04d}.png").convert("RGB") for f in range(n)}
     vertical = (plan.get("scene", {}).get("output") or {}).get("aspect") == "vertical"
     cxs = crop_centers(plan, int(H * 9 / 16)) if vertical else None
-    for f in range(n):
-        (compose_vertical(plan, f, figs, stages, cxs[f]) if vertical else compose_frame(plan, f, figs, stages)).save(out_dir / f"{f + 1:04d}.png")
+    sd = stage_dir if (plan["view"].get("persp") and stage_dir is not None) else None
+    workers = int(os.environ.get("STICKFIG_WORKERS", min(8, os.cpu_count() or 1)))
+    if workers > 1 and n >= 12:             # コマは互いに独立なので、プロセスを分けて並列に合成する(1コマ約0.8秒)
+        ctx = multiprocessing.get_context("spawn")
+        with ctx.Pool(workers, initializer=_init_worker, initargs=(plan, str(fig_dir), str(sd) if sd else None, str(out_dir), vertical, cxs)) as pool:
+            for _ in pool.imap_unordered(_render_one, range(n), chunksize=4):
+                pass
+    else:
+        _init_worker(plan, str(fig_dir), str(sd) if sd else None, str(out_dir), vertical, cxs)
+        for f in range(n):
+            _render_one(f)
     subprocess.run([ffmpeg, "-y", "-loglevel", "error", "-framerate", str(plan["fps"]), "-i", str(out_dir / "%04d.png"),
                     "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "18", str(mp4_path)], check=True)
     return Path(mp4_path)
