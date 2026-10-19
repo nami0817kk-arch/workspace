@@ -399,6 +399,8 @@ def crop_centers(plan: dict, cw: int) -> List[float]:
             p = fr["actors"][who]
             pts.append(P3(cam, p["root_x"], 0.0, 0.95)[0])
         tgt = sum(pts) / len(pts)
+        if len(pts) >= 2 and abs(pts[0] - pts[1]) > cw * 0.8:          # 2人が縦の枠に収まらないほど離れている: 主役(最初の人物)を追う
+            tgt = pts[0]
         for e in plan["events"]:                       # 命中の瞬間は、命中の位置を中心に
             if e["frame"] <= f <= e["frame"] + max(1, e.get("hold_frames", 0)):
                 tgt = to_px(e["pos"][0], e["pos"][1], cam)[0]
