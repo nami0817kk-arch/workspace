@@ -1812,4 +1812,31 @@ void main() {
       expect(Game.fromJson(g.toJson()).coachLabel, g.coachLabel);
     });
   });
+
+  group('エンディングの感謝', () {
+    String end({int coach = 20, int tw = 40, String mate = '佐野タクミ', String label = '大島'}) {
+      final g = Game(
+        eventsEnabled: false,
+        player: strong().copyWith(age: 25),
+        rng: Random(1),
+        track: Track.pro,
+        coachBond: coach,
+        teamwork: tw,
+        mate: mate,
+        coachLabel: label,
+      )..retire();
+      return epilogueLines(g).join(' ');
+    }
+
+    test('信頼・チームワークが高いときだけ、コーチと仲間への一言が入る', () {
+      expect(end(), isNot(contains('大島コーチ')));
+      expect(end(), isNot(contains('佐野タクミ')));
+      expect(end(coach: 80), contains('大島コーチへの感謝'));
+      expect(end(tw: 80), contains('佐野タクミとは'));
+    });
+
+    test('名前が無いセーブでは、入れない', () {
+      expect(end(coach: 90, tw: 90, mate: '', label: ''), isNot(contains('感謝')));
+    });
+  });
 }

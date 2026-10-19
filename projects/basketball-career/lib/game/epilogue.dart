@@ -78,6 +78,16 @@ List<String> epilogueLines(Game g) {
 
   if (r.games > 0) lines.add(r.fate);
 
+  // 支えてくれた人たち。信頼・チームワークが高かったときだけ。
+  final thanks = <String>[];
+  if (g.coachBond >= 60 && g.coachLabel.isNotEmpty) {
+    thanks.add('${g.coachLabel}コーチへの感謝は、最後まで忘れなかった。');
+  }
+  if (g.teamwork >= 60 && g.mate.isNotEmpty) {
+    thanks.add('仲間の${g.mate}とは、いまも連絡を取り合っている。');
+  }
+  if (thanks.isNotEmpty) lines.add(thanks.join(''));
+
   lines.add('${p.age}歳、${g.retiredReason ?? '現役を退いた'}。');
 
   lines.add(_closing(g));
