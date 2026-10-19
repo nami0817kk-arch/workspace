@@ -1,4 +1,4 @@
-/// ストア掲載用のスクリーンショットを生成する(iPhone 6.9インチ = 1320x2868)。
+/// ストア掲載用のスクリーンショットを生成する(iPhone 6.3インチ = 1206x2622。App Store の必須枠)。
 ///
 /// **CI では回らない**(`test/` の外にある生成器。実行するとファイルを書き換える)。
 ///
@@ -45,7 +45,7 @@ class _NullStore extends SaveStore {
   Future<Map<String, dynamic>?> load() async => null;
 }
 
-const _logical = Size(440, 956);
+const _logical = Size(402, 874);
 const _ratio = 3.0;
 const _bandHeight = 150.0;
 
@@ -154,7 +154,7 @@ Future<void> _shoot(
   );
   await t.runAsync(() async {
     final b = _key.currentContext!.findRenderObject() as RenderRepaintBoundary;
-    // 論理 440x956 を 3 倍にして、1320x2868(iPhone 6.9インチ)で書き出す。
+    // 論理 402x874 を 3 倍にして、1206x2622(Dynamic Island 搭載 iPhone の中型)で書き出す。
     final img = await b.toImage(pixelRatio: _ratio);
     final data = await img.toByteData(format: ui.ImageByteFormat.png);
     File('marketing/screenshots/$name.png')
@@ -243,7 +243,7 @@ void main() {
       rng: Random(5),
       pendingEventId: 'school_hs',
     );
-    await _shoot(t, '03_school', '進学も移籍も自分で決める', _controller(e), (
+    await _shoot(t, '03_school', '進路は自分で選ぶ', _controller(e), (
       const Color(0xFF004D40),
       const Color(0xFF00796B),
     ));

@@ -5,11 +5,11 @@ import 'traits.dart';
 
 /// 勝負どころ(最後の攻防)で選べるプレー。
 enum Clutch {
-  drive('ドライブ', '切り込んで決める。ゴール下とドリブルが効く。2点。'),
+  drive('ドライブ', '切り込んで決める。ドリブルが効く。2点。'),
   threePoint('3P', '外から狙う。成功すれば3点。'),
   pass('パス', '味方に任せる。パス力が効く。2点。'),
   defend('ディフェンス', '最後の相手の攻撃を止める。'),
-  drawFoul('ファウルをもらう', '強く当たってファウルを誘い、フリースロー2本を決める。フリースローが効く。');
+  drawFoul('ファウルをもらう', '当たって誘い、フリースロー2本を決める。');
 
   const Clutch(this.label, this.description);
   final String label;

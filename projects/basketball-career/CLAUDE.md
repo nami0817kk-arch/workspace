@@ -115,7 +115,7 @@ baseball-manager の骨格（年齢で局面が変わる一代記・季節ごと
 - **ライバル登場**の節目（はじめて対戦したとき1度だけ。`Game.rivalMet`、古いセーブは対戦の有無から推定）。
 - **チームメイトとコーチの名前**（`Game.mate` / `coachLabel`、段階が変わると替わる）が出来事の文に入る（`{mate}` `{coach}`、`Game.fill`）。状態カードにも出す。名前が無い古いセーブは「仲間」「コーチ」。
 - エンディングに、コーチとの信頼・チームワークが高かったときだけ**コーチと仲間への一言**（名前入り）。
-- **ストア用スクリーンショットの生成器**（`tool/screenshots/capture_test.dart`、`flutter test tool/screenshots/capture_test.dart`、CI では回らない）: iPhone 6.9インチ 1320x2868 の4枚を `marketing/screenshots/` へ。
+- **ストア用スクリーンショットの生成器**（`tool/screenshots/capture_test.dart`、`flutter test tool/screenshots/capture_test.dart`、CI では回らない）: iPhone 6.3インチ 1206x2622(App Store の必須枠。1320x2868 は任意枠で必須に入らない)の4枚を `marketing/screenshots/` へ。
   実フォント・アイコンフォントを読み込み、撮るたびに「読み込み中でない・文字が一定数ある」を検査（落とし穴 #4）。**画像を目で見て、エンディングの不具合を2つ見つけた**
   （「41歳、41歳で…」の年齢の重複／全盛期がミニバスになる）→ 直した。画面の見た目を確かめるなら、この生成器の画像を `Read` で見る（フォントが読まれるので字も読める）。
 - **おすすめの過ごし方のボタン**は濃く塗って「(おすすめ)」を添える（`_ActionButton`）。画像で全画面（はじめ・進路・出来事・大会後の育成・殿堂）を見て、大きな崩れが無いことを確認した。
