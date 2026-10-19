@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../game/career.dart';
 import '../game/game.dart';
+import '../game/match.dart';
 import '../game/season.dart';
 
 /// 画面に出す名前・色。ゲームの規則は持たない。
@@ -60,3 +61,23 @@ String matchLine(int index, bool won, int team, int opp, int pts, int reb, int a
     '${clutch == null ? '' : '  勝負どころ: $clutch'}';
 
 String leagueLabel(League l) => l.label;
+
+/// 試合の流れを一言で。クォーターの得点から読み取る。無ければ null。
+String? matchStory(MatchResult m) {
+  if (m.teamQuarters.length < 4 || m.oppQuarters.length < 4) return null;
+  final half = (m.teamQuarters[0] + m.teamQuarters[1]) -
+      (m.oppQuarters[0] + m.oppQuarters[1]);
+  final c = m.clutch;
+  if (c != null && m.clutchSuccess == true && m.won) {
+    return '勝負どころで${c.label}を決めて勝ち切った。';
+  }
+  if (c != null && m.clutchSuccess == false && !m.won) {
+    return '勝負どころの${c.label}が決まらず、悔しい敗戦。';
+  }
+  if (m.won && half <= -5) return '前半の劣勢から、後半で逆転した。';
+  if (!m.won && half >= 5) return '前半のリードを守れなかった。';
+  if (m.won && m.margin >= 15) return '終始リードの圧勝。';
+  if (!m.won && m.margin <= -15) return '力の差を見せつけられた。';
+  if (m.margin.abs() <= 3) return '最後までもつれる接戦だった。';
+  return null;
+}

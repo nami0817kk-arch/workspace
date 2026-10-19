@@ -10,8 +10,8 @@ enum Action {
   intense('特訓', '大きく伸びるが疲れて怪我もしやすい。'),
   rest('休養', '疲れを取り、気持ちを戻す。伸びない。'),
   study('研究', '映像を見て全体を少しずつ伸ばす。'),
-  social('交流', '仲間と過ごして気持ちを上げる。'),
-  scrimmage('練習試合', '全体が少し伸びる。疲れる。');
+  social('交流', '仲間と過ごして気持ちを上げる。チームワークが大きく上がる。'),
+  scrimmage('練習試合', '全体が少し伸びる。疲れる。チームワークが少し上がる。');
 
   const Action(this.label, this.description);
   final String label;
@@ -71,7 +71,7 @@ double yearlyDelta(Player p, Ability a, Ability focus) {
   final talent = 0.5 + p.potential / 100; // 0.5〜1.5
   final share = a == focus ? 1.0 : 0.25;
   if (g >= 0) {
-    return 3.9 * g * talent * share * growthMultiplier(p.traits, p.age);
+    return 5.0 * g * talent * share * growthMultiplier(p.traits, p.age);
   }
   final aging = switch (a) {
     Ability.speed || Ability.stamina || Ability.physical => 1.5,
@@ -98,16 +98,16 @@ int _stochasticRound(double v, Random rng) {
         Action a) =>
     switch (a) {
       Action.practice =>
-        (focus: 1.0, other: 1.0, fatigue: 10, morale: -2, injury: 0.03),
+        (focus: 1.2, other: 0.6, fatigue: 10, morale: -2, injury: 0.03),
       Action.intense =>
-        (focus: 1.8, other: 1.0, fatigue: 25, morale: -5, injury: 0.12),
+        (focus: 2.2, other: 0.8, fatigue: 25, morale: -5, injury: 0.12),
       Action.rest => (focus: 0.0, other: 0.0, fatigue: -35, morale: 5, injury: 0),
       Action.study =>
-        (focus: 0.8, other: 1.6, fatigue: 5, morale: 2, injury: 0.01),
+        (focus: 0.6, other: 0.9, fatigue: 5, morale: 2, injury: 0.01),
       Action.social =>
-        (focus: 0.3, other: 1.2, fatigue: -10, morale: 15, injury: 0),
+        (focus: 0.2, other: 0.4, fatigue: -10, morale: 15, injury: 0),
       Action.scrimmage =>
-        (focus: 0.6, other: 2.4, fatigue: 15, morale: 3, injury: 0.05),
+        (focus: 0.5, other: 1.0, fatigue: 15, morale: 3, injury: 0.05),
     };
 
 /// 1ターン進める。年齢と身長はここでは動かさない(年末に `ageUp`)。

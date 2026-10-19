@@ -60,10 +60,17 @@ typedef OpponentPicker = ({String name, bool rival, double bonus}) Function(
 /// 進行中の大会。試合を1つずつ進め、勝負どころで止まって選択を待てる。
 class TournamentRun {
   TournamentRun(this.league,
-      {List<MatchResult>? matches, this.round = 0, this.wins = 0, this.pending})
+      {List<MatchResult>? matches,
+      this.round = 0,
+      this.wins = 0,
+      this.pending,
+      this.teamBonus = 0})
       : matches = matches ?? [];
 
   final League league;
+
+  /// チームワークによる、味方の強さへの上乗せ(−4〜+4くらい)。
+  final double teamBonus;
   final List<MatchResult> matches;
   int round;
   int wins;
@@ -99,7 +106,7 @@ class TournamentRun {
           (opp?.bonus ?? 0);
       final s = playQuarters(
         p,
-        teamStrength: league.teamStrength,
+        teamStrength: league.teamStrength + teamBonus,
         oppStrength: strength,
         form: form,
         rng: rng,
@@ -162,6 +169,7 @@ class TournamentRun {
         'matches': [for (final m in matches) m.toJson()],
         'round': round,
         'wins': wins,
+        'teamBonus': teamBonus,
         'pending': pending?.toJson(),
       };
 
@@ -176,6 +184,7 @@ class TournamentRun {
         ],
         round: (j['round'] as num?)?.toInt() ?? 0,
         wins: (j['wins'] as num?)?.toInt() ?? 0,
+        teamBonus: (j['teamBonus'] as num?)?.toDouble() ?? 0,
         pending: j['pending'] == null
             ? null
             : MatchState.fromJson((j['pending'] as Map).cast<String, dynamic>()),

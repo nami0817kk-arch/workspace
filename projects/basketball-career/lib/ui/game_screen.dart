@@ -281,6 +281,13 @@ class _PlayerCard extends StatelessWidget {
             const SizedBox(height: 8),
             _Meter(label: '疲れ', value: cond.fatigue, bad: true),
             _Meter(label: '気持ち', value: cond.morale),
+            _Meter(label: 'チーム', value: game.teamwork),
+            Padding(
+              padding: const EdgeInsets.only(top: 2),
+              child: Text(
+                  'チームワーク: 大会の味方の強さ ${game.teamBonus >= 0 ? '+' : ''}${game.teamBonus.toStringAsFixed(1)}  (交流・練習試合で上がる)',
+                  style: const TextStyle(fontSize: 12)),
+            ),
             if (cond.injured)
               Padding(
                 padding: const EdgeInsets.only(top: 4),

@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../game/career.dart';
 import '../game/difficulty.dart';
 import '../game/game.dart';
 import '../game/legacy.dart';
@@ -200,12 +201,16 @@ class GameController extends ChangeNotifier {
   /// 大会の途中(勝負どころ)で止まっているターンの、これまでの結果の行。
   List<String> _pendingLines = const [];
 
+  /// 止まっているターンのはじめの段階(段階が変わったかを見るため)。
+  Stage _pendingStage = Stage.minibasket;
+
   /// 過ごし方を1つ選んで季節を進める。勝負どころが来て止まったら、その場で選ぶ(`playClutch`)。
   /// [ask] が false なら、勝負どころでは止まらず自動で選ぶ(「おすすめで1年進める」など)。
   TermReport act(Action a, {bool ask = true}) {
     final g = game!;
     final before = Map<Ability, int>.of(g.player.abilities);
     final ageBefore = g.player.age;
+    final stageBefore = g.stage;
     final wasWinter = g.slot == 3;
     final r = g.choose(
       a,
@@ -222,8 +227,9 @@ class GameController extends ChangeNotifier {
       _pendingLines = lines;
       recent = lines;
     } else {
-      recent = _termLines(lines, r, wasWinter, ageBefore);
+      recent = _termLines(lines, r, wasWinter, ageBefore, stageBefore);
     }
+    _pendingStage = stageBefore;
     pathMessage = null;
     recoverMessage = null;
     _commit();
@@ -246,7 +252,8 @@ class GameController extends ChangeNotifier {
 
   /// 大会の結果と年末の知らせを足した、いまの結果の行。
   List<String> _termLines(
-      List<String> head, TermReport r, bool wasWinter, int ageBefore) {
+      List<String> head, TermReport r, bool wasWinter, int ageBefore,
+      [Stage? stageBefore]) {
     final g = game!;
     final lines = [...head];
     if (r.satOut) lines.add('怪我で大会に出られなかった。');
@@ -263,11 +270,19 @@ class GameController extends ChangeNotifier {
             clutch: m.clutch == null
                 ? null
                 : '${m.clutch!.label}${m.clutchSuccess == true ? '成功' : '失敗'}'));
+        final story = matchStory(m);
+        if (story != null) lines.add('　└ $story');
       }
     }
     if (r.yearEnded && g.lastGoalMessage != null) lines.add(g.lastGoalMessage!);
     if (r.yearEnded && g.player.age != ageBefore) {
       lines.add('${g.player.age}歳になった。身長 ${g.player.heightCm.toStringAsFixed(1)}cm。');
+    }
+    if (stageBefore != null &&
+        g.stage != stageBefore &&
+        g.phase != Phase.path &&
+        g.phase != Phase.retired) {
+      lines.add('${stageLabel(g.stage)}になった。新しい仲間とチームワークを築こう。');
     }
     return lines;
   }
@@ -282,7 +297,7 @@ class GameController extends ChangeNotifier {
     if (r.paused) {
       recent = _pendingLines;
     } else {
-      recent = _termLines(_pendingLines, r, wasWinter, ageBefore);
+      recent = _termLines(_pendingLines, r, wasWinter, ageBefore, _pendingStage);
       _pendingLines = const [];
     }
     _commit();
