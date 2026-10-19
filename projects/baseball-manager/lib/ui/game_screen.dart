@@ -2097,8 +2097,8 @@ class _PennantRow extends StatelessWidget {
       ),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text(
-            'ペナント(${p.games}/$leagueGames試合): ${p.wins}勝${p.losses}敗 '
-            '${fmtRate(p.winPct)}  暫定${p.rank}位',
+            '${p.wins}勝${p.losses}敗 ${fmtRate(p.winPct)} 暫定${p.rank}位'
+            '(${p.games}/$leagueGames試合)',
             style: const TextStyle(fontWeight: FontWeight.bold)),
         if (d.isNotEmpty)
           Text('今季ここまで: $d', style: Theme.of(context).textTheme.bodySmall),
@@ -2211,7 +2211,7 @@ class _GoalRow extends StatelessWidget {
                 style: const TextStyle(fontWeight: FontWeight.bold)),
             Text(
               g.achieved == null
-                  ? '達成すると 経験点+$reward(全種類)・やる気+${goalMoraleReward[g.level]}'
+                  ? '達成で 経験点+$reward・やる気+${goalMoraleReward[g.level]}'
                   : (g.achieved! ? 'ごほうびをもらった' : '来年また挑戦しよう'),
               style: Theme.of(context).textTheme.bodySmall,
             ),

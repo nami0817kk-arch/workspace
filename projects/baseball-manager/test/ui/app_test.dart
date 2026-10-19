@@ -824,7 +824,7 @@ void _rankTests() {
     expect(find.byKey(const Key('goal-row')), findsOneWidget);
     expect(find.textContaining('今年の目標:'), findsOneWidget);
     expect(find.text('挑戦中'), findsOneWidget);
-    expect(find.textContaining('達成すると 経験点+'), findsOneWidget);
+    expect(find.textContaining('達成で 経験点+'), findsOneWidget);
     c.admin((g) => g.goal = Goal(GoalKind.rounds, 0));
     for (var i = 0; i < 2; i++) {
       await t.tap(find.byKey(const Key('act-rest')));
@@ -1337,7 +1337,7 @@ void _rankTests() {
       await t.pumpAndSettle();
       expect(c.game!.goal!.level, 2);
       expect(c.game!.goal!.baseTarget, normal);
-      expect(find.textContaining('経験点+${goalExpFor(Stage.youth, 2)}(全種類)'),
+      expect(find.textContaining('達成で 経験点+${goalExpFor(Stage.youth, 2)}'),
           findsOneWidget);
       await t.tap(find.text('閉じる'));
       await t.pumpAndSettle();
@@ -2048,7 +2048,7 @@ void _rankTests() {
         await t.pumpAndSettle();
       }
       expect(find.byKey(const Key('pennant')), findsOneWidget);
-      expect(find.textContaining('ペナント(20/143試合)'), findsOneWidget);
+      expect(find.textContaining('(20/143試合)'), findsOneWidget);
       expect(find.textContaining('暫定'), findsOneWidget);
     });
   });
