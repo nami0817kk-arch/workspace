@@ -121,3 +121,17 @@ def test_weapon_tip_lengths_match_between_fk_and_blender():
 def test_captions_are_off_by_default():
     sc = fight.build_fight(dict(lines=[dict(at="opening", text="a")]))
     assert sc["captions"] == []
+
+
+def test_leg_ik_reaches_target():
+    import math
+    from stickfig import fk
+    pose = dict(fa=0.7, fe=1.6, ra=0.5, re=1.7, fl=0.3, fk=0.4, rl=-0.3, rk=0.3, lean=0.1, hz=0.84, dx=0.0, rz=0.0, roll=0.0, ht=0.0, spin=0.0, st=0.0, lst=0.0, run=0.0)
+    for s in (1, -1):
+        for tx in (-0.25, 0.0, 0.25):
+            r = fk.leg_ik(pose, s, 2.0, 1.0, (2.0 + tx, 0.0))
+            assert r is not None
+            q = dict(pose, fl=r[0], fk=r[1])
+            foot = fk.skeleton(q, s, 2.0, 1.0)["foot"]
+            assert math.hypot(foot[0] - (2.0 + tx), foot[1]) < 0.03
+    assert fk.leg_ik(pose, 1, 0.0, 1.0, (3.0, 0.0)) is None        # 届かない

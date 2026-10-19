@@ -175,3 +175,44 @@ def target_point(sk: Dict[str, object], name: str) -> Pt:
         a, b = sk["torso"]  # type: ignore[misc]
         return ((a[0] + b[0]) / 2, (a[1] + b[1]) / 2)
     raise ValueError(f"知らない当て先: {name}")
+
+
+def leg_ik(pose: Dict[str, float], s: int, root_x: float, scale: float, target: Pt, max_bend: float = 2.6):
+    """脚の IK: 足先(鎖の端)が世界座標 target に来る (太ももの角 t, 膝の曲げ k) を返す。届かなければ None。
+
+    鎖は hip から base_rot=0 で始まるので、t を変えると鎖全体が股を軸に回る(剛体回転)。
+    よって k は「股から足先までの距離」だけで二分法で決まり、t は向きの差で決まる。"""
+    rho = -pose["roll"] * s
+    cr, sr = math.cos(rho), math.sin(rho)
+    X, Z = target[0] - root_x, target[1] - pose["rz"]
+    xl, zl = (X * cr - Z * sr) / scale, (X * sr + Z * cr) / scale          # 根元の座標系(scale 1)
+    hip = (0.0, pose["hz"])
+    dx, dz = xl - hip[0], zl - hip[1]
+    r = math.hypot(dx, dz)
+    if r > LEG_TOTAL * 0.995 or r < LEG_TOTAL * 0.25:
+        return None
+
+    def end(tt: float, kk: float) -> Pt:
+        return chain_points(hip, 0.0, -tt * s, (-tt + kk) * s, LEG_TOTAL)[-1]
+
+    lo, hi = 0.0, max_bend
+    for _ in range(40):
+        mid = 0.5 * (lo + hi)
+        e = end(0.0, mid)
+        if math.hypot(e[0] - hip[0], e[1] - hip[1]) > r:
+            lo = mid
+        else:
+            hi = mid
+    k = 0.5 * (lo + hi)
+    e0 = end(0.0, k)
+    a0 = math.atan2(e0[0] - hip[0], -(e0[1] - hip[1]))
+    aT = math.atan2(dx, -dz)
+    best = None
+    for tt in ((aT - a0) * s, (a0 - aT) * s):
+        e = end(tt, k)
+        err = math.hypot(e[0] - xl, e[1] - zl)
+        if best is None or err < best[0]:
+            best = (err, tt)
+    if best[0] > 0.02:
+        return None
+    return best[1], k

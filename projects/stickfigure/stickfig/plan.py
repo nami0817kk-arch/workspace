@@ -319,6 +319,71 @@ def _follow_x(follow, actors: dict, scene: dict) -> float:
     return sum(xs.values()) / len(xs)
 
 
+def _footwork(scene: dict, frames: List[dict]) -> None:
+    """足運び: 接地した足を世界座標に固定し(足滑りを無くす)、股が開きすぎたら足を浮かせて前へ運ぶ(歩)。
+
+    cfg(台本 footwork): {stride: 0.42(この距離を越えたら踏み替え、身長比), lift: 0.14, frames: 5(1歩のコマ数), lead: 0.12(体より前に置く)}
+    空中(rz)・倒れている(roll)・走りの周期(run/periodic)の間は触らない(走りは clip の足運びのまま)。ヒットストップ(tau が進まない)は前のコマを写す。
+    """
+    cfg = scene.get("footwork")
+    if cfg is None or cfg is False:
+        return
+    cfg = cfg if isinstance(cfg, dict) else {}
+    stride, lift, nfr, lead = float(cfg.get("stride", 0.42)), float(cfg.get("lift", 0.14)), int(cfg.get("frames", 5)), float(cfg.get("lead", 0.12))
+    legs = (("fl", "fk", "foot"), ("rl", "rk", "rear_foot"))
+    for who, a in scene["actors"].items():
+        sc, s = a.get("scale", 1.0), _sign(a)
+        planted = {"foot": None, "rear_foot": None}
+        swing = None
+        for f, fr in enumerate(frames):
+            p = fr["actors"][who]
+            if f > 0 and frames[f - 1]["tau"] == fr["tau"]:                      # ヒットストップ: 前のコマの脚を写す
+                q = frames[f - 1]["actors"][who]
+                for ang, knee, _ in legs:
+                    p[ang], p[knee] = q[ang], q[knee]
+                continue
+            free = abs(p.get("rz", 0.0)) > 0.04 * sc or abs(p.get("roll", 0.0)) > 0.3 or p.get("run", 0) > 0.3 or p.get("periodic")
+            if free:
+                planted = {"foot": None, "rear_foot": None}
+                swing = None
+                continue
+            sk = fk.skeleton(p, s, p["root_x"], sc)
+            nat = {"foot": sk["foot"], "rear_foot": sk["rear_foot"]}
+            for ang, knee, key in legs:
+                other = "rear_foot" if key == "foot" else "foot"
+                nx, nz = nat[key]
+                grounded = nz < 0.08 * sc
+                if swing is not None and swing["key"] == key:                   # 踏み替えの途中: 山なりに運ぶ
+                    u = min(1.0, (f - swing["f0"]) / max(1, swing["n"]))
+                    x = swing["x0"] + (swing["x1"] - swing["x0"]) * smoothstep(u, 0.0, 1.0)
+                    z = lift * sc * math.sin(math.pi * u)
+                    r = fk.leg_ik(p, s, p["root_x"], sc, (x, z))
+                    if r is not None:
+                        p[ang], p[knee] = round(r[0], 6), round(r[1], 6)
+                    if u >= 1.0:
+                        planted[key] = swing["x1"]
+                        swing = None
+                    continue
+                if not grounded:                                                 # 姿勢の都合で浮いている(蹴りなど): 固定を解く
+                    planted[key] = None
+                    continue
+                if planted[key] is None:                                         # 今、接地した: ここに固定
+                    planted[key] = nx
+                    continue
+                gap = (nx - planted[key]) * s                                     # 体の進みに対して、固定した足がどれだけ後ろに残ったか(前が正)
+                if abs(gap) > stride * sc and swing is None:                      # 開きすぎ: 踏み替える(もう片方は接地したまま)
+                    swing = dict(key=key, f0=f, n=nfr, x0=planted[key], x1=nx + s * lead * sc * (1 if gap > 0 else -1))
+                    planted[key] = None
+                    continue
+                r = fk.leg_ik(p, s, p["root_x"], sc, (planted[key], 0.0))       # 固定: 足を世界座標に留める
+                if r is None:                                                     # 届かない(体が速い): 短い踏み替え
+                    swing = dict(key=key, f0=f, n=max(2, nfr - 2), x0=planted[key], x1=nx + s * lead * sc)
+                    planted[key] = None
+                    continue
+                p[ang], p[knee] = round(r[0], 6), round(r[1], 6)
+            fr["actors"][who] = p
+
+
 def _auto_smear(scene: dict, frames: List[dict]) -> None:
     """スミア: 前の手・足が速く動くコマで、その手足を進行方向へ引き伸ばす(st/lst)。使いすぎないよう上限は 0.32。"""
     for who, a in scene["actors"].items():
@@ -669,6 +734,8 @@ def build_plan(scene: dict, solve: bool = True) -> dict:
                              z=round((VIEW["ground_y"] - VIEW["height"] / 2) / pxu + sz, 5))
         fr["cam"]["roll"] = round(roll + fr["cam"].get("dutch", 0.0), 4)
         frames.append(fr)
+    if phys is None:
+        _footwork(scene, frames)
     if (scene.get("anime") or {}).get("smear", False):
         _auto_smear(scene, frames)
     if scene.get("stepping"):
