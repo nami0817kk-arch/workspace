@@ -374,6 +374,22 @@ def compose_frame(plan: dict, f: int, figs: Dict[int, Image.Image], stages: Opti
             base.alpha_composite(col)
     if (plan.get("scene", {}).get("anime") or {}).get("smear", False):
         base.alpha_composite(_limb_smear(plan, f, cam))   # 振りの 1〜2 コマの間を埋めるスミア(人物の下に描く)
+    for ai in fx.get("afterimages", []):       # 瞬間移動の残像の列: 消えた位置から現れた位置まで、消える直前の人影を薄く並べ、すぐ消える
+        if ai["start"] <= tau <= ai["end"] and f > 0:
+            q = (tau - ai["start"]) / max(1e-6, ai["end"] - ai["start"])
+            g = _prev_frame(plan, f) or f
+            src = figs[max(0, min(len(figs) - 1, int(ai.get("src_frame", g))))]
+            n_ = int(ai.get("n", 6))
+            who_a = ai.get("who", "A")
+            x_now = plan["frames"][f]["actors"][who_a]["root_x"]
+            for i in range(n_):
+                xw = float(ai["x0"]) + (float(ai["x1"]) - float(ai["x0"])) * (i + 1) / (n_ + 1)
+                px_, _ = to_px(xw, 0.0, cam)
+                px_now, _ = to_px(x_now, 0.0, cam)
+                ghost = silhouette(src, tuple(int(255 * c) for c in plan["actors"][who_a].get("color", [0.5, 0.8, 0.3])))
+                al = int(150 * (1 - q) * (0.4 + 0.6 * i / n_))
+                ghost.putalpha(ghost.split()[3].point(lambda v, al=al: int(v * al / 255)))
+                base.alpha_composite(ghost, (int(px_ - px_now), 0))
     for bm in fx.get("beams", []):             # 気の光線(人物の下に描く: 上だと撃ち合いで 2 人が光線に隠れた。手の先から壁まで。x_end は数か [[tau, x], ...] の折れ線)
         if bm["start"] <= tau <= bm["end"]:
             base.alpha_composite(look.beam(plan, f, bm.get("who", "A"), _pw_at(bm["x_end"], tau), tau - bm["start"], bm["end"] - bm["start"], tuple(bm.get("color", (120, 230, 255)))))

@@ -129,6 +129,10 @@ def se(plan: dict, seed: int = 7) -> np.ndarray:
         elif k == "wave":
             _add(buf, thump(rng, 130, 0.35, 0.5), t, 0.9)
             _add(buf, whoosh(rng, 0.2), t - 0.06, 0.5)
+        elif k == "vanish":
+            _add(buf, whoosh(rng, 0.14), t - 0.02, 0.9)
+        elif k == "appear":
+            _add(buf, thump(rng, 300, 0.08, 0.3), t, 0.5)
         elif k == "throw":
             _add(buf, whoosh(rng, 0.22), t - 0.05, 0.8)
         elif k == "blast":                              # 気弾の爆発

@@ -26,7 +26,7 @@ DEFAULTS = dict(
     hits=3,                  # 連打の回数(1〜4)
     counter=True,            # 1発目のあと、相手の反撃
     finisher="launch_slash", # launch_slash(決めの斬りで打ち上げ→空中斬り→叩きつけ) / launch_kick(決めは高い蹴りで打ち上げ) / beam(気の光線: 溜め→発射→壁まで吹き飛ばす) / blast(気弾: 片手に玉を膨らませて投げる→着弾で爆発) / wave(衝撃波: 跳んで拳を地面に叩きつけ→地面を走る波で打ち上げる) / beam_clash(光線の撃ち合い: 2 人が同時に撃ち、中央でぶつかり、A が押し勝つ。B の色は beam_color_b) / random(seed で選ぶ) / none(まっすぐ倒れる)
-    opening=None,            # 出だしの技: blast(走り出す前に気弾を投げ、B がかわし、壁で爆発)。kick: true とは併用しない
+    opening=None,            # 出だしの技: blast(走り出す前に気弾を投げ、B がかわし、壁で爆発) / teleport(走らず一瞬で相手の目の前に現れる)。kick: true とは併用しない
     beam_color=None,         # beam の色 [r,g,b](0〜255)。既定は水色
     beam_color_b=None,       # beam_clash の B の光線の色。既定は赤
     palette="warm",          # warm / cool
@@ -158,6 +158,7 @@ def build_fight(spec: dict) -> dict:
     fin_kick = s["finisher"] == "launch_kick"
     bfirst = bool(s["b_first"]) and not kick and s["weapon"] not in ("staff", "spear")
     open_blast = (s["opening"] == "blast") and not kick  # 出だしの技: 走り出す前に気弾を投げ、B がかわし、壁で爆発
+    open_tp = (s["opening"] == "teleport") and not kick  # 出だしの技: 走らず一瞬で相手の目の前に現れる
     o = 0.0 if kick else (-2.4 + (0.95 if bfirst else 0.0))          # 蹴りが無いぶん、連打の開始が早まる(B が先に仕掛けるなら、その分を空ける)
     if open_blast:
         o += 1.0                                         # 気弾のぶん、走り出しが 1.0 秒遅れる
@@ -173,6 +174,8 @@ def build_fight(spec: dict) -> dict:
     fx_orbs: List[dict] = []                             # 手に付く光の玉(finisher: blast の溜め)
     fx_proj: List[dict] = []                             # 飛ぶ玉(finisher: blast)
     fx_waves: List[dict] = []                            # 地面を走る衝撃波(finisher: wave)
+    fx_after: List[dict] = []                            # 瞬間移動の残像の列(opening: teleport)
+    snaps: List[dict] = []                               # 区間で位置(dx)を固定(瞬間移動を 1 コマにする)
     wall_lock = None                                     # beam のときは壁の位置を先に決める
     slow: List[dict] = []
     flurry: List[dict] = []
@@ -231,6 +234,25 @@ def build_fight(spec: dict) -> dict:
         a_dx = (4.0 if sword else 4.6) if bfirst else 3.4   # B が先に仕掛けるときは、B の拳が届く所まで寄る(剣なら、そのあと剣の間合いへ戻る分を小さく)
         clipsA[0].update(end=_r(ta))
         keysA.append(dict(t=_r(ta), dx=a_dx, hz=0.9))
+        if open_tp:                                      # 瞬間移動: 1.0 まで構え → 1.05 沈む(予備動作) → 1.1 消える → 1.2 相手の目の前に現れる → 1.3 構え直して連打へ
+            t_go = _r(ta - 0.1)
+            clipsA.pop(0)                                # 走りは使わない(長さ 0 で残すと継ぎ目合わせが狂い、連打の途中で A が 1.9 戻った)
+            keysA = [k for k in keysA if k["t"] not in (0.6, _r(ta))]
+            keysA += [dict(t=0.6, dx=0.2, hz=0.84, lean=0.1, fa=0.9, fe=1.4, ra=0.7, re=1.5, face="fight"),
+                      dict(t=_r(t_go - 0.06), dx=0.2, hz=0.7, lean=0.3, fl=0.8, fk=1.2, rl=-0.4, rk=0.8, fa=0.5, fe=1.2, ra=0.5, re=1.2),   # 沈む
+                      dict(t=_r(t_go), dx=0.2, hz=0.7, lean=0.3, fl=0.8, fk=1.2, rl=-0.4, rk=0.8),
+                      dict(t=_r(t_go + 0.034), dx=_r(a_dx - 0.3), hz=0.78, lean=0.35, fl=1.0, fk=0.6, rl=-0.6, rk=0.3, fa=1.2, fe=0.8, ra=0.4, re=1.3),   # 1 コマで目の前に
+                      dict(t=_r(ta), dx=a_dx, hz=0.9, lean=0.1, fa=0.9, fe=1.4, ra=0.7, re=1.5)]
+            snaps.append(dict(who="A", t0=_r(t_go - 0.12), t1=_r(t_go + 0.001), dx=0.2))             # 消えるまでは位置を固定(PCHIP の先回りとバネで 3 コマに伸びていた)
+            snaps.append(dict(who="A", t0=_r(t_go + 0.001), t1=_r(t_go + 0.1), dx=_r(a_dx - 0.3)))  # 現れた直後も固定
+            fx_after.append(dict(start=_r(t_go), end=_r(t_go + 0.2), who="A", x0=-2.0 + 0.2, x1=-2.0 + a_dx - 0.3, n=6))
+            hits += [dict(tau=_r(t_go), hold=0.0, kind="vanish", by="A", pos=[-2.0 + 0.2, 1.0]),
+                     dict(tau=_r(t_go + 0.034), hold=0.04, kind="appear", by="A", pos=[_r(-2.0 + a_dx - 0.3), 1.0])]
+            flashes.append(_r(t_go + 0.034))
+            keysB += [dict(t=_r(t_go + 0.1), dx=-1.7, lean=-0.25, ht=-0.35, fa=0.6, ra=0.5, fe=1.2, re=1.3, face="fight"),   # 驚いてのけぞる
+                      dict(t=_r(t_go + 0.3), dx=-1.7, lean=0.05, ht=0.0, fa=0.9, fe=1.4, ra=0.7, re=1.5, face="fight")]
+            shots.insert(0, dict(t=0.55, follow="A", scale=[[0.55, 4.6], [t_go, 4.0]], yaw=[[0.55, -26.0], [t_go, -14.0]], pitch=6.0, lens=32.0, target_z=1.1, lag=0.25))
+            shots.append(dict(t=_r(t_go + 0.034), follow="B", scale=3.6, yaw=20.0, pitch=4.0, lens=32.0, target_z=1.1, lag=0.0))   # 現れた瞬間は B 寄りで
         if open_blast:                                   # 走り出す前の気弾: 0.6 片手を上げて玉を膨らませ → 1.15 投げる → 1.35 B がくぐる → 1.55 壁で爆発 → 1.6 走り出す
             col = list(s.get("beam_color") or [255, 190, 70])
             clipsA[0].update(start=1.6, **{"in": 0.12})
@@ -676,9 +698,10 @@ def build_fight(spec: dict) -> dict:
         stage=dict(wall_x=wall_x, style="flat", theme=s["stage"]), slow=slow, hits=hits, puffs=puffs,
         camera=[[0.0, -0.4, 8.4], [_r(end), 3.2, 8.6]],
         keys=keys,
-        fx=dict(trails=[], speed_lines=speed, invert=invert, flashes=sorted(set(flashes)), charge=charge, color_script=color_script, weapon_glow=bool(sword), beams=fx_beams, orbs=fx_orbs, projectiles=fx_proj, waves=fx_waves),
+        fx=dict(trails=[], speed_lines=speed, invert=invert, flashes=sorted(set(flashes)), charge=charge, color_script=color_script, weapon_glow=bool(sword), beams=fx_beams, orbs=fx_orbs, projectiles=fx_proj, waves=fx_waves, afterimages=fx_after),
         clips=dict(A=clipsA, **({"B": clipsB} if clipsB else {})),
-        qa=dict(max_cross_frames=400, max_stops=3, max_anticipation_frames=14, max_jerk=1.3),
+        snaps=snaps,
+        qa=dict(max_cross_frames=400, max_stops=3, max_anticipation_frames=14, max_jerk=(9.0 if open_tp else 1.3), **({"max_teleport_frames": 2} if open_tp else {})),   # 瞬間移動は 1 コマで飛ぶのが意図
         tempo=s["tempo"], anime=dict(trails=True, sfx=True, zoom_blur=True, grade=True, roll=True, smear=True),
         shots=shots, stepping=stepping,
         impact_cuts=impact_cuts,

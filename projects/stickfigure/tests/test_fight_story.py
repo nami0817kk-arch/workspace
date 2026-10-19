@@ -229,3 +229,11 @@ def test_opening_blast_builds():
     pj = sc["fx"]["projectiles"][0]
     assert abs(pj["x1"] - sc["stage"]["wall_x"]) < 1e-6                 # 玉は壁で爆発
     planmod.validate_scene(sc)
+
+
+def test_opening_teleport_builds():
+    sc = fight.build_fight(dict(weapon="sword", kick=False, opening="teleport", hits=2, finisher="none"))
+    kinds = [h["kind"] for h in sc["hits"] if h["tau"] < 2.5]
+    assert "vanish" in kinds and "appear" in kinds
+    assert sc["fx"]["afterimages"]
+    planmod.validate_scene(sc)

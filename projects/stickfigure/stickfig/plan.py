@@ -951,6 +951,9 @@ def build_plan(scene: dict, solve: bool = True) -> dict:
                 p["face"] = tracks[who].at(tau)["face"]
             else:
                 p = smoothers[who].step(tau, dtau)
+                for sn in scene.get("snaps") or []:          # 区間で位置を固定(瞬間移動: PCHIP の先回りとバネで数コマに伸びるのを 1 コマにする)
+                    if sn["who"] == who and sn["t0"] <= tau < sn["t1"]:
+                        p = dict(p, dx=float(sn["dx"]))
                 p = apply_run(p, tau, scene.get("run"))
                 if scene["_bank"] is not None:
                     p = scene["_bank"].apply(who, p, tau)
@@ -1090,7 +1093,7 @@ def build_plan(scene: dict, solve: bool = True) -> dict:
         c["distance_to_body"] = fk.dist_to_body(eff, sk_t)
         c["effector_pos"] = list(eff)
     return dict(version=1, fps=fps, n=len(frames), view=dict(VIEW, persp=bool(scene.get("view3d") or scene.get("shots")), lens=(scene.get("view3d") or {}).get("lens", 40.0)), actors=scene["actors"], stage=scene.get("stage", {}),
-                events=events, contacts=contacts, frames=frames, scene={k: scene[k] for k in ("hits", "slow", "camera", "fx", "tempo", "view3d", "anime", "shots", "stepping", "impact_cuts", "flurry", "style", "captions", "output", "limb", "body_drive", "clip_timing") if k in scene})
+                events=events, contacts=contacts, frames=frames, scene={k: scene[k] for k in ("hits", "slow", "camera", "fx", "tempo", "view3d", "anime", "shots", "stepping", "impact_cuts", "flurry", "style", "captions", "output", "limb", "body_drive", "clip_timing", "snaps") if k in scene})
 
 
 def save_plan(plan: dict, path) -> None:
