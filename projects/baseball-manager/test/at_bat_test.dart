@@ -47,4 +47,28 @@ void main() {
     expect(hits / n, lessThan(0.10));
     expect(r[AtBatResult.strikeout]! / n, greaterThan(0.40));
   });
+
+  test('力の差が大きく開くと圧倒する(オールSの打者は小学生の投手をほとんど打ち取らせない)', () {
+    const star = Batter(contact: 95, power: 95, eye: 95);
+    final r = _run(const Pitcher(control: 30, stuff: 30), star);
+    final n = r.values.fold<int>(0, (a, b) => a + b);
+    final walks = r[AtBatResult.walk] ?? 0;
+    final hits = r[AtBatResult.single]! +
+        r[AtBatResult.double]! +
+        r[AtBatResult.triple]! +
+        r[AtBatResult.homeRun]!;
+    expect(hits / (n - walks), greaterThan(0.65)); // 打率6割5分以上
+    expect(r[AtBatResult.strikeout]! / n, lessThan(0.08));
+  });
+
+  test('同じくらいの力の対戦は、従来どおり(打率2割台〜3割)', () {
+    final r = _run(avgP, avgB);
+    final n = r.values.fold<int>(0, (a, b) => a + b);
+    final walks = r[AtBatResult.walk] ?? 0;
+    final hits = r[AtBatResult.single]! +
+        r[AtBatResult.double]! +
+        r[AtBatResult.triple]! +
+        r[AtBatResult.homeRun]!;
+    expect(hits / (n - walks), inInclusiveRange(0.22, 0.31));
+  });
 }

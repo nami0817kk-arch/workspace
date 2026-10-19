@@ -38,8 +38,13 @@ AtBatResult simulateAtBat(Pitcher p, Batter b, Random rng) {
           .clamp(0.005, 0.25);
   final kP = (0.22 + d(p.stuff) * 0.20 - d(b.contact) * 0.15 + eo * 0.20)
       .clamp(0.05, 0.55);
-  final hitP = (0.24 + d(b.contact) * 0.20 - d(p.stuff) * 0.10 - eo * 0.16)
-      .clamp(0.03, 0.45);
+  // 打者が投手を大きく上回るとき(S級の打者と小学生の投手)は、ヒットが大きく増える。
+  // 逆に投手が上回るときの減り方より強め(上限 .75)。同レベル同士は従来どおり。
+  final hitP = (0.24 +
+          d(b.contact) * 0.20 -
+          d(p.stuff) * 0.10 -
+          eo * (eo < 0 ? 0.40 : 0.16))
+      .clamp(0.03, 0.75);
 
   final r = rng.nextDouble();
   if (r < walkP) return AtBatResult.walk;
