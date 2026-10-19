@@ -374,23 +374,7 @@ def compose_frame(plan: dict, f: int, figs: Dict[int, Image.Image], stages: Opti
             base.alpha_composite(col)
     if (plan.get("scene", {}).get("anime") or {}).get("smear", False):
         base.alpha_composite(_limb_smear(plan, f, cam))   # 振りの 1〜2 コマの間を埋めるスミア(人物の下に描く)
-    for ai in fx.get("afterimages", []):       # 残像の列。trail: 飛行中、進行方向の後ろに今の絵を少しずつずらして薄く並べる
-        if ai.get("trail") and ai["start"] <= tau <= ai["end"] and f > 0:
-            who_a = ai.get("who", "A")
-            g = _prev_frame(plan, f) or f
-            p1, p0 = plan["frames"][f]["actors"][who_a], plan["frames"][g]["actors"][who_a]
-            x1_, y1_ = to_px(p1["root_x"], p1.get("rz", 0.0), cam)
-            x0_, y0_ = to_px(p0["root_x"], p0.get("rz", 0.0), cam)
-            dxp, dyp = x1_ - x0_, y1_ - y0_
-            if abs(dxp) + abs(dyp) > 2:
-                n_ = int(ai.get("n", 4))
-                col = tuple(int(255 * c) for c in plan["actors"][who_a].get("color", [0.5, 0.8, 0.3]))
-                for i in range(n_, 0, -1):
-                    ghost = silhouette(figs[f], col)
-                    al = int(110 * (1 - i / (n_ + 1)))
-                    ghost.putalpha(ghost.split()[3].point(lambda v, al=al: int(v * al / 255)))
-                    base.alpha_composite(ghost, (int(-dxp * 1.6 * i), int(-dyp * 1.6 * i)))
-            continue
+    for ai in fx.get("afterimages", []):       # 瞬間移動の残像の列: 消えた位置から現れた位置まで、消える直前の人影を薄く並べ、すぐ消える
         if ai["start"] <= tau <= ai["end"] and f > 0:
             q = (tau - ai["start"]) / max(1e-6, ai["end"] - ai["start"])
             g = _prev_frame(plan, f) or f
