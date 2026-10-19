@@ -60,6 +60,8 @@ List<String> epilogueLines(Game g) {
     }
   }
 
+  if (r.games > 0) lines.add(r.fate);
+
   lines.add('${p.age}歳、${g.retiredReason ?? '現役を退いた'}。');
 
   lines.add(_closing(g));
