@@ -1677,4 +1677,40 @@ void main() {
       expect(recommendedAction(g(c: const Condition(fatigue: 40), slot: 1)), Action.practice);
     });
   });
+
+  group('通算と共有', () {
+    Game withRecords() {
+      final g = Game(
+        eventsEnabled: false,
+        player: strong(height: 205).copyWith(age: 26),
+        rng: Random(1),
+        track: Track.pro,
+        rival: Rival(name: '神谷リョウ', potential: 70, wins: 3, losses: 2),
+      );
+      g.records.addAll([
+        YearRecord(age: 24, league: League.proDomestic, wins: 4, games: 6, ppg: 20, rpg: 8, apg: 5, champion: false, achievement: 70, award: 'ベスト5'),
+        YearRecord(age: 25, league: League.proDomestic, wins: 6, games: 6, ppg: 10, rpg: 4, apg: 2, champion: true, achievement: 90),
+      ]);
+      g.retire();
+      return g;
+    }
+
+    test('通算の得点・リバウンド・アシストは年ごとの平均×試合数の合計', () {
+      final g = withRecords();
+      expect(g.totalPoints, 20 * 6 + 10 * 6);
+      expect(g.totalRebounds, 8 * 6 + 4 * 6);
+      expect(g.totalAssists, 5 * 6 + 2 * 6);
+      expect(g.awardCount, 1);
+    });
+
+    test('共有用の文章に称号・通算・ライバルが入る', () {
+      final g = withRecords();
+      final t = shareText(g);
+      expect(t, contains(careerTitle(g)));
+      expect(t, contains('${g.totalPoints}得点'));
+      expect(t, contains('神谷リョウ'));
+      expect(t, contains('3勝2敗'));
+      expect(t, contains('#バスケ育成'));
+    });
+  });
 }

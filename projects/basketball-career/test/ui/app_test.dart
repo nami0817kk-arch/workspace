@@ -8,6 +8,7 @@ import 'package:basketball_career/ui/app.dart';
 import 'package:basketball_career/ui/controller.dart';
 import 'package:basketball_career/ui/milestone_dialog.dart';
 import 'package:flutter/material.dart' hide Action, Route;
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -187,6 +188,37 @@ void main() {
     }
     expect(c.game!.records, isNotEmpty);
     expect(find.textContaining('の夏の大会'), findsWidgets);
+  });
+
+  testWidgets('エンディングで結果をコピーできる', (tester) async {
+    tall(tester);
+    String? copied;
+    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+        SystemChannels.platform, (call) async {
+      if (call.method == 'Clipboard.setData') {
+        copied = (call.arguments as Map)['text'] as String?;
+      }
+      return null;
+    });
+    addTearDown(() => tester.binding.defaultBinaryMessenger
+        .setMockMethodCallHandler(SystemChannels.platform, null));
+    final c = GameController(store: _NullStore(), rng: Random(1), events: false);
+    final g = Game(
+      eventsEnabled: false,
+      player: Player(
+          name: 'ユウ', age: 25, potential: 70, heightCm: 190, heightGenes: 0.5,
+          abilities: {for (final a in Ability.values) a: 70}),
+      rng: Random(1),
+      track: Track.pro,
+    )..retire();
+    c.game = g;
+    await tester.pumpWidget(BasketballCareerApp(controller: c));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('結果をコピー'));
+    await tester.pumpAndSettle();
+    expect(copied, contains('ユウの物語'));
+    expect(copied, contains('#バスケ育成'));
+    expect(find.textContaining('結果をコピーした'), findsOneWidget);
   });
 
   test('能力のランクが上がると知らせる', () {
