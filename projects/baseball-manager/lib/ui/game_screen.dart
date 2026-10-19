@@ -260,7 +260,11 @@ class _StatusCard extends StatelessWidget {
                             .textTheme
                             .titleSmall
                             ?.copyWith(fontWeight: FontWeight.bold)),
-                    Text(playerCardLine(game.stage, p, position: game.position),
+                    Text(
+                        playerCardLine(game.stage, p,
+                            position: game.position,
+                            numberOverride:
+                                specialNumberOf(p.role, game.records)),
                         style: Theme.of(context).textTheme.bodySmall),
                   ]),
             ),
@@ -1230,7 +1234,7 @@ class EndingView extends StatelessWidget {
               const SizedBox(height: 10),
               Text(
                   '${epilogueOf(e, p.name, worldChampion: game.worldRecords.where((r) => r.champion).length, worldPlayed: game.worldRecords.length, overseasYears: game.records.where((r) => r.overseas).length, popularity: popularityOf(game.records, game.worldRecords), retiredNumber: uniformNumberOf(Stage.pro, p))}'
-                  '\nその後: ${afterCareerOf(title: e.title, proYears: e.proYears, popularity: popularityOf(game.records, game.worldRecords), money: game.money, madePro: e.madePro)}',
+                  '\nその後: ${afterCareerOf(title: e.title, proYears: e.proYears, popularity: popularityOf(game.records, game.worldRecords), money: game.money, madePro: e.madePro, team: game.proTeam)}',
                   key: const Key('epilogue'),
                   style: Theme.of(context)
                       .textTheme

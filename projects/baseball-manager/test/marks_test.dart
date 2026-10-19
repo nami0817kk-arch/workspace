@@ -1,6 +1,7 @@
 import 'package:baseball_manager/game/career.dart';
 import 'package:baseball_manager/game/flavor.dart';
 import 'package:baseball_manager/game/marks.dart';
+import 'package:baseball_manager/game/path.dart' show overall;
 import 'package:baseball_manager/game/records.dart';
 import 'package:baseball_manager/game/rival_story.dart';
 import 'package:baseball_manager/game/player.dart';
@@ -22,6 +23,7 @@ void main() {
   markTests6();
   markTests7();
   markTests8();
+  markTests9();
   test('通算の節目: 越えた年にだけ出る', () {
     expect(careerMarks(const Line(), const Line(hits: 150, homeRuns: 20)),
         containsAll(['プロ初安打', 'プロ初本塁打', '通算100安打']));
@@ -210,5 +212,37 @@ void markTests8() {
     expect(ageNote(18), contains('進路'));
     expect(ageNote(19), isNull);
     expect(yearSummaryOf(7, 3), contains('7回'));
+  });
+}
+
+void markTests9() {
+  test('背番号の格上げ・ライバルの通算・成長の見通し', () {
+    SeasonRecord r(List<String> titles) => SeasonRecord(
+        age: 25, stage: Stage.pro, line: const Line(), titles: titles);
+    expect(specialNumberOf(Role.pitcher, [r([])]), isNull);
+    expect(
+        specialNumberOf(Role.pitcher, [
+          r(['最多勝'])
+        ]),
+        18);
+    expect(
+        specialNumberOf(Role.batter, [
+          r(['本塁打王'])
+        ]),
+        3);
+    final s = storyOf('ひかる', 90);
+    expect(rivalStatsOf(s, 17), isNull);
+    expect(rivalStatsOf(s, 23), contains('本塁打'));
+    final p = Player(
+        name: 't',
+        role: Role.batter,
+        age: 18,
+        potential: 90,
+        abilities: {for (final a in batterAbilities) a: 50});
+    final now = overall(p).round();
+    expect(projectedOverall(p, Ability.contact, 18), now);
+    expect(projectedOverall(p, Ability.contact, 25), greaterThan(now));
+    final old = p.copyWith(age: 36);
+    expect(projectedOverall(old, Ability.contact, 41), lessThanOrEqualTo(now));
   });
 }

@@ -1,5 +1,7 @@
 import 'career.dart';
+import 'path.dart' show overall;
 import 'player.dart';
+import 'training.dart' show abilityCap, yearlyDelta;
 import 'records.dart';
 import 'rival_story.dart';
 import 'season.dart';
@@ -161,13 +163,16 @@ String afterCareerOf({
   required int popularity,
   required int money,
   required bool madePro,
+  String? team,
 }) {
   if (!madePro) return '野球で学んだことを生かして、新しい仕事で活躍する。';
   if (title == 'レジェンド' && popularity >= 60) {
     return '解説者として人気を集め、のちに監督としてチームを率いる。';
   }
   if (money >= 50000) return '資産をもとに事業を起こし、実業家として成功する。';
-  if (title == 'レジェンド' || title == '一流選手') return '球団のコーチとして、次の世代の育成に力を注ぐ。';
+  if (title == 'レジェンド' || title == '一流選手') {
+    return '${team ?? '球団'}のコーチとして、次の世代の育成に力を注ぐ。';
+  }
   if (proYears >= 10) return '野球教室を開き、子どもたちに野球の楽しさを伝える。';
   return '地元でスポーツ用品店を営み、野球を支え続ける。';
 }
@@ -396,3 +401,36 @@ String? ageNote(int age) => switch (age) {
 
 /// 1年間の練習と休養の回数のまとめ。
 String yearSummaryOf(int trains, int rests) => 'この1年: 練習・特訓$trains回、休養$rests回。';
+
+/// 背番号の格上げ。タイトルを取った投手はエースナンバー18、打者は3。なければ null。
+int? specialNumberOf(Role role, List<SeasonRecord> records) {
+  final titled = records.any((r) => r.titles.isNotEmpty);
+  if (!titled) return null;
+  return role == Role.pitcher ? 18 : 3;
+}
+
+/// ライバルのプロでの通算成績のめやす(素質と年数から。実際の試合は行わない)。
+String? rivalStatsOf(RivalStory s, int age) {
+  final pa = s.proAge;
+  if (pa == null || age < pa) return null;
+  final years = (age < s.retireAge ? age : s.retireAge) - pa + 1;
+  if (years < 1) return null;
+  final power = (s.talent - 40) * 0.6; // 年あたり本塁打(めやす)
+  final hr = (power * years).round();
+  final avg = 0.230 + (s.talent - 50) * 0.0012;
+  return '通算 約$hr本塁打・打率${fmtRate(avg.clamp(0.2, 0.34))}($years年)';
+}
+
+/// 能力を伸ばし続けたときの総合評価のめやす。`toAge` の歳まで、重点の能力を鍛え続ける。
+/// 乱数は使わず、1年の伸びの平均で計算する。
+int projectedOverall(Player p, Ability focus, int toAge) {
+  var q = p;
+  while (q.age < toAge) {
+    final next = {
+      for (final a in abilitiesOf(q.role))
+        a: (q.of(a) + yearlyDelta(q, a, focus).round()).clamp(0, abilityCap),
+    };
+    q = q.copyWith(age: q.age + 1, abilities: next);
+  }
+  return overall(q).round();
+}

@@ -97,6 +97,21 @@ Player _playerOf(PlayerSnapshot s) => Player(
     potential: s.potential,
     abilities: s.abilities);
 
+Ability _best(PlayerSnapshot s) {
+  final a = abilitiesOf(s.role);
+  return a
+      .reduce((x, y) => (s.abilities[y] ?? 0) > (s.abilities[x] ?? 0) ? y : x);
+}
+
+Ability _worst(PlayerSnapshot s) {
+  final a = abilitiesOf(s.role);
+  return a
+      .reduce((x, y) => (s.abilities[y] ?? 0) < (s.abilities[x] ?? 0) ? y : x);
+}
+
+/// 先の見通しを出す年齢(5年先、ただし25歳か30歳の区切りまで)。
+int _toAge(int age) => age < 25 ? 25 : (age < 30 ? 30 : age + 5);
+
 class _ProfileTab extends StatelessWidget {
   const _ProfileTab({required this.snapshot, required this.game});
   final PlayerSnapshot snapshot;
@@ -171,7 +186,9 @@ class _ProfileTab extends StatelessWidget {
                           playerCardLine(
                               s.stage == Stage.retired ? Stage.pro : s.stage,
                               _playerOf(s),
-                              position: s.position),
+                              position: s.position,
+                              numberOverride:
+                                  specialNumberOf(s.role, s.records)),
                           key: const Key('profile-card'),
                           style: Theme.of(context).textTheme.bodySmall),
                       Text(
@@ -182,6 +199,15 @@ class _ProfileTab extends StatelessWidget {
                           ].join(' '),
                           key: const Key('profile-role'),
                           style: Theme.of(context).textTheme.bodySmall),
+                      Text(
+                          '得意: ${abilityLabel(_best(s))} ・ 苦手: ${abilityLabel(_worst(s))}',
+                          key: const Key('profile-strengths'),
+                          style: Theme.of(context).textTheme.bodySmall),
+                      if (s.endingTitle == null && s.age < 40)
+                        Text(
+                            '弱点を鍛え続けると、${_toAge(s.age)}歳で総合${projectedOverall(_playerOf(s), _worst(s), _toAge(s.age))}ほど(めやす)',
+                            key: const Key('projection'),
+                            style: Theme.of(context).textTheme.bodySmall),
                       const SizedBox(height: 6),
                       Wrap(
                           spacing: 6,

@@ -19,6 +19,7 @@ class SeasonRecord {
     this.rivalWon,
     this.overseas = false,
     this.awards = const [],
+    this.months = const [],
   });
 
   final int age;
@@ -46,6 +47,9 @@ class SeasonRecord {
   /// この年の表彰(新人王・ベストナインなど。タイトルとは別)。
   final List<String> awards;
 
+  /// プロのシーズンの月ごとの成績(4〜9月)。
+  final List<String> months;
+
   bool get isLeague => rank != null;
   bool get champion =>
       isLeague ? rank == 1 : (rounds > 0 && roundsWon == rounds);
@@ -71,6 +75,7 @@ class SeasonRecord {
         'rivalWon': rivalWon,
         'overseas': overseas,
         'awards': awards,
+        'months': months,
       };
 
   /// 項目を足すときは既定値を置く。
@@ -91,6 +96,9 @@ class SeasonRecord {
         overseas: (j['overseas'] as bool?) ?? false,
         awards: [
           for (final t in (j['awards'] as List?) ?? const []) t as String
+        ],
+        months: [
+          for (final t in (j['months'] as List?) ?? const []) t as String
         ],
       );
 }

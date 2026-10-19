@@ -88,6 +88,18 @@ final List<Achievement> achievements = [
           records: s.records,
           title: s.endingTitle ?? '',
           madePro: s.proStartAge != null))),
+  Achievement('month-mvp-3', '月の主役', '月間MVPに3回選ばれる。',
+      (s) => s.events.where((e) => e.text.contains('の月間MVP')).length >= 3),
+  Achievement('all-star-5', '夢の球宴', 'オールスターに5回選ばれる。',
+      (s) => s.events.where((e) => e.text.contains('オールスターに選出')).length >= 5),
+  Achievement(
+      'triple-awards',
+      '栄誉の三冠',
+      '新人王・ベストナイン・ゴールデングラブをすべて受ける。',
+      (s) => const {'新人王', 'ベストナイン', 'ゴールデングラブ'}
+          .every((a) => s.records.any((r) => r.awards.contains(a)))),
+  Achievement('japan-series-3', '常勝軍団', '日本一を3回経験する。',
+      (s) => s.records.where((r) => r.awards.contains('日本一')).length >= 3),
   Achievement('legend', '伝説', '称号「レジェンド」を得る。', (s) => s.endingTitle == 'レジェンド'),
   Achievement('iron-man', '鉄人', 'プロで15年以上プレーする。',
       (s) => s.records.where((r) => r.stage == Stage.pro).length >= 15),

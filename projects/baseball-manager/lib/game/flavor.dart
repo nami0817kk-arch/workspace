@@ -234,8 +234,10 @@ int? uniformNumberOf(Stage stage, Player p) {
 }
 
 /// 1行の選手カード: 「背番号18 ・ 右投左打 ・ 遊撃手」。
-String playerCardLine(Stage stage, Player p, {Pos? position}) {
-  final n = uniformNumberOf(stage, p);
+String playerCardLine(Stage stage, Player p,
+    {Pos? position, int? numberOverride}) {
+  final n =
+      (stage == Stage.pro ? numberOverride : null) ?? uniformNumberOf(stage, p);
   return [
     if (n != null) '背番号$n',
     handednessOf(p.name),

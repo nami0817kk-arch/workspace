@@ -5,6 +5,7 @@ import 'package:baseball_manager/game/game.dart';
 import 'package:baseball_manager/game/life.dart';
 import 'package:baseball_manager/game/path.dart';
 import 'package:baseball_manager/game/player.dart';
+import 'package:baseball_manager/game/records.dart';
 import 'package:baseball_manager/game/season.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -215,6 +216,24 @@ void main() {
         expect(g.log.skip(before).any(re.hasMatch), isTrue, reason: 'slot $i');
         if (g.phase != Phase.term) break;
       }
+    });
+
+    test('シーズンの記録に、月ごとの成績(6か月ぶん)が残る', () {
+      final g = _proGame();
+      var n = 0;
+      while (!g.records.any((r) => r.stage == Stage.pro) && n++ < 40) {
+        if (g.phase == Phase.event) {
+          g.resolveEvent(0);
+          continue;
+        }
+        g.choose(Plan.rest, Ability.contact);
+      }
+      final r = g.records.lastWhere((r) => r.stage == Stage.pro);
+      expect(r.months.length, 6);
+      expect(r.months.first, contains('勝'));
+      expect(g.monthRows, isEmpty);
+      final back = SeasonRecord.fromJson(r.toJson());
+      expect(back.months, r.months);
     });
   });
 }

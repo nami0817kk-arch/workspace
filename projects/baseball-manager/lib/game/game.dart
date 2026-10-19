@@ -380,6 +380,8 @@ class Game {
   Tactic tactic = Tactic.steady;
 
   /// 今年の練習(練習・特訓)と休養の回数。年末にログに出して戻す。
+  /// 今季ここまでの月ごとの成績(4〜9月)。シーズンの記録に写して空にする。
+  List<String> monthRows = [];
   int trainCount = 0;
   int restCount = 0;
 
@@ -815,10 +817,13 @@ class Game {
     _allStar();
     final d = describeLine(m.line);
     if (m.missed >= 20) {
+      monthRows.add('$slotName: 怪我で全休 / ${m.wins}勝${m.losses}敗');
       log.add('$slotName: 怪我で全試合を欠場。チームは${m.wins}勝${m.losses}敗。');
       return;
     }
     log.add('$slotName: ${d.isEmpty ? '' : '$d。'}チームは${m.wins}勝${m.losses}敗。');
+    monthRows
+        .add('$slotName: ${d.isEmpty ? '出場なし' : d} / ${m.wins}勝${m.losses}敗');
     final crowd = (1.5 +
         popularityOf(records, worldRecords) * 0.04 +
         (m.wins + m.losses == 0 ? 0 : m.wins / (m.wins + m.losses)) * 1.5);
@@ -938,7 +943,9 @@ class Game {
         rivalWon: rivalWon,
         overseas: overseas,
         awards: awards,
+        months: List.of(monthRows),
       );
+      monthRows = [];
       records.add(rec);
       _judgeGoal(rec);
       if (league.missed > 0) log.add('怪我で${league.missed}試合を欠場した。');
@@ -1096,6 +1103,7 @@ class Game {
     final before = stage;
     slot = 0;
     offseasonDone = false;
+    monthRows = [];
     seasonProgress = null;
     player = endOfYear(player);
     condition = endOfYearCondition(condition);
@@ -1256,6 +1264,7 @@ class Game {
         'lifeLog': [for (final e in lifeLog) e.toJson()],
         'tactic': tactic.name,
         'focusStreak': focusStreak,
+        'monthRows': monthRows,
         'trainCount': trainCount,
         'restCount': restCount,
         'lastFocus': lastFocus?.name,
@@ -1287,6 +1296,9 @@ class Game {
         (j['condition'] as Map?)?.cast<String, dynamic>() ?? {});
     g.slot = (j['slot'] as num?)?.toInt() ?? 0;
     g.focusStreak = (j['focusStreak'] as num?)?.toInt() ?? 0;
+    g.monthRows = [
+      for (final t in (j['monthRows'] as List?) ?? const []) t as String
+    ];
     g.trainCount = (j['trainCount'] as num?)?.toInt() ?? 0;
     g.restCount = (j['restCount'] as num?)?.toInt() ?? 0;
     g.lastFocus = Ability.parse((j['lastFocus'] as String?) ?? '');

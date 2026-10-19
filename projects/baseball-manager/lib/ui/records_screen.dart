@@ -9,6 +9,7 @@ import '../game/records.dart';
 import '../game/rival_story.dart';
 import '../game/world.dart';
 import 'art/career_chart.dart';
+import 'widgets.dart';
 
 /// 成績画面: 通算・年度別の成績表・タイトル・ライバルとの対戦・総合評価の推移。
 class RecordsScreen extends StatelessWidget {
@@ -61,6 +62,7 @@ class RecordsView extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         _Summary(records: rs, pro: pro),
+        _Highlights(snapshot: snapshot),
         const SizedBox(height: 8),
         _Metrics(records: pro.isNotEmpty ? pro : rs, pro: pro.isNotEmpty),
         const SizedBox(height: 8),
@@ -68,6 +70,10 @@ class RecordsView extends StatelessWidget {
         if (titles.isNotEmpty) ...[
           const SizedBox(height: 8),
           _Titles(titles: titles),
+        ],
+        if (pro.length >= 2) ...[
+          const SizedBox(height: 8),
+          _Grades(records: pro),
         ],
         if (pro.isNotEmpty && pro.last.rank != null) ...[
           const SizedBox(height: 8),
@@ -418,6 +424,68 @@ class _Table extends StatelessWidget {
       };
 }
 
+/// 年ごとの評価(その年の成績から、ランクで)。
+class _Grades extends StatelessWidget {
+  const _Grades({required this.records});
+  final List<SeasonRecord> records;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = Theme.of(context).textTheme;
+    return Card(
+      key: const Key('grades'),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('年ごとの評価', style: t.titleSmall),
+            const SizedBox(height: 6),
+            Wrap(spacing: 10, runSpacing: 6, children: [
+              for (final r in records)
+                Row(mainAxisSize: MainAxisSize.min, children: [
+                  RankBadge(value: r.line.rating.round()),
+                  const SizedBox(width: 4),
+                  Text('${r.age}歳', style: t.bodySmall),
+                ]),
+            ]),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// ハイライトの回数(月間MVP・オールスター・表彰・日本一)。
+class _Highlights extends StatelessWidget {
+  const _Highlights({required this.snapshot});
+  final PlayerSnapshot snapshot;
+
+  @override
+  Widget build(BuildContext context) {
+    int n(String key) =>
+        snapshot.events.where((e) => e.text.contains(key)).length;
+    final awards = snapshot.records.fold<int>(0, (a, r) => a + r.awards.length);
+    final items = <(String, int)>[
+      ('月間MVP', n('の月間MVP')),
+      ('オールスター', n('オールスターに選出')),
+      ('表彰', awards),
+    ].where((e) => e.$2 > 0).toList();
+    if (items.isEmpty) return const SizedBox.shrink();
+    return Padding(
+      padding: const EdgeInsets.only(top: 8),
+      child: Wrap(key: const Key('highlights'), spacing: 6, children: [
+        for (final (label, count) in items)
+          Chip(
+              visualDensity: VisualDensity.compact,
+              avatar:
+                  const Icon(Icons.star, size: 16, color: Color(0xFFD4AF37)),
+              label: Text('$label $count回')),
+      ]),
+    );
+  }
+}
+
 /// 直近のプロのシーズンの順位表。
 class _Standings extends StatelessWidget {
   const _Standings({required this.snapshot, required this.record});
@@ -459,6 +527,13 @@ class _Standings extends StatelessWidget {
                   Text('${rows[i].wins}勝${rows[i].losses}敗'),
                 ]),
               ),
+            if (record.months.isNotEmpty) ...[
+              const SizedBox(height: 8),
+              Text('月ごとの成績', style: t.titleSmall),
+              for (var i = 0; i < record.months.length; i++)
+                Text(record.months[i],
+                    style: t.bodySmall, key: Key('month-row-$i')),
+            ],
           ],
         ),
       ),
@@ -590,7 +665,8 @@ class _RivalCard extends StatelessWidget {
         title: Text('ライバル $rival'),
         subtitle: Text(
             '通算 $w勝 $l敗'
-            '${snapshot.rivalTalent == null ? '' : '\n${rivalStatus(storyOf(rival, snapshot.rivalTalent!), snapshot.age)}'}',
+            '${snapshot.rivalTalent == null ? '' : '\n${rivalStatus(storyOf(rival, snapshot.rivalTalent!), snapshot.age)}'}'
+            '${snapshot.rivalTalent == null ? '' : (rivalStatsOf(storyOf(rival, snapshot.rivalTalent!), snapshot.age) == null ? '' : '\n${rivalStatsOf(storyOf(rival, snapshot.rivalTalent!), snapshot.age)}')}',
             key: const Key('rival-status')),
         isThreeLine: snapshot.rivalTalent != null,
       ),
