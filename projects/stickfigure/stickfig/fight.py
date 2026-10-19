@@ -247,7 +247,8 @@ def build_fight(spec: dict) -> dict:
     pal = PALETTES.get(s["palette"], PALETTES["warm"])
     marks = [0.0, 1.2, 1.9, 2.6, tc - 0.6, tc - 0.05, tc + 0.4, hl, hl + 0.8, end] if kick else \
             [0.0, 1.0, tc - 0.8, tc - 0.3, tc - 0.05, tc + 0.1, tc + 0.4, hl, hl + 0.8, end]
-    color_script = [[_r(t), [c[0], c[1], c[2]], c[3]] for t, c in zip(marks, pal)]
+    light = 0.55 if s["stage"] in ("dojo", "field") else 1.0     # 明るい舞台は、色味を弱める(白飛びする)
+    color_script = [[_r(t), [c[0], c[1], c[2]], round(c[3] * light, 3)] for t, c in zip(marks, pal)]
     stepping = dict(hold=2, ones_around_hits=4, hold_camera=True,
                     ranges=[[0.0, 1.1, 2], [_r(tc - 0.9), _r(tc), 2], [_r(h0 + 0.5), _r(h0 + 1.1), 2], [_r(ko_t + 0.3), _r(end), 2]])
     actors = dict(A=dict(color=s["colors"]["A"], scale=float(s["a_scale"]), base_x=-2.0, facing=1), B=dict(color=s["colors"]["B"], scale=float(s["b_scale"]), base_x=2.4, facing=-1))
