@@ -275,3 +275,13 @@ def test_slash_wave_builds():
     assert pj["shape"] == "crescent" and pj["x1"] > pj["x0"]
     assert "wall" in [h["kind"] for h in sc["hits"]]
     planmod.validate_scene(sc)
+
+
+def test_iai_builds():
+    sc = fight.build_fight(dict(weapon="sword", kick=False, hits=2, finisher="iai"))
+    kinds = [h["kind"] for h in sc["hits"]]
+    assert "vanish" in kinds and "appear" in kinds and sc["fx"]["cuts"]
+    t_app = next(h["tau"] for h in sc["hits"] if h["kind"] == "appear")
+    t_cut = sc["fx"]["cuts"][0]["start"]
+    assert 0.5 <= t_cut - t_app <= 0.7                                 # 抜けてから斬撃線まで「間」がある
+    planmod.validate_scene(sc)

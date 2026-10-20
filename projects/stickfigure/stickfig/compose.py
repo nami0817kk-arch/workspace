@@ -394,6 +394,27 @@ def compose_frame(plan: dict, f: int, figs: Dict[int, Image.Image], stages: Opti
         if bm["start"] <= tau <= bm["end"]:
             base.alpha_composite(look.beam(plan, f, bm.get("who", "A"), _pw_at(bm["x_end"], tau), tau - bm["start"], bm["end"] - bm["start"], tuple(bm.get("color", (120, 230, 255)))))
     base.alpha_composite(figs[f])
+    for ct in fx.get("cuts", []):              # 居合の斬撃線: 相手の体を横切る白い線が 1 本ずつ現れ(0.05 秒おき)、少しずれて消える
+        if ct["start"] <= tau <= ct["end"]:
+            who_c = ct.get("who", "B")
+            pc = plan["frames"][f]["actors"][who_c]
+            ac = plan["actors"][who_c]
+            skc = fk.skeleton(pc, 1 if ac.get("facing", 1) >= 0 else -1, pc["root_x"], ac.get("scale", 1.0))
+            hx, hz = skc["hip"]
+            u = camera.px_per_unit(cam)
+            q = (tau - ct["start"]) / max(1e-6, ct["end"] - ct["start"])
+            n_ = int(ct.get("n", 3))
+            d_ = ImageDraw.Draw(base)
+            col_c = tuple(ct.get("color", (235, 245, 255)))
+            for i in range(n_):
+                if tau < ct["start"] + 0.05 * i:
+                    continue
+                zc = hz + 0.9 - 0.35 * i
+                cx0, cy0 = to_px(hx - 0.7, zc - 0.12, cam)
+                cx1, cy1 = to_px(hx + 0.7, zc + 0.12, cam)
+                al = int(255 * max(0.0, 1.0 - max(0.0, q - 0.5) * 2))
+                d_.line([cx0, cy0, cx1, cy1], fill=col_c[:3] + (al,), width=max(2, int(0.035 * u)))
+                d_.line([cx0 + 2, cy0 + 2, cx1 + 2, cy1 + 2], fill=(20, 20, 30, al // 2), width=max(1, int(0.012 * u)))
     for wv in fx.get("waves", []):             # 地面を走る衝撃波(人物の上。土の山が手前を通る)
         if wv["start"] <= tau <= wv["end"]:
             q = (tau - wv["start"]) / max(1e-6, wv["end"] - wv["start"])
