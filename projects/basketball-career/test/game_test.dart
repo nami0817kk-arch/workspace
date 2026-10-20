@@ -2758,4 +2758,69 @@ void main() {
       expect(cur, greaterThan(100));
     });
   });
+
+  group('ドラフト', () {
+    test('評価点が高いほど上位に指名される(100で1位、低いと下位)', () {
+      double avg(double score) {
+        var sum = 0;
+        for (var i = 0; i < 500; i++) {
+          sum += draftPickOf(score, Random(i));
+        }
+        return sum / 500;
+      }
+
+      expect(avg(100), lessThan(4));
+      expect(avg(90), inInclusiveRange(10, 22));
+      expect(avg(70), inInclusiveRange(38, 52));
+      expect(avg(57), greaterThan(55));
+      for (var i = 0; i < 200; i++) {
+        final k = draftPickOf(40 + i * 0.3, Random(i));
+        expect(k, inInclusiveRange(1, 60));
+      }
+    });
+
+    test('順位の呼び名', () {
+      expect(draftLabel(0), '');
+      expect(draftLabel(1), contains('全体1位'));
+      expect(draftLabel(12), 'ドラフト1巡目 全体12位');
+      expect(draftLabel(44), 'ドラフト2巡目 全体44位');
+    });
+
+    test('プロ契約を勝ち取ると指名順位が付き、保存・復元で残る。契約できなければ付かない', () {
+      final base = Game.start('x', rng: Random(1), events: false);
+      final strong = Game(
+        eventsEnabled: false,
+        player: base.player.copyWith(
+          age: 19,
+          heightCm: 200,
+          abilities: {for (final a in Ability.values) a: 85},
+        ),
+        rng: Random(2),
+        pathPending: true,
+      );
+      expect(strong.draftPick, 0);
+      expect(strong.chooseRoute(Route.pro), isTrue);
+      expect(strong.draftPick, inInclusiveRange(1, 60));
+      expect(Game.fromJson(strong.toJson()).draftPick, strong.draftPick);
+
+      final weak = Game(
+        eventsEnabled: false,
+        player: base.player.copyWith(
+          age: 19,
+          heightCm: 170,
+          abilities: {for (final a in Ability.values) a: 25},
+        ),
+        rng: Random(2),
+        pathPending: true,
+      );
+      expect(weak.chooseRoute(Route.pro), isFalse);
+      expect(weak.draftPick, 0);
+    });
+
+    test('古いセーブ(draftPick なし)は 0 で読める', () {
+      final g = Game.start('x', rng: Random(1), events: false);
+      final j = g.toJson()..remove('draftPick');
+      expect(Game.fromJson(j).draftPick, 0);
+    });
+  });
 }

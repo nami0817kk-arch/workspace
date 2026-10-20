@@ -112,6 +112,14 @@ List<String> epilogueLines(Game g) {
         : '日本代表として${g.caps}度、世界の舞台に立った。');
   }
 
+  if (g.draftPick == 1) {
+    lines.add('ドラフトでは全体1位。いきなり、リーグの顔として迎えられた。');
+  } else if (g.draftPick > 0 && g.draftPick <= 10) {
+    lines.add('ドラフトでは全体${g.draftPick}位の上位指名。大きな期待を背負ってプロの扉を開いた。');
+  } else if (g.draftPick > 30) {
+    lines.add('ドラフトでは全体${g.draftPick}位。決して高い評価ではなかったが、そこからのし上がった。');
+  }
+
   if (retiredNumber(g)) {
     lines.add('背番号${g.number}は、永久欠番になった。');
   } else if (g.number > 0 && _wentPro(g)) {
