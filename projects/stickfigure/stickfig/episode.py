@@ -150,6 +150,9 @@ def build_episode(ep: dict, out: Path, reuse_figs: bool = False, force: bool = F
         else:
             sc = _passing_variant(sc)                 # fight の場面は、点検に落ちる seed なら少しずらして通るものにする(量産で 1 場面のために話ごと止まらない)
             scene = fight.expand(dict(sc), verify=True)
+            if "skit" in scene:                       # 物語の小話(skit:)もその場に書ける
+                from . import skit
+                scene = skit.expand(scene)
             planmod.validate_scene(scene)
         if vertical:
             scene["output"] = {"aspect": "vertical"}

@@ -14,10 +14,10 @@ from typing import Dict, List, Optional, Sequence
 
 from .interp import Curve, Spring
 
-NUM = ("fa", "fe", "ra", "re", "fl", "fk", "rl", "rk", "lean", "hz", "dx", "rz", "roll", "ht", "spin", "st", "lst", "run")
+NUM = ("fa", "fe", "ra", "re", "fl", "fk", "rl", "rk", "lean", "hz", "dx", "rz", "roll", "ht", "spin", "st", "lst", "run", "dir")
 
 STANCE_A: Dict[str, float] = dict(fa=0.7, fe=1.6, ra=0.5, re=1.7, fl=0.35, fk=0.3, rl=-0.35, rk=0.4, lean=0.1, hz=0.84,
-                                  dx=0.0, rz=0.0, roll=0.0, ht=0.0, spin=0.0, st=0.0, lst=0.0, run=0.0)
+                                  dx=0.0, rz=0.0, roll=0.0, ht=0.0, spin=0.0, st=0.0, lst=0.0, run=0.0, dir=0.0)
 STANCE_B: Dict[str, float] = dict(STANCE_A, fa=0.9, fe=1.4, ra=0.7, re=1.5, hz=0.80, lean=0.05, fl=0.45, rl=-0.45)
 
 # バネ: 項目 → (剛性 k, 減衰比 zeta)。腕・脚は硬め、体の傾きと頭は柔らかく遅れて付いてくる。
@@ -72,6 +72,7 @@ class KeyTrack:
         for i, t in enumerate(self.ts):
             if t <= tau:
                 idx = i
+        out["dir"] = self.rows[idx]["dir"]                 # 向きは補間しない(キーの時刻で切り替える。曲線だと −1→+1 の途中で潰れた絵になる)
         nxt = min(idx + 1, len(self.ts) - 1)
         if nxt != idx and tau > 0.5 * (self.ts[idx] + self.ts[nxt]):
             idx = nxt

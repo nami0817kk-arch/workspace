@@ -98,7 +98,7 @@ def _limb_smear(plan: dict, f: int, cam: dict) -> Image.Image:
             continue
         want = {"foot"} if kinds & {"kick", "heel"} else {"hand"}      # 蹴りは足、斬り・拳は手(踏み込みの脚には出さない)
         sc = a.get("scale", 1.0)
-        s = 1 if a.get("facing", 1) >= 0 else -1
+        s = fk.sign_of(a, plan["frames"][f]["actors"][who])
         p1, p0 = plan["frames"][f]["actors"][who], plan["frames"][g]["actors"][who]
         if abs(p1.get("roll", 0.0)) > 0.5:
             continue
@@ -316,6 +316,60 @@ BIG = dict(kick=1.2, slash=0.7, wall=1.5, heel=1.8, hit=0.8, clash=0.9, beam=0.8
 BURST_FRAMES = dict(slash=7, hit=9, kick=14, wall=14, heel=14, clash=8, miss=4, beam=5, blast=12, slam=10, wave=10)   # 放射線が残るコマ数。連続する命中で重ならないよう、斬りは短く
 
 
+def _prop_state(pr: dict, plan: dict, f: int, tau: float):
+    """小道具の今の位置 (x, z, held)。keys=[[t, x, z], ...] を直線でつなぐ。attach=[[t0, t1, who, dx, dz], ...] の間は who の手に付く。"""
+    for at in pr.get("attach", []):
+        if at[0] <= tau < at[1]:
+            hx, hz = anime.effector_world(plan, at[2], f)["hand"]
+            return hx + float(at[3]) if len(at) > 3 else hx, hz + (float(at[4]) if len(at) > 4 else 0.0), True
+    ks = pr.get("keys") or [[0.0, pr.get("x", 0.0), pr.get("z", 0.0)]]
+    if tau <= ks[0][0]:
+        return float(ks[0][1]), float(ks[0][2]), False
+    for (t0, x0, z0), (t1, x1, z1) in zip(ks, ks[1:]):
+        if t0 <= tau <= t1:
+            u = (tau - t0) / max(1e-6, t1 - t0)
+            arc = float(pr.get("arc", 0.0)) * math.sin(math.pi * u) if abs(x1 - x0) > 0.3 and t1 - t0 < 1.2 else 0.0   # 投げた物は山なり
+            return x0 + (x1 - x0) * u, z0 + (z1 - z0) * u + arc, False
+    return float(ks[-1][1]), float(ks[-1][2]), False
+
+
+def _draw_props(base: Image.Image, plan: dict, f: int, tau: float, cam: dict, props: list, behind: bool) -> list:
+    """小道具を描く。behind=True のとき: 置いてある物を描き、持たれている物のリストを返す(人物の後で描く)。"""
+    held_list = []
+    u = camera.px_per_unit(cam)
+    d = ImageDraw.Draw(base)
+    for pr in props:
+        if pr.get("start", -1e9) > tau or pr.get("end", 1e9) < tau:
+            continue
+        x, z, held = _prop_state(pr, plan, f, tau)
+        if behind and held:
+            held_list.append(pr)
+            continue
+        kind = pr.get("kind", "box")
+        col = tuple(pr.get("color", (210, 160, 90)))
+        edge = tuple(int(c * 0.5) for c in col)
+        size = float(pr.get("size", 0.6))
+        if not held:                                       # 影(持たれていない物。空中でも真下に落ちる)
+            sx0, sy0 = to_px(x - size * 0.6, 0.0, cam)
+            sx1, sy1 = to_px(x + size * 0.6, 0.0, cam)
+            d.ellipse([sx0, sy0 - 0.06 * u, sx1, sy0 + 0.06 * u], fill=(0, 0, 0, 70))
+        if kind == "ball":
+            r = size * 0.5 * u
+            cx, cy = to_px(x, z + size * 0.5, cam)
+            d.ellipse([cx - r, cy - r, cx + r, cy + r], fill=col, outline=edge, width=max(2, int(0.03 * u)))
+            d.ellipse([cx - r * 0.45, cy - r * 0.6, cx - r * 0.05, cy - r * 0.2], fill=(255, 255, 255, 110))
+        else:                                              # 箱(木箱): 面＋縁＋十字の板目
+            w = size * u
+            h = float(pr.get("h", size)) * u
+            x0, y1 = to_px(x - size / 2, z, cam)
+            x1, y0 = to_px(x + size / 2, z + float(pr.get("h", size)), cam)
+            d.rectangle([x0, y0, x1, y1], fill=col, outline=edge, width=max(2, int(0.035 * u)))
+            d.line([x0, y0, x1, y1], fill=edge, width=max(1, int(0.015 * u)))
+            d.line([x0, y1, x1, y0], fill=edge, width=max(1, int(0.015 * u)))
+            d.rectangle([x0 + w * 0.12, y0 + h * 0.12, x1 - w * 0.12, y1 - h * 0.12], outline=edge, width=max(1, int(0.015 * u)))
+    return held_list
+
+
 def compose_frame(plan: dict, f: int, figs: Dict[int, Image.Image], stages: Optional[Dict[int, Image.Image]] = None) -> Image.Image:
     fr = plan["frames"][f]
     cam = fr["cam"]
@@ -406,7 +460,9 @@ def compose_frame(plan: dict, f: int, figs: Dict[int, Image.Image], stages: Opti
     for bm in fx.get("beams", []):             # 気の光線(人物の下に描く: 上だと撃ち合いで 2 人が光線に隠れた。手の先から壁まで。x_end は数か [[tau, x], ...] の折れ線)
         if bm["start"] <= tau <= bm["end"]:
             base.alpha_composite(look.beam(plan, f, bm.get("who", "A"), _pw_at(bm["x_end"], tau), tau - bm["start"], bm["end"] - bm["start"], tuple(bm.get("color", (120, 230, 255))), z_end=bm.get("z_end")))
+    held = _draw_props(base, plan, f, tau, cam, fx.get("props", []), behind=True)   # 小道具(箱・玉): 置いてある物は人物の後ろ
     base.alpha_composite(figs[f])
+    _draw_props(base, plan, f, tau, cam, held, behind=False)                           # 持っている物は人物の前(手に追従)
     for ct in fx.get("cuts", []):              # 居合の斬撃線: 相手の体を横切る白い線が 1 本ずつ現れ(0.05 秒おき)、少しずれて消える
         if ct["start"] <= tau <= ct["end"]:
             hx, hz = float(ct["x"]), float(ct.get("z", 1.3)) - 0.9     # 台本の位置(x: 根元、z: 胸の高さ。線は z+0.9 から 0.35 刻みで下へ)
@@ -455,7 +511,7 @@ def compose_frame(plan: dict, f: int, figs: Dict[int, Image.Image], stages: Opti
         if sh["start"] <= tau <= sh["end"]:
             who_s = sh.get("who", "A")
             a_s = plan["actors"][who_s]
-            s_s = 1 if a_s.get("facing", 1) >= 0 else -1
+            s_s = fk.sign_of(a_s, plan["frames"][f]["actors"][who_s])
             hx, hz = anime.effector_world(plan, who_s, f)["hand"]
             px_, py_ = to_px(hx + s_s * float(sh.get("ahead", 0.3)), float(sh.get("z", hz)), cam)
             q = (tau - sh["start"]) / max(1e-6, sh["end"] - sh["start"])

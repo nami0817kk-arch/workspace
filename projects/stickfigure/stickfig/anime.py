@@ -42,7 +42,7 @@ def effector_world(plan: dict, who: str, f: int) -> Dict[str, Tuple[float, float
     """人物 who の、f コマ目の剣先・手・足の世界座標(x, z)。"""
     a = plan["actors"][who]
     p = plan["frames"][f]["actors"][who]
-    s = 1 if a.get("facing", 1) >= 0 else -1
+    s = fk.sign_of(a, p)
     sk = fk.skeleton(p, s, p["root_x"], a.get("scale", 1.0))
     out = {"hand": sk["hand"], "foot": sk["foot"], "rear_foot": sk["rear_foot"]}
     if a.get("weapon"):

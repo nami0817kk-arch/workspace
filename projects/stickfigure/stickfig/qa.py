@@ -46,13 +46,13 @@ def _scale(plan: dict, who: str) -> float:
     return plan["actors"][who].get("scale", 1.0)
 
 
-def _sign(plan: dict, who: str) -> int:
-    return 1 if plan["actors"][who].get("facing", 1) >= 0 else -1
+def _sign(plan: dict, who: str, p: dict = None) -> int:
+    return fk.sign_of(plan["actors"][who], p)
 
 
 def _skel(plan: dict, who: str, f: int) -> dict:
     p = plan["frames"][f]["actors"][who]
-    return fk.skeleton(p, _sign(plan, who), p["root_x"], _scale(plan, who))
+    return fk.skeleton(p, _sign(plan, who, p), p["root_x"], _scale(plan, who))
 
 
 def hold_frames_set(plan: dict) -> set:

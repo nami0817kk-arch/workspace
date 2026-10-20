@@ -56,6 +56,15 @@ def last_dir(base_rot: float, th_up: float, th_low: float, n: int = NSEG) -> Pt:
     return _dir(base_rot + chain_angles(th_up, th_low, n)[-1])
 
 
+def sign_of(actor: dict, pose=None) -> int:
+    """描く向きの符号。姿勢の dir(+1 右向き / -1 左向き)があればそれ、無ければ actor の facing。
+    dir は途中で向きを変えるため(2026-10-20、物語の型)。位置(root_x)は facing のまま(dx の向き)で、dir は絵の左右だけ反転する。"""
+    d = float(pose.get("dir", 0.0) or 0.0) if pose else 0.0
+    if d:
+        return 1 if d > 0 else -1
+    return 1 if actor.get("facing", 1) >= 0 else -1
+
+
 def skeleton(pose: Dict[str, float], s: int, root_x: float, scale: float = 1.0) -> Dict[str, object]:
     """姿勢(合成後の1コマぶん)から、各部位の折れ線を世界座標で返す。
 

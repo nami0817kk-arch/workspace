@@ -1,0 +1,40 @@
+# 物語の小話の見本「箱」(約 1 分): 緑が箱を見つけて運ぶ → 赤が来て箱を奪って逃げる → 投げ返して緑が転ぶ → 緑が玉で仕返し → 2 人で笑う
+name: skit_box
+skit:
+  stage: field
+  mood: calm
+  actors:
+    A: {color: [0.5, 0.85, 0.3], x: -3.0}
+    B: {color: [0.9, 0.3, 0.25], x: 9.5, dir: -1}
+  props:
+    box: {kind: box, x: 2.0, size: 0.65, color: [210, 160, 90]}
+    ball: {kind: ball, x: 4.6, size: 0.42, color: [240, 90, 80]}
+  beats:
+    - {who: A, act: walk, to: 0.8}
+    - {who: A, act: surprised, dur: 0.6}
+    - {who: A, act: think, dur: 1.0}
+    - {who: A, act: pickup, prop: box}
+    - {who: A, act: carry, to: 3.6}
+    - {who: A, act: put, prop: box}
+    - {who: A, act: cheer, dur: 0.9}
+    - {who: B, act: run, to: 5.8, at: with}
+    - {who: B, act: look, at: box}
+    - {who: A, act: surprised, dur: 0.5}
+    - {who: B, act: pickup, prop: box}
+    - {who: A, act: angry, dur: 0.9, at: with}
+    - {who: B, act: run, to: 9.0}
+    - {who: A, act: run, to: 7.2, at: with}
+    - {who: B, act: throw, prop: box, to: 7.2, hit: A}
+    - {who: A, act: fall}
+    - {who: B, act: laugh, dur: 1.2}
+    - {who: A, act: getup}
+    - {who: A, act: throw, prop: ball, to: 9.0, hit: B}
+    - {who: B, act: fall}
+    - {who: A, act: laugh, dur: 1.2}
+    - {who: B, act: getup}
+    - {who: B, act: walk, to: 7.9}
+    - {who: A, act: face, at: B}
+    - {who: B, act: nod, dur: 0.6}
+    - {who: A, act: wave, dur: 0.8}
+    - {who: B, act: wave, dur: 0.8, at: with}
+    - {act: wait, dur: 0.5}

@@ -38,7 +38,7 @@ def _wrap(d: ImageDraw.ImageDraw, text: str, font, max_w: int) -> List[str]:
 def _head_px(plan: dict, f: int, who: str, xf=None) -> Tuple[float, float, float]:
     a = plan["actors"][who]
     p = plan["frames"][f]["actors"][who]
-    s = 1 if a.get("facing", 1) >= 0 else -1
+    s = fk.sign_of(a, p)
     sk = fk.skeleton(p, s, p["root_x"], a.get("scale", 1.0))
     hx, hz = sk["head"]
     cam = plan["frames"][f]["cam"]

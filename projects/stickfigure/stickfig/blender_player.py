@@ -245,6 +245,8 @@ if PERSP:
 for f, fr in enumerate(PLAN["frames"], start=1):
     for who, R in RIG.items():
         p, F, s, fa, ra, sca = fr["actors"][who], R["F"], R["s"], R["front"], R["rear"], R["scale"]
+        if p.get("dir"):                                   # 姿勢の dir で向きを変える(位置は facing のまま、絵だけ左右反転)
+            s = 1 if p["dir"] > 0 else -1
         F["root"].scale = (sca, sca, sca)
         F["root"].location = (p["root_x"], PLAN["actors"][who].get("y", 0.0), p["root_z"])
         F["root"].rotation_euler = (0, -p["roll"] * s, 0)

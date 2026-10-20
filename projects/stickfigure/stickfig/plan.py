@@ -30,6 +30,9 @@ def load_scene(path) -> dict:
     if "fight" in scene:                     # 数行の指定から、戦いの台本を自動で組む(fight.py)
         from . import fight
         scene = fight.expand(scene)
+    if "skit" in scene:                      # 動作の並びから、物語の小話を組む(skit.py)
+        from . import skit
+        scene = skit.expand(scene)
     validate_scene(scene)
     return scene
 
@@ -243,7 +246,7 @@ def skeleton_at(scene: dict, tracks: Dict[str, KeyTrack], who: str, tau: float, 
         if scene.get("_bank") is not None:
             pose = scene["_bank"].apply(who, pose, tau)
     p = dict(pose, wl=fk.WEAPON_TIP.get(a.get("weapon"), fk.SWORD_TIP))
-    return fk.skeleton(p, _sign(a), _root_x(a, p), a.get("scale", 1.0))
+    return fk.skeleton(p, fk.sign_of(a, p), _root_x(a, p), a.get("scale", 1.0))
 
 
 def _set_key(track: KeyTrack, t: float, name: str, value: float) -> None:
@@ -445,6 +448,7 @@ def _footwork(scene: dict, frames: List[dict]) -> None:
 
         for f, fr in enumerate(frames):
             p = fr["actors"][who]
+            s = fk.sign_of(a, p)                                        # 向きはコマごと(dir で途中から変わる)
             if f > 0 and frames[f - 1]["tau"] == fr["tau"]:                      # ヒットストップ: 前のコマの脚を写す
                 q = frames[f - 1]["actors"][who]
                 for ang, knee, _ in legs:
@@ -641,6 +645,7 @@ def _ground_fix(scene: dict, frames: List[dict]) -> None:
         sc, s = a.get("scale", 1.0), _sign(a)
         for fr in frames:
             p = fr["actors"][who]
+            s = fk.sign_of(a, p)                                        # 向きはコマごと(dir で途中から変わる)
             if abs(p.get("roll", 0.0)) > 0.3 or not a.get("plant", True):       # plant: false は「足を触らない」指定
                 continue
             for _ in range(2):
@@ -669,6 +674,7 @@ def _auto_smear(scene: dict, frames: List[dict]) -> None:
         hand, foot = [], []
         for fr in frames:
             p = fr["actors"][who]
+            s = fk.sign_of(a, p)                                        # 向きはコマごと(dir で途中から変わる)
             sk = fk.skeleton(p, s, p["root_x"], sc)
             hand.append(sk["hand"])
             foot.append(sk["foot"])
@@ -740,6 +746,7 @@ def _lift_to_ground(scene: dict, frames: List[dict]) -> None:
         lift = 0.0
         for fr in frames:
             p = fr["actors"][who]
+            s = fk.sign_of(a, p)                                        # 向きはコマごと(dir で途中から変わる)
             sk = fk.skeleton(dict(p, rz=p["rz"]), s, p["root_x"], sc)
             low = min(min(pt[1] for pt in ln) for ln in fk.body_lines(sk))
             low = min(low, sk["head"][1] - sk["head_r"])
@@ -974,7 +981,7 @@ def build_plan(scene: dict, solve: bool = True) -> dict:
                 if scene.get("body_drive"):                  # 倒れている・空中の間は足さない。ただし境目で急に消えないよう、浮き始め・倒れ始めで薄くする(前は rz 0.05 で切っていて、蹴られて浮く瞬間に押され 0.3 ぶん戻っていた)
                     wgt = max(0.0, 1.0 - max(abs(p.get("rz", 0.0)) / 0.35, abs(p.get("roll", 0.0)) / 0.6))
                     if wgt > 0.0:
-                        q = _body_drive(p, who, f, events, scene["body_drive"], _sign(a), taus)
+                        q = _body_drive(p, who, f, events, scene["body_drive"], fk.sign_of(a, p), taus)
                         if wgt >= 1.0:
                             p = q
                         else:
@@ -986,7 +993,7 @@ def build_plan(scene: dict, solve: bool = True) -> dict:
                                     p[k] = v * wgt if isinstance(v, float) else v
                 if who in planters:
                     p = planters[who].apply(p, dtau)
-            s = _sign(a)
+            s = fk.sign_of(a, p)
             jit = 0.0
             if f > 0 and dtau == 0.0:
                 jit = (0.014 if a.get("heavy") else 0.007) * math.sin(f * 7.3)

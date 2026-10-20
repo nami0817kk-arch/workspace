@@ -1,0 +1,4 @@
+name: skit_box_ep
+mood_cards: calm
+items:
+  - scene: scenes/skit_box.yaml

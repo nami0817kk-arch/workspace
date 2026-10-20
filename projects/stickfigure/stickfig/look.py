@@ -96,7 +96,7 @@ def eyes(plan: dict, f: int, img: Image.Image) -> None:
     cam = plan["frames"][f]["cam"]
     for who, a in plan["actors"].items():
         p = plan["frames"][f]["actors"][who]
-        s = 1 if a.get("facing", 1) >= 0 else -1
+        s = fk.sign_of(a, p)
         sk = fk.skeleton(p, s, p["root_x"], a.get("scale", 1.0))
         hx, hz = sk["head"]
         r = sk["head_r"]
@@ -263,7 +263,7 @@ def beam(plan: dict, f: int, who: str, x_end: float, age: float, dur: float, col
     cam = plan["frames"][f]["cam"]
     a = plan["actors"][who]
     p = plan["frames"][f]["actors"][who]
-    s = 1 if a.get("facing", 1) >= 0 else -1
+    s = fk.sign_of(a, p)
     sk = fk.skeleton(p, s, p["root_x"], a.get("scale", 1.0))
     hx, hz = sk["hand"]
     u = camera.px_per_unit(cam)
@@ -317,7 +317,7 @@ def charge_aura(plan: dict, f: int, who: str, age01: float, col=(120, 230, 255))
     cam = plan["frames"][f]["cam"]
     a = plan["actors"][who]
     p = plan["frames"][f]["actors"][who]
-    s = 1 if a.get("facing", 1) >= 0 else -1
+    s = fk.sign_of(a, p)
     sk = fk.skeleton(p, s, p["root_x"], a.get("scale", 1.0))
     hx, hz = sk["hip"]
     cx, cy = camera.project(cam, hx, float(a.get("y", 0.0)), hz + 0.1)[:2]   # 奥行きをずらした人物(味方 C)でも腰に合う

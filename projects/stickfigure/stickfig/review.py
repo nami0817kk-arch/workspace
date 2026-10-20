@@ -64,7 +64,13 @@ def review_episode(ep: dict) -> dict:
             if len(it["card"]["text"]) > 12:
                 notes.append(f"区間{i + 1} カード「{it['card']['text']}」は長い(12文字まで)")
             continue
-        sc = fight.expand(dict(it["scene"]))
+        if isinstance(it["scene"], str):                 # 台本ファイルの指定(fight: / skit: はその中で展開される)
+            sc = planmod.load_scene(it["scene"])
+        else:
+            sc = fight.expand(dict(it["scene"]))
+            if "skit" in sc:
+                from . import skit
+                sc = skit.expand(sc)
         planmod.validate_scene(sc)
         pl = planmod.build_plan(sc)
         total += pl["n"] / pl["fps"]

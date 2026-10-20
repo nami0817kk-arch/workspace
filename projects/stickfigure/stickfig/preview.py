@@ -51,7 +51,7 @@ def draw_frame(plan: dict, f: int) -> Image.Image:
     u = camera.px_per_unit(cam)
     for who, a in plan["actors"].items():
         p = fr["actors"][who]
-        s = 1 if a.get("facing", 1) >= 0 else -1
+        s = fk.sign_of(a, p)
         sk = fk.skeleton(p, s, p["root_x"], a.get("scale", 1.0))
         col = tuple(int(255 * c) for c in a["color"])
         w = max(3, int(0.075 * u * a.get("scale", 1.0)))
