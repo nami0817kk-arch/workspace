@@ -527,7 +527,7 @@ def build_fight(spec: dict) -> dict:
     if rip_i is not None:
         gaps[rip_i] = round(gaps[rip_i] + 0.67, 2)       # 打ち返しの分、次の1発までを空ける(受けてから次の踏み込みまで 0.3 秒は要る)
     if 0 <= kick_i < n - 1:
-        gaps[kick_i] = round(gaps[kick_i] + 0.35 + (0.55 if long_w else 0.0), 2)   # 蹴りの clip は長い(命中の後 0.3 秒)。次の clip と重ならないよう空ける。長い武器は蹴りの間合い 0.9 から突きの 1.8 へ 2 単位下がる時間も要る(0.3 秒だと 1 コマ 0.95 飛ぶ)
+        gaps[kick_i] = round(gaps[kick_i] + 0.35 + (0.55 if (long_w or (sword and defend.get(kick_i + 1) == "clash")) else 0.0), 2)   # 蹴りの clip は長い(命中の後 0.3 秒)。次の clip と重ならないよう空ける。長い武器、または剣で次が受け止めのときは、蹴りの間合い 0.9 から 2 単位下がる時間も要る(0.3 秒だと 1 コマ 0.95 飛ぶ。物語の修行の場面で再発)
     tb_off = 0.0
     if bc:                                               # B の連打は、A の n-1 発目のあと(受け返しがあればその後)に入れる。決めの1発までを空ける
         tb_off = 1.0 if rip_i == n - 2 else 0.5
