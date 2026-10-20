@@ -39,7 +39,7 @@ def _r(x: float) -> float:
     return round(float(x), 3)
 
 
-IDLE = dict(fa=0.45, fe=1.0, ra=0.35, re=1.0, fl=0.12, fk=0.1, rl=-0.12, rk=0.12, lean=0.02, hz=0.81, ht=0.0, run=0.0, rz=0.0, roll=0.0, spin=0.0)
+IDLE = dict(fa=0.45, fe=1.0, ra=0.35, re=1.0, fl=0.12, fk=0.1, rl=-0.12, rk=0.12, lean=0.02, hz=0.81, ht=0.0, run=0.0, walk=0.0, hold=0.0, rz=0.0, roll=0.0, spin=0.0)
 CARRY = dict(IDLE, fa=1.35, fe=0.85, ra=1.3, re=0.9, lean=0.06)                  # 両手を前に出して箱を抱える
 CROUCH = dict(IDLE, hz=0.6, lean=0.55, fa=1.3, fe=0.25, ra=1.2, re=0.3, fl=0.9, fk=1.5, rl=-0.3, rk=1.2)   # しゃがんで手を伸ばす
 WINDUP = dict(IDLE, lean=-0.18, fa=-0.7, fe=0.9, ra=0.6, re=1.4, hz=0.82)
@@ -170,15 +170,11 @@ def build_skit(spec: dict) -> dict:
                 a.key(t + dur + 0.15, IDLE)
                 end = t + dur + 0.15
             else:
-                base = CARRY if act == "carry" else dict(IDLE, lean=0.08)
-                n = max(1, int(dur / 0.32))
-                x0 = a.x
-                for i in range(n + 1):
-                    tt = t + dur * i / n
-                    swing = (0.0 if act == "carry" else (0.55 if i % 2 == 0 else -0.35))     # 腕を交互に振る(脚は footwork が運ぶ)
-                    a.key(tt, dict(base, fa=base["fa"] + swing, ra=base["ra"] - swing), x=x0 + (to - x0) * i / n)
-                a.key(t + dur + 0.1, dict(base, fa=base["fa"], ra=base["ra"]))
-                end = t + dur + 0.1
+                base = CARRY if act == "carry" else dict(IDLE, lean=0.06)
+                a.key(t, dict(base, walk=1.0, hold=(1.0 if act == "carry" else 0.0)))      # 歩きの周期(pose.WALK)。抱えているときは腕を触らない
+                a.key(t + dur, dict(base, walk=1.0, hold=(1.0 if act == "carry" else 0.0)), x=to)
+                a.key(t + dur + 0.12, dict(base, walk=0.0, hold=0.0))
+                end = t + dur + 0.12
         elif act in ("turn", "face", "look"):
             if "dir" in b:
                 a.dir = int(b["dir"])

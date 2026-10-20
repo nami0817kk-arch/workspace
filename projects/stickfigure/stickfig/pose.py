@@ -14,10 +14,10 @@ from typing import Dict, List, Optional, Sequence
 
 from .interp import Curve, Spring
 
-NUM = ("fa", "fe", "ra", "re", "fl", "fk", "rl", "rk", "lean", "hz", "dx", "rz", "roll", "ht", "spin", "st", "lst", "run", "dir")
+NUM = ("fa", "fe", "ra", "re", "fl", "fk", "rl", "rk", "lean", "hz", "dx", "rz", "roll", "ht", "spin", "st", "lst", "run", "dir", "walk", "hold")
 
 STANCE_A: Dict[str, float] = dict(fa=0.7, fe=1.6, ra=0.5, re=1.7, fl=0.35, fk=0.3, rl=-0.35, rk=0.4, lean=0.1, hz=0.84,
-                                  dx=0.0, rz=0.0, roll=0.0, ht=0.0, spin=0.0, st=0.0, lst=0.0, run=0.0, dir=0.0)
+                                  dx=0.0, rz=0.0, roll=0.0, ht=0.0, spin=0.0, st=0.0, lst=0.0, run=0.0, dir=0.0, walk=0.0, hold=0.0)
 STANCE_B: Dict[str, float] = dict(STANCE_A, fa=0.9, fe=1.4, ra=0.7, re=1.5, hz=0.80, lean=0.05, fl=0.45, rl=-0.45)
 
 # バネ: 項目 → (剛性 k, 減衰比 zeta)。腕・脚は硬め、体の傾きと頭は柔らかく遅れて付いてくる。
@@ -96,12 +96,20 @@ class Smoother:
         return out
 
 
+# 歩きの周期(2026-10-20、小話「歩き方変では？」から)。走りより遅く小さく: 脚 ±29°、振り出す脚の膝は曲げ、腕は逆に小さく振る、腰はほぼ上下しない
+WALK = dict(cadence=1.1, leg_bias=0.0, leg_amp=0.5, knee_base=0.05, knee_gain=0.9, arm_bias=0.1, arm_amp=0.55, elbow_base=0.5, elbow_amp=0.25, bounce=0.03, lean_osc=0.015)
+
+
 def apply_run(p: Dict[str, float], tau: float, run: Optional[dict] = None) -> Dict[str, float]:
-    """p['run'] の割合だけ、腕・脚・腰・傾きを走りの周期に置き換える。"""
+    """p['run'] の割合だけ、腕・脚・腰・傾きを走りの周期に置き換える。p['walk'] なら歩きの周期(WALK)。p['hold'] が 1 なら腕は触らない(物を抱えて歩く)。"""
     r = p.get("run", 0.0)
-    if r <= 0.01:
+    w = p.get("walk", 0.0)
+    if r <= 0.01 and w <= 0.01:
         return p
-    c = dict(RUN, **(run or {}))
+    if w > r:
+        c, r = dict(WALK), w
+    else:
+        c = dict(RUN, **(run or {}))
     ph = tau * 2 * math.pi * c["cadence"]
     sw, cw = math.sin(ph), math.cos(ph)
     q = dict(p)
@@ -113,10 +121,11 @@ def apply_run(p: Dict[str, float], tau: float, run: Optional[dict] = None) -> Di
     q["rl"] = mix(c["leg_bias"] - c["leg_amp"] * sw, p["rl"])
     q["fk"] = mix(c["knee_base"] + c["knee_gain"] * max(0.0, cw), p["fk"])
     q["rk"] = mix(c["knee_base"] + c["knee_gain"] * max(0.0, -cw), p["rk"])
-    q["fa"] = mix(c["arm_bias"] - c["arm_amp"] * sw, p["fa"])
-    q["ra"] = mix(c["arm_bias"] + c["arm_amp"] * sw, p["ra"])
-    q["fe"] = mix(c["elbow_base"] - c["elbow_amp"] * sw, p["fe"])
-    q["re"] = mix(c["elbow_base"] + c["elbow_amp"] * sw, p["re"])
+    if p.get("hold", 0.0) < 0.5:
+        q["fa"] = mix(c["arm_bias"] - c["arm_amp"] * sw, p["fa"])
+        q["ra"] = mix(c["arm_bias"] + c["arm_amp"] * sw, p["ra"])
+        q["fe"] = mix(c["elbow_base"] - c["elbow_amp"] * sw, p["fe"])
+        q["re"] = mix(c["elbow_base"] + c["elbow_amp"] * sw, p["re"])
     q["hz"] = p["hz"] + c["bounce"] * abs(sw) * r
     q["lean"] = p["lean"] + c["lean_osc"] * math.sin(2 * ph) * r
     return q

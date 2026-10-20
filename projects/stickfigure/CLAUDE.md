@@ -233,6 +233,7 @@ python scripts/make_gallery.py 09_01:2.4 135_07_s1:3.6   # clip を順に再生�
 - 台本は `skit:`(`scenes/skit_box.yaml` が見本): `actors`(色・置く x・`dir`)、`props`(`kind: box|ball`、x・size・color)、`beats`(動作の並び)。動作は順に進み、`at: with` で直前の動作と同時に始める、`t:` で時刻の直指定、`wait` で間
 - 動作(`act`): walk/run/carry(`to`)・turn/face/look(`dir` か `at`)・jump(`h`,`to`)・pickup(`prop`)・put(`prop`, `at` か `on:` 別の箱に積む)・throw(`prop`,`to`,`hit:` 当てる相手)・push/kick(`prop`,`to`)・surprised・laugh・angry・fall(`back: false` で前のめり)・getup・point(`at`)・think・cheer・cry・sit・stand・wave・nod・shake。驚く・笑う・怒る・転ぶ等は自動で寄りのカット
 - 仕組み: 全員 `facing: 1` で置き、**向きは姿勢の `dir`(±1)で変える**(`fk.sign_of`。位置の計算は facing のまま、絵だけ左右反転。Blender・合成・点検・下書き全部に通してある。補間しないでキーの時刻で切り替える)。小道具は `fx.props`(`keys=[[t,x,z]]` の直線＋`arc` で山なり、`attach=[[t0,t1,who,dx,dz]]` の間は手に追従。置いてある物は人物の後ろ、持っている物は前に描く)。脚は keys で書かず footwork に任せる(歩きは dx を進めて腕を振るだけ)。走りは `run: 1.0`
+- **歩きは周期(`pose.WALK`、姿勢の `walk: 1.0`)で動かす**(2026-10-20 ユーザー「歩き方変では？」): footwork(足を地面に固定して遅れたら踏み替える)で歩かせると両足が体の後ろに残って小刻みになった。走りの `run` と同じ形で、歩きは脚 ±29°・振り出す脚の膝を曲げる・腕は逆に小さく振る・腰はほぼ上下しない・周期 1.1 回/秒(速さ 1.7/秒で歩幅が合う)。`hold: 1.0` で腕を触らない(箱を抱えて歩く)。walk の間は footwork は触らない(走りと同じ)
 - 起き上がり(getup)は根元を上げながら回す(rz 0.1 のまま roll を戻すと体が地面に 0.25 潜り、ground の点検に落ちた)
 - qa は `max_stops` 等を外してある(間が多いのが小話)。点検で見るのは地面・1 コマの飛び・見た目
 - episode/review は `scene: パス` の指定と、その場の `skit:` の両方を展開する

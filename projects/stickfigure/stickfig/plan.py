@@ -454,7 +454,7 @@ def _footwork(scene: dict, frames: List[dict]) -> None:
                 for ang, knee, _ in legs:
                     p[ang], p[knee] = q[ang], q[knee]
                 continue
-            free = abs(p.get("rz", 0.0)) > 0.2 * sc or abs(p.get("roll", 0.0)) > 0.3 or p.get("run", 0) > 0.3 or p.get("periodic")     # rz は Planter が少し持ち上げることがある(0.1 前後)。空中は 0.2 以上
+            free = abs(p.get("rz", 0.0)) > 0.2 * sc or abs(p.get("roll", 0.0)) > 0.3 or p.get("run", 0) > 0.3 or p.get("walk", 0) > 0.3 or p.get("periodic")     # rz は Planter が少し持ち上げることがある(0.1 前後)。空中は 0.2 以上
             if free:
                 planted = {"foot": None, "rear_foot": None}
                 swing = None
