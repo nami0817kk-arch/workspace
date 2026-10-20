@@ -229,8 +229,9 @@ def beam(plan: dict, f: int, who: str, x_end: float, age: float, dur: float, col
     sk = fk.skeleton(p, s, p["root_x"], a.get("scale", 1.0))
     hx, hz = sk["hand"]
     u = camera.px_per_unit(cam)
-    x0, y0 = camera.project(cam, hx, 0.0, hz)[:2]
-    x1, y1 = camera.project(cam, x_end, 0.0, hz if z_end is None else float(z_end))[:2]   # z_end: 終点の高さ(空中から斜め下へ撃つ)
+    ay = float(a.get("y", 0.0))                           # 奥行きをずらした人物(味方 C)の手から出す。終点は奥行き 0(相手の列)へ寄せる
+    x0, y0 = camera.project(cam, hx, ay, hz)[:2]
+    x1, y1 = camera.project(cam, x_end, ay * 0.3, hz if z_end is None else float(z_end))[:2]   # z_end: 終点の高さ(空中から斜め下へ撃つ)
     t01 = age / max(dur, 1e-6)
     grow = min(1.0, age * 30 / 3.0)                                   # 3 コマで太くなる
     fade = 1.0 if t01 < 0.75 else max(0.0, (1 - t01) / 0.25)
@@ -281,7 +282,7 @@ def charge_aura(plan: dict, f: int, who: str, age01: float, col=(120, 230, 255))
     s = 1 if a.get("facing", 1) >= 0 else -1
     sk = fk.skeleton(p, s, p["root_x"], a.get("scale", 1.0))
     hx, hz = sk["hip"]
-    cx, cy = camera.project(cam, hx, 0.0, hz + 0.1)[:2]
+    cx, cy = camera.project(cam, hx, float(a.get("y", 0.0)), hz + 0.1)[:2]   # 奥行きをずらした人物(味方 C)でも腰に合う
     u = camera.px_per_unit(cam)
     rnd = random.Random(f)
     ov = Image.new("RGBA", (W, H), (0, 0, 0, 0))

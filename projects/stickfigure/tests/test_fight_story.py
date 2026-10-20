@@ -193,6 +193,31 @@ def test_beam_finisher_builds_and_flies_to_wall():
     planmod.validate_scene(sc)
 
 
+def test_twin_beam_builds_with_ally_firing_too():
+    sc = fight.build_fight(dict(weapon="none", kick=False, hits=2, finisher="twin_beam"))   # ally 無しでも既定の味方が立つ
+    assert "C" in sc["actors"] and sc["actors"]["C"]["facing"] == 1 and sc["actors"]["C"]["base_x"] < 1.7   # A の後ろで B の方を向く
+    bm = {b["who"]: b for b in sc["fx"]["beams"]}
+    assert sorted(bm) == ["A", "C"]                                                         # C の光線は先に積む(下に描かれ、A の光線が上)
+    ta, tc = bm["A"]["start"], bm["C"]["start"]
+    assert 0.03 <= tc - ta <= 0.1                                                           # C は A の 2 コマ後
+    assert "C" in [c["who"] for c in sc["fx"]["charge"]]                                   # C にも溜めの光
+    kc = sc["keys"]["C"]
+    assert kc == sorted(kc, key=lambda k: k["t"]) and kc[-1]["face"] == "win"             # 発射のあと万歳
+    planmod.validate_scene(sc)
+
+
+def test_random_finisher_adds_twin_beam_only_with_ally():
+    import random
+    seen = set()
+    for sd in range(40):
+        s = fight.build_fight(dict(weapon="none", kick=False, hits=2, finisher="random", ally={}, seed=sd))
+        seen.add("C" in s["actors"] and len(s["fx"]["beams"]) == 2)
+    assert True in seen
+    for sd in range(40):
+        s = fight.build_fight(dict(weapon="none", kick=False, hits=2, finisher="random", seed=sd))
+        assert "C" not in s["actors"]
+
+
 def test_blast_finisher_builds():
     sc = fight.build_fight(dict(weapon="none", kick=False, hits=2, finisher="blast"))
     kinds = [h["kind"] for h in sc["hits"]]

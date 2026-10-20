@@ -103,6 +103,7 @@ FINISHER_POOL = {                                      # finisher: random が選
     "spear": ["launch_slash", "beam", "wave", "meteor"],
     "none": ["launch_kick", "barrage", "blast", "beam", "wave", "slam_throw", "blink_combo", "meteor", "beam_clash", "air_beam"],
 }
+ALLY_FINISHERS = ["twin_beam"]                         # 味方(ally)がいる場面だけ random の池に足す技(合体技)
 OPENING_POOL = [None, None, "blast", "teleport", "fly", "counter_blast", "air_clash", "dodge_beam", "taunt", "lock", "return_blast", "dodge_slash"]   # opening: random が選ぶ(None 2 つ=走りが多め。taunt は名乗り)
 
 
@@ -162,7 +163,7 @@ def build_fight(spec: dict) -> dict:
     n = max(1, min(4, int(s["hits"])))
     kick = bool(s["kick"])
     if s["finisher"] == "random":                        # 全部の技から、武器に合うものを seed で選ぶ(物語・量産で技がばらける)
-        pool = FINISHER_POOL.get(s["weapon"], FINISHER_POOL["none"])
+        pool = FINISHER_POOL.get(s["weapon"], FINISHER_POOL["none"]) + (ALLY_FINISHERS if s["ally"] is not None else [])   # 味方がいれば合体技も候補
         s["finisher"] = (rng.choice(pool) if rng is not None else pool[0])
     if s["opening"] == "random":
         pool = OPENING_POOL
@@ -173,7 +174,10 @@ def build_fight(spec: dict) -> dict:
             s["opening"] = None
         if s["opening"] == "dodge_slash" and s["weapon"] not in ("sword", "dagger"):
             s["opening"] = None
-    beam = s["finisher"] == "beam"                       # 必殺技: 気の光線(溜め → 発射 → 壁まで吹き飛ばす)
+    twin = s["finisher"] == "twin_beam"                  # 必殺技: 合体光線(味方 C と 2 人で同時に撃つ。ally が無ければ既定の味方を立てる)
+    if twin and s["ally"] is None:
+        s["ally"] = {}
+    beam = s["finisher"] == "beam" or twin               # 必殺技: 気の光線(溜め → 発射 → 壁まで吹き飛ばす)
     blast = s["finisher"] == "blast"                     # 必殺技: 気弾(片手に玉を膨らませて投げる → 着弾で爆発 → 壁まで吹き飛ばす)
     wave = s["finisher"] == "wave"                       # 必殺技: 衝撃波(跳んで拳を地面に叩きつけ → 地面を走る波 → 相手を打ち上げる)
     bclash = s["finisher"] == "beam_clash"               # 必殺技: 光線の撃ち合い(2 人が同時に撃ち、中央でぶつかり、A が押し勝つ)
@@ -756,6 +760,20 @@ def build_fight(spec: dict) -> dict:
                   dict(t=_r(t_fire + 0.75), dx=3.75, **dict(fire_pose, lean=0.25, hz=0.84)),
                   dict(t=_r(t_fire + 1.0), dx=3.75, hz=0.88, lean=0.1, fa=0.9, fe=1.4, ra=0.7, re=1.5, ht=0.0, face="fight")]   # 腕を下ろす
         charge.append(dict(start=_r(t_c0), end=_r(t_fire), who="A", color=beam_col))
+        if twin:                                          # 味方 C も横(奥)で同じ型を取り、A の 2 コマ後に撃つ(同時だと 1 本に見えた)。色は beam_color_b か暖色
+            twin_col = list(s.get("beam_color_b") or [255, 205, 90])
+            al = s["ally"]
+            keysC_twin = [dict(t=_r(hl + 0.12), dx=0.0, hz=0.86, lean=0.1, fa=1.2, fe=1.8, ra=1.2, re=1.8, face="fight"),   # 見守りから身構える
+                          dict(t=_r(t_c0 + 0.1), dx=0.0, **charge_pose),                                               # A より 0.1 秒遅れて構える(息を合わせる間)
+                          dict(t=_r(t_fire), dx=0.0, **dict(charge_pose, hz=0.70, lean=0.05)),
+                          dict(t=_r(t_fire + 0.07), dx=0.15, **fire_pose),                                             # A の 2 コマ後に突き出す
+                          dict(t=_r(t_fire + 0.19), dx=0.05, **dict(fire_pose, lean=0.3, hz=0.78)),
+                          dict(t=_r(t_fire + 0.8), dx=0.05, **dict(fire_pose, lean=0.25, hz=0.84)),
+                          dict(t=_r(t_fire + 1.05), dx=0.05, hz=0.88, lean=0.1, fa=0.9, fe=1.4, ra=0.7, re=1.5, ht=0.0, face="fight")]
+            charge.append(dict(start=_r(t_c0 + 0.1), end=_r(t_fire + 0.07), who="C", color=twin_col))
+            fx_beams.append(dict(start=_r(t_fire + 0.07), end=_r(t_fire + 0.8), who="C", color=twin_col, x_end=b_wall + 1.2))   # C の分の閃光は足さない(足すと 41.4/分で上限 41 を超えた)
+            al.setdefault("x", 0.9)                       # 既定の立ち位置: A(根元 1.7〜1.9)の後ろの奥(y 既定 1.6)、B の方を向く。見守りの既定(4.4・左向き)は壁側で光線の道にいた
+            al.setdefault("facing", 1)
         hits += [dict(tau=_r(hl + 0.5), hold=0.0, kind="pose"),
                  dict(tau=_r(t_fire), hold=0.08, kind="beam", by="A", pos=[_r(b_root - 0.15), 1.3]),
                  dict(tau=_r(t_fire + 0.34), hold=0.06, kind="wall", pos=[b_wall, 1.6])]
@@ -1272,11 +1290,12 @@ def build_fight(spec: dict) -> dict:
     marks["counter"] = ts[0] + 0.28
     caps = _layout_captions(s["lines"], marks, end, float(s["tempo"])) if s["captions"] else []
     keys = dict(A=sorted(keysA, key=lambda k: k["t"]), B=sorted(keysB, key=lambda k: k["t"]))
-    if s["ally"]:                                       # 味方: 戦いの間は不安げに見守り、決着で万歳(か、うなだれる)。奥行き y をずらして置く
+    if s["ally"] is not None:                           # 味方(空の {} でも既定で立てる): 戦いの間は不安げに見守り、決着で万歳(か、うなだれる)。奥行き y をずらして置く
         al = s["ally"]
         actors["C"] = dict(color=al.get("color", [0.95, 0.8, 0.2]), scale=al.get("scale", 0.8), base_x=al.get("x", 4.4), y=al.get("y", 1.6), facing=al.get("facing", -1))
         worry = dict(dx=0.0, hz=0.84, lean=0.05, fa=1.4, fe=2.0, ra=1.4, re=2.0, face="pain")
-        keys["C"] = [dict(t=0.0, **worry), dict(t=_r(ko_t), **worry)] + (
+        mid_c = keysC_twin if twin else [dict(t=_r(ko_t), **worry)]   # 合体光線では見守り → 構え → 発射 → 腕を下ろす、のあと万歳
+        keys["C"] = [dict(t=0.0, **worry)] + mid_c + (
             [dict(t=_r(ko_t + 0.25), dx=0.0, hz=0.86, lean=-0.1, fa=2.7, fe=0.3, ra=2.7, re=0.3, face="win"), dict(t=end, dx=0.0, hz=0.86, lean=-0.1, fa=2.7, fe=0.3, ra=2.7, re=0.3, face="win")]
             if al.get("cheer", True) else
             [dict(t=_r(ko_t + 0.3), dx=0.0, hz=0.78, lean=0.3, fa=0.15, fe=0.2, ra=0.15, re=0.2, face="pain"), dict(t=end, dx=0.0, hz=0.78, lean=0.3, fa=0.15, fe=0.2, ra=0.15, re=0.2, face="pain")])

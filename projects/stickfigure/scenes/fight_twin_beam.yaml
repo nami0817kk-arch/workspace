@@ -1,0 +1,3 @@
+# 合体技の見本: 味方 C が後ろの奥から A と息を合わせ、2 本の光線で壁まで吹き飛ばす
+name: fight_twin_beam
+fight: {weapon: none, kick: false, hits: 3, counter: true, finisher: twin_beam, ally: {color: [0.95, 0.8, 0.2]}, palette: cool, stage: night, mood: battle, seed: 7}
