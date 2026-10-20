@@ -941,6 +941,7 @@ def build_plan(scene: dict, solve: bool = True) -> dict:
     for e in events:
         for i in range(e["frame"] + 1, e["frame"] + e.get("hold_frames", 0)):
             hold_frames.add(i)
+    zoom_all = float(scene.get("cam_zoom", 1.0))         # 全カットを一律に引く/寄せる(2026-10-20「もう少し遠くから見るように」→ fight の既定 1.25)
     frames = []
     for f, tau in enumerate(taus):
         dtau = tau - taus[f - 1] if f > 0 else 0.0
@@ -990,7 +991,7 @@ def build_plan(scene: dict, solve: bool = True) -> dict:
             p["root_z"] = p["rz"] + abs(jit) * 0.5
             fr["actors"][who] = {k: (round(v, 6) if isinstance(v, float) else v) for k, v in p.items()}
         # カメラ: 目標へなめらかに追従 + 命中の揺れ
-        tx, ts = cx_curve(tau), cs_curve(tau)
+        tx, ts = cx_curve(tau), cs_curve(tau) * zoom_all
         camx += (tx - camx) * 0.22
         cams += (ts - cams) * 0.30
         shot_cam = None
@@ -1003,7 +1004,7 @@ def build_plan(scene: dict, solve: bool = True) -> dict:
                 cur_shot["i"] = si
             else:
                 cur_shot["x"] += (tgt - cur_shot["x"]) * sh["lag"]
-            shot_cam = dict(x=cur_shot["x"], scale=sh["scale"](tau), yaw=sh["yaw"](tau), pitch=sh["pitch"](tau), lens=sh["lens"],
+            shot_cam = dict(x=cur_shot["x"], scale=sh["scale"](tau) * zoom_all, yaw=sh["yaw"](tau), pitch=sh["pitch"](tau), lens=sh["lens"],
                             target_z=sh["target_z"], dutch=sh["dutch"])
             camx, cams = shot_cam["x"], shot_cam["scale"]
         shake = 0.0
@@ -1050,7 +1051,7 @@ def build_plan(scene: dict, solve: bool = True) -> dict:
             vsc = 1.6 if (scene.get("output") or {}).get("aspect") == "vertical" else 1.0     # 縦画面は中央を切り出すので、寄りのカットは引く(頭で画面が埋まる)
             fr["look"] = (ang.get("hue", (f // 4) % 4)) if ang.get("streak", True) else None
             fr["cam"] = {k: (round(v, 5) if isinstance(v, float) else v) for k, v in
-                         camera.make_cam(e["pos"][0], 0.0, ang.get("scale", 3.0) * vsc, ang.get("yaw", 30.0), ang.get("pitch", 4.0),
+                         camera.make_cam(e["pos"][0], 0.0, ang.get("scale", 3.0) * vsc * zoom_all, ang.get("yaw", 30.0), ang.get("pitch", 4.0),
                                          ang.get("lens", 30.0), sx, sz, target_z=max(0.8, e["pos"][1]), dutch=ang.get("dutch", 0.0)).items()}
             fr["cam"] = camera.keep_out_of_walls(fr["cam"], scene.get("stage", {}).get("wall_x"))
             fr["cam"]["z"] = fr["cam"]["tz"]
@@ -1093,7 +1094,7 @@ def build_plan(scene: dict, solve: bool = True) -> dict:
         c["distance_to_body"] = fk.dist_to_body(eff, sk_t)
         c["effector_pos"] = list(eff)
     return dict(version=1, fps=fps, n=len(frames), view=dict(VIEW, persp=bool(scene.get("view3d") or scene.get("shots")), lens=(scene.get("view3d") or {}).get("lens", 40.0)), actors=scene["actors"], stage=scene.get("stage", {}),
-                events=events, contacts=contacts, frames=frames, scene={k: scene[k] for k in ("hits", "slow", "camera", "fx", "tempo", "view3d", "anime", "shots", "stepping", "impact_cuts", "flurry", "style", "captions", "output", "limb", "body_drive", "clip_timing", "snaps") if k in scene})
+                events=events, contacts=contacts, frames=frames, scene={k: scene[k] for k in ("hits", "slow", "camera", "fx", "tempo", "view3d", "anime", "shots", "stepping", "impact_cuts", "flurry", "style", "captions", "output", "limb", "body_drive", "clip_timing", "snaps", "cam_zoom") if k in scene})
 
 
 def save_plan(plan: dict, path) -> None:

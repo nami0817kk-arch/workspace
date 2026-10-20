@@ -42,6 +42,7 @@ DEFAULTS = dict(
     b_first=True,            # 蹴り無しのとき、B が先に2発仕掛ける(A がかわし→受け止め)。攻守の入れ替わり
     riposte=True,            # 受け止めた直後に、相手(B)が打ち返し、こちら(A)が受け止める(鍔迫り合いの往復)
     camera=None,             # "fixed" で検証用の固定カメラ(カット・寄り・連打カット・決めの引きを無くす)
+    cam_zoom=1.25,           # 全カットを一律に引く倍率(2026-10-20「もう少し遠くから見るように」)
     timing=True,             # アニメの間: clip の時間配分を「溜め→一気→振り抜き」に(plan.ClipBank.warped_u)
     exaggerate=1.25,         # 振りの誇張: 命中の clip の腕の角度を、平均からの差で 1.25 倍
     footwork=True,           # 足運び: 接地した足を滑らせず、体が動いた分だけ踏み替える(plan._footwork)
@@ -747,6 +748,7 @@ def build_fight(spec: dict) -> dict:
         impact_cuts=impact_cuts,
         flurry=flurry, body_drive=({"strength": float(s["body"])} if s["body"] else None), footwork=({} if s["footwork"] else None), style="flat2d",
         clip_timing=({"pre": 0.4, "post": 0.3} if s["timing"] else None),
+        cam_zoom=float(s["cam_zoom"]),
         limb=dict(base=0.055, tip=0.03, tip_color=[0.08, 0.08, 0.1]), captions=caps, audio=(False if s["mood"] == "none" else dict(mood=s["mood"])), _marks={k: _r(v) for k, v in marks.items()})
     return scene
 
