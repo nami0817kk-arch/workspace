@@ -246,3 +246,14 @@ def test_opening_fly_builds():
     top = max(k.get("rz", 0.0) for k in sc["keys"]["A"] if k["t"] < 3.0)
     assert top >= 2.0                                                   # 身長以上の高さを飛ぶ
     planmod.validate_scene(sc)
+
+
+def test_air_combo_adds_two_air_hits():
+    sc = fight.build_fight(dict(weapon="sword", kick=False, hits=2, finisher="air_combo"))
+    sc0 = fight.build_fight(dict(weapon="sword", kick=False, hits=2, finisher="launch_slash"))
+    t_heel = next(h["tau"] for h in sc["hits"] if h["kind"] == "heel")
+    t_heel0 = next(h["tau"] for h in sc0["hits"] if h["kind"] == "heel")
+    assert abs((t_heel - t_heel0) - 0.5) < 1e-6
+    air_hits = [h for h in sc["hits"] if h["kind"] == "hit" and h.get("by") == "A" and h["pos"][1] > 2.0]
+    assert len(air_hits) == 2
+    planmod.validate_scene(sc)
