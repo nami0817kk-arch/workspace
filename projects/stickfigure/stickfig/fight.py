@@ -632,9 +632,6 @@ def build_fight(spec: dict) -> dict:
                   dict(t=_r(t_big), dx=_r(a_dx_r + 0.35), hz=0.84, lean=0.5, fa=1.6, fe=0.05, ra=-0.4, re=1.0, fl=1.0, fk=0.5, rl=-0.7, rk=0.2, face="fight"),         # 大振り
                   dict(t=_r(t_big + 0.3), dx=_r(a_dx_r + 0.35), hz=0.84, lean=0.4, fa=1.5, fe=0.1),
                   dict(t=_r(t_big + 0.9), dx=_r(a_dx_r + 0.35), hz=0.88, lean=0.1, fa=0.9, fe=1.4, ra=0.7, re=1.5, ht=0.0, face="fight")]
-        for k in keysA + keysB:
-            if k["t"] >= hl + 0.1 - 1e-6 and "dx" in k:
-                k["abs"] = True                          # 技の位置は台本どおり(位置合わせの平行移動で A が 1.55・B が 1.05 ずれ、2 人が重なった)
         keysB += [dict(t=_r(t_big - 0.02), dx=_r(dxB - 0.6), lean=-0.3, hz=0.8, fa=0.5, ra=0.4, fe=1.0, re=1.0, ht=-0.3, face="pain"),
                   dict(t=_r(t_big + 0.05), dx=_r(dxB - 0.7), lean=-0.7, hz=0.9, fa=-0.9, ra=-0.9, fe=0.3, re=0.3, ht=-0.8, face="pain"),
                   dict(t=_r(t_big + 0.2), dx=_r(2.4 - (b_wall - 1.4)), rz=1.3, roll=1.0, hz=0.9, fa=-1.1, ra=-0.9, fe=0.2, re=0.3, fl=0.9, fk=0.4, rl=0.2, rk=0.3, lean=-0.3, ht=-0.6, face="pain"),
@@ -752,6 +749,10 @@ def build_fight(spec: dict) -> dict:
         puffs.append(dict(tau=_r(hl + 0.85), kind="land2", pos=[5.4, 0.0]))
         t_end = hl + 1.1
         ko_t = hl + 0.8
+    if beam or blast or wave or bclash or barrage or swave:   # 技の位置は台本どおり: 位置合わせの平行移動(接触で決めた clip の終点と台本の差)を受けない(連打乱舞で A が 1.55・B が 1.05 ずれて重なり、飛ぶ斬撃では三日月が A の後ろから出た)
+        for k in keysA + keysB:
+            if k["t"] >= hl + 0.1 - 1e-6 and "dx" in k:
+                k["abs"] = True
     tail = t_end + 0.3
     end = _r(tail + 0.6)
     # 台詞が収まらないときは、終わりを延ばす(最後の台詞の終わり+0.3秒)。延ばした間は、勝者が立ち・敗者が倒れたまま
