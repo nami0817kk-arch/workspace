@@ -16,6 +16,7 @@ import 'package:baseball_manager/ui/controller.dart';
 import 'package:baseball_manager/ui/history.dart';
 import 'package:baseball_manager/ui/game_screen.dart' show endingShareText;
 import 'package:baseball_manager/ui/labels.dart';
+import 'package:baseball_manager/ui/trait_book_screen.dart';
 import 'package:baseball_manager/ui/widgets.dart' show CastCard;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -180,7 +181,10 @@ void main() {
 
   testWidgets('出来事が起きると選択肢が出て、選ぶと進む', (t) async {
     final c = await _start(t);
-    c.adopt(_until((g) => g.phase == Phase.event));
+    // 幼少期などの「分かれ道」(見出しが別)ではなく、ふつうの出来事で止める。
+    c.adopt(_until((g) =>
+        g.phase == Phase.event &&
+        !childhoodSteps.any((s) => s.event == g.pendingEvent)));
     await t.pumpAndSettle();
     expect(find.text('出来事'), findsOneWidget);
     expect(find.byKey(const Key('event-0')), findsOneWidget);
@@ -995,6 +999,17 @@ void _rankTests() {
     await t.pumpAndSettle();
     await t.pageBack();
     await t.pumpAndSettle();
+    // ホーム → 特性図鑑 → 戻る(狭い画面・大きい文字で溢れない)
+    await t.scrollUntilVisible(find.byKey(const Key('trait-book-open')), 200,
+        scrollable: find.byType(Scrollable).first);
+    await t.ensureVisible(find.byKey(const Key('trait-book-open')));
+    await t.pumpAndSettle();
+    await t.tap(find.byKey(const Key('trait-book-open')));
+    await t.pumpAndSettle();
+    expect(find.byKey(const Key('trait-book-count')), findsOneWidget);
+    expect(t.takeException(), isNull, reason: '特性図鑑');
+    await t.pageBack();
+    await t.pumpAndSettle();
     // 分かれ道(全部)の出来事カードも、狭い画面・大きい文字で溢れない
     for (final st in childhoodSteps) {
       final k = Game.newGame(name: 'テスト', role: Role.batter, rng: Random(2))
@@ -1229,7 +1244,8 @@ void _rankTests() {
       final gainText =
           t.widget<Text>(find.byKey(const Key('gain-contact'))).textSpan!;
       expect(gainText.toPlainText(), contains('+'));
-      // 次の行動で「今回の上昇」は消える
+      // 次の行動で「今回の上昇」は消える(出来事が起きていたら先に選ぶ)
+      if (c.game!.phase == Phase.event) c.chooseEvent(0);
       c.act(Plan.rest);
       await t.pumpAndSettle();
       expect(c.abilityGains, isEmpty);
@@ -1641,7 +1657,9 @@ void _rankTests() {
       await t.pumpAndSettle();
       expect(find.byKey(const Key('draft-outlook')), findsOneWidget);
       expect(find.byKey(const Key('tired-note')), findsNothing);
-      c.game!.condition = c.game!.condition.copyWith(fatigue: 85);
+      // 怪我中は別の表示になるので、怪我のない状態で疲れだけ上げる。
+      c.game!.condition =
+          c.game!.condition.copyWith(fatigue: 85, injuredTerms: 0);
       c.notifyListeners();
       await t.pumpAndSettle();
       expect(find.byKey(const Key('tired-note')), findsOneWidget);
@@ -2081,5 +2099,32 @@ void _rankTests() {
       expect(find.textContaining('(20/143試合)'), findsOneWidget);
       expect(find.textContaining('暫定'), findsOneWidget);
     });
+  });
+
+  testWidgets('特性図鑑: 持った特性が載り、データを消すと空に戻る', (t) async {
+    final c = await _start(t);
+    expect(c.seenTraits, isEmpty);
+    final g = Game.newGame(name: 'テスト', role: Role.batter, rng: Random(2))
+      ..adminSetTraits({Trait.monster, Trait.hardWorker});
+    c.adopt(g);
+    c.autoSpend(); // 操作のあとで、持っている特性が図鑑に載る
+    await t.pumpAndSettle();
+    expect(c.seenTraits, {Trait.monster.name, Trait.hardWorker.name});
+    // 図鑑の画面: 持った特性は名前が出て、持っていないものは「???」
+    await t.pumpWidget(MaterialApp(home: TraitBookScreen(controller: c)));
+    await t.pumpAndSettle();
+    expect(find.text('発見した特性 2 / ${Trait.values.length}'), findsOneWidget);
+    expect(find.text('怪物'), findsOneWidget);
+    expect(find.text('???'), findsWidgets);
+    // 保存され、新しいコントローラーでも残る
+    final c2 = GameController(rng: Random(1));
+    await c2.loadSaved();
+    expect(c2.seenTraits, {Trait.monster.name, Trait.hardWorker.name});
+    // すべてのデータを消す
+    await c.eraseAll();
+    expect(c.seenTraits, isEmpty);
+    final c3 = GameController(rng: Random(1));
+    await c3.loadSaved();
+    expect(c3.seenTraits, isEmpty);
   });
 }

@@ -7,10 +7,12 @@ import '../game/career.dart';
 import '../game/difficulty.dart';
 import '../game/marks.dart';
 import '../game/player.dart';
+import '../game/traits.dart';
 import 'art/avatar.dart';
 import 'art/scene.dart';
 import '../game/achievements.dart';
 import 'achievements_screen.dart';
+import 'trait_book_screen.dart';
 import 'controller.dart';
 import 'game_screen.dart' show contentMaxWidth;
 import 'history.dart';
@@ -277,6 +279,23 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                   ),
+                  Card(
+                    child: ListTile(
+                      key: const Key('trait-book-open'),
+                      leading: const Icon(Icons.auto_stories,
+                          color: Color(0xFFD84315)),
+                      title: const Text('特性図鑑'),
+                      subtitle: Text(
+                          '${widget.controller.seenTraits.length} / ${Trait.values.length} 発見'),
+                      trailing: const Icon(Icons.chevron_right),
+                      onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute<void>(
+                          builder: (_) =>
+                              TraitBookScreen(controller: widget.controller),
+                        ),
+                      ),
+                    ),
+                  ),
                   if (widget.controller.history.isNotEmpty) ...[
                     const SizedBox(height: 32),
                     Row(children: [
@@ -444,7 +463,9 @@ Future<void> showHelp(BuildContext context) {
           '・プロは長いので、「おすすめで年末まで進める」で1年を一気に進められます(出来事や節目では止まります)。\n'
           '・12歳・15歳・18歳(U-12・U-15・U-18)、大学・社会人の21歳(U-23)、プロは22歳から4年おきに「世界大会」があります。実力があると日本代表に選ばれ、世界一を目指します。\n'
           '・中学・高校・進路の最初の年と、プロの毎年のはじめに、ポジションを決められます。ポジションごとに必要な能力が違い、適性はランクで見えます。適性の低い所を選ぶとチーム力が下がります。\n'
-          '・特性は27種類。打者・投手向けのものは、その役割の選手にだけつきます。成績の「指標」(OPS+・WHIPなど)は、項目をタップすると意味が出ます。\n'
+          '・特性は34種類(うちレア7種)。打者・投手向けのものは、その役割の選手にだけつきます。成績の「指標」(OPS+・WHIPなど)は、項目をタップすると意味が出ます。\n'
+          '・能力には「天賦」(得意・苦手)があり、得意な能力は経験点が少なくて済みます。選手ごとに違います。\n'
+          '・レア特性は、生まれつき4%、またはプロでタイトルや優勝をしたときの「覚醒」(一生に一度)で手に入ります。持った特性は「特性図鑑」に残ります。\n'
           '・同じ能力を重点に練習を続けると、経験点が少し増え、ときどき「開眼」します。重点を変えると連続は戻ります。\n'
           '・プロでは、シーズン中の成績で月間MVPやオールスターに選ばれ、年の終わりに新人王・ベストナインなどの表彰があります。8年目からは一度だけ「FA権」で移籍を決められます。\n'
           '・一生を通した達成は「実績」に残ります。ホームの実績カードから見られます。\n'

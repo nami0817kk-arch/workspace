@@ -99,11 +99,12 @@ bool hasOutcome(Plan a) =>
 
 /// 出来を決める。特訓は振れ幅が大きい(失敗も大成功も多い)。
 /// 平均の倍率は1.0前後になるようにしてある(全体のバランスは変えない)。
-Outcome rollOutcome(Plan a, Random rng) {
+Outcome rollOutcome(Plan a, Random rng, [Set<Trait> traits = const {}]) {
   if (!hasOutcome(a)) return Outcome.normal;
   final r = rng.nextDouble();
-  final bad = a == Plan.special ? 0.20 : 0.12;
-  final great = a == Plan.special ? 0.10 : 0.08;
+  final luck = outcomeLuck(traits);
+  final bad = (a == Plan.special ? 0.20 : 0.12) * luck.bad;
+  final great = (a == Plan.special ? 0.10 : 0.08) * luck.great;
   final good = 0.20;
   if (r < bad) return Outcome.bad;
   if (r < bad + great) return Outcome.great;
@@ -151,7 +152,7 @@ TermResult playTerm(
     );
   }
   final e = effectOf(action);
-  final outcome = rollOutcome(action, rng);
+  final outcome = rollOutcome(action, rng, p.traits);
   final motiv = motivationOf(c.morale).expMultiplier * outcome.multiplier;
   final next = Map<Ability, int>.of(p.abilities);
   final gained = <Category, int>{};

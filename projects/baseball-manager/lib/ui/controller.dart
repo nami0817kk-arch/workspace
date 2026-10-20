@@ -38,6 +38,9 @@ const corruptKey = 'baseball_manager_corrupt_save_v1';
 const kTestBuild = bool.fromEnvironment('TEST_BUILD');
 const achievementsKey = 'baseball_manager_achievements_v1';
 
+/// 特性図鑑(これまでに持ったことのある特性の名前)。
+const traitBookKey = 'baseball_manager_traitbook_v1';
+
 enum MilestoneKind {
   draft,
   champion,
@@ -127,6 +130,29 @@ class SaveStore {
     try {
       final p = await SharedPreferences.getInstance();
       await p.setStringList(achievementsKey, ids.toList()..sort());
+    } catch (_) {}
+  }
+
+  Future<Set<String>> loadTraitBook() async {
+    try {
+      final p = await SharedPreferences.getInstance();
+      return (p.getStringList(traitBookKey) ?? const []).toSet();
+    } catch (_) {
+      return {};
+    }
+  }
+
+  Future<void> saveTraitBook(Set<String> names) async {
+    try {
+      final p = await SharedPreferences.getInstance();
+      await p.setStringList(traitBookKey, names.toList()..sort());
+    } catch (_) {}
+  }
+
+  Future<void> clearTraitBook() async {
+    try {
+      final p = await SharedPreferences.getInstance();
+      await p.remove(traitBookKey);
     } catch (_) {}
   }
 
@@ -442,11 +468,23 @@ class GameController extends ChangeNotifier {
   /// 解除した実績の id(何度遊んでも残る)。
   Set<String> unlocked = {};
 
+  /// 特性図鑑: これまでに持ったことのある特性(何度遊んでも残る)。
+  Set<String> seenTraits = {};
+
+  /// 持っている特性を図鑑に足す(増えたときだけ保存)。
+  void _recordTraits(Game g) {
+    final names = {for (final t in g.player.traits) t.name};
+    if (seenTraits.containsAll(names)) return;
+    seenTraits = {...seenTraits, ...names};
+    store.saveTraitBook(seenTraits);
+  }
+
   /// 直前の一生で、新しく解除した実績。エンディングに出す。
   List<Achievement> newlyUnlocked = const [];
 
   Future<bool> loadSaved() async {
     unlocked = await store.loadAchievements();
+    seenTraits = await store.loadTraitBook();
     adminMode = await store.loadAdmin();
     final disp = await store.loadDisplay();
     textScale = disp.scale;
@@ -481,6 +519,7 @@ class GameController extends ChangeNotifier {
         'game': game?.toJson(),
         'history': [for (final e in history) e.toJson()],
         'achievements': unlocked.toList()..sort(),
+        'traitBook': seenTraits.toList()..sort(),
       });
 
   /// `exportBackup` の文字列から復元する。読めなければ何も変えず false。
@@ -502,6 +541,11 @@ class GameController extends ChangeNotifier {
       game = g;
       history = h;
       unlocked = a;
+      seenTraits = {
+        ...seenTraits,
+        for (final x in (m['traitBook'] as List?) ?? const []) x as String,
+      };
+      store.saveTraitBook(seenTraits);
       pending.clear();
       newlyUnlocked = const [];
       recent = const [];
@@ -667,6 +711,9 @@ class GameController extends ChangeNotifier {
     for (final l in lines.where((l) => l.contains('を習得'))) {
       pending.add(Milestone(MilestoneKind.trait, 'コツをつかんだ!', l));
     }
+    for (final l in lines.where((l) => l.contains('に覚醒した'))) {
+      pending.add(Milestone(MilestoneKind.trait, '才能が覚醒!', l));
+    }
   }
 
   /// 一生が終わったとき、新しい実績を解除して保存し、ダイアログで知らせる。
@@ -805,12 +852,14 @@ class GameController extends ChangeNotifier {
     game = null;
     history = const [];
     unlocked = {};
+    seenTraits = {};
     newlyUnlocked = const [];
     recent = const [];
     pending.clear();
     await store.clear();
     await store.clearHistory();
     await store.clearAchievements();
+    await store.clearTraitBook();
     notifyListeners();
   }
 
@@ -826,6 +875,7 @@ class GameController extends ChangeNotifier {
 
   void _commit() {
     final g = game;
+    if (g != null) _recordTraits(g);
     // 引退したら、殿堂に1度だけ書き込む。
     if (g != null && g.phase == Phase.retired && !g.archived) {
       g.archived = true;

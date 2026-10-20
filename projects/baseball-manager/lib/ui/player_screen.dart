@@ -14,6 +14,7 @@ import '../game/records.dart';
 import '../game/snapshot.dart';
 import 'art/avatar.dart';
 import 'art/radar.dart';
+import '../game/talent.dart';
 import 'labels.dart';
 import 'records_screen.dart';
 import 'widgets.dart';
@@ -304,9 +305,18 @@ class _ProfileTab extends StatelessWidget {
                           SizedBox(
                               width: 60,
                               child: Tooltip(
-                                  message: abilityHint(a),
+                                  message: (s.gifts[a] ?? 0) == 0
+                                      ? abilityHint(a)
+                                      : '${abilityHint(a)} 天賦: ${giftHint(s.gifts[a]!)}',
                                   triggerMode: TooltipTriggerMode.tap,
-                                  child: Text(abilityLabel(a)))),
+                                  child: FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                          (s.gifts[a] ?? 0) == 0
+                                              ? abilityLabel(a)
+                                              : '${abilityLabel(a)}(${giftLabel(s.gifts[a]!)})',
+                                          key: Key('gift-${a.name}'))))),
                           SizedBox(
                               width: 28,
                               child: Text('${s.of(a)}',
@@ -414,12 +424,14 @@ class _Traits extends StatelessWidget {
               dense: true,
               contentPadding: EdgeInsets.zero,
               leading: Icon(
-                t.positive ? Icons.auto_awesome : Icons.warning_amber_rounded,
-                color: t.positive
-                    ? const Color(0xFFF9A825)
-                    : const Color(0xFF607D8B),
+                t.rare
+                    ? Icons.stars
+                    : (t.positive
+                        ? Icons.auto_awesome
+                        : Icons.warning_amber_rounded),
+                color: traitIconColor(t),
               ),
-              title: Text(t.label,
+              title: Text(t.rare ? '${t.label}(レア)' : t.label,
                   style: const TextStyle(fontWeight: FontWeight.bold)),
               subtitle: Text(t.description),
             ),

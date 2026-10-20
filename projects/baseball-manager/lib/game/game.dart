@@ -21,6 +21,7 @@ import 'world.dart';
 import 'season.dart';
 import 'awards.dart';
 import 'marks.dart';
+import 'talent.dart';
 import 'traits.dart';
 import 'training.dart' show abilityCap;
 
@@ -110,6 +111,12 @@ class Game {
         traits = gain(traits, cands[rng.nextInt(cands.length)]);
       }
     }
+    traits = rollBirthRare(rng, traits, role);
+    final gifts = rollGifts(rng);
+    if (parent != null) {
+      final a = inheritedGift(rng, role, parent.gifts);
+      if (a != null) gifts[a] = ((gifts[a] ?? 0) + 1).clamp(giftMin, giftMax);
+    }
     final p = Player(
       name: name,
       role: role,
@@ -117,6 +124,7 @@ class Game {
       potential: pot,
       abilities: {for (final a in abilitiesOf(role)) a: 15},
       traits: traits,
+      gifts: gifts,
     );
     final g = Game._(rng, p, Cast.initial(rng, role, p.traits), difficulty)
       .._wasTwoWay = role == Role.twoWay
@@ -196,6 +204,29 @@ class Game {
 
   /// 二世のとき、親の名前(殿堂の選手)。
   String? parentName;
+
+  /// 節目の「覚醒」(レア特性に目覚める)をすでに起こしたか。一生に一度。
+  bool awakened = false;
+
+  /// 覚醒の判定。`chance` の確率で、持てるレア特性を1つ得る(一生に一度)。
+  /// 特性が上限でも、悪い特性があればそれと入れ替わる。
+  bool _tryAwaken(double chance, String why) {
+    if (awakened || rng.nextDouble() >= chance) return false;
+    var have = player.traits;
+    var t = pickRare(rng, have, player.role);
+    if (t == null) {
+      final bad = [for (final x in have) if (!x.positive) x];
+      if (bad.isEmpty) return false;
+      have = {...have}..remove(bad.first);
+      t = pickRare(rng, have, player.role);
+      if (t == null) return false;
+    }
+    player = player.copyWith(traits: gain(have, t));
+    awakened = true;
+    log.add('$why 眠っていた才能が目覚めた!特性「${t.label}」に覚醒した!');
+    _note('trait', '覚醒: 特性「${t.label}」');
+    return true;
+  }
 
   /// 海外(アメリカ)のリーグでプレーしているか。移籍の判断はプロの間、年の最初だけ。
   bool overseas = false;
@@ -995,6 +1026,11 @@ class Game {
       for (final t in titles) {
         log.add('タイトル獲得: $t!');
       }
+      if (titles.isNotEmpty) {
+        _tryAwaken(0.15, 'タイトルを獲った今季、');
+      } else if (league.rank == 1) {
+        _tryAwaken(0.08, '優勝を経験した今季、');
+      }
       for (final w in awards) {
         log.add('表彰: $w!');
       }
@@ -1045,6 +1081,7 @@ class Game {
       if (tournament.champion) {
         championships++;
         log.add('夏の大会で優勝した!');
+        _tryAwaken(0.04, '優勝の勢いで、');
       } else {
         // 負けた試合(次の試合)の名前で、どこまで行ったかを伝える。
         final lost = roundLabel(tournament.roundsWon, tournament.rounds);
@@ -1305,6 +1342,7 @@ class Game {
         'lastFocus': lastFocus?.name,
         'goal': goal?.toJson(),
         'difficulty': difficulty.name,
+        'awakened': awakened,
       };
 
   /// 項目を足すときは既定値を置く(既存セーブを壊さない)。
@@ -1331,6 +1369,7 @@ class Game {
         (j['condition'] as Map?)?.cast<String, dynamic>() ?? {});
     g.slot = (j['slot'] as num?)?.toInt() ?? 0;
     g.focusStreak = (j['focusStreak'] as num?)?.toInt() ?? 0;
+    g.awakened = j['awakened'] == true;
     g.turnCount = (j['turnCount'] as num?)?.toInt() ?? 0;
     g.lastCoachTurn = (j['lastCoachTurn'] as num?)?.toInt() ?? 0;
     g.monthRows = [

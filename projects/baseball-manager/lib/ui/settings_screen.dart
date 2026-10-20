@@ -7,6 +7,7 @@ import 'achievements_screen.dart';
 import 'admin_screen.dart';
 import 'controller.dart';
 import 'home_screen.dart' show showHelp;
+import 'trait_book_screen.dart';
 import 'versus_screen.dart';
 
 /// 設定: 管理者モード・あそびかた・データの削除。
@@ -157,6 +158,17 @@ class SettingsScreen extends StatelessWidget {
                     ),
                   ),
                   const Divider(),
+                  ListTile(
+                    key: const Key('settings-trait-book'),
+                    leading: const Icon(Icons.auto_stories),
+                    title: const Text('特性図鑑'),
+                    subtitle: Text('${controller.seenTraits.length} 発見'),
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (_) => TraitBookScreen(controller: controller),
+                      ),
+                    ),
+                  ),
                   ListTile(
                     key: const Key('settings-achievements'),
                     leading: const Icon(Icons.military_tech),

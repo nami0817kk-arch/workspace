@@ -47,6 +47,7 @@ class Player {
     required this.potential,
     Map<Ability, int>? abilities,
     this.traits = const {},
+    this.gifts = const {},
   }) : abilities = abilities ?? {for (final a in abilitiesOf(role)) a: 20};
 
   final String name;
@@ -60,6 +61,11 @@ class Player {
   /// 特性(個性)。能力とは別に効き方を変える。`traits.dart`。
   final Set<Trait> traits;
 
+  /// 天賦(能力ごとの才能の偏り -2〜+2)。生まれつきで変わらない。`talent.dart`。
+  final Map<Ability, int> gifts;
+
+  int gift(Ability a) => gifts[a] ?? 0;
+
   int of(Ability a) => abilities[a] ?? 0;
 
   Player copyWith({
@@ -68,6 +74,7 @@ class Player {
     int? potential,
     Map<Ability, int>? abilities,
     Set<Trait>? traits,
+    Map<Ability, int>? gifts,
   }) =>
       Player(
         name: name,
@@ -76,6 +83,7 @@ class Player {
         potential: potential ?? this.potential,
         abilities: abilities ?? this.abilities,
         traits: traits ?? this.traits,
+        gifts: gifts ?? this.gifts,
       );
 
   Batter toBatter() => Batter(
@@ -92,6 +100,7 @@ class Player {
         'potential': potential,
         'abilities': {for (final e in abilities.entries) e.key.name: e.value},
         'traits': [for (final t in traits) t.name],
+        'gifts': {for (final e in gifts.entries) e.key.name: e.value},
       };
 
   /// 項目を足すときは既定値を置く(既存セーブを壊さない)。
@@ -116,6 +125,7 @@ class Player {
         for (final s in (j['traits'] as List?) ?? const [])
           if (Trait.parse(s as String) != null) Trait.parse(s)!,
       },
+      gifts: giftsFromJson(j['gifts']),
     );
   }
 }
@@ -133,4 +143,17 @@ Player switchRole(Player p, Role to, Stage stage) {
     for (final a in abilitiesOf(to)) a: p.abilities[a] ?? switchStartLevel,
   };
   return p.copyWith(role: to, abilities: ab);
+}
+
+/// 天賦の読み込み。無い・壊れている項目は0(古いセーブは天賦なし)。
+Map<Ability, int> giftsFromJson(Object? raw) {
+  final d = <Ability, int>{};
+  if (raw is Map) {
+    for (final e in raw.entries) {
+      final a = Ability.parse('${e.key}');
+      final v = e.value;
+      if (a != null && v is num) d[a] = v.toInt().clamp(-2, 2);
+    }
+  }
+  return d;
 }

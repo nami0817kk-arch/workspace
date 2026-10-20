@@ -23,6 +23,7 @@ import 'art/scene.dart';
 import 'admin_screen.dart';
 import 'controller.dart';
 import 'home_screen.dart' show showAdminToggled;
+import '../game/talent.dart';
 import 'labels.dart';
 import '../game/records.dart';
 import '../game/season.dart';
@@ -690,16 +691,17 @@ class _TraitChips extends StatelessWidget {
             child: Chip(
               visualDensity: VisualDensity.compact,
               avatar: Icon(
-                  t.positive ? Icons.auto_awesome : Icons.warning_amber_rounded,
+                  t.rare
+                      ? Icons.stars
+                      : (t.positive
+                          ? Icons.auto_awesome
+                          : Icons.warning_amber_rounded),
                   size: 16,
-                  color: t.positive
-                      ? const Color(0xFFF9A825)
-                      : const Color(0xFF607D8B)),
+                  color: traitIconColor(t)),
               // 明るい背景には暗い文字(ダークテーマでも読める)
               label: Text(t.label,
                   style: const TextStyle(color: Color(0xFF263238))),
-              backgroundColor:
-                  t.positive ? Colors.amber.shade100 : Colors.blueGrey.shade100,
+              backgroundColor: traitChipColor(t),
             ),
           ),
       ]),
@@ -1004,9 +1006,10 @@ Ability _weakest(Player p) =>
 String _abilityNote(Player p, Ability a) {
   if (a == _weakest(p) && abilitiesOf(p.role).length > 1) return '伸ばしどころ';
   final v = p.of(a);
-  if (v >= 90) return 'S';
+  final g = p.gift(a) == 0 ? '' : ' ${giftLabel(p.gift(a))}';
+  if (v >= 90) return 'S$g';
   final next = (v ~/ 10 + 1) * 10;
-  return 'あと+${next - v}';
+  return 'あと+${next - v}$g';
 }
 
 class _AbilityCard extends StatelessWidget {
@@ -1056,7 +1059,9 @@ class _AbilityCard extends StatelessWidget {
                   SizedBox(
                       width: 60,
                       child: Tooltip(
-                          message: abilityHint(a),
+                          message: p.gift(a) == 0
+                              ? abilityHint(a)
+                              : '${abilityHint(a)} 天賦: ${giftHint(p.gift(a))}',
                           triggerMode: TooltipTriggerMode.tap,
                           child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1122,7 +1127,8 @@ class _AbilityCard extends StatelessWidget {
                           : () => controller.spend(a),
                       child: FittedBox(
                           fit: BoxFit.scaleDown,
-                          child: Text('+1 (${expCost(p.of(a))})')),
+                          child:
+                              Text('+1 (${expCost(p.of(a), p.gift(a))})')),
                     ),
                   ),
                 ]),

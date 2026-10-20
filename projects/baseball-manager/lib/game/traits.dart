@@ -37,7 +37,16 @@ enum Trait {
   studious('研究熱心', '「研究」で貯まる経験点が1.4倍。', true),
   moody('ムラっ気', '気持ちの上下が激しい(上がるのも下がるのも1.3倍)。', false),
   slowRecovery('疲れが抜けにくい', '休養で疲れが抜けにくい(0.6倍)。', false),
-  lonely('一匹狼', '友情タッグの経験点が減る(0.6倍)が、練習の伸びは1割増える。', false);
+  lonely('一匹狼', '友情タッグの経験点が減る(0.6倍)が、練習の伸びは1割増える。', false),
+
+  // ── レア特性(生まれつき4%、または節目の「覚醒」でしか手に入らない) ──
+  monster('怪物', '規格外。伸びが2.5割増え、衰えも2割ゆるやか。', true),
+  steelBody('鋼の肉体', '衰えがほとんど来ない(0.4倍)。疲れも溜まりにくい(0.6倍)。', true),
+  ironWill('不屈', '怪我の影響が半分以下(0.4倍)。大会での体調が+5相当になる。', true),
+  stagePresence('千両役者', '大会(世界大会も)での体調が+8相当になる。', true),
+  fortune('強運', '練習の「失敗」が半分に、「大成功」が1.6倍出る。', true),
+  prodigyBat('打撃の天才', '試合でミート+10・パワー+5・選球眼+5。', true, TraitFor.batter),
+  prodigyArm('投球の天才', '試合で球威+8・制球+6。', true, TraitFor.pitcher);
 
   const Trait(this.label, this.description, this.positive,
       [this.forRole = TraitFor.any]);
@@ -49,6 +58,9 @@ enum Trait {
 
   /// 打者・投手のどちらに効く特性か(打者の特性は投手に意味が無いので、与えない)。
   final TraitFor forRole;
+
+  /// レア特性か(通常の抽選には出ない。画面では金色で見せる)。
+  bool get rare => rareTraits.contains(this);
 
   /// この役割の選手に意味がある特性か。二刀流は両方。
   bool appliesTo(Role r) => switch (forRole) {
@@ -68,6 +80,20 @@ enum Trait {
 /// 特性が効く役割。
 enum TraitFor { any, batter, pitcher }
 
+/// レア特性。生まれつき(`rareBirthChance`)か、節目の覚醒(`Game` の `_tryAwaken`)でだけ手に入る。
+const rareTraits = <Trait>{
+  Trait.monster,
+  Trait.steelBody,
+  Trait.ironWill,
+  Trait.stagePresence,
+  Trait.fortune,
+  Trait.prodigyBat,
+  Trait.prodigyArm,
+};
+
+/// 生まれつきレア特性を1つ持つ確率。
+const rareBirthChance = 0.04;
+
 const maxTraits = 4;
 
 /// 同時に持てない組み合わせ。
@@ -85,6 +111,12 @@ const _conflicts = <Trait, Trait>{
 /// 3つ以上の組み合わせではなく2つずつの矛盾のため、上の表だけでは足りないもの。
 const _extraConflicts = <(Trait, Trait)>[
   (Trait.leader, Trait.lonely),
+  (Trait.ironWill, Trait.glassBody),
+  (Trait.ironWill, Trait.nervy),
+  (Trait.stagePresence, Trait.nervy),
+  (Trait.steelBody, Trait.earlyBloomer),
+  (Trait.steelBody, Trait.glassBody),
+  (Trait.monster, Trait.earlyBloomer),
 ];
 
 bool _conflict(Trait a, Trait b) =>
@@ -105,7 +137,9 @@ Set<Trait> gain(Set<Trait> have, Trait t) =>
 
 /// 生まれつきの出やすさ。最初の12個(成長・怪我・体調の基本の特性)は出やすく、
 /// あとから増えた個性派は出にくい。良い特性は悪い特性の倍出る。
-int _weight(Trait t) => (t.positive ? 2 : 1) * (t.index < 12 ? 6 : 1);
+/// レア特性は通常の抽選に出さない(0)。
+int _weight(Trait t) =>
+    t.rare ? 0 : (t.positive ? 2 : 1) * (t.index < 12 ? 6 : 1);
 
 /// 生まれつきの特性。0〜2個。良い特性が出やすい(悪いものは半分)。
 Set<Trait> rollInnateTraits(Random rng, [Role? role]) {
@@ -124,6 +158,22 @@ Set<Trait> rollInnateTraits(Random rng, [Role? role]) {
   return have;
 }
 
+/// 持てるレア特性から1つ選ぶ。無ければ null。
+Trait? pickRare(Random rng, Set<Trait> have, Role role) {
+  final pool = [
+    for (final t in rareTraits)
+      if (t.appliesTo(role) && canGain(have, t)) t,
+  ];
+  return pool.isEmpty ? null : pool[rng.nextInt(pool.length)];
+}
+
+/// 生まれつきのレア特性(4%)。持てなければそのまま。
+Set<Trait> rollBirthRare(Random rng, Set<Trait> have, Role role) {
+  if (rng.nextDouble() >= rareBirthChance) return have;
+  final t = pickRare(rng, have, role);
+  return t == null ? have : gain(have, t);
+}
+
 // ── 効き方。各システムはここだけを見る ──
 
 /// 伸びる年(成長率 >= 0)の倍率。`age` は今の年齢。
@@ -133,6 +183,7 @@ double growthMultiplier(Set<Trait> t, int age) {
   if (t.contains(Trait.earlyBloomer)) m *= age < 16 ? 1.3 : 1.0;
   if (t.contains(Trait.hardWorker)) m *= 1.1;
   if (t.contains(Trait.genius)) m *= 1.2;
+  if (t.contains(Trait.monster)) m *= 1.25;
   if (t.contains(Trait.glassBody)) m *= 1.15;
   if (t.contains(Trait.lonely)) m *= 1.1;
   return m;
@@ -143,6 +194,8 @@ double declineMultiplier(Set<Trait> t) {
   var m = 1.0;
   if (t.contains(Trait.earlyBloomer)) m *= 1.3;
   if (t.contains(Trait.longevity)) m *= 0.6;
+  if (t.contains(Trait.monster)) m *= 0.8;
+  if (t.contains(Trait.steelBody)) m *= 0.4;
   return m;
 }
 
@@ -150,11 +203,14 @@ double injuryMultiplier(Set<Trait> t) {
   var m = 1.0;
   if (t.contains(Trait.sturdy)) m *= 0.5;
   if (t.contains(Trait.glassBody)) m *= 1.8;
+  if (t.contains(Trait.ironWill)) m *= 0.4;
   return m;
 }
 
 /// 疲労の増え方(増えるときだけ。減るときは変えない)。
-double fatigueMultiplier(Set<Trait> t) => t.contains(Trait.ironMan) ? 0.7 : 1.0;
+double fatigueMultiplier(Set<Trait> t) =>
+    (t.contains(Trait.ironMan) ? 0.7 : 1.0) *
+    (t.contains(Trait.steelBody) ? 0.6 : 1.0);
 
 /// 気持ちの上がり方 / 下がり方。
 double moraleGainMultiplier(Set<Trait> t) =>
@@ -166,7 +222,10 @@ double moraleLossMultiplier(Set<Trait> t) =>
 
 /// 大会の体調に足す値。
 int tournamentBonus(Set<Trait> t) =>
-    (t.contains(Trait.clutch) ? 10 : 0) - (t.contains(Trait.nervy) ? 10 : 0);
+    (t.contains(Trait.clutch) ? 10 : 0) -
+    (t.contains(Trait.nervy) ? 10 : 0) +
+    (t.contains(Trait.ironWill) ? 5 : 0) +
+    (t.contains(Trait.stagePresence) ? 8 : 0);
 
 /// ドラフトの点数に足す値。
 double draftBonus(Set<Trait> t) => t.contains(Trait.starPower) ? 5 : 0;
@@ -196,6 +255,15 @@ Map<Ability, int> traitAbilityDelta(Set<Trait> t) {
   }
   if (t.contains(Trait.finesse)) add(Ability.control, 8);
   if (t.contains(Trait.workhorse)) add(Ability.stamina, 8);
+  if (t.contains(Trait.prodigyBat)) {
+    add(Ability.contact, 10);
+    add(Ability.power, 5);
+    add(Ability.eye, 5);
+  }
+  if (t.contains(Trait.prodigyArm)) {
+    add(Ability.stuff, 8);
+    add(Ability.control, 6);
+  }
   return d;
 }
 
@@ -230,3 +298,8 @@ double studyMultiplier(Set<Trait> t) => t.contains(Trait.studious) ? 1.4 : 1.0;
 
 /// 世界大会の体調に足す値。
 int worldBonus(Set<Trait> t) => t.contains(Trait.worldStage) ? 10 : 0;
+
+/// 練習の出来の振れ方。強運は失敗が半分・大成功が1.6倍(平均は少し上がる)。
+({double bad, double great}) outcomeLuck(Set<Trait> t) => t.contains(Trait.fortune)
+    ? (bad: 0.5, great: 1.6)
+    : (bad: 1.0, great: 1.0);
