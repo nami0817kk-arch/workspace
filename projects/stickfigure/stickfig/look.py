@@ -304,7 +304,7 @@ def charge_aura(plan: dict, f: int, who: str, age01: float, col=(120, 230, 255))
     out.alpha_composite(halo.filter(ImageFilter.GaussianBlur(40)))
     out.alpha_composite(glow)
     out.alpha_composite(ov)
-    for k in range(2):                                    # 足もとから広がる輪
+    for k in range(2 if p.get("rz", 0.0) < 0.3 else 0):  # 足もとから広がる輪(空中で溜めるときは描かない: 宙に輪が浮いて見えた)
         t = (age01 * 1.6 + k * 0.5) % 1.0
         rr = (0.4 + 1.8 * t) * u
         ImageDraw.Draw(out).ellipse([cx - rr, cy + 0.85 * u - rr * 0.3, cx + rr, cy + 0.85 * u + rr * 0.3], outline=(*col, int(230 * (1 - t))), width=4)
