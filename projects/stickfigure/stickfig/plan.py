@@ -609,9 +609,9 @@ def _align_keys_to_clips(scene: dict, tracks: Dict[str, KeyTrack]) -> Dict[str, 
                 c = inside[-1]
                 k["dx"] = round(bank.sample(c, min(max(tt, c["start"]), c["end"]))["dx"], 4)
                 continue
-            val = dx0 + shift_at(tt)
+            val = dx0 if k.get("abs") else dx0 + shift_at(tt)       # abs: 台本の位置をそのまま使う(技の位置。接触で決めた clip のあとの平行移動を受けない)
             for (w0, w1, c) in windows:
-                if not (c.get("_solved") or c.get("_chained")):
+                if k.get("abs") or not (c.get("_solved") or c.get("_chained")):
                     continue
                 t0 = w0 - max(0.3, abs(bank.sample(c, c["start"])["dx"] - (dx0 + shift_at(w0))) / 3.0)
                 for pt in protected:
