@@ -167,8 +167,10 @@ def crescent(cx: float, cy: float, r: float, f: int, dir_x: float, col=(170, 245
     glow = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     g = ImageDraw.Draw(glow)
     wob = 1.0 + 0.05 * math.sin(f * 2.3)
-    outer = [cx - r * 1.3 * s, cy - r * 1.9 * wob, cx + r * 1.3 * s, cy + r * 1.9 * wob]
-    inner = [cx - r * 1.9 * s, cy - r * 1.6 * wob, cx + r * 0.7 * s, cy + r * 1.6 * wob]
+    def box(x0, y0, x1, y1):                              # 左向き(s=−1)でも x0<=x1 になるよう並べ替える(PIL は x1<x0 で落ちる)
+        return [min(x0, x1), y0, max(x0, x1), y1]
+    outer = box(cx - r * 1.3 * s, cy - r * 1.9 * wob, cx + r * 1.3 * s, cy + r * 1.9 * wob)
+    inner = box(cx - r * 1.9 * s, cy - r * 1.6 * wob, cx + r * 0.7 * s, cy + r * 1.6 * wob)
     g.ellipse(outer, fill=(*col, 170))
     glow = glow.filter(ImageFilter.GaussianBlur(max(4, int(r * 0.5))))
     ov.alpha_composite(glow)
@@ -178,8 +180,8 @@ def crescent(cx: float, cy: float, r: float, f: int, dir_x: float, col=(170, 245
     d.ellipse(inner, fill=(0, 0, 0, 0))                     # 後ろを抜いて三日月に
     core = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     dc = ImageDraw.Draw(core)
-    dc.ellipse([cx - r * 1.0 * s, cy - r * 1.6 * wob, cx + r * 1.0 * s, cy + r * 1.6 * wob], fill=(255, 255, 255, 245))
-    dc.ellipse([cx - r * 1.6 * s, cy - r * 1.4 * wob, cx + r * 0.5 * s, cy + r * 1.4 * wob], fill=(0, 0, 0, 0))
+    dc.ellipse(box(cx - r * 1.0 * s, cy - r * 1.6 * wob, cx + r * 1.0 * s, cy + r * 1.6 * wob), fill=(255, 255, 255, 245))
+    dc.ellipse(box(cx - r * 1.6 * s, cy - r * 1.4 * wob, cx + r * 0.5 * s, cy + r * 1.4 * wob), fill=(0, 0, 0, 0))
     body.alpha_composite(core)
     ov.alpha_composite(body)
     return ov

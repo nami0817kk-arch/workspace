@@ -397,7 +397,7 @@ def test_opening_return_blast_builds():
     pj = sc["fx"]["projectiles"]
     assert len(pj) >= 2 and pj[0]["x1"] < pj[0]["x0"] and pj[1]["x1"] > pj[1]["x0"]   # 来て、戻る
     early = [h["kind"] for h in sc["hits"] if h["tau"] < 2.0]
-    assert "kick" in early and "blast" in early
+    assert "hit" in early and "blast" in early                           # 蹴り返しは hit 扱い(kick だと反転と寄りで閃光が増える)
     planmod.validate_scene(sc)
 
 

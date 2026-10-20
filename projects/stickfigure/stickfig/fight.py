@@ -931,7 +931,7 @@ def build_fight(spec: dict) -> dict:
                   dict(t=_r(t3 + 1.0), dx=_r(a3), hz=0.9, lean=0.05, fa=0.4, fe=1.3, ra=0.5, re=1.4, face="win")]
         for (ta_, xa, xb) in ((t1, a0, a1), (t2, a1 + 0.1, a2), (t3, a2 + 0.1, a3)):
             snaps += [dict(who="A", t0=_r(ta_ - 0.1), t1=_r(ta_ + 0.001), dx=_r(xa)), dict(who="A", t0=_r(ta_ + 0.001), t1=_r(ta_ + 0.08), dx=_r(xb))]
-            flurry.append(dict(start=_r(ta_ + 0.05), end=_r(ta_ + 0.3), every=4, angles=[B_FACE, A_FACE]))   # 現れた直後は角度を切り替える(無いとカットが 93/分で参考より少ない)
+            flurry.append(dict(start=_r(ta_ + 0.05), end=_r(ta_ + 0.22), every=6, angles=[B_FACE, A_FACE]))   # 現れた直後は角度を切り替える(無いとカットが 93/分で参考より少ない。4 コマおき 0.25 秒だと 286/分で多すぎた)
             fx_after.append(dict(start=_r(ta_), end=_r(ta_ + 0.12), who="A", x0=_r(xa - 2.0), x1=_r(xb - 2.0), n=5))
             hits += [dict(tau=_r(ta_), hold=0.0, kind="vanish", by="A", pos=[_r(xa - 2.0), 1.0]),
                      dict(tau=_r(ta_ + 0.034), hold=0.0, kind="appear", by="A", pos=[_r(xb - 2.0), 1.0])]
