@@ -20,6 +20,7 @@ import '../game/player.dart';
 import 'art/avatar.dart';
 import 'art/radar.dart';
 import 'art/scene.dart';
+import 'art/badge_icon.dart';
 import 'art/story_image.dart';
 import 'admin_screen.dart';
 import 'controller.dart';
@@ -71,7 +72,9 @@ class _GameScreenState extends State<GameScreen> {
       .length;
   bool get _careerMark => game.canUseFa || game.canMoveOverseas;
 
-  Widget _tabIcon(IconData icon, bool mark, String name, {int? count}) =>
+  /// 下のタブの絵。`tab` は 0〜3。選ばれていないタブは少し薄くする。
+  Widget _tabIcon(IconData icon, bool mark, String name,
+          {int? count, required int tab, bool selected = false}) =>
       Semantics(
         label: mark ? '手をつけられることがあります' : null,
         child: Badge(
@@ -79,7 +82,12 @@ class _GameScreenState extends State<GameScreen> {
           smallSize: 9,
           label: count == null ? null : Text('$count'),
           isLabelVisible: mark,
-          child: Icon(icon),
+          child: BadgeIcon(
+            asset: tabBadgeAssets[tab],
+            size: 30,
+            dim: !selected,
+            fallback: Icon(icon),
+          ),
         ),
       );
 
@@ -125,26 +133,36 @@ class _GameScreenState extends State<GameScreen> {
         destinations: [
           NavigationDestination(
               key: const Key('tab-train'),
-              icon:
-                  _tabIcon(Icons.sports_baseball_outlined, _trainMark, 'train'),
-              selectedIcon: const Icon(Icons.sports_baseball),
+              icon: _tabIcon(
+                  Icons.sports_baseball_outlined, _trainMark, 'train', tab: 0),
+              selectedIcon: _tabIcon(Icons.sports_baseball, false, 'train',
+                  tab: 0, selected: true),
               label: '育成'),
           NavigationDestination(
               key: const Key('tab-ability'),
               icon: _tabIcon(Icons.insights_outlined, _abilityMark, 'ability',
-                  count: _abilityCount),
+                  count: _abilityCount, tab: 1),
               selectedIcon: _tabIcon(Icons.insights, _abilityMark, 'ability',
-                  count: _abilityCount),
+                  count: _abilityCount, tab: 1, selected: true),
               label: '能力'),
           NavigationDestination(
               key: const Key('tab-career'),
-              icon: _tabIcon(Icons.timeline_outlined, _careerMark, 'career'),
-              selectedIcon: _tabIcon(Icons.timeline, _careerMark, 'career'),
+              icon: _tabIcon(Icons.timeline_outlined, _careerMark, 'career',
+                  tab: 2),
+              selectedIcon: _tabIcon(Icons.timeline, _careerMark, 'career',
+                  tab: 2, selected: true),
               label: 'キャリア'),
-          const NavigationDestination(
-              key: Key('tab-relations'),
-              icon: Icon(Icons.groups_outlined),
-              selectedIcon: Icon(Icons.groups),
+          NavigationDestination(
+              key: const Key('tab-relations'),
+              icon: BadgeIcon(
+                  asset: tabBadgeAssets[3],
+                  size: 30,
+                  dim: true,
+                  fallback: const Icon(Icons.groups_outlined)),
+              selectedIcon: BadgeIcon(
+                  asset: tabBadgeAssets[3],
+                  size: 30,
+                  fallback: const Icon(Icons.groups)),
               label: '関係'),
         ],
       ),
@@ -1128,8 +1146,7 @@ class _AbilityCard extends StatelessWidget {
                           : () => controller.spend(a),
                       child: FittedBox(
                           fit: BoxFit.scaleDown,
-                          child:
-                              Text('+1 (${expCost(p.of(a), p.gift(a))})')),
+                          child: Text('+1 (${expCost(p.of(a), p.gift(a))})')),
                     ),
                   ),
                 ]),
@@ -1326,12 +1343,16 @@ class _PlanTile extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 7),
               child: Column(mainAxisSize: MainAxisSize.min, children: [
                 Stack(clipBehavior: Clip.none, children: [
-                  Container(
-                    width: 32,
-                    height: 32,
-                    decoration:
-                        BoxDecoration(color: color, shape: BoxShape.circle),
-                    child: Icon(icon, color: Colors.white, size: 19),
+                  BadgeIcon(
+                    asset: planBadgeAsset(plan),
+                    size: 34,
+                    fallback: Container(
+                      width: 34,
+                      height: 34,
+                      decoration:
+                          BoxDecoration(color: color, shape: BoxShape.circle),
+                      child: Icon(icon, color: Colors.white, size: 19),
+                    ),
                   ),
                   if (danger)
                     Positioned(
@@ -1397,12 +1418,17 @@ class _AutoYearTile extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 7),
             child: Column(mainAxisSize: MainAxisSize.min, children: [
-              Container(
-                width: 32,
-                height: 32,
-                decoration:
-                    BoxDecoration(color: cs.primary, shape: BoxShape.circle),
-                child: Icon(Icons.fast_forward, color: cs.onPrimary, size: 19),
+              BadgeIcon(
+                asset: autoYearBadgeAsset,
+                size: 34,
+                fallback: Container(
+                  width: 34,
+                  height: 34,
+                  decoration:
+                      BoxDecoration(color: cs.primary, shape: BoxShape.circle),
+                  child:
+                      Icon(Icons.fast_forward, color: cs.onPrimary, size: 19),
+                ),
               ),
               const SizedBox(height: 4),
               const FittedBox(
@@ -1972,7 +1998,10 @@ class EndingView extends StatelessWidget {
                   : 'プロの舞台には立てなかった。'),
               const SizedBox(height: 10),
               Text(
-                  '${epilogueOf(e, p.name, worldChampion: game.worldRecords.where((r) => r.champion).length, worldPlayed: game.worldRecords.length, overseasYears: game.records.where((r) => r.overseas).length, popularity: popularityOf(game.records, game.worldRecords), retiredNumber: uniformNumberOf(Stage.pro, p), childhood: game.childhood, rareTraitLabels: [for (final t in p.traits) if (t.rare) t.label])}'
+                  '${epilogueOf(e, p.name, worldChampion: game.worldRecords.where((r) => r.champion).length, worldPlayed: game.worldRecords.length, overseasYears: game.records.where((r) => r.overseas).length, popularity: popularityOf(game.records, game.worldRecords), retiredNumber: uniformNumberOf(Stage.pro, p), childhood: game.childhood, rareTraitLabels: [
+                        for (final t in p.traits)
+                          if (t.rare) t.label
+                      ])}'
                   '\nその後: ${afterCareerOf(title: e.title, proYears: e.proYears, popularity: popularityOf(game.records, game.worldRecords), money: game.money, madePro: e.madePro, team: game.proTeam)}',
                   key: const Key('epilogue'),
                   style: Theme.of(context)
