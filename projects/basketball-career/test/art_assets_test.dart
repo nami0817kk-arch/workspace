@@ -4,7 +4,7 @@ import 'dart:io';
 
 import 'package:basketball_career/game/life.dart';
 import 'package:basketball_career/game/match.dart';
-import 'package:flutter_test/flutter_test.dart' hide Action;
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   const arts = [
