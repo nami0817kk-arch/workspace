@@ -261,6 +261,20 @@ def test_second_enemy_rushes_after_ko_and_flies_to_wall():
     planmod.validate_scene(sc)
 
 
+def test_second_enemy_slash_when_armed():
+    sc = fight.build_fight(dict(weapon="sword", kick=False, hits=2, finisher="launch_slash", second_enemy={}))
+    kinds = [h["kind"] for h in sc["hits"]]
+    assert kinds.count("blast") == 0 and sc["fx"]["cuts"]                                # 武器持ちは一太刀(斬撃線)
+    cut = next(h for h in sc["hits"] if h["kind"] == "slash" and "by" not in h)
+    assert abs(sc["fx"]["cuts"][-1]["x"] - cut["pos"][0]) < 1e-6
+    kd = sc["keys"]["D"]
+    assert kd[-1]["face"] == "ko" and kd[-1]["dx"] < max(k["dx"] for k in kd)             # 前のめりに倒れる
+    sc2 = fight.build_fight(dict(weapon="sword", kick=False, hits=2, finisher="launch_slash", second_enemy={"finish": "blast"}))
+    assert [h["kind"] for h in sc2["hits"]].count("blast") == 1                           # finish で上書きできる
+    planmod.validate_scene(sc)
+    planmod.validate_scene(sc2)
+
+
 def test_wave_finisher_builds():
     sc = fight.build_fight(dict(weapon="none", kick=False, hits=2, finisher="wave"))
     kinds = [h["kind"] for h in sc["hits"]]
