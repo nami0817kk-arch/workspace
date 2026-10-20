@@ -416,7 +416,10 @@ def compose_frame(plan: dict, f: int, figs: Dict[int, Image.Image], stages: Opti
             wz = pj["z0"] + (pj["z1"] - pj["z0"]) * q + 0.25 * math.sin(math.pi * q)
             px_, py_ = to_px(wx, wz, cam)
             qx, qy = to_px(wx - (pj["x1"] - pj["x0"]) * 0.05, wz, cam)
-            base.alpha_composite(look.ki_ball(px_, py_, pj["r"] * camera.px_per_unit(cam), f, tuple(pj.get("color", (255, 190, 70))), trail=(px_ - qx, py_ - qy)))
+            if pj.get("shape") == "crescent":
+                base.alpha_composite(look.crescent(px_, py_, pj["r"] * camera.px_per_unit(cam), f, px_ - qx, tuple(pj.get("color", (170, 245, 255)))))
+            else:
+                base.alpha_composite(look.ki_ball(px_, py_, pj["r"] * camera.px_per_unit(cam), f, tuple(pj.get("color", (255, 190, 70))), trail=(px_ - qx, py_ - qy)))
     # 顔(目)は描かない(2026-10-19 ユーザー指示)
     for e in plan["events"]:                   # 特大の効果: 斬撃の弧・衝撃の輪
         age = f - e["frame"]
