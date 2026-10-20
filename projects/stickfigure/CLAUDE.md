@@ -210,6 +210,8 @@ python scripts/make_gallery.py 09_01:2.4 135_07_s1:3.6   # clip を順に再生�
 - **接触の許容(`tol`)は相手の体格で広げる**: 中心まで遠くなるので `0.26 + 0.6×(b_scale−1)`。出だしの飛び蹴りだけ固定だったので、守る戦いの決戦(b_scale 1.25)で 0.29 となり点検に落ちた(量産 series10 で発見)。命中を足すときは必ずこの式で
 - `episode` は fight 指定の場面が点検に落ちるとき seed を +1 ずつ(6 回まで)ずらして通るものにする(`episode._passing_variant`)。random の技・連打の clip の組み合わせが seed で変わるので、たいてい数回で通る。ずらしたら「seed N は点検に落ちるので N+k にした」と出す。それでも落ちる場面は台本側の不具合なので直す
 - 量産の通し確認は `series --n 3 --build --compile`(約 20 分)。落ちた話だけ `episode out/<series>/specs/<ep>.yaml --out out/<series>/<ep>` で作り直し、`series --compile-only` でまとめ直す
+- **出だしの技 9(`opening: dodge_slash`、剣どうし)**: B が剣を振りかぶって溜め、三日月の光を飛ばす(`fx.projectiles` の crescent、左向き。`look.crescent` は箱の座標を並べ替えて左向きでも描ける)→ A は沈んで(予備動作)低くスライディング(hz 0.42、前脚を伸ばし後ろ脚を畳み反る)でくぐる(`miss` の風切り、スロー)→ 光は A の後ろの地面で砕ける(`blast`)→ 立ち上がって走り込む。見本 `scenes/fight_dodge_slash.yaml`
+- **技を足したら書き出した動画を `rhythm` で実測する**(check の見積もりだけでは足りない): 蹴り返しは `kick` の反転と寄りで閃光が 75/分(参考 17〜41)になり、`hit` にして 22/分に。瞬間移動の連撃は連打カットを足して 93→250/分(4 コマおきだと 286 で多すぎ、6 コマおき)。閃光が多いときは反転(`invert`)と `flashes` の重なりを疑う
 - 技を足すときの型: fight の finisher 分岐(キー・hits・fx・shots・ko_t)+ plan の SHAKE + anime の SFX/SFX_SIZE/ZOOM_PUNCH/ROLL_SHAKE + compose の BIG/BURST_FRAMES と描画 + sfx の音 + テスト
 
 ## 決まり・つまずき所(実際に踏んだもの)
