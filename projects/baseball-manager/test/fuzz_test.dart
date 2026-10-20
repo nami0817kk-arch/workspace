@@ -69,7 +69,10 @@ void main() {
           name: 'f$seed',
           role: role,
           rng: Random(seed),
-          potential: rng.nextInt(101));
+          potential: rng.nextInt(101),
+          carry: rng.nextInt(3) == 0
+              ? Trait.values[rng.nextInt(Trait.values.length)]
+              : null);
       var steps = 0;
       while (g.phase != Phase.retired) {
         if (++steps > 4000) fail('終わらない seed=$seed');
