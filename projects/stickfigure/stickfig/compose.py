@@ -440,6 +440,9 @@ def compose_frame(plan: dict, f: int, figs: Dict[int, Image.Image], stages: Opti
         if e["kind"] in ("blast", "slam", "wave") and 0 <= age <= 8:
             cxy = to_px(e["pos"][0], e["pos"][1], cam)
             base.alpha_composite(look.shock_ring(cxy[0], cxy[1], age, 8))
+        if e["kind"] == "rapid" and 0 <= age <= 3:        # 連打乱舞: 小さな火花だけ(放射線・擬音は無し)
+            cxy = to_px(e["pos"][0], e["pos"][1], cam)
+            base.alpha_composite(look.sparks(cxy[0], cxy[1], age, camera.px_per_unit(cam), e["frame"] * 7 + 3, (255, 220, 120), 6, 0.5))
         if e["kind"] in ("clash", "slash", "hit", "kick", "heel", "wall", "beam", "blast", "slam", "wave") and 0 <= age <= 14:                                        # ヒットストップ中も描く(止め絵に火花が散っているのが衝撃のコマ)
             cxy = to_px(e["pos"][0], e["pos"][1], cam)                   # 火花(金属は多め・白黄、打撃は少なめ・橙)
             metal = e["kind"] in ("clash", "slash")

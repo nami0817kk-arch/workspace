@@ -129,6 +129,8 @@ def se(plan: dict, seed: int = 7) -> np.ndarray:
         elif k == "wave":
             _add(buf, thump(rng, 130, 0.35, 0.5), t, 0.9)
             _add(buf, whoosh(rng, 0.2), t - 0.06, 0.5)
+        elif k == "rapid":
+            _add(buf, thump(rng, 240, 0.08, 0.5), t, 0.45)
         elif k == "launch":
             _add(buf, whoosh(rng, 0.5), t - 0.02, 1.0)
         elif k == "vanish":

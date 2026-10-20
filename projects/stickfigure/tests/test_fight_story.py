@@ -257,3 +257,13 @@ def test_air_combo_adds_two_air_hits():
     air_hits = [h for h in sc["hits"] if h["kind"] == "hit" and h.get("by") == "A" and h["pos"][1] > 2.0]
     assert len(air_hits) == 2
     planmod.validate_scene(sc)
+
+
+def test_barrage_builds():
+    sc = fight.build_fight(dict(weapon="none", kick=False, hits=2, finisher="barrage"))
+    rapid = [h for h in sc["hits"] if h["kind"] == "rapid"]
+    assert len(rapid) == 8
+    gaps = [round(b["tau"] - a["tau"], 3) for a, b in zip(rapid, rapid[1:])]
+    assert all(abs(g - 0.1) < 1e-6 for g in gaps)
+    assert "wall" in [h["kind"] for h in sc["hits"]]
+    planmod.validate_scene(sc)

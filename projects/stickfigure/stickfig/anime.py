@@ -27,7 +27,7 @@ SFX_COLOR = dict(kick=(255, 226, 60), slash=(120, 235, 255), hit=(255, 226, 60),
 SFX_SIZE = dict(kick=140, slash=120, hit=110, wall=140, land=85, land2=75, heel=150, clash=125, miss=70, beam=160, blast=150, throw=70, slam=150, wave=130, vanish=80, appear=110)
 TRAIL_COLOR = dict(A=(150, 255, 200), B=(255, 140, 110))
 # カメラの演出(plan.py が使う): 命中の種類ごとの「寄る量」と「傾き(度)」
-ZOOM_PUNCH = dict(kick=0.13, slash=0.07, hit=0.06, wall=0.09, heel=0.12, clash=0.09, miss=0.02, beam=0.1, blast=0.11, slam=0.12, wave=0.1, appear=0.08)
+ZOOM_PUNCH = dict(kick=0.13, slash=0.07, hit=0.06, wall=0.09, heel=0.12, clash=0.09, miss=0.02, beam=0.1, blast=0.11, slam=0.12, wave=0.1, appear=0.08, rapid=0.02)
 ROLL_SHAKE = dict(kick=2.6, slash=1.8, hit=1.4, wall=3.4, heel=3.0, clash=2.2, miss=0.0, beam=2.4, blast=2.6, slam=3.2, wave=2.4, appear=1.5)
 
 
