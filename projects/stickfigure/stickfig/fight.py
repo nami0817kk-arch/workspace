@@ -105,7 +105,7 @@ FINISHER_POOL = {                                      # finisher: random が選
     "none": ["launch_kick", "barrage", "blast", "ki_barrage", "beam", "wave", "slam_throw", "blink_combo", "meteor", "beam_clash", "air_beam"],
 }
 ALLY_FINISHERS = ["twin_beam"]                         # 味方(ally)がいる場面だけ random の池に足す技(合体技)
-OPENING_POOL = [None, None, "blast", "teleport", "fly", "counter_blast", "air_clash", "dodge_beam", "taunt", "lock", "return_blast", "dodge_slash", "barrier"]   # opening: random が選ぶ(None 2 つ=走りが多め。taunt は名乗り)
+OPENING_POOL = [None, None, "blast", "teleport", "fly", "counter_blast", "air_clash", "dodge_beam", "taunt", "lock", "return_blast", "dodge_slash", "barrier", "charge_dash"]   # opening: random が選ぶ(None 2 つ=走りが多め。taunt は名乗り)
 
 
 def _pt(clip_name: str, eff: str) -> str:
@@ -199,6 +199,7 @@ def build_fight(spec: dict) -> dict:
     open_tp = (s["opening"] == "teleport") and not kick  # 出だしの技: 走らず一瞬で相手の目の前に現れる
     open_fly = (s["opening"] == "fly") and not kick      # 出だしの技: 跳び上がって水平に飛び、急降下して相手の前に着地
     open_cb = (s["opening"] == "counter_blast") and not kick   # 出だしの技: 相手が気弾を投げ、A が弾いて空中で爆発させる
+    open_cd = (s["opening"] == "charge_dash") and not kick    # 出だしの技: 腰を落として気を溜め(光の柱)、残像を引いて一息に相手の目の前まで突っ込む(走らない)
     open_bar = (s["opening"] == "barrier") and not kick       # 出だしの技: 相手が気弾を投げ、A が両手の先に気の盾を張って受け止め、砕いてから走り出す
     open_ac = (s["opening"] == "air_clash") and not kick # 出だしの技: 2 人が跳び上がって空中でぶつかり、弾かれて着地
     open_db = (s["opening"] == "dodge_beam") and not kick   # 出だしの技: 相手が光線を撃ち、A が高く跳んでかわす
@@ -225,6 +226,8 @@ def build_fight(spec: dict) -> dict:
         o += 1.4                                         # 飛ぶ斬撃をくぐるぶん、走り出しが 1.4 秒遅れる
     if open_tp:
         o -= 0.4                                         # 瞬間移動は走らないぶん早く(立っている時間が長かった)
+    if open_cd:
+        o -= 0.2                                         # 突進も走らないぶん早く(溜めの 0.5 秒は残す)
     tc = 4.0 + o                       # 連打の準備(起き上がり)の終わり
 
     keysA: List[dict] = [dict(t=0.0, dx=0.2, hz=0.84), dict(t=0.6, dx=0.2, lean=0.12, hz=0.83)]
@@ -567,6 +570,29 @@ def build_fight(spec: dict) -> dict:
                       dict(t=_r(t_go + 0.3), dx=-1.7, lean=0.05, ht=0.0, fa=0.9, fe=1.4, ra=0.7, re=1.5, face="fight")]
             shots.insert(0, dict(t=0.55, follow="A", scale=[[0.55, 4.6], [t_go, 4.0]], yaw=[[0.55, -26.0], [t_go, -14.0]], pitch=6.0, lens=32.0, target_z=1.1, lag=0.25))
             shots.append(dict(t=_r(t_go + 0.034), follow="B", scale=3.6, yaw=20.0, pitch=4.0, lens=32.0, target_z=1.1, lag=0.0))   # 現れた瞬間は B 寄りで
+        if open_cd:                                      # 突進: 0.6 構え → t_go−0.5 腰を落として溜め(光の柱) → t_go 一息に突っ込む(0.15 秒・残像の列・手足の光の尾) → ta 目の前で止まる(土煙)
+            t_go = _r(ta - 0.2)
+            col = list(s.get("beam_color") or [120, 230, 255])
+            clipsA.pop(0)                                # 走りは使わない
+            keysA = [k for k in keysA if k["t"] not in (0.6, _r(ta))]
+            crouch = dict(hz=0.66, lean=0.4, fl=0.9, fk=1.5, rl=-0.5, rk=1.1, fa=-0.4, fe=1.1, ra=-0.3, re=1.1, ht=0.1, face="fight")   # 深く沈んで前傾、腕は後ろ
+            keysA += [dict(t=0.6, dx=0.2, hz=0.84, lean=0.1, fa=0.9, fe=1.4, ra=0.7, re=1.5, face="fight"),
+                      dict(t=_r(t_go - 0.5), dx=0.2, **crouch),
+                      dict(t=_r(t_go - 0.05), dx=0.15, **dict(crouch, hz=0.62, lean=0.45)),                                             # 溜めの終わり: さらに沈んで少し引く(予備動作)
+                      dict(t=_r(t_go + 0.15), dx=_r(a_dx - 0.3), hz=0.8, lean=0.5, fl=1.1, fk=0.5, rl=-0.7, rk=0.2, fa=1.4, fe=0.6, ra=-0.5, re=1.2, ht=0.0),   # 0.15 秒で目の前へ(前傾のまま、前の腕を突き出す)
+                      dict(t=_r(ta), dx=a_dx, hz=0.86, lean=0.15, fa=0.9, fe=1.4, ra=0.7, re=1.5)]                                   # 踏ん張って止まる
+            charge.append(dict(start=_r(t_go - 0.5), end=_r(t_go), who="A", color=col))
+            fx_after.append(dict(start=_r(t_go + 0.03), end=_r(t_go + 0.3), who="A", x0=-2.0 + 0.2, x1=-2.0 + a_dx - 0.3, n=5))
+            hits += [dict(tau=_r(t_go), hold=0.0, kind="launch", by="A", pos=[-2.0 + 0.2, 0.6]),
+                     dict(tau=_r(t_go + 0.15), hold=0.03, kind="land", by="A", pos=[_r(-2.0 + a_dx - 0.3), 0.3])]
+            puffs += [dict(tau=_r(t_go), kind="land2", pos=[-2.0 + 0.2, 0.0]), dict(tau=_r(t_go + 0.15), kind="land2", pos=[_r(-2.0 + a_dx - 0.3), 0.0])]
+            slow.append(dict(start=_r(t_go - 0.08), end=_r(t_go + 0.02), rate=0.5))                                                 # 踏み切りの瞬間だけ少し伸ばす
+            flashes.append(_r(t_go + 0.15))                                                                                          # 止まった瞬間に閃光(無いと 12.7/分で下限 17 を割った)
+            keysB += [dict(t=_r(t_go + 0.2), dx=-1.7, lean=-0.25, ht=-0.35, fa=0.6, ra=0.5, fe=1.2, re=1.3, face="fight"),           # 驚いてのけぞる
+                      dict(t=_r(t_go + 0.4), dx=-1.7, lean=0.05, ht=0.0, fa=0.9, fe=1.4, ra=0.7, re=1.5, face="fight")]
+            shots.insert(0, dict(t=0.55, follow="A", scale=[[0.55, 4.6], [t_go, 3.8]], yaw=[[0.55, -26.0], [t_go, -12.0]], pitch=6.0, lens=32.0, target_z=1.0, lag=0.25))   # 溜め: 寄る
+            shots.append(dict(t=_r(t_go), follow="mid", scale=5.6, yaw=0.0, pitch=3.0, lens=44.0, target_z=1.1))                  # 突進: 2 人が入る引き(残像の列が見える)
+            shots.append(dict(t=_r(t_go + 0.2), follow="B", scale=3.6, yaw=20.0, pitch=4.0, lens=32.0, target_z=1.1, lag=0.0))      # 止まった瞬間は B 寄りで
         if open_blast:                                   # 走り出す前の気弾: 0.6 片手を上げて玉を膨らませ → 1.15 投げる → 1.35 B がくぐる → 1.55 壁で爆発 → 1.6 走り出す
             col = list(s.get("beam_color") or [255, 190, 70])
             clipsA[0].update(start=1.6, **{"in": 0.12})

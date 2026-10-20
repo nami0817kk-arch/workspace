@@ -287,6 +287,19 @@ def test_opening_barrier_builds():
     planmod.validate_scene(sc)
 
 
+def test_opening_charge_dash_builds():
+    sc = fight.build_fight(dict(weapon="none", kick=False, hits=2, opening="charge_dash", finisher="none"))
+    assert sc["fx"]["charge"] and sc["fx"]["afterimages"] and not sc["fx"]["glide"]   # 光の尾は使わない(カメラの切り替わりで長い線が残った)
+    ai = sc["fx"]["afterimages"][0]
+    assert ai["x1"] > ai["x0"] + 1.5                                                     # 残像の列は出発点から目の前まで
+    ka = sc["keys"]["A"]
+    dash = [k for k in ka if "dx" in k and abs(k["dx"] - (ai["x1"] + 2.0)) < 1e-6]
+    assert dash and dash[0]["t"] - ai["start"] < 0.2                                     # 0.15 秒で着く
+    assert not any(c["file"] == "09_01" for c in sc["clips"]["A"])                       # 走りの clip は使わない
+    assert "charge_dash" in fight.OPENING_POOL
+    planmod.validate_scene(sc)
+
+
 def test_wave_finisher_builds():
     sc = fight.build_fight(dict(weapon="none", kick=False, hits=2, finisher="wave"))
     kinds = [h["kind"] for h in sc["hits"]]

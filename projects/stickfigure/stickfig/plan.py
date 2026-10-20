@@ -611,11 +611,14 @@ def _align_keys_to_clips(scene: dict, tracks: Dict[str, KeyTrack]) -> Dict[str, 
                 c = inside[-1]
                 k["dx"] = round(bank.sample(c, min(max(tt, c["start"]), c["end"]))["dx"], 4)
                 continue
-            sh = 0.0 if k.get("abs") else shift_at(tt)             # abs: 台本の位置をそのまま使う(技の位置。接触で決めた clip のあとの平行移動を受けない)
-            if sh and next_abs is not None and tt < next_abs:       # 次の abs キーまでに平行移動を線形に 0 へ戻す(急に戻すと 1 コマ 0.9 以上飛ぶ)
-                w1s = max([w1 for (w1, _d) in shifts if w1 <= tt], default=tt)
-                u = (tt - w1s) / max(1e-6, next_abs - w1s)
-                sh *= max(0.0, 1.0 - u)
+            w1s = max([w1 for (w1, _d) in shifts if w1 <= tt], default=tt)
+            if k.get("abs"):                                       # abs: 台本の位置を使う(技の位置。接触で決めた clip のあとの平行移動を受けない)。ただし窓の終わりから 0.3 秒は平行移動を線形に残す(すぐ 0 にすると、hl+0.3 に最初の abs キーを置く技で 1 コマ 0.9〜1.6 飛んだ。突進→衝撃波で発見)
+                sh = shift_at(w1s) * max(0.0, 1.0 - (tt - w1s) / 0.3) if w1s < tt else 0.0
+            else:
+                sh = shift_at(tt)
+                if sh and next_abs is not None and tt < next_abs:   # 次の abs キーまでに平行移動を線形に 0 へ戻す(急に戻すと 1 コマ 0.9 以上飛ぶ)。abs 側の 0.3 秒の残しと同じ終点にそろえる
+                    u = (tt - w1s) / max(1e-6, max(next_abs, w1s + 0.3) - w1s)
+                    sh *= max(0.0, 1.0 - u)
             val = dx0 + sh
             for (w0, w1, c) in windows:
                 if k.get("abs") or not (c.get("_solved") or c.get("_chained")):

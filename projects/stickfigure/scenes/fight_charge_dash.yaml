@@ -1,0 +1,3 @@
+# 出だしの技の見本: 腰を落として気を溜め、残像を引いて一息に目の前へ突っ込む。決めは衝撃波
+name: fight_charge_dash
+fight: {weapon: none, kick: false, opening: charge_dash, hits: 3, counter: true, finisher: wave, palette: cool, stage: night, mood: battle, seed: 4}
