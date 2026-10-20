@@ -370,3 +370,15 @@ def test_opening_lock_builds():
     sc2 = fight.build_fight(dict(weapon="none", kick=False, opening="lock", hits=2, finisher="none", seed=3))
     assert not any(h["kind"] == "grind" for h in sc2["hits"])            # 素手では鍔迫り合いにならない
     planmod.validate_scene(sc)
+
+
+def test_episode_passing_variant_shifts_seed(monkeypatch):
+    from stickfig import episode
+    calls = []
+    def fake_gate(pl, cfg):
+        calls.append(1)
+        return {"passed": len(calls) >= 3}                            # 3 回目で通る
+    monkeypatch.setattr("stickfig.qa.run_gate", fake_gate)
+    sc = dict(name="x", fight=dict(weapon="none", kick=False, hits=2, finisher="none", seed=10))
+    out = episode._passing_variant(sc)
+    assert out["fight"]["seed"] == 12

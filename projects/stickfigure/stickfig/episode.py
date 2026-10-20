@@ -94,6 +94,27 @@ def card_segment(c: dict, out: Path, ff: str, mood: Optional[str], fps: int = 30
     return mp4
 
 
+def _passing_variant(sc: dict, tries: int = 6) -> dict:
+    """fight 指定の場面が点検に落ちるとき、seed を +1 ずつずらして通るものを返す(無ければ元のまま)。
+    random の技・連打の clip の組み合わせが seed で変わるので、たいてい数回で通る。"""
+    from . import qa
+    if "fight" not in sc or not isinstance(sc.get("fight"), dict):
+        return sc
+    base_seed = int(sc["fight"].get("seed", 0) or 0)
+    for k in range(tries):
+        cand = dict(sc, fight=dict(sc["fight"], seed=base_seed + k)) if (k or "seed" in sc["fight"]) else sc
+        try:
+            scene = fight.expand(dict(cand), verify=False)
+            pl = planmod.build_plan(scene)
+        except Exception:                                  # clips が無い等。点検できない環境ではそのまま
+            return sc
+        if qa.run_gate(pl, scene.get("qa"))["passed"]:
+            if k:
+                print(f"  場面 {sc.get('name', '')}: seed {base_seed} は点検に落ちるので {base_seed + k} にした")
+            return cand
+    return sc
+
+
 def build_episode(ep: dict, out: Path, reuse_figs: bool = False, force: bool = False, vertical: bool = False, preview: bool = False) -> Optional[Path]:
     from . import cli
     out = Path(out)
@@ -127,6 +148,7 @@ def build_episode(ep: dict, out: Path, reuse_figs: bool = False, force: bool = F
         if isinstance(sc, str):
             scene = planmod.load_scene(sc)
         else:
+            sc = _passing_variant(sc)                 # fight の場面は、点検に落ちる seed なら少しずらして通るものにする(量産で 1 場面のために話ごと止まらない)
             scene = fight.expand(dict(sc), verify=True)
             planmod.validate_scene(scene)
         if vertical:
