@@ -276,7 +276,7 @@ def build_fight(spec: dict) -> dict:
                       dict(t=0.95, dx=-1.55, lean=-0.1, ht=-0.1, fa=0.8, ra=0.6, fe=1.3, re=1.4, face="fight"),  # 一歩引く
                       dict(t=1.25, dx=-1.55, **GUARD)]
             hits.append(dict(tau=0.86, hold=0.1, kind="pose"))      # 止めは姿勢の保持(0.85〜1.12)で作る。hold を長くすると点検の「ヒットストップ 1〜3 コマ」に当たる
-            flurry.append(dict(start=0.86, end=1.12, every=5, angles=[dict(target="A", yaw=-30, pitch=6, scale=3.0, lens=28, hue=0), dict(target="A", yaw=20, pitch=-4, scale=2.6, lens=26, dutch=5.0, hue=1)]))
+            flurry.append(dict(start=0.86, end=1.12, every=5, z=1.6, angles=[dict(target="A", yaw=-30, pitch=6, scale=3.8, lens=28, hue=0), dict(target="A", yaw=20, pitch=-4, scale=3.4, lens=26, dutch=5.0, hue=1)]))   # 狙いを高く(z 1.6)・少し引く: 掲げた剣が画面の上に切れていた
             shots.insert(0, dict(t=0.55, follow="A", scale=[[0.55, 4.6], [0.85, 3.6]], yaw=[[0.55, -26.0], [0.85, -12.0]], pitch=5.0, lens=32.0, target_z=1.2, lag=0.2))
             shots.append(dict(t=1.4, follow="A", scale=[[1.4, 4.8], [tc + 0.4, 3.9]], yaw=[[1.4, -38.0], [tc + 0.4, -20.0]], pitch=4.0, lens=30.0, target_z=1.0, lag=0.3))
         if open_db:                                      # 相手の光線: 0.6 B が構えて溜め(1.0 秒)→ 1.6 発射 → 1.65 A が跳んでかわす → 光線は壁へ → 2.0 A 着地 → 2.2 走り出す
