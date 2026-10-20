@@ -131,6 +131,7 @@ def protect(hero: str, rival: str, hero_color=GREEN, rival_color=RED, **_) -> di
         dict(scene=dict(name="p2_stand", fight=dict(
             weapon="sword", kick=True, hits=4, counter=False, finisher="random", palette="warm", mood="battle", stage="sunset", b_scale=1.25,
             ally=dict(color=ALLY, x=-3.6, y=1.6, facing=1, cheer=True),
+            second_enemy=dict(color=PURPLE),             # 村を襲う側は 2 人: 頭目を倒した直後に手下が走り込み、気弾で壁へ(2 対 1)
             colors=dict(A=hero_color, B=rival_color),
             lines=[dict(at="opening", dur=1.6, kind="narr", text="背中には、守るべき人たちがいる。"),
                    dict(at="kick", dt=-0.5, dur=1.1, kind="say", who="A", text=_p(["ここは、通さない！", "一歩も、退かない！", "守ってみせる！"])),
