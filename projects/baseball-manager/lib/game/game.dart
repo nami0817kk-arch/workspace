@@ -93,6 +93,7 @@ class Game {
     int? potential,
     Difficulty difficulty = Difficulty.normal,
     PlayerSnapshot? parent,
+    Trait? carry,
   }) {
     // 二世: 親の素質を受け継ぎ(半分は親ゆずり)、良い特性を1つもらえることがある。
     final pot = potential ??
@@ -110,6 +111,10 @@ class Game {
       if (cands.isNotEmpty) {
         traits = gain(traits, cands[rng.nextInt(cands.length)]);
       }
+    }
+    // 継承ポイントで持たせた特性(乱数は使わない)。
+    if (carry != null && canCarry(carry, role) && canGain(traits, carry)) {
+      traits = gain(traits, carry);
     }
     traits = rollBirthRare(rng, traits, role);
     final gifts = rollGifts(rng);

@@ -1991,6 +1991,20 @@ class EndingView extends StatelessWidget {
                 );
               }),
               const SizedBox(height: 16),
+              if (controller.lastLegacyGain > 0) ...[
+                Card(
+                  key: const Key('legacy-gain'),
+                  child: ListTile(
+                    leading: const Icon(Icons.card_giftcard,
+                        color: Color(0xFFD84315)),
+                    title: Text('継承ポイント +${controller.lastLegacyGain}'
+                        '(いま ${controller.legacyPoints}pt)'),
+                    subtitle: const Text(
+                        '次の選手を始めるとき、図鑑にある特性を生まれつき持たせられます(良い特性3pt、レア8pt)。'),
+                  ),
+                ),
+                const SizedBox(height: 8),
+              ],
               if (controller.newlyUnlocked.isNotEmpty) ...[
                 Card(
                   key: const Key('new-achievements'),

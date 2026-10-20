@@ -7,6 +7,7 @@ import '../game/career.dart';
 import '../game/difficulty.dart';
 import '../game/marks.dart';
 import '../game/player.dart';
+import '../game/talent.dart';
 import '../game/traits.dart';
 import 'art/avatar.dart';
 import 'art/scene.dart';
@@ -36,6 +37,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   /// 二世として始めるときの親(殿堂の、結婚した選手)。なければ ふつうに始める。
   HistoryEntry? heir;
+
+  /// 継承ポイントで、生まれつき持たせる特性。
+  Trait? carry;
 
   /// タイトルを素早く7回タップすると、管理者モードの入/切が切り替わる。
   void _tapTitle() {
@@ -85,8 +89,8 @@ class _HomeScreenState extends State<HomeScreen> {
     if (ok == true) widget.controller.deleteHistory(e);
   }
 
-  void _start() =>
-      widget.controller.newGame(name.text, role, difficulty, heir?.snapshot);
+  void _start() => widget.controller
+      .newGame(name.text, role, difficulty, heir?.snapshot, carry);
 
   @override
   Widget build(BuildContext context) {
@@ -229,6 +233,40 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     const SizedBox(height: 4),
                     Text('親の素質を受け継ぎ、良い特性をもらえることがあります。',
+                        style: Theme.of(context).textTheme.bodySmall),
+                  ],
+                  if (widget.controller.carryCandidates(role).isNotEmpty) ...[
+                    const SizedBox(height: 16),
+                    Text('継承ポイント ${widget.controller.legacyPoints}pt'
+                        ' — 図鑑にある特性を、生まれつき持たせて始める'),
+                    const SizedBox(height: 8),
+                    Wrap(
+                      key: const Key('carry-select'),
+                      spacing: 6,
+                      children: [
+                        ChoiceChip(
+                          key: const Key('carry-none'),
+                          label: const Text('持たせない'),
+                          selected: carry == null,
+                          onSelected: (_) => setState(() => carry = null),
+                        ),
+                        for (final t
+                            in widget.controller.carryCandidates(role))
+                          Tooltip(
+                            message: t.description,
+                            child: ChoiceChip(
+                              key: Key('carry-${t.name}'),
+                              label: Text('${t.label}(${legacyCost(t)}pt)'),
+                              selected: carry == t,
+                              onSelected: (_) => setState(() => carry = t),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ] else if (widget.controller.legacyPoints > 0) ...[
+                    const SizedBox(height: 16),
+                    Text('継承ポイント ${widget.controller.legacyPoints}pt'
+                        '(図鑑にある特性を持たせるには、あと少し貯める)',
                         style: Theme.of(context).textTheme.bodySmall),
                   ],
                   const SizedBox(height: 16),
@@ -466,6 +504,7 @@ Future<void> showHelp(BuildContext context) {
           '・特性は34種類(うちレア7種)。打者・投手向けのものは、その役割の選手にだけつきます。成績の「指標」(OPS+・WHIPなど)は、項目をタップすると意味が出ます。\n'
           '・能力には「天賦」(得意・苦手)があり、得意な能力は経験点が少なくて済みます。選手ごとに違います。\n'
           '・レア特性は、生まれつき4%、またはプロでタイトルや優勝をしたときの「覚醒」(一生に一度)で手に入ります。持った特性は「特性図鑑」に残ります。\n'
+          '・引退のたびに「継承ポイント」が貯まります(称号が高いほど多い)。次の選手を始めるとき、特性図鑑にある良い特性を生まれつき持たせられます(3pt、レアは8pt)。\n'
           '・同じ能力を重点に練習を続けると、経験点が少し増え、ときどき「開眼」します。重点を変えると連続は戻ります。\n'
           '・プロでは、シーズン中の成績で月間MVPやオールスターに選ばれ、年の終わりに新人王・ベストナインなどの表彰があります。8年目からは一度だけ「FA権」で移籍を決められます。\n'
           '・一生を通した達成は「実績」に残ります。ホームの実績カードから見られます。\n'

@@ -246,6 +246,36 @@ void main() {
     });
   });
 
+  group('継承(周回のやり込み)', () {
+    test('継承ポイントは称号が高いほど多い', () {
+      expect(legacyPointsOf(madePro: false, title: 'プロにはなれなかった'), 1);
+      expect(legacyPointsOf(madePro: true, title: 'レギュラー'), 3);
+      expect(legacyPointsOf(madePro: true, title: '一流選手'), 4);
+      expect(legacyPointsOf(madePro: true, title: 'レジェンド'), 6);
+    });
+
+    test('継承できるのは、役割に合う良い特性。レアは高い', () {
+      expect(canCarry(Trait.genius, Role.batter), isTrue);
+      expect(canCarry(Trait.glassBody, Role.batter), isFalse);
+      expect(canCarry(Trait.slugger, Role.pitcher), isFalse);
+      expect(legacyCost(Trait.genius), 3);
+      expect(legacyCost(Trait.monster), 8);
+    });
+
+    test('持たせた特性は生まれつき付く。乱数の並びは変わらない。合わないものは付かない', () {
+      final plain = Game.newGame(name: 'a', role: Role.batter, rng: Random(4));
+      final carried = Game.newGame(
+          name: 'a', role: Role.batter, rng: Random(4), carry: Trait.genius);
+      expect(carried.player.traits, contains(Trait.genius));
+      // 乱数を使わないので、そのほかの特性・天賦は同じ
+      expect(carried.player.gifts, plain.player.gifts);
+      expect(carried.player.potential, plain.player.potential);
+      final bad = Game.newGame(
+          name: 'a', role: Role.pitcher, rng: Random(4), carry: Trait.slugger);
+      expect(bad.player.traits, isNot(contains(Trait.slugger)));
+    });
+  });
+
   group('生まれ持った才能の知らせ', () {
     test('レア特性・天賦+2・不得手(-2)があるときだけ出る', () {
       final plain = Player(

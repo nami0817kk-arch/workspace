@@ -20,6 +20,8 @@ import '../game/life.dart';
 import '../game/path.dart';
 import '../game/player.dart';
 import '../game/snapshot.dart';
+import '../game/talent.dart';
+import '../game/traits.dart';
 import 'history.dart';
 import 'labels.dart';
 
@@ -40,6 +42,9 @@ const achievementsKey = 'baseball_manager_achievements_v1';
 
 /// 特性図鑑(これまでに持ったことのある特性の名前)。
 const traitBookKey = 'baseball_manager_traitbook_v1';
+
+/// 継承ポイント(引退で貯まり、次の選手に特性を持たせるのに使う)。
+const legacyKey = 'baseball_manager_legacy_v1';
 
 enum MilestoneKind {
   draft,
@@ -146,6 +151,29 @@ class SaveStore {
     try {
       final p = await SharedPreferences.getInstance();
       await p.setStringList(traitBookKey, names.toList()..sort());
+    } catch (_) {}
+  }
+
+  Future<int> loadLegacy() async {
+    try {
+      final p = await SharedPreferences.getInstance();
+      return p.getInt(legacyKey) ?? 0;
+    } catch (_) {
+      return 0;
+    }
+  }
+
+  Future<void> saveLegacy(int n) async {
+    try {
+      final p = await SharedPreferences.getInstance();
+      await p.setInt(legacyKey, n);
+    } catch (_) {}
+  }
+
+  Future<void> clearLegacy() async {
+    try {
+      final p = await SharedPreferences.getInstance();
+      await p.remove(legacyKey);
     } catch (_) {}
   }
 
@@ -471,6 +499,19 @@ class GameController extends ChangeNotifier {
   /// 特性図鑑: これまでに持ったことのある特性(何度遊んでも残る)。
   Set<String> seenTraits = {};
 
+  /// 継承ポイント(貯まったぶん)と、直前の一生で増えたぶん(エンディングに出す)。
+  int legacyPoints = 0;
+  int lastLegacyGain = 0;
+
+  /// いま継承できる特性(図鑑にあり、役割に合い、ポイントが足りるもの)。
+  List<Trait> carryCandidates(Role role) => [
+        for (final t in Trait.values)
+          if (seenTraits.contains(t.name) &&
+              canCarry(t, role) &&
+              legacyCost(t) <= legacyPoints)
+            t,
+      ];
+
   /// 持っている特性を図鑑に足す(増えたときだけ保存)。
   void _recordTraits(Game g) {
     final names = {for (final t in g.player.traits) t.name};
@@ -485,6 +526,7 @@ class GameController extends ChangeNotifier {
   Future<bool> loadSaved() async {
     unlocked = await store.loadAchievements();
     seenTraits = await store.loadTraitBook();
+    legacyPoints = await store.loadLegacy();
     adminMode = await store.loadAdmin();
     final disp = await store.loadDisplay();
     textScale = disp.scale;
@@ -520,6 +562,7 @@ class GameController extends ChangeNotifier {
         'history': [for (final e in history) e.toJson()],
         'achievements': unlocked.toList()..sort(),
         'traitBook': seenTraits.toList()..sort(),
+        'legacy': legacyPoints,
       });
 
   /// `exportBackup` の文字列から復元する。読めなければ何も変えず false。
@@ -546,6 +589,8 @@ class GameController extends ChangeNotifier {
         for (final x in (m['traitBook'] as List?) ?? const []) x as String,
       };
       store.saveTraitBook(seenTraits);
+      legacyPoints = (m['legacy'] as num?)?.toInt() ?? legacyPoints;
+      store.saveLegacy(legacyPoints);
       pending.clear();
       newlyUnlocked = const [];
       recent = const [];
@@ -565,12 +610,23 @@ class GameController extends ChangeNotifier {
   }
 
   void newGame(String name, Role role,
-      [Difficulty difficulty = Difficulty.normal, PlayerSnapshot? parent]) {
+      [Difficulty difficulty = Difficulty.normal,
+      PlayerSnapshot? parent,
+      Trait? carry]) {
     newlyUnlocked = const [];
+    lastLegacyGain = 0;
     _undo = null;
+    // 継承: 図鑑にあり、ポイントが足りる特性だけ。持たせたぶんのポイントを使う。
+    Trait? use;
+    if (carry != null && carryCandidates(role).contains(carry)) {
+      use = carry;
+      legacyPoints -= legacyCost(carry);
+      store.saveLegacy(legacyPoints);
+    }
     game = Game.newGame(
         difficulty: difficulty,
         parent: parent,
+        carry: use,
         name: name.trim().isEmpty ? '名無し' : name.trim(),
         role: role,
         rng: _rng);
@@ -853,6 +909,8 @@ class GameController extends ChangeNotifier {
     history = const [];
     unlocked = {};
     seenTraits = {};
+    legacyPoints = 0;
+    lastLegacyGain = 0;
     newlyUnlocked = const [];
     recent = const [];
     pending.clear();
@@ -860,6 +918,7 @@ class GameController extends ChangeNotifier {
     await store.clearHistory();
     await store.clearAchievements();
     await store.clearTraitBook();
+    await store.clearLegacy();
     notifyListeners();
   }
 
@@ -882,6 +941,13 @@ class GameController extends ChangeNotifier {
       history = [HistoryEntry.of(g), ...history].take(historyLimit).toList();
       store.saveHistory(history);
       _unlockAchievements(g);
+      final e = g.ending;
+      if (e != null) {
+        lastLegacyGain =
+            legacyPointsOf(madePro: e.madePro, title: e.title);
+        legacyPoints += lastLegacyGain;
+        store.saveLegacy(legacyPoints);
+      }
     }
     notifyListeners();
     if (g != null) {

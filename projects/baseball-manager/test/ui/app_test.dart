@@ -1006,6 +1006,15 @@ void _rankTests() {
     await t.pumpWidget(BaseballManagerApp(controller: c));
     await t.pumpAndSettle();
     expect(t.takeException(), isNull, reason: 'ホーム(殿堂つき)');
+    // 継承ポイントがあるときの新規開始画面も、狭い画面・大きい文字で溢れない
+    c.legacyPoints = 12;
+    c.seenTraits = {Trait.genius.name, Trait.hardWorker.name, Trait.leader.name};
+    c.notifyListeners();
+    await t.pumpAndSettle();
+    await t.scrollUntilVisible(find.byKey(const Key('carry-genius')), 200,
+        scrollable: find.byType(Scrollable).first);
+    expect(find.byKey(const Key('carry-genius')), findsOneWidget);
+    expect(t.takeException(), isNull, reason: 'ホーム(継承)');
     // ホーム → 実績 → 戻る
     await t.scrollUntilVisible(find.byKey(const Key('achievements-open')), 200,
         scrollable: find.byType(Scrollable).first);
@@ -2115,6 +2124,41 @@ void _rankTests() {
       expect(find.textContaining('(20/143試合)'), findsOneWidget);
       expect(find.textContaining('暫定'), findsOneWidget);
     });
+  });
+
+  testWidgets('継承ポイント: 引退で貯まり、図鑑にある特性を次の選手に持たせられる', (t) async {
+    final c = await _start(t);
+    expect(c.legacyPoints, 0);
+    // 引退した一生(殿堂に書き込まれるとき)にポイントが入り、二重には入らない
+    final done = _until((g) => false, seed: 3, potential: 95);
+    expect(done.phase, Phase.retired);
+    c.adopt(done);
+    c.autoSpend();
+    await t.pumpAndSettle();
+    expect(c.lastLegacyGain, greaterThan(0));
+    final pts = c.legacyPoints;
+    expect(pts, c.lastLegacyGain);
+    c.autoSpend();
+    expect(c.legacyPoints, pts);
+    // 保存され、新しいコントローラーでも残る
+    final c2 = GameController(rng: Random(1));
+    await c2.loadSaved();
+    expect(c2.legacyPoints, pts);
+    // 図鑑に無い特性は持たせられない
+    c.legacyPoints = 10;
+    c.seenTraits = {Trait.genius.name};
+    expect(c.carryCandidates(Role.batter), [Trait.genius]);
+    c.newGame('あ', Role.batter, Difficulty.normal, null, Trait.hardWorker);
+    expect(c.game!.player.traits, isNot(contains(Trait.hardWorker)));
+    expect(c.legacyPoints, 10);
+    // 持たせられる特性は付き、ポイントを使う
+    c.newGame('い', Role.batter, Difficulty.normal, null, Trait.genius);
+    expect(c.game!.player.traits, contains(Trait.genius));
+    expect(c.legacyPoints, 7);
+    // ポイントが足りなければ持たせられない
+    c.legacyPoints = 2;
+    c.newGame('う', Role.batter, Difficulty.normal, null, Trait.genius);
+    expect(c.legacyPoints, 2);
   });
 
   testWidgets('特性図鑑: 持った特性が載り、データを消すと空に戻る', (t) async {
