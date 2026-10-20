@@ -218,7 +218,7 @@ python scripts/make_gallery.py 09_01:2.4 135_07_s1:3.6   # clip を順に再生�
 - **物語の型(`story.py`)での技の出し方**: 決戦は `finisher: random`(全技から)、kick なしの場面は `opening: random`、稽古(師匠との組手・修行)は `opening: lock`(鍔迫り合い)。敗北回は A/B の色を入れ替えて主役を B に置く(主役が負ける見せ方はこれで済んでいる。`winner` の仕組みは作らない)
 - **接触の許容(`tol`)は相手の体格で広げる**: 中心まで遠くなるので `0.26 + 0.6×(b_scale−1)`。出だしの飛び蹴りだけ固定だったので、守る戦いの決戦(b_scale 1.25)で 0.29 となり点検に落ちた(量産 series10 で発見)。命中を足すときは必ずこの式で
 - `episode` は fight 指定の場面が点検に落ちるとき seed を +1 ずつ(6 回まで)ずらして通るものにする(`episode._passing_variant`)。random の技・連打の clip の組み合わせが seed で変わるので、たいてい数回で通る。ずらしたら「seed N は点検に落ちるので N+k にした」と出す。それでも落ちる場面は台本側の不具合なので直す
-- 2026-10-20 の通し確認: series10(3 話)は 1 場面が落ちて直し、series11(5 話・seed 500)は全部通った(seed ずらしが 2 回働いた: s1_defeat 5000→5001、m2_boss 5031→5033)。決戦の技は launch_slash・beam・meteor・blink_combo・wave とばらけた
+- 2026-10-20 の通し確認: series10(3 話)は 1 場面が落ちて直し、series11(5 話・seed 500)は全部通った(seed ずらしが 2 回働いた: s1_defeat 5000→5001、m2_boss 5031→5033)。決戦の技は launch_slash・beam・meteor・blink_combo・wave とばらけた。series12(5 話・seed 600、気の盾・2 対 1・合体技を含む版)も全部通った(duel の seed 6010 → 6011 のずらし 1 回。2026-10-20)
 - 量産の通し確認は `series --n 3 --build --compile`(約 20 分)。落ちた話だけ `episode out/<series>/specs/<ep>.yaml --out out/<series>/<ep>` で作り直し、`series --compile-only` でまとめ直す
 - **出だしの技 9(`opening: dodge_slash`、剣どうし)**: B が剣を振りかぶって溜め、三日月の光を飛ばす(`fx.projectiles` の crescent、左向き。`look.crescent` は箱の座標を並べ替えて左向きでも描ける)→ A は沈んで(予備動作)低くスライディング(hz 0.42、前脚を伸ばし後ろ脚を畳み反る)でくぐる(`miss` の風切り、スロー)→ 光は A の後ろの地面で砕ける(`blast`)→ 立ち上がって走り込む。見本 `scenes/fight_dodge_slash.yaml`
 - **相手の武器(fight の `b_weapon`)**: 既定は無し。鍔迫り合い・飛ぶ斬撃くぐりでは A と同じ武器を自動で持たせる(持たないと素手で斬撃を飛ばして見えた)。B の接触は手(hand)で解くので武器の有無で位置は変わらない。Blender は actor の `weapon` を見て描く
