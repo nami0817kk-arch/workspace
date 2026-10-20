@@ -440,7 +440,7 @@ def compose_frame(plan: dict, f: int, figs: Dict[int, Image.Image], stages: Opti
     # 顔(目)は描かない(2026-10-19 ユーザー指示)
     for e in plan["events"]:                   # 特大の効果: 斬撃の弧・衝撃の輪
         age = f - e["frame"]
-        if e["kind"] == "slash" and 0 <= age <= 9:
+        if e["kind"] == "slash" and e.get("by") and 0 <= age <= 9:   # by の無い slash(居合の斬撃線)では弧を描かない
             who_s = next((w for w, ac in plan["actors"].items() if ac.get("weapon")), None)
             path = []
             if who_s is not None:                  # 剣先が実際に通った道に沿わせる(命中の前後)
