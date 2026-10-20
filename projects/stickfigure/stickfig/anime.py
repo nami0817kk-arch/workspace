@@ -75,7 +75,7 @@ def trails(plan: dict, f: int, cfg: dict, cache: Dict[Tuple[str, int], dict]) ->
     cam = plan["frames"][f]["cam"]
     for who in plan["actors"]:
         # 打つ側の、命中の前後だけ(走りで剣先が速いだけの所に出ると、床にジグザグの線が残る。2026-10-19 fight_mix の冒頭で確認)
-        strikers = [e for e in plan.get("events", []) if e.get("by")]
+        strikers = [e for e in plan.get("events", []) if e.get("by") and e["kind"] in ("slash", "hit", "kick", "heel", "clash", "miss", "slam", "wave", "beam", "blast")]   # 残像は打つ命中だけ(launch/land/vanish/appear/throw では出さない: 跳び出しの手に白い線が出た)
         mine = [e for e in strikers if e["by"] == who and e["frame"] - 8 <= f <= e["frame"] + 3]
         tau_f = plan["frames"][f]["tau"]
         glide = any(r[0] <= tau_f <= r[1] and (len(r) < 3 or r[2] == who) for r in (plan.get("scene", {}).get("fx") or {}).get("glide", []))   # 飛行中: 手足の光の尾を全部出す

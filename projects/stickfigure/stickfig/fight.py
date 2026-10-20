@@ -702,7 +702,7 @@ def build_fight(spec: dict) -> dict:
         wall_lock = b_wall
         b_root = 2.4 - (dxB - 0.45)
         a_dx_m = (b_root - 1.1) + 2.0                    # 着弾する位置(B の 1.1 手前)
-        t_jump, t_top, t_land = _r(hl + 0.45), _r(hl + 0.95), _r(hl + 1.3)
+        t_jump, t_top, t_land = _r(hl + 0.45), _r(hl + 0.85), _r(hl + 1.1)   # 上り 0.4 秒、頂点で止め、落下 0.19 秒(0.25 だとふわりと浮いて見えた)
         col = list(s.get("beam_color") or [255, 200, 90])
         keysB += [dict(t=_r(hl + 0.1), dx=_r(dxB + 0.25), lean=-0.6, fa=0.3, ra=0.3, fe=0.6, re=0.6, ht=-0.8, face="pain"),
                   dict(t=_r(hl + 0.5), dx=_r(dxB - 0.45), lean=-0.2, hz=0.84, fa=0.6, ra=0.5, fe=1.0, re=1.1, ht=-0.3, face="pain"),
@@ -718,11 +718,11 @@ def build_fight(spec: dict) -> dict:
                   dict(t=_r(t_jump - 0.14), dx=4.6, hz=0.6, lean=0.35, fl=1.0, fk=1.8, rl=-0.3, rk=1.4, fa=-0.6, fe=1.0, ra=-0.6, re=1.0),   # 深く沈む(予備動作)
                   dict(t=_r(t_jump), dx=4.5, rz=0.8, hz=0.98, lean=-0.2, fa=2.9, fe=0.2, ra=2.6, re=0.3, fl=0.3, fk=0.2, rl=-0.3, rk=0.2),   # 伸び上がって跳ぶ
                   dict(t=_r(t_top), dx=_r(a_dx_m - 0.3), rz=3.6, hz=0.9, lean=0.0, fa=2.4, fe=0.5, ra=2.2, re=0.6, fl=0.5, fk=0.9, rl=-0.4, rk=0.8),   # 頂点(1.9 身長)で一瞬止まる
-                  dict(t=_r(t_top + 0.1), dx=_r(a_dx_m - 0.2), rz=3.4, hz=0.9, lean=0.6, fa=-0.9, fe=0.3, ra=-0.7, re=0.4, fl=0.6, fk=0.4, rl=-0.5, rk=0.3),   # 拳を下に構えて頭から落ち始める
+                  dict(t=_r(t_top + 0.06), dx=_r(a_dx_m - 0.2), rz=3.4, hz=0.9, lean=0.6, fa=-0.9, fe=0.3, ra=-0.7, re=0.4, fl=0.6, fk=0.4, rl=-0.5, rk=0.3),   # 拳を下に構えて頭から落ち始める
                   dict(t=_r(t_land), dx=_r(a_dx_m), rz=0.0, hz=0.5, lean=0.5, fa=-1.3, fe=0.2, ra=-1.1, re=0.3, fl=1.1, fk=2.0, rl=-0.2, rk=1.6, ht=0.1),   # 着弾(拳が地面、つぶれ)
                   dict(t=_r(t_land + 0.35), dx=_r(a_dx_m), hz=0.52, lean=0.45, fa=-1.2, fe=0.3, ra=-1.0, re=0.4),
                   dict(t=_r(t_land + 0.9), dx=_r(a_dx_m), hz=0.88, lean=0.1, fa=0.9, fe=1.4, ra=0.7, re=1.5, ht=0.0, face="fight")]
-        glide_ranges.append([_r(t_top + 0.1), _r(t_land - 0.02), "A"])                                   # 落下中は手足の光の尾
+        glide_ranges.append([_r(t_top + 0.06), _r(t_land - 0.02), "A"])                                  # 落下中は手足の光の尾
         hits += [dict(tau=_r(hl + 0.5), hold=0.0, kind="pose"),
                  dict(tau=_r(t_jump), hold=0.0, kind="launch", by="A", pos=[_r(a_dx_m - 2.0 - 0.5), 0.0]),
                  dict(tau=_r(t_top), hold=0.08, kind="pose"),
