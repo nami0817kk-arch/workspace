@@ -269,8 +269,10 @@ for f, fr in enumerate(PLAN["frames"], start=1):
         pos = Vector(cam_math.position(c))
         co.location = pos
         co.rotation_quaternion = (Vector((c["tx"], c["ty"], c["tz"])) - pos).to_track_quat("-Z", "Y")
+        cam.lens = float(c.get("lens", cam.lens))          # レンズはコマごとに plan の値(2D は 1.7 倍の望遠)。固定の 40mm のままだと人物だけ 0.585 倍小さく描かれ、合成の影・小道具・火花とずれていた(2026-10-20 発見)
         co.keyframe_insert("location", frame=f)
         co.keyframe_insert("rotation_quaternion", frame=f)
+        cam.keyframe_insert("lens", frame=f)
     else:
         cam.ortho_scale = c["scale"]
         cam.keyframe_insert("ortho_scale", frame=f)

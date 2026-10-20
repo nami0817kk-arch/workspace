@@ -410,7 +410,7 @@ def build_skit(spec: dict) -> dict:
         qa=dict(max_cross_frames=4000, max_stops=9999, max_anticipation_frames=999, max_jerk=9.0, max_teleport_frames=4),
         tempo=1.0, anime=dict(trails=False, sfx=True, zoom_blur=False, grade=True, roll=False, smear=True),
         shots=sorted(shots, key=lambda s: s["t"]), stepping=dict(hold=2, ones_around_hits=3, hold_camera=True),
-        impact_cuts=None, flurry=[], body_drive=None, footwork={}, style="flat2d", clip_timing=None, cam_zoom=1.25,
+        impact_cuts=None, flurry=[], body_drive=None, footwork={}, style="flat2d", clip_timing=None, cam_zoom=2.1,
         limb=dict(base=0.055, tip=0.03, tip_color=[0.08, 0.08, 0.1]), captions=[], audio=dict(mood=spec.get("mood", "calm")), _marks={})
     return scene
 
