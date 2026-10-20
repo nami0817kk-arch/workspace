@@ -1,0 +1,15 @@
+# ショート用(縦・約1分): 必殺技 5 連発。各技の見本と同じ指定(通る seed)
+name: short_hissatsu
+mood_cards: calm
+items:
+  - card: {text: "棒人間ストーリー", sub: "必殺技 5 連発", dur: 2.0, style: title}
+  - card: {text: "一、合体光線", dur: 1.2, style: time}
+  - scene: {name: s1_twin, fight: {weapon: none, kick: false, hits: 3, counter: true, finisher: twin_beam, ally: {color: [0.95, 0.8, 0.2]}, palette: cool, stage: night, mood: battle, seed: 7}}
+  - card: {text: "二、気弾の連射", dur: 1.2, style: time}
+  - scene: {name: s2_kibarrage, fight: {weapon: none, kick: false, hits: 3, counter: true, finisher: ki_barrage, palette: warm, stage: night, mood: battle, seed: 7}}
+  - card: {text: "三、分身乱舞", dur: 1.2, style: time}
+  - scene: {name: s3_clone, fight: {weapon: none, kick: false, hits: 3, counter: true, finisher: clone_rush, palette: cool, stage: night, mood: battle, seed: 4}}
+  - card: {text: "四、気の盾", dur: 1.2, style: time}
+  - scene: {name: s4_barrier, fight: {weapon: none, kick: false, opening: barrier, hits: 3, counter: true, finisher: barrage, palette: cool, stage: night, mood: battle, seed: 4}}
+  - card: {text: "五、二対一", dur: 1.2, style: time}
+  - scene: {name: s5_two, fight: {weapon: sword, kick: false, hits: 3, counter: true, finisher: launch_slash, second_enemy: {color: [0.8, 0.35, 0.9]}, palette: cool, stage: night, mood: battle, seed: 7}}
