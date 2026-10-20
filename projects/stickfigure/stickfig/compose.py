@@ -397,7 +397,8 @@ def compose_frame(plan: dict, f: int, figs: Dict[int, Image.Image], stages: Opti
     for ct in fx.get("cuts", []):              # 居合の斬撃線: 相手の体を横切る白い線が 1 本ずつ現れ(0.05 秒おき)、少しずれて消える
         if ct["start"] <= tau <= ct["end"]:
             who_c = ct.get("who", "B")
-            pc = plan["frames"][f]["actors"][who_c]
+            f0 = next((i for i, fr0 in enumerate(plan["frames"]) if fr0["tau"] >= ct["start"]), f)   # 走り始めのコマの体に固定(崩れ落ちる腰を追うと体から外れた)
+            pc = plan["frames"][f0]["actors"][who_c]
             ac = plan["actors"][who_c]
             skc = fk.skeleton(pc, 1 if ac.get("facing", 1) >= 0 else -1, pc["root_x"], ac.get("scale", 1.0))
             hx, hz = skc["hip"]
