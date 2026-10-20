@@ -37,6 +37,7 @@ DEFAULTS = dict(
     a_scale=1.0,             # こちら側(A)の大きさ。負け場面で相手(A)を大柄にするとき
     b_scale=1.0,             # 相手の大きさ(1.3 で大柄のボス)。連打の位置は固定なので 1.15〜1.35 まで
     stage="cave",            # 舞台の色の組: cave / dojo / field / night / sunset
+    second_enemy=None,       # 2 対 1: {color, scale, y(奥行き)}。奥で控えていた 2 人目が 1 人目の決着の直後に走り込み、A が気弾で壁まで吹き飛ばす(決着が 2 段になる)
     ally=None,               # 3人目(味方): {color, x(置く位置), y(奥行き。+で奥), facing(+1右向き/-1左向き), scale, cheer(勝ったら万歳 true/負けたらうなだれる false)}。戦わず、見守る
     block=True,              # 連打の途中を相手が防ぐ(hits が3以上): 2発目は 受け止め(clash) か かわす(miss)。seed があれば選ぶ、無ければ受け止め。hits≧4 なら3発目にもう一方
     b_combo=2,               # A の決めの1発の前に、相手(B)が打ち返す回数(A はかわし→受け止め)。0 で無し。長い武器では無し
@@ -98,10 +99,10 @@ RUN_LOOK = dict(amp=dict(fa=1.35, ra=1.35, fl=1.2, rl=1.2), add=dict(lean=0.2, h
 
 FINISHER_POOL = {                                      # finisher: random が選ぶ技(武器ごと)。launch_kick は kick の clip が要るので素手だけ
     "sword": ["launch_slash", "air_combo", "slash_wave", "iai", "beam", "wave", "meteor", "beam_clash", "air_beam"],
-    "dagger": ["launch_slash", "air_combo", "slash_wave", "iai", "beam", "blast", "meteor"],
+    "dagger": ["launch_slash", "air_combo", "slash_wave", "iai", "beam", "blast", "ki_barrage", "meteor"],
     "staff": ["launch_slash", "beam", "wave", "meteor"],
     "spear": ["launch_slash", "beam", "wave", "meteor"],
-    "none": ["launch_kick", "barrage", "blast", "beam", "wave", "slam_throw", "blink_combo", "meteor", "beam_clash", "air_beam"],
+    "none": ["launch_kick", "barrage", "blast", "ki_barrage", "beam", "wave", "slam_throw", "blink_combo", "meteor", "beam_clash", "air_beam"],
 }
 ALLY_FINISHERS = ["twin_beam"]                         # 味方(ally)がいる場面だけ random の池に足す技(合体技)
 OPENING_POOL = [None, None, "blast", "teleport", "fly", "counter_blast", "air_clash", "dodge_beam", "taunt", "lock", "return_blast", "dodge_slash"]   # opening: random が選ぶ(None 2 つ=走りが多め。taunt は名乗り)
@@ -178,6 +179,7 @@ def build_fight(spec: dict) -> dict:
     if twin and s["ally"] is None:
         s["ally"] = {}
     beam = s["finisher"] == "beam" or twin               # 必殺技: 気の光線(溜め → 発射 → 壁まで吹き飛ばす)
+    kbar = s["finisher"] == "ki_barrage"                 # 必殺技: 気弾の連射(左右の手で小さい玉を 5 発 0.16 秒間隔 → 両手で溜めた大玉で壁へ)
     blast = s["finisher"] == "blast"                     # 必殺技: 気弾(片手に玉を膨らませて投げる → 着弾で爆発 → 壁まで吹き飛ばす)
     wave = s["finisher"] == "wave"                       # 必殺技: 衝撃波(跳んで拳を地面に叩きつけ → 地面を走る波 → 相手を打ち上げる)
     bclash = s["finisher"] == "beam_clash"               # 必殺技: 光線の撃ち合い(2 人が同時に撃ち、中央でぶつかり、A が押し勝つ)
@@ -827,6 +829,64 @@ def build_fight(spec: dict) -> dict:
         puffs.append(dict(tau=_r(t_hit + 1.08), kind="land2", pos=[_r(b_wall - 0.5), 0.0]))
         t_end = t_hit + 1.1
         ko_t = t_hit + 1.05
+    elif kbar:
+        n_small, gap_s, push = 5, 0.16, 0.3              # 小玉 5 発・間隔 0.16 秒・1 発ごとに B が 0.3 下がる
+        b_root = 2.4 - (dxB - 0.45)
+        b_wall = round(max(6.0, 2.4 - min(float(k["dx"]) for k in keysB if "dx" in k) + 1.3, b_root + push * n_small + 1.3), 2)   # 連射で下がった先に壁
+        wall_lock = b_wall
+        col = list(s.get("beam_color") or [255, 190, 70])
+        a_root = -2.0 + 3.9
+        t0 = _r(hl + 0.8)                                # 構えの abs キーは hl+0.8 以降(決めの clip の窓が hl+0.8 ごろまで続き、窓の中のキーは clip の位置になる。0.4 だと窓を出た直後に 2.2 を 2 コマで戻して飛んだ)
+        ts = [_r(t0 + 0.2 + gap_s * i) for i in range(n_small)]
+        t_c, t_big = _r(ts[-1] + 0.3), _r(ts[-1] + 0.9)  # 大玉: 0.6 秒溜めて投げる
+        t_hit = _r(t_big + 0.2)
+        ready_f = dict(hz=0.84, lean=0.2, fa=0.5, fe=1.5, ra=1.4, re=0.4, ht=0.0, fl=0.7, fk=0.45, rl=-0.5, rk=0.3, face="fight")   # 前の手を引き、後ろの手は前へ(投げた直後)
+        ready_r = dict(hz=0.84, lean=0.2, fa=1.4, fe=0.4, ra=0.5, re=1.5, ht=0.0, fl=0.7, fk=0.45, rl=-0.5, rk=0.3, face="fight")   # 逆
+        throw_f = dict(ready_r, lean=0.3, fa=1.55, fe=0.05)                                                                          # 前の手で投げ切る
+        throw_r = dict(ready_f, lean=0.3, ra=1.55, re=0.05)
+        keysA += [dict(t=_r(hl + 0.12), dx=5.0, hz=0.9, lean=0.15),
+                  dict(t=_r(hl + 0.24), dx=4.4, rz=0.3, hz=0.9, lean=-0.1, fl=0.6, fk=0.9, rl=-0.4, rk=0.6),
+                  dict(t=t0, dx=3.9, **ready_f)]
+        for i, ti in enumerate(ts):                       # 左右交互: 2 コマで投げ切り、次の発射までに逆の構えへ戻る
+            thr, rdy = (throw_f, ready_f) if i % 2 == 0 else (throw_r, ready_r)
+            keysA += [dict(t=_r(ti - 0.07), dx=3.9, **dict(rdy, hz=0.82)), dict(t=ti, dx=3.95, **thr)]
+            bx = _r(b_root + push * i)                    # この玉が当たるときの B の根元
+            fx_proj.append(dict(start=ti, end=_r(ti + 0.12), x0=_r(a_root + 0.8), z0=1.4, x1=_r(bx - 0.15), z1=1.25, r=0.22, color=col))
+            hits += [dict(tau=ti, hold=0.0, kind="throw", by="A", pos=[_r(a_root + 0.8), 1.4]),
+                     dict(tau=_r(ti + 0.12), hold=0.03, kind="rapid", by="A", pos=[_r(bx - 0.15), 1.25])]   # hit にすると接触合わせの対象になり A が 1.2 飛んだ。rapid は対象外(連打乱舞と同じ)
+            keysB += [dict(t=_r(ti + 0.1), dx=_r(2.4 - bx), lean=-0.3, hz=0.86, fa=1.0, fe=2.2, ra=1.0, re=2.2, ht=-0.3, face="pain"),               # 腕で受ける
+                      dict(t=_r(ti + 0.16), dx=_r(2.4 - bx - push * 0.7), lean=-0.55, hz=0.84, fa=1.1, fe=2.0, ra=1.1, re=2.0, ht=-0.5, face="pain")]   # 押される
+        big_charge = dict(hz=0.76, lean=0.1, fa=1.3, fe=1.2, ra=1.3, re=1.2, ht=0.05, fl=0.6, fk=0.5, rl=-0.5, rk=0.35, face="fight")     # 両手を前で合わせて玉を育てる
+        big_throw = dict(hz=0.82, lean=0.42, fa=1.6, fe=0.05, ra=1.55, re=0.08, ht=-0.05, fl=0.95, fk=0.45, rl=-0.6, rk=0.2, face="fight")
+        keysA += [dict(t=_r(ts[-1] + 0.12), dx=3.9, **ready_r),
+                  dict(t=t_c, dx=3.8, **big_charge),
+                  dict(t=_r(t_big - 0.08), dx=3.7, **dict(big_charge, hz=0.7, lean=-0.05)),                                                # 予備動作: 引く
+                  dict(t=t_big, dx=4.0, **big_throw),                                                                                      # 2 コマで突き出す
+                  dict(t=_r(t_big + 0.3), dx=3.95, **dict(big_throw, lean=0.3, hz=0.84)),
+                  dict(t=_r(t_hit + 0.9), dx=3.95, hz=0.88, lean=0.1, fa=0.9, fe=1.4, ra=0.7, re=1.5, ht=0.0, face="fight")]
+        b_last = _r(b_root + push * n_small)
+        keysB += [dict(t=_r(t_hit - 0.04), dx=_r(2.4 - b_last), lean=-0.25, hz=0.85, fa=0.9, fe=1.6, ra=0.8, re=1.6, ht=-0.2, face="pain"),   # 腕を下げかけた所に大玉
+                  dict(t=_r(t_hit + 0.05), dx=_r(2.4 - b_last - 0.1), lean=-0.7, hz=0.9, fa=-0.9, ra=-0.9, fe=0.3, re=0.3, ht=-0.8, face="pain"),
+                  dict(t=_r(t_hit + 0.2), dx=_r(2.4 - (b_wall - 1.4)), rz=1.3, roll=1.0, hz=0.9, fa=-1.1, ra=-0.9, fe=0.2, re=0.3, fl=0.9, fk=0.4, rl=0.2, rk=0.3, lean=-0.3, ht=-0.6, face="pain"),
+                  dict(t=_r(t_hit + 0.34), dx=_r(2.4 - (b_wall - 0.3)), rz=1.35, roll=0.3, hz=0.9, fa=-0.9, ra=-0.9, fe=0.3, re=0.3, fl=0.6, fk=0.3, rl=-0.3, rk=0.4, lean=-0.35, ht=-0.7, face="pain"),
+                  dict(t=_r(t_hit + 0.55), dx=_r(2.4 - (b_wall - 0.3)), rz=1.25, roll=0.35, hz=0.9, lean=-0.3, face="pain"),
+                  dict(t=_r(t_hit + 0.85), dx=_r(2.4 - (b_wall - 0.45)), rz=0.55, roll=1.2, hz=0.9, lean=0.0, fa=0.2, ra=0.2, face="pain"),
+                  dict(t=_r(t_hit + 1.05), dx=_r(2.4 - (b_wall - 0.5)), rz=0.21, roll=1.57, hz=0.9, fa=0.4, ra=0.4, fl=0.0, fk=0.0, rl=0.0, rk=0.0, face="ko")]
+        fx_orbs.append(dict(start=t_c, end=t_big, who="A", r0=0.15, r1=0.55, color=col))
+        fx_proj.append(dict(start=t_big, end=t_hit, x0=_r(a_root + 0.9), z0=1.45, x1=_r(b_last - 0.15), z1=1.25, r=0.55, color=col))
+        charge.append(dict(start=t_c, end=t_big, who="A", color=col))
+        hits += [dict(tau=_r(hl + 0.5), hold=0.0, kind="pose"),
+                 dict(tau=t_big, hold=0.0, kind="throw", by="A", pos=[_r(a_root + 0.9), 1.45]),
+                 dict(tau=t_hit, hold=0.1, kind="blast", by="A", pos=[_r(b_last - 0.15), 1.25]),
+                 dict(tau=_r(t_hit + 0.34), hold=0.06, kind="wall", pos=[b_wall, 1.6])]   # 大玉の着弾に閃光は足さない(実測 42/分で上限 41 を超えた。壁の反転コマで足りる)
+        slow.append(dict(start=_r(t_big - 0.04), end=_r(t_hit + 0.1), rate=0.55))
+        shots += [dict(t=_r(t0 - 0.1), follow="mid", scale=5.4, yaw=-8.0, pitch=4.0, lens=40.0, target_z=1.2),                         # 連射: 2 人と玉の軌道が入る引き
+                  dict(t=_r(t_c - 0.05), follow="A", scale=[[_r(t_c - 0.05), 3.8], [t_big, 3.3]], yaw=[[_r(t_c - 0.05), -28.0], [t_big, -10.0]], pitch=6.0, lens=32.0, target_z=1.2, lag=0.25),   # 大玉の溜め: 寄る
+                  dict(t=t_big, follow="mid", scale=5.8, yaw=4.0, pitch=3.0, lens=44.0, target_z=1.3),
+                  dict(t=_r(t_hit + 0.95), follow="A", scale=[[_r(t_hit + 0.95), 4.6], [_r(t_hit + 2.4), 5.6]], yaw=[[_r(t_hit + 0.95), 30.0], [_r(t_hit + 2.4), -15.0]], pitch=8.0, lens=40.0, target_z=0.9)]
+        puffs.append(dict(tau=_r(t_hit + 1.08), kind="land2", pos=[_r(b_wall - 0.5), 0.0]))
+        t_end = t_hit + 1.1
+        ko_t = t_hit + 1.05
     elif abeam:
         b_wall = round(max(6.0, 2.4 - min(float(k["dx"]) for k in keysB if "dx" in k) + 1.3, 2.4 - (dxB - 0.45) + 1.3), 2)
         wall_lock = b_wall
@@ -1222,10 +1282,59 @@ def build_fight(spec: dict) -> dict:
         puffs.append(dict(tau=_r(hl + 0.85), kind="land2", pos=[5.4, 0.0]))
         t_end = hl + 1.1
         ko_t = hl + 0.8
-    if beam or blast or wave or bclash or barrage or swave or iai or sthrow or blink or meteor or abeam:   # 技の位置は台本どおり: 位置合わせの平行移動(接触で決めた clip の終点と台本の差)を受けない(連打乱舞で A が 1.55・B が 1.05 ずれて重なり、飛ぶ斬撃では三日月が A の後ろから出た)
+    if beam or blast or kbar or wave or bclash or barrage or swave or iai or sthrow or blink or meteor or abeam:   # 技の位置は台本どおり: 位置合わせの平行移動(接触で決めた clip の終点と台本の差)を受けない(連打乱舞で A が 1.55・B が 1.05 ずれて重なり、飛ぶ斬撃では三日月が A の後ろから出た)
         for k in keysA + keysB:
             if k["t"] >= hl + 0.3 - 1e-6 and "dx" in k:   # 0.3 秒後から。それまでのキーは plan が平行移動を線形に 0 へ戻す
                 k["abs"] = True
+    keysD: List[dict] = []
+    if s["second_enemy"] is not None:                   # 2 対 1: 奥で控えていた D が、B の決着の直後に走り込む → A が気弾で壁へ。D は clip を持たず全部キー(位置合わせを受けない)
+        se = s["second_enemy"]
+        b_far0 = max(2.4 - float(k["dx"]) for k in keysB if "dx" in k)
+        wall_d = wall_lock if wall_lock else (6.0 if kick else round(max(6.0, b_far0 + 1.3), 2))
+        wall_lock = wall_d
+        x_d0 = _r(wall_d - 0.7)                           # 控えの位置(壁の手前、奥行き y をずらす)
+        a_last0 = next(k["dx"] for k in reversed(keysA) if "dx" in k)
+        a_root0 = -2.0 + float(a_last0)
+        x_stop = _r(a_root0 + 1.8)                        # D が止まる位置(A の 1.8 先)
+        t1 = _r(ko_t + 0.35); t2 = _r(t1 + 0.55); t_th = _r(t2 + 0.25); t_h = _r(t_th + 0.12)
+        col_d = list(s.get("beam_color") or [255, 190, 70])
+        dstand = dict(dx=0.0, hz=0.85, lean=0.05, run=0.0, fa=1.0, fe=1.8, ra=1.0, re=1.8, ht=0.0, face="fight")
+        run_d = x_d0 - x_stop
+        keysD += [dict(t=0.0, **dstand), dict(t=_r(ko_t + 0.1), **dstand),
+                  dict(t=_r(t1 - 0.1), dx=-0.1, hz=0.78, lean=0.35, fa=0.4, fe=1.6, ra=1.2, re=1.2, ht=0.1, face="fight"),                       # 身をかがめる(予備動作)
+                  dict(t=_r(t1 + 0.12), dx=_r(run_d * 0.25), hz=0.82, lean=0.3, run=1.0, fa=1.4, fe=1.2, ra=-0.3, re=1.4, fl=0.9, fk=0.8, rl=-0.7, rk=0.2, face="fight"),   # 走り(腕と脚を大きく交互に)
+                  dict(t=_r(t1 + 0.26), dx=_r(run_d * 0.5), hz=0.82, lean=0.3, run=1.0, fa=-0.3, fe=1.4, ra=1.4, re=1.2, fl=-0.7, fk=0.2, rl=0.9, rk=0.8, face="fight"),
+                  dict(t=_r(t1 + 0.4), dx=_r(run_d * 0.78), hz=0.82, lean=0.3, run=1.0, fa=1.4, fe=1.2, ra=-0.3, re=1.4, fl=0.9, fk=0.8, rl=-0.7, rk=0.2, face="fight"),
+                  dict(t=t2, dx=_r(run_d), hz=0.8, lean=-0.15, run=0.0, fa=0.2, fe=1.7, ra=1.0, re=1.6, ht=-0.1, fl=0.6, fk=0.5, rl=-0.5, rk=0.3, face="fight"),         # 止まって拳を引く(run は 0 に戻す: 戻さないと最後まで走りの周期が乗り、倒れたまま脚が回って地面に沈んだ)
+                  dict(t=_r(t_h - 0.03), dx=_r(run_d + 0.1), hz=0.84, lean=0.35, fa=1.55, fe=0.05, ra=0.3, re=1.4, ht=0.0, face="fight"),                            # 殴りかかった所に
+                  dict(t=_r(t_h + 0.05), dx=_r(run_d), hz=0.9, lean=-0.7, fa=-0.9, ra=-0.9, fe=0.3, re=0.3, ht=-0.8, face="pain"),                                   # 気弾を受ける
+                  dict(t=_r(t_h + 0.2), dx=_r(x_d0 - (wall_d - 1.4)), rz=1.3, roll=1.0, hz=0.9, fa=-1.1, ra=-0.9, fe=0.2, re=0.3, fl=0.9, fk=0.4, rl=0.2, rk=0.3, lean=-0.3, ht=-0.6, face="pain"),
+                  dict(t=_r(t_h + 0.34), dx=_r(x_d0 - (wall_d - 0.3)), rz=1.35, roll=0.3, hz=0.9, fa=-0.9, ra=-0.9, fe=0.3, re=0.3, fl=0.6, fk=0.3, rl=-0.3, rk=0.4, lean=-0.35, ht=-0.7, face="pain"),
+                  dict(t=_r(t_h + 0.55), dx=_r(x_d0 - (wall_d - 0.3)), rz=1.25, roll=0.35, hz=0.9, lean=-0.3, face="pain"),
+                  dict(t=_r(t_h + 0.85), dx=_r(x_d0 - (wall_d - 0.7)), rz=0.55, roll=1.2, hz=0.9, lean=0.0, fa=0.2, ra=0.2, face="pain"),
+                  dict(t=_r(t_h + 1.05), dx=_r(x_d0 - (wall_d - 1.3)), rz=0.24, roll=1.57, hz=0.9, fa=0.4, ra=0.4, fl=0.0, fk=0.0, rl=0.0, rk=0.0, face="pain"),
+                  dict(t=_r(t_h + 1.3), dx=_r(x_d0 - (wall_d - 1.7)), rz=0.21, roll=1.57, hz=0.9, fa=0.4, ra=0.4, fl=0.0, fk=0.0, rl=0.0, rk=0.0, face="ko")]   # ずり落ちて 1.7 まで転がる: B(壁−0.5)と離す(0.9 だと奥行きをずらしても画面では重なって見えた)
+        raise_hand = dict(hz=0.84, lean=-0.1, fa=2.6, fe=0.3, ra=0.4, re=1.3, ht=-0.1, fl=0.5, fk=0.4, rl=-0.45, rk=0.3, face="fight")
+        throw_pose = dict(hz=0.8, lean=0.4, fa=1.55, fe=0.1, ra=-0.3, re=1.0, ht=0.0, fl=0.95, fk=0.5, rl=-0.6, rk=0.2, face="fight")
+        keysA += [dict(t=_r(ko_t + 0.2), dx=a_last0, abs=True, hz=0.88, lean=0.1, fa=0.9, fe=1.5, ra=0.7, re=1.6, ht=0.1, face="fight"),           # 気づく
+                  dict(t=_r(t1 + 0.15), dx=a_last0, abs=True, **raise_hand),
+                  dict(t=_r(t_th - 0.08), dx=a_last0, abs=True, **dict(raise_hand, fa=2.9, lean=-0.2, hz=0.8)),
+                  dict(t=t_th, dx=_r(a_last0 + 0.15), abs=True, **throw_pose),
+                  dict(t=_r(t_th + 0.3), dx=_r(a_last0 + 0.15), abs=True, **dict(throw_pose, lean=0.3, hz=0.84))]
+        fx_orbs.append(dict(start=_r(t1 + 0.15), end=t_th, who="A", r0=0.14, r1=0.42, color=col_d))
+        fx_proj.append(dict(start=t_th, end=t_h, x0=_r(a_root0 + 0.9), z0=1.5, x1=_r(x_stop - 0.15), z1=1.25, r=0.42, color=col_d))
+        charge.append(dict(start=_r(t1 + 0.15), end=t_th, who="A", color=col_d))
+        hits += [dict(tau=t_th, hold=0.0, kind="throw", by="A", pos=[_r(a_root0 + 0.9), 1.5]),
+                 dict(tau=t_h, hold=0.1, kind="blast", by="A", pos=[_r(x_stop - 0.15), 1.25]),
+                 dict(tau=_r(t_h + 0.34), hold=0.06, kind="wall", pos=[wall_d, 1.6])]
+        flashes.append(t_h)
+        slow.append(dict(start=_r(t_th - 0.04), end=_r(t_h + 0.1), rate=0.55))
+        shots += [dict(t=_r(t1 - 0.15), follow="mid", scale=6.2, yaw=-6.0, pitch=4.0, lens=40.0, target_z=1.1),                              # 走り込みは 2 人と倒れた B が入る引き
+                  dict(t=t_th, follow="mid", scale=5.6, yaw=4.0, pitch=3.0, lens=44.0, target_z=1.3),
+                  dict(t=_r(t_h + 0.95), follow="A", scale=[[_r(t_h + 0.95), 4.6], [_r(t_h + 2.4), 5.6]], yaw=[[_r(t_h + 0.95), 30.0], [_r(t_h + 2.4), -15.0]], pitch=8.0, lens=40.0, target_z=0.9)]
+        puffs.append(dict(tau=_r(t_h + 1.08), kind="land2", pos=[_r(wall_d - 0.9), 0.0]))
+        t_end = t_h + 1.35
+        ko_t = t_h + 1.3
     tail = t_end + 0.3
     end = _r(tail + 0.6)
     # 台詞が収まらないときは、終わりを延ばす(最後の台詞の終わり+0.3秒)。延ばした間は、勝者が立ち・敗者が倒れたまま
@@ -1290,6 +1399,11 @@ def build_fight(spec: dict) -> dict:
     marks["counter"] = ts[0] + 0.28
     caps = _layout_captions(s["lines"], marks, end, float(s["tempo"])) if s["captions"] else []
     keys = dict(A=sorted(keysA, key=lambda k: k["t"]), B=sorted(keysB, key=lambda k: k["t"]))
+    if keysD:
+        se = s["second_enemy"]
+        actors["D"] = dict(color=se.get("color", [0.8, 0.35, 0.9]), scale=float(se.get("scale", 1.0)), base_x=x_d0, y=float(se.get("y", 0.7)), facing=-1)
+        keysD.append(dict(t=end, dx=keysD[-1]["dx"], rz=0.21, roll=1.57, hz=0.9, face="ko"))
+        keys["D"] = keysD
     if s["ally"] is not None:                           # 味方(空の {} でも既定で立てる): 戦いの間は不安げに見守り、決着で万歳(か、うなだれる)。奥行き y をずらして置く
         al = s["ally"]
         actors["C"] = dict(color=al.get("color", [0.95, 0.8, 0.2]), scale=al.get("scale", 0.8), base_x=al.get("x", 4.4), y=al.get("y", 1.6), facing=al.get("facing", -1))

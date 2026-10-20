@@ -228,6 +228,39 @@ def test_blast_finisher_builds():
     planmod.validate_scene(sc)
 
 
+def test_ki_barrage_builds_five_small_then_big():
+    sc = fight.build_fight(dict(weapon="none", kick=False, hits=2, finisher="ki_barrage"))
+    pj = sc["fx"]["projectiles"]
+    small = [p for p in pj if p["r"] < 0.3]
+    big = [p for p in pj if p["r"] >= 0.5]
+    assert len(small) == 5 and len(big) == 1 and big[0]["start"] > small[-1]["end"]
+    gaps = [b["start"] - a["start"] for a, b in zip(small, small[1:])]
+    assert all(abs(g - 0.16) < 1e-6 for g in gaps)                                   # 0.16 秒間隔
+    assert all(b["x1"] > a["x1"] for a, b in zip(small, small[1:]))                  # 当たるたびに B が下がる
+    kinds = [h["kind"] for h in sc["hits"]]
+    assert kinds.count("throw") == 6 and "blast" in kinds and "wall" in kinds
+    assert sc["stage"]["wall_x"] >= big[0]["x1"] + 1.0                                # 壁は大玉が当たる先
+    planmod.validate_scene(sc)
+
+
+def test_second_enemy_rushes_after_ko_and_flies_to_wall():
+    sc = fight.build_fight(dict(weapon="none", kick=False, hits=2, finisher="launch_kick", second_enemy={}))
+    assert "D" in sc["actors"] and sc["actors"]["D"]["facing"] == -1
+    kd = sc["keys"]["D"]
+    assert kd == sorted(kd, key=lambda k: k["t"]) and kd[-1]["face"] == "ko"
+    run = [k for k in kd if k.get("run")]
+    assert len(run) == 3 and all(k["dx"] > 0 for k in run)                              # A の方(左)へ走る
+    blasts = [h for h in sc["hits"] if h["kind"] == "blast"]
+    walls = [h for h in sc["hits"] if h["kind"] == "wall"]
+    assert len(blasts) == 1 and len(walls) >= 1 and walls[-1]["tau"] > blasts[0]["tau"]
+    assert sc["actors"]["D"]["base_x"] < sc["stage"]["wall_x"]                            # 控えの位置は壁の手前
+    t_ko_b = max(k["t"] for k in sc["keys"]["B"] if k.get("face") == "ko" and k["t"] < sc["tau_end"] - 1.0)
+    assert blasts[0]["tau"] > t_ko_b                                                     # B の決着のあとに D
+    win = [k for k in sc["keys"]["A"] if k.get("face") == "win"]
+    assert win and min(k["t"] for k in win) > blasts[0]["tau"]                           # 勝ち名乗りは D を倒したあと
+    planmod.validate_scene(sc)
+
+
 def test_wave_finisher_builds():
     sc = fight.build_fight(dict(weapon="none", kick=False, hits=2, finisher="wave"))
     kinds = [h["kind"] for h in sc["hits"]]
