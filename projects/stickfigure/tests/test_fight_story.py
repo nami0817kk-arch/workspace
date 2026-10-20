@@ -275,6 +275,18 @@ def test_second_enemy_slash_when_armed():
     planmod.validate_scene(sc2)
 
 
+def test_opening_barrier_builds():
+    sc = fight.build_fight(dict(weapon="none", kick=False, hits=2, opening="barrier", finisher="none"))
+    sh = sc["fx"]["shields"]
+    assert len(sh) == 1 and sh[0]["who"] == "A" and sh[0]["start"] < sh[0]["hit_at"] < sh[0]["end"]
+    pj = sc["fx"]["projectiles"][0]
+    assert pj["x1"] < pj["x0"] and abs(pj["end"] - sh[0]["hit_at"]) < 1e-6                 # B の玉が盾の面で止まる
+    kinds = [h["kind"] for h in sc["hits"]]
+    assert kinds.count("throw") == 1 and "blast" in kinds
+    assert "barrier" in fight.OPENING_POOL
+    planmod.validate_scene(sc)
+
+
 def test_wave_finisher_builds():
     sc = fight.build_fight(dict(weapon="none", kick=False, hits=2, finisher="wave"))
     kinds = [h["kind"] for h in sc["hits"]]

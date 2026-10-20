@@ -438,6 +438,16 @@ def compose_frame(plan: dict, f: int, figs: Dict[int, Image.Image], stages: Opti
                 base.alpha_composite(look.crescent(px_, py_, pj["r"] * camera.px_per_unit(cam), f, px_ - qx, tuple(pj.get("color", (170, 245, 255)))))
             else:
                 base.alpha_composite(look.ki_ball(px_, py_, pj["r"] * camera.px_per_unit(cam), f, tuple(pj.get("color", (255, 190, 70))), trail=(px_ - qx, py_ - qy)))
+    for sh in fx.get("shields", []):           # 気の盾: who の前の手の少し先に立つ光の円盤。hit_at 前後 0.15 秒は白く光ってひびが走る
+        if sh["start"] <= tau <= sh["end"]:
+            who_s = sh.get("who", "A")
+            a_s = plan["actors"][who_s]
+            s_s = 1 if a_s.get("facing", 1) >= 0 else -1
+            hx, hz = anime.effector_world(plan, who_s, f)["hand"]
+            px_, py_ = to_px(hx + s_s * float(sh.get("ahead", 0.3)), float(sh.get("z", hz)), cam)
+            q = (tau - sh["start"]) / max(1e-6, sh["end"] - sh["start"])
+            hit = max(0.0, 1.0 - abs(tau - float(sh["hit_at"])) / 0.15) if "hit_at" in sh else 0.0
+            base.alpha_composite(look.shield(px_, py_, float(sh.get("r", 0.9)) * camera.px_per_unit(cam), f, q, tuple(sh.get("color", (120, 230, 255))), hit))
     # 顔(目)は描かない(2026-10-19 ユーザー指示)
     for e in plan["events"]:                   # 特大の効果: 斬撃の弧・衝撃の輪
         age = f - e["frame"]

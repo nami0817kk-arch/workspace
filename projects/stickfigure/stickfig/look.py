@@ -187,6 +187,44 @@ def crescent(cx: float, cy: float, r: float, f: int, dir_x: float, col=(170, 245
     return ov
 
 
+def shield(cx: float, cy: float, r: float, f: int, q: float, col=(120, 230, 255), hit: float = 0.0) -> Image.Image:
+    """気の盾: 手の先に立つ縦長の光の円盤。q=0→1 で開く(3 コマで広がる)、縁は明るく、中は六角の網目が薄く走り、粒が回る。
+    hit=0→1 は受けた直後(白く光り、ひびの線が走る)。"""
+    ov = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    if r < 1:
+        return ov
+    rnd = random.Random(f * 11 + 3)
+    k = min(1.0, q / 0.1) if q < 0.9 else max(0.0, (1.0 - q) / 0.1)   # 開く 10%・閉じる 10%
+    rx, ry = r * 0.55 * k, r * k
+    if rx < 1:
+        return ov
+    glow = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    g = ImageDraw.Draw(glow)
+    g.ellipse([cx - rx * 1.4, cy - ry * 1.25, cx + rx * 1.4, cy + ry * 1.25], fill=(*col, 110 + int(100 * hit)))
+    ov.alpha_composite(glow.filter(ImageFilter.GaussianBlur(max(4, int(r * 0.25)))))
+    d = ImageDraw.Draw(ov)
+    d.ellipse([cx - rx, cy - ry, cx + rx, cy + ry], fill=(*col, 70 + int(120 * hit)), outline=(255, 255, 255, 230), width=max(2, int(r * 0.06)))
+    step = max(6, int(r * 0.22))                                                # 六角の網目(横線+斜め線を薄く)
+    for yy in range(int(cy - ry), int(cy + ry), step):
+        dy = (yy - cy) / ry
+        w = rx * math.sqrt(max(0.0, 1 - dy * dy))
+        d.line([cx - w, yy, cx + w, yy], fill=(255, 255, 255, 45), width=1)
+    for i in range(10):                                                         # 回る粒
+        a = f * 0.25 + i * 0.63
+        px_, py_ = cx + rx * 1.05 * math.cos(a), cy + ry * 1.05 * math.sin(a)
+        d.ellipse([px_ - 2, py_ - 2, px_ + 2, py_ + 2], fill=(255, 255, 255, 200))
+    if hit > 0:                                                                 # ひび: 当たった所から放射状の短い折れ線
+        for i in range(7):
+            a = rnd.uniform(0, 2 * math.pi)
+            x0, y0 = cx, cy
+            for j in range(3):
+                a += rnd.uniform(-0.5, 0.5)
+                x1, y1 = x0 + math.cos(a) * rx * 0.35, y0 + math.sin(a) * ry * 0.35
+                d.line([x0, y0, x1, y1], fill=(255, 255, 255, int(220 * hit)), width=max(1, int(r * 0.03)))
+                x0, y0 = x1, y1
+    return ov
+
+
 def ki_ball(cx: float, cy: float, r: float, f: int, col=(255, 190, 70), trail: Tuple[float, float] = None) -> Image.Image:
     """気の玉: 白い芯+色の光、周りに回る粒。trail=(dx, dy)(画面の進行方向)があれば、後ろに流れる筋。"""
     ov = Image.new("RGBA", (W, H), (0, 0, 0, 0))
