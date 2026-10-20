@@ -206,6 +206,7 @@ python scripts/make_gallery.py 09_01:2.4 135_07_s1:3.6   # clip を順に再生�
 - **`finisher: random` / `opening: random`** は `FINISHER_POOL`(武器ごと。launch_kick は kick の clip が要るので素手だけ、長い武器は相手の拳が届かない型を除く)と `OPENING_POOL`(走り 2・技 6・名乗り)から seed で選ぶ。**新しい技を足したら池にも足す**(物語の決戦は random なので、足した技が自動で回るようになる)。series の `_first_passing_seed` が点検に落ちる seed を避ける
 - **物語の型(`story.py`)での技の出し方**: 決戦は `finisher: random`(全技から)、kick なしの場面は `opening: random`、稽古(師匠との組手・修行)は `opening: lock`(鍔迫り合い)。敗北回は A/B の色を入れ替えて主役を B に置く(主役が負ける見せ方はこれで済んでいる。`winner` の仕組みは作らない)
 - **接触の許容(`tol`)は相手の体格で広げる**: 中心まで遠くなるので `0.26 + 0.6×(b_scale−1)`。出だしの飛び蹴りだけ固定だったので、守る戦いの決戦(b_scale 1.25)で 0.29 となり点検に落ちた(量産 series10 で発見)。命中を足すときは必ずこの式で
+- `episode` は fight 指定の場面が点検に落ちるとき seed を +1 ずつ(6 回まで)ずらして通るものにする(`episode._passing_variant`)。random の技・連打の clip の組み合わせが seed で変わるので、たいてい数回で通る。ずらしたら「seed N は点検に落ちるので N+k にした」と出す。それでも落ちる場面は台本側の不具合なので直す
 - 量産の通し確認は `series --n 3 --build --compile`(約 20 分)。落ちた話だけ `episode out/<series>/specs/<ep>.yaml --out out/<series>/<ep>` で作り直し、`series --compile-only` でまとめ直す
 - 技を足すときの型: fight の finisher 分岐(キー・hits・fx・shots・ko_t)+ plan の SHAKE + anime の SFX/SFX_SIZE/ZOOM_PUNCH/ROLL_SHAKE + compose の BIG/BURST_FRAMES と描画 + sfx の音 + テスト
 
