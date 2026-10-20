@@ -635,7 +635,7 @@ def build_fight(spec: dict) -> dict:
         hits += [dict(tau=_r(hl + 0.5), hold=0.0, kind="pose"),
                  dict(tau=_r(t_dash), hold=0.0, kind="vanish", by="A", pos=[_r(a_dx0 - 2.0), 1.0]),
                  dict(tau=_r(t_dash + 0.034), hold=0.0, kind="appear", by="A", pos=[_r(a_dx1 - 2.0), 1.0]),
-                 dict(tau=_r(t_cut), hold=0.12, kind="slash", by="A", pos=[_r(b_root), 1.3]),
+                 dict(tau=_r(t_cut), hold=0.12, kind="slash", pos=[_r(b_root), 1.3]),   # by は付けない: 被弾の押されは B の向き基準(−dx=右へ)で、右に抜けた A の方へ寄ってしまう。反応は上のキーで書いてある
                  dict(tau=_r(t_cut + 0.8), hold=0.04, kind="land2", pos=[_r(2.4 - (dxB - 0.55)), 0.0])]
         flashes.append(_r(t_cut))
         slow.append(dict(start=_r(t_dash - 0.03), end=_r(t_dash + 0.08), rate=0.5))
