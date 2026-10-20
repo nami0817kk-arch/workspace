@@ -661,6 +661,15 @@ class Game {
     player = player.copyWith(traits: Set.of(t));
   }
 
+  /// 天賦(才能の偏り)を書き換える。-2〜+2。
+  void adminSetGift(Ability a, int v) {
+    player = player.copyWith(
+        gifts: {...player.gifts, a: v.clamp(giftMin, giftMax)});
+  }
+
+  /// 覚醒済みの印を書き換える(もう一度覚醒を試したいとき)。
+  void adminSetAwakened(bool v) => awakened = v;
+
   void adminSetAbility(Ability a, int v) {
     if (!abilitiesOf(player.role).contains(a)) return;
     player =

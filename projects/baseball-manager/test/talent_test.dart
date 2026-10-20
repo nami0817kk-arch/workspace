@@ -10,6 +10,7 @@ import 'package:baseball_manager/game/player.dart';
 import 'package:baseball_manager/game/snapshot.dart';
 import 'package:baseball_manager/game/talent.dart';
 import 'package:baseball_manager/game/traits.dart';
+import 'package:baseball_manager/ui/labels.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 PlayerSnapshot _snapshot({
@@ -242,6 +243,30 @@ void main() {
             lessThanOrEqualTo(maxRareTraits));
       }
       expect(awakenedCount, greaterThan(0));
+    });
+  });
+
+  group('生まれ持った才能の知らせ', () {
+    test('レア特性・天賦+2・不得手(-2)があるときだけ出る', () {
+      final plain = Player(
+          name: 't', role: Role.batter, age: 6, potential: 50, gifts: {
+        Ability.contact: 1,
+        Ability.power: -1,
+      });
+      expect(birthTalentNotes(plain), isEmpty);
+      final special = Player(
+          name: 't',
+          role: Role.batter,
+          age: 6,
+          potential: 50,
+          traits: {Trait.monster},
+          gifts: {Ability.contact: 2, Ability.power: -2, Ability.stuff: 2});
+      final n = birthTalentNotes(special);
+      expect(n.length, 3);
+      expect(n[0], contains('怪物'));
+      expect(n[1], contains('ミート'));
+      expect(n[1], isNot(contains('球威'))); // 打者に投手の能力は出ない
+      expect(n[2], contains('パワー'));
     });
   });
 

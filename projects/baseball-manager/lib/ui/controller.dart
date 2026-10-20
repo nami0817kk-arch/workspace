@@ -574,7 +574,7 @@ class GameController extends ChangeNotifier {
         name: name.trim().isEmpty ? '名無し' : name.trim(),
         role: role,
         rng: _rng);
-    recent = const [];
+    recent = birthTalentNotes(game!.player);
     focus = abilitiesOf(role).first;
     _commit();
   }

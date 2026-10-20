@@ -477,6 +477,22 @@ void _rankTests() {
     await t.drag(find.byKey(const Key('admin-tips')), const Offset(2000, 0));
     await t.pumpAndSettle();
     expect(c.game!.player.traits, contains(Trait.clutch));
+
+    // 天賦: スライダーで書き換えられ、レア特性も付けられる。覚醒済みの印も切り替えられる。
+    await t.ensureVisible(find.byKey(const Key('admin-gift-contact')));
+    await t.drag(
+        find.byKey(const Key('admin-gift-contact')), const Offset(2000, 0));
+    await t.pumpAndSettle();
+    expect(c.game!.player.gift(Ability.contact), 2);
+    await t.ensureVisible(find.byKey(const Key('admin-trait-monster')));
+    await t.tap(find.byKey(const Key('admin-trait-monster')));
+    await t.pumpAndSettle();
+    expect(c.game!.player.traits, contains(Trait.monster));
+    expect(c.game!.awakened, isFalse);
+    await t.ensureVisible(find.byKey(const Key('admin-awakened')));
+    await t.tap(find.byKey(const Key('admin-awakened')));
+    await t.pumpAndSettle();
+    expect(c.game!.awakened, isTrue);
   });
 
   testWidgets('管理者モードは覚えていて、7回タップでもう一度切れる', (t) async {
@@ -2116,6 +2132,8 @@ void _rankTests() {
     expect(find.text('発見した特性 2 / ${Trait.values.length}'), findsOneWidget);
     expect(find.text('怪物'), findsOneWidget);
     expect(find.text('???'), findsWidgets);
+    // 未発見のレア特性には、手に入れ方のヒントが出る
+    expect(find.textContaining('覚醒で手に入る'), findsWidgets);
     // 保存され、新しいコントローラーでも残る
     final c2 = GameController(rng: Random(1));
     await c2.loadSaved();

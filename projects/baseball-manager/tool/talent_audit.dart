@@ -9,7 +9,6 @@
 // ignore_for_file: avoid_print
 import 'dart:math';
 
-import 'package:baseball_manager/game/career.dart';
 import 'package:baseball_manager/game/game.dart';
 import 'package:baseball_manager/game/life.dart';
 import 'package:baseball_manager/game/path.dart';
