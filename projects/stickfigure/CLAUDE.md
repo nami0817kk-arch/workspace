@@ -190,7 +190,7 @@ python scripts/make_gallery.py 09_01:2.4 135_07_s1:3.6   # clip を順に再生�
 - **連打乱舞(`finisher: barrage`)**: 腰を落として構え、拳を 8 発 0.1 秒間隔で左右の腕を交互に(kind `rapid`: 小さな火花だけ、放射線・擬音・体の動き(body_drive)は無し。B は小刻みに揺れる)→ 大きく引いて(予備動作)大振り(`heel` を借りる: 重い音・大きな放射線・閃光・スロー)→ 壁まで吹き飛ばす。見本 `scenes/fight_barrage.yaml`
 - **飛ぶ斬撃(`finisher: slash_wave`、剣・短剣のとき)**: 跳んで下がり、両手で剣を頭上に振りかぶって 0.65 秒溜め(`fx.charge`)→ さらに後ろへ(予備動作)→ 2 コマで振り抜く(`throw`「シュッ」)→ 三日月の光(`fx.projectiles` の `shape: crescent`、`look.crescent`: 進行方向にふくらむ白い芯+色)が 0.22 秒で飛び → 当たって(`slash`)壁まで吹き飛ばす。見本 `scenes/fight_slash_wave.yaml`
 - 連打乱舞の間合いは 1.15・間隔 0.14 秒(0.9/0.1 だと 2 人が重なり、2 コマ撮りに飲まれて拳が見えなかった)
-- **技のキーには `abs: true`**(`_align_keys_to_clips` の平行移動を受けない): 接触で決めた clip のあとのキーは、clip の終点と台本の差だけ平行移動される(連打の継ぎ目のため)。技の位置(B の根元から 1.15 手前、など)を台本で決めたキーがこれを受けると、A が 1.55 前に出て 2 人が重なった(連打乱舞で発見)。技の A のキーには `abs` を付ける(連打乱舞で適用。他の技も重なりが見えたら同じ)
+- **技のキーには `abs: true`**(`_align_keys_to_clips` の平行移動を受けない): 接触で決めた clip のあとのキーは、clip の終点と台本の差だけ平行移動される(連打の継ぎ目のため)。技の位置(B の根元から 1.15 手前、など)を台本で決めたキーがこれを受けると、A が 1.55 前に出て 2 人が重なった(連打乱舞で発見)。決め技の技(beam/blast/wave/beam_clash/barrage/slash_wave)では、決めの 1 発の 0.1 秒後以降の A・B の dx 付きキー全部に `abs` を付ける(飛ぶ斬撃では三日月が A の後ろから出ていた)
 - 見本の seed は点検に通るものを選ぶ: 剣で seed 13 は 13_17_s2 が 2 回並び、2 回目の clip の継ぎ目で A が 1.4 飛ぶ(技とは無関係。`_first_passing_seed` が避ける種類)。組み合わせの見本 `scenes/fight_showcase.yaml`(瞬間移動→連打→撃ち合い)
 - 技を足すときの型: fight の finisher 分岐(キー・hits・fx・shots・ko_t)+ plan の SHAKE + anime の SFX/SFX_SIZE/ZOOM_PUNCH/ROLL_SHAKE + compose の BIG/BURST_FRAMES と描画 + sfx の音 + テスト
 
