@@ -1,0 +1,12 @@
+# サムネ試作用の最小メモ（動画は作らない）
+theme:
+  title: ブラジル代表ってどんなチーム？
+series: 代表チーム紹介
+thumbnail:
+  photo: assets/images/20261021_team_brazil/vini_wide2.jpg
+  line1: ブラジル代表
+  line2: W杯5回優勝
+  tags: [ブラジル]
+  photos:
+    - assets/images/20261021_team_brazil/jp_kubo/01.jpg
+    - assets/images/20261021_team_brazil/vini_crop.jpg

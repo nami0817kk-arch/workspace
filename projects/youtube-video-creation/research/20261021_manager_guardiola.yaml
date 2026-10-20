@@ -1,0 +1,18 @@
+# 試作用（サムネ案づくり専用。動画は作らない）。2026-10-21、新シリーズ「監督紹介」の最初の1本。
+# 数字の出どころ：英語版 Wikipedia「Pep Guardiola」（版 1380708377 を 2026-10-20 に取得）の Managerial statistics 表（2026-05-24 まで）と Honours 欄。
+# 合計（トップチームのみ＝バルサB 42試合を除く）の 1001試合・716勝155分130敗・勝率71.5% と、優勝41（14＋7＋20）は、表と Honours から自分で足した値。
+# **注意：Wikipedia と City の公式発表の引用（2026-05-22）では、グアルディオラは 2025-26 を最後にシティを退任している。現監督は Enzo Maresca。**
+date: 2026年10月21日
+format: news
+series: 監督紹介
+people:
+- グアルディオラ
+theme:
+  topic: グアルディオラ
+  title: グアルディオラ監督ってどんな人？
+thumbnail:
+  photo: assets/images/20261021_manager_guardiola/panel_02.jpg
+  line1: グアルディオラ、通算41冠
+  line2: シティ10年で20冠
+  tags:
+  - マンチェスター・シティ
