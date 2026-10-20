@@ -188,6 +188,8 @@ python scripts/make_gallery.py 09_01:2.4 135_07_s1:3.6   # clip を順に再生�
 - **`snaps: [{who, t0, t1, dx}]`(plan)**: 区間で位置を固定する。キーで 1 コマの飛びを書いても PCHIP の先回りとバネで 3 コマに伸びるので、消えるまでと現れた直後を固定して 1 コマにする
 - **空中コンボ(`finisher: air_combo`)**: 打ち上げ斬りのあと、空中で引く(予備動作)→拳→引く→後ろの手で殴る、の 2 発を 0.18 秒間隔で追加し(B は空中で小さく浮き直す)、上に抜けて叩きつけ。launch_slash の叩きつけ以降を `ex`=0.5 秒遅らせる形で実装。A の空中の位置は B の根元の 0.9 手前(dx 6.55。6.1 だと 1.35 離れて届かなかった)。見本 `scenes/fight_air.yaml`
 - **連打乱舞(`finisher: barrage`)**: 腰を落として構え、拳を 8 発 0.1 秒間隔で左右の腕を交互に(kind `rapid`: 小さな火花だけ、放射線・擬音・体の動き(body_drive)は無し。B は小刻みに揺れる)→ 大きく引いて(予備動作)大振り(`heel` を借りる: 重い音・大きな放射線・閃光・スロー)→ 壁まで吹き飛ばす。見本 `scenes/fight_barrage.yaml`
+- **飛ぶ斬撃(`finisher: slash_wave`、剣・短剣のとき)**: 跳んで下がり、両手で剣を頭上に振りかぶって 0.65 秒溜め(`fx.charge`)→ さらに後ろへ(予備動作)→ 2 コマで振り抜く(`throw`「シュッ」)→ 三日月の光(`fx.projectiles` の `shape: crescent`、`look.crescent`: 進行方向にふくらむ白い芯+色)が 0.22 秒で飛び → 当たって(`slash`)壁まで吹き飛ばす。見本 `scenes/fight_slash_wave.yaml`
+- 連打乱舞の間合いは 1.15・間隔 0.14 秒(0.9/0.1 だと 2 人が重なり、2 コマ撮りに飲まれて拳が見えなかった)
 - 見本の seed は点検に通るものを選ぶ: 剣で seed 13 は 13_17_s2 が 2 回並び、2 回目の clip の継ぎ目で A が 1.4 飛ぶ(技とは無関係。`_first_passing_seed` が避ける種類)。組み合わせの見本 `scenes/fight_showcase.yaml`(瞬間移動→連打→撃ち合い)
 - 技を足すときの型: fight の finisher 分岐(キー・hits・fx・shots・ko_t)+ plan の SHAKE + anime の SFX/SFX_SIZE/ZOOM_PUNCH/ROLL_SHAKE + compose の BIG/BURST_FRAMES と描画 + sfx の音 + テスト
 
