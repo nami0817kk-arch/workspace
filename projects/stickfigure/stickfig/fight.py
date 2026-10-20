@@ -285,7 +285,7 @@ def build_fight(spec: dict) -> dict:
         keysA.append(dict(t=_r(ta), dx=a_dx, hz=0.9))
         if open_lock:                                    # 鍔迫り合い: 0.6〜1.9 走り込む(B も一歩出る)→ 1.9 剣を合わせる(clash)→ 2.45 まで押し合い(火花)→ 2.5 押し勝って B がよろける → 2.7 A が跳び退いて間合いへ
             clipsA[0].update(end=1.9)
-            a_lock = 5.1                                 # A の根元 3.1(B の根元 3.8 の 0.7 手前)
+            a_lock = 4.65                                # A の根元 2.65(B の根元 3.8 の 1.15 手前。0.7 だと 2 人が重なって見えた)
             press = dict(hz=0.78, lean=0.35, fa=1.5, fe=0.6, ra=1.3, re=0.8, ht=0.05, fl=1.0, fk=0.6, rl=-0.6, rk=0.2, face="fight")        # 剣を前で合わせて押す
             keysA += [dict(t=1.9, dx=a_lock, **press),
                       dict(t=2.1, dx=_r(a_lock + 0.05), **dict(press, lean=0.42, hz=0.76)),
@@ -293,13 +293,14 @@ def build_fight(spec: dict) -> dict:
                       dict(t=2.45, dx=_r(a_lock + 0.1), **dict(press, lean=0.45, hz=0.74)),
                       dict(t=2.55, dx=_r(a_lock + 0.3), **dict(press, lean=0.55, hz=0.8, fa=1.7, fe=0.2)),   # 押し勝って踏み込む
                       dict(t=2.7, dx=a_dx, hz=0.9, lean=0.05, fa=0.9, fe=1.4, ra=0.7, re=1.5)]           # 跳び退いて間合いを取り直す
+            press_b = dict(hz=0.8, lean=0.3, fa=1.4, fe=0.7, ra=1.2, re=0.9, ht=0.05, fl=0.9, fk=0.6, rl=-0.6, rk=0.2, face="fight")   # B も剣を前に出して合わせる(BLOCK は顔の前に立てる形で、合わせに見えない)
             keysB += [dict(t=1.5, dx=-1.7, **GUARD), dict(t=1.75, dx=-1.4, **GUARD),                     # 一歩出て受ける
-                      dict(t=1.9, dx=-1.4, **BLOCK), dict(t=2.1, dx=-1.35, **dict(BLOCK, lean=0.22)),
-                      dict(t=2.3, dx=-1.42, **dict(BLOCK, lean=0.15)), dict(t=2.45, dx=-1.3, **dict(BLOCK, lean=0.26)),
+                      dict(t=1.9, dx=-1.4, **press_b), dict(t=2.1, dx=-1.35, **dict(press_b, lean=0.22)),
+                      dict(t=2.3, dx=-1.42, **dict(press_b, lean=0.36)), dict(t=2.45, dx=-1.3, **dict(press_b, lean=0.26)),
                       dict(t=2.5, dx=-2.2, lean=-0.45, hz=0.84, fa=0.6, ra=0.5, fe=1.0, re=1.1, ht=-0.3, face="pain"),   # 押し負けてよろける
                       *([] if bfirst else [dict(t=2.7, dx=-1.7, **GUARD)])]
-            hits += [dict(tau=1.9, hold=0.08, kind="clash", by="A", pos=[3.45, 1.55])]
-            hits += [dict(tau=_r(2.0 + 0.1 * i), hold=0.0, kind="grind", pos=[3.45 + 0.02 * (i % 2), 1.55 - 0.03 * (i % 3)]) for i in range(5)]   # 押し合いの火花
+            hits += [dict(tau=1.9, hold=0.08, kind="clash", by="A", pos=[3.25, 1.5])]
+            hits += [dict(tau=_r(2.0 + 0.1 * i), hold=0.0, kind="grind", pos=[3.25 + 0.02 * (i % 2), 1.5 - 0.03 * (i % 3)]) for i in range(5)]   # 押し合いの火花
             flashes.append(1.9)
             speed.append([1.2, 1.9])
             shots.append(dict(t=1.85, follow="mid", scale=3.8, yaw=12.0, pitch=4.0, lens=32.0, target_z=1.3, lag=0.1))   # 押し合いに寄る
