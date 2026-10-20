@@ -209,19 +209,12 @@ class Game {
   bool awakened = false;
 
   /// 覚醒の判定。`chance` の確率で、持てるレア特性を1つ得る(一生に一度)。
-  /// 特性が上限でも、悪い特性があればそれと入れ替わる。
   bool _tryAwaken(double chance, String why) {
     if (awakened || rng.nextDouble() >= chance) return false;
-    var have = player.traits;
-    var t = pickRare(rng, have, player.role);
-    if (t == null) {
-      final bad = [for (final x in have) if (!x.positive) x];
-      if (bad.isEmpty) return false;
-      have = {...have}..remove(bad.first);
-      t = pickRare(rng, have, player.role);
-      if (t == null) return false;
-    }
-    player = player.copyWith(traits: gain(have, t));
+    // レア特性は通常の特性の枠とは別なので、通常の特性が4つ埋まっていても覚醒できる。
+    final t = pickRare(rng, player.traits, player.role);
+    if (t == null) return false;
+    player = player.copyWith(traits: gain(player.traits, t));
     awakened = true;
     log.add('$why 眠っていた才能が目覚めた!特性「${t.label}」に覚醒した!');
     _note('trait', '覚醒: 特性「${t.label}」');
@@ -1027,9 +1020,9 @@ class Game {
         log.add('タイトル獲得: $t!');
       }
       if (titles.isNotEmpty) {
-        _tryAwaken(0.15, 'タイトルを獲った今季、');
+        _tryAwaken(0.08, 'タイトルを獲った今季、');
       } else if (league.rank == 1) {
-        _tryAwaken(0.08, '優勝を経験した今季、');
+        _tryAwaken(0.04, '優勝を経験した今季、');
       }
       for (final w in awards) {
         log.add('表彰: $w!');
@@ -1081,7 +1074,7 @@ class Game {
       if (tournament.champion) {
         championships++;
         log.add('夏の大会で優勝した!');
-        _tryAwaken(0.04, '優勝の勢いで、');
+        _tryAwaken(0.03, '優勝の勢いで、');
       } else {
         // 負けた試合(次の試合)の名前で、どこまで行ったかを伝える。
         final lost = roundLabel(tournament.roundsWon, tournament.rounds);

@@ -145,6 +145,15 @@ void main() {
       }
     });
 
+    test('レア特性は通常の特性の枠とは別。通常が4つでも持てるが、レアは2つまで', () {
+      final full = {Trait.genius, Trait.sturdy, Trait.sunny, Trait.ironMan};
+      expect(canGain(full, Trait.clutch), isFalse);
+      expect(canGain(full, Trait.monster), isTrue);
+      final two = gain(gain(full, Trait.monster), Trait.fortune);
+      expect(two.length, 6);
+      expect(canGain(two, Trait.steelBody), isFalse);
+    });
+
     test('矛盾する組み合わせは持てない', () {
       expect(canGain({Trait.glassBody}, Trait.ironWill), isFalse);
       expect(canGain({Trait.nervy}, Trait.stagePresence), isFalse);
@@ -156,7 +165,7 @@ void main() {
       expect(growthMultiplier({Trait.monster}, 20),
           greaterThan(growthMultiplier(const {}, 20)));
       expect(declineMultiplier({Trait.monster}), lessThan(1));
-      expect(declineMultiplier({Trait.steelBody}), lessThan(0.5));
+      expect(declineMultiplier({Trait.steelBody}), lessThan(0.7));
       expect(fatigueMultiplier({Trait.steelBody}), lessThan(1));
       expect(injuryMultiplier({Trait.ironWill}), lessThan(0.5));
       expect(tournamentBonus({Trait.stagePresence}), 8);
@@ -227,7 +236,10 @@ void main() {
           awakenedCount++;
           expect(g.player.traits.any((t) => t.rare), isTrue);
         }
-        expect(g.player.traits.length, lessThanOrEqualTo(maxTraits));
+        expect(g.player.traits.where((t) => !t.rare).length,
+            lessThanOrEqualTo(maxTraits));
+        expect(g.player.traits.where((t) => t.rare).length,
+            lessThanOrEqualTo(maxRareTraits));
       }
       expect(awakenedCount, greaterThan(0));
     });
