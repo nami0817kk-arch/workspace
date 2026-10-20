@@ -10,7 +10,7 @@ import subprocess
 from pathlib import Path
 from typing import Dict, List, Optional, Sequence, Tuple
 
-from PIL import Image, ImageDraw, ImageFilter
+from PIL import Image, ImageChops, ImageDraw, ImageFilter
 
 from . import anime, camera, captions, fk, look
 
@@ -378,18 +378,26 @@ def compose_frame(plan: dict, f: int, figs: Dict[int, Image.Image], stages: Opti
         if ai["start"] <= tau <= ai["end"] and f > 0:
             q = (tau - ai["start"]) / max(1e-6, ai["end"] - ai["start"])
             g = _prev_frame(plan, f) or f
-            src = figs[max(0, min(plan["n"] - 1, int(ai.get("src_frame", g))))]
+            gi = max(0, min(plan["n"] - 1, int(ai.get("src_frame", g))))
+            src, cam_s = figs[gi], plan["frames"][gi]["cam"]
             n_ = int(ai.get("n", 6))
             who_a = ai.get("who", "A")
-            x_now = plan["frames"][f]["actors"][who_a]["root_x"]
+            x_src = plan["frames"][gi]["actors"][who_a]["root_x"]           # 元のコマでの本人の位置(元のコマのカメラで測る: カメラが切り替わった直後も崩れない)
+            sc_a = float(plan["actors"][who_a].get("scale", 1.0))
+            l_, _ = to_px(x_src - 0.75 * sc_a, 0.0, cam_s)
+            r_, _ = to_px(x_src + 0.75 * sc_a, 0.0, cam_s)
+            band = Image.new("L", src.size, 0)                               # 本人の根元の左右 0.75 の帯だけ(絵全体の影だと相手や味方の影まで一緒に並んだ)
+            ImageDraw.Draw(band).rectangle([min(l_, r_), 0, max(l_, r_), src.size[1]], fill=255)
+            ghost0 = silhouette(src, tuple(int(255 * c) for c in plan["actors"][who_a].get("color", [0.5, 0.8, 0.3])))
+            a0 = ImageChops.multiply(ghost0.split()[3], band)
+            px_src, _ = to_px(x_src, 0.0, cam_s)
             for i in range(n_):
                 xw = float(ai["x0"]) + (float(ai["x1"]) - float(ai["x0"])) * (i + 1) / (n_ + 1)
                 px_, _ = to_px(xw, 0.0, cam)
-                px_now, _ = to_px(x_now, 0.0, cam)
-                ghost = silhouette(src, tuple(int(255 * c) for c in plan["actors"][who_a].get("color", [0.5, 0.8, 0.3])))
                 al = int(150 * (1 - q) * (0.4 + 0.6 * i / n_))
-                ghost.putalpha(ghost.split()[3].point(lambda v, al=al: int(v * al / 255)))
-                base.alpha_composite(ghost, (int(px_ - px_now), 0))
+                ghost = ghost0.copy()
+                ghost.putalpha(a0.point(lambda v, al=al: int(v * al / 255)))
+                base.alpha_composite(ghost, (int(px_ - px_src), 0))
     for bm in fx.get("beams", []):             # 気の光線(人物の下に描く: 上だと撃ち合いで 2 人が光線に隠れた。手の先から壁まで。x_end は数か [[tau, x], ...] の折れ線)
         if bm["start"] <= tau <= bm["end"]:
             base.alpha_composite(look.beam(plan, f, bm.get("who", "A"), _pw_at(bm["x_end"], tau), tau - bm["start"], bm["end"] - bm["start"], tuple(bm.get("color", (120, 230, 255))), z_end=bm.get("z_end")))
