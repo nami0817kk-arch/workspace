@@ -26,6 +26,10 @@ flutter:
   assets:
     - assets/fonts/OFL-NotoSansJP.txt
     - assets/art/title.jpg
+    - assets/art/ending_glory.jpg
+    - assets/art/ending_quiet.jpg
+    - assets/art/path.jpg
+    - assets/art/hall.jpg
 
   # 日本語フォントを同梱する(Web は足りない字形を外から取りに行って豆腐になる)。
   fonts:

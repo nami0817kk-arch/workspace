@@ -10,6 +10,7 @@ import '../game/path.dart';
 import '../game/player.dart';
 import '../game/season.dart';
 import 'art/court.dart';
+import 'art/title_art.dart';
 import 'art/growth_chart.dart';
 import 'controller.dart';
 import 'history_screen.dart';
@@ -1040,6 +1041,8 @@ class _PathView extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
+        const ArtBanner('assets/art/path.jpg'),
+        const SizedBox(height: 12),
         Card(
           child: Padding(
             padding: const EdgeInsets.all(16),
@@ -1103,7 +1106,9 @@ class _EndingView extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        CourtHeader(game: g, height: 120),
+        ArtBanner(gloriousEnding(g)
+            ? 'assets/art/ending_glory.jpg'
+            : 'assets/art/ending_quiet.jpg'),
         const SizedBox(height: 12),
         Card(
           child: Padding(

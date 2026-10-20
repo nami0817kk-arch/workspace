@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../game/legacy.dart';
+import 'art/title_art.dart';
 import 'controller.dart';
 
 /// 殿堂(過去の選手)と実績の一覧。
@@ -20,6 +21,8 @@ class HistoryScreen extends StatelessWidget {
             child: ListView(
               padding: const EdgeInsets.all(16),
               children: [
+                const ArtBanner('assets/art/hall.jpg'),
+                const SizedBox(height: 12),
                 Card(
                   child: Padding(
                     padding: const EdgeInsets.all(16),

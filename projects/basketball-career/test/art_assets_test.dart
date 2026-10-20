@@ -5,11 +5,39 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test('タイトルの絵が assets にあり、pubspec.yaml に宣言されている', () {
-    final f = File('assets/art/title.jpg');
-    expect(f.existsSync(), isTrue);
-    expect(f.lengthSync(), lessThan(400 * 1024), reason: 'アプリを重くしない');
-    expect(File('pubspec.yaml').readAsStringSync(), contains('assets/art/title.jpg'));
+  const arts = [
+    'title',
+    'ending_glory',
+    'ending_quiet',
+    'path',
+    'hall',
+  ];
+
+  test('アプリ内の絵がすべて assets にあり、pubspec.yaml に宣言されている', () {
+    final pubspec = File('pubspec.yaml').readAsStringSync();
+    var total = 0;
+    for (final n in arts) {
+      final f = File('assets/art/$n.jpg');
+      expect(f.existsSync(), isTrue, reason: '$n.jpg が無い');
+      expect(f.lengthSync(), lessThan(400 * 1024), reason: '$n.jpg が重い');
+      expect(pubspec, contains('assets/art/$n.jpg'), reason: '$n.jpg が pubspec.yaml に無い');
+      total += f.lengthSync();
+    }
+    expect(total, lessThan(2 * 1024 * 1024), reason: '絵の合計でアプリを重くしない');
+  });
+
+  test('コードで使っている絵の名前が、置いてある絵と一致する', () {
+    final used = <String>{};
+    for (final f in Directory('lib')
+        .listSync(recursive: true)
+        .whereType<File>()
+        .where((f) => f.path.endsWith('.dart'))) {
+      for (final m in RegExp(r"assets/art/([a-z_]+)\.jpg")
+          .allMatches(f.readAsStringSync())) {
+        used.add(m.group(1)!);
+      }
+    }
+    expect(used, arts.toSet());
   });
 
   test('アイコンの元の絵は 1024x1024', () {
