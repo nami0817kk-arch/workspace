@@ -403,7 +403,8 @@ Tournament playTournament(
             (g.rating - 50) / 200 +
             (condition + tournamentBonus(p.traits) - 50) / 500)
         .clamp(0.0, 1.0);
-    final win = rng.nextDouble() < pWin;
+    final roll = rng.nextDouble();
+    final win = isShutout(g) || roll < pWin;
     games.add(TournamentGame(opponent: opp, won: win, line: g));
     if (!win) break;
     won++;
@@ -522,9 +523,7 @@ LeagueProgress playLeagueChunk(
         .clamp(0.0, 1.0);
     final won = rng.nextDouble() < pWin;
     won ? wins++ : losses++;
-    line += (starts && game.outs >= 15)
-        ? game.withDecision(win: won, loss: !won)
-        : game;
+    line += (starts && game.outs >= 15) ? decidedStart(game, won) : game;
   }
   return LeagueProgress(
       games: prog.games + count,
@@ -533,6 +532,18 @@ LeagueProgress playLeagueChunk(
       line: line,
       missed: missed);
 }
+
+/// 5回(15アウト)以上投げて無失点(完封に近い登板)か。勝ち抜き戦では、この試合はチームも負けない
+/// (防御率0なのに敗戦、という不自然さを防ぐ。乱数は先に引いて並びは変えない)。
+/// ペナントでは、チームの勝敗は変えず、投手の「負け」だけを付けない(`decidedStart`)。
+/// ペナントまで強制すると、投手のリーグ優勝が倍になってバランスが崩れた。
+bool isShutout(Line game) => game.outs >= 15 && game.runsAllowed < 0.5;
+
+/// 5回以上投げた先発の勝敗を付ける。勝ちはチームが勝った試合。
+/// **負けは、チームが負け、かつ自分が失点した試合だけ**(無失点なのに負けにはならない。
+/// 勝敗も付かない試合になる)。防御率0なのに敗戦、という不自然さを防ぐ。
+Line decidedStart(Line game, bool teamWon) =>
+    game.withDecision(win: teamWon, loss: !teamWon && game.runsAllowed >= 0.5);
 
 /// プロの1シーズンの試合数。
 const leagueGames = 143;
@@ -564,9 +575,7 @@ LeagueSeason playLeagueSeason(
         .clamp(0.0, 1.0);
     final won = rng.nextDouble() < pWin;
     won ? wins++ : losses++;
-    line += (starts && game.outs >= 15)
-        ? game.withDecision(win: won, loss: !won)
-        : game;
+    line += (starts && game.outs >= 15) ? decidedStart(game, won) : game;
   }
   return LeagueSeason(games: games, wins: wins, losses: losses, line: line);
 }
