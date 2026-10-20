@@ -82,7 +82,7 @@ def tracks_b(tgt):
         dict(t=4.62, x=2.60, rz=0.21, roll=1.57, ease="out"),
         # 起き上がる
         dict(t=4.95, x=2.60, rz=0.21, roll=1.57), dict(t=5.25, rz=0.24, roll=1.05, hz=0.55, lean=0.20),
-        dict(t=5.55, rz=0.08, roll=0.40, hz=0.48, lean=0.55), dict(t=5.85, rz=0.0, roll=0.0, hz=0.72, lean=0.30), dict(t=6.05, hz=0.80, lean=0.12, x=2.55),
+        dict(t=5.55, rz=0.18, roll=0.40, hz=0.48, lean=0.55), dict(t=5.85, rz=0.0, roll=0.0, hz=0.72, lean=0.30), dict(t=6.05, hz=0.80, lean=0.12, x=2.55),
         dict(t=6.15, ht=-0.15), dict(t=6.30, ht=0.0),
         # 走り込んで拳をぶつける
         dict(t=6.32, x=2.55, lean=0.12, hz=0.80), dict(t=6.40, lean=0.35, hz=0.78),

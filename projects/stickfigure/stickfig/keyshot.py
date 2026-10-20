@@ -86,7 +86,10 @@ def solve_leg(pose: dict, s: int, x: float, limb: str, target: Pt) -> float:
     届かないときはまっすぐ伸ばして向ける。近すぎるときは数値解に任せる。"""
     a_k, b_k = LIMBS[limb][:2]
     hip = (0.0, pose["hz"])
-    X, Z = target[0] - x, target[1] - pose["rz"]
+    rho = -pose["roll"] * s                       # 根元の座標系へ(体が傾いて・浮いていても合うように。fk.leg_ik と同じ変換。前は回転を入れておらず、起き上がりで足が地面に 0.1 潜った)
+    cr, sr = math.cos(rho), math.sin(rho)
+    X0, Z0 = target[0] - x, target[1] - pose["rz"]
+    X, Z = X0 * cr - Z0 * sr, X0 * sr + Z0 * cr
     dx, dz = X - hip[0], Z - hip[1]
     r = math.hypot(dx, dz)
     L = fk.LEG_TOTAL
