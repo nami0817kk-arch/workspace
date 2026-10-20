@@ -352,7 +352,7 @@ def _draw_props(base: Image.Image, plan: dict, f: int, tau: float, cam: dict, pr
         if not held:                                       # 影(持たれていない物。空中でも真下に落ちる)
             sx0, sy0 = to_px(x - size * 0.6, 0.0, cam)
             sx1, sy1 = to_px(x + size * 0.6, 0.0, cam)
-            d.ellipse([sx0, sy0 - 0.06 * u, sx1, sy0 + 0.06 * u], fill=(0, 0, 0, 70))
+            d.ellipse([min(sx0, sx1), sy0 - 0.06 * u, max(sx0, sx1), sy0 + 0.06 * u], fill=(0, 0, 0, 70))
         if kind == "ball":
             r = size * 0.5 * u
             cx, cy = to_px(x, z + size * 0.5, cam)
@@ -363,10 +363,13 @@ def _draw_props(base: Image.Image, plan: dict, f: int, tau: float, cam: dict, pr
             h = float(pr.get("h", size)) * u
             x0, y1 = to_px(x - size / 2, z, cam)
             x1, y0 = to_px(x + size / 2, z + float(pr.get("h", size)), cam)
+            x0, x1 = min(x0, x1), max(x0, x1)
+            y0, y1 = min(y0, y1), max(y0, y1)                 # カメラの向きで角の上下が入れ替わることがある(y1<y0 で PIL が落ちた)
             d.rectangle([x0, y0, x1, y1], fill=col, outline=edge, width=max(2, int(0.035 * u)))
             d.line([x0, y0, x1, y1], fill=edge, width=max(1, int(0.015 * u)))
             d.line([x0, y1, x1, y0], fill=edge, width=max(1, int(0.015 * u)))
-            d.rectangle([x0 + w * 0.12, y0 + h * 0.12, x1 - w * 0.12, y1 - h * 0.12], outline=edge, width=max(1, int(0.015 * u)))
+            if w > 0.3 * u and h > 0.3 * u:
+                d.rectangle([x0 + w * 0.12, y0 + h * 0.12, x1 - w * 0.12, y1 - h * 0.12], outline=edge, width=max(1, int(0.015 * u)))
     return held_list
 
 

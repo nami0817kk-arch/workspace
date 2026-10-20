@@ -505,10 +505,13 @@ def _footwork(scene: dict, frames: List[dict]) -> None:
                         last[key] = (p[ang], p[knee])
                     continue
                 r = fk.leg_ik(p, s, p["root_x"], sc, (planted[key], 0.0), prefer=("front" if key == "foot" else "rear"))       # 固定: 足を世界座標に留める
-                if r is None:                                                     # 届かない
-                    if fast:                                                      # 体が速い: 短い踏み替え
-                        swing = dict(key=key, f0=f, n=max(2, nfr_e - 2), x0=planted[key], x1=nx)
-                    planted[key] = None                                           # 遅いのに届かない(腰が上がった・伸び上がった): 固定を解いて自然な脚へ寄せる
+                if r is None:                                                     # 届かない: 踏み替える(速いときは短く)。前は遅いと固定を解いて自然な脚へ戻すだけで、ゆっくり歩くと毎コマ外れて足が地面を滑った(小話で発見 2026-10-20)
+                    if swing is None and v > 0.005 * sc and (fast or cfg.get("step_on_fail")):   # step_on_fail: 遅くても踏み替える(小話の歩き)。戦いの既定は従来どおり(study_kick で「途中で止まる」が増えた)
+                        x1 = nx + s * lead_e
+                        if fk.leg_ik(p, s, p["root_x"], sc, (x1, 0.0), prefer=("front" if key == "foot" else "rear")) is None:
+                            x1 = nx
+                        swing = dict(key=key, f0=f, n=(max(2, nfr_e - 2) if fast else nfr_e), x0=planted[key], x1=x1)
+                    planted[key] = None                                           # 止まっているのに届かない(腰が上がった・伸び上がった): 固定を解いて自然な脚へ寄せる
                     settle(p, ang, knee, key)
                     continue
                 p[ang], p[knee] = round(r[0], 6), round(r[1], 6)

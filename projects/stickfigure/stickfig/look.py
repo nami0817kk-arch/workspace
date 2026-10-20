@@ -434,16 +434,24 @@ def _image_bg(plan: dict, f: int, st: dict) -> Image.Image:
     px1 = camera.project(cam, x1, 0.0, 0.0)[0]
     tx = cam.get("tx", cam.get("x", 0.0))
     y_floor = camera.project(cam, tx, 0.0, 0.0)[1]
-    scale = (px1 - px0) / src.size[0]
-    w, h = max(1, int(src.size[0] * scale)), max(1, int(src.size[1] * scale))
-    top = int(y_floor - g * h)
-    left = int(px0)
-    edge = src.getpixel((0, src.size[1] // 4))
+    scale = (px1 - px0) / src.size[0]                            # 画像 1px あたりの画面 px
+    sw, sh = src.size
+    top = y_floor - g * sh * scale
+    left = px0
+    edge = src.getpixel((0, sh // 4))
     img = Image.new("RGB", (W, H), edge)
     d = ImageDraw.Draw(img)
-    floor_col = src.getpixel((src.size[0] // 2, min(src.size[1] - 1, int(src.size[1] * (g + 0.05)))))
-    d.rectangle([0, int(y_floor), W, H], fill=floor_col)        # 画像より下は地面の色
-    img.paste(src.resize((w, h), Image.LANCZOS), (left, top))
+    floor_col = src.getpixel((sw // 2, min(sh - 1, int(sh * (g + 0.05)))))
+    if int(y_floor) < H:
+        d.rectangle([0, int(y_floor), W, H], fill=floor_col)    # 画像より下は地面の色(寄りで地面の線が画面の下に出るコマは描かない: y1<y0 で PIL が落ちる)
+    # 画面に映る範囲だけ切り出して拡大する(全体を拡大すると寄りのコマで幅 8000px 超になり、並列の合成でメモリ切れになった)
+    c0, c1 = int(max(0, (0 - left) / scale) - 1), int(min(sw, (W - left) / scale) + 2)
+    r0, r1 = int(max(0, (0 - top) / scale) - 1), int(min(sh, (H - top) / scale) + 2)
+    c0, r0 = max(0, c0), max(0, r0)
+    if c1 > c0 and r1 > r0:
+        crop = src.crop((c0, r0, c1, r1))
+        w, h = max(1, int(round((c1 - c0) * scale))), max(1, int(round((r1 - r0) * scale)))
+        img.paste(crop.resize((w, h), Image.LANCZOS), (int(left + c0 * scale), int(top + r0 * scale)))
     return img.convert("RGBA")                                   # flat_bg と同じ RGBA(RGB のままだと合成で "image has wrong mode")
 
 

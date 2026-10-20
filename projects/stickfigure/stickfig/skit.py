@@ -39,19 +39,19 @@ def _r(x: float) -> float:
     return round(float(x), 3)
 
 
-IDLE = dict(fa=0.45, fe=1.0, ra=0.35, re=1.0, fl=0.12, fk=0.1, rl=-0.12, rk=0.12, lean=0.02, hz=0.86, ht=0.0, run=0.0, rz=0.0, roll=0.0, spin=0.0)
+IDLE = dict(fa=0.45, fe=1.0, ra=0.35, re=1.0, fl=0.12, fk=0.1, rl=-0.12, rk=0.12, lean=0.02, hz=0.81, ht=0.0, run=0.0, rz=0.0, roll=0.0, spin=0.0)
 CARRY = dict(IDLE, fa=1.35, fe=0.85, ra=1.3, re=0.9, lean=0.06)                  # 両手を前に出して箱を抱える
 CROUCH = dict(IDLE, hz=0.6, lean=0.55, fa=1.3, fe=0.25, ra=1.2, re=0.3, fl=0.9, fk=1.5, rl=-0.3, rk=1.2)   # しゃがんで手を伸ばす
 WINDUP = dict(IDLE, lean=-0.18, fa=-0.7, fe=0.9, ra=0.6, re=1.4, hz=0.82)
 RELEASE = dict(IDLE, lean=0.38, fa=1.55, fe=0.0, ra=-0.2, re=1.1, hz=0.8, fl=0.9, fk=0.4, rl=-0.6, rk=0.2)
-SURPRISE = dict(IDLE, lean=-0.35, fa=2.6, fe=0.3, ra=2.4, re=0.35, ht=-0.5, hz=0.9, fl=0.5, fk=0.4, rl=-0.5, rk=0.4)
+SURPRISE = dict(IDLE, lean=-0.35, fa=2.6, fe=0.3, ra=2.4, re=0.35, ht=-0.5, hz=0.84, fl=0.5, fk=0.4, rl=-0.5, rk=0.4)
 LAUGH = dict(IDLE, lean=-0.22, ht=-0.45, fa=0.9, fe=2.2, ra=0.8, re=2.2, hz=0.84)
 ANGRY = dict(IDLE, lean=0.2, fa=0.5, fe=2.3, ra=-0.4, re=2.0, ht=0.15, hz=0.82)
 POINT = dict(IDLE, fa=1.57, fe=0.0, lean=0.08, ht=0.0)
 THINK = dict(IDLE, ra=2.3, re=2.6, ht=0.25, lean=0.05)
 WAVE_A = dict(IDLE, fa=2.8, fe=0.6)
 WAVE_B = dict(IDLE, fa=2.8, fe=0.15)
-CHEER = dict(IDLE, fa=2.7, fe=0.3, ra=2.7, re=0.3, lean=-0.1, hz=0.9)
+CHEER = dict(IDLE, fa=2.7, fe=0.3, ra=2.7, re=0.3, lean=-0.1, hz=0.84)
 SAD = dict(IDLE, lean=0.3, ht=0.6, fa=0.1, fe=0.2, ra=0.1, re=0.2, hz=0.8)
 PUSH = dict(IDLE, lean=0.5, fa=1.25, fe=0.3, ra=1.2, re=0.35, hz=0.78, fl=0.9, fk=0.5, rl=-0.7, rk=0.2)
 SIT = dict(IDLE, hz=0.5, lean=0.1, fl=1.5, fk=1.5, rl=1.4, rk=1.5, fa=0.6, fe=1.2, ra=0.5, re=1.2)
@@ -298,7 +298,7 @@ def build_skit(spec: dict) -> dict:
                 a.key(t + max(0.1, dist / RUN_SPEED), dict(IDLE, lean=0.2), x=stand_x)
                 t += max(0.1, dist / RUN_SPEED)
             a.key(t + 0.15, dict(IDLE, fl=-0.6, fk=0.9, lean=0.1, hz=0.84))           # 引く
-            a.key(t + 0.25, dict(IDLE, fl=1.5, fk=0.1, lean=-0.1, hz=0.86, fa=-0.3, ra=1.0))   # 蹴り抜く
+            a.key(t + 0.25, dict(IDLE, fl=1.5, fk=0.1, lean=-0.1, hz=0.84, fa=-0.3, ra=1.0))   # 蹴り抜く
             flight = max(0.3, abs(to - p.x) / 8.0)
             p.move(t + 0.25, t + 0.25 + flight, to, 0.0, arc=0.8)
             hits.append(dict(tau=_r(t + 0.25), hold=0.03, kind="kick", pos=[_r(p.x), 0.4]))
@@ -309,7 +309,7 @@ def build_skit(spec: dict) -> dict:
             dur = dur or 0.9
             a.key(t, {})
             a.key(t + 0.08, dict(SURPRISE, rz=0.22), x=a.x - a.dir * 0.2)
-            a.key(t + 0.2, dict(SURPRISE, rz=0.0, hz=0.86))
+            a.key(t + 0.2, dict(SURPRISE, rz=0.0, hz=0.84))
             puffs.append(dict(tau=_r(t + 0.2), kind="land2", pos=[_r(a.x), 0.0]))
             a.key(t + dur, SURPRISE)
             a.key(t + dur + 0.25, IDLE)
@@ -327,7 +327,7 @@ def build_skit(spec: dict) -> dict:
             dur = dur or 1.2
             n = int(dur / 0.3)
             for i in range(n + 1):
-                a.key(t + 0.3 * i, dict(ANGRY, hz=0.78 if i % 2 else 0.86, fl=0.6 if i % 2 else 0.12, fk=0.9 if i % 2 else 0.1))
+                a.key(t + 0.3 * i, dict(ANGRY, hz=0.78 if i % 2 else 0.83, fl=0.6 if i % 2 else 0.12, fk=0.9 if i % 2 else 0.1))
                 if i % 2:
                     puffs.append(dict(tau=_r(t + 0.3 * i), kind="land2", pos=[_r(a.x), 0.0]))
             a.key(t + dur + 0.3, IDLE)
@@ -363,7 +363,7 @@ def build_skit(spec: dict) -> dict:
             a.key(t + 0.2, pose)
             if act == "cheer":
                 for i in range(int(dur / 0.25)):
-                    a.key(t + 0.2 + 0.25 * i, dict(pose, rz=0.25 if i % 2 else 0.0, hz=0.9))
+                    a.key(t + 0.2 + 0.25 * i, dict(pose, rz=0.25 if i % 2 else 0.0, hz=0.84))
             elif act == "cry":
                 for i in range(int(dur / 0.2)):
                     a.key(t + 0.2 + 0.2 * i, dict(pose, lean=0.3 + (0.05 if i % 2 else 0.0)))
@@ -410,7 +410,7 @@ def build_skit(spec: dict) -> dict:
         qa=dict(max_cross_frames=4000, max_stops=9999, max_anticipation_frames=999, max_jerk=9.0, max_teleport_frames=4),
         tempo=1.0, anime=dict(trails=False, sfx=True, zoom_blur=False, grade=True, roll=False, smear=True),
         shots=sorted(shots, key=lambda s: s["t"]), stepping=dict(hold=2, ones_around_hits=3, hold_camera=True),
-        impact_cuts=None, flurry=[], body_drive=None, footwork={}, style="flat2d", clip_timing=None, cam_zoom=2.1,
+        impact_cuts=None, flurry=[], body_drive=None, footwork=dict(stride=0.3, lead=0.32, frames=6, step_on_fail=True), style="flat2d", clip_timing=None, cam_zoom=2.1,   # footwork は歩き向き(fight の既定 lead 0.12 だと置いた直後に遅れて滑った)。行末コメントで後ろの項目を飲み込まない(一度 style/cam_zoom が消えた)
         limb=dict(base=0.055, tip=0.03, tip_color=[0.08, 0.08, 0.1]), captions=[], audio=dict(mood=spec.get("mood", "calm")), _marks={})
     return scene
 
