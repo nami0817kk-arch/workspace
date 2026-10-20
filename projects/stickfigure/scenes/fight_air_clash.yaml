@@ -1,0 +1,3 @@
+# 出だしの技の見本 5: 空中戦。2 人が同時に跳び、空中でぶつかって弾かれ、着地してから連打→空中コンボ
+name: fight_air_clash
+fight: {weapon: sword, kick: false, opening: air_clash, hits: 3, counter: true, finisher: air_combo, palette: cool, stage: sunset, mood: battle, seed: 7}

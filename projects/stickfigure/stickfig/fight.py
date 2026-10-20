@@ -26,7 +26,7 @@ DEFAULTS = dict(
     hits=3,                  # 連打の回数(1〜4)
     counter=True,            # 1発目のあと、相手の反撃
     finisher="launch_slash", # launch_slash(決めの斬りで打ち上げ→空中斬り→叩きつけ) / launch_kick(決めは高い蹴りで打ち上げ) / beam(気の光線: 溜め→発射→壁まで吹き飛ばす) / blast(気弾: 片手に玉を膨らませて投げる→着弾で爆発) / wave(衝撃波: 跳んで拳を地面に叩きつけ→地面を走る波で打ち上げる) / air_combo(空中コンボ: 打ち上げ→空中で 2 発追加→叩きつけ) / barrage(連打乱舞: 拳 8 発 0.1 秒間隔→大振りで壁へ) / slash_wave(飛ぶ斬撃: 振り抜くと三日月の光が飛ぶ。剣だけ) / iai(居合: 1 コマで相手の向こうへ抜け、間を置いて斬撃線が走り崩れ落ちる。剣だけ) / slam_throw(投げ: つかんで頭上を回し、背後の地面に叩きつける) / blink_combo(瞬間移動の連撃: 前に現れ拳→頭上に現れ踵落とし→離れて背を向ける) / beam_clash(光線の撃ち合い: 2 人が同時に撃ち、中央でぶつかり、A が押し勝つ。B の色は beam_color_b) / random(seed で選ぶ) / none(まっすぐ倒れる)
-    opening=None,            # 出だしの技: blast(走り出す前に気弾を投げ、B がかわし、壁で爆発) / teleport(走らず一瞬で相手の目の前に現れる) / fly(跳び上がって水平に飛び、急降下して着地) / counter_blast(相手が気弾を投げ、A が弾いて空中で爆発させる)。kick: true とは併用しない
+    opening=None,            # 出だしの技: blast(走り出す前に気弾を投げ、B がかわし、壁で爆発) / teleport(走らず一瞬で相手の目の前に現れる) / fly(跳び上がって水平に飛び、急降下して着地) / counter_blast(相手が気弾を投げ、A が弾いて空中で爆発させる) / air_clash(2 人が跳び上がって空中でぶつかり、弾かれて着地)。kick: true とは併用しない
     beam_color=None,         # beam の色 [r,g,b](0〜255)。既定は水色
     beam_color_b=None,       # beam_clash の B の光線の色。既定は赤
     palette="warm",          # warm / cool
@@ -169,11 +169,14 @@ def build_fight(spec: dict) -> dict:
     open_tp = (s["opening"] == "teleport") and not kick  # 出だしの技: 走らず一瞬で相手の目の前に現れる
     open_fly = (s["opening"] == "fly") and not kick      # 出だしの技: 跳び上がって水平に飛び、急降下して相手の前に着地
     open_cb = (s["opening"] == "counter_blast") and not kick   # 出だしの技: 相手が気弾を投げ、A が弾いて空中で爆発させる
+    open_ac = (s["opening"] == "air_clash") and not kick # 出だしの技: 2 人が跳び上がって空中でぶつかり、弾かれて着地
     o = 0.0 if kick else (-2.4 + (0.95 if bfirst else 0.0))          # 蹴りが無いぶん、連打の開始が早まる(B が先に仕掛けるなら、その分を空ける)
     if open_blast:
         o += 1.0                                         # 気弾のぶん、走り出しが 1.0 秒遅れる
     if open_cb:
         o += 1.0                                         # 撃ち落としのぶん、走り出しが 1.0 秒遅れる
+    if open_ac:
+        o += 1.2                                         # 空中戦のぶん、走り出しが 1.2 秒遅れる
     if open_tp:
         o -= 0.4                                         # 瞬間移動は走らないぶん早く(立っている時間が長かった)
     tc = 4.0 + o                       # 連打の準備(起き上がり)の終わり
@@ -251,6 +254,42 @@ def build_fight(spec: dict) -> dict:
         a_dx = (4.0 if sword else 4.6) if bfirst else 3.4   # B が先に仕掛けるときは、B の拳が届く所まで寄る(剣なら、そのあと剣の間合いへ戻る分を小さく)
         clipsA[0].update(end=_r(ta))
         keysA.append(dict(t=_r(ta), dx=a_dx, hz=0.9))
+        if open_ac:                                      # 空中戦: 0.6 2 人がしゃがむ → 0.75 跳ぶ → 1.1 空中の中間でぶつかる(止め)→ 弾かれて 1.5 着地 → 1.8 A が走り出す
+            clipsA[0].update(start=1.8, **{"in": 0.12})
+            keysA = [k for k in keysA if k["t"] not in (0.6,)]
+            a_root0, b_root0 = -2.0 + 0.2, 2.4 + 1.7
+            mid = (a_root0 + b_root0) / 2
+            t_j, t_c, t_l = 0.75, 1.1, 1.5
+            crouch = dict(hz=0.62, lean=0.3, fl=1.0, fk=1.7, rl=-0.3, rk=1.3, fa=-0.5, fe=1.0, ra=-0.5, re=1.0, face="fight")
+            atk = (dict(fa=2.4, fe=0.3, ra=1.2, re=0.8) if sword else dict(fa=1.6, fe=0.1, ra=-0.3, re=1.0))          # 剣は上段、素手は拳
+            keysA += [dict(t=0.6, dx=0.2, hz=0.84, lean=0.1, fa=0.9, fe=1.4, ra=0.7, re=1.5, face="fight"),
+                      dict(t=_r(t_j - 0.1), dx=0.2, **crouch),
+                      dict(t=_r(t_j), dx=0.35, rz=0.5, hz=0.95, lean=-0.1, fa=2.6, fe=0.3, ra=2.2, re=0.4, fl=0.3, fk=0.2, rl=-0.3, rk=0.2),
+                      dict(t=_r(t_c - 0.03), dx=_r(mid - 0.5 - a_root0 + 0.2), rz=1.9, hz=0.9, lean=0.35, fl=0.6, fk=0.4, rl=-0.5, rk=0.3, **atk),   # 中間へ、構えて
+                      dict(t=_r(t_c), dx=_r(mid - 0.45 - a_root0 + 0.2), rz=1.9, hz=0.9, lean=0.4, fl=0.6, fk=0.4, rl=-0.5, rk=0.3, **atk),
+                      dict(t=_r(t_c + 0.2), dx=_r(mid - 1.4 - a_root0 + 0.2), rz=1.6, hz=0.9, lean=-0.3, fa=0.8, fe=1.0, ra=0.6, re=1.0, fl=0.4, fk=0.3, rl=-0.4, rk=0.3),   # 弾かれて後ろへ
+                      dict(t=_r(t_l), dx=_r(mid - 2.0 - a_root0 + 0.2), rz=0.0, hz=0.64, lean=0.3, fl=1.0, fk=1.7, rl=-0.3, rk=1.3, fa=0.3, fe=1.2, ra=0.3, re=1.2),   # 着地(つぶれ)
+                      dict(t=1.8, dx=_r(mid - 2.0 - a_root0 + 0.2), hz=0.86, lean=0.15)]
+            keysB = [dict(t=0.0, dx=-1.7), dict(t=0.6, dx=-1.7, **GUARD),
+                     dict(t=_r(t_j - 0.1), dx=-1.7, **crouch),
+                     dict(t=_r(t_j), dx=-1.55, rz=0.5, hz=0.95, lean=-0.1, fa=2.6, fe=0.3, ra=2.2, re=0.4, fl=0.3, fk=0.2, rl=-0.3, rk=0.2),
+                     dict(t=_r(t_c - 0.03), dx=_r(-(mid + 0.5 - 2.4)), rz=1.9, hz=0.9, lean=0.35, fl=0.6, fk=0.4, rl=-0.5, rk=0.3, fa=1.6, fe=0.1, ra=-0.3, re=1.0),
+                     dict(t=_r(t_c), dx=_r(-(mid + 0.45 - 2.4)), rz=1.9, hz=0.9, lean=0.4, fl=0.6, fk=0.4, rl=-0.5, rk=0.3, fa=1.6, fe=0.1, ra=-0.3, re=1.0),
+                     dict(t=_r(t_c + 0.2), dx=_r(-(mid + 1.4 - 2.4)), rz=1.6, hz=0.9, lean=-0.3, fa=0.8, fe=1.0, ra=0.6, re=1.0, fl=0.4, fk=0.3, rl=-0.4, rk=0.3),
+                     dict(t=_r(t_l), dx=_r(-(mid + 2.0 - 2.4)), rz=0.0, hz=0.64, lean=0.3, fl=1.0, fk=1.7, rl=-0.3, rk=1.3, fa=0.3, fe=1.2, ra=0.3, re=1.2),
+                     dict(t=1.8, dx=-1.7, hz=0.86, lean=0.1),
+                     *([] if bfirst else [dict(t=_r(tc), dx=-1.7, **GUARD)])] + [k for k in keysB if k["t"] > 1.8]
+            hits += [dict(tau=_r(t_j), hold=0.0, kind="launch", by="A", pos=[a_root0, 0.0]),
+                     dict(tau=_r(t_c), hold=0.1, kind="clash", pos=[_r(mid), 2.7]),
+                     dict(tau=_r(t_l), hold=0.03, kind="land", pos=[_r(mid - 2.0), 0.0]),
+                     dict(tau=_r(t_l + 0.02), hold=0.0, kind="land", pos=[_r(mid + 2.0), 0.0])]
+            flashes.append(_r(t_c))
+            slow.append(dict(start=_r(t_c - 0.04), end=_r(t_c + 0.12), rate=0.5))
+            speed.append([_r(t_j), _r(t_c)])
+            shots.insert(0, dict(t=0.55, follow="mid", scale=[[0.55, 5.6], [t_j, 5.2]], yaw=6.0, pitch=4.0, lens=40.0, target_z=1.2))
+            shots.append(dict(t=_r(t_j + 0.05), follow="mid", scale=5.6, yaw=0.0, pitch=-4.0, lens=40.0, target_z=2.2))   # 空中の 2 人を少し下から
+            shots.append(dict(t=_r(t_l + 0.1), follow="mid", scale=6.0, yaw=4.0, pitch=6.0, lens=40.0, target_z=1.0))
+            shots.append(dict(t=1.9, follow="A", scale=[[1.9, 4.8], [tc + 0.4, 3.9]], yaw=[[1.9, -38.0], [tc + 0.4, -20.0]], pitch=4.0, lens=30.0, target_z=1.0, lag=0.3))
         if open_cb:                                      # 撃ち落とし: 0.6 B が片手を上げて玉を膨らませ → 1.1 投げる → 1.4 A が弾いて爆発 → 1.6 A が走り出す
             col = list(s.get("beam_color_b") or [255, 110, 90])
             clipsA[0].update(start=1.6, **{"in": 0.12})
@@ -267,7 +306,7 @@ def build_fight(spec: dict) -> dict:
             throw_b = dict(hz=0.8, lean=0.4, fa=1.55, fe=0.1, ra=-0.3, re=1.0, ht=0.0, fl=0.95, fk=0.5, rl=-0.6, rk=0.2, face="fight")
             keysB = [dict(t=0.0, dx=-1.7), dict(t=0.62, dx=-1.7, **raise_hand_b), dict(t=1.0, dx=-1.7, **dict(raise_hand_b, fa=2.9, lean=-0.2, hz=0.8)),
                      dict(t=1.1, dx=-1.5, **throw_b), dict(t=1.4, dx=-1.5, **dict(throw_b, lean=0.3, hz=0.84)),
-                     dict(t=_r(tc - 1.2) if bfirst else _r(tc), dx=-1.7, **GUARD)] + [k for k in keysB if k["t"] > 1.5]
+                     *([] if bfirst else [dict(t=_r(tc), dx=-1.7, **GUARD)])] + [k for k in keysB if k["t"] > 1.5]
             x_hit = _r(a_root0 + 1.05)
             fx_orbs.append(dict(start=0.62, end=1.1, who="B", r0=0.14, r1=0.36, color=col))
             fx_proj.append(dict(start=1.1, end=1.42, x0=_r(b_root0 - 0.9), z0=1.5, x1=x_hit, z1=1.3, r=0.36, color=col))
@@ -341,8 +380,8 @@ def build_fight(spec: dict) -> dict:
             shots.append(dict(t=1.7, follow="A", scale=[[1.7, 4.8], [tc + 0.4, 3.9]], yaw=[[1.7, -38.0], [tc + 0.4, -20.0]], pitch=4.0, lens=30.0, target_z=1.0, lag=0.3))
         if bfirst:                                       # B が先に仕掛ける: 1発目は A が沈んでかわし(miss)、2発目は A が受け止める(clash)
             tb1, tb2 = tc - 0.78, tc - 0.40
-            keysB = [dict(t=0.0, dx=-1.7), dict(t=_r(tc - 1.2), dx=-1.7, **GUARD), dict(t=_r(tb1 - 0.15), dx=-1.0, **GUARD),
-                     dict(t=_r(tc - 0.18), dx=-1.4, **GUARD), keysB[-1]]
+            keysB = [k for k in keysB[:-1] if k["t"] < tc - 1.3] + [dict(t=_r(tc - 1.2), dx=-1.7, **GUARD), dict(t=_r(tb1 - 0.15), dx=-1.0, **GUARD),
+                     dict(t=_r(tc - 0.18), dx=-1.4, **GUARD), keysB[-1]]   # 出だしの技(撃ち落とし・空中戦)の早いキーは残す(丸ごと置き換えると B が投げも跳びもしなかった)
             clipsB += [dict(file=cclip, dx_scale=0.3, strike_at=_r(tb1), start=_r(tb1 - 0.2), end=_r(tb1 + 0.17), **{"in": 0.06, "out": 0.08}),
                        dict(file=cclip, dx_scale=0.3, strike_at=_r(tb2), start=_r(tb2 - 0.17), end=_r(tb2 + 0.25), **{"in": 0.06, "out": 0.1})]
             hits += [dict(tau=_r(tb1), hold=0.0, kind="miss", by="B", pos=[2.9, 1.25],

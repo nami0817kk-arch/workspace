@@ -312,3 +312,12 @@ def test_opening_counter_blast_builds():
     pj = sc["fx"]["projectiles"][0]
     assert pj["x1"] < pj["x0"]                                           # B から A へ(左向き)
     planmod.validate_scene(sc)
+
+
+def test_opening_air_clash_builds():
+    sc = fight.build_fight(dict(weapon="sword", kick=False, opening="air_clash", hits=2, finisher="none"))
+    early = [h for h in sc["hits"] if h["tau"] < 2.0]
+    cl = next(h for h in early if h["kind"] == "clash")
+    assert cl["pos"][1] > 2.0                                            # 空中でぶつかる
+    assert max(k.get("rz", 0.0) for k in sc["keys"]["B"] if k["t"] < 2.0) >= 1.8   # B も跳ぶ
+    planmod.validate_scene(sc)
