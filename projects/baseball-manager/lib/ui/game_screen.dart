@@ -20,6 +20,7 @@ import '../game/player.dart';
 import 'art/avatar.dart';
 import 'art/radar.dart';
 import 'art/scene.dart';
+import 'art/story_image.dart';
 import 'admin_screen.dart';
 import 'controller.dart';
 import 'home_screen.dart' show showAdminToggled;
@@ -1938,13 +1939,27 @@ class EndingView extends StatelessWidget {
           child: ListView(
             padding: const EdgeInsets.all(16),
             children: [
-              SceneBanner(
-                season: Season.autumn,
-                stage: e.madePro ? Stage.pro : Stage.pathChoice,
-                role: p.role,
-                mood: e.madePro ? Mood.happy : Mood.flat,
-                label: '${p.age}歳',
-              ),
+              if (e.madePro)
+                StoryImage(
+                  key: const Key('retire-image'),
+                  asset: retireImageAsset,
+                  semanticLabel: '夕日に染まる球場に、使い込んだバットとグラブとボールが置かれている',
+                  fallback: SceneBanner(
+                    season: Season.autumn,
+                    stage: Stage.pro,
+                    role: p.role,
+                    mood: Mood.happy,
+                    label: '${p.age}歳',
+                  ),
+                )
+              else
+                SceneBanner(
+                  season: Season.autumn,
+                  stage: Stage.pathChoice,
+                  role: p.role,
+                  mood: Mood.flat,
+                  label: '${p.age}歳',
+                ),
               const SizedBox(height: 16),
               Text(e.title,
                   style: Theme.of(context)

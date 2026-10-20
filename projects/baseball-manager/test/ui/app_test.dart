@@ -2126,6 +2126,21 @@ void _rankTests() {
     });
   });
 
+  testWidgets('同梱の絵: ホームのタイトル絵と、プロを引退したときの絵が出る(読めなくても落ちない)', (t) async {
+    final c = await _start(t);
+    expect(find.byKey(const Key('home-hero')), findsOneWidget);
+    expect(find.byType(Image), findsWidgets);
+    expect(t.takeException(), isNull, reason: '画像の読み込み');
+    // プロを引退したエンディングに絵が出る
+    final done = _until((g) => false, seed: 3, potential: 95);
+    expect(done.ending!.madePro, isTrue);
+    c.adopt(done);
+    await t.pumpAndSettle();
+    await _dismissMilestones(t);
+    expect(find.byKey(const Key('retire-image')), findsOneWidget);
+    expect(t.takeException(), isNull, reason: 'エンディング');
+  });
+
   testWidgets('継承ポイント: 引退で貯まり、図鑑にある特性を次の選手に持たせられる', (t) async {
     final c = await _start(t);
     expect(c.legacyPoints, 0);

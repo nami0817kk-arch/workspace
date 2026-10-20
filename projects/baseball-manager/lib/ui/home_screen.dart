@@ -11,6 +11,7 @@ import '../game/talent.dart';
 import '../game/traits.dart';
 import 'art/avatar.dart';
 import 'art/scene.dart';
+import 'art/story_image.dart';
 import '../game/achievements.dart';
 import 'achievements_screen.dart';
 import 'trait_book_screen.dart';
@@ -147,12 +148,17 @@ class _HomeScreenState extends State<HomeScreen> {
               child: ListView(
                 padding: const EdgeInsets.all(16),
                 children: [
-                  SceneBanner(
-                    season: Season.spring,
-                    stage: Stage.youth,
-                    role: role,
-                    mood: Mood.happy,
-                    label: '6歳',
+                  StoryImage(
+                    key: const Key('home-hero'),
+                    asset: homeHeroAsset,
+                    semanticLabel: '夕焼けのグラウンドで素振りをする少年。奥にはプロの球場へ続く道が伸びている',
+                    fallback: SceneBanner(
+                      season: Season.spring,
+                      stage: Stage.youth,
+                      role: role,
+                      mood: Mood.happy,
+                      label: '6歳',
+                    ),
                   ),
                   const SizedBox(height: 16),
                   Text('6歳から、プロを引退するまで。',
