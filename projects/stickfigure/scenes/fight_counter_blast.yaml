@@ -1,0 +1,3 @@
+# 出だしの技の見本 4: 気弾の撃ち落とし。相手が気弾を投げ、A が剣で弾いて空中で爆発、そのまま走って連打→決めは飛ぶ斬撃
+name: fight_counter_blast
+fight: {weapon: sword, kick: false, opening: counter_blast, hits: 3, counter: true, finisher: slash_wave, palette: cool, stage: field, mood: battle, seed: 7}

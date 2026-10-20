@@ -302,3 +302,13 @@ def test_blink_combo_builds():
     assert kinds.count("vanish") == 3 and kinds.count("appear") == 3
     assert "heel" in kinds and len(sc["snaps"]) >= 6
     planmod.validate_scene(sc)
+
+
+def test_opening_counter_blast_builds():
+    sc = fight.build_fight(dict(weapon="sword", kick=False, opening="counter_blast", hits=2, finisher="none"))
+    early = [h for h in sc["hits"] if h["tau"] < 2.0]
+    assert any(h["kind"] == "throw" and h.get("by") == "B" for h in early)
+    assert any(h["kind"] == "blast" for h in early)
+    pj = sc["fx"]["projectiles"][0]
+    assert pj["x1"] < pj["x0"]                                           # B から A へ(左向き)
+    planmod.validate_scene(sc)
