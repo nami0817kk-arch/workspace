@@ -30,6 +30,42 @@ class TitleArt extends StatelessWidget {
       );
 }
 
+/// 画面の上に置く横長の絵(Gemini で生成した `assets/art/*.jpg`)。
+/// 読み込み中・読み込めなかったときは、オレンジのグラデーションを出す(空白や例外にしない)。
+class ArtBanner extends StatelessWidget {
+  const ArtBanner(this.asset, {super.key, this.height = 150});
+  final String asset;
+  final double height;
+
+  @override
+  Widget build(BuildContext context) {
+    const placeholder = DecoratedBox(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [Color(0xFFFFB74D), Color(0xFFBF360C)],
+        ),
+      ),
+    );
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: SizedBox(
+        height: height,
+        width: double.infinity,
+        child: Image.asset(
+          asset,
+          fit: BoxFit.cover,
+          alignment: Alignment.center,
+          frameBuilder: (context, child, frame, sync) =>
+              (frame == null && !sync) ? placeholder : child,
+          errorBuilder: (_, __, ___) => placeholder,
+        ),
+      ),
+    );
+  }
+}
+
 class _TitlePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {

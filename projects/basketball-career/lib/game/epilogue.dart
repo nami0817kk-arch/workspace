@@ -17,6 +17,13 @@ bool _wentPro(Game g) => g.records.any((r) => r.league.name.startsWith('pro'));
 bool worldChampion(Game g) =>
     g.records.any((r) => r.league == League.national && r.champion);
 
+/// 栄光の結末か(エンディングの絵を選ぶ)。世界王者・永久欠番・3回以上の優勝・海外での優勝のどれか。
+bool gloriousEnding(Game g) =>
+    worldChampion(g) ||
+    retiredNumber(g) ||
+    g.titles >= 3 ||
+    (g.abroad && g.titles >= 1);
+
 /// 一生につく称号。到達点で決まる。
 String careerTitle(Game g) {
   final nick = positionNickname(g.player.position);
