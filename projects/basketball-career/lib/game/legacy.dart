@@ -116,6 +116,8 @@ class Achievement {
 bool _wentPro(Game g) => g.records.any((r) => r.league.name.startsWith('pro'));
 
 final achievements = <Achievement>[
+  Achievement('draft_first', 'ドラフト1位', 'ドラフトで全体1位に指名された。', (g) => g.draftPick == 1),
+  Achievement('draft_late', '下位からの成り上がり', 'ドラフト下位(31位以下)から、プロで優勝した。', (g) => g.draftPick > 30 && g.titles >= 1),
   Achievement('first_title', '初優勝', '大会で優勝した。', (g) => g.titles >= 1),
   Achievement('three_titles', '常勝', '大会で3回優勝した。', (g) => g.titles >= 3),
   Achievement('pro', 'プロの扉', 'プロ契約を勝ち取った。', _wentPro),

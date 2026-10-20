@@ -6,6 +6,7 @@ import '../game/epilogue.dart';
 import '../game/game.dart';
 import '../game/life.dart';
 import '../game/match.dart';
+import '../game/path.dart';
 import '../game/player.dart';
 import '../game/season.dart';
 import 'art/court.dart';
@@ -267,6 +268,9 @@ class _PlayerCard extends StatelessWidget {
             Text('${trackLabel(game)}  ${game.number > 0 ? '#${game.number}  ' : ''}${p.position.label}  '
                 '${p.heightCm.toStringAsFixed(1)}cm  総合 ${p.overall.round()}'),
             Text('持ち味: ${p.position.perk}', style: const TextStyle(fontSize: 12)),
+            if (game.track == Track.pro && game.draftPick > 0)
+              Text(draftLabel(game.draftPick),
+                  style: const TextStyle(fontSize: 12)),
             if (game.track == Track.school && p.age >= 15 ||
                 game.track == Track.university ||
                 game.track == Track.corporate)

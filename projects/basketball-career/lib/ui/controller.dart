@@ -507,7 +507,7 @@ class GameController extends ChangeNotifier {
     final ok = g.chooseRoute(r);
     if (r == Route.pro && ok) {
       pending.add(Milestone(MilestoneKind.contract, 'プロ契約!',
-          '${g.player.name}は、プロの世界へ飛び込む。'));
+          '${g.player.name}は、${draftLabel(g.draftPick)}でプロの世界へ飛び込む。'));
     }
     pathMessage = switch ((r, ok)) {
       (Route.pro, true) => 'プロ契約を勝ち取った!',

@@ -172,6 +172,7 @@ class Game {
     this.coachBond = 20,
     this.rivalMet = false,
     this.nationalPending = false,
+    this.draftPick = 0,
     this.caps = 0,
     this.number = 0,
     this.mate = '',
@@ -306,6 +307,9 @@ class Game {
   /// チームメイトの名前とコーチの名前(段階が変わると替わる。出来事の文に入る)。
   String mate;
   String coachLabel;
+
+  /// プロ契約のときのドラフト指名順位(1〜60)。0 は指名なし(古いセーブ・プロ以外)。
+  int draftPick;
 
   /// 日本代表に参加することにした(次の冬に世界大会に出る)。
   bool nationalPending;
@@ -929,6 +933,11 @@ class Game {
     if (route == Route.pro) {
       final win = winsContract(player, achievement, rng);
       if (win) {
+        draftPick = draftPickOf(offerScore(player, achievement), rng);
+        if (draftPick <= 10) {
+          // 上位指名は期待されている: 気持ちが高い状態ではじまる。
+          condition = condition.copyWith(morale: condition.morale + 10);
+        }
         track = Track.pro;
         teamwork = 40;
         coachBond = 20;
@@ -1037,6 +1046,7 @@ class Game {
         'coachBond': coachBond,
         'rivalMet': rivalMet,
         'nationalPending': nationalPending,
+        'draftPick': draftPick,
         'caps': caps,
         'number': number,
         'mate': mate,
@@ -1088,6 +1098,7 @@ class Game {
         coachBond: (j['coachBond'] as num?)?.toInt() ?? 20,
         number: (j['number'] as num?)?.toInt() ?? 0,
         nationalPending: (j['nationalPending'] as bool?) ?? false,
+        draftPick: (j['draftPick'] as num?)?.toInt() ?? 0,
         caps: (j['caps'] as num?)?.toInt() ?? 0,
         mate: (j['mate'] as String?) ?? '',
         coachLabel: (j['coachLabel'] as String?) ?? '',

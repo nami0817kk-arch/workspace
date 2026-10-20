@@ -60,6 +60,18 @@ bool winsContract(Player p, double achievement, Random rng) {
   return s + (rng.nextDouble() * 20 - 10) >= _passLine;
 }
 
+/// ドラフトの指名順位(1〜60位)。評価点が高いほど上位。運で数順位ぶれる。
+/// 評価点100で1位、90で15位前後、80で30位前後、70(ほぼ確実のライン)で44位前後、57以下は60位。
+int draftPickOf(double score, Random rng) {
+  final base = 1 + (100 - score) * 1.45;
+  return (base + (rng.nextDouble() - 0.5) * 8).round().clamp(1, 60);
+}
+
+String draftLabel(int pick) {
+  if (pick <= 0) return '';
+  return pick == 1 ? 'ドラフト1位指名(全体1位)' : 'ドラフト${pick <= 30 ? '1' : '2'}巡目 全体$pick位';
+}
+
 /// 海外挑戦の条件。21歳以上で総合評価が一定以上。
 const abroadMinAge = 21;
 const abroadMinOverall = 70.0;
