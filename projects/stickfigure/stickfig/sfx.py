@@ -131,6 +131,10 @@ def se(plan: dict, seed: int = 7) -> np.ndarray:
             _add(buf, whoosh(rng, 0.2), t - 0.06, 0.5)
         elif k == "grab":
             _add(buf, thump(rng, 180, 0.12, 0.5), t, 0.6)
+        elif k == "grind":                              # 鍔迫り合い: 金属のこすれ(短い高い鳴り)
+            n_ = int(SR * 0.12)
+            tt = np.arange(n_) / SR
+            _add(buf, (np.sin(2 * np.pi * 2900 * tt) * 0.5 + rng.standard_normal(n_) * 0.25) * _env(n_, 0.002, 0.08), t, 0.3)
         elif k == "rapid":
             _add(buf, thump(rng, 240, 0.08, 0.5), t, 0.45)
         elif k == "launch":

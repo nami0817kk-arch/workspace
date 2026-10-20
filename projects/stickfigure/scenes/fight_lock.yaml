@@ -1,0 +1,3 @@
+# 出だしの技の見本 7: 鍔迫り合い。走り込んで剣を合わせ、押し合い、押し勝ってから連打→居合
+name: fight_lock
+fight: {weapon: sword, kick: false, opening: lock, hits: 3, counter: true, finisher: iai, palette: cool, stage: dojo, mood: tense, seed: 7}

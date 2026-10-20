@@ -27,7 +27,7 @@ DEFAULTS = dict(
     counter=True,            # 1発目のあと、相手の反撃
     finisher="launch_slash", # launch_slash(決めの斬りで打ち上げ→空中斬り→叩きつけ) / launch_kick(決めは高い蹴りで打ち上げ) / beam(気の光線: 溜め→発射→壁まで吹き飛ばす) / blast(気弾: 片手に玉を膨らませて投げる→着弾で爆発) / wave(衝撃波: 跳んで拳を地面に叩きつけ→地面を走る波で打ち上げる) / air_combo(空中コンボ: 打ち上げ→空中で 2 発追加→叩きつけ) / barrage(連打乱舞: 拳 8 発 0.1 秒間隔→大振りで壁へ) / slash_wave(飛ぶ斬撃: 振り抜くと三日月の光が飛ぶ。剣だけ) / iai(居合: 1 コマで相手の向こうへ抜け、間を置いて斬撃線が走り崩れ落ちる。剣だけ) / slam_throw(投げ: つかんで頭上を回し、背後の地面に叩きつける) / blink_combo(瞬間移動の連撃: 前に現れ拳→頭上に現れ踵落とし→離れて背を向ける) / meteor(流星落とし: 高く跳んで拳で急降下、着弾の衝撃で相手を壁へ) / beam_clash(光線の撃ち合い: 2 人が同時に撃ち、中央でぶつかり、A が押し勝つ。B の色は beam_color_b) / random(全部の技から武器に合うものを seed で選ぶ。FINISHER_POOL) / none(まっすぐ倒れる)
     taunt=False,             # 名乗り: 走り出す前に決めポーズで止まる(突きつけ→掲げて 0.25 秒止め、寄りと流線)。opening とは併用しない
-    opening=None,            # 出だしの技: blast(走り出す前に気弾を投げ、B がかわし、壁で爆発) / teleport(走らず一瞬で相手の目の前に現れる) / fly(跳び上がって水平に飛び、急降下して着地) / counter_blast(相手が気弾を投げ、A が弾いて空中で爆発させる) / air_clash(2 人が跳び上がって空中でぶつかり、弾かれて着地) / dodge_beam(相手が光線を撃ち、A が高く跳んでかわす) / random(OPENING_POOL から seed で選ぶ。名乗りも入る)。kick: true とは併用しない
+    opening=None,            # 出だしの技: blast(走り出す前に気弾を投げ、B がかわし、壁で爆発) / teleport(走らず一瞬で相手の目の前に現れる) / fly(跳び上がって水平に飛び、急降下して着地) / counter_blast(相手が気弾を投げ、A が弾いて空中で爆発させる) / air_clash(2 人が跳び上がって空中でぶつかり、弾かれて着地) / dodge_beam(相手が光線を撃ち、A が高く跳んでかわす) / lock(鍔迫り合い: 走り込んで剣を合わせ、押し合い、押し勝つ。武器あり) / random(OPENING_POOL から seed で選ぶ。名乗りも入る)。kick: true とは併用しない
     beam_color=None,         # beam の色 [r,g,b](0〜255)。既定は水色
     beam_color_b=None,       # beam_clash の B の光線の色。既定は赤
     palette="warm",          # warm / cool
@@ -102,7 +102,7 @@ FINISHER_POOL = {                                      # finisher: random が選
     "spear": ["launch_slash", "beam", "wave", "meteor"],
     "none": ["launch_kick", "barrage", "blast", "beam", "wave", "slam_throw", "blink_combo", "meteor", "beam_clash"],
 }
-OPENING_POOL = [None, None, "blast", "teleport", "fly", "counter_blast", "air_clash", "dodge_beam", "taunt"]   # opening: random が選ぶ(None 2 つ=走りが多め。taunt は名乗り)
+OPENING_POOL = [None, None, "blast", "teleport", "fly", "counter_blast", "air_clash", "dodge_beam", "taunt", "lock"]   # opening: random が選ぶ(None 2 つ=走りが多め。taunt は名乗り)
 
 
 def _pt(clip_name: str, eff: str) -> str:
@@ -168,6 +168,8 @@ def build_fight(spec: dict) -> dict:
         s["opening"] = (rng.choice(pool) if rng is not None else None)
         if s["opening"] == "taunt":
             s["opening"], s["taunt"] = None, True
+        if s["opening"] == "lock" and s["weapon"] not in ("sword", "dagger", "staff", "spear"):
+            s["opening"] = None
     beam = s["finisher"] == "beam"                       # 必殺技: 気の光線(溜め → 発射 → 壁まで吹き飛ばす)
     blast = s["finisher"] == "blast"                     # 必殺技: 気弾(片手に玉を膨らませて投げる → 着弾で爆発 → 壁まで吹き飛ばす)
     wave = s["finisher"] == "wave"                       # 必殺技: 衝撃波(跳んで拳を地面に叩きつけ → 地面を走る波 → 相手を打ち上げる)
@@ -189,6 +191,7 @@ def build_fight(spec: dict) -> dict:
     open_cb = (s["opening"] == "counter_blast") and not kick   # 出だしの技: 相手が気弾を投げ、A が弾いて空中で爆発させる
     open_ac = (s["opening"] == "air_clash") and not kick # 出だしの技: 2 人が跳び上がって空中でぶつかり、弾かれて着地
     open_db = (s["opening"] == "dodge_beam") and not kick   # 出だしの技: 相手が光線を撃ち、A が高く跳んでかわす
+    open_lock = (s["opening"] == "lock") and not kick and s["weapon"] in ("sword", "dagger", "staff", "spear")   # 出だしの技: 走り込んで剣を合わせ、押し合い、押し勝つ
     taunt = bool(s["taunt"]) and not kick and not s["opening"]   # 名乗り: 走り出す前に決めポーズで止まる(字幕は使わない)
     o = 0.0 if kick else (-2.4 + (0.95 if bfirst else 0.0))          # 蹴りが無いぶん、連打の開始が早まる(B が先に仕掛けるなら、その分を空ける)
     if open_blast:
@@ -201,6 +204,8 @@ def build_fight(spec: dict) -> dict:
         o += 1.6                                         # 相手の光線のぶん、走り出しが 1.6 秒遅れる
     if taunt:
         o += 0.7                                         # 名乗りのぶん、走り出しが 0.7 秒遅れる
+    if open_lock:
+        o += 1.3                                         # 鍔迫り合いのぶん、連打が 1.3 秒遅れる
     if open_tp:
         o -= 0.4                                         # 瞬間移動は走らないぶん早く(立っている時間が長かった)
     tc = 4.0 + o                       # 連打の準備(起き上がり)の終わり
@@ -278,6 +283,27 @@ def build_fight(spec: dict) -> dict:
         a_dx = (4.0 if sword else 4.6) if bfirst else 3.4   # B が先に仕掛けるときは、B の拳が届く所まで寄る(剣なら、そのあと剣の間合いへ戻る分を小さく)
         clipsA[0].update(end=_r(ta))
         keysA.append(dict(t=_r(ta), dx=a_dx, hz=0.9))
+        if open_lock:                                    # 鍔迫り合い: 0.6〜1.9 走り込む(B も一歩出る)→ 1.9 剣を合わせる(clash)→ 2.45 まで押し合い(火花)→ 2.5 押し勝って B がよろける → 2.7 A が跳び退いて間合いへ
+            clipsA[0].update(end=1.9)
+            a_lock = 5.1                                 # A の根元 3.1(B の根元 3.8 の 0.7 手前)
+            press = dict(hz=0.78, lean=0.35, fa=1.5, fe=0.6, ra=1.3, re=0.8, ht=0.05, fl=1.0, fk=0.6, rl=-0.6, rk=0.2, face="fight")        # 剣を前で合わせて押す
+            keysA += [dict(t=1.9, dx=a_lock, **press),
+                      dict(t=2.1, dx=_r(a_lock + 0.05), **dict(press, lean=0.42, hz=0.76)),
+                      dict(t=2.3, dx=_r(a_lock - 0.03), **dict(press, lean=0.33, hz=0.78)),       # 押し合いの揺れ
+                      dict(t=2.45, dx=_r(a_lock + 0.1), **dict(press, lean=0.45, hz=0.74)),
+                      dict(t=2.55, dx=_r(a_lock + 0.3), **dict(press, lean=0.55, hz=0.8, fa=1.7, fe=0.2)),   # 押し勝って踏み込む
+                      dict(t=2.7, dx=a_dx, hz=0.9, lean=0.05, fa=0.9, fe=1.4, ra=0.7, re=1.5)]           # 跳び退いて間合いを取り直す
+            keysB += [dict(t=1.5, dx=-1.7, **GUARD), dict(t=1.75, dx=-1.4, **GUARD),                     # 一歩出て受ける
+                      dict(t=1.9, dx=-1.4, **BLOCK), dict(t=2.1, dx=-1.35, **dict(BLOCK, lean=0.22)),
+                      dict(t=2.3, dx=-1.42, **dict(BLOCK, lean=0.15)), dict(t=2.45, dx=-1.3, **dict(BLOCK, lean=0.26)),
+                      dict(t=2.5, dx=-2.2, lean=-0.45, hz=0.84, fa=0.6, ra=0.5, fe=1.0, re=1.1, ht=-0.3, face="pain"),   # 押し負けてよろける
+                      *([] if bfirst else [dict(t=2.7, dx=-1.7, **GUARD)])]
+            hits += [dict(tau=1.9, hold=0.08, kind="clash", by="A", pos=[3.45, 1.55])]
+            hits += [dict(tau=_r(2.0 + 0.1 * i), hold=0.0, kind="grind", pos=[3.45 + 0.02 * (i % 2), 1.55 - 0.03 * (i % 3)]) for i in range(5)]   # 押し合いの火花
+            flashes.append(1.9)
+            speed.append([1.2, 1.9])
+            shots.append(dict(t=1.85, follow="mid", scale=3.8, yaw=12.0, pitch=4.0, lens=32.0, target_z=1.3, lag=0.1))   # 押し合いに寄る
+            shots.append(dict(t=2.6, follow="A", scale=[[2.6, 4.8], [tc + 0.4, 3.9]], yaw=[[2.6, -38.0], [tc + 0.4, -20.0]], pitch=4.0, lens=30.0, target_z=1.0, lag=0.3))
         if taunt:                                        # 名乗り: 0.6 武器(腕)を相手に突きつける → 0.85 高く掲げて止め(0.25 秒、寄り・流線)→ 1.2 下ろして → 1.3 走り出す
             clipsA[0].update(start=1.3, **{"in": 0.12})
             keysA = [k for k in keysA if k["t"] not in (0.6,)]

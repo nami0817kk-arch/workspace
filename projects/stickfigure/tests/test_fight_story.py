@@ -360,3 +360,13 @@ def test_random_picks_from_pools():
         seen_o.add(frozenset(k for k in kinds if k in ("throw", "vanish", "launch", "clash", "beam")))
         planmod.validate_scene(sc)
     assert len(seen_f) >= 4 and len(seen_o) >= 3                        # 技がばらける
+
+
+def test_opening_lock_builds():
+    sc = fight.build_fight(dict(weapon="sword", kick=False, opening="lock", hits=2, finisher="none"))
+    early = [h for h in sc["hits"] if h["tau"] < 3.0]
+    assert sum(1 for h in early if h["kind"] == "grind") == 5
+    assert any(h["kind"] == "clash" and abs(h["tau"] - 1.9) < 1e-6 for h in early)
+    sc2 = fight.build_fight(dict(weapon="none", kick=False, opening="lock", hits=2, finisher="none", seed=3))
+    assert not any(h["kind"] == "grind" for h in sc2["hits"])            # 素手では鍔迫り合いにならない
+    planmod.validate_scene(sc)
