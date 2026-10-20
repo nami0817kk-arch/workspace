@@ -1,0 +1,3 @@
+# 出だしの技の見本 6: 相手の必殺技。相手が光線を撃ち、A が高く跳んでかわし、走って連打→決めは光線で撃ち返す
+name: fight_dodge_beam
+fight: {weapon: none, kick: false, opening: dodge_beam, hits: 3, counter: true, finisher: beam, palette: cool, stage: night, mood: battle, seed: 3, beam_color: [120, 230, 255], beam_color_b: [255, 110, 90]}

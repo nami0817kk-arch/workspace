@@ -321,3 +321,12 @@ def test_opening_air_clash_builds():
     assert cl["pos"][1] > 2.0                                            # 空中でぶつかる
     assert max(k.get("rz", 0.0) for k in sc["keys"]["B"] if k["t"] < 2.0) >= 1.8   # B も跳ぶ
     planmod.validate_scene(sc)
+
+
+def test_opening_dodge_beam_builds():
+    sc = fight.build_fight(dict(weapon="none", kick=False, opening="dodge_beam", hits=2, finisher="none"))
+    bm = next(b for b in sc["fx"]["beams"] if b["who"] == "B")
+    assert bm["x_end"] < 0                                               # B の光線は左へ
+    top = max(k.get("rz", 0.0) for k in sc["keys"]["A"] if k["t"] < 2.5)
+    assert top >= 2.0                                                    # A は光線より高く跳ぶ
+    planmod.validate_scene(sc)
