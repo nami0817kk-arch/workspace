@@ -2,7 +2,9 @@
 // pubspec.yaml の assets に無いと、実機では読み込めず代替の絵に戻るだけで気づきにくい。
 import 'dart:io';
 
-import 'package:flutter_test/flutter_test.dart';
+import 'package:basketball_career/game/life.dart';
+import 'package:basketball_career/game/match.dart';
+import 'package:flutter_test/flutter_test.dart' hide Action;
 
 void main() {
   const arts = [
@@ -38,6 +40,21 @@ void main() {
       }
     }
     expect(used, arts.toSet());
+  });
+
+  test('ボタンのアイコンが、過ごし方・勝負どころ・ハーフタイムの全種類にある', () {
+    final names = <String>[
+      for (final a in Action.values) 'act_${a.name}',
+      for (final c in Clutch.values) 'clutch_${c.name}',
+      for (final h in Halftime.values) 'half_${h.name}',
+    ];
+    expect(names.length, 15);
+    for (final n in names) {
+      final f = File('assets/art/icons/$n.png');
+      expect(f.existsSync(), isTrue, reason: '$n.png が無い');
+      expect(f.lengthSync(), lessThan(60 * 1024), reason: '$n.png が重い');
+    }
+    expect(File('pubspec.yaml').readAsStringSync(), contains('assets/art/icons/'));
   });
 
   test('アイコンの元の絵は 1024x1024', () {

@@ -141,6 +141,10 @@ Future<void> _shoot(
   );
   await t.pump(const Duration(milliseconds: 100));
   await t.pump(const Duration(milliseconds: 100));
+  // 画面の絵・ボタンのアイコン(assets の画像)の読み込みを待つ。待たないと空白で撮れる。
+  await t.runAsync(() => Future.delayed(const Duration(milliseconds: 600)));
+  await t.pump();
+  await t.pump(const Duration(milliseconds: 200));
   // 読み込み中のまま撮っていないことを検査する。
   expect(
     find.byType(CircularProgressIndicator),

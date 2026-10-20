@@ -387,10 +387,32 @@ class _ActionButton extends StatelessWidget {
       ],
     );
     final cb = enabled ? onPressed : null;
+    final withIcon = _WithIcon('assets/art/icons/act_${action.name}.png', child);
     return recommended
-        ? FilledButton(onPressed: cb, child: child)
-        : FilledButton.tonal(onPressed: cb, child: child);
+        ? FilledButton(onPressed: cb, child: withIcon)
+        : FilledButton.tonal(onPressed: cb, child: withIcon);
   }
+}
+
+/// ボタンの左に置く絵(Gemini で生成した 192px の PNG)。無ければ何も出さず、文字だけにする。
+class _WithIcon extends StatelessWidget {
+  const _WithIcon(this.asset, this.child);
+  final String asset;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) => Row(
+        children: [
+          Image.asset(
+            asset,
+            width: 36,
+            height: 36,
+            errorBuilder: (_, __, ___) => const SizedBox(width: 36, height: 36),
+          ),
+          const SizedBox(width: 8),
+          Expanded(child: child),
+        ],
+      );
 }
 
 /// 今年の目標。まだ選んでいなければ2つの候補を出す。
@@ -835,7 +857,9 @@ class _HalftimeView extends StatelessWidget {
                     padding: const EdgeInsets.only(bottom: 8),
                     child: FilledButton(
                       onPressed: () => controller.playHalftime(k),
-                      child: Column(
+                      child: _WithIcon(
+                        'assets/art/icons/half_${k.name}.png',
+                        Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(k == rec ? '${k.label}  (おすすめ)' : k.label,
@@ -851,6 +875,7 @@ class _HalftimeView extends StatelessWidget {
                             const Text('相手との相性: 悪い',
                                 style: TextStyle(fontSize: 12)),
                         ],
+                      ),
                       ),
                     ),
                   ),
@@ -931,7 +956,9 @@ class _ClutchView extends StatelessWidget {
                     padding: const EdgeInsets.only(bottom: 8),
                     child: FilledButton(
                       onPressed: () => controller.playClutch(k),
-                      child: Column(
+                      child: _WithIcon(
+                        'assets/art/icons/clutch_${k.name}.png',
+                        Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
@@ -941,6 +968,7 @@ class _ClutchView extends StatelessWidget {
                           Text(k.description,
                               style: const TextStyle(fontSize: 12)),
                         ],
+                      ),
                       ),
                     ),
                   ),
