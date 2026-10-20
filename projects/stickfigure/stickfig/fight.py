@@ -248,7 +248,7 @@ def build_fight(spec: dict) -> dict:
             rng.shuffle(fa)
         flurry.append(dict(start=1.12, end=1.64, every=4, angles=fa))
         hits += [dict(tau=1.66, hold=0.13, kind="pose"),
-                 dict(tau=1.9, hold=0.09, kind="kick", by="A", contact=dict(striker="A", effector="foot", target=dict(actor="B", point="hip"), tol=0.26)),
+                 dict(tau=1.9, hold=0.09, kind="kick", by="A", contact=dict(striker="A", effector="foot", target=dict(actor="B", point="hip"), tol=round(0.26 + 0.6 * max(0.0, float(s["b_scale"]) - 1.0), 2))),   # 相手が大きいと体の中心まで遠い(b_scale 1.25 で 0.29。守る戦いの決戦で点検に落ちた)
                  dict(tau=2.25, hold=0.06, kind="wall", pos=[6.0, 1.6])]
         slow += [dict(start=1.85, end=2.4, rate=0.35), dict(start=2.5, end=3.15, rate=2.2)]
         puffs.append(dict(tau=3.0, kind="land", pos=[4.6, 0.0]))
