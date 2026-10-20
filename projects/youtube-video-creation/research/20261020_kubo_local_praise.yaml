@@ -1,0 +1,163 @@
+# 取材メモ（2026年10月20日）久保建英、現地紙の評価（ニュースのショート。見せ方 X＝冒頭1秒に強い一言）
+# 取材: 2026-10-20。requests（ブラウザUA）でサッカーキングの本文を全部読んだ（検索のAI要約は使っていない）。控え research/raw/20261020_kubo_*。
+#   ・サッカーキング 2026-10-19「『ソシエダの右サイドがこれほど輝いたのは本当に久しぶりのこと』久保建英の“復活の狼煙”に現地紙も賛辞」（題材の出典）
+#     https://www.soccer-king.jp/news/world/esp/20261019/2218256.html  — ムンド・デポルティーボ紙の評価の中身（research/raw/20261020_kubo_sk6.txt）。
+#   ・サッカーキング 2026-10-19「『さあ、侍が帰ってきたぞ！』…現地紙は『約10カ月ぶりのゴールはこの試合最大の収穫』」
+#     https://www.soccer-king.jp/news/world/esp/20261019/2218199.html — アス紙・エル・デスマルケ紙・ムンド・デポルティーボ紙の評価（research/raw/20261020_kubo_sk_2218199.txt）。
+#   ・サッカーキング 2026-10-19「苦悩の302日間に“アディオス”告げる一発！」https://www.soccer-king.jp/news/world/esp/20261019/2218197.html
+#     — マタラッツォ監督の試合後の言葉（マルカ紙が伝えた。research/raw/20261020_kubo_sk_2218197.txt）。
+#   元のスペイン紙3紙の本文は読んでいない（SK が訳したもの）。台本は「SK が伝えた評価」として引き、確度は 報道 まで。
+# 10/19 に久保の初ゴール（本人の一問一答）を出している**ので続報の扱い。重ねない**：本人の言葉・3分・59分・7試合ぶり・5対2・「昨年12月のレバンテ戦」・サカラボの反応は使わない。
+#   新しい点＝(1) 現地紙3紙が何を評価したか (2) 相手の左サイドバックを翻弄し、相手監督がハーフタイムに代えたという評価 (3) 右サイドバックのフォルトも評価されたこと (4) マタラッツォ監督の「覚悟の重さ」。
+#   最低限の前提（18日のマラガ戦で1ゴール1アシスト）だけ冒頭に1行。
+# 本人の言葉: この題材には無い（作らない）。引いたのは 新聞の評価（鉤括弧は SK が訳した原文のまま）と、監督の言葉。
+#   使った引用（SK の訳をそのまま）:
+#     アス「さあ、侍が帰ってきたぞ！」／ゴラッソを「ナイトメア・クボ」と形容／「約10カ月ぶりのゴールは、この試合最大の収穫の一つと言えるだろう」
+#     エル・デスマルケ 評価点「9」（オヤルサバルとともにトップタイ）／「タッチライン側にとどまることなく、常にゴールを意識した巧みかつトリッキーなプレー」
+#     ムンド・デポルティーボ「ラ・レアルの右サイドがこれほど輝いたのは、本当に久しぶりのことだった」／「タケ・クボ、昇る太陽のようにレアル・ソシエダに道を照らす」
+#     マタラッツォ監督（マルカ）「彼の試合に対する姿勢、集中力と覚悟の重さにとても満足している」
+# 資料のずれ: ゴールの入った場所＝SK の2本で「ゴール右上」（ムンド・デポルティーボの引用）。10/19 の資料では左隅とする記事もあった → 台本はゴールの場所を言わない。
+#   「302日ぶり」は SK（2218199）の数字。10/19 のゲキサカは「約10か月ぶり」（同じこと）。
+# 数えた比べ（見立て）: 3紙（アス・エル・デスマルケ・ムンド・デポルティーボ）のうち、ゴールだけでなくそれ以外の働き（右サイドでの動き・相手の左サイドバック・フォルトの起点）にも触れたのは2紙（エル・デスマルケ・ムンド）。
+#   ゴールの価値を語ったのはアス。次戦は22日のヨーロッパリーグ第3節リールストロム戦（SK）。
+# 確度: 新聞の評価・監督の言葉は SK 経由の 報道。見立ては 背景。クラブ公式の本文は読んでいない。
+# 反応: 探していない（0件。作らない）。
+# 写真（Real Sociedad 公式の6枚を、2枚ずつ上下に並べた3組＝pair 01〜03。元の写真は高さ945pxで、そのまま縦に敷くと2.03倍に伸びて precheck の×になるため。並べると伸びは約1.0倍）: Real Sociedad 公式サイト（realsociedad.eus）の選手ページに載っている記事の写真。出典・本人確認は credits.json（人が目で確かめた: 久保建英）。
+#   01＝新ユニ（Baghdadi Capital）のビジュアル・02＝ロッカールームの笑顔・03＝ゴール後に両腕を広げる場面（古い）・04＝アスレティック戦のシュート（古い）・05＝バルサ戦（古い）。
+#   10/19 の写真（ゲキサカ・日刊スポーツ）は使い回していない。Commons の「Takefusa Kubo.jpg」は 10/16 に使用済みなので使っていない。JFA の写真は 640x480 でショートに伸ばせず使えなかった。
+slot: japan
+date: "2026年10月20日"
+format: news
+no_main: true
+people: [久保建英, レアル・ソシエダ, マラガ, マタラッツォ監督]
+
+short_style: X
+short_hook_word: 昇る太陽
+short_photos:
+  - assets/images/20261020_kubo_local_praise_pair/01_v.jpg
+  - assets/images/20261020_kubo_local_praise_pair/02_v.jpg
+  - assets/images/20261020_kubo_local_praise_pair/03_v.jpg
+short_question: 22日のヨーロッパリーグ、久保建英の評価はどう変わると思いますか。
+short_hook: 久保建英は、現地でどう評価されたのか。
+short_telops:
+  - {match: 評価を見ます, text: 久保建英/現地での評価}
+  - {match: ナイトメア, text: アス/ゴラッソを「ナイトメア・クボ」}
+  - {match: 侍が帰ってきた, text: アス/「さあ、侍が帰ってきたぞ！」}
+  - {match: 最大の収穫, text: 「この試合/最大の収穫の一つ」}
+  - {match: トップタイ, text: エル・デスマルケの採点/オヤルサバルと並ぶ「9」}
+  - {match: 久しぶり, text: 「右サイドがこれほど輝いたのは/本当に久しぶり」}
+  - {match: 昇る太陽, text: 「昇る太陽のように/道を照らす」}
+  - {match: ハーフタイム, text: 相手の左サイドバックは/ハーフタイムに交代}
+  - {match: フォルト, text: 右サイドバックのフォルトも/先制点の起点と評価}
+  - {match: 覚悟の重さ, text: マタラッツォ監督/「覚悟の重さにとても満足」}
+  - {match: 22日, text: 次は22日/ヨーロッパリーグ リールストロム戦}
+
+theme:
+  id: kubo_local_praise
+  league: spain
+  league_name: ラ・リーガ
+  prefix: ""
+  title: 久保建英は、現地でどう評価されたのか。「昇る太陽のように」
+  hook: ""
+  question: 久保建英のマラガ戦を、現地紙と監督はどう評価したのか
+  takeaway: 現地紙3紙のうち、ゴール以外の働きにも触れたのは2紙。評価は、ゴールそのものから、右サイドでの動きへ広がっていた
+
+thumbnail:
+  line1: 久保建英
+  line2: 現地紙の評価
+  tags: [久保建英, レアル・ソシエダ]
+  layout: face
+  photo: assets/images/20261020_kubo_local_praise/02_w.jpg
+  short_photo: assets/images/20261020_kubo_local_praise_pair/01_v.jpg
+
+answer: 現地紙は、ゴールの価値と、右サイドでの働きの両方を評価した
+watch: 22日のヨーロッパリーグ、リールストロム戦
+
+sections:
+  - id: what
+    main: true
+    heading: 現地紙は何を評価したか
+    tier: 報道
+    telop: 久保建英への現地紙の評価
+    say:
+      - text: マラガ戦でゴールとアシストを記録した久保建英。その評価を見ます。
+        image: assets/images/20261020_kubo_local_praise_pair/01.jpg
+      - voice: マタラッツォ監督
+        text: 彼の試合に対する姿勢、
+        short_voice: true
+        image: assets/images/20261020_kubo_local_praise_pair/02.jpg
+      - voice: マタラッツォ監督
+        text: 集中力と覚悟の重さにとても満足している。
+        cont: true
+        short_voice: true
+      - text: これは、ソシエダの監督が試合後に話した言葉。新聞は、さらに踏み込みます。
+        image: assets/images/20261020_kubo_local_praise_pair/03.jpg
+      - text: スペイン紙アスは、ゴラッソを「ナイトメア・クボ」と形容しました。
+        image: assets/images/20261020_kubo_local_praise_pair/01.jpg
+      - text: 書き出しは「さあ、侍が帰ってきたぞ！」。
+        image: assets/images/20261020_kubo_local_praise_pair/02.jpg
+      - text: 302日ぶりのゴールは、「この試合最大の収穫の一つ」と書きました。
+        image: assets/images/20261020_kubo_local_praise_pair/03.jpg
+      - text: エル・デスマルケは、採点で、オヤルサバルと並ぶトップタイの「9」を付けました。
+        image: assets/images/20261020_kubo_local_praise_pair/01.jpg
+      - text: 右サイドでボールを受けても、タッチライン側にとどまらない。
+        image: assets/images/20261020_kubo_local_praise_pair/02.jpg
+      - text: 常にゴールを意識した、巧みなプレーだ、という評価です。
+        image: assets/images/20261020_kubo_local_praise_pair/03.jpg
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/esp/20261019/2218199.html
+      - https://www.soccer-king.jp/news/world/esp/20261019/2218197.html
+    quotes_from: ["サッカーキング https://www.soccer-king.jp/news/world/esp/20261019/2218197.html"]
+
+  - id: right
+    heading: 右サイドの輝き
+    tier: 報道
+    telop: 「昇る太陽のように、道を照らす」
+    say:
+      - text: スペイン紙ムンド・デポルティーボは、久保建英の右サイドをこう書きました。
+        image: assets/images/20261020_kubo_local_praise_pair/01.jpg
+      - voice: ムンド・デポルティーボ
+        text: ラ・レアルの右サイドがこれほど輝いたのは、
+        image: assets/images/20261020_kubo_local_praise_pair/02.jpg
+      - voice: ムンド・デポルティーボ
+        text: 本当に久しぶりのことだった。
+        cont: true
+      - voice: ムンド・デポルティーボ
+        text: タケ・クボ、昇る太陽のように、
+        image: assets/images/20261020_kubo_local_praise_pair/03.jpg
+      - voice: ムンド・デポルティーボ
+        text: レアル・ソシエダに道を照らす。
+        cont: true
+      - text: 久保建英は、相手の左サイドバックを完全に翻弄しました。
+        image: assets/images/20261020_kubo_local_praise_pair/01.jpg
+      - text: 相手監督は、ハーフタイムに、その選手を代えざるを得なかった、とも書いています。
+        image: assets/images/20261020_kubo_local_praise_pair/02.jpg
+      - text: 同じ紙は、右サイドバックのフォルトの動きが、先制点の起点だったとも評価しました。
+        image: assets/images/20261020_kubo_local_praise_pair/03.jpg
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/esp/20261019/2218256.html
+      - https://www.soccer-king.jp/news/world/esp/20261019/2218199.html
+
+  - id: view
+    viewpoint: true
+    heading: 久保建英の評価は、ゴールからどこへ広がったか
+    tier: 背景
+    telop: 久保建英への評価、3紙のうち2紙はゴール以外にも触れた
+    say:
+      - text: 見立てです。久保建英への評価は、ゴールの外へ広がったでしょうか。
+        image: assets/images/20261020_kubo_local_praise_pair/01.jpg
+      - text: アスが語ったのは、ゴールそのものの価値。
+        image: assets/images/20261020_kubo_local_praise_pair/02.jpg
+      - text: 右サイドでの動きまで触れたのは、エル・デスマルケと、もう1紙。3紙のうち2紙です。
+        image: assets/images/20261020_kubo_local_praise_pair/03.jpg
+      - text: 評価は、ゴールだけでなく、プレー全体へ。
+        image: assets/images/20261020_kubo_local_praise_pair/01.jpg
+      - text: 次は22日、ヨーロッパリーグのリールストロム戦です。
+        image: assets/images/20261020_kubo_local_praise_pair/02.jpg
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/esp/20261019/2218199.html
+      - https://www.soccer-king.jp/news/world/esp/20261019/2218256.html
+short_title: "久保建英は、現地でどう評価されたのか。「昇る太陽のように」"

@@ -1,0 +1,128 @@
+# 取材メモ（2026年10月19日）ヘタフェ会長トーレス、セルヒオ・ラモスの獲得を問われ「はい」。代理人の兄と話した（ニュースのショート。見せ方 X＋煽りの版）
+# 取材: 2026-10-19。requests（ブラウザUA）で本文を全部読んだ。控え research/raw/20261019_ramos_{infobae,bein_es,fichajes,fm}.txt。
+#   ・Infobae（EFE の配信、18日12時 米東部時間）…… トーレス会長の発言（スペイン語の原文）を括弧つきで載せている。**主な根拠**。
+#   ・beIN SPORTS（スペイン語版）…… 同じ発言を同じ括弧で載せている（EFE の内容）。
+#   ・Fichajes.net …… 同じ内容。ヘタフェの今季の戦い方（フリーの経験者を取る）にも触れる。
+#   ・Foot Mercato（題材の一覧の元）…… 仏語訳。「Oui」「Son frère, qui est son agent, a parlé avec moi」。
+#   ・AS（見出し『トーレスがラモスに扉を開く』）は本文が取れない（403）。**見出しも台本に使っていない**（断定しない）。マルカも同じ。
+# 確かめたこと（EFE の原文より）:
+#   ・トーレス会長（ヘタフェ）は日曜（18日）、国営ラジオ RNE の番組『Tablero Deportivo』で、ラモスの兄で代理人のレネ・ラモスと話したことを認めた。
+#   ・記者が、ラモスが「a tiro（手の届く所に来た）」状況なら獲るかと聞き、会長は "Sí"。続けて "Ha estado hablando conmigo su agente, su hermano."
+#   ・**同じ会見で、会長は「優先ではない」と言っている**（題材の一覧は「はい」だけを拾っていた。ここを落とすと誤解させる）:
+#     "Tenemos seis centrales. No es una posición que ahora mismo necesite... El míster quería bandas. Pero todavía no es tarde. Quiero decir que está en la lista de futuribles."
+#     "Podría venir porque ha ocurrido. Es un tema que llevamos tiempo detrás. Pero no era la prioridad, la prioridad era conseguir bandas y, si no es así, pues igual, si no ahora, en enero, si trajéramos un central... Pero ahora esa posición la tenemos bien cubierta."
+#     ※ "Podría venir porque ha ocurrido." は意味が取りにくい（EFE の書き起こしのまま）。**台本では引かない**。
+#   ・ラモスは40歳。モンテレイを離れてチームがない。最後の公式戦は 2025年12月6日（アペルトゥーラ準決勝、トルーカに2-3）。
+#     ※ 離れた時期は、EFE が「2025年の終わり」、Foot Mercato が「1月」で食い違う。**台本は時期を言わない**（最後の公式戦の日付だけ言う）。
+#   ・EFE: ヘタフェは「ダニ・カルバハルを獲得したばかり。契約は2027年6月30日まで」。Foot Mercato も獲得を書く。ラモスとカルバハルはレアルで同じ更衣室にいた（EFE）。
+#   ・クラブの発表は無い。契約の話・条件は出ていない。
+# 自分で数えた比べ（見立て）: 最後の公式戦 12/6 から 10/18 まで 316日（12月の残り25＋1月31＋2月28＋3月31＋4月30＋5月31＋6月30＋7月31＋8月31＋9月30＋10月18）。
+#   会長の言うセンターバック6人に、ラモスが加われば7人目（算数）。
+# 確度: トーレス会長の発言は EFE 配信（複数の媒体が同じ括弧で掲載）＝報道。クラブの発表は無い。**確定とは言わない。** 契約・移籍が決まったとは言わない。
+# 本人の言葉: **ラモス本人の言葉は無い**（作らない）。トーレス会長の言葉は原文（スペイン語）から訳した。語は足していない。
+# 煽りの版の規則: 煽る語は題と1行目だけ。ラモスを貶さない（「40歳」は年齢の事実として1回だけ言う）。事実は変えない。想定は「見立て」と明記。
+# 反応: 0件。この件への書き込みは見つかっていない（Foot Mercato の記事のコメントが3件あるが本文は読めていない）。作らない。approve は --no-voices で。
+# 写真: 代理店は使わない。assets/images/20261019_getafe_ramos_link/（出典は credits.json）。
+slot: laliga
+date: "2026年10月19日"
+format: news
+no_main: true      # ニュースはショートだけ（2026-10-14）。締めで本編を案内しない
+people: [セルヒオ・ラモス, アンヘル・トーレス, ヘタフェ]
+
+short_style: X
+short_hook_word: 会長「はい」
+short_question: ラモスは、1月までにヘタフェのユニフォームを着ると思いますか。
+short_hook: まさか、ラモスにヘタフェ。会長は「はい」と答えた。
+short_telops:
+  - {match: ラジオの番組, text: ヘタフェ会長トーレス/18日 ラジオ番組で語る}
+  - {match: 獲るかと聞かれ, text: ラモスが獲れるなら獲るか/と聞かれて}
+  - {match: 代理人の兄, text: ラモスの兄で代理人が/会長と話したと明かす}
+  - {match: 40歳, text: 40歳のラモス/チームが無い}
+  - {match: すぐに獲る, text: ただし会長は/「優先ではない」}
+  - {match: 6人います, text: 会長/「センターバックは6人いる」}
+  - {match: 候補のリスト, text: 会長/「候補のリストには入っている」}
+  - {match: 1月に, text: 会長/「今でなければ1月に」}
+  - {match: 316日, text: 最後の公式戦から/316日}
+  - {match: 7人目, text: ラモスが加われば/センターバック7人目}
+  - {match: カルバハル, text: ヘタフェは/カルバハルを獲得したばかり}
+  - {match: 決まったことは, text: 契約の話/クラブの発表は無い}
+
+theme:
+  id: getafe_ramos_link
+  league: spain
+  league_name: ラ・リーガ
+  prefix: ""
+  title: セルヒオ・ラモスにまさかのヘタフェ。会長が「兄と話した」と明かす
+  hook: ""
+  question: ヘタフェの会長は、ラモスの獲得について何と言ったのか
+  takeaway: 会長は「はい」と答え、兄で代理人と話したと認めた。ただ「優先ではない。1月なら」とも言った。最後の公式戦から316日。決まったことはまだ無い
+
+thumbnail:
+  layout: face
+  line1: ラモスにヘタフェ
+  line2: 会長が「はい」
+  tags: [セルヒオ・ラモス, ヘタフェ, トーレス会長]
+  photo: assets/images/20261019_getafe_ramos_link/04_w.jpg
+  short_photo: assets/images/20261019_getafe_ramos_link/04_v.jpg
+
+answer: 会長は「はい」と答え、兄で代理人と話したと認めた。ただ「優先ではない」とも言っている
+watch: 1月の冬の移籍期間に、クラブが動くか
+
+sections:
+  - id: what
+    main: true
+    heading: 何が起きたか
+    tier: 報道
+    telop: ヘタフェ会長、ラモスの獲得を問われて「はい」
+    say:
+      - 18日、ヘタフェのトーレス会長が、ラジオの番組で語りました。
+      - 記者が、セルヒオ・ラモスが獲れる状況なら獲るか、と聞きました。
+      - voice: トーレス会長
+        text: はい。
+        short_voice: true
+      - voice: トーレス会長
+        text: 彼の代理人、つまり兄が、私と話をしてきました。
+        cont: true
+      - 40歳のラモスは、いまチームがありません。
+    official: false
+    sources:
+      - https://www.infobae.com/espana/agencias/2026/10/18/angel-torres-confirma-contactos-con-sergio-ramos-esta-en-la-lista-de-futuribles/
+      - https://www.beinsports.com/es-us/football/la-liga/articles/-sergio-ramos-al-getafe-el-presidente-confirma-contactos-y-deja-abierta-la-puerta-2026-10-18
+      - https://www.footmercato.net/a7481617257824285896-un-club-confirme-des-discussions-avec-sergio-ramos
+
+  - id: notnow
+    heading: 会長は、ラモスをすぐ獲るとは言っていない
+    tier: 報道
+    telop: 会長「優先ではない」。ただ、リストには入っている
+    say:
+      - ただし会長は、ラモスをすぐに獲るとは言っていません。
+      - voice: トーレス会長
+        text: センターバックは6人います。いま必要な位置ではありません。
+      - voice: トーレス会長
+        text: 監督は、サイドの選手を望んでいました。
+        cont: true
+      - voice: トーレス会長
+        text: でも、まだ遅くはない。彼は、候補のリストに入っています。
+      - voice: トーレス会長
+        text: 今でなければ、1月に。センターバックを獲るなら、ですが。
+    official: false
+    sources:
+      - https://www.infobae.com/espana/agencias/2026/10/18/angel-torres-confirma-contactos-con-sergio-ramos-esta-en-la-lista-de-futuribles/
+      - https://www.beinsports.com/es-us/football/la-liga/articles/-sergio-ramos-al-getafe-el-presidente-confirma-contactos-y-deja-abierta-la-puerta-2026-10-18
+
+  - id: view
+    viewpoint: true
+    heading: 「はい」と「優先ではない」のあいだ
+    tier: 報道
+    telop: 最後の公式戦から316日。決まったことは無い
+    say:
+      - 見立てです。会長の言葉は、「はい」と「優先ではない」の二つです。
+      - ラモスの最後の公式戦は、去年12月6日。18日まで、316日あります。
+      - 会長の言うセンターバックは6人です。ラモスが加われば、7人目になります。
+      - ヘタフェは、カルバハルを獲得したばかりです。契約は2027年6月までです。
+      - 契約の条件も、クラブの発表もありません。決まったことは、まだありません。
+    official: false
+    sources:
+      - https://www.infobae.com/espana/agencias/2026/10/18/angel-torres-confirma-contactos-con-sergio-ramos-esta-en-la-lista-de-futuribles/
+      - https://www.fichajes.net/noticias/angel-torres-confirma-contactos-fichar-sergio-ramos-20261018.html
+short_title: "セルヒオ・ラモスにまさかのヘタフェ。会長が「兄と話した」と明かす"

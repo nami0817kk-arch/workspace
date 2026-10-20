@@ -1,0 +1,664 @@
+# モーガン・ロジャーズ（チェルシー／イングランド代表）の紹介。選手紹介の8節の型（2026-10-19、シリーズ「有名選手の紹介」）。
+# 見本は research/20261018_wirtz_intro.yaml。**FotMob は使わない**。パーセンタイル・同じ位置との順位・レーダー・シュートマップは出さない。
+# 数字は基本の数と自分で割った90分あたり。取材はブラウザの道具・JavaScript実行を使っていない（requests と WebSearch のURL探しだけ。検索のAI要約は使っていない）。
+#
+# **題材一覧の題案「1億3800万ユーロでヴィラからチェルシーへ移った」を直した点（言い切らない形に）**
+# - 移籍金は**クラブが公表していない**。チェルシー公式（chelseafc.com/…/morgan-rogers-signs-for-chelsea、本文を読んだ）は契約が2033年までとだけ書き、金額は無い。
+#   金額は Press Association（Irish Examiner 掲載の本文を読んだ）が「ヴィラが1億1700万ポンド（1億3750万ユーロ）の入札を受け入れた」、
+#   Sky Sports が「1億1700万ポンドで合意」、Express & Star（PA）が「ヴィラは英国記録の1億1700万ポンドでの売却を確認」と書く。→ **報道**。
+#   **1億3800万ユーロは Transfermarkt が円換算でなくユーロ換算した記録**（API /transfer/6445546 の fee 138,000,000 EUR）で、元の報道はポンド。
+#   題・語りは**ポンドで「報道」と添える**。ユーロは使わない（為替で数字が変わる）。
+# - 市場価値：題材一覧は「€110M」だったが、API の最新は **2026-10-07 付けで €120M**（その前は 07-22 の 110、06-03 の 90）。
+#   移籍の記録に付く市場価値は 90M。→ 語りは「10月7日に1億2000万ユーロ。移籍の直前は9000万」と日付を付ける（Transfermarkt の推定）。
+# - 年齢：24歳（2002-07-26 生まれ。チェルシー公式の発表文は「23歳」＝発表の時点）。
+#
+# **数字の出どころ**
+# - Transfermarkt API（tmapi-alpha。profile・market-value-history・performance-season 2021〜2026・performance-game 2025/2026・/transfer/6445546。
+#   各1回、8秒空けて取得。控えは research/raw/20261019_rogers_tm_a.json・_tm_b.json）：生年月日・身長・契約・市場価値の推移、
+#   季ごとの試合・得点・アシスト・出場時間、今季の試合ごとの出場分数。
+#   **アシストの食い違い**：24/25 のヴィラ全大会は TM 16、Wikipedia は15。→ 比べは**プレミアのリーグ戦だけ**（24/25 は 8G 11A、25/26 は 10G 7A、
+#   Wikipedia のリーグ戦の得点8・10と一致。**チェルシー公式の「ヴィラでプレミア85試合に絡んだゴール40」＝21G＋19A（TM：23/24 の 3G1A＋8G11A＋10G7A）と一致**）。
+#   リーグカップのリーズ戦（9/9）は TM が3アシスト、Wikipedia は「4ゴールを演出」。→ **TM の3**を使う。
+# - ESPN（site.api.espn.com の試合記録 7試合：スコア・得点者・得点の分・交代の分・イエロー）：4得点の分（フルアム41分・アーセナル2分・ハル7分・ボーンマス3分）、
+#   アシスト（ブライトン戦14分のネトのゴール）、チェルシーの7試合は4勝1分2敗。
+# - 英語版 Wikipedia（2026-10-17 更新。クラブは10/17まで、代表は10/6まで）：経歴・ローン・受賞・クラブ別の試合と得点（合計241試合51得点＋代表26試合2得点）・プレースタイル。→ 背景。
+# - Chelsea 公式サイト（本文を読んだ）：加入の発表・7月27日のアロンソ監督の記者会見・9月4日のアロンソ監督の話・ロジャーズの加入時の言葉・背番号17。→ 報道（クラブ公式の発表。金額は無い）。
+# - Sky Sports（本文を読んだ）：1億1700万ポンドで合意・イギリス人選手の最高額・チェルシーのクラブ記録・アンダーソンの1億1600万ポンド・欧州の大会に出ない。
+#   ロジャーズのインタビュー（パーマーとの違い、値段への考え）。→ 報道。
+# - BBC（本文を読んだ）：ハラス・ホークスの会計担当ブライアン・ウィルクスの話（6歳・62ゴール・8歳末にウェスト・ブロムウィッチがスカウト）、ロジャーズ本人の言葉（年上の子との試合）。→ 報道。
+# - Independent（2025-03-19、本文を読んだ）：エメリ監督の叱り方、「EFLでの試合が必要だった」、ベリンガムとのつきあい。→ 報道。
+# - Press Association／Express & Star：ヴィラは英国記録の1億1700万ポンド、ヴィラ初年度の初期金額800万ポンド、ヴィラの優勝は30年ぶりのタイトル。→ 報道。
+#
+# **自分で数えたもの**
+# - 90分あたり＝数÷出場時間×90。全公式戦（クラブの試合だけ、代表は含めない）の得点／90分：
+#   22/23 ブラックプール 1÷1278×90=0.07／23/24 ミドルズブラ 7÷1842×90=0.34／23/24 ヴィラ 3÷980×90=0.28／24/25 ヴィラ 14÷4496×90=0.28／
+#   25/26 ヴィラ 14÷4564×90=0.28／26/27 チェルシー 4÷726×90=0.50。出場分は TM の performance-season（大会ごとの合計）を足した。試合・得点は Wikipedia の表と一致。
+# - 通算：Wikipedia（10/17まで）ヴィラ125試合31得点、チェルシー9試合4得点、ほかの貸し出し・ミドルズブラ・シティU21・WBAなど 241−125−9＝107試合、51−31−4＝16得点、
+#   代表26試合2得点（10/6まで）。合計 267試合53得点。（ほかの107試合は、ユース年代のU21戦6試合1得点を含む。）
+# - 見立ての比べ（プレミアのリーグ戦のみ）：ヴィラ 24/25＋25/26＝74試合・6416分・18得点・18アシスト → ゴール 18×90÷6416＝0.25、アシスト 0.25、合計 0.50。
+#   チェルシー 7試合・613分・4得点・1アシスト → ゴール 4×90÷613＝0.59、アシスト 0.15、合計 0.73。ゴールは 0.5873÷0.2525＝2.3倍。
+# - 市場価値の倍率：2023-06-01 の180万ユーロ → 2026-10-07 の1億2000万ユーロ＝約67倍。
+# - 移籍金の倍率：ヴィラ初年度の報道の初期金額800万ポンド → チェルシー1億1700万ポンド＝14.6倍（約15倍）。ただしヴィラの800万は条件次第で最大1500万ポンドと報じられた（Wikipedia）。
+# - 4得点の分：41・2・7・3分。4つのうち3つは開始7分以内（ESPN の得点の時刻）。
+# - 今季：9試合・726分（プレミア7試合613分 4G1A、リーグカップ2試合113分 0G3A）。
+#
+# **入れなかったもの**：私生活（家族・交際）、父・代理人、ヴィラの移籍金の媒体ごとの食い違い（800万／1600万ポンドは報道に幅がある）、マンチェスター・シティの転売益、
+#   ワールドカップの試合ごとの出場数（Sky は5、Flashscore は6、TM は7で割れる）、「ロナウド・ルーニーに似ている」の比較、チェルシーの順位の話。
+# **日本語名・読みで怪しいもの**：ヘイルズオーウェン、ハラス・ホークス、ウェスト・ブロムウィッチ、リンカーン、ブラックプール、ミドルズブラ、ボーンマス、フライブルク、
+#   セルティック、シャビ・アロンソ、ウナイ・エメリ、コール・パーマー、エリオット・アンダーソン、モイセス・カイセド、ブライアン・ウィルクス。
+#
+# 本人の言葉は6か所（自訳。原文は上の出典）：①フック（Sky）②移籍の節（Chelsea公式）③プレースタイル（Sky）④⑤数字の外の話（BBC・Independent）⑥見立て（Sky）。
+date: 2026年10月19日
+slot: other_1
+format: news
+series: 有名選手の紹介
+people:
+- モーガン・ロジャーズ
+theme:
+  end_bg: assets/images/20261019_rogers/04_w.jpg
+  id: player_503743
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: チェルシー
+  title: ロジャーズってどんな選手？ 報道1億1700万ポンドの24歳は、何を残したか
+  question: 移籍金が報道で1億1700万ポンドの24歳は、チェルシーでどんな数字を残しているのか。ロジャーズは、どんな選手なのか
+  takeaway: プレミアのゴールは90分あたり、ヴィラ2季の0.25からチェルシー7試合の0.59へ。2.3倍。アシストは0.25から0.15へ減った
+  nameplate: ロジャーズ｜チェルシー MF／イングランド代表
+  opening_image: assets/images/20261019_rogers/01_w.jpg
+  bgm: assets/audio/bgm_calm.wav
+short_title: ロジャーズってどんな選手？
+thumbnail:
+  layout: classic
+  callouts:
+  - 報道の移籍金
+  - 4ゴール
+  line1: ロジャーズ
+  line2: 1億1700万ポンドの24歳
+  reaction: 僕の生きがい
+  tags:
+  - チェルシー
+  - ロジャーズ
+  - 選手紹介
+  photo: assets/images/20261019_rogers/06_w.jpg
+  photos: []
+  short_photo: assets/images/20261019_rogers/02_v.jpg
+sections:
+- id: hook
+  heading: 報道で史上最高額の24歳に、プレミアで何が起きているのか
+  tier: 報道
+  telop: イギリスの選手で史上最高額と報じられた移籍
+  narrator: 解説
+  card:
+    type: stats
+    title: モーガン・ロジャーズ 24歳
+    items:
+    - ['1.17', 億ポンド, 報道された移籍金。クラブは金額を発表していない]
+    - ['4', ゴール, 今季のプレミア。7試合613分]
+    - ['1.2', 億ユーロ, いまの市場価値。移籍の直前は9000万]
+    focus: 1
+  say:
+  - text: 移籍金は1億1700万ポンドと報じられました。イギリスの選手で、史上最高額です。
+    image: assets/images/20261019_rogers/02_w.jpg
+    card: &hook_stats
+      type: stats
+      title: モーガン・ロジャーズ 24歳
+      items:
+      - ['1.17', 億ポンド, 報道された移籍金。クラブは金額を発表していない]
+      - ['4', ゴール, 今季のプレミア。7試合613分]
+      - ['1.2', 億ユーロ, いまの市場価値。移籍の直前は9000万]
+      focus: 0
+  - text: ただし、この金額はクラブの発表ではなく、報道の数字です。
+    image: assets/images/20261019_rogers/01_w.jpg
+    card: *hook_stats
+  - text: その名は、ロジャーズ。ヴィラからチェルシーへ移った、24歳。
+    card: none
+  - text: チェルシーでは、プレミアの7試合で、4ゴール。
+    emph: true
+    image: assets/images/20261019_rogers/04_w.jpg
+    card:
+      <<: *hook_stats
+      focus: 1
+  - text: しかも、そのゴールには、時間帯の特徴があります。
+    card: none
+  - text: 市場価値も、10月7日に、過去最高を更新しました。
+    image: assets/images/20261019_rogers/06_w.jpg
+    card:
+      <<: *hook_stats
+      focus: 2
+  - text: 値段への重圧について、本人の言葉です。
+    card: none
+  - voice: ロジャーズ
+    text: これが、僕の生きがいです。
+  - voice: ロジャーズ
+    text: こういう話題の中に、いたいんです。
+    cont: true
+    pause: 0.5
+  quotes_from:
+  - https://www.skysports.com/football/news/11668/13572952/chelseas-morgan-rogers-relishing-prospect-of-playing-with-cole-palmer-as-he-targets-premier-league-and-champions-league-glory
+  sources:
+  - https://www.irishexaminer.com/sport/soccer/arid-41882026.html
+  - https://www.skysports.com/football/news/11668/13564758/morgan-rogers-transfer-news-chelsea-agree-record-lb117m-deal-for-aston-villa-forward-and-arsenals-no-1-target
+  - https://www.chelseafc.com/en/news/article/morgan-rogers-signs-for-chelsea
+  - https://www.transfermarkt.com/morgan-rogers/profil/spieler/503743
+  - https://www.skysports.com/football/news/11668/13572952/chelseas-morgan-rogers-relishing-prospect-of-playing-with-cole-palmer-as-he-targets-premier-league-and-champions-league-glory
+- id: data
+  heading: ロジャーズは、いまどこで、いくらの選手か
+  tier: 報道
+  telop: ロジャーズの基礎DATA
+  narrator: 解説
+  card:
+    type: table
+    title: モーガン・ロジャーズ（チェルシー）
+    columns:
+    - 項目
+    - 内容
+    rows: &bdata
+    - - 所属
+      - チェルシー（17番）
+    - - ポジション
+      - 攻撃的ミッドフィルダー
+    - - 生年月日
+      - 2002年7月26日（24歳）
+    - - 身長・利き足
+      - 1.87m・右足
+    - - 代表
+      - イングランド（26試合2得点）
+    - - 契約
+      - 2033年まで
+    - - 市場価値
+      - 1億2000万ユーロ
+    source: Transfermarkt
+  say:
+  - text: ロジャーズのポジションは、攻撃的ミッドフィルダー。左右のウイングもこなします。
+    image: assets/images/20261019_rogers/04_w.jpg
+    card: &data_card
+      type: table
+      title: モーガン・ロジャーズ（チェルシー）
+      columns: [項目, 内容]
+      rows: *bdata
+      source: Transfermarkt
+      highlight_row: 1
+  - text: 2002年7月26日、イングランド中部のヘイルズオーウェン生まれ。24歳。
+    card:
+      <<: *data_card
+      highlight_row: 2
+  - text: 身長は1メートル87。イングランド代表では、レギュラーとして戦っています。
+    image: assets/images/20261019_rogers/07_w.jpg
+    card:
+      <<: *data_card
+      highlight_row: 4
+  - text: 市場価値は、10月7日に1億2000万ユーロ。移籍の直前は、9000万でした。
+    emph: true
+    image: assets/images/20261019_rogers/04_w.jpg
+    card: &value_line
+      type: line
+      title: ロジャーズの市場価値（百万ユーロ）
+      x: ['23/6', '24/3', '24/12', '25/5', '25/12', '26/6', '26/10']
+      series:
+      - [市場価値, [1.8, 8, 40, 55, 70, 90, 120]]
+      focus: 市場価値
+      highlight: '26/10'
+      source: Transfermarkt
+  - text: 3年前の2023年6月は、180万ユーロ。そこから、およそ67倍です。
+    emph: true
+    card: *value_line
+  sources:
+  - https://www.transfermarkt.com/morgan-rogers/profil/spieler/503743
+  - https://www.chelseafc.com/en/news/article/morgan-rogers-chelsea-squad-number-confirmed
+  - https://en.wikipedia.org/wiki/Morgan_Rogers
+- id: career
+  heading: 少年クラブの子は、どうして1億ポンドの選手になったのか
+  tier: 報道
+  telop: 6歳で始めたサッカー
+  narrator: 解説
+  card:
+    type: table
+    title: 歩んできた道
+    columns:
+    - 年
+    - クラブ
+    - 移籍金（報道）
+    rows: &career_rows
+    - - 2008〜2019
+      - 少年クラブ→WBAユース
+      - —
+    - - 2019〜2023
+      - マンチェスター・シティ
+      - —
+    - - 2023〜2024
+      - ミドルズブラ
+      - 非公表
+    - - 2024〜2026
+      - アストン・ヴィラ
+      - 800万ポンドから
+    - - 2026〜
+      - チェルシー
+      - 1億1700万ポンド
+    source: BBC・Wikipedia・各報道
+  say:
+  - text: 6歳で、地元の少年クラブ、ハラス・ホークスに入ります。
+    image: assets/images/20261019_rogers/08_w.jpg
+    card: &career_card
+      type: table
+      title: 歩んできた道
+      columns: [年, クラブ, 移籍金（報道）]
+      rows: *career_rows
+      source: BBC・Wikipedia・各報道
+      highlight_row: 0
+  - text: 8歳のとき、ウェスト・ブロムウィッチのスカウトの目にとまります。
+    card:
+      <<: *career_card
+      highlight_row: 0
+  - text: 2023年7月、ミドルズブラへ。リーグカップで、大会最多の5ゴールを決めます。
+    image: assets/images/20261019_rogers/06_w.jpg
+    card:
+      <<: *career_card
+      highlight_row: 2
+  - text: 2024年2月、アストン・ヴィラへ。報道では、移籍金は800万ポンドから。
+    card:
+      <<: *career_card
+      highlight_row: 3
+  - text: 2025年1月。チャンピオンズリーグのセルティック戦で、ハットトリック。
+    emph: true
+    image: assets/images/20261019_rogers/07_w.jpg
+    card: none
+  - text: 2026年5月20日、ヨーロッパリーグ決勝。
+    card: none
+  - text: 3対0でフライブルクに勝ち、ロジャーズも決めます。
+    image: assets/images/20261019_rogers/08_w.jpg
+    card: none
+  - text: ヴィラの、この大会の初優勝。大会のベストプレーヤーにも、選ばれました。
+    emph: true
+    card: none
+  - text: 2026年7月21日、チェルシーが加入を発表します。
+    image: assets/images/20261019_rogers/01_w.jpg
+    card:
+      <<: *career_card
+      highlight_row: 4
+  - text: 報道の移籍金は、1億1700万ポンド。
+    card:
+      <<: *career_card
+      highlight_row: 4
+  - text: 今夏に出たばかりの、アンダーソンの1億1600万ポンドを上回りました。
+    card:
+      <<: *career_card
+      highlight_row: 4
+  - text: 加入のとき、本人はこう語りました。
+    card: none
+  - voice: ロジャーズ
+    text: 僕にとってチェルシーは、ロンドンでいちばん大きなクラブです。
+  - voice: ロジャーズ
+    text: 子どものころから、ずっと憧れてきたクラブです。
+    cont: true
+    pause: 0.6
+  quotes_from:
+  - https://www.chelseafc.com/en/news/article/morgan-rogers-signs-for-chelsea
+  sources:
+  - https://www.bbc.com/news/articles/cdej36e0j03o
+  - https://en.wikipedia.org/wiki/Morgan_Rogers
+  - https://www.irishexaminer.com/sport/soccer/arid-41882026.html
+  - https://www.skysports.com/football/news/11668/13564758/morgan-rogers-transfer-news-chelsea-agree-record-lb117m-deal-for-aston-villa-forward-and-arsenals-no-1-target
+  - https://www.chelseafc.com/en/news/article/morgan-rogers-signs-for-chelsea
+- id: style
+  heading: パーマーと何が違うのか。強さで運ぶ攻撃的ミッドフィルダー
+  tier: 報道
+  telop: トップ下も、左右のウイングも
+  narrator: 解説
+  card:
+    type: bars
+    title: プレミアのゴール＋アシスト（シーズン別。23/24と26/27は途中）
+    unit: 点
+    items:
+    - label: 23/24 ヴィラ
+      value: 4
+    - label: 24/25 ヴィラ
+      value: 19
+      highlight: true
+    - label: 25/26 ヴィラ
+      value: 17
+    - label: 26/27 チェルシー
+      value: 5
+    source: Transfermarkt
+  say:
+  - text: 持ち場は、ひとつに収まりません。トップ下のような位置も、左右のウイングも務めます。
+    image: assets/images/20261019_rogers/03_w.jpg
+    no_telop: true
+    card: none
+  - text: チェルシーのコール・パーマーとは、10代からの友人。違いを、本人はこう話します。
+    image: assets/images/20261019_rogers/06_w.jpg
+    card: none
+  - voice: ロジャーズ
+    text: 彼はパサーで、つなぎ役。ボールの扱いが、芸術家のようです。
+  - voice: ロジャーズ
+    text: 僕はもっと直線的で、もっとフィジカルです。
+    cont: true
+  - voice: ロジャーズ
+    text: まったく違うから、うまく補い合えるんです。
+    cont: true
+    pause: 0.5
+  - text: 力強く運ぶ動きに加えて、遠くから打つシュートも、持ち味と言われます。
+    image: assets/images/20261019_rogers/08_w.jpg
+    card: none
+  - text: ヴィラ時代のプレミアを、ゴールとアシストの合計で見ます。最多は24/25の19。
+    emph: true
+    image: assets/images/20261019_rogers/07_w.jpg
+    card: &style_bars
+      type: bars
+      title: プレミアのゴール＋アシスト（シーズン別。23/24と26/27は途中）
+      unit: 点
+      items:
+      - label: 23/24 ヴィラ
+        value: 4
+      - label: 24/25 ヴィラ
+        value: 19
+        highlight: true
+      - label: 25/26 ヴィラ
+        value: 17
+      - label: 26/27 チェルシー
+        value: 5
+      source: Transfermarkt
+  - text: 24/25は、ゴール8にアシスト11。25/26は、10と7。
+    card: *style_bars
+  quotes_from:
+  - https://www.skysports.com/football/news/11668/13572952/chelseas-morgan-rogers-relishing-prospect-of-playing-with-cole-palmer-as-he-targets-premier-league-and-champions-league-glory
+  sources:
+  - https://www.chelseafc.com/en/news/article/xabi-alonso-on-his-plan-for-great-signing-morgan-rogers-and-cole-palmer
+  - https://www.skysports.com/football/news/11668/13572952/chelseas-morgan-rogers-relishing-prospect-of-playing-with-cole-palmer-as-he-targets-premier-league-and-champions-league-glory
+  - https://www.transfermarkt.com/morgan-rogers/profil/spieler/503743
+  - https://en.wikipedia.org/wiki/Morgan_Rogers
+- id: past
+  heading: 6つの季と、通算267試合
+  tier: 報道
+  telop: 直近の6シーズンの試合と得点
+  narrator: 解説
+  card:
+    type: table
+    title: ロジャーズ 直近の6シーズン（クラブの全公式戦）
+    columns:
+    - シーズン
+    - クラブ
+    - 試合
+    - 得点
+    - 90分あたり
+    rows: &season_rows
+    - ['22/23', ブラックプール（貸）, '22', '1', '0.07']
+    - ['23/24', ミドルズブラ, '33', '7', '0.34']
+    - ['23/24', アストン・ヴィラ, '16', '3', '0.28']
+    - ['24/25', アストン・ヴィラ, '54', '14', '0.28']
+    - ['25/26', アストン・ヴィラ, '55', '14', '0.28']
+    - ['26/27', チェルシー, '9', '4', '0.50']
+    source: Transfermarkt・Wikipedia
+  rows_total:
+  - &t1 [アストン・ヴィラ, '125', '31']
+  - &t2 [チェルシー, '9', '4']
+  - &t3 [ミドルズブラ・貸し出しほか, '107', '16']
+  - &t4 [イングランド代表, '26', '2']
+  - &t5 [合計, '267', '53']
+  say:
+  - text: 6つの季を、クラブの全公式戦で見ます。22/23は、貸し出し先で1得点。
+    image: assets/images/20261019_rogers/08_w.jpg
+    card: &past_card
+      type: table
+      title: ロジャーズ 直近の6シーズン（クラブの全公式戦）
+      columns: [シーズン, クラブ, 試合, 得点, 90分あたり]
+      rows: *season_rows
+      source: Transfermarkt・Wikipedia
+      highlight_row: 0
+  - text: 23/24は、ミドルズブラで33試合7得点。90分あたり0.34。
+    image: assets/images/20261019_rogers/06_w.jpg
+    card:
+      <<: *past_card
+      highlight_row: 1
+  - text: 24/25は54試合14得点、25/26は55試合14得点。どちらも0.28。
+    image: assets/images/20261019_rogers/07_w.jpg
+    card:
+      <<: *past_card
+      highlight_row: 3
+  - text: そして今季のチェルシーは、9試合で4得点。0.50まで上がっています。
+    emph: true
+    image: assets/images/20261019_rogers/04_w.jpg
+    card:
+      <<: *past_card
+      highlight_row: 5
+  - text: 通算です。ヴィラで、125試合31得点。
+    image: assets/images/20261019_rogers/06_w.jpg
+    card: &total_card
+      type: table
+      title: ロジャーズ 通算（2026年10月）
+      columns: [所属, 試合, 得点]
+      rows: [*t1, *t2, *t3, *t4, *t5]
+      source: Wikipedia・Transfermarkt
+      highlight_row: 0
+  - text: チェルシーは9試合で4得点。ミドルズブラや貸し出し先などで、107試合16得点。
+    card:
+      <<: *total_card
+      highlight_row: 1
+  - text: 合計は、267試合で53得点です。
+    emph: true
+    card:
+      <<: *total_card
+      highlight_row: 4
+  sources:
+  - https://en.wikipedia.org/wiki/Morgan_Rogers
+  - https://www.transfermarkt.com/morgan-rogers/profil/spieler/503743
+- id: season
+  heading: チェルシーの4ゴールと、直近5試合
+  tier: 報道
+  telop: 今季ここまで
+  narrator: 解説
+  card:
+    type: table
+    title: プレミアの直近5試合（ロジャーズ）
+    columns:
+    - 日付
+    - 相手
+    - 出場
+    - 得点
+    - 結果
+    rows: &recent_rows
+    - - 10/17
+      - エヴァートン
+      - 先発・90分
+      - 0G 0A
+      - 2-0 勝
+    - - 10/10
+      - ボーンマス
+      - 先発・84分交代
+      - 1G 0A
+      - 5-1 勝
+    - - 9/18
+      - ブレントフォード
+      - 先発・90分
+      - 0G 0A
+      - 0-3 負
+    - - 9/12
+      - ハル
+      - 先発・90分
+      - 1G 0A
+      - 2-2 分
+    - - 9/6
+      - アーセナル
+      - 先発・87分交代
+      - 1G 0A
+      - 1-2 負
+    source: ESPN・Transfermarkt
+  say:
+  - text: ロジャーズの今季は、チェルシーで9試合。昨季のヴィラの、およそ6分の1です。
+    image: assets/images/20261019_rogers/01_w.jpg
+    card: &recent_card
+      type: table
+      title: プレミアの直近5試合（ロジャーズ）
+      columns: [日付, 相手, 出場, 得点, 結果]
+      rows: *recent_rows
+      source: ESPN・Transfermarkt
+  - text: プレミアの出場は613分。4ゴール、1アシストです。
+    emph: true
+    card: *recent_card
+  - text: 初ゴールは、開幕のフルアム戦、8月24日。前半41分でした。
+    image: assets/images/20261019_rogers/04_w.jpg
+    card: none
+  - text: 9月6日、アーセナル戦は、開始2分。1対2で負けましたが、先制点でした。
+    image: assets/images/20261019_rogers/03_w.jpg
+    card:
+      <<: *recent_card
+      highlight_row: 4
+  - text: 9月12日、ハル戦は、開始7分。2対2の引き分けです。
+    card:
+      <<: *recent_card
+      highlight_row: 3
+  - text: 10月10日、ボーンマス戦は、開始3分。5対1の勝ちでした。
+    image: assets/images/20261019_rogers/02_w.jpg
+    card:
+      <<: *recent_card
+      highlight_row: 1
+  - text: 4ゴールのうち3つが、開始7分以内。試合の入りで決めています。
+    emph: true
+    card: none
+  - text: リーグカップのリーズ戦、9月9日。後半から出て、3アシスト。6対3で逆転勝ち。
+    emph: true
+    image: assets/images/20261019_rogers/01_w.jpg
+    card: none
+  sources:
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/teams/363/schedule
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/summary?event=401878775
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/summary?event=401879283
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/summary?event=401879292
+  - https://www.transfermarkt.com/morgan-rogers/profil/spieler/503743
+- id: story
+  heading: 数字の外にある、2つの話
+  tier: 報道
+  main: true
+  telop: 少年クラブの62ゴールと、エメリ監督の叱り方
+  narrator: 解説
+  card:
+    type: table
+    title: 数字の外にある、2つの話
+    columns: [いつ, 何があったか]
+    rows: &story_rows
+    - ['6歳〜', 少年クラブの2シーズン目に、62ゴール]
+    - ['ヴィラ時代', 最高の試合の日も、20分のミスを叱られた]
+    source: 各報道
+  say:
+  - text: チェルシーのロジャーズ、今季プレミアで4ゴール。昨季は10。数字の外の話を2つ。
+    image: assets/images/20261019_rogers/02_v.jpg
+    short_only: true
+    card: none
+  - text: 1つ目は、少年時代。地元の少年クラブの、会計担当の話です。
+    image: assets/images/20261019_rogers/02_w.jpg
+    card: none
+  - text: 8歳以下のチームの2シーズン目に、62ゴール。
+    card: none
+  - text: 8歳の終わりに、ウェスト・ブロムウィッチが迎えに来ました。
+    card: none
+  - text: そのあとは、貸し出しを重ねる遠回り。本人は、こう語っています。
+    image: assets/images/20261019_rogers/06_w.jpg
+    card: none
+  - voice: ロジャーズ
+    text: すぐに頂点へ行ける人もいる。
+  - voice: ロジャーズ
+    text: でも僕には、下部リーグでの試合が必要でした。
+    cont: true
+  - voice: ロジャーズ
+    text: 苦しい時期を通って、自分を知る必要があったんです。
+    cont: true
+    pause: 0.6
+  - text: 2つ目は、ヴィラのエメリ監督の話。2025年3月、加入から14か月のころです。
+    image: assets/images/20261019_rogers/07_w.jpg
+    card: &story_card
+      type: table
+      title: 数字の外にある、2つの話
+      columns: [いつ, 何があったか]
+      rows: *story_rows
+      source: 各報道
+      highlight_row: 1
+  - text: 試合のあと、監督は、たった1つのプレーを指摘するそうです。
+    card:
+      <<: *story_card
+      highlight_row: 1
+  - voice: ロジャーズ
+    text: 最高の試合をした日でも、20分の小さなプレーで、叱られます。
+  - voice: ロジャーズ
+    text: 僕はいい試合だったと思って、むしゃくしゃして帰る。
+    cont: true
+  - voice: ロジャーズ
+    text: でも、あの人は、いつも最高を引き出してくれます。
+    cont: true
+    pause: 0.6
+  - text: 叱られた日々を、本人は、変えたくないと言います。
+    image: assets/images/20261019_rogers/06_w.jpg
+    card: none
+    pause: 0.5
+  quotes_from:
+  - https://www.bbc.com/news/articles/c75y7575nxwo
+  - https://www.independent.co.uk/sport/football/morgan-rogers-england-tuchel-emery-bellingham-henderson-b2717926.html
+  sources:
+  - https://www.bbc.com/news/articles/cdej36e0j03o
+  - https://www.bbc.com/news/articles/c75y7575nxwo
+  - https://www.independent.co.uk/sport/football/morgan-rogers-england-tuchel-emery-bellingham-henderson-b2717926.html
+- id: view
+  heading: ヴィラの2季と、チェルシーの7試合を数えると
+  tier: 背景
+  viewpoint: true
+  narrator: 解説
+  telop: ヴィラからチェルシーへ
+  card:
+    type: table
+    title: プレミアのリーグ戦の比べ
+    columns: [項目, ヴィラ2季, チェルシー]
+    rows: &cmp_rows
+    - ['試合', '74', '7']
+    - ['出場時間', '6416分', '613分']
+    - ['ゴール', '18', '4']
+    - ['アシスト', '18', '1']
+    - ['ゴール／90分', '0.25', '0.59']
+    - ['アシスト／90分', '0.25', '0.15']
+    source: Transfermarkt
+  say:
+  - text: 最後に、ロジャーズの数字を並べます。プレミアのリーグ戦だけです。
+    image: assets/images/20261019_rogers/06_w.jpg
+    card: &cmp_card
+      type: table
+      title: プレミアのリーグ戦の比べ
+      columns: [項目, ヴィラ2季, チェルシー]
+      rows: *cmp_rows
+      source: Transfermarkt
+      highlight_row: 0
+  - text: ただし、7試合は、まだ少ない数です。途中の数字として、見てください。
+    card: none
+  - text: 試合は、74と7。出場時間は、6416分と613分です。
+    image: assets/images/20261019_rogers/03_w.jpg
+    card:
+      <<: *cmp_card
+      highlight_row: 1
+  - text: ゴールは、18と4。アシストは、18と1。
+    card:
+      <<: *cmp_card
+      highlight_row: 3
+  - text: 90分あたりのゴールは、0.25が0.59に。2.3倍です。
+    emph: true
+    image: assets/images/20261019_rogers/02_w.jpg
+    card:
+      <<: *cmp_card
+      highlight_row: 4
+    mark: {kind: circle, row: 4}
+  - text: 逆に、90分あたりのアシストは、0.25から0.15へ。減っています。
+    image: assets/images/20261019_rogers/04_w.jpg
+    card:
+      <<: *cmp_card
+      highlight_row: 5
+  - text: 1億1700万ポンドは、ヴィラ初年度の報道額の、約15倍。
+    card: none
+  - text: その価値を測るには、7試合では足りません。
+    image: assets/images/20261019_rogers/01_w.jpg
+    card: none
+  - text: チェルシーは今季、ヨーロッパの大会に出ていません。
+    card: none
+  - text: 残りの試合で、数字は動いていきます。
+    card: none
+  quotes_from:
+  - https://www.skysports.com/football/news/11668/13572952/chelseas-morgan-rogers-relishing-prospect-of-playing-with-cole-palmer-as-he-targets-premier-league-and-champions-league-glory
+  sources:
+  - https://www.transfermarkt.com/morgan-rogers/profil/spieler/503743
+  - https://www.skysports.com/football/news/11668/13564758/morgan-rogers-transfer-news-chelsea-agree-record-lb117m-deal-for-aston-villa-forward-and-arsenals-no-1-target
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/teams/363/schedule

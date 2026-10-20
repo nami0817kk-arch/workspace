@@ -1,0 +1,461 @@
+# 取材メモ（10/19 月、シリーズ「記録の解説」、key: record_cl_goals、型は news）。
+# チャンピオンズリーグの通算得点（ロナウド140・メッシ129・レヴァンドフスキ109）を、試合数で割る。
+#
+# ★重ならないように（同じ選手・同じ数字の言い直しを避ける）：
+#   ・10/17「ロナウド×メッシ」は**クラブでの得点（リーグ・CL・カップ）**を1試合あたりで比べた回。今回は**CL本戦の通算だけ**で、クラブ別の内訳（レアル105・バルサ120 など）は使わない。
+#   ・10/18「ハーランドのCL60得点」は**60点までの試合数（最速）**の回。今回は**60点の行・30/40/50点の行・最初の60試合の得点は使わない**。ハーランドは名前も数字も出さない。
+#     使うのは **70・80・90・100点までの試合数**と**最初の100試合の得点**（どちらも昨日の回に無い列）。
+#   ・過去回への言及は台本に書かない。
+#
+# ★数字の出どころ（2026-10-19 に読み直した。requests のブラウザ UA か WebFetch。ブラウザ操作の道具・JavaScript は使っていない）
+#   ・UEFA.com「All-time top scorers」（fr.uefa.com、ページ日付 2026-10-14、WebFetch）：**本戦の通算得点（予選を除く）**
+#       ロナウド140／メッシ129／レヴァンドフスキ109／ベンゼマ90／ムバッペ72／ラウール71／ハーランド61／ケイン57／ミュラー57／ファン・ニステルローイ56。
+#       注記：予選を含む別の一覧ではロナウド141（2005年の予選の1点）、レヴァンドフスキ109。→ 台本は「予選を外した140点」と言う。
+#   ・UEFA.com「Champions League goalscoring milestones: …」（本文を WebFetch。引用の形で一覧を読み直した）：**N点に届くまでの試合数（少ない順）**
+#       70点＝メッシ90・レヴァンドフスキ93・ムバッペ98・ロナウド106・ベンゼマ126・ラウール139／80点＝レヴァンドフスキ100・メッシ102・ロナウド116・ベンゼマ138／
+#       90点＝メッシ109・レヴァンドフスキ110・ロナウド123・ベンゼマ149／100点＝メッシ123・レヴァンドフスキ125・ロナウド137。
+#       100点の年齢：メッシ30歳263日・ロナウド32歳72日・レヴァンドフスキ36歳97日（台本は「30歳・32歳・36歳」だけ言う。日数は読みが崩れるので言わない）。
+#   ・UEFA.com「Who has scored the most Champions League goals in their first ten, 20, … and 100 games?」（2026-10-14、WebFetch）：**最初の100試合の得点**
+#       レヴァンドフスキ81／メッシ77／ムバッペ72／ロナウド64／ベンゼマ53／ラウール51。
+#   ・試合数（通算の出場）は英語版ウィキペディア『List of UEFA Champions League top scorers』（2026-10-14 時点、requests で表を読んだ）：
+#       ロナウド183（マンU59＋レアル101＋ユベントス23＝183）／メッシ163（149＋14）／レヴァンドフスキ144（28＋78＋38）／ベンゼマ152（19＋133）／ムバッペ100／ラウール142。
+#       **ウィキペディアは config の reference 群＝報道止まり**。得点は UEFA と全員一致（140・129・109・90・72・71）。レヴァンドフスキの144試合は検索の別記事（dongqiudi・orla）でも一致。
+#       ムバッペの100試合は UEFA の「最初の100試合」一覧（72点）と合う。
+#   ・UEFA.com「Cristiano Ronaldo in the Champions League: Records, stats…」（Last updated 2026-07-28、WebFetch）：「140 Champions League goals in 183 appearances」、100点まで137試合、
+#       本戦の初ゴールは「2007年4月のローマ戦（7-1）」（2005年に予選でデブレツェン戦の1点。台本の「初ゴール」は本戦）。→ ロナウドの183試合は UEFA で確定。
+#   ・FCバイエルン公式（fcbayern.com 2021-11「Lewy hat-trick on his 100th appearance」、検索の見出し・要約のみ。本文は requests が接続エラーで未読）：100試合目で81点＝UEFAの81と一致（台本はUEFAを出典に）。
+#   ・ロナウドの「100点に137試合」は UEFA の一覧どおり。**他の記事に「144試合」と書くものがあり、食い違う**（確かめられなかった）。台本は UEFA の数字のみ使い、「UEFAの記録で」と断る。
+#   ・レヴァンドフスキの現在：英語版ウィキペディア『Robert Lewandowski』が「2026年6月にシカゴ・ファイアーへ」「バルセロナを2025-26の終わりに離れた」と書く（WebFetch）。
+#       ウィキペディアの一覧の期間は ロナウド2003–2022・メッシ2005–2023・レヴァンドフスキ2011–2026。→ 台本は「3人とも今季のCLには出ていない」とは断定せず、
+#       「出場の記録は2022年・2023年・2026年のシーズンまで」と書く代わりに、**「いまの割り算の分母は増えていない」**程度に留める（言う行は1つだけ・背景）。
+#   ・Mbappé は2026-27のこの時点で**ちょうど100試合72点**（UEFAの「最初の100試合」と一致）。まだ現役なので「101試合目以降」の列には入れない。
+#
+# ★自分で数えたもの（検算済み。python で再計算して一致）
+#   通算の1試合あたり：ロナウド140÷183＝0.765→0.77／メッシ129÷163＝0.791→0.79／レヴァンドフスキ109÷144＝0.757→0.76／ムバッペ72÷100＝0.72／ベンゼマ90÷152＝0.59／ラウール71÷142＝0.50。
+#       **1位と2位が入れ替わる**（通算はロナウド、1試合あたりはメッシ）。上位3人の差は0.79−0.76＝0.03。
+#   10点ごとにかかった試合数：70→80点＝メッシ12・レヴァンドフスキ7・ロナウド10／80→90点＝メッシ7・レヴァンドフスキ10・ロナウド7／90→100点＝メッシ14・レヴァンドフスキ15・ロナウド14。
+#       **80点から100点までの20点は、メッシもロナウドも21試合**（102→123、116→137）。レヴァンドフスキは25試合（100→125）。
+#       ロナウドはメッシより 70点で16試合・80点で14・90点で14・100点で14試合多い（106−90、116−102、123−109、137−123）。
+#   最初の100試合の1試合あたり：レヴァンドフスキ0.81／メッシ0.77／ムバッペ0.72／ロナウド0.64／ベンゼマ0.53／ラウール0.51。
+#   101試合目以降（通算−最初の100）：ロナウド183−100＝83試合・140−64＝76点＝0.92／メッシ63試合・52点＝0.83／ベンゼマ52試合・37点＝0.71／
+#       レヴァンドフスキ44試合・28点＝0.64／ラウール42試合・20点＝0.48。
+#   **ロナウドの11点差の中身**：最初の100試合はメッシが13点先（77−64）、101試合目以降はロナウドが24点先（76−52）。24−13＝11＝140−129。
+#   ロナウドの出場はメッシより20試合多い（183−163）。メッシの1試合あたり（0.79）で20試合を数えると約16点（20×129÷163＝15.8）。**仮の割り算で、実際の得点ではない**と断る。
+#   レヴァンドフスキとの差：ロナウド140−109＝31／メッシ129−109＝20。
+#
+# ★言い切っていないもの
+#   ・ロナウドの101試合目以降の高い値（0.92）の理由は言わない（年齢・チーム・PK などは数字に出ない）。数字の事実だけ。
+#   ・相手の強さ・出番の長さ（途中出場）は割り算に入らない（見立てで断る）。出場時間（90分あたり）は読んでいないので作らない。
+#   ・Mbappé・ベンゼマ・ラウールの「101試合目以降」は、ムバッペ除外・ベンゼマとラウールは通算−最初の100の自分の引き算（UEFA の最初の100試合の値と通算から）。
+# 反応・本人の言葉は入れない（voice_min: 0）。
+#
+# ★写真（assets/images/20261019_cl_* 、credits.json に控え。必ず開いて見る。代理店・透かしは使わない）：
+#   メッシ：Commons File:Lionel Messi at Bernabeu.jpg（CC0、2012、バルサ）／FCバルセロナ公式（2018 CL100得点の記念、横1200）。
+#   ロナウド：Commons（CC BY 2.0、マンU 2006 の縦）ほか。レヴァンドフスキ：FCバルセロナ公式（2024-11、背番号9の背中、横3000）ほか。
+date: 2026年10月19日
+slot: other_1
+format: news
+series: 記録の解説
+voice_min: 0
+people:
+- クリスティアーノ・ロナウド
+- リオネル・メッシ
+- ロベルト・レヴァンドフスキ
+theme:
+  end_bg: assets/images/20261019_cl_x9/01_w.jpg
+  id: record_cl_goals
+  league: england
+  league_name: チャンピオンズリーグ
+  kind: other
+  topic: CL通算得点の上位3人
+  title: ロナウド・メッシ・レヴァンドフスキ。CL通算得点を試合数で割ると順位は変わるのか
+  question: チャンピオンズリーグの通算得点の上位3人は、試合数で割ると順位が変わるのか
+  lead: 通算得点の1位はロナウド。試合数で割ると、先頭はメッシです。
+  hook: ""
+  takeaway: チャンピオンズリーグ本戦の通算は、ロナウド140点（183試合）、メッシ129点（163試合）、レヴァンドフスキ109点（144試合）（UEFAの記録、試合数はウィキペディア）。1試合あたりは、メッシ0.79、ロナウド0.77、レヴァンドフスキ0.76で、1位と2位が入れ替わる。100点までの試合数はメッシ123、レヴァンドフスキ125、ロナウド137で、80点から100点まではメッシもロナウドも21試合。最初の100試合の得点は、レヴァンドフスキ81、メッシ77、ロナウド64。101試合目からは、ロナウドが83試合で76点（0.92）、メッシが63試合で52点（0.83）。ロナウドの11点差は、最初の100試合でメッシが13点先、そのあとロナウドが24点先という差の合計。出場時間や相手の強さは数字に入らない。
+  opening_image: assets/images/20261019_cl_ronaldo/01_w.jpg
+short_title: CL通算得点を試合数で割ると、1位はメッシ
+thumbnail:
+  photo: assets/images/20261019_cl_x9/01_w.jpg
+  photos:
+  - assets/images/20261019_cl_ronaldo/01_w.jpg
+  - assets/images/20261019_cl_x1/01.jpg
+  - assets/images/20261019_cl_x7/01.jpg
+  short_photo: assets/images/20261019_cl_x9/01_v.jpg
+  line1: CL通算得点を試合数で
+  line2: 割ると1位はメッシ
+  callouts:
+  - 通算1位はロナウド
+  crests: []
+  alt:
+  - layout:
+      layout: versus
+      photos:
+      - assets/images/20261019_cl_ronaldo/01_w.jpg
+      - assets/images/20261019_cl_x9/01_w.jpg
+      names: [ロナウド, メッシ]
+      numbers: ['0.77', '0.79']
+    line1: CL通算の1試合あたり
+    line2: 1位と2位が逆転
+  - layout:
+      layout: number
+      photo: assets/images/20261019_cl_x9/01_w.jpg
+      number: '0.79'
+    line1: メッシのCL通算
+    line2: 1試合あたりで1位
+  tags:
+  - クリスティアーノ・ロナウド
+  - リオネル・メッシ
+  - ロベルト・レヴァンドフスキ
+  - チャンピオンズリーグ
+  - レアル・マドリード
+  - バルセロナ
+  - バイエルン
+  - 記録の解説
+sections:
+- id: top
+  main: true
+  heading: 通算得点の順位は、試合数で割ると、変わるのか
+  tier: 報道
+  telop: 通算はロナウド。1試合あたりでは、メッシが先頭
+  narrator: 解説
+  card: &tot_table
+    type: table
+    title: CL通算得点（本戦、上位6人）
+    columns: [選手, 得点, 試合, 1試合あたり]
+    rows:
+    - [C・ロナウド, '140', '183', '0.77']
+    - [メッシ, '129', '163', '0.79']
+    - [レヴァンドフスキ, '109', '144', '0.76']
+    - [ベンゼマ, '90', '152', '0.59']
+    - [ムバッペ, '72', '100', '0.72']
+    - [ラウール, '71', '142', '0.50']
+    note: 得点はUEFA、試合数はウィキペディア。1試合あたりは自分で割った
+  say:
+  - text: 通算得点の上位を、試合数で割って並べ直します。
+    image: assets/images/20261019_cl_messi2/01_w.jpg
+    card: none
+  - text: 対象は、予選を勝ち上がったあとの、本戦だけです。
+    image: assets/images/20261019_cl_ronaldo/01_w.jpg
+    card: none
+  - text: 予選の得点は外します。ロナウドは、予選の1点を引いた140点です。
+    image: assets/images/20261019_cl_lewandowski2/01_w.jpg
+    card: none
+  - text: 通算得点の上位6人を、並べます。
+    image: assets/backgrounds/pitch.png
+    card: *tot_table
+  - text: 1位はロナウドの140点、183試合。
+    card:
+      <<: *tot_table
+      highlight_row: 0
+  - text: 2位はメッシの129点、163試合です。
+    card:
+      <<: *tot_table
+      highlight_row: 1
+  - text: 3位は、レヴァンドフスキの109点、144試合。
+    card:
+      <<: *tot_table
+      highlight_row: 2
+  - text: 4位のベンゼマは、90点を152試合で決めました。
+    image: assets/images/20261019_cl_lewandowski2/01_w.jpg
+    card: none
+  - text: ムバッペは72点。ラウールは71点を、142試合で決めました。
+    card:
+      <<: *tot_table
+      highlight_row: 4
+  - text: ここから、得点を試合数で割って、順位を並べ直します。
+    image: assets/images/20261019_cl_x9/01_w.jpg
+    card: none
+  - text: 割ると、1位はメッシ。0.79点です。
+    emph: true
+    card: &per_table
+      type: table
+      title: CL通算の1試合あたり（多い順、自分で割った）
+      columns: [選手, 1試合あたり, 得点, 試合]
+      rows:
+      - [メッシ, '0.79', '129', '163']
+      - [C・ロナウド, '0.77', '140', '183']
+      - [レヴァンドフスキ, '0.76', '109', '144']
+      - [ムバッペ, '0.72', '72', '100']
+      - [ベンゼマ, '0.59', '90', '152']
+      - [ラウール, '0.50', '71', '142']
+      note: 得点はUEFA、試合数はウィキペディア。割ったのは自分
+      highlight_row: 0
+  - text: 2位はロナウドの0.77。3位はレヴァンドフスキの0.76です。
+    card:
+      <<: *per_table
+      highlight_row: 1
+  - text: 上位3人の差は、0.03の中に収まっています。
+    card:
+      <<: *per_table
+      highlight_row: 2
+  - text: 4位はムバッペの0.72。ベンゼマは0.59、ラウールは0.50です。
+    card:
+      <<: *per_table
+      highlight_row: 3
+  - text: 通算の1位と2位は、割り算で入れ替わりました。
+    emph: true
+    image: assets/images/20261019_cl_ronaldo/01_w.jpg
+    card: none
+  - text: ただ、0.03の差だけでは、中身が見えません。
+    card: none
+  - text: 次は、そこに届くまでの道のりを見ます。
+    image: assets/images/20261019_cl_messi2/01_w.jpg
+    card: none
+  sources:
+  - https://fr.uefa.com/uefachampionsleague/news/0257-0e910cf2494a-5185150de9d4-1000--all-time-top-scorers/
+  - https://en.wikipedia.org/wiki/List_of_UEFA_Champions_League_top_scorers
+- id: milestones
+  heading: 70点から100点まで、何試合ずつかかったのか
+  tier: 確定
+  official: true
+  telop: 100点まで、メッシ123試合、レヴァンドフスキ125、ロナウド137
+  narrator: 解説
+  card: &ms_table
+    type: table
+    title: 70点・80点・90点・100点に届くまでの試合数（UEFAの記録）
+    columns: [選手, 70点, 80点, 90点, 100点]
+    rows:
+    - [メッシ, '90', '102', '109', '123']
+    - [レヴァンドフスキ, '93', '100', '110', '125']
+    - [C・ロナウド, '106', '116', '123', '137']
+    note: 数字は試合数。少ないほど速い
+  say:
+  - text: 70点、80点、90点、100点。それぞれ何試合で届いたかを、見ます。
+    image: assets/images/20261019_cl_lewandowski2/01_w.jpg
+    card: none
+  - text: メッシは、70点が90試合、80点が102試合。
+    image: assets/backgrounds/pitch.png
+    card:
+      <<: *ms_table
+      highlight_row: 0
+  - text: 90点が109試合、100点が123試合です。
+    card:
+      <<: *ms_table
+      highlight_row: 0
+  - text: レヴァンドフスキは、93、100、110、125試合。
+    card:
+      <<: *ms_table
+      highlight_row: 1
+  - text: ロナウドは、106、116、123、137試合です。
+    card:
+      <<: *ms_table
+      highlight_row: 2
+  - text: 線にすると、メッシとレヴァンドフスキは、ほぼ重なります。
+    image: assets/backgrounds/pitch.png
+    card: &ms_line
+      type: line
+      title: 70点・80点・90点・100点に届くまでの試合数（UEFAの記録）
+      x: ['70', '80', '90', '100']
+      series:
+      - [C・ロナウド, [106, 116, 123, 137]]
+      - [メッシ, [90, 102, 109, 123]]
+      - [レヴァンドフスキ, [93, 100, 110, 125]]
+      unit: 試合
+      focus: C・ロナウド
+      note: 横軸は得点。線が下にあるほど速い
+  - text: ロナウドの線は、14試合から16試合ぶん、上にずれています。
+    card:
+      <<: *ms_line
+      highlight: '100'
+  - text: 100点までの最速は、メッシです。
+    emph: true
+    image: assets/images/20261019_cl_x9/01_w.jpg
+    card: none
+  - text: レヴァンドフスキが2試合差で続き、ロナウドは14試合多くかかりました。
+    card: none
+  - text: 100点に届いた年齢は、メッシが30歳、ロナウドが32歳。
+    image: assets/images/20261019_cl_x4/01_w.jpg
+    card: none
+  - text: レヴァンドフスキは、36歳のときです。
+    card: none
+  - text: 次に、10点ずつ区切って、かかった試合数を引き算します。
+    image: assets/backgrounds/pitch.png
+    card: &step_table
+      type: table
+      title: 10点を積むのにかかった試合数（自分で引いた）
+      columns: [選手, 70→80点, 80→90点, 90→100点]
+      rows:
+      - [メッシ, '12', '7', '14']
+      - [レヴァンドフスキ, '7', '10', '15']
+      - [C・ロナウド, '10', '7', '14']
+      note: UEFAの試合数から引いた。少ないほど速い
+  - text: 70点から80点は、レヴァンドフスキが7試合で最速です。
+    card:
+      <<: *step_table
+      highlight_row: 1
+  - text: 80点から90点は、メッシとロナウドが、どちらも7試合。
+    card:
+      <<: *step_table
+      highlight_row: 2
+  - text: 90点から100点は、2人とも14試合で、並びました。
+    card:
+      <<: *step_table
+      highlight_row: 0
+  - text: 80点から100点までの20点は、メッシもロナウドも21試合です。
+    emph: true
+    image: assets/images/20261019_cl_x4/01_w.jpg
+    card: none
+  - text: 14試合の差は、80点までにできて、そのあと変わりません。
+    image: assets/images/20261019_cl_messi2/01_w.jpg
+    card: none
+  sources:
+  - https://www.uefa.com/uefachampionsleague/news/027d-170b3182d9ed-587169daf860-1000--champions-league-goalscoring-milestones-kylian-mbappe-youn/
+- id: split
+  heading: 最初の100試合と、101試合目からで、何が違うのか
+  tier: 報道
+  telop: 最初の100試合はレヴァンドフスキ81点。101試合目からはロナウドが0.92
+  narrator: 解説
+  card: &first_table
+    type: table
+    title: 最初の100試合の得点（UEFAの記録）
+    columns: [選手, 得点, 1試合あたり]
+    rows:
+    - [レヴァンドフスキ, '81', '0.81']
+    - [メッシ, '77', '0.77']
+    - [ムバッペ, '72', '0.72']
+    - [C・ロナウド, '64', '0.64']
+    - [ベンゼマ, '53', '0.53']
+    - [ラウール, '51', '0.51']
+    note: UEFAの記録。1試合あたりは自分で割った
+  say:
+  - text: 通算を、2つに割ります。最初の100試合と、101試合目からです。
+    image: assets/images/20261019_cl_lewandowski2/01_w.jpg
+    card: none
+  - text: 最初の100試合の1位は、レヴァンドフスキの81点です。
+    image: assets/backgrounds/pitch.png
+    card:
+      <<: *first_table
+      highlight_row: 0
+  - text: メッシが77点、ムバッペが72点。
+    card:
+      <<: *first_table
+      highlight_row: 1
+  - text: ロナウドは64点で、4番目でした。
+    emph: true
+    card:
+      <<: *first_table
+      highlight_row: 3
+  - text: ロナウドの本戦の初ゴールは、2007年4月のローマ戦です。
+    card:
+      <<: *first_table
+      highlight_row: 3
+  - text: ベンゼマは53点、ラウールは51点です。
+    card:
+      <<: *first_table
+      highlight_row: 4
+  - text: 101試合目からを見ます。ムバッペは通算でちょうど100試合。まだ入りません。
+    image: assets/images/20261019_cl_ronaldo/01_w.jpg
+    card: none
+  - text: ロナウドは、83試合で76点。0.92です。
+    emph: true
+    card: &after_table
+      type: table
+      title: 101試合目からの得点（通算から最初の100試合を引いた）
+      columns: [選手, 試合, 得点, 1試合あたり]
+      rows:
+      - [C・ロナウド, '83', '76', '0.92']
+      - [メッシ, '63', '52', '0.83']
+      - [ベンゼマ, '52', '37', '0.71']
+      - [レヴァンドフスキ, '44', '28', '0.64']
+      - [ラウール, '42', '20', '0.48']
+      note: 通算から最初の100試合を引いた。割ったのは自分
+      highlight_row: 0
+  - text: メッシは、63試合で52点。0.83。
+    image: assets/backgrounds/pitch.png
+    card:
+      <<: *after_table
+      highlight_row: 1
+  - text: ベンゼマは52試合で37点。0.71です。
+    card:
+      <<: *after_table
+      highlight_row: 2
+  - text: レヴァンドフスキは、44試合で28点。0.64です。
+    card:
+      <<: *after_table
+      highlight_row: 3
+  - text: ロナウドは、0.64から0.92に上がりました。
+    emph: true
+    image: assets/images/20261019_cl_x4/01_w.jpg
+    card: none
+  - text: メッシは0.77から0.83へ。レヴァンドフスキは0.81から0.64へ。
+    image: assets/images/20261019_cl_lewandowski2/01_w.jpg
+    card: none
+  - text: ベンゼマは0.53から0.71へ。ラウールは0.51から0.48へ。
+    card: none
+  - text: 100試合目までの順位が、そのあとで、大きく入れ替わっています。
+    card: none
+  sources:
+  - https://www.uefa.com/uefachampionsleague/news/02a1-1fa9bccb78e0-1fb14d5cb64f-1000--who-has-scored-the-most-champions-league-goals-in-their-fi/
+  - https://www.uefa.com/uefachampionsleague/news/02a7-2136b8f054ea-76a61b3f9d24-1000--cristiano-ronaldo-in-the-champions-league-records-stats-wh/
+  - https://fcbayern.com/en/news/2021/11/lewy-with-a-hat-trick-on-his-100th-appearance
+  - https://en.wikipedia.org/wiki/List_of_UEFA_Champions_League_top_scorers
+- id: view
+  viewpoint: true
+  heading: 見立て・ロナウドの11点差は、どこで生まれたのか
+  tier: 背景
+  telop: 最初の100試合はメッシが13点先。101試合目からはロナウドが24点先
+  narrator: 解説
+  card: &view_table
+    type: table
+    title: ロナウドとメッシの得点差の中身（自分で引いた）
+    columns: [区間, メッシ, ロナウド, 先に行く側]
+    rows:
+    - [最初の100試合, '77', '64', 'メッシ+13']
+    - [101試合目から, '52', '76', 'ロナウド+24']
+    - [通算, '129', '140', 'ロナウド+11']
+    note: 得点はUEFAと、そこから引いた数字
+  say:
+  - text: 最後に、ロナウドとメッシの差を、分けて見ます。
+    image: assets/images/20261019_cl_messi2/01_w.jpg
+    card: none
+  - text: 通算では、ロナウドが11点多い。その中身です。
+    image: assets/backgrounds/pitch.png
+    card:
+      <<: *view_table
+      highlight_row: 2
+  - text: はじめのうちは、メッシが13点先でした。
+    card:
+      <<: *view_table
+      highlight_row: 0
+  - text: そのあとは、ロナウドが24点先です。
+    mark: {kind: circle, row: 1, col: 先に行く側}
+    card:
+      <<: *view_table
+      highlight_row: 1
+  - text: 24引く13で、通算の11点です。
+    emph: true
+    card: &view_calc
+      type: calc
+      title: 通算の差の中身（自分で引いた）
+      terms:
+      - ['24点', 101試合目から]
+      - ['13点', 最初の100試合]
+      - ['11点', 通算の差]
+      ops: ['−', '＝']
+  - text: ロナウドの1位は、そのあとの積み上げで決まりました。
+    callword: そのあとの24点
+    image: assets/images/20261019_cl_ronaldo/01_w.jpg
+    card: none
+  - text: 出場は、ロナウドのほうが20試合多い。
+    card: none
+  - text: メッシの1試合あたりで20試合を数えると、約16点です。
+    card: none
+  - text: 仮の割り算です。ただ、11点差は、その16点より小さい。
+    image: assets/images/20261019_cl_x9/01_w.jpg
+    card: none
+  - text: レヴァンドフスキは、ロナウドと31点差、メッシと20点差です。
+    image: assets/images/20261019_cl_lewandowski2/01_w.jpg
+    card: none
+  - text: 3人とも、いまのところ、試合数は増えていません。
+    card: none
+  - text: ただし、出場時間や相手の強さは、割り算の外にあります。
+    image: assets/images/20261019_cl_x4/01_w.jpg
+    card: none
+  - text: 全体で割ると、先頭はメッシ。そのあとだけで割ると、先頭はロナウドです。
+    image: assets/images/20261019_cl_messi2/01_w.jpg
+    card: none
+  sources:
+  - https://fr.uefa.com/uefachampionsleague/news/0257-0e910cf2494a-5185150de9d4-1000--all-time-top-scorers/
+  - https://www.uefa.com/uefachampionsleague/news/02a1-1fa9bccb78e0-1fb14d5cb64f-1000--who-has-scored-the-most-champions-league-goals-in-their-fi/
+  - https://en.wikipedia.org/wiki/Robert_Lewandowski

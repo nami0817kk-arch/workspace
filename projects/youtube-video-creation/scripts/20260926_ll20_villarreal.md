@@ -7,7 +7,8 @@ series: ラ・リーガチーム紹介
 topic: ビジャレアル
 thumbnail_line1: 5万人の町が欧州制覇
 thumbnail_line2: 黄色い潜水艦ビジャレアル
-thumbnail_tags: []
+thumbnail_tags:
+- ビジャレアル
 thumbnail_alt: []
 thumbnail_points: []
 thumbnail_note_red: ''
@@ -28,11 +29,11 @@ description: 'ビジャレアル。人口5万の町が、ヨーロッパを制�
   この動画が答える問い: どんなクラブなのか
 
 
-  ※各社の報道をもとにしています。クラブが発表した「確定」、
+  ※画面の札で、クラブが発表した「確定」、
 
   報道機関が伝える「報道」、SNS段階の「未確認」、
 
-  経緯の説明である「背景」を画面上で分けています。
+  経緯の説明である「背景」を分けています。
 
   '
 tags:
@@ -60,6 +61,8 @@ sources:
 - https://www.espn.com/soccer/team/results/_/name/villarreal
 - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard
 - https://en.wikipedia.org/wiki/Template:2026%E2%80%9327_La_Liga_table
+quote_sources:
+- https://villarrealcf.es/presentacion-de-inigo-perez-villarreal-cf/
 cards:
   history_card:
     type: table
@@ -236,70 +239,76 @@ cards:
     - - 第7節
       - レバンテ（ホーム）
       - 3対1
+    - - 第8節
+      - レアル・マドリード（アウェー）
+      - 0対1
+    - - 第9節
+      - エルチェ（ホーム）
+      - 0対0
 ---
 
 ## オープニング
-@bg: assets/backgrounds/stadium_ビジャレアル_in.png
+@bg: assets/backgrounds/studio.png
 
-キャスター: ラ・リーガの20クラブで、いちばん人口の少ない町。
+解説: ラ・リーガの20クラブで、いちばん人口の少ない町。
   telop: ラ・リーガの20クラブで、いちばん人口の少ない町
   image: assets/stats/ll_villarreal_data_t.png
   no_telop: true
-キャスター: ビジャレアル。人口5万の町が、ヨーロッパを制した夜。
+解説: ビジャレアル。人口5万の町が、ヨーロッパを制した夜。
   telop: ビジャレアル。人口5万の町が、ヨーロッパを制した夜
   se: assets/audio/se_pon.wav
   image: assets/stats/ll_villarreal_data_t.png
-キャスター: あの黄色いユニフォームは、ある店の品切れから生まれました。
+解説: あの黄色いユニフォームは、ある店の品切れから生まれました。
   telop: あの黄色いユニフォームは、ある店の品切れから生まれました
   image: assets/stats/ll_villarreal_data_t.png
 
 ## いま見る理由と基礎DATA
-@bg: assets/backgrounds/stadium_ビジャレアル_in.png
+@bg: assets/backgrounds/studio.png
 @main: true
 
-キャスター: 今季は2シーズン続けて、チャンピオンズリーグで戦います。
+解説: 今季は2シーズン続けて、チャンピオンズリーグで戦います。
   no_telop: true
   source: 背景
   image: assets/stats/ll_villarreal_data_r1.png
-キャスター: 就任したばかりのイニゴ・ペレス監督は、こう話しました。
+解説: 就任会見で、新監督のイニゴ・ペレスはこう語りました。
   no_telop: true
   image: assets/stats/ll_villarreal_data_r2.png
 イニゴ・ペレス: チャンピオンズリーグで指揮をとれるのは、とてもうれしい。ずっと見てきた大会だ
   telop: イニゴ・ペレス「チャンピオンズリーグで指揮をとれるのは、とてもうれしい。ずっと見てきた大会だ」
   image: assets/stats/ll_villarreal_data_r2.png
-キャスター: そしてこのクラブは、人口**5万**ほどの町から、ヨーロッパの大会を制しています。
+解説: そしてこのクラブは、人口**5万**ほどの町から、ヨーロッパの大会を制しています。
   no_telop: true
   image: assets/stats/ll_villarreal_data_r3.png
-キャスター: 創立は**1923年**。入場料は男性が半ペセタで、女性は無料でした。
+解説: 創立は**1923年**。入場料は男性が半ペセタで、女性は無料でした。
   no_telop: true
   image: assets/stats/ll_villarreal_data0.png
-キャスター: 愛称は「黄色い潜水艦」。**1967年**の3部への昇格を、ビートルズの曲で祝ったのが始まりです。
+解説: 愛称は「黄色い潜水艦」。**1967年**の3部への昇格を、ビートルズの曲で祝ったのが始まりです。
   no_telop: true
   image: assets/stats/ll_villarreal_data1.png
-キャスター: ホームタウンはビジャレアル。人口**5万3623人**、タイル作りが盛んな町です。
+解説: ホームタウンはビジャレアル。人口**5万3623人**、タイル作りが盛んな町です。
   no_telop: true
   image: assets/stats/ll_villarreal_data2.png
-キャスター: 本拠地はエスタディオ・デ・ラ・セラミカ。クラブの発表では、**2万3173人**が入ります。
-  telop: 本拠地はエスタディオ・デ・ラ・セラミカ。クラブの発表では、**2万3173人**が入ります
-  image: assets/backgrounds/stadium_ビジャレアル.png
-キャスター: オーナーは**1997年**からフェルナンド・ロイグ。陶磁器の会社も持つ実業家です。
+解説: 本拠地はエスタディオ・デ・ラ・セラミカ。クラブの発表では、**2万3173人**が入ります。
+  no_telop: true
+  image: assets/stats/ll_villarreal_data3.png
+解説: オーナーは**1997年**からフェルナンド・ロイグ。陶磁器の会社も持つ実業家です。
   no_telop: true
   image: assets/stats/ll_villarreal_data4.png
-キャスター: 1部も国王杯も、優勝はまだ**0回**。ヨーロッパリーグ**1回**、インタートトカップ**2回**。
+解説: 1部も国王杯も、優勝はまだ**0回**。ヨーロッパリーグ**1回**、インタートトカップ**2回**。
   no_telop: true
   image: assets/stats/ll_villarreal_cups.png
-キャスター: 最多出場は、中盤のマヌ・トリゲロス。このクラブで**477試合**に出ました。
+解説: 最多出場は、中盤のマヌ・トリゲロス。このクラブで**477試合**に出ました。
   no_telop: true
   image: assets/stats/ll_villarreal_data6.png
-キャスター: 直近のタイトルは、**2021年**のヨーロッパリーグです。
+解説: 直近のタイトルは、**2021年**のヨーロッパリーグです。
   no_telop: true
   image: assets/stats/ll_villarreal_data7.png
-キャスター: 昨季のリーグ戦は**3位**。勝ち点は**72**でした。
+解説: 昨季のリーグ戦は**3位**。勝ち点は**72**でした。
   no_telop: true
   image: assets/stats/ll_villarreal_data8.png
 
 ## 下のリーグから1部へ
-@bg: assets/backgrounds/stadium_ビジャレアル_in.png
+@bg: assets/backgrounds/studio.png
 
 解説: 歴史の大半は、下のリーグでした。初めて2部に上がったのは**1970年**です。
   telop: 歴史の大半は、下のリーグでした。初めて2部に上がったのは**1970年**です
@@ -314,14 +323,14 @@ cards:
   telop: 1部の最初の試合はベルナベウ。**3分**で先制し、1対4で敗れました
 
 ## 1年で戻った
-@bg: assets/backgrounds/stadium_ビジャレアル_in.png
+@bg: assets/backgrounds/studio.png
 
 解説: 2012年、最終節でアトレティコに敗れ、2部に落ちます。
   telop: 2012年、最終節でアトレティコに敗れ、2部に落ちます
   source: 背景
   card: history2_card
-解説: 決めたのはファルカオ。終了間際の1点でした。
-  telop: 決めたのはファルカオ。終了間際の1点でした
+解説: 決めたのはアトレティコのファルカオ。終了間際の1点でした。
+  telop: 決めたのはアトレティコのファルカオ。終了間際の1点でした
 解説: 翌シーズンは2部で2位。最後の試合で昇格を決め、1年で戻りました。
   telop: 翌シーズンは2部で2位。最後の試合で昇格を決め、1年で戻りました
   card: history2_2_card
@@ -329,7 +338,7 @@ cards:
   telop: そこから一度も落ちず、今季で**14シーズン**続けて1部です
 
 ## ゴールキーパーのピーケー
-@bg: assets/backgrounds/stadium_ビジャレアル_in.png
+@bg: assets/backgrounds/studio.png
 
 解説: 2021年、ヨーロッパリーグの決勝。相手はマンチェスター・ユナイテッドでした。
   telop: 2021年、ヨーロッパリーグの決勝。相手はマンチェスター・ユナイテッドでした
@@ -344,7 +353,7 @@ cards:
   telop: ピーケー戦を**11対10**で制し、創立から98年で、初めての主要タイトルでした
 
 ## このクラブの特徴
-@bg: assets/backgrounds/stadium_ビジャレアル_in.png
+@bg: assets/backgrounds/studio.png
 
 解説: イニゴ・ペレス監督のチームは、試合を支配して攻める。課題は決め切ること、と本人。
   telop: イニゴ・ペレス監督のチームは、試合を支配して攻める。課題は決め切ること、と本人
@@ -354,20 +363,18 @@ cards:
 解説: ピッチの外は、主力を売っても崩れない型。
   telop: ピッチの外は、主力を売っても崩れない型
   card: features_1_card
-  image: assets/photos/ll/villarreal/villarreal_manager_1c383d6e.jpg
 解説: 昨シーズンの前、中盤のバエナを**4200万ユーロ**でアトレティコへ売りました。
   telop: 昨シーズンの前、中盤のバエナを**4200万ユーロ**でアトレティコへ売りました
   image: assets/photos/ll/villarreal/villarreal_manager_1c383d6e.jpg
 解説: それでも終わってみれば、そのアトレティコより上でした。
   telop: それでも終わってみれば、そのアトレティコより上でした
   image: assets/photos/ll/villarreal/villarreal_manager_1c383d6e.jpg
-解説: スタンドは町ぐるみ。年間シートは**1万9000人**を超え、町の人口の3分の1より多い数です。
-  telop: スタンドは町ぐるみ。年間シートは**1万9000人**を超え、町の人口の3分の1より多い数です
+解説: 年間シートは**1万9000人**超え。町の人口の3分の1を上回ります。
+  telop: 年間シートは**1万9000人**超え。町の人口の3分の1を上回ります
   card: features_4_card
-  image: assets/photos/ll/villarreal/villarreal_manager_1c383d6e.jpg
 
 ## 黄色は品切れから
-@bg: assets/backgrounds/stadium_ビジャレアル_in.png
+@bg: assets/backgrounds/studio.png
 
 解説: 1947年、当時の会長の息子が、ユニフォームを買いにバレンシアへ行きました。
   telop: 1947年、当時の会長の息子が、ユニフォームを買いにバレンシアへ行きました
@@ -381,113 +388,121 @@ cards:
   image: assets/images/ll_villarreal_episode/scene.jpg
 
 ## このクラブを語る3人
-@bg: assets/backgrounds/stadium_ビジャレアル_in.png
+@bg: assets/backgrounds/studio.png
 
-キャスター: リケルメはアルゼンチンの司令塔。バルセロナで外国人枠からあふれ、期限付きで来ました。
-  telop: リケルメはアルゼンチンの司令塔。バルセロナで外国人枠からあふれ、期限付きで来ました
+解説: リケルメはアルゼンチンの司令塔。バルセロナの外国人枠からあふれて来ました。
+  telop: リケルメはアルゼンチンの司令塔。バルセロナの外国人枠からあふれて来ました
   source: 背景
   card: legends_card
   image: assets/photos/ll/villarreal/villarreal_legend_a75286ad.jpg
-キャスター: 2006年、チャンピオンズリーグ準決勝。試合中のピーケーを止められ、延長を逃しました。
-  telop: 2006年、チャンピオンズリーグ準決勝。試合中のピーケーを止められ、延長を逃しました
-キャスター: リーグ戦で**106試合36得点**。いまは母国ボカ・ジュニアーズの会長です。
+解説: 2006年、欧州の準決勝。試合中のピーケーを止められ、延長を逃しました。
+  telop: 2006年、欧州の準決勝。試合中のピーケーを止められ、延長を逃しました
+解説: リーグ戦で**106試合36得点**。いまは母国ボカ・ジュニアーズの会長です。
   telop: リーグ戦で**106試合36得点**。いまは母国ボカ・ジュニアーズの会長です
   image: assets/photos/ll/villarreal/villarreal_legend_a75286ad.jpg
 
 ## このクラブを語る3人（2人目）
-@bg: assets/backgrounds/stadium_ビジャレアル_in.png
+@bg: assets/backgrounds/studio.png
 
-キャスター: マルコス・セナはブラジル生まれの中盤。2002年に来て、11シーズンを過ごしました。
-  telop: マルコス・セナはブラジル生まれの中盤。2002年に来て、11シーズンを過ごしました
+解説: セナはブラジル生まれの中盤。2002年に来て、11シーズンを過ごしました。
+  telop: セナはブラジル生まれの中盤。2002年に来て、11シーズンを過ごしました
   source: 背景
   card: legends2_card
   image: assets/photos/ll/villarreal/villarreal_legend_25513b35.jpg
-キャスター: スペイン代表として、2008年のヨーロッパ選手権を制しています。
+解説: スペイン代表として、2008年のヨーロッパ選手権を制しています。
   telop: スペイン代表として、2008年のヨーロッパ選手権を制しています
-キャスター: リーグ戦で**292試合25得点**。お別れの試合は、背番号と同じ**19分**から1分間の拍手。
+解説: リーグ戦で**292試合25得点**。お別れの試合は、背番号と同じ**19分**から1分間の拍手。
   telop: リーグ戦で**292試合25得点**。お別れの試合は、背番号と同じ**19分**から1分間の拍手
   image: assets/photos/ll/villarreal/villarreal_legend_25513b35.jpg
 
 ## このクラブを語る3人（3人目）
-@bg: assets/backgrounds/stadium_ビジャレアル_in.png
+@bg: assets/backgrounds/studio.png
 
-キャスター: カソルラは、地元オビエドの財政難で、18歳になる前にここへ来た中盤です。
+解説: カソルラは、地元オビエドの財政難で、18歳になる前にここへ来た中盤です。
   telop: カソルラは、地元オビエドの財政難で、18歳になる前にここへ来た中盤です
   source: 背景
   card: legends3_card
   image: assets/photos/ll/villarreal/villarreal_legend_4ca6fa77.jpg
-キャスター: 2008年、レアル・マドリードの誘いを断り、「ノーと言うことはできる」と話しました。
-  telop: 2008年、レアル・マドリードの誘いを断り、「ノーと言うことはできる」と話しました
-キャスター: 大けがから**636日**ぶりの試合を、ここで迎えました。リーグ戦は**251試合40得点**。
+解説: 2008年、レアルの誘いを断り、「ノーと言うことはできる」と話しました。
+  telop: 2008年、レアルの誘いを断り、「ノーと言うことはできる」と話しました
+解説: 大けがから**636日**ぶりの試合を、ここで迎えました。リーグ戦は**251試合40得点**。
   telop: 大けがから**636日**ぶりの試合を、ここで迎えました。リーグ戦は**251試合40得点**
   image: assets/photos/ll/villarreal/villarreal_legend_4ca6fa77.jpg
 
 ## 今季の監督
-@bg: assets/backgrounds/stadium_ビジャレアル_in.png
+@bg: assets/backgrounds/studio.png
 
-キャスター: 今季の監督はイニゴ・ペレス。スペイン出身で、**2026年6月**の就任です。
-  telop: 今季の監督はイニゴ・ペレス。スペイン出身で、**2026年6月**の就任です
+解説: 今季の監督はイニゴ・ペレス。スペイン出身で、就任は**2026年6月**。
+  telop: 今季の監督はイニゴ・ペレス。スペイン出身で、就任は**2026年6月**
   source: 報道
   card: manager_card
   image: assets/photos/ll/villarreal/villarreal_manager_1c383d6e.jpg
-キャスター: 前はラージョ・バジェカーノ。昨シーズン、カンファレンスリーグの決勝まで進みました。
+解説: 前はラージョ・バジェカーノ。昨シーズン、カンファレンスリーグの決勝まで進みました。
   telop: 前はラージョ・バジェカーノ。昨シーズン、カンファレンスリーグの決勝まで進みました
 
 ## 今季の登録選手
-@bg: assets/backgrounds/stadium_ビジャレアル_in.png
+@bg: assets/backgrounds/studio.png
 
-キャスター: 今季の登録選手は24人です。
+解説: 今季の登録選手は24人です。
   no_telop: true
   source: 報道
   image: assets/stats/ll_villarreal_gk.png
-キャスター: ゴールキーパーは3人。
+解説: ゴールキーパーは3人。
   no_telop: true
   image: assets/stats/ll_villarreal_gk_f.png
-キャスター: ペーテル・グラーチはハンガリー代表で**58試合**。
+解説: ペーテル・グラーチはハンガリー代表で**58試合**。
   no_telop: true
   image: assets/stats/ll_villarreal_gk_f.png
-キャスター: ルイス・ジュニオールはリーグ戦で**45試合**。
+解説: ルイス・ジュニオールはリーグ戦で**45試合**。
   no_telop: true
   image: assets/stats/ll_villarreal_gk_f.png
-キャスター: ディフェンダーは8人。
+解説: ディフェンダーは8人。
   no_telop: true
   image: assets/stats/ll_villarreal_df_f.png
-キャスター: フアン・フォイスはアルゼンチン代表で**22試合**。
+解説: フアン・フォイスはアルゼンチン代表で**22試合**。
   no_telop: true
   image: assets/stats/ll_villarreal_df_f.png
-キャスター: ローガン・コスタはカーボベルデ代表で**26試合**。
+解説: ローガン・コスタはカーボベルデ代表で**26試合**。
   no_telop: true
   image: assets/stats/ll_villarreal_df_f.png
-キャスター: ミッドフィールダーは7人。
+解説: ミッドフィールダーは7人。
   no_telop: true
   image: assets/stats/ll_villarreal_mf_f.png
-キャスター: タジョン・ブキャナンはカナダ代表で**65試合**。
+解説: タジョン・ブキャナンはカナダ代表で**65試合**。
   no_telop: true
   image: assets/stats/ll_villarreal_mf_f.png
-キャスター: パペ・ゲイェはセネガル代表で**46試合**。
+解説: パペ・ゲイェはセネガル代表で**46試合**。
   no_telop: true
   image: assets/stats/ll_villarreal_mf_f.png
-キャスター: フォワードは6人。
+解説: フォワードは6人。
   no_telop: true
   image: assets/stats/ll_villarreal_fw_f.png
-キャスター: 主将を務めるのが**ジェラール・モレノ**。
+解説: 主将を務めるのが**ジェラール・モレノ**。
   no_telop: true
   image: assets/stats/ll_villarreal_fw_f.png
-キャスター: リーグ戦で**294試合**に出ています。
+解説: リーグ戦で**294試合**に出ています。
   no_telop: true
   image: assets/stats/ll_villarreal_fw_f.png
-キャスター: ニコラ・ペペはコートジボワール代表で**60試合**。
+解説: ニコラ・ペペはコートジボワール代表で**60試合**。
   no_telop: true
   image: assets/stats/ll_villarreal_fw_f.png
 
 ## 今季のここまで
-@bg: assets/backgrounds/stadium_ビジャレアル_in.png
+@bg: assets/backgrounds/studio.png
 
-解説: ラ・リーガは7試合を終えて、**2勝2引き分け3敗**です。
-  telop: ラ・リーガは7試合を終えて、**2勝2引き分け3敗**です
+解説: ここまでのラ・リーガは**2勝3引き分け4敗**。9試合を消化しました。
+  telop: ここまでのラ・リーガは**2勝3引き分け4敗**。9試合を消化しました
   source: 報道
   card: season_card
-解説: 順位は**9位**、勝ち点は**8**です。
-  telop: 順位は**9位**、勝ち点は**8**です
-解説: チャンピオンズリーグの初戦は、ドルトムントに**2対3**で敗れました。
-  telop: チャンピオンズリーグの初戦は、ドルトムントに**2対3**で敗れました
+  image: assets/photos/ll/villarreal/villarreal_season_ip2.jpg
+解説: いまは**12位**で、勝ち点**9**です。
+  telop: いまは**12位**で、勝ち点**9**です
+解説: チャンピオンズリーグでは、初戦のドルトムント戦に**2対3**と競り負けました。
+  telop: チャンピオンズリーグでは、初戦のドルトムント戦に**2対3**と競り負けました
+  image: assets/photos/ll/villarreal/villarreal_season_ip2.jpg
+解説: 第2戦はナポリに**3対1**で勝ち、1勝1敗です。
+  telop: 第2戦はナポリに**3対1**で勝ち、1勝1敗です
+  image: assets/photos/ll/villarreal/villarreal_season_ip2.jpg
+解説: 次の相手は、敵地アンフィールドのリバプールです。
+  telop: 次の相手は、敵地アンフィールドのリバプールです
+  image: assets/photos/ll/villarreal/villarreal_season_ip2.jpg

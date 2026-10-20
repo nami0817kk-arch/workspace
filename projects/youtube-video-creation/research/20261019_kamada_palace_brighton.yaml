@@ -1,0 +1,116 @@
+# 鎌田大地 の取材メモ（2026年10月19日・ショートだけ）。見せ方は B（写真を切り替え）
+# 取材: 2026-10-19。requests（ブラウザUA）と ESPN の公開API で読んだ。
+#   ・サッカーキング 2026-10-18「開始10分で3発のブライトンが公式戦6連勝！…」（題材の出典。本文を全部読んだ）。https://www.soccer-king.jp/news/world/eng/20261018/2218062.html
+#   ・ESPN 試合記録（先発・交代・得点・チーム統計。API summary event=401879261）／ESPN レポート（Five-goal Brighton run rampant）。https://www.espn.com/soccer/report/_/gameId/401879261
+#   ・ゲキサカ 2026-10-18「ブライトンvsクリスタル・パレスで衝撃のスーパーゴール!!」（7分のゴールの描写）。控えは research/raw/20261019_kamada_*。
+# スコア: ブライトン5-0パレス（現地10/18、第7節）。得点 4分 オウンゴール／7分 ゴメス／10分 アヤリ／49分 コストゥラス／84分 ヒンシェルウッド（SK・ESPN が一致）。7分は ESPN は35ヤード超、ゲキサカ50m超、ESPN レポート51m → 台本は「ハーフライン付近から」（SK）とだけ言う。
+# 鎌田: 先発、81分にウィル・ヒューズと交代（SK・ESPN 一致）。後半頭にティンバー→マクニールで鎌田は2列目から3列目へ（SK）。
+# ESPN レポート: ブライトンのパレスへの勝利は、ヒュルツェラー監督のもとで5度目の対戦で初めて。
+# 自分で数えたもの: パレスの交代は5人（45分マクニール・53分レルマ・61分マテタとンケティア・81分ヒューズ。ESPN）で、鎌田の81分は最後。
+#   チーム統計（ESPN）: シュート ブライトン17・パレス5／枠内 9・1。
+#   鎌田がゴールを決めた11日（パレス3-1フォレスト、ESPN）と15日（EL リヨン3-2パレス、10/16 の取材メモ）でパレスは合わせて5点。18日は0点。
+# 次の試合（SK）: パレスは22日 EL ベシクタシュ戦、25日 ホームでニューカッスル戦。三笘・冨安はメンバー外（SK）— 台本では言わない（鎌田の話に絞る）。
+# 題材の一覧の「サージュ監督『ファンに謝りたい』（ESPN）」は、読めた ESPN の記事・試合記録のどこにも見つからなかった → 使わない。
+# 本人の言葉: 無し（作らない）。反応: 0件（当たった先は上の記事のみ。作らない）。鎌田を小さく見せない書き方（チームの敗戦と個人を分ける）。
+# 写真: 配信写真（Getty）は取り込まない。assets/images/20261019_kamada_palace_brighton/ は Commons（CC BY 2025/8 フレドリクスタ戦のパレス＝MichaelEmilio、CC BY-SA 2026 Arsenal 戦＝Chensiyuan）。背番号18・パレスのユニフォームで目で確認（名前の明記は無い）。
+#   01.jpg の切り出し（27〜31）は相手の選手になったので使わない。縦の切り出し 8枚を使う。10/16 のフランクフルト時代の写真は使っていない。**2025年8月の写真が中心**（今季の写真が無い）。
+slot: japan
+date: "2026年10月19日"
+format: news
+no_main: true
+people: [鎌田大地, クリスタル・パレス, ブライトン]
+short_style: B
+short_photos:
+  - assets/images/20261019_kamada_palace_brighton/66_v.jpg
+  - assets/images/20261019_kamada_palace_brighton/08_v.jpg
+  - assets/images/20261019_kamada_palace_brighton/10_v.jpg
+  - assets/images/20261019_kamada_palace_brighton/64_v.jpg
+  - assets/images/20261019_kamada_palace_brighton/09_v.jpg
+  - assets/images/20261019_kamada_palace_brighton/67_v.jpg
+  - assets/images/20261019_kamada_palace_brighton/65_v.jpg
+  - assets/images/20261019_kamada_palace_brighton/16_v.jpg
+
+short_question: 鎌田大地は、次のベシクタシュ戦でも先発すべきだと思いますか。
+short_hook: 鎌田大地は81分まで。パレスは開始10分で3失点。
+short_telops:
+  - {match: 0対5, text: プレミア第7節/ブライトン5対0パレス}
+  - {match: 81分にピッチ, text: 鎌田大地は先発/81分に交代}
+  - {match: 開始10分で3失点, text: 開始10分で3失点}
+  - {match: ハーフライン付近, text: 7分/ハーフライン付近からのロングシュート}
+  - {match: 49分と84分, text: 後半は49分と84分にも失点}
+  - {match: 5度目の対戦, text: ブライトンは5度目の対戦で/パレスに初勝利}
+  - {match: 中2日, text: 15日のELから中2日で先発}
+  - {match: 2列目から3列目, text: 後半から/2列目から3列目へ}
+  - {match: 5人, text: パレスの交代は5人/鎌田の81分は最後}
+  - {match: 17本, text: シュートは/ブライトン17本・パレス5本}
+  - {match: 枠内, text: 枠内シュートは/9本と1本}
+  - {match: 合わせて5点, text: 11日と15日/パレスは合わせて5点}
+  - {match: 22日, text: 次は22日/ELでベシクタシュ戦}
+
+theme:
+  id: kamada_palace_brighton
+  league: england
+  prefix: ""
+  title: 鎌田大地は81分まで先発。パレスがブライトンに0対5、開始10分で何があったか
+  hook: ""
+  question: パレスは、なぜ開始10分で3失点したのか
+  takeaway: 鎌田が決めた11日と15日の2試合でパレスは合わせて5点。18日は0点で、シュートは17本対5本。ただし1試合のチームの数字で、鎌田ひとりの結果ではない
+
+thumbnail:
+  line1: 鎌田大地、81分まで先発
+  line2: パレス0対5の中身
+  tags: [鎌田大地, クリスタル・パレス, ブライトン]
+  photo: assets/images/20261019_kamada_palace_brighton/02.jpg
+  short_photo: assets/images/20261019_kamada_palace_brighton/66_v.jpg
+
+answer: 4分のオウンゴール、7分のロングシュート、10分の追加点で3失点した
+watch: 22日、ELでベシクタシュ戦
+
+sections:
+  - id: what
+    main: true
+    heading: 何が起きたか
+    tier: 報道
+    telop: プレミア第7節、パレスはブライトンに0対5
+    say:
+      - 現地18日のプレミア第7節。
+      - クリスタル・パレスは、ブライトンに0対5で負けました。
+      - 鎌田大地は先発で、81分にピッチを退きました。
+      - 開始10分で3失点。4分のオウンゴールのあと、
+      - 7分にハーフライン付近からロングシュートを決められました。
+      - 10分にも追加点。後半は49分と84分にも失点しました。
+      - ブライトンは、ヒュルツェラー監督になって5度目の対戦で、パレスに初めて勝ちました。
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/eng/20261018/2218062.html
+      - https://www.espn.com/soccer/report/_/gameId/401879261
+
+  - id: kamada
+    heading: 鎌田が立った81分
+    tier: 報道
+    telop: 中2日の先発。81分は交代のいちばん最後
+    say:
+      - 鎌田は15日のELでゴールを決めて、中2日でこの試合に先発しました。
+      - 後半から、鎌田は2列目から3列目に位置を変えました。
+      - パレスの交代は5人。鎌田の81分は、最後の交代でした。
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/eng/20261018/2218062.html
+      - https://www.espn.com/soccer/report/_/gameId/401879261
+
+  - id: view
+    viewpoint: true
+    heading: 数字で見る0対5
+    tier: 背景
+    telop: シュートは17本対5本。鎌田が決めた2試合では合わせて5点
+    say:
+      - シュートは、ブライトン17本に対してパレスは5本。
+      - 枠内は、9本と1本でした。
+      - 鎌田がゴールを決めた11日と15日の2試合で、パレスは合わせて5点。
+      - この試合は0点でした。1試合のチームの数字です。
+      - 次は22日、ELでベシクタシュ戦。25日はホームでニューカッスルと戦います。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/report/_/gameId/401879261
+      - https://www.soccer-king.jp/news/world/eng/20261018/2218062.html
+short_title: "鎌田大地は81分まで先発。パレスがブライトンに0対5、開始10分で何があったか"

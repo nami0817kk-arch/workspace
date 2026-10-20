@@ -1,0 +1,660 @@
+# シャビ・エルナンデス（元バルセロナ／スペイン代表・現オランダ代表監督）の紹介。シリーズ「レジェンドの紹介（世界）」。試験の見本はジダン・ロナウジーニョ（research/20261018_*_legend.yaml）。
+# 型は引退した選手向けの8節：①フック ②基礎DATA ③歩んできた道と転機 ④プレースタイル（＋通算の表） ⑤あの試合 ⑥引退後・いま ⑦マル秘話2つ ⑧見立て。
+# **FotMob は使わない**。レーダー・シュートマップ・パーセンタイルは出さない。数字は基本の数と、自分で割った・数えた値。Transfermarkt は見ていない（必要な数字はクラブ公式・ESPN・BBC で足りた）。
+# 公開予定は 10/18 以降。**台本は draft まで**（approve・build・screen・upload はしない）。
+#
+# **数字・出来事の出どころ（本文を実際に読んだもの。取材は requests と WebFetch／WebSearch の URL 探しのみ。ブラウザの道具は不使用）と確度**
+# - BBC Sport（2026-08-12、Alastair Telfer、requests で本文を読んだ）：シャビがオランダ代表の新監督（4年契約）、1978年のハッペル（オーストリア人）以来の外国人監督、前任クーマンは今夏のW杯32強でモロッコに敗れて辞任、
+#   初戦は9/24 ドイツ（Nations League）、アルネ・スロットが話し合いのあと辞退、シャビは2010年W杯決勝でオランダを破ったスペインの一員、2019年に引退・アル・サッドで監督・2021年11月にバルセロナ・就任1年目の通年でリーガ優勝・2024年に退く、
+#   写真の説明「シャビは選手時代にバルセロナで25のタイトル」、本人の言葉（「大変な名誉」「ある意味、オランダ・サッカーの息子」「ファン・ハールの下でバルサでデビュー」）。→ 報道（確度の上限が高い連盟発表の報道）。
+# - KNVB（オランダ連盟）公式の発表ページ：本文はサイトのメンテナンス表示で読めなかった（og:image の写真だけ取れた。シャビの写真）。→ 本文は BBC で確かめた。
+# - FC バルセロナ公式（fcbarcelona.com「Xavi by the numbers」2021-11-06、requests で本文を読んだ）：バルセロナで767試合85得点（リーガ505・CL157・国王杯70・UEFAカップ13・スペイン・スーパーカップ14・欧州スーパーカップ3・クラブW杯5）、
+#   タイトル25（リーガ8・CL4・国王杯3・クラブW杯2・欧州スーパーカップ2・スペイン・スーパーカップ6。年も列挙）、17シーズン（1998〜2015）、42回のクラシコ、最後の試合は2015-06-06 CL決勝、アル・サッドの監督で7タイトル。→ 確定（クラブ公式の記録）。
+# - The Guardian 2011-02-11「I'm a romantic, says Xavi」（Sid Lowe のインタビュー。requests で全文）：本人の言葉（空いた場所を探す・ロンド・クライフのアヤックスの型・ウェンブリーに行けなかった12歳・結果より遺産・
+#   2005年ごろは絶滅しかけていた）、同ページの経歴欄（2008年ユーロ最優秀選手、2010年W杯でパス成功が2位より104本多い、直近2シーズンのリーガ・CLでアシスト最多）。→ 報道。
+# - Football España 2015-09-15「Xavi ‘nearly left in 2008’」（Marca への本人の言葉を引いた記事。requests で全文）：2008年にバイエルンの話・グアルディオラが「動くな」。→ 報道。
+# - ESPN（site.api.espn.com の試合記録・実況・出場記録。requests）：ユーロ2012決勝 スペイン4-0イタリア（キエフ・シルバ14・アルバ41＝シャビのアシスト・トーレス84＝シャビのアシスト・マタ88。実況「欧州選手権の決勝で2度アシストした最初の選手」）／
+#   ユーロ2008決勝 ドイツ0-1スペイン（実況：トーレスがシャビのスルーパスに走って決勝点）／W杯2010決勝 オランダ0-1スペイン（イニエスタ116分）／CL決勝2011 バルセロナ3-1マンU（ウェンブリー・シャビ先発1アシスト）／
+#   スペイン・スーパーカップ決勝2023 レアル1-3バルセロナ／オランダの4試合（9/24 ドイツ1-1・9/27 セルビア2-1・10/1 ギリシャ2-2・10/4 セルビア2-1）と次の日程（11/13 ギリシャ戦・11/16 ドイツ戦）。→ 報道（統計の出どころ）。
+# - Omroep Brabant（2026-09-27）：セルビア戦 1-2（オランダの勝ち）の報。→ 報道。
+# - 英語版 Wikipedia（本文・Career statistics・Honours・Managerial statistics）：アル・サッド117試合25得点（スペイン語版の合計884/110と一致）・スペイン代表133試合13得点（英・西・日の3つが一致）・
+#   監督成績（アル・サッド102試合67勝・バルセロナ142試合89勝）・スペイン代表デビュー（2000-11-15 オランダ戦。英・西が一致）・バロンドール3位3回。→ 背景。
+#
+# **食い違いと台本での扱い**
+# - 依頼の「9/25 初戦、9/28 初勝利」は日本時間。ESPN の試合記録・BBC・Wikipedia はどれも現地の 9/24 と 9/27（キックオフは現地 20:45）。→ 台本は現地の日付で言う（9月24日・9月27日）。
+# - バルセロナの試合数：クラブ公式は767試合85得点（全大会）。同じクラブ公式の別ページは869試合97得点・32タイトル（Bチームなども含む数え方と思われる）と書く。→ 1つ目（767/85/25、BBC もタイトル25）を採った。
+# - アル・サッドのリーグ戦の得点：英語版 Wikipedia の infobox は20、同じページの表は21。→ 表は全大会（117試合25得点）だけを使い、リーグ戦の得点は言わない。
+# - 「2009-05-02 のクラシコ6-2で4アシスト」（英語版 Wikipedia）：ESPN の実況では、ヘンリーの1点目はメッシのチップ、メッシの1点目は単独で奪って決めた形で、確認できたシャビのアシストは2つだけ。→ 「あの試合」には使わず、ユーロ2012決勝（ESPN の出場記録で2アシスト）にした。
+# - ユーロ2008決勝のシャビのアシスト：ESPN の統計欄は0だが、実況はシャビのスルーパスでトーレスが決めたと書く。→ 「アシスト」とは言わず「決勝点の前のスルーパス」と言う。
+# - 時刻：ユーロ2012決勝のトーレスの得点は ESPN の得点記録で84分、実況は83分。→ 得点記録の84分。
+# - オランダの「初勝利」：Omroep Brabant・ESPN の記録から、初戦（9/24）は引き分けで、次の9/27が最初の勝ち。BBC・公式の「初勝利」の記事は読めていない。→ 試合記録から言える形（「3日後、最初の勝ち」）にした。
+# - Gulf News の「Xavi Hernandez: I exceeded all my dreams」は、日付と中身（バルセロナの3冠を「昨季」と言う）が合わず読み捨てた。Eurosport／TNT のバイエルンの記事は 403 で読めず、Football España の転載で代えた。
+#
+# **自分で数えた比べ（⑧）**
+# - タイトル：選手＝バルセロナで25（クラブ公式）／監督＝アル・サッド7（クラブ公式）＋バルセロナ2（2022-23 のリーガ〈BBC〉と2023-01 のスペイン・スーパーカップ〈ESPN の決勝記録〉）＝9。25÷9＝約2.8倍。
+# - 試合数：選手（クラブ・全大会）＝767＋117＝884／監督（クラブ＋代表）＝102＋142＋4＝248（Wikipedia の合計と一致。代表の4は ESPN の記録）。
+# - 監督の勝率（Wikipedia）：アル・サッド 67÷102＝65.7%、バルセロナ 89÷142＝62.7%。オランダは4戦2勝2分0敗（ESPN）。標本が小さいので勝率は出さない。
+# - 決勝3試合（ユーロ2008・W杯2010・ユーロ2012）：1-0・1-0・4-0＝6得点0失点（ESPN の決勝の記録）。
+# - 1試合あたりの得点：クラブ全大会 110÷884＝0.12／スペイン代表 13÷133＝0.10（得点の人ではない、の説明）。
+# - 通算：クラブ全大会 884試合110得点、クラブ＋代表で1,017試合（884＋133。自分で足した）。
+#
+# **入れなかったもの**：引退後の私生活・法的な問題・バルセロナ監督時代の解任のいきさつ（brief の決まり）。2009-05-02 のクラシコ（上の食い違い）。ラ・マシア時代の写真（Commons に無かった）。
+#   監督としてのバルセロナの試合の細部（勝率の一言だけ）。ガクポの「非スポーツ的」の話（9/25 の別の回で扱っている）。
+#
+# **日本語名・読みで怪しいもの**：シャビ・エルナンデス／タラサ／ラ・マシア／ファン・ハール／クライフ／アヤックス／グアルディオラ／ハッペル／クーマン／ガクポ／ウェンブリー／キエフ／トーレス／アルバ／マタ／シルバ／アル・サッド／KNVB。
+#
+# 本人の言葉は4か所（自訳。原文は上の出典）：①フック（BBC 2026-08）②プレースタイル（Guardian 2011：探す・ロンド・クライフ・屈辱）③マル秘話①（Guardian 2011：ウェンブリー）④マル秘話②（Marca 2015 経由：グアルディオラ）⑤見立て（Guardian 2011：結果より大きいもの）。
+date: 2026年10月18日
+slot: other_1
+format: news
+series: レジェンドの紹介
+people:
+- シャビ・エルナンデス
+theme:
+  end_bg: assets/images/20261018_xavi_legend/x26_knvb.jpg
+  id: legend_xavi
+  kind: other
+  topic: バルセロナ
+  title: シャビは、どんな選手だった？ オランダ代表を率いる監督が、バルセロナで残した数字
+  question: バルセロナの中盤でパスを回し続けた司令塔は、どんな選手だったのか。いま、なぜオランダ代表を率いているのか
+  takeaway: 獲った優勝は、選手として25個、監督として9個（約2.8倍）。シャビのスペインが勝った3つの決勝は、6得点0失点。オランダ代表は4戦無敗（2勝2分け）で、次の節目は11月16日、初戦と同じドイツ戦
+  nameplate: シャビ｜元MF・オランダ代表監督
+  opening_image: assets/images/20261018_xavi_legend/x26_knvb.jpg
+  bgm: assets/audio/bgm_calm.wav
+short_title: シャビは、どんな選手だった？
+thumbnail:
+  layout: classic
+  callouts:
+  - 25個のタイトル
+  line1: シャビ、バルサで767試合
+  line2: 今はオランダ代表の監督
+  tags:
+  - バルセロナ
+  - スペイン代表
+  - オランダ代表
+  - シャビ
+  - レジェンド
+  - 選手紹介
+  photo: assets/images/20261018_xavi_legend/x26_knvb.jpg
+  photos: []
+  short_photo: assets/images/20261018_xavi_legend/x12_capt_v.jpg
+sections:
+- id: hook
+  heading: 決勝でオランダを倒した人は、いまどこにいるのか
+  tier: 報道
+  telop: シャビ、オランダ代表の監督に
+  narrator: 解説
+  card:
+    type: stats
+    title: シャビ・エルナンデス 46歳
+    items:
+    - ['25', 個, バルセロナで獲ったタイトル]
+    - ['767', 試合, バルセロナでの出場（全大会）]
+    - ['133', 試合, スペイン代表。13得点]
+    focus: 0
+  say:
+  - text: 2010年のワールドカップ決勝。スペインが、オランダを1対0で破りました。
+    image: assets/images/20261018_xavi_legend/x10_wc_w.jpg
+    card: &hook_stats
+      type: stats
+      title: シャビ・エルナンデス 46歳
+      items:
+      - ['25', 個, バルセロナで獲ったタイトル]
+      - ['767', 試合, バルセロナでの出場（全大会）]
+      - ['133', 試合, スペイン代表。13得点]
+      focus: 0
+  - text: そのスペインの中盤にいた人が、いま、オランダ代表の監督です。
+    emph: true
+    card: *hook_stats
+  - text: シャビ・エルナンデス、46歳。バルセロナの黄金期を支えた司令塔です。
+    image: assets/images/20261018_xavi_legend/x26_knvb.jpg
+    card:
+      <<: *hook_stats
+      focus: 1
+  - text: 就任にあたっての言葉は、こうでした。
+    card: none
+  - voice: シャビ
+    text: オランダ代表の監督になれて、本当に大きな名誉です。
+  - voice: シャビ
+    text: ある意味、僕は、オランダ・サッカーの息子なんです。
+    cont: true
+    pause: 0.5
+  - text: ここから、シャビの歩みを追います。
+    card: none
+  quotes_from:
+  - https://www.bbc.com/sport/football/articles/c77g5dne45lo
+  sources:
+  - https://www.bbc.com/sport/football/articles/c77g5dne45lo
+  - https://www.fcbarcelona.com/en/news/2328629/xavi-by-the-numbers
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/summary?event=264123
+- id: data
+  heading: シャビは、いつ、どこで生まれた人なのか
+  tier: 報道
+  telop: シャビの基礎DATA
+  narrator: 解説
+  card:
+    type: table
+    title: シャビ・エルナンデス
+    columns:
+    - 項目
+    - 内容
+    rows: &bdata
+    - - 生年月日
+      - 1980年1月25日（46歳）
+    - - 生まれ
+      - スペイン・カタルーニャのタラサ
+    - - 身長・位置
+      - 1.70m・中盤
+    - - クラブ
+      - バルセロナ→アル・サッド
+    - - 代表
+      - スペイン代表133試合13得点
+    - - 優勝
+      - W杯2010・ユーロ2008／2012
+    - - クラブの優勝
+      - CL4回・リーガ8回
+    - - 個人賞
+      - バロンドール3位が3回
+    source: BBC・クラブ公式・Wikipedia
+  say:
+  - text: シャビは、1980年1月25日、スペインのタラサの生まれです。
+    image: assets/images/20261018_xavi_legend/x12_capt_w.jpg
+    card: &data_card
+      type: table
+      title: シャビ・エルナンデス
+      columns: [項目, 内容]
+      rows: *bdata
+      source: BBC・クラブ公式・Wikipedia
+      highlight_row: 0
+  - text: 身長170センチの中盤。所属は、バルセロナとアル・サッドの2クラブ。
+    card:
+      <<: *data_card
+      highlight_row: 3
+  - text: ワールドカップが1回。ヨーロッパ選手権が2回。
+    emph: true
+    card:
+      <<: *data_card
+      highlight_row: 5
+  - text: クラブでは、チャンピオンズリーグを4回、リーガを8回制しました。
+    card:
+      <<: *data_card
+      highlight_row: 6
+  - text: バロンドールは、3年続けて3位でした。
+    card:
+      <<: *data_card
+      highlight_row: 7
+  sources:
+  - https://www.bbc.com/sport/football/articles/c77g5dne45lo
+  - https://www.fcbarcelona.com/en/news/2328629/xavi-by-the-numbers
+  - https://en.wikipedia.org/wiki/Xavi_(footballer,_born_1980)
+- id: career
+  heading: ラ・マシアの少年は、どうやって世界一の中盤になったのか
+  tier: 報道
+  telop: ラ・マシア、バルセロナ、アル・サッド
+  narrator: 解説
+  card:
+    type: table
+    title: 歩んできた道
+    columns:
+    - 時期
+    - 所属
+    - できごと
+    rows: &career_rows
+    - - 1991〜98
+      - バルセロナの下部組織
+      - ラ・マシアで育つ
+    - - 1998〜2015
+      - バルセロナ
+      - 767試合85得点・25タイトル
+    - - 2000〜14
+      - スペイン代表
+      - 133試合13得点
+    - - 2015〜19
+      - アル・サッド
+      - 117試合25得点。引退
+    source: クラブ公式・Wikipedia
+  say:
+  - text: シャビの始まりは、バルセロナの下部組織、ラ・マシア。1991年に入りました。
+    image: assets/images/20261018_xavi_legend/x10_train_w.jpg
+    card: &career_card
+      type: table
+      title: 歩んできた道
+      columns: [時期, 所属, できごと]
+      rows: *career_rows
+      source: クラブ公式・Wikipedia
+      highlight_row: 0
+  - text: トップチームでのデビューは、1998年。
+    card:
+      <<: *career_card
+      highlight_row: 1
+  - text: そのときの監督は、オランダ人のファン・ハールでした。
+    card:
+      <<: *career_card
+      highlight_row: 1
+  - text: 2000年には、スペイン代表にもデビュー。相手は、オランダでした。
+    card:
+      <<: *career_card
+      highlight_row: 2
+  - text: 転機は、2008年。ヨーロッパ選手権で、大会最優秀選手に選ばれます。
+    emph: true
+    card:
+      <<: *career_card
+      highlight_row: 2
+  - text: すると翌季、バルセロナは、国内リーグ、国内カップ、CLの3冠です。
+    image: assets/images/20261018_xavi_legend/x09_cl_w.jpg
+    card:
+      <<: *career_card
+      highlight_row: 1
+  - text: 最後の試合は、2015年6月6日のCL決勝。
+    card:
+      <<: *career_card
+      highlight_row: 1
+  - text: 控えから出て、3対1の勝利を見届けました。
+    card:
+      <<: *career_card
+      highlight_row: 1
+  - text: その後は、カタールのアル・サッドへ。2019年に、現役を退きます。
+    image: assets/images/20261018_xavi_legend/x15_alsadd_w.jpg
+    card:
+      <<: *career_card
+      highlight_row: 3
+  quotes_from: []
+  sources:
+  - https://www.bbc.com/sport/football/articles/c77g5dne45lo
+  - https://www.fcbarcelona.com/en/news/2328629/xavi-by-the-numbers
+  - https://www.theguardian.com/football/2011/feb/11/xavi-barcelona-spain-interview
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=420246
+  - https://en.wikipedia.org/wiki/Xavi_(footballer,_born_1980)
+- id: style
+  heading: シャビのプレーは、何がすごかったのか
+  tier: 報道
+  telop: パスで試合を支配した司令塔
+  narrator: 解説
+  card:
+    type: table
+    title: シャビの通算（クラブは全大会）
+    columns:
+    - 所属
+    - 試合
+    - 得点
+    rows: &total_rows
+    - [バルセロナ, '767', '85']
+    - [アル・サッド, '117', '25']
+    - [クラブ計, '884', '110']
+    - [スペイン代表, '133', '13']
+    source: クラブ公式・Wikipedia
+  say:
+  - text: シャビの武器は、パス。受けて、出す。それを何本も続けました。
+    image: assets/images/20261018_xavi_legend/x11_cwc_w.jpg
+    card: none
+  - text: シャビ自身の言葉です。
+    card: none
+  - voice: シャビ
+    text: 素早く考えて、空いた場所を探す。
+  - voice: シャビ
+    text: 僕がやっているのは、それだけ。一日中、探している。
+    cont: true
+    pause: 0.5
+  - text: 2010年のW杯では、パスを通した数が、2番目の選手より104本多い。
+    card: none
+  - text: 土台は、ロンドという練習。輪の中で、パスを回します。
+    card: none
+  - text: バルセロナの型を築いたのは、オランダ人のクライフ。本人は、こう言います。
+    card: none
+  - voice: シャビ
+    text: 僕らのやり方は、クライフが持ち込んだ。アヤックスの型だ。
+  - voice: シャビ
+    text: ロンド、ロンド、ロンド。毎日、毎日。
+    cont: true
+    pause: 0.5
+  - text: ボールを失えば、輪の真ん中に入ります。
+    card: none
+  - voice: シャビ
+    text: みんなが拍手して、笑う。屈辱だよ。
+    pause: 0.5
+  - text: 通算の数字も見ます。バルセロナで、767試合85得点。
+    image: assets/images/20261018_xavi_legend/x10_train_w.jpg
+    card: &total_card
+      type: table
+      title: シャビの通算（クラブは全大会）
+      columns: [所属, 試合, 得点]
+      rows: *total_rows
+      source: クラブ公式・Wikipedia
+      highlight_row: 0
+  - text: アル・サッドで、117試合25得点。クラブの合計は、884試合です。
+    card:
+      <<: *total_card
+      highlight_row: 2
+  - text: スペイン代表では、133試合13得点。
+    card:
+      <<: *total_card
+      highlight_row: 3
+  - text: 1試合あたりの得点は、0.1ほど。得点より、味方に点を取らせる人でした。
+    emph: true
+    card:
+      <<: *total_card
+      highlight_row: 2
+  quotes_from:
+  - https://www.theguardian.com/football/2011/feb/11/xavi-barcelona-spain-interview
+  sources:
+  - https://www.theguardian.com/football/2011/feb/11/xavi-barcelona-spain-interview
+  - https://www.fcbarcelona.com/en/news/2328629/xavi-by-the-numbers
+  - https://en.wikipedia.org/wiki/Xavi_(footballer,_born_1980)
+- id: match
+  heading: 2012年7月1日、キエフの決勝で何があったのか
+  tier: 報道
+  main: true
+  telop: 2012年7月1日、ユーロ決勝
+  narrator: 解説
+  card:
+    type: table
+    title: ユーロ2012決勝（ESPNの試合記録）
+    columns:
+    - 項目
+    - 内容
+    rows: &match_rows
+    - - 日付・会場
+      - 2012年7月1日・キエフ
+    - - 対戦
+      - スペイン 対 イタリア
+    - - 結果
+      - 4対0（前半2対0）
+    - - ゴール
+      - シルバ14分・アルバ41分・トーレス84分・マタ88分
+    - - シャビ
+      - 先発。アルバとトーレスの2点をアシスト
+    source: ESPN
+  say:
+  - text: シャビを象徴する試合は、2012年のヨーロッパ選手権の決勝です。
+    image: assets/images/20261018_xavi_legend/x12_euro_w.jpg
+    card: &match_card
+      type: table
+      title: ユーロ2012決勝（ESPNの試合記録）
+      columns: [項目, 内容]
+      rows: *match_rows
+      source: ESPN
+      highlight_row: 0
+  - text: 会場は、ウクライナのキエフ。相手は、イタリアでした。
+    card:
+      <<: *match_card
+      highlight_row: 1
+  - text: スペインは、2008年のユーロ、2010年のW杯と、決勝を勝ち続けていました。
+    card: none
+  - text: 前半14分、シルバのヘディングで先制します。
+    card:
+      <<: *match_card
+      highlight_row: 3
+  - text: 41分。シャビのスルーパスに、アルバが走り込んで、決めます。
+    emph: true
+    card:
+      <<: *match_card
+      highlight_row: 4
+  - text: 84分。今度は、シャビのパスから、トーレスが3点目。
+    card:
+      <<: *match_card
+      highlight_row: 4
+  - text: 88分に、マタが加えて、スペインの4対0の勝ちです。
+    card:
+      <<: *match_card
+      highlight_row: 3
+  - text: 実況は、欧州選手権の決勝で2度アシストした初めての選手、と伝えました。
+    emph: true
+    card: none
+  - text: 2008年の決勝にも、シャビのパスがありました。
+    card: none
+  - text: トーレスの決勝点の前の、スルーパスです。
+    card: none
+  quotes_from: []
+  sources:
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.euro/summary?event=346764
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.euro/summary?event=232286
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/summary?event=264123
+- id: now
+  heading: 引退したシャビは、いま何をしているのか
+  tier: 報道
+  telop: アル・サッド、バルセロナ、オランダ代表
+  narrator: 解説
+  card:
+    type: timeline
+    title: 引退から、いままで
+    rows:
+    - ['2019年', 引退。アル・サッドの監督に]
+    - ['2021年11月', バルセロナの監督に]
+    - ['2022-23季', リーガ優勝]
+    - ['2024年', バルセロナを離れる]
+    - ['2026年8月', オランダ代表の監督に]
+    - ['9〜10月', 4戦して、2勝2分け]
+    focus: 4
+    highlight_row: 4
+  say:
+  - text: シャビが現役を退いたのは、2019年。すぐに、監督になります。
+    image: assets/images/20261018_xavi_legend/x19_last_w.jpg
+    card: &now_tl
+      type: timeline
+      title: 引退から、いままで
+      rows:
+      - ['2019年', 引退。アル・サッドの監督に]
+      - ['2021年11月', バルセロナの監督に]
+      - ['2022-23季', リーガ優勝]
+      - ['2024年', バルセロナを離れる]
+      - ['2026年8月', オランダ代表の監督に]
+      - ['9〜10月', 4戦して、2勝2分け]
+      focus: 4
+      highlight_row: 0
+  - text: アル・サッドでは、7つのタイトルを獲りました。
+    card:
+      <<: *now_tl
+      highlight_row: 0
+  - text: 2021年11月、古巣のバルセロナへ。
+    card:
+      <<: *now_tl
+      highlight_row: 1
+  - text: 就任して最初の通しのシーズン、リーガで優勝します。
+    emph: true
+    card:
+      <<: *now_tl
+      highlight_row: 2
+  - text: 2024年に、バルセロナを離れました。
+    card:
+      <<: *now_tl
+      highlight_row: 3
+  - text: そして今年8月12日。オランダ連盟が、就任を発表します。
+    image: assets/images/20261018_xavi_legend/x26_knvb.jpg
+    card:
+      <<: *now_tl
+      highlight_row: 4
+  - text: 契約は4年。オランダ人以外の監督は、1978年のハッペル以来です。
+    card: none
+  - text: 前任のクーマンは、W杯の決勝トーナメント初戦で、モロッコに敗れて辞めました。
+    card: none
+  - text: 初戦は9月24日。ヨーロッパの代表戦、ネーションズリーグのドイツ戦。
+    card:
+      <<: *now_tl
+      highlight_row: 5
+  - text: 終了間際のガクポのゴールで、1対1の引き分け。
+    card:
+      <<: *now_tl
+      highlight_row: 5
+  - text: 3日後のセルビア戦は、2対1。最初の勝ちです。
+    card:
+      <<: *now_tl
+      highlight_row: 5
+  - text: ギリシャと2対2、セルビアと2対1。ここまで、2勝2分けです。
+    emph: true
+    card:
+      <<: *now_tl
+      highlight_row: 5
+  quotes_from: []
+  sources:
+  - https://www.bbc.com/sport/football/articles/c77g5dne45lo
+  - https://www.fcbarcelona.com/en/news/2328629/xavi-by-the-numbers
+  - https://www.omroepbrabant.nl/nieuws/6028824/Oranje-wint-met-1-2-tegen-Servie-Gakpo-valt-vroeg-uit-met-blessure
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.nations/summary?event=401861041
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.nations/summary?event=401861068
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.nations/summary?event=401861098
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.nations/summary?event=401861122
+  - https://en.wikipedia.org/wiki/Xavi_(footballer,_born_1980)
+- id: story
+  heading: 12歳の涙と、バイエルンの話
+  tier: 報道
+  telop: マル秘話 ウェンブリーの涙と、バイエルンの話
+  narrator: 解説
+  card:
+    type: table
+    title: マル秘話
+    columns: [いつ, 何があったか]
+    rows: &story_rows
+    - ['1992年', 12歳のシャビは、ウェンブリーに行けなかった]
+    - ['2008年', ユーロの最中、バイエルンの話が届いた]
+    source: The Guardian・Marca
+  say:
+  - text: マル秘話を2つ。1つ目は、少年時代の涙です。
+    image: assets/images/20261018_xavi_legend/x12_capt_w.jpg
+    card: &story_card
+      type: table
+      title: マル秘話
+      columns: [いつ, 何があったか]
+      rows: *story_rows
+      source: The Guardian・Marca
+      highlight_row: 0
+  - text: 1992年、バルセロナが欧州王者になった、ロンドンのウェンブリー。
+    card:
+      <<: *story_card
+      highlight_row: 0
+  - text: 12歳のシャビは、兄たちが行くのに、親に止められました。
+    card:
+      <<: *story_card
+      highlight_row: 0
+  - text: 泣いても、行けませんでした。のちに、本人はこう口にしています。
+    emph: true
+    card:
+      <<: *story_card
+      highlight_row: 0
+  - voice: シャビ
+    text: ウェンブリーでやりたい。バルサにとって特別な場所だ。
+  - voice: シャビ
+    text: サッカーにとっても、特別な場所なんだ。
+    cont: true
+    pause: 0.5
+  - text: その3か月半後、2011年5月28日。
+    card:
+      <<: *story_card
+      highlight_row: 0
+  - text: ウェンブリーの決勝で、バルセロナは、マンチェスター・Uに3対1。
+    card:
+      <<: *story_card
+      highlight_row: 0
+  - text: シャビは先発して、1アシストでした。
+    emph: true
+    card:
+      <<: *story_card
+      highlight_row: 0
+  - text: 2つ目は、2008年のヨーロッパ選手権の最中です。
+    image: assets/images/20261018_xavi_legend/x10_train_w.jpg
+    card:
+      <<: *story_card
+      highlight_row: 1
+  - text: 本人は、クラブが自分を売りたがっていると、聞かされていました。
+    card:
+      <<: *story_card
+      highlight_row: 1
+  - text: 代理人を通じて、バイエルンの話も届きます。
+    card:
+      <<: *story_card
+      highlight_row: 1
+  - text: ところが、バルセロナは、グアルディオラ、愛称ペップを監督に迎えます。
+    card:
+      <<: *story_card
+      highlight_row: 1
+  - text: のちに、本人はこう振り返っています。
+    card: none
+  - voice: シャビ
+    text: ペップは、動くな、と言った。
+  - voice: シャビ
+    text: 君のいないチームは、想像できない、と。
+    cont: true
+  - voice: シャビ
+    text: 僕は、心を奪われたよ。
+    cont: true
+    pause: 0.5
+  quotes_from:
+  - https://www.theguardian.com/football/2011/feb/11/xavi-barcelona-spain-interview
+  - https://www.football-espana.net/2015/09/15/xavi-nearly-left-in-2008
+  sources:
+  - https://www.theguardian.com/football/2011/feb/11/xavi-barcelona-spain-interview
+  - https://www.football-espana.net/2015/09/15/xavi-nearly-left-in-2008
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=316520
+- id: view
+  heading: 選手の25個と、監督の9個を、数えて比べると
+  tier: 背景
+  viewpoint: true
+  narrator: 解説
+  telop: 11月16日、初戦と同じドイツ戦
+  card:
+    type: table
+    title: シャビの選手時代と監督時代（自分で数えた比べ）
+    columns: [物差し, 選手時代, 監督時代]
+    rows: &cmp_rows
+    - ['タイトル', '25個', '9個']
+    - ['試合数（全大会）', '884試合', '248試合']
+    source: クラブ公式・BBC・ESPN・Wikipedia（数えたのは当チャンネル）
+  say:
+  - text: 終わりに、シャビの数字を並べて比べます。
+    image: assets/images/20261018_xavi_legend/x26_knvb.jpg
+    card: &cmp_card
+      type: table
+      title: シャビの選手時代と監督時代（自分で数えた比べ）
+      columns: [物差し, 選手時代, 監督時代]
+      rows: *cmp_rows
+      source: クラブ公式・BBC・ESPN・Wikipedia（数えたのは当チャンネル）
+      highlight_row: 0
+  - text: バルセロナで獲ったタイトルは、選手として25個。
+    card:
+      <<: *cmp_card
+      highlight_row: 0
+  - text: 監督では、アル・サッドで7個、バルセロナで2個。合わせて9個です。
+    card:
+      <<: *cmp_card
+      highlight_row: 0
+  - text: 選手のタイトルは、監督の約2.8倍です。
+    emph: true
+    card:
+      <<: *cmp_card
+      highlight_row: 0
+    mark: {kind: circle, row: 0}
+  - text: 次に、シャビのスペインが勝った、3つの決勝を数えます。
+    card: &final_stats
+      type: stats
+      title: 3つの決勝（ユーロ2008・W杯2010・ユーロ2012）
+      items:
+      - ['6', 得点, 3試合の合計]
+      - ['0', 失点, 3試合とも無失点]
+      focus: 1
+  - text: 1対0の勝ち、1対0の勝ち、4対0の勝ち。6得点で、失点は0です。
+    emph: true
+    card: *final_stats
+  - text: 本人は、勝ち負けの先にあるものを、語っていました。
+    card: none
+  - voice: シャビ
+    text: 結果より大きくて、長く残るものがある。遺産だ。
+    pause: 0.5
+  - text: オランダ代表は、4戦して、2勝2分け。負けていません。
+    card: none
+  - text: 次の節目は、11月13日のギリシャ戦。続く16日は、初戦と同じドイツ戦です。
+    card: none
+  - text: 4年契約は、まだ始まったばかりです。
+    emph: true
+    card: none
+  quotes_from:
+  - https://www.theguardian.com/football/2011/feb/11/xavi-barcelona-spain-interview
+  sources:
+  - https://www.fcbarcelona.com/en/news/2328629/xavi-by-the-numbers
+  - https://www.bbc.com/sport/football/articles/c77g5dne45lo
+  - https://www.theguardian.com/football/2011/feb/11/xavi-barcelona-spain-interview
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.super_cup/summary?event=637513
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.euro/summary?event=346764
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.euro/summary?event=232286
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/summary?event=264123
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.nations/scoreboard?dates=20261113
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.nations/scoreboard?dates=20261116
+  - https://en.wikipedia.org/wiki/Xavi_(footballer,_born_1980)

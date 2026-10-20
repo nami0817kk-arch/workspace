@@ -109,7 +109,7 @@ def inspect(script: Script, out_dir: Path, duration: float | None = None) -> lis
         findings.append(check_title_subject(script))
         findings.append(check_band_length(script))
     findings.append(_thumbnail_face(script))
-    findings.append(check_thumbnail_dark(out_dir))
+    findings.append(check_thumbnail_dark(out_dir, script))
     findings.append(check_narration(out_dir))
     findings.append(_card_rule(script))
     findings.append(_photo_credits(script, out_dir))
@@ -384,13 +384,31 @@ DARK_LEVEL = 42        # これより暗い画素を「黒」と数える
 DARK_SHARE = 0.55      # 顔の段のうち黒がこの割合を超えたら知らせる
 
 
-def check_thumbnail_dark(build_dir: Path) -> Finding:
+def _club_board_thumbnail(script: Script | None) -> bool:
+    """クラブ紹介の「基礎DATAの板をサムネにする型」か（2026-10-19 ユーザー指摘）。
+
+    板は暗い地に白い字で、**もともと黒い面積が多い**。この型は20本とも板を敷くと
+    決まっているのに、黒の基準（55%）に当たって、セビージャとバレンシアは
+    私の判断で板を外してエンブレム主役に変えていた。**直すべきは型ではなく基準**。
+    """
+    if script is None:
+        return False
+    meta = script.meta or {}
+    series = str(meta.get("series") or "")
+    return bool(meta.get("thumbnail_board")) and (
+        "チーム紹介" in series or "クラブ紹介" in series)
+
+
+def check_thumbnail_dark(build_dir: Path, script: Script | None = None) -> Finding:
     """サムネの黒い面積を見る（2026-09-08 ユーザー指摘）。
 
     縦長の写真を右に置くと、左が塗りつぶしの濃紺になっていた。実測すると
     **顔の段の72%が黒**で、一覧で沈んで見えた。いまは同じ写真をぼかして
     敷いているが、**気づいたのは目で見たからで、機械は何も言わなかった。**
     """
+    if _club_board_thumbnail(script):
+        return Finding(True, "サムネの黒",
+                       "クラブ紹介の板のサムネ（型）なので、黒の基準は見ません")
     path = build_dir / "thumbnail.png"
     if not path.exists():
         return Finding(True, "サムネの黒", "サムネがまだありません")

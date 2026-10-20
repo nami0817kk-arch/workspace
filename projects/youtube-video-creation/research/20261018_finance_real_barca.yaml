@@ -1,0 +1,563 @@
+# クラブの財政：レアル・マドリード × バルセロナ（10/18 日、シリーズ「クラブの財政」、key: finance_real_barca、型は news）。
+#
+# 軸は「**収入の世界1位と2位。差はどれだけか。その差は何でできていて、1年でどう変わったか**」。
+#   10/3 のバルサ回（使える上限・年間シート）・10/9 のレアル回（無冠でも史上最高の収入・改修と借入・「1.15季ぶん」）・10/17 のシティ×アーセナル回（差760万ユーロ）と
+#   重ねない：スクワッド・コスト・ルール／ラ・リーガの使える上限／スタジアム改修の借入／「補強に苦しんだ」は1行も出さない。女子は扱わない。
+#   アルファベットは読み上げに出さない（座席の長期の権利＝PSL、償却前の営業利益＝EBITDA）。
+#
+# **出どころ（原文を読んだもの）**
+#   ○ **デロイト Football Money League 2026（2024/25、2026-01-22）一次ページ（deloitte.com）**
+#       プレスリリース（real-madrid-tops-…）：1位レアル「close to €1.2bn」、2位バルサ「€975m」。バルサの項の文「For the first time since 2019/20, FC Barcelona (second)
+#       returned to the Money League top three … €975m … 27% growth … (when they placed sixth) … primarily driven by the introduction of PSLs」。
+#       レアルの項「6% decrease in matchday revenue, commercial revenue grew by 23%」。為替 €1＝£0.84 等はポンド側の注記（この回はユーロのまま）。
+#       本体ページ（deloitte-football-money-league.html）の「1. Real Madrid」「2. FC Barcelona」の図（Infogram の埋め込み。ページに入っている図の中身を読んだ）：
+#         レアル 2025年収入 €1,161m（2024: €1,045.5m、+11%、+€115.5m）／試合日 233・放送 335・商業 594（百万ユーロ。足すと1,162。丸め）／
+#           2024年は 248・316・482（棒の札。足して1,046）／給料÷収入 2025=44%・2024=48%／給料 514／順位 2025=1・2024=1／CL 準々決勝。
+#         バルサ 2025年収入 €974.8m（2024: €765.2m、+27%、+€209.6m）／試合日 210・放送 243・商業 522（足して975）／2024年は 103・236・426（足して765）／
+#           給料÷収入 2025=54%・2024=65%／給料 529／順位 2025=2・2024=6／CL 準決勝。本文「Personal Seat Licence arrangements, generating one-off c.€70m」。
+#       ★図の元データ表の「2024年の商業」はレアルだけ 330 と出る（棒の札・合計・「商業+23%」はどれも 482 と合う）。棒の札の 482 を使った（594÷482＝+23.2% でデロイトの本文と一致）。
+#       ★デロイトの給料の定義はクラブの決算と違う。同じ定義で2クラブを並べる用に使う。
+#   ○ **レアル：realmadrid.com 2026-07-28 の決算発表（スペイン語、原文）**：営業収入 1.221,3 百万ユーロ（選手の売却の結果を除く）、前の季 1.184,7。
+#       EBITDA 287,4（+18%）、税引後の利益 26,3（+8%）、「ratio de gastos de personal sobre ingresos en el 46%, muy por debajo del umbral de excelencia del 50%」。
+#       数字は 10/9 回の材料（research/raw/20261009_finance_realmadrid_material.md）で突き合わせ済み。
+#   ○ **バルサ：fcbarcelona.com「Assembly approves record-breaking accounts…」（総会 2026-09-19、原文）**：「Ordinary revenue reached 1.06 billion euros, 66 million more than
+#       in the previous financial year」、通常の利益 0.2 百万、最終 −18 百万（特別項目と税のあと）、EBITDA +140 百万、スポーツの費用は営業収入の53%（原文「sporting costs … 53% of operating revenue」）、
+#       2026/27 の予算：収入 11億9500万。**この原文は収入の細目・人件費の額を出していない**（出しているのは上の数字だけ）。
+#       ★同じ記事の予算の段落は「sporting wage bill falling from 54% to 53%」と書く（2026/27 の話）。2025/26 の53%と合わせると読み方が分かれるので、台本は「53%と発表」までにとどめる。
+#       ★前の季の収入は「66百万多い」から逆算した約9億9400万（クラブの丸め）。デロイトの 9億7480万 とは別の集計。
+#   ○ **ECB の参照相場（frankfurter 経由）2026-10-16：1ユーロ＝177.82円**（丸めて178円）。
+#
+# **決算期と通貨**：デロイトは 2024/25（クラブの決算期 6月末のもの）、両クラブの最新決算は 2025-26（どちらも6月30日締め）。通貨はどちらもユーロ。**季はデロイトより1つ新しい**ので、台本で言い分ける。
+#   クラブの収入の呼び方：レアル＝選手の売却の結果を除く営業収入、バルサ＝「通常の収入」。数え方まで同じかは公表文からは確かめられない（台本で断る）。
+#
+# **自分で計算した数（コードで検算した）**
+#   デロイト：差 1,161.0−974.8＝186.2（レアルの収入の16.0%、バルサの収入の19.1%、レアル÷バルサ＝1.19倍）。前の年 1,045.5−765.2＝280.3。縮み 280.3−186.2＝94.1。
+#     増減：レアル +11.0%（+115.5）、バルサ +27.4%（+209.6）。円：186.2×177.82＝33,110 百万円 →「約331億円」。
+#   内訳の差（レアル−バルサ、百万ユーロ、デロイトの図の整数）：2024/25＝試合日 +23・放送 +92・商業 +72（計187）／2023/24＝+145・+80・+56（計281）。
+#     変化＝試合日 −122・放送 +12・商業 +16（計 −94）。281−122+12+16＝187 ✓。**縮みはすべて試合日**。放送が差の 92÷187＝49%、商業 38%、試合日 12%。
+#     構成比：レアル 商業51%・放送29%・試合日20%／バルサ 商業54%・放送25%・試合日22%。
+#     増減率：レアルの試合日 233÷248−1＝−6.0%（デロイト本文の6%減と一致）、商業 594÷482−1＝+23.2%（同23%と一致）。バルサの試合日 103→210＝2.04倍（+107）。
+#     放送：レアル 316→335（+6%）、バルサ 236→243（+3%）。
+#   「一回限り約70」を除いたバルサ（自分の足し引き。70がバルサの収入に入っているという前提）：差 186.2+70＝256.2 → 前の年の 280.3 からの縮みは約24。
+#   給料÷収入（デロイト）：レアル 514÷1,161＝44.3%、バルサ 529÷974.8＝54.3%。差 10.0ポイント。前の年は 48%と65%（17ポイント差）→ 7ポイントに近づいた…は使わない（定義の揺れ）。
+#   クラブの決算（2025-26）：収入 1,221.3−1,060＝161.3（レアル÷バルサ＝1.15倍）。前の季 1,184.7−994＝約190.7 → 縮み約29。EBITDA 287.4÷140＝2.05倍。
+#     最終：レアル +26.3、バルサ −18。人件費÷収入：レアル46%（クラブの言う人件費）、バルサ53%（クラブの言うスポーツの費用）＝定義が違う。
+#   バルサ 2026/27 の収入予算 1,195 と レアル 2025-26 の実績 1,221.3 の差 26.3（予算と実績で季が違う参考値。レアルの2026-27の予算は11月の総会で出る。10/9 回の整理）。
+#
+# **言い切っていないもの**：放送の差の理由（デロイトは書いていない。バルサのほうが欧州の大会で先へ進んだのに放送はレアルが92多い、という事実の並置まで）。
+#   レアルの試合日が6%減った理由（デロイトは書いていない。言わない）。バルサの最終赤字の中身（総会の原文は「特別項目と税のあと」まで）。
+#
+# 写真：assets/images/20261018_finance_real_barca/（credits.json 同梱、Commons。人物の顔は無し）。01_w＝ベルナベウ内部（屋根つき、CC0 Badefa、2025）／02_w＝ベルナベウのピッチ（CC BY 4.0 MottaW、2024）／
+#   03_w＝工事中のカンプ・ノウ外観（CC BY-SA 4.0 Pere López Brosa、2025）／04_w＝カンプ・ノウ外観（CC BY 4.0 Rukola2、2023）。_sq は中央を切った正方形。目で確認：すべてスタジアム。
+date: 2026年10月18日
+slot: other_1
+format: news
+series: クラブの財政
+voice_min: 0
+people:
+- レアル・マドリード
+- バルセロナ
+theme:
+  end_bg: assets/images/20261018_finance_real_barca/02_w.jpg
+  id: finance_real_barca
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: レアル・マドリードとバルセロナ
+  title: レアル・マドリードとバルセロナ、収入の1位と2位。差はどれだけか
+  question: 収入の世界1位と2位のレアル・マドリードとバルセロナは、どれだけ離れていて、その差は何でできているのか
+  lead: 収入の世界1位と2位。
+  opening_image: assets/images/20261018_finance_real_barca/01_w.jpg
+  takeaway: デロイトの集計で2024-25の収入は、1位のレアルが11億6100万ユーロ、2位のバルサが9億7480万ユーロで、差は1億8620万ユーロ。前の年の2億8030万ユーロから約9400万縮んだ。内訳は試合日・放映権・商業の差が2300万・9200万・7200万で、放映権が差の約半分。縮んだ分は試合日だけで、バルサの試合日は前の年の2倍。デロイトが一回限りと書く約7000万を除いても、差は2億5600万までしか戻らず縮みは約2400万。クラブ自身の2025-26の決算（どちらも6月末・ユーロ）でも差は1億6130万に縮んだが、償却前の営業利益はレアル2億8740万・バルサ1億4000万で約2倍、最終損益はレアルが2630万の黒字・バルサが1800万の赤字。給料の比率はデロイトの同じ定義でレアル44%・バルサ54%
+short_title: レアルとバルサ、収入の差は1億8620万ユーロ。内訳は
+thumbnail:
+  layout: classic
+  photos:
+  - assets/images/20261018_finance_real_barca/01_w.jpg
+  - assets/images/20261018_finance_real_barca/03_w.jpg
+  line1: レアルとバルサの収入
+  line2: 差は1億8620万€
+  callouts: [差の半分は放映権, 縮んだ理由は1つ]
+  tags:
+  - レアル・マドリード
+  - バルセロナ
+  - ラ・リーガ
+  - クラブの財政
+  - サンティアゴ・ベルナベウ
+  - カンプ・ノウ
+sections:
+- id: rank
+  main: true
+  heading: 収入の1位と2位は、どれだけ離れているのか
+  tier: 報道
+  telop: 収入の世界1位レアルと2位バルサ。差は1億8620万ユーロ
+  narrator: キャスター
+  card: &rank_duel
+    type: duel
+    title: デロイトの収入ランキング（2024-25、百万ユーロ）
+    left: {name: レアル, club: 世界1位, photo: assets/images/20261018_finance_real_barca/02_sq.jpg, color: "#d4af37"}
+    right: {name: バルサ, club: 世界2位, photo: assets/images/20261018_finance_real_barca/03_sq.jpg, color: "#a50044"}
+    rows:
+    - [順位, 1位, 2位]
+    - [収入, '1,161.0', '974.8']
+    - [前の年の収入, '1,045.5', '765.2']
+    - [前の年との差, '+11%', '+27%']
+    bars: [収入, 前の年の収入]
+  say:
+  - text: 収入の世界1位と2位。レアルとバルサの差を、決算の数字で見ます。
+    image: assets/images/20261018_finance_real_barca/01_w.jpg
+    short_only: true
+  - text: デロイトの集計では、収入の世界1位がレアル、2位がバルサです。
+    image: assets/images/20261018_finance_real_barca/01_w.jpg
+    card:
+      <<: *rank_duel
+      highlight_row: 順位
+  - text: 2024-25の収入は、レアルが11億6100万ユーロ。
+    emph: true
+    card:
+      <<: *rank_duel
+      highlight_row: 収入
+  - text: バルサは、9億7480万ユーロです。
+    card:
+      <<: *rank_duel
+      highlight_row: 収入
+  - text: 差は1億8620万ユーロ。レアルの収入の、約16%にあたります。
+    card:
+      <<: *rank_duel
+      highlight_row: 収入
+    mark:
+      kind: circle
+      row: 1
+      col: 0
+  - text: 円にすると、およそ331億円の差です。
+    card: &yen_card
+      type: convert
+      title: 収入の差を円で見る
+      from: [1億8620万, ユーロ, レアルの収入 − バルサの収入]
+      to: [約331億, 円, 2026年10月16日の相場]
+      via: 1ユーロ＝178円
+  - text: 換算の相場は、10月16日の欧州中央銀行の公表値です。
+    card: none
+  - text: 前の年の差は、2億8030万ユーロでした。
+    card: &gap_table
+      type: table
+      title: 収入の差の1年（デロイト、百万ユーロ）
+      columns: [季, レアル, バルサ, 差]
+      rows:
+      - [2023-24, '1,045.5', '765.2', '280.3']
+      - [2024-25, '1,161.0', '974.8', '186.2']
+      - [縮んだ分, '', '', '94.1']
+      highlight_row: 0
+  - text: 1年で、差は約9400万ユーロ縮まりました。
+    emph: true
+    card:
+      <<: *gap_table
+      highlight_row: 2
+    mark:
+      kind: circle
+      row: 2
+      col: 3
+  - text: バルサは27%増え、順位は6位から2位へ上がりました。
+    image: assets/images/20261018_finance_real_barca/03_w.jpg
+    card:
+      <<: *rank_duel
+      highlight_row: 前の年との差
+  - text: レアルの伸びは11%。1位は変わりません。
+    card:
+      <<: *rank_duel
+      highlight_row: 前の年との差
+  - text: 縮んだ差の中身は何か。収入の3本の柱で見ます。
+    card: none
+  sources:
+  - https://www.deloitte.com/uk/en/about/press-room/real-madrid-tops-deloitte-football-money-league.html
+  - https://www.deloitte.com/uk/en/services/financial-advisory/analysis/deloitte-football-money-league.html
+  - https://api.frankfurter.app/2026-10-16?from=EUR&to=JPY
+- id: breakdown
+  heading: 差は、試合日・放映権・商業のどこにあるのか
+  tier: 報道
+  telop: 差は試合日2300万、放映権9200万、商業7200万。最大は放映権
+  narrator: 解説
+  card: &rev_table
+    type: table
+    title: 収入の3本柱（2024-25、デロイト、百万ユーロ）
+    columns: [項目, レアル, バルサ, 差]
+    rows:
+    - [試合日, '233', '210', '+23']
+    - [放映権, '335', '243', '+92']
+    - [商業, '594', '522', '+72']
+    - [合計, '1,161', '975', '+186']
+    highlight_row: 3
+  say:
+  - text: デロイトは、収入を試合日・放映権・商業の3本に分けています。
+    image: assets/images/20261018_finance_real_barca/02_w.jpg
+    card:
+      <<: *rev_table
+      highlight_row: 3
+  - text: 差の大きい順に、放映権から見ます。
+    card:
+      <<: *rev_table
+      highlight_row: 1
+  - text: レアルが3億3500万、バルサが2億4300万ユーロ。差は9200万です。
+    emph: true
+    card:
+      <<: *rev_table
+      highlight_row: 1
+    mark:
+      kind: circle
+      row: 1
+      col: 3
+  - text: 3本の中で最大で、全体の差の約半分を占めます。
+    card:
+      <<: *rev_table
+      highlight_row: 1
+  - text: 欧州の大会では、バルサのほうが先へ進みました。準決勝です。レアルは準々決勝。
+    image: assets/images/20261018_finance_real_barca/03_w.jpg
+    card: none
+  - text: それでも放映権は、レアルが上。デロイトは、この理由を書いていません。
+    card:
+      <<: *rev_table
+      highlight_row: 1
+  - text: 次は商業。スポンサー料や商品販売の収入です。
+    card:
+      <<: *rev_table
+      highlight_row: 2
+  - text: レアルが5億9400万、バルサが5億2200万ユーロ。差は7200万。
+    emph: true
+    card:
+      <<: *rev_table
+      highlight_row: 2
+  - text: レアルの商業は、前の年から23%増えています。
+    card:
+      <<: *rev_table
+      highlight_row: 2
+  - text: 試合日は、レアルが2億3300万、バルサが2億1000万ユーロ。差は2300万。
+    card:
+      <<: *rev_table
+      highlight_row: 0
+  - text: 3本の割合は、2つのクラブでほぼ同じ形をしています。
+    card: &share_table
+      type: table
+      title: 収入に占める割合（2024-25、自分で割った）
+      columns: [項目, レアル, バルサ]
+      rows:
+      - [商業, 51%, 54%]
+      - [放映権, 29%, 25%]
+      - [試合日, 20%, 22%]
+      highlight_row: 1
+  - text: 商業が半分ほど。違いが出るのは、放映権の割合。
+    emph: true
+    card:
+      <<: *share_table
+      highlight_row: 1
+  sources:
+  - https://www.deloitte.com/uk/en/services/financial-advisory/analysis/deloitte-football-money-league.html
+  - https://www.deloitte.com/uk/en/about/press-room/real-madrid-tops-deloitte-football-money-league.html
+- id: narrow
+  heading: 縮んだ約9400万ユーロは、どの柱の動きなのか
+  tier: 報道
+  telop: 1年で縮んだ差は、すべて試合日。バルサの試合日は2倍
+  narrator: 解説
+  card: &gap_fall
+    type: waterfall
+    title: レアルとバルサの収入の差（百万ユーロ）
+    start: [2023-24の差, 281]
+    steps:
+    - [試合日, -122]
+    - [放映権, 12]
+    - [商業, 16]
+    total: [2024-25の差, 187]
+    note: 整数に丸めた内訳。デロイトの合計の差は 280.3 → 186.2
+  say:
+  - text: 前の年の差も同じ3本に分けて、1年の動きを追います。
+    image: assets/images/20261018_finance_real_barca/04_w.jpg
+    card:
+      <<: *gap_fall
+      highlight: 2023-24の差
+  - text: 前の年の差は、約2億8100万ユーロ。ここから始めます。
+    card:
+      <<: *gap_fall
+      highlight: 2023-24の差
+  - text: 試合日の差は、1億4500万から、一気に縮みました。
+    emph: true
+    card:
+      <<: *gap_fall
+      highlight: 試合日
+  - text: 試合日の縮みだけで、全体の縮みを上回ります。
+    card:
+      <<: *gap_fall
+      highlight: 試合日
+  - text: 放映権と商業の差は、むしろ広がっています。
+    card:
+      <<: *gap_fall
+      highlight: 商業
+  - text: 差を縮めたのは、試合日だけでした。
+    emph: true
+    card:
+      <<: *gap_fall
+      highlight: 2024-25の差
+  - text: 試合日の中身を見ます。
+    card: &md_table
+      type: table
+      title: 試合日の収入（デロイト、百万ユーロ）
+      columns: [季, レアル, バルサ]
+      rows:
+      - [2023-24, '248', '103']
+      - [2024-25, '233', '210']
+      - [増減, '-15', '+107']
+      highlight_row: 2
+  - text: バルサは前の年の約2倍。レアルは1500万ユーロ、6%減りました。
+    emph: true
+    card:
+      <<: *md_table
+      highlight_row: 2
+    mark:
+      kind: circle
+      row: 2
+      col: 2
+  - text: デロイトは、バルサの増収の主な要因を、次のように書いています。
+    image: assets/images/20261018_finance_real_barca/03_w.jpg
+    card: &del_doc
+      type: document
+      label: デロイト マネーリーグ 2026 バルセロナの項（訳）
+      paragraphs:
+      - 増収の主な要因は、座席の長期の権利を売る仕組みの導入です。一回限りで約7000万ユーロを生みました。
+      highlight:
+      - 一回限りで約7000万ユーロ
+  - text: 座席の長期の権利は、同じ席を長く使える権利を、前もって売るものです。
+    card:
+      <<: *del_doc
+      highlight: [座席の長期の権利]
+  - text: 一回限りの収入は、同じ額が毎年入るとは限りません。
+    card:
+      <<: *del_doc
+      highlight: [一回限り]
+  sources:
+  - https://www.deloitte.com/uk/en/services/financial-advisory/analysis/deloitte-football-money-league.html
+  - https://www.deloitte.com/uk/en/about/press-room/real-madrid-tops-deloitte-football-money-league.html
+- id: accounts
+  heading: クラブ自身の最新の決算では、差はどうなっているのか
+  tier: 確定
+  official: true
+  telop: 最新の決算は2025-26。収入の差は1億6130万ユーロ
+  narrator: 解説
+  card: &acc_duel
+    type: duel
+    title: クラブの発表した決算（2025-26、百万ユーロ）
+    left: {name: レアル, club: 2026年6月期, photo: assets/images/20261018_finance_real_barca/02_sq.jpg, color: "#d4af37"}
+    right: {name: バルサ, club: 2026年6月期, photo: assets/images/20261018_finance_real_barca/03_sq.jpg, color: "#a50044"}
+    rows:
+    - [収入, '1,221.3', '約1,060']
+    - [前の季の収入, '1,184.7', '約994']
+    - [償却前の営業利益, '287.4', '140']
+    - [最終損益, '+26.3', '-18']
+    - [人件費の比率, 46%, 53%]
+    bars: [収入, 前の季の収入, 償却前の営業利益]
+  say:
+  - text: デロイトの対象は2024-25。両クラブの最新の決算は2025-26です。
+    image: assets/images/20261018_finance_real_barca/02_w.jpg
+    card: none
+  - text: どちらも決算期は6月末、通貨はユーロ。期間と通貨は、そろっています。
+    card: none
+  - text: レアルの収入は、12億2130万ユーロ。
+    card:
+      <<: *acc_duel
+      highlight_row: 収入
+  - text: バルサの収入は、約10億6000万ユーロです。
+    card:
+      <<: *acc_duel
+      highlight_row: 収入
+  - text: 差は1億6130万ユーロ。レアルが約1.15倍です。
+    emph: true
+    card:
+      <<: *acc_duel
+      highlight_row: 収入
+    mark:
+      kind: circle
+      row: 0
+      col: 0
+  - text: 前の季の差は、約1億9070万ユーロ。ここでも、差は縮んでいます。
+    card:
+      <<: *acc_duel
+      highlight_row: 前の季の収入
+  - text: ただし、収入の数え方は同じとは限りません。
+    card: none
+  - text: レアルは、選手を売った結果を除く営業収入。バルサは、通常の収入と呼んでいます。
+    card: &def_doc
+      type: document
+      label: クラブの発表文（訳）
+      paragraphs:
+      - レアル：選手などの売却の結果を除く営業収入は、12億2130万ユーロ。
+      - バルサ：通常の収入は10億6000万ユーロ。前の年より6600万ユーロ多い。
+      highlight:
+      - 選手などの売却の結果を除く営業収入
+      - 通常の収入
+  - text: 償却前の営業利益は、選手の獲得費を年ごとの費用にする前の、本業の利益です。
+    card:
+      <<: *acc_duel
+      highlight_row: 償却前の営業利益
+  - text: レアルが2億8740万ユーロ。バルサは1億4000万ユーロ。
+    card:
+      <<: *acc_duel
+      highlight_row: 償却前の営業利益
+  - text: 利益はレアルが約2倍。収入の差が1.15倍なのに、利益の差は大きい。
+    emph: true
+    card:
+      <<: *acc_duel
+      highlight_row: 償却前の営業利益
+    mark:
+      kind: circle
+      row: 2
+      col: 0
+  - text: 最終損益は、レアルが2630万ユーロの黒字。
+    card:
+      <<: *acc_duel
+      highlight_row: 最終損益
+  - text: バルサは、1800万ユーロの赤字。
+    emph: true
+    card:
+      <<: *acc_duel
+      highlight_row: 最終損益
+  - text: ただしクラブが「通常」と呼ぶ損益は、20万ユーロの黒字。赤字は特別項目と税のあと。
+    image: assets/images/20261018_finance_real_barca/04_w.jpg
+    card: none
+  sources:
+  - https://www.realmadrid.com/es-ES/noticias/club/actualidad/el-real-madrid-cierra-la-temporada-2025-2026-con-los-mayores-ingresos-y-el-mayor-ebitda-de-su-historia-28-07-2026
+  - https://www.fcbarcelona.com/en/club/news/4578647/assembly-approves-record-breaking-accounts-that-confirm-clubs-financial-recovery
+  - https://www.fcbarcelona.com/en/club/news/4571765/fc-barcelona-announcement
+- id: cost
+  heading: 稼ぎのうち、給料に回る割合はどちらが重いのか
+  tier: 報道
+  telop: 給料÷収入は、デロイトの同じ定義でレアル44%、バルサ54%
+  narrator: 解説
+  card: &wage_duel
+    type: duel
+    title: 給料の比率（デロイト、2024-25、百万ユーロ）
+    left: {name: レアル, club: 世界1位, photo: assets/images/20261018_finance_real_barca/02_sq.jpg, color: "#d4af37"}
+    right: {name: バルサ, club: 世界2位, photo: assets/images/20261018_finance_real_barca/03_sq.jpg, color: "#a50044"}
+    rows:
+    - [収入, '1,161', '975']
+    - [給料, '514', '529']
+    - [給料÷収入, 44%, 54%]
+    - [前の年の比率, 48%, 65%]
+    bars: [収入, 給料]
+  say:
+  - text: 収入のあと、給料の比率を見ます。クラブごとに、人件費の定義は違います。
+    image: assets/images/20261018_finance_real_barca/01_w.jpg
+    card: none
+  - text: まず、デロイトが同じ物差しで並べた数字です。
+    card:
+      <<: *wage_duel
+      highlight_row: 給料
+  - text: 給料は、レアルが5億1400万、バルサが5億2900万ユーロ。
+    card:
+      <<: *wage_duel
+      highlight_row: 給料
+  - text: 収入が約1億8600万多いレアルのほうが、給料は少ない。
+    emph: true
+    card:
+      <<: *wage_duel
+      highlight_row: 給料
+    mark:
+      kind: circle
+      row: 1
+      col: 0
+  - text: 収入に対する割合は、レアルが44%。バルサが54%です。
+    emph: true
+    card:
+      <<: *wage_duel
+      highlight_row: 給料÷収入
+  - text: 差は10ポイント。収入が多いほうが、給料の割合は軽い。
+    card:
+      <<: *wage_duel
+      highlight_row: 給料÷収入
+  - text: 前の年は、レアルが48%、バルサが65%でした。
+    card:
+      <<: *wage_duel
+      highlight_row: 前の年の比率
+  - text: クラブ自身の2025-26の発表も、向きは同じです。
+    image: assets/images/20261018_finance_real_barca/02_w.jpg
+    card: none
+  - text: レアルは、人件費の割合を46%に保っていると書いています。
+    card: &rm_doc
+      type: document
+      label: レアル 2025-26 決算発表（訳）
+      paragraphs:
+      - 収入に対する人件費の比率は46%を維持し、優良の目安である50%を大きく下回っています。
+      highlight:
+      - 46%
+      - 50%を大きく下回って
+  - text: バルサは、スポーツ部門の費用が、収入の53%だと発表しました。
+    card: none
+  - text: 人件費とスポーツ部門の費用は、定義が違います。数字を並べる参考です。
+    card: none
+  sources:
+  - https://www.deloitte.com/uk/en/services/financial-advisory/analysis/deloitte-football-money-league.html
+  - https://www.realmadrid.com/es-ES/noticias/club/actualidad/el-real-madrid-cierra-la-temporada-2025-2026-con-los-mayores-ingresos-y-el-mayor-ebitda-de-su-historia-28-07-2026
+  - https://www.fcbarcelona.com/en/club/news/4578647/assembly-approves-record-breaking-accounts-that-confirm-clubs-financial-recovery
+- id: view
+  viewpoint: true
+  heading: 見立て・差は縮んだが、一回限りを除くと縮みは約2400万
+  tier: 背景
+  telop: 一回限りの約7000万を除くと、差は2億5600万。縮みは約2400万
+  narrator: 解説
+  card: &view_table
+    type: table
+    title: 自分で足し引きした（2024-25、百万ユーロ）
+    columns: &view_cols [比べ, 答え]
+    rows: &view_rows
+    - [デロイトの差, 186.2]
+    - [前の年の差, 280.3]
+    - [一回限り約70を除いた差, 約256]
+    - [一回限りを除いた縮み, 約24]
+    highlight_row: 0
+  say:
+  - text: デロイトの数字を、自分で足し引きしました。
+    image: assets/images/20261018_finance_real_barca/03_w.jpg
+    card: *view_table
+  - text: 縮んだ分のうち、一回限りがどれだけかを確かめます。
+    card:
+      <<: *view_table
+      highlight_row: 1
+  - text: バルサの収入から、一回限りの約7000万を引きます。
+    card:
+      <<: *view_table
+      highlight_row: 2
+  - text: 差は約2億5600万。縮みは約2400万にとどまる。
+    emph: true
+    card:
+      <<: *view_table
+      highlight_row: 3
+    mark:
+      kind: circle
+      row: 3
+      col: 1
+  - text: 一回限りが収入に入っている、という前提の計算です。
+    card: none
+  - text: それでも、クラブ自身の決算で、差が縮んだ向きは変わりません。
+    card: none
+  - text: 一方、利益の差は、収入の差よりずっと大きい。
+    card:
+      <<: *acc_duel
+      highlight_row: 償却前の営業利益
+  - text: 収入は約1.15倍。償却前の営業利益は、約2倍です。
+    emph: true
+    card:
+      <<: *acc_duel
+      highlight_row: 償却前の営業利益
+    mark:
+      kind: circle
+      row: 2
+      col: 0
+  - text: バルサの2026-27の収入予算は、11億9500万ユーロ。
+    image: assets/images/20261018_finance_real_barca/02_w.jpg
+    card: none
+  - text: 前の季より、増える見込みです。
+    card: none
+  - text: レアルの2026-27の予算は、11月の総会で出ます。
+    card: none
+  - text: 出れば、同じ季どうしで、差を比べられます。
+    card: none
+  sources:
+  - https://www.deloitte.com/uk/en/services/financial-advisory/analysis/deloitte-football-money-league.html
+  - https://www.fcbarcelona.com/en/club/news/4578647/assembly-approves-record-breaking-accounts-that-confirm-clubs-financial-recovery
+  - https://www.realmadrid.com/es-ES/noticias/club/actualidad/el-real-madrid-cierra-la-temporada-2025-2026-con-los-mayores-ingresos-y-el-mayor-ebitda-de-su-historia-28-07-2026

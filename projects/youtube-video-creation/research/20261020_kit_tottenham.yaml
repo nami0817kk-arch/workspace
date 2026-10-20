@@ -1,0 +1,567 @@
+# ユニフォームとエンブレムの歴史 トッテナム・ホットスパー（10/20 作成。10/17 アーセナル・10/18 シティ・10/19 ニューカッスルの次の回）。
+# 題の問い：雄鶏は、いつからユニフォームの胸にいるのか。
+# 軸：①胸に付いた年は、公式とウィキペディアが一致する（1921年のFAカップ決勝）。②その年の胸の形（盾の中か）は資料で割れる。
+#    ③最初の雄鶏像（屋根の飾り）は 年・素材が割れる（公式＝1909年・銅／ウィキペディア＝青銅、本体の記事は1909-10シーズン末）。
+#    ④なぜ雄鶏か：公式は書かない（クラブ名の由来のハリー・ホットスパーまで）／ウィキペディアは「拍車→闘鶏」／ハリーの記事は「スコットランド人が速さを称えた名」。
+#    ⑤胸の形の変遷を、公式の記載だけで数える（10通り＝9回の変更）。⑥胸の広告は公式で確かめた分だけ（AIA は2026/27まで）。
+# 取材：2026-10-19。requests のブラウザ User-Agent で本文を読んだ（WebFetch・ブラウザ操作・検索エンジンのAI要約は使っていない。
+#   記事のURLを探すために WebSearch の結果の「題名とURL」だけ使い、本文は自分で読んだ）。
+#   読んだ公式（tottenhamhotspur.com）：
+#     /news/1045541/shield-and-badge（2003-10-22）／/news/1028435/club-unveils-new-badge（2006-01-19）／
+#     /news/994837/gallery-our-lilywhite-shirts-through-the-years（2020-05-18。写真は Getty 提供だが本文の文字だけ使い、写真は取り込んでいない）／
+#     /news/992604/…-centenary-of-iconic-cockerel-with-new-nike-home-kit-for-202122（2021-05-24）／
+#     /news/982376/golden-cockerel-update（2018-11-02）／/news/1000736/yellow-of-yesteryear…（2025-09-02。百周年の図柄の文字）／
+#     /the-club/history/year-by-year（年表：1890・1896/98 の色替え）／/the-club/history/hall-of-fame/bobby-buckle（創設）／
+#     /news/1000421/club-and-aia-extend-partnership-through-to-2032（2025-11-04）／/news/1036438/…-aia-as-cup-shirt-partner（2013-08-15）／
+#     /news/1074148/gallery-new-nike-202627-home-kit-up-close（2026-06-19）。
+#   読んだウィキペディア(en)：Tottenham Hotspur F.C.（節「Crest」「Kit」）／History of Tottenham Hotspur F.C.／Henry Percy (Hotspur)。
+#
+# ---- 一次情報で確かめたこと（年は本文のまま）----
+#   ・胸に付いた年（公式 2021-05-24）：「The cockerel was worn on the Club's shirts for the first time in the 1921 FA Cup Final victory over Wolverhampton Wanderers,
+#     with Jimmy Dimmock scoring the only goal in a 1-0 victory.」／年表に「1921 Second FA Cup triumph, Spurs beating Wolverhampton Wanderers 1-0 at Stamford Bridge」。
+#     写真集に 1924/25「the cockerel adorning our white shirts」。ウィキペディア：「Since the 1921 FA Cup Final, the Tottenham Hotspur crest has featured a cockerel」。
+#   ・最初の雄鶏像（公式「Shield and Badge」2003）：「The cockerel and ball first appeared in 1909 when a former player, one William James Scott, cast a copper centrepiece to perch on the new West Stand.」
+#     2006 の記事も「first sat on the roof of White Hart Lane in 1909 … copper centrepiece」。ウィキペディア(本体)：「bronze cast … £35 … 9-foot-6-inch (2.90 m) … placed on top of the West Stand at the end of the 1909–10 season」。
+#     ウィキペディア(歴史)：「A bronze cockerel was placed on top of the West Stand in 1909」、1910 の公式プログラムの写真つき。
+#   ・名前の由来（公式 2003）：ノーサンバランド家の「Black House」が高い通りの向かいにあった。「It is probable that the Northumberland family hold the key to our being called Hotspur.」
+#     Sir Henry Percy＝「Harry Hotspur」、1403 に Shrewsbury で討たれた。少年たちが「no doubt looked upon this character as their hero」。**雄鶏の理由は公式のこの記事に書かれていない**。
+#     1880 にクリケット部（Hotspur Cricket Club）、2年後の1882にフットボール、1884 に Tottenham Hotspur Football Club。
+#   ・ウィキペディア(本体)：「Harry Hotspur … was said to have been given the nickname Hotspur as he dug in his spurs to make his horse go faster … spurs are also associated with fighting cocks.
+#     The club used spurs as a symbol in 1900, which then evolved into a fighting cock.」／ハリーの記事：「The nickname "Hotspur" was given to him by the Scots as a tribute to his speed in advance and readiness to attack.」
+#   ・胸の形の変更（公式の写真集・記事）：1921 雄鶏／1965「The shield has been removed while a ball has been added below the feet of the cockerel」／
+#     1982/83 百周年の特別な図柄（「CENTENARY YEAR」・1882・1982・TOTTENHAM HOTSPUR の巻物。2025-09-02 の記事）／1983「heraldic lions … latin motto 'audere est facere'」／
+#     1994/95「a shield was also re-added to our badge」／1995/96「our badge revert to the Cockerel emblem seen first in the 1960s」／
+#     1998/99「Bruce Castle and the red Northumberland heraldic lions … initials monogram and Latin motto returned」／1999/00「the shield removed」／
+#     2006/07（2006-01-19 公式：the first new design since 1983 … replaces the Club crest, first introduced in 1956 … The Ball is taken from the original Cockerel and Ball … 1909）／
+#     2017/18「the historic shield returning to our crest」。公式 2003 は「badge … introduced in 1983 and updated in 1992」。
+#   ・屋根の雄鶏の向き（公式 2018-11-02）：1909 から西スタンドは南向き／東スタンドは 1958 から北向き（「49 years later」）／1980年代に風雨で取り替えた東スタンドの雄鶏は南向き（ファンの声）→北向きに戻した／
+#     「always positioned with its left wing facing the pitch」→ 新しい雄鶏も左の翼をピッチ側（南スタンドの上）。
+#   ・胸の広告（公式の写真集）：1983/84 ホルステン（first ever shirt sponsor）／1995/96 ヒューレット・パッカード／1999/00 ホルステンが戻る／2002 トムソン（綴りは Thompson。ウィキペディアは Thomson）／
+#     2006/07 マンション／2010/11 オートノミー／2011/12 オーラズマ／2013/14 HP が戻る／2014/15 AIA（前の年はカップ戦用）。
+#     公式 2013-08-15：AIA は 2013/14 の「Cup Shirt Partner」（ヨーロッパリーグ・FAカップ・リーグ杯）、HP は「Premier League shirt Partner」。
+#     公式 2025-11-04：「AIA remains the Club's Global Principal Partner and front-of-shirt sponsor until the end of the 2026/2027 season. From July 2027, AIA will transition to Global Training Partner」（2032-06 まで）。
+#     2026/27 ホームの公式写真に胸の AIA と雄鶏が写る（取り込んだ写真で確認）。
+#
+# ---- 食い違い（台本で断る／言わないもの）----
+#   ・**1921年の胸の形**：ウィキペディア＝「cockerel within a shield」。公式＝盾は「believed to date from 1956」（1965 に外れた、と写真集）。1921 の胸が盾付きだったかは、読んだ資料で決められない。
+#   ・**最初の雄鶏像**：公式＝1909年・銅／ウィキペディア(歴史)＝1909年・青銅／ウィキペディア(本体)＝1909-10シーズン末・青銅・35ポンド・約2.9m。
+#   ・**なぜ雄鶏か**：公式は書かない／ウィキペディアは拍車→闘鶏（「said to」「believed」の言い方）／ハリーの記事は「速さを称えたあだ名」。
+#   ・**1965 のボール**：公式の写真集＝1965年／ウィキペディア＝「late 1960s」。
+#   ・**完全な紋章がシャツにあった期間**：公式 2003＝「two years of the full crest」（1999 に戻る）／ウィキペディア＝「three seasons 1996–99」／写真集＝95/96 は雄鶏だけ・98/99 に城と獅子。
+#   ・**2017 のあと**：写真集は盾が戻った 2017/18 以後の変更を書かない／ウィキペディア＝「The shield was however removed the following season」。→ 数えるのは公式の記載だけ（10通り）。
+#   ・**1990 の色替え**：年表は 1890 赤＋紺、1896 チョコレートと金、1898 白と青。ウィキペディアは「1895 に チョコレートと金」。→ 台本では扱わない（本筋でない）。
+#
+# ---- 自分で数えた数（検算した）----
+#   ・屋根の雄鶏 1909 → シャツ 1921 ＝ 12年。シャツ 1921 → 2026 ＝ 105年。105÷12 ＝ 8.75。
+#   ・胸の形（公式の記載）：1921・1965・1982/83・1983・1994/95・1995/96・1998/99・1999/00・2006/07・2017/18 ＝ 10通り（変更は9回）。
+#   ・最初の形 1921→1965 ＝ 44年。1965→2026 ＝ 61年に 9通り。61÷9 ＝ 6.78 ≒ 6.8年。44÷6.78 ＝ 6.5（「6倍を超える」）。
+#   ・AIA：2014/15〜2026/27 ＝ 13シーズン（台本では数えない）。
+#
+# ---- 言わないと決めたもの ----
+#   ・スタジアムの数字（収容・席数・工事）・旧本拠地の収容など（10/19 の「トッテナムの本拠地」の回と重ねない）／契約金額（公式に額なし）／
+#   ・シャツの色の変遷（1890・1896・1898 の色替え）／メーカー（アンブロ等）の細部／アウェー・サードの色／女子チーム／所有・ENIC の話／
+#   ・写真に写る選手の名前（2021/22 の公式写真は服だけで人は写らない）／Wikipedia のメーカー表の細部（Hummel 等は台本で使わない）。
+#
+# ---- 一次情報に届かなかったところ ----
+#   ・雄鶏を選んだ理由を書いた、クラブ自身の資料（読んだ公式の記事に無い）。ウィキペディアの拍車の説は二次。
+#   ・1921 の胸の形を示す当時の写真。公式の写真集（Getty 提供）は文字だけ読み、写真は使っていない。
+#   ・1909 の雄鶏が銅か青銅か、年が 1909 か 1910 かを決める資料。
+#
+# ---- 写真（assets/images/20261020_kit_tottenham/、出典は credits.json）。取り込んだあと開いて見た（透かしなし・代理店の表記なし）----
+#   t01 = 2021/22 ホームシャツ（雄鶏百周年）の公式写真、t02 = 公式記事の金の雄鶏の完成予想図（白地）、t03・t04 = 2026/27 ホームシャツの公式写真（胸に雄鶏と AIA）。
+#   t05 = Commons「Spurs cockerel on the roof…2020」（CC BY-SA 4.0 Hzh）、t06 = Commons「East side of Tottenham Hotspur Stadium with cockerel emblem」（CC BY 4.0 Jonathan Deamer）。
+#   エンブレムは assets/crests/トッテナム.png・節の頭の差し込み assets/backgrounds/cut_トッテナム.png（権利は晴れていない＝引き受ける危険）。
+#   Getty などの代理店の写真は使っていない。人物は写らない（服・像・建物）。
+#
+# ネットの反応は入れない（voice_min: 0）。シリーズの回にショートは作らない決まり。
+# **サムネは案を3つ出してユーザーに決めてもらう**。ここの thumbnail は点検用の案A。
+date: 2026年10月20日
+slot: other_2
+format: news
+series: ユニフォームとエンブレムの歴史
+voice_min: 0
+people:
+- トッテナム・ホットスパー
+theme:
+  end_bg: assets/images/20261020_kit_tottenham/t04_2627_home2.jpg
+  id: kit_tottenham
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: トッテナム
+  title: トッテナムの雄鶏は、いつからユニフォームの胸にいるのか
+  question: トッテナムの雄鶏は、いつからユニフォームの胸にいて、なぜ雄鶏なのか
+  opening_image: assets/images/20261020_kit_tottenham/t03_2627_home.jpg
+  lead: 胸に、雄鶏。
+  hook: ''
+  takeaway: トッテナムの雄鶏がシャツの胸に付いたのは、クラブ公式もウィキペディアも1921年のFAカップ決勝と書く。屋根の雄鶏像が1909年（公式）なので12年あとで、胸にいるのは105年、屋根だけの時期の8.75倍。ただ、雄鶏像が銅か青銅か・1909年か1910年か、なぜ雄鶏なのかは資料で割れる（公式は由来を書かず、ウィキペディアは拍車→闘鶏、ハリーの記事はスコットランド人が付けたあだ名）。胸の形は公式の記載だけで数えて10通り。最初の形は44年続き、その後は61年で9通り、平均6.8年。胸の広告のAIAは2026/27まで。資料で食い違う点は、この動画では断定しない
+  hook_unused: ''
+thumbnail:
+  layout: classic
+  callouts: [1921年の決勝から, 理由は説が割れる]
+  photo: assets/images/20261020_kit_tottenham/t03_2627_home.jpg
+  line1: トッテナムの雄鶏
+  line2: 胸に付いたのは1921年
+  tags:
+  - トッテナム
+  - トッテナム・ホットスパー
+  - スパーズ
+  - プレミアリーグ
+  - ユニフォーム
+  - エンブレム
+sections:
+- id: since
+  main: true
+  heading: 雄鶏は、いつから胸にいるのか
+  tier: 確定
+  official: true
+  telop: 雄鶏が胸に付いたのは1921年のFAカップ決勝（クラブ公式）
+  narrator: 解説
+  card: &id_doc
+    type: document
+    label: トッテナム公式サイト「雄鶏100周年の新ホームキット」（2021年5月24日）の訳
+    paragraphs:
+    - 雄鶏は、1921年のFAカップ決勝で、クラブのシャツに初めて付いた。
+    - 相手はウルヴァーハンプトン。ジミー・ディモックの1点で、1対0の勝ちだった。
+    highlight:
+    - 1921年
+    - FAカップ決勝
+  say:
+  - text: トッテナムの、胸の雄鶏の話です。
+    image: assets/images/20261020_kit_tottenham/t04_2627_home2.jpg
+    emph: true
+    card: none
+  - text: 年も由来も、資料どうしで食い違う所があります。食い違いは、そのまま伝えます。
+    image: assets/images/20261020_kit_tottenham/t01_centenary_kit.jpg
+    card: none
+  - text: まず、胸に付いた年から。クラブ公式の記事を読みます。
+    card:
+      <<: *id_doc
+      highlight: []
+  - text: 公式は、1921年のFAカップ決勝が最初、と書いています。
+    emph: true
+    card: *id_doc
+  - text: FAカップは、イングランドのカップ戦です。
+    card: *id_doc
+  - text: 相手はウルヴァーハンプトン。ジミー・ディモックの1点で、勝ちました。1対0です。
+    image: assets/images/20261020_kit_tottenham/t03_2627_home.jpg
+    card: none
+  - text: ウィキペディアも、1921年の決勝から胸に付いた、と書きます。
+    image: assets/images/20261020_kit_tottenham/t01_centenary_kit.jpg
+    card: none
+  - text: 公式の写真集は、1924/25の白いシャツにも、雄鶏が付くと書きます。
+    card: none
+  - text: ただ、そのときの形は、資料で割れます。
+    emph: true
+    image: assets/images/20261020_kit_tottenham/t04_2627_home2.jpg
+    card: none
+  - text: ウィキペディアは、1921年の胸は、盾の中の雄鶏だった、と書きます。
+    card: none
+  - text: 公式は、クラブの盾の図柄は1956年ごろから、と書きます。
+    card: none
+  - text: 1921年の胸に盾があったかは、読んだ資料では、決められません。
+    emph: true
+    card: none
+  sources:
+  - https://www.tottenhamhotspur.com/news/992604/tottenham-hotspur-marks-centenary-of-iconic-cockerel-with-new-nike-home-kit-for-202122
+  - https://www.tottenhamhotspur.com/the-club/history/year-by-year/
+  - https://www.tottenhamhotspur.com/news/994837/gallery-our-lilywhite-shirts-through-the-years
+  - https://www.tottenhamhotspur.com/news/1045541/shield-and-badge
+  - https://en.wikipedia.org/wiki/Tottenham_Hotspur_F.C.
+- id: statue
+  heading: 最初の雄鶏は、いつ、何で作られたのか
+  tier: 確定
+  official: true
+  telop: 最初の雄鶏像は1909年・銅（公式）。ウィキペディアは青銅で、本体の記事は1909-10シーズン末
+  narrator: 解説
+  card: &id_stat
+    type: document
+    label: トッテナム公式サイト「シールドとバッジ」（2003年10月22日）の訳
+    paragraphs:
+    - 雄鶏とボールが最初に現れたのは1909年。元選手のウィリアム・ジェームズ・スコットが、銅で飾りを鋳造し、新しい西スタンドの上に載せた。
+    highlight:
+    - 1909年
+    - 銅
+  say:
+  - text: トッテナムの雄鶏は、シャツより先に、屋根の上にいました。
+    image: assets/images/20261020_kit_tottenham/t02_golden_cockerel.jpg
+    card: none
+  - text: 公式の記事は、最初の雄鶏を、1909年と書きます。
+    card:
+      <<: *id_stat
+      highlight: []
+  - text: 旧本拠地の、新しい西スタンドの上です。
+    image: assets/images/20261020_kit_tottenham/t05_cockerel_roof.jpg
+    card: none
+  - text: 作ったのは、元選手の、ウィリアム・ジェームズ・スコット。
+    card: none
+  - text: 素材は、銅。公式は、そう書いています。
+    emph: true
+    image: assets/images/20261020_kit_tottenham/t02_golden_cockerel.jpg
+    card: *id_stat
+  - text: ウィキペディアは、同じ雄鶏を、青銅製と書きます。
+    card: &id_stat2
+      type: table
+      title: 最初の雄鶏像の書き方
+      columns:
+      - 資料
+      - 書いてあること
+      rows:
+      - - クラブ公式の記事
+        - 1909年。銅
+      - - ウィキペディア（歴史）
+        - 1909年。青銅
+      - - ウィキペディア（本体）
+        - 1909-10シーズン末。青銅
+      highlight_row: 1
+  - text: 本体の記事は、載せたのは1909-10シーズンの終わり、とも書きます。
+    card:
+      <<: *id_stat2
+      highlight_row: 2
+  - text: 本体の記事は、値段は35ポンド、高さは約2.9メートルと書きます。
+    image: assets/images/20261020_kit_tottenham/t06_stadium_east.jpg
+    card: none
+  - text: 年も、素材も、資料で書き方が割れます。
+    emph: true
+    card:
+      <<: *id_stat2
+      highlight_row: 2
+  - text: シャツに付くのは、そこから十数年あとです。
+    card: none
+  sources:
+  - https://www.tottenhamhotspur.com/news/1045541/shield-and-badge
+  - https://www.tottenhamhotspur.com/news/1028435/club-unveils-new-badge
+  - https://en.wikipedia.org/wiki/Tottenham_Hotspur_F.C.
+  - https://en.wikipedia.org/wiki/History_of_Tottenham_Hotspur_F.C.
+- id: why
+  heading: なぜ、鳥の中でも雄鶏なのか。資料で説が割れる
+  tier: 背景
+  telop: 雄鶏の理由は、公式は書かない。ウィキペディアは拍車→闘鶏。ハリーの記事は別のあだ名の由来
+  narrator: 解説
+  card: &id_why
+    type: table
+    title: 雄鶏の理由の書き方
+    columns:
+    - 資料
+    - 書いてあること
+    rows:
+    - - クラブ公式の記事
+      - 雄鶏の理由は書いていない
+    - - ウィキペディア（本体）
+      - 拍車から闘鶏へ
+    - - ハリー本人の記事
+      - 速さを称えたあだ名
+    highlight_row: 0
+  say:
+  - text: では、なぜ雄鶏なのか。ここでも、資料が割れます。
+    image: assets/images/20261020_kit_tottenham/t06_stadium_east.jpg
+    card: none
+  - text: クラブ公式の記事は、雄鶏の理由を、書いていません。
+    card:
+      <<: *id_why
+      highlight_row: 0
+  - text: 書いているのは、クラブ名の由来です。ハリー・ホットスパー。
+    image: assets/images/20261020_kit_tottenham/t01_centenary_kit.jpg
+    card: none
+  - text: ノーサンバランド家の騎士で、1403年に討たれた人物です。
+    card: none
+  - text: 公式は、少年たちが彼を英雄と見て、名を付けたのだろう、と書きます。
+    image: assets/images/20261020_kit_tottenham/t04_2627_home2.jpg
+    card: none
+  - text: ウィキペディアは、雄鶏の理由まで書きます。
+    card:
+      <<: *id_why
+      highlight_row: 1
+  - text: 拍車は、乗馬の靴に付ける金具。闘鶏の足にも付きます。
+    image: assets/images/20261020_kit_tottenham/t05_cockerel_roof.jpg
+    card: none
+  - text: ハリーは、拍車を馬に当てて突っ込んだ、と言われます。
+    image: assets/images/20261020_kit_tottenham/t02_golden_cockerel.jpg
+    card: none
+  - text: 1900年に、拍車が象徴になり、のちに闘鶏へ変わった、とも書きます。
+    image: assets/images/20261020_kit_tottenham/t03_2627_home.jpg
+    card: none
+  - text: ただ、ハリー本人の記事は、別のことを書きます。
+    card:
+      <<: *id_why
+      highlight_row: 2
+  - text: あだ名は、スコットランド人が付けた、速さと攻める構えを称えた名、と。
+    card: none
+    image: assets/images/20261020_kit_tottenham/t06_stadium_east.jpg
+  - text: 拍車の話は、そこには出てきません。
+    emph: true
+    card: none
+  - text: どの説が正しいかは、ここでは決めません。
+    image: assets/images/20261020_kit_tottenham/t01_centenary_kit.jpg
+    card: none
+  sources:
+  - https://www.tottenhamhotspur.com/news/1045541/shield-and-badge
+  - https://en.wikipedia.org/wiki/Tottenham_Hotspur_F.C.
+  - https://en.wikipedia.org/wiki/History_of_Tottenham_Hotspur_F.C.
+  - https://en.wikipedia.org/wiki/Henry_Percy_(Hotspur)
+- id: crest
+  heading: 胸の形は、何度替わったのか
+  tier: 確定
+  official: true
+  telop: 公式の写真集と記事を数える。雄鶏→盾付き→獅子と標語→2006年の新しい雄鶏
+  narrator: 解説
+  card: &id_crestA
+    type: timeline
+    title: 胸の図柄の変遷（クラブ公式の記載。前半）
+    rows:
+    - - 1921年
+      - FAカップ決勝で、初めて胸に
+    - - 1965年
+      - 盾が外れ、足元にボール
+    - - 1982/83
+      - 百周年の特別な図柄
+    - - 1983年
+      - 獅子2頭と標語が加わる
+    focus: 1921年
+  say:
+  - text: ここからは、トッテナムの胸の形です。先に、数え方を決めます。
+    image: assets/backgrounds/cut_トッテナム.png
+    card: none
+  - text: 資料に載った、図柄の形の変更を、1回と数えます。色の手直しは、数えません。
+    emph: true
+    image: assets/images/20261020_kit_tottenham/t01_centenary_kit.jpg
+    card: none
+  - text: 最初は、1921年。雄鶏の図柄です。
+    card:
+      <<: *id_crestA
+      highlight_row: 0
+  - text: 1965年に、盾が外れ、雄鶏の足元に、ボールが付きました。
+    card:
+      <<: *id_crestA
+      highlight_row: 1
+  - text: ウィキペディアは、これを60年代の終わりごろ、と書きます。
+    image: assets/images/20261020_kit_tottenham/t04_2627_home2.jpg
+    card: none
+  - text: 1982/83は、百周年の文字と年号が入った、特別な図柄です。
+    card:
+      <<: *id_crestA
+      highlight_row: 2
+  - text: 1983年、獅子2頭と、ラテン語の標語が加わります。標語は、挑むことは、行うこと。
+    image: assets/images/20261020_kit_tottenham/t05_cockerel_roof.jpg
+    card: none
+  - text: ここまでで、形は4つです。
+    emph: true
+    card: &id_crestB
+      type: timeline
+      title: 胸の図柄の変遷（クラブ公式の記載。後半）
+      rows:
+      - - 1994/95
+        - 盾が、ふたたび付く
+      - - 1995/96
+        - 雄鶏だけに戻る
+      - - 1998/99
+        - 城と獅子の、紋章に近い形
+      - - 1999/00
+        - 盾が、また外れる
+      - - 2006/07
+        - 新しい雄鶏とボール
+      - - 2017/18
+        - 歴史ある盾が戻る
+      focus: 1994/95
+  - text: 1994/95。盾が、ふたたび付きました。
+    card:
+      <<: *id_crestB
+      highlight_row: 0
+  - text: 1995/96。雄鶏だけに、戻ります。
+    card:
+      <<: *id_crestB
+      highlight_row: 1
+  - text: 1998/99。ブルース城と、赤い獅子の入った、紋章に近い形です。
+    image: assets/images/20261020_kit_tottenham/t01_centenary_kit.jpg
+    card: none
+  - text: 1999/00。盾が、また外れます。
+    card:
+      <<: *id_crestB
+      highlight_row: 3
+  - text: 紋章に近い形が、シャツにあった期間は、資料で割れます。
+    image: assets/images/20261020_kit_tottenham/t03_2627_home.jpg
+    card: none
+  - text: 公式の2003年の記事は、2年と書きます。
+    card: none
+  - text: ウィキペディアは、1996年から99年の、3シーズンと書きます。
+    card: none
+  - text: 公式の写真集は、95/96は雄鶏だけ、紋章に近い形は98/99と書きます。
+    emph: true
+    card: none
+  - text: 2006年。クラブは、1983年以来の、新しい図柄を発表しました。
+    image: assets/images/20261020_kit_tottenham/t04_2627_home2.jpg
+    card:
+      <<: *id_crestB
+      highlight_row: 4
+  - text: 2017/18。歴史ある盾が、また戻りました。
+    card:
+      <<: *id_crestB
+      highlight_row: 5
+  - text: 公式の写真集は、そのあとを書かず、ウィキペディアは翌季に盾が外れたと書きます。
+    image: assets/images/20261020_kit_tottenham/t02_golden_cockerel.jpg
+    card: none
+  - text: 数えるのは、公式の記載だけ。形は、10通りです。
+    emph: true
+    image: assets/images/20261020_kit_tottenham/t04_2627_home2.jpg
+    card: none
+  sources:
+  - https://www.tottenhamhotspur.com/news/994837/gallery-our-lilywhite-shirts-through-the-years
+  - https://www.tottenhamhotspur.com/news/1045541/shield-and-badge
+  - https://www.tottenhamhotspur.com/news/1028435/club-unveils-new-badge
+  - https://www.tottenhamhotspur.com/news/1000736/yellow-of-yesteryear-our-vibrant-history-with-the-yellow-kit
+  - https://en.wikipedia.org/wiki/Tottenham_Hotspur_F.C.
+- id: sponsor
+  heading: シャツの胸の広告は、どう替わってきたのか
+  tier: 確定
+  official: true
+  telop: 胸の広告は公式で確かめた分だけ。最初は1983/84のホルステン、AIAは2026/27まで
+  narrator: 解説
+  card: &id_sp1
+    type: table
+    title: 胸の広告（クラブ公式の写真集。前半）
+    columns:
+    - いつ
+    - 胸の広告
+    rows:
+    - - 1983/84
+      - ホルステン（最初の胸の広告）
+    - - 1995/96
+      - ヒューレット・パッカード
+    - - 1999/00
+      - ホルステンが戻る
+    - - 2002年
+      - トムソン
+    highlight_row: 0
+  say:
+  - text: 次は、トッテナムのシャツの、胸の広告です。
+    image: assets/images/20261020_kit_tottenham/t01_centenary_kit.jpg
+    card: none
+  - text: 公式の写真集は、最初の胸の広告を、1983/84シーズンのホルステンと書きます。
+    card:
+      <<: *id_sp1
+      highlight_row: 0
+  - text: 1995/96は、ヒューレット・パッカードに替わります。
+    card:
+      <<: *id_sp1
+      highlight_row: 1
+  - text: 1999/00に、ホルステンが戻りました。
+    card:
+      <<: *id_sp1
+      highlight_row: 2
+  - text: 2006/07は、ネットの会社の、マンション・ドットコム。
+    card: &id_sp2
+      type: table
+      title: 胸の広告（クラブ公式の写真集・発表。後半）
+      columns:
+      - いつ
+      - 胸の広告
+      rows:
+      - - 2006/07
+        - マンション・ドットコム
+      - - 2010/11
+        - オートノミー
+      - - 2011/12
+        - オーラズマ
+      - - 2013/14
+        - ヒューレット・パッカード
+      - - 2014/15〜
+        - AIA
+      highlight_row: 0
+  - text: 2010/11はオートノミー。次の2011/12は、その会社のオーラズマです。
+    card:
+      <<: *id_sp2
+      highlight_row: 1
+  - text: 2013/14、エーアイエーは、カップ戦だけの、胸の広告でした。
+    card:
+      <<: *id_sp2
+      highlight_row: 4
+  - text: 2014/15から、エーアイエーが、すべての試合のシャツに付きます。
+    image: assets/images/20261020_kit_tottenham/t03_2627_home.jpg
+    card: none
+  - text: 公式は2025年11月、胸の広告は2026/27シーズンまで、と書きました。
+    emph: true
+    card:
+      <<: *id_sp2
+      highlight_row: 4
+  - text: 2027年7月から、エーアイエーは、練習着の提携先に。2032年6月までです。
+    image: assets/images/20261020_kit_tottenham/t04_2627_home2.jpg
+    card: none
+  sources:
+  - https://www.tottenhamhotspur.com/news/994837/gallery-our-lilywhite-shirts-through-the-years
+  - https://www.tottenhamhotspur.com/news/1036438/tottenham-hotspur-announces-aia-as-cup-shirt-partner
+  - https://www.tottenhamhotspur.com/news/1000421/club-and-aia-extend-partnership-through-to-2032
+  - https://www.tottenhamhotspur.com/news/1074148/gallery-new-nike-202627-home-kit-up-close
+  - https://en.wikipedia.org/wiki/Tottenham_Hotspur_F.C.
+- id: view
+  viewpoint: true
+  heading: 見立て・雄鶏は胸に105年、屋根だけの時期の8.75倍。形は10通り
+  tier: 背景
+  telop: 雄鶏は屋根に12年、胸に105年。胸の形は10通りで、最初の形は44年、その後は平均6.8年
+  narrator: 解説
+  card: &id_ratio
+    type: calc
+    title: 胸の雄鶏は、屋根だけの時期の何倍か
+    terms:
+    - - 105年
+      - 1921〜2026（胸）
+    - - 12年
+      - 1909〜21（屋根だけ）
+    - - 8.75倍
+      - 割った答え
+    ops:
+    - ÷
+    - ＝
+  say:
+  - text: 最後は、トッテナムの年を、自分で数えます。
+    image: assets/images/20261020_kit_tottenham/t05_cockerel_roof.jpg
+    card: none
+  - text: 屋根は1909年、胸は1921年。公式の年で、差は12年です。
+    card: none
+    image: assets/images/20261020_kit_tottenham/t02_golden_cockerel.jpg
+  - text: 胸に付いた1921年から、2026年まで、105年。
+    card: *id_ratio
+  - text: 105を12で割ると、8.75。
+    card: *id_ratio
+  - text: 胸にいる105年は、屋根だけの12年の、8.75倍です。
+    emph: true
+    card: *id_ratio
+    mark:
+      kind: circle
+      item: 2
+  - text: 最初の形は、1921年から1965年まで、44年続きました。
+    card: none
+  - text: それ以後の61年で、形は9つ。
+    card: &id_avg
+      type: calc
+      title: 1965年以後、胸の形は何年に1つ替わったか
+      terms:
+      - - 61年
+        - 1965〜2026
+      - - 9通り
+        - 1965年以後の形
+      - - 約6.8年
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+  - text: 61を9で割ると、約6.8。
+    card: *id_avg
+  - text: 最初の形の44年は、その後の平均の、6倍を超えます。
+    emph: true
+    card: *id_avg
+    mark:
+      kind: circle
+      item: 2
+  - text: この数は、公式の記載だけで数えました。数え方で、答えは変わります。
+    image: assets/images/20261020_kit_tottenham/t03_2627_home.jpg
+    card: none
+  - text: 次に替わるのは、胸の広告です。2027年7月から、エーアイエーは胸を離れます。
+    card: none
+  - text: 雄鶏が胸を離れる話は、読んだ資料には、ありません。
+    emph: true
+    card: none
+  sources:
+  - https://www.tottenhamhotspur.com/news/992604/tottenham-hotspur-marks-centenary-of-iconic-cockerel-with-new-nike-home-kit-for-202122
+  - https://www.tottenhamhotspur.com/news/1045541/shield-and-badge
+  - https://www.tottenhamhotspur.com/news/994837/gallery-our-lilywhite-shirts-through-the-years
+  - https://www.tottenhamhotspur.com/news/1000421/club-and-aia-extend-partnership-through-to-2032

@@ -25,6 +25,8 @@ thumbnail:
   line2: 黄色い潜水艦ビジャレアル
   crest_main:
   - ビジャレアル
+  tags:
+  - ビジャレアル
   board: assets/stats/ll_villarreal_data_t.png
 sections:
 - id: data
@@ -37,7 +39,7 @@ sections:
   - text: 今季は2シーズン続けて、チャンピオンズリーグで戦います。
     image: assets/stats/ll_villarreal_data_r1.png
     no_telop: true
-  - text: 就任したばかりのイニゴ・ペレス監督は、こう話しました。
+  - text: 就任会見で、新監督のイニゴ・ペレスはこう語りました。
     image: assets/stats/ll_villarreal_data_r2.png
     no_telop: true
   - voice: イニゴ・ペレス
@@ -55,8 +57,9 @@ sections:
   - image: assets/stats/ll_villarreal_data2.png
     text: ホームタウンはビジャレアル。人口**5万3623人**、タイル作りが盛んな町です。
     no_telop: true
-  - image: assets/backgrounds/stadium_ビジャレアル.png
+  - image: assets/stats/ll_villarreal_data3.png
     text: 本拠地はエスタディオ・デ・ラ・セラミカ。クラブの発表では、**2万3173人**が入ります。
+    no_telop: true
   - image: assets/stats/ll_villarreal_data4.png
     text: オーナーは**1997年**からフェルナンド・ロイグ。陶磁器の会社も持つ実業家です。
     no_telop: true
@@ -78,7 +81,6 @@ sections:
   - https://villarrealcf.es/presentacion-de-inigo-perez-villarreal-cf/
   - https://en.wikipedia.org/wiki/2026%E2%80%9327_Villarreal_CF_season
   - https://en.wikipedia.org/wiki/2021_UEFA_Europa_League_final
-  bg: assets/backgrounds/stadium_ビジャレアル_in.png
   official: false
 - id: history
   heading: 下のリーグから1部へ
@@ -111,7 +113,6 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/Villarreal_CF
   - https://es.wikipedia.org/wiki/Villarreal_Club_de_F%C3%BAtbol
-  bg: assets/backgrounds/stadium_ビジャレアル_in.png
   official: false
 - id: history2
   heading: 1年で戻った
@@ -131,7 +132,7 @@ sections:
       - 2部で2位、1部へ
   say:
   - 2012年、最終節でアトレティコに敗れ、2部に落ちます。
-  - 決めたのはファルカオ。終了間際の1点でした。
+  - 決めたのはアトレティコのファルカオ。終了間際の1点でした。
   - text: 翌シーズンは2部で2位。最後の試合で昇格を決め、1年で戻りました。
     card:
       type: table
@@ -145,7 +146,6 @@ sections:
   - https://en.wikipedia.org/wiki/Villarreal_CF
   - https://es.wikipedia.org/wiki/Villarreal_Club_de_F%C3%BAtbol
   - https://en.wikipedia.org/wiki/2026%E2%80%9327_Villarreal_CF_season
-  bg: assets/backgrounds/stadium_ビジャレアル_in.png
   official: false
 - id: history3
   heading: ゴールキーパーのピーケー
@@ -178,7 +178,6 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/2021_UEFA_Europa_League_final
   - https://es.wikipedia.org/wiki/Villarreal_Club_de_F%C3%BAtbol
-  bg: assets/backgrounds/stadium_ビジャレアル_in.png
   official: false
 - id: features
   heading: このクラブの特徴
@@ -210,7 +209,7 @@ sections:
         - 主力を売っても崩れない
   - 昨シーズンの前、中盤のバエナを**4200万ユーロ**でアトレティコへ売りました。
   - それでも終わってみれば、そのアトレティコより上でした。
-  - text: スタンドは町ぐるみ。年間シートは**1万9000人**を超え、町の人口の3分の1より多い数です。
+  - text: 年間シートは**1万9000人**超え。町の人口の3分の1を上回ります。
     card:
       type: table
       title: このクラブの特徴
@@ -225,7 +224,6 @@ sections:
   - https://villarrealcf.es/inigo-perez-el-triunfo-nos-va-a-venir-muy-bien-para-el-paron/
   - https://en.wikipedia.org/wiki/2025%E2%80%9326_Atl%C3%A9tico_Madrid_season
   - https://villarrealcf.es/mas-de-19-000-razones-para-luchar/
-  bg: assets/backgrounds/stadium_ビジャレアル_in.png
   official: false
 - id: episode
   heading: 黄色は品切れから
@@ -252,7 +250,6 @@ sections:
   - 黄色いシャツはそのまま定着し、いまは上下とも黄色です。
   sources:
   - https://en.wikipedia.org/wiki/Villarreal_CF
-  bg: assets/backgrounds/stadium_ビジャレアル_in.png
   official: false
 - id: legends
   heading: このクラブを語る3人
@@ -272,15 +269,14 @@ sections:
       - 2003-2007
       - 初の欧州4強の司令塔
   say:
-  - text: リケルメはアルゼンチンの司令塔。バルセロナで外国人枠からあふれ、期限付きで来ました。
+  - text: リケルメはアルゼンチンの司令塔。バルセロナの外国人枠からあふれて来ました。
     image: assets/photos/ll/villarreal/villarreal_legend_a75286ad.jpg
-  - 2006年、チャンピオンズリーグ準決勝。試合中のピーケーを止められ、延長を逃しました。
+  - 2006年、欧州の準決勝。試合中のピーケーを止められ、延長を逃しました。
   - リーグ戦で**106試合36得点**。いまは母国ボカ・ジュニアーズの会長です。
   sources:
   - https://en.wikipedia.org/wiki/Juan_Rom%C3%A1n_Riquelme
   - https://en.wikipedia.org/wiki/Marcos_Senna
   - https://en.wikipedia.org/wiki/Santi_Cazorla
-  bg: assets/backgrounds/stadium_ビジャレアル_in.png
   official: false
 - id: legends2
   heading: このクラブを語る3人（2人目）
@@ -301,7 +297,7 @@ sections:
       - 2002-2013
       - 欧州王者になった中盤
   say:
-  - text: マルコス・セナはブラジル生まれの中盤。2002年に来て、11シーズンを過ごしました。
+  - text: セナはブラジル生まれの中盤。2002年に来て、11シーズンを過ごしました。
     image: assets/photos/ll/villarreal/villarreal_legend_25513b35.jpg
   - スペイン代表として、2008年のヨーロッパ選手権を制しています。
   - リーグ戦で**292試合25得点**。お別れの試合は、背番号と同じ**19分**から1分間の拍手。
@@ -309,7 +305,6 @@ sections:
   - https://en.wikipedia.org/wiki/Juan_Rom%C3%A1n_Riquelme
   - https://en.wikipedia.org/wiki/Marcos_Senna
   - https://en.wikipedia.org/wiki/Santi_Cazorla
-  bg: assets/backgrounds/stadium_ビジャレアル_in.png
   official: false
 - id: legends3
   heading: このクラブを語る3人（3人目）
@@ -332,13 +327,12 @@ sections:
   say:
   - text: カソルラは、地元オビエドの財政難で、18歳になる前にここへ来た中盤です。
     image: assets/photos/ll/villarreal/villarreal_legend_4ca6fa77.jpg
-  - 2008年、レアル・マドリードの誘いを断り、「ノーと言うことはできる」と話しました。
+  - 2008年、レアルの誘いを断り、「ノーと言うことはできる」と話しました。
   - 大けがから**636日**ぶりの試合を、ここで迎えました。リーグ戦は**251試合40得点**。
   sources:
   - https://en.wikipedia.org/wiki/Juan_Rom%C3%A1n_Riquelme
   - https://en.wikipedia.org/wiki/Marcos_Senna
   - https://en.wikipedia.org/wiki/Santi_Cazorla
-  bg: assets/backgrounds/stadium_ビジャレアル_in.png
   official: false
 - id: manager
   heading: 今季の監督
@@ -359,14 +353,13 @@ sections:
     - - 前職
       - ラージョ・バジェカーノ
   say:
-  - text: 今季の監督はイニゴ・ペレス。スペイン出身で、**2026年6月**の就任です。
+  - text: 今季の監督はイニゴ・ペレス。スペイン出身で、就任は**2026年6月**。
     image: assets/photos/ll/villarreal/villarreal_manager_1c383d6e.jpg
   - 前はラージョ・バジェカーノ。昨シーズン、カンファレンスリーグの決勝まで進みました。
   sources:
   - https://en.wikipedia.org/wiki/Villarreal_CF
   - https://en.wikipedia.org/wiki/I%C3%B1igo_P%C3%A9rez
   - https://villarrealcf.es/presentacion-de-inigo-perez-villarreal-cf/
-  bg: assets/backgrounds/stadium_ビジャレアル_in.png
   official: false
 - id: squad
   heading: 今季の登録選手
@@ -418,12 +411,11 @@ sections:
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Villarreal_CF
-  bg: assets/backgrounds/stadium_ビジャレアル_in.png
   official: false
 - id: season
   heading: 今季のここまで
   tier: 報道
-  telop: 7試合で2勝2引き分け3敗。9位
+  telop: 9試合で2勝3引き分け4敗。12位
   narrator: 解説
   card:
     type: table
@@ -454,13 +446,21 @@ sections:
     - - 第7節
       - レバンテ（ホーム）
       - 3対1
+    - - 第8節
+      - レアル・マドリード（アウェー）
+      - 0対1
+    - - 第9節
+      - エルチェ（ホーム）
+      - 0対0
   say:
-  - ラ・リーガは7試合を終えて、**2勝2引き分け3敗**です。
-  - 順位は**9位**、勝ち点は**8**です。
-  - チャンピオンズリーグの初戦は、ドルトムントに**2対3**で敗れました。
+  - text: ここまでのラ・リーガは**2勝3引き分け4敗**。9試合を消化しました。
+    image: assets/photos/ll/villarreal/villarreal_season_ip2.jpg
+  - いまは**12位**で、勝ち点**9**です。
+  - チャンピオンズリーグでは、初戦のドルトムント戦に**2対3**と競り負けました。
+  - 第2戦はナポリに**3対1**で勝ち、1勝1敗です。
+  - 次の相手は、敵地アンフィールドのリバプールです。
   sources:
   - https://www.espn.com/soccer/team/results/_/name/villarreal
   - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard
   - https://en.wikipedia.org/wiki/Template:2026%E2%80%9327_La_Liga_table
-  bg: assets/backgrounds/stadium_ビジャレアル_in.png
   official: false

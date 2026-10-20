@@ -1,0 +1,478 @@
+# 取材メモ（10/18 日、シリーズ「記録の解説」、key: record_haaland_cl60、型は news）。
+# ハーランドのチャンピオンズリーグ60得点は何試合目か。歴代の最速と並べる。軸＝「何試合目で60点に届いたか（最速）」と1試合あたり。
+#
+# ★重ならないように（10/15 の PSG 対シティのショート scripts/20261015_psg_city_cl.md は「53分と75分に決めた」試合の話）：
+#   今回は**記録（60試合目・歴代最速・他選手との試合数の比べ）**が主役。試合の中身は1節の頭で触れるだけ。10/15 の文は使っていない。
+#   10/15 の候補メモ（research/20261016_topics_src.yaml）の見出し『CL史上最年少で60得点』は**本文未読の見出し**で、軸を「最年少」でなく「何試合目か」に替えた。
+#   年齢は UEFA の表を読んだ事実として1行だけ（メッシと1日差）。
+#
+# ★物差し（冒頭で言う）：「チャンピオンズリーグに出た試合の数で、通算の得点を数える」。クラブは問わず通算（サルツブルク・ドルトムント・シティ）。
+#   ノルウェー代表の得点は入れない。UEFA の数え方に従う（予選の扱いは UEFA の頁に説明が無く、言っていない）。
+#
+# ★数字の出どころ（2026-10-18 に原文を読んだ）
+#   ・UEFA.com「Champions League goalscoring milestones: Erling Haaland quickest and youngest to 60, Kylian Mbappé youngest to 70」（WebFetch で本文を読んだ）：
+#       「Haaland had scored 57 goals in 58 Champions League games by the end of the 2025/26 season」「reached 60 goals on Matchday 2 in 2026/27, beating Lionel Messi's marks as the fastest and youngest」。
+#       **60点までの試合数（少ない順）**：ハーランド60（26歳85日）／メッシ80（26歳86日）／レヴァンドフスキ85（31歳97日）／ムバッペ89（26歳284日）／C・ロナウド98（29歳21日）／ベンゼマ111（31歳56日）／ラウール115（30歳237日）。
+#       **区切りの試合数**：30点＝ハーランド25・ファン・ニステルローイ34・ケイン45・レヴァンドフスキ46・メッシ48・ムバッペ51／40点＝35・45・57・ムバッペ59・メッシ61・レヴァンドフスキ61／50点＝49・ファン・ニステルローイ62・メッシ66・ケイン66・レヴァンドフスキ77・ムバッペ79・ベンゼマ88・ロナウド91。
+#       50点の若さ（年齢）：メッシ24歳284日、ハーランド25歳59日。
+#   ・UEFA.com「Erling Haaland in the Champions League: Records, stats…」（2026-10-14 の日付。本文を読んだ）：**61 goals in 60 Champions League appearances**。
+#       クラブ別：サルツブルク6試合8点／ドルトムント13試合15点／シティ41試合38点（8+15+38＝61、6+13+41＝60 を自分で足して一致）。
+#       2026/27 の1戦目：ポルト 0-2 シティ、ハーランド2点（57+2＝59点・59試合目。自分で足した）。初のCLゴールは2019-09-17 のゲンク戦（サルツブルク、前半ハットトリック。ウィキペディアも同じ）。
+#       区切り表（ハーランド7・14・25・35・49・60／メッシ23・40・48・61・66・80／ムバッペ15・40・51・59・79・89／レヴァンドフスキ16・36・46・61・77・85／ベンゼマ14・34・50・67・88・111／ロナウド37・56・74・82・91・98）。
+#       **この表のメッシの20点＝40試合は、同じ頁の文では36試合と食い違う（レヴァンドフスキも同じ頁で36）ので20点の列は使わない。** 台本が使うのは30〜60点だけで、別の UEFA 頁と一致を確かめた。
+#   ・UEFA.com「Who has scored the most Champions League goals in their first ten, 20, … games?」（2026-10-14 更新。本文を読んだ）：**最初の N 試合の得点**。
+#       10試合＝ハーランド12／20＝25／30＝35／40＝41／50＝52／60＝61（2位以下：60試合はファン・ニステルローイ48・ケイン45・ムバッペ40・メッシ39・レヴァンドフスキ39）。
+#       ここから、**ハーランドは10試合ごとの区切りの全部で、試合数を上回る得点**（+2,+5,+5,+1,+2,+1。自分で引いた）。
+#   ・マンチェスター・シティ公式（mancity.com）の試合記録「City lose to PSG in action-packed Champions League clash」（2026-10-14、requests で本文を読んだ）：
+#       **シティ 2-4 PSG、エティハド。得点は 13分ドゥエ・15分デンベレ・32分ヴィティーニャ・62分アクリウシュ（PSG）、53分・75分ハーランド（シティ）。**
+#       「Haaland's header was his 37th goal for Champions League, surpassing Sergio Aguero」「a second took his overall tally in the competition to 61」。
+#       **→ 53分が通算60点目（その時点でシティ37点目＝8+15+37＝60）、75分が61点目（自分で足した）**。UEFA の頁は「どちらの得点が60点目か」を書いていない。
+#       アシスト：53分はイリマン・ンディアイのクロス、75分はアユブ・ブアディのクロス（クラブ公式の試合記録）。**観客は欧州の試合で同スタジアム最多の60,021人**（台本では言わない）。
+#       **試合の節（マッチデー）の番号は、UEFA の頁が「2節」、クラブの報道では「3試合目」と読める記述があり、確かめられなかった。台本は節の番号を言わない。**
+#   ・マンチェスター・シティ公式「Haaland becomes quickest to 50 Champions League goals」（2025-09-18、requests で読んだ）：50点＝49試合、2位ファン・ニステルローイ62。
+#       画像（クラブ公式の図）の表：ハーランド49・ファン・ニステルローイ62・メッシ66・レヴァンドフスキ77・ムバッペ79・ベンゼマ88・ロナウド91・ラウール97・アンリ103・ミュラー130。**UEFA の表と一致**。
+#   ・ウィキペディア（英語版 Erling Haaland、背景）：2000-07-21 生まれ、2019 サルツブルク、2020-01 ドルトムント、2022 シティ。
+#   ・BBC は WebSearch が引けず原文未読（言っていない）。スカイスポーツの試合記録は「53分・75分」「2-4」「エティハド」を確認（60点の記録の記述は無い）。
+#
+# ★自分で数えたもの（検算済み）
+#   60点目の時点の1試合あたり：ハーランド 60÷60＝1.00／メッシ 60÷80＝0.75／レヴァンドフスキ60÷85＝0.71／ムバッペ60÷89＝0.67／ロナウド60÷98＝0.61。
+#   ハーランドとの試合数の差：メッシ+20／レヴァンドフスキ+25／ムバッペ+29／ロナウド+38／ベンゼマ+51／ラウール+55。
+#   **1位と2位の差20試合は、2位メッシと3位レヴァンドフスキの差5試合の4倍**（80→85）。
+#   メッシとの区切りの差：30点 48−25＝23／40点 61−35＝26（最大）／50点 66−49＝17（最小）／60点 80−60＝20。
+#   クラブ別の1試合あたり：サルツブルク 8÷6＝1.33／ドルトムント 15÷13＝1.15／シティ 38÷41＝0.93。サルツブルクとドルトムント合わせて 23÷19＝1.21。
+#   最初の60試合の1試合あたり：ハーランド61÷60＝1.02／ファン・ニステルローイ48÷60＝0.80／ケイン45÷60＝0.75／ムバッペ40÷60＝0.67／メッシ・レヴァンドフスキ39÷60＝0.65。
+#   ハーランド61÷メッシ39＝1.56倍。2位との差61−48＝13点。
+#   **70点の最速はメッシの90試合（UEFA の記録頁）。ハーランドが89試合目までに70点なら更新。今は60試合で61点なので、61〜89試合目の29試合で9点＝1試合あたり0.31（これまでの1.02の約3割）。予想はしない（条件の話だけ）。**
+#   年齢（ハーランド 26歳85日）は 2000-07-21 から 2026-10-14 までを自分で数えて一致。メッシは26歳86日（UEFA）で、**ハーランドが1日若い**。
+#   50点の年齢はメッシが先（24歳284日 対 25歳59日。約140日差）。60点でハーランドが逆転。**台本は『24歳』『25歳』とだけ言う（『59日』を合成音声が『ク』ニチ』と誤読するため。日数の読みは config 側で直せない）**。
+#
+# ★言い切っていないもの
+#   ・UEFA の「出場した試合」の数え方（予選・途中出場の扱い）は頁に説明が無い。台本は「チャンピオンズリーグに出た試合」とだけ言う。
+#   ・「どちらの得点が60点目か」は UEFA の頁に無く、クラブ公式の合計（61点）から逆算して53分と言っている。台本は「後半8分の1点目が60点目」と言い、根拠は61点（クラブ公式）。
+#   ・相手の強さ・試合の中身は数字に出ない（見立てで断る）。シティの1試合あたり（0.93）がサルツブルク・ドルトムントより低いのは、**選手を小さく見せる材料にしない**（メッシの最初の60試合の0.65より上、と並べて言う）。
+#   ・メッシ・ロナウドの通算の総得点は今回読んでいない（言わない）。
+# 反応・本人の言葉は入れない（voice_min: 0）。ブラウザの道具・JavaScript は使っていない（WebFetch・WebSearch・requests のみ）。
+#
+# ★写真（目で見た。assets/images/20261018_haaland/ 、credits.json に控え）：
+#   サルツブルク：Commons File:FC RB Salzburg versus SV Mattersburg (4. Juli 2019) 29.jpg（CC BY-SA 4.0、Werner100359。01_salzburg）。
+#   ドルトムント：ボルシア・ドルトムント公式（bvb.de。2020-11-04 の記事のギャラリー。02・03。横1760px）。**02 の顔検出は隣のゲレイロを拾ったので `--face 1` で直した**。
+#   シティ：Commons 2023-10 ライプツィヒ戦（Jacek Stanislawek、CC BY-SA 4.0。04。CLの試合）／2024-07 米国練習（Hameltion、05）／クラブ公式の「50点」図の右側の本人（文字の無い700x1080。06。縦のみ）。
+#   ノルウェー代表：Commons 2025-06 イタリア戦（MichaelEmilio、CC BY 4.0。07）／2026-06 モロッコ戦・フランス戦（Bryan Berlin、CC BY-SA 4.0。08・09）。
+#   **代理店・透かしは無し。**
+#   メッシ（対面カードの右）：assets/images/20261017_messi/01_w.jpg（10/17 の記録の回で使ったクラブ公式の写真。参照のみ）。
+date: 2026年10月18日
+slot: other_1
+format: news
+series: 記録の解説
+voice_min: 0
+people:
+- アーリング・ハーランド
+theme:
+  end_bg: assets/images/20261018_haaland/04_city_leipzig_w.jpg
+  id: record_haaland_cl60
+  league: england
+  league_name: チャンピオンズリーグ
+  kind: other
+  topic: ハーランドのCL60得点
+  title: ハーランド、CLの60得点は何試合目か。歴代の最速と並べると
+  question: ハーランドはチャンピオンズリーグの60得点を何試合目で決め、歴代の最速とどう違うのか
+  lead: ハーランドは、歴代の誰よりも少ない試合数で、CLの60点に届いた。
+  hook: ""
+  takeaway: ハーランドはチャンピオンズリーグの60点目を、通算60試合目、2026年10月14日のパリ・サンジェルマン戦（後半53分）で決めた（UEFAとクラブ公式の記録）。それまでの最速はメッシの80試合で、20試合縮めた。ハーランドのその時点の1試合あたりは1.00、メッシは0.75。60点目の年齢は26歳85日で、メッシの26歳86日と1日違い。30点・40点・50点・60点のどの区切りでもハーランドが最速で、メッシとの差は23・26・17・20試合。2位と3位の差は5試合で、1位と2位の差（20試合）はその4倍。最初の60試合の得点は、ハーランド61、ファン・ニステルローイ48、ケイン45、ムバッペ40、メッシとレヴァンドフスキ39。ハーランドはメッシの1.56倍で、シティだけの41試合38点（0.93）でも、メッシの最初の60試合（0.65）を上回る。70点の最速はメッシの90試合で、89試合目までに届けば更新。そのためには次の29試合で9点、1試合あたり0.31。相手の強さや試合の出方は数字に入らない。
+  opening_image: assets/images/20261018_haaland/05_city_us_w.jpg
+short_title: ハーランドのCL60得点は、歴代最速の何試合目か
+thumbnail:
+  photo: assets/images/20261018_haaland/04_city_leipzig_w.jpg
+  short_photo: assets/images/20261018_haaland/04_city_leipzig_v.jpg
+  line1: ハーランドのCL60得点
+  line2: 60試合目。2位メッシは80
+  callouts:
+  - 歴代最速
+  crests: []
+  alt:
+  - line1: ハーランドのCL記録
+    line2: メッシより20試合速い
+  - layout:
+      layout: versus
+      photos:
+      - assets/images/20261018_haaland/07_norway_rain_w.jpg
+      - assets/images/20261017_messi/01_w.jpg
+      names: [ハーランド, メッシ]
+      numbers: ['60試合', '80試合']
+    line1: CL60得点までの試合数
+    line2: 歴代1位と2位
+  tags:
+  - アーリング・ハーランド
+  - マンチェスター・シティ
+  - チャンピオンズリーグ
+  - リオネル・メッシ
+  - 記録の解説
+sections:
+- id: top
+  main: true
+  heading: ハーランドは、60点目を何試合目で決めたのか
+  tier: 確定
+  official: true
+  telop: 60点目は、通算60試合目。それまでの最速は、メッシの80試合
+  narrator: 解説
+  card: &top_duel
+    type: duel
+    title: CL60点までの試合数と、その時の1試合あたり
+    left: {name: ハーランド, club: マンチェスター・シティ, photo: assets/images/20261018_haaland/04_city_leipzig_w.jpg}
+    right: {name: メッシ, club: バルセロナ, photo: assets/images/20261017_messi/01_w.jpg}
+    rows:
+    - [60点までの試合数, '60', '80']
+    - [その時の1試合あたり, '1.00', '0.75']
+    bars: [60点までの試合数, その時の1試合あたり]
+    lower: [60点までの試合数]
+    note: UEFAの記録。1試合あたりは自分で割った
+  say:
+  - text: 歴代の最速の選手たちと、数え方をそろえて並べます。
+    image: assets/images/20261018_haaland/05_city_us_w.jpg
+    card: none
+  - text: 数えるのは、チャンピオンズリーグに出た試合の数です。
+    image: assets/backgrounds/pitch.png
+    card: none
+  - text: クラブは問わず、通算。ノルウェー代表の得点は入れません。
+    image: assets/images/20261018_haaland/07_norway_rain_w.jpg
+    card: none
+  - text: 10月14日、マンチェスター・シティは、パリ・サンジェルマンと戦いました。
+    image: assets/images/20261018_haaland/05_city_us_w.jpg
+    card: none
+  - text: 後半8分、ンディアイのクロスを、ハーランドが決めます。
+    card: none
+  - text: これが、チャンピオンズリーグの通算60点目でした。
+    card:
+      <<: *top_duel
+      highlight_row: 0
+    emph: true
+  - text: 出場は、ちょうど60試合目。点の数が、試合数と同じです。
+    card:
+      <<: *top_duel
+      highlight_row: 0
+  - text: 75分にも1点を足して、通算は61点になりました。
+    card: none
+  - text: 試合は、シティが2対4で敗れました。それでも、記録は動きました。
+    card: none
+  - text: それまでの最速は、メッシの80試合です。
+    image: assets/backgrounds/pitch.png
+    card:
+      <<: *top_duel
+      highlight_row: 0
+  - text: ハーランドは、その記録を20試合縮めました。
+    card:
+      <<: *top_duel
+      highlight_row: 0
+  - text: 60点目の時点の1試合あたりは、1.00と0.75。
+    card:
+      <<: *top_duel
+      highlight_row: 1
+    emph: true
+  sources:
+  - https://www.uefa.com/uefachampionsleague/news/027d-170b3182d9ed-587169daf860-1000--champions-league-goalscoring-milestones-kylian-mbappe-youn/
+  - https://www.uefa.com/uefachampionsleague/news/0268-11f9321e7599-fde3dd4a7bd0-1000--erling-haaland-in-the-champions-league-records-stats-who-h/
+  - https://www.mancity.com/news/mens/city-v-psg-14-october-match-report-63927601
+  - https://www.skysports.com/football/manchester-city-vs-paris-saint-germain/report/577628
+- id: ranking
+  heading: 歴代の最速は、ほかの選手と並べると、どうなるのか
+  tier: 確定
+  official: true
+  telop: 60点まで、2位はメッシの80試合。ハーランドとの差は20試合
+  narrator: 解説
+  card: &rank_table
+    type: table
+    title: CL60点までの試合数（少ない順、UEFAの記録）
+    columns:
+    - 選手
+    - 試合数
+    - 60点目の年齢
+    rows:
+    - - ハーランド
+      - '60'
+      - 26歳85日
+    - - メッシ
+      - '80'
+      - 26歳86日
+    - - レヴァンドフスキ
+      - '85'
+      - 31歳97日
+    - - ムバッペ
+      - '89'
+      - 26歳284日
+    - - C・ロナウド
+      - '98'
+      - 29歳21日
+    - - ベンゼマ
+      - '111'
+      - 31歳56日
+    - - ラウール
+      - '115'
+      - 30歳237日
+    note: UEFA公式の記録
+  say:
+  - text: 60点に届くまでの試合数を、少ない順に並べます。
+    image: assets/images/20261018_haaland/02_dortmund_a_w.jpg
+    card: none
+  - text: 1位は、ハーランドの60試合です。
+    image: assets/backgrounds/pitch.png
+    card:
+      <<: *rank_table
+      highlight_row: 0
+  - text: 2位は、メッシの80試合。
+    card:
+      <<: *rank_table
+      highlight_row: 1
+  - text: 3位はレヴァンドフスキの85試合。4位は、ムバッペの89試合です。
+    card:
+      <<: *rank_table
+      highlight_row: 2
+  - text: 5位は、クリスティアーノ・ロナウドの98試合。
+    card:
+      <<: *rank_table
+      highlight_row: 4
+  - text: 6位はベンゼマの111試合、7位はラウールの115試合です。
+    card:
+      <<: *rank_table
+      highlight_row: 5
+  - text: 2位のメッシと3位のレヴァンドフスキの差は、5試合です。
+    image: assets/images/20261018_haaland/03_dortmund_b_w.jpg
+    card: none
+  - text: 1位のハーランドと2位の差は、その4倍に開いています。
+    card: none
+    emph: true
+  sources:
+  - https://www.uefa.com/uefachampionsleague/news/027d-170b3182d9ed-587169daf860-1000--champions-league-goalscoring-milestones-kylian-mbappe-youn/
+  - https://www.mancity.com/news/mens/erling-haaland-becomes-quickest-to-50-champions-league-goals-63893823
+- id: milestones
+  heading: 30点・40点・50点・60点。差はどの区切りで開いたのか
+  tier: 確定
+  official: true
+  telop: 差は23、26、17、20試合。年齢では50点までメッシが先
+  narrator: 解説
+  card: &mile_duel
+    type: duel
+    title: 区切りの得点に届くまでの試合数（UEFAの記録）
+    left: {name: ハーランド, club: シティほか, photo: assets/images/20261018_haaland/04_city_leipzig_w.jpg}
+    right: {name: メッシ, club: バルセロナ, photo: assets/images/20261017_messi/01_w.jpg}
+    rows:
+    - [30点, '25', '48']
+    - [40点, '35', '61']
+    - [50点, '49', '66']
+    - [60点, '60', '80']
+    bars: [30点, 40点, 50点, 60点]
+    lower: [30点, 40点, 50点, 60点]
+    note: 数字は試合数。少ないほど速い
+  say:
+  - text: 30点、40点、50点、60点。区切りごとの試合数を、メッシと並べます。
+    image: assets/backgrounds/pitch.png
+    card: *mile_duel
+  - text: 30点は、ハーランド25試合、メッシ48試合。差は23試合です。
+    card:
+      <<: *mile_duel
+      highlight_row: 0
+  - text: 40点は、35試合と61試合。差は26試合で、いちばん開きました。
+    card:
+      <<: *mile_duel
+      highlight_row: 1
+    emph: true
+  - text: 50点は、49試合と66試合。差は17試合に縮まります。
+    card:
+      <<: *mile_duel
+      highlight_row: 2
+  - text: 60点は、60試合と80試合。差は20試合です。
+    card:
+      <<: *mile_duel
+      highlight_row: 3
+  - text: ただ、年齢で数えると、50点まではメッシが先でした。
+    image: assets/images/20261018_haaland/05_city_us_w.jpg
+    card: none
+  - text: 50点に届いたのは、メッシが24歳、ハーランドが25歳のときです。
+    card: none
+  - text: 60点では、ハーランドが26歳85日、メッシが26歳86日。
+    card: none
+  - text: ハーランドが、1日だけ逆転しました。
+    card: none
+  - text: 「何試合で」と「何歳で」では、同じ記録でも順位が入れ替わります。
+    card: none
+  sources:
+  - https://www.uefa.com/uefachampionsleague/news/027d-170b3182d9ed-587169daf860-1000--champions-league-goalscoring-milestones-kylian-mbappe-youn/
+  - https://www.uefa.com/uefachampionsleague/news/0268-11f9321e7599-fde3dd4a7bd0-1000--erling-haaland-in-the-champions-league-records-stats-who-h/
+- id: path
+  heading: 60試合は、3つのクラブで、どう積み上がったのか
+  tier: 確定
+  official: true
+  telop: サルツブルクで8点、ドルトムントで15点、シティで38点
+  narrator: 解説
+  card: &club_table
+    type: table
+    title: CL60試合の内訳（UEFAの記録）
+    columns:
+    - クラブ
+    - 試合
+    - 得点
+    - 1試合あたり
+    rows:
+    - - サルツブルク
+      - '6'
+      - '8'
+      - '1.33'
+    - - ドルトムント
+      - '13'
+      - '15'
+      - '1.15'
+    - - シティ
+      - '41'
+      - '38'
+      - '0.93'
+    note: 試合と得点はUEFA。1試合あたりは自分で割った
+  say:
+  - text: ハーランドの記録を、クラブごとに分けて見ます。
+    image: assets/images/20261018_haaland/01_salzburg_w.jpg
+    card: none
+  - text: サルツブルクは、6試合で8点。
+    image: assets/backgrounds/pitch.png
+    card:
+      <<: *club_table
+      highlight_row: 0
+  - text: 2019年9月、デビュー戦のゲンク戦で、前半にハットトリックを決めています。
+    image: assets/images/20261018_haaland/01_salzburg_w.jpg
+    card: none
+  - text: ドルトムントには、2020年の1月に加わりました。
+    image: assets/images/20261018_haaland/02_dortmund_a_w.jpg
+    card: none
+  - text: ドルトムントは、13試合で15点です。
+    image: assets/backgrounds/pitch.png
+    card:
+      <<: *club_table
+      highlight_row: 1
+  - text: 2022年、シティに移りました。
+    image: assets/images/20261018_haaland/05_city_us_w.jpg
+    card: none
+  - text: シティは、41試合で38点。
+    image: assets/backgrounds/pitch.png
+    card:
+      <<: *club_table
+      highlight_row: 2
+  - text: 次は、10試合ごとの区切りで、得点の積み上がりを見ます。
+    card: &pace_line
+      type: line
+      title: 最初のN試合の累積得点（UEFAの記録）
+      x: ['10', '20', '30', '40', '50', '60']
+      series:
+      - [ハーランド, [12, 25, 35, 41, 52, 61]]
+      - [1試合に1点, [10, 20, 30, 40, 50, 60]]
+      unit: 点
+      focus: ハーランド
+      note: 横軸は試合数。点線は1試合に1点のペース（自分で足した基準）
+  - text: 最初の10試合で12点。20試合で25点です。
+    card:
+      <<: *pace_line
+      highlight: '20'
+  - text: 30試合で35点、40試合で41点。
+    card:
+      <<: *pace_line
+      highlight: '40'
+  - text: 50試合で52点。60試合で61点です。
+    card:
+      <<: *pace_line
+      highlight: '60'
+    emph: true
+  - text: 10試合ごとの区切りの全部で、点の数が試合数を上回っています。
+    card: *pace_line
+  - text: いちばん差が開いたのは5点。序盤の、20試合目と30試合目の時点です。
+    image: assets/images/20261018_haaland/05_city_us_w.jpg
+    card: none
+  sources:
+  - https://www.uefa.com/uefachampionsleague/news/0268-11f9321e7599-fde3dd4a7bd0-1000--erling-haaland-in-the-champions-league-records-stats-who-h/
+  - https://www.uefa.com/uefachampionsleague/news/02a1-1fa9bccb78e0-1fb14d5cb64f-1000--who-has-scored-the-most-champions-league-goals-in-their-fi/
+  - https://en.wikipedia.org/wiki/Erling_Haaland
+- id: view
+  viewpoint: true
+  heading: 見立て・同じ60試合で、何点取ったのか
+  tier: 背景
+  telop: 最初の60試合は、ハーランド61点。2位のファン・ニステルローイは48点
+  narrator: 解説
+  card: &view_table
+    type: table
+    title: 最初の60試合の得点（UEFA、割ったのは自分）
+    columns:
+    - 選手
+    - 得点
+    - 1試合あたり
+    rows:
+    - - ハーランド
+      - '61'
+      - '1.02'
+    - - ファン・ニステルローイ
+      - '48'
+      - '0.80'
+    - - ケイン
+      - '45'
+      - '0.75'
+    - - ムバッペ
+      - '40'
+      - '0.67'
+    - - メッシ
+      - '39'
+      - '0.65'
+    - - レヴァンドフスキ
+      - '39'
+      - '0.65'
+    note: UEFA公式の記録。1試合あたりは自分で割った
+  say:
+  - text: 最後に、見方を変えます。同じ60試合で、何点取ったか。
+    image: assets/images/20261018_haaland/05_city_us_w.jpg
+    card: none
+  - text: ハーランドは61点。1試合あたり1.02点です。
+    image: assets/backgrounds/pitch.png
+    card:
+      <<: *view_table
+      highlight_row: 0
+    mark: {kind: circle, row: 0, col: 1試合あたり}
+  - text: 2位は、ファン・ニステルローイの48点。0.80です。
+    card:
+      <<: *view_table
+      highlight_row: 1
+  - text: ケインが45点、ムバッペが40点。
+    card:
+      <<: *view_table
+      highlight_row: 2
+  - text: メッシとレヴァンドフスキは、どちらも39点でした。
+    card:
+      <<: *view_table
+      highlight_row: 4
+  - text: ハーランドの61点は、メッシの39点の1.56倍です。
+    card: &view_calc
+      type: calc
+      title: 最初の60試合の得点の比（自分で割った）
+      terms:
+      - ['61点', ハーランド]
+      - ['39点', メッシ]
+      - ['1.56倍', 得点の比]
+      ops: ['÷', ＝]
+    emph: true
+  - text: シティだけで見ても、38点。1試合あたり0.93です。
+    image: assets/images/20261018_haaland/05_city_us_w.jpg
+    card: none
+  - text: メッシの最初の60試合の0.65を、上回っています。
+    card: none
+  - text: サルツブルクとドルトムントの19試合は、23点。1.21でした。
+    image: assets/images/20261018_haaland/02_dortmund_a_w.jpg
+    card: none
+  - text: ただし、相手の強さや試合の出方は、この数字に入っていません。
+    card: none
+  - text: 次の区切りは70点。最速は、メッシの90試合です。
+    image: assets/images/20261018_haaland/05_city_us_w.jpg
+    card: none
+  - text: ハーランドが89試合目までに届けば、更新になります。
+    card: none
+  - text: 次の29試合で、9点。1試合あたり0.31です。
+    card: none
+  - text: これまでの平均の、3割ほどのペースです。
+    card: none
+  - text: 60点は通過点。物差しを決めると、このペースの大きさが見えます。
+    image: assets/images/20261018_haaland/07_norway_rain_w.jpg
+    card: none
+  sources:
+  - https://www.uefa.com/uefachampionsleague/news/02a1-1fa9bccb78e0-1fb14d5cb64f-1000--who-has-scored-the-most-champions-league-goals-in-their-fi/
+  - https://www.uefa.com/uefachampionsleague/news/0268-11f9321e7599-fde3dd4a7bd0-1000--erling-haaland-in-the-champions-league-records-stats-who-h/

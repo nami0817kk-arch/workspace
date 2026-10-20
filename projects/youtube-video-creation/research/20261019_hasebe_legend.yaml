@@ -1,0 +1,602 @@
+# 長谷部誠（元日本代表）の紹介。シリーズ「レジェンドの紹介（日本）」2026-10-19。型は 10/18 の中田英寿（20261018_nakata_legend.yaml）と同じ8節。
+# ①フック ②基礎DATA ③歩んできた道と転機 ④プレースタイル（＋通算の表）⑤「あの試合」＝2022-05-18 ヨーロッパリーグ決勝 ⑥引退後・いま ⑦マル秘話2つ ⑧見立て。
+# **FotMob・DataMB・FBref・Sofascore 等は不使用**。パーセンタイル・レーダー・シュートマップは出さない。数字は基本の数と、自分で割った値だけ。
+# **引退後の私生活・法的な問題は入れない**（家族・結婚・CM・事業は不使用）。
+#
+# **ブンデスリーガの出場数（384）の確かめ**（brief の指定：380と384に割れている）
+# - 英語版 Wikipedia の本文「including 380 matches」は、アイントラハト公式（引退発表 2024-04-17）の「over 380 outings」の丸めた数。
+#   その同じ公式記事に「383 appearances as of 17 April」とある（en.eintracht.de/news/makoto-hasebe-verkuendet-karriereende-158181/ ＝フランクフルト公式。読んだ）。
+# - その後、最終節（2024-05-18 ライプツィヒ戦、2対2）で長谷部は試合終了間際に交代出場（sport1.de 2024-05-18「Sekunden vor Spielende eingewechselt」。読んだ）＝383＋1＝**384**。
+# - リーグ公式 bundesliga.com：選手ページの 2023/24 は Appearances 8。bundesliga.de（2024-04-17）は「bislang sieben Einsätze in dieser Spielzeit」＝7＋1＝8 で整合（読んだ）。
+#   bundesliga.com の日本語記事（2020-06-08）は、ヴォルフスブルクでリーグ通算135試合、2020-06-06 に309試合目でアジア人最多（チャ・ボングン308）。
+# - 日本語版・英語版 Wikipedia の成績表（浦和149/12、ヴォルフスブルク135/5、ニュルンベルク14/0、フランクフルト235/2＝ブンデス384/7）、サッカーキング 2024-05-24（引退会見・全シーズン表つき）も 384。
+# → **384を使う**（出典：アイントラハト公式の383＋最終節の出場。表の積み上げと一致）。380と言う記述は丸めた数。語りでは「約」を付けない。
+#
+# **数字の出どころ（読んだもの）**
+# - 日本語版・英語版 Wikipedia「長谷部誠」（経歴・成績表・タイトル・個人賞・エピソード。生年月日・位置・身長）。
+# - アイントラハト公式（引退発表）、bundesliga.com/bundesliga.de（引退・40歳・初出場の記事）、JFA 公式スタッフページ（長谷部 誠：SAMURAI BLUE コーチ。2024年〜）。
+# - サッカーキング：2018-07-03（代表引退のインスタ全文。フットボールチャンネル 2018-07-03 と一致）、2020-04-09（ブンデスのフェアプレー選手ランキング。kicker日本語版の数字）、
+#   2022-05-19（EL決勝・小野伸二以来20年ぶり・58分から出場）、2024-04-17、2024-05-24（引退会見）、2024-05-24（カズへの報告）、2025-10-05（コーチ就任の経緯・担当は守備）、
+#   2026-01-20（フランクフルトを一時離脱）、2026-09-17（森保監督：コーチ陣の役割変更）。Goal.com 2018-11-26（マガトの言葉）、Goal.com 2022-05-19（地元紙の評価）。
+# - UEFA 公式の決勝記録は読み込めなかった（タイムアウト）。EL決勝の記録は英語版 Wikipedia「2022 UEFA Europa League final」（UEFAのフルタイム資料を出典に引いている）で確認：
+#   1–1（延長）・PK5–4、レンジャーズ得点 アリボ57分、フランクフルト得点 ボレ69分、長谷部は58分にトゥタに代わって出場、ローデが90分に交代、PK：（Lenz・Hrustic・Kamada・Kostić・Borré が成功、ラムジーが失敗）、観衆38,842。
+# - 検索エンジンのAI要約は使っていない（URLを探すのに使っただけ。本文は requests で読んだ）。ブラウザ操作の道具・JavaScript実行は使っていない。
+#
+# **数字の食い違い・判断（台本での扱い）**
+# - ブンデスの出場数：上のとおり 384。380は丸め。
+# - EL決勝の長谷部の交代：アイントラハト公式は「57分」、UEFA資料系（Wikipedia）・サッカーキング・Goal は「58分」。**58分を使う**（先制は57分、その直後）。
+# - ボレの同点弾：サッカーキングは67分、Wikipedia（UEFA資料）・Goal は69分。語りでは分を言わず「同点」だけ。表も「同点ゴール」に分を付けない。
+# - フランクフルトでの出場数：アイントラハト公式（2024-04-17）は「公式戦303試合・2万4606分」。Wikipedia の表の通算も303。最終節の1試合が入るか不明なので、語りは「2024年4月の時点で」と断る。1試合平均は 24606÷303＝約81分（自分で割った）。
+# - bundesliga.de（2024-04-17）に「303 Bundesliga-Spiele für die SGE」とあるが、フランクフルトでのリーグ戦は 235（Wikipedia 表）。公式戦の数の書き間違いとみて使わない。
+# - bundesliga.com 日本語記事（2020）の「2011年8月」のGK登板は、日本語・英語版 Wikipedia の「2011年9月17日（第6節 ホッフェンハイム戦）」と食い違う。**9月17日を使う**（第6節の日付と合う）。
+# - 日本代表 114試合2得点（JFA・サッカーキング・Wikipedia 一致）。「歴代7位」は2024年時点なので語りでは使わない。主将の試合数81は日本語版 Wikipedia のみなので使わない。
+# - 外国人選手の歴代順位：サッカーキング 2024-04-17 は383試合で3位（ピサーロ・レヴァンドフスキに次ぐ）、日本語版 Wikipedia は384でレヴァンドフスキと並ぶ2位タイ、と食い違う。**順位は言わない**。
+# - アジア人最多：複数の出典で一致（bundesliga.com 日本語記事・サッカーキング・Wikipedia）。「アジア人で最多」と言う。
+# - 「守備コーチ」：JFA は「コーチ」。サッカーキング 2025-10-05「斉藤俊秀コーチとともに主に守備面」、森保監督 2026-09-17「長谷部コーチに守備のオープンプレーを任せたり」。語りは「守備を任される」「守備のオープンプレーを担当」と言い、肩書きは「コーチ」。
+# - 2026年のワールドカップの結果には触れない（brief の範囲外・確かめていない）。
+# - ホッフェンハイム戦の「日本人初のGK」は Wikipedia のみで確かめられないので言わない。
+#
+# **入れなかったもの**：移籍金・年俸・家族・結婚・CM・事業・著書の販売数や寄付（日本語版 Wikipedia のみ）・Transfermarkt の数字・Instagram 原文（読めず。サッカーキングとフットボールチャンネルの引用が一致）・
+#   Eintracht 公式インタビューの鎌田へのPK譲りの言葉（日本語は訳文なので引用にせず、間接で言う）・「ソルジャー」（コバチの言葉。kicker.town が読めなかった）。
+# **日本語名・読みで怪しいもの**：長谷部誠・藤枝・ヴォルフスブルク・ニュルンベルク・アイントラハト・フランクフルト・ホッフェンハイム・マガト・レンジャーズ・トゥタ・ボレ・トラップ・ラムジー・
+#   ローデ・鎌田大地・斉藤俊秀・森保一・小野伸二・岡崎慎司・三浦知良・鈴木啓太・ライプツィヒ・ヒッツ・リベロ・オープンプレー。
+# 本人の言葉は：①インスタグラム2018-07-03（日本語。サッカーキング・フットボールチャンネルの引用が一致）②引退会見 2024-05-24（日本語。サッカーキングの引用）③コーチ就任の取材 2025-10-05（日本語。サッカーキング）。
+#   ほかの人の言葉：マガト（ドイツのテレビ番組での発言。Goal の訳）、森保監督（記者会見。サッカーキング）、岡崎慎司（X。サッカーキングの引用）。
+date: 2026年10月19日
+slot: other_1
+format: news
+series: レジェンドの紹介
+people:
+- 長谷部誠
+theme:
+  end_bg: assets/images/20261019_hasebe_legend/05_w.jpg
+  id: legend_hasebe
+  league: germany
+  league_name: ブンデスリーガ
+  kind: other
+  topic: 長谷部誠
+  title: 長谷部誠は、どんな選手だった？ 日本代表の守備コーチが、ブンデスで積んだ試合数
+  question: 日本代表の守備を任される長谷部誠は、ブンデスリーガで384試合を戦った選手として、どんな選手だったのか
+  takeaway: 浦和のJ1は149試合12得点（約12試合に1点）、ブンデスリーガは384試合7得点（約55試合に1点）。点を取る司令塔から、守りの要へ。ブンデス384試合のうち235試合は、30歳から過ごしたフランクフルトで積んだ
+  nameplate: 長谷部誠｜元日本代表 MF
+  opening_image: assets/images/20261019_hasebe_legend/02_w.jpg
+  bgm: assets/audio/bgm_calm.wav
+short_title: 長谷部誠は、どんな選手だった？
+thumbnail:
+  layout: classic
+  callouts:
+  - アジア人で最多
+  - 今は守備担当
+  line1: 長谷部誠
+  line2: ブンデス384試合
+  tags:
+  - 長谷部誠
+  - フランクフルト
+  - ヴォルフスブルク
+  - ブンデスリーガ
+  - 日本代表
+  - レジェンドの紹介
+  photo: assets/images/20261019_hasebe_legend/02_w.jpg
+  photos: []
+  short_photo: assets/images/20261019_hasebe_legend/02_v.jpg
+sections:
+- id: hook
+  heading: 代表を去った主将は、なぜいま守備を任されているのか
+  tier: 報道
+  telop: 「僕も代表のサポーターです」から8年
+  card:
+    type: stats
+    title: 長谷部誠 元日本代表（42歳）
+    items:
+    - ['114', 試合, 日本代表。ワールドカップは3大会連続で主将]
+    - ['16', 年, ドイツで戦った年数（2008〜2024）]
+    - ['384', 試合, ブンデスリーガ。アジア人で最多]
+    focus: 2
+  say:
+  - text: 2018年7月。ワールドカップ敗退の翌日、日本代表の主将は、こう書き残しました。
+    image: assets/images/20261019_hasebe_legend/02_w.jpg
+    card: none
+    callword: 僕もサポーター
+  - voice: 長谷部誠
+    text: 最後になりますが、これからは僕も
+  - voice: 長谷部誠
+    text: 日本代表チームのサポーターです。
+    cont: true
+    pause: 0.6
+  - text: それから8年。いま日本代表で守備を任されているのが、その長谷部誠です。
+    emph: true
+    card: &hook_stats
+      type: stats
+      title: 長谷部誠 元日本代表（42歳）
+      items:
+      - ['114', 試合, 日本代表。ワールドカップは3大会連続で主将]
+      - ['16', 年, ドイツで戦った年数（2008〜2024）]
+      - ['384', 試合, ブンデスリーガ。アジア人で最多]
+      focus: 0
+  - text: ドイツのブンデスリーガで積んだ試合数は、384。アジア人で最多です。
+    card:
+      <<: *hook_stats
+      focus: 2
+  - text: では、16年戦った選手の中身を、数えていきます。
+    card: none
+  quotes_from:
+  - https://www.soccer-king.jp/news/japan/national/20180703/788705.html
+  - https://www.footballchannel.jp/?p=279705
+  sources:
+  - https://www.soccer-king.jp/news/japan/national/20180703/788705.html
+  - https://www.footballchannel.jp/?p=279705
+  - https://www.soccer-king.jp/news/japan/national/20260917/2205937.html
+  - https://jfa.jp/national_team/staff/HASEBE_Makoto.html
+  - https://en.eintracht.de/news/makoto-hasebe-verkuendet-karriereende-158181/
+  - https://ja.wikipedia.org/wiki/%E9%95%B7%E8%B0%B7%E9%83%A8%E8%AA%A0
+- id: data
+  heading: 長谷部誠は、いつ、どこで生まれ、何を手にした選手か
+  tier: 報道
+  telop: 長谷部誠の基礎DATA
+  card:
+    type: table
+    title: 長谷部誠
+    columns:
+    - 項目
+    - 内容
+    rows: &bdata
+    - - 生年月日
+      - 1984年1月18日・静岡県藤枝市
+    - - ポジション
+      - MF・DF・右足・180cm
+    - - 所属クラブ
+      - 4つ（日本1・ドイツ3）
+    - - 日本代表
+      - 114試合2得点（2006〜2018）
+    - - ブンデスリーガ
+      - 384試合7得点
+    - - 主なタイトル
+      - J1・ブンデス・ポカール・EL
+    - - 引退
+      - 2024年5月18日（40歳）
+    source: Wikipedia・JFA
+  say:
+  - text: 長谷部誠は、1984年1月18日、静岡県藤枝市の生まれ。いま42歳です。
+    image: assets/images/20261019_hasebe_legend/02_w.jpg
+    card: &data_card
+      type: table
+      title: 長谷部誠
+      columns: [項目, 内容]
+      rows: *bdata
+      source: Wikipedia・JFA
+      highlight_row: 0
+  - text: 日本代表は114試合で2得点。ワールドカップには3大会出場しました。
+    card:
+      <<: *data_card
+      highlight_row: 3
+  - text: クラブは4つ。日本の浦和と、ドイツの3クラブでプレーしました。
+    card:
+      <<: *data_card
+      highlight_row: 2
+  - text: 2024年5月18日、40歳で、現役を引退しました。
+    card:
+      <<: *data_card
+      highlight_row: 6
+  sources:
+  - https://ja.wikipedia.org/wiki/%E9%95%B7%E8%B0%B7%E9%83%A8%E8%AA%A0
+  - https://en.wikipedia.org/wiki/Makoto_Hasebe
+  - https://jfa.jp/national_team/staff/HASEBE_Makoto.html
+- id: career
+  heading: 浦和の18歳は、どうやってドイツで16年戦う選手になったのか
+  tier: 報道
+  telop: 18歳で浦和、24歳でドイツ
+  card:
+    type: table
+    title: 歩んできた道
+    columns:
+    - 年
+    - 所属
+    - 出来事
+    rows: &career_rows
+    - - 2002〜07
+      - 浦和
+      - J1・ACLで優勝
+    - - 2008〜13
+      - ヴォルフスブルク
+      - ブンデスで優勝
+    - - 2013〜14
+      - ニュルンベルク
+      - 2部へ降格
+    - - 2014〜24
+      - フランクフルト
+      - ポカール・ELで優勝
+    - - 2024〜
+      - 指導者
+      - 日本代表コーチへ
+    source: Wikipedia・各報道
+  say:
+  - text: 2002年、18歳で浦和レッズへ。中盤の底で、鈴木啓太と組みました。
+    image: assets/images/20261019_hasebe_legend/05_r.jpg
+    card: &career_card
+      type: table
+      title: 歩んできた道
+      columns: [年, 所属, 出来事]
+      rows: *career_rows
+      source: Wikipedia・各報道
+      highlight_row: 0
+  - text: 2006年にJ1で優勝。2007年は、アジアのクラブ王者にもなります。
+    card:
+      <<: *career_card
+      highlight_row: 0
+  - text: 2008年1月、ドイツのヴォルフスブルクへ。2月2日、ブンデスリーガ初出場です。
+    card:
+      <<: *career_card
+      highlight_row: 1
+  - text: 指揮官は、厳しい練習で“鬼軍曹”と呼ばれたマガト。のちに、こう語ります。
+    card: none
+  - voice: フェリックス・マガト
+    text: 彼に関して最も印象に残っているのは、
+  - voice: フェリックス・マガト
+    text: 半年間でドイツ語を学んだことだ。
+    cont: true
+    pause: 0.5
+  - text: 加入2年目、ヴォルフスブルクが初のリーグ優勝。長谷部は25試合に出ました。
+    emph: true
+    card:
+      <<: *career_card
+      highlight_row: 1
+  - text: 2013年、ニュルンベルクへ。チームは、2部へ降格します。
+    card:
+      <<: *career_card
+      highlight_row: 2
+  - text: 2014年、フランクフルトへ。1年目に、自己最多の33試合に出場します。
+    card:
+      <<: *career_card
+      highlight_row: 3
+  - text: 転機は2016年10月。守備ラインの真ん中、リベロへの転向です。
+    card:
+      <<: *career_card
+      highlight_row: 3
+  quotes_from:
+  - https://www.goal.com/jp/%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9/%E9%95%B7%E8%B0%B7%E9%83%A8%E8%AA%A0%E3%81%8C%E3%83%89%E3%82%A4%E3%83%84%E3%81%A7%E6%88%90%E5%8A%9F%E3%82%92%E3%81%A4%E3%81%8B%E3%82%93%E3%81%A0%E7%90%86%E7%94%B1%E9%AC%BC%E8%BB%8D%E6%9B%B9%E3%83%9E%E3%82%AC%E3%83%88%E6%B0%8F%E3%81%8C%E5%9B%9E%E6%83%B3%E6%9C%80%E3%82%82%E5%8D%B0%E8%B1%A1%E7%9A%84%E3%81%A0%E3%81%A3%E3%81%9F%E3%81%AE%E3%81%AF/typr6z1u75cb16ulvdtr8uo30
+  sources:
+  - https://www.bundesliga.com/jp/bundesliga/news/20200608-hasebe-history-11449
+  - https://ja.wikipedia.org/wiki/%E9%95%B7%E8%B0%B7%E9%83%A8%E8%AA%A0
+  - https://en.wikipedia.org/wiki/Makoto_Hasebe
+  - https://en.eintracht.de/news/makoto-hasebe-verkuendet-karriereende-158181/
+- id: style
+  heading: 長谷部誠の強みは、どこで、何を任されても崩れないことか
+  tier: 報道
+  telop: 司令塔から、守りの要へ
+  card:
+    type: table
+    title: どこで、何を任されたか
+    columns:
+    - クラブ
+    - 任された位置
+    rows: &role_rows
+    - - 浦和
+      - ボランチ（中盤の底）
+    - - ヴォルフスブルク
+      - 右サイドやボランチ
+    - - フランクフルト
+      - ボランチ、のちにリベロ
+    source: Wikipedia・各報道
+  say:
+  - text: 浦和の長谷部誠は、繊細なボールタッチで、中盤の底から攻めを組み立てる司令塔でした。
+    image: assets/images/20261019_hasebe_legend/02_w.jpg
+    card: &role_card
+      type: table
+      title: どこで、何を任されたか
+      columns: [クラブ, 任された位置]
+      rows: *role_rows
+      source: Wikipedia・各報道
+      highlight_row: 0
+  - text: ドイツでは、右サイドハーフや右サイドバックも。どこでも使える選手になります。
+    card:
+      <<: *role_card
+      highlight_row: 1
+  - text: フランクフルトでは、ボランチから、最終ラインの要へ。
+    card:
+      <<: *role_card
+      highlight_row: 2
+  - text: 強みの1つは、反則の少なさ。
+    card: none
+  - text: 2019-20シーズン、25節までの1410分で、反則はわずか4回。
+    emph: true
+    card: none
+  - text: 353分に1回のペース。専門誌の1位で、2位の289分を大きく離しました。
+    card: none
+  - text: フランクフルトでは、2024年4月までに303試合。
+    card: none
+  - text: 2万4606分で、1試合あたり約81分です。
+    card: none
+  - text: 数字では、リーグ戦で通算533試合19得点。内訳は、表のとおりです。
+    emph: true
+    card: &total_card
+      type: table
+      title: 長谷部誠 通算（リーグ戦）
+      columns: [所属, 試合, 得点]
+      rows:
+      - [浦和レッズ, '149', '12']
+      - [ヴォルフスブルク, '135', '5']
+      - [ニュルンベルク, '14', '0']
+      - [フランクフルト, '235', '2']
+      - [リーグ戦の合計, '533', '19']
+      - [日本代表, '114', '2']
+      source: Wikipedia
+      highlight_row: 4
+  quotes_from: []
+  sources:
+  - https://www.soccer-king.jp/news/world/ger/20200409/1054808.html
+  - https://en.eintracht.de/news/makoto-hasebe-verkuendet-karriereende-158181/
+  - https://ja.wikipedia.org/wiki/%E9%95%B7%E8%B0%B7%E9%83%A8%E8%AA%A0
+  - https://en.wikipedia.org/wiki/Makoto_Hasebe
+  - https://www.bundesliga.com/jp/bundesliga/news/20200608-hasebe-history-11449
+- id: match
+  heading: 2022年5月18日、38歳の長谷部誠は、決勝のピッチで何をしたのか
+  tier: 報道
+  main: true
+  telop: 0対1からの、ヨーロッパリーグ決勝
+  card:
+    type: stats
+    title: ヨーロッパリーグ決勝（2022年5月18日）
+    items:
+    - ['42', 年ぶり, フランクフルトのヨーロッパのタイトル]
+    - ['58', 分, 長谷部が交代で入る]
+    - ['38', 歳, 長谷部の年齢（4か月）]
+    focus: 1
+  say:
+  - text: 長谷部誠の最も大きな試合は、2022年5月18日。ヨーロッパリーグ決勝。
+    image: assets/images/20261019_hasebe_legend/02_w.jpg
+    short_only: true
+    card: none
+  - text: 欧州で2番目の大会。相手はレンジャーズ。勝てば、42年ぶりの欧州タイトルです。
+    card: &match_stats
+      type: stats
+      title: ヨーロッパリーグ決勝（2022年5月18日）
+      items:
+      - ['42', 年ぶり, フランクフルトのヨーロッパのタイトル]
+      - ['58', 分, 長谷部が交代で入る]
+      - ['38', 歳, 長谷部の年齢（4か月）]
+      focus: 0
+  - text: 57分、レンジャーズに先制されます。
+    card: &match_tl
+      type: timeline
+      title: 2022年5月18日 ヨーロッパリーグ決勝
+      rows:
+      - ['57分', レンジャーズが先制]
+      - ['58分', 長谷部が交代で入る]
+      - ['同点', ボレのゴール。1対1]
+      - ['120分', 延長でも決着せず]
+      - ['PK戦', 5対4でフランクフルト]
+      focus: 1
+      highlight_row: 0
+  - text: その1分後。負傷したトゥタに代わって、38歳の長谷部がピッチに入ります。
+    emph: true
+    card:
+      <<: *match_tl
+      highlight_row: 1
+  - text: 地元の新聞は、「いつもの長谷部のように」守備に安定感をもたらした、と評価しました。
+    card: none
+  - text: ボレが決めて、同点。延長に入っても、決着がつきません。
+    card:
+      <<: *match_tl
+      highlight_row: 3
+  - text: PK戦。長谷部は監督に、蹴る準備はできているかと聞かれました。
+    card:
+      <<: *match_tl
+      highlight_row: 4
+  - text: 「もちろん」と答えましたが、蹴る順番は、もう決まっていました。
+    card: none
+  - text: 隣で蹴りたがっていた鎌田大地に、譲ったと言います。
+    card: none
+  - text: 鎌田は3人目で成功。GKトラップが、4人目のラムジーを止めます。
+    card:
+      <<: *match_tl
+      highlight_row: 4
+  - text: 最後はボレが決め、PK戦を5対4で制して、ヨーロッパの頂点に立ちました。
+    emph: true
+    card:
+      <<: *match_tl
+      highlight_row: 4
+  - text: 日本人がこのタイトルを手にするのは、2002年の小野伸二以来、20年ぶりでした。
+    card: none
+  quotes_from:
+  - https://www.soccer-king.jp/news/world/el/20220519/1649812.html
+  sources:
+  - https://en.wikipedia.org/wiki/2022_UEFA_Europa_League_final
+  - https://www.soccer-king.jp/news/world/el/20220519/1649812.html
+  - https://www.goal.com/jp/%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9/makoto-hasebe-daichi-kamada-rating-20220519/bltfb0ee0ff686e1bbc
+  - https://www.soccer-king.jp/news/world/ger/20220721/1669530.html
+  - https://en.eintracht.de/news/makoto-hasebe-verkuendet-karriereende-158181/
+- id: after
+  heading: 代表を去った長谷部誠は、いま何をしているのか
+  tier: 報道
+  telop: 引退のあと、指導者へ
+  card:
+    type: timeline
+    title: 引退のあと
+    rows:
+    - ['2018年7月', 日本代表からの引退を表明]
+    - ['2024年5月', 現役を引退（40歳）]
+    - ['2024年夏', フランクフルトU-21のコーチに]
+    - ['2024年9月', 日本代表のコーチに加わる]
+    - ['2026年9月', 守備のオープンプレーを担当]
+    focus: 4
+    highlight_row: 0
+  say:
+  - text: 2018年7月3日。ベルギーに敗れた翌日、長谷部は代表からの引退を表明します。
+    image: assets/images/20261019_hasebe_legend/02_w.jpg
+    card: &after_tl
+      type: timeline
+      title: 引退のあと
+      rows:
+      - ['2018年7月', 日本代表からの引退を表明]
+      - ['2024年5月', 現役を引退（40歳）]
+      - ['2024年夏', フランクフルトU-21のコーチに]
+      - ['2024年9月', 日本代表のコーチに加わる]
+      - ['2026年9月', 守備のオープンプレーを担当]
+      focus: 4
+      highlight_row: 0
+  - text: 2024年5月18日。最終節のライプツィヒ戦、終了間際にピッチへ。
+    card:
+      <<: *after_tl
+      highlight_row: 1
+  - text: 40歳と121日。フランクフルトで、最も年上の出場でした。
+    card:
+      <<: *after_tl
+      highlight_row: 1
+  - text: 6日後の引退会見。自分は目立つ選手ではなかった、と本人は言います。
+    card: none
+  - voice: 長谷部誠
+    text: 目立つような発言をするわけでもない選手が、
+    image: assets/images/20261019_hasebe_legend/05_w.jpg
+  - voice: 長谷部誠
+    text: ここまでのキャリアを築けて
+    cont: true
+  - voice: 長谷部誠
+    text: 多くのタイトルも手にすることができた。
+    cont: true
+    pause: 0.5
+  - text: 引退後は、フランクフルトのU-21で、アシスタントコーチに。
+    card:
+      <<: *after_tl
+      highlight_row: 2
+  - text: 同じ年の9月には、日本代表のコーチにも加わります。
+    card:
+      <<: *after_tl
+      highlight_row: 3
+  - text: きっかけは、森保監督との食事でした。
+    card:
+      <<: *after_tl
+      highlight_row: 3
+  - text: 担当は、もう1人のコーチと並んで、主に守備です。
+    card:
+      <<: *after_tl
+      highlight_row: 3
+  - text: 2026年9月。森保監督は、役割を変えたと明かします。
+    card:
+      <<: *after_tl
+      highlight_row: 4
+  - text: オープンプレーとは、セットプレー以外の、試合の流れの中のプレーのことです。
+    card: none
+  - voice: 森保監督
+    text: 長谷部コーチに守備のオープンプレーを任せたり、
+  - voice: 森保監督
+    text: 前田コーチがセットプレーの攻撃を担ってくれていたところを、
+    cont: true
+  - voice: 森保監督
+    text: 中村俊輔コーチにやってもらうなど、
+    cont: true
+  - voice: 森保監督
+    text: 役割をいくつか変えています。
+    cont: true
+    pause: 0.6
+  - text: 日本代表の守りを見ているのが、いまの長谷部コーチです。
+    card: none
+  quotes_from:
+  - https://www.soccer-king.jp/news/japan/national/20240524/1893795.html
+  - https://www.soccer-king.jp/news/japan/national/20251005/2071750.html
+  - https://www.soccer-king.jp/news/japan/national/20260917/2205937.html
+  sources:
+  - https://www.soccer-king.jp/news/japan/national/20180703/788705.html
+  - https://www.soccer-king.jp/news/world/ger/20240417/1882304.html
+  - https://www.soccer-king.jp/news/japan/national/20240524/1893795.html
+  - https://www.soccer-king.jp/news/japan/national/20251005/2071750.html
+  - https://www.soccer-king.jp/news/japan/national/20260120/2116942.html
+  - https://www.soccer-king.jp/news/japan/national/20260917/2205937.html
+  - https://www.sport1.de/news/fussball/bundesliga/2024/05/im-zeichen-des-abschieds-frankfurt-sichert-platz-sechs
+  - https://jfa.jp/national_team/staff/HASEBE_Makoto.html
+- id: secret
+  heading: 数字の外にある、2つの話
+  tier: 報道
+  telop: ゴールを守った日と、カズへの報告
+  card:
+    type: table
+    title: 数字の外にある、2つの話
+    columns: [いつ, 何があったか]
+    rows: &secret_rows
+    - ['2011年9月', GKとして、ゴールを守る]
+    - ['2024年5月', 三浦知良さんに、引退を報告]
+    source: Wikipedia・サッカーキング
+  say:
+  - text: 1つ目は、2011年9月17日、ホッフェンハイム戦。
+    image: assets/images/20261019_hasebe_legend/05_r.jpg
+    card: &secret_card
+      type: table
+      title: 数字の外にある、2つの話
+      columns: [いつ, 何があったか]
+      rows: *secret_rows
+      source: Wikipedia・サッカーキング
+      highlight_row: 0
+  - text: ヴォルフスブルクのGKが、一発退場。交代の枠は、すでに使い切っていました。
+    card: none
+  - text: ゴールの前に立ったのは、右サイドバックの長谷部。
+    card: none
+  - text: 最後の9分間。正確なロングフィードを出し、クロスにも飛び出しました。
+    card: none
+  - text: 失点は85分の1点だけ。試合は、1対3の負けでした。
+    card: none
+  - text: 2つ目は、引退の報告。いちばん言いづらかった相手は、三浦知良さんだったそうです。
+    card:
+      <<: *secret_card
+      highlight_row: 1
+  - voice: 長谷部誠
+    text: 認めないと言われるかと思ったけど、
+  - voice: 長谷部誠
+    text: そんなことを言えるわけがないと言われました。
+    cont: true
+    pause: 0.5
+  quotes_from:
+  - https://www.soccer-king.jp/news/world/ger/20240524/1893868.html
+  sources:
+  - https://en.wikipedia.org/wiki/Makoto_Hasebe
+  - https://ja.wikipedia.org/wiki/%E9%95%B7%E8%B0%B7%E9%83%A8%E8%AA%A0
+  - https://www.soccer-king.jp/news/world/ger/20240524/1893868.html
+- id: view
+  heading: 浦和のJ1とブンデスリーガ、得点と試合数を並べると
+  tier: 背景
+  viewpoint: true
+  telop: 12試合に1点から、55試合に1点へ
+  card:
+    type: table
+    title: 浦和（J1）とブンデスリーガの比べ
+    columns: [項目, 浦和（J1）, ブンデスリーガ]
+    rows: &cmp_rows
+    - ['在籍', '6年', '16年']
+    - ['試合', '149', '384']
+    - ['得点', '12', '7']
+    - ['1点までの試合', '約12', '約55']
+    source: Wikipedia
+  say:
+  - text: 最後に、長谷部誠のリーグ戦を、浦和とブンデスリーガに分けて数えます。
+    image: assets/images/20261019_hasebe_legend/02_w.jpg
+    card: none
+  - text: 浦和のJ1は、149試合で12得点。点を取るペースは、12試合に1点ほど。
+    emph: true
+    card: &cmp_card
+      type: table
+      title: 浦和（J1）とブンデスリーガの比べ
+      columns: [項目, 浦和（J1）, ブンデスリーガ]
+      rows: *cmp_rows
+      source: Wikipedia
+      highlight_row: 3
+    mark: {kind: circle, row: 3, col: 1}
+  - text: ブンデスリーガは、384試合で7得点。こちらは、55試合に1点ほどです。
+    card:
+      <<: *cmp_card
+      highlight_row: 2
+  - text: 点を取るペースは4倍以上遅くなり、出場した試合は2.6倍に増えました。
+    card:
+      <<: *cmp_card
+      highlight_row: 1
+  - text: しかも、384試合のうち235試合、6割は、30歳から過ごしたフランクフルトです。
+    card: none
+  - text: 点を取る司令塔は、長い時間をかけて、守りの要になりました。
+    image: assets/images/20261019_hasebe_legend/05_w.jpg
+    card: none
+  - text: 2018年に「サポーター」と書いた人は、いま、日本代表の守りを教える側にいます。
+    image: assets/images/20261019_hasebe_legend/05_w.jpg
+    card: none
+  quotes_from: []
+  sources:
+  - https://ja.wikipedia.org/wiki/%E9%95%B7%E8%B0%B7%E9%83%A8%E8%AA%A0
+  - https://en.wikipedia.org/wiki/Makoto_Hasebe
+  - https://www.soccer-king.jp/news/world/ger/20240524/1893795.html
+  - https://www.soccer-king.jp/news/japan/national/20260917/2205937.html

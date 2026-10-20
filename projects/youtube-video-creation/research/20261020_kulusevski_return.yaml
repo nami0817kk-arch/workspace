@@ -1,0 +1,146 @@
+# 取材メモ（2026年10月20日）トッテナムのクルゼフスキ、526日ぶりに復帰。妻の手紙（ニュースのショート。見せ方 Y＝手紙の一言から始める）
+# ケガの話なので、敬意を持った言い方にする。病名・期間は出典に書いてある範囲だけ（推測しない）。選手を小さく見せない。
+# 取材: 2026-10-20。requests（ブラウザUA）で本文を全部読んだ。控え research/raw/20261020_kulu_dm.txt（デイリー・メール）・_kulu_sky.txt（スカイの試合記事）・_spurs_cov_summary.json（ESPN）。
+#   ・デイリー・メール マット・バーロウ記者（10/7 17:00 公開・10/19 10:25 更新）「The untold story of Dejan Kulusevski's 526 days of hell …」— 題材の元。
+#       手紙は妻エルディナ（元ボスニア代表）がスウェーデン語で書き、全体練習に戻った日（9月1日）にSNSへ出した。記事が引いたのは**英語訳**。
+#       英訳:'They said you might never play again' / 'They obviously don't know who you are.'（記事の地の文は「ケガから477日後の9月1日」）。
+#       手紙の続き（英訳）: 'This is a story I will tell our daughters many times'／'How their father was told that he might never play football again – and yet refused to let anyone else write the end of his story.'
+#       → **原文はスウェーデン語。読んだのは記事の英訳。台本の日本語は、その英訳からの自訳**（台本の中で「こちらで訳したもの」と断る）。手紙そのもの（SNS）は読めていない。
+#   ・スカイスポーツ試合記事（10/19 22:00Z）「Tottenham 3-1 Coventry: Dejan Kulusevski returns to action as Spurs secure first Premier League win of the season」—
+#       『85分、ファンの人気者クルゼフスキがベンチから復帰』『526日、膝のセットバック（setback）で離脱』（タイムラインは86分）。**出場の分は 85/86/87（ESPN）で食い違うので台本は分数を言わない（終盤）**。
+#       今季のリーグ戦初勝利。トッテナムは勝ち点6で16位（コベントリーと同点、得失点差で上）。ESPN の試合 summary（401879257）で 3-1・87分にクドゥスと交代を確認。
+#   ・デ・ゼルビ監督の『ファンのためにやった』は、スカイのライブブログの見出しだけで本文は読めていない → 使わない。
+# 本人（クルゼフスキ）の言葉: 今回の復帰についての本人の言葉は、読めた記事には無い。**妻の手紙を「妻の言葉」として使い、本人の言葉は作らない**（台本で「本人の言葉ではない」と断る）。
+#   → short_hook_quote は妻の手紙の一節（voice: エルディナ）。女性の声にするには config の voice_female に名前が要る（編集禁止のため報告）。
+# ケガの病名・期間（デイリー・メールの範囲だけ）:
+#   ・2024-25シーズンのパレス戦（ポステコグルー監督の終わりごろ。DMの『last season』は2025-26の降格争いのこと）で膝のお皿（kneecap）を痛めた。クラブは『膝のお皿（patella）のケガ』という基本の情報以外は確認していない。
+#   ・手術。2025年のヨーロッパリーグ決勝には松葉づえと装具で。復帰の当初の見込みは去年12月 → 球を使う段階で膝に痛み → 1月に注射の治療 → 3月に本人が『小さな処置（a small intervention）』と呼ぶ関節の清掃。
+#   ・スウェーデン代表のチーム医師ヴェルナー:『軟骨のケガはやっかいで、治しにくい。ましてストレスのかかる場所だ。まだ負荷に耐えるほど治っていない』（記事の引用）。記事の書き手は軟骨の損傷の可能性を指摘するが、病名の確定ではない → 台本はこの医師の言葉の範囲だけ、病名は言わない。
+#   ・ワールドカップに出る機会を逃した。代表は45試合。その間にスパーズは監督4人・キャプテン3人・会長2人が入れ替わった（記事）。台本では使わない。
+#   ・9月1日＝ケガから477日目、全体練習に戻った日。復帰の試合で526日（スカイ）。
+# 自分で数えた比べ（見立て）: 526−477＝49日（全体練習に戻ってから試合に出るまで）。526日≒1年5か月あまり（526÷365＝1.44年）。デイリー・メールの『慎重さが合言葉』（Caution remains the watchword）をそのまま引く。
+# 確度: 試合・復帰は 報道（スカイ・ESPN で一致）。手紙・ケガの経過は 報道（デイリー・メール単独。英訳からの自訳）。
+# 反応: 0件。作らない。approve は --no-voices で。
+# 写真: Commons の CC BY-SA 4.0（Rolandhino1、2022年9月のスウェーデン対スロベニア。背番号21）5枚。2022年の写真で、復帰の日の写真ではない（記事主写真は代理店のため不可）。出典は credits.json。
+slot: premier
+date: "2026年10月20日"
+format: news
+no_main: true      # ニュースはショートだけ（2026-10-14）。締めで本編を案内しない
+people: [デヤン・クルゼフスキ, トッテナム]
+
+short_style: Y
+short_hook_quote: もう二度とプレーできないかもしれない、と言われました。
+short_question: クルゼフスキの復帰は、トッテナムの流れを変えると思いますか。
+short_hook: クルゼフスキ、526日ぶりの復帰。
+short_telops:
+  - {match: 妻エルディナさんの手紙, text: 妻エルディナさんの手紙/本人の言葉ではない}
+  - {match: こちらで訳しました, text: 英語の記事の英訳から/こちらで訳したもの}
+  - {match: 3対1, text: 19日 トッテナム3-1コベントリー/今季リーグ戦の初勝利}
+  - {match: 長いケガからの復帰, text: ケガから526日ぶり/スカイスポーツの報道}
+  - {match: 一昨シーズンのパレス戦, text: 一昨シーズンのパレス戦で/膝のお皿を痛めた}
+  - {match: 12月, text: 当初の復帰の見込みは/去年12月}
+  - {match: 軟骨, text: 代表のチーム医師/「軟骨のケガは厄介」}
+  - {match: 477日目, text: 9月1日/ケガから477日目に全体練習へ}
+  - {match: 49日, text: 全体練習から試合まで/49日}
+  - {match: 慎重さ, text: 報道では/「慎重さが合言葉」}
+
+theme:
+  id: kulusevski_return
+  league: england
+  league_name: プレミアリーグ
+  prefix: ""
+  title: クルゼフスキ、526日ぶりにピッチへ。妻の手紙に書かれていたこと
+  hook: ""
+  question: 526日ぶりに復帰したクルゼフスキについて、妻の手紙には何が書かれていたのか
+  takeaway: 手紙は「もう二度とプレーできないかもしれないと言われた」と明かした。全体練習に戻ってから49日、ケガから526日で試合に立った
+
+thumbnail:
+  line1: クルゼフスキ 526日ぶり
+  line2: 妻の手紙の言葉
+  tags: [クルゼフスキ, トッテナム, プレミアリーグ]
+  layout: face
+  photo: assets/images/20261020_kulusevski_return/01_w.jpg
+  short_photo: assets/images/20261020_kulusevski_return/01_v.jpg
+
+answer: 19日のコベントリー戦の終盤に復帰。手紙には「二度とプレーできないかも」と言われたとある
+watch: トッテナムの次の試合、チェルシー戦
+
+sections:
+  - id: what
+    main: true
+    heading: 何が起きたか
+    tier: 報道
+    telop: 妻の手紙と、526日ぶりの復帰
+    say:
+      - トッテナムのクルゼフスキについて、妻エルディナさんの手紙が伝えられました。
+      - 読むのは妻の言葉で、クルゼフスキ本人の言葉ではありません。
+      - voice: エルディナ
+        text: もう二度とプレーできないかもしれない、と言われました。
+        short_voice: true
+      - voice: エルディナ
+        text: 彼らは明らかに、あなたが誰なのか分かっていない。
+        cont: true
+      - 手紙はスウェーデン語で、英語の記事から、こちらで訳しました。
+      - 原文そのままの言葉では、ありません。
+      - 手紙を出したのは、9月1日です。
+    official: false
+    sources:
+      - https://www.dailymail.com/sport/football/article-16189335/Dejan-Kulusevski-injury-return-513-days-hell-Tottenham.html
+
+  - id: return
+    heading: 19日の試合で復帰
+    tier: 報道
+    telop: トッテナム3-1コベントリー。クルゼフスキが終盤に復帰
+    say:
+      - 19日、トッテナムはホームでコベントリーと戦い、3対1で勝ちました。
+      - 今季のリーグ戦で、初めての勝利です。
+      - クルゼフスキは、試合の終盤にベンチから出場しました。
+      - 長いケガからの復帰となりました。
+      - トッテナムは勝ち点6で、16位に上がりました。
+    official: false
+    sources:
+      - https://www.skysports.com/football/tottenham-hotspur-vs-coventry-city/report/559513
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/summary?event=401879257
+
+  - id: road
+    heading: 526日の道のり
+    tier: 未確認
+    telop: 膝のお皿のケガ、手術、そして長い回復
+    card:
+      type: table
+      title: クルゼフスキの回復の道のり
+      columns: [時期, できごと]
+      rows:
+        - [一昨季のパレス戦, 膝のお皿を痛める]
+        - [手術のあと, 復帰の見込みは12月]
+        - [1月, 注射の治療]
+        - [3月, 関節の清掃（小さな処置）]
+        - [9月1日, 477日目に全体練習へ]
+        - [10月19日, 試合に復帰]
+    say:
+      - クルゼフスキがケガをしたのは、一昨シーズンのパレス戦です。
+      - 膝のお皿を痛めた、と伝わっています。
+      - 手術を受け、復帰の当初の見込みは、去年の12月でした。
+      - ところが、ボールを使う段階で膝に痛みが出ました。
+      - 1月には注射の治療、3月には、本人が小さな処置と呼ぶ、関節の清掃を受けています。
+      - スウェーデン代表のチーム医師は、軟骨のケガは厄介で、治しにくいと話しました。
+      - クラブは、膝のお皿のケガという基本の情報以外は、確認していません。
+      - 9月1日は、ケガから477日目でした。
+    official: false
+    sources:
+      - https://www.dailymail.com/sport/football/article-16189335/Dejan-Kulusevski-injury-return-513-days-hell-Tottenham.html
+
+  - id: view
+    viewpoint: true
+    heading: 全体練習から、試合まで
+    tier: 背景
+    telop: 477日目から526日目まで、49日
+    say:
+      - 見立てです。クルゼフスキが全体練習に戻ってから試合に立つまでは、49日でした。
+      - ケガからは、1年5か月あまりです。
+      - ここからも、慎重さが合言葉とされています。
+      - 手紙には、この日々を、いつか娘たちに話す、とも書かれています。
+    official: false
+    sources:
+      - https://www.dailymail.com/sport/football/article-16189335/Dejan-Kulusevski-injury-return-513-days-hell-Tottenham.html
+short_title: "クルゼフスキ、526日ぶりにピッチへ。妻の手紙に書かれていたこと"

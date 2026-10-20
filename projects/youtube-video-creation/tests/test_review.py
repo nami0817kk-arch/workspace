@@ -832,6 +832,32 @@ def test_黒いサムネを止める(tmp_path):
     assert not check_thumbnail_dark(tmp_path).ok
 
 
+def test_クラブ紹介の板のサムネは黒の基準を見ない(tmp_path):
+    """基礎DATAの板を敷く型（20本とも）は暗い地。基準に当てて板を外させない。"""
+    from PIL import Image
+
+    from src.review import check_thumbnail_dark
+    from src.script_model import parse_script
+
+    Image.new("RGB", (1280, 720), (8, 10, 12)).save(tmp_path / "thumbnail.png")
+    board = parse_script("\n".join([
+        "---", "title: ビジャレアル。人口5万の町が",
+        "series: ラ・リーガチーム紹介",
+        "thumbnail_board: assets/stats/ll_villarreal_data_t.png",
+        "---", "", "## 本編", "", "キャスター: 本文。", ""]))
+    assert check_thumbnail_dark(tmp_path, board).ok
+    # 板の指定が無い回、紹介もの以外は今までどおり止める
+    plain = parse_script("\n".join([
+        "---", "title: 題", "series: ラ・リーガチーム紹介",
+        "---", "", "## 本編", "", "キャスター: 本文。", ""]))
+    assert not check_thumbnail_dark(tmp_path, plain).ok
+    other = parse_script("\n".join([
+        "---", "title: 題", "series: 記録の解説",
+        "thumbnail_board: assets/stats/x.png",
+        "---", "", "## 本編", "", "キャスター: 本文。", ""]))
+    assert not check_thumbnail_dark(tmp_path, other).ok
+
+
 def test_明るいサムネは通す(tmp_path):
     from PIL import Image
 

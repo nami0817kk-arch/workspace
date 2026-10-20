@@ -1,0 +1,581 @@
+# ユニフォームとエンブレムの歴史 マンチェスター・シティ（10/18 作成。プレミア⑪→⑳→①→⑩→⑪ の2周目ではなく、10/17 アーセナルの次の回）。
+# 軸：胸のエンブレムが何回形を変えたか。何を1回と数えるかを冒頭で言い、数えて答えを出す（アーセナルの回と同じ型。言い回しは変える）。
+# 一次情報（mancity.com 公式の本文）を requests のブラウザ User-Agent で読み、Wikipedia(en) の本文「Club badge and colours」節・
+#   ガーディアン（PA 配信）・紋章学会の論文（Phillips 2015）と突き合わせた。2026-10-18 取材。ブラウザ操作なし。WebFetch 不使用。
+#   指示にあった「Manchester City F.C. crest and colours」という名前の Wikipedia 記事は存在しない（404）。本文の同名の節を読んだ。
+#   mancity.com の「club crest」「kit history」という名前の記事も存在しない（/news/club-news/club-crest は 404）。検索で出た下記の公式記事を読んだ。
+#
+# ---- 何を1回と数えるか（冒頭で言う）----
+#   **「胸に付く図柄が、前とは別の形で出た年を1回。市の紋章をそのまま付けた試合・色の手直しは数えない」。**
+#   数える材料は、クラブ公式「Badge consultation」（2015-10、mancity.com/news/club-news/club-news/2015/october/badge-announcement）と
+#   「Badge Consultation ends on Saturday」（同 /badge-consultation）の、クラブ自身の数え方：
+#     「Excluding the City of Manchester's Coat of Arms, we have had three key badges since the 1930s, with the present design being used since 1997.」
+#     (2)The Original (1930s-1972)：盾・船・川。市の紋章を除けばいちばん長く使った。
+#     (3)The Rose (1972-97)：川がバラに替わる。「Worn on league shirts from 1972-6 and 1981-1997 (Coat of Arms in the intervening years)」
+#     (4)The Eagle (1997-present)：「abandonment of the round shape ... flat topped shield, an Eagle and, purely for style, three stars」
+#   → 2016年の新エンブレム（クラブ公式 2015-12 / 2016-06）を4つ目に足す。
+#   →数えると 原型・1972・1997・2016 の**4種類**。最初の原型を除いた**替わった回数は3回**（1972・1997・2016）。
+#
+# ---- 読んだ根拠の年の一覧（クラブ公式の原文）----
+#   1884        最初に知られているシャツ：黒に、マルタ十字風の白い十字（club history ページ。「Some say ... Freemasonry ... others ... St Mark's」と2説）
+#   1965        「A new club badge is developed in 1965, based around the central part of the City of Manchester coat of arms」（club history ページ）
+#   1972        「The City badge is replaced with the red rose of Lancashire」（同）
+#   1997        「City unveil a new club badge ... Superbia in proelio ‘Pride in battle’」（同）
+#   2015-10-17  意見募集が始まる（土曜、対ボーンマス戦の前）／11-14 に終わる＝4週間（「will run for 4 weeks」）。
+#   2015-12-26  新しい絵を公開（クラブ公式 mancity.com/citytv/.../new-badge-launch、ガーディアン 2015-12-26：対サンダーランド戦の前、エティハドの大型ビジョン）。
+#               「Only one third (34%) of supporters expressed a desire to retain the existing Eagle badge shape.」
+#               「round design, as used in two of the Club’s three previous crests」
+#   2016-06-30  （木曜の夜）マンチェスター市庁舎に映し出し、正式の公開（クラブ公式 2016-06「City's new badge is here!」）。
+#               「marks a return to its historical round shape ... the ship, the three rivers and the red rose of Lancashire」
+#               「For the first time the Club has included the year of its foundation - 1894」
+#   2016/17     シャツに付くのはこのシーズンの始まりから（ガーディアン）。
+#
+# ---- シャツの色（クラブ公式）----
+#   「City DNA #65: How City came to play in red and black」：マルコム・アリソンが提案。ミラン（1967/68にカップウィナーズカップ）の色。
+#     1968-10-05 に初めて着て 0-2 でエヴァートンに負け。1969年のFAカップを赤と黒で優勝（決勝の相手はレスター、ウェンブリー）。
+#     翌シーズンにカップウィナーズカップとリーグカップ。「only been in existence for 50 years or so」。
+#   「City and PUMA bring the sash home with our 2025/26 Home kit」：ホームの胸に斜めの帯（sash）が付くのは「For the first time in the Club's history」。帯は1970年代から（アウェー）。
+#   「City and PUMA unveil the 2026/27 Home Kit」：空色のグラデーション・「metallic monochrome crest」。**エンブレムの形を変えたとは書いていない**（公式写真は丸い形のまま）。
+#   空色がいつからかは、クラブの記事に**書いていない**（読んだ範囲）。
+#
+# ---- 食い違い（台本で断る／言わないもの。ここに残す）----
+#   ・**エンブレムの数**：クラブ公式の意見募集の案内は「市の紋章を除き、1930年代から主要なエンブレムは3つ」＝2016年を足して4種類。
+#     Wikipedia（Club badge and colours 節）は 1970・1972・1976・1997・2016 の年を挙げ、5つに見える。→ **台本はクラブの数え方に従い、違いを1節で断る**。
+#   ・**最初のエンブレムの年**：クラブの意見募集は「Original (1930s-1972)」、クラブの年表は「1965年に新しい紋章を作った」、Wikipedia は「1970年に導入。1960年代なかばから文書に使っていた」。
+#     → **台本は始まりの年を言わない**（「1972年まで」だけ言う）。
+#   ・**1976年**：Wikipedia は「紋章院が1976年に、船とバラの紋章を円形で認めた」。紋章学会の論文（Phillips 2015）は「1976-12-23の付与は3回目の付与に含まれる。
+#     円ではなく盾の輪郭に入れて、1970年代なかばからしばらくクラブが使った。長い歴史の大半は市の紋章がもと」と書く。→ 1976年は**登録の年であって、1972年のバラとは同じ要素**
+#     （船の上・バラの下）＝新しい絵とは数えない。台本はそう断る。ただし「1972年と同じ要素」は2つの記述（Wikipedia・論文）の突き合わせで、クラブ公式は1976年を書いていない → 確度は背景。
+#   ・**意見募集の期間**：クラブの10月の案内は「4週間」（10/17〜11/14＝28日）、12月の公開記事は「30-day consultation period」。→ 台本は「4週間」（10月の原文）。
+#   ・**意見募集の開始日**：Wikipedia は 2015-10-16 に発表、クラブの案内は「土曜 10/17 の午前9時に始まった」。→ 台本は「10月」まで。
+#   ・**ワシのエンブレムが付いた年**：クラブ年表は1997、Wikipedia は「商標登録できなかったため1997年に採用」（理由はクラブ公式に書いていない → 言わない）。
+#   ・**エンブレムの下の言葉（Superbia in Proelio）の意味**：クラブ年表の英訳 ‘Pride in battle’ → 「戦いの誇り」（訳）。
+#   ・**2011年のFAカップ決勝**：Wikipedia は「通常のエンブレム＋特別な文字」。クラブ公式を読んでいないので言わない。
+#   ・**空色がいつから**：Wikipedia は「遅くとも1892年には青を着た証拠がある」（本文）。クラブ公式に年が無い → 台本は「はっきりしない」とだけ言い、年は言わない。
+#
+# ---- 言わないと決めたもの ----
+#   ・**契約の額**：Wikipedia の表（プーマ 2025年から年約1億ポンド など）は ESPN の「情報筋」報道＋Wikipedia。クラブの発表に額が無い → 言わない。
+#   ・**胸のスポンサー（サーブ1982年〜・エティハド2009年〜 など）**：クラブ公式に表が無く、Wikipedia だけが根拠 → 言わない（エティハド・プーマの社名は写真に写る範囲で触れない）。
+#   ・**クラブの歴史の他の話（1894年の名前の変更以外）・女子チーム・育成年代**。
+#   ・**エンブレムの下の細かい意味（船＝マンチェスター船舶運河の意味 など）**は Wikipedia 単独 → 言わない。「船と3つの川とバラ」だけ、クラブ公式（2016-06）の言い方で。
+#   ・**ガーディアンが書く「金の船が約1世紀前から使われてきた」「星は嘲笑されてきた」**：評価の言葉 → 言わない。
+#   ・**ジョー・ハートの感想**など選手の発言：本題から外れる → 言わない。
+#
+# ---- 自分で数えた数（検算した）----
+#   ・絵の種類：原型・1972・1997・2016 → 4種類／替わった回数 4−1 ＝ 3回（1972・1997・2016）。
+#   ・間隔：1972→1997 ＝ 25年／1997→2016 ＝ 19年／44年（2016−1972）÷ 2つの間隔 ＝ 22年に1回。
+#   ・バラのあいだのリーグ戦のシャツ：1972〜76 ＝ 4年／1976〜81 ＝ 5年（市の紋章）／1981〜97 ＝ 16年。4+5+16 ＝ 25（1997−1972 と一致）。5 ÷ 25 ＝ 20%。
+#   ・丸い形：原型・バラ・2016 の3つ（ワシだけが丸くない）／3 ÷ 4 ＝ 75%。クラブ公式「two of the Club’s three previous crests」とも合う（過去3つのうち2つ）。
+#   ・2016 + 19 ＝ 2035（ワシの19年に並ぶ年）。2026 − 2016 ＝ 10（いまのエンブレムは10年目）。
+#   ・意見募集 10/17〜11/14：14日（10/17→10/31）＋14日（11/1→11/14）＝ 28日。
+#   ・新エンブレム公開 2015-12-26 → 市庁舎 2016-06-30：6か月と4日。
+#
+# ---- 一次情報に届かなかったところ ----
+#   ・エンブレムの変遷の年（1930年代の始まり・1970・1976）は Wikipedia と論文で補った（確度は背景）。クラブの「club crest」専用の記事は見つからなかった。
+#   ・mancity.com の「history」のページ（club/manchester-city-history）の年表は読んだが、空色の始まりは書いていない。
+#   ・Guardian の記事は PA 配信（報道）。クラブ公式の補強として「2016/17 から」の1点だけに使った。
+#
+# ---- 写真（assets/images/20261018_kit_mancity/、出典は credits.json） ----
+#   m01_2627_home = 2026/27 ホームのキット写真（mancity.com の記事の og:image、1920x1080。人物なし。胸の丸いエンブレムが写る）。
+#   m02_badge_flag = 2015-12 の新エンブレムの大きな旗（mancity.com City TV の「New badge revealed」の画像、1500x844。エティハドのピッチ）。
+#   m03_1970s_shirt = 1970年代のホームのシャツ（mancity.com の history ページの画像、1620x911。胸にバラのエンブレム）。人物はファイル名（colinbell）からの推定。**台本で名前を出さない**。
+#   すべて取り込んだあと開いて見た（透かしなし・代理店の表記なし・頭と顎が入る）。クラブ公式（権利は晴れていない＝引き受ける危険）。
+#   （1024x576 の 2枚＝市庁舎の映写・2025/26 ホームは、1.9倍に引き伸ばすため外した。赤黒の縞の写真も原寸1023pxで外した）
+#   クラブの現行エンブレム assets/crests/マンチェスターシティ.png（2016年の丸い形）・assets/backgrounds/cut_マンチェスターシティ.png（節の頭の紋章の差し込み）。権利は晴れていない。
+#   **過去のエンブレムの画像は使っていない**（権利が晴れない）。板は文字だけの年表。ただし m03 の写真には1970年代の胸のバラが写っている（クラブ公式の写真）。
+#
+# ネットの反応は入れない（voice_min: 0）。シリーズの回にショートは作らない決まり。
+# **サムネは案を3つ出してユーザーに決めてもらう**。ここの thumbnail は点検用の1案（案A）。
+date: 2026年10月18日
+slot: other_2
+format: news
+series: ユニフォームとエンブレムの歴史
+voice_min: 0
+people:
+- マンチェスター・シティ
+theme:
+  end_bg: assets/images/20261018_kit_mancity/m02_badge_flag.jpg
+  id: kit_mancity
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: マンチェスター・シティ
+  title: マンチェスター・シティの胸のエンブレムは、これまで何度変わったのか
+  question: マンチェスター・シティの胸のエンブレムは、これまで何度形を変えたのか
+  opening_image: assets/images/20261018_kit_mancity/m02_badge_flag.jpg
+  lead: 空色のシャツの胸に、丸いエンブレム。
+  hook: ''
+  takeaway: マンチェスター・シティの胸のエンブレムは、クラブ公式の数え方で、原型・バラ・ワシ・2016年の丸い形の4種類で、替わったのは3回（1972・1997・2016年）。間隔は1972→1997年が25年、1997→2016年が19年で、平均22年に1回。2015年の意見募集では、ワシの形を残したい人は34%だった。一方、胸の図柄は、4つのうち3つが丸い形。1972〜97年のバラの25年のうち5年（20%）は、リーグ戦のシャツに市の紋章が付いた。いまのエンブレムは2016年からで10年目、ワシの19年に並ぶのは2035年。年や数え方は資料で食い違うため、この動画はクラブの数え方に従う
+  hook_unused: ''
+thumbnail:
+  layout: scene
+  callouts: [クラブの数え方は, 4種類]
+  photo: assets/images/20261018_kit_mancity/m02_badge_flag.jpg
+  line1: シティの胸のエンブレム
+  line2: 替わったのは3回
+  crests:
+  - マンチェスターシティ
+  tags:
+  - マンチェスター・シティ
+  - プレミアリーグ
+  - ユニフォーム
+  - エンブレム
+sections:
+- id: crest15
+  main: true
+  heading: クラブ自身は、胸のエンブレムをいくつと数えたのか
+  tier: 確定
+  official: true
+  telop: 2015年10月、クラブは意見募集の案内に「市の紋章を除いて、1930年代から主要なエンブレムは3つ」と書いた（クラブ公式）
+  narrator: 解説
+  card: &id_doc
+    type: document
+    label: マンチェスター・シティ公式サイト「バッジの意見募集」の記載（2015年10月）の訳
+    paragraphs:
+    - 市の紋章を除くと、クラブには1930年代から、主要なエンブレムが3つあります。いまの形は、1997年から使っています。
+    - 3つ目のワシは、丸い形をやめて平らな頭の盾にし、ワシと、飾りだけの星を3つ置きました。
+    highlight:
+    - 主要なエンブレムが3つ
+    - 飾りだけの星を3つ
+  say:
+  - text: マンチェスター・シティの、胸のエンブレムの話です。
+    short_only: true
+  - text: シャツの胸の図柄が、何度、別の形になったのか。数えて答えを出します。
+    image: assets/images/20261018_kit_mancity/m02_badge_flag.jpg
+    emph: true
+    card: none
+  - text: 数え方を決めます。図柄が、前とは別の形で出た年を、1回とします。
+    card: none
+  - text: マンチェスター市の紋章を、丸ごと付けた試合も、数えません。
+    card: none
+  - text: 色の手直しだけの年も、数えません。
+    card: none
+  - text: 材料は、クラブの公式サイトの文章です。
+    card: none
+  - text: 2015年10月、クラブはサポーターへの意見募集を始めました。
+    card:
+      <<: *id_doc
+      highlight: []
+  - text: エンブレムをどうするか、4週間かけて聞く、という内容でした。
+    card:
+      <<: *id_doc
+      highlight: []
+  - text: その案内文に、クラブ自身の数え方が載っています。
+    card: *id_doc
+  - text: 市の紋章を除いて、1930年代から主要なエンブレムは3つ。
+    emph: true
+    card: *id_doc
+  - text: そして、いまの形は1997年から、と書いています。
+    card: *id_doc
+  - text: 3つには、原型、バラ、ワシという名前が付いています。
+    card:
+      <<: *id_doc
+      highlight: []
+  - text: この3つに、あとから4つ目が足されます。順に数えます。
+    image: assets/images/20261018_kit_mancity/m03_1970s_shirt.jpg
+    card: none
+  sources:
+  - https://www.mancity.com/news/club-news/club-news/2015/october/badge-announcement
+  - https://www.mancity.com/news/club-news/club-news/2015/october/badge-consultation
+  - https://www.theguardian.com/football/2015/nov/24/manchester-city-badge-design-fans-consultation
+- id: crest
+  heading: 胸のエンブレムは、何度形を変えたのか
+  tier: 確定
+  official: true
+  telop: エンブレムの絵は4種類。替わったのは3回（1972・1997・2016年）
+  narrator: 解説
+  card: &id_crest
+    type: timeline
+    title: 胸のエンブレムの変遷（クラブ公式の記載）
+    rows: &rows_crest
+    - - 〜1972年
+      - 盾と船と川の原型
+    - - 1972年
+      - 川が赤いバラに
+    - - 1997年
+      - ワシと星3つの盾
+    - - 2016年
+      - 丸い形と創立年入り
+    focus: 〜1972年
+  say:
+  - text: クラブの文章にある順に、シティのエンブレムを並べていきます。
+    image: assets/backgrounds/cut_マンチェスターシティ.png
+    card: none
+  - text: 1つ目は、盾と船と川を組み合わせた、原型です。
+    image: assets/images/20261018_kit_mancity/m02_badge_flag.jpg
+    emph: true
+    card:
+      <<: *id_crest
+      highlight_row: 0
+  - text: 市の紋章を除けば、いちばん長く使われた絵だと、クラブは書きます。
+    card:
+      <<: *id_crest
+      highlight_row: 0
+  - text: 始まりの年は、クラブの文章どうしで、食い違います。
+    card:
+      <<: *id_crest
+      highlight_row: 0
+  - text: 年表は1965年、意見募集の案内は1930年代から。この動画は、年を決めません。
+    card:
+      <<: *id_crest
+      highlight_row: 0
+  - text: 1972年に、川が、ランカシャーの赤いバラに替わります。2つ目です。
+    image: assets/images/20261018_kit_mancity/m03_1970s_shirt.jpg
+    emph: true
+    card:
+      <<: *id_crest
+      highlight_row: 1
+  - text: バラの絵は、1997年まで、25年続きました。
+    card:
+      <<: *id_crest
+      highlight_row: 1
+  - text: 1997年、丸い形をやめ、ワシが付いた盾に。ここで3つ目。
+    image: assets/images/20261018_kit_mancity/m01_2627_home.jpg
+    card:
+      <<: *id_crest
+      highlight_row: 2
+  - text: 星3つは飾りだけ、標語は「戦いの誇り」という意味でした。
+    card:
+      <<: *id_crest
+      highlight_row: 2
+  - text: 2015年の意見募集で、ワシの形を残したい人は、34%でした。
+    emph: true
+    image: assets/images/20261018_kit_mancity/m02_badge_flag.jpg
+    card:
+      <<: *id_crest
+      highlight_row: 2
+  - text: 同じ年の12月26日、新しい絵が、エティハドで公開されます。
+    card:
+      <<: *id_crest
+      highlight_row: 3
+  - text: 丸い形が戻り、船と3つの川と、赤いバラが入りました。
+    card:
+      <<: *id_crest
+      highlight_row: 3
+  - text: 創立の年、1894も、初めて入りました。4つ目になります。
+    card:
+      <<: *id_crest
+      highlight_row: 3
+  - text: 2016年6月30日には、市庁舎に映し出され、正式な公開になりました。
+    image: assets/images/20261018_kit_mancity/m01_2627_home.jpg
+    card: none
+  - text: シャツに載ったのは、2016/17シーズンの開幕からです。
+    card: none
+  - text: ここまでを、積み上げて並べます。
+    card: &id_count
+      type: line
+      title: エンブレムの絵の種類（積み上げ）
+      x:
+      - 1972
+      - 1997
+      - 2016
+      series:
+      - - エンブレムの絵（累計）
+        - [2, 3, 4]
+      unit: 種類
+      focus: エンブレムの絵（累計）
+      highlight: 2016
+      badges:
+      - series: エンブレムの絵（累計）
+        at: 2016
+        crest: マンチェスターシティ
+  - text: 原型からの絵は、4種類。
+    card: *id_count
+  - text: 最初の原型を除いて、替わったのは、3回です。
+    emph: true
+    card: *id_count
+  sources:
+  - https://www.mancity.com/news/club-news/club-news/2015/october/badge-consultation
+  - https://www.mancity.com/club/manchester-city-history
+  - https://www.mancity.com/citytv/behind-the-scenes/general/2015/december/new-badge-launch
+  - https://www.mancity.com/news/club-news/club-news/2016/june/mcfc-new-badge-is-here
+  - https://www.theguardian.com/football/2015/dec/26/manchester-city-unveil-new-club-crest
+- id: counts
+  heading: 資料によって、エンブレムの数が違うのはなぜか
+  tier: 背景
+  telop: クラブは4種類、ウィキペディアの年は5つ。1976年は紋章院が認めた年で、新しい絵ではない
+  narrator: 解説
+  card: &id_cmp
+    type: table
+    title: エンブレムの数え方の違い
+    columns:
+    - 資料
+    - 数え方
+    rows:
+    - - クラブ公式
+      - 原型・1972・1997・2016
+    - - ウィキペディア
+      - 1970・1972・1976・1997・2016
+    - - この動画
+      - クラブの数え方
+    highlight_row: 0
+  say:
+  - text: ただ、マンチェスター・シティのエンブレムの数え方は、資料によって違います。
+    card:
+      <<: *id_cmp
+      highlight_row: 0
+  - text: クラブは、原型、バラ、ワシ、2016年の丸い形の、4つです。
+    card:
+      <<: *id_cmp
+      highlight_row: 0
+  - text: ウィキペディアは、1970年、1972年、1976年と、年を分けて挙げます。
+    card:
+      <<: *id_cmp
+      highlight_row: 1
+  - text: 1976年は、紋章を管理する紋章院が、バラの紋章を正式に認めた年です。
+    card:
+      <<: *id_cmp
+      highlight_row: 1
+  - text: 紋章の研究論文は、それを盾の形に入れて、しばらく使ったと書きます。
+    card:
+      <<: *id_cmp
+      highlight_row: 1
+  - text: 船の上、バラの下という、1972年と同じ要素です。
+    card:
+      <<: *id_cmp
+      highlight_row: 1
+  - text: そこで、新しい絵としては、数えません。
+    emph: true
+    card:
+      <<: *id_cmp
+      highlight_row: 2
+  - text: クラブの文章に、1970年のエンブレムは出てきません。
+    card:
+      <<: *id_cmp
+      highlight_row: 2
+  - text: この動画は、クラブの数え方に従います。
+    card:
+      <<: *id_cmp
+      highlight_row: 2
+  sources:
+  - https://en.wikipedia.org/wiki/Manchester_City_F.C.
+  - https://www.theheraldrysociety.com/wp-content/uploads/2019/10/CoA-229-Phillips-paper.pdf
+  - https://www.mancity.com/news/club-news/club-news/2015/october/badge-consultation
+- id: chest
+  heading: 胸には、いつ何が付いていたのか
+  tier: 確定
+  official: true
+  telop: 最初に知られるシャツは1884年の黒。1976〜81年のリーグ戦は市の紋章。2016年から丸い形
+  narrator: 解説
+  card: &id_chest
+    type: timeline
+    title: シャツの胸に付いたもの（クラブ公式）
+    rows: &rows_chest
+    - - 1884年
+      - 黒に白い十字
+    - - 1972〜76
+      - リーグ戦はバラ
+    - - 1976〜81
+      - リーグ戦は市の紋章
+    - - 1981〜97
+      - バラが戻る
+    - - 1997〜2016
+      - ワシの盾
+    - - 2016年〜
+      - 丸いエンブレム
+    focus: 1884年
+  say:
+  - text: 次は、マンチェスター・シティのシャツの胸の中身を見ます。
+    image: assets/images/20261018_kit_mancity/m01_2627_home.jpg
+    card: none
+  - text: 最初に知られているシャツは、1884年。黒に、白い十字でした。
+    emph: true
+    card:
+      <<: *id_chest
+      highlight_row: 0
+  - text: 十字は教会との縁だという説と、フリーメイソンとの縁だという説があります。
+    card:
+      <<: *id_chest
+      highlight_row: 0
+  - text: 1972年からは、リーグ戦のシャツに、バラのエンブレムが付きます。
+    image: assets/images/20261018_kit_mancity/m03_1970s_shirt.jpg
+    card:
+      <<: *id_chest
+      highlight_row: 1
+  - text: ところが1976年から81年までは、リーグ戦のシャツに市の紋章でした。
+    emph: true
+    card:
+      <<: *id_chest
+      highlight_row: 2
+  - text: 5年のあと、1981年にバラが戻り、1997年まで続きます。
+    card:
+      <<: *id_chest
+      highlight_row: 3
+  - text: 1997年から2016年は、ワシの盾です。
+    image: assets/images/20261018_kit_mancity/m02_badge_flag.jpg
+    card:
+      <<: *id_chest
+      highlight_row: 4
+  - text: クラブは、エンブレムの議論は、とくにカップ決勝の前後に大きくなった、と書きます。
+    card:
+      <<: *id_chest
+      highlight_row: 4
+  - text: 2016年からは、丸いエンブレムです。
+    card:
+      <<: *id_chest
+      highlight_row: 5
+  - text: 2026/27のホームでは、胸のエンブレムが、単色の金属調になります。
+    image: assets/images/20261018_kit_mancity/m01_2627_home.jpg
+    card: none
+  - text: 形は丸いままなので、色の手直しとして、数えません。
+    card: none
+  sources:
+  - https://www.mancity.com/club/manchester-city-history
+  - https://www.mancity.com/news/club-news/club-news/2015/october/badge-consultation
+  - https://www.mancity.com/news/club-news/club-news/2015/october/badge-announcement
+  - https://www.theguardian.com/football/2015/dec/26/manchester-city-unveil-new-club-crest
+  - https://www.mancity.com/news/club/manchester-city-202627-home-kit-launched-63914816
+- id: colour
+  heading: 空色のシャツに、赤と黒は、いつ入ったのか
+  tier: 確定
+  official: true
+  telop: 赤と黒の縞を初めて着たのは1968年10月5日。1969年のFAカップを赤と黒で優勝。ホームの帯は2025/26が初
+  narrator: 解説
+  card: &id_colour
+    type: table
+    title: シティのシャツの歩み（クラブ公式）
+    columns: &cols_colour
+    - いつ
+    - できごと
+    rows: &rows_colour
+    - - 1884
+      - 最初のシャツは黒
+    - - 1968-10-05
+      - 赤黒の縞を初めて着る
+    - - 1969
+      - FAカップを赤黒で優勝
+    - - 1970
+      - 欧州杯とリーグ杯を獲る
+    - - 2025/26
+      - ホームに初めて斜めの帯
+    highlight_row: 0
+  say:
+  - text: 最後に、マンチェスター・シティのシャツの色です。
+    image: assets/images/20261018_kit_mancity/m01_2627_home.jpg
+    card: *id_colour
+  - text: 空色がいつから始まったかは、クラブの記事に載っていません。
+    card:
+      <<: *id_colour
+      highlight_row: 0
+  - text: 赤と黒の縞は、アリソンコーチの提案でした。
+    image: assets/images/20261018_kit_mancity/m03_1970s_shirt.jpg
+    emph: true
+    card:
+      <<: *id_colour
+      highlight_row: 1
+  - text: イタリアのミランが優勝した色に、あやかった提案でした。
+    card:
+      <<: *id_colour
+      highlight_row: 1
+  - text: 1968年10月5日に初めて着て、エヴァートンに0対2で負けました。
+    card:
+      <<: *id_colour
+      highlight_row: 1
+  - text: ファンは不満でしたが、翌1969年のFAカップは、この色で優勝します。
+    card:
+      <<: *id_colour
+      highlight_row: 2
+  - text: 次のシーズンには、欧州のカップ戦とリーグカップも獲りました。
+    card:
+      <<: *id_colour
+      highlight_row: 3
+  - text: 2025/26には、ホームのシャツに、初めて斜めの帯が付きました。
+    image: assets/images/20261018_kit_mancity/m01_2627_home.jpg
+    card:
+      <<: *id_colour
+      highlight_row: 4
+  - text: 帯は1970年代から、アウェーで着られてきたものです。
+    card:
+      <<: *id_colour
+      highlight_row: 4
+  sources:
+  - https://www.mancity.com/news/mens/city-dna-65-why-city-chose-red-and-b-lack-striped-shirts-63719733
+  - https://www.mancity.com/news/club/202526-puma-home-kit-launch-63882581
+  - https://www.mancity.com/club/manchester-city-history
+  - https://en.wikipedia.org/wiki/Manchester_City_F.C.
+- id: view
+  viewpoint: true
+  heading: 見立て・絵は22年に1回、丸い形が4つのうち3つ
+  tier: 背景
+  telop: 絵の替わり方は平均22年に1回。丸い形は4つのうち3つ。ワシの19年に並ぶのは2035年
+  narrator: 解説
+  card: &id_ratio
+    type: calc
+    title: 丸い形は、4つのうちいくつか
+    terms:
+    - - 3つ
+      - 原型・バラ・2016年
+    - - 4つ
+      - エンブレムの絵の種類
+    - - 75%
+      - 割った答え
+    ops:
+    - ÷
+    - ＝
+  say:
+  - text: マンチェスター・シティのエンブレムが替わる速さを、数字で比べます。
+    image: assets/images/20261018_kit_mancity/m02_badge_flag.jpg
+    card: none
+  - text: まず、絵が替わる間隔。
+    card: none
+  - text: 1972年から1997年までは25年。1997年から2016年までは19年。
+    card: none
+  - text: 足すと44年。2つの間隔で割ると、22年。
+    card: &id_avg
+      type: calc
+      title: エンブレムの絵は、何年に1回替わったか
+      terms:
+      - - 44年
+        - 1972〜2016
+      - - 2つ
+        - 25年と19年の間隔
+      - - 22年に1回
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+  - text: 22年に1回。ワシの19年は、それより3年短い計算です。
+    emph: true
+    card: *id_avg
+  - text: ふたつ目は、形です。丸い形を数えます。
+    image: assets/images/20261018_kit_mancity/m03_1970s_shirt.jpg
+    card: none
+  - text: 原型とバラと2016年が丸く、ワシだけが丸くありません。
+    card: none
+  - text: 4つのうちの3つを、割り算にします。
+    card: *id_ratio
+  - text: 75%。ワシの19年は、丸くない唯一の期間でした。
+    emph: true
+    card: *id_ratio
+    mark:
+      kind: circle
+      item: 2
+  - text: みっつ目は、バラの25年のうち、市の紋章だった5年です。
+    image: assets/images/20261018_kit_mancity/m01_2627_home.jpg
+    card: none
+  - text: 5年を25年で割ります。
+    card: &id_coat
+      type: calc
+      title: バラの25年のうち、リーグ戦が市の紋章だった割合
+      terms:
+      - - 5年
+        - 1976〜81
+      - - 25年
+        - 1972〜97
+      - - 20%
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+  - text: 20%。5年に1年は、バラの年でも、胸は別でした。
+    card: *id_coat
+  - text: いまのエンブレムは、2016年から、10年目です。
+    card: none
+  - text: ワシの19年に並ぶのは、2035年になります。
+    card: none
+  - text: 次の絵を、クラブが決めたという記事は、読んだ範囲にありません。
+    card: none
+  sources:
+  - https://www.mancity.com/news/club-news/club-news/2015/october/badge-consultation
+  - https://www.mancity.com/news/club-news/club-news/2016/june/mcfc-new-badge-is-here
+  - https://www.mancity.com/citytv/behind-the-scenes/general/2015/december/new-badge-launch

@@ -840,16 +840,16 @@
   "digest": "47fe3020e329838b"
  },
  "20260926_ll18_sevilla": {
-  "at": "2026-09-28T00:11:22+09:00",
-  "digest": "312cc5efa8119991"
+  "at": "2026-10-18T09:55:27+09:00",
+  "digest": "62d37f804e129fa2"
  },
  "20260926_ll19_valencia": {
-  "at": "2026-09-28T00:11:22+09:00",
-  "digest": "f7048687762eb9a5"
+  "at": "2026-10-19T01:02:08+09:00",
+  "digest": "f23bc1ddecfba324"
  },
  "20260926_ll20_villarreal": {
-  "at": "2026-09-28T00:11:22+09:00",
-  "digest": "0f595d4a9b8716e2"
+  "at": "2026-10-19T23:32:32+09:00",
+  "digest": "a875511dfe1bec36"
  },
  "koe_nashi": {
   "at": "2026-10-17T00:22:54+09:00",
@@ -1630,5 +1630,229 @@
  "20261018_zidane_legend": {
   "at": "2026-10-17T16:49:17+09:00",
   "digest": "e6b7c0c34928eb1d"
+ },
+ "20261018_wirtz_intro": {
+  "at": "2026-10-18T09:59:52+09:00",
+  "digest": "6390524a90359451"
+ },
+ "20261018_stadium_anfield": {
+  "at": "2026-10-18T03:01:18+09:00",
+  "digest": "b15f4f3d4d3025ae"
+ },
+ "20261018_finance_chelsea": {
+  "at": "2026-10-18T03:01:18+09:00",
+  "digest": "3854cbbe5145b835"
+ },
+ "20261018_finance_real_barca": {
+  "at": "2026-10-18T10:22:29+09:00",
+  "digest": "86eaba04f92d97f5"
+ },
+ "20261018_record_haaland_cl60": {
+  "at": "2026-10-18T09:53:20+09:00",
+  "digest": "6de8932dc06b8e27"
+ },
+ "20261018_kit_mancity": {
+  "at": "2026-10-18T10:18:35+09:00",
+  "digest": "ebf9312c648352b4"
+ },
+ "20261018_transfer_tottenham_window": {
+  "at": "2026-10-18T10:04:29+09:00",
+  "digest": "6f0167444499fae3"
+ },
+ "20261018_xavi_legend": {
+  "at": "2026-10-18T03:01:18+09:00",
+  "digest": "6f89cf7eef2a848a"
+ },
+ "20261018_nakata_legend": {
+  "at": "2026-10-18T03:01:18+09:00",
+  "digest": "b7ef0614f352d3f8"
+ },
+ "20261018_maeda_first_goal": {
+  "at": "2026-10-18T10:58:22+09:00",
+  "digest": "abf072076bdd003f"
+ },
+ "20261018_barca_betis_yamal": {
+  "at": "2026-10-18T10:58:24+09:00",
+  "digest": "551d4febc66f3361"
+ },
+ "20261018_suzuki_zion_cleansheet2": {
+  "at": "2026-10-18T10:58:25+09:00",
+  "digest": "b2df29956849decb"
+ },
+ "20261018_sano_kaishu_mainz": {
+  "at": "2026-10-18T10:58:26+09:00",
+  "digest": "d2a54b753f3b4173"
+ },
+ "20261018_morita_hull_fulham": {
+  "at": "2026-10-18T10:58:27+09:00",
+  "digest": "bfd6ebf127116d79"
+ },
+ "20261018_maresca_haaland_limp": {
+  "at": "2026-10-18T10:58:28+09:00",
+  "digest": "be0a4e28e49f7dbe"
+ },
+ "20261018_city_ffp_35clubs_estimate": {
+  "at": "2026-10-18T10:58:30+09:00",
+  "digest": "c41b9f1ff8588c2e"
+ },
+ "20261018_sano_kota_psv_ado": {
+  "at": "2026-10-18T10:58:31+09:00",
+  "digest": "9456c1f398f24adb"
+ },
+ "20261018_tanaka_ao_leeds_united": {
+  "at": "2026-10-18T10:58:32+09:00",
+  "digest": "fbf7182984aacbe6"
+ },
+ "20261019_rogers_intro": {
+  "at": "2026-10-19T00:30:29+09:00",
+  "digest": "e297b0f38668174a"
+ },
+ "20261019_stadium_tottenham": {
+  "at": "2026-10-18T22:53:54+09:00",
+  "digest": "3d6933b67aed14ce"
+ },
+ "20261019_compare_bayern_dortmund": {
+  "at": "2026-10-19T08:15:51+09:00",
+  "digest": "437558dc72a2bac8"
+ },
+ "20261019_finance_inter": {
+  "at": "2026-10-19T00:52:34+09:00",
+  "digest": "084e3770565fc289"
+ },
+ "20261019_record_cl_goals": {
+  "at": "2026-10-19T00:00:52+09:00",
+  "digest": "6a9fd2b71bbb731d"
+ },
+ "20261019_kit_newcastle": {
+  "at": "2026-10-18T22:53:59+09:00",
+  "digest": "b26fb52279d45add"
+ },
+ "20261019_transfer_arsenal_window": {
+  "at": "2026-10-19T00:00:12+09:00",
+  "digest": "ed760419f6f06e20"
+ },
+ "20261019_iniesta_legend": {
+  "at": "2026-10-18T22:54:01+09:00",
+  "digest": "4def1b1e0772e43d"
+ },
+ "20261019_hasebe_legend": {
+  "at": "2026-10-19T00:36:04+09:00",
+  "digest": "cf9f4c33023b8bd7"
+ },
+ "20261019_kubo_first_goal": {
+  "at": "2026-10-19T09:39:24+09:00",
+  "digest": "6868608293d56ecb"
+ },
+ "20261019_realmadrid_sevilla_mourinho": {
+  "at": "2026-10-19T09:39:25+09:00",
+  "digest": "c0f8114e31a67317"
+ },
+ "20261019_arsenal_forest_madueke": {
+  "at": "2026-10-19T10:51:29+09:00",
+  "digest": "d0fe8000a9e5e3a3"
+ },
+ "20261019_emartinez_jaw_surgery": {
+  "at": "2026-10-19T09:39:28+09:00",
+  "digest": "080a2c99a0910a65"
+ },
+ "20261019_tanaka_ao_leeds_mu_draw": {
+  "at": "2026-10-19T12:32:55+09:00",
+  "digest": "0af9fd5e012f86a0"
+ },
+ "20261019_minamino_monaco_first_loss": {
+  "at": "2026-10-19T12:50:00+09:00",
+  "digest": "324d3e81940940ee"
+ },
+ "20261019_dezerbi_phone_ban": {
+  "at": "2026-10-19T12:32:58+09:00",
+  "digest": "12de4a0883975d12"
+ },
+ "20261019_getafe_ramos_link": {
+  "at": "2026-10-19T09:39:34+09:00",
+  "digest": "e2d3fbb4d44f9193"
+ },
+ "20261019_ueda_plantar_out": {
+  "at": "2026-10-19T12:33:16+09:00",
+  "digest": "9ca0d8a1f5477662"
+ },
+ "20261019_kamada_palace_brighton": {
+  "at": "2026-10-19T12:33:11+09:00",
+  "digest": "bfa5ee0db988709d"
+ },
+ "20261019_maeda_local_praise": {
+  "at": "2026-10-19T12:33:13+09:00",
+  "digest": "9d852cf2ccbfbd4b"
+ },
+ "20261019_nakamura_keito_red_card": {
+  "at": "2026-10-19T11:40:31+09:00",
+  "digest": "fd0d1d3f92844a58"
+ },
+ "20261020_sobosslai_intro": {
+  "at": "2026-10-20T00:09:54+09:00",
+  "digest": "937c8aef998d016f"
+ },
+ "20261020_stadium_etihad": {
+  "at": "2026-10-19T23:47:06+09:00",
+  "digest": "79dd0a9d374edcc2"
+ },
+ "20261020_finance_villa": {
+  "at": "2026-10-20T00:15:42+09:00",
+  "digest": "4c0dfcb34cb568af"
+ },
+ "20261020_kit_tottenham": {
+  "at": "2026-10-20T00:16:32+09:00",
+  "digest": "5f51c42444324a57"
+ },
+ "20261020_beckham_legend": {
+  "at": "2026-10-20T00:23:13+09:00",
+  "digest": "40239a7e05eaf591"
+ },
+ "20261020_nakamura_shunsuke_legend": {
+  "at": "2026-10-20T00:29:02+09:00",
+  "digest": "045e566eb15f3350"
+ },
+ "20261020_compare_ranking_ga": {
+  "at": "2026-10-20T10:03:10+09:00",
+  "digest": "6c160e72b02de247"
+ },
+ "20261020_sato_ryunosuke_no_minutes": {
+  "at": "2026-10-20T10:02:57+09:00",
+  "digest": "431b49f6c2986bed"
+ },
+ "20261020_tomiyasu_out_extended": {
+  "at": "2026-10-20T10:02:59+09:00",
+  "digest": "fc7a87bb287321ad"
+ },
+ "20261020_endo_no_minutes": {
+  "at": "2026-10-20T10:03:00+09:00",
+  "digest": "5ecf057c020afccb"
+ },
+ "20261020_suzuki_yui_spurs_interest": {
+  "at": "2026-10-20T10:03:02+09:00",
+  "digest": "60b3741b4fcb6798"
+ },
+ "20261020_tottenham_first_win_maddison": {
+  "at": "2026-10-20T10:03:03+09:00",
+  "digest": "a64301a1b90cae2b"
+ },
+ "20261020_kulusevski_return": {
+  "at": "2026-10-20T10:03:04+09:00",
+  "digest": "17bcc2ae83f96642"
+ },
+ "20261020_city_demotion_speculation": {
+  "at": "2026-10-20T10:03:06+09:00",
+  "digest": "72fc2f060b9a822e"
+ },
+ "20261020_kubo_local_praise": {
+  "at": "2026-10-20T10:03:48+09:00",
+  "digest": "fd0b3c090ec76cd5"
+ },
+ "20261020_tanaka_ao_mystery_rating": {
+  "at": "2026-10-20T10:03:09+09:00",
+  "digest": "916b5c570d511e1a"
+ },
+ "20261020_sakamoto_first_start": {
+  "at": "2026-10-20T12:53:52+09:00",
+  "digest": "639d7deef740207a"
  }
 }

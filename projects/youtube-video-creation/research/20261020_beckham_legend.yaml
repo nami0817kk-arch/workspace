@@ -1,0 +1,726 @@
+# ベッカム（元マンチェスター・U／レアル・マドリード／LAギャラクシー／PSG／イングランド代表主将・いまはインテル・マイアミ会長）の紹介。シリーズ「レジェンドの紹介（世界）」。見本は 10/19 のイニエスタ・10/18 のシャビ。
+# 型は引退した選手向けの8節：①フック ②基礎DATA ③歩んできた道と転機 ④プレースタイル（通算の表） ⑤あの試合（1999-05-26 CL決勝） ⑥引退後・いま ⑦マル秘話2つ ⑧見立て。
+# **題の読み直し**（候補「右足のクロスが、4つの国で優勝をもたらした」）：
+#   ・「4つの国で優勝」は本当（イングランド・スペイン・アメリカ・フランス）。ただし(1)アメリカは MLSカップ（プレーオフを勝ち上がる優勝）、(2)フランスは約5か月・全大会14試合の途中加入、(3)イタリア（ミランへの貸出）は優勝なし、(4)「クロスが優勝をもたらした」と言い切れるのは1999年CL決勝の2本のコーナーだけ。
+#   ・リーグ優勝の回数は 6（プレミア）＋1（ラ・リーガ2006-07）＋2（MLSカップ2011・2012）＋1（リーグ・アン2012-13）＝10。AP（2013-05-12 SI掲載）も「4か国・リーグ優勝メダル10個」と書く（一致）。
+#   → 題は「4つの国で、10回のリーグ優勝」（数字で言い、因果は言わない）。クロスの話は「あの試合」で、コーナー2本の事実として語る。
+# **FotMob は使わない**。数字は基本の数と、自分で割った・数えた値。Transfermarkt・DataMB・FBref 等は見ていない。公開予定は 10/20。**台本は draft まで**（approve・build・screen・upload はしない）。
+# **引退後の私生活・法的な問題は入れない**（結婚・家族・事業・報道のあった私的な話は不使用。ファーガソンとの確執・ブーツの件も、題に答えないので落とした）。
+#
+# **出どころ（本文を実際に読んだもの。requests と WebSearch の URL 探しのみ。ブラウザの道具は不使用）と確度**
+# - FCバルセロナ公式（fcbarcelona.com「1999: Man United's miracle at Camp Nou」）：キーンとスコールズは出場停止／バスラーの先制／90分でも1-0／ベッカムのCKからギグスの弱いシュートをシェリンガムが足で同点／再開してすぐのCKからシェリンガムが頭、ソルシャールが決勝点／UEFA会長がトロフィーを渡しにピッチへ向かっていた。→ 報道（クラブ公式の記事）。2本目のCKを蹴った人は同記事に明記がないので、UEFA（検索結果の抜粋のみ・本文は接続切れで読めず）と Wikipedia（1999 UEFA Champions League final）の「ベッカムが再び」に従った。→ 背景。
+# - 1999年ロスタイム：表示は3分、1点目はロスタイムに入って36秒、決勝点は「3分のうち残り43秒」（Wikipedia）。→ 背景。台本は「約2分のうちに」。
+# - AP（2013-05-16。Boston Globe 掲載。本文を読んだ）：引退の言葉（「ひたむきに働いたサッカー選手として」「メッシが僕の横を走り抜けたとき」「代表の主将を務めたことが最も誇り」）、PSGでの給料の寄付、MLS・マンU・レアルでの優勝、1998年の退場と2001年ギリシャ戦。→ 報道。
+# - SI（AP配信・2013-05-12）：PSGがリヨンに1-0、1994年以来のリーグ優勝／ベッカムは4か国で優勝、リーグ優勝メダル10個。→ 報道。
+# - FourFourTwo（PA配信）：5か月契約・37歳・給料を寄付・全大会14試合。→ 報道。
+# - Sky Sports（2016-08-17、2025-06-14）：ウィンブルドン戦のゴールの経緯と本人・ファーガソンの言葉、ナイトの称号（理由：選手としての実績と慈善）、マンU394試合85得点、代表115試合・主将59試合。→ 報道。
+# - AP（2026-04-04。Fox Sports 掲載）：インテル・マイアミがマイアミ市内で初めての試合、昨季MLSカップを制した、ベッカムの言葉、2014年に新クラブの権利を行使。→ 報道。
+# - Yahoo Sports（PA）：2001-10-06 ギリシャ戦、1-2でロスタイムに入り、ベッカムのFKで2-2、W杯出場。→ 報道。
+# - ESPN（site.api.espn.com）：W杯1998 イングランド対アルゼンチン 2-2・PK 3-4 でベッカム退場（記録の赤カード1）／ラ・リーガ2007-06-17 レアル対マヨルカ（ベッカム先発・66分に交代）。→ 報道（統計の出どころ）。レアルの公式（realmadrid.com）：勝ち点76で並び、直接対決で優勝。→ 確定に近いが台本では「優勝」だけ使用。
+# - Wikipedia（David Beckham／MLS Cup 2025／2026 Inter Miami CF season／1999 UEFA Champions League final）：出場・得点の表、優勝歴、ベッカム・ルール（指定選手制度）、新クラブの権利 2,500万ドル、インテル・マイアミの会長。→ 背景。
+#
+# **食い違い・不確かな点と台本での扱い**
+# - PSGの出場数：FourFourTwo 14試合（全大会）／別の記事 12試合／Wikipedia リーグ10。→ 「全大会で14試合」（Wikipedia の表と一致）。
+# - ウィンブルドン戦の距離：55ヤード・60ヤードと記事で違う。→ 言わない。GKは「少し離れていた」（Sky）。
+# - ギリシャ戦のFKの分数：93分・94分・「ロスタイム2分」と食い違う。→ 分数は言わず「ロスタイム」。
+# - ベッカム・ルールは「この移籍で作られ、のちにそう呼ばれた」（Wikipedia。MLSの公式ページは読めていない）。→ 背景。
+# - 「優勝した季」：マンUは1995-96〜2002-03の8季（優勝6）、ほか3か国は レアル4季・ギャラクシー6季（暦年2007〜2012）・PSG1季＝11季（優勝4）。ミラン貸出の季は別に数えず、得点の割合にだけ入れた（85÷394＝0.22／42÷330＝0.13）。
+# - 51歳：1975-05-02 生まれ。
+# - FotMob 不使用。読めなかったもの：UEFA の記事本文（接続切れ）、MLS 公式、manutd.com の本文。
+#
+# **自分で数えた比べ（⑧）**：優勝した季の割合 マンU 6÷8＝75%／ほか 4÷11＝36%（約2倍）。1試合あたりの得点 0.22点／0.13点（約1.7倍）。
+# **日本語名・読みで怪しいもの**：ベッカム／ファーガソン／シェリンガム／ソルシャール／シュマイケル／ギグス／キーン／スコールズ／バスラー（台本では「バイエルンが先制」とだけ言う）／カンプ・ノウ／インテル・マイアミ／パリ・サンジェルマン／カントナ。
+# 本人の言葉は5か所（自訳。原文は上の出典）。
+date: 2026年10月20日
+slot: other_1
+format: news
+series: レジェンドの紹介
+people:
+- デビッド・ベッカム
+theme:
+  end_bg: assets/images/20261020_beckham_legend/b12_face_w.jpg
+  id: legend_beckham
+  kind: other
+  topic: マンチェスター・ユナイテッド
+  title: ベッカムは、どんな選手だった？ 4つの国で、10回のリーグ優勝
+  question: 4つの国でリーグ優勝をした右足の人は、どんな選手だったのか。1999年の2本のコーナーと、いまの会長の姿
+  takeaway: リーグ優勝10回のうち6回は、マンUの8季（優勝した季の割合75%）。ほか3か国は11季で4回（36%）。1試合あたりの得点も0.22点から0.13点へ。次の節目は、会長を務めるインテル・マイアミの今季のMLSカップ
+  nameplate: ベッカム｜元MF・インテル・マイアミ会長
+  opening_image: assets/images/20261020_beckham_legend/b06_eng_w.jpg
+  bgm: assets/audio/bgm_calm.wav
+short_title: ベッカムは、どんな選手だった？
+thumbnail:
+  layout: face
+  callouts:
+  - パリでは無給
+  line1: ベッカム、リーグ優勝
+  line2: 4か国で10回
+  tags:
+  - マンチェスター・ユナイテッド
+  - インテル・マイアミ
+  - イングランド代表
+  - ベッカム
+  - レジェンド
+  - 選手紹介
+  photo: assets/images/20261020_beckham_legend/b12_face_w.jpg
+  photos: []
+  short_photo: assets/images/20261020_beckham_legend/b06_eng_v.jpg
+sections:
+- id: hook
+  heading: ベッカムは、どの国で、何回優勝した人なのか
+  tier: 報道
+  telop: ベッカム、4つの国で優勝
+  narrator: 解説
+  card:
+    type: stats
+    title: ベッカム 51歳
+    items:
+    - - '4'
+      - か国
+      - リーグ優勝をした国
+    - - '10'
+      - 回
+      - リーグ優勝（MLSカップを含む）
+    - - '115'
+      - 試合
+      - イングランド代表
+    focus: 0
+  say:
+  - text: イングランド、スペイン、アメリカ、フランス。
+    image: assets/images/20261020_beckham_legend/b06_eng_w.jpg
+    card:
+      type: stats
+      title: ベッカム 51歳
+      items:
+      - - '4'
+        - か国
+        - リーグ優勝をした国
+      - - '10'
+        - 回
+        - リーグ優勝（MLSカップを含む）
+      - - '115'
+        - 試合
+        - イングランド代表
+      focus: 0
+  - text: 4つの国で、リーグ優勝を経験した、右足の人がいます。
+    emph: true
+    card:
+      type: stats
+      title: ベッカム 51歳
+      items:
+      - - '4'
+        - か国
+        - リーグ優勝をした国
+      - - '10'
+        - 回
+        - リーグ優勝（MLSカップを含む）
+      - - '115'
+        - 試合
+        - イングランド代表
+      focus: 1
+  - text: リーグ優勝は、マンチェスター・ユナイテッドで6回。ほかの3か国で4回。
+    card:
+      type: stats
+      title: ベッカム 51歳
+      items:
+      - - '4'
+        - か国
+        - リーグ優勝をした国
+      - - '10'
+        - 回
+        - リーグ優勝（MLSカップを含む）
+      - - '115'
+        - 試合
+        - イングランド代表
+      focus: 1
+  - text: 2013年に引退して、いまはアメリカのクラブの会長です。
+    image: assets/images/20261020_beckham_legend/b12_face_w.jpg
+    card: none
+  - text: 引退のとき、どう見られたいかを聞かれて、こう答えました。
+    card: none
+  - voice: ベッカム
+    text: ひたむきに働いた、サッカー選手として見てほしい。
+  - voice: ベッカム
+    text: この競技に情熱を持ち、
+    cont: true
+  - voice: ベッカム
+    text: ピッチに立つたび、全部を出し切った選手として。
+    cont: true
+    pause: 0.5
+  quotes_from:
+  - https://www.bostonglobe.com/sports/2013/05/16/david-beckham-retire-from-soccer/sxrkhNhDS7j4vSEHtIV6EN/story.html
+  sources:
+  - https://www.bostonglobe.com/sports/2013/05/16/david-beckham-retire-from-soccer/sxrkhNhDS7j4vSEHtIV6EN/story.html
+  - https://www.si.com/soccer/2013/05/12/psg-title-ligue-1
+  - https://en.wikipedia.org/wiki/David_Beckham
+- id: data
+  heading: ベッカムは、いつ生まれ、どこで優勝してきたのか
+  tier: 報道
+  telop: ベッカムの基礎DATA
+  narrator: 解説
+  card:
+    type: table
+    title: ベッカム
+    columns: &id001
+    - 項目
+    - 内容
+    rows: &id002
+    - - 生年月日
+      - 1975年5月2日（51歳）
+    - - 生まれ
+      - イングランド・ロンドン
+    - - 位置
+      - 右サイドの中盤
+    - - クラブ
+      - マンU→レアル→ギャラクシー→PSG
+    - - 代表
+      - イングランド代表115試合17得点
+    - - リーグ優勝
+      - 4か国で10回
+    - - 欧州の優勝
+      - チャンピオンズリーグ1回（1999）
+    - - 個人賞
+      - バロンドール2位（1999）
+    source: クラブ公式・AP・Wikipedia
+  say:
+  - text: ベッカムは、1975年5月2日、ロンドンの生まれです。
+    image: assets/images/20261020_beckham_legend/b99_fa_w.jpg
+    card:
+      type: table
+      title: ベッカム
+      columns: *id001
+      rows: *id002
+      source: クラブ公式・AP・Wikipedia
+      highlight_row: 0
+  - text: リーグ優勝は、4つの国で、合わせて10回です。
+    emph: true
+    card:
+      type: table
+      title: ベッカム
+      columns: *id001
+      rows: *id002
+      source: クラブ公式・AP・Wikipedia
+      highlight_row: 5
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/David_Beckham
+  - https://www.si.com/soccer/2013/05/12/psg-title-ligue-1
+  - https://www.bostonglobe.com/sports/2013/05/16/david-beckham-retire-from-soccer/sxrkhNhDS7j4vSEHtIV6EN/story.html
+- id: career
+  heading: ロンドンの少年は、どうして4つの国で優勝できたのか
+  tier: 報道
+  telop: マンU、レアル、ギャラクシー、PSG
+  narrator: 解説
+  card:
+    type: table
+    title: 歩んできた道
+    columns: &id003
+    - 時期
+    - 所属
+    - できごと
+    rows: &id004
+    - - 1992〜2003
+      - マンチェスター・U
+      - 394試合85得点・リーグ優勝6回
+    - - 2003〜2007
+      - レアル・マドリード
+      - 159試合20得点・リーグ優勝1回
+    - - 2007〜2012
+      - LAギャラクシー
+      - 124試合20得点・MLSカップ2回
+    - - '2013'
+      - パリ・サンジェルマン
+      - 14試合・リーグ優勝1回
+    source: クラブ公式・Wikipedia
+  say:
+  - text: 1992年、17歳で、マンチェスター・ユナイテッドのトップチームへ。
+    image: assets/images/20261020_beckham_legend/b99_fa_w.jpg
+    card:
+      type: table
+      title: 歩んできた道
+      columns: *id003
+      rows: *id004
+      source: クラブ公式・Wikipedia
+      highlight_row: 0
+  - text: 右サイドの中盤に定着した1995年から、リーグ優勝が始まります。
+    card:
+      type: table
+      title: 歩んできた道
+      columns: *id003
+      rows: *id004
+      source: クラブ公式・Wikipedia
+      highlight_row: 0
+  - text: ところが1998年。ワールドカップのアルゼンチン戦で、退場します。
+    image: assets/images/20261020_beckham_legend/b06_eng_w.jpg
+    card: none
+  - text: イングランドはPK戦で敗れ、ベッカムへの批判が集まりました。
+    card: none
+  - text: それでも翌年、マンUは、国内のリーグと杯、欧州を、全部制します。
+    emph: true
+    card: none
+  - text: 2000年11月には、イングランド代表のキャプテンに。本人は、こう話しています。
+    card: none
+  - voice: ベッカム
+    text: いまも、いちばん誇れることの1つは、
+  - voice: ベッカム
+    text: 代表の主将を務めたことだ。
+    cont: true
+  - text: 2003年、スペインのレアル・マドリードへ。
+    image: assets/images/20261020_beckham_legend/b07_real_w.jpg
+    emph: true
+    card: none
+  - text: 4年間で、リーグ優勝は1回。最後の年でした。
+    card: none
+  - text: 2007年、アメリカのLAギャラクシーへ。5年契約でした。
+    image: assets/images/20261020_beckham_legend/b08_gal_w.jpg
+    card: none
+  - text: 給料に上限がある中、上限の外で契約できる決まりが、この移籍で生まれました。
+    card: none
+  - text: 2011年と2012年に、リーグの王者を決めるプレーオフを連覇。
+    image: assets/images/20261020_beckham_legend/b12_gal_w.jpg
+    emph: true
+    card: none
+  - text: 2013年、フランスのパリ・サンジェルマンへ。ここで、4つ目の国の優勝です。
+    image: assets/images/20261020_beckham_legend/b99_fa_w.jpg
+    card:
+      type: table
+      title: 歩んできた道
+      columns: *id003
+      rows: *id004
+      source: クラブ公式・Wikipedia
+      highlight_row: 3
+  quotes_from:
+  - https://www.bostonglobe.com/sports/2013/05/16/david-beckham-retire-from-soccer/sxrkhNhDS7j4vSEHtIV6EN/story.html
+  sources:
+  - https://en.wikipedia.org/wiki/David_Beckham
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/summary?event=198146
+  - https://www.realmadrid.com/en-US/news/club/latest-news/15-years-since-30th-league-title
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/summary?event=204147
+  - https://www.si.com/soccer/2013/05/12/psg-title-ligue-1
+  - https://www.bostonglobe.com/sports/2013/05/16/david-beckham-retire-from-soccer/sxrkhNhDS7j4vSEHtIV6EN/story.html
+- id: style
+  heading: ベッカムの右足は、何がすごかったのか
+  tier: 報道
+  telop: 曲がるボールと、ロスタイムの一撃
+  narrator: 解説
+  card:
+    type: table
+    title: ベッカムの通算（クラブは全大会）
+    columns: &id005
+    - 所属
+    - 試合
+    - 得点
+    rows: &id006
+    - - マンチェスター・U
+      - '394'
+      - '85'
+    - - プレストン（貸出）
+      - '5'
+      - '2'
+    - - レアル・マドリード
+      - '159'
+      - '20'
+    - - LAギャラクシー
+      - '124'
+      - '20'
+    - - ミラン（貸出）
+      - '33'
+      - '2'
+    - - パリ・サンジェルマン
+      - '14'
+      - '0'
+    - - クラブ計
+      - '729'
+      - '129'
+    - - イングランド代表
+      - '115'
+      - '17'
+    source: Wikipedia
+  say:
+  - text: 武器は、右足から出る、曲がるボールの精度です。
+    image: assets/images/20261020_beckham_legend/b07_real_w.jpg
+    card: none
+  - text: 足は速くない。だから、動き方とパスで勝負しました。
+    card: none
+  - text: 2001年10月6日。ワールドカップ予選、ギリシャ戦。
+    image: assets/images/20261020_beckham_legend/b06_eng_w.jpg
+    card: none
+  - text: イングランドは1対2で負けたまま、ロスタイムに入ります。
+    card: none
+  - text: ゴールから遠い位置で、フリーキック。蹴るのは、キャプテンのベッカム。
+    emph: true
+    card: none
+  - text: 右足のボールは、ゴールの上の隅へ。2対2の同点。本大会が決まりました。
+    card: none
+  - text: クラブでの通算は、729試合129得点。
+    image: assets/images/20261020_beckham_legend/b99_fa_w.jpg
+    card:
+      type: table
+      title: ベッカムの通算（クラブは全大会）
+      columns: *id005
+      rows: *id006
+      source: Wikipedia
+      highlight_row: 6
+  - text: 代表は115試合17得点。
+    card:
+      type: table
+      title: ベッカムの通算（クラブは全大会）
+      columns: *id005
+      rows: *id006
+      source: Wikipedia
+      highlight_row: 7
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/David_Beckham
+  - https://uk.sports.yahoo.com/news/day-2001-david-beckham-fires-050000251.html
+  - https://www.skysports.com/football/news/11095/13383159/kings-birthday-honours-list-2025-david-beckham-awarded-knighthood-while-luke-littler-receives-mbe
+- id: match
+  heading: 1999年5月26日、カンプ・ノウで何があったのか
+  tier: 報道
+  main: true
+  telop: 1999年5月26日、CL決勝
+  narrator: 解説
+  card:
+    type: table
+    title: CL決勝（1999年5月26日）
+    columns: &id007
+    - 項目
+    - 内容
+    rows: &id008
+    - - 日付・会場
+      - 1999年5月26日・バルセロナ
+    - - 対戦
+      - マンU対バイエルン
+    - - 前半6分
+      - バイエルンが先制
+    - - この日のベッカム
+      - 中盤の中央で先発
+    - - ロスタイム
+      - ベッカムのCKから、同点
+    - - その直後
+      - ベッカムのCKから、逆転
+    - - 結果
+      - 2対1。マンUが欧州の王者に
+    source: FCバルセロナ公式・UEFA・Wikipedia
+  say:
+  - text: 1つ選ぶなら、1999年5月26日の、チャンピオンズリーグ決勝です。
+    image: assets/images/20261020_beckham_legend/b99_cl_w.jpg
+    card: none
+  - text: 会場はカンプ・ノウ。マンチェスター・ユナイテッド対、バイエルン。
+    image: assets/images/20261020_beckham_legend/b99_fa_w.jpg
+    card:
+      type: table
+      title: CL決勝（1999年5月26日）
+      columns: *id007
+      rows: *id008
+      source: FCバルセロナ公式・UEFA・Wikipedia
+      highlight_row: 1
+  - text: 主力のキーンとスコールズが、出場停止。穴を埋めたのは、ベッカム。
+    card:
+      type: table
+      title: CL決勝（1999年5月26日）
+      columns: *id007
+      rows: *id008
+      source: FCバルセロナ公式・UEFA・Wikipedia
+      highlight_row: 3
+  - text: 試合開始6分。バイエルンが先制し、そのまま90分が過ぎます。
+    card:
+      type: table
+      title: CL決勝（1999年5月26日）
+      columns: *id007
+      rows: *id008
+      source: FCバルセロナ公式・UEFA・Wikipedia
+      highlight_row: 2
+  - text: 表示されたロスタイムは、3分。
+    card: &id009
+      type: stats
+      title: この夜のロスタイム
+      items:
+      - - '3'
+        - 分
+        - 表示されたロスタイム
+      - - '2'
+        - 点
+        - ベッカムのコーナーから
+      - - '3'
+        - 冠
+        - この年のマンUの優勝（リーグ・杯・欧州）
+      focus: 1
+  - text: マンUが、コーナーキックを得ます。蹴るのは、ベッカム。
+    card:
+      type: table
+      title: CL決勝（1999年5月26日）
+      columns: *id007
+      rows: *id008
+      source: FCバルセロナ公式・UEFA・Wikipedia
+      highlight_row: 4
+  - text: ゴール前へ。こぼれたボールを、ギグスが打つ。
+    image: assets/images/20261020_beckham_legend/b99_cl_w.jpg
+    emph: true
+    card: none
+  - text: その弱いシュートに、シェリンガムが足を出して、同点。
+    card: none
+  - text: ロスタイムに入って、わずか36秒。3分の枠の、ごく最初です。
+    image: assets/images/20261020_beckham_legend/b99_fa_w.jpg
+    card: *id009
+  - text: 試合が再開して、すぐ、もう1本のコーナー。蹴るのは、またベッカム。
+    card:
+      type: table
+      title: CL決勝（1999年5月26日）
+      columns: *id007
+      rows: *id008
+      source: FCバルセロナ公式・UEFA・Wikipedia
+      highlight_row: 5
+  - text: シェリンガムが頭で流し、ソルシャールが足で押し込みます。
+    image: assets/images/20261020_beckham_legend/b99_cl_w.jpg
+    emph: true
+    card: none
+  - text: 2対1の逆転勝ち。表示された3分の枠のうち、約2分のうちでした。
+    card: none
+  - text: 同点も、逆転も、ベッカムのコーナーから生まれました。
+    emph: true
+    card: none
+  quotes_from: []
+  sources:
+  - https://www.fcbarcelona.com/en/news/1112409/summary_large_image
+  - https://www.uefa.com/uefachampionsleague/news/newsid=2605469.html
+  - https://en.wikipedia.org/wiki/1999_UEFA_Champions_League_final
+  - https://en.wikipedia.org/wiki/David_Beckham
+- id: now
+  heading: 引退したベッカムは、いま何をしているのか
+  tier: 報道
+  telop: 引退から、インテル・マイアミへ
+  narrator: 解説
+  card:
+    type: timeline
+    title: 引退から、いままで
+    rows: &id010
+    - - 2013年5月
+      - PSGで優勝、現役を引退
+    - - 2014年2月
+      - MLSの新クラブを持つ権利を使う
+    - - 2020年3月
+      - インテル・マイアミが初戦
+    - - 2025年6月
+      - 国王から、ナイトの称号
+    - - 2025年12月
+      - インテル・マイアミがMLSカップ優勝
+    - - 2026年4月
+      - マイアミ市内の新本拠地で初戦
+    focus: 5
+  say:
+  - text: 2013年5月16日。ベッカムは、現役の引退を発表します。
+    image: assets/images/20261020_beckham_legend/b12_face_w.jpg
+    card: none
+  - text: 引退を決めた理由を聞かれると、笑って、こう言いました。
+    card: none
+  - voice: ベッカム
+    text: たぶん、メッシが、僕の横を走り抜けたときかな。
+  - text: その10年後、メッシは、ベッカムが会長を務めるクラブへ移ります。
+    emph: true
+    card: none
+  - text: 2014年2月、選手時代の契約にあった権利を使い、新クラブを作ります。
+    image: assets/images/20261020_beckham_legend/b99_fa_w.jpg
+    card:
+      type: timeline
+      title: 引退から、いままで
+      rows: *id010
+      focus: 5
+      highlight_row: 1
+  - text: 2025年6月14日。国王から、貢献を認められ、ナイトの称号。
+    image: assets/images/20261020_beckham_legend/b12_face_w.jpg
+    emph: true
+    card: none
+  - text: 2025年12月6日。インテル・マイアミが、アメリカのリーグの王者に。
+    image: assets/images/20261020_beckham_legend/b99_fa_w.jpg
+    card:
+      type: timeline
+      title: 引退から、いままで
+      rows: *id010
+      focus: 5
+      highlight_row: 4
+  - text: 今年4月、マイアミ市内の新本拠地で、初めての試合。本人の言葉です。
+    image: assets/images/20261020_beckham_legend/b12_gal_w.jpg
+    card: none
+  - voice: ベッカム
+    text: 13年前、マイアミを選んだ。
+  - voice: ベッカム
+    text: 名前も、ファンも、スタジアムも無かった。
+    cont: true
+  - voice: ベッカム
+    text: 今日、僕らは新しい本拠地に立っている。僕らは王者だ。
+    cont: true
+    pause: 0.5
+  quotes_from:
+  - https://www.bostonglobe.com/sports/2013/05/16/david-beckham-retire-from-soccer/sxrkhNhDS7j4vSEHtIV6EN/story.html
+  - https://www.foxsports.com/articles/soccer/after-13-years-david-beckhams-dream-comes-true-inter-miami-calls-miami-home
+  sources:
+  - https://www.bostonglobe.com/sports/2013/05/16/david-beckham-retire-from-soccer/sxrkhNhDS7j4vSEHtIV6EN/story.html
+  - https://www.foxsports.com/articles/soccer/after-13-years-david-beckhams-dream-comes-true-inter-miami-calls-miami-home
+  - https://www.skysports.com/football/news/11095/13383159/kings-birthday-honours-list-2025-david-beckham-awarded-knighthood-while-luke-littler-receives-mbe
+  - https://en.wikipedia.org/wiki/2026_Inter_Miami_CF_season
+  - https://en.wikipedia.org/wiki/MLS_Cup_2025
+  - https://en.wikipedia.org/wiki/David_Beckham
+- id: story
+  heading: ハーフウェーラインの一撃と、給料を受け取らなかった5か月
+  tier: 報道
+  telop: マル秘話 開幕戦の一撃と、パリの5か月
+  narrator: 解説
+  card:
+    type: table
+    title: マル秘話
+    columns: &id011
+    - いつ
+    - 何があったか
+    rows: &id012
+    - - 1996年8月
+      - 開幕戦で、ハーフウェーラインから決めた
+    - - 2013年
+      - 給料を受け取らず、パリで優勝した
+    source: Sky Sports・AP・FourFourTwo
+    highlight_row: 0
+  say:
+  - text: 秘話は2つ。まず、1996年8月17日。21歳になったばかりの、開幕戦です。
+    image: assets/images/20261020_beckham_legend/b99_fa_w.jpg
+    card:
+      type: table
+      title: マル秘話
+      columns: *id011
+      rows: *id012
+      source: Sky Sports・AP・FourFourTwo
+      highlight_row: 0
+  - text: 相手はウィンブルドン。マンUが、2点をリードしていました。
+    card:
+      type: table
+      title: マル秘話
+      columns: *id011
+      rows: *id012
+      source: Sky Sports・AP・FourFourTwo
+      highlight_row: 0
+  - text: 終了間際。ハーフウェーライン付近から、前に出たキーパーの頭上へ、右足を振ります。
+    image: assets/images/20261020_beckham_legend/b99_cl_w.jpg
+    emph: true
+    card: none
+  - text: 実は、その約10分前にも、似たシュートを狙っていました。
+    card: none
+  - text: ファーガソン監督は、そのとき、助手にこう言ったそうです。
+    card: none
+  - voice: ファーガソン
+    text: もう一度やったら、交代させるぞ。
+  - text: 決まったあと、本人が、うれしかったことがあります。
+    card: none
+  - voice: ベッカム
+    text: ゴールよりも、カントナが「いいゴールだ」と、
+  - voice: ベッカム
+    text: 言ってくれたことが、うれしかった。
+    cont: true
+  - text: 2つ目は、2013年。37歳のベッカムが、パリへ向かった話です。
+    image: assets/images/20261020_beckham_legend/b99_fa_w.jpg
+    card:
+      type: table
+      title: マル秘話
+      columns: *id011
+      rows: *id012
+      source: Sky Sports・AP・FourFourTwo
+      highlight_row: 1
+  - text: 契約は、5か月。給料は受け取らず、パリの子ども向けの慈善団体へ寄付します。
+    emph: true
+    card:
+      type: table
+      title: マル秘話
+      columns: *id011
+      rows: *id012
+      source: Sky Sports・AP・FourFourTwo
+      highlight_row: 1
+  - text: 5月12日、19年ぶりのリーグ優勝。ベッカムは、4つ目の国で、優勝の一員に。
+    image: assets/images/20261020_beckham_legend/b12_gal_w.jpg
+    emph: true
+    card: none
+  - text: 5月18日、本拠地の最終戦。コーナーキックから、味方のゴールを生みました。
+    card: none
+  quotes_from:
+  - https://www.skysports.com/football/news/11667/10540496/remembering-that-david-beckham-wonder-goal-20-years-on
+  sources:
+  - https://www.skysports.com/football/news/11667/10540496/remembering-that-david-beckham-wonder-goal-20-years-on
+  - https://www.fourfourtwo.com/us/news/on-this-day-in-2013-david-beckham-joins-paris-st-germain-on-short-term-deal-1643544020000
+  - https://www.si.com/soccer/2013/05/12/psg-title-ligue-1
+  - https://www.bostonglobe.com/sports/2013/05/16/david-beckham-retire-from-soccer/sxrkhNhDS7j4vSEHtIV6EN/story.html
+  - https://en.wikipedia.org/wiki/David_Beckham
+- id: view
+  heading: 10回の優勝を、いた場所ごとに数えると
+  tier: 背景
+  viewpoint: true
+  narrator: 解説
+  telop: 次の節目は、今季のMLSカップ
+  card:
+    type: table
+    title: ベッカムの優勝（自分で数えた比べ）
+    columns: &id013
+    - 物差し
+    - マンU（8季）
+    - ほか3か国（11季）
+    rows: &id014
+    - - リーグ優勝
+      - 6回
+      - 4回
+    - - 優勝した季の割合
+      - 75%
+      - 36%
+    - - 1試合あたりの得点
+      - 0.22点
+      - 0.13点
+    source: クラブ公式・Wikipedia・AP（数えたのは当チャンネル）
+    highlight_row: 0
+  say:
+  - text: 終わりに、ベッカムの10回のリーグ優勝を、いた場所ごとに数えます。
+    image: assets/images/20261020_beckham_legend/b99_fa_w.jpg
+    card:
+      type: table
+      title: ベッカムの優勝（自分で数えた比べ）
+      columns: *id013
+      rows: *id014
+      source: クラブ公式・Wikipedia・AP（数えたのは当チャンネル）
+      highlight_row: 0
+  - text: マンUは、主力になった1995年以降の8季で、優勝6回。
+    card:
+      type: table
+      title: ベッカムの優勝（自分で数えた比べ）
+      columns: *id013
+      rows: *id014
+      source: クラブ公式・Wikipedia・AP（数えたのは当チャンネル）
+      highlight_row: 0
+  - text: レアル、ギャラクシー、パリ・サンジェルマンの11季は、4回。
+    image: assets/images/20261020_beckham_legend/b08_gal_w.jpg
+    card: none
+  - text: 優勝した季の割合は、マンUが75%。ほか3か国は、36%です。
+    image: assets/images/20261020_beckham_legend/b99_fa_w.jpg
+    emph: true
+    mark:
+      kind: circle
+      row: 1
+    card:
+      type: table
+      title: ベッカムの優勝（自分で数えた比べ）
+      columns: *id013
+      rows: *id014
+      source: クラブ公式・Wikipedia・AP（数えたのは当チャンネル）
+      highlight_row: 1
+  - text: 1試合あたりの得点も、0.22点から、0.13点へ。ミランへの貸出も含めた数。
+    card:
+      type: table
+      title: ベッカムの優勝（自分で数えた比べ）
+      columns: *id013
+      rows: *id014
+      source: クラブ公式・Wikipedia・AP（数えたのは当チャンネル）
+      highlight_row: 2
+  - text: アメリカの優勝は、プレーオフを勝ち上がって決まる形でした。
+    image: assets/images/20261020_beckham_legend/b12_face_w.jpg
+    card: none
+  - text: 次の節目は、インテル・マイアミの、今季のプレーオフ。
+    card: none
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/David_Beckham
+  - https://www.si.com/soccer/2013/05/12/psg-title-ligue-1
+  - https://www.skysports.com/football/news/11095/13383159/kings-birthday-honours-list-2025-david-beckham-awarded-knighthood-while-luke-littler-receives-mbe
+  - https://en.wikipedia.org/wiki/2026_Inter_Miami_CF_season

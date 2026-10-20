@@ -1,0 +1,535 @@
+# クラブの財政：インテル（10/19 月、シリーズ「クラブの財政」、key: finance_inter、型は news）。
+#
+# 軸は「**収入の世界11位（インテル）と10位（チェルシー）の差は4660万ユーロ。その差は、1年でどう縮んだのか／何が残っているのか／給料を引くと誰が上か**」。
+#   ・順位の差ではなく「上との差と下との差」（11位は12位ドルトムントに620万ユーロしか上でない）と、5年の差の推移（約1.6億→約0.5億）を軸にする。
+#   ・収入の内訳は「インテルが1年で伸びた分（試合日・放映権・商業）」と「チェルシーとの残りの差（商業だけ）」。10/18 のチェルシーの回（トッテナムとの差・決算書の損益・人件費）の言い回しは使わない。
+#   ・チェルシーの数字は**デロイトの数字だけ**（収入・内訳・給料）。チェルシーの決算書（ポンド）の損益・赤字・償却・売却益・規制の費用は言わない（10/18 の回で出した）。
+#   ・インテルの数字は、デロイトとクラブ公式の発表（inter.it）。クラブ発表の収入（5億6700万ユーロ）とデロイトの収入（5億3750万ユーロ）は集計が別なので、同じ表に並べない。
+#   ★他の財政回の軸（バルサ＝使える上限／シティ＝判決／アルテタ＝契約／レアル＝スクワッド・コスト・ルール／PSG＝関連当事者取引／バイエルン＝株の持ち主／リヴァプール＝放映権／マンU＝償却・金融費用／
+#     トッテナム＝優勝の年の赤字／シティ×アーセナル＝収入の差760万ユーロと給料の比率／チェルシー＝トッテナムとの差・赤字2.8倍・人件費比率73%）は繰り返さない。
+#   ★アルファベットは読み上げに出さない。女子・部門名は並べない。選手名・移籍の話は言わない。
+#
+# **決算期**：インテル（エフ・チー・インテルナツィオナーレ・ミラノ）は**6月30日決算**。2024/25＝2025年6月期（取締役会の承認 2025-09-29、株主総会の承認 2025-10-15）。
+#   2025/26＝2026年6月期（取締役会 2026-09-24、株主総会 2026-10-12。**5日前に承認されたばかり**）。デロイトの集計は2024/25（2026-01-22 公表）。
+#   ・チェルシーの2026年6月期の決算書は**未提出**（Companies House の提出履歴の最新は2025年6月期。2026-10-18 に確認）。
+#
+# **出どころ（読んだもの）**:
+#   ○ **デロイト Football Money League 2026（2024/25）一次ページ（deloitte.com）**：ランキング 10位チェルシー・11位インテル・12位ドルトムント。クラブごとの図（ページに埋め込まれた
+#       図の中身。e.infogram.com の各クラブの図を読んだ）から：
+#       インテル 2025 収入 **€537.5m**（前の年 €391m、+37%、+€146.5m）／試合日・放映権・商業・給料（百万ユーロ）：2021 2・216・113・274.6／2022 44・177・87・252.9／2023 90・216・73・231／
+#         2024 81・198・112・232／**2025 108・277・153・257**。DFML の順位 11位。ピッチ上：欧州チャンピオンズリーグ準優勝、セリエA 2位。
+#       チェルシー 2025 収入 **€584.1m**（前の年 €545.5m、+7%、+€38.6m）／2021 9・309・176・379.7／2022 82・278・209・403.5／2023 88・206・242・465／2024 93・190・262・394／**2025 103・242・239・418**。
+#         （欧州カンファレンスリーグ優勝。デロイトの注記：チェルシー女子の収入は男子と連結していない。）
+#       ドルトムント 2025 収入 **€531.3m**（前の年 €531.7m）／ 11〜20位の平均 €404m、上位10の平均 €837m（本文）／ 収入は「選手・監督の移籍金、VAT などを含まない」（本文の Comparability）／
+#       放映権の伸びの主な理由は拡大したクラブワールドカップ（マネー・リーグの10クラブが出場、放映権が17%増。本文）。
+#   ○ **インテルのクラブ公式発表（inter.it）**：2024/25 取締役会（2025-09-29）／株主総会（2025-10-15）の発表（収入5億6700万・純利益3540万・15年ぶり・費用4億8200万・3.8%増・社債の返済と3億5000万ユーロの借り入れ・投資適格）。
+#       2025/26 取締役会（2026-09-24）／株主総会（2026-10-12）の発表（収入5億1800万・純利益2270万・純資産マイナス1200万→プラス1040万・費用約2000万減・金融費用約1900万減）。いずれも日本語・英語・イタリア語版を読んだ。
+#   ○ **クラブの決算の内訳（報道：QuiFinanza 2025-10-16・Calcio e Finanza 2025-11-14・2026年版）**：2024/25 の内訳（テレビ 264.0／試合日 98.8／商業 142.3／選手売買 21.5／その他 39.9、合計 566.5）、人件費 253.2、
+#       金融費用 42.5、債務総額 6億6000万（前の年 7億3480万）。**クラブ公式の発表にある数字だけを「確定」、内訳と債務は「報道」（二次の記事）**。
+#       ★QuiFinanza の「テレビ264」と Calcio e Finanza の「テレビ136」は定義が違う（読めていない）。**内訳のテレビの額は台本に出さない**。
+#   ○ **ヨーロッパ中央銀行の参照相場（frankfurter 経由）2026-10-16：1ユーロ＝177.82円**。
+#   × 決算書（イタリアの法定決算）そのものは読んでいない。クラブ発表と二次の報道まで。債務の中身（社債の残り・借り入れの利率）は報道の要約の段階で、台本に利率は出さない。
+#   × オーナー（オークツリー）の取得の経緯・借入の期限は読んでいない。台本は「クラブ発表にある、オークツリー・キャピタルが運用する資金」だけ。
+#
+# 自分で計算した数（コードで検算した）:
+#   デロイトの収入：チェルシー 584.1／インテル 537.5／ドルトムント 531.3。差（チェルシー−インテル）46.6 →「4660万」。46.6÷584.1＝7.98% →「約8%」。
+#   インテル−ドルトムント＝6.2 →「620万」。46.6÷6.2＝7.52 →「約7.5倍」。インテル−11〜20位の平均404＝133.5（1.33倍）←台本では使わない。
+#   5年の収入（試合日＋放映権＋商業、百万ユーロ）：インテル 331・308・379・391・537.5／チェルシー 494・569・536・545.5・584.1。差：163・261・157・154.5・46.6。
+#     2020-21→2024-25 の差の縮み：154.5−46.6＝107.9 →「約1億800万」。インテルの5年の伸び：537.5÷331＝1.62倍 →「約1.6倍」。（チェルシー側の「○倍」は10/18 の回で言ったので言わない。）
+#   インテルの1年の伸び：537.5−391＝146.5（+37.5%）。試合日 108−81＝+27／放映権 277−198＝+79／商業 153−112＝+41。合計 147（図の整数。0.5の丸め差）。放映権の割合 79÷146.5＝53.9% →「54%」。
+#   残りの差（チェルシー−インテル）：試合日 103−108＝−5／放映権 242−277＝−35／商業 239−153＝+86 →合計 +46（図の整数。46.6）。商業 239÷153＝1.56倍 →「約1.6倍」。試合日と放映権でインテルが上の分 5＋35＝40。
+#   給料（デロイトの図）：インテル 257（257÷537.5＝47.8% →「48%」）／チェルシー 418（418÷584.1＝71.6% →「72%」）。給料の差 418−257＝161 →「1億6100万」。
+#     収入−給料：インテル 537.5−257＝280.5／チェルシー 584.1−418＝166.1。差 114.4 →「1億1440万」。**利益ではない**（償却・ほかの費用は引いていない）。
+#     インテルの決算の人件費 253.2（報道）と、デロイトの給料 257 は近い（定義は別）。
+#   クラブ発表の収入 567（内訳の合計 566.5）−選手売買 21.5＝545.0。デロイト 537.5 との差 7.5〜8（中身は読めていない）。
+#   2025/26：518（−49、49÷567＝8.6% →「約9%」）。自己資本 −12 → +10.4。金融費用 42.5（報道）に対し、公式「約50%、約1900万」の減。
+#   円換算：46.6×177.82＝8,286 百万円 →「約83億円」。
+#
+# **言い切っていないもの / 言わなかったもの**:
+#   ・11位が「12位に近い」のは収入の額の話。順位の入れ替わりの予想は言わない。次のデロイトの集計（2025/26）の結果は言わない。
+#   ・インテルの収入が増えた理由は、クラブの発表（国内と欧州の大会・クラブワールドカップ・商業の自然な伸び）まで。額の内訳（クラブワールドカップの分）は読めていない。
+#   ・チェルシーの収入の中身の理由（優勝した大会の収入など）は言わない（10/18 の回）。
+#   ・San Siro の売却・新スタジアムは、クラブ発表で「ミラノ市議会が買取りを認めた」と社長が述べた事実まで。台本では触れない（この回の問いから外れる）。
+#
+# 写真：assets/images/20261019_finance_inter/（01〜03＝サン・シーロ。04〜06＝スタンフォード・ブリッジ、10/18 の取り込み分を移した。credits.json 同梱）。
+# サムネは versus の案A。案B（number）・案C（scene）は報告に出す。
+date: 2026年10月19日
+slot: other_1
+format: news
+series: クラブの財政
+voice_min: 0
+people:
+- インテル
+- チェルシー
+theme:
+  end_bg: assets/images/20261019_finance_inter/01_w.jpg
+  id: finance_inter
+  league: italy
+  league_name: セリエA
+  kind: other
+  topic: インテルとチェルシー
+  title: インテル、デロイトの収入ランキングは11位。10位のチェルシーとの差は、いくらか
+  question: 収入の世界11位インテルと10位チェルシーの差は4660万ユーロ。その差は、どこにあるのか
+  lead: 収入の世界11位、インテル。
+  opening_image: assets/images/20261019_finance_inter/01_w.jpg
+  takeaway: デロイトの集計で2024-25の収入は、世界10位のチェルシーが5億8410万ユーロ、11位のインテルが5億3750万ユーロで、差は4660万ユーロ（チェルシーの収入の約8%）。12位ドルトムントとの差は620万ユーロで、上との差は下との差の約7.5倍。インテルは前の年から37%、1億4650万ユーロ増え、チェルシーとの差は1年で約1億800万ユーロ縮んだ。残る差は商業（チェルシーが8600万ユーロ上）で、試合日と放映権はインテルが上。デロイトの給料は、インテル2億5700万ユーロ（収入の48%）、チェルシー4億1800万ユーロ（72%）で、収入から給料を引いた残りはインテルが1億1440万ユーロ多い。インテル自身の2025-26の決算（10月12日承認）は、収入が5億1800万ユーロで前の年より4900万ユーロ少なく、純利益は2270万ユーロ
+short_title: インテル、収入は世界11位。10位との差は
+thumbnail:
+  layout: versus
+  photos:
+  - assets/images/20261019_finance_inter/01_w.jpg
+  - assets/images/20261019_finance_inter/04_w.jpg
+  names: [インテル, チェルシー]
+  numbers: ['5.4億€', '5.8億€']
+  line1: インテルは収入11位
+  line2: 10位との差は4660万€
+  cutout: false
+  callouts: [給料を引くと逆転]
+  tags:
+  - インテル
+  - セリエA
+  - クラブの財政
+  - サン・シーロ
+  - スタンフォード・ブリッジ
+sections:
+- id: rank
+  main: true
+  heading: 収入の世界11位は、10位と12位のどちらに近いのか
+  tier: 報道
+  telop: 収入の世界11位インテル。10位との差は4660万ユーロ、12位との差は620万ユーロ
+  narrator: キャスター
+  card: &rank_duel
+    type: duel
+    title: デロイトの収入ランキング（2024-25、百万ユーロ）
+    left: {name: インテル, club: 世界11位, photo: assets/images/20261019_finance_inter/01_sq.jpg, color: "#2a6fdb"}
+    right: {name: チェルシー, club: 世界10位, photo: assets/images/20261019_finance_inter/04_sq.jpg, color: "#034694"}
+    rows:
+    - [順位, 11位, 10位]
+    - [収入, '537.5', '584.1']
+    - [前の年の収入, '391.0', '545.5']
+    - [前の年との差, '+37%', '+7%']
+    bars: [収入, 前の年の収入]
+  say:
+  - text: インテルとチェルシー。収入の世界11位と10位の差を、数えます。
+    image: assets/images/20261019_finance_inter/01_w.jpg
+    short_only: true
+  - text: 会計事務所デロイトの集計で、収入の世界11位がインテル、10位がチェルシー。
+    image: assets/images/20261019_finance_inter/01_w.jpg
+    card:
+      <<: *rank_duel
+      highlight_row: 順位
+  - text: 2024-25の収入は、チェルシーが5億8410万ユーロ。
+    emph: true
+    card:
+      <<: *rank_duel
+      highlight_row: 収入
+  - text: インテルは、5億3750万ユーロです。
+    card:
+      <<: *rank_duel
+      highlight_row: 収入
+  - text: その差は4660万ユーロ。チェルシーの収入の、約8%です。
+    card:
+      <<: *rank_duel
+      highlight_row: 収入
+    mark:
+      kind: circle
+      row: 1
+      col: 1
+  - text: 収入は、入場料などの試合日と、放映権と、商業の合計。移籍金は含みません。
+    card: none
+    callword: 差は4660万ユーロ
+  - text: 1つ下の12位は、ドルトムント。5億3130万ユーロです。
+    image: assets/images/20261019_finance_inter/02_w.jpg
+    card: &near_bars
+      type: bars
+      title: 収入の世界10位・11位・12位（百万ユーロ）
+      unit: ''
+      items:
+      - label: チェルシー
+        value: 584.1
+      - label: インテル
+        value: 537.5
+        highlight: true
+      - label: ドルトムント
+        value: 531.3
+  - text: インテルの下との差は、620万ユーロしかありません。
+    card: *near_bars
+  - text: 上との差を、下との差で割ると。
+    card: &near_calc
+      type: calc
+      title: 上との差 ÷ 下との差（百万ユーロ）
+      terms:
+      - [46.6, 上との差]
+      - [6.2, 下との差]
+      - [7.5, 倍]
+      ops: ['÷', '＝']
+  - text: 約7.5倍。順位は11位でも、収入の距離は12位のほうが近い。
+    emph: true
+    card: *near_calc
+  - text: 5年前の2020-21は、差が約1億6300万ユーロありました。
+    image: assets/images/20261019_finance_inter/03_w.jpg
+    card: &gap_line
+      type: line
+      title: 収入の5年（デロイトの図の合計、百万ユーロ）
+      x: [2020-21, 2021-22, 2022-23, 2023-24, 2024-25]
+      series:
+      - [チェルシー, [494, 569, 536, 545.5, 584.1]]
+      - [インテル, [331, 308, 379, 391, 537.5]]
+      unit: 百万ユーロ
+      focus: インテル
+      highlight: 2020-21
+  - text: 翌年は約2億6100万ユーロ。2023-24でも、約1億5500万ユーロでした。
+    card:
+      <<: *gap_line
+      focus: インテル
+      highlight: 2021-22
+  - text: ところが今年は、差が4660万ユーロ。1年で約1億800万ユーロ、縮みました。
+    emph: true
+    card:
+      <<: *gap_line
+      focus: インテル
+      highlight: 2024-25
+  - text: インテルの収入は、5年前の3億3100万ユーロから、約1.6倍になりました。
+    card:
+      <<: *gap_line
+      focus: インテル
+      highlight: 2024-25
+  - text: 1年で、何が差を縮めたのか。内訳で見ます。
+    card: none
+  sources:
+  - https://www.deloitte.com/uk/en/services/financial-advisory/analysis/deloitte-football-money-league.html
+- id: growth
+  heading: 1年で収入が37%増えたのは、何が増えたからか
+  tier: 報道
+  telop: 前の年から1億4650万ユーロ増。最大は放映権の7900万ユーロ
+  narrator: 解説
+  card: &up_fall
+    type: waterfall
+    title: インテルの収入の増え方（百万ユーロ）
+    start: [2023-24の収入, 391]
+    steps:
+    - [試合日, 27]
+    - [放映権, 79]
+    - [商業, 41]
+    total: [2024-25の収入, 537.5]
+    note: 図の整数の丸めで、合計が0.5ずれる
+    highlight: 2023-24の収入
+  say:
+  - text: インテルの収入は、前の年から1億4650万ユーロ増えました。伸びは37%です。
+    image: assets/images/20261019_finance_inter/02_w.jpg
+    card: *up_fall
+  - text: 試合日は、8100万から1億800万ユーロへ。2700万の増加。
+    card:
+      <<: *up_fall
+      highlight: 試合日
+  - text: 放映権は、1億9800万から2億7700万ユーロへ。7900万の増加です。
+    emph: true
+    card:
+      <<: *up_fall
+      highlight: 放映権
+  - text: スポンサーなどの商業は、1億1200万から1億5300万へ。4100万の増加。
+    card:
+      <<: *up_fall
+      highlight: 商業
+  - text: 増えた額の約54%が、放映権です。
+    card:
+      <<: *up_fall
+      highlight: 2024-25の収入
+  - text: この年のインテルは、欧州チャンピオンズリーグで準優勝でした。
+    image: assets/images/20261019_finance_inter/01_w.jpg
+    card: none
+  - text: 増えた理由を、クラブ自身は、こう発表しています。
+    card: &inter_doc
+      type: document
+      label: インテル 2024-25 決算発表（訳）
+      paragraphs:
+      - 収入の増加は、国内と欧州の大会の収入の増加によるもの。あわせて、初開催のFIFAクラブワールドカップに出場しました。
+      - 商業の収入も、スポンサーと試合日から、自然に増えました。
+      highlight:
+      - 国内と欧州の大会の収入
+      - クラブワールドカップ
+  - text: 国内と欧州の大会の収入の増加。そして、初開催のクラブワールドカップへの出場です。
+    card: *inter_doc
+  - text: では、残った4660万ユーロの差は、どこにあるのか。
+    image: assets/images/20261019_finance_inter/05_w.jpg
+    card: &item_table
+      type: table
+      title: 収入の中身（2024-25、百万ユーロ）
+      columns: [項目, インテル, チェルシー]
+      rows:
+      - [試合日, '108', '103']
+      - [放映権, '277', '242']
+      - [商業, '153', '239']
+      - [合計, '537.5', '584.1']
+      highlight_row: 0
+  - text: 試合日は、インテル1億800万、チェルシー1億300万ユーロ。インテルが上。
+    card: *item_table
+  - text: 放映権も、インテル2億7700万、チェルシー2億4200万ユーロ。インテルが上。
+    card:
+      <<: *item_table
+      highlight_row: 1
+  - text: 商業は、チェルシーが2億3900万、インテルが1億5300万ユーロ。
+    emph: true
+    card:
+      <<: *item_table
+      highlight_row: 2
+    mark:
+      kind: circle
+      row: 2
+      col: 2
+  - text: 差は8600万ユーロ。チェルシーは、インテルの約1.6倍です。
+    card:
+      <<: *item_table
+      highlight_row: 2
+  - text: 試合日と放映権で、インテルが上回る分は、合わせて約4000万ユーロ。
+    card:
+      <<: *item_table
+      highlight_row: 3
+  - text: 商業の差の、半分近くを埋めて、残りが4660万ユーロ。
+    card:
+      <<: *item_table
+      highlight_row: 3
+  sources:
+  - https://www.deloitte.com/uk/en/services/financial-advisory/analysis/deloitte-football-money-league.html
+  - https://www.inter.it/en/news/inter-board-approves-2024-25-financial-results
+- id: books
+  heading: インテル自身の決算では、利益はいくらで、借金はどうなったのか
+  tier: 確定
+  official: true
+  telop: 2024-25の収入は5億6700万ユーロ。純利益は3540万ユーロで、15年ぶりの黒字
+  narrator: 解説
+  card: &books_stats
+    type: stats
+    title: インテルの2024-25の決算（クラブ発表）
+    items:
+    - ['567', 百万ユーロ, 収入（過去最高）]
+    - ['482', 百万ユーロ, 費用]
+    - ['35.4', 百万ユーロ, 最終利益]
+    focus: 2
+  say:
+  - text: ここからは、インテル自身の決算です。対象は、2025年6月期です。
+    image: assets/images/20261019_finance_inter/03_w.jpg
+    card: none
+  - text: クラブの発表で、収入は5億6700万ユーロ。過去最高です。
+    card:
+      <<: *books_stats
+      focus: 0
+  - text: 費用は、4億8200万ユーロ。前の年から3.8%の増加。
+    card:
+      <<: *books_stats
+      focus: 1
+  - text: 最終は、3540万ユーロの黒字。15年ぶりの黒字です。
+    emph: true
+    card:
+      <<: *books_stats
+      focus: 2
+  - text: 前の年は、3570万ユーロの赤字でした。
+    card: none
+  - text: デロイトの5億3750万ユーロと、違うのはなぜか。
+    card: none
+  - text: デロイトの収入は、移籍金を含みません。
+    card: none
+  - text: クラブ発表には、選手の売買の収入が入っています。
+    card: none
+  - text: 報道では、その額は2150万ユーロ。除くと、約5億4500万ユーロ。
+    card: none
+  - text: 残りの約800万ユーロの違いは、中身を読めていません。
+    card: none
+  - text: 集計が別なので、デロイトの表には並べません。
+    card: none
+  - text: 次は、借金です。社債という形の借金を、全額、返済しました。
+    image: assets/images/20261019_finance_inter/02_w.jpg
+    card: none
+  - text: 代わりに、3億5000万ユーロの長期の借り入れ。
+    card: none
+  - text: 投資適格、つまり信用の高い格付けを得たと発表。
+    card: none
+  - text: オーナーは、クラブの発表によると、オークツリー・キャピタルが運用する資金です。
+    card: none
+  - text: そして、最新の2025-26の決算が、10月12日に承認されました。
+    image: assets/images/20261019_finance_inter/01_w.jpg
+    card: &books_table
+      type: table
+      title: インテルの決算の比べ（クラブ発表、百万ユーロ）
+      columns: [項目, 2024-25, 2025-26]
+      rows:
+      - [収入, '567', '518']
+      - [最終損益, '+35.4', '+22.7']
+      - [グループの純資産, '-12', '+10.4']
+      highlight_row: 0
+  - text: 収入は5億1800万ユーロ。前の年より4900万ユーロ、約9%少ない。
+    emph: true
+    card:
+      <<: *books_table
+      highlight_row: 0
+    mark:
+      kind: circle
+      row: 0
+      col: 2
+  - text: クラブは、前の年を、特別な収入があった年と説明しています。
+    card: &inter_doc2
+      type: document
+      label: インテル 2025-26 決算発表（訳）
+      paragraphs:
+      - 収入は5億1800万ユーロで、クラブ史上2番目に高い額です。前の年の記録は、クラブワールドカップへの出場と、チャンピオンズリーグ決勝への進出による、特別な収入が特徴でした。
+      highlight:
+      - クラブ史上2番目
+      - 特別な収入
+  - text: 世界大会への出場と、決勝進出が生んだ、特別な収入です。
+    card: *inter_doc2
+  - text: 最終利益は2270万ユーロ。2年連続の黒字です。
+    card:
+      <<: *books_table
+      highlight_row: 1
+  - text: 金融費用は、約1900万ユーロ減少。借り換えの効果と、クラブは説明します。
+    card: none
+  - text: グループの純資産は、マイナス1200万から、プラス1040万ユーロに戻りました。
+    card:
+      <<: *books_table
+      highlight_row: 2
+  sources:
+  - https://www.inter.it/en/news/inter-board-approves-2024-25-financial-results
+  - https://www.inter.it/en/news/inter-shareholders-meeting-october-2025
+  - https://www.inter.it/it/notizie/cda-inter-approvazione-risultati-finanziari-stagione-2025-26
+  - https://www.inter.it/it/notizie/comunicato-assemblea-soci-inter-12-ottobre-2026
+  - https://quifinanza.it/sport-economy/bilancio-inter-2025-utile-ricavi-debiti/933475/
+- id: wage
+  heading: 給料を引いた残りは、どちらが多いのか
+  tier: 報道
+  telop: 給料はインテル2億5700万、チェルシー4億1800万ユーロ。収入に対し48%と72%
+  narrator: 解説
+  card: &wage_duel
+    type: duel
+    title: 給料を引いた残り（デロイト、2024-25、百万ユーロ）
+    left: {name: インテル, club: 世界11位, photo: assets/images/20261019_finance_inter/01_sq.jpg, color: "#2a6fdb"}
+    right: {name: チェルシー, club: 世界10位, photo: assets/images/20261019_finance_inter/04_sq.jpg, color: "#034694"}
+    rows:
+    - [収入, '537.5', '584.1']
+    - [給料, '257', '418']
+    - [給料÷収入, '48%', '72%']
+    - [収入−給料, '280.5', '166.1']
+    bars: [収入, 給料]
+  say:
+  - text: デロイトは、給料の額も載せています。収入の差は、給料を考えると、変わるのか。
+    image: assets/images/20261019_finance_inter/05_w.jpg
+    card:
+      <<: *wage_duel
+      highlight_row: 収入
+  - text: 給料は、インテルが2億5700万ユーロ。チェルシーは4億1800万ユーロ。
+    card:
+      <<: *wage_duel
+      highlight_row: 給料
+  - text: 収入はチェルシーが4660万ユーロ多い。給料は、1億6100万ユーロ多い。
+    emph: true
+    card:
+      <<: *wage_duel
+      highlight_row: 給料
+  - text: 収入に対する給料の割合は、インテルが48%。チェルシーが72%です。
+    card:
+      <<: *wage_duel
+      highlight_row: 給料÷収入
+    mark:
+      kind: circle
+      row: 2
+      col: 0
+  - text: 収入から給料を引くと、インテルは2億8050万ユーロ。
+    card:
+      <<: *wage_duel
+      highlight_row: 収入−給料
+  - text: チェルシーは、1億6610万ユーロです。
+    card:
+      <<: *wage_duel
+      highlight_row: 収入−給料
+  - text: 引き算で、差を出します。
+    card: &rest_calc
+      type: calc
+      title: 収入から給料を引いた残りの差（百万ユーロ）
+      terms:
+      - [280.5, インテルの残り]
+      - [166.1, チェルシーの残り]
+      - [114.4, 差]
+      ops: ['-', '＝']
+  - text: 残りは、インテルのほうが、1億1440万ユーロ多い。
+    emph: true
+    card: *rest_calc
+  - text: ただし、この残りは利益ではありません。
+    card: none
+  - text: ほかの費用や、選手の償却は、まだ引いていません。
+    card: none
+  - text: デロイトの給料と、決算の人件費は、定義が別です。
+    card: none
+  - text: 報道のインテルの人件費は2億5320万ユーロ。デロイトの額と、近い数字です。
+    card: none
+  sources:
+  - https://www.deloitte.com/uk/en/services/financial-advisory/analysis/deloitte-football-money-league.html
+  - https://quifinanza.it/sport-economy/bilancio-inter-2025-utile-ricavi-debiti/933475/
+- id: view
+  viewpoint: true
+  heading: 見立て・収入は10位に4660万ユーロ届かず、給料を引くと1億1440万ユーロ上
+  tier: 背景
+  telop: 上との差は下との差の約7.5倍。給料を引いた残りは、インテルが上
+  narrator: 解説
+  card: &view_table
+    type: table
+    title: 自分で数えてみた（2024-25、デロイトの数字）
+    columns: &view_cols [比べ, 答え]
+    rows: &view_rows
+    - [収入の差（チェルシー − インテル）, 4660万ユーロ（8%）]
+    - [上との差 ÷ 下との差, 約7.5倍]
+    - [給料の差（チェルシー − インテル）, 1億6100万ユーロ]
+    - [収入−給料の差（インテル − チェルシー）, 1億1440万ユーロ]
+    highlight_row: 0
+  say:
+  - text: 見立てです。数えた結果を、並べます。
+    image: assets/images/20261019_finance_inter/02_w.jpg
+    card: *view_table
+  - text: 収入の差は、チェルシーが上。4660万ユーロ。
+    card:
+      <<: *view_table
+      highlight_row: 0
+  - text: 円にすると、およそ83億円。
+    card: &yen_card
+      type: convert
+      title: 収入の差を円で見る
+      from: [4660万, ユーロ, 収入の差]
+      to: [約83億, 円, 2026年10月16日の相場]
+      via: 1ユーロ＝177.82円
+  - text: 円への換算は、10月16日の欧州中央銀行の基準レートです。
+    card: none
+  - text: ところが、下の12位との差は620万ユーロ。上との差の、約7.5分の1です。
+    emph: true
+    card:
+      <<: *view_table
+      highlight_row: 1
+    mark:
+      kind: circle
+      row: 1
+      col: 1
+  - text: 給料の差は1億6100万ユーロ。収入の差の、3倍以上。
+    card:
+      <<: *view_table
+      highlight_row: 2
+  - text: 給料を引くと、順位は逆。残りは、インテルのほうが上です。
+    emph: true
+    card:
+      <<: *view_table
+      highlight_row: 3
+    mark:
+      kind: circle
+      row: 3
+      col: 1
+  - text: 収入の順位は、給料を引く前の順位です。
+    card: none
+  - text: 次の注目は、デロイトの次の集計。2025-26のシーズンの数字が出ます。
+    card: none
+  - text: インテルのクラブ発表では、収入は前の年より、約9%減りました。
+    card: none
+  - text: チェルシーの2025-26の決算書は、提出前です。
+    card: none
+  - text: 差が開くのか、縮むのか。数字を待ちます。
+    card: none
+  sources:
+  - https://www.deloitte.com/uk/en/services/financial-advisory/analysis/deloitte-football-money-league.html
+  - https://www.inter.it/it/notizie/comunicato-assemblea-soci-inter-12-ottobre-2026
+  - https://find-and-update.company-information.service.gov.uk/company/02536231/filing-history
+  - https://api.frankfurter.app/2026-10-16?from=EUR&to=JPY

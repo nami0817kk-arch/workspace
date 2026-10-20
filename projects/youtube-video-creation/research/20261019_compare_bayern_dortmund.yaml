@@ -1,0 +1,430 @@
+# 取材メモ（10/19 月、シリーズ「比べる」＝クラブ、key: compare_bayern_dortmund）。バイエルン×ドルトムント。
+# 材料の控え: research/raw/20261019_compare_bayern_dortmund.md（**この控えの外へ出ていない**）。
+# **FotMob・DataMB は使っていない**。数字は ESPN と Transfermarkt（tmapi の順位表）の突き合わせ、試合記録は ESPN、
+#   タイトルは Transfermarkt の実績ページ（1ページずつ、8秒あけて取得）、収容人数は BVB 公式・Transfermarkt・muenchen.de・Wikipedia。
+# **基準は 2026年10月17日の第6節を終えた時点**。2クラブとも6試合・4勝2分け・勝ち点14・まだ負けていない。
+#   1位バイエルン（得失点差+17）、2位ドルトムント（+7）。**3位フライブルクは5試合で勝ち点13。10/18 22:30 JST のレバークーゼン戦が残っている。
+#   勝てば16で首位が入れ替わる。公開前に順位を取り直すこと**（台本は「10月17日の試合を終えた時点」と時点を言う。題の「首位争い」はそのまま）。
+# **ブリーフの「ブンデス優勝 34回と8回」は混在していた**：ドルトムントの8回はドイツ選手権の合計で、ブンデスリーガ（1963-64〜）は5回。
+#   Transfermarkt（55/56・56/57・62/63 の3回がブンデスリーガ以前）と英語版Wikipedia（BVB「fifth Bundesliga title and eighth German championship」）で確認。
+#   台本は「ブンデスリーガ 34と5」→「選手権を含めて 35と8」の2段で言う。
+# 自分で割った値：1試合あたり 22÷6=3.67／11÷6=1.83（22÷11=2.0倍）、失点 5÷6=0.83／4÷6=0.67、得点÷失点 22÷5=4.4／11÷4=2.75、
+#   5点以上の3試合（5・7・6）で18点＝18÷22=82%、無失点の試合 2と4（2倍）、ブンデスリーガ優勝 34÷5=6.8倍、収容人数の差 6,341（約8%）。
+# 同じ数字・言い回しを避けた相手：10/12「ドルトムントとモナコ」（2対0から2対2・76分以降の得点・点を決めた人の数・最初の得点の分・先に失点した勝ち点）は使っていない。
+#   ドルトムントの 11点・4失点は今回も出るが、**今回の軸は1試合あたり・無失点の試合・ブンデスリーガ以外のタイトル・本拠地**。
+# 写真：すべて Wikimedia Commons（CC BY / CC BY-SA）。assets/images/20261019_compare_bayern_dortmund/credits.json に撮影者とライセンスを控えた。全部目で見て確認済み（人物のアップは無い）。
+#   01=アリアンツ外観(Delso)／02=アリアンツ空撮(Tobias Alt)／03=アリアンツ内側 2012の試合(TomHarmsen)／04=ドルトムント南スタンド(Neundorf)／
+#   05・06=ジグナル・イドゥナ・パルク空撮(Arne Müseler)／07=2021-22 バイエルン対ドルトムントのアリアンツ内側(UNTERMVIERENBERGE-2)／08=アリアンツ内側 試合前(Povysil.martin)。
+#   bay_sq.jpg・bvb_sq.jpg は手元のエンブレムを明るい地に置いた対面カード用の正方形（権利は晴れていない＝引き受ける危険）。
+# 反応・本人の言葉：入れていない（数字で比べる回）。
+slot: other_1
+date: "2026年10月19日"
+format: news
+series: 比べる
+people:
+  - バイエルン
+  - ドルトムント
+
+theme:
+  end_bg: assets/images/20261019_compare_bayern_dortmund/07_w.jpg
+  id: compare_bayern_dortmund
+  league: germany
+  kind: other
+  topic: バイエルンとドルトムント
+  prefix: ""
+  title: バイエルンとドルトムント、同じ勝ち点14の首位争い。得点と失点はどれだけ違うのか
+  hook: ""
+  question: 勝ち点14で並ぶ2クラブは、得点と失点でどれだけ違うのか
+  takeaway: 10月17日の第6節を終えて、バイエルン（1位）とドルトムント（2位）はどちらも4勝2分け・勝ち点14で並び、順位は得失点差（+17と+7）で分かれる。得点は22と11でちょうど2倍（1試合あたり3.67と1.83）、失点は5と4（0.83と0.67）で、無失点の試合はバイエルン2・ドルトムント4。得点を失点で割ると4.4と2.75。リーグ戦の収容人数は7万5024人と8万1365人でドルトムントが約8%多く、ブンデスリーガ優勝は34回と5回（ドイツ選手権を含めると35回と8回）、欧州の頂点は6回と1回。次の物差しは現地10月31日、バイエルンの本拠地での直接対決
+  league_name: ブンデスリーガ
+  opening_image: assets/images/20261019_compare_bayern_dortmund/07_w.jpg
+
+short_title: バイエルンとドルトムント、勝ち点14で並ぶ。違いは得点と失点
+
+thumbnail:
+  layout: number
+  photo: assets/images/20261019_compare_bayern_dortmund/07_w.jpg
+  number: 22対11
+  line1: バイエルンとドルトムント
+  line2: 同じ勝ち点14、得点は2倍
+  callouts: [得失点差は+17と+7, 無失点は2と4]
+  tags: [バイエルン, ドルトムント, ブンデスリーガ, 比べる, アリアンツ・アレーナ, ジグナル・イドゥナ・パルク]
+
+answer: 勝ち点14は同じ。得点はバイエルンが2倍（22と11）、無失点の試合はドルトムントが2倍（4と2）
+watch: 6試合だけの数字。10月31日の直接対決のあと、得点と失点の差がどう動くか
+
+sections:
+  - id: lead
+    heading: 同じ勝ち点14で並ぶ2クラブは、何が同じで何が違うのか
+    tier: 報道
+    telop: ブンデスリーガの1位と2位。どちらも6試合で勝ち点14
+    narrator: 解説
+    card: &rankcard
+      type: duel
+      left: {name: バイエルン, club: 1位, photo: assets/images/20261019_compare_bayern_dortmund/bay_sq.jpg, color: "#dc052d"}
+      right: {name: ドルトムント, club: 2位, photo: assets/images/20261019_compare_bayern_dortmund/bvb_sq.jpg, color: "#b89b00"}
+      rows:
+        - [試合, "6", "6"]
+        - [勝・分・敗, 4・2・0, 4・2・0]
+        - [勝ち点, "14", "14"]
+        - [得失点差, "+17", "+7"]
+      bars: [得失点差]
+      note: ブンデスリーガ 2026-27 第6節（10月17日）を終えた時点
+    say:
+      - text: バイエルンとドルトムント。ブンデスリーガの、1位と2位です。
+        image: assets/images/20261019_compare_bayern_dortmund/07_w.jpg
+        card: *rankcard
+      - text: 10月17日の試合を終えて、どちらも勝ち点14で並びました。
+        card: {<<: *rankcard, highlight_row: 勝ち点}
+      - text: 6試合で4勝2分け。どちらも、まだ負けていません。
+        card: {<<: *rankcard, highlight_row: 勝・分・敗}
+      - text: 順位を分けたのは、得失点差。取った点から、取られた点を引いた数です。
+        card: {<<: *rankcard, highlight_row: 得失点差}
+      - text: バイエルンがプラス17、ドルトムントがプラス7。この時点の首位は、バイエルン。
+        emph: true
+        card: {<<: *rankcard, highlight_row: 得失点差}
+      - text: 3位はフライブルクで、6試合を終えて勝ち点13。
+        image: assets/images/20261019_compare_bayern_dortmund/04_w.jpg
+        card: none
+      - text: 勝ち点が同じ2クラブは、点の取り方も、取られ方も、どう違うのか。
+        card: none
+    sources:
+      - https://site.api.espn.com/apis/v2/sports/soccer/ger.1/standings
+      - https://tmapi-alpha.transfermarkt.technology/competition/L1/table
+
+  - id: goals
+    main: true
+    heading: 得点は、バイエルンがドルトムントの何倍なのか
+    tier: 報道
+    telop: 得点は22と11。1試合あたりは3.67と1.83
+    narrator: 解説
+    card: &goalcard
+      type: duel
+      left: {name: バイエルン, club: 6試合, photo: assets/images/20261019_compare_bayern_dortmund/bay_sq.jpg, color: "#dc052d"}
+      right: {name: ドルトムント, club: 6試合, photo: assets/images/20261019_compare_bayern_dortmund/bvb_sq.jpg, color: "#b89b00"}
+      rows:
+        - [得点, "22", "11"]
+        - [得点（1試合）, "3.67", "1.83"]
+        - [失点, "5", "4"]
+        - [失点（1試合）, "0.83", "0.67"]
+        - [得失点差, "+17", "+7"]
+      bars: [得点, 得点（1試合）, 失点, 失点（1試合）]
+      lower: [失点, 失点（1試合）]
+      note: リーグ戦6試合。1試合あたりは自分で割った値
+    say:
+      - text: まず、6試合の得点です。バイエルンは22点。
+        image: assets/images/20261019_compare_bayern_dortmund/08_w.jpg
+        card: {<<: *goalcard, highlight_row: 得点}
+      - text: ドルトムントは11点。
+        card: {<<: *goalcard, highlight_row: 得点}
+      - text: 22を11で割ると、ちょうど2倍です。
+        emph: true
+        card: &twice
+          type: calc
+          title: 6試合の得点（バイエルンはドルトムントの）
+          terms:
+            - ['22点', バイエルンの得点]
+            - ['11点', ドルトムントの得点]
+            - ['2.0倍', 比]
+          ops: ['÷', ＝]
+      - text: 1試合ごとの平均では、3.67点と1.83点。
+        image: assets/images/20261019_compare_bayern_dortmund/06_w.jpg
+        card: {<<: *goalcard, highlight_row: 得点（1試合）}
+      - text: バイエルンは、1試合に3点台の後半を取っている計算です。
+        card: {<<: *goalcard, highlight_row: 得点（1試合）}
+      - text: 次は失点。バイエルンが5点、ドルトムントが4点です。
+        card: {<<: *goalcard, highlight_row: 失点}
+      - text: 1試合あたりでは、0.83点と0.67点。
+        card: {<<: *goalcard, highlight_row: 失点（1試合）}
+      - text: 失点は、ドルトムントのほうが1点少ない。
+        card: {<<: *goalcard, highlight_row: 失点}
+      - text: 取った点は2倍。取られた点は、1点の差です。
+        emph: true
+        image: assets/images/20261019_compare_bayern_dortmund/02_w.jpg
+        card: none
+      - text: 22引く5で、プラス17。11引く4で、プラス7。
+        card: {<<: *goalcard, highlight_row: 得失点差}
+      - text: 得失点差の差10点は、得点の差11点から失点の差1点を引いた数。
+        card: {<<: *goalcard, highlight_row: 得失点差}
+    sources:
+      - https://site.api.espn.com/apis/v2/sports/soccer/ger.1/standings
+      - https://tmapi-alpha.transfermarkt.technology/competition/L1/table
+
+  - id: matches
+    heading: 試合ごとに並べると、得点はどんな形をしているのか
+    tier: 報道
+    telop: バイエルンは5点以上の試合が3つ。ドルトムントの最多は3点
+    narrator: 解説
+    card: &linecard
+      type: line
+      title: 第1節から第6節の得点（リーグ戦）
+      unit: 点
+      x: [第1節, 第2節, 第3節, 第4節, 第5節, 第6節]
+      series:
+        - [バイエルン, [5, 0, 2, 7, 2, 6]]
+        - [ドルトムント, [2, 3, 3, 1, 2, 0]]
+      focus: バイエルン
+      peak: true
+    say:
+      - text: 次に、試合ごとの得点を並べます。
+        image: assets/images/20261019_compare_bayern_dortmund/03_w.jpg
+        card: *linecard
+      - text: バイエルンは第1節が5点、第2節は0点。
+        card: {<<: *linecard, highlight: 第2節}
+      - text: 第3節は2点、第4節は7点。第5節は2点で、第6節が6点です。
+        card: {<<: *linecard, highlight: 第4節}
+      - text: 1試合の最多は、バイエルンが7点。ドルトムントは3点です。
+        card: {<<: *linecard, highlight: 第4節}
+      - text: 5点以上の試合は、バイエルンだけで3つ。
+        emph: true
+        card: {<<: *linecard, highlight: 第6節}
+      - text: その3試合で18点。22点の、82%です。
+        image: assets/images/20261019_compare_bayern_dortmund/01_w.jpg
+        card: &share
+          type: calc
+          title: 5点以上の3試合が、6試合の得点に占める割合
+          terms:
+            - ['18点', 5点以上の3試合]
+            - ['22点', 6試合の得点]
+            - ['82%', 割合]
+          ops: ['÷', ＝]
+      - text: ドルトムントは、2点か3点の試合が6つのうち4つ。
+        card: {<<: *linecard, focus: ドルトムント, highlight: 第3節}
+      - text: 点が入らなかった試合は、どちらも0対0の引き分けが1つずつ。
+        card: {<<: *linecard, focus: ドルトムント, highlight: 第6節}
+      - text: バイエルンは、まとめて取る。ドルトムントは、少しずつ取る形です。
+        card: none
+        image: assets/images/20261019_compare_bayern_dortmund/05_w.jpg
+    sources:
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/teams/132/schedule
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/teams/124/schedule
+
+  - id: defence
+    heading: 点を取られない試合は、どちらが多いのか
+    tier: 報道
+    telop: 無失点の試合は、バイエルン2つ、ドルトムント4つ
+    narrator: 解説
+    card: &rescard
+      type: table
+      title: 6試合の結果（リーグ戦、自分たちの得点が先）
+      columns: [節, バイエルン, ドルトムント]
+      rows:
+        - [第1節, 5対1 勝, 2対0 勝]
+        - [第2節, 0対0 分, 3対2 勝]
+        - [第3節, 2対1 勝, 3対0 勝]
+        - [第4節, 7対0 勝, 1対0 勝]
+        - [第5節, 2対2 分, 2対2 分]
+        - [第6節, 6対1 勝, 0対0 分]
+    say:
+      - text: 失点の中身も、数えました。まず、6試合の結果です。
+        image: assets/images/20261019_compare_bayern_dortmund/05_w.jpg
+        card: *rescard
+      - text: バイエルンは、5対1の勝ち、0対0の分け、2対1の勝ち。
+        card: {<<: *rescard, highlight_row: 第2節}
+      - text: 続けて、7対0の勝ち、2対2の分け、6対1の勝ち。
+        card: {<<: *rescard, highlight_row: 第4節}
+      - text: ドルトムントは、2対0、3対2、3対0と、3つ勝っています。
+        card: {<<: *rescard, highlight_row: 第3節}
+      - text: そのあと、1対0の勝ち、2対2の分け、0対0の分け。
+        card: {<<: *rescard, highlight_row: 第6節}
+      - text: 相手に点を取られなかった試合は、バイエルンが2つ。
+        image: assets/images/20261019_compare_bayern_dortmund/03_w.jpg
+        card: &cleancard
+          type: duel
+          left: {name: バイエルン, club: 6試合, photo: assets/images/20261019_compare_bayern_dortmund/bay_sq.jpg, color: "#dc052d"}
+          right: {name: ドルトムント, club: 6試合, photo: assets/images/20261019_compare_bayern_dortmund/bvb_sq.jpg, color: "#b89b00"}
+          rows:
+            - [無失点の試合, "2", "4"]
+            - [2失点した試合, "1", "2"]
+            - [失点, "5", "4"]
+            - [失点（1試合）, "0.83", "0.67"]
+          bars: [無失点の試合, 2失点した試合, 失点, 失点（1試合）]
+          lower: [2失点した試合, 失点, 失点（1試合）]
+          note: リーグ戦6試合。1試合あたりは自分で割った値
+      - text: 0対0の分けと、7対0の勝ち。
+        card: {<<: *cleancard, highlight_row: 無失点の試合}
+      - text: ドルトムントは4つ。3つの勝ちと、0対0の分けです。
+        card: {<<: *cleancard, highlight_row: 無失点の試合}
+      - text: 無失点の試合は、ドルトムントがバイエルンの2倍。
+        emph: true
+        card: {<<: *cleancard, highlight_row: 無失点の試合}
+      - text: 2点取られた試合は、バイエルンが1つ、ドルトムントが2つ。
+        card: {<<: *cleancard, highlight_row: 2失点した試合}
+      - text: 点を取られない試合が多いのは、ドルトムントです。
+        image: assets/images/20261019_compare_bayern_dortmund/06_w.jpg
+        card: *cleancard
+    sources:
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/teams/132/schedule
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/teams/124/schedule
+
+  - id: stadium
+    heading: 本拠地の収容人数は、どちらが大きいのか
+    tier: 報道
+    telop: リーグ戦の収容人数は、7万5024人と8万1365人
+    narrator: 解説
+    card: &stadcard
+      type: duel
+      left: {name: バイエルン, club: アリアンツ・アレーナ, photo: assets/images/20261019_compare_bayern_dortmund/bay_sq.jpg, color: "#dc052d"}
+      right: {name: ドルトムント, club: ジグナル・イドゥナ・パルク, photo: assets/images/20261019_compare_bayern_dortmund/bvb_sq.jpg, color: "#b89b00"}
+      rows:
+        - [収容人数, '75,024人', '81,365人']
+        - [開場, 2005年, 1974年]
+        - [所在地, ミュンヘン, ドルトムント]
+      bars: [収容人数]
+      note: リーグ戦のときの収容人数。国際試合は別の数字になる
+    say:
+      - text: ここからは、本拠地です。バイエルンは、ミュンヘンのアリアンツ・アレーナ。
+        image: assets/images/20261019_compare_bayern_dortmund/01_w.jpg
+        card: {<<: *stadcard, highlight_row: 所在地}
+      - text: ドルトムントは、ジグナル・イドゥナ・パルクです。
+        image: assets/images/20261019_compare_bayern_dortmund/05_w.jpg
+        card: {<<: *stadcard, highlight_row: 所在地}
+      - text: リーグ戦の収容人数は、7万5024人と、8万1365人。
+        card: {<<: *stadcard, highlight_row: 収容人数}
+      - text: ドルトムントのほうが、6341人多い。バイエルンの、約8%です。
+        emph: true
+        card: &stadcalc
+          type: calc
+          title: 収容人数の差
+          terms:
+            - ['81,365人', ドルトムント]
+            - ['75,024人', バイエルン]
+            - ['6,341人', 差]
+          ops: ['－', ＝]
+      - text: 開場は、アリアンツが2005年。ドルトムントは、1974年です。
+        image: assets/images/20261019_compare_bayern_dortmund/04_w.jpg
+        card: {<<: *stadcard, highlight_row: 開場}
+      - text: 席の数では、ドルトムントが上。
+        card: {<<: *stadcard, highlight_row: 収容人数}
+    sources:
+      - https://bvb.de/de/en/borussia-dortmund/history/signal-iduna-park.html
+      - https://www.transfermarkt.com/fc-bayern-munchen/erfolge/verein/27
+      - https://www.transfermarkt.com/borussia-dortmund/erfolge/verein/16
+      - https://www.muenchen.de/en/sights/allianz-arena-stadium-munich-frottmaning
+
+  - id: titles
+    heading: 優勝の数は、どれだけ離れているのか
+    tier: 報道
+    telop: ブンデスリーガ優勝は34回と5回。欧州の頂点は6回と1回
+    narrator: 解説
+    card: &shelfcard
+      type: shelf
+      left: {name: バイエルン, club: 個数, photo: assets/images/20261019_compare_bayern_dortmund/bay_sq.jpg, color: "#dc052d"}
+      right: {name: ドルトムント, club: 個数, photo: assets/images/20261019_compare_bayern_dortmund/bvb_sq.jpg, color: "#b89b00"}
+      rows:
+        - [ブンデスリーガ, "34", "5"]
+        - [ドイツ王者の合計, "35", "8"]
+        - [ドイツカップ, "21", "5"]
+        - [欧州の頂点, "6", "1"]
+        - [カップウィナーズ杯, "1", "1"]
+      note: Transfermarkt の実績ページ（2026年10月18日）。ドイツ王者の合計は、ブンデスリーガ開幕前の全国大会を含む。欧州の頂点はチャンピオンズリーグと前身の欧州チャンピオンズクラブ杯
+    say:
+      - text: ここからは、タイトルの数。まず、ブンデスリーガの優勝。
+        image: assets/images/20261019_compare_bayern_dortmund/07_w.jpg
+        card: {<<: *shelfcard, highlight_row: ブンデスリーガ}
+      - text: バイエルンが34回。ドルトムントが5回です。
+        card: {<<: *shelfcard, highlight_row: ブンデスリーガ}
+      - text: 34を5で割ると、6.8倍。
+        emph: true
+        card: &titlecalc
+          type: calc
+          title: ブンデスリーガ優勝（バイエルンはドルトムントの）
+          terms:
+            - ['34回', バイエルン]
+            - ['5回', ドルトムント]
+            - ['6.8倍', 比]
+          ops: ['÷', ＝]
+      - text: ブンデスリーガの開幕は、1963年。それより前は、決勝で決める全国大会でした。
+        image: assets/images/20261019_compare_bayern_dortmund/04_w.jpg
+        card: {<<: *shelfcard, highlight_row: ドイツ王者の合計}
+      - text: その大会も含めると、ドイツ王者は35回と8回。
+        card: {<<: *shelfcard, highlight_row: ドイツ王者の合計}
+      - text: バイエルンの1回は1932年。ドルトムントは、1956年、57年、63年です。
+        card: {<<: *shelfcard, highlight_row: ドイツ王者の合計}
+      - text: ドイツカップは、21回と5回。
+        card: {<<: *shelfcard, highlight_row: ドイツカップ}
+      - text: 欧州の頂点は、チャンピオンズリーグと、その前身の大会を合わせて数えます。
+        image: assets/images/20261019_compare_bayern_dortmund/02_w.jpg
+        card: {<<: *shelfcard, highlight_row: 欧州の頂点}
+      - text: バイエルンは6回。ドルトムントは、1997年の1回です。
+        card: {<<: *shelfcard, highlight_row: 欧州の頂点}
+      - text: 2013年の決勝は、この2クラブの対戦でした。勝ったのは、バイエルンです。
+        emph: true
+        card: {<<: *shelfcard, highlight_row: 欧州の頂点}
+      - text: カップウィナーズ杯は、かつてあった欧州の大会。1回ずつで並びます。
+        card: {<<: *shelfcard, highlight_row: カップウィナーズ杯}
+    sources:
+      - https://www.transfermarkt.com/fc-bayern-munchen/erfolge/verein/27
+      - https://www.transfermarkt.com/borussia-dortmund/erfolge/verein/16
+      - https://en.wikipedia.org/wiki/Borussia_Dortmund
+      - https://en.wikipedia.org/wiki/FC_Bayern_Munich
+
+  - id: view
+    viewpoint: true
+    heading: 見立て・同じ14点の中身は、点を取る力と、取られない力に分かれる
+    tier: 背景
+    telop: 得点を失点で割ると、4.4と2.75。次は10月31日の直接対決
+    narrator: 解説
+    card: &viewcard
+      type: duel
+      left: {name: バイエルン, club: 6試合, photo: assets/images/20261019_compare_bayern_dortmund/bay_sq.jpg, color: "#dc052d"}
+      right: {name: ドルトムント, club: 6試合, photo: assets/images/20261019_compare_bayern_dortmund/bvb_sq.jpg, color: "#b89b00"}
+      rows:
+        - [勝ち点, "14", "14"]
+        - [得失点差, "+17", "+7"]
+        - [得点÷失点, "4.4", "2.75"]
+        - [無失点の試合, "2", "4"]
+      bars: [得失点差, 得点÷失点, 無失点の試合]
+      note: リーグ戦6試合。得点÷失点は自分で割った値
+    say:
+      - text: 最後に、14点の中身を比べます。
+        image: assets/images/20261019_compare_bayern_dortmund/07_w.jpg
+        card: *viewcard
+      - text: 勝ち点は、どちらも14。ここは同じです。
+        card: {<<: *viewcard, highlight_row: 勝ち点}
+      - text: 取った点が、取られた点の何倍か。割ってみます。
+        card: &ratio_b
+          type: calc
+          title: 得点÷失点（バイエルン）
+          terms:
+            - ['22点', 得点]
+            - ['5点', 失点]
+            - ['4.4', 倍]
+          ops: ['÷', ＝]
+      - text: バイエルンは22割る5で、4.4。
+        card: *ratio_b
+      - text: ドルトムントは11割る4で、2.75。
+        card: &ratio_d
+          type: calc
+          title: 得点÷失点（ドルトムント）
+          terms:
+            - ['11点', 得点]
+            - ['4点', 失点]
+            - ['2.75', 倍]
+          ops: ['÷', ＝]
+      - text: 数字の上では、点を取って勝つ力は、バイエルンが上です。
+        image: assets/images/20261019_compare_bayern_dortmund/02_w.jpg
+        card: {<<: *viewcard, highlight_row: 得点÷失点}
+        mark:
+          - {kind: circle, row: 2, col: 左の値}
+      - text: 点を取られずに終わる試合は、ドルトムントが上です。
+        card: {<<: *viewcard, highlight_row: 無失点の試合}
+      - text: ただし、失点は5点と4点で、差は1点。
+        card: {<<: *viewcard, highlight_row: 無失点の試合}
+      - text: 大きく違うのは、点を取る側。22点と11点です。
+        card: {<<: *viewcard, highlight_row: 得失点差}
+      - text: バイエルンの得点の82%は、5点以上の3試合に集まっています。
+        image: assets/images/20261019_compare_bayern_dortmund/08_w.jpg
+        card: *viewcard
+      - text: 6試合だけの数字なので、1試合で動きます。
+        card: *viewcard
+      - text: 次の物差しは、現地10月31日。バイエルンの本拠地での直接対決です。
+        image: assets/images/20261019_compare_bayern_dortmund/03_w.jpg
+        card: none
+      - text: その前に、チャンピオンズリーグ。ドルトムントは20日、バイエルンは21日。
+        card: none
+      - text: 同じ14点の2クラブは、10月31日のあとも並んでいるのか。
+        card: none
+    sources:
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/scoreboard
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard

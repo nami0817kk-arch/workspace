@@ -1,0 +1,563 @@
+# クラブの財政：チェルシー（10/18 日、シリーズ「クラブの財政」、key: finance_chelsea、型は news）。
+#
+# 軸は「**収入の世界10位（チェルシー）と9位（トッテナム）の差は8850万ユーロ。では赤字・給料の比率はどれだけ離れているのか**」。
+#   → 収入の差は13%でも、決算書（ポンド）では、最終の赤字は約2.8倍、人件費の比率は27.9ポイント離れていることを、トッテナム（10/16 の財政の回）と同じ年度・同じ通貨で並べる。
+#   ★他の財政回の軸（バルサ＝使える上限／シティ＝判決／アルテタ＝契約／レアル＝スクワッド・コスト・ルール／PSG＝関連当事者取引／バイエルン＝株の持ち主／
+#     リヴァプール＝放映権／マンU＝償却・金融費用／トッテナム＝優勝の年の赤字／シティ×アーセナル＝収入の差760万ユーロと給料の比率）は1行も出さない。
+#     ★10/17 の「チェルシーの今夏の移籍」の回（支出・収支・約72億円・戻った額）と言い回しを重ねない。移籍金の合計・選手名・売り買いの話は言わない。決算の「選手を売った利益」は会計の数字としてだけ出す。
+#     ★規制の判決・処分・訴訟の話は言わない。決算書の「法務と規制に関する支払い」の1行だけ（注記5の原文。固有名詞なし）。
+#     ★クラブの数字は決算書の範囲のまま。部門名は並べない（女子は扱わない決まり）。前の年に売った会社の1年分が入っていることだけ言う。アルファベットは読み上げに出さない。
+#
+# **決算期**：チェルシー・FC・ホールディングス（Companies House 02536231）と、クラブの会社（チェルシー・フットボール・クラブ・リミテッド 01965149）はどちらも**2025年6月期**（2024-25）。
+#   ・決算書の署名 2025-10-14、Companies House への提出（AA）2026-04-12（どちらも同日）。**2026年6月期は未提出**（提出履歴の最新の決算書。2026-10-18 確認）。
+#   ・トッテナム（10/16 の回）は2025年6月期・提出 2026-04-09。**同じ年度・同じ通貨（ポンド）**。デロイトの数字だけがユーロ（€1＝£0.84。デロイト一次ページの注記）。
+#   ・**範囲**：この回は**ホールディングスの連結**（収入 490,857）を使う。クラブの会社だけは収入 442,466・営業損益（売却益の前）−307,445・最終損益 −256,700。
+#     トッテナムも連結（10/16 の回）なので、連結どうしで比べる。台本で一言断る。
+#
+# **出どころ（読んだもの）**:
+#   ○ **Companies House のホールディングス 2025年6月期 決算書（46ページ、スキャン画像）**をページ画像で読んだ：戦略報告 p1（収入・費用・選手売却益・貸借の文）／連結損益 p14（原数値）／
+#       注記2 p29（前の年の子会社の売却・法務の引当）・注記3 p29（収入の内訳）・注記5〜6 p30（減損・償却・売却益）・注記8 p30〜31（従業員数・人件費の内訳）。
+#   ○ **Companies House のクラブの会社 2025年6月期 決算書（38ページ）**：損益 p14（範囲の断りのため）。
+#   ○ **デロイト Football Money League 2026（2024/25）一次ページ（deloitte.com）**：ランキング 9位トッテナム・10位チェルシー。クラブごとの図（ページに埋め込まれた図の中身）で
+#       **チェルシー €584.1m（前の年 €545.5m、+7%、+€38.6m）／トッテナム €672.6m（前の年 €615m、+9%、+€57.6m）**。5年の図（試合日・放映権・商業）と給料（チェルシー 418・トッテナム 298、百万ユーロ）。
+#       為替の注記：€1＝£0.84。**差 672.6−584.1＝88.5 百万ユーロ**（10/17 の財政の回のメモの数字と同じ）。
+#   ○ **ヨーロッパ中央銀行の参照相場（frankfurter 経由）2026-10-16：1ポンド＝210.72円**（10/17 の回と同じ相場）。
+#   × **クラブ公式の決算発表・BBC は読めなかった**（クラブ公式サイトの決算発表のURLは特定できず、BBC の記事も見つからなかった）。この回は決算書そのものとデロイトの一次ページだけ。
+#   × 2026年6月期の数字・2025-26 の収入の見通しは読めない（未提出）。言わない。
+#
+# 自分で計算した数（コードで検算した）:
+#   収入（百万ポンド）：チェルシー 490.857（前の年 468.486、+22.371、+4.8%）／トッテナム 565.266（528.191、+37.075、+7.0%）。差 74.409 →「7440万」。74.409÷565.266＝13.2% →「13%」。
+#     ユーロに直す（÷0.84）：74.409÷0.84＝88.6 →「約8860万ユーロ」（デロイトは 88.5。ほぼ同じ）。
+#   収入の中身：チェルシー 試合日 86.762・放映権 203.230（**欧州カンファレンスリーグとクラブワールドカップの収入を含む**。戦略報告）・商業 200.865。
+#     トッテナム 試合日 126.473・放映権 126.993＋欧州の賞金 34.716＝161.709・商業 276.699＋その他の収入 0.385＝277.084。
+#     差（トッテナム−チェルシー）：試合日 +39.711／放映権など −41.521／商業など +76.219 → 合計 +74.409 ✓。
+#   チェルシーの前の年との差：放映権 +40.129（163.101→203.230）／商業 −24.400（225.265→200.865）／試合日 +6.642（80.120→86.762）。
+#   営業損益（売却益を足す前。決算書の「Operating loss」）：チェルシー −308.157（前の年 −212.959）／トッテナム −102.963（10/16 のメモ。決算書の「Operating profit/(loss)」の行）。
+#   チェルシーの営業損益の道筋：収入 490.857−売上原価 428.673−管理費（選手の償却・減損・取引 224.344）−ほかの管理費 146.497＋その他の収入 0.500＝−308.157 ✓。
+#     丸め 490.9−428.7−224.3−146.5＋0.5＝−308.1（決算 −308.2。0.1の端数）。営業費用 428.673＋370.841＝799.514（戦略報告「£799.5m」、前の年より +117.4）。
+#   最終損益の道筋：−308.157＋選手の売却益 57.906＋利息（受取 11.149−支払 20.357＝−9.208）＋固定資産の売却損 −2.985＋税 −0.203＝−262.647 ✓（税引き後の損 −262.444）。
+#     丸め：−308.2＋57.9−9.2−3.2＝−262.7（決算 −262.6。0.1の端数）。
+#   最終損益：チェルシー −262.647（前の年 +129.606）／トッテナム −94.666（−26.226）。赤字の比 262.647÷94.666＝2.77 →「約2.8倍」。差 167.981 →「1億6800万」。
+#   売却益を除いた最終損益：チェルシー −262.647−57.906＝−320.553 →「3億2060万」／トッテナム −94.666−52.565＝−147.231 →「1億4720万」。差 173.322 →「1億7330万」。
+#     売却益：チェルシー 57.906（前の年 152.463）／トッテナム 52.565（82.305）。
+#   前の年のチェルシーの黒字 129.606 は、子会社の売却益 198.749 を含む（戦略報告・注記2：2024-06-28 に売却、対価 200.0）。前の年の数字には、その会社の1年分の損益が入っている。
+#   人件費（注記8 の賃金＋社会保険料＋年金）：チェルシー 359.265（前の年 338.021）／トッテナム 255.811（221.929）。差 103.454 →「1億350万」。
+#     人件費÷収入：チェルシー 359.265÷490.857＝73.19%（前 338.021÷468.486＝72.15%）／トッテナム 255.811÷565.266＝45.25%（前 42.02%）。差 27.94pt →「27.9」。
+#     変化：チェルシー +1.04pt →「1.0」／トッテナム +3.24pt →「3.2」。人件費 359.265÷255.811＝1.404 →「約40%多い」／収入 490.857÷565.266＝0.868 →「約13%少ない」。
+#     デロイト図の給料÷収入：チェルシー 418÷584.1＝71.6%／トッテナム 298÷672.6＝44.3%（定義が違う。向きだけ使う）。
+#   選手の償却：チェルシー 213.893（無形資産の償却。減損 12.097 は別）／トッテナム 141.851（償却そのもの）。213.893÷141.851＝1.51 →「約1.5倍」。
+#   5年の収入（デロイトの図の試合日＋放映権＋商業。図は整数。百万ユーロ）：チェルシー 494・569・536・545.5・584.1／トッテナム 406・523・631・615・672.6。
+#     差（トッテナム−チェルシー）：−88・−46・+95・+69.5・+88.5。**2020-21 はチェルシーが約8800万ユーロ上、2022-23 からトッテナムが上**。
+#     5年の伸び：チェルシー 584.1÷494＝1.18倍／トッテナム 672.6÷406＝1.66倍。2020-21 の試合日はほぼ無し（チェルシー 9・トッテナム 2。観客が入れなかった年）。
+#   円換算：262.647×210.72＝55,345 百万円 →「約553億円」。
+#
+# **言い切っていないもの / 言わなかったもの**:
+#   ・赤字の理由は、決算書の戦略報告の文（選手の償却と減損の増加・給料を含む売上原価の増加・規制に関する費用）まで。人件費が高い理由は言わない。
+#   ・前の年のデロイトの図の「その他の収入」の扱い・チェルシーの連結の範囲の違い（部門）は言わない。
+#   ・借入・現金・資産・親会社の資金・オーナーは言わない（範囲が違い、同じ土俵で比べられない。この回は損益と給料の比率）。
+#
+# 写真：assets/images/20261018_finance_chelsea/（Commons 6枚。credits.json 同梱）。01_w＝スタンフォード・ブリッジの空撮 CC BY-SA 3.0 de（Arne Müseler）／02_w＝場内 CC BY-SA 2.0／03_w＝空撮 CC BY-SA 2.0／
+#   04_w〜06_w＝トッテナムのスタジアム（CC BY-SA 4.0）。10/16 のスタジアムの回・トッテナムの財政の回の取り込み分を、そのまま移した（目で確認：すべてスタジアム）。人物の顔は小さな群衆のみ。エンブレムは板の中に出さない。
+# サムネは versus の案A。案B（number）・案C（scene）は報告に出す。
+date: 2026年10月18日
+slot: other_1
+format: news
+series: クラブの財政
+voice_min: 0
+people:
+- チェルシー
+- トッテナム
+theme:
+  end_bg: assets/images/20261018_finance_chelsea/01_w.jpg
+  id: finance_chelsea
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: チェルシーとトッテナム
+  title: チェルシー、収入は世界10位。上のトッテナムとの差は、いくらか
+  question: 収入の世界10位チェルシーと9位トッテナムの差は8850万ユーロ。赤字と給料の比率は、どれだけ離れているのか
+  lead: 収入の世界10位チェルシーと、9位のトッテナム。
+  opening_image: assets/images/20261018_finance_chelsea/01_w.jpg
+  takeaway: デロイトの集計で2024-25の収入は、世界9位のトッテナムが6億7260万ユーロ、10位のチェルシーが5億8410万ユーロで、差は8850万ユーロ。決算書（ポンド、どちらも2025年6月期の連結）では収入の差は7440万ポンド（トッテナムの収入の13%）。営業損益（選手の売却益の前）はチェルシー3億820万ポンド、トッテナム1億300万ポンドの赤字。売却益は5790万と5260万で近いのに、最終損益はチェルシー2億6260万、トッテナム9470万ポンドの赤字で、チェルシーが約2.8倍。人件費は3億5930万と2億5580万ポンド、収入に対する割合は73.2%と45.3%（27.9ポイント差）。どちらの2026年6月期の決算もまだ出ていない
+short_title: チェルシー、収入は世界10位。9位との差は
+thumbnail:
+  layout: versus
+  photos:
+  - assets/images/20261018_finance_chelsea/01_w.jpg
+  - assets/images/20261018_finance_chelsea/04_w.jpg
+  names: [チェルシー, トッテナム]
+  numbers: ['73.2%', '45.3%']
+  line1: チェルシーの給料比率
+  line2: 収入差13%でも
+  cutout: false
+  callouts: [赤字は2.8倍]
+  tags:
+  - チェルシー
+  - トッテナム
+  - プレミアリーグ
+  - クラブの財政
+  - スタンフォード・ブリッジ
+  - トッテナム・ホットスパー・スタジアム
+sections:
+- id: rank
+  main: true
+  heading: 収入の世界9位と10位は、どれだけ離れているのか
+  tier: 報道
+  telop: 収入の世界10位チェルシーと9位トッテナム。差は8850万ユーロ
+  narrator: キャスター
+  card: &rank_duel
+    type: duel
+    title: デロイトの収入ランキング（2024-25、百万ユーロ）
+    left: {name: チェルシー, club: 世界10位, photo: assets/images/20261018_finance_chelsea/01_sq.jpg, color: "#034694"}
+    right: {name: トッテナム, club: 世界9位, photo: assets/images/20261018_finance_chelsea/04_sq.jpg, color: "#132257"}
+    rows:
+    - [順位, 10位, 9位]
+    - [収入, '584.1', '672.6']
+    - [前の年の収入, '545.5', '615.0']
+    - [前の年との差, '+7%', '+9%']
+    bars: [収入, 前の年の収入]
+  say:
+  - text: チェルシーとトッテナム。収入の世界10位と9位の差を、決算で見ます。
+    image: assets/images/20261018_finance_chelsea/01_w.jpg
+    short_only: true
+  - text: 会計事務所デロイトの集計では、収入の世界9位がトッテナム、10位がチェルシー。
+    image: assets/images/20261018_finance_chelsea/01_w.jpg
+    card:
+      <<: *rank_duel
+      highlight_row: 順位
+  - text: 2024-25の収入は、トッテナムが6億7260万ユーロ。
+    emph: true
+    card:
+      <<: *rank_duel
+      highlight_row: 収入
+  - text: チェルシーは、5億8410万ユーロです。
+    card:
+      <<: *rank_duel
+      highlight_row: 収入
+  - text: その差は8850万ユーロ。チェルシーの収入の、約15%です。
+    card:
+      <<: *rank_duel
+      highlight_row: 収入
+    mark:
+      kind: circle
+      row: 1
+      col: 0
+  - text: チェルシーもトッテナムも、欧州の大会で優勝した年の収入。
+    card: none
+    callword: 差は8850万ユーロ
+  - text: 5年前の2020-21は、チェルシーのほうが約8800万ユーロ上でした。
+    card: &gap_line
+      type: line
+      title: 収入の5年（デロイトの図の合計、百万ユーロ）
+      x: [2020-21, 2021-22, 2022-23, 2023-24, 2024-25]
+      series:
+      - [トッテナム, [406, 523, 631, 615, 672.6]]
+      - [チェルシー, [494, 569, 536, 545.5, 584.1]]
+      unit: 百万ユーロ
+      focus: チェルシー
+      highlight: 2020-21
+  - text: 逆転は2022-23。トッテナムが約9500万ユーロ上に立ちました。
+    emph: true
+    card:
+      <<: *gap_line
+      focus: トッテナム
+      highlight: 2022-23
+  - text: 前の年の差は約7000万ユーロ。今年は、そこから広がりました。
+    image: assets/images/20261018_finance_chelsea/04_w.jpg
+    card:
+      <<: *gap_line
+      focus: トッテナム
+      highlight: 2023-24
+  - text: 5年で、トッテナムは1.7倍。チェルシーは1.2倍です。
+    card:
+      <<: *gap_line
+      focus: トッテナム
+      highlight: 2024-25
+  - text: 2020-21は、観客が入れず、試合日の収入がほぼ無い年でした。
+    card: none
+  - text: 収入の差が、赤字や給料の比率でも同じ大きさなのか。決算書で見ます。
+    card: none
+  sources:
+  - https://www.deloitte.com/uk/en/services/financial-advisory/analysis/deloitte-football-money-league.html
+  - https://find-and-update.company-information.service.gov.uk/company/02536231/filing-history
+  - https://find-and-update.company-information.service.gov.uk/company/01965149/filing-history
+- id: breakdown
+  heading: 収入の差は、決算書のどこから生まれるのか
+  tier: 確定
+  official: true
+  telop: 収入の差は7440万ポンド。試合日と商業はトッテナム、放映権はチェルシー
+  narrator: 解説
+  card: &rev_table
+    type: table
+    title: 収入の中身（2024-25、百万ポンド）
+    columns: [項目, チェルシー, トッテナム]
+    rows:
+    - [試合日, '86.8', '126.5']
+    - [放映権など, '203.2', '161.7']
+    - [商業など, '200.9', '277.1']
+    - [合計, '490.9', '565.3']
+    highlight_row: 3
+  say:
+  - text: ここからは決算書です。ポンドで、2025年6月期どうしを比べます。
+    image: assets/images/20261018_finance_chelsea/02_w.jpg
+    card: none
+  - text: チェルシーの決算書は、子会社も合わせた連結です。
+    card: none
+  - text: クラブの会社だけの収入は、4億4250万ポンド。
+    card: none
+  - text: トッテナムも連結なので、連結どうしで比べます。
+    card: none
+  - text: 2026年6月期の決算は、どちらもまだ出ていません。
+    card: none
+  - text: 収入は、チェルシーが4億9090万ポンド。トッテナムが5億6530万ポンド。
+    card: *rev_table
+  - text: 差は7440万ポンド。トッテナムの収入の、13%です。
+    emph: true
+    card:
+      <<: *rev_table
+      highlight_row: 3
+    mark:
+      kind: circle
+      row: 3
+      col: 2
+  - text: 同じ為替でユーロに直すと、約8860万。デロイトの数字と、ほぼ一致します。
+    card: none
+  - text: 内訳です。試合日は、トッテナムが3970万ポンド上回ります。
+    image: assets/images/20261018_finance_chelsea/05_w.jpg
+    card:
+      <<: *rev_table
+      highlight_row: 0
+  - text: 放映権などは、逆にチェルシーが4150万ポンド多い。欧州の賞金を含みます。
+    card:
+      <<: *rev_table
+      highlight_row: 1
+  - text: スポンサーやグッズを含む商業は、トッテナムが7620万ポンド上回ります。
+    emph: true
+    card:
+      <<: *rev_table
+      highlight_row: 2
+  - text: 前の年からの動きは、決算書の戦略報告に出ています。
+    image: assets/images/20261018_finance_chelsea/03_w.jpg
+    card: &rev_doc
+      type: document
+      label: チェルシー 2025年6月期 戦略報告（訳）
+      paragraphs:
+      - 放映権の収入は、前の年から4010万ポンド増えて、2億320万ポンドになりました。欧州カンファレンスリーグとクラブワールドカップの両方から大きな収入を得て、どちらも優勝しました。
+      - 商業収入は、2億2530万ポンドから2億90万ポンドに減りました。主な理由は、スポンサー収入の減少です。
+      highlight:
+      - 4010万ポンド
+      - スポンサー収入の減少
+  - text: 放映権は4010万ポンド増。欧州の大会とクラブワールドカップの収入です。
+    card: *rev_doc
+  - text: 商業は2440万ポンド減。主な理由は、スポンサー収入の減少です。
+    card: *rev_doc
+  - text: 差の7440万ポンドを、1枚にまとめます。
+    card: &gap_fall
+      type: waterfall
+      title: トッテナムの収入 − チェルシーの収入（百万ポンド）
+      start: [試合日, 39.7]
+      steps:
+      - [放映権など, -41.5]
+      - [商業など, 76.2]
+      total: [収入の差, 74.4]
+  - text: 試合日と商業でトッテナムが上回り、放映権はチェルシーが上回ります。
+    card:
+      <<: *gap_fall
+      highlight: 商業など
+  - text: 足し引きして、差は7440万ポンドです。
+    card:
+      <<: *gap_fall
+      highlight: 収入の差
+  sources:
+  - https://find-and-update.company-information.service.gov.uk/company/02536231/filing-history/MzUxNDEyMjMwN2FkaXF6a2N4/document?format=pdf&download=0
+  - https://find-and-update.company-information.service.gov.uk/company/01965149/filing-history/MzUxNDEyMjMwOWFkaXF6a2N4/document?format=pdf&download=0
+  - https://find-and-update.company-information.service.gov.uk/company/01706358/filing-history
+- id: profit
+  heading: 営業の赤字と、選手を売った利益は、どう違うのか
+  tier: 確定
+  official: true
+  telop: 営業損益は3億820万ポンドの赤字。売却益を足しても、最終は2億6260万ポンドの赤字
+  narrator: 解説
+  card: &pl_duel
+    type: duel
+    title: 損益の比べ（2024-25、百万ポンド）
+    left: {name: チェルシー, club: 2025年6月期, photo: assets/images/20261018_finance_chelsea/01_sq.jpg, color: "#034694"}
+    right: {name: トッテナム, club: 2025年6月期, photo: assets/images/20261018_finance_chelsea/04_sq.jpg, color: "#132257"}
+    rows:
+    - [収入, '490.9', '565.3']
+    - [営業損益, '-308.2', '-103.0']
+    - [選手の売却益, '+57.9', '+52.6']
+    - [最終損益, '-262.6', '-94.7']
+    - [売却益を除く最終損益, '-320.6', '-147.2']
+    - [前の年の最終損益, '+129.6', '-26.2']
+    bars: [収入, 選手の売却益]
+  say:
+  - text: 損益を順に見ます。最初は営業損益、売却益を足す前の数字です。
+    image: assets/images/20261018_finance_chelsea/02_w.jpg
+    card:
+      <<: *pl_duel
+      highlight_row: 営業損益
+  - text: 営業損益は、チェルシーが3億820万ポンドの赤字。
+    emph: true
+    card:
+      <<: *pl_duel
+      highlight_row: 営業損益
+    mark:
+      kind: circle
+      row: 1
+      col: 0
+  - text: トッテナムは、1億300万ポンドの赤字。
+    card:
+      <<: *pl_duel
+      highlight_row: 営業損益
+  - text: チェルシーの営業損益が、収入から何を引いて決まるのか。順に見ます。
+    card: &op_fall
+      type: waterfall
+      title: チェルシーの収入から営業損益まで（百万ポンド）
+      start: [収入, 490.9]
+      steps:
+      - [売上原価, -428.7]
+      - [選手の償却・減損など, -224.3]
+      - [ほかの管理費, -146.5]
+      - [その他の収入, 0.5]
+      total: [営業損益, -308.2]
+      note: 端数の丸めで、合計が0.1ずれる
+      highlight: 収入
+  - text: 売上原価は4億2870万ポンド。選手の給料を含みます。
+    card:
+      <<: *op_fall
+      highlight: 売上原価
+  - text: 選手の償却と減損などが、2億2430万ポンド。
+    card:
+      <<: *op_fall
+      highlight: 選手の償却・減損など
+  - text: 残りの管理費が1億4650万ポンド。引いた残りが、営業損益です。
+    card:
+      <<: *op_fall
+      highlight: 営業損益
+  - text: 費用が増えた理由は、選手の償却と減損の増加、売上原価の増加、規制に関する費用です。
+    image: assets/images/20261018_finance_chelsea/03_w.jpg
+    card: &cost_doc
+      type: document
+      label: チェルシー 2025年6月期 戦略報告（訳）
+      paragraphs:
+      - 営業費用は7億9950万ポンドで、前の年から1億1740万ポンド増えました。主な理由は、選手の償却と減損の増加、選手の給料を含む売上原価の増加、そして規制に関する費用です。
+      highlight:
+      - 選手の償却と減損の増加
+      - 規制に関する費用
+  - text: 管理費の中には、法務と規制に関する支払い5020万ポンドが入っています。
+    card: *cost_doc
+  - text: 前の年は、ゼロでした。
+    card: *cost_doc
+  - text: ここに、選手を売った利益を足します。最終損益までの道筋です。
+    card: &fin_fall
+      type: waterfall
+      title: チェルシーの営業損益から最終損益まで（百万ポンド）
+      start: [営業損益, -308.2]
+      steps:
+      - [選手の売却益, 57.9]
+      - [利息の差し引き, -9.2]
+      - [固定資産の売却損と税, -3.2]
+      total: [最終損益, -262.6]
+      note: 端数の丸めで、合計が0.1ずれる
+      highlight: 営業損益
+  - text: 選手を売った利益は、5790万ポンド。
+    card:
+      <<: *fin_fall
+      highlight: 選手の売却益
+  - text: 利息の差し引きが920万ポンド、固定資産の売却損と税が320万ポンド。
+    card:
+      <<: *fin_fall
+      highlight: 利息の差し引き
+  - text: 最終は、2億6260万ポンドの赤字。
+    emph: true
+    card:
+      <<: *fin_fall
+      highlight: 最終損益
+  - text: トッテナムの売却益は5260万ポンド。チェルシーと、近い額です。
+    image: assets/images/20261018_finance_chelsea/06_w.jpg
+    card:
+      <<: *pl_duel
+      highlight_row: 選手の売却益
+  - text: ところが最終は、トッテナムが9470万ポンドの赤字。
+    card:
+      <<: *pl_duel
+      highlight_row: 最終損益
+  - text: チェルシーの赤字は、トッテナムの約2.8倍です。
+    emph: true
+    card:
+      <<: *pl_duel
+      highlight_row: 最終損益
+    mark:
+      kind: circle
+      row: 3
+      col: 0
+  - text: 売却益を除くと、赤字はチェルシー3億2060万、トッテナム1億4720万ポンド。
+    card:
+      <<: *pl_duel
+      highlight_row: 売却益を除く最終損益
+  - text: 前の年は、チェルシーが1億2960万の黒字。トッテナムは2620万の赤字。
+    card:
+      <<: *pl_duel
+      highlight_row: 前の年の最終損益
+  - text: 前の年の黒字は、子会社を売った利益1億9870万ポンドを含んでいました。
+    card: &prev_doc
+      type: document
+      label: チェルシー 2025年6月期 戦略報告（訳）
+      paragraphs:
+      - この変化は、主に、前の年に計上した子会社の売却益1億9870万ポンドによるものです。
+      highlight:
+      - 子会社の売却益
+  - text: 前の年の数字には、売った会社の1年分の損益も入っています。
+    card: *prev_doc
+  sources:
+  - https://find-and-update.company-information.service.gov.uk/company/02536231/filing-history/MzUxNDEyMjMwN2FkaXF6a2N4/document?format=pdf&download=0
+  - https://find-and-update.company-information.service.gov.uk/company/01965149/filing-history/MzUxNDEyMjMwOWFkaXF6a2N4/document?format=pdf&download=0
+- id: cost
+  heading: 給料は、収入の何割を占めているのか
+  tier: 確定
+  official: true
+  telop: 人件費÷収入は、チェルシーが73.2%、トッテナムが45.3%
+  narrator: 解説
+  card: &wage_duel
+    type: duel
+    title: 人件費の比べ（2024-25、百万ポンド）
+    left: {name: チェルシー, club: 2025年6月期, photo: assets/images/20261018_finance_chelsea/01_sq.jpg, color: "#034694"}
+    right: {name: トッテナム, club: 2025年6月期, photo: assets/images/20261018_finance_chelsea/04_sq.jpg, color: "#132257"}
+    rows:
+    - [収入, '490.9', '565.3']
+    - [人件費, '359.3', '255.8']
+    - [人件費÷収入, '73.2%', '45.3%']
+    - [前の年の比率, '72.2%', '42.0%']
+    - [選手の償却, '213.9', '141.9']
+    bars: [人件費, 選手の償却]
+  say:
+  - text: 続いて給料。決算書の人件費は、賃金に社会保険料と年金を足した額です。
+    image: assets/images/20261018_finance_chelsea/05_w.jpg
+    card:
+      <<: *wage_duel
+      highlight_row: 人件費
+  - text: チェルシーが3億5930万ポンド。トッテナムが2億5580万ポンドです。
+    card:
+      <<: *wage_duel
+      highlight_row: 人件費
+  - text: 収入は約13%少ないのに、チェルシーの人件費は、約40%多い。
+    emph: true
+    card:
+      <<: *wage_duel
+      highlight_row: 人件費
+  - text: 収入に対する割合は、チェルシーが73.2%。トッテナムが45.3%です。
+    emph: true
+    card:
+      <<: *wage_duel
+      highlight_row: 人件費÷収入
+    mark:
+      kind: circle
+      row: 2
+      col: 0
+  - text: 差は27.9ポイントです。
+    card:
+      <<: *wage_duel
+      highlight_row: 人件費÷収入
+  - text: 前の年は、チェルシーが72.2%、トッテナムが42.0%でした。
+    card:
+      <<: *wage_duel
+      highlight_row: 前の年の比率
+  - text: チェルシーは1.0ポイント、トッテナムは3.2ポイント上がりました。
+    card:
+      <<: *wage_duel
+      highlight_row: 前の年の比率
+  - text: デロイト側の給料でも、チェルシー72%、トッテナム44%。向きは同じ。
+    card: none
+  - text: 選手の償却とは、獲得費用を契約の年数で割り、毎年の費用にする処理です。
+    card:
+      <<: *wage_duel
+      highlight_row: 選手の償却
+  - text: チェルシーが2億1390万、トッテナムが1億4190万ポンド。約1.5倍。
+    emph: true
+    card:
+      <<: *wage_duel
+      highlight_row: 選手の償却
+  - text: 別に、減損が1210万ポンド。選手の帳簿の値打ちを下げる処理です。
+    card:
+      <<: *wage_duel
+      highlight_row: 選手の償却
+  sources:
+  - https://find-and-update.company-information.service.gov.uk/company/02536231/filing-history/MzUxNDEyMjMwN2FkaXF6a2N4/document?format=pdf&download=0
+  - https://find-and-update.company-information.service.gov.uk/company/01706358/filing-history
+  - https://www.deloitte.com/uk/en/services/financial-advisory/analysis/deloitte-football-money-league.html
+- id: view
+  viewpoint: true
+  heading: 見立て・収入の差13%に対し、赤字は2.8倍、給料の比率は27.9ポイント
+  tier: 背景
+  telop: 収入の差は13%。最終赤字の差は2.8倍、人件費の比率の差は27.9ポイント
+  narrator: 解説
+  card: &view_table
+    type: table
+    title: 自分で割ってみた（2024-25）
+    columns: &view_cols [比べ, 答え]
+    rows: &view_rows
+    - [収入の差（トッテナム − チェルシー）, 7440万ポンド（13%）]
+    - [最終赤字の比（チェルシー ÷ トッテナム）, 約2.8倍]
+    - [人件費÷収入の差, 27.9ポイント]
+    - [売却益を除く赤字の差, 1億7330万ポンド]
+    highlight_row: 0
+  say:
+  - text: ここまでの数字を、自分で割り算し直しました。
+    image: assets/images/20261018_finance_chelsea/02_w.jpg
+    card: *view_table
+  - text: 収入の差は、13%でした。
+    card:
+      <<: *view_table
+      highlight_row: 0
+  - text: ところが最終の赤字は、チェルシーが約2.8倍です。
+    emph: true
+    card:
+      <<: *view_table
+      highlight_row: 1
+    mark:
+      kind: circle
+      row: 1
+      col: 1
+  - text: 円にすると、チェルシーの最終赤字は、およそ553億円。
+    card: &yen_card
+      type: convert
+      title: チェルシーの最終赤字を円で見る
+      from: [2億6260万, ポンド, 2025年6月期の最終損益]
+      to: [約553億, 円, 2026年10月16日の相場]
+      via: 1ポンド＝210.72円
+  - text: 換算は、欧州中央銀行が10月16日に公表した参照相場です。
+    card: none
+  - text: 人件費÷収入の差は、27.9ポイント。
+    card:
+      <<: *view_table
+      highlight_row: 2
+  - text: 売却益を除く赤字の差を、引き算で出します。
+    card: &diff_calc
+      type: calc
+      title: 売却益を除く最終損益の差（百万ポンド）
+      terms:
+      - [320.6, チェルシーの赤字]
+      - [147.2, トッテナムの赤字]
+      - [173.3, 差]
+      ops: ['-', '＝']
+  - text: 選手の売却益を抜いた赤字の差は、1億7330万ポンド。
+    emph: true
+    card:
+      <<: *view_table
+      highlight_row: 3
+    mark:
+      kind: circle
+      row: 3
+      col: 1
+  - text: 収入の差より、赤字の差と、給料の比率の差のほうが、はるかに大きい。
+    emph: true
+    card: none
+  - text: 次に出るのは、どちらも2026年6月期の決算書です。
+    card: none
+  - text: 2025年6月期の提出は、トッテナムが4月9日、チェルシーが4月12日でした。
+    card: none
+  sources:
+  - https://find-and-update.company-information.service.gov.uk/company/02536231/filing-history
+  - https://find-and-update.company-information.service.gov.uk/company/01965149/filing-history
+  - https://api.frankfurter.app/2026-10-16?from=GBP&to=JPY

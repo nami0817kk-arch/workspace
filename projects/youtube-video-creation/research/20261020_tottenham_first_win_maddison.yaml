@@ -1,0 +1,148 @@
+# 取材メモ（2026年10月20日）トッテナム、今季プレミア初勝利。コヴェントリーに3対1、マディソンは536日ぶりの先発で先制（ニュースのショート。見せ方 X）
+# 取材: 2026-10-20。requests（ブラウザUA）と ESPN の公開API で全部読んだ。
+#   ・ESPN の試合データ（site.api.espn.com .../eng.1/summary?event=401879257。控え research/raw/20261020_espn_summary.json）… 得点者・分・アシスト・交代・順位表（試合後）。**結果・得点・時刻の主な根拠**
+#   ・ESPN の記事（50192082「Kulusevski returns as Spurs get first Premier League win of season」。summary の article 欄。PA 配信、10/19 21:08Z）… 「Maddison able to make a first start in 536 days」「seventh time of asking」「22 yards」。**536日の根拠**
+#   ・ESPN の記事（50222119「Maddison scores in 'dream' return as Spurs get 1st EPL win of season」。控え research/raw/20261020_espn_50222119.json）… マディソンの試合後の言葉（Sky Sports への発言を ESPN が引く）
+#   ・Sky Sports の試合レポート（https://www.skysports.com/football/tottenham-hotspur-vs-coventry-city/report/559513。控え research/raw/20261020_sky_tot_cov.txt）… 結果・分・「16位」・次節チェルシー・キャラガー（Sky 解説者）のコメント
+#   ・プレミア公式・クラブ公式は開いたが本文が読めなかった（JS 描画）。使っていない。
+# 確かめたこと（ESPN の試合データ。Sky と一致）:
+#   ・19日（月）20:00 UK＝日本時間20日 午前4時 キックオフ。トッテナム 3 - 1 コヴェントリー、トッテナムのホーム。
+#   ・14分 マディソン（トッテナム）…ペナルティーエリアの外から右足、ゴール左上へ（アシスト クドゥス）。ESPN 記事は「22ヤードから」「first-time effort」。
+#   ・49分 ルドーニ（コヴェントリー）…同点。58分 マルムーシュ（トッテナム、アシスト ロバートソン）…エリア外から右足、右下へ。**今季の移籍後初ゴール**（Sky・ESPN）。
+#   ・90+6分 デイヴィス（トッテナム、アシスト ソランケ）…交代で入った。エリア外から左足。→ **3点とも ESPN の記録でペナルティーエリアの外から**（題材の一覧の「ミドル3発」と合う）。
+#   ・マディソンは 69分にギャラガーと交代（ESPN の記録。負傷の記載は無い）。
+# 数字:
+#   ・536日（ESPN 記事「first start in 536 days」）。最後の先発は 2024-25 のヨーロッパリーグ準決勝（ボデ/グリムト戦、3-1。ESPN）。**ESPN の別の記事は「526 days」と書く（クルゼフスキの日数と取り違えたと見られる）**。台本は 536日。
+#     自分で数えた確認：2025年5月1日（その試合の日＝私の知識。記事に日付は無い）→ 2026年10月19日 ＝ 365＋171 ＝ 536日。ESPN の数字と一致。台本では「ESPNは」と断って言う。
+#   ・順位（ESPN の試合後の表）：トッテナム 7試合 1勝3分3敗 勝ち点6 得失点差−4 **16位**（試合前は最下位。Sky・ESPN）／コヴェントリー 7試合 2勝5敗 勝ち点6 得失点差−8 17位／チェルシー 7試合 4勝1分2敗 勝ち点13 **4位**。
+#     自分で数えた差：チェルシー 13 − トッテナム 6 ＝ 7。
+#   ・次節：24日（土）、アウェーでチェルシー（Sky：スタンフォード・ブリッジ、Saturday Night Football）。
+#   ・開幕から6試合勝ちなし→7試合目で初勝利（ESPN「seventh time of asking」）。
+# 本人の言葉（ESPN 50222119。Sky Sports への試合後の発言。英語を訳した。語は足していない）:
+#   "They're the ones you dream of. Without going too deep into it, them dark days last year, recovering from the ACL, you dream of them moments, them goals and that is the light at the end of the tunnel."
+#   →「ああいうゴールは、夢に見るものだ。深くは言わないが、去年の暗い日々、前十字靭帯の回復のなかで、ああいう瞬間、ああいうゴールを夢見る。それがトンネルの先の光だ」
+# 解説者の言葉（Sky Sports のレポートに載る、Sky の番組でのキャラガーの発言。英語を訳した）: "It was a joy to see [his goal]." / "he still has a bit of magic in his boots!"
+# 確度: 結果・得点・分・順位は ESPN の試合記録と Sky・ESPN の記事で一致＝報道（クラブ・リーグ公式のページは読めていないので「確定」には上げない）。
+# 10/19 のデ・ゼルビのスマホ禁止のショート（dezerbi_phone_ban）との重なりを避けた：3億8000万ポンド・10人加入・勝ち点3で20位・食事中スマホ・「特別なことではない」・「先発できる状態だ」は使わない。「古巣」の言い方も避ける（プロの出発点のクラブ、と言う）。
+# 坂元達裕（コヴェントリー、先発・78分交代。ESPN の記録）とクルゼフスキの復帰（87分）は別の題材（num 12 ほか）なので、このショートでは触れない。
+# 反応: 当たっていない（作らない）。approve は --no-voices で。
+# 写真: Commons。マディソン（2024年12月 レンジャーズ戦＝Jim Easton CC0、2024年3月 練習＝KrispyKrumpets CC BY 4.0）の2枚から縦7枚、マルムーシュ（2026年7月 W杯アルゼンチン戦＝Bryan Berlin CC BY-SA 4.0）の2枚から縦4枚（エジプト代表の姿）。
+#   **今季のトッテナムの姿の写真は無い**（2024年のホームユニと練習着）。マルムーシュの行だけにエジプト代表の写真を使い、ほかの行はマディソンの写真。デイヴィスの写真は無いので、デイヴィスの行にはマディソンの写真を置く（デイヴィスの顔として出さない）。
+slot: premier
+date: "2026年10月20日"
+format: news
+no_main: true
+people: [マディソン, トッテナム, コヴェントリー, マルムーシュ]
+
+short_style: X
+short_hook_word: 536日ぶり
+short_question: トッテナムは、この勝利を次のチェルシー戦につなげられると思いますか。
+short_hook: トッテナム、ついにプレミア初勝利。マディソンが536日ぶりの先発で先制。
+short_photos:
+  - assets/images/20261020_tottenham_first_win_maddison/07_v.jpg
+  - assets/images/20261020_tottenham_first_win_maddison/08_v.jpg
+  - assets/images/20261020_tottenham_first_win_maddison/15_v.jpg
+  - assets/images/20261020_tottenham_first_win_maddison/09_v.jpg
+  - assets/images/20261020_tottenham_first_win_maddison/16_v.jpg
+  - assets/images/20261020_tottenham_first_win_maddison/06_v.jpg
+short_telops:
+  - {match: "取った点は", text: "トッテナム3対1コヴェントリー/プレミア第7節"}
+  - {match: "今季初めての勝利", text: "開幕6試合勝ちなし/7試合目で初勝利"}
+  - {match: "14分", text: "14分 マディソンが先制/エリアの外から"}
+  - {match: "1年半ぶり", text: "マディソンは/536日ぶりの先発（ESPN）"}
+  - {match: "夢に見る", text: "マディソン/「夢に見るもの」"}
+  - {match: "3つとも", text: "3点とも/ペナルティーエリアの外から"}
+  - {match: "移籍後、初めて", text: "58分 マルムーシュ/移籍後初ゴール"}
+  - {match: "90分すぎ", text: "90分すぎ デイヴィス/交代で入って決めた"}
+  - {match: "49分", text: "49分 ルドーニ/コヴェントリーが同点"}
+  - {match: "魔法", text: "キャラガー/「足には魔法が残っている」"}
+  - {match: "20位から16位", text: "20位から16位へ/1勝3分け3敗・勝ち点6"}
+  - {match: "差は7", text: "チェルシーは4位・勝ち点13/差は7"}
+
+theme:
+  id: tottenham_first_win_maddison
+  league: england
+  league_name: プレミアリーグ
+  prefix: ""
+  title: トッテナム、プレミア初勝利。マディソンが536日ぶりの先発で先制
+  hook: ""
+  question: トッテナムは、今季初勝利をどう決めたのか
+  takeaway: 3点とも箱の外から。勝ち点6で20位から16位へ動いたが、次のチェルシーは4位で勝ち点差は7
+
+thumbnail:
+  layout: face
+  line1: マディソン
+  line2: 536日ぶり先発で先制
+  tags: [マディソン, トッテナム]
+  photo: assets/images/20261020_tottenham_first_win_maddison/01_w.jpg
+  short_photo: assets/images/20261020_tottenham_first_win_maddison/07_v.jpg
+
+answer: 3対1。マディソンが14分に先制し、マルムーシュ、デイヴィスが続いた
+watch: 24日、アウェーのチェルシー戦
+
+sections:
+  - id: what
+    main: true
+    heading: 何が起きたか
+    tier: 報道
+    telop: トッテナム、今季プレミア初勝利
+    say:
+      - "19日夜のプレミア第7節。ホームのトッテナムが勝ちました。"
+      - "取った点は、トッテナムが3、コヴェントリーが1。"
+      - "開幕から6試合、勝てなかった。7試合目で、今季初めての勝利です。"
+      - "先制は14分。マディソンが、エリアの外から左上へ決めました。"
+      - "マディソンにとって、およそ1年半ぶりの先発でした。"
+      - voice: マディソン
+        text: ああいうゴールは、夢に見るものだ。
+        short_voice: true
+      - voice: マディソン
+        text: 深くは言わないが、去年の暗い日々、前十字靭帯の回復のなかで、
+        cont: true
+      - voice: マディソン
+        text: ああいう瞬間を、夢見る。
+        cont: true
+      - voice: マディソン
+        text: それが、トンネルの先の光だ。
+        cont: true
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50222119/maddison-scores-return-spurs-1st-epl-win
+      - https://www.skysports.com/football/tottenham-hotspur-vs-coventry-city/report/559513
+    quotes_from: ["ESPN https://www.espn.com/soccer/story/_/id/50222119/maddison-scores-return-spurs-1st-epl-win"]
+
+  - id: goals
+    heading: 3つのゴールは、どこから
+    tier: 報道
+    telop: 3点とも、ペナルティーエリアの外から
+    say:
+      - "49分、コヴェントリーのルドーニが、マディソンの先制に追いつきました。"
+      - "58分は、マルムーシュ。移籍後、初めてのゴールです。"
+      - "90分すぎは、交代で入ったデイヴィスの左足でした。"
+      - "ゴールは3つとも、ペナルティーエリアの外から。記録の上でも、そうです。"
+      - voice: キャラガー
+        text: 見ていて、楽しいゴールだった。
+      - voice: キャラガー
+        text: 彼の足には、まだ魔法が少し残っている。
+        cont: true
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/summary?event=401879257
+      - https://www.skysports.com/football/tottenham-hotspur-vs-coventry-city/report/559513
+    quotes_from: ["Sky Sports https://www.skysports.com/football/tottenham-hotspur-vs-coventry-city/report/559513"]
+
+  - id: view
+    viewpoint: true
+    heading: 20位から16位、次のチェルシーは
+    tier: 背景
+    telop: 16位に上がったが、4位チェルシーとは勝ち点7差
+    say:
+      - "見立てです。マディソンが先制した試合で、勝ち点は6になりました。"
+      - "順位は、20位から16位へ。"
+      - "次は24日、アウェーでチェルシー。"
+      - "チェルシーは、4位で勝ち点13。差は7です。"
+      - "この1勝が、次の試合までつながるか。"
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/summary?event=401879257
+      - https://www.skysports.com/football/tottenham-hotspur-vs-coventry-city/report/559513
+short_title: "トッテナム、プレミア初勝利。マディソンが536日ぶりの先発で先制"

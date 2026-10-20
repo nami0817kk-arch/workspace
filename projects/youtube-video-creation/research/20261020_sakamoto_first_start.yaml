@@ -1,0 +1,148 @@
+# 坂元達裕の取材メモ（2026年10月20日・ショートだけ・見せ方 X＝冒頭に強い一言）
+# 取材: 2026-10-20。requests で原文を読んだ（research/raw/20261020_sak_*.txt）。
+#   ・ゲキサカ 2026-10-20 05:58「トッテナムが待望の今季初白星で最下位脱出、コベントリー坂元達裕はプレミア初先発で好機演出も3連勝ならず」
+#     https://web.gekisaka.jp/ （記事全文＋Opta の出場表）。坂元の部分: プレミア初先発・4-2-3-1の右サイドハーフ・最終ラインまで落ちて守備・
+#     前半8分に右からカットインして左足クロス・10分にファンエバイクとのワンツーからPA中央で左足シュート（ブロック）・後半33分（=78分）までプレー。
+#     「カラバオカップでは2試合連続スタメン、リーグ戦では第2節と前節の途中出場のみ。7試合目で初先発」。
+#   ・ESPN の試合記録（summary event=401879257。research/raw/20261020_sakamoto_summary.json）：先発・右のアタッキングミッドフィールダー・78分にハマーと交代・
+#     シュート1・被ファウル2・ファウル1。スコア 3-1（マディソン14分、ルドーニ49分、マーモウシュ58分、デイヴィス90+6分）と一致。
+#   ・ランパード監督の言葉は ESPN の英語原文（research/raw/20261020_sak_espn_50222119.txt）。**英語原文を自分で訳した**ので台本で「英語の原文を訳した」と断る。
+#     発言は試合全体への評価で、坂元個人への言葉ではない（坂元本人の言葉は無い）。
+# 使わないもの:
+#   ・ゲキサカの「3試合ぶりの黒星」は数が合わない（呼び出し元で確認済み）ので使わない。
+#   ・ESPN の本文は「キンスキーが坂元のクロスを防いだ／ファン・デ・フェンがシュートを逸らした」と書くが、ゲキサカの「ブロック」と細部が違う。
+#     台本は「クロス」「左足シュートはブロックされた」まで（ゲキサカ＋U-NEXT の投稿文と一致する範囲）。
+#   ・トッテナム側の話（マディソン536日ぶり先発・クルゼフスキ復帰など）は同日の「トッテナム初勝利」の本が扱うので言わない。坂元の動きだけ。
+# 10/19 以前の坂元のショート（10/19 ランパード監督の言葉＝試合前の内容）とは重ならない：今回は試合中の動きだけ。「出番が2試合」は言わない。
+# 反応: 0件（探していない・作らない）。確度: 報道（ゲキサカ＋ESPN の試合記録で確かめた）。
+# 写真: Commons CC0「File:Tatshurio Sakamoto.png」（968x1147・2024-11-02・MilesaMFC）1枚だけ。三通りの縦切り（_v）を行ごとに回す。子ども2人が写っている自撮りで、
+#   縦切りには少年の顔が入る（寄っても外せない）。引き伸ばしは縦で 1.67倍・1.98倍・1.98倍。
+slot: japan
+date: "2026年10月20日"
+format: news
+no_main: true
+people: [坂元達裕, コヴェントリー, トッテナム]
+
+short_style: X
+short_hook_word: プレミア初先発
+short_photos:
+  - assets/images/20261020_sakamoto_first_start/01_v.jpg
+  - assets/images/20261020_sakamoto_first_start/02_v.jpg
+  - assets/images/20261020_sakamoto_first_start/03_v.jpg
+
+short_question: 坂元達裕の右サイド、トッテナム戦での動きをどう見ましたか。
+short_hook: 坂元達裕、プレミア初先発。
+short_telops:
+  - {match: 1対3で敗れました, text: 19日 プレミア第7節/トッテナム 3-1 コヴェントリー}
+  - {match: 英語の原文, text: ランパード監督/英語の原文を訳したもの}
+  - {match: 本当に押していた, text: 監督/「2対1の時点では本当に押していた」}
+  - {match: 初めて先発, text: 初めての先発/4-2-3-1の右サイドハーフ}
+  - {match: カットイン, text: 前半8分/右からカットイン→左足クロス}
+  - {match: ワンツー, text: 前半10分/ファンエバイクとワンツー→左足シュート}
+  - {match: ハマーと交代, text: 78分/ハマーと交代}
+  - {match: 3試合目, text: リーグ戦の出場/3試合目（先発は初）}
+
+theme:
+  id: sakamoto_first_start
+  league: england
+  league_name: プレミアリーグ
+  prefix: ""
+  title: 坂元達裕、プレミア初先発。右サイドで何をしたのか
+  hook: ""
+  question: プレミア初先発の坂元達裕は、トッテナム戦で何をしたのか
+  takeaway: 坂元達裕はリーグ戦3試合目で初先発。前半8分のクロスと10分のシュートで序盤に好機を作り、78分に交代した
+
+thumbnail:
+  line1: 坂元達裕、プレミア初先発
+  line2: 78分まで出場
+  tags: [坂元達裕, コヴェントリー]
+  layout: face
+  photo: assets/images/20261020_sakamoto_first_start/01_w.jpg
+  short_photo: assets/images/20261020_sakamoto_first_start/01_v.jpg
+
+answer: 坂元達裕はプレミア初先発。前半8分のクロスと10分のシュートで好機を作り、78分に交代した
+watch: コヴェントリーの次の試合
+
+sections:
+  - id: what
+    main: true
+    heading: トッテナム戦、坂元達裕のプレミア初先発
+    tier: 報道
+    telop: 坂元達裕、トッテナム戦でプレミア初先発
+    say:
+      - text: 19日、トッテナム戦。坂元達裕のコヴェントリーは、1対3で敗れました。
+        image: assets/images/20261020_sakamoto_first_start/01_w.jpg
+        card: none
+      - text: ランパード監督の言葉です。英語の原文を訳しました。
+        image: assets/images/20261020_sakamoto_first_start/02_w.jpg
+        card: none
+      - voice: ランパード監督
+        text: いい内容だった。最後の3対1で見え方は変わるが、
+        image: assets/images/20261020_sakamoto_first_start/03_w.jpg
+        card: none
+      - voice: ランパード監督
+        text: 2対1の時点では、本当に押していたと思う。
+        cont: true
+        image: assets/images/20261020_sakamoto_first_start/03_w.jpg
+        card: none
+      - text: その試合で、坂元達裕が初めて先発。4-2-3-1の右サイドハーフでした。
+        image: assets/images/20261020_sakamoto_first_start/01_w.jpg
+        card: none
+      - text: リーグ戦の出場は、第2節と前節の途中出場だけでした。
+        image: assets/images/20261020_sakamoto_first_start/02_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50222119
+      - https://web.gekisaka.jp/news/world/
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/all/summary?event=401879257
+
+  - id: play
+    heading: 坂元達裕の右サイド、前半の2つの場面
+    tier: 報道
+    telop: 前半8分にクロス、10分にシュート
+    say:
+      - text: 前半8分。坂元は右サイドからカットインして、左足でクロスを上げました。
+        image: assets/images/20261020_sakamoto_first_start/03_w.jpg
+        card: none
+      - text: 10分には、ファンエバイクとのワンツーでエリア中央へ入りました。
+        image: assets/images/20261020_sakamoto_first_start/01_w.jpg
+        card: none
+      - text: 左足で振り抜いたシュートは、相手にブロックされました。
+        image: assets/images/20261020_sakamoto_first_start/02_w.jpg
+        card: none
+      - text: 守備では、最終ラインの近くまで下がって、走り回りました。
+        image: assets/images/20261020_sakamoto_first_start/03_w.jpg
+        card: none
+      - text: 78分、ハマーと交代しました。
+        image: assets/images/20261020_sakamoto_first_start/01_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50222119
+      - https://web.gekisaka.jp/news/world/
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/all/summary?event=401879257
+
+  - id: view
+    viewpoint: true
+    heading: 坂元達裕、初先発をどう見るか
+    tier: 報道
+    telop: リーグ戦3試合目で初先発
+    say:
+      - text: 見立てです。坂元は、カラバオカップで2試合続けて先発していました。
+        image: assets/images/20261020_sakamoto_first_start/02_w.jpg
+        card: none
+      - text: リーグ戦でも、3試合目の出場で先発に入りました。
+        image: assets/images/20261020_sakamoto_first_start/03_w.jpg
+        card: none
+      - text: 坂元が好機を作った前半の2つの場面は、得点にはなりませんでした。
+        image: assets/images/20261020_sakamoto_first_start/01_w.jpg
+        card: none
+      - text: 次のリーグ戦で、坂元がまた先発に入るか。注目されます。
+        image: assets/images/20261020_sakamoto_first_start/02_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/world/
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/all/summary?event=401879257
+short_title: "坂元達裕、プレミア初先発。右サイドで何をしたのか"

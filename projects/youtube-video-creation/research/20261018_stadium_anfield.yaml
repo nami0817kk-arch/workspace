@@ -1,0 +1,571 @@
+# スタジアム紹介シリーズ⑧：リヴァプールの本拠地（アンフィールド、10/18）。雛形は 10/17 オールド・トラッフォード回（research/20261017_stadium_oldtrafford.yaml）。
+# 節の並び：オープニング → 基礎DATA(main・強い一点を頭に＝A) → エヴァートンの本拠地から（年表）→ コップの名（年表）→ イス席になるまで（年表）→ 収容の歩み（折れ線＋記録との差）→ 見立て（自分で数えた比べ）
+# 軸：**A＝収容6万1276席はプレミア20クラブで3位（上の2つはマンチェスター・ユナイテッド 74,158 とトッテナム 62,850）と、B＝歴史（1884年の開場・エヴァートンの本拠地・コップ・立ち見からイス席へ・拡張）の両方。冒頭はA。**
+#
+# 強い一点：**収容 61,276人（今季のプレミア公式ハンドブック2026/27）はプレミア20クラブで3番目。1位マンU 74,158（差 12,882）、2位トッテナム 62,850（差 1,574）、4位シティ 61,038（下との差 238）。**
+#   確度は**報道**（ハンドブックの数字から自分で並べ替え・引き算。クラブ公式 liverpoolfc.com の記事「New Anfield capacity confirmed ahead of 2024-25」も 61,276 と最多入場 61,905（1952）を書く＝確定の数字）。
+#
+# **自分で数えた・割った（20クラブの収容を、PL公式ハンドブック2026/27のPDF（2026-07-31版）の6〜25ページ「Ground Capacity at start of the Season」から全部抽出して検算した。取得 2026-10-18）**
+#   上から：ユナイテッド 74,158／トッテナム 62,850／リヴァプール 61,276／マンチェスター・シティ 61,038／アーセナル 60,704／エヴァートン 52,769／ニューカッスル 52,729／サンダーランド 48,095／チェルシー 40,044／リーズ 37,633／
+#   アストン・ヴィラ 36,887／コヴェントリー 32,609／ブライトン 32,176／フォレスト 31,212／イプスウィッチ 30,294／フラム 28,107／パレス 25,194／ハル 24,983／ブレントフォード 17,250／ボーンマス 12,357。合計 822,365（20ページ分。10/17 オールド・トラッフォード回と一致）。
+#   74,158 − 61,276 = 12,882（1位との差）／62,850 − 61,276 = 1,574（2位との差）／61,276 − 61,038 = 238（4位との差）／61,276 − 60,704 = 572（3位と5位の差＝3〜5位の幅）／
+#   1,574 ÷ 238 = 6.613 →「6.6倍」（2位と3位の差は、3位と4位の差の6.6倍）／822,365 ÷ 20 = 41,118.25、61,276 ÷ 41,118.25 = 1.490 →「1.5倍」／
+#   61,905 − 61,276 = 629（立ち見の時代の最多入場は、今の収容より629人多い）／61,276 ÷ 32,176 = 1.9044 →「1.9倍」（次の本拠地戦 10/25 ブライトン）／61,276 ÷ 74,158 = 0.826。
+#   2025-26 ホーム19試合の入場（PL公式の試合データ。sdp-prem-prod API の2025シーズン全38節から Liverpool がホームの19試合）：合計 1,147,390 ÷ 19 = 60,388.95 →「6万389人」／
+#   60,388.95 ÷ 61,276 = 0.98552 →「98.6％」／最多 60,466（2025-12-27 ウルヴス）・最少 60,314（2026-04-25 パレス）→ 差 152／61,276 − 60,389 = 887（平均と収容の差）／19試合すべて 61,276 未満（最多でも 810 下）。
+#   Wikipedia の「リーグ戦の最多は 60,466（2025-12-27 ウルヴス）」とPL公式データが一致。
+#
+# **重なりで外したもの**
+#   クラブ紹介⑭リヴァプール（2026-09-20 公開）は「アンフィールドの土地を持つホールディング／エヴァートンが去った／スタジアムだけが残った／創立1892年／本拠地は約6万1000人・2024年に広げたばかり／試合前の YNWA は1960年代の初めから」を読んでいる。
+#   この回は同じ筋（エヴァートン→1892）を通るが、**1884年の開場・1890-91年の優勝・1892年3月→6月3日→9月1日の日付・1907年の買い取り**は新しい中身。YNWA は「1963年」の1行と「シャンクリー・ゲイツ」の1行だけ。
+#   ユニフォーム⑦（10/09）は炎のエンブレムとして**ヒルズボロの事実だけ2行**を読んでいる。財政（10/12）・移籍（10/14）の金額は**この回は言わない**（工事費・施工会社の破綻は事実の1行のみ、金額なし）。
+#
+# **ヒルズボロの扱い（CLAUDE.md「リヴァプールのヒルズボロには表を足さない」）**
+#   **亡くなった人の数（97人）は一度も言わない。年表の行にも入れない（表に組まない）。強調（emph・callword）も付けない。**
+#   台本は「事故が起きた」「リヴァプールのサポーターが亡くなった」「判事テイラー卿が調べた」「テイラー報告書が全席イス席を求めた」までの事実だけ。原因・責任の論評はしない。
+#   読んだ原文：Hansard 1990-01-29（内務大臣の声明。「テイラー卿は中間報告で過密を取り上げた。ヒルズボロの原因だったから」「全席イス席へ向かう（all-seater）。Football Spectators Act 1989 s.11」）。
+#   Commons Library・Wikipedia の「1994年までに」は台本に年を書かず、**アンフィールドのコップの最後の立ち見の試合 1994-04-30（クラブ公式）**を事実として言う。
+#
+# **確度の根拠・読めたものと読めなかったもの（取得 2026-10-18、requests のブラウザUA。ブラウザ操作・JS実行は使っていない）**
+#   クラブ公式（liverpoolfc.com）で**原文が読めた**：
+#     ・New Anfield capacity confirmed ahead of 2024-25（収容 61,276・最多入場 61,905＝1952年ウルヴス戦FAカップ・リーグ戦の最多 60,090 当時）
+#     ・120 years ago today: The story of Anfield's famous Spion Kop begins（1906年の改築＝リーチ。コップ 132段・最大2万人。1906-09-01 ストーク戦 1-0・ジョー・ヒューイットが初ゴール。**名づけた人は不明とクラブが書く**＝「記者エドワーズ説は証拠が無い、サポーターが先に呼んだ説のほうが確からしい」。1928年に屋根・改築は別の建築家）
+#     ・125 years on: The story of the Spion Kop（1928年に屋根・1977年に最大3万人が立ったと報じられた・1989年4月のヒルズボロとテイラー報告書→**最後の立ち見は 1994-04-30**・新コップは 12,850席・歌 YNWA は Gerry and the Pacemakers）
+#     ・Liverpool FC celebrates its 134th birthday／133rd birthday（1892年3月に対立→6月3日に Board of Trade が認める→最初の試合は 9月1日 ロザラム・タウンに 7-1 の親善試合。命名は William E. Barclay）
+#     ・legacy.liverpoolfc.com の「Video: How to access Anfield's new Main Stand」（2016-09-08。「54,000超」＝2016年のメインスタンド開場で収容が増えた）
+#   **クラブ公式で読めなかった（404）**：Anfield Road Stand の歴史・Kenny Dalglish Stand の歴史・2016-17決算（54,074）・stadium-expansion の中身 → Wikipedia と StadiumDB で補い、**「とされます」の背景**にとどめた。
+#     ケニー・ダルグリッシュ・スタンドの改名（2017-05-03 発表）は Wikipedia のみ。シャンクリー・ゲイツ（1982）と門の上の曲名も Wikipedia のみ。
+#   StadiumDB（robots 許可）：開場の初戦（Everton 5-0 Earlestown）は StadiumDB が 1884-09-27、Wikipedia が 28日で**食い違う→日は言わず「9月」**。1907年のクラブによる土地の買い取り・1890-91の優勝・1963年 YNWA・2000年ごろ約4万5000人・
+#     2002年以降の新スタジアム案が資金不足で実現せず・FSG が残す道を選んだ理由（コップの雰囲気）・2021-09〜2024 のアンフィールド・ロード拡張は StadiumDB。
+#   **古い数字の食い違い**：新コップの席数は クラブ公式 12,850・Wikipedia 12,390。**クラブ公式の 12,850** を使う（日付違いの可能性。台本は「1万2850席」）。
+#     メインスタンドの収容増は クラブ公式「54,000超」＋Wikipedia「+8,500席、54,074（2016-17決算のクラブ発表、Wikipedia の引用）」。**折れ線は「54,000超」（クラブ公式の原文）**。
+#     2000年ごろ「約4万5000人」は StadiumDB（"around 45,000"）のみ。Wikipedia/他の 45,276 は原文を読めていないので**使わない**。折れ線では「約」。
+#     メインスタンド開場日は クラブ公式 9/9・10 で割れる → **「2016年9月」**。
+#   新スタジアム案（2002 スタンレー・パーク）は StadiumDB（資金不足）と Wikipedia（2004 許可・2006〜07 再設計）。**「2002年に案を出した」「実現しなかった」までを言う**。
+#   工事費・施工会社の破綻：事実の1行（「施工会社が経営破綻して完成が遅れた」）。金額は言わない（確認できる一次が無い）。
+#   **言わないと決めたもの**：コンサート・ラグビー・女子（女子サッカーは扱わない 2026-09-16）・ピッチが UEFA 基準より4メートル短い話・ヘイゼルの悲劇・Everton の新スタジアム・Taylor Swift の 6万2000人・アンフィールド・ロードの歩行者空間化。
+#   ピッチ 縦101×横68メートルは PL公式ハンドブック2026/27 の Liverpool ページ（原文 "Length: 101 metres Width: 68 metres"）。
+#   **次の本拠地戦**：PL公式データで 2026-10-25 ブライトン（PreMatch）。クラブ公式サイトでも 10/20 ビジャレアル（CL）の次に 10/25 ブライトン。台本は「次のプレミアの本拠地戦は10月25日」。
+#
+# 写真：assets/images/20261018_stadium_anfield/（credits.json 同梱。すべて Commons：01 内側の全景2024年5月＝CC0／02 試合日の全景（新メインスタンド）CC BY-SA 2.0／03 コップ側 CC BY-SA 2.0／04 アンフィールド・ロード側2024年5月 CC0／05 夜の試合2008年 CC BY-SA 2.0）。
+#   人の顔が主役の写真は無い（観客は小さい）。透かしなし・代理店なし。10/17 の写真と重ならない。
+# サムネは案を3つ出してユーザーに決めてもらう（2026-10-11）。ここに書いた thumbnail は**案1（暫定）**。
+date: 2026年10月18日
+slot: other_1
+format: news
+series: スタジアム紹介
+voice_min: 0
+people: []
+theme:
+  id: stadium_anfield
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: リヴァプール
+  title: アンフィールド。収容6万1276席はプレミアで3位。上の2つはどこか
+  question: プレミアで3番目に大きい本拠地は、上の2つと何席違い、どんな歴史でいまの形になったのか
+  lead: プレミアで3番目に大きな競技場。
+  hook: ''
+  opening_image: assets/images/20261018_stadium_anfield/01_w.jpg
+  end_bg: assets/images/20261018_stadium_anfield/01_w.jpg
+  takeaway: リヴァプールの本拠地、アンフィールドの収容は、今季の開幕時で6万1276人。プレミア20クラブで3番目に大きく、1位マンチェスター・ユナイテッド（7万4158人）とは1万2882席、2位トッテナム（6万2850人）とは1574席の差。4位マンチェスター・シティ（6万1038人）との差は238席で、2位と3位の差は、3位と4位の差の6.6倍にあたる。1884年にエヴァートンの本拠地として開き、1892年に対立でエヴァートンが去ったあと、空いた競技場でリヴァプールが生まれた。ゴールの裏の立ち見席コップは、1906年の改築でできた。1989年のヒルズボロの事故のあと、テイラー報告書が全席イス席を求め、立ち見のコップは1994年4月30日の試合が最後になった。収容は2000年ごろの約4万5000人から、2016年に5万4000人超、2024年に6万1276人へ広がり、1952年の最多入場（6万1905人）まで629席に迫った。昨季のリーグ戦ホーム19試合の平均入場は6万389人で、収容の98.6％。次のプレミアの本拠地戦は10月25日のブライトン戦で、その本拠地の収容は3万2176人。アンフィールドは1.9倍になる
+  short_title: アンフィールド、プレミア3位の6万1276席
+thumbnail:
+  layout: scene
+  callouts: [6万1276席, 1位と1万2882席差]
+  photo: assets/images/20261018_stadium_anfield/01_w.jpg
+  line1: リヴァプール本拠地
+  line2: プレミア3位、上の2つは
+  crests:
+  - リヴァプール
+  tags:
+  - リヴァプール
+  - アンフィールド
+  - プレミアリーグ
+  - スタジアム紹介
+sections:
+- id: data
+  main: true
+  heading: アンフィールドは、上の2つの本拠地より何席小さいのか
+  bg: assets/images/20261018_stadium_anfield/01_w.jpg
+  tier: 報道
+  telop: 収容は6万1276人。プレミア20クラブで3番目で、1位とは1万2882席差
+  narrator: 解説
+  card: &id_data
+    type: table
+    title: アンフィールドの基礎DATA
+    columns: &cols_data
+    - 項目
+    - 内容
+    rows: &rows_data
+    - - 収容人数
+      - 6万1276人（今季の開幕時）
+    - - 20クラブでは
+      - 3位（1位と1万2882席差）
+    - - 開場
+      - 1884年（エヴァートンの本拠地）
+    - - 最多の入場
+      - 6万1905人（1952年）
+    - - ピッチ
+      - 縦101×横68メートル
+    - - スタンド
+      - コップ・メイン・ダルグリッシュ・アンフィールド・ロード
+  say:
+  - text: リヴァプールの本拠地、アンフィールドの話です。
+    short_only: true
+  - text: 収容は、6万1276人。今季のプレミア20クラブで、3番目に大きな本拠地です。
+    emph: true
+    image: assets/images/20261018_stadium_anfield/02_w.jpg
+    card: &id_stats
+      type: stats
+      title: プレミア3位の本拠地。上の2つ
+      items:
+      - - '61276'
+        - 人
+        - アンフィールドの収容
+      - - '74158'
+        - 人
+        - 1位 マンチェスター・U
+      - - '62850'
+        - 人
+        - 2位 トッテナム
+      focus: 0
+  - text: 上の2つは、1位のマンチェスター・ユナイテッドと、2位のトッテナム。
+    card:
+      <<: *id_stats
+      focus: 1
+  - text: 1位のマンチェスター・ユナイテッドとは、1万2882席の差。
+    card: &id_gap
+      type: stats
+      title: 上の2つ・下との差（自分で引いた）
+      items:
+      - - '12882'
+        - 席
+        - 1位との差
+      - - '1574'
+        - 席
+        - 2位との差
+      - - '238'
+        - 席
+        - 4位マンチェスター・Cとの差
+      focus: 0
+  - text: 2位との差は、1574席だけ。
+    emph: true
+    card:
+      <<: *id_gap
+      focus: 1
+  - text: 下には、4位のマンチェスター・シティが、238席差で続きます。
+    card:
+      <<: *id_gap
+      focus: 2
+  - text: 20クラブの平均、約4万1118席の1.5倍にあたります。
+    card:
+      <<: *id_data
+      highlight_row: 1
+  - text: ただ、この競技場には、リヴァプールより前の主がいました。
+    image: assets/images/20261018_stadium_anfield/04_w.jpg
+    card: none
+  sources:
+  - https://resources.premierleague.pulselive.com/premierleague/document/2026/07/31/8a890ff9-176c-4364-a8ff-e08f995e2c86/TM2040_PL-Handbook-and-Collateral-2026-27_Digital_31.07.pdf
+  - https://www.liverpoolfc.com/news/new-anfield-capacity-confirmed-ahead-2024-25
+- id: origin
+  heading: エヴァートンの本拠地は、なぜ空っぽになったのか
+  bg: assets/images/20261018_stadium_anfield/01_w.jpg
+  tier: 背景
+  telop: 1884年にエヴァートンが開き、1892年に対立で去り、リヴァプールが生まれた
+  narrator: 解説
+  card: &id_origin
+    type: timeline
+    title: 開場と、リヴァプールが生まれるまで
+    rows: &rows_origin
+    - - 1884年
+      - エヴァートンの本拠地として開場
+    - - 1890-91年
+      - エヴァートンが、ここでリーグ優勝
+    - - 1892年3月
+      - 家主のハウルディングと対立
+    - - 1892年6月3日
+      - 新クラブ、リヴァプールが認められる
+    - - 1892年9月1日
+      - 最初の試合。ロザラム・タウンに7対1
+    - - 1907年
+      - クラブが、この土地を買う
+    focus: 1892年6月3日
+  say:
+  - text: 開場は、1884年。ここは、エヴァートンの新しい本拠地でした。
+    image: assets/images/20261018_stadium_anfield/04_w.jpg
+    card:
+      <<: *id_origin
+      highlight_row: 0
+  - text: 最初の試合は、9月。相手はアールズタウンで、5対0の勝ちでした。
+    card:
+      <<: *id_origin
+      highlight_row: 0
+  - text: 1890年から91年、エヴァートンは、ここでリーグ優勝を果たします。
+    card:
+      <<: *id_origin
+      highlight_row: 1
+  - text: ところが1892年3月、家主のジョン・ハウルディングと、対立が起きます。
+    emph: true
+    card:
+      <<: *id_origin
+      highlight_row: 2
+  - text: エヴァートンは、公園をはさんだ、グディソン・パークへ移りました。
+    card: none
+  - text: 空いた競技場を持つハウルディングは、新しいクラブを作ります。
+    card:
+      <<: *id_origin
+      highlight_row: 2
+  - text: 6月3日、リヴァプール・フットボールクラブが、正式に認められました。
+    emph: true
+    card:
+      <<: *id_origin
+      highlight_row: 3
+  - text: 最初の試合は、9月1日。ロザラム・タウンに、7対1で勝ちました。
+    card:
+      <<: *id_origin
+      highlight_row: 4
+  - text: クラブがこの土地を買ったのは、1907年とされます。
+    card:
+      <<: *id_origin
+      highlight_row: 5
+  - text: 空っぽの競技場から、生まれたクラブでした。
+    emph: true
+    card: none
+  sources:
+  - https://www.liverpoolfc.com/news/liverpool-fc-celebrates-its-134th-birthday
+  - https://www.liverpoolfc.com/news/liverpool-fc-celebrates-133rd-birthday
+  - https://stadiumdb.com/stadiums/eng/anfield_road
+- id: kop
+  heading: なぜ、ゴールの裏の立ち見席は、「コップ」と呼ばれるのか
+  bg: assets/images/20261018_stadium_anfield/01_w.jpg
+  tier: 報道
+  telop: 名は南アフリカの丘から。1906年の改築でできた立ち見席は、最大2万人
+  narrator: 解説
+  card: &id_kop
+    type: timeline
+    title: コップの歩み
+    rows: &rows_kop
+    - - 1906年
+      - リーチの改築で、丘のような立ち見席ができる
+    - - 1906年9月1日
+      - 改築後の最初の試合。ストーク・シティに1対0
+    - - 1928年
+      - 屋根がつく
+    - - 1963年
+      - 地元のバンドの曲が、サポーターの歌に
+    - - 1977年
+      - 最大3万人が立ったと報じられる
+    - - 1982年
+      - シャンクリー・ゲイツが建つ
+    focus: 1906年
+  say:
+  - text: ゴールの裏にある立ち見席は、「コップ」と呼ばれてきました。
+    image: assets/images/20261018_stadium_anfield/03_w.jpg
+    card: none
+  - text: 名は、南アフリカの丘、スピオン・コップから。1900年、ボーア戦争の戦場です。
+    card: none
+  - text: 英国軍が戦い、リヴァプール出身の兵士も、多く命を落としました。
+    card: none
+  - text: 1906年、建築家のアーチボルド・リーチが、アンフィールドを改築します。
+    card:
+      <<: *id_kop
+      highlight_row: 0
+  - text: ゴールの裏に、132段の高い立ち見席ができました。最大2万人です。
+    emph: true
+    card:
+      <<: *id_kop
+      highlight_row: 0
+  - text: いまのコップの席数の約1.6倍。急な傾きが、丘に似ていました。
+    card: none
+  - text: 誰が名づけたのかは、はっきりしません。クラブも、確かな証拠は無いと書きます。
+    card: none
+  - text: 改築後の最初の試合は、1906年9月1日。ストーク・シティに1対0で勝ち。
+    card:
+      <<: *id_kop
+      highlight_row: 1
+  - text: この立ち見席の前で最初にゴールを決めたのは、ジョー・ヒューイットです。
+    card: none
+  - text: 1928年、屋根がつきます。声が響くのは、その屋根のおかげとも言われます。
+    card:
+      <<: *id_kop
+      highlight_row: 2
+  - text: 1963年、地元のバンドが歌った曲が、サポーターの歌になります。
+    card:
+      <<: *id_kop
+      highlight_row: 3
+  - text: 曲名は、「ユール・ネヴァー・ウォーク・アローン」です。
+    card: none
+  - text: 1977年のヨーロッパ・カップでは、最大3万人が立ったという報道があります。
+    card:
+      <<: *id_kop
+      highlight_row: 4
+  - text: 1982年、ビル・シャンクリー監督をたたえる門が、建ちました。
+    card:
+      <<: *id_kop
+      highlight_row: 5
+  - text: 門の上には、あの曲名が書かれています。
+    card: none
+  sources:
+  - https://www.liverpoolfc.com/news/120-years-ago-today-story-anfields-famous-spion-kop-begins
+  - https://www.liverpoolfc.com/news/125-years-story-spion-kop
+  - https://stadiumdb.com/stadiums/eng/anfield_road
+  - https://en.wikipedia.org/wiki/Anfield
+- id: seats
+  heading: なぜ、立ち見のコップは、イス席に変わったのか
+  bg: assets/images/20261018_stadium_anfield/01_w.jpg
+  tier: 報道
+  telop: テイラー報告書のあと、立ち見のコップは1994年4月30日の試合が最後に
+  narrator: 解説
+  card: &id_seats
+    type: timeline
+    title: 立ち見から、イス席へ
+    rows: &rows_seats
+    - - 1990年1月
+      - テイラー報告書。全席イス席の方向へ
+    - - 1992年9月1日
+      - 2層になった新スタンドが開く
+    - - 1994年4月30日
+      - 立ち見のコップ、最後の試合
+    - - 1998年
+      - アンフィールド・ロード側に2層目
+    - - 2017年
+      - ケニー・ダルグリッシュ・スタンドに改名
+    focus: 1994年4月30日
+  say:
+  - text: 1989年4月、ヒルズボロの競技場で、事故が起きました。
+    image: assets/images/20261018_stadium_anfield/03_w.jpg
+    card: none
+  - text: リヴァプールのサポーターが、亡くなりました。
+    card: none
+  - text: 判事のテイラー卿が、原因を調べます。
+    card: none
+  - text: 1990年1月、テイラー卿の最終報告書が出ます。立ち見をなくす方向が示されました。
+    card:
+      <<: *id_seats
+      highlight_row: 0
+  - text: 1部と2部の競技場は、全席イス席にする。政府は、そう進めると表明しました。
+    card:
+      <<: *id_seats
+      highlight_row: 0
+  - text: アンフィールドでは1992年9月1日、ピッチ横のスタンドが2層になります。
+    card:
+      <<: *id_seats
+      highlight_row: 1
+  - text: 名前は、センテナリー・スタンド。リヴァプール最初の試合の、ちょうど100年後。
+    card: none
+  - text: 最後まで立ち見だったのが、コップです。
+    card: none
+  - text: 1994年4月30日。立ち見のコップでの、最後の試合が開かれます。
+    card:
+      <<: *id_seats
+      highlight_row: 2
+  - text: 相手はノーウィッチ。試合のあと、コップは壊されました。
+    card:
+      <<: *id_seats
+      highlight_row: 2
+  - text: 新しいコップは、イス席の1層。1万2850人が座れます。
+    card:
+      <<: *id_seats
+      highlight_row: 2
+  - text: 1998年には、もう一方のゴール裏、アンフィールド・ロード側に2層目。
+    card:
+      <<: *id_seats
+      highlight_row: 3
+  - text: 2017年、センテナリー・スタンドは、ケニー・ダルグリッシュの名に変わりました。
+    card:
+      <<: *id_seats
+      highlight_row: 4
+  sources:
+  - https://api.parliament.uk/historic-hansard/commons/1990/jan/29/hillsborough-stadium-disaster-taylor
+  - https://www.liverpoolfc.com/news/125-years-story-spion-kop
+  - https://stadiumdb.com/stadiums/eng/anfield_road
+  - https://en.wikipedia.org/wiki/Anfield
+- id: growth
+  heading: なぜ、約4万5000人の競技場は、6万1276人まで広がったのか
+  bg: assets/images/20261018_stadium_anfield/01_w.jpg
+  tier: 報道
+  telop: 収容は2000年ごろの約4万5000人から、2016年に5万4000人超、2024年に6万1276人
+  narrator: 解説
+  card: &id_cap
+    type: line
+    title: 収容の歩み（約を含む）
+    x: ['2000ごろ', '2016', '今季']
+    series:
+    - - 収容
+      - [45000, 54000, 61276]
+    unit: 人
+    focus: 収容
+    peak: true
+  say:
+  - text: 2000年ごろの収容は、約4万5000人。いまより約1万6000人少ない。
+    image: assets/images/20261018_stadium_anfield/02_w.jpg
+    card:
+      <<: *id_cap
+      highlight: '2000ごろ'
+  - text: 2002年、クラブは、近くの公園に、新しいスタジアムを建てる案を出します。
+    card: none
+  - text: 建てる許可は出ましたが、資金が足りず、実現しませんでした。
+    card: none
+  - text: 2010年に、持ち主が代わります。新しい持ち主は、いまの場所に残す道を選びました。
+    card: none
+  - text: 理由の1つは、コップの雰囲気を、新しい競技場では作りにくいことでした。
+    card: none
+  - text: 最初は、メインスタンドです。2014年の終わりに、工事が始まります。
+    card: none
+  - text: 2016年9月、新メインスタンドが開き、収容は5万4000人を超えます。
+    emph: true
+    card:
+      <<: *id_cap
+      highlight: '2016'
+  - text: 次は、アンフィールド・ロード側。2021年9月に着工しました。
+    card: none
+  - text: 途中で、施工会社が経営破綻し、完成は遅れました。
+    card: none
+  - text: 2024年、7000席ほどが増え、いまの形になりました。
+    emph: true
+    card:
+      <<: *id_cap
+      highlight: '今季'
+  - text: 1952年の最多入場は、立ち見の時代の、6万1905人です。
+    card: &id_rec
+      type: stats
+      title: 1952年の最多入場と、いまの収容
+      items:
+      - - '61905'
+        - 人
+        - 最多の入場（1952年）
+      - - '61276'
+        - 人
+        - いまの収容
+      - - '629'
+        - 人
+        - 最多のほうが多い人数（自分で引いた）
+      focus: 0
+  - text: いまの収容は、それより、629席少ないだけです。
+    emph: true
+    card:
+      <<: *id_rec
+      focus: 2
+  - text: 全席イス席のまま、立ち見の時代の記録に迫りました。
+    card: none
+  sources:
+  - https://www.liverpoolfc.com/news/new-anfield-capacity-confirmed-ahead-2024-25
+  - https://legacy.liverpoolfc.com/news/stadium/234709-video-how-to-access-anfield-s-new-main-stand
+  - https://stadiumdb.com/stadiums/eng/anfield_road
+- id: view
+  viewpoint: true
+  heading: 見立て・3位の本拠地は、2位と4位のどちらに近いのか
+  bg: assets/images/20261018_stadium_anfield/01_w.jpg
+  tier: 報道
+  telop: 2位との差は、4位との差の6.6倍。昨季の平均入場は収容の98.6％
+  narrator: 解説
+  card: &id_rank
+    type: table
+    title: 今季の収容、上位5クラブ（自分で並べた）
+    columns: &cols_rank
+    - 順位
+    - クラブ
+    - 収容
+    rows: &rows_rank
+    - - 1位
+      - マンチェスター・U
+      - 7万4158人
+    - - 2位
+      - トッテナム
+      - 6万2850人
+    - - 3位
+      - リヴァプール
+      - 6万1276人
+    - - 4位
+      - マンチェスター・C
+      - 6万1038人
+    - - 5位
+      - アーセナル
+      - 6万704人
+  say:
+  - text: 今季の収容を順に見ます。1位はマンチェスター・U。3位が、リヴァプール。
+    image: assets/images/20261018_stadium_anfield/01_w.jpg
+    emph: true
+    mark:
+      kind: circle
+      row: 2
+    card:
+      type: table
+      title: 今季の収容、上位5クラブ（自分で並べた）
+      columns: *cols_rank
+      rows: *rows_rank
+      highlight_row: 2
+  - text: 2位との差は、1574席。4位との差は、238席。
+    card: &id_gap2
+      type: calc
+      title: 差と差の比べ（自分で割った）
+      terms:
+      - - 1574席
+        - 2位との差
+      - - 238席
+        - 4位との差
+      - - 6.6倍
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+  - text: 2位との差は、4位との差の6.6倍。
+    emph: true
+    card: *id_gap2
+  - text: 3位から5位までは、わずか572席の幅です。
+    card:
+      type: table
+      title: 今季の収容、上位5クラブ（自分で並べた）
+      columns: *cols_rank
+      rows: *rows_rank
+      highlight_row: 3
+  - text: 実際の入場はどうか。昨季、ホーム19試合の平均は6万389人。
+    card: &id_fill
+      type: calc
+      title: 昨季の平均入場と収容（自分で割った）
+      terms:
+      - - 6万389人
+        - 昨季のホーム19試合の平均入場
+      - - 6万1276人
+        - 今季の開幕時の収容
+      - - 98.6％
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+  - text: 収容に対する割合は、98.6％。
+    emph: true
+    card: *id_fill
+  - text: 最多は6万466人、最少は6万314人。差は、152人しかありません。
+    card: none
+  - text: 19試合のどれも、収容の数には届きませんでした。
+    card: none
+  - text: 平均と収容の差は887席。理由までは、読み取れていません。
+    card: none
+  - text: 次のプレミアの本拠地戦は、10月25日。相手は、ブライトンです。
+    emph: true
+    card: none
+  - text: ブライトンの本拠地の収容は、3万2176人。
+    card: &id_bha
+      type: calc
+      title: アンフィールドとブライトンの収容（自分で割った）
+      terms:
+      - - 6万1276人
+        - アンフィールド
+      - - 3万2176人
+        - ブライトン
+      - - 1.9倍
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+  - text: アンフィールドは、その1.9倍にあたります。
+    card: *id_bha
+  - text: 空っぽの競技場は、プレミア3位の器になりました。
+    emph: true
+    card: none
+  sources:
+  - https://resources.premierleague.pulselive.com/premierleague/document/2026/07/31/8a890ff9-176c-4364-a8ff-e08f995e2c86/TM2040_PL-Handbook-and-Collateral-2026-27_Digital_31.07.pdf
+  - https://sdp-prem-prod.premier-league-prod.pulselive.com/api/v1/competitions/8/seasons/2025/matchweeks/1/matches
+  - https://sdp-prem-prod.premier-league-prod.pulselive.com/api/v1/competitions/8/seasons/2026/matchweeks/8/matches

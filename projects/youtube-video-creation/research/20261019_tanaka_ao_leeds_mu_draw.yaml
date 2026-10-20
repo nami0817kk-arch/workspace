@@ -1,0 +1,124 @@
+# 田中碧 の取材メモ（2026年10月19日・ショートだけ）。**試合の結果**を軸にする（10/18 の田中の回は試合前の見立て）。
+# 取材: 2026-10-19。requests（ブラウザUA）で原文を全部読んだ。
+#   ・サッカーキング 2026-10-18「マンU、ムベウモ先制弾もリーズとドローで6戦未勝利に…先発出場の田中碧は81分までプレー」
+#     https://www.soccer-king.jp/news/world/eng/20261018/2218066.html （research/raw/20261019_a_sk.txt）
+#   ・リーズ公式サイト（leedsunited.com）試合記録「Leeds United draw 1-1 with Manchester United at Elland Road」
+#     https://www.leedsunited.com/en/news/leeds-united-draw-1-1-with-manchester-united-at-elland-road
+#   ・リーズ公式サイト ファルケ監督の試合後の言葉（英語・全文を読んだ。research/raw/20261019_leeds_farke2.txt）
+#     https://www.leedsunited.com/en/news/daniel-farkes-solitary-criticism-after-leeds-uniteds-1-1-draw-with-manchester-united
+#   ・サッカーキング 2026-10-10「…アーセナルが無敗のリーズを撃破！…田中碧は71分まで出場」（見出しだけ。前節の出場時間）
+#     https://www.soccer-king.jp/news/world/eng/20261010/2215180.html
+# 資料間のずれ（台本では**分を言わない／ぼかす**）:
+#   ・同点弾の時刻：SK本文「51分」・SK得点者欄「56分」・リーズ公式の試合記録「51'」。→ 台本は「後半の立ち上がり」とだけ言う。
+#   ・田中の交代：SK「81分」・リーズ公式の出場表「Tanaka (Longstaff 80')」。→ 台本は「80分すぎまで」と言う（81分とも80分とも言い切らない）。
+#   ・「6戦未勝利」：SKの見出し。本文は「ここまで6試合を戦ってわずか1勝」「直近では公式戦5試合勝利から遠ざかっている」。→ 台本は「公式戦6試合、勝ちがありません」（5試合＋今回のドロー）と言う。
+# 自分で数えた比べ: 田中の出場は前節（10/10 アーセナル戦）71分まで → 今回は80分すぎまで。前節より延びた（引き算の数字は言わない）。
+# 本人の言葉: 田中碧本人の言葉は記事にもリーズ公式にも無い（作らない）。ファルケ監督の試合後の言葉は英語の原文を訳した（田中への言及は無い）。
+# 反応: 探していない（0件。作らない）。
+# 写真: 配信写真（Getty）は取り込まない。**リーズ公式サイトの記事内写真**（田中が写るもの4枚。leedsunited.com の各記事のヒーロー写真）。
+#   01 アーセナル戦（10月）・02 ニューカッスル戦（9月・得点を喜ぶ場面）・03 日本代表（9月ベネズエラ戦）・04 日本代表（6月スウェーデン戦・谷口と）。
+#   今日の試合の田中の写真はリーズ公式にも見つからなかった。10/18 に使った Commons の写真は使い回していない。
+slot: japan
+date: "2026年10月19日"
+format: news
+no_main: true
+people: [田中碧, ファルケ監督, リーズ, マンチェスター・ユナイテッド]
+
+short_style: X
+short_hook_word: 5試合連続先発
+short_photos:
+  - assets/images/20261019_tanaka_ao_leeds_mu_draw/01_v.jpg
+  - assets/images/20261019_tanaka_ao_leeds_mu_draw/02_v.jpg
+  - assets/images/20261019_tanaka_ao_leeds_mu_draw/03_v.jpg
+  - assets/images/20261019_tanaka_ao_leeds_mu_draw/04_v.jpg
+
+short_question: 25日のサンダーランド戦、田中碧は6試合連続で先発すると思いますか。
+short_hook: 田中碧、マンU戦は80分すぎまで。
+short_telops:
+  - {match: 1対1で引き分け, text: 18日 プレミア第7節/リーズ1対1マンU}
+  - {match: 5試合連続で先発, text: 田中碧/5試合連続の先発}
+  - {match: ダブルボランチの一角, text: 田中碧は/ダブルボランチの一角}
+  - {match: ムベウモが決めました, text: 前半35分/ムベウモが先制}
+  - {match: 同点にしました, text: 後半の立ち上がり/カルヴァート・ルーウィンが同点}
+  - {match: 上回っていた, text: ファルケ監督/「我々のほうが上回っていた」}
+  - {match: 悔しい, text: 「勝てなかったことが/少し悔しい」}
+  - {match: 71分まで, text: 前節アーセナル戦は/71分まで}
+  - {match: 80分すぎまで。前節, text: 今回は/80分すぎまで}
+  - {match: 勝ちがありません, text: マンUは/公式戦6試合勝ちなし}
+  - {match: 勝ち点1を積み, text: 前節の初黒星のあと/勝ち点1を積んだ}
+  - {match: 25日, text: 次は25日/アウェイでサンダーランド}
+
+theme:
+  id: tanaka_ao_leeds_mu_draw
+  league: england
+  prefix: ""
+  title: 田中碧は、何分までピッチに立ったのか。マンUと1対1の試合
+  hook: ""
+  question: 田中碧は、マンU戦でどんな試合をしたのか
+  takeaway: 田中碧は前節アーセナル戦の71分から、今回は80分すぎまでプレー。リーズは今季初黒星の次の試合を、公式戦6試合勝ちなしのマンUと1対1で終えた
+
+thumbnail:
+  line1: 田中碧、マンUと1対1
+  line2: 先発して80分すぎまで
+  tags: [田中碧, リーズ, マンU戦]
+  layout: number
+  number: 5試合連続
+  photo: assets/images/20261019_tanaka_ao_leeds_mu_draw/01_w.jpg
+  short_photo: assets/images/20261019_tanaka_ao_leeds_mu_draw/01_v.jpg
+
+answer: 田中碧は5試合連続で先発し、80分すぎまでプレーした
+watch: 25日のサンダーランド戦（アウェイ）
+
+sections:
+  - id: what
+    main: true
+    heading: 試合の結果
+    tier: 報道
+    telop: 18日のプレミア第7節、リーズ1対1マンU
+    say:
+      - 18日、プレミアリーグ第7節。
+      - リーズはホームで、マンチェスター・ユナイテッドと1対1で引き分け。
+      - 田中碧は、5試合連続で先発しました。
+      - voice: ファルケ監督
+        text: 我々のほうが上回っていた。
+      - voice: ファルケ監督
+        text: 試合を支配していた。
+        cont: true
+      - voice: ファルケ監督
+        text: 勝てなかったことが、少し悔しい。
+        cont: true
+    official: false
+    sources:
+      - https://www.leedsunited.com/en/news/daniel-farkes-solitary-criticism-after-leeds-uniteds-1-1-draw-with-manchester-united
+      - https://www.leedsunited.com/en/news/leeds-united-draw-1-1-with-manchester-united-at-elland-road
+
+  - id: match
+    heading: 田中碧の90分と、2つの得点
+    tier: 報道
+    telop: ダブルボランチの一角。最終ラインまで下がってリズムを作った
+    say:
+      - 田中碧は、ダブルボランチの一角に入りました。
+      - 最終ラインまで下がってボールをさばき、リズムを作った、と伝えられています。
+      - 先制したのはマンU。前半35分、ムベウモが決めました。
+      - リーズは後半の立ち上がり、カルヴァート・ルーウィンが同点にしました。
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/eng/20261018/2218066.html
+      - https://www.leedsunited.com/en/news/leeds-united-draw-1-1-with-manchester-united-at-elland-road
+
+  - id: view
+    viewpoint: true
+    heading: 田中碧の出場時間と、マンUの勝ちなし
+    tier: 報道
+    telop: 前節は71分まで、今回は80分すぎまで
+    say:
+      - 前節のアーセナル戦、田中碧は71分までのプレーでした。
+      - 今回は80分すぎまで。前節より、長くプレーしました。
+      - マンUは、公式戦6試合、勝ちがありません。
+      - 前節の今季初黒星のあと、リーズは勝ち点1を積みました。
+      - 次は25日。リーズはアウェイで、サンダーランドと戦います。
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/eng/20261018/2218066.html
+      - https://www.soccer-king.jp/news/world/eng/20261010/2215180.html
+short_title: "田中碧は、何分までピッチに立ったのか。マンUと1対1の試合"

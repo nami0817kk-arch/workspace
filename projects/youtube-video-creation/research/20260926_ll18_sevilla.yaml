@@ -3,7 +3,7 @@
 format: news
 voice_min: 0
 slot: laliga_1
-date: 2026年9月19日
+date: 2026年10月18日
 people:
 - セビージャ
 - ルイス・ガルシア・プラサ
@@ -20,9 +20,10 @@ theme:
   hook: ゴールキーパーが、ヨーロッパの大会で点を取ったこともあります。
   lead: 創立**1890年**。20クラブのなかで、いちばん古い。
   opening_image: assets/stats/ll_sevilla_data_t.png
+  end_bg: assets/backgrounds/stadium_セビージャ_in.png
 thumbnail:
-  line1: 100周年の歌の翌年から●●
-  line2: いちばん古いセビージャ
+  line1: 歌の翌年から欧州を7度制覇
+  line2: 100周年のセビージャ
   crest_main:
   - セビージャ
   board: assets/stats/ll_sevilla_data_t.png
@@ -34,16 +35,16 @@ sections:
   telop: 5位の好発進と、降格圏から残した監督
   narrator: キャスター
   say:
-  - text: 今シーズンは7試合を終えて、勝ち点**13**の5位です。
+  - text: 今シーズンは8試合を終えて、勝ち点**14**の5位です。
     image: assets/stats/ll_sevilla_data_r1.png
     no_telop: true
-  - text: 率いるのは、3月に来たルイス・ガルシア監督。こう話しています。
+  - text: 率いるのは、3月に来たルイス・ガルシア監督。9月の勝利のあと、こう話しています。
     image: assets/stats/ll_sevilla_data_r2.png
     no_telop: true
   - voice: ルイス・ガルシア・プラサ
     text: 夢のような出だしだ。ただ、リーグはとても厳しい
     image: assets/stats/ll_sevilla_data_r2.png
-  - text: 昨シーズンは残り5試合で、降格圏の18位。そこから3連勝で残しました。
+  - text: 昨シーズンは残り5試合で降格圏の18位。そこから、チームは3連勝で抜け出しました。
     image: assets/stats/ll_sevilla_data_r2.png
     no_telop: true
   - text: 2005年には、届け出から100年を祝う応援歌が、国内の売り上げで1位になりました。
@@ -53,13 +54,13 @@ sections:
     image: assets/stats/ll_sevilla_data_r3.png
     no_telop: true
   - image: assets/stats/ll_sevilla_data0.png
-    text: 創立の日は、スコットランドの詩人をしのぶ夜。カフェに集まった若者たちが作りました。
+    text: 創立の日は、スコットランドの詩人をしのぶ夜。カフェで、若者たちが作りました。
     no_telop: true
   - image: assets/stats/ll_sevilla_data1.png
     text: 愛称はネルビオネンセス。本拠地のある、ネルビオン地区から来た呼び名です。
     no_telop: true
   - image: assets/stats/ll_sevilla_data2.png
-    text: ホームタウンはセビリア。アンダルシア州の州都で、スペインで**5番目**に大きな町です。
+    text: ホームタウンはセビリア。アンダルシア州の州都。人口はスペインで**5番目**です。
     no_telop: true
   - image: assets/backgrounds/stadium_セビージャ.png
     text: 本拠地はラモン・サンチェス・ピスフアン。**4万3000人**あまりが入ります。
@@ -191,8 +192,8 @@ sections:
     - - 2014〜16年
       - 大会ただ一つの3連覇
   say:
-  - ヨーロッパの初タイトルは2006年。ミドルズブラに**4対0**で勝ちました。
-  - 当時の名前はウエファカップ。クラブにとって、58年ぶりの主要タイトルでした。
+  - ヨーロッパの初タイトルは2006年。当時の名前はウエファカップです。
+  - 決勝はミドルズブラに**4対0**。クラブにとって、58年ぶりの大きなタイトルでした。
   - text: 2014年からは、この大会でただ一つの**3連覇**。
     card:
       type: table
@@ -224,7 +225,7 @@ sections:
       - プレーの色
       - 球際に強い
   say:
-  - text: ルイス・ガルシア監督のチームは、球際に強い。競り合いとボール奪取で、リーグの先頭です。
+  - text: ガルシア監督のチームは球際に強い。競り合いとボール奪取は、リーグの先頭です。
     image: assets/photos/ll/sevilla/sevilla_manager_46745b5c.jpg
   - text: ピッチの外は、見つけて売る型。
     card:
@@ -312,7 +313,7 @@ sections:
   say:
   - text: パロップはバレンシアで控えが長かったゴールキーパー。2005年、**31歳**で来ました。
     image: assets/photos/ll/sevilla/sevilla_legend_d36378f0.jpg
-  - 2007年、ウエファカップのシャフタール戦。ロスタイムに、自分で同点ゴールを決めます。
+  - 2007年、ウエファカップのシャフタール戦。ロスタイムに自ら同点ゴールを決めます。
   - その年の決勝は、ピーケー戦で**3本**止めて優勝。リーグ戦では**217試合**に出ました。
   sources:
   - https://en.wikipedia.org/wiki/Andr%C3%A9s_Palop
@@ -339,9 +340,9 @@ sections:
       - 2005-2012
       - 外国人の最多得点
   say:
-  - text: カヌーテはフランス生まれのマリ代表。2005年に、トッテナムから来たストライカーです。
+  - text: カヌーテはフランス生まれのマリ代表。2005年にトッテナムから来た点取り屋です。
     image: assets/photos/ll/sevilla/sevilla_legend_2a86ec4f.jpg
-  - 2006年のウエファカップ決勝で1点。翌年の国王杯決勝では、1対0の決勝点を挙げました。
+  - 2006年のウエファカップ決勝で1点。翌年の国王杯決勝は、1対0の決勝点です。
   - リーグ戦で**209試合89得点**。外国人選手では、クラブ最多の得点です。
   sources:
   - https://en.wikipedia.org/wiki/Andr%C3%A9s_Palop
@@ -371,7 +372,7 @@ sections:
   - text: ラキティッチはスイス生まれのクロアチア代表。2011年に、シャルケから来ました。
     image: assets/photos/ll/sevilla/sevilla_legend_7bd34f11.jpg
   - 2014年、主将としてヨーロッパリーグを制し、決勝の最優秀選手にも選ばれます。
-  - 2020年に戻って、2023年に2度目の優勝。リーグ戦は2度の在籍で、通算**238試合**。
+  - 2020年に戻り、2023年に2度目の優勝。リーグ戦は2度の在籍で通算**238試合**。
   sources:
   - https://en.wikipedia.org/wiki/Andr%C3%A9s_Palop
   - https://en.wikipedia.org/wiki/Fr%C3%A9d%C3%A9ric_Kanout%C3%A9
@@ -397,7 +398,7 @@ sections:
     - - 前職
       - アラベス
   say:
-  - text: 今シーズンの監督はルイス・ガルシア・プラサ。スペイン出身で、**2026年3月**の就任です。
+  - text: 今季の監督はルイス・ガルシア・プラサ。スペイン出身、**2026年3月**に就任しました。
     image: assets/photos/ll/sevilla/sevilla_manager_46745b5c.jpg
   - 前はアラベス。2部から昇格させ、翌シーズンは1部に残しました。
   sources:
@@ -454,7 +455,7 @@ sections:
 - id: season
   heading: 今季のここまで
   tier: 報道
-  telop: 7試合で4勝1引き分け2敗。5位
+  telop: 8試合で4勝2引き分け2敗。5位
   narrator: 解説
   card:
     type: table
@@ -485,9 +486,12 @@ sections:
     - - 第7節
       - バルセロナ（ホーム）
       - 1対3
+    - - 第8節
+      - レバンテ（アウェー）
+      - 3対3
   say:
-  - ラ・リーガは7試合を終えて、**4勝1引き分け2敗**です。
-  - 順位は**5位**、勝ち点は**13**です。
+  - ラ・リーガは8試合を終えて、**4勝2引き分け2敗**です。
+  - 順位は**5位**、勝ち点は**14**です。
   sources:
   - https://www.espn.com/soccer/team/results/_/name/sevilla
   - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard

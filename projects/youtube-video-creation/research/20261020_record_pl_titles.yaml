@@ -1,0 +1,505 @@
+# 取材メモ（10/20 火、シリーズ「記録の解説」、key: record_pl_titles、型は news）。
+# プレミアリーグの優勝回数（ユナイテッド13・シティ8）を、年代・初優勝からのシーズン数・勝ち点・連覇で数え直す。
+#
+# ★2026-10-19 に数字を読み直した（requests のブラウザ UA。ブラウザ操作の道具・JavaScript は使っていない）
+#   ・プレミアリーグ公式「Premier League Explained」（premierleague.com/en/premier-league-explained）：
+#       優勝は7クラブ。ユナイテッド13回は「34シーズンのうち」。1992/93〜2025/26 の優勝クラブを1季ずつ列挙
+#       （自分で数え直して一致：ユナイテッド13・シティ8・チェルシー5・アーセナル4・リヴァプール2・ブラックバーン1・レスター1＝34）。
+#       「シティは2017/18に2位ユナイテッドと19点差で、記録の最大差」「2011/12の最小の差は得失点差+8（アグエロの決勝弾）」
+#       「アーセナルは2003/04に無敗で、チェルシーに11点差で優勝」。
+#   ・プレミアリーグ公式記事「Arsenal end 22-year wait for Premier League title」（2026-05）：アーセナルの4回目（2025-26）。
+#       本文の優勝回数の表も同じ（ユナイテッド13・シティ8・チェルシー5・アーセナル4・リヴァプール2・1・1）。
+#   ・**brief の「昨季の優勝クラブ＝リヴァプール」は古い。** 昨季（2025-26）はアーセナル（勝ち点85、2位シティ78）。
+#       リヴァプールは一昨季（2024-25）。2026-27 はいま進行中で、優勝回数はまだ動いていない。
+#   ・勝ち点・試合数・2位との差：英語版ウィキペディアの各季（『1992–93 Premier League』〜『2025–26 Premier League』）の最終順位表。
+#       34季ぶん全部を requests で読み、勝ち点が 3×勝＋分 と一致することを確かめた。**ウィキペディアは reference 群＝報道止まり**。
+#       プレミア公式の「19点差」「+8」「11点差」とは一致。
+#   ・38試合になったのは1995-96季から（1992-93〜1994-95は42試合。ウィキペディア『List of Premier League seasons』）。
+#
+# ★自分で数えたもの（python で再計算、検算済み）
+#   年代ごと（季の始まりの年で区切る）：1990年代（1992-93〜1999-2000の8季）ユナイテッド6・アーセナル1・ブラックバーン1／
+#     2000年代（2000-01〜2009-10の10季）ユナイテッド5・チェルシー3・アーセナル2／
+#     2010年代（2010-11〜2019-20の10季）シティ4・ユナイテッド2・チェルシー2・レスター1・リヴァプール1／
+#     2020年代（2020-21〜2025-26の6季）シティ4・リヴァプール1・アーセナル1。ユナイテッドの合計13、シティの合計8に一致。
+#   重なり：ユナイテッドの13回は1992-93〜2012-13、シティの8回は2011-12〜2023-24。両方が優勝した季が重なるのは2011-12・2012-13の2季。
+#   初優勝から数えた何シーズン目（初優勝の季を1つ目）：ユナイテッド 8回目＝2002-03（11季目）・13回目＝2012-13（21季目）／シティ 8回目＝2023-24（13季目）。
+#   同じシーズン数の累計（3・6・9・12・15季目）：ユナイテッド 2・4・7・8・9／シティ 2・2・4・7・8。差 0・2・3・1・1。
+#   38試合の季の優勝（1995-96以降）：ユナイテッド11回＝82・75・79・91・80・83・89・87・90・80・89（最高91＝1999-2000、最低75＝1996-97、90以上は2回）／
+#     シティ8回＝89・86・100・98・86・93・89・91（最高100＝2017-18、最低86、90以上は4回）。
+#   2位との勝ち点差：最大は ユナイテッド18（1999-2000、91対73）・シティ19（2017-18、100対81）。1点以内（0を含む）の優勝は
+#     34季で7回：1994-95・1997-98・1998-99・2009-10・2011-12・2018-19・2021-22。うちシティ3回（0・1・1）、ユナイテッド1回（1998-99）。
+#   連覇の最長：ユナイテッド3（1998-99〜2000-01、2006-07〜2008-09）・シティ4（2020-21〜2023-24）。34季で4連覇はシティだけ。
+#   ユナイテッド最後の優勝（2012-13）のあとの13シーズン：シティ7（2013-14・2017-18・2018-19・2020-21・2021-22・2022-23・2023-24）・
+#     チェルシー2・リヴァプール2・レスター1・アーセナル1・ユナイテッド0＝13。
+#   直近5回の積み上げ：シティ2018-19〜2023-24＝6シーズン／ユナイテッド2006-07〜2012-13＝7シーズン。
+#
+# ★重ならないように
+#   ・10/17 オールド・トラッフォード・10/20 エティハドは**収容席数**の回。今回は席数・建設・入場者数を使わない。
+#   ・10/14 アーセナルの無敗は「2003-04の無敗」だけ。今回アーセナルは4回目の優勝の一言だけ。
+#   ・10/19 のCL通算得点の「試合数で割る」物差しは使わない。今回は「シーズン数」「年代」「勝ち点差」で数える。
+#   ・過去回への言及は台本に書かない。
+#
+# ★言い切っていないもの
+#   ・シティが13回に並ぶ・追い抜く時期は言わない（予想しない）。事実の比べだけ。
+#   ・「ユナイテッドが衰えた」等の理由は言わない（数字に出ない）。
+#   ・コンパニの写真は Commons の題・説明（Vincent Kompany holds up the Premier League trophy 2012）による。
+#
+# ★写真（assets/images/20261020_record_pl_titles/、credits.json に控え。必ず開いて見た）
+#   全部 Commons（CC BY / CC BY-SA）。代理店・透かしなし。01＝アーセナル2026の優勝（Chensiyuan, CC BY-SA 4.0）／
+#   02・06＝シティ2012のパレード、コンパニ（Stuart Grout, CC BY 2.0）／03＝ユナイテッド1998-99の優勝（Seán Murray, CC BY-SA 2.0）／
+#   04＝優勝杯の展示（CC BY-SA 4.0）／07＝シティ2014のパレード、ペジェグリーニ（Oldelpaso, CC BY-SA 3.0）／08＝ユナイテッド1999のパレード（Seán Murray）。
+date: 2026年10月20日
+slot: other_1
+format: news
+series: 記録の解説
+voice_min: 0
+people:
+- マンチェスター・ユナイテッド
+- マンチェスター・シティ
+theme:
+  end_bg: assets/images/20261020_record_pl_titles/03_w.jpg
+  id: record_pl_titles
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: プレミアリーグの優勝回数
+  title: マンチェスター・ユナイテッドの優勝13回に、シティは何回まで迫ったのか
+  question: プレミアリーグの優勝回数で、シティはユナイテッドの13回に、どこまで迫っているのか
+  lead: 優勝回数の1位はユナイテッドの13回。シティは8回です。
+  hook: ""
+  takeaway: プレミアリーグの優勝は34シーズンで7クラブ。ユナイテッド13回、シティ8回、チェルシー5回、アーセナル4回（昨季の2025-26）、リヴァプール2回、ブラックバーンとレスターが1回ずつ（プレミアリーグ公式）。年代別では、ユナイテッドは1990年代に6回・2000年代に5回で、最後は2012-13。シティの8回は2011-12以降で、2010年代と2020年代に4回ずつ。初優勝から数えて15シーズン目までの回数は、ユナイテッド9回・シティ8回で、差は9シーズン目の3回から1回に縮んだ。ユナイテッドの最後の優勝から13シーズンで、シティは7回。勝ち点の最高はシティの100（2017-18）、2位との差が1点以内の優勝はシティ3回・ユナイテッド1回。連覇はユナイテッド3、シティ4が最長。勝ち点は英語版ウィキペディア、優勝クラブはプレミアリーグ公式から数えた
+  opening_image: assets/images/20261020_record_pl_titles/02_w.jpg
+short_title: ユナイテッド13回、シティは8回。初優勝から15季目は9対8
+thumbnail:
+  photo: assets/images/20261020_record_pl_titles/02_w.jpg
+  line1: マンU優勝13回
+  line2: シティは8回まで
+  callouts:
+  - 差は5回
+  crests: []
+  alt:
+  - layout:
+      layout: versus
+      photos:
+      - assets/images/20261020_record_pl_titles/03_w.jpg
+      - assets/images/20261020_record_pl_titles/02_w.jpg
+      names: [ユナイテッド, シティ]
+      numbers: ['13', '8']
+    line1: プレミアの優勝回数
+    line2: 差は5回まで迫った
+  - layout:
+      layout: number
+      photo: assets/images/20261020_record_pl_titles/06_w.jpg
+      number: 9対8
+    line1: 初優勝から15季目
+    line2: ユナイテッドとシティ
+  tags:
+  - マンチェスター・ユナイテッド
+  - マンチェスター・シティ
+  - ヴァンサン・コンパニ
+  - プレミアリーグ
+  - 優勝回数
+  - 記録の解説
+sections:
+- id: top
+  main: true
+  heading: プレミアリーグの優勝は、クラブごとにどう並ぶのか
+  tier: 確定
+  official: true
+  telop: 優勝は7クラブだけ。1位はユナイテッドの13回、2位がシティの8回
+  narrator: 解説
+  card: &titles
+    type: table
+    title: プレミアリーグの優勝回数（1992-93から34シーズン）
+    columns: [クラブ, 優勝, 初優勝, 最後の優勝]
+    rows:
+    - [ユナイテッド, '13', 1992-93, 2012-13]
+    - [シティ, '8', 2011-12, 2023-24]
+    - [チェルシー, '5', 2004-05, 2016-17]
+    - [アーセナル, '4', 1997-98, 2025-26]
+    - [リヴァプール, '2', 2019-20, 2024-25]
+    - [ブラックバーン, '1', 1994-95, 1994-95]
+    - [レスター, '1', 2015-16, 2015-16]
+    note: プレミアリーグ公式の優勝クラブの一覧から数えた
+  say:
+  - text: プレミアリーグの優勝回数を、クラブごとに並べます。
+    image: assets/images/20261020_record_pl_titles/04_w.jpg
+    card: none
+  - text: 1992〜93季から昨季の2025〜26季まで、34シーズンです。
+    image: assets/images/20261020_record_pl_titles/08_w.jpg
+    card: none
+  - text: 優勝したのは、7つのクラブだけです。
+    image: assets/backgrounds/pitch.png
+    card: *titles
+  - text: 1位は、ユナイテッドの13回。
+    emph: true
+    card:
+      <<: *titles
+      highlight_row: 0
+  - text: 初優勝は1992〜93季。最後の優勝は、2012〜13季でした。
+    image: assets/images/20261020_record_pl_titles/03_w.jpg
+    card: none
+  - text: 2位は、シティの8回です。
+    image: assets/backgrounds/pitch.png
+    card:
+      <<: *titles
+      highlight_row: 1
+  - text: 初優勝は2011〜12季。最後の優勝は、2023〜24季でした。
+    image: assets/images/20261020_record_pl_titles/02_w.jpg
+    card: none
+  - text: 3位はチェルシーの5回。リヴァプールは2回。
+    image: assets/backgrounds/pitch.png
+    card:
+      <<: *titles
+      highlight_row: 2
+  - text: アーセナルの4回目は、昨季の2025〜26季でした。
+    image: assets/images/20261020_record_pl_titles/01_w.jpg
+    card: none
+  - text: 前の優勝は2003〜04季。22年ぶりの優勝です。
+    card: none
+  - text: ユナイテッドとシティの差は、13引く8で、5回です。
+    emph: true
+    card: &gap_calc
+      type: calc
+      title: 優勝回数の差（自分で引いた）
+      terms:
+      - ['13回', ユナイテッド]
+      - ['8回', シティ]
+      - ['5回', 差]
+      ops: ['−', '＝']
+  - text: この5回を、年代と、かかったシーズン数で数えます。
+    image: assets/images/20261020_record_pl_titles/07_w.jpg
+    card: none
+  sources:
+  - https://www.premierleague.com/en/premier-league-explained
+  - https://www.premierleague.com/en/news/4662306/arsenal-win-2025-26-premier-league-title-ending-22-year-wait-to-be-crowned-champions-again
+- id: decades
+  heading: 優勝は、いつの年代に、どのクラブへ集まっているのか
+  tier: 報道
+  telop: ユナイテッドは1990年代に6回・2000年代に5回。シティは2010年代と2020年代に4回ずつ
+  narrator: 解説
+  card: &dec_shelf
+    type: shelf
+    title: 年代ごとの優勝回数
+    left: {name: ユナイテッド, club: マンチェスター・ユナイテッド, photo: assets/images/20261020_record_pl_titles/03_w.jpg}
+    right: {name: シティ, club: マンチェスター・シティ, photo: assets/images/20261020_record_pl_titles/02_w.jpg}
+    rows:
+    - [1990年代, '6', '0']
+    - [2000年代, '5', '0']
+    - [2010年代, '2', '4']
+    - [2020年代, '0', '4']
+    note: 1990年代は1992-93季から8シーズン、2020年代は2020-21季から6シーズン。季の始まりの年で区切った
+  say:
+  - text: 次は、10年ずつに区切って、優勝を数えます。
+    image: assets/images/20261020_record_pl_titles/08_w.jpg
+    card: none
+  - text: 1990年代は、ユナイテッドが6回。シティは0回です。
+    image: assets/backgrounds/pitch.png
+    card:
+      <<: *dec_shelf
+      highlight_row: 0
+  - text: 2000年代も、ユナイテッドが5回。シティは0回でした。
+    card:
+      <<: *dec_shelf
+      highlight_row: 1
+  - text: 2000年代の残りの5回は、チェルシーとアーセナルです。
+    image: assets/images/20261020_record_pl_titles/04_w.jpg
+    card: none
+  - text: 流れが変わるのは、2010年代です。
+    emph: true
+    image: assets/backgrounds/pitch.png
+    card:
+      <<: *dec_shelf
+      highlight_row: 2
+  - text: この10年は、シティが4回、ユナイテッドが2回。
+    card:
+      <<: *dec_shelf
+      highlight_row: 2
+  - text: 2020年代は、シティが4回。ユナイテッドは、1回もありません。
+    image: assets/images/20261020_record_pl_titles/07_w.jpg
+    card:
+      <<: *dec_shelf
+      highlight_row: 3
+  - text: ユナイテッドの13回は、すべて2012〜13季までにあります。
+    image: assets/images/20261020_record_pl_titles/03_w.jpg
+    card: none
+  - text: シティの8回は、すべて2011〜12季からです。
+    image: assets/images/20261020_record_pl_titles/02_w.jpg
+    card: none
+  - text: 重なるのは、2011〜12季と2012〜13季の、2シーズンだけです。
+    emph: true
+    card: none
+  - text: 2011〜12季は、どちらも勝ち点89。得失点差で、シティが上でした。
+    image: assets/images/20261020_record_pl_titles/06_w.jpg
+    card: none
+  - text: 2012年の優勝パレード。トロフィーを掲げているのは、シティのコンパニです。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/2011%E2%80%9312_Premier_League
+  - https://en.wikipedia.org/wiki/2012%E2%80%9313_Premier_League
+- id: pace
+  heading: 優勝回数は、初優勝から数えると、どこまで縮まったのか
+  tier: 報道
+  telop: 初優勝から15シーズン目は、ユナイテッド9回、シティ8回。差は1回
+  narrator: 解説
+  card: &pace_table
+    type: table
+    title: 初優勝の季を1シーズン目と数えた、8回目と13回目
+    columns: [クラブ, 初優勝, 8回目まで, 13回目まで]
+    rows:
+    - [ユナイテッド, 1992-93, 11シーズン, 21シーズン]
+    - [シティ, 2011-12, 13シーズン, '―']
+    note: 優勝クラブはプレミアリーグ公式、シーズン数は自分で数えた
+  say:
+  - text: 次は、初優勝の季を1つ目と数えて、何シーズンかかったかを見ます。
+    image: assets/images/20261020_record_pl_titles/07_w.jpg
+    card: none
+  - text: ユナイテッドの初優勝は1992〜93季。シティは2011〜12季です。
+    image: assets/backgrounds/pitch.png
+    card: *pace_table
+  - text: 8回目の優勝は、ユナイテッドが2002〜03季。11シーズン目です。
+    card:
+      <<: *pace_table
+      highlight_row: 0
+  - text: シティの8回目は、2023〜24季。13シーズン目でした。
+    card:
+      <<: *pace_table
+      highlight_row: 1
+  - text: 8回に届くまでは、ユナイテッドが2シーズン早い。
+    emph: true
+    image: assets/images/20261020_record_pl_titles/08_w.jpg
+    card: none
+  - text: ユナイテッドの13回目は、2012〜13季。21シーズン目です。
+    image: assets/backgrounds/pitch.png
+    card:
+      <<: *pace_table
+      highlight_row: 0
+  - text: では、同じシーズン数で、並べてみます。
+    image: assets/images/20261020_record_pl_titles/02_w.jpg
+    card: none
+  - text: 初優勝から3、6、9、12、15シーズン目の回数を、線にします。
+    image: assets/backgrounds/pitch.png
+    card: &pace_line
+      type: line
+      title: 初優勝から数えた優勝回数（累計）
+      x: ['3', '6', '9', '12', '15']
+      series:
+      - [ユナイテッド, [2, 4, 7, 8, 9]]
+      - [シティ, [2, 2, 4, 7, 8]]
+      unit: 回
+      focus: シティ
+      note: 横軸は初優勝の季から数えたシーズン数
+  - text: 3シーズン目は、どちらも2回です。
+    card:
+      <<: *pace_line
+      highlight: '3'
+  - text: 6シーズン目は、ユナイテッドが4回、シティが2回。
+    card:
+      <<: *pace_line
+      highlight: '6'
+  - text: 9シーズン目は、ユナイテッドが7回、シティが4回。差は3回まで開きました。
+    emph: true
+    image: assets/images/20261020_record_pl_titles/03_w.jpg
+    card: none
+  - text: 12シーズン目は、ユナイテッド8回、シティ7回。差は1回です。
+    image: assets/backgrounds/pitch.png
+    card:
+      <<: *pace_line
+      highlight: '12'
+  - text: 15シーズン目は、ユナイテッドが9回、シティが8回です。
+    emph: true
+    card:
+      <<: *pace_line
+      highlight: '15'
+  - text: シティの15シーズン目は、昨季の2025〜26季。
+    image: assets/images/20261020_record_pl_titles/01_w.jpg
+    card: none
+  - text: ユナイテッドの15シーズン目は、2006〜07季でした。
+    card: none
+  - text: 9シーズン目の3回差が、15シーズン目には1回差です。
+    emph: true
+    image: assets/images/20261020_record_pl_titles/06_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/2002%E2%80%9303_Premier_League
+  - https://en.wikipedia.org/wiki/2023%E2%80%9324_Premier_League
+  - https://en.wikipedia.org/wiki/List_of_Premier_League_seasons
+- id: points
+  heading: 優勝の中身は、勝ち点と連覇で、どう違うのか
+  tier: 報道
+  telop: 勝ち点の最高はシティの100。2位との差が1点以内の優勝は、シティ3回、ユナイテッド1回
+  narrator: 解説
+  card: &pts_table
+    type: table
+    title: 38試合の季の優勝（勝ち点）
+    columns: [クラブ, 優勝, 最高, 最低, 90点以上]
+    rows:
+    - [ユナイテッド, '11', '91', '75', '2']
+    - [シティ, '8', '100', '86', '4']
+    note: 1995-96季以降が38試合。最初の3季は42試合なので外した
+  say:
+  - text: 次は、優勝の中身です。まず、勝ち点を比べます。
+    image: assets/images/20261020_record_pl_titles/08_w.jpg
+    card: none
+  - text: 38試合の季の優勝だけで比べます。最初の3季は42試合でした。
+    image: assets/backgrounds/pitch.png
+    card: *pts_table
+  - text: 最高は、シティの100。2017〜18季の勝ち点です。
+    emph: true
+    card:
+      <<: *pts_table
+      highlight_row: 1
+  - text: 100は、プレミアの優勝で、いちばん高い勝ち点です。
+    image: assets/images/20261020_record_pl_titles/07_w.jpg
+    card: none
+  - text: ユナイテッドの最高は、1999〜2000季の91。
+    image: assets/backgrounds/pitch.png
+    card:
+      <<: *pts_table
+      highlight_row: 0
+  - text: 最低は、ユナイテッドが1996〜97季の75。シティは86です。
+    card:
+      <<: *pts_table
+      highlight_row: 0
+  - text: 勝ち点90以上の優勝は、ユナイテッドが11回のうち2回。
+    image: assets/images/20261020_record_pl_titles/03_w.jpg
+    card: none
+  - text: シティは、8回のうち4回です。
+    image: assets/backgrounds/pitch.png
+    card:
+      <<: *pts_table
+      highlight_row: 1
+  - text: 次は、2位との勝ち点差です。
+    image: assets/images/20261020_record_pl_titles/02_w.jpg
+    card: none
+  - text: 最大は、シティの2017〜18季。2位のユナイテッドに、19点差をつけました。
+    image: assets/backgrounds/pitch.png
+    card: &gap_table
+      type: table
+      title: 2位との勝ち点差
+      columns: [クラブ, 優勝, 差が最大, 差が1点以内]
+      rows:
+      - [ユナイテッド, '13', '18点', '1回']
+      - [シティ, '8', '19点', '3回']
+      note: 1点以内には、0点差も入れた
+      highlight_row: 1
+  - text: ユナイテッドの最大は、1999〜2000季の18点差です。
+    card:
+      <<: *gap_table
+      highlight_row: 0
+  - text: 反対に、差が1点以内の優勝を数えます。
+    image: assets/images/20261020_record_pl_titles/06_w.jpg
+    card: none
+  - text: シティは3回。2011〜12季は、0点差でした。
+    image: assets/backgrounds/pitch.png
+    emph: true
+    mark: {kind: circle, row: 1, col: 差が1点以内}
+    card:
+      <<: *gap_table
+      highlight_row: 1
+  - text: 2018〜19季と2021〜22季は、どちらも1点差です。
+    card:
+      <<: *gap_table
+      highlight_row: 1
+  - text: ユナイテッドは、1998〜99季の1点差が、1回だけです。
+    card:
+      <<: *gap_table
+      highlight_row: 0
+  - text: 最後に、連覇を数えます。
+    image: assets/images/20261020_record_pl_titles/08_w.jpg
+    card: none
+  - text: ユナイテッドの最長は3連覇で、これが2回あります。
+    image: assets/backgrounds/pitch.png
+    card: &run_table
+      type: table
+      title: 最も長い連覇
+      columns: [クラブ, 連覇, 期間]
+      rows:
+      - [ユナイテッド, '3', 1998-99から2000-01]
+      - [ユナイテッド, '3', 2006-07から2008-09]
+      - [シティ, '4', 2020-21から2023-24]
+      note: 連続して優勝したシーズンの数
+      highlight_row: 0
+  - text: 1998〜99季からと、2006〜07季からです。
+    card:
+      <<: *run_table
+      highlight_row: 1
+  - text: シティは、2020〜21季から2023〜24季まで、4連覇しました。
+    card:
+      <<: *run_table
+      highlight_row: 2
+  - text: 34シーズンのうち、4連覇したクラブは、シティだけです。
+    emph: true
+    image: assets/images/20261020_record_pl_titles/07_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/1999%E2%80%932000_Premier_League
+  - https://en.wikipedia.org/wiki/2017%E2%80%9318_Premier_League
+  - https://www.premierleague.com/en/premier-league-explained
+- id: view
+  viewpoint: true
+  heading: 見立て・13回との差を、最近のシーズンで数えると
+  tier: 背景
+  telop: ユナイテッドの最後の優勝から13シーズン。シティは7回、ユナイテッドは0回
+  narrator: 解説
+  card: &view_stats
+    type: stats
+    title: ユナイテッドの最後の優勝（2012-13）のあと
+    items:
+    - ['13', シーズン, 2013-14から昨季まで]
+    - ['7', 回, シティの優勝]
+    - ['0', 回, ユナイテッドの優勝]
+    focus: 0
+  say:
+  - text: 最後に、13回と8回の差を、最近のシーズンで数えます。
+    image: assets/images/20261020_record_pl_titles/02_w.jpg
+    card: none
+  - text: ユナイテッドの最後の優勝は、2012〜13季です。
+    image: assets/backgrounds/pitch.png
+    card: *view_stats
+  - text: そのあとの13シーズンで、シティは7回。ユナイテッドの優勝は、ありません。
+    emph: true
+    card:
+      <<: *view_stats
+      focus: 1
+    mark: {kind: circle, item: 1}
+  - text: 13シーズンの残る6回は、チェルシーとリヴァプールが2回ずつ。
+    image: assets/images/20261020_record_pl_titles/07_w.jpg
+    card: none
+  - text: レスターとアーセナルが、1回ずつです。
+    card: none
+  - text: 次に、13回と8回、それぞれ最後の5回が、何シーズンにまたがるかを数えます。
+    image: assets/backgrounds/pitch.png
+    card: &last5
+      type: table
+      title: 直近5回の優勝にかかったシーズン数（自分で数えた）
+      columns: [クラブ, 直近5回の期間, シーズン数]
+      rows:
+      - [ユナイテッド, 2006-07から2012-13, '7']
+      - [シティ, 2018-19から2023-24, '6']
+      note: 13回と8回のそれぞれ、最後の5回
+  - text: シティの最後の5回は、2018〜19季から2023〜24季の6シーズンです。
+    card:
+      <<: *last5
+      highlight_row: 1
+  - text: ユナイテッドの最後の5回は、2006〜07季から2012〜13季の7シーズン。
+    card:
+      <<: *last5
+      highlight_row: 0
+  - text: ただし、シティが最後に優勝したのは、2023〜24シーズンです。
+    image: assets/images/20261020_record_pl_titles/06_w.jpg
+    card: none
+  - text: そのあとの2シーズンは、別のクラブが優勝しました。
+    card: none
+  - text: 昨季のシティは勝ち点78で2位。アーセナルとは7点差でした。
+    image: assets/images/20261020_record_pl_titles/01_w.jpg
+    card: none
+  - text: 今季は2026〜27季で、まだ、優勝回数は動いていません。
+    card: none
+  - text: 差は5回。シティは、13回に、どこまで近づくのでしょうか。
+    emph: true
+    image: assets/images/20261020_record_pl_titles/03_w.jpg
+    card: none
+  sources:
+  - https://www.premierleague.com/en/news/4662306/arsenal-win-2025-26-premier-league-title-ending-22-year-wait-to-be-crowned-champions-again
+  - https://en.wikipedia.org/wiki/2025%E2%80%9326_Premier_League

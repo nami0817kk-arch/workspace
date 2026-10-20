@@ -1,0 +1,100 @@
+# 16歳JJ・ガブリエル（マンU）の移籍先の報道 の取材メモ（2026年10月18日・ショートだけ・煽りの版）
+# **16歳＝未成年**。煽りは控えめ。確度は報道。クラブの発表は確認できていない。本人・家族の言葉は無い → 入れない。
+# 取材: 2026-10-18。
+#   ・ESPN 10/17「Transfer rumors, news: JJ Gabriel move revealed soon amid Barça, Madrid talks」。**ESPN のサイトは自動取得に人間確認（WAF）を出し、requests では本文が取れなかった**
+#     （確認を突破していない）。WebFetch の抜き出しで読んだ範囲：元の報道はスペイン紙ディアリオ・スポルト／16歳はバルセロナ近郊の町でひとりで練習を続けている／
+#     レアルとバルサがPSGとバイエルンより先行（"clear frontrunners"）／掲載は 10/17 12:08 ET。**記事の他の部分（原文）は読めていない**。
+#   ・Sports Mole「Two favourites for Man United wonderkid JJ Gabriel 'revealed' as star celebrates 16th birthday」（requests で本文を全部読んだ。日付は本文に無く、10月上旬）。
+#     背景の事実：先月（9月）クラブに退団を伝えた／夏のプレシーズンのアトレティコ戦でトップチームデビュー、公式戦のトップチームの出場はまだ無い／
+#     ドイツの記者プレッテンベルクの話として、レアルとバルサが巨額の年俸・ボーナス・契約金を用意する用意、バイエルンは2クラブの後ろ。
+#   ・football365（requests で読んだ）は「当時15歳」「スポルトはレアルの提示額のほうが高いと報道」と書く。日付が古い（誕生日の前）ので台本では使わない。
+# 資料間のずれ: ユース年代の得点数は媒体で違う（29得点32試合／23得点23試合）→ **数字は使わない**。誕生日の日付も資料で確かめきれていない → 「16歳」とだけ言う。
+# 自分で数えた比べ: 名前が挙がったクラブは4つ（レアル・バルサ・PSG・バイエルン）。うち先行とされるのはスペインの2つ、追うのが2つ。
+# 反応: 0件（探していない。未成年の選手への書き込みは引かない）。本人・家族の言葉: 無い。
+# 写真: 代理店は取り込まない。assets/images/20261018_jj_gabriel_destination/（出典は credits.json）。
+slot: premier
+date: "2026年10月18日"
+format: news
+no_main: true
+people: [JJ・ガブリエル, マンチェスター・ユナイテッド, バルセロナ, レアル・マドリード]
+short_style: X
+short_hook_word: 先行は2クラブ
+
+short_question: JJ・ガブリエルの移籍先、どこになると思いますか。
+short_hook: マンUの16歳、移籍先がまもなく決まるか。
+short_telops:
+  - {match: 16歳のJJ・ガブリエル, text: マンU所属 16歳のJJ・ガブリエル}
+  - {match: 移籍先が近く明らかに, text: 移籍先が近く明らかにと報道/クラブの発表は無し}
+  - {match: ひとりで練習, text: バルセロナ近郊の町で/ひとりで練習を続ける}
+  - {match: 先行している, text: レアルとバルサが先行/PSGとバイエルンより}
+  - {match: 9月, text: 9月 退団の希望を/クラブに伝えたと報道}
+  - {match: トップチームデビュー, text: 夏のプレシーズンでトップチームデビュー}
+  - {match: まだありません, text: 公式戦のトップチーム出場は/まだ無し}
+  - {match: 4クラブ, text: 名前が挙がったのは4クラブ/先行2・追う2}
+  - {match: 巨額の年俸, text: レアルとバルサ/巨額の年俸を用意する構えとも}
+  - {match: 正式な決定, text: 正式な決定は未発表/確度は報道}
+
+theme:
+  id: jj_gabriel_destination
+  league: england
+  prefix: ""
+  title: マンU16歳JJ・ガブリエル、移籍先がまもなくか。先行と報じられた2クラブは
+  hook: ""
+  question: 16歳のJJ・ガブリエルの移籍先は、どこまで絞られたのか
+  takeaway: 名前が挙がったのは4クラブ。先行とされるのはスペインの2つで、追うのはPSGとバイエルンの2つ
+
+thumbnail:
+  layout: face
+  line1: マンU16歳JJ・ガブリエル
+  line2: 移籍先がまもなく
+  tags: [JJ・ガブリエル, マンチェスター・ユナイテッド, バルセロナ, レアル・マドリード]
+  photo: assets/images/20261018_jj_gabriel_destination/01_w.jpg
+  short_photo: assets/images/20261018_jj_gabriel_destination/01_v.jpg
+
+answer: スペイン紙の報道では、レアルとバルセロナが先行。クラブの発表は無い
+watch: 本人とクラブの正式な発表を待つ段階
+
+sections:
+  - id: what
+    main: true
+    heading: 何が起きたか
+    tier: 報道
+    telop: JJ・ガブリエルの移籍先が近く明らかにと報道
+    say:
+      - マンUの16歳、JJ・ガブリエル。移籍先が、近く明らかになると報じられています。
+      - 伝えたのはスペインの新聞です。クラブの発表はまだありません。
+      - 16歳は、バルセロナ近郊の町でひとりで練習を続けているということです。
+      - 先行しているのは、レアル・マドリードとバルセロナ。
+      - パリ・サンジェルマンとバイエルンより前にいると報じられました。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50200287/transfer-rumors-news-jj-gabriel-move-revealed-soon-amid-barcelona-real-madrid-talks
+
+  - id: background
+    heading: ここまでの経緯は
+    tier: 背景
+    telop: 9月に退団の希望を伝えたと報道
+    say:
+      - 9月、JJ・ガブリエルは退団の希望をクラブに伝えたと報じられていました。
+      - 夏のプレシーズンの試合で、トップチームデビューは果たしています。
+      - ただ、公式戦のトップチームの出場は、まだありません。
+    official: false
+    sources:
+      - https://www.sportsmole.co.uk/football/man-utd/transfer-talk/news/jj-gabriel-turns-16-two-favourites-for-man-united-wonderkid-revealed_606319.html
+
+  - id: view
+    viewpoint: true
+    heading: 移籍先の候補は、4クラブからどこまで絞られたか
+    tier: 報道
+    telop: 4クラブのうち、先行は2つ
+    say:
+      - JJ・ガブリエルの移籍先として、名前が挙がったのは4クラブです。
+      - 4クラブのうち、先行とされるのはスペインの2つ。
+      - 残る2つは、その後ろにいるという報道です。
+      - レアルとバルセロナは、巨額の年俸を用意する構えだとも伝えられています。
+      - 正式な決定は、まだ伝わっていません。
+    official: false
+    sources:
+      - https://www.sportsmole.co.uk/football/man-utd/transfer-talk/news/jj-gabriel-turns-16-two-favourites-for-man-united-wonderkid-revealed_606319.html
+      - https://www.espn.com/soccer/story/_/id/50200287/transfer-rumors-news-jj-gabriel-move-revealed-soon-amid-barcelona-real-madrid-talks
+short_title: "マンU16歳JJ・ガブリエル、移籍先がまもなくか。先行と報じられた2クラブは"

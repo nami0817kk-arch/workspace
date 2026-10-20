@@ -1,0 +1,464 @@
+# クラブの財政：アストン・ヴィラ（10/20 火、シリーズ「クラブの財政」、key: finance_villa、型は news）。
+#
+# 軸は「**収入の6割超が『放映権』なのは、なぜか**」。デロイトの「放映権」の欄は、クラブの決算書では
+#   ①プレミアリーグなどの放映権の分配（収入の約45%）＋②欧州の大会の分配（約19%）の合計だった（自分で足して、デロイトの額に一致することを確かめた）。
+#   ・商業が小さい（収入の18%。デロイトの20クラブで最も低い）ので、放映権の割合が最も高くなる。
+#   ・欧州の分配は、欧州カンファレンスリーグ準決勝→欧州チャンピオンズリーグ準々決勝で5.1倍。
+#   ・決算書が挙げる最大のリスクは降格。放映権に寄る構造そのものが、資金の見通し（融資枠・親会社の支援）の前提になっている。
+#   ・最終損益の黒字1703万ポンドは、子会社2社を同じ親グループの会社へ売った益1億1366万ポンドで出ている。
+#   ★他の財政回の軸（バルサ＝使える上限／シティ＝判決／アルテタ＝契約／レアル＝スクワッド・コスト・ルール／PSG＝関連当事者取引／バイエルン＝株の持ち主／リヴァプール＝放映権／マンU＝償却・金融費用／
+#     トッテナム＝優勝の年の赤字／シティ×アーセナル＝収入の差と給料の比率／チェルシー＝トッテナムとの差・赤字・人件費比率／インテル＝10位との差・給料を引いた残り）は繰り返さない。
+#     リヴァプールの「放映権」の回とは、**割合の比べ（20クラブで最高）と、欧州の分配の内訳、決算の読み方（デロイトと決算書の対応）**で軸を分ける。
+#   ★アルファベットは読み上げに出さない。選手名・移籍の話は言わない（**今夏の移籍の数字（支出・収入・収支）は使わない**。選手の売買益の額も言わない）。
+#   ★女子チームの話は言わない（売却した子会社2社のうち、台本では倉庫施設の運営権の会社だけを名指しする。もう1社は「子会社2社」の中に含める）。
+#
+# **決算期**：6月30日決算。2024/25＝2025年6月期（Companies House に 2026-04-12 提出）。前の期は**13か月**（2024年6月30日まで）。
+#   ・デロイトの集計は2024/25（2026-01-22 公表）。ヴィラの図：収入 2021 207／2022 211／2023 244／2024 310／**2025 450**（百万ユーロ）、DFML の順位 2022 20位／2023 21位／2024 18位／**2025 14位**。
+#   ・クラブの2025/26 の決算書は**未提出**（提出履歴の最新は2025年6月期。2026-10-19 に確認）。
+#
+# **出どころ（読んだもの）**:
+#   ○ **デロイト Football Money League 2026（2024/25）一次ページ（deloitte.com）**：ランキング 14位アストン・ヴィラ（13位アトレティコ・15位ミラン）。クラブごとの図（e.infogram.com の図の中身）から：
+#       ヴィラ 試合日・放映権・商業・給料（百万ユーロ）：2021 1・177・29・155.5／2022 26・146・39・162.4／2023 33・175・36・229／2024 52・215・43・299／**2025 80・287・83・318**。
+#       給料÷収入 75・77・94・96・**71**（%）。ピッチ上：プレミア6位／欧州チャンピオンズリーグ準々決勝。（デロイトの注記：女子チームの収入は連結していない。）
+#       本文：11〜20位の平均は、放映権が収入の49%（上位10は3分の1）。商業は上位10が48%、11〜20位が32%。11〜20位の平均収入404、上位10の平均837。
+#       ★20クラブの図を全部読んで自分で割った：放映権の割合 1位ヴィラ63.8%／2位ウェストハム57.2%／3位ベンフィカ52.3%／4位インテル51.5%…最低バルセロナ24.9%。
+#         商業の割合 最低ヴィラ18.4%（次いでベンフィカ25.4%・ウェストハム25.7%・インテル28.4%）…最高バイエルン53.6%。レアル・マドリードの商業594÷ヴィラ83＝7.2倍。
+#         （シュツットガルトの図は放映権121・商業106・試合日70で、同じ形で読めた。）
+#   ○ **Companies House の決算書（監査済み・いずれも画像のPDFを目で読んだ）**:
+#       ・NSWE Sports Limited（05891280）グループ決算 2025年6月期（2026-04-12 提出）**＝デロイトが使った連結の収入**。
+#           収入 **3億7807万ポンド**（前の期 13か月 2億7570万）。内訳（注4）：試合日 38.452／放映権（プレミア・EFLの分配）**170.717**／スポンサー 28.646／商業 70.021（選手の貸し出し料 7.863 を含む）／欧州（UEFAの分配）**70.232**（百万ポンド）。
+#           前の期：28.009／170.718／21.895／41.383／13.690。KPI：プレミア6位（前 4位）・欧州CL準々決勝（前 欧州カンファレンスリーグ準決勝）・FAカップ準決勝・平均観客41,772。
+#           営業損益（選手売買を除く）−41.346／最終損益 +17.033（税引前も同じ）。**子会社売却益 +113.664**（注9：2025年6月に子会社2社を NSWE Holding Limited＝NSWE UK Limited の子会社、へ売却。
+#             売却額 75.0＋55.0＝130.0、純資産 3.336、偶発債務 13.0を引いて 113.664。うち1社はヴィラ・パークの倉庫施設の運営権の会社）。**関連当事者取引で、プレミアリーグが公正価値を審査**、売却契約に額の調整条項（注9）。
+#           株式発行による現金流入 **94.0**（前の期 148.2）。純資産 321.1。人件費 273.4（前の期 256.8）。
+#           取締役の報告（継続企業）：**ゴールドマン・サックスの融資枠が2027年7月まで**／親会社 **V Sports S.C.S.（ルクセンブルク）の継続的な財政支援**／降格の可能性は「remote」だが、降格なら選手売買の増加か「まだ約束されていない追加の株主支援」が要る／
+#             これ以上の支出は資金確認なしに約束しない。戦略報告：ノース・スタンド再開発の計画承認、**2028年欧州選手権の前に完成予定**。主要リスク＝降格。
+#       ・Aston Villa Football Club Limited（03375789）単体 2025年6月期：収入 3億5928万ポンド（内訳は上と同じ区分。商業 51.230）。単体の損益は使わない（グループの一部）。
+#       ・Aston Villa FC Limited（02502822）単体：収入 3億1008万ポンドは「グループ会社との取引契約によって決まる」＝グループ内取引。**台本には使わない**。
+#   ○ **ヨーロッパ中央銀行の参照相場（frankfurter 経由）**：2024-07-01〜2025-06-30 の日次の平均 1ユーロ＝0.8405ポンド（1ポンド＝1.1897ユーロ）。
+#       ★検算：3億7807万×1.1897＝4億4980万ユーロ ≒ デロイト450。2億4095万（放映権170.717＋欧州70.232）×1.1897＝2億8665万 ≒ デロイトの放映権287。
+#   × クラブ公式サイト（avfc.co.uk）の決算発表は読んでいない（決算書の原本が一次）。報道は使っていない。
+#   × 2026年7月の動き（Companies House の提出履歴に、7月の増資・担保の登録、8月の担保の解除、ナセフ・サウィリス氏の支配株主の登録の終了〈7月7日〉がある）は、中身を読めていない。**台本では触れない**。
+#   × ヴィラの決算書の「放映権」にある「成績配分」の仕組み（均等配分・施設料）は、プレミアリーグの公式資料を読めていない。**台本は決算書の注記の言い方（成績配分を含む）までに留める**。
+#
+# 自分で計算した数（コードで検算した）:
+#   デロイト：450÷310＝+45.2%（+140）。放映権 287÷450＝63.8%（約64%）。商業 83÷450＝18.4%（約18%）。レアル商業 594÷83＝7.2倍。
+#   決算書：(170.717＋70.232)＝240.949 → ÷378.068＝63.7%（約64%）。170.717÷378.068＝45.2%（約45%）。70.232÷378.068＝18.6%（約19%）。70.232÷13.690＝5.13倍（約5.1倍）。
+#     240.949のうち欧州の分 70.232÷240.949＝29.2%（約3割）。残り（試合日・スポンサー・商業）378.068−240.949＝137.119（36.3%）。
+#     欧州を引いた収入 378.068−70.232＝307.836 → 放映権 170.717÷307.836＝55.5%（約55%）。
+#     17.033−113.664＝−96.631 →「9663万ポンドの赤字」（選手の売買の損益を含む。額は言わない）。
+#   見立て：11〜20位の平均の商業割合 32% を450に掛けると 144 → 144−83＝61（約6100万ユーロ、試算）。
+#
+# **言い切っていないもの / 言わなかったもの**:
+#   ・デロイトの「放映権」に欧州の分配が含まれるのは、決算書の合計との一致（換算レートの平均で検算）で確かめた。デロイトの定義文は読めていない。
+#   ・プレミアの放映権が前の期と同額なのは、前の期が13か月だったことを断る。順位が4位から6位に下がったことは決算書のKPI。額の理由は言わない。
+#   ・デロイトの試合日（80）と決算書の試合日（38.452 ポンド＝約46百万ユーロ）が違うのは、デロイトが商業の中の催し・飲食を試合日に入れているためと思われる（読めていない）。**この2つは並べない**。
+#   ・子会社売却益の「公正な価格か」はプレミアリーグの審査次第（決算書の注記まで）。違反や不正の話はしない。
+#
+# 写真：assets/images/20261020_finance_villa/（ヴィラ・パーク＝Commons）。
+date: 2026年10月20日
+slot: other_1
+format: news
+series: クラブの財政
+voice_min: 0
+people:
+- アストン・ヴィラ
+theme:
+  end_bg: assets/images/20261020_finance_villa/01_w.jpg
+  id: finance_villa
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: アストン・ヴィラ
+  title: アストン・ヴィラ、デロイトの収入は14位。放映権が6割を超えるのは、なぜか
+  question: アストン・ヴィラの収入の6割超は放映権。なぜ、そこまで高いのか
+  lead: 収入の世界14位、アストン・ヴィラ。
+  opening_image: assets/images/20261020_finance_villa/01_w.jpg
+  takeaway: デロイトの集計で2024-25の収入は4億5000万ユーロで世界14位、前の年から45%増。放映権は約64%で、デロイトの20クラブで最も高い。クラブの決算書では、この放映権はプレミアリーグの分配が約45%、欧州の大会の分配が約19%の合計で、欧州の分配は前の期の約5.1倍。商業は収入の約18%で最も低い。最終損益は1703万ポンドの黒字だが、子会社2社を同じ親グループの会社へ売った益1億1366万ポンドを除くと赤字。決算書は降格を最大のリスクとし、資金の見通しはゴールドマン・サックスの融資枠（2027年7月まで）と親会社の支援を前提にしている
+short_title: ヴィラ、収入の6割超が放映権
+thumbnail:
+  layout: classic
+  photos:
+  - assets/images/20261020_finance_villa/01_w.jpg
+  - assets/images/20261020_finance_villa/02_w.jpg
+  line1: ヴィラは収入14位
+  line2: 放映権が64%
+  cutout: false
+  callouts: [商業は最下位]
+  tags:
+  - アストン・ヴィラ
+  - プレミアリーグ
+  - クラブの財政
+  - ヴィラ・パーク
+sections:
+- id: rank
+  main: true
+  heading: 収入の世界14位は、1年でどこまで上がったのか
+  tier: 報道
+  telop: 収入4億5000万ユーロで世界14位。前の年から45%増
+  narrator: キャスター
+  card: &rev_line
+    type: line
+    title: アストン・ヴィラの収入の5年（デロイトの図の合計、百万ユーロ）
+    x: [2020-21, 2021-22, 2022-23, 2023-24, 2024-25]
+    series:
+    - [アストン・ヴィラ, [207, 211, 244, 310, 450]]
+    unit: 百万ユーロ
+    focus: アストン・ヴィラ
+    highlight: 2024-25
+  say:
+  - text: 会計事務所デロイトの集計で、アストン・ヴィラの収入は世界14位。
+    image: assets/images/20261020_finance_villa/01_w.jpg
+    card: none
+  - text: 2024-25の収入は、4億5000万ユーロ。
+    emph: true
+    card: *rev_line
+  - text: 前の年は3億1000万ユーロ。1年で、1億4000万ユーロの増加。
+    card:
+      <<: *rev_line
+      highlight: 2023-24
+  - text: 伸びは45%。順位は、前の年の18位から14位に上がりました。
+    image: assets/images/20261020_finance_villa/02_w.jpg
+    card: none
+  - text: ここ4年の順位は、20位、21位、18位。そして14位です。
+    card: none
+  - text: この4億5000万ユーロの、6割を超えるのが、放映権です。
+    image: assets/images/20261020_finance_villa/03_w.jpg
+    card: none
+    callword: 放映権が6割超
+  sources:
+  - https://www.deloitte.com/uk/en/services/financial-advisory/analysis/deloitte-football-money-league.html
+- id: mix
+  heading: 放映権の割合は、ほかのクラブと比べて高いのか
+  tier: 報道
+  telop: 放映権は約64%。デロイトの20クラブで最も高い。商業は約18%で最も低い
+  narrator: 解説
+  card: &mix_stats
+    type: stats
+    title: ヴィラの収入の中身（デロイト、2024-25、百万ユーロ）
+    items:
+    - ['287', 百万ユーロ, 放映権]
+    - ['80', 百万ユーロ, 試合日]
+    - ['83', 百万ユーロ, 商業]
+    focus: 0
+  say:
+  - text: 収入の中身を、デロイトの図で見ます。
+    image: assets/images/20261020_finance_villa/04_w.jpg
+    card: none
+  - text: 入場料などの試合日は、8000万ユーロ。
+    card:
+      <<: *mix_stats
+      focus: 1
+  - text: 商業は、スポンサー収入などで、8300万ユーロ。
+    card:
+      <<: *mix_stats
+      focus: 2
+  - text: 残りが放映権で、2億8700万ユーロ。
+    image: assets/images/20261020_finance_villa/01_w.jpg
+    card: none
+  - text: 収入に占める放映権は、約64%。6割を超えています。
+    emph: true
+    card:
+      <<: *mix_stats
+      focus: 0
+    mark:
+      kind: circle
+      item: 0
+  - text: デロイトの上位20クラブで、この割合が最も高いのが、ヴィラです。
+    image: assets/images/20261020_finance_villa/02_w.jpg
+    card: &share_bars
+      type: bars
+      title: 収入に占める放映権の割合（デロイト、2024-25、%）
+      unit: '%'
+      items:
+      - label: アストン・ヴィラ
+        value: 63.8
+        highlight: true
+      - label: ウェストハム
+        value: 57.2
+      - label: ベンフィカ
+        value: 52.3
+      - label: インテル
+        value: 51.5
+      - label: バルセロナ
+        value: 24.9
+  - text: 2位はウェストハムの57%。3位は、ベンフィカとインテルで5割強。
+    card: *share_bars
+  - text: 11位から20位のクラブの平均は、49%。上位10クラブは、3分の1。
+    image: assets/images/20261020_finance_villa/03_w.jpg
+    card: none
+  - text: 逆に、商業の割合は、ヴィラが約18%。20クラブで最も低い。
+    card: &biz_bars
+      type: bars
+      title: 収入に占める商業の割合（デロイト、2024-25、%）
+      unit: '%'
+      items:
+      - label: アストン・ヴィラ
+        value: 18.4
+        highlight: true
+      - label: ベンフィカ
+        value: 25.4
+      - label: ウェストハム
+        value: 25.7
+      - label: インテル
+        value: 28.4
+      - label: 11〜20位の平均
+        value: 32
+  - text: 11位から20位の平均は、32%です。
+    card: *biz_bars
+  - text: 商業の額で見ると、レアル・マドリードはヴィラの約7倍です。
+    image: assets/images/20261020_finance_villa/04_w.jpg
+    card: none
+  - text: 放映権が多いのは、商業が小さいことの裏返しでもあります。
+    emph: true
+    card: none
+  - text: では、この放映権は、何でできているのか。クラブの決算書で見ます。
+    card: none
+  sources:
+  - https://www.deloitte.com/uk/en/services/financial-advisory/analysis/deloitte-football-money-league.html
+- id: books
+  heading: クラブの決算書では、放映権の6割は何でできているのか
+  tier: 確定
+  official: true
+  telop: プレミアの分配が約45%、欧州の大会の分配が約19%。合わせて約64%
+  narrator: 解説
+  card: &books_bars
+    type: bars
+    title: ヴィラのグループの収入（2025年6月期、決算書、百万ポンド）
+    unit: ''
+    items:
+    - label: プレミアリーグなどの放映権
+      value: 170.7
+      highlight: true
+    - label: 欧州の大会の分配金
+      value: 70.2
+    - label: 試合日・スポンサー・商業
+      value: 137.1
+  say:
+  - text: ここからは、イギリスの会社登記所に出された、クラブの決算書です。
+    image: assets/images/20261020_finance_villa/01_w.jpg
+    card: none
+  - text: 対象は2025年6月期。ヴィラのグループの収入は、3億7807万ポンド。
+    card: none
+  - text: ユーロにすると、デロイトの収入と一致します。
+    emph: true
+    card: none
+  - text: 換算は、欧州中央銀行の1年間の平均レート。1ポンドが約1.19ユーロです。
+    image: assets/images/20261020_finance_villa/02_w.jpg
+    card: none
+  - text: プレミアリーグなどの放映権の分配は、1億7072万ポンド。収入の約45%。
+    card:
+      <<: *books_bars
+  - text: 欧州の大会の分配は、7023万ポンド。収入の約19%です。
+    card: *books_bars
+  - text: この2つを、足します。
+    image: assets/images/20261020_finance_villa/03_w.jpg
+    card: &books_calc
+      type: calc
+      title: 放映権と欧州の分配金の合計（百万ポンド）
+      terms:
+      - [170.7, 放映権の分配]
+      - [70.2, 欧州の分配]
+      - [240.9, 合計]
+      ops: ['+', '＝']
+  - text: 合計は2億4095万ポンド。収入の約64%です。
+    emph: true
+    card: *books_calc
+  - text: ユーロにすると、デロイトの放映権と同じ額。つまり6割超は、欧州の分配金を含みます。
+    image: assets/images/20261020_finance_villa/04_w.jpg
+    card: none
+  - text: 決算書の注記は、2つの分配金を、こう定義しています。
+    card: &notes_doc
+      type: document
+      label: アストン・ヴィラ 2025年6月期 決算書 注記（訳）
+      paragraphs:
+      - 放映権は、プレミアリーグなどの放映権契約の分配金。成績に応じた配分を含みます。
+      - 欧州は、欧州連盟からの分配金。成績に応じた配分と、大会の放映権を含みます。
+      highlight:
+      - 成績に応じた配分
+  - text: リーグは放映権契約の分配、欧州は連盟の分配。どちらも成績配分を含む。
+    card: *notes_doc
+  - text: 欧州の分配金は、前の期の1369万から、7023万ポンドへ。約5.1倍です。
+    image: assets/images/20261020_finance_villa/01_w.jpg
+    card: &uefa_bars
+      type: bars
+      title: 欧州の大会の分配金（決算書、百万ポンド）
+      unit: ''
+      items:
+      - label: 前の期（カンファレンスリーグ準決勝）
+        value: 13.7
+      - label: 2025年6月期（チャンピオンズリーグ準々決勝）
+        value: 70.2
+        highlight: true
+  - text: 前の期は、欧州カンファレンスリーグの準決勝でした。
+    card: *uefa_bars
+  - text: 今期は、欧州チャンピオンズリーグで準々決勝まで進みました。
+    emph: true
+    card: *uefa_bars
+  - text: 決算書は、1982-83以来の、欧州の頂点の舞台への復帰だと書いています。
+    image: assets/images/20261020_finance_villa/02_w.jpg
+    card: none
+  - text: 一方、プレミアリーグの放映権は、前の期とほぼ同じ、約1億7072万ポンドです。
+    card: none
+  - text: ただし前の期は、13か月の決算でした。
+    card: none
+  - text: 順位は、4位から6位に下がっています。
+    image: assets/images/20261020_finance_villa/03_w.jpg
+    card: none
+  - text: 6割超の放映権のうち、約3割は、欧州の分配金です。
+    emph: true
+    card: none
+  sources:
+  - https://find-and-update.company-information.service.gov.uk/company/05891280/filing-history
+  - https://find-and-update.company-information.service.gov.uk/company/03375789/filing-history
+  - https://api.frankfurter.app/2024-07-01..2025-06-30?from=EUR&to=GBP
+- id: risk
+  heading: 放映権に寄る収入を、損益とお金はどう支えているのか
+  tier: 確定
+  official: true
+  telop: 最終は1703万ポンドの黒字。子会社2社の売却益1億1366万ポンドを除くと赤字
+  narrator: 解説
+  card: &pl_stats
+    type: stats
+    title: ヴィラのグループの損益（2025年6月期、決算書、百万ポンド）
+    items:
+    - ['17.0', 百万ポンド, 最終損益（黒字）]
+    - ['113.7', 百万ポンド, 子会社2社の売却益]
+    - ['-96.6', 百万ポンド, 売却益を除くと]
+    focus: 0
+  say:
+  - text: 最終の損益は、1703万ポンドの黒字。前の期は、8541万ポンドの赤字でした。
+    image: assets/images/20261020_finance_villa/04_w.jpg
+    card:
+      <<: *pl_stats
+      focus: 0
+  - text: ただし、この黒字には、子会社2社の売却益が入っています。
+    image: assets/images/20261020_finance_villa/01_w.jpg
+    card: none
+  - text: 売却益は、1億1366万ポンド。売却額は、2社で1億3000万ポンドです。
+    card:
+      <<: *pl_stats
+      focus: 1
+  - text: 売却益を除くと、最終は9663万ポンドの赤字。選手の売買の損益を含みます。
+    emph: true
+    card:
+      <<: *pl_stats
+      focus: 2
+    mark:
+      kind: circle
+      item: 2
+  - text: 売った先は、同じ親グループの別の会社です。
+    image: assets/images/20261020_finance_villa/02_w.jpg
+    card: none
+  - text: 1社は、ヴィラ・パークの倉庫施設の運営権を持つ会社です。
+    card: none
+  - text: 身内への売却なので、プレミアリーグが、公正な価格かを審査します。
+    card: &fmv_doc
+      type: document
+      label: 親グループ 決算書 注記（訳）
+      paragraphs:
+      - 2つの売却は関連当事者との取引で、プレミアリーグの公正価値の審査の対象です。
+      - 売却契約には、審査の結果しだいで、受け取る額を調整する条項があります。
+      highlight:
+      - 公正価値の審査
+      - 受け取る額を調整
+  - text: 審査で価格が違えば、受け取る額が調整される可能性がある。決算書の注記です。
+    card: *fmv_doc
+  - text: では、お金は、どう賄われているのか。
+    image: assets/images/20261020_finance_villa/03_w.jpg
+    card: none
+  - text: 新株の発行で、株主から9400万ポンド。前の期は、1億4820万ポンド。
+    card: none
+  - text: 親会社は、ルクセンブルクのブイ・スポーツ。取締役はエデンスとサウィリス。
+    image: assets/images/20261020_finance_villa/04_w.jpg
+    card: none
+  - text: 決算書が挙げる、クラブの最大のリスクは、降格です。
+    emph: true
+    card: none
+  - text: 資金の見通しは、決算書の継続企業の注記に出ています。
+    card: &gc_doc
+      type: document
+      label: 親グループ 決算書 継続企業の注記（訳）
+      paragraphs:
+      - 見通しは、ゴールドマン・サックスの融資枠が2027年7月まで使えることを前提にしています。
+      - あわせて、親会社ブイ・スポーツの、継続的な財政支援を前提にしています。
+      - 降格の可能性は低い。ただし降格すれば、まだ約束されていない追加の株主支援が要ります。
+      highlight:
+      - 2027年7月まで
+      - 継続的な財政支援
+      - まだ約束されていない
+  - text: ゴールドマン・サックスから借りられる枠が、2027年7月まで。
+    card: *gc_doc
+  - text: 降格すれば、追加の出資が要る。その出資は、まだ約束されていない。
+    image: assets/images/20261020_finance_villa/01_w.jpg
+    card: none
+  - text: 6割超を放映権に寄せた収入は、順位と、欧州の出場に、動きます。
+    emph: true
+    card: none
+  sources:
+  - https://find-and-update.company-information.service.gov.uk/company/05891280/filing-history
+  - https://find-and-update.company-information.service.gov.uk/company/03375789/filing-history
+- id: view
+  viewpoint: true
+  heading: 見立て・放映権が6割超なのは、商業が小さく、欧州の分配が乗ったから
+  tier: 背景
+  telop: 放映権は64%で最高、商業は18%で最低。欧州の分配を引いても放映権は約55%
+  narrator: 解説
+  card: &view_table
+    type: table
+    title: 自分で数えてみた（2024-25）
+    columns: &view_cols [比べ, 答え]
+    rows: &view_rows
+    - [放映権の割合（デロイトの20クラブ）, '64%（最高）']
+    - [欧州の分配を引いた放映権の割合, 約55%]
+    - [商業の割合（20クラブ）, '18%（最低）']
+    - [商業が平均の32%なら、足りない額, 約6100万ユーロ]
+    highlight_row: 0
+  say:
+  - text: ここから見立て。自分で数えた比べです。
+    image: assets/images/20261020_finance_villa/02_w.jpg
+    card: *view_table
+  - text: 放映権の割合は、64%。デロイトの20クラブで、最も高い。
+    card:
+      <<: *view_table
+      highlight_row: 0
+  - text: 欧州の分配金を引いても、プレミアリーグの放映権だけで、約55%です。
+    emph: true
+    image: assets/images/20261020_finance_villa/03_w.jpg
+    card: none
+  - text: 商業は、18%。こちらは、いちばん低い。
+    card:
+      <<: *view_table
+      highlight_row: 2
+    mark:
+      kind: circle
+      row: 2
+      col: 1
+  - text: ヴィラの商業が、11位から20位の平均32%なら、約1億4400万ユーロ。
+    image: assets/images/20261020_finance_villa/04_w.jpg
+    card: none
+  - text: 実際との差は、約6100万ユーロ。
+    emph: true
+    card:
+      <<: *view_table
+      highlight_row: 3
+    mark:
+      kind: circle
+      row: 3
+      col: 1
+  - text: ヴィラの6割超は、リーグと欧州の分配が大きく、商業が小さい組み合わせ。
+    image: assets/images/20261020_finance_villa/01_w.jpg
+    card: none
+  - text: 商業の伸びしろとして、決算書は、ノース・スタンドの建て替えを挙げています。
+    card: none
+  - text: 2028年の欧州選手権の前に、完成する予定です。
+    image: assets/images/20261020_finance_villa/02_w.jpg
+    card: none
+  - text: 2025-26の決算書は、まだ提出されていません。
+    card: none
+  - text: 次のデロイトの集計で、放映権の割合がどう動くか。そこを見ます。
+    card: none
+  sources:
+  - https://www.deloitte.com/uk/en/services/financial-advisory/analysis/deloitte-football-money-league.html
+  - https://find-and-update.company-information.service.gov.uk/company/05891280/filing-history
+  - https://find-and-update.company-information.service.gov.uk/company/03375789/filing-history

@@ -1,0 +1,192 @@
+# 取材メモ（2026年10月19日）レアル対セビージャ4-1と、モウリーニョ監督の「肘の話への執着が分からない」（ニュースのショート。見せ方 Y＝本人の一言から始める）
+# 取材: 2026-10-19。
+#   ・サッカーキング 2026-10-19「レアルがエル・クラシコへ弾みをつける4発快勝！」本文を読んだ（得点者と時間のみ。モウリーニョの肘の発言・ガルシア・プラサの主張は本文に無い）。
+#   ・ESPN 2026-10-18 23:04Z「Mou doesn't understand 'obsession' with elbow from Madrid's Güler」（Alex Kirkland）。ESPN は WAF で開けないので、公開の記事API
+#     （content.core.api.espn.com/v1/sports/news/50213726）で本文を全部読んだ。控え research/raw/20261019_mou_espn.txt。
+#   ・ESPN 試合記録（site.api.espn.com summary?event=401882839。控え research/raw/20261019_rm_sevilla_summary.json）と試合レポート（news/50192148。PA 配信）。
+# 【「肘」は何の話か】ESPN の本文: 前半、0-0 のとき、ギュレルがセビージャのジェラール“ペケ”フェルナンデスに肘を当てたとされる場面で、主審は動かなかった（no intervention）。
+#   セビージャのガルシア・プラサ監督が「退場だった」と主張した。モウリーニョ監督は「その映像を1つも見ていない」と答えた。
+#   → ギュレルが肘を当てたと確かめられているわけではない。台本は「されている場面」「と主張」「見ていないと答えた」で書き、事実として断定しない。
+#   → モウリーニョの『執着』は、記者からその質問が繰り返されることへの言葉（"the obsession with asking about it"）。ギュレル本人を責める言葉ではない。
+# 【モウリーニョの発言（ESPN の英語から訳）】原文のスペイン語は読めていない。ESPN の英訳からの日本語訳であることを控える。
+#   "Nobody has been able to show me what they say happened." / "There aren't any images. I've asked for TV images, and for images from my staff who have the tactical camera,
+#   and I haven't been able to see any image of what's being talked about, what annoyed Luis." / "…if someone gets a clear and objective image to me of something I haven't seen
+#   -- and which my player says didn't happen -- I'll be there [to talk about it], but until then, nothing." / "Have any of you seen it clearly?" /
+#   "That's why I don't understand the obsession with asking about it."
+#   Y の冒頭の一言（hook_quote）＝ "Nobody has been able to show me what they say happened." の訳。
+#   使わなかった: "Until Saturday"（何の期限か本文から分からない）、"if one day something happens that benefits us…"（別の話に広がる）、ベティス対バルサの手のあとのゴール取り消しの話（題の外）、
+#   "I understand Luis, with a team that loses 4-1…"（ガルシア・プラサ監督を責める言い方に取られる）。
+# 【ガルシア・プラサ監督の発言（ESPN の英訳）】"denied the chance to play another game, 11 against 10." / "Today we should have played with an extra man, from the 25th minute, 11 against 10."
+#   "I saw it. Peque at halftime was saying 'he hit me.' It's a red card." / "Maybe we wouldn't have won, but we should have been playing 11 against 10, for 65 minutes."
+# 【試合の事実】ESPN 試合記録: 2026-10-18、ラ・リーガ第9節、サンティアゴ・ベルナベウ。レアル4-1セビージャ。
+#   30分ギュレル（左足、ESPN は curling strike）／37分エンバペ／63分エンバペ（PK）／80分ブエノ（セビージャ）／82分ディオマンデ。
+#   サッカーキング本文の得点者・時間とも一致。ギュレルの30分は試合記録（ESPN）で確かめた（題材の一覧どおり）。
+#   試合記録の前半23〜25分に「ペケ・フェルナンデスの負傷で試合が中断」とある。ただし原因は書かれていないので台本には入れない。
+#   ESPN: エンバペのPKは Panenka。レアルは代表ウィーク明けから3連勝、ヴィニシウスは4試合の出場停止の最初の試合。次は水曜(21日)CLライプツィヒ、日曜(25日)カンプ・ノウでバルセロナ（クラシコ）。
+# 自分で数えた比べ（見立て）: ESPN 試合記録の順位表（第9節終了）。バルセロナ9試合9勝・勝ち点27・得失点+30、アトレティコ22、レアル9試合7勝2敗・勝ち点21・得失点+14（3位）。
+#   差は27-21＝6（ESPN 本文も「首位と6差」）。クラシコ25日：勝てば24対27で3差、引き分けなら22対28で6差のまま、負ければ21対30で9差（勝ち点だけの単純計算。他クラブの試合は数えない）。
+# 本人の言葉: ギュレル本人の今回の言葉は ESPN 本文に無い（モウリーニョが「選手は起きなかったと言っている」と伝えているだけ）→ ギュレルの言葉は作らない。
+# 反応: 0件。この件への実在の投稿は当たっていない。作らない。approve は --no-voices で。
+# 前の本との重なり: 10/15 real_roma_cl・vinicius_ban、10/17〜18 モウリーニョ・ヴィニ。今回は試合結果と新しい発言のみ。ヴィニの出場停止の経緯・ローマ戦の中身は入れない。
+# 写真: realmadrid.com（クラブ公式）の試合レポート（cronica-real-madrid-sevilla-18-10-2026）の写真。assets/images/20261019_realmadrid_sevilla_mourinho/。
+#   01＝会見場のモウリーニョ（見出し帯の ND-RP-MOURINHO＝記者会見の写真。日付は未確認）、02＝ギュレルのゴール（小さく写る・本文のみ）、04＝エンバペ、05＝エンバペとディオマンデ、06＝ディオマンデ。
+#   10/15・10/17〜18 とは別の写真（10/15 のレアル写真はローマ戦のもの）。03（エンバペ2点目の遠景）は縦切りで別の選手になったので外した。Commons のギュレル（441x515）は小さいので外した。
+#   ギュレル本人が大きく写る写真は取れなかった（ゴールの写真は遠景）。
+slot: laliga
+date: "2026年10月19日"
+format: news
+no_main: true
+people: [ホセ・モウリーニョ, アルダ・ギュレル, キリアン・エンバペ, レアル・マドリード, セビージャ]
+
+short_style: Y
+short_photos:
+  - assets/images/20261019_realmadrid_sevilla_mourinho/01_v.jpg
+  - assets/images/20261019_realmadrid_sevilla_mourinho/05_v.jpg
+  - assets/images/20261019_realmadrid_sevilla_mourinho/04_v.jpg
+  - assets/images/20261019_realmadrid_sevilla_mourinho/06_v.jpg
+short_hook_quote: 何が起きたと言われているのか、誰も私に見せられなかった。
+short_question: クラシコで、レアルはバルセロナとの6差を縮められると思いますか。
+short_hook: レアルがセビージャに4対1。
+short_telops:
+  - {match: セビージャに4対1, text: レアル4対1セビージャ/ラ・リーガ第9節}
+  - {match: 30分、ギュレル, text: 30分/ギュレルが先制}
+  - {match: 82分にはディオマンデ, text: エンバペ2点・ディオマンデ/ブエノが1点返す}
+  - {match: 前半のギュレルの肘, text: 前半の「ギュレルの肘」/セビージャ監督が退場と主張}
+  - {match: 主審は, text: 主審は/この場面で動かず}
+  - {match: 映像はない, text: モウリーニョ監督/「映像はない」}
+  - {match: 起きていないと, text: ギュレル本人は/起きていないと言っている}
+  - {match: 9試合で7勝2敗, text: レアル9試合7勝2敗/勝ち点21の3位}
+  - {match: 勝ち点27, text: 首位バルセロナ/9戦全勝で勝ち点27}
+  - {match: 勝てば差は3, text: クラシコに勝てば差は3/負ければ9}
+
+theme:
+  id: realmadrid_sevilla_mourinho
+  league: spain
+  league_name: ラ・リーガ
+  prefix: ""
+  title: モウリーニョ監督、肘の話に何と答えたか。レアル4対1
+  hook: ""
+  question: レアルが4対1で勝った試合のあと、モウリーニョ監督は肘の話に何と答えたのか
+  takeaway: レアルは9試合7勝2敗で勝ち点21の3位。首位バルセロナ（9戦全勝）との6差は、25日のクラシコで3にも9にもなる
+
+thumbnail:
+  line1: モウリーニョ監督
+  line2: 肘の話に何と答えた？
+  tags: [モウリーニョ, ギュレル, レアル・マドリード, セビージャ]
+  layout: scene
+  photo: assets/images/20261019_realmadrid_sevilla_mourinho/01_w.jpg
+  short_photo: assets/images/20261019_realmadrid_sevilla_mourinho/01_v.jpg
+
+answer: ギュレルの肘とされる場面の映像を、自分は見ていない。何が起きたか誰にも見せられていない、と答えた
+watch: 25日のクラシコ（バルセロナ戦）
+
+sections:
+  - id: what
+    heading: 何が起きたか
+    tier: 報道
+    telop: レアル4対1セビージャ。試合後は「肘の話」になった
+    say:
+      - text: 18日のラ・リーガ、レアルはホームでセビージャに4対1で勝ちました。
+        image: assets/images/20261019_realmadrid_sevilla_mourinho/04_w.jpg
+        card: &goals
+          type: table
+          title: レアル4対1セビージャ（18日）
+          columns: [時間, 得点者, 所属]
+          rows:
+            - [30分, ギュレル, レアル]
+            - [37分, エンバペ, レアル]
+            - [63分, エンバペ（PK）, レアル]
+            - [80分, ブエノ, セビージャ]
+            - [82分, ディオマンデ, レアル]
+          highlight_row: 0
+      - text: 30分、ギュレルが先制しました。
+        card:
+          <<: *goals
+          highlight_row: 0
+      - text: 37分と63分のPKでエンバペ。82分にはディオマンデが決めました。
+        card:
+          <<: *goals
+          highlight_row: 4
+      - text: セビージャは、80分にブエノが1点返しました。
+        card: none
+      - text: ただ、試合後に出た話題は、前半のギュレルの肘でした。
+        image: assets/images/20261019_realmadrid_sevilla_mourinho/01_w.jpg
+        card: none
+      - セビージャのガルシア・プラサ監督は、前半の場面を問題にしています。
+      - ギュレルがペケ・フェルナンデスに肘を当てた、という主張です。
+      - 退場だったはずだ、という言い分です。
+      - 主審は、この場面で動きませんでした。
+      - voice: ガルシア・プラサ
+        text: 今日は25分から、11人対10人で戦えるはずだった。
+      - モウリーニョ監督は、この話に会見で答えました。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50213726/mourinho-obsession-elbow-madrid-guler
+      - https://content.core.api.espn.com/v1/sports/news/50213726
+      - https://www.soccer-king.jp/news/world/esp/20261019/2218156.html
+
+  - id: answer
+    main: true
+    heading: モウリーニョ監督の答え
+    tier: 報道
+    telop: モウリーニョ監督「映像はない」
+    say:
+      - ギュレルの肘とされる場面について、会見でこう話しました。
+      - voice: モウリーニョ
+        text: 何が起きたと言われているのか、誰も私に見せられなかった。
+        short_voice: true
+      - voice: モウリーニョ
+        text: 映像はない。テレビの映像も頼んだが、見られなかった。
+        cont: true
+      - voice: モウリーニョ
+        text: スタッフの戦術カメラも、見られなかった。
+        cont: true
+      - ギュレル本人は起きていないと言っている、とも話しました。
+      - voice: モウリーニョ
+        text: 明確で客観的な映像を誰かが届けてくれるなら、私は話す。
+      - voice: モウリーニョ
+        text: それまでは何もない。
+        cont: true
+      - voice: モウリーニョ
+        text: はっきり見た人はいますか。
+      - voice: モウリーニョ
+        text: だから、そのことばかり聞かれる執着が、私には分からない。
+        cont: true
+      - text: 肘が当たったのかどうか。確かめられているのは、主審が動かなかったことだけです。
+        image: assets/images/20261019_realmadrid_sevilla_mourinho/01_r.jpg
+        card: &claims
+          type: table
+          title: ギュレルの肘をめぐる、それぞれの言い分
+          columns: [誰, 言っていること]
+          rows:
+            - [ガルシア・プラサ監督, 退場だった]
+            - [主審, この場面で動かず]
+            - [モウリーニョ監督, 映像は見ていない]
+            - [ギュレル本人, 起きていないと言う（監督談）]
+          highlight_row: 1
+      - text: ギュレル本人の言葉は、今のところ伝わっていません。
+        card:
+          <<: *claims
+          highlight_row: 3
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50213726/mourinho-obsession-elbow-madrid-guler
+      - https://content.core.api.espn.com/v1/sports/news/50213726
+
+  - id: view
+    viewpoint: true
+    heading: 次のクラシコで、6差が3にも9にもなる
+    tier: 報道
+    telop: 9試合7勝2敗。次はクラシコ
+    say:
+      - 見立てです。レアルは、9試合で7勝2敗。
+      - 勝ち点21で3位です。
+      - 首位バルセロナは9戦全勝で、勝ち点27。差は6です。
+      - 代表ウィーク明けから、勝ちが3つ続いています。
+      - 25日のクラシコ（バルセロナ戦）は、勝てば差3、引き分けなら6、負ければ9です。
+      - その前に、水曜はチャンピオンズリーグでライプツィヒ戦があります。
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/summary?event=401882839
+      - https://content.core.api.espn.com/v1/sports/news/50192148
+short_title: "モウリーニョ監督、肘の話に何と答えたか。レアル4対1"

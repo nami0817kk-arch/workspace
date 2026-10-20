@@ -1,0 +1,717 @@
+# header placeholder
+date: 2026年10月19日
+slot: other_1
+format: news
+series: スタジアム紹介
+voice_min: 0
+people: []
+theme:
+  id: stadium_tottenham
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: トッテナム
+  title: トッテナムの本拠地。収容6万2850席はプレミアで2位。1位との差はどれだけか
+  question: プレミアで2番目に大きい本拠地は、1位と何席違い、どんな経緯でいまの形になったのか
+  lead: プレミアで2位の大きさの競技場。
+  hook: ''
+  opening_image: assets/images/20261019_stadium_tottenham/01_w.jpg
+  end_bg: assets/images/20261019_stadium_tottenham/01_w.jpg
+  takeaway: トッテナム・ホットスパー・スタジアムの収容は、今季の開幕時で6万2850人。プレミア20クラブで2番目に大きく、1位マンチェスター・ユナイテッド（7万4158人）とは1万1308席、3位リヴァプール（6万1276人）とは1574席の差。ロンドンの6クラブでは最大で、2位アーセナルとの差は2146席。北ロンドンの2クラブだけで、ロンドン6クラブの収容の53％を占める。旧本拠地は1899年、苗木畑だった土地に開き、1938年に7万5038人の最多入場を記録。立ち見がなくなり、1998年には3万6238人になった。2017年5月に旧本拠地を離れ、2年ほどウェンブリーで戦い、2019年4月3日に新本拠地の最初のプレミアの試合（パレスに2対0）。芝のピッチは3つに割れて南スタンドの下へ動き、下にアメリカンフットボール用の人工芝が隠れる。公式の最多入場は2022年5月12日の6万2027人で、収容まで823人。昨季のホーム19試合の平均入場は6万1006人で、収容の97.1％。次の本拠地戦は現地10月19日のコヴェントリー戦で、その本拠地の収容は3万2609人
+  short_title: トッテナムの本拠地、プレミア2位の6万2850席
+thumbnail:
+  layout: scene
+  callouts:
+  - 6万2850席
+  - 1位と1万1308席差
+  photo: assets/images/20261019_stadium_tottenham/01_w.jpg
+  line1: トッテナム本拠地
+  line2: プレミア2位、1位との差は
+  tags:
+  - トッテナム
+  - スパーズ
+  - プレミアリーグ
+  - スタジアム紹介
+sections:
+- id: data
+  main: true
+  heading: トッテナムの本拠地は、1位より何席小さいのか
+  bg: assets/images/20261019_stadium_tottenham/01_w.jpg
+  tier: 報道
+  telop: 収容は6万2850人。プレミア20クラブで2番目で、1位とは1万1308席差
+  narrator: 解説
+  card:
+    type: table
+    title: トッテナム・ホットスパー・スタジアムの基礎DATA
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - 収容人数
+      - 6万2850人（今季の開幕時）
+    - - 20クラブでは
+      - 2位（1位と1万1308席差）
+    - - ロンドン6クラブでは
+      - 最大
+    - - 開場
+      - 2019年4月（旧本拠地は1899年から）
+    - - ピッチ
+      - 縦105×横68メートル
+    - - 南スタンド
+      - 単層で1万7500席（国内最大）
+  say:
+  - text: トッテナムの本拠地の話です。
+    short_only: true
+    image: assets/images/20261019_stadium_tottenham/01_w.jpg
+    card: none
+  - text: 収容は、6万2850人。今季のプレミア20クラブで、2番目に大きな本拠地です。
+    emph: true
+    image: assets/images/20261019_stadium_tottenham/02_w.jpg
+    card:
+      type: stats
+      title: プレミア2位の本拠地。上と下
+      items: &id001
+      - - '62850'
+        - 人
+        - トッテナムの収容
+      - - '74158'
+        - 人
+        - 1位 マンチェスター・U
+      - - '61276'
+        - 人
+        - 3位 リヴァプール
+      focus: 0
+  - text: 1位は、マンチェスター・ユナイテッド。7万4158人。
+    image: assets/images/20261019_stadium_tottenham/02_w.jpg
+    card:
+      type: stats
+      title: プレミア2位の本拠地。上と下
+      items: *id001
+      focus: 1
+  - text: その差は、1万1308席。
+    emph: true
+    image: assets/images/20261019_stadium_tottenham/02_w.jpg
+    card:
+      type: stats
+      title: 1位との差と、下との差（自分で引いた）
+      items: &id002
+      - - '11308'
+        - 席
+        - 1位との差
+      - - '1574'
+        - 席
+        - 3位リヴァプールとの差
+      - - '2146'
+        - 席
+        - ロンドン2位アーセナルとの差
+      focus: 0
+  - text: 3位のリヴァプールとは、1574席しか違いません。
+    image: assets/images/20261019_stadium_tottenham/02_w.jpg
+    card:
+      type: stats
+      title: 1位との差と、下との差（自分で引いた）
+      items: *id002
+      focus: 1
+  - text: ロンドンでは、最大。2位のアーセナルとは、2146席差。
+    image: assets/images/20261019_stadium_tottenham/02_w.jpg
+    card:
+      type: stats
+      title: 1位との差と、下との差（自分で引いた）
+      items: *id002
+      focus: 2
+  - text: ただ、この競技場ができたのは、2019年です。
+    image: assets/images/20261019_stadium_tottenham/04_w.jpg
+    card: none
+  - text: それまでの本拠地は、ホワイト・ハート・レーン。ほぼ同じ場所にありました。
+    image: assets/images/20261019_stadium_tottenham/04_w.jpg
+    card: none
+  sources:
+  - https://resources.premierleague.pulselive.com/premierleague/document/2026/07/31/8a890ff9-176c-4364-a8ff-e08f995e2c86/TM2040_PL-Handbook-and-Collateral-2026-27_Digital_31.07.pdf
+  - https://www.tottenhamhotspur.com/the-stadium/
+- id: origin
+  heading: 旧本拠地は、なぜ手放されたのか
+  bg: assets/images/20261019_stadium_tottenham/01_w.jpg
+  tier: 背景
+  telop: 1899年に開いた旧本拠地は、全席イス席で3万人台に。2015年に新計画へ
+  narrator: 解説
+  card:
+    type: timeline
+    title: 旧本拠地から、新しい競技場の計画まで
+    rows: &id003
+    - - 1899年
+      - 苗木畑だった土地に、旧本拠地が開場
+    - - 1938年
+      - 最多の入場。7万5038人
+    - - 1998年
+      - 全席イス席で3万6238人
+    - - 2008年10月
+      - 隣に新しい競技場を建てる計画
+    - - 2012年1月
+      - 同じ北ロンドンに残ると表明
+    - - 2015年7月
+      - 計画を作り直す。アメフトの試合も合意
+    focus: 1938年
+    highlight_row: 0
+  say:
+  - text: 旧本拠地の開場は、1899年。もとは、苗木を育てる畑でした。
+    image: assets/images/20261019_stadium_tottenham/05_w.jpg
+    card:
+      type: timeline
+      title: 旧本拠地から、新しい競技場の計画まで
+      rows: *id003
+      focus: 1938年
+      highlight_row: 0
+  - text: 土地は醸造会社の持ち物で、クラブは借りて使いました。
+    image: assets/images/20261019_stadium_tottenham/05_w.jpg
+    card: none
+  - text: 1934年には、収容がほぼ8万人に達します。
+    image: assets/images/20261019_stadium_tottenham/05_w.jpg
+    card:
+      type: timeline
+      title: 旧本拠地から、新しい競技場の計画まで
+      rows: *id003
+      focus: 1938年
+      highlight_row: 0
+  - text: 最多の入場は、1938年のFAカップ。7万5038人です。
+    emph: true
+    image: assets/images/20261019_stadium_tottenham/05_w.jpg
+    card:
+      type: timeline
+      title: 旧本拠地から、新しい競技場の計画まで
+      rows: *id003
+      focus: 1938年
+      highlight_row: 1
+  - text: その人数は、いまの収容より、1万2188席も多い。
+    image: assets/images/20261019_stadium_tottenham/05_w.jpg
+    card: none
+  - text: 立ち見がなくなるにつれて、収容は減っていきました。
+    image: assets/images/20261019_stadium_tottenham/06_w.jpg
+    card: none
+  - text: 1998年には、全席イス席で3万6238人です。
+    image: assets/images/20261019_stadium_tottenham/06_w.jpg
+    card:
+      type: timeline
+      title: 旧本拠地から、新しい競技場の計画まで
+      rows: *id003
+      focus: 1938年
+      highlight_row: 2
+  - text: ほかの大クラブが広げていく中で、差が開きました。
+    image: assets/images/20261019_stadium_tottenham/06_w.jpg
+    card: none
+  - text: 2008年10月、すぐ北に新しい競技場を建てる計画が出ます。
+    emph: true
+    image: assets/images/20261019_stadium_tottenham/04_w.jpg
+    card:
+      type: timeline
+      title: 旧本拠地から、新しい競技場の計画まで
+      rows: *id003
+      focus: 1938年
+      highlight_row: 3
+  - text: 最初の案は、5万6000席ほど。いまより6850席少ない計画でした。
+    image: assets/images/20261019_stadium_tottenham/04_w.jpg
+    card: none
+  - text: 五輪スタジアムへ移る案もありましたが、立ち消えになりました。
+    image: assets/images/20261019_stadium_tottenham/04_w.jpg
+    card: none
+  - text: 2012年1月、クラブは同じ北ロンドンに残ると表明します。
+    image: assets/images/20261019_stadium_tottenham/04_w.jpg
+    card:
+      type: timeline
+      title: 旧本拠地から、新しい競技場の計画まで
+      rows: *id003
+      focus: 1938年
+      highlight_row: 4
+  - text: 土地の取得に時間がかかり、工事は2015年に本格化します。
+    image: assets/images/20261019_stadium_tottenham/03_w.jpg
+    card: none
+  - text: 2015年7月、計画が作り直され、収容は約6万1000席に。
+    emph: true
+    image: assets/images/20261019_stadium_tottenham/03_w.jpg
+    card:
+      type: timeline
+      title: 旧本拠地から、新しい競技場の計画まで
+      rows: *id003
+      focus: 1938年
+      highlight_row: 5
+  - text: アメリカンフットボールの試合を毎年開く合意も、同時に発表。
+    image: assets/images/20261019_stadium_tottenham/03_w.jpg
+    card: none
+  sources:
+  - https://www.tottenhamhotspur.com/the-club/history/white-hart-lane/
+  - https://stadiumdb.com/stadiums/eng/white_hart_lane
+  - https://en.wikipedia.org/wiki/White_Hart_Lane
+  - https://en.wikipedia.org/wiki/Tottenham_Hotspur_Stadium
+- id: wembley
+  heading: 建て替えのあいだ、ホームはどこで戦ったのか
+  bg: assets/images/20261019_stadium_tottenham/01_w.jpg
+  tier: 報道
+  telop: 2017年に旧本拠地を離れ、新本拠地の最初のプレミアは2019年4月3日
+  narrator: 解説
+  card:
+    type: timeline
+    title: 建て替えのあいだの、ホームの行き先
+    rows: &id004
+    - - 2017年5月
+      - 旧本拠地の最後の試合。2対1
+    - - 2017-18
+      - ホームの19試合はすべてウェンブリー
+    - - 2018年秋
+      - 予定した開場は延期
+    - - 2018-19
+      - ホーム19試合のうち14試合がウェンブリー
+    - - 2019年4月3日
+      - 新本拠地の最初のプレミア。2対0
+    focus: 2019年4月3日
+    highlight_row: 0
+  say:
+  - text: 2017年5月14日、旧本拠地の最後の試合です。
+    image: assets/images/20261019_stadium_tottenham/05_w.jpg
+    card:
+      type: timeline
+      title: 建て替えのあいだの、ホームの行き先
+      rows: *id004
+      focus: 2019年4月3日
+      highlight_row: 0
+  - text: 相手はマンチェスター・ユナイテッド。2対1で勝ちました。
+    image: assets/images/20261019_stadium_tottenham/05_w.jpg
+    card: none
+  - text: 取り壊しは翌日に始まり、8月には跡形もなくなりました。
+    image: assets/images/20261019_stadium_tottenham/03_w.jpg
+    card: none
+  - text: 2017-18シーズン、ホームの19試合は、すべてウェンブリーです。
+    image: assets/images/20261019_stadium_tottenham/07_w.jpg
+    card:
+      type: timeline
+      title: 建て替えのあいだの、ホームの行き先
+      rows: *id004
+      focus: 2019年4月3日
+      highlight_row: 1
+  - text: 2018年2月のアーセナル戦は、8万3222人が入りました。
+    emph: true
+    image: assets/images/20261019_stadium_tottenham/07_w.jpg
+    card:
+      type: stats
+      title: ウェンブリー時代の最多入場と、いまの収容
+      items:
+      - - '83222'
+        - 人
+        - 最多の入場（2018年2月）
+      - - '62850'
+        - 人
+        - いまの収容
+      - - '20372'
+        - 席
+        - ウェンブリーのほうが多い（自分で引いた）
+      focus: 0
+  - text: いまの収容より、2万372人も多い。
+    image: assets/images/20261019_stadium_tottenham/07_w.jpg
+    card:
+      type: stats
+      title: ウェンブリー時代の最多入場と、いまの収容
+      items:
+      - - '83222'
+        - 人
+        - 最多の入場（2018年2月）
+      - - '62850'
+        - 人
+        - いまの収容
+      - - '20372'
+        - 席
+        - ウェンブリーのほうが多い（自分で引いた）
+      focus: 2
+  - text: 開場は2018年秋の予定でしたが、安全設備の不具合で遅れます。
+    image: assets/images/20261019_stadium_tottenham/04_w.jpg
+    card:
+      type: timeline
+      title: 建て替えのあいだの、ホームの行き先
+      rows: *id004
+      focus: 2019年4月3日
+      highlight_row: 2
+  - text: 2018-19シーズンも、ホーム19試合のうち14試合はウェンブリー。
+    image: assets/images/20261019_stadium_tottenham/07_w.jpg
+    card:
+      type: timeline
+      title: 建て替えのあいだの、ホームの行き先
+      rows: *id004
+      focus: 2019年4月3日
+      highlight_row: 3
+  - text: 2019年4月3日。新しい本拠地の、最初のプレミアの試合です。
+    emph: true
+    image: assets/images/20261019_stadium_tottenham/02_w.jpg
+    card:
+      type: timeline
+      title: 建て替えのあいだの、ホームの行き先
+      rows: *id004
+      focus: 2019年4月3日
+      highlight_row: 4
+  - text: 相手はクリスタル・パレス。2対0の勝ちでした。
+    image: assets/images/20261019_stadium_tottenham/02_w.jpg
+    card: none
+  - text: 入場は5万9215人。最初の公式のゴールは、ソン・フンミンです。
+    image: assets/images/20261019_stadium_tottenham/01_w.jpg
+    card: none
+  - text: 旧本拠地のコンクリートは砕かれ、新しい通路の床に混ぜられました。
+    image: assets/images/20261019_stadium_tottenham/01_w.jpg
+    card: none
+  sources:
+  - https://www.tottenhamhotspur.com/the-club/history/white-hart-lane/
+  - https://sdp-prem-prod.premier-league-prod.pulselive.com/api/v1/competitions/8/seasons/2017/matchweeks/1/matches
+  - https://sdp-prem-prod.premier-league-prod.pulselive.com/api/v1/competitions/8/seasons/2018/matchweeks/31/matches
+  - https://en.wikipedia.org/wiki/Tottenham_Hotspur_Stadium
+- id: pitch
+  heading: なぜ、このピッチは3つに割れて動くのか
+  bg: assets/images/20261019_stadium_tottenham/01_w.jpg
+  tier: 報道
+  telop: 南スタンドは単層で1万7500席。芝のピッチは3つに割れて下へ滑り込む
+  narrator: 解説
+  card:
+    type: stats
+    title: 南スタンドとピッチの数字
+    items:
+    - - '17500'
+      - 席
+      - 南スタンド（単層で国内最大）
+    - - '3'
+      - 枚
+      - に割れて動く芝のピッチ
+    - - '4.9'
+      - メートル
+      - 最前列からピッチまで（最短）
+    focus: 0
+  say:
+  - text: 南スタンドは、1万7500席。ひと続きの1層で、国内最大です。
+    emph: true
+    image: assets/images/20261019_stadium_tottenham/01_w.jpg
+    card:
+      type: stats
+      title: 南スタンドとピッチの数字
+      items:
+      - - '17500'
+        - 席
+        - 南スタンド（単層で国内最大）
+      - - '3'
+        - 枚
+        - に割れて動く芝のピッチ
+      - - '4.9'
+        - メートル
+        - 最前列からピッチまで（最短）
+      focus: 0
+  - text: 高さは34メートル超。最前列からピッチまで、4.9から7.9メートル。
+    image: assets/images/20261019_stadium_tottenham/01_w.jpg
+    card:
+      type: stats
+      title: 南スタンドとピッチの数字
+      items:
+      - - '17500'
+        - 席
+        - 南スタンド（単層で国内最大）
+      - - '3'
+        - 枚
+        - に割れて動く芝のピッチ
+      - - '4.9'
+        - メートル
+        - 最前列からピッチまで（最短）
+      focus: 2
+  - text: このスタンドは、真ん中の2本の太い柱で支えられます。
+    image: assets/images/20261019_stadium_tottenham/01_w.jpg
+    card: none
+  - text: その柱をよけるため、芝のピッチは、3つに割れて動きます。
+    emph: true
+    image: assets/images/20261019_stadium_tottenham/01_w.jpg
+    card:
+      type: stats
+      title: 南スタンドとピッチの数字
+      items:
+      - - '17500'
+        - 席
+        - 南スタンド（単層で国内最大）
+      - - '3'
+        - 枚
+        - に割れて動く芝のピッチ
+      - - '4.9'
+        - メートル
+        - 最前列からピッチまで（最短）
+      focus: 1
+  - text: 分かれた芝は、南スタンドの下へ滑り込みます。
+    image: assets/images/20261019_stadium_tottenham/02_w.jpg
+    card: none
+  - text: 下には、人工芝の競技場が隠れています。アメフトの試合用。
+    image: assets/images/20261019_stadium_tottenham/02_w.jpg
+    card: none
+  - text: 切り替えは、25分から1時間ほどとされます。
+    image: assets/images/20261019_stadium_tottenham/02_w.jpg
+    card: none
+  - text: 最初のアメフトの試合は、2019年10月6日。6万463人が入場。
+    image: assets/images/20261019_stadium_tottenham/01_w.jpg
+    card: none
+  - text: 南スタンドの形は、ドルトムントの「イエロー・ウォール」に学んだとされます。
+    image: assets/images/20261019_stadium_tottenham/01_w.jpg
+    card: none
+  sources:
+  - https://www.tottenhamhotspur.com/the-stadium/
+  - https://stadiumdb.com/stadiums/eng/tottenham_hotspur_stadium
+  - https://en.wikipedia.org/wiki/Tottenham_Hotspur_Stadium
+- id: growth
+  heading: なぜ、約3万2000人の競技場は、6万2850人になったのか
+  bg: assets/images/20261019_stadium_tottenham/01_w.jpg
+  tier: 報道
+  telop: 最後の季の約3万2000人から、ほぼ2倍の6万2850人に
+  narrator: 解説
+  card:
+    type: line
+    title: 収容の歩み（約を含む）
+    x: &id005
+    - 1934ごろ
+    - '1998'
+    - 2016-17
+    - 今季
+    series: &id006
+    - - 収容
+      - - 80000
+        - 36238
+        - 32000
+        - 62850
+    unit: 人
+    focus: 収容
+    peak: true
+  say:
+  - text: 旧本拠地の最後の季は、一部を壊したので、収容は約3万2000人でした。
+    image: assets/images/20261019_stadium_tottenham/04_w.jpg
+    card:
+      type: line
+      title: 収容の歩み（約を含む）
+      x: *id005
+      series: *id006
+      unit: 人
+      focus: 収容
+      peak: true
+      highlight: 2016-17
+  - text: 開場のときは、6万2062席だったとされます。
+    image: assets/images/20261019_stadium_tottenham/04_w.jpg
+    card: none
+  - text: その後に席が増え、いまの6万2850席になりました。
+    emph: true
+    image: assets/images/20261019_stadium_tottenham/01_w.jpg
+    card:
+      type: line
+      title: 収容の歩み（約を含む）
+      x: *id005
+      series: *id006
+      unit: 人
+      focus: 収容
+      peak: true
+      highlight: 今季
+  - text: ほぼ2倍。ただ、かつての約8万人には届きません。
+    image: assets/images/20261019_stadium_tottenham/01_w.jpg
+    card:
+      type: line
+      title: 収容の歩み（約を含む）
+      x: *id005
+      series: *id006
+      unit: 人
+      focus: 収容
+      peak: true
+      highlight: 1934ごろ
+  - text: 公式の最多入場は、2022年5月12日のアーセナル戦。
+    image: assets/images/20261019_stadium_tottenham/01_w.jpg
+    card:
+      type: stats
+      title: 最多入場と、いまの収容
+      items:
+      - - '62027'
+        - 人
+        - 最多の入場（2022年5月12日）
+      - - '62850'
+        - 人
+        - いまの収容
+      - - '823'
+        - 人
+        - 収容まで足りなかった数（自分で引いた）
+      focus: 0
+  - text: 6万2027人が入りました。
+    image: assets/images/20261019_stadium_tottenham/01_w.jpg
+    card:
+      type: stats
+      title: 最多入場と、いまの収容
+      items:
+      - - '62027'
+        - 人
+        - 最多の入場（2022年5月12日）
+      - - '62850'
+        - 人
+        - いまの収容
+      - - '823'
+        - 人
+        - 収容まで足りなかった数（自分で引いた）
+      focus: 0
+  - text: 収容まで、あと823人でした。
+    emph: true
+    image: assets/images/20261019_stadium_tottenham/01_w.jpg
+    card:
+      type: stats
+      title: 最多入場と、いまの収容
+      items:
+      - - '62027'
+        - 人
+        - 最多の入場（2022年5月12日）
+      - - '62850'
+        - 人
+        - いまの収容
+      - - '823'
+        - 人
+        - 収容まで足りなかった数（自分で引いた）
+      focus: 2
+  - text: 入場は、実際にゲートを通った人数で数えるとされます。
+    image: assets/images/20261019_stadium_tottenham/01_w.jpg
+    card: none
+  - text: アウェーの席を分ける都合で、空く席もあるとされます。
+    image: assets/images/20261019_stadium_tottenham/01_w.jpg
+    card: none
+  sources:
+  - https://www.tottenhamhotspur.com/the-club/history/white-hart-lane/
+  - https://sdp-prem-prod.premier-league-prod.pulselive.com/api/v1/competitions/8/seasons/2021/matchweeks/36/matches
+  - https://en.wikipedia.org/wiki/Tottenham_Hotspur_Stadium
+- id: view
+  viewpoint: true
+  heading: 見立て・ロンドン最大の本拠地は、ロンドンの中でどれほど大きいのか
+  bg: assets/images/20261019_stadium_tottenham/01_w.jpg
+  tier: 報道
+  telop: 北ロンドンの2クラブで、ロンドン6クラブの収容の53％
+  narrator: 解説
+  card:
+    type: table
+    title: ロンドン6クラブの収容（自分で並べた）
+    columns:
+    - 順位
+    - クラブ
+    - 収容
+    rows: &id007
+    - - 1位
+      - トッテナム
+      - 6万2850人
+    - - 2位
+      - アーセナル
+      - 6万704人
+    - - 3位
+      - チェルシー
+      - 4万44人
+    - - 4位
+      - フラム
+      - 2万8107人
+    - - 5位
+      - クリスタル・パレス
+      - 2万5194人
+    - - 6位
+      - ブレントフォード
+      - 1万7250人
+    highlight_row: 0
+  say:
+  - text: ロンドンの6クラブを、収容の順に見ます。1位が、トッテナム。
+    emph: true
+    mark:
+      kind: circle
+      row: 0
+    image: assets/images/20261019_stadium_tottenham/02_w.jpg
+    card:
+      type: table
+      title: ロンドン6クラブの収容（自分で並べた）
+      columns:
+      - 順位
+      - クラブ
+      - 収容
+      rows: *id007
+      highlight_row: 0
+  - text: 3位のチェルシーとの差は、2万2806席です。
+    image: assets/images/20261019_stadium_tottenham/02_w.jpg
+    card:
+      type: table
+      title: ロンドン6クラブの収容（自分で並べた）
+      columns:
+      - 順位
+      - クラブ
+      - 収容
+      rows: *id007
+      highlight_row: 2
+  - text: トッテナムとアーセナルを足すと、12万3554席。
+    image: assets/images/20261019_stadium_tottenham/02_w.jpg
+    card: &id008
+      type: calc
+      title: 北ロンドン2クラブの割合（自分で割った）
+      terms:
+      - - 12万3554席
+        - トッテナム+アーセナル
+      - - 23万4149席
+        - ロンドン6クラブの合計
+      - - 53％
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+  - text: 6クラブの合計は、23万4149席。
+    image: assets/images/20261019_stadium_tottenham/02_w.jpg
+    card: *id008
+  - text: 北ロンドンの2クラブだけで、53％を占めます。
+    emph: true
+    image: assets/images/20261019_stadium_tottenham/02_w.jpg
+    card: *id008
+  - text: では、実際に入った人数は。昨季の本拠地での平均は、6万1006人。
+    image: assets/images/20261019_stadium_tottenham/01_w.jpg
+    card: &id009
+      type: calc
+      title: 昨季の平均入場と収容（自分で割った）
+      terms:
+      - - 6万1006人
+        - 昨季の本拠地での平均入場
+      - - 6万2850人
+        - 今季の開幕時の収容
+      - - 97.1％
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+  - text: 収容に占める割合は、97.1％。
+    emph: true
+    image: assets/images/20261019_stadium_tottenham/01_w.jpg
+    card: *id009
+  - text: 昨季のプレミアで、平均がこれを上回ったのは、2クラブだけです。
+    image: assets/images/20261019_stadium_tottenham/01_w.jpg
+    card: none
+  - text: マンチェスター・ユナイテッドと、ウェストハムです。
+    image: assets/images/20261019_stadium_tottenham/01_w.jpg
+    card: none
+  - text: 最多は6万1876人、最少は5万9773人。差は2103人。
+    image: assets/images/20261019_stadium_tottenham/01_w.jpg
+    card: none
+  - text: 最多の日でも、収容に974人届きませんでした。
+    image: assets/images/20261019_stadium_tottenham/01_w.jpg
+    card: none
+  - text: 次の本拠地戦は、現地時間の10月19日。相手は、コヴェントリーです。
+    emph: true
+    image: assets/images/20261019_stadium_tottenham/02_w.jpg
+    card: none
+  - text: コヴェントリーの本拠地の収容は、3万2609人。
+    image: assets/images/20261019_stadium_tottenham/02_w.jpg
+    card: &id010
+      type: calc
+      title: トッテナムとコヴェントリーの収容（自分で割った）
+      terms:
+      - - 6万2850人
+        - トッテナム
+      - - 3万2609人
+        - コヴェントリー
+      - - 1.9倍
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+  - text: トッテナムの本拠地は、そのほぼ2倍の広さです。
+    image: assets/images/20261019_stadium_tottenham/02_w.jpg
+    card: *id010
+  - text: 苗木畑から始まった土地に、プレミア2位の器が立っています。
+    emph: true
+    image: assets/images/20261019_stadium_tottenham/02_w.jpg
+    card: none
+  sources:
+  - https://resources.premierleague.pulselive.com/premierleague/document/2026/07/31/8a890ff9-176c-4364-a8ff-e08f995e2c86/TM2040_PL-Handbook-and-Collateral-2026-27_Digital_31.07.pdf
+  - https://sdp-prem-prod.premier-league-prod.pulselive.com/api/v1/competitions/8/seasons/2025/matchweeks/1/matches
+  - https://sdp-prem-prod.premier-league-prod.pulselive.com/api/v1/competitions/8/seasons/2026/matchweeks/9/matches

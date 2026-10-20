@@ -1,0 +1,133 @@
+# 取材メモ（2026年10月18日）マンC対イプスウィッチ後、足を引きずったハーランドについてのマレスカ監督の言葉（ニュースのショート。見せ方 Y＝本人の一言から始める）
+# 取材: 2026-10-18。ESPN の記事の本文は WAF のチャレンジ（x-amzn-waf-action: challenge）で開けなかった。突破せず、ESPN が公開している記事API
+#   （now.core.api.espn.com/v1/sports/news/50202449。同じ記事の本文 story を返す）で本文を全部読んだ。控え research/raw/20261018_maresca_espn_api.json。
+#   記事は ESPN の Rob Dawson、2026-10-17 17:54Z 公開。
+#   試合の数字は ESPN の試合記録API（scoreboard / summary。research/raw/20261018_maresca_scoreboard.json・_summary.json）、
+#   日程と過去の結果は ESPN のチーム日程（research/raw/20261018_city_schedule.json）。順位表は summary の standings。
+# 確かめたこと（ESPN の記事本文）:
+#   ・マレスカ監督は、イプスウィッチ戦（3-2）の終わりにハーランドが足を引きずって下がったことについて、心配を和らげる言い方をした。
+#   ・ハーランドは2得点。アディショナルタイムにジャック・クラークとの激しい接触のあと痛そうな様子。終了の笛の前にすでにピッチを出ていて、試合後はまっすぐトンネルへ。
+#   ・発言（英語の原文）: "We will see," Maresca said afterward. "Erling said he was OK. I don't have any news at the moment."
+#   ・同じ会見の別の発言: "Unfortunately in 10 minutes we had four or five players [injured] -- Matheus, Kova, Erling, Antoine and Nico also -- but they are inside now and we will see."
+#     "I asked all of them. Mateo and Kova said they were OK. Erling also said he was OK and Nico, it's still his back if you remember [the injury] against Coventry. It's still the same problem. The only one we need to wait on is Antoine."
+#     ESPN の本文には、コバチッチ・ヌネス・オライリー・セメンヨの4人にも問題が出て、マレスカ監督が最も深刻なのはセメンヨだと見ている、とある。
+#     「Mateo and Kova」が誰を指すか（Mateo＝コバチッチ本人のはず、Kova との並びは記事のままでは曖昧）は確かめられないので、この1文は台本で引かない。
+#   ・"[injured]" の角括弧は ESPN が足した語。台本では監督の言葉として引かず、「4人か5人が痛んだと話しました」と地の文で言う。
+# 試合の事実（ESPN の試合記録）: 2026-10-17 14:00Z 開始、マンチェスター・シティ3-2イプスウィッチ。ホーム（エティハド）。
+#   19分フォーデン／21分前田大然（イプスウィッチ）／34分ハーランド（ヘディング）／69分ハーランド／90分フレミング（PK、イプスウィッチ）。90分+13で終了。
+#   ハーランドの得点はアシストがコバチッチのクロス（34分）とンディアイエ（69分）。コバチッチは後半4分に負傷で交代（記録は50分の交代）、ヌネスは75分に負傷で交代。
+# 自分で数えた比べ（見立て）: 順位表（ESPN）は シティ7試合7勝・勝ち点21・得失点+12で首位、アーセナル6試合・勝ち点15。
+#   得点は日程の結果から数えた：ボーンマス2-1／パレス4-1／コヴェントリー1-0／マンU1-0／サンダーランド5-3／リヴァプール3-0／イプスウィッチ3-2
+#   ＝ 2+4+1+1+5+3+3＝19得点、1+1+0+0+3+0+2＝7失点（順位表の+12と一致）。
+#   3日前の14日、チャンピオンズリーグでパリ・サンジェルマンに2-4（日程）。次のリーグ戦は24日アストン・ヴィラ戦（ESPN の日程）。17日→24日＝7日。
+#   マレスカ監督の就任は 6月29日（10/10 の取材メモ city_maresca より）。
+# **使わなかったもの**: 題材の一覧にあった「就任7戦7勝」。7勝は**リーグ戦だけ**で、就任後には 8/16 のコミュニティ・シールド（0-3）と
+#   10/14 のCL（PSGに2-4）の敗戦がある。『就任7連勝は歴代名将を上回る』（Foot Mercato）は元記事の主張で、本文の後半が読めていないので使わない（言わない）。
+#   台本は「リーグ戦で7試合7勝」までを言う（順位表で確かめた数字）。
+# 確度: 監督の発言は ESPN の記事（報道）。試合の数字・順位は ESPN の試合記録・順位表（Opta ベースの公式データ）。ハーランドの状態は「発表されていない」。
+# 反応: 0件。この件への書き込みは当たっていない（ESPN の記事に付いていたのはバナナ騒ぎの別記事への案内のみ）。作らない。approve は --no-voices で。
+# 写真: 配信写真（ESPN 記事の主写真は Getty）は取り込まない。assets/images/20261018_maresca_haaland_limp/ は Commons（CC BY-SA）。出典は credits.json。
+#   02＝マレスカ（2024年、チェルシー時代のジャケット。マンC時代の写真は Commons に無い。2.37倍に伸びるので本編・ショートの行には使っていない）、03＝ハーランド（2024年7月の撮影）。笑顔の写真（旧01）は怪我の話に合わないので外した。
+slot: premier
+date: "2026年10月18日"
+format: news
+no_main: true      # ニュースはショートだけ（2026-10-14）。締めで本編を案内しない
+people: [エーリング・ハーランド]
+
+short_style: Y
+short_hook_quote: 様子を見ましょう。
+short_question: ハーランドは、24日のアストン・ヴィラ戦に間に合うと思いますか。
+short_hook: ハーランド、足を引きずって退場。
+short_telops:
+  - {match: 足を引きずってピッチを出ました, text: シティ3対2イプスウィッチ/ハーランドは2得点のあと退場}
+  - {match: 終了の笛の前, text: 終了の笛の前に/ピッチを出てトンネルへ}
+  - {match: 大丈夫だと言いました, text: 試合後のマレスカ監督/「本人は大丈夫と言った」}
+  - {match: 情報はありません, text: マレスカ監督/「今は情報がない」}
+  - {match: 4人か5人, text: 10分のあいだに/4人か5人が痛んだと説明}
+  - {match: いちばん重いと見ている, text: 最も深刻と見ているのは/セメンヨ}
+  - {match: 7試合7勝, text: リーグ戦/7試合7勝}
+  - {match: 19得点7失点, text: 19得点7失点/勝ち点21で首位}
+  - {match: 勝ち点15, text: 2位アーセナル/6試合で勝ち点15}
+  - {match: 2対4の負け, text: 14日 CLでPSGに2対4}
+  - {match: 24日, text: 次は24日/アストン・ヴィラ戦}
+
+theme:
+  id: maresca_haaland_limp
+  league: england
+  league_name: プレミアリーグ
+  prefix: ""
+  title: ハーランド、足を引きずって退場。マレスカ監督が試合後に語ったこと
+  hook: ""
+  question: 足を引きずって下がったハーランドについて、マレスカ監督は何と言ったのか
+  takeaway: シティはリーグ戦7試合7勝、19得点7失点。ただ14日にCLで負け、17日に複数の負傷者が出た。次は24日で、ハーランドの状態はまだ発表されていない
+
+thumbnail:
+  line1: ハーランド、足を引きずり退場
+  line2: マレスカ監督「今は情報が無い」
+  tags: [エーリング・ハーランド, マンチェスター・シティ, マレスカ監督]
+  layout: face
+  photo: assets/images/20261018_maresca_haaland_limp/03_w.jpg
+  short_photo: assets/images/20261018_maresca_haaland_limp/03_v.jpg
+
+answer: 監督は『本人は大丈夫と言った。今は情報が無い』と話した。状態はまだ発表されていない
+watch: 24日のアストン・ヴィラ戦にハーランドが出るか
+
+sections:
+  - id: what
+    main: true
+    heading: 何が起きたか
+    tier: 報道
+    telop: ハーランド2得点のあと、足を引きずって退場
+    say:
+      - 17日、シティはイプスウィッチに3対2で勝ちました。ハーランドは2得点でした。
+      - 試合の終わりに、ハーランドは足を引きずってピッチを出ました。
+      - アディショナルタイムに、相手のクラークと激しく接触したあとのことです。
+      - 終了の笛の前にすでにピッチを出ていて、試合後はそのままトンネルへ向かいました。
+      - 試合のあと、マレスカ監督は次のように答えています。
+      - voice: マレスカ監督
+        text: 様子を見ましょう。
+        short_voice: true
+      - voice: マレスカ監督
+        text: エーリングは、大丈夫だと言いました。
+        cont: true
+      - voice: マレスカ監督
+        text: 今のところ、私のところに情報はありません。
+        cont: true
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50202449/enzo-maresca-plays-fears-erling-haaland-injury-fears-man-city-star-limps-off
+      - https://now.core.api.espn.com/v1/sports/news/50202449
+
+  - id: others
+    heading: 痛んだのはハーランドだけではなかった
+    tier: 報道
+    telop: 10分のあいだに4人か5人が痛んだ
+    say:
+      - 監督は、ハーランドを含む4人か5人が、10分のあいだに痛んだと話しました。
+      - コバチッチ、ヌネス、オライリー、セメンヨにも問題が出ています。
+      - 監督がいちばん重いと見ているのは、セメンヨです。
+      - voice: マレスカ監督
+        text: 待たなければならないのは、アントワーヌだけです。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50202449/enzo-maresca-plays-fears-erling-haaland-injury-fears-man-city-star-limps-off
+      - https://now.core.api.espn.com/v1/sports/news/50202449
+
+  - id: view
+    viewpoint: true
+    heading: 7戦7勝の裏で、負傷者が増えた
+    tier: 報道
+    telop: リーグ戦7試合7勝。次は24日
+    say:
+      - 見立てです。シティはリーグ戦で7試合7勝、19得点7失点。勝ち点21で首位です。
+      - 2位のアーセナルは、6試合で勝ち点15です。
+      - ただ、3日前の14日には、チャンピオンズリーグで負けました。
+      - パリ・サンジェルマンに、2対4の負けでした。
+      - 次のリーグ戦は24日、アストン・ヴィラ戦です。それまで、7日あります。
+      - ハーランドの状態は、まだ発表されていません。
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20261017
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/summary?event=401879259
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/teams/382/schedule
+short_title: "ハーランド、足を引きずって退場。マレスカ監督が試合後に語ったこと"

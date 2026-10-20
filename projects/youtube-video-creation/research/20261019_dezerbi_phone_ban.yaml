@@ -1,0 +1,134 @@
+# 取材メモ（2026年10月19日）トッテナム、デ・ゼルビが合宿の食事中のスマホを禁止（ニュースのショート。見せ方 X＋煽りの版）
+# 【煽りの版：何を足したか】（2026-10-17 ユーザー指定。同じ画面どうしで煽りの有無を比べる）
+#   煽る語は題と冒頭1行（題の読み上げ）だけ：「ついに」「何が起きているのか」。冒頭の強い一言（short_hook_word）は事実だけ「食事中スマホ禁止」。
+#   本文に煽る語は無い。事実は変えない。デ・ゼルビを貶さない（本人の言葉「特別なことではない」「軍隊のような規則はない」まで載せる）。答え（何を話し合ったか）は伏せる。
+# 取材: 2026-10-19。ESPN（PA 配信、2026-10-18 21:43Z）の本文を ESPN の記事API（now.core.api.espn.com/v1/sports/news/50213362）で全部読んだ。控え research/raw/20261019_dz_espn.txt・_api.json。
+#   ESPN のページ本体は 202 空で読めず、本文は API の story 欄。デイリー・メールの記事（リシャルリソンの同調）は本文を取得していないので使わない。
+# 数字（ESPN）：夏に10人が加入し、新戦力に3億8000万ポンド超（$5億500万）。6試合で勝ちなし。**10/18 に出した移籍期間の回（Transfermarkt のユーロ・加入18人）とは数え方が違うので、額は言わない**（「10人の補強」だけ）。
+# 数字（ESPN の順位表 2026-10-19 取得 research/raw/20261019_standings_espn.json）：トッテナム6試合 0勝3分3敗・勝ち点3・20位。コヴェントリー6試合 2勝4敗・勝ち点6・16位。
+# 試合：コヴェントリー戦は ESPN の日程で 2026-10-19 19:00 UTC＝**日本時間20日 午前4時**キックオフ、トッテナムのホーム。結果は出ていない（試合前の内容だけ）。
+#   コヴェントリーには日本人の坂元達裕（config/japan_abroad.yaml）。この記事に坂元の話は無いので、名前を出すのは「日本人がいる」までに留める。
+# 本人の言葉（ESPN の英語を訳した。言い換えない）：「朝食、昼食、夕食からスマホを外した。一緒にいるためだ。いまは、いつでもスマホだからだ」／「特別なことではない」／「軍隊のような規則はない。自由が好きだ」／マルセイユでも2度やった。
+#   ※英語の原文は "because now it is like [phone] all the time"（[phone] は記事の補い）。
+# 確度：デ・ゼルビの発言・合宿の内容は 報道（記者会見の発言を ESPN／PA が伝えたもの。クラブ発表は読んでいない）。順位・勝ち点は ESPN の順位表の数字（報道）。見立ては 背景。
+# 反応：作らない（0件）。
+# 写真：**トッテナムの姿の写真は Commons に無く、ESPN の写真は Getty（使わない）**。Commons の CC のみ：01〜03＝2021年シャフタール監督時代（Olya Shcherbitskaya／Dynamomania、CC BY-SA 4.0。**画像の下に撮影者名が焼き込まれている**＝CC の表示。01・02は記者会見の顔、03はタッチライン）、
+#   04＝2019年（TVSEI、CC BY 3.0。サッスオーロ監督時代のインタビュー）。どれも前のクラブの姿だが他に無い。マルベーリャ合宿・今季の写真は無い。
+slot: premier
+date: "2026年10月19日"
+format: news
+no_main: true
+people: [デ・ゼルビ, トッテナム, コヴェントリー, マディソン]
+
+short_style: X
+short_hook_word: 食事中スマホ禁止
+short_photos:
+  - assets/images/20261019_dezerbi_phone_ban_pair3/01_v.jpg
+  - assets/images/20261019_dezerbi_phone_ban_pair2/01_v.jpg
+short_question: デ・ゼルビの合宿の狙いは、コヴェントリー戦に出ると思いますか。
+short_hook: デ・ゼルビ、ついに食事中スマホ禁止。6戦勝ちなしのトッテナム、何が起きているのか。
+short_telops:
+  - {match: 食事中のスマホ, text: スペイン・マルベーリャの合宿で/食事中のスマホを禁止}
+  - {match: 外した, text: 朝食・昼食・夕食から/スマホを外した}
+  - {match: 勝ちなし, text: プレミア6試合/0勝3分3敗・勝ち点3}
+  - {match: 10人, text: 夏に10人が加入/新戦力に3億8000万ポンド超}
+  - {match: 軍隊, text: 「軍隊のような規則はない/自由が好きだ」}
+  - {match: マルセイユ, text: マルセイユでも/同じ形の合宿を2度}
+  - {match: 重要な話し合い, text: 練習のほかに話し合いも/全員が責任を持つこと}
+  - {match: マディソン, text: マディソンは先発できる状態/先発かはまだ分からない}
+  - {match: 午前4時, text: コヴェントリー戦は/日本時間20日午前4時}
+
+theme:
+  id: dezerbi_phone_ban
+  league: england
+  league_name: プレミアリーグ
+  prefix: ""
+  title: デ・ゼルビ、ついに食事中スマホ禁止。6戦勝ちなしのトッテナム、何が起きているのか
+  hook: ""
+  question: デ・ゼルビは、合宿で何を決めたのか
+  takeaway: 勝ち点3で20位のトッテナムが、合宿で食事中のスマホを外した。監督は「特別なことではない」と言う。相手のコヴェントリーは勝ち点6で16位
+
+thumbnail:
+  line1: デ・ゼルビ
+  line2: 食事中スマホ禁止
+  tags: [デ・ゼルビ, トッテナム]
+  layout: face
+  photo: assets/images/20261019_dezerbi_phone_ban_pair/01.jpg
+  short_photo: assets/images/20261019_dezerbi_phone_ban_pair3/01_v.jpg
+
+answer: 朝・昼・晩の食事からスマホを外し、一緒に過ごす時間を作った。監督は特別なことではないと言う
+watch: コヴェントリー戦のトッテナム
+
+sections:
+  - id: what
+    main: true
+    heading: 何が起きたか
+    tier: 報道
+    telop: トッテナム、合宿の食事中のスマホを禁止
+    say:
+      - トッテナムは、スペインのマルベーリャで合宿をしました。
+      - デ・ゼルビ監督が、その合宿で、食事中のスマホを禁止したと明かしました。
+      - voice: デ・ゼルビ監督
+        text: 朝食、昼食、夕食から、スマホを外した。一緒にいるためだ。
+        short_voice: true
+      - voice: デ・ゼルビ監督
+        text: いまは、いつでもスマホだからだ。
+        cont: true
+      - 練習のほかに、重要な話し合いも持ったそうです。
+      - 内容は、サッカーのこと、チームの状況、そして全員が責任を持つことでした。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50213362/roberto-de-zerbi-latest-tottenham-training-ploy-removed-phones-meals
+    quotes_from: ["ESPN https://www.espn.com/soccer/story/_/id/50213362/roberto-de-zerbi-latest-tottenham-training-ploy-removed-phones-meals"]
+
+  - id: why
+    heading: 監督は、なぜやったのか
+    tier: 報道
+    telop: 夏の10人加入で、一緒に過ごす時間が足りなかった
+    say:
+      - トッテナムは、この夏に10人を加えました。
+      - 新戦力に使った額は、3億8000万ポンドを超えます。
+      - ここまでのプレミア6試合は、0勝3分3敗で、勝ち点3の20位です。
+      - 監督は、同じ形の合宿を、マルセイユで2度やったと話します。
+      - voice: デ・ゼルビ監督
+        text: 特別なことではない。ただ、一緒に過ごす時間を増やすためだ。
+      - 夏の準備期間は、それができなかったといいます。
+      - 新しい選手が多く、W杯から戻った選手もいたからです。
+      - 家族と離れて3、4日を共に過ごすのは、普通で良いことだ、とも話しました。
+      - 選手の外出は、自由でした。
+      - voice: デ・ゼルビ監督
+        text: 軍隊のような規則はない。自由が好きだ。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50213362/roberto-de-zerbi-latest-tottenham-training-ploy-removed-phones-meals
+
+  - id: next
+    heading: コヴェントリー戦の前に
+    tier: 報道
+    telop: コヴェントリー戦は日本時間20日午前4時
+    say:
+      - 次は、本拠地でのコヴェントリー戦です。
+      - 日本時間の20日、午前4時にキックオフの予定です。
+      - 相手のコヴェントリーには、日本人の坂元達裕がいます。
+      - コヴェントリーは、マディソンの古巣でもあります。
+      - voice: デ・ゼルビ監督
+        text: 先発できる状態だ。ただ、先発させるかはまだ分からない。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50213362/roberto-de-zerbi-latest-tottenham-training-ploy-removed-phones-meals
+
+  - id: view
+    viewpoint: true
+    heading: 20位と16位、勝ち点3の差
+    tier: 背景
+    telop: 20位と16位、勝ち点の差は3
+    say:
+      - 見立てです。勝ち点は、トッテナムが3、コヴェントリーが6。
+      - どちらも、6試合を終えています。
+      - 順位は20位と16位。デ・ゼルビ監督にとって、勝てば勝ち点で並べる相手です。
+      - 合宿で一緒に過ごす時間を増やしたことが、試合でどう出るか。
+      - このコヴェントリー戦が、最初の答え合わせになります。
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/v2/sports/soccer/eng.1/standings
+short_title: "デ・ゼルビ、ついに食事中スマホ禁止。6戦勝ちなしのトッテナム、何が起きているのか"

@@ -1,0 +1,144 @@
+# 取材メモ（2026年10月20日）シティの処分の見立て（ニュースのショート。見せ方 X＝冒頭1秒に弱い印の一言）
+# **憶測の報道。確度は未確認。**記者の見立てであって、リーグの決定でも、クラブの発表でもない。「降格する」と言い切らない。題・冒頭・本文で憶測と断る。
+# 取材: 2026-10-20。requests（ブラウザUA）で本文を全部読んだ。控え research/raw/20261020_city_dm_holt.txt（デイリー・メール原文）・_city_abola.txt（A Bola）・
+#   _city_pl_statement.html（PL 声明 9/29）・_city_pl_appeal_stmt.html（PL 声明 10/2）。
+#   ・デイリー・メール（19日公開）オリヴァー・ホルト「Insiders tell me Man City are set to face huge points deduction which will guarantee relegation - but they won't be sent down to League Two. And that seems fair, writes OLIVER HOLT」
+#       **署名入りのコラム（意見記事）**。出所は "sources close to the process"（手続きに近い関係者）と "Soundings from insiders"（内部の打診）。記事の言葉:
+#       ①「It is unlikely ... City will face a doomsday scenario of being expelled from the Premier League and forced to start again in League Two」（4部への追放は考えにくい）
+#       ②「It is thought that the Premier League are pressing for City's punishment to be announced before the result of their appeal, which is unlikely to be decided before the end of January」（リーグは控訴の結果より前に処分を発表したい意向と『考えられている』。控訴の結論は1月末前は出にくい）
+#       ③「Soundings from insiders suggest the most likely punishment is a swingeing points deduction which will ensure City's relegation to the Championship, plus a huge fine」（最も可能性が高いのは、シティの降格を確実にする重い勝ち点剥奪＋巨額の罰金）
+#       ④「It is also possible that the punishment would include a further points deduction that would effectively confine City to the Championship for at least one more season」（さらに少なくとももう1季は2部に留める勝ち点剥奪も『ありうる』）
+#       記事は「City were found guilty ... of the vast majority of 115 charges」と書く。**件数は使わない**（A Bola 115・Foot Mercato 114 と食い違い、PL の声明は件数を言わない）。
+#       シティは今季リーグ戦7戦全勝、アーセナルは3点差（記事）。ESPN の順位表（試合記録、2026-10-19）でも シティ7勝・勝ち点21、アーセナル18。
+#   ・A Bola（19日 14:19Z）は、上のコラムを引いて見出しで「Manchester City vai descer de divisão」（降格する）と**言い切っている**が、本文は「Segundo as fontes citadas pelo jornalista britânico, o cenário mais provável é...」で、
+#       情報源は記者が引いた匿名の関係者。**見出しの言い切りは使わない**。
+#   ・Foot Mercato・AS は本文を読めていない（検索で見つからず）。題材の一覧の記述（114件）は使わない。
+# **公式の現状**（PL 公式で確認）:
+#   ・9/29 PL 声明: 独立委員会は、財務規則違反の2009/10〜2017/18の9季について **財務の告発はすべて有罪、調査への非協力は4つのうち3つ** を認定（"three of the four alleged breaches were upheld"）。
+#   ・10/2 PL 声明: シティが控訴（"Manchester City FC has appealed the decision of an independent Commission"）。控訴の委員会の審理は結果の公表が許されるまで非公開。
+#       注記: 委員会は罰に **広い裁量（broad discretion）**。例は罰金・勝ち点の剥奪・ほかの競技上の罰（"fines, points deductions and other sporting sanctions"）。控訴の委員会は控訴を認める・退ける・命令を変えることができる。
+#   ・**罰（処分の中身）は PL の公式発表に無い**（PL のニュースの一覧にも見当たらない。2026-10-20 確認）。デイリー・メールも「まだ処分は出ていない」前提で書く。
+#   ・前例（PL 公式）: エヴァートン 10点 → 控訴で6点（2024-02-26）、フォレスト 4点（控訴は退けられ維持、2024-05-07）。台本はこの2つだけ。
+# **この回で言わないこと**: 勝ち点を何点という数字（記事に無い・情報源の一覧にも無い）、確率、「降格する」、「4部（リーグ・ツー）」への追放が起きるような言い方（記者が『考えにくい』と書いた事実だけ）、シティを貶す語、
+#   35クラブへの影響の試算（10/18 の回で出した）、財政の数字（10/17 の回）、エンブレムの話。
+# 重ならないように: 10/2・10/3 の「判決・控訴」の回は件数・金額・告発の経緯を言った。この回は **処分の見立てと、いま決まっていること** に絞る。
+# 本人の言葉: 無し（誰かの発言は使わない題材）。反応: 0件（作らない）。approve は --no-voices で。
+# 確度: 見立て＝ **未確認**（デイリー・メール単独、匿名の関係者）。いま決まっていること＝ **確定**（PL 公式）。順位は試合記録。
+# 写真: Commons（Ank Kumar、CC BY-SA 4.0）エティハド・スタジアムの外観・客席・ベンチ席の4枚（人物は写っていない）。10/17・10/18・10/20 のスタジアムの回とは別ファイル（06・16 などは使っていない）。出典は credits.json。
+slot: premier
+date: "2026年10月20日"
+format: news
+no_main: true      # ニュースはショートだけ（2026-10-14）。締めで本編を案内しない
+people: [マンチェスター・シティ]
+
+short_style: X
+short_hook_word: 記者の見立て
+
+short_question: シティの処分は、どこまで重くなると思いますか。
+short_hook: マンC、処分の見立て。まだ決定ではありません。
+short_telops:
+  - {match: 見立てです, text: イギリス紙の記者の見立て/リーグの決定ではない}
+  - {match: クラブの発表でもありません, text: リーグの決定でも/クラブの発表でもない}
+  - {match: 重い罰金, text: 見立て/重い罰金＋大きな勝ち点剥奪}
+  - {match: 2部に落ちるほど, text: 「来季は2部に落ちるほど」/という見立て}
+  - {match: 考えにくい, text: 4部への追放は/考えにくいとも書く}
+  - {match: 財務の告発, text: 9月29日 独立委員会/財務の告発はすべて有罪}
+  - {match: 控訴したと発表, text: 10月2日/シティが控訴}
+  - {match: 幅広い裁量, text: 罰は委員会の裁量/罰金・勝ち点の剥奪など}
+  - {match: 公式にはまだ出ていません, text: 罰の内容は/公式に発表されていない}
+  - {match: 勝ち点21, text: シティ7戦全勝・勝ち点21/2位アーセナル18}
+  - {match: 10点から6点, text: 前例 エヴァートン10点→6点/フォレスト4点}
+  - {match: 1月末, text: 控訴の結論は/1月末までは出にくい}
+
+theme:
+  id: city_demotion_speculation
+  league: england
+  league_name: プレミアリーグ
+  prefix: ""
+  title: マンC、2部に落ちる規模の処分は本当か。記者の見立てと、決まっていること
+  hook: ""
+  question: シティの処分について、記者は何を見立て、公式には何が決まっているのか
+  takeaway: 記者の見立ては「重い罰金と、2部に落ちる規模の勝ち点剥奪」。ただし1人の記者の見立てで、罰は未発表、シティは控訴中。公式の前例は6点と4点
+
+thumbnail:
+  layout: scene
+  line1: マンC 処分は未発表
+  line2: 記者「2部に落ちる規模」
+  photo: assets/images/20261020_city_demotion_speculation/01_w.jpg
+  short_photo: assets/images/20261020_city_demotion_speculation/01_v.jpg
+  tags: [マンチェスター・シティ, プレミアリーグ]
+
+answer: 見立ては1人の記者のもの。公式には罰が未発表で、シティは控訴中
+watch: シティの控訴と、罰の発表
+
+sections:
+  - id: what
+    main: true
+    heading: 何が報じられたか
+    tier: 未確認
+    telop: シティの処分について、記者の見立て
+    say:
+      - 見立てです。イギリスの新聞のコラムが、シティの処分について書きました。
+      - 書いたのは、オリヴァー・ホルト記者です。
+      - ただし、リーグの決定でも、クラブの発表でもありません。
+      - 手続きに近い関係者の話をもとにした、見立てです。
+      - 最も可能性が高いのは、重い罰金と、大きな勝ち点の剥奪。
+      - 来季は2部に落ちるほどの、大きな剥奪だと書いています。
+      - 一方で、4部への追放は、考えにくいとも書いています。
+    official: false
+    sources:
+      - https://www.dailymail.com/sport/football/article-16220009/Manchester-City-points-deduction-relegation-Oliver-Holt.html
+      - https://www.abola.pt/noticias/avancam-em-inglaterra-manchester-city-vai-descer-de-divisao-2026101914140738880
+
+  - id: official
+    heading: 公式に決まっていること
+    tier: 確定
+    telop: 9月29日に認定、10月2日にシティが控訴
+    card:
+      type: table
+      title: いま公式に決まっていること
+      columns: [日付, できごと]
+      rows:
+        - ["9月29日", "独立委員会が違反を認定"]
+        - ["10月2日", "シティが控訴"]
+        - ["罰の内容", "まだ発表されていない"]
+    say:
+      - 9月29日、プレミアリーグの独立委員会が、シティの違反を認定しました。
+      - 財務の告発は、すべて有罪。調査への非協力は、4つのうち3つです。
+      - 10月2日、リーグは、シティが控訴したと発表しました。
+      - 控訴の審理は、結果が公表されるまで、非公開です。
+      - 罰を決める委員会には、罰金や勝ち点の剥奪などを選べる、幅広い裁量があります。
+      - ただし、罰の内容は、公式にはまだ出ていません。
+    official: true
+    sources:
+      - https://www.premierleague.com/en/news/4727779/premier-league-statement-manchester-city-fc
+      - https://www.premierleague.com/en/news/4729207/premier-league-statement-manchester-city-fc-appeal-decision-of-independent-commission-02-october-2026
+
+  - id: view
+    viewpoint: true
+    heading: 見立てを、数字と並べる
+    tier: 背景
+    telop: 前例は6点と4点。控訴の結論は1月末まで出にくい
+    card:
+      type: table
+      title: 前例と今季（シティ）
+      columns: [項目, 数字]
+      rows:
+        - ["エヴァートン（控訴後）", "6点"]
+        - ["フォレスト", "4点"]
+        - ["シティの勝ち点（7戦）", "21"]
+        - ["2位アーセナル", "18"]
+    say:
+      - 見立ての側から、数字を並べます。
+      - 公式の前例は、エヴァートンが10点から6点、フォレストが4点です。
+      - 降格を左右する規模なら、前例とは、別の大きさになります。
+      - シティは今季7戦全勝、勝ち点21で首位。2位アーセナルは18です。
+      - 記者は、控訴の結論は1月末までには出にくい、と書いています。
+      - リーグは、控訴の結果より前に、処分を出したい意向だと言われています。
+      - ただ、どちらも1人の記者の見立てで、確かめられた情報ではありません。
+    official: false
+    sources:
+      - https://www.dailymail.com/sport/football/article-16220009/Manchester-City-points-deduction-relegation-Oliver-Holt.html
+      - https://www.premierleague.com/en/news/3912574
+      - https://www.premierleague.com/en/news/3999776
+short_title: "マンC、2部に落ちる規模の処分は本当か。記者の見立てと、決まっていること"

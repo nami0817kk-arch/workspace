@@ -1,0 +1,592 @@
+# 移籍の深掘り 第7回：トッテナムの2026年夏（「1クラブの移籍期間」の回）。10/18 作成。
+# 材料の控え：research/raw/20261018_transfer_tottenham_window.md。**材料から出ない。**
+#
+# **角度：「払った額は世界3位。売って戻った額は、何割か」。**
+#   Transfermarkt の世界の一覧（2026年夏・支出順・1ページ目＝支出の上位25クラブ）で、3位トッテナム 366.35（加入18）／収入 164.25（退団19）／差し引き −202.10。
+#   **10/17 のチェルシーの回のメモにあった「戻った割合 約43%」は、貸し出し料を除いた売りだけ（157.05÷366.35＝42.9%）の暫定値。**
+#   貸し出し料（7.20）を足した一覧の収入 164.25 で数え直すと **44.8%（45%）**。台本は 45% を使い、売りだけだと 43% と区別して言う（言うのは 45% だけ）。
+#
+# **数字の確度。**移籍金は Transfermarkt の集計で**確度は「報道」**。
+#   - **クラブ公式（tottenhamhotspur.com）の発表文を読んだ：買い（トナーリ・M・フェルナンデス・サビオ・ファン・ヘッケ・アダラビオヨ・セネシ・ドゥブラフカ・ロバートソン）、
+#     借り（マルモウシュ・ムドリク）、売り（ヴシュコヴィッチ・ロメロ・スペンス・ランクシャー・フィリップス）、貸し出し（ダンソ・サール・ドラグシン）。額は1つも書かれていない。**
+#     ヴェリス・ソロモン・デヴァインの退団は公式の記事を読めていない（集計だけ）→ 台本では「ほか5人」に入れ、個別には触れない。
+#   - 報道の額は**ポンド**：トナーリ「最大1億ポンド・最初の払い9250万」（ロイター配信）、M・フェルナンデス8500万（Sky）、サビオ7500万＋出来高1000万（Sky）、
+#     ファン・ヘッケ5200万・固定で出来高なし（ESPN）、アダラビオヨ700万＋出来高（PA）、
+#     売り：ヴシュコヴィッチ 固定4600万＋出来高400万（Sky）、ロメロ 約3420万＝4000万ユーロ・出来高込み・次の売却益の15%（Sky）、スペンス 3000万・総額・10%（Sky）。
+#   - **集計のユーロは、報じられた「最初の払い」のポンドの約1.15〜1.17倍に当たる**（M・フェルナンデス99.00÷85＝1.165、サビオ87.70÷75＝1.169、ファン・ヘッケ60.00÷52＝1.154、ヴシュコヴィッチ54.00÷46＝1.174、トナーリ108.00÷92.5＝1.168）。
+#     つまり集計の額は出来高を含まない最初の払いに近い。**合わない1件：アダラビオヨ（報道は700万ポンド＋出来高、集計は1165万ユーロ）、スペンス（報道3000万ポンドの総額、集計は3000万ユーロ）。**台本はそのまま「合わない」と言う。
+#   - **固定かボーナス込みかは、クラブの発表に無い。**買い取りオプション・義務の額は、報道で割れている（サール：2750万ユーロ、ドラグシン：1750万か2500万ユーロ）ので額は言わない。
+#   - 貸し出し料3件（2.90＋2.80＋1.50）は収入164.25に入っている。借りた2人（マルモウシュ・ムドリク）は額に入っていない。
+#
+# **自分で数えた数**（百万ユーロ。足し算で一覧と一致を確かめた）:
+#   払った額 108.00＋99.00＋87.70＋60.00＋11.65＝366.35 ← 一覧と一致（移籍金の付いた加入5人。ロバートソン・セネシ・ドゥブラフカは移籍金なし）。
+#   戻った額 売り8人 54.00＋33.00＋30.00＋11.70＋9.00＋8.20＋5.85＋5.30＝157.05、貸し出し料3件 2.90＋2.80＋1.50＝7.20 → 計 164.25 ← 一覧と一致。
+#   差し引き 164.25−366.35＝−202.10 ← 一覧と一致。戻った割合 164.25÷366.35＝44.83%（45%）／売りだけ 157.05÷366.35＝42.87%（43%）／戻らなかった 202.10（55%）。
+#   買い上位3人 108.00＋99.00＋87.70＝294.70 → ÷366.35＝80.4%（80%）。売り上位3人 54＋33＋30＝117 → ÷157.05＝74.5%（約74%。0.74498）／残り5人 40.05。
+#   7月6日までに買った3人（ファン・ヘッケ6/18・M・フェルナンデス7/2・トナーリ7/6）60＋99＋108＝267.00 → ÷366.35＝72.9%（73%）／あとの2人（サビオ8/25・アダラビオヨ9/1）99.35。
+#   8月15日（クラブの発表日）に売った3人（ロメロ・スペンス・フィリップス）33＋30＋8.20＝71.20 → ÷157.05＝45.3%（45%）。
+#   市場価値（Transfermarkt の移籍の記録の details.marketValue＝移籍時。13人とも API で確認）：
+#     買い5人 80＋50＋35＋45＋16＝226 → 366.35÷226＝1.621（約1.62倍）／サビオ 87.70÷35＝2.506（約2.5倍）／線より下は1人（アダラビオヨ 16→11.65）。
+#     売り8人 60＋50＋40＋7＋4＋7＋8＋8＝184 → 157.05÷184＝0.854（約0.85倍）／線より下5人（ヴシュコヴィッチ・ロメロ・スペンス・ソロモン・デヴァイン）・上3人（ランクシャー・ベリス・フィリップス）。
+#   買ったトナーリ108.00は売ったヴシュコヴィッチ54.00のちょうど2倍（108÷54＝2.0）。
+#   為替：ECB 参照相場 2026-10-16＝1ユーロ177.82円（再確認）。202.10×177.82＝35,937百万円＝約359億円。
+#   プレミア20クラブの差し引きのマイナス（大きい順）：リヴァプール −233.40／トッテナム −202.10／イプスウィッチ −201.29／シティ −189.18（トッテナムは2番目。3位との差 0.81）。
+#   支出の上位4クラブの戻った割合：シティ 337.02÷526.20＝64.0%／チェルシー 447.80÷407.48＝109.9%（110%）／トッテナム 44.8%／ニューカッスル 279.10÷313.00＝89.2%（89%）。
+#   次の窓：プレミアリーグ公式 — 夏は6/15〜9/1 23:00 BST、冬は2027/1/1〜2/1。
+# 数字の重なり対策：チェルシー（10/17）は『447.80』『4030万』『82%』『63%』『1.31倍』『1.27倍』を使った。こちらは別の数字・別の問い。
+#   10/16 のトッテナムの財政の回は 2025年6月期の決算（ポンド）。こちらは今夏の移籍だけ。決算の数字（赤字・借入・収入5億6530万ポンド）には触れない。
+# 板：①waterfall・convert・table（赤字の大きい順） ②table・document・convert・calc・table（借り）③table・document・calc・table（貸し出し）・duel ④timeline・calc ⑤scatter 2枚・calc・table（赤ペン）。
+# 写真（10/18 取得）：クラブ公式（tottenhamhotspur.com の記事の主写真）。トナーリ・M・フェルナンデス・サビオ・ファン・ヘッケ・ヴシュコヴィッチ・ロメロ・スペンス。出典は assets/images/20261018_transfer_tottenham/credits.json。
+# 声：1件も無い。クラブ公式発表の文は文書カードで出した。voice_min: 0。
+format: news
+voice_min: 0
+slot: other_1
+date: 2026年10月18日
+series: 移籍の深掘り
+people:
+- トッテナム
+- サンドロ・トナーリ
+- マテウス・フェルナンデス
+- ルカ・ヴシュコヴィッチ
+- クリスティアン・ロメロ
+- ジェド・スペンス
+theme:
+  end_bg: assets/images/20261018_transfer_tottenham/b01_tonali_w.jpg
+  id: transfer_tottenham_window
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: トッテナム
+  title: トッテナム、今夏の移籍で払った額は世界3位。売って戻った額は、何割か
+  question: 今夏のトッテナムの移籍期間で、払った額のうち何割が売って戻り、差し引きはどうなったのか
+  lead: この夏、世界で3番目に多く払ったクラブ。
+  takeaway: トッテナムが今夏に払った額は3億6635万ユーロで世界3位。選手を売って戻った額は1億6425万ユーロで、払った額の45%、差し引きは2億210万ユーロ（およそ359億円）のマイナス。プレミアでマイナスが大きいのはリヴァプールに次いで2番目。買ったのは移籍金のある5人で、上の3人（トナーリ・M・フェルナンデス・サビオ）が80%、7月6日までに73%が決まった。売ったのは8人で、上の3人（ヴシュコヴィッチ・ロメロ・スペンス）が約74%、8月15日の1日で45%。買った5人は移籍直前の推定の市場価値の約1.62倍、売った8人は約0.85倍。支出の上位4クラブで戻った割合が最も低いのはトッテナム（シティ64%・ニューカッスル89%・チェルシー110%）。クラブの発表に額は無く、額は報じられた移籍金の集計で、報道はポンド（集計はユーロ）。固定かボーナス込みかは公表されていない。借りたマルモウシュは来夏に買い取る義務があり、報道では最低5000万ポンドで、この集計には入っていない。冬の窓は2027年1月1日に開く
+  opening_image: assets/images/20261018_transfer_tottenham/b01_tonali_w.jpg
+  bgm: assets/audio/bgm_calm.wav
+thumbnail:
+  layout: versus
+  photos:
+  - assets/images/20261018_transfer_tottenham/b01_tonali_w.jpg
+  - assets/images/20261018_transfer_tottenham/b05_vuskovic_w.jpg
+  names:
+  - トナーリ（買った）
+  - ヴシュコヴィッチ（売った）
+  numbers:
+  - 1億800万€
+  - 5400万€
+  line1: トッテナムの今夏の収支
+  line2: 戻ったのは45%
+  short_photo: assets/images/20261018_transfer_tottenham/b01_tonali_v.jpg
+  crests:
+  - トッテナム
+  tags:
+  - トッテナム
+  - 移籍金
+  - プレミアリーグ
+  - トッテナム・ホットスパー・スタジアム
+  - 移籍の深掘り
+sections:
+- id: money
+  main: true
+  heading: 払った額は世界3位。売って戻った額は、何割か
+  tier: 報道
+  telop: 払った額は世界3位。戻ったのは45%で、差し引きは大きなマイナス
+  narrator: 解説
+  card: &flow
+    type: waterfall
+    title: 今夏の移籍で動いた額
+    start: [払った額, 366.35]
+    steps:
+    - [売って戻った額, -164.25]
+    total: [戻らなかった額, 202.10]
+    unit: 百万ユーロ
+  say:
+  - text: 戻ったのは45%。差し引きは、プレミアで2番目に大きいマイナス。
+    short_only: true
+    image: assets/images/20261018_transfer_tottenham/a01_stadium_w.jpg
+  - text: 今夏の払った額は、およそ3億6635万ユーロ。世界で3番目です。
+    emph: true
+    image: assets/images/20261018_transfer_tottenham/a01_stadium_w.jpg
+    card:
+      <<: *flow
+      highlight: 払った額
+  - text: 出どころは、移籍サイトの集計です。クラブの発表に、額はありません。
+    card:
+      <<: *flow
+      highlight: 払った額
+  - text: では、売って戻った額は。1億6425万ユーロです。
+    image: assets/images/20261018_transfer_tottenham/a02_stadium_w.jpg
+    card:
+      <<: *flow
+      highlight: 売って戻った額
+  - text: 払った額の45%。差し引き、つまり戻らなかった分は、2億210万ユーロです。
+    emph: true
+    card:
+      <<: *flow
+      highlight: 戻らなかった額
+  - text: この45%には、貸した選手の料金3件を含む。売っただけなら、43%。
+    card: *flow
+  - text: 円にすると、いくらか。欧州中央銀行の10月16日の目安は、1ユーロ177.8円。
+    card: &yen
+      type: convert
+      title: 戻らなかった額を円に
+      from: ['2億210万', ユーロ, 払った額から戻った額を引く]
+      to: [約359億, 円, 10月16日の為替]
+      via: 1ユーロ＝177.82円
+  - text: 戻らなかった分は、およそ359億円です。
+    card: *yen
+  - text: プレミアのクラブを、差し引きのマイナスが大きい順に並べます。
+    image: assets/images/20261018_transfer_tottenham/a01_stadium_w.jpg
+    card: &net
+      type: table
+      title: プレミアの差し引き（マイナスの大きい順）
+      columns: ['クラブ', '払った額', '戻った額', '差し引き']
+      rows:
+      - [リヴァプール, '264.60', '31.20', '−233.40']
+      - [トッテナム, '366.35', '164.25', '−202.10']
+      - [イプスウィッチ, '220.65', '19.36', '−201.29']
+      - [マンチェスター・C, '526.20', '337.02', '−189.18']
+  - text: トッテナムは、リヴァプールに次いで2番目です。
+    emph: true
+    card:
+      <<: *net
+      highlight_row: 1
+  - text: 中身を見ます。まず、買った側から。
+    card: none
+    image: assets/images/20261018_transfer_tottenham/a01_stadium_w.jpg
+  sources:
+  - https://www.transfermarkt.com/transfers/einnahmenausgaben/statistik/plus/1?ids=a&saison_id=2026&saison_id_bis=2026&w_s=s
+  - https://www.transfermarkt.com/premier-league/einnahmenausgaben/wettbewerb/GB1/plus/1?ids=a&saison_id=2026&saison_id_bis=2026&w_s=s
+  - https://www.transfermarkt.com/tottenham-hotspur/transfers/verein/148/plus/1?saison_id=2026&pos=&detailed=1&w_s=s
+  - https://data-api.ecb.europa.eu/service/data/EXR/D.JPY.EUR.SP00.A
+- id: spent
+  heading: 買って払ったのは5人。額の大半は、上の3人
+  tier: 報道
+  telop: 移籍金のある5人で3億6635万ユーロ。上の3人で80%
+  narrator: 解説
+  card: &inlist
+    type: table
+    title: 払った額の大きい順（移籍金の付いた5人）
+    columns: ['選手', '前のクラブ', '百万ユーロ']
+    rows:
+    - &i1 [サンドロ・トナーリ, ニューカッスル, '108.00']
+    - &i2 [M・フェルナンデス, ウェストハム, '99.00']
+    - &i3 [サビオ, マンチェスター・C, '87.70']
+    - &i4 [ファン・ヘッケ, ブライトン, '60.00']
+    - &i5 [アダラビオヨ, チェルシー, '11.65']
+    - &i6 [ほか3人（移籍金なし）, リヴァプールほか, '0.00']
+    - &i7 [借りた2人（額に入らない）, マンチェスター・Cほか, '－']
+  say:
+  - text: トッテナムが買って払ったのは、移籍金のついた5人。売った8人より、少ない人数。
+    image: assets/images/20261018_transfer_tottenham/b01_tonali_wr.jpg
+    card: *inlist
+  - text: いちばん高いのは、トナーリ。1億800万ユーロ。報道では、クラブの新記録。
+    emph: true
+    image: assets/images/20261018_transfer_tottenham/b01_tonali_wr.jpg
+    card: {type: table, title: 払った額の大きい順（移籍金の付いた5人）, columns: ['選手', '前のクラブ', '百万ユーロ'], rows: [*i1, *i2, *i3, *i4, *i5, *i6, *i7], highlight_row: 0}
+  - text: クラブが出した文を、訳します。
+    card: &doc_tonali
+      type: document
+      label: トッテナム 公式発表（7月6日）トナーリ加入の文（訳）
+      paragraphs:
+      - サンドロ・トナーリの獲得を発表する。労働許可の取得が条件となる。
+      - 26歳のイタリア代表のミッドフィールダーは、ニューカッスル・ユナイテッドから加わる。
+      highlight:
+      - 労働許可
+      - 26歳
+  - text: 書かれているのは、年齢と、労働許可が条件であること。額は、ありません。
+    card: *doc_tonali
+  - text: ポンドの報道では、最大で1億ポンド。最初の払いは9250万ポンドでした。
+    card: &gbp
+      type: convert
+      title: ポンドの報道と、ユーロの集計
+      from: ['9250万', ポンド, 報じられた最初の払い]
+      to: ['1億800万', ユーロ, 集計の額]
+      via: 集計の額÷最初の払い＝約1.17
+  - text: 集計の額は、最大額ではなく、最初の払いに近い数字です。
+    card: *gbp
+  - text: 次は、M・フェルナンデス。9900万ユーロ。トナーリより、900万少ない。
+    emph: true
+    image: assets/images/20261018_transfer_tottenham/b02_fernandes_wr.jpg
+    card: {type: table, title: 払った額の大きい順（移籍金の付いた5人）, columns: ['選手', '前のクラブ', '百万ユーロ'], rows: [*i1, *i2, *i3, *i4, *i5, *i6, *i7], highlight_row: 1}
+  - text: 報じられた額は、8500万ポンド。21歳の中盤です。
+    card: {type: table, title: 払った額の大きい順（移籍金の付いた5人）, columns: ['選手', '前のクラブ', '百万ユーロ'], rows: [*i1, *i2, *i3, *i4, *i5, *i6, *i7], highlight_row: 1}
+  - text: 3人目は、サビオ。マンチェスター・シティから、8770万ユーロ。
+    image: assets/images/20261018_transfer_tottenham/b03_savio_wr.jpg
+    card: {type: table, title: 払った額の大きい順（移籍金の付いた5人）, columns: ['選手', '前のクラブ', '百万ユーロ'], rows: [*i1, *i2, *i3, *i4, *i5, *i6, *i7], highlight_row: 2}
+  - text: 報道は、最初の払いが7500万ポンド。
+    card: {type: table, title: 払った額の大きい順（移籍金の付いた5人）, columns: ['選手', '前のクラブ', '百万ユーロ'], rows: [*i1, *i2, *i3, *i4, *i5, *i6, *i7], highlight_row: 2}
+  - text: 出来高、つまり条件つきの上乗せは、最大で1000万ポンド。
+    card: {type: table, title: 払った額の大きい順（移籍金の付いた5人）, columns: ['選手', '前のクラブ', '百万ユーロ'], rows: [*i1, *i2, *i3, *i4, *i5, *i6, *i7], highlight_row: 2}
+  - text: この3人だけで、払った額の80%に当たります。
+    emph: true
+    card: &calc_top3
+      type: calc
+      title: 買った額のうち、上の3人の割合
+      terms:
+      - ['2億9470万ユーロ', 上の3人]
+      - ['3億6635万ユーロ', 買った5人の合計]
+      - [約80%, 3人の割合]
+      ops: ['÷', ＝]
+  - text: 4人目は、ファン・ヘッケ。ブライトンから、6000万ユーロ。
+    image: assets/images/20261018_transfer_tottenham/b04_vanhecke_w.jpg
+    card: none
+  - text: 全額が最初の払いで、5200万ポンド。出来高は、ありません。
+    image: assets/images/20261018_transfer_tottenham/a01_stadium_w.jpg
+    card: {type: table, title: 払った額の大きい順（移籍金の付いた5人）, columns: ['選手', '前のクラブ', '百万ユーロ'], rows: [*i1, *i2, *i3, *i4, *i5, *i6, *i7], highlight_row: 3}
+  - text: 5人目は、アダラビオヨ。チェルシーから、1165万ユーロ。
+    card: {type: table, title: 払った額の大きい順（移籍金の付いた5人）, columns: ['選手', '前のクラブ', '百万ユーロ'], rows: [*i1, *i2, *i3, *i4, *i5, *i6, *i7], highlight_row: 4}
+  - text: この1人だけ、報道と集計が合いません。報道は700万ポンドと出来高です。
+    card: {type: table, title: 払った額の大きい順（移籍金の付いた5人）, columns: ['選手', '前のクラブ', '百万ユーロ'], rows: [*i1, *i2, *i3, *i4, *i5, *i6, *i7], highlight_row: 4}
+  - text: 移籍金なしで、3人が加わりました。ロバートソン、セネシ、ドゥブラフカ。
+    card: {type: table, title: 払った額の大きい順（移籍金の付いた5人）, columns: ['選手', '前のクラブ', '百万ユーロ'], rows: [*i1, *i2, *i3, *i4, *i5, *i6, *i7], highlight_row: 5}
+  - text: そして、借りた2人。マルモウシュとムドリクは、額に入っていません。
+    image: assets/images/20261018_transfer_tottenham/a02_stadium_w.jpg
+    card: {type: table, title: 払った額の大きい順（移籍金の付いた5人）, columns: ['選手', '前のクラブ', '百万ユーロ'], rows: [*i1, *i2, *i3, *i4, *i5, *i6, *i7], highlight_row: 6}
+  - text: マルモウシュには、来夏に買い取る義務が付いています。
+    emph: true
+    card: &doc_marmoush
+      type: document
+      label: トッテナム 公式発表（8月27日）マルモウシュ加入の文（訳）
+      paragraphs:
+      - エジプト代表のフォワード、オマル・マルモウシュの1年間の貸し出しでの獲得を発表する。
+      - 契約には、来夏に完全移籍へ切り替える義務が含まれる。
+      highlight:
+      - 1年間
+      - 来夏
+      - 義務
+  - text: 義務はクラブの発表にあります。額は、ありません。
+    card: *doc_marmoush
+  - text: 報道では、買い取りは最低5000万ポンド。出来高は、別に1000万ポンドまで。
+    card: *doc_marmoush
+  - text: ムドリクは貸し出しだけ。買い取りの約束は、クラブの発表に書かれていません。
+    card: *doc_marmoush
+  - text: ポンドの報道とユーロの集計は、足せません。この額は、今夏の合計の外に置きます。
+    card: none
+    image: assets/images/20261018_transfer_tottenham/b02_fernandes_wr.jpg
+  sources:
+  - https://www.transfermarkt.com/tottenham-hotspur/transfers/verein/148/plus/1?saison_id=2026&pos=&detailed=1&w_s=s
+  - https://www.tottenhamhotspur.com/news/1076467/welcome-sandro-tonali-makes-the-move-to-n17
+  - https://www.tottenhamhotspur.com/news/1076042/mateus-fernandes-signs
+  - https://www.tottenhamhotspur.com/news/1086712/savio-joins-from-manchester-city
+  - https://www.tottenhamhotspur.com/news/1073998/van-hecke-joins-from-brighton
+  - https://www.tottenhamhotspur.com/news/1088054/welcome-tosin-adarabioyo-joins-from-chelsea
+  - https://www.tottenhamhotspur.com/news/1087177/omar-marmoush-arrives-on-loan
+  - https://www.tottenhamhotspur.com/news/1071931/robertson-signing-secured
+  - https://www.tottenhamhotspur.com/news/1072863/senesi-switch-sealed
+  - https://www.tottenhamhotspur.com/news/1074879/dubravka-deal-completed
+  - https://www.thestar.com.my/sport/football/2026/07/06/soccer-spurs-sign-tonali-for-a-club-record-100-million
+  - https://www.skysports.com/football/news/11661/13559281/mateus-fernandes-transfer-news-tottenham-agree-85m-deal-ahead-of-manchester-united-for-west-ham-midfielder
+  - https://www.skysports.com/football/news/13575398/savio-transfer-news-tottenham-sign-winger-from-manchester-city-in-85m-deal
+  - https://global.espn.com/football/story/_/id/49083813/tottenham-agree-52m-deal-sign-brighton-jan-paul-van-hecke-sources-transfers
+  - https://www.echolive.ie/nationalsport/arid-41905300.html
+  - https://skysports.com/football/news/12691/13577796/omar-marmoush-transfer-news-tottenham-sign-man-city-forward-on-loan-with-60m-obligation-to-buy
+- id: sold
+  heading: 売ったのは8人。戻った額の74%は、上の3人
+  tier: 報道
+  telop: 売った8人で1億5705万ユーロ。上の3人で約74%
+  narrator: 解説
+  card: &outlist
+    type: table
+    title: 売った選手（受け取った額の大きい順）
+    columns: ['選手', '行き先', '百万ユーロ']
+    rows:
+    - &o1 [ルカ・ヴシュコヴィッチ, ブライトン, '54.00']
+    - &o2 [クリスティアン・ロメロ, アトレティコ・マドリード, '33.00']
+    - &o3 [ジェド・スペンス, インテル, '30.00']
+    - &o4 [ほか5人, ミドルズブラほか, '40.05']
+    - &o5 [貸し出し料（3件）, サンダーランドほか, '7.20']
+  say:
+  - text: 次は、トッテナムが売った側。移籍金を得たのは、8人。買いより3人多い。
+    image: assets/images/20261018_transfer_tottenham/a02_stadium_w.jpg
+    card: *outlist
+  - text: いちばん高いのは、ヴシュコヴィッチ。ブライトンへ、5400万ユーロ。
+    emph: true
+    image: assets/images/20261018_transfer_tottenham/b05_vuskovic_w.jpg
+    card: none
+  - text: 報じられた額は、最初の払いが4600万ポンド。出来高は最大400万ポンド。
+    image: assets/images/20261018_transfer_tottenham/a02_stadium_w.jpg
+    card: {type: table, title: 売った選手（受け取った額の大きい順）, columns: ['選手', '行き先', '百万ユーロ'], rows: [*o1, *o2, *o3, *o4, *o5], highlight_row: 0}
+  - text: 19歳のクロアチア代表。報道は、次に売れたときの20%が入る約束付き。
+    card: {type: table, title: 売った選手（受け取った額の大きい順）, columns: ['選手', '行き先', '百万ユーロ'], rows: [*o1, *o2, *o3, *o4, *o5], highlight_row: 0}
+  - text: 2人目は、ロメロ。アトレティコ・マドリードへ、3300万ユーロ。
+    emph: true
+    image: assets/images/20261018_transfer_tottenham/b06_romero_wr.jpg
+    card: {type: table, title: 売った選手（受け取った額の大きい順）, columns: ['選手', '行き先', '百万ユーロ'], rows: [*o1, *o2, *o3, *o4, *o5], highlight_row: 1}
+  - text: ロメロの退団を伝えた発表文は、こうです。
+    card: &doc_romero
+      type: document
+      label: トッテナム 公式発表（8月15日）ロメロ退団の文（訳）
+      paragraphs:
+      - アトレティコ・マドリードとの間で、クリスティアン・ロメロの移籍に合意した。
+      - 2021年にアタランタから加わり、2024-25のヨーロッパリーグ優勝の主力で、2025-26は主将に指名された。
+      highlight:
+      - 合意
+      - 主将
+  - text: 昨季の主将を売りました。額は、この文にもありません。
+    card: *doc_romero
+  - text: 報道は、出来高込みで3420万ポンド。次に売れたときの15%が入る約束付き。
+    card: *doc_romero
+  - text: 3人目は、スペンス。インテルへ、3000万ユーロ。
+    image: assets/images/20261018_transfer_tottenham/b07_spence_w.jpg
+    card: none
+  - text: 報道は、3000万ポンドの総額。通貨が違い、額も合いません。
+    image: assets/images/20261018_transfer_tottenham/a01_stadium_w.jpg
+    card: {type: table, title: 売った選手（受け取った額の大きい順）, columns: ['選手', '行き先', '百万ユーロ'], rows: [*o1, *o2, *o3, *o4, *o5], highlight_row: 2}
+  - text: この3人で、売った額のおよそ74%です。
+    emph: true
+    card: &calc_sold3
+      type: calc
+      title: 売った額のうち、上の3人の割合
+      terms:
+      - ['1億1700万ユーロ', 上の3人]
+      - ['1億5705万ユーロ', 売った8人の合計]
+      - [約74%, 3人の割合]
+      ops: ['÷', ＝]
+  - text: 残る5人は、ランクシャー、ベリス、フィリップス、ソロモン、デヴァイン。
+    card: {type: table, title: 売った選手（受け取った額の大きい順）, columns: ['選手', '行き先', '百万ユーロ'], rows: [*o1, *o2, *o3, *o4, *o5], highlight_row: 3}
+  - text: 貸し出し料が付いたのは3件。合わせて720万ユーロです。
+    card: {type: table, title: 売った選手（受け取った額の大きい順）, columns: ['選手', '行き先', '百万ユーロ'], rows: [*o1, *o2, *o3, *o4, *o5], highlight_row: 4}
+  - text: 貸したのは、ダンソ、サール、ドラグシンの3人。
+    card: &loans
+      type: table
+      title: 貸し出し料の付いた3件
+      columns: ['選手', '行き先', '百万ユーロ', '来夏の買い取り']
+      rows:
+      - [ダンソ, サンダーランド, '2.90', 条件つきの義務]
+      - [サール, ユヴェントス, '2.80', 条件つきの義務]
+      - [ドラグシン, フィオレンティーナ, '1.50', 条件つきの義務]
+  - text: 3人とも、条件を満たせば来夏に買い取られる約束。発表文にあります。
+    card: *loans
+  - text: いちばん高い買いと、いちばん高い売り。2人を並べます。
+    image: assets/images/20261018_transfer_tottenham/a01_stadium_w.jpg
+    card: &duel
+      type: duel
+      left: {name: トナーリ, club: 買った（ニューカッスルから）, photo: assets/images/20261018_transfer_tottenham/b01_tonali_sq.jpg, color: "#132257"}
+      right: {name: ヴシュコヴィッチ, club: 売った（ブライトンへ）, photo: assets/images/20261018_transfer_tottenham/b05_vuskovic_sq.jpg, color: "#b8860b"}
+      rows:
+      - [トッテナムの発表日, 7月6日, 7月14日]
+      - [年齢, 26歳, 19歳]
+      - [移籍直前の市場価値, 0.8億€, 0.6億€]
+      - [額（集計）, 1.08億€, 0.54億€]
+      - [報じられた額, 最大約1億£, 約0.5億£]
+      bars: [移籍直前の市場価値, 額（集計）]
+  - text: 年齢は、26歳と19歳です。
+    card: {<<: *duel, highlight_row: 年齢}
+  - text: 移籍直前の市場価値、つまりサイトの推定は、買ったほうが約1.3倍。
+    card: {<<: *duel, highlight_row: 移籍直前の市場価値}
+  - text: 額は、買ったほうが売ったほうの、ちょうど2倍。
+    emph: true
+    card: {<<: *duel, highlight_row: 額（集計）}
+  sources:
+  - https://www.transfermarkt.com/tottenham-hotspur/transfers/verein/148/plus/1?saison_id=2026&pos=&detailed=1&w_s=s
+  - https://tmapi-alpha.transfermarkt.technology/transfer/history/player/892160
+  - https://www.tottenhamhotspur.com/news/1078172/vuskovic-departs
+  - https://www.tottenhamhotspur.com/news/1085511/romero-moves-to-atletico-madrid
+  - https://www.tottenhamhotspur.com/news/1085709/spence-departs-for-inter
+  - https://www.tottenhamhotspur.com/news/1079320/lankshear-on-the-move-to-boro
+  - https://www.tottenhamhotspur.com/news/1085616/phillips-joins-middlesbrough
+  - https://www.tottenhamhotspur.com/news/1088034/danso-departs-on-loan
+  - https://www.tottenhamhotspur.com/news/1088003/juve-loan-for-pape
+  - https://www.tottenhamhotspur.com/news/1076954/dragusin-joins-fiorentina
+  - https://www.skysports.com/football/news/11741/13563294/luka-vuskovic-brighton-complete-50m-deal-to-sign-tottenham-defender
+  - https://skysports.com/football/news/11675/13571751/cristian-romero-atletico-madrid-agree-deal-with-tottenham-to-sign-argentina-defender-after-long-term-interest
+  - https://www.skysports.com/share/13572315
+- id: when
+  heading: 買いは7月6日までに7割。売りは8月15日に半分近くが決まった
+  tier: 報道
+  telop: 7月6日までに買いの73%、8月15日の1日で売りの45%
+  narrator: 解説
+  card: &when
+    type: timeline
+    title: トッテナムが発表した主な動き
+    rows:
+    - ['6月18日', ファン・ヘッケの加入を発表]
+    - ['7月6日', トナーリの加入を発表]
+    - ['7月14日', ヴシュコヴィッチの退団を発表]
+    - ['8月15日', ロメロ・スペンス・フィリップスが退団]
+    - ['8月25日', サビオの加入を発表]
+    - ['9月1日', 窓が閉まる。借りる1人・貸す2人も]
+    focus: 7月6日
+  say:
+  - text: トッテナムの買いと売りは、どの順番で動いたのか。発表の日付で見ます。
+    image: assets/images/20261018_transfer_tottenham/a02_stadium_w.jpg
+    card: none
+  - text: 移籍できる期間を、窓と呼びます。今夏は6月15日から9月1日まで。
+    card: *when
+  - text: 6月18日の、ファン・ヘッケから始まります。
+    card:
+      <<: *when
+      highlight_row: 0
+  - text: 7月6日までに、ファン・ヘッケ、M・フェルナンデス、トナーリの3人。
+    emph: true
+    image: assets/images/20261018_transfer_tottenham/b01_tonali_wr.jpg
+    card:
+      <<: *when
+      highlight_row: 1
+  - text: 合わせて、2億6700万ユーロ。ここまでに、払った額の73%が決まりました。
+    emph: true
+    card: &calc_early
+      type: calc
+      title: 7月6日までに決まった買いは、全体の何割か
+      terms:
+      - ['2億6700万ユーロ', 7月6日までの3人]
+      - ['3億6635万ユーロ', 買った5人の合計]
+      - [約73%, 7月6日までの割合]
+      ops: ['÷', ＝]
+  - text: 売りで最初に大きかったのは、7月14日のヴシュコヴィッチです。
+    card:
+      <<: *when
+      highlight_row: 2
+  - text: 売りが集まったのは、8月15日。ロメロ、スペンス、フィリップスの3人です。
+    emph: true
+    image: assets/images/20261018_transfer_tottenham/b06_romero_wr.jpg
+    card:
+      <<: *when
+      highlight_row: 3
+  - text: 7120万ユーロで、売った額の45%。この1日で、半分近くが決まりました。
+    emph: true
+    card: &calc_day
+      type: calc
+      title: 8月15日に売った額は、全体の何割か
+      terms:
+      - ['7120万ユーロ', 8月15日の3人]
+      - ['1億5705万ユーロ', 売った8人の合計]
+      - [約45%, 8月15日の割合]
+      ops: ['÷', ＝]
+  - text: 8月25日には、サビオ。買いの4人目です。
+    card:
+      <<: *when
+      highlight_row: 4
+  - text: そして窓が閉まる9月1日。アダラビオヨが加わり、ムドリクを借りました。
+    card:
+      <<: *when
+      highlight_row: 5
+  sources:
+  - https://www.tottenhamhotspur.com/news/1073998/van-hecke-joins-from-brighton
+  - https://www.tottenhamhotspur.com/news/1076467/welcome-sandro-tonali-makes-the-move-to-n17
+  - https://www.tottenhamhotspur.com/news/1078172/vuskovic-departs
+  - https://www.tottenhamhotspur.com/news/1085511/romero-moves-to-atletico-madrid
+  - https://www.tottenhamhotspur.com/news/1085709/spence-departs-for-inter
+  - https://www.tottenhamhotspur.com/news/1085616/phillips-joins-middlesbrough
+  - https://www.tottenhamhotspur.com/news/1086712/savio-joins-from-manchester-city
+  - https://www.tottenhamhotspur.com/news/1088054/welcome-tosin-adarabioyo-joins-from-chelsea
+  - https://www.tottenhamhotspur.com/news/1088045/mudryk-arrives-on-loan
+  - https://www.tottenhamhotspur.com/news/1088034/danso-departs-on-loan
+  - https://www.tottenhamhotspur.com/news/1088003/juve-loan-for-pape
+  - https://www.premierleague.com/en/news/4664145/when-does-summer-2026-premier-league-transfer-window-open-and-close
+- id: view
+  viewpoint: true
+  heading: 高く買って、市場価値より安く売った。戻った割合が最も低いのは、トッテナム
+  tier: 報道
+  telop: 買った5人は市場価値の約1.62倍、売った8人は約0.85倍
+  narrator: 解説
+  card: &scat_in
+    type: scatter
+    title: 買った5人の、移籍直前の市場価値と、払った額
+    x: {label: 移籍直前の市場価値, unit: 百万ユーロ}
+    y: {label: 払った額, unit: 百万ユーロ}
+    points:
+    - [トナーリ, 80, 108]
+    - [M・フェルナンデス, 50, 99]
+    - [サビオ, 35, 87.7]
+    - [ファン・ヘッケ, 45, 60]
+    - [アダラビオヨ, 16, 11.65]
+    diagonal: 市場価値と同じ額
+    focus: サビオ
+  say:
+  - text: 高く買って、安く売ったのか。市場価値を物差しに、自分で数えます。
+    image: assets/images/20261018_transfer_tottenham/a01_stadium_w.jpg
+    card: none
+  - text: 市場価値は、移籍サイトの推定値で、実際の値段ではありません。
+    card: *scat_in
+  - text: 買った5人の市場価値は、合計で2億2600万ユーロです。
+    card: *scat_in
+  - text: 払った額は、その約1.62倍です。
+    emph: true
+    card: &calc_in
+      type: calc
+      title: 買った5人は市場価値の何倍か
+      terms:
+      - ['3億6635万ユーロ', 払った額]
+      - ['2億2600万ユーロ', 直前の市場価値の合計]
+      - [約1.62倍, 市場価値の何倍か]
+      ops: ['÷', ＝]
+  - text: サビオは、市場価値の約2.5倍。図でいちばん上に離れています。
+    card:
+      <<: *scat_in
+      highlight: サビオ
+  - text: 線より下は、1人だけ。アダラビオヨです。
+    card:
+      <<: *scat_in
+      highlight: アダラビオヨ
+  - text: 売った8人は、どうか。同じ図にします。
+    card: &scat_out
+      type: scatter
+      title: 売った8人の、移籍直前の市場価値と、受け取った額
+      x: {label: 移籍直前の市場価値, unit: 百万ユーロ}
+      y: {label: 受け取った額, unit: 百万ユーロ}
+      points:
+      - [ヴシュコヴィッチ, 60, 54]
+      - [ロメロ, 50, 33]
+      - [スペンス, 40, 30]
+      - [ランクシャー, 7, 11.7]
+      - [ベリス, 4, 9]
+      - [フィリップス, 7, 8.2]
+      - [ソロモン, 8, 5.85]
+      - [デヴァイン, 8, 5.3]
+      diagonal: 市場価値と同じ額
+      focus: ロメロ
+  - text: 売った8人の市場価値は、合計で1億8400万ユーロ。
+    card: *scat_out
+  - text: 受け取った額は、その約0.85倍です。
+    emph: true
+    card: &calc_out
+      type: calc
+      title: 売った8人は市場価値の何倍か
+      terms:
+      - ['1億5705万ユーロ', 受け取った額]
+      - ['1億8400万ユーロ', 直前の市場価値の合計]
+      - [約0.85倍, 市場価値の何倍か]
+      ops: ['÷', ＝]
+  - text: 線より下は、5人。ヴシュコヴィッチ、ロメロ、スペンス、ソロモン、デヴァイン。
+    card:
+      <<: *scat_out
+      highlight: ロメロ
+  - text: 上に出たのは、ランクシャー、ベリス、フィリップス。
+    card:
+      <<: *scat_out
+      highlight: ランクシャー
+  - text: 買いは市場価値の上、売りは下。数字の上では、そうなります。
+    emph: true
+    card: *scat_out
+  - text: 最後に、支出の上位4クラブで、戻った割合を数えます。
+    image: assets/images/20261018_transfer_tottenham/a02_stadium_w.jpg
+    card: &top4
+      type: table
+      title: 世界の支出の上位4クラブ（戻った割合）
+      columns: ['クラブ', '払った額', '戻った額', '戻った割合']
+      rows:
+      - [マンチェスター・C, '526.20', '337.02', '64%']
+      - [チェルシー, '407.48', '447.80', '110%']
+      - [トッテナム, '366.35', '164.25', '45%']
+      - [ニューカッスル, '313.00', '279.10', '89%']
+  - text: 戻った割合が最も低いのは、トッテナムの45%です。
+    emph: true
+    card: *top4
+    mark: {kind: circle, row: 2, col: 戻った割合}
+  - text: ただし、来夏の分が、まだ数に入っていません。
+    card: none
+    image: assets/images/20261018_transfer_tottenham/b03_savio_wr.jpg
+  - text: 出ていくのは、マルモウシュの買い取り分。
+    card: none
+  - text: 入ってくるのは、貸した3人の買い取り。決まれば、戻る割合が上がります。
+    card: none
+  - text: 冬の窓が開くのは、2027年の1月1日です。
+    card: none
+  sources:
+  - https://www.transfermarkt.com/tottenham-hotspur/transfers/verein/148/plus/1?saison_id=2026&pos=&detailed=1&w_s=s
+  - https://www.transfermarkt.com/transfers/einnahmenausgaben/statistik/plus/1?ids=a&saison_id=2026&saison_id_bis=2026&w_s=s
+  - https://www.tottenhamhotspur.com/news/1087177/omar-marmoush-arrives-on-loan
+  - https://skysports.com/football/news/12691/13577796/omar-marmoush-transfer-news-tottenham-sign-man-city-forward-on-loan-with-60m-obligation-to-buy
+  - https://www.premierleague.com/en/news/4664145/when-does-summer-2026-premier-league-transfer-window-open-and-close

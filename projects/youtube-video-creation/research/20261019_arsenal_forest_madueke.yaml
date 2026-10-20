@@ -1,0 +1,135 @@
+# 取材メモ（2026年10月19日・ニュースのショート）アーセナル1-0フォレスト、マドゥエケの80分とアルテタ監督の言葉。見せ方 B（写真を切り替え）
+# 取材: 2026-10-19。requests（ブラウザUA）と ESPN の公開API で原文を読んだ。AIの要約は使っていない。控えは research/raw/20261019_*。
+#   ・Sky Sports 試合レポート（2026-10-18 18:30 UTC 掲載、William Bitibiri）— 題材の出典。本文（JSON-LD の articleBody）を全部読んだ。
+#       得点＝マドゥエケ 80分（交代で入り、左から中へ持ち込み右足）。フォレストの Jair Cunha に当たってコースが変わり、セルスの逆を取った。アーセナルの唯一の枠内シュート。
+#       勝ち点18・首位シティと3差。フォレストは降格圏・ホームのリーグ戦で今季まだ無得点。アルテタ／グラスナーの試合後の言葉（Sky Sports への発言）が原文のまま載っている。
+#   ・ESPN 試合記録（API summary event=401878769）— 80分の得点（マドゥエケ・右足・ボックス左から・アシストはデクラン・ライス）、
+#       45分にエゼ→マドゥエケの交代、最終 フォレスト0-1アーセナル（The City Ground）。チーム統計: 支配率 アーセナル73.8%・フォレスト26.2%／シュート 9本・14本／枠内 1本・2本。
+#       順位: 1位マンC 21、2位アーセナル 18（7試合）。
+#   ・Arsenal.com「Every word from Arteta's post-Forest presser」（2026-10-18 掲載）— 同じ会見。マドゥエケ評・次のバイエルン戦への言及あり（台本では使わない／次の試合の日付は ESPN で確認）。
+# 分: 80分は Sky（見出し本文・タイムライン）と ESPN の試合記録が一致。Arsenal.com は「10 minutes from time」とゆるく書いている → 台本は「80分」（ESPN の記録）。
+# アルテタの言葉（Sky Sports への発言。英語の原文のまま訳した。言い換えない）:
+#   "We knew the margins would be small unless you open up the game much earlier, which we had two chances to do."
+#   "We had another three chances [in the game] that should have been on target. And not only on target, but they should have been goal."
+#   "That's the difference, you have to be clinical."
+#   題材の一覧の『小さな差は決めきれるかどうか』は要約。台本は原文の3文を訳したものを使い、一覧の言葉はそのまま引用にしない。
+# グラスナーの言葉（Sky Sports への発言。尺に収まらず台本では使っていない）: "But it's another defeat and another game when we couldn't score at the City Ground."
+# 次の試合: アーセナル 対 バイエルン・ミュンヘン、CL、現地2026-10-21 19:00 UTC（ESPN scoreboard uefa.champions 20261021）。アルテタは会見で『3日後』と言及。
+# 自分で数えたもの: シュート差 14-9＝5本。ボール支配率 74%（73.8を丸め）対26%。枠内 1本対2本。
+# 重ならないように: 10/17 の財政（シティ対アーセナル）・ユニフォーム、10/19 の移籍（今夏の支出）とは数字も言い回しも別。移籍金・収入・人件費は出さない。
+# 本人の言葉は Sky の原文にあるものだけ。反応: 取れていない（試合当日のSNSは使っていない）→ 0件。作らない。approve は --no-voices で。
+# 写真: Commons のみ（CC BY-SA 4.0、Chensiyuan＝01 アーセナルの白い2026年のユニフォーム／Bryan Berlin＝02〜07 イングランド代表 2026年6月）。ファイル名にマドゥエケの名前あり・目で確認。
+#   クラブ公式（assets.arsenal.com）の主写真はアルテタ監督がファンに拍手する1枚だけで本人ではないため使わない。代理店は取り込まない。
+#   アーセナルのユニフォームの写真は1枚だけ（Commons に今季の試合写真が無い）。残り6枚はイングランド代表のユニフォームの同じ選手。
+slot: premier
+date: "2026年10月19日"
+format: news
+no_main: true
+people: [ノニ・マドゥエケ, ミケル・アルテタ, アーセナル, ノッティンガム・フォレスト]
+short_style: B
+short_photos:
+  - assets/images/20261019_arsenal_forest_madueke/04_v.jpg
+  - assets/images/20261019_arsenal_forest_madueke/01_v.jpg
+  - assets/images/20261019_arsenal_forest_madueke/03_v.jpg
+  - assets/images/20261019_arsenal_forest_madueke/05_v.jpg
+  - assets/images/20261019_arsenal_forest_madueke/02_v.jpg
+  - assets/images/20261019_arsenal_forest_madueke/06_v.jpg
+  - assets/images/20261019_arsenal_forest_madueke/07_v.jpg
+
+short_question: 決めきれるかどうかが差。いまのアーセナルに、いちばん必要なのは何だと思いますか。
+short_hook: マドゥエケの80分。アルテタが挙げた「差」。
+short_telops:
+  - {match: 1対0, text: プレミア第7節/アーセナル1対0フォレスト}
+  - {match: 80分です, text: 後半から入ったマドゥエケ/入って35分後、80分に決勝点}
+  - {match: 右足のシュート, text: 左から持ち込んだ/右足のシュート}
+  - {match: 当たってコース, text: 相手に当たってコースが変わり/ゴールへ}
+  - {match: 差は小さくなる, text: アルテタ監督/「差は小さくなると分かっていた」}
+  - {match: 枠どころか, text: 「枠どころか、/ゴールになるべきもの」}
+  - {match: それが違いです, text: 「それが違い。」}
+  - {match: 決めきらなければ, text: 「決めきらなければならない」}
+  - {match: 支配率74%, text: アーセナル/支配率74%・シュート9本・枠内1本}
+  - {match: 支配率26%, text: フォレスト/支配率26%・シュート14本・枠内2本}
+  - {match: 勝ったのは, text: 勝ったのは/枠内が1本少ないアーセナル}
+  - {match: 勝ち点18, text: アーセナルは勝ち点18/首位シティと3差}
+  - {match: バイエルン, text: 次は現地21日/CLでバイエルン・ミュンヘン}
+
+theme:
+  id: arsenal_forest_madueke
+  league: england
+  prefix: ""
+  title: アーセナル1対0フォレスト、マドゥエケの80分。アルテタが語った「差」
+  hook: ""
+  question: アルテタ監督は、フォレスト戦の1対0を分けた「差」を何と語ったのか
+  takeaway: 支配率74%・シュート9本で枠内は1本のアーセナルが、26%・14本のフォレストに勝った。アルテタ監督が挙げた差は「決めきる」こと
+
+thumbnail:
+  layout: face
+  line1: マドゥエケ、80分の決勝点
+  line2: アルテタが語った「差」
+  tags: [ノニ・マドゥエケ, アーセナル, ノッティンガム・フォレスト]
+  photo: assets/images/20261019_arsenal_forest_madueke/05_w.jpg
+  short_photo: assets/images/20261019_arsenal_forest_madueke/04_v.jpg
+
+answer: 小さな差になると分かっていた。ほかにもゴールになるべきチャンスがあり、決めきることが差だと話した
+watch: 現地21日、CLでバイエルン・ミュンヘン戦
+
+sections:
+  - id: what
+    main: true
+    heading: 何が起きたか
+    tier: 報道
+    telop: プレミア第7節、フォレスト対アーセナル
+    say:
+      - 現地18日のプレミア。アーセナルは敵地でフォレストを下し、1対0の勝ちです。
+      - 決めたのは、後半から入ったマドゥエケ。入って35分後、80分です。
+      - 左から持ち込んだ右足のシュートが、相手に当たってコースが変わりました。
+      - voice: アルテタ監督
+        text: 差は小さくなると分かっていました。
+      - voice: アルテタ監督
+        text: もっと早く試合を開けない限りは、です。
+        cont: true
+      - voice: アルテタ監督
+        text: ほかにも、枠に行くべきチャンスが3回ありました。
+        cont: true
+      - voice: アルテタ監督
+        text: 枠どころか、ゴールになるべきものです。
+        cont: true
+      - voice: アルテタ監督
+        text: それが違いです。
+        cont: true
+      - voice: アルテタ監督
+        text: 決めきらなければなりません。
+        cont: true
+    official: false
+    sources:
+      - https://www.skysports.com/football/nottingham-forest-vs-arsenal/report/559512
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/summary?event=401878769
+      - https://www.arsenal.com/news/every-word-from-artetas-post-forest-presser-aYTwu8B2hgEu
+
+  - id: view
+    viewpoint: true
+    heading: 数字で見る1対0
+    tier: 背景
+    telop: 支配率74%対26%。枠内は1本対2本
+    say:
+      - 見立てです。アーセナルは、支配率74%、シュート9本、枠内1本。
+      - フォレストは、支配率26%、シュート14本、枠内2本でした。
+      - ボールを持ったのはアーセナル、シュートが5本多かったのはフォレスト。
+      - 勝ったのは、枠内が1本少ないアーセナル。決めたのはマドゥエケでした。
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/summary?event=401878769
+      - https://www.skysports.com/football/nottingham-forest-vs-arsenal/report/559512
+
+  - id: next
+    heading: 首位との差と次の試合
+    tier: 背景
+    telop: アーセナルは勝ち点18、首位シティと3差
+    say:
+      - アーセナルは勝ち点18で、首位のマンチェスター・シティと3差。
+      - フォレストは勝ち点5で降格圏です。
+      - アーセナルの次は現地21日、チャンピオンズリーグのバイエルン・ミュンヘン戦です。
+    official: false
+    sources:
+      - https://www.skysports.com/football/nottingham-forest-vs-arsenal/report/559512
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20261021

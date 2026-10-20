@@ -1,0 +1,130 @@
+# 佐藤龍之介（バレンシア）の取材メモ（2026年10月20日・ショートだけ）。見せ方は X（冒頭の強い一言＝事実の言葉。煽りは付けない）
+# 題材の元: topics_src num 4（フットボールトライブ 10/20 7:56。オランダ『ヘッドライナー』10/18 の引用）。
+# 読んだ出典（requests・ブラウザUAで本文。控え research/raw/20261020_sato_ft.txt）:
+#   ・フットボールトライブ（https://football-tribe.com/japan/2026/10/20/360553/）: 17日のビルバオ戦でも出番なし。FC東京から今夏加入、開幕5試合のうち4試合で先発。
+#     9月に監督交代、アギーレ新監督。10月以降はリーグ戦全試合で出場なし。
+#     ヘッドライナー（18日）は「佐藤はアギーレ監督の構想に含まれていない」「投資は失敗に終わる恐れがある。シーズン途中で移籍する可能性もある」「400万ユーロ（約7億4,000万円）を払ったが、今日ではその金額を正当化するのは難しい」と書く。
+#   ・ヘッドライナーの原文は読んでいない（転載1本のみ）→ 確度は「報道」止まり。台本は「ヘッドライナーが伝えた」と出所を断る。
+# 資料内のずれ: 記事本文は「10月以降リーグ戦全試合で出場なし」、ヘッドライナー引用は「現在4試合ベンチ」。数え方が違うので**試合数は言わない**（「10月以降は全試合で出場なし」だけ）。
+# 繰り返さない: 10/18 のバレンシア紹介（クラブの歴史・本拠地・トップチーム初の日本人・佐藤の言葉）の数字・言い回しは使わない。
+# 自分で数えたもの: 開幕5試合のうち先発4（記事）→ 10月以降の出場は0（記事）。先発が続いた時期と、出番が無い時期が監督交代で分かれる、という並べ方だけ。因果は言わない。
+# 本人の言葉・クラブの発表: 無し（記事に無い）。Y にしない。作らない。
+# 反応: 0件。作らない。
+# 写真: 配信写真（アフロスポーツ）は取り込まない。assets/images/20261020_sato_ryunosuke_no_minutes/ はバレンシアCF公式（valenciacf.com、©Valencia CF）の7月の入団時の記事の写真5枚（01・03・04・07、08は公式の入団バナー画像）。
+#   全て目で見て本人（同じ顔。公式の入団記事の写真で、バナー noticasato の人物とも一致）。許諾は得ていない＝引き受ける危険。台本は「過去の写真」と断らないが credits.json に「入団時（2026年7月）」と控える。
+#   元が小さい（幅450px）写真は拡大で×になるので外し、公式の大きい写真（07・08）に替えた。04_v は1.71倍の△。
+slot: japan
+date: "2026年10月20日"
+format: news
+no_main: true      # ニュースはショートだけ（2026-10-14）。締めで本編を案内しない
+people: [佐藤龍之介, バレンシア, アギーレ]
+short_style: X
+short_hook_word: ビルバオ戦も出番なし
+short_photos:
+  - assets/images/20261020_sato_ryunosuke_no_minutes/01_v.jpg
+  - assets/images/20261020_sato_ryunosuke_no_minutes/03_v.jpg
+  - assets/images/20261020_sato_ryunosuke_no_minutes/08_v.jpg
+  - assets/images/20261020_sato_ryunosuke_no_minutes/04_v.jpg
+  - assets/images/20261020_sato_ryunosuke_no_minutes/07_v.jpg
+
+short_question: 佐藤龍之介は、いつ出番を得られると思いますか。
+short_hook: 佐藤龍之介、ビルバオ戦も出番なし。
+short_telops:
+  - {match: 出番はありませんでした, text: 17日のビルバオ戦/佐藤龍之介は出番なし}
+  - {match: 全試合で出場がありません, text: 10月以降のリーグ戦/全試合で出場なし}
+  - {match: ヘッドライナー』は、18日, text: オランダ紙『ヘッドライナー』/18日の報道}
+  - {match: 開幕から5試合, text: 開幕5試合のうち/4試合で先発}
+  - {match: 見立てです, text: オランダ紙の見立て/佐藤本人・クラブの発表ではない}
+
+theme:
+  id: sato_ryunosuke_no_minutes
+  league: spain
+  prefix: ""
+  title: 佐藤龍之介、ビルバオ戦も出番なし。オランダ紙は「投資は失敗に終わる恐れ」と見立て
+  hook: ""
+  question: 佐藤龍之介の出番は、なぜ減ったと伝えられているのか
+  takeaway: 開幕5試合で4試合先発したあと、10月以降は出場なし。オランダ紙は監督の構想外と見るが、これは1媒体の見立てで、クラブと本人の言葉はまだ無い
+
+thumbnail:
+  line1: 佐藤龍之介、出番なし
+  line2: オランダ紙は「投資は失敗の恐れ」
+  tags: [佐藤龍之介, バレンシア, アギーレ]
+  layout: face
+  photo: assets/images/20261020_sato_ryunosuke_no_minutes/03.jpg
+  short_photo: assets/images/20261020_sato_ryunosuke_no_minutes/03_v.jpg
+
+answer: 開幕で4先発のあと、10月以降は出場なし。オランダ紙は構想外と見立てるが、クラブと本人の言葉は無い
+watch: 次のリーグ戦のメンバー表
+
+sections:
+  - id: what
+    main: true
+    heading: 何が起きたか
+    tier: 報道
+    telop: 17日のビルバオ戦も、佐藤龍之介に出番はなかった
+    say:
+      - text: 17日のビルバオ戦でも、バレンシアの佐藤龍之介に出番はありませんでした。
+        image: assets/images/20261020_sato_ryunosuke_no_minutes/01_w.jpg
+        card: none
+      - text: 10月に入ってから、リーグ戦は全試合で出場がありません。
+        image: assets/images/20261020_sato_ryunosuke_no_minutes/03_w.jpg
+        card: none
+      - text: オランダの『ヘッドライナー』は、18日にこう伝えました。
+        image: assets/images/20261020_sato_ryunosuke_no_minutes/08_w.jpg
+        card: none
+      - text: 佐藤はアギーレ監督の構想に含まれていない、と。
+        image: assets/images/20261020_sato_ryunosuke_no_minutes/04_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://football-tribe.com/japan/2026/10/20/360553/
+
+  - id: before
+    heading: ここまでの出場
+    tier: 報道
+    telop: 開幕5試合のうち4試合で先発。9月に監督が交代
+    say:
+      - text: 佐藤は今夏、FC東京から加入しました。
+        image: assets/images/20261020_sato_ryunosuke_no_minutes/07_w.jpg
+        card: none
+      - text: 開幕から5試合のうち、4試合で先発しています。
+        image: assets/images/20261020_sato_ryunosuke_no_minutes/01_w.jpg
+        card: none
+      - text: そのあとの9月に監督が代わり、アギーレ監督になりました。
+        image: assets/images/20261020_sato_ryunosuke_no_minutes/03_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://football-tribe.com/japan/2026/10/20/360553/
+
+  - id: view
+    viewpoint: true
+    heading: オランダ紙の見立て
+    tier: 報道
+    telop: 「投資は失敗に終わる恐れ」はオランダ紙の見立て
+    say:
+      - text: オランダ紙の報道では、バレンシアの今夏の補強は、ほとんどがレンタルか無償でした。
+        image: assets/images/20261020_sato_ryunosuke_no_minutes/08_w.jpg
+        card: none
+      - text: 佐藤だけが、400万ユーロ、約7億4,000万円を払った例外だと書いています。
+        image: assets/images/20261020_sato_ryunosuke_no_minutes/04_w.jpg
+        card: none
+      - text: 同紙は、その金額を今日では正当化しにくいと見ています。
+        image: assets/images/20261020_sato_ryunosuke_no_minutes/07_w.jpg
+        card: none
+      - text: そして、シーズン途中で移籍する可能性にも触れました。
+        image: assets/images/20261020_sato_ryunosuke_no_minutes/01_w.jpg
+        card: none
+      - text: これはオランダの1媒体の見立てです。佐藤本人とクラブが話したものではありません。
+        image: assets/images/20261020_sato_ryunosuke_no_minutes/03_w.jpg
+        card: none
+      - text: 移籍についてのクラブの発表も、本人の言葉も、まだ出ていません。
+        image: assets/images/20261020_sato_ryunosuke_no_minutes/08_w.jpg
+        card: none
+      - text: 答えが出るのは、次のリーグ戦のメンバー表です。
+        image: assets/images/20261020_sato_ryunosuke_no_minutes/04_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://football-tribe.com/japan/2026/10/20/360553/
+short_title: "佐藤龍之介、ビルバオ戦も出番なし。オランダ紙は「投資は失敗に終わる恐れ」と見立て"

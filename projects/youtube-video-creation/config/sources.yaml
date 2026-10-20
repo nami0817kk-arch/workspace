@@ -45,7 +45,7 @@ domains:
   # クラブ・リーグの公式（欧州）。声明そのものを引ける
   official: [en.atleticodemadrid.com, atleticodemadrid.com, fcbarcelona.com,
              arsenal.com, realmadrid.com, chelseafc.com, manutd.com,
-             liverpoolfc.com, juventus.com,
+             liverpoolfc.com, mancity.com, juventus.com,
              acmilan.com, bvb.de, fcbayern.com, psg.fr, slbenfica.pt,
              tottenhamhotspur.com, newcastleunited.co.uk,
              # 2026-09-08 に追加。日本人選手の所属クラブ（日本人枠が1日5本ある）。
@@ -241,7 +241,7 @@ leagues:
   england:
     name: プレミアリーグ
     official: [premierleague.com, thefa.com, efl.com, arsenal.com, chelseafc.com,
-               manutd.com, liverpoolfc.com, tottenhamhotspur.com, newcastleunited.co.uk]
+               manutd.com, liverpoolfc.com, mancity.com, tottenhamhotspur.com, newcastleunited.co.uk]
     media: english
     utc_offset: 1          # BST（夏時間）
     active_local: "09:00-23:30"

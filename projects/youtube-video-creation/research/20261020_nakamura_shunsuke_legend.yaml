@@ -1,0 +1,619 @@
+# 中村俊輔（元日本代表）の紹介。シリーズ「レジェンドの紹介（日本）」2026-10-20。型は 10/18 の中田英寿・10/19 の長谷部誠と同じ8節。
+# ①フック ②基礎DATA ③歩んできた道と転機 ④プレースタイル（＋通算の表）⑤「あの試合」＝2006-11-21 チャンピオンズリーグ セルティック対マンチェスター・ユナイテッド ⑥引退後・いま ⑦マル秘話2つ ⑧見立て。
+# **FotMob・DataMB・FBref・Sofascore 等は不使用**。パーセンタイル・レーダー・シュートマップは出さない。数字は公式の記録（JFA・Jリーグ公式）と、自分で割った値だけ。
+# **引退後の私生活・法的な問題は入れない**（家族・結婚・CM・事業・著書・香水は不使用）。女子・Jリーグ以外の話は無し（ただし本人の経歴としてJ1の数字は使う）。
+#
+# **brief の指定を読み直して、食い違ったもの（台本では下の読み直した形を使う）**
+# - 「3連覇＝2006-07〜2008-09」は誤り。**セルティックのリーグ優勝は 2005-06・2006-07・2007-08 の3回（連続）**。2008-09 は優勝していない（ジャパン側の記録でも同じ）。
+#   出典：英語版・日本語版 Wikipedia の Honours、サッカーキング 2022-10-18（引退の記事：「2005－06シーズンからのスコティッシュ・プレミアシップ3連覇に大きく貢献」）、
+#   These Football Times 2018-11-09（2005-06 はハーツに1対0で、残り6試合で優勝）、AFP 2007-04-24（Daily Star。2年連続の優勝）、worldsoccertalk 2008-05-24 ほか（2007-08 は最終節で優勝、3年連続）。
+#   中村俊輔は 2005年7月（29日）に加入、2009年6月に退団＝**3回とも優勝した季にいた**（4季目の 2008-09 は優勝なし）。
+# - 「ミラノ戦（2006年CL）のFK」は誤り。**FKを決めたのはマンチェスター・ユナイテッド戦の2試合**（2006-09-13 オールド・トラッフォード＝2対3の負けの中の1点／2006-11-21 セルティック・パーク＝81分の1点で1対0）。
+#   ミランとは 2006-07 の決勝トーナメント1回戦で当たり、**ホーム0対0・ミラノで延長0対1（カカの得点）**。中村俊輔は両試合に出たがゴールなし。
+#   Goal.com 日本版 2018-09-13（本人インタビュー）も「CL本戦17試合出場2得点」と言う（＝ユナイテッド戦の2点）。
+# - 「プレミア出場はない」は正しい（クラブ：横浜M・レッジーナ・セルティック・エスパニョール・磐田・横浜FC）。2010年1月にストラカン監督のミドルスブラ（イングランド2部）から誘いが来たが本人が断った（日本語版 Wikipedia。英語版も同じ）。
+# - 「横浜FCでの現在」は誤り。**2023〜2025年に横浜FCのコーチ、2026年4月16日から日本代表コーチ**（JFA 公式）。引退は 2022年（10月18日発表）。
+#
+# **数字の出どころ（読んだもの）**
+# - JFA 公式「SAMURAI BLUE コーチに中村俊輔氏が就任」2026-04-16（jfa.jp/news/00036247/。選手歴・リーグ戦成績・指導歴・資格・本人のコメント。確定）：
+#   J1 408試合73得点／J2 16試合1得点／セリエA 81試合11得点／スコットランド 128試合29得点／ラ・リーガ 13試合0得点／日本代表 98試合24得点（W杯 2006・2010）／指導歴 2023〜2025 横浜FC コーチ／2025年 JFA Pro ライセンス。
+#   **リーグ戦の合計は自分で足した：試合 408+16+81+128+13＝646、得点 73+1+11+29+0＝114**（英語版 Wikipedia は115、日本語版は114。JFA の数字を足して 114 と一致）。
+# - Jリーグ公式（jleague.jp/news/article/12071/、2018-05-16。データスタジアム協力）：J1の直接FK得点ランキング 1位 中村俊輔24点（2位 遠藤保仁に7点差＝2位は17点）、1シーズンの最多は 2013年の4点。確定。
+#   **24÷73＝約33％（3分の1）、408÷24＝17（約17試合に1本）は自分で割った**。24点は 2017-09-23 の磐田対大宮戦で達成（サッカーダイジェスト・Number の報道。Number 2020-01 も24）。以後のJ1で増えたかは見ていない＝語りは「2018年5月の時点で2位は17本」と言い切らず時点を付ける。
+# - サッカーキング 2022-10-18「中村俊輔が現役引退」：経歴の概要（22歳でJリーグMVP＝史上最年少、2006-07 CL でユナイテッドから直接FK2本、スコットランドPFA年間最優秀選手＝アジア人初の欧州リーグMVP、2005-06からの3連覇）、本人のコメント全文（横浜FC公式サイト経由）。
+# - ゲキサカ 2023-12-17「中村俊輔氏、自慢の左足FK3発に計6ゴール!! 「全ての始まり」三ツ沢で引退試合&セレモニー」：引退試合の記録（横浜FC 3-6 J-DREAMS、FK3本・6得点）と、引退セレモニーでの本人のスピーチ（原文のまま）。
+# - Goal.com 日本版 2018-09-13「【中村俊輔が語るCL】マンチェスター・U戦、伝説のFKを回顧『駆け引きはなかった。ゾーンに入っていたから』」（本人インタビュー。日本語の原文。CL本戦17試合2得点も）。
+# - 試合記録：The Celtic Wiki（BBC の試合レポートの転載。2006-11-21 セルティック1-0マンU：81分、ファン・デル・サール、ボルツがサハのPKを止める、ストラカンの言葉。2006-09-13 マンU3-2セルティック：ヴェネゴール21分・中村43分／サハ30分PK・40分・ソルシャール47分）、
+#   Mail & Guardian（AFP 2006-11-22。決勝トーナメント初進出）、These Football Times 2018-11-09（試合の流れ。**決勝トーナメント進出は現行のCLになって初**）、英語版 Wikipedia（2006–07 の節。ミラン戦0-0・0-1延長）。
+#   ※ The Celtic Wiki は非公式のファンサイト（domain_tiers では enthusiast＝未確認）だが、**BBC・Scotsman の記事本文をそのまま転載している**ので、本文は読んだうえで報道として扱う（出典欄は元の媒体名を併記）。
+# - 優勝を決めた試合（2007-04-22 キルマーノック 1-2 セルティック）：The Celtic Wiki 転載の Scotsman（ストラカンの言葉「天才」「テクニックならナカが最高」と、本人のコメント英語原文）、AFP 2007-04-24（Daily Star。本人の言葉 英語原文）、FilGoal 2007-04-23（92分のFK、優勝は4週間前、2位に13点差）、These Football Times。
+# - 日本語版・英語版 Wikipedia「中村俊輔」「Shunsuke Nakamura」：生年月日・身長・位置・経歴・タイトル・個人賞・W杯（2010年は途中出場1試合）。英語版 Wikipedia「2010 FIFA World Cup Group E」：日本対オランダで64分に交代出場。
+# - サッカーキング 2026-09-17「『変える必要はない』森保一監督がコーチ陣留任の背景語る…長谷部誠・中村俊輔コーチらの役割変更で…」：中村コーチが前田コーチに代わってセットプレーの攻撃を担当（森保監督の発言。**同じ記事を 10/19 の長谷部の回が使っているので、こちらは引用せず「セットプレーの攻撃を任された」の1点だけ使う**）。
+# - 検索エンジンのAI要約は使っていない（URLを探すのに使っただけ。本文は requests で読んだ）。ブラウザ操作の道具・JavaScript実行は使っていない。Transfermarkt は見ていない。
+#
+# **数字の食い違い・判断（台本での扱い）**
+# - 通算の得点：JFA 合計 114／英語版 Wikipedia 115。**JFA の足し算の 114 を使う**。語りでは「646試合114得点」。
+# - 直接FKの24本：**J1の記録**（J2・セルティック・イタリアは含まない）。「J1で」と必ず付ける。73得点のうち24＝約3分の1。
+# - CL 初得点：英語版は「Champions League の最初の日本人得点者」、奥寺康彦（1978-79 欧州チャンピオンズカップ）が先にいる。**語りは「現在のチャンピオンズリーグになってから日本人初」**（日本語版 Wikipedia の言い方）。
+# - 81分：BBC転載・These Football Times・Wikipedia は81分、別の報道は80分。**81分を使う**。距離：BBC転載は「30ヤード」、These Football Times も「fully 30 yards」。語りは「30ヤード、およそ27メートル」（自分で換算）。
+# - 優勝を決めた日のFK：FilGoal は「92分」、Scotsman は「ロスタイム」。語りは「ロスタイム」。
+# - 本人の言葉：日本語の原文があるもの（Goal.com 日本版・サッカーキング〈引退コメント〉・ゲキサカ〈引退セレモニー〉・JFA 公式のコメント）だけ原文のまま。
+#   **英語の報道（AFP・Scotsman）の本人の言葉は日本語に訳した**（原文は取材メモに残す。訳であると台本の語りで言う）。ストラカンの言葉も英語原文からの訳。
+# - 2010年のW杯：出場は途中出場の1試合（日本語版 Wikipedia。英語版 Group E の記録でオランダ戦64分に交代出場が確認できる）。語りは「出場は、途中出場の1試合」。
+# - 日本語版 Wikipedia の「テクニカルアドバイザー（ジュビロ磐田・2026）」は JFA にも他の記事にも無いので**使わない**。
+# - ミドルスブラの件：日本語版 Wikipedia が「本人が断った」、英語版は「受けるか疑問だった」。**「誘われたが、断った」を使う**（日本語版）。
+# - 「10本中10得点」（セルティックの練習でのFK競争）は football-zone の記事を開けず、他の出典も無いので使わない。
+#
+# **入れなかったもの**：移籍金・年俸・家族・結婚・CM・事業・著書・「メシア10」・ビデオゲームの表紙・テレビのパフォーマンス・ラグビーボールのキック・Transfermarkt・
+#   Wikipedia の「ボール速度100km/h」「毎秒7.5回転」（出典が大学教授の談話の孫引きで、原文を読んでいない）・Honda との FK 衝突（日刊スポーツ原文を読んでいない）・2006年W杯の「物議を醸した先制点」の細部。
+# **日本語名・読みで怪しいもの**：中村俊輔・横浜マリノス・レッジーナ・セルティック・エスパニョール・ミドルスブラ・ストラカン・ボルツ・ファン・デル・サール・オールド・トラッフォード・キルマーノック・
+#   桐光学園・三ツ沢・木村和司・ラモス瑠偉・遠藤保仁・森保一・前田・ミラン・カカ・サハ・ヴェネゴール・ソルシャール・ハーツ・ダンディー・ユナイテッド・ロアッソ熊本・J-DREAMS。
+# 本人の言葉は：①Goal.com 日本版 2018-09-13（日本語・原文）②横浜FC 公式サイト経由の引退コメント 2022-10-18（日本語・サッカーキングの引用）③ゲキサカ 2023-12-17 の引退セレモニーのスピーチ（日本語）
+#   ④JFA 公式の就任コメント 2026-04-16（日本語）⑤AFP 2007-04-24（英語・訳）。ほかの人の言葉：ストラカン（Scotsman 2007-04-22 の英語・訳）。
+date: 2026年10月20日
+slot: other_1
+format: news
+series: レジェンドの紹介
+people:
+- 中村俊輔
+theme:
+  end_bg: assets/images/20261020_nakamura_shunsuke_legend/02_w.jpg
+  id: legend_nakamura_shunsuke
+  league: japan
+  league_name: スコットランド・プレミアシップ
+  kind: other
+  topic: 中村俊輔
+  title: 中村俊輔は、どんな選手だった？ セルティック3連覇の2年目、左足に何があったのか
+  question: 日本代表の攻めを考えるコーチになった中村俊輔は、セルティック3連覇の2年目に、左足のフリーキックで何をした選手だったのか
+  takeaway: J1の73得点のうち、直接フリーキックは24点（約3分の1。408試合で17試合に1本）。セルティックの3連覇の2年目、優勝を決めた1点もフリーキックだった。その左足は、いま日本代表のセットプレーの攻撃を任されている
+  nameplate: 中村俊輔｜元日本代表 MF
+  opening_image: assets/images/20261020_nakamura_shunsuke_legend/02_w.jpg
+  bgm: assets/audio/bgm_calm.wav
+short_title: 中村俊輔は、どんな選手だった？
+thumbnail:
+  layout: face
+  side: left
+  callouts:
+  - セルティック3連覇
+  - 81分のFK
+  line1: 中村俊輔
+  line2: 天才の左足
+  tags:
+  - 中村俊輔
+  - セルティック
+  - 日本代表
+  - 横浜F・マリノス
+  - フリーキック
+  - レジェンドの紹介
+  photo: assets/images/20261020_nakamura_shunsuke_legend/01_w.jpg
+  photos: []
+  short_photo: assets/images/20261020_nakamura_shunsuke_legend/02_v.jpg
+sections:
+- id: hook
+  heading: 天才と呼ばれた左足は、いま何を任されているのか
+  tier: 報道
+  telop: 「ボールタッチなら、ナカが一番だ」
+  card:
+    type: stats
+    title: 中村俊輔 元日本代表（48歳）
+    items:
+    - ['24', 本, J1の直接フリーキック。歴代1位（2018年5月時点）]
+    - ['3', 回, スコットランドでリーグ優勝（2005-06〜2007-08）]
+    - ['98', 試合, 日本代表。ワールドカップは2回]
+    focus: 0
+  say:
+  - text: セルティックの監督は、この選手を「天才」と呼びました。
+    image: assets/images/20261020_nakamura_shunsuke_legend/01_w.jpg
+    card: none
+    callword: 天才
+  - voice: ストラカン監督
+    text: ボールタッチの美しさなら、ナカが一番だ。
+    pause: 0.6
+  - text: 中村俊輔、愛称はナカ。いまは、日本代表のコーチです。
+    emph: true
+    card: &hook_stats
+      type: stats
+      title: 中村俊輔 元日本代表（48歳）
+      items:
+      - ['24', 本, J1の直接フリーキック。歴代1位（2018年5月時点）]
+      - ['3', 回, スコットランドでリーグ優勝（2005-06〜2007-08）]
+      - ['98', 試合, 日本代表。ワールドカップは2回]
+      focus: 0
+  - text: J1で決めた直接フリーキックは、24本。歴代の1位です。
+    card:
+      <<: *hook_stats
+      focus: 0
+  - text: 欧州では、スコットランドで3連覇。日本代表では、ワールドカップに2回出ました。
+    card:
+      <<: *hook_stats
+      focus: 1
+  - text: では、左足の中身を、数えていきます。
+    card: none
+  quotes_from:
+  - https://www.thecelticwiki.com/?p=13114
+  sources:
+  - https://www.thecelticwiki.com/?p=13114
+  - https://filgoal.com/articles/171417
+  - https://www.jfa.jp/news/00036247/
+  - https://www.jleague.jp/news/article/12071/
+  - https://www.soccer-king.jp/news/japan/jl/20221018/1698306.html
+- id: data
+  heading: 中村俊輔は、いつ、どこで生まれ、何を手にした選手か
+  tier: 報道
+  telop: 中村俊輔の基礎DATA
+  card:
+    type: table
+    title: 中村俊輔
+    columns:
+    - 項目
+    - 内容
+    rows: &ndata
+    - - 生年月日
+      - 1978年6月24日・横浜市
+    - - ポジション
+      - MF・左足・178cm
+    - - 所属クラブ
+      - 6つ（日本3・欧州3）
+    - - 日本代表
+      - 98試合24得点（2000〜2010）
+    - - 欧州のタイトル
+      - スコットランドで優勝3回
+    - - Jリーグ最優秀選手
+      - 2回（2000・2013年）
+    - - 現在
+      - 日本代表コーチ（2026年〜）
+    source: JFA・Wikipedia
+  say:
+  - text: 中村俊輔は、1978年6月24日、横浜市の生まれ。いま48歳です。
+    image: assets/images/20261020_nakamura_shunsuke_legend/03_w.jpg
+    card: &data_card
+      type: table
+      title: 中村俊輔
+      columns: [項目, 内容]
+      rows: *ndata
+      source: JFA・Wikipedia
+      highlight_row: 0
+  - text: 日本代表は98試合で24得点。ワールドカップは、2006年と2010年に出ました。
+    image: assets/images/20261020_nakamura_shunsuke_legend/04_w.jpg
+    card: none
+  - text: クラブは6つ。日本の3つと、イタリア、スコットランド、スペインの3つです。
+    card:
+      <<: *data_card
+      highlight_row: 2
+  sources:
+  - https://www.jfa.jp/news/00036247/
+  - https://ja.wikipedia.org/wiki/%E4%B8%AD%E6%9D%91%E4%BF%8A%E8%BC%94
+  - https://en.wikipedia.org/wiki/Shunsuke_Nakamura
+- id: career
+  heading: 高校からイタリアとスコットランドへ、どう渡っていったのか
+  tier: 報道
+  telop: 22歳でMVP、24歳でイタリアへ
+  card:
+    type: table
+    title: 歩んできた道
+    columns:
+    - 年
+    - 所属
+    - 出来事
+    rows: &ncareer
+    - - 1997〜02
+      - 横浜マリノス
+      - 22歳でMVP
+    - - 2002〜05
+      - レッジーナ
+      - セリエAで3季
+    - - 2005〜09
+      - セルティック
+      - リーグ優勝3回
+    - - 2009〜10
+      - エスパニョール
+      - 13試合で日本へ
+    - - 2010〜22
+      - 横浜M・磐田・横浜FC
+      - 2013年にMVP
+    source: JFA・Wikipedia
+  say:
+  - text: 高校は桐光学園。横浜マリノスのユースには上がれず、自分で進む道を選びました。
+    image: assets/images/20261020_nakamura_shunsuke_legend/08_w.jpg
+    card: none
+  - text: 1997年、横浜マリノスへ。5月3日、直接フリーキックでJリーグ初ゴール。
+    card: &career_card
+      type: table
+      title: 歩んできた道
+      columns: [年, 所属, 出来事]
+      rows: *ncareer
+      source: JFA・Wikipedia
+      highlight_row: 0
+  - text: 2000年、22歳でJリーグの最優秀選手に。史上最年少の受賞でした。
+    emph: true
+    card:
+      <<: *career_card
+      highlight_row: 0
+  - text: 2002年。日韓ワールドカップのメンバーから外れ、その夏、イタリアのレッジーナへ。
+    image: assets/images/20261020_nakamura_shunsuke_legend/01_w.jpg
+    card: none
+  - text: セリエAで3季を過ごし、2005年の夏、スコットランドのセルティックへ移ります。
+    card:
+      <<: *career_card
+      highlight_row: 2
+  - text: 本人は、スコットランドの日々を、こう振り返っています。
+    card: none
+  - voice: 中村俊輔
+    text: あのときはすべて整っていて運が良かった。
+    pause: 0.6
+  - text: 2009年、エスパニョールへ。リーグ戦は13試合で、半年後に日本へ戻ります。
+    image: assets/images/20261020_nakamura_shunsuke_legend/07_w.jpg
+    card:
+      <<: *career_card
+      highlight_row: 3
+  - text: ストラカン監督のミドルスブラ、イングランド2部からも誘われましたが、断りました。
+    card: none
+  quotes_from:
+  - https://www.goal.com/jp/%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9/%E4%B8%AD%E6%9D%91%E4%BF%8A%E8%BC%94%E3%81%8C%E8%AA%9E%E3%82%8Bcl%E3%83%9E%E3%83%B3%E3%83%81%E3%82%A7%E3%82%B9%E3%82%BF%E3%83%BCu%E6%88%A6%E4%BC%9D%E8%AA%AC%E3%81%AEfk%E3%82%92%E5%9B%9E%E9%A1%A7%E9%A7%86%E3%81%91%E5%BC%95%E3%81%8D%E3%81%AF%E3%81%AA%E3%81%8B%E3%81%A3%E3%81%9F%E3%82%BE%E3%83%BC%E3%83%B3%E3%81%AB%E5%85%A5%E3%81%A3%E3%81%A6%E3%81%84%E3%81%9F%E3%81%8B%E3%82%89%E7%8B%AC%E5%8D%A0%E3%82%A4%E3%83%B3%E3%82%BF%E3%83%93%E3%83%A5%E3%83%BC%E4%B8%AD%E7%B7%A8/okhv04l43hoz1s0zmun77vojv
+  sources:
+  - https://www.jfa.jp/news/00036247/
+  - https://www.soccer-king.jp/news/japan/jl/20221018/1698306.html
+  - https://ja.wikipedia.org/wiki/%E4%B8%AD%E6%9D%91%E4%BF%8A%E8%BC%94
+  - https://en.wikipedia.org/wiki/Shunsuke_Nakamura
+- id: style
+  heading: 中村俊輔の強みは、左足のフリーキックだけだったのか
+  tier: 報道
+  telop: 警戒されても、決めてきた
+  card:
+    type: table
+    title: どこで、何を決めたか
+    columns:
+    - 項目
+    - 数字
+    rows: &nstyle
+    - - J1の得点
+      - 73
+    - - うち直接フリーキック
+      - 24（歴代1位）
+    - - 1シーズンの最多
+      - 4（2013年）
+    source: Jリーグ公式・JFA
+  say:
+  - text: 武器は、左足。精度の高いボールを配る、攻撃の中心でした。
+    image: assets/images/20261020_nakamura_shunsuke_legend/03_w.jpg
+    card: none
+  - text: フリーキックは、警戒されるほど、練習のやり方を変えたと言います。
+    image: assets/images/20261020_nakamura_shunsuke_legend/01_w.jpg
+    card: none
+  - voice: 中村俊輔
+    text: 他のチームに警戒されるようになりましたね。
+  - voice: 中村俊輔
+    text: 壁を増やしたり、蹴る瞬間に仕掛けをしてきたり、
+    cont: true
+  - voice: 中村俊輔
+    text: ゴールの中に人を入れてみたり……。
+    cont: true
+    pause: 0.5
+  - voice: 中村俊輔
+    text: そのために練習では、ゴール前に柵を置いて、
+  - voice: 中村俊輔
+    text: 本当に隅の隅しか入らないようにするとかね。
+    cont: true
+    pause: 0.5
+  - text: J1では、2018年5月の時点で、2位が17本。7本の差です。
+    emph: true
+    card: &style_card
+      type: table
+      title: どこで、何を決めたか
+      columns: [項目, 数字]
+      rows: *nstyle
+      source: Jリーグ公式・JFA
+      highlight_row: 1
+  - text: リーグ戦の通算は、646試合で114得点。内訳は、表のとおり。
+    emph: true
+    card: &ntotal_card
+      type: table
+      title: 中村俊輔 通算（リーグ戦）
+      columns: [リーグ, 試合, 得点]
+      rows:
+      - [J1, '408', '73']
+      - [J2, '16', '1']
+      - [セリエA, '81', '11']
+      - [スコットランド, '128', '29']
+      - [ラ・リーガ, '13', '0']
+      - [リーグ戦の合計, '646', '114']
+      - [日本代表, '98', '24']
+      source: JFA
+      highlight_row: 5
+  quotes_from:
+  - https://www.thecelticwiki.com/?p=13114
+  - https://www.goal.com/jp/%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9/%E4%B8%AD%E6%9D%91%E4%BF%8A%E8%BC%94%E3%81%8C%E8%AA%9E%E3%82%8Bcl%E3%83%9E%E3%83%B3%E3%83%81%E3%82%A7%E3%82%B9%E3%82%BF%E3%83%BCu%E6%88%A6%E4%BC%9D%E8%AA%AC%E3%81%AEfk%E3%82%92%E5%9B%9E%E9%A1%A7%E9%A7%86%E3%81%91%E5%BC%95%E3%81%8D%E3%81%AF%E3%81%AA%E3%81%8B%E3%81%A3%E3%81%9F%E3%82%BE%E3%83%BC%E3%83%B3%E3%81%AB%E5%85%A5%E3%81%A3%E3%81%A6%E3%81%84%E3%81%9F%E3%81%8B%E3%82%89%E7%8B%AC%E5%8D%A0%E3%82%A4%E3%83%B3%E3%82%BF%E3%83%93%E3%83%A5%E3%83%BC%E4%B8%AD%E7%B7%A8/okhv04l43hoz1s0zmun77vojv
+  sources:
+  - https://www.jleague.jp/news/article/12071/
+  - https://www.jfa.jp/news/00036247/
+  - https://en.wikipedia.org/wiki/Shunsuke_Nakamura
+  - https://www.thecelticwiki.com/?p=13114
+- id: match
+  heading: 2006年11月21日、30ヤード先のゴールに、何が待っていたのか
+  tier: 報道
+  main: true
+  telop: 81分の左足、決勝トーナメントへ
+  card:
+    type: stats
+    title: チャンピオンズリーグ（2006年11月21日）
+    items:
+    - ['81', 分, 中村俊輔のフリーキック]
+    - ['1', 対0, セルティックがマンチェスター・ユナイテッドに勝つ]
+    - ['2', 得点, この年、ユナイテッドから決めた数（CL）]
+    focus: 0
+  say:
+  - text: 中村俊輔の最も大きな試合は、2006年11月21日。
+    image: assets/images/20261020_nakamura_shunsuke_legend/03_w.jpg
+    short_only: true
+    card: none
+  - text: チャンピオンズリーグ、対マンチェスター・ユナイテッド。
+    short_only: true
+    card: none
+  - text: セルティック・パークでのグループ戦。勝てば、決勝トーナメント進出が決まります。
+    image: assets/images/20261020_nakamura_shunsuke_legend/01_w.jpg
+    card: none
+  - text: 後半81分。ゴールまで30ヤード、およそ27メートル。
+    emph: true
+    image: assets/images/20261020_nakamura_shunsuke_legend/03_w.jpg
+    card: &nmatch_tl
+      type: timeline
+      title: 2006-07 チャンピオンズリーグ ユナイテッド戦
+      rows:
+      - ['9月13日', 'オールド・トラッフォードで2対3。FKで1点']
+      - ['11月21日', 'セルティック・パークで1対0。81分のFK']
+      - ['決勝T1回戦', 'ミランに0対0、延長0対1']
+      focus: 1
+      highlight_row: 1
+  - text: ペナルティエリアの外で、フリーキックを得ます。
+    card: none
+  - voice: 中村俊輔
+    text: あの時間にファールをもらって
+  - voice: 中村俊輔
+    text: 「やっと自分の時間が来た」と思ったかな。
+    cont: true
+  - voice: 中村俊輔
+    text: もう狙うことしか考えてなかった。
+    cont: true
+  - voice: 中村俊輔
+    text: 今考えたら「あんな遠いところからよく入ったな」って。
+    pause: 0.5
+  - text: 左足で巻いたボールは、GKファン・デル・サールの先、ゴールの上の隅へ。先制です。
+    emph: true
+    card:
+      <<: *nmatch_tl
+      highlight_row: 1
+  - text: 直後、ユナイテッドのPK。GKボルツが、止めました。
+    card: none
+  - voice: 中村俊輔
+    text: もちろんうれしかった。だけど正直あんまり覚えていなくて。
+    pause: 0.5
+  - text: 1対0の勝ち。大会が今の形になって、クラブ初の決勝トーナメント。
+    card:
+      type: stats
+      title: チャンピオンズリーグ（2006年11月21日）
+      items:
+      - ['81', 分, 中村俊輔のフリーキック]
+      - ['1', 対0, セルティックがマンチェスター・ユナイテッドに勝つ]
+      - ['2', 得点, この年、ユナイテッドから決めた数（CL）]
+      focus: 1
+  - text: 決勝トーナメントの1回戦は、ミラン。ホームは0対0、ミラノでは延長で0対1でした。
+    card:
+      <<: *nmatch_tl
+      highlight_row: 2
+  - text: 9月にも、同じユナイテッドから、フリーキックで得点。
+    card:
+      <<: *nmatch_tl
+      highlight_row: 0
+  - text: それは、今の形のチャンピオンズリーグでは、日本人初の得点でした。
+    card: none
+  quotes_from:
+  - https://www.goal.com/jp/%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9/%E4%B8%AD%E6%9D%91%E4%BF%8A%E8%BC%94%E3%81%8C%E8%AA%9E%E3%82%8Bcl%E3%83%9E%E3%83%B3%E3%83%81%E3%82%A7%E3%82%B9%E3%82%BF%E3%83%BCu%E6%88%A6%E4%BC%9D%E8%AA%AC%E3%81%AEfk%E3%82%92%E5%9B%9E%E9%A1%A7%E9%A7%86%E3%81%91%E5%BC%95%E3%81%8D%E3%81%AF%E3%81%AA%E3%81%8B%E3%81%A3%E3%81%9F%E3%82%BE%E3%83%BC%E3%83%B3%E3%81%AB%E5%85%A5%E3%81%A3%E3%81%A6%E3%81%84%E3%81%9F%E3%81%8B%E3%82%89%E7%8B%AC%E5%8D%A0%E3%82%A4%E3%83%B3%E3%82%BF%E3%83%93%E3%83%A5%E3%83%BC%E4%B8%AD%E7%B7%A8/okhv04l43hoz1s0zmun77vojv
+  sources:
+  - https://www.thecelticwiki.com/2006-11-21%3A-Celtic-1-0-Manchester-Utd%2C-Champions-League---%22This-is-priceless%22-%28Gordon-Strachan%29
+  - https://www.thecelticwiki.com/2006-09-13-manchester-united-3-2-celtic-champions-league/
+  - https://mg.co.za/article/2006-11-22-nakamura-gives-celtic-british-bragging-rights/
+  - https://thesefootballtimes.co/2018/11/09/how-the-devilishly-talented-shunsuke-nakamura-became-a-celtic-legend/
+  - https://en.wikipedia.org/wiki/Shunsuke_Nakamura
+- id: after
+  heading: 引退した左足は、いま誰に、何を教えているのか
+  tier: 報道
+  telop: 引退のあと、指導者へ
+  card:
+    type: timeline
+    title: 引退のあと
+    rows:
+    - ['2022年10月', 現役を引退（44歳）]
+    - ['2023年12月', 引退試合で6ゴール]
+    - ['2023〜25年', 横浜FCのコーチ]
+    - ['2026年4月', 日本代表のコーチに就任]
+    - ['2026年9月', セットプレーの攻撃を担当]
+    focus: 4
+    highlight_row: 0
+  say:
+  - text: 2022年10月18日、現役の引退を発表。26年のプロ生活でした。
+    image: assets/images/20261020_nakamura_shunsuke_legend/02_w.jpg
+    card: &nafter_tl
+      type: timeline
+      title: 引退のあと
+      rows:
+      - ['2022年10月', 現役を引退（44歳）]
+      - ['2023年12月', 引退試合で6ゴール]
+      - ['2023〜25年', 横浜FCのコーチ]
+      - ['2026年4月', 日本代表のコーチに就任]
+      - ['2026年9月', セットプレーの攻撃を担当]
+      focus: 4
+      highlight_row: 0
+  - voice: 中村俊輔
+    text: 幼稚園のときにサッカーボールを蹴り始めてから、
+    image: assets/images/20261020_nakamura_shunsuke_legend/02_w.jpg
+  - voice: 中村俊輔
+    text: 40年もの月日が経ちました。
+    cont: true
+    pause: 0.5
+  - text: 2023年12月17日、三ツ沢の引退試合。6ゴールのうち、3本が直接フリーキック。
+    card: none
+  - text: 引退後は、横浜FCのコーチに。2025年には、指導者のプロライセンスも取ります。
+    card:
+      <<: *nafter_tl
+      highlight_row: 2
+  - text: 2026年4月16日、ワールドカップを戦う日本代表の、コーチに就任。
+    image: assets/images/20261020_nakamura_shunsuke_legend/04_w.jpg
+    card:
+      <<: *nafter_tl
+      highlight_row: 3
+  - text: 就任のコメントには、慎重に考えた、とありました。
+    card: none
+  - voice: 中村俊輔
+    text: 森保監督から熱く力強いお言葉をいただき、
+  - voice: 中村俊輔
+    text: お引き受けする決意をいたしました。
+    cont: true
+    pause: 0.5
+  - text: 9月の代表発表で、中村コーチは、セットプレーの攻撃を任されることになります。
+    card:
+      <<: *nafter_tl
+      highlight_row: 4
+  - text: セットプレーとは、コーナーキックなど、試合を止めて始めるプレー。
+    card: none
+  - text: 24本の左足は、いま、日本代表の攻めを考える側にいます。
+    card:
+      <<: *nafter_tl
+      highlight_row: 4
+  quotes_from:
+  - https://www.soccer-king.jp/news/japan/jl/20221018/1698306.html
+  - https://www.jfa.jp/news/00036247/
+  sources:
+  - https://www.soccer-king.jp/news/japan/jl/20221018/1698306.html
+  - https://web.gekisaka.jp/news/jleague/detail/%3F398056-398056-fl
+  - https://www.jfa.jp/news/00036247/
+  - https://www.soccer-king.jp/news/japan/national/20260917/2205937.html
+- id: secret
+  heading: 優勝を決めた日と、引退試合の日に、何があったのか
+  tier: 報道
+  telop: 優勝を決めた日と、三ツ沢の日
+  card:
+    type: table
+    title: 数字の外にある、2つの話
+    columns: [いつ, 何があったか]
+    rows: &nsecret_rows
+    - ['2007年4月', 優勝を決めて、観客席へ飛び込む]
+    - ['2023年12月', 三ツ沢で、初めて観た試合の話]
+    source: Scotsman・AFP・ゲキサカ
+  say:
+  - text: ここからは、数字の外にある話を、2つ。
+    image: assets/images/20261020_nakamura_shunsuke_legend/01_v.jpg
+    card: &nsecret_card
+      type: table
+      title: 数字の外にある、2つの話
+      columns: [いつ, 何があったか]
+      rows: *nsecret_rows
+      source: Scotsman・AFP・ゲキサカ
+      highlight_row: 0
+  - text: 1つ目は、2007年4月22日、キルマーノック戦。
+    card:
+      <<: *nsecret_card
+      highlight_row: 0
+  - text: 同点のまま迎えたロスタイム。ゴールの少し手前で、ファールを受けます。
+    card: none
+  - text: 左足が決めて、2対1。セルティックは、残り4試合で優勝を決めました。
+    card: none
+  - text: 中村俊輔は、シャツを脱いで、サポーターの中へ飛び込みます。
+    card: none
+  - text: ここは、本人の言葉です。英語の報道からの訳。
+    card: none
+  - voice: 中村俊輔
+    text: あんなことをしたのは初めてだけど、
+  - voice: 中村俊輔
+    text: ずっと、観客の中に走り込んでみたかったんだ。
+    cont: true
+    pause: 0.6
+  - text: その夜、選手が選ぶ年間最優秀選手に。アジア人で初めての、欧州リーグの受賞でした。
+    card: none
+  - text: 2つ目は、2023年12月、三ツ沢の引退セレモニー。
+    image: assets/images/20261020_nakamura_shunsuke_legend/02_w.jpg
+    card:
+      <<: *nsecret_card
+      highlight_row: 1
+  - text: プロ初ゴールも、直接フリーキックで、同じ三ツ沢でした。
+    card: none
+  - voice: 中村俊輔
+    text: 思えば最初にサッカー観戦というものをしたのがここ三ツ沢で、
+    card:
+      type: document
+      label: 引退セレモニーでのスピーチ（2023年12月17日）
+      paragraphs:
+      - 思えば最初にサッカー観戦というものをしたのがここ三ツ沢で、ちょうどあの辺の席で、コンクリートの椅子だった時です。父親に連れられて見たのが日産自動車と読売クラブの試合でした。
+      - 両チームの10番、木村和司さんとラモス瑠偉さんに魅了され、自分もああなりたいと思ったのが全ての始まりだったんじゃないかなと思います。
+      highlight: [三ツ沢, 木村和司, ラモス瑠偉, 全ての始まり]
+  - voice: 中村俊輔
+    text: ちょうどあの辺の席で、コンクリートの椅子だった時です。
+    cont: true
+  - voice: 中村俊輔
+    text: 父親に連れられて見たのが日産自動車と読売クラブの試合でした。
+    cont: true
+  - voice: 中村俊輔
+    text: 両チームの10番、木村和司さんとラモス瑠偉さんに魅了され、
+    cont: true
+  - voice: 中村俊輔
+    text: 自分もああなりたいと思ったのが
+    cont: true
+  - voice: 中村俊輔
+    text: 全ての始まりだったんじゃないかなと思います。
+    cont: true
+    pause: 0.6
+  quotes_from:
+  - https://web.gekisaka.jp/news/jleague/detail/%3F398056-398056-fl
+  - https://archive.thedailystar.net/2007/04/24/d70424043353.htm
+  sources:
+  - https://www.thecelticwiki.com/?p=13114
+  - https://filgoal.com/articles/171417
+  - https://archive.thedailystar.net/2007/04/24/d70424043353.htm
+  - https://web.gekisaka.jp/news/jleague/detail/%3F398056-398056-fl
+  - https://ja.wikipedia.org/wiki/%E4%B8%AD%E6%9D%91%E4%BF%8A%E8%BC%94
+- id: view
+  heading: J1の73得点のうち、直接フリーキックは、いくつなのか
+  tier: 背景
+  viewpoint: true
+  telop: 73点のうち24点が、フリーキック
+  card:
+    type: table
+    title: J1の得点と、直接フリーキック
+    columns: [項目, 数字]
+    rows: &ncmp_rows
+    - ['J1の試合', '408']
+    - ['J1の得点', '73']
+    - ['うち直接フリーキック', '24（約3分の1）']
+    - ['1本までの試合', '約17']
+    source: JFA・Jリーグ公式
+  say:
+  - text: 最後に、中村俊輔のJ1を数えます。408試合で、73得点。
+    image: assets/images/20261020_nakamura_shunsuke_legend/03_w.jpg
+    card: &ncmp_card
+      type: table
+      title: J1の得点と、直接フリーキック
+      columns: [項目, 数字]
+      rows: *ncmp_rows
+      source: JFA・Jリーグ公式
+      highlight_row: 1
+  - text: そのうち24点が、直接フリーキック。3分の1です。
+    emph: true
+    card:
+      <<: *ncmp_card
+      highlight_row: 2
+    mark: {kind: circle, row: 2, col: 1}
+  - text: 408試合を24で割ると、17。およそ17試合に1本、決めてきたことになります。
+    card:
+      <<: *ncmp_card
+      highlight_row: 3
+  - text: セルティックの3連覇の2年目。優勝を決めた1点も、フリーキックでした。
+    image: assets/images/20261020_nakamura_shunsuke_legend/01_w.jpg
+    card: none
+  - text: 蹴る人から、考える人へ。左足の話は、まだ続いています。
+    image: assets/images/20261020_nakamura_shunsuke_legend/04_w.jpg
+    card: none
+  quotes_from: []
+  sources:
+  - https://www.jfa.jp/news/00036247/
+  - https://www.jleague.jp/news/article/12071/
+  - https://www.thecelticwiki.com/?p=13114
+  - https://www.soccer-king.jp/news/japan/national/20260917/2205937.html

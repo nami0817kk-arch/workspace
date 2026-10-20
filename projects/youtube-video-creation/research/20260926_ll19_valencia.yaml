@@ -24,6 +24,8 @@ theme:
 thumbnail:
   line1: 本拠地、最後のシーズン
   line2: 佐藤龍之介のいるバレンシア
+  tags:
+  - バレンシア
   crest_main:
   - バレンシア
   board: assets/stats/ll_valencia_data_t.png
@@ -48,7 +50,7 @@ sections:
     image: assets/stats/ll_valencia_data_r2.png
     no_telop: true
   - image: assets/stats/ll_valencia_data0.png
-    text: 創立は**1919年**。町のバルに集まった若者たちが、クラブを作りました。
+    text: 創立は**1919年**。町のバルに集まった若者たちが、立ち上げたクラブです。
     no_telop: true
   - image: assets/stats/ll_valencia_data1.png
     text: 愛称は「チェ」。バレンシアの人が呼びかけに使う、「ねえ」にあたる言葉です。
@@ -56,13 +58,14 @@ sections:
   - image: assets/stats/ll_valencia_data2.png
     text: ホームタウンはバレンシア。人口およそ**82万人**、スペインで3番目の都市です。
     no_telop: true
-  - image: assets/backgrounds/stadium_バレンシア.png
+  - image: assets/stats/ll_valencia_data3.png
     text: 本拠地はメスタージャ。**4万9430人**が入り、客席の傾きは欧州一と言われます。
+    no_telop: true
   - image: assets/stats/ll_valencia_data4.png
     text: オーナーは、シンガポールの実業家ピーター・リム。**2014年**に買い取りました。
     no_telop: true
   - image: assets/stats/ll_valencia_cups.png
-    text: 1部の優勝は**6回**。国王杯は**8回**、スーペルコパは**1回**。
+    text: 1部の優勝は**6回**。国王杯は**8回**、スペイン・スーパーカップは**1回**。
     no_telop: true
   - image: assets/stats/ll_valencia_data6.png
     text: 最多出場はフェルナンド・ゴメス。1983年から1998年までに、**556試合**です。
@@ -80,7 +83,6 @@ sections:
   - https://www.valenciacf.com/comunicado-oficial-ryunosuke-sato
   - https://www.valenciacf.com/official-statement-javier-aguirre
   - https://www.valenciacf.com/el-valencia-cf-y-lawerta-rendiran-homenaje-a-la-ultima-temporada-del-camp-de-mestalla-en-cada-partido-como-local-con-la-colleccio-mestalla-es-etern
-  bg: assets/backgrounds/stadium_バレンシア_in.png
   official: false
 - id: history
   heading: 2年続けて決勝へ
@@ -99,13 +101,12 @@ sections:
     - - 2001年 ミラノ
       - バイエルンにピーケー戦で敗戦
   say:
-  - 2000年、クラブは初めて、チャンピオンズリーグの決勝に進みます。
+  - 2000年、チャンピオンズリーグの決勝に、クラブは初めて進みます。
   - パリでの相手はレアル・マドリード。**0対3**で敗れました。
   - 翌年も決勝へ。バイエルンと**1対1**のあと、ピーケー戦で力尽きます。
   sources:
   - https://en.wikipedia.org/wiki/Valencia_CF
   - https://en.wikipedia.org/wiki/2001_UEFA_Champions_League_final
-  bg: assets/backgrounds/stadium_バレンシア_in.png
   official: false
 - id: history2
   heading: 31年ぶりの優勝
@@ -132,7 +133,6 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/Valencia_CF
   - https://en.wikipedia.org/wiki/Santiago_Ca%C3%B1izares
-  bg: assets/backgrounds/stadium_バレンシア_in.png
   official: false
 - id: nou
   heading: 止まった新スタジアム
@@ -161,11 +161,11 @@ sections:
       rows:
       - - 2025年1月
         - 工事を再開。収容およそ7万人
-  - 完成すれば**およそ7万人**が入ります。1923年からの本拠地とは、今シーズンでお別れです。
+  - 完成すれば、**およそ7万人**が入ります。
+  - 1923年からの本拠地とは、今シーズンでお別れです。
   sources:
   - https://en.wikipedia.org/wiki/Nou_Mestalla
   - https://en.wikipedia.org/wiki/Valencia_CF
-  bg: assets/backgrounds/stadium_バレンシア_in.png
   official: false
 - id: features
   heading: このクラブの特徴
@@ -184,7 +184,7 @@ sections:
       - 粘り強く戦う
   say:
   - text: アギーレ監督は、形にこだわらず、粘り強く戦う監督として知られています。
-    image: assets/photos/ll/valencia/valencia_manager_200422af.jpg
+    image: assets/photos/ll/valencia/valencia_manager_20261017.jpg
   - text: ピッチの外は、育てて売る型。
     card:
       type: table
@@ -195,7 +195,8 @@ sections:
       - &id004
         - 運営の型
         - 育てて売る
-  - 下部組織育ちのフェラン・トーレスは2020年、マンチェスター・シティへ**2300万ユーロ**。
+  - 下部組織育ちのフェラン・トーレスは、2020年にマンチェスター・シティへ。
+  - 移籍金は**2300万ユーロ**でした。
   - text: スタンドの熱も強い。年間シートを持つ会員は、多い時で**5万人**近くいました。
     card:
       type: table
@@ -210,7 +211,6 @@ sections:
   - https://en.wikipedia.org/wiki/Valencia_CF
   - https://en.wikipedia.org/wiki/Javier_Aguirre
   - https://es.wikipedia.org/wiki/Valencia_Club_de_F%C3%BAtbol
-  bg: assets/backgrounds/stadium_バレンシア_in.png
   official: false
 - id: episode
   heading: コイン投げの初代会長
@@ -244,7 +244,6 @@ sections:
   sources:
   - https://es.wikipedia.org/wiki/Valencia_Club_de_F%C3%BAtbol
   - https://en.wikipedia.org/wiki/Valencia_CF
-  bg: assets/backgrounds/stadium_バレンシア_in.png
   official: false
 - id: legends
   heading: このクラブを語る3人
@@ -264,15 +263,15 @@ sections:
       - 1993-2001
       - 欧州最優秀の中盤
   say:
-  - text: ガイスカ・メンディエタは、2部のカステジョンから来た中盤。リーグ戦で**230試合44得点**。
+  - text: ガイスカ・メンディエタは、2部のカステジョンから来た中盤です。
     image: assets/photos/ll/valencia/valencia_legend_b13e7c87.jpg
+  - リーグ戦で**230試合44得点**を挙げました。
   - 欧州の大舞台で輝き、2年続けてヨーロッパ最優秀のミッドフィルダーに選ばれました。
   - 2001年にラツィオへ。**4800万ユーロ**は、クラブが受け取った最高の移籍金です。
   sources:
   - https://en.wikipedia.org/wiki/Gaizka_Mendieta
   - https://en.wikipedia.org/wiki/David_Albelda
   - https://en.wikipedia.org/wiki/David_Villa
-  bg: assets/backgrounds/stadium_バレンシア_in.png
   official: false
 - id: legends2
   heading: このクラブを語る3人（2人目）
@@ -293,15 +292,16 @@ sections:
       - 1995-2013
       - 2度の優勝の主将
   say:
-  - text: ダビド・アルベルダは、地元バレンシア州生まれの守備的な中盤。リーグ戦で**351試合**です。
+  - text: ダビド・アルベルダは、地元バレンシア州生まれの守備的な中盤です。
     image: assets/photos/ll/valencia/valencia_legend_a622fa72.jpg
+  - リーグ戦で**351試合**に出ました。
   - 長く主将を務め、**2度**のリーグ優勝と、ヨーロッパの大会の制覇を支えました。
-  - 2007年、クーマン監督に構想から外されても去らず、翌春に復帰。残留を決めた試合に出ました。
+  - 2007年、クーマン監督に構想から外されても去りませんでした。
+  - 翌春に復帰し、残留を決めた試合に出ました。
   sources:
   - https://en.wikipedia.org/wiki/Gaizka_Mendieta
   - https://en.wikipedia.org/wiki/David_Albelda
   - https://en.wikipedia.org/wiki/David_Villa
-  bg: assets/backgrounds/stadium_バレンシア_in.png
   official: false
 - id: legends3
   heading: このクラブを語る3人（3人目）
@@ -322,15 +322,14 @@ sections:
       - 2005-2010
       - リーグ108得点
   say:
-  - text: ダビド・ビジャは2005年、サラゴサから**1200万ユーロ**で来たストライカーです。
-    image: assets/photos/ll/valencia/valencia_legend_e6568f32.jpg
+  - ダビド・ビジャは2005年、サラゴサから**1200万ユーロ**で加入したフォワードです。
   - 2008年から09年のシーズンは、リーグ戦で**28得点**。リーグで3番目の多さでした。
-  - リーグ戦で**166試合108得点**。2010年にバルセロナへ。その夏、スペイン代表で世界王者に。
+  - リーグ戦で**166試合108得点**。2010年にバルセロナへ。
+  - その夏、スペイン代表の一員として、世界王者になりました。
   sources:
   - https://en.wikipedia.org/wiki/Gaizka_Mendieta
   - https://en.wikipedia.org/wiki/David_Albelda
   - https://en.wikipedia.org/wiki/David_Villa
-  bg: assets/backgrounds/stadium_バレンシア_in.png
   official: false
 - id: manager
   heading: 今季の監督
@@ -352,13 +351,14 @@ sections:
       - メキシコ代表
   say:
   - text: 今シーズンの監督は、メキシコのハビエル・アギーレ。**2026年9月23日**の就任です。
-    image: assets/photos/ll/valencia/valencia_manager_200422af.jpg
+    image: assets/photos/ll/valencia/valencia_manager_20261017.jpg
   - 前はメキシコ代表。この夏のワールドカップで、ベスト16まで進みました。
+  - ホームの初戦は10月17日。アスレティックと、**0対0**でした。
   sources:
   - https://en.wikipedia.org/wiki/Valencia_CF
   - https://en.wikipedia.org/wiki/Javier_Aguirre
   - https://www.valenciacf.com/official-statement-javier-aguirre
-  bg: assets/backgrounds/stadium_バレンシア_in.png
+  - https://www.valenciacf.com/match-report-valencia-cf-draw-athletic-club
   official: false
 - id: squad
   heading: 今季の登録選手
@@ -410,12 +410,11 @@ sections:
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Valencia_CF
-  bg: assets/backgrounds/stadium_バレンシア_in.png
   official: false
 - id: season
   heading: 今季のここまで
   tier: 報道
-  telop: 7試合で1勝1引き分け5敗。19位
+  telop: 9試合で1勝3引き分け5敗。19位
   narrator: 解説
   card:
     type: table
@@ -446,13 +445,19 @@ sections:
     - - 第7節
       - レアル・ソシエダ（ホーム）
       - 2対3
+    - - 第8節
+      - ラシン・サンタンデール（アウェー）
+      - 2対2
+    - - 第9節
+      - アスレティック・ビルバオ（ホーム）
+      - 0対0
   say:
-  - ラ・リーガは7試合を終えて、**1勝1引き分け5敗**です。
-  - 順位は**19位**、勝ち点は**4**です。
+  - ラ・リーガは9試合を終えて、**1勝3引き分け5敗**です。
+  - 順位は**19位**、勝ち点は**6**です。
   - いまは降格圏にいます。
+  - 18位から下の3クラブは、シーズンの終わりに2部へ落ちます。
   sources:
   - https://www.espn.com/soccer/team/results/_/name/valencia
   - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard
   - https://en.wikipedia.org/wiki/Template:2026%E2%80%9327_La_Liga_table
-  bg: assets/backgrounds/stadium_バレンシア_in.png
   official: false

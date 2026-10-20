@@ -1,0 +1,573 @@
+Deu uma cabeçada a Yamal e pede desculpa: «Devia-me controlar» | A Bola
+toast.show($el))"
+x-transition:enter-start="translate-y-12 opacity-0"
+x-transition:enter-end="translate-y-0 opacity-100"
+x-transition:leave-end="opacity-0 scale-90"
+class="relative duration-300 transform transition ease-in-out max-w-xs w-full pointer-events-auto"
+:class="toast.select({ error: 'text-white', info: 'text-black', success: 'text-white', warning: 'text-white' })"
+>
+Menu principal
+Abrir menu
+Início
+Entrar
+Entrar
+Fechar menu
+Jogos
+Futebol
+Basquetebol
+Ténis
+Fans Arena
+Benfica
+Sporting
+FC Porto
+RESULTADOS E CLASSIFICAÇÕES
+Nacional
+Liga Portugal Betclic
+Liga Portugal 2 Meu Super
+Liga 3
+Supertaça
+Taça de Portugal Generali Tranquilidade
+Allianz Cup
+Liga feminina
+Taça de Portugal feminina
+Internacional
+Premier League
+LaLiga
+Ligue 1
+Serie A
+Bundesliga
+Brasileirão
+Internacional
+Uefa Champions League
+Uefa Europa League
+Uefa Conference League
+Mundial de Clubes
+Liga das Nações UEFA
+Mundial
+Euro
+Vídeos
+A BOLA TV
+Informação
+Programas
+Política Desportiva
+Desporto à Solta
+Esta semana no Wrestling
+Isto é Cinema
+Videocasts
+Toque de Bola
+Domínio d'A BOLA
+90+3
+Diário de um treinador
+O Lado Direito do Mister
+Hoje Jogo Eu
+Gear Vibes
+Mais
+Entrevista A BOLA
+DAZN
+Modalidades
+Modalidades
+Andebol
+Basquetebol
+Hóquei em patins
+Voleibol
+Fórmula 1
+Motociclismo
+Futsal
+Ténis
+Ciclismo
+Atletismo
+Últimas
+Mercado
+Liga Portugal Betclic
+Opinião
+A BOLA SUGERE
+iGaming Hub
+Estrelas & Lifestyle
+Barba e Cabelo
+Destino Aventura
+Capas
+Entrar
+Fechar menu
+Usuario
+Definições
+Sair
+Últimas
+Mercado
+Liga Portugal Betclic
+Fans Arena
+Jogos
+Início
+Benfica
+Sporting
+FC Porto
+RESULTADOS E CLASSIFICAÇÕES
+Nacional
+Liga Portugal Betclic
+Liga Portugal 2 Meu Super
+Liga 3
+Supertaça
+Taça de Portugal Generali Tranquilidade
+Allianz Cup
+Liga feminina
+Taça de Portugal feminina
+Ver todas as notícias
+Internacional
+Premier League
+LaLiga
+Ligue 1
+Serie A
+Bundesliga
+Brasileirão
+Ver todas as notícias
+Internacional
+Uefa Champions League
+Uefa Europa League
+Uefa Conference League
+Mundial de Clubes
+Liga das Nações UEFA
+Mundial
+Euro
+Ver todas as notícias
+Vídeos
+A BOLA TV
+Informação
+Programas
+Política Desportiva
+Desporto à Solta
+Esta semana no Wrestling
+Isto é Cinema
+Ver todas as notícias
+Videocasts
+Toque de Bola
+Domínio d'A BOLA
+90+3
+Diário de um treinador
+O Lado Direito do Mister
+Hoje Jogo Eu
+Gear Vibes
+Ver todas as notícias
+Mais
+Entrevista A BOLA
+DAZN
+Ver todas as notícias
+Modalidades
+Modalidades
+Andebol
+Basquetebol
+Hóquei em patins
+Voleibol
+Fórmula 1
+Motociclismo
+Futsal
+Ténis
+Ciclismo
+Atletismo
+Ver todas as notícias
+Vídeos
+A BOLA TV
+Videocasts
+Mais
+Modalidades
+Modalidades
+Entrar
+Entrar
+Últimas
+Mercado
+Liga Portugal Betclic
+Opinião
+A BOLA SUGERE
+iGaming Hub
+Fans Arena
+Jogos
+Futebol
+Internacional
+Deu uma cabeçada a Yamal e pede desculpa: «Devia-me controlar»
+VIVES O DESPORTO COMO NÓS?
+Notícias, golos e análises - apenas na aplicação oficial A BOLA.
+DESCARREGAR APP
+Continuar no navegador
+{
+const contentEl = this.$refs.contentBox;
+if (contentEl && window.innerWidth >= 640) {
+this.contentHeight = contentEl.offsetHeight;
+}
+});
+}
+}"
+x-init="calculateMargin()"
+x-on:resize.window.debounce.150ms="calculateMargin()"
+>
+0 && window.innerWidth >= 640 &&
+!(
+true || ['capas', 'barba-e-cabelo'].includes(
+'news')
+) ?
+`margin-bottom: -${Math.min(contentHeight * 0.15, 200)}px` :
+''"
+:class="{
+'sm:-mb-12': contentHeight === 0 &&
+!(
+true || ['capas', 'barba-e-cabelo'].includes(
+'news')
+)
+}"
+>
+Bernal e extremo do Barcelona envolveram-se numa discussão e o vermelho caiu para o jogador do Betis #DAZNLaLiga
+Afonso Santos
+22:57 - 17. outubro 2026.
+Adicione A BOLA às suas preferências do Google
+Facebook
+X
+WhatsApp
+Threads
+LinkedIn
+Bluesky
+showToast = false, 2000); isOpen = false"
+>
+Copiar link
+Copiado ao portapapeis
+Adicione A BOLA às suas preferências do Google
+//
+Internacional
+//
+Deu uma cabeçada a Yamal e pede desculpa: «Devia-me controlar»
+Facundo Bernal foi expulso na derrota do Betis com o Barcelona, logo após um golo da sua equipa
+Facundo
+Bernal
+recorreu às redes sociais para pedir desculpas aos adeptos do
+Betis
+, devido à cabeçada que deu a
+Lamine Yamal
+e ao cartão vermelho que daí adveio.
+Momentos após Abde fazer o 2-3 para a equipa de Sevilha, o médio desentendeu-se com o jovem do
+Barcelona
+e perdeu a cabeça, deixando a sua equipa em desvantagem, numa altura em que ainda podia lutar pelo resultado. O Barça acabou por ganhar 5-2.
+//
+Internacional
+//
+Barcelona bate Betis em mais uma prova de que vivemos no mundo de Yamal
+Esta foi a mensagem de Bernal:
+Quero pedir desculpa aos meus colegas e aos adeptos do Real Betis por ter deixado hoje a equipa com menos um jogador. Não costumo reagir assim e devia ter-me controlado naquela jogada. Assumo a responsabilidade e isso não voltará a acontecer.
+Héctor Bellerín
+já tinha revelado a reação da equipa do Betis ao incidente, garantindo que a união do grupo ia prevalecer.
+«No balneário, há total confiança para dizermos as coisas boas e as más. Todos cometemos erros. Temos de entrar em campo para corrigir isso no próximo jogo, com cabeça fria e demonstrando a ambição, a energia e a vontade que esta equipa tem, para que tudo o que fizemos até agora não fique refletido nessa ação. Temos de continuar todos juntos. Estamos a fazer uma campanha fantástica e temos de continuar lá no topo», afirmou.
+O Betis está no 3.º lugar com 19 pontos, mas pode cair para o 4.º, caso o Real Madrid ganhe este domingo ao Sevilha.
+#DAZNLALIGA
+Artigos Relacionados:
+//
+Futebol
+//
+FC Porto: o arquiteto invisível com o dom de antecipar o destino da bola
+//
+Internacional
+//
+5
+Casa de craque do Betis foi assaltada durante o jogo com o FC Porto
+//
+Nacional
+//
+34
+UEFA explica golo anulado ao FC Porto e penálti a favor do Betis
+Facebook
+X
+WhatsApp
+Threads
+LinkedIn
+Bluesky
+showToast = false, 2000); isOpen = false"
+>
+Copiar link
+Copiado ao portapapeis
+WhatsApp
+Facebook
+X
+Threads
+LinkedIn
+Bluesky
+showToast = false, 2000)"
+>
+Copiar link
+Copiado ao portapapeis
+Subscrever
+WhatsApp A BOLA
+Tags:
+Betis
+Barcelona
+LaLiga
+Destaques
+Juventus toma decisão após polémica com Francisco Conceição
+Amorim 'inspira-se' nos tempos de Mourinho no Benfica e toma decisão
+Nuno Mendes assusta e Luis Enrique reage
+Benfica vence com autoridade e Sporting tropeça no Funchal
+Sporting: Bragança mete a sexta para sair em definitivo... Pote ainda não arrancou
+Camisola da Argentina «com pouco uso» à venda por €12: Wanda Nara vinga-se de Icardi
+Transformar 90 minutos de bola num destino turístico de excelência
+Creatina Zumub: descubra a opção ideal para si neste guia definitivo
+Últimas
+00:14
+Candidatos à presidência do Belenenses apresentaram últimos trunfos
+00:05
+Barba e Cabelo de 18 de outubro de 2026
+00:05
+18 de outubro de 2026
+23:43
+«O Benfica é uma equipa ofensiva e distribui golos por vários jogadores»
+23:41
+Belenenses: «O Estádio do Restelo precisa de ser modernizado»
+23:38
+Francisco Barreto e Micael Simão vencem Baja Portalegre 500
+23:33
+Debate presidencial do Belenenses: «Temos um parceiro para esta caminhada»
+23:20
+Piloto parte a omoplata em queda violenta no Baja Portalegre (vídeo)
+23:20
+Jogadores do Leixões em confrontos com adeptos
+23:13
+Artur Gaspar sagra-se campeão europeu jovem de triatlo
+Ler mais
+Vídeos
+//
+Internacional
+//
+17.10.2026
+Betis volta à terra depois de vencer o FC Porto e a culpa é de Yamal (resumo)
+Vídeos
+Anterior
+//
+Internacional
+//
+17.10.2026
+Lembre-se do nome: Manzambi volta a ser decisivo (resumo)
+//
+Internacional
+//
+17.10.2026
+Bayern não conseguiu parar de marcar ao RB Leipzig (resumo)
+//
+Internacional
+//
+17.10.2026
+A cabeçada em Lamine Yamal que valeu a expulsão
+//
+Internacional
+//
+17.10.2026
+Golo monumental de Lo Celso ao Barcelona anulado pelo VAR
+//
+Internacional
+//
+17.10.2026
+ESTRONDOSO: Lamine Yamal com novo golaço para a coleção
+//
+Internacional
+//
+17.10.2026
+Ex-Benfica ajuda Elche a conquistar ponto na casa do Villarreal (resumo)
+//
+Internacional
+//
+17.10.2026
+Cabeçada (e expulsão) mudou tudo e o Liverpool sorri em Londres (resumo)
+//
+Internacional
+//
+17.10.2026
+Sete em sete: Man. City e Haaland estão imparáveis (resumo)
+//
+Internacional
+//
+17.10.2026
+Tardou, mas chegou: eis a primeira vitória do Fulham na liga (resumo)
+Seguinte
+Ver todos
+Destaques
+Juventus toma decisão após polémica com Francisco Conceição
+Amorim 'inspira-se' nos tempos de Mourinho no Benfica e toma decisão
+Nuno Mendes assusta e Luis Enrique reage
+Benfica vence com autoridade e Sporting tropeça no Funchal
+Sporting: Bragança mete a sexta para sair em definitivo... Pote ainda não arrancou
+Camisola da Argentina «com pouco uso» à venda por €12: Wanda Nara vinga-se de Icardi
+Transformar 90 minutos de bola num destino turístico de excelência
+Creatina Zumub: descubra a opção ideal para si neste guia definitivo
+Opinião
+Opinions
+Previous
+//
+Opinião
+//
+17.10.2026
+Rui Pedro Soares
+O tempo, o adversário que nem Cristiano Ronaldo conseguiu vencer
+//
+Opinião
+//
+17.10.2026
+Luís Aguilar
+O respeito não tem clube
+//
+Opinião
+//
+17.10.2026
+João Monteiro
+Académico: a força do Interior e um exemplo para um país mais equilibrado
+//
+Opinião
+//
+17.10.2026
+Luís Pedro Ferreira
+Um Benfica mais à Benfica
+//
+Opinião
+//
+17.10.2026
+Rui Almeida
+Letria, a letra fundamental
+Next
+Últimas
+00:14
+Candidatos à presidência do Belenenses apresentaram últimos trunfos
+00:05
+Barba e Cabelo de 18 de outubro de 2026
+00:05
+18 de outubro de 2026
+23:43
+«O Benfica é uma equipa ofensiva e distribui golos por vários jogadores»
+23:41
+Belenenses: «O Estádio do Restelo precisa de ser modernizado»
+23:38
+Francisco Barreto e Micael Simão vencem Baja Portalegre 500
+23:33
+Debate presidencial do Belenenses: «Temos um parceiro para esta caminhada»
+23:20
+Piloto parte a omoplata em queda violenta no Baja Portalegre (vídeo)
+23:20
+Jogadores do Leixões em confrontos com adeptos
+23:13
+Artur Gaspar sagra-se campeão europeu jovem de triatlo
+Ler mais
+A não perder
+1
+//
+Nacional
+//
+Taça Barnabé: há um troféu para conquistar, mas é a comunidade que ganha sempre
+2
+//
+Nacional
+//
+Toni, 80 anos: «O futebol deu-me mais do que aquilo que eu lhe dei»
+3
+//
+Futebol
+//
+Toni, 80 anos: «Eu sou grande porque estou num clube com a dimensão do Benfica»
+4
+//
+Nacional
+//
+Há uma ‘nova Luz’ a 12.500 euros por lugar: fomos conhecer o templo de luxo do Benfica
+5
+//
+Nacional
+//
+'Fugiu' do Benfica, passou por Chelsea e Liverpool e regressou para jogar... na distrital
+6
+//
+Ralis
+//
+O miúdo que levou a máscara de Carnaval ao título mundial
+Rodapé
+Facebook
+Instagram
+TikTok
+X
+YouTube
+WhatsApp
+Categorias
+Nacional
+Internacional
+Modalidades
+Opinião
+Mercado
+Vídeos
+Informações Legais
+Política de Privacidade
+Ficha Técnica
+Estatuto Editorial
+Termos & Condições
+Sobre A Bola
+Livro de Reclamações
+Termos & Condições Comerciais
+Política de Cookies
+Publicidade
+Descarregue a
+app gratuita
+Google Play
+App Store
+© 2026 Ringier Sports Media.
+Todos os direitos reservados.
+Distribuído por:
+Sportal365
+Fãs Unidos
+Ringier South Africa
+CDE
+×
+Próximo artigo
+Acesso
+Registo
+Palavra-passe esquecida
+Novo utilizador?
+Registe-se!
+Já tem conta?
+Iniciar sessão
+Endereço de email
+Palavra-passe
+Usar outro email
+ENTRAR
+CONTINUAR
+A iniciar sessão...
+A verificar...
+Esqueceu a palavra-passe?
+Ou continuar com
+Continuar com Google
+A iniciar sessão com Google...
+Continuar com Apple
+A iniciar sessão com Apple...
+Ao continuar, aceita os
+Termos e Condições
+para utilizar um perfil de utilizador neste website.
+Ou continuar com
+FACEBOOK
+GOOGLE
+APPLE
+Endereço de email
+ENVIAR EMAIL
+A enviar...
+Voltar ao início de sessão
+Nome de utilizador
+Endereço de email
+Palavra-passe
+CRIAR CONTA
+A registar...
+Ou continuar com
+Continuar com Google
+A iniciar sessão com Google...
+Continuar com Apple
+A iniciar sessão com Apple...
+Ao continuar, aceita os
+Termos e Condições
+para utilizar um perfil de utilizador neste website.
+Já existe uma conta com este email
+A ligar as suas contas...
+Continuar com Google
+A iniciar sessão com Google...
+Continuar com Apple
+A iniciar sessão com Apple...
+$refs.linkPassword.focus())"
+>
+Iniciei sessão com uma palavra-passe
+Endereço de email
+Palavra-passe
+ENTRAR
+Cancelar
+A iniciar sessão com Google...

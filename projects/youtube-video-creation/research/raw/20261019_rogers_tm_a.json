@@ -1,0 +1,507 @@
+{
+ "profile": {
+  "id": "503743",
+  "name": "Morgan Rogers",
+  "shortName": "M. Rogers",
+  "artistName": "",
+  "displayName": "",
+  "lifeDates": {
+   "age": 24,
+   "dateOfBirth": "2002-07-26",
+   "isDateOfBirthUnknown": false,
+   "dateOfDeath": null,
+   "isDateOfDeathUnknown": false
+  },
+  "birthPlaceDetails": {
+   "placeOfBirth": "Halesowen",
+   "countryOfBirthId": 189,
+   "placeOfBirthAdditionalInfo": "",
+   "gender": "male"
+  },
+  "nationalityDetails": {
+   "passportName": "Morgan Elliot Rogers",
+   "nationalities": {
+    "nationalityId": 189,
+    "secondNationalityId": 76
+   }
+  },
+  "attributes": {
+   "height": 1.87,
+   "preferredFootId": 2,
+   "outfitterId": 3,
+   "positionGroup": "MIDFIELDER",
+   "positionGroupName": "Midfielder",
+   "positionId": 10,
+   "firstSidePositionId": 12,
+   "secondSidePositionId": 11,
+   "lastContractRenewal": {
+    "year": null,
+    "month": null,
+    "day": null
+   },
+   "contractUntil": "2033-06-30",
+   "contractOptionId": null,
+   "formerClubsNote": "Halas Hawks (2008-2010), West Bromwich Albion (2010-2019)",
+   "consultantAgencyId": 8805,
+   "preferredFoot": {
+    "id": 2,
+    "name": "right"
+   },
+   "outfitter": {
+    "id": 3,
+    "name": "Puma"
+   },
+   "position": {
+    "id": 10,
+    "name": "Attacking Midfield",
+    "shortName": "AM",
+    "category": "Midfielder"
+   },
+   "firstSidePosition": {
+    "id": 12,
+    "name": "Right Winger",
+    "shortName": "RW",
+    "category": "Striker"
+   },
+   "secondSidePosition": {
+    "id": 11,
+    "name": "Left Winger",
+    "shortName": "LW",
+    "category": "Striker"
+   },
+   "consultantAgency": {
+    "id": 8805,
+    "name": "Footwork Management Limited",
+    "shortName": "Footwork",
+    "verificationStatus": "verified",
+    "verificationDate": "2024-02-26",
+    "unlockedDomains": [],
+    "isSpecialConsultantAgency": false,
+    "hasGlobalPremiumAccess": true,
+    "relativeUrl": "/footwork-management-limited/beraterfirma/berater/8805"
+   }
+  },
+  "preferences": {
+   "themeId": 0
+  },
+  "nominees": [],
+  "participations": [],
+  "relativeUrl": "/morgan-rogers/profil/spieler/503743",
+  "ribbon": {
+   "transferId": "6445546",
+   "ribbonType": "NEW_SIGNING"
+  },
+  "portraitUrl": "https://img.a.transfermarkt.technology/portrait/big/503743-1706786450.jpg",
+  "portraitUrlSource": "IMAGO",
+  "marketValueDetails": {
+   "current": {
+    "value": 120000000,
+    "currency": "EUR",
+    "compact": {
+     "prefix": "€",
+     "content": "120.00",
+     "suffix": "M"
+    },
+    "determined": "2026-10-07"
+   },
+   "previous": {
+    "value": 110000000,
+    "currency": "EUR",
+    "compact": {
+     "prefix": "€",
+     "content": "110.00",
+     "suffix": "M"
+    },
+    "determined": "2026-07-22"
+   },
+   "delta": {
+    "value": "+10.000.000 €",
+    "percentage": "+9,09 %",
+    "isVisible": true,
+    "type": "INCREASED"
+   },
+   "highest": {
+    "value": 120000000,
+    "currency": "EUR",
+    "compact": {
+     "prefix": "€",
+     "content": "120.00",
+     "suffix": "M"
+    },
+    "determined": "2026-10-07"
+   }
+  },
+  "clubAssignments": [
+   {
+    "playerId": "503743",
+    "clubId": "631",
+    "shirtNumber": 17,
+    "isCaptain": false,
+    "type": "current",
+    "debut": "2026-08-24",
+    "start": "2026-07-21"
+   },
+   {
+    "playerId": "503743",
+    "clubId": "3299",
+    "shirtNumber": null,
+    "isCaptain": false,
+    "type": "nationalTeam",
+    "debut": "2024-11-14"
+   }
+  ],
+  "lastClubId": 0
+ },
+ "mv": {
+  "history": [
+   {
+    "playerId": "503743",
+    "seasonId": 2019,
+    "clubId": "9265",
+    "age": 17,
+    "marketValue": {
+     "value": 1500000,
+     "currency": "EUR",
+     "compact": {
+      "prefix": "€",
+      "content": "1.50",
+      "suffix": "M"
+     },
+     "determined": "2019-12-10"
+    }
+   },
+   {
+    "playerId": "503743",
+    "seasonId": 2019,
+    "clubId": "9265",
+    "age": 17,
+    "marketValue": {
+     "value": 1300000,
+     "currency": "EUR",
+     "compact": {
+      "prefix": "€",
+      "content": "1.30",
+      "suffix": "M"
+     },
+     "determined": "2020-04-08"
+    }
+   },
+   {
+    "playerId": "503743",
+    "seasonId": 2021,
+    "clubId": "989",
+    "age": 19,
+    "marketValue": {
+     "value": 1800000,
+     "currency": "EUR",
+     "compact": {
+      "prefix": "€",
+      "content": "1.80",
+      "suffix": "M"
+     },
+     "determined": "2021-11-24"
+    }
+   },
+   {
+    "playerId": "503743",
+    "seasonId": 2021,
+    "clubId": "989",
+    "age": 19,
+    "marketValue": {
+     "value": 1800000,
+     "currency": "EUR",
+     "compact": {
+      "prefix": "€",
+      "content": "1.80",
+      "suffix": "M"
+     },
+     "determined": "2022-05-13"
+    }
+   },
+   {
+    "playerId": "503743",
+    "seasonId": 2022,
+    "clubId": "1181",
+    "age": 20,
+    "marketValue": {
+     "value": 1800000,
+     "currency": "EUR",
+     "compact": {
+      "prefix": "€",
+      "content": "1.80",
+      "suffix": "M"
+     },
+     "determined": "2023-03-24"
+    }
+   },
+   {
+    "playerId": "503743",
+    "seasonId": 2022,
+    "clubId": "9265",
+    "age": 20,
+    "marketValue": {
+     "value": 1800000,
+     "currency": "EUR",
+     "compact": {
+      "prefix": "€",
+      "content": "1.80",
+      "suffix": "M"
+     },
+     "determined": "2023-06-01"
+    }
+   },
+   {
+    "playerId": "503743",
+    "seasonId": 2023,
+    "clubId": "641",
+    "age": 21,
+    "marketValue": {
+     "value": 2200000,
+     "currency": "EUR",
+     "compact": {
+      "prefix": "€",
+      "content": "2.20",
+      "suffix": "M"
+     },
+     "determined": "2023-10-27"
+    }
+   },
+   {
+    "playerId": "503743",
+    "seasonId": 2023,
+    "clubId": "641",
+    "age": 21,
+    "marketValue": {
+     "value": 2800000,
+     "currency": "EUR",
+     "compact": {
+      "prefix": "€",
+      "content": "2.80",
+      "suffix": "M"
+     },
+     "determined": "2023-12-21"
+    }
+   },
+   {
+    "playerId": "503743",
+    "seasonId": 2023,
+    "clubId": "405",
+    "age": 21,
+    "marketValue": {
+     "value": 8000000,
+     "currency": "EUR",
+     "compact": {
+      "prefix": "€",
+      "content": "8.00",
+      "suffix": "M"
+     },
+     "determined": "2024-03-14"
+    }
+   },
+   {
+    "playerId": "503743",
+    "seasonId": 2023,
+    "clubId": "405",
+    "age": 21,
+    "marketValue": {
+     "value": 15000000,
+     "currency": "EUR",
+     "compact": {
+      "prefix": "€",
+      "content": "15.00",
+      "suffix": "M"
+     },
+     "determined": "2024-05-27"
+    }
+   },
+   {
+    "playerId": "503743",
+    "seasonId": 2024,
+    "clubId": "405",
+    "age": 22,
+    "marketValue": {
+     "value": 22000000,
+     "currency": "EUR",
+     "compact": {
+      "prefix": "€",
+      "content": "22.00",
+      "suffix": "M"
+     },
+     "determined": "2024-10-01"
+    }
+   },
+   {
+    "playerId": "503743",
+    "seasonId": 2024,
+    "clubId": "405",
+    "age": 22,
+    "marketValue": {
+     "value": 40000000,
+     "currency": "EUR",
+     "compact": {
+      "prefix": "€",
+      "content": "40.00",
+      "suffix": "M"
+     },
+     "determined": "2024-12-16"
+    }
+   },
+   {
+    "playerId": "503743",
+    "seasonId": 2024,
+    "clubId": "405",
+    "age": 22,
+    "marketValue": {
+     "value": 50000000,
+     "currency": "EUR",
+     "compact": {
+      "prefix": "€",
+      "content": "50.00",
+      "suffix": "M"
+     },
+     "determined": "2025-03-18"
+    }
+   },
+   {
+    "playerId": "503743",
+    "seasonId": 2024,
+    "clubId": "405",
+    "age": 22,
+    "marketValue": {
+     "value": 55000000,
+     "currency": "EUR",
+     "compact": {
+      "prefix": "€",
+      "content": "55.00",
+      "suffix": "M"
+     },
+     "determined": "2025-05-30"
+    }
+   },
+   {
+    "playerId": "503743",
+    "seasonId": 2025,
+    "clubId": "405",
+    "age": 23,
+    "marketValue": {
+     "value": 65000000,
+     "currency": "EUR",
+     "compact": {
+      "prefix": "€",
+      "content": "65.00",
+      "suffix": "M"
+     },
+     "determined": "2025-10-17"
+    }
+   },
+   {
+    "playerId": "503743",
+    "seasonId": 2025,
+    "clubId": "405",
+    "age": 23,
+    "marketValue": {
+     "value": 70000000,
+     "currency": "EUR",
+     "compact": {
+      "prefix": "€",
+      "content": "70.00",
+      "suffix": "M"
+     },
+     "determined": "2025-12-09"
+    }
+   },
+   {
+    "playerId": "503743",
+    "seasonId": 2025,
+    "clubId": "405",
+    "age": 23,
+    "marketValue": {
+     "value": 80000000,
+     "currency": "EUR",
+     "compact": {
+      "prefix": "€",
+      "content": "80.00",
+      "suffix": "M"
+     },
+     "determined": "2026-03-09"
+    }
+   },
+   {
+    "playerId": "503743",
+    "seasonId": 2025,
+    "clubId": "405",
+    "age": 23,
+    "marketValue": {
+     "value": 90000000,
+     "currency": "EUR",
+     "compact": {
+      "prefix": "€",
+      "content": "90.00",
+      "suffix": "M"
+     },
+     "determined": "2026-06-03"
+    }
+   },
+   {
+    "playerId": "503743",
+    "seasonId": 2026,
+    "clubId": "631",
+    "age": 23,
+    "marketValue": {
+     "value": 110000000,
+     "currency": "EUR",
+     "compact": {
+      "prefix": "€",
+      "content": "110.00",
+      "suffix": "M"
+     },
+     "determined": "2026-07-22"
+    }
+   },
+   {
+    "playerId": "503743",
+    "seasonId": 2026,
+    "clubId": "631",
+    "age": 24,
+    "marketValue": {
+     "value": 120000000,
+     "currency": "EUR",
+     "compact": {
+      "prefix": "€",
+      "content": "120.00",
+      "suffix": "M"
+     },
+     "determined": "2026-10-07"
+    }
+   }
+  ],
+  "playerIds": [
+   "503743"
+  ],
+  "clubIds": [
+   "9265",
+   "989",
+   "1181",
+   "641",
+   "405",
+   "631"
+  ],
+  "current": {
+   "playerId": "503743",
+   "seasonId": 2026,
+   "clubId": "631",
+   "age": 24,
+   "marketValue": {
+    "value": 120000000,
+    "currency": "EUR",
+    "compact": {
+     "prefix": "€",
+     "content": "120.00",
+     "suffix": "M"
+    },
+    "determined": "2026-10-07"
+   }
+  }
+ },
+ "transfers": null
+}

@@ -1,0 +1,2158 @@
+[
+ {
+  "name": "小久保玲央ブライアン",
+  "club": "Sint-Truidense VV",
+  "competition": "BE1",
+  "week": {
+   "games": 2,
+   "played": 2,
+   "starts": 2,
+   "minutes": 180,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 11,
+   "played": 11,
+   "starts": 11,
+   "minutes": 990,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": [
+   {
+    "date": "2026-10-15",
+    "competition": "カンファレンスリーグ",
+    "score": "2-0",
+    "venue": "home",
+    "state": "played",
+    "minutes": 90,
+    "starting": true,
+    "goals": 0,
+    "assists": 0,
+    "grade": null
+   },
+   {
+    "date": "2026-10-11",
+    "competition": "ジュピラー・プロ・リーグ",
+    "score": "3-4",
+    "venue": "away",
+    "state": "played",
+    "minutes": 90,
+    "starting": true,
+    "goals": 0,
+    "assists": 0,
+    "grade": null
+   }
+  ]
+ },
+ {
+  "name": "佐野航大",
+  "club": "PSV",
+  "competition": "NL1",
+  "week": {
+   "games": 2,
+   "played": 2,
+   "starts": 2,
+   "minutes": 180,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 12,
+   "played": 10,
+   "starts": 9,
+   "minutes": 837,
+   "goals": 1,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": [
+   {
+    "date": "2026-10-17",
+    "competition": "エールディビジ",
+    "score": "1-2",
+    "venue": "away",
+    "state": "played",
+    "minutes": 90,
+    "starting": true,
+    "goals": 0,
+    "assists": 0,
+    "grade": null
+   },
+   {
+    "date": "2026-10-13",
+    "competition": "チャンピオンズリーグ",
+    "score": "0-1",
+    "venue": "away",
+    "state": "played",
+    "minutes": 90,
+    "starting": true,
+    "goals": 0,
+    "assists": 0,
+    "grade": null
+   }
+  ]
+ },
+ {
+  "name": "鈴木彩艶",
+  "club": "アストン・ヴィラ",
+  "competition": "GB1",
+  "week": {
+   "games": 2,
+   "played": 2,
+   "starts": 2,
+   "minutes": 180,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 11,
+   "played": 9,
+   "starts": 8,
+   "minutes": 765,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": [
+   {
+    "date": "2026-10-17",
+    "competition": "プレミアリーグ",
+    "score": "1-0",
+    "venue": "away",
+    "state": "played",
+    "minutes": 90,
+    "starting": true,
+    "goals": 0,
+    "assists": 0,
+    "grade": null
+   },
+   {
+    "date": "2026-10-14",
+    "competition": "チャンピオンズリーグ",
+    "score": "6-0",
+    "venue": "home",
+    "state": "played",
+    "minutes": 90,
+    "starting": true,
+    "goals": 0,
+    "assists": 0,
+    "grade": null
+   }
+  ]
+ },
+ {
+  "name": "谷口彰悟",
+  "club": "Sint-Truidense VV",
+  "competition": "BE1",
+  "week": {
+   "games": 2,
+   "played": 2,
+   "starts": 2,
+   "minutes": 180,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 11,
+   "played": 8,
+   "starts": 7,
+   "minutes": 588,
+   "goals": 1,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 1
+  },
+  "matches": [
+   {
+    "date": "2026-10-15",
+    "competition": "カンファレンスリーグ",
+    "score": "2-0",
+    "venue": "home",
+    "state": "played",
+    "minutes": 90,
+    "starting": true,
+    "goals": 0,
+    "assists": 0,
+    "grade": null
+   },
+   {
+    "date": "2026-10-11",
+    "competition": "ジュピラー・プロ・リーグ",
+    "score": "3-4",
+    "venue": "away",
+    "state": "played",
+    "minutes": 90,
+    "starting": true,
+    "goals": 0,
+    "assists": 0,
+    "grade": null
+   }
+  ]
+ },
+ {
+  "name": "岩田智輝",
+  "club": "Birmingham City",
+  "competition": "GB2",
+  "week": {
+   "games": 2,
+   "played": 2,
+   "starts": 2,
+   "minutes": 165,
+   "goals": 0,
+   "assists": 2,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 13,
+   "played": 13,
+   "starts": 12,
+   "minutes": 1064,
+   "goals": 0,
+   "assists": 2,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": [
+   {
+    "date": "2026-10-17",
+    "competition": "チャンピオンシップ",
+    "score": "3-0",
+    "venue": "home",
+    "state": "played",
+    "minutes": 90,
+    "starting": true,
+    "goals": 0,
+    "assists": 2,
+    "grade": null
+   },
+   {
+    "date": "2026-10-13",
+    "competition": "チャンピオンシップ",
+    "score": "4-0",
+    "venue": "home",
+    "state": "played",
+    "minutes": 75,
+    "starting": true,
+    "goals": 0,
+    "assists": 0,
+    "grade": null
+   }
+  ]
+ },
+ {
+  "name": "旗手怜央",
+  "club": "Celtic FC",
+  "competition": "SC1",
+  "week": {
+   "games": 2,
+   "played": 2,
+   "starts": 2,
+   "minutes": 165,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 14,
+   "played": 9,
+   "starts": 5,
+   "minutes": 481,
+   "goals": 1,
+   "assists": 2,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": [
+   {
+    "date": "2026-10-16",
+    "competition": "チャンピオンシップ",
+    "score": "1-2",
+    "venue": "home",
+    "state": "played",
+    "minutes": 75,
+    "starting": true,
+    "goals": 0,
+    "assists": 0,
+    "grade": null
+   },
+   {
+    "date": "2026-10-13",
+    "competition": "チャンピオンシップ",
+    "score": "2-2",
+    "venue": "home",
+    "state": "played",
+    "minutes": 90,
+    "starting": true,
+    "goals": 0,
+    "assists": 0,
+    "grade": null
+   }
+  ]
+ },
+ {
+  "name": "鈴木唯人",
+  "club": "SC Freiburg",
+  "competition": "L1",
+  "week": {
+   "games": 2,
+   "played": 2,
+   "starts": 2,
+   "minutes": 154,
+   "goals": 0,
+   "assists": 0,
+   "grade": 3.96,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 9,
+   "played": 9,
+   "starts": 9,
+   "minutes": 684,
+   "goals": 4,
+   "assists": 0,
+   "grade": 2.68,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": [
+   {
+    "date": "2026-10-15",
+    "competition": "カンファレンスリーグ",
+    "score": "3-2",
+    "venue": "home",
+    "state": "played",
+    "minutes": 90,
+    "starting": true,
+    "goals": 0,
+    "assists": 0,
+    "grade": null
+   },
+   {
+    "date": "2026-10-11",
+    "competition": "ブンデスリーガ",
+    "score": "2-1",
+    "venue": "home",
+    "state": "played",
+    "minutes": 64,
+    "starting": true,
+    "goals": 0,
+    "assists": 0,
+    "grade": 3.96
+   }
+  ]
+ },
+ {
+  "name": "松木玖生",
+  "club": "Southampton FC",
+  "competition": "GB2",
+  "week": {
+   "games": 2,
+   "played": 2,
+   "starts": 1,
+   "minutes": 135,
+   "goals": 1,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 13,
+   "played": 13,
+   "starts": 8,
+   "minutes": 837,
+   "goals": 2,
+   "assists": 1,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": [
+   {
+    "date": "2026-10-17",
+    "competition": "チャンピオンシップ",
+    "score": "0-0",
+    "venue": "home",
+    "state": "played",
+    "minutes": 45,
+    "starting": false,
+    "goals": 0,
+    "assists": 0,
+    "grade": null
+   },
+   {
+    "date": "2026-10-14",
+    "competition": "チャンピオンシップ",
+    "score": "1-0",
+    "venue": "away",
+    "state": "played",
+    "minutes": 90,
+    "starting": true,
+    "goals": 1,
+    "assists": 0,
+    "grade": null
+   }
+  ]
+ },
+ {
+  "name": "渡辺剛",
+  "club": "フェイエノールト",
+  "competition": "NL1",
+  "week": {
+   "games": 2,
+   "played": 2,
+   "starts": 1,
+   "minutes": 101,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 11,
+   "played": 9,
+   "starts": 8,
+   "minutes": 682,
+   "goals": 0,
+   "assists": 1,
+   "grade": null,
+   "bench": 0,
+   "injured": 2
+  },
+  "matches": [
+   {
+    "date": "2026-10-17",
+    "competition": "エールディビジ",
+    "score": "4-3",
+    "venue": "away",
+    "state": "played",
+    "minutes": 90,
+    "starting": true,
+    "goals": 0,
+    "assists": 0,
+    "grade": null
+   },
+   {
+    "date": "2026-10-14",
+    "competition": "チャンピオンズリーグ",
+    "score": "3-2",
+    "venue": "home",
+    "state": "played",
+    "minutes": 11,
+    "starting": false,
+    "goals": 0,
+    "assists": 0,
+    "grade": null
+   }
+  ]
+ },
+ {
+  "name": "山本天翔",
+  "club": "ドルトムント",
+  "competition": "L1",
+  "week": {
+   "games": 1,
+   "played": 1,
+   "starts": 1,
+   "minutes": 90,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 14,
+   "played": 11,
+   "starts": 8,
+   "minutes": 799,
+   "goals": 0,
+   "assists": 4,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": [
+   {
+    "date": "2026-10-17",
+    "competition": "RLW3",
+    "score": "4-2",
+    "venue": "away",
+    "state": "played",
+    "minutes": 90,
+    "starting": true,
+    "goals": 0,
+    "assists": 0,
+    "grade": null
+   }
+  ]
+ },
+ {
+  "name": "木村誠二",
+  "club": "KVC Westerlo",
+  "competition": "BE1",
+  "week": {
+   "games": 2,
+   "played": 1,
+   "starts": 1,
+   "minutes": 90,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 9,
+   "played": 8,
+   "starts": 8,
+   "minutes": 720,
+   "goals": 0,
+   "assists": 1,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": [
+   {
+    "date": "2026-10-16",
+    "competition": "CCB",
+    "score": "2-0",
+    "venue": "home",
+    "state": "not in squad",
+    "minutes": 0,
+    "starting": false,
+    "goals": 0,
+    "assists": 0,
+    "grade": null
+   },
+   {
+    "date": "2026-10-11",
+    "competition": "ジュピラー・プロ・リーグ",
+    "score": "5-1",
+    "venue": "home",
+    "state": "played",
+    "minutes": 90,
+    "starting": true,
+    "goals": 0,
+    "assists": 0,
+    "grade": null
+   }
+  ]
+ },
+ {
+  "name": "ハーフナーニッキ",
+  "club": "Union Saint-Gilloise",
+  "competition": "BE1",
+  "week": {
+   "games": 2,
+   "played": 1,
+   "starts": 1,
+   "minutes": 90,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 14,
+   "played": 10,
+   "starts": 6,
+   "minutes": 640,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": [
+   {
+    "date": "2026-10-18",
+    "competition": "CCB",
+    "score": "0-0",
+    "venue": "home",
+    "state": "not in squad",
+    "minutes": 0,
+    "starting": false,
+    "goals": 0,
+    "assists": 0,
+    "grade": null
+   },
+   {
+    "date": "2026-10-15",
+    "competition": "ヨーロッパリーグ",
+    "score": "1-1",
+    "venue": "home",
+    "state": "played",
+    "minutes": 90,
+    "starting": true,
+    "goals": 0,
+    "assists": 0,
+    "grade": null
+   }
+  ]
+ },
+ {
+  "name": "佐野海舟",
+  "club": "1.FSV Mainz 05",
+  "competition": "L1",
+  "week": {
+   "games": 1,
+   "played": 1,
+   "starts": 1,
+   "minutes": 90,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 7,
+   "played": 7,
+   "starts": 7,
+   "minutes": 619,
+   "goals": 0,
+   "assists": 2,
+   "grade": 3.13,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": [
+   {
+    "date": "2026-10-17",
+    "competition": "ブンデスリーガ",
+    "score": "1-0",
+    "venue": "away",
+    "state": "played",
+    "minutes": 90,
+    "starting": true,
+    "goals": 0,
+    "assists": 0,
+    "grade": null
+   }
+  ]
+ },
+ {
+  "name": "小杉啓太",
+  "club": "フランクフルト",
+  "competition": "L1",
+  "week": {
+   "games": 1,
+   "played": 1,
+   "starts": 1,
+   "minutes": 90,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 7,
+   "played": 7,
+   "starts": 7,
+   "minutes": 585,
+   "goals": 0,
+   "assists": 3,
+   "grade": 4.08,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": [
+   {
+    "date": "2026-10-16",
+    "competition": "ブンデスリーガ",
+    "score": "1-0",
+    "venue": "home",
+    "state": "played",
+    "minutes": 90,
+    "starting": true,
+    "goals": 0,
+    "assists": 0,
+    "grade": null
+   }
+  ]
+ },
+ {
+  "name": "藤田譲瑠チマ",
+  "club": "FC St. Pauli",
+  "competition": "L2",
+  "week": {
+   "games": 1,
+   "played": 1,
+   "starts": 1,
+   "minutes": 90,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 9,
+   "played": 7,
+   "starts": 7,
+   "minutes": 558,
+   "goals": 1,
+   "assists": 0,
+   "grade": 2.85,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": [
+   {
+    "date": "2026-10-17",
+    "competition": "2.ブンデスリーガ",
+    "score": "1-1",
+    "venue": "away",
+    "state": "played",
+    "minutes": 90,
+    "starting": true,
+    "goals": 0,
+    "assists": 0,
+    "grade": null
+   }
+  ]
+ },
+ {
+  "name": "堂安律",
+  "club": "フランクフルト",
+  "competition": "L1",
+  "week": {
+   "games": 1,
+   "played": 1,
+   "starts": 1,
+   "minutes": 90,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 7,
+   "played": 5,
+   "starts": 5,
+   "minutes": 401,
+   "goals": 0,
+   "assists": 1,
+   "grade": 3.62,
+   "bench": 0,
+   "injured": 2
+  },
+  "matches": [
+   {
+    "date": "2026-10-16",
+    "competition": "ブンデスリーガ",
+    "score": "1-0",
+    "venue": "home",
+    "state": "played",
+    "minutes": 90,
+    "starting": true,
+    "goals": 0,
+    "assists": 0,
+    "grade": null
+   }
+  ]
+ },
+ {
+  "name": "町田浩樹",
+  "club": "TSG 1899 Hoffenheim",
+  "competition": "L1",
+  "week": {
+   "games": 1,
+   "played": 1,
+   "starts": 1,
+   "minutes": 90,
+   "goals": 1,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 9,
+   "played": 6,
+   "starts": 4,
+   "minutes": 365,
+   "goals": 1,
+   "assists": 0,
+   "grade": 3.89,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": [
+   {
+    "date": "2026-10-15",
+    "competition": "ヨーロッパリーグ",
+    "score": "2-3",
+    "venue": "home",
+    "state": "played",
+    "minutes": 90,
+    "starting": true,
+    "goals": 1,
+    "assists": 0,
+    "grade": null
+   }
+  ]
+ },
+ {
+  "name": "中村敬斗",
+  "club": "Olympique Lyon",
+  "competition": "FR1",
+  "week": {
+   "games": 1,
+   "played": 1,
+   "starts": 1,
+   "minutes": 90,
+   "goals": 0,
+   "assists": 2,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 10,
+   "played": 5,
+   "starts": 2,
+   "minutes": 236,
+   "goals": 1,
+   "assists": 2,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": [
+   {
+    "date": "2026-10-15",
+    "competition": "ヨーロッパリーグ",
+    "score": "3-2",
+    "venue": "home",
+    "state": "played",
+    "minutes": 90,
+    "starting": true,
+    "goals": 0,
+    "assists": 2,
+    "grade": null
+   }
+  ]
+ },
+ {
+  "name": "高井幸大",
+  "club": "Sint-Truidense VV",
+  "competition": "BE1",
+  "week": {
+   "games": 2,
+   "played": 1,
+   "starts": 1,
+   "minutes": 90,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 9,
+   "played": 1,
+   "starts": 1,
+   "minutes": 90,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": [
+   {
+    "date": "2026-10-15",
+    "competition": "カンファレンスリーグ",
+    "score": "2-0",
+    "venue": "home",
+    "state": "in squad",
+    "minutes": 0,
+    "starting": false,
+    "goals": 0,
+    "assists": 0,
+    "grade": null
+   },
+   {
+    "date": "2026-10-11",
+    "competition": "ジュピラー・プロ・リーグ",
+    "score": "3-4",
+    "venue": "away",
+    "state": "played",
+    "minutes": 90,
+    "starting": true,
+    "goals": 0,
+    "assists": 0,
+    "grade": null
+   }
+  ]
+ },
+ {
+  "name": "森下龍矢",
+  "club": "Blackburn Rovers",
+  "competition": "GB2",
+  "week": {
+   "games": 2,
+   "played": 2,
+   "starts": 2,
+   "minutes": 89,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 13,
+   "played": 13,
+   "starts": 13,
+   "minutes": 1013,
+   "goals": 2,
+   "assists": 3,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": [
+   {
+    "date": "2026-10-17",
+    "competition": "チャンピオンシップ",
+    "score": "2-3",
+    "venue": "away",
+    "state": "played",
+    "minutes": 27,
+    "starting": true,
+    "goals": 0,
+    "assists": 0,
+    "grade": null
+   },
+   {
+    "date": "2026-10-13",
+    "competition": "チャンピオンシップ",
+    "score": "1-0",
+    "venue": "away",
+    "state": "played",
+    "minutes": 62,
+    "starting": true,
+    "goals": 0,
+    "assists": 0,
+    "grade": null
+   }
+  ]
+ },
+ {
+  "name": "上田綺世",
+  "club": "LOSC Lille",
+  "competition": "FR1",
+  "week": {
+   "games": 2,
+   "played": 1,
+   "starts": 1,
+   "minutes": 78,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 1
+  },
+  "season": {
+   "games": 11,
+   "played": 10,
+   "starts": 8,
+   "minutes": 690,
+   "goals": 6,
+   "assists": 1,
+   "grade": null,
+   "bench": 0,
+   "injured": 1
+  },
+  "matches": [
+   {
+    "date": "2026-10-17",
+    "competition": "リーグ・アン",
+    "score": "1-1",
+    "venue": "home",
+    "state": "injured",
+    "minutes": 0,
+    "starting": false,
+    "goals": 0,
+    "assists": 0,
+    "grade": null
+   },
+   {
+    "date": "2026-10-13",
+    "competition": "チャンピオンズリーグ",
+    "score": "0-3",
+    "venue": "away",
+    "state": "played",
+    "minutes": 78,
+    "starting": true,
+    "goals": 0,
+    "assists": 0,
+    "grade": null
+   }
+  ]
+ },
+ {
+  "name": "三好康児",
+  "club": "VfL Bochum",
+  "competition": "L2",
+  "week": {
+   "games": 1,
+   "played": 1,
+   "starts": 1,
+   "minutes": 72,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 9,
+   "played": 9,
+   "starts": 9,
+   "minutes": 767,
+   "goals": 2,
+   "assists": 1,
+   "grade": 3.4,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": [
+   {
+    "date": "2026-10-17",
+    "competition": "2.ブンデスリーガ",
+    "score": "0-2",
+    "venue": "away",
+    "state": "played",
+    "minutes": 72,
+    "starting": true,
+    "goals": 0,
+    "assists": 0,
+    "grade": null
+   }
+  ]
+ },
+ {
+  "name": "前田大然",
+  "club": "イプスウィッチ",
+  "competition": "GB1",
+  "week": {
+   "games": 1,
+   "played": 1,
+   "starts": 1,
+   "minutes": 71,
+   "goals": 1,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 9,
+   "played": 8,
+   "starts": 5,
+   "minutes": 423,
+   "goals": 1,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": [
+   {
+    "date": "2026-10-17",
+    "competition": "プレミアリーグ",
+    "score": "2-3",
+    "venue": "away",
+    "state": "played",
+    "minutes": 71,
+    "starting": true,
+    "goals": 1,
+    "assists": 0,
+    "grade": null
+   }
+  ]
+ },
+ {
+  "name": "アペルカンプ真大",
+  "club": "SpVgg Greuther Fürth",
+  "competition": "L2",
+  "week": {
+   "games": 1,
+   "played": 1,
+   "starts": 1,
+   "minutes": 66,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 9,
+   "played": 7,
+   "starts": 7,
+   "minutes": 549,
+   "goals": 0,
+   "assists": 1,
+   "grade": 3.12,
+   "bench": 0,
+   "injured": 2
+  },
+  "matches": [
+   {
+    "date": "2026-10-17",
+    "competition": "2.ブンデスリーガ",
+    "score": "2-0",
+    "venue": "home",
+    "state": "played",
+    "minutes": 66,
+    "starting": true,
+    "goals": 0,
+    "assists": 0,
+    "grade": null
+   }
+  ]
+ },
+ {
+  "name": "毎熊晟矢",
+  "club": "AZ Alkmaar",
+  "competition": "NL1",
+  "week": {
+   "games": 1,
+   "played": 1,
+   "starts": 1,
+   "minutes": 61,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 11,
+   "played": 7,
+   "starts": 1,
+   "minutes": 125,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": [
+   {
+    "date": "2026-10-15",
+    "competition": "ヨーロッパリーグ",
+    "score": "2-1",
+    "venue": "home",
+    "state": "played",
+    "minutes": 61,
+    "starting": true,
+    "goals": 0,
+    "assists": 0,
+    "grade": null
+   }
+  ]
+ },
+ {
+  "name": "南野拓実",
+  "club": "モナコ",
+  "competition": "FR1",
+  "week": {
+   "games": 1,
+   "played": 1,
+   "starts": 1,
+   "minutes": 59,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 9,
+   "played": 1,
+   "starts": 1,
+   "minutes": 59,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 6
+  },
+  "matches": [
+   {
+    "date": "2026-10-15",
+    "competition": "カンファレンスリーグ",
+    "score": "2-1",
+    "venue": "away",
+    "state": "played",
+    "minutes": 59,
+    "starting": true,
+    "goals": 0,
+    "assists": 0,
+    "grade": null
+   }
+  ]
+ },
+ {
+  "name": "坂元達裕",
+  "club": "コヴェントリー",
+  "competition": "GB1",
+  "week": {
+   "games": 1,
+   "played": 1,
+   "starts": 0,
+   "minutes": 29,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 8,
+   "played": 4,
+   "starts": 2,
+   "minutes": 207,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": [
+   {
+    "date": "2026-10-12",
+    "competition": "プレミアリーグ",
+    "score": "4-1",
+    "venue": "home",
+    "state": "played",
+    "minutes": 29,
+    "starting": false,
+    "goals": 0,
+    "assists": 0,
+    "grade": null
+   }
+  ]
+ },
+ {
+  "name": "鎌田大地",
+  "club": "クリスタル・パレス",
+  "competition": "GB1",
+  "week": {
+   "games": 1,
+   "played": 1,
+   "starts": 0,
+   "minutes": 28,
+   "goals": 1,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 9,
+   "played": 9,
+   "starts": 7,
+   "minutes": 666,
+   "goals": 3,
+   "assists": 3,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": [
+   {
+    "date": "2026-10-15",
+    "competition": "ヨーロッパリーグ",
+    "score": "2-3",
+    "venue": "away",
+    "state": "played",
+    "minutes": 28,
+    "starting": false,
+    "goals": 1,
+    "assists": 0,
+    "grade": null
+   }
+  ]
+ },
+ {
+  "name": "新川志音",
+  "club": "Sint-Truidense VV",
+  "competition": "BE1",
+  "week": {
+   "games": 2,
+   "played": 2,
+   "starts": 0,
+   "minutes": 24,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 12,
+   "played": 7,
+   "starts": 1,
+   "minutes": 135,
+   "goals": 1,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": [
+   {
+    "date": "2026-10-15",
+    "competition": "カンファレンスリーグ",
+    "score": "2-0",
+    "venue": "home",
+    "state": "played",
+    "minutes": 1,
+    "starting": false,
+    "goals": 0,
+    "assists": 0,
+    "grade": null
+   },
+   {
+    "date": "2026-10-11",
+    "competition": "ジュピラー・プロ・リーグ",
+    "score": "3-4",
+    "venue": "away",
+    "state": "played",
+    "minutes": 23,
+    "starting": false,
+    "goals": 0,
+    "assists": 0,
+    "grade": null
+   }
+  ]
+ },
+ {
+  "name": "久保建英",
+  "club": "レアル・ソシエダ",
+  "competition": "ES1",
+  "week": {
+   "games": 1,
+   "played": 1,
+   "starts": 0,
+   "minutes": 22,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 10,
+   "played": 7,
+   "starts": 3,
+   "minutes": 252,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": [
+   {
+    "date": "2026-10-15",
+    "competition": "ヨーロッパリーグ",
+    "score": "1-1",
+    "venue": "away",
+    "state": "played",
+    "minutes": 22,
+    "starting": false,
+    "goals": 0,
+    "assists": 0,
+    "grade": null
+   }
+  ]
+ },
+ {
+  "name": "菅原由勢",
+  "club": "Southampton FC",
+  "competition": "GB2",
+  "week": {
+   "games": 1,
+   "played": 1,
+   "starts": 0,
+   "minutes": 21,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 10,
+   "played": 3,
+   "starts": 0,
+   "minutes": 74,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": [
+   {
+    "date": "2026-10-11",
+    "competition": "セリエA",
+    "score": "1-1",
+    "venue": "home",
+    "state": "played",
+    "minutes": 21,
+    "starting": false,
+    "goals": 0,
+    "assists": 0,
+    "grade": null
+   }
+  ]
+ },
+ {
+  "name": "守田英正",
+  "club": "ハル・シティ",
+  "competition": "GB1",
+  "week": {
+   "games": 1,
+   "played": 1,
+   "starts": 0,
+   "minutes": 15,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 9,
+   "played": 4,
+   "starts": 1,
+   "minutes": 106,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 5
+  },
+  "matches": [
+   {
+    "date": "2026-10-17",
+    "competition": "プレミアリーグ",
+    "score": "0-1",
+    "venue": "away",
+    "state": "played",
+    "minutes": 15,
+    "starting": false,
+    "goals": 0,
+    "assists": 0,
+    "grade": null
+   }
+  ]
+ },
+ {
+  "name": "伊藤洋輝",
+  "club": "バイエルン",
+  "competition": "L1",
+  "week": {
+   "games": 2,
+   "played": 1,
+   "starts": 0,
+   "minutes": 7,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 10,
+   "played": 2,
+   "starts": 0,
+   "minutes": 17,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": [
+   {
+    "date": "2026-10-17",
+    "competition": "ブンデスリーガ",
+    "score": "6-1",
+    "venue": "home",
+    "state": "in squad",
+    "minutes": 0,
+    "starting": false,
+    "goals": 0,
+    "assists": 0,
+    "grade": null
+   },
+   {
+    "date": "2026-10-13",
+    "competition": "チャンピオンズリーグ",
+    "score": "3-3",
+    "venue": "away",
+    "state": "played",
+    "minutes": 7,
+    "starting": false,
+    "goals": 0,
+    "assists": 0,
+    "grade": null
+   }
+  ]
+ },
+ {
+  "name": "原大智",
+  "club": "FC St. Pauli",
+  "competition": "L2",
+  "week": {
+   "games": 1,
+   "played": 1,
+   "starts": 0,
+   "minutes": 1,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 9,
+   "played": 8,
+   "starts": 5,
+   "minutes": 379,
+   "goals": 2,
+   "assists": 1,
+   "grade": 3.32,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": [
+   {
+    "date": "2026-10-17",
+    "competition": "2.ブンデスリーガ",
+    "score": "1-1",
+    "venue": "away",
+    "state": "played",
+    "minutes": 1,
+    "starting": false,
+    "goals": 0,
+    "assists": 0,
+    "grade": null
+   }
+  ]
+ },
+ {
+  "name": "塩貝健人",
+  "club": "VfL Wolfsburg",
+  "competition": "L2",
+  "week": {
+   "games": 1,
+   "played": 1,
+   "starts": 0,
+   "minutes": 1,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 9,
+   "played": 8,
+   "starts": 3,
+   "minutes": 352,
+   "goals": 0,
+   "assists": 0,
+   "grade": 3.94,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": [
+   {
+    "date": "2026-10-17",
+    "competition": "2.ブンデスリーガ",
+    "score": "3-1",
+    "venue": "home",
+    "state": "played",
+    "minutes": 1,
+    "starting": false,
+    "goals": 0,
+    "assists": 0,
+    "grade": null
+   }
+  ]
+ },
+ {
+  "name": "伊東純也",
+  "club": "KRC Genk",
+  "competition": "BE1",
+  "week": {
+   "games": 1,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 9,
+   "played": 8,
+   "starts": 8,
+   "minutes": 663,
+   "goals": 1,
+   "assists": 2,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": [
+   {
+    "date": "2026-10-17",
+    "competition": "CCB",
+    "score": "2-0",
+    "venue": "away",
+    "state": "not in squad",
+    "minutes": 0,
+    "starting": false,
+    "goals": 0,
+    "assists": 0,
+    "grade": null
+   }
+  ]
+ },
+ {
+  "name": "瀬古歩夢",
+  "club": "Le Havre AC",
+  "competition": "FR1",
+  "week": {
+   "games": 0,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 6,
+   "played": 6,
+   "starts": 6,
+   "minutes": 511,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": []
+ },
+ {
+  "name": "安藤智哉",
+  "club": "FC St. Pauli",
+  "competition": "L2",
+  "week": {
+   "games": 1,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 9,
+   "played": 6,
+   "starts": 6,
+   "minutes": 471,
+   "goals": 0,
+   "assists": 0,
+   "grade": 4.1,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": [
+   {
+    "date": "2026-10-17",
+    "competition": "2.ブンデスリーガ",
+    "score": "1-1",
+    "venue": "away",
+    "state": "in squad",
+    "minutes": 0,
+    "starting": false,
+    "goals": 0,
+    "assists": 0,
+    "grade": null
+   }
+  ]
+ },
+ {
+  "name": "田中碧",
+  "club": "リーズ",
+  "competition": "GB1",
+  "week": {
+   "games": 0,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 8,
+   "played": 7,
+   "starts": 5,
+   "minutes": 419,
+   "goals": 0,
+   "assists": 2,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": []
+ },
+ {
+  "name": "板倉滉",
+  "club": "Ajax Amsterdam",
+  "competition": "NL1",
+  "week": {
+   "games": 0,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 12,
+   "played": 5,
+   "starts": 4,
+   "minutes": 387,
+   "goals": 0,
+   "assists": 0,
+   "grade": 4.78,
+   "bench": 0,
+   "injured": 6
+  },
+  "matches": []
+ },
+ {
+  "name": "佐藤龍之介",
+  "club": "バレンシア",
+  "competition": "ES1",
+  "week": {
+   "games": 2,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 9,
+   "played": 5,
+   "starts": 4,
+   "minutes": 297,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": [
+   {
+    "date": "2026-10-17",
+    "competition": "ラ・リーガ",
+    "score": "0-0",
+    "venue": "home",
+    "state": "in squad",
+    "minutes": 0,
+    "starting": false,
+    "goals": 0,
+    "assists": 0,
+    "grade": null
+   },
+   {
+    "date": "2026-10-11",
+    "competition": "ラ・リーガ",
+    "score": "2-2",
+    "venue": "away",
+    "state": "in squad",
+    "minutes": 0,
+    "starting": false,
+    "goals": 0,
+    "assists": 0,
+    "grade": null
+   }
+  ]
+ },
+ {
+  "name": "冨安健洋",
+  "club": "クリスタル・パレス",
+  "competition": "GB1",
+  "week": {
+   "games": 1,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 1
+  },
+  "season": {
+   "games": 9,
+   "played": 5,
+   "starts": 3,
+   "minutes": 280,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 2
+  },
+  "matches": [
+   {
+    "date": "2026-10-15",
+    "competition": "ヨーロッパリーグ",
+    "score": "2-3",
+    "venue": "away",
+    "state": "injured",
+    "minutes": 0,
+    "starting": false,
+    "goals": 0,
+    "assists": 0,
+    "grade": null
+   }
+  ]
+ },
+ {
+  "name": "橋岡大樹",
+  "club": "ボルシアMG",
+  "competition": "L1",
+  "week": {
+   "games": 0,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 7,
+   "played": 4,
+   "starts": 3,
+   "minutes": 260,
+   "goals": 1,
+   "assists": 0,
+   "grade": 4.46,
+   "bench": 0,
+   "injured": 2
+  },
+  "matches": []
+ },
+ {
+  "name": "山田新",
+  "club": "Oud-Heverlee Leuven",
+  "competition": "BE1",
+  "week": {
+   "games": 1,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 9,
+   "played": 6,
+   "starts": 2,
+   "minutes": 192,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": [
+   {
+    "date": "2026-10-17",
+    "competition": "CCB",
+    "score": "1-0",
+    "venue": "home",
+    "state": "not in squad",
+    "minutes": 0,
+    "starting": false,
+    "goals": 0,
+    "assists": 0,
+    "grade": null
+   }
+  ]
+ },
+ {
+  "name": "高橋仁胡",
+  "club": "Holstein Kiel",
+  "competition": "L2",
+  "week": {
+   "games": 1,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 10,
+   "played": 3,
+   "starts": 2,
+   "minutes": 153,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": [
+   {
+    "date": "2026-10-16",
+    "competition": "2.ブンデスリーガ",
+    "score": "0-0",
+    "venue": "home",
+    "state": "not in squad",
+    "minutes": 0,
+    "starting": false,
+    "goals": 0,
+    "assists": 0,
+    "grade": null
+   }
+  ]
+ },
+ {
+  "name": "大橋祐紀",
+  "club": "Blackburn Rovers",
+  "competition": "GB2",
+  "week": {
+   "games": 2,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 13,
+   "played": 4,
+   "starts": 2,
+   "minutes": 116,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": [
+   {
+    "date": "2026-10-17",
+    "competition": "チャンピオンシップ",
+    "score": "2-3",
+    "venue": "away",
+    "state": "not in squad",
+    "minutes": 0,
+    "starting": false,
+    "goals": 0,
+    "assists": 0,
+    "grade": null
+   },
+   {
+    "date": "2026-10-13",
+    "competition": "チャンピオンシップ",
+    "score": "1-0",
+    "venue": "away",
+    "state": "not in squad",
+    "minutes": 0,
+    "starting": false,
+    "goals": 0,
+    "assists": 0,
+    "grade": null
+   }
+  ]
+ },
+ {
+  "name": "遠藤航",
+  "club": "リバプール",
+  "competition": "GB1",
+  "week": {
+   "games": 3,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 10,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": [
+   {
+    "date": "2026-10-17",
+    "competition": "プレミアリーグ",
+    "score": "2-1",
+    "venue": "away",
+    "state": "in squad",
+    "minutes": 0,
+    "starting": false,
+    "goals": 0,
+    "assists": 0,
+    "grade": null
+   },
+   {
+    "date": "2026-10-14",
+    "competition": "チャンピオンズリーグ",
+    "score": "6-3",
+    "venue": "away",
+    "state": "absent",
+    "minutes": 0,
+    "starting": false,
+    "goals": 0,
+    "assists": 0,
+    "grade": null
+   },
+   {
+    "date": "2026-10-11",
+    "competition": "プレミアリーグ",
+    "score": "0-3",
+    "venue": "home",
+    "state": "in squad",
+    "minutes": 0,
+    "starting": false,
+    "goals": 0,
+    "assists": 0,
+    "grade": null
+   }
+  ]
+ },
+ {
+  "name": "三笘薫",
+  "club": "ブライトン",
+  "competition": "GB1",
+  "week": {
+   "games": 1,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 1
+  },
+  "season": {
+   "games": 10,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 10
+  },
+  "matches": [
+   {
+    "date": "2026-10-15",
+    "competition": "カンファレンスリーグ",
+    "score": "4-0",
+    "venue": "home",
+    "state": "injured",
+    "minutes": 0,
+    "starting": false,
+    "goals": 0,
+    "assists": 0,
+    "grade": null
+   }
+  ]
+ }
+]

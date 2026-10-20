@@ -1,0 +1,1019 @@
+# スタジアム紹介シリーズ：マンチェスター・シティの本拠地（エティハド、10/20）。雛形は 10/19 トッテナム回。
+# 軸：A＝収容6万1038席はプレミア4位／B＝誰が建てたか（市とスポーツ・イングランドの資金で2002年コモンウェルスゲームズ用に建設→2003年にシティが入居→増築）。
+# 収容：PL公式ハンドブック2026/27（6〜25ページ「Ground Capacity at start of the Season」）から20クラブを再抽出して検算（取得2026-10-19）。
+#   74,158 / 62,850 / 61,276 / 61,038(シティ) / 60,704 / 52,769 / 52,729 / 48,095 / 40,044 / 37,633 / 36,887 / 32,609 / 32,176 / 31,212 / 30,294 / 28,107 / 25,194 / 24,983 / 17,250 / 12,357。合計822,365。シティは4位。
+#   74,158-61,038=13,120／61,038-60,704=334／13,120-12,357=763／2019-20ハンドブック28ページ：シティ55,017。
+# 入場（PL公式試合API）：昨季ホーム19試合中、入場の出ている18試合。最終戦(5/24 ヴィラ戦)以外17試合 合計888,802÷17=52,282.5、最多52,534。最終戦60,332（5/13パレス戦は入場がnull）。
+#   今季ホーム4試合 60,645/60,765/60,312/60,817 平均60,634.75。差8,352。60,635÷61,038=99.3%。61,038-60,817=221。控え research/raw/20261020_etihad_city_matches_pl_api.json
+# 自分で数えた：転用工事 市22＋クラブ20=42百万ポンド、20÷42=48%／61,038÷38,000=1.6倍／90-77=13。
+# 割れる点（台本で「割れる」と言った）：総工費 1.10億(BBC2002・Wikipedia CWG)/1.12億(Wikipedia・Guardian2011)/1.20億(BBC2003)。スポーツ・イングランド負担 77百万(Wikipedia)/90百万(Guardian2011)。
+#   いまの収容 クラブ「6万1000超」/61,038(公式)/61,474(Wikipedia)/約6万2000(Wikipedia)。北側の新席 クラブ7,000超/Wikipedia7,900。
+#   言わなかった割れ：旧本拠地の収容 35,150(Wikipedia)対32,000(Guardian)、賃料の式、命名契約の額、アラップ設計の担当者名。
+# 確度：クラブ公式 mancity.com の北側スタンド命名記事（全面開場・7,000席超・401室ホテル）で読めたもの以外は Wikipedia・BBC・Guardian＝報道／背景。持ち主は市のまま＝Wikipedia現在の記述（「とされます」）。
+# 重なりを避けた：オールド・トラッフォード回のメイン・ロード1948年8万3260、アンフィールド回の平均4万1118席・1.5倍・238席・572席・ブライトン、トッテナム回の北ロンドン53%・次の相手の倍率。
+# 読めなかった：mancity.comの建設史ページ、Arup公式ページ、manchester.gov.uk（市の資料はGuardianが引く市の発言・賃貸条件で代替）、archive.org(429)。ブラウザ操作・JS実行は不使用。
+date: 2026年10月20日
+slot: other_1
+format: news
+series: スタジアム紹介
+voice_min: 0
+people: []
+theme:
+  id: stadium_etihad
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: マンチェスター・シティ
+  title: エティハド。収容6万1038席のプレミア4位は、誰が建てた競技場だったのか
+  question: プレミアで4番目に大きい本拠地は、もとは誰が、何のために建てた競技場で、どう広がったのか
+  lead: プレミアで4番目の大きさの競技場。
+  hook: ''
+  opening_image: assets/images/20261020_stadium_etihad/01_w.jpg
+  end_bg: assets/images/20261020_stadium_etihad/01_w.jpg
+  takeaway: マンチェスター・シティの本拠地、エティハド・スタジアムの収容は、今季の開幕時で6万1038人。プレミア20クラブで4番目に大きく、1位マンチェスター・ユナイテッド（7万4158人）とは1万3120席の差。もとは2002年のコモンウェルスゲームズのために、国のスポーツ機関とマンチェスター市の資金で建てた競技場で、2003年にシティが移った。転用工事4200万ポンドのうち、クラブの負担は2000万ポンド（48％）。席は2014〜15年の南側スタンドと、2026年5月24日に全面が開いた北側スタンドで増え、大会のときの3万8000席の1.6倍になった。昨季のホーム最終戦の前の17試合の平均入場は5万2282人、今季のここまで4試合の平均は6万635人で、収容の99.3％。総工費は1億1000万〜1億2000万ポンドと資料で割れる
+  short_title: エティハド、プレミア4位の6万1038席
+thumbnail:
+  layout: classic
+  callouts:
+  - 6万1038席
+  - もとは陸上競技場
+  photo: assets/images/20261020_stadium_etihad/01_w.jpg
+  line1: シティの本拠地エティハド
+  line2: 建てたのは、クラブではない
+  tags:
+  - マンチェスター・シティ
+  - シティ
+  - エティハド
+  - プレミアリーグ
+  - スタジアム紹介
+sections:
+- id: data
+  main: true
+  heading: エティハドの収容は、1位より何席小さいのか
+  bg: assets/images/20261020_stadium_etihad/01_w.jpg
+  tier: 報道
+  telop: 収容は6万1038人。プレミア20クラブで4番目で、1位とは1万3120席差
+  narrator: 解説
+  card:
+    type: table
+    title: エティハド・スタジアムの基礎DATA
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - 収容人数
+      - 6万1038人（今季の開幕時）
+    - - 20クラブでは
+      - 4位（1位と1万3120席差）
+    - - 開場
+      - 2002年7月（シティは2003年から）
+    - - 持ち主
+      - マンチェスター市（クラブが借りる）
+    - - ピッチ
+      - 縦105×横68メートル
+    - - 北側スタンド
+      - ペップ・グアルディオラ・スタンド
+  say:
+  - text: マンチェスター・シティの本拠地の話です。
+    short_only: true
+    image: assets/images/20261020_stadium_etihad/01_w.jpg
+    card: none
+  - text: 収容は、6万1038人。今季のプレミア20クラブで、4番目に大きな本拠地です。
+    emph: true
+    image: assets/images/20261020_stadium_etihad/02_w.jpg
+    card:
+      type: stats
+      title: プレミア4位の本拠地。1位と、すぐ下
+      items:
+      - - '61038'
+        - 人
+        - シティの収容
+      - - '74158'
+        - 人
+        - 1位 マンチェスター・U
+      - - '60704'
+        - 人
+        - 5位 アーセナル
+      focus: 0
+  - text: 1位は、同じ街の、マンチェスター・ユナイテッド。7万4158人。
+    image: assets/images/20261020_stadium_etihad/02_w.jpg
+    card:
+      type: stats
+      title: プレミア4位の本拠地。1位と、すぐ下
+      items:
+      - - '61038'
+        - 人
+        - シティの収容
+      - - '74158'
+        - 人
+        - 1位 マンチェスター・U
+      - - '60704'
+        - 人
+        - 5位 アーセナル
+      focus: 1
+  - text: 5位は、アーセナル。6万704人。差は、334席だけ。
+    image: assets/images/20261020_stadium_etihad/02_w.jpg
+    card:
+      type: stats
+      title: プレミア4位の本拠地。1位と、すぐ下
+      items:
+      - - '61038'
+        - 人
+        - シティの収容
+      - - '74158'
+        - 人
+        - 1位 マンチェスター・U
+      - - '60704'
+        - 人
+        - 5位 アーセナル
+      focus: 2
+  - text: 1位との差は、1万3120席。
+    emph: true
+    image: assets/images/20261020_stadium_etihad/08_w.jpg
+    card:
+      type: stats
+      title: 1位との差と、最小の本拠地（自分で引いた）
+      items:
+      - - '13120'
+        - 席
+        - 1位との差
+      - - '12357'
+        - 人
+        - 最小のボーンマスの収容
+      - - '763'
+        - 席
+        - 差のほうが多い数（自分で引いた）
+      focus: 0
+  - text: 最も小さい本拠地は、ボーンマス。1万2357人。
+    image: assets/images/20261020_stadium_etihad/08_w.jpg
+    card:
+      type: stats
+      title: 1位との差と、最小の本拠地（自分で引いた）
+      items:
+      - - '13120'
+        - 席
+        - 1位との差
+      - - '12357'
+        - 人
+        - 最小のボーンマスの収容
+      - - '763'
+        - 席
+        - 差のほうが多い数（自分で引いた）
+      focus: 1
+  - text: 1位との差のほうが、763席も多い。
+    image: assets/images/20261020_stadium_etihad/08_w.jpg
+    card:
+      type: stats
+      title: 1位との差と、最小の本拠地（自分で引いた）
+      items:
+      - - '13120'
+        - 席
+        - 1位との差
+      - - '12357'
+        - 人
+        - 最小のボーンマスの収容
+      - - '763'
+        - 席
+        - 差のほうが多い数（自分で引いた）
+      focus: 2
+  - text: ただ、この競技場は、サッカーのためには、建てられていません。
+    image: assets/images/20261020_stadium_etihad/06_w.jpg
+    card: none
+  sources:
+  - https://resources.premierleague.pulselive.com/premierleague/document/2026/07/31/8a890ff9-176c-4364-a8ff-e08f995e2c86/TM2040_PL-Handbook-and-Collateral-2026-27_Digital_31.07.pdf
+  - https://www.mancity.com/etihad-stadium
+  - https://www.mancity.com/news/mens/manchester-city-etihad-stand-renaming-63915045
+- id: origin
+  heading: この競技場は、なぜ、サッカーのためには建てられなかったのか
+  bg: assets/images/20261020_stadium_etihad/01_w.jpg
+  tier: 背景
+  telop: 2002年のコモンウェルスゲームズの会場として、2000年に着工
+  narrator: 解説
+  card:
+    type: timeline
+    title: 五輪の落選から、コモンウェルスゲームズの開会式まで
+    rows:
+    - - 1993年9月
+      - 2000年五輪はシドニー。マンチェスターは落選
+    - - 1995年11月
+      - 2002年コモンウェルスゲームズの開催が決まる
+    - - 1999年12月
+      - 礎石を据える。首相はブレア
+    - - 2000年1月
+      - 着工。設計はアラップ
+    - - 2002年7月25日
+      - 開会式。収容は3万8000席
+    - - 2002年8月4日
+      - 閉会式。このあと、シティの本拠地へ
+    focus: 1993年9月
+    highlight_row: 0
+  say:
+  - text: もとは、オリンピックを呼ぶための計画でした。
+    image: assets/images/20261020_stadium_etihad/01_w.jpg
+    card: none
+  - text: 2000年の五輪は、1993年9月にシドニーへ。マンチェスターは、落選します。
+    image: assets/images/20261020_stadium_etihad/01_w.jpg
+    card:
+      type: timeline
+      title: 五輪の落選から、コモンウェルスゲームズの開会式まで
+      rows:
+      - - 1993年9月
+        - 2000年五輪はシドニー。マンチェスターは落選
+      - - 1995年11月
+        - 2002年コモンウェルスゲームズの開催が決まる
+      - - 1999年12月
+        - 礎石を据える。首相はブレア
+      - - 2000年1月
+        - 着工。設計はアラップ
+      - - 2002年7月25日
+        - 開会式。収容は3万8000席
+      - - 2002年8月4日
+        - 閉会式。このあと、シティの本拠地へ
+      focus: 1993年9月
+      highlight_row: 0
+  - text: 次に狙ったのは、コモンウェルスゲームズ。縮めた競技場の案で挑みます。
+    image: assets/images/20261020_stadium_etihad/06_w.jpg
+    card: none
+  - text: 英連邦の国と地域が、4年に1度集まる、総合競技大会です。
+    image: assets/images/20261020_stadium_etihad/06_w.jpg
+    card: none
+  - text: 2002年の開催地は、1995年11月に、マンチェスターと決まります。
+    image: assets/images/20261020_stadium_etihad/06_w.jpg
+    card:
+      type: timeline
+      title: 五輪の落選から、コモンウェルスゲームズの開会式まで
+      rows:
+      - - 1993年9月
+        - 2000年五輪はシドニー。マンチェスターは落選
+      - - 1995年11月
+        - 2002年コモンウェルスゲームズの開催が決まる
+      - - 1999年12月
+        - 礎石を据える。首相はブレア
+      - - 2000年1月
+        - 着工。設計はアラップ
+      - - 2002年7月25日
+        - 開会式。収容は3万8000席
+      - - 2002年8月4日
+        - 閉会式。このあと、シティの本拠地へ
+      focus: 1993年9月
+      highlight_row: 1
+  - text: 国内の選考では、ロンドンに、17対7で勝ちました。
+    image: assets/images/20261020_stadium_etihad/06_w.jpg
+    card: none
+  - text: 礎石を置いたのは、1999年12月。首相のブレアです。
+    image: assets/images/20261020_stadium_etihad/05_w.jpg
+    card:
+      type: timeline
+      title: 五輪の落選から、コモンウェルスゲームズの開会式まで
+      rows:
+      - - 1993年9月
+        - 2000年五輪はシドニー。マンチェスターは落選
+      - - 1995年11月
+        - 2002年コモンウェルスゲームズの開催が決まる
+      - - 1999年12月
+        - 礎石を据える。首相はブレア
+      - - 2000年1月
+        - 着工。設計はアラップ
+      - - 2002年7月25日
+        - 開会式。収容は3万8000席
+      - - 2002年8月4日
+        - 閉会式。このあと、シティの本拠地へ
+      focus: 1993年9月
+      highlight_row: 2
+  - text: 着工は、2000年1月。設計は、建築設計会社のアラップです。
+    image: assets/images/20261020_stadium_etihad/05_w.jpg
+    card:
+      type: timeline
+      title: 五輪の落選から、コモンウェルスゲームズの開会式まで
+      rows:
+      - - 1993年9月
+        - 2000年五輪はシドニー。マンチェスターは落選
+      - - 1995年11月
+        - 2002年コモンウェルスゲームズの開催が決まる
+      - - 1999年12月
+        - 礎石を据える。首相はブレア
+      - - 2000年1月
+        - 着工。設計はアラップ
+      - - 2002年7月25日
+        - 開会式。収容は3万8000席
+      - - 2002年8月4日
+        - 閉会式。このあと、シティの本拠地へ
+      focus: 1993年9月
+      highlight_row: 3
+  - text: 総工費は、約1億1200万ポンドとされます。
+    emph: true
+    image: assets/images/20261020_stadium_etihad/09_w.jpg
+    card:
+      type: stats
+      title: 総工費は記事で割れる（百万ポンド）
+      items:
+      - - '110'
+        - 百万ポンド
+        - 2002年の記事
+      - - '112'
+        - 百万ポンド
+        - 2011年の記事
+      - - '120'
+        - 百万ポンド
+        - 2003年の記事
+      focus: 1
+  - text: ただ、1億1000万ポンドと書く記事があります。
+    image: assets/images/20261020_stadium_etihad/09_w.jpg
+    card:
+      type: stats
+      title: 総工費は記事で割れる（百万ポンド）
+      items:
+      - - '110'
+        - 百万ポンド
+        - 2002年の記事
+      - - '112'
+        - 百万ポンド
+        - 2011年の記事
+      - - '120'
+        - 百万ポンド
+        - 2003年の記事
+      focus: 0
+  - text: もっと高い額を書く記事も、あります。
+    image: assets/images/20261020_stadium_etihad/09_w.jpg
+    card:
+      type: stats
+      title: 総工費は記事で割れる（百万ポンド）
+      items:
+      - - '110'
+        - 百万ポンド
+        - 2002年の記事
+      - - '112'
+        - 百万ポンド
+        - 2011年の記事
+      - - '120'
+        - 百万ポンド
+        - 2003年の記事
+      focus: 2
+  - text: 国のスポーツ機関、スポーツ・イングランドの負担は、7700万ポンドとされます。
+    image: assets/images/20261020_stadium_etihad/05_w.jpg
+    card:
+      type: stats
+      title: スポーツ・イングランドの負担分（百万ポンド）
+      items:
+      - - '77'
+        - 百万ポンド
+        - 一方の資料
+      - - '90'
+        - 百万ポンド
+        - もう一方の資料
+      - - '13'
+        - 百万ポンド
+        - 2つの差（自分で引いた）
+      focus: 0
+  - text: 別の資料では、9000万ポンド。差は、1300万ポンドです。
+    image: assets/images/20261020_stadium_etihad/05_w.jpg
+    card:
+      type: stats
+      title: スポーツ・イングランドの負担分（百万ポンド）
+      items:
+      - - '77'
+        - 百万ポンド
+        - 一方の資料
+      - - '90'
+        - 百万ポンド
+        - もう一方の資料
+      - - '13'
+        - 百万ポンド
+        - 2つの差（自分で引いた）
+      focus: 1
+  - text: 残りは、マンチェスター市が負担した、とされます。
+    image: assets/images/20261020_stadium_etihad/05_w.jpg
+    card: none
+  - text: 開会式は、2002年7月25日。エリザベス女王が、開幕を宣言しました。
+    emph: true
+    image: assets/images/20261020_stadium_etihad/03_w.jpg
+    card:
+      type: timeline
+      title: 五輪の落選から、コモンウェルスゲームズの開会式まで
+      rows:
+      - - 1993年9月
+        - 2000年五輪はシドニー。マンチェスターは落選
+      - - 1995年11月
+        - 2002年コモンウェルスゲームズの開催が決まる
+      - - 1999年12月
+        - 礎石を据える。首相はブレア
+      - - 2000年1月
+        - 着工。設計はアラップ
+      - - 2002年7月25日
+        - 開会式。収容は3万8000席
+      - - 2002年8月4日
+        - 閉会式。このあと、シティの本拠地へ
+      focus: 1993年9月
+      highlight_row: 4
+  - text: 競技場は、トラックを囲む形。収容は、3万8000席でした。
+    image: assets/images/20261020_stadium_etihad/03_w.jpg
+    card: none
+  - text: 閉会式は、8月4日。このあと、競技場は、シティの本拠地になります。
+    image: assets/images/20261020_stadium_etihad/07_w.jpg
+    card:
+      type: timeline
+      title: 五輪の落選から、コモンウェルスゲームズの開会式まで
+      rows:
+      - - 1993年9月
+        - 2000年五輪はシドニー。マンチェスターは落選
+      - - 1995年11月
+        - 2002年コモンウェルスゲームズの開催が決まる
+      - - 1999年12月
+        - 礎石を据える。首相はブレア
+      - - 2000年1月
+        - 着工。設計はアラップ
+      - - 2002年7月25日
+        - 開会式。収容は3万8000席
+      - - 2002年8月4日
+        - 閉会式。このあと、シティの本拠地へ
+      focus: 1993年9月
+      highlight_row: 5
+  sources:
+  - https://en.wikipedia.org/wiki/Etihad_Stadium_(Manchester)
+  - https://en.wikipedia.org/wiki/2002_Commonwealth_Games
+  - https://news.bbc.co.uk/sport3/commonwealthgames2002/hi/features/newsid_2155000/2155555.stm
+  - https://www.theguardian.com/football/2011/oct/04/manchester-city-council-stadium-naming-rights
+  - https://www.theguardian.com/sport/blog/2007/nov/07/stadiumisnowhiteelephantb
+- id: move
+  heading: なぜ、シティは、市が建てた競技場に、移ったのか
+  bg: assets/images/20261020_stadium_etihad/01_w.jpg
+  tier: 背景
+  telop: 転用工事は市が2200万ポンド、クラブが2000万ポンド。2003年8月に開場
+  narrator: 解説
+  card:
+    type: timeline
+    title: 旧本拠地の最後の試合から、日本代表戦まで
+    rows:
+    - - 2003年5月11日
+      - 旧本拠地メイン・ロードの最後の試合
+    - - 2003年8月10日
+      - 新競技場の最初の試合。バルセロナに2対1
+    - - 2003年8月14日
+      - 最初の公式戦。欧州の大会の予選で5対0
+    - - 2003年8月23日
+      - 最初のプレミアのホーム戦。1対1
+    - - 2004年6月1日
+      - イングランド代表対日本代表
+    focus: 2003年5月11日
+    highlight_row: 0
+  say:
+  - text: シティは、1923年から、旧本拠地メイン・ロードを使っていました。
+    image: assets/images/20261020_stadium_etihad/09_w.jpg
+    card: none
+  - text: そこを離れ、市が建てた競技場を借りる。それが、移転の形でした。
+    image: assets/images/20261020_stadium_etihad/09_w.jpg
+    card: none
+  - text: 大会が終わると、競技場は、サッカー用に作り替えられます。
+    image: assets/images/20261020_stadium_etihad/05_w.jpg
+    card: none
+  - text: 陸上のトラックは外され、グラウンドは、掘り下げられました。
+    image: assets/images/20261020_stadium_etihad/05_w.jpg
+    card: none
+  - text: 臨時の客席は撤去。北側に、固定のスタンドが建ちました。
+    image: assets/images/20261020_stadium_etihad/08_w.jpg
+    card: none
+  - text: 工事は、ほぼ1年。大会のときより、約1万席多い、4万8000席に。
+    image: assets/images/20261020_stadium_etihad/08_w.jpg
+    card: none
+  - text: 市の分は、2200万ポンド。トラック撤去や、芝と客席の工事です。
+    image: assets/images/20261020_stadium_etihad/09_w.jpg
+    card:
+      type: stats
+      title: 転用工事の費用（百万ポンド）
+      items:
+      - - '22'
+        - 百万ポンド
+        - 市の負担（トラック・芝・客席）
+      - - '20'
+        - 百万ポンド
+        - クラブの負担（バー・貴賓室など）
+      - - '42'
+        - 百万ポンド
+        - 合計（自分で足した）
+      focus: 0
+  - text: クラブの分は、2000万ポンド。バーやレストラン、貴賓席の整備です。
+    image: assets/images/20261020_stadium_etihad/09_w.jpg
+    card:
+      type: stats
+      title: 転用工事の費用（百万ポンド）
+      items:
+      - - '22'
+        - 百万ポンド
+        - 市の負担（トラック・芝・客席）
+      - - '20'
+        - 百万ポンド
+        - クラブの負担（バー・貴賓室など）
+      - - '42'
+        - 百万ポンド
+        - 合計（自分で足した）
+      focus: 1
+  - text: 合わせて、4200万ポンドの転用工事でした。
+    image: assets/images/20261020_stadium_etihad/09_w.jpg
+    card:
+      type: stats
+      title: 転用工事の費用（百万ポンド）
+      items:
+      - - '22'
+        - 百万ポンド
+        - 市の負担（トラック・芝・客席）
+      - - '20'
+        - 百万ポンド
+        - クラブの負担（バー・貴賓室など）
+      - - '42'
+        - 百万ポンド
+        - 合計（自分で足した）
+      focus: 2
+  - text: クラブの負担は、転用費用の48％にあたります。
+    emph: true
+    image: assets/images/20261020_stadium_etihad/05_w.jpg
+    card:
+      type: calc
+      title: 転用工事のクラブの負担割合（自分で割った）
+      terms:
+      - - 2000万ポンド
+        - クラブの負担
+      - - 4200万ポンド
+        - 市とクラブの合計
+      - - 48％
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+  - text: シティは旧本拠地を市に引き渡し、賃料は入場料収入の一部でした。
+    image: assets/images/20261020_stadium_etihad/05_w.jpg
+    card: none
+  - text: 2003年5月11日、メイン・ロードの最後の試合。サウサンプトン戦でした。
+    image: assets/images/20261020_stadium_etihad/09_w.jpg
+    card:
+      type: timeline
+      title: 旧本拠地の最後の試合から、日本代表戦まで
+      rows:
+      - - 2003年5月11日
+        - 旧本拠地メイン・ロードの最後の試合
+      - - 2003年8月10日
+        - 新競技場の最初の試合。バルセロナに2対1
+      - - 2003年8月14日
+        - 最初の公式戦。欧州の大会の予選で5対0
+      - - 2003年8月23日
+        - 最初のプレミアのホーム戦。1対1
+      - - 2004年6月1日
+        - イングランド代表対日本代表
+      focus: 2003年5月11日
+      highlight_row: 0
+  - text: 新競技場の最初の試合は、8月10日。バルセロナに、2対1の勝ち。
+    image: assets/images/20261020_stadium_etihad/02_w.jpg
+    card:
+      type: timeline
+      title: 旧本拠地の最後の試合から、日本代表戦まで
+      rows:
+      - - 2003年5月11日
+        - 旧本拠地メイン・ロードの最後の試合
+      - - 2003年8月10日
+        - 新競技場の最初の試合。バルセロナに2対1
+      - - 2003年8月14日
+        - 最初の公式戦。欧州の大会の予選で5対0
+      - - 2003年8月23日
+        - 最初のプレミアのホーム戦。1対1
+      - - 2004年6月1日
+        - イングランド代表対日本代表
+      focus: 2003年5月11日
+      highlight_row: 1
+  - text: 4日後は、最初の公式戦。ヨーロッパの大会の予選で、5対0の勝ち。
+    image: assets/images/20261020_stadium_etihad/02_w.jpg
+    card:
+      type: timeline
+      title: 旧本拠地の最後の試合から、日本代表戦まで
+      rows:
+      - - 2003年5月11日
+        - 旧本拠地メイン・ロードの最後の試合
+      - - 2003年8月10日
+        - 新競技場の最初の試合。バルセロナに2対1
+      - - 2003年8月14日
+        - 最初の公式戦。欧州の大会の予選で5対0
+      - - 2003年8月23日
+        - 最初のプレミアのホーム戦。1対1
+      - - 2004年6月1日
+        - イングランド代表対日本代表
+      focus: 2003年5月11日
+      highlight_row: 2
+  - text: 8月23日、最初のプレミアのホーム戦。1対1の引き分けで、満員の4万8000人。
+    emph: true
+    image: assets/images/20261020_stadium_etihad/08_w.jpg
+    card:
+      type: timeline
+      title: 旧本拠地の最後の試合から、日本代表戦まで
+      rows:
+      - - 2003年5月11日
+        - 旧本拠地メイン・ロードの最後の試合
+      - - 2003年8月10日
+        - 新競技場の最初の試合。バルセロナに2対1
+      - - 2003年8月14日
+        - 最初の公式戦。欧州の大会の予選で5対0
+      - - 2003年8月23日
+        - 最初のプレミアのホーム戦。1対1
+      - - 2004年6月1日
+        - イングランド代表対日本代表
+      focus: 2003年5月11日
+      highlight_row: 3
+  - text: 翌年の6月1日には、イングランド代表と日本代表の試合も開かれました。
+    image: assets/images/20261020_stadium_etihad/08_w.jpg
+    card:
+      type: timeline
+      title: 旧本拠地の最後の試合から、日本代表戦まで
+      rows:
+      - - 2003年5月11日
+        - 旧本拠地メイン・ロードの最後の試合
+      - - 2003年8月10日
+        - 新競技場の最初の試合。バルセロナに2対1
+      - - 2003年8月14日
+        - 最初の公式戦。欧州の大会の予選で5対0
+      - - 2003年8月23日
+        - 最初のプレミアのホーム戦。1対1
+      - - 2004年6月1日
+        - イングランド代表対日本代表
+      focus: 2003年5月11日
+      highlight_row: 4
+  sources:
+  - https://en.wikipedia.org/wiki/Etihad_Stadium_(Manchester)
+  - https://en.wikipedia.org/wiki/Maine_Road
+  - https://news.bbc.co.uk/sport2/hi/football/teams/m/man_city/3139231.stm
+  - https://news.bbc.co.uk/sport2/hi/football/eng_prem/3152271.stm
+  - https://www.theguardian.com/football/2011/oct/04/manchester-city-council-stadium-naming-rights
+  - https://www.theguardian.com/sport/blog/2007/nov/07/stadiumisnowhiteelephantb
+- id: growth
+  heading: なぜ、約4万8000席の競技場は、6万1038席になったのか
+  bg: assets/images/20261020_stadium_etihad/01_w.jpg
+  tier: 報道
+  telop: 2010年に命名権を得て、2011年にエティハドへ。席は2014年と2023年に増えた
+  narrator: 解説
+  card:
+    type: timeline
+    title: 命名権から、北側スタンドの全面開場まで
+    rows:
+    - - 2010年10月
+      - 賃貸契約を結び直し、命名権を得る
+    - - 2011年7月
+      - エティハド航空と10年契約。名前が変わる
+    - - 2014年4月
+      - 南側スタンドに3層目をつくる工事
+    - - 2015年8月
+      - 工事が完成。収容は約5万5000席
+    - - 2023年末
+      - 北側スタンドの大工事が始まる
+    - - 2026年5月24日
+      - 北側スタンドが全面開場
+    focus: 2010年10月
+    highlight_row: 0
+  say:
+  - text: 2010年10月、クラブは、市との賃貸契約を結び直します。
+    image: assets/images/20261020_stadium_etihad/06_w.jpg
+    card:
+      type: timeline
+      title: 命名権から、北側スタンドの全面開場まで
+      rows:
+      - - 2010年10月
+        - 賃貸契約を結び直し、命名権を得る
+      - - 2011年7月
+        - エティハド航空と10年契約。名前が変わる
+      - - 2014年4月
+        - 南側スタンドに3層目をつくる工事
+      - - 2015年8月
+        - 工事が完成。収容は約5万5000席
+      - - 2023年末
+        - 北側スタンドの大工事が始まる
+      - - 2026年5月24日
+        - 北側スタンドが全面開場
+      focus: 2010年10月
+      highlight_row: 0
+  - text: 狙いは、名前をつける権利、命名権です。市から、クラブに移りました。
+    image: assets/images/20261020_stadium_etihad/06_w.jpg
+    card: none
+  - text: 2011年7月、エティハド航空と、10年の契約を結びます。
+    emph: true
+    image: assets/images/20261020_stadium_etihad/06_w.jpg
+    card:
+      type: timeline
+      title: 命名権から、北側スタンドの全面開場まで
+      rows:
+      - - 2010年10月
+        - 賃貸契約を結び直し、命名権を得る
+      - - 2011年7月
+        - エティハド航空と10年契約。名前が変わる
+      - - 2014年4月
+        - 南側スタンドに3層目をつくる工事
+      - - 2015年8月
+        - 工事が完成。収容は約5万5000席
+      - - 2023年末
+        - 北側スタンドの大工事が始まる
+      - - 2026年5月24日
+        - 北側スタンドが全面開場
+      focus: 2010年10月
+      highlight_row: 1
+  - text: エティハド航空は、アブダビの航空会社。競技場の名が、変わりました。
+    image: assets/images/20261020_stadium_etihad/06_w.jpg
+    card: none
+  - text: 2014年4月、南側のスタンドに、3層目をつくる工事が始まります。
+    image: assets/images/20261020_stadium_etihad/01_w.jpg
+    card:
+      type: timeline
+      title: 命名権から、北側スタンドの全面開場まで
+      rows:
+      - - 2010年10月
+        - 賃貸契約を結び直し、命名権を得る
+      - - 2011年7月
+        - エティハド航空と10年契約。名前が変わる
+      - - 2014年4月
+        - 南側スタンドに3層目をつくる工事
+      - - 2015年8月
+        - 工事が完成。収容は約5万5000席
+      - - 2023年末
+        - 北側スタンドの大工事が始まる
+      - - 2026年5月24日
+        - 北側スタンドが全面開場
+      focus: 2010年10月
+      highlight_row: 2
+  - text: 完成は、2015年8月。収容は、約5万5000席に増えました。
+    image: assets/images/20261020_stadium_etihad/01_w.jpg
+    card:
+      type: timeline
+      title: 命名権から、北側スタンドの全面開場まで
+      rows:
+      - - 2010年10月
+        - 賃貸契約を結び直し、命名権を得る
+      - - 2011年7月
+        - エティハド航空と10年契約。名前が変わる
+      - - 2014年4月
+        - 南側スタンドに3層目をつくる工事
+      - - 2015年8月
+        - 工事が完成。収容は約5万5000席
+      - - 2023年末
+        - 北側スタンドの大工事が始まる
+      - - 2026年5月24日
+        - 北側スタンドが全面開場
+      focus: 2010年10月
+      highlight_row: 3
+  - text: リーグ公式の2019-20シーズンの収容は、5万5017席です。
+    image: assets/images/20261020_stadium_etihad/08_w.jpg
+    card:
+      type: line
+      title: 収容の歩み（約を含む）
+      x:
+      - '2002'
+      - '2003'
+      - 2019-20
+      - 今季
+      series:
+      - - 収容
+        - - 38000
+          - 48000
+          - 55017
+          - 61038
+      unit: 人
+      focus: 収容
+      peak: true
+      highlight: 2019-20
+  - text: そして、北側のスタンドです。工事は、2023年の終わりごろに始まりました。
+    image: assets/images/20261020_stadium_etihad/04_w.jpg
+    card:
+      type: timeline
+      title: 命名権から、北側スタンドの全面開場まで
+      rows:
+      - - 2010年10月
+        - 賃貸契約を結び直し、命名権を得る
+      - - 2011年7月
+        - エティハド航空と10年契約。名前が変わる
+      - - 2014年4月
+        - 南側スタンドに3層目をつくる工事
+      - - 2015年8月
+        - 工事が完成。収容は約5万5000席
+      - - 2023年末
+        - 北側スタンドの大工事が始まる
+      - - 2026年5月24日
+        - 北側スタンドが全面開場
+      focus: 2010年10月
+      highlight_row: 4
+  - text: 新しい席は、クラブ発表で7000席超。7900席とする資料もあります。
+    image: assets/images/20261020_stadium_etihad/04_w.jpg
+    card: none
+  - text: 全面が開いたのは、2026年5月24日。昨季のホーム最終戦です。
+    emph: true
+    image: assets/images/20261020_stadium_etihad/04_w.jpg
+    card:
+      type: timeline
+      title: 命名権から、北側スタンドの全面開場まで
+      rows:
+      - - 2010年10月
+        - 賃貸契約を結び直し、命名権を得る
+      - - 2011年7月
+        - エティハド航空と10年契約。名前が変わる
+      - - 2014年4月
+        - 南側スタンドに3層目をつくる工事
+      - - 2015年8月
+        - 工事が完成。収容は約5万5000席
+      - - 2023年末
+        - 北側スタンドの大工事が始まる
+      - - 2026年5月24日
+        - 北側スタンドが全面開場
+      focus: 2010年10月
+      highlight_row: 5
+  - text: 新しい北側のスタンドは、「ペップ・グアルディオラ・スタンド」と名づけられました。
+    image: assets/images/20261020_stadium_etihad/01_w.jpg
+    card: none
+  - text: 席は、大会のときの3万8000席から、いまの6万1038席へ。
+    image: assets/images/20261020_stadium_etihad/01_w.jpg
+    card:
+      type: line
+      title: 収容の歩み（約を含む）
+      x:
+      - '2002'
+      - '2003'
+      - 2019-20
+      - 今季
+      series:
+      - - 収容
+        - - 38000
+          - 48000
+          - 55017
+          - 61038
+      unit: 人
+      focus: 収容
+      peak: true
+      highlight: 今季
+  - text: いまの収容は、大会のときの1.6倍です。
+    emph: true
+    image: assets/images/20261020_stadium_etihad/01_w.jpg
+    card:
+      type: calc
+      title: 大会のときといまの収容（自分で割った）
+      terms:
+      - - 6万1038人
+        - いまの収容
+      - - 3万8000人
+        - 大会のときの収容
+      - - 1.6倍
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+  - text: いまの収容は、資料で揺れます。クラブは、「6万1000席超」と言います。
+    image: assets/images/20261020_stadium_etihad/08_w.jpg
+    card: none
+  - text: ほかに、6万1474席や、約6万2000席という数字もあります。
+    image: assets/images/20261020_stadium_etihad/08_w.jpg
+    card: none
+  - text: ここでは、リーグ公式ハンドブックの、6万1038席で数えます。
+    image: assets/images/20261020_stadium_etihad/08_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Etihad_Stadium_(Manchester)
+  - https://www.theguardian.com/football/2011/oct/04/manchester-city-council-stadium-naming-rights
+  - https://www.theguardian.com/football/2011/jul/08/manchester-city-stadium-etihad-airways
+  - https://www.mancity.com/news/mens/manchester-city-etihad-stand-renaming-63915045
+  - https://resources.premierleague.pulselive.com/premierleague/document/2026/07/31/8a890ff9-176c-4364-a8ff-e08f995e2c86/TM2040_PL-Handbook-and-Collateral-2026-27_Digital_31.07.pdf
+  - https://premierleague-static-files.s3.amazonaws.com/premierleague/document/2019/08/23/c8a5b4b5-7f29-43b5-9317-aae04d407c18/2019-20-PL-Handbook-220819.pdf
+- id: view
+  viewpoint: true
+  heading: 見立て・借りた競技場の席は、いま、どれだけ埋まっているのか
+  bg: assets/images/20261020_stadium_etihad/01_w.jpg
+  tier: 報道
+  telop: 昨季の最終戦の前は平均5万2282人。今季は平均6万635人で、収容の99.3％
+  narrator: 解説
+  card:
+    type: table
+    title: ホームの入場人数（自分で並べた）
+    columns:
+    - 区切り
+    - 入場（平均）
+    rows:
+    - - 昨季 最終戦の前 17試合
+      - 5万2282人
+    - - 昨季 最終戦 1試合
+      - 6万332人
+    - - 今季 ここまで 4試合
+      - 6万635人
+    highlight_row: 0
+  say:
+  - text: 席は、埋まっているのか。昨季は、最終戦の前の17試合で、平均5万2282人。
+    emph: true
+    mark:
+      kind: circle
+      row: 0
+    image: assets/images/20261020_stadium_etihad/02_w.jpg
+    card:
+      type: table
+      title: ホームの入場人数（自分で並べた）
+      columns:
+      - 区切り
+      - 入場（平均）
+      rows:
+      - - 昨季 最終戦の前 17試合
+        - 5万2282人
+      - - 昨季 最終戦 1試合
+        - 6万332人
+      - - 今季 ここまで 4試合
+        - 6万635人
+      highlight_row: 0
+  - text: 最終戦は、6万332人。北側のスタンドが、全面で開いた日です。
+    emph: true
+    image: assets/images/20261020_stadium_etihad/08_w.jpg
+    card:
+      type: table
+      title: ホームの入場人数（自分で並べた）
+      columns:
+      - 区切り
+      - 入場（平均）
+      rows:
+      - - 昨季 最終戦の前 17試合
+        - 5万2282人
+      - - 昨季 最終戦 1試合
+        - 6万332人
+      - - 今季 ここまで 4試合
+        - 6万635人
+      highlight_row: 1
+  - text: 今季は、ここまでホーム4試合。平均は、6万635人。
+    image: assets/images/20261020_stadium_etihad/08_w.jpg
+    card:
+      type: table
+      title: ホームの入場人数（自分で並べた）
+      columns:
+      - 区切り
+      - 入場（平均）
+      rows:
+      - - 昨季 最終戦の前 17試合
+        - 5万2282人
+      - - 昨季 最終戦 1試合
+        - 6万332人
+      - - 今季 ここまで 4試合
+        - 6万635人
+      highlight_row: 2
+  - text: 昨季の最終戦の前より、およそ8350人、多い計算です。
+    image: assets/images/20261020_stadium_etihad/01_w.jpg
+    card:
+      type: calc
+      title: 昨季の最終戦の前との差（自分で引いた）
+      terms:
+      - - 6万635人
+        - 今季の平均入場
+      - - 5万2282人
+        - 昨季 最終戦の前の平均
+      - - 約8350人
+        - 引いた答え
+      ops:
+      - −
+      - ＝
+  - text: クラブが言う新しい席は、7000席超。入場は、それより多く増えました。
+    image: assets/images/20261020_stadium_etihad/01_w.jpg
+    card:
+      type: calc
+      title: 昨季の最終戦の前との差（自分で引いた）
+      terms:
+      - - 6万635人
+        - 今季の平均入場
+      - - 5万2282人
+        - 昨季 最終戦の前の平均
+      - - 約8350人
+        - 引いた答え
+      ops:
+      - −
+      - ＝
+  - text: この差の中身は、数字からは分かりません。
+    image: assets/images/20261020_stadium_etihad/01_w.jpg
+    card: none
+  - text: 収容と比べると、99.3％にあたります。
+    emph: true
+    image: assets/images/20261020_stadium_etihad/02_w.jpg
+    card:
+      type: calc
+      title: 今季の平均入場と収容（自分で割った）
+      terms:
+      - - 6万635人
+        - 今季の平均入場
+      - - 6万1038人
+        - 今季の開幕時の収容
+      - - 99.3％
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+  - text: 今季の最多は、6万817人。収容に、221席届きません。
+    image: assets/images/20261020_stadium_etihad/02_w.jpg
+    card: none
+  - text: 建てたのは、市と、国のスポーツ機関の資金でした。
+    image: assets/images/20261020_stadium_etihad/06_w.jpg
+    card: none
+  - text: 持ち主は、いまも市で、クラブが借りているとされます。
+    image: assets/images/20261020_stadium_etihad/06_w.jpg
+    card: none
+  - text: 増築を進めたのは、借り手のシティです。
+    image: assets/images/20261020_stadium_etihad/01_w.jpg
+    card: none
+  - text: 市と国の資金で建った競技場を、シティが、プレミア4位の大きさに育てました。
+    emph: true
+    image: assets/images/20261020_stadium_etihad/01_w.jpg
+    card: none
+  sources:
+  - https://resources.premierleague.pulselive.com/premierleague/document/2026/07/31/8a890ff9-176c-4364-a8ff-e08f995e2c86/TM2040_PL-Handbook-and-Collateral-2026-27_Digital_31.07.pdf
+  - https://sdp-prem-prod.premier-league-prod.pulselive.com/api/v1/competitions/8/seasons/2025/matchweeks/2/matches ほか（2025年シーズン全38節）
+  - https://sdp-prem-prod.premier-league-prod.pulselive.com/api/v1/competitions/8/seasons/2026/matchweeks/1/matches ほか（2026年シーズン第1〜7節）
+  - https://www.mancity.com/news/mens/manchester-city-etihad-stand-renaming-63915045
+  - https://en.wikipedia.org/wiki/Etihad_Stadium_(Manchester)

@@ -1,0 +1,152 @@
+# 遠藤航の取材メモ（2026年10月20日・ショートだけ・見せ方 X＝冒頭に強い一言）
+# 取材: 2026-10-20。requests で原文を全部読んだ。
+#   ・フットボールトライブ 2026-10-19「『表舞台から姿を消した…』リバプールの遠藤航に出場機会の可能性か『彼を戦力外と』」
+#     https://football-tribe.com/japan/2026/10/19/360544/ （research/raw/20261020_endo_ft.txt）。英『Anfield Index』の記事を日本語で伝えたもの。
+#     **Anfield Index の原文は読めていない**。引用は日本語の記事のまま（一語一句は英語の原文と確かめていない）。出典は転載1本＝弱い印。
+#   ・ESPN の試合記録（site.api.espn.com の schedule と summary。research/raw/20261020_lfc_schedule.json）で「10試合」を自分で数えた。
+# 「10試合」の数え方（確かめた）:
+#   ・記事の「今2026/27シーズンのリバプールはここまで10試合」は**全大会の公式戦**。ESPN で数えると
+#     プレミア7（ニューカッスル・フォレスト・イプスウィッチ・フラム・ボーンマス・シティ・ブレントフォード）＋CL2（アトレティコ・LASK）＋リーグカップ1（トッテナム）＝10。**リーグ戦だけなら7試合**。
+#   ・遠藤の出場は10試合とも0分（ESPN の appearances=0 / 出場選手表）。ベンチ入りは7試合（ニューカッスル・フォレスト・イプスウィッチ・リーグカップ・フラム・シティ・ブレントフォード）、
+#     ボーンマス・アトレティコ・LASK の3試合は ESPN の出場選手表に名前が無い（メンバー外。理由は分からないので言わない）。**自分で数えた数字**。
+#   ・直近の出場: ESPN で 2026-02-11 サンダーランド戦（リヴァプール1-0）に右サイドバックで先発（記事と一致）。それ以降、5月のブレントフォード戦（ベンチ）まで出場の記録は無い。
+#   ・18日ブレントフォード 1-2 リヴァプール（逆転勝ち）は ESPN と一致。
+# 重ならないように: 10/20 のソボスライ紹介（本編）が扱う負傷の中身・数字は**言わない**。「中盤の選手が負傷交代」の1句だけ。
+# 次の予定（ESPN）: 21日（日本時間）午前4時 CL ビジャレアル戦（ホーム）、25日 プレミア ブライトン戦（ホーム）、28日 リーグカップ チェルシー戦（ホーム）。
+# 本人の言葉: **無い**（作らない）。クラブの発表・監督の言葉も、この記事には無い（英メディア1本の見方）。
+#   なお liverpoolfc.com に 2026-05-26 の遠藤のインタビュー記事（W杯の抱負）があるが、今回の話ではないので使わない。
+# 反応: 探していない（0件。作らない）。
+# 写真: 01 liverpoolfc.com（クラブ公式・5月の記事のトンネル写真）／02 Commons CC0（2025-04-06 フラム戦前の移動。撮影 Timmy96）／03 Commons 公有（2018-06 日本代表）。
+#   代理店は使っていない。今季の試合写真は取れなかった（出場が無い）。
+# 確度: 報道（英メディア1本の見方。クラブの発表ではない）。数字（10試合・ベンチ入り・直近の出場）は ESPN の試合記録で確かめた。
+slot: japan
+date: "2026年10月20日"
+format: news
+no_main: true
+people: [遠藤航, リヴァプール, ブレントフォード]
+
+short_style: X
+short_hook_word: 出番ゼロ
+short_photos:
+  - assets/images/20261020_endo_no_minutes/01_v.jpg
+  - assets/images/20261020_endo_no_minutes/02_v.jpg
+  - assets/images/20261020_endo_no_minutes/03_v.jpg
+
+short_question: 21日のビジャレアル戦、遠藤航はベンチに入ると思いますか。
+short_hook: 遠藤航、今季は公式戦10試合で出番ゼロ。
+short_telops:
+  - {match: 公式戦すべて, text: 今季のリヴァプール/公式戦10試合で出場なし}
+  - {match: プレミアリーグ7試合, text: プレミア7＋CL2/＋リーグカップ1}
+  - {match: ベンチ入りしたのは, text: ベンチ入り7試合/メンバー外3試合}
+  - {match: サンダーランド, text: 直近の出場は2月/サンダーランド戦 右サイドバック}
+  - {match: 早計, text: 英メディア/「戦力外と決めつけるのは早計」}
+  - {match: 過密, text: 日程が過密になったとき/中盤の経験が価値を持つ}
+  - {match: 8か月, text: 直近の出場から/約8か月}
+  - {match: ビジャレアル, text: 次は日本時間21日午前4時/CL ビジャレアル戦}
+
+theme:
+  id: endo_no_minutes
+  league: england
+  league_name: プレミアリーグ
+  prefix: ""
+  title: 遠藤航、今季は公式戦10試合で出番ゼロ。それでも出番は来るのか
+  hook: ""
+  question: 出番のない遠藤航に、出番は来るのか
+  takeaway: 遠藤航は今季の公式戦10試合で出場0分、直近の出場は2月のサンダーランド戦。英メディアは過密日程になれば経験が価値を持つと見る
+
+thumbnail:
+  line1: 遠藤航、公式戦10試合
+  line2: 出番ゼロ
+  tags: [遠藤航, リヴァプール]
+  layout: face
+  photo: assets/images/20261020_endo_no_minutes/01_w.jpg
+  short_photo: assets/images/20261020_endo_no_minutes/01_v.jpg
+
+answer: 遠藤航は今季の公式戦10試合すべてで出場なし。英メディアは、過密日程で出番が来る可能性を見ている
+watch: 21日（日本時間）午前4時、CLビジャレアル戦
+
+sections:
+  - id: what
+    heading: 今季の遠藤航の出番
+    tier: 報道
+    telop: 遠藤航、今季の公式戦で出場なし
+    say:
+      - text: 遠藤航は、今季のリヴァプールの公式戦すべてで、出場がありません。
+        image: assets/images/20261020_endo_no_minutes/02_w.jpg
+        card: none
+      - text: 内訳は、プレミアリーグ7試合、チャンピオンズリーグ2試合、リーグカップ1試合です。
+        image: assets/images/20261020_endo_no_minutes/03_w.jpg
+        card: &what_tbl
+          type: table
+          title: 遠藤航の今季の出番
+          columns: [大会, 試合, ベンチ入り, 出場]
+          rows: [[プレミアリーグ, 7, 6, 0], [チャンピオンズリーグ, 2, 0, 0], [リーグカップ, 1, 1, 0], [合計, 10, 7, 0]]
+      - text: ベンチ入りしたのは7試合。残る3試合は、メンバーに入っていません。
+        image: assets/images/20261020_endo_no_minutes/01_w.jpg
+        card: none
+      - text: 直近の出場は、2月のサンダーランド戦。右サイドバックで先発し、1対0の勝利でした。
+        image: assets/images/20261020_endo_no_minutes/02_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://football-tribe.com/japan/2026/10/19/360544/
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/all/teams/364/schedule?season=2026
+
+  - id: media
+    main: true
+    heading: 英メディアが見る出番の可能性
+    tier: 報道
+    telop: 遠藤航は「戦力外と決めつけるのは早計」と英メディア
+    say:
+      - text: 18日のブレントフォード戦では、リヴァプールの中盤の選手が負傷交代しました。
+        image: assets/images/20261020_endo_no_minutes/03_w.jpg
+        card: none
+      - text: そこで挙がったのが、遠藤航の名前です。
+        image: assets/images/20261020_endo_no_minutes/01_w.jpg
+        card: none
+      - text: 「彼を戦力外と決めつけるのは早計だ」。そんな声が出ています。
+        image: assets/images/20261020_endo_no_minutes/02_w.jpg
+        card: none
+      - text: 33歳で経験が豊富で、ポジショニングにも優れている、という理由です。
+        image: assets/images/20261020_endo_no_minutes/03_w.jpg
+        card: none
+      - text: 日程が過密になり、中盤に疲労が見え始めたとき、
+        image: assets/images/20261020_endo_no_minutes/01_w.jpg
+        card: none
+      - text: 実務的で規律のある能力が大きな価値を持つ、という指摘です。
+        image: assets/images/20261020_endo_no_minutes/02_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://football-tribe.com/japan/2026/10/19/360544/
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/all/summary?event=401879262
+
+  - id: view
+    viewpoint: true
+    heading: 遠藤航の出番、数字で見ると
+    tier: 報道
+    telop: 公式戦10試合で0分。直近の出場から約8か月
+    say:
+      - text: 遠藤航の出場は、公式戦で0分。ベンチに入ったのは7試合、メンバー外が3試合です。
+        image: assets/images/20261020_endo_no_minutes/03_w.jpg
+        card: none
+      - text: 直近の出場から、約8か月がたちました。
+        image: assets/images/20261020_endo_no_minutes/01_w.jpg
+        card: none
+      - text: ただ、これは1つの見方にとどまります。
+        image: assets/images/20261020_endo_no_minutes/02_w.jpg
+        card: none
+      - text: 見立てとしては、遠藤の出番は、中盤の負傷者の状況しだいです。
+        image: assets/images/20261020_endo_no_minutes/03_w.jpg
+        card: none
+      - text: 次は日本時間21日午前4時、チャンピオンズリーグのビジャレアル戦。
+        image: assets/images/20261020_endo_no_minutes/01_w.jpg
+        card: none
+      - text: 25日には、プレミアでブライトン戦があります。
+        image: assets/images/20261020_endo_no_minutes/02_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://football-tribe.com/japan/2026/10/19/360544/
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/all/teams/364/schedule?season=2026
+short_title: "遠藤航、今季は公式戦10試合で出番ゼロ。それでも出番は来るのか"

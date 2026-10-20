@@ -1,0 +1,157 @@
+# 取材メモ（2026年10月20日）田中碧、リーズ地元紙の採点と「謎」（ニュースのショート。見せ方 X＝冒頭1秒に強い一言）
+# 取材: 2026-10-20。requests（ブラウザUA）で原文を全部読んだ（検索のAI要約は使っていない）。
+#   ・Leeds Live（地元紙）2026-10-18「Leeds United player ratings vs Manchester United amid Calvert-Lewin milestone and Ao Tanaka enigma」— **原文を直接読んだ**
+#     https://www.leeds-live.co.uk/sport/leeds-united/leeds-united-player-ratings-vs-34781528 （research/raw/20261020_tanaka_leedslive.txt）。筆者 Isaac Johnson。先発11人と交代の採点つき。
+#   ・フットボールトライブ 2026-10-19（題材の出典。Leeds Live を日本語にしたもの）https://football-tribe.com/japan/2026/10/19/360546/ （research/raw/20261020_tanaka_ft8.txt）— 原文と突き合わせて一致。
+#   ・リーズ公式サイト ファルケ監督の試合後の言葉（英語。10/19 に全文を読んだ控え research/raw/20261019_leeds_farke2.txt）
+#     https://www.leedsunited.com/en/news/daniel-farkes-solitary-criticism-after-leeds-uniteds-1-1-draw-with-manchester-united
+# 10/17・10/18・10/19 に田中を出している**ので続報の扱い。重ねない**：試合の結果（1対1・ムベウモ・カルバート＝ルーウィン）・5試合連続の先発・80分すぎまで・前節71分・マンUの6試合勝ちなし・ファルケ監督の「我々のほうが上回っていた」は使わない。
+#   新しい点＝(1) 地元紙の採点（5点）と記事の題の「謎」 (2) 採点の中身（良い点・課題・グドムンドソンへのパスの場面） (3) 先発11人の採点の中での位置（自分で数えた） (4) 監督本人の「批判は仕上げとクロスの質だけ」（地元紙の見立てとは別）。
+# **田中を貶さない。**「謎」は地元紙の言葉（記事の題の enigma）として断る。事実（採点の数字・監督の言葉）と地元紙の見立て（謎・苛立たせた）を分ける。
+#   「ファルケ監督を苛立たせた」は Leeds Live の記者の描写（原文「Turned down chance to send Gudmundsson through in the first half, to Farke's ire」）で、監督本人の言葉ではない → 台本でそう断る。
+# 事実の裏取り（Leeds Live 原文）:
+#   ・採点（満点は記事に書いていない。台本は「5点」とだけ言う）：トラッフォード8／ボーグル7／ジャスティン7／エルヴェディ7／ムハレモビッチ7／グドムンドソン7／アンパドゥ6／田中5／シュタッハ5／オカフォー7／カルバート＝ルーウィン8（先発11人）。
+#     → 5点は2人（田中・シュタッハ）、8点は2人（トラッフォード・カルバート＝ルーウィン）、7点は6人、6点は1人。自分で数えた。
+#   ・田中の評（原文）：「Some good turnovers but passing wasn't always correct.／Turned down chance to send Gudmundsson through in the first half, to Farke's ire.／Had a few decent efforts on goal, intermingled with some very sloppy play but tremendous tackles - caused by his own dispossession.」
+#   ・試合の描写の中の言及：「Aside from a few blasts over the bar from Ao Tanaka and Anton Satch, no real clear cut chances presented themselves」（田中とシュタッハのクロスバー越えのシュート）。
+#   ・ファルケ監督（リーズ公式、英語を訳した。田中への言及は無い）：「This lack of quality in the finishing and crossing was the only thing I could criticise.」→「批判できるのは、仕上げとクロスの質だけだ」。
+# 資料のずれ：フットボールトライブは「ガブリエル・グドムンドソン」「リーズのダニエル・ファルケ監督」と書く。Leeds Live は Gabriel Gudmundsson・Farke。台本は「グドムンドソン」「ファルケ監督」。
+#   フットボールトライブの「雑なプレーも散見された」は Leeds Live の「some very sloppy play」の訳。台本は「雑」と言わず、「パスの精度が安定しなかった」「判断」にとどめる（選手を小さく見せない）。
+# 本人の言葉: 田中本人の言葉は無い（作らない）。引いた言葉はファルケ監督（試合後、リーズ公式）だけ。
+# 確度: 採点・記事の題・描写は 報道（Leeds Live の原文を直接読んだ。クラブ公式ではない）。監督の言葉は リーズ公式サイトの記事。見立ては 背景。
+# 反応: 探していない（0件。作らない）。
+# 写真（5枚）: Leeds United 公式サイト（leedsunited.com）の別の記事のヒーロー写真。出典・本人確認は credits.json（人が目で確かめた: 田中碧）。
+#   01＝エヴァートン戦（リーズ・白のユニ）・02＝ウェストハム戦のオカフォーとの喜び（4月）・03＝ブライトン戦（9月）・04＝日本代表 対 エクアドル（10月）・05＝日本代表 対 ニュージーランド（10月）。
+#   10/19 に使ったリーズ公式の4枚（アーセナル戦・ニューカッスル戦・ベネズエラ戦・スウェーデン戦）は使い回していない。元は 2400x1350 で、ショートに敷いても伸びは約1.4倍。
+slot: japan
+date: "2026年10月20日"
+format: news
+no_main: true
+people: [田中碧, ファルケ監督, リーズ, マンチェスター・ユナイテッド]
+
+short_style: X
+short_hook_word: 地元紙の「謎」
+short_photos:
+  - assets/images/20261020_tanaka_ao_mystery_rating/01_v.jpg
+  - assets/images/20261020_tanaka_ao_mystery_rating/02_v.jpg
+  - assets/images/20261020_tanaka_ao_mystery_rating/03_v.jpg
+  - assets/images/20261020_tanaka_ao_mystery_rating/04_v.jpg
+  - assets/images/20261020_tanaka_ao_mystery_rating/05_v.jpg
+short_question: 25日のサンダーランド戦、田中碧の採点はどうなると思いますか。
+short_hook: 田中碧の採点5点。地元紙が書いた「謎」とは。
+short_telops:
+  - {match: 採点は5点, text: 田中碧/地元紙の採点は5点}
+  - {match: 「謎」と, text: 記事の題に/「田中碧の謎」}
+  - {match: 地元紙の言葉, text: 「謎」は/地元紙の言葉}
+  - {match: 批判できるのは, text: ファルケ監督/「批判できるのは、仕上げとクロスの質だけ」}
+  - {match: 見立て, text: 採点は地元紙の見立て/監督の言葉とは別}
+  - {match: 奪い返す, text: 良い点/ボールを奪い返すプレー、激しいタックル}
+  - {match: 悪くないシュート, text: 「悪くないシュートも/何本か」}
+  - {match: パスの精度, text: 課題として/パスの精度}
+  - {match: グドムンドソン, text: 前半/グドムンドソンを走らせるチャンス}
+  - {match: 描写です, text: 「監督を苛立たせた」は/記者の描写}
+  - {match: 11人, text: 先発11人の採点/5点は2人、8点も2人}
+  - {match: シュタッハ, text: 5点のもう1人は/中盤のシュタッハ}
+  - {match: 25日, text: 次は25日/アウェイでサンダーランド}
+
+theme:
+  id: tanaka_ao_mystery_rating
+  league: england
+  league_name: プレミアリーグ
+  prefix: ""
+  title: 田中碧に、リーズ地元紙が付けた5点。記事の題の「謎」とは
+  hook: ""
+  question: 田中碧のマンU戦を、リーズの地元紙はどう採点したのか
+  takeaway: 先発11人のうち、5点は田中碧とシュタッハの2人で、8点も2人。地元紙は「謎」と書きつつ、タックルやシュートの良い面にも触れた
+
+thumbnail:
+  line1: 田中碧
+  line2: 地元紙の採点5点
+  tags: [田中碧, リーズ]
+  layout: number
+  number: 5点
+  photo: assets/images/20261020_tanaka_ao_mystery_rating/01_w.jpg
+  short_photo: assets/images/20261020_tanaka_ao_mystery_rating/01_v.jpg
+
+answer: 地元紙の採点は5点。「謎」は記事の題の言葉で、タックルやシュートの良い面にも触れている
+watch: 25日のサンダーランド戦（アウェイ）
+
+sections:
+  - id: what
+    main: true
+    heading: 地元紙の採点と「謎」
+    tier: 報道
+    telop: 田中碧への地元紙の採点は5点。記事の題は「謎」
+    say:
+      - text: マンU戦の田中碧に、地元紙が付けた採点は5点。
+        image: assets/images/20261020_tanaka_ao_mystery_rating/01.jpg
+      - text: ファルケ監督は、試合後にこう話しました。
+        image: assets/images/20261020_tanaka_ao_mystery_rating/02.jpg
+      - voice: ファルケ監督
+        text: 批判できるのは、
+        short_voice: true
+        image: assets/images/20261020_tanaka_ao_mystery_rating/03.jpg
+      - voice: ファルケ監督
+        text: 仕上げとクロスの質だけだ。
+        cont: true
+        short_voice: true
+      - text: 一方、地元紙の記事の題には、「田中碧の謎」とありました。
+        image: assets/images/20261020_tanaka_ao_mystery_rating/04.jpg
+      - text: 「謎」は、地元紙の言葉です。
+        image: assets/images/20261020_tanaka_ao_mystery_rating/05.jpg
+      - text: 採点は、地元紙の見立て。監督の言葉とは、別のものです。
+        image: assets/images/20261020_tanaka_ao_mystery_rating/01.jpg
+    official: false
+    sources:
+      - https://www.leeds-live.co.uk/sport/leeds-united/leeds-united-player-ratings-vs-34781528
+      - https://football-tribe.com/japan/2026/10/19/360546/
+      - https://www.leedsunited.com/en/news/daniel-farkes-solitary-criticism-after-leeds-uniteds-1-1-draw-with-manchester-united
+    quotes_from: ["リーズ公式サイト https://www.leedsunited.com/en/news/daniel-farkes-solitary-criticism-after-leeds-uniteds-1-1-draw-with-manchester-united"]
+
+  - id: detail
+    heading: 5点の中身
+    tier: 報道
+    telop: 良い点と課題の両方が書かれている
+    say:
+      - text: 地元紙は、田中碧の良い点も書いています。
+        image: assets/images/20261020_tanaka_ao_mystery_rating/02.jpg
+      - text: ボールを奪い返すプレーと、激しいタックルです。
+        image: assets/images/20261020_tanaka_ao_mystery_rating/03.jpg
+      - text: 悪くないシュートも、何本か放ったとあります。
+        image: assets/images/20261020_tanaka_ao_mystery_rating/04.jpg
+      - text: 課題として挙げたのは、パスの精度が安定しなかったこと。
+        image: assets/images/20261020_tanaka_ao_mystery_rating/05.jpg
+      - text: 前半、グドムンドソンを裏へ走らせるチャンスがありました。
+        image: assets/images/20261020_tanaka_ao_mystery_rating/01.jpg
+      - text: 田中碧がパスを選ばなかった場面を、地元紙は、
+        image: assets/images/20261020_tanaka_ao_mystery_rating/02.jpg
+      - text: 「ファルケ監督を苛立たせた」と書きました。
+        image: assets/images/20261020_tanaka_ao_mystery_rating/03.jpg
+      - text: これは記者の描写です。監督本人の言葉ではありません。
+        image: assets/images/20261020_tanaka_ao_mystery_rating/04.jpg
+    official: false
+    sources:
+      - https://www.leeds-live.co.uk/sport/leeds-united/leeds-united-player-ratings-vs-34781528
+      - https://football-tribe.com/japan/2026/10/19/360546/
+
+  - id: view
+    viewpoint: true
+    heading: 田中碧の5点は、先発11人の中でどこか
+    tier: 背景
+    telop: 先発11人のうち、5点は2人、8点も2人
+    say:
+      - text: 見立てです。同じ記事の、先発11人の採点を数えます。
+        image: assets/images/20261020_tanaka_ao_mystery_rating/05.jpg
+      - text: 最高は8点で、2人。7点が6人、6点が1人です。
+        image: assets/images/20261020_tanaka_ao_mystery_rating/01.jpg
+      - text: 5点は、田中碧と、中盤で組んだシュタッハの2人。
+        image: assets/images/20261020_tanaka_ao_mystery_rating/02.jpg
+      - text: 地元紙は、田中碧を「謎」としつつ、タックルやシュートの良い面にも触れています。
+        image: assets/images/20261020_tanaka_ao_mystery_rating/03.jpg
+      - text: 次の試合は、25日のサンダーランド戦です。
+        image: assets/images/20261020_tanaka_ao_mystery_rating/04.jpg
+    official: false
+    sources:
+      - https://www.leeds-live.co.uk/sport/leeds-united/leeds-united-player-ratings-vs-34781528
+      - https://football-tribe.com/japan/2026/10/19/360546/
+short_title: "田中碧に、リーズ地元紙が付けた5点。記事の題の「謎」とは"

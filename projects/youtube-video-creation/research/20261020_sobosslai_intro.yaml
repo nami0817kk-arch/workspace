@@ -1,0 +1,640 @@
+# ドミニク・ソボスライ（リヴァプール／ハンガリー代表）の紹介。選手紹介の8節の型（2026-10-20、シリーズ「有名選手の紹介」）。
+# 見本は research/20261019_rogers_intro.yaml・20261018_wirtz_intro.yaml。**FotMob は使わない**。パーセンタイル・同じ位置との順位・レーダー・シュートマップは出さない。
+# 数字は基本の数と自分で割った90分あたり。取材はブラウザの道具・JavaScript実行を使っていない（requests と WebSearch のURL探しだけ。検索のAI要約は使っていない）。
+#
+# **題材一覧の題案「市場価値1億ユーロ、リヴァプールの25歳に今季の数字で何が見えるか」の数字を一次で読み直した結果**
+# - 市場価値：Transfermarkt API（tmapi-alpha /player/451276、2026-10-19 取得）の最新は **1億ユーロ、日付は 2026-06-03**（過去最高でもある。その前は 2026-03-09 も1億、2025-12-09 は8500万）。
+#   → 題の「1億ユーロ」は合っている。ただし**10月に入っても更新が無い6月の値**なので、語りは「6月3日付け」と日付を付ける（Transfermarkt の推定）。
+# - 年齢：25歳（2000-10-25 生まれ。10月25日に26歳になる）。
+# - 今季の出場時間・得点：Transfermarkt の試合記録と ESPN の試合記録（site.api.espn.com）が一致。プレミア 6試合出場（7試合中）473分 1得点0アシスト。
+#   **リーグ戦の1得点は開幕戦のPK**（ESPN：90分+9分「Penalty - Scored」。リヴァプール公式の試合記事は「99分」）。
+#   プレミア公式の記録は読み直していない（一次の公式記録はリヴァプール公式のクラブ記事と ESPN の試合記録で代えた）。
+#
+# **数字の出どころ**
+# - Transfermarkt API（各1回、8秒空けて取得。控えは research/raw/20261020_sobosslai_tm.json）：生年月日・身長・契約・市場価値の推移、季ごとの試合・得点・アシスト・出場時間、
+#   試合ごとの出場分数・欠場の状態（injured）・シュート数（scoringAttempts）・PK得点。移籍の記録の取得（/transfer-history）は404で取れず、移籍金は Wikipedia の報道の記述に頼る（→ 報道・背景）。
+# - ESPN（site.api.espn.com の試合記録 3試合：スコア・得点者・得点の分・交代の分とケガによる交代の記載）：ニューカッスル戦のPKは90+9分、ブレントフォード戦の交代は32分（ケガのため）。
+# - リヴァプール公式（本文を読んだ）：新契約のインタビュー全文（7/17）・副主将のインタビュー・ニューカッスル戦の試合記事とソボスライの試合後の言葉・
+#   ブレントフォード戦後のイラオラ監督の会見・シティ戦前の欠場の発表・ゴール・オブ・ザ・マンス（トッテナム戦）・アトレティコ戦の試合記事。→ 確定（クラブ公式の発表）。
+# - Bundesliga公式（本文を読んだ、ライプツィヒ加入のころの記事）：父の指導・フェニクス・ゴールド・本人の言葉。→ 報道。
+# - 英語版 Wikipedia（2026-10-17 更新まで）：経歴・移籍・代表歴・受賞・クラブ別のリーグ戦の試合と得点。→ 背景。
+#
+# **自分で数えたもの**
+# - 通算：Wikipedia のリーグ戦（リーフェリング42試合16得点・ザルツブルク56試合16・ライプツィヒ62試合12・リヴァプール111試合16）＋代表69試合18得点
+#   ＝ 340試合78得点（クラブはリーグ戦だけ、代表は全試合）。リヴァプールの111試合16得点は TM の記録（33+36+36+6試合、3+6+6+1得点）と一致。
+# - 全公式戦（クラブのみ、代表は含めない。TM の大会ごとの記録を足した）の試合／得点／出場分：20/21（ザルツブルク）22／9／1657、21/22 ライプツィヒ 45／10／2127、22/23 ライプツィヒ 46／10／3710、
+#   23/24 リヴァプール 45／7／2704、24/25 49／8／3430、25/26 53／13／4736、26/27 8／3／591。90分あたり得点＝得点×90÷出場分：0.49・0.42・0.24・0.23・0.21・0.25・0.46。
+# - プレミアのリーグ戦の比べ：リヴァプール3季（23/24〜25/26）＝105試合・7841分・15得点・17アシスト・シュート198本（TM の記録）、PKでの得点0。
+#   ゴール 15×90÷7841＝0.17、アシスト 17×90÷7841＝0.19、合計 32×90÷7841＝0.37、シュート 198×90÷7841＝2.27。
+#   今季＝6試合・473分・1得点（PK）・0アシスト・シュート14本。ゴール 90÷473＝0.19、アシスト 0、合計 0.19、シュート 14×90÷473＝2.66。
+#   出場できた時間の割合＝出場分÷（クラブのプレミア試合数×90）：23/24 2111÷3420＝62%、24/25 2497÷3420＝73%、25/26 3233÷3420＝95%、3季 7841÷10260＝76%、今季 473÷630＝75%。
+#   合計 0.19÷0.37＝0.52（ほぼ半分）。
+# - 市場価値の倍率：2017-07-02 の20万ユーロ → 2026-06-03 の1億ユーロ＝500倍。2023-10-09（リヴァプール加入直後）の7000万 → 1億＝約1.4倍。
+# - 今季：クラブの公式戦8試合（プレミア6・チャンピオンズリーグ1・リーグカップ1）591分3得点（プレミアのPK、アトレティコ戦の同点ゴール、トッテナム戦の25ヤード）。
+#   プレミアの7試合はリヴァプール3勝3分1敗（ニューカッスル2-2・フォレスト2-2・イプスウィッチ2-0・フラム0-0・ボーンマス1-0・シティ0-3・ブレントフォード2-1）。
+#
+# **入れなかったもの**：私生活（結婚・家族）、年俸・代理人、ハンガリー代表のすべての試合の数字、移籍金の媒体ごとの食い違い（ポンドとユーロ）、
+#   代表ウィークの試合ごとの内容、チームの順位の話、他の選手との優劣の話、前任のスロット監督の評価。
+# **日本語名・読みで怪しいもの**：ソボスライ（辞書は ドミニク・ソボスライ）、イラオラ、リーフェリング、ザルツブルク、ライプツィヒ、セーケシュフェヘールヴァール、
+#   ニューカッスル、ノッティンガム・フォレスト、イプスウィッチ、ボーンマス、ブレントフォード、ラスク、ファン・ダイク、ムニョス、ゴメス、フェニクス・ゴールド、ゾルト。
+#
+# 本人・監督の言葉は6か所（自訳。原文は上の出典）：①フック（新契約のインタビュー）②歩んだ道（同）③今季（ニューカッスル戦後のインタビュー）④今季（イラオラ監督の会見）
+#   ⑤数字の外・父（Bundesliga公式）⑥数字の外・副主将（副主将のインタビュー）。
+date: 2026年10月20日
+slot: other_1
+format: news
+series: 有名選手の紹介
+people:
+- ソボスライ
+theme:
+  end_bg: assets/images/20261020_sobosslai_intro/09_w.jpg
+  id: player_451276
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: リヴァプール
+  title: ソボスライってどんな選手？ 市場価値1億ユーロの25歳、今季の数字は何を語るか
+  question: 市場価値が1億ユーロの25歳は、今季のプレミアでどんな数字を残しているのか。ソボスライは、どんな選手なのか
+  takeaway: プレミアで出られた時間の割合は、3季の平均76%に対して今季75%でほぼ同じ。ゴールとアシストの合計は90分あたり0.37から0.19へ半分。シュートは2.27本から2.66本で減っていない
+  nameplate: ソボスライ｜リヴァプール MF／ハンガリー代表
+  opening_image: assets/images/20261020_sobosslai_intro/02_w.jpg
+  bgm: assets/audio/bgm_calm.wav
+short_title: ソボスライってどんな選手？
+thumbnail:
+  line1: ソボスライ、340試合78点
+  line2: 今季プレミアは1ゴール
+  tags:
+  - リヴァプール
+  photo: assets/images/20261020_sobosslai_intro/panel_09.jpg
+  photos: []
+  short_photo: assets/images/20261020_sobosslai_intro/09_v.jpg
+sections:
+- id: hook
+  heading: 市場価値1億ユーロの25歳。今季の数字は、どう読めばいいのか
+  tier: 報道
+  telop: 市場価値1億ユーロの25歳
+  narrator: 解説
+  card:
+    type: stats
+    title: ドミニク・ソボスライ 25歳
+    items:
+    - ['1', 億ユーロ, 市場価値。6月3日付けで過去最高]
+    - ['473', 分, 今季のプレミア。7試合のうち6試合]
+    - ['1', ゴール, 開幕戦99分のPK]
+    focus: 0
+  say:
+  - text: 市場価値は1億ユーロ。リヴァプールのソボスライ、6月3日付けの過去最高です。
+    image: assets/images/20261020_sobosslai_intro/02_w.jpg
+    card: &hook_stats
+      type: stats
+      title: ドミニク・ソボスライ 25歳
+      items:
+      - ['1', 億ユーロ, 市場価値。6月3日付けで過去最高]
+      - ['473', 分, 今季のプレミア。7試合のうち6試合]
+      - ['1', ゴール, 開幕戦99分のPK]
+      focus: 0
+  - text: ところが今季のプレミアは、6試合で473分。ゴールは、たった1つ。
+    emph: true
+    image: assets/images/20261020_sobosslai_intro/11_w.jpg
+    card:
+      <<: *hook_stats
+      focus: 1
+  - text: 昨季は、36試合で3233分、6ゴール。今季は、まだ6試合です。
+    card:
+      <<: *hook_stats
+      focus: 1
+  - text: そして今季の1点は、開幕戦、99分に決めたPKでした。
+    card:
+      <<: *hook_stats
+      focus: 2
+  - text: さらに、10月17日のブレントフォード戦は、32分でピッチを離れています。
+    image: assets/images/20261020_sobosslai_intro/07_w.jpg
+    card: none
+  - text: それでも本人は、足りないと言います。昨季のクラブ年間最優秀選手が、です。
+    image: assets/images/20261020_sobosslai_intro/01_w.jpg
+    card: none
+  - voice: ソボスライ
+    text: まだ上があります。満足したことは、ありません。
+  - voice: ソボスライ
+    text: 子どものころから、これで十分だと、思ったことがなかった。
+    cont: true
+    pause: 0.5
+  quotes_from:
+  - https://www.liverpoolfc.com/news/full-dominik-szoboszlai-new-lfc-contract-responsibility-and-ambitions
+  sources:
+  - https://www.liverpoolfc.com/news/full-dominik-szoboszlai-new-lfc-contract-responsibility-and-ambitions
+  - https://www.transfermarkt.com/dominik-szoboszlai/profil/spieler/451276
+  - https://www.liverpoolfc.com/news/szoboszlai-scores-late-penalty-rescue-point-liverpool-season-opener-newcastle
+  - https://www.liverpoolfc.com/news/andoni-iraola-on-jeremie-frimpong-and-dominik-szoboszlai-injuries
+- id: data
+  heading: ソボスライは、どんな立場で、いくらと見られている選手か
+  tier: 報道
+  telop: ソボスライの基礎DATA
+  narrator: 解説
+  card:
+    type: table
+    title: ドミニク・ソボスライ（リヴァプール）
+    columns:
+    - 項目
+    - 内容
+    rows: &bdata
+    - - 所属
+      - リヴァプール（8番・副主将）
+    - - ポジション
+      - 攻撃的ミッドフィルダー
+    - - 生年月日
+      - 2000年10月25日（25歳）
+    - - 出身
+      - ハンガリー
+    - - 身長・利き足
+      - 1.87m・右足
+    - - 代表
+      - ハンガリー（69試合18得点・主将）
+    - - 契約・市場価値
+      - 2031年まで・1億ユーロ
+    source: Transfermarkt・Wikipedia
+  say:
+  - text: ソボスライは中盤の選手。トップ下から中央、右サイドバックまで、幅広く使われます。
+    image: assets/images/20261020_sobosslai_intro/09_w.jpg
+    card: &data_card
+      type: table
+      title: ドミニク・ソボスライ（リヴァプール）
+      columns: [項目, 内容]
+      rows: *bdata
+      source: Transfermarkt・Wikipedia
+      highlight_row: 1
+  - text: 2000年10月25日、ハンガリー生まれ。ハンガリー代表では、主将です。
+    image: assets/images/20261020_sobosslai_intro/07_w.jpg
+    card:
+      <<: *data_card
+      highlight_row: 5
+  - text: 市場価値の歩みです。16歳の2017年7月は、20万ユーロでした。
+    emph: true
+    image: assets/images/20261020_sobosslai_intro/09_w.jpg
+    card: &value_line
+      type: line
+      title: ソボスライの市場価値（百万ユーロ）
+      x: ['17/7', '19/6', '20/7', '22/6', '23/10', '24/12', '25/12', '26/6']
+      series:
+      - [市場価値, [0.2, 12, 25, 28, 70, 75, 85, 100]]
+      focus: 市場価値
+      highlight: '26/6'
+      source: Transfermarkt
+  - text: そこから、およそ500倍。最新の更新は6月3日で、10月も同じ値です。
+    emph: true
+    image: assets/images/20261020_sobosslai_intro/07_w.jpg
+    card: none
+  sources:
+  - https://www.transfermarkt.com/dominik-szoboszlai/profil/spieler/451276
+  - https://www.liverpoolfc.com/news/dominik-szoboszlai-liverpool-vice-captaincy-and-his-love-andoni-iraola-football
+  - https://en.wikipedia.org/wiki/Dominik_Szoboszlai
+- id: career
+  heading: 小さな町の少年は、どうしてリヴァプールの8番になったのか
+  tier: 報道
+  telop: 3歳から、父とボールを蹴った
+  narrator: 解説
+  card:
+    type: table
+    title: 歩んできた道
+    columns:
+    - 年
+    - クラブ
+    - 移籍金（報道）
+    rows: &career_rows
+    - - 2017〜2018
+      - リーフェリング
+      - —
+    - - 2018〜2021
+      - ザルツブルク
+      - —
+    - - 2021〜2023
+      - ライプツィヒ
+      - 約2000万ユーロ
+    - - 2023〜
+      - リヴァプール
+      - 約7000万ユーロ
+    source: Wikipedia・各報道
+  say:
+  - text: 3歳でボールを蹴り始め、16歳でプロに。父のゾルトが、コーチでした。
+    image: assets/images/20261020_sobosslai_intro/01_w.jpg
+    card: &career_card
+      type: table
+      title: 歩んできた道
+      columns: [年, クラブ, 移籍金（報道）]
+      rows: *career_rows
+      source: Wikipedia・各報道
+  - text: 2021年、ライプツィヒへ。ハンガリー人で、移籍金の最高額でした。
+    image: assets/images/20261020_sobosslai_intro/04_w.jpg
+    emph: true
+    card:
+      <<: *career_card
+      highlight_row: 2
+  - text: 移籍金は約2000万ユーロ。ただ、最初の半年は、ケガで1試合も出られません。
+    card: none
+  - text: 2023年7月、リヴァプールへ。契約解除条項は、約7000万ユーロとの報道です。
+    image: assets/images/20261020_sobosslai_intro/07_w.jpg
+    card:
+      <<: *career_card
+      highlight_row: 3
+  - text: 2025年4月27日、リヴァプールがプレミア優勝。ハンガリー人で初めてでした。
+    emph: true
+    image: assets/images/20261020_sobosslai_intro/11_w.jpg
+    card: none
+  - text: そして7月17日、2031年までの新契約を結びます。
+    image: assets/images/20261020_sobosslai_intro/02_w.jpg
+    card: none
+  - text: 契約の日、本人は、こう語りました。
+    card: none
+  - voice: ソボスライ
+    text: 僕は、ここで勝てるものは全部、勝ちたい。
+  - voice: ソボスライ
+    text: この国で取れるものは全部。チャンピオンズリーグも、です。
+    cont: true
+    pause: 0.6
+  quotes_from:
+  - https://www.liverpoolfc.com/news/full-dominik-szoboszlai-new-lfc-contract-responsibility-and-ambitions
+  sources:
+  - https://en.wikipedia.org/wiki/Dominik_Szoboszlai
+  - https://www.bundesliga.com/en/bundesliga/news/dominik-szoboszlai-5-things-on-rb-leipzig-s-new-attacker-haaland-rose-13971
+  - https://www.liverpoolfc.com/news/full-dominik-szoboszlai-new-lfc-contract-responsibility-and-ambitions
+- id: style
+  heading: 持ち場が定まらないのに、なぜ外せない選手なのか
+  tier: 報道
+  telop: 万能の中盤と、止まった球
+  narrator: 解説
+  card:
+    type: bars
+    title: プレミアで出られた時間の割合（出場分÷全試合の分）
+    unit: '%'
+    items:
+    - label: 23/24
+      value: 62
+    - label: 24/25
+      value: 73
+    - label: 25/26
+      value: 95
+      highlight: true
+    - label: 26/27（今季）
+      value: 75
+    source: Transfermarkt
+  say:
+  - text: ライプツィヒに加わったころの記事で、自分の強みを、こう説明しています。
+    image: assets/images/20261020_sobosslai_intro/04_w.jpg
+    card: none
+  - voice: ソボスライ
+    text: シュートが打てて、最後のパスも通せる、万能の選手です。
+  - voice: ソボスライ
+    text: フリーキックやセットプレーは、僕の強みのひとつです。
+    cont: true
+    pause: 0.5
+  - text: 昨季のアーセナル戦、32ヤードのフリーキック。ハンガリー人初の月間最優秀ゴール。
+    image: assets/images/20261020_sobosslai_intro/11_w.jpg
+    card: none
+  - text: 今季は9月15日、トッテナム戦の25ヤードの一撃が、ファン投票で月間ゴールに。
+    emph: true
+    image: assets/images/20261020_sobosslai_intro/09_w.jpg
+    card: none
+  - text: 出られた時間の割合で見ます。プレミアの全試合を、フルに出たら100%です。
+    image: assets/images/20261020_sobosslai_intro/07_w.jpg
+    card: &style_bars
+      type: bars
+      title: プレミアで出られた時間の割合（出場分÷全試合の分）
+      unit: '%'
+      items:
+      - label: 23/24
+        value: 62
+      - label: 24/25
+        value: 73
+      - label: 25/26
+        value: 95
+        highlight: true
+      - label: 26/27（今季）
+        value: 75
+      source: Transfermarkt
+  - text: 昨季は95%。今季は75%で、昨季ほどではありませんが、その前の季よりは上です。
+    emph: true
+    card: *style_bars
+  quotes_from:
+  - https://www.bundesliga.com/en/bundesliga/news/dominik-szoboszlai-5-things-on-rb-leipzig-s-new-attacker-haaland-rose-13971
+  sources:
+  - https://www.bundesliga.com/en/bundesliga/news/dominik-szoboszlai-5-things-on-rb-leipzig-s-new-attacker-haaland-rose-13971
+  - https://en.wikipedia.org/wiki/Dominik_Szoboszlai
+  - https://www.liverpoolfc.com/news/dominik-szoboszlai-goal-of-the-month-tottenham
+  - https://www.transfermarkt.com/dominik-szoboszlai/profil/spieler/451276
+- id: past
+  heading: 7つのシーズンと、通算340試合
+  tier: 報道
+  telop: 7シーズンの試合と得点
+  narrator: 解説
+  card:
+    type: table
+    title: ソボスライ 7シーズン（クラブの全公式戦）
+    columns:
+    - シーズン
+    - クラブ
+    - 試合
+    - 得点
+    - 90分あたり
+    rows: &season_rows
+    - ['20/21', ザルツブルク, '22', '9', '0.49']
+    - ['21/22', ライプツィヒ, '45', '10', '0.42']
+    - ['22/23', ライプツィヒ, '46', '10', '0.24']
+    - ['23/24', リヴァプール, '45', '7', '0.23']
+    - ['24/25', リヴァプール, '49', '8', '0.21']
+    - ['25/26', リヴァプール, '53', '13', '0.25']
+    - ['26/27', リヴァプール, '8', '3', '0.46']
+    source: Transfermarkt
+  rows_total:
+  - &t1 [リーフェリング（2部）, '42', '16']
+  - &t2 [ザルツブルク, '56', '16']
+  - &t3 [ライプツィヒ, '62', '12']
+  - &t4 [リヴァプール, '111', '16']
+  - &t5 [ハンガリー代表, '69', '18']
+  - &t6 [合計, '340', '78']
+  say:
+  - text: 全公式戦で、20/21は、ザルツブルクで22試合9得点。0.49は7季で最高。
+    image: assets/images/20261020_sobosslai_intro/04_w.jpg
+    card: &past_card
+      type: table
+      title: ソボスライ 7シーズン（クラブの全公式戦）
+      columns: [シーズン, クラブ, 試合, 得点, 90分あたり]
+      rows: *season_rows
+      source: Transfermarkt
+      highlight_row: 0
+  - text: ライプツィヒの2季は、どちらも10得点。45試合で0.42、46試合で0.24。
+    image: assets/images/20261020_sobosslai_intro/02_w.jpg
+    card:
+      <<: *past_card
+      highlight_row: 1
+  - text: リヴァプールの3季は、0.23、0.21、0.25。ほとんど、動いていません。
+    emph: true
+    image: assets/images/20261020_sobosslai_intro/09_w.jpg
+    card:
+      <<: *past_card
+      highlight_row: 5
+  - text: そして今季は、全公式戦で8試合3得点。0.46ですが、まだ試合数は少なめです。
+    emph: true
+    card:
+      <<: *past_card
+      highlight_row: 6
+  - text: 続いて、通算です。リーグ戦だけで、リーフェリングが42試合16得点。
+    image: assets/images/20261020_sobosslai_intro/07_w.jpg
+    card: &total_card
+      type: table
+      title: ソボスライ 通算（クラブはリーグ戦のみ）
+      columns: [所属, 試合, 得点]
+      rows: [*t1, *t2, *t3, *t4, *t5, *t6]
+      source: Wikipedia・Transfermarkt
+      highlight_row: 0
+  - text: ソボスライのリヴァプールは、111試合16得点。代表は、69試合18得点。
+    image: assets/images/20261020_sobosslai_intro/11_w.jpg
+    card:
+      <<: *total_card
+      highlight_row: 3
+  - text: すべて足すと、340試合で、78得点になります。
+    emph: true
+    card:
+      <<: *total_card
+      highlight_row: 5
+  sources:
+  - https://www.transfermarkt.com/dominik-szoboszlai/profil/spieler/451276
+  - https://en.wikipedia.org/wiki/Dominik_Szoboszlai
+- id: season
+  heading: 6試合473分の中で、何があったのか
+  tier: 報道
+  telop: 今季ここまで
+  narrator: 解説
+  card:
+    type: table
+    title: プレミアの今季7試合（ソボスライ）
+    columns:
+    - 日付
+    - 相手
+    - 出場
+    - 得点
+    - 結果
+    rows: &recent_rows
+    - - 8/23
+      - ニューカッスル
+      - 先発・90分
+      - 1G 0A
+      - 2-2 分
+    - - 8/29
+      - フォレスト
+      - 先発・90分
+      - 0G 0A
+      - 2-2 分
+    - - 9/4
+      - イプスウィッチ
+      - 先発・90分
+      - 0G 0A
+      - 2-0 勝
+    - - 9/12
+      - フラム
+      - 先発・90分
+      - 0G 0A
+      - 0-0 分
+    - - 9/20
+      - ボーンマス
+      - 先発・81分交代
+      - 0G 0A
+      - 1-0 勝
+    - - 10/11
+      - マンチェスターC
+      - 欠場（ケガ）
+      - —
+      - 0-3 負
+    - - 10/17
+      - ブレントフォード
+      - 先発・32分交代
+      - 0G 0A
+      - 2-1 勝
+    source: ESPN・Transfermarkt
+  say:
+  - text: 今季のクラブの公式戦は、8試合で591分、3得点。プレミアでは、6試合です。
+    image: assets/images/20261020_sobosslai_intro/09_w.jpg
+    card: &recent_card
+      type: table
+      title: プレミアの今季7試合（ソボスライ）
+      columns: [日付, 相手, 出場, 得点, 結果]
+      rows: *recent_rows
+      source: ESPN・Transfermarkt
+  - text: 8月23日、開幕のニューカッスル戦。90分を回って、1対2で負けています。
+    card:
+      <<: *recent_card
+      highlight_row: 0
+  - text: 99分、ムニョスが倒されてPK。左上へ蹴り込み、土壇場の同点です。
+    emph: true
+    image: assets/images/20261020_sobosslai_intro/11_w.jpg
+    card: none
+  - voice: ソボスライ
+    text: 主審の笛が、聞こえなかったんです。
+  - voice: ソボスライ
+    text: 敵が5万人。自分の声も聞こえない。
+    cont: true
+  - voice: ソボスライ
+    text: だから、サッカーが好きなんです。
+    cont: true
+    pause: 0.5
+  - text: 9月9日、チャンピオンズリーグ初戦。アトレティコ戦で同点ゴール。2対1の逆転勝ち。
+    image: assets/images/20261020_sobosslai_intro/02_w.jpg
+    card: none
+  - text: 代表から戻ると、太もも裏に張り。シティ戦と、オーストリアのラスク戦を欠場します。
+    image: assets/images/20261020_sobosslai_intro/01_w.jpg
+    card:
+      <<: *recent_card
+      highlight_row: 5
+  - text: 10月17日、ブレントフォード戦で戻りますが、32分で交代しました。
+    image: assets/images/20261020_sobosslai_intro/07_w.jpg
+    card:
+      <<: *recent_card
+      highlight_row: 6
+  - text: 試合後、イラオラ監督は、愛称のドムで呼びながら、こう話しました。
+    card: none
+  - voice: イラオラ監督
+    text: ドムが感じたのは、同じケガです。新しいケガではありません。
+  - voice: イラオラ監督
+    text: 治りきっていなかったのでしょう。もう少し、時間が必要です。
+    cont: true
+    pause: 0.5
+  - text: 復帰の時期は、10月17日の時点で、示されていません。
+    emph: true
+    image: assets/images/20261020_sobosslai_intro/09_w.jpg
+    card: none
+  quotes_from:
+  - https://www.liverpoolfc.com/news/why-i-love-football-how-dominik-szoboszlai-kept-his-cool-score-late-late-penalty-newcastle
+  - https://www.liverpoolfc.com/news/andoni-iraola-on-jeremie-frimpong-and-dominik-szoboszlai-injuries
+  sources:
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/teams/364/schedule
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/summary?event=401879319
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/summary?event=401879262
+  - https://www.liverpoolfc.com/news/szoboszlai-scores-late-penalty-rescue-point-liverpool-season-opener-newcastle
+  - https://www.liverpoolfc.com/news/dominik-szoboszlai-injury-update-andoni-iraola-man-city
+  - https://www.liverpoolfc.com/news/liverpools-injury-list-suspensions-and-availability
+  - https://www.liverpoolfc.com/news/liverpool-comeback-clinches-champions-league-win-over-atletico-madrid
+  - https://www.transfermarkt.com/dominik-szoboszlai/profil/spieler/451276
+- id: story
+  heading: 数字の外にある話。父と、副キャプテンの仕事
+  tier: 報道
+  main: true
+  telop: 父の練習と、ピッチの上で話す人
+  narrator: 解説
+  card:
+    type: table
+    title: 数字の外にある話
+    columns: [いつ, 何があったか]
+    rows: &story_rows
+    - ['3歳〜', 父が、コーチとして練習を始めた]
+    - ['2026年8月', イラオラ監督が、副主将に選んだ]
+    source: Bundesliga・リヴァプール公式
+  say:
+  - text: リヴァプールのソボスライ。今季は6試合1ゴール、昨季は36試合6ゴール。
+    image: assets/images/20261020_sobosslai_intro/09_v.jpg
+    short_only: true
+    card: none
+  - text: ひとつは、少年時代。父のゾルトは、元サッカー選手でした。
+    image: assets/images/20261020_sobosslai_intro/01_w.jpg
+    card: none
+  - text: ライプツィヒに来たころ、本人は、こう語っています。
+    image: assets/images/20261020_sobosslai_intro/04_w.jpg
+    card: none
+  - voice: ソボスライ
+    text: 練習が終わっても、父は、僕を鍛え続けました。
+  - voice: ソボスライ
+    text: 僕は、いつも、みんなより多くやってきたんです。
+    cont: true
+  - voice: ソボスライ
+    text: 父は、僕が育つうえで、いちばんの鍵でした。
+    cont: true
+    pause: 0.6
+  - text: もうひとつは、いまの立場。8月、イラオラ監督が、副キャプテンに選びました。
+    image: assets/images/20261020_sobosslai_intro/02_w.jpg
+    card: none
+  - text: 主将はファン・ダイク。副主将は、アリソンとゴメスと、ソボスライです。
+    card: none
+  - text: 副主将としての振る舞いを、本人は、こう語っています。
+    card: none
+  - voice: ソボスライ
+    text: ロッカールームでは、あまり話さないかもしれません。
+  - voice: ソボスライ
+    text: そのための選手は、ほかにいます。
+    cont: true
+  - voice: ソボスライ
+    text: 僕は、ピッチの上で、話したいんです。
+    cont: true
+    pause: 0.6
+  - text: そのピッチを、ソボスライは、しばらく離れます。
+    image: assets/images/20261020_sobosslai_intro/01_w.jpg
+    card: none
+    pause: 0.5
+  quotes_from:
+  - https://www.bundesliga.com/en/bundesliga/news/dominik-szoboszlai-5-things-on-rb-leipzig-s-new-attacker-haaland-rose-13971
+  - https://www.liverpoolfc.com/news/dominik-szoboszlai-liverpool-vice-captaincy-and-his-love-andoni-iraola-football
+  sources:
+  - https://www.bundesliga.com/en/bundesliga/news/dominik-szoboszlai-5-things-on-rb-leipzig-s-new-attacker-haaland-rose-13971
+  - https://www.liverpoolfc.com/news/dominik-szoboszlai-liverpool-vice-captaincy-and-his-love-andoni-iraola-football
+  - https://en.wikipedia.org/wiki/Dominik_Szoboszlai
+- id: view
+  heading: 3シーズンと今季の6試合を、同じ物差しで並べると
+  tier: 背景
+  viewpoint: true
+  narrator: 解説
+  telop: 3シーズンと今季
+  card:
+    type: table
+    title: プレミアのリーグ戦の比べ（リヴァプール）
+    columns: [項目, 23/24〜25/26, 今季]
+    rows: &cmp_rows
+    - ['試合', '105', '6']
+    - ['出場時間', '7841分', '473分']
+    - ['出られた割合', '76%', '75%']
+    - ['ゴール／90分', '0.17', '0.19']
+    - ['アシスト／90分', '0.19', '0']
+    - ['ゴール＋アシスト／90分', '0.37', '0.19']
+    - ['シュート／90分', '2.27', '2.66']
+    source: Transfermarkt
+  say:
+  - text: 最後に、ソボスライのプレミアのリーグ戦を、過去3シーズンと今季で比べます。
+    image: assets/images/20261020_sobosslai_intro/02_w.jpg
+    card: &cmp_card
+      type: table
+      title: プレミアのリーグ戦の比べ（リヴァプール）
+      columns: [項目, 23/24〜25/26, 今季]
+      rows: *cmp_rows
+      source: Transfermarkt
+      highlight_row: 0
+  - text: 今季は6試合。まだ小さな数なので、途中経過として見てください。
+    card: none
+  - text: まず、出られた割合。3シーズンの平均が76%で、今季は75%。ほとんど同じです。
+    emph: true
+    image: assets/images/20261020_sobosslai_intro/07_w.jpg
+    card:
+      <<: *cmp_card
+      highlight_row: 2
+  - text: ゴールは、90分あたり0.17と0.19。ただ、今季の1点はPKです。
+    card:
+      <<: *cmp_card
+      highlight_row: 3
+  - text: 3シーズンの15ゴールは、PKが0本。そこは、条件が違います。
+    image: assets/images/20261020_sobosslai_intro/11_w.jpg
+    card: none
+  - text: アシストは、0.19から0。合計は、0.37から0.19と、ほぼ半分です。
+    emph: true
+    image: assets/images/20261020_sobosslai_intro/09_w.jpg
+    card:
+      <<: *cmp_card
+      highlight_row: 5
+    mark: {kind: circle, row: 5}
+  - text: 一方、シュートは、2.27本から2.66本。打つ回数は、減っていません。
+    card:
+      <<: *cmp_card
+      highlight_row: 6
+  - text: プレミアは、あと31試合。ただし、戻る日は、まだ見えていません。
+    image: assets/images/20261020_sobosslai_intro/01_w.jpg
+    card: none
+  quotes_from:
+  - https://www.liverpoolfc.com/news/liverpools-injury-list-suspensions-and-availability
+  sources:
+  - https://www.transfermarkt.com/dominik-szoboszlai/profil/spieler/451276
+  - https://www.liverpoolfc.com/news/andoni-iraola-on-jeremie-frimpong-and-dominik-szoboszlai-injuries
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/teams/364/schedule

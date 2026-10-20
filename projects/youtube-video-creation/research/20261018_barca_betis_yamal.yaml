@@ -1,0 +1,165 @@
+# 取材メモ（2026年10月18日）バルサがベティスに5-2。ヤマルの先制ゴラッソ（ニュースのショート。見せ方 B＝高速切り替え）
+# 取材: 2026-10-18。requests（ブラウザUA）で原文を読んだ。控えは research/raw/20261018_barca_*・flick_as・bernal_*・yamal_sakarabo。
+#   ・FC Barcelona 公式（英語）「Betis 2-5 FC Barcelona: the dream start continues」「FC Barcelona equal record for best league start」— 全文読んだ。
+#       試合の流れ・「全11試合に勝った」・レアル1968/69の「9戦9勝」・「39得点9失点」「レアルは21得点」（確定に近い一次。公式の記述）。
+#   ・フットボールチャンネル 2026.10.18 05:20（題材の出典）— 全文読んだ。スペイン紙 Mundo Deportivo を引いてクラブ史上初の開幕9連勝・レアル（1968/69）の記録に並んだと伝える。
+#   ・フットボールチャンネル 2026.10.18 08:15（ヤマルのゴールの描写）、サッカーキング（試合の描写）、ゲキサカ — 読んだ。
+#   ・Marca「El Barça iguala el récord del Madrid」— 全文読んだ。1968-69のレアル（ミゲル・ムニョス監督）が9連勝のあと10節目に0-0（ポンテベドラ戦）。クラシコは25日（日）。
+#   ・AS「Flick: “Lamine es ahora mismo el mejor jugador del mundo”」— 全文読んだ。DAZN LaLiga の試合直後の取材と記者会見の発言。
+#   ・Marca「Facundo Bernal pide disculpas por su expulsión」— 全文読んだ。審判の報告書の文言と、ベルナル本人のSNSの謝罪の全文（スペイン語）。A Bola も同じ投稿を伝える。
+#   ・ESPN の記事（Yamal 'Best in the world'）は開けなかった（bot 判定）。使っていない。
+# 資料のずれ（台本では言わないか、ぼかした）:
+#   ・時間：FC公式＝ベティスの同点は28分・ジェズスは53分前後／フットボールチャンネル・サッカーキング＝27分・51分（ジェズス。ヤマルのクロスのオフサイドを挟む）／エリック・ガルシア 62分 or 63分。
+#     → 台本は10分（ヤマル）と80分前後（オルモ）だけ時間を言わず、「前半に1点ずつ」「後半」でぼかす。ヤマルの10分は全部一致。
+#   ・ベルナルの退場：Marca は「54分」（審判の報告書）。台本は時間を言わず「後半の早いうち」。頭突きの回数は報告書で「2回」だが、台本では「頭突き」とだけ言う。
+#   ・ヤマルのアシスト：ジェズスの3点目は FC公式・サッカーキングとも ヤマルの折り返しとして伝える。62分のゴールもセットプレー（ヤマルのFK）が起点（FC公式）。台本は「ジェズスの得点を折り返しで演出」だけ言う。
+# 確度: 試合結果・得点者・連勝の数字は クラブ公式サイトの記述まで辿れた（確定）。Mundo Deportivo 経由の「クラブ史上初」は報道。フリックの発言は AS（報道）。ベルナルの謝罪は本人のSNS投稿をMarcaが全文で引いている（報道）。見立ては 背景。
+# 数えた比べ（見立て）: レアルは1968/69の開幕9連勝で21得点（FC公式）。バルセロナは9試合で39得点・9失点（FC公式）。39÷21≒1.9倍。連勝の数は同じ。
+#   次は20日 UEFAチャンピオンズリーグ PSG戦、25日 クラシコ（リーグ戦）。クラシコに勝てば 開幕10連勝（リーグ史上初）。
+# 昨日（10/17）の flick_yamal_minutes（会見・出場時間）とは別の話（今回は試合そのもの）。数字（14得点・10連勝）は使わない。
+# 反応: サカラボの記事（10/18 朝）のコメント9件から2件。匿名。全文。ヤマルの話への声のみ。まとめサイトの見出しは引いていない。X は使っていない。
+# 写真: FC Barcelona 公式サイトの記事の写真（クラブ配布）と Commons（CC BY / BY-SA）。Getty などの代理店写真は使わない。出典は credits.json。縦写真は tools/photopool.py ＋ short_photo_fx.py B。
+slot: la_liga
+date: "2026年10月18日"
+format: news
+no_main: true      # ニュースはショートだけ（2026-10-14）。締めで本編を案内しない
+people: [ラミン・ヤマル, バルセロナ, ベティス]
+short_style: B
+short_photos:
+  - assets/images/20261018_barca_betis_yamal/09_v.jpg
+  - assets/images/20261018_barca_betis_yamal/13_v.jpg
+  - assets/images/20261018_barca_betis_yamal/10_v.jpg
+  - assets/images/20261018_barca_betis_yamal/14_v.jpg
+  - assets/images/20261018_barca_betis_yamal/21_v.jpg
+  - assets/images/20261018_barca_betis_yamal/15_v.jpg
+  - assets/images/20261018_barca_betis_yamal/22_v.jpg
+  - assets/images/20261018_barca_betis_yamal/02_v.jpg
+
+short_question: あなたは、ヤマルはいま世界一の選手だと思いますか。
+short_hook: ヤマルの先制ゴラッソ。バルサは何に並んだのか。
+short_telops:
+  - {match: 5対2で勝ちました, text: ラ・リーガ第9節/ベティス2対5バルセロナ}
+  - {match: 10分, text: 10分/ヤマルが左足で先制}
+  - {match: 勝ち越し, text: 41分/ロドリのヘディングで勝ち越し}
+  - {match: 折り返し, text: ヤマルの折り返しから/ジェズスが追加点}
+  - {match: 頭突き, text: ベティスのベルナルが/ヤマルに頭突きで退場}
+  - {match: 自分を抑えるべき, text: ベルナル本人がSNSで謝罪/「自分を抑えるべきでした」}
+  - {match: 世界でいちばん, text: フリック監督/「いま世界でいちばんの選手」}
+  - {match: 開幕9連勝, text: クラブ史上初の開幕9連勝/レアルのリーグ記録に並ぶ}
+  - {match: 39点, text: 9試合で39得点/レアルは9連勝で21得点}
+  - {match: 相手はレアル, text: 25日はクラシコ/勝てば開幕10連勝}
+
+theme:
+  id: barca_betis_yamal
+  league: spain
+  league_name: ラ・リーガ
+  prefix: ""
+  title: ヤマルの先制ゴラッソから5発。バルサが並んだ記録とは
+  hook: ""
+  question: ヤマルの先制ゴールで始まった5対2の勝利で、バルセロナは何に並んだのか
+  takeaway: 開幕9連勝はレアル（1968/69）と同じ。ただし9試合の得点は、レアルの21に対しバルセロナは39
+
+thumbnail:
+  line1: ヤマルの先制ゴラッソ
+  line2: バルサは何に並んだ？
+  tags: [ラミン・ヤマル, バルセロナ]
+  layout: face
+  photo: assets/images/20261018_barca_betis_yamal/05_w.jpg
+  short_photo: assets/images/20261018_barca_betis_yamal/09_v.jpg
+
+answer: レアル・マドリードが1968/69に作った、リーグ開幕9連勝の記録
+watch: 20日のパリ・サンジェルマン戦と、25日のクラシコ
+
+sections:
+  - id: what
+    main: true
+    heading: 何が起きたか
+    tier: 確定
+    telop: ベティス2対5バルセロナ。10分にヤマルが先制
+    say:
+      - 17日のラ・リーガ第9節。バルセロナは、アウェーでベティスに5対2で勝ちました。
+      - 10分、ヤマルがエリアの手前から左足を振り抜き、先制ゴールを決めました。
+      - ベティスは前半のうちに追いつきますが、ロドリのヘディングで勝ち越し。
+      - 後半は、ヤマルの折り返しからジェズスが決めました。
+      - その後、ベティスのベルナルがヤマルに頭突きをして、退場になります。
+      - バルセロナは、さらに2点を加えました。
+    official: true
+    sources:
+      - https://www.fcbarcelona.com/en/football/first-team/news/4593638/betis-2-5-fc-barcelona-the-dream-start-continues
+      - https://www.footballchannel.jp/2026/10/18/post1036356/
+      - https://www.footballchannel.jp/2026/10/18/post1036461/
+
+  - id: flick
+    heading: フリック監督のヤマル評
+    tier: 報道
+    telop: フリック監督「いま世界でいちばんの選手」
+    say:
+      - ヤマルへの言葉です。
+      - voice: ハンジ・フリック監督
+        text: 先制点のゴールは、信じられないものでした。
+      - voice: ハンジ・フリック監督
+        text: 私にとっては、いま世界でいちばんの選手です。
+        cont: true
+    official: false
+    sources:
+      - https://as.com/futbol/primera/flick-lamine-es-ahora-mismo-el-mejor-jugador-del-mundo-f202610-n/
+
+  - id: bernal
+    heading: 退場したベルナルの言葉
+    tier: 報道
+    telop: ベルナル本人がSNSで謝罪
+    say:
+      - 退場になったベルナルは、試合のあと、自分の投稿で謝りました。
+      - voice: ベルナル
+        text: 普段は、こんなふうに反応しません。
+      - voice: ベルナル
+        text: あの場面では、自分を抑えるべきでした。
+        cont: true
+    official: false
+    sources:
+      - https://www.marca.com/futbol/betis/2026/10/17/facundo-bernal-pide-disculpas-expulsion-debi-controlarme.html
+
+  - id: view
+    viewpoint: true
+    heading: 9連勝の中身を数える
+    tier: 背景
+    telop: 9試合で39得点。レアルは9連勝で21得点
+    say:
+      - ヤマルの先制ゴールで始まった勝利で、バルセロナは開幕9連勝。クラブ史上初です。
+      - レアル・マドリードが1968年から69年に作った、リーグの記録に並びました。
+      - 見立てです。連勝の数は同じでも、中身が違います。
+      - 9試合の得点は、バルセロナが39点。
+      - クラブ公式によると、レアルは9連勝で21点でした。
+      - 次は20日、パリ・サンジェルマン戦。
+      - そして25日、相手はレアル・マドリード。クラシコです。
+      - 勝てば、リーグ史上初の開幕10連勝になります。
+    official: false
+    sources:
+      - https://www.fcbarcelona.com/en/football/first-team/news/4593710/fc-barcelona-equal-record-for-best-league-start
+      - https://www.marca.com/futbol/barcelona/2026/10/17/barca-iguala-record-madrid.html
+      - https://www.footballchannel.jp/2026/10/18/post1036356/
+
+  # ネットの反応: 2026-10-18、サカラボ「【動画】ラミン・ヤマルさん、とんでもないゴラッソを決める…これ史上最高の選手になる？」のコメント9件から2件。匿名。全文（改行は元のまま）。
+  - id: reactions
+    heading: ネットの反応
+    tier: 未確認
+    telop: 「凄まじい選手だけどそこまで騒がれてないよな」
+    say:
+      - voice: ネット民
+        text: 凄まじい選手だけどそこまで騒がれてないよな。
+        short_voice: true
+      - voice: ネット民
+        text: ロナウジーニョみたいで俺は大好きだけど。
+        cont: true
+        short_voice: true
+      - voice: ネット民
+        text: 史上最高は言い過ぎ
+        short_voice: true
+      - voice: ネット民
+        text: ロッベン、リベリークラスだろ
+        cont: true
+        short_voice: true
+    official: false
+    sources:
+      - https://sakarabo.blog.jp/archives/1084571477.html
+short_title: "ヤマルの先制ゴラッソから5発。バルサが並んだ記録とは"

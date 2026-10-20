@@ -1,0 +1,123 @@
+# 南野拓実 の取材メモ（2026年10月19日・ショートだけ・**煽りの版**）
+# 【煽りの版：何を足したか】（2026-10-19 指示。X の見せ方に煽りを重ねる）
+#   足したのは題と冒頭1行（short_hook）の「まさかの」だけ。題の頭は「南野拓実」＝名前。【】の札は付けない。
+#   事実・数字・発言は1字も変えていない：0対1／今季初黒星／リーグ戦4勝2分／2戦連続の先発／52分に交代／PKの1点、は下の出典どおり。
+#   答えは伏せた：題は「何が起きたか（PKの1点で敗れた）」を言わない。
+#   選手を小さく見せない：「まさか」の主語はモナコの初黒星。南野は「2戦連続の先発」と書く（交代と敗戦を結ぶ言い方・南野のせいに読める言い方はしない）。
+#   煽りの強さ：想定・確率は作っていない。見立て（予想）は置いていない。
+# 取材: 2026-10-19。requests（ブラウザUA）で原文を全部読んだ。
+#   ・サッカーキング 2026-10-19「南野拓実は2戦連続スタメンで52分までプレー…モナコはPKの1点に沈み今季初黒星」
+#     https://www.soccer-king.jp/news/world/fra/20261019/2218068.html （research/raw/20261019_b_sk.txt）
+#   ・AS モナコ公式サイト（英語）試合レポート「Determined but unlucky as Monaco narrowly beaten in Lorient」（全文。research/raw/20261019_b_asm.txt）
+#     https://www.asmonaco.com/en/news/determined-but-unlucky-as-monaco-narrowly-beaten-in-lorient
+#   ・サッカーキング 2026-10-16「大ケガに苦しんだ南野拓実、298日ぶりに公式戦復帰！ ECL初陣で先発出場…」（見出しだけ。復帰の日付）
+#     https://www.soccer-king.jp/news/world/ecl/20261016/2217264.html
+# 資料間のずれ（台本では**分を言わない**）:
+#   ・PKの時刻：SK本文「60分」・SK得点者欄「61分」・モナコ公式「61'」。→ 台本は「後半」とだけ言う。
+#   ・SKは「後半開始早々の52分に途中交代」、モナコ公式の出場表は「Minamino (Diop, 52')」＝エダン・ディオプと交代。→ 52分・ディオプと言う。
+#   ・「2戦連続の先発」：SK（ECL→リーグ戦）、モナコ公式も「second consecutive start after several months out」。一致。
+#   ・**交代の理由は、SKにもモナコ公式にも書かれていない**。けがとは言わない。
+# 自分で数えたもの: リーグ戦は4勝2分＝6試合無敗（SK）。今回が7試合目の初黒星。復帰は15日のECL、18日のリーグ戦＝3日で2試合連続の先発。
+# 本人の言葉: 南野本人の言葉は、今回の記事にもモナコ公式の試合レポートにも無い（作らない）。SNSの投稿（10/16「まだ始まったばかり」）は別の記事で、今回は使わない。
+# 反応: 探していない（0件。作らない）。
+# 写真: 配信写真（Getty）は取り込まない。**AS モナコ公式サイトの試合フォト**（クラブ撮影）。
+#   01 ロリアン戦（18日・右サイドでクロス）・02 ECL ソフィア戦（15日・復帰戦）・03 ロリアン戦（18日・ドリブル）。10/16 に使った Commons の写真は使い回していない。
+#   元の写真は 842x561 と小さい（縦に切ると約3.4倍に伸びる。precheck の△が出ても、ほかに無い）。
+slot: japan
+date: "2026年10月19日"
+format: news
+no_main: true
+people: [南野拓実, モナコ, ロリアン, フィリペ・ルイス監督]
+
+short_style: X
+short_hook_word: 今季初黒星
+short_photos:
+  - assets/images/20261019_minamino_monaco_first_loss/02_v.jpg
+  - assets/images/20261019_minamino_monaco_first_loss/03_v.jpg
+
+short_question: 22日のフライブルク戦、南野拓実は先発すると思いますか。
+short_hook: 南野拓実、2戦連続の先発。モナコにまさかの初黒星。
+short_telops:
+  - {match: 0対1で敗れ, text: 18日 リーグ・アン第7節/ロリアン1対0モナコ}
+  - {match: 4勝2分, text: リーグ戦は/4勝2分の無敗だった}
+  - {match: 先発は、今季初めて, text: リーグ戦の先発は/今季初めて}
+  - {match: 10カ月ぶり, text: 15日のECLで/約10カ月ぶりに実戦復帰}
+  - {match: ライン間, text: 右の2列目で/ライン間でボールを受けた}
+  - {match: アブリーヌ, text: 34分/右からのクロスにアブリーヌ}
+  - {match: ディオプと交代, text: 後半開始早々の52分/ディオプと交代}
+  - {match: 枠内シュート, text: 前半は/両チーム枠内シュートなし}
+  - {match: 7試合目で、初めて, text: リーグ戦6試合無敗が/7試合目で止まった}
+  - {match: 3日で, text: 3日で/2試合連続の先発}
+  - {match: 22日, text: 次は22日 ECL/ホームでフライブルク}
+
+theme:
+  id: minamino_monaco_first_loss
+  league: france
+  prefix: ""
+  title: 南野拓実が2戦連続の先発。モナコにまさかの今季初黒星
+  hook: ""
+  question: 南野拓実は、2戦連続の先発でどんな試合をしたのか
+  takeaway: 南野拓実は復帰から3日で2試合連続の先発。モナコはリーグ戦6試合無敗のあと、7試合目で初めて負けた
+
+thumbnail:
+  line1: 南野拓実が2戦連続の先発
+  line2: モナコ、まさかの初黒星
+  tags: [南野拓実, モナコ, ロリアン]
+  layout: scene
+  photo: assets/images/20261019_minamino_monaco_first_loss/02_w.jpg
+  short_photo: assets/images/20261019_minamino_monaco_first_loss/02_v.jpg
+
+answer: 南野拓実は2戦連続の先発で52分に交代。モナコはPKの1点で敗れた
+watch: 22日のフライブルク戦（ECL・ホーム）と25日のリール戦
+
+sections:
+  - id: what
+    heading: 試合の結果
+    tier: 報道
+    telop: 18日のリーグ・アン第7節、ロリアン1対0モナコ
+    say:
+      - 18日、リーグ・アン第7節。
+      - 南野拓実が先発したモナコは、ロリアンに0対1で敗れました。
+      - 今季初黒星です。
+      - ここまで公式戦無敗で、リーグ戦は4勝2分。前節終了時点では首位に立っていました。
+      - 前半は、両チームとも枠内シュートがありませんでした。
+      - 後半、ロリアンにPKが与えられ、カディウが決めました。
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/fra/20261019/2218068.html
+      - https://www.asmonaco.com/en/news/determined-but-unlucky-as-monaco-narrowly-beaten-in-lorient
+      - https://www.soccer-king.jp/news/world/ecl/20261016/2217264.html
+
+  - id: match
+    main: true
+    heading: 南野拓実の2戦連続の先発
+    tier: 報道
+    telop: 南野拓実は2戦連続の先発。52分にディオプと交代
+    say:
+      - リーグ戦での先発は、今季初めてです。
+      - 15日のヨーロッパカンファレンスリーグで、約10カ月ぶりに実戦復帰したばかりです。
+      - 右の2列目に入り、ライン間でボールを受けて、攻撃の起点になりました。
+      - 34分には右からクロス。アブリーヌが頭で合わせましたが、バーの上でした。
+      - 後半開始早々の52分、南野はエダン・ディオプと交代しました。
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/fra/20261019/2218068.html
+      - https://www.asmonaco.com/en/news/determined-but-unlucky-as-monaco-narrowly-beaten-in-lorient
+      - https://www.soccer-king.jp/news/world/ecl/20261016/2217264.html
+
+  - id: view
+    viewpoint: true
+    heading: 南野拓実の復帰から3日と、モナコの無敗
+    tier: 報道
+    telop: リーグ戦6試合無敗が、7試合目で止まった
+    say:
+      - モナコは、リーグ戦で6試合、負けていませんでした。7試合目で、初めて負けました。
+      - 南野拓実は復帰から3日で、2試合連続の先発。
+      - 15日のカンファレンスリーグに続いて、18日のリーグ戦でも出場しました。
+      - 次は22日、カンファレンスリーグでホームのフライブルク戦。
+      - 25日のリーグ戦は、ホームで上田綺世のリールと戦います。
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/fra/20261019/2218068.html
+      - https://www.asmonaco.com/en/news/determined-but-unlucky-as-monaco-narrowly-beaten-in-lorient
+short_title: "南野拓実が2戦連続の先発。モナコにまさかの今季初黒星"

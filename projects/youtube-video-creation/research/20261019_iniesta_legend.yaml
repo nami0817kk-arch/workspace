@@ -1,0 +1,1039 @@
+# アンドレス・イニエスタ（元バルセロナ／スペイン代表・元ヴィッセル神戸・いまはUAEのクラブのコーチ）の紹介。シリーズ「レジェンドの紹介（世界）」。見本は 10/18 のシャビ（research/20261018_xavi_legend.yaml）。
+# 型は引退した選手向けの8節：①フック ②基礎DATA ③歩んできた道と転機（通算の表は④に置いた） ④プレースタイル（＋通算の表） ⑤あの試合（2009-05-06 CL準決勝・スタンフォード・ブリッジ） ⑥引退後・いま ⑦マル秘話2つ ⑧見立て。
+# **軸は神戸（日本との接点）**。題材は「バルセロナの中盤が、神戸で過ごした5年」。**FotMob は使わない**（レーダー・シュートマップ・パーセンタイルなし）。数字は基本の数と、自分で割った・数えた値。Transfermarkt・DataMB・FBref 等は見ていない。
+# 公開予定は 10/19。**台本は draft まで**（approve・build・screen・upload はしない）。
+#
+# **昨日のシャビの回と重ねないために**：シャビは「ユーロ2012決勝・767試合・25個・133試合・ウェンブリー・バイエルン・ペップが動くな・2.8倍」。こちらは「CL準決勝2009（スタンフォード・ブリッジ）・674試合・32個・131試合・神戸5年・ハルケへの追悼・0.08対0.19」。
+#   2010年W杯決勝はシャビの回で「スペインがオランダを1対0」と1行出たが、こちらは**決勝のスコアを言わず**、延長116分のゴールとシャツの話（マル秘話①）だけに使った。
+#   シャビの回と同じ文は使わない（「ワールドカップが1回。ヨーロッパ選手権が2回。」を「3大会続けて優勝」に、「黄金期を支えた司令塔」を「全盛期の中盤にいた人」に替えた）。
+#
+# **数字・出来事の出どころ（本文を実際に読んだもの。取材は requests と WebFetch／WebSearch の URL 探しのみ。ブラウザの道具は不使用）と確度**
+# - FC バルセロナ公式（fcbarcelona.com。requests で本文を読んだ）：
+#   ・Andrés Iniesta プロフィール／「the modest genius」（2024-10-08）＝674試合・タイトル32（リーガ9・国王杯6・CL4・スペイン・スーパーカップ7・欧州スーパーカップ3・クラブW杯3）、1996-09-16 に12歳でラ・マシア、2002-10-29 にファン・ハール監督の下でクラブ・ブルッヘ戦でデビュー、
+#     レギュラー定着は2006-07季、シャビ・のちのブスケツと組む「サッカー史上最も重要な中盤の3人組の1つ」、2018年にヴィッセル神戸へ・5年・そのあとエミレーツで1年。スタンフォード・ブリッジのゴールは「おそらく最も有名」。
+#   ・2024-10-08 引退の会見（本人の言葉：ラ・マシア・涙・「みんなで本当に楽しんだ。練習も魔法のようだった」・デビューの震え）。
+#   ・2018-04-27 退団会見（本人の言葉）／2018-05-22 最後のカンプ・ノウ（レアル・ソシエダ 1-0・背番号8のユニフォームで花道・674試合57得点）／2018-05-25 神戸移籍（日本メディアは3年契約・背番号8・674試合はクラブ歴代2位でシャビに次ぐ）／2015-10-28 デビューの記事（12歳で家族を離れてラ・マシア・18歳）。
+#   ・2020-05-06「11 years since Iniesta's Stamford Bridge masterpiece」＝2009-05-06・93分・第1戦は0-0・エッシェン9分・アビダル退場・アウェーゴールが要る・アルベスのクロスがこぼれてメッシへ→エリアの外のイニエスタが決める。→ **確定（クラブ公式の記録・発言）**。
+# - ESPN（site.api.espn.com の試合記録・実況・統計。requests）：
+#   ・CL準決勝2009 第2戦 チェルシー1-1バルセロナ（event 266494。エッシェン9分／イニエスタ90+3分＝実況93分／アビダルの退場は実況66分／イニエスタは95分にグジョンセンと交代／バルセロナ：ボール保持70.9%・総シュート14・**枠内シュート1**（実況89分「ここまで枠内シュートが1本も無い」）／チェルシー：保持29.1%・枠内4／合計1-1でアウェーゴール）、第1戦 0-0（event 266497）、決勝 バルセロナ2-0マンチェスター・U（2009-05-27 ローマ）。
+#   ・W杯2010決勝（event 264123）の実況＝116分「ファブレガスが出して、イニエスタがボレーを決めた」／117分「イニエスタはシャツを脱いで警告」。
+#   ・J1：2018-07-22 神戸0-3湘南（イニエスタは59分から出場）／2018-08-11 神戸2-1磐田（イニエスタ前半15分）／2023-07-01 神戸1-1札幌（先発・57分に交代・27,630人）／2023年最終順位 神戸1位（勝点71）。→ 報道（統計の出どころ）。
+# - BBC Sport 2023-11-25（requests で本文）：ヴィッセル神戸が史上初のJ1優勝、イニエスタの退団の5か月後、名古屋に2-1で1試合を残して優勝。→ 報道。**「吉田監督が外してから調子が上がった」という記述は使わない**（選手を小さく見せる書き方になるため）。
+# - AP（Canadian Press 配信・2026-06-01。castanetkamloops.net の転載を requests で全文）：イニエスタがUAE2部のガルフ・ユナイテッドで初のコーチの仕事・プロライセンスの取得手続き中・本人のコメント（「サッカーは僕にすべてをくれた…」「コーチとして成長し、本物の経験を積み、プロライセンスを取りたい」）。
+#   Yahoo の2本（2026-05-22 ロマーノの報＝リーグは1部と書く／2026-06-01 AP）は**クラブの区分が食い違う**（1部・2部）。→ AP の「2部」に従い、台本は「UAE2部」と言う。**肩書は「コーチ」**（記事によって「監督」とも読める。確かめていない）。確度は 報道。
+# - Goal.com 2011-07-11（requests で本文）：シャツ「Dani Jarque always with us」・ハルケは2009年8月、遠征先のホテルで26歳で亡くなった・イニエスタがシャツをエスパニョールに贈り、スタジアムに展示・エスパニョールの声明（青と白のファンの心をつかんだ）。→ 報道。
+# - 英語版 Wikipedia（Andrés Iniesta 本文・Career statistics・Honours・Style of play／Vissel Kobe。raw）：バルセロナ674/57（クラブ公式と一致）、神戸134/26（J1 114/21）、エミレーツ23/5、スペイン代表131試合13得点、生年月日、欧州最優秀選手2012、
+#   2019年度の天皇杯決勝（2020-01-01）で神戸が鹿島に2-0・クラブ史上初のタイトル、スーパーカップ（2020-02-08）、デル・ボスケ・グアルディオラの評価の言葉。→ 背景。
+#
+# **食い違いと台本での扱い**
+# - 「5年」：神戸は2018-07〜2023-07（クラブ公式も「5年」）。→ 5年。
+# - ヴィッセル神戸の通算（134試合26得点）はクラブ公式に無い（Wikipedia の表）。→ 確度は 背景。台本の「神戸で134試合26得点」は数えた値と明示する（見立ての節で「自分で数えた比べ」）。
+# - バルセロナのリーガ優勝：クラブ公式のプロフィールは「9回」と書くが、年の一覧には8つしか載っていない。→ 「9回」（本文・Wikipedia の優勝歴が9つ）を採り、年は言わない。
+# - 実況の分数：チェルシー戦の得点記録は90+3分、実況は93分。→ 台本は「93分」（クラブ公式も93分）。
+# - 注意：ESPN の統計の「枠内シュート1」は ESPN の集計。クラブ公式は枠内の数を書かない。→ 台本は「ESPNの記録」と表に添える。
+# - 読めなかったもの：J.League 公式の英語版の記事（古い記事は削除・転送）、UEFA・Japan Times（接続切れ・有料）、beIN・Les Nouvelles du Foot（404）。神戸の天皇杯決勝の試合記録は ESPN に無い（Wikipedia のみ）。
+#   ガルフ・ユナイテッドの試合結果（今季のここまで）は確かめられず、言わない。
+#
+# **自分で数えた比べ（⑧）**
+# - 1試合あたりの得点：バルセロナ 57÷674＝0.085（0.08）／神戸 26÷134＝0.194（0.19）。比＝2.3倍。
+# - 1季あたりのタイトル：バルセロナ 32÷16季（2002-03〜2017-18。クラブ公式はトップチーム16年）＝2.0／神戸 2÷5季＝0.4。比＝5倍。神戸の2つは天皇杯（2019年度）・スーパーカップ（2020）。
+# - 通算：クラブ 674＋134＋23＝831試合、57＋26＋5＝88得点（Wikipedia のキャリア合計 885試合93得点からバルセロナBの54試合5得点を除いた値と一致）。
+# - ボール保持70.9%・枠内1・10人（66分から）は ESPN の記録。
+#
+# **入れなかったもの**：引退後の私生活・法的な問題・事業・ワイン（brief の決まり）。2009〜10年の心の不調（本人が話しているが、題に答える節ではなく、選手を小さく見せかねないので落とした）。
+#   エミレーツ時代の細部（1行だけ）。バロンドール2010の順位（読んでいない）。ユーロ2012決勝（シャビの回の「あの試合」と重なる）。2006年CL決勝の途中出場（クラブ公式プロフィールにあるが詳細を読んでいない）。
+#
+# **日本語名・読みで怪しいもの**：イニエスタ／フエンテアルビージャ／アルバセテ／ラ・マシア／クラブ・ブルッヘ／ブスケツ／デル・ボスケ／グアルディオラ／エッシェン／アビダル／ファブレガス／ハルケ／エスパニョール／ガルフ・ユナイテッド／エミレーツ／ヴィッセル神戸／ジュビロ磐田／カンプ・ノウ／レアル・ソシエダ。
+#
+# 本人の言葉は6か所（自訳。原文は上の出典）：①フック（AP 2026-06 ガルフ・ユナイテッド）②歩み（クラブ公式 2024-10「ラ・マシアは僕を変えた」（デビュー時の言葉は尺のため落とした））③プレースタイル（クラブ公式 2024-10「楽しんでいた」）
+# ④引退会見（クラブ公式 2024-10「涙」）・マル秘話②（クラブ公式 2018-04「12歳の僕を迎えてくれたクラブ」）⑤見立て（AP 2026-06「プロライセンス」）。
+# 尺：preview4 の見積り約5分37秒（check の想定尺は7分00秒）。長かった初稿（6分45秒）から18行を落とした（ジュビロ戦の初ゴール・デビュー時の言葉・5/27の決勝・歴代2位・グアルディオラの評・エスパニョールの声明ほか）。
+# precheck の残り×：写真i09_goal_w（1600px。ショートで2.13倍＝ショートは作らないので実害なし）と流れの点検の控え。サムネの classic 3回続きは brief の既定（classic）に従った。
+date: 2026年10月19日
+slot: other_1
+format: news
+series: レジェンドの紹介
+people:
+- アンドレス・イニエスタ
+theme:
+  end_bg: assets/images/20261019_iniesta_legend/i18_kobe_w.jpg
+  id: legend_iniesta
+  kind: other
+  topic: バルセロナ
+  title: イニエスタは、どんな選手だった？ バルセロナの中盤が、神戸で過ごした5年
+  question: バルセロナの中盤で世界を魅了した人は、どんな選手だったのか。神戸で過ごした5年と、いまのコーチの道
+  takeaway: 得点のペースは神戸がバルセロナの約2.3倍（0.19対0.08点）、タイトルは1季あたりバルセロナが5倍（2.0個対0.4個）。神戸の天皇杯はクラブ初のタイトル。次の節目は、UAEでのコーチとしてのプロライセンス取得
+  nameplate: イニエスタ｜元MF・UAEクラブのコーチ
+  opening_image: assets/images/20261019_iniesta_legend/i18_kobe_w.jpg
+  bgm: assets/audio/bgm_calm.wav
+short_title: イニエスタは、どんな選手だった？
+thumbnail:
+  layout: classic
+  callouts:
+  - クラブ初のタイトル
+  line1: イニエスタ、神戸で5年
+  line2: いまはUAEのコーチ
+  tags:
+  - バルセロナ
+  - ヴィッセル神戸
+  - スペイン代表
+  - イニエスタ
+  - レジェンド
+  - 選手紹介
+  photo: assets/images/20261019_iniesta_legend/i18_kobe_w.jpg
+  photos: []
+  short_photo: assets/images/20261019_iniesta_legend/i18_kobe_v.jpg
+sections:
+- id: hook
+  heading: 神戸の背番号8は、どんな選手だったのか
+  tier: 報道
+  telop: イニエスタ、神戸からUAEのコーチへ
+  narrator: 解説
+  card:
+    type: stats
+    title: イニエスタ 42歳
+    items:
+    - - '32'
+      - 個
+      - バルセロナで獲ったタイトル
+    - - '674'
+      - 試合
+      - バルセロナでの出場（全大会）
+    - - '5'
+      - 年
+      - ヴィッセル神戸で過ごした年月
+    focus: 0
+  say:
+  - text: 2018年5月25日。バルセロナの背番号8が、日本のヴィッセル神戸へ。
+    image: assets/images/20261019_iniesta_legend/i18_kobe_w.jpg
+    card:
+      type: stats
+      title: イニエスタ 42歳
+      items:
+      - - '32'
+        - 個
+        - バルセロナで獲ったタイトル
+      - - '674'
+        - 試合
+        - バルセロナでの出場（全大会）
+      - - '5'
+        - 年
+        - ヴィッセル神戸で過ごした年月
+      focus: 0
+  - text: サッカー史に残る中盤の一人が、8年前に選んだのは、日本でした。
+    emph: true
+    card:
+      type: stats
+      title: イニエスタ 42歳
+      items:
+      - - '32'
+        - 個
+        - バルセロナで獲ったタイトル
+      - - '674'
+        - 試合
+        - バルセロナでの出場（全大会）
+      - - '5'
+        - 年
+        - ヴィッセル神戸で過ごした年月
+      focus: 1
+  - text: アンドレス・イニエスタ、42歳。バルセロナの全盛期の中盤にいた人です。
+    card:
+      type: stats
+      title: イニエスタ 42歳
+      items:
+      - - '32'
+        - 個
+        - バルセロナで獲ったタイトル
+      - - '674'
+        - 試合
+        - バルセロナでの出場（全大会）
+      - - '5'
+        - 年
+        - ヴィッセル神戸で過ごした年月
+      focus: 0
+  - text: 神戸で5年。そのあとはアラブ首長国連邦で1年。いまは指導者の道です。
+    image: assets/images/20261019_iniesta_legend/i24_retire_w.jpg
+    card:
+      type: stats
+      title: イニエスタ 42歳
+      items:
+      - - '32'
+        - 個
+        - バルセロナで獲ったタイトル
+      - - '674'
+        - 試合
+        - バルセロナでの出場（全大会）
+      - - '5'
+        - 年
+        - ヴィッセル神戸で過ごした年月
+      focus: 2
+  - text: 今年6月、コーチ就任にあたって、こう語りました。
+    card: none
+  - voice: イニエスタ
+    text: サッカーは、僕にすべてをくれた。
+  - voice: イニエスタ
+    text: 今度は、コーチの仕事を通して、何かを返したい。
+    cont: true
+    pause: 0.5
+  quotes_from:
+  - https://www.castanetkamloops.net/news/Soccer/617363/Andres-Iniesta-signs-with-UAEs-second-tier-club-Gulf-United-for-his-first-coaching-job
+  sources:
+  - https://www.fcbarcelona.com/en/news/695350/andres-iniesta-to-join-japanese-club-vissel-kobe
+  - https://www.castanetkamloops.net/news/Soccer/617363/Andres-Iniesta-signs-with-UAEs-second-tier-club-Gulf-United-for-his-first-coaching-job
+  - https://sports.yahoo.com/articles/barcelona-spain-legend-andres-iniesta-164228005.html
+  - https://www.fcbarcelona.com/en/football/barca-legends/players/4231989/iniesta
+- id: data
+  heading: イニエスタは、いつ、どこで生まれた人なのか
+  tier: 報道
+  telop: イニエスタの基礎DATA
+  narrator: 解説
+  card:
+    type: table
+    title: イニエスタ
+    columns:
+    - 項目
+    - 内容
+    rows: &id001
+    - - 生年月日
+      - 1984年5月11日（42歳）
+    - - 生まれ
+      - スペイン・フエンテアルビージャ
+    - - 位置
+      - 中盤
+    - - クラブ
+      - バルセロナ→神戸→エミレーツ
+    - - 代表
+      - スペイン代表131試合13得点
+    - - 優勝
+      - W杯2010・ユーロ2008／2012
+    - - クラブの優勝
+      - リーガ9回・CL4回
+    - - 個人賞
+      - UEFA欧州最優秀選手（2012）
+    source: クラブ公式・Wikipedia
+  say:
+  - text: イニエスタは、1984年5月11日、フエンテアルビージャの生まれです。
+    image: assets/images/20261019_iniesta_legend/i18_press.jpg
+    card:
+      type: table
+      title: イニエスタ
+      columns:
+      - 項目
+      - 内容
+      rows: *id001
+      source: クラブ公式・Wikipedia
+      highlight_row: 0
+  - text: 位置は中盤。所属は、バルセロナ、神戸、エミレーツの3クラブです。
+    card:
+      type: table
+      title: イニエスタ
+      columns:
+      - 項目
+      - 内容
+      rows: *id001
+      source: クラブ公式・Wikipedia
+      highlight_row: 3
+  - text: スペイン代表では、2008年、2010年、2012年と、3大会続けて優勝。
+    emph: true
+    card:
+      type: table
+      title: イニエスタ
+      columns:
+      - 項目
+      - 内容
+      rows: *id001
+      source: クラブ公式・Wikipedia
+      highlight_row: 5
+  - text: クラブでは、スペインのリーガを9回、チャンピオンズリーグを4回制しました。
+    card:
+      type: table
+      title: イニエスタ
+      columns:
+      - 項目
+      - 内容
+      rows: *id001
+      source: クラブ公式・Wikipedia
+      highlight_row: 6
+  quotes_from: []
+  sources:
+  - https://www.fcbarcelona.com/en/football/barca-legends/players/4231989/iniesta
+  - https://www.fcbarcelona.com/en/news/4145375/andres-iniesta-the-modest-genius
+  - https://en.wikipedia.org/wiki/Andr%C3%A9s_Iniesta
+- id: career
+  heading: 12歳で村を出た少年は、どうやって世界の中盤になったのか
+  tier: 報道
+  telop: ラ・マシア、バルセロナ、神戸、UAE
+  narrator: 解説
+  card:
+    type: table
+    title: 歩んできた道
+    columns:
+    - 時期
+    - 所属
+    - できごと
+    rows: &id002
+    - - 1996〜2002
+      - バルセロナの下部組織
+      - 12歳でラ・マシアへ
+    - - 2002〜2018
+      - バルセロナ
+      - 674試合57得点・32タイトル
+    - - 2018〜2023
+      - ヴィッセル神戸
+      - 134試合26得点・タイトル2個
+    - - 2023〜2024
+      - エミレーツ（UAE）
+      - 23試合5得点。引退
+    source: クラブ公式・Wikipedia
+  say:
+  - text: 始まりは、1996年9月。12歳で、下部組織のラ・マシアに入ります。
+    image: assets/images/20261019_iniesta_legend/i12_lev_w.jpg
+    card:
+      type: table
+      title: 歩んできた道
+      columns:
+      - 時期
+      - 所属
+      - できごと
+      rows: *id002
+      source: クラブ公式・Wikipedia
+      highlight_row: 0
+  - text: 本人は、ラ・マシアをこう振り返ります。
+    card: none
+  - voice: イニエスタ
+    text: ラ・マシアは、僕を永遠に変えた。
+  - voice: イニエスタ
+    text: 人生を導いた価値観を学ぶのに、最高の場所だった。
+    cont: true
+    pause: 0.5
+  - text: トップチームのデビューは、2002年10月29日。18歳でした。
+    emph: true
+    card:
+      type: table
+      title: 歩んできた道
+      columns:
+      - 時期
+      - 所属
+      - できごと
+      rows: *id002
+      source: クラブ公式・Wikipedia
+      highlight_row: 1
+  - text: 相手はクラブ・ブルッヘ。チャンピオンズリーグの敵地でした。
+    card:
+      type: table
+      title: 歩んできた道
+      columns:
+      - 時期
+      - 所属
+      - できごと
+      rows: *id002
+      source: クラブ公式・Wikipedia
+      highlight_row: 1
+  - text: レギュラーに定着したのは、2006-07季です。
+    image: assets/images/20261019_iniesta_legend/i11_ars_w.jpg
+    card:
+      type: table
+      title: 歩んできた道
+      columns:
+      - 時期
+      - 所属
+      - できごと
+      rows: *id002
+      source: クラブ公式・Wikipedia
+      highlight_row: 1
+  - text: シャビ、のちにブスケツと組む中盤は、史上屈指の3人組と呼ばれました。
+    image: assets/images/20261019_iniesta_legend/i11_ars_w.jpg
+    card:
+      type: table
+      title: 歩んできた道
+      columns:
+      - 時期
+      - 所属
+      - できごと
+      rows: *id002
+      source: クラブ公式・Wikipedia
+      highlight_row: 1
+  - text: そして2018年。バルセロナを離れ、日本の神戸へ向かいます。
+    image: assets/images/20261019_iniesta_legend/i18_kobe_w.jpg
+    emph: true
+    card:
+      type: table
+      title: 歩んできた道
+      columns:
+      - 時期
+      - 所属
+      - できごと
+      rows: *id002
+      source: クラブ公式・Wikipedia
+      highlight_row: 2
+  - text: 2023年に、アラブ首長国連邦のクラブ、エミレーツへ。そこで現役を終えます。
+    image: assets/images/20261019_iniesta_legend/i24_retire_w.jpg
+    card:
+      type: table
+      title: 歩んできた道
+      columns:
+      - 時期
+      - 所属
+      - できごと
+      rows: *id002
+      source: クラブ公式・Wikipedia
+      highlight_row: 3
+  quotes_from:
+  - https://www.fcbarcelona.com/en/football/first-team/news/4145426/andres-iniesta-announces-retirement
+  - https://www.fcbarcelona.com/en/news/1077062/years-since-andres-iniestas-debut-in-bruges
+  sources:
+  - https://www.fcbarcelona.com/en/football/barca-legends/players/4231989/iniesta
+  - https://www.fcbarcelona.com/en/news/4145375/andres-iniesta-the-modest-genius
+  - https://www.fcbarcelona.com/en/news/1077062/years-since-andres-iniestas-debut-in-bruges
+  - https://www.fcbarcelona.com/en/football/first-team/news/4145426/andres-iniesta-announces-retirement
+  - https://www.fcbarcelona.com/en/news/695350/andres-iniesta-to-join-japanese-club-vissel-kobe
+  - https://en.wikipedia.org/wiki/Andr%C3%A9s_Iniesta
+- id: style
+  heading: イニエスタのプレーは、何がすごかったのか
+  tier: 報道
+  telop: 狭い場所でも落ち着くボールさばき
+  narrator: 解説
+  card:
+    type: table
+    title: イニエスタの通算（クラブは全大会）
+    columns:
+    - 所属
+    - 試合
+    - 得点
+    rows: &id003
+    - - バルセロナ
+      - '674'
+      - '57'
+    - - ヴィッセル神戸
+      - '134'
+      - '26'
+    - - エミレーツ
+      - '23'
+      - '5'
+    - - クラブ計
+      - '831'
+      - '88'
+    - - スペイン代表
+      - '131'
+      - '13'
+    source: クラブ公式・Wikipedia
+  say:
+  - text: 武器は、狭い場所でも落ち着いて持てる、ボールさばき。
+    image: assets/images/20261019_iniesta_legend/i12_lev_w.jpg
+    card: none
+  - text: デル・ボスケ監督の評は、「攻めも守りもできる、完全な選手」。
+    card: none
+  - text: 本人は、バルセロナの日々を、こう話します。
+    card: none
+  - voice: イニエスタ
+    text: 僕らは、本当に楽しんでいた。
+  - voice: イニエスタ
+    text: 試合だけじゃない。練習も、魔法のようだった。
+    cont: true
+    pause: 0.5
+  - text: 通算では、バルセロナで、674試合57得点。
+    image: assets/images/20261019_iniesta_legend/i11_ars_w.jpg
+    card:
+      type: table
+      title: イニエスタの通算（クラブは全大会）
+      columns:
+      - 所属
+      - 試合
+      - 得点
+      rows: *id003
+      source: クラブ公式・Wikipedia
+      highlight_row: 0
+  - text: 神戸で134試合26得点。エミレーツで23試合5得点。
+    card:
+      type: table
+      title: イニエスタの通算（クラブは全大会）
+      columns:
+      - 所属
+      - 試合
+      - 得点
+      rows: *id003
+      source: クラブ公式・Wikipedia
+      highlight_row: 1
+  - text: クラブの合計は、831試合88得点です。
+    card:
+      type: table
+      title: イニエスタの通算（クラブは全大会）
+      columns:
+      - 所属
+      - 試合
+      - 得点
+      rows: *id003
+      source: クラブ公式・Wikipedia
+      highlight_row: 3
+  quotes_from:
+  - https://www.fcbarcelona.com/en/news/4145375/andres-iniesta-the-modest-genius
+  - https://www.fcbarcelona.com/en/football/first-team/news/4145426/andres-iniesta-announces-retirement
+  sources:
+  - https://www.fcbarcelona.com/en/news/4145375/andres-iniesta-the-modest-genius
+  - https://www.fcbarcelona.com/en/football/first-team/news/4145426/andres-iniesta-announces-retirement
+  - https://www.fcbarcelona.com/en/news/695350/andres-iniesta-to-join-japanese-club-vissel-kobe
+  - https://en.wikipedia.org/wiki/Andr%C3%A9s_Iniesta
+- id: match
+  heading: 2009年5月6日、スタンフォード・ブリッジで何があったのか
+  tier: 報道
+  main: true
+  telop: 2009年5月6日、CL準決勝
+  narrator: 解説
+  card:
+    type: table
+    title: CL準決勝 第2戦（ESPNの試合記録）
+    columns:
+    - 項目
+    - 内容
+    rows: &id004
+    - - 日付・会場
+      - 2009年5月6日・ロンドン
+    - - 大会
+      - CL準決勝 第2戦（第1戦は0対0）
+    - - 前半9分
+      - エッシェンが決め、チェルシー先制
+    - - 後半66分
+      - アビダル退場。バルセロナは10人
+    - - 93分
+      - メッシのパスから、イニエスタが同点
+    - - 結果
+      - 1対1。アウェーゴールで決勝へ
+    source: ESPN・クラブ公式
+  say:
+  - text: 象徴する1つが、2009年、チャンピオンズリーグの準決勝です。
+    image: assets/images/20261019_iniesta_legend/i11_ars_w.jpg
+    card:
+      type: table
+      title: CL準決勝 第2戦（ESPNの試合記録）
+      columns:
+      - 項目
+      - 内容
+      rows: *id004
+      source: ESPN・クラブ公式
+      highlight_row: 0
+  - text: 第2戦の会場はロンドン。相手はチェルシー。勝てば、ローマの決勝です。
+    card:
+      type: table
+      title: CL準決勝 第2戦（ESPNの試合記録）
+      columns:
+      - 項目
+      - 内容
+      rows: *id004
+      source: ESPN・クラブ公式
+      highlight_row: 1
+  - text: 第1戦は、バルセロナで0対0の引き分け。決着は第2戦へ。
+    card:
+      type: table
+      title: CL準決勝 第2戦（ESPNの試合記録）
+      columns:
+      - 項目
+      - 内容
+      rows: *id004
+      source: ESPN・クラブ公式
+      highlight_row: 1
+  - text: 前半9分。チェルシーのエッシェンが強烈なボレーで先制します。
+    image: assets/images/20261019_iniesta_legend/i12_lev_w.jpg
+    card:
+      type: table
+      title: CL準決勝 第2戦（ESPNの試合記録）
+      columns:
+      - 項目
+      - 内容
+      rows: *id004
+      source: ESPN・クラブ公式
+      highlight_row: 2
+  - text: 後半66分。アビダルが退場。相手より1人少ない、10人になります。
+    card:
+      type: table
+      title: CL準決勝 第2戦（ESPNの試合記録）
+      columns:
+      - 項目
+      - 内容
+      rows: *id004
+      source: ESPN・クラブ公式
+      highlight_row: 3
+  - text: 敵地の得点を重く数えるルールで、1点あれば勝ち上がり。
+    card: &id005
+      type: stats
+      title: この夜のバルセロナ（ESPNの記録）
+      items:
+      - - '71'
+        - ％
+        - ボール保持
+      - - '1'
+        - 本
+        - 枠内シュート。このゴール
+      - - '10'
+        - 人
+        - 66分から試合終了まで
+      focus: 1
+  - text: ところが、終盤まで、バルセロナの枠内シュートはゼロ。
+    card: *id005
+  - text: 規定の90分を、3分も過ぎた93分。
+    image: assets/images/20261019_iniesta_legend/i09_goal_w.jpg
+    emph: true
+    card:
+      type: table
+      title: CL準決勝 第2戦（ESPNの試合記録）
+      columns:
+      - 項目
+      - 内容
+      rows: *id004
+      source: ESPN・クラブ公式
+      highlight_row: 4
+  - text: メッシが、エリアの外のイニエスタへ、横に出します。
+    card:
+      type: table
+      title: CL準決勝 第2戦（ESPNの試合記録）
+      columns:
+      - 項目
+      - 内容
+      rows: *id004
+      source: ESPN・クラブ公式
+      highlight_row: 4
+  - text: イニエスタが、足を振り抜く。ボールは、ゴールの上の隅へ。
+    emph: true
+    card:
+      type: table
+      title: CL準決勝 第2戦（ESPNの試合記録）
+      columns:
+      - 項目
+      - 内容
+      rows: *id004
+      source: ESPN・クラブ公式
+      highlight_row: 4
+  - text: 1対1。合計でも並び、敵地の得点差で、バルセロナが決勝へ。
+    card:
+      type: table
+      title: CL準決勝 第2戦（ESPNの試合記録）
+      columns:
+      - 項目
+      - 内容
+      rows: *id004
+      source: ESPN・クラブ公式
+      highlight_row: 5
+  - text: この夜の枠内シュートは、この1本だけ。チェルシーは4本でした。
+    emph: true
+    card: *id005
+  quotes_from: []
+  sources:
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=266494
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20090428
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20090527
+  - https://www.fcbarcelona.com/en/news/1664622/11-years-since-iniestas-stamford-bridge-masterpiece
+  - https://www.fcbarcelona.com/en/news/4145375/andres-iniesta-the-modest-genius
+- id: now
+  heading: 引退したイニエスタは、いま何をしているのか
+  tier: 報道
+  telop: 神戸、エミレーツ、そしてコーチへ
+  narrator: 解説
+  card:
+    type: timeline
+    title: 神戸から、いままで
+    rows: &id006
+    - - 2018年7月
+      - ヴィッセル神戸でデビュー
+    - - 2020年1月
+      - 天皇杯で、クラブ初のタイトル
+    - - 2023年7月
+      - 神戸を離れる
+    - - 2023年11月
+      - 神戸がJ1初優勝
+    - - 2024年10月
+      - 40歳で引退
+    - - 2026年6月
+      - UAEのクラブでコーチに
+    focus: 5
+    highlight_row: 0
+  say:
+  - text: 2018年7月22日。神戸の一員として、初めてピッチに立ちます。
+    image: assets/images/20261019_iniesta_legend/i18_kobe_w.jpg
+    card:
+      type: timeline
+      title: 神戸から、いままで
+      rows: *id006
+      focus: 5
+      highlight_row: 0
+  - text: 2020年1月1日。日本一を決める天皇杯の決勝で、鹿島に2対0。
+    emph: true
+    card:
+      type: timeline
+      title: 神戸から、いままで
+      rows: *id006
+      focus: 5
+      highlight_row: 1
+  - text: これが、神戸にとって初のタイトルです。翌月にはスーパーカップも。
+    card: &id009
+      type: stats
+      title: 神戸で獲った2つ
+      items:
+      - - '2019'
+        - 年度
+        - 天皇杯。クラブ史上初のタイトル
+      - - '2020'
+        - 年
+        - スーパーカップ
+      focus: 0
+  - text: 2023年7月1日。札幌戦に先発して、57分までプレーしました。
+    image: assets/images/20261019_iniesta_legend/i18_kobe_w.jpg
+    card:
+      type: timeline
+      title: 神戸から、いままで
+      rows: *id006
+      focus: 5
+      highlight_row: 2
+  - text: 神戸は、その5か月後の11月25日、クラブ史上初の、日本の1部リーグ優勝。
+    emph: true
+    card:
+      type: timeline
+      title: 神戸から、いままで
+      rows: *id006
+      focus: 5
+      highlight_row: 3
+  - text: イニエスタはアラブ首長国連邦へ。2024年10月8日、引退を発表します。
+    image: assets/images/20261019_iniesta_legend/i24_retire_w.jpg
+    card:
+      type: timeline
+      title: 神戸から、いままで
+      rows: *id006
+      focus: 5
+      highlight_row: 4
+  - text: 会見の言葉です。
+    card: none
+  - voice: イニエスタ
+    text: これは、感動と誇りの涙だ。悲しみじゃない。
+  - voice: イニエスタ
+    text: サッカー選手になりたかった少年が、それを叶えた涙だ。
+    cont: true
+    pause: 0.5
+  - text: 今年6月1日。アラブ首長国連邦の2部のクラブで、コーチに就くと伝わります。
+    emph: true
+    card:
+      type: timeline
+      title: 神戸から、いままで
+      rows: *id006
+      focus: 5
+      highlight_row: 5
+  - text: 目指すのは、指導者の資格、プロライセンスの取得です。
+    card:
+      type: timeline
+      title: 神戸から、いままで
+      rows: *id006
+      focus: 5
+      highlight_row: 5
+  quotes_from:
+  - https://www.fcbarcelona.com/en/football/first-team/news/4145426/andres-iniesta-announces-retirement
+  - https://www.castanetkamloops.net/news/Soccer/617363/Andres-Iniesta-signs-with-UAEs-second-tier-club-Gulf-United-for-his-first-coaching-job
+  sources:
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/jpn.1/summary?event=506145
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/jpn.1/summary?event=506106
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/jpn.1/summary?event=663699
+  - https://site.api.espn.com/apis/v2/sports/soccer/jpn.1/standings?season=2023
+  - https://www.bbc.co.uk/sport/football/67529987
+  - https://www.fcbarcelona.com/en/football/first-team/news/4145426/andres-iniesta-announces-retirement
+  - https://www.castanetkamloops.net/news/Soccer/617363/Andres-Iniesta-signs-with-UAEs-second-tier-club-Gulf-United-for-his-first-coaching-job
+  - https://sports.yahoo.com/articles/barcelona-spain-legend-andres-iniesta-164228005.html
+  - https://en.wikipedia.org/wiki/Vissel_Kobe
+  - https://en.wikipedia.org/wiki/Andr%C3%A9s_Iniesta
+- id: story
+  heading: シャツの下の言葉と、バルセロナを去る日
+  tier: 報道
+  telop: マル秘話 シャツの下の言葉と、去る日の言葉
+  narrator: 解説
+  card:
+    type: table
+    title: マル秘話
+    columns:
+    - いつ
+    - 何があったか
+    rows: &id007
+    - - 2010年7月
+      - 決勝のゴールのあと、シャツを脱いだ
+    - - 2018年4月
+      - バルセロナを去ると発表した
+    source: ESPN・クラブ公式・Goal
+    highlight_row: 0
+  say:
+  - text: 秘話は2つ。まず、2010年7月11日。南アフリカでの、決勝の舞台です。
+    image: assets/images/20261019_iniesta_legend/i12_lev_w.jpg
+    card:
+      type: table
+      title: マル秘話
+      columns:
+      - いつ
+      - 何があったか
+      rows: *id007
+      source: ESPN・クラブ公式・Goal
+      highlight_row: 0
+  - text: 両チーム無得点のまま、延長に入ります。
+    card:
+      type: table
+      title: マル秘話
+      columns:
+      - いつ
+      - 何があったか
+      rows: *id007
+      source: ESPN・クラブ公式・Goal
+      highlight_row: 0
+  - text: 延長116分。ファブレガスのパスを、イニエスタがボレーで決めます。
+    emph: true
+    card:
+      type: table
+      title: マル秘話
+      columns:
+      - いつ
+      - 何があったか
+      rows: *id007
+      source: ESPN・クラブ公式・Goal
+      highlight_row: 0
+  - text: これが決勝点。スペインにとって、初めての優勝でした。
+    card:
+      type: table
+      title: マル秘話
+      columns:
+      - いつ
+      - 何があったか
+      rows: *id007
+      source: ESPN・クラブ公式・Goal
+      highlight_row: 0
+  - text: ゴールのあと、ユニフォームを脱ぎます。下のシャツには、文字が。
+    card:
+      type: table
+      title: マル秘話
+      columns:
+      - いつ
+      - 何があったか
+      rows: *id007
+      source: ESPN・クラブ公式・Goal
+      highlight_row: 0
+  - text: 「ダニ・ハルケは、いつも僕らと一緒に」。
+    emph: true
+    card:
+      type: table
+      title: マル秘話
+      columns:
+      - いつ
+      - 何があったか
+      rows: *id007
+      source: ESPN・クラブ公式・Goal
+      highlight_row: 0
+  - text: ハルケは、バルセロナのもう1つのクラブ、エスパニョールの主将でした。
+    card:
+      type: table
+      title: マル秘話
+      columns:
+      - いつ
+      - 何があったか
+      rows: *id007
+      source: ESPN・クラブ公式・Goal
+      highlight_row: 0
+  - text: 2009年8月、26歳で亡くなっています。
+    card:
+      type: table
+      title: マル秘話
+      columns:
+      - いつ
+      - 何があったか
+      rows: *id007
+      source: ESPN・クラブ公式・Goal
+      highlight_row: 0
+  - text: 脱いだことで、警告も受けました。そのシャツは、のちにエスパニョールへ。
+    card:
+      type: table
+      title: マル秘話
+      columns:
+      - いつ
+      - 何があったか
+      rows: *id007
+      source: ESPN・クラブ公式・Goal
+      highlight_row: 0
+  - text: 2つ目は、バルセロナを去る日です。
+    image: assets/images/20261019_iniesta_legend/i18_press.jpg
+    card:
+      type: table
+      title: マル秘話
+      columns:
+      - いつ
+      - 何があったか
+      rows: *id007
+      source: ESPN・クラブ公式・Goal
+      highlight_row: 1
+  - text: 2018年4月27日。記者会見で、今季限りでの退団を発表しました。
+    card:
+      type: table
+      title: マル秘話
+      columns:
+      - いつ
+      - 何があったか
+      rows: *id007
+      source: ESPN・クラブ公式・Goal
+      highlight_row: 1
+  - text: 本人の言葉です。
+    card: none
+  - voice: イニエスタ
+    text: 12歳の僕を迎えてくれたクラブには、
+  - voice: イニエスタ
+    text: 僕の最善を尽くす価値がある。
+    cont: true
+  - voice: イニエスタ
+    text: イニエスタが去っても、バルサは勝ち続ける。
+    cont: true
+  - voice: イニエスタ
+    text: サッカーは続くし、人生も続く。
+    cont: true
+    pause: 0.5
+  - text: 5月20日、最後のカンプ・ノウ。レアル・ソシエダに1対0の勝ちでした。
+    image: assets/images/20261019_iniesta_legend/i18_pitch.jpg
+    card:
+      type: table
+      title: マル秘話
+      columns:
+      - いつ
+      - 何があったか
+      rows: *id007
+      source: ESPN・クラブ公式・Goal
+      highlight_row: 1
+  - text: 5日後、行き先が決まります。ヨーロッパから遠い、日本の神戸でした。
+    emph: true
+    card:
+      type: table
+      title: マル秘話
+      columns:
+      - いつ
+      - 何があったか
+      rows: *id007
+      source: ESPN・クラブ公式・Goal
+      highlight_row: 1
+  quotes_from:
+  - https://www.fcbarcelona.com/en/news/703976/andres-iniesta-announces-his-barca-goodbye
+  sources:
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/summary?event=264123
+  - https://www.goal.com/en/news/world-cup-shirt-worn-by-andres-iniesta-in-tribute-to-dani-jarque-/bltfbec89a8cfb539af
+  - https://www.fcbarcelona.com/en/news/703976/andres-iniesta-announces-his-barca-goodbye
+  - https://www.fcbarcelona.com/en/news/695435/iniestas-last-week-at-barca-from-a-different-perspective
+  - https://www.fcbarcelona.com/en/news/695350/andres-iniesta-to-join-japanese-club-vissel-kobe
+- id: view
+  heading: バルセロナの16季と、神戸の5季を、数えて比べると
+  tier: 背景
+  viewpoint: true
+  narrator: 解説
+  telop: 次の節目は、プロライセンスの取得
+  card:
+    type: table
+    title: イニエスタの16季と5季（自分で数えた比べ）
+    columns:
+    - 物差し
+    - バルセロナ（16季）
+    - 神戸（5季）
+    rows: &id008
+    - - 1試合あたりの得点
+      - 0.08点
+      - 0.19点
+    - - 1季あたりのタイトル
+      - 2.0個
+      - 0.4個
+    - - 出場（全大会）
+      - 674試合
+      - 134試合
+    source: クラブ公式・Wikipedia・BBC（数えたのは当チャンネル）
+    highlight_row: 0
+  say:
+  - text: 終わりに、イニエスタの数字を、並べて比べます。
+    image: assets/images/20261019_iniesta_legend/i18_pitch.jpg
+    card:
+      type: table
+      title: イニエスタの16季と5季（自分で数えた比べ）
+      columns:
+      - 物差し
+      - バルセロナ（16季）
+      - 神戸（5季）
+      rows: *id008
+      source: クラブ公式・Wikipedia・BBC（数えたのは当チャンネル）
+      highlight_row: 0
+  - text: バルセロナでは、1試合につき、0.08点。
+    card:
+      type: table
+      title: イニエスタの16季と5季（自分で数えた比べ）
+      columns:
+      - 物差し
+      - バルセロナ（16季）
+      - 神戸（5季）
+      rows: *id008
+      source: クラブ公式・Wikipedia・BBC（数えたのは当チャンネル）
+      highlight_row: 0
+  - text: 神戸では、1試合につき、0.19点。
+    card:
+      type: table
+      title: イニエスタの16季と5季（自分で数えた比べ）
+      columns:
+      - 物差し
+      - バルセロナ（16季）
+      - 神戸（5季）
+      rows: *id008
+      source: クラブ公式・Wikipedia・BBC（数えたのは当チャンネル）
+      highlight_row: 0
+  - text: 得点のペースは、神戸が、バルセロナの約2.3倍に当たります。
+    emph: true
+    mark:
+      kind: circle
+      row: 0
+    card:
+      type: table
+      title: イニエスタの16季と5季（自分で数えた比べ）
+      columns:
+      - 物差し
+      - バルセロナ（16季）
+      - 神戸（5季）
+      rows: *id008
+      source: クラブ公式・Wikipedia・BBC（数えたのは当チャンネル）
+      highlight_row: 0
+  - text: 次は、タイトルです。バルセロナは、16季で32個。1季あたり2.0個。
+    card:
+      type: table
+      title: イニエスタの16季と5季（自分で数えた比べ）
+      columns:
+      - 物差し
+      - バルセロナ（16季）
+      - 神戸（5季）
+      rows: *id008
+      source: クラブ公式・Wikipedia・BBC（数えたのは当チャンネル）
+      highlight_row: 1
+  - text: 神戸は、5季で2個。1季あたり0.4個。バルセロナの5分の1です。
+    emph: true
+    mark:
+      kind: circle
+      row: 1
+    card:
+      type: table
+      title: イニエスタの16季と5季（自分で数えた比べ）
+      columns:
+      - 物差し
+      - バルセロナ（16季）
+      - 神戸（5季）
+      rows: *id008
+      source: クラブ公式・Wikipedia・BBC（数えたのは当チャンネル）
+      highlight_row: 1
+  - text: ただ、神戸の天皇杯は、クラブ史上初のタイトルでした。
+    image: assets/images/20261019_iniesta_legend/i18_kobe_w.jpg
+    card: *id009
+  - text: いまは、コーチとして、こう語っています。
+    image: assets/images/20261019_iniesta_legend/i24_retire_w.jpg
+    card: none
+  - voice: イニエスタ
+    text: コーチとして成長して、本物の経験を積みたい。
+  - voice: イニエスタ
+    text: プロライセンスを取りたい。
+    cont: true
+    pause: 0.5
+  - text: 次の節目は、そのプロライセンス。クラブは、取得の手続き中と発表しています。
+    card: none
+  quotes_from:
+  - https://www.castanetkamloops.net/news/Soccer/617363/Andres-Iniesta-signs-with-UAEs-second-tier-club-Gulf-United-for-his-first-coaching-job
+  sources:
+  - https://www.fcbarcelona.com/en/football/barca-legends/players/4231989/iniesta
+  - https://www.fcbarcelona.com/en/news/4145375/andres-iniesta-the-modest-genius
+  - https://www.fcbarcelona.com/en/news/695350/andres-iniesta-to-join-japanese-club-vissel-kobe
+  - https://www.bbc.co.uk/sport/football/67529987
+  - https://www.castanetkamloops.net/news/Soccer/617363/Andres-Iniesta-signs-with-UAEs-second-tier-club-Gulf-United-for-his-first-coaching-job
+  - https://en.wikipedia.org/wiki/Andr%C3%A9s_Iniesta
+  - https://en.wikipedia.org/wiki/Vissel_Kobe

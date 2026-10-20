@@ -1,0 +1,110 @@
+# 中村敬斗 の取材メモ（2026年10月19日・ショートだけ）。見せ方は X（冒頭の強い一言＝事実の言葉。煽りは付けない）
+# 題材の元は topics_src の num 26（Foot Mercato）。一覧は「Nakamura が日本人かは未確認」としていたが、**日本語の記事4本で中村敬斗と確かめた**。
+# 読んだ出典（WebFetch で本文）:
+#   ・Foot Mercato（https://www.footmercato.net/a5410024274834960690-ligue-1-lol-renverse-nice-et-prend-la-tete-du-championnat）: 7節。ワヒ18分→シュルツ32分→テスマン34分で2-1。中村は「à la place de Duranville」で入り、70分「directement expulsé après avoir involontairement planté ses crampons dans le torse d'Abdelmonem」（空中戦）。リヨンは10人で20分戦う。勝ち点で4チームと並び、得失点差で首位。試合前は6位・勝ち点11。
+#   ・サッカーキング 2026-10-19（https://www.soccer-king.jp/news/world/fra/20261019/2218204.html）: 61分に途中出場、9分後に一発退場。頭上を越えたボールを足でコントロールしようとして、スパイクの裏が相手の腹部に。「故意のファールではなかった」が危険なプレーとしてレッド。勝ち点14で4チーム並び、得失点差でモナコ・リールを上回り首位。次節PSG戦（PSGも14）は出場停止で出られない。本人・クラブのコメントは無い。
+#   ・フットボールゾーン（https://www.football-zone.net/archives/679868）: 後半16分に入り約8分後に退場。相手GKの長いボールを後ろ向きでトラップしようとして足裏が左脇腹付近に。主審は即レッド。本人のコメントは無い。次節出場停止。
+#   ・日刊スポーツ（Yahoo、https://news.yahoo.co.jp/articles/d40ff7c89e32b1744ae0c2cc1810e219a6dc89a6）: 後半16分から出場、後半25分に一発退場（=70分）。浮き球のパスカットを狙い右足を高く上げ、DFアブデルモネムの脇腹付近に。故意ではなかったようだが危険なプレー。出場停止の試合数の記載なし。次戦は22日のELホッフェンハイム戦（アウェー）。
+#   ・Sofascore／Goal.com（英）: 70分 straight red。Goal は監督・本人の言葉なし。出場停止の記載なし。
+#   ・ESPN の試合記録（https://www.espn.com/soccer/match/_/gameId/401876434）: 2-1・10月18日・リヨンのホーム。中村のイベントが70分（ページの取得は崩れていて、カードの種類までは読めず）。
+# **食い違い（台本に影響するもの）**:
+#   ・得点の分: ワヒ 11分（サッカーキング）／18分（FM・Sofascore・ESPN）。テスマン 34/36分。→ **台本は得点の分を言わない**（「前半のうちに逆転」まで。3本以上の記事が前半に2点と一致）。
+#   ・出場時間: 61分（サッカーキング・ESPN の交代欄は不整合）／後半16分=61分。退場は 70分（FM・サッカーキング・日刊・Sofascore・Goal・ESPN が一致）。football-zone の「約8分」は他と1分ずれ。→ **「61分に入り、70分に退場。9分後」**（3本以上が一致）。
+#   ・交代相手: Duranville（FM・Goal）。サッカーキングは記載なし。→ 言わない（題の答えではない）。
+#   ・反則の描写: 日刊＝パスカットで右足を高く上げた／football-zone＝GKのロングボールを後ろ向きでトラップ／サッカーキング＝頭上のボールを足でコントロール／FM・Goal＝空中戦。→ **「浮いたボールに足を出して」とだけ言い、細部は言わない**。足裏／スパイクが相手の腹部（脇腹）付近に入った点は全社一致。「胸」はFM・Goalだけ→使わない。
+#   ・「故意ではなかった」は日刊・サッカーキング・FM・Goal が書く＝記事側の描写。審判は危険なプレーと判断（日刊・サッカーキング）。
+#   ・出場停止: 試合数はどの記事にも無い。サッカーキング・football-zone が「次節（PSG戦）は出られない」。→ 台本は「次のリーグ戦、PSG戦は出場停止と伝えられている」まで。試合数は言わない。ELホッフェンハイム戦（22日）に出られるかは記事に無い＝言わない。
+# 本人の言葉・クラブの発表: 無し。→ Y にしない。作らない。
+# 反応: 0件（作らない）。
+# 写真: 配信写真（ロイター・Getty・共同）は取り込まない。Lyon のユニフォームの写真はクラブ公式（ol.fr は API が鍵必須で取れず）にも Commons にも無かった。
+#   assets/images/20261019_nakamura_keito_red_card/ の4枚は**リーグ・アン公式（ligue1.com、© LFP Media）の記事の写真**で、**スタッド・ランス時代**（2024-25 ごろ）の中村。
+#   01＝ランスのアウェー白（ligue1.com 2370 の主写真）、02＝ランスの赤で拳を握る（993 の記事）、03＝背番号17・マルセイユ戦の記事（2250）、04＝PSG戦の記事（839、走る場面）。
+#   4枚とも目で見て本人（同じ顔・ヘアバンド・17番、ファイル名/記事に Nakamura）。透かし無し。許諾は得ていない＝引き受ける危険。10/10・10/16 に使った写真（Commons の LASK・ソフィ等）は使っていない。
+#   台本には「過去の写真」と断らない。credits.json に「スタッド・ランス時代」と控えた。
+slot: france
+date: "2026年10月19日"
+format: news
+no_main: true      # ニュースはショートだけ（2026-10-14）。締めで本編を案内しない
+people: [中村敬斗, リヨン, ニース]
+short_style: X
+short_hook_word: 出場9分で退場
+short_photos:
+  - assets/images/20261019_nakamura_keito_red_card/01_v.jpg
+  - assets/images/20261019_nakamura_keito_red_card/03_v.jpg
+  - assets/images/20261019_nakamura_keito_red_card/04_v.jpg
+  - assets/images/20261019_nakamura_keito_red_card/02_v.jpg
+
+short_question: 中村敬斗の次の出番は、いつだと思いますか。
+short_hook: 中村敬斗、出場9分で退場。
+short_telops:
+  - {match: 一発退場になりました, text: 現地18日 リーグ・アン第7節/リヨン2対1ニース}
+  - {match: 61分, text: 61分に途中出場/70分に退場}
+  - {match: 故意ではなかった, text: 「故意ではなかった」と/報じられている}
+  - {match: 出場停止, text: 次のリーグ戦/PSG戦は出られない}
+  - {match: 首位, text: 勝ち点14で4チーム並び/得失点差でリヨンが首位}
+
+theme:
+  id: nakamura_keito_red_card
+  league: france
+  prefix: ""
+  title: 中村敬斗、途中出場9分で一発退場。リヨンは10人で2対1を守った
+  hook: ""
+  question: 中村敬斗の退場は、どんな場面だったのか
+  takeaway: 61分に入って70分に退場。リヨンは20分ほど10人で戦い、2対1で勝って得失点差で首位に立った
+
+thumbnail:
+  line1: 中村敬斗、出場9分で退場
+  line2: リヨンは10人で2対1
+  tags: [中村敬斗, リヨン, ニース]
+  layout: face
+  side: right
+  photo: assets/images/20261019_nakamura_keito_red_card/01.jpg
+  short_photo: assets/images/20261019_nakamura_keito_red_card/01_v.jpg
+
+answer: 浮いたボールに足を出し、スパイクが相手の腹部に入って一発退場。リヨンは10人で守り切った
+watch: 次のリーグ戦、PSG戦（中村は出場停止と伝えられている）
+
+sections:
+  - id: what
+    main: true
+    heading: 何が起きたか
+    tier: 報道
+    telop: 61分に入り、70分に一発退場
+    say:
+      - 現地18日のリーグ・アン第7節、リヨン対ニース。
+      - 中村敬斗は61分に途中出場し、9分後の70分に一発退場になりました。
+      - 浮いたボールに足を出し、スパイクの裏が相手の腹部に入った場面です。
+      - 故意ではなかったと報じられていますが、主審は危険なプレーと判断しました。
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/fra/20261019/2218204.html
+      - https://news.yahoo.co.jp/articles/d40ff7c89e32b1744ae0c2cc1810e219a6dc89a6
+      - https://www.footmercato.net/a5410024274834960690-ligue-1-lol-renverse-nice-et-prend-la-tete-du-championnat
+
+  - id: match
+    heading: 退場のあと、試合はどうなったか
+    tier: 報道
+    telop: リヨンは10人で20分ほど守り、2対1で勝った
+    say:
+      - 中村が退場したとき、リヨンは前半のうちに逆転していました。
+      - そこから20分ほどを10人で戦いました。
+      - そのまま2対1で勝っています。
+      - 勝ち点14で4チームが並び、得失点差でリヨンが首位に立ちました。
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/fra/20261019/2218204.html
+      - https://www.footmercato.net/a5410024274834960690-ligue-1-lol-renverse-nice-et-prend-la-tete-du-championnat
+
+  - id: next
+    heading: 次の出番は
+    tier: 報道
+    telop: 次のリーグ戦、PSG戦は出場停止と伝えられている
+    say:
+      - 次のリーグ戦は、同じ勝ち点14のパリ・サンジェルマン戦です。
+      - 中村は、この試合に出られないと伝えられています。
+      - 出場停止の試合数や、本人とクラブの言葉は、まだ出ていません。
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/fra/20261019/2218204.html
+      - https://www.football-zone.net/archives/679868
+short_title: "中村敬斗、途中出場9分で一発退場。リヨンは10人で2対1を守った"

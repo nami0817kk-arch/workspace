@@ -1,0 +1,566 @@
+# ユニフォームとエンブレムの歴史 ニューカッスル・ユナイテッド（10/19 作成。10/17 アーセナル・10/18 シティの次の回）。
+# 題の問い：白黒の縞は、いつから、なぜ縦じまなのか。
+# 軸：①縞の始まりの年は資料が一致する（1894年）。②由来の理由は資料で割れる（公式の年表は書かない／公式の読み物は2説／ウィキペディアは2軍の色と言い切る／研究サイトは「おそらく」）。
+#    ③縦か横かの理由はどの資料にも無い。④エンブレムの変遷（公式の5段）と 2026-10-01 の新エンブレム発表（2027/28 から）。⑤胸の広告は公式で確かめた分だけ。
+# 一次情報（newcastleunited.com 公式の本文）を requests のブラウザ User-Agent で読み、ウィキペディア(en)の本文・古いユニフォームの研究サイト（Historical Football Kits の
+#   2012-06 のアーカイブ）と突き合わせた。2026-10-18 取材。ブラウザ操作なし。WebFetch 不使用。検索エンジンのAI要約は使っていない。
+#   読んだ公式の頁：/en/uniteds-victorian-start-1881-1899（年表）・/en/club-crest（エンブレムの歴代）・/en/news/introducing-our-new-club-crest（2026-10-01）・
+#   /en/news/our-club-crest-an-update（2026-08-02）・/en/news/updating-our-crest-together（2025-05-09）・/en/news/kits-a-brief-history（2024-06-05、読み物）・
+#   /en/news/2025-26-newcastle-united-home-kit・/en/news/newcastle-united-and-adidas-unveil-2026-27-home-kit・/en/news/newcastle-united-unveils-2024-25-away-kit・
+#   /en/news/newcastle-united-and-adidas-unveil-home-kit-for-2024-25-season・/en/news/knox-hydrate-front-of-shirt-partnership・
+#   /en/news/unsilence-the-crowd-sela-donates-sponsorship-to-rnid-to-mark-unique-accessible-shirt-launch、
+#   ほかにクラブ公式の旧サイトの記事（web.archive.org 2018-08 の「New kit: A closer look」2017-06-14、2010-12 の旧「Club Crest」頁）。
+#
+# ---- 一次情報で確かめたこと（年は公式の本文のまま）----
+#   ・年表（1881-1899）：1881-11 に Stanley（クリケット部）が起こり、1882-10 に Newcastle East End へ。西側の West End は 1882。1892-05 に East End が West End の
+#     資産（St. James' Park の賃借を含む）を引き継ぎ、1892-12-09 に Newcastle United の名前を採る。
+#     「The team still played in the East End colours of red, but in 1894 they were replaced by the now famous black and white stripes.」← 縞の始まり＝1894年。理由は書いていない。
+#   ・読み物「Kits: A brief history」（2024-06-05、くだけた口調の記事）：「Come 1894, the club decided to don the now-iconic black and white stripes.
+#     Some say it was inspired by the colors of the coal mines that were the lifeblood of the city. Others reckon it was to make the players look slimmer.」
+#     → 2説（炭鉱の色・細く見える）。**どちらも根拠は示されていない**。冗談めいた書き方なので、台本は「説」として紹介し、公式の見解とは言わない。
+#     同じ記事は「1892年に赤いシャツに白いショーツで、couple of years だけ」と書く。
+#   ・2025/26 ホーム（公式 2025-05-23）：「blending it seamlessly with our historic vertical stripes」← **公式が「縦じま」と書いている**（縞を縦と決めた理由は書いていない）。
+#   ・2026/27 ホーム（公式 2026-06-10）：「a bold, disrupted stripe pattern」。アディダス。
+#   ・2024/25 ホーム（公式 2024-06-07）：アディダスが戻る（1995-2010 も供給）。「draws inspiration from the classic 2002/03 adidas home kit」。
+#   ・2024/25 アウェー（公式 2024-08-13）：「the classic navy and burgundy horizontal stripes」＝1995-96 の復刻。**横縞はアウェー**。
+#   ・2017/18 ホーム（公式 2017-06-14）：プーマ、125周年（1892-12-09 の命名から125年）。「unbroken stripes on the front, back and arms」「red numbers」。胸の広告は FUN88。
+#   ・エンブレム（公式 /en/club-crest）：1969-1976 市の紋章（「Our shirts first had the city's Coat of Arms emblazoned on them as early as 1911, but it was in 1969 that
+#     the club finally adopted it as an official emblem」）／1976-1983 クラブ初の自前（城・川・カササギの円形、黒い外輪に名前）／1983-1988 NUFC の4文字の円形（「cult classic」）／
+#     1988-現在 市の紋章の形に戻る（2頭の海馬・城・獅子・旗。内側の盾に縞、青いリボン）。2017/18 は125周年の金銀の特別版（現行をもとに）。近年は白または黒の単色版。
+#   ・旧公式サイト（2010-12）：「the shield signifies the club's black'n'white striped shirt」← **盾が縞のシャツを表す**。
+#   ・新エンブレム（公式 2026-10-01）：2年以上の聴取。3案の投票に 27,348 人。第1希望 C案 64.8%・B案 19.0%・A案 16.2%。**2027/28 シーズンのユニフォームから付く**。
+#     現行は 1988 から（「38-year-old design」）。城・縞の盾・2頭の海馬（hippocampi）・獅子・旗・リボンは残す。
+#     （2026-08-02 の記事：84% が「作り直しより手直し」、5分の4が現行の限界を認める、「no generic circular badge」「Retain the ribbon」）
+#     **新しい絵の細部は、公式のこの記事に文章では書かれていない**（画像のみ）→ 台本は絵の細部に触れない。
+#   ・胸の広告：Knox Hydrate は 2026-06-23 公式（2026/27 から3年）、Sela は 2024-04-11 公式が「front-of-shirt partner」と書く、Fun88 は 2017-06 公式、
+#     最初の胸の広告は 2024 の読み物が「1980 年に Newcastle Brown Ale」と書く。ノーカット：Virgin Money・Wonga・NTL・Northern Rock は**公式で確かめていないので言わない**。
+#
+# ---- 食い違い（台本で断る／言わないもの。ここに残す）----
+#   ・**縞の由来**：公式の年表＝書かない／公式の読み物＝2説（炭鉱の色・細く見える。根拠なし）／ウィキペディア＝「2軍の色を1軍が引き継いだ。前身のどちらとも結びつかない色だから選ばれた」と言い切る／
+#     研究サイト（Historical Football Kits。Pioneers of the North 2009 に拠る）＝「1891年にできたアマチュアの2軍の色。**perhaps** 前身のどちらとも結びつかないから」と推量。
+#     → 台本は**どれも断定しない**。「言い切る側」と「おそらくと書く側」の違いを言う。
+#   ・**縞の始まりの年**：公式・ウィキペディア・研究サイトとも1894年で一致。台本は「一致する」と言う。
+#   ・**市の紋章がシャツに付いた年**：公式＝「早くは1911年」「正式な採用は1969年」／ウィキペディア＝「1969年に初めて刺繍された」／研究サイト＝「1911年・1920年の決勝で付けた。リーグ戦は1969-70年から」。
+#     → 台本は「年が違うのは数える試合が違うからかもしれない」と読みを断ったうえで、**年は公式の言い方（1911年が早い・1969年から76年が正式）に従う**。
+#   ・**最初の胸の広告**：公式の読み物は「1980年にニューカッスル・ブラウン・エール」、ウィキペディアの表は 1980-86 が Newcastle Breweries（ブラウン・エールは 1990 から）。→ 台本は食い違いとして言う。
+#   ・**縦じまの理由**：どの資料にも**書いていない**。公式が「縦じま」と呼ぶことだけ言える。
+#   ・**ウィキペディアの記事内の食い違い**：本文は Sela を 2023-2026 と書き、表は 2025-26 を「スポンサー無し」とする。→ 台本はウィキペディアの年を使わない（Sela は公式の 2024-04 の記載だけ）。
+#   ・**East End の赤白の縞の2枚目のシャツ**（ウィキペディア・1880年代なかば。サンダーランドと同じ色）：根拠が薄く、台本の本筋でもないので**言わない**。
+#
+# ---- 自分で数えた数（検算した）----
+#   ・赤の期間：1892（ユナイテッドの命名）→1894＝2年。縞：1894→2026＝132年。132÷2＝66倍。
+#   ・クラブの創立（公式「Founded 1881」）から 2026 までは 145年。そのうち縞は 132年（91%）。※台本では使わない（見立ては66倍だけ）。
+#   ・エンブレム：1969–76＝7年、1976–83＝7年、1983–88＝5年、合計19年。現行 1988→2026＝38年。38÷19＝2。
+#   ・投票：64.8＋19.0＋16.2＝100.0。64.8−19.0＝45.8ポイント。27,348人。
+#
+# ---- 言わないと決めたもの ----
+#   ・サポーターの感情・Mike Ashley・PIF など所有の話（本題から外れる）、契約の額（クラブの発表に額が無い）、アウェー・サードの色の詳細、新エンブレムの絵の細部、女子チーム。
+#   ・Virgin Money・Wonga・NTL・Northern Rock・Newcastle Breweries の年（公式で確かめていない。Newcastle Breweries はウィキペディアの表を断りとして出すだけ）。
+#   ・名前を出さない人物：写真に写る選手・昔のチームの人々（ファイル名・記事から人は特定できるが、台本で名前を出さない）。
+#
+# ---- 一次情報に届かなかったところ ----
+#   ・縞の由来の理由は、クラブの資料に書かれていない。研究サイトの根拠 Pioneers of the North（2009）の本文は読んでいない（二次）。
+#   ・1894年のどの試合から縞を着たか・縞の幅や形は読んでいない。
+#
+# ---- 写真（assets/images/20261019_kit_newcastle/、出典は credits.json）。すべて取り込んだあと開いて見た（透かしなし・代理店の表記なし）。クラブ公式（権利は晴れていない＝引き受ける危険）----
+#   n01〜n04 = 年表の画像（1888 ウェスト・エンド／1890年代 イースト・エンド／1895／1904-05）。人物の名前は出さない。
+#   k01 = 2026/27 ホームの公式写真（選手2人、名前は出さない）、k02 = 2025/26 ホームの公式写真、k03 = ホームのシャツ胸のアップ（エンブレムのページ）。
+#   c06 = 新エンブレム発表記事のメイン画像（暗い地）。c04/c05 = 1988 と 125周年のエンブレム。c11 = その2つを並べた自作板。c12〜c14 = 1969・1976・1983 のエンブレム1つずつを暗い地に置いた自作板
+#   （元の画像が300pxなので 1.5〜1.6倍までに抑えた）。権利は晴れていない。
+#   写真は **Getty 等の代理店は使っていない**（2026/27 ホームの記事には Getty の画像が混じっていたが、取らなかった）。
+#
+# ネットの反応は入れない（voice_min: 0）。シリーズの回にショートは作らない決まり。
+# **サムネは案を3つ出してユーザーに決めてもらう**（A=k01 選手2人／B=n03 1895年のチーム写真／C=k03 胸のアップ）。ここの thumbnail は点検用の案A。
+date: 2026年10月19日
+slot: other_2
+format: news
+series: ユニフォームとエンブレムの歴史
+voice_min: 0
+people:
+- ニューカッスル・ユナイテッド
+theme:
+  end_bg: assets/images/20261019_kit_newcastle/c06_new2026.png
+  id: kit_newcastle
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: ニューカッスル・ユナイテッド
+  title: ニューカッスルの白黒のしま。いつから、なぜ縦じまなのか
+  question: ニューカッスルの白黒の縞は、いつから着ていて、なぜ白と黒の縦じまなのか
+  opening_image: assets/images/20261019_kit_newcastle/k01_2627_home.jpg
+  lead: 白と黒の縞のシャツ。
+  hook: ''
+  takeaway: ニューカッスルの白黒の縞は、クラブ公式の年表で1894年から。その前は赤で、ユナイテッドの名前になってから2年だった。始まりの年は公式・ウィキペディア・研究サイトで一致するが、由来の理由は資料で割れる（公式の読み物は炭鉱の色か細く見えるかの2説、ウィキペディアは2軍の色と言い切り、研究サイトは「おそらく」）。縦か横かの理由はどの資料にも無い。年数を数えると、縞は132年で赤の66倍。胸のエンブレムは1988年から38年目で、前の3つの合計19年の2倍。2026年10月1日にクラブは新エンブレムを発表し、2027/28のシャツから付く（盾の縞は残す）。資料で食い違う点は、この動画では断定しない
+  hook_unused: ''
+thumbnail:
+  layout: classic
+  callouts: [1894年に赤から, 理由は説が割れる]
+  photo: assets/images/20261019_kit_newcastle/k01_2627_home.jpg
+  line1: ニューカッスルの縞
+  line2: なぜ白と黒なのか
+  tags:
+  - ニューカッスル・ユナイテッド
+  - ニューカッスル
+  - プレミアリーグ
+  - ユニフォーム
+  - エンブレム
+sections:
+- id: since
+  main: true
+  heading: 白黒の縞は、いつから着ているのか
+  tier: 確定
+  official: true
+  telop: 白黒の縞は1894年から。その前は赤（クラブ公式の年表）
+  narrator: 解説
+  card: &id_doc
+    type: document
+    label: ニューカッスル公式サイト「ビクトリア朝の始まり1881-1899」の記載の訳
+    paragraphs:
+    - 1892年12月9日、イースト・エンドはニューカッスル・ユナイテッドになった。
+    - チームはイースト・エンドの色の赤を着ていたが、1894年に、いま有名な白黒の縞に替わった。
+    highlight:
+    - 1894年
+    - 白黒の縞
+  say:
+  - text: ニューカッスル・ユナイテッドの、白黒の縞の話です。
+    image: assets/images/20261019_kit_newcastle/n03_1895_f.jpg
+    emph: true
+    card: none
+  - text: 縞はいつ始まり、なぜ白と黒なのか。資料で確かめます。
+    card: none
+  - text: 由来の説は、資料で割れています。割れる所は、割れると言います。
+    image: assets/images/20261019_kit_newcastle/stripes_bg.jpg
+    card: none
+  - text: まず始まりの年です。材料は、クラブ公式サイトの年表。
+    card:
+      <<: *id_doc
+      highlight: []
+  - text: 1892年12月9日、前身のクラブ、イースト・エンドが、ユナイテッドを名乗ります。
+    image: assets/images/20261019_kit_newcastle/stripes_bg.jpg
+    card:
+      <<: *id_doc
+      highlight: []
+  - text: その年の5月には、街の西のウェスト・エンドの、本拠地と選手も引き継いでいます。
+    image: assets/images/20261019_kit_newcastle/n01_1888_westend_c.jpg
+    card: none
+  - text: ただ、名前が替わっても、シャツはイースト・エンドの赤のまま。
+    image: assets/images/20261019_kit_newcastle/n02_1890s_eastend_c.jpg
+    card: none
+  - text: それが、白黒の縞に替わります。
+    callword: 1894年
+    card: none
+  - text: クラブ公式の年表は、はっきり1894年と書いています。
+    emph: true
+    image: assets/images/20261019_kit_newcastle/stripes_bg.jpg
+    card: *id_doc
+  - text: ウィキペディアも、古いユニフォームの研究サイトも、同じ1894年です。
+    card:
+      <<: *id_doc
+      highlight: []
+  - text: 公式の年表にある1895年の写真には、縞のシャツが並びます。
+    image: assets/images/20261019_kit_newcastle/n03_1895_f.jpg
+    card: none
+  sources:
+  - https://www.newcastleunited.com/en/uniteds-victorian-start-1881-1899
+  - https://www.newcastleunited.com/en/news/kits-a-brief-history
+  - https://en.wikipedia.org/wiki/Newcastle_United_F.C.
+  - https://web.archive.org/web/20120621235223/http://www.historicalkits.co.uk/Newcastle_United/Newcastle_United.htm
+- id: why
+  heading: なぜ白と黒だったのか。資料で説が割れる
+  tier: 背景
+  telop: 由来は、公式の読み物が2説、ウィキペディアは2軍の色と言い切る。研究サイトは「おそらく」
+  narrator: 解説
+  card: &id_why
+    type: table
+    title: 白黒の縞の由来の書き方
+    columns:
+    - 資料
+    - 書いてあること
+    rows:
+    - - クラブ公式の年表
+      - 理由は書いていない
+    - - クラブ公式の読み物
+      - 炭鉱の色か、細く見えるか
+    - - ウィキペディア
+      - 2軍の色を引き継いだ
+    - - 研究サイト
+      - 2軍の色。おそらく、と推量
+    highlight_row: 0
+  say:
+  - text: ニューカッスルは、なぜ白と黒の縞だったのか。ここで資料が割れます。
+    image: assets/images/20261019_kit_newcastle/n04_1905_f.jpg
+    card: none
+  - text: クラブ公式の年表は、理由を書いていません。
+    image: assets/images/20261019_kit_newcastle/stripes_bg.jpg
+    card:
+      <<: *id_why
+      highlight_row: 0
+  - text: 2024年のクラブの読み物には、2つの説が載っています。
+    card:
+      <<: *id_why
+      highlight_row: 1
+  - text: 1つは、街の炭鉱の色に由来する、という説。
+    image: assets/images/20261019_kit_newcastle/n03_1895_f.jpg
+    card: none
+  - text: もう1つは、選手が細く見えるから、という説です。
+    card: none
+  - text: どちらも、根拠は示されていません。
+    emph: true
+    card: none
+  - text: ウィキペディアは、トップチームが2軍の色を引き継いだ、と書きます。
+    image: assets/images/20261019_kit_newcastle/stripes_bg.jpg
+    card:
+      <<: *id_why
+      highlight_row: 2
+  - text: 研究サイトによれば、1891年にできたアマチュアの2軍の色です。
+    card:
+      <<: *id_why
+      highlight_row: 3
+  - text: 前身の2つのクラブの、どちらとも縁のない色だから、という推測です。
+    image: assets/images/20261019_kit_newcastle/n01_1888_westend_c.jpg
+    card: none
+  - text: ウィキペディアは言い切り、研究サイトは「おそらく」と書きます。
+    emph: true
+    image: assets/images/20261019_kit_newcastle/stripes_bg.jpg
+    card:
+      <<: *id_why
+      highlight_row: 3
+  - text: 縞そのものは、前身のクラブにもありました。
+    image: assets/images/20261019_kit_newcastle/n02_1890s_eastend_c.jpg
+    card: none
+  - text: ウェスト・エンドは、赤と黒の縞を着た、と研究サイトは書きます。
+    card: none
+  - text: 縦か横かを決めた理由は、読んだ資料のどれにも、書いていません。
+    emph: true
+    card: none
+  - text: この動画は、どの説も、断定しません。
+    card: none
+  sources:
+  - https://www.newcastleunited.com/en/news/kits-a-brief-history
+  - https://www.newcastleunited.com/en/uniteds-victorian-start-1881-1899
+  - https://en.wikipedia.org/wiki/Newcastle_United_F.C.
+  - https://web.archive.org/web/20120621235223/http://www.historicalkits.co.uk/Newcastle_United/Newcastle_United.htm
+- id: crest
+  heading: 胸のエンブレムは、どう変わってきたのか
+  tier: 確定
+  official: true
+  telop: 市の紋章→カササギの円形→NUFC→1988年から市の紋章の形（クラブ公式）
+  narrator: 解説
+  card: &id_crest
+    type: timeline
+    title: 胸のエンブレムの変遷（クラブ公式の記載）
+    rows: &rows_crest
+    - - 1911年
+      - 決勝で市の紋章を胸に
+    - - 1969〜76
+      - 市の紋章を正式に採用
+    - - 1976〜83
+      - 城とカササギの円形
+    - - 1983〜88
+      - NUFCの4文字の円形
+    - - 1988年〜
+      - 市の紋章をもとにした形
+    - - 2027/28〜
+      - 新エンブレム
+    focus: 1911年
+  say:
+  - text: ここからは、胸のエンブレムです。
+    image: assets/backgrounds/cut_ニューカッスル.png
+    card: none
+  - text: 最初は、ニューカッスル市の紋章でした。
+    image: assets/images/20261019_kit_newcastle/c12_1969.jpg
+    card:
+      <<: *id_crest
+      highlight_row: 0
+  - text: シャツに付いたのは1911年が早い、と公式は書きます。
+    image: assets/images/20261019_kit_newcastle/n04_1905_f.jpg
+    card: none
+  - text: ウィキペディアは、1969年に初めて刺繍された、と書きます。
+    image: assets/images/20261019_kit_newcastle/c12_1969.jpg
+    card:
+      <<: *id_crest
+      highlight_row: 1
+  - text: 研究サイトは、1911年はFA杯決勝だけ、リーグ戦は1969年から、と書きます。
+    card:
+      <<: *id_crest
+      highlight_row: 1
+  - text: 年が違うのは、数える試合が違うから、と読めます。
+    emph: true
+    card:
+      <<: *id_crest
+      highlight_row: 1
+  - text: 1976年、クラブ初の、自前のエンブレムが生まれます。
+    image: assets/images/20261019_kit_newcastle/c13_1976.jpg
+    card:
+      <<: *id_crest
+      highlight_row: 2
+  - text: 城と川と、愛称のカササギを描いた円形です。
+    card:
+      <<: *id_crest
+      highlight_row: 2
+  - text: 1983年は、エヌユーエフシーの4文字を丸く囲んだ形に替わります。
+    image: assets/images/20261019_kit_newcastle/c14_1983.jpg
+    card:
+      <<: *id_crest
+      highlight_row: 3
+  - text: 前の7年より短い、5年で終わりました。公式は、カルト的な人気と書きます。
+    card:
+      <<: *id_crest
+      highlight_row: 3
+  - text: 1988年、市の紋章をもとにした形へ、戻ります。
+    image: assets/images/20261019_kit_newcastle/c11_1988.jpg
+    emph: true
+    card:
+      <<: *id_crest
+      highlight_row: 4
+  - text: 2頭の海の馬と城と獅子。盾の中は、白黒の縞です。
+    card:
+      <<: *id_crest
+      highlight_row: 4
+  - text: 公式の昔のページは、この盾が縞のシャツを表す、と書いています。
+    card:
+      <<: *id_crest
+      highlight_row: 4
+  - text: 2017/18には、125周年の金銀の特別版が付きました。
+    image: assets/images/20261019_kit_newcastle/c15_125th.jpg
+    card: none
+  sources:
+  - https://www.newcastleunited.com/en/club-crest
+  - https://web.archive.org/web/2010/http://www.nufc.co.uk/page/Club/History/ClubCrest
+  - https://web.archive.org/web/20180817024609/https://www.nufc.co.uk/news/latest-news/new-kit-a-closer-look
+  - https://en.wikipedia.org/wiki/Newcastle_United_F.C.
+  - https://web.archive.org/web/20120621235223/http://www.historicalkits.co.uk/Newcastle_United/Newcastle_United.htm
+- id: now
+  heading: 新しいエンブレムは、いつシャツに付くのか
+  tier: 確定
+  official: true
+  telop: 2026年10月1日に新エンブレムを発表。2027/28のシャツから付く（クラブ公式）
+  narrator: 解説
+  card: &id_new
+    type: document
+    label: ニューカッスル公式サイト「新しいクラブ・エンブレム」（2026年10月1日）の訳
+    paragraphs:
+    - サポーター2万7348人の投票で、新しいエンブレムが選ばれた。C案が64.8%で1位だった。
+    - 新しいエンブレムは、2027/28シーズンのユニフォームから付く。
+    - 現行のエンブレムは、1988年から使われてきた。
+    highlight:
+    - 2万7348人
+    - 64.8%
+    - 2027/28シーズン
+  say:
+  - text: ニューカッスルの1988年からのエンブレムが、いま、替わろうとしています。
+    image: assets/images/20261019_kit_newcastle/c06_new2026.png
+    card: none
+  - text: 2026年10月1日、クラブは新しいエンブレムを発表しました。
+    card:
+      <<: *id_new
+      highlight: []
+  - text: 2年以上かけて、サポーターの意見を集めた、と書いています。
+    card:
+      <<: *id_new
+      highlight: []
+  - text: 3つの案から、サポーターの投票で選ばれたのは、C案です。
+    image: assets/images/20261019_kit_newcastle/k03_home_stills.jpg
+    card: *id_new
+  - text: 投票は、2万7348人。C案を1番に選んだのは、64.8%でした。
+    emph: true
+    card: *id_new
+  - text: B案が19.0%、A案が16.2%でした。
+    image: assets/images/20261019_kit_newcastle/k03_home_stills.jpg
+    card: none
+  - text: 新しいエンブレムが付くのは、2027/28シーズンのシャツから。
+    card: *id_new
+  - text: 今季の2026/27は、いまの形のままです。
+    card: none
+  - text: 残す要素も、公式は挙げています。城と、縞の盾と、2頭の海の馬です。
+    image: assets/images/20261019_kit_newcastle/c11_1988.jpg
+    card: none
+  - text: 縞の盾が残る、と公式は書きます。丸いだけのバッジにはしません。
+    emph: true
+    card: none
+  sources:
+  - https://www.newcastleunited.com/en/news/introducing-our-new-club-crest
+  - https://www.newcastleunited.com/en/news/our-club-crest-an-update
+  - https://www.newcastleunited.com/en/news/updating-our-crest-together
+- id: kits
+  heading: 縞の形は、毎年どう描き直されているのか
+  tier: 確定
+  official: true
+  telop: 縞は毎年描き直される。公式は縦じまと呼び、横縞はアウェーに出る
+  narrator: 解説
+  card: &id_kit
+    type: table
+    title: ホームの縞の描き直し（クラブ公式の説明）
+    columns:
+    - シーズン
+    - 公式の説明
+    rows:
+    - - 2017/18
+      - 切れ目のない縞と赤い背番号
+    - - 2024/25
+      - 2002/03のアディダス版が下敷き
+    - - 2025/26
+      - 羊飼い格子と縦じまを合わせた
+    - - 2026/27
+      - 縞を乱した新しい柄
+    highlight_row: 0
+  say:
+  - text: ニューカッスルの縞のシャツは、毎年、描き直されています。
+    image: assets/images/20261019_kit_newcastle/k02_2526_home.jpg
+    card: none
+  - text: 2017/18は、切れ目のない縞に、赤い背番号でした。
+    card:
+      <<: *id_kit
+      highlight_row: 0
+  - text: 2024/25は、2002/03のアディダスのシャツが下敷きです。
+    card:
+      <<: *id_kit
+      highlight_row: 1
+  - text: 2025/26は、北部の羊飼い格子と、昔ながらの縦じまを合わせました。
+    card:
+      <<: *id_kit
+      highlight_row: 2
+  - text: 公式が縦じまとはっきり呼ぶのは、この年の説明。
+    emph: true
+    card: none
+  - text: 2026/27は、縞を乱した、新しい柄。
+    image: assets/images/20261019_kit_newcastle/k01_2627_home.jpg
+    card: none
+  - text: 横縞は、アウェーに出てきます。1995/96の紺とえんじの復刻。
+    card: none
+  sources:
+  - https://www.newcastleunited.com/en/news/2025-26-newcastle-united-home-kit
+  - https://www.newcastleunited.com/en/news/newcastle-united-and-adidas-unveil-2026-27-home-kit
+  - https://www.newcastleunited.com/en/news/newcastle-united-and-adidas-unveil-home-kit-for-2024-25-season
+  - https://www.newcastleunited.com/en/news/newcastle-united-unveils-2024-25-away-kit
+  - https://web.archive.org/web/20180817024609/https://www.nufc.co.uk/news/latest-news/new-kit-a-closer-look
+- id: sponsor
+  heading: シャツの胸の広告は、どう替わってきたのか
+  tier: 確定
+  official: true
+  telop: 胸の広告は、公式で確かめた分だけ。1980年の最初の広告は資料で食い違う
+  narrator: 解説
+  card: &id_sp
+    type: table
+    title: 胸の広告（クラブ公式で確かめた分）
+    columns:
+    - いつ
+    - 胸の広告
+    rows:
+    - - 1980年
+      - ブラウン・エール（読み物）
+    - - 2017/18
+      - ファン88
+    - - 2024年
+      - セラ（前面の提携先）
+    - - 2026/27
+      - ノックス・ハイドレート
+    highlight_row: 0
+  say:
+  - text: 次は、シャツの胸の広告です。
+    image: assets/images/20261019_kit_newcastle/k02_2526_home.jpg
+    card: none
+  - text: クラブの読み物は、最初の広告を1980年と書きます。
+    card:
+      <<: *id_sp
+      highlight_row: 0
+  - text: 社名は、ニューカッスル・ブラウン・エールです。
+    card:
+      <<: *id_sp
+      highlight_row: 0
+  - text: ウィキペディアの表では、1980年は、ニューカッスル・ブルワリーズという会社です。
+    emph: true
+    card:
+      <<: *id_sp
+      highlight_row: 0
+  - text: 2017/18は、プーマの125周年のシャツで、胸はファン88でした。
+    image: assets/images/20261019_kit_newcastle/c15_125th.jpg
+    card:
+      <<: *id_sp
+      highlight_row: 1
+  - text: 2024年4月、クラブは、セラを胸の広告のパートナーと書いています。
+    image: assets/images/20261019_kit_newcastle/k02_2526_home.jpg
+    card:
+      <<: *id_sp
+      highlight_row: 2
+  - text: 今季2026/27からは、3年契約のノックス・ハイドレートです。
+    image: assets/images/20261019_kit_newcastle/stripes_bg.jpg
+    card:
+      <<: *id_sp
+      highlight_row: 3
+  sources:
+  - https://www.newcastleunited.com/en/news/kits-a-brief-history
+  - https://web.archive.org/web/20180817024609/https://www.nufc.co.uk/news/latest-news/new-kit-a-closer-look
+  - https://www.newcastleunited.com/en/news/unsilence-the-crowd-sela-donates-sponsorship-to-rnid-to-mark-unique-accessible-shirt-launch
+  - https://www.newcastleunited.com/en/news/knox-hydrate-front-of-shirt-partnership
+  - https://en.wikipedia.org/wiki/Newcastle_United_F.C.
+- id: view
+  viewpoint: true
+  heading: 見立て・縞は132年で赤の66倍。現行の紋章は前3つの2倍
+  tier: 背景
+  telop: 縞は132年、赤は2年で66倍。現行のエンブレムは38年で、前の3つの合計19年の2倍
+  narrator: 解説
+  card: &id_ratio
+    type: calc
+    title: 縞は、赤の何倍続いたか
+    terms:
+    - - 132年
+      - 1894〜2026（縞）
+    - - 2年
+      - 1892〜94（赤）
+    - - 66倍
+      - 割った答え
+    ops:
+    - ÷
+    - ＝
+  say:
+  - text: 最後に、年数を数えて比べます。
+    image: assets/images/20261019_kit_newcastle/n04_1905_f.jpg
+    card: none
+  - text: まず、縞と、その前の赤です。
+    card: none
+  - text: ユナイテッドの名前になった1892年から、縞の1894年まで、赤は2年。
+    card: *id_ratio
+  - text: 縞は、1894年から2026年まで、132年。
+    card: *id_ratio
+  - text: 132を2で割ると、66。
+    card: *id_ratio
+  - text: 縞は、赤の66倍の長さを、着ています。
+    emph: true
+    card: *id_ratio
+    mark:
+      kind: circle
+      item: 2
+  - text: もう1つは、エンブレムです。
+    image: assets/images/20261019_kit_newcastle/c11_1988.jpg
+    card: none
+  - text: いまの形は、1988年から2026年まで、38年。
+    card: none
+  - text: その前の3つは、7年、7年、5年。合わせて19年で、38年より短い。
+    card: none
+  - text: 38を19で割ります。
+    card: &id_emb
+      type: calc
+      title: 現行のエンブレムは、前の3つの何倍続いたか
+      terms:
+      - - 38年
+        - 1988〜2026
+      - - 19年
+        - 前の3つの合計
+      - - 2倍
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+  - text: 答えは2。現行の形は、前の3つの合計の、ちょうど2倍。
+    emph: true
+    card: *id_emb
+  - text: いまの形で着るのは、あと今季だけ。
+    image: assets/images/20261019_kit_newcastle/k03_home_stills.jpg
+    card: none
+  - text: 縞は132年。次の形でも、盾の中に残る、と公式は書いています。
+    card: none
+  sources:
+  - https://www.newcastleunited.com/en/uniteds-victorian-start-1881-1899
+  - https://www.newcastleunited.com/en/club-crest
+  - https://www.newcastleunited.com/en/news/introducing-our-new-club-crest

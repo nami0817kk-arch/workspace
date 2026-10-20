@@ -1,0 +1,651 @@
+# フロリアン・ヴィルツ（リヴァプール／ドイツ代表）の紹介。選手紹介の8節の型（2026-10-18、シリーズ「有名選手の紹介」）。
+# 見本は research/20261017_kvaratskhelia.yaml。**FotMob は使わない**ので、雛形（player_intro.py の FotMob 部分）は使わず手で書いた。
+# パーセンタイル・同じ位置との順位・レーダー・シュートマップは出さない。数字は基本の数と自分で割った90分あたり。
+# 10/14 に「イラオラ監督、ヴィルツとバルコラに100パーセント信頼」のショートを出した。そこ（会見の発言）には触れない。
+#
+# **題の数字を直した点**：題材一覧の題案は「市場価値1億ユーロ」だったが、Transfermarkt の API で 2026-10-07 付けの市場価値は
+# 8500万ユーロ（その前は 2026-06-03 の1億）。題には市場価値を入れず、移籍金（報道の1億ポンド）と今季の数字にした。
+#
+# **数字の出どころ**
+# - Transfermarkt（API tmapi-alpha: /player/598577 の詳細・market-value-history・performance-season 2021〜2026・performance-game 2026。
+#   各1回ずつ、1.5秒空けて取得。控えは research/raw/20261018_wirtz_tm.json）：生年月日・身長・契約・市場価値の推移、
+#   季ごとの試合・得点・アシスト・出場時間（クラブの全公式戦、代表は除く）。
+#   **アシストの食い違い**：TM は 25/26 のプレミアで4、ESPN は3（ESPN の選手統計）。Flashscore の記事（Opta 系の数え方）は
+#   23/24 を「18得点20アシスト」、24/25 を「16得点15アシスト」と書き、TM のクラブ全大会（20・15）と一致。→ 比べは **TM で2リーグとも同じ数え方** にし、
+#   語りでは「ゴール＋アシスト」を小数1〜2桁で言う（4でも3でも 0.3 台）。
+# - 英語版 Wikipedia（Career statistics・Honours・本文。クラブは 2026-10-11 の試合まで、代表は 2026-10-04 まで）：クラブ別の試合・得点、
+#   ケルンとの紳士協定、デビュー（17歳15日）・最年少ゴール（17歳34日）、前十字靭帯（2022-03-13）と復帰（2023-01-22）、ブレーメン戦ハットトリックでの優勝（2024-04-14）、
+#   EURO2024 開幕戦ゴール（21歳42日）、フランス戦7秒ゴール、プレーの特徴、リヴァプール加入（2025-06-20）、初アシスト・初ゴール（2025-12-20／12-27）。→ 背景。
+# - Flashscore（2025-06 の加入発表の記事）：移籍金「前払い1億ポンド＋最大1600万ポンド」、本人の言葉（liverpool.com への談話）。→ 報道。
+# - Bundesliga.com（公式、2023-01-21 のインタビュー）：前十字靭帯からの復帰を前にした本人の言葉。→ 確定（公式の記事）。
+# - Get German Football News（2025-10-22）：フランクフルト戦（CL 1-5）の試合後に DAZN で語った本人の言葉。「8試合と2試合、数字なし」。→ 報道。
+# - ESPN（site.api.espn.com の試合記録・日程）：直近5試合の出場・交代・アシスト（62分ムニョスのゴール、37分バルコラのゴール）、スコア、シュート数（プレミア今季14本＋10/17の1本）、次の試合（10/25 ブライトン）。
+# - 取材はブラウザの道具・JavaScript実行を使っていない（requests と WebSearch）。
+#
+# **自分で数えたもの**
+# - 90分あたり＝数÷出場時間×90。シーズンの得点／90分は全公式戦（TM の出場時間）：21/22 10÷2327×90=0.39、22/23 4÷1816×90=0.20、
+#   23/24 18÷3475×90=0.47、24/25 16÷3391×90=0.42、25/26 7÷3504×90=0.18（クラブの試合だけ。代表は含めない）。試合・得点は Wikipedia の表と一致。
+# - 通算：Wikipedia（10/11 まで）レヴァークーゼン197試合57得点、リヴァプール56試合7得点、代表48試合12得点（10/4 まで）。
+#   リヴァプールは 10/14（CL・LASK）と 10/17（プレミア・ブレントフォード）の2試合を足して58試合7得点（2試合とも0得点、TM と ESPN で確認）。合計303試合76得点。
+# - 見立ての比べ（リーグ戦のみ）：ブンデスリーガ 23/24＋24/25＝63試合・4739分・21得点・25アシスト → (21+25)÷4739×90＝0.87。
+#   プレミア 25/26＋26/27(7試合)＝40試合・2950分・5得点・6アシスト → (5+6)÷2950×90＝0.34。0.874÷0.336＝2.6。
+# - 23/24 の得点＋アシスト：ブンデス 11+12=23、ヨーロッパリーグ 4+4=8、ポカール 3+4=7 → 38（18得点20アシスト）。
+# - 今季のクラブの試合：9試合・740分・0得点・3アシスト（プレミア7試合560分 0G2A、CL2試合180分 0G1A）。リーグカップ(9/15)は招集外。
+#
+# **入れなかったもの**：私生活（交際・きょうだい）、父が代理人である点、移籍の別のクラブ（バイエルンなど）の話（読んだ出典が無い）、
+#   リヴァプールの前の背番号の話。W杯2026 の敗退（6/29 の試合記録は TM にあるが出典の本文を読んでいない）。
+# **日本語名・読みで怪しいもの**：フロリアン・ヴィルツ（ヴィルツ）、プルハイム、ハフェルツ（カイ・ハフェルツ）、ブラウヴァイラー、アレクサンダー・イサク、ヴィクトル・ムニョス、
+#   バルコラ、LASK（リンツ）、ブレントフォード、ボーンマス、フルアム。
+#
+# 本人の言葉は5か所（自訳。原文は上の出典）：①フック（加入の日）②移籍の節 ③けがの話（Bundesliga.com）④フランクフルト戦（GGFN）⑤見立て。
+date: 2026年10月18日
+slot: other_1
+format: news
+series: 有名選手の紹介
+people:
+- フロリアン・ヴィルツ
+theme:
+  end_bg: assets/images/20261018_wirtz/06.jpg
+  id: player_598577
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: リヴァプール
+  title: ヴィルツってどんな選手？ 1億ポンドの23歳に、今季の数字で何が見えるか
+  question: 1億ポンドで来た23歳は、プレミアでどんな数字を残しているのか。ヴィルツは、どんな選手なのか
+  takeaway: 前払い1億ポンドで来た23歳は、プレミアで560分、まだ0ゴール。ゴールとアシストを足した90分あたりは、ブンデスの0.87からプレミアの0.34へ
+  nameplate: ヴィルツ｜リヴァプール MF／ドイツ代表
+  opening_image: assets/images/20261018_wirtz/04_w.jpg
+  bgm: assets/audio/bgm_calm.wav
+short_title: ヴィルツってどんな選手？
+thumbnail:
+  layout: classic
+  callouts:
+  - リヴァプール最高額
+  - 23歳
+  line1: ヴィルツ
+  line2: 560分でゴール0
+  tags:
+  - リヴァプール
+  - レヴァークーゼン
+  - ドイツ代表
+  - ヴィルツ
+  - 選手紹介
+  photo: assets/images/20261018_wirtz/04_w.jpg
+  photos: []
+  short_photo: assets/images/20261018_wirtz/07_v.jpg
+sections:
+- id: hook
+  heading: クラブ最高額の23歳に、プレミアで何が起きているのか
+  tier: 報道
+  telop: リヴァプール史上最高額の選手
+  narrator: キャスター
+  card:
+    type: stats
+    title: フロリアン・ヴィルツ 23歳
+    items:
+    - ['1', 億ポンド, 加入時に払う移籍金。報道。リヴァプール史上最高額]
+    - ['560', 分, 今季のプレミアの出場。ゴールは0]
+    - ['8500', 万ユーロ, いまの市場価値。最高は1.4億]
+    focus: 1
+  say:
+  - text: リヴァプールが、クラブ史上いちばん高い移籍金で迎えた選手がいます。
+    image: assets/images/20261018_wirtz/05_w.jpg
+    card: &hook_stats
+      type: stats
+      title: フロリアン・ヴィルツ 23歳
+      items:
+      - ['1', 億ポンド, 加入時に払う移籍金。報道。リヴァプール史上最高額]
+      - ['560', 分, 今季のプレミアの出場。ゴールは0]
+      - ['8500', 万ユーロ, いまの市場価値。最高は1.4億]
+      focus: 0
+  - text: その名は、ヴィルツ。ドイツ代表の23歳です。
+    image: assets/images/20261018_wirtz/06.jpg
+    card: *hook_stats
+  - text: 今季のプレミアリーグ。7試合に出て、560分。それでも、ゴールはまだ0。
+    emph: true
+    card:
+      <<: *hook_stats
+      focus: 1
+  - text: 市場価値も、最高の1億4000万ユーロから、8500万まで下がりました。
+    image: assets/images/20261018_wirtz/02.jpg
+    card:
+      <<: *hook_stats
+      focus: 2
+  - text: 本人は、加入が決まったとき、こう話しました。
+    card: none
+  - voice: ヴィルツ
+    text: まったく新しいものが欲しかった。
+  - voice: ヴィルツ
+    text: ブンデスリーガを出て、プレミアリーグに行きたかったんです。
+    cont: true
+    pause: 0.5
+  - text: 何が起きているのか。ヴィルツという選手を、数字と話で見ていきます。
+    card: none
+  quotes_from:
+  - https://www.flashscore.com/news/soccer-premier-league-liverpool-confirm-record-breaking-signing-of-florian-wirtz-from-bayer-leverkusen/nqXR2jVa
+  sources:
+  - https://www.flashscore.com/news/soccer-premier-league-liverpool-confirm-record-breaking-signing-of-florian-wirtz-from-bayer-leverkusen/nqXR2jVa
+  - https://www.transfermarkt.com/florian-wirtz/profil/spieler/598577
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/teams/364/schedule
+- id: data
+  heading: ヴィルツは、いまどこで、いくらの選手か
+  tier: 報道
+  telop: ヴィルツの基礎DATA
+  narrator: キャスター
+  card:
+    type: table
+    title: フロリアン・ヴィルツ（リヴァプール）
+    columns:
+    - 項目
+    - 内容
+    rows: &bdata
+    - - 所属
+      - リヴァプール（7番）
+    - - ポジション
+      - 攻撃的ミッドフィルダー
+    - - 生年月日
+      - 2003年5月3日（23歳）
+    - - 生まれ
+      - ドイツ・プルハイム
+    - - 身長・利き足
+      - 1.77m・右足
+    - - 代表
+      - ドイツ（48試合12得点）
+    - - 契約
+      - 2030年まで
+    - - 市場価値
+      - 8500万ユーロ
+    source: Transfermarkt
+  say:
+  - text: ヴィルツのポジションは、攻撃的ミッドフィルダー。リヴァプールの7番です。
+    image: assets/images/20261018_wirtz/06.jpg
+    card: &data_card
+      type: table
+      title: フロリアン・ヴィルツ（リヴァプール）
+      columns: [項目, 内容]
+      rows: *bdata
+      source: Transfermarkt
+      highlight_row: 1
+  - text: 2003年5月3日、ドイツ西部のプルハイム生まれ。23歳。
+    card:
+      <<: *data_card
+      highlight_row: 2
+  - text: ドイツ代表の常連でもあります。リヴァプールとの契約は、2030年まで。
+    card:
+      <<: *data_card
+      highlight_row: 5
+  - text: 市場価値は、10月7日に、1億から下がったばかり。
+    emph: true
+    image: assets/images/20261018_wirtz/05_w.jpg
+    card:
+      <<: *data_card
+      highlight_row: 7
+  - text: ピークは、加入した2025年6月。そこから5500万ユーロ下がりました。
+    emph: true
+    card: &value_line
+      type: line
+      title: ヴィルツの市場価値（百万ユーロ）
+      x: ['20/7', '21/6', '22/6', '23/6', '24/5', '25/6', '26/6', '26/10']
+      series:
+      - [市場価値, [10, 45, 70, 85, 130, 140, 100, 85]]
+      focus: 市場価値
+      highlight: '26/10'
+      source: Transfermarkt
+  sources:
+  - https://www.transfermarkt.com/florian-wirtz/profil/spieler/598577
+  - https://en.wikipedia.org/wiki/Florian_Wirtz
+- id: career
+  heading: ケルンの少年は、どうやって1億ポンドの選手になったのか
+  tier: 報道
+  telop: 2020年5月、17歳でブンデスリーガ初出場
+  narrator: 解説
+  card:
+    type: table
+    title: 歩んできた道
+    columns:
+    - 年
+    - クラブ
+    - 年齢
+    - 市場価値
+    rows: &career_rows
+    - - 2010〜2020
+      - 1.FCケルン（ユース）
+      - 7歳〜16歳
+      - —
+    - - 2020〜2025
+      - レヴァークーゼン
+      - 16歳〜22歳
+      - 1000万→1.4億ユーロ
+    - - 2025〜
+      - リヴァプール
+      - 22歳〜
+      - 1.4億→8500万ユーロ
+    source: Transfermarkt
+  say:
+  - text: 2010年から、地元のケルンのユースで育ちます。
+    image: assets/images/20261018_wirtz/02.jpg
+    card: &career_card
+      type: table
+      title: 歩んできた道
+      columns: [年, クラブ, 年齢, 市場価値]
+      rows: *career_rows
+      source: Transfermarkt
+      highlight_row: 0
+  - text: 転機は2020年1月。レヴァークーゼンへ移ります。
+    card:
+      <<: *career_card
+      highlight_row: 1
+  - text: この移籍は、もめました。ケルンは、クラブ間の紳士協定が破られたと受け止めたのです。
+    card: none
+  - text: 2020年5月、17歳と15日でデビュー。リーグ戦のクラブ最年少です。
+    image: assets/images/20261018_wirtz/02.jpg
+    card:
+      <<: *career_card
+      highlight_row: 1
+  - text: その3週間後。17歳と34日で、ゴール。当時のブンデスリーガ最年少記録。
+    emph: true
+    card: none
+  - text: 2022年3月、18歳。ひざの前十字靭帯を切り、10か月、ピッチを離れます。
+    image: assets/images/20261018_wirtz/01_w.jpg
+    card: none
+  - text: そして2024年4月14日。ブレーメン戦で、ハットトリック。
+    emph: true
+    image: assets/images/20261018_wirtz/02.jpg
+    card: none
+  - text: 5対0で、クラブ初のブンデスリーガ優勝を決めました。
+    card: none
+  - text: そして2025年6月20日。リヴァプールが、加入を発表します。
+    image: assets/images/20261018_wirtz/06.jpg
+    card:
+      <<: *career_card
+      highlight_row: 2
+  - text: 報道では、前払い1億ポンドに、最大1600万ポンドの上乗せ。
+    card:
+      <<: *career_card
+      highlight_row: 2
+  - text: リヴァプールの史上最高額。ブンデスリーガから出ていく移籍としても、史上最高額です。
+    emph: true
+    card: none
+  - text: 目標については、こう語っていました。
+    card: none
+  - voice: ヴィルツ
+    text: 毎年、すべてを勝ち取りたい。
+  - voice: ヴィルツ
+    text: 目標は、プレミアリーグをもう一度勝つこと。
+    cont: true
+  - voice: ヴィルツ
+    text: チャンピオンズリーグでも、さらに上へ行くことです。
+    cont: true
+    pause: 0.6
+  quotes_from:
+  - https://www.flashscore.com/news/soccer-premier-league-liverpool-confirm-record-breaking-signing-of-florian-wirtz-from-bayer-leverkusen/nqXR2jVa
+  sources:
+  - https://en.wikipedia.org/wiki/Florian_Wirtz
+  - https://www.transfermarkt.com/florian-wirtz/profil/spieler/598577
+  - https://www.flashscore.com/news/soccer-premier-league-liverpool-confirm-record-breaking-signing-of-florian-wirtz-from-bayer-leverkusen/nqXR2jVa
+- id: style
+  heading: ゴールより、アシストを積む攻撃的ミッドフィルダー
+  tier: 報道
+  telop: ブンデスリーガでは、ゴールよりアシストが多かった
+  narrator: 解説
+  card:
+    type: bars
+    title: 23/24シーズン、大会別のゴール＋アシスト（49試合）
+    unit: 点
+    items:
+    - label: ブンデスリーガ
+      value: 23
+      highlight: true
+    - label: ヨーロッパリーグ
+      value: 8
+    - label: DFBポカール
+      value: 7
+    source: Transfermarkt
+  say:
+  - text: 持ち場は一つに収まりません。ウイングも、最前線も務めます。
+    image: assets/images/20261018_wirtz/06.jpg
+    no_telop: true
+    card: &style_bars
+      type: bars
+      title: 23/24シーズン、大会別のゴール＋アシスト（49試合）
+      unit: 点
+      items:
+      - label: ブンデスリーガ
+        value: 23
+        highlight: true
+      - label: ヨーロッパリーグ
+        value: 8
+      - label: DFBポカール
+        value: 7
+      source: Transfermarkt
+  - text: ヴィルツの持ち味は、技術と、ボールを持たないときの動き。走る量も多い選手です。
+    card: none
+  - text: ブンデスリーガでは、毎季、ゴールより、アシストが多い選手でした。
+    emph: true
+    card: none
+  - text: 最高の23/24。ゴールとアシストを足して、38。
+    card: *style_bars
+  - text: 内訳は、ゴール18にアシスト20。ブンデスリーガだけで、23です。
+    image: assets/images/20261018_wirtz/05_w.jpg
+    card: *style_bars
+  - text: 最後の2季を90分に割ると、ゴール0.40に対し、アシスト0.47。
+    card: none
+  - text: 代表では、2024年3月23日。フランス戦の、開始7秒でゴールを決めました。
+    image: assets/images/20261018_wirtz/03.jpg
+    card: none
+  - text: 気になるのは、今季のシュートです。プレミアでは15本打って、枠内は3本。
+    image: assets/images/20261018_wirtz/06.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Florian_Wirtz
+  - https://www.transfermarkt.com/florian-wirtz/profil/spieler/598577
+  - https://site.web.api.espn.com/apis/common/v3/sports/soccer/athletes/303748/stats
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/summary?event=401879262
+- id: past
+  heading: 5つの季と、通算303試合
+  tier: 報道
+  telop: 直近5シーズンの試合と得点
+  narrator: 解説
+  card:
+    type: table
+    title: ヴィルツ 直近5シーズン（クラブの全公式戦）
+    columns:
+    - シーズン
+    - クラブ
+    - 試合
+    - 得点
+    - 90分あたり
+    rows: &season_rows
+    - ['21/22', レヴァークーゼン, '31', '10', '0.39']
+    - ['22/23', レヴァークーゼン, '25', '4', '0.20']
+    - ['23/24', レヴァークーゼン, '49', '18', '0.47']
+    - ['24/25', レヴァークーゼン, '45', '16', '0.42']
+    - ['25/26', リヴァプール, '49', '7', '0.18']
+    source: Transfermarkt・Wikipedia
+  rows_total:
+  - &t1 [レヴァークーゼン, '197', '57']
+  - &t2 [リヴァプール, '58', '7']
+  - &t3 [ドイツ代表, '48', '12']
+  - &t4 [合計, '303', '76']
+  say:
+  - text: ヴィルツの5シーズン。最初は21/22。
+    image: assets/images/20261018_wirtz/02.jpg
+    card: &past_card
+      type: table
+      title: ヴィルツ 直近5シーズン（クラブの全公式戦）
+      columns: [シーズン, クラブ, 試合, 得点, 90分あたり]
+      rows: *season_rows
+      source: Transfermarkt・Wikipedia
+      highlight_row: 0
+  - text: 18歳の季は、31試合で10得点。90分あたり0.39です。
+    card: *past_card
+  - text: 22/23は、前十字靭帯の季。25試合で4得点、復帰は1月でした。
+    image: assets/images/20261018_wirtz/05_w.jpg
+    card:
+      <<: *past_card
+      highlight_row: 1
+  - text: 23/24は、49試合で18得点。90分あたり0.47は、5季で最高。
+    emph: true
+    card:
+      <<: *past_card
+      highlight_row: 2
+  - text: 24/25は、45試合で16得点。0.42。
+    image: assets/images/20261018_wirtz/02.jpg
+    card:
+      <<: *past_card
+      highlight_row: 3
+  - text: そして、リヴァプール1年目の25/26。49試合で7得点。0.18まで下がります。
+    emph: true
+    card:
+      <<: *past_card
+      highlight_row: 4
+  - text: 通算です。レヴァークーゼンで、197試合57得点。
+    image: assets/images/20261018_wirtz/02.jpg
+    card: &total_card
+      type: table
+      title: ヴィルツ 通算（2026年10月）
+      columns: [所属, 試合, 得点]
+      rows: [*t1, *t2, *t3, *t4]
+      source: Wikipedia・Transfermarkt
+      highlight_row: 0
+  - text: リヴァプールは58試合で7得点。ドイツ代表は48試合で12得点。
+    card:
+      <<: *total_card
+      highlight_row: 1
+  - text: 合計は、303試合で76得点です。
+    emph: true
+    card:
+      <<: *total_card
+      highlight_row: 3
+  sources:
+  - https://en.wikipedia.org/wiki/Florian_Wirtz
+  - https://www.transfermarkt.com/florian-wirtz/profil/spieler/598577
+- id: season
+  heading: 今季の数字と直近5試合
+  tier: 報道
+  telop: 今季ここまで
+  narrator: 解説
+  card:
+    type: table
+    title: 直近5試合（クラブ）
+    columns:
+    - 日付
+    - 相手
+    - 出場
+    - 得点
+    - 結果
+    rows: &recent_rows
+    - - 10/17
+      - ブレントフォード
+      - 先発・90分
+      - 0G 1A
+      - 2-1 勝
+    - - 10/14
+      - LASK（CL）
+      - 先発・90分
+      - 0G 1A
+      - 6-3 勝
+    - - 10/11
+      - マンチェスター・シティ
+      - 先発・66分交代
+      - 0G 0A
+      - 0-3 負
+    - - 9/20
+      - ボーンマス
+      - 先発・71分交代
+      - 0G 0A
+      - 1-0 勝
+    - - 9/12
+      - フルアム
+      - 先発・90分
+      - 0G 0A
+      - 0-0 分
+    source: ESPN・Transfermarkt
+  say:
+  - text: ヴィルツの今季は、クラブで9試合。プレミアが7、チャンピオンズリーグが2。
+    image: assets/images/20261018_wirtz/06.jpg
+    card: &recent_card
+      type: table
+      title: 直近5試合（クラブ）
+      columns: [日付, 相手, 出場, 得点, 結果]
+      rows: *recent_rows
+      source: ESPN・Transfermarkt
+  - text: 出場は740分。ゴールは0、アシストは3つです。
+    emph: true
+    card: *recent_card
+  - text: 10月11日は、マンチェスター・シティ戦。66分で交代して、0対3の負けでした。
+    image: assets/images/20261018_wirtz/06.jpg
+    card:
+      <<: *recent_card
+      highlight_row: 2
+  - text: 10月14日は、チャンピオンズリーグのラスク戦。
+    card:
+      <<: *recent_card
+      highlight_row: 1
+  - text: 37分に、バルコラのゴールを演出。6対3の勝利。
+    card:
+      <<: *recent_card
+      highlight_row: 1
+  - text: そして昨日、10月17日のブレントフォード戦。
+    image: assets/images/20261018_wirtz/06.jpg
+    card:
+      <<: *recent_card
+      highlight_row: 0
+  - text: 62分、ヴィルツのパスから、ムニョスが決めます。2対1の勝利。
+    emph: true
+    card:
+      <<: *recent_card
+      highlight_row: 0
+  - text: 次の試合は、10月25日。ホームで、ブライトン戦です。
+    card: none
+  sources:
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/summary?event=401879262
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915415
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/summary?event=401879264
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/teams/364/schedule
+  - https://www.transfermarkt.com/florian-wirtz/profil/spieler/598577
+- id: story
+  heading: 数字の外にある、2つの話
+  tier: 報道
+  main: true
+  telop: 10か月の離脱と、フランクフルトの夜
+  narrator: 解説
+  card:
+    type: table
+    title: 数字の外にある、2つの話
+    columns: [いつ, 何があったか]
+    rows: &story_rows
+    - ['2022年3月', 前十字靭帯を切り、10か月離脱した]
+    - ['2025年10月', 数字の付かない10試合のあと、2アシスト]
+    source: 各報道
+  say:
+  - text: ヴィルツは、プレミアで今季0ゴール。昨季は5。数字の外の話を、2つ。
+    image: assets/images/20261018_wirtz/07_v.jpg
+    short_only: true
+    card: none
+  - text: 1つ目は、あの10か月の話。2022年3月13日、古巣ケルン戦での大けがです。
+    image: assets/images/20261018_wirtz/05_w.jpg
+    card: none
+  - text: その年のワールドカップも、逃しました。
+    card: none
+  - text: 復帰を前にした2023年1月、本人が、公式のインタビューで話しています。
+    card: none
+  - voice: ヴィルツ
+    text: 10か月は、とても長い時間です。
+  - voice: ヴィルツ
+    text: でも振り返ると、そんなに長くは感じませんでした。
+    cont: true
+    pause: 0.5
+  - voice: ヴィルツ
+    text: ワールドカップは、夢でした。
+  - voice: ヴィルツ
+    text: でも、悲しむ時間は、あまりなかった。
+    cont: true
+  - voice: ヴィルツ
+    text: 回復だけに、集中していたからです。
+    cont: true
+    pause: 0.6
+  - text: 2つ目は、リヴァプール1年目の秋。2025年10月22日、フランクフルト戦です。
+    image: assets/images/20261018_wirtz/06.jpg
+    card: &story_card
+      type: table
+      title: 数字の外にある、2つの話
+      columns: [いつ, 何があったか]
+      rows: *story_rows
+      source: 各報道
+      highlight_row: 1
+  - text: 10試合を終えて、数字はゼロ。ゴールも、アシストも、ありません。
+    card:
+      <<: *story_card
+      highlight_row: 1
+  - text: この夜、チームは5対1で勝ちます。ヴィルツは、4点目と5点目を、続けて演出。
+    emph: true
+    image: assets/images/20261018_wirtz/06.jpg
+    card: none
+  - text: 試合直後、ドイツのテレビ局のインタビューで、本人は、こう答えました。
+    card: none
+  - voice: ヴィルツ
+    text: 後半は、もっといいスペースに入ろうとしました。
+  - voice: ヴィルツ
+    text: とくに、僕がボールを失って、失点したあとは。
+    cont: true
+  - voice: ヴィルツ
+    text: 僕は、もっとできると分かっています。
+    cont: true
+    pause: 0.6
+  - text: 2つのアシストを喜ぶより、失点した場面を、先に挙げる選手でした。
+    pause: 0.5
+    card: none
+  quotes_from:
+  - https://www.bundesliga.com/en/bundesliga/news/florian-wirtz-injury-comeback-favourite-position-xabi-alonso-bayer-leverkusen-22274
+  - https://www.getfootballnewsgermany.com/2025/exhausted-florian-wirtz-belittles-two-assist-match-for-liverpool
+  sources:
+  - https://www.bundesliga.com/en/bundesliga/news/florian-wirtz-injury-comeback-favourite-position-xabi-alonso-bayer-leverkusen-22274
+  - https://www.getfootballnewsgermany.com/2025/exhausted-florian-wirtz-belittles-two-assist-match-for-liverpool
+  - https://en.wikipedia.org/wiki/Florian_Wirtz
+- id: view
+  heading: ブンデスの2季と、プレミアの2季を数えると
+  tier: 背景
+  viewpoint: true
+  narrator: 解説
+  telop: ブンデスリーガからプレミアリーグへ
+  card:
+    type: table
+    title: ブンデスとプレミア、リーグ戦の比べ
+    columns: [項目, ブンデス（23/24・24/25）, プレミア（25/26・26/27）]
+    rows: &cmp_rows
+    - ['試合', '63', '40']
+    - ['出場時間', '4739分', '2950分']
+    - ['ゴール', '21', '5']
+    - ['アシスト', '25', '6']
+    - ['ゴール＋アシスト／90分', '0.87', '0.34']
+    source: Transfermarkt
+  say:
+  - text: 最後に、レヴァークーゼンの2季と、リヴァプールの2季を、同じ条件で並べます。
+    image: assets/images/20261018_wirtz/05_w.jpg
+    card: &cmp_card
+      type: table
+      title: ブンデスとプレミア、リーグ戦の比べ
+      columns: [項目, ブンデス（23/24・24/25）, プレミア（25/26・26/27）]
+      rows: *cmp_rows
+      source: Transfermarkt
+      highlight_row: 0
+  - text: ただし、リーグが違います。ブンデスからプレミアへ。割り引いて見てください。
+    card: none
+  - text: 試合は、63と40。出場時間は、4739分と2950分です。
+    card:
+      <<: *cmp_card
+      highlight_row: 1
+  - text: ゴールは、21と5。アシストは、25と6。
+    card:
+      <<: *cmp_card
+      highlight_row: 3
+  - text: 90分あたりのゴールとアシストは、0.87が0.34に。およそ2.6分の1です。
+    emph: true
+    card:
+      <<: *cmp_card
+      highlight_row: 4
+    mark: {kind: circle, row: 4}
+  - text: ただし、今季のプレミアは、まだ7試合。今季のぶんは、まだ途中の数字です。
+    card: none
+  - text: 加入のときの本人は、こうも話していました。
+    image: assets/images/20261018_wirtz/06.jpg
+    card: none
+  - voice: ヴィルツ
+    text: どれだけやれるか、見てみたい。
+  - voice: ヴィルツ
+    text: 自分のベストを出せたらいいと思います。
+    cont: true
+    pause: 0.6
+  - text: 1億ポンドの問いの答えは、まだ出ていません。
+    image: assets/images/20261018_wirtz/07_w.jpg
+    card: none
+  - text: ただ、今季の3アシストのうち、2つは直近の2試合です。
+    card: none
+  quotes_from:
+  - https://www.flashscore.com/news/soccer-premier-league-liverpool-confirm-record-breaking-signing-of-florian-wirtz-from-bayer-leverkusen/nqXR2jVa
+  sources:
+  - https://www.transfermarkt.com/florian-wirtz/profil/spieler/598577
+  - https://en.wikipedia.org/wiki/Florian_Wirtz
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/teams/364/schedule
