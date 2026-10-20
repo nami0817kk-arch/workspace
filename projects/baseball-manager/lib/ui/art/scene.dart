@@ -6,6 +6,7 @@ import '../../game/calendar.dart';
 import '../../game/career.dart';
 import '../../game/player.dart';
 import 'avatar.dart';
+import 'story_image.dart';
 
 /// 季節で変わる球場の背景に、選手が立つ。
 class SceneBanner extends StatelessWidget {
@@ -41,7 +42,7 @@ class SceneBanner extends StatelessWidget {
             key: ValueKey(season),
             fit: StackFit.expand,
             children: [
-              CustomPaint(painter: ScenePainter(season)),
+              _Backdrop(season: season, stage: stage),
               Positioned(
                 left: 0,
                 right: 0,
@@ -74,6 +75,53 @@ class SceneBanner extends StatelessWidget {
       ),
     );
   }
+}
+
+/// 段階ごとの背景の絵に、季節の色味と飾り(花びら・落ち葉・雪)を重ねる。
+/// 絵が読めなければ、これまでの描画(`ScenePainter`)に戻る。
+class _Backdrop extends StatelessWidget {
+  const _Backdrop({required this.season, required this.stage});
+  final Season season;
+  final Stage stage;
+
+  static Color _tint(Season s) => switch (s) {
+        Season.spring => const Color(0x2EFFB7C9),
+        Season.summer => const Color(0x14FFF176),
+        Season.autumn => const Color(0x40FF8F3D),
+        Season.winter => const Color(0x59DDEBFF),
+      };
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        Image.asset(
+          backdropAssetOf(stage),
+          fit: BoxFit.cover,
+          alignment: Alignment.bottomCenter,
+          excludeFromSemantics: true,
+          errorBuilder: (_, __, ___) =>
+              CustomPaint(painter: ScenePainter(season)),
+        ),
+        ColoredBox(color: _tint(season)),
+        CustomPaint(painter: SeasonDecorPainter(season)),
+      ],
+    );
+  }
+}
+
+/// 季節の飾り(春の花びら・秋の落ち葉・冬の雪)だけを描く。背景の絵の上に重ねる。
+class SeasonDecorPainter extends CustomPainter {
+  SeasonDecorPainter(this.season);
+  final Season season;
+
+  @override
+  void paint(Canvas canvas, Size size) =>
+      paintSeasonDecor(canvas, size, season);
+
+  @override
+  bool shouldRepaint(SeasonDecorPainter old) => old.season != season;
 }
 
 class _Palette {
@@ -215,35 +263,11 @@ class ScenePainter extends CustomPainter {
     }
 
     // 季節の飾り
-    final rng = Random(season.index + 7);
-    switch (season) {
-      case Season.spring:
-        for (var i = 0; i < 26; i++) {
-          _petal(
-              canvas,
-              Offset(rng.nextDouble() * w, rng.nextDouble() * h * 0.9),
-              const Color(0xFFFFB7C9),
-              rng.nextDouble());
-        }
-      case Season.autumn:
-        for (var i = 0; i < 20; i++) {
-          _petal(
-              canvas,
-              Offset(rng.nextDouble() * w, rng.nextDouble() * h * 0.9),
-              i.isEven ? const Color(0xFFE65100) : const Color(0xFFBF360C),
-              rng.nextDouble());
-        }
-      case Season.winter:
-        for (var i = 0; i < 36; i++) {
-          canvas.drawCircle(
-              Offset(rng.nextDouble() * w, rng.nextDouble() * h),
-              1 + rng.nextDouble() * 1.8,
-              Paint()..color = Colors.white.withValues(alpha: 0.9));
-        }
-      case Season.summer:
-        // 入道雲
-        _cloud(canvas, Offset(w * 0.10, horizon - 12), 1.5,
-            Paint()..color = Colors.white.withValues(alpha: 0.95));
+    paintSeasonDecor(canvas, size, season);
+    if (season == Season.summer) {
+      // 入道雲
+      _cloud(canvas, Offset(w * 0.10, horizon - 12), 1.5,
+          Paint()..color = Colors.white.withValues(alpha: 0.95));
     }
   }
 
@@ -260,15 +284,44 @@ class ScenePainter extends CustomPainter {
         paint);
   }
 
-  void _petal(Canvas c, Offset o, Color color, double rot) {
-    c.save();
-    c.translate(o.dx, o.dy);
-    c.rotate(rot * pi);
-    c.drawOval(Rect.fromCenter(center: Offset.zero, width: 7, height: 4),
-        Paint()..color = color);
-    c.restore();
-  }
-
   @override
   bool shouldRepaint(ScenePainter old) => old.season != season;
+}
+
+/// 季節の飾り。春は花びら・秋は落ち葉・冬は雪(夏は無し)。
+void paintSeasonDecor(Canvas canvas, Size size, Season season) {
+  final w = size.width, h = size.height;
+  final rng = Random(season.index + 7);
+  void petal(Offset o, Color color, double rot) {
+    canvas.save();
+    canvas.translate(o.dx, o.dy);
+    canvas.rotate(rot * pi);
+    canvas.drawOval(Rect.fromCenter(center: Offset.zero, width: 7, height: 4),
+        Paint()..color = color);
+    canvas.restore();
+  }
+
+  switch (season) {
+    case Season.spring:
+      for (var i = 0; i < 26; i++) {
+        petal(Offset(rng.nextDouble() * w, rng.nextDouble() * h * 0.9),
+            const Color(0xFFFFB7C9), rng.nextDouble());
+      }
+    case Season.autumn:
+      for (var i = 0; i < 20; i++) {
+        petal(
+            Offset(rng.nextDouble() * w, rng.nextDouble() * h * 0.9),
+            i.isEven ? const Color(0xFFE65100) : const Color(0xFFBF360C),
+            rng.nextDouble());
+      }
+    case Season.winter:
+      for (var i = 0; i < 36; i++) {
+        canvas.drawCircle(
+            Offset(rng.nextDouble() * w, rng.nextDouble() * h),
+            1 + rng.nextDouble() * 1.8,
+            Paint()..color = Colors.white.withValues(alpha: 0.9));
+      }
+    case Season.summer:
+      break;
+  }
 }
