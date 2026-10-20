@@ -25,12 +25,12 @@ def draw(plan: dict, taus, who: str = "A", span: float = 2.6, ppu: int = 170, co
     except Exception:
         font = ImageFont.load_default()
     props = plan.get("scene", {}).get("fx", {}).get("props", [])
-    a = plan["actors"][who]
+    whos = list(plan["actors"]) if who == "all" else [who]
     for i, tau in enumerate(taus):
         f = min(range(plan["n"]), key=lambda k: abs(plan["frames"][k]["tau"] - tau))
-        p = plan["frames"][f]["actors"][who]
         ox, oy = (i % cols) * W, (i // cols) * H
-        cx = p["root_x"]
+        xs = [plan["frames"][f]["actors"][w]["root_x"] for w in whos]
+        cx = (min(xs) + max(xs)) / 2
         img = Image.new("RGB", (W, H), (250, 250, 250))       # パネルごとに描いて貼る(はみ出しを切る)
         d = ImageDraw.Draw(img)
         ox_, oy_ = ox, oy
@@ -51,18 +51,26 @@ def draw(plan: dict, taus, who: str = "A", span: float = 2.6, ppu: int = 170, co
             x0, y1 = P(k[1] - s_ / 2, k[2])
             x1, y0 = P(k[1] + s_ / 2, k[2] + pr.get("h", s_))
             d.rectangle([x0, y0, x1, y1], outline=(170, 110, 50), width=3, fill=(235, 200, 150))
-        sk = fk.skeleton(p, fk.sign_of(a, p), p["root_x"], a.get("scale", 1.0))
-        col = tuple(int(255 * c * 0.8) for c in a["color"])
-        for name, c in (("rear_leg", (150, 150, 150)), ("rear_arm", (150, 150, 150)), ("torso", col), ("front_leg", col), ("front_arm", col)):
-            pts = [P(*q) for q in sk[name]]
-            d.line(pts, fill=c, width=7, joint="curve")
-        hx, hz = sk["head"]
-        r = sk["head_r"] * ppu
-        X, Y = P(hx, hz)
-        d.ellipse([X - r, Y - r, X + r, Y + r], fill=col)
-        for key, c in (("foot", (220, 40, 40)), ("rear_foot", (40, 40, 220))):
-            X, Y = P(*sk[key])
-            d.ellipse([X - 5, Y - 5, X + 5, Y + 5], fill=c)
+        for w in whos:
+            a = plan["actors"][w]
+            p = plan["frames"][f]["actors"][w]
+            sk = fk.skeleton(p, fk.sign_of(a, p), p["root_x"], a.get("scale", 1.0))
+            col = tuple(int(255 * c * 0.8) for c in a["color"])
+            dim = tuple(int(c * 0.55 + 250 * 0.45) for c in col)
+            for name, c in (("rear_leg", dim), ("rear_arm", dim), ("torso", col), ("front_leg", col), ("front_arm", col)):
+                pts = [P(*q) for q in sk[name]]
+                d.line(pts, fill=c, width=7, joint="curve")
+            hx, hz = sk["head"]
+            r = sk["head_r"] * ppu
+            X, Y = P(hx, hz)
+            d.ellipse([X - r, Y - r, X + r, Y + r], fill=col)
+            for key, c in (("foot", (220, 40, 40)), ("rear_foot", (40, 40, 220))):
+                X, Y = P(*sk[key])
+                d.ellipse([X - 4, Y - 4, X + 4, Y + 4], fill=c)
+        for e in plan.get("events", []):                     # 命中の位置(このコマの前後 2 コマ)
+            if abs(e["frame"] - f) <= 2 and e.get("pos"):
+                X, Y = P(*e["pos"])
+                d.ellipse([X - 9, Y - 9, X + 9, Y + 9], outline=(255, 120, 0), width=3)
         d.text((ox + 8, oy + 6), f"{plan['frames'][f]['tau']:.2f}s", fill=(40, 40, 40), font=font)
         sheet.paste(img, (ox_, oy_))
     return sheet
