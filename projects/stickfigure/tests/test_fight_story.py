@@ -285,3 +285,12 @@ def test_iai_builds():
     t_cut = sc["fx"]["cuts"][0]["start"]
     assert 0.5 <= t_cut - t_app <= 0.7                                 # 抜けてから斬撃線まで「間」がある
     planmod.validate_scene(sc)
+
+
+def test_slam_throw_builds():
+    sc = fight.build_fight(dict(weapon="none", kick=False, hits=2, finisher="slam_throw"))
+    kinds = [h["kind"] for h in sc["hits"]]
+    assert "grab" in kinds and "heel" in kinds
+    kb = [k for k in sc["keys"]["B"] if k.get("roll") is not None]
+    assert min(k["roll"] for k in kb) <= -1.8                           # 頭上を回る(頂点で頭が下)
+    planmod.validate_scene(sc)
