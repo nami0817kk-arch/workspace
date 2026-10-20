@@ -1,0 +1,3 @@
+# 決め技の見本: 流星落とし。高く跳んで頂点で止まり、拳で急降下、着弾の衝撃で相手を壁まで吹き飛ばす
+name: fight_meteor
+fight: {weapon: none, kick: false, hits: 2, counter: true, finisher: meteor, palette: warm, stage: sunset, mood: battle, seed: 7}

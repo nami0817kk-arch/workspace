@@ -25,7 +25,7 @@ DEFAULTS = dict(
     kick=True,               # 冒頭の蹴り → 壁
     hits=3,                  # 連打の回数(1〜4)
     counter=True,            # 1発目のあと、相手の反撃
-    finisher="launch_slash", # launch_slash(決めの斬りで打ち上げ→空中斬り→叩きつけ) / launch_kick(決めは高い蹴りで打ち上げ) / beam(気の光線: 溜め→発射→壁まで吹き飛ばす) / blast(気弾: 片手に玉を膨らませて投げる→着弾で爆発) / wave(衝撃波: 跳んで拳を地面に叩きつけ→地面を走る波で打ち上げる) / air_combo(空中コンボ: 打ち上げ→空中で 2 発追加→叩きつけ) / barrage(連打乱舞: 拳 8 発 0.1 秒間隔→大振りで壁へ) / slash_wave(飛ぶ斬撃: 振り抜くと三日月の光が飛ぶ。剣だけ) / iai(居合: 1 コマで相手の向こうへ抜け、間を置いて斬撃線が走り崩れ落ちる。剣だけ) / slam_throw(投げ: つかんで頭上を回し、背後の地面に叩きつける) / blink_combo(瞬間移動の連撃: 前に現れ拳→頭上に現れ踵落とし→離れて背を向ける) / beam_clash(光線の撃ち合い: 2 人が同時に撃ち、中央でぶつかり、A が押し勝つ。B の色は beam_color_b) / random(seed で選ぶ) / none(まっすぐ倒れる)
+    finisher="launch_slash", # launch_slash(決めの斬りで打ち上げ→空中斬り→叩きつけ) / launch_kick(決めは高い蹴りで打ち上げ) / beam(気の光線: 溜め→発射→壁まで吹き飛ばす) / blast(気弾: 片手に玉を膨らませて投げる→着弾で爆発) / wave(衝撃波: 跳んで拳を地面に叩きつけ→地面を走る波で打ち上げる) / air_combo(空中コンボ: 打ち上げ→空中で 2 発追加→叩きつけ) / barrage(連打乱舞: 拳 8 発 0.1 秒間隔→大振りで壁へ) / slash_wave(飛ぶ斬撃: 振り抜くと三日月の光が飛ぶ。剣だけ) / iai(居合: 1 コマで相手の向こうへ抜け、間を置いて斬撃線が走り崩れ落ちる。剣だけ) / slam_throw(投げ: つかんで頭上を回し、背後の地面に叩きつける) / blink_combo(瞬間移動の連撃: 前に現れ拳→頭上に現れ踵落とし→離れて背を向ける) / meteor(流星落とし: 高く跳んで拳で急降下、着弾の衝撃で相手を壁へ) / beam_clash(光線の撃ち合い: 2 人が同時に撃ち、中央でぶつかり、A が押し勝つ。B の色は beam_color_b) / random(seed で選ぶ) / none(まっすぐ倒れる)
     taunt=False,             # 名乗り: 走り出す前に決めポーズで止まる(突きつけ→掲げて 0.25 秒止め、寄りと流線)。opening とは併用しない
     opening=None,            # 出だしの技: blast(走り出す前に気弾を投げ、B がかわし、壁で爆発) / teleport(走らず一瞬で相手の目の前に現れる) / fly(跳び上がって水平に飛び、急降下して着地) / counter_blast(相手が気弾を投げ、A が弾いて空中で爆発させる) / air_clash(2 人が跳び上がって空中でぶつかり、弾かれて着地) / dodge_beam(相手が光線を撃ち、A が高く跳んでかわす)。kick: true とは併用しない
     beam_color=None,         # beam の色 [r,g,b](0〜255)。既定は水色
@@ -161,6 +161,7 @@ def build_fight(spec: dict) -> dict:
     iai = s["finisher"] == "iai" and s["weapon"] in ("sword", "dagger")           # 必殺技: 居合(1 コマで相手の向こうへ抜け、間を置いて斬撃線が走る)。剣だけ
     sthrow = s["finisher"] == "slam_throw"               # 必殺技: 投げ(つかんで頭上を回し、背後の地面に叩きつける)
     blink = s["finisher"] == "blink_combo"               # 必殺技: 瞬間移動の連撃(前に現れ拳 → 頭上に現れ踵落とし → 離れて背を向ける)
+    meteor = s["finisher"] == "meteor"                   # 必殺技: 流星落とし(高く跳んで拳で急降下、着弾の衝撃で相手を壁へ)
     air = s["finisher"] == "air_combo"                   # 必殺技: 空中コンボ(打ち上げ → 空中で 2 発追加 → 叩きつけ)
     fin = s["finisher"] in ("launch_slash", "launch_kick", "air_combo")
     fin_kick = s["finisher"] == "launch_kick"
@@ -696,6 +697,46 @@ def build_fight(spec: dict) -> dict:
         puffs.append(dict(tau=_r(t_hit + 1.08), kind="land2", pos=[_r(b_wall - 0.5), 0.0]))
         t_end = t_hit + 1.1
         ko_t = t_hit + 1.05
+    elif meteor:
+        b_wall = round(max(6.0, 2.4 - min(float(k["dx"]) for k in keysB if "dx" in k) + 1.3, 2.4 - (dxB - 0.45) + 1.3), 2)
+        wall_lock = b_wall
+        b_root = 2.4 - (dxB - 0.45)
+        a_dx_m = (b_root - 1.1) + 2.0                    # 着弾する位置(B の 1.1 手前)
+        t_jump, t_top, t_land = _r(hl + 0.45), _r(hl + 0.95), _r(hl + 1.3)
+        col = list(s.get("beam_color") or [255, 200, 90])
+        keysB += [dict(t=_r(hl + 0.1), dx=_r(dxB + 0.25), lean=-0.6, fa=0.3, ra=0.3, fe=0.6, re=0.6, ht=-0.8, face="pain"),
+                  dict(t=_r(hl + 0.5), dx=_r(dxB - 0.45), lean=-0.2, hz=0.84, fa=0.6, ra=0.5, fe=1.0, re=1.1, ht=-0.3, face="pain"),
+                  dict(t=_r(t_top), dx=_r(dxB - 0.45), lean=-0.25, hz=0.86, fa=0.9, ra=0.7, fe=1.2, re=1.2, ht=-0.5, face="pain"),       # 見上げる
+                  dict(t=_r(t_land - 0.02), dx=_r(dxB - 0.45), lean=-0.3, hz=0.84, fa=0.6, ra=0.6, fe=1.0, re=1.0, ht=-0.4, face="pain"),
+                  dict(t=_r(t_land + 0.06), dx=_r(dxB - 0.6), lean=-0.7, hz=0.9, fa=-0.9, ra=-0.9, fe=0.3, re=0.3, ht=-0.8, face="pain"),    # 衝撃でのけぞる
+                  dict(t=_r(t_land + 0.2), dx=_r(2.4 - (b_wall - 1.4)), rz=1.3, roll=1.0, hz=0.9, fa=-1.1, ra=-0.9, fe=0.2, re=0.3, fl=0.9, fk=0.4, rl=0.2, rk=0.3, lean=-0.3, ht=-0.6, face="pain"),
+                  dict(t=_r(t_land + 0.34), dx=_r(2.4 - (b_wall - 0.3)), rz=1.35, roll=0.3, hz=0.9, fa=-0.9, ra=-0.9, fe=0.3, re=0.3, fl=0.6, fk=0.3, rl=-0.3, rk=0.4, lean=-0.35, ht=-0.7, face="pain"),
+                  dict(t=_r(t_land + 0.55), dx=_r(2.4 - (b_wall - 0.3)), rz=1.25, roll=0.35, hz=0.9, lean=-0.3, face="pain"),
+                  dict(t=_r(t_land + 0.85), dx=_r(2.4 - (b_wall - 0.45)), rz=0.55, roll=1.2, hz=0.9, lean=0.0, fa=0.2, ra=0.2, face="pain"),
+                  dict(t=_r(t_land + 1.05), dx=_r(2.4 - (b_wall - 0.5)), rz=0.21, roll=1.57, hz=0.9, fa=0.4, ra=0.4, fl=0.0, fk=0.0, rl=0.0, rk=0.0, face="ko")]
+        keysA += [dict(t=_r(hl + 0.12), dx=5.0, hz=0.9, lean=0.15),
+                  dict(t=_r(t_jump - 0.14), dx=4.6, hz=0.6, lean=0.35, fl=1.0, fk=1.8, rl=-0.3, rk=1.4, fa=-0.6, fe=1.0, ra=-0.6, re=1.0),   # 深く沈む(予備動作)
+                  dict(t=_r(t_jump), dx=4.5, rz=0.8, hz=0.98, lean=-0.2, fa=2.9, fe=0.2, ra=2.6, re=0.3, fl=0.3, fk=0.2, rl=-0.3, rk=0.2),   # 伸び上がって跳ぶ
+                  dict(t=_r(t_top), dx=_r(a_dx_m - 0.3), rz=3.6, hz=0.9, lean=0.0, fa=2.4, fe=0.5, ra=2.2, re=0.6, fl=0.5, fk=0.9, rl=-0.4, rk=0.8),   # 頂点(1.9 身長)で一瞬止まる
+                  dict(t=_r(t_top + 0.1), dx=_r(a_dx_m - 0.2), rz=3.4, hz=0.9, lean=0.6, fa=-0.9, fe=0.3, ra=-0.7, re=0.4, fl=0.6, fk=0.4, rl=-0.5, rk=0.3),   # 拳を下に構えて頭から落ち始める
+                  dict(t=_r(t_land), dx=_r(a_dx_m), rz=0.0, hz=0.5, lean=0.5, fa=-1.3, fe=0.2, ra=-1.1, re=0.3, fl=1.1, fk=2.0, rl=-0.2, rk=1.6, ht=0.1),   # 着弾(拳が地面、つぶれ)
+                  dict(t=_r(t_land + 0.35), dx=_r(a_dx_m), hz=0.52, lean=0.45, fa=-1.2, fe=0.3, ra=-1.0, re=0.4),
+                  dict(t=_r(t_land + 0.9), dx=_r(a_dx_m), hz=0.88, lean=0.1, fa=0.9, fe=1.4, ra=0.7, re=1.5, ht=0.0, face="fight")]
+        glide_ranges.append([_r(t_top + 0.1), _r(t_land - 0.02), "A"])                                   # 落下中は手足の光の尾
+        hits += [dict(tau=_r(hl + 0.5), hold=0.0, kind="pose"),
+                 dict(tau=_r(t_jump), hold=0.0, kind="launch", by="A", pos=[_r(a_dx_m - 2.0 - 0.5), 0.0]),
+                 dict(tau=_r(t_top), hold=0.08, kind="pose"),
+                 dict(tau=_r(t_land), hold=0.1, kind="slam", by="A", pos=[_r(a_dx_m - 2.0 + 0.6), 0.05]),
+                 dict(tau=_r(t_land + 0.34), hold=0.06, kind="wall", pos=[b_wall, 1.6])]
+        flashes.append(_r(t_land))
+        slow += [dict(start=_r(t_top - 0.03), end=_r(t_top + 0.12), rate=0.45), dict(start=_r(t_land - 0.06), end=_r(t_land + 0.05), rate=0.6)]
+        shots += [dict(t=_r(hl + 0.3), follow="A", scale=[[_r(hl + 0.3), 4.6], [_r(t_jump), 4.2]], yaw=[[_r(hl + 0.3), -26.0], [_r(t_jump), -12.0]], pitch=8.0, lens=34.0, target_z=1.1, lag=0.2),
+                  dict(t=_r(t_jump + 0.03), follow="A", scale=6.4, yaw=-6.0, pitch=-10.0, lens=36.0, target_z=2.6, lag=0.1),    # 跳びを下から見上げる(頂点まで入る)
+                  dict(t=_r(t_land - 0.12), follow="mid", scale=5.6, yaw=6.0, pitch=10.0, lens=40.0, target_z=0.9),
+                  dict(t=_r(t_land + 0.95), follow="A", scale=[[_r(t_land + 0.95), 4.6], [_r(t_land + 2.4), 5.6]], yaw=[[_r(t_land + 0.95), 30.0], [_r(t_land + 2.4), -15.0]], pitch=8.0, lens=40.0, target_z=0.9)]
+        puffs.append(dict(tau=_r(t_land + 1.08), kind="land2", pos=[_r(b_wall - 0.5), 0.0]))
+        t_end = t_land + 1.1
+        ko_t = t_land + 1.05
     elif blink:
         b_root = 2.4 - (dxB - 0.45)
         a0 = (b_root - 2.6) + 2.0                        # 構える位置(dx)。B の 2.6 手前
@@ -1004,7 +1045,7 @@ def build_fight(spec: dict) -> dict:
         puffs.append(dict(tau=_r(hl + 0.85), kind="land2", pos=[5.4, 0.0]))
         t_end = hl + 1.1
         ko_t = hl + 0.8
-    if beam or blast or wave or bclash or barrage or swave or iai or sthrow or blink:   # 技の位置は台本どおり: 位置合わせの平行移動(接触で決めた clip の終点と台本の差)を受けない(連打乱舞で A が 1.55・B が 1.05 ずれて重なり、飛ぶ斬撃では三日月が A の後ろから出た)
+    if beam or blast or wave or bclash or barrage or swave or iai or sthrow or blink or meteor:   # 技の位置は台本どおり: 位置合わせの平行移動(接触で決めた clip の終点と台本の差)を受けない(連打乱舞で A が 1.55・B が 1.05 ずれて重なり、飛ぶ斬撃では三日月が A の後ろから出た)
         for k in keysA + keysB:
             if k["t"] >= hl + 0.3 - 1e-6 and "dx" in k:   # 0.3 秒後から。それまでのキーは plan が平行移動を線形に 0 へ戻す
                 k["abs"] = True
@@ -1026,7 +1067,7 @@ def build_fight(spec: dict) -> dict:
     flurry.append(dict(start=_r(ko_t + 0.4), end=_r(ko_t + 0.8), every=5, angles=HERO))
     if fin:                                              # 打ち上げ〜空中斬りの間は、2 人の高さの中ほどを狙って少し引く(高く上げたので上に切れないように)
         shots.append(dict(t=_r(hl + 0.18), follow="mid", scale=5.2, yaw=[[_r(hl + 0.18), 40.0], [_r(hl + 0.9 + ex), 30.0]], pitch=6.0, lens=40.0, target_z=1.6))
-    if not beam and not blast and not wave and not bclash and not barrage and not swave and not iai and not sthrow and not blink:
+    if not beam and not blast and not wave and not bclash and not barrage and not swave and not iai and not sthrow and not blink and not meteor:
         shots.append(dict(t=_r(hl + 0.95 + ex if fin else hl), follow="mid", scale=[[_r(hl), 4.4], [_r(ko_t + 0.3), 5.6], [end, 7.5]], yaw=[[_r(hl), 52.0], [end, -15.0]], pitch=[[_r(hl), 10.0], [end, 22.0]], lens=40.0, target_z=0.9))   # 決め技の間は寄ったまま(5.0→9.0 だと叩きつけで 0.3 まで小さくなった)、倒してから引く
 
     impact_cuts = dict(kinds=["kick", "heel", "wall", "clash"], hold=0.2, angles=[dict(yaw=35, pitch=4, scale=3.0, lens=28, hue=0), dict(yaw=-40, pitch=-6, scale=2.6, lens=26, dutch=6.0, hue=1),

@@ -341,3 +341,11 @@ def test_taunt_adds_pose_before_run():
     run0 = next(c for c in sc0["clips"]["A"] if c.get("loop"))
     assert run["start"] > run0["start"]                                 # 走り出しが遅れる
     planmod.validate_scene(sc)
+
+
+def test_meteor_builds():
+    sc = fight.build_fight(dict(weapon="none", kick=False, hits=2, finisher="meteor"))
+    kinds = [h["kind"] for h in sc["hits"]]
+    assert "launch" in kinds and "slam" in kinds and "wall" in kinds
+    assert max(k.get("rz", 0.0) for k in sc["keys"]["A"]) >= 3.0           # 1.9 身長まで跳ぶ
+    planmod.validate_scene(sc)
