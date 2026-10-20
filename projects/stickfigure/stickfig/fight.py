@@ -25,9 +25,9 @@ DEFAULTS = dict(
     kick=True,               # 冒頭の蹴り → 壁
     hits=3,                  # 連打の回数(1〜4)
     counter=True,            # 1発目のあと、相手の反撃
-    finisher="launch_slash", # launch_slash(決めの斬りで打ち上げ→空中斬り→叩きつけ) / launch_kick(決めは高い蹴りで打ち上げ) / beam(気の光線: 溜め→発射→壁まで吹き飛ばす) / blast(気弾: 片手に玉を膨らませて投げる→着弾で爆発) / wave(衝撃波: 跳んで拳を地面に叩きつけ→地面を走る波で打ち上げる) / air_combo(空中コンボ: 打ち上げ→空中で 2 発追加→叩きつけ) / barrage(連打乱舞: 拳 8 発 0.1 秒間隔→大振りで壁へ) / slash_wave(飛ぶ斬撃: 振り抜くと三日月の光が飛ぶ。剣だけ) / iai(居合: 1 コマで相手の向こうへ抜け、間を置いて斬撃線が走り崩れ落ちる。剣だけ) / slam_throw(投げ: つかんで頭上を回し、背後の地面に叩きつける) / blink_combo(瞬間移動の連撃: 前に現れ拳→頭上に現れ踵落とし→離れて背を向ける) / meteor(流星落とし: 高く跳んで拳で急降下、着弾の衝撃で相手を壁へ) / beam_clash(光線の撃ち合い: 2 人が同時に撃ち、中央でぶつかり、A が押し勝つ。B の色は beam_color_b) / random(seed で選ぶ) / none(まっすぐ倒れる)
+    finisher="launch_slash", # launch_slash(決めの斬りで打ち上げ→空中斬り→叩きつけ) / launch_kick(決めは高い蹴りで打ち上げ) / beam(気の光線: 溜め→発射→壁まで吹き飛ばす) / blast(気弾: 片手に玉を膨らませて投げる→着弾で爆発) / wave(衝撃波: 跳んで拳を地面に叩きつけ→地面を走る波で打ち上げる) / air_combo(空中コンボ: 打ち上げ→空中で 2 発追加→叩きつけ) / barrage(連打乱舞: 拳 8 発 0.1 秒間隔→大振りで壁へ) / slash_wave(飛ぶ斬撃: 振り抜くと三日月の光が飛ぶ。剣だけ) / iai(居合: 1 コマで相手の向こうへ抜け、間を置いて斬撃線が走り崩れ落ちる。剣だけ) / slam_throw(投げ: つかんで頭上を回し、背後の地面に叩きつける) / blink_combo(瞬間移動の連撃: 前に現れ拳→頭上に現れ踵落とし→離れて背を向ける) / meteor(流星落とし: 高く跳んで拳で急降下、着弾の衝撃で相手を壁へ) / beam_clash(光線の撃ち合い: 2 人が同時に撃ち、中央でぶつかり、A が押し勝つ。B の色は beam_color_b) / random(全部の技から武器に合うものを seed で選ぶ。FINISHER_POOL) / none(まっすぐ倒れる)
     taunt=False,             # 名乗り: 走り出す前に決めポーズで止まる(突きつけ→掲げて 0.25 秒止め、寄りと流線)。opening とは併用しない
-    opening=None,            # 出だしの技: blast(走り出す前に気弾を投げ、B がかわし、壁で爆発) / teleport(走らず一瞬で相手の目の前に現れる) / fly(跳び上がって水平に飛び、急降下して着地) / counter_blast(相手が気弾を投げ、A が弾いて空中で爆発させる) / air_clash(2 人が跳び上がって空中でぶつかり、弾かれて着地) / dodge_beam(相手が光線を撃ち、A が高く跳んでかわす)。kick: true とは併用しない
+    opening=None,            # 出だしの技: blast(走り出す前に気弾を投げ、B がかわし、壁で爆発) / teleport(走らず一瞬で相手の目の前に現れる) / fly(跳び上がって水平に飛び、急降下して着地) / counter_blast(相手が気弾を投げ、A が弾いて空中で爆発させる) / air_clash(2 人が跳び上がって空中でぶつかり、弾かれて着地) / dodge_beam(相手が光線を撃ち、A が高く跳んでかわす) / random(OPENING_POOL から seed で選ぶ。名乗りも入る)。kick: true とは併用しない
     beam_color=None,         # beam の色 [r,g,b](0〜255)。既定は水色
     beam_color_b=None,       # beam_clash の B の光線の色。既定は赤
     palette="warm",          # warm / cool
@@ -95,6 +95,16 @@ LONG_POOL = ["76_01_s1", "90_05_s2"]                                  # 棍・�
 RUN_LOOK = dict(amp=dict(fa=1.35, ra=1.35, fl=1.2, rl=1.2), add=dict(lean=0.2, hz=-0.03))   # 走りの誇張(アニメの走り: 前傾・腕を大きく振る。mocap は直立で腕が低い)
 
 
+FINISHER_POOL = {                                      # finisher: random が選ぶ技(武器ごと)。launch_kick は kick の clip が要るので素手だけ
+    "sword": ["launch_slash", "air_combo", "slash_wave", "iai", "beam", "wave", "meteor", "beam_clash"],
+    "dagger": ["launch_slash", "air_combo", "slash_wave", "iai", "beam", "blast", "meteor"],
+    "staff": ["launch_slash", "beam", "wave", "meteor"],
+    "spear": ["launch_slash", "beam", "wave", "meteor"],
+    "none": ["launch_kick", "barrage", "blast", "beam", "wave", "slam_throw", "blink_combo", "meteor", "beam_clash"],
+}
+OPENING_POOL = [None, None, "blast", "teleport", "fly", "counter_blast", "air_clash", "dodge_beam", "taunt"]   # opening: random が選ぶ(None 2 つ=走りが多め。taunt は名乗り)
+
+
 def _pt(clip_name: str, eff: str) -> str:
     key = {"tip": "tip", "hand": "hand"}.get(eff, "hand")
     return STRIKES.get(clip_name, {}).get(key, "chest")
@@ -150,8 +160,14 @@ def build_fight(spec: dict) -> dict:
     long_w = s["weapon"] in ("staff", "spear")                        # 長い武器: 途中の打ち・受け止めは手の位置で合わせる(先端は大きく振れて解けない)
     n = max(1, min(4, int(s["hits"])))
     kick = bool(s["kick"])
-    if s["finisher"] == "random":
-        s["finisher"] = (rng.choice(["launch_slash", "launch_kick"]) if rng is not None else "launch_slash")
+    if s["finisher"] == "random":                        # 全部の技から、武器に合うものを seed で選ぶ(物語・量産で技がばらける)
+        pool = FINISHER_POOL.get(s["weapon"], FINISHER_POOL["none"])
+        s["finisher"] = (rng.choice(pool) if rng is not None else pool[0])
+    if s["opening"] == "random":
+        pool = OPENING_POOL
+        s["opening"] = (rng.choice(pool) if rng is not None else None)
+        if s["opening"] == "taunt":
+            s["opening"], s["taunt"] = None, True
     beam = s["finisher"] == "beam"                       # 必殺技: 気の光線(溜め → 発射 → 壁まで吹き飛ばす)
     blast = s["finisher"] == "blast"                     # 必殺技: 気弾(片手に玉を膨らませて投げる → 着弾で爆発 → 壁まで吹き飛ばす)
     wave = s["finisher"] == "wave"                       # 必殺技: 衝撃波(跳んで拳を地面に叩きつけ → 地面を走る波 → 相手を打ち上げる)

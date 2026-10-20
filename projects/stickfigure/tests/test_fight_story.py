@@ -349,3 +349,14 @@ def test_meteor_builds():
     assert "launch" in kinds and "slam" in kinds and "wall" in kinds
     assert max(k.get("rz", 0.0) for k in sc["keys"]["A"]) >= 3.0           # 1.9 身長まで跳ぶ
     planmod.validate_scene(sc)
+
+
+def test_random_picks_from_pools():
+    seen_f, seen_o = set(), set()
+    for seed in range(1, 25):
+        sc = fight.build_fight(dict(weapon="none", kick=False, opening="random", finisher="random", hits=2, seed=seed))
+        kinds = {h["kind"] for h in sc["hits"]}
+        seen_f.add(frozenset(k for k in kinds if k in ("beam", "blast", "rapid", "slam", "grab", "heel", "wave")))
+        seen_o.add(frozenset(k for k in kinds if k in ("throw", "vanish", "launch", "clash", "beam")))
+        planmod.validate_scene(sc)
+    assert len(seen_f) >= 4 and len(seen_o) >= 3                        # 技がばらける
