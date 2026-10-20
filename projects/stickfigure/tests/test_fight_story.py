@@ -408,3 +408,12 @@ def test_opening_dodge_slash_builds():
     low = min(k.get("hz", 1.0) for k in sc["keys"]["A"] if 1.3 <= k["t"] <= 1.6)
     assert low <= 0.45                                                   # 低く滑る
     planmod.validate_scene(sc)
+
+
+def test_b_weapon_for_sword_openings():
+    sc = fight.build_fight(dict(weapon="sword", kick=False, opening="dodge_slash", hits=2, finisher="none"))
+    assert sc["actors"]["B"].get("weapon") == "sword"
+    sc2 = fight.build_fight(dict(weapon="sword", kick=False, hits=2, finisher="none"))
+    assert "weapon" not in sc2["actors"]["B"]
+    sc3 = fight.build_fight(dict(weapon="none", kick=False, hits=2, finisher="none", b_weapon="staff"))
+    assert sc3["actors"]["B"]["weapon"] == "staff"

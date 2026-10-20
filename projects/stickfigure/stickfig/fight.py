@@ -28,6 +28,7 @@ DEFAULTS = dict(
     finisher="launch_slash", # launch_slash(決めの斬りで打ち上げ→空中斬り→叩きつけ) / launch_kick(決めは高い蹴りで打ち上げ) / beam(気の光線: 溜め→発射→壁まで吹き飛ばす) / blast(気弾: 片手に玉を膨らませて投げる→着弾で爆発) / wave(衝撃波: 跳んで拳を地面に叩きつけ→地面を走る波で打ち上げる) / air_combo(空中コンボ: 打ち上げ→空中で 2 発追加→叩きつけ) / barrage(連打乱舞: 拳 8 発 0.1 秒間隔→大振りで壁へ) / slash_wave(飛ぶ斬撃: 振り抜くと三日月の光が飛ぶ。剣だけ) / iai(居合: 1 コマで相手の向こうへ抜け、間を置いて斬撃線が走り崩れ落ちる。剣だけ) / slam_throw(投げ: つかんで頭上を回し、背後の地面に叩きつける) / blink_combo(瞬間移動の連撃: 前に現れ拳→頭上に現れ踵落とし→離れて背を向ける) / meteor(流星落とし: 高く跳んで拳で急降下、着弾の衝撃で相手を壁へ) / air_beam(空中光線: 跳び上がって空中で溜め、斜め下へ光線) / beam_clash(光線の撃ち合い: 2 人が同時に撃ち、中央でぶつかり、A が押し勝つ。B の色は beam_color_b) / random(全部の技から武器に合うものを seed で選ぶ。FINISHER_POOL) / none(まっすぐ倒れる)
     taunt=False,             # 名乗り: 走り出す前に決めポーズで止まる(突きつけ→掲げて 0.25 秒止め、寄りと流線)。opening とは併用しない
     opening=None,            # 出だしの技: blast(走り出す前に気弾を投げ、B がかわし、壁で爆発) / teleport(走らず一瞬で相手の目の前に現れる) / fly(跳び上がって水平に飛び、急降下して着地) / counter_blast(相手が気弾を投げ、A が弾いて空中で爆発させる) / air_clash(2 人が跳び上がって空中でぶつかり、弾かれて着地) / dodge_beam(相手が光線を撃ち、A が高く跳んでかわす) / lock(鍔迫り合い: 走り込んで剣を合わせ、押し合い、押し勝つ。武器あり) / return_blast(相手の気弾を回し蹴りで蹴り返し、相手に当ててよろけさせる) / dodge_slash(相手の飛ぶ斬撃を低く滑ってくぐる。剣どうし) / random(OPENING_POOL から seed で選ぶ。名乗りも入る)。kick: true とは併用しない
+    b_weapon=None,           # 相手の武器(sword/dagger/staff/spear)。既定は無し。鍔迫り合い・飛ぶ斬撃くぐりでは A と同じ武器
     beam_color=None,         # beam の色 [r,g,b](0〜255)。既定は水色
     beam_color_b=None,       # beam_clash の B の光線の色。既定は赤
     palette="warm",          # warm / cool
@@ -1253,7 +1254,10 @@ def build_fight(spec: dict) -> dict:
     light = 0.55 if s["stage"] in ("dojo", "field") else 1.0     # 明るい舞台は、色味を弱める(白飛びする)
     color_script = [[_r(t), [c[0], c[1], c[2]], round(c[3] * light, 3)] for t, c in zip(marks, pal)]
     stepping = dict(hold=2, ones_around_hits=3, hold_camera=True)        # 2コマ撮りを全体に(命中の前後 3 コマは 1 コマごと)。参考の同じ絵の割合 17〜33% に寄せる
-    actors = dict(A=dict(color=s["colors"]["A"], scale=float(s["a_scale"]), base_x=-2.0, facing=1), B=dict(color=s["colors"]["B"], scale=float(s["b_scale"]), base_x=2.4, facing=-1))
+    b_weapon = s["b_weapon"]
+    if b_weapon is None and (open_lock or open_ds):     # 鍔迫り合い・飛ぶ斬撃くぐりでは相手も同じ武器を持つ(持たないと素手で斬撃を飛ばして見えた)
+        b_weapon = s["weapon"]
+    actors = dict(A=dict(color=s["colors"]["A"], scale=float(s["a_scale"]), base_x=-2.0, facing=1), B=dict(color=s["colors"]["B"], scale=float(s["b_scale"]), base_x=2.4, facing=-1, **({"weapon": b_weapon} if b_weapon else {})))
     b_far = max(2.4 - float(k["dx"]) for k in keysB if "dx" in k)              # B が最も下がる根元の位置(B は base 2.4 で左向き)
     wall_x = wall_lock if wall_lock else (6.0 if kick else round(max(6.0, b_far + 1.3), 2))
     for pj in fx_proj:                                   # 壁へ向かう玉は壁の位置で止める
