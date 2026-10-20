@@ -1,0 +1,3 @@
+# 決め技の見本: 瞬間移動の連撃。消えて前に現れ拳、消えて頭上に現れ踵落とし、消えて離れた所に現れる
+name: fight_blink
+fight: {weapon: none, kick: false, hits: 2, counter: true, finisher: blink_combo, palette: cool, stage: cave, mood: battle, seed: 7}

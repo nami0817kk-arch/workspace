@@ -294,3 +294,11 @@ def test_slam_throw_builds():
     kb = [k for k in sc["keys"]["B"] if k.get("roll") is not None]
     assert min(k["roll"] for k in kb) <= -1.8                           # 頭上を回る(頂点で頭が下)
     planmod.validate_scene(sc)
+
+
+def test_blink_combo_builds():
+    sc = fight.build_fight(dict(weapon="none", kick=False, hits=2, finisher="blink_combo"))
+    kinds = [h["kind"] for h in sc["hits"]]
+    assert kinds.count("vanish") == 3 and kinds.count("appear") == 3
+    assert "heel" in kinds and len(sc["snaps"]) >= 6
+    planmod.validate_scene(sc)
