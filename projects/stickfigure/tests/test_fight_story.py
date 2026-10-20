@@ -390,3 +390,12 @@ def test_air_beam_builds():
     assert bm.get("z_end", 9) < 0.5                                      # 斜め下へ(地面近くで終わる)
     assert max(k.get("rz", 0.0) for k in sc["keys"]["A"]) >= 2.5           # 空中から
     planmod.validate_scene(sc)
+
+
+def test_opening_return_blast_builds():
+    sc = fight.build_fight(dict(weapon="none", kick=False, opening="return_blast", hits=2, finisher="none"))
+    pj = sc["fx"]["projectiles"]
+    assert len(pj) >= 2 and pj[0]["x1"] < pj[0]["x0"] and pj[1]["x1"] > pj[1]["x0"]   # 来て、戻る
+    early = [h["kind"] for h in sc["hits"] if h["tau"] < 2.0]
+    assert "kick" in early and "blast" in early
+    planmod.validate_scene(sc)
