@@ -399,3 +399,12 @@ def test_opening_return_blast_builds():
     early = [h["kind"] for h in sc["hits"] if h["tau"] < 2.0]
     assert "kick" in early and "blast" in early
     planmod.validate_scene(sc)
+
+
+def test_opening_dodge_slash_builds():
+    sc = fight.build_fight(dict(weapon="sword", kick=False, opening="dodge_slash", hits=2, finisher="none"))
+    pj = sc["fx"]["projectiles"][0]
+    assert pj["shape"] == "crescent" and pj["x1"] < pj["x0"]
+    low = min(k.get("hz", 1.0) for k in sc["keys"]["A"] if 1.3 <= k["t"] <= 1.6)
+    assert low <= 0.45                                                   # 低く滑る
+    planmod.validate_scene(sc)
