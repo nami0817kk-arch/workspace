@@ -517,7 +517,7 @@ def build_fight(spec: dict) -> dict:
             x_hit = _r(a_root0 + 0.25 + 0.95)            # 盾の面(突き出した手の 0.3 先)
             fx_orbs.append(dict(start=0.62, end=1.1, who="B", r0=0.14, r1=0.36, color=col))
             fx_proj.append(dict(start=1.1, end=1.42, x0=_r(b_root0 - 0.9), z0=1.5, x1=x_hit, z1=1.3, r=0.36, color=col))
-            fx_shields.append(dict(start=1.2, end=1.6, who="A", r=0.95, ahead=0.3, z=1.25, color=col_s, hit_at=1.42))
+            fx_shields.append(dict(start=1.2, end=1.6, who="A", r=0.7, ahead=0.3, z=1.2, color=col_s, hit_at=1.42))   # 半径 0.7(0.95 だと人物より大きく見えた)
             hits += [dict(tau=1.1, hold=0.0, kind="throw", by="B", pos=[_r(b_root0 - 0.9), 1.5]),
                      dict(tau=1.42, hold=0.06, kind="blast", pos=[x_hit, 1.3])]
             flashes.append(1.42)
