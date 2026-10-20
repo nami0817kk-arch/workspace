@@ -31,7 +31,8 @@ Map<Ability, int> rollGifts(Random rng) {
 }
 
 /// 経験点にかける倍率(得意ほど小さい)。
-double giftCostMultiplier(int g) => 1 - giftCostStep * g.clamp(giftMin, giftMax);
+double giftCostMultiplier(int g) =>
+    1 - giftCostStep * g.clamp(giftMin, giftMax);
 
 String giftLabel(int g) => switch (g) {
       >= 2 => '天賦',
@@ -48,9 +49,11 @@ String giftHint(int g) {
   return g > 0 ? '才能がある。上げるのに要る経験点が$pct%少ない。' : '苦手。上げるのに要る経験点が$pct%多い。';
 }
 
-/// 役割で使う能力のうち、天賦が+2のものの数(「才能の塊」の判定など)。
-int topGifts(Role r, Map<Ability, int> gifts) =>
-    abilitiesOf(r).where((a) => (gifts[a] ?? 0) >= giftMax).length;
+/// 役割で使う能力の、天賦の平均(「才能の塊」の判定など。打者は5能力・投手は3能力で数が違うので平均で見る)。
+double giftAverage(Role r, Map<Ability, int> gifts) {
+  final abs = abilitiesOf(r);
+  return abs.fold<int>(0, (a, x) => a + (gifts[x] ?? 0)) / abs.length;
+}
 
 /// 二世: 親のいちばん得意な能力(使う能力のうち天賦が+1以上)を、子が受け継ぐ。
 /// 受け継ぐとその能力の天賦が+1(上限+2)になる。無ければ null。

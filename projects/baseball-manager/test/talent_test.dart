@@ -91,8 +91,8 @@ void main() {
       expect(back.gift(Ability.speed), 0);
       final old = p.toJson()..remove('gifts');
       expect(Player.fromJson(old).gifts, isEmpty);
-      expect(giftsFromJson({'power': 9, 'xx': 1, 'eye': 'a'}),
-          {Ability.power: 2});
+      expect(
+          giftsFromJson({'power': 9, 'xx': 1, 'eye': 'a'}), {Ability.power: 2});
     });
 
     test('新しい選手は天賦を持ち、二世は親の得意を受け継ぐことがある', () {
@@ -278,8 +278,8 @@ void main() {
 
   group('生まれ持った才能の知らせ', () {
     test('レア特性・天賦+2・不得手(-2)があるときだけ出る', () {
-      final plain = Player(
-          name: 't', role: Role.batter, age: 6, potential: 50, gifts: {
+      final plain =
+          Player(name: 't', role: Role.batter, age: 6, potential: 50, gifts: {
         Ability.contact: 1,
         Ability.power: -1,
       });
@@ -303,19 +303,23 @@ void main() {
   group('実績・スナップショット', () {
     test('レア特性・覚醒・才能の塊', () {
       expect(earnedBy(_snapshot()), isNot(contains('rare-trait')));
-      expect(earnedBy(_snapshot(traits: {Trait.monster})),
-          contains('rare-trait'));
+      expect(
+          earnedBy(_snapshot(traits: {Trait.monster})), contains('rare-trait'));
       expect(earnedBy(_snapshot(awakened: true)), contains('awakening'));
+      // 打者(5能力): 合計+4で平均+0.8、合計+3では届かない
       expect(
           earnedBy(_snapshot(gifts: {
             Ability.contact: 2,
-            Ability.power: 2,
-            Ability.eye: 2,
+            Ability.power: 1,
+            Ability.eye: 1,
           })),
           contains('gifted'));
-      expect(
-          earnedBy(_snapshot(gifts: {Ability.contact: 2, Ability.power: 2})),
+      expect(earnedBy(_snapshot(gifts: {Ability.contact: 2, Ability.power: 1})),
           isNot(contains('gifted')));
+      expect(giftAverage(Role.pitcher, {Ability.stuff: 2, Ability.control: 1}),
+          closeTo(1.0, 1e-9));
+      // 使わない能力(投手の打撃など)の天賦は数えない
+      expect(giftAverage(Role.pitcher, {Ability.contact: 2}), 0);
     });
 
     test('保存で天賦・覚醒が残る。古い記録は空', () {

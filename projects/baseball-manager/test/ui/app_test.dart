@@ -1008,7 +1008,11 @@ void _rankTests() {
     expect(t.takeException(), isNull, reason: 'ホーム(殿堂つき)');
     // 継承ポイントがあるときの新規開始画面も、狭い画面・大きい文字で溢れない
     c.legacyPoints = 12;
-    c.seenTraits = {Trait.genius.name, Trait.hardWorker.name, Trait.leader.name};
+    c.seenTraits = {
+      Trait.genius.name,
+      Trait.hardWorker.name,
+      Trait.leader.name
+    };
     c.notifyListeners();
     await t.pumpAndSettle();
     await t.scrollUntilVisible(find.byKey(const Key('carry-genius')), 200,
@@ -2125,6 +2129,37 @@ void _rankTests() {
     await _dismissMilestones(t);
     expect(find.byKey(const Key('retire-image')), findsOneWidget);
     expect(t.takeException(), isNull, reason: 'エンディング');
+  });
+
+  test('結果のコピーに、特性(レアは★・覚醒の印)が入る', () {
+    final g = _until((g) => false, seed: 3, potential: 95)
+      ..adminSetTraits({Trait.hardWorker, Trait.monster})
+      ..adminSetAwakened(true);
+    final text = endingShareText(g);
+    expect(text, contains('特性: '));
+    expect(text, contains('★怪物'));
+    expect(text, contains('努力家'));
+    expect(text, contains('(覚醒)'));
+    g.adminSetTraits({});
+    expect(endingShareText(g), isNot(contains('特性: ')));
+  });
+
+  testWidgets('殿堂の一覧に、レア特性を持っていた選手の★が出る', (t) async {
+    SharedPreferences.setMockInitialValues({});
+    _tall(t);
+    final rare = _until((g) => false, seed: 3, potential: 95)
+      ..adminSetTraits({Trait.monster});
+    final plain = _until((g) => false, seed: 4, potential: 95)
+      ..adminSetTraits({Trait.hardWorker});
+    await SaveStore()
+        .saveHistory([HistoryEntry.of(rare), HistoryEntry.of(plain)]);
+    final c = GameController(rng: Random(1));
+    await t.pumpWidget(BaseballManagerApp(controller: c));
+    await t.pumpAndSettle();
+    await t.scrollUntilVisible(find.textContaining('★怪物'), 200,
+        scrollable: find.byType(Scrollable).first);
+    expect(find.textContaining('★怪物'), findsOneWidget);
+    expect(find.textContaining('★努力家'), findsNothing);
   });
 
   testWidgets('継承ポイント: 引退で貯まり、図鑑にある特性を次の選手に持たせられる', (t) async {

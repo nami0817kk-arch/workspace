@@ -136,7 +136,14 @@ class Line {
     return '${outs ~/ 3}${r == 0 ? '' : ' $r/3'}';
   }
 
-  double? get era => outs == 0 ? null : runsAllowed * 27 / outs;
+  /// 防御率。**30回以上投げた(90アウト〜)ときは、下限 `minSeasonEra`**(現実の記録でも1点を切る年はほぼ無い。
+  /// 失点の推定が0になるほど抑えた選手が「防御率0.00」で1シーズン投げ切るのを防ぐ)。
+  /// 1試合や1か月の防御率は、0.00になりうる。勝敗(`decidedStart`)は下限を使わない失点で決める。
+  double? get era {
+    if (outs == 0) return null;
+    final e = runsAllowed * 27 / outs;
+    return outs >= 90 ? max(e, minSeasonEra) : e;
+  }
 
   /// WHIP(1回あたりに出した走者の数)。
   double? get whip =>
@@ -245,6 +252,9 @@ const leagueEra = 3.90;
 
 /// 1打席あたりに足す、失点推定の基準値(平均的な環境で防御率が4点前後になる値)。
 const runBaseline = 0.10;
+
+/// シーズン(30回以上)の防御率の下限。
+const minSeasonEra = 0.90;
 
 /// その打席の打点(走者の動きは再現しないので、結果ごとの確率で決める)。
 int _rbiOf(AtBatResult r, Random rng) {

@@ -256,8 +256,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           selected: carry == null,
                           onSelected: (_) => setState(() => carry = null),
                         ),
-                        for (final t
-                            in widget.controller.carryCandidates(role))
+                        for (final t in widget.controller.carryCandidates(role))
                           Tooltip(
                             message: t.description,
                             child: ChoiceChip(
@@ -271,7 +270,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ] else if (widget.controller.legacyPoints > 0) ...[
                     const SizedBox(height: 16),
-                    Text('継承ポイント ${widget.controller.legacyPoints}pt'
+                    Text(
+                        '継承ポイント ${widget.controller.legacyPoints}pt'
                         '(図鑑にある特性を持たせるには、あと少し貯める)',
                         style: Theme.of(context).textTheme.bodySmall),
                   ],
@@ -463,6 +463,12 @@ class _HistoryTile extends StatelessWidget {
       if (e.snapshot != null && e.snapshot!.difficulty != Difficulty.normal)
         e.snapshot!.difficulty.label,
       if (e.married) '結婚',
+      // レア特性(生まれつき・覚醒)を持っていた選手
+      if (e.snapshot != null && e.snapshot!.traits.any((t) => t.rare))
+        '★${[
+          for (final t in e.snapshot!.traits)
+            if (t.rare) t.label
+        ].join('・')}',
     ];
     return Card(
       child: ListTile(

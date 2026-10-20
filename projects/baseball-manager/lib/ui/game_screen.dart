@@ -2349,6 +2349,10 @@ String endingShareText(Game game) {
         : 'プロの舞台には立てなかった',
     '最高の総合評価 ${e.peakOverall}・優勝${e.championships}回・タイトル${e.titles.length}個',
     if (pro.isNotEmpty) careerSummary(game.records),
+    if (p.traits.isNotEmpty)
+      '特性: ${[
+        for (final t in p.traits) t.rare ? '★${t.label}' : t.label
+      ].join('・')}${game.awakened ? '(覚醒)' : ''}',
     if (pro.isNotEmpty)
       'プロ通算収入 ${fmtSalary(careerEarnings(pro))}(最終資産 ${fmtMoney(game.money)})',
     if (game.worldRecords.isNotEmpty)
