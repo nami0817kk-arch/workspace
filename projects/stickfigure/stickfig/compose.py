@@ -400,14 +400,15 @@ def compose_frame(plan: dict, f: int, figs: Dict[int, Image.Image], stages: Opti
             u = camera.px_per_unit(cam)
             q = (tau - ct["start"]) / max(1e-6, ct["end"] - ct["start"])
             n_ = int(ct.get("n", 3))
+            hw = float(ct.get("w", 0.7))               # 線の半幅(2 対 1 の一太刀は A が 0.9 しか離れていないので 0.45: 0.7 だと A の体まで線が届いた)
             d_ = ImageDraw.Draw(base)
             col_c = tuple(ct.get("color", (235, 245, 255)))
             for i in range(n_):
                 if tau < ct["start"] + 0.05 * i:
                     continue
                 zc = hz + 0.9 - 0.35 * i
-                cx0, cy0 = to_px(hx - 0.7, zc - 0.12, cam)
-                cx1, cy1 = to_px(hx + 0.7, zc + 0.12, cam)
+                cx0, cy0 = to_px(hx - hw, zc - 0.12 * hw / 0.7, cam)
+                cx1, cy1 = to_px(hx + hw, zc + 0.12 * hw / 0.7, cam)
                 al = int(255 * max(0.0, 1.0 - max(0.0, q - 0.5) * 2))
                 d_.line([cx0, cy0, cx1, cy1], fill=col_c[:3] + (al,), width=max(2, int(0.035 * u)))
                 d_.line([cx0 + 2, cy0 + 2, cx1 + 2, cy1 + 2], fill=(20, 20, 30, al // 2), width=max(1, int(0.012 * u)))

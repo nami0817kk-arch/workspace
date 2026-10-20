@@ -1350,7 +1350,7 @@ def build_fight(spec: dict) -> dict:
                       dict(t=_r(t_cut - 0.07), dx=a_last0, abs=True, hz=0.76, lean=-0.25, fa=-0.7, fe=1.0, ra=0.6, re=1.5, ht=-0.15, face="fight"),               # さらに引く(予備動作)
                       dict(t=t_cut, dx=_r(a_last0 + 0.35), abs=True, hz=0.8, lean=0.45, fa=1.7, fe=0.0, ra=-0.2, re=1.2, ht=0.05, fl=1.0, fk=0.45, rl=-0.65, rk=0.2, face="fight"),   # 2 コマで振り抜く(踏み込み 0.35)
                       dict(t=_r(t_cut + 0.4), dx=_r(a_last0 + 0.35), abs=True, hz=0.82, lean=0.35, fa=1.6, fe=0.05, ra=-0.1, re=1.2, ht=0.0, face="fight")]      # 振り抜いたまま止める(余韻)
-            fx_cuts.append(dict(start=t_cut, end=_r(t_cut + 0.45), x=_r(x_stop), z=1.3, n=2, color=[235, 245, 255]))
+            fx_cuts.append(dict(start=t_cut, end=_r(t_cut + 0.45), x=_r(x_stop), z=1.3, n=2, w=0.45, color=[235, 245, 255]))   # 半幅 0.45(0.7 だと 0.9 先の A まで線が届いた)
             hits += [dict(tau=t_cut, hold=0.1, kind="slash", pos=[_r(x_stop), 1.3]),                 # by は付けない(押されは B 基準。反応は D のキーで書いてある)
                      dict(tau=_r(t_cut + 0.55), hold=0.04, kind="land2", pos=[_r(x_stop - 0.25), 0.0])]
             flashes.append(t_cut)
