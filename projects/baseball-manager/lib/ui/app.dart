@@ -107,7 +107,6 @@ class _MilestoneHostState extends State<_MilestoneHost> {
         final m = ScaffoldMessenger.maybeOf(context);
         m?.hideCurrentSnackBar();
         final tone = widget.controller.toastTone;
-        final c = widget.controller;
         m?.showSnackBar(SnackBar(
           key: const Key('result-toast'),
           content: Row(children: [
@@ -122,10 +121,6 @@ class _MilestoneHostState extends State<_MilestoneHost> {
             const SizedBox(width: 8),
             Expanded(child: Text(t)),
           ]),
-          action: c.canUndo
-              ? SnackBarAction(
-                  key: const Key('toast-undo'), label: '戻す', onPressed: c.undo)
-              : null,
           duration: const Duration(seconds: 3),
           behavior: SnackBarBehavior.floating,
           // 広い画面では、操作バーと同じ幅に収める。

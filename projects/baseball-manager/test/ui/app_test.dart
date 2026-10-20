@@ -1419,24 +1419,15 @@ void _rankTests() {
   });
 
   group('操作性', () {
-    testWidgets('「ひとつ前に戻す」で、直前の行動を取り消せる', (t) async {
+    testWidgets('「ひとつ前に戻す」ボタンは無い(行動は取り消せない)', (t) async {
       final c = await _start(t);
       c.newGame('テスト', Role.batter);
       await t.pumpAndSettle();
-      expect(find.byKey(const Key('undo')), findsNothing);
-      final fatigue = c.game!.condition.fatigue;
       await t.tap(find.byKey(const Key('act-special')));
       await t.pumpAndSettle();
       await _dismissMilestones(t);
-      if (c.game!.phase == Phase.event) c.game!.resolveEvent(0);
-      c.notifyListeners();
-      await t.pumpAndSettle();
-      expect(find.byKey(const Key('undo')), findsOneWidget);
-      await t.tap(find.byKey(const Key('undo')));
-      await t.pumpAndSettle();
-      expect(c.game!.condition.fatigue, fatigue);
-      expect(c.game!.exp.total, 0);
       expect(find.byKey(const Key('undo')), findsNothing);
+      expect(find.byTooltip('ひとつ前に戻す'), findsNothing);
     });
 
     testWidgets('キーボード: Enterでおすすめ、Rで休養', (t) async {
@@ -1527,20 +1518,15 @@ void _rankTests() {
   });
 
   group('操作の手ごたえ(第3弾)', () {
-    testWidgets('結果のトーストから「戻す」で取り消せる', (t) async {
+    testWidgets('結果のトーストに「戻す」は付かない', (t) async {
       final c = await _start(t);
       c.newGame('テスト', Role.batter);
       await t.pumpAndSettle();
       await t.tap(find.byKey(const Key('act-special')));
       await t.pump();
       await t.pump(const Duration(milliseconds: 1000));
-      expect(find.byKey(const Key('toast-undo')), findsOneWidget);
-      expect(c.canUndo, isTrue);
-      // (テストの大きな画面では押下位置がずれるので、ボタンの処理を直接呼ぶ)
-      t.widget<SnackBarAction>(find.byKey(const Key('toast-undo'))).onPressed();
-      await t.pumpAndSettle();
-      expect(c.canUndo, isFalse);
-      expect(c.game!.exp.total, 0);
+      expect(find.byKey(const Key('toast-undo')), findsNothing);
+      expect(find.text('戻す'), findsNothing);
     });
 
     testWidgets('経験点のチップをタップすると能力タブへ。最も低い能力に「伸ばしどころ」', (t) async {

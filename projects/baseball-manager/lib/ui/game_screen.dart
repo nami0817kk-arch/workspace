@@ -117,8 +117,6 @@ class _GameScreenState extends State<GameScreen> {
             SingleActivator(_digitKeys[i]): () =>
                 controller.act(Plan.values[i]),
         },
-        if (controller.canUndo)
-          const SingleActivator(LogicalKeyboardKey.keyZ): controller.undo,
       },
       child: Focus(autofocus: true, child: _scaffold(context, p)),
     );
@@ -1197,17 +1195,6 @@ class _ActionCard extends StatelessWidget {
                     key: const Key('recommend-reason'),
                     style: Theme.of(context).textTheme.bodySmall),
               ),
-              if (controller.canUndo)
-                IconButton(
-                  key: const Key('undo'),
-                  tooltip: 'ひとつ前に戻す',
-                  visualDensity: VisualDensity.compact,
-                  constraints:
-                      const BoxConstraints.tightFor(width: 36, height: 32),
-                  padding: EdgeInsets.zero,
-                  icon: const Icon(Icons.undo, size: 20),
-                  onPressed: controller.undo,
-                ),
               IconButton(
                 key: const Key('year-plan'),
                 tooltip: '今年の予定',

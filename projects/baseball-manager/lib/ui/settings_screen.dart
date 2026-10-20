@@ -132,7 +132,6 @@ class SettingsScreen extends StatelessWidget {
                     key: const Key('toasts-switch'),
                     secondary: const Icon(Icons.notifications_none),
                     title: const Text('行動の結果を画面の下に出す'),
-                    subtitle: const Text('「戻す」ボタンもここに出ます。'),
                     value: controller.toasts,
                     onChanged: (v) => controller.setFlags(toasts: v),
                   ),
@@ -147,7 +146,6 @@ class SettingsScreen extends StatelessWidget {
                         content: const Text('Enter: おすすめの行動\n'
                             'R: 休養\n'
                             '1〜7: 練習・特訓・休養・研究・交流・練習試合・コーチ\n'
-                            'Z: ひとつ前に戻す\n'
                             '(パソコンのブラウザなどで使えます)'),
                         actions: [
                           TextButton(
