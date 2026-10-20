@@ -99,11 +99,13 @@ class _VersusScreenState extends State<VersusScreen> {
     Trait.contactHitter,
     Trait.patient,
     Trait.speedster,
+    Trait.prodigyBat,
   ];
   static const _pitTraitList = [
     Trait.fireballer,
     Trait.finesse,
     Trait.workhorse,
+    Trait.prodigyArm,
   ];
 
   static String _abilityName(Ability a) => switch (a) {

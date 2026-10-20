@@ -10,6 +10,7 @@ import 'package:baseball_manager/game/player.dart';
 import 'package:baseball_manager/game/snapshot.dart';
 import 'package:baseball_manager/game/talent.dart';
 import 'package:baseball_manager/game/traits.dart';
+import 'package:baseball_manager/ui/labels.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 PlayerSnapshot _snapshot({
@@ -145,6 +146,15 @@ void main() {
       }
     });
 
+    test('レア特性は通常の特性の枠とは別。通常が4つでも持てるが、レアは2つまで', () {
+      final full = {Trait.genius, Trait.sturdy, Trait.sunny, Trait.ironMan};
+      expect(canGain(full, Trait.clutch), isFalse);
+      expect(canGain(full, Trait.monster), isTrue);
+      final two = gain(gain(full, Trait.monster), Trait.fortune);
+      expect(two.length, 6);
+      expect(canGain(two, Trait.steelBody), isFalse);
+    });
+
     test('矛盾する組み合わせは持てない', () {
       expect(canGain({Trait.glassBody}, Trait.ironWill), isFalse);
       expect(canGain({Trait.nervy}, Trait.stagePresence), isFalse);
@@ -156,7 +166,7 @@ void main() {
       expect(growthMultiplier({Trait.monster}, 20),
           greaterThan(growthMultiplier(const {}, 20)));
       expect(declineMultiplier({Trait.monster}), lessThan(1));
-      expect(declineMultiplier({Trait.steelBody}), lessThan(0.5));
+      expect(declineMultiplier({Trait.steelBody}), lessThan(0.7));
       expect(fatigueMultiplier({Trait.steelBody}), lessThan(1));
       expect(injuryMultiplier({Trait.ironWill}), lessThan(0.5));
       expect(tournamentBonus({Trait.stagePresence}), 8);
@@ -227,9 +237,66 @@ void main() {
           awakenedCount++;
           expect(g.player.traits.any((t) => t.rare), isTrue);
         }
-        expect(g.player.traits.length, lessThanOrEqualTo(maxTraits));
+        expect(g.player.traits.where((t) => !t.rare).length,
+            lessThanOrEqualTo(maxTraits));
+        expect(g.player.traits.where((t) => t.rare).length,
+            lessThanOrEqualTo(maxRareTraits));
       }
       expect(awakenedCount, greaterThan(0));
+    });
+  });
+
+  group('継承(周回のやり込み)', () {
+    test('継承ポイントは称号が高いほど多い', () {
+      expect(legacyPointsOf(madePro: false, title: 'プロにはなれなかった'), 1);
+      expect(legacyPointsOf(madePro: true, title: 'レギュラー'), 3);
+      expect(legacyPointsOf(madePro: true, title: '一流選手'), 4);
+      expect(legacyPointsOf(madePro: true, title: 'レジェンド'), 6);
+    });
+
+    test('継承できるのは、役割に合う良い特性。レアは高い', () {
+      expect(canCarry(Trait.genius, Role.batter), isTrue);
+      expect(canCarry(Trait.glassBody, Role.batter), isFalse);
+      expect(canCarry(Trait.slugger, Role.pitcher), isFalse);
+      expect(legacyCost(Trait.genius), 3);
+      expect(legacyCost(Trait.monster), 8);
+    });
+
+    test('持たせた特性は生まれつき付く。乱数の並びは変わらない。合わないものは付かない', () {
+      final plain = Game.newGame(name: 'a', role: Role.batter, rng: Random(4));
+      final carried = Game.newGame(
+          name: 'a', role: Role.batter, rng: Random(4), carry: Trait.genius);
+      expect(carried.player.traits, contains(Trait.genius));
+      // 乱数を使わないので、そのほかの特性・天賦は同じ
+      expect(carried.player.gifts, plain.player.gifts);
+      expect(carried.player.potential, plain.player.potential);
+      final bad = Game.newGame(
+          name: 'a', role: Role.pitcher, rng: Random(4), carry: Trait.slugger);
+      expect(bad.player.traits, isNot(contains(Trait.slugger)));
+    });
+  });
+
+  group('生まれ持った才能の知らせ', () {
+    test('レア特性・天賦+2・不得手(-2)があるときだけ出る', () {
+      final plain = Player(
+          name: 't', role: Role.batter, age: 6, potential: 50, gifts: {
+        Ability.contact: 1,
+        Ability.power: -1,
+      });
+      expect(birthTalentNotes(plain), isEmpty);
+      final special = Player(
+          name: 't',
+          role: Role.batter,
+          age: 6,
+          potential: 50,
+          traits: {Trait.monster},
+          gifts: {Ability.contact: 2, Ability.power: -2, Ability.stuff: 2});
+      final n = birthTalentNotes(special);
+      expect(n.length, 3);
+      expect(n[0], contains('怪物'));
+      expect(n[1], contains('ミート'));
+      expect(n[1], isNot(contains('球威'))); // 打者に投手の能力は出ない
+      expect(n[2], contains('パワー'));
     });
   });
 

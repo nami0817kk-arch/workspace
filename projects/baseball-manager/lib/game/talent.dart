@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'player.dart';
+import 'traits.dart';
 
 /// 天賦(才能の偏り)。能力ごとに生まれつき -2〜+2 の偏りがあり、
 /// 得意な能力は経験点が少なくて済み、苦手な能力は多く要る。
@@ -62,3 +63,23 @@ Ability? inheritedGift(Random rng, Role childRole, Map<Ability, int> parent) {
   cands.sort((x, y) => (parent[y] ?? 0).compareTo(parent[x] ?? 0));
   return cands.first;
 }
+
+// ── 継承(周回のやり込み) ──
+
+/// 引退した一生から得る継承ポイント。プロ入り+1、称号が高いほど多い。
+/// ポイントは端末に貯まり、次の選手に特性を1つ持たせるのに使う。
+int legacyPointsOf({required bool madePro, required String title}) =>
+    1 +
+    (madePro ? 1 : 0) +
+    switch (title) {
+      'レジェンド' => 4,
+      '一流選手' => 2,
+      'レギュラー' => 1,
+      _ => 0,
+    };
+
+/// 特性を次の選手に持たせるのに要る継承ポイント(レアは高い)。
+int legacyCost(Trait t) => t.rare ? 8 : 3;
+
+/// 継承できる特性か: 良い特性で、その役割に合うもの(図鑑に載っているかは別に見る)。
+bool canCarry(Trait t, Role role) => t.positive && t.appliesTo(role);

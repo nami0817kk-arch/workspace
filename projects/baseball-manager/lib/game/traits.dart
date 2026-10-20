@@ -40,8 +40,8 @@ enum Trait {
   lonely('一匹狼', '友情タッグの経験点が減る(0.6倍)が、練習の伸びは1割増える。', false),
 
   // ── レア特性(生まれつき4%、または節目の「覚醒」でしか手に入らない) ──
-  monster('怪物', '規格外。伸びが2.5割増え、衰えも2割ゆるやか。', true),
-  steelBody('鋼の肉体', '衰えがほとんど来ない(0.4倍)。疲れも溜まりにくい(0.6倍)。', true),
+  monster('怪物', '規格外。伸びが1割ほど増え、衰えも1割ゆるやか。', true),
+  steelBody('鋼の肉体', '衰えがゆるやか(0.6倍)。疲れも溜まりにくい(0.8倍)。', true),
   ironWill('不屈', '怪我の影響が半分以下(0.4倍)。大会での体調が+5相当になる。', true),
   stagePresence('千両役者', '大会(世界大会も)での体調が+8相当になる。', true),
   fortune('強運', '練習の「失敗」が半分に、「大成功」が1.6倍出る。', true),
@@ -94,7 +94,9 @@ const rareTraits = <Trait>{
 /// 生まれつきレア特性を1つ持つ確率。
 const rareBirthChance = 0.04;
 
+/// 通常の特性の上限。レア特性は別枠で、最大 `maxRareTraits` 個まで(通常が埋まっていても覚醒できる)。
 const maxTraits = 4;
+const maxRareTraits = 2;
 
 /// 同時に持てない組み合わせ。
 const _conflicts = <Trait, Trait>{
@@ -128,7 +130,9 @@ bool _conflict(Trait a, Trait b) =>
 /// `t` を新しく持てるか(重複・矛盾・上限)。
 bool canGain(Set<Trait> have, Trait t) =>
     !have.contains(t) &&
-    have.length < maxTraits &&
+    (t.rare
+        ? have.where((h) => h.rare).length < maxRareTraits
+        : have.where((h) => !h.rare).length < maxTraits) &&
     !have.any((h) => _conflict(h, t));
 
 /// 持てるなら足した集合を、持てなければそのままを返す。
@@ -183,7 +187,7 @@ double growthMultiplier(Set<Trait> t, int age) {
   if (t.contains(Trait.earlyBloomer)) m *= age < 16 ? 1.3 : 1.0;
   if (t.contains(Trait.hardWorker)) m *= 1.1;
   if (t.contains(Trait.genius)) m *= 1.2;
-  if (t.contains(Trait.monster)) m *= 1.25;
+  if (t.contains(Trait.monster)) m *= 1.12;
   if (t.contains(Trait.glassBody)) m *= 1.15;
   if (t.contains(Trait.lonely)) m *= 1.1;
   return m;
@@ -194,8 +198,8 @@ double declineMultiplier(Set<Trait> t) {
   var m = 1.0;
   if (t.contains(Trait.earlyBloomer)) m *= 1.3;
   if (t.contains(Trait.longevity)) m *= 0.6;
-  if (t.contains(Trait.monster)) m *= 0.8;
-  if (t.contains(Trait.steelBody)) m *= 0.4;
+  if (t.contains(Trait.monster)) m *= 0.9;
+  if (t.contains(Trait.steelBody)) m *= 0.6;
   return m;
 }
 
@@ -210,7 +214,7 @@ double injuryMultiplier(Set<Trait> t) {
 /// 疲労の増え方(増えるときだけ。減るときは変えない)。
 double fatigueMultiplier(Set<Trait> t) =>
     (t.contains(Trait.ironMan) ? 0.7 : 1.0) *
-    (t.contains(Trait.steelBody) ? 0.6 : 1.0);
+    (t.contains(Trait.steelBody) ? 0.8 : 1.0);
 
 /// 気持ちの上がり方 / 下がり方。
 double moraleGainMultiplier(Set<Trait> t) =>

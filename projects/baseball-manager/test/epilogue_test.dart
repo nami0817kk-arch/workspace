@@ -93,4 +93,15 @@ void main() {
     // 分かれ道を選んでいない古い記録では、何も足さない
     expect(epilogueOf(_e(), 'ユウタ'), isNot(contains('幼いころ')));
   });
+
+  test('レア特性を持っていた一生には、その才能のひとことが出る', () {
+    final t = epilogueOf(_e(title: '一流選手'), 'ユウタ',
+        rareTraitLabels: const ['怪物', '強運']);
+    expect(t, contains('「怪物」「強運」'));
+    expect(epilogueOf(_e(title: '一流選手'), 'ユウタ'), isNot(contains('天性')));
+    expect(
+        epilogueOf(_e(madePro: false, proYears: 0), 'ユウタ',
+            rareTraitLabels: const ['怪物']),
+        isNot(contains('天性')));
+  });
 }

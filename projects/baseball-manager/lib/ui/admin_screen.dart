@@ -4,6 +4,7 @@ import '../game/characters.dart';
 import '../game/exp.dart';
 import '../game/game.dart';
 import '../game/player.dart';
+import '../game/talent.dart';
 import '../game/traits.dart';
 import 'controller.dart';
 import 'labels.dart';
@@ -97,13 +98,21 @@ class _Traits extends StatelessWidget {
           Text('特性 (${have.length})',
               style: Theme.of(context).textTheme.titleSmall),
           const SizedBox(height: 4),
+          SwitchListTile(
+            key: const Key('admin-awakened'),
+            dense: true,
+            contentPadding: EdgeInsets.zero,
+            title: const Text('覚醒済み(切ると、もう一度覚醒できる)'),
+            value: game.awakened,
+            onChanged: (v) => controller.admin((g) => g.adminSetAwakened(v)),
+          ),
           Wrap(spacing: 6, runSpacing: 0, children: [
             for (final t in Trait.values)
               Tooltip(
                 message: t.description,
                 child: FilterChip(
                   key: Key('admin-trait-${t.name}'),
-                  label: Text(t.label),
+                  label: Text(t.rare ? '★${t.label}' : t.label),
                   selected: have.contains(t),
                   onSelected: (on) => controller.admin(
                     (g) => g.adminSetTraits(
@@ -182,7 +191,7 @@ class _Abilities extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text('能力 (${roleLabel(p.role)})',
+          Text('能力 (${roleLabel(p.role)})と天賦(右のスライダー -2〜+2)',
               style: Theme.of(context).textTheme.titleSmall),
           for (final a in abilitiesOf(p.role))
             Row(children: [
@@ -196,6 +205,20 @@ class _Abilities extends StatelessWidget {
                   divisions: 99,
                   onChanged: (x) =>
                       controller.admin((g) => g.adminSetAbility(a, x.round())),
+                ),
+              ),
+              // 天賦(-2〜+2)
+              SizedBox(
+                width: 110,
+                child: Slider(
+                  key: Key('admin-gift-${a.name}'),
+                  value: p.gift(a).toDouble(),
+                  min: giftMin.toDouble(),
+                  max: giftMax.toDouble(),
+                  divisions: giftMax - giftMin,
+                  label: '天賦 ${p.gift(a)}',
+                  onChanged: (x) =>
+                      controller.admin((g) => g.adminSetGift(a, x.round())),
                 ),
               ),
             ]),

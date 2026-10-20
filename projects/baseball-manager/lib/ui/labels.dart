@@ -95,6 +95,26 @@ String rankOf(int v) {
   return 'G';
 }
 
+/// 生まれ持った才能の知らせ(新しく始めたときの「いまの結果」に出す)。
+/// レア特性か、天賦が最大(+2)・最小(-2)の能力があるときだけ。無ければ空。
+List<String> birthTalentNotes(Player p) {
+  final lines = <String>[];
+  for (final t in p.traits.where((t) => t.rare)) {
+    lines.add('レア特性「${t.label}」を持って生まれた!');
+  }
+  final top = [
+    for (final a in abilitiesOf(p.role))
+      if (p.gift(a) >= 2) abilityLabel(a)
+  ];
+  final low = [
+    for (final a in abilitiesOf(p.role))
+      if (p.gift(a) <= -2) abilityLabel(a)
+  ];
+  if (top.isNotEmpty) lines.add('天賦の才: ${top.join('・')}(経験点が少なくて済む)');
+  if (low.isNotEmpty) lines.add('不得手: ${low.join('・')}(経験点が多く要る)');
+  return lines;
+}
+
 /// 特性のアイコンの色。レアは赤みの金、良いものは金、代償のあるものは灰青。
 Color traitIconColor(Trait t) => t.rare
     ? const Color(0xFFD84315)

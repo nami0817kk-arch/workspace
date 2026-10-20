@@ -246,4 +246,70 @@ void main() {
       expect(lose.wins, 0, reason: 'seed=$s');
     }
   });
+
+  group('先発の勝敗', () {
+    Line start({required double runs}) => Line(
+        games: 1,
+        starts: 1,
+        faced: 24,
+        outs: 18,
+        runsRaw: runs - runBaseline * 24);
+
+    test('無失点なら、チームが負けても負けは付かない(勝ちは付く)', () {
+      final lostNoRuns = decidedStart(start(runs: 0), false);
+      expect(lostNoRuns.runsAllowed, 0);
+      expect(lostNoRuns.losses, 0);
+      expect(lostNoRuns.wins, 0);
+      final won = decidedStart(start(runs: 0), true);
+      expect(won.wins, 1);
+      expect(won.losses, 0);
+    });
+
+    test('失点があってチームが負ければ負け。勝てば勝ち', () {
+      final lost = decidedStart(start(runs: 3), false);
+      expect(lost.losses, 1);
+      expect(lost.wins, 0);
+      final won = decidedStart(start(runs: 3), true);
+      expect(won.wins, 1);
+      expect(won.losses, 0);
+    });
+
+    test('無失点の先発の試合は、勝ち抜き戦ではチームも負けない', () {
+      // 弱いチームで、強い投手が先発する。無失点の登板は必ず勝つ。
+      for (var seed = 0; seed < 30; seed++) {
+        final p = Player(
+            name: 'p',
+            role: Role.pitcher,
+            age: 27,
+            potential: 90,
+            abilities: {for (final a in pitcherAbilities) a: 99});
+        final t = playTournament(p,
+            teamLevel: 20, opponents: const [60, 60, 60], rng: Random(seed));
+        for (final g in t.games) {
+          if (isShutout(g.line)) expect(g.won, isTrue, reason: 'seed=$seed');
+        }
+      }
+      expect(isShutout(start(runs: 0)), isTrue);
+      expect(isShutout(start(runs: 3)), isFalse);
+      expect(isShutout(const Line(outs: 9, faced: 10)), isFalse); // 5回未満
+    });
+
+    test('1シーズンを通して、防御率が低い年に負けが付きすぎない', () {
+      // 無失点の登板は、負けにならない: 全登板の負け数は、失点のあった登板の数を超えない。
+      for (var seed = 0; seed < 20; seed++) {
+        final p = Player(
+            name: 'p',
+            role: Role.pitcher,
+            age: 27,
+            potential: 90,
+            abilities: {for (final a in pitcherAbilities) a: 95});
+        final s = playLeagueSeason(p,
+            teamLevel: 60,
+            opponents: const [55, 60, 65],
+            rng: Random(seed));
+        expect(s.line.losses, lessThanOrEqualTo(s.line.starts));
+        expect(s.line.wins + s.line.losses, lessThanOrEqualTo(s.line.starts));
+      }
+    });
+  });
 }

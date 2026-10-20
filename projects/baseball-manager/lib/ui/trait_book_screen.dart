@@ -72,6 +72,13 @@ class TraitBookScreen extends StatelessWidget {
   }
 }
 
+/// 未発見の特性の、手に入れ方のヒント。
+String _howToGet(Trait t) {
+  if (t.rare) return 'レア特性。生まれつき4%、またはプロでタイトル・優勝をしたときの覚醒で手に入る。';
+  if (t.index < 12) return 'ふつうの特性。生まれつき・出来事・分かれ道・コーチの教えで身につく。';
+  return '個性派の特性。コーチに教わると身につく(基本の特性を覚えきってから)。';
+}
+
 class _Entry extends StatelessWidget {
   const _Entry({required this.trait, required this.found});
   final Trait trait;
@@ -102,7 +109,7 @@ class _Entry extends StatelessWidget {
         subtitle: Text(
             found
                 ? '${role.isEmpty ? '' : '[$role向け] '}${trait.description}'
-                : (trait.rare ? 'レア特性。まだ出会っていない。' : 'まだ持ったことがない。'),
+                : _howToGet(trait),
             style: TextStyle(
                 color: found ? const Color(0xFF37474F) : Colors.grey)),
       ),

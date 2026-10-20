@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'art/confetti.dart';
+import 'art/story_image.dart';
 import 'controller.dart';
 
 /// 人生の節目を大きく見せるダイアログ。ドラフトと優勝は紙吹雪つき。
@@ -33,9 +34,20 @@ class MilestoneDialog extends StatelessWidget {
       milestone.kind == MilestoneKind.national ||
       milestone.kind == MilestoneKind.world;
 
+  /// 節目ごとの絵(ドラフト・優勝)。無ければアイコンを出す。
+  (String, String)? get _image => switch (milestone.kind) {
+        MilestoneKind.draft => (
+            draftImageAsset,
+            '指名の日の机。新しいユニフォーム・キャップ・グラブ・ボールが並んでいる'
+          ),
+        MilestoneKind.champion => (championImageAsset, '優勝カップと優勝旗。金色の紙吹雪が舞う球場'),
+        _ => null,
+      };
+
   @override
   Widget build(BuildContext context) {
     final (icon, color) = _style;
+    final image = _image;
     final cs = Theme.of(context).colorScheme;
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
@@ -43,48 +55,58 @@ class MilestoneDialog extends StatelessWidget {
       child: Stack(
         children: [
           if (_celebrate) const Positioned.fill(child: Confetti()),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(24, 28, 24, 20),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TweenAnimationBuilder<double>(
-                  tween: Tween(begin: 0.2, end: 1),
-                  duration: const Duration(milliseconds: 600),
-                  curve: Curves.elasticOut,
-                  builder: (context, s, child) =>
-                      Transform.scale(scale: s, child: child),
-                  child: Container(
-                    width: 88,
-                    height: 88,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: color.withValues(alpha: 0.15),
-                      border: Border.all(color: color, width: 3),
+          SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(24, 28, 24, 20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (image != null)
+                    StoryImage(
+                      key: const Key('milestone-image'),
+                      asset: image.$1,
+                      semanticLabel: image.$2,
+                      fallback: Icon(icon, size: 52, color: color),
+                    )
+                  else
+                    TweenAnimationBuilder<double>(
+                      tween: Tween(begin: 0.2, end: 1),
+                      duration: const Duration(milliseconds: 600),
+                      curve: Curves.elasticOut,
+                      builder: (context, s, child) =>
+                          Transform.scale(scale: s, child: child),
+                      child: Container(
+                        width: 88,
+                        height: 88,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: color.withValues(alpha: 0.15),
+                          border: Border.all(color: color, width: 3),
+                        ),
+                        child: Icon(icon, size: 52, color: color),
+                      ),
                     ),
-                    child: Icon(icon, size: 52, color: color),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  milestone.title,
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context)
-                      .textTheme
-                      .headlineSmall
-                      ?.copyWith(fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 8),
-                Text(milestone.body,
+                  const SizedBox(height: 16),
+                  Text(
+                    milestone.title,
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: cs.onSurfaceVariant)),
-                const SizedBox(height: 20),
-                FilledButton(
-                  key: const Key('milestone-ok'),
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text('つづける'),
-                ),
-              ],
+                    style: Theme.of(context)
+                        .textTheme
+                        .headlineSmall
+                        ?.copyWith(fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(milestone.body,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: cs.onSurfaceVariant)),
+                  const SizedBox(height: 20),
+                  FilledButton(
+                    key: const Key('milestone-ok'),
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text('つづける'),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
