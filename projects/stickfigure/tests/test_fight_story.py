@@ -300,6 +300,19 @@ def test_opening_charge_dash_builds():
     planmod.validate_scene(sc)
 
 
+def test_clone_rush_builds():
+    sc = fight.build_fight(dict(weapon="none", kick=False, hits=2, finisher="clone_rush"))
+    ai = [a for a in sc["fx"]["afterimages"] if a.get("xs")]
+    assert len(ai) == 1 and len(ai[0]["xs"]) == 2 and ai[0]["alpha"] > 0.5                  # 分身 2 体、濃さ一定
+    b_root = 2.4 - (next(k["dx"] for k in sc["keys"]["B"] if k.get("face") == "ko") + 0.0)
+    assert all(x < sc["stage"]["wall_x"] - 0.5 for x in ai[0]["xs"])                      # 壁の手前
+    kinds = [h["kind"] for h in sc["hits"]]
+    assert kinds.count("rapid") == 3 and "appear" in kinds and "wall" in kinds
+    t_app = next(h["tau"] for h in sc["hits"] if h["kind"] == "appear")
+    assert abs(ai[0]["start"] - t_app) < 1e-6                                              # 分身は現れる音と同時
+    planmod.validate_scene(sc)
+
+
 def test_wave_finisher_builds():
     sc = fight.build_fight(dict(weapon="none", kick=False, hits=2, finisher="wave"))
     kinds = [h["kind"] for h in sc["hits"]]

@@ -102,7 +102,7 @@ FINISHER_POOL = {                                      # finisher: random が選
     "dagger": ["launch_slash", "air_combo", "slash_wave", "iai", "beam", "blast", "ki_barrage", "meteor"],
     "staff": ["launch_slash", "beam", "wave", "meteor"],
     "spear": ["launch_slash", "beam", "wave", "meteor"],
-    "none": ["launch_kick", "barrage", "blast", "ki_barrage", "beam", "wave", "slam_throw", "blink_combo", "meteor", "beam_clash", "air_beam"],
+    "none": ["launch_kick", "barrage", "blast", "ki_barrage", "clone_rush", "beam", "wave", "slam_throw", "blink_combo", "meteor", "beam_clash", "air_beam"],
 }
 ALLY_FINISHERS = ["twin_beam"]                         # 味方(ally)がいる場面だけ random の池に足す技(合体技)
 OPENING_POOL = [None, None, "blast", "teleport", "fly", "counter_blast", "air_clash", "dodge_beam", "taunt", "lock", "return_blast", "dodge_slash", "barrier", "charge_dash"]   # opening: random が選ぶ(None 2 つ=走りが多め。taunt は名乗り)
@@ -179,6 +179,7 @@ def build_fight(spec: dict) -> dict:
     if twin and s["ally"] is None:
         s["ally"] = {}
     beam = s["finisher"] == "beam" or twin               # 必殺技: 気の光線(溜め → 発射 → 壁まで吹き飛ばす)
+    clone = s["finisher"] == "clone_rush"                # 必殺技: 分身乱舞(溜め → 閃光で分身 2 体が相手の後ろに立つ → 前後から交互に 3 発 → 本体の大振りで壁へ)
     kbar = s["finisher"] == "ki_barrage"                 # 必殺技: 気弾の連射(左右の手で小さい玉を 5 発 0.16 秒間隔 → 両手で溜めた大玉で壁へ)
     blast = s["finisher"] == "blast"                     # 必殺技: 気弾(片手に玉を膨らませて投げる → 着弾で爆発 → 壁まで吹き飛ばす)
     wave = s["finisher"] == "wave"                       # 必殺技: 衝撃波(跳んで拳を地面に叩きつけ → 地面を走る波 → 相手を打ち上げる)
@@ -888,6 +889,68 @@ def build_fight(spec: dict) -> dict:
         puffs.append(dict(tau=_r(t_hit + 1.08), kind="land2", pos=[_r(b_wall - 0.5), 0.0]))
         t_end = t_hit + 1.1
         ko_t = t_hit + 1.05
+    elif clone:
+        b_root = 2.4 - (dxB - 0.45)
+        b_wall = round(max(6.0, 2.4 - min(float(k["dx"]) for k in keysB if "dx" in k) + 1.3, b_root + 0.6 + 1.3), 2)
+        wall_lock = b_wall
+        col = list(s.get("beam_color") or [120, 230, 255])
+        a_root = b_root - 1.15
+        a_dx0 = _r(a_root + 2.0)
+        t_c0, t_split = _r(hl + 0.8), _r(hl + 1.25)      # 構え(abs の最初は hl+0.8)→ 0.45 秒溜めて分身
+        t1, t2, t3 = _r(t_split + 0.3), _r(t_split + 0.52), _r(t_split + 0.74)   # 後ろ→前→後ろ の 3 発(0.22 秒間隔)
+        t_big = _r(t3 + 0.36); t_hit = _r(t_big + 0.03)  # 本体の大振り
+        gx = [_r(b_root + 1.15), _r(min(b_root + 2.3, b_wall - 0.6))]   # 分身の立ち位置(相手の後ろと、さらに後ろ。壁の手前まで)
+        guard_a = dict(hz=0.86, lean=0.1, fa=0.9, fe=1.5, ra=0.7, re=1.6, ht=0.0, fl=0.6, fk=0.4, rl=-0.5, rk=0.3, face="fight")
+        sink = dict(hz=0.68, lean=0.3, fa=-0.3, fe=1.2, ra=-0.3, re=1.2, ht=0.1, fl=0.8, fk=1.3, rl=-0.4, rk=1.0, face="fight")      # 沈んで腕を後ろに(溜め)
+        punch = dict(hz=0.82, lean=0.4, fa=1.55, fe=0.05, ra=-0.3, re=1.0, ht=0.0, fl=1.0, fk=0.5, rl=-0.6, rk=0.2, face="fight")
+        windup = dict(hz=0.8, lean=-0.15, fa=0.2, fe=1.6, ra=0.9, re=1.5, ht=-0.1, fl=0.6, fk=0.5, rl=-0.5, rk=0.3, face="fight")
+        keysA += [dict(t=_r(hl + 0.12), dx=5.0, hz=0.9, lean=0.15),
+                  dict(t=_r(hl + 0.24), dx=4.4, rz=0.3, hz=0.9, lean=-0.1, fl=0.6, fk=0.9, rl=-0.4, rk=0.6),
+                  dict(t=t_c0, dx=a_dx0, **sink),
+                  dict(t=_r(t_split - 0.06), dx=a_dx0, **dict(sink, hz=0.62, lean=0.35)),                                       # 予備動作
+                  dict(t=t_split, dx=a_dx0, **dict(guard_a, hz=0.9, lean=-0.05, fa=2.4, fe=0.4, ra=2.2, re=0.5)),                 # 伸び上がって腕を開く(分身の瞬間)
+                  dict(t=_r(t_split + 0.15), dx=a_dx0, **guard_a),
+                  dict(t=_r(t2 - 0.08), dx=a_dx0, **windup), dict(t=t2, dx=_r(a_dx0 + 0.15), **punch), dict(t=_r(t2 + 0.14), dx=a_dx0, **guard_a),   # 前からの 1 発(本体)
+                  dict(t=_r(t_big - 0.14), dx=_r(a_dx0 - 0.1), **dict(windup, hz=0.74, lean=-0.25)),                             # 大振りの引き
+                  dict(t=t_big, dx=_r(a_dx0 + 0.45), **dict(punch, lean=0.5, hz=0.8)),                                           # 踏み込んで振り抜く
+                  dict(t=_r(t_big + 0.4), dx=_r(a_dx0 + 0.45), **dict(punch, lean=0.35, hz=0.84)),
+                  dict(t=_r(t_hit + 1.0), dx=_r(a_dx0 + 0.45), **guard_a)]
+        charge.append(dict(start=t_c0, end=t_split, who="A", color=col))
+        fx_after.append(dict(start=t_split, end=_r(t_big + 0.05), who="A", xs=gx, alpha=0.75, src_tau=_r(t_split + 0.15)))   # 分身: 本体の構え(t_split+0.15 のコマ)を一定の濃さで立たせる
+        jolt_b = dict(hz=0.86, fa=0.7, fe=1.6, ra=0.6, re=1.6, ht=-0.3, face="pain")
+        keysB += [dict(t=_r(hl + 0.1), dx=_r(dxB + 0.25), lean=-0.6, fa=0.3, ra=0.3, fe=0.6, re=0.6, ht=-0.8, face="pain"),
+                  dict(t=_r(hl + 0.5), dx=_r(dxB - 0.45), lean=-0.25, hz=0.84, fa=0.6, ra=0.5, fe=1.0, re=1.1, ht=-0.3, face="pain"),
+                  dict(t=_r(t_split + 0.12), dx=_r(dxB - 0.45), lean=-0.2, hz=0.85, fa=0.9, fe=1.4, ra=0.9, re=1.4, ht=-0.5, face="pain"),   # 分身に囲まれて首を振る
+                  dict(t=_r(t1 + 0.03), dx=_r(dxB - 0.35), lean=0.5, **jolt_b),                                                  # 後ろから: 前につんのめる
+                  dict(t=_r(t1 + 0.16), dx=_r(dxB - 0.4), lean=0.15, **jolt_b),
+                  dict(t=_r(t2 + 0.03), dx=_r(dxB - 0.6), lean=-0.55, **jolt_b),                                                 # 前から: のけぞる
+                  dict(t=_r(t2 + 0.16), dx=_r(dxB - 0.5), lean=-0.1, **jolt_b),
+                  dict(t=_r(t3 + 0.03), dx=_r(dxB - 0.4), lean=0.5, **jolt_b),                                                   # 後ろから
+                  dict(t=_r(t3 + 0.16), dx=_r(dxB - 0.45), lean=0.1, **jolt_b),
+                  dict(t=_r(t_hit - 0.03), dx=_r(dxB - 0.45), lean=0.0, hz=0.84, fa=0.8, fe=1.5, ra=0.7, re=1.5, ht=-0.2, face="pain"),
+                  dict(t=_r(t_hit + 0.05), dx=_r(dxB - 0.55), lean=-0.7, hz=0.9, fa=-0.9, ra=-0.9, fe=0.3, re=0.3, ht=-0.8, face="pain"),
+                  dict(t=_r(t_hit + 0.2), dx=_r(2.4 - (b_wall - 1.4)), rz=1.3, roll=1.0, hz=0.9, fa=-1.1, ra=-0.9, fe=0.2, re=0.3, fl=0.9, fk=0.4, rl=0.2, rk=0.3, lean=-0.3, ht=-0.6, face="pain"),
+                  dict(t=_r(t_hit + 0.34), dx=_r(2.4 - (b_wall - 0.3)), rz=1.35, roll=0.3, hz=0.9, fa=-0.9, ra=-0.9, fe=0.3, re=0.3, fl=0.6, fk=0.3, rl=-0.3, rk=0.4, lean=-0.35, ht=-0.7, face="pain"),
+                  dict(t=_r(t_hit + 0.55), dx=_r(2.4 - (b_wall - 0.3)), rz=1.25, roll=0.35, hz=0.9, lean=-0.3, face="pain"),
+                  dict(t=_r(t_hit + 0.85), dx=_r(2.4 - (b_wall - 0.45)), rz=0.55, roll=1.2, hz=0.9, lean=0.0, fa=0.2, ra=0.2, face="pain"),
+                  dict(t=_r(t_hit + 1.05), dx=_r(2.4 - (b_wall - 0.5)), rz=0.21, roll=1.57, hz=0.9, fa=0.4, ra=0.4, fl=0.0, fk=0.0, rl=0.0, rk=0.0, face="ko")]
+        hits += [dict(tau=_r(hl + 0.5), hold=0.0, kind="pose"),
+                 dict(tau=t_split, hold=0.04, kind="appear", pos=[gx[0], 1.0]),                                                  # 分身が現れる(音と閃光)
+                 dict(tau=t1, hold=0.03, kind="rapid", pos=[_r(b_root + 0.25), 1.3]),                                           # 後ろから(分身。by なし: 本体は前にいる)
+                 dict(tau=t2, hold=0.03, kind="rapid", by="A", pos=[_r(b_root - 0.25), 1.3]),                                   # 前から(本体)
+                 dict(tau=t3, hold=0.03, kind="rapid", pos=[_r(b_root + 0.25), 1.3]),
+                 dict(tau=t_hit, hold=0.1, kind="hit", by="A", pos=[_r(b_root - 0.2), 1.3]),                                    # 本体の大振り
+                 dict(tau=_r(t_hit + 0.34), hold=0.06, kind="wall", pos=[b_wall, 1.6])]
+        flashes += [t_split, t_hit]
+        slow.append(dict(start=_r(t_big - 0.05), end=_r(t_hit + 0.12), rate=0.5))
+        shots += [dict(t=_r(t_c0 - 0.1), follow="A", scale=[[_r(t_c0 - 0.1), 4.0], [t_split, 3.4]], yaw=[[_r(t_c0 - 0.1), -30.0], [t_split, -12.0]], pitch=6.0, lens=32.0, target_z=1.0, lag=0.25),   # 溜め: 寄る
+                  dict(t=t_split, follow="mid", scale=6.4, yaw=0.0, pitch=4.0, lens=44.0, target_z=1.1),                                                   # 分身: 全員が入る引き
+                  dict(t=_r(t1 - 0.05), follow="B", scale=4.2, yaw=18.0, pitch=4.0, lens=34.0, target_z=1.2),                                             # 乱打: B に寄る
+                  dict(t=_r(t_big - 0.1), follow="mid", scale=5.6, yaw=4.0, pitch=3.0, lens=44.0, target_z=1.3),
+                  dict(t=_r(t_hit + 0.95), follow="A", scale=[[_r(t_hit + 0.95), 4.6], [_r(t_hit + 2.4), 5.6]], yaw=[[_r(t_hit + 0.95), 30.0], [_r(t_hit + 2.4), -15.0]], pitch=8.0, lens=40.0, target_z=0.9)]
+        puffs.append(dict(tau=_r(t_hit + 1.08), kind="land2", pos=[_r(b_wall - 0.5), 0.0]))
+        t_end = t_hit + 1.1
+        ko_t = t_hit + 1.05
     elif kbar:
         n_small, gap_s, push = 5, 0.16, 0.3              # 小玉 5 発・間隔 0.16 秒・1 発ごとに B が 0.3 下がる
         b_root = 2.4 - (dxB - 0.45)
@@ -1341,7 +1404,7 @@ def build_fight(spec: dict) -> dict:
         puffs.append(dict(tau=_r(hl + 0.85), kind="land2", pos=[5.4, 0.0]))
         t_end = hl + 1.1
         ko_t = hl + 0.8
-    if beam or blast or kbar or wave or bclash or barrage or swave or iai or sthrow or blink or meteor or abeam:   # 技の位置は台本どおり: 位置合わせの平行移動(接触で決めた clip の終点と台本の差)を受けない(連打乱舞で A が 1.55・B が 1.05 ずれて重なり、飛ぶ斬撃では三日月が A の後ろから出た)
+    if beam or blast or kbar or clone or wave or bclash or barrage or swave or iai or sthrow or blink or meteor or abeam:   # 技の位置は台本どおり: 位置合わせの平行移動(接触で決めた clip の終点と台本の差)を受けない(連打乱舞で A が 1.55・B が 1.05 ずれて重なり、飛ぶ斬撃では三日月が A の後ろから出た)
         for k in keysA + keysB:
             if k["t"] >= hl + 0.3 - 1e-6 and "dx" in k:   # 0.3 秒後から。それまでのキーは plan が平行移動を線形に 0 へ戻す
                 k["abs"] = True

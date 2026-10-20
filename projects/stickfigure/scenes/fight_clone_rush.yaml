@@ -1,0 +1,3 @@
+# 必殺技の見本: 分身乱舞(溜め → 閃光で分身 2 体が相手の後ろに立つ → 前後から交互に 3 発 → 本体の大振りで壁へ)
+name: fight_clone_rush
+fight: {weapon: none, kick: false, hits: 3, counter: true, finisher: clone_rush, palette: cool, stage: night, mood: battle, seed: 4}

@@ -378,6 +378,8 @@ def compose_frame(plan: dict, f: int, figs: Dict[int, Image.Image], stages: Opti
         if ai["start"] <= tau <= ai["end"] and f > 0:
             q = (tau - ai["start"]) / max(1e-6, ai["end"] - ai["start"])
             g = _prev_frame(plan, f) or f
+            if "src_tau" in ai:                                              # 分身: 指定の時刻(構えのコマ)の絵を元にする(台本はコマ番号を知らないので時刻で渡す)
+                g = next((ff for ff in range(plan["n"]) if plan["frames"][ff]["tau"] >= float(ai["src_tau"])), plan["n"] - 1)
             gi = max(0, min(plan["n"] - 1, int(ai.get("src_frame", g))))
             src, cam_s = figs[gi], plan["frames"][gi]["cam"]
             n_ = int(ai.get("n", 6))
@@ -391,10 +393,13 @@ def compose_frame(plan: dict, f: int, figs: Dict[int, Image.Image], stages: Opti
             ghost0 = silhouette(src, tuple(int(255 * c) for c in plan["actors"][who_a].get("color", [0.5, 0.8, 0.3])))
             a0 = ImageChops.multiply(ghost0.split()[3], band)
             px_src, _ = to_px(x_src, 0.0, cam_s)
-            for i in range(n_):
-                xw = float(ai["x0"]) + (float(ai["x1"]) - float(ai["x0"])) * (i + 1) / (n_ + 1)
-                px_, _ = to_px(xw, 0.0, cam)
-                al = int(150 * (1 - q) * (0.4 + 0.6 * i / n_))
+            xs = ai.get("xs") or [float(ai["x0"]) + (float(ai["x1"]) - float(ai["x0"])) * (i + 1) / (n_ + 1) for i in range(n_)]   # xs: 位置を直に指定(分身)
+            for i, xw in enumerate(xs):
+                px_, _ = to_px(float(xw), 0.0, cam)
+                if "alpha" in ai:                                            # 分身: 薄れず一定の濃さで立ち続け、終わりの 0.1 秒で消える
+                    al = int(255 * float(ai["alpha"]) * min(1.0, (1 - q) / 0.1))
+                else:
+                    al = int(150 * (1 - q) * (0.4 + 0.6 * i / len(xs)))
                 ghost = ghost0.copy()
                 ghost.putalpha(a0.point(lambda v, al=al: int(v * al / 255)))
                 base.alpha_composite(ghost, (int(px_ - px_src), 0))
