@@ -596,8 +596,10 @@ def _align_keys_to_clips(scene: dict, tracks: Dict[str, KeyTrack]) -> Dict[str, 
                 if hi - lo < 0.03:
                     hi = lo + 0.03
                 gaps.append((lo, hi, bank.sample(c, c["end"])["dx"], bank.sample(cn, cn["start"])["dx"]))
+        abs_ts = sorted(float(k["t"]) for k in keys if k.get("abs"))
         for k in keys:
             tt = float(k["t"])
+            next_abs = next((x for x in abs_ts if x > tt), None)
             dx0 = float(k.get("_dx0", base.at(tt)["dx"]))
             g = next((g for g in gaps if g[0] < tt < g[1]), None)
             if g is not None:                                              # 継ぎ目(重なりも): 直線
@@ -609,7 +611,12 @@ def _align_keys_to_clips(scene: dict, tracks: Dict[str, KeyTrack]) -> Dict[str, 
                 c = inside[-1]
                 k["dx"] = round(bank.sample(c, min(max(tt, c["start"]), c["end"]))["dx"], 4)
                 continue
-            val = dx0 if k.get("abs") else dx0 + shift_at(tt)       # abs: 台本の位置をそのまま使う(技の位置。接触で決めた clip のあとの平行移動を受けない)
+            sh = 0.0 if k.get("abs") else shift_at(tt)             # abs: 台本の位置をそのまま使う(技の位置。接触で決めた clip のあとの平行移動を受けない)
+            if sh and next_abs is not None and tt < next_abs:       # 次の abs キーまでに平行移動を線形に 0 へ戻す(急に戻すと 1 コマ 0.9 以上飛ぶ)
+                w1s = max([w1 for (w1, _d) in shifts if w1 <= tt], default=tt)
+                u = (tt - w1s) / max(1e-6, next_abs - w1s)
+                sh *= max(0.0, 1.0 - u)
+            val = dx0 + sh
             for (w0, w1, c) in windows:
                 if k.get("abs") or not (c.get("_solved") or c.get("_chained")):
                     continue

@@ -751,7 +751,7 @@ def build_fight(spec: dict) -> dict:
         ko_t = hl + 0.8
     if beam or blast or wave or bclash or barrage or swave:   # 技の位置は台本どおり: 位置合わせの平行移動(接触で決めた clip の終点と台本の差)を受けない(連打乱舞で A が 1.55・B が 1.05 ずれて重なり、飛ぶ斬撃では三日月が A の後ろから出た)
         for k in keysA + keysB:
-            if k["t"] >= hl + 0.3 - 1e-6 and "dx" in k:   # 0.3 秒後から(0.1 だと衝撃波で 1.5 を 0.12 秒で戻し、1 コマ 1.1 飛んだ)
+            if k["t"] >= hl + 0.3 - 1e-6 and "dx" in k:   # 0.3 秒後から。それまでのキーは plan が平行移動を線形に 0 へ戻す
                 k["abs"] = True
     tail = t_end + 0.3
     end = _r(tail + 0.6)
