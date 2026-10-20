@@ -392,7 +392,7 @@ def compose_frame(plan: dict, f: int, figs: Dict[int, Image.Image], stages: Opti
                 base.alpha_composite(ghost, (int(px_ - px_now), 0))
     for bm in fx.get("beams", []):             # 気の光線(人物の下に描く: 上だと撃ち合いで 2 人が光線に隠れた。手の先から壁まで。x_end は数か [[tau, x], ...] の折れ線)
         if bm["start"] <= tau <= bm["end"]:
-            base.alpha_composite(look.beam(plan, f, bm.get("who", "A"), _pw_at(bm["x_end"], tau), tau - bm["start"], bm["end"] - bm["start"], tuple(bm.get("color", (120, 230, 255)))))
+            base.alpha_composite(look.beam(plan, f, bm.get("who", "A"), _pw_at(bm["x_end"], tau), tau - bm["start"], bm["end"] - bm["start"], tuple(bm.get("color", (120, 230, 255))), z_end=bm.get("z_end")))
     base.alpha_composite(figs[f])
     for ct in fx.get("cuts", []):              # 居合の斬撃線: 相手の体を横切る白い線が 1 本ずつ現れ(0.05 秒おき)、少しずれて消える
         if ct["start"] <= tau <= ct["end"]:

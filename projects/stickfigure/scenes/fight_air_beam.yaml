@@ -1,0 +1,3 @@
+# 決め技の見本: 空中光線。跳び上がって空中で溜め、斜め下へ光線を撃ち、相手を壁まで吹き飛ばす
+name: fight_air_beam
+fight: {weapon: none, kick: false, hits: 2, counter: true, finisher: air_beam, palette: cool, stage: night, mood: battle, seed: 7}

@@ -217,7 +217,7 @@ def ki_ball(cx: float, cy: float, r: float, f: int, col=(255, 190, 70), trail: T
     return ov
 
 
-def beam(plan: dict, f: int, who: str, x_end: float, age: float, dur: float, col=(120, 230, 255)) -> Image.Image:
+def beam(plan: dict, f: int, who: str, x_end: float, age: float, dur: float, col=(120, 230, 255), z_end: float = None) -> Image.Image:
     """気の光線: 手(前の手と後ろの手の間)から x_end(壁)まで、白い芯+色の光。age(秒)で 3 コマで太くなり、終わりの 25% で細って消える。
     縁は揺らぎ(コマごとに乱れる)、根元に光の玉、周りに流れる粒。"""
     cam = plan["frames"][f]["cam"]
@@ -228,7 +228,7 @@ def beam(plan: dict, f: int, who: str, x_end: float, age: float, dur: float, col
     hx, hz = sk["hand"]
     u = camera.px_per_unit(cam)
     x0, y0 = camera.project(cam, hx, 0.0, hz)[:2]
-    x1, y1 = camera.project(cam, x_end, 0.0, hz)[:2]
+    x1, y1 = camera.project(cam, x_end, 0.0, hz if z_end is None else float(z_end))[:2]   # z_end: 終点の高さ(空中から斜め下へ撃つ)
     t01 = age / max(dur, 1e-6)
     grow = min(1.0, age * 30 / 3.0)                                   # 3 コマで太くなる
     fade = 1.0 if t01 < 0.75 else max(0.0, (1 - t01) / 0.25)

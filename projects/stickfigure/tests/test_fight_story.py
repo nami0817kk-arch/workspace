@@ -382,3 +382,11 @@ def test_episode_passing_variant_shifts_seed(monkeypatch):
     sc = dict(name="x", fight=dict(weapon="none", kick=False, hits=2, finisher="none", seed=10))
     out = episode._passing_variant(sc)
     assert out["fight"]["seed"] == 12
+
+
+def test_air_beam_builds():
+    sc = fight.build_fight(dict(weapon="none", kick=False, hits=2, finisher="air_beam"))
+    bm = sc["fx"]["beams"][0]
+    assert bm.get("z_end", 9) < 0.5                                      # 斜め下へ(地面近くで終わる)
+    assert max(k.get("rz", 0.0) for k in sc["keys"]["A"]) >= 2.5           # 空中から
+    planmod.validate_scene(sc)
