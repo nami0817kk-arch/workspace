@@ -2,7 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-/// はじめの画面の絵。夕焼けの空と、ゴールに向かうボール、街のシルエット。
+/// はじめの画面の絵。夕焼けの屋外コートで、ゴールを見上げる少年(Gemini で生成した絵、`assets/art/title.jpg`)。
+/// 読み込めなければ、コードで描いた夕焼けの絵(ゴールに向かうボールと街のシルエット)に戻る。
 class TitleArt extends StatelessWidget {
   const TitleArt({super.key, this.height = 190});
   final double height;
@@ -13,7 +14,18 @@ class TitleArt extends StatelessWidget {
         child: SizedBox(
           height: height,
           width: double.infinity,
-          child: CustomPaint(painter: _TitlePainter()),
+          child: Image.asset(
+            'assets/art/title.jpg',
+            fit: BoxFit.cover,
+            alignment: Alignment.center,
+            // 読み込み中も、読み込めなかったときも、コードで描いた絵を出す(空白にしない)。
+            frameBuilder: (context, child, frame, sync) =>
+                (frame == null && !sync)
+                    ? CustomPaint(painter: _TitlePainter())
+                    : child,
+            errorBuilder: (_, __, ___) =>
+                CustomPaint(painter: _TitlePainter()),
+          ),
         ),
       );
 }
