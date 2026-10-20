@@ -2,10 +2,11 @@
 name: skit_box
 skit:
   stage: field
+  background: {image: assets/bg/meadow.png, x0: -7.0, x1: 15.0, ground: 0.69}   # Gemini で描いた草原(2026-10-20)。x0〜x1 が画像の横幅、ground は地面の線(上から 69%)
   mood: calm
   actors:
     A: {color: [0.5, 0.85, 0.3], x: -3.0}
-    B: {color: [0.9, 0.3, 0.25], x: 9.5, dir: -1}
+    B: {color: [0.9, 0.3, 0.25], x: 8.0, dir: -1}
   props:
     box: {kind: box, x: 2.0, size: 0.65, color: [210, 160, 90]}
     ball: {kind: ball, x: 4.6, size: 0.42, color: [240, 90, 80]}
@@ -22,17 +23,17 @@ skit:
     - {who: A, act: surprised, dur: 0.5}
     - {who: B, act: pickup, prop: box}
     - {who: A, act: angry, dur: 0.9, at: with}
-    - {who: B, act: run, to: 9.0}
-    - {who: A, act: run, to: 7.2, at: with}
-    - {who: B, act: throw, prop: box, to: 7.2, hit: A}
+    - {who: B, act: run, to: 8.2}
+    - {who: A, act: run, to: 6.6, at: with}
+    - {who: B, act: throw, prop: box, to: 6.6, hit: A}
     - {who: A, act: fall}
     - {who: B, act: laugh, dur: 1.2}
     - {who: A, act: getup}
-    - {who: A, act: throw, prop: ball, to: 9.0, hit: B}
+    - {who: A, act: throw, prop: ball, to: 8.2, hit: B}
     - {who: B, act: fall}
     - {who: A, act: laugh, dur: 1.2}
     - {who: B, act: getup}
-    - {who: B, act: walk, to: 7.9}
+    - {who: B, act: walk, to: 7.4}
     - {who: A, act: face, at: B}
     - {who: B, act: nod, dur: 0.6}
     - {who: A, act: wave, dur: 0.8}

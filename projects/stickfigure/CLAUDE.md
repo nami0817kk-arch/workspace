@@ -226,6 +226,21 @@ python scripts/make_gallery.py 09_01:2.4 135_07_s1:3.6   # clip を順に再生�
 - **技を足したら書き出した動画を `rhythm` で実測する**(check の見積もりだけでは足りない): 蹴り返しは `kick` の反転と寄りで閃光が 75/分(参考 17〜41)になり、`hit` にして 22/分に。瞬間移動の連撃は連打カットを足して 93→250/分(4 コマおきだと 286 で多すぎ、6 コマおき)。閃光が多いときは反転(`invert`)と `flashes` の重なりを疑う
 - 技を足すときの型: fight の finisher 分岐(キー・hits・fx・shots・ko_t)+ plan の SHAKE + anime の SFX/SFX_SIZE/ZOOM_PUNCH/ROLL_SHAKE + compose の BIG/BURST_FRAMES と描画 + sfx の音 + テスト
 
+## 物語の小話(skit)(2026-10-20、「Animation vs. Minecraft の感じで」「バトルだけではない」の指示から)
+
+参考は Alan Becker「Animation vs. Minecraft」系: 色違いの棒人間が、箱や道具で遊び・作り・いたずら・失敗する**無言の物語**(4〜7 分)。Minecraft は他社の IP なので使わない。
+
+- 台本は `skit:`(`scenes/skit_box.yaml` が見本): `actors`(色・置く x・`dir`)、`props`(`kind: box|ball`、x・size・color)、`beats`(動作の並び)。動作は順に進み、`at: with` で直前の動作と同時に始める、`t:` で時刻の直指定、`wait` で間
+- 動作(`act`): walk/run/carry(`to`)・turn/face/look(`dir` か `at`)・jump(`h`,`to`)・pickup(`prop`)・put(`prop`, `at` か `on:` 別の箱に積む)・throw(`prop`,`to`,`hit:` 当てる相手)・push/kick(`prop`,`to`)・surprised・laugh・angry・fall(`back: false` で前のめり)・getup・point(`at`)・think・cheer・cry・sit・stand・wave・nod・shake。驚く・笑う・怒る・転ぶ等は自動で寄りのカット
+- 仕組み: 全員 `facing: 1` で置き、**向きは姿勢の `dir`(±1)で変える**(`fk.sign_of`。位置の計算は facing のまま、絵だけ左右反転。Blender・合成・点検・下書き全部に通してある。補間しないでキーの時刻で切り替える)。小道具は `fx.props`(`keys=[[t,x,z]]` の直線＋`arc` で山なり、`attach=[[t0,t1,who,dx,dz]]` の間は手に追従。置いてある物は人物の後ろ、持っている物は前に描く)。脚は keys で書かず footwork に任せる(歩きは dx を進めて腕を振るだけ)。走りは `run: 1.0`
+- 起き上がり(getup)は根元を上げながら回す(rz 0.1 のまま roll を戻すと体が地面に 0.25 潜り、ground の点検に落ちた)
+- qa は `max_stops` 等を外してある(間が多いのが小話)。点検で見るのは地面・1 コマの飛び・見た目
+- episode/review は `scene: パス` の指定と、その場の `skit:` の両方を展開する
+- **背景は描いた絵を貼れる**(`skit.background: {image, x0, x1, ground}` → `stage.image`。`look._image_bg`): 世界の x0〜x1 に画像の横幅を合わせ、画像の `ground`(上から 0〜1)の高さを地面の線(y=0)に合わせて、カメラのパン・寄りに追従(視差なし)。画像の外は端の色、地面より下は地面の色で埋める。Gemini に「セル画風・手前は平らな単色の草地・地面の線は下から 22%・人物なし・左右に続く」と頼んだ草原が `assets/bg/meadow.png`(1376×768、地面は上から 69%。ユーザー「背景とかは Gemini 使っても良い」2026-10-20)。返す画像は RGBA(RGB だと合成で "image has wrong mode")
+- **小話に rhythm の範囲は当てない**(参考 6 本は戦いの動画。小話はカット 10/分・2 コマ撮り 58% でよい)。見るのは check の合否と目視
+- 投げた物が当たったら、玉は跳ね返り、箱は相手の手前に落とす(相手は後ろへ倒れるので重ならない。前は箱が倒れた体の上に残った)。引き 5.0・寄り 3.6(6.2/4.2 だと人物が小さい)
+- 参考に近づけるため次に要るもの: 扉・はしご・積んで崩れる塔・水・乗り物などの小道具、性格の違う 3〜4 人、笑いの型(期待→裏切り、繰り返し→変化、しっぺ返し)、4〜7 分の長さ(小話を数本つなぐ)
+
 ## 決まり・つまずき所(実際に踏んだもの)
 
 1. **参考動画のファイル・切り出した画像は、リポジトリに入れない**(workspace は public、他人の作品)。入れてよいのは数字と読み取った角度だけ(`reference/`)。

@@ -416,11 +416,45 @@ FLAT_THEMES = {
 }
 
 
+_BG_CACHE: dict = {}
+
+
+def _image_bg(plan: dict, f: int, st: dict) -> Image.Image:
+    """背景画像を世界座標に貼る。x0〜x1 が画像の横幅、ground が地面の線(0=上端 1=下端)。カメラのパン・寄りに合わせて平行移動と拡縮だけ(視差は付けない: 2D のセル背景)。
+    画像の外は端の色で埋める(左右に長い絵を頼んでおく)。"""
+    cam = plan["frames"][f]["cam"]
+    path = st["image"]
+    src = _BG_CACHE.get(path)
+    if src is None:
+        src = Image.open(path).convert("RGB")
+        _BG_CACHE[path] = src
+    x0, x1 = float(st.get("image_x0", -8.0)), float(st.get("image_x1", 16.0))
+    g = float(st.get("ground", 0.8))
+    px0 = camera.project(cam, x0, 0.0, 0.0)[0]
+    px1 = camera.project(cam, x1, 0.0, 0.0)[0]
+    tx = cam.get("tx", cam.get("x", 0.0))
+    y_floor = camera.project(cam, tx, 0.0, 0.0)[1]
+    scale = (px1 - px0) / src.size[0]
+    w, h = max(1, int(src.size[0] * scale)), max(1, int(src.size[1] * scale))
+    top = int(y_floor - g * h)
+    left = int(px0)
+    edge = src.getpixel((0, src.size[1] // 4))
+    img = Image.new("RGB", (W, H), edge)
+    d = ImageDraw.Draw(img)
+    floor_col = src.getpixel((src.size[0] // 2, min(src.size[1] - 1, int(src.size[1] * (g + 0.05)))))
+    d.rectangle([0, int(y_floor), W, H], fill=floor_col)        # 画像より下は地面の色
+    img.paste(src.resize((w, h), Image.LANCZOS), (left, top))
+    return img.convert("RGBA")                                   # flat_bg と同じ RGBA(RGB のままだと合成で "image has wrong mode")
+
+
 def flat_bg(plan: dict, f: int) -> Image.Image:
     """平らな2Dの背景: 上の帯・奥の壁・床の帯・床の横線・柱(単色の長方形)・右の壁。遠近の床の目地は描かない。
     位置はカメラの投影で決める(人物と同じ座標系で、パン・寄りに合わせて動く)が、形は正面向きの平らな図形。"""
     cam = plan["frames"][f]["cam"]
     th = FLAT_THEMES.get(plan.get("stage", {}).get("theme", "cave"), FLAT_THEMES["cave"])
+    st = plan.get("stage", {})
+    if st.get("image"):                                           # 描いた背景(Gemini など)を貼る: 世界の x0〜x1 に横幅を合わせ、画像の ground(0〜1、上からの割合)の高さを地面の線に合わせる
+        return _image_bg(plan, f, st)
     img = Image.new("RGB", (W, H), th["sky"])
     d = ImageDraw.Draw(img)
     tx = cam.get("tx", cam.get("x", 0.0))

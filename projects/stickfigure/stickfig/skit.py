@@ -32,6 +32,7 @@ WALK_SPEED = 1.7      # 単位/秒
 RUN_SPEED = 4.2
 ARM_REACH = 0.55      # 物を拾う・置くときの、根元から物までの距離
 FPS = 30
+WIDE, CLOSE = 5.0, 3.6   # 引き・寄りの倍率(6.2/4.2 だと引きで人物が小さかった。参考は画面の 1/3〜1/2)
 
 
 def _r(x: float) -> float:
@@ -118,7 +119,7 @@ def build_skit(spec: dict) -> dict:
     props = {n: _Prop(n, p or {}) for n, p in (spec.get("props") or {}).items()}
     hits: List[dict] = []
     puffs: List[dict] = []
-    shots: List[dict] = [dict(t=0.0, follow="mid", scale=6.2, yaw=-6.0, pitch=4.0, lens=40.0, target_z=1.0, lag=0.5)]
+    shots: List[dict] = [dict(t=0.0, follow="mid", scale=WIDE, yaw=-6.0, pitch=4.0, lens=40.0, target_z=1.0, lag=0.5)]
     flashes: List[float] = []
     for a in actors.values():
         a.key(0.0, IDLE)
@@ -135,8 +136,8 @@ def build_skit(spec: dict) -> dict:
             a.key(t, {})                      # 向きの切り替え(絵だけ反転。1 コマで変わる)
 
     def closeup(a: _Actor, t0: float, t1: float) -> None:
-        shots.append(dict(t=_r(t0), follow=a.name, scale=4.2, yaw=(14.0 if a.dir > 0 else -14.0), pitch=3.0, lens=36.0, target_z=1.05, lag=0.0))
-        shots.append(dict(t=_r(t1), follow="mid", scale=6.2, yaw=-6.0, pitch=4.0, lens=40.0, target_z=1.0, lag=0.5))
+        shots.append(dict(t=_r(t0), follow=a.name, scale=CLOSE, yaw=(14.0 if a.dir > 0 else -14.0), pitch=3.0, lens=36.0, target_z=1.05, lag=0.0))
+        shots.append(dict(t=_r(t1), follow="mid", scale=WIDE, yaw=-6.0, pitch=4.0, lens=40.0, target_z=1.0, lag=0.5))
 
     for b in spec.get("beats") or []:
         act = b["act"]
@@ -265,6 +266,8 @@ def build_skit(spec: dict) -> dict:
                 v.free = t_land + 0.4
                 if p.kind == "ball":
                     p.move(t_land, t_land + 0.4, to - a.dir * 0.8, 0.0, arc=0.35)   # 玉は跳ね返る
+                else:
+                    p.move(t_land, t_land + 0.3, to - a.dir * 0.7, 0.0, arc=0.3)    # 箱は相手の手前に落ちる(相手は後ろへ倒れるので重ならない)
             else:
                 puffs.append(dict(tau=_r(t_land), kind="land2", pos=[_r(to), 0.0]))
             a.key(t_rel + 0.3, dict(RELEASE, lean=0.25))
@@ -397,7 +400,7 @@ def build_skit(spec: dict) -> dict:
     scene = dict(
         name=spec.get("name", "skit"), fps=FPS, tau_end=_r(end_all),
         actors={n: dict(color=a.color, scale=a.scale, base_x=a.base_x, facing=1) for n, a in actors.items()},
-        stage=dict(wall_x=wall_x, style="flat", theme=spec.get("stage", "field")),
+        stage=dict(wall_x=wall_x, style="flat", theme=spec.get("stage", "field"), **(dict(image=spec["background"]["image"], image_x0=float(spec["background"].get("x0", -8.0)), image_x1=float(spec["background"].get("x1", 16.0)), ground=float(spec["background"].get("ground", 0.8))) if spec.get("background") else {})),   # background: {image, x0, x1, ground} で描いた背景を貼る
         slow=[], hits=hits, puffs=puffs,
         camera=[[0.0, -0.4, 8.4], [_r(end_all), 3.2, 8.6]],
         keys={n: sorted(a.keys, key=lambda k: k["t"]) for n, a in actors.items()},
