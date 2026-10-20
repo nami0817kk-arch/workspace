@@ -330,3 +330,14 @@ def test_opening_dodge_beam_builds():
     top = max(k.get("rz", 0.0) for k in sc["keys"]["A"] if k["t"] < 2.5)
     assert top >= 2.0                                                    # A は光線より高く跳ぶ
     planmod.validate_scene(sc)
+
+
+def test_taunt_adds_pose_before_run():
+    sc = fight.build_fight(dict(weapon="sword", kick=False, taunt=True, hits=2, finisher="none"))
+    sc0 = fight.build_fight(dict(weapon="sword", kick=False, hits=2, finisher="none"))
+    poses = [h for h in sc["hits"] if h["kind"] == "pose" and h["tau"] < 1.2]
+    assert poses and any(abs(h["tau"] - 0.86) < 1e-6 for h in poses)
+    run = next(c for c in sc["clips"]["A"] if c.get("loop"))
+    run0 = next(c for c in sc0["clips"]["A"] if c.get("loop"))
+    assert run["start"] > run0["start"]                                 # 走り出しが遅れる
+    planmod.validate_scene(sc)

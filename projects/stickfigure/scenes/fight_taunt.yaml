@@ -1,0 +1,3 @@
+# 名乗りの見本: 走り出す前に決めポーズで止まり(寄り・流線)、相手は一歩引く。そのあと連打→居合
+name: fight_taunt
+fight: {weapon: sword, kick: false, taunt: true, hits: 3, counter: true, finisher: iai, palette: cool, stage: dojo, mood: tense, seed: 7}
