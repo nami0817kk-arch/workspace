@@ -204,6 +204,7 @@ python scripts/make_gallery.py 09_01:2.4 135_07_s1:3.6   # clip を順に再生�
 - **技のキーには `abs: true`**(`_align_keys_to_clips` の平行移動を受けない): 接触で決めた clip のあとのキーは、clip の終点と台本の差だけ平行移動される(連打の継ぎ目のため)。技の位置(B の根元から 1.15 手前、など)を台本で決めたキーがこれを受けると、A が 1.55 前に出て 2 人が重なった(連打乱舞で発見)。決め技の技(beam/blast/wave/beam_clash/barrage/slash_wave)では、決めの 1 発の 0.3 秒後以降の A・B の dx 付きキー全部に `abs` を付け、それまでのキーの平行移動は `_align` が次の abs キーまでに線形に 0 へ戻す(急に戻すと 1 コマ 0.9〜1.1 飛んだ。飛ぶ斬撃では三日月が A の後ろから出ていた)。点検の流れでは不合格なら commit しない(`all_ok` で止める)
 - 見本の seed は点検に通るものを選ぶ: 剣で seed 13 は 13_17_s2 が 2 回並び、2 回目の clip の継ぎ目で A が 1.4 飛ぶ(技とは無関係。`_first_passing_seed` が避ける種類)。組み合わせの見本 `scenes/fight_showcase.yaml`(瞬間移動→連打→撃ち合い)
 - **`finisher: random` / `opening: random`** は `FINISHER_POOL`(武器ごと。launch_kick は kick の clip が要るので素手だけ、長い武器は相手の拳が届かない型を除く)と `OPENING_POOL`(走り 2・技 6・名乗り)から seed で選ぶ。**新しい技を足したら池にも足す**(物語の決戦は random なので、足した技が自動で回るようになる)。series の `_first_passing_seed` が点検に落ちる seed を避ける
+- **物語の型(`story.py`)での技の出し方**: 決戦は `finisher: random`(全技から)、kick なしの場面は `opening: random`、稽古(師匠との組手・修行)は `opening: lock`(鍔迫り合い)。敗北回は A/B の色を入れ替えて主役を B に置く(主役が負ける見せ方はこれで済んでいる。`winner` の仕組みは作らない)
 - 技を足すときの型: fight の finisher 分岐(キー・hits・fx・shots・ko_t)+ plan の SHAKE + anime の SFX/SFX_SIZE/ZOOM_PUNCH/ROLL_SHAKE + compose の BIG/BURST_FRAMES と描画 + sfx の音 + テスト
 
 ## 決まり・つまずき所(実際に踏んだもの)
