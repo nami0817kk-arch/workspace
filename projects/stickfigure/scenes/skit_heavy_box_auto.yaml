@@ -1,0 +1,17 @@
+# 比べる用: 手付けのカット「重い箱」(tools/shots/heavy_box.py)と同じ内容を、自動の台本(skit)で組んだもの
+name: skit_heavy_box_auto
+skit:
+  stage: field
+  background: {image: assets/bg/meadow.png, x0: -7.0, x1: 15.0, ground: 0.69}
+  mood: calm
+  actors:
+    A: {color: [0.5, 0.85, 0.3], x: -1.72}
+  props:
+    box: {kind: box, x: 1.55, size: 0.62, color: [205, 150, 80]}
+  beats:
+    - {who: A, act: walk, to: -0.22}
+    - {who: A, act: surprised, dur: 0.5}
+    - {who: A, act: walk, to: 0.90}
+    - {who: A, act: pickup, prop: box}
+    - {who: A, act: carry, to: 0.42}
+    - {act: wait, dur: 0.6}

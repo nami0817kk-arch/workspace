@@ -971,7 +971,7 @@ def build_plan(scene: dict, solve: bool = True) -> dict:
                 p = physics.sample(phys["states"][who], phys["taus"], min(tau, phys["taus"][-1]), a)
                 p["face"] = tracks[who].at(tau)["face"]
             else:
-                p = smoothers[who].step(tau, dtau)
+                p = smoothers[who].step(tau, dtau) if a.get("springs", True) else tracks[who].at(tau)   # springs: false = 手で付けたキーをそのまま使う(バネの遅れで手足の接触がずれない)
                 for sn in scene.get("snaps") or []:          # 区間で位置を固定(瞬間移動: PCHIP の先回りとバネで数コマに伸びるのを 1 コマにする)
                     if sn["who"] == who and sn["t0"] <= tau < sn["t1"]:
                         p = dict(p, dx=float(sn["dx"]))
