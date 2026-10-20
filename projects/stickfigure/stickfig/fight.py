@@ -899,7 +899,7 @@ def build_fight(spec: dict) -> dict:
         t_c0, t_split = _r(hl + 0.8), _r(hl + 1.25)      # 構え(abs の最初は hl+0.8)→ 0.45 秒溜めて分身
         t1, t2, t3 = _r(t_split + 0.3), _r(t_split + 0.52), _r(t_split + 0.74)   # 後ろ→前→後ろ の 3 発(0.22 秒間隔)
         t_big = _r(t3 + 0.36); t_hit = _r(t_big + 0.03)  # 本体の大振り
-        gx = [_r(b_root + 1.15), _r(min(b_root + 2.3, b_wall - 0.6))]   # 分身の立ち位置(相手の後ろと、さらに後ろ。壁の手前まで)
+        gx = [_r(b_root + 1.15), _r(a_root - 1.15)]      # 分身の立ち位置: 相手の後ろと本体の後ろ(前後から囲む)。「相手のさらに後ろ」は壁の手前で止まり 1 体目と 0.15 しか離れず重なった
         guard_a = dict(hz=0.86, lean=0.1, fa=0.9, fe=1.5, ra=0.7, re=1.6, ht=0.0, fl=0.6, fk=0.4, rl=-0.5, rk=0.3, face="fight")
         sink = dict(hz=0.68, lean=0.3, fa=-0.3, fe=1.2, ra=-0.3, re=1.2, ht=0.1, fl=0.8, fk=1.3, rl=-0.4, rk=1.0, face="fight")      # 沈んで腕を後ろに(溜め)
         punch = dict(hz=0.82, lean=0.4, fa=1.55, fe=0.05, ra=-0.3, re=1.0, ht=0.0, fl=1.0, fk=0.5, rl=-0.6, rk=0.2, face="fight")
