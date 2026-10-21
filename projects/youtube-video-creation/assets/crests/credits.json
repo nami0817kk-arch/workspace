@@ -490,5 +490,17 @@
     "file": "ドイツ.png",
     "source": "https://commons.wikimedia.org/wiki/File:Flag_of_Germany.svg",
     "note": "国旗。パブリックドメイン"
+  },
+  {
+    "club": "インテル",
+    "file": "インテル.png",
+    "source": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/05/FC_Internazionale_Milano_2021.svg/330px-FC_Internazionale_Milano_2021.svg.png?utm_source=en.wikipedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "note": "権利は晴れていない。小さく添えるだけ"
+  },
+  {
+    "club": "スペイン",
+    "file": "スペイン.png",
+    "source": "https://thumb.wikimedia.org/wikipedia/en/thumb/3/39/Spain_national_football_team_crest.svg/330px-Spain_national_football_team_crest.svg.png?utm_source=en.wikipedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "note": "権利は晴れていない。小さく添えるだけ"
   }
 ]

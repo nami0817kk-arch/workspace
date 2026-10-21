@@ -1,0 +1,415 @@
+# 取材メモ（10/22 木、シリーズ「比べる」、key: compare_937958_433177）。ラミン・ヤマル（バルセロナ・19歳）×ブカヨ・サカ（アーセナル・25歳）。どちらも右ウイング。
+# **FotMob・DataMB は使っていない**。数字は Transfermarkt（2026-10-21 取得。控え: research/raw/20261022_yamal_tm.json・20261022_saka_tm.json）。
+#   Transfermarkt 番号：ヤマル 937958・サカ 433177。API を番号ごとに（プロフィール・市場価値の推移・季ごとの大会別成績・試合ごとの記録）3秒あけて取得。
+#   クロスチェック：英語版 Wikipedia の Career statistics（Yamal は 2026-10-20 まで・Saka は 10-18 まで。控え: research/raw/20261022_lamine_yamal_wiki.txt・20261022_bukayo_saka_wiki.txt）。
+#   季ごとの「クラブの試合数と得点」は Transfermarkt と Wikipedia が全季一致（ヤマル 23/24 50試合7得点・24/25 55試合18得点・25/26 45試合24得点・26/27 12試合10得点／
+#   サカ 18/19 4試合0・19/20 38試合4・20/21 46試合7・21/22 43試合12・22/23 48試合15・23/24 47試合20・24/25 37試合12・25/26 49試合11・26/27 10試合4）。アシストと出場時間は Transfermarkt だけ。
+#
+# **重なりの確認（軸を重ねない）**：
+#   ・ヤマルの選手紹介（10/2 scripts/20261002_player_937958.md）が使った軸＝メッシに抱かれた赤ん坊・ユーロ/W杯を10代で・同じ位置100人の中の位置（シュート最上位・守備）・
+#     シュートマップ/ヒートマップ・季ごとの数字・通算194試合67点・母のアパートの話・背番号10・「世界最高の選手は2人」の発言・今季9試合9得点。
+#   ・サカの選手紹介（10/16 scripts/20261016_player_433177.md）が使った軸＝W杯3位決定戦のハットトリック・22年ぶりのリーグ優勝・8歳でアカデミー・左サイドバックへの転向・
+#     ユーロ決勝のPK失敗と少年テディの手紙・初めてのキャプテン・「右から中へ切れ込み左足で決める」・90分あたりのゴール 0.47/0.41/0.30/0.57・シュート／チャンス創出のパーセンタイル・ゴール期待値。
+#   ・10/2「ヤマルとメッシを同じ19歳で数える」（scripts/20261002_compare_342229_418560.md の取材メモ側は 20261004_sameage_yamal_messi.yaml）が使った軸＝メッシとの同じ年齢の比べ。
+#   **この回の軸（上の3本に無い）**：①2人を同じ物差し（得点＋アシストの90分あたり）で、同じ季・同じ年齢で並べる。②19歳の誕生日までにクラブで出た試合数・時間（ヤマル151試合11219分／サカ42試合2827分）。
+#   ③「同じ水準（0.85前後）に届いた年齢」＝ヤマル17歳・サカ22歳。④同じ年齢の市場価値（18歳・19歳の最高値）。⑤19歳の次の試合（クラシコ・エヴァートン戦）。
+#   **使っていない素材**：メッシ・赤ん坊・ユーロ/W杯の優勝・パーセンタイル・シュートマップ・左サイドバック・少年の手紙・キャプテンの日・ハットトリック・サカの「右から左足で仕留める」・
+#   ヤマルの母のアパート・背番号。入れなかった数：身長（Transfermarkt はヤマル 1.83m で、10/2 の選手紹介の 1.78m と食い違う。確かめられない）、負傷・欠場の話、私生活、代表の数字。
+#   日本との接点：確かめられた縁が無いので入れない（無理に押し込まない）。
+#
+# **スタッツの条件（足切り）**：クラブのトップチームの全公式戦（代表・育成年代は混ぜない）の出場時間。
+#   昨季 25/26：ヤマル 45試合3702分／サカ 49試合3256分（2人とも900分超。標本は十分）。
+#   今季 26/27（10/20 まで）：ヤマル 12試合1011分（900分超）／サカ 10試合727分（**450分は超えるが900分に届かない → 「いまの時点」と言う**）。サカの最新はプレミア10/18のノッティンガム・フォレスト戦で、
+#     アーセナル対バイエルン（CL・日本時間10/22 4:00）は含まない。
+#   大会が違う（ヤマル＝ラ・リーガ・CL・国王杯・スーペルコパ／サカ＝プレミア・CL・リーグ杯・FAカップ）一言を入れる。位置は Transfermarkt 表記でどちらも右ウイング（同じ群）。
+# **使った数（基本の数）と自分で割った値**（クラブの試合だけ・TM の大会別を足した）
+#   昨季 25/26：ヤマル＝ES1 28試合2270分16得点12アシスト＋CL 10試合874分6得点4アシスト＋国王杯 5試合450分2得点2アシスト＋スーペルコパ 2試合108分0得点0アシスト＝45試合・3702分・24得点・18アシスト。
+#     サカ＝GB1 31試合2226分7得点7アシスト＋CL 11試合687分3得点2アシスト＋リーグ杯 5試合285分1得点0アシスト＋FAカップ 2試合58分0得点0アシスト＝49試合・3256分・11得点・9アシスト。
+#   得点＋アシストの90分あたり＝(得点＋アシスト)×90÷出場分：25/26 ヤマル 42×90÷3702＝1.02／サカ 20×90÷3256＝0.55。何分に1回＝出場分÷(得点＋アシスト)：ヤマル 3702÷42＝88.1分／サカ 3256÷20＝162.8分。
+#   季ごと（得点＋アシスト90分あたり）：ヤマル 23/24 16×90÷2957＝0.49（50試合・7得点9アシスト）・24/25 43×90÷4553＝0.85（55試合・18得点25アシスト）・25/26 1.02・26/27 20×90÷1011＝1.78（12試合・10得点10アシスト）／
+#     サカ 18/19 4試合123分（得点アシスト0）・19/20 16×90÷2704＝0.53（38試合・4得点12アシスト）・20/21 17×90÷3606＝0.42（46試合・7得点10アシスト）・21/22 19×90÷3359＝0.51・22/23 27×90÷3744＝0.65・
+#     23/24 37×90÷3865＝0.86（47試合・20得点17アシスト）・24/25 26×90÷2619＝0.89（37試合・12得点14アシスト）・25/26 0.55・26/27 5×90÷727＝0.62（10試合・4得点1アシスト）。
+#   **19歳の誕生日まで**（ヤマル＝2026-07-13、25/26 までで確定。サカ＝2020-09-05、19/20 までで確定。19/20 のアーセナルは 2020-08 に終わっている）：
+#     ヤマル 22/23〜25/26 ＝ 1＋50＋55＋45＝151試合、7＋2957＋4553＋3702＝11219分、得点 0＋7＋18＋24＝49・アシスト 0＋9＋25＋18＝52（計101）。
+#     サカ 18/19〜19/20 ＝ 4＋38＝42試合、123＋2704＝2827分、得点 0＋4＝4・アシスト 0＋12＝12（計16）。11219÷2827＝3.97倍。
+#     90分あたり：ヤマル 101×90÷11219＝0.81／サカ 16×90÷2827＝0.51。サカの EFL トロフィー（U21）4試合は含めない（Wikipedia は Arsenal U21 の行）。ヤマルのバルサBは含めない。
+#   市場価値（Transfermarkt の推移、年齢ごとの最高値、百万€）：ヤマル 16歳90・17歳200・18歳200・19歳220／サカ 18歳35・19歳65・20歳65・21歳120・22歳140・23歳150・24歳140。
+#     19歳 220÷65＝3.4倍あまり。ヤマル17歳の200 は サカ22歳の140 より大きい。現在値 ヤマル2.2億（2026-07-22）・サカ1.1億（2026-06-03）＝ちょうど倍。
+# **チャンピオンズリーグだけ**（TM の CL 行。23/24〜26/27 が2人とも初めての4季。Wikipedia の『Europe』と一致）：ヤマル 10＋13＋10＋3＝36試合・579＋1103＋874＋270＝2826分・得点 0＋5＋6＋2＝13・アシスト 2＋4＋4＋4＝14（計27→27×90÷2826＝0.86）／
+#   サカ 9＋9＋11＋2＝31試合・725＋764＋687＋98＝2274分・得点 4＋6＋3＋1＝14・アシスト 4＋2＋2＋1＝9（計23→23×90÷2274＝0.91）。昨季25/26の CL だけ：ヤマル 10×90÷874＝1.03／サカ 5×90÷687＝0.66。
+# 年齢の差：2001-09-05 と 2007-07-13 ＝ 5年10か月。
+# 日程（ESPN、2026-10-21 時点）：バルセロナ対レアル・マドリード（ラ・リーガ）2026-10-25 20:00 UTC＝日本時間26日 5:00。エヴァートン対アーセナル（プレミア）2026-10-24 14:00 UTC＝日本時間24日 23:00。
+#   アーセナル対バイエルン（CL）は 10/21 19:00 UTC で結果を読んでいないので触れない。バルセロナの 10/20 PSG 戦（4-2 と表示）の中身は触れない。
+# 写真：すべて Wikimedia Commons（撮影者 Bryan Berlin・CC BY-SA 4.0）。ヤマル＝2026-07-14（W杯準決勝フランス戦 -057）・2026-07-19（決勝 -144）・フランス戦 -143。
+#   サカ＝2026-06-27（W杯 イングランド対パナマ -065・-130）・2026-06-23（ガーナ戦 -284・-296）。いずれも被写体の記載に本人名あり。背番号（ヤマル19・サカ7）でも合う。
+slot: other_1
+date: "2026年10月22日"
+format: news
+series: 比べる
+people:
+  - ラミン・ヤマル
+  - ブカヨ・サカ
+  - バルセロナ
+  - アーセナル
+
+theme:
+  end_bg: assets/images/20261022_yamal/arg144/01_w.jpg
+  id: compare_937958_433177
+  league: spain
+  kind: other
+  topic: ラミン・ヤマルとブカヨ・サカ
+  prefix: ""
+  title: ヤマルとサカ、19歳と25歳の差は何なのか
+  hook: ""
+  question: 同じ右ウイングの19歳と25歳は、同じ物差しで並べるとどこが違うのか
+  takeaway: 得点＋アシストの90分あたりが0.85前後に届いたのは、ヤマルが17歳の24/25、サカが22歳の23/24。19歳の誕生日までにクラブで出た時間はヤマル11219分・サカ2827分で、昨季の90分あたりは1.02と0.55
+  league_name: スペインとイングランド
+  opening_image: assets/images/20261022_yamal/arg144/01_w.jpg
+
+short_title: ヤマルとサカ、数字が並んだ年齢の差
+
+thumbnail:
+  photo: assets/images/20261022_yamal/arg144/01_w.jpg
+  photos:
+    - assets/images/20261022_yamal/arg144/01_w.jpg
+    - assets/images/20261022_saka/pan065/01_w.jpg
+  face_link: VS
+  layout:
+    layout: classic
+    names: [ヤマル, サカ]
+    name_colors: ["#004d98", "#ef0107"]
+  line1: ヤマルとサカ
+  line2: 17歳と22歳で並ぶ数字
+  tags: [ラミン・ヤマル, ブカヨ・サカ, バルセロナ, アーセナル]
+
+answer: 0.85前後に届いたのはヤマル17歳・サカ22歳。19歳の誕生日までの出場は4倍の差
+watch: 毎日、数字でサッカーを読み解きます
+
+sections:
+  - id: hook
+    heading: ヤマルとサカ、同じ数字に届いたのは何歳のときか
+    tier: 報道
+    telop: 得点＋アシスト、90分あたり
+    narrator: 解説
+    card: &hookcard
+      type: stats
+      title: 得点＋アシスト、90分あたり
+      items:
+        - ["0.85", "", ヤマル、17歳の24/25]
+        - ["0.86", "", サカ、22歳の23/24]
+        - ["5", 年, 同じ水準に届いた年齢の差]
+      focus: 0
+    say:
+      - text: ヤマルが17歳だった、24/25シーズン。
+        image: assets/images/20261022_yamal/arg144/01_w.jpg
+        card: {<<: *hookcard, focus: 0}
+      - text: 90分あたり、1試合に直した、得点とアシストは0.85。
+        card: {<<: *hookcard, focus: 0}
+      - text: サカが0.86に届いたのは、22歳の23/24シーズン。
+        image: assets/images/20261022_saka/pan065/01_w.jpg
+        card: {<<: *hookcard, focus: 1}
+      - text: 同じ水準に届いた年齢は、5年違います。
+        emph: true
+        card: {<<: *hookcard, focus: 2}
+      - text: 同じ右ウイングの2人の差は、何なのか。
+        image: assets/images/20261022_yamal/fra057/01_w.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/lamine-yamal/leistungsdaten/spieler/937958
+      - https://www.transfermarkt.com/bukayo-saka/leistungsdaten/spieler/433177
+
+  - id: data
+    heading: ヤマルとサカは、何歳でいくらの選手か
+    tier: 報道
+    telop: バルセロナとアーセナルの右ウイング
+    narrator: 解説
+    card: &datacard
+      type: duel
+      left: {name: ヤマル, club: バルセロナ, photo: assets/images/20261022_yamal/arg144/01_sq.jpg, color: "#004d98"}
+      right: {name: サカ, club: アーセナル, photo: assets/images/20261022_saka/pan065/01_sq.jpg, color: "#ef0107"}
+      rows:
+        - [年齢, 19歳, 25歳]
+        - [所属, バルセロナ, アーセナル]
+        - [代表, スペイン, イングランド]
+        - [位置, 右ウイング, 右ウイング]
+        - [利き足, 左, 左]
+        - [市場価値, 2.2億€, 1.1億€]
+      bars: [市場価値]
+      note: 市場価値は Transfermarkt の推定（ヤマル2026年7月・サカ2026年6月更新）
+    say:
+      - text: ヤマルは19歳。バルセロナの、スペイン代表です。
+        image: assets/images/20261022_yamal/fra057/01_w.jpg
+        card: {<<: *datacard, highlight_row: 年齢}
+      - text: サカは25歳。アーセナルの、イングランド代表。
+        image: assets/images/20261022_saka/pan130/01_w.jpg
+        card: {<<: *datacard, highlight_row: 年齢}
+      - text: ポジションは、2人とも右ウイング。利き足も、左です。
+        image: assets/images/20261022_yamal/fra143/01_w.jpg
+        card: {<<: *datacard, highlight_row: 利き足}
+      - text: 市場価値は、推定の移籍額。ヤマルが2.2億ユーロ、サカが1.1億ユーロ。
+        card: {<<: *datacard, highlight_row: 市場価値}
+      - text: ヤマルの値が、ちょうど倍です。
+        emph: true
+        card: {<<: *datacard, highlight_row: 市場価値}
+    sources:
+      - https://www.transfermarkt.com/lamine-yamal/profil/spieler/937958
+      - https://www.transfermarkt.com/bukayo-saka/profil/spieler/433177
+
+  - id: age
+    heading: 19歳の誕生日までに、2人はどれだけ出ていたのか
+    tier: 報道
+    main: true
+    telop: 19歳の誕生日までの、クラブの試合
+    narrator: 解説
+    card: &agecard
+      type: duel
+      left: {name: ヤマル, club: バルセロナ, photo: assets/images/20261022_yamal/arg144/01_sq.jpg, color: "#004d98"}
+      right: {name: サカ, club: アーセナル, photo: assets/images/20261022_saka/pan065/01_sq.jpg, color: "#ef0107"}
+      rows:
+        - [クラブでの試合, "151", "42"]
+        - [出場時間, 11219分, 2827分]
+        - [得点＋アシスト, "101", "16"]
+        - [得点＋アシスト（90分あたり）, "0.81", "0.51"]
+      bars: [クラブでの試合, 出場時間, 得点＋アシスト, 得点＋アシスト（90分あたり）]
+      note: 19歳の誕生日までのクラブのトップチームの公式戦。代表と育成年代は含まない。90分あたりは自分で割った値
+    say:
+      - text: ラミン・ヤマルとブカヨ・サカは、19歳の誕生日までに、どれだけ出ていたのか。
+        short_only: true
+        image: assets/images/20261022_yamal/fra057/01_w.jpg
+        card: none
+      - text: ここからは、年齢をそろえます。19歳の誕生日までの、クラブの試合です。
+        image: assets/images/20261022_saka/gha296/01_w.jpg
+        card: *agecard
+      - text: ヤマルは151試合に出て、11219分。
+        image: assets/images/20261022_yamal/arg144/01_w.jpg
+        card: {<<: *agecard, highlight_row: 出場時間}
+      - text: サカは42試合で、2827分です。
+        card: {<<: *agecard, highlight_row: 出場時間}
+      - text: ヤマルの出場時間は、サカの4倍ほどになります。
+        emph: true
+        image: assets/images/20261022_saka/gha284/01_w.jpg
+        card: {<<: *agecard, highlight_row: 出場時間}
+      - text: 得点とアシストを足すと、ヤマルが101、サカが16。
+        image: assets/images/20261022_yamal/fra143/01_w.jpg
+        card: {<<: *agecard, highlight_row: 得点＋アシスト}
+      - text: 90分あたりでは、0.81と0.51です。
+        card: {<<: *agecard, highlight_row: 得点＋アシスト（90分あたり）}
+      - text: 17歳で終えたシーズンで見ると、ヤマルは55試合で4553分。
+        image: assets/images/20261022_yamal/fra057/01_w.jpg
+        card: none
+      - text: サカは、4試合で123分。出場が増えたのは、18歳で終えたシーズンです。
+        image: assets/images/20261022_saka/pan065/01_w.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/lamine-yamal/leistungsdaten/spieler/937958
+      - https://www.transfermarkt.com/bukayo-saka/leistungsdaten/spieler/433177
+      - https://en.wikipedia.org/wiki/Lamine_Yamal
+      - https://en.wikipedia.org/wiki/Bukayo_Saka
+
+  - id: season
+    heading: 昨季の全公式戦、90分あたりでは何が違うのか
+    tier: 報道
+    telop: 昨季の全公式戦
+    narrator: 解説
+    card: &seasoncard
+      type: duel
+      left: {name: ヤマル, club: バルセロナ, photo: assets/images/20261022_yamal/arg144/01_sq.jpg, color: "#004d98"}
+      right: {name: サカ, club: アーセナル, photo: assets/images/20261022_saka/pan065/01_sq.jpg, color: "#ef0107"}
+      rows:
+        - [試合, "45", "49"]
+        - [出場時間, 3702分, 3256分]
+        - [得点, "24", "11"]
+        - [アシスト, "18", "9"]
+        - [得点＋アシスト（90分あたり）, "1.02", "0.55"]
+        - [点に絡む間隔, 88分に1回, 163分に1回]
+      bars: [出場時間, 得点, アシスト, 得点＋アシスト（90分あたり）]
+      note: 昨季25/26のクラブの全公式戦。大会はバルセロナがラ・リーガ・CL・国王杯・スーペルコパ、アーセナルがプレミア・CL・リーグ杯・FAカップ。90分あたりは自分で割った値
+    say:
+      - text: 昨季は、クラブの全公式戦で見ます。大会は、2人で違います。
+        image: assets/images/20261022_saka/pan065/01_w.jpg
+        card: *seasoncard
+      - text: ヤマルは45試合で3702分。サカは49試合で3256分です。
+        card: {<<: *seasoncard, highlight_row: 出場時間}
+      - text: 出場は、2人とも900分以上。数字を比べられる長さです。
+        image: assets/images/20261022_yamal/fra057/01_w.jpg
+        card: {<<: *seasoncard, highlight_row: 出場時間}
+      - text: 得点は、ヤマルが24、サカが11。アシストは、18と9。
+        card: {<<: *seasoncard, highlight_row: アシスト}
+      - text: 足して90分あたりにすると、ヤマルが1.02、サカが0.55。
+        emph: true
+        image: assets/images/20261022_saka/pan130/01_w.jpg
+        card: {<<: *seasoncard, highlight_row: 得点＋アシスト（90分あたり）}
+      - text: ヤマルは88分に1回、得点かアシスト。サカは163分に1回です。
+        card: {<<: *seasoncard, highlight_row: 点に絡む間隔}
+    sources:
+      - https://www.transfermarkt.com/lamine-yamal/leistungsdaten/spieler/937958
+      - https://www.transfermarkt.com/bukayo-saka/leistungsdaten/spieler/433177
+
+  - id: cl
+    heading: 同じ大会、チャンピオンズリーグだけで並べるとどうか
+    tier: 報道
+    telop: チャンピオンズリーグの通算
+    narrator: 解説
+    card: &clcard
+      type: duel
+      left: {name: ヤマル, club: バルセロナ, photo: assets/images/20261022_yamal/arg144/01_sq.jpg, color: "#004d98"}
+      right: {name: サカ, club: アーセナル, photo: assets/images/20261022_saka/pan065/01_sq.jpg, color: "#ef0107"}
+      rows:
+        - [試合, "36", "31"]
+        - [出場時間, 2826分, 2274分]
+        - [得点, "13", "14"]
+        - [アシスト, "14", "9"]
+        - [得点＋アシスト（90分あたり）, "0.86", "0.91"]
+        - [昨季だけの90分あたり, "1.03", "0.66"]
+      bars: [出場時間, 得点, アシスト, 得点＋アシスト（90分あたり）, 昨季だけの90分あたり]
+      note: 23/24から今季（10月20日まで）のチャンピオンズリーグ。2人とも23/24が初めて。90分あたりは自分で割った値
+    say:
+      - text: ただ、大会をそろえると、別の見え方になります。
+        image: assets/images/20261022_yamal/fra057/01_w.jpg
+        card: *clcard
+      - text: 同じ大会、チャンピオンズリーグ。23/24から、今季までです。
+        card: {<<: *clcard, highlight_row: 試合}
+      - text: ヤマルは36試合で2826分。サカは31試合で2274分。
+        image: assets/images/20261022_saka/gha284/01_w.jpg
+        card: {<<: *clcard, highlight_row: 出場時間}
+      - text: 得点は、ヤマルが13、サカが14。アシストは、14と9。
+        card: {<<: *clcard, highlight_row: アシスト}
+      - text: 通算の90分あたりは、ヤマルが0.86、サカが0.91。
+        emph: true
+        image: assets/images/20261022_saka/pan065/01_w.jpg
+        card: {<<: *clcard, highlight_row: 得点＋アシスト（90分あたり）}
+      - text: この大会の通算では、サカが、わずかに上です。
+        card: {<<: *clcard, highlight_row: 得点＋アシスト（90分あたり）}
+      - text: 昨季だけなら、ヤマルが1.03、サカが0.66でした。
+        image: assets/images/20261022_yamal/arg144/01_w.jpg
+        card: {<<: *clcard, highlight_row: 昨季だけの90分あたり}
+    sources:
+      - https://www.transfermarkt.com/lamine-yamal/leistungsdatendetails/spieler/937958
+      - https://www.transfermarkt.com/bukayo-saka/leistungsdatendetails/spieler/433177
+      - https://en.wikipedia.org/wiki/Lamine_Yamal
+      - https://en.wikipedia.org/wiki/Bukayo_Saka
+
+  - id: trend
+    heading: 2人の数字は、いつ入れ替わったのか
+    tier: 報道
+    telop: シーズンごとの90分あたり
+    narrator: 解説
+    card: &trendcard
+      type: line
+      title: 得点＋アシスト、90分あたり（クラブの全公式戦）
+      x: [23/24, 24/25, 25/26, 26/27]
+      series:
+        - [ヤマル, [0.49, 0.85, 1.02, 1.78]]
+        - [サカ, [0.86, 0.89, 0.55, 0.62]]
+      focus: ヤマル
+      note: 年齢はシーズンが終わる6月末のもの。26/27は10月20日までの数字（ヤマル1011分・サカ727分）
+    say:
+      - text: シーズンごとに並べます。同じ数字を、季ごとに追います。
+        image: assets/images/20261022_yamal/fra143/01_w.jpg
+        card: *trendcard
+      - text: 23/24。ヤマルは16歳で0.49。サカは22歳で0.86でした。
+        card: {<<: *trendcard, highlight: 23/24}
+      - text: 24/25。ヤマルは0.49から0.85へ。
+        image: assets/images/20261022_saka/gha296/01_w.jpg
+        card: {<<: *trendcard, highlight: 24/25}
+      - text: サカは0.86から0.89へ。ほぼ並びます。
+        card: {<<: *trendcard, highlight: 24/25}
+      - text: 25/26。ヤマルが1.02、サカが0.55。ここで、ヤマルが上に出ました。
+        emph: true
+        card: {<<: *trendcard, highlight: 25/26}
+      - text: 今季は、ここまで。ヤマルが1.78、サカが0.62。昨季より、2人とも上です。
+        image: assets/images/20261022_yamal/arg144/01_w.jpg
+        card: {<<: *trendcard, highlight: 26/27}
+      - text: サカの今季は727分。試合が増えれば、動く数字です。
+        card: {<<: *trendcard, highlight: 26/27}
+    sources:
+      - https://www.transfermarkt.com/lamine-yamal/leistungsdaten/spieler/937958
+      - https://www.transfermarkt.com/bukayo-saka/leistungsdaten/spieler/433177
+
+  - id: value
+    heading: 市場価値は、同じ年齢で並べると、どれだけ違うのか
+    tier: 報道
+    telop: 同じ年齢での市場価値
+    narrator: 解説
+    card: &valuecard
+      type: duel
+      left: {name: ヤマル, club: バルセロナ, photo: assets/images/20261022_yamal/arg144/01_sq.jpg, color: "#004d98"}
+      right: {name: サカ, club: アーセナル, photo: assets/images/20261022_saka/pan065/01_sq.jpg, color: "#ef0107"}
+      rows:
+        - [18歳の最高値, 2億€, 3500万€]
+        - [19歳の最高値, 2.2億€, 6500万€]
+      bars: [18歳の最高値, 19歳の最高値]
+      note: Transfermarkt の市場価値の推移。年齢ごとの最高値
+    say:
+      - text: 市場価値は、各年齢の最高値で見ます。
+        image: assets/images/20261022_saka/gha284/01_w.jpg
+        card: *valuecard
+      - text: 18歳は、ヤマルが2億ユーロ。サカが3500万ユーロ。
+        card: {<<: *valuecard, highlight_row: 18歳の最高値}
+      - text: 19歳は、サカが6500万ユーロ。
+        image: assets/images/20261022_yamal/fra057/01_w.jpg
+        card: {<<: *valuecard, highlight_row: 19歳の最高値}
+      - text: ヤマルの19歳の値は、サカの3.4倍あまりになります。
+        emph: true
+        card: {<<: *valuecard, highlight_row: 19歳の最高値}
+      - text: サカが22歳でつけた最高値は、1.4億ユーロ。
+        image: assets/images/20261022_saka/pan065/01_w.jpg
+        card: none
+      - text: ヤマルは、17歳で2億ユーロに届いていました。
+        image: assets/images/20261022_yamal/arg144/01_w.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/lamine-yamal/marktwertverlauf/spieler/937958
+      - https://www.transfermarkt.com/bukayo-saka/marktwertverlauf/spieler/433177
+
+  - id: view
+    heading: 見立て・差は、出始めた早さか、1分あたりの数字か
+    tier: 背景
+    viewpoint: true
+    narrator: 解説
+    telop: 数字の違いが示すもの
+    card: &viewcard
+      type: duel
+      left: {name: ヤマル, club: バルセロナ, photo: assets/images/20261022_yamal/arg144/01_sq.jpg, color: "#004d98"}
+      right: {name: サカ, club: アーセナル, photo: assets/images/20261022_saka/pan065/01_sq.jpg, color: "#ef0107"}
+      rows:
+        - [0.85前後に届いた年齢, 17歳, 22歳]
+        - [19歳の誕生日までの出場, 11219分, 2827分]
+        - [昨季の90分あたり, "1.02", "0.55"]
+        - [19歳の最高値, 2.2億€, 6500万€]
+      bars: [19歳の誕生日までの出場, 昨季の90分あたり, 19歳の最高値]
+      note: 90分あたりは得点＋アシスト。クラブの全公式戦
+    say:
+      - text: 見立てです。0.85前後に届いたのは、ヤマルが17歳、サカが22歳。
+        mark: {kind: circle, row: 0}
+        image: assets/images/20261022_saka/pan130/01_w.jpg
+        card: {<<: *viewcard, highlight_row: 0.85前後に届いた年齢}
+      - text: 19歳の誕生日までに、クラブで出た時間は、ヤマルのほうが4倍ほど。
+        card: {<<: *viewcard, highlight_row: 19歳の誕生日までの出場}
+      - text: ヤマルは、早くから長く出て、数字も高い水準へ届きました。
+        emph: true
+        image: assets/images/20261022_yamal/fra057/01_w.jpg
+        card: {<<: *viewcard, highlight_row: 昨季の90分あたり}
+      - text: ただ、チャンピオンズリーグの通算は、0.86と0.91でした。
+        image: assets/images/20261022_saka/gha296/01_w.jpg
+        card: none
+      - text: サカの22歳と23歳も、0.86と0.89。サカの高い水準です。
+        card: none
+      - text: 差は、出始めた早さと、昨季の1分あたりの数字の、2つに見えます。
+        image: assets/images/20261022_yamal/fra143/01_w.jpg
+        card: {<<: *viewcard, highlight_row: 19歳の最高値}
+      - text: 次は、バルセロナ対レアル・マドリード。日本時間26日の午前5時です。
+        card: none
+      - text: アーセナルは、日本時間24日の午後11時、エヴァートン戦。
+        image: assets/images/20261022_saka/pan065/01_w.jpg
+        card: none
+      - text: ヤマルの1.78と、サカの0.62が、どう動くか。見届けます。
+        image: assets/images/20261022_yamal/arg144/01_w.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/lamine-yamal/leistungsdaten/spieler/937958
+      - https://www.transfermarkt.com/bukayo-saka/leistungsdaten/spieler/433177
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard?dates=20261025
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20261024
+      - https://en.wikipedia.org/wiki/Lamine_Yamal
+      - https://en.wikipedia.org/wiki/Bukayo_Saka

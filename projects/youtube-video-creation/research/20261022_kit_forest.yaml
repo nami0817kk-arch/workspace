@@ -1,0 +1,542 @@
+# ユニフォームとエンブレムの歴史 ノッティンガム・フォレスト（10/22 作成）。雛形は 10/21 ウェストハム回。
+# 題の問い：フォレストの胸の木は、いつ、どうやって選ばれたのか（星2つは何を数えるのか）。
+# 軸：①現行の紋章（木）は1973年の地元紙の公募で決まり、1974年に胸に付いた。応募800件超・優勝はデイヴィッド・ルイス・仕上げは当時の書記ケン・スメイルズ。クラフの発案という話は誤り（クラフの就任は1975-01-06）。
+#    ②木の前は市の紋章（城をクラブの頭文字に替えた版）。付いた年は資料で割れる（ウィキペディア＝1947年／ユニフォーム史サイト＝1958年）。③赤＝1865年の集まりで「ガリバルディ・レッド」の房付き帽12個。④星2つ＝1979・1980の欧州王者（どちらも1対0）。⑤シャツの変遷と2026/27ホーム。
+# 取材：2026-10-22。requests（ブラウザ User-Agent）とWebFetch。ブラウザ操作・JS実行・検索エンジンのAI要約は使っていない（WebSearch は題名とURLを探すのと、クラブ公式記事の裏取りのみ）。
+#   読んだ：ウィキペディア en "Nottingham Forest F.C."／"History of Nottingham Forest F.C."／"Arsenal F.C."（Colours）／"Club Atlético Independiente"（色の節）。Historical Football Kits（historicalkits.co.uk、キット史の個人サイト。紋章の変遷と製造元）。クラブの公式ショップの商品説明（WebFetch、2026/27ホームシャツ）。
+#   whatsbehindthebadge.com（個人ブログ。木が森・川の意味という説明は一次情報で確かめられず、台本に入れない）。
+#   クラブ公式「Celebrating 50 years of The Tricky Tree」（nottinghamforest.co.uk/news/2023/april/14/…、2023-04-14）：サイトは表示時にAPIから本文を読む作りで、requests・WebFetch では本文が取れなかった（APIは認証が要るので触らない）。
+#     本文の代わりに WebSearch の検索結果の要約で確かめた（2回、別の問い）：「2月にノッティンガム・ポスト紙が公募・応募800件超・4月にデイヴィッド・ルイス（コソールの若いデザイナー、ノッティンガム・ポリテクニックで働く）の案が優勝・当時の書記ケン・スメイルズと仕上げた・2023年4月に50周年、ルイスを招いて記念版を作った」。
+#     **公式本文を自分の目で読めていない**ので、台本では「クラブは書く」と言い、確度は「報道」止まり。公開前に人が公式記事を開いて確かめる。
+# ---- 一次情報・資料で確かめたこと（年は本文のまま）----
+#   ・ウィキペディア(Forest)：1865年にClinton Armsで集まり（シンティの選手）、サッカーを選ぶ。同じ集まりで「twelve tasselled caps coloured 'Garibaldi Red'」を買うと決めた。クラブはシャツでなく帽子で区別した時代。
+#     「The first club crest used by Forest was the city arms of Nottingham, which was first used on kits in 1947. The current club badge was introduced in 1974, following a competition in 1973 … winning design was by … David Lewis … The logo has been incorrectly reported as being the brainchild of manager Brian Clough. However, he did not arrive at the club until the following year. Forest have two stars above the club badge to commemorate its European Cup victories in 1979 and 1980.」
+#     「1905 South America tour inspired Argentine club Independiente to adopt red」（Independiente の記事は採用を1908年とし、「Langone が Forest に熱中」説と「社会党の書記長が労働者の象徴として」説の2つを書く）。2026年8月に Marex が胸のスポンサーに確定（言わない＝一次情報で確かめていないため）。
+#   ・ウィキペディア(History)：クラフ就任 1974ではなく **1975-01-06**（リーズの44日間のあと12週）。1979欧州杯決勝＝ミュンヘン・オリンピアシュタディオンでマルメに1対0（フランシスの後方での頭）、1980＝マドリード・サンティアゴ・ベルナベウでハンブルクに1対0（ロバートソン）。FA杯 1898・1959。
+#   ・ユニフォーム史サイト：1958年に「大陸風」の新しいシャツと、ノッティンガム市の紋章の版（城をクラブの頭文字NFFCに替えた）／1949年の3部降格のころ「ロビン・フッドのような人物の風変わりな紋章」が数シーズン／1970年に紋章を直接刺繍／1974年3月ごろ新紋章／2008-09・2009-10は30周年で銀の刺繍の星／2015-16は150周年で深い赤に金の飾り・胸の広告なし／製造元：アディダス 1976-77〜1983-84、アンブロ 1984-85〜2010年代前半、アディダス 2012〜17、マクロン 2017〜23、アディダス 2023〜（年の区切りは資料により1年ずれる＝台本では「1970年代後半〜80年代前半」「2023年に復帰」までしか言わない）。
+#   ・クラブの公式ショップ（2026/27 ホームシャツの商品説明）：「Inspired by the mist rising from the River Trent … tonal shades of red … Club crest … adidas」。
+# ---- 食い違い（台本で断る）----
+#   ・**市の紋章が胸に付いた年**：ウィキペディア＝1947年／ユニフォーム史サイト＝1958年の版（城をNFFCに替えた）。
+#   ・**新紋章の年**：公募は1973年、胸に付いたのは1974年（ウィキペディア）／ユニフォーム史サイトは「1974年3月ごろ」。応募数はクラブ公式の要約で「800件超」、別の資料は855件→「800件を超える」と言う。
+#   ・**ルイスの肩書**：クラブ公式の要約＝ポリテクニックで働く若いデザイナー／ウィキペディア＝グラフィックデザインの講師→「ポリテクニックで働くデザイナー」と言う。
+#   ・言わなかったもの：星がいつ紋章に付いたか（確かめられず）／木が何を表すか（一次情報なし）／著作権登録のために替えたという説（二次情報のみ）／アーセナルへの赤シャツの贈り物（別の回で扱っているため重ねない）／スポンサー名・契約額／ブライアン・クラフの人柄。
+# ---- 自分で数えた数 ----
+#   2026-1974=52年（現行の紋章）。2026-1865=161年（赤）。52÷161=0.32（およそ3分の1）。1979-1974=5年・1980-1974=6年（木が付いて星2つがそろうまで）。1980-1979=1年で連覇。
+# ---- 日本との接点 ----
+#   調べたが無し（ウィキデータで日本代表歴のあるフォレスト所属選手は0。pl_data の登録選手にも日本人なし）。無理に入れない。
+# ---- 写真（assets/images/20261022_kit_forest/、出典は credits.json）----
+#   Commons の CC BY / CC BY-SA / 著作権切れのみ。シティ・グラウンド・ガリバルディの肖像（著作権切れ）・オリンピアシュタディオン・ベルナベウ。代理店の写真は使っていない。人物は特定していない。
+#   エンブレムは assets/crests/ノッティンガムフォレスト.png・節の頭の差し込み assets/backgrounds/cut_ノッティンガムフォレスト.png（権利は晴れていない＝引き受ける危険）。
+# ネットの反応は入れない（voice_min: 0）。シリーズの回にショートは作らない決まり。
+date: 2026年10月22日
+slot: other_2
+format: news
+series: ユニフォームとエンブレムの歴史
+voice_min: 0
+people:
+- ノッティンガム・フォレスト
+watch: 毎日、数字でサッカーを読み解きます
+theme:
+  end_bg: assets/images/20261022_kit_forest/f01_city_ground.jpg
+  id: kit_forest
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: ノッティンガム・フォレスト
+  title: ノッティンガム・フォレストの胸の木は、いつ、どうやって選ばれたのか
+  question: フォレストの胸の木は、いつ誰が決め、星2つは何を数えているのか
+  opening_image: assets/images/20261022_kit_forest/f01_city_ground.jpg
+  lead: 胸に、木と星。
+  hook: ''
+  takeaway: フォレストの胸の木は、1973年の地元紙の公募で決まり、1974年から52年続いている。赤の161年のおよそ3分の1。公募は800件を超え、仕上げは当時の書記と。ブライアン・クラフの就任は1975年で、紋章が決まったあと。星2つは1979年と1980年の欧州王者で、どちらも1対0。木が付いて5年で最初の星がついた。木の前の市の紋章の年は、資料で1947年と1958年に割れる
+  hook_unused: ''
+thumbnail:
+  layout: classic
+  callouts: [応募800件超の公募, 星2つは欧州連覇]
+  photo: assets/images/20261022_kit_forest/f07_clough_stand.jpg
+  line1: フォレストの胸の木
+  line2: 公募で決まり52年続く
+  tags:
+  - ノッティンガム・フォレスト
+  - フォレスト
+  - シティ・グラウンド
+  - ユニフォーム
+  - エンブレム
+sections:
+- id: since
+  main: true
+  heading: 胸の木は、いつ、誰が決めたのか
+  bg: assets/images/20261022_kit_forest/f01_city_ground.jpg
+  tier: 報道
+  telop: 木の紋章は1973年の地元紙の公募で決まり、1974年から胸にある。応募は800件超（クラブ公式）
+  narrator: 解説
+  card: &id_since
+    type: timeline
+    title: 胸の木が決まるまで（クラブ公式・ウィキペディア）
+    rows:
+    - - 1973年2月
+      - 地元紙が新しい紋章を公募
+    - - 1973年4月
+      - デイヴィッド・ルイスの案が優勝
+    - - 1974年
+      - 新しい紋章が胸に付く
+    - - 1975年1月
+      - ブライアン・クラフが監督に就任
+    - - 2023年
+      - 50周年。ルイスを招いて記念版
+    focus: 1973年2月
+    highlight_row: 0
+  say:
+  - text: フォレストの、胸のマークの話です。
+    image: assets/images/20261022_kit_forest/f01_city_ground.jpg
+    emph: true
+    card: none
+  - text: 胸には、木と、その上に星が2つ。
+    image: assets/images/20261022_kit_forest/f01_city_ground.jpg
+    card: none
+  - text: 現行の紋章が付いたのは、1974年です。
+    image: assets/images/20261022_kit_forest/f07_clough_stand.jpg
+    card:
+      <<: *id_since
+      highlight_row: 2
+  - text: 2026年まで、52年続いています。
+    emph: true
+    image: assets/images/20261022_kit_forest/f07_clough_stand.jpg
+    card: &id_52
+      type: calc
+      title: 現行の紋章が続いた年数（自分で引いた）
+      terms:
+      - - 2026年
+        - いま
+      - - 1974年
+        - 胸に付いた年
+      - - 52年
+        - 引いた答え
+      ops:
+      - −
+      - ＝
+  - text: 決めたのは、地元紙の公募です。1973年の2月に始まりました。
+    image: assets/images/20261022_kit_forest/f08_trent_end.jpg
+    card:
+      <<: *id_since
+      highlight_row: 0
+  - text: 応募は、800件を超えた、とクラブは書きます。選ばれたのは、その中の1つです。
+    image: assets/images/20261022_kit_forest/f08_trent_end.jpg
+    card: none
+  - text: 4月に優勝したのは、デイヴィッド・ルイスの案。
+    image: assets/images/20261022_kit_forest/f01_city_ground.jpg
+    card:
+      <<: *id_since
+      highlight_row: 1
+  - text: ポリテクニックで働く、デザイナーでした。
+    image: assets/images/20261022_kit_forest/f01_city_ground.jpg
+    card:
+      <<: *id_since
+      highlight_row: 1
+  - text: いまのトレント大学の、前の学校です。
+    image: assets/images/20261022_kit_forest/f01_city_ground.jpg
+    card: none
+  - text: 当時の書記のケン・スメイルズと、最後の形に仕上げた、とクラブは書きます。
+    image: assets/images/20261022_kit_forest/f07_clough_stand.jpg
+    card: none
+  - text: 公募の結果が出てから胸に付くまで、1年のずれがあります。
+    image: assets/images/20261022_kit_forest/f07_clough_stand.jpg
+    card:
+      <<: *id_since
+      highlight_row: 2
+  - text: ブライアン・クラフが監督になったのは、1975年1月6日です。
+    emph: true
+    image: assets/images/20261022_kit_forest/f05_main_stand.jpg
+    card:
+      <<: *id_since
+      highlight_row: 3
+  - text: 紋章が、先に決まっていました。
+    image: assets/images/20261022_kit_forest/f05_main_stand.jpg
+    card: none
+  - text: クラフの発案と伝わることがありますが、ウィキペディアは、誤りだとしています。
+    image: assets/images/20261022_kit_forest/f08_trent_end.jpg
+    card: none
+  - text: 2023年の50周年には、ルイスを招いて、記念の紋章を作りました。
+    image: assets/images/20261022_kit_forest/f01_city_ground.jpg
+    card:
+      <<: *id_since
+      highlight_row: 4
+  sources:
+  - https://www.nottinghamforest.co.uk/news/2023/april/14/celebrating-50-years-of-the-tricky-tree/
+  - https://en.wikipedia.org/wiki/Nottingham_Forest_F.C.
+  - https://historicalkits.co.uk/Nottingham_Forest/Nottingham_Forest.htm
+- id: before
+  heading: 木の前の紋章は、どんな形だったのか
+  bg: assets/images/20261022_kit_forest/f01_city_ground.jpg
+  tier: 背景
+  telop: 木の前は市の紋章。付いた年は、ウィキペディアが1947年、ユニフォーム史のサイトは1958年
+  narrator: 解説
+  card: &id_before
+    type: table
+    title: 木の前の紋章（資料で割れる）
+    columns:
+    - 資料
+    - 書いてあること
+    rows:
+    - - ウィキペディア
+      - 最初の紋章は市の紋章。1947年から
+    - - ユニフォーム史のサイト
+      - 市の紋章の版は1958年から
+    - - 同じサイト
+      - 1949年ごろに風変わりな人物の紋章
+    - - 同じサイト
+      - 1970年に刺繍に。1974年3月ごろ、木に
+    highlight_row: 0
+  say:
+  - text: 木の前は、何があったのか。年は、資料でずれています。
+    image: assets/images/20261022_kit_forest/f01_city_ground.jpg
+    card: none
+  - text: ウィキペディアでは、最初の紋章は、ノッティンガム市の紋章です。
+    emph: true
+    image: assets/images/20261022_kit_forest/f10_city_arms.jpg
+    card:
+      <<: *id_before
+      highlight_row: 0
+  - text: シャツに付いたのは、1947年からです。
+    image: assets/images/20261022_kit_forest/f10_city_arms.jpg
+    card:
+      <<: *id_before
+      highlight_row: 0
+  - text: ユニフォーム史のサイトは、市の紋章の版を、1958年と書きます。
+    image: assets/images/20261022_kit_forest/f10_city_arms.jpg
+    card:
+      <<: *id_before
+      highlight_row: 1
+  - text: 年は、11年ずれています。
+    image: assets/images/20261022_kit_forest/f05_main_stand.jpg
+    card: none
+  - text: 市の紋章の、城の部分を、クラブの頭文字に替えた形です。
+    image: assets/images/20261022_kit_forest/f05_main_stand.jpg
+    card: none
+  - text: 緑の十字は森、3つの金の冠は王への忠誠、と同じサイトは説明します。
+    image: assets/images/20261022_kit_forest/f10_city_arms.jpg
+    card: none
+  - text: 同じサイトは、1949年ごろの、風変わりな人物の紋章も書きます。
+    image: assets/images/20261022_kit_forest/f08_trent_end.jpg
+    card:
+      <<: *id_before
+      highlight_row: 2
+  - text: 数シーズンで、消えたそうです。
+    image: assets/images/20261022_kit_forest/f08_trent_end.jpg
+    card:
+      <<: *id_before
+      highlight_row: 2
+  - text: 1970年に、紋章は、シャツに直接、刺繍されるようになります。
+    image: assets/images/20261022_kit_forest/f08_trent_end.jpg
+    card:
+      <<: *id_before
+      highlight_row: 3
+  - text: そして、1973年の公募の結果、この古い紋章が、木に替わります。
+    emph: true
+    image: assets/images/20261022_kit_forest/f07_clough_stand.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Nottingham_Forest_F.C.
+  - https://historicalkits.co.uk/Nottingham_Forest/Nottingham_Forest.htm
+- id: red
+  heading: 赤は、いつ、なぜ選ばれたのか
+  bg: assets/images/20261022_kit_forest/f01_city_ground.jpg
+  tier: 背景
+  telop: 1865年の集まりで、赤い房付きの帽子12個を買うと決めた。色はガリバルディ・レッド
+  narrator: 解説
+  card: &id_red
+    type: stats
+    title: 赤の始まり（ウィキペディア）
+    items:
+    - - '1865'
+      - 年
+      - クラブの創立
+    - - '12'
+      - 個
+      - 房付きの赤い帽子
+    - - '161'
+      - 年
+      - 赤のまま（自分で数えた）
+    focus: 0
+  say:
+  - text: 次は、赤です。始まりは、シャツではなく、帽子でした。
+    image: assets/images/20261022_kit_forest/f09_garibaldi_banner.jpg
+    card: none
+  - text: 1865年。シンティという球技の選手たちが集まり、サッカーをすると決めます。
+    image: assets/images/20261022_kit_forest/f02_garibaldi.jpg
+    card:
+      <<: *id_red
+      focus: 0
+  - text: 同じ集まりで、赤い房付きの帽子を、12個買うと決めました。
+    emph: true
+    image: assets/images/20261022_kit_forest/f02_garibaldi.jpg
+    card:
+      <<: *id_red
+      focus: 1
+  - text: 当時は、シャツより、帽子で、チームを見分けました。
+    image: assets/images/20261022_kit_forest/f09_garibaldi_banner.jpg
+    card: none
+  - text: 色の名前は、ガリバルディ・レッド。
+    image: assets/images/20261022_kit_forest/f09_garibaldi_banner.jpg
+    card: none
+  - text: イタリアの愛国者、ガリバルディが率いた、赤いシャツの義勇兵にちなみます。
+    image: assets/images/20261022_kit_forest/f02_garibaldi.jpg
+    card: none
+  - text: 赤を公式の色にした最初のクラブだ、とされています。
+    image: assets/images/20261022_kit_forest/f02_garibaldi.jpg
+    card: none
+  - text: 1865年から、2026年まで。赤のまま、161年です。
+    emph: true
+    image: assets/images/20261022_kit_forest/f09_garibaldi_banner.jpg
+    card:
+      <<: *id_red
+      focus: 2
+  - text: 1905年、フォレストは南米へ遠征します。
+    image: assets/images/20261022_kit_forest/f08_trent_end.jpg
+    card: none
+  - text: アルゼンチンのインデペンディエンテが赤を採った、きっかけだという説があります。
+    image: assets/images/20261022_kit_forest/f08_trent_end.jpg
+    card: none
+  - text: そのクラブの記事は、採用を1908年とします。
+    image: assets/images/20261022_kit_forest/f08_trent_end.jpg
+    card: none
+  - text: 労働者の象徴だった、という別の説も、書かれています。
+    image: assets/images/20261022_kit_forest/f08_trent_end.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Nottingham_Forest_F.C.
+  - https://en.wikipedia.org/wiki/Club_Atl%C3%A9tico_Independiente
+- id: stars
+  heading: 星2つは、何を数えているのか
+  bg: assets/images/20261022_kit_forest/f01_city_ground.jpg
+  tier: 背景
+  telop: 星は2つ。欧州王者になった1979年と1980年。どちらも1対0の決勝
+  narrator: 解説
+  card: &id_stars
+    type: table
+    title: 星2つの決勝（ウィキペディア）
+    columns:
+    - 年
+    - 会場
+    - 相手
+    - 結果
+    rows:
+    - - 1979年
+      - ミュンヘン
+      - マルメ
+      - 1対0
+    - - 1980年
+      - マドリード
+      - ハンブルク
+      - 1対0
+    highlight_row: 0
+  say:
+  - text: 次は、木の上の、星です。
+    image: assets/backgrounds/cut_ノッティンガムフォレスト.png
+    card: none
+  - text: フォレストの星は、2つ。
+    emph: true
+    image: assets/images/20261022_kit_forest/f03_olympiastadion.jpg
+    card:
+      <<: *id_stars
+      highlight_row: 0
+  - text: ヨーロッパの王者になった、1979年と1980年を数えます。
+    image: assets/images/20261022_kit_forest/f03_olympiastadion.jpg
+    card:
+      <<: *id_stars
+      highlight_row: 0
+  - text: 当時の欧州一を決める、ヨーロピアンカップ。
+    image: assets/images/20261022_kit_forest/f03_olympiastadion.jpg
+    card: none
+  - text: いまの欧州一の大会、その前の姿です。
+    image: assets/images/20261022_kit_forest/f03_olympiastadion.jpg
+    card: none
+  - text: 1979年の決勝は、ミュンヘン。スウェーデンのマルメに、1対0の勝ち。
+    image: assets/images/20261022_kit_forest/f03_olympiastadion.jpg
+    card:
+      <<: *id_stars
+      highlight_row: 0
+  - text: 決めたのは、フランシス。ロバートソンのクロスに、後ろから頭で合わせました。
+    image: assets/images/20261022_kit_forest/f06_olympia_seats.jpg
+    card: none
+  - text: 1980年は、マドリード。ハンブルクに、また1対0の勝ち。
+    image: assets/images/20261022_kit_forest/f04_bernabeu.jpg
+    card:
+      <<: *id_stars
+      highlight_row: 1
+  - text: 決めたのは、ロバートソン。バートルズとのパス交換から、決めました。
+    image: assets/images/20261022_kit_forest/f04_bernabeu.jpg
+    card: none
+  - text: 2回の決勝は、どちらも、1点差の勝ちでした。
+    emph: true
+    image: assets/images/20261022_kit_forest/f04_bernabeu.jpg
+    card: none
+  - text: 木から最初の星まで、5年です。
+    image: assets/images/20261022_kit_forest/f07_clough_stand.jpg
+    card: &id_gap
+      type: calc
+      title: 木が付いてから、最初の星まで（自分で引いた）
+      terms:
+      - - 1979年
+        - 最初の欧州王者
+      - - 1974年
+        - 木が胸に付いた年
+      - - 5年
+        - 引いた答え
+      ops:
+      - −
+      - ＝
+  - text: 2つ目の星までは、6年です。
+    image: assets/images/20261022_kit_forest/f07_clough_stand.jpg
+    card: *id_gap
+  - text: 2008/09と2009/10は、30周年の記念。
+    image: assets/images/20261022_kit_forest/f05_main_stand.jpg
+    card: none
+  - text: 星が、銀の刺繍になりました。
+    image: assets/images/20261022_kit_forest/f05_main_stand.jpg
+    card: none
+  - text: 星が紋章に付いた年は、調べた範囲では、確かめられませんでした。
+    image: assets/images/20261022_kit_forest/f01_city_ground.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Nottingham_Forest_F.C.
+  - https://en.wikipedia.org/wiki/History_of_Nottingham_Forest_F.C.
+  - https://historicalkits.co.uk/Nottingham_Forest/Nottingham_Forest.htm
+- id: kit
+  heading: シャツの形と色は、どう変わってきたのか
+  bg: assets/images/20261022_kit_forest/f01_city_ground.jpg
+  tier: 背景
+  telop: 1970年代後半はアディダス、2023年に復帰。2026/27のホームは、川の霧にちなむ赤
+  narrator: 解説
+  card: &id_kit
+    type: timeline
+    title: シャツの歩み（ユニフォーム史のサイト・クラブ公式ショップ）
+    rows:
+    - - 1958年
+      - 「大陸風」の新しいシャツ
+    - - 1970年代後半〜
+      - アディダスの時代。欧州連覇もここ
+    - - 2015/16
+      - 創立150周年。深い赤に金の飾り
+    - - 2023年
+      - アディダスが復帰
+    - - 2026/27
+      - ホームは川の霧にちなむ赤
+    focus: 1958年
+    highlight_row: 0
+  say:
+  - text: 最後に、フォレストのシャツです。赤は変わらず、形や飾りが替わってきました。
+    image: assets/images/20261022_kit_forest/f05_main_stand.jpg
+    card: none
+  - text: 1958年、「大陸風」と呼ばれる、新しいシャツになります。
+    image: assets/images/20261022_kit_forest/f05_main_stand.jpg
+    card:
+      <<: *id_kit
+      highlight_row: 0
+  - text: 1970年代の後半から80年代の前半は、アディダス。
+    image: assets/images/20261022_kit_forest/f08_trent_end.jpg
+    card:
+      <<: *id_kit
+      highlight_row: 1
+  - text: 1979年と1980年の欧州王者のシャツも、アディダスでした。
+    emph: true
+    image: assets/images/20261022_kit_forest/f08_trent_end.jpg
+    card: none
+  - text: 2015/16は、創立150周年。深い赤に金の飾りで、胸に広告のないシャツです。
+    image: assets/images/20261022_kit_forest/f01_city_ground.jpg
+    card:
+      <<: *id_kit
+      highlight_row: 2
+  - text: 2023年に、アディダスが復帰しました。
+    image: assets/images/20261022_kit_forest/f01_city_ground.jpg
+    card:
+      <<: *id_kit
+      highlight_row: 3
+  - text: 2026/27のホームは、トレント川の霧にちなむ、と店の説明にあります。
+    image: assets/images/20261022_kit_forest/f09_garibaldi_banner.jpg
+    card:
+      <<: *id_kit
+      highlight_row: 4
+  - text: 同じ赤の、濃さの違いで、霧を表したシャツです。
+    image: assets/images/20261022_kit_forest/f09_garibaldi_banner.jpg
+    card: none
+  - text: 胸には、いまも、クラブの紋章です。
+    image: assets/images/20261022_kit_forest/f07_clough_stand.jpg
+    card: none
+  sources:
+  - https://historicalkits.co.uk/Nottingham_Forest/Nottingham_Forest.htm
+  - https://shop.nottinghamforest.co.uk/products/nffc-26-27-home-shirt
+- id: view
+  viewpoint: true
+  heading: 見立て・胸の木は、赤と比べて、どれだけ長いのか
+  bg: assets/images/20261022_kit_forest/f01_city_ground.jpg
+  tier: 報道
+  telop: 木は52年、赤は161年。木のおよそ3倍。星2つは、木が付いて6年でそろった
+  narrator: 解説
+  card: &id_view
+    type: table
+    title: 胸のものが続いた年数
+    columns:
+    - もの
+    - 続いた年数
+    rows:
+    - - 赤（1865年から）
+      - 161年
+    - - 現行の木（1974年から）
+      - 52年
+    - - 2つ目の星まで（木が付いてから）
+      - 6年
+    highlight_row: 0
+  say:
+  - text: 胸の木は、フォレストの歴史の中で、どれだけ長いのか。
+    emph: true
+    image: assets/images/20261022_kit_forest/f01_city_ground.jpg
+    card: none
+  - text: 赤は、1865年から、161年です。
+    image: assets/images/20261022_kit_forest/f01_city_ground.jpg
+    card:
+      <<: *id_view
+      highlight_row: 0
+    mark:
+      kind: circle
+      row: 0
+  - text: 木は、1974年から、52年です。
+    image: assets/images/20261022_kit_forest/f07_clough_stand.jpg
+    card:
+      <<: *id_view
+      highlight_row: 1
+  - text: 52を161で割ると、0.32。赤のおよそ3分の1。
+    emph: true
+    image: assets/images/20261022_kit_forest/f07_clough_stand.jpg
+    card: &id_ratio
+      type: calc
+      title: 木の年数は、赤の何分の1か（自分で割った）
+      terms:
+      - - 52年
+        - 現行の木
+      - - 161年
+        - 赤
+      - - 0.32
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+  - text: その52年の、最初の6年で、星2つがそろいました。
+    image: assets/images/20261022_kit_forest/f05_main_stand.jpg
+    card:
+      <<: *id_view
+      highlight_row: 2
+  - text: 木が付いたとき、クラブは、まだ欧州王者ではなかったのです。
+    image: assets/images/20261022_kit_forest/f05_main_stand.jpg
+    card: none
+  - text: いまも、星2つを抱えて、胸の木が続く。
+    emph: true
+    image: assets/images/20261022_kit_forest/f08_trent_end.jpg
+    card: none
+  - text: 節目に記念版は作りましたが、紋章を替える話は、私が調べた範囲に、出てきません。
+    image: assets/images/20261022_kit_forest/f01_city_ground.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Nottingham_Forest_F.C.
+  - https://en.wikipedia.org/wiki/History_of_Nottingham_Forest_F.C.
+  - https://www.nottinghamforest.co.uk/news/2023/april/14/celebrating-50-years-of-the-tricky-tree/

@@ -1,0 +1,496 @@
+# クラブの財政：アトレティコ・マドリード（10/22 木、シリーズ「クラブの財政」、key: finance_atletico、型は news）。
+#
+# 軸は「**収入は11%増えたのに、増えた分の約85%が商業なのは、なぜか（放映権はほぼ横ばい）**」。
+#   ・デロイト Football Money League 2026（2024/25）：13位、収入 4億5450万ユーロ（前の年 4億950万、+11%、+4500万）。前の年は12位。
+#     内訳（百万ユーロ、デロイトの図の整数。図の下の棒の値）：商業 117→156（+39）／放映権 218→219（+1）／試合日 74→80（+6）。409→455（図の整数を足すと +46、見出しは +45。丸めのずれ）。
+#   ・過去5年（2021〜2025）：収入 333/394/364/410/455。放映権 231/225/182/218/219。商業 98/108/122/117/156。試合日 4/61/60/74/80。給料÷収入 74/65/67/65/62（%）。DFML の順位 13/12/15/12/13。
+#   ★他の財政回の軸（バルサ＝使える上限／シティ＝判決／アルテタ＝契約／レアル＝スクワッド・コスト・ルール／PSG＝関連当事者取引／バイエルン＝株の持ち主／リヴァプール＝放映権／マンU＝償却・金融費用／
+#     トッテナム＝優勝の年の赤字／シティ×アーセナル＝収入の差と給料の比率／チェルシー＝トッテナムとの差／インテル＝10位との差／ヴィラ＝放映権の割合が最高／ユヴェントス＝放映権の特需と商業の穴）は繰り返さない。
+#     この回の軸は「**増えた収入の中身が商業に寄っていたこと（放映権は動かず、商業が1年で33%増）と、同じ年・その後に起きた持ち主の交代**」。
+#   ★アルファベットは読み上げに出さない。女子チームの話・監督・選手の個人名・法的な争い・制裁は言わない。選手の移籍金・給料の額は出さない。
+#
+# **決算期**：6月30日決算。2024/25＝2025年6月期。
+#
+# **出どころ（読んだもの）**
+#   ○ デロイト Football Money League 2026 一次ページ（deloitte.com、2026-10-21 に取得）：13位アトレティコ。図（e.infogram.com/_/QL0UuDnoYaUBUQ0WSrJt）から
+#       「2025 Revenue €454.5m (2024: €409.5m)」「Change on previous year +11% (+€45m)」。棒の値は上の通り。DFML position 13/12/15/12/13。「ON-PITCH 2024/25：La Liga 3rd／UEFA Champions League R16」。
+#       ★図には女子チーム（収入€1.3m）の欄もあるが、**使わない**（女子は扱わない決まり）。ランキングの収入に女子の分が含まれるかは、デロイトの注記では「別法人なら含まれないことがある」とだけ。
+#       ★隣の順位の収入（それぞれの図で確認）：12位ドルトムント €531.3m、14位アストン・ヴィラ €450.2m（2024: €310.2m、+45%）、15位ミラン €410.4m、16位ユヴェントス €401.7m。
+#         同じスペイン：1位レアル・マドリード €1,161m、2位バルセロナ €974.8m（図で確認）。
+#       定義（ページ本文）：放映権は国内リーグ・カップ・欧州連盟の大会・FIFAクラブW杯の賞金と分配金を含む。商業はスポンサー・グッズ・その他の商業・試合以外の催し。給料は選手・職員すべての賃金・手当・社会保険等。収入は選手の移籍金を含まない。
+#       本文：「UEFA's distributable funds for these competitions grew to €3.3 billion in 2024/25, up c.22% from €2.7 billion in 2023/24」「the expansion of UEFA's three primary men's club competitions also contributed」。
+#   ○ アトレティコ公式サイト（atleticodemadrid.com）総会の記事「La Junta General Ordinaria de Accionistas aprueba por unanimidad las cuentas anuales de la temporada 2024-25 y el presupuesto para la 2025-26」
+#       https://www.atleticodemadrid.com/noticias/la-junta-general-ordinaria-de-accionistas-aprueba-por-unanimidad-las-cuentas-anuales-de-la-temporada-2024-25-y-el-presupuesto-para-la-2025-26
+#       「…la cuenta de resultados del ejercicio cerrado a 30 de junio de 2025 arrojó una pérdida de 5.991.241,13 euros」「…el presupuesto del club para la presente temporada 2025-26, en el que se prevén unos ingresos de 554 millones de euros」。
+#       ★**ページ本文は Cloudflare の確認で直接読めなかった（403）。上の2文は検索結果が引いたクラブ公式サイトの原文の引用で確認した（2回、別の検索で同じ文）。公開前に公式で確かめること。**
+#   ○ アポロ（ir.apollo.com）共同プレスリリース 2025-11-10 https://ir.apollo.com/news-events/press-releases/detail/591/atltico-de-madrid-to-welcome-apollo-sports-capital-as
+#       アポロ・スポーツ・キャピタルがクラブの過半数の株主になる合意（金額は非公表、完了は2026年1〜3月期の見込み）。ヒル（最高経営責任者）とセレソ（会長）は続投・株主のまま。
+#       本拠地の隣の新街区（Ciudad del Deporte）の開発を含め、追加の資本を入れる意向。
+#   ○ アポロ（ir.apollo.com）プレスリリース 2026-03-12 https://ir.apollo.com/news-events/press-releases/detail/612/apollo-sports-capital-completes-transaction-to-become
+#       取引が完了。クアンタム・パシフィックはほぼ全株を保持して2番目の株主。取締役会の株主が「最大1億ユーロの追加の資本（increase of equity and strategic capital）」を承認。
+#   ○ 報道（Gulf News、AFP、2024-10-10）https://gulfnews.com/business/aviation/riyadh-air-ink-stadium-naming-deal-with-atletico-madrid-1.1728559725713
+#       リヤド・エアが9年契約で本拠地の名称を「リヤド・エア・メトロポリターノ」（2033年まで）に。2023年8月10日に始まった提携の一部で、公式スポンサー・航空会社パートナー・名称権のパートナー。ユニフォームの胸にもロゴ。
+#       （英語版 Wikipedia の 2024-25 シーズンの記事では「2024-10-09 から名称変更」と書く。日付は台本では「2024年10月」とだけ言う。）
+#   ○ 英語版 Wikipedia「2024–25 Atlético Madrid season」「2023–24 Atlético Madrid season」：チャンピオンズリーグ 2024-25 は16強、2023-24 は8強（ドルトムントに敗退）。リーグ 3位／4位。（デロイトの R16 と一致）
+#   △ 報道（Calcio e Finanza 2025-11-19、マルカの報道を引く）https://www.calcioefinanza.it/2025/11/19/atletico-madrid-bilancio-2025-ricavi-costi/
+#       「赤字約600万ユーロの主因は償却費（ammortamenti）の増加と他の運営費。償却費は 7640万ユーロ（+26%）」。**クラブ決算の商業収入（113.5）はデロイトの商業（156）と分類が違い、別の報道は 109.5 と書くので、台本には出さない。**
+#   × 確かめられなかったもの：クラブの決算書の全文（総収入・内訳・負債）、「2024/25 は新型コロナ後初の赤字」（確かめられない）、取引の評価額・持分比率（報道で55%・57%・2.5bn と割れる）、増加の内訳の理由（デロイトは書かない）。台本に出さない。
+#
+# 自分で計算した数（検算済み）
+#   商業 156÷117−1＝+33.3%。試合日 80÷74−1＝+8.1%。放映権 219÷218−1＝+0.5%。放映権 219÷231−1＝−5.2%。商業 156÷98−1＝+59%。
+#   増加の合計（図の整数）39＋6＋1＝46。商業の割合 39÷46＝84.8%→約85%。
+#   商業が前の年のままなら 454.5−39＝415.5（409.5÷より +1.5%）。ミラン410.4より上・ヴィラ450.2より下＝15位相当。
+#   構成比 商業 117÷409＝28.6%→29%、156÷455＝34.3%→34%。放映権 218÷409＝53.3%→53%、219÷455＝48.1%→48%。試合日 74÷409＝18.1%、80÷455＝17.6%（どちらも18%）。
+#   アトレティコ÷バルセロナ 454.5÷974.8＝46.6%（半分に届かない）。アトレティコ−ヴィラ 454.5−450.2＝4.3。
+#
+# 写真：assets/images/20261022_finance_atletico/（メトロポリターノ＝Commons。CC BY-SA 4.0×4・CC0×1）。
+date: 2026年10月22日
+slot: other_1
+format: news
+series: クラブの財政
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+people:
+- アトレティコ・マドリード
+theme:
+  end_bg: assets/images/20261022_finance_atletico/01_w.jpg
+  id: finance_atletico
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: アトレティコ・マドリード
+  title: アトレティコ、収入は13位。増えた収入の約85%が商業なのは、なぜか
+  question: アトレティコの収入は11%増えたのに、増えた分の約85%は商業だった。なぜか
+  lead: 収入の世界13位、アトレティコ・マドリード。
+  opening_image: assets/images/20261022_finance_atletico/01_w.jpg
+  takeaway: デロイトの集計で2024-25の収入は4億5450万ユーロで世界13位（前の年は12位）、前の年から11%増。内訳は商業が1億1700万から1億5600万ユーロへ33%増え、試合日が600万ユーロ、放映権が100万ユーロの増加にとどまり、増えた分の約85%を商業が占めた。商業が前の年のままなら収入の伸びは約1.5%で、順位は15位相当。放映権は5年前より約5%少ない。2025年6月期の決算は約600万ユーロの赤字で、クラブは2025年11月にアポロ・スポーツ・キャピタルが過半数の株主になる合意を発表し、2026年3月に取引が完了した
+  short_title: アトレティコ、増えた収入の約85%は商業
+thumbnail:
+  layout: number
+  crest_pos: right
+  photo: assets/images/20261022_finance_atletico/02_w.jpg
+  number: +33%
+  line1: アトレティコ、商業収入
+  line2: 増えた収入の約85%は商業
+  callouts: [放映権はほぼ横ばい]
+  tags:
+  - アトレティコ・マドリード
+  - ラ・リーガ
+  - クラブの財政
+  - メトロポリターノ
+sections:
+- id: rank
+  main: true
+  heading: 収入は世界13位、前の年から11%増。何が増えたのか
+  tier: 報道
+  telop: 収入4億5450万ユーロで世界13位。前の年から11%増
+  narrator: 解説
+  card: &rev_line
+    type: line
+    title: アトレティコの収入の5年（デロイトの図、百万ユーロ）
+    x: [2020-21, 2021-22, 2022-23, 2023-24, 2024-25]
+    series:
+    - [アトレティコ, [333, 394, 364, 410, 455]]
+    unit: 百万ユーロ
+    focus: アトレティコ
+    highlight: 2024-25
+  say:
+  - text: 会計事務所デロイトの集計で、アトレティコ・マドリードの収入は世界13位。
+    image: assets/images/20261022_finance_atletico/01_w.jpg
+    card: none
+  - text: 2024-25の収入は、4億5450万ユーロ。
+    emph: true
+    card: *rev_line
+  - text: 前の年は、4億950万ユーロ。1年で、4500万ユーロの増加。
+    card:
+      <<: *rev_line
+      highlight: 2023-24
+  - text: 伸びは11%。ところが順位は、12位から13位に、ひとつ下がりました。
+    image: assets/images/20261022_finance_atletico/02_w.jpg
+    card: &rank_table
+      type: table
+      title: アトレティコの順位の5年（デロイト）
+      columns: [年, 順位]
+      rows:
+      - [2020-21, 13位]
+      - [2021-22, 12位]
+      - [2022-23, 15位]
+      - [2023-24, 12位]
+      - [2024-25, 13位]
+      highlight_row: 4
+  - text: ここ5年の順位は、12位から15位のあいだを、行き来しています。
+    card: *rank_table
+  - text: 隣の順位と比べます。14位は、アストン・ヴィラ。
+    image: assets/images/20261022_finance_atletico/03_w.jpg
+    card: &near_table
+      type: table
+      title: 13位の前後の収入（デロイト、百万ユーロ）
+      columns: [順位, クラブ, 収入]
+      rows:
+      - [13位, アトレティコ, '454.5']
+      - [14位, アストン・ヴィラ, '450.2']
+      - [15位, ミラン, '410.4']
+      highlight_row: 0
+  - text: 収入は、4億5020万ユーロ。差は、430万ユーロです。
+    card:
+      <<: *near_table
+      highlight_row: 1
+  - text: 同じスペインの、レアル・マドリードは、11億6100万ユーロ。
+    card: &spain_bars
+      type: bars
+      title: スペインの3クラブの収入（デロイト、百万ユーロ）
+      unit: ''
+      items:
+      - label: レアル・マドリード
+        value: 1161
+      - label: バルセロナ
+        value: 975
+      - label: アトレティコ
+        value: 455
+        highlight: true
+  - text: バルセロナは、9億7480万ユーロ。アトレティコは、その半分にも届きません。
+    emph: true
+    image: assets/images/20261022_finance_atletico/04_w.jpg
+    card: *spain_bars
+  - text: まず、増えた4500万ユーロは、何でできているのか。
+    card: none
+  sources:
+  - https://www.deloitte.com/uk/en/services/financial-advisory/analysis/deloitte-football-money-league.html
+- id: break
+  heading: アトレティコの収入の増加は、何でできているのか
+  tier: 報道
+  telop: 増加の約85%は商業。放映権は100万ユーロしか動かず
+  narrator: 解説
+  card: &brk_wf
+    type: waterfall
+    title: アトレティコの収入の増減（デロイトの図、百万ユーロ）
+    start: [2023-24の収入, 409]
+    steps:
+    - [商業, 39]
+    - [試合日, 6]
+    - [放映権, 1]
+    total: [2024-25の収入, 455]
+  say:
+  - text: アトレティコの収入を、3つの流れに分けて見ます。
+    image: assets/images/20261022_finance_atletico/05_w.jpg
+    card: *brk_wf
+  - text: いちばん大きいのは、商業。1億1700万ユーロから、1億5600万ユーロへ。
+    emph: true
+    card:
+      <<: *brk_wf
+      highlight: 商業
+  - text: 次に、試合日。7400万ユーロから、8000万ユーロへ。
+    image: assets/images/20261022_finance_atletico/02_w.jpg
+    card:
+      <<: *brk_wf
+      highlight: 試合日
+  - text: 放映権は、前の年とほぼ同じ。増加は、わずか100万ユーロです。
+    card:
+      <<: *brk_wf
+      highlight: 放映権
+  - text: 3つの増加を足すと、46。そのうち、商業が39です。
+    image: assets/images/20261022_finance_atletico/03_w.jpg
+    card: &brk_calc
+      type: calc
+      title: 増加に占める商業の割合（デロイトの図、百万ユーロ）
+      terms:
+      - [39, 商業の増加]
+      - [46, 3つの増加の合計]
+      - [85, 商業の割合（%）]
+      ops: ['÷', '＝']
+  - text: 増えた分の約85%は、商業。
+    emph: true
+    callword: 約85%が商業
+    card: *brk_calc
+  - text: 図は整数なので、足すと、発表されている増加額と、1ずれます。
+    image: assets/images/20261022_finance_atletico/04_w.jpg
+    card: none
+  - text: まず、ほとんど動かなかった、放映権から見ます。
+    card: none
+  sources:
+  - https://www.deloitte.com/uk/en/services/financial-advisory/analysis/deloitte-football-money-league.html
+- id: bcast
+  heading: 放映権は、なぜほとんど動かなかったのか
+  tier: 報道
+  telop: 放映権は5年前より約5%少ない。分配の総額は約22%増
+  narrator: 解説
+  card: &bc_bars
+    type: bars
+    title: アトレティコの放映権（デロイトの図、百万ユーロ）
+    unit: ''
+    items:
+    - label: 2020-21
+      value: 231
+    - label: 2021-22
+      value: 225
+    - label: 2022-23
+      value: 182
+    - label: 2023-24
+      value: 218
+    - label: 2024-25
+      value: 219
+      highlight: true
+  say:
+  - text: アトレティコの放映権は、2億1900万ユーロ。前の年と、ほぼ同額です。
+    image: assets/images/20261022_finance_atletico/01_w.jpg
+    card: *bc_bars
+  - text: 5年前の、2億3100万ユーロより、約5%少ない額です。
+    emph: true
+    card: *bc_bars
+  - text: 一方、ヨーロッパサッカー連盟が3つの大会で分配するお金は、約22%増えました。
+    image: assets/images/20261022_finance_atletico/02_w.jpg
+    card: &uefa_doc
+      type: document
+      label: デロイト Football Money League 2026 の本文（訳）
+      paragraphs:
+      - ヨーロッパサッカー連盟が、3つの大会で分配できるお金は、2023-24の27億ユーロから、2024-25は33億ユーロへ、約22%増えた。
+      - 3つの大会の拡大も、クラブの収入の増加に寄与した。
+      highlight:
+      - 約22%増えた
+      - 3つの大会の拡大
+  - text: 分配の総額が増えても、アトレティコの放映権は、横ばいでした。
+    emph: true
+    card: *uefa_doc
+  - text: 2024-25の、チャンピオンズリーグは、16強。前のシーズンは、8強でした。
+    image: assets/images/20261022_finance_atletico/03_w.jpg
+    card: none
+  - text: 勝ち上がった段階は、ひとつ手前になっています。
+    card: none
+  - text: ただ、放映権が横ばいだった理由は、デロイトの本文からは読み取れません。
+    image: assets/images/20261022_finance_atletico/05_w.jpg
+    card: none
+  - text: では、増えたほうの商業は、なぜ1年で33%も増えたのか。
+    card: none
+  sources:
+  - https://www.deloitte.com/uk/en/services/financial-advisory/analysis/deloitte-football-money-league.html
+  - https://en.wikipedia.org/wiki/2024%E2%80%9325_Atl%C3%A9tico_Madrid_season
+  - https://en.wikipedia.org/wiki/2023%E2%80%9324_Atl%C3%A9tico_Madrid_season
+- id: comm
+  heading: 商業は、なぜ1年で33%も増えたのか
+  tier: 報道
+  telop: 商業は33%増で、5年で最高。デロイトは理由を書いていない
+  narrator: 解説
+  card: &cm_bars
+    type: bars
+    title: アトレティコの商業収入（デロイトの図、百万ユーロ）
+    unit: ''
+    items:
+    - label: 2020-21
+      value: 98
+    - label: 2021-22
+      value: 108
+    - label: 2022-23
+      value: 122
+    - label: 2023-24
+      value: 117
+    - label: 2024-25
+      value: 156
+      highlight: true
+  say:
+  - text: アトレティコの商業は、1年で、約33%増えました。
+    emph: true
+    image: assets/images/20261022_finance_atletico/04_w.jpg
+    card: *cm_bars
+  - text: この5年で、最も高い額です。前の年は、2年前より、少し下がっていました。
+    card: *cm_bars
+  - text: デロイトの商業は、スポンサー、グッズ、試合以外の催しなどを、合わせた数字です。
+    image: assets/images/20261022_finance_atletico/01_w.jpg
+    card: none
+  - text: 増えた理由の説明は、アトレティコの分には、見当たりません。
+    card: none
+  - text: そこで、同じ年に起きたことを、見ます。
+    card: none
+  - text: 2024年10月、本拠地の名前が、リヤド・エア・メトロポリターノに変わりました。
+    image: assets/images/20261022_finance_atletico/03_w.jpg
+    card: &ra_tl
+      type: timeline
+      title: リヤド・エアとアトレティコ（AFPの報道）
+      rows:
+      - [2023年8月, リヤド・エアがクラブの公式スポンサーに]
+      - [2024年10月, 本拠地の名前を変える9年契約]
+      - [2033年, 名前の契約の期限]
+      focus: 1
+  - text: 2033年までの、9年契約です。
+    emph: true
+    card:
+      <<: *ra_tl
+      focus: 2
+  - text: 提携は、2023年8月から。ユニフォームの胸にも、ロゴが付いています。
+    image: assets/images/20261022_finance_atletico/02_w.jpg
+    card:
+      <<: *ra_tl
+      focus: 0
+  - text: 名前の契約は、2024-25シーズンの途中からです。
+    card: none
+  - text: ただ、デロイトの図に、内訳はありません。時期が重なった、という事実だけを置きます。
+    image: assets/images/20261022_finance_atletico/05_w.jpg
+    card: none
+  - text: 収入が増えた年に、決算は、どうなっていたのか。
+    card: none
+  sources:
+  - https://www.deloitte.com/uk/en/services/financial-advisory/analysis/deloitte-football-money-league.html
+  - https://gulfnews.com/business/aviation/riyadh-air-ink-stadium-naming-deal-with-atletico-madrid-1.1728559725713
+- id: books
+  heading: 収入が増えた年の決算と、その後の持ち主は、どうなったのか
+  tier: 報道
+  telop: 2025年6月期は約600万ユーロの赤字。2026年3月、アポロが過半数の株主に
+  narrator: 解説
+  card: &wage_bars
+    type: bars
+    title: 収入に占める給料の割合（デロイトの図、%）
+    unit: '%'
+    items:
+    - label: 2020-21
+      value: 74
+    - label: 2021-22
+      value: 65
+    - label: 2022-23
+      value: 67
+    - label: 2023-24
+      value: 65
+    - label: 2024-25
+      value: 62
+      highlight: true
+  say:
+  - text: アトレティコは、総会の記録に、2024-25の決算を残しています。
+    image: assets/images/20261022_finance_atletico/01_w.jpg
+    card: none
+  - text: 6月30日に終わった決算期は、約600万ユーロの赤字でした。
+    emph: true
+    card: &loss_stats
+      type: stats
+      title: アトレティコの決算（クラブの総会の記録、2025年6月期）
+      items:
+      - ['-6.0', 百万ユーロ, 最終損益（5,991,241ユーロ）]
+      - ['5.54', 億ユーロ, 2025-26の予算の収入（総会で承認）]
+      focus: 0
+  - text: 正確には、599万1000ユーロあまりです。
+    card: *loss_stats
+  - text: 赤字の主な理由は、償却費の増加だと伝えられています。
+    image: assets/images/20261022_finance_atletico/02_w.jpg
+    card: none
+  - text: 償却費とは、選手の移籍金を、契約の年数で分けて、毎年の費用にするものです。
+    card: none
+  - text: その額は、7640万ユーロ。前の年より、26%多いと伝えられています。
+    card: none
+  - text: 給料の割合は、デロイトの図で、62%。この5年で、最も低い割合です。
+    image: assets/images/20261022_finance_atletico/03_w.jpg
+    card: *wage_bars
+  - text: 収入が増え、給料の割合は下がりました。それでも、決算は、赤字でした。
+    emph: true
+    card: *wage_bars
+  - text: クラブが総会で承認した、2025-26の予算は、収入5億5400万ユーロ。
+    image: assets/images/20261022_finance_atletico/04_w.jpg
+    card:
+      <<: *loss_stats
+      focus: 1
+  - text: ただ、予算の内訳は確かめられていないので、デロイトの数字とは、並べません。
+    card: none
+  - text: 次に、持ち主です。2025年11月10日、新しい大株主の発表がありました。
+    image: assets/images/20261022_finance_atletico/05_w.jpg
+    card: &own_tl
+      type: timeline
+      title: アトレティコの持ち主（アポロとクラブの発表）
+      rows:
+      - [2025年11月10日, アポロ・スポーツ・キャピタルが過半数の株主になる合意]
+      - [2026年3月12日, 取引が完了。最大1億ユーロの追加の資本も承認]
+      focus: 0
+  - text: アポロ・スポーツ・キャピタルが、クラブの過半数の株主になる、という合意です。
+    emph: true
+    card: *own_tl
+  - text: 発表の時点で、取引の金額は、公表されていませんでした。
+    card: none
+  - text: 2026年3月12日に、取引は完了しました。
+    image: assets/images/20261022_finance_atletico/02_w.jpg
+    card:
+      <<: *own_tl
+      focus: 1
+  - text: 株主の側は、最大1億ユーロの、追加の資本も承認しました。
+    emph: true
+    card:
+      <<: *own_tl
+      focus: 1
+  - text: 使い道には、本拠地の隣の、新しい街区の開発が、挙げられています。
+    image: assets/images/20261022_finance_atletico/03_w.jpg
+    card: none
+  - text: 最高経営責任者と会長は、これまでどおり、クラブを率います。
+    card: none
+  sources:
+  - https://www.atleticodemadrid.com/noticias/la-junta-general-ordinaria-de-accionistas-aprueba-por-unanimidad-las-cuentas-anuales-de-la-temporada-2024-25-y-el-presupuesto-para-la-2025-26
+  - https://www.calcioefinanza.it/2025/11/19/atletico-madrid-bilancio-2025-ricavi-costi/
+  - https://ir.apollo.com/news-events/press-releases/detail/591/atltico-de-madrid-to-welcome-apollo-sports-capital-as
+  - https://ir.apollo.com/news-events/press-releases/detail/612/apollo-sports-capital-completes-transaction-to-become
+  - https://www.deloitte.com/uk/en/services/financial-advisory/analysis/deloitte-football-money-league.html
+- id: view
+  viewpoint: true
+  heading: 見立て・収入11%増は、商業への寄りが強まった結果
+  tier: 背景
+  telop: 商業が前の年のままなら、収入は約4億1550万ユーロ。15位相当
+  narrator: 解説
+  card: &view_table
+    type: table
+    title: 自分で数えてみた（2024-25、デロイトの図）
+    columns: &view_cols [比べ, 答え]
+    rows: &view_rows
+    - [増えた収入に占める、商業の割合, 約85%]
+    - [商業が前の年のままなら、収入, 約4億1550万ユーロ（+1.5%）]
+    - [収入に占める商業（前の年→今）, 29%→34%]
+    - [収入に占める放映権（前の年→今）, 53%→48%]
+    highlight_row: 0
+  say:
+  - text: 見立てです。アトレティコの内訳を、割り算で見直します。
+    image: assets/images/20261022_finance_atletico/04_w.jpg
+    card: *view_table
+  - text: 増加のうち、商業が、約85%を占めました。
+    emph: true
+    mark:
+      kind: circle
+      row: 0
+      col: 1
+    card:
+      <<: *view_table
+      highlight_row: 0
+  - text: 商業が、前の年の水準なら、収入は約4億1550万ユーロです。
+    image: assets/images/20261022_finance_atletico/01_w.jpg
+    card:
+      <<: *view_table
+      highlight_row: 1
+  - text: 伸びは、11%ではなく、約1.5%でした。
+    emph: true
+    mark:
+      kind: circle
+      row: 1
+      col: 1
+    card:
+      <<: *view_table
+      highlight_row: 1
+  - text: その場合、順位は15位。ミランを、わずかに上回ります。
+    image: assets/images/20261022_finance_atletico/02_w.jpg
+    card: none
+  - text: 収入の柱も、動きました。商業は、29%から34%へ。
+    card:
+      <<: *view_table
+      highlight_row: 2
+  - text: 放映権は、53%から48%へ。
+    mark:
+      kind: circle
+      row: 3
+      col: 1
+    image: assets/images/20261022_finance_atletico/03_w.jpg
+    card:
+      <<: *view_table
+      highlight_row: 3
+  - text: 5年前と比べると、商業は約59%増えて、放映権は約5%減りました。
+    emph: true
+    card: none
+  - text: 題への答えは、2つ。放映権が動かなかったことと、商業だけが伸びたことです。
+    image: assets/images/20261022_finance_atletico/02_w.jpg
+    card: none
+  - text: 14位のアストン・ヴィラは、1年で1億4000万ユーロ、収入を増やしました。
+    image: assets/images/20261022_finance_atletico/05_w.jpg
+    card: none
+  - text: 次の集計で、商業はどこまで伸びるのか。放映権は動くのか。
+    image: assets/images/20261022_finance_atletico/04_w.jpg
+    card: none
+  sources:
+  - https://www.deloitte.com/uk/en/services/financial-advisory/analysis/deloitte-football-money-league.html
