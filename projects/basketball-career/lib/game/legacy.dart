@@ -117,6 +117,12 @@ class Achievement {
 bool _wentPro(Game g) => g.records.any((r) => r.league.name.startsWith('pro'));
 
 final achievements = <Achievement>[
+  Achievement('earn_5oku', '億の男', 'プロでの生涯収入が5億円を超えた。', (g) => g.totalEarnings >= 50000),
+  Achievement('earn_20oku', '大富豪', 'プロでの生涯収入が20億円を超えた。', (g) => g.totalEarnings >= 200000),
+  Achievement('career_points_2000', '2000得点', '通算2000得点を取った。', (g) => g.totalPoints >= 2000),
+  Achievement('career_points_3000', '3000得点', '通算3000得点を取った。', (g) => g.totalPoints >= 3000),
+  Achievement('career_rebounds_1000', '1000リバウンド', '通算1000リバウンドを取った。', (g) => g.totalRebounds >= 1000),
+  Achievement('career_assists_800', '800アシスト', '通算800アシストを記録した。', (g) => g.totalAssists >= 800),
   Achievement('honor_rookie', '新人王', 'プロ1年目で新人王に選ばれた。',
       (g) => (g.honorCounts[Honor.rookie] ?? 0) > 0),
   Achievement('honor_scoring', '得点王', '得点王になった。',

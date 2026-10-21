@@ -6,6 +6,7 @@ import '../game/epilogue.dart';
 import '../game/game.dart';
 import '../game/life.dart';
 import '../game/match.dart';
+import '../game/money.dart';
 import '../game/path.dart';
 import '../game/player.dart';
 import '../game/season.dart';
@@ -273,6 +274,9 @@ class _PlayerCard extends StatelessWidget {
             Text('持ち味: ${p.position.perk}', style: const TextStyle(fontSize: 12)),
             if (game.track == Track.pro && game.draftPick > 0)
               Text(draftLabel(game.draftPick),
+                  style: const TextStyle(fontSize: 12)),
+            if (game.track == Track.pro && game.salary > 0)
+              Text('年俸 ${moneyLabel(game.salary)}  (これまでの収入 ${moneyLabel(game.totalEarnings)})',
                   style: const TextStyle(fontSize: 12)),
             if (game.track == Track.school && p.age >= 15 ||
                 game.track == Track.university ||
