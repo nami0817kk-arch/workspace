@@ -167,15 +167,47 @@ def _body_at(track: List[dict], t: float) -> dict:
     return out
 
 
-def bake(tracks: Dict[str, List[dict]], actor: dict, fps: int = 30, t_end: Optional[float] = None, report: Optional[list] = None) -> List[dict]:
-    """トラックを毎コマの姿勢キーに焼き込む。actor は base_x を持つ(facing は +1 で置き、向きは body の dir)。"""
+def warp_fn(holds: Optional[List[dict]], fps: int = 30):
+    """アニメの時間の伸び縮み。実時間 t → トラックを読む時刻 s。
+      windup: {kind: windup, t: 当たり, hold: 止めるコマ, burst: 打つコマ} 当たりの (hold+burst) コマ前で全身を止め、
+              そこから当たりまでの動きを burst コマに縮めて一気に打つ(当たりの時刻は動かない)
+      freeze: {kind: freeze, t0, t1} t0〜t1 で全身を止め、その後は (t1−t0) 遅れて続ける(決めの止め絵)"""
+    dt = 1.0 / fps
+    hs = sorted(holds or [], key=lambda h: h.get("t", h.get("t0", 0.0)))
+
+    def w(t: float) -> float:
+        shift = 0.0
+        for h in hs:
+            if h.get("kind", "windup") == "windup":
+                tc = float(h["t"])
+                t1 = tc - h.get("burst", 3) * dt
+                t0 = t1 - h.get("hold", 3) * dt
+                if t0 <= t < t1:
+                    return t0 - shift
+                if t1 <= t < tc:
+                    return t0 + (t - t1) * (tc - t0) / max(1e-9, tc - t1) - shift
+            else:
+                t0, t1 = float(h["t0"]), float(h["t1"])
+                if t0 <= t < t1:
+                    return t0 - shift
+                if t >= t1:
+                    shift += t1 - t0
+        return t - shift
+    return w
+
+
+def bake(tracks: Dict[str, List[dict]], actor: dict, fps: int = 30, t_end: Optional[float] = None, report: Optional[list] = None, holds: Optional[List[dict]] = None) -> List[dict]:
+    """トラックを毎コマの姿勢キーに焼き込む。actor は base_x を持つ(facing は +1 で置き、向きは body の dir)。
+    holds: アニメの溜め・一気・止め(warp_fn)。キーは「止めない」つもりで書き、止めはここで入れる。"""
+    warp = warp_fn(holds, fps)
     base_x = float(actor.get("base_x", 0.0))
     t_end = t_end if t_end is not None else max(k["t"] for tr in tracks.values() for k in tr)
     pose = dict(POSE0)
     keys = []
     worst = 0.0
     for f in range(int(round(t_end * fps)) + 1):
-        t = f / fps
+        t_real = f / fps
+        t = warp(t_real)                                  # 溜め・止めの間は同じ時刻を読む(全身が止まる)
         b = _body_at(tracks["body"], t)
         s = 1 if float(b.get("dir", 1)) >= 0 else -1
         sh = float(b.get("shake", 0.0))
@@ -214,7 +246,7 @@ def bake(tracks: Dict[str, List[dict]], actor: dict, fps: int = 30, t_end: Optio
             worst = max(worst, e)
             if report is not None and e > 0.02:
                 report.append((round(t, 2), limb, round(e, 3)))
-        keys.append(dict(t=round(t, 4), dx=round(x - base_x, 5), abs=True, face=b.get("face", "fight"),
+        keys.append(dict(t=round(t_real, 4), dx=round(x - base_x, 5), abs=True, face=b.get("face", "fight"),
                          **{kk: round(float(pose.get(kk, 0.0)), 5) for kk in ("fa", "fe", "ra", "re", "fl", "fk", "rl", "rk", "lean", "hz", "ht", "spin", "rz", "roll", "dir", "st", "lst", "rst", "rlst")}))
     if report is not None:
         report.insert(0, ("worst", round(worst, 4)))
@@ -230,17 +262,25 @@ def cut_plan(beats: List[dict], base: List[dict], wide: float = 3.4, min_gap: fl
     for i, b in enumerate(sorted(beats, key=lambda q: q["t"])):
         tc, by, to, big = float(b["t"]), b["by"], b["to"], bool(b.get("big"))
         side = -side
-        cuts.append(dict(t=round(tc - (0.34 if big else 0.24), 3), follow=by, scale=2.1 if big else 2.4, yaw=24.0 * side, pitch=3.0, lens=34.0, target_z=1.05, lag=0.0))   # 溜め: 打つ側に寄る
-        cuts.append(dict(t=round(tc - 2 / 30, 3), follow="mid", scale=2.5 if big else 2.8, yaw=-32.0 * side, pitch=(-7.0 if big else 2.0), lens=30.0, target_z=1.1, lag=0.0))   # 当たり: 反対側・大技は下から
-        cuts.append(dict(t=round(tc + (0.22 if big else 0.16), 3), follow=to, scale=2.9 if big else 3.0, yaw=14.0 * side, pitch=3.0, lens=36.0, target_z=0.95, lag=0.15))     # 反応: 受けた側
-        cuts.append(dict(t=round(tc + (0.55 if big else 0.40), 3), follow="mid", scale=wide, yaw=-5.0, pitch=3.0, lens=40.0, target_z=0.95, lag=0.25))                         # 引き
+        n0 = len(cuts)
+        cuts.append(dict(t=round(tc - (0.34 if big else 0.24), 3), follow=by, scale=2.1 if big else 2.4, yaw=24.0 * side, pitch=3.0, lens=34.0, target_z=1.05, lag=0.0, role="windup"))   # 溜め: 打つ側に寄る
+        cuts.append(dict(t=round(tc - 2 / 30, 3), follow="mid", scale=2.5 if big else 2.8, yaw=-32.0 * side, pitch=(-7.0 if big else 2.0), lens=30.0, target_z=1.1, lag=0.0, role="hit"))   # 当たり: 反対側・大技は下から
+        cuts.append(dict(t=round(tc + (0.22 if big else 0.16), 3), follow=to, scale=2.9 if big else 3.0, yaw=14.0 * side, pitch=3.0, lens=36.0, target_z=0.95, lag=0.15, role="react"))     # 反応: 受けた側
+        cuts.append(dict(t=round(tc + (0.55 if big else 0.40), 3), follow="mid", scale=wide, yaw=-5.0, pitch=3.0, lens=40.0, target_z=0.95, lag=0.25, role="wide"))                         # 引き
+        for c in cuts[n0:]:
+            c["big"] = big
     spans = [(c["t"] - 0.05, c["t"] + 0.6) for c in cuts]
     keep = [c for c in base if not any(a <= c["t"] <= b for a, b in spans)]
     out = sorted(keep + cuts, key=lambda c: c["t"])
     res = []
-    for c in out:                                         # 短すぎるカットは前を消す(後のカットを優先)
+    rank = dict(wide=0, react=1, windup=2, hit=3)          # 短すぎて重なるときは、引き → 反応 → 溜め → 当たり の順に消す(大技の溜めの寄りが引きに押し出されて消えていた)。大技のカットは +2(小技の当たりより大技の溜めの寄りを残す)
+    pri = lambda c: rank.get(c.get("role"), -1) + (2 if c.get("big") else 0)
+    for c in out:
         if res and c["t"] - res[-1]["t"] < min_gap:
-            res.pop()
+            if pri(res[-1]) <= pri(c):
+                res.pop()
+            else:
+                continue
         res.append(c)
     return res
 

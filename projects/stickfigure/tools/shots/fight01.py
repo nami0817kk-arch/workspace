@@ -29,6 +29,15 @@ T_END = 9.4
 GUARD_F, GUARD_R = (1.15, 1.7), (0.75, 2.3)      # 構えの腕(前の腕は顔の前、後ろの腕はあご)
 RELAX_F, RELAX_R = (0.35, 0.6), (0.25, 0.7)
 BG = dict(image="assets/bg/shrine_dusk.png", x0=-6.0, x1=6.5, ground=0.80)
+# アニメの溜め・一気・止め(keyshot.warp_fn): 当たりの前で全身を止め、残りを数コマに縮めて打つ。キーは止めない流れで書いておく
+HOLDS_A = [dict(kind="windup", t=1.08, hold=3, burst=3), dict(kind="windup", t=1.8667, hold=5, burst=3),
+           dict(kind="windup", t=3.8667, hold=4, burst=4), dict(kind="windup", t=6.95, hold=4, burst=3),
+           dict(kind="windup", t=7.5667, hold=3, burst=3), dict(kind="windup", t=7.8667, hold=4, burst=3),
+           dict(kind="freeze", t0=8.00, t1=8.75)]                                   # 掌底のあと、振り抜いた形で 0.6 秒止まる(決めの止め絵)
+HOLDS_B = [dict(kind="windup", t=1.55, hold=4, burst=3), dict(kind="windup", t=3.22, hold=3, burst=2), dict(kind="windup", t=6.95, hold=4, burst=3)]
+BEATS = [dict(t=1.08, by="A", to="B", limb="st", miss=True), dict(t=1.55, by="B", to="A", limb="rst", miss=True), dict(t=1.8667, by="A", to="B", big=True, limb="rst"),
+         dict(t=3.22, by="B", to="A", limb="lst"), dict(t=3.8667, by="A", to="B", big=True, limb="rlst"), dict(t=6.95, by="A", to="B", big=True, limb="rst"),
+         dict(t=7.5667, by="A", to="B", limb="rst"), dict(t=7.8667, by="A", to="B", big=True, limb="st")]
 
 
 def skel(keys, actor, t):
@@ -65,7 +74,7 @@ def tracks_b(tgt):
         # ジャブをかわす(上体を反らす)
         dict(t=0.98, x=0.75, lean=0.12, ht=0.0), dict(t=1.10, x=0.90, lean=-0.32, ht=0.15, ease="out"), dict(t=1.24, lean=-0.18, ht=0.05),
         # フック: 溜め → 踏み込んで振り抜く(体が流れる)
-        dict(t=1.32, x=0.90, hz=0.78, lean=-0.20), dict(t=1.40, x=0.90, hz=0.78, lean=-0.22), dict(t=1.52, x=0.82, hz=0.79, lean=0.18, ease="in"), dict(t=1.66, lean=0.26, ht=-0.05),
+        dict(t=1.32, x=0.90, hz=0.78, lean=-0.20, rst=0.0), dict(t=1.40, x=0.90, hz=0.78, lean=-0.22), dict(t=1.52, x=0.82, hz=0.79, lean=0.18, rst=0.16, ease="in"), dict(t=1.58, rst=0.16), dict(t=1.66, lean=0.26, ht=-0.05, rst=0.0),
         dict(t=1.8667, x=0.80, hz=0.80, lean=0.22, ht=0.0),
         # アッパーを受ける → よろける
         dict(t=1.93, x=0.96, hz=0.86, rz=0.24, lean=-0.58, ht=0.85, ease="out"),
@@ -158,7 +167,7 @@ def tracks_a(tgt):
         # 待つ(構えを少し解く)
         dict(t=4.80, hz=0.84, lean=0.05), dict(t=5.80, hz=0.84, lean=0.05), dict(t=6.05, hz=0.80, lean=0.12),
         # 拳をぶつける
-        dict(t=6.70, x=-0.82, hz=0.79, lean=0.15), dict(t=6.80, x=-0.86, hz=0.76, lean=0.02, rst=0.0), dict(t=6.86, x=-0.84, hz=0.76, lean=0.03), dict(t=6.95, x=-0.66, lean=0.44, rst=0.14, ease="in"),
+        dict(t=6.70, x=-0.82, hz=0.79, lean=0.15), dict(t=6.80, x=-0.86, hz=0.76, lean=0.02, rst=0.0), dict(t=6.86, x=-0.84, hz=0.76, lean=0.03), dict(t=6.95, x=-0.66, lean=0.44, rst=0.18, ease="in"), dict(t=6.99, rst=0.16),
         dict(t=7.20, x=-1.10, lean=0.0, hz=0.79, rst=0.0, ease="out"),
         # くぐる → 腹 → 掌底
         dict(t=7.28, x=-1.10, hz=0.80, lean=0.10), dict(t=7.38, x=-1.10, hz=0.55, lean=0.40, ease="out"),
@@ -216,8 +225,8 @@ def build_scene():
                palm=(0.00, 1.45), palm_follow=(0.25, 1.50))
     rep = []
     for it in range(3):
-        kb = ks.bake(tracks_b(tgt), aB, FPS, T_END)
-        ka = ks.bake(tracks_a(tgt), aA, FPS, T_END, report=(rep if it == 2 else None))
+        kb = ks.bake(tracks_b(tgt), aB, FPS, T_END, holds=HOLDS_B)
+        ka = ks.bake(tracks_a(tgt), aA, FPS, T_END, report=(rep if it == 2 else None), holds=HOLDS_A)
         sa = lambda t: skel(ka, aA, t)
         sb = lambda t: skel(kb, aB, t)
         jab_head = face(sb(1.10), -1)
@@ -264,9 +273,7 @@ def build_scene():
                      dict(t=7.25, follow="mid", scale=3.0, yaw=-6.0, pitch=3.0, lens=40.0, target_z=0.9, lag=0.1),
                      dict(t=7.82, follow="B", scale=2.6, yaw=-18.0, pitch=2.0, lens=34.0, target_z=1.1, lag=0.0),        # 掌底
                      dict(t=8.25, follow="mid", scale=3.4, yaw=-5.0, pitch=4.0, lens=40.0, target_z=0.8, lag=0.3)]
-    beats = [dict(t=1.08, by="A", to="B"), dict(t=1.55, by="B", to="A"), dict(t=1.8667, by="A", to="B", big=True), dict(t=3.22, by="B", to="A"),
-             dict(t=3.8667, by="A", to="B", big=True), dict(t=6.95, by="A", to="B", big=True), dict(t=7.5667, by="A", to="B"), dict(t=7.8667, by="A", to="B", big=True)]
-    base["shots"] = ks.cut_plan(beats, base["shots"])
+    base["shots"] = ks.cut_plan(BEATS, base["shots"])
     base["fx"]["invert"] = ["kick", "clash"]
     base["fx"]["speed_lines"] = [[1.78, 1.98], [3.76, 4.40], [6.40, 6.97], [7.44, 7.60], [7.80, 8.00]]
     base["impact_cuts"] = dict(kinds=["kick", "clash"], hold=0.2,
@@ -283,12 +290,20 @@ def main():
     ap.add_argument("--out", default="out/shot_fight01")
     ap.add_argument("--preview", action="store_true")
     ap.add_argument("--plan-only", action="store_true")
+    ap.add_argument("--check", action="store_true", help="アニメ調の点検だけ(書き出し済みの動画があれば同じ絵の割合も)")
     a = ap.parse_args()
     from stickfig import cli, plan as pm
     sc, rep = build_scene()
     print("IK の残差(0.02 超):", rep[:1], len(rep) - 1, "件", rep[1:10])
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
+    if a.check:
+        import json as _j
+        from stickfig import animecheck
+        pl = pm.build_plan(sc)
+        vid = out / "shot_fight01.mp4"
+        print(animecheck.report(animecheck.check(sc, pl, BEATS, str(vid) if vid.exists() else None)))
+        return
     if a.plan_only:
         pl = pm.build_plan(sc)
         pm.save_plan(pl, out / "plan.json")
