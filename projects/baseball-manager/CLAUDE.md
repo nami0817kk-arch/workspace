@@ -579,3 +579,12 @@ soccer-manager / soccer-career の野球版。**中核は「試合中の采配�
 - **実績6つ**: 三冠王・投手三冠・エース賞・トリプルスリー・シリーズの顔・大会の主役、+ **連続王者**(5年連続のタイトル)。計52個(`tool/ach_audit.dart`: すべて取れる)。
 - 乱数は使わないので、既存のシード固定の結果は変わらない(balance は不変)。
 
+## 全部やろう(2026-10-21): 追加要素の一覧と進み具合
+ユーザーが「全部やろう」と指示した10項目。**10(広告・課金)は課金に関わるので、始める前に必ず聞く**(`billing-always-ask`)。
+
+### 6. 効果音
+- `tool/make_sfx.py` で波形から14音を合成(`assets/sfx/*.wav`、合計350KB。goso-boat と同じ方式・外部素材なし)。鳴らす係は `lib/ui/sound.dart`(`SoundPlayer` / 実機は `AudioSound`(audioplayers の AudioPool)/ テストは `NullSound`)。`main.dart` だけが `AudioSound` を渡す。
+- 鳴る場面(`GameController._cue`): 行動(tap)・練習の好調/大成功(great)・失敗(bad)・怪我(injury)・出来事が起きた(event)・能力を上げた(gain)・ランクアップ(rankup)・節目(ドラフト・優勝・タイトル・実績・特性・進学・日本代表/世界一)・引退(retire)。**1回の操作で鳴らすのは基本1音**(節目があれば節目の音)。
+- 設定に「効果音」のスイッチ(`sound-switch`)。保存は `baseball_manager_flags_v1` の4つ目('動き,触覚,トースト,音'。古い保存は音あり)。
+- **iOS のビルドは未検証**(audioplayers のプラグインを足したので、初回の iOS ビルドで Pods が通るか見る)。
+

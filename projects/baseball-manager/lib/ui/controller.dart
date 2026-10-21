@@ -24,6 +24,7 @@ import '../game/talent.dart';
 import '../game/traits.dart';
 import 'history.dart';
 import 'labels.dart';
+import 'sound.dart';
 
 const saveKey = 'baseball_manager_save_v1';
 const historyKey = 'baseball_manager_history_v1';
@@ -224,7 +225,8 @@ class SaveStore {
   }
 
   /// 動きを減らす・触覚・結果の知らせ(画面の下)。保存は 'm,h,t' の形。
-  Future<({bool reduceMotion, bool haptics, bool toasts})> loadFlags() async {
+  Future<({bool reduceMotion, bool haptics, bool toasts, bool sound})>
+      loadFlags() async {
     try {
       final p = await SharedPreferences.getInstance();
       final v = (p.getString(flagsKey) ?? '').split(',');
@@ -232,17 +234,19 @@ class SaveStore {
       return (
         reduceMotion: at(0, false),
         haptics: at(1, true),
-        toasts: at(2, true)
+        toasts: at(2, true),
+        sound: at(3, true)
       );
     } catch (_) {
-      return (reduceMotion: false, haptics: true, toasts: true);
+      return (reduceMotion: false, haptics: true, toasts: true, sound: true);
     }
   }
 
-  Future<void> saveFlags(bool m, bool h, bool t) async {
+  Future<void> saveFlags(bool m, bool h, bool t, [bool s = true]) async {
     try {
       final p = await SharedPreferences.getInstance();
-      await p.setString(flagsKey, '${m ? 1 : 0},${h ? 1 : 0},${t ? 1 : 0}');
+      await p.setString(
+          flagsKey, '${m ? 1 : 0},${h ? 1 : 0},${t ? 1 : 0},${s ? 1 : 0}');
     } catch (_) {}
   }
 
@@ -326,11 +330,15 @@ String eventResultText(Player p0, Condition c0, Player p1, Condition c1,
 }
 
 class GameController extends ChangeNotifier {
-  GameController({SaveStore? store, Random? rng})
+  GameController({SaveStore? store, Random? rng, SoundPlayer? sound})
       : store = store ?? SaveStore(),
-        _rng = rng ?? Random();
+        _rng = rng ?? Random(),
+        sound = sound ?? const NullSound();
 
   final SaveStore store;
+
+  /// 効果音を鳴らす係(テストでは何もしない)。鳴らすかどうかは `soundOn`。
+  final SoundPlayer sound;
   final Random _rng;
   Game? game;
 
@@ -364,7 +372,6 @@ class GameController extends ChangeNotifier {
     final role = g.player.role == Role.twoWay ? Role.batter : g.player.role;
     newGame(randomNameOf(_rng), role, g.difficulty, parent);
   }
-
 
   /// いま重点にしている能力。
   Ability focus = Ability.contact;
@@ -449,14 +456,38 @@ class GameController extends ChangeNotifier {
   bool reduceMotion = false;
   bool haptics = true;
   bool toasts = true;
+  bool soundOn = true;
 
-  void setFlags({bool? reduceMotion, bool? haptics, bool? toasts}) {
+  void setFlags(
+      {bool? reduceMotion, bool? haptics, bool? toasts, bool? sound}) {
     this.reduceMotion = reduceMotion ?? this.reduceMotion;
     this.haptics = haptics ?? this.haptics;
     this.toasts = toasts ?? this.toasts;
-    store.saveFlags(this.reduceMotion, this.haptics, this.toasts);
+    soundOn = sound ?? soundOn;
+    store.saveFlags(this.reduceMotion, this.haptics, this.toasts, soundOn);
     notifyListeners();
   }
+
+  /// 効果音を1つ鳴らす(設定でオフなら鳴らさない)。
+  void _cue(Sfx s) {
+    _cuedThisTick = true;
+    if (soundOn) sound.play(s);
+  }
+
+  /// この操作ですでに音を鳴らしたか(出来事・引退の音は、ほかの音が無いときだけ)。
+  bool _cuedThisTick = false;
+  Phase? _soundPhase;
+
+  /// 節目に合う効果音。
+  Sfx _sfxOfMilestone(MilestoneKind k) => switch (k) {
+        MilestoneKind.draft => Sfx.draft,
+        MilestoneKind.champion => Sfx.champion,
+        MilestoneKind.title => Sfx.title,
+        MilestoneKind.achievement => Sfx.achievement,
+        MilestoneKind.trait => Sfx.trait,
+        MilestoneKind.national || MilestoneKind.world => Sfx.champion,
+        MilestoneKind.stage => Sfx.stage,
+      };
 
   void setTextScale(double v) {
     textScale = v;
@@ -512,6 +543,7 @@ class GameController extends ChangeNotifier {
     reduceMotion = fl.reduceMotion;
     haptics = fl.haptics;
     toasts = fl.toasts;
+    soundOn = fl.sound;
     history = await store.loadHistory();
     final j = await store.load();
     if (store.loadFailed) {
@@ -677,6 +709,7 @@ class GameController extends ChangeNotifier {
     _turnBase = {for (final x in abilitiesOf(g.player.role)) x: g.player.of(x)};
     final start = g.log.length;
     final before = g.stage;
+    final n0 = pending.length;
     g.choose(a, focus);
     recent = [_summary(a, g), ...g.log.sublist(start)];
     toast = toasts ? recent.first : null;
@@ -686,6 +719,19 @@ class GameController extends ChangeNotifier {
             ? 1
             : 0);
     _detect(before, g, g.log.sublist(start));
+    if (g.condition.injured) {
+      _cue(Sfx.injury);
+    } else if (g.lastOutcome == Outcome.bad) {
+      _cue(Sfx.bad);
+    } else if (g.phase == Phase.event && pending.length == n0) {
+      // 出来事が起きた(節目の音が鳴らないとき)。
+      _cue(Sfx.event);
+    } else if (g.lastOutcome == Outcome.good ||
+        g.lastOutcome == Outcome.great) {
+      _cue(Sfx.great);
+    } else {
+      _cue(Sfx.tap);
+    }
     _commit();
   }
 
@@ -704,6 +750,13 @@ class GameController extends ChangeNotifier {
 
   /// 今回のできごとから、見せる価値のある節目を拾う。
   void _detect(Stage before, Game g, List<String> lines) {
+    final n0 = pending.length;
+    _detectMilestones(before, g, lines);
+    // 新しい節目があれば、その音(いちばん最後に足されたもの = 大きな出来事)を鳴らす。
+    if (pending.length > n0) _cue(_sfxOfMilestone(pending.last.kind));
+  }
+
+  void _detectMilestones(Stage before, Game g, List<String> lines) {
     final name = g.player.name;
     final pick = lines.where((l) => l.contains('ドラフトで指名された')).firstOrNull;
     if (pick != null) {
@@ -773,6 +826,7 @@ class GameController extends ChangeNotifier {
     final before = _ranks();
     if (game!.spend(a)) {
       if (haptics) HapticFeedback.selectionClick();
+      _cue(Sfx.gain);
       _noteRankUps(before);
       _commit();
     }
@@ -798,7 +852,10 @@ class GameController extends ChangeNotifier {
         if (before[a] != null && before[a] != rankOf(g.player.of(a)))
           '${abilityLabel(a)}が ${rankOf(g.player.of(a))}ランクに上がった!',
     ];
-    if (ups.isNotEmpty) recent = [...recent, ...ups];
+    if (ups.isNotEmpty) {
+      recent = [...recent, ...ups];
+      _cue(Sfx.rankup);
+    }
   }
 
   /// おすすめの過ごし方で、今年(年が変わるまで)を進める。
@@ -904,6 +961,15 @@ class GameController extends ChangeNotifier {
 
   void _commit() {
     final g = game;
+    // 出来事が起きた・引退したときの音(ほかに鳴らした音が無いときだけ)。
+    if (g != null && g.phase != _soundPhase) {
+      if (!_cuedThisTick && _soundPhase != null) {
+        if (g.phase == Phase.event) _cue(Sfx.event);
+        if (g.phase == Phase.retired) _cue(Sfx.retire);
+      }
+      _soundPhase = g.phase;
+    }
+    _cuedThisTick = false;
     if (g != null) _recordTraits(g);
     // 引退したら、殿堂に1度だけ書き込む。
     if (g != null && g.phase == Phase.retired && !g.archived) {
@@ -913,8 +979,7 @@ class GameController extends ChangeNotifier {
       _unlockAchievements(g);
       final e = g.ending;
       if (e != null) {
-        lastLegacyGain =
-            legacyPointsOf(madePro: e.madePro, title: e.title);
+        lastLegacyGain = legacyPointsOf(madePro: e.madePro, title: e.title);
         legacyPoints += lastLegacyGain;
         store.saveLegacy(legacyPoints);
       }

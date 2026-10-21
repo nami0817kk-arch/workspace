@@ -121,6 +121,14 @@ class SettingsScreen extends StatelessWidget {
                     onChanged: (v) => controller.setFlags(reduceMotion: v),
                   ),
                   SwitchListTile(
+                    key: const Key('sound-switch'),
+                    secondary: const Icon(Icons.volume_up_outlined),
+                    title: const Text('効果音'),
+                    subtitle: const Text('能力アップ・節目・ドラフト・優勝などで鳴ります。'),
+                    value: controller.soundOn,
+                    onChanged: (v) => controller.setFlags(sound: v),
+                  ),
+                  SwitchListTile(
                     key: const Key('haptics-switch'),
                     secondary: const Icon(Icons.vibration),
                     title: const Text('触覚フィードバック'),
