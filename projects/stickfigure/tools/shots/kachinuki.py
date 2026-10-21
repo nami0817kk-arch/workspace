@@ -45,7 +45,7 @@ def _bake(tracks, actor, dur, t_go=0.1, t_stop=None):
     return keys
 
 
-def walk_in(sc: dict, who: str = "A", from_x: float = -5.2, dur: float = 3.0, cam_x: float = None) -> float:
+def walk_in(sc: dict, who: str = "A", from_x: float = -5.2, dur: float = 3.0, cam_x: float = None, scale_in: float = 4.6, scale_fight: float = 3.6) -> float:
     """緑が左から歩いて入り、場面の最初の構えで止まる。待っている相手は最初のコマのまま(構えて待つ)。"""
     a = sc["actors"][who]
     end = bout.pose_of(sc["keys"][who], a, 0)
@@ -53,12 +53,12 @@ def walk_in(sc: dict, who: str = "A", from_x: float = -5.2, dur: float = 3.0, ca
     start = dict(RELAX, x=from_x, dir=1, f=from_x + w, r=from_x - w)
     frames = _bake(bout.walk_tracks(start, end, dur), a, dur)
     cx = cam_x if cam_x is not None else (from_x + end["x"]) / 2 + 0.6
-    shots = [dict(t=0.0, follow=round(cx, 3), scale=4.6, yaw=-4.0, pitch=3.0, lens=40.0, target_z=1.0, lag=0.0),       # 引きで、入ってくる緑と待つ相手
-             dict(t=round(dur - 0.9, 3), follow="mid", scale=3.6, yaw=-5.0, pitch=3.0, lens=40.0, target_z=1.0, lag=0.3)]
+    shots = [dict(t=0.0, follow=round(cx, 3), scale=scale_in, yaw=-4.0, pitch=3.0, lens=40.0, target_z=1.0, lag=0.0),       # 引きで、入ってくる緑と待つ相手
+             dict(t=round(dur - 0.9, 3), follow="mid", scale=scale_fight, yaw=-5.0, pitch=3.0, lens=40.0, target_z=1.0, lag=0.3)]
     return bout.prepend(sc, {who: frames}, shots)
 
 
-def walk_out(sc: dict, who: str = "A", to_x: float = 6.5, dur: float = 3.0, hold: float = 0.4) -> float:
+def walk_out(sc: dict, who: str = "A", to_x: float = 6.5, dur: float = 3.0, hold: float = 0.4, scale: float = 4.4) -> float:
     """最後のコマから、右を向いて歩いて画面の外へ出る。カメラは止めて見送る。"""
     a = sc["actors"][who]
     n = len(sc["keys"][who]) - 1
@@ -68,7 +68,7 @@ def walk_out(sc: dict, who: str = "A", to_x: float = 6.5, dur: float = 3.0, hold
     frames = _bake(bout.walk_tracks(start, end, dur, turn=1), a, dur, t_go=0.25)
     if hold:
         frames = [dict(frames[0]) for _ in range(int(hold * bout.FPS))] + frames
-    shots = [dict(t=0.0, follow=round(start["x"] + 1.2, 3), scale=4.4, yaw=-4.0, pitch=3.0, lens=40.0, target_z=1.0, lag=0.0)]
+    shots = [dict(t=0.0, follow=round(start["x"] + 1.2, 3), scale=scale, yaw=-4.0, pitch=3.0, lens=40.0, target_z=1.0, lag=0.0)]
     return bout.append(sc, {who: frames}, shots)
 
 

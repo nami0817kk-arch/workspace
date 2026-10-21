@@ -98,7 +98,7 @@ def solve_leg(pose: dict, s: int, x: float, limb: str, target: Pt) -> float:
     def end(tt, kk):
         return fk.chain_points(hip, 0.0, -tt * s, (-tt + kk) * s, L)
 
-    if r < L * 0.25:
+    if r < L * 0.17:
         return solve_limb(pose, s, x, limb, target)
     aT = math.atan2(dx, -dz)                     # 股から目標への向き(真下 0、前 +)
     if r >= L * 0.999:                           # 届かない: 伸ばして向ける

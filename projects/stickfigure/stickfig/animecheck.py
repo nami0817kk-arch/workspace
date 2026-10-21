@@ -87,7 +87,8 @@ def check(scene: dict, plan: Optional[dict] = None, beats: Optional[List[dict]] 
             mark, zoom = True, True
             lo, hi = D["stop_small"]                                    # 参考のヒットストップは大技でも 1〜3 コマ
         miss = bool(b.get("miss"))                          # absorb: 当てても効かない(巨漢が受け止める筋書き)は反応だけ求めない。空振り: 受けた側の反応・ヒットストップは求めない(かわす動きで見せる)
-        ok = dict(hold=D["hold"][0] <= hold <= D["hold"][1], burst=D["burst"][0] <= burst <= D["burst"][1],
+        hold_lo = 1 if side else D["hold"][0]                            # 連打では前の戻りを詰めるので、溜めが 1 コマの打ちも許す
+        ok = dict(hold=hold_lo <= hold <= D["hold"][1], burst=D["burst"][0] <= burst <= b.get("burst_max", D["burst"][1]),
                   stretch=stretch >= D["stretch"][0],
                   react=miss or bool(b.get("absorb")) or react >= D["react"], stop=miss or lo <= stop <= hi, mark=(mark if big else True), zoom=(zoom if big else True))
         rows.append(dict(t=round(tc, 2), by=by, big=big, hold=hold, burst=burst, stretch=round(stretch, 2), react=round(react, 2), stop=stop, mark=bool(mark), zoom=zoom, ok=ok))
@@ -122,6 +123,71 @@ def check(scene: dict, plan: Optional[dict] = None, beats: Optional[List[dict]] 
         if (scene.get("fx") or {}).get("radial", True) is not False:   # 参考の見せ方(長回し)ではカットの速さは測らない
             overall["cut_median"] = dict(value=round(med, 2), ok=D["cut_median"][0] <= med <= D["cut_median"][1])
     return dict(beats=rows, final=final, overall=overall)
+
+
+INTENSE = dict(exchanges_per_s=1.2, max_gap_s=1.5, moving=0.60, dashes=2, aerial=1, knockdown=1)   # 2026-10-22「バトルをもっと激しく」。参考(Alan Becker の殴り合い)の動いているコマ 0.56 と、見て決めた目安
+
+
+def intensity(scene: dict, beats: List[dict]) -> dict:
+    """殴り合いの密度(激しさ)。打ち合いの数/秒・打ち合いの最長の間・動いているコマの割合・走り込み・空中の技・倒れ。
+    戦いの区間 = 最初の当たりの 0.5 秒前から最後の当たりの 0.7 秒後まで。"""
+    fps = scene.get("fps", 30)
+    if not beats:
+        return {}
+    t0 = max(0.0, min(b["t"] for b in beats) - 0.5)
+    t1 = min(scene["tau_end"], max(b["t"] for b in beats) + 0.7)
+    n0, n1 = int(t0 * fps), int(t1 * fps)
+    win = max(1e-6, t1 - t0)
+    ts = sorted(b["t"] for b in beats)
+    gaps = [b - a for a, b in zip(ts, ts[1:])] + [ts[0] - t0, t1 - ts[-1]]
+    moving, total, dashes, aerial, down = 0, 0, 0, 0, 0
+    names = list(scene["actors"])
+    last_dash = {w: -9 for w in names}
+    for w in names:
+        ks_ = scene["keys"][w]
+        a = scene["actors"][w]
+        H = 1.9 * a.get("scale", 1.0)
+        prev = None
+        for f in range(n0, min(n1, len(ks_) - 1)):
+            k = ks_[f]
+            sk = fk.skeleton(dict(posemod.POSE0 if hasattr(posemod, "POSE0") else {}, **{n: float(v) for n, v in k.items() if n in posemod.NUM}), 1 if k["dir"] > 0 else -1, a["base_x"] + k["dx"], a.get("scale", 1.0))
+            pts = [sk[n][-1] for n in ("front_arm", "rear_arm", "front_leg", "rear_leg")] + [sk["head"]]
+            root = (a["base_x"] + k["dx"], k["rz"])
+            if prev is not None:
+                sp = max([math.hypot(p[0] - q[0], p[1] - q[1]) for p, q in zip(pts, prev[0])] + [math.hypot(root[0] - prev[1][0], root[1] - prev[1][1])]) / H
+                total += 1
+                moving += 1 if sp > 0.012 else 0
+            prev = (pts, root)
+            if f - last_dash[w] > 12 and f + 10 < len(ks_) and abs(ks_[f + 10]["dx"] - k["dx"]) >= 0.7 * H:
+                dashes += 1
+                last_dash[w] = f + 10
+            if k["rz"] >= 0.4:
+                aerial += 1
+            if abs(k["roll"]) >= 1.4:
+                down += 1
+    D = INTENSE
+    big = max(range(len(gaps) - 2), key=lambda i: gaps[i]) if len(gaps) > 2 else 0
+    res = dict(max_gap_at=round(ts[big], 2) if len(ts) > 1 else 0.0, exchanges_per_s=round(len(beats) / win, 2), max_gap_s=round(max(gaps), 2), moving=round(moving / max(total, 1), 2), dashes=dashes,
+               aerial=1 if aerial >= 3 else 0, knockdown=1 if down >= 3 else 0, window=round(win, 1))
+    res["ok"] = dict(exchanges_per_s=res["exchanges_per_s"] >= D["exchanges_per_s"], max_gap_s=res["max_gap_s"] <= D["max_gap_s"], moving=res["moving"] >= D["moving"],
+                     dashes=res["dashes"] >= D["dashes"], aerial=res["aerial"] >= D["aerial"], knockdown=res["knockdown"] >= D["knockdown"])
+    return res
+
+
+def intensity_report(r: dict) -> str:
+    if not r:
+        return ""
+    D = INTENSE
+    lab = dict(exchanges_per_s="打ち合い/秒", max_gap_s="打ち合いの最長の間(秒)", moving="動いているコマの割合", dashes="走り込み(回)", aerial="空中の技", knockdown="倒れ")
+    rng = dict(exchanges_per_s=f"{D['exchanges_per_s']} 以上", max_gap_s=f"{D['max_gap_s']} 以下", moving=f"{D['moving']} 以上", dashes=f"{D['dashes']} 以上", aerial="1 以上", knockdown="1 以上")
+    out = [f"## 激しさ(戦いの区間 {r['window']} 秒)"]
+    ng = 0
+    for k in lab:
+        ok = r["ok"][k]
+        ng += 0 if ok else 1
+        out.append(f"- {lab[k]}: {r[k]}(目安 {rng[k]}){'' if ok else ' **NG**'}" + (f"  ← {r['max_gap_at']} 秒の当たりのあと" if (k == "max_gap_s" and not ok) else ""))
+    out.append(f"激しさ: {'**合格**' if ng == 0 else f'**不足**({ng} 項目)'}")
+    return chr(10).join(out)
 
 
 NAMES = dict(hold="溜め(コマ)", burst="一気(コマ)", stretch="伸び", react="反応(頭の移動)", stop="ヒットストップ(コマ)", mark="衝撃コマかスピード線", zoom="溜めで寄る")

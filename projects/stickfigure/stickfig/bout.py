@@ -273,6 +273,8 @@ def run_cli(build, beats, name: str):
             from . import animecheck
             vid = out / f"{name}.mp4"
             print(animecheck.report(animecheck.check(sc, pl, beats, str(vid) if vid.exists() else None)))
+            if beats and sc.get("fx", {}).get("radial", True) is False:        # 参考の見せ方の戦いは、激しさも測る
+                print(animecheck.intensity_report(animecheck.intensity(sc, beats)))
         print(out / "plan.json")
     elif a.preview:
         from . import preview
