@@ -3,6 +3,7 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:baseball_manager/game/game.dart' show Phase;
 import 'package:baseball_manager/game/life.dart';
 import 'package:baseball_manager/game/player.dart';
 import 'package:baseball_manager/monetization/ad_service.dart';
@@ -210,11 +211,19 @@ void main() {
       c.newGame('節目', Role.batter);
       final g = c.game!;
       g.player = g.player.copyWith(age: 15);
-      c.act(Plan.rest); // 15歳として覚える
+      void rest() {
+        // 出来事が起きていたら先に答える(行動は季節の段階でしか選べない)
+        while (g.phase == Phase.event) {
+          c.chooseEvent(0);
+        }
+        c.act(Plan.rest);
+      }
+
+      rest(); // 15歳として覚える
       await Future<void>.delayed(const Duration(milliseconds: 1200));
       expect(ads.interstitials, 0); // 年の変わり目ではない
       g.player = g.player.copyWith(age: 16);
-      c.act(Plan.rest); // 15 → 16歳
+      rest(); // 15 → 16歳
       await Future<void>.delayed(const Duration(milliseconds: 1200));
       expect(ads.interstitials, 1);
     });
