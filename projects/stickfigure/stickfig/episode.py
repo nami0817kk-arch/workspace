@@ -28,6 +28,16 @@ W, H = camera.W, camera.H
 LOUDNORM = "loudnorm=I=-16:TP=-2:LRA=12"       # 音量をそろえ、ピークの頭打ち(YouTube は約 -14 LUFS に合わせる。ピークが 0 を越えると再エンコードで歪む)
 
 
+def load_shot(path) -> dict:
+    """手付けのカット(tools/shots/*.py)の場面: build() か build_scene() の返す場面(タプルなら先頭)。"""
+    import importlib.util
+    sp = importlib.util.spec_from_file_location("_shot_" + Path(path).stem, path)
+    mod = importlib.util.module_from_spec(sp)
+    sp.loader.exec_module(mod)
+    got = (getattr(mod, "build", None) or mod.build_scene)()
+    return got[0] if isinstance(got, tuple) else got
+
+
 def load_episode(path) -> dict:
     ep = yaml.safe_load(Path(path).read_text(encoding="utf-8"))
     if "story" in ep:                         # 物語の型(story.py)から組む。ほかのキーで上書き
@@ -144,8 +154,11 @@ def build_episode(ep: dict, out: Path, reuse_figs: bool = False, force: bool = F
                         pass
             segs.append(card_segment(card, seg_dir, ff, ep.get("mood_cards", "sad"), size=((720, 1280) if vertical else (W, H))))
             continue
-        sc = it["scene"]
-        if isinstance(sc, str):
+        scene = load_shot(it["shot"]) if "shot" in it else None   # 手付けのカット(tools/shots/*.py)
+        sc = it.get("scene")
+        if scene is not None:
+            pass
+        elif isinstance(sc, str):
             scene = planmod.load_scene(sc)
         else:
             sc = _passing_variant(sc)                 # fight の場面は、点検に落ちる seed なら少しずらして通るものにする(量産で 1 場面のために話ごと止まらない)

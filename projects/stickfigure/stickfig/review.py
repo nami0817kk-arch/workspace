@@ -64,7 +64,10 @@ def review_episode(ep: dict) -> dict:
             if len(it["card"]["text"]) > 12:
                 notes.append(f"区間{i + 1} カード「{it['card']['text']}」は長い(12文字まで)")
             continue
-        if isinstance(it["scene"], str):                 # 台本ファイルの指定(fight: / skit: はその中で展開される)
+        if "shot" in it:                                 # 手付けのカット(点検は animecheck。ここでは長さとリズムの目安だけ)
+            from .episode import load_shot
+            sc = load_shot(it["shot"])
+        elif isinstance(it["scene"], str):                 # 台本ファイルの指定(fight: / skit: はその中で展開される)
             sc = planmod.load_scene(it["scene"])
         else:
             sc = fight.expand(dict(it["scene"]))

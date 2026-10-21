@@ -82,10 +82,10 @@ def check(scene: dict, plan: Optional[dict] = None, beats: Optional[List[dict]] 
         speed = any(a <= tc <= b_ + 0.05 for a, b_ in scene.get("fx", {}).get("speed_lines", []))
         mark = (hit and hit["kind"] in inv) or speed
         zoom = any(tc - 0.5 <= s["t"] <= tc - 0.1 and s.get("follow") == by and s.get("scale", 9) <= 2.6 for s in scene.get("shots", []))
-        miss = bool(b.get("miss"))                          # 空振り: 受けた側の反応・ヒットストップは求めない(かわす動きで見せる)
+        miss = bool(b.get("miss"))                          # absorb: 当てても効かない(巨漢が受け止める筋書き)は反応だけ求めない。空振り: 受けた側の反応・ヒットストップは求めない(かわす動きで見せる)
         ok = dict(hold=D["hold"][0] <= hold <= D["hold"][1], burst=D["burst"][0] <= burst <= D["burst"][1],
                   stretch=stretch >= D["stretch"][0],
-                  react=miss or react >= D["react"], stop=miss or lo <= stop <= hi, mark=(mark if big else True), zoom=(zoom if big else True))
+                  react=miss or bool(b.get("absorb")) or react >= D["react"], stop=miss or lo <= stop <= hi, mark=(mark if big else True), zoom=(zoom if big else True))
         rows.append(dict(t=round(tc, 2), by=by, big=big, hold=hold, burst=burst, stretch=round(stretch, 2), react=round(react, 2), stop=stop, mark=bool(mark), zoom=zoom, ok=ok))
     # 止め: 最後の当たりの 0.4 秒後から終わりまでで、勝った側が止まっている最長
     final = {}

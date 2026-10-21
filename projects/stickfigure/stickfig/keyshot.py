@@ -201,6 +201,7 @@ def bake(tracks: Dict[str, List[dict]], actor: dict, fps: int = 30, t_end: Optio
     holds: アニメの溜め・一気・止め(warp_fn)。キーは「止めない」つもりで書き、止めはここで入れる。"""
     warp = warp_fn(holds, fps)
     base_x = float(actor.get("base_x", 0.0))
+    sc = float(actor.get("scale", 1.0))                  # 体の大きさ(巨漢など)。IK は体の寸法(1.0)で解き、世界の目標を根元から 1/sc に縮めて渡す
     t_end = t_end if t_end is not None else max(k["t"] for tr in tracks.values() for k in tr)
     pose = dict(POSE0)
     keys = []
@@ -230,7 +231,8 @@ def bake(tracks: Dict[str, List[dict]], actor: dict, fps: int = 30, t_end: Optio
                 if "p" in k:
                     return tuple(k["p"])
                 tmp = dict(pose, **{a_k: k["ang"][0], b_k: k["ang"][1]})
-                return _end(tmp, s, x, chain)
+                e_ = _end(tmp, s, x, chain)
+                return (x + (e_[0] - x) * sc, pose["rz"] + (e_[1] - pose["rz"]) * sc)
 
             if "ang" in k0 and "ang" in k1:
                 pose[a_k], pose[b_k] = _lerp(k0["ang"][0], k1["ang"][0], ue), _lerp(k0["ang"][1], k1["ang"][1], ue)
@@ -242,7 +244,9 @@ def bake(tracks: Dict[str, List[dict]], actor: dict, fps: int = 30, t_end: Optio
             if u >= 1.0 and "ang" in k1:
                 pose[a_k], pose[b_k] = k1["ang"]
                 continue
-            e = solve_leg(pose, s, x, limb, tgt) if limb.endswith("foot") else solve_limb(pose, s, x, limb, tgt)
+            if sc != 1.0:
+                tgt = (x + (tgt[0] - x) / sc, pose["rz"] + (tgt[1] - pose["rz"]) / sc)
+            e = (solve_leg(pose, s, x, limb, tgt) if limb.endswith("foot") else solve_limb(pose, s, x, limb, tgt)) * sc
             worst = max(worst, e)
             if report is not None and e > 0.02:
                 report.append((round(t, 2), limb, round(e, 3)))
@@ -253,13 +257,13 @@ def bake(tracks: Dict[str, List[dict]], actor: dict, fps: int = 30, t_end: Optio
     return keys
 
 
-def widen_stance(tracks: Dict[str, List[dict]], front_min: float = 0.90, rear_min: float = 0.96, cap: float = 0.985) -> Dict[str, List[dict]]:
+def widen_stance(tracks: Dict[str, List[dict]], front_min: float = 0.90, rear_min: float = 0.96, cap: float = 0.985, scale: float = 1.0) -> Dict[str, List[dict]]:
     """腰の高さに合わせて、踏んでいる足の幅を広げる(2026-10-21 ユーザー「足が変」「空気椅子みたい」)。
     腰を下げても足幅が同じだと、前後の脚が両方 85° 折れて空気椅子に見えた。実際の構えは腰が低いほど足幅が広く、
     後ろ脚はほぼ伸びて斜め後ろ、膝の曲がりは前脚が受け持つ。
     後ろ足は脚が rear_min 以上、前足は front_min 以上伸びる位置まで開く。同じ位置で踏んでいる一続きのキーは同じだけ動かす(滑らない)。
     どの時刻でも脚が cap を超えて伸びない範囲に抑える(届かず浮くのを防ぐ)。倒れ・空中の時刻は見ない。"""
-    L = fk.LEG_TOTAL
+    L = fk.LEG_TOTAL * scale                             # 巨漢は脚も腰の高さ(世界)も scale 倍
     body = tracks["body"]
     for limb in ("f_foot", "r_foot"):
         ks_ = tracks.get(limb) or []
@@ -282,7 +286,7 @@ def widen_stance(tracks: Dict[str, List[dict]], front_min: float = 0.90, rear_mi
                     ok = False
                     break
                 s = 1 if float(b.get("dir", 1)) >= 0 else -1
-                x, hz = float(b.get("x", 0.0)), float(b.get("hz", 0.8))
+                x, hz = float(b.get("x", 0.0)), float(b.get("hz", 0.8)) * scale
                 rel = (g[0]["p"][0] - x) * s                 # 腰から見た足の前後(前が +)
                 reach_cap = math.sqrt(max(0.0, (cap * L) ** 2 - hz * hz))
                 if rel < 0:                                   # 後ろ足: もっと後ろへ
