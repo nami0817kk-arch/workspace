@@ -43,7 +43,7 @@ def build():
         keys[w] = ks.bake(ks.widen_stance(bout.stylize(tracks(x, d, tp, sc), style), scale=sc), base["actors"][w], FPS, T_END, report=rep, holds=holds)
     shots = [dict(t=0.0, follow="mid", scale=5.6, yaw=-4.0, pitch=3.0, lens=40.0, target_z=1.1, lag=0.3)]
     for w, (col, sc, style, x, d, tp) in sorted(CAST.items(), key=lambda kv: kv[1][5]):
-        shots.append(dict(t=round(tp - 0.30, 3), follow=w, scale=2.4 * sc, yaw=(14.0 if d < 0 else -14.0), pitch=-6.0, lens=34.0, target_z=1.0 * sc, lag=0.0))
+        shots.append(dict(t=round(tp - 0.30, 3), follow=w, scale=2.4 * sc ** 2, yaw=(14.0 if d < 0 else -14.0), pitch=-6.0, lens=34.0, target_z=1.0 * sc ** 2, lag=0.0))   # 巨漢は頭が切れたので引いて上へ
     shots.append(dict(t=5.10, follow="mid", scale=5.8, yaw=-4.0, pitch=2.0, lens=40.0, target_z=1.1, lag=0.4))
     base = bout.finish(base, keys, [], shots, [], flashes=[CAST["A"][5] + 0.08], speed_lines=[[3.95, 4.30]])
     base["shots"] = shots                                            # 当たりが無いので cut_plan を通さず、そのまま

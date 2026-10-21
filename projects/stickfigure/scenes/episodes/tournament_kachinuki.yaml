@@ -4,11 +4,11 @@ mood_cards: calm
 items:
   - card: {text: "勝ち抜き戦", sub: "棒人間ストーリー", dur: 2.6, style: title}
   - shot: tools/shots/bout_intro.py              # 出場者 4 人が順に構える
-  - card: {text: "第一回戦", sub: "対 蹴り使い", dur: 2.1, style: time}
+  - card: {text: "第一回戦", sub: "対 蹴り使い", dur: 2.1, style: title}
   - shot: tools/shots/bout_r1.py
-  - card: {text: "準決勝", sub: "対 巨漢", dur: 2.1, style: time}
+  - card: {text: "準決勝", sub: "対 巨漢", dur: 2.1, style: title}
   - shot: tools/shots/bout_sf.py
-  - card: {text: "決勝", sub: "対 喧嘩屋", dur: 2.1, style: time}
+  - card: {text: "決勝", sub: "対 喧嘩屋", dur: 2.1, style: title}
   - shot: tools/shots/fight01.py                 # 境内の一戦
   - shot: tools/shots/bout_win.py                # 勝ち名乗り
   - card: {text: "優勝", dur: 2.6, style: title}

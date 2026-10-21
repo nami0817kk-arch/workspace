@@ -21,13 +21,13 @@ def tracks_a():
             dict(t=0.50, hz=0.84, lean=0.05, ht=0.0),
             dict(t=0.95, hz=0.62, lean=0.38, ht=-0.20),                                   # 沈む(溜め)
             dict(t=1.12, hz=0.63, lean=0.40, ht=-0.22),
-            dict(t=1.22, hz=0.82, lean=-0.12, ht=0.38, st=0.30, ease="in"),               # 一気に伸び上がって突き上げる
-            dict(t=1.40, hz=0.81, lean=-0.10, ht=0.35, st=0.0, ease="out"),
-            dict(t=5.50, hz=0.81, lean=-0.10, ht=0.35)]
-    f = [dict(t=0.0, p=(0.25, 0)), dict(t=0.60, p=(0.25, 0)), dict(t=0.90, p=(0.38, 0), lift=0.04), dict(t=5.5, p=(0.38, 0))]
-    r = [dict(t=0.0, p=(-0.25, 0)), dict(t=0.65, p=(-0.25, 0)), dict(t=0.92, p=(-0.40, 0), lift=0.04), dict(t=5.5, p=(-0.40, 0))]
+            dict(t=1.22, hz=0.77, lean=-0.12, ht=0.38, st=0.30, ease="in"),               # 一気に伸び上がって突き上げる
+            dict(t=1.40, hz=0.76, lean=-0.10, ht=0.35, st=0.0, ease="out"),
+            dict(t=5.50, hz=0.76, lean=-0.10, ht=0.35)]
+    f = [dict(t=0.0, p=(0.25, 0)), dict(t=0.60, p=(0.25, 0)), dict(t=0.90, p=(0.45, 0), lift=0.04), dict(t=5.5, p=(0.45, 0))]
+    r = [dict(t=0.0, p=(-0.25, 0)), dict(t=0.65, p=(-0.25, 0)), dict(t=0.92, p=(-0.45, 0), lift=0.04), dict(t=5.5, p=(-0.45, 0))]
     fh = [dict(t=0.0, ang=RELAX_F), dict(t=0.55, ang=RELAX_F), dict(t=0.95, ang=(0.2, 2.4)), dict(t=1.12, ang=(0.1, 2.5)),
-          dict(t=1.22, ang=(3.05, 0.05), ease="in"), dict(t=5.5, ang=(3.05, 0.05))]                      # 前の拳を真上へ
+          dict(t=1.22, ang=(2.55, 0.15), ease="in"), dict(t=5.5, ang=(2.55, 0.15))]                      # 前の拳を斜め前の上へ(真上だと頭の後ろに隠れた)
     rh = [dict(t=0.0, ang=RELAX_R), dict(t=0.55, ang=RELAX_R), dict(t=0.95, ang=(0.6, 2.2)), dict(t=1.22, ang=(-0.5, 2.3), ease="in"), dict(t=5.5, ang=(-0.5, 2.3))]   # 後ろの拳は脇に引く
     return dict(body=body, f_foot=f, r_foot=r, f_hand=fh, r_hand=rh)
 
