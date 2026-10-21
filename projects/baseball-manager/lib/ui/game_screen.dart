@@ -471,7 +471,7 @@ class _Header extends StatelessWidget {
                               children: [
                                 Text(
                                     affiliationOf(game.stage, p.name,
-                                        proTeam: game.proTeam),
+                                        proTeam: game.proTeamLabel),
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                     style: t.titleSmall?.copyWith(

@@ -24,6 +24,7 @@ import 'marks.dart';
 import 'talent.dart';
 import 'traits.dart';
 import 'tryout.dart';
+import 'farm.dart';
 import 'final_moment.dart';
 import 'training.dart' show abilityCap;
 
@@ -164,6 +165,16 @@ class Game {
 
   /// トライアウトをもう使ったか(一生に一度)。
   bool tryoutUsed = false;
+
+  /// 二軍(育成契約)で過ごす残りの年数。0なら一軍。保存する(古いセーブは0=一軍)。
+  int farmYears = 0;
+
+  /// 二軍にいるか(プロ入りしていて、残りの年数がある)。
+  bool get onFarm => turnedPro && farmYears > 0;
+
+  /// 画面に出す所属: 二軍なら「○○ 二軍(育成)」。
+  String? get proTeamLabel =>
+      proTeam == null ? null : (onFarm ? '$proTeam 二軍(育成)' : proTeam);
 
   /// 夏の大会の決勝を前にして、見せ場の決断を待っている途中経過。決まれば null に戻る(保存する)。
   FinalMoment? pendingFinal;
@@ -971,7 +982,7 @@ class Game {
             m.line.atBats >= 50 &&
             (m.line.ops ?? 0) >= 1.000) ||
         (m.line.hasPitching && m.line.outs >= 18 && (m.line.era ?? 99) <= 1.50);
-    if (mvp) {
+    if (mvp && !onFarm) {
       log.add('$slotNameの月間MVPに選ばれた!');
       _note('title', '$slotNameの月間MVP');
       condition = condition.copyWith(morale: condition.morale + 5);
@@ -980,7 +991,7 @@ class Game {
 
   /// シーズン中盤(4か月目)に、ここまでの成績と人気でオールスターに選ばれることがある。
   void _allStar() {
-    if (slot != 3 || condition.injured) return;
+    if (slot != 3 || condition.injured || onFarm) return;
     final prog = seasonProgress;
     if (prog == null || prog.line.games < 40) return;
     final l = prog.line;
@@ -1065,18 +1076,23 @@ class Game {
     }
 
     if (league != null) {
-      final titles =
-          titlesOf(league.line, games: league.games, rank: league.rank);
-      final proBefore = records.where((r) => r.stage == Stage.pro).toList();
-      final awards = awardsOf(
-        league.line,
-        games: league.games,
-        firstYear: proBefore.isEmpty,
-        prevGames: proBefore.isEmpty ? null : proBefore.last.line.games,
-        fielding: player.abilities[Ability.fielding] ?? 0,
-        isBatter: league.line.hasBatting && !league.line.hasPitching,
-        titles: titles,
-      );
+      final farm = onFarm; // 二軍の年: タイトル・表彰・日本一の対象外
+      final titles = farm
+          ? <String>[]
+          : titlesOf(league.line, games: league.games, rank: league.rank);
+      final proBefore =
+          records.where((r) => r.stage == Stage.pro && !r.farm).toList();
+      final awards = farm
+          ? <String>[]
+          : awardsOf(
+              league.line,
+              games: league.games,
+              firstYear: proBefore.isEmpty,
+              prevGames: proBefore.isEmpty ? null : proBefore.last.line.games,
+              fielding: player.abilities[Ability.fielding] ?? 0,
+              isBatter: league.line.hasBatting && !league.line.hasPitching,
+              titles: titles,
+            );
       final rec = SeasonRecord(
         age: player.age,
         stage: stage,
@@ -1090,6 +1106,7 @@ class Game {
         awards: awards,
         months: List.of(monthRows),
         twoWay: player.role == Role.twoWay,
+        farm: farm,
       );
       monthRows = [];
       records.add(rec);
@@ -1101,7 +1118,9 @@ class Game {
         _note('title', '$streak年連続でタイトルを獲得');
       }
       if (league.missed > 0) log.add('怪我で${league.missed}試合を欠場した。');
-      if (league.rank == 1) {
+      if (farm) {
+        log.add('二軍の今季は${league.rank}位(${league.wins}勝${league.losses}敗)。');
+      } else if (league.rank == 1) {
         championships++;
         log.add('リーグ優勝!');
         log.add(
@@ -1307,6 +1326,14 @@ class Game {
         log.add('新人の${kohaiOf(proTeam!, player.age)}が入団してきた。');
       }
       proYears++;
+      if (farmYears > 0) {
+        farmYears--;
+        if (promoted(yearsLeft: farmYears, overall: overall(player))) {
+          farmYears = 0;
+          log.add('一軍に昇格した!');
+          _note('team', '一軍に昇格');
+        }
+      }
       lowYears = nextLowYears(player, lowYears);
       if (mustRetire(player, lowYears)) {
         if (isReleased(lowYears) &&
@@ -1364,6 +1391,11 @@ class Game {
       final round = draftRound(margin);
       log.add('ドラフトで指名された! $team から$round位指名。');
       log.add(pressConferenceNote(round, uniformNumberOf(Stage.pro, player)));
+      farmYears = farmYearsFor(round);
+      if (farmYears > 0) {
+        log.add('育成契約での入団。まずは二軍で力をつけて、一軍昇格を目指す。');
+        _note('team', '育成契約で入団(二軍からのスタート)');
+      }
       final mates = classmatesOf(player.name, team);
       log.add(
           '同期入団: ${[for (final m in mates) '${m.$1}(${m.$2}位)'].join('・')}');
@@ -1465,6 +1497,7 @@ class Game {
         'awakened': awakened,
         'tryoutUsed': tryoutUsed,
         'pendingFinal': pendingFinal?.toJson(),
+        'farmYears': farmYears,
       };
 
   /// 項目を足すときは既定値を置く(既存セーブを壊さない)。
@@ -1493,6 +1526,7 @@ class Game {
     g.focusStreak = (j['focusStreak'] as num?)?.toInt() ?? 0;
     g.awakened = j['awakened'] == true;
     g.tryoutUsed = j['tryoutUsed'] == true;
+    g.farmYears = (j['farmYears'] as num?)?.toInt() ?? 0;
     final pf = j['pendingFinal'];
     if (pf is Map) {
       g.pendingFinal = FinalMoment.fromJson(pf.cast<String, dynamic>());
