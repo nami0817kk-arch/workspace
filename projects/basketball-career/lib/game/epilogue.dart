@@ -15,6 +15,13 @@ String positionNickname(Position p) => switch (p) {
 
 bool _wentPro(Game g) => g.records.any((r) => r.league.name.startsWith('pro'));
 
+/// プロで戦った年数(プロの大会の記録がある年の数)。
+int proYears(Game g) => g.records
+    .where((r) => r.league == League.proDomestic || r.league == League.proAbroad)
+    .map((r) => r.age)
+    .toSet()
+    .length;
+
 /// 日本代表で世界大会を制したか。
 bool worldChampion(Game g) =>
     g.records.any((r) => r.league == League.national && r.champion);
@@ -144,6 +151,21 @@ List<String> epilogueLines(Game g) {
     lines.add('ドラフトでは全体${g.draftPick}位の上位指名。大きな期待を背負ってプロの扉を開いた。');
   } else if (g.draftPick > 30) {
     lines.add('ドラフトでは全体${g.draftPick}位。決して高い評価ではなかったが、そこからのし上がった。');
+  }
+
+  // 引退セレモニー(プロで戦った選手だけ)。
+  final py = proYears(g);
+  if (py > 0) {
+    final forced = g.retiredReason == '戦力外通告を受けた';
+    if (py >= 10 && (g.titles > 0 || g.honorTotal > 0 || g.abroad)) {
+      lines.add('引退セレモニーには満員のアリーナが詰めかけ、スタンディングオベーションで${p.name}を見送った。');
+    } else if (py >= 5) {
+      lines.add(forced
+          ? '戦力外通告を受けたが、最後の試合までコートに立った。仲間とファンが温かく送り出してくれた。'
+          : '引退セレモニーでは、仲間とファンに見送られ、静かにユニフォームを脱いだ。');
+    } else {
+      lines.add('短いプロ生活だったが、最後の試合では温かい拍手が送られた。');
+    }
   }
 
   if (retiredNumber(g)) {

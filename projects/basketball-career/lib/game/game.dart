@@ -181,6 +181,8 @@ class Game {
     this.rivalMet = false,
     this.nationalPending = false,
     this.draftPick = 0,
+    this.injuredStreak = 0,
+    this.comebackPending = false,
     this.salary = 0,
     this.totalEarnings = 0,
     this.caps = 0,
@@ -323,6 +325,12 @@ class Game {
 
   /// プロ契約のときのドラフト指名順位(1〜60)。0 は指名なし(古いセーブ・プロ以外)。
   int draftPick;
+
+  /// 長い怪我が治ったターンで true(復帰の出来事を起こしたら戻す)。大会の途中で保存しても残る。
+  bool comebackPending;
+
+  /// いまの怪我で、続けて休んだターン数(長い怪我から復帰したとき出来事を起こす)。
+  int injuredStreak;
 
   /// プロの年俸(万円)。プロ以外は 0。1年目は新人契約、年の終わりの契約更改で変わる。
   int salary;
@@ -514,6 +522,7 @@ class Game {
     lastMetRival = false;
     lastNewSkills = {};
     final rut = isRut(action);
+    final wasInjured = condition.injured;
     final r = playTerm(player, condition, action, focus, rng,
         growthScale: difficulty.growth * coachBoost * (rut ? slumpScale : 1.0));
     recentActions.add(action);
@@ -523,6 +532,13 @@ class Game {
     lastWasRut = rut;
     player = r.player;
     condition = r.condition;
+    // 長い怪我(3ターン以上)から治ったら、復帰の出来事が起きる。
+    if (condition.injured) {
+      injuredStreak++;
+    } else {
+      comebackPending = wasInjured && injuredStreak >= 3;
+      injuredStreak = 0;
+    }
     termAction = action;
     termInjured = r.gotInjured;
     _learnSkills();
@@ -670,6 +686,22 @@ class Game {
         yearEnded: yearEnded,
       );
     }
+    // プロでは、25・29・33歳でフリーエージェントの権利を得る(出来事が有効なときだけ)。
+    if (eventsEnabled &&
+        yearEnded &&
+        !retired &&
+        phase == Phase.season &&
+        track == Track.pro &&
+        const {25, 29, 33}.contains(player.age)) {
+      pendingEventId = 'pro_fa';
+      return TermReport(
+        action: action,
+        gotInjured: gotInjured,
+        tournament: t,
+        satOut: satOut,
+        yearEnded: yearEnded,
+      );
+    }
     // 中学・高校に上がるときは、進学先を選ぶ(出来事が有効なときだけ)。
     if (eventsEnabled && yearEnded && !retired && phase == Phase.season) {
       final forced = switch (stage) {
@@ -687,6 +719,17 @@ class Game {
           yearEnded: yearEnded,
         );
       }
+    }
+    if (eventsEnabled && comebackPending && phase == Phase.season && !retired) {
+      comebackPending = false;
+      pendingEventId = 'comeback';
+      return TermReport(
+        action: action,
+        gotInjured: gotInjured,
+        tournament: t,
+        satOut: satOut,
+        yearEnded: yearEnded,
+      );
     }
     if (eventsEnabled && phase == Phase.season) {
       pendingEventId = rollEvent(player,
@@ -876,6 +919,7 @@ class Game {
     final opt = e.options[i];
     final before = player;
     final c0 = condition;
+    salaryChangeLine = null;
     final r = applyEffect(player, condition, opt.effect, lastFocus, rng);
     player = r.player;
     condition = r.condition;
@@ -888,6 +932,11 @@ class Game {
     if (opt.effect.school != null) {
       schoolBonus = opt.effect.school!;
       schoolLabel = opt.effect.schoolLabel ?? '';
+    }
+    if (opt.effect.salaryPct != 0 && salary > 0) {
+      final next = (salary * (100 + opt.effect.salaryPct) / 100 / 10).round() * 10;
+      salaryChangeLine = '年俸 ${moneyLabel(salary)} → ${moneyLabel(next)}';
+      salary = next;
     }
     if (opt.effect.achievement != 0) {
       final base = recentAchievements.isEmpty ? 30.0 : recentAchievements.removeLast();
@@ -911,6 +960,8 @@ class Game {
     }
     if (r.gotInjured) lines.add('${condition.injuryName}をした');
     if (opt.effect.achievement != 0) lines.add('評価が上がった');
+    final sc = salaryChangeLine;
+    if (sc != null) lines.add(sc);
     if (opt.effect.national) lines.add('日本代表に参加する(次の冬に世界大会)');
     if (opt.effect.schoolLabel != null) {
       lines.add('進学先: ${opt.effect.schoolLabel}');
@@ -1057,6 +1108,9 @@ class Game {
     _retire('自分で現役を退いた');
   }
 
+  /// 出来事の選択で年俸が変わったときの行(一時的。`resolveEvent` の返り値に入れる)。
+  String? salaryChangeLine;
+
   void _retire(String reason) {
     retiredReason = reason;
     pathPending = false;
@@ -1127,6 +1181,8 @@ class Game {
         'rivalMet': rivalMet,
         'nationalPending': nationalPending,
         'draftPick': draftPick,
+        'injuredStreak': injuredStreak,
+        'comebackPending': comebackPending,
         'salary': salary,
         'totalEarnings': totalEarnings,
         'caps': caps,
@@ -1181,6 +1237,8 @@ class Game {
         number: (j['number'] as num?)?.toInt() ?? 0,
         nationalPending: (j['nationalPending'] as bool?) ?? false,
         draftPick: (j['draftPick'] as num?)?.toInt() ?? 0,
+        injuredStreak: (j['injuredStreak'] as num?)?.toInt() ?? 0,
+        comebackPending: (j['comebackPending'] as bool?) ?? false,
         salary: (j['salary'] as num?)?.toInt() ?? 0,
         totalEarnings: (j['totalEarnings'] as num?)?.toInt() ?? 0,
         caps: (j['caps'] as num?)?.toInt() ?? 0,
