@@ -1,3 +1,4 @@
+import 'guide_dialog.dart';
 import 'package:flutter/material.dart';
 
 import 'controller.dart';
@@ -128,9 +129,20 @@ class _MilestoneHostState extends State<_MilestoneHost> {
         ));
       });
     }
-    if (_showing || widget.controller.pending.isEmpty) return;
+    if (_showing ||
+        (widget.controller.pending.isEmpty &&
+            !widget.controller.guidePending)) {
+      return;
+    }
     _showing = true;
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (mounted && widget.controller.guidePending) {
+        // はじめてのガイド(最初の選手を始めたとき、1度だけ)。
+        widget.controller.guidePending = false;
+        await showGuide(context);
+        widget.controller.markGuideSeen();
+        if (!mounted) return;
+      }
       while (mounted && widget.controller.pending.isNotEmpty) {
         final m = widget.controller.pending.first;
         await showDialog<void>(

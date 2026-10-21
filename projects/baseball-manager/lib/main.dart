@@ -4,5 +4,5 @@ import 'ui/app.dart';
 import 'ui/controller.dart';
 import 'ui/sound.dart';
 
-void main() =>
-    runApp(BaseballManagerApp(controller: GameController(sound: AudioSound())));
+void main() => runApp(BaseballManagerApp(
+    controller: GameController(sound: AudioSound(), autoGuide: true)));

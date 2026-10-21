@@ -7,6 +7,7 @@ import 'achievements_screen.dart';
 import 'admin_screen.dart';
 import 'controller.dart';
 import 'home_screen.dart' show showHelp;
+import 'guide_dialog.dart';
 import 'trait_book_screen.dart';
 import 'versus_screen.dart';
 
@@ -142,6 +143,13 @@ class SettingsScreen extends StatelessWidget {
                     title: const Text('行動の結果を画面の下に出す'),
                     value: controller.toasts,
                     onChanged: (v) => controller.setFlags(toasts: v),
+                  ),
+                  ListTile(
+                    key: const Key('guide-open'),
+                    leading: const Icon(Icons.menu_book_outlined),
+                    title: const Text('はじめてのガイド'),
+                    subtitle: const Text('遊び方の流れを、もう一度見る。'),
+                    onTap: () => showGuide(context),
                   ),
                   ListTile(
                     key: const Key('keys-open'),

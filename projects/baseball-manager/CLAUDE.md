@@ -617,3 +617,8 @@ soccer-manager / soccer-career の野球版。**中核は「試合中の采配�
 - 保存: `Game.afterPath`(古いセーブは null)、`PlayerSnapshot.afterPath / afterTier`。選ぶと殿堂の最新の記録も差し替わり(`GameController.chooseAfterPath`)、**実績2つ**(セカンドキャリア・第二の人生で輝く=大成功)が出る。`tool/ach_audit.dart` は引退後にランダムな道を選ぶ。
 - 既存の `afterCareerOf`(結果コピー・エピローグの「その後」の一文)は、選ぶ前の自動の文として残してある。
 
+### 8. はじめてのガイド(`lib/ui/guide_dialog.dart`)
+- **最初の選手を始めたとき、1度だけ**5ページのガイド(流れ・経験点・天賦と特性・勝負どころ・記録と周回)が出る(「次へ」「スキップ」)。見たかどうかは端末に保存(`guideKey`)。設定の「はじめてのガイド」(`guide-open`)からいつでも見られる。「すべてのデータを消す」で、また出る。
+- **自動で出すのは `GameController(autoGuide: true)` のときだけ**(`main.dart` が渡す。**テストの既定は false**。true にしないと、新しい選手を始めるテストで画面がガイドに隠れる)。`guidePending` を `_MilestoneHost` が見て、節目ダイアログより先に出す。
+- 狭い画面・大きい文字でも溢れない(ボタンは `Flexible`、`insetPadding` 16)ことをテスト(`test/ui/guide_test.dart`)で見張る。
+

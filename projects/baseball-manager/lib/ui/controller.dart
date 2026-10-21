@@ -48,6 +48,9 @@ const traitBookKey = 'baseball_manager_traitbook_v1';
 /// 継承ポイント(引退で貯まり、次の選手に特性を持たせるのに使う)。
 const legacyKey = 'baseball_manager_legacy_v1';
 
+/// はじめてのガイドを見たか(端末単位)。
+const guideKey = 'baseball_manager_guide_v1';
+
 enum MilestoneKind {
   draft,
   champion,
@@ -153,6 +156,29 @@ class SaveStore {
     try {
       final p = await SharedPreferences.getInstance();
       await p.setStringList(traitBookKey, names.toList()..sort());
+    } catch (_) {}
+  }
+
+  Future<bool> loadGuideSeen() async {
+    try {
+      final p = await SharedPreferences.getInstance();
+      return p.getBool(guideKey) ?? false;
+    } catch (_) {
+      return true; // 保存できない環境では、毎回出さない
+    }
+  }
+
+  Future<void> saveGuideSeen() async {
+    try {
+      final p = await SharedPreferences.getInstance();
+      await p.setBool(guideKey, true);
+    } catch (_) {}
+  }
+
+  Future<void> clearGuide() async {
+    try {
+      final p = await SharedPreferences.getInstance();
+      await p.remove(guideKey);
     } catch (_) {}
   }
 
@@ -331,10 +357,27 @@ String eventResultText(Player p0, Condition c0, Player p1, Condition c1,
 }
 
 class GameController extends ChangeNotifier {
-  GameController({SaveStore? store, Random? rng, SoundPlayer? sound})
+  GameController(
+      {SaveStore? store,
+      Random? rng,
+      SoundPlayer? sound,
+      this.autoGuide = false})
       : store = store ?? SaveStore(),
         _rng = rng ?? Random(),
         sound = sound ?? const NullSound();
+
+  /// 最初の選手を始めたときに、はじめてのガイドを自動で出すか(アプリ本体は true、テストは false)。
+  final bool autoGuide;
+
+  /// 次の画面でガイドを出したいか。見せたら `markGuideSeen` で false に戻す。
+  bool guidePending = false;
+  bool guideSeen = false;
+
+  void markGuideSeen() {
+    guidePending = false;
+    guideSeen = true;
+    store.saveGuideSeen();
+  }
 
   final SaveStore store;
 
@@ -535,6 +578,7 @@ class GameController extends ChangeNotifier {
   Future<bool> loadSaved() async {
     unlocked = await store.loadAchievements();
     seenTraits = await store.loadTraitBook();
+    guideSeen = await store.loadGuideSeen();
     legacyPoints = await store.loadLegacy();
     adminMode = await store.loadAdmin();
     final disp = await store.loadDisplay();
@@ -640,6 +684,7 @@ class GameController extends ChangeNotifier {
         role: role,
         rng: _rng);
     recent = birthTalentNotes(game!.player);
+    if (autoGuide && !guideSeen) guidePending = true;
     focus = abilitiesOf(role).first;
     _commit();
   }
@@ -965,6 +1010,8 @@ class GameController extends ChangeNotifier {
     await store.clearAchievements();
     await store.clearTraitBook();
     await store.clearLegacy();
+    await store.clearGuide();
+    guideSeen = false;
     notifyListeners();
   }
 
