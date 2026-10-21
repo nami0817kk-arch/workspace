@@ -828,15 +828,6 @@
   "club": "ボルシアMG"
  },
  {
-  "file": "stadium_バイエルン_in.png",
-  "source": "wikimedia",
-  "title": "File:Allianz Arena stadium, FC Bayern Munich (2158530797).jpg",
-  "page_url": "https://commons.wikimedia.org/wiki/File:Allianz_Arena_stadium,_FC_Bayern_Munich_(2158530797).jpg",
-  "author": "Michal Osmenda from Brussels, Belgium",
-  "license": "CC BY-SA 2.0",
-  "club": "バイエルン"
- },
- {
   "file": "stadium_パーダーボルン_in.png",
   "source": "wikimedia",
   "title": "File:2012-02-26 Paderborn04 (6791755802).jpg",
@@ -990,15 +981,6 @@
   "club": "ベンフィカ"
  },
  {
-  "file": "stadium_バイエルン.png",
-  "source": "wikimedia",
-  "title": "File:Allianz arena golden hour Richard Bartz.jpg",
-  "page_url": "https://commons.wikimedia.org/wiki/File:Allianz_arena_golden_hour_Richard_Bartz.jpg",
-  "author": "Richard Bartz, Munich aka Makro Freak",
-  "license": "CC BY-SA 2.5",
-  "club": "バイエルン"
- },
- {
   "file": "stadium_マンチェスターシティ_in_v.png",
   "source": "wikimedia",
   "title": "File:Etihad Stadium - geograph.org.uk - 7730122.jpg",
@@ -1033,5 +1015,23 @@
   "author": "Vojtasekd",
   "license": "CC BY 4.0",
   "club": "スラヴィア・プラハ"
+ },
+ {
+  "file": "stadium_バイエルン_in.png",
+  "source": "wikimedia",
+  "title": "File:Allianz Arena during a match between Bayern Munich and 1860 Munich.jpg",
+  "page_url": "https://commons.wikimedia.org/wiki/File:Allianz_Arena_during_a_match_between_Bayern_Munich_and_1860_Munich.jpg",
+  "author": "Tobias Kage",
+  "license": "CC BY-SA 3.0",
+  "club": "バイエルン"
+ },
+ {
+  "file": "stadium_バイエルン.png",
+  "source": "wikimedia",
+  "title": "File:Allianz arena at night Richard Bartz.jpg",
+  "page_url": "https://commons.wikimedia.org/wiki/File:Allianz_arena_at_night_Richard_Bartz.jpg",
+  "author": "Richard Bartz, Munich aka Makro Freak",
+  "license": "CC BY-SA 2.5",
+  "club": "バイエルン"
  }
 ]

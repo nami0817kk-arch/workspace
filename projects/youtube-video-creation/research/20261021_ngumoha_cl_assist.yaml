@@ -1,0 +1,142 @@
+# 取材メモ（2026年10月21日）エングモア、18歳でリヴァプール史上CL最年少アシスト。2アシストで逆転勝ち（ニュースのショート。見せ方 Y）
+# **予備の題材**：題材の一覧（research/20261021_topics_src.yaml の番号14）にユーザーの○は付いていない。台本は作るが、使うかどうかはユーザーが決める。
+# 取材: 2026-10-21。requests（ブラウザUA）と ESPN の公開API で全部読んだ。検索エンジンのAI要約は使っていない。
+#   ・サッカーキングの記事（https://www.soccer-king.jp/news/world/eng/20261021/2219132.html）… クラブ公式サイトの伝えを日本語にしたもの。得点者・分・OPTA の記録（18歳52日、史上3番目、オーウェンの記録）・本人の言葉（Amazon Prime への試合後の発言）。本文を最後まで読んだ。
+#   ・ESPN の試合データ（site.api.espn.com .../uefa.champions/summary?event=401915397。控え research/raw/20261021_espn_liverpool_villarreal.json）… 得点・分・アシスト・交代。**分の根拠**
+#   ・ESPN の記事（50231666「Ngumoha sparks Liverpool's comeback Champions League win」、content.core.api.espn.com 経由。控え research/raw/20261021_espn_50231666.json）… 本人の言葉の英語の原文・イラオラ監督の言葉・2008-09 以降の記録・「standing ovation」
+#   ・ESPN の記事 50232573「Leboeuf hails Ngumoha ...」は見出しだけで本文が空だった（使っていない）。
+# 確かめたこと（ESPN の試合記録。サッカーキングと一致）:
+#   ・20日（火）CL リーグフェーズ第3節、アンフィールド。リヴァプール 4 - 3 ビジャレアル。
+#   ・4分 ミカウタゼ（ビジャレアル）、29分 カルドナ（ビジャレアル）で0-2。
+#   ・36分 マクアリスター（コーナーキックから頭で。1-2）。
+#   ・45+2分 アラウホ（頭。アシスト エングモア。2-2）。ESPN の試合記録は「following a corner」、ESPN 記事は「curl a fabulous cross toward the far post」。**台本は「エングモアが上げたボール」とだけ言い、コーナーかクロスかは言わない。**
+#   ・65分 マクアリスター（至近距離。アシスト エングモア。3-2）。ESPN 記事は「drove inside from the right and flashed a sumptuous ball across the face of goal」、サッカーキングは「右サイドを突破した折り返し」。
+#   ・68分 ヴィルツ（ESPN の記録。アシスト ガクポ。4-2）。**サッカーキングは69分と書く。台本は分を言わない。**
+#   ・74分 エングモアは B・バルコラと交代（ESPN の記録）。ESPN 記事は「substituted to a well-deserved standing ovation」。
+#   ・87分 オルワセイ（ビジャレアル。「three minutes from time」）で 4-3。そのまま終了。サッカーキングも87分。
+#   ・リヴァプールはCL開幕3連勝（サッカーキング）。
+# 数字:
+#   ・18歳52日（OPTA。サッカーキング）。CLで複数アシストを記録した史上3番目の若さ。上にウォーレン・ザイール・エメリ（17歳231日）、セオ・ウォルコット（17歳250日）（サッカーキング）。
+#   ・リヴァプールの選手として、欧州の大会でアシストを記録した最年少。マイケル・オーウェンの18歳324日を更新（サッカーキング）。
+#   ・ESPN：2008-09 シーズン以降の記録で、CLの1試合で「5回以上のドリブル成功（7）・相手エリア内の10回以上のタッチ（12）・アシスト（2）」を満たした最年少。
+#   ・ESPN：2点差を逆転して勝ったのは、2022年5月以来（その試合もビジャレアル相手、3-2）。
+# 本人の言葉（試合後、Amazon Prime への発言。ESPN の英語の原文から訳した。語は足していない）:
+#   "It's up there with one of the best I've played. I enjoyed myself and the team helped me a lot." →「自分がこれまでやったなかで、最高のプレーの一つだと思う。楽しめたし、チームメイトにもたくさん助けてもらった」
+#   "Whenever I get the ball and there's an opportunity to go one v. one or two v. one, I believe in myself. I'll just keep going and be ruthless." →「ボールを持って、1対1や2対1にできるときは、自分を信じている。このまま、容赦なくいく」
+#   記録について（サッカーキングの日本語。クラブ公式サイトの伝えから）:「記録を塗り替えられるのは素晴らしいことだけど、何より重要なのは、アシストによって勝利に貢献できたということだ」
+#   ・サッカーキングは「これまでで最高のプレーの一つだと思う」と訳す。ESPN 原文の意味と合う。台本は ESPN 原文から訳した上の言い方を使う。
+# 監督の言葉（ESPN 記事。ポストマッチの会見）: "I am happy with his attitude" →「彼の姿勢には満足している」。（イラオラ監督）
+# 確度: 結果・得点・分は ESPN の試合記録とサッカーキングで一致＝報道。OPTA の記録はサッカーキング経由＝報道（OPTA 自体は読んでいない）。本人の言葉は ESPN が Amazon Prime から引いたもの＝報道。クラブ公式のページは読めていないので「確定」には上げない。
+# 重ならないように：ングモアの選手紹介は当日までの台本・covered に無い（grep 済み）。ただしリヴァプールの他の題材（ソボスライの負傷・バルコラのハットトリック・ヴィルツのチャンス創出）には触れない。
+# 名前の表記：サッカーキングは「エングモア」。題材の一覧は「ングモア」。**台本は「エングモア」**（サッカーキングの記事と、この台本の先行する記事の表記に合わせた）。
+# 反応: 当たっていない（作らない）。approve は --no-voices で。
+# 写真: Commons（Timmy96 CC0、2026年1月4日の試合前練習。Rio Ngumoha と題に明記された6枚のうち、被写体の記載が通った3枚）。今日の試合の写真は代理店（Getty）のみで使えない。今季の姿ではあるが試合の写真ではない（練習着のビブス）。
+slot: match
+date: "2026年10月21日"
+format: news
+no_main: true
+people: [リオ・エングモア, リヴァプール, ビジャレアル, イラオラ]
+
+short_style: Y
+short_hook_quote: 最高のプレーの一つ
+short_question: エングモアは、このままリヴァプールの右で先発を続けられると思いますか。
+short_photos:
+  - assets/images/20261021_ngumoha_cl_assist/03_v.jpg
+  - assets/images/20261021_ngumoha_cl_assist/02_v.jpg
+  - assets/images/20261021_ngumoha_cl_assist/01_v.jpg
+short_hook: 18歳エングモア、2アシストでリヴァプールを逆転勝利に導く。
+short_telops:
+  - {match: 最高のプレーの一つ, text: エングモア/「最高のプレーの一つ」}
+  - {match: 4対3, text: CL第3節/リヴァプール4対3ビジャレアル}
+  - {match: 2点を追う, text: 4分・29分に失点/0対2から逆転}
+  - {match: 2対2, text: 45+2分 エングモアのボール/アラウホが頭で同点}
+  - {match: 65分, text: 65分 エングモアの折り返し/マクアリスターが勝ち越し}
+  - {match: 74分, text: 74分に交代/総立ちの拍手}
+  - {match: 18歳52日, text: 18歳52日/CL複数アシストで史上3番目の若さ}
+  - {match: オーウェン, text: オーウェンの18歳324日を更新/リヴァプール欧州大会アシストの最年少}
+  - {match: 容赦なく, text: エングモア/「容赦なくいく」}
+  - {match: 姿勢, text: イラオラ監督/「姿勢には満足している」}
+
+theme:
+  id: ngumoha_cl_assist
+  league: england
+  league_name: チャンピオンズリーグ
+  prefix: ""
+  title: エングモア、18歳でリヴァプール史上CL最年少アシスト。2アシストで逆転勝ち
+  hook: ""
+  question: 2点を追ったリヴァプールを、18歳のエングモアはどう変えたのか
+  takeaway: OPTAではCLの複数アシストで史上3番目の若さ。リヴァプールの欧州大会アシストではオーウェンの記録を更新した
+
+thumbnail:
+  layout: face
+  line1: エングモア
+  line2: 18歳、2アシストで逆転
+  tags: [エングモア, リヴァプール]
+  photo: assets/images/20261021_ngumoha_cl_assist/02_w.jpg
+  short_photo: assets/images/20261021_ngumoha_cl_assist/03_v.jpg
+
+answer: 45分すぎと65分に、2つのアシスト。0対2から4対3で逆転した
+watch: 次のCLは第4節
+
+sections:
+  - id: what
+    main: true
+    heading: 何が起きたか
+    tier: 報道
+    telop: エングモア、18歳で2アシスト
+    say:
+      - voice: エングモア
+        text: 自分がこれまでやったなかで、最高のプレーの一つだと思う。
+        short_voice: true
+      - "20日夜のCL第3節。リヴァプールは、ホームでビジャレアルを4対3で破りました。"
+      - "試合は、4分と29分に点を取られ、2点を追う展開でした。"
+      - "そこから流れを変えたのが、18歳のエングモアです。"
+      - "前半の終わり、45分すぎ。エングモアのボールを、アラウホが頭で決めて、2対2。"
+      - "65分。エングモアの折り返しを、マクアリスターが決めて、3対2の勝ち越し。"
+      - "そのあとヴィルツも決めて、4対2。87分に1点返されましたが、4対3の勝ちでした。"
+      - "エングモアは、74分に交代。スタジアムは、総立ちの拍手で送りました。"
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/eng/20261021/2219132.html
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915397
+      - https://content.core.api.espn.com/v1/sports/news/50231666
+    quotes_from: ["ESPN https://content.core.api.espn.com/v1/sports/news/50231666"]
+
+  - id: record
+    heading: 記録と、本人の言葉
+    tier: 報道
+    telop: 18歳52日。CL複数アシストで史上3番目の若さ
+    say:
+      - "記録の上で、エングモアは18歳52日。"
+      - "CLで複数のアシストを記録した選手として、史上3番目の若さです。"
+      - "リヴァプールの選手が欧州の大会でアシストを決めた、最年少の記録です。"
+      - "オーウェンの18歳324日を、更新しました。"
+      - voice: エングモア
+        text: ボールを持って、1対1や2対1にできるときは、
+      - voice: エングモア
+        text: 自分を信じている。
+        cont: true
+      - voice: エングモア
+        text: このまま、容赦なくいく。
+        cont: true
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/eng/20261021/2219132.html
+      - https://content.core.api.espn.com/v1/sports/news/50231666
+    quotes_from: ["ESPN https://content.core.api.espn.com/v1/sports/news/50231666"]
+
+  - id: view
+    viewpoint: true
+    heading: 右の先発は続くか
+    tier: 背景
+    telop: 今季の右サイドで、出番を広げられるか
+    say:
+      - "見立てです。エングモアは、先週のラスク・リンツ戦も、右で先発しました。"
+      - "夏にバルコラが加わり、攻撃陣の競争は激しくなっています。"
+      - voice: イラオラ監督
+        text: 彼の姿勢には、満足している。
+      - "この日の活躍が、次の先発につながるか。"
+    official: false
+    sources:
+      - https://content.core.api.espn.com/v1/sports/news/50231666
+short_title: "エングモア、18歳でリヴァプール史上CL最年少アシスト。2アシストで逆転勝ち"

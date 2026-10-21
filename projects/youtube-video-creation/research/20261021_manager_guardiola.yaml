@@ -1,18 +1,552 @@
-# 試作用（サムネ案づくり専用。動画は作らない）。2026-10-21、新シリーズ「監督紹介」の最初の1本。
-# 数字の出どころ：英語版 Wikipedia「Pep Guardiola」（版 1380708377 を 2026-10-20 に取得）の Managerial statistics 表（2026-05-24 まで）と Honours 欄。
-# 合計（トップチームのみ＝バルサB 42試合を除く）の 1001試合・716勝155分130敗・勝率71.5% と、優勝41（14＋7＋20）は、表と Honours から自分で足した値。
-# **注意：Wikipedia と City の公式発表の引用（2026-05-22）では、グアルディオラは 2025-26 を最後にシティを退任している。現監督は Enzo Maresca。**
+# 監督紹介：グアルディオラ（10/21 水、シリーズ「監督紹介」、key: manager_guardiola、型は news）。9節の型（2026-10-20 決定）。
+# 最初の試作（サムネ案づくり専用）を、本編用に作り直したもの。
+#
+# **いまの立場（一次で確かめた）**
+#   ○ マンチェスター・シティ公式（mancity.com）2026-05-22 11:10「Guardiola to step down after incredible decade as City Manager」
+#       https://www.mancity.com/news/mens/pep-guardiola-official-announcement-63915039
+#       「今夏、監督を退く」「2016年7月に加入。20の主要タイトルを獲り、クラブ史上最も成功した監督」「シティ・フットボール・グループのグローバル・アンバサダーとして関係を続ける
+#       （技術的な助言、特定のプロジェクト）」。本人の声明（原文）：「And what a time we have had together. Don't ask me the reasons I'm leaving.
+#       There is no reason, but deep inside, I know it's my time. Nothing is eternal, if it was, I would be here. Eternal will be the feeling, the people, the memories,
+#       the love I have for my Manchester City.」「When I arrived, my first interview was with Noel Gallagher…」「Oasis are back again.」
+#       内訳（クラブ公式）：プレミア6・リーグカップ5・FAカップ3・コミュニティ・シールド3・チャンピオンズリーグ1・UEFAスーパーカップ1・クラブW杯1＝20。
+#   ○ シティ公式（試合記事）：最後の試合は 2026-05-24 のアストン・ヴィラ戦（2-1で敗戦。60,332人の観客、ノースの新スタンドは「The Pep Guardiola Stand」と名付けられた）。
+#       https://www.mancity.com/news/mens/city-v-aston-villa-guardiola-stones-bernardo-last-game-63915228　2025-26 は FAカップとリーグカップを獲り、プレミアは2位。
+#   ○ シティ公式（記録）：https://www.mancity.com/news/mens/pep-guardiola-manchester-city-stats-records-63915079
+#       593試合（最後の試合で、シティの監督として最長のゲーム数＝マクドウォールの592を超えた）・416勝（約70%）／プレミア380試合で勝ち点865（1試合2.28、プレミア最多の10年）／
+#       プレミア269勝（約70%。ファーガソン65.2%・クロップ62.5%・モウリーニョ59.2%・ヴェンゲル57.2%）／得点904・失点328（得失点差+576）／2017-18に勝ち点100（プレミア記録）。
+#   ○ シティ公式（記者会見）2026-05-22・05-25：https://www.mancity.com/news/mens/pep-guardiola-final-press-conference-pre-aston-villa-63915053 ・
+#       https://www.mancity.com/news/mens/pep-guardiola-manchester-city-final-press-conference-reaction-63915248
+#       「ノエル・ギャラガーに、数年前に言った。私たちは4連勝もできないチームだった。いまは4連覇だ」「後任には、あなたらしくいなさい、クラブは無条件で支える、と伝える」
+#       「クラブの別の役割で、決定は一切しない。日々の決定や脚光ではなく、裏側で関わりたい」
+#   ○ シティ公式 2026-06-29：エンツォ・マレスカを後任に任命（3年契約、2029年夏まで）。https://www.mancity.com/news/mens/enzo-maresca-manchester-city-manager-63918331
+#   → 題・語りは「前シティ監督」「2026年5月まで」。**退任は一次（クラブ公式）で確かめた。**
+#
+# **通算の数え方（台本とサムネをそろえる）**＝バルセロナBを除いたトップチーム。**英語版 Wikipedia「Pep Guardiola」Career statistics > Managerial（2026-05-24 時点）**
+#   バルセロナ 247試合179勝47分21敗（勝率72.5%）／バイエルン 161試合121勝21分19敗（75.2%）／シティ 593試合416勝87分90敗（70.2%）＝**1001試合716勝155分130敗（71.5%）**。
+#   優勝：Honours 欄 バルセロナ14（リーグ3・国王杯2・スーパーカップ3・CL2・UEFAスーパーカップ2・クラブW杯2）＋バイエルン7（ブンデス3・DFB杯2・UEFAスーパーカップ1・クラブW杯1）＋シティ20（クラブ公式）＝**41冠**。
+#   裏取り：バルセロナ14冠＝スカイスポーツ「Pep's Barca years」（「14 trophies in four years」。同記事の試合数は246試合178勝で、Wikipediaより各1少ない）／
+#   バイエルン7冠＝Bundesliga公式「Pep Guardiola: the Bayern Munich years」（「winning seven trophies in three seasons」）。
+#   **バルセロナの試合数は出典で1試合ちがう（247か246）。台本では「約1000試合」ではなく板の数字（Wikipedia）を使い、食い違いは報告に書く。**
+#   バルセロナ時代の期間 2008-12（4季）、バイエルン 2013-16（3季）、シティ 2016-26（10季）＝17季。
+# **選手時代・基礎**：Wikipedia：1971-01-18 生まれ（カタルーニャのサンペドール）。バルセロナで1990-2001（リーグ戦263試合・全体382試合11得点）、スペイン代表47試合5得点、1992年バルセロナ五輪の金メダル（スペインU23）、1991-92に欧州カップ優勝。
+#
+# **歩みと転機（Wikipedia の監督歴の節。数字は読んで確かめた）**
+#   2007-08 バルセロナB（3部で優勝し、昇格戦も勝って昇格）→ 2008 トップ就任（ロナウジーニョ・デコ・エトーを構想外と発表。エトーは結局残った）→ 2008-09 国内2冠＋チャンピオンズリーグ（スペイン勢初の3冠。37歳で、CL優勝チームの最年少監督）→
+#   2009年 暦年で6冠（史上初）→ 2010-11 CL2度目 → 2012-04-27 退任表明（疲れが主な理由。4年は永遠のように感じた）→ ニューヨークで1年の休養 → 2013 バイエルン（ドイツ語で会見。ブンデス3連覇）→
+#   2016 シティ（2016-17 は監督として初めて無冠）→ 2017-18 プレミア勝ち点100 → 2018-19 国内4冠（史上初）→ 2022-23 3冠（CL初優勝）→ 2023-12 クラブW杯でシティ初（本人は史上最多の4回）→
+#   2024-25 無冠（監督として初めて4連敗）→ 2025-26 FAカップ・リーグカップ → 2026-05-22 退任発表。
+# **戦術の色（実例の試合＝2009-05-02 レアル・マドリード 2-6 バルセロナ、ベルナベウ）**
+#   ○ バルセロナ公式「Once años del 2-6 en el Santiago Bernabéu」（fcbarcelona.es、2020-05-02）：マドリードが先制（イグアイン）→ アンリとプジョルが5分のあいだに逆転 →
+#       ピケがバルセロナでの公式戦初ゴールで6点目。「グアルディオラとメッシが、位置の入れ替えを決めた。右から真ん中の攻撃の位置、偽9番」。
+#       **得点者の数（メッシ2・アンリ2）は公式で確かめていないので、台本に出さない。**
+#   ○ 英語版 Wikipedia「Tactics」：ボール保持と、GKや守備陣からのつなぎ／奪われたら相手陣のなかで集団で奪い返す／形を変える（バルサ・バイエルンの4-3-3と3-4-3、2022-23のシティは3-2-2-3、ストーンズを中盤の役に）。
+#
+# **日本との接点**：2011年12月、日本（横浜・豊田）で開かれたクラブ・ワールドカップ。バルセロナは決勝でサントスに4-0（Wikipedia：同大会の開催都市・グアルディオラの節）。通算13個目のタイトル（16大会のうち）。
+#   メッシが大会最優秀選手（Golden Ball）。**決勝の会場名は確かめていないので言わない。**
+#
+# **入れなかったもの**：私生活（家族・個人的な出来事）、年俸、代理人、法的な問題（シティの115件の訴え）、後任の評価、他の監督との優劣の話（クラブ公式の勝率の比べだけ、数字として使う）、
+#   女子チームの話、日本人選手の話（グアルディオラとの直接の接点は見つからなかった）、Jリーグの話。
+# **日本語名・読みで怪しいもの**：グアルディオラ、サンペドール、バルセロナ、バイエルン、ミュンヘン、ノエル・ギャラガー、オアシス、アンリ、プジョル、ピケ、イグアイン、メッシ、サントス、マレスカ、ストーンズ、ベルナベウ、マクドウォール。
+#
+# 本人の言葉は3か所（自訳。原文は上の出典＝クラブ公式）：①フック（声明）②本人の言葉の節（声明と記者会見）③見立て（後任へ）。
 date: 2026年10月21日
+slot: other_1
 format: news
 series: 監督紹介
+voice_min: 0
 people:
 - グアルディオラ
 theme:
+  end_bg: assets/images/20261021_manager_guardiola/04_w.jpg
+  id: manager_guardiola
+  league: england
+  league_name: プレミアリーグ
+  kind: other
   topic: グアルディオラ
-  title: グアルディオラ監督ってどんな人？
+  title: グアルディオラ、前シティ監督はどんな人？通算41冠の中身は、どこにあるのか
+  question: 前シティ監督のグアルディオラは、どんな人なのか。通算41冠は、どこで積み上がったのか
+  lead: 前シティ監督、グアルディオラ。
+  opening_image: assets/images/20261021_manager_guardiola/04_w.jpg
+  takeaway: トップチームの通算は1001試合、716勝155分130敗で勝率71.5%。優勝は41冠で、バルセロナ14・バイエルン7・シティ20。1シーズンあたりの優勝は、バルセロナ3.5、バイエルン2.3、シティ2.0。勝率はバイエルンの75.2%が最高。プレミアの勝率は約70%で、クラブ公式の比べではファーガソンの65.2%を上回る。2026年5月にシティ監督を退き、グローバル・アンバサダーになった
+  short_title: グアルディオラ、通算41冠
+  nameplate: グアルディオラ｜前マンチェスター・シティ監督
 thumbnail:
-  photo: assets/images/20261021_manager_guardiola/panel_02.jpg
   line1: グアルディオラ、通算41冠
   line2: シティ10年で20冠
   tags:
   - マンチェスター・シティ
+  photo: assets/images/20261021_manager_guardiola/panel_04.jpg
+  photos: []
+  short_photo: assets/images/20261021_manager_guardiola/04_v.jpg
+sections:
+- id: hook
+  main: true
+  heading: 41個のタイトルは、監督として、どう積み上がったのか
+  tier: 報道
+  telop: トップチームの通算41冠。バルセロナ14、バイエルン7、シティ20
+  narrator: 解説
+  card: &hook_stats
+    type: stats
+    title: グアルディオラ 監督としての通算（トップチーム）
+    items:
+    - ['41', 冠, バルセロナ14・バイエルン7・シティ20]
+    - ['1001', 試合, 通算。勝率71.5%]
+    - ['10', 年, シティの監督。2026年5月まで]
+    focus: 0
+  say:
+  - text: 41冠。グアルディオラが、監督として、トップチームで勝ち取った数。
+    image: assets/images/20261021_manager_guardiola/04_w.jpg
+    card: none
+  - text: 10年率いたシティを、去るとき、こう言っています。
+    card: none
+  - voice: グアルディオラ
+    text: 理由は聞かないでください。理由は、ありません。
+  - voice: グアルディオラ
+    text: でも心の奥で、いまが自分の時だと、分かっています。
+    cont: true
+    pause: 0.5
+  - text: その通算は、1001試合。勝率は、71.5%。中身を順に見ます。
+    image: assets/images/20261021_manager_guardiola/02_w.jpg
+    card: none
+  quotes_from:
+  - https://www.mancity.com/news/mens/pep-guardiola-official-announcement-63915039
+  sources:
+  - https://www.mancity.com/news/mens/pep-guardiola-official-announcement-63915039
+  - https://www.mancity.com/news/mens/pep-guardiola-manchester-city-stats-records-63915079
+  - https://www.skysports.com/football/news/11096/8401141/peps-barca-years
+  - https://www.bundesliga.com/en/bundesliga/news/pep-guardiola-bayern-munich-years-barcelona-manchester-city-coach-catalonia-12008
+  - https://en.wikipedia.org/wiki/Pep_Guardiola
+- id: data
+  heading: 前シティ監督のグアルディオラは、どんな立場で、どんな経歴の人か
+  tier: 報道
+  telop: グアルディオラの基礎DATA
+  narrator: 解説
+  card: &data_table
+    type: table
+    title: グアルディオラ（55歳）の基礎DATA
+    columns: [項目, 中身]
+    rows:
+    - [生年月日, 1971年1月18日（スペイン・サンペドール）]
+    - [選手時代, バルセロナで382試合（1990〜2001）]
+    - [スペイン代表, 47試合5得点。1992年五輪で金メダル]
+    - [監督（トップチーム）, バルセロナ→バイエルン→シティ]
+    - [シティ監督, 2016年7月〜2026年5月]
+    - [いま, シティ・グループのグローバル・アンバサダー]
+    highlight_row: 4
+    source: マンチェスター・シティ公式・英語版Wikipedia
+  say:
+  - text: グアルディオラは、1971年、スペインのカタルーニャ地方に生まれました。
+    image: assets/images/20261021_manager_guardiola/07_w.jpg
+    card:
+      <<: *data_table
+      highlight_row: 0
+  - text: 選手として、バルセロナで382試合。1992年の五輪は、金メダルです。
+    card: none
+  - text: 監督としては、バルセロナ、バイエルン、シティの3つを率いました。
+    image: assets/images/20261021_manager_guardiola/08_w.jpg
+    card:
+      <<: *data_table
+      highlight_row: 3
+  - text: シティの監督は、2016年7月から、2026年5月まで。
+    image: assets/images/20261021_manager_guardiola/04_w.jpg
+    emph: true
+    card:
+      <<: *data_table
+      highlight_row: 4
+  - text: いまは、シティ・フットボール・グループの、グローバル・アンバサダーです。
+    image: assets/images/20261021_manager_guardiola/06_w.jpg
+    card:
+      <<: *data_table
+      highlight_row: 5
+  sources:
+  - https://www.mancity.com/news/mens/pep-guardiola-official-announcement-63915039
+  - https://www.mancity.com/news/mens/pep-guardiola-final-press-conference-pre-aston-villa-63915053
+  - https://en.wikipedia.org/wiki/Pep_Guardiola
+- id: career
+  heading: ひとつのクラブに4年から10年。どこが転機だったのか
+  tier: 背景
+  telop: 歩みと転機。バルセロナ4年、休養、バイエルン3年、シティ10年
+  narrator: 解説
+  card: &career_tl
+    type: timeline
+    title: グアルディオラの監督としての歩み
+    rows:
+    - [2007-08, バルセロナB。4部で優勝し、3部へ昇格]
+    - [2008-12, バルセロナ。4年で14冠]
+    - [2012-13, ニューヨークで、1年の休養]
+    - [2013-16, バイエルン。3年で7冠]
+    - [2016-26, シティ。10年で20冠]
+    - [2026年5月, シティ監督を退任]
+    focus: 1
+  say:
+  - text: グアルディオラの監督の道は、バルセロナのBチームから。当時は、4部です。
+    image: assets/images/20261021_manager_guardiola/07_w.jpg
+    card: none
+  - text: 昇格のあと、トップチームの監督に。
+    card: none
+  - text: 1年目に、国内の2冠と、チャンピオンズリーグを獲りました。
+    emph: true
+    card: none
+  - text: 2009年は、1年のうちに6つのタイトル。監督として史上初です。
+    card: none
+  - text: 最初の転機は、2012年。4年で、バルセロナを離れました。
+    image: assets/images/20261021_manager_guardiola/08_w.jpg
+    card:
+      <<: *career_tl
+      focus: 2
+  - text: 2013年、バイエルンへ。ブンデスリーガ3連覇で、3年で7冠。
+    card:
+      <<: *career_tl
+      focus: 3
+  - text: 2016年、シティへ。ところが1年目は、監督として初めて、無冠でした。
+    image: assets/images/20261021_manager_guardiola/04_w.jpg
+    emph: true
+    card:
+      <<: *career_tl
+      focus: 4
+  - text: 2年目の2017-18に、プレミア記録の勝ち点100で優勝します。
+    card: none
+  - text: 2018-19は、国内の4つのタイトルを全部。イングランドで、初めてです。
+    image: assets/images/20261021_manager_guardiola/02_w.jpg
+    card: none
+  - text: 2022-23は、チャンピオンズリーグを含む3冠。クラブ初の欧州の頂点でした。
+    card: none
+  - text: そして2026年5月、シティの監督を退きました。
+    image: assets/images/20261021_manager_guardiola/06_w.jpg
+    card:
+      <<: *career_tl
+      focus: 5
+  sources:
+  - https://en.wikipedia.org/wiki/Pep_Guardiola
+  - https://www.skysports.com/football/news/13537139/pep-guardiola-to-leave-man-city-spaniard-announces-departure-after-a-decade-of-success-at-premier-league-club
+  - https://www.mancity.com/news/mens/pep-guardiola-hero-image-20-trophies-63915387
+  - https://www.mancity.com/news/mens/pep-guardiola-official-announcement-63915039
+- id: style
+  heading: グアルディオラのサッカーは、2009年のあの試合で、何を変えたのか
+  tier: 報道
+  telop: 戦術の色。2009年5月2日、レアル・マドリード 2-6 バルセロナ
+  narrator: 解説
+  card: &style_stats
+    type: stats
+    title: 2009年5月2日 ラ・リーガ（ベルナベウ）
+    items:
+    - ['2', 点, レアル・マドリード]
+    - ['6', 点, バルセロナ]
+    focus: 1
+  say:
+  - text: 戦術の色を、1つの試合で見ます。2009年5月2日、ベルナベウです。
+    image: assets/images/20261021_manager_guardiola/07_w.jpg
+    card: *style_stats
+  - text: 結果は、2対6。バルセロナの、圧勝でした。
+    emph: true
+    card:
+      <<: *style_stats
+      focus: 1
+  - text: 先制は、レアル・マドリード。アンリとプジョルが、5分で逆転します。
+    image: assets/images/20261021_manager_guardiola/08_w.jpg
+    card: none
+  - text: この試合の前に、グアルディオラとメッシは、位置の入れ替えを決めていました。
+    image: assets/images/20261021_manager_guardiola/04_w.jpg
+    card: none
+  - text: メッシは、右から、真ん中の攻撃の位置へ。偽9番です。
+    emph: true
+    card: none
+  - text: 真ん中の選手が、中盤まで下がる。数の上で、優位をつくります。
+    card: none
+  - text: 色は、3つあります。1つ目は、ボールを持って、試合を動かすこと。
+    card: &style_doc
+      type: document
+      label: 英語版Wikipedia「Tactics」の要約（訳）
+      paragraphs:
+      - ボールを持ち、試合を動かす。GKや守備陣から、つないで組み立てる。
+      - 奪われたら、相手の陣地のなかで、みんなで奪い返す。
+      - 形を、固定しない。バルセロナの4-3-3から、シティの3-2-2-3まで。
+      highlight:
+      - つないで組み立てる
+      - 奪い返す
+      - 固定しない
+  - text: 2つ目は、奪われたら、相手の陣地で、みんなで奪い返すこと。
+    image: assets/images/20261021_manager_guardiola/06_w.jpg
+    card: *style_doc
+  - text: 3つ目は、形を固定しないこと。シティでは、守備のストーンズを、中盤にも使いました。
+    card: *style_doc
+  sources:
+  - https://www.fcbarcelona.es/es/futbol/primer-equipo/noticies/1663569/onze-anys-del-2-6-al-santiago-bernabeu
+  - https://en.wikipedia.org/wiki/Pep_Guardiola
+- id: numbers
+  heading: 通算1001試合の数字は、クラブごとに、どう違うのか
+  tier: 確定
+  official: true
+  telop: 勝率はバイエルン75.2%が最高。シティのプレミア勝率は約70%
+  narrator: 解説
+  card: &club_table
+    type: table
+    title: グアルディオラの通算（トップチーム）
+    columns: [所属, 試合, 勝率, 冠]
+    rows:
+    - [バルセロナ, '247', 72.5%, '14']
+    - [バイエルン, '161', 75.2%, '7']
+    - [シティ, '593', 70.2%, '20']
+    - [合計, '1001', 71.5%, '41']
+    highlight_row: 3
+    source: 英語版Wikipedia・シティ公式
+  say:
+  - text: 通算の数字を、クラブごとに並べます。
+    image: assets/images/20261021_manager_guardiola/02_w.jpg
+    card: *club_table
+  - text: 試合は、バルセロナ247、バイエルン161、シティ593。
+    card:
+      <<: *club_table
+      highlight_row: 3
+  - text: 勝率の最高は、バイエルンの75.2%。シティは70.2%です。
+    emph: true
+    card:
+      <<: *club_table
+      highlight_row: 1
+  - text: 優勝は、14と、7と、20。あわせて41冠。
+    image: assets/images/20261021_manager_guardiola/06_w.jpg
+    card:
+      <<: *club_table
+      highlight_row: 3
+  - text: シティの10年を、プレミアで見ます。380試合で、勝ち点865。
+    image: assets/images/20261021_manager_guardiola/04_w.jpg
+    card: &pl_stats
+      type: stats
+      title: シティの10年のプレミア（クラブ公式の記録）
+      items:
+      - ['865', 点, 380試合の勝ち点。1試合2.28]
+      - ['269', 勝, 380試合のうち。勝率約70%]
+      - ['100', 点, 2017-18。プレミアの最多]
+      focus: 0
+  - text: 2017-18の勝ち点100は、プレミアの最多記録です。
+    emph: true
+    image: assets/images/20261021_manager_guardiola/02_w.jpg
+    card:
+      <<: *pl_stats
+      focus: 2
+  - text: クラブ公式の比べで、プレミアの勝率は、ファーガソン65.2%、クロップ62.5%。
+    card: &win_bars
+      type: bars
+      title: プレミアの勝率（クラブ公式の比べ、%）
+      unit: '%'
+      items:
+      - label: グアルディオラ
+        value: 70.8
+        highlight: true
+      - label: ファーガソン
+        value: 65.2
+      - label: クロップ
+        value: 62.5
+      - label: モウリーニョ
+        value: 59.2
+      - label: ヴェンゲル
+        value: 57.2
+  - text: グアルディオラは、380試合の269勝で、70.8%です。
+    emph: true
+    image: assets/images/20261021_manager_guardiola/02_w.jpg
+    card: *win_bars
+  sources:
+  - https://www.mancity.com/news/mens/pep-guardiola-manchester-city-stats-records-63915079
+  - https://en.wikipedia.org/wiki/Pep_Guardiola
+- id: words
+  heading: 本人は、去るときに、何を語ったのか
+  tier: 確定
+  official: true
+  telop: 退任の声明と、最後の記者会見の言葉
+  narrator: 解説
+  card: &words_doc
+    type: document
+    label: グアルディオラの声明（2026年5月22日、訳）
+    paragraphs:
+    - 理由は聞かないでください。理由はありません。でも心の奥で、いまが自分の時だと分かっています。
+    - 永遠のものはありません。もし永遠なら、私はここにいるでしょう。永遠に残るのは、感情と、人々と、思い出と、シティへの愛です。
+    highlight:
+    - いまが自分の時
+    - 永遠に残るのは
+  say:
+  - text: 2026年5月22日。クラブの公式サイトに、グアルディオラの声明が載りました。
+    image: assets/images/20261021_manager_guardiola/06_w.jpg
+    card: none
+  - text: 声明は、シティに残るものを、こう語っています。
+    card: *words_doc
+  - voice: グアルディオラ
+    text: 永遠のものは、ありません。もし永遠なら、私はここにいます。
+  - voice: グアルディオラ
+    text: 永遠に残るのは、感情と、人々と、思い出と、シティへの愛です。
+    cont: true
+    pause: 0.5
+  - text: 最後の試合の前の記者会見では、10年の変化を、こう語っています。
+    image: assets/images/20261021_manager_guardiola/02_w.jpg
+    card: none
+  - voice: グアルディオラ
+    text: 以前、ノエル・ギャラガーに言いました。
+  - voice: グアルディオラ
+    text: 私たちは、4連勝もできないチームだった。
+    cont: true
+  - voice: グアルディオラ
+    text: それがいまは、4連覇です。
+    cont: true
+    cont: true
+    pause: 0.6
+  - text: 試合のあとの記者会見では、後任へのメッセージも、残しています。
+    card: none
+  - voice: グアルディオラ
+    text: あなたらしくいてください。クラブは、無条件で支えてくれます。
+    pause: 0.6
+  quotes_from:
+  - https://www.mancity.com/news/mens/pep-guardiola-official-announcement-63915039
+  - https://www.mancity.com/news/mens/pep-guardiola-final-press-conference-pre-aston-villa-63915053
+  - https://www.mancity.com/news/mens/pep-guardiola-manchester-city-final-press-conference-reaction-63915248
+  sources:
+  - https://www.mancity.com/news/mens/pep-guardiola-official-announcement-63915039
+  - https://www.mancity.com/news/mens/pep-guardiola-final-press-conference-pre-aston-villa-63915053
+  - https://www.mancity.com/news/mens/pep-guardiola-manchester-city-final-press-conference-reaction-63915248
+- id: japan
+  heading: グアルディオラと日本は、どこでつながるのか
+  tier: 背景
+  telop: 2011年12月、日本のクラブ・ワールドカップでバルセロナが優勝
+  narrator: 解説
+  card: &jp_stats
+    type: stats
+    title: 2011年12月 クラブ・ワールドカップ（日本開催）
+    items:
+    - ['4', 対0, 決勝 バルセロナ対サントス]
+    - ['13', 個目, グアルディオラのタイトル（16大会のうち）]
+    focus: 0
+  say:
+  - text: 日本との接点は、2011年12月にあります。
+    image: assets/images/20261021_manager_guardiola/07_w.jpg
+    card: *jp_stats
+  - text: 舞台は、日本で開かれたクラブ・ワールドカップ。会場は、横浜と豊田です。
+    card: none
+  - text: バルセロナは、決勝でブラジルのサントスに、4対0で勝ちました。
+    emph: true
+    card:
+      <<: *jp_stats
+      focus: 0
+  - text: グアルディオラにとって、通算13個目のタイトルです。
+    image: assets/images/20261021_manager_guardiola/08_w.jpg
+    card:
+      <<: *jp_stats
+      focus: 1
+  sources:
+  - https://en.wikipedia.org/wiki/Pep_Guardiola
+  - https://en.wikipedia.org/wiki/2011_FIFA_Club_World_Cup
+- id: secret
+  heading: 数字の外にある話。最初の取材相手と、4年を永遠と呼んだ理由
+  tier: 確定
+  official: true
+  telop: 最初のインタビューは、ノエル・ギャラガー
+  narrator: 解説
+  card: &sec_table
+    type: table
+    title: 数字の外にある話
+    columns: [いつ, 何があったか]
+    rows:
+    - [2016年, シティでの最初のインタビューは、ノエル・ギャラガー]
+    - [2012年, 4年で、バルセロナを離れる。疲れが理由]
+    - [2012〜13年, ニューヨークで、1年の休養]
+    - [2026年, 声明の最後に「オアシスが戻ってきた」]
+    highlight_row: 0
+    source: シティ公式・英語版Wikipedia
+  say:
+  - text: ひとつめは、2016年。シティの監督として、最初に受けたインタビューの話です。
+    image: assets/images/20261021_manager_guardiola/04_w.jpg
+    card:
+      <<: *sec_table
+      highlight_row: 0
+  - text: 相手は、マンチェスター出身のバンド、オアシスの、ノエル・ギャラガーでした。
+    card: none
+  - text: 本人は、声明で、こう振り返っています。
+    image: assets/images/20261021_manager_guardiola/02_w.jpg
+    card: none
+  - voice: グアルディオラ
+    text: 到着して、最初のインタビューの相手は、ノエル・ギャラガー。
+  - voice: グアルディオラ
+    text: 部屋を出ながら思いました。ノエルがいるのか。
+  - voice: グアルディオラ
+    text: これは、楽しくなる。
+    cont: true
+    pause: 0.6
+  - text: 声明の締めくくりも、同じバンドの話です。
+    image: assets/images/20261021_manager_guardiola/06_w.jpg
+    card:
+      <<: *sec_table
+      highlight_row: 3
+  - voice: グアルディオラ
+    text: 時が終わるのだから、喜んでください。
+  - voice: グアルディオラ
+    text: オアシスが、戻ってきたのですから。
+    cont: true
+    pause: 0.6
+  - text: ふたつめは、2012年。去った理由です。
+    image: assets/images/20261021_manager_guardiola/07_w.jpg
+    card:
+      <<: *sec_table
+      highlight_row: 1
+  - text: 疲れが、いちばんの理由だと話しました。4年は、永遠のように感じたとも。
+    card: none
+  sources:
+  - https://www.mancity.com/news/mens/pep-guardiola-official-announcement-63915039
+  - https://en.wikipedia.org/wiki/Pep_Guardiola
+- id: view
+  viewpoint: true
+  heading: 見立て・41冠は、バルセロナの密度と、シティの長さで出来ている
+  tier: 背景
+  telop: 1シーズンあたりの優勝は、バルセロナ3.5、バイエルン2.3、シティ2.0
+  narrator: 解説
+  card: &view_table
+    type: table
+    title: 自分で数えてみた
+    columns: &view_cols [比べ, 答え]
+    rows: &view_rows
+    - [1シーズンあたりの優勝（バルセロナ）, 3.5冠]
+    - [1シーズンあたりの優勝（バイエルン）, 2.3冠]
+    - [1シーズンあたりの優勝（シティ）, 2.0冠]
+    - [通算（17シーズン）, 約2.4冠]
+    highlight_row: 0
+  say:
+  - text: 見立てに入ります。1シーズンあたりの冠で、比べます。
+    image: assets/images/20261021_manager_guardiola/02_w.jpg
+    card: *view_table
+  - text: 41冠を、シーズンの数で割ります。17シーズンで、1シーズンあたり約2.4冠です。
+    card:
+      <<: *view_table
+      highlight_row: 3
+  - text: バルセロナは、4シーズンで14冠。1シーズンあたり、3.5冠。
+    emph: true
+    mark:
+      kind: circle
+      row: 0
+      col: 1
+    image: assets/images/20261021_manager_guardiola/07_w.jpg
+    card:
+      <<: *view_table
+      highlight_row: 0
+  - text: バイエルンは、3シーズンで7冠。2.3冠。
+    card:
+      <<: *view_table
+      highlight_row: 1
+  - text: シティは、10シーズンで20冠。2.0冠。
+    image: assets/images/20261021_manager_guardiola/04_w.jpg
+    mark:
+      kind: circle
+      row: 2
+      col: 1
+    card:
+      <<: *view_table
+      highlight_row: 2
+  - text: 密度が高いのは、バルセロナ。長く続いたのは、シティ。
+    emph: true
+    card: none
+  - text: シティの20冠のうち、プレミアは6つ。ほかは、カップと、欧州の大会です。
+    image: assets/images/20261021_manager_guardiola/06_w.jpg
+    card: none
+  - text: バルセロナの密度と、シティの長さ。どちらも、同じ監督の数字です。
+    card: none
+  - text: シティの新しい監督は、グアルディオラの下で助手を務めた、マレスカです。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Pep_Guardiola
+  - https://www.mancity.com/news/mens/pep-guardiola-hero-image-20-trophies-63915387
+  - https://www.mancity.com/news/mens/enzo-maresca-manchester-city-manager-63918331

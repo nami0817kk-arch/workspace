@@ -1,0 +1,135 @@
+# 取材メモ（2026年10月21日）アルバレス、アトレティコで174日ぶりのゴール。ただしシュトゥットガルトと1対1（ニュースのショート。見せ方 X）
+# 取材: 2026-10-21。requests（ブラウザUA）と ESPN の公開API で全部読んだ。検索エンジンのAI要約は使っていない。
+#   ・サッカーキングの試合記事（https://www.soccer-king.jp/news/world/cl/20261021/2219124.html）… 結果・得点者と分・64分の退場・「今季公式戦初ゴール」・次節（11月3日、ホームでバイエルン）。本文を最後まで読んだ。
+#   ・ESPN の試合データ（site.api.espn.com .../uefa.champions/summary?event=401915392。控え research/raw/20261021_espn_stuttgart_atletico.json）… 得点・分・アシスト・交代・退場。**時刻・分の根拠**
+#   ・ESPN の記事（50232091「Álvarez scores first Atleti goal since April: Sure it was coming」著者 Alex Kirkland。content.core.api.espn.com 経由。控え research/raw/20261021_espn_50232091.json）
+#       … 「scored his first goal for Atlético Madrid in almost six months」「last found the net on April 29 in a Champions League game against Arsenal」「hadn't scored this season」
+#       … シメオネ（Movistar）"I was sure the goal was going to come" / グリマルド "He needed that goal, and we hope this will be the first of a lot of goals for him this year." "He's our best player."
+#       … 「Atlético's draw left them 15th in the Champions League table on four points」「next ... Bayern Munich on Nov. 3」
+#   ・AS の「174日後」の見出しは読めていない（使っていない）。ESPN の「4月29日」から自分で数えた。
+# 確かめたこと:
+#   ・20日（火）CL リーグフェーズ第3節。シュトゥットガルト 1 - 1 アトレティコ・マドリード（MHPアレーナ、キックオフ 19:00Z ＝日本時間21日 午前4時）。
+#   ・36分 レヴェリング（シュトゥットガルト）…ペナルティーエリアの外から左足、左下へ（ESPN。サッカーキング「ペナルティエリア手前からのミドル」）。
+#   ・45分 ハーフタイムの交代で J・ダヴィドに代わりルックマンが入る（ESPN の記録）。47分 アルバレス…ルックマンの折り返し、左足、右上へ（ESPN：エリア中央から。ESPN 記事は「first-time finish」）。
+#   ・64分 ヒュルマンド（アトレティコ）が退場。以後アトレティコは10人（ESPN・サッカーキング）。**題材の一覧に「相手側に退場者」とあったのは誤り。退場したのはアトレティコ側。**
+#   ・78分 アルバレスは V・ヴァルガスと交代（ESPN の記録）。90+5分 終了、1 - 1。
+# 数字:
+#   ・「174日」… ESPN の「最後に決めたのは4月29日（CLのアーセナル戦）」から、10月20日まで。自分で数えた：4月29日→4月30日 1、5月 31、6月 30、7月 31、8月 31、9月 30 で 4月29日→9月30日 ＝154、さらに10月20日まで 20 ＝ **174日**（python の date 差でも174）。
+#       台本では「ESPNは」と断り、「アトレティコでの」ゴールに限って言う（**代表では10月にも決めている**。サッカーキング 10/04 の見出し「J・アルバレス弾」）。「今季」はクラブの公式戦の話。
+#   ・アトレティコはCL15位・勝ち点4（ESPN）。次のCLは11月3日、ホームでバイエルン（サッカーキング。ESPN は日付のみ）。
+#   ・サッカーキング：この試合は「公式戦7連勝を目指す」一戦だった＝それまで公式戦6連勝（10/17 のエスパニョール戦の記事とも合う）。台本では「6連勝は止まった」と言う。
+# 本人・関係者の言葉（ESPN 50232091。英語を訳した。語は足していない）:
+#   ・シメオネ監督（Movistar への試合後の発言）"I was sure the goal was going to come" →「ゴールは来ると、私は確信していた」
+#   ・グリマルド（左サイドバック）"He needed that goal, and we hope this will be the first of a lot of goals for him this year." →「彼にはあのゴールが必要だった。今年のたくさんのゴールの、最初の1つになってほしい」
+#   **アルバレス本人の試合後の言葉は取れていない**（作らない）。Y にはせず X。
+# 確度: 結果・得点・分・退場は ESPN の試合記録とサッカーキングで一致＝報道（クラブ・UEFA 公式のページは読めていないので「確定」には上げない）。174日は ESPN の日付から自分で数えた数。
+# 10/12 の選手紹介（フリアン・アルバレスってどんな選手？ 20261012_player_576024）との重なりを避けた：369日・6つのタイトル・170センチ・あだ名アラーニャ（クモ）・トラック・2025年3月のダブルタッチ・市場価値・5つの季の数字・昨季の大会別の得点の数え方は使わない。「どんな選手か」の説明はしない。
+#   夏の移籍騒動（バルサ）は 8/29・9/24 の動画で扱い済みなので、この動画では一言（「夏の移籍騒動」）にとどめ、経緯・デコの発言には触れない。
+# 反応: 当たっていない（作らない）。approve は --no-voices で。
+# 写真: Commons。**アトレティコの姿の写真は無い**（Commons にあるのは Salzburg 戦 2025年1月の小さな1枚のみ＝466x748 で縦に伸ばせない）。アルゼンチン代表の姿（2026年7月 W杯のエジプト戦・スペイン戦、Bryan Berlin CC BY-SA 4.0）。10/12 の動画で使った 052・146・105・056 は避け、新しい4枚（02・03 は顔のアップ、01 は相手選手と競り合う場面、04 は全身）。
+slot: match
+date: "2026年10月21日"
+format: news
+no_main: true
+people: [フリアン・アルバレス, アトレティコ・マドリード, シュトゥットガルト, シメオネ]
+
+short_style: X
+short_hook_word: 174日ぶり
+short_question: アルバレスのゴールは、ここから増えると思いますか。
+short_hook: アルバレス、アトレティコで174日ぶりのゴール。ただし試合は1対1。
+short_photos:
+  - assets/images/20261021_alvarez_174days/02_v.jpg
+  - assets/images/20261021_alvarez_174days/03_v.jpg
+  - assets/images/20261021_alvarez_174days/01_v.jpg
+  - assets/images/20261021_alvarez_174days/04_v.jpg
+short_telops:
+  - {match: "第3節", text: "CL第3節/シュトゥットガルト1対1アトレティコ"}
+  - {match: "36分", text: "36分 レヴェリング/エリアの外から先制"}
+  - {match: "47分", text: "47分 アルバレス/ルックマンの折り返し"}
+  - {match: "4月29日", text: "最後のゴールは4月29日/CLのアーセナル戦"}
+  - {match: "174日", text: "4月29日から174日/アトレティコでの今季初ゴール"}
+  - {match: "確信", text: "シメオネ/「来ると確信していた」"}
+  - {match: "最初の1つ", text: "グリマルド/「最初の1つになってほしい」"}
+  - {match: "64分", text: "64分 ヒュルマンドが退場/10人で残り30分"}
+  - {match: "15位", text: "CL15位・勝ち点4/6連勝は止まった"}
+  - {match: "バイエルン", text: "次は11月3日/ホームでバイエルン"}
+
+theme:
+  id: alvarez_174days
+  league: spain
+  league_name: チャンピオンズリーグ
+  prefix: ""
+  title: アルバレス、アトレティコで174日ぶりのゴール。ただしシュトゥットガルトと1対1
+  hook: ""
+  question: アルバレスの174日ぶりのゴールは、何を変えたのか
+  takeaway: 点は出た。ただ試合は1対1で、10人で戦い6連勝は止まった。次はバイエルン
+
+thumbnail:
+  layout: face
+  line1: アルバレス
+  line2: 174日ぶりのゴール
+  tags: [アルバレス, アトレティコ]
+  photo: assets/images/20261021_alvarez_174days/02_w.jpg
+  short_photo: assets/images/20261021_alvarez_174days/02_v.jpg
+
+answer: 47分、ルックマンの折り返しを左足で。アトレティコでは4月29日以来のゴール
+watch: 11月3日、ホームでバイエルン戦
+
+sections:
+  - id: what
+    main: true
+    heading: 何が起きたか
+    tier: 報道
+    telop: アルバレス、アトレティコで174日ぶりのゴール
+    say:
+      - "20日夜のCL第3節。アトレティコの相手は、敵地のシュトゥットガルトです。"
+      - "勝ち負けはつかず、1対1でした。"
+      - "先制はシュトゥットガルト。36分、レヴェリングが外から左足で。"
+      - "追いついたのは47分。ルックマンの折り返しを、アルバレスが左足で決めました。"
+      - "アルバレスがアトレティコで最後に決めたのは、4月29日。CLのアーセナル戦でした。"
+      - "そこから今回まで、数えて174日。今季は初めてのゴールでした。"
+      - voice: シメオネ
+        text: ゴールは来ると、私は確信していた。
+        short_voice: true
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/cl/20261021/2219124.html
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915392
+      - https://content.core.api.espn.com/v1/sports/news/50232091
+    quotes_from: ["ESPN https://content.core.api.espn.com/v1/sports/news/50232091"]
+
+  - id: after
+    heading: 同点のあと、何が起きたか
+    tier: 報道
+    telop: 64分に退場、10人で1対1のまま
+    say:
+      - "アルバレスにボールを出したルックマンは、後半の頭から入った選手でした。"
+      - "64分には、アトレティコのヒュルマンドが退場。残り30分は、10人です。"
+      - "そのまま勝ち越せず、終了のホイッスルでした。"
+      - "公式戦の6連勝は、止まりました。"
+      - voice: グリマルド
+        text: 彼には、あのゴールが必要だった。
+      - voice: グリマルド
+        text: 今年のたくさんのゴールの、最初の1つになってほしい。
+        cont: true
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/cl/20261021/2219124.html
+      - https://content.core.api.espn.com/v1/sports/news/50232091
+    quotes_from: ["ESPN https://content.core.api.espn.com/v1/sports/news/50232091"]
+
+  - id: view
+    viewpoint: true
+    heading: 15位、次はバイエルン
+    tier: 背景
+    telop: CL15位・勝ち点4。次は11月3日、バイエルン
+    say:
+      - "見立てです。アルバレスは、夏の移籍騒動のあと、174日ぶりに決めました。"
+      - "チームはCLの15位、勝ち点は4です。"
+      - "次は11月3日、ホームでバイエルン。"
+      - "このゴールが、次の試合につながるか。"
+    official: false
+    sources:
+      - https://content.core.api.espn.com/v1/sports/news/50232091
+      - https://www.soccer-king.jp/news/world/cl/20261021/2219124.html
+short_title: "アルバレス、アトレティコで174日ぶりのゴール。ただしシュトゥットガルトと1対1"

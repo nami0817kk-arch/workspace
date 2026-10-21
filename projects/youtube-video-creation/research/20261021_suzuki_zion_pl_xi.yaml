@@ -1,0 +1,134 @@
+# 取材メモ（2026年10月21日）鈴木彩艶、プレミアリーグ公式の第7節ベストイレブンに選出（ニュースのショート。見せ方 X＝冒頭に強い一言）
+# 取材: 2026-10-21。requests（ブラウザUA）で本文を全部読んだ。
+#   ・**一次**＝プレミアリーグ公式 2026-10-20「Alan Shearer's Team of the Week for Matchweek 7」（research/raw/20261021_pl_totw7.html）。
+#     本文は短い：ブライトンの Diego Gomez と Luka Vuskovic、Fabian Hurzeler 監督（マネージャー）、「Aston Villa trio Zion Suzuki, Tyrone Mings and Johan Manzambi have been included after their 1-0 away win over Shearer's beloved Newcastle United」。11人の並び（画像）は読めていない。
+#   ・Football Insider 2026-10-20（research/raw/20261021_fi_suzuki.html）：24歳、全大会で3度のクリーンシート、足元でのボールプレーが得意、落ち着きが味方の守備陣を助けている（同紙の評価）。
+#     同記事は「BBC 週間ベストイレブンの別の選者ディーニーは別のGKを選んだ」ことを論じる論評（見出しは選者を批判する形）。**この台本では入れない**（選手を小さく見せる言い方になりやすく、選手本人の話でもない）。
+#   ・Qoly 2026-10-21（research/raw/20261021_qoly_zion.txt。一覧の出典）：17日のニューカッスル戦（1-0）、相手の枠内シュートは1本で指先セーブ、今週はヴィラは CL でヴィーキング、リーグでマンC。Qoly は FI を引いた孫引き。
+# 【題の扱い（ユーザー指示：鈴木彩艶に敬意を持つ）】一覧の見出しは「ベストイレブンに。BBCのディーニー氏は別のGK、彩艶は選ばず」だが、**「選ばれなかった」側は題にも本文にも入れない**。
+#   公式のベストイレブンに選ばれた事実を主役にし、選んだのがシアラー氏（ニューカッスルを愛する人、とプレミア公式が書く）であることを引きにした。「失望しているかもしれない」は媒体の推測なので入れない。
+# 【言葉の引き直し】一覧「BBCのディーニー氏はGKにフェルブルッヘンを選び」「失望」は上の理由で使わない。「PL公式ベストイレブン」の選者は一覧に書かれていないが、公式記事の題に Alan Shearer とある。
+#   Shearer の肩書：公式記事は「Premier League record goalscorer（プレミアリーグ歴代最多得点者）」。
+# 自分で数えたもの（見立て）：選ばれたヴィラの3人は GK 鈴木・DF ミングス（Tyrone Mings）・マンザンビ。完封の試合から、守った側が2人（GKとDF）、点を決めたのが1人（36分にマンザンビ。10/18 の台本の取材メモで読み済み）。
+# 本人の言葉：今回の記事には無い → 作らない。X（冒頭の一言）にした。反応：作らない（0件）。
+# 前の本と重ねない：10/18「49分のボトマンのシュートへのセーブと英紙の評価」、10/18 夜の「採点の割れ方」は言わない。セーブは「枠内シュート1本を止めた」と1行だけ。
+# 確度：選出は 確定（プレミアリーグ公式の記事）。無失点・足元の評価は 報道。選ぶ人の話・見立ては 背景。
+# 写真：新しい写真は取れなかった。ヴィラ公式（avfc.co.uk は画面を JS で組み立てるため記事の写真を取れず）・プレミア公式の記事の画像（デザインカードで本人の写真ではない）・Football Insider の主写真（Imago＝代理店）・Qoly（Getty）は不可。
+#   Commons は日本代表戦の2024年の写真が1枚（顔の検出が空振りで切れず、使わない）。
+#   **使ったのは 10/18 までに取り込んだ報道写真4枚の再利用**（01＝日本代表・ゲキサカ ／ 02＝ヴィラ緑のGKユニ・日刊スポーツ ／ 03・04＝ヴィラのCL・Yahoo 経由）。本人は目で確認済み。前日までと同じ写真なので、報告で警告する。
+slot: japan
+date: "2026年10月21日"
+format: news
+no_main: true
+people: [鈴木彩艶, アストン・ヴィラ, アラン・シアラー]
+
+short_style: X
+short_hook_word: ベストイレブン選出
+short_photos:
+  - assets/images/20261021_suzuki_zion_pl_xi/02_v.jpg
+  - assets/images/20261021_suzuki_zion_pl_xi/03_v.jpg
+  - assets/images/20261021_suzuki_zion_pl_xi/01_v.jpg
+short_question: 鈴木彩艶の、いちばん印象に残っているセーブはどれですか。
+short_hook: 鈴木彩艶、ベストイレブンに選ばれました。
+short_telops:
+  - {match: 第7節のベストイレブン, text: プレミア公式/第7節のベストイレブンに選出}
+  - {match: アラン・シアラー, text: 選んだのは/アラン・シアラー氏}
+  - {match: 17日のニューカッスル戦, text: 17日/ニューカッスルに1対0}
+  - {match: 指先で止め, text: 相手の枠内シュート1本を/指先で止めた}
+  - {match: ミングスとマンザンビ, text: ヴィラからは3人/鈴木・ミングス・マンザンビ}
+  - {match: 愛するクラブ, text: シアラー氏が/「愛するクラブ」を完封した試合}
+  - {match: 3度の無失点, text: 公式戦で3度の無失点}
+  - {match: 守った側が2人, text: 選ばれた3人のうち/守った側が2人}
+
+theme:
+  id: suzuki_zion_pl_xi
+  league: england
+  league_name: プレミアリーグ
+  prefix: ""
+  title: 鈴木彩艶、第7節のベストイレブンに選出。選んだ名FWの愛するクラブとは
+  hook: ""
+  question: 鈴木彩艶は、誰に、どの試合で、ベストイレブンに選ばれたのか
+  takeaway: 選ばれたヴィラの3人のうち2人は、失点を防いだGKの鈴木とDFのミングス。点を決めたのはマンザンビ1人で、完封の試合そのものが選ばれた形
+
+thumbnail:
+  line1: 鈴木彩艶
+  line2: ベストイレブンに選出
+  tags: [鈴木彩艶, アストン・ヴィラ]
+  layout: face
+  photo: assets/images/20261021_suzuki_zion_pl_xi/02_w.jpg
+  short_photo: assets/images/20261021_suzuki_zion_pl_xi/02_v.jpg
+
+answer: シアラー氏。愛するニューカッスルを完封した試合から、ヴィラの3人を選んだ
+watch: 今週のヴィラのCLとマンチェスター・シティ戦
+
+sections:
+  - id: what
+    main: true
+    heading: 何が起きたか
+    tier: 確定
+    telop: 鈴木彩艶が、プレミア公式の第7節ベストイレブンに選ばれた
+    say:
+      - text: 鈴木彩艶が、プレミアリーグ公式の、第7節のベストイレブンに選ばれました。
+        image: assets/images/20261021_suzuki_zion_pl_xi/02.jpg
+        card: none
+      - text: 選んだのは、アラン・シアラー氏です。
+        image: assets/images/20261021_suzuki_zion_pl_xi/03.jpg
+        card: none
+      - text: 17日のニューカッスル戦で、ヴィラは1対0で勝ちました。
+        image: assets/images/20261021_suzuki_zion_pl_xi/01_w.jpg
+        card: none
+      - text: 相手の枠内シュートは1本。鈴木は、それを指先で止めました。
+        image: assets/images/20261021_suzuki_zion_pl_xi/04.jpg
+        card: none
+      - text: ヴィラからは、ミングスとマンザンビも選ばれています。
+        image: assets/images/20261021_suzuki_zion_pl_xi/02.jpg
+        card: none
+    official: true
+    sources:
+      - https://www.premierleague.com/en/news/4743846/alan-shearers-team-of-the-week-for-matchweek-7
+      - https://qoly.jp/q1/17871335
+
+  - id: why
+    heading: なぜ、この試合から3人が選ばれたのか
+    tier: 報道
+    telop: シアラー氏が愛するクラブを完封した試合
+    say:
+      - text: プレミアリーグの記事は、ニューカッスルを、シアラー氏の愛するクラブと書いています。
+        image: assets/images/20261021_suzuki_zion_pl_xi/03.jpg
+        card: none
+      - text: そのクラブを完封した試合から、ヴィラの3人が選ばれました。
+        image: assets/images/20261021_suzuki_zion_pl_xi/01_w.jpg
+        card: none
+      - text: 鈴木は、公式戦で3度の無失点を達成しています。
+        image: assets/images/20261021_suzuki_zion_pl_xi/04.jpg
+        card: none
+      - text: 足元でのプレーの落ち着きも、味方の守備陣を助けているという評価です。
+        image: assets/images/20261021_suzuki_zion_pl_xi/02.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.premierleague.com/en/news/4743846/alan-shearers-team-of-the-week-for-matchweek-7
+      - https://www.footballinsider247.com/aston-villa/troy-deeney-is-blatantly-wrong-aston-villa-star-zion-suzuki-must-be-baffled
+
+  - id: view
+    viewpoint: true
+    heading: 鈴木彩艶の選出は、何を評価したものか
+    tier: 背景
+    telop: 選ばれた3人のうち、守った側が2人
+    say:
+      - text: 見立てです。選ばれたヴィラの3人のうち、守った側は2人。
+        image: assets/images/20261021_suzuki_zion_pl_xi/03.jpg
+        card: none
+      - text: GKの鈴木彩艶と、ディフェンダーのミングス。点を決めたのは、マンザンビ1人です。
+        image: assets/images/20261021_suzuki_zion_pl_xi/01_w.jpg
+        card: none
+      - text: 完封した試合そのものが、評価された形だと見ます。
+        image: assets/images/20261021_suzuki_zion_pl_xi/04.jpg
+        card: none
+      - text: 今週のヴィラは、CLでヴィーキング、リーグでマンチェスター・シティと戦います。
+        image: assets/images/20261021_suzuki_zion_pl_xi/02.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.premierleague.com/en/news/4743846/alan-shearers-team-of-the-week-for-matchweek-7
+short_title: "鈴木彩艶、第7節のベストイレブンに選出。選んだ名FWの愛するクラブとは"

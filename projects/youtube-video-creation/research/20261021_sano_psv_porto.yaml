@@ -1,0 +1,151 @@
+# 取材メモ（2026年10月21日）佐野航大、ポルト戦フル出場でPSVのCL今季初白星。ボス監督の言葉（ニュースのショート。見せ方 Y＝監督の一言から始める）
+# 取材: 2026-10-21。requests（ブラウザUA）で原文を読んだ。
+#   ・サッカーキング 2026-10-21「佐野航大、フル出場でPSVの今季CL初白星に貢献！ ポルトは痛恨の開幕3連敗」— 本文を全部読んだ。得点者・次節の日程・「3試合連続フル出場」「守備面での奮闘が際立つ」「決定的なシーンに絡む回数こそ少なかった」はこの記事。
+#   ・Qoly 2026-10-21「佐野航大、CLポルト戦で勝利に貢献！『航大らのおかげ』とPSV監督が名指したワケ」— 本文を全部読んだ（1ページ完結）。ボス監督・ポルトのファリオーリ監督の言葉（日本語訳。原文の英語・オランダ語は未確認）・4-2-3-1のダブルボランチはこの記事。
+#     題材一覧の「ゲキサカ」は今回読んでいない（上の2本で足りる）。
+#   ・PSV 公式サイト（psv.nl）の試合ページ・選手ページは読んだが、試合後の記事（ボス監督の言葉の原文）はまだ出ておらず、言葉は Qoly の日本語訳のまま。
+# 題材一覧との違い（原文で直した点）:
+#   ・一覧の「ボス監督『航大らのおかげ』」は Qoly の見出しの語。本文のボス監督の言葉には「航大らのおかげ」は無い。台本は本文の言葉をそのまま使い、見出しの語は使わない。
+#   ・一覧の「4-2-3-1のダブルボランチで90分」→ 4-2-3-1 は Qoly、フル出場は SK。
+#   ・一覧の「ポルトのファリオーリ監督『就任して64試合で、最もプレスに苦労した』」→ 原文は「私が就任してからの64試合で、最も自分たちが意図した形でプレッシングをかけるのに苦労した試合だった」。
+#     ＝苦労したのは**ポルト自身のプレッシング**（PSVのプレスではない）。台本は原文どおり。
+#   ・Qoly 本文の「VP」が付けた6点の評価は、媒体名が本文に無い（『VP』のみ）ので入れない。
+# 本人の言葉: **無い**（佐野本人の今回の言葉はどちらの記事にも無い）→ 作らない。Y は監督（ボス）の言葉。
+# 10/18 の佐野（ADO戦・9戦連続フル出場・退場者・敗戦）と重ねない: ADO戦・退場・勝点・フェイエノールトの話は言わない。10/10・10/14 の佐野の話とも重ねない（今回はポルト戦だけ）。
+# 数字: スコア ポルト0-1PSV。得点 57分 ティル（バイラクタレヴィッチの折り返し→マイナンスがダイレクトで繋ぎ、ティルが押し込む。SK）。
+#   佐野はCLで3試合連続のスタメン・フル出場（SK）。ポルトは開幕3連敗（SK）。次節 11月4日 PSVはクラブ・ブルッヘとホーム（SK）。
+# 自分で数えたもの（見立て）: 両監督が試合後に挙げた言葉は、どちらも「プレッシング」（ボス＝PSVのプレスで試合を取り戻した／ファリオーリ＝ポルトが意図した形でプレスをかけられなかった）＝2人とも。
+# 確度: 試合結果・得点は 報道（SK）。監督の言葉は 報道（Qoly の日本語訳）。見立ては 背景。クラブ公式の本文は読んでいないので確定には上げない。
+# 写真: 本人（佐野）の写真は Commons の1枚（Hans Reefman。10/18 のショートでも使用。3日前）、PSV 公式の選手紹介は 602x426 しか取れず小さすぎて使わない（顔の拡大で×になる）、JFA の選手ページの写真5枚（A代表ではなく
+#   U17 W杯・U23 時代の写真、368〜825px）も縦に伸ばすと×になるので使わない。SK・Qoly の主写真は Getty なので取り込まない。
+#   使うのは: 03＝Commons の佐野（再掲）／01＝PSV 公式サイトのボス監督（10/18 の記者会見の写真。ADO 戦前日）／02＝PSV 公式の選手紹介（マウロ・ジュニオール。ボス監督の言葉に出る相手）。
+#   本人と確認できる写真は佐野1枚（再掲）だけ。ボス・マウロは目で確認済み。
+slot: japan
+date: "2026年10月21日"
+format: news
+no_main: true      # ニュースはショートだけ（2026-10-14）。締めで本編を案内しない
+people: [佐野航大, ピーター・ボス, マウロ・ジュニオール, PSV, ポルト]
+
+short_style: Y
+short_hook_quote: マウロ・ジュニオールと航大がプレッシングをかけ始めてから、
+short_photos:
+  - assets/images/20261021_sano_psv_porto/03_v.jpg
+  - assets/images/20261021_sano_psv_porto/01_v.jpg
+  - assets/images/20261021_sano_pair/01_v.jpg
+short_question: 11月4日のクラブ・ブルッヘ戦、佐野航大は4試合連続でフル出場すると思いますか。
+short_hook: 佐野航大のPSV、CL初勝利。監督が名指ししたのは。
+short_telops:
+  - {match: ポルトに1対0, text: CLリーグフェーズ第3節/ポルト 0-1 PSV}
+  - {match: 57分, text: 57分/ティルのゴールで決勝点}
+  - {match: 3試合連続, text: 佐野航大/CLで3試合連続のフル出場}
+  - {match: ダブルボランチ, text: 4-2-3-1の中盤/マウロ・ジュニオールと並ぶ}
+  - {match: 64試合, text: ポルト ファリオーリ監督/就任後64試合で「最も苦労した」}
+  - {match: 両監督, text: 両監督が挙げた言葉/どちらも「プレッシング」}
+  - {match: 11月4日, text: 次は11月4日/クラブ・ブルッヘ戦（ホーム）}
+
+theme:
+  id: sano_psv_porto
+  league: netherlands
+  prefix: ""
+  title: 佐野航大、CLポルト戦でフル出場。ボス監督は何を名指ししたのか
+  hook: ""
+  question: ボス監督は、ポルト戦で佐野航大の何を名指ししたのか
+  takeaway: 試合後、PSVのボス監督もポルトのファリオーリ監督も、挙げた言葉はどちらもプレッシングだった
+
+thumbnail:
+  line1: 佐野航大
+  line2: CL初勝利
+  tags: [佐野航大, PSV]
+  layout: scene
+  photo: assets/images/20261021_sano_psv_porto/01_w.jpg
+  short_photo: assets/images/20261021_sano_psv_porto/03_w.jpg
+
+answer: プレッシングをかけ始めてから、再び試合をコントロールできた
+watch: 11月4日、ホームでクラブ・ブルッヘ戦
+
+sections:
+  - id: what
+    main: true
+    heading: 何が起きたか
+    tier: 報道
+    telop: CL第3節、PSVがポルトに1対0。佐野航大はフル出場
+    say:
+      - text: 20日のチャンピオンズリーグ。ピーエスブイは敵地でポルトを1対0で破りました。
+        image: assets/images/20261021_sano_psv_porto/03_w.jpg
+      - text: これが、今季のCL初勝利です。
+        image: assets/images/20261021_sano_pair/01.jpg
+      - text: 佐野航大は、CLで3試合連続のスタメン。フル出場でした。
+        image: assets/images/20261021_sano_psv_porto/03_w.jpg
+      - text: 試合のあと、ピーエスブイのボス監督は、こう話しました。
+        image: assets/images/20261021_sano_psv_porto/01_w.jpg
+      - voice: ボス監督
+        text: 最初の数分間は守備がうまくいかなかったが、
+      - voice: ボス監督
+        text: マウロ・ジュニオールと航大がプレッシングをかけ始めてから、
+        short_voice: true
+        image: assets/images/20261021_sano_psv_porto/03_w.jpg
+      - voice: ボス監督
+        text: 再び試合をコントロールできた。
+        cont: true
+      - text: 佐野は、マウロ・ジュニオールと、4-2-3-1の中盤でダブルボランチを組みました。
+        image: assets/images/20261021_sano_pair/01.jpg
+      - text: 決勝点は57分、ティルでした。
+        image: assets/images/20261021_sano_psv_porto/01_w.jpg
+      - text: 佐野は、決定的な場面に絡む回数こそ少なかったものの、守備面での奮闘が際立ちました。
+        image: assets/images/20261021_sano_psv_porto/03_w.jpg
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/cl/20261021/2219089.html
+      - https://qoly.jp/q1/17871340
+    quotes_from: ["Qoly https://qoly.jp/q1/17871340"]
+
+  - id: porto
+    heading: 負けたポルトの監督は、何と言ったか
+    tier: 報道
+    telop: ポルトのファリオーリ監督も、試合後に同じ言葉を挙げた
+    say:
+      - text: 佐野航大がフル出場した試合です。
+        image: assets/images/20261021_sano_pair/01.jpg
+      - text: 負けたポルトのファリオーリ監督も、こう話しました。
+        image: assets/images/20261021_sano_psv_porto/03_w.jpg
+      - voice: ファリオーリ監督
+        text: 私が就任してからの64試合で、
+        short_voice: true
+        image: assets/images/20261021_sano_psv_porto/03_w.jpg
+      - voice: ファリオーリ監督
+        text: 最も自分たちが意図した形で
+        cont: true
+      - voice: ファリオーリ監督
+        text: プレッシングをかけるのに苦労した試合だった。
+        cont: true
+      - text: ポルトは、この敗戦でCL開幕3連敗です。
+        image: assets/images/20261021_sano_pair/01.jpg
+    official: false
+    sources:
+      - https://qoly.jp/q1/17871340
+      - https://www.soccer-king.jp/news/world/cl/20261021/2219089.html
+    quotes_from: ["Qoly https://qoly.jp/q1/17871340"]
+
+  - id: view
+    viewpoint: true
+    heading: 両監督が挙げた言葉は、どちらもプレッシング
+    tier: 背景
+    telop: ボス監督もファリオーリ監督も、挙げた言葉は「プレッシング」
+    say:
+      - text: 見立てです。ボス監督が名指ししたのは、佐野航大とマウロ・ジュニオールの2人。
+        image: assets/images/20261021_sano_psv_porto/03_w.jpg
+      - text: その試合後に両監督が挙げた言葉は、どちらもプレッシングでした。2人とも、です。
+        image: assets/images/20261021_sano_psv_porto/01_w.jpg
+      - text: ボス監督は、自分たちのプレスで試合を取り戻したと話しました。
+        image: assets/images/20261021_sano_pair/01.jpg
+      - text: ファリオーリ監督は、自分たちのプレスが形にならなかったと話しました。
+        image: assets/images/20261021_sano_psv_porto/03_w.jpg
+      - text: ピーエスブイは、この試合の前の公式戦4試合で3敗していました。
+        image: assets/images/20261021_sano_psv_porto/01_w.jpg
+      - text: 次は11月4日、ホームでクラブ・ブルッヘ戦です。
+        image: assets/images/20261021_sano_pair/01.jpg
+    official: false
+    sources:
+      - https://qoly.jp/q1/17871340
+      - https://www.soccer-king.jp/news/world/cl/20261021/2219089.html
+short_title: "佐野航大、CLポルト戦でフル出場。ボス監督は何を名指ししたのか"

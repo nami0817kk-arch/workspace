@@ -1,12 +1,524 @@
-# サムネ試作用の最小メモ（動画は作らない）
-theme:
-  title: ブラジル代表ってどんなチーム？
+# 代表チーム紹介 ブラジル代表（10/21 作成。固定シリーズ9「代表チーム紹介」の最初の1本）。7節：フック→基礎DATA（板）→歴史と転機（年表）→看板選手（表）→日本との関係→いまのチーム→見立て。
+# **重なりの注意**：同じ題材を 2026-10-06 に公開済み（scripts/20261006_team_brazil.md、動画 HSa-DlmLm98、題「ブラジル代表ってどんなチーム？W杯で日本の先制をひっくり返した5度の王者」）。
+#   この回は固定シリーズの型（7節）で作り直した別の組み立て。公開するか、別の国（アルゼンチン・フランス・スペイン）に替えるかはユーザーが決める。
+# ---- 公式で確かめたこと（2026-10-20 取材。WebFetch・requests。検索のAI要約は根拠にしていない）----
+#  ・FIFAランク：FIFA 公式（inside.fifa.com/en/news/coca-cola-mens-world-ranking-october-2026-portugal-spain、2026-10-07）＝ブラジル6位（1つ下がる）、ポルトガルが5位、スペイン1位。点数は記載なし。次は11月18日。
+#    FIFA のブラジルのページ（7/20 更新）は5位・1804.92点。→ 6位は FIFA の記事、点数は書かない。
+#  ・日本との通算：JFA 対戦チーム情報（2025-10-09）＝13戦0勝2分11敗（5得点35失点）。JFA マッチレポート（2025-10-14）＝14度目で日本が3-2、通算1勝2分11敗。
+#    JFA マッチレポート（2026-06-29 W杯ラウンド32）＝日本1-2ブラジル。→ 15戦1勝2分12敗。10/6 の JFA 対戦チーム情報（別セッションの控え）は 1勝12敗2分（9得点39失点）で一致（5+3+1=9、35+2+2=39）。
+#  ・日本戦の中身：2025-10-14 東京スタジアム 44,920人、前半0-2、26分パウロ・エンリケ・32分マルティネッリ、後半52分南野・中村敬斗・71分上田。W杯ラウンド32 は前半29分に佐野海舟、56分カゼミーロ、後半アディショナルタイムにマルティネッリ。
+#  ・全大会出場・優勝5度は史上最多・優勝年1958/62/70/94/2002：JFA（2025-10-09）。「ワールドカップで唯一、1930年の第1回大会から全22大会に参加」→ 2026年大会で23大会目。
+#  ・日本との次の試合：JFA 2026年日程＝11/14（土）MIZUHO BLUE CHALLENGE THE KALLANG FOOTBALL SERIES SINGAPORE、シンガポールナショナルスタジアム（キックオフ時刻の記載なし）。
+#  ・9月の招集（ge.globo.com 2026-09-09）：26人、初招集8人、国内クラブ10人、W杯敗退後の最初の招集。ヴィニシウス・エンドリッキ（レアル）、ラフィーニャ（バルセロナ）、エストヴァン（チェルシー）、ブルーノ・ギマランイス・ガブリエウ・マガリャンイス（アーセナル）、マルキーニョス（PSG）。
+# ---- ウィキペディア(en)の値（公式で確かめられていない。台本は「ウィキペディア」と断らず事実の言い方で、ただし下の数は検算した）----
+#  ・1950 ウルグアイに1-2（引き分けでも優勝）、1954 の新ユニフォーム・白をやめた／1958 ペレ・自国の大陸の外で初優勝／1970 6戦全勝／1971–93 を「最初の空白」／2002 決勝は横浜でドイツに2-0・ロナウド2点／
+#    2014 準決勝1-7／2022 準々決勝クロアチアに1-1からPK負け／2026 ベスト16でノルウェーに1-2・準々決勝に進めないのは1990年以来36年ぶり／アンチェロッティ就任（CBF 発表 2025-05-12、ウィキペディアは 5/26 就任）。
+#  ・W杯2026 の試合：6/13 モロッコ1-1、6/19 ハイチ3-0、6/24 スコットランド3-0、6/29 日本2-1、7/5 ノルウェー1-2（10/6 の控えの FIFA 試合データと一致）。
+#  ・日本との試合の古い所：2006 W杯 日本1-4、2013 コンフェデ杯 0-3、2022-06-06 親善 0-1（ネイマールのPK）。2020年以降は3戦（1勝2敗・4得点5失点）。
+#  ・年齢：生年月日（ウィキペディア）から2026-10-20 時点で計算（ヴィニシウス 2000-07-12=26、ラフィーニャ 1996-12-14=29、エストヴァン 2007-04-24=19、ブルーノ 1997-11-16=28、ガブリエウ 1997-12-19=28、マルキーニョス 1994-05-14=32）。
+# ---- 自分で数えた数（検算した）----
+#  ・2019年まで 12戦：13戦（0勝2分11敗・5得点35失点）から2022年の0-1を除く＝0勝2分10敗・5得点34失点。1試合 得点0.4・失点2.8。
+#  ・2020年から 3戦：1勝0分2敗（2022 0-1、2025 3-2、2026 1-2）・4得点5失点。1試合 得点1.3・失点1.7。3戦とも1点差。
+#  ・優勝の空白：1970→1994＝24年。2002→2026＝24年。次の大会 2030 まで優勝がなければ 28年。
+# ---- 言わないもの ----
+#  ・ネイマールの代表引退（ウィキペディアだけ）／この秋の親善3試合の結果（ウィキペディア・FotMob）／スコア以外の主将の入れ替わり／背番号／日本の「初勝利」という言い切り（1996年のアトランタ五輪の試合は A マッチでないので、「国際Aマッチで1勝」と書く）。
+# ---- 写真（assets/images/20261021_team_brazil/、出典は credits.json。Commons CC BY-SA 4.0、撮影者 Bryan Berlin・YantsImages。代理店・放送映像は使っていない）----
+#  b01 アンチェロッティ、b02 マルキーニョス、b03 ラフィーニャ、b04 カゼミーロ、b06 集合写真、b07 アリソン、vini_wide2 ヴィニシウス。人名はファイル名の通り（背番号・腕章で確認）。
+# ネットの反応は置いていない（voice_min: 0）。紹介ものは声なし。ショートは作らない。
+date: 2026年10月21日
+slot: other_1
+format: news
 series: 代表チーム紹介
+voice_min: 0
+watch: 11月14日、日本とブラジルの試合
+people:
+- ブラジル代表
+- アンチェロッティ
+theme:
+  id: team_brazil
+  league: japan
+  league_name: 日本代表
+  kind: preview
+  topic: ブラジル代表
+  title: ブラジル代表ってどんなチーム？
+  question: 11月14日に日本と戦うブラジル代表は、どんなチームか
+  lead: W杯優勝5回。全大会に出た、ただ1つの国。
+  hook: ''
+  opening_image: assets/stats/tb_brazil_data_t.png
+  end_bg: assets/images/20261021_team_brazil/b06_team.jpg
+  takeaway: 日本のブラジル戦は、2019年までの12戦で1試合の失点2.8だったのが、2020年からの3戦で1.7に減り、3戦とも1点差。ただ勝ったのは親善試合で、W杯は2006年も2026年もブラジルが勝っている。ブラジルの優勝の空白は2002年から24年で、1970〜94年の24年に並んだ。2030年に優勝できなければ28年で最長になる
 thumbnail:
-  photo: assets/images/20261021_team_brazil/vini_wide2.jpg
+  board: assets/stats/tb_brazil_data.png
   line1: ブラジル代表
-  line2: W杯5回優勝
-  tags: [ブラジル]
-  photos:
-    - assets/images/20261021_team_brazil/jp_kubo/01.jpg
-    - assets/images/20261021_team_brazil/vini_crop.jpg
+  line2: 日本は15戦1勝
+  crest_main:
+  - ブラジル
+  tags:
+  - ブラジル代表
+  - 日本代表
+  - ワールドカップ
+  - アンチェロッティ
+  - 代表チーム紹介
+sections:
+- id: hook
+  heading: 日本は、ブラジルと15回戦って何回勝ったのか
+  main: true
+  tier: 確定
+  official: true
+  telop: 日本は15戦で、国際Aマッチの勝ちは1回
+  narrator: 解説
+  say:
+  - text: 日本はブラジルと15回戦って、国際Aマッチの勝ちは**1回**。2分け**12敗**です。
+    image: assets/stats/tb_brazil_data_r1.png
+    no_telop: true
+    emph: true
+  - text: ブラジルの勝ちは12回。日本の勝ちの、12倍です。
+    image: assets/stats/tb_brazil_data_r1.png
+    no_telop: true
+  - text: 数えるのは、国際Aマッチだけ。五輪の試合は入れません。
+    image: assets/stats/tb_brazil_data_r1.png
+    no_telop: true
+  - text: 次の試合は、11月14日。シンガポールです。
+    image: assets/stats/tb_brazil_data_r1.png
+    no_telop: true
+  - text: 今年6月のワールドカップでも、決勝トーナメントの1回戦で当たりました。
+    image: assets/stats/tb_brazil_data_r2.png
+    no_telop: true
+  - text: 結果は、日本の1対2の負け。後半のアディショナルタイムに、決勝点を決められました。
+    image: assets/stats/tb_brazil_data_r2.png
+    no_telop: true
+  sources:
+  - https://www.jfa.jp/samuraiblue/news/00035604/
+  - https://www.jfa.jp/samuraiblue/news/00035627/
+  - https://www.jfa.jp/samuraiblue/news/00036487/
+  - https://www.jfa.jp/samuraiblue/schedule_result/2026.html
+- id: data
+  heading: ブラジル代表は、どんな数字を持つ国なのか
+  tier: 確定
+  official: true
+  telop: ブラジル代表の基礎DATA
+  narrator: 解説
+  say:
+  - text: ブラジル代表のフィファランクは**6位**。10月7日に出た、最新の順位です。
+    image: assets/stats/tb_brazil_data0.png
+    no_telop: true
+  - text: ワールドカップの優勝は**5回**。1958年、62年、70年、94年、2002年。史上最多です。
+    image: assets/stats/tb_brazil_data1.png
+    no_telop: true
+  - text: 監督は、イタリア人のアンチェロッティ。2025年5月に就任しました。
+    image: assets/stats/tb_brazil_data4.png
+    no_telop: true
+  - text: 主将は、パリ・サンジェルマンのマルキーニョス。
+    image: assets/stats/tb_brazil_data5.png
+    no_telop: true
+  - text: 愛称は、カナリーニョ。小さなカナリアという意味で、ほかにセレソンとも呼ばれます。
+    image: assets/stats/tb_brazil_data6.png
+    no_telop: true
+  sources:
+  - https://inside.fifa.com/en/news/coca-cola-mens-world-ranking-october-2026-portugal-spain
+  - https://www.jfa.jp/samuraiblue/news/00035604/
+  - https://en.wikipedia.org/wiki/Brazil_national_football_team
+- id: history
+  heading: ブラジルは、いつ頂点に立ち、いつ遠ざかったのか
+  tier: 背景
+  telop: 1950年の敗戦から、優勝5回。そして24年の空白
+  narrator: 解説
+  card: &id_histA
+    type: timeline
+    title: 優勝の時代
+    rows:
+    - - 1950年
+      - 地元の決勝リーグで1対2。逆転負け
+    - - 1958年
+      - 初優勝。自国の大陸の外で初めて
+    - - 1970年
+      - 6戦全勝で3度目の優勝
+    - - 1994年
+      - 24年ぶりの優勝
+    - - 2002年
+      - 日韓大会で5度目。決勝は横浜
+    focus: 1950年
+  say:
+  - text: ブラジルは、ワールドカップの第1回大会から、すべての大会に出ています。
+    image: assets/images/20261021_team_brazil/b06_team.jpg
+    card: none
+  - text: 最初の転機は、1950年。地元開催の大会です。
+    card:
+      <<: *id_histA
+      highlight_row: 0
+  - text: 決勝リーグの最終戦。引き分けでも優勝でした。
+    card:
+      <<: *id_histA
+      highlight_row: 0
+  - text: ところが、ウルグアイに**1対2**で逆転されます。
+    card:
+      <<: *id_histA
+      highlight_row: 0
+  - text: この敗戦のあと、白だったユニフォームをやめ、黄色と緑に変わります。
+    image: assets/images/20261021_team_brazil/b04_casemiro_w.jpg
+    card: none
+  - text: 1958年。スウェーデン大会で、ペレのいたブラジルが初優勝します。
+    card:
+      <<: *id_histA
+      highlight_row: 1
+  - text: 自分の大陸の外で優勝した、史上初の国です。
+    card:
+      <<: *id_histA
+      highlight_row: 1
+  - text: 1970年は、6戦全勝で3度目の優勝。史上最強のチームと、いまも言われます。
+    card:
+      <<: *id_histA
+      highlight_row: 2
+  - text: そのあと、優勝から遠ざかります。次の優勝は、1994年。**24年**あとです。
+    emph: true
+    card:
+      <<: *id_histA
+      highlight_row: 3
+  - text: 2002年は、日本と韓国の共催大会。決勝は横浜でした。
+    image: assets/images/20261021_team_brazil/b02_marquinhos_w.jpg
+    card:
+      <<: *id_histA
+      highlight_row: 4
+  - text: ドイツに2対0。ロナウドが2点を決めて、5度目の優勝です。
+    card:
+      <<: *id_histA
+      highlight_row: 4
+  - text: それから24年。ブラジルは、まだ6度目の優勝をしていません。
+    emph: true
+    card: &id_histB
+      type: timeline
+      title: 遠ざかった24年
+      rows:
+      - - 2014年
+        - 自国開催の準決勝で、ドイツに1対7
+      - - 2022年
+        - 準々決勝でクロアチアにPK負け
+      - - 2026年
+        - ベスト16でノルウェーに1対2
+      focus: 2014年
+  - text: 2014年は、地元の準決勝で、ドイツに**1対7**。
+    card:
+      <<: *id_histB
+      highlight_row: 0
+  - text: ワールドカップで、いちばん大きな敗戦です。
+    card:
+      <<: *id_histB
+      highlight_row: 0
+  - text: 2022年は、準々決勝でクロアチアに、1対1からのPK戦で敗れました。
+    card:
+      <<: *id_histB
+      highlight_row: 1
+  - text: 2026年は、ベスト16でノルウェーに1対2の負け。
+    card:
+      <<: *id_histB
+      highlight_row: 2
+  - text: 準々決勝に進めなかったのは、1990年以来、36年ぶりです。
+    card:
+      <<: *id_histB
+      highlight_row: 2
+  sources:
+  - https://www.jfa.jp/samuraiblue/news/00035604/
+  - https://en.wikipedia.org/wiki/Brazil_national_football_team
+  - https://ge.globo.com/futebol/selecao-brasileira/noticia/2026/09/09/convocacao-da-selecao-veja-a-lista-de-carlo-ancelotti-para-os-amistosos-contra-australia-e-india.ghtml
+- id: players
+  heading: いまの看板選手は、誰なのか
+  tier: 背景
+  telop: 看板選手を、所属・名前・位置・年齢で
+  narrator: 解説
+  card: &id_pl
+    type: table
+    title: ブラジル代表の看板選手
+    columns:
+    - 所属
+    - 名前
+    - 位置
+    - 年齢
+    rows:
+    - - レアル・マドリード
+      - ヴィニシウス
+      - FW
+      - '26'
+    - - バルセロナ
+      - ラフィーニャ
+      - FW
+      - '29'
+    - - チェルシー
+      - エストヴァン
+      - FW
+      - '19'
+    - - アーセナル
+      - ブルーノ・ギマランイス
+      - MF
+      - '28'
+    - - アーセナル
+      - ガブリエウ・マガリャンイス
+      - DF
+      - '28'
+    - - パリ・サンジェルマン
+      - マルキーニョス
+      - DF
+      - '32'
+  say:
+  - text: いまのブラジルを、所属、名前、位置、年齢で見ます。年齢は、生年月日から数えました。
+    image: assets/images/20261021_team_brazil/b01_ancelotti_w.jpg
+    card: *id_pl
+  - text: ヴィニシウスは26歳。レアル・マドリードのフォワードです。
+    image: assets/images/20261021_team_brazil/vini_wide2.jpg
+    card:
+      <<: *id_pl
+      highlight_row: 0
+  - text: ラフィーニャは29歳。バルセロナのフォワードです。
+    image: assets/images/20261021_team_brazil/b03_raphinha_w.jpg
+    card:
+      <<: *id_pl
+      highlight_row: 1
+  - text: 19歳のエストヴァン。チェルシーのフォワードで、いちばん若い看板。
+    card:
+      <<: *id_pl
+      highlight_row: 2
+  - text: アーセナルからは2人。中盤のブルーノ・ギマランイス。
+    card:
+      <<: *id_pl
+      highlight_row: 3
+  - text: そしてディフェンスのガブリエウ・マガリャンイス。ともに28歳です。
+    card:
+      <<: *id_pl
+      highlight_row: 4
+  - text: 主将は、32歳のマルキーニョス。パリ・サンジェルマンのディフェンダー。
+    image: assets/images/20261021_team_brazil/b02_marquinhos_w.jpg
+    card:
+      <<: *id_pl
+      highlight_row: 5
+  sources:
+  - https://ge.globo.com/futebol/selecao-brasileira/noticia/2026/09/09/convocacao-da-selecao-veja-a-lista-de-carlo-ancelotti-para-os-amistosos-contra-australia-e-india.ghtml
+  - https://www.jfa.jp/samuraiblue/news/00035604/
+  - https://en.wikipedia.org/wiki/Brazil_national_football_team
+- id: japan
+  heading: 日本は、ブラジルとの差をどこまで縮めたのか
+  tier: 確定
+  official: true
+  telop: 2006年の1対4から、2025年の3対2へ
+  narrator: 解説
+  card: &id_jp
+    type: table
+    title: 日本とブラジルの対戦（日本の得点が先）
+    columns:
+    - 年
+    - 大会
+    - スコア
+    rows:
+    - - 2006年
+      - ワールドカップ
+      - 1-4
+    - - 2013年
+      - コンフェデ杯
+      - 0-3
+    - - 2022年6月
+      - 親善試合
+      - 0-1
+    - - 2025年10月
+      - 親善試合
+      - 3-2
+    - - 2026年6月
+      - ワールドカップ
+      - 1-2
+  say:
+  - text: 日本とブラジルの対戦を、古い順に見ます。
+    image: assets/images/20261021_team_brazil/b06_team.jpg
+    card: *id_jp
+  - text: 2006年のワールドカップは、1対4の負け。
+    card:
+      <<: *id_jp
+      highlight_row: 0
+  - text: 2013年のコンフェデ杯は、0対3の負けでした。
+    card:
+      <<: *id_jp
+      highlight_row: 1
+  - text: コンフェデ杯は、各大陸の王者が集まった大会です。
+    card:
+      <<: *id_jp
+      highlight_row: 1
+  - text: 2022年6月、東京。ネイマールのPKで、0対1の負け。
+    image: assets/images/20261021_team_brazil/b03_raphinha_w.jpg
+    card:
+      <<: *id_jp
+      highlight_row: 2
+  - text: そして、去年の10月14日。東京スタジアムで、日本が**3対2**で勝ちました。
+    emph: true
+    card:
+      <<: *id_jp
+      highlight_row: 3
+  - text: 前半は0対2の負け。後半に3点を取って、逆転しました。
+    image: assets/images/20261021_team_brazil/b04_casemiro_w.jpg
+    card: none
+  - text: 決めたのは、南野拓実、中村敬斗、上田綺世。
+    card: none
+  - text: ブラジルとの14試合目で、日本が勝ちました。
+    card: none
+  - text: アンチェロッティ監督は、試合のあと、こう振り返りました。
+    image: assets/images/20261021_team_brazil/b01_ancelotti_w.jpg
+    card: none
+  - text: センターバックの最初のミスから、コントロールを失った、と。
+    card: none
+  - text: 今年6月、ワールドカップ。日本は、前半29分に、佐野海舟のゴールで先制します。
+    card:
+      <<: *id_jp
+      highlight_row: 4
+  - text: ブラジルは、56分にカゼミーロが同点。
+    image: assets/images/20261021_team_brazil/b04_casemiro_w.jpg
+    card: none
+  - text: アディショナルタイムに、マルティネッリが決めて、日本の1対2の負けでした。
+    card: none
+  sources:
+  - https://www.jfa.jp/samuraiblue/news/00035627/
+  - https://www.jfa.jp/samuraiblue/news/00036487/
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_results_(2020%E2%80%93present)
+  - https://en.wikipedia.org/wiki/Japan_national_football_team
+- id: now
+  heading: いまのブラジルは、どこへ向かっているのか
+  tier: 背景
+  telop: 2026年W杯は5試合。そのあと、世代交代へ
+  narrator: 解説
+  card: &id_wc
+    type: table
+    title: 2026年ワールドカップ ブラジルの5試合
+    columns:
+    - 日付
+    - 相手
+    - ブラジルの結果
+    rows:
+    - - 6月13日
+      - モロッコ
+      - 1-1
+    - - 6月19日
+      - ハイチ
+      - 3-0
+    - - 6月24日
+      - スコットランド
+      - 3-0
+    - - 6月29日
+      - 日本
+      - 2-1
+    - - 7月5日
+      - ノルウェー
+      - 1-2
+  say:
+  - text: アンチェロッティ監督は、前はレアル・マドリードを率いていた人です。
+    image: assets/images/20261021_team_brazil/b01_ancelotti_w.jpg
+    card: none
+  - text: 6月のワールドカップは、グループを2勝1分けで通過。
+    card:
+      <<: *id_wc
+      highlight_row: 0
+  - text: ハイチとスコットランドには、どちらも3対0の勝ち。
+    card: *id_wc
+  - text: 5試合で10得点、失点は4。1試合の平均は、得点2.0、失点0.8。
+    card: *id_wc
+  - text: 決勝トーナメントは、日本に2対1の勝ち。次の試合が、ノルウェー戦でした。
+    card:
+      <<: *id_wc
+      highlight_row: 4
+  - text: 大会のあと、最初の招集は9月9日。26人のうち、8人が初めて呼ばれました。
+    image: assets/images/20261021_team_brazil/b03_raphinha_w.jpg
+    card: none
+  - text: ブラジル国内のクラブからは、10人。監督は、次の世代を探す、と話しています。
+    image: assets/images/20261021_team_brazil/b07_alisson_w.jpg
+    card: none
+  - text: 9月から10月は、親善試合が3つ。オーストラリアとインドが相手でした。
+    card: none
+  - text: そして次が、11月14日の、日本との試合です。
+    image: assets/images/20261021_team_brazil/b06_team.jpg
+    card: none
+  sources:
+  - https://ge.globo.com/futebol/selecao-brasileira/noticia/2026/09/09/convocacao-da-selecao-veja-a-lista-de-carlo-ancelotti-para-os-amistosos-contra-australia-e-india.ghtml
+  - https://www.jfa.jp/samuraiblue/schedule_result/2026.html
+  - https://en.wikipedia.org/wiki/Brazil_national_football_team
+- id: viewpoint
+  viewpoint: true
+  heading: 日本との差は縮まったのか。ブラジルは世界一に戻れるのか
+  tier: 背景
+  telop: 失点は2.8から1.7へ。優勝の空白は24年
+  narrator: 解説
+  card: &id_vp
+    type: table
+    title: 日本対ブラジル 2020年を境に（1試合あたり）
+    columns:
+    - 区切り
+    - 戦績
+    - 日本の得点
+    - 日本の失点
+    rows:
+    - - 2019年まで12戦
+      - 0勝2分10敗
+      - '0.4'
+      - '2.8'
+    - - 2020年から3戦
+      - 1勝2敗
+      - '1.3'
+      - '1.7'
+  say:
+  - text: 見立てを、数字で2つ。まず、日本との差です。
+    image: assets/images/20261021_team_brazil/b06_team.jpg
+    card: *id_vp
+  - text: 2019年までの12戦は、0勝2分10敗。1試合の失点は、2.8でした。
+    card:
+      <<: *id_vp
+      highlight_row: 0
+  - text: 2020年からの3戦は、1勝2敗。1試合の失点は、1.7に減りました。
+    emph: true
+    mark:
+      kind: circle
+      row: 1
+      col: 3
+    card:
+      <<: *id_vp
+      highlight_row: 1
+  - text: 3戦とも、1点差です。
+    card:
+      <<: *id_vp
+      highlight_row: 1
+  - text: ただ、日本が勝ったのは親善試合です。
+    image: assets/images/20261021_team_brazil/b04_casemiro_w.jpg
+    card: none
+  - text: ワールドカップは、2006年も2026年も、ブラジルが勝っています。
+    card: none
+  - text: もう1つは、優勝のない年数です。
+    image: assets/images/20261021_team_brazil/b02_marquinhos_w.jpg
+    card: &id_vp2
+      type: table
+      title: 優勝のない年数
+      columns:
+      - 期間
+      - 年数
+      rows:
+      - - 1970年から1994年
+        - 24年
+      - - 2002年から2026年
+        - 24年
+      - - 2030年まで続けば
+        - 28年
+  - text: 1970年から94年は、24年。2002年から今年まで、これも24年です。
+    card:
+      <<: *id_vp2
+      highlight_row: 1
+  - text: いまのブラジルは、前の空白と、同じ長さに並びました。
+    card:
+      <<: *id_vp2
+      highlight_row: 1
+  - text: 次のワールドカップは、2030年。
+    card:
+      <<: *id_vp2
+      highlight_row: 2
+  - text: そこで優勝できなければ、空白は28年。最長を更新します。
+    card:
+      <<: *id_vp2
+      highlight_row: 2
+  - text: 11月14日のシンガポールは、日本が縮めた差を、もう一度測る試合になります。
+    image: assets/images/20261021_team_brazil/b01_ancelotti_w.jpg
+    card: none
+  sources:
+  - https://www.jfa.jp/samuraiblue/news/00035604/
+  - https://www.jfa.jp/samuraiblue/news/00035627/
+  - https://www.jfa.jp/samuraiblue/news/00036487/
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_results_(2020%E2%80%93present)
+  - https://en.wikipedia.org/wiki/Brazil_national_football_team

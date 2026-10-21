@@ -1,0 +1,24 @@
+{
+ "bayern": {
+  "フィリップ・ラーム": {
+   "role": "legend",
+   "file": "assets/photos/bd/bayern/bayern_legend_faea6fcf.jpg",
+   "page": "Philipp Lahm"
+  },
+  "トーマス・ミュラー": {
+   "role": "legend",
+   "file": "assets/photos/bd/bayern/bayern_legend_08319754.jpg",
+   "page": "Thomas Müller (footballer, born 1989)"
+  },
+  "ロベルト・レヴァンドフスキ": {
+   "role": "legend",
+   "file": "assets/photos/bd/bayern/bayern_legend_2f89780b.jpg",
+   "page": "Robert Lewandowski"
+  },
+  "ヴァンサン・コンパニ": {
+   "role": "manager",
+   "file": "assets/photos/bd/bayern/bayern_manager_841b42a0.jpg",
+   "page": "Vincent Kompany"
+  }
+ }
+}

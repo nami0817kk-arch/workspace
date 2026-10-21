@@ -1,0 +1,399 @@
+# 取材メモ（10/21 水、シリーズ「比べる」、key: compare_rice_neves）。デクラン・ライス（アーセナル）×ジョアン・ネヴェス（パリ・サンジェルマン）。
+# **FotMob・DataMB は使っていない**。数字は Transfermarkt（2026-10-21 取得。控え: research/raw/20261021_rice_tm.json・20261021_neves_tm.json・*_erfolge.html）と ESPN の試合記録。
+#   Transfermarkt 番号：ライス 357662・ネヴェス 670681。API を番号ごとに（プロフィール・市場価値の推移・季ごとの大会別成績・試合ごとの記録）3秒あけて取得。タイトルは実績ページ（erfolge）を1ページずつ。
+#
+# **スタッツの条件（足切り）**：クラブの全公式戦の出場時間。
+#   昨季 25/26：ライス 55試合4456分／ネヴェス 38試合2701分（2人とも900分超。標本は十分）。
+#   今季 26/27（10/18 まで）：ライス 10試合819分／ネヴェス 8試合540分（**450分は超えるが900分に届かない → 「いまの時点」と言う**）。ネヴェスは 10/20（PSG対バルセロナ）の分を含まない。
+#   大会が違う（ライス＝プレミア・CL・リーグ杯、ネヴェス＝リーグ・アン・CL・各カップ）一言を入れる。位置は Transfermarkt 表記でどちらもセントラルMF（同じ群）。
+# **使った数（基本の数）と自分で割った値**
+#   昨季（クラブの全公式戦、TM の大会別を足した）：ライス＝試合55・得点5・アシスト11・出場4456分（プレミア36試合3099分・CL13試合1069分・リーグ杯6試合288分）。
+#     ネヴェス＝試合38・得点7・アシスト4・出場2701分（リーグ・アン21試合1286分・CL14試合1144分・各カップ・インターコンチネンタル杯など3試合）。
+#   90分あたり＝回数×90÷出場分：得点 ライス5×90÷4456＝0.10／ネヴェス7×90÷2701＝0.23、アシスト 11×90÷4456＝0.22／4×90÷2701＝0.13、
+#     得点＋アシスト 16×90÷4456＝0.32／11×90÷2701＝0.37。
+#   リーグ戦で出られた割合＝リーグ戦の出場分÷（そのリーグの全試合×90分）：ライス（プレミア38試合＝3420分）23/24 3231分＝94%・24/25 2833分＝83%・25/26 3099分＝91%・26/27（7試合630分）594分＝94%。
+#     ネヴェス（23/24 ポルトガル1部34試合＝3060分）2314分＝76%・24/25 リーグ・アン 1851分＝60%・25/26 1286分＝42%・26/27（7試合630分）451分＝72%。**出られなかった理由は数字から分からないので言わない**。
+# 年齢別の市場価値（TM の推移、年齢ごとの最高値、百万€）：ライス 18歳2・19歳20・20歳55・21歳55・22歳75・23歳80・24歳110・25歳120・26歳120・27歳120／ネヴェス 18歳10・19歳55・20歳80・21歳140。
+#   21歳で 140÷55＝2.5倍あまり。現在値 ライス1.2億（2026-06-03）・ネヴェス1.4億（2026-06-01）。ネヴェスの 1.4億 は21歳の時点の値で、9/27 に22歳になっても更新は無い。
+# タイトル（Transfermarkt 実績ページ、2026-10-21。英語版 Wikipedia の栄誉欄と一致）：ライス＝イングランドのリーグ優勝1（25/26）・カンファレンスリーグ1（22/23）・国内スーパーカップ（コミュニティ・シールド）2（2023・2026）、
+#   ユーロ準優勝2・W杯3位1。／ネヴェス＝CL2（24/25・25/26）・リーグ（フランス2＋ポルトガル1＝3）・国内カップ（フランス1）・国内スーパーカップ（フランス2＋ポルトガル1＝3）・UEFAスーパーカップ1・インターコンチネンタル杯1・ネーションズリーグ1。
+#   国内カップ＋スーパーカップ：ライス 0＋2＝2／ネヴェス 1＋3＝4。
+# **CL決勝（2026-05-30、ブダペスト・プスカーシュ・アリーナ）**：ESPN の試合記録（site.api.espn.com/…/uefa.champions/summary?event=401862897）。1-1 の120分、PK戦 PSG 4-3。
+#   6分ハヴァーツ（アーセナル）、65分デンベレのPK（PSG）。ライス・ネヴェスとも先発（ESPN の先発フラグ）で、TM の記録でも2人とも120分出場。
+#   PK戦の蹴り順（ESPN の shootout）：PSG＝ラモス・ドゥエ・N.メンデス（失敗）・アクラフ・ベラルド／アーセナル＝ギェケレス・エゼ（失敗）・**ライス（成功・3人目）**・マルティネッリ・ガブリエウ（失敗）。
+#   **ライスの3人目は ESPN の構造化データだけ**。スカイスポーツの記事は蹴り順を載せておらず（エゼの失敗・ライヤの止めたメンデス・ガブリエウの失敗だけ）、矛盾はしないが裏は取れていない。公開前に別の記録で確かめる。
+#   ネヴェスは蹴っていない（ESPN）。警告（ライス103分・ネヴェス90+6分）は入れない。
+# 日程（ESPN）：アーセナル対バイエルン（CL）2026-10-21 19:00 UTC＝日本時間22日4時。PSG対バルセロナ（CL）は 10/20 19:00 UTC（日本時間21日4時）で、**結果は読んでいないので触れない**。
+# 経歴（英語版 Wikipedia 2026-10-18／10-17 更新。背景）：ライス＝2006年チェルシーの育成→14歳で退団→2013年ウェストハム、トップ初出場 2017-05-21（18歳）、245試合15得点（TM と一致）、2023-07 アーセナルへ（最初の支払い1億ポンド・追加分最大500万ポンド、報道）。
+#   ネヴェス＝2016年ベンフィカの育成組織、トップ初出場 2023-01-01（18歳）、2024-08-05 PSGへ（5990万ユーロ＋追加分最大1000万ユーロ、報道。ベンフィカ会長の発表は7000万ユーロの提示）、75試合4得点（TM）。
+# 入れなかったもの：身長（TM はネヴェス 1.71m・10/8 の選手紹介は 174cm で食い違う。確かめられない）、警告・退場・負傷の話、私生活、CL決勝のスコア以外の細部、ライスのアイルランド代表歴（10/11 の選手紹介の素材）、
+#   ネヴェスとカマラの比べ（10/14）で使った「21歳までの積み方」、FotMob のパーセンタイル。
+# **重なりの確認**：ライスの選手紹介（10/11）・ネヴェスの選手紹介（10/8）・ネヴェス×カマラ（10/14）を直近30日に出している。2人の組み合わせ（ライス×ネヴェス）は初めて。10/9 のベリンガム×ムシアラ・10/17 のペドリ×ヴィティーニャと同じ「比べる」の型だが、中身（CL決勝・出られた割合）は重ならない。
+slot: other_1
+date: "2026年10月21日"
+format: news
+series: 比べる
+people:
+  - デクラン・ライス
+  - ジョアン・ネヴェス
+  - アーセナル
+  - パリ・サンジェルマン
+
+theme:
+  end_bg: assets/images/20261021_rice/ghana305/01_w.jpg
+  id: compare_357662_670681
+  league: england
+  kind: other
+  topic: デクラン・ライスとジョアン・ネヴェス
+  prefix: ""
+  title: ライスとネヴェス、決勝で120分戦った2人。数字の違いはどこにあるのか
+  hook: ""
+  question: チャンピオンズリーグ決勝で120分を戦った2人の中盤は、数字で並べるとどこが違うのか
+  takeaway: 昨季の90分あたりの得点＋アシストはネヴェス0.37・ライス0.32と近い。違うのは出られた時間で、昨季の出場はライス4456分・ネヴェス2701分、リーグ戦で出られた割合は91%と42%（今季ここまでは94%と72%）
+  league_name: イングランドとフランス
+  opening_image: assets/images/20261021_rice/ghana305/01_w.jpg
+
+short_title: ライスとネヴェス、同じ決勝の2人を数字で
+
+thumbnail:
+  photo: assets/images/20261021_rice/ghana305/01_w.jpg
+  photos:
+    - assets/images/20261021_rice/ghana133/01_w.jpg
+    - assets/images/20261021_neves/croatia101/01_w.jpg
+  face_link: VS
+  line1: 昨季CL決勝の中心
+  line2: 二人の差とは何か
+  tags: [デクラン・ライス, ジョアン・ネヴェス, アーセナル, パリ・サンジェルマン]
+
+answer: 90分あたりの得点＋アシストは近い。違うのは出られた時間で、昨季のリーグ戦は91%と42%
+watch: ネヴェスの今季は7試合の数字。試合が増えたあとの出られた割合
+
+sections:
+  - id: final
+    heading: 決勝の120分、2人は同じピッチで何をしていたのか
+    tier: 報道
+    telop: 5月30日、チャンピオンズリーグ決勝
+    narrator: 解説
+    card: &finalcard
+      type: timeline
+      title: チャンピオンズリーグ決勝（2026年5月30日）
+      rows:
+        - ["5月30日", ブダペスト。アーセナル対パリ・サンジェルマン]
+        - ["6分", アーセナルが先制]
+        - ["65分", PSGがPKで同点]
+        - ["120分", 1対1。ライスもネヴェスも120分出場]
+        - ["PK戦", PSGが4対3で優勝。ライスは3人目で成功]
+    say:
+      - text: 5月30日、ブダペスト。チャンピオンズリーグの決勝です。
+        image: assets/images/20261021_rice/ghana305/01_w.jpg
+        card: {<<: *finalcard, highlight_row: "5月30日"}
+      - text: アーセナル対パリ・サンジェルマン。6分に、アーセナルが先制。
+        card: {<<: *finalcard, highlight_row: "6分"}
+      - text: 65分、パリ・サンジェルマンが、ペナルティキックで同点。
+        image: assets/images/20261021_neves/croatia101/01_w.jpg
+        card: {<<: *finalcard, highlight_row: "65分"}
+      - text: 同点のまま、延長戦へ。
+        card: {<<: *finalcard, highlight_row: "120分"}
+      - text: ライスもネヴェスも、先発して、最後までピッチにいました。
+        emph: true
+        card: {<<: *finalcard, highlight_row: "120分"}
+      - text: 決着はペナルティキック戦。パリ・サンジェルマンが4対3で勝ちました。
+        image: assets/images/20261021_rice/ghana133/01_w.jpg
+        card: {<<: *finalcard, highlight_row: "PK戦"}
+      - text: ライスは、アーセナルの3人目で決めています。
+        card: {<<: *finalcard, highlight_row: "PK戦"}
+      - text: 同じ試合を戦った中盤の2人は、数字ではどう違うのか。
+        card: none
+    sources:
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401862897
+      - https://www.skysports.com/football/paris-saint-germain-vs-arsenal/report/554950
+      - https://www.transfermarkt.com/declan-rice/leistungsdatendetails/spieler/357662
+      - https://www.transfermarkt.com/joao-neves/leistungsdatendetails/spieler/670681
+
+  - id: data
+    heading: ライスとネヴェスは、何歳でいくらの選手か
+    tier: 報道
+    telop: アーセナルとPSGの中盤
+    narrator: 解説
+    card: &datacard
+      type: duel
+      left: {name: ライス, club: アーセナル, photo: assets/images/20261021_rice/ghana133/01_sq.jpg, color: "#ef0107"}
+      right: {name: ネヴェス, club: パリ・サンジェルマン, photo: assets/images/20261021_neves/croatia102/01_sq.jpg, color: "#004170"}
+      rows:
+        - [年齢, 27歳, 22歳]
+        - [所属, アーセナル, PSG]
+        - [代表, イングランド, ポルトガル]
+        - [市場価値, 1.2億€, 1.4億€]
+        - [契約満了, 2028年, 2031年]
+      bars: [市場価値]
+      note: 市場価値は Transfermarkt の推定（2026年6月更新）
+    say:
+      - text: ライスは27歳。アーセナルの、イングランド代表です。
+        image: assets/images/20261021_rice/ghana133/01_w.jpg
+        card: {<<: *datacard}
+      - text: ネヴェスは22歳。パリ・サンジェルマンの、ポルトガル代表。
+        image: assets/images/20261021_neves/croatia102/01_w.jpg
+        card: {<<: *datacard}
+      - text: どちらも、中盤の真ん中を任される選手。
+        card: {<<: *datacard}
+      - text: 市場価値は、ライスが1.2億ユーロ、ネヴェスが1.4億ユーロ。
+        card: {<<: *datacard, highlight_row: 市場価値}
+      - text: 5歳ほど年下のネヴェスのほうが、上です。
+        emph: true
+        card: {<<: *datacard, highlight_row: 市場価値}
+    sources:
+      - https://www.transfermarkt.com/declan-rice/profil/spieler/357662
+      - https://www.transfermarkt.com/joao-neves/profil/spieler/670681
+
+  - id: career
+    heading: 2人の歩みは、何歳でどこが違ったのか
+    tier: 報道
+    telop: トップチーム初出場から、いまのクラブまで
+    narrator: 解説
+    card: &careercard
+      type: duel
+      left: {name: ライス, club: ウェストハムから, photo: assets/images/20261021_rice/ghana133/01_sq.jpg, color: "#ef0107"}
+      right: {name: ネヴェス, club: ベンフィカから, photo: assets/images/20261021_neves/croatia102/01_sq.jpg, color: "#004170"}
+      rows:
+        - [トップ初出場, 18歳, 18歳]
+        - [いまのクラブへ, 24歳, 19歳]
+        - [前のクラブでの試合, "245", "75"]
+        - [いまのクラブでの試合, "168", "105"]
+        - [移籍金（報道）, 約1億ポンド, 約6000万€]
+      bars: [前のクラブでの試合, いまのクラブでの試合]
+      note: 移籍金は報道の額。通貨が違うので並べて比べない
+    say:
+      - text: ライスは14歳でチェルシーを離れ、ウェストハムへ。
+        image: assets/images/20261021_rice/ghana305/01_w.jpg
+        card: {<<: *careercard}
+      - text: ネヴェスは2016年に、ベンフィカの育成組織へ。
+        image: assets/images/20261021_neves/croatia232/01_w.jpg
+        card: {<<: *careercard}
+      - text: トップチームの初出場は、2人とも18歳です。
+        card: {<<: *careercard, highlight_row: トップ初出場}
+      - text: ライスは2017年5月、ネヴェスは2023年の元日でした。
+        card: {<<: *careercard, highlight_row: トップ初出場}
+      - text: ライスは、ウェストハムで245試合。24歳でアーセナルへ。
+        image: assets/images/20261021_rice/ghana133/01_w.jpg
+        card: {<<: *careercard, highlight_row: 前のクラブでの試合}
+      - text: ネヴェスは、ベンフィカで75試合。ライスの3分の1ほどです。
+        image: assets/images/20261021_neves/croatia102/01_w.jpg
+        card: {<<: *careercard, highlight_row: 前のクラブでの試合}
+      - text: 19歳で、フランスのパリ・サンジェルマンに移りました。
+        card: {<<: *careercard, highlight_row: いまのクラブへ}
+      - text: ライスの移籍金は、約1億ポンドとされています。
+        card: {<<: *careercard, highlight_row: 移籍金（報道）}
+      - text: ネヴェスは、約6000万ユーロとされています。
+        card: {<<: *careercard, highlight_row: 移籍金（報道）}
+      - text: 通貨が違うので、金額は並べて比べません。
+        card: none
+    sources:
+      - https://en.wikipedia.org/wiki/Declan_Rice
+      - https://en.wikipedia.org/wiki/Jo%C3%A3o_Neves
+      - https://www.transfermarkt.com/declan-rice/leistungsdatendetails/spieler/357662
+      - https://www.transfermarkt.com/joao-neves/leistungsdatendetails/spieler/670681
+
+  - id: season
+    heading: 昨季の全公式戦、90分あたりで並べると何が違うのか
+    tier: 報道
+    main: true
+    telop: 昨季の全公式戦
+    narrator: 解説
+    card: &seasoncard
+      type: duel
+      left: {name: ライス, club: アーセナル, photo: assets/images/20261021_rice/ghana133/01_sq.jpg, color: "#ef0107"}
+      right: {name: ネヴェス, club: パリ・サンジェルマン, photo: assets/images/20261021_neves/croatia102/01_sq.jpg, color: "#004170"}
+      rows:
+        - [試合, "55", "38"]
+        - [出場時間, 4456分, 2701分]
+        - [得点, "5", "7"]
+        - [アシスト, "11", "4"]
+        - [得点（90分あたり）, "0.10", "0.23"]
+        - [アシスト（90分あたり）, "0.22", "0.13"]
+        - [得点＋アシスト（90分あたり）, "0.32", "0.37"]
+      bars: [出場時間, 得点（90分あたり）, アシスト（90分あたり）, 得点＋アシスト（90分あたり）]
+      note: 昨季25/26のクラブの全公式戦。大会はアーセナルがプレミア・CL・リーグ杯、PSGがリーグ・アン・CL・各カップ。90分あたりは自分で割った値
+    say:
+      - text: ライスとネヴェスは、昨季、どんな数字を残したのか。
+        short_only: true
+        image: assets/images/20261021_neves/croatia101/01_w.jpg
+        card: none
+      - text: 昨季、2人がクラブで出た全公式戦です。大会は、同じではありません。
+        image: assets/images/20261021_rice/ghana151/01_w.jpg
+        card: *seasoncard
+      - text: ライスは55試合で4456分。ネヴェスは38試合で2701分です。
+        card: {<<: *seasoncard, highlight_row: 出場時間}
+      - text: どちらも900分を超えていて、比べるには十分な長さです。
+        card: {<<: *seasoncard, highlight_row: 出場時間}
+      - text: 得点は、ネヴェスが7、ライスが5。アシストは、ライスが11、ネヴェスが4。
+        image: assets/images/20261021_neves/croatia232/01_w.jpg
+        card: {<<: *seasoncard, highlight_row: アシスト}
+      - text: 90分あたりの得点は、ネヴェスが0.23、ライスが0.10。
+        card: {<<: *seasoncard, highlight_row: 得点（90分あたり）}
+      - text: アシストは逆で、ライスが0.22、ネヴェスが0.13。
+        image: assets/images/20261021_rice/ghana151/01_w.jpg
+        card: {<<: *seasoncard, highlight_row: アシスト（90分あたり）}
+      - text: 2つを足すと、ネヴェスが0.37、ライスが0.32。
+        emph: true
+        card: {<<: *seasoncard, highlight_row: 得点＋アシスト（90分あたり）}
+      - text: 差は小さく、ネヴェスがわずかに上です。
+        card: {<<: *seasoncard, highlight_row: 得点＋アシスト（90分あたり）}
+    sources:
+      - https://www.transfermarkt.com/declan-rice/leistungsdaten/spieler/357662
+      - https://www.transfermarkt.com/joao-neves/leistungsdaten/spieler/670681
+
+  - id: time
+    heading: リーグ戦で、どれだけ出られているのか
+    tier: 報道
+    telop: リーグ戦で出られた割合
+    narrator: 解説
+    card: &timecard
+      type: line
+      title: リーグ戦で出られた割合（出場分÷全試合の分、%）
+      x: [23/24, 24/25, 25/26, 26/27]
+      series:
+        - [ライス, [94, 83, 91, 94]]
+        - [ネヴェス, [76, 60, 42, 72]]
+      focus: ネヴェス
+      note: ネヴェスの23/24はポルトガル、24/25からフランス。26/27は7試合の数字
+    say:
+      - text: リーグ戦の全試合にフルで出れば、100%です。
+        image: assets/images/20261021_rice/ghana151/01_w.jpg
+        card: *timecard
+      - text: ライスは、4つのシーズンとも83%以上。昨季は91%でした。
+        card: {<<: *timecard, highlight: 25/26}
+      - text: ネヴェスは、パリに来た24/25が60%。昨季は42%でした。
+        image: assets/images/20261021_neves/croatia232/01_w.jpg
+        emph: true
+        card: {<<: *timecard, highlight: 25/26}
+      - text: 昨季は、リーグ戦の半分にも届いていません。
+        card: {<<: *timecard, highlight: 25/26}
+      - text: 今季は、ライスが94%、ネヴェスは72%。
+        image: assets/images/20261021_rice/ghana305/01_w.jpg
+        card: {<<: *timecard, highlight: 26/27}
+      - text: ネヴェスの今季は、まだ7試合の数字です。
+        card: {<<: *timecard, highlight: 26/27}
+      - text: 出られなかった理由は、この数字からは分かりません。
+        card: none
+    sources:
+      - https://www.transfermarkt.com/declan-rice/leistungsdaten/spieler/357662
+      - https://www.transfermarkt.com/joao-neves/leistungsdaten/spieler/670681
+
+  - id: value
+    heading: 市場価値は、同じ年齢で並べると、どれだけ違ったのか
+    tier: 報道
+    telop: 同じ年齢での市場価値
+    narrator: 解説
+    card: &valuecard
+      type: line
+      title: 市場価値（百万ユーロ。年齢ごとの最高値）
+      x: [18歳, 19歳, 20歳, 21歳]
+      series:
+        - [ライス, [2, 20, 55, 55]]
+        - [ネヴェス, [10, 55, 80, 140]]
+      focus: ネヴェス
+      peak: true
+    say:
+      - text: 市場価値を、同じ年齢で並べます。年齢ごとの最高値です。
+        image: assets/images/20261021_neves/croatia101/01_w.jpg
+        card: *valuecard
+      - text: 18歳は、ライスが200万、ネヴェスが1000万ユーロ。
+        card: {<<: *valuecard, highlight: 18歳}
+      - text: 19歳で、ライスは2000万。ネヴェスは5500万でした。
+        card: {<<: *valuecard, highlight: 19歳}
+      - text: 21歳では、ライスが5500万ユーロ。ネヴェスは、2.5倍あまりです。
+        emph: true
+        image: assets/images/20261021_rice/ghana133/01_w.jpg
+        card: {<<: *valuecard, highlight: 21歳}
+      - text: ライスの最高額は、25歳のとき。いまも、その値です。
+        card: none
+      - text: ネヴェスは、いま22歳。値は、21歳のときのまま。
+        image: assets/images/20261021_neves/croatia232/01_w.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/declan-rice/marktwertverlauf/spieler/357662
+      - https://www.transfermarkt.com/joao-neves/marktwertverlauf/spieler/670681
+
+  - id: titles
+    heading: タイトルは、どちらが多いのか
+    tier: 報道
+    telop: タイトルの数
+    narrator: 解説
+    card: &titlecard
+      type: shelf
+      left: {name: ライス, club: 個数, photo: assets/images/20261021_rice/ghana133/01_sq.jpg, color: "#ef0107"}
+      right: {name: ネヴェス, club: 個数, photo: assets/images/20261021_neves/croatia102/01_sq.jpg, color: "#004170"}
+      rows:
+        - [国内リーグ優勝, "1", "3"]
+        - [チャンピオンズリーグ優勝, "0", "2"]
+        - [UEFAスーパーカップ, "0", "1"]
+        - [カンファレンスリーグ優勝, "1", "0"]
+        - [インターコンチネンタル杯, "0", "1"]
+        - [国内カップ・スーパーカップ, "2", "4"]
+        - [ネーションズリーグ優勝（代表）, "0", "1"]
+      note: Transfermarkt の実績ページ（2026年10月21日時点）。ネヴェスの国内はフランスとポルトガルの合計
+    say:
+      - text: 次は、タイトルの数です。ネヴェスは、5歳ほど年下です。
+        image: assets/images/20261021_neves/croatia232/01_w.jpg
+        card: *titlecard
+      - text: 国内リーグの優勝は、ネヴェスが3回、ライスが1回。
+        card: {<<: *titlecard, highlight_row: 国内リーグ優勝}
+      - text: チャンピオンズリーグは、ネヴェスが2回、ライスは0回です。
+        emph: true
+        image: assets/images/20261021_rice/ghana305/01_w.jpg
+        card: {<<: *titlecard, highlight_row: チャンピオンズリーグ優勝}
+      - text: ライスが持つのは、プレミアリーグと、ヨーロッパ3番手の大会、カンファレンスリーグ。
+        card: {<<: *titlecard, highlight_row: カンファレンスリーグ優勝}
+      - text: 国内のカップ戦は、ネヴェスが4、ライスが2。
+        card: {<<: *titlecard, highlight_row: 国内カップ・スーパーカップ}
+      - text: クラブのタイトルは、ネヴェスのほうが多い形です。
+        card: *titlecard
+    sources:
+      - https://www.transfermarkt.com/declan-rice/erfolge/spieler/357662
+      - https://www.transfermarkt.com/joao-neves/erfolge/spieler/670681
+
+  - id: view
+    heading: 見立て・違いは1分あたりの数字か、出られる時間か
+    tier: 背景
+    viewpoint: true
+    narrator: 解説
+    telop: 数字の違いが示すもの
+    card: &viewcard
+      type: duel
+      left: {name: ライス, club: アーセナル, photo: assets/images/20261021_rice/ghana133/01_sq.jpg, color: "#ef0107"}
+      right: {name: ネヴェス, club: パリ・サンジェルマン, photo: assets/images/20261021_neves/croatia102/01_sq.jpg, color: "#004170"}
+      rows:
+        - [得点＋アシスト（90分あたり）, "0.32", "0.37"]
+        - [昨季の出場時間, 4456分, 2701分]
+        - [昨季の得点＋アシスト, "16", "11"]
+        - [リーグ戦で出られた割合（昨季）, 91%, 42%]
+        - [市場価値, 1.2億€, 1.4億€]
+      bars: [得点＋アシスト（90分あたり）, 昨季の出場時間, 昨季の得点＋アシスト, リーグ戦で出られた割合（昨季）]
+      note: 昨季25/26のクラブの全公式戦。90分あたりは自分で割った値
+    say:
+      - text: 見立てです。昨季の90分あたりは、ほぼ並んでいました。
+        image: assets/images/20261021_rice/ghana305/01_w.jpg
+        card: {<<: *viewcard, highlight_row: 得点＋アシスト（90分あたり）}
+      - text: ただ、出た時間は、ライスのほうが、ずっと長い。
+        emph: true
+        card: {<<: *viewcard, highlight_row: 昨季の出場時間}
+      - text: 合計の数は、ライスが16、ネヴェスが11になります。
+        image: assets/images/20261021_neves/croatia232/01_w.jpg
+        card: {<<: *viewcard, highlight_row: 昨季の得点＋アシスト}
+        mark: {kind: circle, row: 2}
+      - text: リーグ戦で出られた割合は、91%と42%。大きな差です。
+        card: {<<: *viewcard, highlight_row: リーグ戦で出られた割合（昨季）}
+      - text: 市場価値は、出た時間が短いほうの値が、高くなっています。
+        card: {<<: *viewcard, highlight_row: 市場価値}
+      - text: 年齢と1分あたりの数字が、値に出ているのかもしれません。
+        image: assets/images/20261021_rice/ghana133/01_w.jpg
+        card: none
+      - text: アーセナルは、日本時間22日の午前4時、バイエルンとのチャンピオンズリーグ。
+        card: none
+      - text: ライスの出番が、ここでどう動くか。ネヴェスは、今季の72%が、どこまで伸びるか。
+        image: assets/images/20261021_neves/croatia101/01_w.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/declan-rice/leistungsdaten/spieler/357662
+      - https://www.transfermarkt.com/joao-neves/leistungsdaten/spieler/670681
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20261021

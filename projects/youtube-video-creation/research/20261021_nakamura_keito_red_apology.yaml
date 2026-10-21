@@ -1,0 +1,183 @@
+# 取材メモ（2026年10月21日）中村敬斗の退場のあと、ニアカテが言ったこと（ニュースのショート。見せ方 X＝冒頭に事実の一言）
+# 取材: 2026-10-21。requests（ブラウザUA）で本文を全部読んだ。
+#   ・サッカーダイジェストWeb 2026-10-21（id=198739）: ニアカテが『GONES RADIO』で明かした言葉。謝罪「ムサ、ごめんよ」→「気にするな。…君のために、最後まで踏ん張ってみせる」。
+#     ドレッシングルームに呼びに行った／「試合運営の責任者に許可を求めた」／「僕たちは一つのグループ。27人の仲間」。セネガル代表DF。
+#   ・ゲキサカ 2026-10-19: 同じ件。訳が違う（「謝らなくていい。心配しないで。…君のために頑張る」）。フォンセカ監督の一体感のコメント。中村の赤紙はトゥエンテ時代の2019年9月15日以来。15日のELで2アシスト。
+# 【食い違い・扱い】
+#   ・ニアカテの言葉は2社で日本語訳が違う（原文は仏語/ラジオ）。→ **台本はサッカーダイジェストWebの訳を一字ずつそのまま**引く。ゲキサカの「君のために頑張る」は題には使わない。
+#   ・ゲキサカは「上位5チームが勝ち点で並ぶ」、10/19 の台本は「4チーム」。→ **今回は順位の話をしない**。
+#   ・「許可を求めた」「出してくれた」は サッカーダイジェスト。ゲキサカは「許可を得られた」。一致。
+#   ・誰が呼んだか: ゲキサカ「チームメイトが呼び寄せた／呼んだ一人のDFニアカテ」、SD「ニアカテが呼びに行った」。→ 「ニアカテは呼びに行った」と言い、独り占めにしない（ゲキサカは「一人」）。
+# 【前の本と重ねない】10/19「退場の場面・故意ではなかった・勝ち点14・PSG戦出場停止・本人とクラブの言葉は出ていない」。
+#   → 今回は **同僚の言葉と行動・監督の一体感の言葉**。反則の細部・勝ち点・首位は言わない。出場時間と退場の分だけ1行。
+# 本人（中村）の言葉: **無い**（謝ったことはニアカテの言葉の中だけ）。作らない。Y にしない（X）。
+# 反応: 0件（作らない。SD の記事にあるネットの声は使わない）。
+# 写真: 10/19 の4枚（ligue1.com © LFP Media、スタッド・ランス時代。ユーザーが再利用を許可）。目で見て4枚とも本人（ヘアバンド・17番）。透かし無し。「過去の写真」と台本で断らない。
+slot: france
+date: "2026年10月21日"
+format: news
+no_main: true
+people: [中村敬斗, ムサ・ニアカテ, リヨン]
+short_style: X
+short_hook_word: 27人の仲間
+short_photos:
+  - assets/images/20261021_nakamura_keito_red_apology/02_v.jpg
+  - assets/images/20261021_nakamura_keito_red_apology/03_v.jpg
+  - assets/images/20261021_nakamura_keito_red_apology/01_v.jpg
+  - assets/images/20261021_nakamura_keito_red_apology/04_v.jpg
+short_question: 中村敬斗に、仲間の言葉はどう届いたと思いますか。
+short_hook: 中村敬斗の退場のあと、ニアカテが言ったこと。
+short_telops:
+  - {match: ごめんよ, text: 退場後/中村「ムサ、ごめんよ」}
+  - {match: 気にするな, text: ニアカテ/「気にするな」}
+  - {match: 呼びに行きました, text: 試合後/ニアカテが中村を呼びに行った}
+  - {match: 27人, text: ニアカテ/「27人の仲間なんだ」}
+  - {match: 2019年9月15日, text: レッドカードは/2019年9月15日以来}
+
+theme:
+  id: nakamura_keito_red_apology
+  league: france
+  league_name: リーグ・アン
+  prefix: ""
+  title: 中村敬斗の退場のあと、ニアカテは何と返したのか。歓喜の場に呼んだ理由
+  hook: ""
+  question: 退場した中村敬斗に、同僚のニアカテは何を言い、何をしたのか
+  takeaway: 謝った中村に、ニアカテは「君のために踏ん張る」と返し、勝ったあとの歓喜の場へ呼びに行った。中村のレッドカードは2019年9月以来で、その3日前のELでは2アシストを記録していた
+
+thumbnail:
+  line1: 中村敬斗とニアカテ
+  line2: 「27人の仲間」
+  tags: [中村敬斗, ニアカテ, リヨン]
+  layout: face
+  side: right
+  photo: assets/images/20261021_nakamura_keito_red_apology/01.jpg
+  short_photo: assets/images/20261021_nakamura_keito_red_apology/02_v.jpg
+
+answer: 「気にするな」と返し、勝ったあとに歓喜の場へ呼びに行った
+watch: 中村の次の出番（次のリーグ戦は出場停止と伝えられている）
+
+sections:
+  - id: what
+    main: true
+    heading: 退場した中村に、ニアカテは何と言ったのか
+    tier: 報道
+    telop: 退場後、中村はニアカテに謝った
+    say:
+      - text: 18日に退場した中村敬斗に、セネガル代表DFのニアカテが声をかけました。
+        image: assets/images/20261021_nakamura_keito_red_apology/01_w.jpg
+        card: none
+      - text: 中村は61分に入って70分に退場。試合は、リヨンの2対1の勝ちでした。
+        image: assets/images/20261021_nakamura_keito_red_apology/02.jpg
+        card: none
+      - voice: ニアカテ
+        text: 彼がレッドカードを受けた時、
+        image: assets/images/20261021_nakamura_keito_red_apology/01_w.jpg
+        card: none
+      - voice: ニアカテ
+        text: 僕に『ムサ、ごめんよ』と謝罪してきたんだ。
+        cont: true
+        image: assets/images/20261021_nakamura_keito_red_apology/02.jpg
+        card: none
+      - voice: ニアカテ
+        text: 彼には『気にするな。自分たちのため、今シーズンの戦いのため、
+        cont: true
+        image: assets/images/20261021_nakamura_keito_red_apology/01_w.jpg
+        card: none
+      - voice: ニアカテ
+        text: サポーターのため、そして君のために、
+        cont: true
+        image: assets/images/20261021_nakamura_keito_red_apology/02.jpg
+        card: none
+      - voice: ニアカテ
+        text: 最後まで踏ん張ってみせる』と伝えたよ。
+        cont: true
+        short_voice: true
+        image: assets/images/20261021_nakamura_keito_red_apology/01_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.soccerdigestweb.com/news/detail/id=198739
+      - https://web.gekisaka.jp/news/world/detail/?461356-461356-fl
+    quotes_from: ["サッカーダイジェストWeb https://www.soccerdigestweb.com/news/detail/id=198739"]
+
+  - id: call
+    heading: 勝ったあと、ニアカテは何をしたのか
+    tier: 報道
+    telop: 試合後、中村を歓喜の場へ呼びに行った
+    say:
+      - text: 2対1の勝ちのあと、ニアカテはロッカールームの中村を呼びに行きました。
+        image: assets/images/20261021_nakamura_keito_red_apology/02.jpg
+        card: none
+      - voice: ニアカテ
+        text: 試合運営の責任者に許可を求めたんだ。
+        image: assets/images/20261021_nakamura_keito_red_apology/01_w.jpg
+        card: none
+      - voice: ニアカテ
+        text: 退場処分を受けた選手は
+        cont: true
+        image: assets/images/20261021_nakamura_keito_red_apology/02.jpg
+        card: none
+      - voice: ニアカテ
+        text: ピッチに出ることが認められない場合もあると知っていたからね。
+        cont: true
+        image: assets/images/20261021_nakamura_keito_red_apology/01_w.jpg
+        card: none
+      - voice: ニアカテ
+        text: でも、彼は事情を理解し、許可を出してくれた。当然のことさ。
+        cont: true
+        image: assets/images/20261021_nakamura_keito_red_apology/02.jpg
+        card: none
+      - voice: ニアカテ
+        text: 僕たちは一つのグループなんだからね。27人の仲間なんだ。
+        cont: true
+        image: assets/images/20261021_nakamura_keito_red_apology/01_w.jpg
+        card: none
+      - text: フォンセカ監督も、チームの一体感に触れています。
+        image: assets/images/20261021_nakamura_keito_red_apology/02.jpg
+        card: none
+      - voice: フォンセカ監督
+        text: 選手はロッカーで強力な関係を築いている。
+        image: assets/images/20261021_nakamura_keito_red_apology/01_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.soccerdigestweb.com/news/detail/id=198739
+      - https://web.gekisaka.jp/news/world/detail/?461356-461356-fl
+    quotes_from: ["サッカーダイジェストWeb https://www.soccerdigestweb.com/news/detail/id=198739", "ゲキサカ https://web.gekisaka.jp/news/world/detail/?461356-461356-fl"]
+
+  - id: view
+    viewpoint: true
+    heading: 中村の退場のあと、リヨンの輪は何を見せたのか
+    tier: 背景
+    telop: レッドカードは2019年9月以来。3日前のELでは2アシスト
+    say:
+      - text: 見立てです。中村は15日のヨーロッパリーグで2アシスト。その3日後に退場しました。
+        image: assets/images/20261021_nakamura_keito_red_apology/02.jpg
+        card: none
+      - text: レッドカードは、トゥウェンテにいた2019年9月15日以来です。
+        image: assets/images/20261021_nakamura_keito_red_apology/01_w.jpg
+        card: none
+      - text: そのあとに出たのが、同僚の「君のために」という言葉と、呼びに行く行動でした。
+        image: assets/images/20261021_nakamura_keito_red_apology/02.jpg
+        card: none
+      - voice: ニアカテ
+        text: レッドカードをもらうこともあれば、PKを外すこともある。
+        image: assets/images/20261021_nakamura_keito_red_apology/01_w.jpg
+        card: none
+      - voice: ニアカテ
+        text: でも、その一方で、喜びを分かち合える瞬間も必ず訪れるんだ。
+        cont: true
+        image: assets/images/20261021_nakamura_keito_red_apology/02.jpg
+        card: none
+      - text: リヨンが今季好調な背景には、この団結力もあると伝えられています。
+        image: assets/images/20261021_nakamura_keito_red_apology/01_w.jpg
+        card: none
+      - text: 次のリーグ戦はパリ・サンジェルマン戦で、中村は出場停止と伝えられています。
+        image: assets/images/20261021_nakamura_keito_red_apology/02.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.soccerdigestweb.com/news/detail/id=198739
+      - https://web.gekisaka.jp/news/world/detail/?461356-461356-fl
+    quotes_from: ["サッカーダイジェストWeb https://www.soccerdigestweb.com/news/detail/id=198739"]
+short_title: "中村敬斗の退場のあと、ニアカテは何と返したのか。歓喜の場に呼んだ理由"

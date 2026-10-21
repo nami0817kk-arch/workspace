@@ -1,0 +1,621 @@
+# ジュード・ベリンガム（レアル・マドリード／イングランド代表）の紹介。選手紹介の8節の型（2026-10-21、シリーズ「有名選手の紹介」。key: player_581678）。
+# **FotMob は使わない**（2026-10-17 決定）。雛形が出した FotMob 由来の板（assets/stats/player_20261021_1077894_*.png・パーセンタイルの bars）は全部外した。
+# 数字は基本の数と、自分で割った90分あたり。取材は WebFetch / requests / ESPN の公開 API だけ（ブラウザの道具・JavaScript 実行は使っていない）。
+#
+# **重なりの確認（見せるときに最初に言うこと）**
+# - 同じ選手の「選手紹介」を 2026-10-06 に公開している（key: player_581678、「ベリンガムってどんな選手？1季で永久欠番になった背番号22の足し算」、research/posted.json・covered.yaml）。15日前。
+#   10/9 に「ベリンガム×ムシアラ」の比べる、10/8 にネヴェス、10/11 にライスの選手紹介、10/14 にネヴェス×カマラの比べるも出している。
+#   → この回は **10/6 の素材（背番号22・家族・ワールドカップの前と後・0対7の夜・8季の表）を使わず**、10/9 の素材（384試合・出場できた割合・連続欠場・出場÷タイトル）も使わない。
+#   新しい軸は「90分あたりの得点の変化」「シュートの数と決まる割合」「クラシコで点を取った3試合」「今季の11試合」。**通算の表（試合・得点）は型で必須なので 387試合91点 は出る**（10/6 の383試合91点と得点は同じ）。
+# - 10/6 のサムネ 1行目は「ベリンガム通算91点」。今回は「ベリンガム、通算387試合」＋2行目「クラシコで点を取れば全勝」で言い方を変えた（表の中の数字は同じ）。
+#
+# **数字の出どころ（すべて 2026-10-21 に取得。控え: research/raw/20261021_bellingham_tm.json）**
+# - Transfermarkt API（tmapi-alpha /player/581678、各1回、3秒あけて取得）：生年月日・身長・契約・市場価値の推移、季ごとの大会別の試合・得点・アシスト・出場時間、
+#   試合ごとの記録（出場分・得点・アシスト・シュート（scoringAttempts）・ファウルを受けた回数・パス）。試合は 10/18（セビージャ戦）まで。
+# - ESPN（site.api.espn.com）：クラシコの日程（2026-10-25 20:00 UTC・Spotify Camp Nou・バルセロナがホーム）、CL（2026-10-21 19:00 UTC・レアル対ライプツィヒ）。
+# - 英語版 Wikipedia（2026-10-19 更新まで。控え: research/raw/20261021_bellingham_wiki.txt）：デビューの日付と記録・移籍金の報道・クラシコの得点。→ 背景。
+# - 90min（2023-10-28。本文を読んだ）：アンチェロッティ監督「20点から25点は簡単に届く」。→ 報道。
+#
+# **自分で数えたもの（時点は 10/18 まで。代表の最後は 10/6）**
+# - クラブ別の通算（TM の大会別を足した。代表以外）：バーミンガム 44試合4得点2943→2944分、ドルトムント 132試合24得点10176分、レアル 151試合49得点12023分、イングランド代表（A）60試合14得点4302分。
+#   合計 387試合91得点、出場時間の合計 29445分。**U21・年代別は入れない**。
+# - 90分あたり得点＝得点×90÷出場分：バーミンガム 4×90÷2944＝0.12、ドルトムント 24×90÷10176＝0.21、レアル 49×90÷12023＝0.37、代表 14×90÷4302＝0.29、合計 91×90÷29445＝0.28。
+# - 季ごと（クラブの全公式戦）：19/20 バーミンガム 44試合4得点2944分0.12／20/21 ドルトムント 46・4・2823分0.13／21/22 44・6・3796分0.14／22/23 42・14・3557分0.35／
+#   23/24 レアル 42・23・3644分0.57／24/25 58・15・4793分0.28（クラブW杯2025の6試合を含む。TM の区切り）／25/26 40・8・2718分0.26／26/27 11・3・868分0.31。
+# - シュート（TM の scoringAttempts。ブロックされたものを含む）：22/23 84本（2.13/90分）・23/24 96本（2.37）・24/25 108本（2.03）・25/26 68本（2.25）・26/27 23本（2.38）。
+#   得点÷シュート：14÷84＝17%・23÷96＝24%・15÷108＝14%・8÷68＝12%・3÷23＝13%。枠に飛んだ割合：47÷96＝49%（23/24）、9÷23＝39%（今季）。
+# - ファウルを受けた回数／90分：2.43・2.52・2.23・2.38・3.42。パス／90分：52.5・56.5・50.6・51.4・40.9（TM の試合ごとの記録。21/22〜26/27 は全試合に記録あり）。
+# - 今季（クラブ11試合：リーグ9・CL2）：868分・3得点4アシスト・1試合平均 868÷11＝79分。代表は4試合で1得点4アシスト。合わせて15試合4得点8アシスト。
+#   リーグ戦 9試合で7勝2敗（ベティス0-1・アトレティコ1-2の2敗）、ベリンガムは9試合すべてに出場。9/12 ラージョ戦のあと、クラブでは5試合続けて得点なし（1アシスト）。
+# - クラシコ（TM の対バルセロナの全試合）：10試合（2023-10-28／2024-01-14（スーパーカップ）／2024-04-21／2024-10-26／2025-01-12（スーパーカップ）／2025-04-26（国王杯決勝）／2025-05-11／2025-10-26／2026-01-11（スーパーカップ）／2026-05-10）。
+#   得点した3試合（10/28 2点・4/21 1点・10/26 1点）はすべてレアルの勝ち（2-1・3-2・2-1）。残る7試合は1勝（4-1）6敗。
+# - 市場価値（TM）：16歳12・17歳55・18歳80・19歳120・20歳180・21歳180・22歳160・23歳160（百万€、年齢ごとの最高値）。現在1.6億（2026-07-22）、最高1.8億（2023-12-22〜2025-06-09）。
+#
+# **入れなかったもの**：背番号22・家族・ワールドカップの前後の代表の得点ペース・クロアチア戦の4点（10/6 の素材）、384試合・連続欠場・出場÷タイトル（10/9）、肩の手術・懲戒（罰金）・私生活・CM、
+#   FotMob のパーセンタイル・レーダー・シュートマップ、記事ごとの食い違うアシスト数（TM のアシストは TM の値だけ使う）。
+# **日本語名・読みで怪しいもの**：ベリンガム、ストウブリッジ、バーミンガム、ドルトムント、ビジャレアル、セビージャ、エスパニョール、マラガ、ラージョ、エルチェ、アトレティコ、アンチェロッティ、ライプツィヒ、
+#   ポカール、クラシコ。
+date: 2026年10月21日
+slot: other_1
+format: news
+series: 有名選手の紹介
+people:
+- ジュード・ベリンガム
+theme:
+  end_bg: assets/images/20261021_bellingham_intro/roma_AV15449/01_w.jpg
+  id: player_581678
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: レアル・マドリード
+  title: ベリンガム、レアルでの点のペースは1年目の約半分。何が変わったのか
+  question: ジュード・ベリンガムの点の取り方は、レアルに来てからどう変わったのか
+  takeaway: レアルでの90分あたり得点は、1年目0.57、昨季0.26、今季0.31（11試合）。シュートは90分あたり2.37本と2.38本でほぼ同じなのに、得点になった割合は24%から13%。クラシコで点を取った3試合は、すべてレアルの勝ち
+  nameplate: ベリンガム｜レアル・マドリード MF／イングランド代表
+  opening_image: assets/images/20261021_bellingham_intro/panama111/01_w.jpg
+  bgm: assets/audio/bgm_calm.wav
+watch: 明日は22.パブロ・バリオス
+short_title: ベリンガムの90分あたり0.57点と0.31点
+thumbnail:
+  line1: ベリンガム、通算387試合
+  line2: クラシコ得点の3試合は全勝
+  tags:
+  - レアル・マドリード
+  photo: assets/images/20261021_bellingham_intro/panel_laureus.jpg
+  photos: []
+  short_photo: assets/images/20261021_bellingham_intro/laureus/01_v.jpg
+sections:
+- id: hook
+  heading: ベリンガムは、レアルでどれだけ点を取ってきたのか
+  tier: 報道
+  telop: 90分あたりの得点、0.57から0.31
+  narrator: 解説
+  card:
+    type: stats
+    title: レアルでの得点のペース（ベリンガム）
+    items:
+    - ['0.57', 点, 1年目 23/24。42試合23得点]
+    - ['0.26', 点, 昨季 25/26。40試合8得点]
+    - ['0.31', 点, 今季ここまで。11試合3得点]
+    focus: 0
+  say:
+  - text: レアル・マドリードのベリンガム、23歳。1年目は、42試合で23得点でした。
+    image: assets/images/20261021_bellingham_intro/roma_MJ14006/01_w.jpg
+    card: &hook_stats
+      type: stats
+      title: レアルでの得点のペース（ベリンガム）
+      items:
+      - ['0.57', 点, 1年目 23/24。42試合23得点]
+      - ['0.26', 点, 昨季 25/26。40試合8得点]
+      - ['0.31', 点, 今季ここまで。11試合3得点]
+      focus: 0
+  - text: ペースに直すと、1年目の数字は、群を抜いています。
+    emph: true
+    card:
+      <<: *hook_stats
+      focus: 0
+  - text: 2年目は58試合で15得点。昨季は、40試合で8得点でした。
+    image: assets/images/20261021_bellingham_intro/ghana182/01_w.jpg
+    card:
+      <<: *hook_stats
+      focus: 1
+  - text: そして今季は、ここまで3得点。ペースは、昨季を少し上回っています。
+    card:
+      <<: *hook_stats
+      focus: 2
+  - text: 試合に出る時間は、1試合あたり87分と79分。ほぼ同じ長さです。
+    image: assets/images/20261021_bellingham_intro/roma_AV15449/01_w.jpg
+    card: none
+  - text: 点の取り方を、シュートの数と、決まる割合から見ていきます。
+    card: none
+  sources:
+  - https://www.transfermarkt.com/jude-bellingham/leistungsdatendetails/spieler/581678
+- id: data
+  heading: ベリンガムは、いま何歳で、いくらと見られている選手か
+  tier: 報道
+  telop: ベリンガムの基礎DATA
+  narrator: 解説
+  card:
+    type: table
+    title: ジュード・ベリンガム（レアル・マドリード）
+    columns:
+    - 項目
+    - 内容
+    rows: &bdata
+    - - 所属
+      - レアル・マドリード（5番）
+    - - ポジション
+      - 攻撃的ミッドフィルダー
+    - - 生年月日
+      - 2003年6月29日（23歳）
+    - - 出身
+      - イングランド（ストウブリッジ）
+    - - 身長・利き足
+      - 1.86m・右足
+    - - 代表
+      - イングランド（60試合14得点）
+    - - 契約・市場価値
+      - 2029年まで・1.6億ユーロ
+    source: Transfermarkt
+  say:
+  - text: ジュード・ベリンガムは、レアルの攻撃的ミッドフィルダー。
+    image: assets/images/20261021_bellingham_intro/roma_AV15449/01_w.jpg
+    card: &data_card
+      type: table
+      title: ジュード・ベリンガム（レアル・マドリード）
+      columns: [項目, 内容]
+      rows: *bdata
+      source: Transfermarkt
+      highlight_row: 1
+  - text: 2003年6月29日、イングランドの生まれ。身長は1メートル86、右利きです。
+    image: assets/images/20261021_bellingham_intro/ghana182/01_w.jpg
+    card:
+      <<: *data_card
+      highlight_row: 4
+  - text: 市場価値の歩みです。16歳で、1200万ユーロ。
+    emph: true
+    image: assets/images/20261021_bellingham_intro/laureus/01_w.jpg
+    card: &value_line
+      type: line
+      title: ベリンガムの市場価値（百万ユーロ。年齢ごとの最高値）
+      x: ['16歳', '17歳', '18歳', '19歳', '20歳', '21歳', '22歳', '23歳']
+      series:
+      - [市場価値, [12, 55, 80, 120, 180, 180, 160, 160]]
+      focus: 市場価値
+      highlight: '20歳'
+      peak: true
+      source: Transfermarkt
+  - text: 17歳で5500万、19歳で1.2億。最高は、20歳の1.8億ユーロです。
+    card: *value_line
+  - text: いまの1.6億は、その最高額から、2000万ユーロ低い値です。
+    image: assets/images/20261021_bellingham_intro/panama111/01_w.jpg
+    card: none
+  sources:
+  - https://www.transfermarkt.com/jude-bellingham/profil/spieler/581678
+  - https://www.transfermarkt.com/jude-bellingham/marktwertverlauf/spieler/581678
+- id: career
+  heading: 3つのクラブで、最初の試合はどう違ったのか
+  tier: 報道
+  telop: 3つのクラブの、最初の試合
+  narrator: 解説
+  card:
+    type: table
+    title: ベリンガムの最初の試合
+    columns:
+    - 年月
+    - クラブ
+    - 何があったか
+    rows: &career_rows
+    - - 2019年8月
+      - バーミンガム
+      - 16歳38日で出場。クラブ最年少
+    - - 2020年9月
+      - ドルトムント
+      - 公式戦の初出場で得点
+    - - 2023年8月
+      - レアル
+      - リーグ初戦で得点
+    source: Wikipedia
+  say:
+  - text: ベリンガムの最初のクラブは、故郷に近いバーミンガム。
+    image: assets/images/20261021_bellingham_intro/ghana182/01_w.jpg
+    card: &career_card
+      type: table
+      title: ベリンガムの最初の試合
+      columns: [年月, クラブ, 何があったか]
+      rows: *career_rows
+      source: Wikipedia
+      highlight_row: 0
+  - text: 2019年8月、16歳38日で、トップチームに出ました。
+    card: none
+  - text: クラブの歴史で、いちばん若い出場でした。
+    card: none
+  - text: 2020年7月、ドイツのドルトムントへ。報道では、最初の支払いは2500万ポンド。
+    image: assets/images/20261021_bellingham_intro/panama088/01_w.jpg
+    card:
+      <<: *career_card
+      highlight_row: 1
+  - text: 17歳としては、史上最高額でした。
+    card: none
+  - text: 9月14日、ドイツのカップ戦、ポカールの1回戦。
+    card: none
+  - text: 公式戦の初出場で、2点目を決めます。
+    emph: true
+    card: none
+  - text: ドルトムントの最後の22/23で、得点を大きく伸ばします。
+    card: none
+  - text: 2023年6月、レアルが発表。基本の移籍金は1億300万ユーロ。
+    image: assets/images/20261021_bellingham_intro/roma_MJ14006/01_w.jpg
+    card:
+      <<: *career_card
+      highlight_row: 2
+  - text: 追加分を入れると、最大で1億3390万ユーロとされます。
+    card: none
+  - text: 8月12日、開幕のアスレティック戦。
+    card: none
+  - text: 初出場で、コーナーからの一撃を決めました。
+    emph: true
+    card: none
+  - text: 最初の4試合、すべてで得点。この記録は、クラブで3人目です。
+    image: assets/images/20261021_bellingham_intro/roma_AV15449/01_w.jpg
+    card: none
+  - text: 最初の10試合で、ちょうど10得点でした。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Jude_Bellingham
+  - https://www.transfermarkt.com/jude-bellingham/leistungsdatendetails/spieler/581678
+- id: style
+  heading: ベリンガムは、何をしている時間が長い選手なのか
+  tier: 報道
+  telop: シュートは同じ。パスは減った
+  narrator: 解説
+  card:
+    type: table
+    title: 90分あたりの回数（クラブの全公式戦）
+    columns:
+    - シーズン
+    - シュート
+    - ファウルを受ける
+    - パス
+    rows: &style_rows
+    - ['22/23 ドルトムント', '2.13', '2.43', '52.5']
+    - ['23/24 レアル', '2.37', '2.52', '56.5']
+    - ['24/25 レアル', '2.03', '2.23', '50.6']
+    - ['25/26 レアル', '2.25', '2.38', '51.4']
+    - ['26/27 レアル', '2.38', '3.42', '40.9']
+    source: Transfermarkt（自分で90分あたりに割った値）
+  say:
+  - text: ベリンガムを、90分あたりの回数で見ます。クラブの全公式戦の記録です。
+    image: assets/images/20261021_bellingham_intro/roma_MJ14006/01_w.jpg
+    card: &style_card
+      type: table
+      title: 90分あたりの回数（クラブの全公式戦）
+      columns: [シーズン, シュート, ファウルを受ける, パス]
+      rows: *style_rows
+      source: Transfermarkt（自分で90分あたりに割った値）
+  - text: シュートは、ドルトムント最後の季が2.13本。レアルの1年目が2.37本です。
+    card:
+      <<: *style_card
+      highlight_row: 1
+  - text: 2年目は2.03本、昨季は2.25本。今季は2.38本で、1年目とほとんど同じ。
+    emph: true
+    image: assets/images/20261021_bellingham_intro/panama111/01_w.jpg
+    card:
+      <<: *style_card
+      highlight_row: 4
+  - text: ファウルを受ける回数は、2.5回前後。今季は3.4回で、いちばん多い。
+    card:
+      <<: *style_card
+      highlight_row: 4
+  - text: 一方、パスは、50本から56本を行き来して、今季は40.9本です。
+    image: assets/images/20261021_bellingham_intro/ghana182/01_w.jpg
+    card:
+      <<: *style_card
+      highlight_row: 4
+  - text: ボールを触る回数は減りましたが、打つ数は減っていません。まだ今季の序盤の数字です。
+    card: none
+  - text: レアルに来て、ベリンガムは、より前の位置を任されました。
+    image: assets/images/20261021_bellingham_intro/roma_AV15449/01_w.jpg
+    card: none
+  - text: 10番の位置。ときには、ゼロトップに近い位置です。
+    card: none
+  - text: ゼロトップは、本職のFWを置かない形のことです。
+    card: none
+  sources:
+  - https://www.transfermarkt.com/jude-bellingham/leistungsdatendetails/spieler/581678
+  - https://en.wikipedia.org/wiki/Jude_Bellingham
+- id: past
+  heading: クラブごとに数えると、点のペースはどう上がってきたのか
+  tier: 報道
+  telop: クラブごとの90分あたり得点
+  narrator: 解説
+  card:
+    type: table
+    title: ベリンガム 8シーズン（クラブの全公式戦）
+    columns:
+    - シーズン
+    - クラブ
+    - 試合
+    - 得点
+    - 90分あたり
+    rows: &season_rows
+    - ['19/20', バーミンガム, '44', '4', '0.12']
+    - ['20/21', ドルトムント, '46', '4', '0.13']
+    - ['21/22', ドルトムント, '44', '6', '0.14']
+    - ['22/23', ドルトムント, '42', '14', '0.35']
+    - ['23/24', レアル, '42', '23', '0.57']
+    - ['24/25', レアル, '58', '15', '0.28']
+    - ['25/26', レアル, '40', '8', '0.26']
+    - ['26/27', レアル, '11', '3', '0.31']
+    source: Transfermarkt
+  rows_total:
+  - &t1 [バーミンガム, '44', '4']
+  - &t2 [ドルトムント, '132', '24']
+  - &t3 [レアル, '151', '49']
+  - &t4 [イングランド代表, '60', '14']
+  - &t5 [合計, '387', '91']
+  say:
+  - text: 全公式戦で見ます。16歳のベリンガムは、バーミンガムで44試合4得点。
+    image: assets/images/20261021_bellingham_intro/laureus/01_w.jpg
+    card: &past_card
+      type: table
+      title: ベリンガム 8シーズン（クラブの全公式戦）
+      columns: [シーズン, クラブ, 試合, 得点, 90分あたり]
+      rows: *season_rows
+      source: Transfermarkt
+      highlight_row: 0
+  - text: ペースは0.12です。ドルトムントの最初の2季は、0.13と0.14。
+    image: assets/images/20261021_bellingham_intro/panama088/01_w.jpg
+    card:
+      <<: *past_card
+      highlight_row: 1
+  - text: 3季目の22/23で、一気に0.35まで上がります。
+    image: assets/images/20261021_bellingham_intro/panama088/01_w.jpg
+    card:
+      <<: *past_card
+      highlight_row: 3
+  - text: そしてレアルの1年目が0.57。8シーズンのなかで、最高です。
+    emph: true
+    image: assets/images/20261021_bellingham_intro/roma_MJ14006/01_w.jpg
+    card:
+      <<: *past_card
+      highlight_row: 4
+  - text: そのあとは0.28、0.26。今季は0.31で、少し戻りました。
+    card:
+      <<: *past_card
+      highlight_row: 7
+  - text: 続いて、通算です。レアルでは151試合で49得点、90分あたり0.37。
+    image: assets/images/20261021_bellingham_intro/ghana182/01_w.jpg
+    card: &total_card
+      type: table
+      title: ベリンガム 通算（クラブとイングランド代表）
+      columns: [所属, 試合, 得点]
+      rows: [*t1, *t2, *t3, *t4, *t5]
+      source: Transfermarkt
+      highlight_row: 2
+  - text: ドルトムントは132試合24得点で0.21。バーミンガムは44試合4得点でした。
+    card:
+      <<: *total_card
+      highlight_row: 1
+  - text: イングランド代表は、60試合で14得点。0.29です。
+    image: assets/images/20261021_bellingham_intro/panama111/01_w.jpg
+    card:
+      <<: *total_card
+      highlight_row: 3
+  - text: すべて足すと、387試合で91得点。90分あたり0.28になります。
+    emph: true
+    card:
+      <<: *total_card
+      highlight_row: 4
+  sources:
+  - https://www.transfermarkt.com/jude-bellingham/leistungsdatendetails/spieler/581678
+- id: season
+  heading: 今季の11試合で、ベリンガムに何があったのか
+  tier: 報道
+  main: true
+  telop: 今季ここまで
+  narrator: 解説
+  card:
+    type: table
+    title: 直近6試合（レアルの公式戦）
+    columns:
+    - 日付
+    - 相手
+    - 出場
+    - 得点・アシスト
+    - 結果
+    rows: &recent_rows
+    - - 9/12
+      - ラージョ
+      - 90分
+      - 1G 0A
+      - 4-1 勝
+    - - 9/15
+      - エルチェ
+      - 22分
+      - 0G 0A
+      - 3-2 勝
+    - - 9/20
+      - アトレティコ
+      - 82分
+      - 0G 0A
+      - 1-2 負
+    - - 10/10
+      - ビジャレアル
+      - 90分
+      - 0G 0A
+      - 1-0 勝
+    - - 10/14
+      - ローマ（CL）
+      - 90分
+      - 0G 0A
+      - 4-3 勝
+    - - 10/18
+      - セビージャ
+      - 69分
+      - 0G 1A
+      - 4-1 勝
+    source: Transfermarkt
+  say:
+  - text: レアルのベリンガム、23歳。1年目は23得点。今季は、どうなのか。
+    short_only: true
+    image: assets/images/20261021_bellingham_intro/panama111/01_w_v.jpg
+    card: none
+  - text: 今季のクラブの公式戦は、11試合で868分。3得点4アシストです。
+    image: assets/images/20261021_bellingham_intro/panama088/01_w.jpg
+    card: none
+  - text: 直近6試合を並べます。
+    image: assets/images/20261021_bellingham_intro/ghana182/01_w.jpg
+    card: &recent_card
+      type: table
+      title: 直近6試合（レアルの公式戦）
+      columns: [日付, 相手, 出場, 得点・アシスト, 結果]
+      rows: *recent_rows
+      source: Transfermarkt
+  - text: 3点は、8月のエスパニョール戦とマラガ戦、そして9月12日のラージョ戦。
+    card:
+      <<: *recent_card
+      highlight_row: 0
+  - text: それ以来、クラブでは5試合続けて、得点がありません。
+    emph: true
+    image: assets/images/20261021_bellingham_intro/panama111/01_w.jpg
+    card:
+      <<: *recent_card
+      highlight_row: 2
+  - text: ただ、10日のビジャレアル戦は1対0の勝ち。14日のローマ戦は、4対3の勝ち。
+    card:
+      <<: *recent_card
+      highlight_row: 3
+  - text: 18日のセビージャ戦も、4対1の勝ちでした。
+    card:
+      <<: *recent_card
+      highlight_row: 4
+  - text: セビージャ戦は69分で下がるまでに、1アシスト。
+    image: assets/images/20261021_bellingham_intro/ghana182/01_w.jpg
+    card:
+      <<: *recent_card
+      highlight_row: 5
+  - text: リーグ戦は9試合で、7勝2敗。ベリンガムは、9試合すべてに出ています。
+    card: none
+  - text: 代表の4試合を合わせると、今季は15試合で4得点8アシストです。
+    image: assets/images/20261021_bellingham_intro/panama088/01_w.jpg
+    card: none
+  sources:
+  - https://www.transfermarkt.com/jude-bellingham/leistungsdatendetails/spieler/581678
+  - https://www.transfermarkt.com/jude-bellingham/profil/spieler/581678
+- id: story
+  heading: クラシコで点を取った3試合は、どんな試合だったのか
+  tier: 報道
+  telop: クラシコで得点した、3試合
+  narrator: 解説
+  card:
+    type: table
+    title: ベリンガムが得点したクラシコ
+    columns:
+    - 日付
+    - 会場
+    - 得点
+    - 結果
+    rows: &clasico_rows
+    - ['2023/10/28', 敵地, '2点', '2-1 勝']
+    - ['2024/4/21', 本拠地, '1点', '3-2 勝']
+    - ['2025/10/26', 本拠地, '1点', '2-1 勝']
+    source: Transfermarkt・Wikipedia
+  say:
+  - text: レアルとバルセロナの対戦、クラシコ。ベリンガムは、これまで10回出ています。
+    image: assets/images/20261021_bellingham_intro/panama111/01_w.jpg
+    card: none
+  - text: 点を取ったのは3試合。その3つとも、レアルが勝っています。
+    emph: true
+    card: &clasico_card
+      type: table
+      title: ベリンガムが得点したクラシコ
+      columns: [日付, 会場, 得点, 結果]
+      rows: *clasico_rows
+      source: Transfermarkt・Wikipedia
+  - text: 2023年10月28日、敵地で2対1の勝ち。ベリンガムが2得点。
+    image: assets/images/20261021_bellingham_intro/panama088/01_w.jpg
+    card:
+      <<: *clasico_card
+      highlight_row: 0
+  - text: 2点目は、追加時間の決勝点でした。
+    card:
+      <<: *clasico_card
+      highlight_row: 0
+  - text: 試合後、アンチェロッティ監督は、ベリンガムの得点の見通しを、こう話しました。
+    card: none
+  - voice: アンチェロッティ監督
+    text: 20点から25点には、簡単に届くよ。
+    pause: 0.5
+  - text: その季の得点は、全公式戦で23。20点から25点の幅に、収まりました。
+    emph: true
+    image: assets/images/20261021_bellingham_intro/laureus/01_w.jpg
+    card: none
+  - text: 2024年4月21日、本拠地で3対2。追加時間に、また決勝点。
+    image: assets/images/20261021_bellingham_intro/roma_AV15449/01_w.jpg
+    card:
+      <<: *clasico_card
+      highlight_row: 1
+  - text: そして2025年10月26日、本拠地で2対1。この日も、決勝点でした。
+    card:
+      <<: *clasico_card
+      highlight_row: 2
+  - text: 残る7試合は、1勝6敗。ベリンガムの得点は、その中にはありません。
+    image: assets/images/20261021_bellingham_intro/ghana182/01_w.jpg
+    card: none
+  quotes_from:
+  - https://www.90min.com/posts/carlo-ancelotti-sets-jude-bellingham-goal-target-el-clasico-brace
+  sources:
+  - https://www.90min.com/posts/carlo-ancelotti-sets-jude-bellingham-goal-target-el-clasico-brace
+  - https://en.wikipedia.org/wiki/Jude_Bellingham
+  - https://www.transfermarkt.com/jude-bellingham/leistungsdatendetails/spieler/581678
+- id: view
+  heading: 25日のクラシコまでに、ベリンガムの数字は何を見せるのか
+  tier: 背景
+  viewpoint: true
+  narrator: 解説
+  telop: レアルの1年目と、今季
+  card:
+    type: table
+    title: レアルの1年目と、今季（クラブの全公式戦）
+    columns: [項目, 23/24（42試合）, 26/27（11試合）]
+    rows: &cmp_rows
+    - ['得点／90分', '0.57', '0.31']
+    - ['シュート／90分', '2.37', '2.38']
+    - ['得点÷シュート', '24%', '13%']
+    - ['枠に飛んだ割合', '49%', '39%']
+    - ['1試合の出場', '87分', '79分']
+    source: Transfermarkt
+  say:
+  - text: 最後に、ベリンガムの数字を、レアルの1年目と今季で並べます。
+    image: assets/images/20261021_bellingham_intro/laureus/01_w.jpg
+    card: &cmp_card
+      type: table
+      title: レアルの1年目と、今季（クラブの全公式戦）
+      columns: [項目, 23/24（42試合）, 26/27（11試合）]
+      rows: *cmp_rows
+      source: Transfermarkt
+      highlight_row: 0
+  - text: 今季はまだ序盤。途中経過として、見てください。
+    card: none
+  - text: 得点のペースは、0.57から0.31。ほぼ半分です。
+    emph: true
+    image: assets/images/20261021_bellingham_intro/panama111/01_w.jpg
+    card:
+      <<: *cmp_card
+      highlight_row: 0
+    mark: {kind: circle, row: 0}
+  - text: ところがシュートは、ほぼ同じ。打つ数は、変わっていません。
+    card:
+      <<: *cmp_card
+      highlight_row: 1
+  - text: 違うのは、決まる割合。24%から13%へ。
+    emph: true
+    image: assets/images/20261021_bellingham_intro/ghana182/01_w.jpg
+    card:
+      <<: *cmp_card
+      highlight_row: 2
+  - text: ゴールの枠に飛んだ割合も、49%から39%に。
+    card:
+      <<: *cmp_card
+      highlight_row: 3
+  - text: 出場時間は、87分と79分。近い長さです。
+    card:
+      <<: *cmp_card
+      highlight_row: 4
+  - text: つまり変わったのは、出番ではなく、打ったシュートが決まる割合です。
+    image: assets/images/20261021_bellingham_intro/panama111/01_w.jpg
+    card: none
+  - text: 次は、日本時間22日の午前4時、チャンピオンズリーグのライプツィヒ戦。
+    card: none
+  - text: そして25日、日本時間26日の午前5時から、バルセロナの本拠地でクラシコです。
+    image: assets/images/20261021_bellingham_intro/roma_AV15449/01_w.jpg
+    card: none
+  - text: クラシコで点を取った3試合は、3つとも勝ち。
+    card: none
+  - text: 取れなかった7試合は、1勝だけ。その続きが、出るのか。
+    card: none
+  sources:
+  - https://www.transfermarkt.com/jude-bellingham/leistungsdatendetails/spieler/581678
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard?dates=20261025
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20261021

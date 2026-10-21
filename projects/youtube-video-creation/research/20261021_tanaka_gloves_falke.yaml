@@ -1,0 +1,124 @@
+# 田中碧 の取材メモ（2026年10月21日・ショートだけ）
+# 取材: 2026-10-21。requests（ブラウザUA）で原文を全部読んだ。控え: research/raw/20261021_leeds_farke_presser.txt ・ research/raw/20261021_qoly.txt
+#   ・【一次】リーズ公式サイト 2026-10-17「Daniel Farke addresses 'favourites' tag and balancing act ahead of Manchester United clash」（英語。ファルケ監督の試合前会見の発言を全文載せている）
+#     https://www.leedsunited.com/en/news/daniel-farke-addresses-favourites-tag-and-balancing-act-ahead-of-manchester-united-clash
+#   ・Qoly 2026-10-17「愛のスパルタ指導！？田中碧から手袋を没収したとリーズ監督が明かす」（日本語。『Sky Sports』などを引く訳）。https://qoly.jp/q1/17870553
+# 【題材の一覧の言葉を原文で引き直した点】
+#   ・一覧は「Qoly（20日）」と書いていたが、Qoly の記事の日付は **10月17日**。会見も試合前（マンU戦は18日）。→ 台本は「マンU戦を前にした会見」とだけ言い、日付は言わない。
+#   ・一覧の「ファルケ監督は『田中碧のように自分に対して厳しすぎる選手もいる。ここ数試合の彼は並外れている…』」は **Qoly の訳**。クラブの英語原文は
+#     「Ao Tanaka was one example - always over critical with himself and sometimes he needs an arm round the shoulder … he was excellent in the last games and is in a top shape」。
+#     この部分は **10/18 の田中碧のショート（会見の「自分に厳しすぎる」）が使っている**ので、今回は入れない。今回は手袋の発言だけ。
+#   ・Qoly の訳には英語原文に無い文がある：「リーズでは、激しいデュエルやタックルが求められる」「彼が手袋をしてプレーすることはないと保証するよ！」。英語原文は
+#     「Don't think we can do it so soft, we lead proper duels here. We are Leeds United and we are not overdoing things. I took the gloves, anyhow.」
+#     → 台本は **クラブの英語原文から、こちらで訳した**（Qoly の訳は使わない）。「保証する」は言わない。
+#   ・Qoly 末尾の「リーズの最近の平均気温は10度ほどのはず」は書き手の推測。使わない。
+#   ・英語原文の「[Zion] Suzuki」の [Zion] は記事（クラブ公式）の書き手が補った語。監督の声に入っているかは分からない。→ 台本は監督の言葉を「鈴木」とだけ訳し、
+#     「鈴木は、記事の補足によれば日本代表のゴールキーパー、鈴木彩艶のこと」と**別の行**で言う（監督の声に彩艶の名は入れない）。
+#   ・原文 "Listen, you're not Suzuki or a goalkeeper or whatever." は、田中本人に言ったのか、会見で再現したのかは原文から分からない。→ 「会見でこう話した」とだけ言い、田中に言ったとは言わない。
+#   ・原文 "we are not overdoing things" は意味が取りにくい（やり過ぎはしない／軟弱にやり過ぎない）。訳が割れるので **使わない**。
+# 本人の言葉: 田中碧本人の言葉は、どの記事にも無い。手袋をしていた理由（寒がり・癖など）は会見では語られていない → 言えなかったこと。作らない。
+# 反応: 探していない（0件。作らない）。
+# 前の本との重なり: 10/17（2029年まで契約延長）・10/18（試合前の見立て。「自分に厳しすぎる」を使用）・10/19（マンU戦1-1）・10/20（地元紙の採点5点）。手袋の話はどれも使っていない
+#   （10/18 の取材メモに「手袋の小話は題に関係が無いので使わない」とある）。同日の伊東純也の本とは、鈴木彩艶の名が出る点だけ共通（別の話）。
+# 写真: 10/17〜10/20 に使ったリーズ公式の写真（アーセナル戦・エバートン戦・ブライトン戦・ニュージーランド戦・ベネズエラ戦など）は使い回さない。
+#   今回は同じ試合前会見の記事と、18日のマンU戦のクラブ公式記事から取る。
+slot: japan
+date: "2026年10月21日"
+format: news
+no_main: true      # ニュースはショートだけ（2026-10-14）。締めで本編を案内しない
+people: [田中碧, ダニエル・ファルケ, リーズ]
+
+short_style: Y
+short_hook_quote: 今週、気温25度の日に、手袋をして出てくる彼を見つけた。
+short_question: 気温25度の日に、あなたなら手袋をしますか。
+short_hook: 田中碧の手袋。ファルケ監督が話しました。
+short_telops:
+  - {match: 今週、気温25度, text: ファルケ監督/「気温25度の日に手袋」}
+  - {match: 田中碧のことです, text: 「彼」は田中碧/マンU戦を前にした会見}
+  - {match: こちらで訳しました, text: 英語の発言を/こちらで訳したもの}
+  - {match: ゴールキーパー、鈴木彩艶, text: 「鈴木」は/日本代表GK鈴木彩艶}
+  - {match: 甘くやれると思うな, text: 「甘くやれると/思うな」}
+  - {match: 手袋は取り上げた, text: ファルケ監督/「手袋は取り上げた」}
+  - {match: 本命, text: 会見の問いは/リーズは本命か}
+  - {match: 一例, text: 田中碧は/話の中の一例}
+  - {match: 見立てです, text: 見立て/手袋より競り合い}
+  - {match: 語られていません, text: 手袋の理由は/語られていない}
+
+theme:
+  id: tanaka_gloves_falke
+  league: england
+  league_name: プレミアリーグ
+  prefix: ""
+  title: ファルケ監督が田中碧から取り上げたもの。気温25度の日の話
+  hook: ""
+  question: ファルケ監督は、気温25度の日に田中碧から何を取り上げたのか
+  takeaway: 手袋の理由は語られていない。監督が会見で繰り返したのは、競り合いを甘くやらせない、ということ
+
+thumbnail:
+  line1: 田中碧
+  line2: 気温25度の日の手袋
+  tags: [田中碧, リーズ, ファルケ監督]
+  photo: assets/images/20261021_tanaka_gloves_falke/01_w.jpg
+  short_photo: assets/images/20261021_tanaka_gloves_falke/01_v.jpg
+
+answer: 手袋。理由は語られていない。監督は競り合いを甘くやらせないと話した
+watch: 次は25日、アウェイでサンダーランド戦
+
+sections:
+  - id: what
+    main: true
+    heading: 監督が話したこと
+    tier: 報道
+    telop: ファルケ監督、田中碧の手袋を取り上げた
+    say:
+      - voice: ファルケ監督
+        text: 今週、気温25度の日に、手袋をして出てくる彼を見つけた。
+        short_voice: true
+      - ファルケ監督が、マンチェスター・ユナイテッド戦を前にした会見で話しました。
+      - 「彼」とは、リーズの田中碧のことです。
+      - 英語の発言を、こちらで訳しました。
+      - voice: ファルケ監督
+        text: いいか、君は鈴木でも、ゴールキーパーでもない。
+      - 鈴木は、記事の補足によれば、日本代表のゴールキーパー、鈴木彩艶のことです。
+      - voice: ファルケ監督
+        text: そんなに甘くやれると思うな。
+      - voice: ファルケ監督
+        text: ここでは、デュエルを正面からやる。
+        cont: true
+      - voice: ファルケ監督
+        text: 我々はリーズ・ユナイテッドだ。とにかく、手袋は取り上げた。
+        cont: true
+    official: false
+    sources:
+      - https://www.leedsunited.com/en/news/daniel-farke-addresses-favourites-tag-and-balancing-act-ahead-of-manchester-united-clash
+      - https://qoly.jp/q1/17870553
+
+  - id: context
+    heading: 会見の問いは「リーズは本命か」
+    tier: 報道
+    telop: リーズは本命か。会見の問いの中での一例
+    say:
+      - この会見で触れられたのは、リーズが本命と見られていることでした。
+      - voice: ファルケ監督
+        text: 誰かが舞い上がっているとは感じていない。
+      - voice: ファルケ監督
+        text: もしそうなら、そうならないようにさせる。
+        cont: true
+      - 田中碧の名前は、その話の中で、一例として出てきました。
+    official: false
+    sources:
+      - https://www.leedsunited.com/en/news/daniel-farke-addresses-favourites-tag-and-balancing-act-ahead-of-manchester-united-clash
+
+  - id: view
+    viewpoint: true
+    heading: 手袋より、競り合い
+    tier: 背景
+    telop: 手袋の理由は、語られていない
+    say:
+      - 見立てです。監督が繰り返したのは、手袋より競り合いでした。
+      - つまり、競り合いを甘くやらせない、ということです。
+      - 手袋をしていた理由は、会見では語られていません。田中碧本人の言葉もありません。
+    official: false
+    sources:
+      - https://www.leedsunited.com/en/news/daniel-farke-addresses-favourites-tag-and-balancing-act-ahead-of-manchester-united-clash
+short_title: "ファルケ監督が田中碧から取り上げたもの。気温25度の日の話"

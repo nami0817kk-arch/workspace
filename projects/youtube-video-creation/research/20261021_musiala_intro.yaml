@@ -1,0 +1,579 @@
+# ジャマル・ムシアラ（バイエルン／ドイツ代表）の紹介。選手紹介の8節の型（2026-10-21、シリーズ「有名選手の紹介」）。key=musiala_intro
+# **FotMob は使わない**（雛形 research/20261021_player_580195.yaml の武器・弱点・パーセンタイル・レーダー・シュートマップ・評点は全部捨てた）。
+# 数字は Transfermarkt API（tmapi-alpha、各1回・8秒空け。控え research/raw/20261021_musiala_tm.json）と、自分で割った90分あたり。
+#
+# **重なり確認（2026-10-21）**
+# - research/posted.json・covered.yaml：ムシアラの「どんな選手」紹介は無し。9/11「3試合ぶりに戻ったムシアラが決めた」（試合の回、40日前）、10/9「ベリンガムとムシアラを同じ日数で並べる」（比べる）のみ。
+# - 10/9 が使った軸＝年代別で15試合を共にした／23歳101日でそろえた通算（273試合78得点）／出られた割合と怪我（腓骨骨折＝33試合195日の欠場・8件と24件）／2022年11月に2人とも1億ユーロ／
+#   「ドイツのための心と、イングランドのための心」の言葉。→ **この回は使わない**。この回の軸は「市場価値が下がった16か月に、ペース（90分あたりのG+A）は落ちたのか」と、シーズンごとの出場時間。
+#   骨折は経歴の1行だけ（日数・件数は言わない）。国籍選択の話・ベリンガムとの比べは入れない。
+# - 10/21 バイエルンのクラブ紹介（20261021_bd_bayern.md）はムシアラをドイツ代表46試合で1回触れるだけ。同日ベリンガム（20261021_player_581678.md）の「点のペースの1年目との比べ」の形（stats の3項目・出られた割合の棒）は
+#   言い回しの見本として読み、**同じ文は使っていない**。ただし「ペースは同じ？」という問い方がベリンガム回（得点ペース×半分）と近いので、この回は「ゴール＋アシスト」で組み、出場時間の減り方（61%減）を主役にした。
+#
+# **数字の出どころ**
+# - Transfermarkt API：生年月日・身長・契約・市場価値の推移（最新 2026-10-02 の8000万ユーロ、最高 2024-12-20 の1.4億ユーロ）、季ごと・大会ごとの試合・得点・アシスト・出場分、試合ごとの出場状態（欠場＝injured）。
+#   移籍・怪我の履歴のAPIは404で取れない。
+# - 自分で数えたもの：クラブのトップチームの全公式戦（代表・Bayern II（3.Liga）は除く）。季ごと 20/21 37試合7得点1アシスト1304分／21/22 40・8・6・1983／22/23 47・16・16・3026／23/24 38・12・8・2860／24/25 44・21・8・2988／
+#   25/26 24・5・6・1174／26/27 4・2・1・213。90分あたり（G+A）＝(得点+アシスト)×90÷出場分：0.55・0.64・0.95・0.63・0.87・0.84・1.27（今季は213分で小さい）。ゴールだけ：0.48・0.36・0.48・0.38・0.63・0.38・0.85。
+#   アシスト／90分：24/25 8×90÷2988＝0.24、25/26 6×90÷1174＝0.46、今季 1×90÷213＝0.42。出場時間の減り：2988→1174＝−61%。
+#   通算：バイエルン トップ 235試合71得点（上の234試合＋デビューした19/20の1試合）、ドイツ代表 46試合10得点（TM の代表戦。2021年3月〜2026年6月）、合計 281試合81得点。
+#   10/9 の台本の「23歳101日で273試合78得点」に、その後の W杯4試合1得点・今季4試合2得点を足すと 281試合81得点で一致（Bayern II の8試合2得点は両方とも入れていない）。
+#   市場価値の減り：1.4億（2024-12-20）→8000万（2026-10-02）＝−43%。市場価値は Transfermarkt の推定で、2026-05-27 に1億、10-02 に8000万の更新（どちらも欠場期間のあと）。
+# - 今季の試合：Transfermarkt（9/5 シャルケ 0-0 33分／9/10 CL ボデ/グリムト 5-0 65分1G／9/13 エルフェルスベルク 2-1 25分／9/18 ウニオン・ベルリン 7-0 90分1G1A）。9/10 のゴールは ESPN で47分。
+# - 怪我：ESPN（2026-09-24）＝ウォームアップ中の筋肉のケガ・MRI（クロップ代表監督の言葉）／90min.de（2026-10-09）＝右太ももの筋繊維の断裂（Muskelfaserriss）・代表4試合を欠場・復帰の期間は書かれていない。
+#   TM の試合記録で、9/24〜10/4 の代表4試合と 10/10・10/13・10/17 のクラブ3試合が欠場。**病名は上の記事の言葉のまま**。小さく見せる言い方はしない。
+# - 経歴・記録：英語版 Wikipedia（2026-10 取得。research/raw/20261021_musiala_wiki.txt）。→ 背景。クラブ公式（fcbayern.com）の2025-10 のインタビューは、Get German Football News が全文を訳して引いた英文を使った（公式ページは読めなかった）→ 報道。
+#
+# **入れなかったもの**：開幕前の体調の話（本人が公表した診断名は入れない。開幕3試合の欠場は日付だけ）、国籍選択・イングランドとの関係（10/9 の回）、ベリンガムとの比べ、年俸・代理人・私生活・家族の詳細、移籍金・契約の金額、
+#   FotMob の指標すべて、他クラブの噂。
+# **日本語名・読み**：ムシアラ／ジャマル・ムシアラ、シュトゥットガルト、エルフェルスベルク、ボデ/グリムト、ウニオン・ベルリン、バイエルン、ライプツィヒ、アウクスブルク、クロップ、コンパニ、ハンジ・フリック、オリーセ、ケイン、シャルケ、チェルシー。
+#
+# 本人・関係者の言葉は4か所（自訳。原文は上の出典）：①ムシアラ（9/10 ESPN）②ムシアラ（2025-10 fcbayern.com のインタビュー）③フリック（Wikipedia 引用）④コンパニ（90min.de 10/9）と⑤クロップ（ESPN 9/24）。
+date: 2026年10月21日
+slot: other_1
+format: news
+series: 有名選手の紹介
+people:
+- ムシアラ
+theme:
+  id: player_580195
+  league: germany
+  league_name: ブンデスリーガ
+  kind: other
+  topic: バイエルン
+  title: ムシアラってどんな選手？ 市場価値が4割下がった間に、何が変わったか
+  question: ムシアラの市場価値は、なぜ1年あまりで1.4億から8000万ユーロへ下がったのか。その数字の中で、プレーのペースは落ちたのか。ムシアラは、どんな選手なのか
+  takeaway: クラブでの出場時間は24/25の2988分から25/26の1174分へ61%減った。90分あたりのゴール＋アシストは0.87と0.84でほぼ同じ。市場価値は1.4億から8000万ユーロで43%減
+  nameplate: ムシアラ｜バイエルン MF／ドイツ代表
+  opening_image: assets/images/20261021_musiala_intro/q1/01_w.jpg
+  end_bg: assets/images/20261021_musiala_intro/q4/01_w.jpg
+  bgm: assets/audio/bgm_calm.wav
+watch: 毎日、数字でサッカーを読み解きます
+short_title: ムシアラってどんな選手？
+thumbnail:
+  line1: ムシアラ、281試合81点
+  line2: 出場61%減でもペースは同じ
+  tags:
+  - バイエルン
+  photo: assets/images/20261021_musiala_intro/panel_q2.jpg
+  photos: []
+  short_photo: assets/images/20261021_musiala_intro/q4/01_v.jpg
+sections:
+- id: hook
+  heading: 市場価値が1.4億から8000万ユーロへ。下がったのは、何なのか
+  tier: 報道
+  telop: 市場価値1.4億から8000万ユーロ
+  narrator: 解説
+  card:
+    type: stats
+    title: ジャマル・ムシアラ 23歳
+    items:
+    - ['8000', 万ユーロ, 市場価値。10月2日付け。最高は1.4億]
+    - ['0.87→0.84', 点, 90分あたりのゴール＋アシスト。24/25→25/26]
+    - ['2988→1174', 分, クラブでの出場時間。24/25→25/26]
+    focus: 0
+  say:
+  - text: バイエルンの10番、ムシアラ。市場価値は、ピークから4割、下がりました。
+    image: assets/images/20261021_musiala_intro/q1/01_w.jpg
+    card: &hook_stats
+      type: stats
+      title: ジャマル・ムシアラ 23歳
+      items:
+      - ['8000', 万ユーロ, 市場価値。10月2日付け。最高は1.4億]
+      - ['0.87→0.84', 点, 90分あたりのゴール＋アシスト。24/25→25/26]
+      - ['2988→1174', 分, クラブでの出場時間。24/25→25/26]
+      focus: 0
+  - text: ところが、90分あたりのゴールとアシストは、0.87から0.84。ほぼ横ばいです。
+    emph: true
+    image: assets/images/20261021_musiala_intro/q4/01_w.jpg
+    card:
+      <<: *hook_stats
+      focus: 1
+  - text: 減ったのは、ピッチに立った時間のほうです。
+    card:
+      <<: *hook_stats
+      focus: 2
+  - text: そして今季は、開幕から3試合を欠場。9月24日には、右の太ももを痛めました。
+    image: assets/images/20261021_musiala_intro/q1/01_w.jpg
+    card: none
+  - text: それでも、9月10日、今季初ゴールを決めた夜。本人の言葉です。
+    card: none
+  - voice: ムシアラ
+    text: 今日の感覚は、しばらく味わえていなかったものでした。
+  - voice: ムシアラ
+    text: 体は、いい状態です。
+    cont: true
+    pause: 0.5
+  quotes_from:
+  - https://www.espn.com/soccer/story/_/id/49896289/jamal-musiala-bayern-munich-goal-bodo-glimt-seizures
+  sources:
+  - https://www.transfermarkt.com/jamal-musiala/profil/spieler/580195
+  - https://www.espn.com/soccer/story/_/id/49896289/jamal-musiala-bayern-munich-goal-bodo-glimt-seizures
+- id: data
+  heading: ムシアラは、どんな立場で、いくらと見られている選手か
+  tier: 報道
+  telop: ムシアラの基礎DATA
+  narrator: 解説
+  card:
+    type: table
+    title: ジャマル・ムシアラ（バイエルン）
+    columns:
+    - 項目
+    - 内容
+    rows: &bdata
+    - - 所属
+      - バイエルン（10番）
+    - - ポジション
+      - 攻撃的ミッドフィルダー
+    - - 生年月日
+      - 2003年2月26日（23歳）
+    - - 出身
+      - ドイツ（シュトゥットガルト）
+    - - 身長・利き足
+      - 1.84m・右足
+    - - 代表
+      - ドイツ（46試合10得点）
+    - - 契約・市場価値
+      - 2030年まで・8000万ユーロ
+    source: Transfermarkt
+  say:
+  - text: ムシアラは、攻撃的ミッドフィルダー。攻撃も中盤も、こなします。好みは左です。
+    image: assets/images/20261021_musiala_intro/q4/01_w.jpg
+    card: &data_card
+      type: table
+      title: ジャマル・ムシアラ（バイエルン）
+      columns: [項目, 内容]
+      rows: *bdata
+      source: Transfermarkt
+      highlight_row: 1
+  - text: シュトゥットガルト出身。2003年2月26日。1メートル84の右利き。
+    card:
+      <<: *data_card
+      highlight_row: 4
+  - text: 契約は2030年まで。ドイツ代表の一員でもあります。
+    image: assets/images/20261021_musiala_intro/q1/01_w.jpg
+    card:
+      <<: *data_card
+      highlight_row: 5
+  - text: 市場価値は、専門サイトの推定値。17歳の2020年7月は、100万ユーロ。
+    image: assets/images/20261021_musiala_intro/q4/01_w.jpg
+    card: &value_line
+      type: line
+      title: ムシアラの市場価値（百万ユーロ）
+      x: ['20/7', '21/6', '22/11', '23/3', '24/12', '25/12', '26/5', '26/10']
+      series:
+      - [市場価値, [1, 38, 100, 110, 140, 130, 100, 80]]
+      focus: 市場価値
+      highlight: '24/12'
+      source: Transfermarkt
+  - text: ピークは、2024年12月の1.4億。そこから、いまの8000万まで下りました。
+    emph: true
+    card:
+      <<: *value_line
+      highlight: '26/10'
+  sources:
+  - https://www.transfermarkt.com/jamal-musiala/profil/spieler/580195
+  - https://www.transfermarkt.com/jamal-musiala/marktwertverlauf/spieler/580195
+- id: career
+  heading: 16歳でバイエルンへ来た少年は、どう10番になったのか
+  tier: 報道
+  telop: 16歳の加入から、10番へ
+  narrator: 解説
+  card:
+    type: timeline
+    title: ムシアラの歩み
+    rows:
+    - ['2019', 16歳でバイエルンへ]
+    - ['2020', 17歳でブンデスリーガデビュー]
+    - ['2022', ドルトムント戦でゴール。10連覇]
+    - ['2025', 10番を継ぐ。7月に骨折]
+    - ['2026', 1月に復帰、5月にリーグ優勝]
+    focus: 2025
+  say:
+  - text: ムシアラは、2011年から、チェルシーの下部組織で育ちました。
+    image: assets/images/20261021_musiala_intro/q1/01_w.jpg
+    card: none
+  - text: 2019年、16歳でバイエルンへ。翌年6月20日、ブンデスリーガ初出場。
+    card: &career_tl
+      type: timeline
+      title: ムシアラの歩み
+      rows:
+      - ['2019', 16歳でバイエルンへ]
+      - ['2020', 17歳でブンデスリーガデビュー]
+      - ['2022', ドルトムント戦でゴール。10連覇]
+      - ['2025', 10番を継ぐ。7月に骨折]
+      - ['2026', 1月に復帰、5月にリーグ優勝]
+      focus: 2020
+
+  - text: 17歳と115日。バイエルンの、ブンデスリーガ最年少出場の記録です。
+    emph: true
+    image: assets/images/20261021_musiala_intro/q4/01_w.jpg
+    card: none
+  - text: 同じ年の9月、初ゴール。17歳と205日で、クラブの最年少得点者になります。
+    card: none
+  - text: 2022年4月、ドルトムント戦でゴール。バイエルンは10連覇を決めます。
+    card:
+      <<: *career_tl
+      focus: 2022
+  - text: 2025年、サネから、バイエルンの10番を受け継ぎます。
+    image: assets/images/20261021_musiala_intro/q1/01_w.jpg
+    card:
+      <<: *career_tl
+      focus: 2025
+  - text: その7月、クラブワールドカップで、腓骨と足首を骨折。復帰は、2026年1月でした。
+    card: none
+  - text: 戻った1月17日、投入からわずか76秒で、オリーセへのアシスト。
+    emph: true
+    image: assets/images/20261021_musiala_intro/q4/01_w.jpg
+    card: none
+  - text: 昨季は、ブンデスリーガとドイツカップの2冠。ムシアラも、その一員でした。
+    card:
+      <<: *career_tl
+      focus: 2026
+  sources:
+  - https://en.wikipedia.org/wiki/Jamal_Musiala
+  - https://www.transfermarkt.com/jamal-musiala/profil/spieler/580195
+- id: style
+  heading: ボールを持てば、何が起きるのか。そして、数字は何を語るのか
+  tier: 報道
+  telop: 懐の深いドリブルと、先を読む目
+  narrator: 解説
+  card:
+    type: bars
+    title: 90分あたりのゴール＋アシスト（クラブの全公式戦）
+    unit: 点
+    items:
+    - label: 20/21
+      value: 0.55
+    - label: 21/22
+      value: 0.64
+    - label: 22/23
+      value: 0.95
+    - label: 23/24
+      value: 0.63
+    - label: 24/25
+      value: 0.87
+    - label: 25/26
+      value: 0.84
+      highlight: true
+    source: Transfermarkt
+  say:
+  - text: ムシアラは、狭い所でも、ボールを失いません。フェイントで、相手をかわします。
+    image: assets/images/20261021_musiala_intro/q4/01_w.jpg
+    card: none
+  - text: 2022年W杯、コスタリカ戦。ドリブル成功13回。1994年の記録に、あと2つ。
+    emph: true
+    image: assets/images/20261021_musiala_intro/q2/01_w.jpg
+    card: none
+  - text: 元バイエルン監督のフリックの評価です。
+    card: none
+  - voice: フリック
+    text: スペースを選ぶ、素晴らしい目と感覚がある。
+  - voice: フリック
+    text: ボールの上でも自信があり、ラインの間で、うまくプレーできる。
+    cont: true
+    pause: 0.5
+  - text: では、数字でいまを見ます。ゴールとアシストを足し、90分に直した値です。
+    image: assets/images/20261021_musiala_intro/q1/01_w.jpg
+    card: &style_bars
+      type: bars
+      title: 90分あたりのゴール＋アシスト（クラブの全公式戦）
+      unit: 点
+      items:
+      - label: 20/21
+        value: 0.55
+      - label: 21/22
+        value: 0.64
+      - label: 22/23
+        value: 0.95
+      - label: 23/24
+        value: 0.63
+      - label: 24/25
+        value: 0.87
+      - label: 25/26
+        value: 0.84
+        highlight: true
+      source: Transfermarkt
+  - text: いちばん高いのは、22/23の0.95。24/25は0.87、昨季は0.84です。
+    emph: true
+    card: *style_bars
+  - text: 昨季は、骨折から戻った1月以降の分だけ。それでも、ペースは落ちていません。
+    card: *style_bars
+  quotes_from:
+  - https://en.wikipedia.org/wiki/Jamal_Musiala
+  sources:
+  - https://en.wikipedia.org/wiki/Jamal_Musiala
+  - https://www.transfermarkt.com/jamal-musiala/leistungsdatendetails/spieler/580195
+- id: past
+  heading: 6シーズンで、何試合に出て、何点取ってきたのか
+  tier: 報道
+  telop: 6シーズンの出場時間と得点
+  narrator: 解説
+  card:
+    type: table
+    title: ムシアラ 6シーズン（バイエルンの全公式戦）
+    columns:
+    - シーズン
+    - 試合
+    - 得点
+    - アシスト
+    - 出場時間
+    rows: &season_rows
+    - ['20/21', '37', '7', '1', 1304分]
+    - ['21/22', '40', '8', '6', 1983分]
+    - ['22/23', '47', '16', '16', 3026分]
+    - ['23/24', '38', '12', '8', 2860分]
+    - ['24/25', '44', '21', '8', 2988分]
+    - ['25/26', '24', '5', '6', 1174分]
+    - ['26/27', '4', '2', '1', 213分]
+    source: Transfermarkt
+  rows_total:
+  - &t1 [バイエルン（トップ）, '235', '71']
+  - &t2 [ドイツ代表, '46', '10']
+  - &t3 [合計, '281', '81']
+  say:
+  - text: バイエルンの全公式戦です。20/21は、37試合7得点。17歳のシーズンでした。
+    image: assets/images/20261021_musiala_intro/q4/01_w.jpg
+    card: &past_card
+      type: table
+      title: ムシアラ 6シーズン（バイエルンの全公式戦）
+      columns: [シーズン, 試合, 得点, アシスト, 出場時間]
+      rows: *season_rows
+      source: Transfermarkt
+      highlight_row: 0
+  - text: ムシアラの22/23は、16得点16アシスト。出場時間は、3026分でした。
+    image: assets/images/20261021_musiala_intro/q1/01_w.jpg
+    card:
+      <<: *past_card
+      highlight_row: 2
+  - text: 得点が最多なのは、24/25の21点。44試合に出ました。
+    emph: true
+    card:
+      <<: *past_card
+      highlight_row: 4
+  - text: そして25/26は、24試合で5点、6アシスト。出場時間は、前の季の4割ほどです。
+    emph: true
+    image: assets/images/20261021_musiala_intro/q4/01_w.jpg
+    card:
+      <<: *past_card
+      highlight_row: 5
+  - text: 続いて、通算です。バイエルンのトップチームで、235試合71得点。
+    card: &total_card
+      type: table
+      title: ムシアラ 通算（トップチーム）
+      columns: [所属, 試合, 得点]
+      rows: [*t1, *t2, *t3]
+      source: Transfermarkt
+      highlight_row: 0
+  - text: ドイツ代表は、46試合10得点。欧州選手権2024は、3得点で得点王の1人。
+    image: assets/images/20261021_musiala_intro/q1/01_w.jpg
+    card:
+      <<: *total_card
+      highlight_row: 1
+  - text: すべて足すと、281試合で、81得点になります。
+    emph: true
+    card:
+      <<: *total_card
+      highlight_row: 2
+  sources:
+  - https://www.transfermarkt.com/jamal-musiala/profil/spieler/580195
+  - https://en.wikipedia.org/wiki/Jamal_Musiala
+- id: season
+  heading: 4試合213分。今季は、何があったのか
+  tier: 報道
+  main: true
+  telop: 今季ここまで
+  narrator: 解説
+  card:
+    type: table
+    title: 今季のムシアラ（クラブの試合）
+    columns:
+    - 日付
+    - 相手
+    - 出場
+    - 結果
+    rows: &recent_rows
+    - - 9/5
+      - シャルケ
+      - 33分（途中）
+      - 0-0 分
+    - - 9/10
+      - ボデ/グリムト（CL）
+      - 65分・1G
+      - 5-0 勝
+    - - 9/13
+      - エルフェルスベルク
+      - 25分（途中）
+      - 2-1 勝
+    - - 9/18
+      - ウニオン・ベルリン
+      - 90分・1G1A
+      - 7-0 勝
+    - - 10/10〜17
+      - 3試合
+      - 欠場（右太もも）
+      - —
+    source: Transfermarkt・ESPN
+  say:
+  - text: バイエルンのムシアラは、右太ももを痛め、17日まで欠場。今季は2得点1アシスト。
+    image: assets/images/20261021_musiala_intro/q4/01_v.jpg
+    short_only: true
+    card: none
+  - text: 今季のクラブの試合は、4試合で213分。2得点1アシストです。
+    image: assets/images/20261021_musiala_intro/q4/01_w.jpg
+    card: none
+  - text: 開幕の3試合は欠場。初出場は、9月5日のシャルケ戦。途中から33分です。
+    card: &recent_card
+      type: table
+      title: 今季のムシアラ（クラブの試合）
+      columns: [日付, 相手, 出場, 結果]
+      rows: *recent_rows
+      source: Transfermarkt・ESPN
+      highlight_row: 0
+  - text: 9月10日、チャンピオンズリーグ初戦。後半2分に、今季初ゴール。5対0の快勝。
+    emph: true
+    image: assets/images/20261021_musiala_intro/q1/01_w.jpg
+    card:
+      <<: *recent_card
+      highlight_row: 1
+  - text: ケインも、このゴールを喜びました。
+    card: none
+  - voice: ハリー・ケイン
+    text: 本当に、うれしい。彼にかかっていた重みが、取れたんです。
+  - voice: ハリー・ケイン
+    text: いまの彼は、すごくいい状態に見えます。
+    cont: true
+    pause: 0.5
+  - text: 9月18日、ウニオン戦。今季初の90分で、1ゴール1アシスト。7対0の勝ち。
+    image: assets/images/20261021_musiala_intro/q4/01_w.jpg
+    card:
+      <<: *recent_card
+      highlight_row: 3
+  - text: その6日後、9月24日。オランダ戦のウォームアップで、筋肉を痛めます。
+    card: none
+  - text: クロップ代表監督は、ムシアラとハフェルツが検査中だと話しました。
+    card: none
+  - voice: クロップ監督
+    text: 2人とも、いま、検査を受けています。
+  - voice: クロップ監督
+    text: おそらく、今回の代表は、無理でしょう。
+    cont: true
+  - voice: クロップ監督
+    text: できるだけ早く、戻ってほしいです。
+    cont: true
+    pause: 0.5
+  - text: ドイツの報道では、右太ももの筋繊維の断裂です。代表の4試合を欠場しました。
+    emph: true
+    image: assets/images/20261021_musiala_intro/q1/01_w.jpg
+    card:
+      <<: *recent_card
+      highlight_row: 4
+  - text: クラブでも、10月10日から17日まで、3試合を欠場しています。
+    card: none
+  - text: 10月9日、コンパニ監督は、こう語りました。
+    card: none
+  - voice: コンパニ監督
+    text: 挫折から戻ってくることは、それ自体が強さです。
+    pause: 0.6
+  quotes_from:
+  - https://www.espn.com/soccer/story/_/id/49896289/jamal-musiala-bayern-munich-goal-bodo-glimt-seizures
+  - https://www.espn.com/soccer/story/_/id/50023499/kai-havertz-jamal-musiala-probably-germany-mri
+  - https://www.90min.de/nachster-ruckschlag-kompany-mit-bewegenden-worten-zu-musiala
+  sources:
+  - https://www.transfermarkt.com/jamal-musiala/leistungsdatendetails/spieler/580195
+  - https://www.espn.com/soccer/story/_/id/49896289/jamal-musiala-bayern-munich-goal-bodo-glimt-seizures
+  - https://www.espn.com/soccer/story/_/id/50023499/kai-havertz-jamal-musiala-probably-germany-mri
+  - https://www.90min.de/nachster-ruckschlag-kompany-mit-bewegenden-worten-zu-musiala
+- id: story
+  heading: 数字の外にある話。あだ名と、チェルシー時代の友人
+  tier: 背景
+  telop: 「バンビ」と、オリーセ
+  narrator: 解説
+  say:
+  - text: 数字の外側に、ムシアラらしい話が、2つあります。
+    image: assets/images/20261021_musiala_intro/q1/01_w.jpg
+    card: none
+  - text: ひとつは、あだ名。2021年の欧州選手権で、サネが付けました。
+    card: none
+  - text: あだ名は、バンビ。若さと、穏やかな人柄から。本人は、もう卒業したと話します。
+    emph: true
+    image: assets/images/20261021_musiala_intro/q4/01_w.jpg
+    card: none
+  - text: もうひとつは、チェルシーの下部組織。そこで出会ったのが、オリーセです。
+    image: assets/images/20261021_musiala_intro/q1/01_w.jpg
+    card: none
+  - text: いまは、同じバイエルンの仲間。ケガから戻って最初のアシストも、オリーセでした。
+    card: none
+  - text: 長いケガのあと、本人は、こう語っています。
+    card: none
+  - voice: ムシアラ
+    text: ケガをすると、学ぶことが多いと思います。
+  - voice: ムシアラ
+    text: ふだん、どれだけ楽しんでいるか。
+    cont: true
+  - voice: ムシアラ
+    text: どれだけサッカーを愛しているか。見えてきました。
+    cont: true
+    pause: 0.6
+  quotes_from:
+  - https://www.getfootballnewsgermany.com/2025/bayern-musiala-injury/
+  sources:
+  - https://en.wikipedia.org/wiki/Jamal_Musiala
+  - https://www.getfootballnewsgermany.com/2025/bayern-musiala-injury/
+- id: view
+  heading: 市場価値の下がった16か月に、ムシアラの数字は落ちたのか
+  tier: 背景
+  viewpoint: true
+  narrator: 解説
+  telop: 出場時間と、ペースと、市場価値
+  card:
+    type: table
+    title: ムシアラの比べ（バイエルンの全公式戦）
+    columns: [項目, 24/25, 25/26, 今季]
+    rows: &cmp_rows
+    - ['出場時間', '2988分', '1174分', '213分']
+    - ['ゴール／90分', '0.63', '0.38', '0.85']
+    - ['アシスト／90分', '0.24', '0.46', '0.42']
+    - ['ゴール＋アシスト／90分', '0.87', '0.84', '1.27']
+    - ['シーズン終わりの市場価値', '1.4億', '1億', '8000万']
+    source: Transfermarkt
+  say:
+  - text: 最後に、ムシアラの3つの季を並べます。24/25、25/26、そして今季。
+    image: assets/images/20261021_musiala_intro/q1/01_w.jpg
+    card: &cmp_card
+      type: table
+      title: ムシアラの比べ（バイエルンの全公式戦）
+      columns: [項目, 24/25, 25/26, 今季]
+      rows: *cmp_rows
+      source: Transfermarkt
+      highlight_row: 0
+  - text: 出場時間は、61%の減少。ムシアラが立てた時間が、大きく減りました。
+    emph: true
+    image: assets/images/20261021_musiala_intro/q4/01_w.jpg
+    card:
+      <<: *cmp_card
+      highlight_row: 0
+    mark: {kind: circle, row: 0}
+  - text: ゴールだけなら0.63から0.38。ただ、アシストは0.24から0.46です。
+    card:
+      <<: *cmp_card
+      highlight_row: 1
+  - text: ゴールとアシストの合計は、0.87と0.84。ほとんど同じです。
+    emph: true
+    card:
+      <<: *cmp_card
+      highlight_row: 3
+  - text: 一方、市場価値も、出場時間と同じ向きに、下っています。
+    card:
+      <<: *cmp_card
+      highlight_row: 4
+  - text: 今季は、まだ4試合と小さな数です。途中経過として、見てください。
+    card: none
+  - text: クラブの次の試合は、現地10月21日のアーセナル戦。ピッチに戻れるのか。
+    image: assets/images/20261021_musiala_intro/q1/01_w.jpg
+    card: none
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/jamal-musiala/profil/spieler/580195
+  - https://www.transfermarkt.com/jamal-musiala/marktwertverlauf/spieler/580195
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20261021

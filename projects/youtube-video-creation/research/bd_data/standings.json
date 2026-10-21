@@ -12,12 +12,12 @@
    "ga": 2
   },
   "bayern": {
-   "rank": 2,
-   "points": 10,
-   "record": "3勝1分0敗",
-   "played": 4,
-   "gf": 14,
-   "ga": 2
+   "rank": 1,
+   "points": 14,
+   "record": "4勝2分0敗",
+   "played": 6,
+   "gf": 22,
+   "ga": 5
   },
   "freiburg": {
    "rank": 3,
@@ -147,5 +147,6 @@
    "gf": 6,
    "ga": 16
   }
- }
+ },
+ "bayern_note": "バイエルンだけ第6節終了時点（ESPN standings API、2026-10-20 取得。ドルトムントと勝点14で並び、得失点差で首位）。ほかのクラブは as_of の第4節時点のまま。"
 }

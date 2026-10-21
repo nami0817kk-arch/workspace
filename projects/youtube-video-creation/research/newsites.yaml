@@ -42,7 +42,7 @@ sites:
   - https://www.dailymail.com/sport/football/article-16098909/Chelsea-transfer-window-Enzo-Fernandez.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
   - https://www.dailymail.com/sport/football/article-16098687/Footballer-tears-mum.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
 - host: forzaroma.info
-  seen: 15
+  seen: 16
   days:
   - '2026-09-02'
   - '2026-09-05'
@@ -51,6 +51,7 @@ sites:
   - '2026-09-24'
   - '2026-10-14'
   - '2026-10-15'
+  - '2026-10-21'
   examples:
   - https://www.forzaroma.info/news-as-roma/rodrigo-mora-gasperini-fondamentale-nella-mia-scelta-e-un-sogno-giocare-con-dybala/?intcmp=gazzanet-forzaroma
   - https://www.forzaroma.info/news-as-roma/fenerbahce-guendouzi-squalificato-salta-la-roma-greenwood-ci-sara-ecco-perche/?intcmp=gazzanet-forzaroma
@@ -86,7 +87,7 @@ sites:
   - https://www.mondoudinese.it/udinese/news-udinese/conferenza-runjaic-bayo-puo-giocare-titolare-ma-non-vi-diro-lundici/?intcmp=gazzanet-mondoudinese
   - https://www.mondoudinese.it/udinese/news-udinese/palma-il-posto-da-titolare-me-lo-dovro-riguadagnare/?intcmp=gazzanet-mondoudinese
 - host: fcinter1908.it
-  seen: 13
+  seen: 14
   days:
   - '2026-09-05'
   - '2026-09-09'
@@ -94,6 +95,7 @@ sites:
   - '2026-09-23'
   - '2026-09-26'
   - '2026-10-17'
+  - '2026-10-21'
   examples:
   - https://www.fcinter1908.it/news/interviste/sneijder-inter-triplete-ausilio-chivu-dumfries/?intcmp=gazzanet-fcinter1908
   - https://www.fcinter1908.it/cronaca-live/youth-league-real-madrid-inter/?intcmp=gazzanet-fcinter1908
@@ -219,6 +221,19 @@ sites:
   - https://www.fantamagazine.com/news/cagliari-lecce-1-0-di-francesco-poco-cattivi-e-determinati-cosi-non-possiamo-permettercelo/
   - https://www.fantamagazine.com/news/verso-lecce-monza-di-francesco-avverte-non-possiamo-ripetere-la-gara-di-cagliari/
   - https://www.fantamagazine.com/news/como-parma-2-1-cuesta-abbiamo-creato-piu-occasioni-ma-non-e-bastato-dobbiamo-essere-piu-precisi/
+- host: cagliaricalcio-news.it
+  seen: 7
+  days:
+  - '2026-09-07'
+  - '2026-09-13'
+  - '2026-09-20'
+  - '2026-09-22'
+  - '2026-10-20'
+  - '2026-10-21'
+  examples:
+  - https://www.cagliaricalcio-news.it/notizie/interviste/cagliari-pisacane-coppa-italia-fiducia-ragazzi/?intcmp=gazzanet-cagliaricalcionews
+  - https://www.cagliaricalcio-news.it/notizie/pisacane-cagliari-atalanta-romano/?intcmp=gazzanet-cagliaricalcionews
+  - https://www.cagliaricalcio-news.it/notizie/cagliari-pisacane-maldini-mendy-adopo/?intcmp=gazzanet-cagliaricalcionews
 - host: bbc.co.uk
   seen: 6
   days:
@@ -245,18 +260,6 @@ sites:
   - https://www.sportsmole.co.uk/football/barcelona/race-for-the-la-liga-title/predicted-lineups/any-changes-for-flick-how-barca-could-line-up-against-valencia_604504.html
   - https://www.sportsmole.co.uk/football/arsenal/league-cup/news/far-too-good-dowman-breaks-arsenal-record-as-gunners-reach-next-round_605207.html
   - https://www.sportsmole.co.uk/football/real-madrid/race-for-the-la-liga-title/news/mourinho-rant-real-boss-on-justice-after-atletico-defeat-as-barca-pull-away_605532.html
-- host: cagliaricalcio-news.it
-  seen: 6
-  days:
-  - '2026-09-07'
-  - '2026-09-13'
-  - '2026-09-20'
-  - '2026-09-22'
-  - '2026-10-20'
-  examples:
-  - https://www.cagliaricalcio-news.it/notizie/interviste/cagliari-pisacane-coppa-italia-fiducia-ragazzi/?intcmp=gazzanet-cagliaricalcionews
-  - https://www.cagliaricalcio-news.it/notizie/pisacane-cagliari-atalanta-romano/?intcmp=gazzanet-cagliaricalcionews
-  - https://www.cagliaricalcio-news.it/notizie/cagliari-pisacane-maldini-mendy-adopo/?intcmp=gazzanet-cagliaricalcionews
 - host: espn.co.uk
   seen: 5
   days:

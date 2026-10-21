@@ -1,0 +1,167 @@
+# 取材メモ（2026年10月21日）久保建英、マラガ戦で右サイドバックのフォルトと初めて並ぶ。現地紙が「新たなホットライン」（ニュースのショート。見せ方 Y＝久保本人の一言から始める）
+# 取材: 2026-10-21。requests（ブラウザUA）で原文を読んだ。
+#   ・Qoly 2026-10-21「302日ぶりゴールの久保建英、『新相棒』がソシエダで爆誕か！『2人ともバルサ育ち、プレースタイル完璧合致』と現地注目」— 2ページとも全文を読んだ（1ページ目 qoly.jp/q1/17871336、2ページ目 /p2）。
+#     久保本人の試合後の言葉、ムンド・デポルティーボの記事（日本語訳）の引用、フォルトの年齢・身長・加入の経緯、アランブルの欠場の理由はこの記事。
+#     ムンド・デポルティーボの原文（スペイン語）は読めていない（検索で見つからない／読み込んでいない）。引用は Qoly の日本語訳のまま。
+#   ・Real Sociedad 公式サイトの試合の記事「Recital」（2026-10-18）— 試合の記事の主写真と先発メンバー（H. Fort 先発・60分に交代、Take 71分に交代）だけ確認。本文のスコア・ゴールは別の台本で既に出ている。
+# 題材一覧との違い（原文で直した点）:
+#   ・一覧「サイドバックが追い越してくれると2対2になる。フォルトが上がるのを見てカットインできると判断した」は要約。原文は
+#     「サイドバックがウィングを追い越すオーバーラップをしてくれると助かる。そうなると、1vs2ではなく、2vs2の状況が生まれる。（右SBの）エクトル・フォルトがサイドを上がってくるのを見て、カットインするチャンスと判断した」。
+#     台本は原文の言葉のまま使う。**「1vs2」「2vs2」は声に出す都合で「1対2」「2対2」と書いた**（数字の関係は同じ）。「（右SBの）」はQolyの補足なので「右サイドバックの」とした。
+#   ・「新相棒」は Qoly の見出しの語（「爆誕か」と疑問形）。ムンド・デポルティーボの語は「新たなホットライン」（Qoly 本文）。台本は「ホットライン」と、Qoly の語として「新相棒」を使い、断定しない。
+#   ・Qoly 本文には、久保の最近を疑う声（ボールを持っても抜けない等）と、「両選手とも監督にとっては脇役にとどまっている」がある。**選手を小さく見せる言い方なので台本には入れない**。
+# 本人の言葉: **ある**（上記。試合後の発言として Qoly が紹介。どの媒体のどのインタビューかは Qoly 本文に書いていない）。10/19 のショートで使った「今日は絶対自分で行こうって決めてたんで」とは別の言葉。
+# 10/19（初ゴール）・10/20（現地紙の評価。ムンド・デポルティーボの「昇る太陽」「右サイドの輝き」「フォルトの動きが先制点の起点」）と重ねない:
+#   使わない: 302日ぶり・3分・59分・5対2・昨年12月のレバンテ戦・ナイトメア・クボ・侍が帰ってきた・エル・デスマルケの採点・マタラッツォ監督の言葉・昇る太陽・先制点の起点・相手の左サイドバックの交代。
+#   マラガ戦のスコアとゴール・アシストは前提1行（「1ゴール1アシスト」）だけ。新しいのは、フォルトの人となり・久保との組み合わせ・アランブルとの違い。
+# 数字: 久保は今季ここまで7試合に出場（Qoly）。フォルトは20歳・185センチ・今季バルセロナから加入（Qoly）。右サイドバックは、これまでアランブルが入ることが多かった（Qoly）。
+#   アランブルはふくらはぎの故障で欠場中（Qoly）。**アランブルの「日本代表戦後のSNS投稿で物議」は台本に入れない**（選手を貶す・関係ない）。
+# 自分で数えたもの（見立て）: 右サイドバックがフォルトに替わった最初の試合で、久保は1ゴール1アシスト（Qoly）。1試合だけ。
+# 確度: ムンド・デポルティーボの評価は 報道（Qoly 経由の日本語訳）。久保の言葉は 報道。見立ては 背景。**確定には上げない。**
+# 写真: Real Sociedad 公式サイトのマラガ戦の記事の主写真（久保の背番号14と、抱き合うオヤルサバル。顔の検出はオヤルサバル）／Commons の久保（2026-10-05 撮影。10/16 のショートでも使用）／
+#   Commons のフォルト（FC Barcelona 撮影・CC0・2024年・バルサのユニフォーム）。10/20 の久保のショートの写真（Real Sociedad 公式の選手紹介の写真）は使っていない。
+#   本人と確認できるのは久保の顔1枚＋背番号14の写真＋フォルト1枚。久保の顔の写真は再掲。
+slot: japan
+date: "2026年10月21日"
+format: news
+no_main: true      # ニュースはショートだけ（2026-10-14）。締めで本編を案内しない
+people: [久保建英, エクトル・フォルト, レアル・ソシエダ, マラガ]
+
+short_style: Y
+short_hook_quote: サイドバックがウィングを追い越す
+short_photos:
+  - assets/images/20261021_kubo_new_partner_forte/02_v.jpg
+  - assets/images/20261021_kubo_new_partner_forte/01_v.jpg
+  - assets/images/20261021_kubo_pair/01_v.jpg
+short_question: 久保建英の右サイドバックは、次の試合もフォルトだと思いますか。
+short_hook: 久保建英に「新相棒」の声。右サイドで並んだ20歳は誰か。
+short_telops:
+  - {match: マラガ戦, text: ラ・リーガ マラガ戦/右サイドバックのフォルトと初めて並ぶ}
+  - {match: 追い越す, text: 久保建英/「サイドバックが追い越してくれると助かる」}
+  - {match: ホットライン, text: ムンド・デポルティーボ/「新たなホットライン誕生」}
+  - {match: 20歳, text: エクトル・フォルト/20歳・185cm・今季バルセロナから加入}
+  - {match: ラ・マシア, text: 久保建英とフォルト/どちらもラ・マシア出身}
+  - {match: ふくらはぎ, text: アランブルは/ふくらはぎの故障で欠場中}
+  - {match: 1ゴール1アシスト, text: 右サイドバックが替わった最初の試合/久保は1ゴール1アシスト}
+
+theme:
+  id: kubo_new_partner_forte
+  league: spain
+  league_name: ラ・リーガ
+  prefix: ""
+  title: 久保建英に「新相棒」の声。右サイドで並んだ20歳は誰か
+  hook: ""
+  question: 久保建英の右サイドで並んだ20歳のフォルトは、現地でどう見られたのか
+  takeaway: 右サイドバックがフォルトに替わった最初の試合で、久保は1ゴール1アシスト。ただし1試合だけで、アランブルが戻ったときの起用はまだ分からない
+
+thumbnail:
+  line1: 久保建英
+  line2: 右サイドの新相棒
+  tags: [久保建英, レアル・ソシエダ]
+  layout: scene
+  photo: assets/images/20261021_kubo_new_partner_forte/01_w.jpg
+  short_photo: assets/images/20261021_kubo_new_partner_forte/02_v.jpg
+
+answer: 20歳の右サイドバック、エクトル・フォルト
+watch: アランブルが戻ったときの右サイドバックの起用
+
+sections:
+  - id: what
+    main: true
+    heading: 久保建英は、右サイドで誰と並んだのか
+    tier: 報道
+    telop: マラガ戦の久保建英。右サイドバックのフォルトと、初めて並んだ
+    say:
+      - text: ラ・リーガのマラガ戦。久保建英は、右サイドバックのフォルトと初めて並びました。
+        image: assets/images/20261021_kubo_new_partner_forte/02_w.jpg
+      - text: 久保はこの試合で、ゴールとアシストを記録。試合のあと、こう話しました。
+        image: assets/images/20261021_kubo_new_partner_forte/01_w.jpg
+      - voice: 久保建英
+        text: サイドバックがウィングを追い越す
+        short_voice: true
+        image: assets/images/20261021_kubo_new_partner_forte/02_w.jpg
+      - voice: 久保建英
+        text: オーバーラップをしてくれると助かる。
+        cont: true
+      - voice: 久保建英
+        text: そうなると、1対2ではなく、2対2の状況が生まれる。
+        cont: true
+      - voice: 久保建英
+        text: 右サイドバックのエクトル・フォルトが、
+        cont: true
+      - voice: 久保建英
+        text: サイドを上がってくるのを見て、
+        cont: true
+      - voice: 久保建英
+        text: カットインするチャンスと判断した。
+        cont: true
+      - text: この2人は、「新たなホットライン」と伝えられています。
+        image: assets/images/20261021_kubo_pair/01.jpg
+    official: false
+    sources:
+      - https://qoly.jp/q1/17871336
+      - https://qoly.jp/q1/17871336/p2
+    quotes_from: ["Qoly https://qoly.jp/q1/17871336"]
+
+  - id: forte
+    heading: フォルトは、どんな選手か
+    tier: 報道
+    telop: フォルトは20歳。今季バルセロナから加入した右サイドバック
+    say:
+      - text: フォルトは20歳。今季バルセロナから加入した、185センチの右サイドバック。
+        image: assets/images/20261021_kubo_pair/01.jpg
+      - text: 久保と同じ、ラ・マシア出身。バルセロナの下部組織です。
+        image: assets/images/20261021_kubo_new_partner_forte/02_w.jpg
+      - text: ここまで久保は、7試合に出場しています。
+        image: assets/images/20261021_kubo_new_partner_forte/01_w.jpg
+      - text: 右サイドバックには、アランブルが入ることが多くありました。
+        image: assets/images/20261021_kubo_new_partner_forte/02_w.jpg
+      - text: そのアランブルはいま、ふくらはぎの故障で欠場中。フォルトは、その代役でした。
+        image: assets/images/20261021_kubo_pair/01.jpg
+      - text: ムンド・デポルティーボは、フォルトをこう評価しました。
+        image: assets/images/20261021_kubo_new_partner_forte/02_w.jpg
+      - voice: ムンド・デポルティーボ
+        text: カタルーニャ出身のフォルトは、
+        short_voice: true
+        image: assets/images/20261021_kubo_pair/01.jpg
+      - voice: ムンド・デポルティーボ
+        text: アランブルよりも攻撃的で、久保をうまく補完していた。
+        cont: true
+      - voice: ムンド・デポルティーボ
+        text: 彼はより自然な形でオーバーラップを仕掛け、
+        short_voice: true
+        image: assets/images/20261021_kubo_new_partner_forte/01_w.jpg
+      - voice: ムンド・デポルティーボ
+        text: 相手守備陣にポジショニングの判断を迫るようなプレーを見せた。
+        cont: true
+      - voice: ムンド・デポルティーボ
+        text: フォルトの試合を読む力や攻撃のスペースを見つけ出すセンスは、
+        image: assets/images/20261021_kubo_new_partner_forte/02_w.jpg
+      - voice: ムンド・デポルティーボ
+        text: 久保のプレースタイルと完璧に合致しているからだ。
+        cont: true
+    official: false
+    sources:
+      - https://qoly.jp/q1/17871336/p2
+      - https://qoly.jp/q1/17871336
+    quotes_from: ["Qoly https://qoly.jp/q1/17871336/p2"]
+
+  - id: view
+    viewpoint: true
+    heading: 右サイドバックが替わった最初の試合は、1ゴール1アシスト
+    tier: 背景
+    telop: 久保建英に「新相棒」。ただし、まだ1試合
+    say:
+      - text: 見立てです。フォルトに替わった最初の試合で、久保は1ゴール1アシスト。
+        image: assets/images/20261021_kubo_new_partner_forte/01_w.jpg
+      - text: ただし、1試合だけです。「新相棒」は、現地の見立てにすぎません。
+        image: assets/images/20261021_kubo_pair/01.jpg
+      - text: アランブルが戻ったとき、右サイドバックに誰が入るのか。
+        image: assets/images/20261021_kubo_pair/01.jpg
+      - text: 久保の右サイドの形は、そこで見えてきます。
+        image: assets/images/20261021_kubo_new_partner_forte/01_w.jpg
+    official: false
+    sources:
+      - https://qoly.jp/q1/17871336
+      - https://qoly.jp/q1/17871336/p2
+short_title: "久保建英に「新相棒」の声。右サイドで並んだ20歳は誰か"

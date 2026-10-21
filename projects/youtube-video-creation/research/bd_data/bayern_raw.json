@@ -1,0 +1,659 @@
+{
+ "club_title": "FC_Bayern_Munich",
+ "season_title": "2026–27_FC_Bayern_Munich_season",
+ "squad": [
+  {
+   "no": "1",
+   "pos": "GK",
+   "nat": "GER",
+   "name": "Manuel Neuer",
+   "page": "Manuel Neuer",
+   "dob": "1986-03-27",
+   "captain": true,
+   "loan": false,
+   "team": "Germany",
+   "caps": 128,
+   "club_caps": 393,
+   "club_goals": 0
+  },
+  {
+   "no": "2",
+   "pos": "DF",
+   "nat": "FRA",
+   "name": "Dayot Upamecano",
+   "page": "Dayot Upamecano",
+   "dob": "1998-10-27",
+   "captain": false,
+   "loan": false,
+   "team": "France",
+   "caps": 48,
+   "club_caps": 132,
+   "club_goals": 6
+  },
+  {
+   "no": "3",
+   "pos": "DF",
+   "nat": "KOR",
+   "name": "Kim Min-jae",
+   "page": "Kim Min-jae (footballer)",
+   "dob": "1996-11-15",
+   "captain": false,
+   "loan": false,
+   "team": "South Korea",
+   "caps": 85,
+   "club_caps": 81,
+   "club_goals": 4
+  },
+  {
+   "no": "4",
+   "pos": "DF",
+   "nat": "GER",
+   "name": "Jonathan Tah",
+   "page": "Jonathan Tah",
+   "dob": "1996-02-11",
+   "captain": false,
+   "loan": false,
+   "team": "Germany",
+   "caps": 53,
+   "club_caps": 32,
+   "club_goals": 2
+  },
+  {
+   "no": "6",
+   "pos": "MF",
+   "nat": "GER",
+   "name": "Joshua Kimmich",
+   "page": "Joshua Kimmich",
+   "dob": "1995-02-08",
+   "captain": false,
+   "loan": false,
+   "team": "Germany",
+   "caps": 116,
+   "club_caps": 330,
+   "club_goals": 31
+  },
+  {
+   "no": "7",
+   "pos": "FW",
+   "nat": "GER",
+   "name": "Serge Gnabry",
+   "page": "Serge Gnabry",
+   "dob": "1995-07-14",
+   "captain": false,
+   "loan": false,
+   "team": "Germany",
+   "caps": 62,
+   "club_caps": 217,
+   "club_goals": 78
+  },
+  {
+   "no": "8",
+   "pos": "MF",
+   "nat": "GER",
+   "name": "Tom Bischof",
+   "page": "Tom Bischof",
+   "dob": "2005-06-28",
+   "captain": false,
+   "loan": false,
+   "team": "Germany",
+   "caps": 3,
+   "club_caps": 32,
+   "club_goals": 3
+  },
+  {
+   "no": "9",
+   "pos": "FW",
+   "nat": "ENG",
+   "name": "Harry Kane",
+   "page": "Harry Kane",
+   "dob": "1993-07-28",
+   "captain": false,
+   "loan": false,
+   "team": "England",
+   "caps": 125,
+   "club_caps": 100,
+   "club_goals": 102
+  },
+  {
+   "no": "10",
+   "pos": "MF",
+   "nat": "GER",
+   "name": "Jamal Musiala",
+   "page": "Jamal Musiala",
+   "dob": "2003-02-26",
+   "captain": false,
+   "loan": false,
+   "team": "Germany",
+   "caps": 46,
+   "club_caps": 157,
+   "club_goals": 49
+  },
+  {
+   "no": "11",
+   "pos": "DF",
+   "nat": "GER",
+   "name": "Nathaniel Brown",
+   "page": "Nathaniel Brown (footballer)",
+   "dob": "2003-06-16",
+   "captain": false,
+   "loan": false,
+   "team": "Germany",
+   "caps": 10,
+   "club_caps": 6,
+   "club_goals": 1
+  },
+  {
+   "no": "14",
+   "pos": "FW",
+   "nat": "COL",
+   "name": "Luis Díaz",
+   "page": "Luis Díaz (footballer, born 1997)",
+   "dob": "1997-01-13",
+   "captain": false,
+   "loan": false,
+   "team": "Colombia",
+   "caps": 79,
+   "club_caps": 38,
+   "club_goals": 19
+  },
+  {
+   "no": "17",
+   "pos": "FW",
+   "nat": "FRA",
+   "name": "Michael Olise",
+   "page": "Michael Olise",
+   "dob": "2001-12-12",
+   "captain": false,
+   "loan": false,
+   "team": "France",
+   "caps": 29,
+   "club_caps": 72,
+   "club_goals": 32
+  },
+  {
+   "no": "19",
+   "pos": "DF",
+   "nat": "CAN",
+   "name": "Alphonso Davies",
+   "page": "Alphonso Davies",
+   "dob": "2000-11-02",
+   "captain": false,
+   "loan": false,
+   "team": "Canada",
+   "caps": 59,
+   "club_caps": 172,
+   "club_goals": 10
+  },
+  {
+   "no": "21",
+   "pos": "DF",
+   "nat": "JPN",
+   "name": "Hiroki Itō",
+   "page": "Hiroki Itō (footballer, born 1999)",
+   "dob": "1999-05-12",
+   "captain": false,
+   "loan": false,
+   "team": "Japan",
+   "caps": 32,
+   "club_caps": 22,
+   "club_goals": 2
+  },
+  {
+   "no": "23",
+   "pos": "DF",
+   "nat": "FRA",
+   "name": "Sacha Boey",
+   "page": "Sacha Boey",
+   "dob": "2000-09-13",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 25,
+   "club_goals": 0
+  },
+  {
+   "no": "26",
+   "pos": "GK",
+   "nat": "GER",
+   "name": "Sven Ulreich",
+   "page": "Sven Ulreich",
+   "dob": "1988-08-03",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 67,
+   "club_goals": 0
+  },
+  {
+   "no": "27",
+   "pos": "MF",
+   "nat": "AUT",
+   "name": "Konrad Laimer",
+   "page": "Konrad Laimer",
+   "dob": "1997-05-27",
+   "captain": false,
+   "loan": false,
+   "team": "Austria",
+   "caps": 63,
+   "club_caps": 90,
+   "club_goals": 5
+  },
+  {
+   "no": "34",
+   "pos": "MF",
+   "nat": "MAR",
+   "name": "Ismael Saibari",
+   "page": "Ismael Saibari",
+   "dob": "2001-01-28",
+   "captain": false,
+   "loan": false,
+   "team": "Morocco",
+   "caps": 37,
+   "club_caps": 6,
+   "club_goals": 2
+  },
+  {
+   "no": "39",
+   "pos": "MF",
+   "nat": "SEN",
+   "name": "Bara Sapoko Ndiaye",
+   "page": "Bara Sapoko Ndiaye",
+   "dob": "2007-12-31",
+   "captain": false,
+   "loan": false,
+   "team": "Senegal",
+   "caps": 4,
+   "club_caps": 4,
+   "club_goals": 0
+  },
+  {
+   "no": "40",
+   "pos": "GK",
+   "nat": "GER",
+   "name": "Jonas Urbig",
+   "page": "Jonas Urbig",
+   "dob": "2003-08-08",
+   "captain": false,
+   "loan": false,
+   "team": "Germany",
+   "caps": 2,
+   "club_caps": 24,
+   "club_goals": 0
+  },
+  {
+   "no": "42",
+   "pos": "MF",
+   "nat": "GER",
+   "name": "Lennart Karl",
+   "page": "Lennart Karl",
+   "dob": "2008-02-22",
+   "captain": false,
+   "loan": false,
+   "team": "Germany",
+   "caps": 4,
+   "club_caps": 31,
+   "club_goals": 6
+  },
+  {
+   "no": "44",
+   "pos": "DF",
+   "nat": "CRO",
+   "name": "Josip Stanišić",
+   "page": "Josip Stanišić",
+   "dob": "2000-04-02",
+   "captain": false,
+   "loan": false,
+   "team": "Croatia",
+   "caps": 38,
+   "club_caps": 73,
+   "club_goals": 3
+  },
+  {
+   "no": "45",
+   "pos": "MF",
+   "nat": "GER",
+   "name": "Aleksandar Pavlović",
+   "page": "Aleksandar Pavlović (footballer)",
+   "dob": "2004-05-03",
+   "captain": false,
+   "loan": false,
+   "team": "Germany",
+   "caps": 17,
+   "club_caps": 70,
+   "club_goals": 8
+  },
+  {
+   "no": "47",
+   "pos": "MF",
+   "nat": "POR",
+   "name": "David Santos Daiber",
+   "page": "David Santos Daiber",
+   "dob": "2007-01-10",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 2,
+   "club_goals": 0
+  }
+ ],
+ "results": [
+  [
+   "28 August 2026",
+   "1",
+   "Bayern Munich",
+   "5–1",
+   "VfB Stuttgart"
+  ],
+  [
+   "5 September 2026",
+   "2",
+   "Schalke 04",
+   "0–0",
+   "Bayern Munich"
+  ],
+  [
+   "13 September 2026",
+   "3",
+   "SV Elversberg",
+   "1–2",
+   "Bayern Munich"
+  ],
+  [
+   "18 September 2026",
+   "4",
+   "Bayern Munich",
+   "7–0",
+   "Union Berlin"
+  ],
+  [
+   "10 October 2026",
+   "5",
+   "FC Augsburg",
+   "2–2",
+   "Bayern Munich"
+  ],
+  [
+   "17 October 2026",
+   "6",
+   "Bayern Munich",
+   "6–1",
+   "RB Leipzig"
+  ],
+  [
+   "25 October 2026",
+   "7",
+   "SC Freiburg",
+   "",
+   "Bayern Munich"
+  ],
+  [
+   "31 October 2026",
+   "8",
+   "Bayern Munich",
+   "",
+   "Borussia Dortmund"
+  ],
+  [
+   "7 November 2026",
+   "9",
+   "Mainz 05",
+   "",
+   "Bayern Munich"
+  ],
+  [
+   "20 November 2026",
+   "10",
+   "Bayern Munich",
+   "",
+   "1. FC Köln"
+  ],
+  [
+   "28 November 2026",
+   "11",
+   "Hamburger SV",
+   "",
+   "Bayern Munich"
+  ],
+  [
+   "4–6 December 2026",
+   "12",
+   "Bayern Munich",
+   "",
+   "SC Paderborn"
+  ],
+  [
+   "11–13 December 2026",
+   "13",
+   "TSG Hoffenheim",
+   "",
+   "Bayern Munich"
+  ],
+  [
+   "18–20 December 2026",
+   "14",
+   "Bayern Munich",
+   "",
+   "Werder Bremen"
+  ],
+  [
+   "8–10 January 2027",
+   "15",
+   "Borussia Mönchengladbach",
+   "",
+   "Bayern Munich"
+  ],
+  [
+   "12–14 January 2027",
+   "16",
+   "Bayern Munich",
+   "",
+   "Bayer Leverkusen"
+  ],
+  [
+   "15–17 January 2027",
+   "17",
+   "Eintracht Frankfurt",
+   "",
+   "Bayern Munich"
+  ],
+  [
+   "22–24 January 2027",
+   "18",
+   "VfB Stuttgart",
+   "",
+   "Bayern Munich"
+  ],
+  [
+   "29–31 January 2027",
+   "19",
+   "Bayern Munich",
+   "",
+   "Schalke 04"
+  ],
+  [
+   "5–7 February 2027",
+   "20",
+   "Bayern Munich",
+   "",
+   "SV Elversberg"
+  ],
+  [
+   "12–14 February 2027",
+   "21",
+   "Union Berlin",
+   "",
+   "Bayern Munich"
+  ],
+  [
+   "19–21 February 2027",
+   "22",
+   "Bayern Munich",
+   "",
+   "FC Augsburg"
+  ],
+  [
+   "26–28 February 2027",
+   "23",
+   "RB Leipzig",
+   "",
+   "Bayern Munich"
+  ],
+  [
+   "2–4 March 2027",
+   "24",
+   "Bayern Munich",
+   "",
+   "SC Freiburg"
+  ],
+  [
+   "5–7 March 2027",
+   "25",
+   "Borussia Dortmund",
+   "",
+   "Bayern Munich"
+  ],
+  [
+   "12–14 March 2027",
+   "26",
+   "Bayern Munich",
+   "",
+   "Mainz 05"
+  ],
+  [
+   "19–21 March 2027",
+   "27",
+   "1. FC Köln",
+   "",
+   "Bayern Munich"
+  ],
+  [
+   "2–4 April 2027",
+   "28",
+   "Bayern Munich",
+   "",
+   "Hamburger SV"
+  ],
+  [
+   "9–11 April 2027",
+   "29",
+   "SC Paderborn",
+   "",
+   "Bayern Munich"
+  ],
+  [
+   "16–18 April 2027",
+   "30",
+   "Bayern Munich",
+   "",
+   "TSG Hoffenheim"
+  ],
+  [
+   "23–25 April 2027",
+   "31",
+   "Werder Bremen",
+   "",
+   "Bayern Munich"
+  ],
+  [
+   "7–9 May 2027",
+   "32",
+   "Bayern Munich",
+   "",
+   "Borussia Mönchengladbach"
+  ],
+  [
+   "14–16 May 2027",
+   "33",
+   "Bayer Leverkusen",
+   "",
+   "Bayern Munich"
+  ],
+  [
+   "22 May 2027",
+   "34",
+   "Bayern Munich",
+   "",
+   "Eintracht Frankfurt"
+  ],
+  [
+   "2 September 2026",
+   "First round",
+   "VfL Osnabrück",
+   "1–4",
+   "Bayern Munich"
+  ],
+  [
+   "28 October 2026",
+   "Second round",
+   "Bayern Munich",
+   "",
+   "1. FC Magdeburg"
+  ],
+  [
+   "22 August 2026",
+   "Final",
+   "Borussia Dortmund",
+   "1–2",
+   "Bayern Munich"
+  ],
+  [
+   "10 September 2026",
+   "1",
+   "Bayern Munich",
+   "5–0",
+   "Bodø/Glimt"
+  ],
+  [
+   "13 October 2026",
+   "2",
+   "Viking",
+   "3–3",
+   "Bayern Munich"
+  ],
+  [
+   "21 October 2026",
+   "3",
+   "Bayern Munich",
+   "",
+   "Arsenal"
+  ],
+  [
+   "3 November 2026",
+   "4",
+   "Atlético Madrid",
+   "",
+   "Bayern Munich"
+  ],
+  [
+   "25 November 2026",
+   "5",
+   "Lille",
+   "",
+   "Bayern Munich"
+  ],
+  [
+   "8 December 2026",
+   "6",
+   "Bayern Munich",
+   "",
+   "Slavia Prague"
+  ],
+  [
+   "20 January 2027",
+   "7",
+   "Manchester United",
+   "",
+   "Bayern Munich"
+  ],
+  [
+   "27 January 2027",
+   "8",
+   "Bayern Munich",
+   "",
+   "Real Betis"
+  ]
+ ]
+}

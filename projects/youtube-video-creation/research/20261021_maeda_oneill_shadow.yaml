@@ -1,0 +1,148 @@
+# 取材メモ（2026年10月21日）前田大然「よりユニーク」オニール監督が語った使い方（ニュースのショート。見せ方 Y＝監督の一言から始める）
+# 取材: 2026-10-21。requests（ブラウザUA）で本文を全部読んだ。控え research/raw/20261021_ipswichstar_26652100.html（元記事）・_26646734.html（シティ戦後の会見）・20261021_qoly_maeda.txt（一覧の出典）。
+#   ・**元記事**＝イプスウィッチ・スター（2026-10-20 13:30Z）「Ipswich Town - Gary O'Neil on what he likes about Jaden Philogene」（Stuart Watson 記者）。**一覧の出典 Qoly（10/21）はこの記事を『IpswichStar』として引いた日本語の孫引き**。
+#     Qoly の訳は、原文の別々の箇所をつないでいる（「大然はよりユニークにプレーする、守備的な役割を担うこともあるからね。彼はその役割を完璧にこなしつつ、脅威にもなる」）。
+#     原文は過去形（"has played a more unique, defensive role at times. He's carried that out excellently, but still managed to be a threat"）。**台本は原文から訳した**。
+#   ・シティ戦後の会見＝同紙 2026-10-17「'Something I'll use again' - O'Neil on switching to wing-backs system at Man City」。3-4-2-1 のシャドー（"dual No.10s"）、前田は右側の10番。
+# 【言葉の取り違えを原文で直した点】
+#   ・一覧「『大然はよりユニークにプレーする』」→ 原文は "Daizen's played a more unique, defensive role at times"（**時に、より独特な、守備的な役割を担ってきた**）。現在形ではない。
+#   ・一覧「次はフォレスト、ハル、ボーンマス」→ 原文は Nottingham Forest（home on Friday night）, Hull City (A), Bournemouth (H)。金曜＝23日（この記事は火曜20日の配信）。
+#   ・Qoly の「Ipswich Star 引用」の「（ウィンガーたち）全ての選手が好きだ」は、原文では **"I like them all. We've got good options."**（ウイング4人の話のあとの一言）。
+#   ・記事の末尾の表（TOWN'S WINGERS 26/27）：前田は サンダーランド・マンU・リヴァプール＝LW／パレス・エヴァートン＝控え（先発は Clarke）／フルアム＝RW／マンC＝R10（右のシャドー）。
+#     → **自分で数えた見立て**：先発の位置は 左ウイング・右ウイング・右のシャドー の3つ（表は地元紙の作ったもの）。
+# 【前の本と重ねない】10/18「初ゴール・本人のX・7.2点・保持率80%」／10/19「現地メディアの3つの評価・高い最終ラインの背後を突く狙い」。
+#   → 今回は **「使い方の一般論」＝ウイング重視の監督が、前田をどう見ているか** と **位置が試合ごとに変わること**。初ゴール・本人のX・7.2点・グエヒ・ドンナルンマ・最終ラインの背後・保持率は言わない。
+#   （初ゴールは「その試合で」と1語だけ触れる。新しい点ではないので詳しく言わない。）
+# 本人（前田）の言葉：**今回の記事には無い**。Y の言葉は**オニール監督**の言葉（実在・原文から訳）。台本で「監督」と明記。前田の言葉は作らない。
+# 反応：作らない（0件）。
+# 確度：監督の言葉は 報道（イプスウィッチ・スターが伝えた会見の言葉。クラブの公式発表ではない）。位置の数えは 背景（自分で数えた見立て）。
+# 写真：クラブ公式と記事の主写真ではシティ戦後の写真 01（itfc.co.uk の「3rdキットのギャラリー」の主写真。前田本人。顔あり）だけが前田だった。
+#   ITFC の試合レポートの主写真（Enciso）・イプスウィッチ・スターの og 画像（Greaves 他・ファン・Ouattara と Egeli・オニール監督）は別人。**02＝オニール監督（イプスウィッチ・スター 10/17 の会見記事の主写真）**。
+#   03＝日本代表（Keiteay、CC BY 4.0。後ろ向き）、04＝2023年セルティック（pantkiewicz、CC BY-SA 2.0）、05＝2024年セルティックの練習（Hameltion、CC BY-SA 4.0）。**03〜05 は 10/19 と同じ Commons の写真（今季のイプスウィッチの写真は Commons に無い）**。
+#   一覧の「Commons に2枚だけ」は実際は10/19 時点で5枚取れていた。今回の新規はクラブ公式の01とオニール監督の02。
+slot: japan
+date: "2026年10月21日"
+format: news
+no_main: true
+people: [前田大然, イプスウィッチ, オニール監督]
+
+short_style: Y
+short_hook_quote: 前田は、時にもっと独特な、守備的な役割を担ってきた。
+short_photos:
+  - assets/images/20261021_maeda_oneill_shadow/01_v.jpg
+  - assets/images/20261021_maeda_oneill_shadow/02_v.jpg
+  - assets/images/20261021_maeda_oneill_shadow/04_v.jpg
+  - assets/images/20261021_maeda_oneill_shadow/03_v.jpg
+short_question: 前田大然は、どの位置がいちばん怖いと思いますか。
+short_hook: 前田大然の使い方、監督が語りました。
+short_telops:
+  - {match: 守備的な役割, text: オニール監督/前田は「守備的な役割」も担ってきた}
+  - {match: 右のシャドー, text: シティ戦は/右のシャドー}
+  - {match: 純粋なウイング, text: 監督/「純粋なウイングが大好き」}
+  - {match: 見事にこなしながら, text: 監督/「見事にこなしながら、脅威にもなっていた」}
+  - {match: 位置が3つ, text: 開幕3試合は左ウイング/そのあと先発の位置が3つに}
+  - {match: 23日, text: 次戦は23日/ホームでフォレスト戦}
+
+theme:
+  id: maeda_oneill_shadow
+  league: england
+  league_name: プレミアリーグ
+  prefix: ""
+  title: 前田大然の使い方、イプスウィッチ監督が語った。守備も担う役割とは
+  hook: ""
+  question: オニール監督は、前田大然をどう使い、どう見ているのか
+  takeaway: 前田が先発した位置は、左ウイング・右ウイング・右のシャドーの3つ。監督は、相手に合わせて試合ごとに形を選ぶと話している
+
+thumbnail:
+  line1: 前田大然
+  line2: 監督が語った使い方
+  tags: [前田大然, イプスウィッチ]
+  layout: face
+  photo: assets/images/20261021_maeda_oneill_shadow/01_w.jpg
+  short_photo: assets/images/20261021_maeda_oneill_shadow/01_v.jpg
+
+answer: 守備の役割も担いながら、脅威にもなる選手。位置は相手に合わせて変わる
+watch: 23日のフォレスト戦での前田の位置
+
+sections:
+  - id: what
+    main: true
+    heading: 何が起きたか
+    tier: 報道
+    telop: オニール監督が前田大然の使い方を語った
+    say:
+      - voice: オニール監督
+        text: 前田は、時にもっと独特な、守備的な役割を担ってきた。
+        short_voice: true
+        image: assets/images/20261021_maeda_oneill_shadow/02_w.jpg
+        card: none
+      - voice: オニール監督
+        text: それを見事にこなしながら、脅威にもなっていた。
+        cont: true
+        image: assets/images/20261021_maeda_oneill_shadow/01_w.jpg
+        card: none
+      - text: イプスウィッチのオニール監督が、前田大然の使い方を語りました。
+        image: assets/images/20261021_maeda_oneill_shadow/04_w.jpg
+        card: none
+      - text: ここまでウイングで使われてきた前田は、シティ戦では右のシャドーに入りました。
+        image: assets/images/20261021_maeda_oneill_shadow/01_w.jpg
+        card: none
+      - text: その試合で、プレミア初ゴールを決めています。
+        image: assets/images/20261021_maeda_oneill_shadow/04_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.ipswichstar.co.uk/sport/26652100.ipswich-town---gary-oneil-likes-jaden-philogene/
+      - https://www.ipswichstar.co.uk/sport/26646734.ipswich-town---gary-oneil-use-wing-backs-formation-man-city/
+    quotes_from: ["イプスウィッチ・スター https://www.ipswichstar.co.uk/sport/26652100.ipswich-town---gary-oneil-likes-jaden-philogene/"]
+
+  - id: wingers
+    heading: 前田を含むウイングを、監督はどう見ているのか
+    tier: 報道
+    telop: 監督「純粋なウイングが大好き」
+    say:
+      - text: 20日付の地元紙の取材で、監督は前田を含むウイング全体についても話しました。
+        image: assets/images/20261021_maeda_oneill_shadow/01_w.jpg
+        card: none
+      - voice: オニール監督
+        text: 私は純粋なウイングが大好きだ。
+        image: assets/images/20261021_maeda_oneill_shadow/02_w.jpg
+        card: none
+      - voice: オニール監督
+        text: サイドの選手には、サイドでプレーしてほしい。
+        cont: true
+        image: assets/images/20261021_maeda_oneill_shadow/04_w.jpg
+        card: none
+      - voice: オニール監督
+        text: 全員が好きだ。いい選択肢がそろっている。
+        cont: true
+        image: assets/images/20261021_maeda_oneill_shadow/01_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.ipswichstar.co.uk/sport/26652100.ipswich-town---gary-oneil-likes-jaden-philogene/
+    quotes_from: ["イプスウィッチ・スター https://www.ipswichstar.co.uk/sport/26652100.ipswich-town---gary-oneil-likes-jaden-philogene/"]
+
+  - id: view
+    viewpoint: true
+    heading: 前田の位置は、試合ごとに変わるのか
+    tier: 背景
+    telop: 開幕3試合は左ウイング。そのあとは位置が3つに
+    say:
+      - text: 見立てです。地元紙の表で数えると、前田は開幕の3試合を左ウイングで先発しました。
+        image: assets/images/20261021_maeda_oneill_shadow/04_w.jpg
+        card: none
+      - text: そのあとは、右ウイング、右のシャドーと、先発の位置が3つに増えています。
+        image: assets/images/20261021_maeda_oneill_shadow/01_w.jpg
+        card: none
+      - voice: オニール監督
+        text: 試合ごとに、適切な戦い方を選ぼうとしている。
+        image: assets/images/20261021_maeda_oneill_shadow/02_w.jpg
+        card: none
+      - text: 次戦は23日、ホームでフォレスト戦。そのあとは、ハルとボーンマスです。
+        image: assets/images/20261021_maeda_oneill_shadow/04_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.ipswichstar.co.uk/sport/26652100.ipswich-town---gary-oneil-likes-jaden-philogene/
+short_title: "前田大然の使い方、イプスウィッチ監督が語った。守備も担う役割とは"

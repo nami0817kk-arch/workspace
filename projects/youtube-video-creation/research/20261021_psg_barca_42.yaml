@@ -1,0 +1,151 @@
+# PSG 4-2 バルセロナ（CL第3節、現地20日）の取材メモ（2026年10月21日・ショートだけ）。見せ方は X（冒頭の強い一言。B は縦写真が4枚しか取れず断念。Yamal の Commons 写真は 329x450 で小さい）
+# 読んだ出典:
+#   ・サッカーキング 2026-10-21（https://www.soccer-king.jp/news/world/cl/20261021/2219045.html）本文を全部読んだ。バルサは公式戦11戦全勝・48得点で来ていた。38分ドゥエ（ペナルティエリア手前、右足）、55分チャビ・エスパール、72分リュカ・エルナンデス（CKからヘッド）、79分ヤマル、81分ヴィティーニャ（ペナルティエリア手前、右足）、86分ファビアン・ルイス。PSGはCL直近3戦で14ゴール。バルサの記録は「11」で止まった。次節は11/3（PSGはビジャレアル、バルサはホームでヴィラ）。
+#   ・ESPN の試合記録（https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915399）: 4-2、得点の分は全部一致。ドゥエ・ヴィティーニャとも「outside the box」の右足。リュカのヘッドはドゥエのアシスト。ファビアン・ルイスはアシストがハキミ。シュートはPSG22本（枠内14）・バルサ18本（枠内5）、ボール保持はバルサ52.9%。
+#   ・フットボールチャンネルは未読（一覧の「半ボレー」は使わない。ヴィティーニャは「ミドルシュート」とだけ言う）。
+# 食い違い: 無し（得点の分・得点者は2社で一致）。
+# 本人の言葉: 使わない（試合後の本人・監督の言葉は読めていない）。→ Y にしない。反応: 0件（作らない）。
+# 他の題材との重なり回避: 10/18 バルサ対ベティス・10/20 の得点とアシストの比べ（ヤマル・ラフィーニャ）・10/21 シリーズのライス×ネヴェスとは別の切り口（得点の決まり方と、全勝が止まったこと）。負傷（デンベレ・マルキーニョス・クヴァラツヘリア）は別題材なので扱わない。
+slot: overseas
+date: 2026年10月21日
+format: news
+no_main: true
+people:
+- パリ・サンジェルマン
+- バルセロナ
+- ドゥエ
+- ヴィティーニャ
+short_style: X
+short_photos:
+- assets/images/20261021_psg_barca_42/01_v.jpg
+- assets/images/20261021_psg_barca_42/02_v.jpg
+- assets/images/20261021_psg_barca_42/03_v.jpg
+- assets/images/20261021_psg_barca_42/04_v.jpg
+short_question: バルサの全勝を止めたのは、PSGのどこだったと思いますか。
+short_hook: PSG、バルサの全勝を止めた。
+theme:
+  id: psg_barca_42
+  league: france
+  league_name: チャンピオンズリーグ
+  prefix: ''
+  title: PSG、バルサの全勝を止めた4発。外からのミドル2本は誰が決めたのか
+  hook: ''
+  question: バルサの11連勝を止めたPSGの4点は、どう決まったのか
+  takeaway: バルサは11試合で48点を取って来た。PSGはその相手に枠内14本を打ち、4点のうち2点をペナルティエリアの外から決めた
+thumbnail:
+  line1: PSG、バルサの全勝を止めた
+  line2: 4発のうち2本はミドル
+  tags:
+  - PSG
+  - バルサ
+  photo: assets/images/20261021_psg_barca_42/01_w.jpg
+  photos:
+  - assets/images/20261021_psg_barca_42/01_w.jpg
+  - assets/images/20261021_psg_barca_42/02_w.jpg
+  short_photo: assets/images/20261021_psg_barca_42/01_v.jpg
+answer: 4点は、ドゥエとヴィティーニャのミドル、リュカのヘッド、ファビアン・ルイスの押し込み
+watch: 次の試合は11月3日。PSGはビジャレアル、バルサはホームでアストン・ヴィラ
+sections:
+- id: what
+  main: true
+  heading: 何が起きたか
+  tier: 報道
+  telop: PSG4-2バルセロナ。バルサの公式戦11連勝が止まった
+  say:
+  - text: 現地20日のチャンピオンズリーグ第3節、パリ・サンジェルマン対バルセロナ。
+    image: assets/images/20261021_psg_barca_42/01_w.jpg
+    card: none
+  - text: パリ・サンジェルマンが4対2で勝ちました。
+    image: assets/images/20261021_psg_barca_42/02_w.jpg
+    card: none
+  - text: バルセロナはラ・リーガとチャンピオンズリーグを合わせた公式戦で、11連勝中でした。
+    image: assets/images/20261021_psg_barca_42/01_w.jpg
+    card: none
+  - text: その記録が、11で止まりました。
+    image: assets/images/20261021_psg_barca_42/02_w.jpg
+    card: none
+  official: false
+  sources:
+  - https://www.soccer-king.jp/news/world/cl/20261021/2219045.html
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915399
+- id: goals
+  heading: パリ・サンジェルマンの4点は、どう決まったのか
+  tier: 報道
+  telop: 4点のうち2点は、ペナルティエリアの外から
+  card:
+    type: table
+    title: パリ・サンジェルマンの4得点
+    columns:
+    - 分
+    - 決めた選手
+    - 決まり方
+    rows:
+    - - 38分
+      - ドゥエ
+      - エリア外から右足
+    - - 72分
+      - リュカ・エルナンデス
+      - コーナーからヘッド
+    - - 81分
+      - ヴィティーニャ
+      - エリア外から右足
+    - - 86分
+      - ファビアン・ルイス
+      - ハキミのクロスから
+  say:
+  - text: パリ・サンジェルマンの先制点は、38分のドゥエです。
+    image: assets/images/20261021_psg_barca_42/01_w.jpg
+  - text: ペナルティエリアの手前から、右足でゴール左下に決めました。
+    image: assets/images/20261021_psg_barca_42/01_w.jpg
+  - text: 55分、バルセロナのチャビ・エスパールが決めて、追いつきました。
+    image: assets/images/20261021_psg_barca_42/01_w.jpg
+  - text: 72分は、ドゥエのコーナーキックを、リュカ・エルナンデスがヘッドで合わせました。
+    image: assets/images/20261021_psg_barca_42/01_w.jpg
+  - text: 79分には、ヤマルが決めて、また追いつきました。
+    image: assets/images/20261021_psg_barca_42/01_w.jpg
+  - text: 81分は、ヴィティーニャです。
+    image: assets/images/20261021_psg_barca_42/02_w.jpg
+  - text: ヤマルの同点弾の2分後、ペナルティエリアの手前から決めました。
+    image: assets/images/20261021_psg_barca_42/02_w.jpg
+  - text: 右足で、ゴール右下でした。
+    image: assets/images/20261021_psg_barca_42/02_w.jpg
+    cont: true
+  - text: 86分は、ハキミのクロスを、ファビアン・ルイスが押し込みました。
+    image: assets/images/20261021_psg_barca_42/03_w.jpg
+  official: false
+  sources:
+  - https://www.soccer-king.jp/news/world/cl/20261021/2219045.html
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915399
+- id: view
+  viewpoint: true
+  heading: 11試合で48点のバルサに、パリ・サンジェルマンは何本打ったのか
+  tier: 背景
+  telop: 枠内シュート PSG14本、バルサ5本
+  say:
+  - text: 見立てです。バルサは11試合で48点、1試合平均4点を超える攻撃で来ていました。
+    image: assets/images/20261021_psg_barca_42/01_w.jpg
+    card: none
+  - text: この試合のシュートは、パリ・サンジェルマンが22本、枠内が14本。
+    image: assets/images/20261021_psg_barca_42/02_w.jpg
+    card: none
+  - text: バルサは18本で、枠内は5本です。
+    image: assets/images/20261021_psg_barca_42/01_w.jpg
+    card: none
+  - text: ボールを持っていたのは、バルサの52.9%でした。
+    image: assets/images/20261021_psg_barca_42/02_w.jpg
+    card: none
+  - text: 持った時間より、枠に飛ばした本数で上回ったことになります。
+    image: assets/images/20261021_psg_barca_42/01_w.jpg
+    card: none
+  - text: パリ・サンジェルマンは、チャンピオンズリーグの3試合で14点です。
+    image: assets/images/20261021_psg_barca_42/02_w.jpg
+    card: none
+  - text: 次は11月3日、ビジャレアルとの試合です。
+    image: assets/images/20261021_psg_barca_42/01_w.jpg
+    card: none
+  official: false
+  sources:
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915399
+  - https://www.soccer-king.jp/news/world/cl/20261021/2219045.html
+short_title: PSG、バルサの全勝を止めた4発。外からのミドル2本は誰が決めたのか
+short_hook_word: 11連勝が止まる

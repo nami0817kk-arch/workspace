@@ -593,6 +593,8 @@ def build_thumbnail(
             lines or (title, subtitle), tags or [], focus, reaction, points or [],
             note_red, band_full, photos or [], crest_main or [], crests, crest_link,
             face_link, callouts=(spec or {}).get("callouts"),
+            names=(spec or {}).get("names"),
+            name_colors=(spec or {}).get("name_colors"),
         )
 
     font_path = str(config.video.font_path())
@@ -653,6 +655,8 @@ def _band_thumbnail(
     crest_link: str = "対",
     face_link: str = "",
     callouts: list[str] | None = None,
+    names: list[str] | None = None,
+    name_colors: list[str] | None = None,
 ) -> Path:
     """写真の上に蛍光イエローの帯を重ねる。**最高再生の型に合わせてある。**
 
@@ -687,6 +691,9 @@ def _band_thumbnail(
         if face_link:
             _face_clash(canvas, face_link, font_path,
                         tags if crests is None else crests, tiles=len(tiles))
+            if names:
+                _draw_side_names(canvas, names, font_path,
+                                 tags if crests is None else crests, name_colors)
             crests = []          # 上に置いたので、右下には出さない
         portrait = False
     else:
@@ -953,6 +960,57 @@ def _is_portrait(background: str | None, ratio: float = 1.1) -> bool:
             return image.height > image.width * ratio
     except OSError:
         return False
+
+
+def _crest_color(name: str) -> tuple[int, int, int]:
+    """エンブレムのいちばん目立つ色（彩度の高い画素の多い色）。無ければ濃い青。"""
+    from . import crest as crest_mod
+
+    path = crest_mod.find(name)
+    if path is None:
+        return (24, 52, 120)
+    with Image.open(path) as source:
+        small = source.convert("RGBA").resize((48, 48))
+    counts: dict[tuple[int, int, int], int] = {}
+    for r, g, b, a in small.getdata():
+        if a < 200 or max(r, g, b) - min(r, g, b) < 60 or max(r, g, b) < 70:
+            continue
+        key = (r // 32 * 32 + 16, g // 32 * 32 + 16, b // 32 * 32 + 16)
+        counts[key] = counts.get(key, 0) + 1
+    if not counts:
+        return (24, 52, 120)
+    r, g, b = max(counts, key=counts.get)
+    return (int(r * 0.85), int(g * 0.85), int(b * 0.85))
+
+
+def _draw_side_names(canvas: Image.Image, names: list[str], font_path: str,
+                     crests: list[str] | None, colors: list[str] | None = None) -> None:
+    """左右に並べた2人の名前を、クラブの色の枠に入れて置く（2026-10-21 ユーザー
+    「左右に色枠で名前入れる」）。帯のすぐ上、VS の札の外側。"""
+    names = [str(n) for n in names][:2]
+    if len(names) != 2:
+        return
+    layer, draw = _layer(canvas.size)
+    font = ImageFont.truetype(font_path, 66)
+    clubs = list(crests or [])
+    for index, name in enumerate(names):
+        color = _crest_color(clubs[index]) if index < len(clubs) else (24, 52, 120)
+        if colors and index < len(colors):
+            try:
+                hexv = str(colors[index]).lstrip("#")
+                color = (int(hexv[0:2], 16), int(hexv[2:4], 16), int(hexv[4:6], 16))
+            except (ValueError, IndexError):
+                pass
+        width = draw.textlength(name, font=font)
+        w, h = int(width + 56), 92
+        x0 = 36 if index == 0 else canvas.width - 36 - w
+        y1 = int(canvas.height * 0.575) - 4
+        box = [x0, y1 - h, x0 + w, y1]
+        draw.rounded_rectangle(box, radius=14, fill=color + (255,),
+                               outline=(255, 255, 255, 255), width=6)
+        draw.text((x0 + 28, y1 - h + 8), name, font=font, fill=(255, 255, 255, 255),
+                  stroke_width=3, stroke_fill=(0, 0, 0, 200))
+    canvas.alpha_composite(layer)
 
 
 def _face_clash(canvas: Image.Image, text: str, font_path: str,
@@ -1586,7 +1644,7 @@ def _draw_date(draw: ImageDraw.ImageDraw, date: str, font_path: str, y: int) -> 
 LAYOUTS = ("classic", "face", "scene", "versus", "number")
 # 取材メモの thumbnail: から台本の thumbnail_layout へ持ち越す項目
 LAYOUT_KEYS = ("layout", "side", "band", "number", "names", "numbers",
-               "fx", "light", "rays", "tint", "cutout", "bold", "callouts")
+               "fx", "light", "rays", "tint", "cutout", "bold", "callouts", "crest_pos", "name_colors")
 # 写真が要る構図（thumbnail.photo。横に広いもの）
 PHOTO_LAYOUTS = ("face", "scene", "number")
 
@@ -1647,7 +1705,7 @@ def layout_spec(meta: dict) -> dict | None:
         return None
     spec = {"layout": str(raw)} if isinstance(raw, str) else dict(raw)
     # classic でも吹き出し（callouts）があれば持ち越す（下段の黄色い帯の形に吹き出しを足す。2026-10-16）
-    if layout_of(spec) == "classic" and not spec.get("callouts"):
+    if layout_of(spec) == "classic" and not spec.get("callouts") and not spec.get("names"):
         return None
     return spec
 
@@ -2818,6 +2876,20 @@ def _bold_number(spec, o, photo, source, line1, line2, marks, focus, focus_x, fo
             _say(canvas, o, (cursor, baseline), text, small, WHITE, anchor="ls")
             rects.append(_rect_of((cursor, baseline), text, small, anchor="ls"))
             cursor += small.getlength(text)
+    # **エンブレムを数字の右の隙間に置く**（2026-10-21 ユーザー「ユヴェントス収入16位を真ん中に、ロゴも入れて」「右の隙間」。
+    # `thumbnail.layout.crest_pos: right`）。暗いエンブレム（黒い J）は暗い地に沈むので、白い丸い台に載せる。
+    if str(spec.get("crest_pos") or "") == "right" and marks:
+        big = max(rects, key=lambda r: (r[2] - r[0]) * (r[3] - r[1]))
+        plate_h = 270
+        inner = _crest_image(marks[0], 190)
+        if inner is not None:
+            plate = Image.new("RGBA", (plate_h, plate_h), (0, 0, 0, 0))
+            ImageDraw.Draw(plate).ellipse((0, 0, plate_h - 1, plate_h - 1), fill=(255, 255, 255, 245))
+            plate.alpha_composite(inner, ((plate_h - inner.width) // 2, (plate_h - inner.height) // 2))
+            cx = SIZE[0] - 80 - plate_h
+            cy = (big[1] + big[3]) // 2 - plate_h // 2
+            canvas.alpha_composite(plate, (cx, cy))
+            marks = []
     # **数字や文字にかからない大きさまで縮める**（2026-10-15、チェルシーの ●●●●万ポンド の最初の丸にかかった）。
     # 大きいほうから試し、どちらの隅でも重ならない最初の大きさを使う。下限（BOLD_CREST_MIN）でも重なれば、重なりの小さい隅
     for h in (250, 220, 190, 160, BOLD_CREST_MIN):

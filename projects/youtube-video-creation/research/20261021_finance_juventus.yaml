@@ -1,0 +1,467 @@
+# クラブの財政：ユヴェントス（10/21 水、シリーズ「クラブの財政」、key: finance_juventus、型は news）。
+#
+# 軸は「**放映権が7割超増えたのに、収入は13%増にとどまったのは、なぜか**」。
+#   ・デロイト（2024/25）：収入 4億170万ユーロ（前の年 3億5570万、+13%、+4600万）、順位は16位（前の年も16位）。
+#     内訳（百万ユーロ、デロイトの図の整数）：放映権 100→177（+77）／商業 201→160（−41）／試合日 55→65（+10）。356＋77−41＋10＝402。
+#   ・クラブの公式発表（26 Sep 2025、2025年6月期）：放映権・メディア収入 +77.7＝欧州の大会 +67.5＋クラブ・ワールドカップ +27.0−国内のメディア権 −16.8（主にセリエA）。
+#     デロイトの増加幅（177.4−99.7＝77.7）と一致。商業の穴＝スポンサー −27.0（主な理由は胸のスポンサーが一時いなかったこと。ステランティス・ヨーロッパとビジット・デトロイトとの契約は終盤）＋商品・ライセンス −17.7。
+#   ・クラブの公式発表（29 Sep 2026、2026年6月期）：赤字 66.0（前 58.1）。放映権・メディア −31.9（クラブW杯 −27.0、国内 −4.3）、スポンサー・広告 +20.3。
+#     2026/27 はチャンピオンズリーグに出られず赤字見込み。増資の枠 最大2億5000万ユーロを提案、エクソールは直ちに6000万ユーロ払い込み。株主総会 2026-11-03。
+#   ★他の財政回の軸（バルサ＝使える上限／シティ＝判決／アルテタ＝契約／レアル＝スクワッド・コスト・ルール／PSG＝関連当事者取引／バイエルン＝株の持ち主／リヴァプール＝放映権／マンU＝償却・金融費用／
+#     トッテナム＝優勝の年の赤字／シティ×アーセナル＝収入の差と給料の比率／チェルシー＝トッテナムとの差・赤字・人件費比率／インテル＝10位との差・給料を引いた残り／ヴィラ＝放映権の割合が最高）は繰り返さない。
+#     この回の軸は「**収入の増減の内訳（放映権の特需と商業の穴）と、柱の入れ替わり**」。
+#   ★アルファベットは読み上げに出さない。女子チームの話・監督の解任・法的な争い・制裁は言わない。選手名は出さない。
+#
+# **決算期**：6月30日決算（上場企業。決算は取締役会の承認＋株主総会）。2024/25＝2025年6月期。
+#
+# **出どころ（読んだもの）**
+#   ○ デロイト Football Money League 2026（2024/25）一次ページ（deloitte.com）：16位ユヴェントス、図（e.infogram.com）から
+#       収入 2021-2025（百万）：434/401/434/356/402。放映権 237/175/157/100/177。商業 189/184/219/201/160。試合日 8/32/58/55/65。
+#       給料 337.8/336.5/282/264/245。給料÷収入 78/84/65/74/61（%）。DFML の順位 9/11/11/16/16。ピッチ上：セリエA 4位／チャンピオンズリーグ ノックアウトのプレーオフ。
+#       ★「2025 Revenue €401.7m (2024: €355.7m)」「Change on previous year +13% (+€46m)」。
+#       ★隣の順位：15位ミラン €410.4m、17位ニューカッスル €398.4m、14位ヴィラ €450.2m（それぞれの図で確認）。
+#       定義（ページ本文）：放映権は国内リーグ・カップ・欧州連盟の大会・FIFAクラブW杯の賞金と分配金を含む。商業はスポンサー・グッズ・その他の商業・試合以外の催し。
+#       本文：セリエAの新しい国内契約は1シーズンの平均の権利額が約3%下がった。クラブW杯に出た10クラブは放映権が17%押し上がった。
+#   ○ ユヴェントス公式（juventus.com の投資家向け発表）
+#       ・2025-09-26「30 June 2025」：https://www.juventus.com/images/image/private/fl_attachment/dev/kqa9o6wnrkfguvdlmma3.pdf
+#         最終損益 −58.1（前 −199.2）／資本 13.2（前 40.2）／純金融債務 280.2（前 242.8）／エクソールが 2025-03-31 と 06-30 に15ずつ、計30を増資の前払い／増資の枠 最大1億1000万。
+#         放映権・メディア +77.7（欧州復帰 +67.5、クラブW杯 +27.0、メディア権の売却 −16.8＝主にセリエA）。スポンサー −27.0、商品・ライセンス −17.7（ファナティクスとの取引の会計上の影響）。
+#         欧州連盟の大会の収入 75.3（前 0.1）、FIFA 27.0。2024/25：セリエA 4位、チャンピオンズリーグはリーグフェーズを通過し、プレーオフで敗退（2025-02-19）。
+#         「前の期は欧州連盟の大会に不参加」（2024年6月期の発表の見出し）。ホームの入場料収入は「過去最高の流れ」。
+#       ・2026-09-29「30 June 2026」：https://www.juventus.com/images/image/private/fl_attachment/dev/k0a34i2hcacmgbyxjw5o.pdf
+#         最終損益 −66.0／資本 11.5／純金融債務 331.1／放映権・メディア −31.9（クラブW杯の不在 −27.0、セリエAの視聴権 −4.3＝順位が下がったため）／スポンサー・広告 +20.3（ステランティス・ヨーロッパとビジット・デトロイトの契約が通年で効いた）。
+#         2025-11 に増資（総額 9781万3426.98ユーロ）完了。2025/26：セリエA 6位、チャンピオンズリーグはリーグフェーズ通過後、プレーオフで敗退（2026-02-25）、2026/27 はヨーロッパリーグ。
+#         2026/27 は「チャンピオンズリーグに出られないため」赤字見込み。増資の委任 最大2億5000万（株主総会 2026-11-03）、エクソール（65.4%）は直ちに6000万を払い込み。
+#   × デロイトの「放映権＝決算書の放映権・メディア」の定義の一致は、増加幅の一致（77.7）で確かめた。全額の一致は確かめていない（クラブの「営業収益」には選手の登録権の収入などの扱いが違う）。**台本では全額を並べない**。
+#   × 商業の減少（デロイト −41）と決算書（スポンサー −27.0＋商品・ライセンス −17.7＝−44.7）は分類が違い、ぴったりは合わない。**台本はそのことを断る**。
+#   × 報道は使っていない。
+#
+# 自分で計算した数（検算済み）
+#   放映権 177÷100＝+77%。商業 160÷201−1＝−20.4%。試合日 65÷55−1＝+18%。収入 402÷356−1＝+12.9%（デロイトは+13%）。
+#   放映権の増加に対する商業の減少 41÷77＝53%。商業が前の年のままなら 356＋77＋10＝443（+24.4%）→ ミラン410.4より上・ヴィラ450.2より下＝15位相当。
+#   収入に占める割合 放映権 100÷356＝28%→177÷402＝44%／商業 201÷356＝56%→160÷402＝40%／試合日 55÷356＝15%→65÷402＝16%。
+#   放映権の増加の内訳 67.5＋27.0−16.8＝77.7。 スポンサー−27.0＋商品−17.7＝−44.7。
+#
+# 写真：assets/images/20261021_finance_juventus/（アリアンツ・スタジアム＝Commons。CC BY-SA 4.0・CC BY 2.0・CC BY-SA 3.0 it・CC BY-SA 3.0）。
+date: 2026年10月21日
+slot: other_1
+format: news
+series: クラブの財政
+voice_min: 0
+people:
+- ユヴェントス
+theme:
+  end_bg: assets/images/20261021_finance_juventus/01_w.jpg
+  id: finance_juventus
+  league: italy
+  league_name: セリエA
+  kind: other
+  topic: ユヴェントス
+  title: ユヴェントス、収入は16位。放映権が77%増えて、収入は13%増なのは、なぜか
+  question: ユヴェントスの放映権は77%増えたのに、収入は13%増にとどまった。なぜか
+  lead: 収入の世界16位、ユヴェントス。
+  opening_image: assets/images/20261021_finance_juventus/01_w.jpg
+  takeaway: デロイトの集計で2024-25の収入は4億170万ユーロで世界16位（前の年も16位）、前の年から13%増。放映権は100から177百万ユーロへ77%増えたが、商業が201から160百万ユーロへ約2割減り、増加の半分以上を打ち消した。クラブの決算書では、放映権の増加は欧州の大会への復帰とクラブ・ワールドカップが中身で、商業の減少は胸のスポンサーが一時いなかったことが主な理由。収入の柱は商業から放映権へ入れ替わった。2026年6月期は放映権が3190万ユーロ減り、スポンサーが2030万ユーロ増えた。最終損益は2025年6月期が5810万ユーロの赤字、2026年6月期が6600万ユーロの赤字で、クラブは最大2億5000万ユーロの増資を株主総会に諮る
+  short_title: ユヴェントス、放映権77%増でも収入13%増
+thumbnail:
+  layout: number
+  photo: assets/images/20261021_finance_juventus/03_w.jpg
+  number: 16位
+  line1: ユヴェントス、収入は
+  line2: 放映権+77%でも収入は13%増
+  callouts: [商業は2割減]
+  tags:
+  - ユヴェントス
+  - セリエA
+  - クラブの財政
+  - アリアンツ・スタジアム
+sections:
+- id: rank
+  main: true
+  heading: 収入は世界16位のまま、1年で増えたものと減ったものは何か
+  tier: 報道
+  telop: 収入4億170万ユーロで世界16位。前の年から13%増
+  narrator: 解説
+  card: &rev_line
+    type: line
+    title: ユヴェントスの収入の5年（デロイトの図の合計、百万ユーロ）
+    x: [2020-21, 2021-22, 2022-23, 2023-24, 2024-25]
+    series:
+    - [ユヴェントス, [433, 401, 434, 356, 402]]
+    unit: 百万ユーロ
+    focus: ユヴェントス
+    highlight: 2024-25
+  say:
+  - text: 会計事務所デロイトの集計で、ユヴェントスの収入は世界16位。
+    image: assets/images/20261021_finance_juventus/01_w.jpg
+    card: none
+  - text: 2024-25の収入は、4億170万ユーロ。
+    emph: true
+    card: *rev_line
+  - text: 前の年は3億5570万ユーロ。1年で、4600万ユーロの増加。
+    card:
+      <<: *rev_line
+      highlight: 2023-24
+  - text: 伸びは13%。順位は、前の年と同じ16位です。
+    image: assets/images/20261021_finance_juventus/02_w.jpg
+    card: &rank_table
+      type: table
+      title: ユヴェントスの順位の5年（デロイト）
+      columns: [年, 順位]
+      rows:
+      - [2020-21, 9位]
+      - [2021-22, 11位]
+      - [2022-23, 11位]
+      - [2023-24, 16位]
+      - [2024-25, 16位]
+      highlight_row: 4
+  - text: ここ5年の順位は、9位、11位、11位。そして、16位が2年続いています。
+    card: *rank_table
+  - text: 前の年の収入に、3つの動きが重なって、今の収入になります。
+    card: &move_wf
+      type: waterfall
+      title: ユヴェントスの収入の増減（デロイトの図、百万ユーロ）
+      start: [2023-24の収入, 356]
+      steps:
+      - [放映権, 77]
+      - [商業, -41]
+      - [試合日, 10]
+      total: [2024-25の収入, 402]
+  - text: 放映権は、1億ユーロから、1億7700万ユーロに。7700万ユーロのプラスです。
+    emph: true
+    card:
+      <<: *move_wf
+      highlight: 放映権
+  - text: 商業は、2億100万ユーロから、1億6000万ユーロに。マイナス4100万ユーロ。
+    image: assets/images/20261021_finance_juventus/04_w.jpg
+    card:
+      <<: *move_wf
+      highlight: 商業
+  - text: 試合日は、5500万ユーロから、6500万ユーロに。プラス1000万ユーロ。
+    card:
+      <<: *move_wf
+      highlight: 試合日
+  - text: 放映権の増加のうち、半分以上を、商業の減少が打ち消しました。
+    emph: true
+    callword: 商業が半分を打ち消す
+    image: assets/images/20261021_finance_juventus/01_w.jpg
+    card: none
+  - text: まず、ユヴェントスの放映権は、なぜ1年で7割以上も増えたのか。
+    card: none
+  sources:
+  - https://www.deloitte.com/uk/en/services/financial-advisory/analysis/deloitte-football-money-league.html
+- id: bcast
+  heading: 放映権は、なぜ1年で7割以上も増えたのか
+  tier: 確定
+  official: true
+  telop: 増加7770万ユーロは、欧州の大会への復帰とクラブ・ワールドカップが中身
+  narrator: 解説
+  card: &bc_wf
+    type: waterfall
+    title: 放映権などの収入の増減（2025年6月期、クラブの発表、百万ユーロ）
+    steps:
+    - [欧州の大会への復帰, 67.5]
+    - [クラブ・ワールドカップ, 27.0]
+    - [国内の放映権, -16.8]
+    total: [増加の合計, 77.7]
+  say:
+  - text: ここからは、ユヴェントスが公式サイトに出した、決算の発表資料で見ます。
+    image: assets/images/20261021_finance_juventus/02_w.jpg
+    card: none
+  - text: 放映権などの収入の増加は、7770万ユーロ。
+    emph: true
+    card: none
+  - text: デロイトの図の放映権の増加、7700万ユーロと、ほぼ同じです。
+    image: assets/images/20261021_finance_juventus/03_w.jpg
+    card: none
+  - text: 発表資料は、この増加を3つに分けています。
+    card: *bc_wf
+  - text: 1つ目は、欧州の大会への復帰で、6750万ユーロ。
+    card:
+      <<: *bc_wf
+      highlight: 欧州の大会への復帰
+  - text: 欧州の大会に関わる収入は、10万ユーロから7530万ユーロへ。
+    card: &uefa_bars
+      type: bars
+      title: 欧州の大会に関わる収入（決算書、百万ユーロ）
+      unit: ''
+      items:
+      - label: 前の期（出場なし）
+        value: 0.1
+      - label: 2025年6月期（チャンピオンズリーグ）
+        value: 75.3
+        highlight: true
+  - text: 今期は、チャンピオンズリーグに出て、プレーオフまで進みました。
+    emph: true
+    card: *uefa_bars
+  - text: 2つ目は、クラブ・ワールドカップ。収入は、2700万ユーロです。
+    image: assets/images/20261021_finance_juventus/01_w.jpg
+    card:
+      <<: *bc_wf
+      highlight: クラブ・ワールドカップ
+  - text: 3つ目は、マイナスです。国内の放映権の収入が、1680万ユーロ縮みました。
+    image: assets/images/20261021_finance_juventus/02_w.jpg
+    card:
+      <<: *bc_wf
+      highlight: 国内の放映権
+  - text: 主な理由は、セリエAの映像の権利の分です。
+    card: none
+  - text: 6750万に2700万を足して、1680万を引くと、7770万ユーロ。
+    image: assets/images/20261021_finance_juventus/03_w.jpg
+    card: &bc_calc
+      type: calc
+      title: 放映権などの収入の増加（百万ユーロ）
+      terms:
+      - [67.5, 欧州の大会への復帰]
+      - [27.0, クラブ・ワールドカップ]
+      - [16.8, 国内の放映権の減少]
+      - [77.7, 増加の合計]
+      ops: ['+', '−', '＝']
+  - text: 増えた分の中身は、欧州の大会と、クラブ・ワールドカップです。
+    emph: true
+    card: *bc_calc
+  - text: では、半分を打ち消した商業は、なぜ2割も減ったのか。
+    card: none
+  sources:
+  - https://www.juventus.com/images/image/private/fl_attachment/dev/kqa9o6wnrkfguvdlmma3.pdf
+  - https://www.deloitte.com/uk/en/services/financial-advisory/analysis/deloitte-football-money-league.html
+- id: comm
+  heading: 商業は、なぜ2割も減ったのか
+  tier: 確定
+  official: true
+  telop: 商業は20%減。決算書の理由は、胸のスポンサーが一時いなかったこと
+  narrator: 解説
+  card: &cm_bars
+    type: bars
+    title: ユヴェントスの商業収入（デロイトの図、百万ユーロ）
+    unit: ''
+    items:
+    - label: 2022-23
+      value: 219
+    - label: 2023-24
+      value: 201
+    - label: 2024-25
+      value: 160
+      highlight: true
+  say:
+  - text: ユヴェントスの商業は、減少が約20%。5年の中で、いちばん低い額です。
+    emph: true
+    image: assets/images/20261021_finance_juventus/01_w.jpg
+    card: *cm_bars
+  - text: 決算書は、収入が減った理由を、こう書いています。
+    card: &sp_doc
+      type: document
+      label: ユヴェントス 2025年6月期 決算の発表資料（訳）
+      paragraphs:
+      - スポンサー収入の減少は、主に、胸のスポンサーが一時的にいなかったことによります。
+      - 2024-25シーズンの終盤に、ステランティス・ヨーロッパと、ビジット・デトロイトとの契約が結ばれるまでの期間です。
+      highlight:
+      - 胸のスポンサーが一時的にいなかった
+      - 終盤に
+  - text: まず、スポンサー収入が減りました。
+    emph: true
+    card: *sp_doc
+  - text: 主な理由は、ユニフォームの胸のスポンサーが、一時的にいなかったことです。
+    image: assets/images/20261021_finance_juventus/02_w.jpg
+    card: *sp_doc
+  - text: 新しい契約が結ばれたのは、シーズンの終盤。
+    card: none
+  - text: 相手は、ステランティスと、ビジット・デトロイトです。
+    card: none
+  - text: もう1つ。商品とライセンスの販売も、1年で、1770万ユーロ落ちています。
+    image: assets/images/20261021_finance_juventus/03_w.jpg
+    card: none
+  - text: 理由は、ファナティクスとの取引の、会計上の影響です。
+    card: none
+  - text: この2つを足すと、4470万ユーロ。
+    card: &cm_calc
+      type: calc
+      title: 決算書の商業まわりの減少（百万ユーロ）
+      terms:
+      - [27.0, スポンサー収入]
+      - [17.7, 商品・ライセンス]
+      - [44.7, 減少の合計]
+      ops: ['+', '＝']
+  - text: デロイトの減少額とは、分類が少し違うので、ぴったりは合いません。
+    card: none
+    image: assets/images/20261021_finance_juventus/01_w.jpg
+  - text: 一方、試合日は、増えました。
+    image: assets/images/20261021_finance_juventus/04_w.jpg
+    card: none
+  - text: 5年で最高の額。決算書も、ホームの入場料収入は、過去最高の流れとしています。
+    card: none
+  - text: 商業の穴と、放映権の特需が、同じ年に重なりました。
+    emph: true
+    card: none
+  sources:
+  - https://www.juventus.com/images/image/private/fl_attachment/dev/kqa9o6wnrkfguvdlmma3.pdf
+  - https://www.deloitte.com/uk/en/services/financial-advisory/analysis/deloitte-football-money-league.html
+- id: books
+  heading: 収入が動いた2年、決算と資金はどうなっているのか
+  tier: 確定
+  official: true
+  telop: 赤字は2025年6月期が5810万ユーロ、2026年6月期が6600万ユーロ
+  narrator: 解説
+  card: &pl_stats
+    type: stats
+    title: ユヴェントスのグループの最終損益（決算書、百万ユーロ）
+    items:
+    - ['-199.2', 百万ユーロ, 2024年6月期]
+    - ['-58.1', 百万ユーロ, 2025年6月期]
+    - ['-66.0', 百万ユーロ, 2026年6月期]
+    focus: 1
+  say:
+  - text: ユヴェントスの最終損益を見ます。2025年6月期は、5810万ユーロの赤字。
+    image: assets/images/20261021_finance_juventus/02_w.jpg
+    card:
+      <<: *pl_stats
+      focus: 1
+  - text: 前の期は、1億9920万ユーロの赤字。
+    card:
+      <<: *pl_stats
+      focus: 0
+  - text: 赤字が縮んだ理由として、クラブが挙げるのは2つ。
+    card: none
+  - text: チャンピオンズリーグへの復帰と、選手の登録権、つまり移籍に関わる収入の増加。
+    image: assets/images/20261021_finance_juventus/03_w.jpg
+    card: none
+  - text: 続いて、資金です。借金から現金を引いた、純金融債務。
+    card: none
+  - text: 2億8020万ユーロ。1年で、3740万ユーロ膨らみました。
+    emph: true
+    card: none
+  - text: 大株主のエクソールは、増資の前払いを、2025年の3月と6月に実施。
+    card: none
+  - text: 1500万ユーロずつ、あわせて3000万ユーロ。
+    image: assets/images/20261021_finance_juventus/04_w.jpg
+    card: none
+  - text: 2025年11月、増資が完了。総額は、9781万ユーロです。
+    emph: true
+    image: assets/images/20261021_finance_juventus/01_w.jpg
+    card: none
+  - text: 2026年6月期は、6600万ユーロの赤字。9月29日の取締役会で承認されました。
+    card:
+      <<: *pl_stats
+      focus: 2
+  - text: 2025-26は、セリエAが6位。2026-27は、ヨーロッパリーグです。
+    image: assets/images/20261021_finance_juventus/02_w.jpg
+    card: none
+  - text: 発表資料は、2026-27の見通しを、赤字としています。
+    card: &fc_doc
+      type: document
+      label: ユヴェントス 2026年6月期 決算の発表資料（訳）
+      paragraphs:
+      - 2026-27年度は、チャンピオンズリーグに出られないことが主な理由で、赤字が見込まれます。
+      - 続く2年度は、結果が段階的に改善する見通しです。
+      highlight:
+      - チャンピオンズリーグに出られない
+      - 赤字が見込まれます
+  - text: 主な理由は、チャンピオンズリーグに出られないことです。
+    emph: true
+    card: *fc_doc
+  - text: そこで、増資の枠を、最大2億5000万ユーロとする案が、株主総会に出されます。
+    card: none
+  - text: 増資とは、新しい株を出して、資金を集めることです。
+    image: assets/images/20261021_finance_juventus/03_w.jpg
+    card: none
+  - text: エクソールは、すぐに6000万ユーロを払い込むと、表明しました。
+    card: none
+  - text: 株主総会は、11月3日です。
+    card: none
+  sources:
+  - https://www.juventus.com/images/image/private/fl_attachment/dev/kqa9o6wnrkfguvdlmma3.pdf
+  - https://www.juventus.com/images/image/private/fl_attachment/dev/k0a34i2hcacmgbyxjw5o.pdf
+- id: view
+  viewpoint: true
+  heading: 見立て・収入13%増は、放映権の特需と商業の穴が重なった結果
+  tier: 背景
+  telop: 商業が前の年のままなら、収入は約4億4300万ユーロ。15位相当
+  narrator: 解説
+  card: &view_table
+    type: table
+    title: 自分で数えてみた（2024-25、デロイトの図）
+    columns: &view_cols [比べ, 答え]
+    rows: &view_rows
+    - [放映権の増加に対する、商業の減少, 約53%]
+    - [商業が前の年のままなら、収入, 約4億4300万ユーロ（+24%）]
+    - [収入に占める放映権（前の年→今）, 28%→44%]
+    - [収入に占める商業（前の年→今）, 56%→40%]
+    highlight_row: 0
+  say:
+  - text: 見立てに入ります。ユヴェントスの数字を、自分で比べました。
+    image: assets/images/20261021_finance_juventus/04_w.jpg
+    card: *view_table
+  - text: 放映権の増加と、商業の減少を、比べます。
+    card:
+      <<: *view_table
+      highlight_row: 0
+  - text: 商業の減少が、放映権の増加の約53%を、打ち消しました。
+    emph: true
+    mark:
+      kind: circle
+      row: 0
+      col: 1
+    image: assets/images/20261021_finance_juventus/01_w.jpg
+    card:
+      <<: *view_table
+      highlight_row: 0
+  - text: 商業が、前の年の2億100万ユーロのままなら、収入は約4億4300万ユーロ。
+    card:
+      <<: *view_table
+      highlight_row: 1
+  - text: 伸びは、13%ではなく、約24%でした。
+    emph: true
+    mark:
+      kind: circle
+      row: 1
+      col: 1
+    image: assets/images/20261021_finance_juventus/02_w.jpg
+    card:
+      <<: *view_table
+      highlight_row: 1
+  - text: 4億4300万ユーロなら、順位は15位。ミランの4億1040万ユーロを上回ります。
+    card: none
+  - text: 収入の柱も、入れ替わりました。
+    card:
+      <<: *view_table
+      highlight_row: 2
+  - text: 放映権の割合は、28%から44%へ。商業は、56%から40%へ。
+    mark:
+      kind: circle
+      row: 2
+      col: 1
+    image: assets/images/20261021_finance_juventus/04_w.jpg
+    card:
+      <<: *view_table
+      highlight_row: 2
+  - text: 放映権の増加は、欧州の大会に出ることが、前提でした。
+    card: none
+  - text: 実際、2026年6月期は、放映権の収入が、3190万ユーロ減りました。
+    image: assets/images/20261021_finance_juventus/01_w.jpg
+    card: &fy26_wf
+      type: stats
+      title: 2026年6月期の収入の増減（クラブの発表、百万ユーロ）
+      items:
+      - ['-31.9', 百万ユーロ, 放映権など]
+      - ['+20.3', 百万ユーロ, スポンサー・広告]
+      focus: 0
+  - text: 主な理由は、クラブ・ワールドカップの2700万ユーロが、なくなったことです。
+    emph: true
+    card: *fy26_wf
+  - text: 一方、スポンサーと広告は、プラス2030万ユーロ。
+    image: assets/images/20261021_finance_juventus/02_w.jpg
+    card:
+      <<: *fy26_wf
+      focus: 1
+  - text: 商業の穴は、埋まり始めました。
+    emph: true
+    image: assets/images/20261021_finance_juventus/03_w.jpg
+    card: none
+  - text: クラブ・ワールドカップの収入は、この期には、ありませんでした。
+    card: none
+  - text: 次のデロイトの集計で、商業がどこまで戻るか。そこを見ます。
+    card: none
+  sources:
+  - https://www.deloitte.com/uk/en/services/financial-advisory/analysis/deloitte-football-money-league.html
+  - https://www.juventus.com/images/image/private/fl_attachment/dev/kqa9o6wnrkfguvdlmma3.pdf
+  - https://www.juventus.com/images/image/private/fl_attachment/dev/k0a34i2hcacmgbyxjw5o.pdf

@@ -1,0 +1,195 @@
+# 取材メモ（2026年10月21日）アーセナルのラヤ「退屈」の声に「いいえ」、アルテタ「ごく少数」。バイエルン戦（日本時間22日4時）の前日（ニュースのショート。見せ方 Y＝ラヤ本人の一言から始める）
+# 取材: 2026-10-21。requests（ブラウザUA）で本文を全部読んだ。検索エンジンのAI要約は使っていない。
+#   ・ガーディアン（2026-10-20）「Arsenal's David Raya hits back at 'boring' label as Arteta defends side's style of play」— 題材の出典。本文を最後まで読んだ。
+#       ラヤ「No it doesn't.（質問は『批判は自分とチームメイトを苛立たせるか』）／People have their own opinions. We have our own opinion. At the end of the day, we have lost one game in 11 this season and if you call that boring or irritating … I don't know what to say. We enjoy playing football. We enjoy going out there every single day to win football matches and that's the most important thing.」
+#       記事の地の文「David Raya says he does not care if rival supporters call Arsenal "boring"」→ **「退屈」と呼ぶのは相手サポーター**（記事）。ラヤの発言そのものに「相手サポーター」は出てこない。
+#       アルテタ「I don't have that impression [about there being a debate] because I heard it was incredible. Because we scored so many goals, we have more possession, more shots, different players participating ... so the story is completely different to last year. I think we are talking about a very small minority and the other ones they know they have enjoyed a lot the way we have played and dominated games this year. We have proven that, so that's my opinion.」
+#       **「no goals from set pieces」の一節は使わない**（クラブ公式の記録でも同じ綴りで、前後と意味が通らない。誤記の疑いがあるので訳さない）。
+#       地の文：全大会で11試合10勝（日曜のフォレスト戦1-0）。「Arteta admitted his players had to be better in attacking terms」。バイエルンはオリーズが出場停止、コンパニ監督はウイルスで欠場の可能性（**題に答えないので台本では使わない**）。
+#       「Arteta knows that Bayern will bring the game to Arsenal; perhaps it will be a relief not to face low-block opponents and it might allow his team to be more expansive.」＝**ガーディアン記者の見立て**（台本では「ガーディアンは、と書く」と断る）。
+#       去年のエミレーツ（アルテタ「we experienced that at the Emirates」、記事の括弧書き「when Arsenal won 3-1」）。
+#   ・Arsenal.com「Every word of Mikel Arteta's pre-Bayern presser」（2026-10-20 22:11Z。アリアンツ・アレーナで火曜の夜）— 同じ話題の公式の全文。ガーディアンの引用と一致することを確かめた。
+#       「On the debate about our style of play」の全文（上と同じ）／「On whether extra scrutiny comes with being champions」「If you analyse the top teams in England … they all have a list. We all have a list because none of us are perfect. Thank God that we are not perfect…」
+#       「On whether opinions can become reputations」「we are open to opinions … those opinions have to be respected, especially if they are done in a respectful way. We are here to prove that we belong to this level…」
+#       「On how difficult it is to face a low block」「a low block demands a different kind of game to the high block … Still, I think on Sunday, we could have done things better, but that's in our hands and we need to recognise that openly as well」
+# 時刻: ESPN の uefa.champions scoreboard（dates=20261021）で Arsenal at Bayern Munich＝2026-10-21T19:00Z、状態 Scheduled（未開始）＝日本時間22日午前4時。**結果は言わない**（前日の発言だけ）。
+# 数字: 「11試合で10勝」はガーディアンの地の文、「11試合で負けたのは1つ」はラヤ本人の言葉。**勝ち点・順位・フォレスト戦の支配率は使わない**（10/19 のフォレスト戦のショートで扱い済み）。
+# 重ならないように: 10/19 のマドゥエケ（フォレスト戦の「差」）、10/21 の「ライス×ネヴェス」（去年のCL決勝）、バイエルン紹介（本拠地・35回優勝）とは軸も言い回しも別。**去年のCL決勝（PSGにPK）には触れない**。ラヤの「支配率28%」の話は使わない。
+# 本人の言葉: ラヤ本人・アルテタ本人の発言が実在する（Y）。**英語を訳した。語は足していない**。ラヤの発言は英語の原文、台本の日本語は自訳。
+# 反応: 当たっていない（作らない）。approve は --no-voices で。
+# 確度: 発言は 報道（ガーディアン）で、アルテタの分はクラブ公式の全文とも一致。バイエルンが攻めてくるという見立ては記者の見立て（背景）。
+# 写真: Arsenal.com（クラブ公式）5枚＋Commons 2枚。ラヤ＝01・03・05・07、アルテタ＝02・04、2人＝06（ミュンヘンのピッチ）。代理店のURLは使っていない。
+#   01・07 は Commons（Bryan Berlin、CC BY-SA 4.0、2026年7月のW杯でのスペイン代表）。03・05 はフォレスト戦のラヤ（Arsenal.com）。02 はミュンヘンでの前日会見のアルテタ、04 はフォレスト戦後にファンへ拍手するアルテタ。
+slot: premier
+date: "2026年10月21日"
+format: news
+no_main: true      # ニュースはショートだけ（2026-10-14）。締めで本編を案内しない
+people: [ダビド・ラヤ, ミケル・アルテタ, アーセナル, バイエルン]
+
+short_style: Y
+short_hook_quote: 人にはそれぞれ意見があります。
+short_question: アーセナルの戦い方を、あなたは楽しめていますか。
+short_hook: ラヤの答えは「いいえ」。アルテタは「ごく少数」。
+short_photos:
+  - assets/images/20261021_arteta_raya_bayern/01_v.jpg
+  - assets/images/20261021_arteta_raya_bayern/03_v.jpg
+  - assets/images/20261021_arteta_raya_bayern/05_v.jpg
+  - assets/images/20261021_arteta_raya_bayern/07_v.jpg
+  - assets/images/20261021_arteta_raya_bayern/02_v.jpg
+  - assets/images/20261021_arteta_raya_bayern/04_v.jpg
+  - assets/images/20261021_arteta_raya_bayern/06_v.jpg
+short_telops:
+  - {match: 退屈, text: ラヤ GK/「退屈」の声が気になるか、と問われて}
+  - {match: 11試合で、負けたのは, text: ラヤ/「11試合で、負けたのは1つ」}
+  - {match: 楽しんでいます, text: ラヤ/「私たちはサッカーを楽しんでいます」}
+  - {match: 同じ話題, text: アルテタ監督/バイエルン戦の前日の会見}
+  - {match: 印象, text: アルテタ監督/「そういう印象は私にはない」}
+  - {match: ごく少数, text: アルテタ監督/「ごく少数の話だと思う」}
+  - {match: 認める, text: アルテタ監督/「もっと良くできた。率直に認める」}
+  - {match: 求められる試合, text: 引いて守る相手と前から来る相手/求められる試合は違う}
+  - {match: 現地の記事, text: 現地の記事の見立て/バイエルンは試合を作りに来る}
+  - {match: 午前4時, text: 試合は日本時間22日午前4時/アリアンツ・アレーナ}
+
+theme:
+  id: arteta_raya_bayern
+  league: england
+  league_name: チャンピオンズリーグ
+  prefix: ""
+  title: ラヤ、アーセナルへの「退屈」の声に「いいえ」。アルテタは「ごく少数」
+  hook: ""
+  question: 戦い方への「退屈」という声に、ラヤとアルテタは何と答えたのか
+  takeaway: ラヤは「11試合で負けたのは1つ」、アルテタは「ごく少数」と答えた。次は日本時間22日午前4時、バイエルン戦
+
+thumbnail:
+  layout: face
+  line1: ラヤ「いいえ」
+  line2: アルテタ「ごく少数」
+  tags: [ラヤ, アルテタ, アーセナル]
+  photo: assets/images/20261021_arteta_raya_bayern/03_w.jpg
+  short_photo: assets/images/20261021_arteta_raya_bayern/01_v.jpg
+
+answer: ラヤは「いいえ」、アルテタは「ごく少数」。バイエルン戦の前日の発言
+watch: 日本時間22日午前4時、バイエルン戦
+
+sections:
+  - id: what
+    main: true
+    heading: ラヤは何と答えたか
+    tier: 報道
+    telop: ラヤ、「退屈」の声に「いいえ」
+    say:
+      - text: バイエルン戦を前に、アーセナルのGKラヤが語りました。
+        card: none
+      - text: 相手サポーターが「退屈」と呼ぶことは、気になるか。ラヤの答えは「いいえ」。
+        card: none
+      - voice: ラヤ
+        text: 人にはそれぞれ意見があります。
+        short_voice: true
+        card: none
+      - voice: ラヤ
+        text: 私たちには、私たちの意見があります。
+        cont: true
+        card: none
+      - text: アーセナルは、全大会で11試合のうち10勝です。
+        card: none
+      - voice: ラヤ
+        text: 今季、11試合で、負けたのは1つです。
+        cont: true
+        card: none
+      - voice: ラヤ
+        text: それを退屈とか、苛立たしいとか呼ぶのなら、
+        cont: true
+        card: none
+      - voice: ラヤ
+        text: 何と言えばいいのか分かりません。
+        cont: true
+        card: none
+      - voice: ラヤ
+        text: 私たちはサッカーを楽しんでいます。
+        cont: true
+        card: none
+      - voice: ラヤ
+        text: 毎日、勝つためにピッチへ出ることを楽しんでいます。
+        cont: true
+        card: none
+      - voice: ラヤ
+        text: それがいちばん大事です。
+        cont: true
+        card: none
+    official: false
+    sources:
+      - https://www.theguardian.com/football/2026/oct/20/bayern-munich-arsenal-champions-league
+    quotes_from: ["ガーディアン https://www.theguardian.com/football/2026/oct/20/bayern-munich-arsenal-champions-league"]
+
+  - id: arteta
+    heading: ラヤと同じ話題に、アルテタ監督は
+    tier: 報道
+    telop: アルテタ監督「批判はごく少数」
+    say:
+      - text: ラヤと同じ話題に、アルテタ監督も答えました。
+        card: none
+      - text: バイエルン戦の前日、ミュンヘンでの会見です。
+        card: none
+      - text: 監督は、強いチームはどこも、あれこれ言われるものだと話しました。
+        card: none
+      - voice: アルテタ監督
+        text: そういう印象は、私にはありません。
+        card: none
+      - voice: アルテタ監督
+        text: 素晴らしいと聞いていますから。
+        cont: true
+        card: none
+      - voice: アルテタ監督
+        text: 得点が多く、ボール支配も、シュートも多い。
+        cont: true
+        card: none
+      - voice: アルテタ監督
+        text: 批判しているのは、ごく少数だと思います。
+        card: none
+      - voice: アルテタ監督
+        text: それ以外の人たちは、今年の私たちの戦い方を、
+        cont: true
+        card: none
+      - voice: アルテタ監督
+        text: 試合を支配してきたことを、楽しんだと分かっています。
+        cont: true
+        card: none
+      - text: 日曜のフォレスト戦については、こうも認めています。
+        card: none
+      - voice: アルテタ監督
+        text: もっと良くできたことは、あります。
+        card: none
+      - voice: アルテタ監督
+        text: それは私たち次第で、率直に認める必要があります。
+        cont: true
+        card: none
+    official: false
+    sources:
+      - https://www.theguardian.com/football/2026/oct/20/bayern-munich-arsenal-champions-league
+      - https://www.arsenal.com/news/every-word-of-mikel-artetas-pre-bayern-presser-agdMk0a7U4Ft
+    quotes_from: ["ガーディアン https://www.theguardian.com/football/2026/oct/20/bayern-munich-arsenal-champions-league", "Arsenal.com https://www.arsenal.com/news/every-word-of-mikel-artetas-pre-bayern-presser-agdMk0a7U4Ft"]
+
+  - id: view
+    viewpoint: true
+    heading: ラヤとアルテタが迎えるバイエルン
+    tier: 背景
+    telop: 引いて守る相手と、前から来る相手
+    say:
+      - text: 見立てです。ラヤとアルテタ監督が迎えるバイエルンは、試合を作りに来るチームです。
+        card: none
+      - text: 監督は、引いて守る相手と、前から来る相手では、求められる試合が違うと話しました。
+        card: none
+      - text: 引いて守るとは、自陣に下がって守ることです。
+        card: none
+      - text: 現地の記事は、アーセナルが攻めやすくなるかもしれない、と見ています。
+        card: none
+      - text: 昨季、エミレーツで当たったときは、アーセナルの3対1の勝利でした。
+        card: none
+      - text: 試合は、日本時間の22日午前4時です。
+        card: none
+    official: false
+    sources:
+      - https://www.theguardian.com/football/2026/oct/20/bayern-munich-arsenal-champions-league
+      - https://www.arsenal.com/news/every-word-of-mikel-artetas-pre-bayern-presser-agdMk0a7U4Ft
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20261021
+short_title: "ラヤ、アーセナルへの「退屈」の声に「いいえ」。アルテタは「ごく少数」"

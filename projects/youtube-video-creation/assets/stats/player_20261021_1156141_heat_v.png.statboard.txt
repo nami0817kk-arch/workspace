@@ -1,0 +1,4 @@
+title: ジャマル・ムシアラの今季のヒートマップ
+unit: touches
+points=132
+source: FotMob

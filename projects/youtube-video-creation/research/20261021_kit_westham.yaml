@@ -1,0 +1,558 @@
+# ユニフォームとエンブレムの歴史 ウェストハム・ユナイテッド（10/21 作成）。雛形は 10/20 トッテナム回。
+# 題の問い：ウェストハムの紋章（交差したハンマー）は、いつから胸にあり、また変わるのか。
+# 軸：①胸にハンマーが付いたのはクラブ公式の記事で1923年のFAカップ決勝。その前は1896年のユニオンジャックが1シーズンだけ（公式）。ウィキペディアは「1895〜1900年の紋章」と書き、割れる。
+#    ②城がいつから紋章にいるか：公式＝1950年代のブレザー・シャツは1965年5月のカップ・ウィナーズ・カップ決勝が最初・大きな城は1975/76から／ウィキペディア歴史＝1904年／本体＝塔が1950年代から断続的。
+#    ③色：公式＝1895/96は濃紺／ウィキペディア＝1903年に赤紫（クラレット）と青をホームに。2026/27はニューバランス初のホーム、袖は「ボンズ・ブルー」（B&D Post）。
+#    ④胸の形の変遷（公式の記載）と、1980年の形が36年続いたこと（公式）。⑤2026年6月29日に紋章の見直しを発表。第1回アンケート（8/20〜9/13）は有効15,314件、85%が変更に賛成（クラブ公式 2026-09）。新紋章は2028年夏に導入予定。
+# 取材：2026-10-21。requests のブラウザ User-Agent で本文を読んだ（WebFetch・ブラウザ操作・検索エンジンのAI要約は使っていない。URLを探すため WebSearch の題名とURLだけ使い、本文は自分で読んだ）。
+#   読んだ公式（whufc.com）：/news/articles/2017/june/29-june/west-ham-united-crest-through-years（2017-06-29。本体は500エラーでアクセスできず、Internet Archive の控え web.archive.org/web/2020/… を読んだ）／
+#     /en/our-crest（Forging Our Future、2026-09）／/en/news/forging-our-future-or-supporters-opt-for-change-in-club-crest（第1回アンケートの結果、記事内の数字を本文から抽出）。
+#   読んだウィキペディア(en)：West Ham United F.C.（節 Crest・Colours。現在は EFL Championship、2025–26 は18位で降格）／History of West Ham United F.C.（1904年の城入りの紋章、1923年の決勝）。
+#   報道：Barking and Dagenham Post「West Ham United unveil new 2026/27 home shirt by New Balance」（クラブの発表の引用）、SportsLogos.Net（2026-06-30、紋章の相談の発表。クラブの文面を引用）。
+#   読めなかった：whufc.com の2026/27ホームシャツの公式記事（見つからず）、1923年の決勝のシャツの写真（公式の記事の写真は使っていない）。
+#
+# ---- 一次情報で確かめたこと（年は本文のまま）----
+#   ・公式 2017-06-29：「In 1896, the Club introduced its first crest … the Union Jack. Above and below the crest, the wording 'TIW FC' was sewed on. However, this crest … was used for just one season before being removed.」
+#     「For the next 27 years … wore a shirt without a crest.」「The next time one appeared on West Ham's shirts was for the historic 1923 FA Cup final with Bolton Wanderers – the first final to be played at the new Empire Stadium in Wembley.」
+#     「the estimated 200,000-strong crowd saw captain George Kay lead his team out in claret and blue shirts adorned with an 'elegant' shaped crest containing, for the first time, the now world-famous 'crossed hammers' symbol denoting two riveting hammers.」
+#     「The crest then disappeared for another 27 years before reappearing in a similar form in 1950 … It remained on the Club's shirts for five seasons before taking a three-year break between 1955-58.」
+#     「During the same decade, the players often wore blazers … For the first time, these designs included an image of the 'Boleyn Castle', the building named Green Street House which sat next to the Club's Boleyn Ground」
+#     「In 1958 … the crossed hammers returned inside a 'classic' shaped crest which would remain on the shirts for most of the next nine seasons.」「One notable exception came in May 1965 … European Cup Winners' Cup final, complete with a 'renaissance' shaped crest containing the crossed hammers and, for the first time, the Boleyn Castle」
+#     「Crests then disappeared … aside from a two-month period in 1967 – until the 1975/76 season … a large Boleyn Castle behind the classic crossed hammers.」「In 1980, a ribbon was added … 'West Ham United' and this design – save for a return to the plain crossed hammers between 1983-85 – remained on the shirts for the next 36 years」
+#     「In 1995 … a special commemorative crest」「The crest used between 1998-2016」「The most-recent change … summer 2016, with a new shape based on the bow of HMS Warrior … the addition of the word 'London'」。1895/96 は「a plain all-Harrovian blue」の無地のシャツ。
+#   ・公式 /en/our-crest・結果の記事：アンケートは 2026-08-20〜09-13。「A total of 15,911 responses were submitted. Of these, 96% were verified as eligible, giving a final total of 15,314 verified responses.」「85% – of respondents have voted in favour of changing the current Club crest.」
+#     次：集会（フォーカスグループ）→デザイン会社→「proposed crests being shared in Spring 2027」→投票→「planned introduction of the new crest in summer 2028」。
+#   ・SportsLogos 2026-06-30：クラブは2026年6月29日（1895年のテムズ鉄工所創設の記念日）に発表。現在の紋章は2016年に採用。2026-27は2部（EFL Championship）。
+#   ・ウィキペディア（本体）：「The Thames Ironworks Team (1895–1900) used the Union Flag as its badge.」／塔は「from the 1950s onwards … intermittently」、アン・ブーリンの塔を表すとされるが「there is no documentary evidence」／ボリンの屋敷（Green Street House）は1955年に取り壊し／
+#     2016年の形は「HMS Warrior の船体の断面」と同じ形／色：「The Irons permanently adopted claret and blue … as home colours in 1903」、1895-96は濃紺、1897〜99年は空色のシャツと白のパンツなど。
+#   ・ウィキペディア（歴史）：「1904 also saw the introduction of the newly renamed club emblem. It incorporated the crossed hammers … and introduced the 'castle'」／1923年の決勝は0対2でボルトンに負け、「White Horse Final」。
+#   ・B&D Post：2026/27ホームは「its first with a new manufacturer」＝ニューバランス初のホーム。「incorporates the club's 'Bonds Blue' sleeves」。
+#
+# ---- 食い違い（台本で断る／言わないもの）----
+#   ・**最初の紋章（ユニオンジャック）の期間**：公式＝1896年の1シーズン／ウィキペディア＝1895〜1900年。
+#   ・**城が最初に紋章に入った年**：公式＝1950年代のブレザー、シャツは1965年／ウィキペディア(歴史)＝1904年／本体＝1950年代から断続。→ シャツでは1965年（公式）と1904年（ウィキペディア）の差は 1965−1904＝61年。
+#   ・**2016年の形**：公式＝HMS Warrior の船首／ウィキペディア＝船体の断面。台本では「船の形」と言い、船首か断面かは割れると断る。
+#   ・**色**：公式の1895/96＝濃紺の無地／ウィキペディア＝赤紫と青の採用は1903年。
+#   ・言わなかった割れ：城の理由の他説（旧鉄工所の建物・オールド・キャッスル・スウィフツ・ボリン城FC）は1行だけ「ほかにも説がある」と言う／1998年の作り直しのデザイナーの名前（検索の要約にだけ出た）／2014年のアンケートの数字（読めた公式の記事に無い）。
+#
+# ---- 自分で数えた数（検算した）----
+#   ・紋章の無かった期間（公式の2つの「27年」）：1896→1923＝27、1923→1950＝27、足して54年。1975/76→2026＝51年（途切れず付いている）。54−51＝3。
+#   ・1980→2016＝36年（公式）。1998→2016＝18年。2016→2028＝12年（予定）。12÷18＝0.67（3分の2）、12÷36＝0.33（3分の1）。
+#   ・赤紫と青の採用 1903→2026＝123年。15,314×0.85＝13,017（約1万3000人。百分率は四捨五入なので概数）。15,314÷15,911＝96.2%（公式は96%）。
+#
+# ---- 言わないと決めたもの ----
+#   ・スタジアムの数字・本拠地の収容（スタジアムの回と重ねない）／契約金額／アウェー・サードの色／女子チーム／所有者の話／スポンサー名（公式で確かめた資料が無い。Boyle Sports の続投は二次情報のみ）／
+#   ・ファン投票の中身の予想（ハンマーを残すか・城を戻すか）。クラブは新しい形をまだ発表していない。
+#
+# ---- 写真（assets/images/20261021_kit_westham/、出典は credits.json）。取り込んだあと開いて見た ----
+#   Commons の CC BY / CC BY-SA / 著作権切れの写真だけ。ボリン・グラウンド・ロンドン・スタジアム・ウォリアー号・1923年のケイ主将。Getty などの代理店の写真は使っていない。
+#   エンブレムは assets/crests/ウェストハム.png・節の頭の差し込み assets/backgrounds/cut_ウェストハム.png（権利は晴れていない＝引き受ける危険）。
+#
+# ネットの反応は入れない（voice_min: 0）。シリーズの回にショートは作らない決まり。
+date: 2026年10月21日
+slot: other_2
+format: news
+series: ユニフォームとエンブレムの歴史
+voice_min: 0
+people:
+- ウェストハム・ユナイテッド
+theme:
+  end_bg: assets/images/20261021_kit_westham/w02_london_stadium.jpg
+  id: kit_westham
+  league: england
+  league_name: イングランド2部（チャンピオンシップ）
+  kind: other
+  topic: ウェストハム
+  title: ウェストハムの紋章は、いつから胸にあり、また変わるのか
+  question: ウェストハムのハンマーの紋章は、いつから胸にあり、なぜいま、また見直されているのか
+  opening_image: assets/images/20261021_kit_westham/w06_boleyn_02.jpg
+  lead: 胸に、交差したハンマー。
+  hook: ''
+  takeaway: ウェストハムの胸のハンマーは、クラブ公式の記事では1923年のFAカップ決勝が最初。その前の紋章は1896年のユニオンジャックの1シーズンだけで、胸に紋章が無かった年は27年が2回、54年。1975/76から今までの51年より3年長い。城がいつ紋章に入ったかは、公式（シャツは1965年）とウィキペディア（1904年）で61年割れる。2016年の紋章は、2028年夏に替わる予定なら12年で、1998〜2016年の紋章の18年より短い。2026年の第1回アンケートは有効15,314件で、85％が変更に賛成。新しい形は、まだ発表されていない。資料で食い違う点は、この動画では断定しない
+  hook_unused: ''
+thumbnail:
+  layout: classic
+  callouts: [2028年夏に新紋章, 城は資料で割れる]
+  photo: assets/images/20261021_kit_westham/w06_boleyn_02.jpg
+  line1: ウェストハムの紋章
+  line2: 胸に付いたのは1923年
+  tags:
+  - ウェストハム
+  - ウェストハム・ユナイテッド
+  - ハマーズ
+  - ユニフォーム
+  - エンブレム
+sections:
+- id: since
+  main: true
+  heading: ハンマーは、いつから胸にあるのか
+  tier: 報道
+  telop: 胸のハンマーは1923年のFAカップ決勝が最初。その前は1896年のユニオンジャックが1シーズン（クラブ公式）
+  narrator: 解説
+  card: &id_doc
+    type: document
+    label: ウェストハム公式サイト「紋章の歩み」（2017年6月29日）の訳
+    paragraphs:
+    - 1896年、クラブは最初の紋章を付けた。ユニオンジャックだった。1シーズンで外された。
+    - その後27年、シャツに紋章は無かった。
+    - 次に付いたのは、1923年のFAカップ決勝。主将ジョージ・ケイは、交差した2本のハンマーの紋章のシャツで、チームを率いた。
+    highlight:
+    - 1896年
+    - 27年
+    - 1923年
+  say:
+  - text: ウェストハムの、胸の紋章の話です。
+    image: assets/images/20261021_kit_westham/w01_boleyn_east.jpg
+    emph: true
+    card: none
+  - text: 年や由来は、資料によって、書き方が違います。違いは、そのまま伝えます。
+    image: assets/images/20261021_kit_westham/w01_boleyn_east.jpg
+    card: none
+  - text: まず、クラブ公式の記事から。
+    card:
+      <<: *id_doc
+      highlight: []
+  - text: 最初の紋章は、1896年のユニオンジャックでした。
+    emph: true
+    card: *id_doc
+  - text: 1シーズンで外され、そのあとは27年。1シーズンの27倍の空白です。
+    card: *id_doc
+  - text: ウィキペディアは、ユニオンジャックを、1895年から1900年の紋章と書きます。
+    image: assets/images/20261021_kit_westham/w05_warrior.jpg
+    card: none
+  - text: 期間は、公式と食い違います。
+    image: assets/images/20261021_kit_westham/w05_warrior.jpg
+    card: none
+  - text: 次に付いたのは、1923年のFAカップ決勝です。
+    emph: true
+    card: *id_doc
+  - text: ウェンブリー競技場で、初めて開かれた決勝でした。
+    image: assets/images/20261021_kit_westham/w05_warrior.jpg
+    card: none
+  - text: 主将のジョージ・ケイは、ハンマーの紋章のシャツで、先頭に立ちました。
+    image: assets/images/20261021_kit_westham/w05_warrior.jpg
+    card: none
+  - text: ハンマーは、造船で鋲を打つ道具。クラブは、鉄工所のチームから生まれました。
+    image: assets/images/20261021_kit_westham/w05_warrior.jpg
+    card: none
+  - text: 公式は、観客を約20万人と見積もります。収容を、大きく超えました。
+    image: assets/images/20261021_kit_westham/w01_boleyn_east.jpg
+    card: none
+  - text: 試合は、ボルトンに0対2の負け。「白馬の決勝」と呼ばれます。
+    image: assets/images/20261021_kit_westham/w01_boleyn_east.jpg
+    card: none
+  sources:
+  - https://www.whufc.com/news/articles/2017/june/29-june/west-ham-united-crest-through-years
+  - https://en.wikipedia.org/wiki/West_Ham_United_F.C.
+  - https://en.wikipedia.org/wiki/History_of_West_Ham_United_F.C.
+- id: castle
+  heading: 城は、いつから紋章にいるのか。資料で割れる
+  tier: 背景
+  telop: 城の初出は、公式はシャツで1965年。ウィキペディアは1904年と書く
+  narrator: 解説
+  card: &id_cas
+    type: table
+    title: 紋章に城が入った年の書き方
+    columns:
+    - 資料
+    - 書いてあること
+    rows:
+    - - クラブ公式の記事
+      - 1950年代のブレザー。シャツは1965年
+    - - ウィキペディア（歴史）
+      - 1904年の紋章に城
+    - - ウィキペディア（本体）
+      - 塔が1950年代から断続的に
+    highlight_row: 0
+  say:
+  - text: 次は、ウェストハムの紋章の、城です。いつ入ったかは、資料によって年が違います。
+    image: assets/images/20261021_kit_westham/w03_boleyn_last.jpg
+    card: none
+  - text: クラブ公式は、1950年代のブレザーが最初、と書きます。
+    emph: true
+    card:
+      <<: *id_cas
+      highlight_row: 0
+  - text: 選手が行事で着た、上着です。シャツではありません。
+    image: assets/images/20261021_kit_westham/w03_boleyn_last.jpg
+    card: none
+  - text: シャツでは、1965年5月。ヨーロッパの決勝が、最初です。
+    image: assets/images/20261021_kit_westham/w03_boleyn_last.jpg
+    card: none
+  - text: モデルは、旧本拠地のそばにあった、屋敷。ボリン城と呼ばれました。
+    image: assets/images/20261021_kit_westham/w06_boleyn_02.jpg
+    card: none
+  - text: ウィキペディアは、ヘンリー8世の妃、アン・ブーリンの塔が由来と書きます。
+    image: assets/images/20261021_kit_westham/w06_boleyn_02.jpg
+    card: none
+  - text: ただ、そこで求愛した話は、記録の裏づけがない、とも書きます。
+    image: assets/images/20261021_kit_westham/w06_boleyn_02.jpg
+    card: none
+  - text: ウィキペディアの歴史の記事は、1904年に城入りの紋章ができた、と書きます。
+    emph: true
+    card:
+      <<: *id_cas
+      highlight_row: 1
+  - text: 本体の記事は、塔は、1950年代から断続的に、と書きます。
+    card:
+      <<: *id_cas
+      highlight_row: 2
+  - text: シャツの1965年と、1904年の差は、61年です。
+    emph: true
+    image: assets/images/20261021_kit_westham/w03_boleyn_last.jpg
+    card: &id_gap
+      type: calc
+      title: 城の初出の差（自分で引いた）
+      terms:
+      - - 1965年
+        - 公式（シャツ）
+      - - 1904年
+        - ウィキペディア（歴史）
+      - - 61年
+        - 引いた答え
+      ops:
+      - −
+      - ＝
+  - text: どちらが正しいか、資料だけでは言えません。
+    image: assets/images/20261021_kit_westham/w03_boleyn_last.jpg
+    card: none
+  - text: シャツで大きな城が付くのは、1975/76シーズンからです。
+    image: assets/images/20261021_kit_westham/w06_boleyn_02.jpg
+    card: none
+  sources:
+  - https://www.whufc.com/news/articles/2017/june/29-june/west-ham-united-crest-through-years
+  - https://en.wikipedia.org/wiki/West_Ham_United_F.C.
+  - https://en.wikipedia.org/wiki/History_of_West_Ham_United_F.C.
+- id: colour
+  heading: シャツの色は、いつから赤紫と青なのか
+  tier: 背景
+  telop: 赤紫と青を正式なホームにしたのは1903年。今季はニューバランス初のホームで、袖はボンズ・ブルー
+  narrator: 解説
+  card: &id_col
+    type: timeline
+    title: シャツの色の歩み
+    rows:
+    - - 1895/96
+      - 濃紺の無地（クラブ公式）
+    - - 1897〜99年
+      - 空色のシャツと白のパンツ（ウィキペディア）
+    - - 1903年
+      - 赤紫と青を、ホームの色に
+    - - 2026/27
+      - ニューバランス初のホーム。袖はボンズ・ブルー
+    focus: 1895/96
+    highlight_row: 0
+  say:
+  - text: では、ウェストハムのシャツの色です。最初は、赤紫でも、青でもありませんでした。
+    image: assets/images/20261021_kit_westham/w05_warrior.jpg
+    card: none
+  - text: 1895/96シーズンは、濃紺の無地。クラブ公式の記事の記載です。
+    emph: true
+    image: assets/images/20261021_kit_westham/w05_warrior.jpg
+    card:
+      <<: *id_col
+      highlight_row: 0
+  - text: 1897年から99年は、空色のシャツと、白いパンツも使いました。
+    image: assets/images/20261021_kit_westham/w05_warrior.jpg
+    card:
+      <<: *id_col
+      highlight_row: 1
+  - text: 赤紫と青を、ホームの色に決めたのは、1903年。鉄工所の色でした。
+    emph: true
+    image: assets/images/20261021_kit_westham/w01_boleyn_east.jpg
+    card:
+      <<: *id_col
+      highlight_row: 2
+  - text: 赤紫は、赤ワインのような色。クラレットと呼ばれます。
+    image: assets/images/20261021_kit_westham/w01_boleyn_east.jpg
+    card: none
+  - text: 1903年から今まで、123年です。
+    image: assets/images/20261021_kit_westham/w01_boleyn_east.jpg
+    card: &id_123
+      type: calc
+      title: 赤紫と青の年数（自分で引いた）
+      terms:
+      - - 2026年
+        - 今季
+      - - 1903年
+        - ホームの色に決めた年
+      - - 123年
+        - 引いた答え
+      ops:
+      - −
+      - ＝
+  - text: 今季の2026/27は、ニューバランスの、初めてのホームシャツです。
+    image: assets/images/20261021_kit_westham/w02_london_stadium.jpg
+    card:
+      <<: *id_col
+      highlight_row: 3
+  - text: 袖は、「ボンズ・ブルー」。クラブの発表で、そう呼ばれています。
+    image: assets/images/20261021_kit_westham/w02_london_stadium.jpg
+    card: none
+  sources:
+  - https://www.whufc.com/news/articles/2017/june/29-june/west-ham-united-crest-through-years
+  - https://en.wikipedia.org/wiki/West_Ham_United_F.C.
+  - https://www.barkinganddagenhampost.co.uk/sport/26246616.west-ham-united-unveil-new-2026-27-home-shirt-new-balance/
+- id: shape
+  heading: 胸の形は、何度替わったのか
+  tier: 報道
+  telop: クラブ公式の記載を数える。ハンマーの形・城・リボン・船の形へ
+  narrator: 解説
+  card: &id_shA
+    type: timeline
+    title: 胸の紋章の変遷（クラブ公式の記載。前半）
+    rows:
+    - - 1923年
+      - FAカップ決勝で、ハンマーが初めて胸に
+    - - 1950年
+      - 5シーズン付き、その後3年外れる
+    - - 1958年
+      - 「クラシック」の形で、約9シーズン
+    - - 1965年5月
+      - 欧州決勝で、城つきの形（例外）
+    - - 1975/76
+      - 大きな城がハンマーの後ろに
+    focus: 1923年
+  say:
+  - text: ここからは、ウェストハムの胸の形の移り変わり。公式の記載で数えます。
+    image: assets/backgrounds/cut_ウェストハム.png
+    card: none
+  - text: 1923年の最初の形は、決勝の1試合のあと、27年消えます。
+    emph: true
+    image: assets/images/20261021_kit_westham/w01_boleyn_east.jpg
+    card:
+      <<: *id_shA
+      highlight_row: 0
+  - text: 1950年に、似た形で戻ります。5シーズン付き、そのあと3年外れました。
+    image: assets/images/20261021_kit_westham/w01_boleyn_east.jpg
+    card:
+      <<: *id_shA
+      highlight_row: 1
+  - text: 1958年は、1部に戻った祝い。「クラシック」と呼ぶ形が、ほぼ9シーズン付きます。
+    image: assets/images/20261021_kit_westham/w01_boleyn_east.jpg
+    card:
+      <<: *id_shA
+      highlight_row: 2
+  - text: 1965年5月、欧州の決勝で、城つきの形。公式は、これを例外と書きます。
+    image: assets/images/20261021_kit_westham/w03_boleyn_last.jpg
+    card:
+      <<: *id_shA
+      highlight_row: 3
+  - text: 1975/76から、大きな城が、ハンマーの後ろに付きました。
+    emph: true
+    image: assets/images/20261021_kit_westham/w03_boleyn_last.jpg
+    card:
+      <<: *id_shA
+      highlight_row: 4
+  - text: ここから先は、後半です。
+    card: &id_shB
+      type: timeline
+      title: 胸の紋章の変遷（クラブ公式の記載。後半）
+      rows:
+      - - 1980年
+        - リボンに「ウェストハム・ユナイテッド」
+      - - 1983〜85年
+        - ハンマーだけに戻る
+      - - 1995年
+        - 百周年の特別な紋章
+      - - 1998年
+        - 紋章が作り直される
+      - - 2016年
+        - 船の形の盾。「ロンドン」の文字
+      focus: 1980年
+  - text: 1980年、紋章の下に、チーム名のリボンが付きます。
+    emph: true
+    card:
+      <<: *id_shB
+      highlight_row: 0
+  - text: 1983年から85年は、ハンマーだけに戻りました。
+    card:
+      <<: *id_shB
+      highlight_row: 1
+  - text: 1995年は、鉄工所の創設100年。特別な紋章が付きました。
+    image: assets/images/20261021_kit_westham/w05_warrior.jpg
+    card:
+      <<: *id_shB
+      highlight_row: 2
+  - text: 1998年、紋章は作り直されます。公式は、2016年までの紋章と書きます。
+    image: assets/images/20261021_kit_westham/w05_warrior.jpg
+    card:
+      <<: *id_shB
+      highlight_row: 3
+  - text: 公式は、1980年の形が、その後36年、胸にあったと書きます。
+    emph: true
+    image: assets/images/20261021_kit_westham/w03_boleyn_last.jpg
+    card: none
+  - text: 2016年は、新本拠地に移った夏。胸の形が、船の形の盾に替わります。
+    image: assets/images/20261021_kit_westham/w02_london_stadium.jpg
+    card:
+      <<: *id_shB
+      highlight_row: 4
+  - text: 元は、鉄工所が造った軍艦、ウォリアー号。船首の形と、公式は書きます。
+    image: assets/images/20261021_kit_westham/w05_warrior.jpg
+    card: none
+  - text: ウィキペディアは、船体の断面と同じ形、と書きます。
+    image: assets/images/20261021_kit_westham/w05_warrior.jpg
+    card: none
+  - text: このとき、城が外れ、「ロンドン」の文字が入りました。
+    image: assets/images/20261021_kit_westham/w02_london_stadium.jpg
+    card: none
+  sources:
+  - https://www.whufc.com/news/articles/2017/june/29-june/west-ham-united-crest-through-years
+  - https://en.wikipedia.org/wiki/West_Ham_United_F.C.
+- id: now
+  heading: 紋章の見直しは、いま、どこまで進んでいるのか
+  tier: 報道
+  telop: 2026年6月29日に発表。第1回アンケートは有効15,314件で、85％が変更に賛成。新紋章は2028年夏の予定
+  narrator: 解説
+  card: &id_now
+    type: document
+    label: ウェストハム公式サイト「Forging Our Future」（2026年9月）の訳
+    paragraphs:
+    - 第1回アンケートの回答は、計15,911件。うち96％が資格を満たし、有効回答は15,314件だった。
+    - 回答者の85％が、現在の紋章を変えることに賛成した。
+    - 提案する紋章は、2027年春に示す。新しい紋章は、2028年夏に導入する予定。
+    highlight:
+    - 15,314件
+    - 85％
+    - 2028年夏
+  say:
+  - text: そして、いま。ウェストハムは、紋章を見直しています。
+    image: assets/images/20261021_kit_westham/w02_london_stadium.jpg
+    card: none
+  - text: 発表は、2026年6月29日。鉄工所のチームができた記念日です。
+    image: assets/images/20261021_kit_westham/w02_london_stadium.jpg
+    card: none
+  - text: 昨季18位で降格し、今季は、2部のチャンピオンシップにいます。
+    image: assets/images/20261021_kit_westham/w02_london_stadium.jpg
+    card: none
+  - text: クラブは、紋章が、歴史と個性を映すものか、確かめるため、と説明します。
+    image: assets/images/20261021_kit_westham/w02_london_stadium.jpg
+    card: none
+  - text: アンケートは、8月20日から、9月13日まで。
+    image: assets/images/20261021_kit_westham/w02_london_stadium.jpg
+    card:
+      <<: *id_now
+      highlight: []
+  - text: 有効な回答は、1万5314件。クラブ公式の数字です。
+    emph: true
+    image: assets/images/20261021_kit_westham/w02_london_stadium.jpg
+    card: *id_now
+  - text: そのうち、85％が、いまの紋章を変えることに、賛成しました。
+    emph: true
+    image: assets/images/20261021_kit_westham/w02_london_stadium.jpg
+    card: *id_now
+  - text: 人数にすると、およそ1万3000人です。
+    image: assets/images/20261021_kit_westham/w02_london_stadium.jpg
+    card: &id_ppl
+      type: calc
+      title: 賛成のおよその人数（自分で掛けた）
+      terms:
+      - - 15,314件
+        - 有効回答
+      - - 85％
+        - 賛成の割合
+      - - 約1万3000人
+        - 掛けた答え（概数）
+      ops:
+      - ×
+      - ＝
+  - text: 次は、集会。デザイン会社が、案を作ります。
+    image: assets/images/20261021_kit_westham/w02_london_stadium.jpg
+    card: none
+  - text: 案は、2027年春に示され、投票が行われます。
+    image: assets/images/20261021_kit_westham/w02_london_stadium.jpg
+    card: *id_now
+  - text: 新しい紋章の導入は、2028年の夏の予定です。
+    emph: true
+    image: assets/images/20261021_kit_westham/w02_london_stadium.jpg
+    card: *id_now
+  - text: 新しい形は、まだ、発表されていません。
+    emph: true
+    image: assets/images/20261021_kit_westham/w02_london_stadium.jpg
+    card: none
+  sources:
+  - https://www.whufc.com/en/our-crest
+  - https://www.whufc.com/en/news/forging-our-future-or-supporters-opt-for-change-in-club-crest
+  - https://news.sportslogos.net/west-ham-united-launch-fan-consultation-on-new-club-crest
+  - https://en.wikipedia.org/wiki/West_Ham_United_F.C.
+- id: view
+  viewpoint: true
+  heading: 見立て・胸に紋章の無い54年と、付いている51年。次の紋章は何年持つのか
+  tier: 背景
+  telop: 紋章が無かったのは27年が2回で54年。1975/76から今までの51年より3年長い。2016年の紋章は12年で替わる予定
+  narrator: 解説
+  card: &id_gapyear
+    type: calc
+    title: 胸に紋章の無かった年と、付いている年（自分で数えた）
+    terms:
+    - - 54年
+      - 無かった年（27年が2回）
+    - - 51年
+      - 付いている年（1975/76から今まで）
+    - - 3年
+      - 引いた答え
+    ops:
+    - −
+    - ＝
+  say:
+  - text: 最後に、ウェストハムの年を、数え直します。
+    image: assets/images/20261021_kit_westham/w01_boleyn_east.jpg
+    card: none
+  - text: 公式は、紋章の無い期間を、27年と書きました。
+    image: assets/images/20261021_kit_westham/w01_boleyn_east.jpg
+    card: none
+  - text: 1923年の決勝をはさみ、同じ27年が、2回あります。
+    image: assets/images/20261021_kit_westham/w01_boleyn_east.jpg
+    card: none
+  - text: 足すと、54年です。
+    image: assets/images/20261021_kit_westham/w03_boleyn_last.jpg
+    card: *id_gapyear
+  - text: 1975/76から今までは、51年。
+    image: assets/images/20261021_kit_westham/w03_boleyn_last.jpg
+    card: *id_gapyear
+  - text: 無かった年のほうが、3年、長いのです。
+    emph: true
+    image: assets/images/20261021_kit_westham/w03_boleyn_last.jpg
+    card: *id_gapyear
+    mark:
+      kind: circle
+      item: 2
+  - text: では、次の紋章は、何年持つのか。
+    image: assets/images/20261021_kit_westham/w02_london_stadium.jpg
+    card: none
+  - text: 2016年の紋章が、2028年に替われば、12年です。
+    image: assets/images/20261021_kit_westham/w02_london_stadium.jpg
+    card: &id_life
+      type: calc
+      title: 2016年の紋章の年数（予定どおりなら、自分で引いた）
+      terms:
+      - - 2028年
+        - 導入の予定
+      - - 2016年
+        - 今の紋章の導入
+      - - 12年
+        - 引いた答え
+      ops:
+      - −
+      - ＝
+  - text: 1998年から2016年の紋章は、18年でした。
+    image: assets/images/20261021_kit_westham/w03_boleyn_last.jpg
+    card: *id_life
+  - text: 12年は、その3分の2です。
+    emph: true
+    image: assets/images/20261021_kit_westham/w03_boleyn_last.jpg
+    card: *id_life
+  - text: 1980年の形は、細かい手直しを含め、36年。12年は、その3分の1です。
+    image: assets/images/20261021_kit_westham/w03_boleyn_last.jpg
+    card: *id_life
+  - text: ただし、新しい紋章は、投票でこれから決まる途中。
+    image: assets/images/20261021_kit_westham/w02_london_stadium.jpg
+    card: none
+  - text: 2028年に替わると決まったわけでは、ありません。
+    emph: true
+    image: assets/images/20261021_kit_westham/w02_london_stadium.jpg
+    card: none
+  sources:
+  - https://www.whufc.com/news/articles/2017/june/29-june/west-ham-united-crest-through-years
+  - https://www.whufc.com/en/news/forging-our-future-or-supporters-opt-for-change-in-club-crest

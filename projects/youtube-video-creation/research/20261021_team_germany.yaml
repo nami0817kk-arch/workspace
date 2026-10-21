@@ -1,0 +1,525 @@
+# 代表チーム紹介 ドイツ代表（10/21 作成。固定シリーズ9「代表チーム紹介」）。7節：フック→基礎DATA（板）→歴史と転機（年表）→看板選手（表）→日本との関係→いまのチーム→見立て。
+# **重なりの確認（2026-10-21）**：research/posted.json にドイツ代表の紹介は無い。research/covered.yaml のドイツ代表は 9/15〜9/28 のクロップ就任直後のニュース5本（名簿・初陣・ギリシャ戦）で、紹介ものではなく、題材が違う。
+#   ただし「ブラジル代表」の紹介（10/6 公開、10/21 作り直し）とは「2002年決勝」「2014年7対1」の話が重なるので、ブラジル側の台本の細部は繰り返さず、ここでは日本戦の中身を変えた（2022年と2023年の2試合を主役にした）。
+# ---- 公式で確かめたこと（2026-10-21 取材。WebFetch・requests。検索のAI要約は根拠にしていない）----
+#  ・FIFAランク：FIFA 公式（inside.fifa.com/en/news/coca-cola-mens-world-ranking-october-2026-portugal-spain、2026-10-07）＝ドイツ13位（1つ下がる、クロアチアが14位）。点数は書かない。次の発表は11月18日。
+#  ・日本の今年の日程と結果：JFA（https://www.jfa.jp/samuraiblue/schedule_result/2026.html）。ドイツとの試合は2026年の日程に無い。
+#  ・2023年9月9日 ドイツ1-4日本（ヴォルフスブルク）：JFA 試合ページ（https://www.jfa.jp/samuraiblue/20230909/match_page.html）＝伊東純也11分・上田綺世22分・浅野拓磨90分・田中碧90+2分、ドイツはサネ19分。
+#  ・2022年11月23日 W杯グループE初戦 ドイツ1-2日本：Wikipedia(en) の試合一覧＝ギュンドアン33分PK、堂安律75分・浅野拓磨83分（ドーハ）。FIFA の試合ページは取っていない。
+# ---- ウィキペディア(en/ja)の値（公式で確かめられていない。台本は「ウィキペディア」と断らず事実の言い方で、ただし下の数は検算した）----
+#  ・ドイツのW杯優勝：1954（ハンガリーに3-2、ベルンの奇跡）／1974（オランダに2-1）／1990（アルゼンチンに1-0）／2014（アルゼンチンに延長1-0、ゲッツェ113分）。ja版の記述と一致。1954・74・90年は西ドイツ。
+#  ・2002年：決勝でブラジルに0-2（ロナウド2点）。カーンが大会最優秀選手。決勝の会場が横浜であることは 10/21 のブラジル回の取材メモ（JFA）による。
+#  ・2002〜2014年の成績：2002 準優勝／2006 3位／2010 3位／2014 優勝（Wikipedia のメダル表）。4大会とも準決勝に進んだ。
+#  ・2014年準決勝 ブラジル7-1：Wikipedia(en)。
+#  ・2018年：初戦メキシコに敗れ、スウェーデンに2-1、最終戦韓国に0-2でグループ敗退。2022年：日本に1-2・スペインに1-1・コスタリカに4-2で、得失点差でグループ敗退（2大会連続）。
+#  ・2026年W杯（Wikipedia(en) 試合一覧）：6/14 キュラソー7-1、6/20 コートジボワール2-1、6/25 エクアドル1-2、6/29 ラウンド32 パラグアイ1-1（延長）PK3-4。グループは2勝1敗。**W杯のPK戦で負けたのは初めて**（Wikipedia の記述。公式では未確認。公開前に FIFA で確かめるのが望ましい）。
+#  ・クロップ：2026年7月24日に監督就任が発表（Wikipedia en/ja）、8月15日に就任（en）、契約は2030年まで。前任はナーゲルスマンで、W杯敗退の直後に退任。DFB の公式発表は取っていない。
+#  ・ネーションズリーグ2026-27（Wikipedia(en) 試合一覧）：9/24 オランダ1-1ドイツ（アムステルダム）、9/27 ドイツ0-1ギリシャ（アウクスブルク）、10/1 ドイツ2-0セルビア（ミュンヘン）、10/4 ギリシャ0-0ドイツ（テッサロニキ）＝1勝2分1敗・3得点2失点。次は11/13 セルビア戦（ベオグラード）、11/16 オランダ戦（ベルリン）。
+#  ・44人を2つの名簿に分けて4試合（ESPN の見出し 2026-09、covered.yaml の klopp_germany_44）。
+#  ・日本との試合：Wikipedia(en) の日本代表の結果一覧（1970年以降。1990年代・2010年代にドイツ戦は無い）では、2004-12-16 横浜 日本0-3ドイツ（親善）、2006-05-30 レヴァークーゼン 2-2（親善）、2022-11-23 日本2-1、2023-09-09 日本4-1。**JFA の通算対戦成績は取れていない**ので「2004年以降の4試合」と言い、通算とは言わない。
+#  ・フリック前監督の解任は2023年9月10日（Wikipedia en。日本に1-4で負けたあと）。
+#  ・愛称 Die Mannschaft：海外の報道でよく使う呼び名。DFB は2022年7月に公式のブランドとしては取りやめた（Wikipedia en 脚注）。
+#  ・年齢：生年月日（ウィキペディア）から2026-10-21 時点で計算（キミッヒ 1995-02-08=31、ヴィルツ 2003-05-03=23、ムシアラ 2003-02-26=23、ハヴァーツ 1999-06-11=27、リュディガー 1993-03-03=33、ヴォルテマーデ 2002-02-14=24）。所属は Wikipedia の代表名簿（2026-10-04 時点）。
+# ---- 自分で数えた数（検算した）----
+#  ・日本対ドイツ 2006年までの2戦：0勝1分1敗・2得点5失点＝1試合 得点1.0・失点2.5。2022年からの2戦：2勝・6得点2失点＝得点3.0・失点1.0。
+#  ・2018・2022・2026の3大会で準々決勝に進んだ回数＝0。2002〜2014の4大会は4大会とも準決勝へ。
+#  ・クロップ体制の4試合：1勝2分1敗・3得点2失点。
+# ---- 言わないもの ----
+#  ・日本戦の通算（JFA 未確認）／「初勝利」の言い切り／戦術の説明／ネーションズリーグの順位／選手の怪我・私生活／背番号。
+# ---- 写真（assets/images/20261021_team_germany/、出典は credits.json。Commons。代理店・放送映像は使っていない）----
+#  g02 キミッヒ・g03 ヴィルツ・g04 ムシアラ・g05 ハヴァーツ・g06 リュディガー（2026年6月25日 エクアドル戦。Bryan Berlin、CC BY-SA 4.0。背番号 6・17・10・7・2 と腕章で本人を確認）／
+#  g01 クロップ（2019年・リヴァプール帽。CC BY 4.0 Mehdi Bolourian。古い写真）／g07 ゴールを喜ぶ選手たち（YantsImages CC BY-SA 4.0。誰かは特定していない）。
+# ネットの反応は置いていない（voice_min: 0）。紹介ものは声なし。ショートは作らない。
+date: 2026年10月21日
+slot: other_1
+format: news
+series: 代表チーム紹介
+voice_min: 0
+watch: 11月13日、セルビア対ドイツ
+people:
+- ドイツ代表
+- クロップ
+theme:
+  id: team_germany
+  league: germany
+  league_name: ドイツ代表
+  kind: preview
+  topic: ドイツ代表
+  title: ドイツ代表ってどんなチーム？
+  question: 優勝4回のドイツ代表は、日本に2連敗したあと、いまどこにいるのか
+  lead: W杯優勝4回。最後は2014年。
+  hook: ''
+  opening_image: assets/stats/tb_germany_data_t.png
+  end_bg: assets/images/20261021_team_germany/g10_team4.jpg
+  takeaway: ドイツは2002〜2014年の4大会すべてで準決勝に進んだが、2018年からの3大会は準々決勝に進めていない。日本との試合は、2006年までの2戦が1分1敗（1試合の失点2.5）、2022年からの2戦は日本の2勝で失点1.0。クロップ体制の最初の4試合は1勝2分1敗で、立ち直りが見えるのは11月13日のセルビア戦と16日のオランダ戦から
+thumbnail:
+  board: assets/stats/tb_germany_data.png
+  line1: ドイツ代表
+  line2: 優勝4回、最後は2014年
+  crest_main:
+  - ドイツ
+  tags:
+  - ドイツ代表
+  - 日本代表
+  - ワールドカップ
+  - クロップ
+  - 代表チーム紹介
+sections:
+- id: hook
+  heading: 優勝4回のドイツは、2014年のあと、どこまで進めたのか
+  main: true
+  tier: 確定
+  official: true
+  telop: 優勝4回。そのあとの3大会は、準々決勝に進めていない
+  narrator: 解説
+  say:
+  - text: ドイツ代表は、ワールドカップで**4回**優勝しています。最後の優勝は、2014年。それから12年です。
+    image: assets/stats/tb_germany_data_r1.png
+    no_telop: true
+    emph: true
+  - text: ところが、そのあとの**3大会**で、準々決勝まで届いた年は、一度もありません。
+    image: assets/stats/tb_germany_data_r1.png
+    no_telop: true
+  - text: 2018年と2022年は、グループステージで敗退。
+    image: assets/stats/tb_germany_data_r1.png
+    no_telop: true
+  - text: 今年は、決勝トーナメント1回戦のラウンド32で、パラグアイにPK戦で負けました。
+    image: assets/stats/tb_germany_data_r1.png
+    no_telop: true
+  - text: 2022年は、初戦で日本に負けた大会。スコアは、1対2。
+    image: assets/stats/tb_germany_data_r1.png
+    no_telop: true
+  - text: その翌年の親善試合も、ドイツの本拠地で、日本の勝ちです。
+    image: assets/stats/tb_germany_data_r1.png
+    no_telop: true
+  - text: いま率いているのは、クロップ監督。リヴァプールで知られた人。
+    image: assets/stats/tb_germany_data_r2.png
+    no_telop: true
+  sources:
+  - https://inside.fifa.com/en/news/coca-cola-mens-world-ranking-october-2026-portugal-spain
+  - https://www.jfa.jp/samuraiblue/20230909/match_page.html
+  - https://en.wikipedia.org/wiki/Germany_national_football_team
+- id: data
+  heading: ドイツ代表は、どんな数字を持つ国なのか
+  tier: 背景
+  telop: ドイツ代表の基礎DATA
+  narrator: 解説
+  say:
+  - text: ドイツ代表のフィファランクは**13位**。フィファが10月7日に出した順位で、前回より1つ下がりました。
+    image: assets/stats/tb_germany_data0.png
+    no_telop: true
+  - text: ワールドカップの優勝は**4回**。1954年、74年、90年、2014年。このうち3回は、西ドイツでした。
+    image: assets/stats/tb_germany_data1.png
+    no_telop: true
+  - text: 監督は、ユルゲン・クロップ。リヴァプールを率いた人で、2026年8月に就任しました。
+    image: assets/stats/tb_germany_data4.png
+    no_telop: true
+  - text: 主将は、バイエルン・ミュンヘンのキミッヒです。
+    image: assets/stats/tb_germany_data5.png
+    no_telop: true
+  - text: 愛称は、ディ・マンシャフト。ドイツ語で、チームという意味です。
+    image: assets/stats/tb_germany_data6.png
+    no_telop: true
+  sources:
+  - https://inside.fifa.com/en/news/coca-cola-mens-world-ranking-october-2026-portugal-spain
+  - https://en.wikipedia.org/wiki/Germany_national_football_team
+  - https://ja.wikipedia.org/wiki/サッカードイツ代表
+- id: history
+  heading: ドイツは、いつ頂点に立ち、いつ遠ざかったのか
+  tier: 背景
+  telop: 1954年の初優勝から、2014年の4度目へ。そして3大会
+  narrator: 解説
+  card: &id_histA
+    type: timeline
+    title: 優勝と決勝の歩み
+    rows:
+    - - 1954年
+      - 初優勝。決勝でハンガリーに3対2
+    - - 1974年
+      - 自国開催で2度目。オランダに2対1
+    - - 1990年
+      - 3度目。アルゼンチンに1対0
+    - - 2002年
+      - 日韓大会の決勝。ブラジルに0対2
+    - - 2014年
+      - ブラジル大会で4度目。決勝は延長1対0
+    focus: 1954年
+  say:
+  - text: ドイツの最初の優勝は、1954年。決勝の相手は、ハンガリー。スコアは3対2です。
+    image: assets/images/20261021_team_germany/g10_team4.jpg
+    card:
+      <<: *id_histA
+      highlight_row: 0
+  - text: 『ベルンの奇跡』と呼ばれる試合です。当時は、西ドイツでした。
+    card:
+      <<: *id_histA
+      highlight_row: 0
+  - text: 1974年は、自国開催で2度目の優勝。1990年は、1対0で3度目。
+    card:
+      <<: *id_histA
+      highlight_row: 2
+  - text: 2002年は、日本と韓国の共催大会。決勝は横浜で、ブラジルに0対2で負けました。
+    image: assets/images/20261021_team_germany/g09_team3.jpg
+    card:
+      <<: *id_histA
+      highlight_row: 3
+  - text: 2014年は、ブラジル大会。準決勝で、開催国のブラジルに**7対1**で勝ちます。
+    emph: true
+    card:
+      <<: *id_histA
+      highlight_row: 4
+  - text: 決勝は、アルゼンチンに延長戦で1対0。ゲッツェのゴールで、4度目の優勝です。
+    card:
+      <<: *id_histA
+      highlight_row: 4
+  - text: ところが、そのあと、ドイツは3大会続けて、準々決勝に届かなくなります。
+    card: &id_histB
+      type: timeline
+      title: 優勝のあとの3大会
+      rows:
+      - - 2018年
+        - ロシア大会。グループで敗退
+      - - 2022年
+        - カタール大会。初戦で日本に1対2。グループで敗退
+      - - 2026年
+        - ラウンド32。パラグアイにPK戦3対4
+      focus: 2018年
+  - text: 2018年は、初戦でメキシコに負けました。
+    image: assets/images/20261021_team_germany/g02_kimmich_w.jpg
+    card:
+      <<: *id_histB
+      highlight_row: 0
+  - text: 最後の韓国戦も0対2で、グループステージ敗退です。
+    card:
+      <<: *id_histB
+      highlight_row: 0
+  - text: 2022年は、得失点差で、決勝トーナメントに進めませんでした。
+    card:
+      <<: *id_histB
+      highlight_row: 1
+  - text: 2026年は、グループを2勝1敗で通過しました。キュラソーには7対1。
+    image: assets/images/20261021_team_germany/g08_curacao.jpg
+    card:
+      <<: *id_histB
+      highlight_row: 2
+  - text: ラウンド32のパラグアイ戦は、1対1のまま、PK戦へ。3対4で負けました。
+    card:
+      <<: *id_histB
+      highlight_row: 2
+  - text: 2018年、2022年に続き、準々決勝に届かない大会になりました。
+    emph: true
+    card:
+      <<: *id_histB
+      highlight_row: 2
+  sources:
+  - https://en.wikipedia.org/wiki/Germany_national_football_team
+  - https://ja.wikipedia.org/wiki/サッカードイツ代表
+  - https://en.wikipedia.org/wiki/Germany_national_football_team_results_(2020%E2%80%93present)
+- id: players
+  heading: いまの看板選手は、誰なのか
+  tier: 背景
+  telop: 看板選手を、所属・名前・位置・年齢で
+  narrator: 解説
+  card: &id_pl
+    type: table
+    title: ドイツ代表の看板選手
+    columns:
+    - 所属
+    - 名前
+    - 位置
+    - 年齢
+    rows:
+    - - バイエルン
+      - キミッヒ
+      - MF
+      - '31'
+    - - リヴァプール
+      - ヴィルツ
+      - MF
+      - '23'
+    - - バイエルン
+      - ムシアラ
+      - MF
+      - '23'
+    - - アーセナル
+      - ハヴァーツ
+      - FW
+      - '27'
+    - - レアル・マドリード
+      - リュディガー
+      - DF
+      - '33'
+    - - ユヴェントス
+      - ヴォルテマーデ
+      - FW
+      - '24'
+  say:
+  - text: ここからは、ドイツ代表の選手です。6人を表にしました。
+    image: assets/images/20261021_team_germany/g10_team4.jpg
+    card: *id_pl
+  - text: 年齢は、生年月日から計算した、今日の時点の数字です。
+    card: *id_pl
+  - text: 主将のキミッヒは31歳。バイエルン・ミュンヘンの中盤です。
+    image: assets/images/20261021_team_germany/g02_kimmich_w.jpg
+    card:
+      <<: *id_pl
+      highlight_row: 0
+  - text: ヴィルツは23歳。リヴァプールで、中盤を任されています。
+    image: assets/images/20261021_team_germany/g03_wirtz_w.jpg
+    card:
+      <<: *id_pl
+      highlight_row: 1
+  - text: ムシアラも23歳。キミッヒと同じ、バイエルンの選手。
+    image: assets/images/20261021_team_germany/g04_musiala_w.jpg
+    card:
+      <<: *id_pl
+      highlight_row: 2
+  - text: 前線には、アーセナルのハヴァーツ。27歳のフォワードです。
+    image: assets/images/20261021_team_germany/g05_havertz_w.jpg
+    card:
+      <<: *id_pl
+      highlight_row: 3
+  - text: 守備は、レアル・マドリードのリュディガー。33歳のディフェンダー。
+    image: assets/images/20261021_team_germany/g06_rudiger_w.jpg
+    card:
+      <<: *id_pl
+      highlight_row: 4
+  - text: そして、ユヴェントスのフォワード、ヴォルテマーデ。24歳です。
+    card:
+      <<: *id_pl
+      highlight_row: 5
+  sources:
+  - https://en.wikipedia.org/wiki/Germany_national_football_team
+  - https://ja.wikipedia.org/wiki/サッカードイツ代表
+- id: japan
+  heading: 日本は、ドイツとどう戦ってきたのか
+  tier: 確定
+  official: true
+  telop: 2004年の0対3から、2022年と2023年の日本の2連勝へ
+  narrator: 解説
+  card: &id_jp
+    type: table
+    title: 日本とドイツの対戦（日本の得点が先）
+    columns:
+    - 年
+    - 大会
+    - スコア
+    rows:
+    - - 2004年12月
+      - 親善試合
+      - 0-3
+    - - 2006年5月
+      - 親善試合
+      - 2-2
+    - - 2022年11月
+      - ワールドカップ
+      - 2-1
+    - - 2023年9月
+      - 親善試合
+      - 4-1
+  say:
+  - text: 日本とドイツの国際Aマッチは、2004年から4試合です。
+    image: assets/images/20261021_team_germany/g10_team4.jpg
+    card: *id_jp
+  - text: 古い順に見ます。
+    card: *id_jp
+  - text: 2004年12月、横浜。日本は、0対3で負けました。
+    card:
+      <<: *id_jp
+      highlight_row: 0
+  - text: 2006年5月は、ワールドカップの直前に、ドイツで戦って、2対2の引き分けです。
+    card:
+      <<: *id_jp
+      highlight_row: 1
+  - text: ここまでの2試合は、1分け1敗。取った点は2、取られた点は5でした。
+    card:
+      <<: *id_jp
+      highlight_row: 1
+  - text: 2022年11月、カタール。ワールドカップのグループE、初戦です。
+    image: assets/images/20261021_team_germany/g06_rudiger_w.jpg
+    card:
+      <<: *id_jp
+      highlight_row: 2
+  - text: 日本は、前半33分に、ギュンドアンのPKで先制されます。
+    card: none
+  - text: 後半の75分に堂安律、83分に浅野拓磨が決めて、2対1の逆転勝ちでした。
+    emph: true
+    card:
+      <<: *id_jp
+      highlight_row: 2
+  - text: 2023年9月、ドイツのヴォルフスブルク。親善試合で、日本が4対1で勝ちました。
+    image: assets/images/20261021_team_germany/g02_kimmich_w.jpg
+    card:
+      <<: *id_jp
+      highlight_row: 3
+  - text: 決めたのは、伊東純也、上田綺世、浅野拓磨、田中碧。
+    card: none
+  - text: ドイツの得点は、サネの1点だけです。
+    card: none
+  - text: この試合の直後、9月10日に、当時のフリック監督は、解任されています。
+    card: none
+  - text: 2022年からの2試合で、日本は6得点、失点は2です。
+    card:
+      <<: *id_jp
+      highlight_row: 3
+  sources:
+  - https://www.jfa.jp/samuraiblue/20230909/match_page.html
+  - https://www.jfa.jp/samuraiblue/schedule_result/2026.html
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_results_(2020%E2%80%93present)
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_results_(2000%E2%80%932009)
+  - https://en.wikipedia.org/wiki/Germany_national_football_team
+- id: now
+  heading: クロップのドイツは、最初の秋をどう戦ったのか
+  tier: 背景
+  telop: 最初の4試合は、1勝2分1敗
+  narrator: 解説
+  card: &id_nl
+    type: table
+    title: 2026年ネーションズリーグ ドイツの4試合
+    columns:
+    - 日付
+    - 相手
+    - ドイツの結果
+    rows:
+    - - 9月24日
+      - オランダ
+      - 1-1
+    - - 9月27日
+      - ギリシャ
+      - 0-1
+    - - 10月1日
+      - セルビア
+      - 2-0
+    - - 10月4日
+      - ギリシャ
+      - 0-0
+  say:
+  - text: ワールドカップのあと、ドイツ代表のナーゲルスマン監督が退きました。
+    image: assets/images/20261021_team_germany/g10_team4.jpg
+    card: none
+  - text: 後を継いだのが、クロップ監督です。
+    image: assets/images/20261021_team_germany/g01_klopp.jpg
+    card: *id_nl
+  - text: 最初の公式戦は、9月のネーションズリーグ。ヨーロッパの国が戦う、公式の大会です。
+    card: none
+  - text: 選手は44人を呼んで、2つの名簿に分けました。
+    card: none
+  - text: 9月24日は、アムステルダムでオランダと、1対1の引き分け。
+    image: assets/images/20261021_team_germany/g03_wirtz_w.jpg
+    card:
+      <<: *id_nl
+      highlight_row: 0
+  - text: 3日後、ホームでギリシャに0対1で負けました。
+    card:
+      <<: *id_nl
+      highlight_row: 1
+  - text: 10月1日は、ミュンヘンでセルビアに、2対0の勝ち。
+    card:
+      <<: *id_nl
+      highlight_row: 2
+  - text: 10月4日は、ギリシャのテッサロニキで、0対0の引き分けでした。
+    card:
+      <<: *id_nl
+      highlight_row: 3
+  - text: 4試合で、1勝2分け1敗。得点は3、失点は2です。
+    card: *id_nl
+  - text: 次の試合は、11月13日、ベオグラードでセルビア。
+    image: assets/images/20261021_team_germany/g09_team3.jpg
+    card: none
+  - text: 16日は、ベルリンでオランダです。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Germany_national_football_team
+  - https://www.espn.com/soccer/story/_/id/49962961/jurgen-klopp-names-two-squads-44-players-first-games-germany-manager
+  - https://www.sportschau.de/fussball/nationalmannschaft/wunderheilung-vertagt-griechenland-bestraft-deutschlands-fehler,spielbericht-nations-league-deutschland-griechenland-100.html
+- id: viewpoint
+  viewpoint: true
+  heading: 日本に2連敗した4度の王者は、立ち直れるのか
+  tier: 背景
+  telop: 準決勝の常連は4大会。そのあとの3大会は、準々決勝へ0回
+  narrator: 解説
+  card: &id_vp
+    type: table
+    title: ワールドカップ ドイツの準々決勝進出
+    columns:
+    - 期間
+    - 大会数
+    - 準々決勝へ進んだ
+    rows:
+    - - 2002〜2014年
+      - 4大会
+      - 4大会
+    - - 2018〜2026年
+      - 3大会
+      - 0大会
+  say:
+  - text: ここからは見立てです。根拠は、数字の比べを2つ。最初は、ワールドカップから。
+    image: assets/images/20261021_team_germany/g10_team4.jpg
+    card: *id_vp
+  - text: 2002年から2014年の4大会は、4大会とも準決勝まで進んでいます。
+    card:
+      <<: *id_vp
+      highlight_row: 0
+  - text: 2002年は準優勝、2006年と2010年は3位、2014年は優勝です。
+    card:
+      <<: *id_vp
+      highlight_row: 0
+  - text: 2018年からの3大会は、ベスト8に1回も入っていません。
+    emph: true
+    mark:
+      kind: circle
+      row: 1
+      col: 2
+    card:
+      <<: *id_vp
+      highlight_row: 1
+  - text: もう1つは、日本戦の数字です。
+    image: assets/images/20261021_team_germany/g06_rudiger_w.jpg
+    card: &id_vp2
+      type: table
+      title: 日本対ドイツ 2022年を境に（1試合あたり）
+      columns:
+      - 区切り
+      - 戦績
+      - 日本の得点
+      - 日本の失点
+      rows:
+      - - 2006年までの2戦
+        - 0勝1分1敗
+        - '1.0'
+        - '2.5'
+      - - 2022年からの2戦
+        - 2勝
+        - '3.0'
+        - '1.0'
+  - text: 2006年までの2戦は、1分け1敗。1試合の失点は、2.5でした。
+    card:
+      <<: *id_vp2
+      highlight_row: 0
+  - text: 2022年からの2戦は、日本の2勝。1試合の失点は、1.0に減りました。
+    emph: true
+    mark:
+      kind: circle
+      row: 1
+      col: 3
+    card:
+      <<: *id_vp2
+      highlight_row: 1
+  - text: ただ、日本が勝ったドイツは、グループ敗退を続けた時期のドイツです。
+    image: assets/images/20261021_team_germany/g02_kimmich_w.jpg
+    card: none
+  - text: クロップ体制の最初の4試合は、1勝2分け1敗。1試合の失点は、0.5です。
+    card: none
+  - text: ワールドカップのグループステージは、3試合で4失点。
+    card: none
+  - text: 1試合に1.3でしたから、減りました。
+    card: none
+  - text: 立ち直ったかどうかは、まだ分かりません。
+    card: none
+  - text: 見えてくるのは、11月13日のセルビア戦と、16日のオランダ戦です。
+    image: assets/images/20261021_team_germany/g09_team3.jpg
+    card: none
+  sources:
+  - https://www.jfa.jp/samuraiblue/20230909/match_page.html
+  - https://en.wikipedia.org/wiki/Germany_national_football_team
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_results_(2020%E2%80%93present)

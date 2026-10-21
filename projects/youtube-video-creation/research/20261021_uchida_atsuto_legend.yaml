@@ -1,0 +1,608 @@
+# 内田篤人（元日本代表）の紹介。シリーズ「レジェンドの紹介（日本）」2026-10-21。型は 10/18 の中田英寿・10/19 の長谷部誠・10/20 の中村俊輔と同じ8節。
+# ①フック ②基礎DATA ③歩んだ道と転機 ④プレースタイル（＋通算の表）⑤「あの試合」＝2011-04 チャンピオンズリーグ準々決勝 シャルケ対インテル（2試合）⑥引退後・いま ⑦マル秘話2つ ⑧見立て。
+# **FotMob・DataMB・FBref・Sofascore・Transfermarkt は不使用**。数字は JFA・スポニチ・日刊スポーツ・日本語版 Wikipedia の成績表と、自分で割った値だけ。
+# **引退後の私生活（家族・結婚・テレビ出演・CM）は入れない**。女子サッカーの話は入れない（現在のコーチ就任を1行の事実として言うだけ。下の「判断」参照）。
+#
+# **一次情報で確かめたこと（引退・時期・いまの立場）**
+# - 引退：鹿島アントラーズが 2020-08-20 に発表（本人がコンディション面を理由にクラブへ申し入れ）。スポニチ 2020-08-21「内田 32歳で引退」。ラストマッチは 2020-08-23 のガンバ大阪戦（日刊スポーツ 2020-08-23：前半16分から途中出場、約75分、キャプテンマーク）。
+#   鹿島公式サイトは 429（アクセス制限）で本文を読めなかったので、**クラブ発表そのものは未読**。スポニチ・日刊・Football ZONE・REAL SPORTS（2020-08-26）が一致している。
+# - ロールモデルコーチ：JFA 公式 2020-09-13「ロールモデルコーチとして内田篤人氏と契約」（jfa.jp/national_team/news/00025323/。選手歴・代表歴・技術委員長コメント）。
+# - いまの立場：JFA 公式 なでしこジャパン 2026 年のメンバー・スタッフのページ（jfa.jp/nadeshikojapan_2026/member/）に「コーチ 内田 篤人」。スポニチ 2026-05-18 が就任発表の記事（狩野倫久監督の就任会見の席で発表）。
+#   2021-05-21 にシャルケのクラブアンバサダー（ドイツ語版 Wikipedia。クラブ発表の引用。クラブ公式は未読）。
+# - **現役ではない**ことを確認（2020-08-23 に引退、いまは指導者）。
+#
+# **判断（台本での扱い）**
+# - 「女子サッカーは扱わない」との衝突：いまの肩書きが「サッカー日本女子代表のコーチ」。**女子サッカーの中身は一切入れず、就任したという事実を1行だけ**言う（after 節）。
+#   これも避けたいなら、after 節の該当1行と基礎DATAの「現在」行を「日本サッカー協会のコーチ」に替える（要判断）。
+# - 数字の食い違い：J1は 148試合3得点（日本語版 Wikipedia の成績表。2020-08-23 の日刊スポーツが「J1通算148試合目」）。スポニチ 2020-08-20 の時点は147試合（23日の出場で148）。ドイツ1部は 104試合1得点（スポニチ・Wikipedia 一致）、ドイツ2部は 2試合0得点。
+#   **リーグ戦の合計は自分で足した：254試合4得点**（148+104+2、3+1+0）。日本代表は 74試合2得点（JFA 公式）。
+# - 英語版 Wikipedia は準々決勝の合計を「7-4」と書くが誤り。**UEFA の試合記録（英語版 Wikipedia の knockout phase 表。UEFA の試合ページを出典にしている）は 2-5・2-1 で合計7-3**。台本は 7対3。
+# - 第1戦 2011-04-05 サン・シーロ（インテル2-5シャルケ：スタンコビッチ1分・ミリート34分／マティプ17分・エドゥ40分と75分・ラウル53分・ラノッキアのオウンゴール57分）、第2戦 2011-04-13 ゲルゼンキルヒェン（シャルケ2-1：ラウル45分・ヘーヴェデス81分／モッタ49分）。準決勝は 0-2・1-4 でマンチェスター・ユナイテッド。
+# - 復帰日：日本語版 Wikipedia は「2016-12-08 ヨーロッパリーグ・ザルツブルク戦、1年9か月ぶり」、英語版は「7日」。**台本は日付を言わず「2016年12月」**。
+# - **「日本人として初めてのCL準決勝」とは言わない**（Wikipedia の記述で、一次資料で確かめていない）。REAL SPORTS（2020-08-26）が「日本人選手として最高のベスト4」と書くので、**言うのは「クラブ初の準決勝」（ドイツ語版 Wikipedia「zum ersten Mal in der Vereinsgeschichte das Halbfinale der Champions League」）と「CL初の日本人対決」（日本語版 長友佑都）まで**。
+# - **「ユーロスポーツの第1戦ベストイレブン」は日本語版 Wikipedia のみ**（原文未読）。台本は「欧州の報道が選ぶ、第1戦のベストイレブン」とだけ言う（確度：報道・要裏取り）。
+# - 「CL 12試合のうち11試合」：11試合は日本語版 Wikipedia の成績表（2010-11 UEFA CL 11試合0得点）。12試合は**自分で数えた**（グループ6＋決勝トーナメント1回戦2＋準々決勝2＋準決勝2）。UEFA の出場記録そのものは未確認（Wikipedia 由来）。
+# - 病名・部位は一次情報の言葉のまま：「右太ももの腱が切れる大けが」（2014年2月。スポニチ 2020）、「重度の炎症を起こしていた右膝の膝蓋腱」「2015年6月に手術」（REAL SPORTS・スポニチ）、「2020年2月のプレシーズンマッチで右足を負傷」（スポニチ）。小さく見せる言い方・煽る言い方はしない。
+#
+# **数字の出どころ（読んだもの）**
+# - REAL SPORTS 2020-08-26（藤江直人）：引退会見（8/24）とセレモニー（8/23）の本人の言葉（日本語・原文）、梅田和男監督の言葉、2009年の本人の言葉（SLAM DUNK）、右サイドバックへの転向（高3になる春）。
+# - スポニチ 2020-08-21：引退発表の記事（17歳11か月のクラブ史上最年少得点、2014年W杯の本人の言葉、2015年6月の右膝手術）。
+# - JFA 2020-09-13：選手歴・代表歴（74試合2得点、W杯2010・2014、コンフェデ2013、アジアカップ2011）、「シャルケのUEFAチャンピオンズリーグベスト4進出に貢献」の技術委員長コメント。
+# - Football ZONE 2020-09-17：8月に引退した内田が U-19 のロールモデルコーチとして合宿に参加。
+# - 日本語版・英語版・ドイツ語版 Wikipedia「内田篤人」「Atsuto Uchida」：クラブ別の成績表、シャルケでの経過、タイトル、ベストイレブン、2013-03-09 のルール・ダービー（2アシスト・2対1）。
+# - 英語版 Wikipedia「2010–11 UEFA Champions League knockout phase」：準々決勝・準決勝の日付・会場・スコア・得点者。ドイツ語版 Wikipedia「FC Schalke 04」：クラブ初のCL準決勝、2010-11 のリーグ戦は14位。
+# - 日本語版 Wikipedia「長友佑都」：準々決勝でCL初の日本人対決。
+# - 検索エンジンのAI要約は使っていない。ブラウザ操作の道具は使っていない（requests と WebFetch のみ）。Transfermarkt・FotMob は見ていない。
+#
+# **入れなかったもの**：移籍金（日本語版は「推定1億5000万円」、英語版は「130万ユーロ」と食い違うため）・年俸・家族・結婚・テレビ出演・CM・ポケモン映画・モンスターハンター・2011-03-12 のメッセージシャツ（Wikipedia のみ、文面も版ごとに違う）。
+# **日本語名・読みで怪しいもの**：内田篤人・函南町・清水東・鹿島アントラーズ・シャルケ・ウニオン・ベルリン・ブンデスリーガ・ポカール・インテル・ミラノ・ゲルゼンキルヒェン・スタンコビッチ・ミリート・マティプ・エドゥ・ラウル・
+#   ラノッキア・ヘーヴェデス・モッタ・ルーニー・ドルトムント・ルール・ダービー・ファルファン・ヘルト・梅田和男・膝蓋腱・ザルツブルク・犬飼智也・三竿健斗・狩野倫久・清水東高・宮城リョータ。
+# 本人の言葉は：①REAL SPORTS（引退会見・セレモニー・2009年・日本語原文）②スポニチ 2020-08-21（2014年W杯・日本語原文）。ほかの人の言葉：梅田和男（REAL SPORTS）。
+date: 2026年10月21日
+slot: other_1
+format: news
+series: レジェンドの紹介
+people:
+- 内田篤人
+theme:
+  end_bg: assets/images/20261021_uchida_atsuto_legend/02_w.jpg
+  id: legend_uchida_atsuto
+  league: germany
+  league_name: ドイツ・ブンデスリーガ
+  kind: other
+  topic: 内田篤人
+  title: 内田篤人は、どんな選手だった？ CL4強の右サイドバックに何があったのか
+  question: シャルケがクラブ初のチャンピオンズリーグ4強に進んだ年、右サイドバックの内田篤人は何をした選手で、そのあとに何が起きたのか
+  takeaway: シャルケで試合に出た最初の5季は、ブンデスリーガ1部で104試合（1季あたり約21試合）。その中に、クラブ初のCL準決勝とポカール優勝が入っている。その後の3季、シャルケでのリーグ戦は0試合。右膝の手術は2015年6月だった
+  nameplate: 内田篤人｜元日本代表 DF
+  opening_image: assets/images/20261021_uchida_atsuto_legend/01_w.jpg
+  bgm: assets/audio/bgm_calm.wav
+short_title: 内田篤人は、どんな選手だった？
+thumbnail:
+  line1: 内田篤人、代表74試合
+  line2: シャルケでCL4強
+  tags:
+  - シャルケ
+  photo: assets/images/20261021_uchida_atsuto_legend/panel_01.jpg
+  photos: []
+  short_photo: assets/images/20261021_uchida_atsuto_legend/02_v.jpg
+sections:
+- id: hook
+  heading: クラブ初のCL4強で、右サイドバックは何をしたのか
+  tier: 報道
+  telop: 2011年、シャルケ初のCL準決勝
+  narrator: 解説
+  card:
+    type: stats
+    title: 内田篤人 元日本代表（38歳）
+    items:
+    - ['4', 強, チャンピオンズリーグ2010-11。シャルケはクラブ初]
+    - ['104', 試合, ドイツ1部リーグ（2010〜17年）]
+    - ['74', 試合, 日本代表。ワールドカップには2回選出]
+    focus: 0
+  say:
+  - text: 2011年4月、ドイツのシャルケが、チャンピオンズリーグの4強に入ります。
+    image: assets/images/20261021_uchida_atsuto_legend/01_w.jpg
+    card: none
+  - text: クラブ史上、初めてのことです。
+    card: none
+    callword: クラブ初の4強
+  - text: その右サイドバックが、内田篤人。
+    emph: true
+    card: &hook_stats
+      type: stats
+      title: 内田篤人 元日本代表（38歳）
+      items:
+      - ['4', 強, チャンピオンズリーグ2010-11。シャルケはクラブ初]
+      - ['104', 試合, ドイツ1部リーグ（2010〜17年）]
+      - ['74', 試合, 日本代表。ワールドカップには2回選出]
+      focus: 0
+  - text: 日本代表では、ワールドカップに、2回選ばれています。
+    card:
+      <<: *hook_stats
+      focus: 2
+  - text: 2020年8月に現役を退き、いまは日本サッカー協会のコーチ。
+    card: none
+  - text: ヨーロッパで、何を残したのか。数えていきます。
+    card: none
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/2010%E2%80%9311_UEFA_Champions_League_knockout_phase
+  - https://de.wikipedia.org/wiki/FC_Schalke_04
+  - https://www.jfa.jp/national_team/news/00025323/
+  - https://www.jfa.jp/nadeshikojapan_2026/member/
+- id: data
+  heading: 内田篤人は、いつ、どこで生まれ、何を手にした選手か
+  tier: 報道
+  telop: 内田篤人の基礎DATA
+  card:
+    type: table
+    title: 内田篤人
+    columns:
+    - 項目
+    - 内容
+    rows: &udata
+    - - 生年月日
+      - 1988年3月27日・静岡県函南町
+    - - ポジション
+      - 右サイドバック
+    - - 所属クラブ
+      - 鹿島・シャルケ・ウニオン・鹿島
+    - - 日本代表
+      - 74試合2得点（2008〜2015）
+    - - J1優勝
+      - 3回（2007〜2009年）
+    - - ドイツのタイトル
+      - DFBポカール（2010-11）
+    - - 引退
+      - 2020年8月（32歳）
+    - - 現在
+      - 日本サッカー協会のコーチ
+    source: JFA・Wikipedia・スポニチ
+  say:
+  - text: 内田篤人は、1988年3月27日、静岡県函南町の生まれ。いま38歳です。
+    image: assets/images/20261021_uchida_atsuto_legend/pair_0405.jpg
+    card: &data_card
+      type: table
+      title: 内田篤人
+      columns: [項目, 内容]
+      rows: *udata
+      source: JFA・Wikipedia・スポニチ
+      highlight_row: 0
+  - text: クラブは、鹿島、シャルケ、ウニオン・ベルリン、そして鹿島。
+    card:
+      <<: *data_card
+      highlight_row: 2
+  - text: 鹿島でJリーグ3回の優勝。シャルケではカップ戦のポカール。
+    image: assets/images/20261021_uchida_atsuto_legend/01_w.jpg
+    card:
+      <<: *data_card
+      highlight_row: 5
+  sources:
+  - https://www.jfa.jp/national_team/news/00025323/
+  - https://ja.wikipedia.org/wiki/%E5%86%85%E7%94%B0%E7%AF%A4%E4%BA%BA
+  - https://en.wikipedia.org/wiki/Atsuto_Uchida
+  - https://www.sponichi.co.jp/soccer/news/2020/08/21/kiji/20200820s00002179491000c.html
+- id: career
+  heading: 高校でポジションを変えた少年は、どう海を渡ったのか
+  tier: 報道
+  telop: 17歳で開幕先発、32歳で引退
+  card:
+    type: table
+    title: 歩んできた道
+    columns:
+    - 年
+    - 所属
+    - 出来事
+    rows: &ucareer
+    - - 2006〜10
+      - 鹿島
+      - 高卒1年目に開幕先発
+    - - 2010〜17
+      - シャルケ
+      - クラブ初のCL4強
+    - - 2017
+      - ウニオン・ベルリン
+      - ドイツ2部で2試合
+    - - 2018〜20
+      - 鹿島
+      - 8月に現役を引退
+    source: JFA・スポニチ・Wikipedia
+  say:
+  - text: 高校は清水東。高校3年の春、右サイドバックに替わります。
+    image: assets/images/20261021_uchida_atsuto_legend/pair_0405.jpg
+    card: none
+  - text: そのときのことを、本人は引退会見で、こう話しています。
+    card: none
+  - voice: 内田篤人
+    text: 「内田」と書かれている磁石のマークが、
+  - voice: 内田篤人
+    text: サイドバックの位置にあったので。
+    cont: true
+  - voice: 内田篤人
+    text: あっ、僕はこれからここでプレーするんだな、と。
+    cont: true
+  - voice: 内田篤人
+    text: 特に質問をすることはなかったですね。
+    cont: true
+  - voice: 内田篤人
+    text: 点が取れないからサイドバックになった、
+    cont: true
+  - voice: 内田篤人
+    text: という印象を最初は受けていました。
+    cont: true
+    pause: 0.6
+  - text: 2006年、鹿島へ。クラブ初の、高卒ルーキーの開幕先発。
+    image: assets/images/20261021_uchida_atsuto_legend/01_w.jpg
+    card: &career_card
+      type: table
+      title: 歩んできた道
+      columns: [年, 所属, 出来事]
+      rows: *ucareer
+      source: JFA・スポニチ・Wikipedia
+      highlight_row: 0
+  - text: 17歳11か月でのゴールは、クラブ史上最年少でした。
+    emph: true
+    card:
+      <<: *career_card
+      highlight_row: 0
+  - text: 2007年から3連覇。2010年7月、シャルケへ。
+    card:
+      <<: *career_card
+      highlight_row: 1
+  - text: ドイツでは、右膝の痛みが続きます。
+    image: assets/images/20261021_uchida_atsuto_legend/pair_0405.jpg
+    card: none
+  - text: 右膝の腱、膝蓋腱の重度の炎症。2015年6月に手術を受けます。
+    card: none
+  - text: 復帰は、2016年12月のヨーロッパリーグ。1年9か月ぶりでした。
+    card:
+      <<: *career_card
+      highlight_row: 1
+  - text: 2017年8月、ウニオン・ベルリンへ。2018年1月、鹿島に戻ります。
+    card:
+      <<: *career_card
+      highlight_row: 2
+  quotes_from:
+  - https://real-sports.jp/page/articles/428486197384315841
+  sources:
+  - https://www.sponichi.co.jp/soccer/news/2020/08/21/kiji/20200820s00002179491000c.html
+  - https://real-sports.jp/page/articles/428486197384315841
+  - https://www.jfa.jp/national_team/news/00025323/
+  - https://ja.wikipedia.org/wiki/%E5%86%85%E7%94%B0%E7%AF%A4%E4%BA%BA
+  - https://en.wikipedia.org/wiki/Atsuto_Uchida
+- id: style
+  heading: 内田篤人の右サイドは、何が武器だったのか
+  tier: 報道
+  telop: 速さと、つなぐ力
+  card:
+    type: table
+    title: 右サイドの武器
+    columns:
+    - 項目
+    - 中身
+    rows: &ustyle
+    - - 速さ
+      - 高校入学時に50m走6秒切り
+    - - 組み立て
+      - 後方からのビルドアップ
+    - - 自制心
+      - 戦術の指示を一つずつ実行
+    - - 磨く点
+      - クロスの精度（ヘルト談）
+    source: REAL SPORTS・Wikipedia
+  say:
+  - text: 武器は、まず、速さ。高校に入った時点で、すでに際立っていたと言います。
+    image: assets/images/20261021_uchida_atsuto_legend/pair_0405.jpg
+    card: &style_card
+      type: table
+      title: 右サイドの武器
+      columns: [項目, 中身]
+      rows: *ustyle
+      source: REAL SPORTS・Wikipedia
+      highlight_row: 0
+  - text: 後ろからボールをつなぐ力も高く、
+    card:
+      <<: *style_card
+      highlight_row: 1
+  - text: 日本では、現代的なサイドバックの先駆けと呼ばれました。
+    card:
+      <<: *style_card
+      highlight_row: 1
+  - text: シャルケの強化部長ヘルトが挙げたのは、自制心。
+    card:
+      <<: *style_card
+      highlight_row: 2
+  - text: 指示を実行し、攻めても守りを忘れない、と。
+    card:
+      <<: *style_card
+      highlight_row: 3
+  - text: 本人は、2009年、自分のプレーを、バスケにたとえています。
+    image: assets/images/20261021_uchida_atsuto_legend/01_w.jpg
+    card: none
+  - voice: 内田篤人
+    text: バスケのポイントガードっぽいかな、と。
+  - voice: 内田篤人
+    text: 漫画の『SLAM DUNK』が好きで、
+    cont: true
+  - voice: 内田篤人
+    text: 宮城リョータくんを意識している。
+    cont: true
+    pause: 0.6
+  - text: 2013年3月、ドルトムント戦で2アシスト。
+    card: none
+  - text: ブンデスリーガの公式サイトが選ぶベストイレブンに、2度、選ばれました。
+    card: none
+  - text: リーグ戦の通算は、254試合で4得点。内訳は、表のとおり。
+    emph: true
+    image: assets/images/20261021_uchida_atsuto_legend/pair_0405.jpg
+    card:
+      type: table
+      title: 内田篤人 通算（リーグ戦）
+      columns: [リーグ, 試合, 得点]
+      rows:
+      - [J1, '148', '3']
+      - [ドイツ1部, '104', '1']
+      - [ドイツ2部, '2', '0']
+      - [リーグ戦の合計, '254', '4']
+      - [日本代表, '74', '2']
+      source: JFA・スポニチ・日刊スポーツ・Wikipedia
+      highlight_row: 3
+  quotes_from:
+  - https://real-sports.jp/page/articles/428486197384315841
+  sources:
+  - https://real-sports.jp/page/articles/428486197384315841
+  - https://ja.wikipedia.org/wiki/%E5%86%85%E7%94%B0%E7%AF%A4%E4%BA%BA
+  - https://en.wikipedia.org/wiki/Atsuto_Uchida
+  - https://de.wikipedia.org/wiki/Atsuto_Uchida
+  - https://www.sponichi.co.jp/soccer/news/2020/08/21/kiji/20200820s00002179491000c.html
+  - https://www.nikkansports.com/soccer/news/202008230000922.html
+- id: match
+  heading: 2011年4月、ミラノとゲルゼンキルヒェンで、何が起きたのか
+  tier: 報道
+  main: true
+  telop: 準々決勝、インテルに合計7対3
+  card:
+    type: stats
+    title: チャンピオンズリーグ準々決勝（2011年4月）
+    items:
+    - ['5', 対2, 第1戦。ミラノで、インテルに勝つ]
+    - ['7', 対3, 2試合の合計]
+    - ['4', 強, シャルケはクラブ初の準決勝]
+    focus: 1
+  say:
+  - text: シャルケの右サイドバック、内田篤人。
+    image: assets/images/20261021_uchida_atsuto_legend/01_w.jpg
+    short_only: true
+    card: none
+  - text: 最も大きな舞台は、2011年4月、チャンピオンズリーグの準々決勝。
+    short_only: true
+    card: none
+  - text: この年のシャルケは、リーグ戦では14位でした。
+    image: assets/images/20261021_uchida_atsuto_legend/01_w.jpg
+    card: none
+  - text: それでも、チャンピオンズリーグでは勝ち進みます。
+    card: none
+  - text: 準々決勝の相手は、前の年の優勝チーム、インテル・ミラノ。
+    card: &umatch_tl
+      type: timeline
+      title: 2010-11 CL 準々決勝・準決勝
+      rows:
+      - ['4月5日', 'ミラノで、インテルに5対2']
+      - ['4月13日', '本拠地で、インテルに2対1']
+      - ['合計', '7対3で、クラブ初の準決勝へ']
+      - ['4月26日', '準決勝 第1戦。ユナイテッドに0対2']
+      - ['5月4日', '第2戦。マンチェスターで1対4']
+      focus: 0
+      highlight_row: 0
+  - text: 長友佑都のいるクラブで、チャンピオンズリーグ初の、日本人対決でもありました。
+    card: none
+  - text: 第1戦、4月5日、ミラノ。開始1分に先制されます。
+    emph: true
+    card:
+      <<: *umatch_tl
+      highlight_row: 0
+  - text: それでも、エドゥの2点などで、5対2の大勝。
+    emph: true
+    card:
+      <<: *umatch_tl
+      highlight_row: 0
+  - text: 欧州の報道が選ぶ、この試合のベストイレブンに、内田篤人の名前がありました。
+    card: none
+  - text: 第2戦は、本拠地で2対1の勝ち。合計は、7対3です。
+    card:
+      <<: *umatch_tl
+      highlight_row: 1
+  - text: これで、ベスト4。シャルケにとって、初めての景色でした。
+    emph: true
+    card:
+      <<: *umatch_tl
+      highlight_row: 2
+  - text: この年のチャンピオンズリーグ12試合のうち、内田は11試合に出ました。
+    card: none
+  - text: 準決勝は、マンチェスター・ユナイテッドに、0対2、1対4。
+    card:
+      <<: *umatch_tl
+      highlight_row: 4
+  - text: 5月、ポカール決勝は5対0。内田は途中出場で、移籍後初のタイトル。
+    card: none
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/2010%E2%80%9311_UEFA_Champions_League_knockout_phase
+  - https://de.wikipedia.org/wiki/FC_Schalke_04
+  - https://ja.wikipedia.org/wiki/%E5%86%85%E7%94%B0%E7%AF%A4%E4%BA%BA
+  - https://ja.wikipedia.org/wiki/%E9%95%B7%E5%8F%8B%E4%BD%90%E9%83%BD
+  - https://www.jfa.jp/national_team/news/00025323/
+- id: after
+  heading: ピッチを離れた右サイドバックは、いま何をしているのか
+  tier: 報道
+  telop: 引退のあと、指導者へ
+  card:
+    type: timeline
+    title: 引退のあと
+    rows:
+    - ['2020年8月', 現役を引退（32歳）]
+    - ['2020年9月', JFAのロールモデルコーチ]
+    - ['2021年5月', シャルケのアンバサダー]
+    - ['2026年5月', 日本サッカー協会がコーチ就任を発表]
+    focus: 3
+    highlight_row: 0
+  say:
+  - text: 2020年8月20日、鹿島が、内田篤人の現役引退を発表します。
+    image: assets/images/20261021_uchida_atsuto_legend/01_w.jpg
+    card: &uafter_tl
+      type: timeline
+      title: 引退のあと
+      rows:
+      - ['2020年8月', 現役を引退（32歳）]
+      - ['2020年9月', JFAのロールモデルコーチ]
+      - ['2021年5月', シャルケのアンバサダー]
+      - ['2026年5月', 日本サッカー協会がコーチ就任を発表]
+      focus: 3
+      highlight_row: 0
+  - text: 理由は、コンディション。2月に、右足を負傷していました。
+    card: none
+  - text: 引退セレモニーで語ったのは、鹿島の先輩たちの姿。
+    card: none
+  - voice: 内田篤人
+    text: その姿を……いまの後輩に見せることができないと、
+  - voice: 内田篤人
+    text: 日々練習していく中で身体が戻らないことを実感し、
+    cont: true
+  - voice: 内田篤人
+    text: このような気持ちを抱えながら、
+    cont: true
+  - voice: 内田篤人
+    text: 鹿島アントラーズでプレーすることは違うんじゃないかと、
+    cont: true
+  - voice: 内田篤人
+    text: サッカー選手として終わったんだなと考えるようになりました。
+    cont: true
+    pause: 0.6
+  - text: 8月23日、ガンバ大阪戦。前半16分から出場して、約75分。
+    image: assets/images/20261021_uchida_atsuto_legend/01_w.jpg
+    card:
+      <<: *uafter_tl
+      highlight_row: 0
+  - text: 終了間際の同点ゴールは、内田のサイドチェンジから始まりました。
+    emph: true
+    card: none
+  - text: 9月、日本サッカー協会のロールモデルコーチに。後進の育成が、役割でした。
+    card:
+      <<: *uafter_tl
+      highlight_row: 1
+  - text: 2021年5月には、シャルケのクラブアンバサダーに就任しました。
+    card:
+      <<: *uafter_tl
+      highlight_row: 2
+  - text: 2026年5月、日本サッカー協会のコーチへの就任が発表されました。
+    image: assets/images/20261021_uchida_atsuto_legend/pair_0405.jpg
+    card:
+      <<: *uafter_tl
+      highlight_row: 3
+  quotes_from:
+  - https://real-sports.jp/page/articles/428486197384315841
+  sources:
+  - https://www.sponichi.co.jp/soccer/news/2020/08/21/kiji/20200820s00002179491000c.html
+  - https://real-sports.jp/page/articles/428486197384315841
+  - https://www.nikkansports.com/soccer/news/202008230000922.html
+  - https://www.jfa.jp/national_team/news/00025323/
+  - https://www.football-zone.net/archives/283424
+  - https://www.sponichi.co.jp/soccer/news/2026/05/18/articles/20260518s00002014180000c.html
+  - https://www.jfa.jp/nadeshikojapan_2026/member/
+  - https://de.wikipedia.org/wiki/Atsuto_Uchida
+- id: secret
+  heading: 始発の電車と、テーピングの右ももに、何があったのか
+  tier: 報道
+  telop: 毎朝5時40分と、2014年の右もも
+  card:
+    type: table
+    title: 数字の外にある、2つの話
+    columns: [いつ, 何があったか]
+    rows: &usecret_rows
+    - ['高校時代', 毎朝5時40分の始発で、清水へ']
+    - ['2014年6月', 右ももの腱の大けがから、W杯へ']
+    source: REAL SPORTS・スポニチ
+  say:
+  - text: ここからは、数字には出ない話を、2つ。
+    image: assets/images/20261021_uchida_atsuto_legend/pair_0405.jpg
+    card: &usecret_card
+      type: table
+      title: 数字の外にある、2つの話
+      columns: [いつ, 何があったか]
+      rows: *usecret_rows
+      source: REAL SPORTS・スポニチ
+      highlight_row: 0
+  - text: 1つ目は、高校時代。始発は、午前5時40分。電車で約1時間、自転車で約1キロ。
+    emph: true
+    card:
+      <<: *usecret_card
+      highlight_row: 0
+  - text: 下宿の話もありましたが、当時の監督、梅田和男さんによると、
+    card: none
+  - voice: 梅田和男さん
+    text: 自宅に帰ることで篤人がホッとしている部分もあるので、
+  - voice: 梅田和男さん
+    text: 限界までやらせたいと言われました。
+    cont: true
+    pause: 0.6
+  - text: 2つ目は、2014年のワールドカップ。
+    image: assets/images/20261021_uchida_atsuto_legend/pair_0405.jpg
+    card:
+      <<: *usecret_card
+      highlight_row: 1
+  - text: この年の2月、右太ももの腱が切れる大けがを負いました。
+    card: none
+  - text: 手術を勧められましたが、手術をしない、保存療法を選びます。
+    card: none
+  - text: 半年足らずで復帰。患部は、テーピングでぐるぐる巻きでした。
+    emph: true
+    card: none
+  - voice: 内田篤人
+    text: 支えてくれるスタッフがいる。痛いなんて言えない。
+    pause: 0.6
+  - text: グループリーグ敗退。それでも、3試合すべてに先発しました。
+    image: assets/images/20261021_uchida_atsuto_legend/01_w.jpg
+    card: none
+  quotes_from:
+  - https://real-sports.jp/page/articles/428486197384315841
+  - https://www.sponichi.co.jp/soccer/news/2020/08/21/kiji/20200820s00002179491000c.html
+  sources:
+  - https://real-sports.jp/page/articles/428486197384315841
+  - https://www.sponichi.co.jp/soccer/news/2020/08/21/kiji/20200820s00002179491000c.html
+  - https://ja.wikipedia.org/wiki/%E5%86%85%E7%94%B0%E7%AF%A4%E4%BA%BA
+- id: view
+  heading: 内田篤人の104試合には、何が入っていたのか
+  tier: 背景
+  viewpoint: true
+  telop: ドイツの104試合に、CL準決勝
+  card:
+    type: table
+    title: 内田篤人 リーグ戦の試合数
+    columns: [区間, 試合, 1季あたり]
+    rows: &ucmp_rows
+    - ['鹿島 2006〜09年（4季）', '115', '約29']
+    - ['シャルケ 2010-11〜14-15（5季）', '104', '約21']
+    - ['シャルケ 2015-16〜17-18（3季）', '0', '0']
+    source: Wikipedia・スポニチ
+  say:
+  - text: 最後に、内田篤人のリーグ戦の試合数を数えます。
+    image: assets/images/20261021_uchida_atsuto_legend/pair_0405.jpg
+    card: &ucmp_card
+      type: table
+      title: 内田篤人 リーグ戦の試合数
+      columns: [区間, 試合, 1季あたり]
+      rows: *ucmp_rows
+      source: Wikipedia・スポニチ
+      highlight_row: 0
+  - text: 鹿島の最初の4季は、Jリーグの1部で115試合。1季あたり、約29試合。
+    card:
+      <<: *ucmp_card
+      highlight_row: 0
+  - text: ドイツに渡ってからの5季は、ブンデスリーガ1部に104試合。
+    emph: true
+    card:
+      <<: *ucmp_card
+      highlight_row: 1
+    mark: {kind: circle, row: 1, col: 1}
+  - text: 1季あたり、約21試合です。鹿島の時より、約8試合少ない。
+    card:
+      <<: *ucmp_card
+      highlight_row: 1
+  - text: それでも、この5季の中に、クラブ初のCL4強と、ポカール優勝があります。
+    image: assets/images/20261021_uchida_atsuto_legend/01_w.jpg
+    card: none
+  - text: その後の3季、シャルケでのリーグ戦は0試合。右膝の手術は、2015年6月。
+    card:
+      <<: *ucmp_card
+      highlight_row: 2
+  - text: 走って、つないで、守る。
+    image: assets/images/20261021_uchida_atsuto_legend/pair_0405.jpg
+    card: none
+  - text: 限られた試合数で、ヨーロッパの準決勝まで届いた、右サイドでした。
+    card: none
+  quotes_from: []
+  sources:
+  - https://ja.wikipedia.org/wiki/%E5%86%85%E7%94%B0%E7%AF%A4%E4%BA%BA
+  - https://www.sponichi.co.jp/soccer/news/2020/08/21/kiji/20200820s00002179491000c.html
+  - https://de.wikipedia.org/wiki/FC_Schalke_04

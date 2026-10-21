@@ -1,0 +1,465 @@
+# ブンデスリーガ18クラブ紹介 ①バイエルン（2026-10-20 作成。見本はビジャレアル）。固定シリーズ1「クラブ紹介」（ブンデス）の最初の1本。
+# tools/plbuild.py（CLUB_LEAGUE=bundesliga）で組み立て。材料は research/bd_data/bayern*.json・bayern_say.yaml・bayern_research.md。
+# （plbuild は日本人を people の先頭に置く。主役の名前の点検が伊藤洋輝を見て鳴るので、バイエルンを先頭に並べ直した。thumbnail の callouts は板を隠すので外した）
+format: news
+voice_min: 0
+slot: other_1
+date: 2026年10月21日
+people:
+- バイエルン
+- 伊藤洋輝
+short_title: バイエルン、ドイツ王者35回。2位の4倍近く
+series: ブンデスリーガチーム紹介
+theme:
+  id: bd_bayern
+  league: germany
+  league_name: ブンデスリーガ
+  kind: other
+  topic: バイエルン
+  title: バイエルンはドイツで35回優勝。2位の4倍近くは、なぜ起きたのか
+  question: どんなクラブなのか
+  hook: このクラブは、できたばかりのブンデスリーガに、入れませんでした。
+  lead: ドイツで、いちばん勝ってきたクラブ。
+  opening_image: assets/stats/bd_bayern_data_t.png
+thumbnail:
+  line1: ドイツ王者35回
+  line2: 2位の4倍近く
+  crest_main:
+  - バイエルン
+  tags:
+  - バイエルン
+  - ブンデスリーガ
+  layout: classic
+  board: assets/stats/bd_bayern_data.png
+sections:
+- id: data
+  heading: いま見る理由と基礎DATA
+  main: true
+  tier: 背景
+  telop: 伊藤洋輝がいる。6試合無敗で首位。次はアーセナル
+  narrator: キャスター
+  say:
+  - text: 日本代表の伊藤洋輝が、バイエルンにいます。
+    image: assets/stats/bd_bayern_data_r1.png
+    no_telop: true
+  - text: 今季は第6節まで無敗。22得点で、首位に立っています。
+    image: assets/stats/bd_bayern_data_r2.png
+    no_telop: true
+  - text: 10月21日は、チャンピオンズリーグで、アーセナルを迎えます。
+    image: assets/stats/bd_bayern_data_r3.png
+    no_telop: true
+  - image: assets/stats/bd_bayern_data0.png
+    text: 創立は**1900年**。体操クラブを出た11人が、その夜のうちに作りました。
+    no_telop: true
+  - image: assets/stats/bd_bayern_data1.png
+    text: 愛称は「赤い人たち」。ほかに、「南の星」とも呼ばれます。
+    no_telop: true
+  - image: assets/stats/bd_bayern_map.png
+    text: ホームタウンはミュンヘン。人口は**158万人**で、ドイツで3番目に大きな街です。
+    no_telop: true
+  - image: assets/backgrounds/stadium_バイエルン.png
+    text: 本拠地はアリアンツ・アレーナ。**7万5000人**が入ります。
+  - image: assets/backgrounds/stadium_バイエルン.png
+    text: 18クラブで、ドルトムントに次ぐ2番目の大きさです。
+  - image: assets/stats/bd_bayern_data4.png
+    text: オーナーは、クラブの会員組織。株の**75%**を持ちます。アディダス、アウディ、アリアンツは各8.33%。
+    no_telop: true
+  - image: assets/stats/bd_bayern_cups.png
+    text: ブンデスリーガの優勝は**34回**。1932年を含めたドイツ王者は**35回**、カップは**21回**です。
+    no_telop: true
+  - image: assets/stats/bd_bayern_data6.png
+    text: 最多出場は、トーマス・ミュラー。このクラブで**756試合**に出ました。
+    no_telop: true
+  - image: assets/stats/bd_bayern_data7.png
+    text: 直近のタイトルは、今年**8月**のスーパーカップ。ドルトムントを2対1で下しました。
+    no_telop: true
+  - image: assets/stats/bd_bayern_data8.png
+    text: 昨季のリーグ戦は**1位**。勝ち点は**89**。2位のドルトムントとは、16の差でした。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/FC_Bayern_Munich
+  - https://en.wikipedia.org/wiki/2026–27_FC_Bayern_Munich_season
+  - https://en.wikipedia.org/wiki/Hiroki_It%C5%8D_(footballer,_born_1999)
+  - https://site.api.espn.com/apis/v2/sports/soccer/ger.1/standings
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/all/scoreboard?dates=20261021
+  bg: assets/backgrounds/stadium_バイエルン_in.png
+  official: false
+- id: history
+  heading: ブンデスリーガに、入れなかった年
+  tier: 背景
+  telop: 1963年、南部の5クラブに入れず。1965年に昇格
+  narrator: 解説
+  card:
+    type: table
+    title: 1963年、ブンデスリーガの発足
+    columns: &id001
+    - ''
+    - ''
+    rows:
+    - - 1963年
+      - 全国リーグが発足
+    - - 南部から選ばれた数
+      - 5クラブ
+  say:
+  - 1963年、ドイツに、全国リーグのブンデスリーガが生まれます。
+  - ドイツ南部から選ばれたのは、5クラブ。物差しは、過去12年の成績でした。
+  - バイエルンは、その順位が**6位**。選ばれなかったのです。
+  - text: 同じ街の1860ミュンヘンは7位でしたが、直前の優勝を評価されて入りました。
+    card:
+      type: table
+      title: 1963年、ブンデスリーガの発足
+      columns: *id001
+      rows:
+      - - バイエルン
+        - 過去12年で6位。選ばれず
+  - 若い選手は、ベッケンバウアー、ゲルト・ミュラー、マイヤー。
+  - このチームで、**1965年**に昇格します。
+  sources:
+  - https://en.wikipedia.org/wiki/FC_Bayern_Munich
+  bg: assets/backgrounds/stadium_バイエルン_in.png
+  official: false
+- id: history2
+  heading: 3年連続、ヨーロッパの頂点
+  tier: 背景
+  telop: 1974〜76年、ヨーロッパ杯3連覇
+  narrator: 解説
+  card:
+    type: table
+    title: ヨーロッパ杯、3連覇
+    columns: &id002
+    - ''
+    - ''
+    rows:
+    - - 1974年
+      - 初優勝。再試合で4対0
+  say:
+  - 1967年、バイエルンは、初めてヨーロッパの大会を制します。
+  - 会場は、各国のカップ優勝クラブが集まる、カップウィナーズカップ。
+  - 決勝は、レンジャーズに1対0でした。
+  - text: 1974年は、ヨーロッパ杯の決勝。いまのチャンピオンズリーグの前身です。
+    card:
+      type: table
+      title: ヨーロッパ杯、3連覇
+      columns: *id002
+      rows:
+      - - 1975年
+        - リーズを破る
+  - アトレティコ・マドリードと引き分けます。
+  - text: 再試合は**4対0**で勝って、初優勝です。
+    card:
+      type: table
+      title: ヨーロッパ杯、3連覇
+      columns: *id002
+      rows:
+      - - 1976年
+        - サンテティエンヌを破り3連覇
+  - 1975年はリーズ、1976年はサンテティエンヌを破りました。
+  - 3年連続の優勝は、史上3番目のクラブでした。
+  sources:
+  - https://en.wikipedia.org/wiki/FC_Bayern_Munich
+  bg: assets/backgrounds/stadium_バイエルン_in.png
+  official: false
+- id: history3
+  heading: ドイツ初の3冠
+  tier: 背景
+  telop: 2013年、リーグ勝ち点91の記録とドイツ初の3冠
+  narrator: 解説
+  card:
+    type: table
+    title: 2012-13の3冠
+    columns: &id003
+    - ''
+    - ''
+    rows:
+    - - リーグ
+      - 勝ち点91。最多記録
+    - - 欧州の決勝
+      - ドルトムントに2対1
+  say:
+  - 2012年、バイエルンは、チャンピオンズリーグの決勝を本拠地で戦います。
+  - ところが、ピーケー戦でチェルシーに敗れました。
+  - text: その翌シーズン。リーグは、勝ち点**91**の最多記録で優勝します。
+    card:
+      type: table
+      title: 2012-13の3冠
+      columns: *id003
+      rows:
+      - - 1週間後
+        - カップも優勝。3冠
+  - チャンピオンズリーグの決勝は、同じドイツのドルトムントに**2対1**。
+  - 1週間後のカップ決勝にも勝って、ドイツのクラブとして初めて、3冠を達成しました。
+  sources:
+  - https://en.wikipedia.org/wiki/FC_Bayern_Munich
+  bg: assets/backgrounds/stadium_バイエルン_in.png
+  official: false
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: 攻める。黒字を続ける。会員43万人
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - 攻めて点を取り続ける
+    - - 運営の型
+      - 27年連続の黒字
+    - - クラブの気質
+      - 会員43万人のクラブ
+  say:
+  - text: プレーの色は、攻めて、点を取り続けること。
+    image: assets/photos/bd/bayern/bayern_manager_841b42a0.jpg
+  - 昨季のリーグ戦は**122得点**。それまでの最多は、1971-72の**101得点**でした。
+  - 運営の型は、黒字。収入は**9億7830万ユーロ**で、**27年**続けて利益を出しています。
+  - 気質は「ミア・サン・ミア」。バイエルン語で、「我々は我々だ」という意味です。
+  - 会員は**43万人**を超え、世界で2番目に大きなスポーツクラブです。
+  sources:
+  - https://en.wikipedia.org/wiki/FC_Bayern_Munich
+  - https://en.wikipedia.org/wiki/2025%E2%80%9326_Bundesliga
+  bg: assets/backgrounds/stadium_バイエルン_in.png
+  official: false
+- id: episode
+  heading: 体操クラブを出た夜に
+  tier: 背景
+  telop: 1900年2月27日。その夜のうちに、新しいクラブができた
+  narrator: 解説
+  card:
+    type: table
+    title: 体操クラブを出た夜に
+    columns: &id004
+    - ''
+    - ''
+    rows:
+    - - 1900年2月27日
+      - 体操クラブの総会
+    - - 決まったこと
+      - サッカー部は連盟に入れない
+  say:
+  - 1900年2月27日、ミュンヘンの体操クラブの総会が開かれました。
+  - 決まったのは、サッカー部員は、ドイツサッカー連盟に入れない、ということ。
+  - text: サッカー部の11人は、その場を出て、同じ晩に新しいクラブを作りました。
+    card:
+      type: table
+      title: 体操クラブを出た夜に
+      columns: *id004
+      rows:
+      - - その夜
+        - 11人が出て、新クラブを作る
+  - それが、バイエルンです。数か月のうちに、地元のクラブに大勝を重ねました。
+  sources:
+  - https://en.wikipedia.org/wiki/FC_Bayern_Munich
+  bg: assets/backgrounds/stadium_バイエルン_in.png
+  official: false
+- id: legends
+  heading: このクラブを語る3人
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - &id005
+      - フィリップ・ラーム
+      - 2002-2017
+      - 2013年の優勝主将
+  say:
+  - text: ラームは、ミュンヘン生まれ。11歳で、バイエルンの下部組織に入りました。
+    image: assets/photos/bd/bayern/bayern_legend_faea6fcf.jpg
+  - 2013年、主将として、チャンピオンズリーグの優勝カップを掲げました。
+  - リーグ戦で**332試合12得点**。2017年、主将のまま現役を終えました。
+  sources:
+  - https://en.wikipedia.org/wiki/Philipp_Lahm
+  - https://en.wikipedia.org/wiki/Thomas_M%C3%BCller
+  - https://en.wikipedia.org/wiki/Robert_Lewandowski
+  bg: assets/backgrounds/stadium_バイエルン_in.png
+  official: false
+- id: legends2
+  heading: このクラブを語る3人（2人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id005
+    - &id006
+      - トーマス・ミュラー
+      - 2008-2025
+      - クラブ最多756試合
+  say:
+  - text: ミュラーは、2000年に下部組織へ入った、地元バイエルン育ちのアタッカーです。
+    image: assets/photos/bd/bayern/bayern_legend_08319754.jpg
+  - 2010年のワールドカップは、**5得点**で得点王。2020年の3冠では、**14得点**。
+  - 出場はクラブ最多。**250得点223アシスト**を残し、2025年に退団しました。
+  sources:
+  - https://en.wikipedia.org/wiki/Philipp_Lahm
+  - https://en.wikipedia.org/wiki/Thomas_M%C3%BCller
+  - https://en.wikipedia.org/wiki/Robert_Lewandowski
+  bg: assets/backgrounds/stadium_バイエルン_in.png
+  official: false
+- id: legends3
+  heading: このクラブを語る3人（3人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id005
+    - *id006
+    - - ロベルト・レヴァンドフスキ
+      - 2014-2022
+      - 1シーズン41得点
+  say:
+  - text: 2014年、ライバルのドルトムントからバイエルンへ来たレヴァンドフスキ。
+    image: assets/photos/bd/bayern/bayern_legend_2f89780b.jpg
+  - 2015年、途中出場から**8分59秒**で5得点。ブンデスリーガの最速記録です。
+  - 2020-21は29試合で**41得点**。ゲルト・ミュラーの記録を超えました。
+  sources:
+  - https://en.wikipedia.org/wiki/Philipp_Lahm
+  - https://en.wikipedia.org/wiki/Thomas_M%C3%BCller
+  - https://en.wikipedia.org/wiki/Robert_Lewandowski
+  bg: assets/backgrounds/stadium_バイエルン_in.png
+  official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はコンパニ。前はバーンリー
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - ヴァンサン・コンパニ（ベルギー）
+    - - 就任
+      - 2024年
+    - - 前職
+      - バーンリー
+  say:
+  - text: 今季の監督はヴァンサン・コンパニ。ベルギー出身で、就任は**2024年**。
+    image: assets/photos/bd/bayern/bayern_manager_841b42a0.jpg
+  - 前はバーンリー。選手の頃は、マンチェスター・シティの主将でした。
+  - バイエルンでは、就任1年目にリーグ優勝。昨季は、リーグとカップの2冠でした。
+  sources:
+  - https://en.wikipedia.org/wiki/FC_Bayern_Munich
+  - https://en.wikipedia.org/wiki/Vincent_Kompany
+  bg: assets/backgrounds/stadium_バイエルン_in.png
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - text: 今季の登録選手は24人です。
+    image: assets/stats/bd_bayern_gk.png
+    no_telop: true
+  - image: assets/stats/bd_bayern_gk_f.png
+    text: ゴールキーパーは3人。
+    no_telop: true
+  - image: assets/stats/bd_bayern_gk_f.png
+    text: 主将を務めるのが**マヌエル・ノイアー**。
+    no_telop: true
+  - image: assets/stats/bd_bayern_gk_f.png
+    text: リーグ戦で**393試合**に出ています。
+    no_telop: true
+  - image: assets/stats/bd_bayern_gk_f.png
+    text: スヴェン・ウルライヒはリーグ戦で**67試合**。
+    no_telop: true
+  - image: assets/stats/bd_bayern_df_f.png
+    text: ディフェンダーは8人。
+    no_telop: true
+  - image: assets/stats/bd_bayern_df_f.png
+    text: 日本の伊藤洋輝がいます。
+    no_telop: true
+  - image: assets/stats/bd_bayern_df_f.png
+    text: アルフォンソ・デイヴィスはカナダ代表で**59試合**。
+    no_telop: true
+  - image: assets/stats/bd_bayern_mf_f.png
+    text: ミッドフィールダーは9人。
+    no_telop: true
+  - image: assets/stats/bd_bayern_mf_f.png
+    text: ヨシュア・キミッヒはドイツ代表で**116試合**。
+    no_telop: true
+  - image: assets/stats/bd_bayern_mf_f.png
+    text: ジャマル・ムシアラはドイツ代表で**46試合**。
+    no_telop: true
+  - image: assets/stats/bd_bayern_fw_f.png
+    text: フォワードは4人。
+    no_telop: true
+  - image: assets/stats/bd_bayern_fw_f.png
+    text: ハリー・ケインはイングランド代表で**125試合**。
+    no_telop: true
+  - image: assets/stats/bd_bayern_fw_f.png
+    text: セルジュ・ニャブリはドイツ代表で**62試合**。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/FC_Bayern_Munich
+  bg: assets/backgrounds/stadium_バイエルン_in.png
+  official: false
+- id: season
+  heading: 今季のここまで
+  tier: 報道
+  telop: 6試合で4勝2引き分け。1位
+  narrator: 解説
+  card:
+    type: table
+    title: ブンデスリーガの結果
+    columns:
+    - 節
+    - 相手
+    - 結果
+    rows:
+    - - 第1節
+      - シュツットガルト（ホーム）
+      - 5対1
+    - - 第2節
+      - シャルケ（アウェー）
+      - 0対0
+    - - 第3節
+      - エルフェルスベルク（アウェー）
+      - 2対1
+    - - 第4節
+      - ウニオン・ベルリン（ホーム）
+      - 7対0
+    - - 第5節
+      - アウクスブルク（アウェー）
+      - 2対2
+    - - 第6節
+      - ライプツィヒ（ホーム）
+      - 6対1
+  say:
+  - ブンデスリーガは6試合を終えて、**4勝2引き分け**です。
+  - 順位は**1位**、勝ち点は**14**です。
+  - バイエルンは、チャンピオンズリーグ初戦のボーデ・グリムトに**5対0**の勝ち。
+  - 第2戦は、敵地でヴァイキングと**3対3**の引き分けでした。
+  - 次の第3戦は、10月21日。アーセナルが、アリアンツ・アレーナに来ます。
+  sources:
+  - https://www.espn.com/soccer/team/results/_/name/bayern
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard
+  - https://www.fotmob.com/leagues/54/table/bundesliga
+  bg: assets/backgrounds/stadium_バイエルン_in.png
+  official: false
