@@ -1,3 +1,4 @@
+import 'honors.dart';
 import 'game.dart';
 import 'season.dart';
 import 'player.dart';
@@ -117,6 +118,14 @@ List<String> epilogueLines(Game g) {
     lines.add(worldChampion(g)
         ? '日本代表として世界の頂点に立った。${g.caps}度の代表の舞台は、誇りだった。'
         : '日本代表として${g.caps}度、世界の舞台に立った。');
+  }
+
+  final hc = g.honorCounts;
+  if (hc.isNotEmpty) {
+    lines.add('個人タイトルは、${[
+      for (final h in Honor.all)
+        if (hc.containsKey(h)) hc[h]! > 1 ? '$h${hc[h]}回' : h,
+    ].join('、')}。');
   }
 
   if (g.draftPick == 1) {

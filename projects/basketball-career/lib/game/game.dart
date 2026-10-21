@@ -4,6 +4,7 @@ import 'career.dart';
 import 'difficulty.dart';
 import 'events.dart';
 import 'goals.dart';
+import 'honors.dart';
 import 'life.dart';
 import 'match.dart';
 import 'path.dart';
@@ -37,6 +38,7 @@ class YearRecord {
     this.blocks = 0,
     this.threes = 0,
     this.highPoints = 0,
+    this.honors = const [],
   });
 
   final int age;
@@ -61,7 +63,11 @@ class YearRecord {
   final int threes;
   final int highPoints;
 
+  /// その大会で受けた表彰(得点王・新人王・オールスターなど。`Honor`)。
+  final List<String> honors;
+
   Map<String, dynamic> toJson() => {
+        'honors': honors,
         'winter': winter,
         'award': award,
         'steals': steals,
@@ -98,6 +104,7 @@ class YearRecord {
         blocks: (j['blocks'] as num?)?.toInt() ?? 0,
         threes: (j['threes'] as num?)?.toInt() ?? 0,
         highPoints: (j['highPoints'] as num?)?.toInt() ?? 0,
+        honors: [for (final v in (j['honors'] as List?) ?? const []) v as String],
       );
 }
 
@@ -256,6 +263,9 @@ class Game {
 
   /// 直近の年末の、目標の結果の言葉(画面が見せたら消す)。
   String? lastGoalMessage;
+
+  /// 直近の大会で受けた表彰(画面に出す。保存はしない。記録は `YearRecord.honors`)。
+  List<String> lastHonors = const [];
   Player player;
   Condition condition;
   Track track;
@@ -476,6 +486,7 @@ class Game {
     lastFocus = focus;
     recoveredThisTerm = false;
     lastGoalMessage = null;
+    lastHonors = const [];
     lastMetRival = false;
     lastNewSkills = {};
     final rut = isRut(action);
@@ -721,6 +732,9 @@ class Game {
         rival.losses++;
       }
     }
+    final firstPro = !records.any(
+        (r) => r.league == League.proDomestic || r.league == League.proAbroad);
+    lastHonors = t.honors(rookie: firstPro);
     records.add(YearRecord(
       age: player.age,
       league: t.league,
@@ -737,6 +751,7 @@ class Game {
       blocks: t.blocks,
       threes: t.threes,
       highPoints: t.highPoints,
+      honors: lastHonors,
     ));
     recentAchievements.add(t.achievement);
     while (recentAchievements.length > _recentCount) {
@@ -1022,6 +1037,19 @@ class Game {
   }
 
   int get awardCount => records.where((r) => r.award != null).length;
+
+  /// 個人タイトル・表彰ごとの受賞回数(`Honor`)。
+  Map<String, int> get honorCounts {
+    final m = <String, int>{};
+    for (final r in records) {
+      for (final h in r.honors) {
+        m[h] = (m[h] ?? 0) + 1;
+      }
+    }
+    return m;
+  }
+
+  int get honorTotal => records.fold(0, (s, r) => s + r.honors.length);
   double get careerPpg => totalGames == 0
       ? 0
       : records.fold(0.0, (s, r) => s + r.ppg * r.games) / totalGames;

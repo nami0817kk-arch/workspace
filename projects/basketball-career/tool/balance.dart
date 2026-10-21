@@ -18,6 +18,8 @@ void main(List<String> args) {
   final team = args.contains('--team');
   var pro = 0, direct = 0, abroad = 0, titles = 0, rw = 0, rl = 0, awards = 0, skills = 0, st = 0, bl = 0, th = 0, games = 0, high = 0;
   var ovrAt18 = 0.0, heightAt18 = 0.0;
+  final honorCareers = <String, int>{};
+  final honorTotals = <String, int>{};
   for (var seed = 0; seed < n; seed++) {
     final g = Game.start('x', rng: Random(seed));
     var guard = 0;
@@ -92,12 +94,19 @@ void main(List<String> args) {
     high += g.careerHigh?.points ?? 0;
     skills += g.player.skills.length;
     awards += g.records.where((r) => r.award != null).length;
+    g.honorCounts.forEach((h, c) {
+      honorCareers[h] = (honorCareers[h] ?? 0) + 1;
+      honorTotals[h] = (honorTotals[h] ?? 0) + c;
+    });
     rw += g.rival.wins;
     rl += g.rival.losses;
   }
   String pct(int v) => '${(v / n * 100).toStringAsFixed(1)}%';
   print('プロ入り: ${pct(pro)}(高校から直接 ${pct(direct)})');
   print('海外挑戦: ${pct(abroad)}');
+  for (final h in honorCareers.keys.toList()..sort()) {
+    print('表彰 $h: ${pct(honorCareers[h]!)}の人生で受賞(1人あたり ${(honorTotals[h]! / n).toStringAsFixed(2)}回)');
+  }
   print('ライバルとの通算: ${(rw / n).toStringAsFixed(1)}勝 ${(rl / n).toStringAsFixed(1)}敗(1人あたり)');
   print('1試合あたり: スティール ${(st / games).toStringAsFixed(2)} ブロック ${(bl / games).toStringAsFixed(2)} 3P ${(th / games).toStringAsFixed(2)}本 / キャリアハイ平均 ${(high / n).toStringAsFixed(1)}点');
   print('平均の得意技: ${(skills / n).toStringAsFixed(1)}個');

@@ -1,3 +1,4 @@
+import 'honors.dart';
 import 'difficulty.dart';
 import 'epilogue.dart';
 import 'game.dart';
@@ -116,6 +117,16 @@ class Achievement {
 bool _wentPro(Game g) => g.records.any((r) => r.league.name.startsWith('pro'));
 
 final achievements = <Achievement>[
+  Achievement('honor_rookie', '新人王', 'プロ1年目で新人王に選ばれた。',
+      (g) => (g.honorCounts[Honor.rookie] ?? 0) > 0),
+  Achievement('honor_scoring', '得点王', '得点王になった。',
+      (g) => (g.honorCounts[Honor.scoringKing] ?? 0) > 0),
+  Achievement('honor_allstar5', 'オールスターの常連', 'オールスターに5回選ばれた。',
+      (g) => (g.honorCounts[Honor.allStar] ?? 0) >= 5),
+  Achievement('honor_collector', 'タイトルコレクター', '5種類以上の個人タイトルを取った。',
+      (g) => g.honorCounts.length >= 5),
+  Achievement('triple_double', 'トリプルダブル', '1試合で得点・リバウンド・アシストが全部10以上。',
+      (g) => (g.honorCounts[Honor.tripleDouble] ?? 0) > 0),
   Achievement('draft_first', 'ドラフト1位', 'ドラフトで全体1位に指名された。', (g) => g.draftPick == 1),
   Achievement('draft_late', '下位からの成り上がり', 'ドラフト下位(31位以下)から、プロで優勝した。', (g) => g.draftPick > 30 && g.titles >= 1),
   Achievement('first_title', '初優勝', '大会で優勝した。', (g) => g.titles >= 1),
