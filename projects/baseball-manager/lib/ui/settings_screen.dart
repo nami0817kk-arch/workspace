@@ -251,55 +251,38 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
-  Future<void> _backup(BuildContext context) async {
-    final text = TextEditingController();
-    await showDialog<void>(
+  Future<void> _backup(BuildContext context) => showDialog<void>(
+        context: context,
+        builder: (ctx) => _BackupDialog(
+          controller: controller,
+          onRestore: (i) => _confirmRestoreAuto(ctx, i),
+        ),
+      );
+
+  Future<void> _confirmRestoreAuto(BuildContext context, int i) async {
+    final ok = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('バックアップ'),
-        content: SingleChildScrollView(
-          child: Column(mainAxisSize: MainAxisSize.min, children: [
-            const Text('「書き出す」で、いまのデータを文字列としてコピーします。'
-                'メモなどに貼っておけば、あとで「読み込む」で戻せます。'),
-            const SizedBox(height: 12),
-            TextField(
-              key: const Key('backup-text'),
-              controller: text,
-              minLines: 3,
-              maxLines: 6,
-              decoration: const InputDecoration(
-                  border: OutlineInputBorder(), hintText: '読み込むときは、ここに貼り付け'),
-            ),
-          ]),
-        ),
+        title: const Text('この時点に戻しますか?'),
+        content: const Text('いまのデータは、自動バックアップにとってから戻します。'),
         actions: [
           TextButton(
-            key: const Key('backup-export'),
-            onPressed: () async {
-              final m = ScaffoldMessenger.of(context);
-              await Clipboard.setData(
-                  ClipboardData(text: controller.exportBackup()));
-              m.showSnackBar(const SnackBar(content: Text('コピーしました')));
-            },
-            child: const Text('書き出す'),
-          ),
+              onPressed: () => Navigator.pop(ctx, false),
+              child: const Text('やめる')),
           FilledButton(
-            key: const Key('backup-import'),
-            onPressed: () async {
-              final m = ScaffoldMessenger.of(context);
-              final ok = await controller.importBackup(text.text);
-              m.showSnackBar(SnackBar(
-                  content: Text(ok ? '読み込みました' : '読み込めませんでした(文字列が違うかもしれません)')));
-              if (ok && ctx.mounted) Navigator.pop(ctx);
-            },
-            child: const Text('読み込む'),
-          ),
-          TextButton(
-              onPressed: () => Navigator.pop(ctx), child: const Text('閉じる')),
+              key: const Key('autobackup-restore-confirm'),
+              onPressed: () => Navigator.pop(ctx, true),
+              child: const Text('戻す')),
         ],
       ),
     );
-    text.dispose();
+    if (ok != true) return;
+    final done = await controller.restoreAutoBackup(i);
+    if (context.mounted) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(done ? '戻しました' : '戻せませんでした')));
+      if (done) Navigator.pop(context);
+    }
   }
 
   Future<void> _confirmRestart(BuildContext context) async {
@@ -348,5 +331,114 @@ class SettingsScreen extends StatelessWidget {
     if (ok != true) return;
     await controller.eraseAll();
     if (context.mounted) Navigator.of(context).popUntil((r) => r.isFirst);
+  }
+}
+
+/// バックアップのダイアログ。入力欄の持ち主はここ(閉じる動きの間も、安全に描かれる)。
+class _BackupDialog extends StatefulWidget {
+  const _BackupDialog({required this.controller, required this.onRestore});
+  final GameController controller;
+
+  /// 自動バックアップ `i` に戻す(確認つき)。
+  final Future<void> Function(int i) onRestore;
+
+  static String _fmtTime(DateTime t) =>
+      '${t.month}/${t.day} ${t.hour.toString().padLeft(2, '0')}:${t.minute.toString().padLeft(2, '0')}';
+
+  @override
+  State<_BackupDialog> createState() => _BackupDialogState();
+}
+
+class _BackupDialogState extends State<_BackupDialog> {
+  final text = TextEditingController();
+
+  @override
+  void dispose() {
+    text.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('バックアップ'),
+      content: SingleChildScrollView(
+        child: Column(mainAxisSize: MainAxisSize.min, children: [
+          const Text('「書き出す」で、いまのデータを文字列としてコピーします。'
+              'メモなどに貼っておけば、あとで「読み込む」で戻せます。'),
+          const SizedBox(height: 12),
+          if (widget.controller.autoBackups.isNotEmpty) ...[
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Text('自動バックアップ(最新$autoBackupMax件)',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+            ),
+            for (var i = 0; i < widget.controller.autoBackups.length; i++)
+              ListTile(
+                key: Key('autobackup-$i'),
+                dense: true,
+                contentPadding: EdgeInsets.zero,
+                title: Text(widget.controller.autoBackups[i].why),
+                subtitle: Text(_BackupDialog._fmtTime(
+                    widget.controller.autoBackups[i].at)),
+                trailing: TextButton(
+                  key: Key('autobackup-restore-$i'),
+                  onPressed: () => widget.onRestore(i),
+                  child: const Text('戻す'),
+                ),
+              ),
+            const SizedBox(height: 8),
+          ],
+          TextField(
+            key: const Key('backup-text'),
+            controller: text,
+            minLines: 3,
+            maxLines: 6,
+            decoration: const InputDecoration(
+                border: OutlineInputBorder(), hintText: '読み込むときは、ここに貼り付け'),
+          ),
+        ]),
+      ),
+      actions: [
+        if (widget.controller.sharer != null)
+          Builder(
+            builder: (bctx) => TextButton(
+              key: const Key('backup-share'),
+              onPressed: () {
+                final box = bctx.findRenderObject() as RenderBox?;
+                final origin = box == null
+                    ? null
+                    : box.localToGlobal(Offset.zero) & box.size;
+                widget.controller.sharer!
+                    .share(widget.controller.exportBackup(), origin: origin);
+              },
+              child: const Text('ファイルで共有'),
+            ),
+          ),
+        TextButton(
+          key: const Key('backup-export'),
+          onPressed: () async {
+            final m = ScaffoldMessenger.of(context);
+            await Clipboard.setData(
+                ClipboardData(text: widget.controller.exportBackup()));
+            m.showSnackBar(const SnackBar(content: Text('コピーしました')));
+          },
+          child: const Text('書き出す'),
+        ),
+        FilledButton(
+          key: const Key('backup-import'),
+          onPressed: () async {
+            final m = ScaffoldMessenger.of(context);
+            final ok = await widget.controller.importBackup(text.text);
+            m.showSnackBar(SnackBar(
+                content: Text(ok ? '読み込みました' : '読み込めませんでした(文字列が違うかもしれません)')));
+            if (ok && context.mounted) Navigator.pop(context);
+          },
+          child: const Text('読み込む'),
+        ),
+        TextButton(
+            onPressed: () => Navigator.pop(context), child: const Text('閉じる')),
+      ],
+    );
   }
 }

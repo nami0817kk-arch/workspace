@@ -25,6 +25,7 @@ import '../game/talent.dart';
 import '../game/traits.dart';
 import 'history.dart';
 import 'labels.dart';
+import 'backup_share.dart';
 import 'sound.dart';
 
 const saveKey = 'baseball_manager_save_v1';
@@ -47,6 +48,35 @@ const traitBookKey = 'baseball_manager_traitbook_v1';
 
 /// 継承ポイント(引退で貯まり、次の選手に特性を持たせるのに使う)。
 const legacyKey = 'baseball_manager_legacy_v1';
+
+/// 自動バックアップ(直近3件。選手を始め直す前・引退したとき・4歳ごとの節目)。
+const autoBackupKey = 'baseball_manager_autobackup_v1';
+const autoBackupMax = 3;
+
+/// 自動でとった、データの控え。
+class AutoBackup {
+  const AutoBackup(this.at, this.why, this.text);
+  final DateTime at;
+
+  /// とった理由(画面に出す)。
+  final String why;
+
+  /// `exportBackup` の文字列。
+  final String text;
+
+  Map<String, dynamic> toJson() =>
+      {'at': at.millisecondsSinceEpoch, 'why': why, 'text': text};
+
+  static AutoBackup? fromJson(Object? j) {
+    if (j is! Map) return null;
+    final at = j['at'];
+    final why = j['why'];
+    final text = j['text'];
+    if (at is! num || why is! String || text is! String) return null;
+    return AutoBackup(
+        DateTime.fromMillisecondsSinceEpoch(at.toInt()), why, text);
+  }
+}
 
 /// はじめてのガイドを見たか(端末単位)。
 const guideKey = 'baseball_manager_guide_v1';
@@ -156,6 +186,35 @@ class SaveStore {
     try {
       final p = await SharedPreferences.getInstance();
       await p.setStringList(traitBookKey, names.toList()..sort());
+    } catch (_) {}
+  }
+
+  Future<List<AutoBackup>> loadAutoBackups() async {
+    try {
+      final p = await SharedPreferences.getInstance();
+      final raw = p.getString(autoBackupKey);
+      if (raw == null) return [];
+      return [
+        for (final e in jsonDecode(raw) as List)
+          if (AutoBackup.fromJson(e) != null) AutoBackup.fromJson(e)!,
+      ];
+    } catch (_) {
+      return [];
+    }
+  }
+
+  Future<void> saveAutoBackups(List<AutoBackup> list) async {
+    try {
+      final p = await SharedPreferences.getInstance();
+      await p.setString(
+          autoBackupKey, jsonEncode([for (final b in list) b.toJson()]));
+    } catch (_) {}
+  }
+
+  Future<void> clearAutoBackups() async {
+    try {
+      final p = await SharedPreferences.getInstance();
+      await p.remove(autoBackupKey);
     } catch (_) {}
   }
 
@@ -361,13 +420,39 @@ class GameController extends ChangeNotifier {
       {SaveStore? store,
       Random? rng,
       SoundPlayer? sound,
-      this.autoGuide = false})
+      this.autoGuide = false,
+      this.sharer})
       : store = store ?? SaveStore(),
         _rng = rng ?? Random(),
         sound = sound ?? const NullSound();
 
   /// 最初の選手を始めたときに、はじめてのガイドを自動で出すか(アプリ本体は true、テストは false)。
   final bool autoGuide;
+
+  /// バックアップを共有メニューに渡す係(アプリ本体だけ。テストは null で、ボタンも出ない)。
+  final BackupSharer? sharer;
+
+  /// 自動バックアップ(新しい順、最大 `autoBackupMax` 件)。
+  List<AutoBackup> autoBackups = [];
+  int _backedAge = -1;
+
+  /// いまのデータの控えを1件とる。同じ内容がすぐ前にあれば足さない。
+  void autoBackup(String why) {
+    final text = exportBackup();
+    if (autoBackups.isNotEmpty && autoBackups.first.text == text) return;
+    autoBackups = [AutoBackup(DateTime.now(), why, text), ...autoBackups]
+        .take(autoBackupMax)
+        .toList();
+    store.saveAutoBackups(autoBackups);
+  }
+
+  /// 自動バックアップ `i` に戻す。戻す前のデータも控えに残す(戻しすぎても、やり直せる)。
+  Future<bool> restoreAutoBackup(int i) async {
+    if (i < 0 || i >= autoBackups.length) return false;
+    final text = autoBackups[i].text;
+    autoBackup('戻す前');
+    return importBackup(text);
+  }
 
   /// 次の画面でガイドを出したいか。見せたら `markGuideSeen` で false に戻す。
   bool guidePending = false;
@@ -579,6 +664,7 @@ class GameController extends ChangeNotifier {
     unlocked = await store.loadAchievements();
     seenTraits = await store.loadTraitBook();
     guideSeen = await store.loadGuideSeen();
+    autoBackups = await store.loadAutoBackups();
     legacyPoints = await store.loadLegacy();
     adminMode = await store.loadAdmin();
     final disp = await store.loadDisplay();
@@ -669,6 +755,11 @@ class GameController extends ChangeNotifier {
       Trait? carry]) {
     newlyUnlocked = const [];
     lastLegacyGain = 0;
+    // 育成中の選手がいるなら、始め直す前に控えをとる。
+    if (game != null && game!.phase != Phase.retired) {
+      autoBackup('${game!.player.name}を始め直す前');
+    }
+    _backedAge = -1;
     // 継承: 図鑑にあり、ポイントが足りる特性だけ。持たせたぶんのポイントを使う。
     Trait? use;
     if (carry != null && carryCandidates(role).contains(carry)) {
@@ -1011,11 +1102,16 @@ class GameController extends ChangeNotifier {
     await store.clearTraitBook();
     await store.clearLegacy();
     await store.clearGuide();
+    await store.clearAutoBackups();
+    autoBackups = [];
     guideSeen = false;
     notifyListeners();
   }
 
   Future<void> reset() async {
+    if (game != null && game!.phase != Phase.retired) {
+      autoBackup('${game!.player.name}をやめる前');
+    }
     game = null;
     await store.clear();
     notifyListeners();
@@ -1027,6 +1123,13 @@ class GameController extends ChangeNotifier {
 
   void _commit() {
     final g = game;
+    // 4歳ごとの節目で、自動バックアップ(同じ歳では1度だけ)。
+    if (g != null && g.phase != Phase.retired && g.player.age != _backedAge) {
+      _backedAge = g.player.age;
+      if (g.player.age % 4 == 0) {
+        autoBackup('${g.player.name} ${g.player.age}歳');
+      }
+    }
     // 出来事が起きた・引退したときの音(ほかに鳴らした音が無いときだけ)。
     if (g != null && g.phase != _soundPhase) {
       if (!_cuedThisTick && _soundPhase != null) {
@@ -1043,6 +1146,7 @@ class GameController extends ChangeNotifier {
       history = [HistoryEntry.of(g), ...history].take(historyLimit).toList();
       store.saveHistory(history);
       _unlockAchievements(g);
+      autoBackup('${g.player.name}が引退したとき');
       final e = g.ending;
       if (e != null) {
         lastLegacyGain = legacyPointsOf(madePro: e.madePro, title: e.title);
