@@ -1548,8 +1548,8 @@ void _rankTests() {
       await t.tap(find.byKey(const Key('exp-batting')));
       await t.pumpAndSettle();
       expect(find.byKey(const Key('buy-contact')), findsOneWidget);
-      expect(find.text('伸ばしどころ'), findsOneWidget);
-      expect(find.textContaining('あと+'), findsWidgets);
+      expect(find.textContaining('伸ばしどころ', findRichText: true), findsOneWidget);
+      expect(find.textContaining('あと+', findRichText: true), findsWidgets);
     });
 
     testWidgets('疲れが高いと特訓・練習試合に危険の印。数字キーで行動できる', (t) async {

@@ -111,9 +111,10 @@ void main() {
         eventResultText(before, const Condition(), after, const Condition()),
         contains('才能 ★★☆☆☆→★★★☆☆'));
     // 星が変わらない小さな上昇
-    final small = before.copyWith(potential: 55);
+    final low = _p(Role.batter, potential: 44);
+    final small = low.copyWith(potential: 47);
     expect(
-        eventResultText(before, const Condition(), small, const Condition()),
+        eventResultText(low, const Condition(), small, const Condition()),
         contains('才能が伸びた'));
     // 能力ごとの才能
     final g = giftUp(before, Ability.contact);

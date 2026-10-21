@@ -1077,7 +1077,7 @@ class _AbilityCard extends StatelessWidget {
                   RankBadge(value: p.of(a)),
                   const SizedBox(width: 6),
                   SizedBox(
-                      width: 92,
+                      width: 84,
                       child: Tooltip(
                           message: p.gift(a) == 0
                               ? abilityHint(a)

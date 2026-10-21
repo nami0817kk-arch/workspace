@@ -83,8 +83,9 @@ void main() {
     expect(g.childhood['kid-idol'], 0);
     expect(g.player.traits.map((t) => t.name), contains('fireballer'));
     final kid = g.lifeLog.where((e) => e.kind == 'childhood').toList();
-    expect(kid.length, 9);
-    expect(kid.map((e) => e.age).toList(), [6, 7, 8, 9, 9, 10, 11, 12, 12]);
+    expect(kid.length, 12);
+    expect(kid.map((e) => e.age).toList(),
+        [6, 7, 7, 8, 9, 9, 10, 10, 11, 11, 12, 12]);
     // 打者の憧れは打者向けの特性になる
     final b = _kidYears(3, (id, n) => id == 'kid-idol' ? 0 : 1);
     expect(b.player.traits.map((t) => t.name), contains('slugger'));
