@@ -7,6 +7,7 @@ import 'package:flutter/material.dart' show ThemeMode;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../game/achievements.dart';
+import '../game/after_career.dart';
 import '../game/difficulty.dart';
 import '../game/exp.dart';
 import '../game/career.dart';
@@ -804,13 +805,13 @@ class GameController extends ChangeNotifier {
   }
 
   /// 一生が終わったとき、新しい実績を解除して保存し、ダイアログで知らせる。
-  void _unlockAchievements(Game g) {
+  void _unlockAchievements(Game g, {bool append = false}) {
     final earned = earnedBy(PlayerSnapshot.fromGame(g));
     final fresh = [
       for (final a in achievements)
         if (earned.contains(a.id) && !unlocked.contains(a.id)) a,
     ];
-    newlyUnlocked = fresh;
+    newlyUnlocked = append ? [...newlyUnlocked, ...fresh] : fresh;
     if (fresh.isEmpty) return;
     unlocked = {...unlocked, ...fresh.map((a) => a.id)};
     store.saveAchievements(unlocked);
@@ -818,6 +819,20 @@ class GameController extends ChangeNotifier {
       pending.add(Milestone(
           MilestoneKind.achievement, '実績解除!', '${a.title}\n${a.description}'));
     }
+  }
+
+  /// 引退後の道を選ぶ(エンディングの画面から)。殿堂の記録も更新し、新しい実績があれば知らせる。
+  void chooseAfterPath(AfterPath p) {
+    final g = game;
+    if (g == null) return;
+    g.chooseAfterPath(p);
+    // 殿堂の最新の記録(この一生のもの)を、選んだ道を含む内容に差し替える。
+    if (g.archived && history.isNotEmpty) {
+      history = [HistoryEntry.of(g), ...history.skip(1)];
+      store.saveHistory(history);
+    }
+    _unlockAchievements(g, append: true);
+    _commit();
   }
 
   /// 見せ終わった節目を1つ取り除く。

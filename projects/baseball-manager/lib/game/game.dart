@@ -24,6 +24,7 @@ import 'marks.dart';
 import 'talent.dart';
 import 'traits.dart';
 import 'tryout.dart';
+import 'after_career.dart';
 import 'farm.dart';
 import 'fielding.dart';
 import 'final_moment.dart';
@@ -166,6 +167,36 @@ class Game {
 
   /// トライアウトをもう使ったか(一生に一度)。
   bool tryoutUsed = false;
+
+  /// 引退後に選んだ道(監督・コーチ・解説者・実業家・少年野球の指導者)。引退してプロだった選手だけ。
+  AfterPath? afterPath;
+
+  /// 引退後の道を選ぶ(引退済み・プロ入りした選手だけ。選び直しもできる)。
+  void chooseAfterPath(AfterPath p) {
+    if (phase != Phase.retired || !(ending?.madePro ?? false)) {
+      throw StateError('引退後の道を選べるのは、プロを引退したときだけ');
+    }
+    afterPath = p;
+  }
+
+  /// 選んだ道での、引退後の物語。選んでいなければ null。
+  SecondCareer? get secondCareer {
+    final p = afterPath;
+    final e = ending;
+    if (p == null || e == null) return null;
+    return secondCareerOf(
+      p,
+      name: player.name,
+      peak: e.peakOverall,
+      titles: e.titles.length,
+      championships: e.championships,
+      popularity: popularityOf(records, worldRecords),
+      money: money,
+      proYears: e.proYears,
+      married: e.married,
+      team: proTeam,
+    );
+  }
 
   /// 二軍(育成契約)で過ごす残りの年数。0なら一軍。保存する(古いセーブは0=一軍)。
   int farmYears = 0;
@@ -1507,6 +1538,7 @@ class Game {
         'tryoutUsed': tryoutUsed,
         'pendingFinal': pendingFinal?.toJson(),
         'farmYears': farmYears,
+        'afterPath': afterPath?.name,
       };
 
   /// 項目を足すときは既定値を置く(既存セーブを壊さない)。
@@ -1536,6 +1568,7 @@ class Game {
     g.awakened = j['awakened'] == true;
     g.tryoutUsed = j['tryoutUsed'] == true;
     g.farmYears = (j['farmYears'] as num?)?.toInt() ?? 0;
+    g.afterPath = AfterPath.parse(j['afterPath'] as String?);
     final pf = j['pendingFinal'];
     if (pf is Map) {
       g.pendingFinal = FinalMoment.fromJson(pf.cast<String, dynamic>());

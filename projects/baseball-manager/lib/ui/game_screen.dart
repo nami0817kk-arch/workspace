@@ -25,6 +25,7 @@ import 'art/story_image.dart';
 import 'admin_screen.dart';
 import 'controller.dart';
 import 'home_screen.dart' show showAdminToggled;
+import '../game/after_career.dart';
 import '../game/talent.dart';
 import 'labels.dart';
 import '../game/records.dart';
@@ -1466,6 +1467,57 @@ class _AutoRevealState extends State<_AutoReveal> {
   Widget build(BuildContext context) => widget.child;
 }
 
+/// 引退後の道を選ぶカード(プロを引退した選手だけ)。選ぶと、その道での10年後までの物語が出る。
+class _AfterPathCard extends StatelessWidget {
+  const _AfterPathCard({required this.controller, required this.game});
+  final GameController controller;
+  final Game game;
+
+  @override
+  Widget build(BuildContext context) {
+    final chosen = game.afterPath;
+    final result = game.secondCareer;
+    return Card(
+      key: const Key('after-path'),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text('引退後の道', style: Theme.of(context).textTheme.titleSmall),
+          const SizedBox(height: 4),
+          Text(chosen == null
+              ? 'プロを引退したあと、どの道に進む? 現役時代の成績・人気・資産で、結果が変わります。'
+              : '選び直すこともできます。'),
+          const SizedBox(height: 8),
+          Wrap(spacing: 6, runSpacing: 6, children: [
+            for (final p in AfterPath.values)
+              Tooltip(
+                message: p.description,
+                child: ChoiceChip(
+                  key: Key('after-${p.name}'),
+                  label: Text(p.label),
+                  selected: chosen == p,
+                  onSelected: (_) => controller.chooseAfterPath(p),
+                ),
+              ),
+          ]),
+          if (result != null) ...[
+            const Divider(height: 20),
+            Text('${chosen!.label}: ${result.tierLabel}',
+                key: const Key('after-tier'),
+                style: const TextStyle(fontWeight: FontWeight.bold)),
+            const SizedBox(height: 4),
+            for (final l in result.lines)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 2),
+                child: Text(l, key: const Key('after-line')),
+              ),
+          ],
+        ]),
+      ),
+    );
+  }
+}
+
 /// 出来事カードの見出し。段階ごとの分かれ道は「中学の分かれ道」のように出す。
 String _eventKind(String id, Stage stage) {
   if (id.startsWith('kid-')) return '幼少期の分かれ道';
@@ -2023,6 +2075,10 @@ class EndingView extends StatelessWidget {
                       style: const TextStyle(fontWeight: FontWeight.bold)),
                 );
               }),
+              if (e.madePro) ...[
+                const SizedBox(height: 12),
+                _AfterPathCard(controller: controller, game: game),
+              ],
               const SizedBox(height: 16),
               if (controller.lastLegacyGain > 0) ...[
                 Card(

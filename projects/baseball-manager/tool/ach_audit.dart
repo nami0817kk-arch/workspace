@@ -4,6 +4,7 @@
 import 'dart:math';
 
 import 'package:baseball_manager/game/achievements.dart';
+import 'package:baseball_manager/game/after_career.dart';
 import 'package:baseball_manager/game/career.dart';
 import 'package:baseball_manager/game/difficulty.dart';
 import 'package:baseball_manager/game/game.dart';
@@ -85,6 +86,10 @@ void main(List<String> a) {
         case Phase.retired:
           break;
       }
+    }
+    // プロを引退した選手は、引退後の道を1つ選ぶ(実績「セカンドキャリア」を調べるため)。
+    if (g.ending!.madePro) {
+      g.chooseAfterPath(AfterPath.values[r.nextInt(AfterPath.values.length)]);
     }
     final snap = PlayerSnapshot.fromGame(g);
     parent = snap;

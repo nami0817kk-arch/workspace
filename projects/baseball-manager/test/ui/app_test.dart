@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:baseball_manager/game/after_career.dart';
 import 'package:baseball_manager/game/career.dart';
 import 'package:baseball_manager/game/childhood.dart';
 import 'package:baseball_manager/game/flavor.dart';
@@ -2213,6 +2214,38 @@ void _rankTests() {
     await _dismissMilestones(t);
     expect(c.game!.records.length, recs + 1);
     expect(c.game!.pendingFinal, isNull);
+    expect(t.takeException(), isNull);
+  });
+
+  testWidgets('引退後の道: プロを引退すると5つの道が出て、選ぶと物語が出る(殿堂にも残る)', (t) async {
+    final c = await _start(t);
+    Game? g;
+    for (var sd = 0; sd < 40 && g == null; sd++) {
+      final x = _until((g) => false, seed: sd, potential: 100);
+      if (x.ending!.madePro) g = x;
+    }
+    expect(g, isNotNull);
+    c.adopt(g!);
+    c.autoSpend(); // 引退を殿堂に書き込む
+    await t.pumpAndSettle();
+    await _dismissMilestones(t);
+    await t.scrollUntilVisible(find.byKey(const Key('after-path')), 200,
+        scrollable: find.byType(Scrollable).first);
+    expect(find.byKey(const Key('after-path')), findsOneWidget);
+    for (final p in AfterPath.values) {
+      expect(find.byKey(Key('after-${p.name}')), findsOneWidget);
+    }
+    expect(find.byKey(const Key('after-tier')), findsNothing);
+    await t.ensureVisible(find.byKey(const Key('after-commentator')));
+    await t.tap(find.byKey(const Key('after-commentator')));
+    await t.pumpAndSettle();
+    await _dismissMilestones(t);
+    expect(c.game!.afterPath, AfterPath.commentator);
+    expect(find.byKey(const Key('after-tier')), findsOneWidget);
+    expect(find.byKey(const Key('after-line')), findsWidgets);
+    // 殿堂の最新の記録にも、選んだ道が入る
+    expect(c.history.first.snapshot!.afterPath, 'commentator');
+    expect(c.unlocked, contains('second-career'));
     expect(t.takeException(), isNull);
   });
 

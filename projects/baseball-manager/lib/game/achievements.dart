@@ -145,6 +145,10 @@ final List<Achievement> achievements = [
       'トライアウトで契約を勝ち取り、現役を続ける。',
       (s) => s.events
           .any((e) => e.text.contains('トライアウトで') && e.text.contains('契約'))),
+  Achievement('second-career', 'セカンドキャリア', 'プロを引退したあと、新しい道(監督・解説者・実業家など)を選ぶ。',
+      (s) => s.afterPath != null),
+  Achievement('second-career-star', '第二の人生で輝く',
+      '引退後の道で「大成功」をおさめる(名監督・人気解説者・大実業家など)。', (s) => (s.afterTier ?? 0) >= 2),
   Achievement('title-streak', '連続王者', 'プロで5年連続でタイトルを獲得する。',
       (s) => longestTitleStreak(s.records) >= 5),
   Achievement('salary-oku', '億の男', '年俸が1億円を超える年を迎える。',

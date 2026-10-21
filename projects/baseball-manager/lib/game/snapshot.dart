@@ -40,6 +40,8 @@ class PlayerSnapshot {
     this.rivalTalent,
     this.gifts = const {},
     this.awakened = false,
+    this.afterPath,
+    this.afterTier,
   });
 
   final String name;
@@ -95,6 +97,10 @@ class PlayerSnapshot {
   /// 一生のうちに特性が覚醒したか。
   final bool awakened;
 
+  /// 引退後に選んだ道の名前(`AfterPath.name`)と、その結果の段階(0〜2)。選んでいなければ null。
+  final String? afterPath;
+  final int? afterTier;
+
   int of(Ability a) => abilities[a] ?? 0;
 
   factory PlayerSnapshot.fromGame(Game g) => PlayerSnapshot(
@@ -126,6 +132,8 @@ class PlayerSnapshot {
         rivalTalent: g.cast.rival?.talent,
         gifts: Map.of(g.player.gifts),
         awakened: g.awakened,
+        afterPath: g.afterPath?.name,
+        afterTier: g.secondCareer?.tier,
       );
 
   Map<String, dynamic> toJson() => {
@@ -157,6 +165,8 @@ class PlayerSnapshot {
         'rivalTalent': rivalTalent,
         'gifts': {for (final e in gifts.entries) e.key.name: e.value},
         'awakened': awakened,
+        'afterPath': afterPath,
+        'afterTier': afterTier,
       };
 
   /// 項目を足すときは既定値を置く(殿堂の古い記録を壊さない)。
@@ -212,6 +222,8 @@ class PlayerSnapshot {
       rivalTalent: (j['rivalTalent'] as num?)?.toInt(),
       gifts: giftsFromJson(j['gifts']),
       awakened: j['awakened'] == true,
+      afterPath: j['afterPath'] as String?,
+      afterTier: (j['afterTier'] as num?)?.toInt(),
     );
   }
 }
