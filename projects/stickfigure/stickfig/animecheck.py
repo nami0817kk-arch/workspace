@@ -82,6 +82,10 @@ def check(scene: dict, plan: Optional[dict] = None, beats: Optional[List[dict]] 
         speed = any(a <= tc <= b_ + 0.05 for a, b_ in scene.get("fx", {}).get("speed_lines", []))
         mark = (hit and hit["kind"] in inv) or speed
         zoom = any(tc - 0.5 <= s["t"] <= tc - 0.1 and s.get("follow") == by and s.get("scale", 9) <= 2.6 for s in scene.get("shots", []))
+        side = (scene.get("fx") or {}).get("radial", True) is False      # 参考(Becker)の見せ方: 記号・寄りのカットは使わないので求めない
+        if side:
+            mark, zoom = True, True
+            lo, hi = D["stop_small"]                                    # 参考のヒットストップは大技でも 1〜3 コマ
         miss = bool(b.get("miss"))                          # absorb: 当てても効かない(巨漢が受け止める筋書き)は反応だけ求めない。空振り: 受けた側の反応・ヒットストップは求めない(かわす動きで見せる)
         ok = dict(hold=D["hold"][0] <= hold <= D["hold"][1], burst=D["burst"][0] <= burst <= D["burst"][1],
                   stretch=stretch >= D["stretch"][0],
@@ -115,7 +119,8 @@ def check(scene: dict, plan: Optional[dict] = None, beats: Optional[List[dict]] 
         hot = [c for c in cuts if any(abs(c - e) <= fps for e in ev)]
         lens = sorted((b - a) / fps for a, b in zip(hot, hot[1:]) if b - a <= 2 * fps)
         med = lens[len(lens) // 2] if lens else 0.0
-        overall["cut_median"] = dict(value=round(med, 2), ok=D["cut_median"][0] <= med <= D["cut_median"][1])
+        if (scene.get("fx") or {}).get("radial", True) is not False:   # 参考の見せ方(長回し)ではカットの速さは測らない
+            overall["cut_median"] = dict(value=round(med, 2), ok=D["cut_median"][0] <= med <= D["cut_median"][1])
     return dict(beats=rows, final=final, overall=overall)
 
 

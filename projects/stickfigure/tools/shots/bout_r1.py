@@ -23,7 +23,7 @@ from stickfig.bout import GUARD_F, GUARD_R, RELAX_F, RELAX_R, FPS, H  # noqa: E4
 
 NAME = "bout_r1"
 T_END = 7.5
-BG = dict(image="assets/bg/dojo.png", x0=-6.5, x1=6.0, ground=0.82)
+BG = dict(image="assets/bg/dojo.png", x0=-8.5, x1=8.0, ground=0.82)
 HOLDS_A = [dict(kind="windup", t=4.40, hold=5, burst=3), dict(kind="freeze", t0=4.52, t1=5.12)]   # 掌底のあと 0.6 秒の止め絵(以降の A のキーは 0.6 秒遅れて読む)
 HOLDS_B = [dict(kind="windup", t=1.20, hold=3, burst=3), dict(kind="windup", t=1.80, hold=4, burst=3),
            dict(kind="windup", t=2.70, hold=3, burst=3), dict(kind="windup", t=3.62, hold=4, burst=3)]

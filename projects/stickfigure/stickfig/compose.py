@@ -333,6 +333,15 @@ def _prop_state(pr: dict, plan: dict, f: int, tau: float):
     return float(ks[-1][1]), float(ks[-1][2]), False
 
 
+_BOARDS: Dict[str, Image.Image] = {}
+
+
+def _board_image(path: str) -> Image.Image:
+    if path not in _BOARDS:
+        _BOARDS[path] = Image.open(path).convert("RGBA")
+    return _BOARDS[path]
+
+
 def _draw_props(base: Image.Image, plan: dict, f: int, tau: float, cam: dict, props: list, behind: bool) -> list:
     """小道具を描く。behind=True のとき: 置いてある物を描き、持たれている物のリストを返す(人物の後で描く)。"""
     held_list = []
@@ -353,6 +362,20 @@ def _draw_props(base: Image.Image, plan: dict, f: int, tau: float, cam: dict, pr
             sx0, sy0 = to_px(x - size * 0.6, 0.0, cam)
             sx1, sy1 = to_px(x + size * 0.6, 0.0, cam)
             d.ellipse([min(sx0, sx1), sy0 - 0.06 * u, max(sx0, sx1), sy0 + 0.06 * u], fill=(0, 0, 0, 70))
+        if kind == "board":                                # 看板(勝ち抜きの表など): 2 本の脚＋板に絵。images の tau で絵が替わる
+            imgs = [p for t, p in pr.get("images", []) if t <= tau + 1e-6] or [pr["images"][0][1]]
+            h = float(pr.get("h", size))
+            px0, py1 = to_px(x - size / 2, z, cam)
+            px1, py0 = to_px(x + size / 2, z + h, cam)
+            px0, px1, py0, py1 = int(min(px0, px1)), int(max(px0, px1)), int(min(py0, py1)), int(max(py0, py1))
+            post = (90, 62, 38)
+            for lx in (x - size * 0.32, x + size * 0.32):
+                gx, gy = to_px(lx, 0.0, cam)
+                d.line([gx, gy, gx, py1], fill=post, width=max(3, int(0.05 * u)))
+            if px1 - px0 > 4 and py1 - py0 > 4:
+                im = _board_image(imgs[-1]).resize((px1 - px0, py1 - py0))
+                base.paste(im, (px0, py0), im)
+            continue
         if kind == "ball":
             r = size * 0.5 * u
             cx, cy = to_px(x, z + size * 0.5, cam)
@@ -576,7 +599,7 @@ def compose_frame(plan: dict, f: int, figs: Dict[int, Image.Image], stages: Opti
     for e in plan["events"]:
         age = f - e["frame"]
         nb = BURST_FRAMES.get(e["kind"], 14)
-        if e["kind"] in BIG and 0 <= age <= nb:
+        if e["kind"] in BIG and 0 <= age <= nb and fx.get("radial", True):   # radial: false で放射線を出さない(参考の Becker は放射線を使わない)
             cx, cy = to_px(e["pos"][0], e["pos"][1], cam)
             radial(d, cx, cy, min(1.0, age / nb), BIG[e["kind"]])
             if e["kind"] in invert_kinds and age == 0:                   # 衝撃のコマは 1 コマだけ(2 コマ目の色つきは閃光が増える)

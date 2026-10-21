@@ -13,7 +13,7 @@ from stickfig.bout import GUARD_F, GUARD_R, RELAX_F, RELAX_R, FPS  # noqa: E402
 
 NAME = "bout_intro"
 T_END = 7.0
-BG = dict(image="assets/bg/dojo.png", x0=-6.5, x1=6.0, ground=0.82)
+BG = dict(image="assets/bg/dojo.png", x0=-8.5, x1=8.0, ground=0.82)
 # 人: (色, 大きさ, 型, 立つ x, 向き, 構える時刻)
 CAST = dict(B=([0.25, 0.55, 0.95], 1.0, "kicker", -0.9, -1, 1.0),
             C=([0.62, 0.35, 0.85], 1.25, "giant", 0.75, -1, 2.0),

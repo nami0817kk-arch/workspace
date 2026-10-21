@@ -25,7 +25,7 @@ from stickfig.bout import GUARD_F, GUARD_R, RELAX_F, RELAX_R, FPS, H  # noqa: E4
 NAME = "bout_sf"
 T_END = 10.2
 GIANT = 1.25
-BG = dict(image="assets/bg/riverside.png", x0=-6.5, x1=6.0, ground=0.80)
+BG = dict(image="assets/bg/riverside.png", x0=-8.5, x1=8.0, ground=0.80)
 F = 0.65                                                             # A の止め絵のぶんの遅れ
 HOLDS_A = [dict(kind="windup", t=1.30, hold=3, burst=3), dict(kind="windup", t=7.25, hold=3, burst=3), dict(kind="windup", t=7.5667, hold=4, burst=3),
            dict(kind="windup", t=7.9667, hold=5, burst=3), dict(kind="freeze", t0=8.07, t1=8.07 + F)]
@@ -103,14 +103,14 @@ def tracks_a(tgt):
         dict(t=5.45, ht=-0.15), dict(t=5.75, ht=0.05), dict(t=5.95, ht=0.0),
         # 走り込んでくぐる
         dict(t=6.05, x=-3.45, hz=0.78, lean=0.35), dict(t=6.55, x=-1.40, hz=0.78, lean=0.35, ease="linear"),
-        dict(t=6.75, x=-1.32, hz=0.45, lean=0.50, ht=-0.10, ease="out"), dict(t=6.98, hz=0.45, lean=0.50),
+        dict(t=6.75, x=-1.32, hz=0.49, lean=0.50, ht=-0.10, ease="out"), dict(t=6.98, hz=0.49, lean=0.50),
         # 懐で腹
         dict(t=7.08, x=-1.22, hz=0.48, lean=0.45, rst=0.0), dict(t=7.25, x=-0.90, hz=0.50, lean=0.40, rst=0.30, ease="in"), dict(t=7.35, rst=0.0),
         # アッパー
         dict(t=7.42, x=-0.92, hz=0.48, lean=0.42, st=0.0), dict(t=7.5667, x=-0.70, hz=0.86, lean=0.05, ht=0.15, st=0.32, ease="in"), dict(t=7.66, st=0.0, lean=-0.05),
         # 沈んで足払い
-        dict(t=7.74, x=-0.65, hz=0.70, lean=0.10, ht=0.0), dict(t=7.85, x=-0.72, hz=0.42, lean=0.45, rlst=0.0),
-        dict(t=7.9667, x=-0.78, hz=0.40, lean=0.40, rlst=0.34, ease="in"), dict(t=8.07, rlst=0.20),
+        dict(t=7.74, x=-0.65, hz=0.70, lean=0.10, ht=0.0), dict(t=7.85, x=-0.72, hz=0.47, lean=0.45, rlst=0.0),
+        dict(t=7.9667, x=-0.78, hz=0.46, lean=0.40, rlst=0.34, ease="in"), dict(t=8.07, hz=0.53, lean=0.30, rlst=0.20),
         # (ここから止め絵の F 秒ぶん遅れて読む)立って構えを解く
         dict(t=9.10 - F, x=-0.75, hz=0.80, lean=0.12, rlst=0.0, ease="inout"), dict(t=9.65 - F, hz=0.84, lean=0.05), dict(t=10.2 - F, hz=0.84, lean=0.05),
     ]
@@ -120,7 +120,7 @@ def tracks_a(tgt):
          dict(t=4.50, ang=(1.2, 1.6)), dict(t=4.80, p=(-3.10, 0)), dict(t=6.05, p=(-3.10, 0)),
          dict(t=6.20, p=(-2.30, 0), lift=0.10), dict(t=6.40, p=(-2.30, 0)), dict(t=6.56, p=(-0.98, 0), lift=0.10),
          dict(t=7.10, p=(-0.98, 0)), dict(t=7.24, p=(-0.62, 0), lift=0.03),
-         dict(t=7.44, p=(-0.62, 0)), dict(t=7.56, p=(-0.38, 0), lift=0.03), dict(t=7.84, p=(-0.38, 0)), dict(t=7.92, p=(-0.32, 0), lift=0.02), dict(t=10.2, p=(-0.85, 0))]
+         dict(t=7.44, p=(-0.62, 0)), dict(t=7.56, p=(-0.38, 0), lift=0.03), dict(t=7.84, p=(-0.38, 0)), dict(t=7.92, p=(-0.20, 0.06), lift=0.02), dict(t=8.80 - F, p=(-0.20, 0.06)), dict(t=9.10 - F, p=(-0.45, 0), lift=0.05), dict(t=10.2, p=(-0.45, 0))]
     r = [dict(t=0.00, p=(-1.10, 0)), dict(t=0.62, p=(-1.10, 0)), dict(t=0.78, p=(-0.95, 0), lift=0.04),
          dict(t=1.12, p=(-0.95, 0)), dict(t=1.26, p=(-0.55, 0), lift=0.04), dict(t=1.50, p=(-0.55, 0)), dict(t=1.80, p=(-0.95, 0), lift=0.04),
          dict(t=2.20, p=(-0.95, 0)), dict(t=2.28, ang=(-0.4, 0.6)), dict(t=2.65, ang=(0.1, 0.2)), dict(t=4.20, ang=(0.1, 0.2)),

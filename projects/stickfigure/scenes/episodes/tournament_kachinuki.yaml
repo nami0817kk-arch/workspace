@@ -1,14 +1,11 @@
-# 勝ち抜き戦(約 1 分・横)。全部手付け(tools/shots の keyshot)。2026-10-21「勝ち抜き戦の1分の動画作れる？」
+# 勝ち抜き戦(横)。全部手付け(tools/shots の keyshot)。2026-10-21「勝ち抜き戦の1分の動画作れる？」
+# 2026-10-21「参考の動画のような見せ方をしたい」(参考: Animation vs. Minecraft Shorts Ep.14)→ 黒い札をやめ、場面の中でつなぐ:
+#   緑が会場へ歩いて入り、勝ったら歩いて出る。勝ち抜きの表は会場の看板。カメラは真横・引き・長回し(bout.side_view)
 name: tournament_kachinuki
-mood_cards: calm
+mood_cards: none
 items:
-  - card: {text: "勝ち抜き戦", sub: "棒人間ストーリー", dur: 2.6, style: title}
-  - shot: tools/shots/bout_intro.py              # 出場者 4 人が順に構える
-  - card: {text: "第一回戦", sub: "対 蹴り使い", dur: 2.1, style: title}
-  - shot: tools/shots/bout_r1.py
-  - card: {text: "準決勝", sub: "対 巨漢", dur: 2.1, style: title}
-  - shot: tools/shots/bout_sf.py
-  - card: {text: "決勝", sub: "対 喧嘩屋", dur: 2.1, style: title}
-  - shot: tools/shots/fight01.py                 # 境内の一戦
-  - shot: tools/shots/bout_win.py                # 勝ち名乗り
-  - card: {text: "優勝", dur: 2.6, style: title}
+  - shot: tools/shots/kachinuki_intro.py         # 道場: 看板の前で 4 人が順に構える
+  - shot: tools/shots/kachinuki_r1.py            # 道場: 対 蹴り使い → 歩いて出る
+  - shot: tools/shots/kachinuki_sf.py            # 河川敷: 歩いて入る(入口の看板に青の×)→ 対 巨漢 → 歩いて出る
+  - shot: tools/shots/kachinuki_final.py         # 境内: 歩いて入る(看板に紫の×)→ 対 喧嘩屋
+  - shot: tools/shots/kachinuki_win.py           # 境内: 拳を突き上げると看板のてっぺんに星

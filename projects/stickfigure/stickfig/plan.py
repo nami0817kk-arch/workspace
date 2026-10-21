@@ -1038,7 +1038,7 @@ def build_plan(scene: dict, solve: bool = True) -> dict:
         sx, sz = shake * math.sin(f * 2.9), shake * math.cos(f * 2.3)
         # アニメの演出: 命中の瞬間に「寄って」(ズームパンチ)、画面が傾いて揺れる
         zp, roll = 0.0, 0.0
-        if scene.get("anime") is not None:
+        if scene.get("anime") is not None and (scene.get("anime") or {}).get("zoom_punch", True):
             for i, e in enumerate(events):
                 d = f - e["frame"]
                 zk = anime.ZOOM_PUNCH.get(e["kind"], 0.0) * 0.8

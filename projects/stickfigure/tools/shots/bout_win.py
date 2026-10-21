@@ -13,7 +13,7 @@ from stickfig.bout import RELAX_F, RELAX_R, FPS  # noqa: E402
 
 NAME = "bout_win"
 T_END = 5.5
-BG = dict(image="assets/bg/shrine_dusk.png", x0=-6.0, x1=6.5, ground=0.80)
+BG = dict(image="assets/bg/shrine_dusk.png", x0=-8.5, x1=8.0, ground=0.80)
 
 
 def tracks_a():

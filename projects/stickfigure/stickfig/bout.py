@@ -106,6 +106,151 @@ def finish(base: dict, keys: Dict[str, List[dict]], beats: List[dict], shots: Li
     return base
 
 
+# ---------------- 場面をつなぐ(2026-10-21「参考の動画のような見せ方」→ 札をやめて、歩いて入る・出るでつなぐ)----------------
+def pose_of(keys: List[dict], actor: dict, i: int) -> dict:
+    """焼いたコマ i の姿勢(歩きの始点・終点に使う)。足は世界の x。"""
+    k = keys[i]
+    pose = dict(ks.POSE0, **{n: v for n, v in k.items() if n in ks.POSE0})
+    s = 1 if k["dir"] > 0 else -1
+    sk = fk.skeleton(pose, s, actor["base_x"] + k["dx"], actor.get("scale", 1.0))
+    return dict(x=actor["base_x"] + k["dx"], hz=k["hz"], lean=k["lean"], ht=k["ht"], dir=s,
+                f=sk["front_leg"][-1][0], r=sk["rear_leg"][-1][0], fa=k["fa"], fe=k["fe"], ra=k["ra"], re=k["re"])
+
+
+def walk_tracks(start: dict, end: dict, dur: float, step: float = 0.48, turn: Optional[int] = None) -> Dict[str, List[dict]]:
+    """start から end まで歩くトラック(start/end は pose_of の形)。足は交互に前へ運び、腕は逆に振る。
+    turn: 歩き出す前に向きを変える(+1/-1)。end の姿勢(構えなど)で終わる。"""
+    d = turn if turn is not None else (1 if end["x"] >= start["x"] else -1)
+    dist = abs(end["x"] - start["x"])
+    n = max(2, int(round(dist / step)) + 1)
+    t_go, t_stop = 0.18 if turn is not None else 0.06, dur - 0.12
+    bx = lambda t: start["x"] + (end["x"] - start["x"]) * min(1.0, max(0.0, (t - t_go) / max(1e-6, t_stop - t_go)))
+    body = [dict(t=0.0, x=start["x"], hz=start["hz"], lean=start["lean"], ht=start["ht"], dir=start["dir"], face="fight")]
+    if turn is not None:
+        body.append(dict(t=0.12, x=start["x"], hz=0.84, lean=0.05, ht=0.0, dir=d))
+    ts = [t_go + (t_stop - t_go) * (i + 1) / n for i in range(n)]
+    for i, t in enumerate(ts):                                       # 上下の弾み(踏み出しで沈み、通過で伸びる)
+        body.append(dict(t=round(t - (ts[1] - ts[0]) * 0.5, 3), x=round(bx(t - (ts[1] - ts[0]) * 0.5), 3), hz=0.83, lean=0.07, ht=0.0, ease="linear"))
+        if i < n - 1:
+            body.append(dict(t=round(t, 3), x=round(bx(t), 3), hz=0.79, lean=0.07, ease="linear"))
+    body.append(dict(t=round(dur, 3), x=end["x"], hz=end["hz"], lean=end["lean"], ht=end["ht"], dir=end["dir"]))
+    feet = dict(f=[dict(t=0.0, p=(round(start["f"], 3), 0))], r=[dict(t=0.0, p=(round(start["r"], 3), 0))])
+    cur = dict(f=start["f"], r=start["r"])
+    order = ("r", "f") if (start["r"] - start["f"]) * d < 0 else ("f", "r")   # 後ろにある足から踏み出す
+    for i, t in enumerate(ts):
+        foot = order[i % 2]
+        t0 = t - (ts[1] - ts[0]) * 0.95
+        last = i >= n - 2
+        tgt = end[foot] if last else bx(t) + d * 0.28
+        feet[foot].append(dict(t=round(max(0.0, t0), 3), p=(round(cur[foot], 3), 0)))
+        feet[foot].append(dict(t=round(t, 3), p=(round(tgt, 3), 0), lift=0.07))
+        cur[foot] = tgt
+    for foot in ("f", "r"):
+        if abs(cur[foot] - end[foot]) > 1e-3:
+            feet[foot].append(dict(t=round(dur - 0.02, 3), p=(round(end[foot], 3), 0), lift=0.04))
+        feet[foot].append(dict(t=round(dur, 3), p=(round(end[foot], 3), 0)))
+    fh = [dict(t=0.0, ang=(start["fa"], start["fe"]))]
+    rh = [dict(t=0.0, ang=(start["ra"], start["re"]))]
+    for i, t in enumerate(ts[:-1]):                                  # 腕は脚と逆に小さく振る
+        sw = 0.45 if i % 2 == 0 else -0.35
+        fh.append(dict(t=round(t, 3), ang=(sw, 0.35)))
+        rh.append(dict(t=round(t, 3), ang=(-sw, 0.35)))
+    fh.append(dict(t=round(dur, 3), ang=(end["fa"], end["fe"])))
+    rh.append(dict(t=round(dur, 3), ang=(end["ra"], end["re"])))
+    for tr in (feet["f"], feet["r"], fh, rh, body):
+        tr.sort(key=lambda k: k["t"])
+    return dict(body=body, f_foot=feet["f"], r_foot=feet["r"], f_hand=fh, r_hand=rh)
+
+
+def _shift_times(sc: dict, dt: float) -> None:
+    for w in sc["keys"]:
+        for k in sc["keys"][w]:
+            k["t"] = round(k["t"] + dt, 4)
+    for h in sc.get("hits", []):
+        h["tau"] = round(h["tau"] + dt, 4)
+    for p in sc.get("puffs", []):
+        p["tau"] = round(p["tau"] + dt, 4)
+    fx = sc.get("fx", {})
+    fx["flashes"] = [round(t + dt, 4) for t in fx.get("flashes", [])]
+    fx["speed_lines"] = [[a + dt, b + dt] for a, b in fx.get("speed_lines", [])]
+    for pr in fx.get("props", []):
+        for k in pr.get("images", []):
+            k[0] += dt
+    for s in sc.get("slow", []):
+        s["start"] += dt
+        s["end"] += dt
+    for s in sc.get("shots", []):
+        s["t"] = round(s["t"] + dt, 4)
+
+
+def prepend(sc: dict, frames: Dict[str, List[dict]], shots: Optional[List[dict]] = None) -> float:
+    """場面の前に、焼いたコマ frames(人ごと。最後のコマ=場面の最初のコマ)を足す。書いていない人は最初のコマのまま待つ。
+    場面の時刻はすべて後ろへずらす。足した秒数を返す(点検の beats もこの分ずらす)。"""
+    n = max(len(v) for v in frames.values()) - 1
+    dt = n / FPS
+    _shift_times(sc, dt)
+    for w, ks_ in sc["keys"].items():
+        pre = frames.get(w)
+        if pre is None:
+            pre = [dict(ks_[0]) for _ in range(n)]
+        else:
+            pre = [dict(k) for k in pre[:n]]
+        for i, k in enumerate(pre):
+            k["t"] = round(i / FPS, 4)
+        sc["keys"][w] = pre + ks_
+    sc["tau_end"] = round(sc["tau_end"] + dt, 4)
+    sc["shots"] = sorted((shots or []) + sc.get("shots", []), key=lambda s: s["t"])
+    return dt
+
+
+def append(sc: dict, frames: Dict[str, List[dict]], shots: Optional[List[dict]] = None) -> float:
+    """場面の後ろに、焼いたコマ frames(最初のコマ=場面の最後のコマ)を足す。書いていない人は最後のコマのまま。"""
+    n = max(len(v) for v in frames.values()) - 1
+    t0 = sc["tau_end"]
+    for w, ks_ in sc["keys"].items():
+        add = frames.get(w)
+        add = [dict(k) for k in add[1:n + 1]] if add is not None else [dict(ks_[-1]) for _ in range(n)]
+        for i, k in enumerate(add):
+            k["t"] = round(t0 + (i + 1) / FPS, 4)
+        sc["keys"][w] = ks_ + add
+    sc["tau_end"] = round(t0 + n / FPS, 4)
+    sc["shots"] = sorted(sc.get("shots", []) + [dict(s, t=round(t0 + s["t"], 4)) for s in (shots or [])], key=lambda s: s["t"])
+    return n / FPS
+
+
+def board(x: float, images: List[list], w: float = 1.1, h: float = 1.4, z: float = 0.55) -> dict:
+    """会場に立てる看板(勝ち抜きの表)。images: [[tau, 画像のパス], ...](tau 以降はその絵)。compose の props(kind board)で描く。"""
+    return dict(kind="board", x=x, z=z, size=w, h=h, images=[[float(t), str(p)] for t, p in images])
+
+
+def side_view(sc: dict, min_scale: float = 4.2) -> dict:
+    """参考(Alan Becker の Animation vs. Minecraft)の見せ方にする(2026-10-21「参考の動画のような見せ方」)。
+    カメラは真横から動かさず(角度のカットを消す)、全身が入る引きで横に追う。擬音の文字・放射線・白黒反転・角度を回す衝撃のカット・
+    スピード線・ズームの寄り・スローは使わず、当たりは土煙と火花で見せる。動作(溜め・一気・止め・伸び)はそのまま。"""
+    shots = [s for s in sc.get("shots", []) if "role" not in s]      # cut_plan で足した当たりごとのカットを外す
+    flat = []
+    for s in shots:
+        s = dict(s, yaw=0.0, pitch=0.0, lens=40.0, scale=max(float(s.get("scale", min_scale)), min_scale), lag=max(float(s.get("lag", 0.0)), 0.35))
+        s.pop("dutch", None)
+        if flat and s["follow"] == flat[-1]["follow"] and abs(s["scale"] - flat[-1]["scale"]) < 0.3:
+            continue                                                 # 同じ追い方が続くなら 1 カットのまま(長回し)
+        flat.append(s)
+    sc["shots"] = flat
+    fx = sc.setdefault("fx", {})
+    fx["invert"], fx["speed_lines"], fx["flashes"], fx["radial"] = [], [], [], False
+    sc.pop("impact_cuts", None)
+    sc.pop("flurry", None)
+    sc["slow"] = []
+    sc["anime"] = dict(sc.get("anime") or {}, trails=False, sfx=False, zoom_blur=False, roll=False, zoom_punch=False)
+    sc["stepping"] = dict(hold=2, ones_around_hits=3, hold_camera=True)
+    for h in sc.get("hits", []):                                     # ヒットストップは短く(参考は 1〜3 コマ)
+        h["hold"] = min(float(h.get("hold", 0.0)), 0.10)
+    for h in sc.get("hits", []):                                     # 当たりに土煙(放射線の代わり)
+        if h.get("kind") in ("hit", "kick", "clash", "land"):
+            sc.setdefault("puffs", []).append(dict(tau=h["tau"], kind="land2", pos=[h["pos"][0], max(0.0, h["pos"][1] - 0.2)]))
+    return sc
+
+
 def run_cli(build, beats, name: str):
     """各試合のスクリプトの main(--out / --preview / --plan-only / --check)。build() は (scene, rep) を返す。"""
     import argparse

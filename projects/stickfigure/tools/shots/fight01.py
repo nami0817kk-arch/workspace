@@ -28,7 +28,7 @@ FPS = 30
 T_END = 9.4
 GUARD_F, GUARD_R = (1.15, 1.7), (0.75, 2.3)      # 構えの腕(前の腕は顔の前、後ろの腕はあご)
 RELAX_F, RELAX_R = (0.35, 0.6), (0.25, 0.7)
-BG = dict(image="assets/bg/shrine_dusk.png", x0=-6.0, x1=6.5, ground=0.80)
+BG = dict(image="assets/bg/shrine_dusk.png", x0=-8.5, x1=8.0, ground=0.80)
 # アニメの溜め・一気・止め(keyshot.warp_fn): 当たりの前で全身を止め、残りを数コマに縮めて打つ。キーは止めない流れで書いておく
 HOLDS_A = [dict(kind="windup", t=1.08, hold=3, burst=3), dict(kind="windup", t=1.8667, hold=5, burst=3),
            dict(kind="windup", t=3.8667, hold=4, burst=4), dict(kind="windup", t=6.95, hold=4, burst=3),
