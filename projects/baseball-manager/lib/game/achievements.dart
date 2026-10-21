@@ -139,6 +139,12 @@ final List<Achievement> achievements = [
       (s) => s.records.any((r) => r.awards.contains('シリーズMVP'))),
   Achievement('amateur-mvp', '大会の主役', 'アマの大会で「大会最優秀選手」に選ばれる。',
       (s) => s.records.any((r) => r.awards.contains('大会最優秀選手'))),
+  Achievement(
+      'tryout-comeback',
+      'もう一度、舞台へ',
+      'トライアウトで契約を勝ち取り、現役を続ける。',
+      (s) => s.events
+          .any((e) => e.text.contains('トライアウトで') && e.text.contains('契約'))),
   Achievement('title-streak', '連続王者', 'プロで5年連続でタイトルを獲得する。',
       (s) => longestTitleStreak(s.records) >= 5),
   Achievement('salary-oku', '億の男', '年俸が1億円を超える年を迎える。',

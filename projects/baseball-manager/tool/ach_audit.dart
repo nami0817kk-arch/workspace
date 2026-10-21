@@ -32,6 +32,8 @@ void main(List<String> a) {
     final wantOverseas = r.nextInt(4) == 0;
     final invest = r.nextBool();
     final retireAge = 33 + r.nextInt(10);
+    // 10人に1人は、プロで伸び悩む選手(戦力外→トライアウトの実績を調べるため)。
+    final weak = r.nextInt(10) == 0;
     var steps = 0;
     while (g.phase != Phase.retired) {
       if (++steps > 6000) throw StateError('終わらない seed=$s');
@@ -41,6 +43,11 @@ void main(List<String> a) {
           if (g.stage == Stage.pro && g.player.age >= retireAge) {
             g.retire();
             break;
+          }
+          if (g.stage == Stage.pro && weak) {
+            for (final a in abilitiesOf(g.player.role)) {
+              g.adminSetAbility(a, 10);
+            }
           }
           if (g.stage == Stage.pro) {
             if (wantTwoWay && g.player.role != Role.twoWay) {
@@ -70,7 +77,9 @@ void main(List<String> a) {
                 ][r.nextInt(4)];
           g.choose(plan, ab[r.nextInt(ab.length)]);
         case Phase.event:
-          g.resolveEvent(r.nextInt(g.pendingEvent!.choices.length));
+          g.resolveEvent(g.pendingEvent!.id == 'tryout'
+              ? (weak ? 0 : r.nextInt(2))
+              : r.nextInt(g.pendingEvent!.choices.length));
         case Phase.pathChoice:
           g.chooseRoute(r.nextBool() ? Course.university : Course.corporate);
         case Phase.retired:

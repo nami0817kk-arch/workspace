@@ -11,6 +11,7 @@ import 'package:baseball_manager/game/life.dart';
 import 'package:baseball_manager/game/path.dart';
 import 'package:baseball_manager/game/player.dart';
 import 'package:baseball_manager/game/traits.dart';
+import 'package:baseball_manager/game/tryout.dart';
 import 'package:baseball_manager/ui/app.dart';
 import 'package:baseball_manager/ui/controller.dart';
 import 'package:baseball_manager/ui/history.dart';
@@ -2160,6 +2161,24 @@ void _rankTests() {
         scrollable: find.byType(Scrollable).first);
     expect(find.textContaining('★怪物'), findsOneWidget);
     expect(find.textContaining('★努力家'), findsNothing);
+  });
+
+  testWidgets('戦力外のトライアウト: 「受ける」「引退する」の選択が出て、引退を選ぶと終わる', (t) async {
+    final c = await _start(t);
+    final g = _until((g) => g.stage == Stage.pro, seed: 3, potential: 95)
+      ..pendingEvent = tryoutEvent
+      ..phase = Phase.event;
+    c.adopt(g);
+    await t.pumpAndSettle();
+    await _dismissMilestones(t);
+    expect(find.textContaining('戦力外通告を受けた'), findsWidgets);
+    expect(find.text('トライアウトを受ける'), findsOneWidget);
+    expect(find.text('現役を引退する'), findsOneWidget);
+    await t.tap(find.byKey(const Key('event-1')));
+    await t.pumpAndSettle();
+    await _dismissMilestones(t);
+    expect(c.game!.phase, Phase.retired);
+    expect(t.takeException(), isNull);
   });
 
   testWidgets('継承ポイント: 引退で貯まり、図鑑にある特性を次の選手に持たせられる', (t) async {

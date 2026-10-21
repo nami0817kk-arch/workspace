@@ -23,6 +23,7 @@ import 'awards.dart';
 import 'marks.dart';
 import 'talent.dart';
 import 'traits.dart';
+import 'tryout.dart';
 import 'training.dart' show abilityCap;
 
 /// いま何を待っているか。画面はこれを見て出すものを決める。
@@ -159,6 +160,9 @@ class Game {
   Course? route; // 大学/社会人を選んだか
   bool turnedPro = false;
   int lowYears = 0;
+
+  /// トライアウトをもう使ったか(一生に一度)。
+  bool tryoutUsed = false;
   int proYears = 0;
   int peakOverall = 0;
   int championships = 0;
@@ -570,8 +574,41 @@ class Game {
     }
   }
 
+  /// トライアウトの選択(受ける/引退する)。年の終わりの戦力外のあとに出る。
+  void _resolveTryout(int index) {
+    pendingEvent = null;
+    phase = Phase.term;
+    if (index == 1) {
+      log.add('トライアウトは受けず、現役を退くことにした。');
+      _retire('戦力外通告を受けて引退');
+      return;
+    }
+    tryoutUsed = true;
+    if (rng.nextDouble() < tryoutChance(player)) {
+      final others = [
+        for (final t in draftTeams)
+          if (t != proTeam) t
+      ];
+      final next = others[rng.nextInt(others.length)];
+      proTeam = next;
+      lowYears = 0;
+      teamBoost = -1; // 新しい球団は、あまり強くない
+      condition = condition.copyWith(morale: condition.morale + 10);
+      log.add('トライアウトで好投・好打を見せ、$nextと契約を勝ち取った!');
+      _note('team', 'トライアウトで$nextと契約');
+      _newGoal();
+    } else {
+      log.add('トライアウトを受けたが、どの球団からも声がかからなかった…。');
+      _retire('戦力外通告を受けて引退');
+    }
+  }
+
   void resolveEvent(int index) {
     _require(Phase.event);
+    if (pendingEvent!.id == tryoutEventId) {
+      _resolveTryout(index);
+      return;
+    }
     final ch = pendingEvent!.choices[index];
     if (childhoodStepById(pendingEvent!.id) != null) {
       childhood[pendingEvent!.id] = index;
@@ -1229,9 +1266,19 @@ class Game {
       proYears++;
       lowYears = nextLowYears(player, lowYears);
       if (mustRetire(player, lowYears)) {
-        final why = isReleased(lowYears) ? '戦力外になった' : '年齢により引退した';
-        log.add('$why。');
-        _retire(isReleased(lowYears) ? '戦力外通告を受けて引退' : '年齢により引退');
+        if (isReleased(lowYears) &&
+            player.age <= maxProAge &&
+            canTryout(age: player.age, used: tryoutUsed)) {
+          // 戦力外通告。一生に一度、トライアウトを選べる(受ける/引退する)。
+          log.add('戦力外通告を受けた。');
+          _note('team', '戦力外通告を受けた');
+          pendingEvent = tryoutEvent;
+          phase = Phase.event;
+        } else {
+          final why = isReleased(lowYears) ? '戦力外になった' : '年齢により引退した';
+          log.add('$why。');
+          _retire(isReleased(lowYears) ? '戦力外通告を受けて引退' : '年齢により引退');
+        }
       }
     } else if (route == null && player.age == proEntryAge + 1) {
       _draft();
@@ -1373,6 +1420,7 @@ class Game {
         'goal': goal?.toJson(),
         'difficulty': difficulty.name,
         'awakened': awakened,
+        'tryoutUsed': tryoutUsed,
       };
 
   /// 項目を足すときは既定値を置く(既存セーブを壊さない)。
@@ -1400,6 +1448,7 @@ class Game {
     g.slot = (j['slot'] as num?)?.toInt() ?? 0;
     g.focusStreak = (j['focusStreak'] as num?)?.toInt() ?? 0;
     g.awakened = j['awakened'] == true;
+    g.tryoutUsed = j['tryoutUsed'] == true;
     g.turnCount = (j['turnCount'] as num?)?.toInt() ?? 0;
     g.lastCoachTurn = (j['lastCoachTurn'] as num?)?.toInt() ?? 0;
     g.monthRows = [
@@ -1415,7 +1464,8 @@ class Game {
     g.phase = pick(Phase.values, j['phase'], Phase.term);
     g.pendingEvent =
         events.where((e) => e.id == j['pendingEvent']).firstOrNull ??
-            childhoodStepById(j['pendingEvent'] as String?)?.event;
+            childhoodStepById(j['pendingEvent'] as String?)?.event ??
+            (j['pendingEvent'] == tryoutEventId ? tryoutEvent : null);
     if (g.phase == Phase.event && g.pendingEvent == null) g.phase = Phase.term;
     g._eventFocus = pick(Ability.values, j['eventFocus'], Ability.contact);
     g.route = Course.values.where((r) => r.name == j['route']).firstOrNull;
