@@ -68,6 +68,8 @@ void main() {
                   r.player.traits.length != p.traits.length ||
                   r.condition.fatigue != 50 ||
                   r.condition.morale != 50 ||
+                  r.player.potential != p.potential ||
+                  r.player.gifts.toString() != p.gifts.toString() ||
                   ch.onCast != null;
           expect(changed, isTrue, reason: '${st.id} ${ch.label}');
         }

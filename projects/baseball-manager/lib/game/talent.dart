@@ -30,6 +30,39 @@ Map<Ability, int> rollGifts(Random rng) {
   return d;
 }
 
+/// 素質(0〜100。裏の数字)を、星1〜5つに(おおよそ5等分: 〜41・〜53・〜65・〜77・78〜)。
+int talentStarCount(int potential) => potential < 42
+    ? 1
+    : potential < 54
+        ? 2
+        : potential < 66
+            ? 3
+            : potential < 78
+                ? 4
+                : 5;
+
+/// 天賦(-2〜+2。裏の数字)を、星1〜5つに。0 が星3つ(ふつう)。
+int giftStarCount(int gift) => gift.clamp(giftMin, giftMax) + 3;
+
+/// 星 `n` つ(5つのうち)。「★★★☆☆」。
+String starsOf(int n) => '★' * n.clamp(0, 5) + '☆' * (5 - n.clamp(0, 5));
+
+String talentStars(int potential) => starsOf(talentStarCount(potential));
+String giftStars(int gift) => starsOf(giftStarCount(gift));
+
+/// 能力 `a` の天賦を1段階上げる(上限 +2)。役割で使わない能力・もう上限の能力なら、
+/// 使う能力のうち天賦がいちばん低いものを上げる。使う能力が全部上限なら変わらない。
+Player giftUp(Player p, Ability a) {
+  final mine = abilitiesOf(p.role);
+  var target = mine.contains(a) && p.gift(a) < giftMax ? a : null;
+  if (target == null) {
+    final low = [...mine]..sort((x, y) => p.gift(x).compareTo(p.gift(y)));
+    if (p.gift(low.first) < giftMax) target = low.first;
+  }
+  if (target == null) return p;
+  return p.copyWith(gifts: {...p.gifts, target: p.gift(target) + 1});
+}
+
 /// 経験点にかける倍率(得意ほど小さい)。
 double giftCostMultiplier(int g) =>
     1 - giftCostStep * g.clamp(giftMin, giftMax);

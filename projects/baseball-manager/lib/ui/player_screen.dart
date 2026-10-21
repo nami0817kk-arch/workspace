@@ -110,10 +110,7 @@ double overallOf(PlayerSnapshot s) => overall(Player(
     ));
 
 /// 素質を星5つで。
-String potentialStars(int potential) {
-  final n = (potential / 20).ceil().clamp(1, 5);
-  return '★' * n + '☆' * (5 - n);
-}
+String potentialStars(int potential) => talentStars(potential);
 
 Player _playerOf(PlayerSnapshot s) => Player(
     name: s.name,
@@ -216,7 +213,7 @@ class _ProfileTab extends StatelessWidget {
                             Text('総合評価 $ov',
                                 style: Theme.of(context).textTheme.titleSmall),
                           ]),
-                      Text('素質 ${potentialStars(s.potential)}',
+                      Text('才能 ${potentialStars(s.potential)}',
                           key: const Key('potential-stars')),
                       Text(
                           '人気 ${rankOf(popularityOf(s.records, s.worldRecords))}'
@@ -307,16 +304,18 @@ class _ProfileTab extends StatelessWidget {
                               child: Tooltip(
                                   message: (s.gifts[a] ?? 0) == 0
                                       ? abilityHint(a)
-                                      : '${abilityHint(a)} 天賦: ${giftHint(s.gifts[a]!)}',
+                                      : '${abilityHint(a)} 才能: ${giftHint(s.gifts[a]!)}',
                                   triggerMode: TooltipTriggerMode.tap,
                                   child: FittedBox(
                                       fit: BoxFit.scaleDown,
                                       alignment: Alignment.centerLeft,
-                                      child: Text(
-                                          (s.gifts[a] ?? 0) == 0
-                                              ? abilityLabel(a)
-                                              : '${abilityLabel(a)}(${giftLabel(s.gifts[a]!)})',
+                                      child: Text(abilityLabel(a),
                                           key: Key('gift-${a.name}'))))),
+                          Text(giftStars(s.gifts[a] ?? 0),
+                              key: Key('gift-stars-${a.name}'),
+                              style: const TextStyle(
+                                  fontSize: 10, color: Color(0xFFF9A825))),
+                          const SizedBox(width: 6),
                           SizedBox(
                               width: 28,
                               child: Text('${s.of(a)}',

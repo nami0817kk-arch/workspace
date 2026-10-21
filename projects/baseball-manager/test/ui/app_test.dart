@@ -729,7 +729,7 @@ void _rankTests() {
     expect(find.text('経歴'), findsOneWidget);
     expect(find.text('ひなた'), findsWidgets);
     expect(find.textContaining('総合評価'), findsOneWidget);
-    expect(find.text('素質 ★★★★☆'), findsOneWidget);
+    expect(find.text('才能 ★★★★★'), findsOneWidget);
     expect(find.byKey(const Key('trait-clutch')), findsOneWidget);
     expect(find.byKey(const Key('trait-sturdy')), findsOneWidget);
     expect(find.textContaining('大会での体調が'), findsOneWidget); // 特性の説明が読める
