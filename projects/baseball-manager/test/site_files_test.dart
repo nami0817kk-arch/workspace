@@ -41,14 +41,36 @@ void main() {
     }
   });
 
-  test('プライバシーポリシーは、データ収集なし・広告と課金なしの現状と一致している', () {
+  test('プライバシーポリシーは、広告(AdMob)と課金のあるアプリの現状と一致している', () {
     final pages = load();
     final s = pages['privacy']!;
     expect(s, contains('収集しません'));
-    expect(s, contains('広告もアプリ内課金もありません'));
     expect(s, contains('端末の中にだけ保存'));
-    // 広告・課金を入れるときは、ここを直してから出す
-    expect(s.contains('AdMob'), isFalse);
+    // 広告を入れたので、AdMob・ATT を使わないこと・マイ アド センター・課金の決済を書いている(日英)
+    expect(s, contains('AdMob'));
+    expect(s, contains('App Tracking Transparency'));
+    expect(s, contains('myadcenter.google.com'));
+    expect(s, contains('「広告を消す」（買い切り）'));
+    expect(s, contains('"Remove Ads" (one-time)'));
+    expect(s, contains('決済は App Store が行います'));
+    // 古い「広告も課金も無い」の文面が残っていない
+    expect(s.contains('広告もアプリ内課金もありません'), isFalse);
+    expect(s.contains('has no ads'), isFalse);
+  });
+
+  test('サポートに「不適切な広告の報告」と購入の復元がある(Apple 2.5.18・3.1.1)', () {
+    final s = load()['support']!;
+    expect(s, contains('不適切な広告'));
+    expect(s, contains('An inappropriate ad'));
+    expect(s, contains('購入を復元'));
+    expect(s.contains('広告もアプリ内課金もありません'), isFalse);
+  });
+
+  test('app-ads.txt は発行元の行があり、robots.txt は AdMob のクローラを通す', () {
+    final a = read('site/app-ads.txt');
+    expect(a, contains('google.com, pub-6409014819339195, DIRECT'));
+    expect(a.toLowerCase(), isNot(contains('<html')));
+    expect(read('site/robots.txt'), contains('Google-adstxt'));
   });
 
   test('robots.txt が全部許可で、404.html がある(無いパスにトップページを返さない)', () {

@@ -27,6 +27,7 @@ import 'history.dart';
 import 'labels.dart';
 import 'backup_share.dart';
 import 'sound.dart';
+import '../monetization/monetization.dart';
 
 const saveKey = 'baseball_manager_save_v1';
 const historyKey = 'baseball_manager_history_v1';
@@ -421,13 +422,58 @@ class GameController extends ChangeNotifier {
       Random? rng,
       SoundPlayer? sound,
       this.autoGuide = false,
-      this.sharer})
+      this.sharer,
+      this.money})
       : store = store ?? SaveStore(),
         _rng = rng ?? Random(),
         sound = sound ?? const NullSound();
 
   /// 最初の選手を始めたときに、はじめてのガイドを自動で出すか(アプリ本体は true、テストは false)。
   final bool autoGuide;
+
+  /// 広告と「広告を消す」(アプリ本体だけ。テストは null で、広告も購入の表示も出ない)。
+  final Monetization? money;
+
+  /// 疲れを取る動画を見た歳(同じ歳には1度だけ)。
+  int _recoveredAge = -1;
+
+  /// 前の操作のときの歳(年が変わった瞬間を見つける)。
+  int _adAge = -1;
+
+  /// 動画で疲れを取れる状態か(疲れが70以上・怪我でない・その歳にまだ使っていない)。
+  bool get canRecoverByAd {
+    final g = game;
+    if (money == null || g == null || g.phase == Phase.retired) return false;
+    return g.condition.fatigue >= 70 &&
+        g.condition.injuredTerms == 0 &&
+        g.player.age != _recoveredAge;
+  }
+
+  /// 動画を見て疲れを取る。結果は「いまの結果」の文面(取れなかった理由を含む)で返す。
+  Future<String> recoverByAd({void Function()? onWaiting}) async {
+    final m = money;
+    final g = game;
+    if (m == null || g == null || !canRecoverByAd) return '今は使えません。';
+    final age = g.player.age;
+    _recoveredAge = age; // 重ねて押されても二重に渡さない
+    final r = await m.beforeRecovery(onWaiting: onWaiting);
+    // 広告を見ている間に画面を離れても渡す(見終えているのに何も入らない、を防ぐ)
+    if (r != RecoveryGate.granted) {
+      _recoveredAge = -1;
+      return switch (r) {
+        RecoveryGate.declined => '最後まで見ると疲れが取れます。',
+        RecoveryGate.showFailed => '動画を出せませんでした。しばらくしてからもう一度どうぞ。',
+        _ => '今は動画を読み込めません。通信を確かめて、あとでもう一度どうぞ。',
+      };
+    }
+    if (!identical(game, g)) return '選手が替わったので、疲れは取れませんでした。';
+    final start = g.log.length;
+    g.relieveFatigue();
+    recent = g.log.sublist(start);
+    _cue(Sfx.rankup);
+    _commit();
+    return '疲れが大きく抜けました。';
+  }
 
   /// バックアップを共有メニューに渡す係(アプリ本体だけ。テストは null で、ボタンも出ない)。
   final BackupSharer? sharer;
@@ -760,6 +806,8 @@ class GameController extends ChangeNotifier {
       autoBackup('${game!.player.name}を始め直す前');
     }
     _backedAge = -1;
+    _adAge = -1;
+    _recoveredAge = -1;
     // 継承: 図鑑にあり、ポイントが足りる特性だけ。持たせたぶんのポイントを使う。
     Trait? use;
     if (carry != null && carryCandidates(role).contains(carry)) {
@@ -1123,6 +1171,22 @@ class GameController extends ChangeNotifier {
 
   void _commit() {
     final g = game;
+    // 年が1つ進んだ瞬間に、全画面広告(間隔・年齢の決まりは Monetization)。
+    final m = money;
+    if (m != null && g != null && g.phase != Phase.retired) {
+      final age = g.player.age;
+      if (_adAge >= 0 && age == _adAge + 1) {
+        // 年を進めたタップの指が広告に当たらないよう、少し置いてから出す
+        Future<void>.delayed(const Duration(milliseconds: 900), () async {
+          if (identical(game, g) && g.phase != Phase.retired) {
+            await m.afterYear(age);
+          }
+        });
+      }
+      _adAge = age;
+    } else if (g == null || g.phase == Phase.retired) {
+      _adAge = -1;
+    }
     // 4歳ごとの節目で、自動バックアップ(同じ歳では1度だけ)。
     if (g != null && g.phase != Phase.retired && g.player.age != _backedAge) {
       _backedAge = g.player.age;

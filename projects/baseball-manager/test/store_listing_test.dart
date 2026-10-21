@@ -90,6 +90,17 @@ void main() {
     }
   });
 
+  test('広告と課金のあるアプリとして書いている(古い「広告なし」が残っていない)', () {
+    final m = md();
+    expect(m.contains('広告も課金もありません'), isFalse);
+    expect(m, contains('baseball_manager_remove_ads'));
+    expect(m, contains('AdMob'));
+    // 審査メモに、広告・課金・復元の場所がある
+    final memo = section('## 審査メモ', '## アプリのプライバシー');
+    expect(memo, contains('広告を消す'));
+    expect(memo, contains('購入を復元'));
+  });
+
   test('個人の名前・ユーザー名を入れていない', () {
     expect(
         RegExp(r'\bnami\b|0817|なみ', caseSensitive: false).hasMatch(

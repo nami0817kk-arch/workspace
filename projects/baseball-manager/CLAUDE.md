@@ -636,3 +636,15 @@ soccer-manager / soccer-career の野球版。**中核は「試合中の采配�
 - **掲載画像**(`marketing/screenshots/01〜05.png`、1206×2622・透過なし): `tool/screenshots/capture_test.dart` を、環境変数 FLUTTER_ROOT(Flutter SDK の場所)を付けて `flutter test tool/screenshots/capture_test.dart`(subst したドライブから)で作る。CI では回らない。**撮ったら必ず1枚ずつ目で見る**。書き出し後に Pillow で RGB に変換する(透過なしが条件)。踏んだ穴: ①絵(背景・アイコン)を `precacheImage` せずに撮ると、絵が抜ける ②`Column` の横は loose なので、縮めた画面のまわりが透明になる(`SizedBox(width: double.infinity)`)③育成タブは 844 の高さが要るので、帯を 104 にして画面を縮めて収める。
 - 未実施: App Store Connect の入力・提出、公開(上)、実機の確認。
 
+### 10. 広告と「広告を消す」(2026-10-21 ユーザー指示「広告課金を進める」。**ストア側の作業はユーザー待ち**)
+- **形**: 無料＋広告＋「広告を消す」370円(買い切り・非消耗型・商品ID `baseball_manager_remove_ads`)。護送ボートと同じ。`lib/monetization/`(`ad_service.dart` / `purchase_service.dart` は goso-boat の写し、`monetization.dart` が野球育成の決まり)。
+- **全画面広告**: 年が変わる節目で**4年に1回**、**13歳になってから**(少年野球のあいだは出さない)。年を進めたタップの0.9秒後に出す(指が当たらないように)。広告を消した人・アプリが裏のとき・在庫が無いときは出さない(出せなかった回は数えを戻さず次の年に試す)。`GameController._commit` が年の+1を見つけて `Monetization.afterYear` を呼ぶ。
+- **動画広告(任意)**: 疲れが70以上・怪我でない年に1度、育成タブの「疲れがたまっています」の行の「動画で休む」で、見終えると疲れ-60・やる気+5(`Game.relieveFatigue`、保存項目は増えない)。**読み込めていないときはタダでは渡さない**。広告を消した人は動画なしの「体を休める」。バランス(`tool/balance.dart`)は広告を使わない前提で不変。
+- **設定**: 「広告を消す」(価格つき)・「購入を復元」(`_AdsSection`)。ストアに繋がらない環境では出ない。広告を消した後は「広告なし(購入済み)」。広告の報告はサポートページ(設定の「サポート・お問い合わせ」から開く)。
+- **ID と CI**: 広告ユニットIDは `--dart-define=ADMOB_REWARDED_IOS` / `ADMOB_INTERSTITIAL_IOS`(既定は Google のテスト用ID)。アプリIDは `Info.plist` の `GADApplicationIdentifier`(既定はテスト用)。`baseball-ios-release.yml` は**テスト版(test_build)ではテスト用IDのまま**、審査に出す通常ビルドでは Secrets の `BASEBALL_ADMOB_APP_ID_IOS` / `BASEBALL_ADMOB_REWARDED_IOS` / `BASEBALL_ADMOB_INTERSTITIAL_IOS` を検証して差し替える(形・発行元・テスト用IDでないこと・法務ページが開けること・`scripts/check-app-site.sh`)。
+- **公開ページ**: `legal/` の3ページを広告・課金ありの内容に直した。`site/app-ads.txt`(発行元 `pub-6409014819339195`)と `robots.txt` の `Google-adstxt` を足し、`baseball-site.yml` が公開後に点検する。`test/site_files_test.dart` が「広告・課金あり」の文面と一致していることを見張る。
+- **ATT は使わない**(Info.plist に `NSUserTrackingUsageDescription` を入れない)。広告の内容は全年齢向け(G)まで。
+- **iOS ビルドは未検証**: google_mobile_ads / in_app_purchase を足したので、初回の CI ビルドで Pods が通るか見る。実機の広告・購入は TestFlight(Sandbox)で確かめる。
+- **ユーザーがやること**(ios-app-release スキル A-4 / A-5 / A-6): ① App Store Connect で課金アイテムを作る(製品ID・価格370円・審査用スクリーンショット) ② AdMob にアプリと広告ユニット(リワード・インタースティシャル)を作る ③ Secrets 3つ。公開前は本番の広告が届かないのが普通。
+- 踏まないこと(`docs/app-pitfalls.md`): 購入通知は待ち手がいなくても受け取る／報酬は `mounted` を見ない位置で渡す／広告は55分で捨てる／`await Ad.load` で待たない(`test/monetization_test.dart` が原文を見張る)。
+

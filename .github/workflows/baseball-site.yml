@@ -1,6 +1,6 @@
 # 野球育成の公開ページ（プライバシーポリシー・サポート・利用規約・紹介）を Cloudflare Pages の baseball-ikusei に出す。
 # アプリの設定画面は https://baseball-ikusei.pages.dev/privacy.html と support.html を開く（lib/ui/links.dart）。
-# ストアの「プライバシーポリシー URL」「サポート URL」もここ。広告を入れるときは app-ads.txt と点検を足す（ios-app-release スキル）。
+# ストアの「プライバシーポリシー URL」「サポート URL」もここ。app-ads.txt と AdMob 用の点検つき（広告を入れた。ios-app-release スキル B）。
 #
 # Web版の公開（baseball-pages.yml → baseball-manager）とは別のプロジェクト。
 # 必要な Secrets: CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID（baseball-pages.yml と同じ値）
@@ -12,6 +12,7 @@ on:
     paths:
       - "projects/baseball-manager/legal/**"
       - "projects/baseball-manager/site/**"
+      - "scripts/check-app-site.sh"
       - ".github/workflows/baseball-site.yml"
   workflow_dispatch: {}
 
@@ -69,3 +70,8 @@ jobs:
           grep -q "野球育成" <(curl -fsSL https://baseball-ikusei.pages.dev/privacy.html) || { echo "::error::baseball-ikusei.pages.dev が野球育成のページではありません"; exit 1; }
           # robots.txt は実体として置く(無いとトップページの HTML が返る。docs/app-pitfalls.md 項目8)
           if curl -fsSL https://baseball-ikusei.pages.dev/robots.txt | grep -qi '<html'; then echo "::error::/robots.txt が HTML を返している"; exit 1; fi
+
+      # AdMob が app-ads.txt を確かめられる状態か(robots.txt がテキスト・app-ads.txt の行・無いパスは 404)。
+      # docs/app-pitfalls.md 項目8
+      - name: Check the site for AdMob (robots.txt / app-ads.txt)
+        run: bash ../../scripts/check-app-site.sh baseball-ikusei.pages.dev pub-6409014819339195

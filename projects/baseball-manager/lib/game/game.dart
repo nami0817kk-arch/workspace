@@ -768,6 +768,13 @@ class Game {
   // 通常の遊びでは使わない。上限(特性は4つまで)や矛盾(大器晩成と早熟など)も無視して書き換える。
 
   /// 素質(0〜100)を書き換える。
+  /// 動画を見た特典で、疲れを大きく抜く(怪我は治さない)。保存する項目は増えない。
+  void relieveFatigue() {
+    condition = condition.copyWith(
+        fatigue: condition.fatigue - 60, morale: condition.morale + 5);
+    log.add('動画を見て、しっかり体を休めた。疲れが大きく抜けた。');
+  }
+
   void adminSetPotential(int v) {
     player = player.copyWith(potential: v.clamp(0, 100));
   }

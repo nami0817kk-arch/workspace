@@ -8,6 +8,8 @@ import 'admin_screen.dart';
 import 'controller.dart';
 import 'home_screen.dart' show showHelp;
 import 'guide_dialog.dart';
+import '../monetization/monetization.dart';
+import '../monetization/purchase_service.dart';
 import 'links.dart';
 import 'trait_book_screen.dart';
 import 'versus_screen.dart';
@@ -145,6 +147,8 @@ class SettingsScreen extends StatelessWidget {
                     value: controller.toasts,
                     onChanged: (v) => controller.setFlags(toasts: v),
                   ),
+                  if (controller.money != null)
+                    _AdsSection(money: controller.money!),
                   ListTile(
                     key: const Key('privacy-open'),
                     leading: const Icon(Icons.privacy_tip_outlined),
@@ -468,5 +472,99 @@ class _BackupDialogState extends State<_BackupDialog> {
             onPressed: () => Navigator.pop(context), child: const Text('閉じる')),
       ],
     );
+  }
+}
+
+/// 広告を消す(買い切り)と、購入の復元。ストアに繋がらない環境では何も出さない(広告を消した後の表示は出す)。
+class _AdsSection extends StatefulWidget {
+  const _AdsSection({required this.money});
+  final Monetization money;
+
+  @override
+  State<_AdsSection> createState() => _AdsSectionState();
+}
+
+class _AdsSectionState extends State<_AdsSection> {
+  bool _storeAvailable = false;
+  String? _price;
+  bool _busy = false;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.money.addListener(_changed);
+    _load();
+  }
+
+  @override
+  void dispose() {
+    widget.money.removeListener(_changed);
+    super.dispose();
+  }
+
+  void _changed() {
+    if (mounted) setState(() {});
+  }
+
+  Future<void> _load() async {
+    final v = await widget.money.canBuy;
+    final price = v ? await widget.money.price : null;
+    if (!mounted) return;
+    setState(() {
+      _storeAvailable = v;
+      _price = price;
+    });
+  }
+
+  Future<void> _run({required bool restore}) async {
+    setState(() => _busy = true);
+    final m = ScaffoldMessenger.of(context);
+    PurchaseOutcome r;
+    try {
+      r = await (restore ? widget.money.restore() : widget.money.buy());
+    } catch (_) {
+      r = PurchaseOutcome.failed;
+    }
+    if (mounted) setState(() => _busy = false);
+    final text = switch (r) {
+      PurchaseOutcome.purchased => restore ? '購入を復元しました。広告は出なくなります。' : 'ありがとうございます。広告は出なくなります。',
+      PurchaseOutcome.pending => '保護者の承認を待っています。承認されると広告が消えます。',
+      PurchaseOutcome.canceled => '',
+      PurchaseOutcome.unavailable => restore ? '復元できる購入が見つかりませんでした。' : '今は購入できません。しばらくしてからもう一度どうぞ。',
+      PurchaseOutcome.failed => restore ? '復元できませんでした。通信を確かめてください。' : '購入できませんでした。もう一度どうぞ。',
+    };
+    if (text.isNotEmpty) m.showSnackBar(SnackBar(content: Text(text)));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final money = widget.money;
+    if (money.adFree) {
+      return const ListTile(
+        key: Key('ad-free-on'),
+        leading: Icon(Icons.check_circle, color: Color(0xFF43A047)),
+        title: Text('広告なし(購入済み)'),
+        subtitle: Text('ご支援ありがとうございます。'),
+      );
+    }
+    if (!_storeAvailable || _price == null) return const SizedBox.shrink();
+    return Column(children: [
+      ListTile(
+        key: const Key('remove-ads'),
+        leading: const Icon(Icons.block),
+        title: const Text('広告を消す'),
+        subtitle: const Text('年替わりの全画面広告が出なくなり、疲れを取る動画も不要になります(買い切り)。'),
+        trailing: Text(_price!, style: const TextStyle(fontWeight: FontWeight.bold)),
+        enabled: !_busy,
+        onTap: () => _run(restore: false),
+      ),
+      ListTile(
+        key: const Key('restore-purchases'),
+        leading: const Icon(Icons.restore),
+        title: const Text('購入を復元'),
+        enabled: !_busy,
+        onTap: () => _run(restore: true),
+      ),
+    ]);
   }
 }

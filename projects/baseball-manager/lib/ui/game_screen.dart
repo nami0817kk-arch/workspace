@@ -600,16 +600,19 @@ class _StatusCard extends StatelessWidget {
                 ]),
               )
             else if (c.fatigue >= 70)
-              const Padding(
-                padding: EdgeInsets.only(top: 4),
+              Padding(
+                padding: const EdgeInsets.only(top: 4),
                 child: Row(children: [
-                  Icon(Icons.battery_alert, color: Color(0xFFEF6C00), size: 18),
-                  SizedBox(width: 4),
-                  Expanded(
+                  const Icon(Icons.battery_alert,
+                      color: Color(0xFFEF6C00), size: 18),
+                  const SizedBox(width: 4),
+                  const Expanded(
                     child: Text('疲れがたまっています。休養がおすすめ',
                         key: Key('tired-note'),
                         style: TextStyle(color: Color(0xFFEF6C00))),
                   ),
+                  if (controller.canRecoverByAd)
+                    _AdRecoveryButton(controller: controller),
                 ]),
               ),
             if (spendable)
@@ -2420,4 +2423,40 @@ String endingShareText(Game game) {
       '殿堂入り!',
   ];
   return lines.join('\n');
+}
+
+/// 疲れがたまった年に1度、動画を見て疲れを大きく抜く(任意。広告を消した人は動画なしで使える)。
+class _AdRecoveryButton extends StatefulWidget {
+  const _AdRecoveryButton({required this.controller});
+  final GameController controller;
+
+  @override
+  State<_AdRecoveryButton> createState() => _AdRecoveryButtonState();
+}
+
+class _AdRecoveryButtonState extends State<_AdRecoveryButton> {
+  bool _busy = false;
+
+  Future<void> _run() async {
+    setState(() => _busy = true);
+    final messenger = ScaffoldMessenger.maybeOf(context);
+    final text = await widget.controller.recoverByAd();
+    if (mounted) setState(() => _busy = false);
+    messenger?.hideCurrentSnackBar();
+    messenger?.showSnackBar(SnackBar(content: Text(text)));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final free = widget.controller.money?.adFree ?? false;
+    return TextButton.icon(
+      key: const Key('ad-recovery'),
+      style: TextButton.styleFrom(
+          visualDensity: VisualDensity.compact,
+          padding: const EdgeInsets.symmetric(horizontal: 8)),
+      onPressed: _busy ? null : _run,
+      icon: Icon(free ? Icons.spa : Icons.ondemand_video, size: 18),
+      label: Text(free ? '体を休める' : '動画で休む'),
+    );
+  }
 }
