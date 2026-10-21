@@ -121,7 +121,9 @@ class _SeasonView extends StatelessWidget {
         ],
         if (c.lastTournament != null) ...[
           _TournamentCard(
-              result: c.lastTournament!, winter: c.lastTournamentWinter),
+              result: c.lastTournament!,
+              winter: c.lastTournamentWinter,
+              honors: game.lastHonors),
           const SizedBox(height: 12),
         ],
         if (c.recent.isNotEmpty) ...[
@@ -657,9 +659,11 @@ class _Meter extends StatelessWidget {
 
 /// 大会の結果。試合ごとに ○● と得点・個人成績・流れの一言を並べる。
 class _TournamentCard extends StatelessWidget {
-  const _TournamentCard({required this.result, required this.winter});
+  const _TournamentCard(
+      {required this.result, required this.winter, this.honors = const []});
   final TournamentResult result;
   final bool winter;
+  final List<String> honors;
 
   @override
   Widget build(BuildContext context) {
@@ -677,6 +681,11 @@ class _TournamentCard extends StatelessWidget {
                 '${t.wins}勝${t.games - t.wins}敗${t.champion ? '  優勝!' : ''}',
                 style:
                     const TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+            if (honors.isNotEmpty)
+              Text('表彰: ${honors.join('・')}',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.primary)),
             if (t.award != null)
               Text('個人賞: ${t.award}',
                   style: TextStyle(

@@ -385,6 +385,15 @@ class GameController extends ChangeNotifier {
       pending.add(Milestone(MilestoneKind.award, '個人賞: ${t.award}',
           '${leagueLabel(t.league)}の大会で、素晴らしい活躍だった。'));
     }
+    if (g.lastHonors.isNotEmpty) {
+      pending.add(Milestone(
+          MilestoneKind.award,
+          g.lastHonors.length == 1 ? '表彰: ${g.lastHonors.first}' : '表彰: ${g.lastHonors.length}部門',
+          [
+            for (final h in g.lastHonors)
+              '$h  (通算${g.honorCounts[h] ?? 1}回)',
+          ].join('\n')));
+    }
     final goal = g.lastGoalMessage;
     if (r.yearEnded && goal != null && goal.startsWith('目標達成')) {
       pending.add(Milestone(MilestoneKind.goal, '目標達成!', goal.replaceFirst('目標達成!', '').trim()));
