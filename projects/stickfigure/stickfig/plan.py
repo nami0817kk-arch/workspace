@@ -674,17 +674,19 @@ def _auto_smear(scene: dict, frames: List[dict]) -> None:
     """スミア: 前の手・足が速く動くコマで、その手足を進行方向へ引き伸ばす(st/lst)。使いすぎないよう上限は 0.32。"""
     for who, a in scene["actors"].items():
         sc, s = a.get("scale", 1.0), _sign(a)
-        hand, foot = [], []
+        hand, foot, rhand, rfoot = [], [], [], []
         for fr in frames:
             p = fr["actors"][who]
             s = fk.sign_of(a, p)                                        # 向きはコマごと(dir で途中から変わる)
             sk = fk.skeleton(p, s, p["root_x"], sc)
             hand.append(sk["hand"])
             foot.append(sk["foot"])
+            rhand.append(sk["rear_arm"][-1])
+            rfoot.append(sk["rear_foot"])
         for i, fr in enumerate(frames):
             if i == 0:
                 continue
-            for key, pts in (("st", hand), ("lst", foot)):
+            for key, pts in (("st", hand), ("lst", foot), ("rst", rhand), ("rlst", rfoot)):   # 後ろの手足も(アッパー・後ろ回し蹴り)
                 v = math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]) / (1.9 * sc)
                 fr["actors"][who][key] = round(max(fr["actors"][who].get(key, 0.0), max(0.0, min(0.32, (v - 0.09) * 1.5))), 4)
 

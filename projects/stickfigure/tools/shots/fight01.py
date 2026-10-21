@@ -65,34 +65,34 @@ def tracks_b(tgt):
         # ジャブをかわす(上体を反らす)
         dict(t=0.98, x=0.75, lean=0.12, ht=0.0), dict(t=1.10, x=0.90, lean=-0.32, ht=0.15, ease="out"), dict(t=1.24, lean=-0.18, ht=0.05),
         # フック: 溜め → 踏み込んで振り抜く(体が流れる)
-        dict(t=1.32, x=0.88, hz=0.78, lean=-0.08), dict(t=1.52, x=0.82, hz=0.79, lean=0.18, ease="in"), dict(t=1.66, lean=0.26, ht=-0.05),
+        dict(t=1.32, x=0.90, hz=0.78, lean=-0.20), dict(t=1.40, x=0.90, hz=0.78, lean=-0.22), dict(t=1.52, x=0.82, hz=0.79, lean=0.18, ease="in"), dict(t=1.66, lean=0.26, ht=-0.05),
         dict(t=1.8667, x=0.80, hz=0.80, lean=0.22, ht=0.0),
         # アッパーを受ける → よろける
-        dict(t=1.93, x=0.94, hz=0.84, rz=0.12, lean=-0.42, ht=0.65, ease="out"),
+        dict(t=1.93, x=0.96, hz=0.86, rz=0.24, lean=-0.58, ht=0.85, ease="out"),
         dict(t=2.10, x=1.10, hz=0.78, rz=0.0, lean=-0.30, ht=0.35), dict(t=2.35, x=1.35, hz=0.79, lean=-0.12, ht=0.18), dict(t=2.55, x=1.40, hz=0.80, lean=0.08, ht=0.0),
         # 怒る: 首を振って踏み鳴らす
         dict(t=2.60, ht=0.22), dict(t=2.66, ht=-0.20), dict(t=2.72, ht=0.18), dict(t=2.78, ht=-0.08), dict(t=2.84, ht=0.0, hz=0.80), dict(t=2.88, hz=0.76), dict(t=2.94, hz=0.80),
         # 踏み込んで前蹴り
         dict(t=2.96, x=1.40, lean=0.10), dict(t=3.10, x=0.55, hz=0.80, lean=0.05, ease="inout"),
-        dict(t=3.16, lean=-0.12, hz=0.82), dict(t=3.22, x=0.50, lean=-0.30, ease="in"), dict(t=3.30, x=0.58, lean=-0.34), dict(t=3.46, x=0.62, lean=0.10, hz=0.80, ease="out"),
+        dict(t=3.16, lean=-0.12, hz=0.82, lst=0.0), dict(t=3.19, lean=-0.14, hz=0.82), dict(t=3.22, x=0.50, lean=-0.32, lst=0.15, ease="in"), dict(t=3.30, x=0.58, lean=-0.34, lst=0.0), dict(t=3.46, x=0.62, lean=0.10, hz=0.80, ease="out"),
         # 後ろ回し蹴りを受けて吹き飛ぶ
         dict(t=3.8667, x=0.62, lean=0.12, hz=0.80, rz=0.0, roll=0.0, ht=0.0),
         dict(t=3.95, x=0.90, lean=-0.55, rz=0.25, roll=0.35, ht=0.30, ease="out"),
-        dict(t=4.10, x=1.55, rz=0.48, roll=0.95), dict(t=4.30, x=2.15, rz=0.28, roll=1.42), dict(t=4.38, x=2.28, rz=0.21, roll=1.57, lean=0.0, ht=0.0),
-        dict(t=4.62, x=2.60, rz=0.21, roll=1.57, ease="out"),
+        dict(t=4.10, x=1.65, rz=0.62, roll=1.00), dict(t=4.30, x=2.30, rz=0.30, roll=1.45), dict(t=4.38, x=2.42, rz=0.21, roll=1.57, lean=0.0, ht=0.0),
+        dict(t=4.46, x=2.55, rz=0.38, roll=1.57, ease="out"), dict(t=4.54, x=2.66, rz=0.21, roll=1.57, ease="in"), dict(t=4.75, x=2.90, rz=0.21, roll=1.57, ease="out"),
         # 起き上がる
-        dict(t=4.95, x=2.60, rz=0.21, roll=1.57), dict(t=5.25, rz=0.24, roll=1.05, hz=0.55, lean=0.20),
-        dict(t=5.55, rz=0.18, roll=0.40, hz=0.48, lean=0.55), dict(t=5.85, rz=0.0, roll=0.0, hz=0.72, lean=0.30), dict(t=6.05, hz=0.80, lean=0.12, x=2.55),
+        dict(t=4.95, x=2.90, rz=0.21, roll=1.57), dict(t=5.25, rz=0.24, roll=1.05, hz=0.55, lean=0.20),
+        dict(t=5.55, rz=0.18, roll=0.40, hz=0.48, lean=0.55), dict(t=5.85, rz=0.0, roll=0.0, hz=0.72, lean=0.30), dict(t=6.05, hz=0.80, lean=0.12, x=2.85),
         dict(t=6.15, ht=-0.15), dict(t=6.30, ht=0.0),
         # 走り込んで拳をぶつける
-        dict(t=6.32, x=2.55, lean=0.12, hz=0.80), dict(t=6.40, lean=0.35, hz=0.78),
-        dict(t=6.86, x=0.85, lean=0.38, hz=0.78, ease="linear"), dict(t=6.95, x=0.80, lean=0.40),
-        dict(t=7.20, x=1.15, lean=0.0, hz=0.80, ease="out"),
+        dict(t=6.32, x=2.85, lean=0.12, hz=0.80), dict(t=6.40, lean=0.35, hz=0.78),
+        dict(t=6.80, x=1.02, lean=0.30, hz=0.78, rst=0.0, ease="linear"), dict(t=6.86, x=0.95, lean=0.10, hz=0.77), dict(t=6.95, x=0.80, lean=0.44, rst=0.14, ease="in"),
+        dict(t=7.20, x=1.30, lean=0.0, hz=0.80, rst=0.0, ease="out"),
         # 大振り → 腹 → 掌底 → 尻もち
-        dict(t=7.26, x=1.15, lean=-0.10), dict(t=7.40, x=0.62, lean=0.45, ease="in"), dict(t=7.50, x=0.58, lean=0.30), dict(t=7.53, lean=0.10),
+        dict(t=7.26, x=1.30, lean=-0.10), dict(t=7.40, x=0.62, lean=0.45, ease="in"), dict(t=7.50, x=0.58, lean=0.30), dict(t=7.53, lean=0.10),
         dict(t=7.5667, x=0.58, lean=0.10, hz=0.80), dict(t=7.65, x=0.80, lean=0.50, hz=0.74, ht=-0.30, ease="out"), dict(t=7.80, lean=0.42, hz=0.75, ht=-0.20),
-        dict(t=7.8667, lean=0.40), dict(t=7.95, x=1.00, lean=-0.45, ht=0.55, hz=0.80, ease="out"),
-        dict(t=8.10, x=1.27, lean=-0.30, hz=0.60, ht=0.35), dict(t=8.30, x=1.47, hz=0.33, lean=-0.18, ht=0.10, ease="out"),
+        dict(t=7.8667, lean=0.40), dict(t=7.95, x=1.02, lean=-0.55, ht=0.75, hz=0.82, rz=0.10, ease="out"),
+        dict(t=8.10, x=1.35, lean=-0.30, hz=0.60, rz=0.0, ht=0.35), dict(t=8.30, x=1.55, hz=0.33, lean=-0.18, ht=0.10, ease="in"), dict(t=8.38, hz=0.40, lean=-0.10, ease="out"), dict(t=8.46, hz=0.33, lean=-0.16, ease="in"),
         # 目を回す
         dict(t=8.55, ht=-0.22, lean=-0.12), dict(t=8.85, ht=0.20, lean=-0.20), dict(t=9.15, ht=-0.18, lean=-0.13), dict(t=9.40, ht=0.10),
     ]
@@ -104,20 +104,20 @@ def tracks_b(tgt):
          dict(t=3.16, p=(0.24, 0.45)), dict(t=3.22, p=tgt["kick_b"], ease="in"), dict(t=3.30, p=tgt["kick_b"]),
          dict(t=3.38, p=(0.28, 0.40)), dict(t=3.46, p=(0.36, 0)),
          dict(t=3.8667, p=(0.36, 0)), dict(t=3.96, ang=(0.9, 0.4)), dict(t=4.38, ang=(0.3, 0.2)), dict(t=4.95, ang=(0.3, 0.2)),
-         dict(t=5.25, ang=(1.2, 1.6)), dict(t=5.55, p=(2.20, 0)), dict(t=6.05, p=(2.30, 0)),
-         dict(t=6.40, p=(2.30, 0)), dict(t=6.52, p=(1.80, 0), lift=0.10), dict(t=6.64, p=(1.80, 0)), dict(t=6.76, p=(1.05, 0), lift=0.10),
-         dict(t=6.95, p=(0.55, 0), lift=0.06), dict(t=7.20, p=(0.90, 0), lift=0.0),
-         dict(t=7.26, p=(0.90, 0)), dict(t=7.40, p=(0.34, 0), lift=0.06), dict(t=7.85, p=(0.34, 0)),
-         dict(t=8.05, p=(0.70, 0), lift=0.05), dict(t=8.30, p=(0.85, 0), lift=0.03), dict(t=9.40, p=(0.85, 0))]
+         dict(t=5.25, ang=(1.2, 1.6)), dict(t=5.55, p=(2.50, 0)), dict(t=6.05, p=(2.60, 0)),
+         dict(t=6.40, p=(2.60, 0)), dict(t=6.52, p=(1.90, 0), lift=0.10), dict(t=6.64, p=(1.80, 0)), dict(t=6.76, p=(1.05, 0), lift=0.10),
+         dict(t=6.95, p=(0.55, 0), lift=0.06), dict(t=7.20, p=(1.05, 0), lift=0.0),
+         dict(t=7.26, p=(1.05, 0)), dict(t=7.40, p=(0.34, 0), lift=0.06), dict(t=7.85, p=(0.34, 0)),
+         dict(t=8.05, p=(0.70, 0), lift=0.05), dict(t=8.30, p=(0.93, 0), lift=0.03), dict(t=9.40, p=(0.93, 0))]
     r = [dict(t=0.00, p=(1.05, 0)), dict(t=1.52, p=(1.05, 0)), dict(t=1.70, p=(1.02, 0), lift=0.02),
          dict(t=1.95, p=(1.02, 0)), dict(t=2.10, p=(1.35, 0), lift=0.06), dict(t=2.40, p=(1.35, 0)), dict(t=2.55, p=(1.68, 0), lift=0.04),
          dict(t=2.96, p=(1.68, 0)), dict(t=3.04, p=(0.85, 0), lift=0.08), dict(t=3.46, p=(0.88, 0)),
          dict(t=3.8667, p=(0.88, 0)), dict(t=3.96, ang=(-0.4, 0.6)), dict(t=4.38, ang=(0.1, 0.2)), dict(t=4.95, ang=(0.1, 0.2)),
-         dict(t=5.25, ang=(1.0, 1.8)), dict(t=5.55, p=(2.85, 0)), dict(t=6.05, p=(2.85, 0)),
-         dict(t=6.40, p=(2.85, 0)), dict(t=6.46, p=(2.15, 0), lift=0.10), dict(t=6.58, p=(2.15, 0)), dict(t=6.70, p=(1.40, 0), lift=0.10),
-         dict(t=6.82, p=(1.40, 0)), dict(t=6.95, p=(1.10, 0), lift=0.06), dict(t=7.20, p=(1.42, 0), lift=0.0),
-         dict(t=7.26, p=(1.42, 0)), dict(t=7.44, p=(0.87, 0), lift=0.06), dict(t=7.85, p=(0.87, 0)),
-         dict(t=8.10, p=(1.47, 0), lift=0.05), dict(t=8.30, p=(0.97, 0), lift=0.03), dict(t=9.40, p=(0.97, 0))]
+         dict(t=5.25, ang=(1.0, 1.8)), dict(t=5.55, p=(3.15, 0)), dict(t=6.05, p=(3.15, 0)),
+         dict(t=6.40, p=(3.15, 0)), dict(t=6.46, p=(2.30, 0), lift=0.10), dict(t=6.58, p=(2.15, 0)), dict(t=6.70, p=(1.40, 0), lift=0.10),
+         dict(t=6.82, p=(1.40, 0)), dict(t=6.95, p=(1.10, 0), lift=0.06), dict(t=7.20, p=(1.57, 0), lift=0.0),
+         dict(t=7.26, p=(1.57, 0)), dict(t=7.44, p=(0.87, 0), lift=0.06), dict(t=7.85, p=(0.87, 0)),
+         dict(t=8.10, p=(1.55, 0), lift=0.05), dict(t=8.30, p=(1.05, 0), lift=0.03), dict(t=9.40, p=(1.05, 0))]
     fh = [dict(t=0.00, ang=GUARD_F), dict(t=1.32, ang=GUARD_F), dict(t=1.52, ang=(0.6, 1.2)), dict(t=1.90, ang=(0.9, 0.6)),
           dict(t=2.10, ang=(1.5, 0.8)), dict(t=2.40, ang=GUARD_F),
           dict(t=3.10, ang=GUARD_F), dict(t=3.22, ang=(0.8, 1.4)), dict(t=3.46, ang=GUARD_F),
@@ -142,36 +142,36 @@ def tracks_a(tgt):
         dict(t=0.00, x=-0.75, hz=0.80, lean=0.12, ht=0.0, dir=1, face="fight"),
         dict(t=0.22, hz=0.77), dict(t=0.44, hz=0.80), dict(t=0.50, x=-0.62), dict(t=0.66, hz=0.77), dict(t=0.88, hz=0.80, x=-0.62),
         # ジャブ
-        dict(t=0.95, hz=0.76, lean=0.08), dict(t=1.08, x=-0.30, hz=0.78, lean=0.38, ease="in"), dict(t=1.20, lean=0.30),
+        dict(t=0.95, hz=0.75, lean=0.06), dict(t=1.00, hz=0.75, lean=0.05, st=0.0), dict(t=1.08, x=-0.30, hz=0.78, lean=0.42, st=0.14, ease="in"), dict(t=1.20, lean=0.30, st=0.0),
         dict(t=1.40, x=-0.42, hz=0.79, lean=0.14, ease="out"),
         # しゃがんでかわす
         dict(t=1.47, hz=0.79, lean=0.14, ht=0.0), dict(t=1.58, x=-0.55, hz=0.52, lean=0.30, ht=-0.10, ease="out"), dict(t=1.70, x=-0.55, hz=0.52, lean=0.30),
         # アッパー: 沈んで溜め → 伸び上がる
-        dict(t=1.75, hz=0.49, lean=0.38), dict(t=1.8667, x=0.14, hz=0.86, lean=0.05, ht=0.15, ease="in"), dict(t=1.98, x=0.16, hz=0.88, lean=-0.05),
+        dict(t=1.74, hz=0.47, lean=0.40), dict(t=1.80, hz=0.45, lean=0.42, rst=0.0), dict(t=1.8667, x=0.14, hz=0.86, lean=0.05, ht=0.15, rst=0.18, ease="in"), dict(t=1.98, x=0.16, hz=0.88, rz=0.10, lean=-0.08, rst=0.0, ease="out"), dict(t=2.10, rz=0.0, hz=0.80),
         dict(t=2.30, x=-0.35, hz=0.80, lean=0.12, ht=0.0, ease="out"), dict(t=2.55, hz=0.78), dict(t=2.80, hz=0.80),
         # 前蹴りを受けて滑る
         dict(t=3.10, hz=0.78, lean=0.18, x=-0.35), dict(t=3.22, x=-0.35), dict(t=3.52, x=-0.80, hz=0.77, lean=0.04, ease="out"), dict(t=3.58, hz=0.80, lean=0.12),
         # 回りながら踏み込んで後ろ回し蹴り
-        dict(t=3.64, x=-0.72, hz=0.78, lean=0.10), dict(t=3.72, x=-0.38, hz=0.82, lean=0.12, dir=-1),
-        dict(t=3.8667, x=-0.18, hz=0.83, lean=0.60, ease="in"), dict(t=4.02, x=-0.20, lean=0.30),
+        dict(t=3.64, x=-0.72, hz=0.78, lean=0.10), dict(t=3.72, x=-0.38, hz=0.82, lean=0.12, dir=-1), dict(t=3.78, x=-0.30, hz=0.80, lean=0.30, rlst=0.0), dict(t=3.81, x=-0.29, hz=0.80, lean=0.32),
+        dict(t=3.8667, x=-0.18, hz=0.83, lean=0.64, rlst=0.20, ease="in"), dict(t=4.02, x=-0.20, lean=0.30, rlst=0.0),
         dict(t=4.12, x=-0.26, hz=0.80, lean=0.12, dir=1), dict(t=4.32, x=-0.40), dict(t=4.55, x=-0.82, hz=0.80),
         # 待つ(構えを少し解く)
         dict(t=4.80, hz=0.84, lean=0.05), dict(t=5.80, hz=0.84, lean=0.05), dict(t=6.05, hz=0.80, lean=0.12),
         # 拳をぶつける
-        dict(t=6.70, x=-0.82, hz=0.79, lean=0.15), dict(t=6.86, x=-0.68, lean=0.34, ease="in"), dict(t=6.95, x=-0.66, lean=0.40),
-        dict(t=7.20, x=-1.00, lean=0.05, hz=0.80, ease="out"),
+        dict(t=6.70, x=-0.82, hz=0.79, lean=0.15), dict(t=6.80, x=-0.86, hz=0.76, lean=0.02, rst=0.0), dict(t=6.86, x=-0.84, hz=0.76, lean=0.03), dict(t=6.95, x=-0.66, lean=0.44, rst=0.14, ease="in"),
+        dict(t=7.20, x=-1.10, lean=0.0, hz=0.79, rst=0.0, ease="out"),
         # くぐる → 腹 → 掌底
-        dict(t=7.28, x=-1.00, hz=0.80, lean=0.10), dict(t=7.38, x=-1.00, hz=0.55, lean=0.40, ease="out"),
-        dict(t=7.44, x=-0.95, hz=0.56, lean=0.36), dict(t=7.50, x=-0.50, hz=0.58, lean=0.32, ease="in"), dict(t=7.5667, x=-0.12, hz=0.58, lean=0.30, ease="in"),
-        dict(t=7.72, x=-0.12, hz=0.76, lean=0.08), dict(t=7.8667, x=-0.05, hz=0.80, lean=0.16, ease="in"), dict(t=8.05, lean=0.12),
+        dict(t=7.28, x=-1.10, hz=0.80, lean=0.10), dict(t=7.38, x=-1.10, hz=0.55, lean=0.40, ease="out"),
+        dict(t=7.44, x=-1.02, hz=0.56, lean=0.36), dict(t=7.50, x=-0.50, hz=0.58, lean=0.32, ease="in"), dict(t=7.5667, x=-0.12, hz=0.58, lean=0.30, rst=0.14, ease="in"), dict(t=7.66, rst=0.0),
+        dict(t=7.72, x=-0.12, hz=0.76, lean=0.08), dict(t=7.78, x=-0.15, hz=0.74, lean=0.0, st=0.0), dict(t=7.8667, x=-0.05, hz=0.80, lean=0.20, st=0.16, ease="in"), dict(t=8.05, lean=0.12, st=0.0),
         dict(t=8.50, x=-0.20, hz=0.82, lean=0.10, ease="inout"), dict(t=9.00, hz=0.85, lean=0.03), dict(t=9.40, hz=0.85),
     ]
     f = [dict(t=0.00, p=(-0.50, 0)), dict(t=0.36, p=(-0.50, 0)), dict(t=0.50, p=(-0.37, 0), lift=0.04),
          dict(t=0.98, p=(-0.37, 0)), dict(t=1.08, p=(-0.02, 0), lift=0.05, ease="out"), dict(t=1.30, p=(-0.02, 0)), dict(t=1.40, p=(-0.17, 0), lift=0.03),
          dict(t=1.78, p=(-0.17, 0)), dict(t=1.8667, p=(0.40, 0), lift=0.03), dict(t=2.25, p=(0.25, 0)), dict(t=2.32, p=(-0.10, 0), lift=0.03),
          dict(t=3.22, p=(-0.10, 0)), dict(t=3.52, p=(-0.55, 0), lift=0.0, ease="out"),
-         dict(t=6.70, p=(-0.55, 0)),                                                             # 右足は回し蹴りの間も -0.55 に置いたまま(体の向きを変えても足の位置は入れ替わらない) dict(t=6.86, p=(-0.40, 0), lift=0.05), dict(t=6.95, p=(-0.40, 0)), dict(t=7.20, p=(-0.75, 0), lift=0.0),
-         dict(t=7.40, p=(-0.75, 0)), dict(t=7.52, p=(0.12, 0), lift=0.05), dict(t=7.78, p=(0.12, 0)), dict(t=7.8667, p=(0.22, 0), lift=0.03),
+         dict(t=6.70, p=(-0.55, 0)),                                                             # 右足は回し蹴りの間も -0.55 に置いたまま(体の向きを変えても足の位置は入れ替わらない) dict(t=6.86, p=(-0.40, 0), lift=0.05), dict(t=6.95, p=(-0.40, 0)), dict(t=7.20, p=(-0.85, 0), lift=0.0),
+         dict(t=7.40, p=(-0.85, 0)), dict(t=7.52, p=(0.12, 0), lift=0.05), dict(t=7.78, p=(0.12, 0)), dict(t=7.8667, p=(0.22, 0), lift=0.03),
          dict(t=8.45, p=(0.22, 0)), dict(t=8.60, p=(0.05, 0), lift=0.03), dict(t=9.40, p=(0.05, 0))]
     r = [dict(t=0.00, p=(-1.05, 0)), dict(t=0.52, p=(-1.05, 0)), dict(t=0.66, p=(-0.92, 0), lift=0.04),
          dict(t=1.40, p=(-0.92, 0)), dict(t=1.52, p=(-0.95, 0), lift=0.03),
@@ -181,8 +181,8 @@ def tracks_a(tgt):
          dict(t=3.74, p=(-0.22, 0)), dict(t=3.80, p=(-0.02, 0.38), lift=0.0), dict(t=3.8667, p=tgt["backkick"], ease="in"),
          dict(t=3.96, p=tgt["backkick"]), dict(t=4.06, p=(0.0, 0.25)), dict(t=4.12, p=(-0.05, 0.02)),
          dict(t=4.30, p=(-0.05, 0)), dict(t=4.50, p=(-1.10, 0), lift=0.06),                              # 向き直ったら左足を大きく引いて構えへ
-         dict(t=6.95, p=(-1.10, 0)), dict(t=7.20, p=(-1.30, 0), lift=0.0),
-         dict(t=7.40, p=(-1.30, 0)), dict(t=7.50, p=(-0.55, 0), lift=0.06), dict(t=7.85, p=(-0.55, 0)), dict(t=7.95, p=(-0.45, 0), lift=0.03),
+         dict(t=6.95, p=(-1.10, 0)), dict(t=7.20, p=(-1.40, 0), lift=0.0),
+         dict(t=7.40, p=(-1.40, 0)), dict(t=7.50, p=(-0.55, 0), lift=0.06), dict(t=7.85, p=(-0.55, 0)), dict(t=7.95, p=(-0.45, 0), lift=0.03),
          dict(t=9.40, p=(-0.45, 0))]
     fh = [dict(t=0.00, ang=GUARD_F), dict(t=0.95, ang=(0.95, 2.0)), dict(t=1.08, p=tgt["jab"], ease="in"), dict(t=1.18, p=tgt["jab"]), dict(t=1.36, ang=GUARD_F, ease="out"),
           dict(t=1.58, ang=(1.35, 1.9)), dict(t=1.76, ang=(1.2, 1.8)), dict(t=1.8667, ang=(0.5, 1.2)), dict(t=2.30, ang=GUARD_F),
@@ -243,13 +243,13 @@ def build_scene():
     base["footwork"] = None
     H = lambda tau, kind, pos, hold=0.0, by=None: dict(tau=tau, hold=hold, kind=kind, pos=[round(pos[0], 3), round(pos[1], 3)], **({"by": by} if by else {}))
     base["hits"] = [H(1.08, "miss", tgt["jab"]), H(1.55, "miss", tgt["hook_b"]),
-                    H(1.8667, "hit", tgt["upper"], 0.08), H(3.22, "clash", tgt["kick_b"], 0.07),
-                    H(3.8667, "kick", tgt["backkick"], 0.10), H(4.38, "land", (2.28, 0.2), 0.04),
-                    H(6.95, "clash", tgt["clash"], 0.10), H(7.40, "miss", tgt["hook2"]),
-                    H(7.5667, "hit", tgt["body"], 0.06), H(7.8667, "hit", tgt["palm"], 0.08), H(8.30, "land", (1.47, 0.1), 0.03)]
+                    H(1.8667, "hit", tgt["upper"], 0.12), H(3.22, "clash", tgt["kick_b"], 0.07),
+                    H(3.8667, "kick", tgt["backkick"], 0.14), H(4.38, "land", (2.42, 0.2), 0.04), H(4.54, "land", (2.66, 0.2), 0.02),
+                    H(6.95, "clash", tgt["clash"], 0.14), H(7.40, "miss", tgt["hook2"]),
+                    H(7.5667, "hit", tgt["body"], 0.06), H(7.8667, "hit", tgt["palm"], 0.12), H(8.30, "land", (1.55, 0.1), 0.03)]
     base["puffs"] = [dict(tau=3.30, kind="land2", pos=[-0.3, 0.0]), dict(tau=3.50, kind="land2", pos=[-0.8, 0.0]),
-                     dict(tau=4.38, kind="land2", pos=[2.28, 0.0]), dict(tau=4.62, kind="land2", pos=[2.6, 0.0]),
-                     dict(tau=7.20, kind="land2", pos=[0.0, 0.0]), dict(tau=8.30, kind="land2", pos=[1.47, 0.0])]
+                     dict(tau=4.38, kind="land2", pos=[2.42, 0.0]), dict(tau=4.54, kind="land2", pos=[2.66, 0.0]), dict(tau=4.75, kind="land2", pos=[2.9, 0.0]),
+                     dict(tau=7.20, kind="land2", pos=[0.0, 0.0]), dict(tau=8.30, kind="land2", pos=[1.55, 0.0])]
     base["fx"]["flashes"] = [1.8667, 3.8667, 6.95, 7.8667]
     base["slow"] = [dict(start=1.82, end=1.95, rate=0.5), dict(start=3.82, end=3.98, rate=0.5), dict(start=7.82, end=7.95, rate=0.5)]
     base["shots"] = [dict(t=0.0, follow="mid", scale=3.4, yaw=-5.0, pitch=3.0, lens=40.0, target_z=1.0, lag=0.25),
@@ -264,11 +264,16 @@ def build_scene():
                      dict(t=7.25, follow="mid", scale=3.0, yaw=-6.0, pitch=3.0, lens=40.0, target_z=0.9, lag=0.1),
                      dict(t=7.82, follow="B", scale=2.6, yaw=-18.0, pitch=2.0, lens=34.0, target_z=1.1, lag=0.0),        # 掌底
                      dict(t=8.25, follow="mid", scale=3.4, yaw=-5.0, pitch=4.0, lens=40.0, target_z=0.8, lag=0.3)]
+    beats = [dict(t=1.08, by="A", to="B"), dict(t=1.55, by="B", to="A"), dict(t=1.8667, by="A", to="B", big=True), dict(t=3.22, by="B", to="A"),
+             dict(t=3.8667, by="A", to="B", big=True), dict(t=6.95, by="A", to="B", big=True), dict(t=7.5667, by="A", to="B"), dict(t=7.8667, by="A", to="B", big=True)]
+    base["shots"] = ks.cut_plan(beats, base["shots"])
+    base["fx"]["invert"] = ["kick", "clash"]
+    base["fx"]["speed_lines"] = [[1.78, 1.98], [3.76, 4.40], [6.40, 6.97], [7.44, 7.60], [7.80, 8.00]]
     base["impact_cuts"] = dict(kinds=["kick", "clash"], hold=0.2,
                                angles=[dict(yaw=35, pitch=4, scale=3.0, lens=28, hue=0), dict(yaw=-40, pitch=-6, scale=2.6, lens=26, dutch=6.0, hue=1)],
                                per_kind=dict(clash=[dict(yaw=28, pitch=2, scale=2.4, lens=30, hue=3)]))
     base["anime"] = dict(base["anime"], trails=True, zoom_blur=True, roll=True)
-    base["stepping"] = dict(hold=2, ones_around_hits=4, hold_camera=True)
+    base["stepping"] = dict(hold=2, ones_around_hits=7, hold_camera=True)   # 当たりの前後 7 コマは 1 コマ打ち(同じ絵が続く割合を参考の 33% 以下に)
     base["name"] = "shot_fight01"
     return base, rep
 

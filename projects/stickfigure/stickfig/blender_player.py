@@ -259,6 +259,8 @@ for f, fr in enumerate(PLAN["frames"], start=1):
         set_chain(F["leg" + ra], -p["rl"] * s, (-p["rl"] + p["rk"]) * s)
         F["arm" + fa][0].scale = (1, 1, 1 + p["st"])
         F["leg" + fa][0].scale = (1, 1, 1 + p["lst"])
+        F["arm" + ra][0].scale = (1, 1, 1 + p.get("rst", 0.0))      # 後ろの手足の伸び(アッパー・後ろ回し蹴りのスミア)
+        F["leg" + ra][0].scale = (1, 1, 1 + p.get("rlst", 0.0))
         for o in F["objs"]:
             o.keyframe_insert("location", frame=f)
             o.keyframe_insert("rotation_euler", frame=f)

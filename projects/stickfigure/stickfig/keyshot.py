@@ -28,7 +28,8 @@ LIMBS = dict(f_foot=("fl", "fk", "front_leg", (-2.2, 2.2), (0.0, 2.7)),
              r_foot=("rl", "rk", "rear_leg", (-2.2, 2.2), (0.0, 2.7)),
              f_hand=("fa", "fe", "front_arm", (-3.3, 3.3), (-0.05, 2.9)),
              r_hand=("ra", "re", "rear_arm", (-3.3, 3.3), (-0.05, 2.9)))
-BODY = ("x", "hz", "lean", "ht", "spin", "rz", "roll")
+ZERO_BEFORE = ("rz", "roll", "spin", "st", "lst", "rst", "rlst", "shake")   # 書く前の時間は 0 とみなす項目
+BODY = ("x", "hz", "lean", "ht", "spin", "rz", "roll", "st", "lst", "rst", "rlst")   # st/lst/rst/rlst: 前/後ろの腕・脚の伸び(当たりの瞬間の「伸び」。骨格の計算には入れない)
 
 
 def ease(u: float, kind: str) -> float:
@@ -150,6 +151,9 @@ def _body_at(track: List[dict], t: float) -> dict:
         ks = [k for k in track if key in k]
         if not ks:
             continue
+        if key in ZERO_BEFORE and ks[0]["t"] > track[0]["t"]:      # 初めて書いたキーより前は既定値(0)。前は最初の値が冒頭まで使われ、アッパーで浮く値 0.12 のまま最初から浮いていた
+            t_prev = max(k["t"] for k in track if k["t"] < ks[0]["t"])   # 0 から動き出すのは直前のキーから(冒頭から少しずつ浮いていくのを防ぐ)
+            ks = [dict(t=track[0]["t"], **{key: 0.0}), dict(t=t_prev, **{key: 0.0})] + ks
         k0, k1, u = _seg(ks, t)
         out[key] = _lerp(float(k0[key]), float(k1[key]), ease(u, k1.get("ease", "inout")))
     for key in ("dir", "face"):
@@ -176,7 +180,7 @@ def bake(tracks: Dict[str, List[dict]], actor: dict, fps: int = 30, t_end: Optio
         s = 1 if float(b.get("dir", 1)) >= 0 else -1
         sh = float(b.get("shake", 0.0))
         x = float(b.get("x", base_x)) + (sh * (1 if (f // 2) % 2 == 0 else -1) if sh else 0.0)   # 震え: 2 コマごとに左右・上下に小さく(力んでいる)
-        for key in ("hz", "lean", "ht", "spin", "rz", "roll"):
+        for key in ("hz", "lean", "ht", "spin", "rz", "roll", "st", "lst", "rst", "rlst"):
             if key in b:
                 pose[key] = float(b[key])
         if sh:
@@ -211,10 +215,34 @@ def bake(tracks: Dict[str, List[dict]], actor: dict, fps: int = 30, t_end: Optio
             if report is not None and e > 0.02:
                 report.append((round(t, 2), limb, round(e, 3)))
         keys.append(dict(t=round(t, 4), dx=round(x - base_x, 5), abs=True, face=b.get("face", "fight"),
-                         **{kk: round(float(pose[kk]), 5) for kk in ("fa", "fe", "ra", "re", "fl", "fk", "rl", "rk", "lean", "hz", "ht", "spin", "rz", "roll", "dir")}))
+                         **{kk: round(float(pose.get(kk, 0.0)), 5) for kk in ("fa", "fe", "ra", "re", "fl", "fk", "rl", "rk", "lean", "hz", "ht", "spin", "rz", "roll", "dir", "st", "lst", "rst", "rlst")}))
     if report is not None:
         report.insert(0, ("worst", round(worst, 4)))
     return keys
+
+
+def cut_plan(beats: List[dict], base: List[dict], wide: float = 3.4, min_gap: float = 0.16) -> List[dict]:
+    """当たりごとのカット割りを足す(アニメの戦いの「寄り → 当たりの角度 → 反応 → 引き」)。
+    beats: [{t: 当たりの時刻, by: 打つ側, to: 受ける側, big: 大技なら True}]。base: 台本のカット(当たりの周りは置き換える)。
+    角度は当たりごとに左右を入れ替える(同じ側から続けて撮らない)。カットは min_gap 秒より短くしない。"""
+    cuts = []
+    side = 1
+    for i, b in enumerate(sorted(beats, key=lambda q: q["t"])):
+        tc, by, to, big = float(b["t"]), b["by"], b["to"], bool(b.get("big"))
+        side = -side
+        cuts.append(dict(t=round(tc - (0.34 if big else 0.24), 3), follow=by, scale=2.1 if big else 2.4, yaw=24.0 * side, pitch=3.0, lens=34.0, target_z=1.05, lag=0.0))   # 溜め: 打つ側に寄る
+        cuts.append(dict(t=round(tc - 2 / 30, 3), follow="mid", scale=2.5 if big else 2.8, yaw=-32.0 * side, pitch=(-7.0 if big else 2.0), lens=30.0, target_z=1.1, lag=0.0))   # 当たり: 反対側・大技は下から
+        cuts.append(dict(t=round(tc + (0.22 if big else 0.16), 3), follow=to, scale=2.9 if big else 3.0, yaw=14.0 * side, pitch=3.0, lens=36.0, target_z=0.95, lag=0.15))     # 反応: 受けた側
+        cuts.append(dict(t=round(tc + (0.55 if big else 0.40), 3), follow="mid", scale=wide, yaw=-5.0, pitch=3.0, lens=40.0, target_z=0.95, lag=0.25))                         # 引き
+    spans = [(c["t"] - 0.05, c["t"] + 0.6) for c in cuts]
+    keep = [c for c in base if not any(a <= c["t"] <= b for a, b in spans)]
+    out = sorted(keep + cuts, key=lambda c: c["t"])
+    res = []
+    for c in out:                                         # 短すぎるカットは前を消す(後のカットを優先)
+        if res and c["t"] - res[-1]["t"] < min_gap:
+            res.pop()
+        res.append(c)
+    return res
 
 
 def bake_prop(track: List[dict], fps: int = 30, t_end: Optional[float] = None) -> List[list]:
