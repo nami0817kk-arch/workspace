@@ -683,7 +683,7 @@ class _OverallHeader extends StatelessWidget {
             const SizedBox(height: 4),
             // 素質の星は途中で折れないよう、「素質」と「今年」を別の塊にして並べる
             Wrap(spacing: 14, children: [
-              Text('素質 ${potentialStars(game.player.potential)}',
+              Text('才能 ${talentStars(game.player.potential)}',
                   key: const Key('overall-delta')),
               if (delta != null && delta != 0)
                 Text('今年 ${delta > 0 ? '+' : ''}$delta'),
@@ -1027,10 +1027,9 @@ Ability _weakest(Player p) =>
 String _abilityNote(Player p, Ability a) {
   if (a == _weakest(p) && abilitiesOf(p.role).length > 1) return '伸ばしどころ';
   final v = p.of(a);
-  final g = p.gift(a) == 0 ? '' : ' ${giftLabel(p.gift(a))}';
-  if (v >= 90) return 'S$g';
+  if (v >= 90) return 'S';
   final next = (v ~/ 10 + 1) * 10;
-  return 'あと+${next - v}$g';
+  return 'あと+${next - v}';
 }
 
 class _AbilityCard extends StatelessWidget {
@@ -1078,11 +1077,11 @@ class _AbilityCard extends StatelessWidget {
                   RankBadge(value: p.of(a)),
                   const SizedBox(width: 6),
                   SizedBox(
-                      width: 60,
+                      width: 92,
                       child: Tooltip(
                           message: p.gift(a) == 0
                               ? abilityHint(a)
-                              : '${abilityHint(a)} 天賦: ${giftHint(p.gift(a))}',
+                              : '${abilityHint(a)} 才能: ${giftHint(p.gift(a))}',
                           triggerMode: TooltipTriggerMode.tap,
                           child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1094,13 +1093,21 @@ class _AbilityCard extends StatelessWidget {
                                 FittedBox(
                                     fit: BoxFit.scaleDown,
                                     alignment: Alignment.centerLeft,
-                                    child: Text(_abilityNote(p, a),
+                                    child: Text.rich(
+                                        TextSpan(children: [
+                                          TextSpan(
+                                              text: giftStars(p.gift(a)),
+                                              style: const TextStyle(
+                                                  color: Color(0xFFF9A825))),
+                                          TextSpan(
+                                              text: ' ${_abilityNote(p, a)}',
+                                              style: TextStyle(
+                                                  color: a == _weakest(p)
+                                                      ? const Color(0xFFEF6C00)
+                                                      : Colors.grey)),
+                                        ]),
                                         key: Key('note-${a.name}'),
-                                        style: TextStyle(
-                                            fontSize: 9,
-                                            color: a == _weakest(p)
-                                                ? const Color(0xFFEF6C00)
-                                                : Colors.grey))),
+                                        style: const TextStyle(fontSize: 10))),
                               ]))),
                   SizedBox(
                       width: 54,

@@ -3,6 +3,7 @@ import 'dart:math';
 import 'characters.dart';
 import 'life.dart';
 import 'player.dart';
+import 'talent.dart';
 import 'training.dart';
 import 'traits.dart';
 
@@ -55,6 +56,21 @@ Player _gain(Player p, Ability a, int n) {
 /// 役割に合う能力(打者は第1候補、投手は第2候補)に足す。
 Player _byRole(Player p, Ability bat, Ability pit, int n) =>
     _gain(_gain(p, bat, n), pit, n);
+
+/// 素質(才能の総合。星5つの元の数字)を上げる。
+Player _potential(Player p, int n) =>
+    p.copyWith(potential: (p.potential + n).clamp(0, 100));
+
+/// 重点の能力 `focus` の天賦を1段階上げる(使わない能力・上限なら、いちばん低い能力)。
+EventChoice _giftChoice(String label, {int fatigue = 0, int morale = 0}) =>
+    EventChoice(
+      label,
+      (p, c, focus) => (
+        player: giftUp(p, focus),
+        condition:
+            c.copyWith(fatigue: c.fatigue + fatigue, morale: c.morale + morale),
+      ),
+    );
 
 /// 特性を足す。持てない(もう上限・重複・矛盾)ときは、選んだことが無駄にならないよう、
 /// いちばん低い能力を+1にする。
@@ -325,6 +341,41 @@ final List<ChildhoodStep> childhoodSteps = [
       }),
     ]),
     const ['親友とケンカして、自分から謝った', '親友とケンカして、野球に打ち込んだ', '親友とのケンカを、コーチに助けてもらった'],
+    const [],
+    2,
+  ),
+  // ── 才能が上がる分かれ道(素質の星・能力ごとの天賦の星が増える) ──
+  ChildhoodStep(
+    7,
+    GameEvent('kid-talent-coach', '近所の元選手が、君の動きを見て「筋がいいね」と声をかけてくれた。', [
+      _c('「ぜひ、教えてください!」', (p) => _potential(p, 4), fatigue: 10),
+      _c('家族に相談して、通うか決める', (p) => _potential(p, 2),
+          morale: 5, onCast: (cast, rng) => cast.family?.addBond(10)),
+      _c('今は友だちと遊びたい', (p) => p, morale: 15),
+    ]),
+    const ['元選手に才能を見いだされ、教わった', '元選手の誘いを、家族と相談して決めた', '才能を認められたが、友だちと遊ぶほうを選んだ'],
+    const [],
+    2,
+  ),
+  ChildhoodStep(
+    10,
+    GameEvent('kid-talent-mentor', '憧れの選手の野球教室に参加できた。直接アドバイスをもらえる!', [
+      _c('全部メモして、毎日実践する', (p) => _potential(p, 3), fatigue: 8),
+      _giftChoice('いちばん得意にしたい動きを、教えてもらう', morale: 5),
+      _c('サインをもらって、大喜びする', (p) => p, morale: 20),
+    ]),
+    const ['憧れの選手の教えを、毎日実践した', '憧れの選手に、得意な動きを教わった', '憧れの選手のサインをもらって大喜びした'],
+    const [],
+    2,
+  ),
+  ChildhoodStep(
+    11,
+    GameEvent('kid-talent-flash', '練習の途中、体の使い方がふっとつかめた気がする!', [
+      _giftChoice('この感覚を、重点の能力で繰り返す', fatigue: 6),
+      _c('もう少し、いろいろ試してみる', (p) => _potential(p, 3), fatigue: 8),
+      _c('気のせいかな、と遊びに戻る', (p) => p, morale: 12),
+    ]),
+    const ['体の使い方をつかみ、得意を伸ばした', '感覚をつかみかけて、いろいろ試した', '感覚を気にせず、遊びに戻った'],
     const [],
     2,
   ),

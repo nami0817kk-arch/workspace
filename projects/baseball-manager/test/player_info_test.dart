@@ -207,7 +207,11 @@ void main() {
       });
       expect(overallOf(s), closeTo(60, 1e-9));
       expect(potentialStars(0), '★☆☆☆☆');
-      expect(potentialStars(50), '★★★☆☆');
+      expect(potentialStars(41), '★☆☆☆☆');
+      expect(potentialStars(42), '★★☆☆☆');
+      expect(potentialStars(50), '★★☆☆☆');
+      expect(potentialStars(60), '★★★☆☆');
+      expect(potentialStars(70), '★★★★☆');
       expect(potentialStars(100), '★★★★★');
     });
   });

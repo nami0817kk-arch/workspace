@@ -409,6 +409,17 @@ String eventResultText(Player p0, Condition c0, Player p1, Condition c1,
   final f = c1.fatigue - c0.fatigue;
   if (f != 0) parts.add('疲れ ${sgn(f)}');
   if (c1.injuredTerms > c0.injuredTerms) parts.add('怪我');
+  // 才能(素質・天賦)は星5つで見せる。星が変わらない小さな上昇も知らせる。
+  if (p1.potential > p0.potential) {
+    final s0 = talentStarCount(p0.potential), s1 = talentStarCount(p1.potential);
+    parts.add(s1 > s0 ? '才能 ${starsOf(s0)}→${starsOf(s1)}' : '才能が伸びた');
+  }
+  for (final a in abilitiesOf(p1.role)) {
+    if (p1.gift(a) > p0.gift(a)) {
+      parts.add(
+          '${abilityLabel(a)}の才能 ${giftStars(p0.gift(a))}→${giftStars(p1.gift(a))}');
+    }
+  }
   for (final t in p1.traits) {
     if (!p0.traits.contains(t)) parts.add('特性「${t.label}」');
   }
