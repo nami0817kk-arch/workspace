@@ -317,6 +317,32 @@ void main() {
       expect(find.byKey(const Key('remove-ads')), findsNothing);
     });
 
+    testWidgets('疲れた状態の「動画で休む」は、狭い画面・大きい文字でも溢れず、押すと疲れが抜ける', (t) async {
+      final (m, ads, _) = await _open();
+      final c = GameController(rng: Random(3), money: m);
+      c.newGame('疲れ', Role.batter);
+      c.game!.condition = c.game!.condition.copyWith(fatigue: 85);
+      t.view.physicalSize = const Size(320, 900);
+      t.view.devicePixelRatio = 1.0;
+      t.platformDispatcher.textScaleFactorTestValue = 1.6;
+      addTearDown(t.view.resetPhysicalSize);
+      addTearDown(t.view.resetDevicePixelRatio);
+      addTearDown(t.platformDispatcher.clearTextScaleFactorTestValue);
+      await t.pumpWidget(BaseballManagerApp(controller: c));
+      await t.pumpAndSettle();
+      // 最初の案内などが出ていたら閉じる
+      expect(t.takeException(), isNull);
+      final button = find.byKey(const Key('ad-recovery'));
+      await t.ensureVisible(button);
+      expect(button, findsOneWidget);
+      expect(t.takeException(), isNull);
+      await t.tap(button);
+      await t.pumpAndSettle();
+      expect(ads.rewarded, 1);
+      expect(c.game!.condition.fatigue, 25);
+      expect(find.byKey(const Key('ad-recovery')), findsNothing);
+    });
+
     testWidgets('ストアに繋がらないときは購入の項目を出さない', (t) async {
       final (m, _, store) = await _open();
       store.available = false;
