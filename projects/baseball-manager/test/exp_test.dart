@@ -130,7 +130,9 @@ void _roleFactorTests() {
     }
 
     expect(roleExpFactor(Role.batter), closeTo(1.0, 1e-9));
-    expect(perAbility(Role.pitcher), closeTo(perAbility(Role.batter), 1e-9));
+    // 投手だけ、プロ入り率・レジェンド率を打者に揃えるため少し遅くしてある(pitcherPace)
+    expect(perAbility(Role.pitcher),
+        closeTo(perAbility(Role.batter) * pitcherPace, 1e-9));
     expect(perAbility(Role.twoWay), closeTo(perAbility(Role.batter), 1e-9));
     expect(roleExpFactor(Role.pitcher), lessThan(1.0));
   });
