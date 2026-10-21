@@ -304,6 +304,5 @@ double studyMultiplier(Set<Trait> t) => t.contains(Trait.studious) ? 1.4 : 1.0;
 int worldBonus(Set<Trait> t) => t.contains(Trait.worldStage) ? 10 : 0;
 
 /// 練習の出来の振れ方。強運は失敗が半分・大成功が1.6倍(平均は少し上がる)。
-({double bad, double great}) outcomeLuck(Set<Trait> t) => t.contains(Trait.fortune)
-    ? (bad: 0.5, great: 1.6)
-    : (bad: 1.0, great: 1.0);
+({double bad, double great}) outcomeLuck(Set<Trait> t) =>
+    t.contains(Trait.fortune) ? (bad: 0.5, great: 1.6) : (bad: 1.0, great: 1.0);

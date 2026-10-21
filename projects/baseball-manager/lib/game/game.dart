@@ -668,8 +668,8 @@ class Game {
 
   /// 天賦(才能の偏り)を書き換える。-2〜+2。
   void adminSetGift(Ability a, int v) {
-    player = player.copyWith(
-        gifts: {...player.gifts, a: v.clamp(giftMin, giftMax)});
+    player =
+        player.copyWith(gifts: {...player.gifts, a: v.clamp(giftMin, giftMax)});
   }
 
   /// 覚醒済みの印を書き換える(もう一度覚醒を試したいとき)。
@@ -995,6 +995,7 @@ class Game {
         prevGames: proBefore.isEmpty ? null : proBefore.last.line.games,
         fielding: player.abilities[Ability.fielding] ?? 0,
         isBatter: league.line.hasBatting && !league.line.hasPitching,
+        titles: titles,
       );
       final rec = SeasonRecord(
         age: player.age,
@@ -1013,6 +1014,12 @@ class Game {
       monthRows = [];
       records.add(rec);
       _judgeGoal(rec);
+      // N年連続でタイトルを獲ったとき。
+      final streak = currentTitleStreak(records);
+      if (const [3, 5, 8].contains(streak)) {
+        log.add('$streak年連続でタイトルを獲得!');
+        _note('title', '$streak年連続でタイトルを獲得');
+      }
       if (league.missed > 0) log.add('怪我で${league.missed}試合を欠場した。');
       if (league.rank == 1) {
         championships++;
@@ -1022,6 +1029,11 @@ class Game {
         if (wonSeries(player.name, player.age, league.line)) {
           log.add('日本シリーズを制して、日本一に輝いた!');
           awards.add('日本一');
+          // シリーズMVP: 日本一の年に、打撃か投球がとくに良かった選手。
+          if ((league.line.ops ?? 0) >= 0.850 ||
+              (league.line.hasPitching && (league.line.era ?? 99) <= 2.50)) {
+            awards.add('シリーズMVP');
+          }
         } else {
           log.add('日本シリーズでは惜しくも敗れた。');
         }
@@ -1074,6 +1086,11 @@ class Game {
       }
     } else if (tournament != null) {
       achievements.add(ach);
+      // アマの大会の表彰(大会優秀選手・大会最優秀選手)。
+      final ampAwards = tournamentAwardsOf(
+          roundsWon: tournament.roundsWon,
+          rounds: tournament.rounds,
+          rating: tournament.line.rating);
       final rec = SeasonRecord(
         age: player.age,
         stage: stage,
@@ -1081,10 +1098,15 @@ class Game {
         roundsWon: tournament.roundsWon,
         rounds: tournament.rounds,
         rivalWon: rivalWon,
+        awards: ampAwards,
       );
       records.add(rec);
       _judgeGoal(rec);
       _logRounds(tournament);
+      for (final w in ampAwards) {
+        log.add('表彰: $w!');
+        _note('title', w);
+      }
       if (tournament.champion) {
         championships++;
         log.add('夏の大会で優勝した!');
@@ -1251,6 +1273,7 @@ class Game {
       proTeam = team;
       final round = draftRound(margin);
       log.add('ドラフトで指名された! $team から$round位指名。');
+      log.add(pressConferenceNote(round, uniformNumberOf(Stage.pro, player)));
       final mates = classmatesOf(player.name, team);
       log.add(
           '同期入団: ${[for (final m in mates) '${m.$1}(${m.$2}位)'].join('・')}');

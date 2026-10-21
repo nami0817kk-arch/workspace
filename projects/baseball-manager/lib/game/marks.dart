@@ -32,7 +32,42 @@ List<String> careerMarks(Line before, Line after) {
       (t) => t == 1 ? 'プロ初勝利' : '通算$t勝');
   cross(before.strikeouts, after.strikeouts, const [500, 1000, 2000, 3000],
       (t) => '通算$t奪三振');
+  // 実際の野球にある、長く第一線で続けた人の記録。
+  cross(before.games, after.games, const [1000, 1500, 2000], (t) => '通算$t試合出場');
+  cross(before.walks, after.walks, const [1000], (t) => '通算$t四球');
   return m;
+}
+
+/// プロの記録で、タイトルを獲った年が連続した最長の年数(「N年連続タイトル」)。
+int longestTitleStreak(Iterable<SeasonRecord> records) {
+  var best = 0, run = 0;
+  for (final r in records) {
+    if (r.stage != Stage.pro) continue;
+    run = r.titles.isEmpty ? 0 : run + 1;
+    if (run > best) best = run;
+  }
+  return best;
+}
+
+/// 今の年までで、タイトルの連続が何年か(直近から数える)。
+int currentTitleStreak(Iterable<SeasonRecord> records) {
+  var run = 0;
+  for (final r
+      in records.where((r) => r.stage == Stage.pro).toList().reversed) {
+    if (r.titles.isEmpty) break;
+    run++;
+  }
+  return run;
+}
+
+/// 入団会見のひとこと。ドラフトの順位(`round`)で、期待のされ方が違う。
+String pressConferenceNote(int round, int? number) {
+  final n = number == null ? '' : '背番号$number。';
+  return switch (round) {
+    1 => '入団会見: $n「1位指名の期待に応えたい。新人王を狙います」',
+    2 || 3 => '入団会見: $n「早く一軍で戦力になりたい」',
+    _ => '入団会見: $n「まずは二軍で結果を出して、一軍を目指します」',
+  };
 }
 
 /// 愛称。いちばん高い能力から決める(同じ選手なら同じ)。
