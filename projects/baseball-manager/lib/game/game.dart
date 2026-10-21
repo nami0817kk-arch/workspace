@@ -24,6 +24,7 @@ import 'marks.dart';
 import 'talent.dart';
 import 'traits.dart';
 import 'tryout.dart';
+import 'final_moment.dart';
 import 'training.dart' show abilityCap;
 
 /// いま何を待っているか。画面はこれを見て出すものを決める。
@@ -163,6 +164,9 @@ class Game {
 
   /// トライアウトをもう使ったか(一生に一度)。
   bool tryoutUsed = false;
+
+  /// 夏の大会の決勝を前にして、見せ場の決断を待っている途中経過。決まれば null に戻る(保存する)。
+  FinalMoment? pendingFinal;
   int proYears = 0;
   int peakOverall = 0;
   int championships = 0;
@@ -547,10 +551,19 @@ class Game {
     }
     if (isTournamentSlot(stage, slot)) {
       _playSummer();
+      if (pendingFinal != null) {
+        // 決勝の見せ場の決断を待つ(決まったら `_resolveFinalMoment` が続きを進める)。
+        _eventFocus = f;
+        return;
+      }
     } else if (stage == Stage.pro && slot < 6) {
       _playLeagueMonth();
     }
+    _finishTurn(f, share);
+  }
 
+  /// 行動のあとの続き: 分かれ道・出来事、なければ次のターンへ。
+  void _finishTurn(Ability f, double share) {
     // 幼少期の分かれ道は、その歳の2回目の行動のあとに必ず出る(くじでは出ない)。
     final kid = stage != Stage.pro && stage != Stage.retired
         ? childhoodStepFor(player.age, childhood, slot)?.event
@@ -603,10 +616,28 @@ class Game {
     }
   }
 
+  /// 決勝の見せ場の決断。決まったら決勝の勝ち負けを決め、大会の続き(記録・ライバル・世界大会)を進める。
+  void _resolveFinalMoment(int index) {
+    final m = pendingFinal!;
+    final stance = finalStances(player)[index];
+    pendingEvent = null;
+    pendingFinal = null;
+    phase = Phase.term;
+    log.add('決勝の最終回、${player.name}は「${stance.$1}」を選んだ。');
+    final bonus = finalBonus(index, player, rng);
+    final t = finishFinal(m, bonus, rng);
+    _summerAftermath(t, null);
+    _finishTurn(_eventFocus, slotShare(stage));
+  }
+
   void resolveEvent(int index) {
     _require(Phase.event);
     if (pendingEvent!.id == tryoutEventId) {
       _resolveTryout(index);
+      return;
+    }
+    if (pendingEvent!.id == finalMomentId) {
+      _resolveFinalMoment(index);
       return;
     }
     final ch = pendingEvent!.choices[index];
@@ -990,17 +1021,29 @@ class Game {
     final team = l.team +
         traitTeamBonus(player.traits) +
         positionTeamAdjust(player, effectivePos);
-    final tournament = isPro
-        ? null
-        : playTournament(
-            fighter,
-            teamLevel: team,
-            opponents: l.opponents,
-            rng: rng,
-            condition: condition.value,
-          );
-    final league = isPro ? _finishLeague(fighter, team, l.opponents) : null;
+    if (isPro) {
+      _summerAftermath(null, _finishLeague(fighter, team, l.opponents));
+      return;
+    }
+    final prog = playTournamentToFinal(
+      fighter,
+      teamLevel: team,
+      opponents: l.opponents,
+      rng: rng,
+      condition: condition.value,
+    );
+    if (prog.moment != null) {
+      // 決勝まで勝ち上がった。勝負を決める場面の決断を、選んでもらう。
+      pendingFinal = prog.moment;
+      pendingEvent = finalMomentEvent(player);
+      phase = Phase.event;
+      return;
+    }
+    _summerAftermath(prog.done, null);
+  }
 
+  /// 夏の大会(またはプロのシーズン)の結果が出たあとの、記録・ライバル・世界大会など。
+  void _summerAftermath(Tournament? tournament, LeagueSeason? league) {
     var ach = tournament?.achievement ?? 0;
     bool? rivalWon;
     final rival = cast.rival;
@@ -1421,6 +1464,7 @@ class Game {
         'difficulty': difficulty.name,
         'awakened': awakened,
         'tryoutUsed': tryoutUsed,
+        'pendingFinal': pendingFinal?.toJson(),
       };
 
   /// 項目を足すときは既定値を置く(既存セーブを壊さない)。
@@ -1449,6 +1493,10 @@ class Game {
     g.focusStreak = (j['focusStreak'] as num?)?.toInt() ?? 0;
     g.awakened = j['awakened'] == true;
     g.tryoutUsed = j['tryoutUsed'] == true;
+    final pf = j['pendingFinal'];
+    if (pf is Map) {
+      g.pendingFinal = FinalMoment.fromJson(pf.cast<String, dynamic>());
+    }
     g.turnCount = (j['turnCount'] as num?)?.toInt() ?? 0;
     g.lastCoachTurn = (j['lastCoachTurn'] as num?)?.toInt() ?? 0;
     g.monthRows = [
@@ -1465,7 +1513,10 @@ class Game {
     g.pendingEvent =
         events.where((e) => e.id == j['pendingEvent']).firstOrNull ??
             childhoodStepById(j['pendingEvent'] as String?)?.event ??
-            (j['pendingEvent'] == tryoutEventId ? tryoutEvent : null);
+            (j['pendingEvent'] == tryoutEventId ? tryoutEvent : null) ??
+            (j['pendingEvent'] == finalMomentId
+                ? finalMomentEvent(g.player)
+                : null);
     if (g.phase == Phase.event && g.pendingEvent == null) g.phase = Phase.term;
     g._eventFocus = pick(Ability.values, j['eventFocus'], Ability.contact);
     g.route = Course.values.where((r) => r.name == j['route']).firstOrNull;

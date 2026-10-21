@@ -423,7 +423,137 @@ Tournament playTournament(
       roundsWon: won, rounds: opponents.length, line: line, games: games);
 }
 
-/// プロの1シーズン(リーグ戦)。
+/// 決勝の直前まで進めた途中経過。決勝で「見せ場の決断」を選べるように、決勝の勝ち負けだけ未決にしてある。
+/// (決勝の個人成績 `finalLine` は先に決めてあり、決断で変わるのは勝つ確率 `pWin` だけ)。
+class FinalMoment {
+  const FinalMoment({
+    required this.games,
+    required this.line,
+    required this.roundsWon,
+    required this.rounds,
+    required this.opponent,
+    required this.finalLine,
+    required this.pWin,
+  });
+
+  /// 決勝の前までの試合(全部勝っている)。
+  final List<TournamentGame> games;
+  final Line line;
+  final int roundsWon;
+  final int rounds;
+  final int opponent;
+  final Line finalLine;
+  final double pWin;
+
+  Map<String, dynamic> toJson() => {
+        'games': [
+          for (final g in games)
+            {'opponent': g.opponent, 'won': g.won, 'line': g.line.toJson()}
+        ],
+        'line': line.toJson(),
+        'roundsWon': roundsWon,
+        'rounds': rounds,
+        'opponent': opponent,
+        'finalLine': finalLine.toJson(),
+        'pWin': pWin,
+      };
+
+  factory FinalMoment.fromJson(Map<String, dynamic> j) => FinalMoment(
+        games: [
+          for (final g in (j['games'] as List? ?? const []))
+            TournamentGame(
+              opponent: ((g as Map)['opponent'] as num).toInt(),
+              won: g['won'] == true,
+              line: Line.fromJson((g['line'] as Map).cast<String, dynamic>()),
+            )
+        ],
+        line: Line.fromJson((j['line'] as Map).cast<String, dynamic>()),
+        roundsWon: (j['roundsWon'] as num).toInt(),
+        rounds: (j['rounds'] as num).toInt(),
+        opponent: (j['opponent'] as num).toInt(),
+        finalLine:
+            Line.fromJson((j['finalLine'] as Map).cast<String, dynamic>()),
+        pWin: (j['pWin'] as num).toDouble(),
+      );
+}
+
+/// `playTournamentToFinal` の結果。決勝まで進んだら `moment`(決勝は未決)、そこで負けていたら `done`。
+class TournamentProgress {
+  const TournamentProgress({this.done, this.moment});
+  final Tournament? done;
+  final FinalMoment? moment;
+}
+
+/// `playTournament` と同じ順で、**決勝の勝ち負けの手前まで**進める。
+/// 決勝より前で負ければ、その結果(`done`)を返す。決勝まで来たら `moment`。
+TournamentProgress playTournamentToFinal(
+  Player p, {
+  required int teamLevel,
+  required List<int> opponents,
+  required Random rng,
+  int condition = 50,
+}) {
+  var line = const Line();
+  var won = 0;
+  final games = <TournamentGame>[];
+  for (var i = 0; i < opponents.length; i++) {
+    final opp = opponents[i];
+    final g = playGame(p, opp, rng);
+    final pWin = (0.5 +
+            (teamLevel - opp) / 100 +
+            (g.rating - 50) / 200 +
+            (condition + tournamentBonus(p.traits) - 50) / 500)
+        .clamp(0.0, 1.0);
+    if (i == opponents.length - 1) {
+      // 決勝: 勝ち負けは、見せ場の決断のあとで決める。
+      return TournamentProgress(
+        moment: FinalMoment(
+          games: games,
+          line: line,
+          roundsWon: won,
+          rounds: opponents.length,
+          opponent: opp,
+          finalLine: g,
+          pWin: pWin,
+        ),
+      );
+    }
+    line += g;
+    final roll = rng.nextDouble();
+    final win = isShutout(g) || roll < pWin;
+    games.add(TournamentGame(opponent: opp, won: win, line: g));
+    if (!win) {
+      return TournamentProgress(
+          done: Tournament(
+              roundsWon: won,
+              rounds: opponents.length,
+              line: line,
+              games: games));
+    }
+    won++;
+  }
+  // 試合が無い(通常は無い)。
+  return TournamentProgress(
+      done: Tournament(
+          roundsWon: won, rounds: opponents.length, line: line, games: games));
+}
+
+/// 決勝を決める。`bonus` は見せ場の決断で変わる勝つ確率(足し算)。無失点の登板は負けない(`isShutout`)。
+Tournament finishFinal(FinalMoment m, double bonus, Random rng) {
+  final roll = rng.nextDouble();
+  final win = isShutout(m.finalLine) || roll < (m.pWin + bonus).clamp(0.0, 1.0);
+  return Tournament(
+    roundsWon: m.roundsWon + (win ? 1 : 0),
+    rounds: m.rounds,
+    line: m.line + m.finalLine,
+    games: [
+      ...m.games,
+      TournamentGame(opponent: m.opponent, won: win, line: m.finalLine),
+    ],
+  );
+}
+
+/// プロのシーズン(リーグ戦)。
 class LeagueSeason {
   const LeagueSeason({
     required this.games,

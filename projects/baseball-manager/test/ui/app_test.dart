@@ -373,6 +373,12 @@ void _rankTests() {
       }
       await t.tap(find.byKey(const Key('act-train')));
       await t.pumpAndSettle();
+      // 決勝まで来たら、見せ場の作戦を選ぶ。
+      if (c.game!.phase == Phase.event &&
+          c.game!.pendingEvent!.id == 'final-moment') {
+        await t.tap(find.byKey(const Key('event-1')));
+        await t.pumpAndSettle();
+      }
       if (find.text('優勝!').evaluate().isNotEmpty) return;
       while (find.byKey(const Key('milestone-ok')).evaluate().isNotEmpty) {
         await t.tap(find.byKey(const Key('milestone-ok')));
@@ -2178,6 +2184,35 @@ void _rankTests() {
     await t.pumpAndSettle();
     await _dismissMilestones(t);
     expect(c.game!.phase, Phase.retired);
+    expect(t.takeException(), isNull);
+  });
+
+  testWidgets('決勝の見せ場: 見出しと3つの作戦が出て、選ぶと大会の結果が出る', (t) async {
+    final c = await _start(t);
+    Game? g;
+    for (var sd = 0; sd < 60 && g == null; sd++) {
+      final x = _until(
+          (g) => g.phase == Phase.event && g.pendingEvent?.id == 'final-moment',
+          seed: sd,
+          potential: 100);
+      if (x.phase == Phase.event) g = x;
+    }
+    expect(g, isNotNull);
+    c.adopt(g!);
+    await t.pumpAndSettle();
+    await _dismissMilestones(t);
+    expect(find.text('決勝の見せ場'), findsOneWidget);
+    expect(find.textContaining('決勝、最終回'), findsOneWidget);
+    for (var i = 0; i < 3; i++) {
+      expect(find.byKey(Key('event-$i')), findsOneWidget);
+    }
+    expect(find.textContaining('パワー'), findsWidgets);
+    final recs = g.records.length;
+    await t.tap(find.byKey(const Key('event-1')));
+    await t.pumpAndSettle();
+    await _dismissMilestones(t);
+    expect(c.game!.records.length, recs + 1);
+    expect(c.game!.pendingFinal, isNull);
     expect(t.takeException(), isNull);
   });
 

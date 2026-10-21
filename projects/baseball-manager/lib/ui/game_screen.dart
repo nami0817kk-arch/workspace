@@ -1470,6 +1470,8 @@ class _AutoRevealState extends State<_AutoReveal> {
 String _eventKind(String id, Stage stage) {
   if (id.startsWith('kid-')) return '幼少期の分かれ道';
   if (id.startsWith('turn-')) return '${stageLabel(stage)}の分かれ道';
+  if (id == 'final-moment') return '決勝の見せ場';
+  if (id == 'tryout') return '戦力外通告';
   return '出来事';
 }
 

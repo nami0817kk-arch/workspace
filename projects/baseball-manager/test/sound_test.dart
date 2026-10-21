@@ -36,7 +36,9 @@ void main() {
     final c = GameController(rng: Random(3), sound: rec);
     c.newGame('テスト', Role.batter);
     void next() {
-      if (c.game!.phase == Phase.event) c.chooseEvent(0);
+      while (c.game!.phase == Phase.event) {
+        c.chooseEvent(0);
+      }
     }
 
     c.act(Plan.train);
