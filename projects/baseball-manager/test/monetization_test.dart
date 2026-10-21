@@ -320,8 +320,6 @@ void main() {
     testWidgets('疲れた状態の「動画で休む」は、狭い画面・大きい文字でも溢れず、押すと疲れが抜ける', (t) async {
       final (m, ads, _) = await _open();
       final c = GameController(rng: Random(3), money: m);
-      c.newGame('疲れ', Role.batter);
-      c.game!.condition = c.game!.condition.copyWith(fatigue: 85);
       t.view.physicalSize = const Size(320, 900);
       t.view.devicePixelRatio = 1.0;
       t.platformDispatcher.textScaleFactorTestValue = 1.6;
@@ -330,7 +328,12 @@ void main() {
       addTearDown(t.platformDispatcher.clearTextScaleFactorTestValue);
       await t.pumpWidget(BaseballManagerApp(controller: c));
       await t.pumpAndSettle();
-      // 最初の案内などが出ていたら閉じる
+      // 起動時の読み込みが済んでから選手を始める(読み込みが先に走ると、始めた選手が消える)
+      c.newGame('疲れ', Role.batter);
+      c.game!.condition =
+          c.game!.condition.copyWith(fatigue: 85, injuredTerms: 0);
+      c.notifyListeners();
+      await t.pumpAndSettle();
       expect(t.takeException(), isNull);
       final button = find.byKey(const Key('ad-recovery'));
       await t.ensureVisible(button);
