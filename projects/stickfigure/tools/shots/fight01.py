@@ -42,8 +42,8 @@ BEATS = [dict(t=1.08, by="A", to="B", limb="st", miss=True), dict(t=1.55, by="B"
 
 # 構え(2026-10-21「構えとかをもっとかっこよく」): 人ごとの型。構えている間の腰・前傾・顎と構えの腕を置き換える
 STYLE = dict(
-    A=dict(hz_drop=0.14, lean=0.22, ht=-0.12, guard_f=(1.75, 0.35), guard_r=(-0.30, 2.20)),   # 緑: 拳法。腰を落とした半身、前の手を相手へまっすぐ、後ろの拳は腰の脇
-    B=dict(hz_drop=0.11, lean=0.38, ht=-0.20, guard_f=(1.05, 2.35), guard_r=(0.65, 2.60)))    # 赤: 喧嘩屋。背を丸めた前のめり、両拳を顔の前に高く
+    A=dict(hz_drop=0.08, lean=0.22, ht=-0.12, guard_f=(1.75, 0.35), guard_r=(-0.30, 2.20)),   # 緑: 拳法。腰を落とした半身、前の手を相手へまっすぐ、後ろの拳は腰の脇
+    B=dict(hz_drop=0.06, lean=0.38, ht=-0.20, guard_f=(1.05, 2.35), guard_r=(0.65, 2.60)))    # 赤: 喧嘩屋。背を丸めた前のめり、両拳を顔の前に高く
 
 
 def stylize(tr, who):
@@ -247,8 +247,8 @@ def build_scene():
                palm=(0.00, 1.45), palm_follow=(0.25, 1.50))
     rep = []
     for it in range(3):
-        kb = ks.bake(stylize(tracks_b(tgt), "B"), aB, FPS, T_END, holds=HOLDS_B)
-        ka = ks.bake(stylize(tracks_a(tgt), "A"), aA, FPS, T_END, report=(rep if it == 2 else None), holds=HOLDS_A)
+        kb = ks.bake(ks.widen_stance(stylize(tracks_b(tgt), "B")), aB, FPS, T_END, holds=HOLDS_B)
+        ka = ks.bake(ks.widen_stance(stylize(tracks_a(tgt), "A")), aA, FPS, T_END, report=(rep if it == 2 else None), holds=HOLDS_A)
         sa = lambda t: skel(ka, aA, t)
         sb = lambda t: skel(kb, aB, t)
         jab_head = face(sb(1.10), -1)

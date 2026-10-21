@@ -253,6 +253,58 @@ def bake(tracks: Dict[str, List[dict]], actor: dict, fps: int = 30, t_end: Optio
     return keys
 
 
+def widen_stance(tracks: Dict[str, List[dict]], front_min: float = 0.90, rear_min: float = 0.96, cap: float = 0.985) -> Dict[str, List[dict]]:
+    """腰の高さに合わせて、踏んでいる足の幅を広げる(2026-10-21 ユーザー「足が変」「空気椅子みたい」)。
+    腰を下げても足幅が同じだと、前後の脚が両方 85° 折れて空気椅子に見えた。実際の構えは腰が低いほど足幅が広く、
+    後ろ脚はほぼ伸びて斜め後ろ、膝の曲がりは前脚が受け持つ。
+    後ろ足は脚が rear_min 以上、前足は front_min 以上伸びる位置まで開く。同じ位置で踏んでいる一続きのキーは同じだけ動かす(滑らない)。
+    どの時刻でも脚が cap を超えて伸びない範囲に抑える(届かず浮くのを防ぐ)。倒れ・空中の時刻は見ない。"""
+    L = fk.LEG_TOTAL
+    body = tracks["body"]
+    for limb in ("f_foot", "r_foot"):
+        ks_ = tracks.get(limb) or []
+        groups, cur = [], []
+        for k in ks_:
+            if "p" in k and abs(k["p"][1]) < 0.01 and (not cur or tuple(cur[-1]["p"]) == tuple(k["p"])):
+                cur.append(k)
+            else:
+                if cur:
+                    groups.append(cur)
+                cur = [k] if ("p" in k and abs(k["p"][1]) < 0.01) else []
+        if cur:
+            groups.append(cur)
+        for g in groups:
+            need, lo, hi = [], -9.0, 9.0                  # 足の x を動かす量: 必要量の候補と、伸びすぎない範囲
+            ok = True
+            for k in g:
+                b = _body_at(body, k["t"])
+                if abs(b.get("roll", 0.0)) > 0.3 or b.get("rz", 0.0) > 0.05:
+                    ok = False
+                    break
+                s = 1 if float(b.get("dir", 1)) >= 0 else -1
+                x, hz = float(b.get("x", 0.0)), float(b.get("hz", 0.8))
+                rel = (g[0]["p"][0] - x) * s                 # 腰から見た足の前後(前が +)
+                reach_cap = math.sqrt(max(0.0, (cap * L) ** 2 - hz * hz))
+                if rel < 0:                                   # 後ろ足: もっと後ろへ
+                    want = -math.sqrt(max(0.0, (rear_min * L) ** 2 - hz * hz))
+                    if rel > want:
+                        need.append((want - rel) * s)
+                    lo_, hi_ = (-reach_cap - rel) * s, 9.0 * s
+                else:                                         # 前足: もっと前へ
+                    want = math.sqrt(max(0.0, (front_min * L) ** 2 - hz * hz))
+                    if rel < want:
+                        need.append((want - rel) * s)
+                    lo_, hi_ = -9.0 * s, (reach_cap - rel) * s
+                lo, hi = max(lo, min(lo_, hi_)), min(hi, max(lo_, hi_))
+            if not ok or not need:
+                continue
+            d = max(need, key=abs)
+            d = max(lo, min(hi, d))
+            for k in g:
+                k["p"] = (round(k["p"][0] + d, 4), k["p"][1])
+    return tracks
+
+
 def cut_plan(beats: List[dict], base: List[dict], wide: float = 3.4, min_gap: float = 0.16) -> List[dict]:
     """当たりごとのカット割りを足す(アニメの戦いの「寄り → 当たりの角度 → 反応 → 引き」)。
     beats: [{t: 当たりの時刻, by: 打つ側, to: 受ける側, big: 大技なら True}]。base: 台本のカット(当たりの周りは置き換える)。
