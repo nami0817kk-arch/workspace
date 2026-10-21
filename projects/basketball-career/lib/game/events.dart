@@ -20,6 +20,7 @@ class Effect {
     this.school,
     this.schoolLabel,
     this.national = false,
+    this.salaryPct = 0,
   });
 
   /// 能力の増減(決まった能力)。
@@ -52,6 +53,9 @@ class Effect {
 
   /// 日本代表に参加する(次の冬に世界大会に出る)。
   final bool national;
+
+  /// 年俸の増減(%)。フリーエージェントでの契約交渉など。プロ以外では効かない。
+  final int salaryPct;
 }
 
 class EventOption {
@@ -187,6 +191,43 @@ const proEvents = <EventDef>[
       EventOption(
           '新天地で一から挑戦する',
           Effect(school: -1, schoolLabel: '新天地のチーム', teamwork: -8, morale: 8, abilities: {Ability.speed: 1, Ability.threePoint: 1})),
+    ],
+  ),
+];
+
+/// フリーエージェント(プロで25・29・33歳に必ず起きる)。実世界と同じく、市場に出て条件の良いチームへ移るか、
+/// 今のチームと再契約するかを選ぶ。年俸が動く(`Effect.salaryPct`)。
+const proFaEvents = <EventDef>[
+  EventDef(
+    id: 'pro_fa',
+    title: 'フリーエージェント',
+    body: '契約の年数が満了した。市場に出れば、複数のチームから条件の良いオファーが届きそうだ。',
+    forced: true,
+    options: [
+      EventOption(
+          '市場に出て、最高額を出すチームへ',
+          Effect(salaryPct: 40, school: 3, schoolLabel: '高額オファーのチーム', coach: -10, teamwork: -15, morale: 4)),
+      EventOption(
+          '今のチームと再契約する(愛着と信頼)',
+          Effect(salaryPct: 12, teamwork: 10, coach: 10, morale: 6)),
+      EventOption(
+          '優勝を狙える強豪へ(年俸は据え置き)',
+          Effect(school: 5, schoolLabel: '強豪チーム', teamwork: -12, coach: -5, achievement: 3, fatigue: 5)),
+    ],
+  ),
+];
+
+/// 長い怪我(3ターン以上)から復帰したときに必ず起きる出来事。
+const injuryEvents = <EventDef>[
+  EventDef(
+    id: 'comeback',
+    title: '復帰のとき',
+    body: '長い怪我が癒えた。コートに戻る日が来た。どう復帰する？',
+    forced: true,
+    options: [
+      EventOption('焦らず、段階的に復帰する', Effect(fatigue: -10, morale: 5, coach: 6)),
+      EventOption('早く試合勘を戻したい(無理をする)', Effect(morale: 10, focusBonus: 2, injuryChance: 0.25)),
+      EventOption('離脱中に磨いた武器を試す', Effect(abilities: {Ability.threePoint: 1, Ability.dribble: 1}, morale: 3)),
     ],
   ),
 ];
@@ -546,7 +587,14 @@ const events = <EventDef>[
 ];
 
 EventDef? eventById(String id) {
-  for (final e in [...events, ...schoolEvents, ...proEvents, ...nationalEvents]) {
+  for (final e in [
+    ...events,
+    ...schoolEvents,
+    ...proEvents,
+    ...proFaEvents,
+    ...injuryEvents,
+    ...nationalEvents,
+  ]) {
     if (e.id == id) return e;
   }
   return null;
