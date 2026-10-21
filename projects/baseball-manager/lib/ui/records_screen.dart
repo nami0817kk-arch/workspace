@@ -224,6 +224,8 @@ class _Metrics extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = totalOf(records);
     if (!l.hasBatting && !l.hasPitching) return const SizedBox.shrink();
+    final chances = records.fold<int>(0, (a, r) => a + r.chances);
+    final errors = records.fold<int>(0, (a, r) => a + r.errors);
     final t = Theme.of(context).textTheme;
     return Card(
       key: const Key('metrics'),
@@ -262,6 +264,13 @@ class _Metrics extends StatelessWidget {
                     small: true, hint: '盗塁: 走力を生かして進んだ塁の数。'),
                 _Stat('二塁打', '${l.doubles}', small: true),
                 _Stat('三塁打', '${l.triples}', small: true),
+                if (chances > 0)
+                  _Stat('守備率', fmtRate(1 - errors / chances),
+                      small: true,
+                      hint: '守備率: 守備機会のうち、失策をしなかった割合。.990を超えると守備の名手。'),
+                if (chances > 0)
+                  _Stat('失策', '$errors',
+                      small: true, hint: '失策: 守備でのミスの数。少ないほど良い。'),
               ]),
             ],
             if (l.hasPitching) ...[
@@ -604,6 +613,8 @@ void _showSeason(BuildContext context, SeasonRecord start,
           if (describeLine(r.line).isNotEmpty) describeLine(r.line),
           if (r.line.hasBatting)
             'OPS+ ${fmtPlus(r.line.opsPlus)} ・ 打点 ${r.line.rbi} ・ 盗塁 ${r.line.stolenBases}',
+          if (r.chances > 0)
+            '守備: 守備機会${r.chances} ・ 失策${r.errors} ・ 守備率${fmtRate(r.fieldingPct)}',
           if (r.line.hasPitching)
             'ERA+ ${fmtPlus(r.line.eraPlus)} ・ WHIP ${fmt2(r.line.whip)} ・ 奪三振 ${r.line.strikeouts}',
           if (r.titles.isNotEmpty) 'タイトル: ${r.titles.join('・')}',

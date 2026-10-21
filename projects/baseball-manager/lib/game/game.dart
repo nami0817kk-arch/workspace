@@ -25,6 +25,7 @@ import 'talent.dart';
 import 'traits.dart';
 import 'tryout.dart';
 import 'farm.dart';
+import 'fielding.dart';
 import 'final_moment.dart';
 import 'training.dart' show abilityCap;
 
@@ -1082,6 +1083,11 @@ class Game {
           : titlesOf(league.line, games: league.games, rank: league.rank);
       final proBefore =
           records.where((r) => r.stage == Stage.pro && !r.farm).toList();
+      final field = fieldingOf(
+          player: player,
+          pos: effectivePos,
+          games: league.line.hasBatting ? league.line.games : 0,
+          age: player.age);
       final awards = farm
           ? <String>[]
           : awardsOf(
@@ -1092,6 +1098,7 @@ class Game {
               fielding: player.abilities[Ability.fielding] ?? 0,
               isBatter: league.line.hasBatting && !league.line.hasPitching,
               titles: titles,
+              fieldingPct: field.pct,
             );
       final rec = SeasonRecord(
         age: player.age,
@@ -1107,6 +1114,8 @@ class Game {
         months: List.of(monthRows),
         twoWay: player.role == Role.twoWay,
         farm: farm,
+        chances: field.chances,
+        errors: field.errors,
       );
       monthRows = [];
       records.add(rec);

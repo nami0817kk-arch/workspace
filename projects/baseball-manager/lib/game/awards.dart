@@ -10,6 +10,7 @@ List<String> awardsOf(
   required int fielding,
   required bool isBatter,
   List<String> titles = const [],
+  double? fieldingPct,
 }) {
   final a = <String>[];
   final qualBat = l.plateAppearances >= games * 3.1;
@@ -25,7 +26,11 @@ List<String> awardsOf(
     a.add('新人王');
   }
   if (strongBat || strongPitch) a.add('ベストナイン');
-  if (isBatter && fielding >= 70 && l.games >= games * 0.7) {
+  // ゴールデングラブ: 守備力が高く、よく出場し、(守備の記録があれば)守備率も高い。
+  if (isBatter &&
+      fielding >= 70 &&
+      l.games >= games * 0.7 &&
+      (fieldingPct == null || fieldingPct >= 0.990)) {
     a.add('ゴールデングラブ');
   }
   if (prevGames != null &&
