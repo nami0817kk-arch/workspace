@@ -628,3 +628,11 @@ soccer-manager / soccer-career の野球版。**中核は「試合中の采配�
 - バックアップのダイアログは `_BackupDialog`(入力欄の持ち主)に移した(閉じる動きの間に、片づけた入力欄が描かれて落ちる不具合を避ける)。
 - **iCloud への自動保存は未実装**: 端末の外に自動で保存するには、Apple 側で App ID の iCloud 機能の追加・プロファイルの作り直し(Secret の更新)と、iOS のネイティブ(Swift)の追加が要る。実機で確かめられず、署名で落ちる恐れがあるので、見送った。やるなら別の作業にして、Apple 側の操作を先に済ませる。
 
+### 9. 公開の準備(ストア・法務ページ・掲載画像。**公開はまだしていない**)
+- **法務ページ**(`legal/privacy.html`・`terms.html`・`support.html`、`site/index.html`・`robots.txt`・`404.html`): 日英。名義は「つるはし社」、問い合わせは `info[at]dailyquarry.com`(`mailto:` は使わない)。**内容は現状に合わせてある=広告も課金も無く、通信も使わない**(`test/site_files_test.dart` が「広告・課金なし」の文面と一致していることを見張る。**広告・課金を入れるときは、先にここと `STORE_LISTING.md` を直す**)。
+- **公開する仕組み**: `.github/workflows/baseball-site.yml`(Cloudflare Pages `baseball-ikusei` → https://baseball-ikusei.pages.dev)。**master に取り込むと、legal/・site/ を触っていれば自動で公開される**(取り込む前にユーザーの OK)。個人の名前が入っていたら止める。app-ads.txt は広告を入れるときに足す(ios-app-release スキル B)。
+- **アプリからの導線**: 設定に「プライバシーポリシー」「サポート・お問い合わせ」「利用規約」(`lib/ui/links.dart` の `Links`、url_launcher。`--dart-define=LEGAL_BASE_URL` で置き場所を替えられる)。審査の決まり(Apple 5.1.1)。
+- **掲載文**: `STORE_LISTING.md`(名前・サブタイトル・キーワード・説明文・プロモーション・審査メモ・プライバシーの答え。`test/store_listing_test.dart` が文字数・禁止記号・実在名称・個人名を見張る)。実在の名称は入れない(プロ野球の団体名・甲子園・沢村賞など)。
+- **掲載画像**(`marketing/screenshots/01〜05.png`、1206×2622・透過なし): `tool/screenshots/capture_test.dart` を、環境変数 FLUTTER_ROOT(Flutter SDK の場所)を付けて `flutter test tool/screenshots/capture_test.dart`(subst したドライブから)で作る。CI では回らない。**撮ったら必ず1枚ずつ目で見る**。書き出し後に Pillow で RGB に変換する(透過なしが条件)。踏んだ穴: ①絵(背景・アイコン)を `precacheImage` せずに撮ると、絵が抜ける ②`Column` の横は loose なので、縮めた画面のまわりが透明になる(`SizedBox(width: double.infinity)`)③育成タブは 844 の高さが要るので、帯を 104 にして画面を縮めて収める。
+- 未実施: App Store Connect の入力・提出、公開(上)、実機の確認。
+
