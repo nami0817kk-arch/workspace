@@ -1,0 +1,71 @@
+# 野球育成の公開ページ（プライバシーポリシー・サポート・利用規約・紹介）を Cloudflare Pages の baseball-ikusei に出す。
+# アプリの設定画面は https://baseball-ikusei.pages.dev/privacy.html と support.html を開く（lib/ui/links.dart）。
+# ストアの「プライバシーポリシー URL」「サポート URL」もここ。広告を入れるときは app-ads.txt と点検を足す（ios-app-release スキル）。
+#
+# Web版の公開（baseball-pages.yml → baseball-manager）とは別のプロジェクト。
+# 必要な Secrets: CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID（baseball-pages.yml と同じ値）
+name: 野球育成の公開ページ
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "projects/baseball-manager/legal/**"
+      - "projects/baseball-manager/site/**"
+      - ".github/workflows/baseball-site.yml"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: baseball-site
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: projects/baseball-manager
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Assemble site
+        run: |
+          mkdir -p dist
+          cp site/* dist/
+          cp legal/*.html dist/
+          # 公開物に個人の名前を出さない(docs/public-identity.md)
+          if grep -rniE '\bnami\b|0817|なみ' dist; then echo "::error::公開ページに個人の名前が入っている"; exit 1; fi
+          ls -la dist
+
+      # 無ければ作る。既にあれば重複エラーが返るだけ。production_branch を master に固定する
+      # （デプロイの --branch とずれると、本番ではなくプレビューの別URLに出て法務リンクが404になる）
+      - name: Ensure Cloudflare Pages project exists
+        run: |
+          curl -s -o /dev/null -w "%{http_code}\n" -X POST \
+            "https://api.cloudflare.com/client/v4/accounts/${{ secrets.CLOUDFLARE_ACCOUNT_ID }}/pages/projects" \
+            -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            --data '{"name":"baseball-ikusei","production_branch":"master"}'
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: projects/baseball-manager
+          command: pages deploy dist --project-name=baseball-ikusei --branch=master
+
+      # アプリが開く URL で本当に見えるか（プロジェクト名が取られていて別の URL になった場合もここで分かる）
+      - name: Check the public URLs
+        run: |
+          sleep 20
+          for p in privacy.html support.html terms.html robots.txt; do
+            curl -fsSL "https://baseball-ikusei.pages.dev/$p" -o /tmp/page || { echo "::error::https://baseball-ikusei.pages.dev/$p が開けません"; exit 1; }
+          done
+          grep -q "野球育成" <(curl -fsSL https://baseball-ikusei.pages.dev/privacy.html) || { echo "::error::baseball-ikusei.pages.dev が野球育成のページではありません"; exit 1; }
+          # robots.txt は実体として置く(無いとトップページの HTML が返る。docs/app-pitfalls.md 項目8)
+          if curl -fsSL https://baseball-ikusei.pages.dev/robots.txt | grep -qi '<html'; then echo "::error::/robots.txt が HTML を返している"; exit 1; fi

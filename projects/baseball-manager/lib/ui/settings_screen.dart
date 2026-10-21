@@ -8,6 +8,7 @@ import 'admin_screen.dart';
 import 'controller.dart';
 import 'home_screen.dart' show showHelp;
 import 'guide_dialog.dart';
+import 'links.dart';
 import 'trait_book_screen.dart';
 import 'versus_screen.dart';
 
@@ -145,6 +146,27 @@ class SettingsScreen extends StatelessWidget {
                     onChanged: (v) => controller.setFlags(toasts: v),
                   ),
                   ListTile(
+                    key: const Key('privacy-open'),
+                    leading: const Icon(Icons.privacy_tip_outlined),
+                    title: const Text('プライバシーポリシー'),
+                    trailing: const Icon(Icons.open_in_new, size: 18),
+                    onTap: () => _openLink(context, Links.privacy),
+                  ),
+                  ListTile(
+                    key: const Key('support-open'),
+                    leading: const Icon(Icons.support_agent_outlined),
+                    title: const Text('サポート・お問い合わせ'),
+                    trailing: const Icon(Icons.open_in_new, size: 18),
+                    onTap: () => _openLink(context, Links.support),
+                  ),
+                  ListTile(
+                    key: const Key('terms-open'),
+                    leading: const Icon(Icons.description_outlined),
+                    title: const Text('利用規約'),
+                    trailing: const Icon(Icons.open_in_new, size: 18),
+                    onTap: () => _openLink(context, Links.terms),
+                  ),
+                  ListTile(
                     key: const Key('guide-open'),
                     leading: const Icon(Icons.menu_book_outlined),
                     title: const Text('はじめてのガイド'),
@@ -249,6 +271,12 @@ class SettingsScreen extends StatelessWidget {
         );
       },
     );
+  }
+
+  Future<void> _openLink(BuildContext context, Uri url) async {
+    final m = ScaffoldMessenger.of(context);
+    final ok = await Links.open(url);
+    if (!ok) m.showSnackBar(const SnackBar(content: Text('ページを開けませんでした')));
   }
 
   Future<void> _backup(BuildContext context) => showDialog<void>(
