@@ -8,7 +8,6 @@ import 'package:basketball_career/game/legacy.dart';
 import 'package:basketball_career/game/life.dart';
 import 'package:basketball_career/game/match.dart';
 import 'package:basketball_career/game/path.dart';
-import 'package:basketball_career/game/player.dart';
 import 'package:basketball_career/game/season.dart';
 import 'package:flutter_test/flutter_test.dart';
 
