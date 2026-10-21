@@ -585,7 +585,8 @@ def cmd_shorts(args) -> int:
             continue
         body = sc.short_lines(sid)
         hook_line, tease_line = shorts_mod.extra_lines(body, meta, say_hook and hook_on)
-        lines = ([hook_line] if hook_line else []) + body + ([tease_line] if tease_line else [])
+        cta = shorts_mod.cta_line(body, meta)
+        lines = ([hook_line] if hook_line else []) + body + ([tease_line] if tease_line else []) + ([cta] if cta else [])
         spoken = {line.index: tts.speak_line(engine, line, vs, readings, cache)
                   for line in lines}
         # ショートの中では節の切れ目の長い間を入れない
@@ -598,8 +599,9 @@ def cmd_shorts(args) -> int:
         shown = [replace(c, line=replace(c.line, text="")) if c.line.index == -1 else c for c in cues]
         hold = (cues[0].end + shorts_mod.HOOK_AFTER) if hook_line else shorts_mod.HOOK_HOLD
         if tease_line:                                      # 最後のもう一つの疑問（10-08）。「続きは本編で」とループの画の代わり
+            cc = shown.pop() if cta else None               # 最後の「高評価とチャンネル登録」（10-21）。画面は問いのまま
             tc = shown.pop()
-            total = tc.end + shorts_mod.TEASE_AFTER
+            total = (cc or tc).end + shorts_mod.TEASE_AFTER
             items = render.frames(painter, shown, tc.start, wd / "frames", fps, with_text=True)
             items = shorts_mod.finish(items, painter, shorts_mod.hook_text(meta) if hook_on else "", wd / "hook",
                                       fps, False, hold=hold)

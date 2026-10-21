@@ -94,7 +94,11 @@ def options(config: dict) -> tuple[bool, bool]:
 # 声は本編と同じ cast の聞き手の設定・readings.yaml を通す（tts.speak_line）。
 TEASER = "聞き"            # hook・tease を読む話者（config の cast のキー）
 TEASE_GAP = 0.6            # 最後の行から tease までの間（秒）
-TEASE_AFTER = 2.8          # tease を読み終えてから画面を残す秒数（下の3行を読む時間。10-21 に登録のお願いを足して 2.2→2.8）
+TEASE_AFTER = 2.0          # 最後の声を読み終えてから画面を残す秒数（下の3行を読む時間。10-21 に登録のお願いを足して声も入れた）
+# 10-21 ユーザー決定：最後の問いのあとに「高評価とチャンネル登録も、お願いします。」を聞き手の声で読み、画面にも出す。
+CTA_SPOKEN = "高評価とチャンネル登録、お願いします。"
+CTA_SCREEN = "高評価・チャンネル登録もお願いします"
+CTA_GAP = 0.3              # 最後の問いからお願いまでの間（秒）
 TEASE_SIZES = (104, 94, 84, 76, 68)
 TEASE_MAX_ROWS = 4
 HOOK_AFTER = 0.3           # hook を読み終えてから縮み始めるまで
@@ -144,6 +148,15 @@ def extra_lines(lines: list, meta: dict, say_hook: bool) -> tuple:
     if tease_text(meta):
         tease = replace(lines[-1], index=-2, text=spoken(tease_text(meta)), pause=TEASE_GAP, **common)
     return hook, tease
+
+
+def cta_line(lines: list, meta: dict):
+    """最後の問い（tease）のあとの「高評価とチャンネル登録」の行。tease が無い回は付けない。画面の状態は最後の行と同じ。"""
+    from dataclasses import replace
+    if not lines or not tease_text(meta):
+        return None
+    return replace(lines[-1], index=-3, text=CTA_SPOKEN, speaker=TEASER, tone="明るい", reaction=None, mark=None,
+                   bubble=None, icon=None, hook=False, pause=CTA_GAP)
 
 
 def hook_text(meta: dict) -> str:
@@ -331,7 +344,7 @@ class ShortPainter(Painter):
         dr.text((W / 2, y + 160), "本編は概要欄から", font=self.font("gothic", 52), fill=INK, anchor="mt")
         # 10-21 ユーザー決定：登録者を増やすため、最後の画面に登録のお願いを足す（声は足さない。60秒を食わない）
         dr.rounded_rectangle([W / 2 - 330, y + 250, W / 2 + 330, y + 340], radius=45, outline=GOLD, width=5)
-        dr.text((W / 2, y + 295), "チャンネル登録もお願いします", font=self.font("gothic", 44), fill=GOLD, anchor="mm")
+        dr.text((W / 2, y + 295), CTA_SCREEN, font=self.font("gothic", 44), fill=GOLD, anchor="mm")
         return img
 
     def end_card(self, background) -> Image.Image:
