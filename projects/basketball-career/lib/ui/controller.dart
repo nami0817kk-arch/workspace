@@ -394,6 +394,13 @@ class GameController extends ChangeNotifier {
               '$h  (通算${g.honorCounts[h] ?? 1}回)',
           ].join('\n')));
     }
+    if (g.lastCareerLines.isNotEmpty) {
+      pending.add(Milestone(MilestoneKind.award, '通算記録!', g.lastCareerLines.join('\n')));
+    }
+    final contract = g.lastSalaryNote;
+    if (contract != null) {
+      pending.add(Milestone(MilestoneKind.contract, '契約更改', contract.replaceFirst('契約更改: ', '')));
+    }
     final goal = g.lastGoalMessage;
     if (r.yearEnded && goal != null && goal.startsWith('目標達成')) {
       pending.add(Milestone(MilestoneKind.goal, '目標達成!', goal.replaceFirst('目標達成!', '').trim()));

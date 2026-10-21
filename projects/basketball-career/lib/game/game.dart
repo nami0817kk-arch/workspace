@@ -7,6 +7,7 @@ import 'goals.dart';
 import 'honors.dart';
 import 'life.dart';
 import 'match.dart';
+import 'money.dart';
 import 'path.dart';
 import 'player.dart';
 import 'rival.dart';
@@ -180,6 +181,8 @@ class Game {
     this.rivalMet = false,
     this.nationalPending = false,
     this.draftPick = 0,
+    this.salary = 0,
+    this.totalEarnings = 0,
     this.caps = 0,
     this.number = 0,
     this.mate = '',
@@ -320,6 +323,25 @@ class Game {
 
   /// プロ契約のときのドラフト指名順位(1〜60)。0 は指名なし(古いセーブ・プロ以外)。
   int draftPick;
+
+  /// プロの年俸(万円)。プロ以外は 0。1年目は新人契約、年の終わりの契約更改で変わる。
+  int salary;
+
+  /// プロでもらった年俸の合計(万円)。
+  int totalEarnings;
+
+  /// 直近の年の終わりの、契約更改の知らせ(年俸アップ・ダウン)。画面に出す。保存はしない。
+  String? lastSalaryNote;
+
+  /// 直近の大会で超えた通算記録の節目(「通算1000得点を達成!」など)。画面に出す。保存はしない。
+  List<String> lastCareerLines = const [];
+
+  /// 通算記録の節目(得点・リバウンド・アシスト)。
+  static const careerLadder = <String, List<int>>{
+    '得点': [500, 1000, 2000, 3000],
+    'リバウンド': [300, 600, 1000, 1500],
+    'アシスト': [200, 500, 800, 1000],
+  };
 
   /// 日本代表に参加することにした(次の冬に世界大会に出る)。
   bool nationalPending;
@@ -487,6 +509,8 @@ class Game {
     recoveredThisTerm = false;
     lastGoalMessage = null;
     lastHonors = const [];
+    lastSalaryNote = null;
+    lastCareerLines = const [];
     lastMetRival = false;
     lastNewSkills = {};
     final rut = isRut(action);
@@ -732,6 +756,7 @@ class Game {
         rival.losses++;
       }
     }
+    final before = (totalPoints, totalRebounds, totalAssists);
     final firstPro = !records.any(
         (r) => r.league == League.proDomestic || r.league == League.proAbroad);
     lastHonors = t.honors(rookie: firstPro);
@@ -753,6 +778,18 @@ class Game {
       highPoints: t.highPoints,
       honors: lastHonors,
     ));
+    final after = (totalPoints, totalRebounds, totalAssists);
+    final lines = <String>[];
+    void crossed(String name, int b, int a) {
+      for (final v in careerLadder[name]!) {
+        if (b < v && a >= v) lines.add('通算$v$name達成!');
+      }
+    }
+
+    crossed('得点', before.$1, after.$1);
+    crossed('リバウンド', before.$2, after.$2);
+    crossed('アシスト', before.$3, after.$3);
+    lastCareerLines = lines;
     recentAchievements.add(t.achievement);
     while (recentAchievements.length > _recentCount) {
       recentAchievements.removeAt(0);
@@ -761,6 +798,7 @@ class Game {
 
   void _endYear() {
     _evaluateGoal();
+    if (track == Track.pro) totalEarnings += salary; // その年の年俸
     growthLog.add(GrowthPoint(player.age, player.overall, player.heightCm));
     final stageBefore = stage;
     slot = 0;
@@ -780,6 +818,19 @@ class Game {
           _retire('戦力外通告を受けた');
         } else if (player.age > maxProAge) {
           _retire('年齢を重ね、現役を退いた');
+        } else {
+          // 契約更改: 総合評価と、その年の表彰で来年の年俸が決まる。
+          final honorsLast = records
+              .where((r) => r.age == player.age - 1)
+              .fold(0, (s, r) => s + r.honors.length);
+          final next = salaryOf(
+              overall: player.overall, honorsLastYear: honorsLast, abroad: abroad);
+          if (next >= salary * 1.25) {
+            lastSalaryNote = '契約更改: 年俸アップ! ${moneyLabel(salary)} → ${moneyLabel(next)}';
+          } else if (next <= salary * 0.8) {
+            lastSalaryNote = '契約更改: 年俸ダウン… ${moneyLabel(salary)} → ${moneyLabel(next)}';
+          }
+          salary = next;
         }
     }
     // 中学・高校に上がると新しいチーム(進路の選択は chooseRoute で)。
@@ -949,6 +1000,7 @@ class Game {
       final win = winsContract(player, achievement, rng);
       if (win) {
         draftPick = draftPickOf(offerScore(player, achievement), rng);
+        salary = rookieSalary(draftPick);
         if (draftPick <= 10) {
           // 上位指名は期待されている: 気持ちが高い状態ではじまる。
           condition = condition.copyWith(morale: condition.morale + 10);
@@ -1075,6 +1127,8 @@ class Game {
         'rivalMet': rivalMet,
         'nationalPending': nationalPending,
         'draftPick': draftPick,
+        'salary': salary,
+        'totalEarnings': totalEarnings,
         'caps': caps,
         'number': number,
         'mate': mate,
@@ -1127,6 +1181,8 @@ class Game {
         number: (j['number'] as num?)?.toInt() ?? 0,
         nationalPending: (j['nationalPending'] as bool?) ?? false,
         draftPick: (j['draftPick'] as num?)?.toInt() ?? 0,
+        salary: (j['salary'] as num?)?.toInt() ?? 0,
+        totalEarnings: (j['totalEarnings'] as num?)?.toInt() ?? 0,
         caps: (j['caps'] as num?)?.toInt() ?? 0,
         mate: (j['mate'] as String?) ?? '',
         coachLabel: (j['coachLabel'] as String?) ?? '',

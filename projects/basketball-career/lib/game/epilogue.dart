@@ -1,4 +1,5 @@
 import 'honors.dart';
+import 'money.dart';
 import 'game.dart';
 import 'season.dart';
 import 'player.dart';
@@ -126,6 +127,15 @@ List<String> epilogueLines(Game g) {
       for (final h in Honor.all)
         if (hc.containsKey(h)) hc[h]! > 1 ? '$h${hc[h]}回' : h,
     ].join('、')}。');
+  }
+
+  if (g.totalEarnings > 0) {
+    lines.add('プロで稼いだ生涯収入は、約${moneyLabel(g.totalEarnings)}。');
+  }
+
+  final cp = g.totalPoints;
+  if (cp >= 500) {
+    lines.add('通算${cp}得点・${g.totalRebounds}リバウンド・${g.totalAssists}アシストを積み上げた。');
   }
 
   if (g.draftPick == 1) {

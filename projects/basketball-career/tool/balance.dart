@@ -18,6 +18,8 @@ void main(List<String> args) {
   final team = args.contains('--team');
   var pro = 0, direct = 0, abroad = 0, titles = 0, rw = 0, rl = 0, awards = 0, skills = 0, st = 0, bl = 0, th = 0, games = 0, high = 0;
   var ovrAt18 = 0.0, heightAt18 = 0.0;
+  var earnSum = 0, earnMax = 0, proCount = 0, salaryTop = 0;
+  final totP = <int>[], totR = <int>[], totA = <int>[];
   final honorCareers = <String, int>{};
   final honorTotals = <String, int>{};
   for (var seed = 0; seed < n; seed++) {
@@ -94,6 +96,15 @@ void main(List<String> args) {
     high += g.careerHigh?.points ?? 0;
     skills += g.player.skills.length;
     awards += g.records.where((r) => r.award != null).length;
+    totP.add(g.totalPoints);
+    totR.add(g.totalRebounds);
+    totA.add(g.totalAssists);
+    if (g.totalEarnings > 0) {
+      proCount++;
+      earnSum += g.totalEarnings;
+      if (g.totalEarnings > earnMax) earnMax = g.totalEarnings;
+    }
+    if (g.salary > salaryTop) salaryTop = g.salary;
     g.honorCounts.forEach((h, c) {
       honorCareers[h] = (honorCareers[h] ?? 0) + 1;
       honorTotals[h] = (honorTotals[h] ?? 0) + c;
@@ -104,6 +115,14 @@ void main(List<String> args) {
   String pct(int v) => '${(v / n * 100).toStringAsFixed(1)}%';
   print('プロ入り: ${pct(pro)}(高校から直接 ${pct(direct)})');
   print('海外挑戦: ${pct(abroad)}');
+  String dist(List<int> v) {
+    final x = [...v]..sort();
+    return '平均 ${(x.fold(0, (a, b) => a + b) / x.length).round()} / 中央 ${x[x.length ~/ 2]} / 上位1割 ${x[(x.length * 0.9).floor()]} / 最大 ${x.last}';
+  }
+  print('通算 得点: ${dist(totP)}');
+  print('通算 リバウンド: ${dist(totR)}');
+  print('通算 アシスト: ${dist(totA)}');
+  print('プロの生涯収入(万円): 平均 ${proCount == 0 ? 0 : (earnSum / proCount).round()} / 最大 $earnMax (対象 $proCount人)  最高年俸 $salaryTop');
   for (final h in honorCareers.keys.toList()..sort()) {
     print('表彰 $h: ${pct(honorCareers[h]!)}の人生で受賞(1人あたり ${(honorTotals[h]! / n).toStringAsFixed(2)}回)');
   }
