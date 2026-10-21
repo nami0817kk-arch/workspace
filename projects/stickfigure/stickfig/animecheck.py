@@ -7,8 +7,8 @@
   1 溜め    技の前に打つ側が 2〜6 コマ止まる(Becker の溜め 3〜9 と日本の長い溜めの間)
   2 一気    溜めの終わりから当たりまで 2〜4 コマ
   3 止め    最後の決着のあと、勝った側が 0.5 秒以上ほぼ止まる(決めの止め絵)
-  4 伸び    当たりの瞬間に打った腕・脚が 12〜30% 伸びる
-  5 反応    当たりから 0.3 秒で受けた側の頭が 0.30 以上動く(現実の 2〜3 倍)
+  4 伸び    当たりの瞬間に打った腕・脚が 20〜40% 伸びる(派手なくらいでよい)
+  5 反応    当たりから 0.3 秒で受けた側の頭が 0.45 以上動く(現実の 3 倍以上。派手なくらいでよい)
   6 コマ打ち 同じ絵が続くコマ 20〜40%(Becker 17〜33% と日本の 3 コマ打ちの間)
   7 衝撃    大技のヒットストップ 4〜6 コマ・小技 1〜3 コマ。大技は衝撃コマ(反転)かスピード線
   8 カット  山場(当たりの前後 1 秒)のカットの長さの中央値 0.15〜0.40 秒
@@ -21,7 +21,7 @@ from typing import Dict, List, Optional
 
 from . import fk, pose as posemod
 
-DEFINITION = dict(hold=(2, 6), burst=(2, 4), final_hold_s=0.5, stretch=(0.12, 0.30), react=0.30,
+DEFINITION = dict(hold=(2, 6), burst=(2, 4), final_hold_s=0.5, stretch=(0.20, 0.40), react=0.45,   # 2026-10-21 ユーザー「動きは派手なくらいでちょうどいい」→ 伸び 0.12→0.20・反応 0.30→0.45 に引き上げ
                   dup=(0.20, 0.40), stop_big=(4, 6), stop_small=(1, 3), cut_median=(0.15, 0.40))
 ANG = ("fa", "fe", "ra", "re", "fl", "fk", "rl", "rk", "lean", "hz", "ht", "rz", "roll")
 STILL = 0.035          # 1 コマの姿勢の変化の合計(rad・単位)がこれ未満なら「止まっている」
@@ -35,10 +35,10 @@ def _change(a: dict, b: dict) -> float:
     return sum(abs(a[k] - b[k]) for k in ANG) + abs(a["dx"] - b["dx"]) * 2
 
 
-def _head(scene, tr, who, t):
+def _head(scene, tr, who, t, part="head"):
     p = tr.at(t)
     a = scene["actors"][who]
-    return fk.skeleton(p, fk.sign_of(a, p), a["base_x"] + p["dx"], a.get("scale", 1.0))["head"]
+    return fk.skeleton(p, fk.sign_of(a, p), a["base_x"] + p["dx"], a.get("scale", 1.0))[part]
 
 
 def check(scene: dict, plan: Optional[dict] = None, beats: Optional[List[dict]] = None, video: Optional[str] = None) -> dict:
@@ -71,8 +71,10 @@ def check(scene: dict, plan: Optional[dict] = None, beats: Optional[List[dict]] 
         fc = int(round(tc * fps))
         ks_ = scene["keys"][by]
         stretch = max((float(ks_[min(len(ks_) - 1, max(0, fc + d))].get(k, 0.0)) for d in (-1, 0, 1) for k in ([limb] if limb else ("st", "lst", "rst", "rlst"))), default=0.0)
-        h0, h1 = _head(scene, trs[to], to, tc), _head(scene, trs[to], to, tc + 0.3)
-        react = math.hypot(h1[0] - h0[0], h1[1] - h0[1])
+        react = 0.0
+        for part in ("head", "hip"):                          # 頭か腰の大きい方(腹への打撃は体を折るので頭は殴った側へ寄り、押される動きと打ち消し合う)
+            h0 = _head(scene, trs[to], to, tc, part)
+            react = max(react, max(math.hypot(h[0] - h0[0], h[1] - h0[1]) for h in (_head(scene, trs[to], to, tc + i * dt, part) for i in range(1, int(0.3 * fps) + 1))))   # 0.3 秒の間に最も遠くまで動いた量(0.3 秒後だけで測ると、次の技に備えて戻る分が差し引かれた)
         hit = next((h for h in scene.get("hits", []) if abs(h["tau"] - tc) < 0.02), None)
         stop = round((hit or {}).get("hold", 0.0) * fps)
         lo, hi = D["stop_big"] if big else D["stop_small"]
