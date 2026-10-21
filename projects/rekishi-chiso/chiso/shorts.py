@@ -94,7 +94,7 @@ def options(config: dict) -> tuple[bool, bool]:
 # 声は本編と同じ cast の聞き手の設定・readings.yaml を通す（tts.speak_line）。
 TEASER = "聞き"            # hook・tease を読む話者（config の cast のキー）
 TEASE_GAP = 0.6            # 最後の行から tease までの間（秒）
-TEASE_AFTER = 2.2          # tease を読み終えてから画面を残す秒数（下の2行を読む時間）
+TEASE_AFTER = 2.8          # tease を読み終えてから画面を残す秒数（下の3行を読む時間。10-21 に登録のお願いを足して 2.2→2.8）
 TEASE_SIZES = (104, 94, 84, 76, 68)
 TEASE_MAX_ROWS = 4
 HOOK_AFTER = 0.3           # hook を読み終えてから縮み始めるまで
@@ -329,6 +329,9 @@ class ShortPainter(Painter):
         dr.rounded_rectangle([W / 2 - 270, y, W / 2 + 270, y + 120], radius=18, fill=(176, 40, 40))
         dr.text((W / 2, y + 60), "答えは本編で", font=self.font("gothic", 66), fill=(255, 255, 255), anchor="mm")
         dr.text((W / 2, y + 160), "本編は概要欄から", font=self.font("gothic", 52), fill=INK, anchor="mt")
+        # 10-21 ユーザー決定：登録者を増やすため、最後の画面に登録のお願いを足す（声は足さない。60秒を食わない）
+        dr.rounded_rectangle([W / 2 - 330, y + 250, W / 2 + 330, y + 340], radius=45, outline=GOLD, width=5)
+        dr.text((W / 2, y + 295), "チャンネル登録もお願いします", font=self.font("gothic", 44), fill=GOLD, anchor="mm")
         return img
 
     def end_card(self, background) -> Image.Image:
