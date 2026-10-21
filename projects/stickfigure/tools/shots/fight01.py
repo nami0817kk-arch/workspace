@@ -40,6 +40,28 @@ BEATS = [dict(t=1.08, by="A", to="B", limb="st", miss=True), dict(t=1.55, by="B"
          dict(t=7.5667, by="A", to="B", limb="rst"), dict(t=7.8667, by="A", to="B", big=True, limb="st")]
 
 
+# 構え(2026-10-21「構えとかをもっとかっこよく」): 人ごとの型。構えている間の腰・前傾・顎と構えの腕を置き換える
+STYLE = dict(
+    A=dict(hz_drop=0.14, lean=0.22, ht=-0.12, guard_f=(1.75, 0.35), guard_r=(-0.30, 2.20)),   # 緑: 拳法。腰を落とした半身、前の手を相手へまっすぐ、後ろの拳は腰の脇
+    B=dict(hz_drop=0.11, lean=0.38, ht=-0.20, guard_f=(1.05, 2.35), guard_r=(0.65, 2.60)))    # 赤: 喧嘩屋。背を丸めた前のめり、両拳を顔の前に高く
+
+
+def stylize(tr, who):
+    st = STYLE[who]
+    for k in tr["body"]:
+        if "hz" in k and 0.755 <= k["hz"] <= 0.815:          # 構え・踏み込み・戻りの高さ(しゃがみ・浮き・倒れは触らない)
+            k["hz"] = round(k["hz"] - st["hz_drop"], 3)
+        if k.get("lean") == 0.12:                          # 構えの値だけ(0.10 などは当たりの瞬間に体を起こすためにわざと置いた値)
+            k["lean"] = st["lean"]
+        if k.get("ht") == 0.0:
+            k["ht"] = st["ht"]
+    for limb, g in (("f_hand", "guard_f"), ("r_hand", "guard_r")):
+        for k in tr[limb]:
+            if k.get("ang") in (GUARD_F, GUARD_R) and k["ang"] == (GUARD_F if limb == "f_hand" else GUARD_R):
+                k["ang"] = st[g]
+    return tr
+
+
 def skel(keys, actor, t):
     k = keys[min(len(keys) - 1, int(round(t * FPS)))]
     pose = dict(ks.POSE0, **{n: v for n, v in k.items() if n in ks.POSE0})
@@ -99,7 +121,7 @@ def tracks_b(tgt):
         dict(t=7.20, x=1.45, lean=0.0, hz=0.80, rst=0.0, ease="out"),
         # 大振り → 腹 → 掌底 → 尻もち
         dict(t=7.26, x=1.45, lean=-0.10), dict(t=7.40, x=0.62, lean=0.45, ease="in"), dict(t=7.50, x=0.58, lean=0.30), dict(t=7.53, lean=0.10),
-        dict(t=7.5667, x=0.58, lean=0.10, hz=0.80), dict(t=7.65, x=1.08, rz=0.14, lean=0.72, hz=0.72, ht=-0.45, ease="out"), dict(t=7.74, rz=0.0), dict(t=7.80, x=1.02, lean=0.55, hz=0.73, ht=-0.30),
+        dict(t=7.5667, x=0.58, lean=0.10, hz=0.83), dict(t=7.65, x=1.08, rz=0.14, lean=0.72, hz=0.72, ht=-0.45, ease="out"), dict(t=7.74, rz=0.0), dict(t=7.80, x=1.02, lean=0.55, hz=0.73, ht=-0.30),
         dict(t=7.8667, lean=0.50), dict(t=7.95, x=1.10, lean=-0.55, ht=0.75, hz=0.82, rz=0.10, ease="out"),
         dict(t=8.10, x=1.45, lean=-0.30, hz=0.60, rz=0.0, ht=0.35), dict(t=8.30, x=1.65, hz=0.33, lean=-0.18, ht=0.10, ease="in"), dict(t=8.38, hz=0.40, lean=-0.10, ease="out"), dict(t=8.46, hz=0.33, lean=-0.16, ease="in"),
         # 目を回す
@@ -163,7 +185,7 @@ def tracks_a(tgt):
         # 回りながら踏み込んで後ろ回し蹴り
         dict(t=3.64, x=-0.86, hz=0.78, lean=0.10), dict(t=3.72, x=-0.38, hz=0.82, lean=0.12, dir=-1), dict(t=3.78, x=-0.30, hz=0.80, lean=0.30, rlst=0.0), dict(t=3.81, x=-0.29, hz=0.80, lean=0.32),
         dict(t=3.8667, x=-0.18, hz=0.83, lean=0.64, rlst=0.34, ease="in"), dict(t=4.02, x=-0.20, lean=0.30, rlst=0.0),
-        dict(t=4.12, x=-0.26, hz=0.80, lean=0.12, dir=1), dict(t=4.32, x=-0.40), dict(t=4.55, x=-0.82, hz=0.80),
+        dict(t=4.12, x=-0.26, hz=0.83, lean=0.12, dir=1), dict(t=4.32, x=-0.40), dict(t=4.55, x=-0.82, hz=0.80),
         # 待つ(構えを少し解く)
         dict(t=4.80, hz=0.84, lean=0.05), dict(t=5.80, hz=0.84, lean=0.05), dict(t=6.05, hz=0.80, lean=0.12),
         # 拳をぶつける
@@ -225,8 +247,8 @@ def build_scene():
                palm=(0.00, 1.45), palm_follow=(0.25, 1.50))
     rep = []
     for it in range(3):
-        kb = ks.bake(tracks_b(tgt), aB, FPS, T_END, holds=HOLDS_B)
-        ka = ks.bake(tracks_a(tgt), aA, FPS, T_END, report=(rep if it == 2 else None), holds=HOLDS_A)
+        kb = ks.bake(stylize(tracks_b(tgt), "B"), aB, FPS, T_END, holds=HOLDS_B)
+        ka = ks.bake(stylize(tracks_a(tgt), "A"), aA, FPS, T_END, report=(rep if it == 2 else None), holds=HOLDS_A)
         sa = lambda t: skel(ka, aA, t)
         sb = lambda t: skel(kb, aB, t)
         jab_head = face(sb(1.10), -1)
