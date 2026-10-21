@@ -135,7 +135,7 @@ List<String> epilogueLines(Game g) {
 
   final cp = g.totalPoints;
   if (cp >= 500) {
-    lines.add('通算${cp}得点・${g.totalRebounds}リバウンド・${g.totalAssists}アシストを積み上げた。');
+    lines.add('通算$cp得点・${g.totalRebounds}リバウンド・${g.totalAssists}アシストを積み上げた。');
   }
 
   if (g.draftPick == 1) {
