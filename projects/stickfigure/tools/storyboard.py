@@ -73,10 +73,48 @@ def _star(d: ImageDraw.ImageDraw, c: Pt, r: float, fill, outline):
     d.polygon(pts, fill=fill, outline=outline)
 
 
+def _draw_fx(d: ImageDraw.ImageDraw, P, fx, u: float, S: int):
+    """エフェクト。fx の要素は (種類, x, z, 大きさ[, 向き])。spark=火花(放射の短い線+芯)、dust=土煙(灰色の丸の塊)、shock=空中の衝撃の輪、
+    smear=軌跡の三日月(向きは度。振った腕・脚の通り道)、glint=きらっと光る十字、guard=受けの火花(小さな輪+短い線)。"""
+    for e in fx:
+        kind, x, z, sz = e[0], e[1], e[2], e[3]
+        c = P(x, z)
+        r = sz * u
+        if kind == "spark":
+            for i in range(14):
+                a = i * 2 * math.pi / 14 + 0.2
+                r0, r1 = r * (0.45 if i % 2 else 0.35), r * (1.15 if i % 2 else 0.8)
+                d.line([(c[0] + r0 * math.cos(a), c[1] + r0 * math.sin(a)), (c[0] + r1 * math.cos(a), c[1] + r1 * math.sin(a))], fill=(255, 196, 40) if i % 2 else (255, 240, 170), width=int(3.5 * S))
+            d.ellipse([c[0] - r * 0.3, c[1] - r * 0.3, c[0] + r * 0.3, c[1] + r * 0.3], fill=(255, 250, 220), outline=(240, 150, 30), width=2 * S)
+        elif kind == "dust":
+            for k, (dx, dz, rr) in enumerate(((-0.9, 0.0, 0.5), (-0.3, 0.35, 0.62), (0.4, 0.15, 0.55), (1.0, 0.45, 0.42), (0.1, 0.8, 0.38), (1.5, 0.1, 0.3))):
+                cc = (c[0] + dx * r * 0.5, c[1] - dz * r * 0.5)
+                rr_ = rr * r * 0.5
+                d.ellipse([cc[0] - rr_, cc[1] - rr_, cc[0] + rr_, cc[1] + rr_], fill=(214, 204, 188), outline=(168, 156, 138), width=2 * S)
+        elif kind == "shock":
+            for k, a_ in enumerate((1.0, 0.7)):
+                rr_ = r * a_
+                d.ellipse([c[0] - rr_, c[1] - rr_, c[0] + rr_, c[1] + rr_], outline=(255, 255, 255) if k else (240, 150, 40), width=int((6 - 2 * k) * S))
+        elif kind == "smear":
+            ang = e[4] if len(e) > 4 else 0
+            for k, w_ in enumerate((14, 8, 3)):
+                box = [c[0] - r, c[1] - r, c[0] + r, c[1] + r]
+                d.arc(box, ang - 38 + k * 8, ang + 38 - k * 4, fill=(255, 255, 255) if k == 2 else ((160, 205, 255) if k == 1 else (110, 160, 235)), width=int(w_ * S))
+        elif kind == "glint":
+            for a in (0, math.pi / 2):
+                d.line([(c[0] - r * math.cos(a), c[1] - r * math.sin(a)), (c[0] + r * math.cos(a), c[1] + r * math.sin(a))], fill=(255, 255, 255), width=int(5 * S))
+            d.ellipse([c[0] - r * 0.22, c[1] - r * 0.22, c[0] + r * 0.22, c[1] + r * 0.22], fill=(255, 255, 255))
+        elif kind == "guard":
+            d.ellipse([c[0] - r, c[1] - r, c[0] + r, c[1] + r], outline=(120, 190, 255), width=int(4 * S))
+            for i in range(8):
+                a = i * math.pi / 4 + 0.4
+                d.line([(c[0] + r * 1.1 * math.cos(a), c[1] + r * 1.1 * math.sin(a)), (c[0] + r * 1.6 * math.cos(a), c[1] + r * 1.6 * math.sin(a))], fill=(120, 190, 255), width=int(3 * S))
+
+
 def panel(figs: List[dict], path: Path, hits: Sequence[Pt] = (), arrows: Sequence[Tuple[Pt, Pt]] = (), rings: Sequence[Tuple[float, float, float]] = (),
           cracks: Sequence[Tuple[float, float]] = (), debris: Sequence[Tuple[float, float, float]] = (), speed: Sequence[Tuple[float, float, float, float]] = (),
           trails: Sequence[Sequence[Pt]] = (), posts: Sequence[Tuple[float, float, float]] = (), ppu: float = 150.0, cx: Optional[float] = None,
-          w: int = 560, h: int = 340, ground: float = 0.86, ghosts: Sequence[dict] = (), label: str = "", scale_ss: int = 2, auto: bool = True, ppu_max: float = 150.0) -> Path:
+          w: int = 560, h: int = 340, ground: float = 0.86, ghosts: Sequence[dict] = (), label: str = "", scale_ss: int = 2, auto: bool = True, ppu_max: float = 150.0, fx: Sequence[tuple] = (), flash: float = 0.0) -> Path:
     """1 コマを描く。ghosts: 薄く重ねる前の姿勢(動きの軌跡)。ground: 地面の線の高さ(上からの割合)。"""
     S = scale_ss
     W, H = w * S, h * S
@@ -174,6 +212,10 @@ def panel(figs: List[dict], path: Path, hits: Sequence[Pt] = (), arrows: Sequenc
         d.polygon([(c[0] - r_, c[1]), (c[0], c[1] - r_ * 0.8), (c[0] + r_, c[1] + r_ * 0.3), (c[0] - r_ * 0.2, c[1] + r_)], fill=(150, 112, 70), outline=(80, 56, 30))
     for f in figs:
         draw_fig(f)
+    _draw_fx(d, P, fx, ppu * S, S)                            # エフェクト(人物の上に描く)
+    if flash > 0:                                             # 大技の 1 コマの閃光(画面全体を白く)
+        img.paste(Image.new("RGB", (W, H), (255, 255, 255)), (0, 0), Image.new("L", (W, H), int(255 * flash)))
+        d = ImageDraw.Draw(img)
     for (a, b) in arrows:
         pa, pb = P(*a), P(*b)
         d.line([pa, pb], fill=(230, 90, 60), width=4 * S)
