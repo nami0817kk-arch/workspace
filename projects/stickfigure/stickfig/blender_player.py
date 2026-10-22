@@ -83,7 +83,7 @@ LIMB = PLAN.get("scene", {}).get("limb") or {}        # 線の太さ: {base: 根
 
 
 HAND_R = float(LIMB.get("hand_r", 0.055))              # 手先(握りこぶし)の半径。腕の先の太さ(0.03 前後)の 1.8 倍
-FOOT_R = float(LIMB.get("foot_r", 0.048))              # 足先(靴)の半径。前後に 1.8 倍の楕円
+FOOT_R = float(LIMB.get("foot_r", 0.05))               # 足先の丸い先の半径(手と同じ形)
 TIP_INK = None                                         # make_figure の前に mat が使えるようになってから決める(下の _tip_ink)
 
 
@@ -132,10 +132,7 @@ def make_figure(tag, color, weapon, front):
     for side, y in (("L", 0.05), ("R", -0.05)):
         h = empty(tag + "hp" + side, hip, (0, y, 0))
         js, seg = chain(tag + "leg" + side, h, 0.90, ink)
-        shoe = sphere(FOOT_R, js[-1], (0.05, 0, -seg + 0.012 - 0.4 * 0.8 * FOOT_R), TIP_INK or ink, 20, (1.8, 1.0, 0.8))      # 足先は丸い靴(前へ長い楕円)
-        for v in shoe.data.vertices:                     # 接地面は曲げず平らに(2026-10-22)。底を切った分だけ下げて、地面に触れる高さは丸い靴と同じ
-            v.co.z = max(v.co.z, -0.6 * FOOT_R)
-        F["shoe" + side] = shoe
+        sphere(FOOT_R, js[-1], (0, 0, -seg + 0.025), TIP_INK or ink, 20)      # 足先は手と同じ丸い先(靴は付けない。2026-10-22「靴とかはいらない」)
         F["leg" + side] = js
     if weapon in WEAPONS:
         W_ = WEAPONS[weapon]
@@ -164,7 +161,7 @@ def make_figure(tag, color, weapon, front):
     F["objs"] = [v for k, v in F.items() if k in ("root", "hip", "chest", "neck", "head")]
     for k in ("armL", "armR", "legL", "legR"):
         F["objs"] += F[k]
-    F["objs"] += F.get("extra", []) + [F["shoeL"], F["shoeR"]]
+    F["objs"] += F.get("extra", []) 
     return F
 
 
@@ -271,13 +268,6 @@ for f, fr in enumerate(PLAN["frames"], start=1):
         F["leg" + fa][0].scale = (1, 1, 1 + p["lst"])
         F["arm" + ra][0].scale = (1, 1, 1 + p.get("rst", 0.0))      # 後ろの手足の伸び(アッパー・後ろ回し蹴りのスミア)
         F["leg" + ra][0].scale = (1, 1, 1 + p.get("rlst", 0.0))
-        bpy.context.view_layer.update()
-        for lf, ang_l in ((fa, (-p["fl"] + p["fk"]) * s), (ra, (-p["rl"] + p["rk"]) * s)):
-            shoe = F["shoe" + lf]                          # 足首は曲げる: 踏んでいる足は足裏を地面と平行に保ち、浮いた足(蹴り)はすねに付いたまま
-            z = shoe.matrix_world.translation.z
-            w = max(0.0, min(1.0, 1.0 - (z - 0.10) / 0.25))
-            w = w * w * (3 - 2 * w)
-            shoe.rotation_euler = (0, -w * (-p["roll"] * s + ang_l), 0)
         for o in F["objs"]:
             o.keyframe_insert("location", frame=f)
             o.keyframe_insert("rotation_euler", frame=f)
