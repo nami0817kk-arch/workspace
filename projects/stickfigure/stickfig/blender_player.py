@@ -82,6 +82,11 @@ def limb(name, parent, length, ink, loc=(0, 0, 0), r=0.036):
 LIMB = PLAN.get("scene", {}).get("limb") or {}        # 線の太さ: {base: 根元の半径, tip: 先の半径, tip_color: 先の2節の色}(Alan Becker は根元が太く先が細い。手足の先は暗い色)
 
 
+HAND_R = float(LIMB.get("hand_r", 0.055))              # 手先(握りこぶし)の半径。腕の先の太さ(0.03 前後)の 1.8 倍
+FOOT_R = float(LIMB.get("foot_r", 0.048))              # 足先(靴)の半径。前後に 1.8 倍の楕円
+TIP_INK = None                                         # make_figure の前に mat が使えるようになってから決める(下の _tip_ink)
+
+
 def chain(name, parent, total, ink):
     seg = total / NSEG
     js, par, pos = [], parent, (0, 0, 0)
@@ -105,7 +110,9 @@ WEAPONS = {
 
 
 def make_figure(tag, color, weapon, front):
+    global TIP_INK
     ink = mat(color)
+    TIP_INK = mat(LIMB["tip_color"]) if LIMB.get("tip_color") else None
     F = {}
     F["root"] = root = empty(tag + "root", None)
     F["hip"] = hip = empty(tag + "hip", root, (0, 0, 0.92))
@@ -120,12 +127,12 @@ def make_figure(tag, color, weapon, front):
     for side, y in (("L", 0.07), ("R", -0.07)):          # 付け根は胴の線の真上。左右は奥行きだけずらす
         s = empty(tag + "sh" + side, chest, (0, y, 0.6))
         js, seg = chain(tag + "arm" + side, s, 0.66, ink)
-        sphere(0.034, js[-1], (0, 0, -seg), ink, 12)
+        sphere(HAND_R, js[-1], (0, 0, -seg), TIP_INK or ink, 20)       # 手先は丸い握りこぶし(先の細い線のままだと、とがって見えた。2026-10-22「手先と足先を丸く」)
         F["arm" + side] = js
     for side, y in (("L", 0.05), ("R", -0.05)):
         h = empty(tag + "hp" + side, hip, (0, y, 0))
         js, seg = chain(tag + "leg" + side, h, 0.90, ink)
-        sphere(0.032, js[-1], (0.04, 0, -seg + 0.01), ink, 12, (1.7, 0.9, 0.6))
+        sphere(FOOT_R, js[-1], (0.05, 0, -seg + 0.012), TIP_INK or ink, 20, (1.8, 1.0, 0.8))      # 足先は丸い靴(前へ長い楕円)
         F["leg" + side] = js
     if weapon in WEAPONS:
         W_ = WEAPONS[weapon]
