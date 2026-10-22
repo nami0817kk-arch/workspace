@@ -212,7 +212,6 @@ sections:
       credit: 田原坂の弾痕の残る蔵（富重利平撮影、1880年ごろ）
   - 聞き: え、7か月で、何が起きたの？ 減りかたが、すごいね。
     tone: 驚き
-    short: s1
   - 語り: 率いたのは、西郷隆盛。数えで50歳でした。維新の功労者が、なぜ、政府に刃を向けたのか。今日は、西南戦争を掘ります。
     portrait: &id002
       image: paintings/saigo_takamori_portrait.jpg
@@ -227,7 +226,6 @@ sections:
       image: paintings/saigo_bg_tabaru_pines.jpg
       credit: 「田原坂激戦之図」の一部（小林永濯の錦絵、1877年）
   - 聞き: 教科書で見た、あの太い眉の顔だよね。維新のヒーローが政府と戦ったなんて、ちょっと信じられないな。
-    short: s1
   - 語り: そこで、今日の問いです。もし、薩軍が、政府軍に勝っていたら。仮定は、ひとつだけ。2月22日、熊本城が、薩軍の手に落ちた、とします。
     portrait: null
     background:
