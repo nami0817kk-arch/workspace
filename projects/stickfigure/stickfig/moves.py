@@ -52,6 +52,7 @@ class Fighter:
         self._nocut = False              # 吹き飛びの途中などは切れない
         self._spans: List[Tuple[float, float]] = []   # 吹き飛び〜起き上がり(この間だけ rz・roll を補間のまま使う)
         self._lying = False
+        self.hold, self.burst = HOLD, BURST      # 溜め・一気(コマ)。fast なら 1・2
 
     # ---------------- 下回り ----------------
     def _start(self, t0: float, what: str):
@@ -202,8 +203,15 @@ class Fighter:
         dx = math.sqrt(max(0.0, r * r - (T[1] - hz_w) ** 2))
         return T[0] - self.d * dx
 
-    def _hold(self, t, burst=BURST, hold=HOLD):
+    def _hold(self, t, burst=None, hold=None):
+        burst = self.burst if burst is None else burst
+        hold = self.hold if hold is None else hold
         self.holds.append(dict(kind="windup", t=_r(t), hold=hold, burst=burst))
+
+    @property
+    def pre(self) -> float:
+        """打つ前の「溜め + 一気」の秒数(当たりのこの秒数前に、構えを止めて打つ)。"""
+        return (self.hold + self.burst) / FPS
 
     def punch(self, kind: str, t: float, T: Pt, ret: Optional[float] = None):
         """kind: jab(前の手)・cross(後ろの手)・hook(大振り)・upper(しゃがみから)・palm(掌底)・belly(低い腹打ち)。T: 当てる点(世界)。"""
@@ -216,7 +224,7 @@ class Fighter:
                    belly=dict(hz=0.52, lean=0.40, adv=0.40, ret=0.35, hand="r"))[kind]
         if ret is not None:
             cfg = dict(cfg, ret=ret)                     # 連打の途中は下がらない(ret=0)
-        t0 = t - PRE
+        t0 = t - self.pre
         x_hit = self._x_for_hand(T, cfg["hz"], cfg["lean"])
         x_pre = self._x_pre(x_hit, cfg["adv"])
         self._approach(x_pre, t0)
@@ -270,7 +278,7 @@ class Fighter:
     def kick(self, kind: str, t: float, T: Pt, ret: Optional[float] = None):
         """kind: front(前の脚)・round(後ろの脚で高く回す)・jump(跳び蹴り)・sweep(しゃがんで足払い)。"""
         d, sc = self.d, self.sc
-        t0 = t - PRE
+        t0 = t - self.pre
         if kind == "front":
             hz, rz = 0.82, 0.0
             x_hit = self._x_for_leg(T, hz)
@@ -349,7 +357,7 @@ class Fighter:
             rz_hit, hz = 0.70, 0.83
             x_hit = self._x_for_leg(T, hz, rz_hit)
             burst = 6
-            pre = (HOLD + burst) / FPS
+            pre = (self.hold + burst) / FPS
             t0 = t - pre
             x_pre = x_hit - d * 1.2
             pass
@@ -597,6 +605,7 @@ class Table:
         self.hits: List[dict] = []
         self.beats: List[dict] = []
         self.puffs: List[dict] = []
+        self.fast = False                                  # True なら以降の打ちは溜め 1 コマ・一気 2 コマ(速い連打)
 
     def _skel(self, dfn: Fighter, miss_kind: Optional[str]) -> dict:
         """守る側の、当たる(かわす)瞬間の体。いまの立ち位置(compile の状態)と、構えの型・かわす姿勢から解析的に出す。
@@ -632,6 +641,8 @@ class Table:
         # かわす側は当たる前から動くので、先に受けを置く(かわした体の位置から空振りの位置を取るため、動作の置く順は受け→打ちではなく打ち→受けのまま、時刻で並ぶ)
         T = self.point(att, dfn, kind, t, result if miss else None, kw.get("part"))
         ret = kw.get("ret")
+        fast = kw.get("fast", self.fast)
+        att.hold, att.burst = (1, 2) if fast else (HOLD, BURST)
         if kind in HAND_KINDS:
             att.punch(kind, t, T, ret=ret)
         elif kind == "jump":
@@ -654,12 +665,31 @@ class Table:
         big = kind in BIG_KINDS and result in ("launch", "stagger", "fold")
         kindfx = "miss" if miss else ("clash" if result == "block" else ("kick" if kind in KICK_KINDS else "hit"))
         hold = 0.0 if miss else (0.10 if big or result == "launch" else (0.07 if result == "block" else 0.06))
+        if fast and not miss and hold <= 0.07:
+            hold = 0.04                                    # 速い連打のヒットストップは 1 コマ
         self.hits.append(hit_rec(round(t, 4), kindfx, T, hold, by=att.name if not miss else None))
         self.beats.append(dict(t=round(t, 4), by=att.name, to=dfn.name, big=big, limb=LIMB[kind], miss=miss, absorb=(result == "block"), **({"burst_max": 6} if kind == "jump" else {})))
         if result == "launch":
             lx = round(dfn.x - dfn._away() * 0.30, 3)
             self.hits.append(hit_rec(round(t + 0.50, 4), "land", (lx, 0.2), 0.04))
             self.puffs.append(dict(tau=round(t + 0.50, 4), kind="land2", pos=[lx, 0.0]))
+
+
+def _chain(self: Table, att: Fighter, dfn: Fighter, steps: list, t: float, gap: float = 0.26, fast: bool = True) -> float:
+    """連続技。steps=[(技, 結果, kw), ...] を gap 秒おきに速い打ち(溜め 1・一気 2)で並べる。途中は下がらず(ret=0)押しも小さく、最後だけ kw のまま。
+    最後の当たりの時刻を返す。"""
+    for i, st in enumerate(steps):
+        kind, result = st[0], st[1]
+        kw = dict(st[2]) if len(st) > 2 else {}
+        if i < len(steps) - 1:
+            kw.setdefault("ret", 0.0)
+            kw.setdefault("push", 0.15)
+        kw.setdefault("fast", fast)
+        self.exchange(att, dfn, kind, t + i * gap, result, **kw)
+    return t + (len(steps) - 1) * gap
+
+
+Table.chain = _chain
 
 
 def _clash(self: Table, a: Fighter, b: Fighter, kind: str, t: float, ret: float = 0.35, z: float = 1.40):
