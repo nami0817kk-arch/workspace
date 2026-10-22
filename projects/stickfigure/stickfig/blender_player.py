@@ -135,6 +135,7 @@ def make_figure(tag, color, weapon, front):
         shoe = sphere(FOOT_R, js[-1], (0.05, 0, -seg + 0.012 - 0.4 * 0.8 * FOOT_R), TIP_INK or ink, 20, (1.8, 1.0, 0.8))      # 足先は丸い靴(前へ長い楕円)
         for v in shoe.data.vertices:                     # 接地面は曲げず平らに(2026-10-22)。底を切った分だけ下げて、地面に触れる高さは丸い靴と同じ
             v.co.z = max(v.co.z, -0.6 * FOOT_R)
+        F["shoe" + side] = shoe
         F["leg" + side] = js
     if weapon in WEAPONS:
         W_ = WEAPONS[weapon]
@@ -163,7 +164,7 @@ def make_figure(tag, color, weapon, front):
     F["objs"] = [v for k, v in F.items() if k in ("root", "hip", "chest", "neck", "head")]
     for k in ("armL", "armR", "legL", "legR"):
         F["objs"] += F[k]
-    F["objs"] += F.get("extra", [])
+    F["objs"] += F.get("extra", []) + [F["shoeL"], F["shoeR"]]
     return F
 
 
@@ -270,6 +271,13 @@ for f, fr in enumerate(PLAN["frames"], start=1):
         F["leg" + fa][0].scale = (1, 1, 1 + p["lst"])
         F["arm" + ra][0].scale = (1, 1, 1 + p.get("rst", 0.0))      # 後ろの手足の伸び(アッパー・後ろ回し蹴りのスミア)
         F["leg" + ra][0].scale = (1, 1, 1 + p.get("rlst", 0.0))
+        bpy.context.view_layer.update()
+        for lf, ang_l in ((fa, (-p["fl"] + p["fk"]) * s), (ra, (-p["rl"] + p["rk"]) * s)):
+            shoe = F["shoe" + lf]                          # 足首は曲げる: 踏んでいる足は足裏を地面と平行に保ち、浮いた足(蹴り)はすねに付いたまま
+            z = shoe.matrix_world.translation.z
+            w = max(0.0, min(1.0, 1.0 - (z - 0.10) / 0.25))
+            w = w * w * (3 - 2 * w)
+            shoe.rotation_euler = (0, -w * (-p["roll"] * s + ang_l), 0)
         for o in F["objs"]:
             o.keyframe_insert("location", frame=f)
             o.keyframe_insert("rotation_euler", frame=f)
