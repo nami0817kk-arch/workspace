@@ -136,7 +136,7 @@ def panel(figs: List[dict], path: Path, hits: Sequence[Pt] = (), arrows: Sequenc
             else:
                 rx, ry = 0.085 * f["sc"] * ppu * S, 0.045 * f["sc"] * ppu * S
                 X += 0.04 * f["d"] * f["sc"] * ppu * S
-                d.ellipse([X - rx, Y - ry, X + rx, Y + ry], fill=mix(tipc))
+                d.chord([X - rx, Y - ry, X + rx, Y + ry], 147, 33, fill=mix(tipc))   # 接地面は平ら(底を切った楕円)
         hx, hz = sk["head"]
         r = sk["head_r"] * ppu * S
         X, Y = P(hx, hz)

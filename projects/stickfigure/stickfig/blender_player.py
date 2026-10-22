@@ -132,7 +132,9 @@ def make_figure(tag, color, weapon, front):
     for side, y in (("L", 0.05), ("R", -0.05)):
         h = empty(tag + "hp" + side, hip, (0, y, 0))
         js, seg = chain(tag + "leg" + side, h, 0.90, ink)
-        sphere(FOOT_R, js[-1], (0.05, 0, -seg + 0.012), TIP_INK or ink, 20, (1.8, 1.0, 0.8))      # 足先は丸い靴(前へ長い楕円)
+        shoe = sphere(FOOT_R, js[-1], (0.05, 0, -seg + 0.012 - 0.4 * 0.8 * FOOT_R), TIP_INK or ink, 20, (1.8, 1.0, 0.8))      # 足先は丸い靴(前へ長い楕円)
+        for v in shoe.data.vertices:                     # 接地面は曲げず平らに(2026-10-22)。底を切った分だけ下げて、地面に触れる高さは丸い靴と同じ
+            v.co.z = max(v.co.z, -0.6 * FOOT_R)
         F["leg" + side] = js
     if weapon in WEAPONS:
         W_ = WEAPONS[weapon]
