@@ -1,0 +1,141 @@
+# 取材メモ（2026年10月22日）ニコ・パス、マンU戦のあとに（ニュースのショート。見せ方 Y＝本人の一言から始める）
+# 取材: 2026-10-22。requests（ブラウザUA）で原文を読んだ。控えは research/raw/20261022_nicopaz_fi.html。
+#   ・Football Italia（英語）「Nico Paz: I'll never forget Man United」— 本文を全部読んだ。パスの発言（スカイ・スポーツ・イタリアの試合後インタビュー）はここから訳した。
+#       得点の流れ（開始2分に先制／ドゥビカスの2点目をアシスト／単独で3点目／ラモン、ジルクジーの得点が続く）もここ。
+#   ・ESPN 試合記録API（site.api.espn.com … uefa.champions scoreboard 20261021・summary event=401915395）— 得点者と時間、シュートを確かめた。
+#       2分パス／49分ドゥビカス（アシスト：パスのスルーパス）／57分パス／76分ラモン（ヘディング）／90+1分ジルクジー（マンU）。最終 コモ4-1マンU。
+#       パスの数字（ESPN の選手別）：シュート4本・4本とも枠内・2得点・1アシスト。
+#   ・ESPN チーム日程API — コモの次の試合：10/24（土）ホームでサッスオーロ（キックオフ 13:00 UTC＝現地15時）、10/27 トリノ。
+# 発言（英語の原文を訳した。言い換えない。パスは Sky Sport Italia の試合後インタビューで話した）:
+#   「That was one of the most beautiful games of my career, I'll never forget it」→ 僕のキャリアで、最も美しい試合の一つでした。一生、忘れません。
+#   「It's more than what I had dreamed of, we played an incredible game.」→ 夢に見ていた以上です。信じられない試合をしました。
+#   「We have to continue like this, but this was an historic night for everyone from Como.」→ このまま続けなければいけません。でも、コモのみんなにとって、歴史的な夜でした。
+#   「We have to carry on like this, not thinking about where we can go, but to take on every game as if it's our last.」→ どこまで行けるかは考えず、どの試合も最後の試合のつもりで戦うだけです。
+#   「I just saw the space and shot. I'm happy to experience nights like these in front of my family.」（先制点について）→ スペースが見えたので打ちました。家族の前で、こんな夜を味わえてうれしいです。
+# 確度: 発言は 報道（Football Italia の記事。インタビューの発言として伝えている）。得点と数字は ESPN の試合記録（公式の試合記録に近い）。見立ての節は 背景（自分で数えた比べ）。
+# 日付: 試合は10/21（水）夜。記事は「Wednesday evening」。
+# 自分で数えた比べ（見立て）: コモの4得点のうち、パスが絡んだのは3つ（2分、49分、57分）。3点目までの3点はすべてパスが絡んだ。シュート4本はすべて枠内（ESPN）。
+# 入れなかったこと: ファブレガス監督の会見の言葉（今回の出典では本文を読めていない）。記事の見出しの「マンU戦術へのブルーノの不満」は別の話なので使わない。
+#   「CL初参戦」「歴史的な夜」はパス本人の言葉としてだけ引く（こちらから言い切らない）。ジルクジーの得点は90+1分（ESPN）だが、本編では使わない。
+# 反応: 取れなかった（この題材のために探していない／作らない）。approve は --no-voices で。
+# 写真: Commons の Nico Paz（Como）の写真を photopool と commons で集める。Getty（代理店）の記事主写真は使わない。出典は credits.json。
+slot: other
+date: "2026年10月22日"
+format: news
+no_main: true
+people: [ニコ・パス, コモ, マンチェスター・ユナイテッド]
+
+short_style: Y
+short_hook_quote: 僕のキャリアで、最も美しい試合の一つでした。
+short_question: あなたは、次の試合でもパスが得点に絡むと思いますか。
+short_hook: ニコ・パス、マンU戦のあとに。
+short_telops:
+  - {match: 2ゴール1アシスト, text: 21日 コモ4-1マンU/パス 2ゴール1アシスト}
+  - {match: 最も美しい試合の一つ, text: 「僕のキャリアで/最も美しい試合の一つ」}
+  - {match: 夢に見ていた以上, text: 「夢に見ていた以上です」}
+  - {match: 歴史的な夜, text: 「コモのみんなにとって/歴史的な夜」}
+  - {match: 最後の試合のつもり, text: 「どの試合も/最後の試合のつもりで」}
+  - {match: 開始2分, text: 2分 パスが先制}
+  - {match: 49分, text: 49分 パスのアシストで2点目}
+  - {match: 57分, text: 57分 パスが3点目}
+  - {match: スペースが見えた, text: 先制点を語る}
+  - {match: 4点のうち3点, text: コモの4点のうち/3点にパスが関与}
+  - {match: 4本すべて, text: シュート4本/4本とも枠内}
+  - {match: サッスオーロ, text: 次戦 24日/ホームでサッスオーロ}
+
+theme:
+  id: nicopaz_como_manu
+  league: italy
+  league_name: セリエA
+  prefix: ""
+  title: ニコ・パス、マンU戦のあとに言った「一生忘れません」
+  hook: ""
+  question: マンU戦で2ゴール1アシストのニコ・パスは、試合のあとに何と語ったのか
+  takeaway: コモの4点のうち3点にパスが絡み、シュート4本はすべて枠内。次は24日のサッスオーロ戦
+
+thumbnail:
+  line1: ニコ・パス
+  line2: 一生忘れません
+  tags: [ニコ・パス, コモ]
+  layout: face
+  photo: assets/images/20261022_nicopaz_como_manu/01_w.jpg
+  short_photo: assets/images/20261022_nicopaz_como_manu/01_w_v.jpg
+
+answer: 「僕のキャリアで最も美しい試合の一つ。一生忘れません」と話した
+watch: 24日（土）のサッスオーロ戦のパス
+
+sections:
+  - id: what
+    main: true
+    heading: 何が起きたか
+    tier: 報道
+    telop: マンU戦で2ゴール1アシストのパス
+    say:
+      - text: 21日のチャンピオンズリーグ、コモはマンUに4対1で勝利。
+      - text: パスは2ゴール1アシスト。試合後、こう話しました。
+      - voice: ニコ・パス
+        text: 僕のキャリアで、最も美しい試合の一つでした。
+        short_voice: true
+        image: assets/images/20261022_nicopaz_como_manu/01_p.jpg
+      - voice: ニコ・パス
+        text: 一生、忘れません。
+        cont: true
+      - voice: ニコ・パス
+        text: 夢に見ていた以上です。
+        image: assets/images/20261022_nicopaz_como_manu/04_w.jpg
+      - voice: ニコ・パス
+        text: 信じられない試合をしました。
+        cont: true
+      - voice: ニコ・パス
+        text: このまま続けなければいけません。
+        image: assets/images/20261022_nicopaz_como_manu/01_w.jpg
+      - voice: ニコ・パス
+        text: でも、コモのみんなにとって、歴史的な夜でした。
+        cont: true
+    official: false
+    sources:
+      - https://football-italia.net/nico-paz-ill-never-forget-man-united/
+
+  - id: goals
+    heading: 2ゴール1アシストの中身
+    tier: 報道
+    telop: 2分、49分、57分
+    say:
+      - text: 開始2分、パスが先制点を決めました。
+        image: assets/images/20261022_nicopaz_como_manu/02_w.jpg
+      - text: 49分は、パスのスルーパスから、チームメートのドゥビカスが2点目です。
+        image: assets/images/20261022_nicopaz_como_manu/03_w.jpg
+      - text: 57分、パスが3点目。右サイドでボールを奪い、ひとりで持ち込んで決めました。
+        image: assets/images/20261022_nicopaz_como_manu/04_w.jpg
+      - text: 先制点について、パスはこう話しています。
+        image: assets/images/20261022_nicopaz_como_manu/01_w.jpg
+      - voice: ニコ・パス
+        text: スペースが見えたので打ちました。
+        image: assets/images/20261022_nicopaz_como_manu/02_w.jpg
+      - voice: ニコ・パス
+        text: 家族の前で、こんな夜を味わえてうれしいです。
+        cont: true
+    official: false
+    sources:
+      - https://football-italia.net/nico-paz-ill-never-forget-man-united/
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915395
+
+  - id: view
+    viewpoint: true
+    heading: パスの3つの関与を数える
+    tier: 背景
+    telop: コモの4点のうち3点にパスが関与
+    say:
+      - text: 見立てです。コモの4点のうち、パスが絡んだのは3点です。
+        image: assets/images/20261022_nicopaz_como_manu/03_w.jpg
+      - text: 2分、49分、57分。3点目までは、すべてパスが関わっていました。
+      - text: シュートは4本、4本とも枠内でした。
+        image: assets/images/20261022_nicopaz_como_manu/04_w.jpg
+      - text: パスは、どの試合も最後の試合のつもりで戦う、と話しています。
+        image: assets/images/20261022_nicopaz_como_manu/01_w.jpg
+      - text: コモの次の試合は、24日の土曜、ホームでサッスオーロ戦です。
+        image: assets/images/20261022_nicopaz_como_manu/02_w.jpg
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915395
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/teams/2572/schedule?fixture=true

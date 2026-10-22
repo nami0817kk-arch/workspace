@@ -1,0 +1,148 @@
+# ブルーノ・フェルナンデス「守備のやり方はスタッフの判断」とキャリック監督の反論の取材メモ（2026年10月22日・ショートだけ）。見せ方は B（写真を切り替え）
+# 題材の元: topics_src num 8（フットボールチャンネル 10/22 06:59。英『The Guardian』の引用）。
+# 読んだ出典（requests・ブラウザUAで本文を全部。控え research/raw/20261022_*.txt）:
+#   ・フットボールチャンネル（https://www.footballchannel.jp/2026/10/22/post1038099/）: 日本語の引用元。ブルーノ・キャリックの言葉の日本語訳はここ。
+#   ・The Guardian 試合後の記事（https://www.theguardian.com/football/2026/oct/21/michael-carrick-bruno-fernandes-manchester-united-como-champions-league）: 英語の原文の引用。ブルーノ・キャリックの言葉の原文を確かめた。
+#   ・The Guardian 試合レポート（https://www.theguardian.com/football/2026/oct/21/como-manchester-united-champions-league-match-report）: 4-1 の経過。
+# 事実: CL リーグフェーズ第3節 コモ対マンU、現地21日、コモが4-1。2分にニコ・パス先制、後半アディショナルタイムにザークツィーが1点返す（日本語記事）。
+#   マンU 公式戦7試合連続未勝利（日本語記事）。次は25日（日）ホームのボーンマス戦（日本語記事「25日のボーンマス戦」・Guardian「Bournemouth's visit to Old Trafford」）。
+# 【言葉の突き合わせ（原文 Guardian と日本語記事）】
+#   ・ブルーノ「It's a decision from the staff to not press man-to-man and sometimes leave space behind and try to get the ball, wait for them, but sometimes when you give space to these teams they get confidence」
+#     → 日本語記事「マンツーマンでプレスをかけず、ある程度のスペースを与えて相手にボールを持たせるのは、スタッフの判断だった」。台本は前半の訳を使う（後半の「自信をつけさせる」は日本語記事の別の引用で、台本には入れない）。
+#   ・ブルーノ「That's on the manager and staff to see, not me」→「それは監督とスタッフが判断することだ。私が判断することではない」（質問: 監督の戦術が間違っていたのか）。
+#   ・ブルーノ「Sometimes you have to be more brave under pressure, take the risk of pressing high and making them uncomfortable」→「時にはもっと勇敢になり、リスクを冒して高い位置からプレスをかけ、相手を苦しめる必要がある」。
+#   ・キャリック「We actually half-pressed man-to-man in the second half and then conceded a goal from that. Whatever system you play, whatever tactics you play, if you don't run, and you don't run forward, and you don't run back, you ain't going to win.」
+#     → 「実際、後半には部分的にマンツーマンでプレスをかけたが、そこから失点した」「どんなシステムや戦術でプレーしても、前にも後ろにも走らなければ勝つことはできない」。
+#   ・キャリック「I'm bitterly disappointed, I'm frustrated; more than frustrated, I'm really angry.」→ 台本は「悔しいし、苛立っている。それ以上に、本当に怒っている」。日本語記事の「受け入れられない」は Guardian の引用の中に見つからなかったので入れない。
+# 入れないもの（主将を貶さない・発言の紹介にとどめる）: 67分の交代で首を振った（The Sun 経由）・ベンチをたたいた（Football Italia 経由）・「内部崩壊の危機」・キャリックの進退・マルティネスの騒動の中身・試合の中身の評価。
+#   「ブルーノが公然と挑んだ」「首脳陣批判」などの記事側の言い方は使わない。台本は二人の言葉を並べるだけ。どちらが正しいかは言わない。
+# 本人の言葉: ブルーノ・キャリックともに実在（試合後の取材・会見）。短い引用だけ。反応: 実在の投稿を当たっていない → 0件（作らない）。
+# 自分で数えたもの（見立て）: ブルーノの言葉は前半からの守り方の方針、キャリックの言葉は後半の試みと走る量。話している場面が違う、と台本は「見立て」と断る。優劣・どちらが正しいかは言わない。
+# 写真（B・縦5枚以上）: assets/images/20261022_bruno_carrick_como/。配信写真（Getty・ロイター等）は取り込まない。Commons の CC BY-SA 4.0（Bryan Berlin 撮影 ポルトガル代表の試合）のブルーノと CC0（Timmy96）のキャリック。
+#   01〜04＝ブルーノ（Bryan Berlin, CC BY-SA 4.0。2026-07-02 ポルトガル対クロアチア／2026-03-31 米国対ポルトガル。背番号8・主将の腕章を目で確認）、06〜08＝キャリック（Timmy96, CC0。2025-04-12 ミドルズブラ監督時代の写真。クラブのジャケットが前所属のもの）。
+#   今日の試合の写真ではない。Commons に今日・今季のマンU姿は無く、報道写真は代理店（Getty・ロイター等）なので取り込まない。目で見て本人。05（遠景でブルーノの顔が小さい）は外した。ショートは ブルーノ→キャリック と交互に回す。
+slot: abroad
+date: "2026年10月22日"
+format: news
+no_main: true      # ニュースはショートだけ（2026-10-14）。締めで本編を案内しない
+people: [ブルーノ・フェルナンデス, マイケル・キャリック, マンチェスター・ユナイテッド, コモ]
+short_style: B
+short_photos:
+  - assets/images/20261022_bruno_carrick_como/01_v.jpg
+  - assets/images/20261022_bruno_carrick_como/06_v.jpg
+  - assets/images/20261022_bruno_carrick_como/02_v.jpg
+  - assets/images/20261022_bruno_carrick_como/07_v.jpg
+  - assets/images/20261022_bruno_carrick_como/03_v.jpg
+  - assets/images/20261022_bruno_carrick_como/08_v.jpg
+  - assets/images/20261022_bruno_carrick_como/04_v.jpg
+
+short_question: マンUの守備、いちばん直すべきなのは何だと思いますか。
+short_hook: ブルーノ、守備のやり方を語る。
+short_telops:
+  - {match: 21日、チャンピオンズリーグ, text: CL第3節/コモ4-1マンU}
+  - {match: スタッフの判断だった, text: ブルーノ/「スタッフの判断だった」}
+  - {match: 勇敢になって, text: ブルーノ/「高い位置からプレスをかける必要がある」}
+  - {match: 私が判断することではない, text: ブルーノ/「私が判断することではない」}
+  - {match: 部分的にマンツーマン, text: キャリック監督/「後半、部分的にマンツーマンでやった」}
+  - {match: 走らなければ, text: キャリック監督/「走らなければ勝てない」}
+  - {match: 7試合連続, text: マンUは公式戦/7試合連続で勝てず}
+  - {match: ボーンマス, text: 次は25日/ホームでボーンマス戦}
+
+theme:
+  id: bruno_carrick_como
+  league: england
+  prefix: ""
+  title: ブルーノ・フェルナンデス「守備はスタッフの判断」。監督の答えは
+  hook: ""
+  question: コモ戦のあと、ブルーノとキャリック監督はそれぞれ何を語ったのか
+  takeaway: ブルーノは守り方の方針を、キャリック監督は後半の試みと走る量を語った。二人が話している場面は少し違う。これで公式戦7試合連続で勝てていない
+
+thumbnail:
+  line1: ブルーノが語った守備
+  line2: キャリック監督の答え
+  tags: [マンU, ブルーノ・フェルナンデス, キャリック]
+  layout: versus
+  photos:
+    - assets/images/20261022_bruno_carrick_como/01_w.jpg
+    - assets/images/20261022_bruno_carrick_como/06_w.jpg
+  face_link: VS
+  names: [ブルーノ, キャリック]
+  photo: assets/images/20261022_bruno_carrick_como/01_w.jpg
+  short_photo: assets/images/20261022_bruno_carrick_como/01_v.jpg
+
+answer: ブルーノは守り方は「スタッフの判断」と話し、キャリック監督は「走らなければ勝てない」と答えた
+watch: 25日、ホームでボーンマス戦
+
+sections:
+  - id: what
+    main: true
+    heading: 何が起きたか
+    tier: 報道
+    telop: コモ戦のあと、主将ブルーノが守り方について語った
+    say:
+      - 21日、チャンピオンズリーグでコモに1対4で敗れたマンチェスター・ユナイテッド。
+      - 試合後、主将のブルーノ・フェルナンデスは、守り方の話をしました。
+      - voice: ブルーノ・フェルナンデス
+        text: マンツーマンでプレスをかけず、ある程度のスペースを与えて、
+        short_voice: true
+      - voice: ブルーノ・フェルナンデス
+        text: 相手に持たせるのは、スタッフの判断だった。
+        cont: true
+      - voice: ブルーノ・フェルナンデス
+        text: 時にはもっと勇敢になって、
+        cont: true
+      - voice: ブルーノ・フェルナンデス
+        text: リスクを冒して高い位置からプレスをかける必要がある。
+        cont: true
+      - 監督の戦術が間違っていたのか、と聞かれたブルーノの返事です。
+      - voice: ブルーノ・フェルナンデス
+        text: それは監督とスタッフが判断することだ。
+      - voice: ブルーノ・フェルナンデス
+        text: 私が判断することではない。
+        cont: true
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/10/22/post1038099/
+      - https://www.theguardian.com/football/2026/oct/21/michael-carrick-bruno-fernandes-manchester-united-como-champions-league
+
+  - id: reply
+    heading: キャリック監督の答え
+    tier: 報道
+    telop: ブルーノの発言を聞かれた監督「走らなければ勝てない」
+    say:
+      - ブルーノの発言は、試合後にキャリック監督にも伝えられました。
+      - voice: キャリック監督
+        text: 実際、後半には部分的にマンツーマンでプレスをかけたが、
+        short_voice: true
+      - voice: キャリック監督
+        text: そこから失点した。
+        cont: true
+      - voice: キャリック監督
+        text: どんなシステムや戦術でプレーしても、
+        cont: true
+      - voice: キャリック監督
+        text: 前にも後ろにも走らなければ、勝つことはできない。
+        cont: true
+      - voice: キャリック監督
+        text: 悔しいし、苛立っている。それ以上に、本当に怒っている。
+        cont: true
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/10/22/post1038099/
+      - https://www.theguardian.com/football/2026/oct/21/michael-carrick-bruno-fernandes-manchester-united-como-champions-league
+
+  - id: view
+    viewpoint: true
+    heading: 二人が話している場面は、少し違う
+    tier: 報道
+    telop: 見立て：ブルーノは守り方の方針、監督は後半の試みと走る量
+    say:
+      - 見立てです。ブルーノは、守り方の方針を語りました。
+      - 監督は、後半の試みと走る量を語っています。
+      - 二人が話している場面は、少し違います。
+      - マンUはこれで、公式戦7試合連続で勝てていません。
+      - 次は25日、ホームでボーンマスと戦います。
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/10/22/post1038099/
+      - https://www.theguardian.com/football/2026/oct/21/michael-carrick-bruno-fernandes-manchester-united-como-champions-league-match-report

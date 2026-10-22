@@ -3,7 +3,7 @@
 #   python -m src.cli sources --new
 sites:
 - host: derbyderbyderby.it
-  seen: 41
+  seen: 42
   days:
   - '2026-09-02'
   - '2026-09-03'
@@ -25,6 +25,7 @@ sites:
   - '2026-10-17'
   - '2026-10-18'
   - '2026-10-20'
+  - '2026-10-22'
   examples:
   - https://www.derbyderbyderby.it/calcio-italiano/monza-juric-dopo-la-vittoria-sul-torino-se-ci-salviamo-sara-un-grande-risultato/?intcmp=gazzanet-derbyderbyderby
   - https://www.derbyderbyderby.it/calcio-estero/monza-ecco-zeballos-in-italia-per-il-mito-di-maradona-e-i-consigli-di-paredes/?intcmp=gazzanet-derbyderbyderby
@@ -56,6 +57,21 @@ sites:
   - https://www.forzaroma.info/news-as-roma/rodrigo-mora-gasperini-fondamentale-nella-mia-scelta-e-un-sogno-giocare-con-dybala/?intcmp=gazzanet-forzaroma
   - https://www.forzaroma.info/news-as-roma/fenerbahce-guendouzi-squalificato-salta-la-roma-greenwood-ci-sara-ecco-perche/?intcmp=gazzanet-forzaroma
   - https://www.forzaroma.info/news-as-roma/conti-omaggia-totti-ricordando-il-suo-primo-gol-sei-la-storia-della-roma-foto/?intcmp=gazzanet-forzaroma
+- host: fcinter1908.it
+  seen: 15
+  days:
+  - '2026-09-05'
+  - '2026-09-09'
+  - '2026-09-19'
+  - '2026-09-23'
+  - '2026-09-26'
+  - '2026-10-17'
+  - '2026-10-21'
+  - '2026-10-22'
+  examples:
+  - https://www.fcinter1908.it/news/interviste/sneijder-inter-triplete-ausilio-chivu-dumfries/?intcmp=gazzanet-fcinter1908
+  - https://www.fcinter1908.it/cronaca-live/youth-league-real-madrid-inter/?intcmp=gazzanet-fcinter1908
+  - https://www.fcinter1908.it/partite/conferenze-stampa/fabregas-roma-inter-como-frosinone/?intcmp=gazzanet-fcinter1908
 - host: transfermarkt.co.uk
   seen: 14
   days:
@@ -86,20 +102,6 @@ sites:
   - https://www.mondoudinese.it/udinese/news-udinese/udinese-unai-gomez-voglio-migliorare-e-aumentare-i-miei-numeri/?intcmp=gazzanet-mondoudinese
   - https://www.mondoudinese.it/udinese/news-udinese/conferenza-runjaic-bayo-puo-giocare-titolare-ma-non-vi-diro-lundici/?intcmp=gazzanet-mondoudinese
   - https://www.mondoudinese.it/udinese/news-udinese/palma-il-posto-da-titolare-me-lo-dovro-riguadagnare/?intcmp=gazzanet-mondoudinese
-- host: fcinter1908.it
-  seen: 14
-  days:
-  - '2026-09-05'
-  - '2026-09-09'
-  - '2026-09-19'
-  - '2026-09-23'
-  - '2026-09-26'
-  - '2026-10-17'
-  - '2026-10-21'
-  examples:
-  - https://www.fcinter1908.it/news/interviste/sneijder-inter-triplete-ausilio-chivu-dumfries/?intcmp=gazzanet-fcinter1908
-  - https://www.fcinter1908.it/cronaca-live/youth-league-real-madrid-inter/?intcmp=gazzanet-fcinter1908
-  - https://www.fcinter1908.it/partite/conferenze-stampa/fabregas-roma-inter-como-frosinone/?intcmp=gazzanet-fcinter1908
 - host: tuttobolognaweb.it
   seen: 13
   days:
@@ -131,7 +133,7 @@ sites:
   - https://www.violanews.com/news-viola/conferenze-stampa/vanoli-conf-non-so-qua-per-rivincita-questa-la-fiorentina-che-voglio/?intcmp=gazzanet-violanews
   - https://www.violanews.com/news-viola/conferenze-stampa/si-presenta-gnonto-dalle-14-30-il-live-della-conferenza-stampa/?intcmp=gazzanet-violanews
 - host: calcionapoli1926.it
-  seen: 12
+  seen: 13
   days:
   - '2026-09-02'
   - '2026-09-03'
@@ -141,6 +143,7 @@ sites:
   - '2026-09-13'
   - '2026-10-14'
   - '2026-10-20'
+  - '2026-10-22'
   examples:
   - https://www.calcionapoli1926.it/ultimissime-calcio-napoli/mazzocchi-laddio-al-napoli-e-da-brividi-sono-stato-un-napoletano-con-quella-maglia-addosso/?intcmp=gazzanet-calcionapoli1926
   - https://www.calcionapoli1926.it/altro/jorginho-agente-santos-proposte-serie-a/?intcmp=gazzanet-calcionapoli1926

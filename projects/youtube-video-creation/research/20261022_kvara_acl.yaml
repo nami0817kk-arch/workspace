@@ -1,0 +1,160 @@
+# 取材メモ（2026年10月22日）クヴァラツヘリア、前十字じん帯断裂（ニュースのショート。見せ方 Y＝本人のインスタの言葉から始める）
+# 怪我の話なので、敬意を持った言い方にする。負傷の場面・担架の写真は使わない。病気・私生活は入れない。本人の言葉とクラブ発表の事実だけで組む。
+# 取材: 2026-10-22。requests で原文を読んだ（検索エンジンの要約は使っていない）。
+#   ・PSG 公式「Medical update following the Barcelona match」(10/21) — 全文を読んだ（3行）。「torn anterior cruciate ligament in his right knee」「surgery in the coming days」。期間は書かれていない。確定。
+#   ・ESPN（記事API content.core.api.espn.com/v1/sports/news/50235833、Mark Ogden、10/21 16:31Z）— 本文を読んだ。本人のインスタグラムの投稿を引用。
+#       「通常は少なくとも9か月の離脱」「今季中の復帰の見込みは薄い」は ESPN の記述（報道）。
+#       本人の言葉の原文は ESPN の引用のみ（インスタ本体は読めない・第二の出典は見つからなかった）。→ 確度は 報道。
+#       ESPN の引用の2文目に文の崩れ（編集の混入）がある。『prepared for this game the best I have ever prepared』の部分は崩れた文の中なので使わない。
+#       使う発言は崩れていない2か所だけ：
+#         (1)「Not much time has passed, yet one thought keeps circling in my head: why me? I never held anything back,」
+#         (2)「I'm ready to go through these months in labor, pain, tears. I know I have to come back stronger for my people who always have my back, I won't let you down.」
+#             → (2) の『labor』は原文のまま『苦しみ』に近い意味で訳した（『pain, tears』と並ぶ）。『my people』は『支えてくれる人たち』と訳した。
+#   ・ESPN 試合記録（site.api.espn.com summary?event=401915399）— PSG 4-2 バルサ。クヴァラツヘリアは58分に治療、59分にアクリウシュと交代（『because of an injury』）。
+# 数字:
+#   ・昨季（25/26）の公式戦 48試合19得点、90分あたり0.59、5季で最高 — 10/17 の取材メモ（Transfermarkt・Wikipedia から自分で割った値）を引いた。今回は再計算していない。
+#   ・9か月 — ESPN の『at least nine months』。10月下旬＋9か月＝2027年7月下旬（自分で数えた）。今季は2027年5月までなので『今季中は難しい』の ESPN の見立てと合う。
+# 入れなかったもの：負傷の場面（接触の相手・担架）。ドゥンベレとマルキーニョスの離脱（題に答えない）。ほかの選手のSNS（ロナウドの追悼は ESPN の見出しだけで中身を読んでいない）。
+# 前の本との重なり：10/17『クヴァラツヘリアってどんな選手？』（シリーズ）、10/21『PSG、バルサの全勝を止めた4発』とは別の新事実（負傷の確定と本人の言葉）。数字・写真は使い回さない。
+# 反応: まとめサイトで今回の負傷への書き込みを探していない／取れなかった扱い。作らない。approve は --no-voices で。
+# 日本語名: フヴィチャ・クヴァラツヘリア（辞書の表記）。PSG はパリ・サンジェルマン。
+slot: other_1
+date: "2026年10月22日"
+format: news
+no_main: true
+people: [フヴィチャ・クヴァラツヘリア]
+
+short_style: Y
+short_photos:
+  - assets/images/20261022_kvara_acl/01_v.jpg
+  - assets/images/20261022_kvara_acl/02_v.jpg
+  - assets/images/20261022_kvara_acl/03_v.jpg
+short_hook_quote: 少ししか経っていないのに
+short_question: あなたは、強くなって戻る彼を、どんな形で迎えたいですか。
+short_hook: クヴァラツヘリアの、手術の発表について。
+short_telops:
+  - {match: 右ひざの前十字じん帯, text: PSGが21日に発表/右ひざの前十字じん帯断裂}
+  - {match: 数日のうちに手術, text: 手術は/数日のうちに}
+  - {match: 59分, text: 20日のバルサ戦/59分に交代}
+  - {match: 少ししか経っていない, text: 本人がインスタグラムに/「なぜ僕なんだ」}
+  - {match: 全てを出し切, text: 「全てを出し切ってきた」}
+  - {match: 苦しみと涙, text: 「苦しみと涙の/数か月を過ごす覚悟」}
+  - {match: 強くなって戻, text: 「強くなって戻る」}
+  - {match: 9か月, text: 復帰まで/通常9か月以上}
+  - {match: 48試合19得点, text: 昨季は/48試合19得点}
+  - {match: 0.59, text: 90分あたり0.59/5季で最高}
+  - {match: 7月, text: 9か月後は/2027年7月ごろ}
+
+theme:
+  id: kvara_acl
+  league: france
+  league_name: リーグ・アン
+  prefix: ""
+  title: クヴァラツヘリア、手術へ。本人が書いた「なぜ僕なんだ」
+  hook: ""
+  question: 前十字じん帯を断裂したクヴァラツヘリアは、何を書いたのか
+  takeaway: 昨季は48試合19得点、90分あたり0.59点で5季で最高。その翌季に、通常9か月以上かかる離脱に入る。9か月後は2027年7月ごろ
+
+thumbnail:
+  line1: クヴァラツヘリア
+  line2: 本人が書いた言葉
+  tags: [フヴィチャ・クヴァラツヘリア, パリ・サンジェルマン]
+  layout: face
+  photo: assets/images/20261022_kvara_acl/01_w.jpg
+  short_photo: assets/images/20261022_kvara_acl/01_v.jpg
+
+answer: 強くなって戻る、という約束。手術のあと、復帰まで通常9か月以上
+watch: 25日のリヨン戦（PSGは不在で戦う）
+
+sections:
+  - id: what
+    main: true
+    heading: 何が起きたか
+    tier: 確定
+    telop: PSGがクヴァラツヘリアの手術を発表
+    say:
+      - text: パリ・サンジェルマンのクヴァラツヘリアが、右ひざの前十字じん帯を断裂しました。
+        image: assets/images/20261022_kvara_acl/01_w.jpg
+        card: none
+      - text: 20日のバルサ戦、59分に交代。
+        image: assets/images/20261022_kvara_acl/02_w.jpg
+        card: none
+      - text: クラブは21日、数日のうちに手術を受けると発表しました。
+        image: assets/images/20261022_kvara_acl/01_w.jpg
+        card: none
+      - text: 本人は、インスタグラムに書きました。
+        image: assets/images/20261022_kvara_acl/02_w.jpg
+        card: none
+      - voice: クヴァラツヘリア
+        text: 少ししか経っていないのに、頭の中をぐるぐる回る。
+        short_voice: true
+        image: assets/images/20261022_kvara_acl/01_w.jpg
+        card: none
+      - voice: クヴァラツヘリア
+        text: なぜ僕なんだ？
+        cont: true
+      - voice: クヴァラツヘリア
+        text: 全てを出し切ってきた。
+        cont: true
+        image: assets/images/20261022_kvara_acl/02_w.jpg
+      - voice: クヴァラツヘリア
+        text: この数か月を、苦しみと涙の中で過ごす覚悟はできている。
+        image: assets/images/20261022_kvara_acl/01_w.jpg
+      - voice: クヴァラツヘリア
+        text: 強くなって戻らなければいけないと、分かっている。
+        cont: true
+        image: assets/images/20261022_kvara_acl/02_w.jpg
+      - voice: クヴァラツヘリア
+        text: 支えてくれる人たちを、がっかりさせない。
+        cont: true
+    official: true
+    sources:
+      - https://www.psg.fr/en/content/communique-medical-apres-barcelone-psg-ucl-kvaratskhelia-marquinhos-dembele-2026-2027
+      - https://www.espn.com/soccer/story/_/id/50235833/khvicha-kvaratskhelia-ruptured-acl-paris-saint-germain-confirm
+      - https://content.core.api.espn.com/v1/sports/news/50235833
+
+  - id: outlook
+    heading: 復帰の見通し
+    tier: 報道
+    telop: 復帰まで通常9か月以上
+    say:
+      - text: クヴァラツヘリアの復帰の時期を、クラブは示していません。
+        image: assets/images/20261022_kvara_acl/02_w.jpg
+        card: none
+      - text: この怪我は通常、少なくとも9か月の離脱になる、と伝えられています。
+        image: assets/images/20261022_kvara_acl/01_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://content.core.api.espn.com/v1/sports/news/50235833
+
+  - id: view
+    viewpoint: true
+    heading: 5季で最高の年の、次の季
+    tier: 背景
+    telop: 昨季48試合19得点。9か月後は7月ごろ
+    say:
+      - text: 見立てです。クヴァラツヘリアの昨季を、数字で見ます。
+        image: assets/images/20261022_kvara_acl/02_w.jpg
+        card: none
+      - text: 昨季は、公式戦48試合で19得点。
+        image: assets/images/20261022_kvara_acl/01_w.jpg
+        card: none
+      - text: 90分あたり0.59点は、直近5季で最高でした。
+        image: assets/images/20261022_kvara_acl/02_w.jpg
+        card: none
+      - text: その翌季に、9か月以上の離脱。
+        image: assets/images/20261022_kvara_acl/01_w.jpg
+        card: none
+      - text: 10月下旬から9か月数えると、2027年7月ごろです。
+        image: assets/images/20261022_kvara_acl/02_w.jpg
+        card: none
+      - text: 今季の終わりは、2027年5月。
+        image: assets/images/20261022_kvara_acl/01_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.transfermarkt.com/khvicha-kvaratskhelia/profil/spieler/502670
+      - https://en.wikipedia.org/wiki/Khvicha_Kvaratskhelia
+      - https://content.core.api.espn.com/v1/sports/news/50235833
+short_title: "クヴァラツヘリア、手術へ。本人が書いた「なぜ僕なんだ」"

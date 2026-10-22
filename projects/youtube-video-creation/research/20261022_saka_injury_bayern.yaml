@@ -1,0 +1,140 @@
+# 取材メモ（2026年10月22日）サカ、バイエルン戦の開始10分で負傷交代。アルテタ監督の試合後の言葉（ニュースのショート。見せ方 X＝冒頭1秒に強い一言）
+# 題材: research/20261022_topics_src.yaml の番号11。題材ページの「確かめられなかったこと」＝アルテタの発言の全文が未確認、程度・離脱期間は未発表。
+# 取材: 2026-10-22。requests（ブラウザUA／ESPN は記事API）で本文を全部読んだ。検索エンジンのAI要約は使っていない。控えは research/raw/20261022_saka_*.txt。
+#   ・Arsenal.com（クラブ公式）「Every word from Arteta's post-Bayern presser」（2026-10-21 22:13Z）……試合後会見の全文を読んだ（一次情報）。
+#       「On Bukayo's injury… It's his quad. It was early in the game, and the level of intensity his game requires is something incredible. … those things happen unfortunately. It doesn't look good at all, but we have to wait and see.」
+#       **ここで『全文』が確かめられた**（題材ページでは未確認だった）。ただし「They are a bit concerned」「really sharp pain」はこの会見録に**無い**。試合直後の取材（ミックスゾーンなど）の発言らしく、下の2紙が引いている。
+#   ・Arsenal.com 試合レポート「Report: Bayern Munich 2-2 Arsenal」……「forced off with a non-contact injury after just nine minutes」（**接触のない負傷**。クラブ公式）。交代は「Eze – an early replacement for Bukayo Saka」。**公式は「9分」、他紙は10分交代**——台本は「開始10分に交代」（ESPN・ガーディアン・フットボールチャンネルが10分）。
+#   ・ESPN（記事API・AP配信）「Saka forced off after 'sharp pain;' Arteta says 'doesn't look good'」……「"They are a bit concerned," Arteta said after the game, while confirming the injury was to Saka's quad. "A player who has to come off with a really sharp pain is never good news but we have to wait and see." … "It doesn't look good."」、左の太ももを押さえた、エゼと交代した時点で0-0、25歳、近年はけがが多い（ハムストリングとアキレス）。
+#   ・ガーディアン（2026-10-21）「'A player off with really sharp pain is never good news'」……「"It doesn't look good at all but we have to wait and see," Arteta said. "They [the medics] are a bit concerned. A player who has to come off with a really sharp pain is never good news. Bukayo did not start the game against Lille last Tuesday, then he started at Nottingham Forest on Sunday and it happened very early in this game."」**「They」は記事の補足で『医療班』**（括弧書き）。
+#   ・フットボールチャンネル（2026-10-22）……8分に接触なしで太もも付近を押さえて倒れ、10分にエゼと交代。「今後の欠場の有無にも注目が集まる」（記事の書き方。**欠場は未発表**）。
+#   ・スカイスポーツ：題材ページの見出し『Gunners 'concerned' by Saka injury, says Arteta』は**見出しだけ**。本文（ライブブログ）は読めていない。**使わない**。BBC は採点記事に「thigh injury」とあるのみ。
+# **「懸念している」はアルテタの言葉そのものではない。** 原文は「They [the medics] are a bit concerned」＝医療班が少し懸念している。台本は『医療班は、少し懸念している』と訳し、監督自身が懸念していると言わない。
+# 出来事の順（現地21日・水曜、アリアンツ・アレーナ、CL リーグフェーズ第3節）: 8分に倒れ込む → 10分にエゼと交代（0-0）→ 25分エゼ先制（VAR で認められる）→ 35分デイビスが同点 → 61分ケインPKで逆転 → 82分ライスが同点、2-2。アーセナルは2勝1分で無敗。
+# 数字（自分で数えた）: 交代の10分→エゼの先制25分＝**15分後**。サカは 13日のリール戦＝先発でない／18日のフォレスト戦＝先発／21日＝10分で交代（監督の振り返り。ESPN の日程で13日・18日を確認）。
+# 言わないこと: 負傷の程度・離脱期間・次の試合への影響は憶測になるので書かない。診断結果は、会見録・試合レポート・arsenal.com のニュース一覧のどこにも出ていない（10/22 昼の時点）。
+#   「ハムストリング／アキレスの既往」は台本に入れない（今回の負傷と結びつけて読まれるため）。
+# 反応: **当たっていない（作らない）**。承認は --no-voices で。
+# 確度: 負傷交代・大腿四頭筋・接触なし＝確定（クラブ公式）。「医療班は少し懸念」「鋭い痛み」の言葉＝報道（ガーディアン・ESPN）。診断は未発表。
+# 本人の言葉: アルテタ本人の発言が実在する（英語を訳した。語は足していない）。サカ本人の言葉は無い。
+# 写真: 負傷の場面は使わない。代理店（Getty・AP など）は取り込まない。assets/images/20261022_saka_injury_bayern/（出典は credits.json）。
+slot: premier
+date: "2026年10月22日"
+format: news
+no_main: true      # ニュースはショートだけ（2026-10-14）。締めで本編を案内しない
+people: [ブカヨ・サカ, ミケル・アルテタ, エベレチ・エゼ, アーセナル, バイエルン]
+
+short_style: X
+short_hook_word: 開始10分で負傷
+short_photos:
+  - assets/images/20261022_saka_injury_bayern/05_v.jpg
+  - assets/images/20261022_saka_injury_bayern/04_v.jpg
+  - assets/images/20261022_saka_injury_bayern/03_v.jpg
+  - assets/images/20261022_saka_injury_bayern/06_v.jpg
+  - assets/images/20261022_saka_injury_bayern/01_v.jpg
+  - assets/images/20261022_saka_injury_bayern/07_v.jpg
+  - assets/images/20261022_saka_injury_bayern/02_v.jpg
+short_question: サカの診断結果の発表を、あなたも待っていますか。
+short_hook: サカ、開始10分で負傷交代。アルテタ監督の言葉。
+short_telops:
+  - {match: 開始10分に負傷交代, text: サカ(アーセナル)/CLバイエルン戦の開始10分に負傷交代}
+  - {match: 接触のない場面, text: 相手との接触のない場面/サカは太ももを押さえて倒れた}
+  - {match: 治療を受けましたが, text: 治療を受けたが/プレーを続けられなかった}
+  - {match: 両チームに得点, text: 代わって入ったのはエゼ/交代の時点は0対0}
+  - {match: 大腿四頭筋, text: アルテタ監督の説明/痛めたのは大腿四頭筋}
+  - {match: 良さそうには, text: アルテタ監督/「まったく良さそうには見えない」}
+  - {match: 様子を見るしかない, text: アルテタ監督/「様子を見るしかない」}
+  - {match: 医療班, text: アルテタ監督/「医療班は、少し懸念している」}
+  - {match: 鋭い痛み, text: アルテタ監督/「いい知らせではない」}
+  - {match: その15分後, text: 交代の10分から15分後/25分にエゼが先制}
+  - {match: 2対2, text: バイエルン対アーセナルは2対2/ライスが82分に同点}
+  - {match: 18日のフォレスト戦, text: 監督の振り返り/13日リール戦は先発でなく、18日フォレスト戦は先発}
+  - {match: 診断結果, text: サカの診断結果/試合後の時点で発表なし}
+
+theme:
+  id: saka_injury_bayern
+  league: england
+  league_name: チャンピオンズリーグ
+  kind: other
+  prefix: ""
+  title: アーセナルのサカ、開始10分で負傷交代。アルテタ「まったく良さそうには見えない」
+  hook: ""
+  question: サカの負傷交代について、アルテタ監督は何と言ったのか
+  takeaway: 確かなのは、10分の負傷交代と、監督の「まったく良さそうには見えない」まで。診断結果はまだ出ていない
+
+thumbnail:
+  layout: face
+  line1: サカ、10分で負傷交代
+  line2: アルテタ「良さそうに見えない」
+  tags: [サカ, アルテタ, アーセナル]
+  photo: assets/images/20261022_saka_injury_bayern/04_w.jpg
+  short_photo: assets/images/20261022_saka_injury_bayern/05_v.jpg
+
+answer: サカは開始10分に負傷交代。アルテタ監督は「まったく良さそうには見えない」と話し、診断はこれから
+watch: 診断結果の発表を待つ段階
+
+sections:
+  - id: what
+    main: true
+    heading: 何が起きたか
+    tier: 確定
+    telop: サカ、開始10分に負傷交代
+    say:
+      - text: アーセナルのサカが、バイエルン戦で、開始10分に負傷交代しました。
+      - text: チャンピオンズリーグ、現地21日の試合です。
+      - text: 相手との接触のない場面でした。サカは太ももを押さえて倒れ込みました。
+      - text: 治療を受けましたが、プレーを続けられませんでした。
+      - text: 代わって入ったのは、エゼです。ここまで、両チームに得点はありませんでした。
+    official: true
+    sources:
+      - https://www.arsenal.com/news/report-bayern-munich-2-2-arsenal-af3gg0j1ufcj
+      - https://www.arsenal.com/news/every-word-from-artetas-post-bayern-presser-azIsw7P3tdJO
+      - https://www.footballchannel.jp/2026/10/22/post1038048/
+      - https://www.espn.com/soccer/story/_/id/50240494/saka-limps-10th-minute-arsenal-match-bayern
+
+  - id: words
+    heading: アルテタ監督は、サカの状態を何と言ったか
+    tier: 報道
+    telop: アルテタ監督「まったく良さそうには見えない」
+    say:
+      - text: 試合後、アルテタ監督は、サカの状態について語りました。
+      - text: 監督によると、痛めたのは、太ももの前側の筋肉、大腿四頭筋です。
+      - voice: アルテタ監督
+        text: まったく良さそうには見えない。
+      - voice: アルテタ監督
+        text: ただ、様子を見るしかない。
+        cont: true
+      - voice: アルテタ監督
+        text: 医療班は、少し懸念している。
+        cont: true
+      - voice: アルテタ監督
+        text: とても鋭い痛みで下がる選手は、決していい知らせではない。
+        cont: true
+    official: false
+    sources:
+      - https://www.arsenal.com/news/every-word-from-artetas-post-bayern-presser-azIsw7P3tdJO
+      - https://www.theguardian.com/football/2026/oct/21/champions-league-bayern-munich-arsenal-mikel-arteta-bukayo-saka-injury
+      - https://www.espn.com/soccer/story/_/id/50240494/saka-limps-10th-minute-arsenal-match-bayern
+    quotes_from: ["Arsenal.com https://www.arsenal.com/news/every-word-from-artetas-post-bayern-presser-azIsw7P3tdJO", "ガーディアン https://www.theguardian.com/football/2026/oct/21/champions-league-bayern-munich-arsenal-mikel-arteta-bukayo-saka-injury"]
+
+  - id: view
+    viewpoint: true
+    heading: サカの状態について、いま分かっていること
+    tier: 報道
+    telop: 分かっているのは、10分の交代と監督の言葉まで
+    say:
+      - text: いま分かっていることを、事実の範囲で整理します。
+      - text: サカが下がったのは10分。その15分後の25分に、
+      - text: エゼのゴールでアーセナルが先制しました。
+      - text: 試合は2対2。82分にライスが追いつきました。
+      - text: アーセナルはリーグフェーズ2勝1分で、無敗です。
+      - text: 監督は、サカが13日のリール戦は先発でなく、
+      - text: 18日のフォレスト戦は先発だったと振り返っています。
+      - text: 診断結果は、試合後の時点で、発表されていません。
+      - text: 離脱するのか、どのくらいかは、まだ誰も言っていません。発表を待つ段階です。
+    official: false
+    sources:
+      - https://www.arsenal.com/news/report-bayern-munich-2-2-arsenal-af3gg0j1ufcj
+      - https://www.theguardian.com/football/2026/oct/21/champions-league-bayern-munich-arsenal-mikel-arteta-bukayo-saka-injury
+      - https://www.espn.com/soccer/report/_/gameId/401915312
+short_title: "アーセナルのサカ、開始10分で負傷交代。アルテタ「まったく良さそうには見えない」"

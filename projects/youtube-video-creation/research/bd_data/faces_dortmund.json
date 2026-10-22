@@ -1,0 +1,39 @@
+{
+ "dortmund": {
+  "ミヒャエル・ツォルク": {
+   "role": "legend",
+   "file": "assets/photos/bd/dortmund/dortmund_legend_994f21bf.jpg",
+   "page": "Michael Zorc"
+  },
+  "マティアス・ザマー": {
+   "role": "legend",
+   "file": "assets/photos/bd/dortmund/dortmund_legend_1e388e1c.jpg",
+   "page": "Matthias Sammer"
+  },
+  "マルコ・ロイス": {
+   "role": "legend",
+   "file": "assets/photos/bd/dortmund/dortmund_legend_5c801836.jpg",
+   "page": "Marco Reus"
+  },
+  "ニコ・コヴァチ": {
+   "role": "manager",
+   "file": "assets/photos/bd/dortmund/dortmund_manager_5430aa6f.jpg",
+   "page": "Niko Kovač"
+  },
+  "香川真司": {
+   "role": "japan",
+   "file": "assets/photos/bd/dortmund/dortmund_japan_b03f6a89.jpg",
+   "page": "Shinji Kagawa"
+  },
+  "香川真司（2014）": {
+   "role": "japan2",
+   "file": "assets/photos/bd/dortmund/dortmund_japan2_a60c624c.jpg",
+   "page": "Shinji Kagawa"
+  },
+  "ラース・リッケン": {
+   "role": "legend2",
+   "file": "assets/photos/bd/dortmund/dortmund_legend2_1448c57f.jpg",
+   "page": "Lars Ricken"
+  }
+ }
+}

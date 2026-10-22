@@ -1,0 +1,568 @@
+# スタジアム紹介シリーズ：エヴァートンの本拠地（ヒル・ディキンソン・スタジアム、10/22）。雛形は 10/21 ニューカッスルの回。
+# 軸：A＝収容5万2769席はプレミア6位（旧グディソン・パークより1万3355席多い）／B＝広げられない旧本拠地を離れるのに、移転案が3回つぶれ、使われなくなった港（ブラムリー・ムーア・ドック）に建った。
+# 収容：PL公式ハンドブック2026/27（Ground Capacity at start of the Season、取得2026-10-21の控え research/raw/20261021_nufc_plhandbook.txt の同じ表）。
+#   エヴァートン 52,769／アーセナル 60,704／ニューカッスル 52,729。60,704-52,769=7,935／52,769-52,729=40。ピッチ 105×68m（同ハンドブック）。所在 Bramley-Moore Dock, Liverpool L5 9SR。
+# 旧本拠地：グディソン・パークの収容 39,414（ウィキペディア en "Goodison Park"）。52,769-39,414=13,355（自分で引いた）。52,769÷39,414=1.339→1.34倍（自分で割った）。
+# 入場（PL公式の試合API、取得2026-10-22。控え research/raw/20261022_everton_matches_pl_api.json）：
+#   2024/25 のグディソンのホーム19試合＝合計744,587・平均39,188.8（最多39,572・最少38,742、最終戦 5/18 サウサンプトン戦 39,201）。
+#   2025/26 のヒル・ディキンソンのホーム19試合＝合計990,504・平均52,131.8（最多52,590＝5/17 サンダーランド戦・最少50,196＝2/10 ボーンマス戦）。
+#   2026/27 ここまでのホーム4試合＝51,820／52,302／52,008／52,271、合計208,401・平均52,100.25。
+#   自分で数えた：52,132-39,189=12,943／52,132÷39,189=1.33／990,504-744,587=245,917／52,132÷52,769=98.8%／52,590→52,769-52,590=179／50,196÷52,769=95.1%／52,100÷52,769=98.7%。
+#   初戦 2025-08-24 ブライトン戦 2対0 の入場 51,759（API・ウィキペディアで一致）。
+# 割れる点（台本で断った）：着工が2021年7月（ウィキペディア"Hill Dickinson Stadium"）か8月（"Bramley-Moore Dock"）か→「2021年の夏」と言う／移転案の最初の発表が1996年（HDS）か1997年（Goodison Park）か→「1990年代の後半、年は記事のあいだで1年割れる」と言う／総費用（約7.5億〜8億ポンド超など資料で幅がある。クラブの契約額5億の報道もあるが一次情報で確かめられなかった）→言わない。
+# 言わなかった割れ：命名権の金額（クラブの発表文に無く、報道は600万〜1000万ポンド/年で割れる）／UEFA は会場名を「Everton Stadium」と書く（台本では「ユーロ2028の会場」とだけ言う）／ウィキペディア"HDS"の「会場は10」に対し UEFA の案内は9会場。
+# 一次情報：①クラブの命名権の発表文（ヒル・ディキンソン社の公式サイトに全文、2025-05-16）＝52,888席・長期契約・金額なし。②ユネスコ世界遺産センター（whc.unesco.org/en/news/2314、2021-07-21）＝リヴァプールの削除、2004年登録・2012年危機遺産・3件目。③PL公式ハンドブックと試合API。④UEFA ユーロ2028の会場案内（uefa.com、WebFetch）＝Everton Stadium・大会時収容50,000・試合5つ（6/11・14・17・20、6/24 は決勝トーナメント1回戦）。
+# 背景（ウィキペディア）：移転案の歩み、ドックの歴史（1848年開港・ジェシー・ハートリー・1988年に石炭の積み出し終了）、2017年の合意、2021年2月の承認、保存修復に最大5500万ポンド、2024年2月に構造完成・12月に引き渡し、2025年の試験の試合（2/17 ユース1万人・3/23 21歳以下2万5000人・8/9 ローマ戦 5万837人）、119席減った理由（ホームとアウェーの分離線・放送設備・カメラ位置）。
+# 日本との接点：調べたが無し（ウィキデータで日本代表歴のあるエヴァートン所属選手は0。取材メモ pl_data の登録選手にも日本人なし）。無理に入れない。
+# 重なりを避けた：10/21 ニューカッスルの回（稼働率の見せ方は同じ型だが数字は別）、アンフィールドの回の「1892年にエヴァートンが去った」話（旧本拠地の起源は言わない）、クラブ紹介⑨の話。女子チームの話はしない（旧本拠地の今の使い道は言わない）。
+# 読めなかった：evertonfc.com の公式記事（本文を読める形で取れず。クラブ発表文はヒル・ディキンソン社のサイトで読んだ）。ブラウザ操作・JS実行は不使用（requests と WebFetch。WebSearch は題名とURLを探すためだけ）。
+# 写真：assets/images/20261022_stadium_everton/（Commons、出典は credits.json）。人物は特定していない。
+date: 2026年10月22日
+slot: other_1
+format: news
+series: スタジアム紹介
+voice_min: 0
+people: []
+watch: 毎日、数字でサッカーを読み解きます
+theme:
+  id: stadium_everton
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: エヴァートン
+  title: エヴァートンの新しい本拠地は、なぜ、港の跡地に建てられたのか
+  question: 広げられなかった旧本拠地を離れるのに、なぜ港の跡地を選び、席はいま埋まっているのか
+  lead: 港の跡地の競技場。
+  hook: ''
+  opening_image: assets/images/20261022_stadium_everton/01_w.jpg
+  end_bg: assets/images/20261022_stadium_everton/01_w.jpg
+  takeaway: エヴァートンの新本拠地ヒル・ディキンソン・スタジアムの収容は、今季の開幕時で5万2769人。プレミア20クラブで6番目で、旧本拠地グディソン・パークの3万9414席より1万3355席多い。旧本拠地は敷地が囲まれて広げられず、移転案は20年あまりで3回つぶれ、使われなくなった港を埋めて建てた。入場は旧本拠地の最後の1年の平均3万9189人から、新本拠地の最初の1年は5万2132人へ、1万2943人増え、収容の98.8％にあたる。総費用は資料で割れる
+  short_title: ヒル・ディキンソン、プレミア6位の5万2769席
+thumbnail:
+  layout: scene
+  bold: false
+  callouts:
+  - 5万2769席
+  - 港の跡地に建つ
+  photo: assets/images/20261022_stadium_everton/01_w.jpg
+  line1: エヴァートンの新本拠地
+  line2: 旧本拠地より1.3万席増
+  tags:
+  - エヴァートン
+  - ヒル・ディキンソン・スタジアム
+  - グディソン・パーク
+  - プレミアリーグ
+  - スタジアム紹介
+sections:
+- id: data
+  main: true
+  heading: 新しい本拠地の収容は、旧本拠地より何席多いのか
+  bg: assets/images/20261022_stadium_everton/01_w.jpg
+  tier: 報道
+  telop: 収容は5万2769人。プレミア20クラブで6番目で、旧本拠地より1万3355席多い
+  narrator: 解説
+  card:
+    type: table
+    title: ヒル・ディキンソン・スタジアムの基礎DATA
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - 収容人数
+      - 5万2769人（今季の開幕時）
+    - - 20クラブでは
+      - 6位（すぐ下と40席差）
+    - - 場所
+      - ブラムリー・ムーア・ドック（港の跡地）
+    - - ピッチ
+      - 縦105×横68メートル
+    - - 名前の由来
+      - 法律事務所ヒル・ディキンソン（2025年5月発表）
+    - - 旧本拠地
+      - グディソン・パーク 3万9414席
+  say:
+  - text: エヴァートンの本拠地の話です。
+    short_only: true
+    image: assets/images/20261022_stadium_everton/01_w.jpg
+    card: none
+  - text: 収容は、5万2769人。今季のプレミア20クラブで、6番目に大きな本拠地です。
+    emph: true
+    image: assets/images/20261022_stadium_everton/02_w.jpg
+    card: &id_rank
+      type: stats
+      title: プレミア6位の本拠地。すぐ上と、すぐ下
+      items:
+      - - '60704'
+        - 人
+        - 5位 アーセナル
+      - - '52769'
+        - 人
+        - エヴァートンの収容
+      - - '52729'
+        - 人
+        - 7位 ニューカッスル
+      focus: 1
+  - text: 5位は、アーセナル。6万704人。差は、7935席。
+    image: assets/images/20261022_stadium_everton/02_w.jpg
+    card:
+      <<: *id_rank
+      focus: 0
+  - text: 7位は、ニューカッスル。5万2729人。差は、40席。
+    image: assets/images/20261022_stadium_everton/02_w.jpg
+    card:
+      <<: *id_rank
+      focus: 2
+  - text: 旧本拠地のグディソン・パークは、3万9414席でした。
+    image: assets/images/20261022_stadium_everton/04_w.jpg
+    card: &id_diff
+      type: calc
+      title: 新しい本拠地が増やした席（自分で引いた）
+      terms:
+      - - 5万2769席
+        - 新本拠地の収容
+      - - 3万9414席
+        - 旧本拠地の収容
+      - - 1万3355席
+        - 引いた答え
+      ops:
+      - −
+      - ＝
+  - text: 増えたのは、1万3355席。1.34倍です。
+    emph: true
+    image: assets/images/20261022_stadium_everton/04_w.jpg
+    card: *id_diff
+  - text: 場所は、リヴァプールの北にある港、ブラムリー・ムーア・ドック。
+    image: assets/images/20261022_stadium_everton/06_w.jpg
+    card: none
+  - text: 名前は、地元生まれの法律事務所から。
+    image: assets/images/20261022_stadium_everton/01_w.jpg
+    card: none
+  - text: 競技場に社名をつける契約、命名権です。
+    image: assets/images/20261022_stadium_everton/01_w.jpg
+    card: none
+  sources:
+  - https://resources.premierleague.pulselive.com/premierleague/document/2026/07/31/8a890ff9-176c-4364-a8ff-e08f995e2c86/TM2040_PL-Handbook-and-Collateral-2026-27_Digital_31.07.pdf
+  - https://www.hilldickinson.com/our-view/news/hill-dickinson-announced-as-official-stadium-naming-rights-partner-for-new-everton-stadium/
+  - https://en.wikipedia.org/wiki/Goodison_Park
+- id: old
+  heading: なぜ、グディソン・パークは、広げられなかったのか
+  bg: assets/images/20261022_stadium_everton/01_w.jpg
+  tier: 背景
+  telop: 立ち見の時代は7万8000人超。全席を座席にして3万9414席に。敷地は囲まれていた
+  narrator: 解説
+  card: &id_old
+    type: stats
+    title: 旧本拠地の席の数（ウィキペディア）
+    items:
+    - - '78000'
+      - 人超
+      - かつての収容
+    - - '39414'
+      - 席
+      - いまの収容
+    - - '1892'
+      - 年
+      - 開場
+    focus: 2
+  say:
+  - text: 次は、旧本拠地の話です。
+    image: assets/images/20261022_stadium_everton/04_w.jpg
+    card: none
+  - text: グディソン・パークの開場は、1892年。市の中心から、北へ約3キロです。
+    image: assets/images/20261022_stadium_everton/04_w.jpg
+    card:
+      <<: *id_old
+      focus: 2
+  - text: 立ち見があった時代の収容は、7万8000人を超えました。
+    emph: true
+    image: assets/images/20261022_stadium_everton/08_w.jpg
+    card:
+      <<: *id_old
+      focus: 0
+  - text: 1990年のテイラー報告は、大きな競技場を全席の座席にするよう、求めた文書です。
+    image: assets/images/20261022_stadium_everton/08_w.jpg
+    card: none
+  - text: 1994年には、ゴール裏のスタンドも建て替えて、全席の座席になりました。
+    image: assets/images/20261022_stadium_everton/07_w.jpg
+    card: none
+  - text: 収容は、3万9414席。ほぼ半分です。
+    emph: true
+    image: assets/images/20261022_stadium_everton/07_w.jpg
+    card:
+      <<: *id_old
+      focus: 1
+  - text: ウィキペディアは、敷地が住宅や役所の建物に囲まれていた、と書きます。
+    image: assets/images/20261022_stadium_everton/04_w.jpg
+    card: none
+  - text: 2007年、当時の最高経営責任者が、明かしました。
+    image: assets/images/20261022_stadium_everton/04_w.jpg
+    card: none
+  - text: 鉄骨の修繕に、50万ポンドを使った、と。
+    image: assets/images/20261022_stadium_everton/04_w.jpg
+    card: none
+  - text: このままでは、10年以内に、安全検査を通らないかもしれない、とも。
+    emph: true
+    image: assets/images/20261022_stadium_everton/08_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Goodison_Park
+  - https://en.wikipedia.org/wiki/Hill_Dickinson_Stadium
+  - https://resources.premierleague.pulselive.com/premierleague/document/2026/07/31/8a890ff9-176c-4364-a8ff-e08f995e2c86/TM2040_PL-Handbook-and-Collateral-2026-27_Digital_31.07.pdf
+- id: plans
+  heading: 移転案は、なぜ、3回つぶれたのか
+  bg: assets/images/20261022_stadium_everton/01_w.jpg
+  tier: 背景
+  telop: 2003年に資金不足で断念。2009年に国が却下。2016年に取りやめ。2017年に港が第一候補に
+  narrator: 解説
+  card: &id_plans
+    type: timeline
+    title: 移転案の歩み（ウィキペディア）
+    rows:
+    - - 1990年代後半
+      - 6万席の新競技場案が出る
+    - - 2001〜03年
+      - キングス・ドック案。資金不足で断念
+    - - 2006〜09年
+      - キルビー案。国が却下
+    - - 2014〜16年
+      - ウォルトン・ホール・パーク案。取りやめ
+    - - 2017年
+      - ブラムリー・ムーアが第一候補に
+    focus: 1990年代後半
+    highlight_row: 0
+  say:
+  - text: 動けない旧本拠地から、出ようとした案は、何度もありました。
+    image: assets/images/20261022_stadium_everton/08_w.jpg
+    card: none
+  - text: 1990年代の後半、当時の会長が、6万席の新しい競技場を発表します。
+    image: assets/images/20261022_stadium_everton/08_w.jpg
+    card:
+      <<: *id_plans
+      highlight_row: 0
+  - text: 発表の年は、ウィキペディアの記事のあいだで、1年割れます。
+    image: assets/images/20261022_stadium_everton/08_w.jpg
+    card: none
+  - text: 2001年。キングス・ドックに、5万5000席の案が出ます。
+    emph: true
+    image: assets/images/20261022_stadium_everton/07_w.jpg
+    card:
+      <<: *id_plans
+      highlight_row: 1
+  - text: 完成は2005年ごろの予定でした。資金が足りず、2003年4月に断念します。
+    image: assets/images/20261022_stadium_everton/07_w.jpg
+    card: none
+  - text: 2006年、次の候補は、市の外の町、キルビー。大手スーパーのテスコと組む案です。
+    image: assets/images/20261022_stadium_everton/04_w.jpg
+    card:
+      <<: *id_plans
+      highlight_row: 2
+  - text: クラブは、ファン投票を開きます。賛成59％、反対41％。
+    emph: true
+    image: assets/images/20261022_stadium_everton/04_w.jpg
+    card: none
+  - text: それでも、市の外に出ることに、反対する声がありました。
+    image: assets/images/20261022_stadium_everton/04_w.jpg
+    card: none
+  - text: 近くの自治体は、大きな店の影響も、心配しました。
+    image: assets/images/20261022_stadium_everton/08_w.jpg
+    card: none
+  - text: 公聴会のあと、国は案を退けます。2009年11月のことです。
+    image: assets/images/20261022_stadium_everton/08_w.jpg
+    card: none
+  - text: 2014年9月、今度は市と組んで、ウォルトン・ホール・パークに建てる案が出ます。
+    image: assets/images/20261022_stadium_everton/07_w.jpg
+    card:
+      <<: *id_plans
+      highlight_row: 3
+  - text: 2016年5月に取りやめ。2つの新しい候補地を探すことになりました。
+    image: assets/images/20261022_stadium_everton/07_w.jpg
+    card: none
+  - text: 2017年1月の総会で、会長が「第一候補はブラムリー・ムーア」と明かします。
+    emph: true
+    image: assets/images/20261022_stadium_everton/03_w.jpg
+    card:
+      <<: *id_plans
+      highlight_row: 4
+  - text: 最初の案から、20年あまりかかっていました。
+    image: assets/images/20261022_stadium_everton/03_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Hill_Dickinson_Stadium
+  - https://en.wikipedia.org/wiki/Goodison_Park
+- id: dock
+  heading: 港の跡地に建てることは、何と引き換えだったのか
+  bg: assets/images/20261022_stadium_everton/01_w.jpg
+  tier: 背景
+  telop: 2021年7月21日、リヴァプールの港町は世界遺産から外れた。外れたのは3件目
+  narrator: 解説
+  card: &id_dock
+    type: timeline
+    title: ブラムリー・ムーア・ドックの歩み
+    rows:
+    - - 1848年
+      - 開港。ジェシー・ハートリーの設計
+    - - 1988年
+      - 石炭の積み出しが終わる
+    - - 2017年3月
+      - 市・クラブ・地主が買収で合意
+    - - 2021年2月
+      - 競技場の計画を承認
+    - - 2021年7月
+      - 港町が世界遺産から外れる
+    - - 2024年12月
+      - 施工会社から引き渡し
+    focus: 1848年
+    highlight_row: 0
+  say:
+  - text: その港は、どんな場所だったのか。1848年8月4日に開いた、船の港です。
+    image: assets/images/20261022_stadium_everton/06_w.jpg
+    card:
+      <<: *id_dock
+      highlight_row: 0
+  - text: 石炭の積み出しで栄え、1988年に、それが終わりました。
+    image: assets/images/20261022_stadium_everton/06_w.jpg
+    card:
+      <<: *id_dock
+      highlight_row: 1
+  - text: 2017年3月。市とクラブと地主のピール社が、港を手に入れる合意をします。
+    image: assets/images/20261022_stadium_everton/03_w.jpg
+    card:
+      <<: *id_dock
+      highlight_row: 2
+  - text: 場所は、リヴァプール市の中。
+    image: assets/images/20261022_stadium_everton/03_w.jpg
+    card: none
+  - text: クラブは、北リヴァプールの再開発の中心に置く、と説明しました。
+    image: assets/images/20261022_stadium_everton/03_w.jpg
+    card: none
+  - text: 市の計画委員会が認めたのは、2021年2月です。
+    image: assets/images/20261022_stadium_everton/03_w.jpg
+    card:
+      <<: *id_dock
+      highlight_row: 3
+  - text: クラブは、港に残る古い建物の修復に、最大5500万ポンドを約束しました。
+    image: assets/images/20261022_stadium_everton/06_w.jpg
+    card: none
+  - text: その5か月後の、2021年7月21日。
+    image: assets/images/20261022_stadium_everton/03_w.jpg
+    card:
+      <<: *id_dock
+      highlight_row: 4
+  - text: ユネスコの委員会が、リヴァプールの港町を、世界遺産から外します。
+    emph: true
+    image: assets/images/20261022_stadium_everton/03_w.jpg
+    card: &id_unesco
+      type: document
+      label: ユネスコ世界遺産センターの発表（2021年7月21日）の訳
+      paragraphs:
+      - 世界遺産委員会は、「リヴァプール海商都市」を世界遺産リストから削除すると決めた。
+      - 理由は、遺産の価値を伝える特徴の、取り返しのつかない喪失。
+      - 2004年に登録され、2012年に、リヴァプール・ウォーターズの開発への懸念で、危機遺産リストに載った。
+      - 削除は、ドイツのエルベ渓谷、オマーンのアラビアオリックス保護区に続き、3件目。
+      highlight:
+      - 取り返しのつかない
+      - 3件目
+  - text: 外れたのは、世界で3件目です。
+    image: assets/images/20261022_stadium_everton/06_w.jpg
+    card: *id_unesco
+  - text: ユネスコの発表文が挙げるのは、リヴァプール・ウォーターズなど、港町の開発です。
+    image: assets/images/20261022_stadium_everton/06_w.jpg
+    card: none
+  - text: この競技場の計画も、理由の1つに数えられた、との記述があります。
+    image: assets/images/20261022_stadium_everton/03_w.jpg
+    card: none
+  - text: 工事は、2021年の夏に始まりました。ドックには、マージー川の砂を詰めました。
+    emph: true
+    image: assets/images/20261022_stadium_everton/03_w.jpg
+    card: none
+  - text: 2024年12月、施工会社から、クラブに引き渡されます。
+    image: assets/images/20261022_stadium_everton/01_w.jpg
+    card:
+      <<: *id_dock
+      highlight_row: 5
+  sources:
+  - https://whc.unesco.org/en/news/2314/
+  - https://en.wikipedia.org/wiki/Bramley-Moore_Dock
+  - https://en.wikipedia.org/wiki/Hill_Dickinson_Stadium
+- id: open
+  heading: 開業までに、収容は、なぜ119席減ったのか
+  bg: assets/images/20261022_stadium_everton/01_w.jpg
+  tier: 報道
+  telop: 発表は5万2888席。開業前の見直しで5万2769席に。初戦の入場は5万1759人
+  narrator: 解説
+  card: &id_open
+    type: stats
+    title: 開業前後の席と入場
+    items:
+    - - '52888'
+      - 席
+      - 2025年5月の発表
+    - - '52769'
+      - 席
+      - 今季の開幕時（ハンドブック）
+    - - '51759'
+      - 人
+      - プレミア初戦の入場
+    focus: 0
+  say:
+  - text: 2025年5月にクラブが発表した収容は、5万2888席でした。
+    image: assets/images/20261022_stadium_everton/01_w.jpg
+    card:
+      <<: *id_open
+      focus: 0
+  - text: 今季のハンドブックは、5万2769席です。
+    image: assets/images/20261022_stadium_everton/02_w.jpg
+    card:
+      <<: *id_open
+      focus: 1
+  - text: 減ったのは、119席。0.2％です。
+    emph: true
+    image: assets/images/20261022_stadium_everton/02_w.jpg
+    card: &id_119
+      type: calc
+      title: 開業前に減った席（自分で引いた）
+      terms:
+      - - 5万2888席
+        - 2025年5月の発表
+      - - 5万2769席
+        - 今季の開幕時
+      - - 119席
+        - 引いた答え
+      ops:
+      - −
+      - ＝
+  - text: 理由は、ホームとアウェーを分ける線、放送設備、カメラの位置、とされます。
+    image: assets/images/20261022_stadium_everton/01_w.jpg
+    card: none
+  - text: 試験の試合は、3回ありました。最初は2025年2月、ユース同士で、1万人です。
+    image: assets/images/20261022_stadium_everton/02_w.jpg
+    card: none
+  - text: 8月9日の最後の試験は、ローマとの親善試合。入場は5万837人でした。
+    image: assets/images/20261022_stadium_everton/02_w.jpg
+    card: none
+  - text: 8月24日。プレミアの初戦で、ブライトンに2対0で勝ちました。
+    emph: true
+    image: assets/images/20261022_stadium_everton/05_w.jpg
+    card: none
+  - text: 入場は5万1759人。リーグ公式の数字。
+    image: assets/images/20261022_stadium_everton/05_w.jpg
+    card:
+      <<: *id_open
+      focus: 2
+  - text: 最初のゴールは23分、イリマン・ンディアイ。
+    image: assets/images/20261022_stadium_everton/05_w.jpg
+    card: none
+  - text: アシストは、ジャック・グリーリッシュです。
+    image: assets/images/20261022_stadium_everton/05_w.jpg
+    card: none
+  - text: ンディアイは、旧本拠地で最後に点を取った選手でもあります。
+    emph: true
+    image: assets/images/20261022_stadium_everton/08_w.jpg
+    card: none
+  sources:
+  - https://www.hilldickinson.com/our-view/news/hill-dickinson-announced-as-official-stadium-naming-rights-partner-for-new-everton-stadium/
+  - https://resources.premierleague.pulselive.com/premierleague/document/2026/07/31/8a890ff9-176c-4364-a8ff-e08f995e2c86/TM2040_PL-Handbook-and-Collateral-2026-27_Digital_31.07.pdf
+  - https://en.wikipedia.org/wiki/Hill_Dickinson_Stadium
+  - https://sdp-prem-prod.premier-league-prod.pulselive.com/api/v1/competitions/8/seasons/2025/matchweeks/2/matches
+- id: view
+  viewpoint: true
+  heading: 見立て・増えた席は、いま、どれだけ埋まっているのか
+  bg: assets/images/20261022_stadium_everton/01_w.jpg
+  tier: 報道
+  telop: 旧本拠地の最後の1年は平均3万9189人。新本拠地の最初の1年は5万2132人で、1万2943人増
+  narrator: 解説
+  card: &id_view
+    type: table
+    title: ホームの平均入場（プレミア）
+    columns:
+    - 区切り
+    - 平均入場
+    rows:
+    - - 2024/25 旧本拠地 19試合
+      - 3万9189人
+    - - 2025/26 新本拠地 19試合
+      - 5万2132人
+    - - 2026/27 ここまで 4試合
+      - 5万2100人
+    highlight_row: 0
+  say:
+  - text: 席は増えました。では、埋まっているのでしょうか。
+    emph: true
+    image: assets/images/20261022_stadium_everton/05_w.jpg
+    card: none
+  - text: 旧本拠地の最後の1年、2024/25のホーム19試合は、平均3万9189人です。
+    image: assets/images/20261022_stadium_everton/08_w.jpg
+    card:
+      <<: *id_view
+      highlight_row: 0
+    mark:
+      kind: circle
+      row: 0
+  - text: 新本拠地の最初の1年、2025/26も19試合。平均は、5万2132人です。
+    image: assets/images/20261022_stadium_everton/05_w.jpg
+    card:
+      <<: *id_view
+      highlight_row: 1
+  - text: 差は、1万2943人。1.33倍。
+    emph: true
+    image: assets/images/20261022_stadium_everton/05_w.jpg
+    card: &id_avg
+      type: calc
+      title: 平均入場の差（リーグ公式の入場数から、自分で数えた）
+      terms:
+      - - 5万2132人
+        - 2025/26 新本拠地
+      - - 3万9189人
+        - 2024/25 旧本拠地
+      - - 1万2943人
+        - 引いた答え
+      ops:
+      - −
+      - ＝
+  - text: 19試合の合計は、74万4587人から、99万504人へ。
+    image: assets/images/20261022_stadium_everton/02_w.jpg
+    card: none
+  - text: 24万5917人の増加です。
+    image: assets/images/20261022_stadium_everton/02_w.jpg
+    card: none
+  - text: 平均は、いまの収容の98.8％。
+    image: assets/images/20261022_stadium_everton/02_w.jpg
+    card: none
+  - text: いちばん多かったのは、5月17日のサンダーランド戦。5万2590人。
+    emph: true
+    image: assets/images/20261022_stadium_everton/02_w.jpg
+    card: none
+  - text: 収容に、179席届きません。
+    image: assets/images/20261022_stadium_everton/02_w.jpg
+    card: none
+  - text: いちばん少なかったのは、2月10日、火曜の夜のボーンマス戦。5万196人。
+    image: assets/images/20261022_stadium_everton/01_w.jpg
+    card: none
+  - text: それでも、収容の95％を下回った試合は、ありませんでした。
+    image: assets/images/20261022_stadium_everton/01_w.jpg
+    card: none
+  - text: 今季は、ここまで4試合で、平均5万2100人。収容の98.7％です。
+    image: assets/images/20261022_stadium_everton/01_w.jpg
+    card:
+      <<: *id_view
+      highlight_row: 2
+  - text: 欧州選手権2028の会場にも、入っています。
+    image: assets/images/20261022_stadium_everton/02_w.jpg
+    card: none
+  - text: ヨーロッパサッカー連盟の案内では、大会時の収容は5万人。試合は5つです。
+    image: assets/images/20261022_stadium_everton/02_w.jpg
+    card: none
+  - text: 広げられない場所を離れ、使われなくなった港を埋めて建てた。
+    image: assets/images/20261022_stadium_everton/01_w.jpg
+    card: none
+  - text: その結果が、1試合あたり、1万人を超える増加です。
+    emph: true
+    image: assets/images/20261022_stadium_everton/02_w.jpg
+    card: none
+  - text: 総費用は、資料で数字が割れるので、ここでは言いません。
+    image: assets/images/20261022_stadium_everton/01_w.jpg
+    card: none
+  sources:
+  - https://sdp-prem-prod.premier-league-prod.pulselive.com/api/v1/competitions/8/seasons/2024/matchweeks/1/matches ほか（2024/25 第1〜38節、2025/26 第1〜38節、2026/27 第1〜7節）
+  - https://resources.premierleague.pulselive.com/premierleague/document/2026/07/31/8a890ff9-176c-4364-a8ff-e08f995e2c86/TM2040_PL-Handbook-and-Collateral-2026-27_Digital_31.07.pdf
+  - https://www.uefa.com/euro2028/news/029f-1f2ffa63f511-1e265da34302-1000--euro-2028-host-cities-and-stadiums-venue-guide/

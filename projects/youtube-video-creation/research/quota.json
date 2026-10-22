@@ -393,11 +393,11 @@
     "playlists.insert": 2
   },
   "2026-10-21": {
-    "channels.list": 4,
-    "playlistItems.list": 4,
-    "videos.insert": 3,
-    "thumbnails.set": 3,
-    "playlistItems.insert": 2,
+    "channels.list": 25,
+    "playlistItems.list": 25,
+    "videos.insert": 23,
+    "thumbnails.set": 23,
+    "playlistItems.insert": 12,
     "playlists.insert": 1
   }
 }

@@ -855,15 +855,6 @@
   "club": "シュツットガルト"
  },
  {
-  "file": "stadium_ドルトムント_in.png",
-  "source": "wikimedia",
-  "title": "File:GER Dortmund Stadion 002 2011 - Südtribüne.jpg",
-  "page_url": "https://commons.wikimedia.org/wiki/File:GER_Dortmund_Stadion_002_2011_-_S%C3%BCdtrib%C3%BCne.jpg",
-  "author": "Der-wuppertaler",
-  "license": "CC BY-SA 3.0",
-  "club": "ドルトムント"
- },
- {
   "file": "stadium_ライプツィヒ_in.png",
   "source": "wikimedia",
   "title": "File:Red Bull Arena Panorama cropped.jpg",
@@ -1033,5 +1024,23 @@
   "author": "Richard Bartz, Munich aka Makro Freak",
   "license": "CC BY-SA 2.5",
   "club": "バイエルン"
+ },
+ {
+  "file": "stadium_ドルトムント_in.png",
+  "source": "wikimedia",
+  "title": "File:Dortmund - Berlin - Bundesliga 27.10 (44201767250).jpg",
+  "page_url": "https://commons.wikimedia.org/wiki/File:Dortmund_-_Berlin_-_Bundesliga_27.10_(44201767250).jpg",
+  "author": "Steffen Flor from Hagen, Deutschland",
+  "license": "CC BY-SA 2.0",
+  "club": "ドルトムント"
+ },
+ {
+  "file": "stadium_ドルトムント.png",
+  "source": "wikimedia",
+  "title": "File:Signal Iduna Park.jpg",
+  "page_url": "https://commons.wikimedia.org/wiki/File:Signal_Iduna_Park.jpg",
+  "author": "Moayad Abuawad",
+  "license": "CC BY-SA 4.0",
+  "club": "ドルトムント"
  }
 ]

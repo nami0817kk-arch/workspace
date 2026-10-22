@@ -1,0 +1,152 @@
+# 取材メモ（2026年10月22日）テン・ハフ氏、マンU時代のロナウドを語る（ニュースのショート。見せ方 B＝写真を切り替え）
+# 取材: 2026-10-22。requests（ブラウザUA）で原文を読んだ。
+#   ・サッカーキング 2026-10-21「テン・ハフ氏、マンU指揮時のC・ロナウドを批判…」（本文を全部読んだ。BBC・アスレティックを引く日本語の孫引き。研究メモ: 題材の一覧の出典）
+#   ・GOAL（英語版）2026-10-20 17:41「“He let the team down”: Erik ten Hag's scathing assessment…」（アスレティックのインタビューを引く。発言の英語を確かめた。アスレティックがロナウド側にも伝えたが返答なし、の記述はここ）
+#   ・Yahoo Sports（英語）「Erik ten Hag reveals why Cristiano Ronaldo was 'not capable' of pressing…」（同じインタビューの発言の英語。最後の発言までここで確かめた）
+#   ・Sky Sports の本文は URL を特定できず読めていない（題材の一覧は出典に挙げていたが、同じ発言を上の3つで確かめたので足りる）。アスレティックの原文は有料で未読。BBC も本文は読めていない。
+# 発言の訳: 英語の原文（GOAL・Yahoo）から訳した。日本語はサッカーキングの訳と意味が一致することを確かめた。言い換えていない。
+#   "He let the team down, and he let me down, because we planned with him."
+#   "Obviously, he's one of the best in football history. I respected him a lot. But at that time, as a manager, I had to make a rational decision and keep the players I admire in."
+#   "He ran neither in possession nor out of possession. The reason was because he didn't prepare himself."
+#   "Every top team has to embrace the top player, but the top player has to work for the team."
+#   "He was telling the players, 'Save your legs at the training.'"
+# 【題材の一覧の言葉を原文で引き直した点】
+#   ・一覧の「我々は彼を組み込んだ計画を立てていた」は原文 "we planned with him"（Yahoo）/ "we had planned with him"（GOAL）。台本は「我々は彼を組み込んだ計画を立てていたからだ」のサッカーキングの訳に合わせた。
+#   ・一覧の「メイヌーは『特別な選手』と評価」は、今回読んだ3つの本文には無かった（確かめられていない）。台本に入れない。
+#   ・一覧の「30日の出場停止処分」は代表チーム（ポルトガル）の話。GOAL に載っているが、この題材とは別の話。入れない。
+#   ・Yahoo は「トレーニングで心拍が上がらなかった」「走る3周のうち2周」などテン・ハフ氏の説明を書くが、引用符の外の記者の要約。台本に入れない。
+# 【断りを入れる点（brief の指示）】
+#   ・ロナウドは現在サウジアラビアのアル・ナスルでプレー（GOAL: 契約は2027年夏まで）。話は2022年当時のマンU時代。→ 台本で「いまの話ではなく2022年の話」と言う。7リーグ外の選手の古い話であることを断る。
+#   ・ロナウド本人を貶さない。テン・ハフ氏の言葉の紹介にとどめ、「テン・ハフ氏の側の見方」と言う。「史上最高の選手の一人」と評した発言も入れる。アスレティックが本人側に伝えたが返答なし（GOAL）。
+#   ・当時の経緯（2022年10月のトッテナム戦で途中出場を拒否 → チェルシー戦でメンバー外 → 11月に双方合意で契約解除）はサッカーキングの記述。ロナウド側の言い分（当時のインタビュー）は別に伝えられているが、今回は入れない。
+# 自分で数えたもの（見立て）:
+#   ・テン・ハフ氏の就任は2022年7月、ロナウドの契約解除は2022年11月（サッカーキング）。同じチームにいた期間は約4か月（GOAL も four months）。
+#   ・語られたのは2026年10月。契約解除から約4年（2022年11月→2026年10月）。テン・ハフ氏がユナイテッドを去った2024年10月からも2年。
+#   ・「当時36歳」とサッカーキングは書くが、ロナウドの生年月日からの計算と合わないので年齢は言わない。
+# 本人の言葉の有無: テン・ハフ氏の言葉は実在（アスレティックのインタビュー）。ロナウド本人の今回の言葉は無い（返答なし）。入れない。
+# 反応: 当たっていない（今回の発言への投稿・書き込みは取り出していない）。作らない。0件。approve は --no-voices で。
+# 前の本との重なり: scripts/20261017_record_ronaldo_messi・20261021_ronaldo_r9_legend は別の話（記録・ブラジルのロナウド）。ユナイテッド時代の確執の話は未扱い（covered.yaml・posted.json に「テン・ハフ」は無し）。
+# 写真: Wikimedia Commons（CC BY-SA 4.0 / 3.0）。マンU対ブライトン（2022-08-07）などの試合写真から、背番号と名前の入った場面で本人を確かめた。代理店・報道写真は使っていない。
+#   記事の主写真（Getty）は使わない。今日の記事に使える今日の写真は無い。
+slot: overseas
+date: "2026年10月22日"
+format: news
+no_main: true      # ニュースはショートだけ（2026-10-14）。締めで本編を案内しない
+people: [エリク・テン・ハフ, クリスティアーノ・ロナウド, マンチェスター・ユナイテッド]
+short_style: B
+short_photos:
+  - assets/images/20261022_tenhag_ronaldo/07_v.jpg
+  - assets/images/20261022_tenhag_ronaldo/01_v.jpg
+  - assets/images/20261022_tenhag_ronaldo/04_v.jpg
+  - assets/images/20261022_tenhag_ronaldo/02_v.jpg
+  - assets/images/20261022_tenhag_ronaldo/03_v.jpg
+
+short_question: あなたは、監督とスター選手の関係は、どうあるべきだと思いますか。
+short_hook: テン・ハフ氏が、マンU時代のロナウドを語りました。
+short_telops:
+  - {match: アスレティックのインタビュー, text: テン・ハフ氏/英紙アスレティックで語る}
+  - {match: アル・ナスル, text: ロナウドは現在/サウジのアル・ナスル}
+  - {match: 2022年10月のトッテナム戦, text: 2022年10月/トッテナム戦で途中出場を拒否}
+  - {match: 我々は彼を組み込んだ, text: テン・ハフ氏/「彼を組み込んだ計画を立てていた」}
+  - {match: 史上最高の選手の一人, text: 「サッカー史上最高の選手の一人」}
+  - {match: 走らなかった, text: 「持っていても、いなくても/走らなかった」}
+  - {match: 足を温存, text: 「練習では足を温存しておけ」と/言っていた、とテン・ハフ氏}
+  - {match: 返答はありません, text: アスレティックの問い合わせに/ロナウド側の返答なし}
+  - {match: 約4年, text: 契約解除（2022年11月）から/約4年}
+
+theme:
+  id: tenhag_ronaldo
+  league: england
+  league_name: プレミアリーグ
+  prefix: ""
+  title: テン・ハフ氏は、マンU時代のロナウドをどう語ったのか。2022年当時の話
+  hook: ""
+  question: テン・ハフ氏は、マンチェスター・ユナイテッド時代のロナウドを、いま何と語ったのか
+  takeaway: 契約解除は2022年11月、この発言は2026年10月。約4年たって語られた、テン・ハフ氏の側の見方
+
+thumbnail:
+  line1: テン・ハフ氏
+  line2: マンU時代のロナウドを語る
+  tags: [テン・ハフ, クリスティアーノ・ロナウド, マンチェスター・ユナイテッド]
+  layout: face
+  photo: assets/images/20261022_tenhag_ronaldo/07_w.jpg
+  short_photo: assets/images/20261022_tenhag_ronaldo/07_v.jpg
+
+answer: 『彼はチームを失望させ、私も失望させた』。ただし2022年当時の、テン・ハフ氏の側の見方
+watch: ロナウド側の返答が、このあと出るかどうか
+
+sections:
+  - id: what
+    main: true
+    heading: 何が起きたか
+    tier: 報道
+    telop: テン・ハフ氏が、マンU時代のロナウドを語った
+    say:
+      - 元マンチェスター・ユナイテッド監督のテン・ハフ氏が、当時のロナウドを語りました。
+      - 英紙アスレティックのインタビューです。
+      - ロナウドは現在、サウジアラビアのアル・ナスルでプレーしています。
+      - これは、2022年当時の話です。
+      - 2022年10月のトッテナム戦で、ロナウドは途中出場を拒みました。
+      - 次のチェルシー戦で、テン・ハフ氏は彼をメンバーから外しています。
+      - voice: テン・ハフ氏
+        text: 彼はチームを失望させ、私も失望させた。
+        short_voice: true
+      - voice: テン・ハフ氏
+        text: 我々は彼を組み込んだ計画を立てていたからだ。
+        cont: true
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/eng/20261021/2219196.html
+      - https://www.goal.com/en/news/he-let-the-team-down-erik-ten-hag-s-scathing-verdict-on-cristiano-ronaldo/blte973ab3713e68902
+
+  - id: reason
+    heading: テン・ハフ氏が挙げた理由
+    tier: 報道
+    telop: 理由として挙げたのは、当時の決断と、走らなかったという点
+    say:
+      - voice: テン・ハフ氏
+        text: もちろん、彼はサッカー史上最高の選手の一人だ。
+      - voice: テン・ハフ氏
+        text: 私は彼を非常に高く評価していた。
+        cont: true
+      - voice: テン・ハフ氏
+        text: しかし当時、監督としては、
+      - voice: テン・ハフ氏
+        text: 合理的な決断を下さなければならなかった。
+        cont: true
+      - voice: テン・ハフ氏
+        text: ボールを持っている時も、
+      - voice: テン・ハフ氏
+        text: 持っていない時も、彼は走らなかった。
+        cont: true
+      - voice: テン・ハフ氏
+        text: その理由は、彼自身が準備をしていなかったからだ。
+        cont: true
+      - voice: テン・ハフ氏
+        text: 彼は他の選手たちに、
+      - voice: テン・ハフ氏
+        text: トレーニングでは足を温存しておけと言っていた。
+        cont: true
+      - 以上は、テン・ハフ氏の側の見方です。
+      - アスレティックはロナウド側にも内容を伝えましたが、返答はありません。
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/eng/20261021/2219196.html
+      - https://www.goal.com/en/news/he-let-the-team-down-erik-ten-hag-s-scathing-verdict-on-cristiano-ronaldo/blte973ab3713e68902
+      - https://sports.yahoo.com/articles/erik-ten-hag-reveals-why-160000767.html
+
+  - id: view
+    viewpoint: true
+    heading: 約4年たって語られた、一方の側の見方
+    tier: 背景
+    telop: 契約解除は2022年11月。この発言は2026年10月
+    say:
+      - ロナウドとユナイテッドの契約が双方合意で解除されたのは、2022年11月です。
+      - テン・ハフ氏とロナウドが同じチームにいたのは、約4か月でした。
+      - 今回の発言は、契約解除から約4年たった2026年10月のものです。
+      - ロナウド本人の言葉は、今回はありません。
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/eng/20261021/2219196.html
+      - https://www.goal.com/en/news/he-let-the-team-down-erik-ten-hag-s-scathing-verdict-on-cristiano-ronaldo/blte973ab3713e68902
+short_title: "テン・ハフ氏は、マンU時代のロナウドをどう語ったのか。2022年当時の話"

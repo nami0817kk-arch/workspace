@@ -1,0 +1,506 @@
+# 代表チーム紹介 スペイン代表（10/22 作成。固定シリーズ9「代表チーム紹介」。見本は 10/21 のドイツ代表）。7節：フック→基礎DATA（板）→歴史と転機（年表）→看板選手（表）→日本との関係→いまのチーム→見立て。
+# **軸（2026-10-21）**：「2022年W杯で日本に負けたスペインは、次の大会（2026年）で優勝した。何が変わったのか」。10/3 の「史上初の40試合無敗」のニュース（scripts/20261003_record_spain40.md）の軸（無敗記録）とは重ねない。無敗の試合数は言わない。
+# **重なりの確認（2026-10-21）**：research/posted.json にスペイン代表の紹介は無い。research/covered.yaml のスペイン代表は 9/30 ヤマルの一言・10/3 無敗記録・10/4 久保の3本（紹介ものではない）。scripts/ にも team_spain は無い。
+# ---- 公式で確かめたこと（2026-10-21 取材。WebFetch・requests。検索のAI要約は根拠にしていない）----
+#  ・FIFAランク：FIFA 公式（inside.fifa.com/en/news/coca-cola-mens-world-ranking-october-2026-portugal-spain、2026-10-07）＝スペイン1位（unchanged、2位アルゼンチン・3位フランス）。点数は書かない。
+#  ・日本の2022年の結果：JFA（https://www.jfa.jp/samuraiblue/schedule_result/2022.html）＝「12/1(木) FIFAワールドカップ カタール2022 ○2-1 スペイン ドーハ(カタール)／Khalifa International Stadium」。得点者と時間は Jリーグ公式サイトのサマリー（https://www.jleague.jp/news/article/24005/）＝モラタ11分・堂安律48分・田中碧51分、日本は勝点6でグループ首位。JFA の個別の試合ページは取れていない（20221201・20221202 の match_page は404）。
+#  ・日本の2026年の日程と結果：JFA（https://www.jfa.jp/samuraiblue/schedule_result/2026.html）。スペインとの試合は無い。
+# ---- ウィキペディア(en)の値（公式で確かめられていない。台本は「ウィキペディア」と断らず事実の言い方で、ただし下の数は検算した）----
+#  ・タイトル：W杯 2010・2026、欧州選手権 1964・2008・2012・2024（「記録の4回」の記述）、ネーションズリーグ 2023。W杯の優勝数は台本で「2回」。
+#  ・2026年W杯（Wikipedia Spain national football team の試合一覧）：6/15 カーボベルデ0-0、6/21 サウジアラビア4-0、6/26 ウルグアイ1-0、7/2 ラウンド32 オーストリア3-0、7/6 ラウンド16 ポルトガル1-0（90+1分メリノ）、7/10 準々決勝 ベルギー2-1、7/14 準決勝 フランス2-0、7/19 決勝 アルゼンチン1-0（延長106分フェラン・トーレス、MetLife）＝8試合7勝1分・14得点1失点。
+#  ・2022年W杯（2022 FIFA World Cup Group E、Spain at the FIFA World Cup）：11/23 コスタリカ7-0、11/27 ドイツ1-1、12/1 日本1-2、12/6 ラウンド16 モロッコ0-0（延長・PK0-3で敗退）＝4試合（PK戦を除く）1勝2分1敗・9得点3失点。「3大会連続の主要大会PK戦敗退」の記述も同記事（言わない）。
+#  ・2014年グループ敗退、2018年ラウンド16でロシアに PK3-4（1-1）、2022年ラウンド16でモロッコにPK0-3。
+#  ・ルイス・エンリケは2022年W杯ラウンド16のあとに退任、デ・ラ・フエンテが2022-12-08 に就任（Wikipedia Luis de la Fuente）。契約はEURO 2028 まで（2025年1月延長）。就任後に NL 2023・EURO 2024・W杯2026 を制し、3つとも獲った初の監督（記述。言わない）。
+#  ・日本とスペインの国際Aマッチ：日本代表の試合記録（Wikipedia en、1990〜1999・2000〜2009・2010〜2019・2020〜）では 2001-04-25 コルドバ 親善 0-1（日本負け）と 2022-12-01 W杯 2-1 の2試合だけ。**JFA の通算対戦成績は取れていない**ので「1990年以降の記録で2試合」と言い、通算とは言わない。2001年の試合は Wikipedia のみ。
+#  ・久保建英はレアル・ソシエダ所属（Takefusa Kubo の infobox）、オヤルサバルも同クラブ（Spain national football team の名簿 2026-10-06 時点）。
+#  ・ネーションズリーグ2026-27（リーグA、Wikipedia の試合一覧）：9/26 イングランド2-3スペイン（ロンドン）、9/29 スペイン4-1クロアチア（セビリア）、10/3 スペイン3-1チェコ（オビエド）、10/6 クロアチア1-2スペイン（スプリト）＝4勝・12得点5失点。次は 11/12 チェコ戦（プラハ）、11/15 イングランド戦（マドリード）。
+#  ・名簿・年齢：Wikipedia の代表名簿（2026-10-06 時点）。生年月日から2026-10-22 時点で計算（ロドリ 1996-06-22=30、ペドリ 2002-11-25=23、ヤマル 2007-07-13=19、オヤルサバル 1997-04-21=29、メリノ 1996-06-22=30、ウナイ・シモン 1997-06-11=29）。所属も同名簿（ロドリ・ペドリ・ヤマル＝バルセロナ、オヤルサバル＝レアル・ソシエダ、メリノ＝アーセナル、ウナイ・シモン＝アスレティック）。
+#  ・愛称 La Roja（意味は「赤」。台本では意味だけ）。
+# ---- 自分で数えた数（検算した）----
+#  ・W杯の1試合あたり失点：2022年 3÷4=0.75、2026年 1÷8=0.125（0.13）。得点：2022年 9÷4=2.25、2026年 14÷8=1.75。
+#  ・決勝トーナメントの得点：2022年は1試合（モロッコ戦120分）で0点、2026年は5試合で 3+1+2+2+1=9点（決勝は延長を含む）。
+#  ・ネーションズリーグ4試合の失点 2+1+1+1=5（1試合1.25）、得点 3+4+3+2=12。
+# ---- 言わないもの ----
+#  ・無敗の試合数（10/3 のニュースの軸）／日本戦の通算（JFA 未確認）／戦術の説明／選手の怪我・私生活／背番号／五輪（A代表ではない）。
+# ---- 写真（assets/images/20261022_team_spain/、出典は credits.json。Commons。代理店・放送映像は使っていない）----
+#  s01 表彰台のチーム・s02 優勝を祝うチーム・s03 ロドリ（背番号16）・s04 ペドリ（20）・s05 ヤマル（19、メダル）・s06 オヤルサバル（21）・s07 デ・ラ・フエンテ監督・s08 準々決勝のスタジアム（CC0）。いずれも2026年7月（Bryan Berlin CC BY-SA 4.0、s08 は Alexis Doine CC0）。背番号と腕章で本人を確認。
+# ネットの反応は置いていない（voice_min: 0）。紹介ものは声なし。ショートは作らない。
+date: 2026年10月22日
+slot: other_1
+format: news
+series: 代表チーム紹介
+voice_min: 0
+watch: 11月15日、スペイン対イングランド
+people:
+- スペイン代表
+- デ・ラ・フエンテ
+theme:
+  id: team_spain
+  league: spain
+  league_name: スペイン代表
+  kind: preview
+  topic: スペイン代表
+  title: スペイン代表は、日本に負けた次のW杯で優勝。何が変わったのか
+  question: 日本に負けた2022年のスペインと、2026年に世界王者になったスペインは、どこが違うのか
+  lead: W杯優勝2回。最後は2026年。
+  hook: ''
+  opening_image: assets/stats/tb_spain_data_t.png
+  end_bg: assets/images/20261022_team_spain/s02_celebrate.jpg
+  takeaway: スペインは2022年W杯で日本に1対2で負けたが、次の2026年大会で優勝した。1試合あたりの得点は2.25から1.75に減り、失点は0.75から0.13に減った（W杯、PK戦を除く）。変わったのは攻めより守り。ただ、ネーションズリーグ4試合の失点は5（1試合1.25）で、確かめは11月15日のイングランド戦。
+thumbnail:
+  board: assets/stats/tb_spain_data.png
+  line1: スペイン代表
+  line2: 優勝2回、最後は2026年
+  crest_main:
+  - スペイン
+  tags:
+  - スペイン代表
+  - 日本代表
+  - ワールドカップ
+  - デ・ラ・フエンテ
+  - 代表チーム紹介
+sections:
+- id: hook
+  heading: 日本に負けた4年前のスペインは、どこが違うのか
+  main: true
+  tier: 背景
+  telop: W杯優勝2回。最後は今年7月。4年前は日本に負けた
+  narrator: 解説
+  say:
+  - text: スペイン代表は、ワールドカップで**2回**優勝しています。
+    image: assets/stats/tb_spain_data_r1.png
+    no_telop: true
+    emph: true
+  - text: 最後の優勝は、今年の7月です。
+    image: assets/stats/tb_spain_data_r1.png
+    no_telop: true
+  - text: 決勝の相手は、アルゼンチン。延長戦の末、1対0でした。
+    image: assets/stats/tb_spain_data_r1.png
+    no_telop: true
+  - text: 8試合で、負けはなし。失点は、準々決勝の1点だけです。
+    image: assets/stats/tb_spain_data_r1.png
+    no_telop: true
+  - text: ところが、前回の2022年大会。スペインは、日本に負けています。
+    image: assets/stats/tb_spain_data_r2.png
+    no_telop: true
+  - text: 日本の2対1の勝ち。日本は、そのグループの1位でした。
+    image: assets/stats/tb_spain_data_r2.png
+    no_telop: true
+  - text: スペインは2位で、決勝トーナメントに進みました。
+    image: assets/stats/tb_spain_data_r2.png
+    no_telop: true
+  - text: 負けた次の大会で、世界一。何が変わったのでしょうか。
+    image: assets/stats/tb_spain_data_r1.png
+    no_telop: true
+  sources:
+  - https://inside.fifa.com/en/news/coca-cola-mens-world-ranking-october-2026-portugal-spain
+  - https://www.jfa.jp/samuraiblue/schedule_result/2022.html
+  - https://en.wikipedia.org/wiki/Spain_national_football_team
+- id: data
+  heading: スペイン代表は、どんな数字を持つ国なのか
+  tier: 背景
+  telop: スペイン代表の基礎DATA
+  narrator: 解説
+  say:
+  - text: スペイン代表のフィファランクは**1位**。10月7日の発表でも、首位のままです。
+    image: assets/stats/tb_spain_data0.png
+    no_telop: true
+  - text: ワールドカップの優勝は**2回**。2010年と、2026年です。
+    image: assets/stats/tb_spain_data1.png
+    no_telop: true
+  - text: ヨーロッパ選手権の優勝は**4回**。国として最多。
+    image: assets/stats/tb_spain_data2.png
+    no_telop: true
+  - text: 監督は、ルイス・デ・ラ・フエンテ。2022年12月に就任しました。
+    image: assets/stats/tb_spain_data4.png
+    no_telop: true
+  - text: 主将は、バルセロナのロドリです。
+    image: assets/stats/tb_spain_data5.png
+    no_telop: true
+  sources:
+  - https://inside.fifa.com/en/news/coca-cola-mens-world-ranking-october-2026-portugal-spain
+  - https://en.wikipedia.org/wiki/Spain_national_football_team
+  - https://en.wikipedia.org/wiki/Luis_de_la_Fuente_(footballer,_born_1961)
+- id: history
+  heading: スペインは、いつ頂点に立ち、いつ遠ざかったのか
+  tier: 背景
+  telop: 1964年の初タイトルから、2008〜12年の3連続、そして2026年
+  narrator: 解説
+  card: &id_histA
+    type: timeline
+    title: スペインの優勝の歩み
+    rows:
+    - - 1964年
+      - 欧州選手権で初タイトル。ソ連に2対1
+    - - 2008年
+      - 欧州選手権。決勝でドイツに1対0
+    - - 2010年
+      - W杯初優勝。決勝は延長でオランダに1対0
+    - - 2012年
+      - 欧州選手権を連覇。イタリアに4対0
+    - - 2024年
+      - 欧州選手権4度目。イングランドに2対1
+    - - 2026年
+      - W杯2度目。決勝は延長でアルゼンチンに1対0
+    focus: 1964年
+  say:
+  - text: スペインの最初のタイトルは、1964年。自国開催のヨーロッパ選手権です。
+    image: assets/images/20261022_team_spain/s01_champs_w.jpg
+    card: none
+  - text: 決勝は、ソビエト連邦に2対1。次のタイトルまで、44年かかりました。
+    card:
+      <<: *id_histA
+      highlight_row: 0
+  - text: 2008年は、ヨーロッパ選手権。ドイツに1対0の勝ち。
+    card:
+      <<: *id_histA
+      highlight_row: 1
+  - text: 2010年は、ワールドカップ。決勝で、オランダに延長1対0です。
+    emph: true
+    card:
+      <<: *id_histA
+      highlight_row: 2
+  - text: 2012年は、イタリアに4対0の勝ちで、連覇しました。
+    card:
+      <<: *id_histA
+      highlight_row: 3
+  - text: 2008年から2012年に、主要な大会を3つ続けて制しています。
+    card:
+      <<: *id_histA
+      highlight_row: 3
+  - text: そのあと、ワールドカップでは、勝ち上がれない時期が続きます。
+    card: &id_histB
+      type: timeline
+      title: 優勝のあいだの3大会
+      rows:
+      - - 2014年
+        - W杯。グループステージで敗退
+      - - 2018年
+        - W杯。ベスト16でロシアにPK戦3対4
+      - - 2022年
+        - W杯。ベスト16でモロッコにPK戦0対3
+      focus: 2014年
+  - text: 2014年は、グループステージで敗退。
+    card:
+      <<: *id_histB
+      highlight_row: 0
+  - text: 2018年は、ベスト16で、ロシアにPK戦で負けました。
+    card:
+      <<: *id_histB
+      highlight_row: 1
+  - text: 2022年も、ベスト16。モロッコにPK戦で負けています。
+    emph: true
+    card:
+      <<: *id_histB
+      highlight_row: 2
+  - text: 2024年のヨーロッパ選手権は、7戦全勝。イングランドに2対1で、4度目です。
+    image: assets/images/20261022_team_spain/s01_champs_w.jpg
+    card:
+      <<: *id_histA
+      highlight_row: 4
+  - text: 2026年のワールドカップは、準決勝でフランスに2対0。
+    image: assets/images/20261022_team_spain/s08_stadium_w.jpg
+    card:
+      <<: *id_histA
+      highlight_row: 5
+  - text: 決勝は、アルゼンチンに、延長で1対0。フェラン・トーレスが決めました。
+    image: assets/images/20261022_team_spain/s02_celebrate_w.jpg
+    emph: true
+    card:
+      <<: *id_histA
+      highlight_row: 5
+  sources:
+  - https://en.wikipedia.org/wiki/Spain_national_football_team
+  - https://en.wikipedia.org/wiki/Spain_at_the_FIFA_World_Cup
+- id: players
+  heading: いまの看板選手は、誰なのか
+  tier: 背景
+  telop: 看板選手を、所属・名前・位置・年齢で
+  narrator: 解説
+  card: &id_pl
+    type: table
+    title: スペイン代表の看板選手
+    columns:
+    - 所属
+    - 名前
+    - 位置
+    - 年齢
+    rows:
+    - - バルセロナ
+      - ロドリ
+      - MF
+      - '30'
+    - - バルセロナ
+      - ペドリ
+      - MF
+      - '23'
+    - - バルセロナ
+      - ヤマル
+      - FW
+      - '19'
+    - - レアル・ソシエダ
+      - オヤルサバル
+      - FW
+      - '29'
+    - - アーセナル
+      - メリノ
+      - MF
+      - '30'
+    - - アスレティック
+      - ウナイ・シモン
+      - GK
+      - '29'
+  say:
+  - text: スペイン代表の看板は、この6人。所属と位置、年齢を表にしました。
+    card: *id_pl
+  - text: 年齢は、生年月日から数えた、10月22日時点です。
+    card: *id_pl
+  - text: 主将のロドリは30歳。バルセロナの中盤です。
+    image: assets/images/20261022_team_spain/s03_rodri_w.jpg
+    card:
+      <<: *id_pl
+      highlight_row: 0
+  - text: ペドリは23歳。同じバルセロナの中盤。
+    image: assets/images/20261022_team_spain/s04_pedri_w.jpg
+    card:
+      <<: *id_pl
+      highlight_row: 1
+  - text: ヤマルは19歳。バルセロナで、前線を担います。
+    image: assets/images/20261022_team_spain/s05_yamal_w.jpg
+    card:
+      <<: *id_pl
+      highlight_row: 2
+  - text: オヤルサバルは29歳。レアル・ソシエダのフォワード。
+    image: assets/images/20261022_team_spain/s06_oyarzabal_w.jpg
+    card:
+      <<: *id_pl
+      highlight_row: 3
+  - text: アーセナルの中盤は、30歳のメリノです。
+    card:
+      <<: *id_pl
+      highlight_row: 4
+  - text: ゴールを守るのは、アスレティックのウナイ・シモン。29歳です。
+    card:
+      <<: *id_pl
+      highlight_row: 5
+  sources:
+  - https://en.wikipedia.org/wiki/Spain_national_football_team
+- id: japan
+  heading: 日本は、スペインとどう戦ってきたのか
+  tier: 背景
+  telop: 2001年の0対1の負けから、2022年の2対1の勝ちへ
+  narrator: 解説
+  card: &id_jp
+    type: table
+    title: 日本とスペインの対戦（日本の得点が先）
+    columns:
+    - 年
+    - 大会
+    - スコア
+    rows:
+    - - 2001年4月
+      - 親善試合
+      - 0-1
+    - - 2022年12月
+      - ワールドカップ
+      - 2-1
+  say:
+  - text: 日本とスペインの国際Aマッチは、1990年以降で2試合です。
+    image: assets/images/20261022_team_spain/s07_fuente_w.jpg
+    card: *id_jp
+  - text: 古い順に見ます。
+    card: *id_jp
+  - text: 2001年4月、スペインのコルドバ。親善試合は、0対1の負けでした。
+    card:
+      <<: *id_jp
+      highlight_row: 0
+  - text: 2022年12月、ドーハ。ワールドカップのグループE、第3戦です。
+    image: assets/images/20261022_team_spain/s04_pedri_w.jpg
+    card:
+      <<: *id_jp
+      highlight_row: 1
+  - text: 前半11分、モラタの得点で、日本が先に失点します。
+    card: none
+  - text: 後半は、堂安律が48分に同点、田中碧が51分に逆転。
+    emph: true
+    card:
+      <<: *id_jp
+      highlight_row: 1
+  - text: 3分間で2点。日本は、この大会ドイツにも、2対1で勝っています。
+    card: none
+  - text: 日本は2勝1敗で、グループの1位に立ちました。
+    card: none
+  - text: スペインは2位で、決勝トーナメントへ進みました。
+    image: assets/images/20261022_team_spain/s03_rodri_w.jpg
+    card: none
+  - text: 12月8日、ルイス・エンリケ監督が退き、デ・ラ・フエンテ監督が就きました。
+    card: none
+  - text: 日本戦の1週間後に、いまの体制が始まったことになります。
+    card: none
+  - text: 久保建英は、レアル・ソシエダ。代表のオヤルサバルも、同じクラブです。
+    image: assets/images/20261022_team_spain/s06_oyarzabal_w.jpg
+    card: none
+  - text: 2022年のあと、日本とスペインの試合は、ほかにありません。
+    card:
+      <<: *id_jp
+      highlight_row: 1
+  sources:
+  - https://www.jfa.jp/samuraiblue/schedule_result/2022.html
+  - https://www.jleague.jp/news/article/24005/
+  - https://www.jfa.jp/samuraiblue/schedule_result/2026.html
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_results_(2020%E2%80%93present)
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_results_(2000%E2%80%932009)
+  - https://en.wikipedia.org/wiki/Luis_de_la_Fuente_(footballer,_born_1961)
+- id: now
+  heading: 世界王者のスペインは、最初の秋をどう戦ったのか
+  tier: 背景
+  telop: ワールドカップのあとの4試合は、4勝
+  narrator: 解説
+  card: &id_nl
+    type: table
+    title: 2026年ネーションズリーグ スペインの4試合
+    columns:
+    - 日付
+    - 相手
+    - スペインの結果
+    rows:
+    - - 9月26日
+      - イングランド
+      - 3-2
+    - - 9月29日
+      - クロアチア
+      - 4-1
+    - - 10月3日
+      - チェコ
+      - 3-1
+    - - 10月6日
+      - クロアチア
+      - 2-1
+  say:
+  - text: スペイン代表が世界一になって最初の公式戦は、9月のネーションズリーグ。
+    image: assets/images/20261022_team_spain/s02_celebrate_w.jpg
+    card: none
+  - text: ヨーロッパの代表が競う大会で、イングランド、クロアチア、チェコと同じ組です。
+    card: *id_nl
+  - text: 9月26日は、ロンドンでイングランドに、3対2の勝ち。
+    image: assets/images/20261022_team_spain/s05_yamal_w.jpg
+    card:
+      <<: *id_nl
+      highlight_row: 0
+  - text: 9月29日は、セビリアでクロアチアに、4対1の勝ち。ヤマルが2点。
+    card:
+      <<: *id_nl
+      highlight_row: 1
+  - text: 10月3日は、オビエドでチェコに、3対1の勝ち。
+    card:
+      <<: *id_nl
+      highlight_row: 2
+  - text: 10月6日は、クロアチアの本拠地で、2対1の勝ちでした。
+    card:
+      <<: *id_nl
+      highlight_row: 3
+  - text: 4試合で、4勝。得点は12、失点は5です。
+    card: *id_nl
+  - text: 次の試合は、11月12日、プラハでチェコ。
+    image: assets/images/20261022_team_spain/s01_champs_w.jpg
+    card: none
+  - text: 15日は、マドリードでイングランドです。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Spain_national_football_team
+- id: viewpoint
+  viewpoint: true
+  heading: 日本に負けた2022年のスペインは、どこが変わったのか
+  tier: 背景
+  telop: 1試合の失点は0.75から0.13へ。得点は2.25から1.75へ
+  narrator: 解説
+  card: &id_vp
+    type: table
+    title: ワールドカップ スペインの2大会（PK戦を除く）
+    columns:
+    - 大会
+    - 戦績
+    - 1試合の得点
+    - 1試合の失点
+    rows:
+    - - 2022年
+      - 4試合1勝2分1敗
+      - '2.25'
+      - '0.75'
+    - - 2026年
+      - 8試合7勝1分
+      - '1.75'
+      - '0.13'
+  say:
+  - text: スペイン代表の見立てです。比べる数字は2つ。1つめは、2大会です。
+    card: *id_vp
+  - text: 2022年は、4試合で9得点3失点。1試合の失点は、0.75でした。
+    card:
+      <<: *id_vp
+      highlight_row: 0
+  - text: 2026年は、8試合で14得点1失点。失点は、1試合0.13です。
+    emph: true
+    mark:
+      kind: circle
+      row: 1
+      col: 3
+    card:
+      <<: *id_vp
+      highlight_row: 1
+  - text: 得点は、1試合2.25から1.75に減っています。
+    card:
+      <<: *id_vp
+      highlight_row: 1
+  - text: 変わったのは、攻めよりも、守りでした。
+    emph: true
+    card: none
+  - text: もう1つは、決勝トーナメントです。
+    image: assets/images/20261022_team_spain/s03_rodri_w.jpg
+    card: &id_vp2
+      type: table
+      title: 決勝トーナメントのスペイン
+      columns:
+      - 大会
+      - 試合数
+      - 得点
+      - 結果
+      rows:
+      - - 2022年
+        - 1試合
+        - '0'
+        - PK戦で敗退
+      - - 2026年
+        - 5試合
+        - '9'
+        - 5勝で優勝
+  - text: 2022年は、モロッコ戦の120分間で、0点。決着はPK戦でした。
+    card:
+      <<: *id_vp2
+      highlight_row: 0
+  - text: 2026年は、5試合で9点を取って、5勝です。
+    emph: true
+    mark:
+      kind: circle
+      row: 1
+      col: 2
+    card:
+      <<: *id_vp2
+      highlight_row: 1
+  - text: ペドリとロドリは、2022年と2026年の両方の大会に出ています。
+    image: assets/images/20261022_team_spain/s04_pedri_w.jpg
+    card: none
+  - text: 監督は、2022年12月に代わりました。
+    card: none
+  - text: ただ、ネーションズリーグの4試合は、失点5。1試合1.25です。
+    card: none
+  - text: ワールドカップほど、失点は抑えられていません。
+    card: none
+  - text: 守りが続くのか、いまは言い切れません。
+    card: none
+  - text: 確かめられるのは、11月15日の、イングランド戦です。
+    image: assets/images/20261022_team_spain/s02_celebrate_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Spain_national_football_team
+  - https://en.wikipedia.org/wiki/2022_FIFA_World_Cup_Group_E
+  - https://www.jfa.jp/samuraiblue/schedule_result/2022.html
