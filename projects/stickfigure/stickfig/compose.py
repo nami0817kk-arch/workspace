@@ -655,7 +655,10 @@ def _color_script(frame: Image.Image, plan: dict, tau: float, fx: dict) -> Image
 
 
 def crop_centers(plan: dict, cw: int) -> List[float]:
-    """縦画面の切り出しの中心 x(画面の画素)。2人の中間を追い、カットでは飛び、同じカットの中では1コマ 70px まで。"""
+    """縦画面の切り出しの中心 x(画面の画素)。2人の中間を追い、カットでは飛び、同じカットの中では1コマ 70px まで。
+    output.crop が camera なら、カメラの中心(画面の真ん中)に固定する(手付けの場面は、カメラが見せたい所を決めている)。"""
+    if (plan.get("scene", {}).get("output") or {}).get("crop") == "camera":
+        return [W / 2.0] * len(plan["frames"])
     xs, prev_cam, cur = [], None, None
     for f, fr in enumerate(plan["frames"]):
         cam = fr["cam"]

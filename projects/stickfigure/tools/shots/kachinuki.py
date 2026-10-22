@@ -16,6 +16,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from stickfig import bout, keyshot as ks  # noqa: E402
 
 HERE = Path(__file__).resolve().parent
+VERTICAL_ZOOM = 2.4        # 縦(9:16)では枠が横の 1/3 なので、カメラをこの倍率で引く(2 人が収まる)。2026-10-22「ショートがめちゃくちゃ」(片方が切れた)
 BG_DIR = HERE.parents[1] / "assets" / "bg"
 RELAX = dict(hz=0.84, lean=0.05, ht=0.0, fa=0.35, fe=0.6, ra=0.25, re=0.7)
 
@@ -120,6 +121,7 @@ def build_intro():
 def _side(fn):
     def w():
         sc, rep, beats, dt = fn()
+        sc["vertical_zoom"] = VERTICAL_ZOOM
         return bout.side_view(sc), rep, beats, dt
     return w
 

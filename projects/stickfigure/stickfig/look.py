@@ -438,7 +438,7 @@ def _image_bg(plan: dict, f: int, st: dict) -> Image.Image:
     sw, sh = src.size
     top = y_floor - g * sh * scale
     left = px0
-    edge = src.getpixel((0, sh // 4))
+    edge = src.crop((0, 0, sw, max(2, sh // 40))).resize((1, 1), Image.BOX).getpixel((0, 0))     # 画像の外(上・左右)は、上端の平均色(前は左端の中ほどの 1 画素で、道場では旗の紫が帯になって映った)
     img = Image.new("RGB", (W, H), edge)
     d = ImageDraw.Draw(img)
     floor_col = src.getpixel((sw // 2, min(sh - 1, int(sh * (g + 0.05)))))

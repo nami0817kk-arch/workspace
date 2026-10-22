@@ -318,6 +318,7 @@ python scripts/make_gallery.py 09_01:2.4 135_07_s1:3.6   # clip を順に再生�
 - 蹴り足を腰の真上や真後ろへ通す道はIKが解けない(回し蹴りの振り抜き → 前を通して引き戻す)。IK の残差は build の最初の行(`worst`)と `tools/lowparts.py`(地面に潜った部位)で見る
 - **点検**: `animecheck.check`(動作)+ `animecheck.intensity`(**激しさ**: 打ち合い/秒 1.2 以上・最長の間 1.5 秒以下・動いているコマ 0.6 以上・走り込み 2 回以上・空中の技・倒れ)。`python tools/shots/duel_red.py --check`。当たりごとの確認は `tools/beatsheet.py tools/shots/duel_red.py`(先端と当て先の距離・頭の距離・姿勢の並び)。動画の動きを参考と並べる数字は `tools/motion_probe.py`(meanDiff・動いているコマ・速さ)
 - 擬音の文字は出さない(`anime.sfx: false`。音は付く)。カメラは真横で人物が画面の 0.48(`cam_scale` 3.4)
+- **縦(ショート)の落とし穴**(2026-10-22「ショートがめちゃくちゃ」): 縦は横の 1/3 の幅しか映らない。横のカメラ(scale 3.4)のまま切り出すと戦う 2 人の片方が切れ、切り出しの中心が主役と 2 人の中間を行き来して跳ね、紹介の 4 人は 2 人しか映らなかった。手付けの場面には `sc["vertical_zoom"]`(`kachinuki.VERTICAL_ZOOM` 2.4)を付ける → `episode.apply_vertical` がカメラを引き、切り出しをカメラの中心に固定(`output.crop: camera`)、目線を上げて人物を画面の下寄りに置く(`vertical_lift` 1.4。引きのカットで上げすぎると背景の外が映る)。**縦に書き出す前に `tools/verticheck.py 場面.py` で、2 人が枠の外に出たコマの割合を数える**(戦いは 0% が目安。歩き入りの出だしは主役が枠の外から入るので出てよい)。背景画像の外は上端の平均色で埋める(`look._image_bg`。前は左端の旗の紫が帯になった)
 - 勝ち抜き戦の第 2 版は `tools/shots/kachinuki2.py`(歩いて入る・出る・看板は第 1 版の `kachinuki.py` のものを使う)
 
 ## 決まり・つまずき所(実際に踏んだもの)

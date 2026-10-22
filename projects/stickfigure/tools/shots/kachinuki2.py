@@ -31,6 +31,7 @@ def _duel(name, stage, board_x, walk_in_from=None, walk_out_to=None):
         mod = _load(name)
         sc, rep, beats = mod.build()
         K1.add_board(sc, board_x, [[0.0, K1.ladder(stage)]])
+        sc["vertical_zoom"] = K1.VERTICAL_ZOOM
         dt = 0.0
         if walk_in_from is not None:
             dt = K1.walk_in(sc, from_x=walk_in_from, scale_in=4.2, scale_fight=3.4)

@@ -38,6 +38,19 @@ def load_shot(path) -> dict:
     return got[0] if isinstance(got, tuple) else got
 
 
+def apply_vertical(scene: dict) -> dict:
+    """縦(9:16)で書き出す設定。手付けの場面(vertical_zoom がある)は、細い枠(横の 1/3)に 2 人が収まるようカメラを引き、
+    切り出しをカメラの中心に固定し、人物が画面の下寄りに来るようカメラの目線を上げる(上が空き、下の床だけが広がるのを避ける)。"""
+    scene["output"] = {"aspect": "vertical"}
+    vz = scene.get("vertical_zoom")
+    if vz:
+        scene["cam_zoom"] = float(scene.get("cam_zoom", 1.0)) * float(vz)
+        scene["output"]["crop"] = "camera"
+        for sh in scene.get("shots", []):
+            sh["target_z"] = float(sh.get("target_z", 1.0)) + float(scene.get("vertical_lift", 1.4))
+    return scene
+
+
 def load_episode(path) -> dict:
     ep = yaml.safe_load(Path(path).read_text(encoding="utf-8"))
     if "story" in ep:                         # 物語の型(story.py)から組む。ほかのキーで上書き
@@ -168,7 +181,7 @@ def build_episode(ep: dict, out: Path, reuse_figs: bool = False, force: bool = F
                 scene = skit.expand(scene)
             planmod.validate_scene(scene)
         if vertical:
-            scene["output"] = {"aspect": "vertical"}
+            apply_vertical(scene)
         if preview:                                   # 下書き: Blender を使わない線画(数秒/場面)。台本・字幕・カメラ・音のタイミングを先に見る
             from . import preview as prev
             segs.append(prev.preview_scene(scene, seg_dir / f"{scene.get('name', 'scene')}_prev.mp4", ff))

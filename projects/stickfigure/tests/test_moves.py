@@ -76,3 +76,13 @@ def test_intensity_counts_exchanges():
     sc, rep, beats = _build(script, 3.5)
     r = animecheck.intensity(sc, beats)
     assert r["exchanges_per_s"] >= 1.2 and r["knockdown"] == 1 and r["moving"] > 0.5
+
+
+def test_apply_vertical_zooms_out_and_fixes_crop():
+    from stickfig import episode
+    sc = {"vertical_zoom": 2.4, "shots": [dict(t=0.0, follow="mid", scale=3.4, target_z=1.0)], "cam_zoom": 1.0}
+    episode.apply_vertical(sc)
+    assert sc["output"] == {"aspect": "vertical", "crop": "camera"}
+    assert abs(sc["cam_zoom"] - 2.4) < 1e-9 and sc["shots"][0]["target_z"] > 2.0
+    plain = episode.apply_vertical({"shots": [dict(t=0.0, target_z=1.0)]})        # 自動の場面(vertical_zoom なし)は触らない
+    assert plain["output"] == {"aspect": "vertical"} and plain["shots"][0]["target_z"] == 1.0
