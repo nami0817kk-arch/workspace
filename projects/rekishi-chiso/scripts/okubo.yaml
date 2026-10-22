@@ -138,12 +138,13 @@ sections:
         background: {image: paintings/yoshinobu_beato_yedo_palace_kitlv.jpg, credit: "フェリーチェ・ベアト撮影《江戸の濠と石垣》1863〜65年ごろ"}
       - 聞き: 教科書だと、西郷さんと対立した人、って印象かな。あーしは、ちょっと近づきにくい人だと思ってた。冷たそう、っていうか。
       - 語り: 今日は、生まれから順に掘ります。西郷隆盛、岩倉使節団、内務省、そして最期の日。確かめられることと、後の話を分けて、たどります。
+        background: {image: paintings/yoshinobu_beato_yedo_castle_moat.jpg, credit: "フェリーチェ・ベアト撮影《江戸城の濠》1863〜70年代初め（明治初期の東京のあたり）"}
         card: {head: 今日の掘り方, body: 記録で言えることと、後の話を分ける}
       - 聞き: 計画がどこまで進んでたのかも気になる。まずは、生まれからだね。
 
   # ---------------------------------------------------------------- 2 生い立ちと久光
   - title: 1830年 鹿児島に生まれ、西郷と学び、久光に近づく
-    background: {image: paintings/okubo_kagoshima_castle_gate.jpg, credit: "鹿児島城（鶴丸城）の御楼門（1873年以前の古写真）"}
+    background: {image: paintings/okubo_satsuma_sakurajima_crop.jpg, credit: "二代歌川広重《諸国六十八景 大隅 桜島》1862年の部分"}
     year: 1830
     lines:
       - 語り: 文政13年8月10日、薩摩の鹿児島城下、高麗町に生まれます。父は薩摩藩士の大久保利世。長男でした。
@@ -153,15 +154,16 @@ sections:
         card: {head: 御小姓与, body: 薩摩藩では下のほうの武士の家}
       - 聞き: 下のほうの武士かあ。のちの内務卿も、低いところから始まったってこと？
       - 語り: 加治屋町は、同じ町の少年が年長者のもとで学ぶ、郷中の町でした。ここで学んだ仲間に、西郷隆盛、税所篤、吉井友実らがいます。西郷は、大久保より2歳ほど年上です。
-        background: {image: paintings/okubo_satsuma_sakurajima_crop.jpg, credit: "二代歌川広重《諸国六十八景 大隅 桜島》1862年の部分"}
+        background: {image: paintings/okubo_satsuma_bonoura_crop2.jpg, credit: "歌川広重《六十余州名所図会 薩摩 坊ノ浦 双剣石》1856年の部分"}
         card: {head: 加治屋町, body: 西郷隆盛・税所篤・吉井友実らと学ぶ}
       - 聞き: 幼なじみかあ。同じ町の友達が、あとで国を動かすなんて、不思議な町じゃん。
       - 語り: 数えで17歳、藩の記録所に出ます。ところが嘉永3年、お由羅騒動で、父の利世が島流しになります。喜界島とされます。大久保も職を失い、謹慎。暮らしは苦しくなりました。
+        background: {image: paintings/okubo_satsuma_sakurajima_crop.jpg, credit: "二代歌川広重《諸国六十八景 大隅 桜島》1862年の部分"}
         year: 1850
         card: {head: 嘉永3年, body: お由羅騒動で父が島流し 一家は困窮}
       - 聞き: お父さんが流されて、自分も仕事を失って。若いころに、きついなあ。
       - 語り: 二人の関係は、幼なじみで、学びの仲間。ここまでは確かです。けれど、友情を描く逸話の多くは、後の時代の伝記に出てきます。この回では、確かめられるものを数えていきます。
-        background: {image: paintings/okubo_kagoshima_castle_gate.jpg, credit: "鹿児島城（鶴丸城）の御楼門（1873年以前の古写真）"}
+        background: {image: paintings/okubo_satsuma_bonoura_crop2.jpg, credit: "歌川広重《六十余州名所図会 薩摩 坊ノ浦 双剣石》1856年の部分"}
         figure: {type: compare, title: 同じ町で育った二人, people: [[西郷隆盛, paintings/yoshinobu_saigo_takamori.jpg, 1828年生まれ・後世の肖像画], [大久保利通, paintings/yoshinobu_okubo_toshimichi.jpg, 1830年生まれ・1872年の写真]]}
       - 聞き: 友情の話って、聞くとそのまま信じちゃうけど、後の時代の伝記が元になってることが多いってこと？
         figure: null
@@ -170,7 +172,7 @@ sections:
         year: 1858
         card: {head: 安政5年, body: 斉彬の死のあと、大久保が精忠組を率いる}
       - 語り: 安政6年11月、大久保は脱藩まで考えますが、藩主・茂久の親書で思いとどまります。そして、藩の実権を握る茂久の父、島津久光に近づこうとします。
-        background: {image: paintings/okubo_kagoshima_castle_gate.jpg, credit: "鹿児島城（鶴丸城）の御楼門（1873年以前の古写真）"}
+        background: {image: paintings/okubo_satsuma_bonoura_crop2.jpg, credit: "歌川広重《六十余州名所図会 薩摩 坊ノ浦 双剣石》1856年の部分"}
         portrait: {image: paintings/okubo_hisamitsu_portrait.jpg, caption: "島津久光（原田直次郎筆）", age: false}
         year: 1859
         card: {head: 安政6年11月, body: 脱藩を思いとどまり、久光に近づく}
@@ -184,7 +186,7 @@ sections:
         card: {head: 囲碁の逸話, body: 久光のために学んだ、とは言い切れない}
       - 聞き: 出世のために碁を覚えた、って話のほうが分かりやすいけど、そう単純でもなさそう。
       - 語り: 万延元年3月11日、大久保は久光に初めて会います。文久元年10月には、御小納戸役に抜擢され、藩の政治に加わりました。
-        background: {image: paintings/okubo_kagoshima_castle_gate.jpg, credit: "鹿児島城（鶴丸城）の御楼門（1873年以前の古写真）"}
+        background: {image: paintings/okubo_satsuma_bonoura_crop2.jpg, credit: "歌川広重《六十余州名所図会 薩摩 坊ノ浦 双剣石》1856年の部分"}
         year: 1860
         card: {head: 万延元年3月11日, body: 久光に初めて面会}
       - 聞き: 手紙を渡してから、2年ほどで藩の政治の中だよ。出世のスピードが、ほかの下級武士と全然違うよね。
@@ -192,7 +194,7 @@ sections:
         background: {image: paintings/ryoma_fushimi_teradaya_modern.jpg, credit: "伏見の寺田屋（現在の写真。再建された建物、撮影 Saigen Jiro、CC0）"}
         portrait: null
         year: 1862
-        card: {head: 文久2年4月23日, body: 寺田屋で8人が命を落とす}
+        card: {head: 現在の寺田屋, body: 再建された建物の写真}
       - 語り: 大久保がその場にいた記述はなく、役割は分かりません。そのあとも久光のそばで政治に関わり、慶応元年のうちに、利通という名に改めます。
         year: 1865
       - 語り: そして翌年、敵どうしだった薩摩と長州が、京都で手を握ります。
@@ -207,20 +209,23 @@ sections:
     year: 1866
     lines:
       - 語り: 慶応2年1月21日。京都の小松帯刀の屋敷で、西郷隆盛と木戸孝允が会い、坂本龍馬の仲立ちで、薩長同盟が結ばれます。画面は、現在の京都の、ゆかりの石碑です。
-        background: {image: paintings/ryoma_satcho_alliance_stone_modern.jpg, credit: "薩長同盟ゆかりの石碑（現在の写真、撮影 ぽかぶーぶー、CC0）"}
+        background: {image: paintings/ryoma_kyoto_nijo_castle_before1902.jpg, credit: "《二条城》1902年以前の写真（明治）"}
+        portrait: {image: paintings/ryoma_satcho_alliance_stone_modern.jpg, caption: "現在の石碑（薩長同盟ゆかりの地、京都）", age: false}
         card: {head: 慶応2年1月21日, body: 小松帯刀邸で薩長同盟が結ばれる}
       - 聞き: 大久保も、その席にいたんだよね？ 同盟を結んだ人、って習った気がする。
       - 語り: 出席者に大久保を挙げる記述はあります。けれど、どんな役割だったかは分かりません。確かなのは、前の年の秋、長州再征の勅許に反対する手紙を、西郷に送っていたことです。
-        background: {image: paintings/ryoma_kyoto_sanjo_ohashi_hiroshige_1848.jpg, credit: "歌川広重《京 三条大はし》1848年ごろ"}
+        background: {image: paintings/ryoma_kyoto_sanjo_ohashi_hiroshige_1833.jpg, credit: "歌川広重《京師 三条大橋》1833年ごろ"}
+        portrait: null
         card: {head: 慶応元年の秋, body: 長州再征に反対する手紙を西郷へ}
       - 聞き: 席での役割は分からなくても、前の年から動いてたってことだ。
       - 語り: この同盟には、盟約書がありません。木戸が記憶で6か条をまとめ、龍馬が裏書きしました。
-        background: {image: paintings/yoshinobu_kimbei_mikado_garden.jpg, credit: "日下部金兵衛《京都御所の庭》1890年ごろ（明治の彩色写真）"}
+        background: {image: paintings/yoshinobu_kimbei_nijo_castle.jpg, credit: "日下部金兵衛《二条城》1890年ごろ（明治の写真）"}
+        portrait: {image: paintings/ryoma_katsura_kogoro.jpg, caption: "木戸孝允（桂小五郎。1867〜68年、上野彦馬撮影）", age: false}
         card: {head: 薩長同盟の六か条, body: 盟約書はなく、木戸の書状に龍馬が裏書き}
       - 聞き: 盟約書がないのに、同盟って呼ばれてるなんて、ちょっと不思議。
       - 語り: 大久保が前に出るのは、慶応3年です。9月8日、薩摩・長州・広島の三藩が、出兵を約束しました。草案は、大久保の自筆で現存しています。
-        background: {image: paintings/yoshinobu_kimbei_nijo_castle.jpg, credit: "日下部金兵衛《二条城》1890年ごろ（明治の写真）"}
-        portrait: {image: paintings/okubo_portrait_1868.jpg, caption: "大久保利通（明治元年ごろ）", age: false}
+        background: {image: paintings/ryoma_kyoto_sanjo_ohashi_hiroshige_1848.jpg, credit: "歌川広重《京 三条大はし》1848年ごろ"}
+        portrait: null
         year: 1867
         card: {head: 慶応3年9月8日, body: 薩長広の出兵協定 草案は大久保の自筆}
       - 聞き: 自分の字で下書きしたなら、大久保が引っ張った約束なのかな。
@@ -235,11 +240,12 @@ sections:
       - 聞き: 日付を1日ずらしたのか。大事な日の予定を、頼まれて動かすなんて、思ったより柔らかいところもありそう。
       - 語り: その夜の小御所会議で、慶喜に辞官納地が求められます。大久保が主張した、と伝記にあります。
       - 語り: 最初の案は幕府領400万石の全部。のちに松平春嶽らの尽力で、半分の200万石に和らぎました。
+        background: {image: paintings/yoshinobu_kimbei_mikado_garden.jpg, credit: "日下部金兵衛《京都御所の庭》1890年ごろ（明治の彩色写真）"}
         figure: {type: bars, title: 慶喜に求めた領地の返上, bars: [[最初の案, 4000000], [決まった案, 2000000]], labels: [約400万石, 約200万石]}
       - 聞き: 松平春嶽さんたちが間に入って、半分に。会議の中身も、人の動き次第で変わりそう。
         figure: null
       - 語り: 明治2年、版籍奉還で藩主が土地と人民を朝廷に返し、7月、大久保は参議になります。
-        background: {image: paintings/okubo_syoheibashi_meiji.jpg, credit: "《昌平橋》明治初期の写真（東京）"}
+        background: {image: paintings/yoshinobu_beato_yedo_palace_kitlv.jpg, credit: "フェリーチェ・ベアト撮影《江戸の濠と石垣》1863〜65年ごろ"}
         portrait: {image: paintings/okubo_portrait_3.jpg, caption: "大久保利通（参議・大蔵卿のころ）", age: false}
         year: 1869
       - 語り: 明治4年7月14日、廃藩置県。300ほどあった藩が、一度に県になりました。最初の提案から、決まるまで、約10日です。
@@ -269,6 +275,7 @@ sections:
         short: s2
       - 聞き: 政府のトップが、何人もそろって外国へ。留守を預かるのは、誰なんだろう。
       - 語り: 旅は約1年10か月、総勢107人。アメリカに約8か月、ヨーロッパ11か国を回ります。留守の政府は西郷隆盛たちが預かり、大きな内政改革はしない約束が結ばれました。
+        background: {image: paintings/yoshinobu_beato_yedo_palace_kitlv.jpg, credit: "フェリーチェ・ベアト撮影《江戸の濠と石垣》1863〜65年ごろ"}
         portrait: null
         figure: {type: stats, title: 岩倉使節団の旅, items: [[旅の長さ, 約1年10か月, 明治4年11月〜6年9月], [総勢, 107人, 使節46・随員18・留学生43], [訪ねた国, 約12か国, 米国と欧州11か国]]}
         short: s2
@@ -279,16 +286,19 @@ sections:
         portrait: {image: paintings/okubo_portrait_sf2.jpg, caption: "大久保利通（サンフランシスコ、1872年ごろ）", age: false}
         card: {head: 明治5年, body: 条約改正は委任状が無く、出直しに}
       - 聞き: わざわざ取りに戻ったのに、結局ダメだったの？ それは、がっかりだね。
-      - 語り: 明治6年1月、留守政府の混乱から、大久保と木戸に、早く帰れという命令が出ます。大久保は5月26日に横浜へ着き、使節団の本隊より、約3か月半早く帰りました。
+      - 語り: 明治6年1月、留守政府の混乱から、大久保と木戸に、早く帰れという命令が出ます。
         background: {image: paintings/yoshinobu_beato_kanagawa_port.jpg, credit: "フェリーチェ・ベアト撮影《神奈川の港》1863〜65年ごろ（数年前の姿）"}
         portrait: {image: paintings/okubo_iwakura_mission.jpg, caption: "岩倉使節団の5人（1872年）", age: false}
         year: 1873
+        card: {head: 明治6年1月, body: 大久保と木戸に帰国の命令が出る}
+        short: s2
+      - 語り: 大久保は5月26日に横浜へ着き、使節団の本隊より、約3か月半早く帰りました。
         card: {head: 明治6年5月26日, body: 大久保、使節団より先に帰国}
         short: s2
       - 聞き: 呼び戻されるなんて、留守の政府、相当荒れてたんだ。何があったんだろう。
       - 語り: ヨーロッパでの大久保の感想は、分かりません。目ざした国の形は、ドイツ型とみる説と、イギリス型とみる説に割れます。
         background: {image: paintings/okubo_windsor_1872.jpg, credit: "《ウィンザー城》『London (illustrated)』1872年"}
-        portrait: null
+        portrait: {image: paintings/okubo_berlin_schlossbrucke.jpg, caption: "ベルリンのシュロス橋（1876年の図）", age: false}
         card: {head: 目ざした国の形, body: ドイツ型とイギリス型、研究者で割れる}
       - 聞き: どんな国にしたかったのかは、決め手がないってことか。
       - 語り: 帰国した大久保を待っていたのは、朝鮮との交渉をめぐる、留守政府の大論争です。その中心にいたのは、西郷隆盛でした。
@@ -308,12 +318,12 @@ sections:
         short: s3
       - 聞き: 西郷さんが、自分で行くって言ったんだ。それは、戦争をするためなの？
       - 語り: 8月17日の閣議で、西郷の派遣が決まります。ただし、詳しいことは決まっていません。
-        background: {image: paintings/okubo_seikanron_nishikie.jpg, credit: "鈴木年基《征韓議論図》1877年（『西郷隆盛前功記』より。後世の想像図）"}
-        detail: {box: [0.335, 0.0, 0.668, 1.0], label: 西郷と岩倉の論争を描いた錦絵の一部}
+        background: {image: paintings/okubo_syoheibashi_meiji.jpg, credit: "《昌平橋》明治初期の写真（東京）"}
+        detail: {image: paintings/okubo_seikanron_nishikie.jpg, box: [0.335, 0.0, 0.668, 1.0], label: 西郷と岩倉の論争を描いた錦絵の一部}
         card: {head: 明治6年8月17日, body: 閣議で西郷の朝鮮派遣が決まる}
       - 語り: 西郷の狙いは、研究者の見方が割れます。自分が殺されれば開戦の名分が立つ、と板垣退助への手紙に書いた、とされます。一方、西郷を征韓論者とみない研究者もいます。
-        background: {image: paintings/okubo_seikanron_nishikie.jpg, credit: "鈴木年基《征韓議論図》1877年（『西郷隆盛前功記』より。後世の想像図）"}
-        detail: {box: [0.335, 0.0, 0.668, 1.0], label: 西郷と岩倉の論争を描いた錦絵の一部}
+        background: {image: paintings/okubo_syoheibashi_meiji.jpg, credit: "《昌平橋》明治初期の写真（東京）"}
+        detail: {image: paintings/okubo_seikanron_nishikie.jpg, box: [0.335, 0.0, 0.668, 1.0], label: 西郷と岩倉の論争を描いた錦絵の一部}
         portrait: null
         short: s3
       - 聞き: 征韓論って名前だけ聞くと、戦争を叫んだ人みたいだけど、本人の狙いは分かれてるらしいよね。
@@ -347,12 +357,12 @@ sections:
       - 聞き: 参議が5人も、600人も。政府の中が、空っぽになりそう。
         figure: null
       - 語り: 大久保と西郷が直接どう話したのかは、分かっていません。政変の見方は、研究者の間で分かれます。従来の通説は、征韓論をめぐる路線の対立です。
-        background: {image: paintings/okubo_seikanron_nishikie.jpg, credit: "鈴木年基《征韓議論図》1877年（『西郷隆盛前功記』より。後世の想像図）"}
-        detail: {box: [0.0, 0.0, 0.325, 1.0], label: 征韓論争を描いた錦絵の一部}
+        background: {image: paintings/okubo_syoheibashi_meiji.jpg, credit: "《昌平橋》明治初期の写真（東京）"}
+        detail: {image: paintings/okubo_seikanron_nishikie.jpg, box: [0.0, 0.0, 0.325, 1.0], label: 征韓論争を描いた錦絵の一部}
         card: {head: 政変の見方, body: 征韓論の対立／江藤の追い落とし／内治優先}
       - 語り: 毛利敏彦は、江藤新平を追い落とす権力争いだとみます。家近良樹は、内治を優先するために、強硬派を外した、とみています。
-        background: {image: paintings/okubo_seikanron_nishikie.jpg, credit: "鈴木年基《征韓議論図》1877年（『西郷隆盛前功記』より。後世の想像図）"}
-        detail: {box: [0.0, 0.0, 0.325, 1.0], label: 征韓論争を描いた錦絵の一部}
+        background: {image: paintings/okubo_syoheibashi_meiji.jpg, credit: "《昌平橋》明治初期の写真（東京）"}
+        detail: {image: paintings/okubo_seikanron_nishikie.jpg, box: [0.0, 0.0, 0.325, 1.0], label: 征韓論争を描いた錦絵の一部}
       - 聞き: 「大久保が西郷さんを切り捨てた」の一言じゃ、収まらないよね。そうやって覚えかけてたよ。
         background: {image: paintings/yoshinobu_beato_yedo_palace_kitlv.jpg, credit: "フェリーチェ・ベアト撮影《江戸の濠と石垣》1863〜65年ごろ"}
       - 語り: 政権に残った大久保は、翌月、新しい役所の長になります。国内のほとんどの仕事を受け持つ、内務省です。
@@ -376,6 +386,7 @@ sections:
         card: {head: 殖産興業, body: 国が産業を育て、豊かにしようとした}
       - 聞き: 国を強くするために権力を集めて、そこを批判された、ってことだね。
       - 語り: 明治7年2月、佐賀の乱を、大久保は収めます。江藤新平らは短い裁判で処刑され、今も批判されています。
+        background: {image: paintings/yoshinobu_beato_yedo_castle_moat.jpg, credit: "フェリーチェ・ベアト撮影《江戸城の濠》1863〜70年代初め（明治初期の東京のあたり）"}
         year: 1874
       - 聞き: 辞めた江藤さんが戦いを起こして、大久保が収める側に。複雑だなあ。
       - 語り: 明治7年4月、台湾出兵が決まります。3年前、宮古島の島民が台湾南部で殺された事件が、きっかけでした。
@@ -405,22 +416,21 @@ sections:
       - 聞き: 戦いのあとにも、病気で倒れる人が多かった。重い話だなあ。
         tone: しみじみ
       - 語り: 内務卿の大久保は、もう一つ、産業を育てる大きな催しを考えていました。上野公園での、博覧会です。
-        background: {image: paintings/okubo_expo_1877_hiroshige3.jpg, credit: "三代歌川広重《上野公園地 内国勧業博覧会 美術館之図》1877年"}
-        detail: {box: [0.335, 0.0, 0.668, 1.0], label: 内国勧業博覧会の美術館を描いた錦絵の一部}
+        background: {image: paintings/okubo_toranomon_meiji.jpg, credit: "《虎ノ門》1870年代の写真（東京）"}
         hook: true
       - 聞き: 博覧会？ 何を並べる催しなの？
         hook: true
 
   # ---------------------------------------------------------------- 7 西南戦争の年
   - title: 1877年 内国勧業博覧会と、西郷の死の知らせ
-    background: {image: paintings/okubo_yokohama_troops_1877.jpg, credit: "《横浜で乗船する兵》Illustrated London News 1877年（西南戦争の版画）"}
+    background: {image: paintings/yoshinobu_kimbei_mikado_garden.jpg, credit: "日下部金兵衛《京都御所の庭》1890年ごろ（明治の彩色写真）"}
     year: 1877
     lines:
       - 語り: 明治10年2月、西郷隆盛を担いだ士族たちが鹿児島を出て、西南戦争が始まります。大久保は京都へ出向き、政府側を指揮しました。
         card: {head: 明治10年2月, body: 西南戦争が始まる 大久保は京都で指揮}
       - 聞き: 大久保は、戦いが始まる前に、西郷さんと会おうとしなかったの？
       - 語り: 会いたい、とは考えていました。2月7日付の伊藤博文あての手紙で、西郷は無名の軽挙はしないだろう、と見込んでいます。鹿児島へ行きたいと願いましたが、かないませんでした。
-        background: {image: paintings/yoshinobu_kimbei_mikado_garden.jpg, credit: "日下部金兵衛《京都御所の庭》1890年ごろ（明治の彩色写真）"}
+        background: {image: paintings/yoshinobu_kimbei_nijo_castle.jpg, credit: "日下部金兵衛《二条城》1890年ごろ（明治の写真）"}
         card: {head: 2月7日付の手紙, body: 西郷は軽挙をしない、と見込んでいた}
       - 聞き: 西郷さんは戦争なんてしない、って信じてたんだよね。それが外れてしまった。
       - 語り: 8月21日。戦争のさなかに、上野公園で、第1回内国勧業博覧会が開かれます。内務卿の大久保が開催を提案し、内務省の主導で進めた、産業の博覧会です。
@@ -431,14 +441,14 @@ sections:
       - 聞き: 8月って、戦争の真っ最中だよね。お客さんは、ちゃんと来たの？
         figure: null
       - 語り: 戦争とコレラの流行で、入場者は大久保の予想を下回りました。財政の面では成功ではなかった、と大久保自身も語ったそうです。
-        background: {image: paintings/okubo_expo_1877_hiroshige3.jpg, credit: "三代歌川広重《上野公園地 内国勧業博覧会 美術館之図》1877年"}
-        detail: {box: [0.0, 0.0, 0.325, 1.0], label: 内国勧業博覧会の美術館を描いた錦絵の一部}
+        background: {image: paintings/okubo_syoheibashi_meiji.jpg, credit: "《昌平橋》明治初期の写真（東京）"}
+        detail: {image: paintings/okubo_expo_1877_hiroshige3.jpg, box: [0.0, 0.0, 0.325, 1.0], label: 内国勧業博覧会の美術館を描いた錦絵の一部}
       - 語り: それでも、新しい技術と産物を並べた試みは、殖産興業の柱の一つでした。
-        background: {image: paintings/okubo_expo_1877_hiroshige3.jpg, credit: "三代歌川広重《上野公園地 内国勧業博覧会 美術館之図》1877年"}
-        detail: {box: [0.675, 0.0, 1.0, 1.0], label: 内国勧業博覧会の美術館を描いた錦絵の一部}
+        background: {image: paintings/okubo_syoheibashi_meiji.jpg, credit: "《昌平橋》明治初期の写真（東京）"}
+        detail: {image: paintings/okubo_expo_1877_hiroshige3.jpg, box: [0.675, 0.0, 1.0, 1.0], label: 内国勧業博覧会の美術館を描いた錦絵の一部}
       - 聞き: 思ったほど人が来なくても、やめなかった。大久保は、粘る人だったのかな。
       - 語り: 9月24日、西郷隆盛が亡くなります。
-        background: {image: paintings/okubo_kagoshima_castle_gate.jpg, credit: "鹿児島城（鶴丸城）の御楼門（1873年以前の古写真）"}
+        background: {image: paintings/okubo_satsuma_sakurajima_crop.jpg, credit: "二代歌川広重《諸国六十八景 大隅 桜島》1862年の部分"}
         portrait: {image: paintings/yoshinobu_saigo_takamori.jpg, caption: "西郷隆盛（後世の肖像画）", age: false}
         year: 1877
         card: {head: 明治10年9月24日, body: 西郷が没 大久保の話は2002年の本}
@@ -448,7 +458,7 @@ sections:
       - 語り: この話の出典に挙がるのは、2002年に出た本です。確かな記録かどうかは、分かりません。
       - 聞き: 本当に、そんなふうに泣いたのかな。信じたいけど、出典が新しい本だと、慎重になるよね。
       - 語り: 一方で西郷は、自分を刺す計画に、大久保も同意していた、と考えるようになった、ともいわれます。事実かどうかは、分かりません。
-        background: {image: paintings/okubo_satsuma_sakurajima_crop.jpg, credit: "二代歌川広重《諸国六十八景 大隅 桜島》1862年の部分"}
+        background: {image: paintings/okubo_satsuma_bonoura_crop2.jpg, credit: "歌川広重《六十余州名所図会 薩摩 坊ノ浦 双剣石》1856年の部分"}
       - 聞き: 西郷さんがどう思ってたのか、大久保がどう思ってたのか。手紙からでも、そう簡単には分からないね。
       - 語り: 西郷の死から、約8か月。大久保にも、最期の朝が近づいていました。
         background: {image: paintings/okubo_toranomon_meiji.jpg, credit: "《虎ノ門》1870年代の写真（東京）"}
@@ -468,35 +478,35 @@ sections:
         tone: 重い
       - 聞き: 馬車に、護衛はつかなかったのかな。
       - 語り: 8時30分ごろ、清水谷にさしかかります。紀尾井坂の変と呼ばれますが、正確には坂ではなく、坂の下のあたりでした。島田一郎ら、士族6人が襲いました。
-        background: {image: paintings/yoshinobu_beato_yedo_castle_moat.jpg, credit: "フェリーチェ・ベアト撮影《江戸城の濠》1863〜70年代初め（明治初期の東京のあたり）"}
+        background: {image: paintings/okubo_toranomon_meiji.jpg, credit: "《虎ノ門》1870年代の写真（東京）"}
         figure: {type: stats, title: 紀尾井坂の変, items: [[襲った士族, 6人, 島田一郎ら], [襲撃, 午前8時30分, 清水谷], [判決と処刑, 7月27日, 6人とも即日]]}
       - 聞き: 6人って、どんな人たちだったの？
       - 語り: 島田は加賀藩の足軽の子で、金沢の生まれです。ほかに、長連豪ら5人。そのうちの一人は、罪が家に及ぶのを恐れて、事前に士族をやめ、平民になっていました。
         figure: null
       - 聞き: 罪が家族に及ばないように、先に平民に。そこまで準備してたってことだよね。
       - 語り: 襲撃の細部は語りません。従者は逃げのび、近くの北白川宮邸に助けを求めます。御者の中村太郎は亡くなり、大久保も、護身の武器を持たないまま、数えで49歳、満47歳で亡くなりました。
-        background: {image: paintings/yoshinobu_beato_yedo_palace_kitlv.jpg, credit: "フェリーチェ・ベアト撮影《江戸の濠と石垣》1863〜65年ごろ"}
+        background: {image: paintings/yoshinobu_beato_yedo_castle_moat.jpg, credit: "フェリーチェ・ベアト撮影《江戸城の濠》1863〜70年代初め（明治初期の東京のあたり）"}
         portrait: {image: paintings/okubo_portrait_1878.jpg, caption: "大久保利通（維新後の写真）", age: false}
         card: {head: 明治11年5月14日, body: 大久保、満47歳で亡くなる}
         tone: 重い
       - 聞き: ……武器も持たずに、馬車に乗ってたなんて。
       - 語り: 報道では、大久保は、その朝、西郷から送られた手紙を読んでいた、とされます。前島密は、数日前に、大久保から悪夢の話を聞いた、と伝わります。西郷に追われて、高い崖から落ちる夢でした。
-        background: {image: paintings/yoshinobu_beato_yedo_castle_moat.jpg, credit: "フェリーチェ・ベアト撮影《江戸城の濠》1863〜70年代初め（明治初期の東京のあたり）"}
+        background: {image: paintings/okubo_okuragumi_meiji.jpg, credit: "《大倉組の建物》明治の写真（東京）"}
         card: {head: 悪夢と手紙の話, body: どちらも後の話 予言とは言い切れない}
       - 語り: どちらも、出来事のあとに語られた話の可能性があります。
       - 聞き: 西郷さんに追われて落ちる夢、か。本当だとしたら、ずっと気にしてたんだろうな。
       - 語り: 6人は、斬奸状を持って自首しました。斬奸状を書いたのは、襲撃に加わらなかった陸義猶です。大久保の罪を《5つ》挙げた文書でした。
-        background: {image: paintings/yoshinobu_beato_yedo_palace_kitlv.jpg, credit: "フェリーチェ・ベアト撮影《江戸の濠と石垣》1863〜65年ごろ"}
+        background: {image: paintings/okubo_syoheibashi_meiji.jpg, credit: "《昌平橋》明治初期の写真（東京）"}
         card: {head: 斬奸状の5つの罪, body: 公議・法令・土木・志士・外交}
       - 語り: 公議と民権を抑えたこと。法令が場当たりで、人の登用に縁故が使われたこと。不要な土木事業で、国のお金を無駄にしたこと。
       - 語り: 憂国の志士を退けて、内乱を招いたこと。外交の道を誤り、国の権威を落としたこと。この5つでした。
       - 聞き: 5つとも、政治のやり方への不満だよね。
       - 語り: 7月27日、臨時裁判所で6人に判決が出て、その日のうちに処刑されました。陸は終身禁錮になり、明治22年、憲法発布の特赦で釈放されます。
-        background: {image: paintings/yoshinobu_beato_yedo_castle_moat.jpg, credit: "フェリーチェ・ベアト撮影《江戸城の濠》1863〜70年代初め（明治初期の東京のあたり）"}
+        background: {image: paintings/yoshinobu_beato_yedo_palace_kitlv.jpg, credit: "フェリーチェ・ベアト撮影《江戸の濠と石垣》1863〜65年ごろ"}
         year: 1878
         card: {head: 明治11年7月27日, body: 6人に判決 即日、処刑}
       - 語り: 5月15日、大久保に正二位・右大臣が贈られます。17日、青山霊園で葬儀が営まれ、御者の中村太郎も、大久保のそばに葬られました。
-        background: {image: paintings/yoshinobu_beato_yedo_palace_kitlv.jpg, credit: "フェリーチェ・ベアト撮影《江戸の濠と石垣》1863〜65年ごろ"}
+        background: {image: paintings/yoshinobu_beato_yedo_castle_moat.jpg, credit: "フェリーチェ・ベアト撮影《江戸城の濠》1863〜70年代初め（明治初期の東京のあたり）"}
         card: {head: 明治11年5月17日, body: 青山霊園で葬儀 中村太郎も隣に}
       - 聞き: 御者の人まで、同じところに眠ってる。
       - 語り: 現在の清水谷公園には、大久保の哀悼碑が立っています。高さは約6メートル。画面は、現在の清水谷公園です。
@@ -520,15 +530,16 @@ sections:
         card: {head: 1つ目 記録で言えること, body: 国のしくみを作る側にいた}
       - 聞き: 県とか、役所とか、今の日本の形につながる話ばかりだね。
       - 語り: 2つ目、決めつけられないこと。西郷との関係です。幼なじみで、学びの仲間だったのは確かです。けれど、友情と決別の物語の多くは、後の時代の伝記に書かれています。
-        background: {image: paintings/okubo_seikanron_nishikie.jpg, credit: "鈴木年基《征韓議論図》1877年（『西郷隆盛前功記』より。後世の想像図）"}
-        detail: {box: [0.675, 0.0, 1.0, 1.0], label: 征韓論争を描いた錦絵の一部}
+        background: {image: paintings/okubo_syoheibashi_meiji.jpg, credit: "《昌平橋》明治初期の写真（東京）"}
+        detail: {image: paintings/okubo_seikanron_nishikie.jpg, box: [0.675, 0.0, 1.0, 1.0], label: 征韓論争を描いた錦絵の一部}
         card: {head: 2つ目 決めつけられないこと, body: 西郷との友情と決別の物語}
       - 聞き: 同じ人なのに、本によって、顔が変わっていくね。
       - 語り: 3つ目、後の話です。西郷の死に号泣した話も、悪夢の話も、手紙を読んでいた話も、あとから出た本や報道に出てきます。そこから、冷たい政治家とも、情の深い人とも読める像ができました。
-        background: {image: paintings/okubo_kagoshima_castle_gate.jpg, credit: "鹿児島城（鶴丸城）の御楼門（1873年以前の古写真）"}
+        background: {image: paintings/okubo_toranomon_meiji.jpg, credit: "《虎ノ門》1870年代の写真（東京）"}
         card: {head: 3つ目 後の話, body: 号泣・悪夢・手紙は、あとの本や報道}
       - 聞き: 冷たい人にも、泣く人にも見える。話を足すほど、像が揺れるよね。
       - 語り: 冷徹という像には、同じ時代の見方もあります。大隈重信は「維新時代唯一の大政事家」と評しました。伊藤博文は、大久保を圧政家とするのは誤りだ、と語ったとされます。
+        background: {image: paintings/okubo_okuragumi_meiji.jpg, credit: "《大倉組の建物》明治の写真（東京）"}
         card: {head: 同じ時代の見方, body: 大隈「唯一の大政事家」 伊藤は圧政家を誤りと}
       - 聞き: 同時代には、違う見方もあったんだ。伊藤博文まで、圧政家は誤りって言ってたなんて、意外。
       - 語り: 大久保利通の遺産の話です。死後、財産は現金が140円ほどで、借金が8000円あった、とされます。財産はすべて抵当に入っていましたが、貸主は遺族に返済を求めなかった、といいます。
@@ -552,12 +563,12 @@ sections:
         card: {head: 冒頭の問い, body: 計画は第2期の入口で止まった}
       - 聞き: 4.5か月って、120か月のたった4%くらい。第2期は、ほとんど始まったばかりだったんだ。
       - 語り: 明治10年5月に木戸孝允、9月に西郷隆盛、翌年5月に大久保。維新の三傑が、約1年のうちに亡くなりました。年齢は、木戸が43、西郷が49、大久保が47。満年齢です。
-        background: {image: paintings/okubo_toranomon_meiji.jpg, credit: "《虎ノ門》1870年代の写真（東京）"}
+        background: {image: paintings/okubo_syoheibashi_meiji.jpg, credit: "《昌平橋》明治初期の写真（東京）"}
         figure: {type: numberline, title: 三人の亡くなった年齢（満）, items: [[木戸孝允, 43], [大久保利通, 47], [西郷隆盛, 49]], unit: 歳, focus: 大久保利通, note: 約1年のうちに三人とも亡くなる}
       - 聞き: 三人とも40代で、1年のあいだに。維新を動かした人たちが、一気にいなくなった。
         figure: null
       - 語り: 人柄の逸話を一つ。子煩悩で、土曜日に家族と夕食を囲むのを楽しみにしていた、といいます。伝記の逸話で、記録で裏づけた話ではありません。
-        background: {image: paintings/okubo_syoheibashi_meiji.jpg, credit: "《昌平橋》明治初期の写真（東京）"}
+        background: {image: paintings/okubo_okuragumi_meiji.jpg, credit: "《大倉組の建物》明治の写真（東京）"}
       - 聞き: 家に帰れば、ふつうのお父さんかあ。冷徹っていう顔は、その一部だけなのかな。
       - 語り: では、層の下にある、記録で言える大久保は、どんな人だったのか。
         background: {image: paintings/yoshinobu_beato_yedo_palace_kitlv.jpg, credit: "フェリーチェ・ベアト撮影《江戸の濠と石垣》1863〜65年ごろ"}
