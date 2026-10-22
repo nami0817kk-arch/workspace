@@ -415,10 +415,174 @@ roles:
     tone_strength: 0.5
     max_intonation: 1.3
     max_speed: 1.0
+  ナポレオン想像:            # 10-22。Bのワーテルロー IF の想像のセリフ（第1幕）。ナポレオン（満45歳）は玄野武宏（手紙の一文のナポレオンと同じ声）。同じ幕のネイ想像（黒沢冴白）と重ならない
+    label: ナポレオン（想像）
+    name: 玄野武宏
+    style_id: 11
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  ネイ想像:                  # 10-22。ワーテルロー IF 第1幕。ネイ元帥は黒沢冴白。ナポレオン想像（玄野武宏）と重ならない
+    label: ネイ元帥（想像）
+    name: 黒沢冴白
+    style_id: 100
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  ウェリントン想像:          # 10-22。ワーテルロー IF 第2幕。ウェリントンは落ち着いた声の麒ヶ島宗麟。ブリュッヘル想像（雀松朱司）と重ならない
+    label: ウェリントン公（想像）
+    name: 麒ヶ島宗麟
+    style_id: 53
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  ブリュッヘル想像:          # 10-22。ワーテルロー IF 第2幕。ブリュッヘル（72歳）は年配の声として雀松朱司。ウェリントン想像（麒ヶ島宗麟）と重ならない
+    label: ブリュッヘル（想像）
+    name: 雀松朱司
+    style_id: 52
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  アレクサンドル想像:        # 10-22。ワーテルロー IF 第3幕。アレクサンドル1世は白上虎太郎。メッテルニヒ想像（離途）と重ならない
+    label: アレクサンドル1世（想像）
+    name: 白上虎太郎
+    style_id: 12
+    speed: 1.0
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.05
+  メッテルニヒ想像:          # 10-22。ワーテルロー IF 第3幕。メッテルニヒは離途。アレクサンドル想像（白上虎太郎）と重ならない
+    label: メッテルニヒ（想像）
+    name: 離途
+    style_id: 99
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
   広家想像:                  # 10-17。Bの関ヶ原IFの想像のセリフ（第3幕）。吉川広家は雀松朱司
     label: 吉川広家（想像）
     name: 雀松朱司
     style_id: 52
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+
+  千姫想像:                  # 10-22。Bの秀頼IFの想像のセリフ（第1幕）。千姫（数え19歳）は落ち着いた若い女性の声として冥鳴ひまり。同じ幕の秀忠想像（青山龍星）と重ならない
+    label: 千姫（想像）
+    name: 冥鳴ひまり
+    style_id: 14
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  秀忠想像:                  # 10-22。Bの秀頼IFの想像のセリフ（第1幕）。徳川秀忠（数え37歳）は低めの男性の声 青山龍星。千姫想像（冥鳴ひまり）と重ならない
+    label: 徳川秀忠（想像）
+    name: 青山龍星
+    style_id: 13
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  秀頼想像:                  # 10-22。Bの秀頼IFの想像のセリフ（第2幕）。豊臣秀頼（数え23歳）は若い声の白上虎太郎。同じ幕の家康想像（麒ヶ島宗麟）と重ならない
+    label: 豊臣秀頼（想像）
+    name: 白上虎太郎
+    style_id: 12
+    speed: 1.0
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.05
+  義元想像:                  # 10-22。Bの桶狭間IFの想像のセリフ（第1・4幕）。今川義元（数え42歳）は落ち着いた声の麒ヶ島宗麟。第1幕の朝比奈想像（雀松朱司）・第4幕の氏真想像（玄野武宏）と重ならない
+    label: 今川義元（想像）
+    name: 麒ヶ島宗麟
+    style_id: 53
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  朝比奈想像:                # 10-22。桶狭間IF第1幕。朝比奈泰朝は雀松朱司。義元想像（麒ヶ島宗麟）と重ならない
+    label: 朝比奈泰朝（想像）
+    name: 雀松朱司
+    style_id: 52
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  柴田想像:                  # 10-22。桶狭間IF第2幕。柴田勝家は黒沢冴白。同じ幕の信長想像（青山龍星）と重ならない
+    label: 柴田勝家（想像）
+    name: 黒沢冴白
+    style_id: 100
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  元康想像:                  # 10-22。桶狭間IF第3幕。松平元康（数え19歳）は若い声の白上虎太郎。同じ幕の忠次想像（離途）と重ならない
+    label: 松平元康（想像）
+    name: 白上虎太郎
+    style_id: 12
+    speed: 1.0
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.05
+  氏真想像:                  # 10-22。桶狭間IF第4幕。今川氏真（数え23歳）は玄野武宏。同じ幕の義元想像（麒ヶ島宗麟）と重ならない
+    label: 今川氏真（想像）
+    name: 玄野武宏
+    style_id: 11
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+
+  桐野想像:                  # 10-22。Bの西郷IFの想像のセリフ（第1幕）。桐野利秋は玄野武宏。同じ幕の西郷想像（麒ヶ島宗麟）と重ならない
+    label: 桐野利秋（想像）
+    name: 玄野武宏
+    style_id: 11
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  山県想像:                  # 10-22。Bの西郷IFの想像のセリフ（第2幕）。山県有朋は雀松朱司。同じ幕の参謀想像（離途）と重ならない
+    label: 山県有朋（想像）
+    name: 雀松朱司
+    style_id: 52
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  参謀想像:                  # 10-22。第2幕。名の分からない政府軍の参謀の役。離途
+    label: 政府軍の参謀（想像）
+    name: 離途
+    style_id: 99
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  池上想像:                  # 10-22。第3幕。池上四郎（薩軍の参謀）は黒沢冴白。同じ幕の西郷想像（麒ヶ島宗麟）と重ならない
+    label: 池上四郎（想像）
+    name: 黒沢冴白
+    style_id: 100
     speed: 0.95
     intonation: 1.0
     tone_strength: 0.5

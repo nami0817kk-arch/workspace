@@ -1,0 +1,1427 @@
+# B（歴史の転換点の if ストーリー）。型：事実（桶狭間の戦い・兵数の諸説・奇襲説と正面攻撃説・義元の目的・戦後の今川と元康）→ 史料に残る別の道 → 「こうなった可能性」（理由つき）。
+# 仮定はひとつだけ：永禄3年5月19日、信長の突入が義元に届かず、義元は討たれなかった（どう討たれなかったかは決めない。戦の描写もしない）。
+# 事実の出どころは dev/output/rekishi-chiso/research/okehazama_if_facts.md（確実／有力／説／後世の話の区分もそこ）。絵の一覧は okehazama_if_assets.md。
+# 決まり：B は昼12時・約30分／題名は「もし〇〇だったら｜…どうなったか」／再生リストは A と分ける（歴史のif）／想像の部分は画面に「ここから想像」の札
+#   人物のセリフは B では想像のセリフを入れてよい。①「ここから想像」の札が出ている節（想像①〜④）だけ ②字幕に「（想像）」（roles の義元想像・朝比奈想像・信長想像・柴田想像・元康想像・忠次想像・氏真想像）③記録のセリフは本編に置かない
+#   同じ幕で声が重ならない：第1幕＝義元（麒ヶ島宗麟）と朝比奈（雀松朱司）／第2幕＝信長（青山龍星）と柴田（黒沢冴白）／第3幕＝元康（白上虎太郎）と忠次（離途）／第4幕＝義元（麒ヶ島宗麟）と氏真（玄野武宏）。
+#   幕割り：想像①＝第1幕（5/19夕・桶狭間山）／想像②＝第2幕（5/20・尾張の清洲）／想像③＝第3幕（5/19夜・大高城）／想像④＝第4幕（永禄3年夏・駿府）。
+#   出てくる人が実際にその場にいたかも想像（柴田勝家・酒井忠次・朝比奈泰朝）。第1幕の頭で断る。
+# 想像の部分は言い切る。確かさは画面の札（ありうる／ほぼ妄想）と運命表で出す。声に出すのは「ほぼ妄想」を中心に、言い回しは変える。
+# 冒頭の強い一点：『信長公記』の今川軍4万5千・信長軍2千未満という数字を、いまの研究は信じていない（2万5千の通説・渡邊大門の試算約1万2千）。
+#   3つの問い：今川は？（答え＝三河を保つ・5字）／信長は？（答え＝美濃が遠のく・6字）／家康は？（答え＝1560年は戻れない）。まとめの stats・運命表・サムネの伏せ字（今川は5＝三河を保つ・信長は6＝美濃が遠のく）を一致させる。家康は7字で札と重なるのでサムネでは「家康は？」の札にする。
+# 数字は「何の数か」を言う（4万5千＝『信長公記』、2万5千＝参謀本部、約1万2千＝渡邊大門の試算。損害は書物ごと）。日付は和暦の月日、西暦は「一般に1560年6月12日とされる」。
+#   年齢は数え：義元42（1519生）・信長27・元康19・氏真23（1538生）。
+# 使わない話：奇襲・迂回を事実として／簗田政綱の勲功第一を事実として／毛利の指を噛み切った話を事実として／「捨城ならば拾はん」を元康の言葉として／義元の首・遺体・流血の描写／
+#   「義元が生きていれば今川は滅びなかった」「家康・信長は天下を取れなかった」の断定／善徳寺の会盟／黒田基樹を桶狭間の論者として（出どころでは黒田日出男）。
+# 研究：「義元が討たれなかったら」を正面から論じた研究は見つからない（冒頭と運命表で断る）。論じられているのは奇襲説の見直し（藤本正行・渡邊大門）・義元の目的（高柳光壽・小和田哲男・久保田昌希・大石泰史・小林正信）・兵数（太田満明・橋場日月・渡邊大門）。
+#   本文は未読（Wikipedia と一般向け記事経由）と冒頭で断る。
+# 画面の決まり：背景に人物の肖像・拡大絵を使わない（肖像は額）／極端に横長の絵は使わない（桶狭間の三連絵2枚は額だけ）／後世の絵（名所図会・錦絵・国絵図）は語りで断る／現代の写真は今回は使っていない。
+title: もし桶狭間で今川義元が討たれなかったら｜今川は三河を保てたか、信長と家康はどうなったか、そのあとどうなったか
+series: ''
+playlists:
+- 歴史のif（もしもの地層）
+- 戦国時代を掘る
+shorts_playlists:
+- 歴史のifショート
+shorts_badge: もしもの話
+tags:
+- もし桶狭間で今川義元が討たれなかったら
+- もし今川義元が生きていたら
+- 桶狭間の戦い
+- 今川義元
+- 織田信長
+- 徳川家康
+- 松平元康
+- 今川氏真
+- 三国同盟
+- 歴史if
+- 戦国時代
+- 日本史
+- 歴史解説
+- 歴史の地層
+en:
+  title: What If Imagawa Yoshimoto Survived Okehazama? | What Happens to Imagawa, Nobunaga, Ieyasu?
+  description: 'On the 19th day of the 5th month of Eiroku 3 (generally given as June 12, 1560), Imagawa Yoshimoto, aged 42 by Japanese count, was killed at Okehazama. The Shincho-ko-ki puts his army at 45,000 and Nobunaga''s at under 2,000, but modern research does not accept those figures. This video asks: what if Yoshimoto had not been killed?
+
+
+    We keep records, theories and imagination apart. First, what the sources and historians say: Yoshimoto''s domains and the Three-Way Alliance, why he marched into Owari (the old Kyoto-march theory versus territorial theories), Matsudaira Motoyasu (the young Ieyasu, 19) bringing rice into Odaka Castle, the three competing army-size figures, the surprise-attack theory versus the frontal-attack theory, the hail and rain, Yoshimoto''s death, the widely differing casualty figures, and what happened to Ujizane, Motoyasu and the alliance afterwards.
+
+
+    Then, clearly marked imagination with reasons: the evening on Mount Okehazama, Nobunaga at Kiyosu, Motoyasu at Odaka Castle, Yoshimoto and Ujizane in Sunpu, a table of fates, and the chains to today. In imagined parts we speak plainly, and the on-screen label tells you how likely it is: likely, possible, or nearly fantasy. We found no study that argues this counterfactual directly, and we say so.
+
+
+    The accounts of historians'' views follow summaries on Wikipedia and magazine articles; we have not checked the original texts.
+
+
+    A Japanese history video to listen to while you work (Japanese audio).'
+  chapters:
+  - 'May 19, 1560: Do the Numbers 45,000 vs 2,000 Hold Up?'
+  - 'Imagawa Yoshimoto: Lord of Suruga, Totomi and Mikawa'
+  - 'May 1560: Why March Into Owari? Kyoto or Territory'
+  - 'The Night of May 18: Motoyasu Brings Rice Into Odaka Castle'
+  - 'May 19: What Are the Army Figures Counting?'
+  - 'Noon on May 19: Mount Okehazama, Dengaku-hazama, the Hail'
+  - 'Surprise Attack or Frontal Attack? Research Revisited'
+  - 'Yoshimoto''s Death and the Disputed Casualty Figures'
+  - 'After Okehazama: Motoyasu Enters Okazaki and Allies with Nobunaga'
+  - 'Ujizane''s Imagawa, 1560-1569: The Fate of the Three-Way Alliance'
+  - 'Other Paths in the Sources'
+  - 'Imagination 1: Evening on Mount Okehazama'
+  - 'Imagination 2: Nobunaga and Shibata Katsuie at Kiyosu'
+  - 'Imagination 3: Motoyasu and Sakai Tadatsugu at Odaka Castle'
+  - 'Imagination 4: Yoshimoto and Ujizane in Sunpu'
+  - 'Imagination 5: A Table of Fates'
+  - 'Imagination 6: How Japan Changes, and the Chains to Today'
+  - 'Summary: The Fork in the Rain at Okehazama'
+texture: true
+recap: true
+timeline:
+  start: 1552
+  end: 1570
+  events:
+  - - 1554
+    - 三国同盟
+  - - 1560
+    - 桶狭間
+  - - 1562
+    - 清洲同盟
+  - - 1569
+    - 今川氏の終わり
+terms:
+  桶狭間山: 『信長公記』が義元の休息地とする山。田楽狭間は後の呼び名
+  奇襲説: 信長が迂回して本陣の背後を突いたとする説。江戸初期の書物が出どころ
+  正面攻撃説: 信長が正面から攻めたとする説。『信長公記』を重んじる
+  三国同盟: 今川・武田・北条が娘や息子の結婚で結んだ同盟
+  兵糧入れ: 包囲された城へ食べ物を運び込むこと
+  塗輿: 漆を塗った、身分の高い人の乗り物
+  遠州忩劇: 氏真の代に遠江の国衆が起こした反乱
+  清洲同盟: 信長と元康の講和・同盟。年は割れる
+  先鋒: 軍の先頭を受け持つ隊
+shorts:
+  s1:
+    title: 桶狭間の兵数／何の数か
+    yt_title: 桶狭間の今川軍は4万5千人？｜信長公記の数字と、研究が出す約1万2千
+    hook: 桶狭間の今川軍は、／本当に4万5千もいた？
+    tease: 信長の兵のほうは、／本当に2千だった？
+    lead: 桶狭間の戦い、兵数の話です。
+    tags:
+    - 桶狭間の戦い
+    - 今川義元
+    - 兵数
+    - 歴史if
+  s2:
+    title: 奇襲説の出どころ／教科書の絵
+    yt_title: 桶狭間の奇襲はいつ生まれた？｜小瀬甫庵と参謀本部、正面攻撃説の見直し
+    hook: 桶狭間の「奇襲」は、／いつ生まれた話？
+    tease: ならば、正面から行って、／どうやって義元に届いた？
+    lead: 桶狭間の戦い、奇襲説の話です。
+    tags:
+    - 桶狭間の戦い
+    - 奇襲説
+    - 正面攻撃説
+    - 歴史if
+  s3:
+    title: もしも／桶狭間山の夕方
+    yt_title: もし桶狭間で義元が討たれなかったら？｜義元と朝比奈泰朝の想像劇場
+    hook: 討たれなかった夕方、／義元は何を決める？
+    tease: 義元は、大高城の元康に／何を命じる？
+    lead: もし桶狭間で義元が生きていたら、の想像劇場です。
+    tags:
+    - もし今川義元が生きていたら
+    - 朝比奈泰朝
+    - 桶狭間の戦い
+    - 歴史if
+  s4:
+    title: 義元の尾張進軍／目的の説
+    yt_title: 今川義元は上洛を目指していた？｜桶狭間、尾張進軍の目的を研究者の説で整理
+    hook: 義元は、本当に／京へ上るつもりだった？
+    tease: その義元は、桶狭間山で／何をしていた？
+    lead: 今川義元の目的、研究者の説の話です。
+    tags:
+    - 今川義元
+    - 上洛説
+    - 桶狭間の戦い
+    - 歴史if
+  s5:
+    title: 元康19歳／桶狭間の前夜
+    yt_title: 桶狭間の前の夜、19歳の松平元康は何をした？｜大高城の兵糧入れ
+    hook: 19歳の元康は、／桶狭間の前の夜に何をした？
+    tease: もし義元が生きていたら、／元康は岡崎に戻れた？
+    lead: のちの家康が、まだ元康だった年の話です。
+    tags:
+    - 松平元康
+    - 徳川家康
+    - 大高城
+    - 歴史if
+next:
+  title: 次の「もしも」
+  series: ''
+  teaser: あなたが気になる歴史の分かれ道を、コメントで教えてください。
+thumbnail:
+  layout: mask
+  image: paintings/ieyasu_imagawa_yoshimoto_yoshiiku.jpg
+  top: 桶狭間の戦いに義元が生き残った世界
+  main:
+  - もし義元が
+  - 討たれなかったら
+  blanks:
+  - - 今川は
+    - 5
+  - - 信長は
+    - 6
+  tags:
+  - 家康は？
+  - 三国同盟は？
+  name: 今川義元
+sections:
+- title: 永禄3年5月19日 4万5千対2千の数字は信じられるか
+  background:
+    image: paintings/nobunaga_okehazama_owari_meisho.jpg
+    credit: 『尾張名所図会』桶狭間古戦場（1844年）
+  year: 1560
+  lines:
+  - 語り: 永禄3年5月19日、一般に西暦1560年6月12日と言われる日。尾張の桶狭間で、今川義元が討たれます。『信長公記』は、今川軍を4万5千、信長の軍を2千にも満たない、と書きます。
+    portrait:
+      image: paintings/okehazama_imagawa_yoshimoto_portrait.jpg
+      caption: 今川義元（肖像画、作者・制作年不詳）
+      age: false
+    card:
+      head: 永禄3年5月19日
+      body: 桶狭間の戦い
+    short: s1
+  - 聞き: 20倍以上も違うじゃん。それで勝ったから、信長ってすごいって習うんだよね。
+    short: s1
+  - 語り: ところが、この4万5千という数字を、いまの研究は、そのまま信じていません。2万5千という通説も、割れています。
+    background:
+      image: paintings/toshiie_owari_atsuta_zue.jpg
+      credit: 『尾張名所図会』熱田神宮（江戸後期）
+    figure:
+      type: bars
+      title: 今川軍の数（何の数か：見積もりごと）
+      bars:
+      - - 『信長公記』
+        - 45000
+      - - 参謀本部の戦史（通説）
+        - 25000
+      - - 渡邊大門の試算
+        - 12000
+      labels:
+      - 約4万5千
+      - 約2万5千
+      - 約1万2千
+    short: s1
+  - 聞き: 同じ戦いで、1万2千から4万5千か。3倍以上も違うよ。
+    short: s1
+  - 語り: 何の数かを分けて読まないと、この戦いの数字は、使えません。
+    figure: null
+    short: s1
+  - 語り: 今日の分かれ道は、ひとつです。もし、義元が討たれなかったら。信長の突入は、義元に届かなかった。仮定は、それだけです。
+    background:
+      image: paintings/nobunaga_okehazama_owari_meisho.jpg
+      credit: 『尾張名所図会』桶狭間古戦場（1844年）
+    figure: null
+    card:
+      head: 今日の分かれ道
+      body: 義元が討たれなかった
+  - 語り: 問いは3つあります。今川は、三河を保てたのか。信長は、どう動くのか。家康は、どうなるのか。
+    card:
+      head: 今日の3つの問い
+      body: 今川は？ 信長は？ 家康は？
+  - 語り: 数え年で、義元は42歳。信長は27歳。のちの徳川家康、松平元康は19歳でした。
+    portrait: null
+    figure:
+      type: stats
+      title: 桶狭間の年（数え）
+      items: &id001
+      - - 義元
+        - 42歳
+        - 数え。今川
+      - - 信長
+        - 27歳
+        - 数え。織田
+      - - 元康
+        - 19歳
+        - 数え。のちの家康
+      upto: 3
+  - 聞き: 42歳と27歳と19歳か。のちの天下人が、1つの戦場に2人もいたのか。ところで、桶狭間のもしもって、研究とか、あるの？
+    background:
+      image: paintings/mikata_mitsuke_tenryu_cleveland.jpg
+      credit: 歌川広重《東海道五十三次之内 見附 天竜川》1833年ごろ
+    figure: null
+    tone: 疑問
+  - 語り: 先に断ります。義元が討たれなかった場合を、正面から論じた学術研究は、今回の調査では、見つかっていません。
+    card:
+      head: 最初の断り
+      body: 論じた研究は見つからない
+  - 聞き: 研究がないなら、材料は、どこから持ってくるの？ 想像だけだと、ちょっと不安かも。
+    background:
+      image: paintings/toshiie_owari_atsuta_zue.jpg
+      credit: 『尾張名所図会』熱田神宮（江戸後期）
+    tone: 疑問
+  - 語り: 約束が2つ。事実と想像は分けます。想像のあいだは《ここから想像》の札を出し、可能性を、ありうる、ほぼ妄想の2段階で示します。事実は、紹介記事で確かめたもので、原本は未確認です。
+    background:
+      image: paintings/ieyasu_hamamatsu_hiroshige_1834.jpg
+      credit: 歌川広重《東海道五十三次之内 濱松 冬枯の図》1834年ごろ
+    card:
+      head: この回の約束
+      body: 事実と想像を分け、可能性を付ける
+  - 語り: まずは、義元という人から、掘ります。
+    background:
+      image: paintings/toshiie_owari_atsuta_zue.jpg
+      credit: 『尾張名所図会』熱田神宮（江戸後期）
+    hook: true
+  - 聞き: 公家みたいな人、って習ったけど、違うの？
+    hook: true
+- title: 永禄3年まで 駿河・遠江・三河を治めた今川義元
+  background:
+    image: paintings/ieyasu_fuchu_abe_river_hiroshige_1833.jpg
+    credit: 歌川広重《東海道五十三次之内 府中 安部川》1833年ごろ
+  year: 1554
+  lines:
+  - 語り: 今川義元は、1519年の生まれです。幼くして仏門に入り、兄の死のあとに還俗して、花倉の乱という内乱に勝って、当主になりました。
+    portrait:
+      image: paintings/okehazama_imagawa_yoshimoto_portrait.jpg
+      caption: 今川義元（肖像画、作者・制作年不詳）
+      age: false
+  - 聞き: お坊さんだった人が、戦国大名か。すごい転職だね。
+  - 語り: 1553年には、室町幕府との関係を断ち、戦国大名として自立したことを示します。治めた国は、駿河、遠江、三河。「海道一の弓取り」と呼ばれました。
+    background:
+      image: paintings/shingen_odawara_sakawa_hiroshige.jpg
+      credit: 歌川広重《東海道五拾三次之内 小田原 酒匂川》1833年ごろ
+    card:
+      head: 1553年
+      body: 室町幕府との関係を断つ
+  - 語り: そして1554年。甲斐の武田、相模の北条と、三国同盟を結びます。子どもたちの結婚で結ぶ、同盟でした。
+    card:
+      head: 1554年
+      body: 甲相駿三国同盟
+  - 語り: 義元の娘は武田義信へ、信玄の娘は北条氏政へ、氏康の娘は氏真へ。今川の狙いは、東と西に敵を持たず、争う相手を織田に絞ること、とされます。
+  - 聞き: 結婚でつなぐのか。東を安心させてから、西の尾張を見るって作戦だね。
+    background:
+      image: paintings/shingen_kai_fuji_hiroshige_1852.jpg
+      credit: 歌川広重《不二三十六景 甲斐 夢山裏富士》1852年
+  - 語り: 「公家かぶれの無能な大名」という義元の像は、いまは見直されています。お歯黒や化粧の話は、後世の書に出るもので、確かではありません。内政も軍事も力のある大名だった、という再評価です。
+    portrait:
+      image: paintings/ieyasu_imagawa_yoshimoto_yoshiiku.jpg
+      caption: 今川義元（落合芳幾、1867年。後世の武者絵）
+      age: false
+  - 聞き: 負けた側は、あとから、だらしなく描かれがち、ってことかな。
+  - 語り: そして永禄3年、義元は尾張へ向かいます。目的は、何だったのか。
+    background:
+      image: paintings/ieyasu_fuchu_abe_river_hiroshige_1833.jpg
+      credit: 歌川広重《東海道五十三次之内 府中 安部川》1833年ごろ
+    portrait: null
+    hook: true
+  - 聞き: 京都に上る、って習った気がするけど。
+    hook: true
+- title: 永禄3年5月 義元の尾張進軍 上洛か、領土か
+  background:
+    image: paintings/nobunaga_okehazama_owari_meisho.jpg
+    credit: 『尾張名所図会』桶狭間古戦場（1844年）
+  year: 1560
+  lines:
+  - 語り: 永禄3年、今川義元は尾張へ進みます。かつては、京へ上るための軍だと言われました。『甫庵信長記』以来の旧説です。
+    short: s4
+    figure:
+      type: map
+      title: 義元の進軍（経路の目安）
+      bounds:
+      - 136.6
+      - 138.6
+      - 34.7
+      - 35.4
+      places:
+      - - 駿府
+        - 138.38
+        - 34.98
+      - - 岡崎
+        - 137.16
+        - 34.96
+      - - 桶狭間
+        - 136.99
+        - 35.07
+      - - 清洲
+        - 136.84
+        - 35.22
+      route:
+      - 駿府
+      - 岡崎
+      - 桶狭間
+      note: 駿河から尾張へ。地図は経路の目安
+  - 聞き: 天下を取りに行った、って話だよね。
+    short: s4
+    figure: null
+  - 語り: いまは、尾張や三河を確保するための軍、という見方が有力です。高柳光壽さんは、領土の拡大。小和田哲男さんは、鳴海城と大高城の救援。久保田昌希さんは、西三河の確保と見ます。
+    background:
+      image: paintings/toshiie_owari_atsuta_zue.jpg
+      credit: 『尾張名所図会』熱田神宮（江戸後期）
+    card:
+      head: 義元の目的
+      body: 領土の拡大・城の救援・西三河の確保
+    short: s4
+  - 聞き: 目的が、割れるの？ 決め手は、ないの？
+    tone: 疑問
+    short: s4
+  - 語り: 決め手は、ありません。大石泰史さんは、上洛説は成り立ちにくいとして、説を6つの型に分けました。
+    short: s4
+  - 語り: 一方で、小林正信さんは、上洛が目的だった説を、改めて唱えています。
+    background:
+      image: paintings/nobunaga_okehazama_owari_meisho.jpg
+      credit: 『尾張名所図会』桶狭間古戦場（1844年）
+  - 聞き: 目的が割れたままなのに、戦いは起きたのか。
+  - 語り: 鳴海城と大高城は、今川方の城でした。
+  - 語り: 信長は、鳴海城を囲む砦と、大高城を押さえる砦を築いていました。善照寺、丹下、中島。そして丸根と、鷲津です。
+  - 語り: その大高城に、5月18日の夜、兵糧が運び込まれます。
+    background:
+      image: paintings/mikata_mitsuke_tenryu_cleveland.jpg
+      credit: 歌川広重《東海道五十三次之内 見附 天竜川》1833年ごろ
+    hook: true
+  - 聞き: 運んだのは、誰？
+    hook: true
+- title: 5月18日の夜 元康、大高城へ兵糧を入れる
+  background:
+    image: paintings/ieyasu_okazaki_castle_ryujo_zu.jpg
+    credit: 《龍城図》岡崎城（江戸時代）
+  year: 1560
+  lines:
+  - 語り: 桶狭間の前の夜、数え19歳の松平元康が、今川の先鋒として動きます。のちの徳川家康です。
+    portrait:
+      image: paintings/ieyasu_yoshitora_mikawa_eiyuden.jpg
+      caption: 徳川家康（武将姿、歌川芳虎画。後世の絵）
+      age: false
+    card:
+      head: 5月18日の夜
+      body: 元康、大高城へ兵糧を入れる
+    short: s5
+  - 語り: 織田方の砦に囲まれた大高城は、兵糧が尽きかけていました。
+    short: s5
+  - 語り: 城の鵜殿長照が義元に訴え、義元が補給を命じた、とされます。
+  - 語り: 元康は、鷲津と丸根の砦のあいだを抜けて、兵糧を入れました。
+    short: s5
+  - 聞き: 敵の砦のすきまを通るの？ 19歳で、それは胃が痛くなりそう。
+    background:
+      image: paintings/kira_okazaki_hiroshige.jpg
+      credit: 歌川広重《東海道五十三次 岡崎》（三河の国）1833年ごろ
+    short: s5
+  - 語り: 夜が明けた5月19日。元康の隊が丸根砦を、朝比奈泰朝の隊が鷲津砦を攻めます。鷲津では飯尾定宗と織田秀敏が、丸根では佐久間盛重が、戦死します。
+    card:
+      head: 5月19日の朝
+      body: 丸根・鷲津の砦が落ちる
+    short: s5
+  - 聞き: 朝のうちに、砦が2つも落ちたのか。織田は、押されてるね。
+    short: s5
+  - 語り: 清洲の信長にも、知らせが届きます。『信長公記』によれば、信長は、幸若舞『敦盛』の一節を舞い、立ったまま食事をして、具足をつけて出陣しました。
+    background:
+      image: paintings/toshiie_owari_atsuta_zue.jpg
+      credit: 『尾張名所図会』熱田神宮（江戸後期）
+    portrait:
+      image: paintings/nobunaga_portrait_eitoku_daitokuji.jpg
+      caption: 織田信長（狩野永徳（伝）画、大徳寺 総見院、1584年）
+      age: false
+    card:
+      head: 敦盛を舞い、出陣
+      body: 『信長公記』の記述
+  - 語り: 「人間五十年」は、信長の作った言葉ではなく、舞の詞章です。『信長公記』が舞を書くのは、この出陣の前です。本能寺ではありません。
+  - 聞き: 炎の中で舞った、っていうイメージだった。あれは、あとから付いた話か。
+    background:
+      image: paintings/nobunaga_okehazama_owari_meisho.jpg
+      credit: 『尾張名所図会』桶狭間古戦場（1844年）
+  - 語り: 供は6騎だけだった、と『信長公記』は書きます。信長は、朝のうちに熱田へ向かいます。
+    background:
+      image: paintings/toshiie_owari_atsuta_zue.jpg
+      credit: 『尾張名所図会』熱田神宮（江戸後期）
+    hook: true
+  - 聞き: たった6騎で出るの？ そこから、兵は集まるのかな。
+    hook: true
+- title: 5月19日 信長の進路と、兵数は何の数か
+  background:
+    image: paintings/toshiie_owari_atsuta_zue.jpg
+    credit: 『尾張名所図会』熱田神宮（江戸後期）
+  year: 1560
+  lines:
+  - 語り: 信長は、辰の刻、朝8時ごろに熱田に着き、そのあと善照寺砦に入ります。画面は、江戸後期の『尾張名所図会』の、熱田神宮です。
+    portrait: null
+    figure:
+      type: map
+      title: 信長の進路（経路の目安）
+      bounds:
+      - 136.7
+      - 137.1
+      - 35.0
+      - 35.3
+      places:
+      - - 清洲
+        - 136.84
+        - 35.22
+      - - 熱田
+        - 136.91
+        - 35.13
+      - - 桶狭間
+        - 136.99
+        - 35.07
+      route:
+      - 清洲
+      - 熱田
+      - 桶狭間
+      note: 清洲から熱田へ。地図は経路の目安
+  - 聞き: 熱田って、いまの名古屋だよね。清洲から、けっこう距離があるよ。
+    figure: null
+  - 語り: 信長の兵は、『信長公記』で「二千にも満たない」。通説でも、2千から3千。信長側が数で劣った、という点は、多くの見積もりが一致しています。
+    background:
+      image: paintings/nobunaga_okehazama_owari_meisho.jpg
+      credit: 『尾張名所図会』桶狭間古戦場（1844年）
+  - 語り: 今川軍の数は、割れます。渡邊大門さんの試算は、駿河と遠江の石高から出した、約1万2千。桶狭間に着いた時点で約2万、義元の本陣は5千から6千、とも言われています。
+    card:
+      head: 今川軍の数
+      body: 何の数かを分けて読む
+  - 聞き: 全軍の数と、本陣の数は、別ものってことか。
+    background:
+      image: paintings/mikata_mitsuke_tenryu_cleveland.jpg
+      credit: 歌川広重《東海道五十三次之内 見附 天竜川》1833年ごろ
+  - 語り: 太田満明さんや橋場日月さんは、石高から見て、2万5千でも多すぎる、と論じます。数字を並べるほど、はっきりしなくなります。
+  - 聞き: 大きい数字ほど、あとから盛られやすいのかな。
+  - 語り: 次は、昼の桶狭間です。
+    hook: true
+  - 聞き: 昼の桶狭間で、義元は、何をしてたの？
+    hook: true
+- title: 5月19日の昼 桶狭間山と田楽狭間、石混じりの雨
+  background:
+    image: paintings/nobunaga_okehazama_owari_meisho.jpg
+    credit: 『尾張名所図会』桶狭間古戦場（1844年）
+  year: 1560
+  lines:
+  - 語り: 義元は、桶狭間山で人馬を休めていた、と『信長公記』は書きます。昼ごろに着いて、戦勝を祝いながら休んだ、という整理もあります。
+    portrait:
+      image: paintings/okehazama_imagawa_yoshimoto_portrait.jpg
+      caption: 今川義元（肖像画、作者・制作年不詳）
+      age: false
+  - 聞き: 砦を2つ落として、ひと息ついてたのかな。
+  - 語り: 地名にも、違いがあります。「桶狭間山」は『信長公記』の地名。「田楽狭間」は『甫庵信長記』に出て、江戸時代に広まりました。
+    portrait: null
+    card:
+      head: 桶狭間山と田楽狭間
+      body: 書物ごとに地名が違う
+  - 語り: 1587年の太原雪斎の三十三回忌の記録に「田楽窪」とあり、これが戦死地の根拠の一つとされます。
+    background:
+      image: paintings/toshiie_owari_atsuta_zue.jpg
+      credit: 『尾張名所図会』熱田神宮（江戸後期）
+  - 聞き: 地名ひとつにも、書物ごとの違いがあるのか。
+  - 語り: そこへ、激しい雨が降ります。『信長公記』は、石や氷の混じった雨と書き、雹ではないか、という指摘があります。
+    card:
+      head: 石混じりの雨
+      body: 『信長公記』の記述・雹の可能性
+  - 聞き: 雹まで降ったの！？ 兵も馬も、びっくりしただろうな。
+    tone: 驚き
+  - 語り: 画面は、1844年の『尾張名所図会』の桶狭間古戦場です。後世の絵で、当日の様子を写したものではありません。
+    background:
+      image: paintings/nobunaga_okehazama_owari_meisho.jpg
+      credit: 『尾張名所図会』桶狭間古戦場（1844年）
+  - 語り: この雨の中で、何が起きたのか。奇襲だったのか、正面からだったのか。研究は割れています。
+    hook: true
+  - 聞き: 教科書では、奇襲だった気がするけど……。
+    hook: true
+- title: 奇襲説と正面攻撃説 研究の見直し
+  background:
+    image: paintings/nobunaga_okehazama_owari_meisho.jpg
+    credit: 『尾張名所図会』桶狭間古戦場（1844年）
+  year: 1560
+  lines:
+  - 語り: 桶狭間の「奇襲説」。信長が迂回して、義元の本陣の背後を突いた、という話です。画面は、後世の錦絵です。
+    portrait:
+      image: paintings/nobunaga_okehazama_toyonobu.jpg
+      caption: 尾州桶狭間合戦（歌川豊宣、1882年。後世の錦絵）
+      age: false
+    card:
+      head: 奇襲説
+      body: 迂回して本陣の背後を突く
+    short: s2
+  - 語り: 迂回を書いたのは、江戸時代初めの小瀬甫庵『信長記』です。明治の参謀本部の戦史が、事実として定着させた、とされます。
+    short: s2
+  - 聞き: 戦の本が、物語を足してたってこと？ そこが出どころなら、教科書の絵は、ずいぶんあとの話か。
+    short: s2
+  - 語り: 『信長公記』を重んじる正面攻撃説が、いまは有力です。藤本正行さんらが支持します。
+    background:
+      image: paintings/toshiie_owari_atsuta_zue.jpg
+      credit: 『尾張名所図会』熱田神宮（江戸後期）
+    portrait: null
+    card:
+      head: 正面攻撃説
+      body: 『信長公記』を重んじる
+    short: s2
+  - 聞き: 教科書の絵とは、正面攻撃説のほうが、地味に聞こえるね。
+    short: s2
+  - 語り: 信長は、義元の居場所を知らず、中島砦から向かった先で、偶然、本陣に突き当たった。これが、正面攻撃説の見方です。
+    portrait: null
+  - 語り: 渡邊大門さんは、奇襲説の根拠になる史料は信頼度が低く、いまは正面攻撃説を支持する研究者が多い、と書いています。
+    background:
+      image: paintings/nobunaga_okehazama_owari_meisho.jpg
+      credit: 『尾張名所図会』桶狭間古戦場（1844年）
+  - 聞き: 偶然、本陣に突き当たったの？ それはそれで、すごい運だな。
+  - 語り: ほかにも説があります。別働隊を使ったとする橋場日月さん。乱取りの最中の急襲とする黒田日出男さん。撤退中の急襲とするかぎや散人さんと水野誠志朗さん。決着は、ついていません。
+    background:
+      image: paintings/mikata_mitsuke_tenryu_cleveland.jpg
+      credit: 歌川広重《東海道五十三次之内 見附 天竜川》1833年ごろ
+    card:
+      head: ほかの説
+      body: 別働隊・乱取り急襲・撤退中の急襲
+  - 聞き: 説が5つもあって、決着なし。それでも、結果は同じなんだよね。
+  - 語り: では、肝心の、義元の最期です。
+    hook: true
+  - 聞き: 残酷な話は少し苦手だけど、ぼかさずに、知りたいな。
+    background:
+      image: paintings/toshiie_owari_atsuta_zue.jpg
+      credit: 『尾張名所図会』熱田神宮（江戸後期）
+    hook: true
+- title: 5月19日 未の刻 義元の最期と、割れる損害
+  background:
+    image: paintings/nobunaga_okehazama_owari_meisho.jpg
+    credit: 『尾張名所図会』桶狭間古戦場（1844年）
+  year: 1560
+  lines:
+  - 語り: 『信長公記』によれば、未の刻、午後1時から2時ごろ。信長の旗本が、東から義元の隊へ突き入った。混乱の中で、義元の塗輿も、捨てられたと伝わります。
+    portrait:
+      image: paintings/ieyasu_imagawa_yoshimoto_yoshiiku.jpg
+      caption: 今川義元（落合芳幾、1867年。後世の武者絵）
+      age: false
+    card:
+      head: 未の刻
+      body: 旗本が義元の隊へ突入
+  - 語り: 服部小平太、のちの一忠が、義元の膝を斬ります。毛利新介、良勝が、討ち取ります。名前が残るのは、この2人です。
+    portrait: null
+  - 聞き: 義元は、数え42歳で亡くなったのか。
+    tone: しみじみ
+  - 語り: 損害は、書物ごとに割れます。今川側は、『信長公記』が首3千あまり。『落穂集』が約2千5百。『改正三河後風土記』が約3千9百です。
+    background:
+      image: paintings/toshiie_owari_atsuta_zue.jpg
+      credit: 『尾張名所図会』熱田神宮（江戸後期）
+    figure:
+      type: stats
+      title: 今川側の損害（書物ごとの記述）
+      items:
+      - - 『信長公記』
+        - 首3千あまり
+        - 首の数
+      - - 『落穂集』
+        - 約2千5百
+        - 今川側
+      - - 『改正三河後風土記』
+        - 約3千9百
+        - 今川側
+  - 聞き: 数字が、こんなに割れるのか。何を信じていいか、分からなくなるね。
+    figure: null
+  - 語り: 今川は約2千7百、織田は990あまり、と書く記録もありますが、偽情報という見方もあります。確実なのは、義元が討たれて、今川軍が総崩れになったことです。
+    background:
+      image: paintings/nobunaga_okehazama_owari_meisho.jpg
+      credit: 『尾張名所図会』桶狭間古戦場（1844年）
+  - 語り: 義元を失った今川家は、このあと、どうなったのか。
+    portrait: null
+    hook: true
+  - 聞き: 家来の人たちは、どうしたんだろう。
+    hook: true
+- title: 永禄3年5月〜 元康の岡崎入りと、氏真の今川家
+  background:
+    image: paintings/ieyasu_okazaki_castle_ryujo_zu.jpg
+    credit: 《龍城図》岡崎城（江戸時代）
+  year: 1560
+  lines:
+  - 語り: 義元の死は、5月19日の夕方、大高城に伝わります。水野信元の使者の知らせを、元康は、物見で確かめ、その夜のうちに大高城を退きます。
+    portrait:
+      image: paintings/ieyasu_yoshitora_mikawa_eiyuden.jpg
+      caption: 徳川家康（武将姿、歌川芳虎画。後世の絵）
+      age: false
+  - 語り: 岡崎城には、まだ今川の残兵がいました。元康は、5月20日に菩提寺の大樹寺へ入り、23日に岡崎城へ入ります。画面は、江戸時代の岡崎城の絵図です。
+    card:
+      head: 5月23日
+      body: 元康、岡崎城へ入る
+  - 語り: 「捨城ならば拾はん」という言葉は有名ですが、出どころは昭和9年の本で、後世の話です。
+    background:
+      image: paintings/kira_okazaki_hiroshige.jpg
+      credit: 歌川広重《東海道五十三次 岡崎》（三河の国）1833年ごろ
+  - 聞き: 有名な名ゼリフなのに、昭和の本か。
+  - 語り: 独立の理由には、見方があります。ひとつは、武田や北条への援軍を後回しにした氏真に、元康が失望した、という見方。
+    portrait: null
+    card:
+      head: 元康の独立
+      body: 氏真への失望／帰還を許した新説
+  - 語り: 近年は、織田の三河侵攻を警戒した氏真が、岡崎への帰還を許した、という新説もあります。
+    background:
+      image: paintings/ieyasu_okazaki_castle_ryujo_zu.jpg
+      credit: 《龍城図》岡崎城（江戸時代）
+  - 語り: 1562年ごろ、元康は信長と講和します。清洲同盟です。年は、永禄4年と5年で、記述が割れています。
+    year: 1562
+    card:
+      head: 1562年ごろ
+      body: 元康と信長、講和（清洲同盟）
+  - 聞き: 敵だった信長と組むなんて、すごい切り替えだね。
+  - 語り: 元康の側は、ここまでです。今川の側は、どうなったのか。
+    hook: true
+  - 聞き: 当主を失った家は、どうなったんだろう。
+    hook: true
+- title: 氏真の今川家 1560年から1569年、三国同盟の行方
+  background:
+    image: paintings/mikata_totomi_kuniezu_1838.jpg
+    credit: 《天保国絵図 遠江国》1838年（国立公文書館蔵）
+  year: 1560
+  lines:
+  - 語り: 今川の側です。当主の氏真は、1538年生まれ。数え23歳でした。重臣や国衆の戦死が相次ぎ、三河では元康が離れ、遠江では飯尾連龍らの反乱、遠州忩劇が起きます。
+    background:
+      image: paintings/ieyasu_fuchu_abe_river_hiroshige_1833.jpg
+      credit: 歌川広重《東海道五十三次之内 府中 安部川》1833年ごろ
+    year: 1560
+    card:
+      head: 氏真の今川
+      body: 離反と反乱が重なる
+  - 語り: 氏真は、尾張への出陣を試みましたが、代替わりの所領の安堵や、北条への援軍に追われました。
+  - 聞き: 当主が代わった直後に、あちこちで揺れたのか。社長が急にいなくなった会社みたいだね。
+  - 語り: 1567年、氏真は甲斐への塩止めを行い、1568年12月、武田と徳川が駿河へ攻め込みます。
+    background:
+      image: paintings/shingen_kai_fuji_hiroshige_1852.jpg
+      credit: 歌川広重《不二三十六景 甲斐 夢山裏富士》1852年
+    year: 1568
+  - 語り: 1569年5月、氏真は掛川城を開城し、戦国大名としての今川氏は終わった、という解釈が一般的です。
+    background:
+      image: paintings/shingen_totomi_kuniezu_trim.jpg
+      credit: 《天保国絵図 遠江国》1838年の部分（国立公文書館蔵）
+    year: 1569
+    card:
+      head: 1569年5月
+      body: 氏真、掛川城を開城
+  - 聞き: 義元がいなくなって、9年で終わったのか。
+  - 語り: 三国同盟も、この流れで崩れます。いつ、どこで崩れたかは、研究に幅があります。黒田基樹さんは、塩止めは誤解から生じた可能性がある、との見方です。
+    portrait: null
+  - 語り: 信長は、桶狭間のあと、尾張の統一を進め、美濃や畿内へ広げる足がかりをつかんだ。1567年に稲葉山城、1568年に上洛です。
+    background:
+      image: paintings/nobunaga_okehazama_owari_meisho.jpg
+      credit: 『尾張名所図会』桶狭間古戦場（1844年）
+    year: 1568
+    portrait:
+      image: paintings/nobunaga_portrait_eitoku_daitokuji.jpg
+      caption: 織田信長（狩野永徳（伝）画、大徳寺 総見院、1584年）
+      age: false
+    card:
+      head: 1567年・1568年
+      body: 稲葉山城・上洛
+  - 語り: ここまでが、史実です。次は、史料に残る別の道を見ます。
+    background:
+      image: paintings/toshiie_owari_atsuta_zue.jpg
+      credit: 『尾張名所図会』熱田神宮（江戸後期）
+    year: 1560
+    portrait: null
+    hook: true
+  - 聞き: 義元が生き残る道って、ほんとに、あったの？
+    tone: 疑問
+    hook: true
+- title: 永禄3年5月19日 史料に残る別の道 突入のずれ・義元の動き・信長の足
+  background:
+    image: paintings/nobunaga_okehazama_owari_meisho.jpg
+    credit: 『尾張名所図会』桶狭間古戦場（1844年）
+  year: 1560
+  lines:
+  - 語り: 1つ目の道。信長の突入が、本陣に届かない道です。居場所を知らずに偶然当たったのなら、偶然外れる余地も、ありました。
+    card:
+      head: 別の道 1
+      body: 突入が本陣に届かない
+  - 聞き: 偶然、当たったのなら、偶然、外れてもおかしくない、ってことか。
+  - 語り: 2つ目の道。義元が、混乱の中を動く道です。『信長公記』は、塗輿が捨てられたと伝えます。義元は、輿を離れて動いた、と読めます。
+    background:
+      image: paintings/toshiie_owari_atsuta_zue.jpg
+      credit: 『尾張名所図会』熱田神宮（江戸後期）
+    card:
+      head: 別の道 2
+      body: 輿を離れて動く義元
+  - 語り: 3つ目の道。信長が、動かない道です。『信長公記』は、中島砦へ向かおうとした信長を、家老たちが止めた、と書きます。止める声が通れば、突入そのものが、無かった。
+    card:
+      head: 別の道 3
+      body: 家老が止めた信長の動き
+  - 聞き: どの道も、雨とか運とか、細い糸みたい。あーしなら、止める側に回りそう。
+  - 語り: そして、義元が討たれなかった場合を書いた史料は、見当たりません。
+    hook: true
+  - 聞き: 史料がないなら、どうやって考えるの？
+    background:
+      image: paintings/nobunaga_okehazama_owari_meisho.jpg
+      credit: 『尾張名所図会』桶狭間古戦場（1844年）
+    tone: 疑問
+    hook: true
+  - 語り: 当時の人の選択肢を土台に、想像で掘ります。
+    hook: true
+- title: 想像① 5月19日の夕方 桶狭間山の義元と朝比奈泰朝
+  background:
+    image: paintings/nobunaga_okehazama_owari_meisho.jpg
+    credit: 『尾張名所図会』桶狭間古戦場（1844年）
+  year: 1560
+  lines:
+  - 語り: ここから先は、想像です。仮定は、ひとつだけ。5月19日、信長の突入は、義元に届かなかった。義元は、生きて桶狭間山にいます。
+    portrait:
+      image: paintings/okehazama_imagawa_yoshimoto_portrait.jpg
+      caption: 今川義元（肖像画、作者・制作年不詳）
+      age: false
+    card:
+      head: ここから想像
+      body: 義元が討たれなかった
+    short: s3
+  - 語り: どう討たれなかったかは、決めません。細かい戦の描写もしません。大事なのは、そのあと、誰が何を決めるかです。
+  - 聞き: 理由は決めずに、そのあとだけ、考えるわけか。
+  - 語り: 想像劇場、第1幕。5月19日の夕方、桶狭間山。義元と、朝比奈泰朝です。
+    background:
+      image: paintings/toshiie_owari_atsuta_zue.jpg
+      credit: 『尾張名所図会』熱田神宮（江戸後期）
+    short: s3
+  - 語り: 出てくる人が、そこに実際にいたかも、想像です。
+    card:
+      head: 想像劇場 第1幕
+      body: 5月19日夕 桶狭間山
+  - 人物: 「雨の中、織田の旗本が突き入ったか。泰朝、味方の兵は、どれほど残っておる」
+    who: 義元想像
+    portrait:
+      image: paintings/okehazama_imagawa_yoshimoto_portrait.jpg
+      caption: 今川義元（肖像画、作者・制作年不詳）
+      age: false
+    short: s3
+  - 人物: 「本陣の備えは、持ちこたえました。ただ、丸根と鷲津を攻めた兵が、まだ戻り切りませぬ」
+    who: 朝比奈想像
+    portrait: null
+    short: s3
+  - 人物: 「ならば、戻るのを待て。鳴海と大高の城へは、使いを送れ」
+    background:
+      image: paintings/nobunaga_okehazama_owari_meisho.jpg
+      credit: 『尾張名所図会』桶狭間古戦場（1844年）
+    who: 義元想像
+    portrait:
+      image: paintings/okehazama_imagawa_yoshimoto_portrait.jpg
+      caption: 今川義元（肖像画、作者・制作年不詳）
+      age: false
+    short: s3
+  - 人物: 「討たれた者の名は、あとで数えまする。いまは、雨が上がる前に、陣を締め直しとうございます」
+    who: 朝比奈想像
+    portrait: null
+  - 人物: 「よい。夜のうちに、鳴海の者へも、備えを伝えよ」
+    who: 義元想像
+    portrait:
+      image: paintings/okehazama_imagawa_yoshimoto_portrait.jpg
+      caption: 今川義元（肖像画、作者・制作年不詳）
+      age: false
+  - 人物: 「元康殿は、いかがいたしましょう。大高城に、おられます」
+    who: 朝比奈想像
+    portrait: null
+    short: s3
+  - 人物: 「そのまま大高城を守らせよ。若いが、兵糧を入れた男だ」
+    background:
+      image: paintings/mikata_mitsuke_tenryu_cleveland.jpg
+      credit: 歌川広重《東海道五十三次之内 見附 天竜川》1833年ごろ
+    who: 義元想像
+    portrait:
+      image: paintings/okehazama_imagawa_yoshimoto_portrait.jpg
+      caption: 今川義元（肖像画、作者・制作年不詳）
+      age: false
+  - 聞き: 義元、勝てなかったのに、落ち着いてるなあ。
+    portrait: null
+  - 語り: ここでは、義元が追撃より、兵を戻して、鳴海と大高の城を固めるのを先にする、という想像です。目的が城の救援や確保なら、筋は通ります。
+    card:
+      head: ありうる
+      body: 兵を戻して城を固める
+  - 語り: 義元がそのまま清洲まで攻め込んだのか。その先は、記録の外です。
+    card:
+      head: ほぼ妄想
+      body: 清洲まで進むかは材料なし
+  - 語り: ここで、史実を1つ。桶狭間では、今川の重臣や国衆の戦死が相次いだ、と整理されます。義元が生きて、本陣が持ちこたえた世界なら、この戦死は、減ります。
+    background:
+      image: paintings/toshiie_owari_atsuta_zue.jpg
+      credit: 『尾張名所図会』熱田神宮（江戸後期）
+    card:
+      head: ありうる
+      body: 重臣や国衆の戦死が減る
+  - 聞き: 戦死が減ったら、氏真の代の混乱も、小さくなりそうだね。義元の動きは決まったから、じゃあ、信長は、どうするの？
+    tone: 疑問
+    hook: true
+  - 語り: 場面は、5月20日の清洲に移ります。
+    hook: true
+- title: 想像② 5月20日 清洲の信長と柴田勝家
+  background:
+    image: paintings/toshiie_owari_atsuta_zue.jpg
+    credit: 『尾張名所図会』熱田神宮（江戸後期）
+  year: 1560
+  lines:
+  - 語り: 想像劇場、第2幕です。5月20日、尾張の清洲。織田信長と、柴田勝家の対面です。
+    portrait: null
+    card:
+      head: ここから想像
+      body: 第2幕 5月20日 清洲
+    figure:
+      type: map
+      title: 尾張の清洲（経路の目安）
+      bounds:
+      - 136.7
+      - 137.1
+      - 35.0
+      - 35.3
+      places:
+      - - 清洲
+        - 136.84
+        - 35.22
+      - - 熱田
+        - 136.91
+        - 35.13
+      - - 桶狭間
+        - 136.99
+        - 35.07
+      route:
+      - 清洲
+      - 桶狭間
+      note: 清洲から桶狭間まで。地図は目安
+  - 人物: 「義元は、生きておるか。雨が、あと半刻、味方せなんだか」
+    who: 信長想像
+    portrait:
+      image: paintings/nobunaga_portrait_eitoku_daitokuji.jpg
+      caption: 織田信長（狩野永徳（伝）画、大徳寺 総見院、1584年）
+      age: false
+    figure: null
+  - 人物: 「殿、砦は2つ落ち、鳴海と大高は、今川の手のうち。東の守りを、固めねばなりませぬ」
+    who: 柴田想像
+    portrait:
+      image: paintings/oichi_katsuie_portrait.jpg
+      caption: 柴田勝家（桃山〜江戸初期の肖像）
+      age: false
+  - 人物: 「分かっておる。東を見ねば、尾張が危うい。美濃を見る余裕は、なくなったな」
+    who: 信長想像
+    portrait:
+      image: paintings/nobunaga_portrait_eitoku_daitokuji.jpg
+      caption: 織田信長（狩野永徳（伝）画、大徳寺 総見院、1584年）
+      age: false
+  - 人物: 「大高城の元康は、いかがいたしましょう」
+    background:
+      image: paintings/nobunaga_okehazama_owari_meisho.jpg
+      credit: 『尾張名所図会』桶狭間古戦場（1844年）
+    who: 柴田想像
+    portrait:
+      image: paintings/oichi_katsuie_portrait.jpg
+      caption: 柴田勝家（桃山〜江戸初期の肖像）
+      age: false
+  - 人物: 「あの若い三河者か。義元が生きておる間は、動かぬだろう」
+    who: 信長想像
+    portrait:
+      image: paintings/nobunaga_portrait_eitoku_daitokuji.jpg
+      caption: 織田信長（狩野永徳（伝）画、大徳寺 総見院、1584年）
+      age: false
+  - 人物: 「水野殿の使いが、知多の様子を伝えております。今川は、動いておりませぬ」
+    who: 柴田想像
+    portrait:
+      image: paintings/oichi_katsuie_portrait.jpg
+      caption: 柴田勝家（桃山〜江戸初期の肖像）
+      age: false
+  - 人物: 「動かぬのではない。固めておるのだ。次は、もう雨には頼れぬ」
+    who: 信長想像
+    portrait:
+      image: paintings/nobunaga_portrait_eitoku_daitokuji.jpg
+      caption: 織田信長（狩野永徳（伝）画、大徳寺 総見院、1584年）
+      age: false
+  - 人物: 「東の守りに、どれほど兵を割きますか」
+    who: 柴田想像
+    portrait:
+      image: paintings/oichi_katsuie_portrait.jpg
+      caption: 柴田勝家（桃山〜江戸初期の肖像）
+      age: false
+  - 人物: 「全部は割かぬ。尾張は広い。西にも北にも、敵がおる」
+    background:
+      image: paintings/mikata_mitsuke_tenryu_cleveland.jpg
+      credit: 歌川広重《東海道五十三次之内 見附 天竜川》1833年ごろ
+    who: 信長想像
+    portrait:
+      image: paintings/nobunaga_portrait_eitoku_daitokuji.jpg
+      caption: 織田信長（狩野永徳（伝）画、大徳寺 総見院、1584年）
+      age: false
+  - 聞き: 運に頼れるのは1回だけ、ってことか。じゃあ、信長は、美濃どころじゃなくなる？
+    portrait: null
+  - 語り: ここでは、信長が尾張の東を固めるあいだ、美濃へ向かうのが遅れる、と見ます。桶狭間のあとに尾張の統一を進めた、という史実の、裏返しです。
+    card:
+      head: ありうる
+      body: 美濃へ向かうのが遅れる
+  - 語り: では、信長が尾張を失うのか。今川が清洲まで攻め込むのか。ここは、想像の根拠がありません。
+    background:
+      image: paintings/toshiie_owari_atsuta_zue.jpg
+      credit: 『尾張名所図会』熱田神宮（江戸後期）
+    card:
+      head: ほぼ妄想
+      body: 尾張を失うかは材料なし
+  - 聞き: 信長のその後が、まだ決まらないのが、ちょっと怖いなあ。じゃあ、大高城の元康は？
+    tone: 疑問
+    hook: true
+  - 語り: 場面は、5月19日の夜の大高城に移ります。
+    hook: true
+- title: 想像③ 5月19日の夜 大高城の元康と酒井忠次
+  background:
+    image: paintings/ieyasu_okazaki_castle_ryujo_zu.jpg
+    credit: 《龍城図》岡崎城（江戸時代）
+  year: 1560
+  lines:
+  - 語り: 想像劇場、第3幕です。時は少し戻って、5月19日の夜、大高城。松平元康と、酒井忠次が、言葉を交わします。
+    portrait: null
+    card:
+      head: ここから想像
+      body: 第3幕 5月19日夜 大高城
+  - 人物: 「義元様は、ご無事だと聞いた。忠次、そなたは、どう見る」
+    who: 元康想像
+    portrait:
+      image: paintings/ieyasu_yoshitora_mikawa_eiyuden.jpg
+      caption: 徳川家康（武将姿、歌川芳虎画。後世の絵）
+      age: false
+  - 人物: 「織田の手は、本陣まで届いたとか。討ち取れなんだのなら、今川の勢いは、続きましょう」
+    who: 忠次想像
+    portrait:
+      image: paintings/mikata_sakai_tadatsugu_portrait.jpg
+      caption: 酒井忠次（16世紀末〜17世紀初の肖像）
+      age: false
+  - 人物: 「岡崎には、今川の兵が、まだ残っておる。帰れるのは、いつになるか」
+    background:
+      image: paintings/kira_okazaki_hiroshige.jpg
+      credit: 歌川広重《東海道五十三次 岡崎》（三河の国）1833年ごろ
+    who: 元康想像
+    portrait:
+      image: paintings/ieyasu_yoshitora_mikawa_eiyuden.jpg
+      caption: 徳川家康（武将姿、歌川芳虎画。後世の絵）
+      age: false
+  - 人物: 「義元様が健在のうちは、殿を岡崎へ戻す理由が、今川にはございませぬ。いまは、先鋒の務めを」
+    who: 忠次想像
+    portrait:
+      image: paintings/mikata_sakai_tadatsugu_portrait.jpg
+      caption: 酒井忠次（16世紀末〜17世紀初の肖像）
+      age: false
+  - 人物: 「岡崎の三河衆も、殿のお帰りを待っております」
+    who: 忠次想像
+    portrait:
+      image: paintings/mikata_sakai_tadatsugu_portrait.jpg
+      caption: 酒井忠次（16世紀末〜17世紀初の肖像）
+      age: false
+  - 人物: 「待たせておけ。いま動けば、義元様にも、氏真様にも、背く者と見られる」
+    who: 元康想像
+    portrait:
+      image: paintings/ieyasu_yoshitora_mikawa_eiyuden.jpg
+      caption: 徳川家康（武将姿、歌川芳虎画。後世の絵）
+      age: false
+  - 人物: 「三河の者たちには、何と伝えましょう」
+    background:
+      image: paintings/ieyasu_okazaki_castle_ryujo_zu.jpg
+      credit: 《龍城図》岡崎城（江戸時代）
+    who: 忠次想像
+    portrait:
+      image: paintings/mikata_sakai_tadatsugu_portrait.jpg
+      caption: 酒井忠次（16世紀末〜17世紀初の肖像）
+      age: false
+  - 人物: 「義元様のもとで働く、とだけ伝えよ。それ以上は、言うな」
+    who: 元康想像
+    portrait:
+      image: paintings/ieyasu_yoshitora_mikawa_eiyuden.jpg
+      caption: 徳川家康（武将姿、歌川芳虎画。後世の絵）
+      age: false
+  - 人物: 「かしこまりました。いまは、先鋒の務めを果たし、力をつけるまで、待ちましょう」
+    who: 忠次想像
+    portrait:
+      image: paintings/mikata_sakai_tadatsugu_portrait.jpg
+      caption: 酒井忠次（16世紀末〜17世紀初の肖像）
+      age: false
+  - 聞き: 元康は、岡崎に帰りたいのに、帰れるのかな。
+    portrait: null
+  - 語り: ここでは、元康が1560年のうちには岡崎へ戻れず、今川の先鋒に留まる、という想像です。
+  - 語り: 材料は2つです。岡崎城に今川の残兵がいたこと。そして、独立のきっかけは、義元の死と、氏真への失望だったという見方があること。
+    background:
+      image: paintings/kira_okazaki_hiroshige.jpg
+      credit: 歌川広重《東海道五十三次 岡崎》（三河の国）1833年ごろ
+    card:
+      head: ありうる
+      body: 1560年の岡崎入りと離反は起こりにくい
+  - 語り: その先の、元康が独立する日が来たのか。来るなら、いつか。答えは、史料にありません。
+    background:
+      image: paintings/ieyasu_okazaki_castle_ryujo_zu.jpg
+      credit: 《龍城図》岡崎城（江戸時代）
+    card:
+      head: ほぼ妄想
+      body: 独立する日は材料なし
+  - 語り: 岡崎の三河衆や、奥三河の国衆が、どちらへ傾くのかも、個別の記録が足りません。
+  - 聞き: 先のことまでは、材料がないよね。
+  - 語り: では、義元が生きている今川と、三国同盟は、続くのか。
+    hook: true
+  - 聞き: 駿府の義元は、息子の氏真に、何て言うんだろう。
+    background:
+      image: paintings/ieyasu_fuchu_abe_river_hiroshige_1833.jpg
+      credit: 歌川広重《東海道五十三次之内 府中 安部川》1833年ごろ
+    hook: true
+- title: 想像④ 永禄3年の夏 駿府の義元と氏真
+  background:
+    image: paintings/ieyasu_fuchu_abe_river_hiroshige_1833.jpg
+    credit: 歌川広重《東海道五十三次之内 府中 安部川》1833年ごろ
+  year: 1560
+  lines:
+  - 語り: 想像劇場、第4幕です。永禄3年の夏、駿府。義元と、氏真が、向き合います。
+    portrait: null
+    card:
+      head: ここから想像
+      body: 第4幕 永禄3年夏 駿府
+  - 人物: 「尾張では、勝ち切れなんだ。だが、三河は、守れておる」
+    who: 義元想像
+    portrait:
+      image: paintings/okehazama_imagawa_yoshimoto_portrait.jpg
+      caption: 今川義元（肖像画、作者・制作年不詳）
+      age: false
+  - 人物: 「父上、北条の氏康殿から、援軍をと、文が参っております」
+    background:
+      image: paintings/shingen_odawara_sakawa_hiroshige.jpg
+      credit: 歌川広重《東海道五拾三次之内 小田原 酒匂川》1833年ごろ
+    who: 氏真想像
+    portrait: null
+  - 人物: 「三国同盟は、わしの代に結んだ。西を向くために、東を安んじたのだ。援軍は、送れ」
+    who: 義元想像
+    portrait:
+      image: paintings/okehazama_imagawa_yoshimoto_portrait.jpg
+      caption: 今川義元（肖像画、作者・制作年不詳）
+      age: false
+  - 人物: 「承知いたしました。尾張は、いかがいたしましょう」
+    who: 氏真想像
+    portrait: null
+  - 人物: 「続ける。ただし、焦るな。年をまたいで、兵を整えよ」
+    who: 義元想像
+    portrait:
+      image: paintings/okehazama_imagawa_yoshimoto_portrait.jpg
+      caption: 今川義元（肖像画、作者・制作年不詳）
+      age: false
+  - 人物: 「甲斐からは、義信殿のご様子を知らせる文が参りました。お変わりないと」
+    background:
+      image: paintings/shingen_kai_fuji_hiroshige_1852.jpg
+      credit: 歌川広重《不二三十六景 甲斐 夢山裏富士》1852年
+    who: 氏真想像
+    portrait: null
+  - 人物: 「娘が嫁した家だ。西を向く間、東は静かでなければならぬ」
+    who: 義元想像
+    portrait:
+      image: paintings/okehazama_imagawa_yoshimoto_portrait.jpg
+      caption: 今川義元（肖像画、作者・制作年不詳）
+      age: false
+  - 聞き: 義元が生きてると、氏真は、父の下で実務を続けるのか。
+    portrait: null
+  - 語り: 史実を1つ挟みます。氏真は、1558年ごろから文書を出し、そのころ家督を譲られた、とするのが研究上の見解です。ここでは、義元が実権を保ち、氏真が支える形を、思い描きます。
+    background:
+      image: paintings/ieyasu_fuchu_abe_river_hiroshige_1833.jpg
+      credit: 歌川広重《東海道五十三次之内 府中 安部川》1833年ごろ
+    card:
+      head: 史実を1つ
+      body: 氏真は1558年ごろ家督を譲られた
+  - 語り: 同盟の結び目は、結婚です。義元の娘は、武田義信の妻でした。
+  - 語り: 義元が生きていれば、この糸は切れにくく、三国同盟も、当面は保たれる、と見ます。氏真の代で重臣や国衆が揺れたのは、義元の死のあとの動きだからです。
+    background:
+      image: paintings/shingen_odawara_sakawa_hiroshige.jpg
+      credit: 歌川広重《東海道五拾三次之内 小田原 酒匂川》1833年ごろ
+    card:
+      head: ありうる
+      body: 義元が実権を保ち同盟は当面保たれる
+  - 語り: 1568年に武田が駿河へ入った流れが、義元の代でも起きたのか。今川が、いつまで続くのか。答えは、材料の外にあります。
+    background:
+      image: paintings/ieyasu_fuchu_abe_river_hiroshige_1833.jpg
+      credit: 歌川広重《東海道五十三次之内 府中 安部川》1833年ごろ
+    card:
+      head: ほぼ妄想
+      body: 今川の滅ぶ日は材料なし
+  - 聞き: 滅びた日を知ってると、生きてても結局、って思っちゃうけど、材料はないよね。
+    background:
+      image: paintings/shingen_kai_fuji_hiroshige_1852.jpg
+      credit: 歌川広重《不二三十六景 甲斐 夢山裏富士》1852年
+  - 語り: では、ここまでの想像を、一枚の表にまとめます。
+    hook: true
+  - 聞き: 誰がどうなるのか、一覧で見たい。
+    hook: true
+- title: 想像⑤ 義元が討たれなかった世界の運命表
+  background:
+    image: paintings/mikata_totomi_kuniezu_1838.jpg
+    credit: 《天保国絵図 遠江国》1838年（国立公文書館蔵）
+  year: 1560
+  lines:
+  - 語り: ここが、今日いちばんの見どころです。前提は、ひとつ。史実の義元は、桶狭間で討たれました。もしも、討たれなかったら。あの人たちは、どうなるのか。
+    portrait: null
+    card:
+      head: ここから想像
+      body: 人物と流れの運命表
+  - 聞き: 誰がどうなるのか、一覧で見られるの？ この表も、研究はあるのかな。
+    tone: 疑問
+  - 語り: この表を正面から論じた研究も、今回の調査では、見つかっていません。材料は、これまで見た事実だけです。札は画面に出します。声に出すのは、ほぼ妄想の所だけです。
+    background:
+      image: paintings/toshiie_owari_atsuta_zue.jpg
+      credit: 『尾張名所図会』熱田神宮（江戸後期）
+  - 語り: 1つ目は、今川の三河です。史実では、元康の離反で、揺れました。もしもは、三河を保ちます。
+    figure:
+      type: table
+      title: 運命表（史実ともしも）
+      cols:
+      - 史実
+      - もしも
+      rows: &id002
+      - - 今川の三河
+        - 元康の離反で揺れた
+        - 三河を保つ
+        - ありうる
+      - - 松平元康
+        - 1560年に岡崎へ入る
+        - 1560年は戻れない
+        - ありうる
+      - - 織田信長
+        - 尾張を固め美濃へ
+        - 美濃が遠のく
+        - ありうる
+      - - 三国同盟
+        - 1567〜68年に崩れる
+        - 当面は続く
+        - ありうる
+      - - 清洲同盟
+        - 1562年ごろ 信長と元康
+        - 結ばれたか不明
+        - ほぼ妄想
+      - - 信長の上洛
+        - 1568年
+        - 時期は変わるか不明
+        - ほぼ妄想
+      - - 今川の終わり
+        - 1569年 掛川城を開城
+        - 終わる日は不明
+        - ほぼ妄想
+      - - 武田の侵攻
+        - 1568年12月
+        - 同じ形かは不明
+        - ほぼ妄想
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 1
+  - 聞き: 三河を保つ、か。じゃあ、元康は？
+  - 語り: 2つ目は、松平元康。史実では、1560年に岡崎へ入ります。もしもは、岡崎に戻れません。
+    background:
+      image: paintings/nobunaga_okehazama_owari_meisho.jpg
+      credit: 『尾張名所図会』桶狭間古戦場（1844年）
+    portrait:
+      image: paintings/ieyasu_yoshitora_mikawa_eiyuden.jpg
+      caption: 徳川家康（武将姿、歌川芳虎画。後世の絵）
+      age: false
+    figure:
+      type: table
+      title: 運命表（史実ともしも）
+      cols:
+      - 史実
+      - もしも
+      rows: *id002
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 2
+  - 聞き: 元康のところは、岡崎に戻れない、って言い切るんだね。
+  - 語り: 3つ目は、織田信長。史実では、尾張を固めて、美濃へ向かいます。もしもは、東の守りで、美濃が遠のきます。
+    portrait:
+      image: paintings/nobunaga_portrait_eitoku_daitokuji.jpg
+      caption: 織田信長（狩野永徳（伝）画、大徳寺 総見院、1584年）
+      age: false
+    figure:
+      type: table
+      title: 運命表（史実ともしも）
+      cols:
+      - 史実
+      - もしも
+      rows: *id002
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 3
+  - 聞き: 信長は、美濃が遠のく、で止まるのか。尾張を失う、とは言ってないね。
+    background:
+      image: paintings/mikata_mitsuke_tenryu_cleveland.jpg
+      credit: 歌川広重《東海道五十三次之内 見附 天竜川》1833年ごろ
+  - 語り: 4つ目は、甲相駿三国同盟。史実では、1567年から68年にかけて崩れます。もしもは、当面は続きます。
+    portrait: null
+    figure:
+      type: table
+      title: 運命表（史実ともしも）
+      cols:
+      - 史実
+      - もしも
+      rows: *id002
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 4
+  - 聞き: 同盟は続く、か。その先は？
+  - 語り: 5つ目と6つ目。清洲同盟と、信長の上洛です。結ばれたか、時期が変わるかは、史料の外です。札は、ほぼ妄想です。
+    background:
+      image: paintings/toshiie_owari_atsuta_zue.jpg
+      credit: 『尾張名所図会』熱田神宮（江戸後期）
+    figure:
+      type: table
+      title: 運命表（史実ともしも）
+      cols:
+      - 史実
+      - もしも
+      rows: *id002
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 6
+  - 聞き: 同盟も上洛も、元康と信長の動きがずれたら、全部ずれるのか。
+  - 語り: 最後に、今川氏の終わりと、武田の駿河侵攻。終わる日も、侵攻が同じ形で起きたかも、答えは史料の外です。ほぼ妄想の札が、並びます。
+    background:
+      image: paintings/mikata_mitsuke_tenryu_cleveland.jpg
+      credit: 歌川広重《東海道五十三次之内 見附 天竜川》1833年ごろ
+    figure:
+      type: table
+      title: 運命表（史実ともしも）
+      cols:
+      - 史実
+      - もしも
+      rows: *id002
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 8
+  - 聞き: 表を見ると、ありうると、ほぼ妄想ばっかりで、すっきりしないね。
+    background:
+      image: paintings/nobunaga_okehazama_owari_meisho.jpg
+      credit: 『尾張名所図会』桶狭間古戦場（1844年）
+  - 語り: 札を数えると、ありうるが4つ、ほぼ妄想が4つです。根拠の足りない所は、足りない、と言います。
+    figure: null
+    hook: true
+  - 聞き: じゃあ、日本全体では、何が変わるの？
+    background:
+      image: paintings/toshiie_owari_atsuta_zue.jpg
+      credit: 『尾張名所図会』熱田神宮（江戸後期）
+    tone: 疑問
+    hook: true
+- title: 想像⑥ 日本の変化点と、現代につながる鎖
+  background:
+    image: paintings/mikata_totomi_kuniezu_1838.jpg
+    credit: 《天保国絵図 遠江国》1838年（国立公文書館蔵）
+  year: 1569
+  lines:
+  - 語り: 最後に、日本全体の流れです。史実では、桶狭間のあと、織田と徳川が力をつけ、今川は、1569年に戦国大名として終わります。
+    portrait: null
+    card:
+      head: 史実の流れ
+      body: 織田・徳川が伸び、今川は終わる
+  - 聞き: 義元が生き残ってたら、信長も家康も、天下に近づけなかったのかな。
+  - 語り: ここから先は、想像です。遅れた、とも言えますが、根拠がありません。信長の足場、家康の独立、今川の存続。どれも、他の人の動き次第です。
+    background:
+      image: paintings/toshiie_owari_atsuta_zue.jpg
+      credit: 『尾張名所図会』熱田神宮（江戸後期）
+    card:
+      head: ここから想像
+      body: 日本全体の流れ（ほぼ妄想）
+  - 聞き: 天下人の話まで届くかどうかは、決められないか。
+  - 語り: もうひとつ、想像します。義元が生きていたら、桶狭間は、いま、どう語られているか。「信長の奇襲」という物語は、討ち取ったから生まれました。
+    background:
+      image: paintings/nobunaga_okehazama_owari_meisho.jpg
+      credit: 『尾張名所図会』桶狭間古戦場（1844年）
+  - 語り: 討ち取れなければ、尾張の東の小競り合いとして、名前だけが残ったかもしれません。
+    card:
+      head: ほぼ妄想
+      body: 桶狭間がどう語られるかは材料なし
+  - 聞き: 勝ったから語られるのか。勝たなかった戦は、教科書に載らないのか。
+  - 語り: 元康が独立しなければ、のちの江戸幕府へ続く鎖が、どこかで切れるのか。切れたとも、つながったとも、言い切れません。
+    background:
+      image: paintings/ieyasu_edo_zu_byobu_castle_detail.jpg
+      credit: 《江戸図屏風》江戸城の部分（17世紀）
+  - 聞き: 鎖の1個目が違うだけで、最後の形が変わるかもしれない。想像するだけで、くらくらするよ。
+  - 語り: ここで、想像を離れて、史実の話です。「桶狭間は奇襲だった」という像が、はっきり残っています。江戸初期の書物が迂回を書き、明治の戦史が定着させ、教科書を通って、今も語られます。
+    background:
+      image: paintings/toshiie_owari_atsuta_zue.jpg
+      credit: 『尾張名所図会』熱田神宮（江戸後期）
+  - 語り: ここで、想像は終わりです。まとめに入ります。
+    background:
+      image: paintings/mikata_mitsuke_tenryu_cleveland.jpg
+      credit: 歌川広重《東海道五十三次之内 見附 天竜川》1833年ごろ
+    card:
+      head: 想像はここまで
+      body: 次はまとめ
+    hook: true
+  - 聞き: 最初の3つの問いに、答えるのか。
+    hook: true
+- title: まとめ：永禄3年5月19日 桶狭間の雨の中の分かれ道
+  background:
+    image: paintings/nobunaga_okehazama_owari_meisho.jpg
+    credit: 『尾張名所図会』桶狭間古戦場（1844年）
+  year: 1560
+  lines:
+  - 語り: 冒頭の3つの問いに答えます。1つ目。今川は、三河を保てたのか。想像では、三河を保ちます。
+    portrait: null
+    figure:
+      type: stats
+      title: 3つの問いの答え（想像）
+      items: &id003
+      - - 今川は？
+        - 三河を保つ
+        - ありうる
+      - - 信長は？
+        - 美濃が遠のく
+        - ありうる
+      - - 家康は？
+        - 1560年は戻れない
+        - ありうる
+      upto: 1
+  - 語り: 2つ目。信長は、どう動くのか。想像では、東の守りで、美濃が遠のきます。尾張を失うかどうかは、ほぼ妄想です。
+    background:
+      image: paintings/ieyasu_hamamatsu_hiroshige_1834.jpg
+      credit: 歌川広重《東海道五十三次之内 濱松 冬枯の図》1834年ごろ
+    figure:
+      type: stats
+      title: 3つの問いの答え（想像）
+      items: *id003
+      upto: 2
+  - 語り: 3つ目。家康は、どうなるのか。想像では、1560年のうちには、岡崎に戻れません。岡崎に今川の残兵がいたのは、史実です。
+    background:
+      image: paintings/ieyasu_okazaki_castle_ryujo_zu.jpg
+      credit: 《龍城図》岡崎城（江戸時代）
+    figure:
+      type: stats
+      title: 3つの問いの答え（想像）
+      items: *id003
+      upto: 3
+  - 聞き: 三つとも、細い道の話だったね。
+    figure: null
+  - 語り: もう一度、要点を番号で。1つ目。兵数は、4万5千、2万5千、約1万2千と割れていて、何の数かを分けて読みます。
+    background:
+      image: paintings/toshiie_owari_atsuta_zue.jpg
+      credit: 『尾張名所図会』熱田神宮（江戸後期）
+    card:
+      head: 要点
+      body: 兵数・奇襲説・目的・義元の死の影響
+  - 語り: 2つ目。奇襲説は、江戸初期の書物と明治の戦史から広まった話で、いまは正面攻撃説を支持する研究者が多い。
+    background:
+      image: paintings/nobunaga_okehazama_owari_meisho.jpg
+      credit: 『尾張名所図会』桶狭間古戦場（1844年）
+    portrait:
+      image: paintings/nobunaga_okehazama_toyonobu.jpg
+      caption: 尾州桶狭間合戦（歌川豊宣、1882年。後世の錦絵）
+      age: false
+    figure: null
+  - 聞き: 1つ目は、数字が割れてること。2つ目は、奇襲が後付けかもってことだね。
+  - 語り: 3つ目。義元の目的は、上洛説から、尾張や三河の確保説へ動いています。4つ目。義元の死が、元康の独立と、三国同盟の動揺の起点になりました。
+    portrait:
+      image: paintings/okehazama_imagawa_yoshimoto_portrait.jpg
+      caption: 今川義元（肖像画、作者・制作年不詳）
+      age: false
+  - 聞き: 義元ひとりの死で、東海の地図が動いたのか。
+    background:
+      image: paintings/mikata_mitsuke_tenryu_cleveland.jpg
+      credit: 歌川広重《東海道五十三次之内 見附 天竜川》1833年ごろ
+    tone: しみじみ
+  - 語り: さきほどの3つの答えは、全部、想像です。史実で言えるのは、永禄3年5月19日、義元が討たれ、今川軍が総崩れになったこと。兵数・奇襲・目的は、割れたままだということです。
+    portrait: null
+    card:
+      head: 史実で言えること
+      body: 義元が討たれ、今川軍が総崩れになった
+  - 聞き: ここまでで、今川の人たちの顔が、だいぶ見えてきたよ。最後に、人柄が分かる話は、ないの？
+    tone: 疑問
+  - 語り: 1人、挙げます。氏真です。桶狭間の日に数え23歳だった氏真は、のちに家康の庇護を受け、慶長19年に江戸で亡くなります。77歳でした。和歌は、1千6百首あまりが収録されています。
+    background:
+      image: paintings/ieyasu_fuchu_abe_river_hiroshige_1833.jpg
+      credit: 歌川広重《東海道五十三次之内 府中 安部川》1833年ごろ
+    card:
+      head: 今川氏真
+      body: 数え77歳で没・和歌は1千6百首あまり
+  - 聞き: 蹴鞠と和歌の人、って言われがちだけど、お父さんを失ってから、50年あまり生きたのか。
+    tone: しみじみ
+  - 語り: 氏真の評価は、いまも割れています。文弱で国を滅ぼした人、とも、治水に力を入れた人でもあった、とも読まれます。
+  - 語り: 分かれ道を1つ挙げるなら、史実で5月19日の昼に起きた、あの雨の中の突入です。
+    background:
+      image: paintings/nobunaga_okehazama_owari_meisho.jpg
+      credit: 『尾張名所図会』桶狭間古戦場（1844年）
+  - 聞き: もし、あの雨の中で、突入が外れていたら……って、つい考えちゃうね。
+  - 語り: 今日の地層は、ここまでです。
+    card:
+      head: 今日の地層
+      body: ここまで
+  - 聞き: 次の「もしも」は、誰の、どの分かれ道かな。
+    background:
+      image: paintings/ieyasu_hamamatsu_hiroshige_1834.jpg
+      credit: 歌川広重《東海道五十三次之内 濱松 冬枯の図》1834年ごろ
+    tone: 疑問
+  - 語り: あなたが気になる、歴史の分かれ道を、コメントで教えてください。
+  - 二人: また一緒に、掘りましょう！
+    tone: 明るい

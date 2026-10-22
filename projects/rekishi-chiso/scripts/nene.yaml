@@ -1,0 +1,659 @@
+# ねね（高台院）（A作品・10/23 19時公開予定）。型：掘り下げ型（生まれから順・節ごとに1つの山場・最後は「まとめ：ねねとは何者だったのか」）
+# 冒頭の一点：没日（寛永元年9月6日・1624年）は確かだが、享年76は天文18年説の場合（11年説なら83・17年説なら77）。生年は天文11年（1542）・17年（1548）・18年（1549）の3説で最大7年の差。名前も「ねね」「おね」「ねい」で割れる。
+#   答えは第1節の問いから、まとめで戻る（福田千鶴は画賛「春秋七十有六」から天文18年説、黒田基樹も同意。名前は福田＝諱はねい・愛称ねね／黒田＝ねね（寧々）が妥当）。
+# 事実の出どころは dev/output/rekishi-chiso/research/nene_facts.md（確実／有力／説／後世の話／未確認の区分もそこ）。素材は research/nene_assets.md。
+# 決まり：①日付は和暦で言う。西暦は年表・card の年・節の年にだけ出す（語りでは「慶長5年、1600年」のように初出のみ併記）。
+#   ②使わない話（入れない）：「信長が秀吉の浮気を叱った」を事実として（書状は「励ます趣旨と説明される」まで。叱った記録は確認できなかったと言う）／
+#     結婚の長屋・藁・竹簀子・土間の祝言を事実として（後世の話・出典を言う）／三本木の隠棲／関ヶ原で家康に寄り添ったと断定／淀殿との不仲の断定／秀吉の便秘の手紙／ネットの個人ブログ。
+#   ③書状の年は言わない（年不詳。「天正4年ごろ」の説明は未確認）。信長書状の筆跡は右筆・楠長諳（桑田忠親の指摘。宮本義己は書状を夫婦の関係を保たせる趣旨と読む）。
+#   ④関ヶ原の通説（淀殿との対立→東軍）・跡部信（淀殿と連携し大津城の講和・戦後処理）・白川亨（西軍寄りの可能性。根拠は辰姫・東殿・行長の母・孝蔵主・梵舜日記）は並べて、決着はついていないと言う。
+#     三成と不仲は「通説」と言い、白川亨が結びつく材料を挙げると並べる。「不仲だった」と言い切る材料は確認できていない、まで。
+#   ⑤人物のセリフは入れない（秀吉の手紙は趣旨の言い換え。原文の引用もしない）。⑥年齢は数え。肖像の「この時○歳」は出さない（生年が割れるため age: false）。
+#   ⑦背景に人物の肖像・拡大絵・縦の継ぎ目のある三連絵・大字のある絵を使わない。NDL 系は trim 版。歌麿の北政所・醍醐花見の部分図は portrait に caption つきで。血・遺体・首・切腹の絵は使わない。
+#   読みの注意：高台院＝こうだいいん／北政所＝きたのまんどころ／寧々＝ねね／杉原定利＝すぎはらさだとし／朝日殿＝あさひどの／木下家定＝きのしたいえさだ／浅野長勝＝あさのながかつ／福田千鶴＝ふくだちづる／黒田基樹＝くろだもとき／
+#     旧事考異＝きゅうじこうい／渡辺世祐＝わたなべせいゆう／田端泰子＝たばたやすこ／森家先代実録＝もりけせんだいじつろく／簀子＝すのこ／薄縁＝うすべり／楠長諳＝くすのきちょうあん／右筆＝ゆうひつ／石松丸＝いしまつまる／
+#     宮本義己＝みやもとよしみ／聚楽第＝じゅらくだい／准三后＝じゅさんごう／孝蔵主＝こうぞうす／上臈＝じょうろう／有馬則頼＝ありまのりより／黒印状＝こくいんじょう／醍醐＝だいご／西の丸殿＝にしのまるどの／松の丸殿＝まつのまるどの／
+#     三の丸殿＝さんのまるどの／加賀殿＝かがどの／曲直瀬道三＝まなせどうさん／跡部信＝あとべまこと／白川亨＝しらかわとおる／辰姫＝たつひめ／東殿＝ひがしどの／言経卿記＝ときつねきょうき／義演准后日記＝ぎえんじゅごうにっき／
+#     勧修寺晴子＝かじゅうじはるこ／梵舜日記＝ぼんしゅんにっき／小早川秀秋＝こばやかわひであき／弓箴善彊＝きゅうしんぜんきょう／寛政重修諸家譜＝かんせいちょうしゅうしょかふ／木下利房＝きのしたとしふさ／足守＝あしもり／豊国社＝とよくにしゃ／養老料＝ようろうりょう。
+title: ねね（高台院）｜秀吉の妻の生まれた年は、3つの説に割れている
+series: ""
+playlists: [日本史を掘る（聞き流し）, 戦国時代を掘る]
+shorts_playlists: [日本史ショート]
+tags: [ねね, 高台院, 北政所, おね, 豊臣秀吉, 高台寺, 孝蔵主, 淀殿, 関ヶ原の戦い, 醍醐の花見, 戦国時代, 日本史, 歴史, 歴史解説, 歴史の地層]
+en:
+  title: "Nene (Kodai-in): Three Theories on the Birth Year of Hideyoshi's Wife"
+  description: |-
+    Nene, Toyotomi Hideyoshi's lawful wife, later called Kita no Mandokoro and then Kodai-in, died on the 6th day of the 9th month of Kan'ei 1 (October 17, 1624). The death date is certain, but her age at death (76 by Japanese count) holds only if she was born in 1549, and her birth year is split among three theories (1542, 1548 and 1549), and even her name is debated: Nene, One or Nei.
+    This video digs into her life from her birth in Owari Province and separates what contemporary records show from what later books say: the date of her marriage, the famous humble wedding story, the kana letter that Oda Nobunaga's secretary wrote for him, her post as Kita no Mandokoro, Hideyoshi's handwritten letter about the newborn Hideyori, the Daigo cherry-blossom party of 1598, her role around Sekigahara as seen by different scholars, the founding of Kodai-ji, and her death.
+    We say plainly where sources and scholars disagree. Dates are in the Japanese calendar of the time.
+    A Japanese history video to listen to while you work (Japanese audio).
+  chapters:
+    - "1624: Three Theories on Her Birth Year"
+    - "1561: Born in Owari, Married to Hideyoshi"
+    - "Nobunaga's Letter and a Couple Without Children"
+    - "1585: Kita no Mandokoro and the Junior First Rank"
+    - "1593: Hideyori's Birth and the Daigo Cherry-Blossom Party"
+    - "1598: After Hideyoshi's Death, Mitsunari and Sekigahara"
+    - "1603: Kodai-in, Kodai-ji, Yodo-dono and Hideyori"
+    - "1614: The Siege of Osaka and Her Death"
+    - "Summary: Who Was Nene?"
+
+texture: true
+recap: true
+
+timeline:
+  start: 1540
+  end: 1630
+  events: [[1561, 結婚説], [1585, 北政所], [1588, 従一位], [1598, 秀吉没], [1600, 関ヶ原], [1624, 没]]
+
+terms:
+  北政所: 摂政・関白の正室の呼び名
+  上臈: 身分の高い奥女中。奥向きの取りまとめ役
+  右筆: 主君に代わって文書を書く役
+  黒印状: 黒い印を押して出した文書
+  准三后: 皇后などに準じる待遇を受ける位
+  養老料: 老後の暮らしを支えるための領地
+  落飾: 髪をおろして出家すること
+  輿: 人を乗せて運ぶ乗り物
+
+shorts:
+  s1:
+    title: "没年は確か／生年は？"
+    yt_title: "ねね（高台院）の生まれた年は、いつ？｜3つの説と、名前の説"
+    hook: "秀吉の妻ねねは、／いつ生まれた？"
+    tease: "ねねが手元で育てたのは、／どの武将たち？"
+    lead: "ねねの生まれた年は、説によって最大7年違います。名前も、ねね・おね・ねいと割れています。"
+    tags: [ねね, 高台院, 豊臣秀吉, 歴史の地層]
+  s2:
+    title: "質素な祝言／出どころ"
+    yt_title: "秀吉とねねは長屋の祝言で結ばれた？｜逸話の出どころを確かめる"
+    hook: "ねねと秀吉は、／長屋の祝言で結ばれた？"
+    tease: "じゃあ、信長は秀吉の浮気を、／本当に叱った？"
+    lead: "秀吉とねねの結婚といえば、質素な祝言の話。その出どころを調べます。"
+    tags: [ねね, 豊臣秀吉, 祝言, 歴史の地層]
+  s3:
+    title: "信長の書状／ねね宛て"
+    yt_title: "信長がねねに宛てた手紙は、誰が書いた？｜書状の筆跡を確かめる"
+    hook: "信長のねね宛ての手紙は、／信長が書いた？"
+    tease: "天下人の妻、北政所の仕事は、／何だった？"
+    lead: "秀吉を「はげねずみ」と書いた、信長のねね宛ての手紙。その筆跡を確かめます。"
+    tags: [織田信長, ねね, 楠長諳, 歴史の地層]
+  s4:
+    title: "北政所の仕事／位の高さ"
+    yt_title: "北政所ねねの仕事とは？｜記録に残る役割を確かめる"
+    hook: "天下人の妻には、／どんな仕事があった？"
+    tease: "じゃあ、ねねに届いた秀吉の手紙には、／何が書いてあった？"
+    lead: "秀吉が関白になって、ねねは北政所と呼ばれました。その仕事を、記録から確かめます。"
+    tags: [北政所, ねね, 従一位, 歴史の地層]
+  s5:
+    title: "関ヶ原の日／ねねの立場"
+    yt_title: "ねねは関ヶ原で東軍についた？｜通説の根拠を確かめる"
+    hook: "関ヶ原で、ねねは／家康の味方だった？"
+    tease: "ねねが建てた高台寺を、／支えたのは誰？"
+    lead: "関ヶ原でのねねの立場として語られる通説。その根拠を、記録と照らして確かめます。"
+    tags: [ねね, 関ヶ原の戦い, 小早川秀秋, 歴史の地層]
+
+next:
+  title: レオナルド・ダ・ヴィンチ
+  series: ""
+  teaser: 万能の天才と呼ばれる人。その像は、どこまでが記録なのか。
+
+thumbnail:
+  layout: face
+  image: paintings/nene_portrait_ectype.jpg
+  crop: [380, 880, 1380, 1880]
+  name: ねね（高台院）
+  lead: 生まれた年が
+  main: 3通り
+
+sections:
+  # ---------------------------------------------------------------- 1 導入
+  - title: 1624年 生まれた年が3つに割れる、秀吉の妻
+    background: {image: paintings/nene_kodaiji_autumn_ndl_trim.jpg, credit: "長谷川貞信《都名所之内 高台寺秋景》（江戸後期〜幕末。国立国会図書館蔵、色票などを切り抜いた版）"}
+    year: 1624
+    lines:
+      - 語り: 寛永元年、1624年の9月6日。高台院、ねねは、京都の屋敷で亡くなりました。亡くなった日は確かですが、生まれた年は、3つの説に割れています。
+        portrait: {image: paintings/nene_portrait_ectype.jpg, caption: "高台院（ねね）の肖像（高台寺本の1910年の模写）", age: false}
+        card: {head: 寛永元年9月6日, body: 高台院が亡くなる。享年76と伝わる}
+        tone: 重い
+        short: s1
+      - 語り: 天文11年、17年、18年。いちばん離れた説で、7年の差です。
+        figure: {type: numberline, title: ねねの生まれた年の3説, items: [[天文11年説, 1542], [天文17年説, 1548], [天文18年説, 1549]], unit: 年, focus: 天文18年説, note: 最大で7年の差}
+        short: s1
+      - 聞き: え、亡くなった日は分かるのに、生まれた年は分からないの？ 7年って、けっこう大きいよね。
+        tone: 疑問
+        short: s1
+      - 語り: 享年76と伝わるのは、18年説の場合です。
+        background: {image: paintings/nene_rakuchu_funaki_1.jpg, credit: "《洛中洛外図屏風 舟木本》右隻（17世紀初め）"}
+      - 聞き: ほかの説だと、享年はどうなるの？
+      - 語り: 11年説なら83、17年説なら77です。
+      - 語り: 名前も、定まっていません。「ねね」のほかに、「おね」「ねい」の説があります。秀吉の自筆の手紙の宛名は、「おね」です。
+        background: {image: paintings/nene_kyoto_map_1696.jpg, credit: "《京都の地図》元禄9年（1696年）"}
+        portrait: null
+        figure: null
+        card: {head: 名前の説, body: ねね・おね・ねい}
+        short: s1
+      - 聞き: あーしは、秀吉の奥さんはねね、としか知らなかったよ。ドラマでも、ずっとそうだったし。
+        short: s1
+      - 語り: 桑田忠親は、自筆の署名が「ね」の一字だったことから、「おね」だと考えました。「ねね」は、『太閤記』などが書き誤った形だ、という見方です。
+        background: {image: paintings/nene_rakuchu_funaki_2.jpg, credit: "《洛中洛外図屏風 舟木本》左隻（17世紀初め）"}
+        card: {head: 桑田忠親の説, body: 署名は「ね」の一字。「おね」説}
+      - 聞き: 署名が「ね」一字なら、「ねね」とも「おね」とも読めそうだよね。
+      - 語り: 角田文衞は、女性が一字で署名する習慣があった、と反論しました。「ねね」は、鎌倉時代以降に多い女性名だ、という指摘です。この論争は、まとめでもう一度見ます。
+        background: {image: paintings/nene_hokoji_daibutsu_okyo.jpg, credit: "円山応挙《京大仏図》1796年以前（方広寺の大仏殿）"}
+        card: {head: 角田文衞の反論, body: 女性は一字で署名する習慣があった}
+      - 聞き: 一字で署名する習慣があったなら、「ね」の一字は、「ねね」の略かもしれないってこと？
+      - 語り: 今日掘るのは、そのねねです。秀吉の正室で、のちに北政所、さらに高台院と呼ばれました。
+        background: {image: paintings/sekigahara_osaka_castle_trim.jpg, credit: "《大坂夏の陣図屏風》大坂城天守の部分（17世紀前半）"}
+        card: {head: 北政所, body: 秀吉の正室。のちに高台院}
+      - 聞き: 天下人を支えた、しっかり者の奥さん、ってイメージだよね。
+      - 語り: ところが、その姿を語る名場面の多くは、のちの時代の書物に出てきます。同じ時代の史料にあるものと、後世の話を、分けながら掘ります。
+        background: {image: paintings/nene_rakuchu_funaki_1.jpg, credit: "《洛中洛外図屏風 舟木本》右隻（17世紀初め）"}
+        card: {head: 後世の話, body: 同じ時代の史料と、分けて見る}
+      - 聞き: 信長の手紙や、関ヶ原での動きなど、有名な話が多いけど、どこまでが確かなんだろう。
+        tone: 疑問
+      - 語り: まずは、尾張の生まれから、順に見ていきましょう。
+        background: {image: paintings/toshiie_owari_atsuta_zue.jpg, credit: "岡田啓・野口道直《尾張名所図会 熱田大宮全図》1880年（尾張の名所図）"}
+      - 聞き: 生まれから順に聞くのは、あーしも初めてかも。楽しみだなあ。
+
+  # ---------------------------------------------------------------- 2 生まれと結婚
+  - title: 1561年 尾張に生まれ、秀吉と結ばれる
+    background: {image: paintings/toshiie_owari_atsuta_zue.jpg, credit: "岡田啓・野口道直《尾張名所図会 熱田大宮全図》1880年（尾張の名所図）"}
+    year: 1561
+    lines:
+      - 語り: ねねは、尾張国の朝日村、いまの愛知県清須市のあたりに生まれました。父は杉原定利、母は朝日殿。次女で、兄は木下家定です。
+        card: {head: 尾張の朝日村, body: 杉原定利の次女に生まれる}
+      - 聞き: お兄さんの木下家定。その名前、あとで出てきそうな気がするなあ。
+      - 語り: のちに、同じ尾張の武士、浅野長勝の養女になります。秀吉との結婚は、この浅野家で決まった、との説明が一般的です。
+        background: {image: paintings/nobunaga_okehazama_owari_meisho.jpg, credit: "小田切春江《尾張名所図会 桶狭間古戦場》1844年"}
+        card: {head: 浅野長勝の養女, body: 結婚は浅野家で決まったとされる}
+      - 聞き: 養女になってから結婚、っていうのは、家の格を合わせるためだったのかな。
+      - 語り: 結婚は、永禄4年、1561年の8月3日という説があります。福田千鶴が、『旧事考異』などを典拠に採る説です。黒田基樹は、永禄8年の8月と見ます。
+        year: 1561
+        card: {head: 結婚の年は割れる, body: 福田千鶴と黒田基樹で違う}
+        short: s2
+        figure: {type: numberline, title: 結婚の年の2説, items: [[永禄4年説, 1561], [永禄8年説, 1565]], unit: 年, focus: 永禄4年説, note: 福田千鶴と黒田基樹で4年の差}
+      - 聞き: 結婚した年まで割れてるのか。そのとき、ねねは何歳だったの？
+        tone: 疑問
+      - 語り: 通説では13歳です。永禄4年に結婚したとして数えで比べると、天文11年説なら20歳、17年説なら14歳、18年説なら13歳。生まれた年しだいで、7歳も違います。
+        figure: {type: stats, title: 結婚したときの数え年（永禄4年とすると）, items: [[天文11年説, 20歳, 結婚の年に数えで], [天文17年説, 14歳, 結婚の年に数えで], [天文18年説, 13歳, 通説の年齢]]}
+        background: {image: paintings/nene_kyoto_map_1696.jpg, credit: "《京都の地図》元禄9年（1696年）"}
+        card: {head: 説ごとの数え年, body: 20歳・14歳・13歳と7歳違う}
+      - 聞き: 7歳も違うのか。20歳と13歳じゃ、同じ結婚でも印象がぜんぜん違うよ。
+      - 語り: 母の朝日殿は、身分の差を理由に反対した、と伝わります。兄の家定が、「自分も秀吉の養子になる」と説いて、説得した、という伝承です。出典は確かめにくいものです。
+        background: {image: paintings/toshiie_owari_atsuta_zue.jpg, credit: "岡田啓・野口道直《尾張名所図会 熱田大宮全図》1880年（尾張の名所図）"}
+        figure: null
+        card: {head: 母は反対した、と伝わる, body: 兄・家定が説得したとされる}
+      - 聞き: 家族ぐるみで決めた結婚だったのかな。身分違いの結婚なんて、ドラマの設定みたい。
+      - 語り: 有名なのは、質素な祝言の話です。藁と薄縁を敷いた式、竹の簀子の上の式、土間の式、と、伝わり方は一つではありません。
+        background: {image: paintings/nobunaga_okehazama_owari_meisho.jpg, credit: "小田切春江《尾張名所図会 桶狭間古戦場》1844年"}
+        card: {head: 質素な祝言の話, body: 藁・簀子・土間と伝わり方が違う}
+        short: s2
+      - 聞き: 藁と薄縁と、簀子と、土間。同じ祝言なのに、床の素材だけ、話ごとに変わってるじゃん。
+      - 語り: 福田千鶴の整理では、竹の簀子の話は、江戸時代の『旧事考異』まで遡れます。
+        card: {head: 後世の話, body: 竹の簀子は江戸時代の書まで遡れる}
+        short: s2
+      - 語り: 土間の話は、昭和14年、1939年の渡辺世祐の研究までしか遡れません。
+        year: 1939
+        card: {head: 後世の話, body: 土間の祝言は1939年までしか遡れない}
+        short: s2
+      - 聞き: 長屋の祝言は定番の場面なのに、昭和の研究までしかさかのぼれない話もあるのか。
+        short: s2
+      - 語り: 結婚の相手として秀吉を推した人がいた、ともいいます。いずれの話も、同じ時代の書状ではなく、のちの家の記録や研究に書かれたものです。
+        background: {image: paintings/toshiie_owari_atsuta_zue.jpg, credit: "岡田啓・野口道直《尾張名所図会 熱田大宮全図》1880年（尾張の名所図）"}
+        card: {head: 結婚の話の出どころ, body: 同じ時代の書状ではなく、のちの記録}
+      - 聞き: 誰が推したのか、そこまでは分からないのか。
+      - 語り: 信長が結婚を認めた、という話もあります。『森家先代実録』に執り成しの話がありますが、信長が許した、とはっきり書く記述は、見つかりません。
+        year: 1561
+        portrait: {image: paintings/nobunaga_portrait_sanpoji.png, caption: "織田信長の肖像（16世紀末ごろの原画）", age: false}
+        background: {image: paintings/nene_kyoto_map_1696.jpg, credit: "《京都の地図》元禄9年（1696年）"}
+        card: {head: 信長の許可, body: 許したと明示する記述は無い}
+      - 聞き: 恋愛結婚とよく言われるけど、そこは決められないのか。
+        portrait: null
+      - 語り: 言えるのは、ねねが秀吉の妻になった、という結果です。そして、この夫婦に、あの信長が、手紙を書いています。
+        background: {image: paintings/nobunaga_azuchi_castle_zu.jpg, credit: "《近江国蒲生郡安土城之図》（1855年原図の明治の写し）"}
+        hook: true
+      - 聞き: 信長が、秀吉の奥さんに手紙？ どんな手紙なの？
+        hook: true
+
+  # ---------------------------------------------------------------- 3 信長の手紙と子のいない夫婦
+  - title: 約1,100通の信長書状と、秀吉の側室・養子の話
+    background: {image: paintings/nobunaga_letter_to_nene.jpg, credit: "織田信長がねねに宛てた書状（『紀元二千六百年記念皇国文化史展図録』1941年に掲載）"}
+    lines:
+      - 語り: ねね宛ての、信長の書状が残っています。ひらがな中心の手紙で、「天下布武」の印が押されています。秀吉を、「《はげねずみ》」と書いたことで知られる手紙です。
+        detail: {box: [0.0, 0.0, 0.55, 1.0], label: 信長がねねに宛てた書状の部分}
+        card: {head: 信長の書状, body: ひらがな中心。「天下布武」の印}
+      - 聞き: 秀吉が信長にそう呼ばれてたのは有名だよね。その呼び名が出てくるのは、ねね宛ての手紙なの？
+        detail: {box: [0.0, 0.0, 0.55, 1.0], label: 信長がねねに宛てた書状の部分}
+      - 語り: 内容は、夫の浮気に悩むねねを励ます趣旨だ、という説明です。宮本義己は、夫婦の仲を保たせる趣旨と読みます。
+        detail: {box: [0.0, 0.0, 0.55, 1.0], label: 信長がねねに宛てた書状の部分}
+      - 語り: あなたほどの女性を、あのはげねずみは、二度と見つけられまい、という趣旨とされます。
+        background: {image: paintings/nobunaga_azuchi_castle_zu.jpg, credit: "《近江国蒲生郡安土城之図》（1855年原図の明治の写し）"}
+      - 聞き: 秀吉って、そんなに浮気してたの？ あーしが奥さんなら、手紙で励まされても、モヤモヤするけど。
+        tone: 疑問
+      - 語り: 秀吉には、京で妾を持ち、石松丸秀勝をもうけた、という話があります。出典は示されておらず、黒田基樹は、結婚の前に生まれた可能性にも触れました。
+        background: {image: paintings/nobunaga_azuchi_castle_zu.jpg, credit: "《近江国蒲生郡安土城之図》（1855年原図の明治の写し）"}
+        card: {head: 石松丸秀勝, body: 結婚前の生まれの可能性も指摘される}
+      - 聞き: そうなると、浮気という言い方が合うかどうかも、変わってくるか。
+      - 語り: 永青文庫の解説では、信長の書状は約1,100通が数えられます。
+        background: {image: paintings/nobunaga_letter_to_nene.jpg, credit: "織田信長がねねに宛てた書状（『紀元二千六百年記念皇国文化史展図録』1941年に掲載）"}
+        detail: {box: [0.0, 0.0, 0.55, 1.0], label: 信長がねねに宛てた書状の部分}
+        card: {head: 信長の書状, body: 約1,100通が数えられる}
+        short: s3
+      - 語り: ほとんどは右筆が書いたもので、自筆と伝わるのは十数通だけです。ねね宛ての、ひらがな中心の手紙も、長く自筆と考えられてきた一通です。
+        detail: {box: [0.0, 0.0, 0.55, 1.0], label: 信長がねねに宛てた書状の部分}
+        short: s3
+      - 語り: ところが、桑田忠親は、筆跡から、右筆の楠長諳が書いたものと指摘しました。信長の名で出た、側近の代筆です。
+        background: {image: paintings/nobunaga_letter_to_nene.jpg, credit: "織田信長がねねに宛てた書状（『紀元二千六百年記念皇国文化史展図録』1941年に掲載）"}
+        portrait: {image: paintings/nobunaga_portrait_sanpoji.png, caption: "織田信長の肖像（16世紀末ごろの原画）", age: false}
+        card: {head: 右筆・楠長諳の筆, body: 信長の直筆ではないとされる}
+        short: s3
+      - 聞き: 信長が自分で書いたんじゃないのか。でも、代筆でも、信長の意向で出した手紙に変わりはないよね？
+        short: s3
+      - 語り: その通りです。書かれた年は、分かっていません。励ましという読み方も、文面からの解釈です。
+        portrait: null
+        background: {image: paintings/nobunaga_azuchi_castle_zu.jpg, credit: "《近江国蒲生郡安土城之図》（1855年原図の明治の写し）"}
+        card: {head: 書状の年は不明, body: 励ましは文面からの解釈}
+        short: s3
+      - 語り: 信長が秀吉の浮気を叱った、という話も語られます。しかし、叱った記録は、今回の調べでは見つかりませんでした。
+        card: {head: 叱った記録, body: 今回の調べでは見つからない}
+      - 聞き: 手紙一通から、ずいぶん話が広がったね。
+      - 語り: 信長の四男、秀勝を養子に迎えたのも、主筋の子を迎えて、家中を安定させるためだった、という見方があります。宮本義己の説です。
+        portrait: {image: paintings/nobunaga_portrait_sanpoji.png, caption: "織田信長の肖像（16世紀末ごろの原画）", age: false}
+        background: {image: paintings/nobunaga_okehazama_owari_meisho.jpg, credit: "小田切春江《尾張名所図会 桶狭間古戦場》1844年"}
+        card: {head: 信長の四男・秀勝, body: 家中の安定のため迎えた、という説}
+      - 聞き: 主君の子を迎えるのは、家を守るための、したたかな手だったのかな。
+      - 語り: 子のいないねねは、加藤清正や福島正則ら、親族や家臣の子を、手元で育てたといわれます。甥の小早川秀秋は、兄・家定の子で、秀吉の養子になりました。
+        background: {image: paintings/hanbei_nagahama_map.jpg, credit: "《長浜町絵図》（江戸時代、長浜城と城下）"}
+        portrait: {image: paintings/nene_kato_kiyomasa_yoshiiku.jpg, caption: "加藤清正（『太平記英勇伝』、後世の想像図）", age: false}
+        card: {head: 子のいない夫婦, body: 親族や家臣の子を育てたといわれる}
+      - 聞き: 清正も正則も、関ヶ原で名前が出てくる人たちだよね。
+        portrait: null
+      - 語り: その子飼いの武将たちが、のちに大きな分かれ道に立ちます。その前に、ねねは、天下人の妻として、新しい地位に就きました。
+        background: {image: paintings/hidenaga_jurakudai_mitsui.jpg, credit: "《聚楽第図》（17世紀中頃）"}
+        hook: true
+      - 聞き: 天下人の妻の地位って、どんなものなの？
+        hook: true
+
+  # ---------------------------------------------------------------- 4 北政所
+  - title: 1585年 北政所になり、従一位へ
+    background: {image: paintings/hidenaga_jurakudai_mitsui.jpg, credit: "《聚楽第図》（17世紀中頃）"}
+    year: 1585
+    lines:
+      - 語り: 天正13年、1585年。秀吉が関白に任じられ、ねねは従三位に叙され、北政所と呼ばれるようになります。北政所とは、もともと、摂政や関白の正室を指す呼び名です。
+        portrait: {image: paintings/nene_taiko_gosai_part.jpg, caption: "喜多川歌麿《太閤五妻洛東遊観之図》の北政所の部分（1804年ごろ、後世の想像図）", age: false}
+        card: {head: 天正13年, body: 秀吉が関白に。ねねは北政所と呼ばれる}
+        short: s4
+      - 聞き: ねねは名前、北政所は肩書き、か。
+      - 語り: 天正13年ごろとみられる10月24日付の、秀吉からおね宛ての書状には、便秘のことが書かれています。宮本義己が紹介する一通です。
+        background: {image: paintings/sekigahara_osaka_castle_trim.jpg, credit: "《大坂夏の陣図屏風》大坂城天守の部分（17世紀前半）"}
+        card: {head: おね宛ての書状, body: 天正13年ごろ。便秘の記述がある}
+      - 聞き: 天下人が、奥さんに便秘の話まで書くの？ どんな間柄だったんだろう。
+      - 語り: 天正16年、1588年の4月14日、聚楽第に天皇を迎える行幸がありました。その功で、ねねは従一位・准三后に叙せられ、豊臣吉子の名を与えられます。
+        year: 1588
+        portrait: null
+        background: {image: paintings/mitsunari_jurakudai_1.jpg, credit: "《豊公築所聚楽城之図》（1843年）"}
+        card: {head: 天正16年4月14日, body: 聚楽第行幸の功で従一位に}
+        short: s4
+        figure: {type: stats, title: 北政所ねねの位, items: [[北政所の称号, 天正13年, 関白任官に伴い], [従一位, 天正16年4月14日, 聚楽第行幸の功], [位記の名, 豊臣吉子, 天正16年]]}
+      - 聞き: 従一位は、かなり高い位だよね。農民の生まれの夫が天下人になると、奥さんまで位をもらうのか。
+      - 語り: 従一位は、位階のなかでも、ほぼ最上位です。異例の高さでした。
+        card: {head: 従一位, body: 位階のほぼ最上位}
+      - 語り: 北政所の仕事は、朝廷との交渉を引き受けることと、諸大名の妻子を監督することだった、という整理です。大坂城の奥を取り仕切る立場です。
+        figure: null
+        background: {image: paintings/sekigahara_osaka_castle_trim.jpg, credit: "《大坂夏の陣図屏風》大坂城天守の部分（17世紀前半）"}
+        card: {head: 北政所の仕事, body: 朝廷との交渉。大名の妻子の監督}
+        short: s4
+      - 聞き: 奥を仕切るのは、今でいう、会社の総務と人事を合わせたような係？
+        short: s4
+      - 語り: その仕事を支えたのが、筆頭の上臈、孝蔵主です。名古屋市博物館に、天正18年11月24日付で、孝蔵主が差し出した北政所の黒印状が残っています。
+        year: 1590
+        background: {image: paintings/nene_rakuchu_funaki_2.jpg, credit: "《洛中洛外図屏風 舟木本》左隻（17世紀初め）"}
+        portrait: {image: paintings/nene_letter_kita_no_mandokoro.jpg, caption: "北政所の黒印状（孝蔵主の奉書、名古屋市博物館蔵）", age: false}
+        card: {head: 北政所の黒印状, body: 孝蔵主が差し出した文書が残る}
+      - 聞き: 文書が残ってるなら、孝蔵主が実際に働いていたのは確かだよね。
+      - 語り: 孝蔵主は、天正18年には、秀吉の代理として伊達政宗に詰問の書状を送りました。慶長2年には、小早川秀秋の移封の実務も担った人です。
+        background: {image: paintings/sekigahara_osaka_castle_trim.jpg, credit: "《大坂夏の陣図屏風》大坂城天守の部分（17世紀前半）"}
+        card: {head: 孝蔵主の仕事, body: 伊達政宗への詰問状。秀秋の移封の実務}
+      - 聞き: 秀吉の代理で、大名に詰問まで？ 奥の人が、表の仕事にも関わってたの？
+      - 語り: 「表のことは浅野長政が、奥のことは孝蔵主が」と言われるほどの権威だった、といいます。
+        card: {head: 孝蔵主, body: 「奥のことは孝蔵主が」と伝わる}
+      - 聞き: ねね本人より、孝蔵主が前に出る場面も多かったの？
+      - 語り: 文禄の役が始まると、大坂から名護屋へ向かう通行には、北政所の黒印状が必要だった、とされます。人やものの流れにまで、北政所の名が要った形です。
+        year: 1592
+        portrait: null
+        background: {image: paintings/nene_osaka_castle_summer_screen_detail.jpg, credit: "《大坂夏の陣図屏風》大坂城の部分（江戸時代）"}
+        card: {head: 文禄の役, body: 名護屋への通行に黒印状が必要とされる}
+      - 聞き: 通行証みたいなものを、奥さんが出すの？ 大坂城の奥が、窓口だったってこと？
+      - 語り: 宣教師フロイスの『日本史』は、ねねを、大変な人格者と評し、頼めば解決できないことはない、と書いたとされます。
+        background: {image: paintings/nene_hokoji_daibutsu_okyo.jpg, credit: "円山応挙《京大仏図》1796年以前（方広寺の大仏殿）"}
+        card: {head: フロイス『日本史』, body: 「大変な人格者」と評す}
+      - 聞き: 外国の人にも、頼りにされてたんだね。
+      - 語り: その北政所に、文禄2年、秀吉から、一通の手紙が届きます。
+        year: 1593
+        hook: true
+      - 聞き: 秀吉からの手紙って、どんな内容なの？
+        hook: true
+
+  # ---------------------------------------------------------------- 5 秀頼の誕生と醍醐の花見
+  - title: 1593年 秀頼の誕生と、1598年の醍醐の花見
+    background: {image: paintings/sekigahara_osaka_castle_trim.jpg, credit: "《大坂夏の陣図屏風》大坂城天守の部分（17世紀前半）"}
+    year: 1593
+    lines:
+      - 語り: 文禄2年、1593年の8月3日。淀殿が、大坂城で男の子、のちの秀頼を産みます。秀吉は57歳。名護屋の陣で、その知らせを聞きました。
+        portrait: {image: paintings/oichi_chacha_yodo_portrait.jpg, caption: "淀殿（茶々）の肖像（江戸時代）", age: false}
+        card: {head: 文禄2年8月3日, body: 淀殿が大坂城で秀頼を産む}
+      - 聞き: 57歳で授かった子か。秀吉は、その知らせを、ねねにどう伝えたんだろう。
+      - 語り: 8月9日付で、秀吉は、おね宛てに自筆の手紙を書きます。京都の高台寺に伝わり、重要文化財です。宛名は、「おねへ」です。
+        background: {image: paintings/nene_hokoji_daibutsu_okyo.jpg, credit: "円山応挙《京大仏図》1796年以前（方広寺の大仏殿）"}
+        portrait: {image: paintings/nene_hideyoshi_kodaiji_1598.png, caption: "豊臣秀吉の肖像（高台寺蔵、狩野光信、1598年ごろ）", age: false}
+        card: {head: 8月9日付の手紙, body: 秀吉が「おねへ」自筆で知らせる}
+      - 聞き: 重要文化財の手紙が、ねねのお寺に残ってるのか。大事にされてきたんだろうね。
+      - 語り: 丈夫に育つよう、いったん形だけ捨てて、家臣に拾わせる習わしにしたので、名は「ひろい」にした、と書かれています。
+        card: {head: 子の名は「ひろい」, body: 形だけ捨てて拾わせる習わし}
+      - 語り: 「お」の字はつけず、「ひろい、ひろい」と呼ぶように、とも。最後は、すぐに帰るので安心するように、と結ばれています。
+        background: {image: paintings/mitsunari_kyoto_map_1889.jpg, credit: "《京都名所の絵地図》1889年（近代の絵図）"}
+      - 聞き: 遠い名護屋から、妻に、安心してって書き送ったのか。
+        tone: しみじみ
+      - 語り: 秀吉は、このあと、この子を「おひろい」と呼んでかわいがったと、大阪城天守閣は解説します。「お」をつけるな、と書いた本人が、です。
+        background: {image: paintings/hidenaga_jurakudai_mitsui.jpg, credit: "《聚楽第図》（17世紀中頃）"}
+        card: {head: 「おひろい」, body: 自分で「お」をつけて呼んだ、と解説される}
+      - 聞き: 自分で決めたルールを、すぐ破っちゃってるじゃん。親ばかだね。
+        tone: 笑い
+      - 語り: 慶長3年、1598年の3月15日。秀吉は、京都の醍醐寺で、花見の宴を開きます。
+        year: 1598
+        background: {image: paintings/nene_rakuchu_funaki_1.jpg, credit: "《洛中洛外図屏風 舟木本》右隻（17世紀初め）"}
+        portrait: {image: paintings/nene_daigo_hanami.jpg, caption: "醍醐花見図屏風の部分（国立歴史民俗博物館蔵、1598年ごろ）", age: false}
+        card: {head: 慶長3年3月15日, body: 醍醐の花見。参加は約1,300人}
+        figure: {type: stats, title: 醍醐の花見, items: [[参加した人, "約1,300人", 女房や女中の衆が中心], [桜の木, 約700本, 醍醐山の山腹まで], [男の客, 前田利家だけ, 秀吉と秀頼のほかに]]}
+      - 語り: 参加したのは約1,300人。女房や女中の衆が中心で、男の客は、秀吉と秀頼のほかには、前田利家だけでした。桜は、約700本が植えられたとされます。
+      - 聞き: ほとんど女性の花見なんて、豪華な女子会じゃん。あーしも行ってみたいけど、男の人は、前田利家だけか。
+        background: {image: paintings/nene_rakuchu_funaki_2.jpg, credit: "《洛中洛外図屏風 舟木本》左隻（17世紀初め）"}
+        figure: null
+      - 語り: 秀吉は、下見のために、何度も醍醐寺へ通い、前田玄以を責任者に任じました。会場には、八番までの茶屋が設けられ、湯殿のある茶屋もあった、といいます。
+        background: {image: paintings/nene_kyoto_map_1696.jpg, credit: "《京都の地図》元禄9年（1696年）"}
+        card: {head: 醍醐の準備, body: 前田玄以が責任者。茶屋は八番まで}
+      - 聞き: 秀吉が、自分で何度も下見に通ったの？ 本気のビッグイベントだったか。
+      - 語り: 輿の順番は、1番目が北政所、2番目が西の丸殿、つまり淀殿でした。
+        figure: null
+        portrait: null
+        background: {image: paintings/nene_kyoto_map_1696.jpg, credit: "《京都の地図》元禄9年（1696年）"}
+        card: {head: 輿の順番, body: 1番目は北政所、2番目は淀殿}
+      - 語り: 3番目は松の丸殿、4番目は三の丸殿、5番目は加賀殿。そのあとに、前田利家の妻のまつが続きました。
+      - 聞き: 最初がねねで、次が淀殿。順番に、序列が出てるよね。
+      - 語り: 宴席で、盃を受ける順を、淀殿と松の丸殿が争い、まつがとりなした、という話が伝わります。けれど、この話は、出典が示されていません。
+        background: {image: paintings/nene_rakuchu_funaki_2.jpg, credit: "《洛中洛外図屏風 舟木本》左隻（17世紀初め）"}
+        card: {head: 盃の争い, body: 伝わる話。出典が示されていない}
+      - 聞き: 女同士の争いにしたくなるけど、出典が無いなら、そのまま信じちゃだめだよね。
+      - 語り: この花見の5か月後、慶長3年8月18日。秀吉が、伏見城で亡くなります。
+        detail: {box: [0.0, 0.0, 0.34, 1.0], label: 伏見城を描いた絵の部分（後世の想像図）}
+        year: 1598
+        background: {image: paintings/nene_fushimi_earthquake_yoshitoshi.jpg, credit: "月岡芳年《伏見大地震桃山御殿図》1885年（国立国会図書館蔵。伏見城を描いた後世の絵）"}
+        card: {head: 慶長3年8月18日, body: 秀吉が伏見城で死去}
+        hook: true
+      - 聞き: ねねは、そのあと、どうしたの？
+        hook: true
+
+  # ---------------------------------------------------------------- 6 秀吉の死と三成
+  - title: 1598年 秀吉の死のあと、三成・七将襲撃・関ヶ原
+    background: {image: paintings/nene_kyoto_map_1696.jpg, credit: "《京都の地図》元禄9年（1696年）"}
+    year: 1598
+    lines:
+      - 語り: 秀吉が亡くなったあと、ねねは、秀頼の後見にあたる淀殿と連携しつつ、夫の供養を担った、という整理です。
+        card: {head: 秀吉の死のあと, body: 淀殿と連携し、夫の供養を担う}
+      - 聞き: 三成と仲が悪かった、っていうのも、よく聞くけど。
+        tone: 疑問
+      - 語り: 三成と不仲だった、という見方は、通説として語られてきました。ところが、ねねと三成を結ぶ材料が、いくつも指摘されています。
+        portrait: {image: paintings/ieyasu_ishida_mitsunari_portrait.jpg, caption: "石田三成の肖像（18〜19世紀ごろ）", age: false}
+        background: {image: paintings/nene_rakuchu_funaki_2.jpg, credit: "《洛中洛外図屏風 舟木本》左隻（17世紀初め）"}
+        card: {head: 三成との不仲, body: 通説。結ぶ材料も指摘される}
+      - 聞き: 結ぶ材料って、たとえば？
+        tone: 疑問
+      - 語り: 白川亨が挙げるのは、ねねが三成の娘の辰姫を養女にしたこと、側近の東殿が大谷吉継の母だったこと、小西行長の母が侍女だったことです。
+        portrait: null
+        background: {image: paintings/mitsunari_kyoto_map_1889.jpg, credit: "《京都名所の絵地図》1889年（近代の絵図）"}
+        card: {head: 白川亨の指摘, body: 辰姫・東殿・行長の母がそば近くにいた}
+        figure: {type: people, title: ねねと結ぶ人たち（白川亨の指摘）, nodes: [[高台院ねね, 北政所], [辰姫, 三成の娘], [東殿, 大谷吉継の母], [小西行長の母, 侍女]], edges: [[高台院ねね, 辰姫, 養女], [高台院ねね, 東殿, 側近], [高台院ねね, 小西行長の母, 侍女]]}
+      - 聞き: それって、三成と近い人たちが、そばにいたってこと？
+      - 語り: 慶長4年、1599年の閏3月3日、前田利家が亡くなった夜、武将たちが三成を襲おうとした、と伝わります。前の石田三成の回で見た、七将襲撃事件です。
+        year: 1599
+        figure: null
+        background: {image: paintings/mitsunari_kyoto_map_1889.jpg, credit: "《京都名所の絵地図》1889年（近代の絵図）"}
+        card: {head: 慶長4年閏3月3日, body: 七将襲撃事件（前の回で見た）}
+      - 語り: このとき、家康は、北政所の仲裁を受けたとされます。『言経卿記』にある記述です。
+        card: {head: 北政所の仲裁, body: 家康が仲裁を受けたとされる}
+      - 聞き: 仲裁って、誰と誰のあいだに入ったの？
+        tone: 疑問
+      - 語り: もちろん、辰姫などの指摘は白川亨の見方で、決まった結論ではありません。それでも、不仲だったと言い切れる材料は、今回の調べでは見つかりませんでした。
+        background: {image: paintings/nene_rakuchu_funaki_1.jpg, credit: "《洛中洛外図屏風 舟木本》右隻（17世紀初め）"}
+        card: {head: 不仲か、結ぶか, body: 決着はついていない}
+      - 聞き: 不仲だったと言い切れる材料は、見つからなかったのか。
+      - 語り: その年の9月、ねねは大坂城を出て、京都の新城へ移ります。孝蔵主らも同行しました。『義演准后日記』や『言経卿記』に記されています。
+        year: 1599
+        background: {image: paintings/nene_osaka_castle_summer_screen_detail.jpg, credit: "《大坂夏の陣図屏風》大坂城の部分（江戸時代）"}
+        card: {head: 慶長4年9月, body: 大坂城を出て京都の新城へ移る}
+      - 聞き: 大坂城を出たってことは、秀頼や淀殿とは、別々に暮らし始めたの？
+        tone: 疑問
+      - 語り: 大坂城には、淀殿と秀頼が残りました。その翌年、天下を二つに割る戦いが起きます。
+        background: {image: paintings/sekigahara_osaka_castle_trim.jpg, credit: "《大坂夏の陣図屏風》大坂城天守の部分（17世紀前半）"}
+      - 聞き: 関ヶ原だ。そのとき、ねねは、どっちの味方だったの？
+
+      - 語り: 慶長5年、1600年の9月15日、関ヶ原の戦いです。通説では、ねねは、淀殿との対立から、家康の東軍についたと語られます。
+        background: {image: paintings/nene_sekigahara_screen_gifu.jpg, credit: "《関ヶ原合戦図屏風》（江戸後期）"}
+        year: 1600
+        card: {head: 慶長5年9月15日, body: 通説では、ねねは東軍についたとされる}
+        short: s5
+      - 聞き: ねねが東軍、淀殿が西軍。女の戦い、みたいに語られてるよね。
+        short: s5
+      - 語り: その根拠に挙げられるのが、甥の小早川秀秋です。ねねの兄、木下家定の子で、関ヶ原で西軍を裏切りました。ねねが背中を押した、という筋書きで語られます。
+        background: {image: paintings/nene_rakuchu_funaki_2.jpg, credit: "《洛中洛外図屏風 舟木本》左隻（17世紀初め）"}
+        portrait: {image: paintings/sekigahara_kobayakawa_hideaki_portrait_trim.jpg, caption: "小早川秀秋の肖像（高台寺蔵、17世紀前半）", age: false}
+        card: {head: 通説の根拠, body: 甥の秀秋が西軍を裏切った}
+        short: s5
+      - 聞き: 甥が裏切ったから、ねねも東軍、という流れか。でも、それはねねの動きの証拠なの？
+        tone: 疑問
+      - 語り: 秀秋の動きから、ねねの立場を推し量った話で、ねね自身の行動を示す史料ではありません。
+        card: {head: 根拠は秀秋の動き, body: ねね自身の行動の史料ではない}
+        short: s5
+      - 語り: 大阪城天守閣の研究では、別の動きが指摘されています。ねねは淀殿と連携し、大津城の戦いの講和や、戦後処理に動いた、というのです。
+        portrait: null
+        background: {image: paintings/mitsunari_otsu_hiroshige_rice_carts.jpg, credit: "歌川広重《東海道五十三次 大津》1833〜34年ごろ"}
+        card: {head: 跡部信の見方, body: 大津城の講和や戦後処理に動いた}
+      - 聞き: 東軍か西軍かじゃなくて、戦いを止める側で動いたってこと？
+        tone: 疑問
+      - 語り: その交渉役を務めたのが、孝蔵主とされます。孝蔵主は、のちに家康との折衝役も務めました。
+        background: {image: paintings/nene_rakuchu_funaki_2.jpg, credit: "《洛中洛外図屏風 舟木本》左隻（17世紀初め）"}
+        card: {head: 孝蔵主, body: 大津城の講和の交渉役とされる}
+      - 聞き: 孝蔵主って、ほんとにいろんな場面に出てくるね。ねねの代理みたいな人？
+      - 語り: 関ヶ原の2日後、ねねが、兄の家定に守られて、准后の勧修寺晴子の屋敷に駆け込んだ、といいます。
+        year: 1600
+        background: {image: paintings/mitsunari_kyoto_map_1889.jpg, credit: "《京都名所の絵地図》1889年（近代の絵図）"}
+        card: {head: 関ヶ原の2日後, body: 勧修寺晴子の屋敷に駆け込んだとされる}
+      - 語り: 『言経卿記』には宮中へ逃げ込んだとあり、裸足だったとも『梵舜日記』に書かれていると伝わります。
+      - 聞き: どうして、そんなに急いで駆け込んだんだろう。
+        tone: 疑問
+      - 語り: 白川亨は、こうした材料から、ねねは西軍寄りだった可能性がある、と見ます。もっとも、これも一つの説です。
+        background: {image: paintings/nene_sekigahara_screen_gifu.jpg, credit: "《関ヶ原合戦図屏風》（江戸後期）"}
+        card: {head: 白川亨の見方, body: 西軍寄りだった可能性（一つの説）}
+      - 語り: 整理すると、東軍についたという通説の根拠は、秀秋の動きから推し量った話でした。講和に動いた、西軍寄りだった、という見方が研究で出ていますが、どれも、決め手はありません。
+        card: {head: 通説と研究, body: ねねの立場はまだ決まっていない}
+      - 聞き: 東軍か西軍かで分けるのは、むずかしいってこと？
+      - 語り: 戦いは、家康の勝ちで終わります。ねねは、このあと、秀吉の供養に生きることになります。
+        background: {image: paintings/nene_rakuchu_funaki_2.jpg, credit: "《洛中洛外図屏風 舟木本》左隻（17世紀初め）"}
+        hook: true
+      - 聞き: 供養って、どこで、どんなふうに？
+        hook: true
+
+  # ---------------------------------------------------------------- 8a 高台院と高台寺
+  - title: 1603年 高台院と高台寺、淀殿と秀頼
+    background: {image: paintings/nene_kodaiji_autumn_ndl_trim.jpg, credit: "長谷川貞信《都名所之内 高台寺秋景》（江戸後期〜幕末。国立国会図書館蔵、色票などを切り抜いた版）"}
+    year: 1603
+    lines:
+      - 語り: 慶長8年、1603年。ねねは、秀頼と千姫の婚儀を見届けて、髪をおろした、と見られています。後陽成天皇から、「高台院」の号を受けました。
+        portrait: {image: paintings/nene_portrait_ectype_bust.jpg, caption: "高台院（ねね）の肖像（高台寺本の1910年の模写）", age: false}
+        card: {head: 1603年（慶長8年）, body: 出家して「高台院」の号を受ける}
+      - 聞き: 天皇から号をもらうなんて、ふつうの出家じゃないよね。
+      - 語り: 慶長9年には、家康が、養老料として約1万6千石を安堵した、といいます。豊臣の家が残るなかで、徳川が、高台院の暮らしを支えていた、という形です。
+        year: 1604
+        background: {image: paintings/nene_kyoto_map_1696.jpg, credit: "《京都の地図》元禄9年（1696年）"}
+        card: {head: 1604年（慶長9年）, body: 養老料として約1万6千石を安堵とされる}
+      - 聞き: 1万石以上が大名だから、ちゃんと大名並みの領地だね。
+      - 語り: 慶長10年、1605年、京都の東山で、秀吉の菩提を弔う寺が整えられ、翌年に完成します。高台寺です。家康が、建立を支援しました。
+        year: 1605
+        portrait: null
+        background: {image: paintings/nene_hokoji_daibutsu_okyo.jpg, credit: "円山応挙《京大仏図》1796年以前（方広寺の大仏殿）"}
+        card: {head: 1605年（慶長10年）, body: 高台寺の寺名を改める。家康が支援}
+        figure: {type: stats, title: 高台寺ができるまで, items: [[高台院の号, 慶長8年, 後陽成天皇から], [寺名を高台寺に, 慶長10年, 家康が建立を支援], [完成, 慶長11年, 開山は弓箴善彊]]}
+      - 聞き: 秀吉の奥さんの寺なのに、家康が支えたの？ 意外な組み合わせ。
+      - 語り: 境内の霊屋には、秀吉の坐像と、ねねの木像が、現在も安置されています。ねね自身は、自分の木像の約2メートル下に葬られたといわれます。伏見城から移した、と伝わる建物も多い寺です。
+        figure: null
+        background: {image: paintings/nene_kodaiji_autumn_ndl_trim.jpg, credit: "長谷川貞信《都名所之内 高台寺秋景》（江戸後期〜幕末。国立国会図書館蔵、色票などを切り抜いた版）"}
+        card: {head: 高台寺の霊屋, body: 秀吉の坐像とねねの木像を安置}
+      - 聞き: 自分の木像の下に眠るなんて、ちょっと変わってるね。ずっと秀吉のそばにいるつもりだったのかな。
+      - 語り: 寺には、北政所が持っていたと伝わる、蒔絵の調度類があります。32点が、重要文化財です。
+        background: {image: paintings/nene_rakuchu_funaki_1.jpg, credit: "《洛中洛外図屏風 舟木本》右隻（17世紀初め）"}
+        card: {head: 蒔絵調度類, body: 北政所所持と伝わる32点が重文}
+      - 語り: 霊屋の内装の蒔絵は「高台寺蒔絵」と呼ばれ、秀吉に仕えた幸阿弥長安一門の作といわれる蒔絵です。
+      - 聞き: お寺に、ねねの持ち物が残ってるの？ 暮らしぶりが見えそうで、気になる。
+      - 語り: 傘亭と時雨亭は、伏見城から移されたと伝わる茶室です。表門は、加藤清正が伏見城に建てた門が、移されたものといわれます。
+        background: {image: paintings/nene_kyoto_map_1696.jpg, credit: "《京都の地図》元禄9年（1696年）"}
+        card: {head: 傘亭・時雨亭・表門, body: 伏見城から移したと伝わる}
+      - 聞き: 子飼いの清正が建てた門が、お寺の入口になってるのか。
+      - 語り: 梵鐘は慶長11年の銘で、兄の木下家定の寄進と伝わるものです。開山堂の天井には、狩野山楽が描いた龍図が残っています。
+        background: {image: paintings/nene_kodaiji_autumn_ndl_trim.jpg, credit: "長谷川貞信《都名所之内 高台寺秋景》（江戸後期〜幕末。国立国会図書館蔵、色票などを切り抜いた版）"}
+        card: {head: 梵鐘と開山堂, body: 梵鐘は家定寄進と伝わる。龍図は狩野山楽}
+      - 聞き: お兄さんの家定、ここにも名前が出てきた。
+      - 語り: 高台寺のふもとの圓徳院は、伏見城の化粧御殿を移した、ねねの居所の跡です。ねねはここで、没するまでの19年を過ごした、と圓徳院は紹介しています。
+        year: 1605
+        background: {image: paintings/nene_kyoto_map_1696.jpg, credit: "《京都の地図》元禄9年（1696年）"}
+        card: {head: 1605年 圓徳院, body: 化粧御殿。ねねが19年を過ごしたと紹介}
+      - 聞き: お寺のすぐそばで、秀吉の供養をしながら暮らしてたのか。
+      - 語り: 慶長13年、1608年の3月3日。天然痘にかかった秀頼について、ねねは、治療にあたった曲直瀬道三に容態を問い合わせています。
+        year: 1608
+        background: {image: paintings/sekigahara_osaka_castle_trim.jpg, credit: "《大坂夏の陣図屏風》大坂城天守の部分（17世紀前半）"}
+        portrait: null
+        card: {head: 1608年3月3日, body: 秀頼の容態を道三（二代目か）に問う}
+      - 語り: 初代の道三は1594年に亡くなっているので、二代目の可能性があります。
+      - 聞き: 同じ道三という名でも、代が違えば、別の人なのか。
+      - 語り: 淀殿と対立していた、という見方もありました。しかし、田端泰子や大阪城天守閣の研究者は、協調して連携していた関係だったと指摘します。
+        background: {image: paintings/nene_rakuchu_funaki_1.jpg, credit: "《洛中洛外図屏風 舟木本》右隻（17世紀初め）"}
+        portrait: {image: paintings/oichi_chacha_yodo_portrait.jpg, caption: "淀殿（茶々）の肖像（江戸時代）", age: false}
+        card: {head: 淀殿との関係, body: 対立説と、協調・連携説}
+      - 聞き: ねねは、秀頼のことを、どう思ってたんだろう。
+        portrait: null
+      - 語り: しかし、その豊臣の家に、やがて、大きな戦いが迫ります。
+        hook: true
+      - 聞き: 大坂の陣、だよね。そのとき、ねねは、どこにいたの？
+        hook: true
+
+  # ---------------------------------------------------------------- 8b 大坂の陣と最期
+  - title: 1615年 大坂の陣と、高台院の最期
+    background: {image: paintings/nene_kodaiji_autumn_ndl_trim.jpg, credit: "長谷川貞信《都名所之内 高台寺秋景》（江戸後期〜幕末。国立国会図書館蔵、色票などを切り抜いた版）"}
+    year: 1615
+    lines:
+      - 語り: 孝蔵主は、大坂の陣の直前の慶長19年に、駿府へ赴きました。のちに、秀忠から屋敷を与えられます。
+        year: 1614
+        background: {image: paintings/nene_kyoto_map_1696.jpg, credit: "《京都の地図》元禄9年（1696年）"}
+        card: {head: 1614年 孝蔵主, body: 駿府へ赴き、のち江戸に屋敷を与えられる}
+      - 聞き: ねねの側近だった人が、徳川にも取り立てられるの？ 意外な流れ。
+        tone: 疑問
+      - 語り: 豊臣家は、慶長19年から翌年にかけての大坂の陣で、滅びます。このとき、幕府は、高台院を大坂へ行かせるな、という方針でした。
+        year: 1614
+        background: {image: paintings/ieyasu_osaka_haichi_map.jpg, credit: "《大坂冬夏の陣配置図》（江戸時代）"}
+        card: {head: 1614年 大坂の陣, body: 幕府は高台院を大坂へ行かせない方針}
+      - 語り: 甥の木下利房が、護衛と監視を兼ねて、つきます。『寛政重修諸家譜』に書かれています。
+        card: {head: 木下利房, body: 護衛と監視を兼ねてつく}
+      - 聞き: 護衛と監視って、どういうこと？
+        tone: 疑問
+      - 語り: 元和元年、1615年。大坂城が落ち、豊臣家は滅びます。木下利房は、高台院を足止めした功で、足守藩主に復帰した、という説明です。
+        year: 1615
+        background: {image: paintings/nene_osaka_castle_summer_screen_detail.jpg, credit: "《大坂夏の陣図屏風》大坂城の部分（江戸時代）"}
+        card: {head: 1615年（元和元年）, body: 豊臣家が滅亡。利房は足守藩主に}
+      - 聞き: 足止めした功績で出世、なんて、ねねの立場からすると、複雑だよね。
+      - 語り: 大坂の陣のあと、家康は豊国社の廟を破却した、と白川亨は指摘しています。それでも高台院は、徳川秀忠とは親しく、屋敷を訪ねる記録があります。
+        year: 1615
+        background: {image: paintings/mitsunari_kyoto_map_1889.jpg, credit: "《京都名所の絵地図》1889年（近代の絵図）"}
+        card: {head: 1615年 豊国廟, body: 家康が破却した、と白川亨が指摘}
+      - 聞き: 豊臣が滅びたあとも、徳川のトップと親しいなんて、微妙な立場だよね。
+      - 語り: 最晩年には、木下家から利次を養子に迎えました。これを許したのは、家康の死後、秀忠だったとされます。福田千鶴の整理です。
+        background: {image: paintings/nene_kyoto_map_1696.jpg, credit: "《京都の地図》元禄9年（1696年）"}
+        year: 1623
+        card: {head: 1623年 木下利次, body: 養子。家康の死後、秀忠が許したとされる}
+      - 聞き: 最後まで、徳川の許可を取りながらの暮らしだったか。
+      - 語り: 寛永元年、1624年の9月6日。高台院は、京都の屋敷で亡くなりました。墓所は、高台寺です。
+        year: 1624
+        background: {image: paintings/nene_kodaiji_autumn_ndl_trim.jpg, credit: "長谷川貞信《都名所之内 高台寺秋景》（江戸後期〜幕末。国立国会図書館蔵、色票などを切り抜いた版）"}
+        portrait: {image: paintings/nene_portrait_ectype.jpg, caption: "高台院（ねね）の肖像（高台寺本の1910年の模写）", age: false}
+        card: {head: 1624年9月6日, body: 屋敷で死去。墓所は高台寺}
+        hook: true
+      - 聞き: 自分で建てたお寺に眠ってるのか。ねねは、結局、どんな人だったんだろう。
+        hook: true
+
+  # ---------------------------------------------------------------- 9 まとめ
+  - title: まとめ：ねね（高台院）とは何者だったのか
+    background: {image: paintings/nene_kodaiji_autumn_ndl_trim.jpg, credit: "長谷川貞信《都名所之内 高台寺秋景》（江戸後期〜幕末。国立国会図書館蔵、色票などを切り抜いた版）"}
+    portrait: {image: paintings/nene_portrait_ectype.jpg, caption: "高台院（ねね）の肖像（高台寺本の1910年の模写）", age: false}
+    year: 1624
+    lines:
+      - 語り: ねねの像も、層でできていました。1つ目は、同じ時代の記録です。秀吉の自筆の手紙、信長の書状、位記、孝蔵主が出した黒印状。夫を支え、大坂城の奥を取り仕切った人の姿です。
+        card: {head: 1つ目の層, body: 同じ時代の記録（手紙・位記・黒印状）}
+        figure: {type: people, title: ねねの像をつくった層, nodes: [[同じ時代の記録, 手紙・位記・黒印状], [後の書物と研究, 生年・名前・関ヶ原], [広く語られた筋書き, 祝言・不仲]], edges: [], upto: 1}
+      - 聞き: 手紙や書状に出てくるのは、働いてる、ねねだね。
+      - 語り: 2つ目は、後の書物と、研究者の説です。名前は、ねね、おね、ねい。生まれた年は、3つ。結婚の年は、2つ。研究者によって、見方が分かれたままです。
+        background: {image: paintings/nene_rakuchu_funaki_1.jpg, credit: "《洛中洛外図屏風 舟木本》右隻（17世紀初め）"}
+        card: {head: 2つ目の層, body: 後の書物と研究者の説}
+        figure: {type: people, title: ねねの像をつくった層, nodes: [[同じ時代の記録, 手紙・位記・黒印状], [後の書物と研究, 生年・名前・関ヶ原], [広く語られた筋書き, 祝言・不仲]], edges: [], upto: 2}
+      - 聞き: 分からないことが残るのも、記録のうちだよね。
+      - 語り: 3つ目は、広く語られた筋書きです。土間の祝言は昭和の研究までしか遡れず、三成と不仲だったという話も、通説として語られてきました。
+        background: {image: paintings/toshiie_owari_atsuta_zue.jpg, credit: "岡田啓・野口道直《尾張名所図会 熱田大宮全図》1880年（尾張の名所図）"}
+        card: {head: 3つ目の層, body: 広く語られた筋書き（祝言・不仲）}
+        figure: {type: people, title: ねねの像をつくった層, nodes: [[同じ時代の記録, 手紙・位記・黒印状], [後の書物と研究, 生年・名前・関ヶ原], [広く語られた筋書き, 祝言・不仲]], edges: [], upto: 3}
+      - 語り: 同じ「ねね」の話でも、手紙の宛名は記録、長屋の祝言は後の話。置き場所を分けると、どこまでが確かか、見えてきます。
+      - 聞き: 確かな話と、後から付いた話を、置き場所で分けるのか。
+      - 語り: 冒頭の問いに戻ります。生まれた年は、福田千鶴が、画像の賛に「春秋七十有六」とあることから、天文18年、1549年が正しいと見ています。黒田基樹も同意です。
+        figure: null
+        background: {image: paintings/nene_kodaiji_autumn_ndl_trim.jpg, credit: "長谷川貞信《都名所之内 高台寺秋景》（江戸後期〜幕末。国立国会図書館蔵、色票などを切り抜いた版）"}
+        card: {head: 冒頭の問い, body: 福田千鶴・黒田基樹は天文18年説}
+      - 聞き: 福田さんたちは、1549年と見てるんだね。
+      - 語り: 名前は、割れたままです。福田千鶴は、諱はねい、愛称がねね、と見ます。黒田基樹は、当時の史料に「ねね」が出ることから、寧々が妥当という立場です。
+        background: {image: paintings/nene_rakuchu_funaki_2.jpg, credit: "《洛中洛外図屏風 舟木本》左隻（17世紀初め）"}
+        card: {head: 名前, body: ねいか、ねねか。研究者で割れる}
+      - 語り: 名前の論争を整理します。桑田忠親は「おね」説、角田文衞は「ねね」説の側から反論しました。
+        card: {head: 名前の論争, body: 桑田忠親・角田文衞・堀新}
+      - 語り: 堀新は、秀吉自筆の『掟』にある「お祢ゝ」を根拠に、「ねね」説を補います。
+      - 聞き: 桑田さんと角田さんで、意見が正反対なの？
+      - 語り: 同じ秀吉の自筆でも、手紙の宛名は「おね」、『掟』には「お祢ゝ」。名前の論争は、今も続いたままです。
+        background: {image: paintings/nene_rakuchu_funaki_1.jpg, credit: "《洛中洛外図屏風 舟木本》右隻（17世紀初め）"}
+        card: {head: 同じ自筆でも, body: 手紙は「おね」、『掟』は「お祢ゝ」}
+      - 聞き: 生まれた年は有力な説が出たけど、名前は、まだ割れたままなのか。
+      - 語り: 豊臣家は、大坂の陣で滅びました。ねねは、その最期を、大坂の外から見ることになりました。止められたかどうかは、史料から言えません。
+        background: {image: paintings/sekigahara_osaka_castle_trim.jpg, credit: "《大坂夏の陣図屏風》大坂城天守の部分（17世紀前半）"}
+        card: {head: 豊臣家の滅亡, body: ねねは大坂の外にいた。止められたかは不明}
+      - 聞き: 止められたかどうかは言えない、か。でも、見てるだけだったのは、つらかっただろうな。
+      - 語り: ねねの側近だった孝蔵主は、一周忌が明けた寛永2年に、河内に200石を与えられました。その翌年に亡くなっています。
+        year: 1625
+        background: {image: paintings/mitsunari_kyoto_map_1889.jpg, credit: "《京都名所の絵地図》1889年（近代の絵図）"}
+        card: {head: 孝蔵主のその後, body: 寛永2年に河内200石。翌年に死去}
+      - 聞き: ねねの周りの人たちは、そのあと、どうなったんだろう。
+      - 語り: 功績は、位記や黒印状から言えるかぎりでは、朝廷との交渉と、大名の妻子の監督を担い、豊臣の家を奥から支えたことです。
+        background: {image: paintings/nene_rakuchu_funaki_2.jpg, credit: "《洛中洛外図屏風 舟木本》左隻（17世紀初め）"}
+        card: {head: 言える功績, body: 朝廷との交渉。大名の妻子の監督}
+      - 聞き: 派手な戦の手柄じゃなくて、組織を回す、地味だけど大事な仕事だね。
+      - 語り: 後の時代に残したものは、高台寺です。秀吉と自分を祀る霊屋は、現在も、京都の東山にあります。
+        background: {image: paintings/nene_kodaiji_autumn_ndl_trim.jpg, credit: "長谷川貞信《都名所之内 高台寺秋景》（江戸後期〜幕末。国立国会図書館蔵、色票などを切り抜いた版）"}
+        card: {head: 高台寺, body: 秀吉とねねを祀る霊屋が残る}
+      - 聞き: 自分で建てたお寺が今も残ってるのは、いちばんの形見かも。
+      - 語り: 人柄が見える場面を、2つ挙げます。秀吉は、名護屋から、安心するように、とねねに書き送りました。フロイスは、頼めば何でも解決できる、と書きました。どちらも、同じ時代の人が見た姿です。
+        background: {image: paintings/nene_kodaiji_autumn_ndl_trim.jpg, credit: "長谷川貞信《都名所之内 高台寺秋景》（江戸後期〜幕末。国立国会図書館蔵、色票などを切り抜いた版）"}
+      - 聞き: あーしが言い直すなら、ねねは、天下人の家を、表じゃなくて奥から回した人。でも、その姿を決めつけるのは、まだ早いのかも。
+        tone: しみじみ
+      - 語り: 今日の地層は、ここまでです。
+        background: {image: paintings/nene_kodaiji_autumn_ndl_trim.jpg, credit: "長谷川貞信《都名所之内 高台寺秋景》（江戸後期〜幕末。国立国会図書館蔵、色票などを切り抜いた版）"}
+      - 聞き: 次回は、レオナルド・ダ・ヴィンチ。万能の天才って言われるけど、その像も、どこまでが記録なのかな？
+        portrait: {image: paintings/davinci_monalisa.jpg, caption: "レオナルド・ダ・ヴィンチ《モナ・リザ》（1503〜06年ごろ）", age: false}
+        background: {image: paintings/davinci_lastsupper.jpg, credit: "レオナルド・ダ・ヴィンチ《最後の晩餐》1495〜98年ごろ"}
+        card: {head: 次回, body: レオナルド・ダ・ヴィンチ}
+        tone: 疑問
+      - 語り: 知っている通説があれば、コメントで教えてください。
+      - 二人: また一緒に、掘りましょう！
+        tone: 明るい
