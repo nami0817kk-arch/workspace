@@ -1,0 +1,561 @@
+# 足利尊氏（A作品・10/25 19時公開予定）。型：掘り下げ型（生まれから順・節ごとに1つの山場・最後は「まとめ：足利尊氏とは何者だったのか」）
+# 冒頭の一点：幕府軍の大将・高氏が、1333年4月に丹波の篠村で旗を翻し、ひと月足らずで鎌倉幕府が滅ぶ。
+#   名は「高氏」＝北条高時の一字（足利氏の系図の付記）→ 1333年8月5日に後醍醐の「尊治」の一字を賜り「尊氏」（『公卿補任』。『太平記』は2年後と書く＝割れる）。
+#   まとめで「高氏として約14年（1319元服〜1333）・尊氏として約25年（1333〜1358）」と自分で数えて冒頭に戻る。
+# 事実の出どころは dev/output/rekishi-chiso/research/takauji_facts_a.md（前半）・takauji_facts_b.md（後半と尊氏像）。素材は research/takauji_assets.md。
+#   どちらも Wikipedia 中心の調べで、一次史料の原文には当たっていない。区分（確実／有力／後世の編纂物／現代の見方／未確認）は facts の通り。
+# 決まり：①日付は当時の暦（旧暦）のまま。年は西暦で言う。冒頭で「いまの暦とは1〜2か月ずれる」と一度断る。
+#   ②年齢は数え。生まれた日・場所は分からない（足利・丹波・鎌倉の三説）。肖像の「この時○歳」は出さない（age: false）。
+#   ③使わない話（入れない）：生年月日7月27日／兵数（『太平記』の数字。湊川の騎数・時間・突撃の回数も）／赤橋守時の戦死日／鎌倉で自刃した人数／
+#     尊氏が師直・師泰の殺害を指示した話（「関わりは分からない」まで）／直義の毒殺（出どころは『太平記』だけと断る）／七生報国／護良親王の最期の細部／
+#     北条時行の肖像（Commons に無い。別人の肖像が混じっていた）／「等持院事件1934年」（誤り。木像の首は1863年、1934年は中島久万吉の辞任）。
+#   ④後世の話（出典名を言う）：人質の登子と千寿王（『太平記』）・綸旨を受けた経緯（『梅松論』『太平記』、使者も場所も書ごとに違う）・出家しかけた話（『梅松論』『太平記』）・
+#     正成の最期と進言（『太平記』）・八朔の贈り物と心の強さ・慈悲深さ（『梅松論』。足利方の本で夢窓疎石の評＝身内の称賛）・天龍寺の夢の話。
+#   ⑤割れていれば割れていると言う：挙兵の日（27日／29日）・生まれの場所・改名の時期・幕府の始まり（1336か1338）・騎馬武者像の人物・直義の死因・「躁鬱」。
+#   ⑥人物のセリフは入れない。⑦背景に人物の肖像・拡大絵を使わない。尊氏の確かな同時代の肖像は無い。伝・騎馬武者像は「像の人物は定まっていない」と断る。
+#   ⑧現代の写真は「現在の〜」とその行で断る。江戸の絵・近代の絵は想像図と断る。
+#   読みの注意：足利尊氏＝あしかがたかうじ／高氏＝たかうじ／直義＝ただよし／北条高時＝ほうじょうたかとき／赤橋登子＝あかはしとうし／赤橋守時＝あかはしもりとき／後醍醐＝ごだいご／尊治＝たかはる／
+#     篠村八幡宮＝しのむらはちまんぐう／六波羅探題＝ろくはらたんだい／新田義貞＝にったよしさだ／千寿王＝せんじゅおう／義詮＝よしあきら／北条時行＝ほうじょうときゆき／
+#     中先代の乱＝なかせんだいのらん／箱根・竹ノ下＝はこね・たけのした／湊川＝みなとがわ／楠木正成＝くすのきまさしげ／光厳＝こうごん／光明＝こうみょう／建武式目＝けんむしもく／
+#     観応の擾乱＝かんのうのじょうらん／高師直＝こうのもろなお／高師泰＝こうのもろやす／直冬＝ただふゆ／夢窓疎石＝むそうそせき／梅松論＝ばいしょうろん／清水寺＝きよみずでら／
+#     願文＝がんもん／綸旨＝りんじ／院宣＝いんぜん／鞆の浦＝とものうら／多々良浜＝たたらはま／公卿補任＝くぎょうぶにん／騎馬武者像＝きばむしゃぞう／集古十種＝しゅうこじっしゅ／
+#     南北朝正閏問題＝なんぼくちょうせいじゅんもんだい／中島久万吉＝なかじまくまきち／等持院＝とうじいん／佐藤進一＝さとうしんいち／呉座勇一＝ござゆういち／東勝寺＝とうしょうじ／
+#     打出浜＝うちでのはま／薩埵峠＝さったとうげ／鑁阿寺＝ばんなじ／笠置山＝かさぎやま／船上山＝せんじょうさん／名越高家＝なごえたかいえ／是円・真恵＝ぜえん・しんえ／八朔＝はっさく
+title: 足利尊氏｜倒した北条の一字を捨て、後醍醐の一字を賜った男
+series: ""
+playlists: [日本史を掘る（聞き流し）, 戦国時代を掘る]
+shorts_playlists: [日本史ショート]
+tags: [足利尊氏, 足利高氏, 足利直義, 高師直, 後醍醐天皇, 楠木正成, 新田義貞, 鎌倉幕府, 建武の新政, 中先代の乱, 湊川の戦い, 建武式目, 室町幕府, 観応の擾乱, 騎馬武者像, 南北朝時代, 日本史, 歴史, 歴史解説, 歴史の地層]
+en:
+  title: "Ashikaga Takauji: The Man Who Dropped a Character from the Hojo and Took One from the Emperor"
+  description: |-
+    In the fourth month of 1333 Ashikaga Takauji, then named Takauji with the character "taka" taken from the Hojo regent Takatoki, was sent to Kyoto as a general of the shogunate. At Shinomura in Tanba he turned against it, and the Kamakura shogunate fell in less than a month. In the eighth month he was granted a character from Emperor Go-Daigo's name and became "Takauji" written with the new character "taka" (honor) in place of the old one. The Kugyo Bunin records the change in 1333, while the Taiheiki places it two years later.
+    This video digs into his life from his birth in 1305 to his death in 1358: the prayer text he wrote at Shinomura Hachimangu, the fall of the Rokuhara office and Kamakura, the Nakasendai Rebellion and his departure for the east without imperial permission, the Battle of Minatogawa, the Kenmu Shikimoku, and the Kanno Disturbance with his brother Tadayoshi. It also separates what documents show from what the Baishoron and Taiheiki tell, and traces how his image was made: the equestrian portrait whose subject is now undecided, the label "traitor", and the diagnosis of manic depression that appeared only in the 1960s.
+    We say plainly where sources disagree. Dates are in the Japanese calendar of the time.
+    A Japanese history video to listen to while you work (Japanese audio).
+  chapters:
+    - "1333: The Banner at Shinomura and the Character from the Hojo"
+    - "1305: Born to the Ashikaga, Married into the Hojo World"
+    - "1333: The Prayer at Shinomura and the Fall of Kamakura"
+    - "1333: A Character from the Emperor and the Nakasendai Rebellion"
+    - "1336: Flight to Kyushu, Minatogawa and the Kenmu Shikimoku"
+    - "1338: The Muromachi Shogunate, the Kanno Disturbance and His Death"
+    - "1920: The Equestrian Portrait, the Traitor and the Manic Depression"
+    - "Summary: Who Was Ashikaga Takauji?"
+
+texture: true
+recap: true
+
+timeline:
+  start: 1300
+  end: 1360
+  events: [[1305, 誕生], [1333, 幕府滅亡], [1336, 湊川], [1351, 観応], [1358, 没]]
+
+terms:
+  後醍醐天皇: 鎌倉幕府を倒そうとした天皇。のちに吉野へ逃れて南朝を開いた
+  六波羅探題: 鎌倉幕府が京都に置いた役所。西国を見張る拠点
+  綸旨: 天皇の命令を、側近が文書にして伝えるもの
+  院宣: 上皇の命令を伝える文書
+  中先代: 北条（先代）と足利のあいだに、一時だけ鎌倉を取った北条時行
+  願文: 神仏に願いごとを書いて納める文書
+  征夷大将軍: 武士のトップが任じられる官職。朝廷が任命する
+  執事: 足利将軍家の政務や家の仕事を取り仕切る役
+  施政方針: 政治をどう進めるかの方針。法律とは違う
+  南朝: 後醍醐天皇が吉野に開いた朝廷。京の朝廷は北朝
+
+shorts:
+  s1:
+    title: "尊氏という名／元の名は？"
+    yt_title: "足利尊氏の「尊」の字は誰の名前から？｜元の名「高氏」と北条高時の一字"
+    hook: "「尊氏」の「尊」の字は、／誰の名前から／もらったもの？"
+    tease: "じゃあ、その天皇に尊氏が求めて／断られた地位は、何？"
+    lead: "足利尊氏の名の由来を、官位の記録と軍記の言い分から確かめます。"
+    tags: [足利尊氏, 足利高氏, 後醍醐天皇, 歴史の地層]
+  s2:
+    title: "篠村の願文／本人の筆？"
+    yt_title: "足利尊氏の旗揚げ「篠村八幡宮の願文」は本人の自筆？｜1333年・六波羅探題の陥落まで"
+    hook: "幕府を倒す願いを、／本人が書いた紙が／今も残っている？"
+    tease: "鎌倉を攻め落としたのは、／尊氏本人だった？"
+    lead: "元弘3年の旗揚げを、残る文書と記録の言い分から読み直します。"
+    tags: [篠村八幡宮, 足利高氏, 六波羅探題, 歴史の地層]
+  s3:
+    title: "京を出た日／許しはあった？"
+    yt_title: "足利尊氏は後醍醐天皇の許しなく出陣した？｜中先代の乱と「征東将軍」の順番"
+    hook: "尊氏は、天皇の許しがないまま／京を出て、鎌倉へ向かった？"
+    tease: "出家しかけたという話は、／どの本に書かれている？"
+    lead: "1335年の中先代の乱を、日付を並べて確かめます。"
+    tags: [中先代の乱, 足利尊氏, 北条時行, 歴史の地層]
+  s4:
+    title: "騎馬武者像／誰の絵？"
+    yt_title: "騎馬武者像は足利尊氏ではない？｜高師直説が崩れた理由と、いま分かっていること"
+    hook: "教科書にも載ってきた騎馬武者像は、／本当に足利尊氏？"
+    tease: "戦前の尊氏は、／なぜ「逆賊」と呼ばれた？"
+    lead: "騎馬武者像の人物をめぐる研究を、修理で分かったことから整理します。"
+    tags: [騎馬武者像, 足利尊氏, 高師直, 歴史の地層]
+  s5:
+    title: "清水寺の願文／何を願った？"
+    yt_title: "足利尊氏が清水寺に納めた自筆の願文｜湊川の3か月後に書かれた「この世の幸せは弟に」"
+    hook: "天下を取った直後の尊氏は、／京の寺で／何を祈っていた？"
+    tease: "尊氏と直義の兄弟は、／このあと何で争った？"
+    lead: "1336年の湊川の戦いのあとに書かれた、自筆の願文を読み直します。"
+    tags: [清水寺, 足利尊氏, 足利直義, 歴史の地層]
+
+next:
+  title: 大久保利通
+  series: ""
+  teaser: 維新の三傑の一人、大久保利通。その像は、どう作られてきたのか。
+
+thumbnail:
+  layout: face
+  image: paintings/takauji_horseman_urashimataro.jpg
+  crop: [300, 0, 1500, 1200]
+  name: 足利尊氏
+  contrast: {from: 高氏, to: 尊氏, style: arrow}
+
+sections:
+  # ---------------------------------------------------------------- 1 導入
+  - title: 1333年4月 篠村八幡宮の旗と、「高」から「尊」への一字
+    background: {image: paintings/takauji_godaigo_emaki.jpg, credit: "《太平記絵巻》の部分（江戸時代初めごろの絵巻。当時の絵ではない）"}
+    year: 1333
+    lines:
+      - 語り: 1333年4月、鎌倉幕府の大将として京に入った足利高氏は、西へ向かう途中の丹波の篠村八幡宮で、幕府に背く旗を掲げました。ひと月足らずで、鎌倉幕府は滅びます。
+        portrait: {image: paintings/takauji_horseman_urashimataro.jpg, caption: "騎馬武者像（京都国立博物館蔵。尊氏の像と見られてきたが、人物は定まっていない）", age: false}
+        card: {head: 1333年4月, body: 幕府軍の大将が丹波で旗を掲げる}
+        tone: 重い
+      - 聞き: 幕府の大将が、幕府を裏切ったの？ しかも、ひと月足らずで幕府が滅んじゃうなんて、早すぎない？
+        tone: 驚き
+      - 語り: 足利尊氏です。ところが、このときの名は「尊氏」ではなく「高氏」。「高」の字は、北条氏の当主・北条高時から一字をもらった、と足利氏の系図に付記があります。
+        portrait: null
+        background: {image: paintings/takauji_kamakura_tsurugaoka.jpg, credit: "Ocdp撮影《鶴岡八幡宮》2017年（CC0）。現在の姿"}
+        card: {head: 元の名, body: 高氏。北条高時の一字をもらう}
+        short: s1
+      - 聞き: 倒した相手の名前を、もらってたの？ 自分の名前に、北条の字が入ってたってこと？ じゃあ、「尊」は誰の字なの？
+        short: s1
+      - 語り: 「尊」の字は、時の天皇、後醍醐天皇の名「尊治」から賜ったものです。倒した側の一字を捨て、味方についた側の一字を受け取った名前が、「尊氏」でした。
+        background: {image: paintings/takauji_banna_hondo.jpg, credit: "taketarou撮影《鑁阿寺本堂》2007年（CC BY 2.5）。現在の姿"}
+        figure: {type: stats, title: 名前の一字, items: [[元服から, 高氏, 北条高時の一字], [改名から, 尊氏, 後醍醐の尊治の一字]]}
+        short: s1
+      - 聞き: 名前を替えただけで、立つ側がまるごと入れ替わったみたい。あーしの感覚だと、会社で前の社長の名前を外して、新しい社長の名前を付けたようなものかな。
+        figure: null
+      - 語り: 尊氏には、「逆賊」と呼ばれた時代があります。性格は「躁鬱」とも言われました。
+        background: {image: paintings/takauji_ashikaga_residence_site.jpg, credit: "Masayuki (Yuki) Kawagishi撮影《足利氏館跡（鑁阿寺）》2005年（CC BY 2.0）。現在の姿"}
+        card: {head: 後の尊氏像, body: 逆賊・躁鬱・騎馬武者像}
+      - 語り: 教科書に載ってきた騎馬武者像でさえ、本当に尊氏の絵なのか、決まっていません。
+        portrait: {image: paintings/takauji_horseman_urashimataro.jpg, caption: "騎馬武者像（京都国立博物館蔵。人物は定まっていない）", age: false}
+      - 聞き: 悪者扱いされて、気分屋とも言われて、肖像まで怪しいの？ 何が本当なのか、分からなくなってきたよ。
+        tone: 驚き
+      - 語り: 材料は《三つの層》に分けます。本人の文書や官位の記録、『梅松論』や『太平記』のような後の編纂物、近代以降の評価です。
+        background: {image: paintings/takauji_banna_sanmon.jpg, credit: "taketarou撮影《鑁阿寺山門》2007年（CC BY 2.5）。現在の姿"}
+        card: {head: 三つの層, body: 本人の文書・編纂物・後の評価}
+      - 語り: 日付は、当時の暦のままで言います。いまの暦とは、1〜2か月ずれます。
+      - 聞き: 本人の文書と、後の本と、後の評価か。層を分けて見るのか。じゃあ、まずは生まれから？
+
+  # ---------------------------------------------------------------- 2 生まれ
+  - title: 足利氏の次男に生まれ、北条と結ばれた家
+    background: {image: paintings/takauji_banna_sanmon.jpg, credit: "taketarou撮影《鑁阿寺山門》2007年（CC BY 2.5）。現在の姿"}
+    year: 1305
+    lines:
+      - 語り: 足利尊氏は、1305年、嘉元3年に生まれました。生まれた日は分からず、生まれた場所も、足利、丹波、鎌倉と説が割れています。
+        background: {image: paintings/takauji_banna_hondo.jpg, credit: "taketarou撮影《鑁阿寺本堂》2007年（CC BY 2.5）。現在の姿"}
+        card: {head: 1305年, body: 生まれた日も場所も定まらない}
+      - 聞き: 将軍になる人なのに、生まれた日も場所も、はっきりしないの？ 意外だよ。
+        tone: 疑問
+      - 語り: 足利氏は、清和源氏の名門です。本拠は下野国、いまの栃木県足利市で、氏寺の鑁阿寺が残ります。画面は、現在の鑁阿寺の山門です。
+        background: {image: paintings/takauji_banna_sanmon.jpg, credit: "taketarou撮影《鑁阿寺山門》2007年（CC BY 2.5）。現在の姿"}
+        card: {head: 足利氏, body: 清和源氏の名門。本拠は下野国足利}
+      - 聞き: 源氏の名門なら、鎌倉幕府でも大事にされてたんじゃない？ 将軍って、源氏の役目だよね。
+      - 語り: 幕府を握っていたのは、源氏ではなく、北条氏の本家、得宗家です。足利氏は、その北条氏と、代々、婚姻で結ばれていました。
+        background: {image: paintings/takauji_obusuma_armor_emaki.jpg, credit: "《男衾三郎絵詞》の部分（鎌倉時代）"}
+      - 聞き: 敵対するんじゃなくて、親戚になってたの？ 家どうしの結びつきって、同盟みたいなものかな。
+      - 語り: 父の貞氏の正室も、北条一族の娘です。尊氏の妻も、北条一門の赤橋家の娘、登子でした。
+        background: {image: paintings/takauji_ashikaga_residence_site.jpg, credit: "Masayuki (Yuki) Kawagishi撮影《足利氏館跡（鑁阿寺）》2005年（CC BY 2.0）。現在の姿"}
+        figure: {type: people, title: 足利氏と北条氏の結びつき, nodes: [[足利貞氏, 尊氏の父], [足利高氏, のちの尊氏], [赤橋登子, 北条一門の娘], [赤橋守時, 最後の執権]], edges: [[足利貞氏, 足利高氏, 父子], [足利高氏, 赤橋登子, 夫婦], [赤橋登子, 赤橋守時, 兄妹]]}
+        card: {head: 妻の登子, body: 兄は最後の執権・赤橋守時}
+      - 語り: 登子の兄の赤橋守時は、鎌倉幕府の最後の執権です。
+      - 聞き: 奥さんのお兄さんが、幕府のトップ？ ほとんど身内じゃん。それなのに、どうして背くことになるんだろう。
+        figure: null
+      - 語り: ですから、「北条に冷遇されたから恨んだ」という分かりやすい説明は、そのまま信じられません。厚遇されていたという見方もあり、割れています。
+        background: {image: paintings/takauji_banna_sanmon.jpg, credit: "taketarou撮影《鑁阿寺山門》2007年（CC BY 2.5）。現在の姿"}
+      - 聞き: 冷遇されたから恨んだ、のほうが、お話としては分かりやすいけど。事実は、もっと複雑ってことか。
+      - 語り: 尊氏は次男で、母の違う兄の高義が嫡子でした。高義は1317年に亡くなった、と足利氏の系図にあります。
+        background: {image: paintings/takauji_ashikaga_residence_site.jpg, credit: "Masayuki (Yuki) Kawagishi撮影《足利氏館跡（鑁阿寺）》2005年（CC BY 2.0）。現在の姿"}
+        year: 1317
+        card: {head: 1317年, body: 兄の高義が亡くなる。尊氏は次男}
+      - 聞き: 次男だと、家を継ぐ予定じゃなかったってこと？ あーしが次男なら、長男が元気なうちは目立たないままかも。
+      - 語り: 2年後の1319年、15歳で元服し、北条高時の一字をもらって「高氏」を名乗った、とされます。
+        year: 1319
+        card: {head: 1319年, body: 15歳で元服。北条高時の一字をもらう}
+      - 聞き: お兄さんが亡くなったあとに、次男が前に出てきたの？ 15歳で元服なら、いまなら中学3年生くらいか。
+      - 語り: そして1331年、元弘の乱です。後醍醐天皇が、幕府を倒そうとして、笠置山で兵を挙げました。高氏は、幕府軍に加わり、攻める側にいました。
+        background: {image: paintings/takauji_kasagiyama_panoramio.jpg, credit: "shikabane taro撮影《笠置山》2012年（CC BY 3.0）。現在の姿"}
+        year: 1331
+        card: {head: 1331年, body: 元弘の乱。高氏は幕府軍に加わる}
+      - 聞き: のちに味方になる後醍醐天皇と、最初は戦う側だったの？ 因縁の相手じゃん。
+      - 語り: 笠置山は落ち、後醍醐天皇は、翌1332年3月に隠岐へ流されます。
+        background: {image: paintings/takauji_oki_kokubunji_ato.jpg, credit: "Saigen Jiro撮影《隠岐国分寺・後醍醐天皇行在所跡の碑》2016年（CC0）。現在の姿"}
+        card: {head: 1332年3月, body: 後醍醐天皇が隠岐へ流される}
+      - 語り: 1333年、後醍醐天皇が隠岐を脱出して、船上山で兵を挙げます。幕府は大軍を送り、大将は、名越高家と足利高氏でした。
+        background: {image: paintings/takauji_godaigo_emaki.jpg, credit: "《太平記絵巻》の部分（江戸時代初めごろの絵巻。当時の絵ではない）"}
+        year: 1333
+        card: {head: 1333年, body: 幕府が名越高家と高氏を大将に送る}
+      - 語り: 出発のとき、妻の登子と、幼い千寿王、のちの義詮は、鎌倉に残されました。『太平記』は、人質だった、と伝えます。
+        hook: true
+      - 聞き: 妻と子を鎌倉に置いて、出発したの？ その大将が、このあとどうなるの？
+        tone: 疑問
+        hook: true
+
+  # ---------------------------------------------------------------- 3 篠村から鎌倉の滅亡まで
+  - title: 1333年 篠村八幡宮の願文と、鎌倉幕府の滅亡
+    background: {image: paintings/takauji_godaigo_emaki.jpg, credit: "《太平記絵巻》の部分（江戸時代初めごろの絵巻。当時の絵ではない）"}
+    year: 1333
+    lines:
+      - 語り: 1333年4月、足利高氏は、京から西へ向かう途中の丹波国篠村で、幕府に背きました。その日は、27日とも、29日とも言われます。
+        background: {image: paintings/takauji_ashikaga_residence_site.jpg, credit: "Masayuki (Yuki) Kawagishi撮影《足利氏館跡（鑁阿寺）》2005年（CC BY 2.0）。現在の姿"}
+        figure: {type: map, title: 尊氏の旗揚げと鎌倉, bounds: [134.6, 140.2, 34.6, 36.2], places: [[鎌倉, 139.55, 35.32], [篠村, 135.55, 35.01], [京都, 135.77, 35.01]], route: [鎌倉, 京都, 篠村], note: 京から山陰道を西へ}
+        card: {head: 元弘3年4月, body: 丹波の篠村で背く。27日とも29日とも}
+        short: s2
+      - 聞き: 日にちまで割れてるの？ どうして背いたって分かるの？
+        figure: null
+        tone: 疑問
+      - 語り: 根拠の一つが、篠村八幡宮に残る「足利高氏願文」です。元弘3年4月の日付で、高氏の自筆と考えられています。
+        background: {image: paintings/takauji_banna_hondo.jpg, credit: "taketarou撮影《鑁阿寺本堂》2007年（CC BY 2.5）。現在の姿"}
+        card: {head: 足利高氏願文, body: 篠村八幡宮蔵。幕府打倒を祈る自筆とされる}
+        short: s2
+      - 語り: 幕府を倒し、源氏を再び盛んにしたい、と八幡神に祈る内容です。
+        short: s2
+      - 聞き: 本人が書いた紙が、今も残ってるの？ 本人の字なら、証拠としては強いよね。
+        short: s2
+      - 語り: 一方、後醍醐天皇の綸旨を受けた、という話は、『梅松論』にも『太平記』にも出ます。ところが、使者の名も受け取った場所も、書ごとに違います。
+        background: {image: paintings/takauji_oki_kokubunji_ato.jpg, credit: "Saigen Jiro撮影《隠岐国分寺・後醍醐天皇行在所跡の碑》2016年（CC0）。現在の姿"}
+        card: {head: 綸旨の話, body: 使者も場所も書ごとに違う}
+      - 聞き: 同じ出来事でも、書く人の立場で色が変わるのか。あーしは、足利方の本は足利をかばって、南朝寄りの本は尊氏を悪く書きそうって思っちゃう。
+      - 語り: 5月7日、高氏らの軍が、京の六波羅探題を攻め落とします。六波羅は、幕府が京に置いて、西国を見張る役所でした。
+        background: {image: paintings/takauji_kiyomizu.jpg, credit: "Ganden撮影《清水寺》2013年（CC BY 3.0）。現在の姿"}
+        card: {head: 5月7日, body: 六波羅探題が落ちる}
+        short: s2
+      - 聞き: 鎌倉の本拠じゃなくて、京の出先を落としたの？ 西の見張り役がいなくなったら、幕府は困るよね。
+      - 語り: 同じ頃、関東では、新田義貞が兵を挙げます。尊氏の子の千寿王も、数え4歳で、父の名代として新田軍に加わったと伝わります。
+        background: {image: paintings/takauji_kamakura_tsurugaoka.jpg, credit: "Ocdp撮影《鶴岡八幡宮》2017年（CC0）。現在の姿"}
+        card: {head: 5月8日, body: 新田義貞が挙兵。千寿王も加わったと伝わる}
+      - 語り: 画面は、現在の鶴岡八幡宮です。
+      - 聞き: 4歳の子が、大将の代わり？ お父さんの名前って、そんなに力があったのかな。
+      - 語り: 新田軍は5月18日から鎌倉を攻め、22日、北条高時ら北条一門は、東勝寺で自刃しました。鎌倉幕府は、ここで滅びます。
+        background: {image: paintings/takauji_kamakura_tosho_ji_site.jpg, credit: "Tarourashima撮影《東勝寺跡》2008年。現在の姿"}
+        card: {head: 5月22日, body: 鎌倉が落ち、北条一門が東勝寺で自刃}
+      - 語り: 登子の兄で、最後の執権の赤橋守時も、鎌倉攻めの中で亡くなりました。画面は、現在の東勝寺跡です。
+      - 聞き: 奥さんの実家が、旦那さんの背いた戦いの中で、滅びたの？ 家族が、敵と味方に分かれちゃったのか。
+        tone: しみじみ
+      - 語り: ただ、鎌倉攻めの現場に、尊氏はいません。攻めの主役は、新田義貞です。画面は、突入したと伝わる稲村ヶ崎の、現在の海辺です。
+        background: {image: paintings/takauji_kamakura_inamuragasaki.jpg, credit: "Quercus acuta撮影《稲村ヶ崎》2017年（CC0）。現在の姿"}
+      - 語り: 京にいた尊氏には、このあと、褒美が待っていました。
+        hook: true
+      - 聞き: 褒美？ 何をもらったの？
+        hook: true
+
+  # ---------------------------------------------------------------- 4 尊の字から中先代の乱まで
+  - title: 1333年 「尊」の字を賜り、1335年の中先代の乱
+    background: {image: paintings/takauji_banna_hondo.jpg, credit: "taketarou撮影《鑁阿寺本堂》2007年（CC BY 2.5）。現在の姿"}
+    year: 1333
+    lines:
+      - 語り: 1333年8月5日、高氏は従三位・武蔵守に叙されると同時に、後醍醐天皇の名から一字を賜り、「尊氏」と改めました。
+        portrait: {image: paintings/takauji_godaigo_monkanbo.jpg, caption: "後醍醐天皇御像（文観房弘真筆とされる）", age: false}
+        card: {head: 1333年8月5日, body: 「高氏」を「尊氏」に改める}
+      - 語り: 『公卿補任』という官位の記録に、「高」の字を「尊」に改めた、という趣旨の記事があります。一方『太平記』は、改名を2年後の出来事として書きます。
+        card: {head: 改名の時期, body: 官位の記録は1333年。『太平記』は2年後}
+      - 聞き: 同じ改名なのに、2年もずれるの？ あーし、そこが気になる。どっちを信じたらいいの？
+        tone: 疑問
+      - 語り: 一般には、官位の記録に基づく1333年8月が採られ、『太平記』の記述は誤りとされます。
+      - 語り: こうして尊氏は、建武の新政に加わり、参議にもなりました。
+        portrait: null
+      - 聞き: 天皇のもとで、偉い人になったんだね。参議にもなって、順風満帆じゃないの？
+        background: {image: paintings/takauji_kiyomizu.jpg, credit: "Ganden撮影《清水寺》2013年（CC BY 3.0）。現在の姿"}
+      - 語り: 1335年7月14日、鎌倉で事件が起きます。北条高時の遺児の北条時行が、東国で兵を挙げました。この乱を、中先代の乱と呼びます。
+        background: {image: paintings/takauji_tokiyuki_memorial_stone.jpg, credit: "C2revenge撮影《伝・北条時行供養塔》（CC0）。現在の写真で、時行の肖像は残っていない"}
+        year: 1335
+        card: {head: 1335年7月14日, body: 北条時行が東国で挙兵}
+        short: s3
+      - 語り: 時行の肖像は残っていません。画面は、伝・北条時行供養塔の、現在の写真です。
+      - 聞き: 北条の生き残りが、また出てきたの？ 鎌倉はどうなっちゃったの？
+      - 語り: 時行の軍は、7月下旬に鎌倉へ迫ります。鎌倉にいた尊氏の弟の直義は、鎌倉を離れて退きました。時行が鎌倉に入ったのは、7月25日ごろです。
+        background: {image: paintings/takauji_kamakura_tsurugaoka.jpg, credit: "Ocdp撮影《鶴岡八幡宮》2017年（CC0）。現在の姿"}
+        card: {head: 7月25日ごろ, body: 時行が鎌倉に入る。直義は退く}
+      - 語り: 尊氏は、鎌倉を取り戻すために京を出ようと、後醍醐天皇に、征夷大将軍の任命などを求めました。
+        card: {head: 尊氏の願い, body: 征夷大将軍などの任命を求める}
+        short: s3
+      - 聞き: 将軍の地位がほしかったの？ 天皇は、許したの？
+        short: s3
+      - 語り: 後醍醐天皇は、これを断りました。それでも尊氏は、8月2日、天皇の許しを得ないまま京を出て、東へ向かいます。
+        background: {image: paintings/takauji_ashikaga_residence_site.jpg, credit: "Masayuki (Yuki) Kawagishi撮影《足利氏館跡（鑁阿寺）》2005年（CC BY 2.0）。現在の姿"}
+        card: {head: 8月2日, body: 許しを得ないまま京を出る}
+        short: s3
+      - 語り: 出発のあとで、天皇は尊氏に「征東将軍」の号を与えました。8月9日のことです。
+        short: s3
+      - 聞き: 先に出てしまってから、あとで許されたの？ 順番が逆じゃない？
+      - 語り: 8月19日、尊氏は時行の軍を破り、鎌倉を取り戻します。時行が鎌倉を押さえたのは、20日余りでした。
+        background: {image: paintings/takauji_kamakura_inamuragasaki.jpg, credit: "Quercus acuta撮影《稲村ヶ崎》2017年（CC0）。現在の姿"}
+        card: {head: 8月19日, body: 鎌倉を回復。時行の支配は20日余り}
+      - 聞き: 20日余りで取り返したのか。尊氏が出てきたら、あっという間だったのかな。
+      - 語り: 乱のあと、尊氏は京へ戻らず、鎌倉にとどまりました。『太平記』などは、自分で将軍を名乗り、配下に恩賞を与えたと書きます。
+        background: {image: paintings/takauji_banna_hondo.jpg, credit: "taketarou撮影《鑁阿寺本堂》2007年（CC BY 2.5）。現在の姿"}
+      - 聞き: 天皇の命令を聞かないで、自分で決めて動くなんて、ほとんど独立みたいだよ。
+      - 語り: 11月、朝廷は新田義貞に、尊氏を討たせます。尊氏は朝敵となりました。
+        background: {image: paintings/takauji_godaigo_emaki.jpg, credit: "《太平記絵巻》の部分（江戸時代初めごろの絵巻。当時の絵ではない）"}
+        card: {head: 11月, body: 尊氏追討の命。尊氏は朝敵に}
+      - 語り: 『梅松論』と『太平記』は、このとき尊氏が、朝敵になるのを恥じて出家しようとした、と語ります。
+      - 語り: ただ、物語としての色が強く、同時代の文書では確かめられません。戦線を担ったのは弟の直義で、尊氏は直義の窮地を受けて戦場に戻った、とも書かれます。
+      - 聞き: 出家しかけた人が、そのあと戦場に立つの？ 気持ちの切り替えが、すごいよ。
+      - 語り: 12月、箱根と竹ノ下で、足利軍と新田軍が戦います。竹ノ下では足利方が勝ち、箱根の新田軍も総崩れになりました。
+        background: {image: paintings/takauji_kamakura_tsurugaoka.jpg, credit: "Ocdp撮影《鶴岡八幡宮》2017年（CC0）。現在の姿"}
+        figure: {type: map, title: 箱根と竹ノ下, bounds: [138.4, 139.8, 35.0, 35.6], places: [[鎌倉, 139.55, 35.32], [箱根, 139.02, 35.23], [竹ノ下, 138.98, 35.33]], route: [鎌倉, 箱根], note: 鎌倉の西の山道}
+        card: {head: 12月, body: 箱根・竹ノ下の戦い。足利方が勝つ}
+      - 語り: 勝った尊氏は、そのまま京へ攻め上ります。ところが、京の戦いで、思わぬ負けが待っていました。
+        figure: null
+        hook: true
+      - 聞き: 負けるの？ そこから、どうやって立て直したの？
+        tone: 疑問
+        hook: true
+
+  # ---------------------------------------------------------------- 5 九州落ち・湊川・建武式目
+  - title: 1336年 九州落ち、湊川、清水寺の願文と建武式目
+    background: {image: paintings/takauji_map_gyoki_ninnaji.jpg, credit: "行基図（仁和寺本）の江戸時代の写し、1656年。中世の日本地図の型"}
+    year: 1336
+    lines:
+      - 語り: 1336年1月、尊氏は京の戦いで敗れ、丹波の篠村へ退きます。2月の豊島河原の戦いでも負けて、海路で九州へ落ちました。
+        figure: {type: map, title: 尊氏の西国落ち, bounds: [129.8, 136.2, 33.2, 35.4], places: [[京都, 135.77, 35.01], [鞆の浦, 133.38, 34.38], [多々良浜, 130.43, 33.64], [湊川, 135.18, 34.68], [豊島河原, 135.47, 34.80]], route: [京都, 豊島河原, 鞆の浦, 多々良浜], upto: 2}
+        card: {head: 1336年2月, body: 京で敗れ、海路で九州へ落ちる}
+      - 聞き: 九州まで逃げたの？ そこから、巻き返せるの？
+        figure: null
+      - 語り: 途中の鞆の浦で、光厳上皇の院宣を得て、新田義貞を討つ名分を手に入れた、とされます。
+        figure: {type: map, title: 尊氏の西国落ち, bounds: [129.8, 136.2, 33.2, 35.4], places: [[京都, 135.77, 35.01], [鞆の浦, 133.38, 34.38], [多々良浜, 130.43, 33.64], [湊川, 135.18, 34.68], [豊島河原, 135.47, 34.80]], route: [京都, 豊島河原, 鞆の浦, 多々良浜], upto: 3}
+        card: {head: 院宣, body: 上皇の命令を伝える文書。討つ名分を得る}
+      - 語り: 3月、九州の多々良浜の戦いで、菊池武敏らを破ります。尊氏は軍をととのえて、東へ戻りました。
+        figure: null
+      - 聞き: 九州で、味方を集め直して戻ってきたの？ 大逆転だね。
+      - 語り: 5月25日、摂津国の湊川。尊氏は水軍を率い、弟の直義は陸の軍を指揮した、と言われます。足利方が勝ちました。画面は、現在の湊川神社です。
+        background: {image: paintings/takauji_minatogawa_shrine.jpg, credit: "k_tweet撮影《湊川神社》2022年（CC0）。現在の姿"}
+        card: {head: 5月25日, body: 湊川の戦い。足利方が勝つ}
+      - 聞き: 湊川で、足利方が勝ったのか。ここで決着、って感じじゃなさそうだけど。
+      - 語り: この戦いで、楠木正成が亡くなりました。『太平記』によれば、正成は弟の正季と、刺し違えて自害した、と伝わります。
+        portrait: {image: paintings/takauji_masashige_sanraku.jpg, caption: "楠木正成画像（狩野山楽筆、江戸時代）", age: false}
+        background: {image: paintings/takauji_nanko_tomb_nypl.jpg, credit: "《神戸楠公社内楠公碑》1901年ごろの彩色絵葉書（ニューヨーク公共図書館蔵）"}
+      - 聞き: あーし、正成って後醍醐天皇に尽くした忠臣のイメージがあるな。最期まで、天皇のために戦ったのかな。
+      - 語り: 6月、尊氏は京に入ります。8月15日には、尊氏の要請を受けた光厳上皇の院宣で、光明天皇が即位しました。
+        portrait: {image: paintings/takauji_komyo_portrait.jpg, caption: "光明天皇像（出家後の姿、江戸初期の像）", age: false}
+        background: {image: paintings/takauji_kiyomizu.jpg, credit: "Ganden撮影《清水寺》2013年（CC BY 3.0）。現在の姿"}
+        card: {head: 8月15日, body: 光明天皇が即位。尊氏の要請を受けて}
+        short: s5
+      - 聞き: 後醍醐天皇とは、別の天皇を立てたの？
+      - 語り: 8月17日、尊氏は、京の清水寺に願文を納めます。現在は重要文化財です。
+        portrait: null
+        background: {image: paintings/takauji_kiyomizu.jpg, credit: "Ganden撮影《清水寺》2013年（CC BY 3.0）。現在の姿"}
+        card: {head: 8月17日, body: 清水寺願文。この世の幸せは直義に}
+        short: s5
+      - 語り: 自筆で、この世の幸せはすべて弟の直義に与えてください、自分は来世の安らぎを、という趣旨が書かれています。
+        short: s5
+      - 聞き: 勝って京に入ったばかりなのに、出世を喜んでるわけじゃないの？ 天下を取った人が書く言葉とは、思えないよ。
+        short: s5
+      - 語り: 湊川で勝ち、京を取り戻してから、わずか3か月。そのあいだに書かれた、本人の自筆です。
+        background: {image: paintings/takauji_minatogawa_shrine.jpg, credit: "k_tweet撮影《湊川神社》2022年（CC0）。現在の姿"}
+        short: s5
+      - 語り: 11月7日、尊氏は建武式目を定めます。法律に詳しい是円・真恵らに、政治の方針を尋ね、17条にまとめました。
+        portrait: {image: paintings/takauji_doc_takauji_gokyosho_trim.jpg, caption: "足利尊氏御判御教書（写し、1338年）。尊氏の文書の例", age: false}
+        background: {image: paintings/takauji_banna_hondo.jpg, credit: "taketarou撮影《鑁阿寺本堂》2007年（CC BY 2.5）。現在の姿"}
+        card: {head: 11月7日, body: 建武式目17か条。政治の方針}
+      - 聞き: 法律というより、これからの政治の目標みたいなものなの？ 校則というより、学校の目標みたいな感じかな。
+      - 語り: 御成敗式目のような法令ではなく、施政方針とされます。第一条は、幕府を鎌倉に置くか、ほかの場所に移すか、という問いでした。
+      - 語り: 同じ11月、後醍醐天皇は尊氏と和睦して、三種の神器を光明天皇に渡します。
+        portrait: {image: paintings/takauji_godaigo_gekko_1904.jpg, caption: "後醍醐天皇（尾形月耕画、1904年。明治の想像図）", age: false}
+        background: {image: paintings/takauji_godaigo_emaki.jpg, credit: "《太平記絵巻》の部分（江戸時代初めごろの絵巻。当時の絵ではない）"}
+        year: 1336
+      - 語り: ところが12月に、吉野へ逃れ、渡したのは偽物だ、と主張した、とされます。そして、もう一つの朝廷、南朝を開きました。
+      - 聞き: 天皇が2人いる時代になっちゃったの？ ここから、南北朝時代だね。
+      - 語り: 京の北朝を支えた尊氏と、吉野の南朝。この対立が、尊氏の生涯を最後まで追いかけます。
+        portrait: null
+        background: {image: paintings/takauji_kasagiyama_panoramio.jpg, credit: "shikabane taro撮影《笠置山》2012年（CC BY 3.0）。現在の姿"}
+        hook: true
+      - 聞き: 天皇が2つに分かれて、そのあと何十年も続くんだよね。尊氏と弟は、このあとどうなるの？
+        hook: true
+
+  # ---------------------------------------------------------------- 6 幕府・観応の擾乱・最期
+  - title: 室町幕府と観応の擾乱、弟との戦いと最期
+    background: {image: paintings/takauji_banna_sanmon.jpg, credit: "taketarou撮影《鑁阿寺山門》2007年（CC BY 2.5）。現在の姿"}
+    year: 1338
+    lines:
+      - 語り: 1338年8月11日、尊氏は光明天皇から、征夷大将軍に任じられます。これで室町幕府が始まった、と言われます。
+        figure: {type: numberline, title: 幕府の始まりはどちらか, items: [[建武式目, 1336], [征夷大将軍, 1338]], unit: 年, focus: 征夷大将軍, note: 2年の違い}
+        card: {head: 1338年8月11日, body: 征夷大将軍に任じられる}
+      - 語り: ただ、始まりを1336年の建武式目とみる見方もあり、研究者の間でも分かれています。
+      - 聞き: 幕府の始まりって、はっきり決まってないの？ 学校では年号を覚えたのに、意外だよ。
+        figure: null
+      - 語り: 1339年に後醍醐天皇が吉野で亡くなると、尊氏は、その菩提を弔う天龍寺の建立を決めました。夢窓疎石の勧めがあった、とされます。
+        background: {image: paintings/takauji_tenryuji_daderot.jpg, credit: "Daderot撮影《天龍寺》2012年（CC0）。現在の姿"}
+        card: {head: 天龍寺と安国寺, body: 後醍醐天皇の菩提を弔う寺と塔}
+      - 語り: 全国に、安国寺と利生塔も設けます。画面は、現在の天龍寺です。
+      - 聞き: 戦って倒した相手の供養を、自分でしたの？ 敵を弔う人だったのかな。
+      - 語り: 政治は、尊氏と弟の直義で分けて担った、と説明されてきました。尊氏は恩賞と軍事、直義は裁判と行政というおおまかな形です。
+        portrait: {image: paintings/takauji_tadayoshi_portrait.jpg, caption: "足利直義（『英雄百人一首』、19世紀の想像図）", age: false}
+        background: {image: paintings/takauji_ashikaga_residence_site.jpg, credit: "Masayuki (Yuki) Kawagishi撮影《足利氏館跡（鑁阿寺）》2005年（CC BY 2.0）。現在の姿"}
+        card: {head: 二人の政治, body: おおまかに尊氏は恩賞と軍事・直義は裁判と行政}
+      - 聞き: 兄が武力で、弟が実務なんて、いいコンビに聞こえるよ。うまくいってたのかな。
+      - 語り: そこへ、尊氏の執事、高師直が力をつけます。恩賞を求める武士の支持を集めた人物で、直義とは、考え方も合いませんでした。
+        portrait: {image: paintings/takauji_moronao_kuniyoshi_chushingura_trim.jpg, caption: "武蔵守師直（歌川国芳、1847年ごろ。忠臣蔵の高師直の絵で、史実の肖像ではない）", age: false}
+      - 語り: 名前に「高」が付きますが、尊氏の元の名の「高」は北条高時の一字、師直の「高」は一族の氏です。別の「高」です。
+        background: {image: paintings/takauji_banna_hondo.jpg, credit: "taketarou撮影《鑁阿寺本堂》2007年（CC BY 2.5）。現在の姿"}
+        card: {head: 二つの「高」, body: 高氏は北条高時の一字。師直は一族の氏}
+      - 聞き: 「高」が付く人が多すぎて、あーしは混ざりそう。北条高時と、高氏と、高師直で、全部別の人だよね。
+      - 語り: 1350年から、観応の擾乱が始まります。師直と直義の対立が、幕府を二つに割りました。
+        portrait: null
+        background: {image: paintings/takauji_banna_hondo.jpg, credit: "taketarou撮影《鑁阿寺本堂》2007年（CC BY 2.5）。現在の姿"}
+      - 語り: 1350年10月、直義は京を出て、まず大和へ向かい、南朝と結んで挙兵します。
+        year: 1350
+        card: {head: 1350年10月, body: 直義が挙兵。観応の擾乱が広がる}
+      - 聞き: 兄弟で戦いになっちゃったの？ 尊氏は、どっちについたの？
+        tone: 驚き
+      - 語り: 尊氏は、師直の側に立ちました。1351年2月17日、摂津の打出浜で戦い、直義軍が勝ちます。
+        background: {image: paintings/takauji_banna_sanmon.jpg, credit: "taketarou撮影《鑁阿寺山門》2007年（CC BY 2.5）。現在の姿"}
+        card: {head: 1351年2月17日, body: 打出浜で直義軍が勝つ}
+      - 語り: 和睦の条件は、師直と師泰の出家でした。
+      - 語り: ところが2月26日、護送の途中で、師直と師泰は、武庫川のあたりで、上杉能憲らに殺されました。尊氏がどう関わったかは、分かっていません。
+        card: {head: 1351年2月26日, body: 師直・師泰が殺される}
+      - 聞き: 出家して和睦したはずなのに、殺されちゃったの？ 約束って、何だったんだろう。
+      - 語り: 同じ1351年の10月、尊氏は南朝に降る形で和睦を結び、直義を討つ綸旨を得ます。後醍醐天皇と戦った人が、南朝と手を組んだのです。
+        background: {image: paintings/takauji_kasagiyama_panoramio.jpg, credit: "shikabane taro撮影《笠置山》2012年（CC BY 3.0）。現在の姿"}
+        card: {head: 1351年10月, body: 尊氏が南朝と和睦。直義追討の綸旨}
+      - 聞き: 昨日の敵と手を組んだの？ 弟を倒すためなら、使えるものは何でも使う、ってことか。
+      - 語り: 12月の薩埵峠の戦いで、尊氏は直義軍に勝ちました。1352年1月、直義は降伏して、鎌倉に入ります。画面は、現在の鶴岡八幡宮です。
+        background: {image: paintings/takauji_kamakura_tsurugaoka.jpg, credit: "Ocdp撮影《鶴岡八幡宮》2017年（CC0）。現在の姿"}
+        card: {head: 1351年12月, body: 薩埵峠で直義軍に勝つ}
+      - 語り: そして2月26日、直義は鎌倉で急に亡くなります。
+        portrait: {image: paintings/takauji_tadayoshi_portrait.jpg, caption: "足利直義（『英雄百人一首』、19世紀の想像図）", age: false}
+        card: {head: 1352年2月26日, body: 直義が急死。死因は分からない}
+      - 語り: 『太平記』は毒殺をほのめかしますが、その説の出どころは『太平記』だけです。死因は、分かっていません。
+      - 聞き: 清水寺の願文で、この世の幸せは弟にって書いた人なのに。兄弟で戦って、弟が急に亡くなるなんて、重い話だよ。
+        tone: しみじみ
+      - 語り: 日付が重なります。師直と師泰が殺されたのは1351年2月26日、直義の死は1352年2月26日です。
+        portrait: null
+        background: {image: paintings/takauji_obusuma_armor_emaki.jpg, credit: "《男衾三郎絵詞》の部分（鎌倉時代）"}
+        figure: {type: numberline, title: 同じ2月26日, items: [[師直と師泰の死, 1351], [直義の死, 1352]], unit: 年, focus: 直義の死, note: ちょうど1年違い}
+      - 語り: ちょうど1年違いです。重なったという事実だけを、言っておきます。偶然かどうかは、分かりません。
+      - 語り: 1358年4月30日、尊氏は京で亡くなります。死因は背中の腫れ物とされ、数え年で54歳でした。
+        figure: null
+        background: {image: paintings/takauji_kiyomizu.jpg, credit: "Ganden撮影《清水寺》2013年（CC BY 3.0）。現在の姿"}
+        card: {head: 1358年4月30日, body: 背中の腫れ物で死去。数えで54歳}
+      - 聞き: 54歳か。ずっと戦ってた人生だよね。
+      - 語り: その年の暮れ、嫡男の義詮が、二代将軍になります。尊氏は等持院に葬られました。のちに、その寺で木像が祀られることになります。
+      - 語り: では、尊氏の像として長く見られてきた、馬上の武者の絵は、本当に尊氏なのでしょうか。
+        portrait: {image: paintings/takauji_horseman_urashimataro.jpg, caption: "騎馬武者像（京都国立博物館蔵。人物は定まっていない）", age: false}
+        hook: true
+      - 聞き: あの教科書の絵？ 違うかもしれないってこと？
+        hook: true
+
+  # ---------------------------------------------------------------- 7 尊氏像
+  - title: 1920年 騎馬武者像と、逆賊と呼ばれた尊氏像
+    background: {image: paintings/takauji_banna_hondo.jpg, credit: "taketarou撮影《鑁阿寺本堂》2007年（CC BY 2.5）。現在の姿"}
+    year: 1920
+    lines:
+      - 語り: 黒い馬に乗り、太刀を振り上げる武者の絵を、騎馬武者像と呼びます。京都国立博物館にあり、長く、足利尊氏の像と見られてきました。
+        portrait: {image: paintings/takauji_horseman_urashimataro.jpg, caption: "騎馬武者像（京都国立博物館蔵。人物は定まっていない）", age: false}
+        card: {head: 騎馬武者像, body: 京都国立博物館蔵。尊氏の像とされてきた}
+        short: s4
+      - 語り: ところが1974年、太刀や馬具の紋は高一族の紋だとして、高師直の像とする説が出ます。1990年代には、顔つきから30代とみて、師直の子の師詮説も出ました。
+        figure: {type: stats, title: 騎馬武者像の人物をめぐる説, items: [[最初の説, 尊氏, 1800年], [次の説, 高師直, 1974年], [その次の説, 師直の子の師詮, 1990年代]]}
+        short: s4
+      - 聞き: 尊氏じゃなくて、家来の像かもしれないの？ 教科書の絵が別人だったら、びっくりだよ。
+        figure: null
+      - 語り: 1990年の修理でX線で調べると、その紋の部分が、後の時代の補筆と分かりました。顔にも補筆があり、高一族説の根拠は崩れます。今も、尊氏の像かは決まっていません。
+        portrait: {image: paintings/takauji_horseman_kyoto_museum.jpg, caption: "騎馬武者像の全体（京都国立博物館蔵。上に義詮の花押がある）", age: false}
+        background: {image: paintings/takauji_banna_sanmon.jpg, credit: "taketarou撮影《鑁阿寺山門》2007年（CC BY 2.5）。現在の姿"}
+        short: s4
+      - 語り: 2011年には、補筆を裏づける1916年の模写の備忘録も見つかりました。一方、尊氏が刀を抜いて奮戦した様子に近いとして、尊氏説をもう一度考える研究者もいます。
+      - 語り: 京都国立博物館の解説も、尊氏と見られてきたが、今は議論されている、という書き方です。
+        card: {head: 像の人物, body: 尊氏とも師直一族とも決まらない}
+      - 聞き: 分かったつもりだった絵が、また分からなくなったのか。尊氏の顔って、結局どんな顔なんだろう。
+      - 語り: 像だけでなく、尊氏の評価も大きく揺れました。幕末の1863年、京都の等持院で、尊氏の木像の首が、鴨川の河原にさらされました。画面は、足利市の現在の銅像で、木像ではありません。
+        portrait: {image: paintings/takauji_statue_kawagishi.jpg, caption: "足利市の足利尊氏像（現在の銅像、2005年撮影）", age: false}
+        background: {image: paintings/takauji_ashikaga_residence_site.jpg, credit: "Masayuki (Yuki) Kawagishi撮影《足利氏館跡（鑁阿寺）》2005年（CC BY 2.0）。現在の姿"}
+        year: 1863
+        card: {head: 1863年, body: 等持院の尊氏の木像の首がさらされる}
+      - 語り: 尊氏・義詮・義満の3体で、尊王攘夷派の仕業とされます。幕府への批判と受け取られ、京都守護職が捜査を命じました。
+      - 聞き: 木像の首が、さらされたの？ 何百年も前の人なのに、そこまで怒られてたのか。
+      - 語り: 戦前の尊氏は、「逆賊」と呼ばれたのです。後醍醐天皇に背いたからでした。
+        portrait: null
+        background: {image: paintings/takauji_minatogawa_shrine.jpg, credit: "k_tweet撮影《湊川神社》2022年（CC0）。現在の姿"}
+        year: 1911
+        card: {head: 1911年, body: 南朝が正統と定められる}
+      - 語り: 1911年、南朝が正統と定められ、後醍醐天皇を裏切った尊氏への評価は厳しくなった、と整理する研究者がいます。
+      - 聞き: 昔の教科書では、尊氏って、悪者だったの？ あーしには、同じ人なのに時代で評価が真逆になるのが、不思議だよ。
+      - 語り: 1934年には、商工大臣の中島久万吉が、尊氏を再評価する文章を問題にされ、辞任しました。
+        background: {image: paintings/takauji_nanko_tomb_nypl.jpg, credit: "《神戸楠公社内楠公碑》1901年ごろの彩色絵葉書（ニューヨーク公共図書館蔵）"}
+        year: 1934
+        card: {head: 1934年, body: 中島久万吉が商工大臣を辞任}
+      - 語り: 製鉄会社をめぐる問題など、ほかの背景もあったとされ、尊氏だけが理由とは言い切れません。
+      - 語り: 戦後、尊氏は、武家政権を開いた政治家として見直されます。1963年の佐藤進一の室町幕府論が、その代表です。
+        year: 1963
+        card: {head: 戦後の見直し, body: 武家政権を開いた政治家として}
+      - 聞き: 戦前は悪者で、戦後は政治家。同じ人が、真逆に見られてきたのか。
+      - 語り: 性格についても、有名な言葉があります。「躁鬱」です。清水寺の願文のように出家したいと書く一方で、戦場では突き進む、その振れ幅を説明する見立てです。
+        portrait: null
+        background: {image: paintings/takauji_kiyomizu.jpg, credit: "Ganden撮影《清水寺》2013年（CC BY 3.0）。現在の姿"}
+        card: {head: 「躁鬱」, body: 出家を望む一方、戦場では突き進む}
+      - 聞き: 気分の波が激しかったってこと？ それは、同じ時代の人が書いたの？
+        tone: 疑問
+      - 語り: いいえ。「躁鬱」は、1960年代に佐藤進一が示した見立てで、同時代の記録にはありません。
+        card: {head: 「躁鬱」, body: 1960年代の見立て。同時代の記録にない}
+      - 語り: 呉座勇一さんのように、根拠が足りないと強く否定する研究者もいます。後醍醐天皇への思いと、弟への情で説明できる、という見方です。
+      - 聞き: 病気の名前を、後の人が当てはめたってこと？ 本人は、そんな言葉、知らないよね。
+      - 語り: 一方『梅松論』は、尊氏が戦場で死を恐れず、慈悲深く、物を気前よく与えた、と書いています。
+        background: {image: paintings/takauji_banna_sanmon.jpg, credit: "taketarou撮影《鑁阿寺山門》2007年（CC BY 2.5）。現在の姿"}
+        card: {head: 『梅松論』の評, body: 足利方の本。身内の称賛として読む}
+      - 語り: 八朔の日に届いた贈り物を、夕方までに人へ与えて、手元に残らなかった、とも伝わります。
+      - 語り: ただ、『梅松論』は足利方の本で、この評は夢窓疎石の言葉として載ります。身内の称賛として、割り引いて読みたいところです。
+        hook: true
+      - 聞き: じゃあ、層の下にある、記録で言える尊氏って、どんな人なんだろう。
+        hook: true
+
+  # ---------------------------------------------------------------- 8 まとめ
+  - title: まとめ：足利尊氏とは何者だったのか
+    background: {image: paintings/takauji_banna_hondo.jpg, credit: "taketarou撮影《鑁阿寺本堂》2007年（CC BY 2.5）。現在の姿"}
+    year: 1358
+    lines:
+      - 語り: まとめます。尊氏の像は、三つの層でできていました。1つ目は、本人の文書と、同じ時代の記録です。
+        portrait: {image: paintings/takauji_horseman_urashimataro.jpg, caption: "騎馬武者像（京都国立博物館蔵。人物は定まっていない）", age: false}
+        card: {head: 1つ目の層, body: 本人の文書と同時代の記録}
+        figure: {type: people, title: 尊氏の像をつくった層, nodes: [[足利尊氏, 三つの層で語られた人], [文書と同時代の記録, 本人の時代], [梅松論と太平記, 出来事の筋書き], [後の評価, 逆賊・躁鬱・騎馬武者像]], edges: [[足利尊氏, 文書と同時代の記録, 願文と官位の記録], [足利尊氏, 梅松論と太平記, 綸旨や出家の話], [足利尊氏, 後の評価, 逆賊や躁鬱]], upto: 4}
+      - 語り: 篠村八幡宮の願文と清水寺の願文は、本人の自筆とされます。官位の記録とあわせて、この層にあります。
+      - 聞き: 自筆と言われる願文が、いちばん固い層なんだね。幕府を倒す願いも、弟に幸せをって願いも、本人の字で残ってるなんて。
+      - 語り: 本人が自分で書いたものは、数が多くありません。だからこそ、願文のような一次の文書は、軍記の筋書きを確かめる物差しになります。
+        background: {image: paintings/takauji_ashikaga_residence_site.jpg, credit: "Masayuki (Yuki) Kawagishi撮影《足利氏館跡（鑁阿寺）》2005年（CC BY 2.0）。現在の姿"}
+      - 語り: 2つ目は、『梅松論』と『太平記』です。綸旨の話も、出家しかけた場面も、湊川の最期も、この層にあります。
+        card: {head: 2つ目の層, body: 『梅松論』と『太平記』。立場で細部が違う}
+        figure: {type: people, title: 尊氏の像をつくった層, nodes: [[足利尊氏, 三つの層で語られた人], [文書と同時代の記録, 本人の時代], [梅松論と太平記, 出来事の筋書き], [後の評価, 逆賊・躁鬱・騎馬武者像]], edges: [[足利尊氏, 文書と同時代の記録, 願文と官位の記録], [足利尊氏, 梅松論と太平記, 綸旨や出家の話], [足利尊氏, 後の評価, 逆賊や躁鬱]], upto: 4}
+      - 語り: 足利方と南朝寄りで立場が違い、細部が食い違います。
+      - 聞き: 同じ話でも、本ごとに色が違うのか。どの本が書いたかを見ないと、そのまま信じられないのか。
+      - 語り: 3つ目は、後の評価です。「逆賊」も、「躁鬱」も、騎馬武者像の主も、後の時代が付けたものでした。
+        background: {image: paintings/takauji_banna_sanmon.jpg, credit: "taketarou撮影《鑁阿寺山門》2007年（CC BY 2.5）。現在の姿"}
+        card: {head: 3つ目の層, body: 後の評価。逆賊・躁鬱・騎馬武者像}
+        figure: {type: people, title: 尊氏の像をつくった層, nodes: [[足利尊氏, 三つの層で語られた人], [文書と同時代の記録, 本人の時代], [梅松論と太平記, 出来事の筋書き], [後の評価, 逆賊・躁鬱・騎馬武者像]], edges: [[足利尊氏, 文書と同時代の記録, 願文と官位の記録], [足利尊氏, 梅松論と太平記, 綸旨や出家の話], [足利尊氏, 後の評価, 逆賊や躁鬱]], upto: 4}
+      - 聞き: 後から貼られたラベルが、そんなに多いの？
+        figure: null
+      - 語り: ラベルが悪いわけではありません。貼った人の時代の事情が、そこに映っています。南朝を正統とした時代には「逆賊」、戦後には「政治家」というように。
+      - 聞き: 同じ尊氏でも、どの時代の人が見るかで、顔が変わるのか。いまの私たちが見る尊氏も、いまの時代のラベルなのかもね。
+      - 語り: 冒頭の名前に戻ります。尊氏は、1319年の元服から、「高氏」として約14年を過ごしました。
+        portrait: null
+        background: {image: paintings/takauji_banna_hondo.jpg, credit: "taketarou撮影《鑁阿寺本堂》2007年（CC BY 2.5）。現在の姿"}
+        figure: {type: bars, title: 二つの名で過ごした年月, bars: [[高氏の名, 14], [尊氏の名, 25]], labels: [約14年, 約25年]}
+      - 語り: 「尊氏」の名で過ごしたのは、1333年から1358年までの約25年です。
+      - 聞き: 名前を替えてからのほうが、ずっと長いのか。その25年は、戦いも多かったよね。
+        figure: null
+      - 語り: では、層の下にある、記録で言える尊氏は、どんな人だったのか。つむぎさんなら、尊氏をどんな人と言いますか。
+      - 聞き: 天皇も弟も、味方も敵も、何度も入れ替わる中で、いちばん上に立たされた人、かな。本人が書いた願文で、幸せは弟にって祈ってるのが、あーしは一番、人間っぽいと思うよ。
+        tone: しみじみ
+      - 語り: 並べられるのは、記録の日付です。1333年4月の篠村。5月7日の六波羅。8月5日の改名。1336年8月17日の清水寺。1358年4月30日の死。
+        background: {image: paintings/takauji_kiyomizu.jpg, credit: "Ganden撮影《清水寺》2013年（CC BY 3.0）。現在の姿"}
+        card: {head: 並べられる日付, body: 篠村・六波羅・改名・清水寺・死}
+      - 語り: 今日の地層は、ここまでです。
+        background: {image: paintings/takauji_banna_hondo.jpg, credit: "taketarou撮影《鑁阿寺本堂》2007年（CC BY 2.5）。現在の姿"}
+      - 聞き: 次回は、大久保利通。維新の三傑の一人だよね。その利通の像も、後の人が作ったの？
+        tone: 疑問
+      - 語り: 知っている通説があれば、コメントで教えてください。
+      - 二人: また一緒に、掘りましょう！
+        tone: 明るい
+

@@ -1,0 +1,1538 @@
+# B（歴史の転換点の if ストーリー）。型：事実（百日天下・リニーとカトル・ブラ・6月18日・グルーシーとプロイセンの到着）→ 史料と論考に残る別の道（朝の攻撃／グルーシーが砲声へ向かう／プロイセンが合流しない）→ 「こうなった可能性」（理由つき）。
+# 事実の出どころは dev/output/rekishi-chiso/research/waterloo_if_facts.md（確実／有力／説／未確認の区分もそこ）。絵の一覧は waterloo_if_assets.md。ナポレオンの回（napoleon.yaml）とは、身長・独裁・辞書・毒殺・ハイチを扱わず、ワーテルローと百日天下に絞って重ならないようにした。
+# 決まり：B は昼12時・約30分／題名は「もし〇〇だったら｜…どうなったか」／再生リストは A と分ける（歴史のif）／想像の部分は画面に「ここから想像」の札
+#   人物のセリフは B では想像のセリフを入れてよい。①「ここから想像」の札が出ている節（想像①②③）だけ ②字幕に「（想像）」（roles のナポレオン想像・ネイ想像・ウェリントン想像・ブリュッヘル想像・アレクサンドル想像・メッテルニヒ想像） ③記録のセリフは本編に置かない。
+#   同じ幕で声が重ならない：第1幕＝ナポレオン（玄野武宏）とネイ（黒沢冴白）／第2幕＝ウェリントン（麒ヶ島宗麟）とブリュッヘル（雀松朱司）／第3幕＝アレクサンドル（白上虎太郎）とメッテルニヒ（離途）。
+# 分岐点は1つだけ：1815年6月18日、プロイセン軍の到着が間に合わず、夜、ナポレオンが戦場を押さえた（どう間に合わなかったかは決めない。史実で割れる分かれ目＝開戦の遅れ・グルーシー・プロイセンの合流を「別の道」の節で並べる）。ほかは史実のまま（連合の大軍と7月1日の侵攻予定・ウィーン会議の宣言・国内の分裂）。
+# 想像の部分は言い切る。確かさは画面の札（高い／ありうる／ほぼ妄想）で出す。声に出す札は、各幕に1回と最後のまとめに絞る（「可能性は、〜、です」の連発を避けた）。
+#   高い＝プロイセン軍は壊滅しない（リニーのあと2日で戦場に来た史実）／連合は侵攻をやめない（3/13の宣言・3/25の約束・7/1の予定が史実）／ありうる＝ウェリントン軍は退くが壊滅しない・ナポレオンは翌日も追撃する・数週間から数か月で帝政が続かなくなる／ほぼ妄想＝追撃の成果・オーストリアの単独和平・ウィーン体制の形・100年先の因果。
+# 研究：「ワーテルローで勝ったあと」を正面から論じた学術研究は見つかっていない（冒頭と想像の節で断る）。見つかったのは、ロバーツ（良かったとみる）・ザモイスキ（和平の条件は無理）・トレヴェリアン（敵は常備軍を保つ）・フォレストら（結末は変わらない）の見方と、思考実験（アロン・ユフェンデルほか）。本文は未読（紹介記事の要約）。
+# 数字は何の数かを言う：兵力は文献で割れる（ワーテルローの仏7.2〜7.4万、グルーシー約3.3万＝約1.7万のティールマンと戦う、プロイセン約4.8万〜5万が戦場へ（図の注・語りとも「約4万8千〜5万」に統一））。損害は幅で言う。年齢は ブリュッヘル72歳（出典あり）以外は言わない。
+# 使わない話：血・遺体の細部／ウェリントンの発言（「一番きわどい勝負」は「伝わる話」「確かな記録とは言えない」と断る）／ロスチャイルドの株の逸話／日本との接点／ネットの意見・ブログ。
+# 画面の決まり：背景に人物の肖像・拡大絵を使わない（肖像は額）／縦横比2.4:1以上の絵は使わない（サドラーの横長は左右に切り出した版）／大字の図・地図は全面背景に使いすぎない／現代の写真は使っていない。
+# 10-22 確認3件の指摘を反映：スールトの手紙は午後1時に書かれ、届いた時刻は割れる／ネイは「寝返る」（14日）／ザモイスキは出典未確認と断る／ウェリントン軍の損害は史実の数字と断る／歴史家4人の見方は想像の外（札「ここからは歴史家の見方」）／退位の行は百日天下の年表の図。napoleon.yaml と重なる死因・退位の細部は削った。
+title: もしナポレオンがワーテルローで勝っていたら｜プロイセン軍の到着が間に合わなかった日、ヨーロッパはどうなったか
+series: ''
+playlists:
+- 歴史のif（もしもの地層）
+- 世界史を掘る
+shorts_playlists:
+- 歴史のifショート
+shorts_badge: もしもの話
+tags:
+- もしナポレオンがワーテルローで勝っていたら
+- ワーテルローの戦い
+- ナポレオン
+- 百日天下
+- ウェリントン
+- ブリュッヘル
+- グルーシー
+- ネイ元帥
+- ウィーン体制
+- 歴史if
+- 世界史
+- 歴史解説
+- 歴史の地層
+en:
+  title: What If Napoleon Had Won at Waterloo? | The Day the Prussians Arrived Too Late
+  description: 'On June 18, 1815, near Waterloo in today''s Belgium, Napoleon''s last battle can be told with two numbers: about 33,000 men under Marshal Grouchy who were not on the battlefield, and about 50,000 Prussians who arrived in the afternoon. This video asks: what if the Prussians had been too late and Napoleon had won?
+
+
+    We keep records, theories and imagination apart. First, what the sources say: the Hundred Days from Elba to Paris, the Seventh Coalition and its planned invasion date of July 1, Ligny and Quatre Bras, the rain, the delayed start, Marshal Ney''s cavalry, the Imperial Guard, Grouchy at Wavre, and the aftermath through Saint Helena and the Congress of Vienna.
+
+
+    Then, clearly marked imagination with reasons: the night of June 18, Wellington and Blucher on June 19, the allied sovereigns'' headquarters, a table of fates, and how Europe might differ. In imagined parts we speak plainly, and the on-screen label tells you how likely it is: likely, possible, or nearly fantasy. We found no study that argues this counterfactual in detail, and we say so. Views by Andrew Roberts, Adam Zamoyski, G. M. Trevelyan and Alan Forrest are summarized from articles; we have not checked the original texts.
+
+
+    A Japanese history video to listen to while you work (Japanese audio).'
+  chapters:
+  - 'June 18, 1815: 33,000 Men Who Were Not on the Battlefield'
+  - From Elba to the Hundred Days, and the Coalition
+  - 'June 16-17: Ligny, Quatre Bras and the Rain'
+  - 'June 18: Waterloo from Eleven in the Morning'
+  - Grouchy, the Prussians and Why Napoleon Lost
+  - 'After Waterloo: Abdication, Saint Helena, the Vienna Order'
+  - 'Other Paths in the Sources: Earlier Attack, Grouchy, the Prussians'
+  - 'Imagination 1: The Night of June 18'
+  - 'Imagination 2: Wellington and Blucher on June 19'
+  - 'Imagination 3: The Allied Headquarters'
+  - 'Imagination 4: A Table of Fates'
+  - 'Imagination 5: Europe''s Turning Points and Rival Views'
+  - 'Summary: Two Numbers on June 18'
+texture: true
+recap: true
+timeline:
+  start: 1812
+  end: 1822
+  events:
+  - - 1814
+    - エルバ島へ
+  - - 1815
+    - ワーテルロー
+  - - 1821
+    - 没
+terms:
+  百日天下: ナポレオンが戻った3月20日から退位までの約100日
+  対仏大同盟: ナポレオンのフランスに対抗した国々の同盟
+  方陣: 歩兵が四角くかたまり、騎兵を防ぐ陣形
+  近衛隊: ナポレオン直属の精鋭の部隊
+  ダルロン軍団: ネイの下にいた約2万の軍団
+  ラ・エー・サント: ウェリントン軍の中央にあった農場
+  ウィーン体制: 勢力均衡を守る、会議のあとの国際秩序
+  スコッツ・グレイズ: 英国の重騎兵の連隊
+  最終議定書: ウィーン会議の取り決めをまとめた文書
+shorts:
+  s1:
+    title: ワーテルロー／ふたつの数字
+    yt_title: ナポレオンを負かした2つの数字とは？｜もしナポレオンがワーテルローで勝っていたら
+    hook: ワーテルローの日、／戦場にいなかった軍は何人？
+    tease: 大砲の音を聞いた、その軍は、／動いた？
+    lead: ワーテルロー、最後の日の話です。
+    tags:
+    - ワーテルローの戦い
+    - ナポレオン
+    - グルーシー
+    - 歴史if
+  s2:
+    title: エルバ島脱出／百日天下
+    yt_title: ナポレオンはエルバ島を出て何日でパリに戻った？｜百日天下のはじまり
+    hook: エルバ島を出たナポレオンの側に、／約6千人で寝返った元帥は？
+    tease: 戻ってすぐ、ヨーロッパの国々は、／ナポレオンを何と宣言した？
+    lead: 1815年、百日天下のはじまりです。
+    tags:
+    - 百日天下
+    - ナポレオン
+    - ネイ元帥
+    - 歴史if
+  s3:
+    title: カトル・ブラ／迷った2万
+    yt_title: ナポレオンの2万人はなぜ戦えなかった？｜リニーとカトル・ブラの6月16日
+    hook: 2つの戦場の、どちらにも／出なかった軍は何人？
+    tease: その翌日、ナポレオンが3万3千を／預けた元帥は誰？
+    lead: 1815年6月16日、2つの戦いの話です。
+    tags:
+    - カトル・ブラの戦い
+    - ネイ元帥
+    - リニーの戦い
+    - 歴史if
+  s4:
+    title: もしも／勝った夜
+    yt_title: もしナポレオンが勝った夜に何を命じた？｜ワーテルロー想像劇場
+    hook: ワーテルローに勝った夜、／ナポレオンは何を命じた？
+    tease: 勝ったあとも、連合は／進軍をやめなかった？
+    lead: もしナポレオンが勝ったら、想像劇場です。
+    tags:
+    - もしナポレオンがワーテルローで勝っていたら
+    - ネイ元帥
+    - ナポレオン
+    - 歴史if
+  s5:
+    title: 最後の突撃／近衛隊
+    yt_title: ナポレオン最後の近衛隊は何人だった？｜ワーテルロー、日没前
+    hook: ナポレオンが最後に出した、／近衛隊は何人？
+    tease: 近衛隊が退く少し前、／プロイセンはどこまで来ていた？
+    lead: ワーテルロー、日没前の話です。
+    tags:
+    - 近衛隊
+    - ワーテルローの戦い
+    - ナポレオン
+    - 歴史if
+next:
+  title: 次の「もしも」
+  series: ''
+  teaser: あなたが気になる歴史の分かれ道を、コメントで教えてください。
+thumbnail:
+  layout: mask
+  image: paintings/napoleon_study_david.jpg
+  crop:
+  - 608
+  - 240
+  - 1344
+  - 976
+  top: 戦場にいなかった3万3千人
+  main:
+  - もしナポレオンが
+  - 勝っていたら
+  blanks:
+  - - 連合は
+    - 5
+  - - 帝政は
+    - 4
+  tags:
+  - ネイは？
+  - ウェリントンは？
+  - グルーシーは？
+  name: ナポレオン
+sections:
+- title: 1815年6月18日 戦場にいなかった3万3千人
+  background: &id001
+    image: paintings/waterloo_sadler_left.jpg
+    credit: ワーテルローの戦い（ウィリアム・サドラー2世、19世紀前半。部分）
+  year: 1815
+  lines:
+  - 語り: 1815年6月18日、いまのベルギーのワーテルロー。ワーテルローの戦いは、2つの数字で語られます。戦場にいなかった約3万3千人と、午後に戦場へ着いた約4万8千から5万人です。
+    portrait:
+      image: paintings/napoleon_study_david.jpg
+      caption: ナポレオン（1812年の肖像、ダヴィッド）
+      age: false
+    background: *id001
+    card:
+      head: 6月18日
+      body: ワーテルローの戦い
+    short: s1
+  - 聞き: 戦場にいなかった人たちが、勝ち負けを決めたってこと？ 約3万3千って、大きなスタジアムが満員になる数だよ。すごい数じゃない？
+    tone: 驚き
+    short: s1
+  - 語り: 約3万3千は、ナポレオンがグルーシー元帥に預けた軍です。プロイセン軍を追うため、前の日に別れました。この日は、ワーヴルという町で戦っていました。
+    background:
+      image: paintings/waterloo_butler_l.jpg
+      credit: 《スコットランドよ永遠に》（エリザベス・トンプソン〈レディ・バトラー〉、1881年。部分）
+    figure:
+      type: stats
+      title: 6月18日の数字（約）
+      items:
+      - - グルーシーの軍
+        - 約3万3千
+        - 戦場の外にいた
+      - - 午後に着いたプロイセン軍
+        - 約4万8千〜5万
+        - 戦場へ向かった
+      - - ナポレオンの軍
+        - 約7万2千
+        - ワーテルローの兵
+    short: s1
+  - 聞き: 別の町に3万人、横から5万人。数だけ聞くと、ナポレオンが気の毒になるよ。でも、それで負けたって、いったい何があったんだろう。
+    tone: しみじみ
+  - 語り: そこで、今日の問いです。もし、プロイセン軍の到着が間に合わず、ナポレオンが勝っていたら。ヨーロッパの行く先は、どうなったのか。問いは3つあります。
+    portrait: null
+    background:
+      image: paintings/waterloo_map1.jpg
+      credit: ワーテルローの戦い 第1図 朝（アリソン『欧州史』の地図、1852年。部分）
+    card:
+      head: 今日の3つの問い
+      body: 連合は？ 帝政は？ 欧州は？
+    figure: null
+  - 語り: 1つ目。連合軍は、侵攻をやめたのか。2つ目。ナポレオンの帝政は、続いたのか。3つ目。その先のヨーロッパは、どう変わったのか。
+  - 聞き: その3つって、連合と、ナポレオン本人と、ヨーロッパ全体、ってことでいいのかな。
+    tone: 疑問
+  - 語り: ここでいう勝ちは、翌日も戦場を押さえること、とします。連合軍が退き、ナポレオン軍が戦場に残る形です。
+  - 聞き: ワーテルローの「もしも」って、有名すぎない？ ゲームや小説なら山ほどありそうだけど、ちゃんと研究した人、いるの？
+    tone: 疑問
+    background:
+      image: paintings/waterloo_pieneman_b.jpg
+      credit: 《ワーテルローの戦い》（ヤン・ウィレム・ピーネマン、1824年。部分）
+  - 語り: 先に断ります。ワーテルローの勝利のあとを、正面から数字で論じた学術研究は、今回の調査では見つかっていません。見つかったのは、歴史家の見方と、思考実験です。
+    background:
+      image: paintings/waterloo_sadler_right.jpg
+      credit: ワーテルローの戦い（ウィリアム・サドラー2世、19世紀前半。部分）
+    card:
+      head: 最初の断り
+      body: 論じた研究は見つからない
+  - 聞き: じゃあ、想像ばっかりになっちゃわない？ あーし、根拠のない話って、ちょっと苦手かも。材料って、あるの？
+    tone: 疑問
+  - 語り: 材料は、史料に残る事実だけです。想像のあいだは《ここから想像》の札を出し、可能性を、高い、ありうる、ほぼ妄想の3段階で示します。
+    background:
+      image: paintings/waterloo_andrieux.jpg
+      credit: 《ワーテルローの戦い》（クレマン＝オーギュスト・アンドリュー、1852年）
+    card:
+      head: この回の約束
+      body: 事実と想像を分け、札を付ける
+  - 聞き: 事実と想像は、ちゃんと分けてくれるんだね。それで、最初は何から見るの？
+    tone: 納得
+  - 語り: はい。1815年2月、エルバ島から掘ります。
+    hook: true
+- title: 1815年2月〜6月 エルバ島から百日天下へ 連合の大軍
+  background: &id002
+    image: paintings/waterloo_elba_beaume.jpg
+    credit: 《エルバ島を発つナポレオン》（ジョゼフ・ボーム、1836年）
+  year: 1815
+  lines:
+  - 語り: 1815年2月26日、ナポレオンは、約1千人を連れて、地中海のエルバ島を出ます。3月1日、南フランスのゴルフ・ジュアンに上陸しました。
+    portrait:
+      image: paintings/napoleon_study_david.jpg
+      caption: ナポレオン（1812年の肖像、ダヴィッド）
+      age: false
+    background: *id002
+    card:
+      head: 2月26日
+      body: エルバ島を出る
+    figure:
+      type: map
+      title: エルバ島からパリへ（1815年）
+      bounds:
+      - 1.0
+      - 14.0
+      - 42.0
+      - 49.5
+      places:
+      - - エルバ島
+        - 10.26
+        - 42.78
+      - - ゴルフ・ジュアン
+        - 7.07
+        - 43.57
+      - - グルノーブル
+        - 5.72
+        - 45.19
+      - - リヨン
+        - 4.83
+        - 45.76
+      - - パリ
+        - 2.35
+        - 48.86
+      route:
+      - エルバ島
+      - ゴルフ・ジュアン
+      - グルノーブル
+      - リヨン
+      - パリ
+      note: 2月26日に出て3月20日にパリ入り
+    short: s2
+  - 聞き: たった1千人で、国に戻ってきたの？ あーしなら、怖くて足が止まっちゃう。王様の軍隊は、どうしたの？
+    tone: 驚き
+  - 語り: 送り込まれた軍が、次々と彼の側につきました。3月5日に、グルノーブルの第5連隊。14日には、ネイ元帥が、約6千人を連れて、寝返ります。
+    portrait:
+      image: paintings/waterloo_ney.jpg
+      caption: ネイ元帥（1805年ごろの肖像、ジェラール）
+      age: false
+    background:
+      image: paintings/waterloo_elba_steuben.jpg
+      credit: 《エルバ島からのナポレオンの帰還》（シャルル・ド・ステューベン、1818年）
+    card:
+      head: 3月14日
+      body: ネイ元帥が寝返る
+    figure: null
+    short: s2
+  - 語り: 国王ルイ18世は、パリを出ました。
+  - 聞き: ネイって、王様に仕える元帥だったんでしょ？ それが、ナポレオンの側に？
+    tone: 疑問
+    short: s2
+  - 語り: そうです。3月20日、ナポレオンはパリに入ります。ここから、約100日の天下が始まります。
+    portrait:
+      image: paintings/napoleon_study_david.jpg
+      caption: ナポレオン（1812年の肖像、ダヴィッド）
+      age: false
+    background:
+      image: paintings/waterloo_elba_garneray.jpg
+      credit: ナポレオンを乗せて仏へ向かうブリッグ『アンコンスタン』（アンブロワーズ・ルイ・ガルヌレ、19世紀前半）
+    card:
+      head: 3月20日
+      body: パリに入る。百日天下の始まり
+    short: s2
+  - 聞き: 島を出て、約3週間で、またパリの皇帝かあ。お話みたいな帰り道だね。
+    tone: しみじみ
+  - 語り: それより前の3月13日、ウィーン会議は、ナポレオンを「法の保護の外」に置くと宣言していました。25日には、各国が15万人ずつ出す約束をします。第七次の対仏大同盟です。
+    portrait: null
+    background:
+      image: paintings/waterloo_congress.jpg
+      credit: ウィーン会議（イザベ原画、19世紀前半の版画）
+    card:
+      head: 3月13日
+      body: ウィーン会議の宣言
+  - 聞き: 戻ってすぐに、ヨーロッパ中を敵に回したのか。クラス全員から、いっぺんに絶交されたみたいなものだよね。
+    tone: 重い
+  - 語り: 兵の数を並べます。ナポレオン側は約25万人、連合側は約85万人、という見積もりがあります。連合は、4つの戦線に分かれて攻める計画でした。
+    background:
+      image: paintings/waterloo_mapc.jpg
+      credit: 《ベルギー戦役の歴史地図》（シドニー・ホール、1816年。部分）
+    figure: &id011
+      type: bars
+      title: 兵力の見積もり（1815年）
+      bars:
+      - - フランス軍
+        - 25
+      - - 連合軍
+        - 85
+      labels:
+      - 約25万人
+      - 約85万人
+      note: 連合は4つの戦線。数は文献で割れる
+  - 聞き: 3倍以上かあ。数だけ見ると、重たいね。サッカーで、11人対33人くらいの差だもん。
+    tone: しみじみ
+  - 語り: ただ、連合はまだ、そろっていませんでした。オーストリアとロシアの大軍は遠く、侵攻の予定日は7月1日。全軍で同時に攻めるためです。
+    background:
+      image: paintings/waterloo_map_strat.jpg
+      credit: 1815年6月1日の欧州北西部の配置図（米国陸軍士官学校歴史学科の地図。部分）
+    figure: null
+  - 語り: 先に動けたのは、ブリュッセル近くの、ウェリントンの軍とブリュッヘルの軍でした。
+  - 聞き: じゃあ、7月1日の前に動けば、ナポレオンにも勝ち目があるんだ。ナポレオンも、それを狙ったのかな。
+    tone: 納得
+    hook: true
+  - 語り: ナポレオンも、そう考えました。6月15日、国境を越えます。
+    hook: true
+- title: 6月16日〜17日 リニーとカトル・ブラ 雨の前夜
+  background: &id003
+    image: paintings/waterloo_cuirass.jpg
+    credit: 《ワーテルローの胸甲騎兵の突撃》（アンリ・フェリックス・エマニュエル・フィリポトー、1874年。部分）
+  year: 1815
+  lines:
+  - 語り: 北部軍は、いまのベルギーに入ります。兵は、約12万。2つの軍が1つになる前に、1つずつ叩こうとした、と説明されます。
+    portrait:
+      image: paintings/napoleon_study_david.jpg
+      caption: ナポレオン（1812年の肖像、ダヴィッド）
+      age: false
+    background: *id003
+  - 聞き: ウェリントンの軍と、ブリュッヘルの軍が、くっつく前に、1つずつ倒せば、数は足りるってことか。
+    tone: 納得
+    portrait: null
+  - 語り: 6月16日、リニー。ナポレオンは、ブリュッヘルのプロイセン軍と戦います。フランスは約6万3千、プロイセンは約8万3千、とされます。結果は、フランスの勝ちです。
+    portrait:
+      image: paintings/waterloo_blucher.jpg
+      caption: ブリュッヘル（1818年の肖像、ジョージ・ドーウ）
+      age: false
+    background:
+      image: paintings/waterloo_map2.jpg
+      credit: ワーテルローの戦い 第2図 危機（アリソン『欧州史』の地図、1852年。部分）
+    card:
+      head: 6月16日
+      body: リニーの戦い。フランスの勝ち
+  - 語り: 72歳のブリュッヘルは、騎兵の先頭で突撃し、馬が撃たれて下敷きになります。もうろうとして運び出され、参謀長のグナイゼナウが指揮を引き継ぎました。
+  - 聞き: 72歳で先頭って、元気すぎない？ 今なら、定年後の年齢だよ。それで、馬に乗って突撃って。
+    tone: 驚き
+  - 語り: 6月16日、カトル・ブラの交差点では、ネイ元帥が、ウェリントン側と戦っていました。ネイの兵は約1万8千から2万4千。相手は、はじめ約8千です。
+    portrait:
+      image: paintings/waterloo_ney.jpg
+      caption: ネイ元帥（1805年ごろの肖像、ジェラール）
+      age: false
+    background:
+      image: paintings/waterloo_butler.jpg
+      credit: 《スコットランドよ永遠に》（エリザベス・トンプソン〈レディ・バトラー〉、1881年）
+    card:
+      head: 6月16日
+      body: カトル・ブラの戦い
+    short: s3
+  - 語り: ところがネイは、昼ごろまで、本格的に攻めませんでした。さらに、ダルロン軍団、約2万が、リニーとカトル・ブラのあいだを行き来して、どちらの戦いにも出ませんでした。
+    background:
+      image: paintings/waterloo_cuirass_b.jpg
+      credit: 《ワーテルローの胸甲騎兵の突撃》（アンリ・フェリックス・エマニュエル・フィリポトー、1874年。部分）
+    card:
+      head: ダルロン軍団
+      body: どちらの戦場にも出ず
+    short: s3
+  - 聞き: 2万人が、2つの戦場の真ん中を、うろうろしてたの？ もったいなさすぎない？ どっちかに入ってれば、結果が変わったかもしれないのに。
+    tone: 驚き
+    short: s3
+  - 語り: 6月17日。ナポレオンは、遅く出発し、昼すぎにカトル・ブラに着きます。ウェリントンは、もう北へ退いていました。
+    portrait:
+      image: paintings/napoleon_study_david.jpg
+      caption: ナポレオン（1812年の肖像、ダヴィッド）
+      age: false
+    background:
+      image: paintings/waterloo_sadler_mid.jpg
+      credit: ワーテルローの戦い（ウィリアム・サドラー2世、19世紀前半。部分）
+  - 語り: ウェリントンは、ナポレオンと同じ1769年の生まれです。2人が戦場で向き合うのは、これが初めてでした。
+    portrait:
+      image: paintings/waterloo_wellington.jpg
+      caption: ウェリントン公（1815〜16年ごろの肖像、ローレンス）
+      age: false
+  - 語り: プロイセン軍も、北のワーヴルへ退いていました。ブリュッヘルは、グナイゼナウが折れた、公爵に合流する、と語ったと伝わります。
+    portrait:
+      image: paintings/waterloo_blucher.jpg
+      caption: ブリュッヘル（1818年の肖像、ジョージ・ドーウ）
+      age: false
+  - 聞き: 72歳の元帥が、ウェリントンのほうへ向かう、って決めたんだね。ここで2つの軍が、つながるんだ。
+    tone: 納得
+  - 語り: ナポレオンは、グルーシーに約3万3千を預け、プロイセンを追わせます。夜、大雨が降りました。
+    portrait:
+      image: paintings/waterloo_grouchy.jpg
+      caption: グルーシー元帥（1835年の肖像、ルイヤール）
+      age: false
+    background:
+      image: paintings/waterloo_map1_c.jpg
+      credit: ワーテルローの戦い 第1図 朝（アリソン『欧州史』の地図、1852年。部分）
+    card:
+      head: 6月17日
+      body: グルーシーに約3万3千を預ける
+  - 聞き: その雨は、次の日の戦いに、関係したの？
+    tone: 疑問
+    hook: true
+  - 語り: はい。6月18日の朝から、見ていきます。
+    hook: true
+- title: 6月18日 午前11時のワーテルロー 近衛隊が退くまで
+  background: &id004
+    image: paintings/waterloo_cuirass.jpg
+    credit: 《ワーテルローの胸甲騎兵の突撃》（アンリ・フェリックス・エマニュエル・フィリポトー、1874年。部分）
+  year: 1815
+  lines:
+  - 語り: 6月18日の朝、雨は止みましたが、地面はぬかるんでいました。ナポレオンは、大砲と騎兵のために、乾くのを待ちます。開戦は、午前11時から正午ごろ、とされます。
+    portrait:
+      image: paintings/napoleon_study_david.jpg
+      caption: ナポレオン（1812年の肖像、ダヴィッド）
+      age: false
+    background: *id004
+    card:
+      head: 開戦の遅れ
+      body: ぬかるみで午前11時すぎ
+  - 聞き: 待った分だけ、プロイセンが近づくじゃん。あーしなら、ぬかるみでも、早く始めたくなっちゃうけど。待たなくてよかったんじゃない？
+    tone: 疑問
+  - 語り: そういう議論はあります。けれど、地面がどれだけ乾くかも、開戦の時刻も、文献で割れていて、確定していません。
+  - 語り: まず、兵の数です。ナポレオン軍は、歩兵が約5万、騎兵が約1万5千、砲兵と工兵が約8千。大砲は約250門です。ウェリントン側は約6万8千で、大砲は156門。数は文献で割れます。
+    background:
+      image: paintings/waterloo_cuirass_b.jpg
+      credit: 《ワーテルローの胸甲騎兵の突撃》（アンリ・フェリックス・エマニュエル・フィリポトー、1874年。部分）
+  - 語り: ウェリントン側は、英国人だけの軍ではありません。英国人は約3万1千。残りは、オランダ・ベルギー人、ハノーファー人、ブランシュヴァイク人、ナッサウ人です。
+    background:
+      image: paintings/waterloo_andrieux.jpg
+      credit: 《ワーテルローの戦い》（クレマン＝オーギュスト・アンドリュー、1852年）
+    figure:
+      type: bars
+      title: ウェリントン軍の内訳（千人・約）
+      bars:
+      - - 英国
+        - 31
+      - - オランダ・ベルギー
+        - 17
+      - - ハノーファー
+        - 11
+      - - ブランシュヴァイク
+        - 6
+      - - ナッサウ
+        - 3
+      labels:
+      - 約3万1千
+      - 約1万7千
+      - 約1万1千
+      - 約6千
+      - 約3千
+      note: 合計は約6万8千。数は文献で割れる
+  - 聞き: 英国の軍だと思ってたけど、英国人は半分もいないんだ。いろんな国の人の寄せ集めで、よく持ちこたえたね。
+    tone: 驚き
+  - 語り: さらに約1万7千は、ハレという町に置かれ、戦場にいなかった、とも書かれます。後方の守りです。
+    figure: null
+  - 語り: 午前から、ユーゴモンの農場では、ナポレオンの弟ジェロームの師団が、陽動のつもりで攻めていました。ところが、一日の消耗戦に変わります。
+    portrait: null
+    background:
+      image: paintings/waterloo_cuirass.jpg
+      credit: 《ワーテルローの胸甲騎兵の突撃》（アンリ・フェリックス・エマニュエル・フィリポトー、1874年。部分）
+    card:
+      head: ユーゴモン
+      body: 陽動が一日の消耗戦に
+  - 語り: ウェリントンの言葉と伝わるのが、戦いの成否は、ここを守れるかにかかっていた、です。
+  - 聞き: 囮のつもりが、いちばん長引くなんて。ナポレオン、計算が狂っちゃったね。
+    tone: 驚き
+  - 語り: 正午前後から、ナポレオンの大砲84門が、ウェリントンの陣を撃ちました。ぬかるみで砲弾が跳ねず、被害は小さかった、という説明です。
+    background:
+      image: paintings/waterloo_butler.jpg
+      credit: 《スコットランドよ永遠に》（エリザベス・トンプソン〈レディ・バトラー〉、1881年）
+  - 聞き: 砲弾が跳ねないと、威力が落ちちゃうのか。ぬかるみは、ウェリントンの味方だったんだね。
+    tone: 納得
+  - 語り: 午後1時半ごろ、ダルロンの軍団が、横に約250人の幅の縦隊で、ライ麦畑を進みました。丘の上まで迫りましたが、ピクトン隊と、スコッツ・グレイズの騎兵に押し戻されたのです。
+    portrait: null
+    background:
+      image: paintings/waterloo_butler_l.jpg
+      credit: 《スコットランドよ永遠に》（エリザベス・トンプソン〈レディ・バトラー〉、1881年。部分）
+    card:
+      head: 午後1時半
+      body: ダルロン軍団の攻撃
+  - 語り: 同じころ、ナポレオンは、東の遠くに、プロイセンの先頭を見ました。
+  - 語り: 午後4時ごろ、ネイの騎兵が、何度も突撃します。ぬかるみと、英軍の方陣と砲に阻まれました。ナポレオンは「1時間早すぎた」と言ったと伝わりますが、止めなかった、とされます。
+    background:
+      image: paintings/waterloo_cuirass_b.jpg
+      credit: 《ワーテルローの胸甲騎兵の突撃》（アンリ・フェリックス・エマニュエル・フィリポトー、1874年。部分）
+    card:
+      head: 午後4時ごろ
+      body: ネイの騎兵の突撃
+  - 聞き: 騎兵が、何度もはね返されて……。馬で突っ込んで、四角い壁にぶつかるって、想像するだけで怖いね。
+    tone: しみじみ
+  - 語り: 午後4時までに、フランス軍の約7千が、プロイセン軍の約3万を足止めしていました。ビューローは、午後4時半、プランスノワへの道が開いた、と記します。
+    portrait: null
+    background:
+      image: paintings/waterloo_plance.jpg
+      credit: プランスノワへのプロイセン軍の攻撃（アドルフ・ノルテン、1864年。部分）
+    card:
+      head: 午後4時半
+      body: プランスノワへの道が開く
+  - 語り: 午後6時ごろ、ネイの攻撃で、ラ・エー・サントの農場が落ちます。ツィーテンのプロイセン軍が、戦いに入ってきたのも、このころです。
+    portrait:
+      image: paintings/waterloo_ney.jpg
+      caption: ネイ元帥（1805年ごろの肖像、ジェラール）
+      age: false
+    background:
+      image: paintings/waterloo_haye.jpg
+      credit: ラ・エー・サントの攻防（リヒャルト・クネーテル、19世紀後半〜20世紀初め）
+    card:
+      head: 午後6時ごろ
+      body: ラ・エー・サントが落ちる
+  - 語り: 午後7時半ごろ、ナポレオンは、近衛隊、約4千を前に出します。しかし、反撃で崩れ、「近衛が退く」という叫びが広がり、フランス軍は総崩れになりました。
+    portrait:
+      image: paintings/napoleon_study_david.jpg
+      caption: ナポレオン（1812年の肖像、ダヴィッド）
+      age: false
+    background:
+      image: paintings/waterloo_crofts.jpg
+      credit: 《ワーテルローでの最後の総攻撃》（アーネスト・クロフツ、1895年。部分）
+    card:
+      head: 午後7時半ごろ
+      body: 近衛隊約4千の攻撃
+    short: s5
+  - 聞き: 近衛隊って、最強の部隊でしょ？ それが退いたら、みんな逃げるよね。
+    tone: 驚き
+    short: s5
+  - 語り: 損害は、文献で割れます。フランス軍は、約2万5千から3万3千。ウェリントン軍は、約1万7千。プロイセン軍は、約6千6百から7千です。
+    portrait: null
+    background:
+      image: paintings/waterloo_andrieux.jpg
+      credit: 《ワーテルローの戦い》（クレマン＝オーギュスト・アンドリュー、1852年）
+    figure:
+      type: stats
+      title: ワーテルローの損害（文献の幅）
+      items:
+      - - フランス軍
+        - 約2万5千〜3万3千
+        - 文献で割れる
+      - - ウェリントン軍
+        - 約1万7千
+      - - プロイセン軍
+        - 約7千
+        - 約6600〜7000
+    short: s5
+  - 聞き: ウェリントン側も、1万7千も……。勝った側でも、これだけ減るんだ。ぎりぎりの勝負だったんだね。
+    tone: 重い
+    short: s5
+  - 語り: 戦場では、少なくとも7千頭の馬が、死ぬか傷つきました。戦いのあと、フランス軍では、約1万5千が脱走し、大砲約220門が失われた、とされます。
+    figure: null
+  - 語り: 夜、ウェリントンとブリュッヘルは、ラ・ベル・アリアンスの近くで会った、とされます。
+    portrait:
+      image: paintings/waterloo_wellington.jpg
+      caption: ウェリントン公（1815〜16年ごろの肖像、ローレンス）
+      age: false
+    background:
+      image: paintings/waterloo_cuirass_b.jpg
+      credit: 《ワーテルローの胸甲騎兵の突撃》（アンリ・フェリックス・エマニュエル・フィリポトー、1874年。部分）
+  - 聞き: 勝った側の2人が、顔を合わせたんだね。この場面が、無かったことになる世界を、考えるのかな。
+    tone: しみじみ
+  - 語り: ここで、冒頭の数字に戻ります。3万3千人と、約5万人の、行方です。
+    portrait: null
+    hook: true
+- title: 6月18日 グルーシーとプロイセン 負けた理由
+  background: &id005
+    image: paintings/waterloo_map1_c.jpg
+    credit: ワーテルローの戦い 第1図 朝（アリソン『欧州史』の地図、1852年。部分）
+  year: 1815
+  lines:
+  - 語り: グルーシーの軍は、約3万3千。18日は、ワーヴルで、プロイセンの後衛、約1万7千と戦っていました。
+    portrait:
+      image: paintings/waterloo_grouchy.jpg
+      caption: グルーシー元帥（1835年の肖像、ルイヤール）
+      age: false
+    background: *id005
+    card:
+      head: 6月18日
+      body: グルーシーはワーヴルで戦う
+  - 語り: 午前11時半ごろ、遠い戦場の方角から、大砲の音が聞こえます。部下のジェラール将軍は、砲声に向かって進もう、と勧めました。グルーシーは、命令どおり、ワーヴルの戦いを続けます。
+    background:
+      image: paintings/waterloo_sadler_right.jpg
+      credit: ワーテルローの戦い（ウィリアム・サドラー2世、19世紀前半。部分）
+  - 聞き: 音が聞こえてたのに、行かなかったの？ あーしなら、胸騒ぎして走っちゃうかも。でも、勝手に動いて外れたら、責任重大だよね。
+    tone: 疑問
+  - 語り: グルーシーは、17日、プロイセンがどの道を退いたか、つかめていませんでした。命令も、あいまいでした。
+  - 聞き: 命令があいまいだと、現場は迷うよね。
+    tone: しみじみ
+  - 語り: ナポレオンも、午前10時ごろ、新しい命令を出しています。プロイセンを攻めろという、スールトの手紙は、午後1時に書かれました。
+    background:
+      image: paintings/waterloo_andrieux_b.jpg
+      credit: 《ワーテルローの戦い》（クレマン＝オーギュスト・アンドリュー、1852年。部分）
+    card:
+      head: 午後1時
+      body: スールトが手紙を書く
+  - 語り: その手紙が届いたのは、夕方から夜で、時刻は文献で割れます。グルーシーが、ワーテルローの敗北を知ったのは、翌19日の午前10時半です。
+    card:
+      head: 夕方以降
+      body: 手紙がグルーシーに届く
+  - 語り: ワーヴルの戦いは、18日から19日まで続きました。戦術では、フランスの勝ちです。でも、プロイセンの後衛が足止めに成功したので、戦略では、プロイセンの成功とされます。
+  - 聞き: 戦いに勝っても、足止めされたら、負けみたいなものか。
+    tone: しみじみ
+  - 語り: ブリュッヘル側は、1個軍団をワーヴルに残してグルーシーを止め、約4万8千から5万のプロイセン軍を、ワーテルローへ向かわせていました。
+    background:
+      image: paintings/waterloo_plance.jpg
+      credit: プランスノワへのプロイセン軍の攻撃（アドルフ・ノルテン、1864年。部分）
+    card:
+      head: ブリュッヘルの手
+      body: 1個軍団でグルーシーを止める
+    figure:
+      type: bars
+      title: 動かせた軍の数（約）
+      bars:
+      - - ワーヴルのグルーシー軍
+        - 33000
+      - - 戦場へ向かったプロイセン軍
+        - 48000
+      labels:
+      - 約3万3千
+      - 約4万8千〜5万
+      note: 数は文献で少し割れる
+  - 聞き: 同じ3万3千が、もし、戦場にいたら……。冒頭の数字が、ここでつながるんだね。
+    tone: しみじみ
+    figure: null
+  - 語り: ナポレオンの体調も、よく話題になります。痔や膀胱の病気で、動きが鈍かった、という見方があります。ただ、これは推測で、確かめられた事実ではありません。
+    portrait:
+      image: paintings/napoleon_study_david.jpg
+      caption: ナポレオン（1812年の肖像、ダヴィッド）
+      age: false
+    background:
+      image: paintings/waterloo_crofts.jpg
+      credit: 《ワーテルローでの最後の総攻撃》（アーネスト・クロフツ、1895年。部分）
+  - 語り: 歴史家のアンドリュー・ロバーツは、痔があったことは認めつつ、それでは遅れは説明できないとみます。ナポレオンは、午前8時には、服を着て馬に乗っていたからです。
+    card:
+      head: ロバーツの見方
+      body: 痔では遅れを説明できない
+  - 聞き: 仕事でも、体調のせいにしたくなる日はあるけど、時間で見ると別の話になるんだね。体調だけじゃ、決め手にならないのか。
+    tone: 納得
+  - 語り: 戦場の指揮は、多くをネイに任せていました。ナポレオン自身は、ロソムの丘から、ラ・ベル・アリアンスの近くへ動いたとされます。
+    background:
+      image: paintings/waterloo_butler_r.jpg
+      credit: 《スコットランドよ永遠に》（エリザベス・トンプソン〈レディ・バトラー〉、1881年。部分）
+  - 語り: 負けた原因は、ひとつでは言えません。遅れ、ネイの突撃、グルーシー、プロイセンの到着。どれが決め手だったかは、歴史家のあいだで、議論が続いています。
+    background:
+      image: paintings/waterloo_sadler_left.jpg
+      credit: ワーテルローの戦い（ウィリアム・サドラー2世、19世紀前半。部分）
+  - 聞き: じゃあ、ひとつだけ変えたら、どうなるの？
+    tone: 疑問
+    hook: true
+  - 語り: その前に、負けたあとの史実を見ます。
+    hook: true
+- title: 6月22日〜1821年 退位とセントヘレナ ウィーン体制
+  background: &id006
+    image: paintings/waterloo_pieneman_c.jpg
+    credit: 《ワーテルローの戦い》（ヤン・ウィレム・ピーネマン、1824年。部分）
+  year: 1815
+  lines:
+  - 語り: 6月22日、ナポレオンは、息子のナポレオン2世に譲る形で、2度目の退位をします。百日天下は、ここで終わりました。
+    portrait:
+      image: paintings/napoleon_study_david.jpg
+      caption: ナポレオン（1812年の肖像、ダヴィッド）
+      age: false
+    background: *id006
+    card:
+      head: 6月22日
+      body: 2度目の退位
+    figure:
+      type: stats
+      title: 百日天下の年表（1815年）
+      items:
+      - - パリ入り
+        - 3月20日
+        - 百日天下の始まり
+      - - 2度目の退位
+        - 6月22日
+        - 約94日後
+      - - ルイ18世が復位
+        - 7月8日
+        - 約110日後
+  - 語り: 百日天下という名ですが、実際は約3か月です。パリ入りから退位まで約94日、ルイ18世の復位までなら、約110日と数えます。
+  - 聞き: 100日って、数え方しだいなんだね。ぴったりじゃないのに、名前だけ残ったよ。
+    tone: 納得
+  - 語り: 7月7日、連合軍はパリに入り、翌8日、ルイ18世が戻ります。ナポレオンは、7月15日に英艦ベレロフォン号に身を預け、10月、南大西洋のセントヘレナ島へ送られました。
+    background:
+      image: paintings/napoleon_saint_helena_ship_1826.jpg
+      credit: セントヘレナ島沖の英国軍艦（ウィリアム・ジョン・ハギンズ、1826年ごろ）
+    figure: null
+  - 聞き: 逃げ場が、島ひとつになっちゃった。南大西洋の、ぽつんとした島だよね。
+    tone: 重い
+  - 語り: 1821年5月5日、島で亡くなります。51歳でした。
+    year: 1821
+    background:
+      image: paintings/waterloo_sainthelena.jpg
+      credit: 《セントヘレナ島のナポレオン》（フランツ・ヨーゼフ・ザンドマン、1820年ごろ）
+    card:
+      head: 1821年5月5日
+      body: セントヘレナ島で没、51歳
+  - 語り: ネイ元帥は、8月に逮捕され、11月に裁判を受け、12月7日に処刑されます。3月に寝返った、あの決断の結末です。
+    year: 1815
+    portrait:
+      image: paintings/waterloo_ney.jpg
+      caption: ネイ元帥（1805年ごろの肖像、ジェラール）
+      age: false
+    background:
+      image: paintings/waterloo_elba_steuben.jpg
+      credit: 《エルバ島からのナポレオンの帰還》（シャルル・ド・ステューベン、1818年）
+    card:
+      head: 12月7日
+      body: ネイ元帥が処刑される
+  - 語り: 第7連隊を率いて合流したラ・ベドワイエール大佐も、国王の政府に処刑されました。
+    portrait: null
+  - 聞き: 勝つ側につくか、負ける側につくかで、こんなに違うなんて。ネイも、3月の時点では、どっちが勝つか分からなかったはずなのに。
+    tone: 重い
+  - 語り: 11月には、パリで条約が結ばれ、連合軍の占領軍が、北フランスに残りました。指揮は、ウェリントンです。
+    portrait:
+      image: paintings/waterloo_wellington.jpg
+      caption: ウェリントン公（1815〜16年ごろの肖像、ローレンス）
+      age: false
+    background:
+      image: paintings/waterloo_map_strat.jpg
+      credit: 1815年6月1日の欧州北西部の配置図（米国陸軍士官学校歴史学科の地図。部分）
+    card:
+      head: 11月
+      body: 占領軍が北フランスに残る
+  - 語り: 戦いの9日前、6月9日に、ウィーン会議の最終議定書は、すでに結ばれていました。国境と勢力均衡を守る、いわゆるウィーン体制です。1914年ごろまで、外交の指針になったと言われます。
+    portrait:
+      image: paintings/waterloo_metternich.jpg
+      caption: メッテルニヒ（1815年の肖像、ローレンス）
+      age: false
+    background:
+      image: paintings/waterloo_congress2.jpg
+      credit: 《ヨーロッパの再生》ウィーンの君主の集い（1814年の彩色版画。部分）
+    card:
+      head: 6月9日
+      body: ウィーン会議の最終議定書
+  - 聞き: 戦いの前に、もう取り決めはできてた、ってこと？
+    tone: 疑問
+  - 語り: では、史料や研究に、別の道は残っているのか。次は、そこを見ます。
+    hook: true
+- title: 1815年6月 史料と論考に残る別の道 グルーシーとプロイセン
+  background: &id007
+    image: paintings/waterloo_butler_l.jpg
+    credit: 《スコットランドよ永遠に》（エリザベス・トンプソン〈レディ・バトラー〉、1881年。部分）
+  year: 1815
+  lines:
+  - 語り: 想像の前に、実際に議論されてきた別の道を、4つ見ます。1つ目。開戦が早い道です。
+    portrait:
+      image: paintings/napoleon_study_david.jpg
+      caption: ナポレオン（1812年の肖像、ダヴィッド）
+      age: false
+    background: *id007
+    card:
+      head: 別の道 1
+      body: 朝に攻める
+  - 語り: 前夜の雨で、地面はぬかるんでいました。もっと早く攻めていれば、という議論があります。とはいえ、早く攻めても、ぬかるみが砲と騎兵を鈍らせたかもしれず、結果は分かりません。
+  - 聞き: 早く攻めても、ぬかるみにはまるだけかもしれないのか。戦いを決めるのは、天気と地面でもあるんだね。
+    tone: 納得
+  - 語り: 2つ目。グルーシーが、砲声に向かう道です。ジェラールの進言どおりなら、約3万3千が戦場に近づきます。ロベール・アロンの『ワーテルローの勝利』などが、この道を描きました。
+    portrait:
+      image: paintings/waterloo_grouchy.jpg
+      caption: グルーシー元帥（1835年の肖像、ルイヤール）
+      age: false
+    background:
+      image: paintings/waterloo_map1.jpg
+      credit: ワーテルローの戦い 第1図 朝（アリソン『欧州史』の地図、1852年。部分）
+    card:
+      head: 別の道 2
+      body: グルーシーが砲声に向かう
+  - 語り: 3つ目。プロイセンが、ウェリントンに合流しない道です。グナイゼナウの退く先は、研究で見方が割れます。
+    portrait:
+      image: paintings/waterloo_blucher.jpg
+      caption: ブリュッヘル（1818年の肖像、ジョージ・ドーウ）
+      age: false
+    background:
+      image: paintings/waterloo_map2.jpg
+      credit: ワーテルローの戦い 第2図 危機（アリソン『欧州史』の地図、1852年。部分）
+    card:
+      head: 別の道 3
+      body: プロイセンが合流しない
+  - 語り: ウェリントンと連絡を保つため北へ退いた、とみる人もいれば、リエージュのほうへ向かっていた、とみる人もいます。
+  - 語り: 4つ目。カトル・ブラで、違いが出る道です。ウェリントンの命令に、現地の将軍たちが従っていれば、カトル・ブラは、おそらくフランス側に落ちた、という見方です。
+    portrait:
+      image: paintings/waterloo_ney.jpg
+      caption: ネイ元帥（1805年ごろの肖像、ジェラール）
+      age: false
+    background:
+      image: paintings/waterloo_butler.jpg
+      credit: 《スコットランドよ永遠に》（エリザベス・トンプソン〈レディ・バトラー〉、1881年）
+    card:
+      head: 別の道 4
+      body: カトル・ブラで違いが出る
+  - 語り: 歴史家ロングフォードの論として紹介されます。
+  - 聞き: カトル・ブラは、ネイが迷った場所でもあったよね。そこで違いが出るなら、確かに大きいかも。でも、どれか1つだけで、ひっくり返るの？
+    tone: 疑問
+  - 語り: そこは、分かりません。歴史家の本にも、フランスの勝ちから書いた思考実験があります。戦場の別の道を描いた本は、いくつもあります。
+    portrait: null
+    background:
+      image: paintings/waterloo_pieneman_b.jpg
+      credit: 《ワーテルローの戦い》（ヤン・ウィレム・ピーネマン、1824年。部分）
+  - 語り: 分かれ目は、ひとつだけ。プロイセンの到着が間に合わず、夜、ナポレオンが戦場を押さえた、という形です。どう間に合わなかったかは、決めません。
+    background:
+      image: paintings/waterloo_sadler_left.jpg
+      credit: ワーテルローの戦い（ウィリアム・サドラー2世、19世紀前半。部分）
+  - 聞き: 勝った夜、ナポレオンは、何て言うんだろう。
+    tone: しみじみ
+    hook: true
+  - 語り: 場面は、勝った夜の戦場です。
+    hook: true
+- title: 想像① 6月18日の夜 ラ・ベル・アリアンスのそば
+  background: &id008
+    image: paintings/waterloo_sadler_right.jpg
+    credit: ワーテルローの戦い（ウィリアム・サドラー2世、19世紀前半。部分）
+  year: 1815
+  lines:
+  - 語り: ここから先は、想像です。仮定は、ひとつだけ。6月18日、プロイセン軍の到着が間に合わず、夜、ナポレオンが戦場を押さえる。それだけです。
+    portrait:
+      image: paintings/napoleon_study_david.jpg
+      caption: ナポレオン（1812年の肖像、ダヴィッド）
+      age: false
+    background: *id008
+    card:
+      head: ここから想像
+      body: プロイセンが間に合わない
+  - 語り: ほかは、史実のまま。連合の大軍は動いていて、ウィーン会議の宣言も、変わりません。
+    background:
+      image: paintings/waterloo_crofts.jpg
+      credit: 《ワーテルローでの最後の総攻撃》（アーネスト・クロフツ、1895年。部分）
+  - 語り: 想像劇場、第1幕です。もしもの話です。プロイセンが間に合わず、ナポレオンが勝った夜、ラ・ベル・アリアンスの近くで、ナポレオンとネイが向き合います。台詞は想像です。
+    background:
+      image: paintings/waterloo_andrieux.jpg
+      credit: 《ワーテルローの戦い》（クレマン＝オーギュスト・アンドリュー、1852年）
+    card:
+      head: 想像劇場 第1幕
+      body: 6月18日の夜 戦場のそば
+    short: s4
+  - 人物: 「ウェリントンは、どこまで退いた」
+    who: ナポレオン想像
+    portrait:
+      image: paintings/napoleon_study_david.jpg
+      caption: ナポレオン（1812年の肖像、ダヴィッド）
+      age: false
+    short: s4
+  - 人物: 「ブリュッセルの方角へ。ただ、軍は残っております」
+    who: ネイ想像
+    portrait:
+      image: paintings/waterloo_ney.jpg
+      caption: ネイ元帥（1805年ごろの肖像、ジェラール）
+      age: false
+    short: s4
+  - 人物: 「プロイセンは」
+    who: ナポレオン想像
+    portrait:
+      image: paintings/napoleon_study_david.jpg
+      caption: ナポレオン（1812年の肖像、ダヴィッド）
+      age: false
+    short: s4
+  - 人物: 「到着が遅れましたが、消えてはおりませぬ」
+    who: ネイ想像
+    portrait:
+      image: paintings/waterloo_ney.jpg
+      caption: ネイ元帥（1805年ごろの肖像、ジェラール）
+      age: false
+    background:
+      image: paintings/waterloo_butler.jpg
+      credit: 《スコットランドよ永遠に》（エリザベス・トンプソン〈レディ・バトラー〉、1881年）
+    short: s4
+  - 人物: 「ブリュッヘルは、リニーで負けても、2日で戻った男だ」
+    who: ナポレオン想像
+    portrait:
+      image: paintings/napoleon_study_david.jpg
+      caption: ナポレオン（1812年の肖像、ダヴィッド）
+      age: false
+    short: s4
+  - 人物: 「では陛下、追撃を」
+    who: ネイ想像
+    portrait:
+      image: paintings/waterloo_ney.jpg
+      caption: ネイ元帥（1805年ごろの肖像、ジェラール）
+      age: false
+    short: s4
+  - 人物: 「追う。ただし、グルーシーを呼び戻せ。軍を1つにする」
+    who: ナポレオン想像
+    portrait:
+      image: paintings/napoleon_study_david.jpg
+      caption: ナポレオン（1812年の肖像、ダヴィッド）
+      age: false
+    short: s4
+  - 人物: 「休んではおれぬ。7月1日まで、あと2週間ほどだ」
+    who: ナポレオン想像
+    portrait:
+      image: paintings/napoleon_study_david.jpg
+      caption: ナポレオン（1812年の肖像、ダヴィッド）
+      age: false
+  - 人物: 「では、ブリュッセルを押さえましょう。16日のカトル・ブラのような、ためらいは、いたしませぬ」
+    who: ネイ想像
+    portrait:
+      image: paintings/waterloo_ney.jpg
+      caption: ネイ元帥（1805年ごろの肖像、ジェラール）
+      age: false
+  - 聞き: 勝っても、あんまり安心してないね、ナポレオン。ネイは、16日のカトル・ブラを、引きずってるんだね。
+    tone: しみじみ
+    portrait: null
+  - 語り: ここでは、ナポレオンが、翌日も追撃を続ける、と想像します。ウェリントン軍は退きますが、壊滅はしません。史実でも、ウェリントンは17日に退いて、軍を保ったからです。
+    background:
+      image: paintings/waterloo_cuirass.jpg
+      credit: 《ワーテルローの胸甲騎兵の突撃》（アンリ・フェリックス・エマニュエル・フィリポトー、1874年。部分）
+    card:
+      head: ありうる
+      body: 連合軍は退くが、壊滅しない
+  - 語り: 追撃がどこまで成功するか。ウェリントン軍は、史実では約1万7千を失います。もしもでは、それ以上かもしれません。この先は、材料がなく、ほぼ妄想です。
+    card:
+      head: ほぼ妄想
+      body: 追撃の成果は材料なし
+  - 聞き: そのブリュッヘルの軍は、無事なの？ 連合の側は、どうしてるんだろう。
+    tone: 疑問
+    hook: true
+  - 語り: 場面を、連合の側へ移します。
+    hook: true
+- title: 想像② 6月19日 連合軍の陣 ウェリントンとブリュッヘル
+  background: &id009
+    image: paintings/waterloo_map1.jpg
+    credit: ワーテルローの戦い 第1図 朝（アリソン『欧州史』の地図、1852年。部分）
+  year: 1815
+  lines:
+  - 語り: 想像劇場、第2幕です。6月19日、連合軍の陣。ウェリントンと、ブリュッヘルが、顔を合わせます。ここで会った記録は、ありません。台詞は、想像です。
+    portrait:
+      image: paintings/waterloo_wellington.jpg
+      caption: ウェリントン公（1815〜16年ごろの肖像、ローレンス）
+      age: false
+    background: *id009
+    card:
+      head: ここから想像
+      body: 第2幕 6月19日 連合軍の陣
+  - 人物: 「ブリュッヘル殿、軍は残っておるか」
+    who: ウェリントン想像
+    portrait:
+      image: paintings/waterloo_wellington.jpg
+      caption: ウェリントン公（1815〜16年ごろの肖像、ローレンス）
+      age: false
+  - 人物: 「残っておる。まだ戦えるぞ」
+    who: ブリュッヘル想像
+    portrait:
+      image: paintings/waterloo_blucher.jpg
+      caption: ブリュッヘル（1818年の肖像、ジョージ・ドーウ）
+      age: false
+    background:
+      image: paintings/waterloo_cuirass_b.jpg
+      credit: 《ワーテルローの胸甲騎兵の突撃》（アンリ・フェリックス・エマニュエル・フィリポトー、1874年。部分）
+  - 人物: 「こちらは、昨日の戦いで、多くの兵を失った。ナポレオンは、また攻めてくる」
+    who: ウェリントン想像
+    portrait:
+      image: paintings/waterloo_wellington.jpg
+      caption: ウェリントン公（1815〜16年ごろの肖像、ローレンス）
+      age: false
+  - 人物: 「ならば、退いて、合流を保つのだ。7月には、ウィーンの大軍が来る」
+    who: ブリュッヘル想像
+    portrait:
+      image: paintings/waterloo_blucher.jpg
+      caption: ブリュッヘル（1818年の肖像、ジョージ・ドーウ）
+      age: false
+  - 人物: 「7月1日まで、持ちこたえればよい、ということか」
+    who: ウェリントン想像
+    portrait:
+      image: paintings/waterloo_wellington.jpg
+      caption: ウェリントン公（1815〜16年ごろの肖像、ローレンス）
+      age: false
+    background:
+      image: paintings/waterloo_butler_l.jpg
+      credit: 《スコットランドよ永遠に》（エリザベス・トンプソン〈レディ・バトラー〉、1881年。部分）
+  - 人物: 「そうだ。勝つ必要はない。時間を稼げばよい」
+    who: ブリュッヘル想像
+    portrait:
+      image: paintings/waterloo_blucher.jpg
+      caption: ブリュッヘル（1818年の肖像、ジョージ・ドーウ）
+      age: false
+  - 人物: 「ならば、ナポレオンが疲れるまで、退いて待とう」
+    who: ウェリントン想像
+    portrait:
+      image: paintings/waterloo_wellington.jpg
+      caption: ウェリントン公（1815〜16年ごろの肖像、ローレンス）
+      age: false
+  - 人物: 「大軍は、じきに来る。それまで、軍を保つのだ」
+    who: ブリュッヘル想像
+    portrait:
+      image: paintings/waterloo_blucher.jpg
+      caption: ブリュッヘル（1818年の肖像、ジョージ・ドーウ）
+      age: false
+  - 聞き: 勝たなくていい、時間を稼げばいいって……。テストで、満点はいらない、赤点だけ避ければいい、って決めた人は強いもんね。ナポレオンには、いちばん嫌な相手じゃない？
+    tone: しみじみ
+    portrait: null
+  - 語り: ここでは、プロイセン軍は壊滅しない、と想像します。リニーで負けたあとも、2日で戦場へ来たのは、史実だからです。
+    background:
+      image: paintings/waterloo_map2.jpg
+      credit: ワーテルローの戦い 第2図 危機（アリソン『欧州史』の地図、1852年。部分）
+    card:
+      head: 高い
+      body: プロイセン軍は消えない
+  - 語り: 2人が、この会話のように割り切ったかは、材料がありません。台詞は、想像です。
+    portrait:
+      image: paintings/waterloo_wellington.jpg
+      caption: ウェリントン公（1815〜16年ごろの肖像、ローレンス）
+      age: false
+    background:
+      image: paintings/waterloo_cuirass.jpg
+      credit: 《ワーテルローの胸甲騎兵の突撃》（アンリ・フェリックス・エマニュエル・フィリポトー、1874年。部分）
+  - 聞き: ウィーンの側は、この知らせを、どう受け止めたんだろう。
+    tone: 疑問
+    portrait: null
+    hook: true
+  - 語り: 場面を、連合の本営に移します。
+    hook: true
+- title: 想像③ 6月下旬 連合の本営 アレクサンドルとメッテルニヒ
+  background: &id010
+    image: paintings/waterloo_congress.jpg
+    credit: ウィーン会議（イザベ原画、19世紀前半の版画）
+  year: 1815
+  lines:
+  - 語り: 想像劇場、第3幕です。6月下旬、連合の本営。ロシア皇帝アレクサンドル1世と、オーストリアのメッテルニヒが、戦いの知らせを受けます。場所は特定しません。台詞は想像です。
+    portrait:
+      image: paintings/waterloo_alexander1.jpg
+      caption: アレクサンドル1世（1814〜18年の肖像、ローレンス）
+      age: false
+    background: *id010
+    card:
+      head: ここから想像
+      body: 第3幕 6月下旬 連合の本営
+  - 人物: 「ナポレオンが、ワーテルローで勝ったそうだ」
+    who: アレクサンドル想像
+    portrait:
+      image: paintings/waterloo_alexander1.jpg
+      caption: アレクサンドル1世（1814〜18年の肖像、ローレンス）
+      age: false
+  - 人物: 「ウェリントンとブリュッヘルの軍は、残っております。約束の7月1日は、変わりませぬ」
+    who: メッテルニヒ想像
+    portrait:
+      image: paintings/waterloo_metternich.jpg
+      caption: メッテルニヒ（1815年の肖像、ローレンス）
+      age: false
+    background:
+      image: paintings/waterloo_congress2.jpg
+      credit: 《ヨーロッパの再生》ウィーンの君主の集い（1814年の彩色版画。部分）
+  - 人物: 「ロシアの兵は、ライン川へ向かっている。ここで止まれば、また、あの男に戻られる」
+    who: アレクサンドル想像
+    portrait:
+      image: paintings/waterloo_alexander1.jpg
+      caption: アレクサンドル1世（1814〜18年の肖像、ローレンス）
+      age: false
+  - 人物: 「ナポレオンは、和平を申し出るでしょう。ただし、勝った側の条件で」
+    who: メッテルニヒ想像
+    portrait:
+      image: paintings/waterloo_metternich.jpg
+      caption: メッテルニヒ（1815年の肖像、ローレンス）
+      age: false
+    background:
+      image: paintings/waterloo_mapc.jpg
+      credit: 《ベルギー戦役の歴史地図》（シドニー・ホール、1816年。部分）
+  - 人物: 「それは、のめぬ。3月に、全員で約束したはずだ」
+    who: アレクサンドル想像
+    portrait:
+      image: paintings/waterloo_alexander1.jpg
+      caption: アレクサンドル1世（1814〜18年の肖像、ローレンス）
+      age: false
+  - 人物: 「はい。各国15万の約束です。続けましょう」
+    who: メッテルニヒ想像
+    portrait:
+      image: paintings/waterloo_metternich.jpg
+      caption: メッテルニヒ（1815年の肖像、ローレンス）
+      age: false
+  - 人物: 「足並みを崩す者が出ぬよう、見張らねばならぬ」
+    who: アレクサンドル想像
+    portrait:
+      image: paintings/waterloo_alexander1.jpg
+      caption: アレクサンドル1世（1814〜18年の肖像、ローレンス）
+      age: false
+  - 人物: 「ご安心を。各国の足並みは、そろっております」
+    who: メッテルニヒ想像
+    portrait:
+      image: paintings/waterloo_metternich.jpg
+      caption: メッテルニヒ（1815年の肖像、ローレンス）
+      age: false
+  - 聞き: 連合は、ワーテルローの勝ち負けでは、ぐらつかなかったのかな。あーしなら、1回負けたら、考え直しちゃうかも。
+    tone: 疑問
+    portrait: null
+  - 語り: ここでは、連合は侵攻を止めない、と想像します。3月の宣言と、25日の約束、7月1日の予定が、どれも史実だからです。
+    background:
+      image: paintings/waterloo_haye.jpg
+      credit: ラ・エー・サントの攻防（リヒャルト・クネーテル、19世紀後半〜20世紀初め）
+    card:
+      head: 高い
+      body: 連合は侵攻をやめない
+  - 語り: ナポレオンの妻マリー＝ルイーズは、オーストリアの皇女でした。オーストリアだけが、和平に動く道も、頭に浮かびます。材料はなく、ほぼ妄想です。
+    card:
+      head: ほぼ妄想
+      body: 単独和平の材料はなし
+  - 語り: 数も、もう一度見ます。連合は約85万、ナポレオン側は約25万。勝った翌日でも、この差は消えません。
+    background:
+      image: paintings/waterloo_mapc.jpg
+      credit: 《ベルギー戦役の歴史地図》（シドニー・ホール、1816年。部分）
+    figure: *id011
+  - 聞き: 勝っても、数では、まだ負けてるよね。ナポレオンが勝ち続けても、使える兵は、どんどん減っていくよね。じゃあ、ナポレオンの帝政は、いつまで持つんだろう。
+    tone: 疑問
+    figure: null
+    hook: true
+  - 語り: 次は、人の運命を、表にします。
+    hook: true
+- title: 想像④ 1815年夏 ナポレオン・ウェリントン・ネイ・グルーシーの運命表
+  background: &id012
+    image: paintings/waterloo_sadler_mid.jpg
+    credit: ワーテルローの戦い（ウィリアム・サドラー2世、19世紀前半。部分）
+  year: 1815
+  lines:
+  - 語り: ここが、今日いちばんの見どころです。前提は、ひとつ。史実のナポレオンは、6月22日に退位しました。もしも、勝っていたら。4人の運命は、どうなるのか。
+    portrait: null
+    background: *id012
+    card:
+      head: ここから想像
+      body: 人物の運命表
+  - 聞き: 誰がどうなるのか、一覧で見られるの？ この表にも、研究はあるの？
+    tone: 疑問
+  - 語り: 材料は、これまで見た事実だけです。表は、4人にしぼります。この表を論じた研究も、見つかっていません。
+    card:
+      head: 研究
+      body: 論じた研究は見つからない
+  - 語り: 1人目は、ナポレオン。史実では、6月22日に退位し、島で亡くなります。もしもは、夏の戦いを続けます。連合の大軍が来るまで、約2週間です。
+    portrait:
+      image: paintings/napoleon_study_david.jpg
+      caption: ナポレオン（1812年の肖像、ダヴィッド）
+      age: false
+    background:
+      image: paintings/waterloo_pieneman_b.jpg
+      credit: 《ワーテルローの戦い》（ヤン・ウィレム・ピーネマン、1824年。部分）
+    figure:
+      type: table
+      title: 人物の運命表（史実ともしも）
+      cols: &id013
+      - 史実
+      - もしも
+      rows: &id014
+      - - ナポレオン
+        - 6月22日に退位、島で51歳で没
+        - 夏の戦いを続ける
+        - ありうる
+      - - ウェリントン軍
+        - 勝者として占領軍を指揮
+        - 退いて、時間を稼ぐ
+        - ありうる
+      - - ネイ元帥
+        - 12月7日に処刑
+        - 勝った側の元帥として戦う
+        - ありうる
+      - - グルーシー
+        - ワーヴルで戦い、敗北を翌日に知る
+        - 合流して全軍で追撃
+        - ほぼ妄想
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 1
+  - 聞き: 2週間で、どこまでできるんだろう。ブリュッセルまで行って、連合の本拠を押さえる、とか？
+    tone: 疑問
+  - 語り: 2人目は、ウェリントン軍。史実では、勝者として、のちに占領軍を指揮します。もしもは、退いて、時間を稼ぎます。
+    portrait:
+      image: paintings/waterloo_wellington.jpg
+      caption: ウェリントン公（1815〜16年ごろの肖像、ローレンス）
+      age: false
+    background:
+      image: paintings/waterloo_sadler_right.jpg
+      credit: ワーテルローの戦い（ウィリアム・サドラー2世、19世紀前半。部分）
+    figure:
+      type: table
+      title: 人物の運命表（史実ともしも）
+      cols: *id013
+      rows: *id014
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 2
+  - 聞き: ウェリントン、史実では勝った側なのに、ここでは時間稼ぎの役か。立場が逆になるね。
+    tone: 納得
+  - 語り: 3人目は、ネイ。史実では、12月7日に処刑されます。もしもは、勝った側の元帥として戦います。けれど、7月以降は連合の大軍が来るので、その先は読めません。
+    portrait:
+      image: paintings/waterloo_ney.jpg
+      caption: ネイ元帥（1805年ごろの肖像、ジェラール）
+      age: false
+    background:
+      image: paintings/waterloo_cuirass_b.jpg
+      credit: 《ワーテルローの胸甲騎兵の突撃》（アンリ・フェリックス・エマニュエル・フィリポトー、1874年。部分）
+    figure:
+      type: table
+      title: 人物の運命表（史実ともしも）
+      cols: *id013
+      rows: *id014
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 3
+  - 聞き: ネイは、勝てば処刑されない道もある、ってことか。でも、その先は連合の大軍だもんね。
+    tone: 重い
+  - 語り: 4人目は、グルーシー。史実では、ワーヴルで戦い、敗北を翌日に知ります。もしもは、合流して全軍で追撃します。ここは、札のとおりです。
+    portrait:
+      image: paintings/waterloo_grouchy.jpg
+      caption: グルーシー元帥（1835年の肖像、ルイヤール）
+      age: false
+    background:
+      image: paintings/waterloo_map1_c.jpg
+      credit: ワーテルローの戦い 第1図 朝（アリソン『欧州史』の地図、1852年。部分）
+    figure:
+      type: table
+      title: 人物の運命表（史実ともしも）
+      cols: *id013
+      rows: *id014
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 4
+  - 聞き: 表で見ると、はっきりしてるのは、連合の動きだけか。ほかの人は、どうなったのかな。
+    tone: しみじみ
+    hook: true
+  - 語り: 次は、ヨーロッパ全体の変化点を、見ます。
+    hook: true
+- title: 想像⑤ ヨーロッパの変化点と、見方の割れ 現代につながる鎖
+  background: &id015
+    image: paintings/waterloo_congress2.jpg
+    credit: 《ヨーロッパの再生》ウィーンの君主の集い（1814年の彩色版画。部分）
+  year: 1815
+  lines:
+  - 語り: ここからは、さらに遠い話です。ナポレオンが勝ったなら、ヨーロッパの形は、どう変わったのか。まず、歴史家たちの見方を見ます。見方は、割れます。
+    portrait: null
+    background: *id015
+    card:
+      head: ここからは歴史家の見方
+      body: 想像ではなく論者の見方
+    figure: null
+  - 聞き: 研究は見つからないのに、見方は割れてるの？
+    tone: 疑問
+  - 語り: 研究ではなく、論考や討論です。4人の見方を、名前つきで並べます。いずれも、紹介記事で知った要約で、原典は確かめていません。
+    background:
+      image: paintings/waterloo_cuirass.jpg
+      credit: 《ワーテルローの胸甲騎兵の突撃》（アンリ・フェリックス・エマニュエル・フィリポトー、1874年。部分）
+    card:
+      head: 4人の見方
+      body: 原典は未確認
+  - 語り: 1人目は、アンドリュー・ロバーツ。ロバーツは、連合の戦争のほうが先だった、とみます。
+    background:
+      image: paintings/waterloo_andrieux_b.jpg
+      credit: 《ワーテルローの戦い》（クレマン＝オーギュスト・アンドリュー、1852年。部分）
+    card:
+      head: ロバーツ
+      body: 連合の戦争が先、とみる
+  - 語り: ナポレオンは、平和を申し出ていた、という見方です。勝てば、自由主義への弾圧が抑えられた、と論じます。
+    card:
+      head: ロバーツ
+      body: 勝てば弾圧が抑えられた
+  - 語り: 2人目は、アダム・ザモイスキ。討論で、ナポレオンの和平の条件は無理があった、と反論したと紹介されます。この点は、出典を確かめられていません。
+    card:
+      head: ザモイスキ
+      body: 和平は無理、との紹介（未確認）
+  - 語り: 3人目は、G・M・トレヴェリアン。かつての敵が常備軍を保ち、大陸の改革運動を、数十年おさえた、と想像しました。
+    background:
+      image: paintings/waterloo_cuirass_b.jpg
+      credit: 《ワーテルローの胸甲騎兵の突撃》（アンリ・フェリックス・エマニュエル・フィリポトー、1874年。部分）
+    card:
+      head: トレヴェリアン
+      body: 敵は常備軍を保つ
+  - 語り: 4人目は、アラン・フォレストらです。フランスが勝っても、最終的な結末は変わらず、数週間から数か月で打ち負かされた、とみます。
+    background:
+      image: paintings/waterloo_mapc.jpg
+      credit: 《ベルギー戦役の歴史地図》（シドニー・ホール、1816年。部分）
+    card:
+      head: フォレストら
+      body: 結末は変わらない、と多くが
+  - 語り: フォレストは、革命のあとで深く割れたフランス国内も、ナポレオンの足かせになった、と指摘します。
+  - 語り: ここからは、想像です。変化点を、表にします。
+    background:
+      image: paintings/waterloo_haye.jpg
+      credit: ラ・エー・サントの攻防（リヒャルト・クネーテル、19世紀後半〜20世紀初め）
+    card:
+      head: ここから想像
+      body: ヨーロッパの変化点
+  - 聞き: 同じ勝ちでも、良かったと見る人から、変わらないと見る人まで、いるんだね。
+    tone: 納得
+  - 語り: ウィーン体制は、史実では、1914年ごろまで外交の指針でした。もしもは、形が変わる道もあります。材料は乏しく、札のとおりです。
+    background:
+      image: paintings/waterloo_congress.jpg
+      credit: ウィーン会議（イザベ原画、19世紀前半の版画）
+    figure:
+      type: table
+      title: ヨーロッパの変化点（史実ともしも）
+      cols: *id013
+      rows: &id016
+      - - ウィーン体制
+        - 6月9日に最終議定書、1914年ごろまで指針
+        - 形が変わる道もある
+        - ほぼ妄想
+      - - フランスの政体
+        - 7月8日にルイ18世が復位
+        - 数か月は続き、いずれ倒れる
+        - ありうる
+      - - 連合の占領
+        - 11月の条約で北フランスに占領軍
+        - 講和が別の形になる
+        - ほぼ妄想
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 1
+  - 語り: フランスの政体は、史実では7月8日に国王ルイ18世が戻ります。もしもは、数か月は、ナポレオンの政権が続きます。
+    portrait:
+      image: paintings/napoleon_study_david.jpg
+      caption: ナポレオン（1812年の肖像、ダヴィッド）
+      age: false
+    background:
+      image: paintings/waterloo_elba_steuben.jpg
+      credit: 《エルバ島からのナポレオンの帰還》（シャルル・ド・ステューベン、1818年）
+    figure:
+      type: table
+      title: ヨーロッパの変化点（史実ともしも）
+      cols: *id013
+      rows: *id016
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 2
+  - 語り: 冒頭の問い2の答えは、いずれ続かなくなる、です。
+  - 語り: 数か月は続き、そのあとは続かない。この2つは、続けて起きる話です。札は、どちらも、ありうる、です。
+  - 語り: 連合の占領は、史実では、11月の条約で、北フランスに占領軍が残ります。もしもは、講和が別の形になる道です。材料は、ありません。
+    portrait:
+      image: paintings/waterloo_wellington.jpg
+      caption: ウェリントン公（1815〜16年ごろの肖像、ローレンス）
+      age: false
+    background:
+      image: paintings/waterloo_map_strat.jpg
+      credit: 1815年6月1日の欧州北西部の配置図（米国陸軍士官学校歴史学科の地図。部分）
+    figure:
+      type: table
+      title: ヨーロッパの変化点（史実ともしも）
+      cols: *id013
+      rows: *id016
+      note: もしもは想像。右の札は可能性の高さ
+      upto: 3
+  - 聞き: ウィーン体制の形が変わるなら、その先の100年も変わるのかな。
+    tone: 疑問
+  - 語り: そう筋を引く人もいます。ウィーン体制の反動が、第一次世界大戦につながる、という見方です。因果は断定できません。この点を論じた研究も、見つかっていません。
+    portrait: null
+    background:
+      image: paintings/waterloo_butler_l.jpg
+      credit: 《スコットランドよ永遠に》（エリザベス・トンプソン〈レディ・バトラー〉、1881年。部分）
+    card:
+      head: 現代への鎖
+      body: 因果は断定できない
+    figure: null
+  - 聞き: ここまで想像が続いたけど、史実で言えることは、結局、何だったっけ？
+    tone: 疑問
+    hook: true
+  - 語り: それを、最後に整理します。
+    hook: true
+- title: まとめ：1815年6月18日 ふたつの数字の分かれ道
+  background: &id017
+    image: paintings/waterloo_pieneman_b.jpg
+    credit: 《ワーテルローの戦い》（ヤン・ウィレム・ピーネマン、1824年。部分）
+  year: 1815
+  lines:
+  - 語り: 冒頭の3つの問いに答えます。1つ目。連合軍は、侵攻をやめたのか。想像では、やめません。札は、高い、です。
+    portrait: null
+    background: *id017
+    figure:
+      type: stats
+      title: 3つの問いの答え（想像）
+      items:
+      - - 連合は？
+        - 止まらない
+        - 高い
+      - - 帝政は？
+        - 続かない
+        - ありうる
+      - - ヨーロッパは？
+        - 見方が割れる
+        - ほぼ妄想
+      upto: 1
+  - 語り: 2つ目。ナポレオンの帝政は、続いたのか。想像では、数か月は持っても、いずれ続かなくなります。連合の大軍と、国内の分裂が重いからです。札は、ありうる、です。
+    background:
+      image: paintings/waterloo_sadler_right.jpg
+      credit: ワーテルローの戦い（ウィリアム・サドラー2世、19世紀前半。部分）
+    figure:
+      type: stats
+      title: 3つの問いの答え（想像）
+      items:
+      - - 連合は？
+        - 止まらない
+        - 高い
+      - - 帝政は？
+        - 続かない
+        - ありうる
+      - - ヨーロッパは？
+        - 見方が割れる
+        - ほぼ妄想
+      upto: 2
+  - 語り: 3つ目。その先のヨーロッパは、どう変わったのか。ロバーツ、ザモイスキ、トレヴェリアンらで、見方が割れます。札は、ほぼ妄想です。
+    background:
+      image: paintings/waterloo_mapc.jpg
+      credit: 《ベルギー戦役の歴史地図》（シドニー・ホール、1816年。部分）
+    figure:
+      type: stats
+      title: 3つの問いの答え（想像）
+      items:
+      - - 連合は？
+        - 止まらない
+        - 高い
+      - - 帝政は？
+        - 続かない
+        - ありうる
+      - - ヨーロッパは？
+        - 見方が割れる
+        - ほぼ妄想
+      upto: 3
+  - 聞き: いちばん確からしいのは、連合が止まらないところ、ってことかな。あとは、細い道の話だった？
+    tone: 疑問
+    figure: null
+  - 語り: もう一度、史実の要点を、番号で。1つ目。ナポレオンは、約1千人でエルバ島を出て、3月20日にパリへ入りました。
+    portrait:
+      image: paintings/napoleon_study_david.jpg
+      caption: ナポレオン（1812年の肖像、ダヴィッド）
+      age: false
+    background:
+      image: paintings/waterloo_andrieux.jpg
+      credit: 《ワーテルローの戦い》（クレマン＝オーギュスト・アンドリュー、1852年）
+  - 語り: 2つ目。ウィーン会議は、3月13日に宣言を出し、連合は7月1日の侵攻を予定していました。
+    portrait: null
+    background:
+      image: paintings/waterloo_congress2.jpg
+      credit: 《ヨーロッパの再生》ウィーンの君主の集い（1814年の彩色版画。部分）
+  - 聞き: 1つ目は島からの帰還で、2つ目は連合の約束が先にできてたこと、だね。
+    tone: 納得
+  - 語り: 3つ目。18日の戦いは、午前11時すぎに始まり、午後7時半ごろ、近衛隊が退きました。
+    portrait:
+      image: paintings/napoleon_study_david.jpg
+      caption: ナポレオン（1812年の肖像、ダヴィッド）
+      age: false
+    background:
+      image: paintings/waterloo_butler_r.jpg
+      credit: 《スコットランドよ永遠に》（エリザベス・トンプソン〈レディ・バトラー〉、1881年。部分）
+  - 語り: 4つ目。グルーシーの約3万3千は、ワーヴルにいて、約4万8千から5万のプロイセン軍が、戦場へ向かいました。
+    portrait:
+      image: paintings/waterloo_grouchy.jpg
+      caption: グルーシー元帥（1835年の肖像、ルイヤール）
+      age: false
+  - 聞き: 3万3千と、約5万の差が、あの日の分かれ道のひとつだったんだね。
+    tone: しみじみ
+  - 語り: さきほどの3つの答えは、全部、想像です。史実で言えるのは、グルーシーが砲声の方向へ進まなかったこと。
+    portrait:
+      image: paintings/waterloo_grouchy.jpg
+      caption: グルーシー元帥（1835年の肖像、ルイヤール）
+      age: false
+    background:
+      image: paintings/waterloo_cuirass_b.jpg
+      credit: 《ワーテルローの胸甲騎兵の突撃》（アンリ・フェリックス・エマニュエル・フィリポトー、1874年。部分）
+    card:
+      head: 史実で言えること
+      body: グルーシーの動き・プロイセンの到着
+  - 語り: プロイセンが、午後に戦場へ着いたこと。ナポレオンが6月22日に退位したことです。
+    portrait:
+      image: paintings/napoleon_study_david.jpg
+      caption: ナポレオン（1812年の肖像、ダヴィッド）
+      age: false
+  - 聞き: 最後に、人柄が分かる話って、ないの？
+    tone: 疑問
+  - 語り: ウェリントンの言葉が、伝わります。勝ったあとで、あれは一番きわどい勝負だった、と語ったと言います。知人が書き留めた話で、確かな記録とは言えません。
+    portrait:
+      image: paintings/waterloo_wellington.jpg
+      caption: ウェリントン公（1815〜16年ごろの肖像、ローレンス）
+      age: false
+    background:
+      image: paintings/waterloo_andrieux.jpg
+      credit: 《ワーテルローの戦い》（クレマン＝オーギュスト・アンドリュー、1852年）
+    card:
+      head: 伝わる話
+      body: 一番きわどい勝負、と語ったとされる
+  - 聞き: 勝った側が、そう言うんだ。ぎりぎりだったのは、本当みたいだね。
+    tone: しみじみ
+  - 語り: ネイは、3月にナポレオンの側へ寝返り、12月に処刑されました。勝ち負けが、人の一生を、これほど分けた年でした。
+    portrait:
+      image: paintings/waterloo_ney.jpg
+      caption: ネイ元帥（1805年ごろの肖像、ジェラール）
+      age: false
+    background:
+      image: paintings/waterloo_elba_steuben.jpg
+      credit: 《エルバ島からのナポレオンの帰還》（シャルル・ド・ステューベン、1818年）
+  - 聞き: たった数時間で、いろんな人の一生が変わったんだね。……ナポレオンが勝っていたら、って、つい考えちゃう。
+    tone: しみじみ
+  - 語り: この回の絵は、戦いのあとの時代に描かれたものです。画家の想像が入るので、細部は史実とは限りません。
+    portrait: null
+    background:
+      image: paintings/waterloo_sadler_right.jpg
+      credit: ワーテルローの戦い（ウィリアム・サドラー2世、19世紀前半。部分）
+  - 聞き: 絵と史実は、分けて見ないといけないんだね。想像の場面を札つきで見たあとだと、なおさら納得かも。
+    tone: 納得
+  - 語り: 今日の地層は、ここまでです。
+  - 聞き: 次の「もしも」は、誰の、どの分かれ道かな。
+    tone: 疑問
+  - 語り: あなたが気になる、歴史の分かれ道を、コメントで教えてください。
+    background:
+      image: paintings/waterloo_butler_l.jpg
+      credit: 《スコットランドよ永遠に》（エリザベス・トンプソン〈レディ・バトラー〉、1881年。部分）
+  - 二人: また一緒に、掘りましょう！
+    tone: 明るい
+    background:
+      image: paintings/waterloo_butler.jpg
+      credit: 《スコットランドよ永遠に》（エリザベス・トンプソン〈レディ・バトラー〉、1881年）
