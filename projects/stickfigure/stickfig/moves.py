@@ -143,6 +143,7 @@ class Fighter:
         self._start(t0, "ダッシュ")
         self._hold_to(t0)
         sgn = 1 if (x_new - self.x) * self.d >= 0 else -1          # 前へ(+1)か後ろへ(-1)
+        self.dust.append((t0 + 0.04, self.x - self.d * sgn * 0.3))   # 蹴り出しの土煙
         tm = (t0 + t1) / 2
         xm = (self.x + x_new) / 2
         lean = 0.55 if sgn > 0 else -0.20
@@ -386,6 +387,7 @@ class Fighter:
             for tr, g in ((self.FH, GUARD_F), (self.RH, GUARD_R)):
                 tr.append(dict(t=_r(t0), ang=g)); tr.append(dict(t=_r(t - 0.10), ang=(1.1, 1.8))); tr.append(dict(t=_r(t + 0.10), ang=(1.0, 2.0))); tr.append(dict(t=_r(t_end), ang=g, ease="out"))
             self._hold(t, burst=burst)
+            self.dust.append((t_land, x_land))
             self._set_state(x_land, t_end)
             return x_hit
         else:
@@ -580,6 +582,122 @@ class Fighter:
         return dict(body=body, f_foot=srt(self.F), r_foot=srt(self.R), f_hand=srt(self.FH), r_hand=srt(self.RH))
 
 
+# ---------------- 派手な動き(2026-10-22「これで作ってみよう」。絵コンテの合意: バク転・スライディング・衝撃波・空中コンボ・空中の蹴り)----------------
+# 注意: bout.stylize は hz が 0.755〜0.815・lean がちょうど 0.12・ht がちょうど 0.0 のキーを構えの値に置き換える。ここのキーはその範囲を避けて書く。
+TWO_PI = 2 * math.pi
+
+
+def _flip(self: "Fighter", t: float, back: float = 1.0):
+    """バク転(後ろ宙返り)でかわす。t は相手の攻撃が通る時刻(体は宙に浮いている)。しゃがみ 0.16 秒 → 跳ぶ 0.46 秒 → 着地。
+    腰を中心に回すので、根元の位置 = 腰の軌道 − 回した腰の高さ(根元の回転は足元が中心になるため)。毎コマ 1 つずつキーを置く。"""
+    a, sc = self._away(), self.sc
+    t_o = round((t - 0.18) * FPS) / FPS                  # コマの時刻にそろえる(2π → 0 の戻りがコマの途中に当たると、着地のコマで体が回りかけの姿勢になる)
+    t_s = t_o - 0.16
+    n = 14
+    self._start(t_s, "flip")
+    self._hold_to(t_s)
+    x0 = self.x
+    h = 0.83 * sc
+    xl = x0 + a * back
+    self.body.append(dict(t=_r(t_s), x=_r(x0), hz=0.83, lean=0.02, ht=0.01, rz=0.0, roll=0.0))
+    self.body.append(dict(t=_r(t_o), x=_r(x0), hz=0.60, lean=0.30, ht=0.01, rz=0.0, roll=0.0, ease="in"))       # 沈む(予備動作)
+    for i in range(1, n + 1):
+        u = i / n
+        roll = TWO_PI * u
+        hip_z = 0.83 * sc + 0.52 * sc * 4 * u * (1 - u)
+        hip_x = x0 + a * back * (1 - (1 - u) ** 1.6)
+        self.body.append(dict(t=_r(t_o + i / FPS), x=_r(hip_x - a * math.sin(roll) * h), hz=0.83, lean=0.02, ht=0.01, rz=_r(hip_z - math.cos(roll) * h), roll=_r(roll), ease="linear"))
+    t_l = _r(t_o + n / FPS)
+    self.body[-1]["rz"] = 0.0
+    self.body[-1]["x"] = _r(xl)
+    self.body.append(dict(t=_r(t_l + 1 / FPS), x=_r(xl), hz=0.60, lean=0.30, ht=0.01, rz=0.0, roll=0.0))       # 着地のつぶれ(2π → 0 は同じ姿勢。1 コマで戻す)
+    # 手足: しゃがみで引き、跳んだら抱え、着地で踏む
+    for tr, g in ((self.FH, GUARD_F), (self.RH, GUARD_R)):
+        tr.append(dict(t=_r(t_s), ang=g)); tr.append(dict(t=_r(t_o), ang=(0.9, 1.5)))
+        tr.append(dict(t=_r(t_o + 4 / FPS), ang=(1.0, 1.6))); tr.append(dict(t=_r(t_l - 3 / FPS), ang=(0.9, 1.4)))
+    self.F.append(dict(t=_r(t_s), p=(_r(self.lead), 0))); self.R.append(dict(t=_r(t_s), p=(_r(self.rear), 0)))
+    self.F.append(dict(t=_r(t_o), p=(_r(x0 + self.d * 0.30 * sc), 0), ease="in")); self.R.append(dict(t=_r(t_o), p=(_r(x0 - self.d * 0.30 * sc), 0), ease="in"))
+    self.F.append(dict(t=_r(t_o + 4 / FPS), ang=(1.2, 1.9))); self.R.append(dict(t=_r(t_o + 4 / FPS), ang=(0.9, 1.8)))
+    self.F.append(dict(t=_r(t_l - 3 / FPS), ang=(1.0, 1.7))); self.R.append(dict(t=_r(t_l - 3 / FPS), ang=(0.8, 1.6)))
+    self.F.append(dict(t=_r(t_l), p=(_r(xl + self.d * 0.30 * sc), 0), ease="in")); self.R.append(dict(t=_r(t_l), p=(_r(xl - self.d * 0.35 * sc), 0), ease="in"))
+    self._spans.append((t_o, t_l + 2 / FPS))
+    self.dust += [(t_l, xl), (t_o, x0)]
+    self._end_at(t_l + 0.20, xl)
+
+
+def _slide(self: "Fighter", t: float, back: float = 0.9):
+    """スライディングでかわす: 後ろへ寝そべって滑り(根元を低く・腕を頭の上へ)、すぐ起きる。t は攻撃が通る時刻。"""
+    a, sc = self._away(), self.sc
+    t_s = t - 0.16
+    self._start(t_s, "slide")
+    self._hold_to(t_s)
+    x0 = self.x
+    xe = x0 + a * back
+    self._nocut = True
+    self.body.append(dict(t=_r(t_s), x=_r(x0), hz=0.83, lean=0.02, ht=0.01, rz=0.0, roll=0.0))
+    self.body.append(dict(t=_r(t), x=_r(x0 + a * back * 0.45), hz=0.62, lean=0.01, ht=0.01, rz=0.12, roll=1.45, ease="out"))
+    self.body.append(dict(t=_r(t + 0.22), x=_r(xe), hz=0.62, lean=0.01, ht=0.01, rz=0.12, roll=1.45))
+    self.body.append(dict(t=_r(t + 0.40), x=_r(xe), hz=0.55, lean=0.55, ht=0.01, rz=0.18, roll=0.45))           # 起きる
+    for tr in (self.FH, self.RH):
+        tr.append(dict(t=_r(t_s), ang=GUARD_F if tr is self.FH else GUARD_R)); tr.append(dict(t=_r(t), ang=(2.5, 0.4))); tr.append(dict(t=_r(t + 0.22), ang=(2.6, 0.3))); tr.append(dict(t=_r(t + 0.40), ang=(0.5, 0.5)))
+    self.F.append(dict(t=_r(t_s), p=(_r(self.lead), 0))); self.R.append(dict(t=_r(t_s), p=(_r(self.rear), 0)))
+    self.F.append(dict(t=_r(t), ang=(0.15, 0.1))); self.R.append(dict(t=_r(t), ang=(0.05, 0.1)))
+    self.F.append(dict(t=_r(t + 0.22), ang=(0.15, 0.1))); self.R.append(dict(t=_r(t + 0.22), ang=(0.05, 0.1)))
+    self.F.append(dict(t=_r(t + 0.40), p=(_r(xe + self.d * 0.25 * sc), 0))); self.R.append(dict(t=_r(t + 0.40), p=(_r(xe - self.d * 0.30 * sc), 0)))
+    self._spans.append((t_s, t + 0.46))
+    self.dust += [(t, x0 + a * back * 0.2), (t + 0.12, x0 + a * back * 0.6)]
+    self.speed.append((t, t + 0.22))
+    self._end_at(t + 0.55, xe)
+    self._nocut = False
+
+
+def _slam(self: "Fighter", t: float, wave_to: float) -> float:
+    """地面を叩いて衝撃波を出す(巨漢)。t は叩く時刻。構え → 腕を上げて跳ぶ → 深くしゃがんで拳を地面へ。叩いた手の x を返す。"""
+    d, sc = self.d, self.sc
+    t0 = t - 0.62
+    self._approach(self.x, t0)
+    self._start(t0, "slam")
+    hz_s, lean_s = 0.30, 1.15
+    sx = sc * SH * math.sin(lean_s)
+    sz = sc * (hz_s + SH * math.cos(lean_s))
+    r = sc * ARM * 0.95
+    gz = 0.12
+    dx = math.sqrt(max(0.0, r * r - (sz - gz) ** 2))
+    x_hand = self.x + d * (sx + dx)
+    self.body.append(dict(t=_r(t0), x=_r(self.x), hz=0.83, lean=-0.10, ht=0.01, rz=0.0))
+    self.body.append(dict(t=_r(t - 0.30), x=_r(self.x), hz=0.60, lean=-0.05, ht=0.01, rz=0.0, ease="in"))           # 沈む
+    self.body.append(dict(t=_r(t - 0.14), x=_r(self.x), hz=0.86, lean=-0.18, ht=0.01, rz=0.30, ease="out"))         # 跳び上がって腕を振り上げる
+    self.body.append(dict(t=_r(t), x=_r(self.x), hz=hz_s, lean=lean_s, ht=0.20, rz=0.0, st=0.30, rst=0.30, ease="in"))   # 叩きつけて深くつぶれる
+    self.body.append(dict(t=_r(t + 0.35), x=_r(self.x), hz=hz_s + 0.02, lean=lean_s - 0.05, ht=0.20, rz=0.0))
+    for tr, g in ((self.FH, GUARD_F), (self.RH, GUARD_R)):
+        tr.append(dict(t=_r(t0), ang=g)); tr.append(dict(t=_r(t - 0.30), ang=(0.5, 1.3))); tr.append(dict(t=_r(t - 0.14), ang=(2.8, 0.3)))
+        tr.append(dict(t=_r(t), p=(_r(x_hand + (0.0 if tr is self.FH else -d * 0.12)), gz), ease="in")); tr.append(dict(t=_r(t + 0.35), p=(_r(x_hand + (0.0 if tr is self.FH else -d * 0.12)), gz)))
+    wide = 0.55 * sc
+    self.F.append(dict(t=_r(t0), p=(_r(self.lead), 0))); self.R.append(dict(t=_r(t0), p=(_r(self.rear), 0)))
+    self.F.append(dict(t=_r(t - 0.14), ang=(0.5, 1.6))); self.R.append(dict(t=_r(t - 0.14), ang=(0.3, 1.6)))
+    self.F.append(dict(t=_r(t), p=(_r(self.x + d * wide), 0), ease="in")); self.R.append(dict(t=_r(t), p=(_r(self.x - d * wide), 0), ease="in"))
+    self.F.append(dict(t=_r(t + 0.35), p=(_r(self.x + d * wide), 0))); self.R.append(dict(t=_r(t + 0.35), p=(_r(self.x - d * wide), 0)))
+    self._spans.append((t0, t + 0.40))
+    self._last_hit = t
+    self.dust += [(t, x_hand)]
+    self._hold(t, burst=3)
+    self._end_at(t + 0.70, self.x)
+    return x_hand
+
+
+Fighter.flip, Fighter.slide, Fighter.slam = _flip, _slide, _slam
+_orig_init = Fighter.__init__
+
+
+def _init(self, *a, **k):
+    _orig_init(self, *a, **k)
+    self.dust: List[Tuple[float, float]] = []          # 土煙を出す(時刻, x)
+    self.speed: List[Tuple[float, float]] = []         # 流線を出す区間
+
+
+Fighter.__init__ = _init
+
+
 # ---------------- 組み立て ----------------
 POINT = {"face": lambda sk, tw: bout.face(sk, tw), "chin": lambda sk, tw: bout.chin(sk, tw), "chest": lambda sk, tw: bout.surface(bout.chest(sk), tw, 0.10),
          "belly": lambda sk, tw: bout.surface(bout.belly(sk), tw, 0.12), "arm": lambda sk, tw: (sk["front_arm"][-3][0] + tw * 0.06, sk["front_arm"][-3][1]),
@@ -590,7 +708,8 @@ ATTACK = dict(jab="face", cross="face", hook="face", upper="chin", palm="face", 
 REACT_FOR = dict(  # 受け方の既定(結果 → 動作)
     stagger=lambda dfn, t, kind: dfn.stagger(t, high=(kind == "upper")), fold=lambda dfn, t, kind: dfn.fold(t),
     block=lambda dfn, t, kind: dfn.block(t), launch=lambda dfn, t, kind: dfn.launch(t))
-MISS_FOR = dict(lean=lambda dfn, t: dfn.lean_dodge(t), duck=lambda dfn, t: dfn.duck(t), hop=lambda dfn, t: dfn.hop(t))
+MISS_FOR = dict(lean=lambda dfn, t: dfn.lean_dodge(t), duck=lambda dfn, t: dfn.duck(t), hop=lambda dfn, t: dfn.hop(t),
+                flip=lambda dfn, t: dfn.flip(t), slide=lambda dfn, t: dfn.slide(t))
 BIG_KINDS = {"upper", "jump", "round", "sweep"}
 KICK_KINDS = {"front", "round", "jump", "sweep"}
 LIMB = dict(jab="st", cross="rst", hook="rst", upper="rst", palm="st", belly="rst", front="lst", round="rlst", jump="rlst", sweep="rlst")
@@ -606,6 +725,9 @@ class Table:
         self.beats: List[dict] = []
         self.puffs: List[dict] = []
         self.fast = False                                  # True なら以降の打ちは溜め 1 コマ・一気 2 コマ(速い連打)
+        self.flashes: List[float] = []                     # 1 コマの白い閃光(決めの一撃)
+        self.waves: List[dict] = []                        # 地面を走る衝撃波
+        self.cam: List[tuple] = []                         # 高く跳ぶ・大技の間だけカメラを引く(t0, t1, scale, target_z)
 
     def _skel(self, dfn: Fighter, miss_kind: Optional[str]) -> dict:
         """守る側の、当たる(かわす)瞬間の体。いまの立ち位置(compile の状態)と、構えの型・かわす姿勢から解析的に出す。
@@ -621,6 +743,12 @@ class Table:
             shift = dfn._away() * 0.15
         elif miss_kind == "hop":
             pose.update(hz=0.84, lean=0.05, ht=0.0, rz=0.45)
+        elif miss_kind == "flip":                          # バク転: 腰が浮いて後ろへ回っている
+            pose.update(hz=0.83, lean=0.02, ht=0.0, rz=0.95, roll=1.7)
+            shift = dfn._away() * 0.45
+        elif miss_kind == "slide":                         # スライディング: 後ろへ寝そべっている
+            pose.update(hz=0.62, lean=0.0, ht=0.0, rz=0.12, roll=1.45)
+            shift = dfn._away() * 0.40
         return fk.skeleton(pose, dfn.d, dfn.x + shift, dfn.sc)
 
     def point(self, att: Fighter, dfn: Fighter, kind: str, t: float, miss_kind: Optional[str] = None, part: Optional[str] = None) -> Pt:
@@ -669,7 +797,10 @@ class Table:
             hold = 0.04                                    # 速い連打のヒットストップは 1 コマ
         self.hits.append(hit_rec(round(t, 4), kindfx, T, hold, by=att.name if not miss else None))
         self.beats.append(dict(t=round(t, 4), by=att.name, to=dfn.name, big=big, limb=LIMB[kind], miss=miss, absorb=(result == "block"), **({"burst_max": 6} if kind == "jump" else {})))
+        if kw.get("flash"):
+            self.flashes.append(round(t, 4))
         if result == "launch":
+            dfn.speed.append((round(t + 0.05, 4), round(t + 0.45, 4)))
             lx = round(dfn.x - dfn._away() * 0.30, 3)
             self.hits.append(hit_rec(round(t + 0.50, 4), "land", (lx, 0.2), 0.04))
             self.puffs.append(dict(tau=round(t + 0.50, 4), kind="land2", pos=[lx, 0.0]))
@@ -707,6 +838,206 @@ def _clash(self: Table, a: Fighter, b: Fighter, kind: str, t: float, ret: float 
 Table.clash = _clash
 
 
+def _slam_wave(self: Table, att: Fighter, dfn: Fighter, t: float, result: str = "hop", speed: float = 6.5, **kw) -> float:
+    """att が地面を叩いて衝撃波を出す。波は dfn へ走り、result が hop なら dfn は跳んでかわし(足の下を通る)、launch なら吹き飛ぶ。当たる(通る)時刻を返す。"""
+    t = round(t * FPS) / FPS
+    xh = att.slam(t, dfn.x)
+    dist = abs(dfn.x - xh)
+    t_arr = round((t + dist / speed) * FPS) / FPS
+    x_end = dfn.x + att.d * 1.0
+    self.waves.append(dict(start=round(t, 4), end=round(t + abs(x_end - xh) / speed, 4), x0=round(xh, 3), x1=round(x_end, 3), color=[255, 214, 120]))
+    self.hits.append(hit_rec(round(t, 4), "slam", (xh, 0.05), 0.10, by=att.name))
+    self.flashes.append(round(t, 4))
+    self.cam.append((round(t - 0.45, 4), round(t + 0.6, 4), 3.0, 1.3))
+    hit = result == "launch"
+    if hit:
+        dfn.launch(t_arr, **{k: v for k, v in kw.items() if k in ("dist", "lie", "getup", "stay")})
+        dfn.speed.append((round(t_arr + 0.05, 4), round(t_arr + 0.45, 4)))
+        self.hits.append(hit_rec(round(t_arr, 4), "wave", (dfn.x, 0.6), 0.10, by=att.name))
+        lx = round(dfn.x - dfn._away() * 0.30, 3)
+        self.hits.append(hit_rec(round(t_arr + 0.50, 4), "land", (lx, 0.2), 0.04))
+        self.puffs.append(dict(tau=round(t_arr + 0.50, 4), kind="land2", pos=[lx, 0.0]))
+    else:
+        dfn.hop(t_arr)
+    self.beats.append(dict(t=round(t, 4), by=att.name, to=dfn.name, big=True, limb="st", miss=not hit, absorb=False))
+    return t_arr
+
+
+Table.slam_wave = _slam_wave
+
+
+def _cut(self: "Fighter", t_cut: float):
+    """t_cut より後のキーを捨てる(打ったあとの戻りを切って、続けて別の動作へつなぐ)。"""
+    for tr in (self.body, self.F, self.R, self.FH, self.RH):
+        while len(tr) > 1 and tr[-1]["t"] > t_cut + 1e-6:
+            tr.pop()
+    self.t = t_cut
+
+
+Fighter._cut = _cut
+
+
+def _qf(t: float) -> float:
+    return round(t * FPS) / FPS
+
+
+def _air_combo(self: Table, att: Fighter, dfn: Fighter, t: float) -> float:
+    """空中コンボ(決勝の締め): アッパーで打ち上げ → att が跳んで空中で拳と回し蹴りの 2 発 → 蹴り落とし(踵)で叩きつける。
+    dfn は打ち上がって回りながら浮き(腰の軌道から根元を逆算)、2 発のたびに押され、最後に地面へ落ちて倒れたまま。
+    当たりは dfn の体を解析的に出し、att の高さ・位置を合わせる。叩きつけで地面に着く時刻を返す。"""
+    d, sc, a = att.d, att.sc, dfn._away()
+    t = _qf(t)
+    scB = dfn.sc
+    hB = 0.83 * scB
+    # --- 1. アッパー(打ち上げ) ---
+    T0 = self.point(att, dfn, "upper", t)
+    att.hold, att.burst = HOLD, BURST
+    att.punch("upper", t, T0, ret=0.0)
+    att._cut(t + 0.12)
+    self.hits.append(hit_rec(round(t, 4), "kick", T0, 0.10, by=att.name))
+    self.beats.append(dict(t=round(t, 4), by=att.name, to=dfn.name, big=True, limb="rst", miss=False, absorb=False))
+    self.flashes.append(round(t, 4))
+    # --- 時刻 ---
+    t_j, T1, T2, T3 = _qf(t + 0.30), _qf(t + 0.58), _qf(t + 0.80), _qf(t + 1.02)
+    t_land = _qf(t + 1.34)
+    x_b0 = dfn.x
+    dfn._start(t, "juggle")
+    dfn._hold_to(t)
+    dfn._pre_static(t)
+    dfn._nocut = True
+
+    def bump(tau, t0_, amt):
+        u = min(1.0, max(0.0, (tau - t0_) / (4 / FPS)))
+        return amt * u * u * (3 - 2 * u)
+
+    def b_state(tau):
+        u = min(1.0, max(0.0, (tau - t) / 0.62))
+        e = 1 - (1 - u) ** 2
+        hip_x = x_b0 + a * 0.8 * e + bump(tau, T1, a * 0.45) + bump(tau, T2, a * 0.30)
+        hip_z = hB + 0.62 * e + 0.05 * math.sin((tau - t) * 9) * (1.0 if u >= 1 else 0.0) + bump(tau, T1, 0.14) + bump(tau, T2, 0.12)
+        roll = 0.9 * e + 0.25 * min(1.0, max(0.0, (tau - T1) / (T3 - T1)))
+        return hip_x, hip_z, roll
+
+    def b_root(tau):
+        hx, hz_, roll = b_state(tau)
+        return hx - a * math.sin(roll) * hB, hz_ - math.cos(roll) * hB, roll
+
+    def b_sk(tau):
+        rx, rz_, roll = b_root(tau)
+        pose = dict(ks.POSE0, hz=0.83, lean=-0.35, ht=0.5, rz=rz_, roll=roll, dir=float(dfn.d))
+        return fk.skeleton(pose, dfn.d, rx, scB)
+
+    tw = dfn.d
+    P1 = bout.face(b_sk(T1), tw)
+    P2 = bout.face(b_sk(T2), tw)
+    sk3 = b_sk(T3)
+    P3 = bout.surface(bout.chest(sk3), tw, 0.10)
+    # --- 2. dfn: 打ち上げ〜浮遊(毎コマ) ---
+    n_pre = int(round((T3 - t) * FPS))
+    for i in range(1, n_pre + 1):
+        tau = t + i / FPS
+        rx, rz_, roll = b_root(tau)
+        dfn.body.append(dict(t=_r(tau), x=_r(rx), hz=0.83, lean=-0.35, ht=0.5, rz=_r(rz_), roll=_r(roll), ease="linear"))
+    for tr, ang in ((dfn.FH, (2.2, 0.6)), (dfn.RH, (2.0, 0.7)), (dfn.F, (0.7, 0.8)), (dfn.R, (-0.3, 0.9))):
+        tr.append(dict(t=_r(t + 0.08), ang=ang))
+        tr.append(dict(t=_r(T3), ang=ang))
+    # 叩きつけ: T3 のあと 5 コマで地面へ(背中から。寝たまま)
+    rx3, rz3, roll3 = b_root(T3)
+    t_g = _qf(T3 + 0.17)
+    x_lie = rx3 + a * 0.45
+    n_g = int(round((t_g - T3) * FPS))
+    for i in range(1, n_g + 1):
+        u = i / n_g
+        dfn.body.append(dict(t=_r(T3 + i / FPS), x=_r(rx3 + (x_lie - rx3) * u), hz=0.83, lean=-0.1 * (1 - u), ht=0.5 * (1 - u), rz=_r(rz3 + (0.21 - rz3) * u * u), roll=_r(roll3 + (1.57 - roll3) * u), ease="linear"))
+    dfn.body.append(dict(t=_r(t_g + 0.08), x=_r(x_lie + a * 0.12), hz=0.83, lean=0.0, ht=0.0, rz=0.34, roll=1.57, ease="out"))
+    dfn.body.append(dict(t=_r(t_g + 0.16), x=_r(x_lie + a * 0.22), hz=0.83, lean=0.0, ht=0.0, rz=0.21, roll=1.57, ease="in"))
+    for tr, ang in ((dfn.FH, (2.6, 0.3)), (dfn.RH, (2.4, 0.3)), (dfn.F, (0.3, 0.2)), (dfn.R, (0.1, 0.2))):
+        tr.append(dict(t=_r(t_g), ang=ang))
+        tr.append(dict(t=_r(t_g + 0.25), ang=ang))
+    dfn.t = t_g + 0.25
+    dfn.x = x_lie + a * 0.30
+    dfn._lying = True
+    dfn._spans.append((t, 1e9))
+    dfn._last_hit = T3
+    # --- 3. att: 跳ぶ → 拳 → 回し蹴り → 蹴り落とし → 着地 ---
+    hz_a = 0.83
+    rzA1 = max(0.0, P1[1] - sc * (hz_a + SH * math.cos(0.45)))
+    xA1 = att._x_for_hand(P1, hz_a, 0.45, rzA1)
+    rzA2 = max(0.0, P2[1] - sc * hz_a + 0.10)
+    xA2 = att._x_for_leg(P2, hz_a, rzA2)
+    rzA3 = max(0.0, P3[1] + 0.55 - sc * hz_a)
+    xA3 = P3[0] - d * 0.30
+    xj = att.x
+    x_land = x_lie - d * 0.8                                   # 倒れた相手の足元より手前に降りる(重ならない)
+    # 体(制御点。縦の弧は PCHIP が滑らかに通す)
+    att.body.append(dict(t=_r(t + 0.18), x=_r(xj), hz=0.60, lean=0.30, ht=0.01, rz=0.0, roll=0.0, ease="in"))
+    att.body.append(dict(t=_r(t_j), x=_r(xj), hz=0.83, lean=0.20, ht=0.01, rz=0.0, roll=0.0, ease="out"))
+    att.body.append(dict(t=_r(T1), x=_r(xA1), hz=hz_a, lean=0.45, ht=0.01, rz=_r(rzA1), roll=0.0, rst=0.30, ease="linear"))
+    att.body.append(dict(t=_r(T1 + 0.10), x=_r(xA1 + d * 0.05), hz=hz_a, lean=0.10, ht=0.01, rz=_r(rzA1 + 0.15), rst=0.0, ease="linear"))
+    att.body.append(dict(t=_r(T2), x=_r(xA2), hz=hz_a, lean=-0.40, ht=0.01, rz=_r(rzA2), rlst=0.34, ease="linear"))
+    att.body.append(dict(t=_r(T2 + 0.08), x=_r(xA2 + d * 0.05), hz=hz_a, lean=-0.30, ht=0.01, rz=_r(rzA2 + 0.10), rlst=0.0, ease="linear"))
+    att.body.append(dict(t=_r(T3), x=_r(xA3), hz=hz_a, lean=0.10, ht=0.01, rz=_r(rzA3), lst=0.30, ease="in"))
+    att.body.append(dict(t=_r(T3 + 0.10), x=_r(xA3 + d * 0.05), hz=hz_a, lean=0.05, ht=0.01, rz=_r(rzA3 * 0.5), lst=0.0, ease="out"))
+    att.body.append(dict(t=_r(t_land - 1 / FPS), x=_r(x_land), hz=hz_a, lean=0.10, ht=0.01, rz=0.04, ease="in"))
+    att.body.append(dict(t=_r(t_land), x=_r(x_land), hz=0.58, lean=0.35, ht=0.01, rz=0.0, ease="out"))                 # 着地のつぶれ
+    # 手足
+    att.F.append(dict(t=_r(t + 0.18), p=(_r(att.lead), 0), ease="in"))
+    att.R.append(dict(t=_r(t + 0.18), p=(_r(att.rear), 0), ease="in"))
+    att.F.append(dict(t=_r(t_j), p=(_r(xj + d * 0.30 * sc), 0), ease="in"))
+    att.R.append(dict(t=_r(t_j), p=(_r(xj - d * 0.35 * sc), 0), ease="in"))
+    att.F.append(dict(t=_r(t_j + 0.07), ang=(0.5, 1.5)))
+    att.R.append(dict(t=_r(t_j + 0.07), ang=(0.2, 1.6)))               # 跳んだら抱える
+    att.F.append(dict(t=_r(T1), ang=(0.6, 1.4)))
+    att.F.append(dict(t=_r(T2 - 0.12), ang=(0.3, 1.5)))
+    att.R.append(dict(t=_r(T1), ang=(0.2, 1.6)))
+    att.R.append(dict(t=_r(T2 - 0.12), ang=(1.0, 1.2)))                # 回し蹴りの振りかぶり
+    att.R.append(dict(t=_r(T2), p=(_r(P2[0]), _r(P2[1])), ease="in"))
+    att.R.append(dict(t=_r(T2 + 0.12), ang=(0.4, 1.6)))
+    att.F.append(dict(t=_r(T2 + 0.08), ang=(0.5, 1.6)))
+    att.F.append(dict(t=_r(T3 - 0.14), ang=(2.0, 0.25)))               # 脚を高く振り上げる
+    att.F.append(dict(t=_r(T3), p=(_r(P3[0]), _r(P3[1])), ease="in"))
+    att.F.append(dict(t=_r(T3 + 0.12), ang=(0.5, 1.4)))
+    att.R.append(dict(t=_r(T3), ang=(0.2, 1.5)))
+    att.F.append(dict(t=_r(t_land), p=(_r(x_land + d * 0.30 * sc), 0), ease="in"))
+    att.R.append(dict(t=_r(t_land), p=(_r(x_land - d * 0.35 * sc), 0), ease="in"))
+    att.FH.append(dict(t=_r(t + 0.18), ang=(1.0, 1.6)))
+    att.FH.append(dict(t=_r(t_j + 0.06), ang=(1.0, 1.5)))
+    att.FH.append(dict(t=_r(T1 - 0.05), ang=(0.9, 1.7)))
+    att.FH.append(dict(t=_r(T3 - 0.14), ang=(1.4, 1.2)))
+    att.FH.append(dict(t=_r(T3), ang=(0.7, 1.4)))
+    att.RH.append(dict(t=_r(t + 0.18), ang=(0.4, 1.7)))
+    att.RH.append(dict(t=_r(T1 - 0.12), ang=(-0.4, 1.9)))              # 後ろの拳を引く
+    att.RH.append(dict(t=_r(T1), p=(_r(P1[0]), _r(P1[1])), ease="in"))
+    att.RH.append(dict(t=_r(T1 + 0.14), ang=(0.4, 1.2)))
+    att.RH.append(dict(t=_r(T3), ang=(0.5, 1.3)))
+    att.FH.append(dict(t=_r(t_land), ang=GUARD_F))
+    att.RH.append(dict(t=_r(t_land), ang=GUARD_R))
+    att._spans.append((t + 0.12, t_land + 2 / FPS))
+    for tt in (T1, T2, T3):
+        att.holds.append(dict(kind="windup", t=_r(tt), hold=2, burst=3))
+    att.dust += [(t_j, xj), (t_land, x_land)]
+    att.speed.append((T3 - 0.14, T3))
+    dfn.speed.append((t + 0.05, t + 0.45))
+    att._last_hit = T3
+    att._set_state(x_land, t_land)
+    att._end_at(t_land + 0.30, x_land)
+    # --- 当たり・点検・効果 ---
+    self.hits.append(hit_rec(round(T1, 4), "hit", P1, 0.06, by=att.name))
+    self.hits.append(hit_rec(round(T2, 4), "kick", P2, 0.08, by=att.name))
+    self.hits.append(hit_rec(round(T3, 4), "kick", P3, 0.10, by=att.name))
+    self.hits.append(hit_rec(round(t_g, 4), "heel", (x_lie, 0.2), 0.08))
+    self.puffs.append(dict(tau=round(t_g, 4), kind="land2", pos=[round(x_lie, 3), 0.0]))
+    self.flashes += [round(T3, 4), round(t_g, 4)]
+    self.cam.append((round(t + 0.15, 4), round(t_land + 0.25, 4), 2.9, 1.5))
+    self.beats += [dict(t=round(T1, 4), by=att.name, to=dfn.name, big=False, limb="rst", miss=False, absorb=False),
+                   dict(t=round(T2, 4), by=att.name, to=dfn.name, big=True, limb="rlst", miss=False, absorb=False),
+                   dict(t=round(T3, 4), by=att.name, to=dfn.name, big=True, limb="lst", miss=False, absorb=False)]
+    return t_g
+
+
+Table.air_combo = _air_combo
+
+
 def build_bout(name: str, bg: dict, t_end: float, cast: Dict[str, dict], script: Callable, passes: int = 1, cam_scale: float = 3.4):
     """cast: {名前: dict(color, scale, style, x, d)}。script(F, T) が動作を並べる。(場面, IK 残差, 点検用の beats) を返す。"""
     base = bout.new_scene(name, bg, t_end, {w: dict(color=c["color"], scale=(c.get("scale") if c.get("scale", 1.0) != 1.0 else None)) for w, c in cast.items()})
@@ -725,11 +1056,16 @@ def build_bout(name: str, bg: dict, t_end: float, cast: Dict[str, dict], script:
         prev = keys
     base["keys"] = keys
     base["hits"] = T.hits
-    base["puffs"] = T.puffs
-    base["fx"]["flashes"] = []
+    base["puffs"] = T.puffs + [dict(tau=round(t_, 4), kind="land2", pos=[round(x_, 3), 0.0]) for f in F.values() for (t_, x_) in f.dust]     # 土煙(走り出し・着地・滑り・叩き)
+    base["fx"]["flashes"] = sorted(set(T.flashes))
+    base["fx"]["waves"] = T.waves
     base["slow"] = []
-    base["shots"] = [dict(t=0.0, follow="mid", scale=cam_scale, yaw=0.0, pitch=0.0, lens=40.0, target_z=1.0, lag=0.30)]
-    base["fx"]["invert"], base["fx"]["speed_lines"], base["fx"]["radial"] = [], [], False        # 参考の見せ方(side_view と同じ)。animecheck は記号・寄りを求めない
+    normal = dict(follow="mid", yaw=0.0, pitch=0.0, lens=40.0, lag=0.30)
+    base["shots"] = [dict(normal, t=0.0, scale=cam_scale, target_z=1.0)]
+    for (c0, c1, sc_, tz_) in sorted(T.cam):                                         # 高く跳ぶ・大技の間だけ引いて、頭が画面の上に切れないようにする
+        base["shots"] += [dict(normal, t=c0, scale=sc_, target_z=tz_), dict(normal, t=c1, scale=cam_scale, target_z=1.0)]
+    base["fx"]["invert"], base["fx"]["radial"] = [], False
+    base["fx"]["speed_lines"] = sorted([round(a_, 4), round(b_, 4)] for f in F.values() for (a_, b_) in f.speed)                 # 流線は吹き飛び・滑りの間だけ        # 参考の見せ方(side_view と同じ)。animecheck は記号・寄りを求めない
     base["stepping"] = dict(hold=2, ones_around_hits=3, hold_camera=True)
-    base["anime"] = dict(base["anime"], trails=False, sfx=False, zoom_blur=False, roll=False)      # 擬音の文字は出さない(音は sfx.py が付ける)
+    base["anime"] = dict(base["anime"], trails=False, sfx=False, zoom_blur=False, roll=False, smear=True)      # 擬音の文字は出さない(音は sfx.py が付ける)
     return base, rep, T.beats

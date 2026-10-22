@@ -1,7 +1,7 @@
-"""勝ち抜き戦 準決勝「緑 vs 紫(巨漢)」約 10 秒。動作部品 stickfig/moves.py で組む。2026-10-22「バトルをもっと激しく」。
+"""勝ち抜き戦 準決勝「緑 vs 紫(巨漢)」約 10 秒。動作部品 stickfig/moves.py で組む。2026-10-22「バトルをもっと激しく」→「これで作ってみよう」。
 
-巨漢の大振りで緑が吹き飛ばされる(ピンチ)→ 起き上がって懐へ走り込む → 足払い・腹・アッパー・連打で崩し、
-巨漢の最後の大振りをくぐって跳び蹴りで倒す。
+巨漢の大振りをくぐり、緑の連打は腕で受けられ、巨漢の右で緑が吹き飛ぶ(ピンチ)。起き上がって足払い・腹で崩し、
+巨漢が地面を叩いて衝撃波 → 緑が跳んでかわす(新しい動作・エフェクト)。食らいついて 4 連打、最後は大振りをくぐって跳び蹴りで倒す。
 
 使い方: python tools/shots/duel_giant.py --out out/duel_giant [--check|--preview|--plan-only]
 """
@@ -14,7 +14,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from stickfig import bout, moves  # noqa: E402
 
 NAME = "duel_giant"
-T_END = 10.4
+T_END = 11.2
 GIANT = 1.25
 BG = dict(image="assets/bg/riverside.png", x0=-9.5, x1=9.0, ground=0.80)
 CAST = dict(A=dict(color=[0.5, 0.85, 0.3], style="kenpo", x=-0.9, d=1),
@@ -23,20 +23,18 @@ CAST = dict(A=dict(color=[0.5, 0.85, 0.3], style="kenpo", x=-0.9, d=1),
 
 def script(F, T):
     A, B = F["A"], F["B"]
-    T.exchange(B, A, "hook", 1.00, "duck")                              # 巨漢の大振りを、緑がしゃがんでくぐる
-    T.exchange(A, B, "jab", 1.50, "block", push=0.10, part="chest")                   # 緑の左は、腕で受けられて効かない
-    T.exchange(B, A, "cross", 1.95, "launch", dist=2.4, lie=0.12, getup=0.5)   # 巨漢の右が入り、緑が吹き飛ばされる
-    T.exchange(A, B, "cross", 3.42, "stagger", push=0.12, ret=0.0, part="chest")      # 起き上がった緑が走り込んで返す
-    T.exchange(B, A, "hook", 3.95, "block", push=0.6)                   # 巨漢の大振りを両腕で受ける
-    T.exchange(A, B, "sweep", 4.50, "stagger", push=0.2)                # 足払い(巨漢がぐらつく)
-    T.exchange(A, B, "belly", 4.92, "fold", push=0.3)                   # 腹
-    T.exchange(B, A, "cross", 5.35, "duck")                             # 巨漢の右をくぐる
-    T.exchange(A, B, "upper", 5.80, "stagger", push=0.25, ret=0.0, part="chest")      # アッパーで顎が上がる
-    T.exchange(A, B, "cross", 6.17, "stagger", push=0.15, ret=0.0, part="chest")      # 右
-    T.exchange(A, B, "jab", 6.54, "stagger", push=0.15, ret=0.0, part="chest")        # 左
-    T.exchange(B, A, "hook", 7.05, "duck")                              # 巨漢の最後の大振り → くぐる
-    T.exchange(A, B, "jump", 7.75, "launch", dist=1.8, stay=True)       # 跳び蹴りで巨漢が倒れる
-    A.freeze(8.15, 0.8)                                                  # 決めの止め絵
+    T.exchange(B, A, "hook", 1.00, "duck")                                                  # 巨漢の大振りをくぐる
+    T.chain(A, B, [("jab", "block", dict(push=0.1, part="chest")), ("cross", "block", dict(push=0.1, part="chest"))], 1.50, gap=0.26)           # 緑の連打は腕で受けられる
+    T.exchange(B, A, "cross", 2.10, "launch", dist=2.4, lie=0.10, getup=0.45, flash=True)   # 巨漢の右で緑が吹き飛ぶ
+    T.exchange(A, B, "cross", 3.60, "stagger", push=0.12, part="chest")                      # 起き上がって走り込み、右
+    T.exchange(A, B, "sweep", 4.05, "stagger", push=0.25)                                   # 足払い
+    T.exchange(A, B, "belly", 4.55, "fold", push=0.3)                                       # 腹
+    A.dash(5.00, 5.23, B.x - 2.7)                                                           # 緑が跳び退いて間合いを取る
+    T.slam_wave(B, A, 5.95, "hop")                                                          # 巨漢が地面を叩いて衝撃波 → 緑は跳んでかわす
+    T.chain(A, B, [("upper", "stagger", dict(push=0.25, part="chest")), ("cross", "stagger", dict(push=0.15, part="chest")), ("jab", "stagger", dict(push=0.15, part="chest")), ("belly", "fold", dict(push=0.35))], 7.15, gap=0.26)   # 食らいついて 4 連打
+    T.exchange(B, A, "hook", 8.40, "duck")                                                  # 巨漢の最後の大振りをくぐる
+    T.exchange(A, B, "jump", 9.25, "launch", dist=1.8, stay=True, flash=True)               # 跳び蹴りで巨漢が倒れる
+    A.freeze(9.65, 0.8)
 
 
 def build():

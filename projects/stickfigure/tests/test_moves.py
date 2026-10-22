@@ -86,3 +86,40 @@ def test_apply_vertical_zooms_out_and_fixes_crop():
     assert abs(sc["cam_zoom"] - 2.4) < 1e-9 and sc["shots"][0]["target_z"] > 2.0
     plain = episode.apply_vertical({"shots": [dict(t=0.0, target_z=1.0)]})        # 自動の場面(vertical_zoom なし)は触らない
     assert plain["output"] == {"aspect": "vertical"} and plain["shots"][0]["target_z"] == 1.0
+
+
+def test_flip_comes_back_upright_on_the_ground():
+    # バク転は 2π 回って着地する。着地のコマ(2π → 0 を 1 コマで戻したあと)には roll 0・根元が地面にある
+    def script(F, T):
+        T.exchange(F["B"], F["A"], "round", 1.2, "flip")
+    sc, rep, beats = _build(script, 3.0)
+    keys = sc["keys"]["A"]
+    peak = max(abs(k["roll"]) for k in keys[:60])
+    assert peak > 4.0                                         # 途中で大きく回っている
+    for f in range(60, 75):
+        assert abs(keys[f]["roll"]) < 1e-6 or abs(keys[f]["roll"] - 2 * math.pi) < 1e-3, f
+
+
+def test_slam_wave_registers_wave_and_flash():
+    cast = dict(A=CAST["A"], B=dict(color=[0.62, 0.35, 0.85], style="giant", x=1.9, d=-1, scale=1.25))
+
+    def script(F, T):
+        T.slam_wave(F["B"], F["A"], 1.4, "hop")
+    sc, rep, beats = _build(script, 3.0, cast)
+    assert len(sc["fx"]["waves"]) == 1
+    assert sc["fx"]["flashes"] == [1.4]
+    assert any(h["kind"] == "slam" for h in sc["hits"])
+
+
+def test_air_combo_hits_in_the_air_and_leaves_defender_lying():
+    def script(F, T):
+        T.air_combo(F["A"], F["B"], 1.5)
+    sc, rep, beats = _build(script, 5.0)
+    kinds = [h["kind"] for h in sc["hits"]]
+    assert kinds.count("kick") >= 3 and "heel" in kinds
+    air = [b for b in beats if b["t"] > 1.5 and not b["miss"]]
+    assert len(air) >= 3
+    heel = next(h for h in sc["hits"] if h["kind"] == "heel")
+    last = sc["keys"]["B"][-1]
+    assert abs(abs(last["roll"]) - 1.57) < 0.05               # 倒れたまま
+    assert heel["tau"] < 4.0
