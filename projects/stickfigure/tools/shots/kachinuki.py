@@ -59,14 +59,14 @@ def walk_in(sc: dict, who: str = "A", from_x: float = -5.2, dur: float = 3.0, ca
     return bout.prepend(sc, {who: frames}, shots)
 
 
-def walk_out(sc: dict, who: str = "A", to_x: float = 6.5, dur: float = 3.0, hold: float = 0.4, scale: float = 4.4) -> float:
+def walk_out(sc: dict, who: str = "A", to_x: float = 6.5, dur: float = 2.5, hold: float = 0.0, scale: float = 4.4) -> float:
     """最後のコマから、右を向いて歩いて画面の外へ出る。カメラは止めて見送る。"""
     a = sc["actors"][who]
     n = len(sc["keys"][who]) - 1
     start = bout.pose_of(sc["keys"][who], a, n)
     w = 0.18
     end = dict(RELAX, x=to_x, dir=1, f=to_x + w, r=to_x - w)
-    frames = _bake(bout.walk_tracks(start, end, dur, turn=1), a, dur, t_go=0.25)
+    frames = _bake(bout.walk_tracks(start, end, dur, turn=1), a, dur, t_go=0.12)      # 立ち止まりは 4 コマ未満(動画の点検が「意図しない静止」で止める)。画面から出たら終わる
     if hold:
         frames = [dict(frames[0]) for _ in range(int(hold * bout.FPS))] + frames
     shots = [dict(t=0.0, follow=round(start["x"] + 1.2, 3), scale=scale, yaw=-4.0, pitch=3.0, lens=40.0, target_z=1.0, lag=0.0)]

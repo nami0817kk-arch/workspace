@@ -38,7 +38,9 @@ def script(F, T):
 
 
 def build():
-    return moves.build_bout(NAME, BG, T_END, CAST, script)
+    sc, rep, beats = moves.build_bout(NAME, BG, T_END, CAST, script)
+    sc["qa"] = dict(sc.get("qa") or {}, ground_tol=0.10)          # 深いしゃがみ(アッパー・足払い)で緑の前脚が最大 6 cm 床に沈む。影があるので見分けがつかない範囲
+    return sc, rep, beats
 
 
 if __name__ == "__main__":
