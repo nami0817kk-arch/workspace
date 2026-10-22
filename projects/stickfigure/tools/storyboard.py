@@ -126,17 +126,17 @@ def panel(figs: List[dict], path: Path, hits: Sequence[Pt] = (), arrows: Sequenc
             pts = [P(*q) for q in sk[name]]
             d.line(pts, fill=mix(edge), width=lw + 3 * S, joint="curve")
             d.line(pts, fill=mix(c), width=lw, joint="curve")
-        tipc = (30, 30, 36)                                   # 手先は丸い握りこぶし・足先も丸い先(靴は付けない。暗い色。Blender の描画と同じ形)
+        tipc = None                                   # 手先は丸い握りこぶし・足先も丸い先(靴は付けない。暗い色。Blender の描画と同じ形)
         for name, kind, c0 in (("rear_arm", "hand", dim), ("front_arm", "hand", col), ("rear_leg", "foot", dim), ("front_leg", "foot", col)):
             ex, ez = sk[name][-1]
             X, Y = P(ex, ez)
             if kind == "hand":
                 rr = 0.055 * f["sc"] * ppu * S
-                d.ellipse([X - rr, Y - rr, X + rr, Y + rr], fill=mix(tipc))
+                d.ellipse([X - rr, Y - rr, X + rr, Y + rr], fill=mix(c0))
             else:
                 rr = 0.05 * f["sc"] * ppu * S
                 Y -= 0.025 * f["sc"] * ppu * S
-                d.ellipse([X - rr, Y - rr, X + rr, Y + rr], fill=mix(tipc))
+                d.ellipse([X - rr, Y - rr, X + rr, Y + rr], fill=mix(c0))
         hx, hz = sk["head"]
         r = sk["head_r"] * ppu * S
         X, Y = P(hx, hz)

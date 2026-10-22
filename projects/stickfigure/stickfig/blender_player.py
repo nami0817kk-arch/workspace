@@ -91,7 +91,7 @@ def chain(name, parent, total, ink):
     seg = total / NSEG
     js, par, pos = [], parent, (0, 0, 0)
     rb, rt = LIMB.get("base", 0.036), LIMB.get("tip", 0.036)
-    tip_ink = mat(LIMB["tip_color"]) if LIMB.get("tip_color") else ink
+    tip_ink = ink                                       # 手足の先も体の色(暗い色は付けない。2026-10-22 ユーザー指示。台本の limb.tip_color は無視)
     for i in range(NSEG):
         r = rb + (rt - rb) * (i / (NSEG - 1))
         j = limb(f"{name}{i}", par, seg, tip_ink if i >= NSEG - 2 else ink, pos, r)
@@ -112,7 +112,7 @@ WEAPONS = {
 def make_figure(tag, color, weapon, front):
     global TIP_INK
     ink = mat(color)
-    TIP_INK = mat(LIMB["tip_color"]) if LIMB.get("tip_color") else None
+    TIP_INK = None
     F = {}
     F["root"] = root = empty(tag + "root", None)
     F["hip"] = hip = empty(tag + "hip", root, (0, 0, 0.92))
