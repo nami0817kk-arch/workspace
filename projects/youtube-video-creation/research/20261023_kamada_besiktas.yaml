@@ -1,0 +1,141 @@
+# 鎌田大地・EL ベシクタシュ戦 の取材メモ（2026年10月23日・ショートだけ・short_style B）
+# 取材: 2026-10-23。requests（ブラウザUA）で原文を読んだ。検索エンジンのAI要約は使っていない。
+#   ・ゲキサカ 2026-10-23 05:57「クリスタル・パレスは一時逆転もELドロー…フル出場の鎌田は守備スイッチで得点関与」（本文＋Opta試合記録を全部読んだ。research/raw/20261023_gk_kamada2.txt）
+#   ・日刊スポーツ 2026-10-23 07:27「【EL】クリスタルパレス鎌田大地、攻守に躍動 効果的な2度追いで2点目演出で引き分け」（本文を全部読んだ。research/raw/20261023_nikkan_kamada.txt）
+#   ・フットボールチャンネル 2026-10-23 04:43「MF鎌田大地、C・パレスで公式戦通算100試合出場達成 6得点11アシスト、FA杯＆ECLなど3タイトル獲得に貢献」
+#     （本文を全部読んだ。ｄメニューニュースの転載ページ。research/raw/20261023_fc100.txt。フットボールチャンネル本体の URL は https://www.footballchannel.jp/2026/10/23/post1038825/ で、直接は開けなかった）
+#   ・ESPN 試合記録（site.api.espn.com の summary と scoreboard。research/raw/20261023_espn_kamada_summary.json）：得点者と分、退場の分、チーム統計
+# 日付・場所: 現地10月22日（木）UEFAヨーロッパリーグ リーグフェーズ第3節。ベシクタシュのホーム（ゲキサカ「Tüpraş Stadyumu」／日刊「ボーダフォン・アリーナ」と表記が割れている。台本では会場名を言わない）。
+# 得点・数字（ゲキサカ・日刊・ESPN で一致）: ベシクタシュ2-2クリスタル・パレス（前半1-0）。45+2分エンディディ（ベ）／51分ピノ（ク）／55分マテタ（ク）／73分オライタン（ベ）。
+#   鎌田は先発フル出場（ゲキサカ「ウォートンと2ボランチ」／日刊「ボランチ」）。冨安健洋は負傷中でメンバー外（ゲキサカ）。
+# 資料間のずれ:
+#   ・分の表記：ピノの同点弾は ゲキサカ「後半6分」・Opta/ESPN 51分（＝後半6分）／日刊「後半13分」（これは日刊の誤記と読める。Opta・ESPN・ゲキサカの3つが一致）。
+#     マテタの逆転弾は ゲキサカ・日刊「後半10分」・Opta/ESPN 55分（＝後半10分）で一致。退場は ゲキサカ「後半33分」／日刊「32分」／ESPN 77分（＝後半32分）→ 台本は退場の分を言わない。
+#     マテタのオフサイドで消えたゴール：ゲキサカ「前半8分」／日刊「前半5分」→ 台本は言わない。
+#   ・鎌田が倒された場面：ゲキサカ「36分に敵陣内で後方から来た相手に倒されたように見えたがPKとはならず」／日刊「後半36分にペナルティーエリア内で…倒されたが、ノーファウル判定」→ 場所が割れているので「エリア内」とは言わない。「倒されたように見えましたが、PKにはなりませんでした」までにする。
+#   ・ベシクタシュの2点目（73分オライタン）：ゲキサカ「パレスのクリアを拾い、鎌田とオソリオをドリブルでかわしきり右足」／日刊「自陣でのクリアミスからミドルシュート」→ 台本は「追いつかれた」とだけ言い、形は言わない。
+#   ・鎌田の位置：ゲキサカ「ウォートンと2ボランチ」／日刊「ボランチ」→ 台本は「ボランチ」。
+# 100試合（フットボールチャンネル、1社）: 2024年に加入してから、このベシクタシュ戦で公式戦通算100試合（国内リーグ・カップ戦・UEFA主催大会・コミュニティ・シールドの合計）。
+#   6得点11アシスト。FAカップ・コミュニティ・シールド・カンファレンスリーグの3タイトル。今季はベシクタシュ戦までに公式戦3得点3アシスト（第6節フォレスト戦でリーグ初ゴール、続くELリヨン戦で途中出場から得点）。
+#   → 確度は 報道（1社）。公式（クラブ・UEFA）で100試合は確かめていない。英語版Wikipediaのクラブ別出場はリーグ戦のみで、100試合の突き合わせにならない。
+# 自分で数えたもの（見立て）: 6得点＋11アシスト＝17。今季の3得点3アシスト＝6が、そのうち6/17。→「100試合で17、うち6が今季」。台本は「報道では」と断り、数字の足し算は自分で数えたと分かる言い方にする。
+# 次の試合: ESPN scoreboard で 25日（日）ホームでニューカッスル戦（14:00 UTC）を確認。ゲキサカ：EL第4節は11月5日、町田浩樹のホッフェンハイム戦。
+# 本人の言葉: 鎌田本人の試合後のコメントは、ゲキサカ・日刊・フットボールチャンネルの本文のどれにも無かった。本人の言葉は入れない（作らない）。→ short_style は B のまま（Y にはしない）。
+#   当たった先: 上の3本の本文。本人のSNS（X・Instagram）は、ブラウザの道具を使わない決まりのため当たっていない（未確認）。
+# 反応: 実在の投稿を見つけていない（DAZN・NO FOOTY NO LIFE は10/23 朝の時点で鎌田の回が無かった）。反応は作らない。
+# 重なりの確認: 鎌田は 10/16（ELリヨン戦のゴール）・10/19（ブライトン戦0-5）の本で扱い済み。今日の新しい出来事は「100試合目」と「プレスが逆転弾の起点」。
+#   10/19 の本の「中2日で先発」「81分」などは繰り返さない。今日の他の本（series: スタジアム紹介 パレス）とは別の話。
+# 写真（10/23 差し替え: ユーザー指示「写真はネットから探して」）: 10=クラブ公式サイト cpfc.co.uk の鎌田ページ（ECL優勝杯を持つ、パレス #18、報道向けクレジット表記は画像内に無し）／11=Commons 2025-08 Fredrikstad戦 A18（MichaelEmilio CC BY、背番号18・KAMADAの背中、パレス金色アウェイ）／03=同 B27（パレス、拍手）。08・09（フランクフルト姿）は使わない。
+# （旧メモ）写真: 配信写真（Getty 等）は取り込まない。記事の写真は代理店（ロイター・ゲキサカの配信）で使えず、Commons のみ（CC BY / CC BY-SA）。
+#   03=パレス時代(2025-08 Fredrikstad戦、MichaelEmilio CC BY)／08・09=フランクフルト2022(Sven Mandel CC BY-SA)。本人は目で確認。パレスのユニフォームで顔が写る別の写真は10/16・10/19 で使用済みか背中のみ。
+slot: japan
+date: "2026年10月23日"
+format: news
+no_main: true      # ニュースはショートだけ（2026-10-14）。締めで本編を案内しない
+people: [鎌田大地, クリスタル・パレス, ベシクタシュ]
+short_style: B
+short_photos:
+  - assets/images/20261023_kamada_besiktas/10_v.jpg
+  - assets/images/20261023_kamada_besiktas/03_v.jpg
+  - assets/images/20261023_kamada_besiktas/11_v.jpg
+
+short_question: 鎌田大地の強みは、守備のスイッチだと思いますか。
+short_hook: ""
+short_telops:
+  - {match: 2対2のドロー, text: EL第3節/ベシクタシュ2対2パレス}
+  - {match: フル出場しました, text: 鎌田大地/ボランチでフル出場}
+  - {match: 通算100試合, text: パレス加入後/公式戦100試合目}
+  - {match: 後半6分, text: 後半6分/ピノが同点弾}
+  - {match: プレスをかけて, text: 後半10分/鎌田のプレスからマテタ}
+  - {match: 勝ち越せません, text: その後に追いつかれ/勝ち越せず}
+  - {match: PKにはなりません, text: 後半36分/倒されたがPKなし}
+  - {match: 17です, text: 100試合で/6得点11アシスト}
+  - {match: 今季の6, text: 17のうち6が/今季の3得点3アシスト}
+  - {match: 11月5日, text: 次は25日ニューカッスル/EL第4節は11月5日}
+
+theme:
+  id: kamada_besiktas
+  league: england
+  prefix: ""
+  title: 鎌田大地、パレスで節目の一戦。逆転弾の前にかけたプレスとは
+  hook: ""
+  question: 鎌田大地は、逆転弾の前に何をしたのか
+  takeaway: 100試合の得点関与17のうち、今季の6は3分の1強。この試合は得点もアシストも付かなかったが、逆転弾の前にはプレスがあった。ただし1試合の場面の話
+
+thumbnail:
+  layout: face
+  line1: 鎌田大地、節目の一戦
+  line2: 逆転弾の前のプレス
+  tags: [鎌田大地, クリスタル・パレス, ベシクタシュ]
+  photo: assets/images/20261023_kamada_besiktas/10_w.jpg
+  short_photo: assets/images/20261023_kamada_besiktas/10_v.jpg
+
+answer: 左サイドで鎌田がプレスをかけ、相手のパスミスを誘ってマテタの逆転弾につながった
+watch: 25日、ホームでニューカッスル戦
+
+sections:
+  - id: what
+    main: true
+    heading: 何が起きたか
+    tier: 報道
+    telop: EL第3節、パレスはベシクタシュと2対2
+    say:
+      - text: 現地22日、ヨーロッパリーグのリーグフェーズ第3節。
+        image: assets/images/20261023_kamada_besiktas/10_w.jpg
+      - text: クリスタル・パレスは、敵地でベシクタシュと2対2のドローでした。
+        image: assets/images/20261023_kamada_besiktas/10_w.jpg
+      - text: 鎌田大地は中盤の底、ボランチで、フル出場しました。
+        image: assets/images/20261023_kamada_besiktas/10_w.jpg
+      - text: パレスに加わってからの公式戦出場は、通算100試合になりました。
+        image: assets/images/20261023_kamada_besiktas/03_w.jpg
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/uel/detail/?461621-461621-fl
+      - https://www.nikkansports.com/soccer/world/news/202610230000061.html
+      - https://www.footballchannel.jp/2026/10/23/post1038825/
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.europa/summary?event=401915553
+
+  - id: press
+    heading: 逆転弾の前にあったプレス
+    tier: 報道
+    telop: 後半10分、鎌田のプレスからマテタの逆転弾
+    say:
+      - text: 0対1の後半6分、ピノが決めて1対1の同点に。
+        image: assets/images/20261023_kamada_besiktas/03_w.jpg
+      - text: 後半10分、左サイドで鎌田がプレスをかけて、相手のパスミスを誘いました。
+        image: assets/images/20261023_kamada_besiktas/11_w.jpg
+      - text: 拾ったマテタが左足で決めて、2対1とパレスがリードしました。
+        image: assets/images/20261023_kamada_besiktas/11_w.jpg
+      - text: ただ、ベシクタシュに追いつかれ、相手に退場者が出たあとも勝ち越せません。
+        image: assets/images/20261023_kamada_besiktas/11_w.jpg
+      - text: 後半36分には鎌田が倒されたように見えましたが、PKにはなりませんでした。
+        image: assets/images/20261023_kamada_besiktas/10_w.jpg
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/uel/detail/?461621-461621-fl
+      - https://www.nikkansports.com/soccer/world/news/202610230000061.html
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.europa/summary?event=401915553
+
+  - id: view
+    viewpoint: true
+    heading: 100試合の数字で見る鎌田
+    tier: 報道
+    telop: 100試合で6得点11アシスト。17のうち6が今季
+    say:
+      - text: 報道では、加入からここまでで6得点11アシストです。
+        image: assets/images/20261023_kamada_besiktas/10_w.jpg
+      - text: 足すと17です。そのうち今季の6は、3得点3アシスト。
+        image: assets/images/20261023_kamada_besiktas/03_w.jpg
+      - text: 今季の6は、17の3分の1を少し超えています。
+        image: assets/images/20261023_kamada_besiktas/03_w.jpg
+      - text: この試合は、得点もアシストも付きませんでした。
+        image: assets/images/20261023_kamada_besiktas/03_w.jpg
+      - text: ただ、逆転弾の前には鎌田のプレスがありました。
+        image: assets/images/20261023_kamada_besiktas/11_w.jpg
+      - text: 次は25日にホームでニューカッスル。ELの第4節は11月5日です。
+        image: assets/images/20261023_kamada_besiktas/11_w.jpg
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/10/23/post1038825/
+      - https://web.gekisaka.jp/news/uel/detail/?461621-461621-fl
+short_title: "鎌田大地、パレスで節目の一戦。逆転弾の前にかけたプレスとは"

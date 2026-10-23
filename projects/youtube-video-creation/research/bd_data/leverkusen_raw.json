@@ -1,0 +1,694 @@
+{
+ "club_title": "Bayer_04_Leverkusen",
+ "season_title": "2026–27_Bayer_04_Leverkusen_season",
+ "squad": [
+  {
+   "no": "1",
+   "pos": "GK",
+   "nat": "NED",
+   "name": "Mark Flekken",
+   "page": "Mark Flekken",
+   "dob": "1993-06-13",
+   "captain": false,
+   "loan": false,
+   "team": "Netherlands",
+   "caps": 12,
+   "club_caps": 30,
+   "club_goals": 0
+  },
+  {
+   "no": "2",
+   "pos": "DF",
+   "nat": "ARG",
+   "name": "Facundo Medina",
+   "page": "Facundo Medina",
+   "dob": "1999-05-28",
+   "captain": false,
+   "loan": false,
+   "team": "Argentina",
+   "caps": 15,
+   "club_caps": 6,
+   "club_goals": 1
+  },
+  {
+   "no": "3",
+   "pos": "DF",
+   "nat": "ESP",
+   "name": "Miguel Gutiérrez",
+   "page": "Miguel Gutiérrez (footballer, born 2001)",
+   "dob": "2001-07-27",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 6,
+   "club_goals": 1
+  },
+  {
+   "no": "4",
+   "pos": "DF",
+   "nat": "ENG",
+   "name": "Jarell Quansah",
+   "page": "Jarell Quansah",
+   "dob": "2003-01-29",
+   "captain": false,
+   "loan": false,
+   "team": "England",
+   "caps": 9,
+   "club_caps": 34,
+   "club_goals": 5
+  },
+  {
+   "no": "5",
+   "pos": "DF",
+   "nat": "FRA",
+   "name": "Loïc Badé",
+   "page": "Loïc Badé",
+   "dob": "2000-04-11",
+   "captain": false,
+   "loan": false,
+   "team": "France",
+   "caps": 1,
+   "club_caps": 25,
+   "club_goals": 0
+  },
+  {
+   "no": "6",
+   "pos": "MF",
+   "nat": "ARG",
+   "name": "Equi Fernández",
+   "page": "Equi Fernández",
+   "dob": "2002-07-25",
+   "captain": false,
+   "loan": false,
+   "team": "Argentina",
+   "caps": 1,
+   "club_caps": 26,
+   "club_goals": 1
+  },
+  {
+   "no": "7",
+   "pos": "MF",
+   "nat": "GER",
+   "name": "Jonas Hofmann",
+   "page": "Jonas Hofmann",
+   "dob": "1992-07-14",
+   "captain": false,
+   "loan": false,
+   "team": "Germany",
+   "caps": 23,
+   "club_caps": 69,
+   "club_goals": 9
+  },
+  {
+   "no": "8",
+   "pos": "MF",
+   "nat": "GER",
+   "name": "Robert Andrich",
+   "page": "Robert Andrich",
+   "dob": "1994-09-22",
+   "captain": false,
+   "loan": false,
+   "team": "Germany",
+   "caps": 19,
+   "club_caps": 141,
+   "club_goals": 15
+  },
+  {
+   "no": "9",
+   "pos": "FW",
+   "nat": "POR",
+   "name": "Afonso Moreira",
+   "page": "Afonso Moreira",
+   "dob": "2005-03-19",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 0,
+   "club_goals": 0
+  },
+  {
+   "no": "10",
+   "pos": "MF",
+   "nat": "USA",
+   "name": "Malik Tillman",
+   "page": "Malik Tillman",
+   "dob": "2002-05-28",
+   "captain": false,
+   "loan": false,
+   "team": "United States",
+   "caps": 39,
+   "club_caps": 34,
+   "club_goals": 6
+  },
+  {
+   "no": "11",
+   "pos": "FW",
+   "nat": "FRA",
+   "name": "Martin Terrier",
+   "page": "Martin Terrier",
+   "dob": "1997-03-04",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 35,
+   "club_goals": 6
+  },
+  {
+   "no": "12",
+   "pos": "DF",
+   "nat": "BFA",
+   "name": "Edmond Tapsoba",
+   "page": "Edmond Tapsoba",
+   "dob": "1999-02-02",
+   "captain": true,
+   "loan": false,
+   "team": "Burkina Faso",
+   "caps": 67,
+   "club_caps": 193,
+   "club_goals": 8
+  },
+  {
+   "no": "14",
+   "pos": "FW",
+   "nat": "CZE",
+   "name": "Patrik Schick",
+   "page": "Patrik Schick",
+   "dob": "1996-01-24",
+   "captain": false,
+   "loan": false,
+   "team": "Czech Republic",
+   "caps": 56,
+   "club_caps": 155,
+   "club_goals": 86
+  },
+  {
+   "no": "15",
+   "pos": "DF",
+   "nat": "GER",
+   "name": "Tim Oermann",
+   "page": "Tim Oermann",
+   "dob": "2003-10-06",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 2,
+   "club_goals": 0
+  },
+  {
+   "no": "17",
+   "pos": "DF",
+   "nat": "ESP",
+   "name": "Lucas Vázquez",
+   "page": "Lucas Vázquez",
+   "dob": "1991-07-01",
+   "captain": false,
+   "loan": false,
+   "team": "Spain",
+   "caps": 9,
+   "club_caps": 15,
+   "club_goals": 1
+  },
+  {
+   "no": "18",
+   "pos": "MF",
+   "nat": "GER",
+   "name": "Kennet Eichhorn",
+   "page": "Kennet Eichhorn",
+   "dob": "2009-07-27",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 0,
+   "club_goals": 0
+  },
+  {
+   "no": "19",
+   "pos": "FW",
+   "nat": "FRA",
+   "name": "Moussa Diaby",
+   "page": "Moussa Diaby",
+   "dob": "1999-07-07",
+   "captain": false,
+   "loan": false,
+   "team": "France",
+   "caps": 11,
+   "club_caps": 130,
+   "club_goals": 32
+  },
+  {
+   "no": "20",
+   "pos": "DF",
+   "nat": "CIV",
+   "name": "Guéla Doué",
+   "page": "Guéla Doué",
+   "dob": "2002-10-17",
+   "captain": false,
+   "loan": false,
+   "team": "Ivory Coast",
+   "caps": 24,
+   "club_caps": 1,
+   "club_goals": 0
+  },
+  {
+   "no": "22",
+   "pos": "FW",
+   "nat": "NGA",
+   "name": "Victor Boniface",
+   "page": "Victor Boniface",
+   "dob": "2000-12-23",
+   "captain": false,
+   "loan": false,
+   "team": "Nigeria",
+   "caps": 13,
+   "club_caps": 43,
+   "club_goals": 22
+  },
+  {
+   "no": "23",
+   "pos": "FW",
+   "nat": "NGA",
+   "name": "Nathan Tella",
+   "page": "Nathan Tella",
+   "dob": "1999-07-05",
+   "captain": false,
+   "loan": false,
+   "team": "Nigeria",
+   "caps": 2,
+   "club_caps": 70,
+   "club_goals": 8
+  },
+  {
+   "no": "24",
+   "pos": "MF",
+   "nat": "ESP",
+   "name": "Aleix García",
+   "page": "Aleix García",
+   "dob": "1997-06-28",
+   "captain": false,
+   "loan": false,
+   "team": "Spain",
+   "caps": 8,
+   "club_caps": 67,
+   "club_goals": 6
+  },
+  {
+   "no": "28",
+   "pos": "GK",
+   "nat": "GER",
+   "name": "Janis Blaswich",
+   "page": "Janis Blaswich",
+   "dob": "1991-05-02",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 11,
+   "club_goals": 0
+  },
+  {
+   "no": "29",
+   "pos": "FW",
+   "nat": "MAR",
+   "name": "Eliesse Ben Seghir",
+   "page": "Eliesse Ben Seghir",
+   "dob": "2005-02-16",
+   "captain": false,
+   "loan": false,
+   "team": "Morocco",
+   "caps": 20,
+   "club_caps": 10,
+   "club_goals": 0
+  },
+  {
+   "no": "30",
+   "pos": "MF",
+   "nat": "ALG",
+   "name": "Ibrahim Maza",
+   "page": "Ibrahim Maza",
+   "dob": "2005-11-24",
+   "captain": false,
+   "loan": false,
+   "team": "Algeria",
+   "caps": 24,
+   "club_caps": 34,
+   "club_goals": 5
+  },
+  {
+   "no": "35",
+   "pos": "FW",
+   "nat": "CMR",
+   "name": "Christian Kofane",
+   "page": "Christian Kofane",
+   "dob": "2006-07-26",
+   "captain": false,
+   "loan": false,
+   "team": "Cameroon",
+   "caps": 7,
+   "club_caps": 33,
+   "club_goals": 7
+  },
+  {
+   "no": "36",
+   "pos": "GK",
+   "nat": "GER",
+   "name": "Niklas Lomb",
+   "page": "Niklas Lomb",
+   "dob": "1993-07-28",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 2,
+   "club_goals": 1
+  },
+  {
+   "no": "42",
+   "pos": "MF",
+   "nat": "GER",
+   "name": "Montrell Culbreath",
+   "page": "Montrell Culbreath",
+   "dob": "2007-08-29",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 12,
+   "club_goals": 1
+  }
+ ],
+ "results": [
+  [
+   "29 August 2026",
+   "1",
+   "SV Elversberg",
+   "3–2",
+   "Bayer Leverkusen"
+  ],
+  [
+   "5 September 2026",
+   "2",
+   "Bayer Leverkusen",
+   "4–0",
+   "Union Berlin"
+  ],
+  [
+   "12 September 2026",
+   "3",
+   "FC Augsburg",
+   "2–2",
+   "Bayer Leverkusen"
+  ],
+  [
+   "20 September 2026",
+   "4",
+   "Bayer Leverkusen",
+   "2–0",
+   "RB Leipzig"
+  ],
+  [
+   "10 October 2026",
+   "5",
+   "Mainz 05",
+   "3–4",
+   "Bayer Leverkusen"
+  ],
+  [
+   "18 October 2026",
+   "6",
+   "Bayer Leverkusen",
+   "2–1",
+   "SC Freiburg"
+  ],
+  [
+   "25 October 2026",
+   "7",
+   "TSG Hoffenheim",
+   "",
+   "Bayer Leverkusen"
+  ],
+  [
+   "31 October 2026",
+   "8",
+   "Bayer Leverkusen",
+   "",
+   "VfB Stuttgart"
+  ],
+  [
+   "8 November 2026",
+   "9",
+   "1. FC Köln",
+   "",
+   "Bayer Leverkusen"
+  ],
+  [
+   "21 November 2026",
+   "10",
+   "Bayer Leverkusen",
+   "",
+   "SC Paderborn"
+  ],
+  [
+   "29 November 2026",
+   "11",
+   "Borussia Dortmund",
+   "",
+   "Bayer Leverkusen"
+  ],
+  [
+   "4–6 December 2026",
+   "12",
+   "Bayer Leverkusen",
+   "",
+   "Borussia Mönchengladbach"
+  ],
+  [
+   "11–13 December 2026",
+   "13",
+   "Werder Bremen",
+   "",
+   "Bayer Leverkusen"
+  ],
+  [
+   "18–20 December 2026",
+   "14",
+   "Bayer Leverkusen",
+   "",
+   "Eintracht Frankfurt"
+  ],
+  [
+   "8–10 January 2027",
+   "15",
+   "Hamburger SV",
+   "",
+   "Bayer Leverkusen"
+  ],
+  [
+   "12–14 January 2027",
+   "16",
+   "Bayern Munich",
+   "",
+   "Bayer Leverkusen"
+  ],
+  [
+   "15–17 January 2027",
+   "17",
+   "Bayer Leverkusen",
+   "",
+   "Schalke 04"
+  ],
+  [
+   "22–24 January 2027",
+   "18",
+   "Bayer Leverkusen",
+   "",
+   "SV Elversberg"
+  ],
+  [
+   "29–31 January 2027",
+   "19",
+   "Union Berlin",
+   "",
+   "Bayer Leverkusen"
+  ],
+  [
+   "5–7 February 2027",
+   "20",
+   "Bayer Leverkusen",
+   "",
+   "FC Augsburg"
+  ],
+  [
+   "12–14 February 2027",
+   "21",
+   "RB Leipzig",
+   "",
+   "Bayer Leverkusen"
+  ],
+  [
+   "19–21 February 2027",
+   "22",
+   "Bayer Leverkusen",
+   "",
+   "Mainz 05"
+  ],
+  [
+   "26–28 February 2027",
+   "23",
+   "SC Freiburg",
+   "",
+   "Bayer Leverkusen"
+  ],
+  [
+   "2–4 March 2027",
+   "24",
+   "Bayer Leverkusen",
+   "",
+   "TSG Hoffenheim"
+  ],
+  [
+   "5–7 March 2027",
+   "25",
+   "VfB Stuttgart",
+   "",
+   "Bayer Leverkusen"
+  ],
+  [
+   "12–14 March 2027",
+   "26",
+   "Bayer Leverkusen",
+   "",
+   "1. FC Köln"
+  ],
+  [
+   "19–21 March 2027",
+   "27",
+   "SC Paderborn",
+   "",
+   "Bayer Leverkusen"
+  ],
+  [
+   "2–4 April 2027",
+   "28",
+   "Bayer Leverkusen",
+   "",
+   "Borussia Dortmund"
+  ],
+  [
+   "9–11 April 2027",
+   "29",
+   "Borussia Mönchengladbach",
+   "",
+   "Bayer Leverkusen"
+  ],
+  [
+   "16–18 April 2027",
+   "30",
+   "Bayer Leverkusen",
+   "",
+   "Werder Bremen"
+  ],
+  [
+   "23–25 April 2027",
+   "31",
+   "Eintracht Frankfurt",
+   "",
+   "Bayer Leverkusen"
+  ],
+  [
+   "7–9 May 2027",
+   "32",
+   "Bayer Leverkusen",
+   "",
+   "Hamburger SV"
+  ],
+  [
+   "14–16 May 2027",
+   "33",
+   "Bayer Leverkusen",
+   "",
+   "Bayern Munich"
+  ],
+  [
+   "22 May 2027",
+   "34",
+   "Schalke 04",
+   "",
+   "Bayer Leverkusen"
+  ],
+  [
+   "22 August 2026",
+   "First round",
+   "Wehen Wiesbaden",
+   "0–4",
+   "Bayer Leverkusen"
+  ],
+  [
+   "28 October 2026",
+   "Second round",
+   "Bayer Leverkusen",
+   "",
+   "1. FC Nürnberg"
+  ],
+  [
+   "16 September 2026",
+   "1",
+   "Bayer Leverkusen",
+   "2–0",
+   "Celje"
+  ],
+  [
+   "15 October 2026",
+   "2",
+   "Lech Poznań",
+   "0–4",
+   "Bayer Leverkusen"
+  ],
+  [
+   "22 October 2026",
+   "3",
+   "OFI",
+   "",
+   "Bayer Leverkusen"
+  ],
+  [
+   "5 November 2026",
+   "4",
+   "Bayer Leverkusen",
+   "",
+   "Marseille"
+  ],
+  [
+   "26 November 2026",
+   "5",
+   "Dinamo Zagreb",
+   "",
+   "Bayer Leverkusen"
+  ],
+  [
+   "10 December 2026",
+   "6",
+   "Bayer Leverkusen",
+   "",
+   "Beşiktaş"
+  ],
+  [
+   "21 January 2027",
+   "7",
+   "Bayer Leverkusen",
+   "",
+   "Red Bull Salzburg"
+  ],
+  [
+   "28 January 2027",
+   "8",
+   "Lyon",
+   "",
+   "Bayer Leverkusen"
+  ]
+ ]
+}

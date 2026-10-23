@@ -1,0 +1,29 @@
+{
+ "leverkusen": {
+  "ウルフ・キルステン": {
+   "role": "legend",
+   "file": "assets/photos/bd/leverkusen/leverkusen_legend_d8b8dd58.jpg",
+   "page": "Ulf Kirsten"
+  },
+  "ミヒャエル・バラック": {
+   "role": "legend",
+   "file": "assets/photos/bd/leverkusen/leverkusen_legend_93232908.jpg",
+   "page": "Michael Ballack"
+  },
+  "フロリアン・ヴィルツ": {
+   "role": "legend",
+   "file": "assets/photos/bd/leverkusen/leverkusen_legend_d1b4f790.jpg",
+   "page": "Florian Wirtz"
+  },
+  "カルレス・マルティネス・ノベル": {
+   "role": "manager",
+   "file": "assets/photos/bd/leverkusen/leverkusen_manager_a1ab47a1.jpg",
+   "page": "Carles Martínez Novell"
+  },
+  "細貝萌": {
+   "role": "japan",
+   "file": "assets/photos/bd/leverkusen/leverkusen_japan_49494d14.jpg",
+   "page": "Hajime Hosogai"
+  }
+ }
+}

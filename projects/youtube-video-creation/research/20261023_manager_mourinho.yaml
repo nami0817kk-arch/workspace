@@ -1,0 +1,594 @@
+# 監督紹介：モウリーニョ（10/23 金、シリーズ「監督紹介」、key: manager_mourinho、型は news）。9節の型（2026-10-20 決定）。見本は 20261022_manager_ancelotti。
+# 順：フック→基礎DATA→**日本との接点（基礎DATAの次）**→歩みと転機→戦術の色（実例の試合1つ）→数字で見る→本人の言葉→マル秘話→見立て。
+#
+# **重なりの確認（2026-10-23 に自分で）**：research/posted.json・covered.yaml・scripts/ を grep。モウリーニョを主題にした「人物紹介」は無し（監督紹介は 10/21 グアルディオラ・10/22 アンチェロッティ）。
+#   モウリーニョの名前が出る既存の本は、ニュース（9/8 VAR・9/9 ベティス会見・9/24 ヴィニシウスとの距離・10/14 審判の名前のショート・10/19 肘の話のショート）で、題材は別。本編の人物紹介は初。
+#
+# **いまの立場（一次で確かめた。違わなかった）**
+#   ○ レアル・マドリード公式（realmadrid.com）2026-06-11「Official Announcement: José Mourinho」
+#       https://www.realmadrid.com/en-US/news/club/latest-news/comunicado-oficial-mourinho-11-06-2026
+#       「理事会が、モウリーニョを2029年6月30日までの3シーズン、トップチームの監督に任命」「7月13日（プレシーズン初日）に合流」。
+#   ○ BBC Sport 2026-06-11（Keifer MacDonald）：63歳。3年契約。2010〜13年の1期目（リーグ1・国王杯1・スペイン・スーパー杯1）から13年ぶり。ベンフィカから戻る。
+#   ○ ESPN の試合記録（site.api.espn.com schedule/summary）：2026-27 のレアル 12試合（ラ・リーガ9＋CL3）10勝0分2敗・33得点14失点（英語版 Wikipedia の 12試合10勝2敗33-14 と一致）。
+#       ラ・リーガ 7勝2敗（ベティス 0-1・アトレティコ 1-2）、CL 3勝（インテル 2-1・ローマ 4-3・ライプツィヒ 4-1、10/21 まで）。
+#   → 題・語りは「レアル・マドリード監督」「2期目」。就任発表は 2026-06-11、合流は 07-13。
+#
+# **通算の数え方（台本とサムネをそろえる）**＝クラブのトップチームの全公式戦。**英語版 Wikipedia「José Mourinho」Managerial statistics（2026-10-21 時点）の行を自分で足し直した。**
+#   行（試合・勝・分・敗）：ベンフィカ1期 11・6・3・2／レイリア 20・9・7・4／ポルト 127・91・21・15／チェルシー1期 185・124・40・21／インテル 108・67・26・15／レアル1期 178・128・28・22／
+#     チェルシー2期 136・80・29・27／マンU 144・84・32・28／トッテナム 86・44・19・23／ローマ 138・68・31・39／フェネルバフチェ 62・37・14・11／ベンフィカ2期 45・27・10・8／レアル2期 12・10・0・2。
+#   **合計 1252試合 775勝 260分 217敗（勝率 61.9%）。Wikipedia の合計欄は 1251・774・259・218 と書くが、行を足すと 1252・775・260・217（各行は 勝＋分＋敗＝試合 で一致）。→ 台本・サムネは自分の足し算を使う。食い違いは報告に書く。**
+#   クラブ別：レアル（2期）190試合138勝＝72.6%（1期 178試合128勝＝71.9%、2期 12試合10勝）／チェルシー（2期）321試合204勝＝63.6%／ポルト 127試合91勝＝71.7%／インテル 108試合67勝＝62.0%／マンU 144試合84勝＝58.3%／
+#     ほか（ベンフィカ2期・レイリア・トッテナム・ローマ・フェネルバフチェ）362試合191勝＝52.8%。サムネの表は「他7チーム」＝インテル・マンU・ほか＝614試合342勝＝55.7%。
+#   優勝（Wikipedia Honours の「Manager」欄を数えた。インタートト杯に当たる大会は無い。スーパー杯・コミュニティ・シールドは数える＝アンチェロッティ（30冠）と同じ数え方）：
+#     ポルト6（リーグ2・国内杯1・スーパー杯1・UEFAカップ1・CL1）／チェルシー8（プレミア3・FAカップ1・リーグカップ3・コミュニティ・シールド1）／インテル5（セリエA2・コッパ1・スーパーコッパ1・CL1）／
+#     レアル3（リーグ1・国王杯1・スペイン・スーパー杯1）／マンU3（リーグカップ1・コミュニティ・シールド1・ヨーロッパリーグ1）／ローマ1（カンファレンスリーグ）＝**26冠**。
+#     助手時代の優勝（ポルト・バルセロナ）は数えない。→ 台本は「26冠」と言い、数え方（助手時代を除くトップチームの優勝）を概要欄の見立てに書く。
+#   リーグ優勝の国：ポルトガル（2003・2004）・イングランド（2005・2006・2015）・イタリア（2009・2010）・スペイン（2012）＝**4か国、計8度**。
+#   欧州王者：ポルト 2004（モナコに3-0）・インテル 2010（バイエルンに2-0）。BBC（2010-05-22）「ヘッペルとヒッツフェルトに並び、2つのクラブで欧州王者になった3人目」。
+# **選手時代・基礎**：Wikipedia：1963-01-26 生まれ（ポルトガルのセトゥーバル）。選手：ベレネンセス・リオ・アヴェ・セジンブラ・コメルシオ・エ・インドゥストリア（下部）。通算62試合9得点（インフォボックス）→ 台本は数字を言わない。
+# **ロブソンの通訳（マル秘話）**：Wikipedia「Coaching career」：1992年、ボビー・ロブソンがスポルティングの監督になり、英語を話せる地元の指導者が通訳として必要で、モウリーニョが就く（7月7日に就任会見）。
+#   1993-12 ロブソンが解任され、ポルトの監督に（ポルトへ同行）→ 1994・95・96年のスーパー杯、1993-94 国内杯、1994-95・1995-96 リーグ優勝（助手）→ 1996 バルセロナ（ロブソン）→ ファン・ハール（La Liga 1997-98・1998-99）。
+#   BBC（2010-05-21 プレビュー）：ファン・ハール「彼にコーチになってほしいと頼んだ。彼はチームを知っていた」「3年、私のもとにいた」。ファン・ハールは Bチームの指導を任せた（Wikipedia）。→ 台本は事実だけ。
+#
+# **日本との接点（一次で確かめた）**
+#   ○ ESPN の試合記録（site.api.espn.com summary?event=401882919、控え research/raw/20261023_rm_sociedad_summary.json）：2026-08-26 ラ・リーガ、サンティアゴ・ベルナベウ（72,226人）。レアル 4-1 ソシエダ。
+#       40分エンバペ・44分スチッチ（ソシエダ）・60分エンバペ・68分ヴィニシウス・80分エンバペ。**久保建英はソシエダの先発、74分にゲデスと交代。**ESPN の見出し「Mbappé hat trick gives Mourinho winning Bernabéu return」。
+#   × モウリーニョと日本代表・日本人選手の直接の縁（指導した日本人）は確かめられなかった。Wikipedia に Japan の語は無い。→ 台本は「今季の1試合」だけ。
+#
+# **戦術の色（実例の試合＝2010-04-28 CL準決勝第2戦、バルセロナ 1-0 インテル（合計 2-3））**
+#   ○ BBC Sport（2010-04-28 試合記録＋レポート）https://news.bbc.co.uk/sport2/hi/football/europe/8645184.stm ：第1戦 3-1 のリードを守る。モッタが退場（試合記録 27:38＝前半28分）で、60分以上を10人で戦う。
+#       「インテルは深く引いて守りの場所を埋め、バルセロナのパスは前で回るだけで裏に通らなかった」。支配率 バルセロナ76%・インテル24%、枠内シュート 7-0、コーナー 9-2。84分ピケの1点。
+#       ※BBCは「ピケはオフサイドの可能性」「モッタの退場は厳しい」と書くが、台本は審判の判定に触れない。
+#   ○ 英語版 Wikipedia「Tactics」：特徴＝守備の意識の高さ＋中盤（特にサイド）を使った素早い切り替え／中盤に3人以上の中央の選手を置く／試合中の素早い対応。
+#       「第2戦でモッタが退場したあと、モウリーニョは深く、狭く守った。インテルは1-0で負けたが合計3-2で決勝へ。『人生でいちばん美しい敗戦』と本人が語った」（←この言葉は Wikipedia のみ。一次を確かめられなければ台本に入れない）。
+# **本人の言葉（自訳。原文は出典）**：①ESPN 2026-10-22「Mourinho made Real Madrid-Barcelona Clásico rivalry unmissable」：2026年8月の最初の会見（再就任後）"I'm not one for regrets" / "I'm here today, there tomorrow. I don't think much about what I've left behind."
+#   ②ESPN 2026-09-25（Bet It Drives Show）："There are rules that are not negotiable. If you report at 9 a.m., it's 9 a.m. for everybody." / "Don't betray me, and I'll always be there for you."（本人の補足：「サッカーの話として」）
+#   ③レアル公式の記者会見（es-ES、2026-10-21 ライプツィヒ戦のあと）：「Yo quiero siempre mejorar. Estoy aquí desde hace más de cien días. Obviamente, no está donde quiero, pero hay cosas que hacemos mejor hoy de lo que hacíamos antes.」
+#       https://www.realmadrid.com/es-ES/noticias/futbol/primer-equipo/ruedas-de-prensa/rueda-prensa-mourinho-post-rm-leipzig-j3-champions-21-10-2026
+# **クラシコ（見立て）**：ESPN 2026-10-22（控え research/raw/20261023_mou_clasico_background.txt）：1期目の対バルセロナ17試合（ラ・リーガ・国王杯・スーパー杯・CL）は 5勝6分6敗。最後の5試合は負けなし。
+#   ※こちらで試合ごとに数え直した（2010-11-29 L0-5／2011-04-16 D1-1／04-20 W1-0延長／04-27 L0-2／05-03 D1-1／2011-08 D2-2・L／2011-12 L1-3／2012-01 L1-2・D2-2／04-21 W2-1／2012-08 L・W／10 D2-2／2013-01 D1-1／02 W3-1／03-02 W2-1）＝5勝6分6敗で一致。
+#   クラシコ除く161試合＝178−17。勝 128−5＝123 → 76.4%。クラシコ 5÷17＝29.4%。差 47.0ポイント。
+#   次：10/25（日）レアル対バルセロナ（ESPN 日程：Spotify Camp Nou）。ESPN 順位（第9節終了）：バルセロナ 9勝0分0敗＝勝ち点27、アトレティコ22、レアル 7勝0分2敗＝21（3位）。差6。勝てば3・引き分けなら6・負ければ9（勝ち点だけの単純計算）。
+#
+# **入れなかったもの**：私生活・家族、年俸、代理人、法的な問題、退任・解任の経緯（「率いた」と在任の年だけ）、他の監督との優劣（クラシコの数字はモウリーニョ自身の試合の数え直し）、ヴィニシウスやギュレルをめぐる最近の話題、
+#   記者との応酬・審判批判・煽りの言葉、女子チーム、Jリーグ、報道・SNS の反応、ベンフィカへの補償金。
+# **日本語名・読みで怪しいもの**：モウリーニョ、セトゥーバル、ベンフィカ、レイリア、ポルト、ロブソン、スポルティング、ファン・ハール、チェルシー、インテル、バルセロナ、ブスケツ、ピケ、モッタ、エンバペ、ヴィニシウス、スチッチ、ゲデス、ソシエダ、ベルナベウ、カンプ・ノウ、クラシコ、フェネルバフチェ。
+date: 2026年10月23日
+slot: other_1
+format: news
+series: 監督紹介
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+people:
+- モウリーニョ
+theme:
+  end_bg: assets/images/20261023_manager_mourinho/06_w.jpg
+  id: manager_mourinho
+  league: spain
+  league_name: レアル・マドリード
+  kind: other
+  topic: モウリーニョ
+  title: モウリーニョ、レアル・マドリード監督はどんな人？リーグ優勝4か国の中身は何か
+  question: レアル・マドリードのモウリーニョ監督は、どんな人なのか。リーグ優勝4か国、通算26冠は、どこで積み上がったのか
+  lead: レアル・マドリード監督、モウリーニョ。
+  opening_image: assets/images/20261023_manager_mourinho/01_w.jpg
+  takeaway: 通算は1252試合、775勝で勝率61.9%。優勝は26冠（助手時代を除くトップチームの優勝）で、チェルシー8・ポルト6・インテル5・レアル3・マンチェスター・U3・ローマ1。リーグ優勝は4か国で計8度、欧州王者は別々のクラブで2度。勝率はレアル1期目の178試合で71.9%、うちクラシコ17試合は5勝6分け6敗の29.4%で、残る161試合は76.4%。2026年6月にレアルが再就任を発表し、7月13日に就任、契約は2029年6月30日まで。次は10月25日のクラシコ（敵地）
+  short_title: モウリーニョ、リーグ優勝4か国
+  nameplate: モウリーニョ｜レアル・マドリード監督
+thumbnail:
+  line1: モウリーニョ、通算26冠
+  line2: リーグ優勝は4か国
+  tags:
+  - レアル・マドリード
+  photo: assets/images/20261023_manager_mourinho/panel_01.jpg
+  photos: []
+  short_photo: assets/images/20261023_manager_mourinho/05_w.jpg
+sections:
+- id: hook
+  main: true
+  heading: リーグ優勝は4か国、欧州王者は2度。通算26冠は、どう積み上がったのか
+  tier: 報道
+  telop: リーグ優勝は4か国。欧州王者は2度
+  narrator: 解説
+  card: &hook_stats
+    type: stats
+    title: モウリーニョ 監督としての実績（トップチーム）
+    items:
+    - ['4', か国, リーグ優勝の国の数]
+    - ['2', 度, 欧州王者。ポルトとインテル]
+    - ['26', 冠, 通算の優勝]
+    focus: 0
+  say:
+  - text: リーグ優勝は、4か国。欧州王者は、2度です。
+    image: assets/images/20261023_manager_mourinho/05_w.jpg
+    card: none
+  - text: 2026年8月、再就任後の最初の会見です。
+    image: assets/images/20261023_manager_mourinho/02_w.jpg
+    card: none
+  - voice: モウリーニョ
+    text: 私は、後悔する人間ではありません。
+  - voice: モウリーニョ
+    text: 今日はここにいて、明日は別の場所にいる。
+    cont: true
+  - voice: モウリーニョ
+    text: 置いてきたものは、あまり考えません。
+    cont: true
+    pause: 0.5
+  - text: いまは、レアルの指揮官です。数字を、順に見ていきます。
+    image: assets/images/20261023_manager_mourinho/01_w.jpg
+    card: none
+  quotes_from:
+  - https://www.espn.com/soccer/story/_/id/50245408/jose-mourinho-el-clasico-unmissable-real-madrid-barcelona-guardiola-messi-ronaldo
+  sources:
+  - https://www.realmadrid.com/en-US/news/club/latest-news/comunicado-oficial-mourinho-11-06-2026
+  - https://www.espn.com/soccer/story/_/id/50245408/jose-mourinho-el-clasico-unmissable-real-madrid-barcelona-guardiola-messi-ronaldo
+  - https://news.bbc.co.uk/sport2/hi/football/europe/8697017.stm
+  - https://en.wikipedia.org/wiki/Jos%C3%A9_Mourinho
+- id: data
+  heading: レアル・マドリードのモウリーニョは、いつから、どんな立場の人か
+  tier: 確定
+  official: true
+  telop: モウリーニョの基礎DATA
+  narrator: 解説
+  card: &data_table
+    type: table
+    title: モウリーニョ（63歳）の基礎DATA
+    columns: [項目, 中身]
+    rows:
+    - [生年月日, 1963年1月26日（ポルトガル・セトゥーバル）]
+    - [選手時代, ポルトガルのクラブでプレー。のち指導者へ]
+    - [監督（トップチーム）, 10クラブを、13度率いた]
+    - [レアル・マドリード, 2期目。2026年7月13日に就任]
+    - [契約, 2029年6月30日まで]
+    highlight_row: 3
+    source: レアル・マドリード公式・英語版Wikipedia
+  say:
+  - text: 1963年1月26日、ポルトガルのセトゥーバルの生まれ。63歳です。
+    image: assets/images/20261023_manager_mourinho/06_w.jpg
+    card:
+      <<: *data_table
+      highlight_row: 0
+  - text: 選手時代は、ポルトガルのクラブでプレー。
+    image: assets/images/20261023_manager_mourinho/04_w.jpg
+    card:
+      <<: *data_table
+      highlight_row: 2
+  - text: 監督としては、10のクラブを、13度率いてきました。
+    card:
+      <<: *data_table
+      highlight_row: 2
+  - text: 2026年6月11日、レアル・マドリードが、モウリーニョの就任を発表しました。
+    emph: true
+    image: assets/images/20261023_manager_mourinho/01_w.jpg
+    card:
+      <<: *data_table
+      highlight_row: 3
+  - text: 13年ぶりの復帰です。契約は、2029年までです。
+    card:
+      <<: *data_table
+      highlight_row: 3
+  sources:
+  - https://www.realmadrid.com/en-US/news/club/latest-news/comunicado-oficial-mourinho-11-06-2026
+  - https://www.bbc.com/sport/football/articles/cvg4ne1pv4jo
+  - https://en.wikipedia.org/wiki/Jos%C3%A9_Mourinho
+- id: japan
+  heading: モウリーニョと日本は、どこでつながるのか
+  tier: 報道
+  telop: 日本とは、今季の1試合。久保建英が先発した8月26日
+  narrator: 解説
+  card: &jp_stats
+    type: stats
+    title: 2026年8月26日 ラ・リーガ（サンティアゴ・ベルナベウ）
+    items:
+    - ['4', 点, レアル・マドリード]
+    - ['1', 点, レアル・ソシエダ]
+    focus: 0
+  say:
+  - text: モウリーニョと日本のつながりは、今季の1試合にあります。
+    image: assets/images/20261023_manager_mourinho/01_w.jpg
+    card: *jp_stats
+  - text: 2026年8月26日、ベルナベウ。相手は、レアル・ソシエダです。
+    card: *jp_stats
+  - text: 久保建英は、ソシエダの先発で出ました。
+    emph: true
+    image: assets/images/20261023_manager_mourinho/01_w.jpg
+    card: none
+  - text: エンバペが前半40分に先制。ソシエダが追いつきます。
+    card: none
+  - text: 後半に3点を加えて、レアルの4対1の勝ちでした。
+    card: none
+  sources:
+  - https://www.espn.com/soccer/report/_/gameId/401882919
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/summary?event=401882919
+- id: career
+  heading: 通算26冠は、どのクラブで、どう積み上がったのか。転機はどこだったのか
+  tier: 背景
+  telop: 歩みと転機。ポルト、チェルシー、インテル、レアル
+  narrator: 解説
+  card: &career_tl
+    type: timeline
+    title: モウリーニョの監督としての歩み
+    rows:
+    - [2000〜02, ベンフィカ、レイリア]
+    - [2002〜04, ポルト。UEFAカップと欧州王者]
+    - [2004〜07, チェルシー。リーグ優勝2度]
+    - [2008〜10, インテル。3冠。欧州王者]
+    - [2010〜13, レアル。2012年にリーグ優勝]
+    - [2013〜26, チェルシー、マンU、ローマなど。レアルへ]
+    focus: 0
+  say:
+  - text: モウリーニョの監督の道は、2000年、ポルトガルのベンフィカから。
+    image: assets/images/20261023_manager_mourinho/05_w.jpg
+    card: *career_tl
+  - text: 転機は、2002年1月。ポルトの監督になります。
+    emph: true
+    card:
+      <<: *career_tl
+      focus: 1
+  - text: 当時のポルトは、リーグ5位。そこから、2002-03のリーグ優勝を果たします。
+    image: assets/images/20261023_manager_mourinho/04_w.jpg
+    card:
+      <<: *career_tl
+      focus: 1
+  - text: この年は、国内杯と、欧州のカップ戦も制覇。3つのタイトルを獲りました。
+    card:
+      <<: *career_tl
+      focus: 1
+  - text: 2004年、ポルトは、チャンピオンズリーグで優勝。欧州王者になります。
+    emph: true
+    image: assets/images/20261023_manager_mourinho/06_w.jpg
+    card:
+      <<: *career_tl
+      focus: 1
+  - text: 同じ2004年に、チェルシーへ。2004-05は、50年ぶりのリーグ優勝でした。
+    image: assets/images/20261023_manager_mourinho/02_w.jpg
+    card:
+      <<: *career_tl
+      focus: 2
+  - text: 勝ち点95、失点15は、当時のプレミアリーグの記録です。
+    card:
+      <<: *career_tl
+      focus: 2
+  - text: 2008年、インテルへ。
+    emph: true
+    image: assets/images/20261023_manager_mourinho/03_w.jpg
+    card:
+      <<: *career_tl
+      focus: 3
+  - text: 2009-10に、リーグ、国内杯、チャンピオンズリーグの3冠。
+    emph: true
+    card:
+      <<: *career_tl
+      focus: 3
+  - text: イタリアのクラブでは、初めての3冠でした。
+    card:
+      <<: *career_tl
+      focus: 3
+  - text: 2010年、レアルへ。2011-12にリーグ優勝。
+    emph: true
+    image: assets/images/20261023_manager_mourinho/01_w.jpg
+    card:
+      <<: *career_tl
+      focus: 4
+  - text: ポルトガル、イングランド、イタリアに続く、4か国目です。
+    card:
+      <<: *career_tl
+      focus: 4
+  - text: 2015年に、チェルシーでリーグ優勝。
+    image: assets/images/20261023_manager_mourinho/05_w.jpg
+    card:
+      <<: *career_tl
+      focus: 5
+  - text: 2017年には、マンチェスター・ユナイテッドで、ヨーロッパリーグを制します。
+    card:
+      <<: *career_tl
+      focus: 5
+  - text: 2022年、ローマでカンファレンスリーグを制覇。クラブ初の欧州タイトルです。
+    image: assets/images/20261023_manager_mourinho/04_w.jpg
+    card:
+      <<: *career_tl
+      focus: 5
+  - text: そして今年、レアルに戻ってきました。
+    image: assets/images/20261023_manager_mourinho/01_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Jos%C3%A9_Mourinho
+  - https://news.bbc.co.uk/sport2/hi/football/europe/8697017.stm
+  - https://www.realmadrid.com/en-US/news/club/latest-news/comunicado-oficial-mourinho-11-06-2026
+- id: style
+  heading: モウリーニョのサッカーは、2010年のカンプ・ノウで、何を見せたのか
+  tier: 報道
+  telop: 戦術の色。2010年4月28日、バルセロナ 1-0 インテル
+  narrator: 解説
+  card: &style_stats
+    type: stats
+    title: 2010年4月28日 チャンピオンズリーグ準決勝・第2戦
+    items:
+    - ['1', 対0, この試合は、バルセロナの勝ち]
+    - ['3', 対2, 2試合の合計は、インテルの勝ち]
+    focus: 1
+  say:
+  - text: モウリーニョの戦術は、2010年4月28日、バルセロナの本拠地で見ます。
+    image: assets/images/20261023_manager_mourinho/03_w.jpg
+    card: *style_stats
+  - text: チャンピオンズリーグの準決勝、第2戦。第1戦のスコアは、インテルの3対1でした。
+    card: *style_stats
+  - text: この試合は、バルセロナの1対0の勝ち。
+    emph: true
+    image: assets/images/20261023_manager_mourinho/06_w.jpg
+    card: *style_stats
+  - text: それでも、2試合の合計3対2で、インテルが決勝へ進みます。
+    emph: true
+    card: *style_stats
+  - text: 前半28分、モッタが退場。インテルは、60分以上を、10人で戦いました。
+    image: assets/images/20261023_manager_mourinho/03_w.jpg
+    card: none
+  - text: ボール支配率は、バルセロナが76%、インテルが24%。
+    card: &style_poss
+      type: stats
+      title: ボール支配率
+      items:
+      - ['76', '%', バルセロナの支配率]
+      - ['24', '%', インテルの支配率]
+      focus: 0
+  - text: インテルは、自陣の深くまで引いて、守る場所を埋めました。
+    card: none
+  - text: チームの特徴を、3つ見ます。まず、中盤に、中央の選手を3人以上置くこと。
+    image: assets/images/20261023_manager_mourinho/05_w.jpg
+    card: &style_doc
+      type: document
+      label: 英語版Wikipediaの要約（訳）
+      paragraphs:
+      - 中盤に、中央の選手を3人以上置き、中盤で上回ることを重く見る。
+      - 守りの意識が高く、奪ってから、特にサイドを使って素早く攻める。
+      - 試合の流れを見て、すばやく形を変える。
+      highlight:
+      - 3人以上
+      - 奪ってから
+      - すばやく形を変える
+  - text: 次に、守りを固め、奪ったら素早く攻めること。
+    image: assets/images/20261023_manager_mourinho/04_w.jpg
+    emph: true
+    card: *style_doc
+  - text: 最後は、試合の流れを見て、形を変えること。
+    card: *style_doc
+  - text: このカンプ・ノウでは、退場のあと、深く、狭く守りました。
+    card: *style_doc
+  sources:
+  - https://news.bbc.co.uk/sport2/hi/football/europe/8645184.stm
+  - https://en.wikipedia.org/wiki/Jos%C3%A9_Mourinho
+- id: numbers
+  heading: 通算1252試合の数字は、チームごとに、どう違うのか
+  tier: 報道
+  telop: 勝率の最高はレアル72.6%。優勝26冠のうち、チェルシーが8
+  narrator: 解説
+  card: &club_table
+    type: table
+    title: モウリーニョの通算（トップチーム）
+    columns: [所属, 試合, 勝率, 冠]
+    rows:
+    - [レアル（2期）, '190', 72.6%, '3']
+    - [チェルシー（2期）, '321', 63.6%, '8']
+    - [ポルト, '127', 71.7%, '6']
+    - [インテル, '108', 62.0%, '5']
+    - [マンチェスターU, '144', 58.3%, '3']
+    - [ほか5チーム, '362', 52.8%, '1']
+    - [合計, '1252', 61.9%, '26']
+    highlight_row: 6
+    source: 英語版Wikipedia（行を足し直した）
+  say:
+  - text: モウリーニョの通算を、率いたクラブ別に並べます。
+    image: assets/images/20261023_manager_mourinho/06_w.jpg
+    card: *club_table
+  - text: 勝率の最高は、レアルの72.6%。ポルトが、71.7%で続きます。
+    emph: true
+    image: assets/images/20261023_manager_mourinho/01_w.jpg
+    card:
+      <<: *club_table
+      highlight_row: 0
+  - text: 合計は、1252試合。775勝で、勝率61.9%。優勝は26冠です。
+    emph: true
+    image: assets/images/20261023_manager_mourinho/04_w.jpg
+    card:
+      <<: *club_table
+      highlight_row: 6
+  - text: 優勝26冠の内訳です。チェルシーが8、ポルトが6、インテルが5。
+    card: &title_bars
+      type: bars
+      title: モウリーニョの優勝の内訳（冠）
+      unit: ''
+      items:
+      - label: チェルシー
+        value: 8
+        highlight: true
+      - label: ポルト
+        value: 6
+      - label: インテル
+        value: 5
+      - label: レアル
+        value: 3
+      - label: マンU
+        value: 3
+      - label: ローマ
+        value: 1
+  - text: リーグ優勝は、計8度。ポルトガルで2度、イングランドで3度、
+    image: assets/images/20261023_manager_mourinho/02_w.jpg
+    card: &lg_bars
+      type: bars
+      title: モウリーニョのリーグ優勝（度）
+      unit: ''
+      items:
+      - label: イングランド
+        value: 3
+        highlight: true
+      - label: ポルトガル
+        value: 2
+      - label: イタリア
+        value: 2
+      - label: スペイン
+        value: 1
+  - text: イタリアで2度、スペインで1度です。
+    card: *lg_bars
+  sources:
+  - https://en.wikipedia.org/wiki/Jos%C3%A9_Mourinho
+  - https://www.bbc.com/sport/football/articles/cvg4ne1pv4jo
+- id: words
+  heading: 本人は、規則とこれからを、どう語っているのか
+  tier: 確定
+  official: true
+  telop: 9月のインタビューと、10月21日の記者会見
+  narrator: 解説
+  card: &words_doc
+    type: document
+    label: モウリーニョの言葉（2026年9月・10月、訳）
+    paragraphs:
+    - 交渉できない決まりがあります。9時集合なら、全員が9時です。
+    - 私は、いつも良くなりたい。ここに来て、100日以上になります。
+    highlight:
+    - 全員が9時
+    - いつも良くなりたい
+  say:
+  - text: ここからは、本人の言葉です。まず、9月のインタビュー。規則の話です。
+    image: assets/images/20261023_manager_mourinho/06_w.jpg
+    card: *words_doc
+  - voice: モウリーニョ
+    text: 交渉できない決まりがあります。
+  - voice: モウリーニョ
+    text: 9時集合なら、全員が9時です。
+    cont: true
+    pause: 0.5
+  - text: もう1つは、10月21日。ライプツィヒ戦のあとの、記者会見です。
+    image: assets/images/20261023_manager_mourinho/01_w.jpg
+    card: *words_doc
+  - voice: モウリーニョ
+    text: 私は、いつも良くなりたい。
+  - voice: モウリーニョ
+    text: ここに来て、100日以上になります。
+    cont: true
+  - voice: モウリーニョ
+    text: チームは、まだ望む場所にいません。
+    cont: true
+  - voice: モウリーニョ
+    text: でも、以前より良くなっていることもあります。
+    cont: true
+    pause: 0.5
+  quotes_from:
+  - https://www.espn.com/soccer/story/_/id/50026378/jose-mourinho-nonnegotiable-rules-real-madrid-follow-dont-betray-me
+  - https://www.realmadrid.com/es-ES/noticias/futbol/primer-equipo/ruedas-de-prensa/rueda-prensa-mourinho-post-rm-leipzig-j3-champions-21-10-2026
+  sources:
+  - https://www.espn.com/soccer/story/_/id/50026378/jose-mourinho-nonnegotiable-rules-real-madrid-follow-dont-betray-me
+  - https://www.realmadrid.com/es-ES/noticias/futbol/primer-equipo/ruedas-de-prensa/rueda-prensa-mourinho-post-rm-leipzig-j3-champions-21-10-2026
+- id: secret
+  heading: 数字の外にある話。最初の仕事は、通訳だった
+  tier: 背景
+  telop: 通訳から始まった道。助手としてリーグ優勝を4度
+  narrator: 解説
+  card: &sec_table
+    type: table
+    title: 数字の外にある話
+    columns: [いつ, 何があったか]
+    rows:
+    - [1992年, スポルティングで、ロブソン監督の通訳に]
+    - [1994〜96年, ポルトへ。助手として、リーグ優勝2度]
+    - [1996〜2000年, バルセロナへ。助手として、リーグ優勝2度]
+    - [2000年, ベンフィカの監督に。初めての監督]
+    highlight_row: 0
+    source: 英語版Wikipedia
+  say:
+  - text: ここから、数字の外の話。最初の仕事は、通訳でした。
+    image: assets/images/20261023_manager_mourinho/05_w.jpg
+    card:
+      <<: *sec_table
+      highlight_row: 0
+  - text: 1992年、ボビー・ロブソンが、ポルトガルのスポルティングの監督になります。
+    card:
+      <<: *sec_table
+      highlight_row: 0
+  - text: 英語を話せる、地元の指導者が必要でした。その役が、モウリーニョです。
+    image: assets/images/20261023_manager_mourinho/06_w.jpg
+    card: none
+  - text: 通訳をしながら、戦術の話を重ねました。
+    card:
+      <<: *sec_table
+      highlight_row: 1
+  - text: ロブソンと一緒に、ポルト、そしてバルセロナへ移ります。
+    card:
+      <<: *sec_table
+      highlight_row: 1
+  - text: ポルトでも、バルセロナでも、助手として、リーグ優勝を2度ずつ経験しました。
+    emph: true
+    image: assets/images/20261023_manager_mourinho/04_w.jpg
+    card:
+      <<: *sec_table
+      highlight_row: 2
+  - text: そして2000年、ベンフィカで、初めて監督になります。
+    image: assets/images/20261023_manager_mourinho/05_w.jpg
+    card:
+      <<: *sec_table
+      highlight_row: 3
+  sources:
+  - https://en.wikipedia.org/wiki/Jos%C3%A9_Mourinho
+  - https://news.bbc.co.uk/sport2/hi/football/europe/8694338.stm
+- id: view
+  viewpoint: true
+  heading: 見立て・勝率76%のレアルと、29%のクラシコ。差は、どこにあるのか
+  tier: 背景
+  telop: レアル1期目、クラシコを除く161試合は76.4%。クラシコ17試合は29.4%
+  narrator: 解説
+  card: &view_table
+    type: table
+    title: 自分で数えてみた
+    columns: &view_cols [比べ, 答え]
+    rows: &view_rows
+    - [レアル1期目、178試合の勝率, 71.9%]
+    - [クラシコを除く161試合の勝率, 76.4%]
+    - [クラシコ17試合（5勝6分け6敗）の勝率, 29.4%]
+    - [クラシコ、最後の5試合, 負けなし]
+    highlight_row: 0
+  say:
+  - text: 見立てです。モウリーニョの、レアル1期目を、数え直します。
+    image: assets/images/20261023_manager_mourinho/05_w.jpg
+    card: *view_table
+  - text: 178試合で、勝率71.9%。
+    image: assets/images/20261023_manager_mourinho/01_w.jpg
+    card:
+      <<: *view_table
+      highlight_row: 0
+  - text: クラシコの17試合を除くと、161試合で、76.4%です。
+    emph: true
+    mark: {kind: circle, row: 1, col: 1}
+    card:
+      <<: *view_table
+      highlight_row: 1
+  - text: そのクラシコ17試合は、5勝6分け6敗。勝率は、29.4%です。
+    emph: true
+    mark: {kind: circle, row: 2, col: 1}
+    card:
+      <<: *view_table
+      highlight_row: 2
+  - text: ほかの試合との差は、約47ポイント。相手がバルセロナだと、数字は大きく変わります。
+    image: assets/images/20261023_manager_mourinho/02_w.jpg
+    card: none
+  - text: それでも、最後の5試合は、負けていません。
+    card:
+      <<: *view_table
+      highlight_row: 3
+  - text: 10月25日、バルセロナの本拠地で、2期目で初めてのクラシコです。
+    image: assets/images/20261023_manager_mourinho/01_w.jpg
+    card: none
+  - text: バルセロナは、9戦9勝で、勝ち点27。レアルは21で、3位です。
+    card: &view_pts
+      type: stats
+      title: 第9節までの勝ち点（ラ・リーガ）
+      items:
+      - ['27', 点, バルセロナ（9戦9勝）]
+      - ['21', 点, レアル・マドリード（3位）]
+      focus: 0
+  - text: 差は6。クラシコの結果で、この差は、3にも、9にもなります。
+    emph: true
+    image: assets/images/20261023_manager_mourinho/05_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Jos%C3%A9_Mourinho
+  - https://www.espn.com/soccer/story/_/id/50245408/jose-mourinho-el-clasico-unmissable-real-madrid-barcelona-guardiola-messi-ronaldo
+  - https://site.api.espn.com/apis/v2/sports/soccer/esp.1/standings

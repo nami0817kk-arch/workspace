@@ -4,12 +4,12 @@
  "source_note": "python -m src.cli standings germany（src/standings.py、FotMob の data API id=54）の表を clubs.json の key に当てたもの。gf/ga は同じ応答の scoresStr。英語版 Wikipedia の Template:2026–27 Bundesliga table（update=20 September 2026）の36試合の結果から計算した勝敗・得失点・勝ち点と18クラブすべて一致（2026-09-28 に突き合わせ）。",
  "table": {
   "dortmund": {
-   "rank": 1,
-   "points": 12,
-   "record": "4勝0分0敗",
-   "played": 4,
-   "gf": 9,
-   "ga": 2
+   "rank": 2,
+   "points": 14,
+   "record": "4勝2分0敗",
+   "played": 6,
+   "gf": 11,
+   "ga": 4
   },
   "bayern": {
    "rank": 1,
@@ -36,12 +36,12 @@
    "ga": 6
   },
   "leverkusen": {
-   "rank": 5,
-   "points": 7,
-   "record": "2勝1分1敗",
-   "played": 4,
-   "gf": 10,
-   "ga": 5
+   "rank": 4,
+   "points": 13,
+   "record": "4勝1分1敗",
+   "played": 6,
+   "gf": 16,
+   "ga": 9
   },
   "mainz": {
    "rank": 6,
@@ -148,5 +148,6 @@
    "ga": 16
   }
  },
- "bayern_note": "バイエルンだけ第6節終了時点（ESPN standings API、2026-10-20 取得。ドルトムントと勝点14で並び、得失点差で首位）。ほかのクラブは as_of の第4節時点のまま。"
+ "bayern_note": "バイエルンだけ第6節終了時点（ESPN standings API、2026-10-20 取得。ドルトムントと勝点14で並び、得失点差で首位）。ほかのクラブは as_of の第4節時点のまま。",
+ "leverkusen_note": "レバークーゼンだけ第6節終了時点（ESPN standings API、2026-10-22 取得。バイエルン・ドルトムントと同じ手当て）。4位、勝点13、4勝1分1敗、16得点9失点。"
 }

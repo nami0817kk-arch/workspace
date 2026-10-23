@@ -1,0 +1,140 @@
+# 取材メモ（2026年10月23日）ボーンマス、欧州初参戦で3連勝。ミランに3-0（ニュースのショート。見せ方 X。本人の言葉はローズ監督の一言だけ）
+# 取材: 2026-10-23。requests（ブラウザUA）と ESPN の公開APIで読んだ。検索エンジンのAI要約は使っていない。
+#   ・デイリーメール 2026-10-22（https://www.dailymail.com/sport/football/article-16229409/…）… 本文を全部読んだ。控え research/raw/20261023_bournemouth_dm.html
+#       15年前の同じ日（2011年10月22日）にホームで3部のベリーに1-2で負けたクラブ。2008年、元会長モスティンが10万ポンドの小切手を書き清算から救った（試合に来ていた）。
+#       初めて欧州に出る年。EL 3戦全勝。ミランの枠内シュート0本。ローズ監督の言葉（英語原文の訳）。
+#   ・ESPN 試合記録（site.api.espn.com … uefa.europa summary?event=401915552）… 8分 クライファート（PK）／27分 マイニャン退場／32分 タヴァニエ（PK）／84分 アドリ（FK）。最終 3-0。
+#       EL順位表：ボーンマス 3試合3勝・勝点9・得失点差+7・3位。
+#   ・ESPN 日程API（eng.1 / uefa.europa）… 次は10/25（日）PL マンU戦（アウェー）、11/5 EL スパルタ・プラハ戦（アウェー）。
+#   ・Wikipedia 英語版「A.F.C. Bournemouth」（二次。控え research/raw/20261023_bournemouth_wiki.txt）… 2008年2月に経営破綻（管財人管理）、勝ち点10剥奪、負債約400万ポンド、3部から4部へ降格。
+#       2008-09は17点の勝ち点剥奪つきで開幕。同年末にエディ・ハウが監督になり、2009年6月に新しい出資者グループ（モスティンを含む）が引き継いだ。
+# **クラブの過去の財政危機について（一次情報の確認結果）**: BBC（2008年の記事3本）とクラブ公式は、接続できず（タイムアウト・429）原文を読めていない。
+#   台本では「2008年に経営破綻して勝ち点を引かれた」（Wikipedia＝二次）と「10万ポンドの小切手で清算を免れたとデイリーメールが伝えている」（報道）にとどめ、
+#   一次で確かめられていない細部（小切手の額・清算の時期）は言い切らない。Wikipediaは2009年のグループ入りと書いており、デイリーメールの「2008年」と時期が違う。**だから小切手は「デイリーメールによると」と断る。**
+# 入れなかったこと: 破綻の原因の推測、当時の経営陣の評価、クラブを貶す言い方、アモリムの言葉（別題材13）、マイニャンの退場の評価。退場は事実（27分・退場）だけ。
+# 自分で数えた比べ（見立て）: 15年前＝3部リーグのホームでベリーに敗戦。2026年＝欧州の大会で3戦全勝（9点・得失点差+7）。今季の次の2試合は 10/25 マンU（アウェー）と 11/5 スパルタ・プラハ（アウェー）。
+# 確度: 試合の事実は ESPN の試合記録＝報道。小切手・15年前の敗戦はデイリーメール＝報道。2008年の破綻・勝ち点剥奪は Wikipedia＝背景。ローズの言葉は報道（デイリーメールの引用）。
+# 反応: 探していない（作らない）。approve は --no-voices で。
+slot: overseas
+date: "2026年10月23日"
+format: news
+no_main: true
+people: [ボーンマス, ACミラン, マルコ・ローズ]
+
+short_style: X
+short_hook_word: 欧州3連勝
+short_question: 初めての欧州の年に、ボーンマスはどこまで勝ち進むと思いますか。
+short_hook: ボーンマス、欧州初参戦で3連勝。
+short_photos:
+  - assets/images/20261023_bournemouth_milan_3_0/07_v.jpg
+  - assets/images/20261023_bournemouth_milan_3_0/05_v.jpg
+  - assets/images/20261023_bournemouth_milan_3_0/03_v.jpg
+  - assets/images/20261023_bournemouth_milan_3_0/06_v.jpg
+short_telops:
+  - {match: 22日, text: 22日 EL第3節/ボーンマス3-0ミラン}
+  - {match: 8分, text: 8分 クライファートがPK}
+  - {match: 27分, text: 27分 ミランのGKが退場}
+  - {match: 32分, text: 32分 タヴァニエがPK}
+  - {match: 84分, text: 84分 アドリがFK}
+  - {match: 謙虚, text: ローズ監督/「我々のクラブは謙虚でいる」}
+  - {match: 15年前, text: 15年前/3部でベリーに1-2}
+  - {match: 2008年, text: 2008年/経営破綻、勝ち点を引かれた}
+  - {match: 小切手, text: 10万ポンドの小切手/元会長が清算から救ったと報道}
+  - {match: 3戦全勝, text: EL 3戦全勝/勝点9・得失点差+7}
+  - {match: マンU, text: 次戦 25日/PL マンU戦}
+
+theme:
+  id: bournemouth_milan_3_0
+  league: england
+  league_name: ヨーロッパリーグ
+  prefix: ""
+  title: ボーンマス、欧州初参戦でミランと対戦。15年前は3部だったクラブの結果は
+  hook: ""
+  question: 初めての欧州の年に、ボーンマスはミランをどう破ったのか
+  opening_image: assets/images/20261023_bournemouth_milan_3_0/08_w.jpg
+  takeaway: 15年前は3部でベリーに敗れたクラブが、欧州の大会で3戦全勝。勝点9・得失点差+7。次は25日のマンU戦
+
+thumbnail:
+  layout: face
+  line1: ボーンマス
+  line2: 欧州3連勝
+  tags: [ボーンマス, ミラン]
+  photo: assets/images/20261023_bournemouth_milan_3_0/07_w.jpg
+  short_photo: assets/images/20261023_bournemouth_milan_3_0/07_v.jpg
+
+answer: 8分と32分のPK、84分のFKで3-0。EL 3戦全勝で、15年前は3部のクラブ
+watch: 25日のマンチェスター・ユナイテッド戦
+
+sections:
+  - id: what
+    main: true
+    heading: ミランに3-0、何が起きたか
+    tier: 報道
+    telop: 22日 EL第3節 ボーンマス3-0ミラン
+    say:
+      - text: 22日、ボーンマスがミランに3対0で勝利。
+        image: assets/images/20261023_bournemouth_milan_3_0/07_w.jpg
+      - voice: マルコ・ローズ監督
+        text: 我々のクラブは謙虚でいる。
+        short_voice: true
+        image: assets/images/20261023_bournemouth_milan_3_0/07_w.jpg
+      - voice: マルコ・ローズ監督
+        text: 全員がそろえば、誰とでも戦えると分かっている。
+        cont: true
+      - voice: マルコ・ローズ監督
+        text: でもシーズンは長い。
+        cont: true
+      - text: 8分、クライファートがPKで先制。
+        image: assets/images/20261023_bournemouth_milan_3_0/09_w.jpg
+      - text: 27分にミランのゴールキーパーが退場し、32分にタヴァニエがPKで2点目。
+        image: assets/images/20261023_bournemouth_milan_3_0/09_w.jpg
+      - text: 84分、アドリのフリーキックで3点目でした。
+        image: assets/images/20261023_bournemouth_milan_3_0/07_w.jpg
+    official: false
+    sources:
+      - https://www.dailymail.com/sport/football/article-16229409/AC-Milan-Bournemouth-Europa-League-memorable-victory-KIERAN-GILL-Ruben-Amorim.html
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.europa/summary?event=401915552
+
+  - id: past
+    heading: 15年前、ボーンマスはどこにいたか
+    tier: 報道
+    telop: 15年前は3部、2008年は経営破綻
+    say:
+      - text: 15年前の同じ日、ボーンマスは3部でベリーに1対2で負けていました。
+        image: assets/images/20261023_bournemouth_milan_3_0/03_w.jpg
+      - text: 2008年には経営破綻し、勝ち点を引かれて3部から4部へ降格しています。
+        image: assets/images/20261023_bournemouth_milan_3_0/08_w.jpg
+      - text: 元会長が10万ポンドの小切手を書いて、クラブを清算から救ったと報じられています。
+        image: assets/images/20261023_bournemouth_milan_3_0/08_w.jpg
+      - text: その元会長は、この夜、スタンドにいました。
+        image: assets/images/20261023_bournemouth_milan_3_0/06_w.jpg
+    official: false
+    sources:
+      - https://www.dailymail.com/sport/football/article-16229409/AC-Milan-Bournemouth-Europa-League-memorable-victory-KIERAN-GILL-Ruben-Amorim.html
+      - https://en.wikipedia.org/wiki/A.F.C._Bournemouth
+
+  - id: view
+    viewpoint: true
+    heading: 3部から欧州の3戦全勝まで
+    tier: 背景
+    telop: EL 3戦全勝、勝点9・得失点差+7
+    say:
+      - text: 見立てです。ボーンマスは、15年前に3部で敗れたクラブ。
+        image: assets/images/20261023_bournemouth_milan_3_0/05_w.jpg
+      - text: 初めての欧州で、3戦全勝です。
+        image: assets/images/20261023_bournemouth_milan_3_0/08_w.jpg
+      - text: ボーンマスの勝点は9、得失点差は+7。順位表では3位です。
+        image: assets/images/20261023_bournemouth_milan_3_0/03_w.jpg
+      - text: この夜、ミランの枠内シュートは0本でした。
+        image: assets/images/20261023_bournemouth_milan_3_0/07_w.jpg
+      - text: 次は25日、マンチェスター・ユナイテッド戦。
+        image: assets/images/20261023_bournemouth_milan_3_0/06_w.jpg
+      - text: 11月5日には、欧州でスパルタ・プラハと戦います。
+        image: assets/images/20261023_bournemouth_milan_3_0/09_w.jpg
+      - text: ローズ監督の言葉どおり、シーズンはまだ長いままです。
+        image: assets/images/20261023_bournemouth_milan_3_0/05_w.jpg
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.europa/standings
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/teams/349/schedule?fixture=true
+short_title: "ボーンマス、欧州初参戦でミランと対戦。15年前は3部だったクラブの結果は"

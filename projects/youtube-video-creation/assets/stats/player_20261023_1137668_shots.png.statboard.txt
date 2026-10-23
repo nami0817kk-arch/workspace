@@ -1,0 +1,6 @@
+title: モイセス・カイセドの今季のシュート
+unit: xG
+shots=2
+goals=0
+xg=0.06
+source: FotMob

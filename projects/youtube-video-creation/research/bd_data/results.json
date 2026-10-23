@@ -267,7 +267,36 @@
    "Bayern Munich",
    "6–1",
    "RB Leipzig"
+  ],
+  [
+   "9 October 2026",
+   "5",
+   "Borussia Dortmund",
+   "2–2",
+   "SV Werder Bremen"
+  ],
+  [
+   "17 October 2026",
+   "6",
+   "1. FC Union Berlin",
+   "0–0",
+   "Borussia Dortmund"
+  ],
+  [
+   "10 October 2026",
+   "5",
+   "1. FSV Mainz 05",
+   "3–4",
+   "Bayer 04 Leverkusen"
+  ],
+  [
+   "18 October 2026",
+   "6",
+   "Bayer 04 Leverkusen",
+   "2–1",
+   "SC Freiburg"
   ]
  ],
- "bayern_note": "バイエルンの第5・6節だけ追記（ESPN scoreboard の 2026-10-10・10-17、2026-10-20 取得）。ほかのクラブの第5節以降は未取得。"
+ "bayern_note": "バイエルンの第5・6節だけ追記（ESPN scoreboard の 2026-10-10・10-17、2026-10-20 取得）。ほかのクラブの第5節以降は未取得。",
+ "leverkusen_note": "レバークーゼンの第5・6節だけ追記（ESPN scoreboard の 2026-10-10・10-18、2026-10-22 取得）。"
 }

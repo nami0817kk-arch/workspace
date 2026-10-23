@@ -1,0 +1,247 @@
+
+    MÁLAGA CF 2-5 REAL SOCIEDAD Real run riot - Real Sociedad de Football S.A.D.
+    -->
+        You are using an outdated browser. Please upgrade your browser to improve your experience.
+    Campo
+    Card
+    Download
+    Ball
+    Upload Photo
+    Obsequio
+    Acceso Libre
+    Descuento
+    Museo
+    Descargar
+    Perfil
+    Datos de abonados
+    Cuota
+    Asistencia
+    Datos de accionista
+    Arrow Right
+    Arrow Left 2
+    Link
+    <symbol id="data" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+            viewBox="0 0 48 56" style="enable-background:new 0 0 48 56;" xml:space="preserve">
+    <path class="st0" d="M47.1,31.7l-2.8-2.9c-1.2-1.2-3.1-1.2-4.2,0L24.7,44.3L22.5,52L22,52.6c-0.4,0.4-0.4,1,0,1.4l0,0l0,0
+		c0.2,0.2,0.4,0.3,0.7,0.3c0.3,0,0.5-0.1,0.7-0.3l0.5-0.5l7.8-2.1l15.4-15.4C48.3,34.8,48.3,32.9,47.1,31.7z M27,44.8l10.2-10.2
+		l4.2,4.2L31.2,49L27,44.8z M26.1,46.7l3.2,3.2l-4.4,1.2L26.1,46.7z M45.7,34.5l-2.8,2.8l-4.2-4.2l2.8-2.8c0.4-0.4,1-0.4,1.4,0
+		l2.8,2.8C46.1,33.5,46.1,34.1,45.7,34.5z" />
+    <path class="st0" d="M21.8,43.2L17,38.4l-15,15V13h30v14c0,0.6,0.4,1,1,1s1-0.4,1-1V13V0H0v13v41.4c0,0.6,0.4,1.2,1,1.4
+		C1.2,56,1.4,56,1.6,56c0.4,0,0.8-0.2,1.1-0.5L17,41.2l3.4,3.4c0.4,0.4,1,0.4,1.4,0S22.2,43.6,21.8,43.2z M2,2h30v9H2V2z" />
+    <symbol version="1.1" id="done" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+            viewBox="0 0 40 40" style="enable-background:new 0 0 40 40;" xml:space="preserve">
+    <path class="st0" d="M18.5-0.1C8.2-0.1-0.1,8.2-0.1,18.5S8.2,37,18.5,37S37,28.7,37,18.5S28.7-0.1,18.5-0.1z M18.5,34
+		C9.9,34,3,27,3,18.5S9.9,3,18.5,3S34,9.9,34,18.5S27,34,18.5,34z" />
+    <path class="st0" d="M25.1,11.3l-7.9,11.4l-5.6-4.6c-0.6-0.5-1.5-0.4-2,0.2c-0.5,0.6-0.4,1.5,0.2,2l6.8,5.6
+		c0.3,0.2,0.6,0.3,0.9,0.3c0.1,0,0.1,0,0.2,0c0.4-0.1,0.7-0.3,1-0.6l8.8-12.7c0.4-0.6,0.3-1.5-0.4-2C26.4,10.5,25.6,10.7,25.1,11.3z
+		" />
+    <symbol version="1.1" id="highlight" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+            viewBox="0 0 40 40" style="enable-background:new 0 0 40 40;" xml:space="preserve">
+<path class="st0" d="M40.1,14c-0.2-0.6-0.7-1-1.3-1.1l-12-1.7L21.5,0.8c-0.5-1-2.2-1-2.8,0l-5.4,10.5l-12,1.7
+	C0.7,13,0.3,13.4,0.1,14c-0.2,0.6,0,1.2,0.4,1.6l8.7,8.1l-2,11.5c-0.1,0.6,0.1,1.2,0.6,1.5c0.5,0.4,1.1,0.4,1.6,0.1l10.8-5.5
+	l10.8,5.5c0.2,0.1,0.5,0.2,0.7,0.2c0.3,0,0.7-0.1,0.9-0.3c0.5-0.3,0.7-0.9,0.6-1.5l-2-11.5l8.7-8.1C40.1,15.2,40.3,14.6,40.1,14z
+	 M28.3,22.1c-0.4,0.4-0.6,0.9-0.5,1.4l1.6,9.3l-8.7-4.4c-0.2-0.1-0.5-0.2-0.7-0.2c-0.2,0-0.5,0.1-0.7,0.2l-8.7,4.4l1.6-9.3
+	c0.1-0.5-0.1-1-0.5-1.4L5,15.6l9.6-1.3c0.5-0.1,0.9-0.4,1.2-0.8l4.4-8.5l4.4,8.5c0.2,0.4,0.7,0.8,1.2,0.8l9.6,1.3L28.3,22.1z" />
+    <symbol version="1.1" id="warning" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+            viewBox="0 0 48 56" style="enable-background:new 0 0 48 56;" xml:space="preserve">
+    <path class="st0" d="M47.7,52.6L35.8,32.3c-0.4-0.7-1.1-1.1-1.9-1.1c-0.8,0-1.5,0.4-1.9,1.1L20.1,52.6c-0.4,0.7-0.4,1.5,0,2.2
+		c0.4,0.7,1.1,1.1,1.9,1.1h23.7c0.8,0,1.5-0.4,1.9-1.1C48.1,54.2,48.1,53.3,47.7,52.6z M46,53.9c0,0.1-0.1,0.1-0.2,0.1H22.1
+		c-0.1,0-0.2-0.1-0.2-0.1s-0.1-0.1,0-0.2l11.8-20.3c0.1-0.1,0.1-0.1,0.2-0.1c0.1,0,0.1,0,0.2,0.1L46,53.6C46,53.7,46,53.8,46,53.9z" />
+    <path class="st0" d="M33.3,50.3C33.1,50.5,33,50.7,33,51s0.1,0.5,0.3,0.7c0.2,0.2,0.5,0.3,0.7,0.3s0.5-0.1,0.7-0.3
+		c0.2-0.2,0.3-0.5,0.3-0.7s-0.1-0.5-0.3-0.7C34.3,49.9,33.7,49.9,33.3,50.3z" />
+    <path class="st0" d="M21.8,44.6c0.4-0.4,0.4-1,0-1.4L17,38.4l-15,15V13h30v14c0,0.6,0.4,1,1,1s1-0.4,1-1V13V0H0v13v41.4
+		c0,0.6,0.4,1.2,1,1.4C1.2,56,1.4,56,1.6,56c0.4,0,0.8-0.2,1.1-0.5L17,41.2l3.4,3.4C20.8,45,21.4,45,21.8,44.6z M2,2h30v9H2L2,2z" />
+    <symbol version="1.1" id="close" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+            viewBox="0 0 47 56" style="enable-background:new 0 0 47 56;" xml:space="preserve">
+    <path class="st0" d="M43,38v-1c0-3.9-3.1-7-7-7s-7,3.1-7,7v1h-4v18h22V38H43z M31,37c0-2.8,2.2-5,5-5s5,2.2,5,5v1H31V37z M45,54H27
+		V40h2h14h2V54z" />
+    <path class="st0" d="M36,43c-2.2,0-4,1.8-4,4c0,1.9,1.3,3.4,3,3.9V52c0,0.6,0.4,1,1,1s1-0.4,1-1v-1.1c1.7-0.4,3-2,3-3.9
+		C40,44.8,38.2,43,36,43z M36,49c-1.1,0-2-0.9-2-2s0.9-2,2-2s2,0.9,2,2S37.1,49,36,49z" />
+    <path class="st0" d="M17,38.4l-15,15V13h30v13c0,0.6,0.4,1,1,1s1-0.4,1-1V13V0H0v13v41.4c0,0.6,0.4,1.2,1,1.4C1.2,56,1.4,56,1.6,56
+		c0.4,0,0.8-0.2,1.1-0.5L17,41.2l3.4,3.4c0.4,0.4,1,0.4,1.4,0s0.4-1,0-1.4L17,38.4z M2,2h30v9H2V2z" />
+                Fundazioa
+                RS Store
+            Tickets
+            Hospitality
+            EVENTS
+                            My La Real
+                        Enter
+            SearchSearch
+            ENSee more
+                Euskara
+                Castellano
+                English
+                Français
+                中文
+                日本語
+    Menu 
+                        Real Sociedad
+                        Levante UD
+                            25 Oct | 18:30
+        Menu 
+            Enter
+                    Eu
+                    Ca
+                    En
+                    Fr
+                    Zh
+                    Ja
+            News
+                Football
+                        First team
+                            Home page
+                            News stories
+                            Fixtures
+                            Squad
+                        Women's team
+                            Home page
+                            News stories
+                            Fixtures
+                            Squad
+                        Sanse
+                            Home page
+                            News stories
+                            Fixtures
+                            Squad
+                        Zubieta
+                        Liga Genuine
+                Teams
+                    Field hockey
+                    Athletics
+                    Basque Pelota
+                    Sub-aquatic sports
+                    The club's historic teams
+                    History
+                Club
+                    The institution
+                    Transparency Law
+                    Canal Interno
+                    History
+                    Partnerships
+                    Press
+                    Facilities
+                    Fan
+                    Realzale Program
+                    Members
+                    Shareholders
+                    RSFan
+                    Supporters' groups
+                    RS Txiki
+                    Fan Wall
+                    Te Escuchamos
+                Anoeta
+                        Descúbrelo
+                        Keler Espazioa
+                        Guided tour
+            Search Search
+            News stories
+                    MÁLAGA CF 2-5 REAL SOCIEDAD
+            Real run riot
+                18/10/2026
+Real Sociedad produced a dominant display at La Rosaleda this afternoon, securing a convincing 5-2 win over Málaga. The txuri-urdin were highly effective in attack, taking control of the match from the outset and responding decisively whenever the home side threatened to get back into the game. The three valuable points keep Real Sociedad firmly in the upper reaches of the table.
+ The visitors came out with intent and wasted no time in opening the scoring, with a spectacular strike from Kubo outside the area setting the tone. Real Sociedad kept their foot on the gas and continued to threaten Alfonso's goal. Their pressure paid off when Óskarsson reacted quickest to a loose ball and finished coolly in a one-on-one to double the lead. With the match firmly under control, the txuri-urdin managed the game intelligently and headed into the break with a commanding advantage.
+ Málaga emerged for the second half with renewed purpose and pulled one back through Adrián Niño. However, Real Sociedad responded immediately, with Oyarzabal finding the net to restore their three-goal lead. The hosts reduced the deficit again through Pablo Martínez, but the txuri-urdin captain struck once more almost immediately, slotting home a precise low finish after a high press to make it 4-2. Shortly afterwards, Guedes pounced on a loose ball in the area to add a fifth and put the result beyond doubt.
+ It was a brilliant away performance packed with goals as Real Sociedad returned to winning ways. With little time to rest, the txuri-urdin now turn their attention to Thursday's Europa League fixture against Lillestrøm, where they will look to carry this momentum into Europe.
+ Match details:
+ Málaga CF: A. Herrero (cap.), Rafita, F. Calero, Recio, Salinas (Aznou, 46'), Dotor (Lorenzo, 63'), Izan M. (R. Enríquez, 46'), Martínez, D. Larrubia (Joaquín, 63'), Niño (Puga, 82'), Chupe.
+ Real Sociedad: Remiro, H. Fort (Zubeldia, 60'), Jon Martín, M. Sarr, Aihen (Sergio Gómez, 71'), Gorrotxa, C. Soler, Take (Ochieng, 71'), Barrene (Guedes, 60'), Oyarzabal (cap.), Óskarsson (Marchal, 79').
+ Goals: 0-1 Take (3'); 0-2 Óskarsson (26'); 1-2 Niño (54'); 1-3 Oyarzabal (59'); 2-3 Martínez (66'); 2-4 Oyarzabal (67'); 2-5 Guedes (73').
+ Referee: Luis Bestard. Bookings: M. Sarr, Jon Martín (Real Sociedad).
+                        Twitter
+                        Facebook
+                        Instagram
+                     19/10/2026
+                Videos
+                At his feet
+                     18/10/2026
+                Press conference
+                "Many positive takeaways"
+                     18/10/2026
+                Press conference
+                "We must keep on this path"
+                     16/10/2026
+                Videos
+                So close to glory
+                     15/10/2026
+                Video highlights
+                A point that stings
+                     15/10/2026
+                Videos
+                "Gutted, we were so close"
+                     11/10/2026
+                Video highlights
+                Efficiency, resilience and victory
+                     11/10/2026
+                Press conference
+                "Another game to learn from"
+                     11/10/2026
+                Press conference
+                "We knew how to dig deep"
+                     02/10/2026
+                Match report
+                No Txapela for Real
+                     28/09/2026
+                Training
+        For registered users only!
+        This content is only available to users registered on our website.
+            Sign up by clicking on Log in
+            and enjoy content that's exclusive to you.
+                Welcome to the private section of the Real Sociedad website
+                We encourage you to enter and enjoy content that's exclusive to you.
+                2405:1201:6112:f700:5bee:40a0:c80:72c7
+                    Enter 
+                    Disfruta de tu nuevo carnet digital
+                    Manage and view your profile details
+                    Take part in exclusive activities and special promotions
+                    Competitions, prizes 360º videos...
+                    Estadísticas de nuestros equipos y futbolistas
+                    View our historical archives
+                    Material descargable (audios, postales, pósters, boletines...)
+                    Descárgate 'tu foto con el equipo'
+                        News
+                    Football
+                        First team
+                        Women's team
+                        Sanse
+                        Academy
+                        Zubieta
+                        Liga Genuine
+                    Teams
+                        Field hockey
+                        Athletics
+                        Basque Pelota
+                        Sub-aquatic sports
+                        The club's historic teams
+                        History
+                    Club
+                        The institution
+                        Transparency Law
+                        Canal Interno
+                        History
+                        Partnerships
+                        Press
+                        Facilities
+                    Fan
+                        Realzale Program
+                        Members
+                        Shareholders
+                        RSFan
+                        Supporters' groups
+                        RS Txiki
+                        Fan Wall
+                        Te Escuchamos
+                    Anoeta
+                            Descúbrelo
+                            Información proceso
+                            Avance obras
+                            Keler Espazioa
+                            Guided tour
+                Phone 943 46 28 33
+                Fax 943 45 89 41
+                    Legal warning
+                    Privacy policy
+                    Cookies policy
+                Copyright
+                All rights reserved. Real Sociedad assumes no responsibility for the information provided by users. 
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+         https://firebase.google.com/docs/web/setup#available-libraries -->

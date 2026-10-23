@@ -1,0 +1,630 @@
+# ユニフォームとエンブレムの歴史 ブライトン（10/23 作成）。雛形は 10/22 フォレスト回。
+# 題の問い：ブライトンの胸のカモメは、いつ、何がきっかけで生まれたのか（イルカだった時期、盾に入り、向きが逆になった理由）。
+# 軸：①1970年代半ばに「ドルフィンズ」と呼ばれた→ライバルのパレスの「イーグルス」に「シーガルズ」と返した掛け声から愛称が決まり、1977年に丸いカモメの紋章。
+#    ②その前は二つの町（ブライトンとホーヴ）の紋章・頭文字の盾・紋章なしの時期（資料で割れる）。③1998年の新会長が盾の中のカモメに替え、2011年（新スタジアムの開場）に丸い紋章が戻り、向きが逆。
+#    ④青白の縞は1904年、途中で白一色・青一色（資料により無地／細い縦縞）。⑤2026/27は1983年のFAカップ決勝のシャツに着想、襟の内側に「We are Brighton 1901 - 2026」。
+# 取材：2026-10-23。requests（ブラウザ User-Agent）・WebFetch・WebSearch（題名とURL探しと、クラブ公式ページの裏取り）。ブラウザ操作・JS実行・検索エンジンのAI要約を根拠にはしていない。
+#   読んだ：ウィキペディア en "Brighton & Hove Albion F.C."（Colours and kits／Kit manufacturers and sponsors）、"History of Brighton & Hove Albion F.C."（Crest history）、"Kaoru Mitoma"、"1983 FA Cup final"、"Brighton & Hove Albion F.C.–Crystal Palace F.C. rivalry"。
+#   Historical Football Kits（historicalkits.co.uk、キット史の個人サイト。Brighton & Hove Albion のページ全文）。WeAreBrighton.com「The history of the creation of the Brighton emblem」（2024-04-02、ファンの個人サイト）。
+#   クラブ公式：brightonandhovealbion.com「A nod to 1983 for 2026/27!」（WebFetchで本文を読んだ）／クラブ公式ショップの2026/27ホームシャツ商品ページと1983 FA Cup Finalists Retro Home Shirt の商品ページ（WebFetch）。
+#   読めなかった：Design Week「KSS on target with new Brighton & Hove Albion identity」（2011年2月、403）。2011年の紋章をKSSが設計した、という点は検索結果の要約でしか見ておらず、台本には入れない。
+# ---- 一次情報・資料で確かめたこと（年は本文のまま）----
+#   ・ウィキペディア(History/Crest history)：最初の紋章（1946–1975）は二つの町の紋章。1974/75シーズンに「The Dolphins」と呼ばれ、翌シーズンの頭までに新しい紋章が導入。ただしその愛称も紋章も短命。
+#     パレス戦の前、アウェーの数人が「Eagles, Eagles」と叫び、ブライトンのファンが「Seagulls, Seagulls」と返した（「Bo'sun」というパブでの出来事と伝わる）。1977年に紋章がカモメに替わった。丸いカモメは1998年まで。
+#     新会長ディック・ナイトが「古い体制の名残を一掃し」新しい始まりを示すため1998年に紋章を一新。2001/02は紋章がなく（百周年で）二つの町の紋章に戻った。2011/12に1970〜90年代と似た丸い紋章へ。
+#     ブライトンの盾＝martlet（紋章の鳥）と珊瑚、どちらも海を表す。ホーヴの盾＝martletと座礁した船（16世紀初めのフランスの襲撃を記念）。
+#   ・ウィキペディア(rivalry)：「シーガルズ」の愛称は、1976-02-24のゴールドストーンでの試合（2対0、サミー・モーガンの2点、観衆33,300）での掛け声に帰される。1977年に公式に「ドルフィンズ」から「シーガルズ」へ。パブには触れていない。
+#   ・Historical Football Kits：二つの町の紋章がシャツに付いたのは1948年。頭文字の盾（カリグラフィー）は1956-57と1958-59。1972年8月〜1977年5月は紋章なし。1974年は全身白で「ドルフィンズ」と呼ばれた。
+#     「イルカを入れた紋章は設計されたが、シャツには付かなかった」。パブ（Bo'sun）の掛け声の話。カモメの新しい紋章は1998年まで公式。1980年にアディダスが供給元になり、縞をやめて無地の青（「理由は不明」）、紋章に「The Seagulls」の文字が足された。
+#     1983年FAカップ決勝は2対2、再試合0対4。1998年、紋章が改まる。2000-01の百周年で二つの町の紋章が復活。縞が定着したのは1904年（「いまより薄い青」）。1901-02は「漁師の青」、その前のBrighton Unitedは緑と白、Rangersは黒と白（Chris Worrall の調べ）。1947年にロイヤルブルーに白い袖（戦後の衣料の配給のためかもしれない）。
+#   ・ウィキペディア(club)：製造元＝Bukta 1971–74/1977–80、Admiral 1974–75/1994–97、Umbro 1975–77、Adidas 1980–87、…、Erreà 1999–2014、Nike 2014〜。胸のスポンサー＝Skint Records 1999〜2008、アメリカン・エキスプレス 2013〜（スポンサー表では2013〜）。
+#   ・WeAreBrighton：現行の紋章はアメックスの開場（2011年）に合わせた。丸い紋章をカモメの向きを逆にして復活。「後ろでなく前を見る意味」はこのサイトの見方。1998年の紋章＝盾の中のカモメ。
+#   ・ウィキペディア(1983 FA Cup final)：1983-05-21、ウェンブリー、2対2（延長）。再試合 1983-05-26、ウェンブリー、マンチェスター・ユナイテッドが4対0。
+#   ・クラブ公式「A nod to 1983 for 2026/27!」：「our home and away kits draw inspiration from the 1983 FA Cup final」。ホーム＝all royal blue with a printed crisp white pinstripe and contrasting white neckline。アウェー＝clean white base with printed royal blue pinstripes。発売＝7月8日の水曜に店頭。ナイキが技術パートナー。
+#   ・クラブ公式ショップ：ホームシャツの襟の内側に「We are Brighton 1901 - 2026」（125 years of BHAFC）。1983年のレトロシャツ＝青、White & Red pinstripe pattern、白い襟と袖口。
+#   ・ウィキペディア(Mitoma)：2021-08-10にブライトンと4年契約を結び、1年目はユニオン・サン＝ジロワーズへレンタル。2026年9月3日更新のブライトンの選手名簿に三笘薫の名前がある（背番号は名簿では7。他の資料は22で割れる＝台本に番号は入れない）。
+# ---- 食い違い（台本で断る）----
+#   ・**愛称の掛け声の場所**：ウィキペディア(History)・ユニフォーム史＝パブ（Bo'sun）／ウィキペディア(rivalry)＝1976年2月のゴールドストーンの試合。→「パブという話と試合という話があり、資料で割れる」と言う。
+#   ・**イルカの紋章がシャツに付いたか**：ウィキペディア(History)＝翌シーズンの頭に新紋章が導入／ユニフォーム史＝設計されたがシャツに付かず、1972年8月〜77年5月は紋章なし／WeAreBrighton＝頭文字の紋章が1968〜74年。
+#   ・**1983年のシャツ**：ユニフォーム史・ウィキペディア＝「無地の青」の時期／クラブ公式ショップの1983レトロシャツ＝白と赤のピンストライプ入りの青。→「無地」と「細い縦縞」に割れる、と言う。
+#   ・**頭文字の紋章の年**：ユニフォーム史＝1956-57・1958-59／WeAreBrighton＝1958〜60年に盾入り、1968〜74年は盾なし。
+# ---- 自分で数えた数 ----
+#   2026-2011=15年（現行の紋章）。2026-1977=49年（カモメの愛称と紋章）。2026-1904=122年（青白の縞が決まってから）。49÷122=0.40（およそ5分の2）。
+#   1977〜1998=21年（初代の丸）、1998〜2011=13年（盾）、2011〜2026=15年（現行）。21+13+15=49。49÷3=16.3（3つの紋章の平均）。2021-2011=10（三笘の契約のとき紋章は10年目）。
+#   ジリンガム＝70マイル（ウィキペディア）＝約113キロ（自分で換算）。
+# ---- 日本との接点 ----
+#   三笘薫（2021年8月契約）。胸の紋章が何代目か、という形で第2節に置いた。ほかの接点は調べた範囲で無し。無理に広げない。
+# ---- 写真（assets/images/20261023_kit_brighton/、出典は credits.json）----
+#   Commons の CC0 / CC BY / CC BY-SA / パブリックドメインのみ。パレス・ピア・セグロカモメ・ウィズディーン・ホーヴ市庁舎・海岸通り・アメックス（10/14のスタジアム回の取り込み分から再利用）。代理店・放送映像は使っていない。人物は写っていない。
+#   ゴールドストーン・グラウンドの写真は Commons に640px幅しか無く、引き伸ばしの上限（1.6倍）を超えるので使っていない。
+#   エンブレムは assets/crests/ブライトン.png・節の頭の差し込み assets/backgrounds/cut_ブライトン.png（権利は晴れていない＝引き受ける危険）。
+# ネットの反応は入れない（voice_min: 0）。シリーズの回にショートは作らない決まり。
+date: 2026年10月23日
+slot: other_2
+format: news
+series: ユニフォームとエンブレムの歴史
+voice_min: 0
+people:
+- ブライトン
+- 三笘薫
+watch: 毎日、数字でサッカーを読み解きます
+theme:
+  end_bg: assets/images/20261023_kit_brighton/a01_amex.jpg
+  id: kit_brighton
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: ブライトン
+  title: ブライトンの胸のカモメは、いつ、何がきっかけで生まれたのか
+  question: ブライトンの胸のカモメは、いつ生まれ、なぜ盾に入って向きが変わったのか
+  opening_image: assets/images/20261023_kit_brighton/b01_pier.jpg
+  lead: 胸に、カモメ。
+  hook: ''
+  takeaway: ブライトンの胸のカモメは、1977年に決まった。愛称は、ライバルの「イーグルス」に「シーガルズ」と返した掛け声から。紋章は49年で3つ。1998年に盾、2011年に向きの逆の丸になり、いまの紋章は15年目。青白の縞は1904年から122年で、カモメはその0.40。三笘薫が契約した2021年、紋章は10年目だった。掛け声の場所は、パブとゴールドストーンの試合で資料が割れる
+  hook_unused: ''
+thumbnail:
+  layout: classic
+  callouts: [最初はイルカだった, 紋章は49年で3つ]
+  photo: assets/images/20261023_kit_brighton/b01_pier.jpg
+  line1: ブライトンの胸のカモメ
+  line2: 掛け声から生まれた
+  tags:
+  - ブライトン
+  - 三笘薫
+  - シーガルズ
+  - ユニフォーム
+  - エンブレム
+sections:
+- id: since
+  main: true
+  heading: 胸のカモメは、いつ、何がきっかけで生まれたのか
+  bg: assets/images/20261023_kit_brighton/b01_pier.jpg
+  tier: 報道
+  telop: カモメの紋章は1977年から。きっかけはライバルの「イーグルス」に返した掛け声（場所は資料で割れる）
+  narrator: 解説
+  card: &id_since
+    type: timeline
+    title: 胸の紋章が決まるまで（ウィキペディア・ユニフォーム史のサイト）
+    rows:
+    - - 1974年
+      - 全身白。「ドルフィンズ」と呼ばれる
+    - - 1970年代半ば
+      - 「イーグルス」に「シーガルズ」と返す
+    - - 1977年
+      - 丸いカモメの紋章
+    - - 1998年
+      - 盾の中のカモメ
+    - - 2011年
+      - 向きが逆の丸い紋章
+    focus: 1977年
+    highlight_row: 2
+  say:
+  - text: ブライトンのシャツ、胸の紋章の話を、します。
+    image: assets/images/20261023_kit_brighton/b01_pier.jpg
+    emph: true
+    card: none
+  - text: いまの紋章は、2011年からです。
+    image: assets/images/20261023_kit_brighton/b01_pier.jpg
+    card:
+      <<: *id_since
+      highlight_row: 4
+  - text: 2026年まで、15年。
+    emph: true
+    image: assets/images/20261023_kit_brighton/b02_gull.jpg
+    card: &id_15
+      type: calc
+      title: いまの紋章が続いた年数（自分で引いた）
+      terms:
+      - - 2026年
+        - いま
+      - - 2011年
+        - 胸に付いた年
+      - - 15年
+        - 引いた答え
+      ops:
+      - −
+      - ＝
+  - text: でも、クラブは、最初からカモメだったわけではありません。
+    image: assets/images/20261023_kit_brighton/b02_gull.jpg
+    card: none
+  - text: 1974年、全身が白のシャツで、クラブは「ドルフィンズ」、イルカと呼ばれました。
+    image: assets/images/20261023_kit_brighton/b05_seafront.jpg
+    card:
+      <<: *id_since
+      highlight_row: 0
+  - text: ブライトンの町の紋章に、イルカがいるからです。
+    image: assets/images/20261023_kit_brighton/b05_seafront.jpg
+    card: none
+  - text: でも、この愛称は、定着しませんでした。
+    image: assets/images/20261023_kit_brighton/b05_seafront.jpg
+    card: none
+  - text: きっかけは、ライバルのクリスタル・パレスです。
+    image: assets/images/20261023_kit_brighton/b03_withdean.jpg
+    card: none
+  - text: パレスのファンが、「イーグルス」と叫びます。
+    image: assets/images/20261023_kit_brighton/b03_withdean.jpg
+    card: none
+  - text: ブライトンのファンが、「シーガルズ」と返した、と伝わります。
+    emph: true
+    image: assets/images/20261023_kit_brighton/b03_withdean.jpg
+    card:
+      <<: *id_since
+      highlight_row: 1
+  - text: その場所は、パブという話と、ゴールドストーンの試合という話があり、ずれています。
+    image: assets/images/20261023_kit_brighton/b03_withdean.jpg
+    card: none
+  - text: 愛称が公式になったのは、1977年。
+    image: assets/images/20261023_kit_brighton/b02_gull.jpg
+    card:
+      <<: *id_since
+      highlight_row: 2
+  - text: 同じ年に、紋章も、丸いカモメに替わりました。
+    emph: true
+    image: assets/images/20261023_kit_brighton/b02_gull.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/History_of_Brighton_%26_Hove_Albion_F.C.
+  - https://en.wikipedia.org/wiki/Brighton_%26_Hove_Albion_F.C.%E2%80%93Crystal_Palace_F.C._rivalry
+  - https://historicalkits.co.uk/Brighton_and_Hove_Albion/Brighton_and_Hove_Albion.htm
+  - https://wearebrighton.com/albionfeatures/?p=6571
+- id: mitoma
+  heading: 三笘薫が着ているカモメは、何代目なのか
+  bg: assets/images/20261023_kit_brighton/a01_amex.jpg
+  tier: 背景
+  telop: 三笘薫の契約は2021年8月。紋章は10年目だった。カモメは数えると3代目
+  narrator: 解説
+  card: &id_gen
+    type: table
+    title: カモメの紋章の代（ウィキペディア・ユニフォーム史）
+    columns:
+    - 代
+    - 年
+    - 形
+    rows:
+    - - 初代
+      - 1977年
+      - 丸いカモメ
+    - - 2代目
+      - 1998年
+      - 盾の中のカモメ
+    - - 3代目
+      - 2011年
+      - 向きが逆の丸
+    highlight_row: 2
+  say:
+  - text: ここで、日本とのつながりを一つ。三笘薫です。
+    image: assets/images/20261023_kit_brighton/a01_amex.jpg
+    card: none
+  - text: ブライトンと契約したのは、2021年の8月です。
+    image: assets/images/20261023_kit_brighton/a01_amex.jpg
+    card: none
+  - text: そのとき、胸の紋章は、10年目でした。
+    emph: true
+    image: assets/images/20261023_kit_brighton/a01_amex.jpg
+    card: &id_10
+      type: calc
+      title: 契約のとき、紋章は何年目か（自分で引いた）
+      terms:
+      - - 2021年
+        - 三笘の契約
+      - - 2011年
+        - 紋章が付いた年
+      - - 10年
+        - 引いた答え
+      ops:
+      - −
+      - ＝
+  - text: カモメの紋章は、数えると、3つ目です。
+    image: assets/images/20261023_kit_brighton/a02_open2011.jpg
+    card:
+      <<: *id_gen
+      highlight_row: 2
+  - text: 初代は、1977年の、丸いカモメ。
+    image: assets/images/20261023_kit_brighton/a02_open2011.jpg
+    card:
+      <<: *id_gen
+      highlight_row: 0
+  - text: 2代目は、1998年の、盾の中のカモメ。
+    image: assets/images/20261023_kit_brighton/a02_open2011.jpg
+    card:
+      <<: *id_gen
+      highlight_row: 1
+  - text: 3代目が、2011年の、向きが逆になった、丸い紋章です。
+    image: assets/images/20261023_kit_brighton/a01_amex.jpg
+    card:
+      <<: *id_gen
+      highlight_row: 2
+  - text: 三笘が着ているのは、この3代目です。
+    emph: true
+    image: assets/images/20261023_kit_brighton/a01_amex.jpg
+    card: none
+  - text: 百周年の1シーズンなど、例外はあります。
+    image: assets/images/20261023_kit_brighton/a01_amex.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Kaoru_Mitoma
+  - https://en.wikipedia.org/wiki/Brighton_%26_Hove_Albion_F.C.
+  - https://wearebrighton.com/albionfeatures/?p=6571
+- id: before
+  heading: カモメの前の紋章は、どんな形だったのか
+  bg: assets/images/20261023_kit_brighton/b04_hove_hall.jpg
+  tier: 背景
+  telop: カモメの前は、二つの町の紋章。イルカの紋章がシャツに付いたかは、資料で割れる
+  narrator: 解説
+  card: &id_before
+    type: table
+    title: カモメの前の紋章（資料で割れる）
+    columns:
+    - 資料
+    - 書いてあること
+    rows:
+    - - ユニフォーム史のサイト
+      - 二つの町の紋章がシャツに。1948年
+    - - 同じサイト
+      - 1972年8月〜77年5月は紋章なし
+    - - 同じサイト
+      - イルカの紋章はシャツに付かず
+    - - ウィキペディア
+      - 翌シーズンの頭に新しい紋章を導入
+    highlight_row: 0
+  say:
+  - text: カモメの前は、どうだったのか。資料によって、年が食い違います。
+    image: assets/images/20261023_kit_brighton/b04_hove_hall.jpg
+    card: none
+  - text: 最初の紋章は、ブライトンとホーヴ、二つの町の紋章です。
+    emph: true
+    image: assets/images/20261023_kit_brighton/b04_hove_hall.jpg
+    card:
+      <<: *id_before
+      highlight_row: 0
+  - text: シャツに初めて載ったのは、1948年。キットの歴史を集めた個人サイトの記述です。
+    image: assets/images/20261023_kit_brighton/b04_hove_hall.jpg
+    card:
+      <<: *id_before
+      highlight_row: 0
+  - text: ブライトンの盾には、海を表す、鳥と珊瑚。
+    image: assets/images/20261023_kit_brighton/b05_seafront.jpg
+    card: none
+  - text: ホーヴの盾には、座礁した船があります。
+    image: assets/images/20261023_kit_brighton/b05_seafront.jpg
+    card: none
+  - text: 16世紀の初めに、フランスの軍船に襲われた記憶です。
+    image: assets/images/20261023_kit_brighton/b05_seafront.jpg
+    card: none
+  - text: 1970年代の前半、シャツには、紋章がありません。
+    image: assets/images/20261023_kit_brighton/b03_withdean.jpg
+    card:
+      <<: *id_before
+      highlight_row: 1
+  - text: 1972年の8月から、77年の5月まで、という記述です。
+    image: assets/images/20261023_kit_brighton/b03_withdean.jpg
+    card:
+      <<: *id_before
+      highlight_row: 1
+  - text: イルカの紋章は、設計されたものの、シャツには付かなかった、ともあります。
+    image: assets/images/20261023_kit_brighton/b03_withdean.jpg
+    card:
+      <<: *id_before
+      highlight_row: 2
+  - text: ウィキペディアは、翌シーズンの頭に、新しい紋章ができたとします。
+    image: assets/images/20261023_kit_brighton/b04_hove_hall.jpg
+    card:
+      <<: *id_before
+      highlight_row: 3
+  - text: ここは、資料ごとに、言い分が違います。
+    image: assets/images/20261023_kit_brighton/b04_hove_hall.jpg
+    card: none
+  - text: 確かなのは、1977年に、カモメに替わったことです。
+    emph: true
+    image: assets/images/20261023_kit_brighton/b02_gull.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/History_of_Brighton_%26_Hove_Albion_F.C.
+  - https://historicalkits.co.uk/Brighton_and_Hove_Albion/Brighton_and_Hove_Albion.htm
+- id: turn
+  heading: カモメは、なぜ盾に入り、また向きを変えたのか
+  bg: assets/images/20261023_kit_brighton/b03_withdean.jpg
+  tier: 背景
+  telop: 1998年は新会長が古い体制を消すため盾に。2011年は新スタジアムに合わせ、向きが逆の丸に
+  narrator: 解説
+  card: &id_turn
+    type: timeline
+    title: カモメの紋章の変遷（ウィキペディア・ファンのサイト）
+    rows:
+    - - 1977年
+      - 丸いカモメ
+    - - 1997年
+      - ゴールドストーンを手放す
+    - - 1998年
+      - 盾の中のカモメ
+    - - 2001/02
+      - 百周年。二つの町の紋章へ
+    - - 2011年
+      - 向きが逆の丸い紋章
+    focus: 1998年
+    highlight_row: 0
+  say:
+  - text: 丸いカモメは、20年以上、続きました。
+    image: assets/images/20261023_kit_brighton/b02_gull.jpg
+    card:
+      <<: *id_turn
+      highlight_row: 0
+  - text: 1980年には、紋章に、シーガルズの文字が足されます。
+    image: assets/images/20261023_kit_brighton/b02_gull.jpg
+    card: none
+  - text: 1997年、クラブは、本拠地のゴールドストーン・グラウンドを、手放しました。
+    emph: true
+    image: assets/images/20261023_kit_brighton/b03_withdean.jpg
+    card:
+      <<: *id_turn
+      highlight_row: 1
+  - text: 2年間のホームは、およそ113キロ離れた、ジリンガム。
+    image: assets/images/20261023_kit_brighton/b03_withdean.jpg
+    card: none
+  - text: 1998年、ブライトンの新しい会長、ディック・ナイトが、紋章を替えます。
+    image: assets/images/20261023_kit_brighton/b05_seafront.jpg
+    card:
+      <<: *id_turn
+      highlight_row: 2
+  - text: 古い体制の名残を消して、新しい始まりを示すためだった、とされています。
+    image: assets/images/20261023_kit_brighton/b05_seafront.jpg
+    card: none
+  - text: 形は、盾の中のカモメです。
+    image: assets/images/20261023_kit_brighton/b05_seafront.jpg
+    card: none
+  - text: 2001年の百周年だけは、二つの町の紋章に戻りました。
+    image: assets/images/20261023_kit_brighton/b04_hove_hall.jpg
+    card:
+      <<: *id_turn
+      highlight_row: 3
+  - text: そして2011年。新しいスタジアムの開場に合わせて、丸い紋章が戻ります。
+    emph: true
+    image: assets/images/20261023_kit_brighton/a02_open2011.jpg
+    card:
+      <<: *id_turn
+      highlight_row: 4
+  - text: ただし、カモメの向きは、逆になりました。
+    image: assets/images/20261023_kit_brighton/a02_open2011.jpg
+    card: none
+  - text: 後ろでなく前を見る意味だ、という、ファンの見方があります。
+    image: assets/images/20261023_kit_brighton/a01_amex.jpg
+    card: none
+  - text: 三つ目のカモメは、そこから、続いています。
+    image: assets/images/20261023_kit_brighton/a01_amex.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/History_of_Brighton_%26_Hove_Albion_F.C.
+  - https://historicalkits.co.uk/Brighton_and_Hove_Albion/Brighton_and_Hove_Albion.htm
+  - https://wearebrighton.com/albionfeatures/?p=6571
+- id: stripes
+  heading: 青と白の縞は、いつ決まり、なぜ途切れたのか
+  bg: assets/images/20261023_kit_brighton/b05_seafront.jpg
+  tier: 背景
+  telop: 縞が決まったのは1904年。途中で白一色、青一色の時期がある。1983年のシャツは資料で割れる
+  narrator: 解説
+  card: &id_stripes
+    type: timeline
+    title: ブライトンのシャツの色（ユニフォーム史のサイト・クラブ公式ショップ）
+    rows:
+    - - 1904年
+      - 青と白の縞が決まる
+    - - 1947年
+      - ロイヤルブルーに白い袖
+    - - 1974年
+      - 全身白
+    - - 1980年
+      - 縞をやめて青のシャツ
+    - - 2026/27
+      - 青地に白の細い縦縞
+    focus: 1904年
+    highlight_row: 0
+  say:
+  - text: 次は、シャツの色です。ブライトンといえば、青と白の縞。
+    image: assets/images/20261023_kit_brighton/b05_seafront.jpg
+    card: none
+  - text: 縞に決まったのは、1904年です。
+    emph: true
+    image: assets/images/20261023_kit_brighton/b05_seafront.jpg
+    card:
+      <<: *id_stripes
+      highlight_row: 0
+  - text: いまより薄い青だった、と同じ個人サイトにあります。
+    image: assets/images/20261023_kit_brighton/b06_pavilion.jpg
+    card: none
+  - text: その前の、前身のクラブの時代は、緑と白、黒と白でした。
+    image: assets/images/20261023_kit_brighton/b06_pavilion.jpg
+    card: none
+  - text: でも、縞は、途切れています。
+    image: assets/images/20261023_kit_brighton/b06_pavilion.jpg
+    card: none
+  - text: 1947年は、ロイヤルブルーに、白い袖。
+    image: assets/images/20261023_kit_brighton/b04_hove_hall.jpg
+    card:
+      <<: *id_stripes
+      highlight_row: 1
+  - text: 戦後の、衣料の配給のせいかもしれない、という推測です。
+    image: assets/images/20261023_kit_brighton/b04_hove_hall.jpg
+    card: none
+  - text: 1974年は、全身が白。クラブが「ドルフィンズ」と呼ばれた年です。
+    image: assets/images/20261023_kit_brighton/b03_withdean.jpg
+    card:
+      <<: *id_stripes
+      highlight_row: 2
+  - text: 1980年、縞をやめ、青を基調にしたシャツへ。
+    image: assets/images/20261023_kit_brighton/b03_withdean.jpg
+    card:
+      <<: *id_stripes
+      highlight_row: 3
+  - text: 個人サイトの説明は、無地の青。
+    image: assets/images/20261023_kit_brighton/b02_gull.jpg
+    card: none
+  - text: クラブの店の1983年のシャツは、白と赤の細い縦縞の入った青です。
+    image: assets/images/20261023_kit_brighton/b02_gull.jpg
+    card: none
+  - text: この年の青は、言い分が二つあります。
+    emph: true
+    image: assets/images/20261023_kit_brighton/b02_gull.jpg
+    card: none
+  sources:
+  - https://historicalkits.co.uk/Brighton_and_Hove_Albion/Brighton_and_Hove_Albion.htm
+  - https://en.wikipedia.org/wiki/Brighton_%26_Hove_Albion_F.C.
+  - https://shop.brightonandhovealbion.com/fashion/fashion-collections/retro/3354_1983-fa-cup-finalists-home-shirt.html
+- id: kit
+  heading: 2026/27のシャツは、何を懐かしんでいるのか
+  bg: assets/images/20261023_kit_brighton/a01_amex.jpg
+  tier: 報道
+  telop: 1983年のFAカップ決勝に着想。青地に白の細い縦縞。襟の内側に「We are Brighton 1901 - 2026」
+  narrator: 解説
+  card: &id_kit
+    type: timeline
+    title: シャツの歩み（ウィキペディア・クラブ公式）
+    rows:
+    - - 1983年
+      - FAカップ決勝。2対2、再試合0対4
+    - - 1999〜2014
+      - 製造元はエッレア
+    - - 1999〜2008
+      - 胸の広告はスキント・レコーズ
+    - - 2014年〜
+      - 製造元はナイキ
+    - - 2026/27
+      - 1983年に着想。襟の内側に125年
+    focus: 1983年
+    highlight_row: 0
+  say:
+  - text: 最後に、ブライトンの今季のシャツ。
+    image: assets/images/20261023_kit_brighton/a01_amex.jpg
+    card: none
+  - text: クラブは、1983年のFAカップ決勝に着想した、と書きます。
+    image: assets/images/20261023_kit_brighton/a01_amex.jpg
+    card:
+      <<: *id_kit
+      highlight_row: 4
+  - text: 1983年の決勝は、ウェンブリーで、2対2。
+    emph: true
+    image: assets/images/20261023_kit_brighton/b01_pier.jpg
+    card:
+      <<: *id_kit
+      highlight_row: 0
+  - text: 5日後の再試合は、マンチェスター・ユナイテッドが、4対0で勝ちました。
+    image: assets/images/20261023_kit_brighton/b01_pier.jpg
+    card: none
+  - text: 今季のホームは、青一色に、白い、細い縦縞。
+    image: assets/images/20261023_kit_brighton/a02_open2011.jpg
+    card: none
+  - text: アウェーは、その反対。白地に、青の縦縞。
+    image: assets/images/20261023_kit_brighton/a02_open2011.jpg
+    card: none
+  - text: 襟の内側には、「ウィー・アー・ブライトン」の刻印。創立125年の印。
+    image: assets/images/20261023_kit_brighton/b05_seafront.jpg
+    card: none
+  - text: 製造元は、1999年から2014年がエッレア。2014年から、ナイキです。
+    image: assets/images/20261023_kit_brighton/b05_seafront.jpg
+    card:
+      <<: *id_kit
+      highlight_row: 3
+  - text: 胸の広告は、1999年から2008年まで、スキント・レコーズでした。
+    image: assets/images/20261023_kit_brighton/b02_gull.jpg
+    card:
+      <<: *id_kit
+      highlight_row: 2
+  - text: DJファットボーイ・スリムこと、ノーマン・クックの、音楽レーベルです。
+    image: assets/images/20261023_kit_brighton/b02_gull.jpg
+    card: none
+  - text: いまは、アメリカン・エキスプレス。
+    image: assets/images/20261023_kit_brighton/a01_amex.jpg
+    card: none
+  sources:
+  - https://www.brightonandhovealbion.com/media-article/a-nod-to-1983-for-2026-27
+  - https://shop.brightonandhovealbion.com/kit/home-kit/adult/7588_bhafc-adult-2627-home-shirt.html
+  - https://en.wikipedia.org/wiki/1983_FA_Cup_final
+  - https://en.wikipedia.org/wiki/Brighton_%26_Hove_Albion_F.C.
+  - https://historicalkits.co.uk/Brighton_and_Hove_Albion/Brighton_and_Hove_Albion.htm
+- id: view
+  viewpoint: true
+  heading: 見立て・カモメは、縞と比べて、どれだけ長いのか
+  bg: assets/images/20261023_kit_brighton/a01_amex.jpg
+  tier: 報道
+  telop: 縞は122年、カモメは49年。縞のおよそ5分の2。紋章は49年で3つ、平均16年
+  narrator: 解説
+  card: &id_view
+    type: table
+    title: 胸と色が続いた年数
+    columns:
+    - もの
+    - 続いた年数
+    rows:
+    - - 青白の縞（1904年から）
+      - 122年
+    - - カモメ（1977年から）
+      - 49年
+    - - いまの紋章（2011年から）
+      - 15年
+    highlight_row: 0
+  say:
+  - text: ブライトンのカモメは、縞に比べて、どれくらい新しいのか。
+    emph: true
+    image: assets/images/20261023_kit_brighton/a01_amex.jpg
+    card: none
+  - text: 青と白の縞は、1904年から、122年です。
+    image: assets/images/20261023_kit_brighton/b05_seafront.jpg
+    card:
+      <<: *id_view
+      highlight_row: 0
+    mark:
+      kind: circle
+      row: 0
+  - text: カモメは、1977年から、49年です。
+    image: assets/images/20261023_kit_brighton/b02_gull.jpg
+    card:
+      <<: *id_view
+      highlight_row: 1
+  - text: 49を122で割ると、0.40。縞のおよそ5分の2。
+    emph: true
+    image: assets/images/20261023_kit_brighton/b02_gull.jpg
+    card: &id_ratio
+      type: calc
+      title: カモメの年数は、縞の何分の1か（自分で割った）
+      terms:
+      - - 49年
+        - カモメ
+      - - 122年
+        - 縞
+      - - 0.40
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+  - text: その49年に、カモメの紋章は、3つありました。
+    image: assets/images/20261023_kit_brighton/a02_open2011.jpg
+    card:
+      <<: *id_gen
+      highlight_row: 2
+  - text: 49を3で割ると、16。ひとつの紋章は、平均で16年です。
+    image: assets/images/20261023_kit_brighton/a02_open2011.jpg
+    card: &id_avg
+      type: calc
+      title: ひとつの紋章の平均（自分で割った）
+      terms:
+      - - 49年
+        - カモメの紋章
+      - - 3つ
+        - 紋章の数
+      - - 16年
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+  - text: いまの紋章は、15年目。平均に、ほぼ並びました。
+    emph: true
+    image: assets/images/20261023_kit_brighton/a01_amex.jpg
+    card:
+      <<: *id_view
+      highlight_row: 2
+  - text: 次の紋章の予定は、公式の発表を確かめられませんでした。
+    image: assets/images/20261023_kit_brighton/a01_amex.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/History_of_Brighton_%26_Hove_Albion_F.C.
+  - https://historicalkits.co.uk/Brighton_and_Hove_Albion/Brighton_and_Hove_Albion.htm
+  - https://wearebrighton.com/albionfeatures/?p=6571

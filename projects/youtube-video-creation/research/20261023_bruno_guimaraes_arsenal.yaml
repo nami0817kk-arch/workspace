@@ -1,0 +1,195 @@
+# 取材メモ（2026年10月23日）ブルーノ・ギマランイス、ニューカッスルからアーセナルへ移る決断を語る（ニュースのショート。見せ方 Y＝本人の実在の発言から始める）
+# 取材: 2026-10-23。requests で原文を読んだ（検索エンジンの要約は使っていない）。
+#   ・ESPN（記事API now.core.api.espn.com/v1/sports/news/50247830、10/22 14:01Z）「Bruno Guimarães: I had sleepless nights over Arsenal move」— 本文を全部読んだ。控え: research/raw/20261023_bruno_espn.json
+#       本人の発言は、21日（水）のバイエルン戦（2-2）のあとの取材での発言を ESPN が引いたもの。発言の原文は ESPN の引用だけ（第二の出典は読めていない）。→ 確度は 報道。
+#       移籍は本人が語った範囲だけで組む。ESPN は「ニューカッスルのGMは売るつもりがなかった」「本人が移籍を望んだ」とも書いているが、本人の言葉ではないので使わない。
+# 使う事実（ESPN の記述）: 28歳／ニューカッスルで4年／2024年に主将／夏にアーセナルへ（移籍金7500万ポンドは本人の言葉ではないので台本では言わない）／2025年リーグカップ決勝でリヴァプールに勝ち、クラブ70年ぶりの国内タイトル／
+#   アーセナルで13試合出場、バイエルン戦で初めてCL2試合連続先発／移籍時に本人が声明を出し「人生で最も難しい決断のひとつ」と書いた（声明の原文は未読。ESPN の引用のみ）。
+#   ・7500万ポンドは ESPN の記述（報道）。10/19 の移籍まとめの本（8750万ユーロ）は別の出典・別の通貨なので、数字は並べない。
+# 本人の発言（英語の原文のまま訳した。言い換えない）:
+#   (1)「It was very difficult for me because I had an amazing relationship with everyone at Newcastle.」→ 僕にとって、とても難しいことでした。ニューカッスルの全員と、すばらしい関係だったからです。
+#   (2)「I just wanted a new challenge.」→ 心の中で、新しい挑戦がしたかったのです。
+#   (3)「I lost many, many nights of sleep because it was difficult for me, for my family.」→ たくさん、たくさんの夜、眠れませんでした。僕にとっても、家族にとっても、難しかったからです。
+#   (4)「We won a trophy after 70 years. We got into the Champions League twice. We got to two finals.」→ 70年ぶりのタイトルを獲りました。チャンピオンズリーグには2回出ました。決勝には2回行きました。
+#   (5)「I never felt so loved like the way I was at Newcastle. I hope I can have the same love here at Arsenal」→ ニューカッスルほど愛されたと感じたことは、ありません。ここアーセナルでも、同じ愛をもらえたらと思います。
+#   (6)「when I said bye to the lads, I was crying. They were crying as well, because we were a family there.」→ 仲間にさよならを言ったとき、僕は泣いていました。彼らも泣いていました。僕らは家族だったからです。
+#   (7)「He [Arteta] is always a little bit addicted to videos… I think we have a top manager with a top mentality.」→ 台本には入れない（移籍の話に答えないため）。
+# 冒頭に出す発言（short_hook_quote）: (3) 「たくさん、たくさんの夜、眠れませんでした。」
+# 自分で数えた比べ（見立て）: 本人が挙げたニューカッスルの数字＝タイトル1つ・CL2回・決勝2回（発言 (4)）。アーセナルは13試合出場（ESPN）。
+#   次の試合: 24日（土）アーセナル対エヴァートン（ESPN の日程API・ホーム。キックオフ 14:00Z）。結果は未定。
+# 前の本との重なり: 10/19『アーセナルの夏』（ギマランイスは補強の一人として出ただけ）、10/21 ブラジル代表（メンバーの一人）、10/22 バイエルン戦のライス・サカの本。本人の移籍の言葉は今回が初めて。
+#   写真: 10/22 の bruno_carrick_como はブルーノ・フェルナンデス（別人）。使い回しなし。
+# 反応: 取れなかった／探していない。作らない。approve は --no-voices で。
+# 日本語名: ブルーノ・ギマランイス（config/reading.yaml の対象かは未確認＝報告に書く）。
+slot: other_1
+date: "2026年10月23日"
+format: news
+no_main: true
+people: [ブルーノ・ギマランイス, アーセナル]
+
+short_style: Y
+short_photos:
+  - assets/images/20261023_bruno_guimaraes/01_v.jpg
+  - assets/images/20261023_bruno_guimaraes/02_v.jpg
+  - assets/images/20261023_bruno_guimaraes/03_v.jpg
+  - assets/images/20261023_bruno_guimaraes/04_v.jpg
+short_hook_quote: たくさん、たくさんの夜、眠れませんでした。
+short_question: あなたは、ギマランイスのこの決断を、どう受け止めますか。
+short_hook: ギマランイスが語る、アーセナルへ移る決断。
+short_telops:
+  - {match: バイエルン戦のあと, text: 21日のバイエルン戦のあと/移籍の決断を語る}
+  - {match: この夏、ニューカッスル, text: この夏/ニューカッスルからアーセナルへ}
+  - {match: 難しいことでした, text: 「とても難しかった」/「全員と、すばらしい関係だった」}
+  - {match: 新しい挑戦, text: 「新しい挑戦がしたかった」}
+  - {match: 眠れませんでした, text: 「たくさん、たくさんの夜、/眠れなかった」}
+  - {match: 家族にとっても, text: 「僕にとっても、/家族にとっても難しかった」}
+  - {match: 泣いていました, text: 「さよならを言ったとき、/僕は泣いていた」}
+  - {match: 愛されたと感じた, text: 「ニューカッスルほど/愛されたことはない」}
+  - {match: 同じ愛, text: 「アーセナルでも/同じ愛をもらえたら」}
+  - {match: 70年ぶり, text: 本人が挙げた成果/70年ぶりのタイトル}
+  - {match: 13試合, text: アーセナルでは/13試合に出場}
+  - {match: エヴァートン, text: 次は24日/ホームでエヴァートン戦}
+
+theme:
+  id: bruno_guimaraes_arsenal
+  league: england
+  league_name: プレミアリーグ
+  prefix: ""
+  title: ギマランイス「たくさんの夜、眠れなかった」。アーセナルへ移る決断
+  hook: ""
+  question: ブルーノ・ギマランイスは、ニューカッスルからアーセナルへ移る決断を、どう語ったのか
+  takeaway: 本人が挙げたニューカッスルでの成果は、タイトル1つ、チャンピオンズリーグ2回、決勝2回。アーセナルでは13試合。次は24日、ホームでエヴァートン戦
+
+thumbnail:
+  line1: ギマランイス
+  line2: 眠れなかった夜
+  tags: [ブルーノ・ギマランイス, アーセナル]
+  layout: face
+  photo: assets/images/20261023_bruno_guimaraes/01_w.jpg
+  short_photo: assets/images/20261023_bruno_guimaraes/01_v.jpg
+
+answer: 眠れない夜が続くほど難しい決断だった、と本人は語った。仲間とは泣いて別れた
+watch: 24日のエヴァートン戦（ホーム）
+
+sections:
+  - id: what
+    main: true
+    heading: 何を語ったか
+    tier: 報道
+    telop: ギマランイスが移籍の決断を語る
+    say:
+      - text: 28歳のブルーノ・ギマランイスが、移籍の決断を語りました。
+        image: assets/images/20261023_bruno_guimaraes/01_w.jpg
+        card: none
+      - text: 21日のバイエルン戦のあと、記者に答えています。
+        image: assets/images/20261023_bruno_guimaraes/02_w.jpg
+        card: none
+      - text: この夏、ニューカッスルから、アーセナルへ移りました。
+        image: assets/images/20261023_bruno_guimaraes/03_w.jpg
+        card: none
+      - voice: ギマランイス
+        text: とても難しいことでした。
+        image: assets/images/20261023_bruno_guimaraes/01_w.jpg
+        card: none
+      - voice: ギマランイス
+        text: ニューカッスルの全員と、すばらしい関係だったからです。
+        cont: true
+        image: assets/images/20261023_bruno_guimaraes/02_w.jpg
+        card: none
+      - voice: ギマランイス
+        text: 心の中で、新しい挑戦がしたかったのです。
+        cont: true
+        image: assets/images/20261023_bruno_guimaraes/03_w.jpg
+        card: none
+      - voice: ギマランイス
+        text: たくさん、たくさんの夜、眠れませんでした。
+        short_voice: true
+        image: assets/images/20261023_bruno_guimaraes/01_w.jpg
+        card: none
+      - voice: ギマランイス
+        text: 僕にとっても、家族にとっても、難しかったからです。
+        cont: true
+        image: assets/images/20261023_bruno_guimaraes/01_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50247830/bruno-guimaraes-sleepless-nights-arsenal-move
+      - https://now.core.api.espn.com/v1/sports/news/50247830
+
+  - id: farewell
+    heading: 仲間との別れと、これから
+    tier: 報道
+    telop: 泣いて別れた仲間。アーセナルでも同じ愛を
+    say:
+      - voice: ギマランイス
+        text: 仲間にさよならを言ったとき、僕は泣いていました。
+        image: assets/images/20261023_bruno_guimaraes/02_w.jpg
+        card: none
+      - voice: ギマランイス
+        text: 彼らも泣いていました。僕らは家族だったからです。
+        cont: true
+        image: assets/images/20261023_bruno_guimaraes/03_w.jpg
+        card: none
+      - voice: ギマランイス
+        text: ニューカッスルほど愛されたと感じたことは、ありません。
+        image: assets/images/20261023_bruno_guimaraes/01_w.jpg
+        card: none
+      - voice: ギマランイス
+        text: ここアーセナルでも、同じ愛をもらえたらと思います。
+        cont: true
+        image: assets/images/20261023_bruno_guimaraes/02_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50247830/bruno-guimaraes-sleepless-nights-arsenal-move
+      - https://now.core.api.espn.com/v1/sports/news/50247830
+
+  - id: view
+    viewpoint: true
+    heading: ニューカッスルでの数字と、アーセナルの13試合
+    tier: 背景
+    telop: タイトル1つ、CL2回、決勝2回。アーセナルでは13試合
+    say:
+      - text: 見立てです。ギマランイスは、ニューカッスルでの時間を、数字で振り返っています。
+        image: assets/images/20261023_bruno_guimaraes/03_w.jpg
+        card: none
+      - text: ニューカッスルは2025年のリーグカップ決勝で、リヴァプールに勝ちました。
+        image: assets/images/20261023_bruno_guimaraes/04_w.jpg
+        card: none
+      - voice: ギマランイス
+        text: 70年ぶりのタイトルを獲りました。
+        image: assets/images/20261023_bruno_guimaraes/01_w.jpg
+        card: none
+      - voice: ギマランイス
+        text: チャンピオンズリーグには2回出ました。
+        cont: true
+        image: assets/images/20261023_bruno_guimaraes/02_w.jpg
+        card: none
+      - voice: ギマランイス
+        text: 決勝には2回行きました。
+        cont: true
+        image: assets/images/20261023_bruno_guimaraes/03_w.jpg
+        card: none
+      - text: タイトル1つ、チャンピオンズリーグ2回、決勝2回。
+        image: assets/images/20261023_bruno_guimaraes/04_w.jpg
+        card: none
+      - text: それが、本人が挙げた成果です。
+        image: assets/images/20261023_bruno_guimaraes/01_w.jpg
+        card: none
+      - text: アーセナルでは、ここまで13試合に出ています。
+        image: assets/images/20261023_bruno_guimaraes/02_w.jpg
+        card: none
+      - text: チャンピオンズリーグの先発は、バイエルン戦で2試合連続です。
+        image: assets/images/20261023_bruno_guimaraes/03_w.jpg
+        card: none
+      - text: アーセナルでは、初めての連続先発です。
+        image: assets/images/20261023_bruno_guimaraes/04_w.jpg
+        card: none
+      - text: 次は24日、ホームでエヴァートンと戦います。
+        image: assets/images/20261023_bruno_guimaraes/01_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50247830/bruno-guimaraes-sleepless-nights-arsenal-move
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20261024
+short_title: "ギマランイス「たくさんの夜、眠れなかった」。アーセナルへ移る決断"

@@ -1,0 +1,487 @@
+# 代表チーム紹介 アルゼンチン代表（10/23 作成。固定シリーズ9「代表チーム紹介」。見本は 10/22 のスペイン代表）。7節：フック→基礎DATA（板）→歴史と転機（年表）→看板選手（表）→日本との関係→いまのチーム→見立て。
+# **軸（2026-10-23）**：「2022年に優勝し、2026年に準優勝。数字では何が違ったのか」。10/7 のメッシ引退の回（scripts/20261007_messi_farewell.md）・スカローニの契約の回（9/12）とは重ねない（紹介ものではない）。
+# **重なりの確認（2026-10-23）**：research/posted.json・covered.yaml にアルゼンチン代表の紹介は無い（covered は 9/12 スカローニ契約・9/26 メッシ最後の代表戦の一枚の2本。ニュース）。scripts/ に team_argentina は無い。直近30日に人名・クラブ名が重なる紹介ものは無い（ロメロ・エンソ等の選手紹介も無し）。
+# ---- 確かめたこと（2026-10-23。WebFetch・requests。検索のAI要約は根拠にしていない）----
+#  ・FIFAランク：FIFA 公式（inside.fifa.com/en/news/coca-cola-mens-world-ranking-october-2026-portugal-spain、2026-10-07）＝1位スペイン・2位アルゼンチン・3位フランス（10/22 のスペイン回で確認済み）。点数は書かない。
+#  ・日本との対戦：日本代表の試合記録（Wikipedia en の Japan national football team results 1990–1999・2000–2009・2010–2019・2020–present の生の表を ARG で拾った。WebFetch の要約は2010年を「負け」と誤っていたので使わず、生の表を読んだ）。2010-10-08 のスコアは JFA（https://www.jfa.jp/samuraiblue/schedule_result/2010.html）の「○1-0」でも確認した。
+#     1992-05-31 東京 キリンカップ 0-1／1995-01-08 リヤド キング・ファハド杯 1-5／1998-06-14 トゥールーズ W杯 0-1／2002-11-20 埼玉 親善 0-2／2003-06-08 大阪 キリンカップ 1-4／2004-08-18 静岡 親善 1-2／2010-10-08 埼玉 親善 1-0。＝7試合1勝6敗・4得点15失点（検算した）。2010年以降、2026-10-06 までに日本対アルゼンチンの試合は無い（2010–2019・2020–present の表に ARG は2010年の1行だけ）。**JFA の通算対戦成績は取れていない**ので「1990年以降の記録で7試合」と言い、通算とは言わない。1998年のアルゼンチンの得点はバティストゥータ（Wikipedia 1998 Group H の記述。分は言わない）。2010年の得点者・2022年大会との関係は言わない。
+#  ・W杯の成績（Wikipedia en の Argentina at the FIFA World Cup の生の表）：優勝 1978（決勝オランダ3-1）・1986（西ドイツ3-2）・2022（フランス3-3、PK4-2）、準優勝 1930（ウルグアイ2-4）・1990（西ドイツ0-1）・2014（ドイツ延長0-1）・2026（スペイン延長0-1）。決勝は7回。2022年の決勝のアルゼンチンの得点者はメッシ2・ディ・マリア1。決勝の主将は 1986 マラドーナ、2014・2022・2026 メッシ。2014 準決勝はオランダと0-0（延長）PK4-2。
+#  ・2022年W杯（7試合）：サウジアラビア1-2、メキシコ2-0、ポーランド2-0、R16オーストラリア2-1、QFオランダ2-2（延長）PK4-3、SFクロアチア3-0、決勝フランス3-3（延長）PK4-2＝15得点8失点（PK戦を除く）、延長にもつれたのは2試合でどちらもPK戦で勝ち。決勝トーナメント4試合＝10得点6失点。
+#  ・2026年W杯（8試合）：アルジェリア3-0、オーストリア2-0、ヨルダン3-1、R32カーボベルデ3-2（延長）、R16エジプト3-2、QFスイス3-1（延長）、SFイングランド2-1、決勝スペイン0-1（延長）＝19得点8失点、7勝1敗。延長は3試合（2勝1敗）、PK戦は無し。決勝トーナメント5試合＝11得点7失点。
+#  ・自分で割った数：1試合あたり 2022年 得点15÷7=2.14・失点8÷7=1.14／2026年 得点19÷8=2.38（2.375）・失点8÷8=1.00。
+#  ・W杯後の親善試合（Wikipedia en の Argentina results 2020–present）：2026-09-30 ボリビア4-0、10-03 ブルキナファソ7-0、10-06 ベナン3-0＝3試合14得点0失点。会場・得点者は言わない。次の試合の日程は取れていない（表に10/6 のあとの行が無い）ので言わない。
+#  ・メッシ：2026-10-06 に代表引退（Wikipedia en の Lionel Messi）。代表の最多出場208試合・最多得点126（Argentina national football team の infobox・名簿 2026-10-03 時点）。主将はクリスティアン・ロメロ（同 infobox）。監督はリオネル・スカローニ、2018年から（Wikipedia en。契約の話は言わない）。コパ・アメリカの優勝は「最多の16回」（同）。愛称ラ・アルビセレステ＝白と空色。
+#  ・名簿・年齢：Wikipedia の代表名簿（2026-10-03 時点）。生年月日から2026-10-23 時点で計算（ロメロ 1998-04-27=28、エミリアーノ・マルティネス 1992-09-02=34、エンソ・フェルナンデス 2001-01-17=25、マック・アリスター 1998-12-24=27、フリアン・アルバレス 2000-01-31=26、ラウタロ・マルティネス 1997-08-22=29）。所属も同名簿（ロメロ・アルバレス＝アトレティコ・マドリード、E・マルティネス＝チェルシー、エンソ＝マンチェスター・シティ、マック・アリスター＝リヴァプール、ラウタロ＝インテル）。
+# ---- 言わないもの ----
+#  ・背番号／私生活／メッシの引退の理由／監督の契約／戦術の説明／日本戦の通算（JFA 未確認）／次の試合の日程／選手の怪我／ジャージの話。
+# ---- 写真（assets/images/20261023_team_argentina/、出典は credits.json。Commons。代理店・放送映像は使っていない）----
+#  Bryan Berlin ほか Commons の 2026-07-07（エジプト戦）・07-19（決勝）の写真。目で見て本人を確かめてから使う。
+date: 2026年10月23日
+slot: other_1
+format: news
+series: 代表チーム紹介
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+people:
+- アルゼンチン代表
+- スカローニ
+theme:
+  id: team_argentina
+  league: japan
+  league_name: アルゼンチン代表
+  kind: preview
+  topic: アルゼンチン代表
+  title: アルゼンチン代表は、優勝の次の大会で準優勝。何が違ったのか
+  question: 2022年に優勝し、2026年に準優勝したアルゼンチンは、数字の上でどこが違うのか
+  lead: W杯の決勝に7回。優勝3回、準優勝4回。
+  hook: ''
+  opening_image: assets/stats/tb_argentina_data_t.png
+  end_bg: assets/images/20261023_team_argentina/a02_enzo.jpg
+  takeaway: アルゼンチンは2022年のW杯で優勝、2026年は決勝でスペインに延長0対1で準優勝。1試合あたりの得点は2.14から2.38に増え、失点は1.14から1.00に減った（W杯、PK戦を除く）。数字の上では2026年のほうが同じか上で、決勝の延長の1失点が結果を分けた。メッシが代表を退いたあとの、最初の公式戦が確かめになる。
+thumbnail:
+  board: assets/stats/tb_argentina_data.png
+  line1: アルゼンチン代表
+  line2: 決勝7回、優勝3回
+  crest_main:
+  - アルゼンチン
+  tags:
+  - アルゼンチン代表
+  - 日本代表
+  - ワールドカップ
+  - スカローニ
+  - 代表チーム紹介
+sections:
+- id: hook
+  heading: 優勝の2022年と、準優勝の2026年。何が違ったのか
+  main: true
+  tier: 背景
+  telop: W杯の決勝に7回。優勝3回、準優勝4回
+  narrator: 解説
+  say:
+  - text: アルゼンチン代表は、ワールドカップの決勝に**7回**進んでいます。
+    image: assets/stats/tb_argentina_data_r1.png
+    no_telop: true
+    emph: true
+  - text: 優勝が3回、準優勝が4回です。
+    image: assets/stats/tb_argentina_data_r1.png
+    no_telop: true
+  - text: 最新の決勝は、今年の7月。スペインに、延長で0対1でした。
+    image: assets/stats/tb_argentina_data_r1.png
+    no_telop: true
+  - text: その前の2022年は、フランスとのPK戦に勝って、優勝です。
+    image: assets/stats/tb_argentina_data_r1.png
+    no_telop: true
+  - text: 日本とは、1990年以降に7試合。日本の勝ちは1回で、割合にすれば14%。
+    image: assets/stats/tb_argentina_data_r2.png
+    no_telop: true
+  - text: 最後に戦ったのは、2010年です。
+    image: assets/stats/tb_argentina_data_r2.png
+    no_telop: true
+  - text: 優勝の2022年と、準優勝の2026年。何が違ったのでしょうか。
+    image: assets/stats/tb_argentina_data_r1.png
+    no_telop: true
+  sources:
+  - https://inside.fifa.com/en/news/coca-cola-mens-world-ranking-october-2026-portugal-spain
+  - https://en.wikipedia.org/wiki/Argentina_at_the_FIFA_World_Cup
+  - https://en.wikipedia.org/wiki/Argentina_national_football_team
+- id: data
+  heading: アルゼンチン代表は、どんな数字を持つ国なのか
+  tier: 背景
+  telop: アルゼンチン代表の基礎DATA
+  narrator: 解説
+  say:
+  - text: アルゼンチン代表のフィファランクは**2位**。10月7日の発表で、首位はスペインです。
+    image: assets/stats/tb_argentina_data0.png
+    no_telop: true
+  - text: ワールドカップの優勝は**3回**。1978年、1986年、2022年です。
+    image: assets/stats/tb_argentina_data1.png
+    no_telop: true
+  - text: 南米選手権のコパ・アメリカは、優勝**16回**。国として最多。
+    image: assets/stats/tb_argentina_data2.png
+    no_telop: true
+  - text: 監督は、リオネル・スカローニ。2018年から率いている。
+    image: assets/stats/tb_argentina_data4.png
+    no_telop: true
+  - text: 主将は、アトレティコ・マドリードのクリスティアン・ロメロです。
+    image: assets/stats/tb_argentina_data5.png
+    no_telop: true
+  sources:
+  - https://inside.fifa.com/en/news/coca-cola-mens-world-ranking-october-2026-portugal-spain
+  - https://en.wikipedia.org/wiki/Argentina_national_football_team
+- id: history
+  heading: アルゼンチンは、いつ優勝し、いつ決勝で敗れたのか
+  tier: 背景
+  telop: 優勝は1978年・1986年・2022年。決勝の負けは4回
+  narrator: 解説
+  card: &id_histA
+    type: timeline
+    title: アルゼンチンのW杯優勝
+    rows:
+    - - 1978年
+      - 自国開催で初優勝。決勝はオランダに3対1
+    - - 1986年
+      - 2度目。決勝は西ドイツに3対2
+    - - 2022年
+      - 3度目。決勝はフランスと3対3、PK戦4対2
+    focus: 1978年
+  say:
+  - text: アルゼンチンの最初のワールドカップ優勝は、1978年。自国開催の大会です。
+    image: assets/images/20261023_team_argentina/a10_egypt2_w.jpg
+    card: none
+  - text: 決勝は、オランダに3対1の勝ち。
+    card:
+      <<: *id_histA
+      highlight_row: 0
+  - text: 2度目は1986年。西ドイツに3対2で勝ちました。主将はマラドーナです。
+    emph: true
+    card:
+      <<: *id_histA
+      highlight_row: 1
+  - text: 次の優勝まで、36年かかりました。
+    card:
+      <<: *id_histA
+      highlight_row: 1
+  - text: そのあいだにも、決勝には進んでいます。
+    card: &id_histB
+      type: timeline
+      title: アルゼンチンのW杯決勝の負け
+      rows:
+      - - 1930年
+        - 第1回大会。ウルグアイに2対4
+      - - 1990年
+        - 西ドイツに0対1
+      - - 2014年
+        - ドイツに延長で0対1
+      - - 2026年
+        - スペインに延長で0対1
+      focus: 1930年
+  - text: 1930年は、第1回大会の決勝です。ウルグアイに、2対4。
+    card:
+      <<: *id_histB
+      highlight_row: 0
+  - text: 1990年は、西ドイツに0対1の負け。
+    card:
+      <<: *id_histB
+      highlight_row: 1
+  - text: 2014年は、ドイツに延長で0対1の負け。主将はメッシでした。
+    image: assets/images/20261023_team_argentina/a01_messi_w.jpg
+    card:
+      <<: *id_histB
+      highlight_row: 2
+  - text: 2022年は、フランスと3対3。延長のあと、PK戦に4対2で勝ちました。
+    emph: true
+    image: assets/images/20261023_team_argentina/a04_messi2_w.jpg
+    card:
+      <<: *id_histA
+      highlight_row: 2
+  - text: 決勝の得点は、メッシが2点、ディ・マリアが1点でした。
+    card: none
+  - text: 2026年は、スペインに延長で0対1の負け。
+    image: assets/images/20261023_team_argentina/a09_egypt_w.jpg
+    card:
+      <<: *id_histB
+      highlight_row: 3
+  - text: 決勝の負け4回のうち、0対1が3回。1990年、2014年、2026年です。
+    emph: true
+    card:
+      <<: *id_histB
+      highlight_row: 3
+  sources:
+  - https://en.wikipedia.org/wiki/Argentina_at_the_FIFA_World_Cup
+- id: players
+  heading: いまの看板選手は、誰なのか
+  tier: 背景
+  telop: 看板選手を、所属・名前・位置・年齢で
+  narrator: 解説
+  card: &id_pl
+    type: table
+    title: アルゼンチン代表の看板選手
+    columns:
+    - 所属
+    - 名前
+    - 位置
+    - 年齢
+    rows:
+    - - アトレティコ・マドリード
+      - ロメロ
+      - DF
+      - '28'
+    - - チェルシー
+      - エミリアーノ・マルティネス
+      - GK
+      - '34'
+    - - マンチェスター・シティ
+      - エンソ・フェルナンデス
+      - MF
+      - '25'
+    - - リヴァプール
+      - マック・アリスター
+      - MF
+      - '27'
+    - - アトレティコ・マドリード
+      - フリアン・アルバレス
+      - FW
+      - '26'
+    - - インテル
+      - ラウタロ・マルティネス
+      - FW
+      - '29'
+  say:
+  - text: 看板選手を、6人選びました。所属と位置、年齢を並べます。
+    card: *id_pl
+  - text: 年齢は、生年月日から数えた、10月23日時点です。
+    card: *id_pl
+  - text: 主将のロメロは28歳。アトレティコ・マドリードの守備を担います。
+    card:
+      <<: *id_pl
+      highlight_row: 0
+  - text: ゴールを守るのは、チェルシーのエミリアーノ・マルティネス。34歳です。
+    card:
+      <<: *id_pl
+      highlight_row: 1
+  - text: マンチェスター・シティのエンソ・フェルナンデスは、25歳の中盤。
+    image: assets/images/20261023_team_argentina/a02_enzo_w.jpg
+    card:
+      <<: *id_pl
+      highlight_row: 2
+  - text: リヴァプールの中盤は、27歳のマック・アリスターです。
+    card:
+      <<: *id_pl
+      highlight_row: 3
+  - text: 前線は、アトレティコ・マドリードのフリアン・アルバレスが26歳。
+    card:
+      <<: *id_pl
+      highlight_row: 4
+  - text: インテルのラウタロ・マルティネスは、29歳です。
+    card:
+      <<: *id_pl
+      highlight_row: 5
+  - text: 2026年の決勝まで主将だったのは、メッシです。
+    image: assets/images/20261023_team_argentina/a04_messi2_w.jpg
+    card: none
+  - text: 10月6日に代表を退き、出場208試合と得点126は、どちらも代表の最多。
+    emph: true
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Argentina_national_football_team
+  - https://en.wikipedia.org/wiki/Lionel_Messi
+- id: japan
+  heading: 日本は、アルゼンチンとどう戦ってきたのか
+  tier: 背景
+  telop: 1992年の0対1から、2010年の1対0まで7試合
+  narrator: 解説
+  card: &id_jp
+    type: table
+    title: 日本とアルゼンチンの対戦（日本の得点が先）
+    columns:
+    - 年
+    - 大会
+    - スコア
+    rows:
+    - - 1992年5月
+      - キリンカップ
+      - 0-1
+    - - 1995年1月
+      - キング・ファハド杯
+      - 1-5
+    - - 1998年6月
+      - ワールドカップ
+      - 0-1
+    - - 2002年11月
+      - 親善試合
+      - 0-2
+    - - 2003年6月
+      - キリンカップ
+      - 1-4
+    - - 2004年8月
+      - 親善試合
+      - 1-2
+    - - 2010年10月
+      - 親善試合
+      - 1-0
+  say:
+  - text: 日本とアルゼンチンの国際Aマッチは、1990年以降で7試合。
+    image: assets/images/20261023_team_argentina/a09_egypt_w.jpg
+    card: *id_jp
+  - text: そのうち日本が勝ったのは、1回。
+    card: *id_jp
+  - text: 古い順に見ます。
+    card: *id_jp
+  - text: 1992年5月は東京で、キリンカップ。0対1の負け。
+    card:
+      <<: *id_jp
+      highlight_row: 0
+  - text: 1995年1月は、サウジアラビアで1対5の負け。
+    card:
+      <<: *id_jp
+      highlight_row: 1
+  - text: 1998年6月、トゥールーズ。日本が初めて出たワールドカップの、初戦です。
+    image: assets/images/20261023_team_argentina/a10_egypt2_w.jpg
+    card:
+      <<: *id_jp
+      highlight_row: 2
+  - text: バティストゥータの1点で、日本は0対1で敗れました。
+    emph: true
+    card:
+      <<: *id_jp
+      highlight_row: 2
+  - text: 2002年11月は埼玉で0対2の負け。2003年6月は大阪で1対4の負け。
+    card:
+      <<: *id_jp
+      highlight_row: 4
+  - text: 2004年8月は、静岡で1対2の負け。
+    card:
+      <<: *id_jp
+      highlight_row: 5
+  - text: 2010年10月8日、埼玉。日本が、1対0で勝ちました。
+    emph: true
+    image: assets/images/20261023_team_argentina/a08_xi_w.jpg
+    card:
+      <<: *id_jp
+      highlight_row: 6
+  - text: 7試合で、日本の得点は4、失点は15。
+    card: *id_jp
+  - text: 2010年のあと、日本とアルゼンチンの試合はありません。
+    card: none
+  sources:
+  - https://www.jfa.jp/samuraiblue/schedule_result/2010.html
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_results_(1990%E2%80%931999)
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_results_(2000%E2%80%932009)
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_results_(2010%E2%80%932019)
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_results_(2020%E2%80%93present)
+  - https://en.wikipedia.org/wiki/1998_FIFA_World_Cup_Group_H
+- id: now
+  heading: 世界2位のアルゼンチンは、W杯のあとをどう戦っているのか
+  tier: 背景
+  telop: ワールドカップのあとの3試合は、3勝。失点は0
+  narrator: 解説
+  card: &id_nw
+    type: table
+    title: ワールドカップのあと アルゼンチンの3試合
+    columns:
+    - 日付
+    - 相手
+    - アルゼンチンの結果
+    rows:
+    - - 9月30日
+      - ボリビア
+      - 4-0
+    - - 10月3日
+      - ブルキナファソ
+      - 7-0
+    - - 10月6日
+      - ベナン
+      - 3-0
+  say:
+  - text: アルゼンチン代表の大会のあとは、親善試合が3つ。3つとも、勝ちました。
+    image: assets/images/20261023_team_argentina/a08_xi_w.jpg
+    card: *id_nw
+  - text: 9月30日は、ボリビアに4対0の勝ち。
+    card:
+      <<: *id_nw
+      highlight_row: 0
+  - text: 10月3日は、ブルキナファソに7対0の勝ち。
+    card:
+      <<: *id_nw
+      highlight_row: 1
+  - text: 10月6日は、ベナンに3対0の勝ちでした。
+    image: assets/images/20261023_team_argentina/a01_messi_w.jpg
+    card:
+      <<: *id_nw
+      highlight_row: 2
+  - text: メッシにとっては、これが代表の最後の試合でした。
+    emph: true
+    card: none
+  - text: 3試合で14得点。1試合の平均は4.7点で、失点は0。
+    card: *id_nw
+  - text: メッシが退いたあとも、率いるのはスカローニ監督。主将はロメロです。
+    image: assets/images/20261023_team_argentina/a03_scaloni_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Argentina_national_football_team_results_(2020%E2%80%93present)
+  - https://en.wikipedia.org/wiki/Lionel_Messi
+- id: viewpoint
+  viewpoint: true
+  heading: 優勝の2022年と準優勝の2026年。数字の上でどこが違ったのか
+  tier: 背景
+  telop: 1試合の得点は2.14から2.38へ、失点は1.14から1.00へ
+  narrator: 解説
+  card: &id_vp
+    type: table
+    title: ワールドカップ アルゼンチンの2大会（PK戦を除く）
+    columns:
+    - 大会
+    - 戦績
+    - 1試合の得点
+    - 1試合の失点
+    rows:
+    - - 2022年
+      - 7試合4勝2分1敗
+      - '2.14'
+      - '1.14'
+    - - 2026年
+      - 8試合7勝1敗
+      - '2.38'
+      - '1.00'
+  say:
+  - text: 見立てに入ります。比べる数字は2つ。まず、2つの大会の全体を見ます。
+    card: *id_vp
+  - text: 2022年は、7試合で15得点8失点。1試合の平均は、得点2.14、失点1.14。
+    card:
+      <<: *id_vp
+      highlight_row: 0
+  - text: 2026年は、8試合で19得点8失点。得点は2.38、失点は1.00です。
+    emph: true
+    mark:
+      kind: circle
+      row: 1
+      col: 2
+    card:
+      <<: *id_vp
+      highlight_row: 1
+  - text: 平均で見れば、2026年のほうが、得点は多く、失点は少ない大会でした。
+    emph: true
+    card: none
+  - text: 次は、決勝トーナメントの延長戦。
+    image: assets/images/20261023_team_argentina/a09_egypt_w.jpg
+    card: &id_vp2
+      type: table
+      title: 決勝トーナメントのアルゼンチン
+      columns:
+      - 大会
+      - 試合数
+      - 延長戦
+      - 延長の結果
+      rows:
+      - - 2022年
+        - 4試合
+        - 2試合
+        - PK戦に2勝
+      - - 2026年
+        - 5試合
+        - 3試合
+        - 延長で2勝1敗
+  - text: 2022年は、4試合のうち2試合が延長で、どちらもPK戦に勝ちました。
+    card:
+      <<: *id_vp2
+      highlight_row: 0
+  - text: 2026年は、5試合のうち3試合が延長。2試合は勝ち、決勝は0対1でした。
+    emph: true
+    mark:
+      kind: circle
+      row: 1
+      col: 3
+    card:
+      <<: *id_vp2
+      highlight_row: 1
+  - text: 数字の上では、2026年のアルゼンチンも、2022年と同等か、それ以上でした。
+    image: assets/images/20261023_team_argentina/a04_messi2_w.jpg
+    card: none
+  - text: 優勝と準優勝を分けたのは、平均の数字ではなく、決勝の延長の1失点でした。
+    card: none
+  - text: 確かめるのは、メッシが代表を退いたあとの、これからの公式戦です。
+    image: assets/images/20261023_team_argentina/a02_enzo_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Argentina_at_the_FIFA_World_Cup
+  - https://en.wikipedia.org/wiki/Argentina_national_football_team

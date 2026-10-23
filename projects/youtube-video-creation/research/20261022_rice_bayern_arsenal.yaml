@@ -1,0 +1,148 @@
+# 取材メモ（2026年10月22日）ライスの82分の同点弾で、アーセナルがバイエルンと2対2（ニュースのショート。見せ方 X＝冒頭に強い一言。ライス本人の言葉が取れていないので Y にしない）
+# 取材: 2026-10-22。requests（ブラウザUA）で原文を読んだ。控えは research/raw/20261022_rice_arsenal_*（report/presser/odegaard）。
+#   ・アーセナル公式 試合レポート（arsenal.com/news/report-bayern-munich-2-2-arsenal-af3gg0j1ufcj）— 全文読んだ。得点の流れ・ライスの得点・次の試合。クラブ公式なので 確定。
+#   ・アーセナル公式 アルテタ監督の試合後会見の全文（every-word-from-artetas-post-bayern-presser）— 全文読んだ。発言はここから訳した（言い換えない）。
+#   ・アーセナル公式 ウーデゴールの試合後コメント（odegaard-sees-positives-in-bayern-draw）— 全文読んだ。主将の発言。
+#   ・ESPN 試合記録API（site.api.espn.com/.../uefa.champions/summary?event=401915312）— 得点・交代・分・シュート数・ボール保持率。試合の記事（PA配信の要約）で「リーグフェーズの14連勝が止まった」。
+#   ・ESPN 記事API（content.core.api.espn.com/v1/sports/news/50241594）— 全文読んだ。ライスの得点を「ギェケレシュとのワンツーから低いシュート」と書く。※この題材では使わない数字（ケインの10試合連続など）は題材の外なので落とした。
+#   ・フットボールチャンネル 2026-10-22 06:22（題材の出典）— 全文読んだ。日本語の試合経過。
+# 得点（ESPN の試合記録＝アーセナル公式・フットボールチャンネルと一致）:
+#   25分 エゼ（アーセナル）← ウーデゴール。VAR確認後にゴール／35分 デイビス（バイエルン）← ケインのスルーパス／61分 ケイン PK（ティンバーの手）／82分 ライス（アーセナル）← ギェケレシュ。
+#   ギェケレシュは68分にハヴァーツと交代で入った（ESPN・フットボールチャンネルで一致）。ライスの得点は82分（ESPN・FC。アーセナル公式は『残り8分』）。
+# 資料のずれ（台本では言わない）:
+#   ・ライスのシュートの場所：ESPN記事＝左下／ESPN試合記録の文＝『ゴール中央』／アーセナル公式＝『ファーのコーナー』→ 場所は言わず『低いシュート』だけ。
+#   ・サカの交代の分：ESPN・FC＝8分に倒れて10分に交代／アーセナル公式＝9分。→ サカの負傷は別の題材（番号11）なので台本で扱わない。エゼは『サカに代わって入った』とだけ言わない（この題材の答えに要らない）。
+#   ・バイエルンのCLホーム成績：ESPN＝グループステージ40戦無敗／アーセナル公式のレポート＝31戦中1敗／ウーデゴールの記事＝32戦中1敗 → 食い違うので使わない。
+#   ・アーセナルの無敗：公式＝リーグフェーズ15試合無敗（昨季を含む）。ESPNの記事＝14連勝が止まった。→ 『連勝は14で止まった。ただし無敗は15試合に伸びた』と分けて言う（どちらも出どころがある。引き分けなので14勝1分＝15と整合）。
+# 本人の言葉:
+#   ライス本人のコメントは取れなかった（アーセナル公式・ESPNに試合後の発言なし）。→ Y にしない。X（冒頭に強い一言）。
+#   アルテタ監督（会見）：『We'll take the draw, but it doesn't mean we're really happy about it because we prepared a team to win the game』→ 『引き分けは受け入れます。ただ、大満足というわけではありません。勝つつもりでチームを準備していたからです』
+#   ウーデゴール（主将）：『Yeah, probably a fair result to be honest, but I feel like we could have won the game as well.』→ 『正直なところ、妥当な結果だと思います。でも、勝てたとも思っています』
+# 自分で数えた比べ（見立て）: 61分のPK→82分の同点まで21分。ギェケレシュが入った68分→82分まで14分。シュート：アーセナル14本（枠内5）・バイエルン13本（枠内5）、ボール保持はアーセナル53.9%（ESPN）。
+#   アーセナルのCL連勝は14で止まったが、リーグフェーズの無敗は15試合に伸びた（公式）。
+# 10/21 の本（ラヤとアルテタ＝試合前日の『退屈』の声）とは別の切り口：試合そのもの（ライスの同点弾と連勝）。アルテタの『退屈』への答えは扱わない。
+# 反応: まとめサイトを探した結果は下記の欄。X は使っていない。
+# 写真: アーセナル公式サイトの記事の主写真（© Arsenal FC）と、Commons。Getty の写真は使わない。10/21 の本で使った写真（ラヤ・アルテタ）とは別。出典は credits.json。
+slot: overseas
+date: 2026年10月22日
+format: news
+no_main: true
+people:
+- デクラン・ライス
+- アーセナル
+- バイエルン・ミュンヘン
+short_style: X
+short_hook_word: 14連勝が止まる
+short_question: ライスの同点弾は、今季のアーセナルに何をもたらすと思いますか。
+short_hook: ライスが82分に同点弾。アーセナルはバイエルンと2対2。
+theme:
+  id: rice_bayern_arsenal
+  league: england
+  league_name: チャンピオンズリーグ
+  prefix: ''
+  title: ライスが82分に同点弾。アーセナルのCL連勝は、いくつで止まったのか
+  hook: ''
+  question: ライスの同点弾で2対2になったバイエルン戦で、アーセナルの連勝はいくつで止まったのか
+  takeaway: アーセナルのCL連勝は14で止まったが、総当たりの段階（リーグフェーズ）の無敗は15試合に伸びた。バイエルンの逆転から同点まで21分、シュートは14本対13本で枠内は5本ずつ
+thumbnail:
+  line1: ライスの同点弾
+  line2: アーセナルの連勝は14で止まる
+  tags:
+  - デクラン・ライス
+  - アーセナル
+  photo: assets/images/20261022_rice_bayern_arsenal/01_w.jpg
+  short_photo: assets/images/20261022_rice_bayern_arsenal/01_v.jpg
+  layout: face
+answer: 82分にライスが同点。アーセナルの連勝は14で止まったが、無敗は15試合に伸びた
+watch: 土曜（現地24日）のプレミアリーグ、ホームのエバートン戦
+sections:
+- id: what
+  main: true
+  heading: 何が起きたか
+  tier: 確定
+  telop: バイエルン2対2アーセナル。ライスが82分に同点
+  say:
+  - text: 現地21日のチャンピオンズリーグ、バイエルン・ミュンヘン対アーセナル。
+    image: assets/images/20261022_rice_bayern_arsenal/01_w.jpg
+  - text: ライスが82分に同点弾。2対2で引き分けました。
+    image: assets/images/20261022_rice_bayern_arsenal/02_w.jpg
+  - text: 25分にアーセナルのエゼが先制。61分、ケインのPKでバイエルンが逆転。
+    image: assets/images/20261022_rice_bayern_arsenal/03_w.jpg
+  - text: 68分に入ったギェケレシュのパスから、ライスが低いシュートを決めました。
+    image: assets/images/20261022_rice_bayern_arsenal/01_w.jpg
+  official: true
+  sources:
+  - https://www.arsenal.com/news/report-bayern-munich-2-2-arsenal-af3gg0j1ufcj
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915312
+  - https://www.footballchannel.jp/2026/10/22/post1038048/
+  - https://www.arsenal.com/news/every-word-from-artetas-post-bayern-presser-azIsw7P3tdJO
+- id: words
+  heading: アルテタ監督は、試合のあとに何と語ったのか
+  tier: 確定
+  telop: アルテタ監督「引き分けは受け入れます」
+  say:
+  - text: ライスが追いついた試合のあと、アルテタ監督は語っています。
+    image: assets/images/20261022_rice_bayern_arsenal/05_w.jpg
+  - voice: アルテタ監督
+    text: 引き分けは受け入れます。
+    image: assets/images/20261022_rice_bayern_arsenal/03_w.jpg
+  - voice: アルテタ監督
+    text: ただ、大満足というわけではありません。
+    cont: true
+    image: assets/images/20261022_rice_bayern_arsenal/05_w.jpg
+  - voice: アルテタ監督
+    text: 勝つつもりでチームを準備していたからです。
+    cont: true
+    image: assets/images/20261022_rice_bayern_arsenal/02_w.jpg
+  official: true
+  sources:
+  - https://www.arsenal.com/news/every-word-from-artetas-post-bayern-presser-azIsw7P3tdJO
+- id: view
+  viewpoint: true
+  heading: 連勝は止まっても、無敗は15試合に伸びた
+  tier: 背景
+  telop: CLの連勝は14で止まり、無敗は15試合に
+  say:
+  - text: 見立てです。ライスの同点弾で、アーセナルの連勝は14で止まりました。
+    image: assets/images/20261022_rice_bayern_arsenal/01_w.jpg
+  - text: ただ、負けてはいません。総当たりの段階の無敗は、15試合に伸びました。
+    image: assets/images/20261022_rice_bayern_arsenal/02_w.jpg
+  - text: バイエルンの逆転から、同点まで21分でした。
+    image: assets/images/20261022_rice_bayern_arsenal/03_w.jpg
+  - text: シュートは14本対13本。枠内は、どちらも5本でした。
+    image: assets/images/20261022_rice_bayern_arsenal/05_w.jpg
+  - text: 次は土曜、現地24日。ホームでエバートンと戦います。
+    image: assets/images/20261022_rice_bayern_arsenal/01_w.jpg
+  official: false
+  sources:
+  - https://www.arsenal.com/news/report-bayern-munich-2-2-arsenal-af3gg0j1ufcj
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915312
+  - https://content.core.api.espn.com/v1/sports/news/50241594
+  - https://www.arsenal.com/news/odegaard-sees-positives-in-bayern-draw-atEqM8h4LJhs
+short_title: ライスが82分に同点弾。アーセナルのCL連勝は、いくつで止まったのか
+short_photos:
+- assets/images/20261022_rice_bayern_arsenal/01_v.jpg
+- assets/images/20261022_rice_bayern_arsenal/02_v.jpg
+- assets/images/20261022_rice_bayern_arsenal/03_v.jpg
+- assets/images/20261022_rice_bayern_arsenal/05_v.jpg
+short_telops:
+- match: 2対2で引き分け
+  text: CL第3節/バイエルン2対2アーセナル
+- match: 25分にアーセナルのエゼ
+  text: エゼが先制/ケインのPKで逆転
+- match: 68分に入ったギェケレシュ
+  text: 82分/ギェケレシュのパスからライスが同点
+- match: 引き分けは受け入れます
+  text: アルテタ監督/「引き分けは受け入れます」
+- match: 大満足
+  text: アルテタ監督/「大満足というわけではありません」
+- match: 連勝は14で止まりました
+  text: アーセナルの連勝は/14で止まる
+- match: 15試合に伸びました
+  text: 総当たりの段階の無敗は/15試合に伸びた
+- match: 同点まで21分
+  text: バイエルンの逆転から/同点まで21分
+- match: 14本対13本
+  text: シュート 14本対13本/枠内は5本ずつ
+- match: エバートン
+  text: 次は土曜（現地24日）/ホームでエバートン戦

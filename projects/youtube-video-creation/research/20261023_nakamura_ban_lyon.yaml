@@ -1,0 +1,130 @@
+# 取材メモ（2026年10月23日）中村敬斗にLFPが1試合の出場停止＋1試合の執行猶予（ニュースのショート。見せ方 X＝冒頭に事実の一言）
+# 取材: 2026-10-23。requests（ブラウザUA）と WebFetch で本文を読んだ。検索エンジンのAI要約は使っていない（URLを探すのに WebSearch は使った）。
+#   ・LFP公式（ligue1.com「Discipline : Toutes les décisions du 21 octobre」、2026-10-22 07:35 公開）: 「Keito Nakamura (OL) a été expulsé face à Nice. Un match de suspension ferme et un match avec sursis」。
+#       21日の懲戒委員会の決定。理由・反則の描写は無し。→ **処分の内容（1試合ferme＋1試合sursis）は 確定（一次情報）**。
+#   ・ゲキサカ 2026-10-22 22:13（https://web.gekisaka.jp/news/world/detail/?461612-461612-fl）本文を全部読んだ: LFPが21日に発表。18日のリーグ・アン第7節ニース戦、後半16分から途中出場、同25分に浮き球をトラップしようと右足を伸ばした際、
+#       足裏が前方のDFモハメド・アブデルモネイムの腹部に入り一発退場。2-1で勝利。**仏紙ル・プログレ（原文は未読。ゲキサカの伝聞）**は、接触が故意ではなかったことと、中村がすぐ相手の状態を確認して謝罪したことも考慮されたと伝える。
+#       次のリーグ戦が出場停止の対象で25日のパリSG戦を欠場。今回の処分は22日のELには適用されない。→ 考慮された点は 報道（伝聞の伝聞）。
+#   ・ゲキサカ 試合記録（https://web.gekisaka.jp/news/uel/detail/?461623-461623-fl、Opta）: ELリーグフェーズ第3節 ホッフェンハイム3-0リヨン（前半1-0）。リヨンの先発に中村敬斗（FW 11、交代の記載なし）。ホッフェンハイムの町田浩樹は77分に途中出場（DF 39 M. Rots と交代）。→ 確定（試合記録）。
+# 【言わないこと】PSG-OL戦の延期の可能性（フットマルカトの報道。原文は読めていない＝言わない。日付は「予定されている」とだけ言う）／「処分が軽くなった」と断定する言い方（ゲキサカ見出しの「軽減か」は推測）／
+#   執行猶予が発動する条件・期間（出典に無い）／反則の細部の言い直し（10/19の本で扱い済み）／ニアカテの言葉（10/21の本で扱い済み）。法的な問題には触れず、競技上の処分の範囲にとどめる。中村を貶す語は使わない。
+# 本人の言葉・クラブの言葉: 無い（作らない）→ Y にしない。X（short_hook_word）。反応: 0件（作らない。approve は --no-voices）。
+# 写真: 配信写真（ゲキサカの主写真は放送画面のため取り込まず）。01=ligue1.com（LFP公式の処分記事の写真、リヨンの背番号11、803x585と小さい＝縦切りは使わない）。
+#   02〜04=10/19・10/21 と同じ ligue1.com © LFP Media のスタッド・ランス時代の3枚（ユーザーが再利用を許可。新しい写真が取れなかったため再利用）。Commons は429（レート制限）で取れず、2022年の Salzburg の1枚は別選手が主役で除外。台本に「過去の写真」と断らない。
+slot: japanese
+date: "2026年10月23日"
+format: news
+no_main: true
+people: [中村敬斗, リヨン, 町田浩樹]
+short_style: X
+short_hook_word: 1試合の出場停止
+short_photos:
+  - assets/images/20261023_nakamura_ban_lyon/01_v.jpg
+  - assets/images/20261023_nakamura_ban_lyon/02_v.jpg
+  - assets/images/20261023_nakamura_ban_lyon/03_v.jpg
+short_question: 中村敬斗が戻る試合で、いちばん見たいプレーは何ですか。
+short_hook: 中村敬斗に、1試合の出場停止。
+short_telops:
+  - {match: 21日に発表, text: LFPが21日に発表/中村敬斗の処分}
+  - {match: 執行猶予, text: 1試合の出場停止/＋1試合の執行猶予}
+  - {match: 故意ではなかった, text: 考慮されたと報じられた点/故意ではなかった・すぐに謝罪}
+  - {match: 25日, text: 次のリーグ戦/25日のパリSG戦を欠場}
+  - {match: 適用されません, text: 22日のELには/処分は適用されない}
+  - {match: 町田浩樹, text: ホッフェンハイム3-0リヨン/町田浩樹は77分から}
+
+theme:
+  id: nakamura_ban_lyon
+  league: france
+  league_name: リーグ・アン
+  prefix: ""
+  title: 中村敬斗の処分が決定。出場停止は何試合で、どの試合に響くのか
+  hook: ""
+  question: 中村敬斗の処分は何試合で、どの試合に響くのか
+  takeaway: 18日の退場から3日後の21日にLFPが決定。出場停止は1試合で、25日のパリSG戦を欠場する見込み。22日のELには適用されず、中村は先発した
+
+thumbnail:
+  line1: 中村敬斗に処分
+  line2: 1試合の出場停止
+  tags: [中村敬斗, リヨン, LFP]
+  layout: face
+  side: right
+  photo: assets/images/20261023_nakamura_ban_lyon/02.jpg
+  short_photo: assets/images/20261023_nakamura_ban_lyon/01_v.jpg
+
+answer: 1試合の出場停止と1試合の執行猶予。出られないのは次のリーグ戦（25日のパリSG戦）
+watch: 25日のパリSG戦（中村は欠場の見込み）
+
+sections:
+  - id: what
+    main: true
+    heading: 中村敬斗の処分は、どう決まったのか
+    tier: 確定
+    telop: LFPが21日、1試合の出場停止と1試合の執行猶予を科した
+    say:
+      - text: 中村敬斗に、1試合の出場停止と、1試合の執行猶予付きの出場停止が科されました。
+        image: assets/images/20261023_nakamura_ban_lyon/01.jpg
+        card: none
+      - text: フランスのプロリーグ機構が、21日に発表しました。
+        image: assets/images/20261023_nakamura_ban_lyon/01.jpg
+        card: none
+      - text: 対象は、18日のニース戦で受けた一発退場です。
+        image: assets/images/20261023_nakamura_ban_lyon/01.jpg
+        card: none
+      - text: 61分に途中出場し、70分に足裏が相手の腹部に入った場面でした。
+        image: assets/images/20261023_nakamura_ban_lyon/02.jpg
+        card: none
+    official: true
+    sources:
+      - https://ligue1.com/fr/articles/l1_article_5989-discipline-toutes-les-decisions-du-21-octobre
+      - https://web.gekisaka.jp/news/world/detail/?461612-461612-fl
+
+  - id: why
+    heading: 処分を決めるとき、何が考慮されたと伝えられているのか
+    tier: 報道
+    telop: 故意ではなかったことと、すぐに謝罪したことが考慮されたと報じられた
+    say:
+      - text: フランスの新聞は、考慮された点を二つ伝えています。
+        image: assets/images/20261023_nakamura_ban_lyon/02.jpg
+        card: none
+      - text: 一つは、接触が故意ではなかったこと。
+        image: assets/images/20261023_nakamura_ban_lyon/02.jpg
+        card: none
+      - text: もう一つは、中村がすぐに相手の状態を確認し、謝罪したことです。
+        image: assets/images/20261023_nakamura_ban_lyon/01.jpg
+        card: none
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/world/detail/?461612-461612-fl
+
+  - id: view
+    viewpoint: true
+    heading: この処分は、中村の次の試合のどこまで響くのか
+    tier: 報道
+    telop: 出場停止の対象は次のリーグ戦の1試合。22日のELには適用されない
+    say:
+      - text: 見立てです。18日の退場から、処分の発表まで3日でした。
+        image: assets/images/20261023_nakamura_ban_lyon/01.jpg
+        card: none
+      - text: 処分は2試合分ですが、出られないのは次のリーグ戦の1試合です。
+        image: assets/images/20261023_nakamura_ban_lyon/02.jpg
+        card: none
+      - text: 25日に予定されているパリ・サンジェルマン戦を、中村は欠場することになります。
+        image: assets/images/20261023_nakamura_ban_lyon/02.jpg
+        card: none
+      - text: 22日のヨーロッパリーグには、この処分は適用されません。
+        image: assets/images/20261023_nakamura_ban_lyon/01.jpg
+        card: none
+      - text: 実際に中村は、そのホッフェンハイム戦に先発しました。
+        image: assets/images/20261023_nakamura_ban_lyon/01.jpg
+        card: none
+      - text: 試合は、リヨンが0対3で敗れました。
+        image: assets/images/20261023_nakamura_ban_lyon/03.jpg
+        card: none
+      - text: 町田浩樹は、ホッフェンハイムで77分から出ています。
+        image: assets/images/20261023_nakamura_ban_lyon/03.jpg
+        card: none
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/world/detail/?461612-461612-fl
+      - https://web.gekisaka.jp/news/uel/detail/?461623-461623-fl
+short_title: "中村敬斗の処分が決定。出場停止は何試合で、どの試合に響くのか"

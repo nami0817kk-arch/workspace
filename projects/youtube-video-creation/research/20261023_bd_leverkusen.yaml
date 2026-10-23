@@ -1,0 +1,502 @@
+# ブンデスリーガ18クラブ紹介 ③レバークーゼン（2026-10-22 作成。見本は 10/21 のバイエルン・10/22 のドルトムント）。tools/plbuild.py（CLUB_LEAGUE=bundesliga）で組み立て。
+# 材料は research/bd_data/leverkusen*.json・leverkusen_say.yaml・leverkusen_research.md。（出力名・theme.id・date・question・takeaway・season の viewpoint は手で足した）
+format: news
+voice_min: 0
+slot: other_1
+date: 2026年10月23日
+people:
+- レバークーゼン
+short_title: レバークーゼン、無敗優勝の1年半前は17位。何が
+series: ブンデスリーガチーム紹介
+theme:
+  id: bd_leverkusen
+  league: germany
+  league_name: ブンデスリーガ
+  kind: other
+  topic: レバークーゼン
+  title: レバークーゼンは2024年、無敗でリーグ優勝。1年半前は17位。何が変わったのか
+  question: 17位から無敗優勝まで、何が変わったのか
+  hook: 優勝を決めた試合では、途中から出た20歳が、1人で3点を取りました。
+  lead: 工場で働く人たちの手紙から生まれた、赤と黒のクラブ。
+  opening_image: assets/stats/bd_leverkusen_data_t.png
+  takeaway: 今季のリーグ戦は1試合あたり2.7得点1.5失点。無敗で優勝した年は2.6得点0.7失点で、得点は同じペース。違いは失点が倍になっていること
+thumbnail:
+  line1: レバークーゼン初の優勝
+  line2: 創立120年、34試合無敗
+  crest_main:
+  - レバークーゼン
+  tags:
+  - レバークーゼン
+  - ブンデスリーガ
+  - シャビ・アロンソ
+  layout: classic
+  board: assets/stats/bd_leverkusen_data_t.png
+sections:
+- id: data
+  heading: いま見る理由と基礎DATA
+  main: true
+  tier: 背景
+  telop: 6節まで4勝1分1敗で4位。無敗のフライブルクに2-1。新監督で6試合16得点
+  narrator: キャスター
+  say:
+  - text: 今季は6節まで**4勝1分け1敗**。4位で、首位と勝ち点1差です。
+    image: assets/stats/bd_leverkusen_data_r1.png
+    no_telop: true
+  - text: 10月18日、無敗だったフライブルクに2対1。日本の後藤啓介が先発した試合。
+    image: assets/stats/bd_leverkusen_data_r2.png
+    no_telop: true
+  - text: 新監督のカルレス・マルティネス。リーグ戦6試合で、**16得点**。
+    image: assets/stats/bd_leverkusen_data_r3.png
+    no_telop: true
+  - image: assets/stats/bd_leverkusen_data0.png
+    text: 創立は**1904年**。バイエル社の工場で、**170人**が署名した手紙から始まりました。
+    no_telop: true
+  - image: assets/stats/bd_leverkusen_data1.png
+    text: 愛称は「ヴェルクエルフ」。工場の11人、という意味です。
+    no_telop: true
+  - image: assets/stats/bd_leverkusen_map.png
+    text: ホームタウンはレバークーゼン。人口は約**16万8000人**。ケルンの北隣です。
+    no_telop: true
+  - image: assets/backgrounds/stadium_レバークーゼン.png
+    text: 本拠地はバイアレーナ。**3万210人**が入ります。
+  - image: assets/backgrounds/stadium_レバークーゼン.png
+    text: 18クラブでは14番目の大きさ。いちばん遠い席も、ピッチ中央まで**94メートル**。
+  - image: assets/stats/bd_leverkusen_data4.png
+    text: 経営会社は、バイエル社の子会社。会員が過半数を持つ決まりの、例外のひとつ。
+    no_telop: true
+  - image: assets/stats/bd_leverkusen_cups.png
+    text: リーグ優勝は**1回**、ドイツカップは**2回**。ヨーロッパの大会でも**1回**です。
+    no_telop: true
+  - image: assets/stats/bd_leverkusen_data6.png
+    text: 最多出場は、リューディガー・フォルボルン。リーグ戦**401試合**。
+    no_telop: true
+  - image: assets/stats/bd_leverkusen_data7.png
+    text: 直近のタイトルは、**2024年**のスーパーカップ。PK戦の末に勝ちました。
+    no_telop: true
+  - image: assets/stats/bd_leverkusen_data8.png
+    text: 昨季のリーグ戦は**6位**。勝ち点**59**で、首位バイエルンと30差。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Bayer_04_Leverkusen
+  - https://en.wikipedia.org/wiki/2026–27_Bayer_04_Leverkusen_season
+  - https://site.api.espn.com/apis/v2/sports/soccer/ger.1/standings
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/summary?event=401884771
+  - https://www.bayer04.de/de-de/news/bayer04/carles-martinez-novell-wird-neuer-cheftrainer-von-bayer-04
+  bg: assets/backgrounds/stadium_レバークーゼン_in.png
+  official: false
+- id: history2
+  heading: 2002年、2位が3つ。その夏は、日本で
+  tier: 背景
+  telop: 2002年に3つの大会で2位。W杯の決勝は横浜
+  narrator: 解説
+  card:
+    type: table
+    title: 2002年のレバークーゼン
+    columns: &id001
+    - ''
+    - ''
+    rows:
+    - - ブンデスリーガ
+      - 5点差の首位から、2位
+    - - ドイツカップ決勝
+      - シャルケに2対4
+  say:
+  - 2002年、3つの大会で2位でした。
+  - リーグは、5点差の首位から、2連敗で抜かれます。
+  - ドイツカップ決勝は、シャルケに2対4。
+  - 4日後のチャンピオンズリーグ決勝は、レアル・マドリードに1対2。
+  - text: この年のあだ名が、英語で「ネバークーゼン」。あと一歩で届かない、という意味です。
+    card:
+      type: table
+      title: 2002年のレバークーゼン
+      columns: *id001
+      rows:
+      - - チャンピオンズリーグ決勝
+        - レアル・マドリードに1対2
+      - - W杯決勝（横浜）
+        - 先発22人のうち4人が所属
+  - text: その夏のワールドカップは、日本と韓国で。決勝の会場は、横浜でした。
+    image: assets/images/bd_leverkusen_yokohama/scene.jpg
+  - 決勝に先発した22人のうち、4人がレバークーゼンの選手でした。
+  - ブラジルのルシオと、ドイツのラメロウ、シュナイダー、ノイヴィル。
+  - text: 日本の細貝萌も、このクラブの選手でした。2012-13は、リーグ戦17試合。
+    image: assets/photos/bd/leverkusen/leverkusen_japan_49494d14.jpg
+  sources:
+  - https://www.bayer04.de/en-us/page/history/seasons/2001-2002
+  - https://en.wikipedia.org/wiki/Bayer_04_Leverkusen
+  - https://en.wikipedia.org/wiki/2002_FIFA_World_Cup_final
+  - https://en.wikipedia.org/wiki/Michael_Ballack
+  - https://en.wikipedia.org/wiki/Hajime_Hosogai
+  bg: assets/backgrounds/stadium_レバークーゼン_in.png
+  official: false
+- id: history3
+  heading: 2022年10月、17位だった
+  tier: 背景
+  telop: 2022年10月5日、17位。シャビ・アロンソが監督に就く
+  narrator: 解説
+  card:
+    type: table
+    title: 17位から、無敗の優勝へ
+    columns: &id002
+    - ''
+    - ''
+    rows:
+    - - 2022年10月5日
+      - 17位で、アロンソが就任
+    - - 2022-23
+      - 6位で終える
+  say:
+  - 2022年10月5日。レバークーゼンは、17位でした。
+  - その日、シャビ・アロンソが監督に就きます。
+  - text: 元スペイン代表。一軍の監督は、これが初めてでした。
+    card:
+      type: table
+      title: 17位から、無敗の優勝へ
+      columns: *id002
+      rows:
+      - - 2023年の夏
+        - ジャカ、ホフマンらが加入
+  - 初戦はホームでシャルケに4対0の勝ち。その年は6位で終えます。
+  - 2023年の夏、ジャカ、ホフマン、ボニフェイス、グリマルドが加わります。
+  sources:
+  - https://www.bayer04.de/en-us/page/history/seasons/2022-2023
+  - https://www.bayer04.de/en-us/page/history/seasons/2023-2024
+  - https://en.wikipedia.org/wiki/Xabi_Alonso
+  bg: assets/backgrounds/stadium_レバークーゼン_in.png
+  official: false
+- id: history4
+  heading: 34試合、一度も負けなかった
+  tier: 背景
+  telop: 2023-24は28勝6分け。勝ち点90で、創立120年で初優勝
+  narrator: 解説
+  card:
+    type: table
+    title: 2023-24のブンデスリーガ
+    columns: &id003
+    - ''
+    - ''
+    rows:
+    - - 成績
+      - 28勝6分け0敗
+    - - 勝ち点
+      - 90（前の年より40増）
+  say:
+  - 2023-24は、開幕のライプツィヒ戦、3対2の勝ちで始まります。
+  - そこから最後まで、一度も負けませんでした。
+  - text: 4月14日、第29節。ブレーメンに5対0で、初優勝を決めます。
+    image: assets/images/bd_leverkusen_title/scene.jpg
+  - 創立から**120年**で、初めての優勝でした。
+  - text: 最終節も勝って、ブンデスリーガ史上初の、無敗優勝です。
+    card:
+      type: table
+      title: 2023-24のブンデスリーガ
+      columns: *id003
+      rows:
+      - - 得点と失点
+        - 89得点、24失点
+      - - 優勝を決めた日
+        - 4月14日、第29節
+  - 28勝6分け。勝ち点は**90**で、前の年より**40**多い数字でした。
+  - 公式戦の無敗は**51試合**。ベンフィカの48を超える、欧州の記録です。
+  - 止まったのは、ヨーロッパリーグ決勝。3日後のドイツカップ決勝には勝ち、2冠でした。
+  sources:
+  - https://www.bayer04.de/en-us/page/history/seasons/2023-2024
+  - https://www.bundesliga.com/en/bundesliga/news/bayer-leverkusen-are-2023-24-bundesliga-champions-26930
+  bg: assets/backgrounds/stadium_レバークーゼン_in.png
+  official: false
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: 点を取り合う攻撃。バイエル社の子会社。終了間際に強い
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns: &id004
+    - ''
+    - ''
+    rows:
+    - &id005
+      - プレーの色
+      - 攻めて、点を取り合う
+  say:
+  - text: プレーの色は、攻撃的なこと。
+    image: assets/photos/bd/leverkusen/leverkusen_manager_a1ab47a1.jpg
+  - リーグ戦6試合すべてで、**2点以上**を取っています。
+  - text: 運営の型は、会社の一部門のような形。赤字は親会社が補い、黒字は渡します。
+    card:
+      type: table
+      title: このクラブの特徴
+      columns: *id004
+      rows:
+      - *id005
+      - &id006
+        - 運営の型
+        - バイエル社の子会社
+  - text: 気質は、最後まで諦めないこと。
+    card:
+      type: table
+      title: このクラブの特徴
+      columns: *id004
+      rows:
+      - *id005
+      - *id006
+      - - クラブの気質
+        - 終了間際まで諦めない
+  - 2024年3月のホッフェンハイム戦は、88分まで0対1。そこから逆転勝ち。
+  sources:
+  - https://en.wikipedia.org/wiki/Bayer_04_Leverkusen
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/summary?event=401884776
+  - https://www.bayer04.de/en-us/page/history/seasons/2023-2024
+  bg: assets/backgrounds/stadium_レバークーゼン_in.png
+  official: false
+- id: episode
+  heading: 0対3から、PK戦で勝った夜
+  tier: 背景
+  telop: 1988年5月18日。UEFAカップ決勝の第2戦
+  narrator: 解説
+  card:
+    type: table
+    title: 1988年、UEFAカップ決勝
+    columns: &id007
+    - ''
+    - ''
+    rows:
+    - - 第1戦
+      - 敵地でエスパニョールに0対3
+    - - 第2戦
+      - ホームで3対0。合計3対3
+  say:
+  - 1988年、ヨーロッパリーグの前身の決勝は、エスパニョール戦。
+  - 第1戦は、敵地で0対3の負け。ほとんど望みのない形でした。
+  - text: ホームの第2戦は、後半に3点を返して3対0の勝ち。合計は同点です。
+    card:
+      type: table
+      title: 1988年、UEFAカップ決勝
+      columns: *id007
+      rows:
+      - - PK戦
+        - 3対2。クラブ初のタイトル
+  - PK戦は、最初に蹴った選手が外す苦しい出だし。
+  - それでも、フォルボルンが1本を止めて、3対2の勝ち。クラブ初のタイトルです。
+  sources:
+  - https://www.bayer04.de/en-us/page/history/founding-years-to-the-new-millennium/1980s
+  - https://en.wikipedia.org/wiki/1987%E2%80%9388_UEFA_Cup
+  bg: assets/backgrounds/stadium_レバークーゼン_in.png
+  official: false
+- id: legends
+  heading: このクラブを語る3人
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - &id008
+      - ウルフ・キルステン
+      - 1990-2003
+      - リーグ戦181得点
+  say:
+  - text: キルステンは、旧東ドイツ出身。統一の年の1990年に来ました。
+    image: assets/photos/bd/leverkusen/leverkusen_legend_d8b8dd58.jpg
+  - リーグ戦**181得点**。全大会では**240得点**で、クラブ最多です。
+  - 2004年には、クラブ最初の名誉主将になりました。
+  sources:
+  - https://en.wikipedia.org/wiki/Ulf_Kirsten
+  - https://en.wikipedia.org/wiki/Michael_Ballack
+  - https://en.wikipedia.org/wiki/Florian_Wirtz
+  - https://www.bayer04.de/en-us/page/history
+  bg: assets/backgrounds/stadium_レバークーゼン_in.png
+  official: false
+- id: legends2
+  heading: このクラブを語る3人（2人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id008
+    - &id009
+      - ミヒャエル・バラック
+      - 1999-2002
+      - 2002年の中心選手
+  say:
+  - text: バラックは、旧東ドイツ出身。1999年に来ました。
+    image: assets/photos/bd/leverkusen/leverkusen_legend_93232908.jpg
+  - 2002年のワールドカップは、準決勝で決勝点。警告で、決勝は出られませんでした。
+  - その夏にバイエルンへ移り、2010年に戻ってきました。
+  sources:
+  - https://en.wikipedia.org/wiki/Ulf_Kirsten
+  - https://en.wikipedia.org/wiki/Michael_Ballack
+  - https://en.wikipedia.org/wiki/Florian_Wirtz
+  bg: assets/backgrounds/stadium_レバークーゼン_in.png
+  official: false
+- id: legends3
+  heading: このクラブを語る3人（3人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id008
+    - *id009
+    - - フロリアン・ヴィルツ
+      - 2020-2025
+      - 無敗優勝の中心
+  say:
+  - text: ヴィルツは、ケルンの下部組織から、2020年に来ました。
+    image: assets/photos/bd/leverkusen/leverkusen_legend_d1b4f790.jpg
+  - 17歳で、当時のブンデスリーガ最年少得点を決めました。
+  - 2025年6月に、約**1億ポンド**で、リヴァプールへ移りました。
+  sources:
+  - https://en.wikipedia.org/wiki/Ulf_Kirsten
+  - https://en.wikipedia.org/wiki/Michael_Ballack
+  - https://en.wikipedia.org/wiki/Florian_Wirtz
+  bg: assets/backgrounds/stadium_レバークーゼン_in.png
+  official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はマルティネス。就任は7月1日。契約は2028年まで
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - カルレス・マルティネス・ノベル
+    - - 就任
+      - 2026年7月1日
+    - - 契約
+      - 2028年6月まで
+  say:
+  - text: 今季の監督は、カルレス・マルティネス・ノベル。**42歳**のスペイン人です。
+    image: assets/photos/bd/leverkusen/leverkusen_manager_a1ab47a1.jpg
+  - 就任は**2026年7月1日**。契約は2028年6月まで。
+  - 前職はトゥールーズ。若手を伸ばした点を、クラブは評価しました。
+  sources:
+  - https://en.wikipedia.org/wiki/Bayer_04_Leverkusen
+  - https://www.bayer04.de/de-de/news/bayer04/carles-martinez-novell-wird-neuer-cheftrainer-von-bayer-04
+  - https://en.wikipedia.org/wiki/Carles_Mart%C3%ADnez_Novell
+  bg: assets/backgrounds/stadium_レバークーゼン_in.png
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - text: 今季の登録選手は27人です。
+    image: assets/stats/bd_leverkusen_gk.png
+    no_telop: true
+  - image: assets/stats/bd_leverkusen_gk_f.png
+    text: ゴールキーパーは3人。
+    no_telop: true
+  - image: assets/stats/bd_leverkusen_gk_f.png
+    text: マーク・フレッケンはオランダ代表で**12試合**。
+    no_telop: true
+  - image: assets/stats/bd_leverkusen_df_f.png
+    text: ディフェンダーは8人。
+    no_telop: true
+  - image: assets/stats/bd_leverkusen_df_f.png
+    text: 主将を務めるのが**エドモン・タプソバ**。
+    no_telop: true
+  - image: assets/stats/bd_leverkusen_df_f.png
+    text: リーグ戦で**193試合**に出ています。
+    no_telop: true
+  - image: assets/stats/bd_leverkusen_df_f.png
+    text: ゲラ・ドゥエは、今夏の最高額の**3000万ユーロ**で、ストラスブールから来ました。
+    no_telop: true
+  - image: assets/stats/bd_leverkusen_mf_f.png
+    text: ミッドフィールダーは8人。
+    no_telop: true
+  - image: assets/stats/bd_leverkusen_mf_f.png
+    text: ロベルト・アンドリッヒはドイツ代表で**19試合**。
+    no_telop: true
+  - image: assets/stats/bd_leverkusen_mf_f.png
+    text: マリク・ティルマンはアメリカ代表で**39試合**。
+    no_telop: true
+  - image: assets/stats/bd_leverkusen_fw_f.png
+    text: フォワードは8人。
+    no_telop: true
+  - image: assets/stats/bd_leverkusen_fw_f.png
+    text: パトリック・シックは、クラブの歴代得点で**3位**。
+    no_telop: true
+  - image: assets/stats/bd_leverkusen_fw_f.png
+    text: '**112得点**です。'
+    no_telop: true
+  - image: assets/stats/bd_leverkusen_fw_f.png
+    text: ムサ・ディアビは、9月に、サウジアラビアから戻ってきました。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Bayer_04_Leverkusen
+  bg: assets/backgrounds/stadium_レバークーゼン_in.png
+  official: false
+- id: season
+  heading: 今季のここまで
+  tier: 報道
+  telop: 6試合で4勝1引き分け1敗。4位
+  narrator: 解説
+  card:
+    type: table
+    title: ブンデスリーガの結果
+    columns:
+    - 節
+    - 相手
+    - 結果
+    rows:
+    - - 第1節
+      - エルフェルスベルク（アウェー）
+      - 2対3
+    - - 第2節
+      - ウニオン・ベルリン（ホーム）
+      - 4対0
+    - - 第3節
+      - アウクスブルク（アウェー）
+      - 2対2
+    - - 第4節
+      - ライプツィヒ（ホーム）
+      - 2対0
+    - - 第5節
+      - マインツ（アウェー）
+      - 4対3
+    - - 第6節
+      - フライブルク（ホーム）
+      - 2対1
+  say:
+  - 6試合を終えて、**4勝1引き分け1敗**。
+  - 順位は**4位**、勝ち点は**13**です。
+  - 次は10月25日、敵地でホッフェンハイム。
+  - 今季の1試合あたりは、**2.7得点**、**1.5失点**。
+  - 無敗優勝の年は、**2.6得点**、**0.7失点**でした。
+  - 得点は同じペース。違いは、失点が倍なことです。
+  sources:
+  - https://www.espn.com/soccer/team/results/_/name/leverkusen
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/scoreboard
+  - https://site.api.espn.com/apis/v2/sports/soccer/ger.1/standings
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.europa/scoreboard
+  - https://en.wikipedia.org/wiki/2023%E2%80%9324_Bundesliga
+  bg: assets/backgrounds/stadium_レバークーゼン_in.png
+  official: false
+  viewpoint: true
+watch: 毎日、数字でサッカーを読み解きます

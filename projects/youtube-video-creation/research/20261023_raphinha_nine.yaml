@@ -1,0 +1,135 @@
+# 取材メモ（2026年10月23日）ラフィーニャ、今季14ゴール。ウイングから9番へ（ニュースのショート。見せ方 B＝写真を切り替え）
+# 取材: 2026-10-23。requests（ブラウザUA）で原文を読んだ（ESPN の記事API。控えは research/raw/20261023_raphinha_espn.txt）。
+#   ・ESPN「How Raphinha's latest transformation made him into Barcelona's star striker」(2026-10-22 14:14Z、Sam Marsden / Mohamed Mohamed) — 本文を全部読んだ。題材の出典。
+#   ・ESPN の試合記録（site.api.espn.com の summary、バルセロナの公式戦12試合ぶん。控え research/raw/20261023_espn_*.json）— ラフィーニャの出場・得点・アシストを1試合ずつ数えた。
+#   ・FC Barcelona 公式の日程ページ — 「Sun 25 Oct 21:00 La Liga Matchday 10 Spotify Camp Nou FC Barcelona vs. Real Madrid」（現地時間）。
+# 【記録を一次に近い試合記録で数え直した結果】
+#   出場10試合（2026-10-22 時点）で14得点3アシスト（公式戦）。内訳（得点）: エルチェ2・アスレティック1・ラージョ2・バレンシア1・フェイエノールト(CL)2・レバンテ0（2アシスト）・ラシン3・セビージャ3・ベティス0（途中出場）・PSG(CL)0。
+#   欠場: 10/10 ヘタフェ戦・10/13 ガラタサライ戦（ロスターに名前なし）。バルセロナの公式戦は12試合（8/23〜10/20）なので、「10試合で14得点」は『出場10試合』の意味。ESPN の「14 goals in 10 games」と一致。
+#   リーグ戦は出場8試合（ベティスは途中出場）で12得点。ESPN の「12 in only eight LaLiga matches」と一致。
+#   自分で数えた比べ: 14÷10＝1.4点/出場。昨季（ESPN: 33試合21得点）は21÷33≒0.64。
+# ESPN の記述（ESPN の分析・取材。クラブ発表ではない＝報道）:
+#   ・リーズ→バルサ（2022）は右ウイング。フリック1年目（2024-25）は左ウイングで34得点（三冠）。昨季は33試合21得点（けが）。今季はレヴァンドフスキとトーレスが去り、アルバレス獲得は実らず、ラフィーニャが9番に。
+#   ・今夏クラブの主将に（ESPN）。クラブ公式の2026ガンペール記事も彼を captain と書く。
+#   ・元リーズ強化部長オルタ氏（ESPN の取材）: "He loves work. He's a player that loves training. He's a player that loves the next level."（台本は『練習が好きで、次のレベルが好きだ』）
+#       "The German school is the perfect style for him. He's like a German with Brazilian technique."
+#   ・題材の一覧の言葉『ブラジルの草サッカー「うまくいかなかった選手たちの家」』は本文に "the home of the rejects"（ラフィーニャ自身の言い方、várzea）とあるが、台本には入れない（尺・本筋から外れる）。
+# 確度: ESPN の分析記事＝報道。出場・得点の数字は試合記録を自分で数えた（確定に近いが、ESPN 経由）。クラシコの日時はクラブ公式（確定）。見立てでは結果の予想をしない。
+# 本人の言葉: 今回の記事に9番の話をしたラフィーニャの言葉は無い。PSG戦後の発言（途中交代への不満）は別の話なので使わない。作らない。
+# 前の本との重なり: scripts/20261016_raphinha_dejong_return（復帰・8試合14得点）、20261020_compare_ranking_ga（得点とアシスト比べ・リーグ15）、20260922/25/30_raphinha。位置の変遷（ウイング→9番）・オルタ氏の言葉は未扱い。数字14は10/16 と同じだが『出場10試合』に更新。
+# 反応: 取り出していない（今日は試していない）。作らない。0件。approve は --no-voices で。
+# 写真: 後述（credits.json）。
+slot: la_liga
+date: "2026年10月23日"
+format: news
+no_main: true      # ニュースはショートだけ（2026-10-14）。締めで本編を案内しない
+people: [ラフィーニャ, バルセロナ, レアル・マドリード]
+short_style: B
+short_photos:
+  - assets/images/20261023_raphinha_nine/02_v.jpg
+  - assets/images/20261023_raphinha_nine/03_v.jpg
+  - assets/images/20261023_raphinha_nine/04_v.jpg
+  - assets/images/20261023_raphinha_nine/05_v.jpg
+  - assets/images/20261023_raphinha_nine/06_v.jpg
+
+short_question: あなたは、9番のラフィーニャとウイングのラフィーニャ、どちらが好きですか。
+short_hook: ラフィーニャ、今季14ゴール。
+short_telops:
+  - {match: 14ゴールです, text: ラフィーニャ/公式戦10試合で14ゴール}
+  - {match: 右ウイングでした, text: リーズからバルサへ/最初は右ウイング}
+  - {match: 左ウイングで34, text: フリック監督1年目/左ウイングで34ゴール}
+  - {match: レヴァンドフスキ, text: 今季/前線の2人が退団}
+  - {match: ドイツ式が, text: 元リーズ強化部長オルタ氏/「ドイツ式が完璧だった」}
+  - {match: 練習が好きで, text: オルタ氏/「練習が好き」}
+  - {match: ブラジルの技術を持った, text: オルタ氏/「ブラジルの技術を持ったドイツ人」}
+  - {match: 今季は1.4ゴール, text: 今季は1試合1.4ゴール/昨季は0.64}
+  - {match: 25日, text: クラシコは/現地25日21時}
+
+theme:
+  id: raphinha_nine
+  league: spain
+  league_name: ラ・リーガ
+  prefix: ""
+  title: ラフィーニャ、今季14ゴール。ウイングから9番へ、クラシコ前のバルサ主将の変身
+  hook: ""
+  question: ラフィーニャは、なぜウイングから9番に変わって、これほど点を取っているのか
+  takeaway: 昨季は1試合0.64ゴール、今季は出場10試合で14ゴール（1試合1.4）。クラシコは現地25日の21時
+
+thumbnail:
+  line1: ラフィーニャ
+  line2: ウイングから9番へ
+  tags: [ラフィーニャ, バルセロナ]
+  layout: face
+  photo: assets/images/20261023_raphinha_nine/02_w.jpg
+  short_photo: assets/images/20261023_raphinha_nine/02_v.jpg
+
+answer: 前線の2人が去った今季、左ウイングから9番へ。元リーズ強化部長は『ドイツ式が完璧』と話す
+watch: 現地25日（日）21時のクラシコ
+
+sections:
+  - id: what
+    main: true
+    heading: 何が起きたか
+    tier: 報道
+    telop: ラフィーニャ、今季14ゴール
+    card:
+      type: table
+      title: ラフィーニャの位置とゴール
+      columns: [時期, 位置, 公式戦のゴール]
+      rows:
+        - ["2022年", "右ウイング（リーズから移籍）", ""]
+        - ["2024-25", "左ウイング", "34"]
+        - ["2025-26", "左ウイング", "21（33試合）"]
+        - ["今季", "9番", "14（10試合）"]
+    say:
+      - クラシコを前に、バルセロナの主将ラフィーニャが注目されています。
+      - 元リーズの強化部長オルタ氏は、フリック監督のサッカーをこう話します。
+      - voice: オルタ氏
+        text: ドイツ式が、彼には完璧だった。
+      - voice: オルタ氏
+        text: ブラジルの技術を持った、ドイツ人のようだ。
+        cont: true
+      - 2022年にリーズから来たときのラフィーニャは、右ウイングでした。
+      - フリック監督の1年目には、左ウイングで34ゴールを決めています。
+      - 昨季は33試合で21ゴールでした。
+      - 今季は前線のレヴァンドフスキとトーレスが去り、ラフィーニャが9番を務めています。
+      - そのラフィーニャが、公式戦10試合で14ゴールです。
+      - 昨季の21ゴールの、3分の2にあたります。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50196710/raphinha-latest-transformation-barcelona-star-striker
+      - https://www.fcbarcelona.com/en/football/first-team/schedule
+      - https://www.espn.com/soccer/match/_/gameId/401882846/barcelona-real-betis
+      - https://www.espn.com/soccer/match/_/gameId/401915399/barcelona-paris-saint-germain
+
+  - id: why
+    heading: ラフィーニャの練習への姿勢
+    tier: 報道
+    telop: 元リーズ強化部長オルタ氏の見方
+    say:
+      - オルタ氏は、ラフィーニャの人柄についても話しています。
+      - voice: オルタ氏
+        text: 彼は練習が好きで、
+      - voice: オルタ氏
+        text: 次のレベルが好きだ。
+        cont: true
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50196710/raphinha-latest-transformation-barcelona-star-striker
+
+  - id: view
+    viewpoint: true
+    heading: ラフィーニャの1試合あたりを数える
+    tier: 背景
+    telop: 昨季は1試合0.64ゴール。今季は1.4ゴール
+    say:
+      - 見立てです。ラフィーニャは、昨季が1試合あたり0.64ゴール。
+      - 今季は1.4ゴールで、2倍以上です。
+      - リーグ戦だけで見ると、出場8試合で12ゴールです。
+      - クラシコは、現地25日の日曜21時に始まります。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50196710/raphinha-latest-transformation-barcelona-star-striker
+      - https://www.fcbarcelona.com/en/football/first-team/schedule
+      - https://www.espn.com/soccer/match/_/gameId/401882846/barcelona-real-betis
+short_title: "ラフィーニャ、今季14ゴール。ウイングから9番へ、クラシコ前のバルサ主将の変身"

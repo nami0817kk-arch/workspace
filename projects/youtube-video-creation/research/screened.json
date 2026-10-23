@@ -2890,5 +2890,157 @@
  "20261021_team_germany": {
   "at": "2026-10-21T18:34:05+09:00",
   "digest": "d77d57fdedbe74fb"
+ },
+ "20261022_compare_937958_433177": {
+  "at": "2026-10-22T00:08:50+09:00",
+  "digest": "71f8b21fa310b694"
+ },
+ "20261022_player_406625": {
+  "at": "2026-10-22T00:17:15+09:00",
+  "digest": "8125d4207a49d915"
+ },
+ "20261022_kawaguchi_yoshikatsu_legend": {
+  "at": "2026-10-22T07:14:16+09:00",
+  "digest": "773f11da5b8b628d"
+ },
+ "20261022_manager_ancelotti": {
+  "at": "2026-10-22T07:15:25+09:00",
+  "digest": "72402a57a3d9d6e3"
+ },
+ "20261022_finance_atletico": {
+  "at": "2026-10-22T07:33:22+09:00",
+  "digest": "b4f82dd8dd4358ec"
+ },
+ "20261022_stadium_everton": {
+  "at": "2026-10-22T07:35:31+09:00",
+  "digest": "74dc343fd2de797b"
+ },
+ "20261022_kit_forest": {
+  "at": "2026-10-22T07:39:20+09:00",
+  "digest": "020562d8e67d0f58"
+ },
+ "20261022_team_spain": {
+  "at": "2026-10-22T07:42:59+09:00",
+  "digest": "f031297fc4f57cef"
+ },
+ "20261022_henry_legend": {
+  "at": "2026-10-22T07:58:32+09:00",
+  "digest": "0828f6ddbd715ae8"
+ },
+ "20261022_ito_junya_aoi_zion_short": {
+  "at": "2026-10-22T10:20:11+09:00",
+  "digest": "b0946c64b60c8953"
+ },
+ "20261022_suzuki_zion_cl_viking_short": {
+  "at": "2026-10-22T10:20:12+09:00",
+  "digest": "1031d9e4a4188538"
+ },
+ "20261022_kvara_acl_short": {
+  "at": "2026-10-22T10:20:13+09:00",
+  "digest": "4020c279097b4e63"
+ },
+ "20261022_ballondor_three_short": {
+  "at": "2026-10-22T10:20:14+09:00",
+  "digest": "78d58171b89f4ab4"
+ },
+ "20261022_bruno_carrick_como_short": {
+  "at": "2026-10-22T10:20:15+09:00",
+  "digest": "eb706e8b03ab1a24"
+ },
+ "20261022_nicopaz_como_manu_short": {
+  "at": "2026-10-22T10:20:16+09:00",
+  "digest": "88887307c500f473"
+ },
+ "20261022_rice_bayern_arsenal_short": {
+  "at": "2026-10-22T10:20:17+09:00",
+  "digest": "45d3d26a4e9118f3"
+ },
+ "20261022_saka_injury_bayern_short": {
+  "at": "2026-10-22T10:20:18+09:00",
+  "digest": "974c45e35dd5109c"
+ },
+ "20261022_olmo_adductor_short": {
+  "at": "2026-10-22T10:20:19+09:00",
+  "digest": "e59c9840ea9ccfa8"
+ },
+ "20261022_tenhag_ronaldo_short": {
+  "at": "2026-10-22T10:20:21+09:00",
+  "digest": "06598d0c05a7e36b"
+ },
+ "20261022_bd_dortmund": {
+  "at": "2026-10-22T10:23:40+09:00",
+  "digest": "8aefb8b0963077a3"
+ },
+ "20261023_finance_acmilan": {
+  "at": "2026-10-23T10:37:46+09:00",
+  "digest": "e4dee15e35c60a23"
+ },
+ "20261023_manager_mourinho": {
+  "at": "2026-10-23T10:40:50+09:00",
+  "digest": "a58362da8e0cdfa3"
+ },
+ "20261023_team_argentina": {
+  "at": "2026-10-23T10:42:18+09:00",
+  "digest": "2c6e2f123ed3bd5b"
+ },
+ "20261023_ibrahimovic_legend": {
+  "at": "2026-10-23T10:42:49+09:00",
+  "digest": "bf67df627adc76ea"
+ },
+ "20261023_ono_shinji_legend": {
+  "at": "2026-10-23T10:44:08+09:00",
+  "digest": "7c61298ad84d7699"
+ },
+ "20261023_compare_598577_503743": {
+  "at": "2026-10-23T10:45:21+09:00",
+  "digest": "c190151b019837ea"
+ },
+ "20261023_player_687626": {
+  "at": "2026-10-23T10:47:10+09:00",
+  "digest": "1040c08f4aa4edbb"
+ },
+ "20261023_bd_leverkusen": {
+  "at": "2026-10-23T10:48:49+09:00",
+  "digest": "c6cbd08f98549181"
+ },
+ "20261023_stadium_palace": {
+  "at": "2026-10-23T10:49:29+09:00",
+  "digest": "ef20b7408e7ea3b1"
+ },
+ "20261023_kit_brighton": {
+  "at": "2026-10-23T10:51:24+09:00",
+  "digest": "8f2de72e897efee2"
+ },
+ "20261023_kamada_besiktas_short": {
+  "at": "2026-10-23T12:22:53+09:00",
+  "digest": "62680f486b3dac47"
+ },
+ "20261023_kubo_el_6_0_short": {
+  "at": "2026-10-23T12:23:55+09:00",
+  "digest": "6c64c3b991f4a798"
+ },
+ "20261023_nakamura_ban_lyon_short": {
+  "at": "2026-10-23T12:24:25+09:00",
+  "digest": "a414311f22978fe9"
+ },
+ "20261023_kane_cl_10_straight_short": {
+  "at": "2026-10-23T12:24:51+09:00",
+  "digest": "d5e7411d735f1397"
+ },
+ "20261023_mbappe_never_satisfied_short": {
+  "at": "2026-10-23T12:25:27+09:00",
+  "digest": "65109c00fcad724e"
+ },
+ "20261023_bournemouth_milan_3_0_short": {
+  "at": "2026-10-23T12:26:03+09:00",
+  "digest": "af4bb7688f4164bd"
+ },
+ "20261023_bruno_guimaraes_arsenal_short": {
+  "at": "2026-10-23T12:26:44+09:00",
+  "digest": "cf23ef1eb558e925"
+ },
+ "20261023_raphinha_nine_short": {
+  "at": "2026-10-23T12:27:20+09:00",
+  "digest": "9dbae005656c414c"
  }
 }

@@ -1,0 +1,949 @@
+# ズラタン・イブラヒモビッチ（元スウェーデン代表FW）の紹介。シリーズ「レジェンドの紹介（世界）」2026-10-23。
+date: 2026年10月23日
+slot: other_1
+format: news
+series: レジェンドの紹介
+people:
+- イブラヒモビッチ
+watch: 毎日、数字でサッカーを読み解きます
+theme:
+  end_bg: assets/images/20261023_ibrahimovic_legend/p_lag_w.jpg
+  id: legend_ibrahimovic
+  league: italy
+  league_name: イタリア・セリエA
+  kind: other
+  topic: ズラタン・イブラヒモビッチ
+  title: イブラヒモビッチは、どんな選手だった？ 4点目のオーバーヘッドで、何が起きたのか
+  question: イングランド戦で4点すべてを決めたイブラヒモビッチは、何を残した選手で、引退後に何を語ったのか
+  takeaway: 2010年までの5クラブは412試合で180点（1試合あたり0.44点）、2012年からの4クラブは369試合で275点（0.75点）。30歳を過ぎてから、得点のペースは約1.7倍になった
+  nameplate: ズラタン・イブラヒモビッチ｜元FW
+  opening_image: assets/images/20261023_ibrahimovic_legend/p_lagtop_w.jpg
+  bgm: assets/audio/bgm_calm.wav
+short_title: イブラヒモビッチは、どんな選手だった？
+thumbnail:
+  line1: ズラタン、通算573点
+  line2: 代表62点は国の最多
+  tags:
+  - パリサンジェルマン
+  photo: assets/images/20261023_ibrahimovic_legend/panel_01.jpg
+  photos: []
+  short_photo: assets/images/20261023_ibrahimovic_legend/p_psg_v.jpg
+sections:
+- id: hook
+  heading: 4点目をオーバーヘッドで決めた男は、何を残したのか
+  tier: 報道
+  telop: イングランド戦で4得点
+  card:
+    type: stats
+    title: ズラタン・イブラヒモビッチ 元FW（45歳）
+    items:
+    - - '573'
+      - 点
+      - 通算。クラブ511、代表62
+    - - '62'
+      - 点
+      - スウェーデン代表。国の歴代最多
+    - - '12'
+      - 回
+      - スウェーデンの年間最優秀選手
+    focus: 0
+  say:
+  - text: 2012年11月14日、スウェーデン。イングランドとの、親善試合。
+    card: none
+    image: assets/images/20261023_ibrahimovic_legend/p_swe3_w.jpg
+  - text: この日、スウェーデンの4点すべてを決めたのが、ズラタン・イブラヒモビッチです。
+    emph: true
+    card: none
+  - text: 4点目は、ゴールから遠い位置からの、オーバーヘッドキック。
+    card: none
+    image: assets/images/20261023_ibrahimovic_legend/p_psg_w.jpg
+  - text: 通算の得点は、クラブと代表で、573。
+    card:
+      type: stats
+      title: ズラタン・イブラヒモビッチ 元FW（45歳）
+      items:
+      - - '573'
+        - 点
+        - 通算。クラブ511、代表62
+      - - '62'
+        - 点
+        - スウェーデン代表。国の歴代最多
+      - - '12'
+        - 回
+        - スウェーデンの年間最優秀選手
+      focus: 0
+    callword: 通算573点
+    image: assets/images/20261023_ibrahimovic_legend/p_mu_w.jpg
+  - text: スウェーデン代表での得点は、62。国の歴代最多。
+    card:
+      type: stats
+      title: ズラタン・イブラヒモビッチ 元FW（45歳）
+      items:
+      - - '573'
+        - 点
+        - 通算。クラブ511、代表62
+      - - '62'
+        - 点
+        - スウェーデン代表。国の歴代最多
+      - - '12'
+        - 回
+        - スウェーデンの年間最優秀選手
+      focus: 1
+  - text: 年間最優秀選手には、母国で、12回選ばれました。
+    card:
+      type: stats
+      title: ズラタン・イブラヒモビッチ 元FW（45歳）
+      items:
+      - - '573'
+        - 点
+        - 通算。クラブ511、代表62
+      - - '62'
+        - 点
+        - スウェーデン代表。国の歴代最多
+      - - '12'
+        - 回
+        - スウェーデンの年間最優秀選手
+      focus: 2
+    image: assets/images/20261023_ibrahimovic_legend/p_mu_w.jpg
+  - text: 現役生活は、2023年6月まで。
+    card: none
+  - text: 何を残した選手だったのか。数えていきます。
+    card: none
+    image: assets/images/20261023_ibrahimovic_legend/p_lag_w.jpg
+  quotes_from: []
+  sources:
+  - https://www.uefa.com/european-qualifiers/news/0203-0e13bc54c003-3b40702afd5a-1000--magic-in-the-air-for-four-goal-ibrahimovic
+  - https://en.wikipedia.org/wiki/Zlatan_Ibrahimovi%C4%87
+  - https://www.nbcnewyork.com/news/sports/ac-milan-star-zlatan-ibrahimovic-officially-retires-from-soccer/
+- id: data
+  heading: イブラヒモビッチは、いつ、どこで生まれ、何を手にした選手か
+  tier: 報道
+  telop: イブラヒモビッチの基礎DATA
+  card:
+    type: table
+    title: ズラタン・イブラヒモビッチ
+    columns:
+    - 項目
+    - 内容
+    rows: &id001
+    - - 生年月日
+      - 1981年10月3日・スウェーデン
+    - - ポジション
+      - フォワード（身長195cm）
+    - - 欧州のクラブ
+      - アヤックス・ユベントス・インテル・バルセロナ・ミラン・パリSG・マンチェスターU
+    - - アメリカ
+      - LAギャラクシー
+    - - スウェーデン代表
+      - 122試合62得点・W杯2回・EURO4回
+    - - 引退
+      - 2023年6月（41歳）
+    source: Wikipedia・UEFA・NBC
+    highlight_row: 0
+  say:
+  - text: ズラタン・イブラヒモビッチは、1981年10月3日、マルメの生まれ。45歳です。
+    card:
+      type: table
+      title: ズラタン・イブラヒモビッチ
+      columns:
+      - 項目
+      - 内容
+      rows: *id001
+      source: Wikipedia・UEFA・NBC
+      highlight_row: 0
+    image: assets/images/20261023_ibrahimovic_legend/p_psg_w.jpg
+  - text: ポジションは、フォワード。身長は、195センチ。
+    card:
+      type: table
+      title: ズラタン・イブラヒモビッチ
+      columns:
+      - 項目
+      - 内容
+      rows: *id001
+      source: Wikipedia・UEFA・NBC
+      highlight_row: 1
+  - text: クラブは、アヤックス、ユベントス、インテル、バルセロナ。
+    card:
+      type: table
+      title: ズラタン・イブラヒモビッチ
+      columns:
+      - 項目
+      - 内容
+      rows: *id001
+      source: Wikipedia・UEFA・NBC
+      highlight_row: 2
+  - text: ミラン、パリ・サンジェルマン、ユナイテッド、そしてアメリカのLAギャラクシー。
+    card:
+      type: table
+      title: ズラタン・イブラヒモビッチ
+      columns:
+      - 項目
+      - 内容
+      rows: *id001
+      source: Wikipedia・UEFA・NBC
+      highlight_row: 3
+    image: assets/images/20261023_ibrahimovic_legend/p_psg_w.jpg
+  - text: スウェーデン代表では、ワールドカップ2回、ヨーロッパ選手権4回。
+    card:
+      type: table
+      title: ズラタン・イブラヒモビッチ
+      columns:
+      - 項目
+      - 内容
+      rows: *id001
+      source: Wikipedia・UEFA・NBC
+      highlight_row: 4
+    image: assets/images/20261023_ibrahimovic_legend/p_mu_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Zlatan_Ibrahimovi%C4%87
+  - https://www.nbcnewyork.com/news/sports/ac-milan-star-zlatan-ibrahimovic-officially-retires-from-soccer/
+- id: career
+  heading: マルメの若者は、どう世界の点取り屋になったのか
+  tier: 報道
+  telop: マルメからミランまで
+  card:
+    type: table
+    title: 歩んできた道
+    columns:
+    - 年
+    - 所属
+    - 出来事
+    rows: &id002
+    - - 1999〜2004
+      - マルメ・アヤックス
+      - 2001年にオランダへ
+    - - 2004〜09
+      - ユベントス・インテル
+      - インテルでセリエA3連覇
+    - - 2009〜12
+      - バルセロナ・ミラン
+      - 2011年にミランで優勝
+    - - 2012〜16
+      - パリ・サンジェルマン
+      - リーグ・アン4連覇
+    - - 2016〜19
+      - マンチェスターU・ギャラクシー
+      - 2016-17にEL優勝
+    - - 2019〜23
+      - ミラン
+      - 2022年にセリエA優勝
+    source: Wikipedia
+    highlight_row: 0
+  say:
+  - text: イブラヒモビッチは、地元マルメで、1999年にデビュー。
+    card:
+      type: table
+      title: 歩んできた道
+      columns:
+      - 年
+      - 所属
+      - 出来事
+      rows: *id002
+      source: Wikipedia
+      highlight_row: 0
+    image: assets/images/20261023_ibrahimovic_legend/p_mu_w.jpg
+  - text: 2001年、オランダのアヤックスへ。
+    card:
+      type: table
+      title: 歩んできた道
+      columns:
+      - 年
+      - 所属
+      - 出来事
+      rows: *id002
+      source: Wikipedia
+      highlight_row: 0
+  - text: 2004年、イタリアのユベントス。2006年に、インテルへ。
+    card:
+      type: table
+      title: 歩んできた道
+      columns:
+      - 年
+      - 所属
+      - 出来事
+      rows: *id002
+      source: Wikipedia
+      highlight_row: 1
+    image: assets/images/20261023_ibrahimovic_legend/p_psg_w.jpg
+  - text: インテルでは、セリエAを3連覇。2008-09シーズンは、25点で得点王でした。
+    emph: true
+    card:
+      type: table
+      title: 歩んできた道
+      columns:
+      - 年
+      - 所属
+      - 出来事
+      rows: *id002
+      source: Wikipedia
+      highlight_row: 1
+  - text: バルセロナとの契約は、2009年。1年目に、リーガ・エスパニョーラを制しました。
+    card:
+      type: table
+      title: 歩んできた道
+      columns:
+      - 年
+      - 所属
+      - 出来事
+      rows: *id002
+      source: Wikipedia
+      highlight_row: 2
+    image: assets/images/20261023_ibrahimovic_legend/p_mu_w.jpg
+  - text: 2010年にミランへ移り、2011年のセリエAを制します。
+    card:
+      type: table
+      title: 歩んできた道
+      columns:
+      - 年
+      - 所属
+      - 出来事
+      rows: *id002
+      source: Wikipedia
+      highlight_row: 2
+  - text: 2012年、パリ・サンジェルマンへ。
+    card:
+      type: table
+      title: 歩んできた道
+      columns:
+      - 年
+      - 所属
+      - 出来事
+      rows: *id002
+      source: Wikipedia
+      highlight_row: 3
+    image: assets/images/20261023_ibrahimovic_legend/p_psg_w.jpg
+  - text: リーグ・アンを、4連覇しました。
+    emph: true
+    card:
+      type: table
+      title: 歩んできた道
+      columns:
+      - 年
+      - 所属
+      - 出来事
+      rows: *id002
+      source: Wikipedia
+      highlight_row: 3
+  - text: 2016年、移籍金なしで、マンチェスター・ユナイテッドと契約します。
+    card:
+      type: table
+      title: 歩んできた道
+      columns:
+      - 年
+      - 所属
+      - 出来事
+      rows: *id002
+      source: Wikipedia
+      highlight_row: 4
+    image: assets/images/20261023_ibrahimovic_legend/p_mu_w.jpg
+  - text: 1年目に、ヨーロッパリーグと、リーグカップ。
+    card:
+      type: table
+      title: 歩んできた道
+      columns:
+      - 年
+      - 所属
+      - 出来事
+      rows: *id002
+      source: Wikipedia
+      highlight_row: 4
+  - text: 2018年からは、アメリカのLAギャラクシー。
+    card:
+      type: table
+      title: 歩んできた道
+      columns:
+      - 年
+      - 所属
+      - 出来事
+      rows: *id002
+      source: Wikipedia
+      highlight_row: 4
+    image: assets/images/20261023_ibrahimovic_legend/p_lag_w.jpg
+  - text: 2019年、ミランに戻ります。
+    card:
+      type: table
+      title: 歩んできた道
+      columns:
+      - 年
+      - 所属
+      - 出来事
+      rows: *id002
+      source: Wikipedia
+      highlight_row: 5
+  - text: 2022年、40歳で、セリエAの優勝でした。
+    emph: true
+    card:
+      type: table
+      title: 歩んできた道
+      columns:
+      - 年
+      - 所属
+      - 出来事
+      rows: *id002
+      source: Wikipedia
+      highlight_row: 5
+    image: assets/images/20261023_ibrahimovic_legend/p_mu_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Zlatan_Ibrahimovi%C4%87
+- id: style
+  heading: イブラヒモビッチのプレーは、何が他の点取り屋と違ったのか
+  tier: 報道
+  telop: 大きな体と、細かい技術
+  card:
+    type: table
+    title: イブラヒモビッチのプレー
+    columns:
+    - 項目
+    - 中身
+    rows: &id003
+    - - 体
+      - とても大きな大型フォワード
+    - - 技術
+      - 大きな体で、細かいボール扱い
+    - - シュート
+      - ボレー、オーバーヘッドなど
+    - - 得点
+      - クラブで0.59点、代表で0.51点（1試合）
+    source: Wikipedia
+    highlight_row: 0
+  say:
+  - text: まず、数字。イブラヒモビッチの全大会の通算は、988試合で、573点。
+    emph: true
+    card:
+      type: table
+      title: イブラヒモビッチ 通算（全大会）
+      columns:
+      - 所属
+      - 試合
+      - 得点
+      rows:
+      - - マルメ・アヤックス
+        - '157'
+        - '66'
+      - - ユベントス・インテル
+        - '209'
+        - '92'
+      - - バルセロナ・ミラン
+        - '209'
+        - '115'
+      - - パリ・サンジェルマン
+        - '180'
+        - '156'
+      - - ユナイテッド・ギャラクシー
+        - '111'
+        - '82'
+      - - スウェーデン代表
+        - '122'
+        - '62'
+      - - 合計
+        - '988'
+        - '573'
+      source: Wikipedia
+      highlight_row: 6
+    image: assets/images/20261023_ibrahimovic_legend/p_psg_w.jpg
+  - text: 武器の1つ目は、体。とても大きな、大型のフォワードです。
+    card:
+      type: table
+      title: イブラヒモビッチのプレー
+      columns:
+      - 項目
+      - 中身
+      rows: *id003
+      source: Wikipedia
+      highlight_row: 0
+    image: assets/images/20261023_ibrahimovic_legend/p_swe3_w.jpg
+  - text: 2つ目は、技術。大きな体なのに、ボールの扱いが、細かい。
+    card:
+      type: table
+      title: イブラヒモビッチのプレー
+      columns:
+      - 項目
+      - 中身
+      rows: *id003
+      source: Wikipedia
+      highlight_row: 1
+  - text: 3つ目は、シュート。ボレーや、オーバーヘッドなど、曲芸のような形も持ち味でした。
+    card:
+      type: table
+      title: イブラヒモビッチのプレー
+      columns:
+      - 項目
+      - 中身
+      rows: *id003
+      source: Wikipedia
+      highlight_row: 2
+    image: assets/images/20261023_ibrahimovic_legend/p_mu_w.jpg
+  - text: 1試合あたりでは、クラブで0.59点、代表で0.51点。
+    card:
+      type: table
+      title: イブラヒモビッチのプレー
+      columns:
+      - 項目
+      - 中身
+      rows: *id003
+      source: Wikipedia
+      highlight_row: 3
+  - text: 大きな体と、細かい技術を、1人で持っていたのです。
+    card: none
+    image: assets/images/20261023_ibrahimovic_legend/p_lag_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Zlatan_Ibrahimovi%C4%87
+- id: match
+  heading: 2012年11月14日、イングランド戦の4点目は、どう生まれたのか
+  tier: 報道
+  main: true
+  telop: 4対2。イブラヒモビッチが4得点
+  card:
+    type: timeline
+    title: 2012年11月14日 スウェーデン対イングランド
+    rows: &id004
+    - - 20分
+      - イブラヒモビッチが先制
+    - - 35分
+      - ウェルベックが同点
+    - - 38分
+      - コーカーが逆転
+    - - 77分
+      - イブラヒモビッチが同点
+    - - 84分
+      - イブラヒモビッチが勝ち越し
+    - - 90分
+      - 4点目はオーバーヘッド
+    focus: 0
+    highlight_row: 0
+  say:
+  - text: スウェーデンのイブラヒモビッチ。
+    short_only: true
+    card: none
+    image: assets/images/20261023_ibrahimovic_legend/p_lag_w.jpg
+  - text: 最も語られる一戦は、2012年11月14日、イングランド戦。
+    short_only: true
+    card: none
+  - text: 2012年11月14日、親善試合。スウェーデン対イングランド。
+    card: none
+    image: assets/images/20261023_ibrahimovic_legend/p_lag_w.jpg
+  - text: 会場は、できたばかりの、フレンズ・アリーナです。
+    card: none
+  - text: イングランドの主将、ジェラードは、この試合が、代表100試合目でした。
+    card: none
+    image: assets/images/20261023_ibrahimovic_legend/p_mu_w.jpg
+  - text: 20分、イブラヒモビッチが先制。
+    card:
+      type: timeline
+      title: 2012年11月14日 スウェーデン対イングランド
+      rows: *id004
+      focus: 0
+      highlight_row: 0
+  - text: 35分にウェルベック、38分にコーカーが決めて、イングランドが逆転。
+    card: none
+    image: assets/images/20261023_ibrahimovic_legend/p_psg_w.jpg
+  - text: 前半が終わって、イングランドが2対1でリード。
+    card: none
+  - text: 77分、イブラヒモビッチが、同点。
+    card:
+      type: timeline
+      title: 2012年11月14日 スウェーデン対イングランド
+      rows: *id004
+      focus: 3
+      highlight_row: 0
+    image: assets/images/20261023_ibrahimovic_legend/p_lag_w.jpg
+  - text: 84分、再び。勝ち越しです。
+    card:
+      type: timeline
+      title: 2012年11月14日 スウェーデン対イングランド
+      rows: *id004
+      focus: 4
+      highlight_row: 0
+  - text: そして、試合終了間際。
+    card:
+      type: timeline
+      title: 2012年11月14日 スウェーデン対イングランド
+      rows: *id004
+      focus: 5
+      highlight_row: 0
+    image: assets/images/20261023_ibrahimovic_legend/p_mu_w.jpg
+  - text: ゴールキーパーのジョー・ハートが、前に出て、ヘディングでクリア。
+    card:
+      type: timeline
+      title: 2012年11月14日 スウェーデン対イングランド
+      rows: *id004
+      focus: 5
+      highlight_row: 0
+  - text: そのボールを、イブラヒモビッチは、オーバーヘッドキックで。
+    card:
+      type: timeline
+      title: 2012年11月14日 スウェーデン対イングランド
+      rows: *id004
+      focus: 5
+      highlight_row: 0
+    image: assets/images/20261023_ibrahimovic_legend/p_lag_w.jpg
+  - text: 30メートルほど先のゴールへ、叩き込みました。
+    emph: true
+    card:
+      type: timeline
+      title: 2012年11月14日 スウェーデン対イングランド
+      rows: *id004
+      focus: 5
+      highlight_row: 0
+  - text: スウェーデンの、4対2の勝ち。4点すべてが、イブラヒモビッチでした。
+    emph: true
+    card: none
+  - text: 本人は、こう話しています。
+    card: none
+  - voice: イブラヒモビッチ
+    text: キーパーが出てくるのが見えた。
+    image: assets/images/20261023_ibrahimovic_legend/p_lag_w.jpg
+  - voice: イブラヒモビッチ
+    text: 彼が先にボールに触ると、分かっていた。
+    cont: true
+    pause: 0.6
+    image: assets/images/20261023_ibrahimovic_legend/p_lag_w.jpg
+  - text: ジェラードの言葉です。
+    card: none
+  - voice: ジェラード
+    text: 生で見た中で、最高のゴールの1つだ。
+    pause: 0.6
+    image: assets/images/20261023_ibrahimovic_legend/p_mu_w.jpg
+  - text: このゴールは、2013年の、プスカシュ賞に選ばれます。
+    card: none
+    image: assets/images/20261023_ibrahimovic_legend/p_psg_w.jpg
+  - text: その年のいちばんのゴールに、国際サッカー連盟が贈る賞です。
+    card: none
+  quotes_from:
+  - https://www.uefa.com/european-qualifiers/news/0203-0e13bc54c003-3b40702afd5a-1000--magic-in-the-air-for-four-goal-ibrahimovic
+  sources:
+  - https://www.uefa.com/european-qualifiers/news/0203-0e13bc54c003-3b40702afd5a-1000--magic-in-the-air-for-four-goal-ibrahimovic
+  - https://www.sportsmole.co.uk/football/sweden/live-commentary/sweden-4-2-england-as-it-happened_54650.html
+  - https://www.sverigesradio.se/artikel/5346911
+  - https://amp.foxsports.com/stories/soccer/acrobatic-ibrahimovic-shoots-down-england
+  - https://en.wikipedia.org/wiki/Zlatan_Ibrahimovi%C4%87
+- id: after
+  heading: ピッチを離れたイブラヒモビッチは、どんな言葉を残したのか
+  tier: 報道
+  telop: 引退と、その言葉
+  card:
+    type: timeline
+    title: 引退のあと
+    rows: &id005
+    - - 2023年6月4日
+      - 現役引退を発表（41歳）
+    - - 2023年12月
+      - ミランの上級顧問に
+    focus: 0
+    highlight_row: 0
+  say:
+  - text: 2023年6月4日。イタリア、サン・シーロ。
+    card:
+      type: timeline
+      title: 引退のあと
+      rows: *id005
+      focus: 0
+      highlight_row: 0
+    image: assets/images/20261023_ibrahimovic_legend/p_mu_w.jpg
+  - text: セリエAの最終戦、ミラン対ヴェローナのあとでした。
+    card:
+      type: timeline
+      title: 引退のあと
+      rows: *id005
+      focus: 0
+      highlight_row: 0
+  - text: イブラヒモビッチは、ピッチの上で、現役引退を発表します。
+    emph: true
+    card:
+      type: timeline
+      title: 引退のあと
+      rows: *id005
+      focus: 0
+      highlight_row: 0
+    image: assets/images/20261023_ibrahimovic_legend/p_psg_w.jpg
+  - text: 41歳でした。
+    card:
+      type: timeline
+      title: 引退のあと
+      rows: *id005
+      focus: 0
+      highlight_row: 0
+  - text: 引退の言葉は、こうでした。
+    card: none
+  - voice: イブラヒモビッチ
+    text: サッカーに、さよならを言う時が来ました。
+    image: assets/images/20261023_ibrahimovic_legend/p_swe3_w.jpg
+  - voice: イブラヒモビッチ
+    text: でも、皆さんに、ではありません。
+    cont: true
+    pause: 0.6
+    image: assets/images/20261023_ibrahimovic_legend/p_swe3_w.jpg
+  - text: 2023年12月、ミランの親会社、レッドバードが、上級顧問に迎えると発表しました。
+    card:
+      type: timeline
+      title: 引退のあと
+      rows: *id005
+      focus: 1
+      highlight_row: 0
+    image: assets/images/20261023_ibrahimovic_legend/p_mu_w.jpg
+  quotes_from:
+  - https://www.nbcnewyork.com/news/sports/ac-milan-star-zlatan-ibrahimovic-officially-retires-from-soccer/
+  sources:
+  - https://www.nbcnewyork.com/news/sports/ac-milan-star-zlatan-ibrahimovic-officially-retires-from-soccer/
+  - https://en.wikipedia.org/wiki/Zlatan_Ibrahimovi%C4%87
+- id: secret
+  heading: パリの110点目と、家族にも隠した引退には、何があったのか
+  tier: 報道
+  telop: パリの記録と、秘密の引退
+  card:
+    type: table
+    title: 記録と秘密の、2つの話
+    columns:
+    - いつ
+    - 何があったか
+    rows: &id006
+    - - 2015年10月
+      - パリSGの歴代最多得点に
+    - - 2023年6月
+      - 家族にも言わずに引退
+    source: Wikipedia・NBC
+    highlight_row: 0
+  say:
+  - text: ここからは、記録と秘密の話を、2つ。
+    card:
+      type: table
+      title: 記録と秘密の、2つの話
+      columns:
+      - いつ
+      - 何があったか
+      rows: *id006
+      source: Wikipedia・NBC
+      highlight_row: 0
+    image: assets/images/20261023_ibrahimovic_legend/p_psg_w.jpg
+  - text: 1つ目は、2015年10月4日。パリ・サンジェルマン。
+    emph: true
+    card:
+      type: table
+      title: 記録と秘密の、2つの話
+      columns:
+      - いつ
+      - 何があったか
+      rows: *id006
+      source: Wikipedia・NBC
+      highlight_row: 0
+  - text: イブラヒモビッチは、通算110点目を決めます。
+    card:
+      type: table
+      title: 記録と秘密の、2つの話
+      columns:
+      - いつ
+      - 何があったか
+      rows: *id006
+      source: Wikipedia・NBC
+      highlight_row: 0
+  - text: パウレタを抜いて、クラブの歴代1位に立ちました。
+    card:
+      type: table
+      title: 記録と秘密の、2つの話
+      columns:
+      - いつ
+      - 何があったか
+      rows: *id006
+      source: Wikipedia・NBC
+      highlight_row: 0
+    image: assets/images/20261023_ibrahimovic_legend/p_swe3_w.jpg
+  - text: 2018年1月に、エディンソン・カバーニが超えるまで、1位でした。
+    card:
+      type: table
+      title: 記録と秘密の、2つの話
+      columns:
+      - いつ
+      - 何があったか
+      rows: *id006
+      source: Wikipedia・NBC
+      highlight_row: 0
+  - text: 2つ目は、2023年6月。引退の発表の、裏話です。
+    emph: true
+    card:
+      type: table
+      title: 記録と秘密の、2つの話
+      columns:
+      - いつ
+      - 何があったか
+      rows: *id006
+      source: Wikipedia・NBC
+      highlight_row: 1
+    image: assets/images/20261023_ibrahimovic_legend/p_mu_w.jpg
+  - text: その理由を、本人は、こう語っています。
+    card: none
+  - voice: イブラヒモビッチ
+    text: 家族も、知らなかった。
+    image: assets/images/20261023_ibrahimovic_legend/p_mu_w.jpg
+  - voice: イブラヒモビッチ
+    text: 発表するとき、みんなが同時に聞けるように、したかったから。
+    cont: true
+    pause: 0.6
+    image: assets/images/20261023_ibrahimovic_legend/p_mu_w.jpg
+  - text: 最後の言葉は、また会いましょう。運がよければ。でした。
+    card:
+      type: table
+      title: 記録と秘密の、2つの話
+      columns:
+      - いつ
+      - 何があったか
+      rows: *id006
+      source: Wikipedia・NBC
+      highlight_row: 1
+    image: assets/images/20261023_ibrahimovic_legend/p_lag_w.jpg
+  quotes_from:
+  - https://www.nbcnewyork.com/news/sports/ac-milan-star-zlatan-ibrahimovic-officially-retires-from-soccer/
+  sources:
+  - https://en.wikipedia.org/wiki/Zlatan_Ibrahimovi%C4%87
+  - https://www.nbcnewyork.com/news/sports/ac-milan-star-zlatan-ibrahimovic-officially-retires-from-soccer/
+  - https://news.stv.tv/sport/zlatan-ibrahimovic-announces-retirement-from-football-aged-41
+- id: view
+  heading: イブラヒモビッチの得点のペースは、いつ上がったのか
+  tier: 背景
+  viewpoint: true
+  telop: 30歳を過ぎて、0.44点から0.75点へ
+  card:
+    type: table
+    title: イブラヒモビッチ 1試合あたりの得点
+    columns:
+    - 所属
+    - 試合
+    - 得点
+    - 1試合あたり
+    rows: &id007
+    - - LAギャラクシー
+      - '58'
+      - '53'
+      - '0.91'
+    - - パリSG
+      - '180'
+      - '156'
+      - '0.87'
+    - - ミラン
+      - '163'
+      - '93'
+      - '0.57'
+    - - スウェーデン代表
+      - '122'
+      - '62'
+      - '0.51'
+    - - アヤックス
+      - '110'
+      - '48'
+      - '0.44'
+    - - ユベントス
+      - '92'
+      - '26'
+      - '0.28'
+    source: Wikipedia
+    highlight_row: 0
+  say:
+  - text: 最後に、1試合あたりの得点で、見てみます。
+    card:
+      type: table
+      title: イブラヒモビッチ 1試合あたりの得点
+      columns:
+      - 所属
+      - 試合
+      - 得点
+      - 1試合あたり
+      rows: *id007
+      source: Wikipedia
+      highlight_row: 0
+    image: assets/images/20261023_ibrahimovic_legend/p_swe3_w.jpg
+  - text: いちばん高いのは、ギャラクシー。58試合で53点、0.91点です。
+    emph: true
+    mark:
+      kind: circle
+      row: 0
+      col: 3
+    card:
+      type: table
+      title: イブラヒモビッチ 1試合あたりの得点
+      columns:
+      - 所属
+      - 試合
+      - 得点
+      - 1試合あたり
+      rows: *id007
+      source: Wikipedia
+      highlight_row: 0
+  - text: 次が、パリ・サンジェルマン。180試合で、156点。0.87点。
+    card:
+      type: table
+      title: イブラヒモビッチ 1試合あたりの得点
+      columns:
+      - 所属
+      - 試合
+      - 得点
+      - 1試合あたり
+      rows: *id007
+      source: Wikipedia
+      highlight_row: 1
+    image: assets/images/20261023_ibrahimovic_legend/p_psg_w.jpg
+  - text: いちばん低いのは、ユベントス。92試合で、26点。0.28点でした。
+    card:
+      type: table
+      title: イブラヒモビッチ 1試合あたりの得点
+      columns:
+      - 所属
+      - 試合
+      - 得点
+      - 1試合あたり
+      rows: *id007
+      source: Wikipedia
+      highlight_row: 5
+  - text: ユベントスは、22歳から24歳のクラブ。ギャラクシーは、36歳から38歳です。
+    card:
+      type: table
+      title: イブラヒモビッチ 1試合あたりの得点
+      columns:
+      - 所属
+      - 試合
+      - 得点
+      - 1試合あたり
+      rows: *id007
+      source: Wikipedia
+      highlight_row: 5
+    image: assets/images/20261023_ibrahimovic_legend/p_psg_w.jpg
+  - text: 2010年までの5クラブと、2012年からの4クラブで、まとめます。
+    card: none
+  - text: 2010年までの、マルメからバルセロナは、412試合で、180点。0.44点。
+    card: &id008
+      type: table
+      title: 1試合あたりの得点（まとめ）
+      columns:
+      - 期間
+      - 試合
+      - 得点
+      - 1試合あたり
+      rows:
+      - - 〜2010年の5クラブ
+        - '412'
+        - '180'
+        - '0.44'
+      - - 2012年〜の4クラブ
+        - '369'
+        - '275'
+        - '0.75'
+      source: Wikipedia
+      highlight_row: 1
+    image: assets/images/20261023_ibrahimovic_legend/p_mu_w.jpg
+  - text: 2012年からの、パリ・サンジェルマン以降は、369試合で、275点。0.75点。
+    card: *id008
+  - text: 間のミランの1度目は、入れていません。
+    card: none
+    image: assets/images/20261023_ibrahimovic_legend/p_mu_w.jpg
+  - text: 30歳を過ぎてから、得点のペースは、約1.7倍になりました。
+    emph: true
+    card: *id008
+  - text: リーグの違いはあります。それでも、ペースが落ちた、という数字ではありません。
+    card: none
+    image: assets/images/20261023_ibrahimovic_legend/p_mu_w.jpg
+  - text: 年を重ねて、点を増やした。それが、イブラヒモビッチでした。
+    card: none
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Zlatan_Ibrahimovi%C4%87

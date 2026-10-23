@@ -1,0 +1,381 @@
+# 取材メモ（10/23 金、シリーズ「比べる」、key: compare_598577_503743）。フロリアン・ヴィルツ（リバプール・23歳）×モーガン・ロジャーズ（チェルシー・24歳）。どちらも攻撃的MF。
+# **FotMob・DataMB は使っていない**。数字は Transfermarkt（2026-10-22 取得。控え: research/raw/20261023_wirtz_tm.json・20261023_rogers_tm.json）。
+#   Transfermarkt 番号：ヴィルツ 598577・ロジャーズ 503743。API（tmapi-alpha）を番号ごとに（プロフィール・市場価値の推移・季ごとの大会別成績・試合ごとの記録）3秒あけて取得。
+#   クロスチェック：英語版 Wikipedia の Career statistics（2026-10-22 取得。控え: research/raw/20261023_wirtz_wiki.txt・20261023_rogers_wiki.txt）。
+#   **クラブの試合数・得点は Transfermarkt と Wikipedia が一致**：ヴィルツ 23/24 49試合18得点・24/25 45試合16得点・25/26 49試合7得点・26/27 10試合1得点／
+#   ロジャーズ 24/25 54試合14得点・25/26 55試合14得点・26/27 9試合4得点（23/24 はミドルズブラ33試合7得点＋ヴィラ16試合3得点＝49試合10得点で TM と一致）。アシストと出場時間は Transfermarkt だけ。
+# **選んだ理由**：直近の比べ（10/2エムバペ×ハーランド・10/9ベリンガム×ムシアラ・10/14バレバ×カマラ・10/16エムバペ×ヴィニシウス・10/17ペドリ×ヴィティーニャ・10/21ライス×ネヴェス・10/22ヤマル×サカ・ランキング）に
+#   ヴィルツ・ロジャーズの組み合わせは無い（posted.json・scripts/*compare*・covered.yaml を確認）。2人とも players_202610 の31人に入る（選定時の市場価値 ヴィルツ1億・ロジャーズ1.1億。
+#   Transfermarkt の最新は 0.85億・1.2億）。同じ位置（攻撃的MF）で、**昨季末にともに23歳**（2003-05-03生・2002-07-26生）、ともにプレミアで昨季を過ごした。
+#   市場価値が**2026-07-22 に逆転**した（ヴィルツ1億・ロジャーズ1.1億）という数字の動きが軸になる。
+# **重なりの確認（軸を重ねない）**：ヴィルツの選手紹介（10/18 scripts/20261018_wirtz_intro.md）・ロジャーズの選手紹介（10/19 scripts/20261019_rogers_intro.md）が使った軸＝経歴・移籍・人物・個別の試合。
+#   **この回の軸**：①市場価値が入れ替わった日。②同じ年齢（昨季末23歳）の全公式戦とプレミアのリーグ戦、同じ物差し（得点＋アシストの90分あたり）。③シーズンごとの推移。④年齢ごとの市場価値の最高値。
+#   使っていない素材：移籍金（報道ごとに額と通貨が違う）・身長（TM はヴィルツ1.77m・Wikipedia は1.76m で食い違う。確かめられない）・負傷・私生活・代表の数字・パーセンタイル。
+#   日本との接点：確かめられた縁が無いので入れない（無理に押し込まない）。
+# **スタッツの条件（足切り）**：クラブのトップチームの全公式戦（代表・育成年代は混ぜない）。
+#   昨季25/26：ヴィルツ 49試合3504分／ロジャーズ 55試合4564分（2人とも900分超）。プレミアのリーグ戦だけ：33試合2390分／37試合3285分。
+#   今季26/27（ヴィルツは10/20 CL まで・ロジャーズは10/17 プレミアまで）：ヴィルツ 10試合785分／ロジャーズ 9試合726分（**450分は超えるが900分に届かない → 「いまの時点」と言う**）。
+#   大会が違う（ヴィルツ＝プレミア・CL・FAカップ・コミュニティ・シールド／ロジャーズ＝ヴィラでプレミア・ヨーロッパリーグ・FAカップ・リーグ杯）一言を入れる。
+#   ヴィルツの25/26はリバプールでの1年目（24/25はレバークーゼン。TM のクラブ番号 15→31）。リーグが違う季をそのまま並べる点は、台本の見立てで言う。
+# **使った数と自分で割った値**（クラブの試合だけ。TM の大会別を足した。90分あたり＝(得点＋アシスト)×90÷出場分）
+#   25/26 ヴィルツ＝GB1 33試合2390分5得点4アシスト＋CL 11試合840分1得点4アシスト＋FAカップ 4試合190分1得点1アシスト＋コミュニティ・シールド 1試合84分0得点1アシスト＝49試合・3504分・7得点・10アシスト（計17→17×90÷3504＝0.44）。206分に1回＝3504÷17。
+#   25/26 ロジャーズ＝GB1 37試合3285分10得点7アシスト＋EL 15試合1089分3得点5アシスト＋FAカップ 2試合167分1得点0アシスト＋リーグ杯 1試合23分＝55試合・4564分・14得点・12アシスト（計26→26×90÷4564＝0.51）。176分に1回＝4564÷26。
+#   プレミアのリーグ戦のみ 25/26：ヴィルツ 9×90÷2390＝0.34／ロジャーズ 17×90÷3285＝0.47。
+#   季ごと（得点＋アシスト90分あたり）：ヴィルツ 23/24 38×90÷3475＝0.98・24/25 31×90÷3391＝0.82・25/26 0.44・26/27 4×90÷785＝0.46（10試合・1得点3アシスト）／
+#     ロジャーズ 23/24 20×90÷2822＝0.64（ミドルズブラ＋ヴィラ。49試合）・24/25 30×90÷4496＝0.60・25/26 0.51・26/27 8×90÷726＝0.99（9試合・4得点4アシスト）。0.99÷0.46＝2.2倍。
+#   26/27 内訳：ヴィルツ＝プレミア7試合560分0得点2アシスト＋CL 3試合225分1得点1アシスト（リーグ杯9/15は登録外）／ロジャーズ＝プレミア7試合613分4得点1アシスト＋リーグ杯2試合113分0得点3アシスト。
+#   年齢（シーズン終わり6月末）：2人とも 25/26 の終わりに23歳（ロジャーズは2026-07-26 に24歳）。
+# **市場価値**（Transfermarkt の推移。百万€）：ヴィルツ 21歳140（2024-12-20）・22歳140（2025-06-05）・130（2025-10-17）・110（12-09）・23歳100（2026-06-03）・85（2026-10-07）／
+#   ロジャーズ 21歳15・22歳55（2025-05-30）・23歳65（2025-10-17）・70（12-09）・80（2026-03-09）・90（2026-06-03）・110（2026-07-22）・24歳120（2026-10-07）。
+#   **逆転の日＝2026-07-22**（ロジャーズ110>ヴィルツ100。6/3 は 90<100）。2025-10-17 は 130 と 65（ちょうど倍）。いま 85 と 120（1.4倍あまり）。
+# 日程（ESPN、2026-10-22 時点）：チェルシー対トッテナム（プレミア）2026-10-24 16:30 UTC＝日本時間25日 1:30。リバプール対ブライトン（プレミア）2026-10-25 14:00 UTC＝日本時間25日 23:00。
+# 写真：すべて Wikimedia Commons。ヴィルツ＝W杯ドイツ対エクアドル 2026-06-25（Bryan Berlin・CC BY-SA 4.0 の2枚）＋リバプールのバス到着 2026-01-04（Timmy96・CC0）。
+#   ロジャーズ＝W杯イングランド対パナマ・ガーナ 2026-06（Bryan Berlin・CC BY-SA 4.0 の3枚）。背番号（ヴィルツ17・ロジャーズ17）と被写体名の記載で本人と判断し、目で見て確認。
+slot: other_1
+date: "2026年10月23日"
+format: news
+series: 比べる
+people:
+  - フロリアン・ヴィルツ
+  - モーガン・ロジャーズ
+  - リバプール
+  - チェルシー
+
+theme:
+  end_bg: assets/images/20261023_compare_wirtz_rogers/w_ger04/01_w.jpg
+  id: compare_598577_503743
+  league: england
+  kind: other
+  topic: フロリアン・ヴィルツとモーガン・ロジャーズ
+  prefix: ""
+  title: ヴィルツとロジャーズ、同じ23歳で終えた昨季。市場価値は、なぜ入れ替わったのか
+  hook: ""
+  question: 同じ攻撃的MFの23歳と24歳は、同じ物差しで並べると市場価値の入れ替わりに何が見えるのか
+  takeaway: 市場価値が入れ替わったのは2026年7月22日の更新。昨季の90分あたりの得点＋アシストはヴィルツ0.44・ロジャーズ0.51、今季はいまの時点で0.46と0.99
+  league_name: イングランド
+  opening_image: assets/images/20261023_compare_wirtz_rogers/w_ger04/01_r.jpg
+
+short_title: ヴィルツとロジャーズ、市場価値が入れ替わった日
+
+thumbnail:
+  photo: assets/images/20261023_compare_wirtz_rogers/w_ger04/01_w.jpg
+  photos:
+    - assets/images/20261023_compare_wirtz_rogers/w_ger04/01_w.jpg
+    - assets/images/20261023_compare_wirtz_rogers/r_eng06/01_w.jpg
+  short_photo: assets/images/20261023_compare_wirtz_rogers/w_ger04/01_v.jpg
+  face_link: VS
+  layout:
+    layout: classic
+    names: [ヴィルツ, ロジャーズ]
+    name_colors: ["#c8102e", "#034694"]
+  line1: ヴィルツとロジャーズ
+  line2: 市場価値、いつ逆転した？
+  tags: [フロリアン・ヴィルツ, モーガン・ロジャーズ, リバプール, チェルシー]
+
+answer: 入れ替わったのは2026年7月22日。昨季は0.44と0.51、今季はいまの時点で0.46と0.99
+watch: 毎日、数字でサッカーを読み解きます
+
+sections:
+  - id: hook
+    heading: ヴィルツとロジャーズ、市場価値が入れ替わったのはいつか
+    tier: 報道
+    telop: 市場価値の入れ替わり
+    narrator: 解説
+    card: &hookcard
+      type: stats
+      title: 市場価値（Transfermarkt の推定）
+      items:
+        - ["1.3億", "€", ヴィルツ、2025年10月]
+        - ["6500万", "€", ロジャーズ、同じ日]
+        - ["7/22", "", 入れ替わった日]
+      focus: 0
+    say:
+      - text: 2025年10月17日。ヴィルツの市場価値は、1億3000万ユーロ。
+        image: assets/images/20261023_compare_wirtz_rogers/w_ger04/01_w.jpg
+        card: none
+      - text: 同じ日のロジャーズは、6500万ユーロ。
+        image: assets/images/20261023_compare_wirtz_rogers/r_eng06/01_r.jpg
+        card: {<<: *hookcard, focus: 1}
+      - text: 2026年7月22日の更新で、ロジャーズが上に出ました。
+        emph: true
+        image: assets/images/20261023_compare_wirtz_rogers/w_ger05/01_r.jpg
+        card: {<<: *hookcard, focus: 2}
+      - text: いまは、ヴィルツが8500万、ロジャーズが1億2000万ユーロ。
+        image: assets/images/20261023_compare_wirtz_rogers/r_eng07/01_w.jpg
+        card: none
+      - text: 同じ攻撃的MFの2人。その間に、数字では何があったのか。
+        image: assets/images/20261023_compare_wirtz_rogers/w_liv07/01_w.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/florian-wirtz/leistungsdaten/spieler/598577
+      - https://www.transfermarkt.com/morgan-rogers/leistungsdaten/spieler/503743
+      - https://www.transfermarkt.com/florian-wirtz/marktwertverlauf/spieler/598577
+      - https://www.transfermarkt.com/morgan-rogers/marktwertverlauf/spieler/503743
+
+  - id: data
+    heading: ヴィルツとロジャーズは、何歳でいくらの選手か
+    tier: 報道
+    telop: リバプールとチェルシーの攻撃的MF
+    narrator: 解説
+    card: &datacard
+      type: duel
+      left: {name: ヴィルツ, club: リバプール, photo: assets/images/20261023_compare_wirtz_rogers/w_ger04/01_sq.jpg, color: "#c8102e"}
+      right: {name: ロジャーズ, club: チェルシー, photo: assets/images/20261023_compare_wirtz_rogers/r_eng06/01_sq.jpg, color: "#034694"}
+      rows:
+        - [年齢, 23歳, 24歳]
+        - [所属, リバプール, チェルシー]
+        - [代表, ドイツ, イングランド]
+        - [位置, 攻撃的MF, 攻撃的MF]
+        - [利き足, 右, 右]
+        - [市場価値, 0.85億€, 1.2億€]
+      bars: [市場価値]
+      note: 市場価値は Transfermarkt の推定（2026年10月7日更新）
+    say:
+      - text: ヴィルツは23歳。リバプールの、ドイツ代表です。
+        image: assets/images/20261023_compare_wirtz_rogers/w_ger04/01_r.jpg
+        card: {<<: *datacard, highlight_row: 年齢}
+      - text: ロジャーズは24歳。チェルシーの、イングランド代表。
+        image: assets/images/20261023_compare_wirtz_rogers/r_eng06/01_r.jpg
+        card: {<<: *datacard, highlight_row: 年齢}
+      - text: ポジションは、2人とも攻撃的MF。利き足も、右です。
+        image: assets/images/20261023_compare_wirtz_rogers/w_ger05/01_r.jpg
+        card: {<<: *datacard, highlight_row: 位置}
+      - text: 市場価値は、推定の移籍額。
+        image: assets/images/20261023_compare_wirtz_rogers/r_eng07/01_r.jpg
+        card: {<<: *datacard, highlight_row: 市場価値}
+      - text: いまは、ロジャーズの値が上。
+        emph: true
+        card: {<<: *datacard, highlight_row: 市場価値}
+    sources:
+      - https://www.transfermarkt.com/florian-wirtz/profil/spieler/598577
+      - https://www.transfermarkt.com/morgan-rogers/profil/spieler/503743
+
+  - id: season
+    heading: 昨季の全公式戦、90分あたりでは何が違うのか
+    tier: 報道
+    main: true
+    telop: 昨季の全公式戦
+    narrator: 解説
+    card: &seasoncard
+      type: duel
+      left: {name: ヴィルツ, club: リバプール, photo: assets/images/20261023_compare_wirtz_rogers/w_ger04/01_sq.jpg, color: "#c8102e"}
+      right: {name: ロジャーズ, club: チェルシー, photo: assets/images/20261023_compare_wirtz_rogers/r_eng06/01_sq.jpg, color: "#034694"}
+      rows:
+        - [試合, "49", "55"]
+        - [出場時間, 3504分, 4564分]
+        - [得点, "7", "14"]
+        - [アシスト, "10", "12"]
+        - [得点＋アシスト（90分あたり）, "0.44", "0.51"]
+        - [点に絡む間隔, 206分に1回, 176分に1回]
+      bars: [出場時間, 得点, アシスト, 得点＋アシスト（90分あたり）]
+      note: 昨季25/26のクラブの全公式戦。大会はリバプールがプレミア・CL・FAカップ・コミュニティ・シールド、アストン・ヴィラがプレミア・ヨーロッパリーグ・FAカップ・リーグ杯。90分あたりは自分で割った値
+    say:
+      - text: ヴィルツとロジャーズの市場価値は、7月に入れ替わりました。
+        short_only: true
+        image: assets/images/20261023_compare_wirtz_rogers/w_ger04/01_w.jpg
+        card: none
+      - text: 昨季25/26は、2人とも23歳で終えました。対象は、クラブでの全公式戦です。
+        image: assets/images/20261023_compare_wirtz_rogers/w_liv07/01_r.jpg
+        card: *seasoncard
+      - text: 出た大会は異なります。リバプールと、アストン・ヴィラ。
+        image: assets/images/20261023_compare_wirtz_rogers/r_eng08/01_w.jpg
+        card: {<<: *seasoncard, highlight_row: 試合}
+      - text: ヴィルツは49試合で3504分。ロジャーズは55試合で4564分です。
+        image: assets/images/20261023_compare_wirtz_rogers/w_ger05/01_r.jpg
+        card: {<<: *seasoncard, highlight_row: 出場時間}
+      - text: 900分を超えた出場時間で、比較には足ります。
+        card: {<<: *seasoncard, highlight_row: 出場時間}
+      - text: 得点は、ヴィルツが7、ロジャーズが14。アシストは、10と12。
+        image: assets/images/20261023_compare_wirtz_rogers/r_eng07/01_r.jpg
+        card: {<<: *seasoncard, highlight_row: アシスト}
+      - text: 得点とアシストを足して90分に直すと、0.44と0.51。
+        emph: true
+        image: assets/images/20261023_compare_wirtz_rogers/w_ger04/01_r.jpg
+        card: {<<: *seasoncard, highlight_row: 得点＋アシスト（90分あたり）}
+      - text: ヴィルツは206分に1回、得点かアシスト。ロジャーズは176分に1回です。
+        image: assets/images/20261023_compare_wirtz_rogers/r_eng06/01_w.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/florian-wirtz/leistungsdaten/spieler/598577
+      - https://www.transfermarkt.com/morgan-rogers/leistungsdaten/spieler/503743
+      - https://en.wikipedia.org/wiki/Florian_Wirtz
+      - https://en.wikipedia.org/wiki/Morgan_Rogers
+
+  - id: league
+    heading: 同じ大会、プレミアのリーグ戦だけで並べるとどうか
+    tier: 報道
+    telop: 昨季のプレミアのリーグ戦
+    narrator: 解説
+    card: &leaguecard
+      type: duel
+      left: {name: ヴィルツ, club: リバプール, photo: assets/images/20261023_compare_wirtz_rogers/w_ger04/01_sq.jpg, color: "#c8102e"}
+      right: {name: ロジャーズ, club: チェルシー, photo: assets/images/20261023_compare_wirtz_rogers/r_eng06/01_sq.jpg, color: "#034694"}
+      rows:
+        - [試合, "33", "37"]
+        - [出場時間, 2390分, 3285分]
+        - [得点, "5", "10"]
+        - [アシスト, "4", "7"]
+        - [得点＋アシスト（90分あたり）, "0.34", "0.47"]
+      bars: [出場時間, 得点, アシスト, 得点＋アシスト（90分あたり）]
+      note: 昨季25/26のプレミアリーグのリーグ戦だけ。ロジャーズは当時アストン・ヴィラ。90分あたりは自分で割った値
+    say:
+      - text: 大会をそろえます。昨季の、プレミアリーグのリーグ戦だけです。
+        image: assets/images/20261023_compare_wirtz_rogers/w_ger05/01_r.jpg
+        card: *leaguecard
+      - text: ヴィルツは33試合で2390分。ロジャーズは37試合で3285分。
+        image: assets/images/20261023_compare_wirtz_rogers/r_eng08/01_w.jpg
+        card: {<<: *leaguecard, highlight_row: 出場時間}
+      - text: 得点は、5と10。アシストは、4と7です。
+        card: {<<: *leaguecard, highlight_row: アシスト}
+      - text: 90分あたりは、ヴィルツが0.34、ロジャーズが0.47。
+        emph: true
+        image: assets/images/20261023_compare_wirtz_rogers/w_liv07/01_r.jpg
+        card: {<<: *leaguecard, highlight_row: 得点＋アシスト（90分あたり）}
+      - text: ヴィルツは、昨季がリバプールでの1年目。その前は、ドイツのレバークーゼンでした。
+        image: assets/images/20261023_compare_wirtz_rogers/w_ger04/01_w.jpg
+        card: none
+      - text: ロジャーズは、昨季もアストン・ヴィラのプレミアで、3季目でした。
+        image: assets/images/20261023_compare_wirtz_rogers/r_eng06/01_w.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/florian-wirtz/leistungsdaten/spieler/598577
+      - https://www.transfermarkt.com/morgan-rogers/leistungsdaten/spieler/503743
+      - https://en.wikipedia.org/wiki/Florian_Wirtz
+      - https://en.wikipedia.org/wiki/Morgan_Rogers
+
+  - id: trend
+    heading: 2人の数字は、いつ入れ替わったのか
+    tier: 報道
+    telop: シーズンごとの90分あたり
+    narrator: 解説
+    card: &trendcard
+      type: line
+      title: 得点＋アシスト、90分あたり（クラブの全公式戦）
+      x: [23/24, 24/25, 25/26, 26/27]
+      series:
+        - [ヴィルツ, [0.98, 0.82, 0.44, 0.46]]
+        - [ロジャーズ, [0.64, 0.60, 0.51, 0.99]]
+      focus: ロジャーズ
+      note: 26/27は10月20日までの数字（ヴィルツ785分・ロジャーズ726分）。ロジャーズの23/24はチャンピオンシップとヴィラの合計
+    say:
+      - text: ここからは、季の移り変わりで追います。
+        image: assets/images/20261023_compare_wirtz_rogers/r_eng07/01_r.jpg
+        card: *trendcard
+      - text: 23/24。ヴィルツが0.98、ロジャーズが0.64でした。
+        image: assets/images/20261023_compare_wirtz_rogers/w_ger05/01_r.jpg
+        card: {<<: *trendcard, highlight: 23/24}
+      - text: 24/25は、0.82と0.60。ヴィルツが上です。
+        image: assets/images/20261023_compare_wirtz_rogers/r_eng08/01_w.jpg
+        card: {<<: *trendcard, highlight: 24/25}
+      - text: 25/26は、0.44と0.51。ここで、上下が入れ替わりました。
+        emph: true
+        image: assets/images/20261023_compare_wirtz_rogers/w_ger04/01_r.jpg
+        card: {<<: *trendcard, highlight: 25/26}
+      - text: 今季は、ここまで。ヴィルツが0.46、ロジャーズが0.99です。
+        image: assets/images/20261023_compare_wirtz_rogers/r_eng06/01_r.jpg
+        card: {<<: *trendcard, highlight: 26/27}
+      - text: ただ、今季はまだ試合が少なく、いまの時点の数字です。
+        image: assets/images/20261023_compare_wirtz_rogers/w_liv07/01_r.jpg
+        card: {<<: *trendcard, highlight: 26/27}
+    sources:
+      - https://www.transfermarkt.com/florian-wirtz/leistungsdaten/spieler/598577
+      - https://www.transfermarkt.com/morgan-rogers/leistungsdaten/spieler/503743
+      - https://en.wikipedia.org/wiki/Florian_Wirtz
+      - https://en.wikipedia.org/wiki/Morgan_Rogers
+
+  - id: value
+    heading: 市場価値は、同じ年齢で並べると、どれだけ違うのか
+    tier: 報道
+    telop: 同じ年齢での市場価値
+    narrator: 解説
+    card: &valuecard
+      type: duel
+      left: {name: ヴィルツ, club: リバプール, photo: assets/images/20261023_compare_wirtz_rogers/w_ger04/01_sq.jpg, color: "#c8102e"}
+      right: {name: ロジャーズ, club: チェルシー, photo: assets/images/20261023_compare_wirtz_rogers/r_eng06/01_sq.jpg, color: "#034694"}
+      rows:
+        - [21歳の最高値, 1.4億€, 1500万€]
+        - [22歳の最高値, 1.4億€, 5500万€]
+        - [23歳の最高値, 1億€, 1.1億€]
+      bars: [21歳の最高値, 22歳の最高値, 23歳の最高値]
+      note: Transfermarkt の市場価値の推移。年齢ごとの最高値。ヴィルツの23歳は、いまの時点（2026年10月7日は8500万€）
+    say:
+      - text: 最後に市場価値を、21歳から23歳の最高値で並べます。
+        image: assets/images/20261023_compare_wirtz_rogers/w_ger05/01_r.jpg
+        card: *valuecard
+      - text: 21歳は、ヴィルツが1億4000万ユーロ。ロジャーズが1500万ユーロ。
+        image: assets/images/20261023_compare_wirtz_rogers/r_eng07/01_r.jpg
+        card: {<<: *valuecard, highlight_row: 21歳の最高値}
+      - text: 22歳は、ヴィルツが1億4000万、ロジャーズが5500万。
+        image: assets/images/20261023_compare_wirtz_rogers/w_liv07/01_r.jpg
+        card: {<<: *valuecard, highlight_row: 22歳の最高値}
+      - text: 23歳では、ヴィルツが1億、ロジャーズが1億1000万ユーロ。
+        emph: true
+        image: assets/images/20261023_compare_wirtz_rogers/r_eng08/01_w.jpg
+        card: {<<: *valuecard, highlight_row: 23歳の最高値}
+      - text: ヴィルツの23歳は、いまの時点。いまの値は、そこから下がっています。
+        image: assets/images/20261023_compare_wirtz_rogers/w_ger04/01_w.jpg
+        card: none
+      - text: ロジャーズの値は、2025年6月から2026年10月で、2倍以上になりました。
+        image: assets/images/20261023_compare_wirtz_rogers/r_eng06/01_w.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/florian-wirtz/leistungsdaten/spieler/598577
+      - https://www.transfermarkt.com/morgan-rogers/leistungsdaten/spieler/503743
+      - https://www.transfermarkt.com/florian-wirtz/marktwertverlauf/spieler/598577
+      - https://www.transfermarkt.com/morgan-rogers/marktwertverlauf/spieler/503743
+
+  - id: view
+    heading: 見立て・入れ替わりは、昨季の数字か、今季の出だしか
+    tier: 背景
+    viewpoint: true
+    narrator: 解説
+    telop: 数字の違いが示すもの
+    card: &viewcard
+      type: duel
+      left: {name: ヴィルツ, club: リバプール, photo: assets/images/20261023_compare_wirtz_rogers/w_ger04/01_sq.jpg, color: "#c8102e"}
+      right: {name: ロジャーズ, club: チェルシー, photo: assets/images/20261023_compare_wirtz_rogers/r_eng06/01_sq.jpg, color: "#034694"}
+      rows:
+        - [昨季の90分あたり, "0.44", "0.51"]
+        - [昨季プレミアだけ, "0.34", "0.47"]
+        - [今季の90分あたり, "0.46", "0.99"]
+        - [市場価値, 0.85億€, 1.2億€]
+      bars: [昨季の90分あたり, 昨季プレミアだけ, 今季の90分あたり, 市場価値]
+      note: 90分あたりは得点＋アシスト。クラブの公式戦。今季は10月20日まで（ヴィルツ785分・ロジャーズ726分）
+    say:
+      - text: 見立てです。昨季は全公式戦で、ヴィルツが0.44、ロジャーズが0.51。
+        mark: {kind: circle, row: 0}
+        image: assets/images/20261023_compare_wirtz_rogers/r_eng07/01_r.jpg
+        card: {<<: *viewcard, highlight_row: 昨季の90分あたり}
+      - text: プレミアのリーグ戦だけで見ても、順は同じでした。
+        image: assets/images/20261023_compare_wirtz_rogers/w_ger05/01_r.jpg
+        card: {<<: *viewcard, highlight_row: 昨季プレミアだけ}
+      - text: 今季は、0.46と0.99。ロジャーズは、ヴィルツの2倍あまりです。
+        emph: true
+        image: assets/images/20261023_compare_wirtz_rogers/r_eng08/01_w.jpg
+        card: {<<: *viewcard, highlight_row: 今季の90分あたり}
+      - text: 市場価値も、同じ向きに動きました。ヴィルツは下がり、ロジャーズは上がっています。
+        image: assets/images/20261023_compare_wirtz_rogers/w_liv07/01_r.jpg
+        card: {<<: *viewcard, highlight_row: 市場価値}
+      - text: ただ、ヴィルツの昨季は、リバプールでの1年目。リーグも国も変わった季でした。
+        image: assets/images/20261023_compare_wirtz_rogers/w_ger04/01_w.jpg
+        card: none
+      - text: 今季の数字も、まだ短い時間のものです。
+        card: none
+      - text: 入れ替わりと重なっているのは、昨季の数字と今季の出だし、この2点です。
+        image: assets/images/20261023_compare_wirtz_rogers/r_eng06/01_w.jpg
+        card: none
+      - text: 次は、チェルシー対トッテナム。日本時間25日の午前1時半。
+        card: none
+      - text: リバプールは、日本時間25日の午後11時、ブライトン戦。
+        image: assets/images/20261023_compare_wirtz_rogers/w_ger05/01_w.jpg
+        card: none
+      - text: 0.46と0.99という今季の数字の動きを、追っていきます。
+        image: assets/images/20261023_compare_wirtz_rogers/r_eng07/01_w.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/florian-wirtz/leistungsdaten/spieler/598577
+      - https://www.transfermarkt.com/morgan-rogers/leistungsdaten/spieler/503743
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20261024
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20261025
+      - https://en.wikipedia.org/wiki/Florian_Wirtz
+      - https://en.wikipedia.org/wiki/Morgan_Rogers

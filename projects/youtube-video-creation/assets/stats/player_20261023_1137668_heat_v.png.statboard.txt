@@ -1,0 +1,4 @@
+title: モイセス・カイセドの今季のヒートマップ
+unit: touches
+points=156
+source: FotMob

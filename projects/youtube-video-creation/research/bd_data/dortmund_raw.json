@@ -1,0 +1,743 @@
+{
+ "club_title": "Borussia_Dortmund",
+ "season_title": "2026–27_Borussia_Dortmund_season",
+ "squad": [
+  {
+   "no": "1",
+   "pos": "GK",
+   "nat": "SUI",
+   "name": "Gregor Kobel",
+   "page": "Gregor Kobel",
+   "dob": "1997-12-06",
+   "captain": false,
+   "loan": false,
+   "team": "Switzerland",
+   "caps": 30,
+   "club_caps": 155,
+   "club_goals": 0
+  },
+  {
+   "no": "3",
+   "pos": "DF",
+   "nat": "GER",
+   "name": "Waldemar Anton",
+   "page": "Waldemar Anton",
+   "dob": "1996-07-20",
+   "captain": false,
+   "loan": false,
+   "team": "Germany",
+   "caps": 17,
+   "club_caps": 64,
+   "club_goals": 4
+  },
+  {
+   "no": "4",
+   "pos": "DF",
+   "nat": "GER",
+   "name": "Nico Schlotterbeck",
+   "page": "Nico Schlotterbeck",
+   "dob": "1999-12-01",
+   "captain": false,
+   "loan": false,
+   "team": "Germany",
+   "caps": 30,
+   "club_caps": 116,
+   "club_goals": 12
+  },
+  {
+   "no": "5",
+   "pos": "DF",
+   "nat": "ALG",
+   "name": "Ramy Bensebaini",
+   "page": "Ramy Bensebaini",
+   "dob": "1995-04-16",
+   "captain": false,
+   "loan": false,
+   "team": "Algeria",
+   "caps": 89,
+   "club_caps": 70,
+   "club_goals": 6
+  },
+  {
+   "no": "7",
+   "pos": "MF",
+   "nat": "ENG",
+   "name": "Jobe Bellingham",
+   "page": "Jobe Bellingham",
+   "dob": "2005-09-23",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 37,
+   "club_goals": 0
+  },
+  {
+   "no": "8",
+   "pos": "MF",
+   "nat": "GER",
+   "name": "Felix Nmecha",
+   "page": "Felix Nmecha",
+   "dob": "2000-10-10",
+   "captain": false,
+   "loan": false,
+   "team": "Germany",
+   "caps": 14,
+   "club_caps": 81,
+   "club_goals": 9
+  },
+  {
+   "no": "9",
+   "pos": "FW",
+   "nat": "GUI",
+   "name": "Serhou Guirassy",
+   "page": "Serhou Guirassy",
+   "dob": "1996-03-12",
+   "captain": false,
+   "loan": false,
+   "team": "Guinea",
+   "caps": 30,
+   "club_caps": 69,
+   "club_goals": 40
+  },
+  {
+   "no": "14",
+   "pos": "MF",
+   "nat": "GER",
+   "name": "Maximilian Beier",
+   "page": "Maximilian Beier",
+   "dob": "2002-10-17",
+   "captain": false,
+   "loan": false,
+   "team": "Germany",
+   "caps": 10,
+   "club_caps": 67,
+   "club_goals": 18
+  },
+  {
+   "no": "17",
+   "pos": "MF",
+   "nat": "AUT",
+   "name": "Carney Chukwuemeka",
+   "page": "Carney Chukwuemeka",
+   "dob": "2003-10-20",
+   "captain": false,
+   "loan": false,
+   "team": "Austria",
+   "caps": 9,
+   "club_caps": 39,
+   "club_goals": 3
+  },
+  {
+   "no": "18",
+   "pos": "MF",
+   "nat": "ENG",
+   "name": "Ethan Nwaneri",
+   "page": "Ethan Nwaneri",
+   "dob": "2007-03-21",
+   "captain": false,
+   "loan": true,
+   "team": "",
+   "caps": null,
+   "club_caps": 5,
+   "club_goals": 0
+  },
+  {
+   "no": "19",
+   "pos": "MF",
+   "nat": "GRE",
+   "name": "Konstantinos Karetsas",
+   "page": "Konstantinos Karetsas",
+   "dob": "2007-11-19",
+   "captain": false,
+   "loan": false,
+   "team": "Greece",
+   "caps": 14,
+   "club_caps": 4,
+   "club_goals": 0
+  },
+  {
+   "no": "20",
+   "pos": "MF",
+   "nat": "AUT",
+   "name": "Marcel Sabitzer",
+   "page": "Marcel Sabitzer",
+   "dob": "1994-03-17",
+   "captain": false,
+   "loan": false,
+   "team": "Austria",
+   "caps": null,
+   "club_caps": 81,
+   "club_goals": 6
+  },
+  {
+   "no": "21",
+   "pos": "FW",
+   "nat": "POR",
+   "name": "Fábio Silva",
+   "page": "Fábio Silva (footballer, born 2002)",
+   "dob": "2002-07-19",
+   "captain": false,
+   "loan": false,
+   "team": "Portugal",
+   "caps": 1,
+   "club_caps": 32,
+   "club_goals": 4
+  },
+  {
+   "no": "22",
+   "pos": "DF",
+   "nat": "FRA",
+   "name": "Joane Gadou",
+   "page": "Joane Gadou",
+   "dob": "2007-01-17",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 6,
+   "club_goals": 0
+  },
+  {
+   "no": "23",
+   "pos": "MF",
+   "nat": "GER",
+   "name": "Emre Can",
+   "page": "Emre Can",
+   "dob": "1994-01-12",
+   "captain": true,
+   "loan": false,
+   "team": "Germany",
+   "caps": 48,
+   "club_caps": 156,
+   "club_goals": 18
+  },
+  {
+   "no": "24",
+   "pos": "DF",
+   "nat": "SWE",
+   "name": "Daniel Svensson",
+   "page": "Daniel Svensson (footballer, born 2002)",
+   "dob": "2002-02-12",
+   "captain": false,
+   "loan": false,
+   "team": "Sweden",
+   "caps": 19,
+   "club_caps": 51,
+   "club_goals": 4
+  },
+  {
+   "no": "25",
+   "pos": "MF",
+   "nat": "NED",
+   "name": "Joey Veerman",
+   "page": "Joey Veerman",
+   "dob": "1998-11-19",
+   "captain": false,
+   "loan": false,
+   "team": "Netherlands",
+   "caps": 20,
+   "club_caps": 5,
+   "club_goals": 0
+  },
+  {
+   "no": "26",
+   "pos": "DF",
+   "nat": "NOR",
+   "name": "Julian Ryerson",
+   "page": "Julian Ryerson",
+   "dob": "1997-11-17",
+   "captain": false,
+   "loan": false,
+   "team": "Norway",
+   "caps": 50,
+   "club_caps": 103,
+   "club_goals": 7
+  },
+  {
+   "no": "28",
+   "pos": "MF",
+   "nat": "ECU",
+   "name": "Justin Lerma",
+   "page": "Justin Lerma",
+   "dob": "2008-05-05",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 0,
+   "club_goals": 0
+  },
+  {
+   "no": "30",
+   "pos": "GK",
+   "nat": "GER",
+   "name": "Patrick Drewes",
+   "page": "Patrick Drewes",
+   "dob": "1993-02-04",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 0,
+   "club_goals": 0
+  },
+  {
+   "no": "31",
+   "pos": "GK",
+   "nat": "GER",
+   "name": "Silas Ostrzinski",
+   "page": "Silas Ostrzinski",
+   "dob": "2003-11-19",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 0,
+   "club_goals": 0
+  },
+  {
+   "no": "33",
+   "pos": "GK",
+   "nat": "GER",
+   "name": "Alexander Meyer",
+   "page": "Alexander Meyer (footballer, born 1991)",
+   "dob": "1991-04-13",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 17,
+   "club_goals": 0
+  },
+  {
+   "no": "36",
+   "pos": "DF",
+   "nat": "BRA",
+   "name": "Kauã Prates",
+   "page": "Kauã Prates",
+   "dob": "2008-08-12",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 1,
+   "club_goals": 0
+  },
+  {
+   "no": "39",
+   "pos": "DF",
+   "nat": "ITA",
+   "name": "Filippo Mane",
+   "page": "Filippo Mane",
+   "dob": "2005-03-08",
+   "captain": false,
+   "loan": false,
+   "team": "Italy",
+   "caps": 2,
+   "club_caps": 6,
+   "club_goals": 0
+  },
+  {
+   "no": "40",
+   "pos": "FW",
+   "nat": "ITA",
+   "name": "Samuele Inácio",
+   "page": "Samuele Inácio",
+   "dob": "2008-04-02",
+   "captain": false,
+   "loan": false,
+   "team": "Italy",
+   "caps": 1,
+   "club_caps": 8,
+   "club_goals": 1
+  },
+  {
+   "no": "41",
+   "pos": "FW",
+   "nat": "USA",
+   "name": "Mathis Albert",
+   "page": "Mathis Albert",
+   "dob": "2009-05-21",
+   "captain": false,
+   "loan": false,
+   "team": "United States",
+   "caps": 4,
+   "club_caps": 3,
+   "club_goals": 0
+  },
+  {
+   "no": "44",
+   "pos": "MF",
+   "nat": "LUX",
+   "name": "Enzo dos Santos",
+   "page": "Enzo dos Santos",
+   "dob": "2009-01-28",
+   "captain": false,
+   "loan": false,
+   "team": "Luxembourg",
+   "caps": 8,
+   "club_caps": 0,
+   "club_goals": 0
+  },
+  {
+   "no": "45",
+   "pos": "MF",
+   "nat": "GRE",
+   "name": "Giannis Konstantelias",
+   "page": "Giannis Konstantelias",
+   "dob": "2003-03-05",
+   "captain": false,
+   "loan": false,
+   "team": "Greece",
+   "caps": 18,
+   "club_caps": 1,
+   "club_goals": 1
+  },
+  {
+   "no": "48",
+   "pos": "MF",
+   "nat": "GER",
+   "name": "Mussa Kaba",
+   "page": "Mussa Kaba",
+   "dob": "2008-11-17",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 0,
+   "club_goals": 0
+  },
+  {
+   "no": "49",
+   "pos": "DF",
+   "nat": "ITA",
+   "name": "Luca Reggiani",
+   "page": "Luca Reggiani",
+   "dob": "2008-01-09",
+   "captain": false,
+   "loan": false,
+   "team": "Italy",
+   "caps": 1,
+   "club_caps": 9,
+   "club_goals": 1
+  }
+ ],
+ "results": [
+  [
+   "29 August 2026",
+   "1",
+   "Borussia Dortmund",
+   "2–0",
+   "Hamburger SV"
+  ],
+  [
+   "5 September 2026",
+   "2",
+   "TSG Hoffenheim",
+   "2–3",
+   "Borussia Dortmund"
+  ],
+  [
+   "12 September 2026",
+   "3",
+   "Borussia Dortmund",
+   "3–0",
+   "SC Paderborn"
+  ],
+  [
+   "19 September 2026",
+   "4",
+   "VfB Stuttgart",
+   "0–1",
+   "Borussia Dortmund"
+  ],
+  [
+   "9 October 2026",
+   "5",
+   "Borussia Dortmund",
+   "2–2",
+   "Werder Bremen"
+  ],
+  [
+   "17 October 2026",
+   "6",
+   "Union Berlin",
+   "0–0",
+   "Borussia Dortmund"
+  ],
+  [
+   "24 October 2026",
+   "7",
+   "Borussia Dortmund",
+   "",
+   "Eintracht Frankfurt"
+  ],
+  [
+   "31 October 2026",
+   "8",
+   "Bayern Munich",
+   "",
+   "Borussia Dortmund"
+  ],
+  [
+   "7 November 2026",
+   "9",
+   "Borussia Dortmund",
+   "",
+   "SV Elversberg"
+  ],
+  [
+   "21 November 2026",
+   "10",
+   "Borussia Mönchengladbach",
+   "",
+   "Borussia Dortmund"
+  ],
+  [
+   "29 November 2026",
+   "11",
+   "Borussia Dortmund",
+   "",
+   "Bayer Leverkusen"
+  ],
+  [
+   "4–6 December 2026",
+   "12",
+   "Schalke 04",
+   "",
+   "Borussia Dortmund"
+  ],
+  [
+   "11–13 December 2026",
+   "13",
+   "Borussia Dortmund",
+   "",
+   "FC Augsburg"
+  ],
+  [
+   "18–20 December 2026",
+   "14",
+   "RB Leipzig",
+   "",
+   "Borussia Dortmund"
+  ],
+  [
+   "8–10 January 2027",
+   "15",
+   "Borussia Dortmund",
+   "",
+   "Mainz 05"
+  ],
+  [
+   "12–14 January 2027",
+   "16",
+   "1. FC Köln",
+   "",
+   "Borussia Dortmund"
+  ],
+  [
+   "15–17 January 2027",
+   "17",
+   "Borussia Dortmund",
+   "",
+   "SC Freiburg"
+  ],
+  [
+   "22–24 January 2027",
+   "18",
+   "Hamburger SV",
+   "",
+   "Borussia Dortmund"
+  ],
+  [
+   "29–31 January 2027",
+   "19",
+   "Borussia Dortmund",
+   "",
+   "TSG Hoffenheim"
+  ],
+  [
+   "5–7 February 2027",
+   "20",
+   "SC Paderborn",
+   "",
+   "Borussia Dortmund"
+  ],
+  [
+   "12–14 February 2027",
+   "21",
+   "Borussia Dortmund",
+   "",
+   "VfB Stuttgart"
+  ],
+  [
+   "19–21 February 2027",
+   "22",
+   "Werder Bremen",
+   "",
+   "Borussia Dortmund"
+  ],
+  [
+   "26–28 February 2027",
+   "23",
+   "Borussia Dortmund",
+   "",
+   "Union Berlin"
+  ],
+  [
+   "2–4 March 2027",
+   "24",
+   "Eintracht Frankfurt",
+   "",
+   "Borussia Dortmund"
+  ],
+  [
+   "5–7 March 2027",
+   "25",
+   "Borussia Dortmund",
+   "",
+   "Bayern Munich"
+  ],
+  [
+   "12–14 March 2027",
+   "26",
+   "SV Elversberg",
+   "",
+   "Borussia Dortmund"
+  ],
+  [
+   "19–21 March 2027",
+   "27",
+   "Borussia Dortmund",
+   "",
+   "Borussia Mönchengladbach"
+  ],
+  [
+   "2–4 April 2027",
+   "28",
+   "Bayer Leverkusen",
+   "",
+   "Borussia Dortmund"
+  ],
+  [
+   "9–11 April 2027",
+   "29",
+   "Borussia Dortmund",
+   "",
+   "Schalke 04"
+  ],
+  [
+   "16–18 April 2027",
+   "30",
+   "FC Augsburg",
+   "",
+   "Borussia Dortmund"
+  ],
+  [
+   "23–25 April 2027",
+   "31",
+   "Borussia Dortmund",
+   "",
+   "RB Leipzig"
+  ],
+  [
+   "7–9 May 2027",
+   "32",
+   "Mainz 05",
+   "",
+   "Borussia Dortmund"
+  ],
+  [
+   "14–16 May 2027",
+   "33",
+   "Borussia Dortmund",
+   "",
+   "1. FC Köln"
+  ],
+  [
+   "22 May 2027",
+   "34",
+   "SC Freiburg",
+   "",
+   "Borussia Dortmund"
+  ],
+  [
+   "1 September 2026",
+   "First round",
+   "Hamburg-Eimsbütteler BC",
+   "0–5",
+   "Borussia Dortmund"
+  ],
+  [
+   "27 October 2026",
+   "Second round",
+   "Borussia Dortmund",
+   "",
+   "Werder Bremen"
+  ],
+  [
+   "22 August 2026",
+   "Final",
+   "Borussia Dortmund",
+   "1–2",
+   "Bayern Munich"
+  ],
+  [
+   "8 September 2026",
+   "1",
+   "Borussia Dortmund",
+   "3–2",
+   "Villarreal"
+  ],
+  [
+   "14 October 2026",
+   "2",
+   "Bodø/Glimt",
+   "1–0",
+   "Borussia Dortmund"
+  ],
+  [
+   "20 October 2026",
+   "3",
+   "Sabah",
+   "1–2",
+   "Borussia Dortmund"
+  ],
+  [
+   "4 November 2026",
+   "4",
+   "Borussia Dortmund",
+   "",
+   "Real Betis"
+  ],
+  [
+   "24 November 2026",
+   "5",
+   "Arsenal",
+   "",
+   "Borussia Dortmund"
+  ],
+  [
+   "9 December 2026",
+   "6",
+   "Borussia Dortmund",
+   "",
+   "Inter Milan"
+  ],
+  [
+   "19 January 2027",
+   "7",
+   "Aston Villa",
+   "",
+   "Borussia Dortmund"
+  ],
+  [
+   "27 January 2027",
+   "8",
+   "Borussia Dortmund",
+   "",
+   "AEK Athens"
+  ]
+ ]
+}

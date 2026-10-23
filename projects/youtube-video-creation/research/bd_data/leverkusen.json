@@ -1,0 +1,87 @@
+{
+ "title": "レバークーゼン 基礎DATA",
+ "colors": [
+  "#E32221",
+  "#1A1A1A"
+ ],
+ "crest": "assets/crests/レバークーゼン.png",
+ "tiles": [
+  [
+   "クラブ創立",
+   "1904年",
+   "7月1日。工場の従業員170人の署名つき手紙から"
+  ],
+  [
+   "愛称",
+   "ヴェルクエルフ",
+   "「工場の11人」。「黒と赤」とも"
+  ],
+  [
+   "ホームタウン",
+   "レバークーゼン",
+   "人口約16.8万人。ケルンの北隣"
+  ],
+  [
+   "本拠地",
+   "バイアレーナ",
+   "収容 30,210人。18クラブで14番目"
+  ],
+  [
+   "オーナー",
+   "バイエル社の子会社",
+   "会員が過半数を持つ決まりの、例外のひとつ"
+  ],
+  [
+   "タイトル歴",
+   "1部優勝 1回",
+   "ドイツカップ2回。UEFAカップ1回"
+  ],
+  [
+   "最多出場",
+   "401試合",
+   "フォルボルン、1982〜1999年。リーグ戦"
+  ],
+  [
+   "直近のタイトル",
+   "スーパーカップ",
+   "2024年8月、シュツットガルトにPK戦"
+  ],
+  [
+   "昨季の順位",
+   "6位",
+   "勝ち点59。優勝バイエルンと30差"
+  ]
+ ],
+ "trophies": [
+  [
+   "ブンデスリーガ",
+   1
+  ],
+  [
+   "DFBポカール",
+   2
+  ],
+  [
+   "ドイツ・スーパーカップ",
+   1
+  ],
+  [
+   "UEFAカップ",
+   1
+  ],
+  [
+   "チャンピオンズリーグ",
+   0
+  ]
+ ],
+ "sources": [
+  "https://en.wikipedia.org/wiki/Bayer_04_Leverkusen",
+  "https://www.bayer04.de/en-us/page/history/founding-years-to-the-new-millennium/early-years",
+  "https://www.bayer04.de/en-us/page/bayarena",
+  "https://en.wikipedia.org/wiki/Leverkusen",
+  "https://www.bayer04.de/en-us/page/history",
+  "https://en.wikipedia.org/wiki/2024_DFL-Supercup",
+  "https://en.wikipedia.org/wiki/2025%E2%80%9326_Bundesliga"
+ ],
+ "notes": "取材の控えは research/bd_data/leverkusen_research.md。タイトル数は英語版クラブ記事 Honours（ブンデスリーガ1回＝2023-24、DFBポカール2回＝1992-93と2023-24、UEFAカップ1回＝1987-88、スーパーカップ1回＝2024）。最多出場401はクラブ公式の歴史ページ（フォルボルン＝ブンデスリーガ最多出場401）。人口は英語版 Leverkusen の約168,000人。収容30,210はクラブ公式の BayArena ページ（18クラブで14番目＝clubs.json の収容数を並べた順位）。直近のタイトルは2024-08-17 のスーパーカップ（本拠地で2-2、PK戦4-3）。"
+}

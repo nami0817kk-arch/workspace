@@ -1,0 +1,656 @@
+# モイセス・カイセド（チェルシー／エクアドル代表）の紹介。選手紹介の8節の型（2026-10-23、シリーズ「有名選手の紹介」。key: player_687626）。
+# 雛形は tools/player_intro.py 687626。**FotMob は使わない**（2026-10-17 決定）。雛形が出した FotMob 由来の板（レーダー・シュートマップ・ヒートマップ・パーセンタイルの bars・評点）と、雛形の数字（FotMob の「59試合5得点」は TM と一致したが評点は捨てた）は全部捨てた。
+# 数字は Transfermarkt API（tmapi-alpha。プロフィール・市場価値の推移・季ごと大会ごとの成績・試合ごとの記録を各1回、3秒あけて取得。控え research/raw/20261023_caicedo_tm.json）と、自分で割った90分あたり。
+# 取材は requests（ESPN の公開 API と記事・Wikipedia REST・Commons API）だけ。ブラウザの道具は使っていない。
+#
+# **選んだ理由・重なり確認（2026-10-23。見せるときに最初に言うこと）**
+# - `player_pool.py list`（市場価値の順）の上位で、scripts/ の 20261010〜20261022 に「ってどんな選手」の紹介があるのは、ライス・アルバレス・アンダーソン・サカ・ヴィルツ・ロジャーズ・ソボスライ・ムシアラ・ベリンガム・ラウタロ。
+#   10/1〜10/9 の紹介済み（ハーランド・ヤマル・オリーセ・エムバペ・ヴィティーニャ・ヴィニシウス・ネヴェス・ペドリ・ベリンガム）はその外だが、**直近に1度紹介した人の2周目より、まだ1度も紹介していない大物のほうがよい**と判断した。
+#   一覧で「紹介ゼロ」の中で市場価値が最も高いのは、モイセス・カイセド（1億ユーロ、21位。TM 2026-06-03 の値）。次点は ユルドゥズ 7500万・バストーニ 6500万。
+#   research/posted.json・covered.yaml・scripts/ の全部を「カイセド」で検索：**題名に入った台本は0本**。scripts/20261019_rogers_intro.md（チェルシーのロジャーズ）にチェルシーの文脈は出るが、人も数字も別。
+#   → 現役（2026-10-17 のエバートン戦に90分出場。TM の試合記録）。女子・Jリーグでもない。
+# - **数字の軸は新しい**：「チェルシーでの得点が1→2→5（全公式戦）」「シュート19→27→40本、枠内6→5→13本」「出場時間はほぼ同じ（3899→4289→4169分）」「パスと成功率・タックルはほぼ変わらない」「ブライトン最後の年（22/23）のシュートは90分あたり0.86で、25/26 と同じ」。
+#
+# **日本との接点（あり）**：ブライトンの 2022/23 に、カイセドの出場43試合のうち **38試合で三笘薫も出場**（TM の試合記録の gameId を両者で突き合わせた。控え research/raw/20261023_mitoma_tm.json）。この季、カイセドはクラブの年間最優秀選手と選手間投票の賞（英語版 Wikipedia）。
+#   2026年W杯でエクアドルは日本と当たっていない（グループはコートジボワール・キュラソー・ドイツ）。ほかの接点は確かめられていないので入れていない。
+#
+# **数字の出どころ**
+# - Transfermarkt API：生年月日・出身（サント・ドミンゴ）・身長1.78m・利き足（右）・契約（2033-06-30、最後の更新 2026-04-17）・市場価値の推移（最高 2025-12-09 の1.1億、2026-06-03 の1億）、季ごと・大会ごとの試合・得点・アシスト・出場分、試合ごとの記録（出場状態・出場分・得点・アシスト・シュート・枠内・パス・タックル）。試合の記録は 2026-10-17（エバートン戦）まで。
+# - 自分で数えたもの（トップチームの全公式戦。時点は 2026-10-17）：
+#   通算＝デル・バジェ 31試合6得点（2019 の3試合0得点＋2020 の28試合6得点）／ブライトン 53試合2得点／ベールスホット（貸出）14試合2得点／チェルシー 151試合8得点（12533分・11アシスト）／エクアドル代表 65試合3得点9アシスト（5507分）。合計 314試合21得点。→ 英語版 Wikipedia の「クラブ 249試合18得点」「代表 65試合3得点（2026-07-01 時点）」と一致。
+#   TM の季ごとの合計（代表を含む全公式戦）：21/22 33試合4得点3アシスト2513分／22/23 48・1・1・4116／23/24 72・1・9・5956／24/25 50・2・6・4289（クラブW杯2025の5試合を含む）／25/26 59・5・1・4934（W杯2026の4試合を含む）。
+#   チェルシー（クラブの全公式戦）：23/24 48試合3899分1得点4アシスト・シュート19本（枠内6本）・パス65.0本/90分・成功91.0%・タックル2.93本/90分／24/25 50試合4289分2得点6アシスト・シュート27本（枠内5本）・61.2本・90.3%・3.17本／25/26 50試合4169分5得点1アシスト・シュート40本（枠内13本）・67.7本・92.0%・2.76本。
+#   ブライトン 22/23：43試合3666分1得点1アシスト・シュート35本（枠内9本）0.86本/90分・パス63.7本・成功88.9%。
+#   90分あたり＝その数×90÷出場分（試合ごとの記録がある試合の分数で割った）。シュートは TM の scoringAttempts（ブロックされたものを含む）。
+#   今季（26/27）：チェルシーのPL7試合のうち出場3試合・176分・0得点（8/30 ブライトン戦14分／10/10 ボーンマス戦72分／10/17 エバートン戦90分）。欠場は TM の記録で「負傷」（PL 4試合＋リーグカップ2試合）。
+#   直近2試合のパス：10/10 55本・成功53本（96.4%）、10/17 63本・成功58本（92.1%）。
+# - 英語版 Wikipedia（2026-10-23 取得。控え research/raw/20261023_caicedo_wiki.txt）：生い立ち・テスト・十字靭帯・デビュー・ブライトン移籍（400万ポンド）・チェルシー移籍（報じられた額は基本1億〜最大1億1500万ポンド）・25番・初得点・CL決勝の得点・W杯（2022年セネガル戦の同点弾）・プレースタイル・受賞。→ 背景。
+# - ESPN（2026-10-15「Moisés Caicedo determined to repay faith shown by Chelsea manager Xabi Alonso」。控え research/raw/20261023_caicedo_espn_article.txt）：アロンソ監督のもとでの先発（負傷から戻って初めて）・リーダーとしての話・本人の言葉（クラブ公式サイトでの発言）。→ 報道。
+#   ESPN の日程（site.api.espn.com の eng.1 チェルシーの schedule、2026-10-23 取得）：次の試合は 10/24 16:30 UTC（日本時間 10/25 1:30）チェルシー対トッテナム。W杯のエクアドルの結果（ESPN scoreboard fifa.world）：コートジボワールに0-1／キュラソーと0-0／ドイツに2-1／ラウンド32でメキシコに0-2。
+#
+# **ブリーフとの食い違い・不安（報告に書く）**
+# - 「英国の移籍金の記録」は台本に入れない（英語版 Wikipedia は当時の記録と書くが、その後の移籍で更新されている可能性があり、確かめていない）。
+# - 移籍金（ブライトン400万ポンド・チェルシー最大1億1500万ポンド）は報道の額（英語版 Wikipedia 経由）で、公式の額ではない。台本は「報じられた」と書く。
+# - ピッチの上の腕章：チェルシーで「キャプテンの一人」は本人の発言（ESPN）。TM の記録ではエバートン戦で腕章。台本は本人の言葉の範囲だけ。エクアドル代表の主将は Wikipedia＋TM（W杯の2試合）。
+#
+# **入れなかったもの**：FotMob の指標すべて、年俸・代理人・私生活（家族・パートナー・信仰・財団）、2023年1月の公開書簡の細部、他クラブとの比べ、チェルシーの順位。
+# **日本語名・読み**：モイセス・カイセド、エクアドル、サント・ドミンゴ、インデペンディエンテ・デル・バジェ、ブライトン、ベールスホット、チェルシー、三笘薫、イバン・ゲラ、アーセナル、リヴァプール、ゾラ、ベティス、コンフェレンスリーグ、アロンソ監督、ボーンマス、エバートン、トッテナム、フラメンゴ、セネガル、ドイツ。
+#
+# 本人の言葉は1か所（自訳。ESPN 2026-10-15、チェルシー公式サイトでの発言）。
+date: 2026年10月23日
+slot: other_1
+format: news
+series: 有名選手の紹介
+people:
+- モイセス・カイセド
+theme:
+  id: player_687626
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: チェルシー
+  title: カイセドってどんな選手？ チェルシーの3季で、点は1から5へ。何が変わったか
+  question: モイセス・カイセドは、チェルシーでの得点が3季で1点から5点に増えた。守備的MFのカイセドは、どんな選手で、何が変わったのか
+  takeaway: チェルシーでの得点は1→2→5。出場時間はほぼ同じ（3899→4289→4169分）で、シュートは19本→27本→40本、枠内は6本→5本→13本。パスと成功率は同じ水準で、ブライトン最後の年（22/23）のシュートは90分あたり0.86と、25/26と同じ。負傷で今季は3試合
+  nameplate: モイセス・カイセド｜チェルシー MF／エクアドル代表
+  opening_image: assets/images/20261023_player_687626/q4/01_w.jpg
+  end_bg: assets/images/20261023_player_687626/q4/01_w.jpg
+  bgm: assets/audio/bgm_calm.wav
+watch: 毎日、数字でサッカーを読み解きます
+short_title: カイセドってどんな選手？
+thumbnail:
+  line1: カイセド、314試合21点
+  line2: 3季で1点から5点へ
+  tags:
+  - チェルシー
+  photo: assets/images/20261023_player_687626/panel_q1.jpg
+  photos: []
+  short_photo: assets/images/20261023_player_687626/q2/01_v.jpg
+sections:
+- id: hook
+  heading: チェルシーでの得点が、1、2、5。守備的MFに、何が起きたのか
+  tier: 報道
+  telop: チェルシーでの得点、1→2→5
+  narrator: 解説
+  card:
+    type: stats
+    title: カイセド チェルシーの3季（全公式戦）
+    items:
+    - ['1→2→5', 点, 得点。23/24→24/25→25/26]
+    - ['19→40', 本, シュート。枠内は6本→13本]
+    - ['4169', 分, 25/26の出場時間。23/24は3899分]
+    focus: 0
+  say:
+  - text: チェルシーの守備的ミッドフィールダー、カイセド。
+    image: assets/images/20261023_player_687626/q1/01_w.jpg
+    card: &hook_stats
+      type: stats
+      title: カイセド チェルシーの3季（全公式戦）
+      items:
+      - ['1→2→5', 点, 得点。23/24→24/25→25/26]
+      - ['19→40', 本, シュート。枠内は6本→13本]
+      - ['4169', 分, 25/26の出場時間。23/24は3899分]
+      focus: 0
+  - text: チェルシーでの得点は、1年目が1、2年目が2、3年目が5です。
+    card:
+      <<: *hook_stats
+      focus: 0
+  - text: シュートは、19本、27本、40本。ほぼ倍になりました。
+    emph: true
+    image: assets/images/20261023_player_687626/q3/01_w.jpg
+    card:
+      <<: *hook_stats
+      focus: 1
+  - text: 枠に飛んだのは、6本、5本、13本です。
+    image: assets/images/20261023_player_687626/q4/01_w.jpg
+    card:
+      <<: *hook_stats
+      focus: 1
+  - text: 出場時間は、3899分、4289分、4169分。ほぼ同じです。
+    image: assets/images/20261023_player_687626/q2/01_w.jpg
+    card:
+      <<: *hook_stats
+      focus: 2
+  - text: 何が変わったのかを、数字で見ていきます。
+    image: assets/images/20261023_player_687626/q6/01_w.jpg
+    card: none
+  - text: ただ、今季は、負傷で、ここまで3試合の出場です。
+    image: assets/images/20261023_player_687626/q1/01_w.jpg
+    card: none
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/moises-caicedo/leistungsdatendetails/spieler/687626
+- id: data
+  heading: カイセドは、どんな立場で、いくらと見られている選手か
+  tier: 報道
+  telop: カイセドの基礎DATA
+  narrator: 解説
+  card:
+    type: table
+    title: モイセス・カイセド（チェルシー）
+    columns:
+    - 項目
+    - 内容
+    rows: &bdata
+    - - 所属
+      - チェルシー（25番）
+    - - ポジション
+      - 守備的MF
+    - - 生年月日
+      - 2001年11月2日（24歳）
+    - - 出身
+      - エクアドル（サント・ドミンゴ）
+    - - 身長・利き足
+      - 1.78m・右足
+    - - 代表
+      - エクアドル（65試合3得点・主将）
+    - - 契約・市場価値
+      - 2033年まで・1億ユーロ
+    source: Transfermarkt
+  say:
+  - text: カイセドは、チェルシーの守備的ミッドフィールダー。25番です。
+    image: assets/images/20261023_player_687626/q2/01_w.jpg
+    card: &data_card
+      type: table
+      title: モイセス・カイセド（チェルシー）
+      columns: [項目, 内容]
+      rows: *bdata
+      source: Transfermarkt
+      highlight_row: 0
+  - text: エクアドルのサント・ドミンゴ出身。2001年11月2日生まれ、24歳。
+    card:
+      <<: *data_card
+      highlight_row: 3
+  - text: 身長は1メートル78、右利き。契約は、2033年まで。
+    image: assets/images/20261023_player_687626/q5/01_w.jpg
+    card:
+      <<: *data_card
+      highlight_row: 4
+  - text: エクアドル代表では、キャプテン。65試合で3得点です。
+    image: assets/images/20261023_player_687626/q4/01_w.jpg
+    card:
+      <<: *data_card
+      highlight_row: 5
+  - text: 市場価値は、推定で1億ユーロ。ピークは、2025年12月の1.1億ユーロです。
+    emph: true
+    image: assets/images/20261023_player_687626/q6/01_w.jpg
+    card: &value_line
+      type: line
+      title: カイセドの市場価値（百万ユーロ）
+      x: ['20/10', '22/6', '22/9', '23/6', '23/10', '25/12', '26/6']
+      series:
+      - [市場価値, [1.2, 6, 25, 75, 90, 110, 100]]
+      focus: 市場価値
+      highlight: '25/12'
+      source: Transfermarkt
+  sources:
+  - https://www.transfermarkt.com/moises-caicedo/profil/spieler/687626
+  - https://www.transfermarkt.com/moises-caicedo/marktwertverlauf/spieler/687626
+- id: japan
+  heading: カイセドは、ブライトンで、三笘薫と何試合、同じピッチに立ったのか
+  tier: 報道
+  telop: ブライトンで、三笘薫と同じ試合
+  narrator: 解説
+  card:
+    type: table
+    title: ブライトン 2022/23 の出場（TMの試合記録）
+    columns:
+    - 項目
+    - 試合
+    rows: &jp_rows
+    - ['カイセドの出場', '43']
+    - ['そのうち、三笘薫も出場', '38']
+    source: Transfermarkt
+  say:
+  - text: ここで、日本との接点を、ひとつ。
+    image: assets/images/20261023_player_687626/q5/01_w.jpg
+    card: none
+  - text: 22/23シーズン、ブライトンには、三笘薫もいました。
+    card: &jp_card
+      type: table
+      title: ブライトン 2022/23 の出場（TMの試合記録）
+      columns: [項目, 試合]
+      rows: *jp_rows
+      source: Transfermarkt
+      highlight_row: 0
+  - text: カイセドの出場は、43試合。そのうち、38試合で、三笘薫も出ています。
+    emph: true
+    image: assets/images/20261023_player_687626/q5/01_v.jpg
+    card:
+      <<: *jp_card
+      highlight_row: 1
+  - text: この季、カイセドは、クラブの年間最優秀選手に選ばれました。
+    image: assets/images/20261023_player_687626/q5/01_w.jpg
+    card: none
+  - text: 選手どうしの投票で選ぶ賞も、受けています。
+    card: none
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/moises-caicedo/leistungsdatendetails/spieler/687626
+  - https://www.transfermarkt.com/mitoma-kaoru/leistungsdatendetails/spieler/504849
+  - https://en.wikipedia.org/wiki/Mois%C3%A9s_Caicedo
+- id: career
+  heading: エクアドルの石のゴールから、1億ポンドへ。値が跳ねたのは、どこだったのか
+  tier: 背景
+  telop: 石のゴールから、チェルシーへ
+  narrator: 解説
+  card:
+    type: timeline
+    title: カイセドの歩み
+    rows:
+    - ['2016', 兄に連れられ、デル・バジェのテストに合格]
+    - ['2019', 10月、17歳でトップチームのデビュー]
+    - ['2021', 2月、ブライトンへ。報道で約400万ポンド]
+    - ['2023', 8月、チェルシーへ。報道で最大1億1500万ポンド]
+    - ['2025', コンフェレンスリーグ優勝。決勝で得点]
+    - ['2026', W杯は主将。ドイツに2対1]
+    focus: 2016
+  say:
+  - text: 少年のころのカイセドは、石を積んだゴールで、サッカーを覚えました。
+    image: assets/images/20261023_player_687626/q5/01_w.jpg
+    card: none
+  - text: 地元のコーチ、イバン・ゲラが、スパイクや、交通費、食事を出してくれました。
+    image: assets/images/20261023_player_687626/q1/01_w.jpg
+    card: none
+  - text: プロクラブのテストは、2つ、うまくいきませんでした。
+    card: none
+  - text: 2016年、兄に連れられて、デル・バジェのテストへ。今度は、合格です。
+    image: assets/images/20261023_player_687626/q3/01_w.jpg
+    card: &career_tl
+      type: timeline
+      title: カイセドの歩み
+      rows:
+      - ['2016', 兄に連れられ、デル・バジェのテストに合格]
+      - ['2019', 10月、17歳でトップチームのデビュー]
+      - ['2021', 2月、ブライトンへ。報道で約400万ポンド]
+      - ['2023', 8月、チェルシーへ。報道で最大1億1500万ポンド]
+      - ['2025', コンフェレンスリーグ優勝。決勝で得点]
+      - ['2026', W杯は主将。ドイツに2対1]
+      focus: 2016
+  - text: 2017年には、膝の十字靭帯を痛めて、10か月、ピッチを離れました。
+    image: assets/images/20261023_player_687626/q6/01_w.jpg
+    card: none
+  - text: 2019年10月1日、17歳でトップチームのデビュー。
+    card:
+      <<: *career_tl
+      focus: 2019
+  - text: 2021年2月、ブライトンへ。報じられた移籍金は、約400万ポンドです。
+    image: assets/images/20261023_player_687626/q5/01_w.jpg
+    card:
+      <<: *career_tl
+      focus: 2021
+  - text: 2022年6月の市場価値は、600万ユーロ。1年後の6月には、7500万ユーロ。
+    emph: true
+    image: assets/images/20261023_player_687626/q4/01_w.jpg
+    card:
+      <<: *value_line
+      highlight: '23/6'
+  - text: 2023年1月、アーセナルの獲得案が報じられます。ブライトンは断ります。
+    image: assets/images/20261023_player_687626/q2/01_w.jpg
+    card: none
+  - text: 同じ年の8月。リヴァプールとの合意が報じられます。
+    image: assets/images/20261023_player_687626/q1/01_w.jpg
+    card:
+      <<: *career_tl
+      focus: 2023
+  - text: そこへチェルシーが、最大1億1500万ポンドで上回りました。
+    card:
+      <<: *career_tl
+      focus: 2023
+  - text: 8月14日、入団。25番は、2003年のゾラ以来、だれも着けていない番号でした。
+    image: assets/images/20261023_player_687626/q3/01_w.jpg
+    card: none
+  - text: 2025年5月28日、コンフェレンスリーグ決勝、ベティス戦。
+    image: assets/images/20261023_player_687626/q6/01_w.jpg
+    card:
+      <<: *career_tl
+      focus: 2025
+  - text: アディショナルタイムに得点して、4対1の勝ち。
+    emph: true
+    card:
+      <<: *career_tl
+      focus: 2025
+  - text: 代表では、2022年W杯のセネガル戦で、同点ゴール。
+    image: assets/images/20261023_player_687626/q4/01_w.jpg
+    card: none
+  - text: 2026年のW杯は、キャプテンとして4試合。ドイツに、2対1で勝ちました。
+    image: assets/images/20261023_player_687626/q2/01_w.jpg
+    card:
+      <<: *career_tl
+      focus: 2026
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Mois%C3%A9s_Caicedo
+  - https://www.transfermarkt.com/moises-caicedo/marktwertverlauf/spieler/687626
+  - https://www.transfermarkt.com/moises-caicedo/leistungsdatendetails/spieler/687626
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260625
+- id: style
+  heading: カイセドは、どんな選手か。3季で、何が変わらず、何が変わったのか
+  tier: 背景
+  telop: パスは同じ。撃つ数が倍
+  narrator: 解説
+  card:
+    type: bars
+    title: 90分あたりのパス
+    unit: 本
+    items:
+    - label: 22/23 ブライトン
+      value: 63.7
+    - label: 23/24
+      value: 65.0
+    - label: 24/25
+      value: 61.2
+    - label: 25/26
+      value: 67.7
+      highlight: true
+    source: Transfermarkt
+  say:
+  - text: カイセドは、中盤の2人の右側で、守備的に構える役が多い選手です。
+    image: assets/images/20261023_player_687626/q4/01_w.jpg
+    card: none
+  - text: 攻め上がることもできて、パスと、ボールを奪う力で知られます。
+    image: assets/images/20261023_player_687626/q6/01_w.jpg
+    card: none
+  - text: 右サイドバックも、こなします。
+    card: none
+  - text: まず、90分あたりのパス。
+    image: assets/images/20261023_player_687626/q1/01_w.jpg
+    card: &pass_bars
+      type: bars
+      title: 90分あたりのパス
+      unit: 本
+      items:
+      - label: 22/23 ブライトン
+        value: 63.7
+      - label: 23/24
+        value: 65.0
+      - label: 24/25
+        value: 61.2
+      - label: 25/26
+        value: 67.7
+        highlight: true
+      source: Transfermarkt
+  - text: 昨季は67.7本で、成功率は92.0%。
+    emph: true
+    card: *pass_bars
+  - text: ブライトン最後の年は、63.7本で88.9%でした。
+    image: assets/images/20261023_player_687626/q5/01_w.jpg
+    card: *pass_bars
+  - text: タックルは、チェルシーの3季とも、90分あたり2.8本から3.2本です。
+    image: assets/images/20261023_player_687626/q3/01_w.jpg
+    card: none
+  - text: 守りの数字は、ほとんど動いていません。
+    card: none
+  - text: 変わったのは、撃つ数です。90分あたりのシュート。
+    image: assets/images/20261023_player_687626/q2/01_w.jpg
+    card: &shot_bars
+      type: bars
+      title: 90分あたりのシュート
+      unit: 本
+      items:
+      - label: 22/23 ブライトン
+        value: 0.86
+      - label: 23/24
+        value: 0.44
+      - label: 24/25
+        value: 0.57
+      - label: 25/26
+        value: 0.86
+        highlight: true
+      source: Transfermarkt
+  - text: 0.44本、0.57本、0.86本。
+    emph: true
+    card: *shot_bars
+  - text: ブライトン最後の年も、0.86本でした。
+    image: assets/images/20261023_player_687626/q5/01_w.jpg
+    card: *shot_bars
+  - text: チェルシー1年目に半分ほどになって、3年目に、元の水準へ戻っています。
+    image: assets/images/20261023_player_687626/q6/01_w.jpg
+    card: none
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Mois%C3%A9s_Caicedo
+  - https://www.transfermarkt.com/moises-caicedo/leistungsdatendetails/spieler/687626
+- id: past
+  heading: カイセドは、5シーズンで、何試合に出て、何点取ってきたのか
+  tier: 報道
+  telop: 5シーズンの試合と得点
+  narrator: 解説
+  card:
+    type: table
+    title: カイセド 直近5シーズン（代表を含む全公式戦）
+    columns:
+    - シーズン
+    - 試合
+    - 得点
+    - アシスト
+    - 出場時間
+    rows: &season_rows
+    - ['21/22', '33', '4', '3', 2513分]
+    - ['22/23', '48', '1', '1', 4116分]
+    - ['23/24', '72', '1', '9', 5956分]
+    - ['24/25', '50', '2', '6', 4289分]
+    - ['25/26', '59', '5', '1', 4934分]
+    source: Transfermarkt
+  rows_total:
+  - &t1 [デル・バジェ, '31', '6']
+  - &t2 [ブライトン, '53', '2']
+  - &t3 [ベールスホット（貸出）, '14', '2']
+  - &t4 [チェルシー, '151', '8']
+  - &t5 [エクアドル代表, '65', '3']
+  - &t6 [合計, '314', '21']
+  say:
+  - text: カイセドの全公式戦で、21/22は33試合4得点。25/26の5得点に次ぐ数です。
+    image: assets/images/20261023_player_687626/q3/01_w.jpg
+    card: &past_card
+      type: table
+      title: カイセド 直近5シーズン（代表を含む全公式戦）
+      columns: [シーズン, 試合, 得点, アシスト, 出場時間]
+      rows: *season_rows
+      source: Transfermarkt
+      highlight_row: 0
+  - text: ベルギーへの貸出と、W杯のセネガル戦を含みます。
+    card:
+      <<: *past_card
+      highlight_row: 0
+  - text: 最多は、23/24の72試合。出場時間は、5956分です。
+    emph: true
+    image: assets/images/20261023_player_687626/q4/01_w.jpg
+    card:
+      <<: *past_card
+      highlight_row: 2
+  - text: 得点は1点、アシストは9つ。
+    card:
+      <<: *past_card
+      highlight_row: 2
+  - text: 25/26は、59試合で5得点。
+    image: assets/images/20261023_player_687626/q6/01_w.jpg
+    card:
+      <<: *past_card
+      highlight_row: 4
+  - text: クラブW杯の優勝は、24/25の数字に入っています。
+    card:
+      <<: *past_card
+      highlight_row: 3
+  - text: 続いて、通算です。チェルシーは、151試合8得点。
+    image: assets/images/20261023_player_687626/q2/01_w.jpg
+    card: &total_card
+      type: table
+      title: カイセド 通算（トップチーム）
+      columns: [所属, 試合, 得点]
+      rows: [*t1, *t2, *t3, *t4, *t5, *t6]
+      source: Transfermarkt
+      highlight_row: 3
+  - text: ブライトンは、53試合2得点。
+    image: assets/images/20261023_player_687626/q5/01_w.jpg
+    card:
+      <<: *total_card
+      highlight_row: 1
+  - text: エクアドル代表では、通算3得点です。
+    image: assets/images/20261023_player_687626/q1/01_w.jpg
+    card:
+      <<: *total_card
+      highlight_row: 4
+  - text: すべて足すと、314試合で、21得点になります。
+    emph: true
+    card:
+      <<: *total_card
+      highlight_row: 5
+  sources:
+  - https://www.transfermarkt.com/moises-caicedo/leistungsdatendetails/spieler/687626
+  - https://en.wikipedia.org/wiki/Mois%C3%A9s_Caicedo
+- id: season
+  heading: 負傷から戻ったカイセドは、アロンソ監督のもとで、何を見せたのか
+  tier: 報道
+  main: true
+  telop: 今季ここまで
+  narrator: 解説
+  card:
+    type: table
+    title: 今季のカイセド（チェルシーのPLの試合から）
+    columns:
+    - 日付
+    - 相手
+    - 出場
+    - 結果
+    rows: &recent_rows
+    - - 8/30
+      - ブライトン
+      - 14分
+      - 4-3 勝
+    - - 10/10
+      - ボーンマス
+      - 先発72分
+      - 5-1 勝
+    - - 10/17
+      - エバートン
+      - 90分
+      - 2-0 勝
+    source: Transfermarkt・ESPN
+  say:
+  - text: カイセドは、負傷から戻って、今季は3試合。ボーンマス戦から、先発に復帰しました。
+    short_only: true
+    image: assets/images/20261023_player_687626/q2/01_v.jpg
+    card: none
+  - text: 今季のチェルシーのプレミアリーグは、ここまで7試合。
+    image: assets/images/20261023_player_687626/q4/01_w.jpg
+    card: none
+  - text: カイセドの出場は、3試合、176分です。
+    card: none
+  - text: 欠場は、負傷のため。リーグ戦4試合と、リーグカップ2試合でした。
+    image: assets/images/20261023_player_687626/q1/01_w.jpg
+    card: none
+  - text: 8月30日、ブライトン戦。14分間、出場。4対3の勝ち。
+    image: assets/images/20261023_player_687626/q5/01_w.jpg
+    card: &recent_card
+      type: table
+      title: 今季のカイセド（チェルシーのPLの試合から）
+      columns: [日付, 相手, 出場, 結果]
+      rows: *recent_rows
+      source: Transfermarkt・ESPN
+      highlight_row: 0
+  - text: 10月10日、ボーンマス戦。アロンソ監督のもとで、初めて先発。
+    emph: true
+    image: assets/images/20261023_player_687626/q3/01_w.jpg
+    card:
+      <<: *recent_card
+      highlight_row: 1
+  - text: 72分の出場で、5対1の勝ち。
+    card:
+      <<: *recent_card
+      highlight_row: 1
+  - text: パスは55本で、成功は53本。96.4%です。
+    card:
+      <<: *recent_card
+      highlight_row: 1
+  - text: 10月17日、エバートン戦。90分、フル出場。2対0の勝ち。
+    image: assets/images/20261023_player_687626/q6/01_w.jpg
+    card:
+      <<: *recent_card
+      highlight_row: 2
+  - text: パスは63本で、成功は58本。92.1%でした。
+    card:
+      <<: *recent_card
+      highlight_row: 2
+  - text: 本人は、チェルシーの主将グループの一人として、こう話しています。
+    image: assets/images/20261023_player_687626/q4/01_w.jpg
+    card: none
+  - voice: カイセド
+    text: 頑張ってはいますが、話すのは、自分の性分ではないんです。
+  - voice: カイセド
+    text: だから、話せないときは、もっと行動で示そうとしています。
+    cont: true
+    pause: 0.5
+  - text: 今季のシュートは、3試合で2本。昨季は、50試合で40本。
+    image: assets/images/20261023_player_687626/q2/01_w.jpg
+    card: none
+  - text: まだ、得点はありません。
+    card: none
+  quotes_from:
+  - https://www.espn.com/soccer/story/_/id/50189608/moises-caicedo-determined-repay-faith-shown-chelsea-manager-xabi-alonso
+  sources:
+  - https://www.transfermarkt.com/moises-caicedo/leistungsdatendetails/spieler/687626
+  - https://www.espn.com/soccer/story/_/id/50189608/moises-caicedo-determined-repay-faith-shown-chelsea-manager-xabi-alonso
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/teams/363/schedule
+- id: view
+  heading: カイセドの点は、増えたのか。撃つ数と、枠に飛んだ数で見る
+  tier: 背景
+  viewpoint: true
+  narrator: 解説
+  telop: シュート35→19→27→40、得点1→1→2→5
+  card:
+    type: table
+    title: カイセドの全公式戦（クラブ）
+    columns: [季, シュート, 枠内, 得点]
+    rows: &cmp_rows
+    - ['22/23 ブライトン', '35', '9', '1']
+    - ['23/24 チェルシー', '19', '6', '1']
+    - ['24/25 チェルシー', '27', '5', '2']
+    - ['25/26 チェルシー', '40', '13', '5']
+    source: Transfermarkt
+  say:
+  - text: 最後に、カイセドの点を、撃つ数と並べます。
+    image: assets/images/20261023_player_687626/q1/01_w.jpg
+    card: &cmp_card
+      type: table
+      title: カイセドの全公式戦（クラブ）
+      columns: [季, シュート, 枠内, 得点]
+      rows: *cmp_rows
+      source: Transfermarkt
+      highlight_row: 0
+  - text: ブライトン最後の年は、35本撃って、1得点。
+    image: assets/images/20261023_player_687626/q5/01_w.jpg
+    card:
+      <<: *cmp_card
+      highlight_row: 0
+  - text: チェルシー1年目は、19本で1得点。
+    card:
+      <<: *cmp_card
+      highlight_row: 1
+  - text: 25/26は、40本で5得点。枠に飛んだのは13本です。
+    emph: true
+    image: assets/images/20261023_player_687626/q3/01_w.jpg
+    card:
+      <<: *cmp_card
+      highlight_row: 3
+    mark: {kind: circle, row: 3}
+  - text: 1点を取るのに撃った数は、19本から、8本になりました。
+    card:
+      <<: *cmp_card
+      highlight_row: 3
+  - text: 守りの数字は同じまま、撃つ数と、枠に飛ぶ数が増えた3季でした。
+    emph: true
+    image: assets/images/20261023_player_687626/q4/01_w.jpg
+    card: none
+  - text: 今季の3試合は、シュート2本で、0得点。見るのは、ここからです。
+    image: assets/images/20261023_player_687626/q6/01_w.jpg
+    card: none
+  - text: チェルシーの次の試合は、トッテナム戦。
+    image: assets/images/20261023_player_687626/q2/01_w.jpg
+    card: none
+  - text: 10月24日、日本時間の25日、午前1時半からです。
+    card: none
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/moises-caicedo/leistungsdatendetails/spieler/687626
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/teams/363/schedule

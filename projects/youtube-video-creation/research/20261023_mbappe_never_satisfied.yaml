@@ -1,0 +1,168 @@
+# 取材メモ（2026年10月23日）ムバッペ「僕らのような選手は、現状に満足することは決してない」＋ヴィニシウスへの励まし（ニュースのショート。見せ方 Y＝ムバッペ本人の実在の発言から始める）
+# 取材: 2026-10-23。requests（ブラウザUA）で本文を全部読んだ。控え research/raw/20261023_*。
+#   ・ゲキサカ（2026-10-22 12:39 JST）「大勝導く1G1AのムバッペがMOM受賞『僕はもっとできる。満足することは決してない』」— 全文読んだ。レアル公式サイトが伝えたコメントの引用。
+#       ムバッペは先発し、後半7分（52分）にギュレルの追加点をアシスト、同38分（83分）に右足で追加点。4-1。レアルは開幕3連勝で、首位パリSGと同勝ち点の4位。次戦は25日、首位を快走するバルセロナの本拠地。
+#       発言（クラブ公式サイト経由）:「僕はもっとできると思う。僕は常により多くを求められる数少ない選手の1人だ。僕のような選手にとって満足することは決してない。常に向上を目指している。」
+#                                   「エル・クラシコは完全に別物だ。今日はこの試合だけに集中していた」
+#   ・サッカーキング（2026-10-22）「エンバペ、低調なパフォーマンス＆ディオマンデの台頭で焦燥感募らせるヴィニシウスに『彼は最高の選手』」— 全文読んだ。スペインメディア Movistar Plus のインタビュー。
+#       公式戦3戦連発で今季12点（サッカーキング）。発言:「調子はいい感じだけど、もっとできるはずだ。僕は、どんな時もさらなる高みを求められる選手だから。僕らのような選手は、現状に満足することは決してない」
+#                     「ヴィニシウスなら大丈夫だよ。彼が落ち込むのは理解できる。チームやファンのために貢献したい、という思いが強いからね」「冷静になって、自分を認めてあげてほしい。彼は、素晴らしい才能を秘めた最高の選手なんだから」
+#   ・ESPN 試合記録API（site.api.espn.com/.../uefa.champions/summary?event=401915313）— 得点・交代・シュート。4-1。得点 43分B・シウバ／52分ギュレル（ムバッペのアシスト）／83分ムバッペ（ディオマンデのアシスト）／85分ゴミス（ライプツィヒ）／87分ディオマンデ。
+#       70分にヴィニシウスがディオマンデと交代。ムバッペ＝シュート4本・枠内2本・1得点1アシスト。ヴィニシウス＝シュート3本・枠内2本。
+# 資料のずれ（台本では言わない）:
+#   ・ベルナルド・シウバの先制：ゲキサカ記事に分の記載なし／ESPN＝43分／サッカーキング（モウリーニョ記事）＝44分 → 台本では分を言わない。
+#   ・ムバッペの3点目の「ゴール」の分：ゲキサカ＝後半38分（83分）、ESPN・サッカーキング＝83分 → 一致。ただし台本では分を言わない（題材の答えに要らない）。
+#   ・同じ言葉の2つの訳：「僕のような選手にとって満足することは決してない」（ゲキサカ＝レアル公式の訳）／「僕らのような選手は、現状に満足することは決してない」（サッカーキング＝Movistar の訳）→ 別のインタビュー（公式サイトと Movistar）。台本は Movistar の訳に統一し、公式サイトの訳は混ぜない。
+# 使わなかったもの:
+#   ・ヴィニシウスの今季1得点・「低調」「焦燥感」といった媒体の評価（ヴィニシウスを小さく見せる言い方になる）。ムバッペ本人の言葉と、ヴィニシウス本人の試合の数字（シュート3本・枠内2本）だけを使う。
+#   ・モウリーニョ監督のヴィニシウス交代の説明（題材10のモウリーニョ「彼は成長する」と重なる。この本はムバッペの言葉に絞る）。
+#   ・ヴィニシウスの出場停止・クラシコに出られるか（BBC 等で読めていない）。
+# 確度: 試合結果・得点・シュート数は 確定（ESPN 試合記録＋ゲキサカ。クラブ公式の発言引用も）。ムバッペの発言は 報道（ゲキサカ＝クラブ公式サイトの引用、サッカーキング＝Movistar の引用。原文のスペイン語・フランス語は読めていない）。見立ては 背景。
+# 10/22 の本（ムバッペが語ったバロンドールの条件）とは別の発言・別の試合。9/23 以降の『ムバッペ』の本とも、この発言（満足しない・ヴィニシウスへの言葉）は重ならない。
+# 反応: 取らない。ネットの反応は集めていない（作らない）。approve は --no-voices で。
+# 写真: Commons（CC BY / BY-SA）。ムバッペはレアルのユニフォーム姿（2025-10-22 ユベントス戦）と W杯2026。ヴィニシウスは 2025-04-26 コパ・デル・レイ決勝（レアルの姿）と W杯2026。10/15〜10/22 の他の本と重ならない写真を選んだ。
+slot: world_1
+date: "2026年10月23日"
+format: news
+no_main: true      # ニュースはショートだけ（2026-10-14）。締めで本編を案内しない
+people: [ムバッペ, ヴィニシウス, レアル・マドリード]
+
+short_style: Y
+short_hook_quote: 調子はいい感じだけど、もっとできるはずだ
+short_question: あなたは、ムバッペのこの言葉をどう受け止めましたか。
+short_hook: レアルが4対1で勝った試合のあとに。
+short_telops:
+  - {match: 4対1で勝って, text: CL第3節/レアル4対1ライプツィヒ}
+  - {match: 1ゴール1アシスト, text: ムバッペ/1ゴール1アシスト}
+  - {match: 3試合連続, text: 公式戦3試合連続ゴール/今季12点目}
+  - {match: もっとできるはずだ, text: ムバッペ/「もっとできるはずだ」}
+  - {match: さらなる高み, text: 「どんな時も/さらなる高みを求められる」}
+  - {match: 満足することは決して, text: 「現状に満足することは/決してない」}
+  - {match: 先発して、70分, text: ヴィニシウスもこの試合は先発}
+  - {match: 言葉をかけました, text: ムバッペは/ヴィニシウスにも言葉を}
+  - {match: 大丈夫だよ, text: 「ヴィニシウスなら/大丈夫だよ」}
+  - {match: 落ち込むのは, text: 「落ち込むのは理解できる」}
+  - {match: 貢献したい, text: 「チームやファンのために/貢献したい思いが強い」}
+  - {match: 自分を認めて, text: 「冷静になって/自分を認めてあげてほしい」}
+  - {match: 最高の選手なんだから, text: 「素晴らしい才能を秘めた/最高の選手」}
+  - {match: 4本打って, text: ムバッペ/シュート4本・枠内2本}
+  - {match: 3本打って, text: ヴィニシウス/シュート3本・枠内2本}
+  - {match: 首位のパリ, text: レアルは首位PSGと/同じ勝ち点の4位}
+  - {match: 25日, text: 次は25日/バルセロナの本拠地でクラシコ}
+
+theme:
+  id: mbappe_never_satisfied
+  league: spain
+  league_name: チャンピオンズリーグ
+  prefix: ""
+  title: ムバッペ「満足することは決してない」。ヴィニシウスに贈った言葉とは
+  hook: ""
+  question: ライプツィヒ戦のあと、ムバッペは自分とヴィニシウスについて何と語ったのか
+  takeaway: ムバッペは4本打って枠内2本、ヴィニシウスは3本打って枠内2本。レアルはCL3連勝で首位PSGと同勝ち点の4位、次は25日のクラシコ。ムバッペは自分には上を求め、仲間（ヴィニシウス）には自分を認めてほしいと語った
+
+thumbnail:
+  line1: ムバッペ「満足しない」
+  line2: ヴィニシウスに贈った言葉
+  tags: [ムバッペ, ヴィニシウス, レアル・マドリード]
+  layout: scene
+  photo: assets/images/20261023_mbappe_never_satisfied/11_w.jpg
+  short_photo: assets/images/20261023_mbappe_never_satisfied/11_v.jpg
+
+answer: 「僕らのような選手は、現状に満足することは決してない」。ヴィニシウスには「素晴らしい才能を秘めた最高の選手」と語った
+watch: 25日（現地）のエル・クラシコ、バルセロナ対レアル
+
+short_photos:
+  - assets/images/20261023_mbappe_never_satisfied/11_v.jpg
+  - assets/images/20261023_mbappe_never_satisfied/12_v.jpg
+  - assets/images/20261023_mbappe_never_satisfied/13_v.jpg
+  - assets/images/20261023_mbappe_never_satisfied/01_v.jpg
+  - assets/images/20261023_mbappe_never_satisfied/06_v.jpg
+  - assets/images/20261023_mbappe_never_satisfied/03_v.jpg
+
+sections:
+  - id: what
+    main: true
+    heading: ライプツィヒ戦のあとに
+    tier: 報道
+    telop: レアル4対1ライプツィヒ。ムバッペが語った
+    say:
+      - text: 21日のCLでレアルが4対1で勝って3連勝。ムバッペは1ゴール1アシスト。
+        image: assets/images/20261023_mbappe_never_satisfied/13_w.jpg
+      - text: 試合のあと、ムバッペはこう話しました。
+        main_only: true
+        image: assets/images/20261023_mbappe_never_satisfied/11_w.jpg
+      - voice: ムバッペ
+        text: 調子はいい感じだけど、もっとできるはずだ。
+        short_voice: true
+        image: assets/images/20261023_mbappe_never_satisfied/11_w.jpg
+      - voice: ムバッペ
+        text: 僕は、どんな時もさらなる高みを求められる選手だから。
+        cont: true
+        image: assets/images/20261023_mbappe_never_satisfied/12_w.jpg
+      - voice: ムバッペ
+        text: 僕らのような選手は、現状に満足することは決してない。
+        cont: true
+        image: assets/images/20261023_mbappe_never_satisfied/12_w.jpg
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/ucl/detail/?461580-461580-fl
+      - https://www.soccer-king.jp/news/world/esp/20261022/2219762.html
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915313
+
+  - id: vinicius
+    heading: ヴィニシウスには何と言ったか
+    tier: 報道
+    telop: ムバッペがヴィニシウスにかけた言葉
+    say:
+      - text: この試合、ヴィニシウスも先発して、70分に交代しました。
+        image: assets/images/20261023_mbappe_never_satisfied/06_w.jpg
+      - text: ムバッペは、そのヴィニシウスにも言葉をかけました。
+        image: assets/images/20261023_mbappe_never_satisfied/13_w.jpg
+      - voice: ムバッペ
+        text: ヴィニシウスなら大丈夫だよ。
+        image: assets/images/20261023_mbappe_never_satisfied/10_w.jpg
+      - voice: ムバッペ
+        text: 彼が落ち込むのは理解できる。
+        cont: true
+        image: assets/images/20261023_mbappe_never_satisfied/11_w.jpg
+      - voice: ムバッペ
+        text: チームやファンのために貢献したい、という思いが強いからね。
+        cont: true
+        image: assets/images/20261023_mbappe_never_satisfied/10_w.jpg
+      - voice: ムバッペ
+        text: 冷静になって、自分を認めてあげてほしい。
+        cont: true
+        image: assets/images/20261023_mbappe_never_satisfied/12_w.jpg
+      - voice: ムバッペ
+        text: 彼は、素晴らしい才能を秘めた最高の選手なんだから。
+        cont: true
+        image: assets/images/20261023_mbappe_never_satisfied/06_w.jpg
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/esp/20261022/2219762.html
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915313
+
+  - id: view
+    viewpoint: true
+    heading: 二人の数字と、次のクラシコ
+    tier: 背景
+    telop: ムバッペ4本、ヴィニシウス3本。次は25日のクラシコ
+    say:
+      - text: 見立てです。ムバッペは、自分には上を求め、仲間には自分を認めてほしいと語りました。
+        card: none
+        image: assets/images/20261023_mbappe_never_satisfied/13_w.jpg
+      - text: ムバッペは公式戦3試合連続のゴールで、今季12点目です。
+        image: assets/images/20261023_mbappe_never_satisfied/11_w.jpg
+      - text: 同じ試合で、ムバッペは4本打って、枠内は2本。
+        image: assets/images/20261023_mbappe_never_satisfied/12_w.jpg
+      - text: ヴィニシウスも3本打って、2本が枠内でした。
+        image: assets/images/20261023_mbappe_never_satisfied/03_w.jpg
+      - text: レアルは首位のパリ・サンジェルマンと同じ勝ち点で、4位につけています。
+        image: assets/images/20261023_mbappe_never_satisfied/13_w.jpg
+      - text: 次は25日。首位を走るバルセロナの本拠地で、エル・クラシコです。
+        image: assets/images/20261023_mbappe_never_satisfied/06_w.jpg
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/ucl/detail/?461580-461580-fl
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915313
+short_title: "ムバッペ「満足することは決してない」。ヴィニシウスに贈った言葉とは"

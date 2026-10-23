@@ -1,0 +1,614 @@
+# スタジアム紹介シリーズ：クリスタル・パレスの本拠地（セルハースト・パーク、10/23）。雛形は 10/22 エヴァートンの回。
+# 軸：A＝収容2万5194席はプレミア20クラブで17位（下から4番目）／B＝その本拠地が、毎試合ほぼ満員（入場は収容の99.4％）なのに、広げるのが遅れた。メイン・スタンドを5200席から1万3500席の3層に建て替える工事が2026年夏に始まった。
+# 収容・ピッチ：PL公式ハンドブック2026/27（Ground Capacity at start of the Season、控え research/raw/20261021_nufc_plhandbook.txt の同じ表）。
+#   パレス 25,194（ピッチ 縦101.5×横68m）。20クラブ：マンU 74,158／スパーズ 62,850／リヴァプール 61,276／シティ 61,038／アーセナル 60,704／エヴァートン 52,769／ニューカッスル 52,729／サンダーランド 48,095／チェルシー 40,044／リーズ 37,633／ヴィラ 36,887／コヴェントリー 32,609／ブライトン 32,176／フォレスト 31,212／イプスウィッチ 30,294／フラム 28,107／パレス 25,194（17位）／ハル 24,983／ブレントフォード 17,250／ボーンマス 12,357。
+#   （ハンドブックのニューカッスルの行は2行あり、2行目 31,212 はフォレストの表。見出しの取り違えをクラブの並びで直した）
+#   自分で引いた：74,158-25,194=48,964／25,194÷74,158=0.34＝約3分の1／フラム 28,107-25,194=2,913／パレス 25,194-ハル 24,983=211。ピッチの縦はフラム100・リヴァプール101・パレス101.5・チェルシー103の順で、パレスは短いほうから3番目。
+# 入場（PL公式の試合API、取得2026-10-23。控え research/raw/20261023_palace_matches_pl_api.json）：
+#   2024/25 パレスのホーム19試合＝合計476,273・平均25,067.0（最多25,185＝4/19 ボーンマス戦・最少24,564＝4/5 ブライトン戦）。
+#   2025/26 ホーム19試合のうち入場数が載る18試合（2/11 バーンリー戦は入場数が空）＝合計450,305・平均25,016.9（最多25,192＝5/24 アーセナル戦・最少24,326＝11/9 ブライトン戦）。
+#   2026/27 ここまでのホーム3試合＝25,149（8/28 シティ）／25,122（9/12 イプスウィッチ）／25,120（10/11 フォレスト）、合計75,391・平均25,130.3。
+#   自分で数えた：2季の37試合＝合計926,578・平均25,042.6＝収容25,194の99.4％／最少24,326÷25,194=96.6％／最多は収容に2席届かない／2026/27の平均÷収容=99.7％。
+#   注意：ハンドブックの25,194は今季の開幕時の収容。前の季の収容は確かめていないので、台本では「いまの収容に対して」と断る。
+# 本人・記録（ウィキペディア en "Selhurst Park" 取得2026-10-23。控え research/raw/20261023_pa_wp_selhurst.txt）：
+#   開場1924-08-30（ロンドン市長が開く）・設計アーチボルド・リーチ・費用約3万ポンド・開場時はメイン・スタンド1つだけ（ストで未完成）・初戦は ザ・ウェンズデイに0-1・観客2万5000人。
+#   1969 アーサー・ウェイト・スタンド（1部昇格）／1979 最多入場5万1482人（バーンリーに2-0、2部優勝）／1981 ホワイトホース・レーンの裏の裏手の土地をスーパーのセインズベリーに200万ポンドで売り、テラスは実質半分に／
+#   1985 チャールトンが間借り（リーグのクラブで初の本拠地共用）／1986 会長ノエイズがクラブから競技場を買う／1990 テイラー報告を受けてアーサー・ウェイトの下段を全席座席に／1991〜2003 ウィンブルドンが間借り／1994 ホームズデールのテラスを壊し翌年2層8500席のスタンド（いまの表記 8,329）／
+#   1993-01-26 プレミア史上最少の入場3,039人（ウィンブルドン対エヴァートン、会場はセルハースト）／2008 クラブに25年の賃貸（年1.2百万ポンド）／2010-06 コンソーシアムがクラブと競技場を買い、1998年以来初めて同じ会社に。
+#   2018-04-19 メイン・スタンド建て替え案を市議会が承認（2019年夏着工・2021/22完成予定だった）→コロナ・アカデミー整備（2021完成）・ウッダーソン・クローズの住宅の問題で遅れ、2026年に着工・完成は2029年初めの予定（ウィキペディア）。
+# クラブ公式（cpfc.co.uk/crystal-palace-main-stand-redevelopment/ と cpfc.co.uk/news/announcement/exciting-new-stadium-training-ground-improvements-this-summer/、WebFetch、取得2026-10-23）：
+#   新スタンドは3層・1万3500席（現在の1924年のスタンドは5200席）・総収容は2万6000席から3万4000席超へ／2022年10月に修正案を市議会が承認／2024年夏に市との最終の法的合意に署名／2026年1月にウッダーソン・クローズの6軒を全部買い取り居住者の移転が済む／
+#   2026-08-28（今季のホーム初戦、対シティ）の発表：メイン・スタンドと周りの取り壊しが始まった。正面玄関・役員室・貴賓ラウンジ・レストランなどを撤去して移し、6軒の住宅を壊し、ファンゾーンを工事車両と電源工事のため撤去／工事の完成日はこのページに書かれていない。費用も書かれていない。
+# 割れる点（台本で断った）：①ウィキペディアは現スタンドを5460席、クラブは5200席と書く→「クラブの数字」で言い、差は言わない／②総収容の「2万6000」（クラブ）と「25,194」（ハンドブック）→増える席は 1万3500-5200=8300 で言う／③完成は「2029年の初め」（ウィキペディア。クラブの公式ページに完成日は無い）→「2029年の初めと伝えられる」と断る／④承認の年：ウィキペディアは2018年4月と2024年8月、クラブは2022年10月の修正案承認と2024年夏の法的合意→「2018年に最初の承認、2022年に修正案」と言い、2024年は「最終の法的合意」とクラブの言葉で言う。
+# 言わなかったもの：費用（資料に無い）／ジョーダン氏の2006年の買収をめぐる記述（ウィキペディアが「誤り」と書く事実関係。確かめられず、法的な話に近いので入れない）／ボクシングの試合・ドラマの撮影／AFC ウィンブルドンの経緯。
+# 日本との接点（基礎の次の節に置いた）：ウィキペディア en "Daichi Kamada"：2024-07-01 パレスに加入、クラブ初の日本人選手。2024-08-18 開幕戦（ブレントフォード戦、1対2）でデビュー、クラブで1000人目のデビュー。2025-05-17 FAカップ決勝でシティに1対0（優勝はクラブ初の主要タイトル）。
+#   "Takehiro Tomiyasu"：2026-08-07 アヤックスの契約満了でパレスに加入。今季の名簿（research/pl_data/palace_raw.json）に日本人は鎌田・冨安の2人。冨安のクラブ出場は2。
+# 重なりを避けた：クラブ紹介⑧パレスの回（2026-09-20）は本拠地を「2万5194人が入る」の1行で言うだけ。名選手・ザハ・万博の話は言わない。10/16チェルシー・10/22エヴァートンの回と、稼働率の見せ方は同じ型だが数字は別。女子チームの話はしない。
+# 読めなかった：クラブ公式の完成日（無い）。ブラウザ操作・JS実行は不使用（requests と WebFetch。WebSearch は題名とURLを探すためだけ）。
+# 写真：assets/images/20261023_stadium_palace/（Commons、出典は credits.json）。人物は特定していない。
+date: 2026年10月23日
+slot: other_1
+format: news
+series: スタジアム紹介
+voice_min: 0
+people: []
+watch: 毎日、数字でサッカーを読み解きます
+theme:
+  id: stadium_palace
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: クリスタル・パレス
+  title: クリスタル・パレスの本拠地は、満員が続くのに、なぜ、広げるのがこれほど遅れたのか
+  question: プレミア20クラブで17位の2万5194席は、なぜ広がらないまま満員が続き、いま何が始まったのか
+  lead: 満員が続く、小さな本拠地。
+  hook: ''
+  opening_image: assets/images/20261023_stadium_palace/01_w.jpg
+  end_bg: assets/images/20261023_stadium_palace/01_w.jpg
+  takeaway: クリスタル・パレスの本拠地セルハースト・パークの収容は、今季の開幕時で2万5194人。プレミア20クラブで17位で、首位のマンチェスター・ユナイテッドの約3分の1。鎌田大地が加わった2シーズンのホーム37試合の平均入場は2万5043人で、収容の99.4％にあたる。席が足りない本拠地で、メイン・スタンドを5200席から1万3500席の3層に建て替える工事が、2026年夏に始まった。増える席は8300で、総収容は3万4000席を超える見込み。完成は2029年の初めと伝えられる。費用は資料に無い
+  short_title: パレスの本拠地、プレミア17位の2万5194席
+thumbnail:
+  layout: scene
+  bold: false
+  callouts:
+  - 入場は収容の99.4％
+  - 建て替えが始まった
+  photo: assets/images/20261023_stadium_palace/01_w.jpg
+  line1: クリスタル・パレスの本拠地
+  line2: 収容は20クラブ中17位
+  tags:
+  - クリスタル・パレス
+  - セルハースト・パーク
+  - 鎌田大地
+  - プレミアリーグ
+  - スタジアム紹介
+sections:
+- id: data
+  main: true
+  heading: セルハースト・パークの収容は、プレミアで何番目なのか
+  bg: assets/images/20261023_stadium_palace/01_w.jpg
+  tier: 報道
+  telop: 収容は2万5194人。プレミア20クラブで17位。ピッチの縦は短いほうから3番目
+  narrator: 解説
+  card:
+    type: table
+    title: セルハースト・パークの基礎DATA
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - 収容人数
+      - 2万5194人（今季の開幕時）
+    - - 20クラブでは
+      - 17位（下から4番目）
+    - - 場所
+      - ロンドン南部、クロイドン区
+    - - ピッチ
+      - 縦101.5×横68メートル
+    - - 開場
+      - 1924年8月30日
+    - - 設計
+      - アーチボルド・リーチ
+  say:
+  - text: クリスタル・パレスの本拠地の話です。
+    short_only: true
+    image: assets/images/20261023_stadium_palace/01_w.jpg
+    card: none
+  - text: 収容は、2万5194人。今季のプレミア20クラブで、17番目です。
+    emph: true
+    image: assets/images/20261023_stadium_palace/02_w.jpg
+    card: &id_rank
+      type: stats
+      title: プレミア17位の本拠地。すぐ上と、すぐ下
+      items:
+      - - '28107'
+        - 人
+        - 16位 フラム
+      - - '25194'
+        - 人
+        - パレスの収容
+      - - '24983'
+        - 人
+        - 18位 ハル
+      focus: 1
+  - text: 16位は、フラム。2万8107人。差は、2913席。
+    image: assets/images/20261023_stadium_palace/02_w.jpg
+    card:
+      <<: *id_rank
+      focus: 0
+  - text: 18位は、ハル。2万4983人。差は、211席。
+    image: assets/images/20261023_stadium_palace/02_w.jpg
+    card:
+      <<: *id_rank
+      focus: 2
+  - text: 1位は、マンチェスター・ユナイテッド。7万4158人です。
+    image: assets/images/20261023_stadium_palace/03_w.jpg
+    card: none
+  - text: パレスの収容は、その約3分の1です。
+    emph: true
+    image: assets/images/20261023_stadium_palace/03_w.jpg
+    card: &id_third
+      type: calc
+      title: 首位との差（自分で割った）
+      terms:
+      - - 2万5194人
+        - パレスの収容
+      - - 7万4158人
+        - マンチェスター・ユナイテッド
+      - - 0.34
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+  - text: 場所は、ロンドンの南。クロイドン区のセルハースト。
+    image: assets/images/20261023_stadium_palace/04_w.jpg
+    card: none
+  - text: ピッチの縦は、101.5メートル。短いほうから、3番目です。
+    image: assets/images/20261023_stadium_palace/04_w.jpg
+    card: none
+  sources:
+  - https://resources.premierleague.pulselive.com/premierleague/document/2026/07/31/8a890ff9-176c-4364-a8ff-e08f995e2c86/TM2040_PL-Handbook-and-Collateral-2026-27_Digital_31.07.pdf
+  - https://en.wikipedia.org/wiki/Selhurst_Park
+- id: japan
+  heading: この本拠地で、日本人は、いつから戦っているのか
+  bg: assets/images/20261023_stadium_palace/01_w.jpg
+  tier: 背景
+  telop: 2024年7月、鎌田大地がクラブ初の日本人選手に。2026年8月に冨安健洋が加わった
+  narrator: 解説
+  card: &id_jp
+    type: timeline
+    title: パレスの日本人選手（ウィキペディア）
+    rows:
+    - - 2024年7月1日
+      - 鎌田大地が加入。クラブ初の日本人選手
+    - - 2024年8月18日
+      - 開幕戦でデビュー。クラブで1000人目
+    - - 2025年5月17日
+      - FAカップ決勝でシティに1対0
+    - - 2026年8月7日
+      - 冨安健洋が加入
+    focus: 2024年7月1日
+    highlight_row: 0
+  say:
+  - text: 次は、この本拠地を、日本人が使うようになった話です。
+    image: assets/images/20261023_stadium_palace/05_w.jpg
+    card: none
+  - text: 2024年7月1日、鎌田大地が、パレスに加わります。
+    image: assets/images/20261023_stadium_palace/05_w.jpg
+    card:
+      <<: *id_jp
+      highlight_row: 0
+  - text: クラブの歴史で、初めての日本人選手です。
+    emph: true
+    image: assets/images/20261023_stadium_palace/05_w.jpg
+    card: none
+  - text: 8月18日の開幕戦で、デビュー。クラブで、1000人目のデビューでした。
+    image: assets/images/20261023_stadium_palace/02_w.jpg
+    card:
+      <<: *id_jp
+      highlight_row: 1
+  - text: 2025年5月17日、FAカップの決勝で、シティに1対0。
+    image: assets/images/20261023_stadium_palace/02_w.jpg
+    card:
+      <<: *id_jp
+      highlight_row: 2
+  - text: 鎌田は、決勝のただ1点につながる、パスに関わりました。
+    image: assets/images/20261023_stadium_palace/02_w.jpg
+    card: none
+  - text: クラブ初の、主要タイトルです。
+    emph: true
+    image: assets/images/20261023_stadium_palace/02_w.jpg
+    card: none
+  - text: 2026年8月7日には、冨安健洋が、加わります。
+    emph: true
+    image: assets/images/20261023_stadium_palace/04_w.jpg
+    card:
+      <<: *id_jp
+      highlight_row: 3
+  - text: いまの名簿に、日本人は、2人です。
+    image: assets/images/20261023_stadium_palace/04_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Daichi_Kamada
+  - https://en.wikipedia.org/wiki/Takehiro_Tomiyasu
+- id: history
+  heading: なぜ、収容は、100年たってもほぼ同じなのか
+  bg: assets/images/20261023_stadium_palace/01_w.jpg
+  tier: 背景
+  telop: 1924年の開場日の観客は約2万5000人。最多は1979年の5万1482人。いまは2万5194席
+  narrator: 解説
+  card: &id_hist
+    type: timeline
+    title: セルハースト・パークの歩み（ウィキペディア）
+    rows:
+    - - 1924年
+      - 開場。スタンドは1つだけ
+    - - 1969年
+      - 1部昇格。アーサー・ウェイト・スタンド
+    - - 1979年
+      - 最多5万1482人
+    - - 1981年
+      - 裏手の土地を200万ポンドで売る
+    - - 1990年
+      - テイラー報告で全席の座席へ
+    - - 1994年
+      - ホームズデールを建て替え
+    focus: 1924年
+    highlight_row: 0
+  say:
+  - text: 開場は、1924年8月30日です。
+    image: assets/images/20261023_stadium_palace/05_w.jpg
+    card:
+      <<: *id_hist
+      highlight_row: 0
+  - text: スタンドは、いまのメイン・スタンドが、1つだけ。
+    image: assets/images/20261023_stadium_palace/05_w.jpg
+    card: none
+  - text: 工事は、ストライキで、未完成のままでした。
+    image: assets/images/20261023_stadium_palace/05_w.jpg
+    card: none
+  - text: 初戦は、ザ・ウェンズデイに0対1の負け。観客は、約2万5000人。
+    emph: true
+    image: assets/images/20261023_stadium_palace/02_w.jpg
+    card: none
+  - text: 1969年、1部に上がった年に、アーサー・ウェイト・スタンドが建ちます。
+    image: assets/images/20261023_stadium_palace/02_w.jpg
+    card:
+      <<: *id_hist
+      highlight_row: 1
+  - text: 1979年、バーンリーに2対0。2部優勝の試合に、5万1482人が入りました。
+    emph: true
+    image: assets/images/20261023_stadium_palace/04_w.jpg
+    card:
+      <<: *id_hist
+      highlight_row: 2
+  - text: いまの収容は、その約半分です。
+    image: assets/images/20261023_stadium_palace/04_w.jpg
+    card: &id_rec
+      type: calc
+      title: 最多の入場は、いまの収容の何倍か（自分で割った）
+      terms:
+      - - 5万1482人
+        - 1979年の最多入場
+      - - 2万5194人
+        - いまの収容
+      - - 2.04倍
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+  - text: 1981年、立ち見席の裏手の土地を、スーパーに売りました。
+    image: assets/images/20261023_stadium_palace/03_w.jpg
+    card:
+      <<: *id_hist
+      highlight_row: 3
+  - text: 値段は、200万ポンド。ゴール裏の立ち見席は、実質、半分になりました。
+    image: assets/images/20261023_stadium_palace/03_w.jpg
+    card: none
+  - text: 1990年、全席を座席にするよう求めた、テイラー報告を受けます。
+    image: assets/images/20261023_stadium_palace/03_w.jpg
+    card:
+      <<: *id_hist
+      highlight_row: 4
+  - text: アーサー・ウェイト・スタンドの下段が、座席だけになりました。
+    image: assets/images/20261023_stadium_palace/03_w.jpg
+    card: none
+  - text: 1994年、ゴール裏のホームズデールを壊し、翌年、2層のスタンドが建ちます。
+    emph: true
+    image: assets/images/20261023_stadium_palace/01_w.jpg
+    card:
+      <<: *id_hist
+      highlight_row: 5
+  - text: 広げる工事は、そこで止まりました。
+    image: assets/images/20261023_stadium_palace/01_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Selhurst_Park
+- id: owner
+  heading: なぜ、競技場は、クラブの持ち物ではなかったのか
+  bg: assets/images/20261023_stadium_palace/01_w.jpg
+  tier: 背景
+  telop: 1986年に会長が競技場を買い、2010年6月まで、クラブと競技場は別々だった
+  narrator: 解説
+  card: &id_own
+    type: timeline
+    title: 競技場とクラブの持ち主（ウィキペディア）
+    rows:
+    - - 1985年
+      - チャールトンが間借り。リーグのクラブで初
+    - - 1986年
+      - 会長が、クラブから競技場を買う
+    - - 1991〜2003年
+      - ウィンブルドンが間借り
+    - - 2008年
+      - クラブに25年の賃貸
+    - - 2010年6月
+      - 競技場とクラブが、同じ会社に
+    focus: 1986年
+    highlight_row: 0
+  say:
+  - text: 広がらなかった理由の1つは、お金です。
+    image: assets/images/20261023_stadium_palace/03_w.jpg
+    card: none
+  - text: 1985年、チャールトンが、この競技場を間借りします。
+    image: assets/images/20261023_stadium_palace/03_w.jpg
+    card:
+      <<: *id_own
+      highlight_row: 0
+  - text: リーグのクラブが、本拠地を共用するのは、イングランドで初めてでした。
+    image: assets/images/20261023_stadium_palace/03_w.jpg
+    card: none
+  - text: 翌1986年、当時の会長が、競技場を、クラブから買います。
+    emph: true
+    image: assets/images/20261023_stadium_palace/02_w.jpg
+    card:
+      <<: *id_own
+      highlight_row: 1
+  - text: ウィキペディアは、収入を作るため、と書きます。
+    image: assets/images/20261023_stadium_palace/02_w.jpg
+    card: none
+  - text: 1991年からは、ウィンブルドンが、2003年まで間借りします。
+    image: assets/images/20261023_stadium_palace/04_w.jpg
+    card:
+      <<: *id_own
+      highlight_row: 2
+  - text: 1993年1月26日。ここで開いた、ウィンブルドン戦の入場は、3039人。
+    emph: true
+    image: assets/images/20261023_stadium_palace/04_w.jpg
+    card: none
+  - text: プレミア史上、いちばん少ない入場です。
+    image: assets/images/20261023_stadium_palace/04_w.jpg
+    card: none
+  - text: 2008年、クラブは、競技場を25年間、借りる契約を結びます。
+    image: assets/images/20261023_stadium_palace/05_w.jpg
+    card:
+      <<: *id_own
+      highlight_row: 3
+  - text: 2010年6月、新しい持ち主の集まりが、クラブと競技場を、一緒に買いました。
+    emph: true
+    image: assets/images/20261023_stadium_palace/05_w.jpg
+    card:
+      <<: *id_own
+      highlight_row: 4
+  - text: クラブと競技場が同じ会社になるのは、1998年以来のことです。
+    image: assets/images/20261023_stadium_palace/01_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Selhurst_Park
+- id: stand
+  heading: 新しいスタンドは何席で、なぜ、工事が遅れたのか
+  bg: assets/images/20261023_stadium_palace/01_w.jpg
+  tier: 報道
+  telop: 5200席のメイン・スタンドを、1万3500席の3層へ。2026年夏に取り壊しが始まった
+  narrator: 解説
+  card: &id_stand
+    type: timeline
+    title: メイン・スタンド建て替えの歩み
+    rows:
+    - - 2018年4月
+      - 市議会が建て替え案を承認
+    - - 2019年夏
+      - 着工の予定（実現せず）
+    - - 2022年10月
+      - 修正案を市議会が承認
+    - - 2024年夏
+      - 市と最終の法的合意に署名
+    - - 2026年1月
+      - 隣の住宅6軒の買い取りが完了
+    - - 2026年8月
+      - 取り壊しが始まっている
+    focus: 2018年4月
+    highlight_row: 0
+  say:
+  - text: 取り壊されるスタンドは、1924年の開場のままの建物です。
+    image: assets/images/20261023_stadium_palace/02_w.jpg
+    card: none
+  - text: クラブの数字で、5200席。
+    image: assets/images/20261023_stadium_palace/02_w.jpg
+    card: &id_seats
+      type: stats
+      title: メイン・スタンドの席数（クラブの発表）
+      items:
+      - - '5200'
+        - 席
+        - いまのスタンド
+      - - '13500'
+        - 席
+        - 新しいスタンド
+      - - '3'
+        - 層
+        - 新しいスタンド
+      focus: 0
+  - text: 新しいスタンドは、3層で、1万3500席です。
+    emph: true
+    image: assets/images/20261023_stadium_palace/02_w.jpg
+    card:
+      <<: *id_seats
+      focus: 1
+  - text: 増えるのは、8300席です。
+    image: assets/images/20261023_stadium_palace/03_w.jpg
+    card: &id_plus
+      type: calc
+      title: 新しいスタンドが増やす席（自分で引いた）
+      terms:
+      - - 1万3500席
+        - 新しいスタンド
+      - - 5200席
+        - いまのスタンド
+      - - 8300席
+        - 引いた答え
+      ops:
+      - −
+      - ＝
+  - text: クラブは、総収容が、3万4000席を超える、と説明しています。
+    image: assets/images/20261023_stadium_palace/03_w.jpg
+    card: none
+  - text: ガラスの正面は、万博の建物だった元の水晶宮から、着想を得たものです。
+    image: assets/images/20261023_stadium_palace/01_w.jpg
+    card: none
+  - text: 2018年4月、市議会が、建て替え案を承認します。
+    emph: true
+    image: assets/images/20261023_stadium_palace/01_w.jpg
+    card:
+      <<: *id_stand
+      highlight_row: 0
+  - text: 着工は2019年の夏、新スタンドは2021/22シーズンに間に合う予定でした。
+    image: assets/images/20261023_stadium_palace/05_w.jpg
+    card:
+      <<: *id_stand
+      highlight_row: 1
+  - text: ところが、遅れます。コロナ禍と、アカデミーの整備が先になりました。
+    image: assets/images/20261023_stadium_palace/05_w.jpg
+    card: none
+  - text: さらに、隣のウッダーソン・クローズの住宅が、壁になりました。
+    image: assets/images/20261023_stadium_palace/05_w.jpg
+    card: none
+  - text: 2022年10月に、修正した案が、市議会で承認されます。
+    image: assets/images/20261023_stadium_palace/04_w.jpg
+    card:
+      <<: *id_stand
+      highlight_row: 2
+  - text: 2024年の夏には、市との最終の法的合意に、署名しました。
+    image: assets/images/20261023_stadium_palace/04_w.jpg
+    card:
+      <<: *id_stand
+      highlight_row: 3
+  - text: 2026年1月、住宅6軒の買い取りが終わり、住人の移転も済みました。
+    emph: true
+    image: assets/images/20261023_stadium_palace/04_w.jpg
+    card:
+      <<: *id_stand
+      highlight_row: 4
+  - text: そして、2026年の夏。取り壊しが、始まりました。
+    emph: true
+    image: assets/images/20261023_stadium_palace/02_w.jpg
+    card:
+      <<: *id_stand
+      highlight_row: 5
+  - text: 8月28日、今季のホーム初戦の日の、クラブの発表です。
+    image: assets/images/20261023_stadium_palace/02_w.jpg
+    card: &id_doc
+      type: document
+      label: クラブの発表（2026年8月28日）の訳
+      paragraphs:
+      - メイン・スタンドと周辺の取り壊しが始まった。
+      - 正面玄関、役員室、貴賓ラウンジ、レストランは撤去し、移した。
+      - ウッダーソン・クローズの、クラブが買った6軒の住宅を壊した。
+      - ファンゾーンは、工事車両と電源工事のため撤去した。
+      highlight:
+      - 取り壊しが始まった
+      - 6軒
+  - text: 正面玄関や役員室は、もう、別の場所に移っています。
+    image: assets/images/20261023_stadium_palace/02_w.jpg
+    card: *id_doc
+  - text: 完成は、2029年の初めと、伝えられます。
+    emph: true
+    image: assets/images/20261023_stadium_palace/03_w.jpg
+    card: none
+  - text: 当初の目標、2021/22シーズンから、約7年あとです。
+    image: assets/images/20261023_stadium_palace/03_w.jpg
+    card: none
+  - text: クラブの公式ページには、完成日も、費用も、載っていません。
+    image: assets/images/20261023_stadium_palace/01_w.jpg
+    card: none
+  sources:
+  - https://cpfc.co.uk/crystal-palace-main-stand-redevelopment/
+  - https://www.cpfc.co.uk/news/announcement/exciting-new-stadium-training-ground-improvements-this-summer/
+  - https://en.wikipedia.org/wiki/Selhurst_Park
+- id: view
+  viewpoint: true
+  heading: 見立て・満員の2万5194席は、新スタンドで、何位になるのか
+  bg: assets/images/20261023_stadium_palace/01_w.jpg
+  tier: 報道
+  telop: 鎌田が加わった2季のホーム37試合は、平均2万5043人。収容の99.4％
+  narrator: 解説
+  card: &id_view
+    type: table
+    title: ホームの平均入場（プレミア）
+    columns:
+    - 区切り
+    - 平均入場
+    rows:
+    - - 2024/25 ホーム19試合
+      - 2万5067人
+    - - 2025/26 ホーム18試合
+      - 2万5017人
+    - - 2026/27 ここまで 3試合
+      - 2万5130人
+    highlight_row: 0
+  say:
+  - text: では、いまの本拠地は、毎試合、どれくらい入るのか。
+    emph: true
+    image: assets/images/20261023_stadium_palace/05_w.jpg
+    card: none
+  - text: 鎌田大地が加わった、2024/25のホーム19試合。平均は、2万5067人です。
+    image: assets/images/20261023_stadium_palace/05_w.jpg
+    card:
+      <<: *id_view
+      highlight_row: 0
+    mark:
+      kind: circle
+      row: 0
+  - text: 2025/26は、入場数が載っている18試合で、2万5017人。
+    image: assets/images/20261023_stadium_palace/02_w.jpg
+    card:
+      <<: *id_view
+      highlight_row: 1
+  - text: 今季は、ここまで3試合で、2万5130人です。
+    image: assets/images/20261023_stadium_palace/02_w.jpg
+    card:
+      <<: *id_view
+      highlight_row: 2
+  - text: 2季、37試合の平均は、2万5043人。
+    emph: true
+    image: assets/images/20261023_stadium_palace/02_w.jpg
+    card: &id_fill
+      type: calc
+      title: 平均入場÷いまの収容（自分で割った）
+      terms:
+      - - 2万5043人
+        - 2季37試合の平均
+      - - 2万5194人
+        - いまの収容
+      - - 99.4％
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+  - text: いまの収容の、99.4％です。
+    image: assets/images/20261023_stadium_palace/03_w.jpg
+    card: *id_fill
+  - text: 最多は、2026年5月24日のアーセナル戦。2万5192人。
+    emph: true
+    image: assets/images/20261023_stadium_palace/03_w.jpg
+    card: none
+  - text: 収容に、2席届きません。99.99％です。
+    image: assets/images/20261023_stadium_palace/03_w.jpg
+    card: none
+  - text: 最少は、2025年11月9日のブライトン戦。2万4326人。
+    image: assets/images/20261023_stadium_palace/04_w.jpg
+    card: none
+  - text: それでも、収容の96％を、下回った試合は、ありませんでした。
+    image: assets/images/20261023_stadium_palace/04_w.jpg
+    card: none
+  - text: 入場は、収容の天井に張りついています。
+    emph: true
+    image: assets/images/20261023_stadium_palace/04_w.jpg
+    card: none
+  - text: 完成後は、クラブの数字で、3万4000席超です。
+    image: assets/images/20261023_stadium_palace/01_w.jpg
+    card: none
+  - text: いまの他のクラブの数字に並べると、12番目です。
+    emph: true
+    image: assets/images/20261023_stadium_palace/01_w.jpg
+    card: none
+  - text: 17位から、12位へ。
+    image: assets/images/20261023_stadium_palace/02_w.jpg
+    card: none
+  - text: 費用は、資料にないので、触れません。
+    image: assets/images/20261023_stadium_palace/05_w.jpg
+    card: none
+  sources:
+  - https://sdp-prem-prod.premier-league-prod.pulselive.com/api/v1/competitions/8/seasons/2024/matchweeks/1/matches ほか（2024/25 第1〜38節、2025/26 第1〜38節、2026/27 第1〜10節）
+  - https://resources.premierleague.pulselive.com/premierleague/document/2026/07/31/8a890ff9-176c-4364-a8ff-e08f995e2c86/TM2040_PL-Handbook-and-Collateral-2026-27_Digital_31.07.pdf
+  - https://cpfc.co.uk/crystal-palace-main-stand-redevelopment/

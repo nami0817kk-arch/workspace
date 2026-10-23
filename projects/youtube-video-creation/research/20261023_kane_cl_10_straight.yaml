@@ -1,0 +1,158 @@
+# 取材メモ（2026年10月23日）ケイン、CLで10試合連続ゴール。最長のC・ロナウド（11試合）まであと1（ニュースのショート。見せ方 B＝縦写真を高速で切り替え）
+# 取材: 2026-10-23。requests / curl（ブラウザUA）で原文を読んだ。控えは research/raw/20261023_kane_*。
+#   ・ESPN 記事API（content.core.api.espn.com/v1/sports/news/50241594、試合の分析記事）… 全文読んだ。「He has now scored in 10 consecutive Champions League games. Only Cristiano Ronaldo (11) has had a longer streak.」。
+#   ・ESPN 試合記録API（site.api.espn.com/.../uefa.champions/summary?event=401915312）… 得点・アシスト・分。35分 デイヴィス（アシスト ケイン）、61分 ケイン PK。
+#   ・Bundesliga.com（DFL公式）試合レポート（2026-10-22）… 全文読んだ。「2-1 Kane 61' (pen)」「1-1 Davies 35' (assist: Kane)」、ティンバーの手でPK。次のCLは11月3日アトレティコ・マドリード戦。
+#   ・サッカーキング（2026-10-22 14:42、題材の出典。UEFA.com のコメント記事を引く）… 全文読んだ。「CL史上2人目の10試合連続ゴール。最長はC・ロナウドの11試合」は Squawka の集計として書く。ケインの言葉は DAZN の試合後インタビュー。
+#   ・Goal.com（2026-10-23 02:02 JST）… 全文読んだ。「ロナウドは2017〜2018年にレアル・マドリードで11試合連続（UEFAの統計）」。「ケインは9試合でファン・ニステルローイ、レバンドフスキに並んでいた」。次はアトレティコ戦（3日）。
+#   ・beIN SPORTS（2026-10-21/22）… 英語の試合後コメント。「It was a good performance」「The draw was fair overall」が日本語の DAZN 引用と一致。
+#   ・ESPN scoreboard API（dates=20261103）… Bayern Munich at Atlético Madrid 2026-11-03T20:00Z、Riyadh Air Metropolitano。
+# UEFA.com は何度かアクセスしたが応答がなく（タイムアウト）、原文は読めていない。UEFA の記録は ESPN（記事）と Goal.com（「UEFAの統計」）、サッカーキング（UEFA.com の引用）で確かめた。
+# 確度: 試合結果・得点・アシストは 確定（ESPN 試合記録と Bundesliga.com が一致）。「10試合連続・史上2人目・最長は11試合」は 報道（ESPN・Goal.com・サッカーキングで一致。UEFA 原文は未読）。本人の言葉は 報道（DAZN の試合後インタビュー）。見立ては 背景。
+# 資料のずれ（台本では言わない）:
+#   ・CLの連続ゴールの数え方：beIN は「得点またはアシストが10試合連続（CL史上6人目）」とも書く。こちらは「ゴールが10試合連続」だけを言う。
+#   ・アーセナル戦の通算ゴール（16）、ライプツィヒ戦の話などは題材の外なので使わない。
+#   ・本人の「最後の15分／20分」：日本語の DAZN 引用は「最後の15分間」、beIN の英語は「last 20 minutes」。別の取材か訳の違いかが分からないので、この言葉は使わない。
+# 本人の言葉（DAZN。サッカーキングの日本語訳をそのまま使う。言い換えない）:
+#   「良いパフォーマンスだったと思う。」／「全体として見れば、引き分けは妥当な結果だったかもしれない。」／「ファイナルサードでのプレーの精度をもう少し高められたはずだ。」
+#   ストリーク（連続ゴール）そのものについてのケインの発言は、読んだ資料に無い。→ 作らない。
+# 自分で数えたこと（ESPN の試合記録 summary API の keyEvents／rosters から。控えは research/raw/20261023_kane_m*.json）:
+#   ケインのCL得点を新しい順に：アーセナル戦(10/21) 1・ヴァイキング(10/13) 2・ボデ・グリムト(9/10) 1・PSG第2戦(5/6) 1・PSG第1戦(4/28) 1・レアル第2戦(4/15) 1・レアル第1戦(4/7) 1・アタランタ第2戦(3/18) 2・
+#   [アタランタ第1戦(3/10)はケインの出場 appearances=0 ＝ベンチで出番なし。出場した試合で数えると途切れない]・PSV(1/28, 途中出場84分) 1・ユニオン・サン＝ジロワーズ(1/21, 先発) 2 ＝ 10試合で13ゴール。
+#   その前のスポルティング戦(12/9)は先発出場で0点なので、連続はユニオン戦から。→「10試合連続」と合う（ESPN・Goal.com・サッカーキングの数字と一致）。
+#   ※『出場した試合で数える』ことは台本で一言添える。アタランタ第1戦のベンチ（出番なし）は別の資料では確かめていない（ESPN の appearances=0 だけ）ので台本では言わない。
+# 反応: 0件。作らない（まとめ・X は使っていない）。approve は --no-voices で。
+# 10/22 の本（ライスの同点弾・バロンドール3人・ライスの「文句なしの勝者」）とは別の切り口：ケインの連続ゴールの記録。
+# 写真（10/23 差し替え: ユーザー指示「写真はネットから探して」）: 05・06・07=Commons Werner100359 CC BY-SA 4.0（FC Red Bull Salzburg gegen Bayern München の2026-01-06 #08／2025-01-06 #86・#85。バイエルン姿のケイン）、01=同 #34（既存、バイエルンの上着）。England 姿の02・04と、10/16 に使った fcbinside の03 は使わない。
+# 写真: Commons の取得が 429（レート制限）で詰まり、今日の試合・バイエルン姿の新しい写真を取れなかった（Salzburg 親善試合の写真は本人が小さく子どもが写るので不採用）。
+#   既存の4枚（Commons CC BY-SA の England 戦2枚＝10/22 バロンドールの本で使用／fcbinside の主写真と England 戦1枚＝10/16 の本で使用）を再利用。同じ写真の使い回し＝要判断。出典は credits.json。
+slot: overseas
+date: 2026年10月23日
+format: news
+no_main: true
+people:
+- ハリー・ケイン
+- バイエルン・ミュンヘン
+- アーセナル
+short_style: B
+short_question: ケインは、ロナウドの11試合に並べると思いますか。
+short_hook: ケインがCLで10試合連続ゴール。
+theme:
+  id: kane_cl_10_straight
+  league: germany
+  league_name: チャンピオンズリーグ
+  prefix: ''
+  title: ケイン、CLで10試合連続ゴール。ロナウドの最長記録まで、あと何試合か
+  hook: ''
+  question: ケインのCL10試合連続ゴールは、最長のロナウドの記録まであと何試合なのか
+  takeaway: ケインはCL10試合連続ゴールで史上2人目。最長のC・ロナウドは11試合で、次のアトレティコ戦で並べるかどうかが見どころ
+thumbnail:
+  line1: ケイン、CL10戦連発
+  line2: ロナウドの記録まで、あと
+  tags:
+  - ハリー・ケイン
+  - バイエルン・ミュンヘン
+  photo: assets/images/20261023_kane_cl_10_straight/05_w.jpg
+  short_photo: assets/images/20261023_kane_cl_10_straight/05_v.jpg
+  layout: face
+answer: ケインはCL10試合連続ゴール。史上2人目で、最長のロナウド（11試合）まであと1試合
+watch: 11月3日のCL、敵地でのアトレティコ・マドリード戦
+sections:
+- id: what
+  main: true
+  heading: 何が起きたか
+  tier: 確定
+  telop: バイエルン2対2アーセナル。ケインは1ゴール1アシスト
+  say:
+  - text: 現地21日のチャンピオンズリーグ、バイエルン対アーセナルは2対2の引き分け。
+    image: assets/images/20261023_kane_cl_10_straight/05_w.jpg
+  - text: ケインは35分、デイヴィスの同点弾につながるパスを出しました。
+    image: assets/images/20261023_kane_cl_10_straight/05_w.jpg
+  - text: 61分には、PKを決めています。
+    image: assets/images/20261023_kane_cl_10_straight/06_w.jpg
+  official: true
+  sources:
+  - https://www.bundesliga.com/en/bundesliga/news/bayern-munich-arsenal-fc-match-report-highlights-matchday-3-39675
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915312
+- id: words
+  heading: ケインは、試合のあとに何と語ったのか
+  tier: 報道
+  telop: ケイン「良いパフォーマンスだったと思う」
+  say:
+  - voice: ケイン
+    text: 良いパフォーマンスだったと思う。
+    image: assets/images/20261023_kane_cl_10_straight/01_w.jpg
+  - voice: ケイン
+    text: 引き分けは妥当な結果だったかもしれない。
+    cont: true
+    image: assets/images/20261023_kane_cl_10_straight/01_w.jpg
+  - voice: ケイン
+    text: ファイナルサードでの精度を、もう少し高められたはずだ。
+    cont: true
+    image: assets/images/20261023_kane_cl_10_straight/01_w.jpg
+  official: false
+  sources:
+  - https://www.soccer-king.jp/news/world/ger/20261022/2219590.html
+  quotes_from: サッカーキング
+- id: record
+  heading: 10試合連続ゴールは、史上何人目か
+  tier: 報道
+  telop: CL10試合連続ゴールは史上2人目。最長はC・ロナウドの11試合
+  say:
+  - text: 61分のPKで、ケインの連続ゴールは10になりました。
+    image: assets/images/20261023_kane_cl_10_straight/07_w.jpg
+  - text: ここまで続けたのは、CL史上2人目です。最長はC・ロナウドの11試合です。
+    image: assets/images/20261023_kane_cl_10_straight/07_w.jpg
+  official: false
+  sources:
+  - https://content.core.api.espn.com/v1/sports/news/50241594
+  - https://www.goal.com/en/news/one-step-separates-kane-from-cristiano-ronaldo-s-legendary-record/bltf9d5bd2bd3d78139
+  - https://www.soccer-king.jp/news/world/ger/20261022/2219590.html
+- id: view
+  viewpoint: true
+  heading: ロナウドに並ぶのは、いつか
+  tier: 背景
+  telop: 次のCLは11月3日、敵地でアトレティコ戦
+  say:
+  - text: 見立てです。出場した10試合を、イーエスピーエヌの記録で数えると13ゴール。
+    image: assets/images/20261023_kane_cl_10_straight/05_w.jpg
+  - text: 1試合あたり1.3点。今季のCLだけなら、3試合で4ゴールです。
+    image: assets/images/20261023_kane_cl_10_straight/05_w.jpg
+  - text: 次のCLは11月3日、敵地でアトレティコ・マドリードと戦います。
+    image: assets/images/20261023_kane_cl_10_straight/07_w.jpg
+  - text: そこで決めれば、ロナウドの記録に並びます。
+    image: assets/images/20261023_kane_cl_10_straight/07_w.jpg
+  official: false
+  sources:
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20261103
+  - https://www.bundesliga.com/en/bundesliga/news/bayern-munich-arsenal-fc-match-report-highlights-matchday-3-39675
+  - https://www.goal.com/en/news/one-step-separates-kane-from-cristiano-ronaldo-s-legendary-record/bltf9d5bd2bd3d78139
+short_title: ケイン、CLで10試合連続ゴール。ロナウドの最長記録まで、あと何試合か
+short_photos:
+- assets/images/20261023_kane_cl_10_straight/05_v.jpg
+- assets/images/20261023_kane_cl_10_straight/07_v.jpg
+- assets/images/20261023_kane_cl_10_straight/06_v.jpg
+- assets/images/20261023_kane_cl_10_straight/01_v.jpg
+short_telops:
+- match: 2対2
+  text: CL第3節/バイエルン2対2アーセナル
+- match: 同点弾につながる
+  text: 35分 デイヴィスの同点弾を/ケインがアシスト
+- match: PKを決めました
+  text: 61分/ケインがPKを決める
+- match: 良いパフォーマンス
+  text: ケイン（DAZN）/「良いパフォーマンスだった」
+- match: 妥当な結果
+  text: 「引き分けは妥当な結果」
+- match: ファイナルサード
+  text: 「ファイナルサードの精度を/高められたはず」
+- match: 10試合連続ゴール
+  text: CL 10試合連続ゴール
+- match: 史上2人目
+  text: 史上2人目/最長はC・ロナウドの11試合
+- match: 13ゴール
+  text: 出場した10試合で/13ゴール（1試合1.3点）
+- match: アトレティコ
+  text: 次は11月3日/敵地でアトレティコ戦
+- match: 並びます
+  text: 決めれば/ロナウドの記録に並ぶ

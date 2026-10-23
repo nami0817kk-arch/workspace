@@ -1,0 +1,194 @@
+# 取材メモ（2026年10月22日）バロンドール授賞式は26日（月）ロンドン。ヤマル・ケイン・ムバッペ（ニュースのショート。見せ方 Y＝ムバッペの実在の発言から始める）
+# 予想は書かない（受賞者は未発表）。三人とも本人の言葉の原文（英語）を訳した。言い換えない。
+# 取材: 2026-10-22。ESPN 記事API（now.core.api.espn.com/v1/sports/news/50229304）で本文を全部読んだ。控え research/raw/20261022_ballondor_espn_story.txt。
+#   ・ESPN（Mark Ogden、10/21）「What it takes to win a Ballon d'Or: Trophies, goals and playing the PR game」
+#       授賞式は「ロンドン・パラディアムで月曜」。有力候補は『Yamal, Kane and Mbappé』。投票は 9/28 に締め切り済み。
+#       投票は『FIFA ランキング上位100の国の記者が1人ずつ、トップ10を選ぶ』。受賞なら19歳のヤマルが最年少。
+#       ヤマルは『LaLiga を制し、W杯を掲げた』。ムバッペは『W杯得点王（10得点）で大会の通算得点の歴代最多になったが、レアルでも代表でもタイトルなし』。
+#       ケインは『バイエルンでリーグと国内カップの二冠。イングランドはW杯で優勝できなかった』。
+#   ・Wikipedia「2026 Ballon d'Or」— 授賞式は 2026-10-26、ロンドン。対象期間は 2025-08-03〜2026-07-19（日程だけ突き合わせた）。
+# 発言（ESPN が引いた英語の原文を訳した）:
+#   ムバッペ（フランス・フットボール誌）: "You don't give [Ballon d'Or] to ordinary players. You give it to players who are different. I think I did things that were different this year, so I believe I can win it."
+#   ケイン（マルカ）: "...last season was incredible, on a personal level and as a team. It's true that to finish on 73 goals [last season], the second-highest tally in history, speaks for itself."
+#       → 73得点・歴代2位は本人の言葉。出典の文は数字を確かめていない。台本では『本人は〜と話しました』の形にし、事実として言い切らない。
+#   ヤマル（モビスター）: "I would give it to the best player in the world. ... For me, Mbappé and I are the best in the world. It is clear to me."
+# 確度: 日程・場所・候補・投票方式は 報道（ESPN、日程は Wikipedia と一致）。発言は 報道（媒体が引いたもの。元の雑誌・新聞は読めていない）。見立ての節は 背景。
+# 使わなかったもの: 前回受賞者の側近の『見苦しくなってきた』（匿名・人を小さく見せる言い方）。クヴァラツヘリアの欠場の見通し（フットマルカトの本文は読めていない）。
+#   ヤマルのW杯の得点数（1得点0アシスト）・ケインのW杯での得点が途絶えた話は、選手を小さく見せる言い方になるので入れない。
+# 9/23『ヤマル「バロンドールはゴールの数とは関係ない」』・9/30『ヤマル2発1アシスト。バロンドールを聞かれて…』とは別の話（授賞式の直前・三人それぞれの発言）。
+#   9/23 の本で使ったムバッペの『受賞できなければ残念』とは別の発言（今回は『普通の選手には与えない』）。
+# 反応: 取らない。ネットの反応は集めていない（作らない）。approve は --no-voices で。
+# 写真: Commons（CC BY-SA 4.0、Bryan Berlin 撮影のW杯2026の写真）。ムバッペ・ケイン・ヤマル各2〜3枚。10/16〜10/22 の他の本と重ならない写真を選んだ。
+slot: world_2
+date: "2026年10月22日"
+format: news
+no_main: true      # ニュースはショートだけ（2026-10-14）。締めで本編を案内しない
+people: [ムバッペ, ケイン, ヤマル, バロンドール]
+
+short_style: Y
+short_hook_quote: バロンドールは、普通の選手には与えません
+short_question: あなたは、今年のバロンドールは誰が受賞してほしいと思いますか。
+short_hook: バロンドール授賞式の直前に。
+short_telops:
+  - {match: 26日の月曜, text: バロンドール授賞式/26日（月）ロンドン}
+  - {match: 有力候補, text: 有力候補は/ヤマル・ケイン・ムバッペ}
+  - {match: 締め切られ, text: 投票は9月28日に終了/受賞者は未発表}
+  - {match: フランス・フットボール誌, text: ムバッペ/フランス・フットボール誌に}
+  - {match: 普通の選手には, text: 「普通の選手には与えない」}
+  - {match: 違う選手に, text: 「違う選手に与えるもの」}
+  - {match: 違うことをした, text: 「今年の僕は違うことをした」}
+  - {match: 取れると信じて, text: 「自分にも取れると信じている」}
+  - {match: 投票の前, text: ケインとヤマルも/投票の前に取材へ}
+  - {match: 素晴らしい, text: ケイン（マルカ）/「昨季は素晴らしかった」}
+  - {match: 73ゴール, text: 「73ゴールが物語っている」}
+  - {match: 世界最高の選手, text: ヤマル（モビスター）/「世界最高の選手に与える」}
+  - {match: 世界一だと, text: 「僕とムバッペが世界一」}
+  - {match: 三人の強み, text: 三人の強みを/並べて見る}
+  - {match: 10得点, text: ムバッペ/W杯得点王の10得点}
+  - {match: 最年少, text: ヤマル/リーガ優勝とW杯優勝}
+  - {match: 二冠, text: ケイン/バイエルンで二冠}
+  - {match: 100か国, text: 投票するのは/FIFAランク上位100か国の記者}
+
+theme:
+  id: ballondor_three
+  league: spain
+  league_name: バロンドール
+  prefix: ""
+  title: ムバッペが語ったバロンドールの条件。26日の授賞式を前に
+  hook: ""
+  question: 授賞式を前に、ムバッペ・ヤマル・ケインは何と語ったのか
+  takeaway: 優勝はヤマルが2つ、ケインが2つ、ムバッペは0。一方のW杯の得点はムバッペが10。投票はFIFAランク上位100か国の記者が1人ずつ。強みの違う三人で、結果は26日
+
+thumbnail:
+  line1: ムバッペ・ヤマル・ケイン
+  line2: 26日、授賞式
+  tags: [ムバッペ, ヤマル, ケイン, バロンドール]
+  layout: scene
+  photo: assets/images/20261022_ballondor_three/01_w.jpg
+  short_photo: assets/images/20261022_ballondor_three/01_v.jpg
+
+answer: 授賞式は26日。三人とも受賞を意識した発言をしている（受賞者は未発表）
+watch: 26日のバロンドール授賞式
+
+short_photos:
+  - assets/images/20261022_ballondor_three/01_v.jpg
+  - assets/images/20261022_ballondor_three/02_v.jpg
+  - assets/images/20261022_ballondor_three/03_v.jpg
+  - assets/images/20261022_ballondor_three/04_v.jpg
+  - assets/images/20261022_ballondor_three/05_v.jpg
+  - assets/images/20261022_ballondor_three/06_v.jpg
+
+sections:
+  - id: what
+    main: true
+    heading: 授賞式を前に
+    tier: 報道
+    telop: バロンドール授賞式は26日、ロンドン
+    say:
+      - text: バロンドールの授賞式は、26日の月曜、ロンドンで開かれます。
+        main_only: true
+        image: assets/images/20261022_ballondor_three/02_w.jpg
+      - text: 有力候補は、ヤマル、ケイン、ムバッペ。
+        main_only: true
+        image: assets/images/20261022_ballondor_three/03_w.jpg
+      - text: 近年で最も混戦だと、イーエスピーエヌは伝えています。
+        main_only: true
+        image: assets/images/20261022_ballondor_three/05_w.jpg
+      - text: 投票は9月28日に締め切られ、受賞者はまだ発表されていません。
+        main_only: true
+        image: assets/images/20261022_ballondor_three/02_w.jpg
+      - text: ムバッペは、フランス・フットボール誌にこう話しました。
+        main_only: true
+        image: assets/images/20261022_ballondor_three/01_w.jpg
+      - text: 26日のバロンドール授賞式を前に、有力候補のムバッペが語りました。
+        short_only: true
+        image: assets/images/20261022_ballondor_three/01_w.jpg
+      - voice: ムバッペ
+        text: バロンドールは、普通の選手には与えません。
+        short_voice: true
+        image: assets/images/20261022_ballondor_three/04_w.jpg
+      - voice: ムバッペ
+        text: 違う選手に与えるものです。
+        cont: true
+        image: assets/images/20261022_ballondor_three/01_w.jpg
+      - voice: ムバッペ
+        text: 今年の僕は、違うことをしたと思います。
+        cont: true
+        image: assets/images/20261022_ballondor_three/04_w.jpg
+      - voice: ムバッペ
+        text: だから、自分にも取れると信じています。
+        cont: true
+        image: assets/images/20261022_ballondor_three/01_w.jpg
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50229304/ballon-dor-industry-harry-kane-lamine-yamal-kylian-mbappe
+      - https://en.wikipedia.org/wiki/2026_Ballon_d%27Or
+
+  - id: words
+    heading: ケインとヤマルは何と答えたか
+    tier: 報道
+    telop: ケインとヤマルも、投票の前に語っていた
+    say:
+      - text: ケインとヤマルも、投票の前に、取材で受賞への思いを語っていました。
+        image: assets/images/20261022_ballondor_three/06_w.jpg
+      - voice: ケイン
+        text: 昨季は、個人としても、
+        image: assets/images/20261022_ballondor_three/02_w.jpg
+      - voice: ケイン
+        text: チームとしても、素晴らしいシーズンでした。
+        cont: true
+        image: assets/images/20261022_ballondor_three/05_w.jpg
+      - voice: ケイン
+        text: 73ゴールで終えたのは、歴代2位の数字です。
+        cont: true
+        image: assets/images/20261022_ballondor_three/02_w.jpg
+      - voice: ケイン
+        text: それが、すべてを物語っています。
+        cont: true
+        image: assets/images/20261022_ballondor_three/05_w.jpg
+      - voice: ヤマル
+        text: 僕は、世界最高の選手に与えるべきだと思います。
+        image: assets/images/20261022_ballondor_three/03_w.jpg
+      - voice: ヤマル
+        text: 僕とムバッペが世界一だと、はっきり思っています。
+        cont: true
+        image: assets/images/20261022_ballondor_three/06_w.jpg
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50229304/ballon-dor-industry-harry-kane-lamine-yamal-kylian-mbappe
+
+  - id: view
+    viewpoint: true
+    heading: 三人の強みは何が違うか
+    tier: 背景
+    telop: 優勝の数とW杯の得点で、三人の強みが分かれる
+    say:
+      - text: 見立てです。三人の強みを、並べて見ます。
+        card: none
+        image: assets/images/20261022_ballondor_three/01_w.jpg
+      - text: ムバッペは、W杯得点王の10得点です。大会の通算得点でも、歴代最多になりました。
+        image: assets/images/20261022_ballondor_three/04_w.jpg
+      - text: ただ、レアルでも代表でも、優勝には届いていません。
+        image: assets/images/20261022_ballondor_three/01_w.jpg
+      - text: ヤマルは、リーガを制し、W杯でも優勝しました。
+        image: assets/images/20261022_ballondor_three/03_w.jpg
+      - text: 受賞すれば19歳で、最年少の受賞者になります。
+        image: assets/images/20261022_ballondor_three/06_w.jpg
+      - text: ケインは、バイエルンでリーグと国内カップの二冠です。
+        image: assets/images/20261022_ballondor_three/02_w.jpg
+      - text: 本人は昨季、73得点を挙げたと話しています。
+        image: assets/images/20261022_ballondor_three/05_w.jpg
+      - text: 挙げられた優勝は、ヤマルが2つ、ケインが2つ、ムバッペは0です。
+        image: assets/images/20261022_ballondor_three/04_w.jpg
+      - text: 一方、W杯の得点では、ムバッペが10得点です。
+        image: assets/images/20261022_ballondor_three/01_w.jpg
+      - text: 投票するのは、フィファランキング上位100か国の記者たち。
+        image: assets/images/20261022_ballondor_three/03_w.jpg
+      - text: 1か国から1人ずつ、それぞれが10人を選びます。
+        image: assets/images/20261022_ballondor_three/06_w.jpg
+      - text: 結果は、26日に発表されます。
+        image: assets/images/20261022_ballondor_three/02_w.jpg
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50229304/ballon-dor-industry-harry-kane-lamine-yamal-kylian-mbappe
+short_title: "ムバッペが語ったバロンドールの条件。26日の授賞式を前に"

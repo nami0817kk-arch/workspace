@@ -1,0 +1,464 @@
+# クラブの財政：ACミラン（10/23 金、シリーズ「クラブの財政」、key: finance_acmilan、型は news）。
+#
+# 軸は「**欧州の大会が無かった年に、収入は6%減り、3年続いた黒字が約2400万ユーロの赤字になった。デロイトの数字とクラブの数字は、なぜ8410万ユーロ違うのか**」。
+#   ・デロイト Football Money League 2026（2024/25）：15位、収入 4億1040万ユーロ（前の年 3億9760万、+3%、+1280万）。順位は前の年13位から2つ下がった。
+#   ・クラブ公式（5 Nov 2025、2025年6月期）：収入 4億9450万（3年連続の過去最高、前の年から+10%）、純利益 300万（3年連続の黒字）、純資産 1億9900万、純金融債務 9260万（+4300万）。
+#   ・クラブ公式（28 Sep 2026、2026年6月期）：収入 4億6460万（2024/25比 −6%、2023/24比 +1.7%）、最終損益 約2400万の赤字（3年連続の黒字のあとの最初）、
+#     スポンサー収入 初めて1億超、セリエAの平均観客 7万2000人超（2年連続で最多）、純金融債務 1億4530万（前の年 約9200万）、純資産 1億7640万。「欧州の大会に出なかった」。
+#   ★他の財政回の軸（バルサ＝使える上限／シティ＝判決／アルテタ＝契約／レアル＝スクワッド・コスト・ルール／PSG＝関連当事者取引／バイエルン＝株の持ち主／リヴァプール＝放映権／マンU＝償却・金融費用／
+#     トッテナム＝優勝の年の赤字／シティ×アーセナル＝収入の差と給料の比率／チェルシー＝トッテナムとの差／インテル＝10位との差／ヴィラ＝放映権の割合が最高／ユヴェントス＝放映権の特需と商業の穴／
+#     アトレティコ＝増えた収入の約85%が商業）は繰り返さない。
+#     この回の軸は「**欧州の大会が無かった年の収入の減りと損益の動きの大きさ（クラブの発表）と、デロイトとクラブの収入の集計の違い**」。
+#   ★アルファベットは読み上げに出さない。女子チームの話・監督・選手の個人名・法的な争い・制裁は言わない。選手の移籍金・給料の額は出さない。オーナーの名前・取引の話は言わない。
+#
+# **決算期**：6月30日決算。2024/25＝2025年6月期。2025/26＝2026年6月期（取締役会が決算案を承認＝2026-09-28、株主総会に提出する前の段階）。
+#
+# **出どころ（読んだもの）**
+#   ○ デロイト Football Money League 2026 一次ページ（deloitte.com、2026-10-23 に取得）：15位 AC Milan。図（e.infogram.com/_/jPrqMzlWeB6VvXO2r9HP、図の文字を座標順に読んだ）から
+#       「2025 Revenue €410.4m (2024: €397.6m)」「Change on previous year +3% (+€12.8m)」。収入 2021-2025（百万ユーロ、図の整数）：216/257/385/398/410。
+#       試合日 −/38/79/87/87（2021は図に無し）。放映権 147/141/182/161/161。商業 69/79/124/150/163。給料 168.7/169.9/174/189/189。給料÷収入 78/66/45/47/46（%）。
+#       DFML の順位 19/16/13/13/15。ピッチ上（2024/25）：セリエA 8位／欧州チャンピオンズリーグ ノックアウトのプレーオフ。
+#       ★女子チームの欄は n/d（使わない）。
+#       ★隣の順位の収入（それぞれの図で確認、アトレティコの回までに確認済みの値）：14位アストン・ヴィラ €450.2m、16位ユヴェントス €401.7m。
+#       定義（ページ本文 Comparability）：「Revenue excludes player/coach transfer fees, VAT and other sales related taxes.」＝選手・監督の移籍金、付加価値税などを含まない。
+#       本文：「Serie A’s new domestic deals … total average rights value per season fall by c.3%」（セリエAの新しい国内契約は、1シーズンの平均の権利額が約3%下がった）。
+#   ○ クラブ公式（acmilan.com）2026-09-28「AC MILAN, SOLIDITÀ E INVESTIMENTI PER ACCELERARE LA CRESCITA」
+#       https://www.acmilan.com/it/news/articles/club/2026-09-28/ac-milan-solidita-e-investimenti-per-accelerare-la-crescita（requests で全文を読んだ）
+#       「€464,6 milioni di ricavi … +1,7% rispetto al 2023/24 e -6% rispetto al 2024/25」「assorbire una parte significativa dell’impatto dell’assenza dalle competizioni europee」
+#       「risultato netto negativo per circa €24 milioni, dopo tre stagioni consecutive in utile」「sponsorship che superano per la prima volta nella storia del Club la soglia dei €100 milioni」
+#       「più alta media spettatori del campionato, pari a oltre 72mila presenze」（2年連続）「Posizione Finanziaria Netta … €145,3 milioni, rispetto a circa €92 milioni … patrimonio netto pari a €176,4 milioni」
+#       「maggiore utilizzo di linee di credito a supporto degli investimenti, della crescita e dei progetti strategici」「5 novembre 2025 … Grande Funzione Urbana San Siro, comprensiva dello stadio Meazza e delle aree circostanti」
+#       ★ブランド価値（ブランド・ファイナンス）の記述は第三者の算定をクラブが引いたもの。台本に出さない。
+#   ○ クラブ公式（acmilan.com）2025-11-05「STORICO TERZO UTILE CONSECUTIVO E NUOVO RECORD DI RICAVI …」
+#       https://www.acmilan.com/it/news/articoli/club/2025-11-05/storico-terzo-utile-consecutivo-e-nuovo-record-di-ricavi-il-club-cresce-sostenendo-il-progetto-sportivo
+#       「terzo utile di bilancio consecutivo … risultato consolidato positivo di 3 milioni di euro」「terzo anno consecutivo un nuovo record assoluto di ricavi … 494,5 milioni di euro, con un incremento del 10%」
+#       「ricavi commerciali … 152,3 milioni totali, in crescita del 6%」（スポンサー収入＋商業・ロイヤルティ）「proventi audiovisivi e media … incremento di 1,9 milioni」「ricavi da gestione dei diritti dei calciatori, in aumento del 30,6%」
+#       「patrimonio netto consolidato positivo … 199 milioni」「indebitamento finanziario netto … 92,6 milioni di euro, in aumento di 43 milioni」。
+#   ○ 報道（ANSA 2025-11-05）https://www.ansa.it/sito/notizie/topnews/2025/11/05/s.-siro-passa-a-inter-e-milan-per-197-milioni-firmato-il-rogito_4f97f758-3b64-4e6d-b611-a1d0b0023f89.html
+#       サン・シーロと周辺の用地をインテルとミランが1億9700万ユーロで買い、証書に署名（2025-11-05）。2クラブの按分は記事に無い。
+#   ○ 英語版 Wikipedia「2024–25 AC Milan season」：セリエA 8位、チャンピオンズリーグはプレーオフまで（ノックアウトフェーズ）。「2025–26 AC Milan season」：欧州の大会は無し（国内リーグ・コッパ・スーパーコッパ）。
+#   × 確かめられなかったもの：2025/26 の決算書本体（収入の内訳・費用・選手の売却益・人件費）、株主総会の日付、赤字の費用側の理由、2025/26 のリーグ順位（記事間で割れるので台本に出さない）、
+#     2023/24 の収入の絶対額（クラブの+10%と+1.7%を足し引きすると合わない＝比べる基準が違う可能性。台本に2023/24の額と+10%は出さない）、
+#     デロイトとクラブの収入の差8410万ユーロの全部の中身（クラブは「選手の権利の管理から入る収入」を収入に入れている。デロイトは移籍金を除く。全部がそれかは未確認）。
+#     第三者（Calcio e Finanza）の「テレビと試合日が7000〜8000万減った」という推計は有料記事で読めていない。台本に出さない。
+#
+# 自分で計算した数（検算済み）
+#   デロイト 410.4−397.6＝12.8。410.4−401.7＝8.7（ユヴェントスとの差）。450.2−410.4＝39.8（ヴィラとの差）。
+#   商業 163÷69＝2.36倍→約2.4倍。放映権 161÷147＝1.095→約10%増。商業 150→163（+13）、放映権 161→161、試合日 87→87。
+#   クラブ 494.5−410.4＝84.1。84.1÷494.5＝17.0%。464.6−494.5＝−29.9。−29.9÷494.5＝−6.05%→6%。損益の動き 3−(−24)＝27（クラブの値は「約24」）。
+#   純金融債務 145.3−92.6＝52.7（クラブは「約92」と書く）。純資産 199−176.4＝22.6。
+#
+# 写真：assets/images/20261023_finance_acmilan/（サン・シーロ、カーザ・ミラン＝Commons）。
+date: 2026年10月23日
+slot: other_1
+format: news
+series: クラブの財政
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+people:
+- ミラン
+theme:
+  end_bg: assets/images/20261023_finance_acmilan/01_w.jpg
+  id: finance_acmilan
+  league: italy
+  league_name: セリエA
+  kind: other
+  topic: ミラン
+  title: ミラン、収入は15位。欧州の大会が無い年に、赤字約2400万ユーロなのは、なぜか
+  question: ミランは欧州の大会が無かった年に、収入が6%減り、約2400万ユーロの赤字になった。なぜか
+  lead: 収入の世界15位、ミラン。
+  opening_image: assets/images/20261023_finance_acmilan/01_w.jpg
+  takeaway: デロイトの集計で2024-25の収入は4億1040万ユーロで世界15位（前の年は13位）。クラブ自身の発表は4億9450万ユーロで、デロイトは選手の移籍金を収入に含めない。2025-26は欧州の大会に出ず、収入は4億6460万ユーロと6%減り、3年続いた黒字が約2400万ユーロの赤字に変わった。収入の減りは2990万ユーロで、損益の動き約2700万ユーロとほぼ同じ大きさ。スポンサー収入は初めて1億ユーロを超え、純金融債務は約9200万から1億4530万ユーロに増えた
+  short_title: ミラン、欧州なしの年に収入6%減
+thumbnail:
+  layout: number
+  crest_pos: right
+  photo: assets/images/20261023_finance_acmilan/01_w.jpg
+  number: 6%減
+  line1: ミラン、収入
+  line2: 欧州なしで赤字2400万ユーロ
+  callouts: [3年続いた黒字のあと]
+  tags:
+  - ミラン
+  - セリエA
+  - クラブの財政
+  - サン・シーロ
+sections:
+- id: rank
+  main: true
+  heading: 収入は世界15位、前の年から3%増。なぜ順位は下がったのか
+  tier: 報道
+  telop: 収入4億1040万ユーロで世界15位。前の年から3%増
+  narrator: 解説
+  card: &rev_line
+    type: line
+    title: ミランの収入の5年（デロイトの図、百万ユーロ）
+    x: [2020-21, 2021-22, 2022-23, 2023-24, 2024-25]
+    series:
+    - [ミラン, [216, 257, 385, 398, 410]]
+    unit: 百万ユーロ
+    focus: ミラン
+    highlight: 2024-25
+  say:
+  - text: 会計事務所デロイトの集計で、ミランの収入は世界15位。
+    image: assets/images/20261023_finance_acmilan/01_w.jpg
+    card: none
+  - text: 2024-25の収入は、4億1040万ユーロ。
+    emph: true
+    card: *rev_line
+  - text: 前の年は、3億9760万ユーロ。1年で、1280万ユーロの増加です。
+    card:
+      <<: *rev_line
+      highlight: 2023-24
+  - text: 伸びは3%。順位は、13位から15位に、ふたつ下がりました。
+    image: assets/images/20261023_finance_acmilan/06_w.jpg
+    card: &rank_table
+      type: table
+      title: ミランの順位の5年（デロイト）
+      columns: [年, 順位]
+      rows:
+      - [2020-21, 19位]
+      - [2021-22, 16位]
+      - [2022-23, 13位]
+      - [2023-24, 13位]
+      - [2024-25, 15位]
+      highlight_row: 4
+  - text: 5年前の19位から、13位まで上がり、15位に戻りました。
+    card: *rank_table
+  - text: 15位の前後を見ます。上の14位は、アストン・ヴィラ。
+    image: assets/images/20261023_finance_acmilan/03_w.jpg
+    card: &near_table
+      type: table
+      title: 15位の前後の収入（デロイト、百万ユーロ）
+      columns: [順位, クラブ, 収入]
+      rows:
+      - [14位, アストン・ヴィラ, '450.2']
+      - [15位, ミラン, '410.4']
+      - [16位, ユヴェントス, '401.7']
+      highlight_row: 1
+  - text: ヴィラとは、3980万ユーロの差。
+    card:
+      <<: *near_table
+      highlight_row: 0
+  - text: 16位のユヴェントスを、870万ユーロ、上回っています。
+    card:
+      <<: *near_table
+      highlight_row: 2
+  - text: 次に、増えた1280万ユーロの中身へ。
+    card: none
+  sources:
+  - https://www.deloitte.com/uk/en/services/financial-advisory/analysis/deloitte-football-money-league.html
+- id: break
+  heading: 収入の3つの流れのうち、動いたのはどれか
+  tier: 報道
+  telop: 増えたのは商業。放映権と試合日は、前の年と同じ額
+  narrator: 解説
+  card: &brk_tbl
+    type: table
+    title: ミランの収入の内訳（デロイトの図、百万ユーロ）
+    columns: [流れ, 2023-24, 2024-25]
+    rows:
+    - [商業, '150', '163']
+    - [放映権, '161', '161']
+    - [試合日, '87', '87']
+    highlight_row: 0
+  say:
+  - text: 流れを3つに分けると、こうなります。
+    image: assets/images/20261023_finance_acmilan/04_w.jpg
+    card: *brk_tbl
+  - text: 商業は、1億5000万ユーロから、1億6300万ユーロへ。
+    emph: true
+    card: *brk_tbl
+  - text: 放映権は、1億6100万ユーロのまま。試合日も、8700万ユーロのままでした。
+    image: assets/images/20261023_finance_acmilan/04_w.jpg
+    card:
+      <<: *brk_tbl
+      highlight_row: 1
+  - text: 増えた分は、ほぼすべてが商業です。
+    card: none
+  - text: セリエAの新しい国内契約は、平均の権利額が、約3%下がりました。
+    image: assets/images/20261023_finance_acmilan/03_w.jpg
+    card: none
+  - text: ただ、ミランの放映権が横ばいだった理由は、書かれていません。
+    card: none
+  - text: 5年の流れを、商業と放映権で並べます。
+    image: assets/images/20261023_finance_acmilan/01_w.jpg
+    card: &cross_line
+      type: line
+      title: ミランの商業と放映権（デロイトの図、百万ユーロ）
+      x: [2020-21, 2021-22, 2022-23, 2023-24, 2024-25]
+      series:
+      - [商業, [69, 79, 124, 150, 163]]
+      - [放映権, [147, 141, 182, 161, 161]]
+      unit: 百万ユーロ
+      focus: 商業
+      highlight: 2024-25
+  - text: 商業は、69から163へ。5年で、約2.4倍です。
+    emph: true
+    card: *cross_line
+  - text: 放映権は、147から161へ。約10%の増加です。
+    card: *cross_line
+  - text: 2024-25は、図の整数で、商業が放映権を、5年で初めて上回りました。
+    emph: true
+    callword: 商業が初めて上回る
+    image: assets/images/20261023_finance_acmilan/05_w.jpg
+    card: *cross_line
+  - text: 次に、クラブ自身が発表した、同じ年の数字を見ます。
+    card: none
+  sources:
+  - https://www.deloitte.com/uk/en/services/financial-advisory/analysis/deloitte-football-money-league.html
+- id: club
+  heading: クラブの発表は、デロイトより8410万ユーロ多いのは、なぜか
+  tier: 報道
+  telop: クラブの収入は4億9450万ユーロ。デロイトより8410万ユーロ多い
+  narrator: 解説
+  card: &gap_tbl
+    type: table
+    title: 2024-25の収入（百万ユーロ）
+    columns: [集計, 収入]
+    rows:
+    - [デロイト, '410.4']
+    - [クラブの発表, '494.5']
+    highlight_row: 1
+  say:
+  - text: ミランは、2024-25の収入を、自分でも発表しています。
+    image: assets/images/20261023_finance_acmilan/04_w.jpg
+    card: none
+  - text: 4億9450万ユーロ。3年連続の、過去最高です。
+    emph: true
+    card: *gap_tbl
+  - text: デロイトの4億1040万ユーロとは、8410万ユーロの差があります。
+    image: assets/images/20261023_finance_acmilan/05_w.jpg
+    card:
+      <<: *gap_tbl
+      highlight_row: 0
+  - text: デロイトは、選手と監督の移籍金を、収入に含めません。
+    card: none
+  - text: クラブの発表には、選手の権利の管理から入る収入が、収入として入っています。
+    image: assets/images/20261023_finance_acmilan/06_w.jpg
+    card: none
+  - text: その収入は、前の年より、30.6%増えました。
+    card: none
+  - text: ただ、8410万ユーロの全部が、それだとは、確かめられていません。
+    emph: true
+    card: none
+  - text: 商業も、クラブの発表は1億5230万ユーロ。デロイトは、1億6300万ユーロ。
+    image: assets/images/20261023_finance_acmilan/03_w.jpg
+    card: none
+  - text: 集計の範囲が違うので、この2つの数字は、同じ表には並べません。
+    card: none
+  - text: クラブの決算は、約300万ユーロの黒字。3年連続の、黒字でした。
+    image: assets/images/20261023_finance_acmilan/01_w.jpg
+    card: &fy25_stats
+      type: stats
+      title: ミランの決算（クラブの発表、2025年6月期）
+      items:
+      - ['3', 百万ユーロ, 最終損益（黒字）]
+      - ['199', 百万ユーロ, 純資産]
+      - ['92.6', 百万ユーロ, 純金融債務]
+      focus: 0
+  - text: この年のミランは、ヨーロッパの大会を戦っていました。次の年は、どうなったのか。
+    image: assets/images/20261023_finance_acmilan/04_w.jpg
+    card: none
+  sources:
+  - https://www.acmilan.com/it/news/articoli/club/2025-11-05/storico-terzo-utile-consecutivo-e-nuovo-record-di-ricavi-il-club-cresce-sostenendo-il-progetto-sportivo
+  - https://www.deloitte.com/uk/en/services/financial-advisory/analysis/deloitte-football-money-league.html
+- id: noeuro
+  heading: 欧州の大会が無かった年に、収入と損益はどう動いたのか
+  tier: 報道
+  telop: 2025-26は収入6%減。約2400万ユーロの赤字
+  narrator: 解説
+  card: &rev_bars
+    type: bars
+    title: ミランの収入（クラブの発表、百万ユーロ）
+    unit: ''
+    items:
+    - label: 2024-25
+      value: 494.5
+    - label: 2025-26
+      value: 464.6
+      highlight: true
+  say:
+  - text: 2025-26のミランは、ヨーロッパの大会に出ませんでした。
+    image: assets/images/20261023_finance_acmilan/04_w.jpg
+    card: none
+  - text: 前のシーズンは、チャンピオンズリーグの、プレーオフまで進んでいました。
+    card: none
+  - text: 2026年9月28日、クラブは、2025-26の決算案を発表しました。
+    image: assets/images/20261023_finance_acmilan/03_w.jpg
+    card: none
+  - text: 収入は、4億6460万ユーロ。前の年から、6%の減少です。
+    emph: true
+    card: *rev_bars
+  - text: 額は、2990万ユーロの減少です。
+    card: *rev_bars
+  - text: 2年前の2023-24と比べると、1.7%多い額。
+    image: assets/images/20261023_finance_acmilan/05_w.jpg
+    card: none
+  - text: 最終損益は、約2400万ユーロの赤字。
+    emph: true
+    callword: 約2400万の赤字
+    card: &loss_stats
+      type: stats
+      title: ミランの損益（クラブの発表）
+      items:
+      - ['+3', 百万ユーロ, 2025年6月期（黒字）]
+      - ['-24', 百万ユーロ, 2026年6月期（赤字、約）]
+      focus: 1
+  - text: 3年続いた黒字のあとの、最初の赤字です。
+    image: assets/images/20261023_finance_acmilan/01_w.jpg
+    card: *loss_stats
+  - text: 前の年は、300万ユーロの黒字。損益は、約2700万ユーロ動きました。
+    emph: true
+    card:
+      <<: *loss_stats
+      focus: 0
+  - text: クラブが支えとして挙げたのは、欧州の大会に左右されにくい、収入です。
+    image: assets/images/20261023_finance_acmilan/04_w.jpg
+    card: none
+  - text: スポンサー収入は、クラブの歴史で初めて、1億ユーロを超えました。
+    emph: true
+    card: none
+  - text: セリエAの平均観客数は、7万2000人超。2年連続で、リーグで最多です。
+    image: assets/images/20261023_finance_acmilan/06_w.jpg
+    card: none
+  sources:
+  - https://www.acmilan.com/it/news/articles/club/2026-09-28/ac-milan-solidita-e-investimenti-per-accelerare-la-crescita
+  - https://www.deloitte.com/uk/en/services/financial-advisory/analysis/deloitte-football-money-league.html
+- id: books
+  heading: 赤字のあと、借り入れと純資産は、どうなったのか
+  tier: 報道
+  telop: 純金融債務は1億4530万ユーロ。純資産は1億7640万ユーロ
+  narrator: 解説
+  card: &debt_bars
+    type: bars
+    title: ミランの純金融債務（クラブの発表、百万ユーロ）
+    unit: ''
+    items:
+    - label: 2025年6月期
+      value: 92.6
+    - label: 2026年6月期
+      value: 145.3
+      highlight: true
+  say:
+  - text: 借り入れから見ます。純金融債務は、1億4530万ユーロ。前の年の、約1.6倍です。
+    image: assets/images/20261023_finance_acmilan/03_w.jpg
+    card: *debt_bars
+  - text: 純金融債務とは、借り入れから、手元の現金などを引いた額です。
+    card: *debt_bars
+  - text: 前の年は、9260万ユーロ。差は、約5270万ユーロ。
+    emph: true
+    card: *debt_bars
+  - text: クラブの説明は、銀行から借りられる枠を、より多く使ったため。
+    image: assets/images/20261023_finance_acmilan/04_w.jpg
+    card: none
+  - text: 使い道は、投資、成長、戦略的な計画を支えるため、と書かれています。
+    card: none
+  - text: 純資産は、資産から負債を引いた額です。
+    image: assets/images/20261023_finance_acmilan/05_w.jpg
+    card: &eq_stats
+      type: stats
+      title: ミランの純資産（クラブの発表、百万ユーロ）
+      items:
+      - ['199', 百万ユーロ, 2025年6月期]
+      - ['176.4', 百万ユーロ, 2026年6月期]
+      focus: 1
+  - text: 1億7640万ユーロ。前の年は、1億9900万ユーロ。
+    card: *eq_stats
+  - text: 減ったのは、約2260万ユーロ。赤字の額に近い大きさでした。
+    emph: true
+    card: *eq_stats
+  - text: 純資産は、プラスのままです。
+    card: none
+  - text: クラブが、もうひとつ挙げているのは、新しいスタジアム。
+    image: assets/images/20261023_finance_acmilan/01_w.jpg
+    card: none
+  - text: 2025年11月5日、ミランは、サン・シーロの用地を手に入れました。
+    emph: true
+    card: &siro_tl
+      type: timeline
+      title: ミランとサン・シーロ（クラブの発表と報道）
+      rows:
+      - [2025年11月5日, スタジアムと周辺の用地を取得（インテルと共同）]
+      - [2026年9月28日, 2025-26の決算案を発表]
+      focus: 0
+  - text: 報道では、インテルと合わせた額は、1億9700万ユーロ。
+    image: assets/images/20261023_finance_acmilan/04_w.jpg
+    card: *siro_tl
+  - text: クラブは、新しいスタジアムが、投資する力を強める、と位置づけています。
+    card: none
+  sources:
+  - https://www.acmilan.com/it/news/articles/club/2026-09-28/ac-milan-solidita-e-investimenti-per-accelerare-la-crescita
+  - https://www.acmilan.com/it/news/articoli/club/2025-11-05/storico-terzo-utile-consecutivo-e-nuovo-record-di-ricavi-il-club-cresce-sostenendo-il-progetto-sportivo
+  - https://www.ansa.it/sito/notizie/topnews/2025/11/05/s.-siro-passa-a-inter-e-milan-per-197-milioni-firmato-il-rogito_4f97f758-3b64-4e6d-b611-a1d0b0023f89.html
+- id: view
+  viewpoint: true
+  heading: 見立て・収入の減りは、損益の動きとほぼ同じ大きさ
+  tier: 背景
+  telop: 収入は2990万ユーロ減り、損益は約2700万ユーロ動いた
+  narrator: 解説
+  card: &view_table
+    type: table
+    title: 自分で数えてみた（クラブの発表）
+    columns: &view_cols [比べ, 答え]
+    rows: &view_rows
+    - [収入の減り（2024-25→2025-26）, 2990万ユーロ（-6%）]
+    - [損益の動き（黒字→赤字）, 約2700万ユーロ]
+    - [純金融債務の増え, 約5270万ユーロ（赤字の約2.2倍）]
+    - [デロイトとクラブの収入の差（2024-25）, 8410万ユーロ（クラブの額の17%）]
+    highlight_row: 0
+  say:
+  - text: 見立てです。引き算と割り算で、ミランの数字を数え直します。
+    image: assets/images/20261023_finance_acmilan/04_w.jpg
+    card: *view_table
+  - text: 収入は、4億9450万ユーロから、4億6460万ユーロへ。
+    emph: true
+    mark:
+      kind: circle
+      row: 0
+      col: 1
+    card:
+      <<: *view_table
+      highlight_row: 0
+  - text: 減った額は、2990万ユーロ。約6%です。
+    card:
+      <<: *view_table
+      highlight_row: 0
+  - text: 損益は、300万ユーロの黒字から、約2400万ユーロの赤字へ。
+    image: assets/images/20261023_finance_acmilan/01_w.jpg
+    card:
+      <<: *view_table
+      highlight_row: 1
+  - text: 動いたのは、約2700万ユーロ。収入の減りと、ほぼ同じ大きさです。
+    emph: true
+    mark:
+      kind: circle
+      row: 1
+      col: 1
+    card:
+      <<: *view_table
+      highlight_row: 1
+  - text: 題への答えです。収入が減った理由に、クラブは欧州の大会の欠場を挙げます。
+    image: assets/images/20261023_finance_acmilan/06_w.jpg
+    card: none
+  - text: ただ、費用と選手の売却益の内訳は、決算書の本体で確かめる必要があります。
+    card: none
+  - text: 借り入れの増えは、赤字の約2.2倍の額です。
+    emph: true
+    image: assets/images/20261023_finance_acmilan/03_w.jpg
+    card:
+      <<: *view_table
+      highlight_row: 2
+  - text: 集計の違いも、数字で見ます。クラブの収入は、デロイトより、約17%大きい額です。
+    card:
+      <<: *view_table
+      highlight_row: 3
+  - text: 欧州の大会が無かった年の順位は、次のデロイトの集計で分かります。
+    image: assets/images/20261023_finance_acmilan/05_w.jpg
+    image: assets/images/20261023_finance_acmilan/05_w.jpg
+    card: none
+  - text: 商業は、放映権を上回ったまま伸びるのか。収入の柱は、どう変わるのか。
+    image: assets/images/20261023_finance_acmilan/04_w.jpg
+    card: none
+  sources:
+  - https://www.acmilan.com/it/news/articles/club/2026-09-28/ac-milan-solidita-e-investimenti-per-accelerare-la-crescita

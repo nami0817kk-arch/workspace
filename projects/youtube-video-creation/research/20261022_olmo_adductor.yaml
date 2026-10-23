@@ -1,0 +1,116 @@
+# 取材メモ（2026年10月22日）バルサのオルモが左内転筋を負傷、約1か月の離脱（ニュースのショート。見せ方 X。本人の言葉は無い）
+# 取材: 2026-10-22。requests（ブラウザUA）と ESPN の公開APIで読んだ。検索エンジンのAI要約は使っていない。
+#   ・バルセロナ公式サイト「Dani Olmo injury news」（https://www.fcbarcelona.com/en/football/first-team/news/4596701/dani-olmo-injury-news）… 本文を全部読んだ。控え research/raw/20261022_olmo_fcb.html
+#       全文は2文：「Tests carried out confirm that Dani Olmo is suffering from an injury to his left adductor muscle as a consequence of a collision with an opponent during the game against Paris Saint-Germain.」
+#       「The player is expected to be out for around a month.」（検査で左内転筋の負傷が確認された／PSG戦での相手選手との接触が原因／離脱は約1か月の見込み）。**これが確定の範囲。**
+#   ・サッカーキング 2026-10-21（https://www.soccer-king.jp/news/world/esp/20261021/2219497.html）… 本文を全部読んだ。控え research/raw/20261022_olmo_sk.html
+#       20日のCL第3節PSG戦でスタメン→「25分にピッチに座り込み、フェルミン・ロペスとの交代」。25日のレアル・マドリード戦（エル・クラシコ）を欠場。
+#   ・ESPN の試合記録（site.api.espn.com .../uefa.champions/summary?event=401915399）… 25分「Delay in match because of an injury Dani Olmo」、27分「Fermín López replaces Dani Olmo because of an injury」。サッカーキングの「25分」と合う。
+#   ・ESPN の日程API（.../esp.1/teams/83/schedule, .../uefa.champions/teams/83/schedule）… 見立ての節の「次の1か月の試合」を自分で数えた根拠。
+# **クラブの公式発表の範囲だけで書く**（ユーザー指示）。次は使わない：
+#   ・「左内転筋の断裂」（ムンド・デポルティーボの報道。サッカーキングが伝えている。原文は未読。クラブは『負傷』としか言っていない）
+#   ・「復帰は11月の代表期間明けが予想される」（サッカーキングの予想。クラブは『約1か月』のみ）
+#   ・マルカの「MRI検査」の報道・バイエルンの関心などの関連記事（別の話）
+# 数字（見立て）: 自分で数えた。21日から1か月後は11月21日ごろ。その前にバルサに予定されている試合は
+#   10/25 レアル・マドリード（ラ・リーガ、ホーム）／10/31 アラベス（ラ・リーガ、ホーム）／11/3 アストン・ヴィラ（CL、ホーム）／11/8 アトレティコ・マドリード（ラ・リーガ、アウェー）の4つ。
+#   次の予定は11/22 ビジャレアル（ラ・リーガ）。ESPN の日程表に載っている範囲（国内カップの日程は載っていない）。「約1か月」はクラブの見込みで、日数は確定ではない。
+# 確度: クラブの発表（左内転筋の負傷・相手選手との接触・約1か月）は 確定。25分・交代は ESPN の試合記録とサッカーキングで一致＝報道。見立ての節（日程の数え）は 背景。
+# 本人の言葉: 無い（取れていない。作らない）→ Y にしない。X（short_hook_word）。反応: 当たっていない（作らない。approve は --no-voices で）。
+# 重なり回避: 10/21 の PSG対バルサ 4-2（20261021_psg_barca_42）は試合の得点の話。こちらは負傷の発表だけで、得点・結果は言わない。デンベレ・マルキーニョス・クヴァラツヘリアの負傷は別題材なので扱わない。
+#   同じ日のジェラール・マルティンの発言（フットマルカト）は別の題材なので使わない。
+# 怪我の話なので、敬意を持った言い方にする。離脱期間・部位はクラブの言葉のまま。煽る語（衝撃・痛手・大打撃）は使わない。
+slot: overseas
+date: "2026年10月22日"
+format: news
+no_main: true      # ニュースはショートだけ（2026-10-14）。締めで本編を案内しない
+people: [ダニ・オルモ, バルセロナ, フェルミン・ロペス]
+
+short_style: X
+short_hook_word: 約1か月の離脱
+short_photos:
+  - assets/images/20261022_olmo_adductor/01_v.jpg
+  - assets/images/20261022_olmo_adductor/02_v.jpg
+  - assets/images/20261022_olmo_adductor/04_v.jpg
+  - assets/images/20261022_olmo_adductor/03_v.jpg
+short_question: オルモ不在のクラシコ、バルサの中盤は誰が埋めると思いますか。
+short_hook: バルサのオルモ、約1か月の離脱。
+short_telops:
+  - {match: 21日, text: バルサが21日に発表/オルモの負傷}
+  - {match: 25分, text: 20日のPSG戦/25分に座り込み}
+  - {match: 左内転筋, text: 検査の結果/左内転筋の負傷}
+  - {match: 相手選手との接触, text: 原因は/相手選手との接触}
+  - {match: 約1か月, text: クラブの見込み/離脱は約1か月}
+  - {match: クラシコ, text: 25日/レアル・マドリードとのクラシコ}
+  - {match: 4つ, text: 11月21日ごろまでに/予定は4試合}
+  - {match: 31日, text: 10/31 アラベス戦}
+  - {match: 3日, text: 11/3 CL アストン・ヴィラ戦}
+  - {match: 8日, text: 11/8 アトレティコ戦}
+
+theme:
+  id: olmo_adductor
+  league: spain
+  league_name: ラ・リーガ
+  prefix: ""
+  title: バルサのオルモ、左内転筋を負傷。クラブが示した離脱の期間は
+  hook: ""
+  question: オルモが約1か月離れるあいだに、バルサは何試合を戦うのか
+  takeaway: クラブの見込みは約1か月。21日から数えると11月21日ごろまでで、バルサの予定は4試合。クラシコはその最初の試合
+
+thumbnail:
+  layout: face
+  line1: オルモ
+  line2: 約1か月の離脱
+  tags: [オルモ, バルセロナ]
+  photo: assets/images/20261022_olmo_adductor/02_w.jpg
+  short_photo: assets/images/20261022_olmo_adductor/01_v.jpg
+
+answer: 左内転筋の負傷で、約1か月の離脱の見込み。25日のクラシコは欠場
+watch: 25日のレアル・マドリード戦（クラシコ）
+
+sections:
+  - id: scene
+    heading: 何が起きたか
+    tier: 報道
+    telop: PSG戦の25分、オルモがピッチに座り込む
+    say:
+      - 20日のチャンピオンズリーグ、パリ・サンジェルマン戦。ダニ・オルモは先発しました。
+      - 25分、ピッチに座り込み、フェルミン・ロペスと交代しました。
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/esp/20261021/2219497.html
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915399
+
+  - id: what
+    main: true
+    heading: クラブが発表したこと
+    tier: 確定
+    telop: バルサのオルモ、左内転筋を負傷。離脱は約1か月
+    say:
+      - バルセロナは21日、スペイン代表のダニ・オルモについて発表しました。
+      - 20日のパリ・サンジェルマン戦で負傷した件です。
+      - 検査の結果、左の内転筋の負傷で、原因は試合中の相手選手との接触です。
+      - 離脱は、約1か月の見込み。
+      - 25日のレアル・マドリードとのクラシコは、その期間の中に入ります。
+    official: true
+    sources:
+      - https://www.fcbarcelona.com/en/football/first-team/news/4596701/dani-olmo-injury-news
+
+  - id: view
+    viewpoint: true
+    heading: 約1か月で、試合はいくつあるか
+    tier: 背景
+    telop: 11月21日ごろまでに、バルサの予定は4試合
+    say:
+      - 見立てです。オルモの離脱を、クラブは約1か月と見ています。
+      - 21日から1か月後は、11月21日ごろです。
+      - 日程表で数えると、その間の試合は4つ。
+      - 約30日に4試合なら、平均7、8日に1試合です。
+      - 25日のクラシコ。31日のアラベス戦。
+      - 11月3日のCLアストン・ヴィラ戦。8日のアトレティコ戦。
+      - 次の予定は11月22日、ビジャレアル戦。
+      - ただ、約1か月はクラブの見込みで、日数は確定ではありません。
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/teams/83/schedule?fixture=true
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/teams/83/schedule?fixture=true
+short_title: "バルサのオルモ、左内転筋を負傷。クラブが示した離脱の期間は"
