@@ -1,0 +1,108 @@
+# 物語完結型ショート 第3版（10-22 ユーザー「絵はいい感じだけど、画面の文字が話している内容と違う」への直し）。投稿しない。
+# 第2版との違い：画面の中央の文字は「その瞬間に話している言葉そのもの」。要約の見出し（phrase）をやめ、語りの文を自動で
+#   8〜16字のかたまり（句読点・文節の切れ目で分ける。画面では2行まで）に分け、各かたまりを声が言っている間だけ出す。
+#   つなげると語りの文（句読点を除く）と一字一句同じ。「、」「。」は画面に出さない。出す時刻は VOICEVOX の audio_query のモーラ長から求める。
+#   語りの文中の《》は、画面で黄色にするだけ（声には強調をかけない＝第1版・第2版と同じ声）。絵は第2版のまま（7枚）。
+# 書き方：shots＝絵の定義（第2版と同じ）。lines＝語り（｜は絵の替わり目）と shots（｜で分けた断片ごとに使う絵。1つなら shot:）。
+# 事実の出どころは scripts/oichi.yaml の次の行だけ（第1版・第2版と同じ。台本に無い事実は足さない。伝承は「と伝わります」）：
+#   145〜210行目 信長の妹・浅井長政に嫁ぐ／283・323行目 兄と夫が戦う・長政の最期／395行目・456〜467行目 勝家と再婚・賤ヶ岳で敗れ北ノ庄城が囲まれる／
+#   468〜481行目 勝家が退去を勧め、お市は断ったと伝わる・小谷で逃げたことを悔やんだ／487行目・503行目 娘3人を城から出す・お市は勝家とともに生涯を閉じた／
+#   556〜585行目 茶々は秀吉の妻・初は京極高次・江は徳川秀忠／597〜609行目 大坂の陣・初は和議・江は徳川の側・茶々は大坂城とともに最期／
+#   650〜653行目 肖像は茶々が供養に納めたと言われる・高野山持明院
+title: お市の方｜逃げなかった姫と三人の娘（第3版）
+yt_title: 二度目の落城で、逃げなかった姫｜お市の方と三人の娘
+ai_images: true
+art_dir: out/story/oichi2
+out: oichi_story_s3
+cta: 本編は概要欄から
+# 図解（10-22 ユーザー「honto のような視覚的に分かりやすいのはいいね」。絵の上に重ねる。出入りの時刻は語りの中の字から求める）：
+#   header＝上部の固定の見出し帯（「実」の角印は伝承が混じるので付けない）／cards＝年号カード・列が増えるカード（数の対比カード versus も使えるが、
+#   oichi.yaml の数字で語りと一致する対比が無いので今回は使わない＝無理に作らない）。カードが出ている間は語りの文字が下がる（text_y）。
+header:
+  tag: お市の方
+  title: "《逃げなかった》姫と三人の娘"
+cards:
+  - type: columns                       # 絵 G（肖像3枚）の下に、語りに合わせて1列ずつ増える
+    from: 茶々は秀吉の妻
+    until: 1615年
+    items:
+      - {at: 茶々は秀吉の妻, head: 茶々, text: 豊臣秀吉の妻}
+      - {at: 初は京極高次, head: 初, text: 京極高次の妻}
+      - {at: 江は徳川秀忠, head: 江, text: 徳川秀忠の妻}
+  - type: year                          # 「1615年、大坂の陣」の瞬間。絵 E の上に特大の年号と赤い下線
+    from: 1615年
+    until: 茶々は大坂城
+    big: 1615年
+    sub: 大坂夏の陣
+    text_y: 0.84
+shots:
+  A:
+    kind: ai
+    move: in
+    prompt: "a single woman in a crimson kimono with long black hair seen strictly from behind, standing still in an open heavy wooden castle doorway flooded with bright morning light, her silhouette small and calm, no face visible, no other people"
+    must: 開いた城の戸口の光と、立ち止まる女性1人の後ろ姿（顔は写らない）
+  B:
+    kind: real
+    image: paintings/oichi_odani_castle_map.jpg
+    crop: [0.0, 0.0, 1.0, 0.62]
+    focus: [0.5, 0.3]
+    move: down
+    credit: "《小谷城図》江戸時代（Wikimedia Commons・パブリックドメイン）"
+    must: 小谷城の古絵図
+  C:
+    kind: real
+    image: paintings/oichi_katsuie_utamaro.jpg
+    focus: [0.5, 0.5]
+    move: in
+    credit: "喜多川歌麿《柴田修理進勝家と小谷の方》1803〜04年ごろ（Wikimedia Commons・パブリックドメイン）"
+    must: 鎧の勝家と、並ぶお市の絵
+  D:
+    kind: ai
+    move: out
+    prompt: "wide view of a large dark wooden castle gate in morning mist, exactly three small young girls seen strictly from behind walking out through the gate into the bright light, wearing kimono of three clearly different solid colors: red, indigo blue and pale green, no one else visible, no faces, a plain gate with no plaque and no sign board"
+    must: 城門を出る3人の少女の後ろ姿（ちょうど3人、顔は写らない）
+  G:
+    kind: composite
+    move: out
+    phrase_y: 0.76
+    images:
+      - {image: paintings/oichi_chacha_yodo_portrait.jpg, crop: [0.0, 0.3, 1.0, 1.0], label: 茶々}
+      - {image: paintings/oichi_hatsu_jokoin.jpg, crop: [0.0, 0.3, 1.0, 1.0], label: 初}
+      - {image: paintings/oichi_go_sugenin.jpg, crop: [0.0, 0.0, 1.0, 1.0], focus: [0.58, 0.5], label: 江}
+    credit: "伝 淀殿（奈良県立美術館蔵）／常高院像／崇源院像（いずれも江戸時代ごろ、Wikimedia Commons・パブリックドメイン）"
+    must: 茶々・初・江の肖像（3人）
+  E:
+    kind: real
+    image: paintings/nene_osaka_castle_summer_screen_detail.jpg
+    focus: [0.16, 0.38]
+    move: in
+    credit: "大坂夏の陣図屏風（部分、大阪城天守閣蔵）17世紀前半（Wikimedia Commons・パブリックドメイン）"
+    must: 大坂城の天守と合戦
+  F:
+    kind: real
+    image: paintings/oichi_portrait_jimyoin_full.jpg
+    crop: [0.0, 0.2, 1.0, 1.0]
+    focus: [0.5, 0.55]
+    move: in
+    credit: "《浅井長政夫人像》（お市の方、高野山持明院蔵）16世紀後半（Wikimedia Commons・パブリックドメイン）"
+    must: お市の肖像（高野山持明院）
+lines:
+  - 語り: 二度目の落城で、《逃げなかった》姫がいた。送り出された三人の娘は、《敵と味方》に分かれていく。
+    shot: A
+  - 語り: お市は、織田《信長の妹》。浅井長政に嫁ぎます。兄と夫は《敵》となり、夫の城は《落ち》ました。
+    shot: B
+    tone: しみじみ
+  - 語り: 再婚した柴田勝家も、秀吉に《敗れ》、城を囲まれます。城を出るよう勧められても、お市は《断った》と伝わります。小谷で逃げたことを《悔やんでいた》、と。
+    shot: C
+    tone: しみじみ
+  - 語り: お市は娘たちを城から《送り出し》、｜勝家とともに《生涯を閉じました》。
+    shots: [D, C]
+    tone: 重い
+  - 語り: 茶々は《秀吉の妻》に、初は《京極高次》に、江は《徳川秀忠》に。
+    shot: G
+  - 語り: 1615年、《大坂の陣》。茶々は大坂城に、初は《和議》に、江は徳川の側に。茶々は城とともに《最期》を迎えました。
+    shot: E
+    tone: しみじみ
+  - 語り: 母の《肖像》を供養に納めたのは、茶々と言われます。その絵は、今も《高野山》にあります。
+    shot: F
+    tone: しみじみ

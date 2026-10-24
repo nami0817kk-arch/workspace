@@ -93,16 +93,9 @@ def wav_seconds(data: bytes) -> float:
         return w.getnframes() / w.getframerate()
 
 
-def speak(engine: Voicevox, text: str, voice: Voice, tone: str, readings: dict[str, str],
-          cache_dir: Path) -> Spoken:
-    cache_dir.mkdir(parents=True, exist_ok=True)
-    key = line_key(text, voice, tone, readings)
-    target = cache_dir / f"{key}.wav"
-    meta = cache_dir / f"{key}.json"
-    if target.exists() and meta.exists():
-        info = json.loads(meta.read_text(encoding="utf-8"))
-        return Spoken(target, info["seconds"], info.get("missing", []))
-
+def final_query(engine: Voicevox, text: str, voice: Voice, tone: str, readings: dict[str, str]) -> tuple[dict, list[str]]:
+    """合成に渡す audio_query（読み・「ン」のつなぎ・調子・強調・語尾の上げまで入れたもの）と、見つからなかった強調語。
+    10-22：ショートの画面の文字を声の時刻に合わせるため、speak から取り出した（中身は変えていない）。"""
     plain, words = split_emphasis(text)
     spoken_text = apply_readings(plain, readings)
     query = engine.query(spoken_text, voice.style_id)
@@ -115,6 +108,20 @@ def speak(engine: Voicevox, text: str, voice: Voice, tone: str, readings: dict[s
         kanas = [kana_of(engine.query(apply_readings(w, readings), voice.style_id)) for w in words]
         query, missing = emphasize(query, kanas, voice.emphasis)
     query = end_rise(query, TONES[tone].get("end_rise", 0.0) * voice.tone_strength)
+    return query, missing
+
+
+def speak(engine: Voicevox, text: str, voice: Voice, tone: str, readings: dict[str, str],
+          cache_dir: Path) -> Spoken:
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    key = line_key(text, voice, tone, readings)
+    target = cache_dir / f"{key}.wav"
+    meta = cache_dir / f"{key}.json"
+    if target.exists() and meta.exists():
+        info = json.loads(meta.read_text(encoding="utf-8"))
+        return Spoken(target, info["seconds"], info.get("missing", []))
+
+    query, missing = final_query(engine, text, voice, tone, readings)
     data = engine.synthesize(query, voice.style_id)
     target.write_bytes(data)
     seconds = wav_seconds(data)

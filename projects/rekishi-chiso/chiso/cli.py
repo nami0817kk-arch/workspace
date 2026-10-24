@@ -7,6 +7,7 @@
     python -m chiso.cli approve scripts/x.yaml          # 台本の承認を控える（自分の確認を回しきったあとだけ。reading-ok が要る）
     python -m chiso.cli build   scripts/x.yaml          # 本番の動画。承認した台本の中身と一致しないと動かない
     python -m chiso.cli shorts  scripts/x.yaml [--draft]  # short: を付けた行からショートを全部作る
+    python -m chiso.cli story-short scripts/story/x.yaml [--kana]   # 物語完結型のショート（10-22。絵は tools/gen_story_art.py）
     python -m chiso.cli describe scripts/x.yaml [--keywords]   # 概要欄（章・クレジット・絵の出典。--keywords で扱う語）
     python -m chiso.cli assign  scripts/x.yaml --assets research/x_assets.md   # 絵の割り当ての下書き（out/x_assign.md）
     python -m chiso.cli keywords "織田信長" [--all]      # YouTube の検索候補でよく続く語・題名とタグの候補
@@ -627,6 +628,56 @@ def cmd_shorts(args) -> int:
     return 0
 
 
+def cmd_story_short(args) -> int:
+    """物語完結型のショート（10-22）。scripts/story/*.yaml → out/<名前>_story_<番号>.mp4。--kana で読みだけ。"""
+    from . import storyshort
+    config = load_config()
+    path = Path(args.script)
+    doc = storyshort.load(path)
+    errs = storyshort.problems(doc)
+    for e in errs:
+        print(f"  × {e}")
+    readings = load_readings(ROOT / "readings.yaml")
+    vs = voices(config)
+    if args.kana:
+        for row in storyshort.kana_report(doc, config, readings, tts.Voicevox(config["voicevox_url"]), vs["語り"]):
+            print(row)
+        return 1 if errs else 0
+    if errs:
+        return 3
+    if not ensure_disk(config):
+        return 2
+    if args.stills:
+        print(storyshort.stills(path, config, out_dir() / f"{path.stem}_stills.jpg"))
+        return 0
+    if args.frames:
+        times = [float(x) for x in args.frames.split(",") if x.strip()]
+        styles = [x.strip().upper() for x in args.layouts.split(",")] if args.layouts else None
+        stem = doc.get("out") or path.stem
+        single = out_dir() / f"{stem}_frames"
+        single.mkdir(parents=True, exist_ok=True)
+        pngs = storyshort.frames(path, config, vs, readings, single, ROOT / "work", times, styles)
+        if styles:
+            labels = [f"案{s}  {t:g}秒" for s in styles for t in times]
+            sheet = storyshort.grid(pngs, len(times), out_dir() / f"{stem}_layouts.jpg", labels, font=config["fonts"]["gothic"])
+        else:
+            labels = [f"{t:g}秒" for t in times]
+            sheet = storyshort.grid(pngs, 3, out_dir() / f"{stem}_stills.jpg", labels, font=config["fonts"]["gothic"])
+        for x in pngs:
+            print(x)
+        print(sheet)
+        return 0
+    target, total = storyshort.build(path, config, vs, readings, out_dir(), ROOT / "work", draft=args.draft)
+    if storyshort.PLACEHOLDERS_USED:
+        print(f"  ! 仮の絵で書き出しました（確認用）: {', '.join(dict.fromkeys(storyshort.PLACEHOLDERS_USED))}")
+    print(f"{target}（{total:.1f}秒）")
+    if total > storyshort.MAX_SECONDS:
+        print(f"  ! {total:.1f}秒で、上限 {storyshort.MAX_SECONDS:.0f}秒を超えています")
+    sheet = storyshort.contact_sheet(ffmpeg(), target, out_dir() / f"{target.stem}_sheet.jpg", font=config["fonts"]["gothic"])
+    print(sheet)
+    return 0
+
+
 def _same_section(line):
     return replace(line, section=0)
 
@@ -1167,6 +1218,14 @@ def main(argv=None) -> int:
     s.add_argument("--draft", action="store_true")
     s.add_argument("--only", help="作るショートだけ（例 s1,s3）")
     s.set_defaults(fn=cmd_shorts)
+    s = sub.add_parser("story-short")
+    s.add_argument("script")
+    s.add_argument("--kana", action="store_true", help="読みをカタカナで出すだけ（音は作らない）")
+    s.add_argument("--draft", action="store_true", help="届いていない絵（shot の file）を placeholder の仮の絵で置き換えて、確認用（_draft）に書き出す")
+    s.add_argument("--frames", default="", help="動画を書き出さず、本番の声の時刻でこの秒のコマを PNG と一覧に（例 0,4,18）")
+    s.add_argument("--layouts", default="", help="--frames と一緒に：上の常時表示の案を並べる（例 A,B,C）")
+    s.add_argument("--stills", action="store_true", help="声を作らず、各フレーズの途中の1コマの一覧だけ作る（絵の確認用）")
+    s.set_defaults(fn=cmd_story_short)
     s = sub.add_parser("describe")
     s.add_argument("script")
     s.add_argument("--no-voice", action="store_true", help="章の時刻を出さない（音声を作らない）")
