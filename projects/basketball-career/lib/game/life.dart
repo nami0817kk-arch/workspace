@@ -124,7 +124,12 @@ double yearlyDelta(Player p, Ability a, Ability focus) {
   final talent = 0.5 + p.potential / 100; // 0.5〜1.5
   final share = a == focus ? 1.0 : 0.25;
   if (g >= 0) {
-    return 5.2 * g * talent * share * growthMultiplier(p.traits, p.age);
+    return 5.2 *
+        g *
+        talent *
+        share *
+        growthMultiplier(p.traits, p.age) *
+        abilityGrowthMultiplier(p.traits, a);
   }
   final aging = switch (a) {
     Ability.speed || Ability.stamina || Ability.physical => 1.5,

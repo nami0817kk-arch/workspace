@@ -584,6 +584,72 @@ const events = <EventDef>[
       EventOption('バスケを優先する', Effect(focusBonus: 2, morale: -3, fatigue: 5)),
     ],
   ),
+  EventDef(
+    id: 'video_study',
+    weight: 0.6,
+    title: '試合映像の研究会',
+    body: '{coach}が、名勝負の映像を流して「次のパスはどこに出る？」と聞いてきた。',
+    minAge: 12,
+    options: [
+      EventOption('一時停止しながら、とことん読み解く', Effect(abilities: {Ability.pass: 1, Ability.defense: 1}, focusBonus: 2, fatigue: 4, trait: Trait.basketballIq)),
+      EventOption('流し見して、先に練習したい', Effect(morale: 2, focusBonus: 1)),
+    ],
+  ),
+  EventDef(
+    id: 'shooting_camp',
+    weight: 0.6,
+    title: 'シューティング合宿',
+    body: '毎朝、シュートを500本打つ合宿が開かれる。手が豆だらけになるらしい。',
+    minAge: 10,
+    options: [
+      EventOption('参加して、ひたすら打ち込む', Effect(abilities: {Ability.threePoint: 1}, focusBonus: 3, fatigue: 8, trait: Trait.shooterBorn)),
+      EventOption('体を休めて、見送る', Effect(fatigue: -8, morale: 2)),
+    ],
+  ),
+  EventDef(
+    id: 'defense_clinic',
+    weight: 0.6,
+    title: 'ディフェンス講習',
+    body: '元守備職人の講師が来て、足の運びと手の出し方を教えてくれる。',
+    minAge: 10,
+    options: [
+      EventOption('最前列で、動きを盗む', Effect(abilities: {Ability.defense: 1}, focusBonus: 3, fatigue: 6, trait: Trait.lockdown)),
+      EventOption('得意なオフェンスの練習を優先する', Effect(focusBonus: 2)),
+    ],
+  ),
+  EventDef(
+    id: 'jump_training',
+    weight: 0.6,
+    title: '跳躍力トレーニング',
+    body: 'トレーナーが、ジャンプ力と瞬発力を鍛える特別メニューを勧めてくれた。',
+    minAge: 13,
+    options: [
+      EventOption('跳ぶ、走る、また跳ぶ', Effect(abilities: {Ability.speed: 1, Ability.physical: 1}, focusBonus: 2, fatigue: 8, trait: Trait.athletic)),
+      EventOption('怪我が怖いので控えめにする', Effect(fatigue: -4)),
+    ],
+  ),
+  EventDef(
+    id: 'captain_named',
+    weight: 0.6,
+    title: 'キャプテンに指名された',
+    body: '{coach}が「次のキャプテンはお前だ」と言った。{mate}も頷いている。',
+    minAge: 12,
+    options: [
+      EventOption('引き受けて、チームをまとめる', Effect(teamwork: 12, coach: 8, focusBonus: 2, trait: Trait.captain)),
+      EventOption('プレーに集中したい、と辞退する', Effect(focusBonus: 2)),
+    ],
+  ),
+  EventDef(
+    id: 'bench_learning',
+    weight: 0.6,
+    title: 'ベンチで学ぶ時間',
+    body: '出番がない試合で、ベンチから流れを見ていた。ゲームの動かし方が少し見えてきた。',
+    minAge: 14,
+    options: [
+      EventOption('相手の癖をノートに書き留める', Effect(abilities: {Ability.pass: 1, Ability.midRange: 1}, focusBonus: 2, trait: Trait.gameSmart)),
+      EventOption('次の出番に備えて、気持ちを整える', Effect(morale: 6)),
+    ],
+  ),
 ];
 
 EventDef? eventById(String id) {

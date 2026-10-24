@@ -109,7 +109,8 @@ class Player {
           Ability.rebound || Ability.inside => tall,
           Ability.dribble || Ability.speed => -tall * 0.5,
           _ => 0,
-        };
+        } +
+        effectiveBonus(traits, a);
     return v.clamp(0, 120).toDouble();
   }
 

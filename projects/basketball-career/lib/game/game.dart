@@ -483,7 +483,8 @@ class Game {
       0.07 *
       (0.7 + player.of(Ability.pass) / 200) *
       (player.position == Position.pointGuard ? 1.4 : 1.0) +
-      player.skills.fold(0.0, (s, k) => s + k.teamBonus);
+      player.skills.fold(0.0, (s, k) => s + k.teamBonus) +
+      traitTeamBonus(player.traits);
 
   /// 冬の大会(全国選手権)がある段階。高校と大学・実業団。
   bool get hasWinterCup => stage == Stage.highSchool || stage == Stage.college;
@@ -557,7 +558,7 @@ class Game {
               Action.scrimmage => 6,
               _ => 0,
             } -
-            2)
+            teamworkDecay(player.traits))
         .clamp(0, 100);
     if (action == Action.practice || action == Action.intense) {
       coachBond = (coachBond + 1).clamp(0, 100);

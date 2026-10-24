@@ -240,7 +240,11 @@ double clutchChance(Player p, Clutch c, double oppDefense, double form) {
   // 得意技の加算。
   final skill = p.skills.fold(0.0, (s, k) => s + k.clutchBonus(c));
   if (c == Clutch.drawFoul) return (raw + skill).clamp(0.03, 0.9);
-  return (raw * (0.8 + form * 0.2) + clutchBonus(p.traits) + perk + skill)
+  return (raw * (0.8 + form * 0.2) +
+          clutchBonus(p.traits) +
+          clutchPlayBonus(p.traits, c) +
+          perk +
+          skill)
       .clamp(0.03, 0.9);
 }
 
@@ -483,7 +487,8 @@ MatchHalf playFirstHalf(
         0,
         (((p.effective(Ability.defense) + p.effective(Ability.speed)) / 2) /
                     45 *
-                    form +
+                    form *
+                    stealMultiplier(p.traits) +
                 _noise(rng) * 0.8)
             .round()
             .clamp(0, 6)),
@@ -491,7 +496,8 @@ MatchHalf playFirstHalf(
         0,
         ((p.effective(Ability.defense) / 70) *
                     (0.2 + max(0.0, p.heightCm - 180) / 35) *
-                    form +
+                    form *
+                    blockMultiplier(p.traits) +
                 _noise(rng) * 0.6)
             .round()
             .clamp(0, 6)),
@@ -525,7 +531,7 @@ MatchState playSecondHalf(Player p, MatchHalf h, Halftime choice, Random rng,
       boost = ((p.overall - 50) * 0.05 + 1.0) * k - 0.8;
       shareAdd = 0.08 * k;
   }
-  var fit = h.style.fit(choice, p);
+  var fit = h.style.fit(choice, p) * halftimeFitMultiplier(p.traits);
   if (fit > 0) fit += scout;
   var team = h.team, opp = h.opp;
   final tq = [...h.teamQuarters], oq = [...h.oppQuarters];
