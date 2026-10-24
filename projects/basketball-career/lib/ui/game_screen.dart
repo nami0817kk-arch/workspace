@@ -272,23 +272,18 @@ class _PlayerCard extends StatelessWidget {
           children: [
             Text('${trackLabel(game)}  ${game.number > 0 ? '#${game.number}  ' : ''}${p.position.label}  '
                 '${p.heightCm.toStringAsFixed(1)}cm  総合 ${p.overall.round()}'),
-            Text('持ち味: ${p.position.perk}', style: const TextStyle(fontSize: 12)),
             if (buildOf(p) != null)
-              Text('ビルド: ${buildOf(p)!.label}\n${buildOf(p)!.build.description}',
+              Text('ビルド: ${buildOf(p)!.label}',
                   style: const TextStyle(fontSize: 12)),
             if (p.age <= 17)
               Text(
                   '生活習慣: ${game.habit >= 6 ? '良い' : game.habit < 0 ? '乱れ気味' : 'ふつう'}  '
                   '(身長の伸び ${habitHeightMultiplier(game.habit) >= 1 ? '+' : ''}${((habitHeightMultiplier(game.habit) - 1) * 100).round()}%)',
                   style: const TextStyle(fontSize: 12)),
-            if (game.track == Track.pro && game.draftPick > 0)
-              Text(draftLabel(game.draftPick),
-                  style: const TextStyle(fontSize: 12)),
             if (game.track == Track.pro && game.salary > 0)
-              Text('年俸 ${moneyLabel(game.salary)}  (これまでの収入 ${moneyLabel(game.totalEarnings)})',
-                  style: const TextStyle(fontSize: 12)),
-            if (game.track == Track.pro && game.sponsor > 0)
-              Text('スポンサー契約 年${moneyLabel(game.sponsor)}',
+              Text(
+                  '年俸 ${moneyLabel(game.salary)}'
+                  '${game.sponsor > 0 ? '  スポンサー 年${moneyLabel(game.sponsor)}' : ''}',
                   style: const TextStyle(fontSize: 12)),
             if (game.track == Track.school && p.age >= 15 ||
                 game.track == Track.university ||
@@ -341,25 +336,41 @@ class _PlayerCard extends StatelessWidget {
             _Meter(label: '気持ち', value: cond.morale),
             _Meter(label: 'チーム', value: game.teamwork),
             _Meter(label: 'コーチ', value: game.coachBond),
-            if (game.mate.isNotEmpty || game.coachLabel.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.only(top: 2),
-                child: Text(
-                    'コーチ: ${game.coachLabel.isEmpty ? '-' : game.coachLabel}  /  仲間: ${game.mate.isEmpty ? '-' : game.mate}',
-                    style: const TextStyle(fontSize: 12)),
+            Theme(
+              data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+              child: ExpansionTile(
+                tilePadding: EdgeInsets.zero,
+                childrenPadding: const EdgeInsets.only(bottom: 4),
+                dense: true,
+                visualDensity: VisualDensity.compact,
+                title: const Text('くわしく', style: TextStyle(fontSize: 12)),
+                expandedCrossAxisAlignment: CrossAxisAlignment.start,
+                expandedAlignment: Alignment.centerLeft,
+                children: [
+                  Text('持ち味: ${p.position.perk}',
+                      style: const TextStyle(fontSize: 12)),
+                  if (buildOf(p) != null)
+                    Text('ビルド: ${buildOf(p)!.build.description}',
+                        style: const TextStyle(fontSize: 12)),
+                  if (game.track == Track.pro && game.draftPick > 0)
+                    Text(draftLabel(game.draftPick),
+                        style: const TextStyle(fontSize: 12)),
+                  if (game.track == Track.pro && game.salary > 0)
+                    Text('これまでの収入 ${moneyLabel(game.totalEarnings)}',
+                        style: const TextStyle(fontSize: 12)),
+                  if (game.mate.isNotEmpty || game.coachLabel.isNotEmpty)
+                    Text(
+                        'コーチ: ${game.coachLabel.isEmpty ? '-' : game.coachLabel}  /  仲間: ${game.mate.isEmpty ? '-' : game.mate}',
+                        style: const TextStyle(fontSize: 12)),
+                  if (game.schoolLabel.isNotEmpty)
+                    Text(
+                        '環境: ${game.schoolLabel} (大会の味方の強さ ${game.schoolBonus >= 0 ? '+' : ''}${game.schoolBonus.toStringAsFixed(0)})',
+                        style: const TextStyle(fontSize: 12)),
+                  Text(
+                      'チームワーク: 味方の強さ ${game.teamBonus >= 0 ? '+' : ''}${game.teamBonus.toStringAsFixed(1)} (交流・練習試合で上がる)',
+                      style: const TextStyle(fontSize: 12)),
+                ],
               ),
-            if (game.schoolLabel.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.only(top: 2),
-                child: Text(
-                    '環境: ${game.schoolLabel} (大会の味方の強さ ${game.schoolBonus >= 0 ? '+' : ''}${game.schoolBonus.toStringAsFixed(0)})',
-                    style: const TextStyle(fontSize: 12)),
-              ),
-            Padding(
-              padding: const EdgeInsets.only(top: 2),
-              child: Text(
-                  'チームワーク: 味方の強さ ${game.teamBonus >= 0 ? '+' : ''}${game.teamBonus.toStringAsFixed(1)} (交流・練習試合で上がる)',
-                  style: const TextStyle(fontSize: 12)),
             ),
             if (cond.injured)
               Padding(
@@ -1022,7 +1033,7 @@ class _ClutchView extends StatelessWidget {
                 if (s.timeout)
                   const Padding(
                     padding: EdgeInsets.only(bottom: 8),
-                    child: Text('タイムアウト中: 最後の攻防+5%',
+                    child: Text('タイムアウト中: +5%',
                         style: TextStyle(fontWeight: FontWeight.bold)),
                   )
                 else if (run.timeouts > 0)
@@ -1030,7 +1041,7 @@ class _ClutchView extends StatelessWidget {
                     padding: const EdgeInsets.only(bottom: 8),
                     child: OutlinedButton(
                       onPressed: controller.useTimeout,
-                      child: Text('タイムアウトを取る(残り${run.timeouts}回・最後の攻防+5%)'),
+                      child: Text('タイムアウトを取る(残り${run.timeouts}回・+5%)'),
                     ),
                   ),
                 for (final k in Clutch.values)
@@ -1044,9 +1055,13 @@ class _ClutchView extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                              '${k.label}  成功率 ${(info.chances[k]! * 100).round()}%${game.player.skills.any((s) => s.clutchBonus(k) > 0) ? '  [得意技]' : ''}',
+                              '${k.label}  成功率 ${(info.chances[k]! * 100).round()}%',
                               style: const TextStyle(
                                   fontWeight: FontWeight.bold)),
+                          if (game.player.skills.any((s) => s.clutchBonus(k) > 0))
+                            const Text('得意技が効く',
+                                style: TextStyle(
+                                    fontSize: 11, fontWeight: FontWeight.bold)),
                           Text(k.description,
                               style: const TextStyle(fontSize: 12)),
                         ],
