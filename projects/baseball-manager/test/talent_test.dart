@@ -146,11 +146,12 @@ void main() {
     });
 
     test('レア特性は通常の特性の枠とは別。通常が4つでも持てるが、レアは2つまで', () {
-      final full = {Trait.genius, Trait.sturdy, Trait.sunny, Trait.ironMan};
+      final full = {Trait.genius, Trait.sturdy, Trait.sunny};
+      expect(full.length, maxTraits);
       expect(canGain(full, Trait.clutch), isFalse);
       expect(canGain(full, Trait.monster), isTrue);
       final two = gain(gain(full, Trait.monster), Trait.fortune);
-      expect(two.length, 6);
+      expect(two.length, 5);
       expect(canGain(two, Trait.steelBody), isFalse);
     });
 

@@ -351,6 +351,23 @@ void main() {
           age: 26, stage: stage, line: line, rank: 2, titles: t);
     }
 
+    test('年ごとの年俸はなだらか: 前の年の60%より下がらず、上がるときも一気に上がりきらない', () {
+      final star = rec(_p(Role.batter, 85), t: ['首位打者', '本塁打王', 'MVP']);
+      final poor = rec(_p(Role.batter, 40));
+      final hs = rec(_p(Role.batter, 60), stage: Stage.highSchool);
+      final list = [hs, star, poor, poor, star];
+      final pays = salariesOf(list);
+      expect(pays[0], 0); // プロ以外は0
+      expect(pays[1], salaryOf(star)); // 最初のプロの年はその年の成績どおり
+      expect(pays[2], greaterThanOrEqualTo((pays[1] * 0.6).floor() - 10)); // 10万円単位の丸め
+      expect(pays[2], greaterThan(salaryOf(poor))); // 急に底まで落ちない
+      expect(pays[3], lessThan(pays[2])); // 不振が続けば下がっていく
+      expect(pays[4], lessThan(salaryOf(star))); // 戻るときも一気には戻らない
+      expect(pays[4], greaterThan(pays[3]));
+      expect(salaryIn(list, list[2]), pays[2]);
+      expect(careerEarnings(list), pays.reduce((a, b) => a + b));
+    });
+
     test('強い選手ほど高い。タイトルでも上がる。プロ以外は0', () {
       final lo = salaryOf(rec(_p(Role.batter, 40)));
       final hi = salaryOf(rec(_p(Role.batter, 85)));

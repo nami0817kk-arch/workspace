@@ -245,8 +245,7 @@ void main() {
               })),
           isTrue);
       expect(
-          _has('traits-full',
-              _snap(traits: {Trait.genius, Trait.sturdy, Trait.sunny})),
+          _has('traits-full', _snap(traits: {Trait.genius, Trait.sturdy})),
           isFalse);
     });
 

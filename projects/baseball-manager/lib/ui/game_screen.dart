@@ -67,11 +67,16 @@ class _GameScreenState extends State<GameScreen> {
   /// タブの印(赤い点): いま手をつけられることがあるとき。
   bool get _trainMark =>
       game.canChooseSchool || game.canChoosePosition || game.canChooseOffseason;
-  bool get _abilityMark => abilitiesOf(game.player.role)
-      .any((a) => buy(game.player, game.exp, a) != null);
-  int get _abilityCount => abilitiesOf(game.player.role)
-      .where((a) => buy(game.player, game.exp, a) != null)
-      .length;
+  bool get _abilityMark =>
+      abilitiesOf(game.player.role)
+          .any((a) => buy(game.player, game.exp, a) != null) ||
+      game.skillsInSeason.isNotEmpty;
+  // 振り分けられる能力の数＋取りどきの特殊能力の数
+  int get _abilityCount =>
+      abilitiesOf(game.player.role)
+          .where((a) => buy(game.player, game.exp, a) != null)
+          .length +
+      game.skillsInSeason.length;
   bool get _careerMark => game.canUseFa || game.canMoveOverseas;
 
   /// 下のタブの絵。`tab` は 0〜3。選ばれていないタブは少し薄くする。
@@ -343,7 +348,7 @@ class _GameScreenState extends State<GameScreen> {
                 leading: const Icon(Icons.savings, color: Color(0xFF2E7D32)),
                 title: Text('資産 ${fmtMoney(game.money)}'),
                 subtitle: Text(game.records.any((r) => r.stage == Stage.pro)
-                    ? '昨年の年俸 ${fmtSalary(salaryOf(game.records.lastWhere((r) => r.stage == Stage.pro)))}'
+                    ? '昨年の年俸 ${fmtSalary(salaryIn(game.records, game.records.lastWhere((r) => r.stage == Stage.pro)))}'
                     : '年俸はシーズンのあとに決まります'),
               ),
             ),
@@ -2207,7 +2212,8 @@ class _RecentRecordCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final r = game.records.last;
     final d = describeLine(r.line);
-    final pay = salaryOf(r) > 0 ? '  年俸 ${fmtSalary(salaryOf(r))}' : '';
+    final yen = salaryIn(game.records, r);
+    final pay = yen > 0 ? '  年俸 ${fmtSalary(yen)}' : '';
     return Card(
       child: ListTile(
         key: const Key('records-open-card'),
@@ -2577,6 +2583,22 @@ class _SkillRow extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                           color: locked ? Colors.grey : null)),
                 ),
+                if (game.skillsInSeason.contains(s))
+                  Container(
+                    key: Key('skill-ready-${s.name}'),
+                    margin: const EdgeInsets.only(left: 6),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFFFF3C4),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Text('取りどき',
+                        style: TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFFB26A00))),
+                  ),
               ]),
               Text(effectText(s),
                   key: Key('skill-effect-${s.name}'),

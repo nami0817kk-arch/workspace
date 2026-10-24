@@ -223,9 +223,14 @@ double skillRating(Player p) {
   if (p.skills.isEmpty) return 0;
   final pts = skillAbilityDelta(p.skills).values.fold<int>(0, (a, b) => a + b) +
       skillMatchBonus(p.skills);
-  // 投手は能力が3つで1点の重みが大きいので、打者と同じ5で割る(役割で得にならないように)。
-  return pts / batterAbilities.length * 0.5;
+  // 投手は能力が3つで1点の重みが大きいので、打者と同じ5で割るのが基本(役割で得にならないように)。
+  // ただし投手は経験点が1つの種類(投球)に集まり、特殊能力にも回しにくいので、少し重くする(`tPitcherSkillDiv`)。
+  final div = p.role == Role.pitcher ? tPitcherSkillDiv / 10 : 5.0;
+  return pts / div * 0.5;
 }
+
+/// 投手の特殊能力が総合評価に効く重み(割る数×10)。dart run -DBAL_PSKILL=40 で試せる。
+const tPitcherSkillDiv = int.fromEnvironment('BAL_PSKILL', defaultValue: 35);
 
 /// 大会(世界大会も)の体調に足す値(特殊能力のぶん)。
 int skillMatchBonus(Set<Skill> s) => s.fold(0, (a, k) => a + k.match);

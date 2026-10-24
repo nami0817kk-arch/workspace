@@ -83,7 +83,7 @@ const rareTraits = <Trait>{
 const rareBirthChance = 0.04;
 
 /// 通常の特性の上限。レア特性は別枠で、最大 `maxRareTraits` 個まで(通常が埋まっていても覚醒できる)。
-const maxTraits = 4;
+const maxTraits = 3; // 2026-10-25 に4→3(特性が増えすぎないように。特殊能力は別枠)
 const maxRareTraits = 2;
 
 /// 同時に持てない組み合わせ。

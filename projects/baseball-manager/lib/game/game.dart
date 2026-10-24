@@ -736,6 +736,15 @@ class Game {
     return r.bought;
   }
 
+  /// 「取りどき」の特殊能力: コツが3つ以上(3割以上安い)で、いまの経験点で取れるもの。
+  /// 能力タブの印と、行の「取りどき」の札に使う(おまかせ振り分けは能力にしか使わないので、取り忘れを防ぐ)。
+  List<Skill> get skillsInSeason => [
+        for (final s in skillsFor(player.role))
+          if ((skillTips[s] ?? 0) >= 3 &&
+              skillBlock(player, s, exp, skillTips[s] ?? 0) == null)
+            s
+      ];
+
   /// 特殊能力の値段(いまのコツで)。
   int skillPrice(Skill s) => skillCost(s, skillTips[s] ?? 0);
 
@@ -1327,18 +1336,22 @@ class Game {
         _note('title', m);
       }
       log.add(coachWordOf(player));
-      // 年俸が資産に入る。
-      money += salaryOf(rec);
+      // 年俸が資産に入る(前の年も見てなだらかに決めた年俸)。
+      final pays = salariesOf(records);
+      money += pays.last;
       final cm = cmFeeOf(popularityOf(records, worldRecords));
       if (cm > 0) {
         money += cm;
         log.add('CM出演料: ${fmtMoney(cm)}');
       }
       // 契約更改(前の年からの増減)。保存はせず、成績から計算する。
-      final pro = records.where((r) => r.stage == Stage.pro).toList();
-      final now = salaryOf(rec);
-      if (pro.length >= 2) {
-        final prev = salaryOf(pro[pro.length - 2]);
+      final proPays = [
+        for (var i = 0; i < records.length; i++)
+          if (records[i].stage == Stage.pro) pays[i]
+      ];
+      final now = proPays.last;
+      if (proPays.length >= 2) {
+        final prev = proPays[proPays.length - 2];
         final diff = now - prev;
         final mark = diff > 0
             ? '(アップ)'
@@ -1584,11 +1597,14 @@ class Game {
     ending = _buildEnding();
   }
 
+  /// 称号「レジェンド」になる最高評価(dart run -DBAL_LEGEND=82 で試せる)。
+  static const legendLine = int.fromEnvironment('BAL_LEGEND', defaultValue: 82);
+
   Ending _buildEnding() {
     final String title;
     if (!turnedPro && proYears == 0) {
       title = 'プロにはなれなかった';
-    } else if (peakOverall >= 80) {
+    } else if (peakOverall >= legendLine) {
       title = 'レジェンド';
     } else if (peakOverall >= 65) {
       title = '一流選手';

@@ -237,9 +237,38 @@ String fmtSalary(int man) {
   return rest == 0 ? '$oku億円' : '$oku億$rest万円';
 }
 
+/// 年ごとの年俸(万円)。契約更改のように、前の年の年俸も見てなだらかに決める
+/// (その年の成績だけだと、タイトルを逃した翌年に半分になることがあった)。
+/// その年の成績の年俸を65%・前の年の年俸を35%で混ぜ、下がるときも前の年の60%より下げない。
+/// 二軍→一軍、日本→海外のような契約の替わり目もなだらかになる。プロ以外の年は 0。保存はしない。
+List<int> salariesOf(List<SeasonRecord> rs) {
+  final out = <int>[];
+  int? prev;
+  for (final r in rs) {
+    if (r.stage != Stage.pro) {
+      out.add(0);
+      continue;
+    }
+    final raw = salaryOf(r);
+    final v = prev == null
+        ? raw
+        : max(0.65 * raw + 0.35 * prev, 0.6 * prev).round();
+    final s = ((v / 10).round() * 10).clamp(400, 200000);
+    out.add(s);
+    prev = s;
+  }
+  return out;
+}
+
+/// 記録 `r` の年の年俸(一覧 `rs` の中での、なだらかにした値)。一覧に無ければ、その年の成績だけで。
+int salaryIn(List<SeasonRecord> rs, SeasonRecord r) {
+  final i = rs.indexOf(r);
+  return i < 0 ? salaryOf(r) : salariesOf(rs)[i];
+}
+
 /// プロ通算の収入(万円)。
 int careerEarnings(List<SeasonRecord> rs) =>
-    rs.fold(0, (a, r) => a + salaryOf(r));
+    salariesOf(rs).fold(0, (a, s) => a + s);
 
 /// 人気(0〜100)。タイトル・優勝・日本代表・海外での活躍で上がる。古い年ほど薄れる。
 /// 保存せず、成績から計算する。

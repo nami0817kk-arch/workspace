@@ -76,7 +76,8 @@ void main() {
         for (final x in t) {
           expect(x.appliesTo(Role.pitcher), isTrue);
         }
-        expect(t.length, lessThanOrEqualTo(maxTraits));
+        // レア特性は別枠なので、通常の特性だけ数える
+        expect(t.where((x) => !x.rare).length, lessThanOrEqualTo(maxTraits));
       }
       // 6割ほどで受け継ぐ(生まれつきの分も含めて、ふつうより明らかに多い)
       expect(inherited / n, greaterThan(0.45));

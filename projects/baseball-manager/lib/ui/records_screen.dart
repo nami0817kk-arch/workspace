@@ -420,7 +420,7 @@ class _Table extends StatelessWidget {
                               : '-')),
                         ],
                         if (records.any((r) => r.stage == Stage.pro))
-                          DataCell(Text(fmtSalary(salaryOf(r)))),
+                          DataCell(Text(fmtSalary(salaryIn(records, r)))),
                         DataCell(Text(
                             r.titles.isEmpty ? '' : r.titles.join('・'),
                             style: TextStyle(color: cs.tertiary))),
@@ -620,7 +620,7 @@ void _showSeason(BuildContext context, SeasonRecord start,
           if (r.titles.isNotEmpty) 'タイトル: ${r.titles.join('・')}',
           if (r.awards.isNotEmpty) '表彰: ${r.awards.join('・')}',
           if (r.rivalWon != null) 'ライバル対決: ${r.rivalWon! ? '勝ち' : '負け'}',
-          if (r.stage == Stage.pro) '年俸 ${fmtSalary(salaryOf(r))}',
+          if (r.stage == Stage.pro) '年俸 ${fmtSalary(salaryIn(list, r))}',
         ];
         return AlertDialog(
           key: const Key('season-detail'),
