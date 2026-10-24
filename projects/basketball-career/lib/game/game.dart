@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'build.dart';
 import 'career.dart';
 import 'difficulty.dart';
 import 'events.dart';
@@ -183,6 +184,7 @@ class Game {
     this.draftPick = 0,
     this.injuredStreak = 0,
     this.habit = 0,
+    this.buildLabel = '',
     this.comebackPending = false,
     this.salary = 0,
     this.sponsor = 0,
@@ -331,6 +333,14 @@ class Game {
   /// 長い怪我が治ったターンで true(復帰の出来事を起こしたら戻す)。大会の途中で保存しても残る。
   bool comebackPending;
 
+  /// いまのビルド(型とティア)の表示名。変わったときだけ知らせるために覚えておく。ビルドなしは空。
+  String buildLabel;
+
+  /// 直近のターンでビルドが決まった・変わったときの知らせ(画面に出す。保存はしない)。
+  String? lastBuildNote;
+
+  int _buildCool = 0;
+
   /// 幼少期(17歳まで)の生活習慣(-10〜+10)。睡眠・食事・外遊び・無理のしすぎで動き、身長の伸びに±10%まで効く。
   double habit;
 
@@ -381,6 +391,21 @@ class Game {
   Set<Skill> lastNewSkills = {};
 
   /// 条件を満たした得意技を身につける。新しく身についたものを返す。
+  /// 能力が変わったあとに、ビルド(型とティア)を見直す。変わったら知らせる。
+  /// 境目でころころ変わって知らせすぎないよう、知らせたあと2ターンは黙る。
+  void _updateBuild() {
+    final b = buildOf(player);
+    final label = b == null ? '' : b.label;
+    if (_buildCool > 0) _buildCool--;
+    if (label.isNotEmpty && label != buildLabel && _buildCool == 0) {
+      lastBuildNote = buildLabel.isEmpty
+          ? 'ビルドが決まった: $label'
+          : 'ビルドが変わった: $label';
+      _buildCool = 2;
+    }
+    buildLabel = label;
+  }
+
   Set<Skill> _learnSkills() {
     final n = newlyQualified(player);
     if (n.isNotEmpty) {
@@ -488,7 +513,8 @@ class Game {
       (0.7 + player.of(Ability.pass) / 200) *
       (player.position == Position.pointGuard ? 1.4 : 1.0) +
       player.skills.fold(0.0, (s, k) => s + k.teamBonus) +
-      traitTeamBonus(player.traits);
+      traitTeamBonus(player.traits) +
+      buildTeamBonus(player);
 
   /// 冬の大会(全国選手権)がある段階。高校と大学・実業団。
   bool get hasWinterCup => stage == Stage.highSchool || stage == Stage.college;
@@ -531,6 +557,7 @@ class Game {
     lastHonors = const [];
     lastSalaryNote = null;
     lastSponsorNote = null;
+    lastBuildNote = null;
     lastCareerLines = const [];
     lastMetRival = false;
     lastNewSkills = {};
@@ -558,6 +585,7 @@ class Game {
     termAction = action;
     termInjured = r.gotInjured;
     _learnSkills();
+    _updateBuild();
     // 何もしなければ少しずつ薄れる(毎ターン -2)。交流・練習試合で保つ。
     teamwork = (teamwork +
             switch (action) {
@@ -959,6 +987,7 @@ class Game {
     pendingEventId = null;
     lastNewSkills = {};
     _learnSkills();
+    _updateBuild();
     teamwork = (teamwork + opt.effect.teamwork).clamp(0, 100);
     coachBond = (coachBond + opt.effect.coach).clamp(0, 100);
     if (opt.effect.national) nationalPending = true;
@@ -1222,6 +1251,7 @@ class Game {
         'draftPick': draftPick,
         'injuredStreak': injuredStreak,
         'habit': habit,
+        'buildLabel': buildLabel,
         'comebackPending': comebackPending,
         'salary': salary,
         'sponsor': sponsor,
@@ -1280,6 +1310,7 @@ class Game {
         draftPick: (j['draftPick'] as num?)?.toInt() ?? 0,
         injuredStreak: (j['injuredStreak'] as num?)?.toInt() ?? 0,
         habit: (j['habit'] as num?)?.toDouble() ?? 0,
+        buildLabel: (j['buildLabel'] as String?) ?? '',
         comebackPending: (j['comebackPending'] as bool?) ?? false,
         salary: (j['salary'] as num?)?.toInt() ?? 0,
         sponsor: (j['sponsor'] as num?)?.toInt() ?? 0,

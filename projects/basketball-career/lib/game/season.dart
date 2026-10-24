@@ -113,6 +113,7 @@ class TournamentRun {
       {List<MatchResult>? matches,
       this.round = 0,
       this.wins = 0,
+      this.streak = 0,
       this.pending,
       this.pendingHalf,
       this.askHalftime = false,
@@ -133,6 +134,12 @@ class TournamentRun {
   final List<MatchResult> matches;
   int round;
   int wins;
+
+  /// 勢い: 連勝なら正の数、連敗なら負の数(試合ごとに数える)。次の試合の味方の強さに効く。
+  int streak;
+
+  /// 勢いによる味方の強さへの加算。1試合あたり0.8、3試合分(±2.4)まで。
+  double get momentum => streak.clamp(-3, 3) * 0.8;
 
   /// 勝負どころで選択を待っている試合。null なら止まっていない。
   MatchState? pending;
@@ -184,7 +191,7 @@ class TournamentRun {
           (opp?.bonus ?? 0);
       final h = playFirstHalf(
         p,
-        teamStrength: league.teamStrength + teamBonus,
+        teamStrength: league.teamStrength + teamBonus + momentum,
         oppStrength: strength,
         form: form,
         rng: rng,
@@ -265,7 +272,12 @@ class TournamentRun {
   void _finish(Player p, MatchState s, Clutch? choice, Random rng) {
     final m = finishMatch(p, s, choice, rng);
     matches.add(m);
-    if (m.won) wins++;
+    if (m.won) {
+      wins++;
+      streak = streak > 0 ? streak + 1 : 1;
+    } else {
+      streak = streak < 0 ? streak - 1 : -1;
+    }
     round++;
   }
 
@@ -292,6 +304,7 @@ class TournamentRun {
         'matches': [for (final m in matches) m.toJson()],
         'round': round,
         'wins': wins,
+        'streak': streak,
         'teamBonus': teamBonus,
         'scout': scout,
         'pending': pending?.toJson(),
@@ -310,6 +323,7 @@ class TournamentRun {
         ],
         round: (j['round'] as num?)?.toInt() ?? 0,
         wins: (j['wins'] as num?)?.toInt() ?? 0,
+        streak: (j['streak'] as num?)?.toInt() ?? 0,
         teamBonus: (j['teamBonus'] as num?)?.toDouble() ?? 0,
         scout: (j['scout'] as num?)?.toDouble() ?? 0,
         askHalftime: (j['askHalftime'] as bool?) ?? false,

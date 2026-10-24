@@ -1,3 +1,4 @@
+import 'build.dart';
 import 'honors.dart';
 import 'difficulty.dart';
 import 'epilogue.dart';
@@ -117,6 +118,8 @@ class Achievement {
 bool _wentPro(Game g) => g.records.any((r) => r.league.name.startsWith('pro'));
 
 final achievements = <Achievement>[
+  Achievement('build_gold', 'ビルド・ゴールド', 'ビルドがゴールド以上になった。', (g) => (buildOf(g.player)?.tier ?? 0) >= 2),
+  Achievement('build_legend', 'ビルド・レジェンド', 'ビルドがレジェンドになった。', (g) => (buildOf(g.player)?.tier ?? 0) >= 3),
   Achievement('pro_decade', '十年選手', 'プロで10年戦った(引退セレモニーで見送られる)。', (g) => proYears(g) >= 10),
   Achievement('earn_5oku', '億の男', 'プロでの生涯収入が5億円を超えた。', (g) => g.totalEarnings >= 50000),
   Achievement('earn_20oku', '大富豪', 'プロでの生涯収入が20億円を超えた。', (g) => g.totalEarnings >= 200000),
