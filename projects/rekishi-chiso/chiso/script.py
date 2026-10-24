@@ -27,6 +27,13 @@
           - 人物: 「ごめんなさい。わざとではないのよ」
             who: マリー
 
+物語型の本編（台本の一番上に story: true、10-24）の想像の台詞は、roles の「〇〇想像」の声で読み、行に imagined: true を書く。
+字幕の上に小さく「想像」の札が出る（メモ欄には積まない）:
+
+          - 人物: 「この子たちだけは、何があっても、守ります」
+            who: お市想像
+            imagined: true
+
 画面の指定（background / portrait / card / year）は「次に変えるまで続く」。
 紀元前の年は負の数で書く（year: -221、timeline も負、札は「紀元前221年」、people は born: -259。chiso/years.py）。
 portrait と card は節が変わると消える。null を書けばその行で消せる。
@@ -82,6 +89,7 @@ class Line:
     reaction: str | None = None       # つむぎの「寄り」（その行だけ）。JSON の文字列（chiso/reaction.py）
     detail: str | None = None         # 絵の一部を大きく（その行だけ）。JSON の文字列（chiso/pen.py）
     mark: str | None = None           # 赤ペンの書き込み。JSON {"items": [...], "from": n}（chiso/pen.py）
+    imagined: bool = False            # 想像の台詞（物語型、10-24）。字幕の上に小さく「想像」の札。メモ欄には積まない
 
 
 MEMO_SIZE = 3
@@ -208,6 +216,9 @@ class Script:
     shorts_playlists: list = field(default_factory=list)   # ショートを入れる再生リスト（省けば入れない）
     shorts_badge: str = ""                                   # ショートの画面に貼る札（B作品は「もしもの話」。省けば出さない）
     en: dict = field(default_factory=dict)          # 英語の題名・説明・章の題 {title, description, chapters}
+    story: bool = False                             # 物語型の本編（10-24。台本の一番上に story: true）。締めの決まり文句と次回予告を必須にしない
+    description_head: str = ""                      # 概要欄の頭（物語の冒頭数行＋この動画でわかること）。describe が一番上に出す
+    description_note: str = ""                      # 概要欄の断り（想像の台詞など）。describe が目次の前に出す
 
     @property
     def question(self) -> str:
@@ -461,8 +472,8 @@ def parse(data: dict, path: Path | None = None, glossary: dict[str, str] | None 
                 figure = _grown(_figure(raw["figure"], where), figure)
             if "card" in raw:
                 card = _card(raw["card"], where)
-                if card is not None and (not memo or memo[-1] != card):
-                    memo.append(card)
+                if card is not None and (not memo or memo[-1] != card) and not raw.get("imagined"):
+                    memo.append(card)                  # 想像の台詞の行の札はメモ欄に積まない（10-24）
             if raw.get("year") is not None:
                 year = int(raw["year"])
             elif "card" in raw and _card_year(card) is not None:
@@ -501,6 +512,7 @@ def parse(data: dict, path: Path | None = None, glossary: dict[str, str] | None 
                 memo=tuple(reversed(memo[-MEMO_SIZE:])), figure=figure,
                 bubble=_bubble(raw.get("bubble"), where), hook=bool(raw.get("hook")), icon=(str(raw["icon"]) if raw.get("icon") else None),
                 reaction=_reaction(raw.get("reaction"), where), detail=detail, mark=mark,
+                imagined=bool(raw.get("imagined")),
             ))
     if not lines:
         raise ScriptError("せりふが1行もありません")
@@ -546,6 +558,9 @@ def parse(data: dict, path: Path | None = None, glossary: dict[str, str] | None 
         shorts_playlists=_names(data.get("shorts_playlists")),
         shorts_badge=str(data.get("shorts_badge") or ""),
         en=_english(data.get("en"), len(sections)),
+        story=bool(data.get("story")),
+        description_head=str(data.get("description_head") or "").strip(),
+        description_note=str(data.get("description_note") or "").strip(),
     )
 
 
