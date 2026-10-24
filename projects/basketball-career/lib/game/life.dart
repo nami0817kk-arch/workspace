@@ -236,9 +236,33 @@ int _stochasticRound(double v, Random rng) {
   );
 }
 
-/// 年末: 年齢を1つ上げ、身長を伸ばす。
-Player ageUp(Player p, Random rng) {
-  final growth = heightGrowthPerYear(p.age, p.heightGenes);
+/// 生活習慣の「ふつう」の水準。ふつうに遊んでいるとここに落ち着き、身長の伸びは基準どおり。
+const habitBaseline = 4.5;
+
+/// 1ターンの過ごし方が生活習慣(-10〜+10)に与える点。幼少期(17歳まで)だけ。
+/// 休養=よく眠る(+0.4)、交流=外で遊ぶ(+0.1)。疲れ切るまでの特訓や、疲れが溜まったまま(70以上)は睡眠不足で乱れる。
+double habitDelta(Action a, int fatigue) {
+  var d = switch (a) {
+    Action.rest => 0.4,
+    Action.social => 0.1,
+    Action.practice || Action.scrimmage || Action.study => 0.0,
+    Action.intense => fatigue >= 60 ? -0.3 : 0.0,
+  };
+  if (fatigue >= 70) d -= 0.3;
+  return d;
+}
+
+/// 生活習慣が身長の伸びに与える倍率。「ふつう(+4.5)」で1倍、良い(+10)で約1.05倍、乱れ(-10)で約0.92倍。
+/// 最終身長で、良いと+3.5cm・乱れると-5cm くらい(基準から離れるほど効くが、悪い側のほうが緩やか)。
+double habitHeightMultiplier(double habit) {
+  final d = habit.clamp(-10, 10) - habitBaseline;
+  return 1 + d * (d >= 0 ? 0.0095 : 0.0055);
+}
+
+/// 年末: 年齢を1つ上げ、身長を伸ばす。`habit` は幼少期の生活習慣(-10〜+10)。
+Player ageUp(Player p, Random rng, {double habit = 0}) {
+  final growth = heightGrowthPerYear(p.age, p.heightGenes) *
+      (p.age <= 17 ? habitHeightMultiplier(habit) : 1.0);
   final noise = growth > 0 ? (rng.nextDouble() - 0.5) * 1.2 : 0.0;
   return p.copyWith(
     age: p.age + 1,

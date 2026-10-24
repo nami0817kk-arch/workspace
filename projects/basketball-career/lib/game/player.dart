@@ -131,7 +131,11 @@ class Player {
     return heightCm >= 182 ? Position.shootingGuard : Position.pointGuard;
   }
 
-  /// 総合評価(0〜99 付近)。ポジションごとに重みが違う。
+  /// 身長の評価(0〜100)。155cm で 0、186cm で約48、210cm で約85、220cm 以上で100。
+  /// 身長は能力の1つとして総合評価に入る(素質=ポテンシャルとは別。伸びは `heightGenes` と幼少期の生活習慣で決まる)。
+  double get heightRating => heightRatingOf(heightCm);
+
+  /// 総合評価(0〜99 付近)。ポジションごとに重みが違い、身長も能力として入る。
   double get overall {
     final w = _weights[position]!;
     var sum = 0.0, total = 0.0;
@@ -139,6 +143,9 @@ class Player {
       sum += effective(e.key) * e.value;
       total += e.value;
     }
+    final hw = heightWeightOf(position);
+    sum += heightRating * hw;
+    total += hw;
     return (sum / total).clamp(0, 99).toDouble();
   }
 
@@ -179,6 +186,18 @@ class Player {
     );
   }
 }
+
+/// 身長の評価(0〜100)。
+double heightRatingOf(double cm) => ((cm - 155) / 65 * 100).clamp(0, 100).toDouble();
+
+/// 身長が総合評価に効く度合い(ポジションの重みと同じ尺度)。大きい選手ほど身長が効く。
+int heightWeightOf(Position p) => switch (p) {
+      Position.pointGuard => 1,
+      Position.shootingGuard => 1,
+      Position.smallForward => 2,
+      Position.powerForward => 3,
+      Position.center => 4,
+    };
 
 /// ポジションごとの能力の重み(総合評価に効く度合い)。
 Map<Ability, int> weightsOf(Position p) => _weights[p]!;

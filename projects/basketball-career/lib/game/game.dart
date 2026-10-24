@@ -182,6 +182,7 @@ class Game {
     this.nationalPending = false,
     this.draftPick = 0,
     this.injuredStreak = 0,
+    this.habit = 0,
     this.comebackPending = false,
     this.salary = 0,
     this.sponsor = 0,
@@ -329,6 +330,9 @@ class Game {
 
   /// 長い怪我が治ったターンで true(復帰の出来事を起こしたら戻す)。大会の途中で保存しても残る。
   bool comebackPending;
+
+  /// 幼少期(17歳まで)の生活習慣(-10〜+10)。睡眠・食事・外遊び・無理のしすぎで動き、身長の伸びに±10%まで効く。
+  double habit;
 
   /// いまの怪我で、続けて休んだターン数(長い怪我から復帰したとき出来事を起こす)。
   int injuredStreak;
@@ -547,6 +551,9 @@ class Game {
     } else {
       comebackPending = wasInjured && injuredStreak >= 3;
       injuredStreak = 0;
+    }
+    if (player.age <= 17) {
+      habit = (habit + habitDelta(action, condition.fatigue)).clamp(-10.0, 10.0);
     }
     termAction = action;
     termInjured = r.gotInjured;
@@ -854,7 +861,7 @@ class Game {
     growthLog.add(GrowthPoint(player.age, player.overall, player.heightCm));
     final stageBefore = stage;
     slot = 0;
-    player = ageUp(player, rng);
+    player = ageUp(player, rng, habit: habit);
     switch (track) {
       case Track.school:
         if (player.age >= 19) pathPending = true;
@@ -974,6 +981,9 @@ class Game {
       final d = player.of(a) - before.of(a);
       if (d != 0) lines.add('${a.label} ${sgn(d)}');
     }
+    if (opt.effect.habit != 0) {
+      habit = (habit + opt.effect.habit).clamp(-10.0, 10.0);
+    }
     final dm = condition.morale - c0.morale;
     if (dm != 0) lines.add('気持ち ${sgn(dm)}');
     final df = condition.fatigue - c0.fatigue;
@@ -986,6 +996,9 @@ class Game {
     }
     if (r.gotInjured) lines.add('${condition.injuryName}をした');
     if (opt.effect.achievement != 0) lines.add('評価が上がった');
+    if (opt.effect.habit != 0) {
+      lines.add('生活習慣 ${opt.effect.habit > 0 ? '良くなった(身長が伸びやすい)' : '乱れた(身長の伸びが鈍る)'}');
+    }
     final sc = salaryChangeLine;
     if (sc != null) lines.add(sc);
     if (opt.effect.national) lines.add('日本代表に参加する(次の冬に世界大会)');
@@ -1208,6 +1221,7 @@ class Game {
         'nationalPending': nationalPending,
         'draftPick': draftPick,
         'injuredStreak': injuredStreak,
+        'habit': habit,
         'comebackPending': comebackPending,
         'salary': salary,
         'sponsor': sponsor,
@@ -1265,6 +1279,7 @@ class Game {
         nationalPending: (j['nationalPending'] as bool?) ?? false,
         draftPick: (j['draftPick'] as num?)?.toInt() ?? 0,
         injuredStreak: (j['injuredStreak'] as num?)?.toInt() ?? 0,
+        habit: (j['habit'] as num?)?.toDouble() ?? 0,
         comebackPending: (j['comebackPending'] as bool?) ?? false,
         salary: (j['salary'] as num?)?.toInt() ?? 0,
         sponsor: (j['sponsor'] as num?)?.toInt() ?? 0,
