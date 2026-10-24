@@ -257,7 +257,7 @@ def ki_ball(cx: float, cy: float, r: float, f: int, col=(255, 190, 70), trail: T
     return ov
 
 
-def beam(plan: dict, f: int, who: str, x_end: float, age: float, dur: float, col=(120, 230, 255), z_end: float = None) -> Image.Image:
+def beam(plan: dict, f: int, who: str, x_end: float, age: float, dur: float, col=(120, 230, 255), z_end: float = None, width: float = 0.42, impact: bool = False) -> Image.Image:
     """気の光線: 手(前の手と後ろの手の間)から x_end(壁)まで、白い芯+色の光。age(秒)で 3 コマで太くなり、終わりの 25% で細って消える。
     縁は揺らぎ(コマごとに乱れる)、根元に光の玉、周りに流れる粒。"""
     cam = plan["frames"][f]["cam"]
@@ -273,7 +273,7 @@ def beam(plan: dict, f: int, who: str, x_end: float, age: float, dur: float, col
     t01 = age / max(dur, 1e-6)
     grow = min(1.0, age * 30 / 3.0)                                   # 3 コマで太くなる
     fade = 1.0 if t01 < 0.75 else max(0.0, (1 - t01) / 0.25)
-    wid = 0.42 * u * grow * (0.35 + 0.65 * fade)
+    wid = width * u * grow * (0.35 + 0.65 * fade)                 # width: 太さ(身長比。必殺技は 0.7 前後。0.42 だと弱そうに見えた 2026-10-25)
     ov = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     if wid < 1 or abs(x1 - x0) < 2:
         return ov
@@ -289,6 +289,13 @@ def beam(plan: dict, f: int, who: str, x_end: float, age: float, dur: float, col
         top.append((x, y - ww))
         bot.append((x, y + ww))
     poly = top + bot[::-1]
+    if width > 0.5:                                                   # 太い光線は、外側にもう一層の大きな光(空気が焼ける感じ)
+        halo = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+        mid = [((tx + bx) / 2, (ty + by) / 2) for (tx, ty), (bx, by) in zip(top, bot)]
+        h_top = [(x, y - (y - ty) * 1.9) for (x, y), (_, ty) in zip(mid, top)]
+        h_bot = [(x, y + (by - y) * 1.9) for (x, y), (_, by) in zip(mid, bot)]
+        ImageDraw.Draw(halo).polygon(h_top + h_bot[::-1], fill=(*col, int(110 * fade)))
+        ov.alpha_composite(halo.filter(ImageFilter.GaussianBlur(max(10, int(wid * 1.4)))))
     glow = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     ImageDraw.Draw(glow).polygon(poly, fill=(*col, int(200 * fade)))
     glow = glow.filter(ImageFilter.GaussianBlur(max(6, int(wid * 0.9))))
@@ -303,6 +310,18 @@ def beam(plan: dict, f: int, who: str, x_end: float, age: float, dur: float, col
     ImageDraw.Draw(ball).ellipse([x0 - r0, y0 - r0, x0 + r0, y0 + r0], fill=(*col, int(220 * fade)))
     ov.alpha_composite(ball.filter(ImageFilter.GaussianBlur(int(r0 * 0.5) + 2)))
     d.ellipse([x0 - r0 * 0.55, y0 - r0 * 0.55, x0 + r0 * 0.55, y0 + r0 * 0.55], fill=(255, 255, 255, int(240 * fade)))
+    if impact and fade > 0:                                           # 当たる先の光の爆ぜ(白い玉 + 放射の筋)
+        r1 = wid * (1.7 + 0.25 * math.sin(f * 3.1))
+        burst = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+        db = ImageDraw.Draw(burst)
+        db.ellipse([x1 - r1 * 1.6, y1 - r1 * 1.6, x1 + r1 * 1.6, y1 + r1 * 1.6], fill=(*col, int(150 * fade)))
+        ov.alpha_composite(burst.filter(ImageFilter.GaussianBlur(int(r1 * 0.6) + 2)))
+        d.ellipse([x1 - r1 * 0.8, y1 - r1 * 0.8, x1 + r1 * 0.8, y1 + r1 * 0.8], fill=(255, 255, 255, int(245 * fade)))
+        for k in range(12):
+            ang = k * math.pi / 6 + f * 0.4
+            ln = r1 * rnd.uniform(1.6, 2.8)
+            d.line([x1 + math.cos(ang) * r1, y1 + math.sin(ang) * r1, x1 + math.cos(ang) * ln, y1 + math.sin(ang) * ln],
+                   fill=(255, 255, 255, int(200 * fade)), width=max(2, int(wid * 0.12)))
     for i in range(40):                                               # 光線に沿って流れる粒・筋
         q = (rnd.random() + f * 0.09) % 1.0
         x = x0 + (x1 - x0) * q

@@ -485,7 +485,7 @@ def compose_frame(plan: dict, f: int, figs: Dict[int, Image.Image], stages: Opti
                 base.alpha_composite(ghost, (int(px_ - px_src), 0))
     for bm in fx.get("beams", []):             # 気の光線(人物の下に描く: 上だと撃ち合いで 2 人が光線に隠れた。手の先から壁まで。x_end は数か [[tau, x], ...] の折れ線)
         if bm["start"] <= tau <= bm["end"]:
-            base.alpha_composite(look.beam(plan, f, bm.get("who", "A"), _pw_at(bm["x_end"], tau), tau - bm["start"], bm["end"] - bm["start"], tuple(bm.get("color", (120, 230, 255))), z_end=bm.get("z_end")))
+            base.alpha_composite(look.beam(plan, f, bm.get("who", "A"), _pw_at(bm["x_end"], tau), tau - bm["start"], bm["end"] - bm["start"], tuple(bm.get("color", (120, 230, 255))), z_end=bm.get("z_end"), width=float(bm.get("width", 0.42)), impact=bool(bm.get("impact", False))))
     held = _draw_props(base, plan, f, tau, cam, fx.get("props", []), behind=True)   # 小道具(箱・玉): 置いてある物は人物の後ろ
     base.alpha_composite(figs[f])
     _draw_props(base, plan, f, tau, cam, held, behind=False)                           # 持っている物は人物の前(手に追従)
