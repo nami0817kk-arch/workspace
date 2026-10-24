@@ -109,12 +109,57 @@ def _draw_fx(d: ImageDraw.ImageDraw, P, fx, u: float, S: int):
             for i in range(8):
                 a = i * math.pi / 4 + 0.4
                 d.line([(c[0] + r * 1.1 * math.cos(a), c[1] + r * 1.1 * math.sin(a)), (c[0] + r * 1.6 * math.cos(a), c[1] + r * 1.6 * math.sin(a))], fill=(120, 190, 255), width=int(3 * S))
+        elif kind == "beam":                                  # 光線: (beam, x0, z0, 太さ, x1, z1, 色)。色の帯に白い芯
+            x1, z1 = e[4], e[5]
+            col = tuple(e[6]) if len(e) > 6 else (120, 230, 255)
+            c1 = P(x1, z1)
+            d.line([c, c1], fill=tuple(int(v * 0.6 + 255 * 0.4) for v in col), width=int(r * 2.4))
+            d.line([c, c1], fill=col, width=int(r * 1.6))
+            d.line([c, c1], fill=(255, 255, 255), width=int(r * 0.6))
+            d.ellipse([c[0] - r * 1.3, c[1] - r * 1.3, c[0] + r * 1.3, c[1] + r * 1.3], fill=col)
+            d.ellipse([c[0] - r * 0.7, c[1] - r * 0.7, c[0] + r * 0.7, c[1] + r * 0.7], fill=(255, 255, 255))
+        elif kind == "orb":                                   # 気弾: (orb, x, z, 半径, 色)
+            col = tuple(e[4]) if len(e) > 4 else (255, 190, 70)
+            d.ellipse([c[0] - r * 1.4, c[1] - r * 1.4, c[0] + r * 1.4, c[1] + r * 1.4], fill=tuple(int(v * 0.5 + 255 * 0.5) for v in col))
+            d.ellipse([c[0] - r, c[1] - r, c[0] + r, c[1] + r], fill=col)
+            d.ellipse([c[0] - r * 0.45, c[1] - r * 0.45, c[0] + r * 0.45, c[1] + r * 0.45], fill=(255, 255, 255))
+        elif kind == "shield":                                # 気の盾: (shield, x, z, 半径)。縦長の光の円盤と網目
+            d.ellipse([c[0] - r * 0.45, c[1] - r, c[0] + r * 0.45, c[1] + r], outline=(150, 240, 255), width=int(6 * S))
+            for k in range(-2, 3):
+                yy = c[1] + k * r * 0.35
+                hw = r * 0.45 * math.sqrt(max(0.0, 1 - (k * 0.35) ** 2))
+                d.line([(c[0] - hw, yy), (c[0] + hw, yy)], fill=(190, 250, 255), width=int(2 * S))
+
+
+def _draw_back_fx(d: ImageDraw.ImageDraw, P, fx, u: float, S: int):
+    """人物の後ろに描く効果。aura=気のオーラ(体を包む炎の形。(aura, x, 腰の高さ, 大きさ, 色))、pillar=光の柱(気を溜める。(pillar, x, 0, 幅, 色))。"""
+    for e in fx:
+        kind, x, z, sz = e[0], e[1], e[2], e[3]
+        col = tuple(e[4]) if len(e) > 4 else (130, 255, 150)
+        light = tuple(int(v * 0.45 + 255 * 0.55) for v in col)
+        r = sz * u
+        if kind == "aura":
+            c = P(x, z)
+            pts = []
+            for i in range(24):                               # 上に伸びる炎の輪郭(とがりを交互に)
+                a = math.pi / 2 + i * 2 * math.pi / 24
+                rr = r * (1.25 if i % 2 == 0 else 0.95)
+                up = 1.0 + 0.9 * max(0.0, -math.sin(a))       # 上側ほど長い
+                pts.append((c[0] + rr * 0.62 * math.cos(a), c[1] + rr * math.sin(a) * up))
+            d.polygon(pts, fill=light, outline=col, width=int(4 * S))
+        elif kind == "pillar":
+            x0, yb = P(x - sz / 2, 0.0)
+            x1, _ = P(x + sz / 2, 0.0)
+            d.rectangle([x0, 0, x1, yb], fill=light)
+            mx = (x0 + x1) / 2
+            d.rectangle([mx - (x1 - x0) * 0.18, 0, mx + (x1 - x0) * 0.18, yb], fill=(255, 255, 255))
+            d.ellipse([x0 - (x1 - x0) * 0.4, yb - (x1 - x0) * 0.25, x1 + (x1 - x0) * 0.4, yb + (x1 - x0) * 0.25], outline=col, width=int(5 * S))
 
 
 def panel(figs: List[dict], path: Path, hits: Sequence[Pt] = (), arrows: Sequence[Tuple[Pt, Pt]] = (), rings: Sequence[Tuple[float, float, float]] = (),
           cracks: Sequence[Tuple[float, float]] = (), debris: Sequence[Tuple[float, float, float]] = (), speed: Sequence[Tuple[float, float, float, float]] = (),
           trails: Sequence[Sequence[Pt]] = (), posts: Sequence[Tuple[float, float, float]] = (), ppu: float = 150.0, cx: Optional[float] = None,
-          w: int = 560, h: int = 340, ground: float = 0.86, ghosts: Sequence[dict] = (), label: str = "", scale_ss: int = 2, auto: bool = True, ppu_max: float = 150.0, fx: Sequence[tuple] = (), flash: float = 0.0) -> Path:
+          w: int = 560, h: int = 340, ground: float = 0.86, ghosts: Sequence[dict] = (), label: str = "", scale_ss: int = 2, auto: bool = True, ppu_max: float = 150.0, fx: Sequence[tuple] = (), flash: float = 0.0, back_fx: Sequence[tuple] = ()) -> Path:
     """1 コマを描く。ghosts: 薄く重ねる前の姿勢(動きの軌跡)。ground: 地面の線の高さ(上からの割合)。"""
     S = scale_ss
     W, H = w * S, h * S
@@ -181,6 +226,7 @@ def panel(figs: List[dict], path: Path, hits: Sequence[Pt] = (), arrows: Sequenc
         d.ellipse([X - r - 2 * S, Y - r - 2 * S, X + r + 2 * S, Y + r + 2 * S], fill=mix(edge))
         d.ellipse([X - r, Y - r, X + r, Y + r], fill=mix(col))
 
+    _draw_back_fx(d, P, back_fx, ppu * S, S)                  # オーラ・光の柱(人物の後ろ)
     for i, g in enumerate(ghosts):                            # 軌跡の残像: 古いほど薄い
         draw_fig(g, 0.16 + 0.26 * (i + 1) / max(1, len(ghosts)))
     for (px_, pw_, ph_) in posts:                             # 柱(木): 地面に立つ長方形
