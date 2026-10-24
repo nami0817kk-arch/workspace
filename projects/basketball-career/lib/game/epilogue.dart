@@ -30,7 +30,7 @@ String secondCareer(Game g) {
     return '引退後は指導者の道へ。チームのコーチとして、次の世代の選手を育てている。';
   }
   if (g.honorTotal >= 3 || worldChampion(g) || (g.abroad && g.titles > 0)) {
-    return '引退後は解説者として、試合の中継で語り口が人気になった。${name}の解説を待つファンも多い。';
+    return '引退後は解説者として、試合の中継で語り口が人気になった。$nameの解説を待つファンも多い。';
   }
   if (g.totalEarnings >= 100000) {
     return '引退後は、稼いだ資金でバスケットボールの育成アカデミーを開き、子どもたちを教えている。';
