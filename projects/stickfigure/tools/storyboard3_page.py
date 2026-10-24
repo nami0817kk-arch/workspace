@@ -41,9 +41,23 @@ def main():
                     f'<p class="lead">{html.escape(lead)}</p></div><div class="board">{cards}</div></section>')
     body.append('<section><h2>エフェクト</h2><p class="lead">勝ち抜き戦の付け方に、アニメの技の効果を足します。当たりは黄色い火花、受けは青い輪、速い振りに軌跡、着地と叩きつけに土煙、吹き飛びに流線、決めの一撃に閃光 1 コマ。'
                 '加えて、気を溜める光の柱、覚醒のオーラ、光線、気の盾、瞬間移動の残像の列、分身。擬音の文字・白黒反転・放射線は付けません。</p></section>')
+    snd = json.loads((OUT / "sounds.json").read_text(encoding="utf-8"))
+    players = "".join(f'<li><b>{html.escape(x["label"])}</b><span class="sec">{x["sec"]:.1f} 秒</span><audio controls preload="none" src="{html.escape(x["src"])}"></audio></li>' for x in snd)
+    body.append('<section><h2>音(戦闘アニメ風)</h2><p class="lead">ドラゴンボールのような戦闘アニメの手触りに寄せた効果音を、自分で作りました(実際の作品の音や曲は、著作権と YouTube の自動判定の理由で使えません)。'
+                '打撃は「風切り → 高い破裂 → 中域の衝撃 → 低い胴鳴り」を重ねて短く鋭く、瞬間移動は高い「シュン」、気の溜めはうなりが上がっていく音に電気のはじける音、光線は明るいうなりの持続と轟音です。</p>'
+                f'<ul class="sounds">{players}</ul>'
+                '<div class="tablewrap"><table><thead><tr><th>幕</th><th>鳴らす音</th></tr></thead><tbody>'
+                '<tr><td>第一幕「降臨」</td><td>風の音と低いうなり(にらみ合い)/ 重い着地 ×3 / 瞬間移動 ×3 / 受け止め ×3 / 山場の合図</td></tr>'
+                '<tr><td>第二幕「連携」</td><td>打撃・連打・重い一撃 / 叩きつけの爆発 / 3 人の気の溜め / 光線 / 大爆発</td></tr>'
+                '<tr><td>第三幕「覚醒」</td><td>無音(煙の中)→ オーラの噴き上がり / 光線を盾で受け止める</td></tr>'
+                '<tr><td>第四幕「逆転」</td><td>瞬間移動 + 重い一撃 / 分身の連打 / 拳と拳の激突</td></tr>'
+                '<tr><td>第五幕「決着」</td><td>気の溜め → とどめの光線 → 大爆発 → 風の音だけ</td></tr>'
+                '</tbody></table></div>'
+                '<p class="note">BGM も戦闘アニメ風(速いテンポの、金管っぽい和音と太い低音)に作り直します。光線の直前は BGM を止めて無音にし、溜めの音だけを聞かせます。上の見本は効果音だけです。</p></section>')
     body.append('<section><h2>作るもの</h2><ul class="vocab">'
                 '<li><b>3 人を相手にする組み立て</b>緑が左右に向きを変えて戦う(いまの殴り合いの部品は 1 対 1 で向きが固定)。3 人の連携技も当たりとして並べる。</li>'
                 '<li><b>手付けの戦いに必殺技の効果をつなぐ</b>光線・光の柱・気の盾・残像の列・オーラは、自動の戦い(fight)に部品があるので、手付けの戦いから呼べるようにする。オーラは新しく作る。</li>'
+                '<li><b>戦闘アニメ風の音</b>効果音(上の見本)と BGM。打撃・受け・連打・瞬間移動・溜め・オーラ・光線・爆発・激突を、当たりの種類ごとに鳴らし分ける。</li>'
                 '<li><b>新しい動作</b>着地(降り立つ)、四方からの連撃の受け流し、気を溜める構え、片手で光線を受け止める、拳と拳の押し合い。</li>'
                 '</ul><p class="note">バク転・衝撃波・空中コンボ・吹き飛び・瞬間移動・分身乱舞は、これまでに作ったものを使います。72 秒を 5 つの幕に分けて書き出すので、直した幕だけ描き直せます。</p></section>')
     body.append('<section><h2>決めたいこと</h2><ol class="q">'
@@ -52,7 +66,12 @@ def main():
                 '</ol></section>')
     body.append('<section><h2>このあとの流れ</h2><p class="note">合意できたら、(1) 3 人を相手にできる組み立てと新しい動作・効果を作る、(2) 幕ごとに振り付けを組んで点検に通す、(3) 横と縦を書き出して見せる、(4) 投稿、の順で進めます。'
                 'コマを直したい所は、番号で教えてください(例: 「8 をもっと派手に」「第二幕を短く」)。</p></section>')
-    page = sp.HEAD.replace("<title>勝ち抜き戦 絵コンテ</title>", "<title>3対1 絵コンテ</title>") + "<main>" + "".join(body) + "</main>"
+    css = ('<style>.sounds { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 10px; }'
+           '.sounds li { background: var(--paper); border: 1px solid var(--line); padding: 10px 12px; display: grid; grid-template-columns: 1fr auto; gap: 6px 10px; align-items: center; }'
+           '.sounds li:first-child { grid-column: 1 / -1; border-color: var(--hero); }'
+           '.sounds .sec { font-family: var(--mono); font-size: 12px; color: var(--mute); }'
+           '.sounds audio { grid-column: 1 / -1; width: 100%; height: 36px; }</style>')
+    page = sp.HEAD.replace("<title>勝ち抜き戦 絵コンテ</title>", "<title>3対1 絵コンテ</title>") + css + "<main>" + "".join(body) + "</main>"
     (OUT / "index.html").write_text(page, encoding="utf-8")
     print(OUT / "index.html", len(page) // 1024, "KB", n, "コマ")
 
