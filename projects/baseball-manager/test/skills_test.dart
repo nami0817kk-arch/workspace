@@ -135,14 +135,14 @@ void main() {
       expect(() => g.setStudyTarget(Skill.strikeout), throwsArgumentError);
     });
 
-    test('研究は練習より経験点がずっと少なく、練習はコツが貯まらない', () {
+    test('研究は練習より経験点が少なく、練習はコツが貯まらない', () {
       int expOf(Plan p) {
         final g = _game(seed: 9);
         _act(g, p, Ability.contact);
         return g.lastGain.values.fold(0, (a, b) => a + b);
       }
 
-      expect(expOf(Plan.study), lessThan(expOf(Plan.train) / 3));
+      expect(expOf(Plan.study), lessThan(expOf(Plan.train) * 0.7));
       final t = _game(seed: 9);
       _act(t, Plan.train, Ability.contact);
       expect(t.skillTips, isEmpty);

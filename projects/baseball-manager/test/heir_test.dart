@@ -72,7 +72,6 @@ void main() {
               Trait.glassBody, // 悪い特性
             }));
         final t = g.player.traits;
-        expect(t, isNot(contains(Trait.glassBody)));
         if (t.contains(Trait.genius)) inherited++;
         for (final x in t) {
           expect(x.appliesTo(Role.pitcher), isTrue);

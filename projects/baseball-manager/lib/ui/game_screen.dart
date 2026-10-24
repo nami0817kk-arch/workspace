@@ -2600,7 +2600,9 @@ class _SkillRow extends StatelessWidget {
         ),
         FilledButton.tonal(
           key: Key('skill-buy-${s.name}'),
+          // テーマの既定は横いっぱい(Size.fromHeight)なので、行の中では幅を決める
           style: FilledButton.styleFrom(
+              minimumSize: const Size(52, 36),
               visualDensity: VisualDensity.compact,
               padding: const EdgeInsets.symmetric(horizontal: 10)),
           onPressed: why == null ? () => controller.buySkill(s) : null,

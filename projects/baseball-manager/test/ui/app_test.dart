@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:baseball_manager/game/skills.dart';
 import 'package:baseball_manager/game/after_career.dart';
 import 'package:baseball_manager/game/career.dart';
 import 'package:baseball_manager/game/childhood.dart';
@@ -477,14 +478,14 @@ void _rankTests() {
             .containsAll({Trait.lateBloomer, Trait.earlyBloomer}),
         isTrue);
 
-    // コーチ: 教える特性を決めて、コツを満タンにすると習得する。
-    await t.ensureVisible(find.byKey(const Key('admin-teach-clutch')));
-    await t.tap(find.byKey(const Key('admin-teach-clutch')));
+    // コーチ: 教える特殊能力を決めて、コツを満タンにすると習得する。
+    await t.ensureVisible(find.byKey(const Key('admin-teach-chance')));
+    await t.tap(find.byKey(const Key('admin-teach-chance')));
     await t.pumpAndSettle();
     await t.ensureVisible(find.byKey(const Key('admin-tips')));
     await t.drag(find.byKey(const Key('admin-tips')), const Offset(2000, 0));
     await t.pumpAndSettle();
-    expect(c.game!.player.traits, contains(Trait.clutch));
+    expect(c.game!.player.skills, contains(Skill.chance));
 
     // 天賦: スライダーで書き換えられ、レア特性も付けられる。覚醒済みの印も切り替えられる。
     await t.ensureVisible(find.byKey(const Key('admin-gift-contact')));
