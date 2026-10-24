@@ -256,7 +256,8 @@ def voicevox_guard(config) -> None:
     if os.name != "nt":
         return
     port = str(config["voicevox_url"]).rstrip("/").rsplit(":", 1)[-1]
-    ps = ("$p = Get-CimInstance Win32_Process -Filter \"Name='run.exe'\" | "
+    ps = ("[Console]::OutputEncoding = [Text.Encoding]::UTF8; "
+          "$p = Get-CimInstance Win32_Process -Filter \"Name='run.exe'\" | "
           f"Where-Object {{ $_.CommandLine -like '*vv-engine*' -and $_.CommandLine -like '*{port}*' }} | Select-Object -First 1; "
           "if ($p) { '{0}|{1}|{2}' -f $p.ProcessId, $p.PrivatePageCount, $p.ExecutablePath }")
     try:
@@ -271,9 +272,11 @@ def voicevox_guard(config) -> None:
     if gb < VOICEVOX_MAX_GB:
         return
     print(f"VOICEVOX のエンジンが {gb:.1f}GB 抱えているので立ち上げ直します")
+    # 道のりは環境変数で渡す（10-25：コマンドの文字列に「なみ」の入った道のりを書くと ? に化けて、止めたまま起動できなかった）
     subprocess.run(["powershell", "-NoProfile", "-Command",
-                    f"Stop-Process -Id {pid} -Force; Start-Process -FilePath '{exe}' "
-                    f"-ArgumentList '--host','127.0.0.1','--port','{port}' -WindowStyle Hidden"], timeout=60)
+                    f"Stop-Process -Id {pid} -Force; Start-Process -FilePath $env:VV_EXE "
+                    f"-ArgumentList '--host','127.0.0.1','--port','{port}' -WindowStyle Hidden"], timeout=60,
+                   env={**os.environ, "VV_EXE": exe})
     import time, urllib.request
     for _ in range(60):
         time.sleep(2)
@@ -634,6 +637,17 @@ def cmd_story_main(args) -> int:
     shots: から全カットの表（out/<名前>_shotlist.md）も。"""
     from . import storymain
     config = load_config()
+    if args.build:
+        if not ensure_disk(config) or disk_free_gb() < 30:
+            print("  × ディスクの空きが30GB未満なので書き出しません")
+            return 2
+        r = storymain.build(Path(args.look), config, out_dir(), limit=args.limit or None, workers=args.workers,
+                            name=args.name or None)
+        print(f"{r['target']}（{r['seconds']:.1f}秒・カット{r['cuts']}）")
+        for k, v in r["times"].items():
+            print(f"  {k}: {v / 60:.1f}分")
+        print("  BGM:", {k: (round(v, 2) if isinstance(v, float) else v) for k, v in r["bgm"].items()})
+        return 0
     pngs, sheet, infos = storymain.stills(Path(args.look), config, out_dir(), f"_{args.ver}")
     for p, info in zip(pngs, infos):
         print(f"{p}  {info}")
@@ -1246,6 +1260,10 @@ def main(argv=None) -> int:
     s = sub.add_parser("story-main")
     s.add_argument("look")
     s.add_argument("--ver", default="v3", help="静止画の版（out/<名前>_stills_<版>.jpg）")
+    s.add_argument("--build", action="store_true", help="本編（横）を書き出す（音声・BGM 込み）")
+    s.add_argument("--limit", type=float, default=0, help="--build と一緒に：頭の何秒だけ書き出す（試し）")
+    s.add_argument("--workers", type=int, default=4, help="--build：並行で描く本数")
+    s.add_argument("--name", default="", help="--build：出力の名前（既定は台本の名前。out/<名前>.mp4）")
     s.set_defaults(fn=cmd_story_main)
     s = sub.add_parser("story-short")
     s.add_argument("script")

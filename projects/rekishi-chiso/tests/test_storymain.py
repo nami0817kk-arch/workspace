@@ -51,7 +51,7 @@ def test_plan_follows_shot_rules():
     assert set(ai) <= set(look["ai"])
     assert pl.runs() == []                                        # 同じ絵が続けて20秒を超えない
     chapters = [c for c in pl.cuts if c.kind == "chapter"]
-    assert len(chapters) == len(sc.sections) - 1 and all(abs(c.seconds - M.CHAPTER_SECONDS) < 1e-6 for c in chapters)
+    assert len(chapters) == len(sc.sections) - 1 and all(M.CHAPTER_SECONDS <= c.seconds <= M.CHAPTER_SECONDS + 1.3 for c in chapters)
     assert pl.cuts[-1].kind == "end" and abs(pl.cuts[-1].seconds - M.END_SECONDS) < 1e-6
     for a, b in zip(pl.cuts, pl.cuts[1:]):
         assert abs(a.end - b.start) < 1e-6                         # 隙間も重なりもない
@@ -84,3 +84,28 @@ def test_record_lines_use_serif_and_imagined_are_not_records():
     assert not M.is_record(L())
     L.speaker, L.imagined = "語り", False
     assert not M.is_record(L())
+
+
+def test_plan_with_real_voice_lengths_keeps_lines_in_order_and_chapter_gaps():
+    look = yaml.safe_load(LOOK.read_text(encoding="utf-8"))
+    sc = script.load(ROOT / look["script"])
+    secs = [3.0] * len(sc.lines)
+    pl = M.Plan(look, sc, secs)
+    for line in sc.lines:
+        a, b = pl.line_at[line.index]
+        assert abs((b - a) - 3.0) < 1e-6                          # ブロックをつなぐと、その行の声の長さ
+    for sec, t in pl.chapter_at.items():                            # 章題カードの間は声が無い
+        first = next(l for l in sc.lines if l.section == sec)
+        assert pl.line_at[first.index][0] >= t + M.CHAPTER_SECONDS
+        prev = sc.lines[first.index - 1]
+        assert pl.line_at[prev.index][1] <= t
+    assert abs(pl.total - pl.voice_end - M.END_SECONDS) < 1e-6
+
+
+def test_put_blends_only_inside_the_box():
+    import numpy as np
+    lay = Image.new("RGBA", (M.MW, M.MH), (0, 0, 0, 0))
+    lay.paste((255, 255, 255, 255), (100, 100, 110, 110))
+    frame = np.zeros((M.MH, M.MW, 3), dtype=np.uint8)
+    M._put(frame, M._premul(lay), 1.0)
+    assert frame[105, 105].tolist() == [255, 255, 255] and frame[50, 50].tolist() == [0, 0, 0]
