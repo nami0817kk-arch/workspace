@@ -239,10 +239,18 @@ void main() {
       expect(find.textContaining(h.label), findsWidgets);
     }
     expect(find.textContaining('(おすすめ)'), findsOneWidget);
-    await tester.tap(find.textContaining('守りを固める'));
+    // 相手の持ち味の説明文にも「守りを固めて…」と出るので、ボタンの中の文字を押す。
+    final defense = find.descendant(
+        of: find.byType(FilledButton), matching: find.textContaining('守りを固める'));
+    await tester.ensureVisible(defense);
+    await tester.pumpAndSettle();
+    await tester.tap(defense);
     await tester.pumpAndSettle();
     // 作戦を選んだので、次の止まりどころ(勝負どころか次の試合のハーフタイム)か終了へ進む。
-    expect(c.game!.run?.matches.length ?? c.game!.records.length, greaterThan(0));
+    // (接戦なら勝負どころで止まり、まだ試合の結果は無い。ハーフタイムのままでなければ進んでいる。)
+    final moved = c.game!.phase != Phase.halftime ||
+        (c.game!.run?.matches.length ?? c.game!.records.length) > 0;
+    expect(moved, isTrue);
   });
 
   testWidgets('エンディングで結果をコピーできる', (tester) async {
