@@ -42,6 +42,8 @@ class MatchResult {
     this.oppQuarters = const [],
     this.opponent = '',
     this.vsRival = false,
+    this.fouls = 0,
+    this.fouledOut = false,
   });
 
   final bool won;
@@ -68,6 +70,10 @@ class MatchResult {
   final String opponent;
   final bool vsRival;
 
+  /// その試合の個人ファウル数と、5つ目で退場したか。
+  final int fouls;
+  final bool fouledOut;
+
   int get margin => teamScore - oppScore;
 
   Map<String, dynamic> toJson() => {
@@ -86,6 +92,8 @@ class MatchResult {
         'oppQuarters': oppQuarters,
         'opponent': opponent,
         'vsRival': vsRival,
+        'fouls': fouls,
+        'fouledOut': fouledOut,
       };
 
   factory MatchResult.fromJson(Map<String, dynamic> j) => MatchResult(
@@ -110,6 +118,8 @@ class MatchResult {
         ],
         opponent: (j['opponent'] as String?) ?? '',
         vsRival: (j['vsRival'] as bool?) ?? false,
+        fouls: (j['fouls'] as num?)?.toInt() ?? 0,
+        fouledOut: (j['fouledOut'] as bool?) ?? false,
       );
 }
 
@@ -131,6 +141,9 @@ class MatchState {
     required this.oppQuarters,
     this.opponent = '',
     this.vsRival = false,
+    this.fouls = 0,
+    this.fouledOut = false,
+    this.timeout = false,
   });
 
   final int team;
@@ -148,6 +161,35 @@ class MatchState {
   final List<int> oppQuarters;
   final String opponent;
   final bool vsRival;
+
+  /// 個人ファウルの数と、5つ目で退場したか。
+  final int fouls;
+  final bool fouledOut;
+
+  /// タイムアウトを取ったか(最後の攻防の成功率が上がる)。
+  final bool timeout;
+
+  /// タイムアウトを取った状態にした試合。
+  MatchState withTimeout() => MatchState(
+        team: team,
+        opp: opp,
+        points: points,
+        rebounds: rebounds,
+        assists: assists,
+        steals: steals,
+        blocks: blocks,
+        threes: threes,
+        teamStrength: teamStrength,
+        oppStrength: oppStrength,
+        form: form,
+        teamQuarters: teamQuarters,
+        oppQuarters: oppQuarters,
+        opponent: opponent,
+        vsRival: vsRival,
+        fouls: fouls,
+        fouledOut: fouledOut,
+        timeout: true,
+      );
 
   int get margin => team - opp;
 
@@ -170,6 +212,9 @@ class MatchState {
         'oppQuarters': oppQuarters,
         'opponent': opponent,
         'vsRival': vsRival,
+        'fouls': fouls,
+        'fouledOut': fouledOut,
+        'timeout': timeout,
       };
 
   factory MatchState.fromJson(Map<String, dynamic> j) => MatchState(
@@ -194,6 +239,9 @@ class MatchState {
         ],
         opponent: (j['opponent'] as String?) ?? '',
         vsRival: (j['vsRival'] as bool?) ?? false,
+        fouls: (j['fouls'] as num?)?.toInt() ?? 0,
+        fouledOut: (j['fouledOut'] as bool?) ?? false,
+        timeout: (j['timeout'] as bool?) ?? false,
       );
 }
 
@@ -215,9 +263,13 @@ double freeThrowChance(Player p, double form) =>
     (0.40 + 0.50 * (p.effective(Ability.freeThrow) / 100) + (form - 1) * 0.1 + clutchBonus(p.traits) * 0.5)
         .clamp(0.2, 0.95);
 
+/// タイムアウトで最後の攻防の成功率が上がる量(5%)。
+const timeoutBonus = 0.05;
+
 /// 勝負どころの成功率(0〜1)。`oppDefense` は相手の守備の強さ(0〜100)。
 /// ファウルをもらうは「ファウルを誘って、2本とも決める」確率(1本だけでも1点は入る)。
-double clutchChance(Player p, Clutch c, double oppDefense, double form) {
+double clutchChance(Player p, Clutch c, double oppDefense, double form,
+    {bool timeout = false}) {
   final opp = oppDefense / 100;
   final double raw = switch (c) {
     Clutch.drive =>
@@ -240,13 +292,15 @@ double clutchChance(Player p, Clutch c, double oppDefense, double form) {
   };
   // 得意技の加算。
   final skill = p.skills.fold(0.0, (s, k) => s + k.clutchBonus(c));
-  if (c == Clutch.drawFoul) return (raw + skill).clamp(0.03, 0.9);
+  final to = timeout ? timeoutBonus : 0.0;
+  if (c == Clutch.drawFoul) return (raw + skill + to).clamp(0.03, 0.9);
   return (raw * (0.8 + form * 0.2) +
           clutchBonus(p.traits) +
           clutchPlayBonus(p.traits, c) +
           buildClutchBonus(p, c) +
           perk +
-          skill)
+          skill +
+          to)
       .clamp(0.03, 0.9);
 }
 
@@ -364,6 +418,7 @@ class MatchHalf {
     this.opponent = '',
     this.vsRival = false,
     this.style = OppStyle.balanced,
+    this.fouls = 0,
   });
 
   final int team;
@@ -381,6 +436,12 @@ class MatchHalf {
   final String opponent;
   final bool vsRival;
   final OppStyle style;
+
+  /// 前半のファウル数。3つ以上はファウルトラブル(後半に5つで退場)。
+  final int fouls;
+
+  /// ファウルトラブルか(前半で3つ以上)。
+  bool get foulTrouble => fouls >= 3;
 
   int get margin => team - opp;
 
@@ -403,6 +464,7 @@ class MatchHalf {
         'opponent': opponent,
         'vsRival': vsRival,
         'style': style.name,
+        'fouls': fouls,
       };
 
   factory MatchHalf.fromJson(Map<String, dynamic> j) => MatchHalf(
@@ -427,6 +489,7 @@ class MatchHalf {
         opponent: (j['opponent'] as String?) ?? '',
         vsRival: (j['vsRival'] as bool?) ?? false,
         style: OppStyle.parse(j['style'] as String?) ?? OppStyle.balanced,
+        fouls: (j['fouls'] as num?)?.toInt() ?? 0,
       );
 }
 
@@ -508,7 +571,30 @@ MatchHalf playFirstHalf(
     opponent: opponent,
     vsRival: vsRival,
     style: style,
+    fouls: foulsOf(p, 2, 1.0, rng),
   );
+}
+
+/// ファウルの数。守りが強く体が強い選手ほど、強く当たってファウルが増える。
+/// `quarters` クォーター分、`mul` は後半の作戦による倍率(守りを固めると増える)。
+int foulsOf(Player p, int quarters, double mul, Random rng) {
+  final aggressive = 0.8 +
+      (p.effective(Ability.defense) - 50) / 100 +
+      (p.effective(Ability.physical) - 50) / 200;
+  final lambda = 0.45 * quarters * aggressive.clamp(0.4, 1.6) * mul;
+  return _poisson(lambda, rng).clamp(0, 5);
+}
+
+/// 平均 `lambda` 回の起こる回数(ポアソン分布)。ファウルのように、ときどき多く起きる数に使う。
+int _poisson(double lambda, Random rng) {
+  final limit = exp(-lambda);
+  var k = 0;
+  var prod = rng.nextDouble();
+  while (prod > limit && k < 20) {
+    k++;
+    prod *= rng.nextDouble();
+  }
+  return k;
 }
 
 /// 作戦の効きの強さ(エースに任せる)。スタミナと総合力があるほど大きい。
@@ -563,7 +649,22 @@ MatchState playSecondHalf(Player p, MatchHalf h, Halftime choice, Random rng,
     team += t;
     opp += o;
   }
-  final pts = (team * (h.share + shareAdd).clamp(0.04, 0.55) * h.form).round();
+  // ファウル: 守りを固めると増える。前半と合わせて5つで退場(最後のクォーターに出られない)。
+  final foulMul = switch (choice) {
+    Halftime.defense => 1.5,
+    Halftime.tempo => 1.2,
+    Halftime.star => 1.1,
+    Halftime.keep => 1.0,
+  };
+  final fouls = min(5, h.fouls + foulsOf(p, 2, foulMul, rng));
+  final fouledOut = fouls >= 5;
+  if (fouledOut) team = max(0, team - 3); // 最後のクォーターに主力がいない
+  var pts = (team * (h.share + shareAdd).clamp(0.04, 0.55) * h.form).round();
+  if (fouledOut) {
+    pts = (pts * 0.8).round();
+  } else if (fouls == 4) {
+    pts = (pts * 0.94).round(); // 4つ目からは慎重に守る
+  }
   // 3Pの本数: 得点のうち外から決める割合(3P、ミドル、ゴール下の比)。
   final tp = p.effective(Ability.threePoint);
   final mid = p.effective(Ability.midRange);
@@ -587,6 +688,8 @@ MatchState playSecondHalf(Player p, MatchHalf h, Halftime choice, Random rng,
     oppQuarters: oq,
     opponent: h.opponent,
     vsRival: h.vsRival,
+    fouls: fouls,
+    fouledOut: fouledOut,
   );
 }
 
@@ -604,12 +707,17 @@ Halftime bestHalftime(Player p, MatchHalf h) {
   } else {
     base = Halftime.keep;
   }
+  // ファウルトラブル(前半で3つ以上)なら、ファウルが増える守り・エースは避ける。
+  if (h.foulTrouble && (base == Halftime.defense || base == Halftime.star)) {
+    base = Halftime.keep;
+  }
   if (h.style == OppStyle.balanced) return base;
   var best = base;
   var bestScore = -99.0;
   for (final c in Halftime.values) {
+    final trouble = h.foulTrouble && (c == Halftime.defense || c == Halftime.star) ? 1.0 : 0.0;
     final score =
-        (c == base ? 0.6 : (c == Halftime.keep ? 0.3 : 0.0)) + h.style.fit(c, p);
+        (c == base ? 0.6 : (c == Halftime.keep ? 0.3 : 0.0)) + h.style.fit(c, p) - trouble;
     if (score > bestScore) {
       best = c;
       bestScore = score;
@@ -649,7 +757,8 @@ MatchResult finishMatch(Player p, MatchState s, Clutch? choice, Random rng) {
   if (s.needsClutch) {
     final c = choice ?? bestClutch(p, s.oppStrength, s.form);
     used = c;
-    var success = rng.nextDouble() < clutchChance(p, c, s.oppStrength, s.form);
+    var success = rng.nextDouble() <
+        clutchChance(p, c, s.oppStrength, s.form, timeout: s.timeout);
     if (c == Clutch.drawFoul) {
       // ファウルを誘えたか→フリースロー2本。入った本数だけ得点(2本とも入れば成功)。
       var made = 0;
@@ -716,6 +825,8 @@ MatchResult finishMatch(Player p, MatchState s, Clutch? choice, Random rng) {
     oppQuarters: s.oppQuarters,
     opponent: s.opponent,
     vsRival: s.vsRival,
+    fouls: s.fouls,
+    fouledOut: s.fouledOut,
   );
 }
 

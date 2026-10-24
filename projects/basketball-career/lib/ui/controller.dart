@@ -434,6 +434,17 @@ class GameController extends ChangeNotifier {
     if (!r.paused) await money?.tournamentPlayed();
   }
 
+  /// 勝負どころでタイムアウトを取る(残りがあるときだけ)。
+  Future<void> useTimeout() async {
+    final g = game;
+    if (g == null || g.phase != Phase.clutch) return;
+    final run = g.run;
+    final s = run?.pending;
+    if (run == null || s == null || s.timeout || run.timeouts <= 0) return;
+    g.useTimeout();
+    _commit();
+  }
+
   Future<void> playClutch(Clutch c) async {
     final g = game;
     if (g == null || g.phase != Phase.clutch) return;

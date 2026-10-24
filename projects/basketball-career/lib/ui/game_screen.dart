@@ -878,6 +878,16 @@ class _HalftimeView extends StatelessWidget {
                   Text(h.vsRival
                       ? '相手: ライバル ${h.opponent}  (通算 ${game.rival.wins}勝${game.rival.losses}敗)'
                       : '相手: ${h.opponent}'),
+                Padding(
+                  padding: const EdgeInsets.only(top: 4),
+                  child: Text(
+                      h.foulTrouble
+                          ? 'ファウル: ${h.fouls}  ファウルトラブル!  強く当たる作戦は退場の危険'
+                          : 'ファウル: ${h.fouls}',
+                      style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: h.foulTrouble ? FontWeight.bold : FontWeight.normal)),
+                ),
                 if (run.streak != 0)
                   Padding(
                     padding: const EdgeInsets.only(top: 4),
@@ -952,7 +962,9 @@ class _HalftimeView extends StatelessWidget {
                   run.matches[i].oppScore, run.matches[i].points,
                   run.matches[i].rebounds, run.matches[i].assists,
                   opponent: run.matches[i].opponent,
-                  rival: run.matches[i].vsRival),
+                  rival: run.matches[i].vsRival,
+                  fouls: run.matches[i].fouls,
+                  fouledOut: run.matches[i].fouledOut),
           ]),
         ],
       ],
@@ -1007,6 +1019,20 @@ class _ClutchView extends StatelessWidget {
                 Text(situation,
                     style: const TextStyle(fontWeight: FontWeight.bold)),
                 const SizedBox(height: 12),
+                if (s.timeout)
+                  const Padding(
+                    padding: EdgeInsets.only(bottom: 8),
+                    child: Text('タイムアウト中: 最後の攻防+5%',
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                  )
+                else if (run.timeouts > 0)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: OutlinedButton(
+                      onPressed: controller.useTimeout,
+                      child: Text('タイムアウトを取る(残り${run.timeouts}回・最後の攻防+5%)'),
+                    ),
+                  ),
                 for (final k in Clutch.values)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 8),
@@ -1045,7 +1071,9 @@ class _ClutchView extends StatelessWidget {
                   run.matches[i].oppScore, run.matches[i].points,
                   run.matches[i].rebounds, run.matches[i].assists,
                   opponent: run.matches[i].opponent,
-                  rival: run.matches[i].vsRival),
+                  rival: run.matches[i].vsRival,
+                  fouls: run.matches[i].fouls,
+                  fouledOut: run.matches[i].fouledOut),
           ]),
         ],
       ],

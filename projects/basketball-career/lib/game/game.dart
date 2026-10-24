@@ -646,6 +646,19 @@ class Game {
     return _afterRun(cr);
   }
 
+  /// 勝負どころで、タイムアウトを取って作戦を練る(残りがあるときだけ。最後の攻防の成功率+5%)。
+  void useTimeout() {
+    final cr = run;
+    final s = cr?.pending;
+    if (phase != Phase.clutch || cr == null || s == null) {
+      throw StateError('今は勝負どころではない: $phase');
+    }
+    if (s.timeout) throw StateError('この試合ではもうタイムアウトを取った');
+    if (cr.timeouts <= 0) throw StateError('タイムアウトの残りがない');
+    cr.timeouts--;
+    cr.pending = s.withTimeout();
+  }
+
   /// ハーフタイムで止まっている試合に、選んだ作戦を渡して続きを進める。
   TermReport resolveHalftime(Halftime choice) {
     final cr = run;
@@ -681,7 +694,7 @@ class Game {
       oppStrength: s.oppStrength,
       chances: {
         for (final c in Clutch.values)
-          c: clutchChance(player, c, s.oppStrength, s.form),
+          c: clutchChance(player, c, s.oppStrength, s.form, timeout: s.timeout),
       },
     );
   }

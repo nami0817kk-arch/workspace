@@ -29,6 +29,13 @@ enum League {
 
   /// プレーオフに進める勝ち数(レギュラーシーズンの半分)。
   int get qualifyWins => (rounds + 1) ~/ 2;
+
+  /// 大会全体で使えるタイムアウトの数(試合数に応じて。大事な試合を選んで使う)。
+  int get timeouts => switch (this) {
+        League.minibasket || League.juniorHigh => 1,
+        League.highSchool || League.university || League.corporate || League.national => 2,
+        League.proDomestic || League.proAbroad => 3,
+      };
 }
 
 /// 大会(1シーズン)の結果。
@@ -114,12 +121,14 @@ class TournamentRun {
       this.round = 0,
       this.wins = 0,
       this.streak = 0,
+      int? timeouts,
       this.pending,
       this.pendingHalf,
       this.askHalftime = false,
       this.scout = 0,
       this.teamBonus = 0})
-      : matches = matches ?? [];
+      : timeouts = timeouts ?? league.timeouts,
+        matches = matches ?? [];
 
   final League league;
 
@@ -134,6 +143,9 @@ class TournamentRun {
   final List<MatchResult> matches;
   int round;
   int wins;
+
+  /// タイムアウトの残り(大会全体で数回だけ)。大事な試合の最後の攻防で使うと成功率が+5%。
+  int timeouts;
 
   /// 勢い: 連勝なら正の数、連敗なら負の数(試合ごとに数える)。次の試合の味方の強さに効く。
   int streak;
@@ -305,6 +317,7 @@ class TournamentRun {
         'round': round,
         'wins': wins,
         'streak': streak,
+        'timeouts': timeouts,
         'teamBonus': teamBonus,
         'scout': scout,
         'pending': pending?.toJson(),
@@ -324,6 +337,7 @@ class TournamentRun {
         round: (j['round'] as num?)?.toInt() ?? 0,
         wins: (j['wins'] as num?)?.toInt() ?? 0,
         streak: (j['streak'] as num?)?.toInt() ?? 0,
+        timeouts: (j['timeouts'] as num?)?.toInt(),
         teamBonus: (j['teamBonus'] as num?)?.toDouble() ?? 0,
         scout: (j['scout'] as num?)?.toDouble() ?? 0,
         askHalftime: (j['askHalftime'] as bool?) ?? false,
