@@ -4,6 +4,7 @@
 import 'dart:math';
 
 import 'package:basketball_career/game/advice.dart';
+import 'package:basketball_career/game/difficulty.dart';
 import 'package:basketball_career/game/game.dart';
 import 'package:basketball_career/game/life.dart';
 import 'package:basketball_career/game/match.dart';
@@ -22,8 +23,13 @@ void main(List<String> args) {
   final totP = <int>[], totR = <int>[], totA = <int>[];
   final honorCareers = <String, int>{};
   final honorTotals = <String, int>{};
+  // --easy / --hard で難易度を変えて測る。
+  final diff = args.contains('--hard')
+      ? Difficulty.hard
+      : (args.contains('--easy') ? Difficulty.easy : Difficulty.normal);
+  var turnsTotal = 0, endAgeTotal = 0;
   for (var seed = 0; seed < n; seed++) {
-    final g = Game.start('x', rng: Random(seed));
+    final g = Game.start('x', rng: Random(seed), difficulty: diff);
     var guard = 0;
     var seen18 = false;
     while (g.phase != Phase.retired && guard++ < 500) {
@@ -87,6 +93,8 @@ void main(List<String> args) {
           break;
       }
     }
+    turnsTotal += guard;
+    endAgeTotal += g.player.age;
     if (g.records.any((r) => r.league.name.startsWith('pro'))) pro++;
     titles += g.titles;
     st += g.totalSteals;
@@ -113,6 +121,8 @@ void main(List<String> args) {
     rl += g.rival.losses;
   }
   String pct(int v) => '${(v / n * 100).toStringAsFixed(1)}%';
+  print('難易度: ${diff.label}');
+  print('1周の操作回数(画面で止まる回数)の平均: ${(turnsTotal / n).toStringAsFixed(0)} / 引退の平均年齢: ${(endAgeTotal / n).toStringAsFixed(1)}歳');
   print('プロ入り: ${pct(pro)}(高校から直接 ${pct(direct)})');
   print('海外挑戦: ${pct(abroad)}');
   String dist(List<int> v) {

@@ -1,8 +1,8 @@
 /// 難しさ。成長の速さと、対戦相手の強さが変わる。
 enum Difficulty {
-  easy('やさしい', 'よく伸びて、相手が少し弱い。', 1.25, -3),
-  normal('ふつう', '標準。', 1.0, 0),
-  hard('むずかしい', '伸びが遅く、相手が強い。', 0.85, 3);
+  easy('やさしい', 'よく伸びて相手が弱い。おすすめなら、ほぼプロ入り。', 1.25, -3),
+  normal('ふつう', '標準。おすすめどおりなら、プロ入りは7割前後。', 1.0, 0),
+  hard('むずかしい', '伸びが遅く相手が強い。おすすめでもプロ入りは4割。', 0.85, 3);
 
   const Difficulty(this.label, this.description, this.growth, this.opponent);
   final String label;

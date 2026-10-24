@@ -202,6 +202,11 @@ class _SeasonView extends StatelessWidget {
                   onPressed: c.autoYear,
                   child: const Text('おすすめで1年進める'),
                 ),
+                const SizedBox(height: 8),
+                OutlinedButton(
+                  onPressed: () => c.autoYears(3),
+                  child: const Text('おすすめで3年進める'),
+                ),
               ],
             ),
           ),

@@ -426,4 +426,18 @@ void main() {
     expect(c.game!.player.age, 7);
     expect(c.recent.first, contains('1年進めた'));
   });
+
+  test('おすすめで3年まとめて進める(止まる場面があれば、そこまで)', () async {
+    final c = GameController(rng: Random(4), events: false);
+    c.newGame('オート');
+    await c.autoYears(3);
+    expect(c.game!.player.age, 9);
+    expect(c.recent.first, contains('3年進めた'));
+    // 進路の画面など、季節の画面でなくなったら、それ以上は進まない。
+    final d = GameController(rng: Random(5), events: false);
+    d.newGame('オート');
+    await d.autoYears(40);
+    expect(d.game!.phase, isNot(Phase.season), reason: '進路・引退などで止まる');
+    expect(d.game!.player.age, lessThan(60));
+  });
 }
