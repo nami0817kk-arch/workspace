@@ -461,6 +461,9 @@ class Game {
   int turnCount = 0;
   int lastCoachTurn = 0;
 
+  /// 前にコーチに教わった行動の番号(間をあけて教わるほど、教わったときの経験点が多い)。
+  int lastLessonTurn = 0;
+
   /// 今年の練習(練習・特訓)と休養の回数。年末にログに出して戻す。
   /// 今季ここまでの月ごとの成績(4〜9月)。シーズンの記録に写して空にする。
   List<String> monthRows = [];
@@ -955,6 +958,21 @@ class Game {
         log.add('${mate.name}と友情タッグ練習!');
       }
     }
+    if (action == Plan.lesson &&
+        tLessonGap > 0 &&
+        out.isNotEmpty &&
+        stage != Stage.pro) {
+      // 間をあけて教わるほど身につく(コーチばかりより、練習と混ぜたほうが得)。
+      // プロでは足さない(長いプロ生活で積み上がり、レジェンド・タイトルが増えすぎた)。
+      final gap = turnCount - lastLessonTurn;
+      lastLessonTurn = turnCount;
+      final k = categoryOf(focus);
+      final extra = (min(tLessonGapCap, tLessonGap * (gap - 1)) *
+              slotShare(stage) *
+              roleExpFactor(player.role))
+          .round();
+      if (extra > 0) out[k] = (out[k] ?? 0) + extra;
+    }
     if (action == Plan.lesson) {
       final coach = cast.coach;
       if (coach != null) {
@@ -974,14 +992,17 @@ class Game {
     if (coach == null || coach.tips < tipsNeeded) return;
     coach.tips = 0;
     final t = coach.teaches;
+    // コーチは特殊能力を「くれる」のではなく、コツを最大にしてくれる(取るのは経験点で。半額)。
+    // 無料で渡すと、プロで特殊能力が積み上がり、タイトル・レジェンドが増えすぎた(2026-10-24)。
     final ready = t != null &&
         t.appliesTo(player.role) &&
         !player.skills.contains(t) &&
-        (t.requires == null || player.skills.contains(t.requires));
+        (skillTips[t] ?? 0) < maxSkillTips;
     if (ready) {
-      player = player.copyWith(skills: {...player.skills, t});
-      log.add('${coach.name}のコツをつかんだ! 特殊能力「${t.label}」を習得。');
-      _note('trait', '特殊能力「${t.label}」を習得(コーチ ${coach.name})');
+      skillTips[t] = maxSkillTips;
+      log.add('${coach.name}のコツをつかんだ! 「${t.label}」のコツが最大(Lv$maxSkillTips)に。'
+          'あと${skillPrice(t)}の経験点で取れる。');
+      _note('trait', '「${t.label}」のコツをつかんだ(コーチ ${coach.name})');
     } else {
       // 学びのボーナスは、前の学びからの間があくほど大きい(コーチばかりが最善にならないように)。
       final bonus = min(40, 3 * (turnCount - lastCoachTurn));
@@ -1634,6 +1655,7 @@ class Game {
         'studyTarget': studyTarget?.name,
         'turnCount': turnCount,
         'lastCoachTurn': lastCoachTurn,
+        'lastLessonTurn': lastLessonTurn,
         'monthRows': monthRows,
         'trainCount': trainCount,
         'childhood': childhood,
@@ -1684,6 +1706,7 @@ class Game {
     }
     g.turnCount = (j['turnCount'] as num?)?.toInt() ?? 0;
     g.lastCoachTurn = (j['lastCoachTurn'] as num?)?.toInt() ?? 0;
+    g.lastLessonTurn = (j['lastLessonTurn'] as num?)?.toInt() ?? 0;
     g.monthRows = [
       for (final t in (j['monthRows'] as List?) ?? const []) t as String
     ];

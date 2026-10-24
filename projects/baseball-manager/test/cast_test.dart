@@ -214,13 +214,13 @@ void main() {
     expect(c.lover!.bond, 16);
   });
 
-  test('コーチに教わり続けると、コツが貯まって特殊能力を習得する(経験点は払わない)', () {
+  test('コーチに教わり続けると、コーチの特殊能力のコツが最大になる(取るのは経験点で、半額)', () {
     final g = _game(5, potential: 60);
     g.cast.coach!.tips = 0;
     final teaches = g.cast.coach!.teaches;
     expect(teaches, isNotNull);
     var turns = 0;
-    while (!g.player.skills.contains(teaches)) {
+    while ((g.skillTips[teaches] ?? 0) < maxSkillTips) {
       if (++turns > 40) fail('習得できない');
       if (g.phase == Phase.event) {
         g.resolveEvent(1);
@@ -228,9 +228,10 @@ void main() {
       }
       g.choose(Plan.lesson, Ability.contact);
     }
-    expect(g.player.skills, contains(teaches));
+    expect(g.player.skills, isNot(contains(teaches))); // 無料ではもらえない
+    expect(g.skillPrice(teaches!), (teaches.baseCost / 2).round());
     expect(g.cast.coach!.tips, lessThan(tipsNeeded));
-    expect(g.log.any((l) => l.contains('習得')), isTrue);
+    expect(g.log.any((l) => l.contains('のコツをつかんだ')), isTrue);
   });
 
   test('教えられる特性が無いコーチからは、代わりに経験点をもらう', () {
@@ -437,15 +438,16 @@ void _adminTests() {
     expect(gained(100), greaterThan(gained(0)));
   });
 
-  test('管理者: コツを満タンにすると、その場で特殊能力を習得する', () {
+  test('管理者: コツを満タンにすると、その場でコーチの特殊能力のコツが最大になる', () {
     final g = _game(5);
     g.adminSetCoachTeaches(Skill.chance);
     g.adminSetCoachTips(2);
     expect(g.player.skills, isNot(contains(Skill.chance)));
     expect(g.cast.coach!.tips, 2);
     g.adminSetCoachTips(tipsNeeded);
-    expect(g.player.skills, contains(Skill.chance));
-    expect(g.cast.coach!.tips, 0); // 習得したらコツは0に戻る
+    expect(g.skillTips[Skill.chance], maxSkillTips);
+    expect(g.player.skills, isNot(contains(Skill.chance)));
+    expect(g.cast.coach!.tips, 0); // つかんだらコーチのコツは0に戻る
     expect(g.cast.coach!.teaches, Skill.chance);
   });
 

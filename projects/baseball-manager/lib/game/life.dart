@@ -66,13 +66,22 @@ class Condition {
 /// 倍率は「1年ぶんの伸び」に対する割合で、通常の練習が 0.25(=4季節で1年)。
 ({double scale, int fatigue, int morale}) effectOf(Plan a) => switch (a) {
       Plan.train => (scale: 0.25, fatigue: 15, morale: 0),
-      Plan.special => (scale: 0.45, fatigue: 35, morale: -5),
+      Plan.special => (scale: tSpecial / 100, fatigue: tSpecialFatigue, morale: -5),
       Plan.rest => (scale: 0.05, fatigue: -40, morale: 5),
       Plan.study => (scale: 0.12, fatigue: 5, morale: 10), // 主役は特殊能力のコツ(Game._gainTips)
       Plan.social => (scale: 0.03, fatigue: -10, morale: 20),
-      Plan.match => (scale: 0.11, fatigue: 20, morale: 0),
-      Plan.lesson => (scale: 0.15, fatigue: 12, morale: 0),
+      Plan.match => (scale: tMatch / 1000, fatigue: 20, morale: 0),
+      Plan.lesson => (scale: tLesson / 100, fatigue: 12, morale: 0),
     };
+
+// ── バランス調整のつまみ(dart run -DBAL_SPECIAL=40 tool/balance.dart で試せる) ──
+const tSpecial = int.fromEnvironment('BAL_SPECIAL', defaultValue: 40);
+const tSpecialFatigue = int.fromEnvironment('BAL_SPFAT', defaultValue: 35);
+const tLesson = int.fromEnvironment('BAL_LESSON', defaultValue: 15);
+const tMatchFix = bool.fromEnvironment('BAL_MATCHFIX', defaultValue: true);
+const tLessonGap = int.fromEnvironment('BAL_LGAP', defaultValue: 8);
+const tMatch = int.fromEnvironment('BAL_MATCH', defaultValue: 105);
+const tLessonGapCap = int.fromEnvironment('BAL_LGAPCAP', defaultValue: 40);
 
 /// 怪我の確率。疲れているほど、特訓ほど高い。
 double injuryChance(Condition c, Plan a, [Set<Trait> traits = const {}]) =>
@@ -160,6 +169,10 @@ TermResult playTerm(
     // 練習試合は特定の能力に偏らない。
     final f = action == Plan.match ? a : focus;
     var x = yearlyDelta(p, a, f) * e.scale * share;
+    // 練習試合は全部の能力が重点扱いなので、能力の数で割る補正(roleExpFactor)を戻す
+    if (tMatchFix && action == Plan.match && p.role == Role.pitcher) {
+      x *= pitcherPace / roleExpFactor(p.role);
+    }
     if (x > 0) x *= trainBonus; // 投資(専属トレーナー)
     if (x >= 0) {
       final cat = categoryOf(a);

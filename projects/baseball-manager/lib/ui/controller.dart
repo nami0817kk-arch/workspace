@@ -988,7 +988,8 @@ class GameController extends ChangeNotifier {
       pending.add(Milestone(
           MilestoneKind.title, 'タイトル獲得!', l.replaceFirst('タイトル獲得: ', '')));
     }
-    for (final l in lines.where((l) => l.contains('を習得'))) {
+    for (final l in lines.where(
+        (l) => l.contains('を習得') || l.contains('のコツをつかんだ'))) {
       pending.add(Milestone(MilestoneKind.trait, 'コツをつかんだ!', l));
     }
     if (lines.any((l) => l.contains('一軍に昇格した'))) {

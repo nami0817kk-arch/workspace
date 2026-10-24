@@ -485,7 +485,7 @@ void _rankTests() {
     await t.ensureVisible(find.byKey(const Key('admin-tips')));
     await t.drag(find.byKey(const Key('admin-tips')), const Offset(2000, 0));
     await t.pumpAndSettle();
-    expect(c.game!.player.skills, contains(Skill.chance));
+    expect(c.game!.skillTips[Skill.chance], maxSkillTips);
 
     // 天賦: スライダーで書き換えられ、レア特性も付けられる。覚醒済みの印も切り替えられる。
     await t.ensureVisible(find.byKey(const Key('admin-gift-contact')));

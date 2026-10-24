@@ -37,7 +37,8 @@ double _twoWayOverall(double a, double b) {
 double draftScore(Player p, double achievement) =>
     0.7 * overall(p) + 0.3 * achievement.clamp(0, 100) + draftBonus(p.traits);
 
-const draftLine = 58.0; // 運を除いた合否ライン
+/// 運を除いた合否ライン(dart run -DBAL_DRAFT=600 で試せる。単位は0.1)。
+const draftLine = int.fromEnvironment('BAL_DRAFT', defaultValue: 595) / 10;
 const draftLuck = 10.0; // 運の振れ幅(±)
 
 /// ドラフトで指名されるか。能力と実績に運が乗る。
