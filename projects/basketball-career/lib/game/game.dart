@@ -184,6 +184,7 @@ class Game {
     this.injuredStreak = 0,
     this.comebackPending = false,
     this.salary = 0,
+    this.sponsor = 0,
     this.totalEarnings = 0,
     this.caps = 0,
     this.number = 0,
@@ -335,7 +336,13 @@ class Game {
   /// プロの年俸(万円)。プロ以外は 0。1年目は新人契約、年の終わりの契約更改で変わる。
   int salary;
 
-  /// プロでもらった年俸の合計(万円)。
+  /// スポンサー契約の年収(万円)。人気(表彰・優勝・華がある・上位指名・日本代表・海外)で決まる。年俸とは別に毎年入る。
+  int sponsor;
+
+  /// 直近の年の終わりの、スポンサー契約の知らせ(新しく付いた・増えた)。画面に出す。保存はしない。
+  String? lastSponsorNote;
+
+  /// プロでもらった年俸とスポンサー収入の合計(万円)。
   int totalEarnings;
 
   /// 直近の年の終わりの、契約更改の知らせ(年俸アップ・ダウン)。画面に出す。保存はしない。
@@ -518,6 +525,7 @@ class Game {
     lastGoalMessage = null;
     lastHonors = const [];
     lastSalaryNote = null;
+    lastSponsorNote = null;
     lastCareerLines = const [];
     lastMetRival = false;
     lastNewSkills = {};
@@ -841,7 +849,7 @@ class Game {
 
   void _endYear() {
     _evaluateGoal();
-    if (track == Track.pro) totalEarnings += salary; // その年の年俸
+    if (track == Track.pro) totalEarnings += salary + sponsor; // その年の年俸とスポンサー収入
     growthLog.add(GrowthPoint(player.age, player.overall, player.heightCm));
     final stageBefore = stage;
     slot = 0;
@@ -874,6 +882,23 @@ class Game {
             lastSalaryNote = '契約更改: 年俸ダウン… ${moneyLabel(salary)} → ${moneyLabel(next)}';
           }
           salary = next;
+          // スポンサー契約: 前の年の活躍・人気で来年の契約が決まる。
+          final lastYear = records.where((r) => r.age == player.age - 1);
+          final nextSponsor = sponsorOf(
+            overall: player.overall,
+            honorsLastYear: lastYear.fold(0, (s, r) => s + r.honors.length),
+            champion: lastYear.any((r) => r.champion),
+            star: player.traits.contains(Trait.starPower),
+            draftPick: draftPick,
+            caps: caps,
+            abroad: abroad,
+          );
+          if (sponsor == 0 && nextSponsor > 0) {
+            lastSponsorNote = 'スポンサー契約が決まった! 年${moneyLabel(nextSponsor)}';
+          } else if (nextSponsor >= sponsor + 600) {
+            lastSponsorNote = 'スポンサー契約が増えた: 年${moneyLabel(sponsor)} → 年${moneyLabel(nextSponsor)}';
+          }
+          sponsor = nextSponsor;
         }
     }
     // 中学・高校に上がると新しいチーム(進路の選択は chooseRoute で)。
@@ -1184,6 +1209,7 @@ class Game {
         'injuredStreak': injuredStreak,
         'comebackPending': comebackPending,
         'salary': salary,
+        'sponsor': sponsor,
         'totalEarnings': totalEarnings,
         'caps': caps,
         'number': number,
@@ -1240,6 +1266,7 @@ class Game {
         injuredStreak: (j['injuredStreak'] as num?)?.toInt() ?? 0,
         comebackPending: (j['comebackPending'] as bool?) ?? false,
         salary: (j['salary'] as num?)?.toInt() ?? 0,
+        sponsor: (j['sponsor'] as num?)?.toInt() ?? 0,
         totalEarnings: (j['totalEarnings'] as num?)?.toInt() ?? 0,
         caps: (j['caps'] as num?)?.toInt() ?? 0,
         mate: (j['mate'] as String?) ?? '',

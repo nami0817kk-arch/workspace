@@ -50,7 +50,7 @@ String fingerprint(Game g) => jsonEncode({
       'draft': g.draftPick,
       'injStreak': g.injuredStreak,
       'comeback': g.comebackPending,
-      'salary': [g.salary, g.totalEarnings],
+      'salary': [g.salary, g.totalEarnings, g.sponsor],
       'stats': [g.totalSteals, g.totalBlocks, g.totalThrees, g.careerHigh?.points],
       'skills': [for (final k in g.player.skills) k.name]..sort(),
       'mate': g.mate,
