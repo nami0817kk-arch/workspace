@@ -251,12 +251,13 @@ def _protect(piece: str, sizes: list[int]) -> list[int]:
     return sizes
 
 
-def _two_rows(sizes: list[int]) -> int:
-    """文節の字数の並びを2行に分ける切れ目（文節の境で、行の長さがそろう所。どちらも ROW_MAX 以内）。"""
+def _two_rows(sizes: list[int], row_max: int | None = None) -> int:
+    """文節の字数の並びを2行に分ける切れ目（文節の境で、行の長さがそろう所。どちらも ROW_MAX（row_max）以内）。"""
+    row_max = row_max or ROW_MAX
     best = None
     for i in range(1, len(sizes)):
         l1, l2 = sum(sizes[:i]), sum(sizes[i:])
-        if l1 > ROW_MAX or l2 > ROW_MAX:
+        if l1 > row_max or l2 > row_max:
             continue
         key = (max(l1, l2), abs(l1 - l2))
         if best is None or key < best[0]:
@@ -264,30 +265,31 @@ def _two_rows(sizes: list[int]) -> int:
     return best[1] if best else len(sizes) // 2
 
 
-def _clause_blocks(s: str, m: list[bool]) -> list[tuple[list, ...]]:
+def _clause_blocks(s: str, m: list[bool], row_max: int | None = None) -> list[tuple[list, ...]]:
     """1つの句（読点・句点で区切られた1片）を、1〜2行のブロックにする。1行10字まで・1ブロック20字まで。
     21字以上は文節の境でなるべく等分して複数ブロックにする。"""
+    ROW = row_max or ROW_MAX                               # 本編（横長）は1行20字（storymain）
     sizes = bunsetsu(s)
     fixed = []
     for n in sizes:                                         # 10字を超える文節は10字で切る
-        while n > ROW_MAX:
-            fixed.append(ROW_MAX)
-            n -= ROW_MAX
+        while n > ROW:
+            fixed.append(ROW)
+            n -= ROW
         fixed.append(n)
     sizes = fixed
     total = len(s)
 
     def fits_two_rows(sz: list) -> bool:                    # 文節の境で、どちらの行も10字以内に分けられるか
-        if sum(sz) <= ROW_MAX:
+        if sum(sz) <= ROW:
             return True
-        i = _two_rows(sz)
-        return sum(sz[:i]) <= ROW_MAX and sum(sz[i:]) <= ROW_MAX
+        i = _two_rows(sz, ROW)
+        return sum(sz[:i]) <= ROW and sum(sz[i:]) <= ROW
 
-    if (total > 2 * ROW_MAX or not fits_two_rows(sizes)) and len(sizes) > 1:      # 21字以上、または2行に収まらない句は複数のブロックに
+    if (total > 2 * ROW or not fits_two_rows(sizes)) and len(sizes) > 1:      # 21字以上、または2行に収まらない句は複数のブロックに
         best = min(range(1, len(sizes)), key=lambda i: abs(sum(sizes[:i]) - total / 2))
         cut = sum(sizes[:best])
-        return _clause_blocks(s[:cut], m[:cut]) + _clause_blocks(s[cut:], m[m.__len__() - (total - cut):])
-    rows = [sizes] if total <= ROW_MAX else [sizes[:_two_rows(sizes)], sizes[_two_rows(sizes):]]
+        return _clause_blocks(s[:cut], m[:cut], ROW) + _clause_blocks(s[cut:], m[m.__len__() - (total - cut):], ROW)
+    rows = [sizes] if total <= ROW else [sizes[:_two_rows(sizes, ROW)], sizes[_two_rows(sizes, ROW):]]
     out, pos = [], 0
     for r in rows:
         units = []
@@ -298,7 +300,7 @@ def _clause_blocks(s: str, m: list[bool]) -> list[tuple[list, ...]]:
     return [tuple(out)]
 
 
-def blocks_of(text: str) -> list[Block]:
+def blocks_of(text: str, row_max: int | None = None, merge_max: int | None = None, merge_below: int | None = None) -> list[Block]:
     """語りの断片（《》・「、」「。」つき）を、画面に一度に出すブロックに分ける（10-22 第4版）。
     読点・句点で切った句を1ブロックにする（句をまたがない）。4字に満たない句（「と」など）だけは同じ文の前の句につなぐ。
     1ブロックは1〜2行・1行10字まで。2行になるときは文節の境で、行の長さがそろう所で折り返す。
@@ -323,16 +325,18 @@ def blocks_of(text: str) -> list[Block]:
     if clauses:
         sentences.append(clauses)
     blocks: list[Block] = []
+    mm = merge_max or MERGE_MAX
+    mb = merge_below or MERGE_BELOW
     for sent in sentences:
         merged: list[tuple[str, list[bool]]] = []
         for s, m in sent:
-            if (merged and s not in CONJ and merged[-1][0] not in CONJ and (len(s) < MERGE_BELOW or len(merged[-1][0]) < MERGE_BELOW)
-                    and len(merged[-1][0]) + len(s) <= (MERGE_MAX + 4 if min(len(s), len(merged[-1][0])) < 4 else MERGE_MAX)):
+            if (merged and s not in CONJ and merged[-1][0] not in CONJ and (len(s) < mb or len(merged[-1][0]) < mb)
+                    and len(merged[-1][0]) + len(s) <= (mm + 4 if min(len(s), len(merged[-1][0])) < 4 else mm)):
                 merged[-1] = (merged[-1][0] + s, merged[-1][1] + m)
             else:
                 merged.append((s, m))
         for s, m in merged:
-            for rows in _clause_blocks(s, m):
+            for rows in _clause_blocks(s, m, row_max):
                 blocks.append(Block([[Unit(mark_up(a, b), ri) for a, b in row] for ri, row in enumerate(rows)]))
     return blocks
 
