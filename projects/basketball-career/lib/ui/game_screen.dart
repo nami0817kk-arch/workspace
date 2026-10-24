@@ -2,6 +2,7 @@ import 'package:flutter/material.dart' hide Action, Route;
 import 'package:flutter/services.dart';
 
 import '../game/advice.dart';
+import '../game/build.dart';
 import '../game/epilogue.dart';
 import '../game/game.dart';
 import '../game/life.dart';
@@ -272,6 +273,9 @@ class _PlayerCard extends StatelessWidget {
             Text('${trackLabel(game)}  ${game.number > 0 ? '#${game.number}  ' : ''}${p.position.label}  '
                 '${p.heightCm.toStringAsFixed(1)}cm  総合 ${p.overall.round()}'),
             Text('持ち味: ${p.position.perk}', style: const TextStyle(fontSize: 12)),
+            if (buildOf(p) != null)
+              Text('ビルド: ${buildOf(p)!.label}\n${buildOf(p)!.build.description}',
+                  style: const TextStyle(fontSize: 12)),
             if (p.age <= 17)
               Text(
                   '生活習慣: ${game.habit >= 6 ? '良い' : game.habit < 0 ? '乱れ気味' : 'ふつう'}  '
@@ -874,6 +878,14 @@ class _HalftimeView extends StatelessWidget {
                   Text(h.vsRival
                       ? '相手: ライバル ${h.opponent}  (通算 ${game.rival.wins}勝${game.rival.losses}敗)'
                       : '相手: ${h.opponent}'),
+                if (run.streak != 0)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4),
+                    child: Text(
+                        '勢い: ${run.streak > 0 ? '${run.streak}連勝中' : '${-run.streak}連敗中'}  '
+                        '(味方の強さ ${run.momentum >= 0 ? '+' : ''}${run.momentum.toStringAsFixed(1)})',
+                        style: const TextStyle(fontSize: 12)),
+                  ),
                 if (h.style != OppStyle.balanced)
                   Padding(
                     padding: const EdgeInsets.only(top: 4),

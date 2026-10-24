@@ -1,3 +1,4 @@
+import 'build.dart';
 import 'honors.dart';
 import 'money.dart';
 import 'game.dart';
@@ -191,6 +192,11 @@ List<String> epilogueLines(Game g) {
     lines.add('背番号${g.number}は、永久欠番になった。');
   } else if (g.number > 0 && _wentPro(g)) {
     lines.add('背番号${g.number}を背負って、プロの舞台に立った。');
+  }
+
+  final build = buildOf(p);
+  if (build != null) {
+    lines.add('プレースタイルは「${build.label}」。${build.build.description}');
   }
 
   if (p.skills.isNotEmpty) {

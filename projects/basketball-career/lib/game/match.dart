@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'player.dart';
+import 'build.dart';
 import 'traits.dart';
 
 /// 勝負どころ(最後の攻防)で選べるプレー。
@@ -243,6 +244,7 @@ double clutchChance(Player p, Clutch c, double oppDefense, double form) {
   return (raw * (0.8 + form * 0.2) +
           clutchBonus(p.traits) +
           clutchPlayBonus(p.traits, c) +
+          buildClutchBonus(p, c) +
           perk +
           skill)
       .clamp(0.03, 0.9);
@@ -488,7 +490,8 @@ MatchHalf playFirstHalf(
         (((p.effective(Ability.defense) + p.effective(Ability.speed)) / 2) /
                     45 *
                     form *
-                    stealMultiplier(p.traits) +
+                    stealMultiplier(p.traits) *
+                    buildStealMultiplier(p) +
                 _noise(rng) * 0.8)
             .round()
             .clamp(0, 6)),
@@ -497,7 +500,8 @@ MatchHalf playFirstHalf(
         ((p.effective(Ability.defense) / 70) *
                     (0.2 + max(0.0, p.heightCm - 180) / 35) *
                     form *
-                    blockMultiplier(p.traits) +
+                    blockMultiplier(p.traits) *
+                    buildBlockMultiplier(p) +
                 _noise(rng) * 0.6)
             .round()
             .clamp(0, 6)),
