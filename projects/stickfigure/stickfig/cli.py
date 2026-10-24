@@ -201,7 +201,7 @@ def cmd_series(a) -> int:
 
 def cmd_episode(a) -> int:
     from . import episode
-    mp4 = episode.build_episode(episode.load_episode(a.episode), Path(a.out), a.reuse_figs, a.force, a.vertical, a.preview)
+    mp4 = episode.build_episode(episode.load_episode(a.episode), Path(a.out), a.reuse_figs, a.force, a.vertical, a.preview, a.rebuild)
     return 0 if mp4 else 1
 
 
@@ -219,7 +219,7 @@ def main(argv=None) -> int:
     p = sub.add_parser("plan"); p.add_argument("scene"); p.add_argument("--out", required=True); p.set_defaults(fn=cmd_plan)
     p = sub.add_parser("check"); p.add_argument("scene"); p.add_argument("--report"); p.set_defaults(fn=cmd_check)
     p = sub.add_parser("build"); p.add_argument("scene"); p.add_argument("--out", required=True); p.add_argument("--force", action="store_true"); p.add_argument("--reuse-figs", action="store_true", help="書き出し済みの人物PNGを再利用(plan が同じときだけ)"); p.set_defaults(fn=cmd_build)
-    p = sub.add_parser("episode"); p.add_argument("episode"); p.add_argument("--out", required=True); p.add_argument("--force", action="store_true"); p.add_argument("--reuse-figs", action="store_true"); p.add_argument("--vertical", action="store_true", help="縦画面(ショート用 720x1280)で作る"); p.add_argument("--preview", action="store_true", help="下書き(線画・Blender なし)で数十秒で作る"); p.set_defaults(fn=cmd_episode)
+    p = sub.add_parser("episode"); p.add_argument("episode"); p.add_argument("--out", required=True); p.add_argument("--force", action="store_true"); p.add_argument("--reuse-figs", action="store_true"); p.add_argument("--vertical", action="store_true", help="縦画面(ショート用 720x1280)で作る"); p.add_argument("--preview", action="store_true", help="下書き(線画・Blender なし)で数十秒で作る"); p.add_argument("--rebuild", action="store_true", help="前回と同じ場面も全部書き出し直す(既定は使い回す)"); p.set_defaults(fn=cmd_episode)
     p = sub.add_parser("kit"); p.add_argument("ep_dir"); p.add_argument("--title", required=True); p.add_argument("--hero", default="ミドリ"); p.add_argument("--rival"); p.add_argument("--arc"); p.set_defaults(fn=cmd_kit)
     p = sub.add_parser("series"); p.add_argument("--n", type=int, default=5); p.add_argument("--out", required=True); p.add_argument("--seed", type=int, default=100); p.add_argument("--vertical", action="store_true"); p.add_argument("--build", action="store_true"); p.add_argument("--compile", action="store_true", help="全話を題名カードつきで 1 本につなぐ(長尺用)"); p.add_argument("--compile-only", dest="compile_only", action="store_true", help="作成済みのエピソードをつなぐだけ"); p.set_defaults(fn=cmd_series)
     p = sub.add_parser("preview"); p.add_argument("scene"); p.add_argument("--out", required=True); p.set_defaults(fn=cmd_preview)

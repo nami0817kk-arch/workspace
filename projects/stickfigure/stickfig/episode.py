@@ -10,9 +10,15 @@ episode.yaml:
     - card: {text: "一か月後", dur: 1.6, style: time}
 
 各場面は build_scene でそれぞれ点検・書き出しし、同じ設定の mp4(H.264 + AAC 44.1kHz ステレオ)に揃えて、ffmpeg で連結する。
+
+場面ごとの保存(2026-10-24「作成に時間かかるのはなぜ？」→ 書き出しが 1 場面数分〜十数分かかるため): 場面の中身(台本・使う絵・stickfig のコード)から
+目印を作って seg??/scene_key.txt に残し、次に同じ目印なら書き出さずに前の mp4 を使う。直した場面だけが描き直される。
+点検で止まった場面があっても残りの場面は続けて書き出し、最後にまとめて報告する(1 回で全部の不具合が分かる)。
 """
 from __future__ import annotations
 
+import hashlib
+import json
 import subprocess
 import wave
 from pathlib import Path
@@ -117,6 +123,45 @@ def card_segment(c: dict, out: Path, ff: str, mood: Optional[str], fps: int = 30
     return mp4
 
 
+CODE_DIR = Path(__file__).resolve().parent
+IMAGE_EXT = (".png", ".jpg", ".jpeg")
+
+
+def scene_key(scene: dict) -> str:
+    """場面の目印。台本の中身・台本が指す絵(背景・看板)の中身・stickfig のコード(描き方)のどれかが変われば変わる。"""
+    h = hashlib.sha256()
+    h.update(json.dumps(scene, sort_keys=True, default=str, ensure_ascii=False).encode("utf-8"))
+    files = set()
+
+    def walk(v):
+        if isinstance(v, dict):
+            for x in v.values():
+                walk(x)
+        elif isinstance(v, (list, tuple)):
+            for x in v:
+                walk(x)
+        elif isinstance(v, str) and v.lower().endswith(IMAGE_EXT):
+            files.add(v)
+    walk(scene)
+    for p in sorted(files):
+        f = Path(p)
+        if f.is_file():
+            h.update(f.read_bytes())
+    for f in sorted(CODE_DIR.glob("*.py")):
+        h.update(f.read_bytes())
+    return h.hexdigest()[:20]
+
+
+def _cached(seg_dir: Path, key: str) -> Optional[Path]:
+    """前回の書き出しが同じ目印なら、その mp4 を返す。"""
+    kf = seg_dir / "scene_key.txt"
+    if not kf.is_file():
+        return None
+    k, _, name = kf.read_text(encoding="utf-8").strip().partition(" ")
+    mp4 = seg_dir / name
+    return mp4 if k == key and name and mp4.is_file() else None
+
+
 def _passing_variant(sc: dict, tries: int = 6) -> dict:
     """fight 指定の場面が点検に落ちるとき、seed を +1 ずつずらして通るものを返す(無ければ元のまま)。
     random の技・連打の clip の組み合わせが seed で変わるので、たいてい数回で通る。"""
@@ -138,7 +183,8 @@ def _passing_variant(sc: dict, tries: int = 6) -> dict:
     return sc
 
 
-def build_episode(ep: dict, out: Path, reuse_figs: bool = False, force: bool = False, vertical: bool = False, preview: bool = False) -> Optional[Path]:
+def build_episode(ep: dict, out: Path, reuse_figs: bool = False, force: bool = False, vertical: bool = False, preview: bool = False,
+                  rebuild: bool = False) -> Optional[Path]:
     from . import cli
     out = Path(out)
     out.mkdir(parents=True, exist_ok=True)
@@ -151,6 +197,7 @@ def build_episode(ep: dict, out: Path, reuse_figs: bool = False, force: bool = F
         return None
     ff = cli.find_ffmpeg()
     segs = []
+    failed = []
     for i, it in enumerate(ep["items"]):
         seg_dir = out / f"seg{i + 1:02d}"
         if "card" in it:
@@ -186,11 +233,23 @@ def build_episode(ep: dict, out: Path, reuse_figs: bool = False, force: bool = F
             from . import preview as prev
             segs.append(prev.preview_scene(scene, seg_dir / f"{scene.get('name', 'scene')}_prev.mp4", ff))
             continue
+        key = scene_key(scene)
+        hit = None if rebuild else _cached(seg_dir, key)
+        if hit is not None:
+            print(f"場面 {i + 1}({scene.get('name', '')}): 前回と同じなので書き出さずに使う")
+            segs.append(hit)
+            continue
         mp4 = cli.build_scene(scene, seg_dir, reuse_figs, force, quiet=True)
         if mp4 is None:
-            print(f"場面 {i + 1} が点検で止まった")
-            return None
+            print(f"場面 {i + 1}({scene.get('name', '')}) が点検で止まった(報告: {seg_dir / 'gate_report.md'})。残りの場面は続けて書き出す")
+            (seg_dir / "scene_key.txt").unlink(missing_ok=True)
+            failed.append(i + 1)
+            continue
+        (seg_dir / "scene_key.txt").write_text(f"{key} {Path(mp4).name}", encoding="utf-8")
         segs.append(mp4)
+    if failed:
+        print(f"点検で止まった場面: {failed}。直してもう一度実行すると、通った場面は書き出さずに使い、止まった場面だけ作り直す")
+        return None
     lst = out / "concat.txt"
     lst.write_text("".join(f"file '{Path(s).resolve().as_posix()}'\n" for s in segs), encoding="utf-8")
     final = out / f"{ep.get('name', 'episode')}{'_preview' if preview else ''}.mp4"

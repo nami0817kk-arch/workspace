@@ -111,6 +111,8 @@ python scripts/make_gallery.py 09_01:2.4 135_07_s1:3.6   # clip を順に再生�
 - `captions.py`(既定 off。fight の `captions: true` で出す。ユーザー指示で字幕なし): 台詞の吹き出し(`say`)・ナレーション(`narr`)・叫び文字(`shout`)。台本の `captions` か fight の `lines`
 - `sfx.py`: 効果音と BGM を計算で作って動画に付ける(外部の音源は使わない)。台本の `audio: false` で無音、`mood` で雰囲気
 - `episode.py`: 複数の場面+カード(タイトル・「一か月後」)を1本に連結。`python -m stickfig episode scenes/episodes/ep_revenge.yaml --out out/…`
+  - **場面ごとの保存(2026-10-24)**: 場面の目印(台本の中身・台本が指す絵・`stickfig/*.py` のコード)を `seg??/scene_key.txt` に残し、同じ目印なら書き出さずに前の mp4 を使う(実測: 2 場面で 106 秒 → 6 秒)。**同じ `--out` に書き出し直す**(`out/…` を消すと使い回せない)。`stickfig/` のコードを 1 行でも変えると全場面が描き直しになる(安全側)。全部やり直すときは `--rebuild`
+  - 点検で止まった場面があっても残りの場面は続けて書き出し、最後に止まった場面の番号をまとめて出す(前は最初の 1 つで止まり、直すたびに頭から 20 分かかった)
 - `story.py`: 物語の型(`revenge` 雪辱戦 / `tournament` 勝ち上がり / `duel` 一騎打ち / `protect` 守る戦い / `mentor` 師の教え)。episode.yaml に `story: {arc, hero, rival}`
 - 舞台の色の組: 台本 `stage: {theme: cave|dojo|field|night|sunset}`(fight の `stage:`)。`blender_player.THEMES`
 - 縦画面(ショート): 台本 `output: {aspect: vertical}`(720x1280。2人の中間を切り出し、字幕は切り出し後)
