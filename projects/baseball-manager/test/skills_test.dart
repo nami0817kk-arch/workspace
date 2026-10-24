@@ -1,6 +1,7 @@
 // 特殊能力(経験点で取る・コツで安くなる)と、行動ごとの役割の違い(2026-10-24)。
 import 'dart:math';
 
+import 'package:baseball_manager/game/career.dart';
 import 'package:baseball_manager/game/exp.dart';
 import 'package:baseball_manager/game/game.dart';
 import 'package:baseball_manager/game/life.dart';
@@ -30,10 +31,15 @@ void main() {
       expect(pit, contains(Skill.strikeout));
       expect(pit, isNot(contains(Skill.stealer)));
       expect(skillsFor(Role.twoWay).toSet(), {...bat, ...pit});
-      // 打者・投手とも、基本が6つ以上・金特が2つ
-      expect(bat.where((s) => !s.gold).length, greaterThanOrEqualTo(6));
-      expect(bat.where((s) => s.gold).length, 2);
-      expect(pit.where((s) => s.gold).length, 2);
+      // 2026-10-24「特殊能力の数を増やして」: 打者は基本17・金特6、投手は基本13・金特5(計41)
+      expect(bat.where((s) => !s.gold).length, 17);
+      expect(bat.where((s) => s.gold).length, 6);
+      expect(pit.where((s) => !s.gold).length, 13);
+      expect(pit.where((s) => s.gold).length, 5);
+      expect(Skill.values.length, 41);
+      // 金特は一覧の最後に並ぶ
+      expect(skillsFor(Role.batter).skipWhile((s) => !s.gold).every((s) => s.gold),
+          isTrue);
       for (final s in Skill.values.where((s) => s.gold)) {
         expect(s.requires, isNotNull, reason: s.name);
         expect(s.requires!.gold, isFalse);
@@ -186,6 +192,31 @@ void main() {
       expect(good, greaterThan(0));
       expect(tipped, good);
     });
+  });
+
+  test('試合への影響の見込み: 上げる能力に結びつく数字だけが動き、大会向けは勝率で出る', () {
+    final bat = Player(
+        name: 't',
+        role: Role.batter,
+        age: 20,
+        potential: 50,
+        abilities: {for (final a in batterAbilities) a: 55});
+    final pw = skillImpact(bat, Skill.powerHitter, Stage.pro).lines.join(' ');
+    expect(pw, contains('本塁打 +'));
+    expect(pw, isNot(contains('盗塁')));
+    expect(skillImpact(bat, Skill.stealer, Stage.pro).lines.join(), contains('盗塁 +'));
+    expect(skillImpact(bat, Skill.chance, Stage.pro).lines.join(), contains('大会の1試合の勝率 +1.2%'));
+    final pit = Player(
+        name: 't',
+        role: Role.pitcher,
+        age: 20,
+        potential: 50,
+        abilities: {for (final a in pitcherAbilities) a: 55});
+    expect(skillImpact(pit, Skill.strikeout, Stage.pro).lines.join(' '), contains('奪三振 +'));
+    // スタミナ+6 も投球回に効く(端数を確率で足すようにした)
+    expect(skillImpact(pit, Skill.staminaPlus, Stage.pro).lines.join(' '), contains('投球回 +'));
+    expect(effectText(Skill.wideAngle), '試合でミート+3・パワー+3');
+    expect(effectText(Skill.gambler), '大会の勝負どころ+12');
   });
 
   test('名前に、同梱フォントに無い記号(◯ U+25EF)を使わない(画面で□になる)', () {

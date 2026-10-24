@@ -2506,14 +2506,15 @@ class _SkillCard extends StatelessWidget {
                   style: Theme.of(context).textTheme.titleMedium),
             ),
           ]),
-          const Text('経験点で取る。研究・特訓・練習試合・交流・コーチでコツが貯まると安くなる(コツ5で半額)。',
+          const Text('経験点で取る。研究・特訓・練習試合・交流・コーチでコツが貯まると安くなる(コツ5で半額)。'
+              '緑の数字は、いまの能力で取ったときの1シーズンの見込み(打者は143試合、投手は先発28試合)。',
               style: TextStyle(fontSize: 11, color: Colors.grey)),
           if (owned.isNotEmpty) ...[
             const SizedBox(height: 6),
             Wrap(spacing: 6, runSpacing: 4, children: [
               for (final s in owned)
                 Tooltip(
-                  message: s.description,
+                  message: '${s.description} ${effectText(s)}',
                   triggerMode: TooltipTriggerMode.tap,
                   child: Chip(
                     key: Key('skill-owned-${s.name}'),
@@ -2559,7 +2560,7 @@ class _SkillRow extends StatelessWidget {
           child: Tooltip(
             message: locked
                 ? '${s.description}(「${s.requires!.label}」を取ると取れる)'
-                : s.description,
+                : '${s.description} ${effectText(s)}',
             triggerMode: TooltipTriggerMode.tap,
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Row(children: [
@@ -2577,6 +2578,14 @@ class _SkillRow extends StatelessWidget {
                           color: locked ? Colors.grey : null)),
                 ),
               ]),
+              Text(effectText(s),
+                  key: Key('skill-effect-${s.name}'),
+                  style: const TextStyle(fontSize: 11)),
+              if (!locked)
+                Text(skillImpact(game.player, s, game.stage).lines.join(' / '),
+                    key: Key('skill-impact-${s.name}'),
+                    style: const TextStyle(
+                        fontSize: 11, color: Color(0xFF2E7D32))),
               Text(
                   locked
                       ? '「${s.requires!.label}」が先'

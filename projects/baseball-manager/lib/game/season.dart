@@ -337,8 +337,11 @@ Line playGame(
     appeared = true;
     started = 1;
     final foe = Batter(contact: opp, power: opp, eye: opp);
-    // スタミナが低いと長く投げられない(対戦数が減る)。
-    final faced = (facedBase * (0.5 + p.of(Ability.stamina) / 200)).round();
+    // スタミナが低いと長く投げられない(対戦数が減る)。端数は確率で1人ぶん足す
+    // (四捨五入だと、スタミナ+6 程度の差がほとんどの能力で0人に丸められ、効かなかった)。
+    final rawFaced = facedBase * (0.5 + p.of(Ability.stamina) / 200);
+    final faced = rawFaced.floor() +
+        (rng.nextDouble() < rawFaced - rawFaced.floor() ? 1 : 0);
     for (var i = 0; i < faced; i++) {
       final r = simulateAtBat(p.toPitcher(), foe, rng);
       line += Line(

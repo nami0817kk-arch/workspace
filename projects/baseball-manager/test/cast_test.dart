@@ -124,7 +124,8 @@ void main() {
       expect(t, isNot(Skill.chance));
       expect(t, isNotNull);
       expect(t!.appliesTo(Role.batter), isTrue);
-      expect(t.gold, isFalse); // もとの特殊能力が無いので金特は出ない
+      // 金特は、もとの特殊能力(ここではチャンス○)を持っているものだけ
+      if (t.gold) expect(t.requires, Skill.chance);
     }
     // もとを持てば、高校から金特も教える。中学までは教えない
     final base = {Skill.averageHitter};

@@ -14,6 +14,7 @@ import '../game/records.dart';
 import '../game/snapshot.dart';
 import 'art/avatar.dart';
 import 'art/radar.dart';
+import '../game/skills.dart';
 import '../game/talent.dart';
 import 'labels.dart';
 import 'records_screen.dart';
@@ -444,7 +445,7 @@ class _Traits extends StatelessWidget {
             Wrap(spacing: 6, runSpacing: 4, children: [
               for (final k in snapshot.skills)
                 Tooltip(
-                  message: k.description,
+                  message: '${k.description} ${effectText(k)}',
                   triggerMode: TooltipTriggerMode.tap,
                   child: Chip(
                     key: Key('profile-skill-${k.name}'),

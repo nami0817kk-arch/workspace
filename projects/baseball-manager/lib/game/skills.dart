@@ -1,7 +1,9 @@
 import 'dart:math';
 
+import 'career.dart';
 import 'exp.dart';
 import 'player.dart';
+import 'season.dart' show Line, playGame;
 import 'traits.dart';
 
 /// 特殊能力(パワプロの特殊能力のように、経験点で取る)。特性(生まれつきの体質・性格)とは別の枠。
@@ -9,40 +11,116 @@ import 'traits.dart';
 /// - 取るには、その種類(打撃・守備走塁・投球)の経験点を払う(`skillCost`)。
 /// - **コツ**(0〜`maxSkillTips`)が貯まるほど安くなる。コツは研究・特訓・練習試合・交流・コーチで貯まる。
 /// - 金の特殊能力(`gold`)は、もとになる特殊能力(`requires`)を持っていないと取れない。
-/// - 効き方は試合の間だけ(`skillAbilityDelta` / `skillMatchBonus`)。総合評価やドラフトの点には入らない。
+/// - 効き方: 試合の間だけ能力に上乗せ(`effects` → `skillAbilityDelta`)と、大会の勝負どころ(`match` → `skillMatchBonus`)。
+///   総合評価にも入る(`skillRating`)。試合への影響の見込みは `skillImpact`。
+/// - **名前を変えない**(保存は `name`)。足すときは末尾に足し、テストの個数も直す。
 enum Skill {
   // ── 打者(打撃) ──
-  chance('チャンス○', '大会・世界大会の勝負どころに強い(体調+6相当)。', Category.batting, 30),
-  powerHitter('パワーヒッター', '試合でパワー+6。', Category.batting, 40),
-  averageHitter('アベレージヒッター', '試合でミート+6。', Category.batting, 40),
-  eyePlus('選球眼○', '試合で選球眼+6・ミート+1。', Category.batting, 35),
-  wideAngle('広角打法', '試合でミート+3・パワー+3。', Category.batting, 45),
+  chance('チャンス○', '得点圏で集中力が増す。', Category.batting, 30, match: 6),
+  powerHitter('パワーヒッター', '打球が遠くへ飛ぶ。', Category.batting, 40,
+      effects: {Ability.power: 6}),
+  averageHitter('アベレージヒッター', 'ヒットを打つのがうまい。', Category.batting, 40,
+      effects: {Ability.contact: 6}),
+  eyePlus('選球眼○', 'ボール球に手を出さない。', Category.batting, 35,
+      effects: {Ability.eye: 6, Ability.contact: 1}),
+  wideAngle('広角打法', 'どの方向にも強い打球が打てる。', Category.batting, 45,
+      effects: {Ability.contact: 3, Ability.power: 3}),
   // ── 打者(守備走塁) ──
-  stealer('盗塁○', '試合で走力+6。', Category.running, 30),
-  fieldMaster('守備職人', '試合で守備+6。', Category.running, 30),
-  strongArm('強肩', '試合で守備+3・走力+3。', Category.running, 35),
+  stealer('盗塁○', 'スタートがうまく、盗塁が増える。', Category.running, 30,
+      effects: {Ability.speed: 6}),
+  fieldMaster('守備職人', '打球への反応が速い。', Category.running, 30,
+      effects: {Ability.fielding: 6}),
+  strongArm('強肩', '矢のような送球。', Category.running, 35,
+      effects: {Ability.fielding: 3, Ability.speed: 3}),
   // ── 打者の金特 ──
-  geniusBat('天才打者', '金の特殊能力。試合でミート+8・パワー+4・選球眼+4。', Category.batting, 120,
-      gold: true, requiresName: 'averageHitter'),
-  artist('アーチスト', '金の特殊能力。試合でパワー+12。', Category.batting, 120,
-      gold: true, requiresName: 'powerHitter'),
+  geniusBat('天才打者', '金の特殊能力。打撃のすべてが一段上。', Category.batting, 120,
+      effects: {Ability.contact: 8, Ability.power: 4, Ability.eye: 4},
+      gold: true,
+      requiresName: 'averageHitter'),
+  artist('アーチスト', '金の特殊能力。本塁打を量産する。', Category.batting, 120,
+      effects: {Ability.power: 12}, gold: true, requiresName: 'powerHitter'),
   // ── 投手(投球) ──
-  strikeout('奪三振', '試合で球威+5。', Category.pitching, 40),
-  controlPlus('コントロール○', '試合で制球+6。', Category.pitching, 40),
-  staminaPlus('スタミナ○', '試合でスタミナ+6。', Category.pitching, 35),
-  pinch('対ピンチ○', '大会・世界大会の勝負どころに強い(体調+6相当)。', Category.pitching, 30),
-  nobi('ノビ○', '試合で球威+3・制球+2。', Category.pitching, 40),
-  heavyBall('重い球', '試合で球威+3・スタミナ+2。', Category.pitching, 35),
+  strikeout('奪三振', '決め球で三振が取れる。', Category.pitching, 40,
+      effects: {Ability.stuff: 5}),
+  controlPlus('コントロール○', '狙ったところに投げられる。', Category.pitching, 40,
+      effects: {Ability.control: 6}),
+  staminaPlus('スタミナ○', '長いイニングを投げられる。', Category.pitching, 35,
+      effects: {Ability.stamina: 6}),
+  pinch('対ピンチ○', 'ピンチで力を出せる。', Category.pitching, 30, match: 6),
+  nobi('ノビ○', '速球が手元で伸びる。', Category.pitching, 40,
+      effects: {Ability.stuff: 3, Ability.control: 2}),
+  heavyBall('重い球', '打たれても飛ばない。', Category.pitching, 35,
+      effects: {Ability.stuff: 3, Ability.stamina: 2}),
   // ── 投手の金特 ──
-  geniusArm('天才投手', '金の特殊能力。試合で球威+8・制球+6。', Category.pitching, 130,
-      gold: true, requiresName: 'strikeout'),
-  precision('精密機械', '金の特殊能力。試合で制球+12。', Category.pitching, 120,
-      gold: true, requiresName: 'controlPlus');
+  geniusArm('天才投手', '金の特殊能力。球の力と精度が一段上。', Category.pitching, 130,
+      effects: {Ability.stuff: 8, Ability.control: 6},
+      gold: true,
+      requiresName: 'strikeout'),
+  precision('精密機械', '金の特殊能力。四球をほとんど出さない。', Category.pitching, 120,
+      effects: {Ability.control: 12}, gold: true, requiresName: 'controlPlus'),
+
+  // ── 2026-10-24 追加(打者・打撃) ──
+  firstPitch('初球○', '初球から迷わず振れる。', Category.batting, 30,
+      effects: {Ability.contact: 2, Ability.power: 2}),
+  oppositeField('流し打ち', '逆方向へうまく運ぶ。', Category.batting, 35,
+      effects: {Ability.contact: 4}),
+  pullHitter('プルヒッター', '引っ張って強い打球を飛ばす。', Category.batting, 35,
+      effects: {Ability.power: 4}),
+  tenacious('粘り打ち', '追い込まれても粘る。', Category.batting, 35,
+      effects: {Ability.eye: 4, Ability.contact: 1}),
+  multiHit('固め打ち', '当たり出すと止まらない。', Category.batting, 40,
+      effects: {Ability.contact: 3, Ability.power: 1}),
+  walkOff('サヨナラ男', '試合の最後に強い。', Category.batting, 30, match: 4),
+  // ── 追加(打者・守備走塁) ──
+  baserunning('走塁○', '次の塁を狙う判断がうまい。', Category.running, 30,
+      effects: {Ability.speed: 4}),
+  infieldHit('内野安打○', '足で内野安打をもぎ取る。', Category.running, 35,
+      effects: {Ability.speed: 3, Ability.contact: 1}),
+  throwing('送球○', '送球がそれない。', Category.running, 30,
+      effects: {Ability.fielding: 4}),
+  // ── 追加(打者の金特) ──
+  hitMachine('安打製造機', '金の特殊能力。ヒットを打ち続ける。', Category.batting, 120,
+      effects: {Ability.contact: 12}, gold: true, requiresName: 'wideAngle'),
+  lightning('電光石火', '金の特殊能力。塁上を駆け回る。', Category.running, 110,
+      effects: {Ability.speed: 12}, gold: true, requiresName: 'stealer'),
+  ironWall('鉄壁', '金の特殊能力。どんな打球も逃さない。', Category.running, 110,
+      effects: {Ability.fielding: 12}, gold: true, requiresName: 'fieldMaster'),
+  gambler('勝負師', '金の特殊能力。大一番で必ず打つ。', Category.batting, 110,
+      match: 12, gold: true, requiresName: 'chance'),
+  // ── 追加(投手) ──
+  kire('キレ○', '変化球が鋭く曲がる。', Category.pitching, 40,
+      effects: {Ability.stuff: 2, Ability.control: 3}),
+  resilient('打たれ強さ', '走者を出しても崩れない。', Category.pitching, 35,
+      effects: {Ability.stamina: 3, Ability.control: 2}),
+  lateStrong('尻上がり', '回を追うごとに良くなる。', Category.pitching, 30,
+      effects: {Ability.stamina: 4}),
+  pickoff('牽制○', '走者をくぎ付けにする。', Category.pitching, 30,
+      effects: {Ability.control: 3}),
+  lowBall('低め○', '低めに集めて打たせて取る。', Category.pitching, 35,
+      effects: {Ability.control: 3, Ability.stuff: 1}),
+  intimidate('威圧感', 'マウンドに立つだけで打者がひるむ。', Category.pitching, 40,
+      effects: {Ability.stuff: 4}),
+  goodHold('球持ち○', '打者がタイミングを取りにくい。', Category.pitching, 35,
+      effects: {Ability.stuff: 2, Ability.stamina: 2}),
+  // ── 追加(投手の金特) ──
+  ironArm('鉄腕', '金の特殊能力。何イニングでも投げられる。', Category.pitching, 110,
+      effects: {Ability.stamina: 12}, gold: true, requiresName: 'staminaPlus'),
+  doctorK('ドクターK', '金の特殊能力。三振の山を築く。', Category.pitching, 120,
+      effects: {Ability.stuff: 10, Ability.control: 2},
+      gold: true,
+      requiresName: 'nobi'),
+  braveHeart('強心臓', '金の特殊能力。どんなピンチでも動じない。', Category.pitching, 110,
+      match: 12, gold: true, requiresName: 'pinch');
 
   const Skill(this.label, this.description, this.category, this.baseCost,
-      {this.gold = false, this.requiresName});
+      {this.effects = const {},
+      this.match = 0,
+      this.gold = false,
+      this.requiresName});
 
   final String label;
+
+  /// ひとことの説明(効き目は `effectText`)。
   final String description;
 
   /// 払う経験点の種類。
@@ -50,6 +128,12 @@ enum Skill {
 
   /// コツ0のときの値段(経験点)。
   final int baseCost;
+
+  /// 試合の間だけ能力に足す値。
+  final Map<Ability, int> effects;
+
+  /// 大会・世界大会の勝負どころの体調に足す値。
+  final int match;
 
   /// 金の特殊能力(もとの特殊能力が要る・高い)。
   final bool gold;
@@ -63,10 +147,10 @@ enum Skill {
 
   /// 大会の勝負どころに効く(練習試合でコツが貯まりやすい)特殊能力か。
   bool get forMatches =>
-      this == Skill.chance ||
-      this == Skill.pinch ||
+      match > 0 ||
       this == Skill.stealer ||
-      this == Skill.staminaPlus;
+      this == Skill.staminaPlus ||
+      this == Skill.baserunning;
 
   static Skill? parse(String s) {
     for (final k in Skill.values) {
@@ -74,6 +158,26 @@ enum Skill {
     }
     return null;
   }
+}
+
+/// 効き目の文(「試合でミート+6・パワー+3」「大会の勝負どころ+6」)。
+String effectText(Skill s) {
+  String jp(Ability a) => switch (a) {
+        Ability.contact => 'ミート',
+        Ability.power => 'パワー',
+        Ability.eye => '選球眼',
+        Ability.speed => '走力',
+        Ability.fielding => '守備',
+        Ability.stuff => '球威',
+        Ability.control => '制球',
+        Ability.stamina => 'スタミナ',
+      };
+  final parts = [
+    if (s.effects.isNotEmpty)
+      '試合で${s.effects.entries.map((e) => '${jp(e.key)}+${e.value}').join('・')}',
+    if (s.match > 0) '大会の勝負どころ+${s.match}',
+  ];
+  return parts.join('、');
 }
 
 /// コツの上限。1つで値段が10%下がり、上限で半額。
@@ -84,10 +188,12 @@ const skillTipDiscount = 0.10;
 int skillCost(Skill s, int tips) =>
     max(1, (s.baseCost * (1 - skillTipDiscount * tips.clamp(0, maxSkillTips))).round());
 
-/// 役割で取れる特殊能力の一覧(画面の並び順)。
+/// 役割で取れる特殊能力の一覧(画面の並び順: 金特は最後)。
 List<Skill> skillsFor(Role r) => [
       for (final s in Skill.values)
-        if (s.appliesTo(r)) s
+        if (s.appliesTo(r) && !s.gold) s,
+      for (final s in Skill.values)
+        if (s.appliesTo(r) && s.gold) s,
     ];
 
 /// 取れない理由(取れるなら null)。
@@ -103,58 +209,15 @@ String? skillBlock(Player p, Skill s, ExpPool pool, int tips) {
 /// 試合の間だけ効く能力の上乗せ(特殊能力のぶん)。
 Map<Ability, int> skillAbilityDelta(Set<Skill> s) {
   final d = <Ability, int>{};
-  void add(Ability a, int n) => d[a] = (d[a] ?? 0) + n;
   for (final k in s) {
-    switch (k) {
-      case Skill.powerHitter:
-        add(Ability.power, 6);
-      case Skill.averageHitter:
-        add(Ability.contact, 6);
-      case Skill.eyePlus:
-        add(Ability.eye, 6);
-        add(Ability.contact, 1);
-      case Skill.wideAngle:
-        add(Ability.contact, 3);
-        add(Ability.power, 3);
-      case Skill.stealer:
-        add(Ability.speed, 6);
-      case Skill.fieldMaster:
-        add(Ability.fielding, 6);
-      case Skill.strongArm:
-        add(Ability.fielding, 3);
-        add(Ability.speed, 3);
-      case Skill.geniusBat:
-        add(Ability.contact, 8);
-        add(Ability.power, 4);
-        add(Ability.eye, 4);
-      case Skill.artist:
-        add(Ability.power, 12);
-      case Skill.strikeout:
-        add(Ability.stuff, 5);
-      case Skill.controlPlus:
-        add(Ability.control, 6);
-      case Skill.staminaPlus:
-        add(Ability.stamina, 6);
-      case Skill.nobi:
-        add(Ability.stuff, 3);
-        add(Ability.control, 2);
-      case Skill.heavyBall:
-        add(Ability.stuff, 3);
-        add(Ability.stamina, 2);
-      case Skill.geniusArm:
-        add(Ability.stuff, 8);
-        add(Ability.control, 6);
-      case Skill.precision:
-        add(Ability.control, 12);
-      case Skill.chance:
-      case Skill.pinch:
-        break;
+    for (final e in k.effects.entries) {
+      d[e.key] = (d[e.key] ?? 0) + e.value;
     }
   }
   return d;
 }
 
-/// 特殊能力が総合評価に足す値。上乗せの合計(大会に効くものは6相当)を5で割り、半分にする。
+/// 特殊能力が総合評価に足す値。上乗せの合計(大会の勝負どころの値も)を5で割り、半分にする。
 /// 定価で取ると、同じ経験点で能力を上げるのとほぼ同じ。コツが貯まるほど得になる(コツ5で倍)。
 double skillRating(Player p) {
   if (p.skills.isEmpty) return 0;
@@ -165,8 +228,111 @@ double skillRating(Player p) {
 }
 
 /// 大会(世界大会も)の体調に足す値(特殊能力のぶん)。
-int skillMatchBonus(Set<Skill> s) =>
-    (s.contains(Skill.chance) ? 6 : 0) + (s.contains(Skill.pinch) ? 6 : 0);
+int skillMatchBonus(Set<Skill> s) => s.fold(0, (a, k) => a + k.match);
+
+/// 試合への影響の見込み。いまの能力で、その特殊能力が「ある/ない」を同じ乱数で
+/// `games` 試合ずつ戦わせ、1シーズン(打者は143試合、投手は先発28試合)あたりに直す。表示用(乱数の並びは本編と関係ない)。
+class SkillImpact {
+  const SkillImpact(this.lines);
+
+  /// 「打率 +.012」「本塁打 +3」「防御率 -0.21」のような、変わった項目(1シーズンあたり)。
+  final List<String> lines;
+}
+
+/// 段階ごとの、試算の相手の強さ。
+int impactOpponent(Stage s) => switch (s) {
+      Stage.youth => 30,
+      Stage.juniorHigh => 40,
+      Stage.highSchool => 50,
+      Stage.pathChoice => 55,
+      Stage.pro || Stage.retired => 62,
+    };
+
+final _impactCache = <String, SkillImpact>{};
+
+SkillImpact skillImpact(Player p, Skill s, Stage stage, {int games = 250}) {
+  final key = [
+    p.role.name,
+    for (final a in Ability.values) p.of(a),
+    for (final k in p.skills) k.name,
+    s.name,
+    stage.name,
+    games,
+  ].join(',');
+  final hit = _impactCache[key];
+  if (hit != null) return hit;
+  final lines = <String>[];
+  if (s.effects.isNotEmpty) {
+    final opp = impactOpponent(stage);
+    final without = p.copyWith(skills: {...p.skills}..remove(s));
+    final with_ = without.copyWith(skills: {...without.skills, s});
+    var a = const Line(), b = const Line();
+    final r1 = Random(7), r2 = Random(7);
+    for (var i = 0; i < games; i++) {
+      a += playGame(traitAdjusted(without), opp, r1);
+      b += playGame(traitAdjusted(with_), opp, r2);
+    }
+    // 打者は143試合、投手は先発28試合ぶん(5試合に1度の先発)に直す。
+    final per = 143 / games;
+    final perStart = 28 / games;
+    String sg(num v, int digits) =>
+        '${v >= 0 ? '+' : ''}${v.toStringAsFixed(digits)}';
+    // 乱数のずれで関係ない数字が動いて見えないよう、その特殊能力が上げる能力に結びつく項目だけ出す。
+    final e = s.effects.keys.toSet();
+    bool has(Ability x) => e.contains(x);
+    if (p.role != Role.pitcher && a.atBats > 0) {
+      if (has(Ability.contact) || has(Ability.eye) || has(Ability.power)) {
+        final d = b.hits / max(1, b.atBats) - a.hits / a.atBats;
+        if (d.abs() >= 0.0015) {
+          lines.add(
+              '打率 ${d >= 0 ? '+' : '-'}${d.abs().toStringAsFixed(3).replaceFirst('0.', '.')}');
+        }
+      }
+      if (has(Ability.power)) {
+        final hr = (b.homeRuns - a.homeRuns) * per;
+        if (hr.abs() >= 0.5) lines.add('本塁打 ${sg(hr, 0)}');
+      }
+      if (has(Ability.speed)) {
+        final sb = (b.stolenBases - a.stolenBases) * per;
+        if (sb.abs() >= 0.5) lines.add('盗塁 ${sg(sb, 0)}');
+      }
+      if (has(Ability.eye)) {
+        final bb = (b.walks - a.walks) * per;
+        if (bb.abs() >= 1) lines.add('四球 ${sg(bb, 0)}');
+      }
+    }
+    if (p.role != Role.batter && a.outs > 0) {
+      if (has(Ability.stuff) || has(Ability.control)) {
+        final d = b.runsAllowed * 27 / max(1, b.outs) - a.runsAllowed * 27 / a.outs;
+        if (d.abs() >= 0.02) lines.add('防御率 ${sg(d, 2)}');
+      }
+      if (has(Ability.stuff)) {
+        final k = (b.strikeouts - a.strikeouts) * perStart;
+        if (k.abs() >= 1) lines.add('奪三振 ${sg(k, 0)}');
+      }
+      if (has(Ability.control)) {
+        final w = (b.walksGiven - a.walksGiven) * perStart;
+        if (w.abs() >= 1) lines.add('与四球 ${sg(w, 0)}');
+      }
+      if (has(Ability.stamina)) {
+        final ip = (b.outs - a.outs) / 3 * perStart;
+        if (ip.abs() >= 0.5) lines.add('投球回 ${sg(ip, 0)}');
+      }
+    }
+    if (lines.isEmpty && s.effects.containsKey(Ability.fielding)) {
+      lines.add('守備率が上がる(失策が減る)');
+    }
+    if (lines.isEmpty) lines.add('打席・投球の数字はほぼ変わらない');
+  }
+  if (s.match > 0) {
+    // 大会の1試合の勝率: 体調の差 / 500(`season.dart` の勝ち抜き戦と同じ式)
+    lines.add('大会の1試合の勝率 +${(s.match / 500 * 100).toStringAsFixed(1)}%');
+  }
+  final out = SkillImpact(lines);
+  if (_impactCache.length > 500) _impactCache.clear();
+  _impactCache[key] = out;
+  return out;
+}
 
 /// 大会の体調に足す値(特性＋特殊能力)。
 int matchBonus(Player p) => tournamentBonus(p.traits) + skillMatchBonus(p.skills);
