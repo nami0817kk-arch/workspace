@@ -28,6 +28,7 @@ REACTION_MAX = 2         # つむぎの寄り（reaction）は1本に2回まで
 # 掛け合い（10-04・10-07）
 HOST_SHARE_MAX = 0.70    # 剣崎の字数の割合（10-07 の5本は72〜79%で講義に近かった）
 SOLO_SHARE = 0.10        # つむぎの字数がこれ以下なら、語り1人の物語型として剣崎の割合を見ない（10-22）
+IMAGINED_MAX = 8         # 物語型の想像の台詞は1本にこの数まで（10-24 ユーザー決定）
 # 文体（10-08、chiso/style.py。既存6本に掛けて決めた）
 ENDING_RUN = 4           # 剣崎の同じ語尾がこの数だけ続いたら知らせる
 PHRASE_LEN = 8           # この字数以上の言い回しを数える
@@ -185,7 +186,8 @@ def episode(script) -> tuple[list[str], list[str]]:
     last = script.sections[-1].title if script.sections else ""
     if not ("まとめ" in last or "見立て" in last):        # 10-07 から人物・出来事を掘る形。最後は「まとめ：…」（前の回の「見立て」も通す）
         errors.append("最後の節は「まとめ：…」にする（その人・出来事は何だったのか）")
-    if not script.next:
+    story = bool(getattr(script, "story", False))           # 物語型（10-24）：次回予告と締めの決まり文句は必須にしない
+    if not script.next and not story:
         errors.append("次回予告（next: {title, teaser}）がありません")
     if not script.thumbnail:
         errors.append("サムネイル（thumbnail:）がありません")
@@ -295,10 +297,29 @@ def cast_rules(script) -> tuple[list[str], list[str]]:
     lines = script.lines
     if lines and lines[0].speaker != host:
         errors.append("最初の行は進行役の剣崎（語り）が話す")
-    if not lines or lines[-1].speaker != "二人" or CLOSING not in lines[-1].text:
-        errors.append(f"最後の行は二人で「{CLOSING}！」")
-    if not any(HOST_CLOSE in l.text and l.speaker == host for l in lines):
-        errors.append(f"締めに剣崎の「{HOST_CLOSE}」がありません")
+    if getattr(script, "story", False):
+        # 物語型の本編（台本の一番上に story: true。10-24 ユーザー決定）：締めは剣崎の余韻の一文（＋登録のお願い）。
+        # 「今日の地層は、ここまでです」と二人の「また一緒に、掘りましょう！」は使わない（旧型の台本は下の決まりのまま）
+        if lines and lines[-1].speaker != host:
+            errors.append("物語型の最後の行は剣崎（語り）の余韻の一文にする")
+        if any(l.speaker == "二人" for l in lines):
+            warns.append("物語型の本編に「二人」の行があります（締めは剣崎1人。10-24）")
+        # 想像の台詞（10-24）：1本に IMAGINED_MAX か所まで。「〇〇想像」の声と imagined: true の印をそろえる（札は印で出る）
+        imagined = [l for l in lines if getattr(l, "imagined", False)]
+        if len(imagined) > IMAGINED_MAX:
+            warns.append(f"想像の台詞が{len(imagined)}か所（1本{IMAGINED_MAX}か所まで）")
+        for l in lines:
+            mark = bool(getattr(l, "imagined", False))
+            role = l.speaker.endswith("想像")
+            if mark and not role:
+                errors.append(f"{l.index + 1}行目：imagined: true の行は「〇〇想像」の声（roles）で読む（記録の声と分ける）")
+            elif role and not mark:
+                errors.append(f"{l.index + 1}行目：想像の声の行に imagined: true がありません（字幕の上の「想像」の札が出ない）")
+    else:
+        if not lines or lines[-1].speaker != "二人" or CLOSING not in lines[-1].text:
+            errors.append(f"最後の行は二人で「{CLOSING}！」")
+        if not any(HOST_CLOSE in l.text and l.speaker == host for l in lines):
+            errors.append(f"締めに剣崎の「{HOST_CLOSE}」がありません")
     for l in lines:
         if re.search(r"めすお|べっつー", l.text):
             errors.append(f"{l.index + 1}行目：呼び方は「剣崎さん」「つむぎさん」（公式のあだ名は使わない）")

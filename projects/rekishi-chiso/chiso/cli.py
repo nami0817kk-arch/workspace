@@ -685,8 +685,16 @@ def _same_section(line):
 # --- 概要欄 -------------------------------------------------------------
 
 def description(sc, config, cues, reserve: int = 0) -> str:
-    """reserve：あとに足す行（この動画で扱うこと）の字数。そのぶん絵の出典の欄を詰める。"""
+    """reserve：あとに足す行（この動画で扱うこと）の字数。そのぶん絵の出典の欄を詰める。
+    物語型（10-24）：台本の description_head（物語の冒頭数行＋この動画でわかること）を一番上に、
+    description_note（想像の台詞の断り）を目次の前に出す。"""
     out = []
+    head = getattr(sc, "description_head", "") or ""
+    note = getattr(sc, "description_note", "") or ""
+    if head:
+        out += [head, ""]
+    if note:
+        out += ["■ この動画の台詞について", note, ""]
     if cues:
         chs = mix.chapters(cues, [s.title for s in sc.sections])
         starts = sorted({c.line.section: c.start for c in reversed(cues)}.values())

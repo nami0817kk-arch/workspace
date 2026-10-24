@@ -109,6 +109,18 @@ MISREADS = [
     ("yoshinobu", "無血開城", "むけつかいじょう", "ムケツカイジョオ"),
     ("yoshinobu", "駿府の宝台院", "ほうだいいん", "ホオダイイン"),
     ("yoshinobu", "紺屋町にあった", "こうやちょう", "コオヤチョオ"),
+    # お市の方・物語型の本編（oichi-story、10-24）
+    ("oichi-story", "いちばん下の江は", "したのごうは", "ゴオワ"),
+    ("oichi-story", "江は10歳", "ごうは", "ゴオワ"),
+    ("oichi-story", "茶々、初、江。", "はつ、ごう。", "ゴオ"),
+    ("oichi-story", "江と秀忠", "ごうとひでただ", "ゴオト"),
+    ("oichi-story", "兄上と、殿が", "とのが", "トノ"),
+    ("oichi-story", "市。娘たち", "いち。", "イチ"),
+    ("oichi-story", "御くやしく候", "おくやしくそうろう", "オクヤシクソオロウ"),
+    ("oichi-story", "生まれた、和子", "まさこ", "マサコ"),
+    ("oichi-story", "その和子が", "まさこ", "マサコ"),
+    ("oichi-story", "三法師", "さんぼうし", "ボオシ"),
+    ("oichi-story", "天皇の位を", "くらいを", "クライオ"),
 ]
 
 
@@ -136,7 +148,7 @@ def test_misread_kana(stem, phrase, _said, kana):
 def test_misread_list_covers_the_four_episodes():
     # 約50か所（4本）を残している
     assert len(MISREADS) >= 50
-    assert {m[0] for m in MISREADS} == {"shikoutei", "hidenaga", "oichi", "hideyoshi", "yoshinobu"}
+    assert {m[0] for m in MISREADS} == {"shikoutei", "hidenaga", "oichi", "hideyoshi", "yoshinobu", "oichi-story"}
 
 
 # --- 置き換え ------------------------------------------------------------------
