@@ -524,6 +524,21 @@ class GameController extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// おすすめの過ごし方で、`years` 年まとめて進める。出来事・進路・引退などで止まったら、そこまで。
+  Future<void> autoYears(int years) async {
+    final g = game;
+    if (g == null) return;
+    var done = 0;
+    while (done < years && g.phase == Phase.season && !g.retired) {
+      await autoYear();
+      done++;
+    }
+    if (done > 1) {
+      recent = ['おすすめの過ごし方で$done年進めた。', ...recent.skip(1)];
+      notifyListeners();
+    }
+  }
+
   /// 出来事の選択肢を選ぶ。
   void chooseEvent(int i) {
     final g = game!;
