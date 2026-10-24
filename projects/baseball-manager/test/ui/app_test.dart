@@ -888,19 +888,16 @@ void _rankTests() {
     expect(find.text('ごほうびをもらった'), findsOneWidget);
   });
 
-  testWidgets('難しさ: はじめの画面で選べ、選んだものでその選手が始まる。説明が出る', (t) async {
+  testWidgets('難しさは選ばない(2026-10-24 ユーザー「難しさのコントロールはいらない」)。いつも「ふつう」で始まる', (t) async {
     final c = await _start(t);
-    expect(find.text('難しさ'), findsOneWidget);
-    expect(find.textContaining('ほどよい難しさ'), findsOneWidget);
-    await t.tap(find.text('むずかしい'));
-    await t.pumpAndSettle();
-    expect(find.textContaining('経験点が0.9倍'), findsOneWidget);
+    expect(find.text('難しさ'), findsNothing);
+    expect(find.byKey(const Key('difficulty')), findsNothing);
     await t.tap(find.text('はじめる'));
     await t.pumpAndSettle();
-    expect(c.game!.difficulty, Difficulty.hard);
+    expect(c.game!.difficulty, Difficulty.normal);
     await t.tap(find.byKey(const Key('player-open')));
     await t.pumpAndSettle();
-    expect(find.text('むずかしい'), findsOneWidget); // 選手情報に出る
+    expect(find.text('難しさ'), findsNothing); // 選手情報にも出さない
   });
 
   testWidgets('実績: 一生が終わると解除され、ダイアログとエンディングで知らせる。保存されて、ホームと一覧に出る', (t) async {

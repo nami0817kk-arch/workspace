@@ -34,7 +34,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final name = TextEditingController(text: '');
   Role role = Role.batter;
-  Difficulty difficulty = Difficulty.normal;
 
   /// 二世として始めるときの親(殿堂の、結婚した選手)。なければ ふつうに始める。
   HistoryEntry? heir;
@@ -91,7 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _start() => widget.controller
-      .newGame(name.text, role, difficulty, heir?.snapshot, carry);
+      .newGame(name.text, role, Difficulty.normal, heir?.snapshot, carry);
 
   @override
   Widget build(BuildContext context) {
@@ -200,22 +199,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     '二刀流は、プロになってからいつでも選べます。(いまは${roleLabel(role)}から)',
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
-                  const SizedBox(height: 16),
-                  const Text('難しさ'),
-                  const SizedBox(height: 8),
-                  SegmentedButton<Difficulty>(
-                    key: const Key('difficulty'),
-                    segments: [
-                      for (final d in Difficulty.values)
-                        ButtonSegment(value: d, label: Text(d.label)),
-                    ],
-                    selected: {difficulty},
-                    onSelectionChanged: (s) =>
-                        setState(() => difficulty = s.first),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(difficulty.description,
-                      style: Theme.of(context).textTheme.bodySmall),
                   if (_heirCandidates.isNotEmpty) ...[
                     const SizedBox(height: 16),
                     const Text('二世として始める'),

@@ -557,7 +557,7 @@ class GameController extends ChangeNotifier {
     if (g == null || g.phase != Phase.retired) return;
     final parent = PlayerSnapshot.fromGame(g);
     final role = g.player.role == Role.twoWay ? Role.batter : g.player.role;
-    newGame(randomNameOf(_rng), role, g.difficulty, parent);
+    newGame(randomNameOf(_rng), role, Difficulty.normal, parent);
   }
 
   /// いま重点にしている能力。
