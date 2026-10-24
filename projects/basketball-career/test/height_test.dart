@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:basketball_career/game/career.dart';
 import 'package:basketball_career/game/events.dart';
 import 'package:basketball_career/game/game.dart';
 import 'package:basketball_career/game/life.dart';
