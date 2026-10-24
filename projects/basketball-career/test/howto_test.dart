@@ -24,6 +24,7 @@ void main() {
       'フリーエージェント',
       '表彰',
       '殿堂',
+      '図鑑',
     ];
     for (final w in words) {
       expect(all, contains(w), reason: '遊び方に「$w」が載っていない');

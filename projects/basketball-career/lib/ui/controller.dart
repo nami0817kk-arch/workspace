@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../game/advice.dart';
 import '../game/career.dart';
+import '../game/collection.dart';
 import '../game/difficulty.dart';
 import '../game/game.dart';
 import '../game/legacy.dart';
@@ -21,6 +22,7 @@ import 'milestone_dialog.dart';
 
 const saveKey = 'basketball_career_save_v1';
 const historyKey = 'basketball_career_history_v1';
+const collectionKey = 'basketball_career_collection_v1';
 const achievementsKey = 'basketball_career_achievements_v1';
 const historyLimit = 30;
 const howtoKey = 'basketball_career_howto_seen_v1';
@@ -57,6 +59,24 @@ class SaveStore {
       final p = await SharedPreferences.getInstance();
       await p.setString(
           historyKey, jsonEncode([for (final e in h) e.toJson()]));
+    } catch (_) {}
+  }
+
+  Future<Collection> loadCollection() async {
+    try {
+      final p = await SharedPreferences.getInstance();
+      final s = p.getString(collectionKey);
+      if (s == null) return const Collection.empty();
+      return Collection.fromJson((jsonDecode(s) as Map).cast<String, dynamic>());
+    } catch (_) {
+      return const Collection.empty();
+    }
+  }
+
+  Future<void> saveCollection(Collection c) async {
+    try {
+      final p = await SharedPreferences.getInstance();
+      await p.setString(collectionKey, jsonEncode(c.toJson()));
     } catch (_) {}
   }
 
@@ -162,6 +182,9 @@ class GameController extends ChangeNotifier {
   /// 殿堂(過去の選手)。新しい順。
   List<HistoryEntry> history = const [];
 
+  /// 図鑑(何人の人生をまたいで集めた個人タイトル・ビルド・特性・得意技)。
+  Collection collection = const Collection.empty();
+
   /// 遊び方を見たことがあるか(はじめて始めるときだけ見せる)。
   bool howtoSeen = true;
 
@@ -180,6 +203,7 @@ class GameController extends ChangeNotifier {
 
   Future<bool> loadSaved() async {
     history = await store.loadHistory();
+    collection = await store.loadCollection();
     unlocked = await store.loadAchievements();
     howtoSeen = await store.loadHowtoSeen();
     final j = await store.load();
@@ -606,6 +630,8 @@ class GameController extends ChangeNotifier {
       g.archived = true;
       history = [HistoryEntry.of(g), ...history].take(historyLimit).toList();
       store.saveHistory(history);
+      collection = collection.merge(g);
+      store.saveCollection(collection);
       final earned = earnedBy(g);
       newlyUnlocked = [
         for (final a in achievements)
