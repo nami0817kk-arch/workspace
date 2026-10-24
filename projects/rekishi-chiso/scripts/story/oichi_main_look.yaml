@@ -27,33 +27,34 @@ chapters:
       dates: {171: 1623年, 173: 1607年, 174: 1620年, 176: 1629年, 181: 1643年}}
 no_tag_from: 183                       # 最後の余韻（この行から）と終了画面は、左上の札を出さない
 
-# 作る AI 絵（16:9 横・最大25枚）。stand_in は静止画で仮に使う今の縦の絵（無ければ近い絵）
+# AI 絵（16:9 横・25枚。10-25 にそろった：main_art_dir）。stand_in は届く前の仮の縦の絵。
+# crops＝切り出しの名前ごとの [倍率, 中心x, 中心y]（人物の位置に合わせる）、lock＝この切り出しだけ使う、soften＝上の遠景を暗くぼかす（暗さ）
 ai:
   A01: {scene: 北ノ庄城の夜。篝火に囲まれた天守の遠景, stand_in: S1, horizontal_of: S1}
   A02: {scene: 天守の大広間の最後の酒宴。灯の下で杯を交わす家臣たち（顔は小さく）, stand_in: S1}
   A03: {scene: お市・決意の表情（胸から上・薄暗い城内）, stand_in: P6, horizontal_of: P6}
-  A04: {scene: お市・うつむく（城内、遠くに炎）, stand_in: P2, horizontal_of: P2}
-  A05: {scene: お市・涙をこらえる寄り, stand_in: P5c, horizontal_of: P5c}
-  A06: {scene: お市・窓辺で燃える城下を見る横顔（P4 より若い顔で作り直し）, stand_in: P4, horizontal_of: P4（作り直し）}
+  A04: {scene: お市・うつむく（城内、遠くに炎）, stand_in: P2, horizontal_of: P2, crops: {right: [1.15, 0.55, 0.45], face: [1.25, 0.36, 0.40]}}
+  A05: {scene: お市・涙をこらえる寄り, stand_in: P5c, horizontal_of: P5c, lock: [1.0, 0.5, 0.40]}
+  A06: {scene: お市・窓辺で燃える城下を見る横顔（P4 より若い顔で作り直し）, stand_in: P4, horizontal_of: P4（作り直し）, crops: {left: [1.15, 0.40, 0.45], face: [1.25, 0.68, 0.40]}}
   A07: {scene: 1567年 輿入れの行列が山の城へ向かう（秋・遠景）, stand_in: S2}
   A08: {scene: 小谷城の尾根と、琵琶湖の北の平野（俯瞰の風景・人物なし）, stand_in: S3}
-  A09: {scene: 小谷城の縁側。若いお市と幼い茶々（穏やかな昼）, stand_in: P1}
-  A10: {scene: 1570年 文を前に思い悩むお市（室内・灯）, stand_in: P2}
+  A09: {scene: 小谷城の縁側。若いお市と幼い茶々（穏やかな昼）, stand_in: P1, crops: {face: [1.25, 0.68, 0.50]}}
+  A10: {scene: 1570年 文を前に思い悩むお市（室内・灯）, stand_in: P2, crops: {face: [1.25, 0.72, 0.45]}}
   A11: {scene: 1573年 夜の山城を囲む大軍の篝火, stand_in: S1}
-  A12: {scene: 1573年 城の一室で赤子を抱くお市と幼い娘2人, stand_in: P2}
+  A12: {scene: 1573年 城の一室で赤子を抱くお市と幼い娘2人, stand_in: P2, crops: {wide: [1.12, 0.55, 0.66], left: [1.18, 0.50, 0.66], right: [1.18, 0.60, 0.66], face: [1.25, 0.55, 0.62]}}   # 子どもの顔が下の方にあるので、切り出しを下へ
   A13: {scene: 本丸の長政（武将の後ろ姿）が妻に告げる。お市は向き合う, stand_in: P1}
   A14: {scene: 夜明けの城門を、赤子を抱いたお市と幼い娘2人が出ていく（後ろ姿）, stand_in: S2}
   A15: {scene: 十年の暮らし。屋敷の庭で育つ3人の娘（後ろ姿・遠景）, stand_in: S4}
-  A16: {scene: 1582年 知らせを聞いて立ち尽くすお市, stand_in: P2}
-  A17: {scene: 1582年 越前へ向かう輿の列（雪の残る山道）, stand_in: S3}
+  A16: {scene: 1582年 知らせを聞いて立ち尽くすお市, stand_in: P2, crops: {face: [1.25, 0.32, 0.40], right: [1.15, 0.50, 0.45]}}
+  A17: {scene: 1582年 越前へ向かう輿の列（雪の残る山道）, stand_in: S3, lock: [1.15, 0.45, 0.68], soften: 0.55}
   A18: {scene: 1583年 霧の戦場に向き合う旗の列（賤ヶ岳）, stand_in: S3, horizontal_of: S3}
   A19: {scene: 板廊下を行く娘3人と、奥の武士の影, stand_in: S4, horizontal_of: S4}
   A20: {scene: 母が娘3人を送り出す。お市の後ろ姿と、遠ざかる娘たち, stand_in: S4}
-  A21: {scene: 覚書を書き留める女房の手元（巻紙・筆・灯）, stand_in: P1}
+  A21: {scene: 覚書を書き留める女房の手元（巻紙・筆・灯）, stand_in: P1, lock: [1.22, 0.35, 0.35]}
   A22: {scene: 1615年 炎上する大坂城の遠景, stand_in: S1}
   A23: {scene: 1615年 知らせを聞く江の後ろ姿（徳川の屋敷）, stand_in: S4}
   A24: {scene: 光の門を出ていく娘3人の後ろ姿, stand_in: S2, horizontal_of: S2}
-  A25: {scene: 終了画面用。月夜の北ノ庄の城跡と静かな川（右半分を空けた構図）, stand_in: S1}
+  A25: {scene: 終了画面用。月夜の北ノ庄の城跡と静かな川（右半分を空けた構図）, stand_in: S1, lock: [1.0, 0.5, 0.5]}
 
 # 絵の割り当て：「行の番号 種類:絵 [切り出し]」。次の行の指定まで続く。
 #   ai:A01＝AI 絵を全面（切り出し wide/left/right/face。長いと自動で切り出しを替える）
@@ -123,7 +124,7 @@ shots:
   - 80 frame:paintings/oichi_katsuie_portrait.jpg
   - 82 frame:paintings/oichi_katsuie_utamaro.jpg
   - 84 ai:A17 wide
-  - 86 ai:A17 right
+  - 86 frame:paintings/oichi_fukui_castle_map.jpg   # A17（雪の山道）は山が日本らしくないので1行だけ
   - 87 ai:A18 wide
   - 90 frame:paintings/oichi_katsuie_yoshiiku.jpg
   - 91 ai:A01 wide
@@ -166,6 +167,7 @@ shots:
   - 148 frame:paintings/akechi_hideyoshi_kodaiji.jpg
   - 149 frame:paintings/oichi_chacha_yodo_portrait.jpg
   - 150 frame:paintings/nene_taiko_gosai_lccn.jpg
+  - 151 ai:A24 right                     # 額の絵が2分続かないよう、娘たちの絵を挟む
   - 152 frame:paintings/oichi_hatsu_jokoin.jpg
   - 154 frame:paintings/oichi_go_sugenin.jpg
   - 155 frame:paintings/oichi_hidetada.jpg
@@ -186,8 +188,8 @@ shots:
   - 182 frame:paintings/oichi_go_sugenin.jpg
   - 183 ai:A01 wide
   - 184 ai:A14 wide
-  - 185 ai:A24 wide
-  - end ai:A25 left
+  - 185 ai:A20 wide                     # 余韻：門の向こうへ去る娘たちと、見送る母の後ろ姿
+  - end ai:A25 wide
 
 stills:
   - {line: 0, note: 冒頭（0秒）北ノ庄の夜}

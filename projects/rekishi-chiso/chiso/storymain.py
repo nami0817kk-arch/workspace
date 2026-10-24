@@ -50,8 +50,9 @@ CUT_MAX = 18.0                  # 1カットの長さの上限（これを超え
 CUT_MIN = 8.0
 RUN_MAX = 20.0                  # 同じ絵を続けて出す上限（図の間は数えない）
 IMAGINED_COLOR = (88, 82, 96)   # render.py の「想像」札と同じ灰紫
-CROPS = {"wide": (1.0, (0.5, 0.45)), "left": (1.32, (0.32, 0.45)), "right": (1.32, (0.68, 0.45)),
-         "face": (1.45, (0.5, 0.40))}   # 顔の寄り：あごが文字（縦80%より下）にかからない量
+CROPS = {"wide": (1.0, (0.5, 0.45)), "left": (1.18, (0.36, 0.45)), "right": (1.18, (0.64, 0.45)),
+         "face": (1.25, (0.5, 0.40))}   # 1376x768 の絵を 1920x1080 に広げるので、寄りは最大 ZOOM_CAP 倍まで（10-25）
+ZOOM_CAP = 1.32
 MOVES = ("in", "right", "out", "left")
 
 
@@ -73,12 +74,16 @@ class Grade(S.Grade):
         self.band = (1 - band)[:, None, None]
 
 
-def picture(im: Image.Image, u: float = 0.5, move: str = "in", crop: str = "wide", zoom: float = 0.06) -> Image.Image:
-    """全面の絵（1920x1080、補正前）。横長の絵は切り出し（crop）＋寄り・パン。縦長の絵（いまの仮の絵）は、ぼかした下地に高さいっぱいで。"""
+def picture(im: Image.Image, u: float = 0.5, move: str = "in", crop="wide", zoom: float = 0.05) -> Image.Image:
+    """全面の絵（1920x1080、補正前）。横長の絵は切り出し（crop＝CROPS の名前か (倍率, (中心x, 中心y))）＋寄り・パン。
+    パンは窓が動けるよう 1.12 倍以上に、全体で ZOOM_CAP 倍まで。縦長の絵（仮の絵）は、ぼかした下地に高さいっぱいで。"""
     im = im.convert("RGB")
-    cz, focus = CROPS.get(crop, CROPS["wide"])
+    cz, focus = crop if isinstance(crop, tuple) else CROPS.get(crop, CROPS["wide"])
     z, dx, dy = S.motion(move, u, zoom)
     z *= cz
+    if move in ("left", "right", "up", "down"):
+        z = max(z, 1.12)
+    z = min(z, ZOOM_CAP)
     if im.width / im.height >= 1.25:
         sw, sh = im.width, im.height
         if sw / sh > MW / MH:
@@ -454,8 +459,23 @@ class Look:
 
     def base(self, c: Cut, u: float, n: int) -> Image.Image:
         move = MOVES[n % len(MOVES)]
-        if c.kind == "ai":
-            return picture(self.ai_image(c.ref), u, move, c.crop)
+        if c.kind in ("ai", "end"):
+            spec = (self.look.get("ai") or {}).get(c.ref) or {}
+            crop = c.crop
+            if spec.get("lock"):                          # この絵は決まった切り出しだけ（A21：紙を大きく映さない など）
+                z0, fx, fy = spec["lock"]
+                crop = (float(z0), (float(fx), float(fy)))
+            elif spec.get("crops") and c.crop in spec["crops"]:
+                z0, fx, fy = spec["crops"][c.crop]
+                crop = (float(z0), (float(fx), float(fy)))
+            img = picture(self.ai_image(c.ref), u, move if c.kind == "ai" else "in", crop)
+            if spec.get("soften"):                        # 遠景を暗くぼかして目立たせない（A17 の山）
+                k = float(spec["soften"])
+                top = img.crop((0, 0, MW, int(MH * 0.55))).filter(ImageFilter.GaussianBlur(6))
+                top = Image.eval(top, lambda v: int(v * k))
+                mask = Image.linear_gradient("L").resize((MW, int(MH * 0.55))).transpose(Image.FLIP_TOP_BOTTOM)
+                img.paste(top, (0, 0), mask)
+            return img
         if c.kind == "part":
             return picture(Image.open(self.assets / c.ref), u, move, c.crop)
         if c.kind == "frame":
