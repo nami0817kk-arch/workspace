@@ -1,0 +1,128 @@
+# 町野修斗の取材メモ（2026年10月24日・ショートだけ・見せ方 X＝冒頭に強い一言）
+# 取材: 2026-10-24。requests で原文を読んだ。
+#   ・ゲキサカ 2026-10-24「町野修斗が今季2ゴール目! 最下位ボルシアMGの今季初白星に貢献」
+#     https://web.gekisaka.jp/news/world/detail/?461668-461668-fl （本文と得点者の欄を全部読んだ）
+#     本文: 橋岡大樹・宇野禅斗とともに先発。1-1の後半6分、左サイドの突破で2人を振り切ったモヒヤのマイナスのパスに反応し、
+#     左足でゴール左上へ逆転弾。3試合ぶりの今季2点目。3-2で競り勝ち、開幕からの連敗を6で止める今季初白星。
+#     順位は最下位のままだが、残留圏内15位との差を暫定で2とした。
+#     得点者: [シ]デミロビッチ（5分・83分）／[ボ]スカリー（38分）、町野（51分）、モヒヤ（66分）。前半1-1。会場はメルセデス・ベンツ・アレーナ。
+#   ・ESPN の試合記録（site.api.espn.com scoreboard 2026-10-23、event 401884761）で得点の分と得点者を確かめた（ゲキサカと一致）。
+#     ESPN の記事本文（「負ければブンデス史上初の開幕7連敗」）は**読めなかった**（API が時間切れ、試合ページに本文なし）→ **言わない**。
+#   ・フットボールゾーン 655476「町野修斗が"背番号6″に本音…遠藤から継承」（見出しのみ使用：W杯で遠藤航の背番号6を継いだこと＝背景）
+# 言わないこと: モヒヤの年齢（ゲキサカ本文に無い）、次の試合の日時（日程を読めていない）、ESPN の「史上初」の話。
+# 本人の言葉: **無い**（ゲキサカ本文にもコメントなし。ボルシアMG公式は時間切れで読めず）。作らない → 型は X。
+# 反応: 探していない（0件。作らない）。
+# 写真: 01 Commons CC BY-SA 4.0 Lanthan2003（2025-04-15 キール時代）／02 Commons CC BY-SA 4.0 Matthias Süßen（2024 キール昇格の祝い。元画像から町野の周りを切り出し）。
+#   フットボールゾーンの代表写真（写真：徳原隆元）3枚は 900x600 でショートで3倍超に伸びるため外した。
+#   今日の試合の写真はゲキサカの主写真が ©Getty Images の透かし入りで使えなかった。今日の試合写真は0枚。
+# 確度: 報道（ゲキサカの記事。得点者・分は ESPN の試合記録と一致。クラブ発表は読めていない）。
+slot: japan
+date: "2026年10月24日"
+format: news
+no_main: true
+people: [町野修斗, ボルシアMG, シュツットガルト, 橋岡大樹, 宇野禅斗]
+
+short_style: X
+short_hook_word: 逆転弾
+short_photos:
+  - assets/images/20261024_machino_gladbach_first_win/01_v.jpg
+  - assets/images/20261024_machino_gladbach_first_win/02_v.jpg
+
+short_question: ボルシアMGは、ここから残留圏に届くと思いますか。
+short_hook: 町野修斗、左足で逆転弾。
+short_telops:
+  - {match: 敵地, text: ブンデス第7節/シュツットガルト 2-3 ボルシアMG}
+  - {match: 後半6分, text: 1対1の後半6分/町野が左足で逆転弾}
+  - {match: マイナスのパス, text: モヒヤが2人を振り切って/マイナスの折り返し}
+  - {match: 3試合ぶり, text: 3試合ぶり/今季2点目}
+  - {match: 連敗, text: 開幕からの連敗を6で止めた/今季初白星}
+  - {match: 15位, text: 最下位のまま/残留圏15位との差は暫定2}
+
+theme:
+  id: machino_gladbach_first_win
+  league: germany
+  league_name: ブンデスリーガ
+  prefix: ""
+  title: 町野修斗が左足で逆転弾。開幕から6連敗のボルシアMGが止めたもの
+  hook: ""
+  question: 町野修斗の逆転弾で、ボルシアMGに何が起きたのか
+  takeaway: 町野修斗の3試合ぶりの今季2点目が決勝点の流れを作り、ボルシアMGは7試合目で初勝利。18位のままでも残留圏との差は暫定2まで縮まった
+
+thumbnail:
+  line1: 町野修斗が逆転弾
+  line2: 6連敗のあとに
+  tags: [町野修斗, ボルシアMG]
+  layout: face
+  photo: assets/images/20261024_machino_gladbach_first_win/01_w.jpg
+  short_photo: assets/images/20261024_machino_gladbach_first_win/01_v.jpg
+
+answer: 町野修斗の逆転弾などでボルシアMGはシュツットガルトに3対2で勝ち、開幕からの連敗を6で止めて今季初白星
+watch: 18位のボルシアMGが、残留圏15位との差（暫定2）を詰められるか
+
+sections:
+  - id: what
+    main: true
+    heading: 町野修斗の逆転弾
+    tier: 報道
+    telop: 町野修斗が逆転弾、ボルシアMGが今季初白星
+    say:
+      - text: 町野修斗のボルシアMGが、敵地でシュツットガルトに3対2で勝ちました。
+        short_only: true
+        image: assets/images/20261024_machino_gladbach_first_win/01_w.jpg
+        card: none
+      - text: ブンデスリーガ第7節。町野は、橋岡大樹、宇野禅斗とそろって先発しました。
+        image: assets/images/20261024_machino_gladbach_first_win/02_w.jpg
+        card: none
+      - text: 前半5分に先制されたものの、38分にスカリーが追いつき、1対1で折り返します。
+        image: assets/images/20261024_machino_gladbach_first_win/01_w.jpg
+        card: none
+      - text: そして後半6分。左サイドで2人を振り切ったモヒヤが、マイナスに折り返します。
+        image: assets/images/20261024_machino_gladbach_first_win/02_w.jpg
+        card: none
+      - text: 反応したのが町野。左足で、ゴール左上に蹴り込みました。これが逆転弾です。
+        emph: true
+        image: assets/images/20261024_machino_gladbach_first_win/01_w.jpg
+        card: none
+      - text: 66分にモヒヤが加えて3対1。終盤に1点を返されても、逃げ切りました。
+        image: assets/images/20261024_machino_gladbach_first_win/02_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/world/detail/?461668-461668-fl
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/scoreboard?dates=20261023
+
+  - id: who
+    heading: 町野修斗の今季2点目
+    tier: 報道
+    telop: 町野修斗、3試合ぶりの今季2点目
+    say:
+      - text: 町野にとっては、3試合ぶりの今季2点目でした。
+        image: assets/images/20261024_machino_gladbach_first_win/01_w.jpg
+        card: none
+      - text: 今夏のワールドカップで、遠藤航から背番号6を受け継いだストライカーです。
+        image: assets/images/20261024_machino_gladbach_first_win/02_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/world/detail/?461668-461668-fl
+      - https://www.football-zone.net/archives/655476
+
+  - id: view
+    viewpoint: true
+    heading: 6連敗のあとの1勝、数字で見ると
+    tier: 報道
+    telop: 開幕からの連敗を6で止めた今季初白星
+    say:
+      - text: ボルシアMGは開幕から6連敗。7試合目で、ようやく今季初白星です。
+        image: assets/images/20261024_machino_gladbach_first_win/01_w.jpg
+        card: none
+      - text: 順位は18位のままですが、残留圏の15位との差は、暫定で2まで縮まりました。
+        image: assets/images/20261024_machino_gladbach_first_win/02_w.jpg
+        card: none
+      - text: 見立てとしては、町野が点を取り続けられるかが、残留争いの鍵です。
+        image: assets/images/20261024_machino_gladbach_first_win/01_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/world/detail/?461668-461668-fl
+short_title: "町野修斗が左足で逆転弾。開幕から6連敗のボルシアMGが止めたもの"

@@ -1,0 +1,550 @@
+# 代表チーム紹介 フランス代表（10/24 作成。固定シリーズ9「代表チーム紹介」。見本は 10/23 のアルゼンチン代表）。7節：フック→基礎DATA（板）→歴史と転機（年表）→看板選手（表）→日本との関係→いまのチーム→見立て。
+# **軸（2026-10-23）**：「2026年W杯でフランスは8試合20得点。それでも4位。どの試合で流れが変わったのか」。10/3 のフランス対イタリア（scripts/20261003_france_italy.md）・10/6 のフランス対ベルギー（20261006_match_france_belgium.md）は試合のニュースで別題。9/11・9/19 のジダン就任の回（covered.yaml の zidane_france・zidane_first_squad）は監督のニュースで別題（紹介ものではない）。
+# **重なりの確認（2026-10-23）**：scripts/・research/covered.yaml・research/posted.json を grep。フランス代表の「紹介」回（team_france）は無い。直近30日に重なる紹介ものは無い（エムバペ・オリーズ・デンベレの選手紹介は10/24 の player 系の別担当。看板選手の表に名前が並ぶだけ）。
+# ---- 確かめたこと（2026-10-23。WebFetch の要約は使わず requests で生の値を読んだ。検索のAI要約は根拠にしていない）----
+#  ・FIFAランク：FIFA 公式（inside.fifa.com/en/news/coca-cola-mens-world-ranking-october-2026-portugal-spain、2026-10-07）の本文「France still occupy the final place on the podium」＝3位（1位スペイン・2位アルゼンチン）。点数は書かない。
+#  ・日本との対戦：日本代表の試合記録（Wikipedia en の Japan national football team results 1990–1999・2000–2009・2010–2019・2020–present の生の表を FRA で拾った）。1994-05-29 東京 キリンカップ 1-4／2000-06-04 カサブランカ ハッサン2世杯 2-2（PK 2-4）／2001-03-24 サン・ドニ 親善 0-5／2001-06-10 横浜 コンフェデ杯（決勝）0-1／2003-06-20 サン・テティエンヌ コンフェデ杯 1-2／2012-10-12 サン・ドニ 親善 1-0。＝6試合1勝1分4敗・5得点14失点（検算した。2000年のPK戦は引き分け扱い）。2010–2019 の表に FRA は2012年の1行だけ、2020–present（2026-09-24 更新）の表に FRA は無い。2012-10-12 のスコアは JFA（https://www.jfa.jp/samuraiblue/schedule_result/2012.html）の「○1-0 フランス スタッド・ド・フランス」でも確認した。1994・2000・2001・2003 年は JFA の年別ページが 404 で取れず、Wikipedia の表だけ（**JFA の通算対戦成績は取れていない**ので「1990年以降の記録で6試合」と言い、通算とは言わない）。補助：2001年のコンフェデ杯決勝は Wikipedia 2001 FIFA Confederations Cup の「Final」（日本0-1フランス、ヴィエラ30分、会場 横浜）、2003年は 2003 FIFA Confederations Cup（フランス2-1日本、ピレ43分PK・グヴ65分／中村59分）、2000年は 2000 King Hassan II International Cup Tournament（準決勝 2-2、日本の得点は森島34分・西澤70分、PK 日本2-4）。2012年の日本の得点者は確かめられていないので言わない。
+#  ・W杯の成績（Wikipedia en の France at the FIFA World Cup の生の表）：優勝 1998（決勝ブラジル3-0、得点ジダン2・プティ）・2018（クロアチア4-2）、準優勝 2006（イタリア1-1、延長、PK 3-5）・2022（アルゼンチン3-3、延長、PK 2-4、得点はエムバペ3）。決勝は4回。3位 1958・1986、4位 1982・2026。準決勝で敗れた大会：1958（ブラジル2-5、3位決定戦は西ドイツに6-3）・1982（西ドイツ3-3延長、PK 4-5、3位決定戦はポーランドに2-3）・1986（西ドイツ0-2、3位決定戦はベルギーに4-2延長）・2026（スペイン0-2、3位決定戦はイングランドに4-6）。
+#  ・2026年W杯（France at the FIFA World Cup の試合一覧、ESPN の scoreboard API で日付とスコアを突き合わせた）：6/16 セネガル3-1、6/22 イラク3-0、6/26 ノルウェー4-1、6/30 ラウンド32 スウェーデン3-0、7/4 ラウンド16 パラグアイ1-0、7/9 準々決勝 モロッコ2-0、7/14 準決勝 スペイン0-2（オヤルサバルPK22分・ポロ58分、アーリントン）、7/18 3位決定戦 イングランド4-6（マイアミ・ガーデンズ。エムバペ48・66分、バルコラ54分、デンベレ90+6分／ライス3分・コンサ18分・サカ37・45+1・87分PK・ベリンガム90+8分）＝8試合6勝2敗・20得点10失点。最初の6試合＝16得点2失点（セネガル1・ノルウェー1失点）、最後の2試合＝4得点8失点。無得点の試合は準決勝の1試合だけ。3位決定戦はW杯でフランスが初めて6失点した試合（Wikipedia 2026 FIFA World Cup knockout stage の記述）。エムバペは10得点で大会の得点王（Wikipedia 2026 FIFA World Cup の Awards：10 goals, 4 assists）、W杯通算22得点はフランスの最多（France at the FIFA World Cup の Top goalscorers、2位はフォンテーヌ13）。デンベレは大会6得点（同）。バルコラは3得点（セネガル戦・スウェーデン戦・イングランド戦の得点者の表から数えた）。
+#  ・自分で割った数（検算した）：1試合あたり 1998年 得点15÷7=2.14・失点2÷7=0.29／2018年 14÷7=2.00・6÷7=0.86／2022年 16÷7=2.29・8÷7=1.14／2026年 20÷8=2.50・10÷8=1.25。2026年の前6試合 得点16÷6=2.67・失点2÷6=0.33、後2試合 得点4÷2=2.0・失点8÷2=4.0。（W杯の得点・失点は延長を含み、PK戦を除く。）
+#  ・監督：ジダンは2026-07-28 に就任を発表（Wikipedia Zinedine Zidane の「named as coach on 28 July 2026」。出典 FFF・BBC）。契約の開始日は Wikipedia 内で 9/1 と 8/1 が食い違うので言わない。初戦は 9/25 トルコ戦（Kocaeli）。前任デシャンは2012–2026（Wikipedia France national football team の監督表）。1998年の決勝のジダンの2点は上の W杯の表。
+#  ・W杯のあと（Wikipedia France national football team results 2020–present、ESPN の scoreboard API で日付とスコアを確認）：ネーションズリーグ 9/25 トルコ1-0（エムバペ54分）、9/28 ベルギー1-0（オリーズ88分）、10/2 イタリア1-1（オリーズ55分／バストーニ68分）、10/5 ベルギー4-1（ドゥエ77分・シェルキ81分・オリーズ88・90+1分）＝4試合3勝1分・7得点2失点（ジダンの記録 Wikipedia Zinedine Zidane の managerial statistics と一致）。オリーズの4点＝28日1・2日1・5日2。次は 11/12 イタリア対フランス（ミラノ。ESPN の scoreboard に 2026-11-12 19:45Z France at Italy）。
+#  ・主将：エムバペ（Wikipedia France national football team の名簿・infobox）。所属 レアル・マドリード。愛称 Les Bleus（意味は「青」）。EURO 優勝 1984・2000（infobox）。
+#  ・名簿・年齢：Wikipedia の代表名簿（2026-10-05 時点）。生年月日から2026-10-23 時点で計算（エムバペ 1998-12-20=27、デンベレ 1997-05-15=29、オリーズ 2001-12-12=24、チュアメニ 2000-01-27=26、サリバ 2001-03-24=25、メニャン 1995-07-03=31）。所属も同名簿（エムバペ・チュアメニ＝レアル・マドリード、デンベレ＝パリ・サンジェルマン、オリーズ＝バイエルン、サリバ＝アーセナル、メニャン＝ミラン）。
+# ---- 言わないもの ----
+#  ・背番号／私生活／怪我（エムバペの招集辞退を含む）／監督の契約／戦術の説明／日本戦の通算（JFA 未確認）／2012年の日本の得点者／パラグアイ戦後の騒動／選手を小さく見せる言い方。
+# ---- 写真（assets/images/20261024_team_france/、出典は credits.json。Commons。代理店・放送映像は使っていない）----
+date: 2026年10月24日
+slot: other_1
+format: news
+series: 代表チーム紹介
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+people:
+- フランス代表
+- ジダン
+theme:
+  id: team_france
+  league: japan
+  league_name: フランス代表
+  kind: preview
+  topic: フランス代表
+  title: フランス代表は、W杯で20点を取って4位。どの試合で、流れが変わったのか
+  question: 2026年のW杯で8試合20得点を取り、4位になったフランスは、どの試合で流れが変わったのか
+  lead: W杯の決勝に4回。優勝2回、準優勝2回。
+  hook: ''
+  opening_image: assets/stats/tb_france_data_t.png
+  end_bg: assets/images/20261024_team_france/f01_mbappe_swe.jpg
+  takeaway: フランスは2026年のW杯で8試合20得点、準決勝のスペイン戦に0対2で敗れて4位。最初の6試合は16得点2失点、最後の2試合（準決勝と3位決定戦）は4得点8失点で、8失点は2022年大会の7試合の合計と同じ。1試合の得点2.50は1998・2018・2022年より多く、失点1.25は4大会でいちばん多い（PK戦を除く）。ジダン監督のもとの次の公式戦、11月12日のイタリア戦が確かめになる。
+thumbnail:
+  board: assets/stats/tb_france_data.png
+  line1: フランス代表
+  line2: 決勝4回、優勝2回
+  crest_main:
+  - フランス
+  tags:
+  - フランス代表
+  - 日本代表
+  - ワールドカップ
+  - ジダン
+  - 代表チーム紹介
+sections:
+- id: hook
+  heading: 20点を取った2026年。流れが変わったのは、どの試合だったのか
+  main: true
+  tier: 背景
+  telop: W杯の決勝に4回。優勝2回、準優勝2回
+  narrator: 解説
+  say:
+  - text: フランス代表は、ワールドカップの決勝に**4回**進んでいます。
+    image: assets/stats/tb_france_data_r1.png
+    no_telop: true
+    emph: true
+  - text: 優勝が2回、準優勝が2回です。
+    image: assets/stats/tb_france_data_r1.png
+    no_telop: true
+  - text: 最新の2026年大会は、準決勝でスペインに0対2で敗れて、4位でした。
+    image: assets/stats/tb_france_data_r1.png
+    no_telop: true
+  - text: それでも、8試合で20得点。エムバペは10点で、大会の得点王です。
+    image: assets/stats/tb_france_data_r1.png
+    no_telop: true
+  - text: 日本との国際Aマッチは、1990年以降で6試合。日本が勝ったのは1回、17%です。
+    image: assets/stats/tb_france_data_r2.png
+    no_telop: true
+  - text: いちばん新しい対戦は、2012年。
+    image: assets/stats/tb_france_data_r2.png
+    no_telop: true
+  - text: 点を取り続けたフランス。流れが傾いた試合は、どれだったのでしょうか。
+    image: assets/stats/tb_france_data_r1.png
+    no_telop: true
+  sources:
+  - https://inside.fifa.com/en/news/coca-cola-mens-world-ranking-october-2026-portugal-spain
+  - https://en.wikipedia.org/wiki/France_at_the_FIFA_World_Cup
+  - https://en.wikipedia.org/wiki/2026_FIFA_World_Cup
+  - https://en.wikipedia.org/wiki/France_national_football_team
+- id: data
+  heading: フランス代表は、どんな数字を持つ国なのか
+  tier: 背景
+  telop: フランス代表の基礎DATA
+  narrator: 解説
+  say:
+  - text: フランス代表のフィファランクは**3位**。首位はスペイン、2位はアルゼンチン。10月7日の発表です。
+    image: assets/stats/tb_france_data0.png
+    no_telop: true
+  - text: ワールドカップの優勝は**2回**。1998年と、2018年。
+    image: assets/stats/tb_france_data1.png
+    no_telop: true
+  - text: ヨーロッパ選手権の優勝も**2回**。1984年と、2000年。
+    image: assets/stats/tb_france_data2.png
+    no_telop: true
+  - text: 監督は、ジダン。7月28日に、就任が発表されました。
+    image: assets/stats/tb_france_data4.png
+    no_telop: true
+  - text: 主将は、レアル・マドリードのキリアン・エムバペです。
+    image: assets/stats/tb_france_data5.png
+    no_telop: true
+  sources:
+  - https://inside.fifa.com/en/news/coca-cola-mens-world-ranking-october-2026-portugal-spain
+  - https://en.wikipedia.org/wiki/France_national_football_team
+  - https://en.wikipedia.org/wiki/Zinedine_Zidane
+- id: history
+  heading: フランスは、いつ優勝し、いつ決勝で敗れたのか
+  tier: 背景
+  telop: 優勝は1998年と2018年。決勝の負けは2回
+  narrator: 解説
+  card: &id_histA
+    type: timeline
+    title: フランスのW杯優勝
+    rows:
+    - - 1998年
+      - 自国開催で初優勝。決勝はブラジルに3対0
+    - - 2018年
+      - 2度目。決勝はクロアチアに4対2
+    focus: 1998年
+  say:
+  - text: フランスの最初のワールドカップ優勝は、1998年。自国開催の大会です。
+    card: *id_histA
+  - text: 決勝は、ブラジルに3対0の勝ち。
+    card:
+      <<: *id_histA
+      highlight_row: 0
+  - text: 2点を取ったのは、ジダン。いまの監督です。
+    emph: true
+    card:
+      <<: *id_histA
+      highlight_row: 0
+  - text: 2度目は2018年。決勝のクロアチア戦は、4対2の勝ちでした。
+    image: assets/images/20261024_team_france/f01_mbappe_swe_w.jpg
+    card:
+      <<: *id_histA
+      highlight_row: 1
+  - text: 優勝のほかに、決勝には2回、進んでいます。
+    card: &id_histB
+      type: timeline
+      title: フランスのW杯決勝の負け
+      rows:
+      - - 2006年
+        - イタリアに、1対1からのPK戦で3対5
+      - - 2022年
+        - アルゼンチンに、3対3からのPK戦で2対4
+      focus: 2006年
+  - text: 2006年は、イタリアと1対1。延長でも決着せず、PK戦に3対5で敗れました。
+    card:
+      <<: *id_histB
+      highlight_row: 0
+  - text: 2022年は、アルゼンチンと3対3。PK戦に、2対4で敗れました。
+    emph: true
+    card:
+      <<: *id_histB
+      highlight_row: 1
+  - text: この決勝の3点は、すべてエムバペの得点です。
+    image: assets/images/20261024_team_france/f05_mbappe_nor_w.jpg
+    card: none
+  - text: 決勝の手前で敗れたのは、2026年を含めて4回です。
+    card: &id_histC
+      type: timeline
+      title: フランスのW杯 準決勝で敗れた大会
+      rows:
+      - - 1958年
+        - ブラジルに2対5。3位決定戦は西ドイツに6対3
+      - - 1982年
+        - 西ドイツと3対3、PK戦4対5。3位決定戦はポーランドに2対3
+      - - 1986年
+        - 西ドイツに0対2。3位決定戦はベルギーに4対2
+      - - 2026年
+        - スペインに0対2。3位決定戦はイングランドに4対6
+      focus: 1958年
+  - text: 1958年は、ブラジルに2対5。3位決定戦は、西ドイツに6対3で勝ちました。
+    card:
+      <<: *id_histC
+      highlight_row: 0
+  - text: 1982年は、西ドイツと3対3。PK戦に、4対5で敗れました。
+    card:
+      <<: *id_histC
+      highlight_row: 1
+  - text: 3位決定戦は、ポーランドに2対3の負けでした。
+    card:
+      <<: *id_histC
+      highlight_row: 1
+  - text: 1986年は、西ドイツに0対2の負け。3位決定戦は、ベルギーに4対2の勝ち。
+    card:
+      <<: *id_histC
+      highlight_row: 2
+  - text: 2026年は、スペインに0対2の負け。
+    emph: true
+    card:
+      <<: *id_histC
+      highlight_row: 3
+  - text: 3位決定戦は、イングランドに4対6の負け。
+    card:
+      <<: *id_histC
+      highlight_row: 3
+  sources:
+  - https://en.wikipedia.org/wiki/France_at_the_FIFA_World_Cup
+  - https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_knockout_stage
+- id: players
+  heading: いまの看板選手は、誰なのか
+  tier: 背景
+  telop: 看板選手を、所属・名前・位置・年齢で
+  narrator: 解説
+  card: &id_pl
+    type: table
+    title: フランス代表の看板選手
+    columns:
+    - 所属
+    - 名前
+    - 位置
+    - 年齢
+    rows:
+    - - レアル・マドリード
+      - エムバペ
+      - FW
+      - '27'
+    - - パリ・サンジェルマン
+      - デンベレ
+      - FW
+      - '29'
+    - - バイエルン
+      - オリーズ
+      - FW
+      - '24'
+    - - レアル・マドリード
+      - チュアメニ
+      - MF
+      - '26'
+    - - アーセナル
+      - サリバ
+      - DF
+      - '25'
+    - - ミラン
+      - メニャン
+      - GK
+      - '31'
+  say:
+  - text: いまの看板選手は、6人。所属、名前、位置、年齢の順に並べます。
+    card: *id_pl
+  - text: 年齢は、生年月日から数えた、10月23日時点です。
+    card: *id_pl
+  - text: 主将のエムバペは27歳。レアル・マドリードの前線です。
+    image: assets/images/20261024_team_france/f01_mbappe_swe_w.jpg
+    card:
+      <<: *id_pl
+      highlight_row: 0
+  - text: パリ・サンジェルマンのデンベレは、29歳の前線。W杯では、6得点でした。
+    card:
+      <<: *id_pl
+      highlight_row: 1
+  - text: バイエルンのオリーズは、24歳の前線です。
+    image: assets/images/20261024_team_france/f03_olise_mar_w.jpg
+    card:
+      <<: *id_pl
+      highlight_row: 2
+  - text: レアル・マドリードのチュアメニは、26歳の中盤。
+    image: assets/images/20261024_team_france/f04_tcho_sen_w.jpg
+    card:
+      <<: *id_pl
+      highlight_row: 3
+  - text: 守備は、アーセナルのサリバ。25歳です。
+    card:
+      <<: *id_pl
+      highlight_row: 4
+  - text: ゴールを守るのは、ミランのメニャン。31歳です。
+    card:
+      <<: *id_pl
+      highlight_row: 5
+  - text: エムバペのワールドカップ通算は、22得点。フランス代表の、歴代最多。
+    emph: true
+    image: assets/images/20261024_team_france/f05_mbappe_nor_w.jpg
+    card: none
+  - text: 2026年の10得点は、大会の得点王でした。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/France_national_football_team
+  - https://en.wikipedia.org/wiki/France_at_the_FIFA_World_Cup
+  - https://en.wikipedia.org/wiki/2026_FIFA_World_Cup
+- id: japan
+  heading: 日本は、フランスとどう戦ってきたのか
+  tier: 背景
+  telop: 1994年の1対4から、2012年の1対0まで6試合
+  narrator: 解説
+  card: &id_jp
+    type: table
+    title: 日本とフランスの対戦（日本の得点が先）
+    columns:
+    - 年
+    - 大会
+    - スコア
+    rows:
+    - - 1994年5月
+      - キリンカップ
+      - 1-4
+    - - 2000年6月
+      - ハッサン2世杯
+      - 2-2（PK2-4）
+    - - 2001年3月
+      - 親善試合
+      - 0-5
+    - - 2001年6月
+      - コンフェデ杯決勝
+      - 0-1
+    - - 2003年6月
+      - コンフェデ杯
+      - 1-2
+    - - 2012年10月
+      - 親善試合
+      - 1-0
+  say:
+  - text: 日本とフランスの国際Aマッチは、1990年以降で6試合。
+    image: assets/images/20261024_team_france/f03_olise_mar_w.jpg
+    card: *id_jp
+  - text: 日本の勝ちは1回。引き分けが1回で、負けは4回です。
+    card: *id_jp
+  - text: 古い順に見ます。
+    card: *id_jp
+  - text: 1994年5月は東京で、キリンカップ。1対4の負け。
+    card:
+      <<: *id_jp
+      highlight_row: 0
+  - text: 2000年6月は、モロッコのカサブランカ。ハッサン2世杯の、準決勝です。
+    card:
+      <<: *id_jp
+      highlight_row: 1
+  - text: 2対2の引き分けで、PK戦は日本が2対4でした。
+    card:
+      <<: *id_jp
+      highlight_row: 1
+  - text: リードしたのは、日本。前半の森島寛晃と、後半の西澤明訓の得点でした。
+    card:
+      <<: *id_jp
+      highlight_row: 1
+  - text: 2001年3月は、サン・ドニで0対5の負け。
+    card:
+      <<: *id_jp
+      highlight_row: 2
+  - text: 2001年6月、横浜。コンフェデレーションズカップの、決勝です。
+    image: assets/images/20261024_team_france/f04_tcho_sen_w.jpg
+    card:
+      <<: *id_jp
+      highlight_row: 3
+  - text: 各大陸の王者などが集まる、大きな大会でした。
+    card:
+      <<: *id_jp
+      highlight_row: 3
+  - text: 前半30分にヴィエラに決められて、0対1の負けでした。
+    emph: true
+    card:
+      <<: *id_jp
+      highlight_row: 3
+  - text: 2003年6月は、サン・テティエンヌで1対2の負け。日本の得点は、中村俊輔です。
+    card:
+      <<: *id_jp
+      highlight_row: 4
+  - text: 2012年10月12日、サン・ドニ。日本の、1対0の勝ちでした。
+    emph: true
+    image: assets/images/20261024_team_france/f01_mbappe_swe_w.jpg
+    card:
+      <<: *id_jp
+      highlight_row: 5
+  - text: 6試合で、日本の得点は5、失点は14。
+    card: *id_jp
+  - text: 2012年のあと、日本とフランスは、対戦していません。
+    card: none
+  sources:
+  - https://www.jfa.jp/samuraiblue/schedule_result/2012.html
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_results_(1990%E2%80%931999)
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_results_(2000%E2%80%932009)
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_results_(2010%E2%80%932019)
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_results_(2020%E2%80%93present)
+  - https://en.wikipedia.org/wiki/2001_FIFA_Confederations_Cup
+  - https://en.wikipedia.org/wiki/2003_FIFA_Confederations_Cup
+  - https://en.wikipedia.org/wiki/2000_King_Hassan_II_International_Cup_Tournament
+- id: now
+  heading: ジダン監督のフランスは、W杯のあとをどう戦っているのか
+  tier: 背景
+  telop: W杯のあとの4試合は、3勝1分。失点は2
+  narrator: 解説
+  card: &id_nw
+    type: table
+    title: W杯のあと フランスの4試合
+    columns:
+    - 日付
+    - 相手
+    - フランスの結果
+    rows:
+    - - 9月25日
+      - トルコ
+      - 1-0
+    - - 9月28日
+      - ベルギー
+      - 1-0
+    - - 10月2日
+      - イタリア
+      - 1-1
+    - - 10月5日
+      - ベルギー
+      - 4-1
+  say:
+  - text: 大会のあと、フランス代表は、ネーションズリーグを4試合。3勝1分けです。
+    image: assets/images/20261024_team_france/f04_tcho_sen_w.jpg
+    card: *id_nw
+  - text: ネーションズリーグは、ヨーロッパの代表チームが戦う、公式戦。
+    card: *id_nw
+  - text: ジダン監督にとっては、代表監督としての、最初の4試合でした。
+    card: *id_nw
+  - text: 9月25日は、トルコに1対0の勝ち。得点は、エムバペです。
+    card:
+      <<: *id_nw
+      highlight_row: 0
+  - text: 9月28日は、ベルギーに1対0の勝ち。決めたのは、88分のオリーズです。
+    card:
+      <<: *id_nw
+      highlight_row: 1
+  - text: 10月2日は、イタリアと1対1で、勝ち点を分けました。
+    card:
+      <<: *id_nw
+      highlight_row: 2
+  - text: 10月5日は、ベルギーに4対1の勝ち。オリーズが、2点を取りました。
+    emph: true
+    image: assets/images/20261024_team_france/f03_olise_mar_w.jpg
+    card:
+      <<: *id_nw
+      highlight_row: 3
+  - text: 4試合で7得点、2失点。7点のうち、オリーズが4点を取っています。
+    card: *id_nw
+  sources:
+  - https://en.wikipedia.org/wiki/France_national_football_team_results_(2020%E2%80%93present)
+  - https://en.wikipedia.org/wiki/Zinedine_Zidane
+- id: viewpoint
+  viewpoint: true
+  heading: 2026年の最初の6試合と最後の2試合。数字はどこが違ったのか
+  tier: 背景
+  telop: 最初の6試合は2失点、最後の2試合は8失点
+  narrator: 解説
+  card: &id_vp
+    type: table
+    title: ワールドカップ 2026年のフランス（PK戦を除く）
+    columns:
+    - 試合
+    - 戦績
+    - 得点
+    - 失点
+    rows:
+    - - 最初の6試合
+      - 6勝
+      - '16'
+      - '2'
+    - - 最後の2試合
+      - 2敗
+      - '4'
+      - '8'
+  say:
+  - text: 見立てに入ります。比べる数字は2つ。
+    card: *id_vp
+  - text: まず、2026年の8試合を、前と後ろに分けます。
+    card: *id_vp
+  - text: 最初の6試合は、6勝。16得点で、失点は2。
+    card:
+      <<: *id_vp
+      highlight_row: 0
+  - text: 1試合の平均は、得点2.67、失点0.33。
+    card:
+      <<: *id_vp
+      highlight_row: 0
+  - text: 最後の2試合は、準決勝と3位決定戦。4得点で、失点は8。
+    emph: true
+    mark:
+      kind: circle
+      row: 1
+      col: 3
+    card:
+      <<: *id_vp
+      highlight_row: 1
+  - text: 1試合の平均は、得点2、失点4。
+    card:
+      <<: *id_vp
+      highlight_row: 1
+  - text: 失点の8は、2022年大会の7試合の合計と、同じ数。
+    image: assets/images/20261024_team_france/f04_tcho_sen_w.jpg
+    card: none
+  - text: 3位決定戦の6失点は、フランスのワールドカップで、初めてでした。
+    card: none
+  - text: 次は、最近の4大会を並べます。
+    card: &id_vp2
+      type: table
+      title: ワールドカップ フランスの4大会（PK戦を除く）
+      columns:
+      - 大会
+      - 結果
+      - 1試合の得点
+      - 1試合の失点
+      rows:
+      - - 1998年
+        - 優勝
+        - '2.14'
+        - '0.29'
+      - - 2018年
+        - 優勝
+        - '2.00'
+        - '0.86'
+      - - 2022年
+        - 準優勝
+        - '2.29'
+        - '1.14'
+      - - 2026年
+        - 4位
+        - '2.50'
+        - '1.25'
+  - text: 1試合の得点は、2026年が2.50。
+    emph: true
+    mark:
+      kind: circle
+      row: 3
+      col: 2
+    card:
+      <<: *id_vp2
+      highlight_row: 3
+  - text: 1998年、2018年、2022年より、多い数字です。
+    card:
+      <<: *id_vp2
+      highlight_row: 3
+  - text: 1試合の失点は1.25で、この4大会では、いちばん多い数字です。
+    mark:
+      kind: circle
+      row: 3
+      col: 3
+    card:
+      <<: *id_vp2
+      highlight_row: 3
+  - text: 準決勝のスペイン戦は、2026年で、フランスが無得点に終わった唯一の試合です。
+    card: none
+    image: assets/images/20261024_team_france/f01_mbappe_swe_w.jpg
+  - text: 数字の上で、流れが変わったのは、ここでした。
+    card: none
+  - text: 確かめるのは、ジダン監督のもとの、次の公式戦。11月12日の、イタリア戦です。
+    card: none
+    image: assets/images/20261024_team_france/f04_tcho_sen_w.jpg
+  sources:
+  - https://en.wikipedia.org/wiki/France_at_the_FIFA_World_Cup
+  - https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_knockout_stage
+  - https://en.wikipedia.org/wiki/France_national_football_team

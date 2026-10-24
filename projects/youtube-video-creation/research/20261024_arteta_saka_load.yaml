@@ -1,0 +1,170 @@
+# 取材メモ（2026年10月24日）アルテタ「負荷をどう管理するか」。サカは大腿四頭筋、最低6週間の離脱の恐れ（ニュースのショート。見せ方 Y＝監督の一言から始める）
+# 題材: research/20261024_topics_src.yaml の番号11。
+# 取材: 2026-10-24。requests（ブラウザUA）で本文を全部読んだ。検索エンジンのAI要約は使っていない。控えは research/raw/20261024_arteta_saka_{bbc,guardian}.txt。
+#   ・BBC（2026-10-23 14:09Z）「Arsenal fear Saka could be out for two months」
+#       「Arsenal fear Bukayo Saka could miss a minimum of six weeks with the quadriceps injury」「will undergo an MRI scan on Friday afternoon」
+#       「Fluid around the affected muscle has made diagnosing the injury difficult, but club medics are estimating, after early examinations, Saka will miss a minimum of six weeks and it could be even longer.」
+#       「If those early concerns are realised, he will miss … England's forthcoming Uefa Nations League matches against Croatia and Spain.」「Saka will miss Saturday's home Premier League match against Everton」
+#       アルテタ「We need a few more scans and opinions from the specialists.」「When a player has to walk off the pitch, he is struggling to walk without any pain, and is restricted to movement; it is not a good sign.」
+#       「He's got another MRI as there was quite a lot of fluid in the area so it was quite difficult to understand the extent of the injury. We will know more tomorrow.」
+#       記者の分析欄：「likely to be out for up to eight weeks」、今季11試合4得点。見出しの「two months」はこの記者の見立て。
+#   ・ガーディアン（2026-10-23 21:33Z）「Arteta concerned over Saka's durability as forward faces possible six-week absence」
+#       「it is understood, Arsenal fear it could be a grade-two tear that could potentially keep him out for up to six weeks.」← **BBC の「最低6週間」と食い違う**（ガーディアンは「最長6週間」）。台本は両方を出典つきで言い、幅があると言う。
+#       「In total, he has had 11 different injuries since September 2023」（ガーディアンの地の文。数え方の内訳は記事に無い→台本は「ガーディアンによると」と付ける）
+#       アルテタ「It's certainly been different in the last year or so」（毎試合先発できる頑丈さがあるかと問われて）「The demands that we are putting on every player are immense.」
+#       「We really need to understand, whenever he comes back, how we are going to manage his load, what he is capable of to sustain having an impact in the team.」
+#       「I don't have that feeling at all」（17歳でデビューしたので燃え尽きを恐れるかと問われて）
+#       2021〜2024年の3季でPL欠場は3試合だけ、PL83試合連続出場のクラブ記録（ガーディアン）。
+# 10/22 のショート（20261022_saka_injury_bayern）と重ねないこと：負傷の場面（8分・10分・エゼの交代・2対2）と、試合直後の「まったく良さそうには見えない」「医療班は少し懸念」は**入れない**。
+#   今回の新事実＝①離脱の見立て（最低6週間・長ければもっと／最長6週間とする報道も）②水が溜まり程度が分からずMRIをもう一度 ③エヴァートン戦は欠場、代表戦も欠場の恐れ ④11のケガ ⑤「負荷をどう管理するか」。
+# 確かめたこと: 10/24 昼の時点で、BBC のアーセナル欄・ガーディアンのアーセナル欄に MRI の結果の続報は無い（arsenal.com のニュース一覧は読めなかった）。→「診断の結果はまだ発表されていない」と時点を付けて言う。
+# 言わないこと: 断裂の程度（ガーディアンの「grade-two tear の恐れ」は "it is understood" の伝聞。台本では「肉離れ」と断定しない）。復帰の日付。ハムストリング・アキレスの既往を今回と結びつけること。
+#   ダウマンの話（題12。今日は選ばれていない）は入れない。
+# 反応: **当たっていない（作らない）**。承認は --no-voices で。
+# 確度: 大腿四頭筋のケガ・MRI・エヴァートン戦欠場・監督の言葉＝報道（BBC・ガーディアン。監督会見）。離脱期間＝報道（クラブの見立てを伝えたもの。未発表）。
+# 本人の言葉: アルテタ監督の会見の発言が実在する（英語を訳した。語は足していない）。サカ本人の言葉は無い。作らない。
+# 写真: 負傷の場面は使わない。Commons の CC BY-SA / CC BY（W杯 2026 のイングランド代表のサカ、2022年エヴァートン戦のアルテタ）。代理店は使わない。assets/images/20261024_arteta_saka_load/（出典は credits.json）。
+slot: premier
+date: "2026年10月24日"
+format: news
+no_main: true      # ニュースはショートだけ（2026-10-14）。締めで本編を案内しない
+people: [ブカヨ・サカ, ミケル・アルテタ, アーセナル]
+
+short_style: Y
+short_hook_quote: 彼が戻ってきたとき、負荷をどう管理するのか。
+short_question: サカの離脱、あなたはどのくらいになると思いますか。
+short_hook: サカ、離脱は最低6週間の恐れ。アルテタ監督の言葉。
+short_photos:
+  - assets/images/20261024_arteta_saka_load/01_v.jpg
+  - assets/images/20261024_arteta_saka_load/04_v.jpg
+  - assets/images/20261024_arteta_saka_load/02_v.jpg
+  - assets/images/20261024_arteta_saka_load/03_v.jpg
+  - assets/images/20261024_arteta_saka_load/05_v.jpg
+short_telops:
+  - {match: 戻ってきたとき、負荷, text: アルテタ監督/「戻ってきたとき、負荷をどう管理するのか」}
+  - {match: 最低6週間, text: 報道/クラブの医療班は「最低6週間」と見積もり}
+  - {match: 最長6週間, text: 別の報道は/「最長6週間」の恐れ}
+  - {match: かなりの水が, text: アルテタ監督/「患部にかなりの水が溜まっていた」}
+  - {match: 程度を把握する, text: アルテタ監督/「程度を把握するのがとても難しかった」}
+  - {match: 良い兆候ではない, text: アルテタ監督/「良い兆候ではない」}
+  - {match: クロアチア, text: 見立てどおりなら/代表のクロアチア戦・スペイン戦も欠場}
+  - {match: 11のケガ, text: 報道/2023年9月以降のケガは11}
+  - {match: 83試合連続, text: 以前は/プレミア83試合連続出場のクラブ記録}
+  - {match: 確かに違っている, text: アルテタ監督/「この1年ほどは、確かに違っている」}
+  - {match: まだ発表されていません, text: 再検査の結果/24日昼の時点で発表なし}
+
+theme:
+  id: arteta_saka_load
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  prefix: ""
+  title: アーセナルのサカ、2023年9月から11のケガ。アルテタが口にした課題
+  hook: ""
+  question: サカの離脱はどのくらいになりそうで、アルテタ監督は何を考えているのか
+  takeaway: 離脱の長さは報道で「最低6週間」と「最長6週間」に分かれ、再検査の結果待ち。監督の課題は、戻ったあとの負荷の管理
+
+thumbnail:
+  layout: face
+  line1: サカ、最低6週間の離脱の恐れ
+  line2: アルテタ「負荷をどう管理するか」
+  tags: [サカ, アルテタ, アーセナル]
+  photo: assets/images/20261024_arteta_saka_load/02_w.jpg
+  short_photo: assets/images/20261024_arteta_saka_load/01_v.jpg
+
+answer: 離脱は最低6週間の恐れ（報道）。再検査の結果待ちで、監督は戻ったあとの負荷の管理を課題に挙げた
+watch: 再検査の結果の発表を待つ段階
+
+sections:
+  - id: words
+    main: true
+    heading: アルテタ監督は、サカの今後について何と言ったか
+    tier: 報道
+    telop: アルテタ監督「負荷をどう管理するのか」
+    say:
+      - text: アーセナルのサカは、21日のバイエルン戦で、太ももの前側の筋肉を痛めました。
+        image: assets/images/20261024_arteta_saka_load/03_w.jpg
+      - text: 24日のエヴァートン戦は欠場します。
+        image: assets/images/20261024_arteta_saka_load/03_w.jpg
+      - text: アルテタ監督は、復帰したあとの課題を、こう語りました。
+        image: assets/images/20261024_arteta_saka_load/06_w.jpg
+      - voice: アルテタ監督
+        text: 彼が戻ってきたとき、負荷をどう管理するのか。
+        image: assets/images/20261024_arteta_saka_load/04_w.jpg
+      - voice: アルテタ監督
+        text: それを本当に理解する必要がある。
+        cont: true
+        image: assets/images/20261024_arteta_saka_load/04_w.jpg
+    official: false
+    sources:
+      - https://www.theguardian.com/football/2026/oct/23/arsenal-arteta-concerned-saka-durability-six-week-absence
+      - https://www.bbc.com/sport/football/articles/cmwyql6v5q82o
+    quotes_from: ["ガーディアン https://www.theguardian.com/football/2026/oct/23/arsenal-arteta-concerned-saka-durability-six-week-absence"]
+
+  - id: length
+    heading: サカの離脱は、どのくらいになりそうか
+    tier: 報道
+    telop: 離脱は「最低6週間」の恐れ（報道）
+    say:
+      - text: クラブの医療班は、サカの離脱を、最低6週間と見積もっていると報じられています。
+        image: assets/images/20261024_arteta_saka_load/05_w.jpg
+      - text: 長ければ、さらに延びる可能性もあるとのことです。
+        image: assets/images/20261024_arteta_saka_load/05_w.jpg
+      - text: 一方で、最長6週間の恐れとする報道もあり、見立てには幅があります。
+        image: assets/images/20261024_arteta_saka_load/06_w.jpg
+      - text: 監督は、程度がまだ分からない理由を、こう話しました。
+        image: assets/images/20261024_arteta_saka_load/04_w.jpg
+      - voice: アルテタ監督
+        text: 患部にかなりの水が溜まっていた。
+        image: assets/images/20261024_arteta_saka_load/04_w.jpg
+      - voice: アルテタ監督
+        text: だから、ケガの程度を把握するのがとても難しかった。
+        cont: true
+        image: assets/images/20261024_arteta_saka_load/02_w.jpg
+      - voice: アルテタ監督
+        text: 痛みなしでは歩くのも難しく、動きも制限されている。
+        cont: true
+        image: assets/images/20261024_arteta_saka_load/02_w.jpg
+      - voice: アルテタ監督
+        text: 良い兆候ではない。
+        cont: true
+        image: assets/images/20261024_arteta_saka_load/03_w.jpg
+      - text: 最低6週間の見立てどおりなら、イングランド代表の、
+        image: assets/images/20261024_arteta_saka_load/01_w.jpg
+      - text: クロアチア戦とスペイン戦も欠場になります。
+        image: assets/images/20261024_arteta_saka_load/03_w.jpg
+    official: false
+    sources:
+      - https://www.bbc.com/sport/football/articles/cmwyql6v5q82o
+      - https://www.theguardian.com/football/2026/oct/23/arsenal-arteta-concerned-saka-durability-six-week-absence
+    quotes_from: ["BBC https://www.bbc.com/sport/football/articles/cmwyql6v5q82o", "ガーディアン https://www.theguardian.com/football/2026/oct/23/arsenal-arteta-concerned-saka-durability-six-week-absence"]
+
+  - id: view
+    viewpoint: true
+    heading: なぜ「負荷の管理」なのか
+    tier: 報道
+    telop: 2023年9月以降、ケガは11
+    say:
+      - text: サカのケガは、2023年9月以降で11にのぼるとされています。
+        image: assets/images/20261024_arteta_saka_load/01_w.jpg
+      - text: 以前は、プレミア83試合連続出場の、クラブ記録を持つ選手でした。
+        image: assets/images/20261024_arteta_saka_load/01_w.jpg
+      - text: 毎試合先発できる頑丈さはあるのかと問われ、監督はこう答えました。
+        image: assets/images/20261024_arteta_saka_load/05_w.jpg
+      - voice: アルテタ監督
+        text: この1年ほどは、確かに違っている。
+        image: assets/images/20261024_arteta_saka_load/04_w.jpg
+      - voice: アルテタ監督
+        text: 選手にかかる要求は、とてつもない。
+        cont: true
+        image: assets/images/20261024_arteta_saka_load/04_w.jpg
+      - text: 再検査の結果は、24日昼の時点で、まだ発表されていません。
+        image: assets/images/20261024_arteta_saka_load/06_w.jpg
+      - text: 離脱の長さより先に、戻ったあとの使い方が問われている、というのが見立てです。
+        image: assets/images/20261024_arteta_saka_load/06_w.jpg
+    official: false
+    sources:
+      - https://www.theguardian.com/football/2026/oct/23/arsenal-arteta-concerned-saka-durability-six-week-absence
+      - https://www.bbc.com/sport/football/articles/cmwyql6v5q82o
+    quotes_from: ["ガーディアン https://www.theguardian.com/football/2026/oct/23/arsenal-arteta-concerned-saka-durability-six-week-absence"]
+short_title: "アーセナルのサカ、2023年9月から11のケガ。アルテタが口にした課題"

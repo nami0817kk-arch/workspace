@@ -1,0 +1,622 @@
+{
+ "club_title": "Eintracht_Frankfurt",
+ "season_title": "2026–27_Eintracht_Frankfurt_season",
+ "squad": [
+  {
+   "no": "1",
+   "pos": "GK",
+   "nat": "GER",
+   "name": "Noah Atubolu",
+   "page": "Noah Atubolu",
+   "dob": "2002-05-25",
+   "captain": false,
+   "loan": true,
+   "team": "",
+   "caps": null,
+   "club_caps": 6,
+   "club_goals": 0
+  },
+  {
+   "no": "2",
+   "pos": "DF",
+   "nat": "GER",
+   "name": "Elias Baum",
+   "page": "Elias Baum",
+   "dob": "2005-10-26",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 15,
+   "club_goals": 0
+  },
+  {
+   "no": "3",
+   "pos": "DF",
+   "nat": "FRA",
+   "name": "Lilian Brassier",
+   "page": "Lilian Brassier",
+   "dob": "1999-11-02",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 5,
+   "club_goals": 0
+  },
+  {
+   "no": "4",
+   "pos": "DF",
+   "nat": "GER",
+   "name": "Robin Koch",
+   "page": "Robin Koch",
+   "dob": "1996-07-17",
+   "captain": true,
+   "loan": false,
+   "team": "Germany",
+   "caps": 15,
+   "club_caps": 99,
+   "club_goals": 8
+  },
+  {
+   "no": "5",
+   "pos": "DF",
+   "nat": "BRA",
+   "name": "Otávio",
+   "page": "Otávio (footballer, born November 2005)",
+   "dob": "2005-11-25",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 1,
+   "club_goals": 0
+  },
+  {
+   "no": "6",
+   "pos": "MF",
+   "nat": "DEN",
+   "name": "Oscar Højlund",
+   "page": "Oscar Højlund",
+   "dob": "2005-01-04",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 46,
+   "club_goals": 2
+  },
+  {
+   "no": "7",
+   "pos": "FW",
+   "nat": "GER",
+   "name": "Ansgar Knauff",
+   "page": "Ansgar Knauff",
+   "dob": "2002-01-10",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 127,
+   "club_goals": 17
+  },
+  {
+   "no": "8",
+   "pos": "MF",
+   "nat": "ALG",
+   "name": "Farès Chaïbi",
+   "page": "Farès Chaïbi",
+   "dob": "2002-11-28",
+   "captain": false,
+   "loan": false,
+   "team": "Algeria",
+   "caps": 37,
+   "club_caps": 86,
+   "club_goals": 5
+  },
+  {
+   "no": "9",
+   "pos": "FW",
+   "nat": "GER",
+   "name": "Jonathan Burkardt",
+   "page": "Jonathan Burkardt",
+   "dob": "2000-07-11",
+   "captain": false,
+   "loan": false,
+   "team": "Germany",
+   "caps": 8,
+   "club_caps": 28,
+   "club_goals": 16
+  },
+  {
+   "no": "11",
+   "pos": "FW",
+   "nat": "GER",
+   "name": "Younes Ebnoutalib",
+   "page": "Younes Ebnoutalib",
+   "dob": "2003-09-13",
+   "captain": false,
+   "loan": false,
+   "team": "Germany",
+   "caps": 2,
+   "club_caps": 11,
+   "club_goals": 5
+  },
+  {
+   "no": "15",
+   "pos": "MF",
+   "nat": "GER",
+   "name": "Noël Aséko",
+   "page": "Noël Aséko",
+   "dob": "2005-11-22",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 4,
+   "club_goals": 0
+  },
+  {
+   "no": "20",
+   "pos": "FW",
+   "nat": "JPN",
+   "name": "Ritsu Dōan",
+   "page": "Ritsu Dōan",
+   "dob": "1998-06-16",
+   "captain": false,
+   "loan": false,
+   "team": "Japan",
+   "caps": 73,
+   "club_caps": 36,
+   "club_goals": 5
+  },
+  {
+   "no": "22",
+   "pos": "DF",
+   "nat": "USA",
+   "name": "Timothy Chandler",
+   "page": "Timothy Chandler",
+   "dob": "1990-03-29",
+   "captain": false,
+   "loan": false,
+   "team": "United States",
+   "caps": 29,
+   "club_caps": 170,
+   "club_goals": 9
+  },
+  {
+   "no": "25",
+   "pos": "MF",
+   "nat": "NGA",
+   "name": "Raphael Onyedika",
+   "page": "Raphael Onyedika",
+   "dob": "2001-04-19",
+   "captain": false,
+   "loan": false,
+   "team": "Nigeria",
+   "caps": 27,
+   "club_caps": 6,
+   "club_goals": 0
+  },
+  {
+   "no": "26",
+   "pos": "DF",
+   "nat": "JPN",
+   "name": "Keita Kosugi",
+   "page": "Keita Kosugi",
+   "dob": "2006-03-18",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 6,
+   "club_goals": 0
+  },
+  {
+   "no": "27",
+   "pos": "MF",
+   "nat": "GER",
+   "name": "Mario Götze",
+   "page": "Mario Götze",
+   "dob": "1992-06-03",
+   "captain": false,
+   "loan": false,
+   "team": "Germany",
+   "caps": 66,
+   "club_caps": 111,
+   "club_goals": 9
+  },
+  {
+   "no": "29",
+   "pos": "FW",
+   "nat": "MAR",
+   "name": "Ayoube Amaimouni",
+   "page": "Ayoube Amaimouni",
+   "dob": "2004-11-30",
+   "captain": false,
+   "loan": false,
+   "team": "Morocco",
+   "caps": 3,
+   "club_caps": 21,
+   "club_goals": 2
+  },
+  {
+   "no": "31",
+   "pos": "MF",
+   "nat": "SWE",
+   "name": "Love Arrhov",
+   "page": "Love Arrhov",
+   "dob": "2008-05-17",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 7,
+   "club_goals": 0
+  },
+  {
+   "no": "33",
+   "pos": "GK",
+   "nat": "GER",
+   "name": "Jens Grahl",
+   "page": "Jens Grahl",
+   "dob": "1988-09-22",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 3,
+   "club_goals": 0
+  },
+  {
+   "no": "34",
+   "pos": "DF",
+   "nat": "GER",
+   "name": "Nnamdi Collins",
+   "page": "Nnamdi Collins",
+   "dob": "2004-01-10",
+   "captain": false,
+   "loan": false,
+   "team": "Germany",
+   "caps": 1,
+   "club_caps": 50,
+   "club_goals": 2
+  },
+  {
+   "no": "35",
+   "pos": "FW",
+   "nat": "DEN",
+   "name": "Malik Pimpong",
+   "page": "Malik Pimpong",
+   "dob": "2008-01-01",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 2,
+   "club_goals": 0
+  },
+  {
+   "no": "37",
+   "pos": "DF",
+   "nat": "GER",
+   "name": "Jeremiaha Maluze",
+   "page": "Jeremiaha Maluze",
+   "dob": "2004-11-11",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 1,
+   "club_goals": 0
+  },
+  {
+   "no": "39",
+   "pos": "GK",
+   "nat": "BIH",
+   "name": "Amil Šiljević",
+   "page": "Amil Šiljević",
+   "dob": "",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "40",
+   "pos": "GK",
+   "nat": "BRA",
+   "name": "Kauã Santos",
+   "page": "Kauã Santos",
+   "dob": "2003-04-11",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 22,
+   "club_goals": 0
+  },
+  {
+   "no": "42",
+   "pos": "FW",
+   "nat": "TUR",
+   "name": "Can Uzun",
+   "page": "Can Uzun",
+   "dob": "2005-11-11",
+   "captain": false,
+   "loan": false,
+   "team": "Turkey",
+   "caps": 10,
+   "club_caps": 46,
+   "club_goals": 14
+  },
+  {
+   "no": "44",
+   "pos": "FW",
+   "nat": "GER",
+   "name": "Jessic Ngankam",
+   "page": "Jessic Ngankam",
+   "dob": "2000-07-20",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 18,
+   "club_goals": 0
+  }
+ ],
+ "results": [
+  [
+   "",
+   "1",
+   "Union Berlin",
+   "3–3",
+   "Eintracht Frankfurt"
+  ],
+  [
+   "",
+   "2",
+   "Eintracht Frankfurt",
+   "1–4",
+   "FC Augsburg"
+  ],
+  [
+   "",
+   "3",
+   "Mainz 05",
+   "1–3",
+   "Eintracht Frankfurt"
+  ],
+  [
+   "",
+   "4",
+   "Eintracht Frankfurt",
+   "2–2",
+   "SC Freiburg"
+  ],
+  [
+   "",
+   "5",
+   "RB Leipzig",
+   "6–0",
+   "Eintracht Frankfurt"
+  ],
+  [
+   "",
+   "6",
+   "Eintracht Frankfurt",
+   "1–0",
+   "1. FC Köln"
+  ],
+  [
+   "",
+   "7",
+   "Borussia Dortmund",
+   "",
+   "Eintracht Frankfurt"
+  ],
+  [
+   "",
+   "8",
+   "Eintracht Frankfurt",
+   "",
+   "Hamburger SV"
+  ],
+  [
+   "",
+   "9",
+   "SC Paderborn",
+   "",
+   "Eintracht Frankfurt"
+  ],
+  [
+   "",
+   "10",
+   "Eintracht Frankfurt",
+   "",
+   "TSG Hoffenheim"
+  ],
+  [
+   "",
+   "11",
+   "VfB Stuttgart",
+   "",
+   "Eintracht Frankfurt"
+  ],
+  [
+   "4–6",
+   "12",
+   "Eintracht Frankfurt",
+   "",
+   "Werder Bremen"
+  ],
+  [
+   "11–13",
+   "13",
+   "Borussia Mönchengladbach",
+   "",
+   "Eintracht Frankfurt"
+  ],
+  [
+   "18–20",
+   "14",
+   "Bayer Leverkusen",
+   "",
+   "Eintracht Frankfurt"
+  ],
+  [
+   "8–10",
+   "15",
+   "Eintracht Frankfurt",
+   "",
+   "Schalke 04"
+  ],
+  [
+   "12–14",
+   "16",
+   "SV Elversberg",
+   "",
+   "Eintracht Frankfurt"
+  ],
+  [
+   "15–17",
+   "17",
+   "Eintracht Frankfurt",
+   "",
+   "Bayern Munich"
+  ],
+  [
+   "22–24",
+   "18",
+   "Eintracht Frankfurt",
+   "",
+   "Union Berlin"
+  ],
+  [
+   "29–31",
+   "19",
+   "FC Augsburg",
+   "",
+   "Eintracht Frankfurt"
+  ],
+  [
+   "5–7",
+   "20",
+   "Eintracht Frankfurt",
+   "",
+   "Mainz 05"
+  ],
+  [
+   "12–14",
+   "21",
+   "SC Freiburg",
+   "",
+   "Eintracht Frankfurt"
+  ],
+  [
+   "19–21",
+   "22",
+   "Eintracht Frankfurt",
+   "",
+   "RB Leipzig"
+  ],
+  [
+   "26–28",
+   "23",
+   "1. FC Köln",
+   "",
+   "Eintracht Frankfurt"
+  ],
+  [
+   "2–4",
+   "24",
+   "Eintracht Frankfurt",
+   "",
+   "Borussia Dortmund"
+  ],
+  [
+   "5–7",
+   "25",
+   "Hamburger SV",
+   "",
+   "Eintracht Frankfurt"
+  ],
+  [
+   "12–14",
+   "26",
+   "Eintracht Frankfurt",
+   "",
+   "SC Paderborn"
+  ],
+  [
+   "19–21",
+   "27",
+   "TSG Hoffenheim",
+   "",
+   "Eintracht Frankfurt"
+  ],
+  [
+   "2–4",
+   "28",
+   "Eintracht Frankfurt",
+   "",
+   "VfB Stuttgart"
+  ],
+  [
+   "9–11",
+   "29",
+   "Werder Bremen",
+   "",
+   "Eintracht Frankfurt"
+  ],
+  [
+   "16–18",
+   "30",
+   "Eintracht Frankfurt",
+   "",
+   "Borussia Mönchengladbach"
+  ],
+  [
+   "23–25",
+   "31",
+   "Eintracht Frankfurt",
+   "",
+   "Bayer Leverkusen"
+  ],
+  [
+   "7–9",
+   "32",
+   "Schalke 04",
+   "",
+   "Eintracht Frankfurt"
+  ],
+  [
+   "14–16",
+   "33",
+   "Eintracht Frankfurt",
+   "",
+   "SV Elversberg"
+  ],
+  [
+   "",
+   "34",
+   "Bayern Munich",
+   "",
+   "Eintracht Frankfurt"
+  ],
+  [
+   "",
+   "First round",
+   "SC St. Tönis",
+   "0–11",
+   "Eintracht Frankfurt"
+  ],
+  [
+   "",
+   "Second round",
+   "Hamburger SV",
+   "",
+   "Eintracht Frankfurt"
+  ]
+ ]
+}

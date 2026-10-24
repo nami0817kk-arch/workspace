@@ -1,0 +1,169 @@
+# 取材メモ（2026年10月24日）チュアメニ、バルベルデとの更衣室の件を自分のYouTube番組で説明（ニュースのショート。見せ方 Y＝チュアメニ本人の言葉から始める）
+# 取材: 2026-10-24。ESPN 記事API（now.core.api.espn.com/v1/sports/news/50257348）で本文を全部読んだ。控え research/raw/20261024_tchouameni_espn_story.txt。
+#   ・ESPN（Alex Kirkland、2026-10-23 18:30Z）「Tchouaméni: 'There was no fight' in Real Madrid dressing room with Valverde」
+#       5月の更衣室の件で、バルベルデは頭を負傷して入院（hospitalised with a head injury）。2人はクラブから合計100万ユーロの罰金が科されました。
+#       件はリーガでバルサと対戦する数日前に起きた。今季最初のクラシコは日曜、カンプ・ノウ。2人とも出場の見込み（set to feature）。
+#       チュアメニは木曜、自分の YouTube 番組『The Bridge』で話した。
+#       2人は今季、モウリーニョ監督のもとで中盤で並んで先発することが多い。モウリーニョは8月に「問題は見ていない」と話していた。
+#       レアルは首位バルサに勝ち点6差。バルサはリーグ戦で全勝。バルベルデは直近2試合、右サイドバックで先発（ダンフリース、アレクサンダー＝アーノルドより先に）。
+# 発言（ESPN が引いた英語の原文を訳した。言い換えない）:
+#   チュアメニ: "I want to clear things up. There was no fight like people said there was."
+#     "Things happen in a changing room, it happens, you see little scuffles and things. ... The only problem is, when you are at Real, something small like that becomes like that"
+#     "It was such a minor thing" / "Now in the changing room, the coach said it... we're cool. There is no problem at all. On the field, it is completely the same and life goes on."
+#     "Someone told me actually that stuff like this brings people closer"
+#   モウリーニョ（8月）: "I decided to start from zero... I've seen that everything is normal. Seeing how they've interacted, you couldn't imagine what happened."
+# 確度: 発言・罰金・負傷は 報道（ESPN 1社。本人の番組の原本は見ていない）。順位・勝ち点差は 報道（ESPN）。見立ては 背景。
+# 使わなかったもの: 件の中身の細部（誰が何をしたか。記事に無い）。NFL のドキュメンタリーの話（脇道）。バルベルデ本人の言葉（記事に無い）。
+#   「勝てば9差」（別の記事。この記事には無い）。2人を悪く見せる言い方は使わない。罰金は事実として1回だけ言う。
+# 反応: 取らない（作らない）。approve は --no-voices で。
+# 写真: Commons（CC BY-SA 4.0、Bryan Berlin 撮影のW杯2026のフランス代表の写真）7枚（01〜05・07・08）。行の image は横長の 04・05・07・08 を回す（01〜03 は縦の写真で、横に切ると頭の帯になるので short_photos だけ）。レアルの写真は Commons に新しいものが無く、代表の写真にした。
+#   バルベルデの写真（Commons 2022、jikatu）は縦に切ると本人が小さく背を向けるので外した。ESPN の記事写真は Getty なので使わない。
+slot: world_2
+date: "2026年10月24日"
+format: news
+no_main: true      # ニュースはショートだけ。締めで本編を案内しない
+people: [チュアメニ, バルベルデ, モウリーニョ, レアル・マドリード]
+
+short_style: Y
+short_hook_quote: 言われていたような殴り合いは、ありませんでした
+short_question: クラシコで並ぶ2人。あなたは、この説明をどう聞きましたか。
+short_hook: クラシコの前に、本人が。
+short_telops:
+  - {match: 自分のユーチューブ番組, text: チュアメニ/自分のYouTube番組で}
+  - {match: 殴り合いは, text: 「殴り合いは、ありませんでした」}
+  - {match: 小さなことが, text: 「小さなことが大きくなる」}
+  - {match: 100万ユーロ, text: 2人に合計/100万ユーロの罰金}
+  - {match: 何の問題も, text: 「何の問題もありません」}
+  - {match: 勝ち点6, text: 首位バルサと/勝ち点6差}
+
+theme:
+  id: tchouameni_valverde
+  league: spain
+  league_name: ラ・リーガ
+  prefix: ""
+  title: チュアメニ、バルベルデとの件を自ら説明。クラシコ前に語ったこと
+  hook: ""
+  question: 5月の更衣室の件を、チュアメニは何と説明したのか
+  takeaway: 5月の件はクラシコの数日前に起き、今回の説明はクラシコの3日前。2人は今季、中盤で並んで先発することが多く、首位バルサとの勝ち点6差を追う日曜の一戦にもそろって出る見込み
+
+thumbnail:
+  line1: チュアメニ、更衣室の件を説明
+  line2: 「殴り合いは…」
+  tags: [チュアメニ, バルベルデ, レアル・マドリード, クラシコ]
+  photo: assets/images/20261024_tchouameni_valverde/08_w.jpg
+  short_photo: assets/images/20261024_tchouameni_valverde/02_v.jpg
+
+answer: 「言われていたような殴り合いは無かった。いまは何の問題も無い」と説明した
+watch: 日曜のクラシコ（カンプ・ノウ）
+
+short_photos:
+  - assets/images/20261024_tchouameni_valverde/02_v.jpg
+  - assets/images/20261024_tchouameni_valverde/01_v.jpg
+  - assets/images/20261024_tchouameni_valverde/03_v.jpg
+  - assets/images/20261024_tchouameni_valverde/04_v.jpg
+  - assets/images/20261024_tchouameni_valverde/07_v.jpg
+  - assets/images/20261024_tchouameni_valverde/05_v.jpg
+  - assets/images/20261024_tchouameni_valverde/08_v.jpg
+
+sections:
+  - id: what
+    main: true
+    heading: チュアメニは何と説明したか
+    tier: 報道
+    telop: チュアメニが自分の番組で、5月の件を説明
+    say:
+      - text: 5月に更衣室で起きた件を、チュアメニが木曜、自分のユーチューブ番組で語りました。
+        image: assets/images/20261024_tchouameni_valverde/05_w.jpg
+      - voice: チュアメニ
+        text: 言われていたような殴り合いは、ありませんでした。
+        short_voice: true
+        image: assets/images/20261024_tchouameni_valverde/08_w.jpg
+      - voice: チュアメニ
+        text: 更衣室では、いろいろなことが起こります。
+        cont: true
+        image: assets/images/20261024_tchouameni_valverde/04_w.jpg
+      - voice: チュアメニ
+        text: ちょっとした小競り合いもあります。
+        cont: true
+        image: assets/images/20261024_tchouameni_valverde/07_w.jpg
+      - voice: チュアメニ
+        text: ただ、レアルにいると、小さなことがこんなに大きくなるんです。
+        image: assets/images/20261024_tchouameni_valverde/05_w.jpg
+      - voice: チュアメニ
+        text: 本当に、ごく小さなことでした。
+        cont: true
+        image: assets/images/20261024_tchouameni_valverde/08_w.jpg
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50257348
+
+  - id: background
+    heading: 5月に何があったのか
+    tier: 報道
+    telop: バルベルデは頭を負傷し、2人に合計100万ユーロの罰金
+    say:
+      - text: 5月の件で、バルベルデは頭を負傷し、病院に運ばれました。
+        image: assets/images/20261024_tchouameni_valverde/08_w.jpg
+      - text: チュアメニとバルベルデには、クラブから合計100万ユーロの罰金が科されました。
+        image: assets/images/20261024_tchouameni_valverde/04_w.jpg
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50257348
+
+  - id: now
+    heading: いまの2人はどうなのか
+    tier: 報道
+    telop: 「何の問題もありません」。監督も8月に「問題は見ていない」
+    say:
+      - text: では、いまの2人はどうなのか。チュアメニはこう続けました。
+        image: assets/images/20261024_tchouameni_valverde/08_w.jpg
+      - voice: チュアメニ
+        text: 監督も更衣室で言いましたが、僕らは大丈夫です。
+        image: assets/images/20261024_tchouameni_valverde/04_w.jpg
+      - voice: チュアメニ
+        text: 何の問題もありません。
+        cont: true
+        image: assets/images/20261024_tchouameni_valverde/07_w.jpg
+      - voice: チュアメニ
+        text: ピッチの上でも、まったく同じです。
+        cont: true
+        image: assets/images/20261024_tchouameni_valverde/05_w.jpg
+      - text: モウリーニョ監督も8月に、こう話していました。
+        image: assets/images/20261024_tchouameni_valverde/08_w.jpg
+      - voice: モウリーニョ
+        text: すべて普通だと見ています。
+        image: assets/images/20261024_tchouameni_valverde/04_w.jpg
+      - voice: モウリーニョ
+        text: 2人の接し方を見たら、何があったのか想像できないほどです。
+        cont: true
+        image: assets/images/20261024_tchouameni_valverde/07_w.jpg
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50257348
+
+  - id: view
+    viewpoint: true
+    heading: 日曜のクラシコで2人はどうなるか
+    tier: 背景
+    telop: 5月の件はクラシコの数日前。今回の説明はクラシコの3日前
+    say:
+      - text: 見立てです。5月の件は、クラシコの数日前に起きました。
+        image: assets/images/20261024_tchouameni_valverde/05_w.jpg
+      - text: 今回は、クラシコの3日前に、チュアメニが自分の言葉で説明しました。
+        image: assets/images/20261024_tchouameni_valverde/08_w.jpg
+      - text: チュアメニとバルベルデは今季、中盤で並んで先発することが多くなっています。
+        image: assets/images/20261024_tchouameni_valverde/04_w.jpg
+      - text: バルベルデは直近の2試合、右サイドバックで先発しました。
+        image: assets/images/20261024_tchouameni_valverde/07_w.jpg
+      - text: その位置のダンフリースやアレクサンダー＝アーノルドより、先に起用されています。
+        card: none
+      - text: 日曜も、そこで出る可能性があります。
+        image: assets/images/20261024_tchouameni_valverde/05_w.jpg
+      - text: レアルは、リーグ戦で全勝の首位バルサに、勝ち点6差。
+        image: assets/images/20261024_tchouameni_valverde/08_w.jpg
+      - text: 2人がそろって出る見込みの日曜のクラシコは、その差を縮められるかの一戦です。
+        image: assets/images/20261024_tchouameni_valverde/04_w.jpg
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50257348
+short_title: "チュアメニ、バルベルデとの件を自ら説明。クラシコ前に語ったこと"

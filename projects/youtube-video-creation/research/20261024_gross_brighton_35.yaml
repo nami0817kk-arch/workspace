@@ -1,0 +1,207 @@
+# 取材メモ（2026年10月24日）パスカル・グロス、35歳。ブライトンで「常に一歩先」（ニュースのショート。見せ方 Y＝監督の一言から始める）
+# 題材の元: research/20261024_topics_src.yaml 番号17（ユーザー○）。
+# 取材: 2026-10-24。requests（ブラウザUA）で本文を全部読んだ。
+#   ・ガーディアン エド・アーロンズ記者（10/23 12:11 BST 公開・17:39 更新）
+#     「Pascal Gross: the obsessive runner keeping Brighton 'one step ahead' after fast start」（URL の slug は fabian-gross だが本文はパスカル・グロス）。
+#     使った事実（記事のまま）:
+#       - 9月のプレミアリーグ月間最優秀選手（写真説明と本文の両方）。35歳。
+#       - 今季は1試合平均11.5km超を走り、走行距離はリーグ3位（the third-most ground of any player）。
+#       - リーグ戦3試合続けてアシスト（日曜のパレス戦5-0では FK がカンヴォのオウンゴールに）。4試合続ければ、2002年12月のゾラ（チェルシー）以来の最年長になる機会。
+#       - ブライトンは7試合で23得点＝7試合時点でプレミア史上4番目に多い。日曜はアウェーのリヴァプール戦（時刻は記事に無い→言わない）。
+#       - 2017年にインゴルシュタットから加入、プレミアで7年 → ドルトムント → 今年1月に120万ポンドで復帰。全大会の全試合に先発。
+#       - EURO2024 で準々決勝敗退のあと、東フリジア諸島のユイスト島で 8.4km のレースに出て 31分35秒で優勝（1分以上の差）。競技者がSNSに動画を出して知られた。
+#       - 芝のアレルギーで長袖を着る。クラブでの呼び名は「カイザー」。W杯のあとで代表を引退。
+#     監督の言葉（ヒュルツェラー、記事の引用。英語→こちらで訳す）:
+#       'Sometimes he's just one step ahead than his opponent' / 'He might not be the quickest player, but he can be the quickest in the head'
+#       'No one expected that it would be this good.' / 'The older the wine gets, the better it gets.'
+#       'Where can I run a race?' Because he will never stand still（冗談として）
+#     本人の言葉（記事の引用。いつの発言かは記事に書いていない→「去ったときのことを」とだけ言う）:
+#       'It was really difficult' / 'There were a couple of other options [before returning], but Brighton was always the priority.'
+#   ・プレミアリーグ公式（FPL の公式データ bootstrap-static、10/24 取得）: Groß 3得点・先発7・610分、ブライトンは3位、第7節まで終了。
+#       → 3位・3得点は公式で一致。FPL のアシストは6（FPL独自の数え方）で、ガーディアンの「得点とアシストで7」と合わないので、**合計の数字は言わない**。
+#       → 月間最優秀選手は公式サイトの記事を探したが、API が遅く本文まで届かなかった（ガーディアンの記載のみ。確度は報道）。
+# 自分で数えた比べ（見立て）: 11.5km − 8.4km ＝ 3.1km。1試合で、夏に優勝したレースより3km以上長く走っている計算。
+# 確度: 報道（ガーディアン1社）。順位・得点はプレミアリーグ公式データでも一致。
+# 三笘薫: 同じクラブだが記事に出てこないので入れない。
+# 反応: 0件。作らない。approve は --no-voices で。
+# 写真: Commons 6枚（CC BY 2.0 James Boyes／CC BY-SA 4.0 Ardfern・Bryan Berlin）。ブライトンでの写真は2018・2022年、06 は2026年W杯のドイツ代表。今季の写真ではない（記事の写真は Getty・ロイターで不可）。
+slot: premier
+date: "2026年10月24日"
+format: news
+no_main: true      # ニュースはショートだけ（2026-10-14）。締めで本編を案内しない
+people: [パスカル・グロス, ファビアン・ヒュルツェラー, ブライトン]
+
+short_style: Y
+short_hook_quote: 彼は時々、相手より一歩先にいます。
+short_question: 35歳のグロスは、リヴァプール戦で4試合連続のアシストを決めると思いますか。
+short_hook: グロス、35歳で9月の月間MVP。
+short_telops:
+  - {match: ヒュルツェラー監督が語りました, text: ブライトン ヒュルツェラー監督/35歳のグロスについて}
+  - {match: 月間最優秀選手, text: 9月のプレミアリーグ/月間最優秀選手}
+  - {match: 11.5キロ, text: 1試合平均11.5km以上/走った距離はリーグ3位}
+  - {match: 3試合続けて, text: リーグ戦で/3試合続けてアシスト}
+  - {match: 23得点, text: ブライトン 7試合で23得点/プレミア史上4番目の多さ}
+  - {match: ワイン, text: ヒュルツェラー監督/「ワインは古くなるほど良くなる」}
+  - {match: 120万ポンド, text: ドルトムントから/今年1月に120万ポンドで復帰}
+  - {match: 8.4キロ, text: 2024年夏/8.4kmのレースで優勝}
+  - {match: 3キロ以上, text: 1試合で/レースより3km以上長く走る計算}
+  - {match: ゾラ, text: 4試合連続なら/2002年12月のゾラ以来の最年長}
+
+theme:
+  id: gross_brighton_35
+  league: england
+  league_name: プレミアリーグ
+  prefix: ""
+  title: グロス、35歳で走る距離はリーグ3位。監督「相手より一歩先にいる」
+  hook: ""
+  question: 35歳のグロスは、なぜブライトンで「一歩先」にいられるのか
+  takeaway: 1試合11.5km以上を走ってリーグ3位、3試合続けてアシスト。監督は「頭の中がいちばん速い」と話した
+
+thumbnail:
+  layout: face
+  line1: グロス 35歳
+  line2: 9月の月間MVP
+  tags: [グロス, ブライトン, プレミアリーグ]
+  photo: assets/images/20261024_gross_brighton_35/02_w.jpg
+  short_photo: assets/images/20261024_gross_brighton_35/01_v.jpg
+
+answer: 1試合平均11.5km以上を走り、走った距離はリーグ3位。監督は「頭の中がいちばん速い」と話した
+watch: 日曜のリヴァプール戦。4試合続けてアシストできるか
+
+short_photos:
+  - assets/images/20261024_gross_brighton_35/01_v.jpg
+  - assets/images/20261024_gross_brighton_35/02_v.jpg
+  - assets/images/20261024_gross_brighton_35/03_v.jpg
+  - assets/images/20261024_gross_brighton_35/04_v.jpg
+  - assets/images/20261024_gross_brighton_35/05_v.jpg
+  - assets/images/20261024_gross_brighton_35/06_v.jpg
+
+sections:
+  - id: what
+    main: true
+    heading: 監督は何と言ったか
+    tier: 報道
+    telop: ヒュルツェラー監督「頭の中では、いちばん速い」
+    say:
+      - text: 35歳のパスカル・グロスについて、ブライトンのヒュルツェラー監督が語りました。
+        image: assets/images/20261024_gross_brighton_35/01_w.jpg
+        card: none
+      - voice: ヒュルツェラー監督
+        text: 彼は時々、相手より一歩先にいます。
+        short_voice: true
+        image: assets/images/20261024_gross_brighton_35/01_w.jpg
+        card: none
+      - voice: ヒュルツェラー監督
+        text: いちばん足が速い選手では、ないかもしれない。
+        cont: true
+        image: assets/images/20261024_gross_brighton_35/02_w.jpg
+        card: none
+      - voice: ヒュルツェラー監督
+        text: でも頭の中では、いちばん速くなれる。
+        cont: true
+        image: assets/images/20261024_gross_brighton_35/02_w.jpg
+        card: none
+      - voice: ヒュルツェラー監督
+        text: ここまで良くなるとは、誰も思っていませんでした。
+        cont: true
+        image: assets/images/20261024_gross_brighton_35/02_w.jpg
+        card: none
+      - text: 9月のプレミアリーグ月間最優秀選手は、このグロスでした。
+        image: assets/images/20261024_gross_brighton_35/03_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.theguardian.com/football/2026/oct/23/fabian-gross-obsessive-runner-brighton-one-step-ahead
+    quotes_from: ["ガーディアン https://www.theguardian.com/football/2026/oct/23/fabian-gross-obsessive-runner-brighton-one-step-ahead"]
+
+  - id: numbers
+    heading: 35歳の今季の数字
+    tier: 報道
+    telop: 1試合平均11.5km以上、走った距離はリーグ3位
+    say:
+      - text: 今季は1試合平均で11.5キロ以上を走り、走った距離はリーグで3番目です。
+        image: assets/images/20261024_gross_brighton_35/03_w.jpg
+        card: none
+      - text: リーグ戦では、3試合続けてアシストを記録しました。
+        image: assets/images/20261024_gross_brighton_35/04_w.jpg
+        card: none
+      - text: チームも好調で、ブライトンはここまで7試合で23得点。
+        image: assets/images/20261024_gross_brighton_35/04_w.jpg
+        card: none
+      - text: 7試合の時点では、プレミアリーグの歴史で4番目の多さです。
+        image: assets/images/20261024_gross_brighton_35/04_w.jpg
+        card: none
+      - text: 監督は、35歳のグロスを、ワインに例えました。
+        image: assets/images/20261024_gross_brighton_35/05_w.jpg
+        card: none
+      - voice: ヒュルツェラー監督
+        text: ワインは、古くなるほど良くなる。
+        image: assets/images/20261024_gross_brighton_35/05_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.theguardian.com/football/2026/oct/23/fabian-gross-obsessive-runner-brighton-one-step-ahead
+      - https://fantasy.premierleague.com/api/bootstrap-static/
+    quotes_from: ["ガーディアン https://www.theguardian.com/football/2026/oct/23/fabian-gross-obsessive-runner-brighton-one-step-ahead"]
+
+  - id: back
+    heading: ドルトムントから戻った理由
+    tier: 報道
+    telop: 今年1月、120万ポンドでブライトンへ復帰
+    say:
+      - text: グロスは2017年にブライトンへ加入し、7年プレーしました。
+        image: assets/images/20261024_gross_brighton_35/06_w.jpg
+        card: none
+      - text: そのあと、少年時代から憧れたドルトムントへ移っています。
+        image: assets/images/20261024_gross_brighton_35/06_w.jpg
+        card: none
+      - text: そして今年1月、120万ポンドで戻ってきました。
+        image: assets/images/20261024_gross_brighton_35/06_w.jpg
+        card: none
+      - text: 本人は、ブライトンを去ったときのことを、こう話しています。
+        image: assets/images/20261024_gross_brighton_35/01_w.jpg
+        card: none
+      - voice: グロス
+        text: 本当に難しかった。
+        image: assets/images/20261024_gross_brighton_35/01_w.jpg
+        card: none
+      - voice: グロス
+        text: 戻る前に、ほかの選択肢もありました。
+        cont: true
+        image: assets/images/20261024_gross_brighton_35/02_w.jpg
+        card: none
+      - voice: グロス
+        text: でも、いつもブライトンが一番でした。
+        cont: true
+        image: assets/images/20261024_gross_brighton_35/02_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.theguardian.com/football/2026/oct/23/fabian-gross-obsessive-runner-brighton-one-step-ahead
+    quotes_from: ["ガーディアン https://www.theguardian.com/football/2026/oct/23/fabian-gross-obsessive-runner-brighton-one-step-ahead"]
+
+  - id: view
+    viewpoint: true
+    heading: レースより長い1試合
+    tier: 背景
+    telop: 1試合で、優勝したレースより3km以上長く走る
+    say:
+      - text: 2024年の夏、グロスはドイツの島で8.4キロのレースに出て、優勝しています。
+        image: assets/images/20261024_gross_brighton_35/03_w.jpg
+        card: none
+      - text: 見立てです。1試合の11.5キロは、そのレースより3キロ以上長い計算です。
+        image: assets/images/20261024_gross_brighton_35/04_w.jpg
+        card: none
+      - text: 日曜は、アウェーでリヴァプール戦。
+        image: assets/images/20261024_gross_brighton_35/05_w.jpg
+        card: none
+      - text: リヴァプール戦でもアシストすれば、4試合連続。
+        image: assets/images/20261024_gross_brighton_35/05_w.jpg
+        card: none
+      - text: 決めれば最年長。2002年12月、チェルシーのゾラ以来と伝えられています。
+        image: assets/images/20261024_gross_brighton_35/06_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.theguardian.com/football/2026/oct/23/fabian-gross-obsessive-runner-brighton-one-step-ahead
+short_title: "グロス、35歳で走る距離はリーグ3位。監督「相手より一歩先にいる」"

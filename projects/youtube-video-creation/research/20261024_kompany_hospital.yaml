@@ -1,0 +1,174 @@
+# 取材メモ（2026年10月24日）バイエルンのコンパニ監督、練習中に倒れ病院へ（ニュースのショート。見せ方 X）
+# 健康の話。クラブの発表の言葉のまま、日付と事実とクラブ・エーベルルの言葉だけで組む。病名は推測しない。煽る語（衝撃・まさか）は使わない。
+# 取材: 2026-10-24。requests（ブラウザUA）と ESPN の記事API で本文を全部読んだ。検索エンジンのAI要約は使っていない。
+#   ・The Guardian（2026-10-23T16:50Z）https://www.theguardian.com/football/2026/oct/23/vincent-kompany-hospital-collapsing-bayern-munich-training
+#       控え research/raw/20261024_guardian_kompany.html。『Bayern said on their website』としてクラブの発表文を引用。
+#       「required medical attention after collapsing during a training session for Bayern's reserve team. The head coach of the professional squad had been observing the second team's session.」
+#       「currently undergoing a thorough examination in the hospital and will remain under medical care. For the time being, his coaching staff will manage all training and match-related operations.」
+#       エーベルル「Vincent Kompany's health is our top priority…」「he will be given as much time as he needs」。日曜にフライブルクへ。水曜のCLアーセナル戦は2-2、ウイルス感染のままベンチに。
+#   ・BBC（2026-10-23T16:39Z）https://www.bbc.com/sport/football/articles/ck3r5792en7go 控え research/raw/20261024_bbc_kompany.html
+#       クラブの発表文（同じ中身）、エーベルル「His coaching team, in whom we have complete confidence, will take over his duties.」
+#       「Reports in Germany say Kompany is in a stable condition in hospital.」（ドイツの報道＝報道止まり）。40歳。火曜の会見はアシスタントのダンクスが代わった。
+#       独記者ハリル（BBC Radio 5 Live）の話（ヘリコプター等）は使わない（記者の伝聞。絵を煽る材料になる）。
+#   ・ESPN 50258850（2026-10-23T19:59Z、ESPN News Services／AP）content.core.api.espn.com 経由。控え research/raw/20261024_espn_50258850.json
+#       「viral infection that was affecting his legs over the past week」。ダンクス（火曜）"It has affected his legs at times and he's felt some pain" "It's just a virus."
+#       「Following Wednesday's match, Kompany acknowledged he tried to push through the illness and failed to heed the signals from his body.」（ESPN の地の文の要約。本人の言葉そのものではない→本人の声にはしない）
+#       エーベルルが17日のライプツィヒ戦（6-1）のころに股関節のけがにも触れた件・階段の件は、病状の細部なので使わない。
+#       「top of the German Bundesliga and level on points with Borussia Dortmund, next visit Freiburg on Sunday」。マンCも回復を願う投稿。
+#   ・ESPN の試合予定（site.api.espn.com ger.1 scoreboard 20261025）: フライブルク対バイエルン 2026-10-25T16:30Z ＝ 日本時間26日（月）午前1時30分、Europa-Park Stadion。
+# 新しい発表（容体・日曜の指揮）: 24日朝の時点で、ESPN のブンデスリーガの記事一覧・Guardian のバイエルンのページ・BBC に続報は無い。
+#   fcbayern.com は読み込みが時間切れで開けなかった（クラブ公式の原文は直接は読めていない）。→ 診断・容体・日曜の指揮者は台本で言わない（「診断は発表されていない」とだけ言う）。
+# 日付: 倒れたのは23日（金）（Guardian・BBC「on Friday」）。ダンクスの会見は20日（火）。アーセナル戦は21日（水）。
+# 確度: クラブの発表は Guardian・BBC・ESPN の3社が同じ文を引用。クラブ公式のページは開けていないので「報道」にとどめる。容体が安定は「ドイツの報道」（BBC）＝報道。
+# 本人の言葉: 無い（作らない）→ Y にしない。X（short_hook_word は落ち着いた語）。言葉はクラブの声明・エーベルル・ダンクスの3つ（すべて実在の発言・発表）。
+# 反応: 当たっていない（作らない。approve は --no-voices で）。
+# 重なり: research/posted.json・covered.yaml・scripts/20261018〜24 を grep。コンパニの入院を扱った本は無い（20261021_bd_bayern・musiala_intro はシリーズで別の話）。
+#   10/22 の rice_bayern_arsenal・saka_injury_bayern の写真は報道写真で、今回の Commons の3枚とは別。
+# 写真: Commons（Werner100359, CC BY-SA 4.0）。FC Bayern 対 Salzburg の練習試合 2026-01-06（01 全身・ベンチ前）と 2025-01-06（02・03 ニット帽の顔のアップ）。3枚とも本人を目で確認。
+#   代理店の写真（Guardian=PA、ESPN・BBC=Getty）は使わない。ショートの冒頭は全身の 01_v（顔のアップはテロップが顔にかかった）。
+#   01 は facecrop が右に座るスタッフの顔を主役と取り違えたので、01_w・01_v はコンパニ中心に手で切った。03_w は顔が16:9に入らないので本文の行には使わない（ショートの回しだけ 03_v）。
+slot: news
+date: "2026年10月24日"
+format: news
+no_main: true
+people: [ヴァンサン・コンパニ, バイエルン, エーベルル]
+
+short_style: X
+short_hook_word: 病院で検査中
+short_question: あなたは、コンパニ監督にどんな言葉をかけたいですか。
+short_hook: バイエルンのコンパニ監督が、練習場で倒れ、病院に運ばれました。
+short_photos:
+  - assets/images/20261024_kompany_hospital/01_v.jpg
+  - assets/images/20261024_kompany_hospital/03_v.jpg
+  - assets/images/20261024_kompany_hospital/02_v.jpg
+short_telops:
+  - {match: "倒れたのは23日", text: "23日/2軍の練習を見ていたとき"}
+  - {match: "徹底的な検査", text: "クラブの声明/「病院で徹底的な検査」"}
+  - {match: "コーチ陣", text: "当面は/コーチ陣が練習と試合を運営"}
+  - {match: "いちばん大事", text: "エーベルル/「健康がいちばん大事」"}
+  - {match: "ウイルスに感染", text: "ここ1週間/ウイルスに感染していた"}
+  - {match: "脚に影響", text: "ダンクス/「脚に影響が出ることも」"}
+  - {match: "ベンチに立ちました", text: "21日 CLアーセナル戦/ベンチに立った"}
+  - {match: "安定", text: "ドイツの報道/容体は安定"}
+  - {match: "2日です", text: "倒れた23日から/次の試合まで2日"}
+  - {match: "フライブルク", text: "次は25日/敵地でフライブルク戦"}
+
+theme:
+  id: kompany_hospital
+  league: germany
+  league_name: ブンデスリーガ
+  prefix: ""
+  title: コンパニ監督、練習中に倒れ病院へ。バイエルン「徹底的な検査を受けている」
+  hook: ""
+  question: コンパニ監督に何が起き、バイエルンはどう発表したのか
+  takeaway: 23日に練習場で倒れ、病院で検査中。当面はコーチ陣が練習と試合を運営する。診断は発表されていない
+
+thumbnail:
+  layout: face
+  line1: コンパニ監督
+  line2: 病院で検査中
+  tags: [コンパニ, バイエルン]
+  photo: assets/images/20261024_kompany_hospital/01_w.jpg
+  short_photo: assets/images/20261024_kompany_hospital/01_v.jpg
+
+answer: 23日、2軍の練習を見ていたときに倒れ、病院で徹底的な検査を受けている。当面はコーチ陣が練習と試合を運営する
+watch: 25日、敵地でのフライブルク戦
+
+sections:
+  - id: what
+    main: true
+    heading: クラブの発表
+    tier: 報道
+    telop: コンパニ監督、練習場で倒れ病院へ
+    say:
+      - text: "倒れたのは23日。2軍の練習を見ていたときでした。"
+        image: assets/images/20261024_kompany_hospital/01_w.jpg
+      - text: "バイエルンは、こう発表しました。"
+        image: assets/images/20261024_kompany_hospital/01_w.jpg
+      - voice: バイエルンの発表文
+        text: コンパニは病院で、徹底的な検査を受けています。
+        image: assets/images/20261024_kompany_hospital/02_w.jpg
+      - voice: バイエルンの発表文
+        text: 引き続き、医師の管理を受けます。
+        cont: true
+        image: assets/images/20261024_kompany_hospital/02_w.jpg
+      - voice: バイエルンの発表文
+        text: 当面は、コーチ陣が、練習と試合の運営を担います。
+        cont: true
+        image: assets/images/20261024_kompany_hospital/01_w.jpg
+      - text: "スポーツ部門の責任者、エーベルルは、こう話しました。"
+        image: assets/images/20261024_kompany_hospital/01_w.jpg
+      - voice: マックス・エーベルル
+        text: ヴィンセントの健康が、いちばん大事です。
+        short_voice: true
+        image: assets/images/20261024_kompany_hospital/02_w.jpg
+      - voice: マックス・エーベルル
+        text: 彼には、必要な時間をすべて与えます。
+        cont: true
+        image: assets/images/20261024_kompany_hospital/02_w.jpg
+    official: false
+    sources:
+      - https://www.theguardian.com/football/2026/oct/23/vincent-kompany-hospital-collapsing-bayern-munich-training
+      - https://www.bbc.com/sport/football/articles/ck3r5792en7go
+      - https://content.core.api.espn.com/v1/sports/news/50258850
+    quotes_from: ["Guardian https://www.theguardian.com/football/2026/oct/23/vincent-kompany-hospital-collapsing-bayern-munich-training", "BBC https://www.bbc.com/sport/football/articles/ck3r5792en7go"]
+
+  - id: before
+    heading: この1週間
+    tier: 報道
+    telop: ウイルスに感染したまま、アーセナル戦のベンチに
+    say:
+      - text: "コンパニは、この1週間、ウイルスに感染していました。"
+        image: assets/images/20261024_kompany_hospital/01_w.jpg
+        card: &week_card
+          type: timeline
+          title: コンパニ監督の1週間
+          rows:
+            - [20日, 会見はダンクスコーチが代わりに]
+            - [21日, CLアーセナル戦 2対2の引き分け]
+            - [23日, 2軍の練習中に倒れ、病院へ]
+          highlight_row: 0
+      - text: "20日の会見には出ず、コーチのダンクスが代わりに、こう話しました。"
+        image: assets/images/20261024_kompany_hospital/01_w.jpg
+        card:
+          <<: *week_card
+          highlight_row: 0
+      - voice: アーロン・ダンクス
+        text: 脚に影響が出て、痛みを感じることもありました。
+        image: assets/images/20261024_kompany_hospital/02_w.jpg
+        card: none
+      - text: "それでも21日、チャンピオンズリーグのアーセナル戦では、ベンチに立ちました。"
+        image: assets/images/20261024_kompany_hospital/02_w.jpg
+        card:
+          <<: *week_card
+          highlight_row: 1
+      - text: "試合は2対2の引き分け。試合のあと本人は、病気を押して指揮したと認めていました。"
+        image: assets/images/20261024_kompany_hospital/01_w.jpg
+        card: none
+      - text: "ドイツでは、容体は安定していると報じられています。"
+        image: assets/images/20261024_kompany_hospital/01_w.jpg
+    official: false
+    sources:
+      - https://content.core.api.espn.com/v1/sports/news/50258850
+      - https://www.bbc.com/sport/football/articles/ck3r5792en7go
+    quotes_from: ["ESPN https://content.core.api.espn.com/v1/sports/news/50258850"]
+
+  - id: next
+    viewpoint: true
+    heading: 倒れてから次の試合まで
+    tier: 背景
+    telop: 診断は未発表。次は25日、フライブルク戦
+    say:
+      - text: "見立てです。コンパニが倒れた23日から、次の試合までは2日です。"
+        image: assets/images/20261024_kompany_hospital/02_w.jpg
+      - text: "コンパニの診断は、まだ発表されていません。"
+        image: assets/images/20261024_kompany_hospital/02_w.jpg
+      - text: "バイエルンは首位で、ドルトムントと勝ち点で並んでいます。"
+        image: assets/images/20261024_kompany_hospital/01_w.jpg
+      - text: "次は25日、敵地でのフライブルク戦。日本時間では26日の午前1時30分です。"
+        image: assets/images/20261024_kompany_hospital/01_w.jpg
+    official: false
+    sources:
+      - https://content.core.api.espn.com/v1/sports/news/50258850
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/scoreboard?dates=20261025
+short_title: "コンパニ監督、練習中に倒れ病院へ。バイエルン「徹底的な検査を受けている」"

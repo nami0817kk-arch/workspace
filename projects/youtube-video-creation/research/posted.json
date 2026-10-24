@@ -5400,5 +5400,125 @@
     "video_id": "2envv3bNrE0",
     "at": "2026-10-23T03:27:56+00:00",
     "publish_at": "2026-10-23T10:30:00Z"
+  },
+  {
+    "build": "20261024_manager_klopp",
+    "video_id": "VooyvT2doWI",
+    "at": "2026-10-23T16:09:32+00:00",
+    "publish_at": "2026-10-24T00:00:00Z"
+  },
+  {
+    "build": "20261024_team_france",
+    "video_id": "J9T64ZVgToY",
+    "at": "2026-10-23T16:10:05+00:00",
+    "publish_at": "2026-10-24T01:00:00Z"
+  },
+  {
+    "build": "20261024_maldini_legend",
+    "video_id": "y0VT61Ti7SE",
+    "at": "2026-10-23T16:12:02+00:00",
+    "publish_at": "2026-10-24T02:00:00Z"
+  },
+  {
+    "build": "20261024_inamoto_legend",
+    "video_id": "s3llWqivTRY",
+    "at": "2026-10-23T16:12:47+00:00",
+    "publish_at": "2026-10-24T03:00:00Z"
+  },
+  {
+    "build": "20261024_player_845654",
+    "video_id": "A2v0fCZapyc",
+    "at": "2026-10-23T16:13:53+00:00",
+    "publish_at": "2026-10-24T04:00:00Z"
+  },
+  {
+    "build": "20261024_compare_566723_568177",
+    "video_id": "WtPNUR2xzsc",
+    "at": "2026-10-23T16:15:37+00:00",
+    "publish_at": "2026-10-24T05:00:00Z"
+  },
+  {
+    "build": "20261024_bd_frankfurt",
+    "video_id": "uAaTIkWGkzs",
+    "at": "2026-10-23T16:16:10+00:00",
+    "publish_at": "2026-10-24T06:00:00Z"
+  },
+  {
+    "build": "20261024_finance_newcastle",
+    "video_id": "GNF1yKldmD8",
+    "at": "2026-10-23T16:17:52+00:00",
+    "publish_at": "2026-10-24T07:00:00Z"
+  },
+  {
+    "build": "20261024_stadium_fulham",
+    "video_id": "Wn6l0B3ZIsI",
+    "at": "2026-10-23T16:18:27+00:00",
+    "publish_at": "2026-10-24T08:00:00Z"
+  },
+  {
+    "build": "20261024_kit_astonvilla",
+    "video_id": "UjNJnD8UMFc",
+    "at": "2026-10-23T16:19:43+00:00",
+    "publish_at": "2026-10-24T09:00:00Z"
+  },
+  {
+    "build": "20261024_suzuki_zion_villa_city_preview_short",
+    "video_id": "Z5nIJovsok4",
+    "at": "2026-10-24T02:24:41+00:00",
+    "publish_at": "2026-10-24T03:30:00Z"
+  },
+  {
+    "build": "20261024_machino_gladbach_first_win_short",
+    "video_id": "V8wmHdPciaA",
+    "at": "2026-10-24T02:28:32+00:00",
+    "publish_at": "2026-10-24T04:30:00Z"
+  },
+  {
+    "build": "20261024_maeda_ipswich_forest_short",
+    "video_id": "LAnXyENVZHc",
+    "at": "2026-10-24T02:32:11+00:00",
+    "publish_at": "2026-10-24T05:30:00Z"
+  },
+  {
+    "build": "20261024_kompany_hospital_short",
+    "video_id": "QFJxOsbHM5s",
+    "at": "2026-10-24T02:36:03+00:00",
+    "publish_at": "2026-10-24T06:30:00Z"
+  },
+  {
+    "build": "20261024_alonso_chelsea_no_reds_short",
+    "video_id": "8BhhM0uKVSQ",
+    "at": "2026-10-24T02:38:48+00:00",
+    "publish_at": "2026-10-24T07:30:00Z"
+  },
+  {
+    "build": "20261024_arteta_saka_load_short",
+    "video_id": "GPvamiYkklQ",
+    "at": "2026-10-24T02:42:07+00:00",
+    "publish_at": "2026-10-24T08:30:00Z"
+  },
+  {
+    "build": "20261024_tchouameni_valverde_short",
+    "video_id": "NrFeBDGga7w",
+    "at": "2026-10-24T02:45:54+00:00",
+    "publish_at": "2026-10-24T09:30:00Z"
+  },
+  {
+    "build": "20261024_ballondor_eve_words_short",
+    "video_id": "Hy3Ga5VATco",
+    "at": "2026-10-24T02:49:59+00:00",
+    "publish_at": "2026-10-24T10:30:00Z"
+  },
+  {
+    "build": "20261024_yamal_mbappe_clasico_numbers_short",
+    "video_id": "N-qxcOpdDsA",
+    "at": "2026-10-24T02:53:50+00:00",
+    "publish_at": "2026-10-24T11:30:00Z"
+  },
+  {
+    "build": "20261024_gross_brighton_35_short",
+    "video_id": "BDXy8NDam4s",
+    "at": "2026-10-24T02:57:17+00:00",
+    "publish_at": "2026-10-24T12:30:00Z"
   }
 ]

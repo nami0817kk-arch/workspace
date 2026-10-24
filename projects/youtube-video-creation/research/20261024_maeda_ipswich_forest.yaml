@@ -1,0 +1,125 @@
+# 取材メモ（2026年10月24日）前田大然、後半28分から投入。イプスウィッチ 1-1 フォレスト（ニュースのショート。見せ方 B＝写真を切り替え）
+# 取材: 2026-10-24。requests（ブラウザUA）で本文を全部読んだ。
+#   ・ゲキサカ 10/24 05:58「前田大然は後半途中出場から攻守奮闘も…」：3試合ぶりのベンチスタート、後半28分に3枚目の交代で投入、右サイドハーフ、
+#     守備時は最終ラインまで戻って5バックの一角、攻撃時は最前線まで走り裏を突く、後半38分に中盤のプレスからカウンターのスイッチ（ゴールにはつながらず）。
+#     イプスウィッチは試合前 3勝4敗・勝ち点9・10位、フォレストは19位で3連敗中。得点：前半13分ネコ・ウィリアムズ（フォレスト）、41分エンシソ（イプスウィッチ）。
+#   ・クラブ公式（itfc.co.uk）試合レポート：先発・交代 "Fatawu (Maeda, 73')"（＝後半28分と一致）、観衆29,198、追加時間8分、後半6分にディオプがVARで警告止まり。
+#   ・クラブ公式「Gary proud of hard-fought draw」：オニール監督の会見。**前田の名前は出てこない**。後半の早い時間に「より安全に、より直接的に」戦い方を切り替えたと話している。
+#     → 監督の言葉は試合全体の総括（「厳しい相手、厳しい条件」「いい勝ち点1」）だけ引く。「より安全に」は**引かない**：イプスウィッチ・スターの記者評は前田らの交代を「攻撃的」と書いており、前田の投入と結びつくように読めるため。
+#   ・EADT（Alex Jones の採点）：前田 6点「Ran his socks off, added defensive solidity but had little to work with in an attacking sense」。途中出場のクラーク・前田・マトゥシワ・アクポムはそろって6点。
+#   ・イプスウィッチ・スター（Stuart Watson の試合評）：交代は「attack-minded」、前田も投入された一人。
+# 本人（前田）の言葉：取れていない（ゲキサカ・クラブ公式に無い）。作らない。監督の言葉は前田についてではないので Y にはしない → B。
+# 反応：作らない（0件）。
+# 確度：結果・交代時刻はクラブ公式で 確定。前田の役割の描写は 報道（ゲキサカ）。勝ち点10は自分で数えた（9＋1）。
+# 【前の本と重ねない】10/18 初ゴール／10/19 現地メディアの評価／10/21 オニール監督の使い方（シャドー・ウイング）。今回は「この試合で何を任されたか」。
+#   初ゴールは「前節ゴールを決めた」と1語だけ（ゲキサカ本文の言い方）。シャドー・「純粋なウイング」は言わない。
+# 写真：今日の試合の前田の写真は、代理店でない先から取れなかった。ゲキサカ主写真は ©Getty の透かし（落とした）、クラブ公式の試合レポート主写真はエンシソ（別人）、
+#   地元紙の写真はディオプ・エンシソ・主審。クラブ公式のシティ戦ギャラリー（mdi_*）は S3 の取得が時間切れ。→ **10/19 と同じ Commons の5枚（2023〜24年のセルティック時代と日本代表）を使い回している**。
+slot: japan
+date: "2026年10月24日"
+format: news
+no_main: true
+people: [前田大然, イプスウィッチ, ノッティンガム・フォレスト, オニール監督]
+
+short_style: B
+short_photos:
+  - assets/images/20261024_maeda_ipswich_forest/01_v.jpg
+  - assets/images/20261024_maeda_ipswich_forest/03_v.jpg
+  - assets/images/20261024_maeda_ipswich_forest/05_v.jpg
+
+short_question: 前田大然の走力と守備、どの場面で生きていたと思いますか。
+short_hook: 前田大然、後半28分から投入。
+short_telops:
+  - {match: 後半28分, text: 前田大然/後半28分から出場}
+  - {match: 厳しい相手, text: オニール監督/「厳しい相手、厳しい条件」}
+  - {match: 5人が並ぶ, text: 守備では/最終ラインまで戻り5バックの一角}
+  - {match: 最前線まで, text: 攻撃では/最前線まで走って裏へ}
+  - {match: 後半38分, text: 後半38分/プレスからカウンターの起点に}
+  - {match: 採点は6, text: 地元紙の採点/前田は6点}
+
+theme:
+  id: maeda_ipswich_forest
+  league: england
+  league_name: プレミアリーグ
+  prefix: ""
+  title: 前田大然が後半28分から任された、二つの仕事
+  hook: ""
+  question: フォレスト戦の終盤、前田大然はどんな役割を担ったのか
+  takeaway: 後半28分からの約25分、前田は守備では5バックの一角、攻撃では最前線と、ピッチの両端を往復した。地元紙は「走りに走った」と6点を付けた
+
+thumbnail:
+  line1: 前田大然
+  line2: 後半28分から任された仕事
+  tags: [前田大然, イプスウィッチ]
+  layout: face
+  photo: assets/images/20261024_maeda_ipswich_forest/01_w.jpg
+  short_photo: assets/images/20261024_maeda_ipswich_forest/01_v.jpg
+
+answer: 守備では最終ラインまで戻って5バックの一角、攻撃では最前線まで走って裏を突く役割
+watch: 次の試合で前田が先発に戻るか
+
+sections:
+  - id: what
+    main: true
+    heading: 前田は、どこに入ったのか
+    tier: 報道
+    telop: 前田大然、後半28分から出場
+    say:
+      - text: 23日、イプスウィッチはホームでフォレストと1対1で引き分けました。
+        short_only: true
+        image: assets/images/20261024_maeda_ipswich_forest/03_w.jpg
+      - text: 前田大然は後半28分から、右サイドハーフに入っています。
+      - voice: オニール監督
+        text: 厳しい相手、厳しい条件だった。
+        image: assets/images/20261024_maeda_ipswich_forest/05_w.jpg
+      - voice: オニール監督
+        text: 我々にとって、いい勝ち点1だ。
+        cont: true
+      - text: 雨と風の中の一戦。前田は守備で、最終ラインまで戻ります。
+      - text: 最終ラインに5人が並ぶ形の、その1人になりました。
+        image: assets/images/20261024_maeda_ipswich_forest/03_w.jpg
+      - text: 攻撃に移ると、最前線まで走って、相手の守備ラインの裏を突いていきます。
+      - text: 後半38分には、中盤のプレスでボールを奪い、速い攻めの起点になります。
+      - text: この攻撃は、ゴールにはつながりませんでした。
+        image: assets/images/20261024_maeda_ipswich_forest/05_w.jpg
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/world/detail/?461665-461665-fl
+      - https://www.itfc.co.uk/news/2026/october/23/town-1-nottingham-forest-1/
+      - https://www.itfc.co.uk/news/2026/october/23/gary-proud-of-hard-fought-draw/
+    quotes_from: ["イプスウィッチ公式 https://www.itfc.co.uk/news/2026/october/23/gary-proud-of-hard-fought-draw/"]
+
+  - id: match
+    heading: 試合はどう動いたのか
+    tier: 報道
+    telop: イプスウィッチ1-1フォレスト
+    say:
+      - text: 先制したのはフォレスト。前半13分、ネコ・ウィリアムズのボレーでした。
+        image: assets/images/20261024_maeda_ipswich_forest/03_w.jpg
+      - text: イプスウィッチは前半41分に追いつきます。
+      - text: 短くなったバックパスを、エンシソが奪って決めました。
+      - text: 前田は前節、ゴールを決めていて、この日は3試合ぶりのベンチスタートでした。
+        image: assets/images/20261024_maeda_ipswich_forest/05_w.jpg
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/world/detail/?461665-461665-fl
+      - https://www.itfc.co.uk/news/2026/october/23/town-1-nottingham-forest-1/
+
+  - id: view
+    viewpoint: true
+    heading: 前田の約25分は、地元紙にどう見えたのか
+    tier: 報道
+    telop: 地元紙の採点は6点
+    say:
+      - text: 見立てです。前田がピッチにいたのは、追加の8分を含めて約25分。
+      - text: 守備ではいちばん後ろ、攻撃ではいちばん前と、両方の端を行き来しました。
+        image: assets/images/20261024_maeda_ipswich_forest/03_w.jpg
+      - text: 地元紙の採点は6。「走りに走り、守備に安定をもたらした」と書かれました。
+      - text: 途中出場のクラーク、マトゥシワ、アクポムと同じ点です。
+      - text: イプスウィッチは連敗を止め、勝ち点は9から10へ。3勝1分4敗になりました。
+        image: assets/images/20261024_maeda_ipswich_forest/05_w.jpg
+    official: false
+    sources:
+      - https://www.eadt.co.uk/sport/26666675.ipswich-town-1-1-nottingham-forest---alex-jones-player-ratings/
+      - https://web.gekisaka.jp/news/world/detail/?461665-461665-fl
+short_title: "前田大然が後半28分から任された、二つの仕事"

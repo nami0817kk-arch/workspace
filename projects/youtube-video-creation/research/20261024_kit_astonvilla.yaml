@@ -1,0 +1,1055 @@
+# ユニフォームとエンブレムの歴史 アストン・ヴィラ（10/24 作成）。雛形は 10/23 ブライトン回。
+# 題の問い：ヴィラの紋章は、なぜ2022年に決めた丸から、2024年に盾へ戻ったのか（試合のシャツで丸は1シーズン）。
+# 重なり確認（2026-10-23）：scripts/・research/covered.yaml の kit_*・research/posted.json を grep。ヴィラのユニフォーム回は無し（20261020_finance_villa は財政、20261011_stadium_villapark はスタジアム、別シリーズ）。
+# 取材：requests（ブラウザ User-Agent）・WebFetch・WebSearch（URL探しと裏取り）。ブラウザ操作・JS実行・検索のAI要約を根拠にはしていない。
+#   読んだ：ウィキペディア en "Aston Villa F.C."（Colours and badge／Kit manufacturers and sponsors／History／Records／Honours）、"Zion Suzuki"（冒頭）。
+#   sportslogos.net 2023-09-27・2024-05-31（WebFetch 経由の要約。丸い紋章は2022年11月、投票はシーズンチケット保有者とクラブ会員、盾の案はガス灯に着想。2024-05-31 に盾を公表。黄ライオン・水色の盾・1874年・星＝1982年）。
+#   クラブ公式 avfc.co.uk（2026/27ホームの発表 5/26・発売 5/28。本文は JS 描画で直接読めず、検索結果の要約のみ。「1960年代に着想」「ラグランの袖から離れた」はその要約）。
+#   readastonvilla.com（ファンのサイト。全体クラレット・ポロ襟・胸広告なし。公式未確認なので台本で断る）。
+#   読めなかった：historicalkits.co.uk（SSL エラー・WebFetch タイムアウト）。クラブ公式の2022年投票告知と2016年の紋章発表の原文（検索に出ず）。
+# ---- 食い違い・断ったこと ----
+#   ・初期のライオンと「Prepared」がいつから紋章にあったかは、ウィキペディア（1906年のプログラムが最古の記録）と個人サイト（1874年から）で割れる→台本に入れない。
+#   ・2026/27ホームの袖・ストライプの色（水色／白）はサイト間で割れる→入れない。胸広告なしはファンのサイトのみ→「公式は確かめられなかった」と断る。
+#   ・2026年のヨーロッパリーグ優勝が紋章の星に足されたかは確認できず→台本で断る。
+#   ・製造元・スポンサー表はウィキペディアの表が結合セルで読みにくい→1974年アンブロ・1982/83ダベンポーツ・2008〜10エーコーンズ・2019/20袖・2024/25アディダスだけ使う（本文の文章で確認済み）。
+# ---- 自分で数えた数 ----
+#   2024年5月−2022年11月=18か月（1年半）。2026−1886=140年。2026−1874の創立から胸の広告1982まで=1982−1874=108年。
+#   試合のシャツの紋章：2007/08〜2015/16=9、2016/17〜2022/23=7、2023/24=1、2024/25〜2026/27=3（今季まで）。合計20シーズン、4つ、平均5。1÷140（丸の1シーズン／色の140年）。
+#   「1982年のシャツに広告が無い」は、最初の広告が1982/83（ウィキペディア）という文からの推論。
+# ---- 日本との接点 ----
+#   鈴木彩艶（2026年パルマから加入。ウィキペディア）。紋章が何代目かの形で第2節。
+# ---- 写真（assets/images/20261024_kit_astonvilla/、出典は credits.json）----
+#   Commons の CC のみ。代理店・放送映像なし。エンブレムは使っていない（紋章の実物画像を出さない）。
+date: 2026年10月24日
+slot: other_2
+format: news
+series: ユニフォームとエンブレムの歴史
+voice_min: 0
+people:
+- アストン・ヴィラ
+- 鈴木彩艶
+watch: 毎日、数字でサッカーを読み解きます
+theme:
+  end_bg: assets/images/20261024_kit_astonvilla/a01_aerial.jpg
+  id: kit_astonvilla
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: アストン・ヴィラ
+  title: アストン・ヴィラの紋章は、なぜ丸から盾へ、1年半で戻ったのか
+  question: アストン・ヴィラの紋章は、なぜ2022年の丸い紋章から、2024年に盾へ戻ったのか
+  opening_image: assets/images/20261024_kit_astonvilla/a01_aerial.jpg
+  lead: 胸に、ライオン。
+  hook: ''
+  takeaway: ヴィラの色は、1886年に決まって140年。試合のシャツの紋章は、2007/08から20シーズンで4つ、平均5シーズン。2022年11月の投票で決まった丸い紋章は、試合のシャツで1シーズン、色の140分の1で盾に戻った。鈴木彩艶が着ているのは4代目。2026/27のホームは1960年代に着想した
+  hook_unused: ''
+thumbnail:
+  layout: classic
+  callouts:
+  - 星は1982年の優勝
+  - 紋章は20季で4つ
+  photo: assets/images/20261024_kit_astonvilla/a01_aerial.jpg
+  line1: アストン・ヴィラの紋章
+  line2: 丸は1シーズン、色は140年
+  tags:
+  - アストン・ヴィラ
+  - 鈴木彩艶
+  - ユニフォーム
+  - エンブレム
+  - ライオン
+sections:
+- id: crest
+  main: true
+  heading: ヴィラの紋章は、なぜ丸から盾へ、1年半で戻ったのか
+  bg: assets/images/20261024_kit_astonvilla/a01_aerial.jpg
+  tier: 報道
+  telop: 紋章は2022年11月の投票で丸に決まり、2024年5月に盾へ。丸は試合のシャツで1シーズン
+  narrator: 解説
+  card:
+    type: timeline
+    title: 試合のシャツの紋章（ウィキペディア・報道）
+    rows:
+    - - 2007年5月
+      - 星と水色の地。2007/08から
+    - - 2016年4月
+      - 爪が付き、モットーが消える
+    - - 2022年11月
+      - 投票で、丸い紋章に決まる
+    - - 2023/24
+      - 試合のシャツに、丸い紋章
+    - - 2024年5月
+      - 盾の紋章に戻る
+    focus: 2024年5月
+    highlight_row: 4
+  say:
+  - text: 今回は、アストン・ヴィラの、胸の紋章です。
+    image: assets/images/20261024_kit_astonvilla/a01_aerial.jpg
+    emph: true
+    card: none
+  - text: いまの紋章は、2024年5月に決まった、盾です。
+    image: assets/images/20261024_kit_astonvilla/a01_aerial.jpg
+    card:
+      type: timeline
+      title: 試合のシャツの紋章（ウィキペディア・報道）
+      rows:
+      - - 2007年5月
+        - 星と水色の地。2007/08から
+      - - 2016年4月
+        - 爪が付き、モットーが消える
+      - - 2022年11月
+        - 投票で、丸い紋章に決まる
+      - - 2023/24
+        - 試合のシャツに、丸い紋章
+      - - 2024年5月
+        - 盾の紋章に戻る
+      focus: 2024年5月
+      highlight_row: 4
+  - text: その前は、丸い紋章でした。
+    image: assets/images/20261024_kit_astonvilla/a01_aerial.jpg
+    card: none
+  - text: 決まったのは、2022年の11月です。
+    image: assets/images/20261024_kit_astonvilla/a03_trinity.jpg
+    card:
+      type: timeline
+      title: 試合のシャツの紋章（ウィキペディア・報道）
+      rows:
+      - - 2007年5月
+        - 星と水色の地。2007/08から
+      - - 2016年4月
+        - 爪が付き、モットーが消える
+      - - 2022年11月
+        - 投票で、丸い紋章に決まる
+      - - 2023/24
+        - 試合のシャツに、丸い紋章
+      - - 2024年5月
+        - 盾の紋章に戻る
+      focus: 2024年5月
+      highlight_row: 2
+  - text: シーズンチケットを持つ人と、クラブ会員の投票でした。
+    image: assets/images/20261024_kit_astonvilla/a03_trinity.jpg
+    card: none
+  - text: 選ばれたのは、丸い紋章。選ばれなかったのは、盾の案です。
+    image: assets/images/20261024_kit_astonvilla/a03_trinity.jpg
+    card: none
+  - text: その盾は、創立のガス灯の話に着想したもの、と伝わります。
+    image: assets/images/20261024_kit_astonvilla/a03_trinity.jpg
+    card: none
+  - text: 創立は、1874年。ガス灯の下の話し合いで、サッカーをやると決めた、と言われます。
+    image: assets/images/20261024_kit_astonvilla/a04_north.jpg
+    card: none
+  - text: でも、丸い紋章の出番は、短いものでした。
+    image: assets/images/20261024_kit_astonvilla/a04_north.jpg
+    emph: true
+    card: none
+  - text: 使うのは、試合のシャツと、練習着だけ。ほかの場所では、前の紋章が続きました。
+    image: assets/images/20261024_kit_astonvilla/a04_north.jpg
+    card: none
+  - text: 着たのは、2023年からの、1シーズン。前の紋章は、7シーズンでした。
+    image: assets/images/20261024_kit_astonvilla/a04_north.jpg
+    card:
+      type: timeline
+      title: 試合のシャツの紋章（ウィキペディア・報道）
+      rows:
+      - - 2007年5月
+        - 星と水色の地。2007/08から
+      - - 2016年4月
+        - 爪が付き、モットーが消える
+      - - 2022年11月
+        - 投票で、丸い紋章に決まる
+      - - 2023/24
+        - 試合のシャツに、丸い紋章
+      - - 2024年5月
+        - 盾の紋章に戻る
+      focus: 2024年5月
+      highlight_row: 3
+  - text: 2023年の9月、クラブは、こう説明します。
+    image: assets/images/20261024_kit_astonvilla/a02_holte.jpg
+    card: none
+  - text: 丸い紋章は、期待した効果が出ていない、と。
+    image: assets/images/20261024_kit_astonvilla/a02_holte.jpg
+    card: none
+  - text: 150周年を前に、もう一度ファンと話し合う、とも。
+    image: assets/images/20261024_kit_astonvilla/a02_holte.jpg
+    card: none
+  - text: 2024年5月31日、クラブは、新しい盾の紋章を、動画で公表します。
+    image: assets/images/20261024_kit_astonvilla/a02_holte.jpg
+    card:
+      type: timeline
+      title: 試合のシャツの紋章（ウィキペディア・報道）
+      rows:
+      - - 2007年5月
+        - 星と水色の地。2007/08から
+      - - 2016年4月
+        - 爪が付き、モットーが消える
+      - - 2022年11月
+        - 投票で、丸い紋章に決まる
+      - - 2023/24
+        - 試合のシャツに、丸い紋章
+      - - 2024年5月
+        - 盾の紋章に戻る
+      focus: 2024年5月
+      highlight_row: 4
+  - text: 黄色いライオンが、水色の盾に立っています。
+    image: assets/images/20261024_kit_astonvilla/a01_aerial.jpg
+    card: none
+  - text: 投票で負けた盾の案と、同じ形かは、不明です。
+    image: assets/images/20261024_kit_astonvilla/a01_aerial.jpg
+    card: none
+  - text: ライオンの前足の上に、白い星が1つ。
+    image: assets/images/20261024_kit_astonvilla/e01_badge1982.jpg
+    card: none
+  - text: 星は、1982年に、ヨーロッパの王者になった印です。
+    image: assets/images/20261024_kit_astonvilla/e01_badge1982.jpg
+    emph: true
+    card: none
+  - text: 2022年11月から、2024年5月まで。
+    image: assets/images/20261024_kit_astonvilla/a01_aerial.jpg
+    card:
+      type: calc
+      title: 投票から盾に戻るまで（自分で引いた）
+      terms:
+      - - 2024年5月
+        - 盾の公表
+      - - 2022年11月
+        - 投票
+      - - 18か月
+        - 引いた答え
+      ops:
+      - −
+      - ＝
+  - text: 丸い紋章が決まってから、盾に戻るまで、1年半です。
+    image: assets/images/20261024_kit_astonvilla/a01_aerial.jpg
+    emph: true
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Aston_Villa_F.C.
+  - https://news.sportslogos.net/2023/09/27/aston-villa-to-ditch-new-crest-after-1-season-come-up-with-new-design-for-150th-anniversary/soccer/
+  - https://news.sportslogos.net/2024/05/31/aston-villa-officially-switches-over-to-new-crest/soccer/
+- id: suzuki
+  heading: 鈴木彩艶が着ている紋章は、何代目なのか
+  bg: assets/images/20261024_kit_astonvilla/a03_trinity.jpg
+  tier: 背景
+  telop: 試合のシャツの紋章は、2007年から数えて4つ目。鈴木彩艶の加入は2026年
+  narrator: 解説
+  card:
+    type: table
+    title: 試合のシャツの紋章（2007年から）
+    columns:
+    - 代
+    - シーズン
+    - 形
+    - 続いた
+    rows:
+    - - 初代
+      - 2007/08〜
+      - 星と水色の地
+      - 9シーズン
+    - - 2代目
+      - 2016/17〜
+      - 爪付き
+      - 7シーズン
+    - - 3代目
+      - 2023/24
+      - 丸い紋章
+      - 1シーズン
+    - - 4代目
+      - 2024/25〜
+      - 盾
+      - 今季で3シーズン目
+    highlight_row: 3
+  say:
+  - text: 日本とのつながりは、鈴木彩艶です。
+    image: assets/images/20261024_kit_astonvilla/a03_trinity.jpg
+    card: none
+  - text: パルマから、ヴィラに加わったのは、2026年です。
+    image: assets/images/20261024_kit_astonvilla/a03_trinity.jpg
+    card: none
+  - text: 加入の時点で、胸には、2024年からの盾がありました。
+    image: assets/images/20261024_kit_astonvilla/a03_trinity.jpg
+    card: none
+  - text: この盾は、何代目なのか。
+    image: assets/images/20261024_kit_astonvilla/a03_trinity.jpg
+    card: none
+  - text: 試合のシャツで数えると、2007年から、4つ目です。
+    image: assets/images/20261024_kit_astonvilla/a02_holte.jpg
+    emph: true
+    card:
+      type: table
+      title: 試合のシャツの紋章（2007年から）
+      columns:
+      - 代
+      - シーズン
+      - 形
+      - 続いた
+      rows:
+      - - 初代
+        - 2007/08〜
+        - 星と水色の地
+        - 9シーズン
+      - - 2代目
+        - 2016/17〜
+        - 爪付き
+        - 7シーズン
+      - - 3代目
+        - 2023/24
+        - 丸い紋章
+        - 1シーズン
+      - - 4代目
+        - 2024/25〜
+        - 盾
+        - 今季で3シーズン目
+      highlight_row: 3
+  - text: 初代は、2007年から。星と、水色の地です。
+    image: assets/images/20261024_kit_astonvilla/a02_holte.jpg
+    card:
+      type: table
+      title: 試合のシャツの紋章（2007年から）
+      columns:
+      - 代
+      - シーズン
+      - 形
+      - 続いた
+      rows:
+      - - 初代
+        - 2007/08〜
+        - 星と水色の地
+        - 9シーズン
+      - - 2代目
+        - 2016/17〜
+        - 爪付き
+        - 7シーズン
+      - - 3代目
+        - 2023/24
+        - 丸い紋章
+        - 1シーズン
+      - - 4代目
+        - 2024/25〜
+        - 盾
+        - 今季で3シーズン目
+      highlight_row: 0
+  - text: 初代は、9シーズン続きます。
+    image: assets/images/20261024_kit_astonvilla/a04_north.jpg
+    card:
+      type: table
+      title: 試合のシャツの紋章（2007年から）
+      columns:
+      - 代
+      - シーズン
+      - 形
+      - 続いた
+      rows:
+      - - 初代
+        - 2007/08〜
+        - 星と水色の地
+        - 9シーズン
+      - - 2代目
+        - 2016/17〜
+        - 爪付き
+        - 7シーズン
+      - - 3代目
+        - 2023/24
+        - 丸い紋章
+        - 1シーズン
+      - - 4代目
+        - 2024/25〜
+        - 盾
+        - 今季で3シーズン目
+      highlight_row: 0
+  - text: 2代目は、2016年から。ライオンに、爪が付きました。
+    image: assets/images/20261024_kit_astonvilla/a04_north.jpg
+    card:
+      type: table
+      title: 試合のシャツの紋章（2007年から）
+      columns:
+      - 代
+      - シーズン
+      - 形
+      - 続いた
+      rows:
+      - - 初代
+        - 2007/08〜
+        - 星と水色の地
+        - 9シーズン
+      - - 2代目
+        - 2016/17〜
+        - 爪付き
+        - 7シーズン
+      - - 3代目
+        - 2023/24
+        - 丸い紋章
+        - 1シーズン
+      - - 4代目
+        - 2024/25〜
+        - 盾
+        - 今季で3シーズン目
+      highlight_row: 1
+  - text: モットーの、プリペアードの文字は、消えました。
+    image: assets/images/20261024_kit_astonvilla/a04_north.jpg
+    card:
+      type: table
+      title: 試合のシャツの紋章（2007年から）
+      columns:
+      - 代
+      - シーズン
+      - 形
+      - 続いた
+      rows:
+      - - 初代
+        - 2007/08〜
+        - 星と水色の地
+        - 9シーズン
+      - - 2代目
+        - 2016/17〜
+        - 爪付き
+        - 7シーズン
+      - - 3代目
+        - 2023/24
+        - 丸い紋章
+        - 1シーズン
+      - - 4代目
+        - 2024/25〜
+        - 盾
+        - 今季で3シーズン目
+      highlight_row: 1
+  - text: 2代目は、7シーズン続きます。
+    image: assets/images/20261024_kit_astonvilla/a04_north.jpg
+    card:
+      type: table
+      title: 試合のシャツの紋章（2007年から）
+      columns:
+      - 代
+      - シーズン
+      - 形
+      - 続いた
+      rows:
+      - - 初代
+        - 2007/08〜
+        - 星と水色の地
+        - 9シーズン
+      - - 2代目
+        - 2016/17〜
+        - 爪付き
+        - 7シーズン
+      - - 3代目
+        - 2023/24
+        - 丸い紋章
+        - 1シーズン
+      - - 4代目
+        - 2024/25〜
+        - 盾
+        - 今季で3シーズン目
+      highlight_row: 1
+  - text: 3代目が、丸い紋章。1シーズンだけでした。
+    image: assets/images/20261024_kit_astonvilla/a01_aerial.jpg
+    card:
+      type: table
+      title: 試合のシャツの紋章（2007年から）
+      columns:
+      - 代
+      - シーズン
+      - 形
+      - 続いた
+      rows:
+      - - 初代
+        - 2007/08〜
+        - 星と水色の地
+        - 9シーズン
+      - - 2代目
+        - 2016/17〜
+        - 爪付き
+        - 7シーズン
+      - - 3代目
+        - 2023/24
+        - 丸い紋章
+        - 1シーズン
+      - - 4代目
+        - 2024/25〜
+        - 盾
+        - 今季で3シーズン目
+      highlight_row: 2
+  - text: そして、4代目が、2024年からの盾です。
+    image: assets/images/20261024_kit_astonvilla/a01_aerial.jpg
+    card:
+      type: table
+      title: 試合のシャツの紋章（2007年から）
+      columns:
+      - 代
+      - シーズン
+      - 形
+      - 続いた
+      rows:
+      - - 初代
+        - 2007/08〜
+        - 星と水色の地
+        - 9シーズン
+      - - 2代目
+        - 2016/17〜
+        - 爪付き
+        - 7シーズン
+      - - 3代目
+        - 2023/24
+        - 丸い紋章
+        - 1シーズン
+      - - 4代目
+        - 2024/25〜
+        - 盾
+        - 今季で3シーズン目
+      highlight_row: 3
+  - text: 鈴木の胸にあるのは、この4代目。
+    image: assets/images/20261024_kit_astonvilla/a01_aerial.jpg
+    emph: true
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Aston_Villa_F.C.
+  - https://en.wikipedia.org/wiki/Zion_Suzuki
+- id: colours
+  heading: 黒だったシャツは、なぜクラレットと水色になったのか
+  bg: assets/images/20261024_kit_astonvilla/a04_north.jpg
+  tier: 背景
+  telop: 色は黒の時代を経て、1886年にチョコレート色と水色。なぜその色かは、はっきりしない
+  narrator: 解説
+  card:
+    type: timeline
+    title: シャツの色の歩み（ウィキペディア）
+    rows:
+    - - 創立のころ
+      - ロイヤルブルーと赤の横縞
+    - - 1877〜79年
+      - 白、青と黒、赤と青、緑
+    - - 1880年
+      - 黒に、スコットランドのライオン
+    - - 1886年11月
+      - チョコレート色と水色に決める
+    - - 伝統の形
+      - クラレットに、水色の袖
+    focus: 1886年11月
+    highlight_row: 3
+  say:
+  - text: では、シャツの色。ヴィラといえば、クラレットと水色。
+    image: assets/images/20261024_kit_astonvilla/a04_north.jpg
+    card: none
+  - text: クラレットは、赤ワインのような、暗い赤紫です。
+    image: assets/images/20261024_kit_astonvilla/a04_north.jpg
+    card: none
+  - text: でも、最初は違いました。
+    image: assets/images/20261024_kit_astonvilla/a04_north.jpg
+    card: none
+  - text: 創立のころは、ロイヤルブルーと赤の、横縞のシャツでした。
+    image: assets/images/20261024_kit_astonvilla/a04_north.jpg
+    card:
+      type: timeline
+      title: シャツの色の歩み（ウィキペディア）
+      rows:
+      - - 創立のころ
+        - ロイヤルブルーと赤の横縞
+      - - 1877〜79年
+        - 白、青と黒、赤と青、緑
+      - - 1880年
+        - 黒に、スコットランドのライオン
+      - - 1886年11月
+        - チョコレート色と水色に決める
+      - - 伝統の形
+        - クラレットに、水色の袖
+      focus: 1886年11月
+      highlight_row: 0
+  - text: 1877年から79年は、白、青と黒、赤と青、緑。色が、ころころ替わります。
+    image: assets/images/20261024_kit_astonvilla/a02_holte.jpg
+    card:
+      type: timeline
+      title: シャツの色の歩み（ウィキペディア）
+      rows:
+      - - 創立のころ
+        - ロイヤルブルーと赤の横縞
+      - - 1877〜79年
+        - 白、青と黒、赤と青、緑
+      - - 1880年
+        - 黒に、スコットランドのライオン
+      - - 1886年11月
+        - チョコレート色と水色に決める
+      - - 伝統の形
+        - クラレットに、水色の袖
+      focus: 1886年11月
+      highlight_row: 1
+  - text: 1880年に、黒いシャツが決まります。
+    image: assets/images/20261024_kit_astonvilla/a02_holte.jpg
+    card:
+      type: timeline
+      title: シャツの色の歩み（ウィキペディア）
+      rows:
+      - - 創立のころ
+        - ロイヤルブルーと赤の横縞
+      - - 1877〜79年
+        - 白、青と黒、赤と青、緑
+      - - 1880年
+        - 黒に、スコットランドのライオン
+      - - 1886年11月
+        - チョコレート色と水色に決める
+      - - 伝統の形
+        - クラレットに、水色の袖
+      focus: 1886年11月
+      highlight_row: 2
+  - text: 胸には、スコットランドのライオンの刺繍。
+    image: assets/images/20261024_kit_astonvilla/a02_holte.jpg
+    card: none
+  - text: 持ち込んだのは、スコットランド出身の二人です。
+    image: assets/images/20261024_kit_astonvilla/a03_trinity.jpg
+    card: none
+  - text: ウィリアム・マクレガーと、ジョージ・ラムゼイ。
+    image: assets/images/20261024_kit_astonvilla/a03_trinity.jpg
+    card: none
+  - text: 1886年11月8日。クラブの議事録に、こう残ります。
+    image: assets/images/20261024_kit_astonvilla/a01_aerial.jpg
+    card:
+      type: timeline
+      title: シャツの色の歩み（ウィキペディア）
+      rows:
+      - - 創立のころ
+        - ロイヤルブルーと赤の横縞
+      - - 1877〜79年
+        - 白、青と黒、赤と青、緑
+      - - 1880年
+        - 黒に、スコットランドのライオン
+      - - 1886年11月
+        - チョコレート色と水色に決める
+      - - 伝統の形
+        - クラレットに、水色の袖
+      focus: 1886年11月
+      highlight_row: 3
+  - text: チョコレート色と水色のシャツを、2ダース注文する、と。
+    image: assets/images/20261024_kit_astonvilla/a01_aerial.jpg
+    emph: true
+    card: none
+  - text: チョコレート色は、のちに、クラレットになりました。
+    image: assets/images/20261024_kit_astonvilla/a01_aerial.jpg
+    card: none
+  - text: でも、なぜその色にしたのかは、はっきりしません。
+    image: assets/images/20261024_kit_astonvilla/a01_aerial.jpg
+    emph: true
+    card: none
+  - text: 同じ色は、ほかにも。クリスタル・パレスは、1970年代まで、ヴィラの色でした。
+    image: assets/images/20261024_kit_astonvilla/a03_trinity.jpg
+    card: none
+  - text: 色が決まってから、いままで。
+    image: assets/images/20261024_kit_astonvilla/a04_north.jpg
+    card: &id001
+      type: calc
+      title: 色が決まって何年か（自分で引いた）
+      terms:
+      - - 2026年
+        - いま
+      - - 1886年
+        - 色が決まった年
+      - - 140年
+        - 引いた答え
+      ops:
+      - −
+      - ＝
+  - text: 140年です。
+    image: assets/images/20261024_kit_astonvilla/a04_north.jpg
+    emph: true
+    card: *id001
+  sources:
+  - https://en.wikipedia.org/wiki/Aston_Villa_F.C.
+- id: ads
+  heading: 胸の広告は、いつ始まり、なぜ慈善団体だった時期があるのか
+  bg: assets/images/20261024_kit_astonvilla/a02_holte.jpg
+  tier: 背景
+  telop: 胸の広告は1982/83が最初。2008〜10年の2シーズンは、胸が子ども向けホスピス
+  narrator: 解説
+  card:
+    type: timeline
+    title: シャツの広告と製造元（ウィキペディア）
+    rows:
+    - - 1974年
+      - アンブロ、ロゴ付きの最初の供給元
+    - - 1982/83
+      - 胸の広告が初めて。ビール会社
+    - - 2008〜10
+      - 胸は、子ども向けホスピス
+    - - 2019/20
+      - 袖の広告が初めて
+    - - 2024/25
+      - 製造元はアディダス
+    focus: 1982/83
+    highlight_row: 1
+  say:
+  - text: 次は、アストン・ヴィラのシャツの、まわりです。胸の広告から。
+    image: assets/images/20261024_kit_astonvilla/a02_holte.jpg
+    card: none
+  - text: 1974年まで、シャツは、地元の業者製。
+    image: assets/images/20261024_kit_astonvilla/a04_north.jpg
+    card:
+      type: timeline
+      title: シャツの広告と製造元（ウィキペディア）
+      rows:
+      - - 1974年
+        - アンブロ、ロゴ付きの最初の供給元
+      - - 1982/83
+        - 胸の広告が初めて。ビール会社
+      - - 2008〜10
+        - 胸は、子ども向けホスピス
+      - - 2019/20
+        - 袖の広告が初めて
+      - - 2024/25
+        - 製造元はアディダス
+      focus: 1982/83
+      highlight_row: 0
+  - text: この年、アンブロが、ロゴ付きの最初の供給元になります。
+    image: assets/images/20261024_kit_astonvilla/a04_north.jpg
+    card:
+      type: timeline
+      title: シャツの広告と製造元（ウィキペディア）
+      rows:
+      - - 1974年
+        - アンブロ、ロゴ付きの最初の供給元
+      - - 1982/83
+        - 胸の広告が初めて。ビール会社
+      - - 2008〜10
+        - 胸は、子ども向けホスピス
+      - - 2019/20
+        - 袖の広告が初めて
+      - - 2024/25
+        - 製造元はアディダス
+      focus: 1982/83
+      highlight_row: 0
+  - text: 胸の広告は、もっと遅く、1982年のシーズンです。
+    image: assets/images/20261024_kit_astonvilla/a04_north.jpg
+    card:
+      type: timeline
+      title: シャツの広告と製造元（ウィキペディア）
+      rows:
+      - - 1974年
+        - アンブロ、ロゴ付きの最初の供給元
+      - - 1982/83
+        - 胸の広告が初めて。ビール会社
+      - - 2008〜10
+        - 胸は、子ども向けホスピス
+      - - 2019/20
+        - 袖の広告が初めて
+      - - 2024/25
+        - 製造元はアディダス
+      focus: 1982/83
+      highlight_row: 1
+  - text: つまり、1982年に欧州王者になったシャツには、まだ広告がありません。
+    image: assets/images/20261024_kit_astonvilla/a01_aerial.jpg
+    emph: true
+    card: none
+  - text: 創立の1874年から、胸に広告が付くまで。
+    image: assets/images/20261024_kit_astonvilla/a01_aerial.jpg
+    card: &id002
+      type: calc
+      title: 創立から胸の広告まで（自分で引いた）
+      terms:
+      - - 1982年
+        - 広告が付く
+      - - 1874年
+        - 創立
+      - - 108年
+        - 引いた答え
+      ops:
+      - −
+      - ＝
+  - text: 108年です。
+    image: assets/images/20261024_kit_astonvilla/a01_aerial.jpg
+    emph: true
+    card: *id002
+  - text: 2008年から2年間、胸の位置は、慈善団体でした。
+    image: assets/images/20261024_kit_astonvilla/a03_trinity.jpg
+    card:
+      type: timeline
+      title: シャツの広告と製造元（ウィキペディア）
+      rows:
+      - - 1974年
+        - アンブロ、ロゴ付きの最初の供給元
+      - - 1982/83
+        - 胸の広告が初めて。ビール会社
+      - - 2008〜10
+        - 胸は、子ども向けホスピス
+      - - 2019/20
+        - 袖の広告が初めて
+      - - 2024/25
+        - 製造元はアディダス
+      focus: 1982/83
+      highlight_row: 2
+  - text: 子ども向けのホスピス、エーコーンズです。
+    image: assets/images/20261024_kit_astonvilla/a03_trinity.jpg
+    card: none
+  - text: 胸の広告を、慈善団体に渡すのは、プレミアで、初めてでした。
+    image: assets/images/20261024_kit_astonvilla/a03_trinity.jpg
+    emph: true
+    card: none
+  - text: 製造元は、2024年から、アディダスです。
+    image: assets/images/20261024_kit_astonvilla/a02_holte.jpg
+    card:
+      type: timeline
+      title: シャツの広告と製造元（ウィキペディア）
+      rows:
+      - - 1974年
+        - アンブロ、ロゴ付きの最初の供給元
+      - - 1982/83
+        - 胸の広告が初めて。ビール会社
+      - - 2008〜10
+        - 胸は、子ども向けホスピス
+      - - 2019/20
+        - 袖の広告が初めて
+      - - 2024/25
+        - 製造元はアディダス
+      focus: 1982/83
+      highlight_row: 4
+  sources:
+  - https://en.wikipedia.org/wiki/Aston_Villa_F.C.
+- id: now
+  heading: 今季のホームシャツは、何が昔と違うのか
+  bg: assets/images/20261024_kit_astonvilla/a01_aerial.jpg
+  tier: 報道
+  telop: 2026/27のホームは1960年代に着想。近年のラグランから離れた（クラブ発表）
+  narrator: 解説
+  card:
+    type: table
+    title: 2026/27のホームシャツ（クラブ発表）
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - 発表
+      - 2026年5月26日
+    - - 発売
+      - 2026年5月28日
+    - - 着想
+      - 1960年代のデザイン
+    - - 袖
+      - 近年のラグランから離れた
+    highlight_row: 0
+  say:
+  - text: 最後に、今季のホームシャツ。
+    image: assets/images/20261024_kit_astonvilla/a01_aerial.jpg
+    card: none
+  - text: クラブとアディダスの発表は、2026年5月26日です。
+    image: assets/images/20261024_kit_astonvilla/a01_aerial.jpg
+    card:
+      type: table
+      title: 2026/27のホームシャツ（クラブ発表）
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 発表
+        - 2026年5月26日
+      - - 発売
+        - 2026年5月28日
+      - - 着想
+        - 1960年代のデザイン
+      - - 袖
+        - 近年のラグランから離れた
+      highlight_row: 0
+  - text: 発売は、2日後の、5月28日。
+    image: assets/images/20261024_kit_astonvilla/a01_aerial.jpg
+    card:
+      type: table
+      title: 2026/27のホームシャツ（クラブ発表）
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 発表
+        - 2026年5月26日
+      - - 発売
+        - 2026年5月28日
+      - - 着想
+        - 1960年代のデザイン
+      - - 袖
+        - 近年のラグランから離れた
+      highlight_row: 1
+  - text: 着想は、1960年代のデザインです。
+    image: assets/images/20261024_kit_astonvilla/a02_holte.jpg
+    emph: true
+    card:
+      type: table
+      title: 2026/27のホームシャツ（クラブ発表）
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 発表
+        - 2026年5月26日
+      - - 発売
+        - 2026年5月28日
+      - - 着想
+        - 1960年代のデザイン
+      - - 袖
+        - 近年のラグランから離れた
+      highlight_row: 2
+  - text: 近年のホームは、ラグランの袖。肩から襟へ、斜めに縫い目が走る袖です。
+    image: assets/images/20261024_kit_astonvilla/a02_holte.jpg
+    card: none
+  - text: 今季は、そこから離れます。
+    image: assets/images/20261024_kit_astonvilla/a02_holte.jpg
+    card:
+      type: table
+      title: 2026/27のホームシャツ（クラブ発表）
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 発表
+        - 2026年5月26日
+      - - 発売
+        - 2026年5月28日
+      - - 着想
+        - 1960年代のデザイン
+      - - 袖
+        - 近年のラグランから離れた
+      highlight_row: 3
+  - text: ファンのサイトは、全体がクラレットで、襟は昔風のポロ襟、と紹介します。
+    image: assets/images/20261024_kit_astonvilla/a03_trinity.jpg
+    card: none
+  - text: 胸の広告は、付いていない、とも書いています。公式の発表は、載っていませんでした。
+    image: assets/images/20261024_kit_astonvilla/a03_trinity.jpg
+    card: none
+  - text: 前のシーズン、ヴィラは、ヨーロッパリーグで優勝しました。
+    image: assets/images/20261024_kit_astonvilla/a03_trinity.jpg
+    card: none
+  - text: 1996年のリーグ杯以来、30年ぶりのタイトルです。
+    image: assets/images/20261024_kit_astonvilla/a03_trinity.jpg
+    emph: true
+    card: none
+  - text: この優勝が、紋章の星に足されたのかは、分かりませんでした。
+    image: assets/images/20261024_kit_astonvilla/a04_north.jpg
+    card: none
+  sources:
+  - https://www.avfc.co.uk/news/2026/may/26/news-aston-villa-and-adidas-unveil-2026-27-home-kit/
+  - https://readastonvilla.com/2026/05/28/buy-aston-villa-2026-27-home-kit/
+  - https://en.wikipedia.org/wiki/Aston_Villa_F.C.
+- id: view
+  viewpoint: true
+  heading: 見立て・紋章は20シーズンで4つ、色は140年。何が動いたのか
+  bg: assets/images/20261024_kit_astonvilla/a01_aerial.jpg
+  tier: 報道
+  telop: 色は140年、紋章は20シーズンで4つ、平均5シーズン。丸い紋章は1シーズン
+  narrator: 解説
+  card:
+    type: table
+    title: 動いたものと、動かないもの
+    columns:
+    - もの
+    - 続いた長さ
+    rows:
+    - - 色（1886年から）
+      - 140年
+    - - 試合のシャツの紋章
+      - 20シーズンで4つ
+    - - 丸い紋章
+      - 1シーズン
+    highlight_row: 0
+  say:
+  - text: ヴィラのシャツで、動いたものと、動かないものを、数えます。
+    image: assets/images/20261024_kit_astonvilla/a01_aerial.jpg
+    emph: true
+    card: none
+  - text: 色は、チョコレート色と水色が決まった1886年から、140年です。
+    image: assets/images/20261024_kit_astonvilla/a01_aerial.jpg
+    card:
+      type: table
+      title: 動いたものと、動かないもの
+      columns:
+      - もの
+      - 続いた長さ
+      rows:
+      - - 色（1886年から）
+        - 140年
+      - - 試合のシャツの紋章
+        - 20シーズンで4つ
+      - - 丸い紋章
+        - 1シーズン
+      highlight_row: 0
+    mark:
+      kind: circle
+      row: 0
+  - text: 色に比べて、紋章はよく替わります。この間に、4つです。
+    image: assets/images/20261024_kit_astonvilla/a02_holte.jpg
+    card:
+      type: table
+      title: 動いたものと、動かないもの
+      columns:
+      - もの
+      - 続いた長さ
+      rows:
+      - - 色（1886年から）
+        - 140年
+      - - 試合のシャツの紋章
+        - 20シーズンで4つ
+      - - 丸い紋章
+        - 1シーズン
+      highlight_row: 1
+  - text: 今季まで数えると、20シーズン。
+    image: assets/images/20261024_kit_astonvilla/a02_holte.jpg
+    card:
+      type: calc
+      title: 試合のシャツの紋章を数えた期間（自分で引いた）
+      terms:
+      - - 2027年
+        - 2026/27の終わり
+      - - 2007年
+        - 初代の始まり
+      - - 20年
+        - 引いた答え
+      ops:
+      - −
+      - ＝
+  - text: 20を4で割ると、5。紋章ひとつの寿命は、平均5シーズン。
+    image: assets/images/20261024_kit_astonvilla/a02_holte.jpg
+    emph: true
+    card:
+      type: calc
+      title: ひとつの紋章の平均（自分で割った）
+      terms:
+      - - 20シーズン
+        - 期間
+      - - 4つ
+        - 紋章の数
+      - - 5シーズン
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+  - text: 丸い紋章は、1シーズンでした。
+    image: assets/images/20261024_kit_astonvilla/a03_trinity.jpg
+    card:
+      type: table
+      title: 動いたものと、動かないもの
+      columns:
+      - もの
+      - 続いた長さ
+      rows:
+      - - 色（1886年から）
+        - 140年
+      - - 試合のシャツの紋章
+        - 20シーズンで4つ
+      - - 丸い紋章
+        - 1シーズン
+      highlight_row: 2
+  - text: 色が続いた140年の、140分の1です。
+    image: assets/images/20261024_kit_astonvilla/a03_trinity.jpg
+    emph: true
+    card:
+      type: table
+      title: 動いたものと、動かないもの
+      columns:
+      - もの
+      - 続いた長さ
+      rows:
+      - - 色（1886年から）
+        - 140年
+      - - 試合のシャツの紋章
+        - 20シーズンで4つ
+      - - 丸い紋章
+        - 1シーズン
+      highlight_row: 2
+  - text: いまの盾は、今季で3シーズン目。平均の5シーズンまで、あと2シーズン。
+    image: assets/images/20261024_kit_astonvilla/a04_north.jpg
+    card: none
+  - text: 次の紋章の予定は、公式の発表を確かめられませんでした。
+    image: assets/images/20261024_kit_astonvilla/a04_north.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Aston_Villa_F.C.

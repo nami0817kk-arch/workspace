@@ -1,0 +1,218 @@
+# ブンデスリーガ チーム紹介 ④フランクフルト（見本は 10/21 のバイエルン・10/22 のドルトムント・10/23 のレバークーゼン）。2026-10-23 作成。
+# 事実は research/bd_data/frankfurt_research.md（出典付き）から。「季」は使わない。アルファベットは読み上げに残さない。
+# **日本人選手は、クラブ記事・各選手の英語版記事の在籍期間とリーグ戦の数字から。遠藤航はフランクフルトに在籍したことが無い**（シュツットガルト→リヴァプール）ので入れない。
+# 次の試合（ドルトムント戦、ドイツ時間10/24 18:30）の結果は台本に入れない。
+title: フランクフルトはブンデスリーガ優勝0回、ヨーロッパリーグ優勝2回。何が違うのか
+short_title: フランクフルト、ブンデス優勝0回。欧州は2回。何が
+opening: "鷲を紋章に、ホームがほぼ毎試合満員のクラブ。"
+hook: 2022年、バルセロナの本拠地に、3万人を超えるファンが集まりました。
+thumbnail:
+  line1: フランクフルトの優勝
+  line2: ブンデス0回、ヨーロッパ2回
+  crest_main: [フランクフルト]
+  tags: [フランクフルト, ブンデスリーガ, 堂安律, 長谷部誠]
+  layout: classic
+
+reasons:
+- "日本の堂安律と小杉啓太が、いま所属しています。"
+- "監督は、アディ・ヒュッター。2021年まで率いた古巣に、戻ってきました。"
+- "今季は6節を終えて、11位。首位バイエルンとは、勝ち点6差です。"
+reasons_focus: [1, 2, 3]
+reasons_telop: 堂安律と小杉啓太。ヒュッター監督が復帰。6節で11位、首位と勝ち点6差
+reasons_rows:
+- ["理由1", "堂安律と小杉啓太"]
+- ["理由2", "ヒュッター監督が復帰"]
+- ["理由3", "6節で11位。首位と勝ち点6差"]
+reasons_sources:
+- https://site.api.espn.com/apis/v2/sports/soccer/ger.1/standings
+- https://en.eintracht.de/news/adi-huetter-wird-neuer-cheftrainer-von-eintracht-frankfurt-177740
+- https://en.wikipedia.org/wiki/Ritsu_D%C5%8Dan
+- https://en.wikipedia.org/wiki/Keita_Kosugi
+
+data:
+- 創立は**1899年**。前身のひとつ、ヴィクトリアが、3月8日にできました。
+- 愛称は「アドラー」。鷲のことです。正式名は、アイントラハト・フランクフルト。
+- ホームタウンはフランクフルト。人口は約**76万人**。ドイツで5番目の大都市です。
+- 本拠地はドイツ銀行パーク。収容は**6万100人**で、18クラブでは4番目です。
+- オーナーは、会員のクラブ本体。株式会社の株の約**68%**を持っています。
+- ドイツ王者は1959年の**1回**。ブンデスリーガは1963年開幕で、優勝は**0回**です。
+- ドイツカップは**5回**。ヨーロッパリーグは、前身のカップを含めて**2回**。
+- 最多出場は、チャーリー・ケルベル。ブンデスリーガの歴代最多、**602試合**です。
+- 直近のタイトルは、**2022年**のヨーロッパリーグ。決勝は、PK戦で勝ちました。
+- 昨季のリーグ戦は**8位**。勝ち点**44**で、首位バイエルンと**45**差です。
+data_focus: [0, 1, 2, 3, 4, 5, 5, 6, 7, 8]
+
+story_sections:
+  - id: japan
+    heading: 2006年から、日本人は7人。いちばん長くいたのは誰か
+    tier: 背景
+    telop: 2006年から日本人7人。長谷部誠は10年、リーグ戦235試合
+    narrator: 解説
+    say:
+      - text: 2006年から、少なくとも7人の日本人選手が、フランクフルトでプレーしました。
+        card:
+          type: table
+          title: フランクフルトの日本人選手（リーグ戦）
+          columns: ["名前", "在籍", "試合と得点"]
+          rows:
+            - ["高原直泰", "2006-2008", "38試合12得点"]
+            - ["稲本潤一", "2007-2009", "43試合0得点"]
+            - ["乾貴士", "2012-2015", "75試合7得点"]
+            - ["長谷部誠", "2014-2024", "235試合2得点"]
+            - ["鎌田大地", "2017-2023", "127試合20得点"]
+            - ["堂安律", "2025-", "36試合5得点"]
+            - ["小杉啓太", "2026-", "6試合0得点"]
+        image: assets/backgrounds/stadium_フランクフルト.png
+      - 高原直泰は、2年で**12得点**。稲本潤一は2年、乾貴士は3年、在籍しました。
+      - text: 長谷部誠は、2014年から2024年まで、10年在籍しました。
+        card: none
+        image: assets/images/bd_frankfurt_pair_hasebe_kamada/01.jpg
+      - 7人の中でいちばん長く、リーグ戦は**235試合**です。
+      - text: 鎌田大地は、2017年から6年。リーグ戦**127試合**で、20得点を決めました。
+        image: assets/images/bd_frankfurt_pair_kamada_doan/01.jpg
+      - 今は、堂安律と小杉啓太。堂安は昨季、リーグ戦**31試合**で5得点でした。
+    sources:
+      - https://en.wikipedia.org/wiki/Naohiro_Takahara
+      - https://en.wikipedia.org/wiki/Junichi_Inamoto
+      - https://en.wikipedia.org/wiki/Takashi_Inui
+      - https://en.wikipedia.org/wiki/Makoto_Hasebe
+      - https://en.wikipedia.org/wiki/Daichi_Kamada
+      - https://en.wikipedia.org/wiki/Ritsu_D%C5%8Dan
+      - https://en.wikipedia.org/wiki/Keita_Kosugi
+  - id: history2
+    heading: 1960年、ヨーロッパ決勝で3対7。それでも語り継がれるのはなぜか
+    tier: 背景
+    telop: 1959年にドイツ王者。翌年のヨーロッパ杯決勝で、レアル・マドリードに3対7
+    narrator: 解説
+    card:
+      type: table
+      title: 1959年から1960年
+      columns: ["", ""]
+      rows:
+        - ["1959年 ドイツ選手権決勝", "オッフェンバッハに5対3"]
+        - ["ヨーロッパ杯 準決勝", "レンジャーズに合計12対4"]
+        - ["ヨーロッパ杯 決勝", "レアル・マドリードに3対7"]
+    say:
+      - text: 1959年、フランクフルトは決勝でオッフェンバッハに5対3。延長で初優勝。
+        image: assets/backgrounds/stadium_フランクフルト.png
+      - 翌年は、王者としてヨーロッパ杯へ。いまのチャンピオンズリーグにあたる大会です。
+      - 準決勝は、レンジャーズ。ホームで6対1、敵地で6対3。合計12対4でした。
+      - 決勝の相手は、4連覇中のレアル・マドリード。会場は、同じグラスゴーです。
+      - 先に点を取りながら、3対7で敗れました。観客は**12万7621人**でした。
+      - 決勝の合計**10得点**は、いまもヨーロッパ杯決勝の最多です。
+    sources:
+      - https://museum.eintracht.de/chronik/1945-1963/
+      - https://en.wikipedia.org/wiki/1960_European_Cup_final
+      - https://en.wikipedia.org/wiki/Eintracht_Frankfurt
+  - id: history3
+    heading: ヨーロッパリーグの優勝2回は、どんな試合だったのか
+    tier: 背景
+    telop: 1980年はアウェーゴール差。2022年は13試合で7勝6分け0敗
+    narrator: 解説
+    say:
+      - text: フランクフルトはヨーロッパリーグ優勝2回。1回目は、1980年のユーエファカップ。
+        card: none
+        image: assets/images/bd_frankfurt_uefa1980/scene.jpg
+      - 決勝の相手はメンヒェングラートバッハ。合計3対3で、敵地での得点が多く優勝。
+      - text: 2回目は、2022年。13試合で、7勝6引き分け。1度も負けていません。
+        card:
+          type: table
+          title: ヨーロッパリーグの優勝2回
+          columns: ["", ""]
+          rows:
+            - ["1980年 決勝", "メンヒェングラートバッハに合計3対3"]
+            - ["2022年 準々決勝", "バルセロナに敵地で3対2"]
+            - ["2022年 決勝", "レンジャーズにPK戦で5対4"]
+        image: assets/images/bd_frankfurt_camp/scene.jpg
+      - 準々決勝は、冒頭のバルセロナ戦。敵地で3対2。ホームの1対1とあわせて突破。
+      - text: 決勝は、セビリアでレンジャーズ。1対1のあと、PK戦を5対4で制しました。
+        image: assets/images/bd_frankfurt_seville/scene.jpg
+      - 鎌田大地が決め、ケビン・トラップが、ラムジーのPKを止めました。
+    sources:
+      - https://museum.eintracht.de/chronik/1963-1981/
+      - https://museum.eintracht.de/chronik/2016-2024/
+      - https://en.wikipedia.org/wiki/2021%E2%80%9322_Eintracht_Frankfurt_season
+      - https://en.wikipedia.org/wiki/2021%E2%80%9322_UEFA_Europa_League
+
+features:
+- "フランクフルトのプレーの色は、大胆な攻撃。クラブの役員は、新監督をそう評しました。"
+- "運営の型は、会員が支える形です。"
+- "会員は、2000年ごろの約**5000人**から、**15万5000人**以上に増えました。"
+- "気質は、「気まぐれな歌姫」と呼ばれてきたこと。"
+- "大きな相手に勝った後、思わぬ相手に負ける試合が、昔から多かったためです。"
+features_marks: [1, 3]
+features_telop: 大胆な攻撃。会員が支える形。「気まぐれな歌姫」
+features_rows:
+- ["プレーの色", "大胆な攻撃"]
+- ["運営の型", "会員が支える形"]
+- ["クラブの気質", "気まぐれな歌姫"]
+features_sources:
+- https://en.eintracht.de/news/adi-huetter-wird-neuer-cheftrainer-von-eintracht-frankfurt-177740
+- https://klub.eintracht.de/news/strukturelle-einigkeit-25-jahre-eintracht-frankfurt-fussball-ag-169547/
+- https://museum.eintracht.de/chronik/1945-1963/
+
+episode:
+  id: episode
+  heading: 1992年、最終節の前は首位だった。何が起きたのか
+  tier: 背景
+  telop: 1992年。最終節の前に3クラブが勝ち点50で並ぶ
+  narrator: 解説
+  card:
+    type: table
+    title: 1991-92のブンデスリーガ
+    columns: ["", ""]
+    rows:
+      - ["34節", "レバークーゼンに3対1。首位"]
+      - ["最終節の前", "3クラブが勝ち点50"]
+      - ["最終節", "ロストックに1対2。3位"]
+  say:
+    - text: 1992年の春、フランクフルトは、2度目のドイツ王者に近づきます。
+      image: assets/backgrounds/stadium_フランクフルト.png
+    - 34節は、レバークーゼンに3対1で勝って、首位に立ちました。
+    - 最終節の前は、シュツットガルト、ドルトムントと、3クラブが勝ち点**50**で並びます。
+    - フランクフルトは、ロストックに1対2で敗れて、3位。
+    - 優勝は、レバークーゼンに2対1で勝った、シュツットガルトでした。
+  sources:
+    - https://museum.eintracht.de/chronik/1981-1996/
+    - https://en.wikipedia.org/wiki/1991%E2%80%9392_Bundesliga
+
+legends:
+- - ケルベルは、1972年から1991年まで、フランクフルト一筋でした。
+  - "ディフェンダーでありながら、リーグ戦で**45得点**を決めています。"
+  - ドイツカップを4回、1980年のヨーロッパのカップも、獲りました。
+- - ヘルツェンバインは、1967年から1981年まで、フランクフルトにいました。
+  - "リーグ戦**160得点**はクラブ記録。西ドイツ代表で、1974年のワールドカップ優勝。"
+- - マイヤーは、2004年にフランクフルトに加わって、14年プレーしました。
+  - "2014年から15年にかけて、**26試合で19得点**。リーグの得点王になりました。"
+legend_rows:
+- ["チャーリー・ケルベル", "1972-1991", "リーグ戦602試合"]
+- ["ベルント・ヘルツェンバイン", "1967-1981", "リーグ戦160得点"]
+- ["アレクサンダー・マイヤー", "2004-2018", "2014-15の得点王"]
+legend_sources:
+- - https://en.wikipedia.org/wiki/Charly_K%C3%B6rbel
+  - https://museum.eintracht.de/chronik/1963-1981/
+- - https://en.wikipedia.org/wiki/Bernd_H%C3%B6lzenbein
+- - https://en.wikipedia.org/wiki/Alexander_Meier
+  - https://klub.eintracht.de/news/strukturelle-einigkeit-25-jahre-eintracht-frankfurt-fussball-ag-169547/
+
+manager:
+- 今季の監督は、アディ・ヒュッター。**56歳**のオーストリア人です。
+- 就任は**2026年7月**。契約は2029年6月までです。
+- 2018年から3年、フランクフルトを率いて、ヨーロッパリーグ準決勝へ。
+manager_telop: 監督はヒュッター。就任は7月。契約は2029年まで
+manager_rows:
+- ["監督", "アディ・ヒュッター"]
+- ["就任", "2026年7月1日"]
+- ["契約", "2029年6月まで"]
+manager_sources:
+- https://en.eintracht.de/news/adi-huetter-wird-neuer-cheftrainer-von-eintracht-frankfurt-177740
+- https://en.wikipedia.org/wiki/Adi_H%C3%BCtter
+
+season:
+- フランクフルトの次は、ドイツ時間の24日。敵地でドルトムントと対戦します。
+- 2021年から22年のヨーロッパリーグは、**1.6得点**、**1.0失点**。無敗でした。
+- 同じ年のリーグ戦は、**1.3得点**、**1.4失点**。10勝12引き分け12敗でした。
+- 勝ち抜く試合の強さと、34試合を戦う強さは、別のもののようです。
+
+squad_about:
+  小杉啓太: 小杉啓太は、今年1月に来た、20歳です。

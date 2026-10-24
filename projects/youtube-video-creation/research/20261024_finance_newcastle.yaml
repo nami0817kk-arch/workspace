@@ -1,0 +1,451 @@
+# クラブの財政：ニューカッスル・ユナイテッド（10/24 土、シリーズ「クラブの財政」、key: finance_newcastle、型は news）。
+#
+# 軸は「**買収後の4年で初めての黒字（3470万ポンド）は、何で生まれたのか。処分益1億3320万ポンドを除くと、約9840万ポンドの赤字（分析記事の試算）。リーグの規則（3年で最大1億500万ポンド）とどう向き合うのか**」。
+#   ・デロイト Football Money League 2026（2024/25）：17位、収入 3億9840万ユーロ（+7%）。16位ユヴェントス 4億170万、18位シュトゥットガルト 2億9630万。
+#   ・クラブ公式（2026-03-31、2025年6月期）：収入 3億3530万ポンド（過去最高、前の年から+1500万）、税引後 3470万ポンドの黒字（前の年は1110万の赤字＝報道）、商業収入 +44%、
+#     処分益（profit on disposal）1億3320万ポンド＝2025-26で少し調整される。
+#   ・クラブ公式に無い内訳（試合日・メディア・商業・UEFA・人件費・営業費用・処分益の中身）は ESK の分析記事（決算書の読み）と Sportcal（クラブの発表の報道）。
+#   ★他の財政回（バルサ・シティ・アルテタ・レアル・PSG・バイエルン・リヴァプール・マンU・トッテナム・シティ×アーセナル・チェルシー・インテル・ヴィラ・ユヴェントス・アトレティコ・ミラン）の軸は繰り返さない。
+#     この回の軸は「**黒字の中身（不動産の処分益）と、規則の物差し**」。
+#   ★アルファベット（PSR・PZ・UEFA）は読み上げに出さない。女子・監督・選手の個人名・制裁の話はしない。選手の移籍金・給料の額は出さない。「違反した」と断定しない（分析記事の見方と書く）。
+#
+# **決算期**：6月30日決算。2024-25＝2025年6月期（決算書の公表は2026-03-31）。2025-26 の決算は未公表。
+#
+# **出どころ（読んだもの）**
+#   ○ クラブ公式 https://www.newcastleunited.com/en/news/newcastle-united-announces-record-income（2026-03-31、WebFetch）
+#       「turnover £335.3m, up £15m」「profit after tax of £34.7m」「44% rise in commercial revenue」「profit on disposal of £133.2m, which will be slightly adjusted in Financial Year 2026」。
+#       試合日・メディア・費用・人件費・PSR は本文に無い。
+#   ○ クラブ公式（2021-22 決算）https://www.newcastleunited.com/en/news/financial-results-for-year-ended-30-june-2022
+#       「loss after tax of £70.7m」「revenues £180m from £140.2m」。
+#   ○ クラブ公式（2022-23 決算）https://www.newcastleunited.com/en/news/newcastle-united-limited-announces-financial-results-for-year-ended-30-june-2023
+#       「revenue rose 39% to £250.3m」「loss after tax of £73.4m」（当時の発表。翌年の報道は前年の赤字を71.8mと書く＝組み替えの可能性。台本は当時の発表の73.4を使う）。
+#   ○ クラブ公式（2023-24 決算）https://www.newcastleunited.com/en/news/newcastle-united-announces-financial-results-for-the-year-ended-june-2024
+#       「£320.3 million, up from £250.3 million」「+28%」「commercial +90%・matchday +32%」「return to the UEFA Champions League」。損益は本文に無い。
+#       赤字 1110万ポンドは報道（Offaly Express／City AM／Arab News／Sportcal 等が一致）。
+#   ○ ESK 分析 https://theesk.org/2026/04/14/the-analysis-series-analysis-of-newcastle-united-limited-financial-results-2024-2025/（WebFetch）
+#       2024/25 対 2023/24（百万ポンド）：総収入 335.3/320.3、試合日 51.6/50.1、メディア（UEFA除く）161.1/154.0、商業 120.2/83.6、UEFA 0/29.8、人件費 243.5/218.7、償却と減損 99.9/97.5、税引後損益 +34.7/−11.1。
+#       処分益 133.2＝スタジアムの leasehold improvements 129.0（PZ Holdings へ 172.1 で売却、帳簿 43.1）＋ストロベリー・プレイスの土地 4.2（17.1 で売却、帳簿 12.9）。
+#       「処分益を除く税引前の赤字は約98.4」「処分益が無ければ PSR に抵触した可能性が高い」「PSR は3年で最大1億500万ポンド」。純債務の額は記事に無い。
+#   ○ Sportcal https://www.sportcal.com/financial/stadium-sale-commercial-income-help-newcastle-post-first-profit-in-pif-era/
+#       商業 83.6→120.1、試合日 50.1→51.6、メディア 154→161.1、営業費用 +53.4（+18%）→344.9（前年 291.5）。
+#       クラブの説明：売却は不動産の整理（再開発か新スタジアムの可能性）のためで、PSR の遵守のためではない。
+#   ○ Newcastle World（別の報道）https://www.newcastleworld.com/sport/football/newcastle-united/newcastle-united-news-st-james-park-6531441
+#       クラブは控除できる費用と年度末までの選手の売却を入れれば PSR を守れていると見られる、という報道（検索結果の要約で確認。本文の全文は403で読めず）。
+#   ○ Goal（Deloitte の数字の転載）https://www.goal.com/en-om/news/deloitte-football-money-league-2026/bltedf9c4b411ec7212 と
+#     Deloitte 一次ページ（17位、前後は16位ユヴェントス・18位シュトゥットガルトを確認）：ニューカッスル €398.4m（+7%）。14位ヴィラ 450.2、15位ミラン 410.4、16位ユヴェントス 401.7、18位シュトゥットガルト 296.3。
+#       プレミアの数：上位20のうち9（リヴァプール・シティ・アーセナル・マンU・トッテナム・チェルシー・ヴィラ・ニューカッスル・ウェストハム）。
+#   ○ 買収の完了：2021-10-07（On the Money／Arab News の要約。クラブの2021-22決算の発表も「買収後の最初の決算」と書く）。サウジアラビアの公共投資基金が中心（City AM）。
+#   × 確かめられなかったもの：Deloitte のニューカッスルの内訳（試合日・放映権・商業のユーロ）と前年の順位、2025-26 の決算、
+#     決算の純債務、プレミアリーグの公式な PSR 判断、商業収入が増えた契約ごとの内訳、ポンドとユーロの換算（為替）、
+#     Deloitte €398.4m とクラブ £335.3m の差の中身（通貨・集計範囲が違うので台本では並べない）、Deloitte の16位以下の数字は Goal 転載を一次ページの順位で確認した範囲。
+#
+# 自分で計算した数（検算済み）
+#   デロイト 401.7−398.4＝3.3。398.4−296.3＝102.1。クラブ 335.3÷180.0＝1.863→約1.9倍。335.3−320.3＝15.0（+4.7%）。
+#   商業 120.2−83.6＝36.6（+43.8%）。ユーロ除く収入：320.3−29.8＝290.5 → 335.3−290.5＝44.8。36.6÷44.8＝81.7%→約8割。商業の割合 120.2÷335.3＝35.8%、83.6÷320.3＝26.1%。
+#   人件費 243.5−218.7＝24.8。243.5÷335.3＝72.6%、218.7÷320.3＝68.3%。営業費用 344.9−291.5＝53.4。53.4÷15.0＝3.56倍。344.9−335.3＝9.6。
+#   処分益 129.0+4.2＝133.2。172.1−43.1＝129.0。17.1−12.9＝4.2。34.7÷133.2＝26%。98.4÷105＝93.7%→約94%。
+#
+# 写真：assets/images/20261024_finance_newcastle/（Commons、出典は credits.json）。
+date: 2026年10月24日
+slot: other_1
+format: news
+series: クラブの財政
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+people:
+- ニューカッスル
+theme:
+  end_bg: assets/images/20261024_finance_newcastle/01_w.jpg
+  id: finance_newcastle
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: ニューカッスル
+  title: ニューカッスル、収入は17位。買収後はじめての黒字は、何で生まれたのか
+  question: ニューカッスルは買収後はじめて3470万ポンドの黒字になった。その黒字は、何で生まれたのか
+  lead: 収入の世界17位、ニューカッスル。
+  opening_image: assets/images/20261024_finance_newcastle/01_w.jpg
+  takeaway: デロイトの集計で2024-25の収入は3億9840万ユーロで世界17位（+7%）。クラブの決算は収入3億3530万ポンドで過去最高、欧州の大会が無くても商業収入が44%増え、税引後で3470万ポンドの黒字（前の年は1110万の赤字）。ただ決算書には1億3320万ポンドの処分益（スタジアムの改良部分などを同じオーナーグループの会社へ売ったもの）が入り、これを除く税引前は約9840万ポンドの赤字という分析がある。収入の増え1500万に対し営業費用は5340万増えた。リーグの規則の上限は3年で1億500万ポンド
+  short_title: ニューカッスル、黒字3470万の中身
+thumbnail:
+  layout: number
+  crest_pos: right
+  photo: assets/images/20261024_finance_newcastle/02_w.jpg
+  number: 1.3億ポンド
+  line1: ニューカッスルの黒字
+  line2: 処分益を除くと赤字約9840万ポンド
+  callouts: [買収後はじめて]
+  tags:
+  - ニューカッスル
+  - プレミアリーグ
+  - クラブの財政
+  - セント・ジェームズ・パーク
+sections:
+- id: rank
+  heading: 収入は世界17位。7%増えて、前後のクラブとはどれだけ違うのか
+  tier: 報道
+  telop: 収入3億9840万ユーロで世界17位。前の年から7%増
+  narrator: 解説
+  card: &rank_table
+    type: table
+    title: 15位から18位の収入（デロイト、百万ユーロ）
+    columns: [順位, クラブ, 収入]
+    rows:
+    - [15位, ミラン, '410.4']
+    - [16位, ユヴェントス, '401.7']
+    - [17位, ニューカッスル, '398.4']
+    - [18位, シュトゥットガルト, '296.3']
+    highlight_row: 2
+  say:
+  - text: 会計事務所デロイトの集計で、ニューカッスルの収入は世界17位。
+    image: assets/images/20261024_finance_newcastle/01_w.jpg
+    card: none
+  - text: 2024-25の収入は、3億9840万ユーロ。前の年から、7%の増加です。
+    emph: true
+    card: *rank_table
+  - text: 上の16位は、ユヴェントス。差は、330万ユーロです。
+    image: assets/images/20261024_finance_newcastle/02_w.jpg
+    card:
+      <<: *rank_table
+      highlight_row: 1
+  - text: 下の18位は、シュトゥットガルト。差は、1億210万ユーロ。
+    card:
+      <<: *rank_table
+      highlight_row: 3
+  - text: 上位20クラブのうち、プレミアリーグは9クラブ。ニューカッスルは、そのひとつです。
+    image: assets/images/20261024_finance_newcastle/03_w.jpg
+    card: none
+  - text: 17位の数字は、ユーロです。クラブの決算は、ポンドで出ます。
+    card: none
+  - text: 次は、クラブ自身の数字で、買収からの4年を見ます。
+    image: assets/images/20261024_finance_newcastle/04_w.jpg
+    card: none
+  sources:
+  - https://www.deloitte.com/uk/en/services/financial-advisory/analysis/deloitte-football-money-league.html
+  - https://www.goal.com/en-om/news/deloitte-football-money-league-2026/bltedf9c4b411ec7212
+- id: years
+  heading: 買収からの4年で、収入と損益はどう動いたのか
+  tier: 報道
+  telop: 収入は1億8000万から3億3530万ポンドへ。損益は、赤字から黒字へ
+  narrator: 解説
+  card: &rev_line
+    type: line
+    title: ニューカッスルの収入（クラブの発表、百万ポンド）
+    x: [2021-22, 2022-23, 2023-24, 2024-25]
+    series:
+    - [収入, [180, 250.3, 320.3, 335.3]]
+    unit: 百万ポンド
+    focus: 収入
+    highlight: 2024-25
+  say:
+  - text: 2021年10月、ニューカッスルは、新しいオーナーグループに買収されました。
+    image: assets/images/20261024_finance_newcastle/05_w.jpg
+    card: none
+  - text: 中心は、サウジアラビアの政府系ファンドです。
+    card: none
+  - text: 買収後、最初の決算は、2021-22。収入は、1億8000万ポンドから始まります。
+    emph: true
+    image: assets/images/20261024_finance_newcastle/01_w.jpg
+    card:
+      <<: *rev_line
+      highlight: 2021-22
+  - text: そのあと、2億5030万、3億2030万、3億3530万ポンド。
+    card: *rev_line
+  - text: 3年で、収入は、約1.9倍になりました。
+    emph: true
+    image: assets/images/20261024_finance_newcastle/06_w.jpg
+    card: *rev_line
+  - text: 損益も、並べます。
+    card: &pl_table
+      type: table
+      title: ニューカッスルの税引後の損益（クラブの発表と報道、百万ポンド）
+      columns: [年, 損益]
+      rows:
+      - [2021-22, '-70.7']
+      - [2022-23, '-73.4']
+      - [2023-24, '-11.1']
+      - [2024-25, '+34.7']
+      highlight_row: 3
+  - text: 最初の2年は、7000万ポンドを超える赤字。
+    image: assets/images/20261024_finance_newcastle/02_w.jpg
+    card:
+      <<: *pl_table
+      highlight_row: 1
+  - text: 2023-24は、チャンピオンズリーグに戻った年。
+    image: assets/images/20261024_finance_newcastle/04_w.jpg
+    card: none
+  - text: 赤字は、1110万ポンドまで縮みました。
+    card:
+      <<: *pl_table
+      highlight_row: 2
+  - text: 2024-25は、3470万ポンドの黒字に転じました。
+    emph: true
+    callword: 買収後はじめて黒字
+    image: assets/images/20261024_finance_newcastle/03_w.jpg
+    card: *pl_table
+  - text: ただ、この黒字は、本業だけで生まれたものではありません。
+    card: none
+  sources:
+  - https://www.newcastleunited.com/en/news/financial-results-for-year-ended-30-june-2022
+  - https://www.newcastleunited.com/en/news/newcastle-united-limited-announces-financial-results-for-year-ended-30-june-2023
+  - https://www.newcastleunited.com/en/news/newcastle-united-announces-financial-results-for-the-year-ended-june-2024
+  - https://www.newcastleunited.com/en/news/newcastle-united-announces-record-income
+- id: break
+  heading: 欧州の大会が無い年に、収入はなぜ増えたのか
+  tier: 報道
+  telop: 欧州の分配金はゼロ。それでも収入は1500万ポンド増えた
+  narrator: 解説
+  card: &brk_tbl
+    type: table
+    title: ニューカッスルの収入の内訳（決算書、百万ポンド）
+    columns: [流れ, 2023-24, 2024-25]
+    rows:
+    - [商業, '83.6', '120.2']
+    - [放映権などのメディア, '154.0', '161.1']
+    - [試合日, '50.1', '51.6']
+    - [欧州の大会の分配金, '29.8', '0']
+    highlight_row: 0
+  say:
+  - text: 2024-25のニューカッスルは、ヨーロッパの大会に出ていません。
+    image: assets/images/20261024_finance_newcastle/04_w.jpg
+    card: none
+  - text: 前の年は、チャンピオンズリーグ。その分配金が、2980万ポンドありました。
+    card:
+      <<: *brk_tbl
+      highlight_row: 3
+  - text: 今年は、ゼロです。それでも、収入は、1500万ポンド増えました。
+    emph: true
+    image: assets/images/20261024_finance_newcastle/05_w.jpg
+    card: none
+  - text: 内訳です。商業は、8360万ポンドから、約1億2020万ポンドへ。
+    card: *brk_tbl
+  - text: クラブの発表で、商業収入は、44%の増加です。
+    emph: true
+    callword: 商業 44%増
+    image: assets/images/20261024_finance_newcastle/06_w.jpg
+    card: *brk_tbl
+  - text: 放映権などは、1億5400万から、1億6110万ポンド。
+    card:
+      <<: *brk_tbl
+      highlight_row: 1
+  - text: 試合日は、5010万から、5160万ポンドです。
+    card:
+      <<: *brk_tbl
+      highlight_row: 2
+  - text: 欧州の分配金を除いて、比べます。前の年は、2億9050万ポンド。
+    image: assets/images/20261024_finance_newcastle/01_w.jpg
+    card: none
+  - text: 今年は、3億3530万ポンド。増えたのは、4480万ポンドです。
+    emph: true
+    card: none
+  - text: そのうち、商業が、約3660万ポンド。約8割です。
+    emph: true
+    image: assets/images/20261024_finance_newcastle/02_w.jpg
+    card:
+      <<: *brk_tbl
+      highlight_row: 0
+  - text: 商業は、収入の約36%。前の年は、約26%でした。
+    card: none
+  - text: 商業が増えた契約ごとの内訳は、公表の範囲では、見つかりません。
+    image: assets/images/20261024_finance_newcastle/03_w.jpg
+    card: none
+  sources:
+  - https://www.sportcal.com/financial/stadium-sale-commercial-income-help-newcastle-post-first-profit-in-pif-era/
+  - https://theesk.org/2026/04/14/the-analysis-series-analysis-of-newcastle-united-limited-financial-results-2024-2025/
+  - https://www.newcastleunited.com/en/news/newcastle-united-announces-record-income
+- id: gain
+  main: true
+  heading: 3470万ポンドの黒字は、何で生まれたのか
+  tier: 報道
+  telop: 決算書に処分益1億3320万ポンド。除くと約9840万ポンドの赤字
+  narrator: 解説
+  card: &gain_stats
+    type: stats
+    title: ニューカッスルの2024-25（百万ポンド）
+    items:
+    - ['34.7', 百万ポンド, 税引後の黒字]
+    - ['133.2', 百万ポンド, 資産の処分益]
+    - ['-98.4', 百万ポンド, 処分益を除く税引前（試算）]
+    focus: 1
+  say:
+  - text: ニューカッスルの黒字の中身を、決算書で見ます。
+    image: assets/images/20261024_finance_newcastle/04_w.jpg
+    card: none
+  - text: 2024-25の決算に、資産の処分益が、1億3320万ポンド入っています。
+    emph: true
+    card: *gain_stats
+  - text: 処分益とは、持っている資産を、帳簿より高く売って出た益です。
+    card: *gain_stats
+  - text: スタジアムの土地は、市のもの。売ったのは、その上の改良部分です。
+    image: assets/images/20261024_finance_newcastle/05_w.jpg
+    card: none
+  - text: 処分益の内訳です。改良部分が、1億2900万ポンド。
+    image: assets/images/20261024_finance_newcastle/05_w.jpg
+    card: &gain_table
+      type: table
+      title: 売却したもの（決算書、百万ポンド）
+      columns: [売ったもの, 売値, 帳簿, 益]
+      rows:
+      - [スタジアムの改良部分, '172.1', '43.1', '129.0']
+      - [隣の土地, '17.1', '12.9', '4.2']
+      - [合計, '189.2', '56.0', '133.2']
+      highlight_row: 0
+  - text: 売値は、1億7210万ポンド。帳簿の価値は、4310万ポンドでした。
+    card: *gain_table
+  - text: 隣の土地は、益が420万ポンド。合わせて、1億3320万ポンドです。
+    image: assets/images/20261024_finance_newcastle/06_w.jpg
+    card:
+      <<: *gain_table
+      highlight_row: 1
+  - text: 売った相手は、同じオーナーグループの会社です。
+    emph: true
+    card: none
+  - text: クラブは、これを不動産の整理だと説明しています。
+    image: assets/images/20261024_finance_newcastle/01_w.jpg
+    card: none
+  - text: 将来の再開発や、新しいスタジアムを見据えたもの、という説明です。
+    card: none
+  - text: この処分益を除くと、税引前で、約9840万ポンドの赤字。分析記事の試算です。
+    emph: true
+    card:
+      <<: *gain_stats
+      focus: 2
+  - text: 利益3470万ポンドは、処分益の約26%。
+    image: assets/images/20261024_finance_newcastle/02_w.jpg
+    card:
+      <<: *gain_stats
+      focus: 0
+  - text: クラブは、この処分益が、2025-26の決算で、少し調整されると発表しています。
+    card: none
+  - text: プレミアリーグの市場価値の確認を経た、調整です。
+    image: assets/images/20261024_finance_newcastle/03_w.jpg
+    card: none
+  sources:
+  - https://theesk.org/2026/04/14/the-analysis-series-analysis-of-newcastle-united-limited-financial-results-2024-2025/
+  - https://www.newcastleunited.com/en/news/newcastle-united-announces-record-income
+  - https://www.sportcal.com/financial/stadium-sale-commercial-income-help-newcastle-post-first-profit-in-pif-era/
+- id: rule
+  heading: 3年で1億500万ポンドの上限に、この赤字はどう当たるのか
+  tier: 報道
+  telop: 損失の上限は3年で1億500万ポンド。1年の赤字の試算は約9840万
+  narrator: 解説
+  card: &rule_tbl
+    type: table
+    title: リーグの規則の物差し（百万ポンド）
+    columns: [比べ, 額]
+    rows:
+    - [損失の上限（3年の合計）, '105']
+    - [処分益を除く1年の赤字（試算）, '約98.4']
+    - [上限に対する割合, '約94%']
+    highlight_row: 1
+  say:
+  - text: ニューカッスルが向き合う、リーグの規則を見ます。収益と持続可能性の規則です。
+    image: assets/images/20261024_finance_newcastle/04_w.jpg
+    card: none
+  - text: クラブが失ってよい損失は、3年間の合計で、1億500万ポンドまで。
+    emph: true
+    card: *rule_tbl
+  - text: 処分益を除いた1年の赤字は、約9840万ポンド。
+    image: assets/images/20261024_finance_newcastle/05_w.jpg
+    card:
+      <<: *rule_tbl
+      highlight_row: 1
+  - text: 上限の、約94%の大きさです。
+    emph: true
+    card:
+      <<: *rule_tbl
+      highlight_row: 2
+  - text: ただ、規則の計算は、決算の損益と、そのままは同じではありません。
+    image: assets/images/20261024_finance_newcastle/06_w.jpg
+    card: none
+  - text: 控除できる費用や、年度末までの選手の売却があります。
+    card: none
+  - text: それに、規則は、3年の合計で見ます。1年だけでは、決まりません。
+    image: assets/images/20261024_finance_newcastle/01_w.jpg
+    card: none
+  - text: 分析記事は、処分益が無ければ、規則の上限を超えていた可能性が高い、と見ています。
+    card: none
+  - text: 別の報道は、控除と売却を入れれば、規則は守れていた、と見ています。
+    image: assets/images/20261024_finance_newcastle/02_w.jpg
+    card: none
+  - text: クラブは、処分益が無くても守れていたのか、確認していません。
+    emph: true
+    card: none
+  - text: リーグの公式な判断は、見つかりませんでした。
+    image: assets/images/20261024_finance_newcastle/03_w.jpg
+    card: none
+  sources:
+  - https://theesk.org/2026/04/14/the-analysis-series-analysis-of-newcastle-united-limited-financial-results-2024-2025/
+  - https://www.newcastleworld.com/sport/football/newcastle-united/newcastle-united-news-st-james-park-6531441
+  - https://www.sportcal.com/financial/stadium-sale-commercial-income-help-newcastle-post-first-profit-in-pif-era/
+- id: view
+  viewpoint: true
+  heading: 見立て・黒字は、増えた費用より、売却益の大きさで決まった
+  tier: 背景
+  telop: 収入は1500万ポンド増え、営業費用は5340万ポンド増えた
+  narrator: 解説
+  card: &view_table
+    type: table
+    title: 自分で数えてみた（決算書、2023-24から2024-25）
+    columns: [比べ, 答え]
+    rows:
+    - [収入の増え, 1500万ポンド（+4.7%）]
+    - [営業費用の増え, 5340万ポンド（+18%）]
+    - [人件費の収入に対する割合, 68.3%から72.6%]
+    - [処分益と黒字の比, 1億3320万対3470万]
+    highlight_row: 0
+  say:
+  - text: 見立てを、数字で出します。差と比を、ニューカッスルの決算で数え直します。
+    image: assets/images/20261024_finance_newcastle/04_w.jpg
+    card: none
+  - text: 収入は、3億2030万から、3億3530万ポンドへ。増えたのは、1500万ポンド。
+    emph: true
+    mark:
+      kind: circle
+      row: 0
+      col: 1
+    card:
+      <<: *view_table
+      highlight_row: 0
+  - text: 営業費用は、2億9150万から、3億4490万ポンドへ。
+    image: assets/images/20261024_finance_newcastle/05_w.jpg
+    card:
+      <<: *view_table
+      highlight_row: 1
+  - text: 増えたのは、5340万ポンドです。
+    card:
+      <<: *view_table
+      highlight_row: 1
+  - text: 費用の増えは、収入の増えの、約3.6倍です。
+    emph: true
+    mark:
+      kind: circle
+      row: 1
+      col: 1
+    card:
+      <<: *view_table
+      highlight_row: 1
+  - text: 営業費用は、収入を、960万ポンド上回りました。
+    card: none
+  - text: 人件費は、2億4350万ポンド。収入の割合は、68.3%から、72.6%へ。
+    image: assets/images/20261024_finance_newcastle/06_w.jpg
+    card:
+      <<: *view_table
+      highlight_row: 2
+  - text: 題への答えです。黒字を生んだのは、不動産の処分益です。
+    emph: true
+    card:
+      <<: *view_table
+      highlight_row: 3
+  - text: 本業の収入は、商業が伸びて、過去最高。ただ、費用の伸びが、それを上回りました。
+    image: assets/images/20261024_finance_newcastle/01_w.jpg
+    card: none
+  - text: 処分益は、毎年は入りません。入らない年は、本業の数字が、そのまま損益に出ます。
+    card: none
+  - text: 商業の伸びは、続くのか。2025-26の決算は、どこに出るのか。
+    image: assets/images/20261024_finance_newcastle/03_w.jpg
+    card: none
+  sources:
+  - https://theesk.org/2026/04/14/the-analysis-series-analysis-of-newcastle-united-limited-financial-results-2024-2025/
+  - https://www.sportcal.com/financial/stadium-sale-commercial-income-help-newcastle-post-first-profit-in-pif-era/
+  - https://www.newcastleunited.com/en/news/newcastle-united-announces-record-income

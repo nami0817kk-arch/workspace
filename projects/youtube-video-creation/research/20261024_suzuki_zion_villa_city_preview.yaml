@@ -1,0 +1,150 @@
+# 取材メモ（2026年10月24日）鈴木彩艶のヴィラ、24日（日本時間20時30分）に7戦全勝のマンCを迎える（試合前。ニュースのショート。見せ方 X＝冒頭に事実の一言）
+# 取材: 2026-10-24。requests（ブラウザUA）で本文を読んだ。検索エンジンのAI要約は使っていない。
+#   ・ガーディアン 2026-10-23「Premier League: 10 things to look out for this weekend」の「New-look Villa host Maresca's defiant City」の節（全文読んだ）:
+#       5月の最終節、ヴィラはエティハドで2-1（ワトキンス2点）、シティにリーグ戦のダブル。イスタンブールでのEL優勝の4日後。
+#       ヴィラはリーグ戦の最初の4試合で勝ち点1のあと調子を上げた。シティは勝てば「PL史上3チーム目の開幕8連勝」。Aston Villa v Manchester City, Saturday 12.30pm BST（＝日本時間20時30分。英国の夏時間は25日まで）。
+#   ・BBC 2026-10-23「Emery's Villa 2.0 reboot restores optimism before Man City meeting」（https://www.bbc.com/sport/football/articles/cwg7xvz8e8dpo、全文読んだ）:
+#       エメリは土曜のシティ戦（ヴィラ・パーク）の日に就任4周年。シティは7試合で100%。ヴィラは欧州のホーム12連勝。
+#       5月のEL決勝（フライブルクに3-0）の先発のうち6人が夏に退団（マルティネス含む）。
+#       リーグ序盤: ブライトン0-4、アーセナル0-1、ハル0-0、フォレスト1-2 → スパーズで初勝利、ニューカッスルに1-0。
+#       鈴木: 「24歳の日本代表GK。パルマから3,000万ポンド。人気者マルティネスの後を継ぐ重圧の中、落ち着いて見え、短いパスと長いパスの幅が加わった」（要旨。移籍金は言わない＝10/22以前の本と食い違いがあるため）。
+#       エメリの言葉（ヴァイキング戦後）: "We now try to focus now on the Manchester City game on Saturday, hopefully the same atmosphere, the same energy."
+# 自分で数えたこと: EL決勝の先発11人のうち6人が退団 → 残りは5人（11−6）。
+# 【言わないこと】試合の結果の予想・先発の予想（鈴木の先発は出典に無い＝「先発」と言わない）／シティの監督の話（マレスカ。本筋でない）／移籍金／マンザンビの欠場の可能性。
+# 本人の言葉: 鈴木本人は無い（作らない）。エメリの言葉は鈴木についてではないので、冒頭は X（事実の一言）。反応: 0件（作らない。approve は --no-voices）。
+# 10/22（CLヴァイキング戦の働き）・10/21（PLベストイレブン）・10/18（無失点）と題・数字を重ねない。写真もそれらと別（10/18 掲載の記事写真＝ニューカッスル戦）。
+# 写真: Yahoo!ニュース経由の記事主写真3枚（サッカーキング2枚・ゲキサカ1枚、いずれも10/17のニューカッスル戦）。画像に透かしは見えない（代理店かは判別できず）。
+#   フットボールチャンネル・報知・サッカーダイジェストの3枚は取り込みが時間切れ。Commons は日本代表の集合写真（子どもが写る）・放送画面・通信社の透かしで不採用。
+#   元の幅が1024px（02・03）で、縦切りは高さ約700px。
+slot: japanese
+date: "2026年10月24日"
+format: news
+no_main: true
+people: [鈴木彩艶, アストン・ヴィラ, マンチェスター・シティ, ウナイ・エメリ]
+short_style: X
+short_hook_word: 7戦全勝のシティ
+short_photos:
+  - assets/images/20261024_suzuki_zion_villa_city_preview/03_v.jpg
+  - assets/images/20261024_suzuki_zion_villa_city_preview/05_v.jpg
+  - assets/images/20261024_suzuki_zion_villa_city_preview/02_v.jpg
+short_question: シティ戦の鈴木彩艶で、いちばん見たいプレーは何ですか。
+short_hook: 鈴木彩艶のヴィラが、7戦全勝のシティを迎えます。
+short_telops:
+  - {match: 20時30分, text: 24日 日本時間20時30分/ヴィラ対シティ}
+  - {match: 開幕8連勝, text: シティは勝てば/PL史上3チーム目の開幕8連勝}
+  - {match: 2対1, text: 5月のエティハド/ヴィラが2-1で勝利}
+  - {match: ちょうど4年, text: この日で/エメリ就任4年}
+  - {match: 勝ち点1, text: リーグ戦の最初の4試合/勝ち点1}
+  - {match: 12連勝, text: 欧州のホームで/12連勝中}
+  - {match: マルティネス, text: 抜けた主力の一人/GKマルティネス}
+  - {match: 6人, text: EL決勝の先発11人のうち/6人が夏に退団}
+  - {match: 残ったのは5人, text: 残ったのは/5人}
+
+theme:
+  id: suzuki_zion_villa_city_preview
+  league: england
+  prefix: ""
+  title: 鈴木彩艶のヴィラ、7戦全勝のシティと。欧州王者の先発11人のうち、残ったのは
+  hook: ""
+  question: 7戦全勝のシティを迎えるヴィラは、どんなチームになっているのか
+  takeaway: 5月のEL決勝の先発11人のうち6人が夏に退団し、残ったのは5人。マルティネスの後を継いだ鈴木彩艶が、開幕8連勝を狙うシティを迎える
+
+thumbnail:
+  line1: 鈴木彩艶、シティ戦
+  line2: 相手は7戦全勝
+  tags: [鈴木彩艶, アストン・ヴィラ, マンチェスター・シティ]
+  layout: face
+  photo: assets/images/20261024_suzuki_zion_villa_city_preview/03.jpg
+  short_photo: assets/images/20261024_suzuki_zion_villa_city_preview/03_v.jpg
+
+answer: EL決勝の先発11人のうち残ったのは5人。その中でゴールを守るのが、マルティネスの後を継いだ鈴木彩艶
+watch: 24日 日本時間20時30分のヴィラ対シティ
+
+sections:
+  - id: what
+    main: true
+    heading: 何がある日か
+    tier: 報道
+    telop: 24日、ヴィラが7戦全勝のシティを迎える
+    say:
+      - text: 鈴木彩艶のアストン・ヴィラが、7戦全勝のマンチェスター・シティを迎えます。
+        image: assets/images/20261024_suzuki_zion_villa_city_preview/03_w.jpg
+      - text: 試合は24日、日本時間の20時30分から、ヴィラ・パークで行われます。
+        image: assets/images/20261024_suzuki_zion_villa_city_preview/03_w.jpg
+        card: none
+      - text: シティは勝てば、プレミアリーグ史上3チーム目の開幕8連勝です。
+        image: assets/images/20261024_suzuki_zion_villa_city_preview/05_w.jpg
+        card: none
+      - text: 一方のヴィラは昨季、シティにリーグ戦で2勝。5月には敵地で2対1と勝っています。
+        image: assets/images/20261024_suzuki_zion_villa_city_preview/05_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.theguardian.com/football/2026/oct/23/premier-league-10-things-to-look-out-for-this-weekend
+      - https://www.bbc.com/sport/football/articles/cwg7xvz8e8dpo
+
+  - id: emery
+    heading: エメリ監督の「ヴィラ2.0」
+    tier: 報道
+    telop: 夏に主力が抜け、序盤の4試合で勝ち点1。そこから立て直した
+    say:
+      - text: この日は、エメリ監督の就任からちょうど4年の日です。
+        image: assets/images/20261024_suzuki_zion_villa_city_preview/02_w.jpg
+      - text: 鈴木が加わったこの夏、ヴィラでは主力が次々と抜けました。
+        image: assets/images/20261024_suzuki_zion_villa_city_preview/02_w.jpg
+        card: none
+      - text: リーグ戦は、最初の4試合で勝ち点1でした。
+        image: assets/images/20261024_suzuki_zion_villa_city_preview/02_w.jpg
+        card: none
+      - text: そこから立て直し、ヨーロッパの大会では、ホームで12連勝中です。
+        image: assets/images/20261024_suzuki_zion_villa_city_preview/03_w.jpg
+        card: none
+      - text: エメリ監督は、「土曜のシティ戦も、同じ雰囲気、同じエネルギーで」と話しています。
+        image: assets/images/20261024_suzuki_zion_villa_city_preview/03_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.bbc.com/sport/football/articles/cwg7xvz8e8dpo
+
+  - id: zion
+    heading: マルティネスの後を継いだ鈴木
+    tier: 報道
+    telop: マルティネスの後を継いだ鈴木。落ち着いたプレーとパスの幅が評価されている
+    say:
+      - text: 抜けた主力の一人が、ゴールキーパーのエミリアーノ・マルティネスでした。
+        image: assets/images/20261024_suzuki_zion_villa_city_preview/05_w.jpg
+      - text: その後を継いだのが、パルマから来た24歳の鈴木です。
+        image: assets/images/20261024_suzuki_zion_villa_city_preview/05_w.jpg
+        card: none
+      - text: 現地では、落ち着いたプレーと、短いパスも長いパスも出せる幅が評価されています。
+        image: assets/images/20261024_suzuki_zion_villa_city_preview/02_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.bbc.com/sport/football/articles/cwg7xvz8e8dpo
+
+  - id: view
+    viewpoint: true
+    heading: 欧州王者の先発11人のうち、残ったのは何人か
+    tier: 報道
+    telop: EL決勝の先発11人のうち6人が退団。残ったのは5人
+    say:
+      - text: 見立てです。5月のヨーロッパリーグ決勝で先発したのは11人。
+        image: assets/images/20261024_suzuki_zion_villa_city_preview/02_w.jpg
+        card: none
+      - text: そのうち6人が、この夏にチームを離れました。
+        image: assets/images/20261024_suzuki_zion_villa_city_preview/05_w.jpg
+        card: none
+      - text: 残ったのは5人です。
+        image: assets/images/20261024_suzuki_zion_villa_city_preview/03_w.jpg
+        card: none
+      - text: 半分以上が入れ替わったチームで、ゴールを守るのが鈴木です。
+        image: assets/images/20261024_suzuki_zion_villa_city_preview/03_w.jpg
+        card: none
+      - text: 開幕8連勝がかかるシティを、その鈴木がどう迎え撃つか。
+        image: assets/images/20261024_suzuki_zion_villa_city_preview/05_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.bbc.com/sport/football/articles/cwg7xvz8e8dpo
+      - https://www.theguardian.com/football/2026/oct/23/premier-league-10-things-to-look-out-for-this-weekend

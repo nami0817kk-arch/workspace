@@ -1,0 +1,144 @@
+# 取材メモ（2026年10月24日）アロンソ「感情のコントロールだ」。昨季11枚だったチェルシーの退場が、今季はゼロ（ニュースのショート。見せ方 Y＝アロンソ本人の言葉から始める）
+# 取材: 2026-10-24。requests（ブラウザUA）で本文を全部読んだ。
+#   ・ガーディアン「Premier League news: Spurs' nine injuries 'normal', says De Zerbi; 'emotional control' keeps Blues red-free」（10/23、Jacob Steinberg 記者の項）— 題材の元。
+#       地の文: 昨季チェルシーはレッドカード11枚（picked up 11 red cards last season）。今季はまだ0（have not had a red card this season）。先週末エヴァートンで2-0で勝った試合でも賢さを見せた。
+#       アロンソは昨夏に監督になってから、この問題に取り組んだ（地の文）。
+#       本人: 'For me it comes a lot with emotional control, with the control of the game' / 'If you are focused on what you have to do, you are prepared for what's going on. Normally you don't make that many mistakes and don't overreact to certain situations.'
+#             'This is a fundamental part of the game, to have that emotional control. ... we keep calm, I don't lose my head and I don't get stupid yellow cards, make stupid penalties.'
+#             経験のある選手の補強について 'I think it helps. Absolutely. It helps for that composure that you need in certain moments.'
+#             'To find a total dominance in a game ... it's difficult to find it in the Premier League unless you have become a top, top, top team. That's why you can't rest on your laurels when you are 2-0 up.'
+#             'It is people on the pitch ... I have from the touchline some kind of input but the real one is from the players.'
+#       スパーズは2018年からスタンフォード・ブリッジで勝っていない（ガーディアン地の文）。
+#   ・チェルシー公式「Xabi Alonso confirms Chelsea team news for Tottenham」（10/23）: 直近はボーンマスに5-1、エヴァートンに2-0でリーグ2連勝。
+#   ・チェルシー公式「Alonso targeting a complete performance…」（10/23）: スパーズ戦は今季のプレミア8試合目（'game eight'）。ホームのスパーズ戦は直近41試合で1敗だけ（公式の書き方）。
+#   → 台本の訳はこちらの自訳（英語の記者会見）。「ばかげた」は stupid の訳。
+# 言わないこと: キックオフ時刻（ガーディアンは evening、公式は afternoon で食い違う）。11枚の内訳（リーグ戦か公式戦全体か）は記事に無いので「昨季」とだけ言う。
+# 自分で数えた比べ（見立て）: 昨季11枚→今季0枚。今季はプレミアで7試合を終えた段階（公式の game eight から）。
+# 確度: 報道（ガーディアンの会見記事。チェルシー公式で試合結果を確認）。
+# 反応: 0件。作らない。approve は --no-voices で。
+# 写真: 01・02 はチェルシー公式の記事主写真（10/23、練習場）。03 は Commons CC BY-SA 2.0（Giovanni Batista Rodriguez、2021年レアル・ソシエダB監督時代。写真に撮影者名の小さな表記あり）。ガーディアンの写真はロイター・PA なので使わない。
+slot: premier
+date: "2026年10月24日"
+format: news
+no_main: true      # ニュースはショートだけ（2026-10-14）。締めで本編を案内しない
+people: [シャビ・アロンソ, チェルシー]
+
+short_style: Y
+short_hook_quote: 私にとっては、感情のコントロールが大きい。
+short_question: チェルシーの退場ゼロは、このまま続くと思いますか。
+short_hook: 昨季11枚の退場が、今季はゼロ。
+short_telops:
+  - {match: 11枚, text: チェルシー 昨季のレッドカード/11枚}
+  - {match: まだ1枚も, text: 今季はここまで/退場ゼロ}
+  - {match: 過剰に反応しない, text: アロンソ/「過剰に反応しない」}
+  - {match: ばかげたイエロー, text: 「ばかげたイエローも/ばかげたPKもない」}
+  - {match: 経験のある選手, text: 昨夏の補強/経験のある選手}
+  - {match: 2対0で勝った, text: 先週末 エヴァートン0-2チェルシー}
+  - {match: 2対0でも, text: 「2対0でも/気は抜けない」}
+  - {match: ピッチの上の選手, text: 「本当の力は/ピッチの上の選手」}
+  - {match: 2018年, text: スパーズは2018年から/ここで勝っていない}
+
+theme:
+  id: alonso_chelsea_no_reds
+  league: england
+  league_name: プレミアリーグ
+  prefix: ""
+  title: アロンソ「感情のコントロールだ」。昨季11枚だったチェルシーの退場が、今季はゼロ
+  hook: ""
+  question: 昨季11枚の退場を出したチェルシーが、今季まだ1枚も出していないのはなぜか。アロンソは何と話したのか
+  takeaway: アロンソは感情と試合のコントロールを挙げ、経験のある選手の補強も効いたと話した。一方で、プレミアで試合を完全に支配するのは難しく、2対0でも気は抜けないとも語った
+
+thumbnail:
+  line1: 退場 11枚→0枚
+  line2: アロンソ「感情のコントロール」
+  tags: [アロンソ, チェルシー, プレミアリーグ]
+  layout: face
+  photo: assets/images/20261024_alonso_chelsea_no_reds/01_w.jpg
+  short_photo: assets/images/20261024_alonso_chelsea_no_reds/01_v.jpg
+
+answer: 「感情のコントロールと、試合のコントロール」。経験のある選手の補強も助けになったと話した
+watch: 24日（現地）のチェルシー対トッテナム
+
+short_photos:
+  - assets/images/20261024_alonso_chelsea_no_reds/01_v.jpg
+  - assets/images/20261024_alonso_chelsea_no_reds/02_v.jpg
+  - assets/images/20261024_alonso_chelsea_no_reds/03_v.jpg
+
+sections:
+  - id: what
+    main: true
+    heading: 退場ゼロの理由
+    tier: 報道
+    telop: 昨季11枚の退場が、今季はゼロ。アロンソが語った理由
+    say:
+      - text: チェルシーは昨季、レッドカードを11枚もらいました。
+        image: assets/images/20261024_alonso_chelsea_no_reds/01_w.jpg
+      - text: 今季は、まだ1枚も出ていません。アロンソ監督はこう話しました。
+        image: assets/images/20261024_alonso_chelsea_no_reds/01_w.jpg
+      - voice: アロンソ
+        text: 私にとっては、感情のコントロールが大きい。試合のコントロールもだ。
+        short_voice: true
+        image: assets/images/20261024_alonso_chelsea_no_reds/02_w.jpg
+      - voice: アロンソ
+        text: やるべきことに集中していれば、ミスは減るし、過剰に反応しない。
+        cont: true
+        image: assets/images/20261024_alonso_chelsea_no_reds/02_w.jpg
+      - voice: アロンソ
+        text: 冷静さを保てば、ばかげたイエローも、ばかげたPKもない。
+        cont: true
+        image: assets/images/20261024_alonso_chelsea_no_reds/03_w.jpg
+      - text: 英語の会見の言葉を、こちらで訳しました。
+        image: assets/images/20261024_alonso_chelsea_no_reds/03_w.jpg
+    official: false
+    sources:
+      - https://www.theguardian.com/football/2026/oct/23/premier-league-news-spurs-nine-injuries-normal-says-de-zerbi-emotional-control-keeps-blues-red-free
+
+  - id: experience
+    heading: 経験のある選手と、2対0の怖さ
+    tier: 報道
+    telop: 補強の効果と、プレミアの難しさ
+    say:
+      - text: アロンソは、昨夏に経験のある選手を補強したことも、助けになったと話しています。
+        image: assets/images/20261024_alonso_chelsea_no_reds/01_w.jpg
+      - text: 先週末は、アウェーでエヴァートンに2対0で勝ちました。
+        image: assets/images/20261024_alonso_chelsea_no_reds/01_w.jpg
+      - voice: アロンソ
+        text: プレミアで試合を完全に支配するのは、難しい。
+        image: assets/images/20261024_alonso_chelsea_no_reds/02_w.jpg
+      - voice: アロンソ
+        text: 本当にトップのチームにならない限りは。
+        cont: true
+        image: assets/images/20261024_alonso_chelsea_no_reds/02_w.jpg
+      - voice: アロンソ
+        text: だから2対0でも、気は抜けない。
+        cont: true
+        image: assets/images/20261024_alonso_chelsea_no_reds/02_w.jpg
+      - voice: アロンソ
+        text: 本当の力は、ピッチの上の選手だ。
+        image: assets/images/20261024_alonso_chelsea_no_reds/03_w.jpg
+    official: false
+    sources:
+      - https://www.theguardian.com/football/2026/oct/23/premier-league-news-spurs-nine-injuries-normal-says-de-zerbi-emotional-control-keeps-blues-red-free
+      - https://www.chelseafc.com/en/news/article/xabi-alonso-confirms-chelsea-team-news-for-tottenham
+
+  - id: view
+    viewpoint: true
+    heading: 次はロンドン・ダービー
+    tier: 背景
+    telop: 退場ゼロが試されるスパーズ戦
+    say:
+      - text: 見立てです。今季はプレミアで7試合を終えて、退場はゼロ。
+        image: assets/images/20261024_alonso_chelsea_no_reds/01_w.jpg
+      - text: 昨季の11枚から、大きく変わりました。
+        image: assets/images/20261024_alonso_chelsea_no_reds/01_w.jpg
+      - text: アロンソのチェルシーは次に24日、ホームでトッテナムとのダービーです。
+        image: assets/images/20261024_alonso_chelsea_no_reds/02_w.jpg
+      - text: スパーズは2018年から、スタンフォード・ブリッジで勝っていません。
+        image: assets/images/20261024_alonso_chelsea_no_reds/03_w.jpg
+      - text: 熱くなりやすいダービーで、アロンソの言う冷静さを保てるかが試されます。
+        image: assets/images/20261024_alonso_chelsea_no_reds/01_w.jpg
+    official: false
+    sources:
+      - https://www.theguardian.com/football/2026/oct/23/premier-league-news-spurs-nine-injuries-normal-says-de-zerbi-emotional-control-keeps-blues-red-free
+      - https://www.chelseafc.com/en/news/article/alonso-targeting-a-complete-performance-to-continue-good-run
+short_title: "アロンソ「感情のコントロールだ」。昨季11枚だったチェルシーの退場が、今季はゼロ"

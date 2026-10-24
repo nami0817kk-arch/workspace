@@ -1,0 +1,157 @@
+# 取材メモ（2026年10月24日）バロンドール発表（26日・月曜）の前に、候補が語った言葉（ニュースのショート。見せ方 Y＝ヤマルの実在の発言から始める）
+# 予想は書かない（受賞者は未発表。ESPN の予測市場の数字も入れない）。本人の言葉は BBC が引いた英語を訳した。言い換えない。
+# 取材: 2026-10-24。BBC 本文を requests で全部読んだ。控え research/raw/20261024_ballondor_eve_bbc.txt。
+#   ・BBC Sport（2026-10-23 06:06 UTC）「A Ballon d'Or campaign as fierce off the pitch as on it」
+#       ヤマル: will not "beg for anything"（『何かを乞うことはしない』）。賞は得点王だけに与えるものではない、と示した（間接話法。カギ括弧にしない）。
+#       ルイス・エンリケ: "bored of the Ballon d'Or"。PSG は過去最多の10人が候補（record 10 PSG players on the shortlist）。
+#       デンベレとクヴァラツヘリアは BBC Sport に互いを推した。デンベレ: "We can cut it in two"（joked）"Honestly, he deserves it, the season he had was exceptional."
+#         クヴァラツヘリア: "Of course it's him!"。デンベレは 2025 年の受賞者（写真の説明文）。
+#       ムバッペ: "I always think I'm the best but everyone has their own opinion ... Of course, this year could be good for me to win the Ballon d'Or - but journalists vote."
+#       投票は締め切り済みで、受賞者はすでに決まっている（The deadline has passed. The winner has already been chosen.）。
+#   ・日程: 授賞式は月曜、ロンドン・パラディアム（ESPN 10/21、控え research/raw/20261022_ballondor_espn_story.txt）。月曜＝26日。
+# 10/22『ムバッペが語ったバロンドールの条件』（20261022_ballondor_three）との重なり:
+#   ムバッペの『普通の選手には与えない』（BBC にも同じ発言がある）は使わない。今回は『いつも自分が最高だと思っている』の別の発言だけ。
+#   ヤマルの『僕とムバッペが世界一』・ケインの発言・『FIFAランク上位100か国の記者』の説明・優勝の数の比べ、は使わない。写真も 10/16〜10/24 の本と重ならないものにした。
+# 使わなかったもの: ケイン（今回は3人に絞る）。エーベルルの『キャンペーンを張らない人たち』（ケインの推しで別の話）。パパンの『自分、自分、自分』（ムバッペを小さく見せる言い方）。
+#   デコの『大スキャンダル』（ラフィーニャ・ペドリの落選の話で別筋）。ESPN の予測市場（予想に当たる）。
+# 反応: 取らない。ネットの反応は集めていない（作らない）。approve は --no-voices で。
+# 写真: Commons（CC BY-SA 4.0。ヤマル・デンベレ・ムバッペは Bryan Berlin 撮影のW杯2026、クヴァラツヘリアは 2023 年ナポリ時代の1枚しか大きいものが無い）。
+slot: world_2
+date: "2026年10月24日"
+format: news
+no_main: true      # ニュースはショートだけ（2026-10-14）。締めで本編を案内しない
+people: [ヤマル, デンベレ, クヴァラツヘリア, ムバッペ, バロンドール]
+
+short_style: Y
+short_hook_quote: 僕は、何も乞いません
+short_question: 候補たちの言葉で、いちばん印象に残ったのは誰ですか。
+short_hook: バロンドール発表の直前に。
+short_telops:
+  - {match: 乞いません, text: ヤマル/「何も乞わない」}
+  - {match: 得点王, text: 「賞は得点王だけのものではない」}
+  - {match: 10人, text: パリ・サンジェルマンから/過去最多の10人が候補}
+  - {match: 半分, text: デンベレ/「半分に分けよう」}
+  - {match: もちろん, text: クヴァラツヘリア/「もちろん彼だ」}
+  - {match: 最高だと, text: ムバッペ/「いつも自分が最高だと思う」}
+  - {match: 記者です, text: 「投票するのは記者」}
+  - {match: 決まって, text: 投票は締め切り済み/受賞者はもう決まっている}
+
+theme:
+  id: ballondor_eve_words
+  league: spain
+  league_name: バロンドール
+  prefix: ""
+  title: ヤマル「何も乞わない」。バロンドール発表前に、候補たちが語ったこと
+  hook: ""
+  question: 26日のバロンドール発表を前に、候補たちは何と語ったのか
+  takeaway: ヤマルは乞わず、デンベレは仲間と半分に、ムバッペは自分を推した。受賞者はもう決まっていて、発表は26日
+
+thumbnail:
+  line1: ヤマル「何も乞わない」
+  line2: 発表は26日
+  tags: [ヤマル, デンベレ, ムバッペ, バロンドール]
+  layout: scene
+  photo: assets/images/20261024_ballondor_eve_words/01_w.jpg
+  short_photo: assets/images/20261024_ballondor_eve_words/01_v.jpg
+
+answer: 3人とも、受賞への向き合い方を語った（受賞者は未発表）
+watch: 26日のバロンドール発表
+
+short_photos:
+  - assets/images/20261024_ballondor_eve_words/01_v.jpg
+  - assets/images/20261024_ballondor_eve_words/02_v.jpg
+  - assets/images/20261024_ballondor_eve_words/03_v.jpg
+  - assets/images/20261024_ballondor_eve_words/04_v.jpg
+  - assets/images/20261024_ballondor_eve_words/05_v.jpg
+  - assets/images/20261024_ballondor_eve_words/06_v.jpg
+  - assets/images/20261024_ballondor_eve_words/07_v.jpg
+
+sections:
+  - id: what
+    main: true
+    heading: ヤマルは何と語ったか
+    tier: 報道
+    telop: ヤマル「何も乞わない」
+    say:
+      - text: 26日のバロンドール発表を前に、本命のひとり、ヤマルが語りました。
+        short_only: true
+        image: assets/images/20261024_ballondor_eve_words/01_w.jpg
+      - voice: ヤマル
+        text: 僕は、何も乞いません。
+        short_voice: true
+        image: assets/images/20261024_ballondor_eve_words/05_w.jpg
+      - text: ヤマルは、賞は得点王だけに与えるものではない、とも話しました。
+        image: assets/images/20261024_ballondor_eve_words/01_w.jpg
+    official: false
+    sources:
+      - https://www.bbc.com/sport/football/articles/c65yng4x302jo
+      - https://www.espn.com/soccer/story/_/id/50229304/ballon-dor-industry-harry-kane-lamine-yamal-kylian-mbappe
+
+  - id: psg
+    heading: デンベレとクヴァラツヘリアは何と言ったか
+    tier: 報道
+    telop: パリ・サンジェルマンの2人は、互いを推した
+    say:
+      - text: パリ・サンジェルマンからは、過去最多の10人が候補に入りました。
+        image: assets/images/20261024_ballondor_eve_words/06_w.jpg
+      - text: 前回の受賞者デンベレは、同僚のクヴァラツヘリアについて、こう冗談を言いました。
+        image: assets/images/20261024_ballondor_eve_words/02_w.jpg
+      - voice: デンベレ
+        text: 半分に分けましょう。
+        image: assets/images/20261024_ballondor_eve_words/06_w.jpg
+      - voice: デンベレ
+        text: 正直、彼はふさわしい。彼のシーズンは、特別でした。
+        cont: true
+        image: assets/images/20261024_ballondor_eve_words_pair/01.jpg
+      - voice: クヴァラツヘリア
+        text: もちろん、彼ですよ！
+        image: assets/images/20261024_ballondor_eve_words_pair/01.jpg
+    official: false
+    sources:
+      - https://www.bbc.com/sport/football/articles/c65yng4x302jo
+
+  - id: mbappe
+    heading: ムバッペは何と言ったか
+    tier: 報道
+    telop: ムバッペ「いつも自分が最高だと思う」
+    say:
+      - text: 初めての受賞を狙うムバッペは、もっとはっきり語りました。
+        image: assets/images/20261024_ballondor_eve_words/04_w.jpg
+      - voice: ムバッペ
+        text: 僕はいつも、自分が最高だと思っています。
+        image: assets/images/20261024_ballondor_eve_words/07_w.jpg
+      - voice: ムバッペ
+        text: でも、意見は人それぞれです。
+        cont: true
+        image: assets/images/20261024_ballondor_eve_words/04_w.jpg
+      - voice: ムバッペ
+        text: もちろん、今年は取れるかもしれません。
+        cont: true
+        image: assets/images/20261024_ballondor_eve_words/07_w.jpg
+      - voice: ムバッペ
+        text: ただ、投票するのは記者です。
+        cont: true
+        image: assets/images/20261024_ballondor_eve_words/04_w.jpg
+    official: false
+    sources:
+      - https://www.bbc.com/sport/football/articles/c65yng4x302jo
+
+  - id: view
+    viewpoint: true
+    heading: 3人の言葉は何が違うか
+    tier: 背景
+    telop: 乞わない、分け合う、自分を推す
+    say:
+      - text: 見立てです。3人の言葉は、向きがはっきり分かれました。
+        card: none
+        image: assets/images/20261024_ballondor_eve_words/01_w.jpg
+      - text: ヤマルは何も乞わず、デンベレは仲間と分け合い、ムバッペは自分を推しました。
+        image: assets/images/20261024_ballondor_eve_words/02_w.jpg
+      - text: ただ、投票はもう締め切られていて、受賞者は決まっています。
+        image: assets/images/20261024_ballondor_eve_words/04_w.jpg
+      - text: 答えが出るのは、26日の月曜です。
+        image: assets/images/20261024_ballondor_eve_words/05_w.jpg
+    official: false
+    sources:
+      - https://www.bbc.com/sport/football/articles/c65yng4x302jo
+short_title: "ヤマル「何も乞わない」。バロンドール発表前に、候補たちが語ったこと"

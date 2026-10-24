@@ -1,0 +1,4 @@
+title: ケナン・ユルドゥズの今季のヒートマップ
+unit: touches
+points=42
+source: FotMob

@@ -1,0 +1,558 @@
+# 監督紹介：クロップ（10/24 土、シリーズ「監督紹介」、key: manager_klopp、型は news）。9節の型（2026-10-20 決定）。見本は 20261023_manager_mourinho。
+# 順：フック→基礎DATA→**日本との接点（基礎DATAの次）**→歩みと転機→戦術の色（実例の試合1つ）→数字で見る→本人の言葉→マル秘話→見立て。
+#
+# **重なりの確認（2026-10-24 に自分で）**：scripts/・research/covered.yaml・research/posted.json を grep。クロップを主題にした「人物紹介」は無し。
+#   クロップの名前が出る既存の本は、ニュース（9/16・9/18 ドイツ代表の初招集44人、9/25 初陣の1対1、9/27 ヴィルツ擁護のquote、9/28 ギリシャに初黒星）で、題材は別。
+#   ドイツ代表の4試合（9/24〜10/4）のうち、9/24 と 9/27 の2試合は既存のニュースが扱った。この回は「人物の経歴・勝率・戦術の色」で、試合の中身には入らない（結果の一覧だけ）。
+#
+# **いまの立場（一次情報で確かめた。依頼文の「レッドブルのグローバル・フットボール統括」は古い。変わっていた）**
+#   ○ DFB（ドイツサッカー連盟）公式 2026-07-24「Jürgen Klopp als Bundestrainer vorgestellt」
+#       https://www.dfb.de/news/juergen-klopp-als-bundestrainer-vorgestellt （控え research/raw/20261024_dfb_juergen-klopp-als-bundestrainer-vorgestellt.txt）
+#       「59歳のクロップは、今日、フランクフルトのDFBキャンパスで4年契約に署名。EURO 2028 と 2030年ワールドカップへ導く」「2026年8月15日にナーゲルスマンの後任に就く。
+#        ナーゲルスマンは、ワールドカップでパラグアイに敗れたあと 7月3日に辞任」「コーチ：クラヴィーツ、リンデルス、ベンダー」。
+#   ○ DFB 公式 2026-07-24「DFB und Red Bull treffen Vereinbarung」：クロップは Red Bull の「Head of Global Soccer」から**早めに**移る。クロップ本人（上の記事）「ここ1年半、レッドブルで…」。
+#   ○ DFB 公式 2026-07-24（会見）「Klopp: Erfolgreicher Fußball kann ein Land verändern」（控え research/raw/20261024_dfb_klopp-ein-neustart-fuer-alle-die-bock-haben.txt）
+#   ○ DFB 公式 2026-09-24「Klopp: Ich war mit der gezeigten Leidenschaft sehr zufrieden」：現在もバンデストレーナー。
+#   ○ 英語版 Wikipedia「Jürgen Klopp」（2026-10-04 までの試合を反映。控え research/raw/20261024_klopp_wiki.txt）：ドイツ代表 2026-08-15〜現在 4試合 1勝2分1敗。
+#   → 題・語りは「ドイツ代表監督」。依頼文の「レッドブル統括」は、**直前の肩書き**として1行だけ入れる（2024年にリヴァプールを退任→約1年半レッドブル→7月に代表）。
+#
+# **通算の数え方（台本とサムネをそろえる）**＝クラブ・代表のトップチームの全公式戦。**英語版 Wikipedia「Jürgen Klopp」Managerial statistics（updated: match played 4 October 2026）を自分で足し直した。**
+#   行（試合・勝・分・敗）：マインツ 270・109・78・83／ドルトムント 319・180・69・70／リヴァプール 491・299・109・83／ドイツ代表 4・1・2・1。
+#   **合計 1084試合 589勝 258分 237敗（勝率 54.3%）。Wikipedia の合計欄 1084・589・258・237 と一致。各行は 勝＋分＋敗＝試合 で一致。**
+#   勝率：マインツ 40.4%／ドルトムント 56.4%／リヴァプール 60.9%／クラブ3つの合計 1080試合 588勝＝54.4%。
+#   ※Wikipedia の注：Kicker はドルトムントの出場停止中の2試合（2013-14 CL の2勝）を数えない。The Analyst の数字を採っている（319試合）。台本は Wikipedia の表のまま。
+#   優勝（Wikipedia Honours の「Manager」欄。インタートト杯に当たる大会は無い。スーパー杯・コミュニティ・シールドは数える＝モウリーニョと同じ数え方）：
+#     ドルトムント5（ブンデスリーガ 2010-11・2011-12／DFBポカール 2011-12／DFLスーパー杯 2013・2014）／
+#     リヴァプール8（プレミア 2019-20／FAカップ 2021-22／リーグ杯 2021-22・2023-24／コミュニティ・シールド 2022／CL 2018-19／UEFAスーパー杯 2019／クラブW杯 2019）＝**13冠**。
+#     マインツの「2部3位での昇格（2003-04）」は優勝に数えない。
+#     種類別：リーグ3（BL2・PL1）／国内カップ4（ポカール1・FA杯1・リーグ杯2）／国内スーパー杯・シールド3（DFL2・シールド1）／欧州・世界3（CL・UEFAスーパー杯・クラブW杯）＝13。
+#     ※Wikipedia 本文は「2008年のドイツ・スーパー杯でバイエルンを破り最初のタイトル」と書くが、Honours 欄には 2008 が無い（本文と欄が食い違う）。**台本は Honours 欄の13冠を使い、2008 は言わない。報告に書く。**
+#   リーグ優勝：ドイツ（2010-11・2011-12）＋イングランド（2019-20）＝2か国で3度。
+#   CL決勝：2013（ドルトムント、バイエルンに1-2）・2018（リヴァプール）・2019（優勝）・2022（リヴァプール）＝4度進み、優勝は1度。
+# **選手時代・基礎**：Wikipedia：1967-06-16 生まれ（シュトゥットガルト、育ちは黒い森のグラッテン村）。マインツ 1990〜2001（最初はFW、1995年からDF）。1995年にフランクフルトのゲーテ大学でスポーツ科学の学位。
+#   マインツの歴代最多得点（通算56、リーグ52）で引退。コーチングライセンスの勉強に、毎週ケルンへ通った（エーリヒ・ルーテメラー）。
+#
+# **日本との接点（一次で確かめた範囲）**
+#   ○ 英語版 Wikipedia「Shinji Kagawa」の出場表：ドルトムント 2010-11 ブンデスリーガ 18試合8得点、2011-12 31試合13得点＝**2シーズンで49試合21得点**。2シーズンともドルトムントの優勝（Honours 欄）。クロップの在任中（2008〜15）。
+#   ○ 英語版 Wikipedia「2012 DFB-Pokal final」：2012-05-12 ベルリン、ドルトムント 5-2 バイエルン。香川 3分、フンメルス 41分（PK）、レヴァンドフスキ 45+1・58・81分。→ 香川が先制点。
+#   ○ 英語版 Wikipedia「Takumi Minamino」：リヴァプール 2020〜2022（クロップの在任中）。「Wataru Endo」：2023-08-18 にリヴァプール加入（クロップ最後のシーズン 2023-24）。
+#   × 香川と南野・遠藤の詳しい出場数は台本に入れない（香川の通算以外）。
+#
+# **戦術の色（実例の試合＝2019-05-07 CL準決勝第2戦、リヴァプール 4-0 バルセロナ（合計 4-3））**
+#   ○ ESPN の試合記録（site.api.espn.com uefa.champions summary?event=538699、控え research/raw/20261024_klopp_lfc_barca_summary.json）：アンフィールド（52,212人）。
+#       7分オリギ／54分・56分ウェイナルドゥム（ハーフタイムにロバートソンと交代で入った）／79分オリギ（アレクサンダー＝アーノルドのコーナーから）。
+#       支配率 リヴァプール42.7%・バルセロナ57.3%、シュート 13対8、枠内 7対5、コーナー 7対6。サラーとフィルミーノは出場していない（先発にも途中交代にも名前が無い）。
+#       第1戦（2019-05-01 カンプ・ノウ）は バルセロナ 3-0 リヴァプール（ESPN scoreboard 2019-05-01）。
+#   ○ クロップ本人（DFB 2026-07-24 会見）：「Mehr Aufwand betreiben, mehr Intensität auf dem Platz – das ist schon mein Plan. Gegenpressing und eine stabile Ordnung werden auch wichtige Themen sein.」
+#   ○ 英語版 Wikipedia「Tactics」：ゲーゲンプレッシング（ボールを失った直後に、下がらずすぐ奪い返しにいく）・速さと組織と体力と規律・自分のチームを「ヘヴィメタル」と呼ぶ・感情の大切さ。
+#   ※リヴァプールの具体的な走行距離・プレス回数は一次で確かめられなかったので入れない。
+# **本人の言葉（DFB の公式記事。自訳。原文は出典）**：
+#   ①2026-07-24 会見：「Mein erstes Ziel ist, dass wir besser Fußball spielen.」
+#   ②同「Ich habe dreimal erlebt, wie erfolgreicher Fußball eine Stadt verändern kann. Und erfolgreicher Fußball kann auch ein Land verändern.」
+#   ③2026-09-24 DFB「Klopp: Ich war mit der gezeigten Leidenschaft sehr zufrieden」（オランダ戦 1-1 のあと）：「Wir können besser und mehr Fußball spielen.」
+#   ④2026-07-24 会見「Heute ist für alle, die Bock darauf haben, ein Neustart.」（フックで使う）
+# **ドイツ代表の4試合（Wikipedia「Germany national football team results (2020–present)」。UEFA のレポートURL付き）**
+#   9/24 オランダ 1-1 ドイツ（ゲーク90+2・ンメチャ32）／9/27 ドイツ 0-1 ギリシャ（クルベリス74）／10/1 ドイツ 2-0 セルビア（ビショフ39・ヴィルツ61）／10/4 ギリシャ 0-0 ドイツ。3得点2失点。
+#   次：11/13 セルビア戦（ベオグラード、UEFA の決定で無観客＝DFB 発表）／11/16 ドイツ対オランダ（ベルリン）。
+#
+# **マインツの始まり**：Wikipedia：2001-02-27、解任されたクラウツンの後任に。翌日の試合 1-0 デュースブルク。最初の7試合で6勝。14位で降格を最終節の前に避けた。2003-04 に3位で昇格（2004年）。
+#   2004-05 初のトップリーグ：予算もスタジアムもリーグ最小で11位。2008年に退任（クラブ最長の在任）。
+#
+# **入れなかったもの**：私生活・家族・政治的な発言、年俸・契約金・補償金（レッドブルへの100万ユーロ等）、法的な問題、退任・解任の経緯の評価（「退任した」と年だけ）、他の監督との優劣、
+#   審判への抗議・退場・罰金、アシスタントの内紛（ブヴァチ）、ワールドカップ敗退の評価（ナーゲルスマンの辞任は事実の一行のみ）、女子チーム、Jリーグ、報道・SNS の反応、
+#   ドイツ代表の4試合の中身（既存のニュースが扱った）、2008年のスーパー杯。
+# **日本語名・読みで怪しいもの**：クロップ、シュトゥットガルト、マインツ、ドルトムント、リヴァプール、ブンデスリーガ、ポカール、ゲーゲンプレッシング、ヘヴィメタル、ウェイナルドゥム、オリギ、アレクサンダー＝アーノルド、
+#   サラー、フィルミーノ、アンフィールド、バルセロナ、香川真司、南野拓実、遠藤航、レヴァンドフスキ、フンメルス、ナーゲルスマン、クラウツン、デュースブルク、ベオグラード。
+date: 2026年10月24日
+slot: other_1
+format: news
+series: 監督紹介
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+people:
+- クロップ
+theme:
+  end_bg: assets/images/20261024_manager_klopp/01_w.jpg
+  id: manager_klopp
+  league: germany
+  league_name: ドイツ代表
+  kind: other
+  topic: クロップ
+  title: クロップ、ドイツ代表監督はどんな人？13冠を積んだやり方は、代表でどう生きるのか
+  question: ドイツ代表のクロップ監督は、どんな人なのか。13冠は、どのクラブで積み上がり、そのやり方は代表でどう生きるのか
+  lead: ドイツ代表監督、クロップ。
+  opening_image: assets/images/20261024_manager_klopp/05_w.jpg
+  takeaway: 通算は1084試合、589勝で勝率54.3%（ドイツ代表の4試合を含む）。優勝は13冠（トップチームの優勝）で、リヴァプール8・ドルトムント5。リーグ優勝は2か国で3度、チャンピオンズリーグは決勝に4度進んで優勝は1度。勝率は率いた順にマインツ40.4%、ドルトムント56.4%、リヴァプール60.9%。2026年7月24日にドイツサッカー連盟が就任を発表し、4年契約は2030年のワールドカップまで。代表は4試合で1勝2分け1敗、次は11月13日と16日
+  short_title: クロップ、13冠と代表の4試合
+  nameplate: クロップ｜ドイツ代表監督
+thumbnail:
+  line1: クロップ、通算13冠
+  line2: リーグ優勝は2か国で3度
+  tags:
+  - ドイツ
+  photo: assets/images/20261024_manager_klopp/panel_01.jpg
+  photos: []
+  short_photo: assets/images/20261024_manager_klopp/05_w.jpg
+sections:
+- id: hook
+  main: true
+  heading: 13冠、決勝は何度も。クロップは、どんな監督なのか
+  tier: 報道
+  telop: 13冠。リーグ優勝は2か国で3度
+  narrator: 解説
+  card: &hook_stats
+    type: stats
+    title: クロップ 監督としての実績（トップチーム）
+    items:
+    - ['13', 冠, ドルトムントとリヴァプールでの優勝]
+    - ['3', 度, リーグ優勝。ドイツで2度、イングランドで1度]
+    - ['4', 度, チャンピオンズリーグの決勝に進出。優勝は1度]
+    focus: 0
+  say:
+  - text: 13冠。リヴァプールの8冠が、最多です。リーグ優勝は、2か国で3度。
+    image: assets/images/20261024_manager_klopp/01_w.jpg
+    card: none
+  - text: 7月24日、ドイツ代表監督の就任会見です。
+    image: assets/images/20261024_manager_klopp/02_w.jpg
+    card: none
+  - voice: クロップ
+    text: 私の最初の目標は、もっと良いサッカーをすることです。
+    pause: 0.5
+  - text: いまは、ドイツ代表の監督です。まず、数字から。
+    image: assets/images/20261024_manager_klopp/01_w.jpg
+    card: none
+  quotes_from:
+  - https://www.dfb.de/news/klopp-ein-neustart-fuer-alle-die-bock-haben
+  sources:
+  - https://www.dfb.de/news/juergen-klopp-als-bundestrainer-vorgestellt
+  - https://www.dfb.de/news/klopp-ein-neustart-fuer-alle-die-bock-haben
+  - https://en.wikipedia.org/wiki/J%C3%BCrgen_Klopp
+- id: data
+  heading: ドイツ代表のクロップは、いつから、どんな立場の人か
+  tier: 報道
+  telop: クロップの基礎DATA
+  narrator: 解説
+  card: &data_table
+    type: table
+    title: クロップ（59歳）の基礎DATA
+    columns: [項目, 中身]
+    rows:
+    - [生年月日, 1967年6月16日（ドイツ・シュトゥットガルト）]
+    - [選手時代, マインツで11年。最初はFW、のちにDF]
+    - [監督（トップチーム）, 3つのクラブと、ドイツ代表]
+    - [ドイツ代表, 2026年8月15日に就任]
+    - [契約, 4年。2030年のワールドカップまで]
+    highlight_row: 3
+    source: ドイツサッカー連盟・英語版Wikipedia
+  say:
+  - text: クロップは、1967年6月16日、ドイツのシュトゥットガルトの生まれ。59歳です。
+    image: assets/images/20261024_manager_klopp/01_w.jpg
+    card:
+      <<: *data_table
+      highlight_row: 0
+  - text: 選手時代は、マインツで1990年から2001年。FWからDFへ。
+    image: assets/images/20261024_manager_klopp/05_w.jpg
+    card:
+      <<: *data_table
+      highlight_row: 1
+  - text: 監督としては、3つのクラブと、ドイツ代表を率いてきました。
+    image: assets/images/20261024_manager_klopp/01_w.jpg
+    card:
+      <<: *data_table
+      highlight_row: 2
+  - text: 2024年にリヴァプールを退任。約1年半、レッドブルの統括を務めました。
+    image: assets/images/20261024_manager_klopp/04_w.jpg
+    card: none
+  - text: 2026年7月24日に就任決定。契約は4年、2030年のワールドカップまで。
+    emph: true
+    card:
+      <<: *data_table
+      highlight_row: 3
+  sources:
+  - https://www.dfb.de/news/juergen-klopp-als-bundestrainer-vorgestellt
+  - https://www.dfb.de/news/dfb-und-red-bull-treffen-vereinbarung
+  - https://en.wikipedia.org/wiki/J%C3%BCrgen_Klopp
+- id: japan
+  heading: クロップと日本は、どこでつながるのか
+  tier: 報道
+  telop: 日本とは、ドルトムントの2年間。香川真司が先制した2012年の決勝
+  narrator: 解説
+  card: &jp_stats
+    type: stats
+    title: 香川真司 ドルトムント（クロップ監督、2010〜12年）
+    items:
+    - ['49', 試合, ブンデスリーガ（2シーズン）]
+    - ['21', 点, ブンデスリーガの得点]
+    - ['2', 度, ブンデスリーガ優勝]
+    focus: 0
+  say:
+  - text: クロップと日本のつながりは、ドルトムントの香川真司です。
+    image: assets/backgrounds/stadium_ドルトムント.png
+    card: *jp_stats
+  - text: 香川は2010年に加入。クロップのもとで、2シーズンを戦いました。
+    card: *jp_stats
+  - text: ブンデスリーガは、49試合で21得点。2シーズンとも、優勝しています。
+    emph: true
+    card: *jp_stats
+  - text: 2012年5月12日、ドイツのカップ戦、ポカールの決勝。相手はバイエルンです。
+    image: assets/images/20261024_manager_klopp/02_w.jpg
+    card: none
+  - text: 香川は、開始3分に先制点を決めました。ドルトムントは、5対2で勝ちます。
+    emph: true
+    card: none
+  - text: リヴァプールでも、南野拓実と遠藤航が、クロップの下でプレーしました。
+    image: assets/images/20261024_manager_klopp/04_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Shinji_Kagawa
+  - https://en.wikipedia.org/wiki/2012_DFB-Pokal_final
+  - https://en.wikipedia.org/wiki/Takumi_Minamino
+  - https://en.wikipedia.org/wiki/Wataru_Endo
+- id: career
+  heading: 13冠は、どのクラブで、どう積み上がったのか。転機はどこだったのか
+  tier: 背景
+  telop: 歩みと転機。マインツ、ドルトムント、リヴァプール
+  narrator: 解説
+  card: &career_tl
+    type: timeline
+    title: クロップの監督としての歩み
+    rows:
+    - [2001〜08, マインツ。2004年に1部昇格]
+    - [2008〜15, ドルトムント。リーグ優勝2度、国内2冠]
+    - [2015〜24, リヴァプール。欧州王者、リーグ優勝]
+    - [2024〜26, 監督を離れ、レッドブルのサッカー統括]
+    - [2026〜, ドイツ代表]
+    focus: 0
+  say:
+  - text: クロップの監督の道は、2001年2月、マインツから始まります。
+    image: assets/images/20261024_manager_klopp/02_w.jpg
+    card: *career_tl
+  - text: 転機は、2001年2月27日。監督が解任され、クロップが後任になります。
+    emph: true
+    card:
+      <<: *career_tl
+      focus: 0
+  - text: 翌日の試合は、1対0の勝ち。最初の7試合で、6勝しました。
+    card:
+      <<: *career_tl
+      focus: 0
+  - text: 2004年、マインツは、初めてのブンデスリーガ昇格。
+    image: assets/images/20261024_manager_klopp/05_w.jpg
+    card:
+      <<: *career_tl
+      focus: 0
+  - text: 2008年、ドルトムントへ。2010-11と2011-12に、リーグ優勝。
+    emph: true
+    image: assets/images/20261024_manager_klopp/02_w.jpg
+    card:
+      <<: *career_tl
+      focus: 1
+  - text: 2012年は、リーグとカップの2冠。2013年は、チャンピオンズリーグの決勝へ。
+    card:
+      <<: *career_tl
+      focus: 1
+  - text: 2015年10月、リヴァプールの監督に。
+    emph: true
+    image: assets/images/20261024_manager_klopp/01_w.jpg
+    card:
+      <<: *career_tl
+      focus: 2
+  - text: 2019年、チャンピオンズリーグで優勝。初めての欧州王者です。
+    card:
+      <<: *career_tl
+      focus: 2
+  - text: 2019-20は、クラブ初のプレミアリーグ優勝。勝ち点99は、クラブ記録です。
+    image: assets/images/20261024_manager_klopp/05_w.jpg
+    card:
+      <<: *career_tl
+      focus: 2
+  - text: 2022年はFAカップとリーグカップ、2024年にもリーグカップ。
+    image: assets/images/20261024_manager_klopp/04_w.jpg
+    card:
+      <<: *career_tl
+      focus: 2
+  - text: そして今年、ドイツ代表の監督に就きました。
+    image: assets/images/20261024_manager_klopp/01_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/J%C3%BCrgen_Klopp
+  - https://www.dfb.de/news/juergen-klopp-als-bundestrainer-vorgestellt
+- id: style
+  heading: クロップのサッカーは、2019年のアンフィールドで、何を見せたのか
+  tier: 報道
+  telop: 戦術の色。2019年5月7日、リヴァプール 4-0 バルセロナ
+  narrator: 解説
+  card: &style_stats
+    type: stats
+    title: 2019年5月7日 チャンピオンズリーグ準決勝・第2戦
+    items:
+    - ['4', 対0, この試合は、リヴァプールの勝ち]
+    - ['4', 対3, 2試合の合計も、リヴァプールの勝ち]
+    focus: 1
+  say:
+  - text: 2019年5月7日、リヴァプールの本拠地アンフィールドで見ます。
+    image: assets/images/20261024_manager_klopp/05_w.jpg
+    card: *style_stats
+  - text: チャンピオンズリーグ準決勝の第2戦。第1戦は、バルセロナが3対0でした。
+    card: *style_stats
+  - text: クロップのリヴァプールが、4対0の勝ち。合計4対3で、決勝へ。
+    emph: true
+    image: assets/images/20261024_manager_klopp/01_w.jpg
+    card: *style_stats
+  - text: この日、サラーとフィルミーノは、出場していません。
+    card: none
+  - text: 7分にオリギが先制。ハーフタイムに入ったウェイナルドゥムが、連続ゴール。
+    image: assets/images/20261024_manager_klopp/04_w.jpg
+    card: none
+  - text: ボール支配率は、リヴァプールが42.7%、バルセロナが57.3%。
+    card: &style_poss
+      type: stats
+      title: 2019年5月7日 リヴァプール 4-0 バルセロナ
+      items:
+      - ['42.7', '%', リヴァプールの支配率]
+      - ['13', 対8, シュートの数]
+      - ['7', 対5, 枠内シュートの数]
+      focus: 1
+  - text: それでもシュートは、13本対8本。枠内も、7本対5本でした。
+    emph: true
+    card:
+      <<: *style_poss
+      focus: 2
+  - text: 4点目は79分。アレクサンダー＝アーノルドのコーナーから、オリギが決めました。
+    image: assets/images/20261024_manager_klopp/05_w.jpg
+    card: none
+  - text: 特徴の1つ目は、ゲーゲンプレッシング。ボールを失った直後に、すぐ奪い返します。
+    emph: true
+    image: assets/images/20261024_manager_klopp/01_w.jpg
+    card: &style_doc
+      type: document
+      label: 英語版Wikipediaの要約（訳）
+      paragraphs:
+      - ゲーゲンプレッシング。ボールを失った直後に、下がらず、すぐ奪い返しにいく。
+      - 速さ、組織、体力、そして規律が要る。
+      - 自分のサッカーを、本人は「ヘヴィメタル」と呼ぶ。感情の大切さを、何度も語っている。
+      highlight:
+      - すぐ奪い返しにいく
+      - 規律
+      - ヘヴィメタル
+  - text: 2つ目は、速さと組織。3つ目は、感情。自分のサッカーを、ヘヴィメタルと呼びます。
+    image: assets/images/20261024_manager_klopp/04_w.jpg
+    card: *style_doc
+  - text: 就任会見でも、ゲーゲンプレッシングと安定した守りを挙げました。
+    card: none
+  sources:
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=538699
+  - https://www.dfb.de/news/klopp-ein-neustart-fuer-alle-die-bock-haben
+  - https://en.wikipedia.org/wiki/J%C3%BCrgen_Klopp
+- id: numbers
+  heading: 通算1084試合の数字は、チームごとに、どう違うのか
+  tier: 報道
+  telop: リヴァプールが491試合で299勝。優勝13冠のうち、リヴァプールが8
+  narrator: 解説
+  card: &club_table
+    type: table
+    title: クロップの通算（トップチーム）
+    columns: [所属, 試合, 勝, 冠]
+    rows:
+    - [リヴァプール, '491', '299', '8']
+    - [ドルトムント, '319', '180', '5']
+    - [マインツ, '270', '109', '0']
+    - [ドイツ代表（就任中）, '4', '1', '0']
+    - [合計, '1084', '589', '13']
+    highlight_row: 4
+    source: 英語版Wikipedia（行を足し直した）
+  say:
+  - text: クロップの通算を、率いたチーム別に並べます。
+    image: assets/images/20261024_manager_klopp/02_w.jpg
+    card: *club_table
+  - text: 試合数がいちばん多いのは、リヴァプール。491試合で、299勝。
+    emph: true
+    image: assets/images/20261024_manager_klopp/01_w.jpg
+    card:
+      <<: *club_table
+      highlight_row: 0
+  - text: ドルトムントは、319試合で、180勝。
+    card:
+      <<: *club_table
+      highlight_row: 1
+  - text: 合計は、1084試合。589勝で、勝率54.3%。優勝は13冠です。
+    emph: true
+    image: assets/images/20261024_manager_klopp/05_w.jpg
+    card:
+      <<: *club_table
+      highlight_row: 4
+  - text: 優勝13冠の内訳です。リーグ優勝が3、国内カップが4。
+    card: &title_bars
+      type: bars
+      title: クロップの優勝の内訳（冠）
+      unit: ''
+      items:
+      - label: 国内カップ
+        value: 4
+        highlight: true
+      - label: リーグ優勝
+        value: 3
+      - label: 国内のスーパー杯
+        value: 3
+      - label: 欧州・世界
+        value: 3
+  - text: 国内のスーパー杯が3、欧州と世界の大会も3。リーグ優勝と、同じ数です。
+    image: assets/images/20261024_manager_klopp/04_w.jpg
+    card: *title_bars
+  sources:
+  - https://en.wikipedia.org/wiki/J%C3%BCrgen_Klopp
+- id: words
+  heading: 本人は、目標とこれからを、どう語っているのか
+  tier: 報道
+  telop: 7月24日の就任会見と、9月24日のオランダ戦のあと
+  narrator: 解説
+  card: &words_doc
+    type: document
+    label: クロップの言葉（2026年7月・9月、訳）
+    paragraphs:
+    - 私の最初の目標は、もっと良いサッカーをすることです。
+    - 成功するサッカーは、国も変えられます。
+    - 私たちは、もっと良く、もっと多く、サッカーができる。
+    highlight:
+    - もっと良いサッカー
+    - 国も変えられます
+    - もっと多く
+  say:
+  - text: 本人の言葉を聞きます。7月24日の就任会見は、目標の話です。
+    image: assets/images/20261024_manager_klopp/04_w.jpg
+    card: *words_doc
+  - voice: クロップ
+    text: 私の最初の目標は、もっと良いサッカーをすることです。
+  - voice: クロップ
+    text: そのために、持っているものを全部出します。
+    cont: true
+    pause: 0.5
+  - text: 同じ会見で、街の話もしました。
+    image: assets/images/20261024_manager_klopp/02_w.jpg
+    card: *words_doc
+  - voice: クロップ
+    text: 成功するサッカーが街を変えるのを、私は3度、見ました。
+  - voice: クロップ
+    text: 成功するサッカーは、国も変えられます。
+    cont: true
+    pause: 0.5
+  - text: もう1つは、9月24日。オランダ戦のあとの言葉です。
+    image: assets/images/20261024_manager_klopp/01_w.jpg
+    card: *words_doc
+  - voice: クロップ
+    text: 私たちは、もっと良く、もっと多く、サッカーができる。
+    pause: 0.5
+  quotes_from:
+  - https://www.dfb.de/news/klopp-ein-neustart-fuer-alle-die-bock-haben
+  - https://www.dfb.de/news/klopp-ich-war-mit-der-gezeigten-leidenschaft-sehr-zufrieden
+  sources:
+  - https://www.dfb.de/news/klopp-ein-neustart-fuer-alle-die-bock-haben
+  - https://www.dfb.de/news/klopp-ich-war-mit-der-gezeigten-leidenschaft-sehr-zufrieden
+- id: secret
+  heading: 数字の外にある話。現役のころから、監督の勉強を始めていた
+  tier: 背景
+  telop: 現役時代に学位とライセンスの勉強。マインツの監督は翌日から
+  narrator: 解説
+  card: &sec_table
+    type: table
+    title: 数字の外にある話
+    columns: [いつ, 何があったか]
+    rows:
+    - [1990〜2001年, マインツの選手。歴代最多の56得点]
+    - [1995年, FWからDFへ。大学でスポーツ科学の学位]
+    - [現役のころ, 毎週ケルンへ通い、指導者の資格の勉強]
+    - [2001年2月, 解任された監督の後任に。翌日に1対0]
+    highlight_row: 0
+    source: 英語版Wikipedia
+  say:
+  - text: ここから、数字の外の話。クロップの監督の勉強は、現役のころに始まっていました。
+    image: assets/images/20261024_manager_klopp/02_w.jpg
+    card:
+      <<: *sec_table
+      highlight_row: 0
+  - text: マインツの選手として、通算56得点。クラブの歴代最多で、引退しました。
+    card:
+      <<: *sec_table
+      highlight_row: 0
+  - text: 1995年、FWからDFに替わった年に、スポーツ科学の学位を取ります。
+    image: assets/images/20261024_manager_klopp/05_w.jpg
+    card:
+      <<: *sec_table
+      highlight_row: 1
+  - text: 指導者の資格の勉強に、毎週、ケルンまで通いました。
+    card:
+      <<: *sec_table
+      highlight_row: 2
+  - text: そして2001年2月、解任された監督の翌日に、マインツの指揮を執ります。
+    emph: true
+    image: assets/images/20261024_manager_klopp/04_w.jpg
+    card:
+      <<: *sec_table
+      highlight_row: 3
+  sources:
+  - https://en.wikipedia.org/wiki/J%C3%BCrgen_Klopp
+- id: view
+  viewpoint: true
+  heading: 見立て・勝率は率いるたびに上がった。代表の4試合は、そこにどうつながるのか
+  tier: 背景
+  telop: マインツ40.4%、ドルトムント56.4%、リヴァプール60.9%。代表は1勝2分け1敗
+  narrator: 解説
+  card: &view_table
+    type: table
+    title: 自分で数えてみた
+    columns: &view_cols [比べ, 答え]
+    rows: &view_rows
+    - [マインツ（270試合）の勝率, 40.4%]
+    - [ドルトムント（319試合）の勝率, 56.4%]
+    - [リヴァプール（491試合）の勝率, 60.9%]
+    - [ドイツ代表の4試合, 1勝2分け1敗（3得点2失点）]
+    highlight_row: 0
+  say:
+  - text: 見立てです。クロップの勝率を、率いた順に並べます。
+    image: assets/images/20261024_manager_klopp/05_w.jpg
+    card: *view_table
+  - text: マインツは、270試合で40.4%。
+    image: assets/images/20261024_manager_klopp/04_w.jpg
+    card:
+      <<: *view_table
+      highlight_row: 0
+  - text: ドルトムントは56.4%、リヴァプールは60.9%。率いるたびに、上がりました。
+    emph: true
+    mark: {kind: circle, row: 2, col: 1}
+    image: assets/images/20261024_manager_klopp/01_w.jpg
+    card:
+      <<: *view_table
+      highlight_row: 2
+  - text: ドイツ代表の4試合は、欧州の代表の大会、ネーションズリーグ。
+    card:
+      <<: *view_table
+      highlight_row: 3
+  - text: 結果は、1勝2分け1敗。3点を取って、2点を許しています。
+    emph: true
+    card:
+      <<: *view_table
+      highlight_row: 3
+  - text: 9月24日、オランダ戦は、1対1の引き分け。27日、ギリシャ戦は、0対1の負け。
+    image: assets/images/20261024_manager_klopp/04_w.jpg
+    card: none
+  - text: 10月1日は、セルビアに2対0の勝ち。4日は、ギリシャと0対0の引き分けです。
+    card: none
+  - text: 次の試合は、11月13日のベオグラードと、16日のベルリン。
+    image: assets/images/20261024_manager_klopp/02_w.jpg
+    card: none
+  - text: 13日のセルビア戦は、欧州サッカー連盟の決定で、観客を入れずに行われます。
+    card: none
+  - text: クラブ3つの通算は、1080試合で勝率54.4%。代表は、まだ4試合です。
+    image: assets/images/20261024_manager_klopp/01_w.jpg
+    card: none
+  - text: 次の2試合が、その続きの目安になります。
+    emph: true
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/J%C3%BCrgen_Klopp
+  - https://en.wikipedia.org/wiki/Germany_national_football_team_results_(2020%E2%80%93present)
+  - https://www.uefa.com/uefanationsleague/match/2048003/
+  - https://www.uefa.com/uefanationsleague/match/2047976/
+  - https://www.uefa.com/uefanationsleague/match/2047954/
+  - https://www.uefa.com/uefanationsleague/match/2047926/
+  - https://www.dfb.de/news/dfb-und-red-bull-treffen-vereinbarung

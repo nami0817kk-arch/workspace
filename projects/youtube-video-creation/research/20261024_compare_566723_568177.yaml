@@ -1,0 +1,408 @@
+# 取材メモ（10/24 土、シリーズ「比べる」、key: compare_566723_568177）。マイケル・オリーセ（バイエルン・24歳）×コール・パーマー（チェルシー・24歳）。
+# **FotMob・DataMB は使っていない**。数字は Transfermarkt（2026-10-24 取得。控え: research/raw/20261024_olise_tm.json・20261024_palmer_tm.json）。
+#   Transfermarkt 番号：オリーセ 566723・パーマー 568177。API（tmapi-alpha）を番号ごとに（プロフィール・市場価値の推移・季ごとの大会別成績）3秒あけて取得。
+#   クロスチェック：英語版 Wikipedia の Career statistics（2026-10-24 取得。控え: research/raw/20261024_olise_wiki.txt・20261024_palmer_wiki.txt）。
+#   **クラブの試合数・得点は Transfermarkt と Wikipedia が一致**：オリーセ（バイエルン）24/25 55試合20得点・25/26 52試合22得点・26/27 10試合9得点／
+#   パーマー（チェルシー）24/25 52試合18得点・25/26 34試合11得点・26/27 9試合4得点（23/24 はチェルシー45試合25得点＋シティ序盤3試合2得点＝48試合27得点で一致）。
+#   オリーセの 23/24 はクリスタル・パレス 19試合10得点で一致。アシストと出場時間は Transfermarkt だけ。代表の試合は混ぜない（クラブの試合だけ）。
+# **選んだ理由**：直近の比べ（10/2エムバペ×ハーランド・10/9ベリンガム×ムシアラ・10/14バレバ×カマラ・10/16エムバペ×ヴィニシウス・10/17ペドリ×ヴィティーニャ・10/19バイエルン×ドルトムント・10/21ライス×ネヴェス・10/22ヤマル×サカ・10/23ヴィルツ×ロジャーズ・ランキング）に
+#   オリーセ・パーマーの組み合わせは無い（posted.json・scripts/*compare*・covered.yaml を grep で確認。パーマーは比べに一度も出ていない）。オリーセは選手紹介（10/3）、パーマーは契約延長のニュース（10/11）が別にあるだけ。
+#   オリーセは players_202610 の3位（市場価値 TM 最新 1.8億）、パーマーは1.1億。どちらも24歳（2001-12-12生・2002-05-06生＝5か月違い）の**左利き**で、ともに右側から攻める攻撃の選手。
+#   **この回の軸**（10/23 の「市場価値が入れ替わった日」と重ねない）：昨季の「点に絡んだ数」53と14を、**出場時間の差と90分あたりの差に分ける**。①昨季の全公式戦 ②各リーグ戦 ③出場時間をそろえた計算（増減の内訳）④季ごとの推移 ⑤年齢ごとの市場価値。
+#   使っていない素材：移籍金・負傷・私生活・代表の数字・パーセンタイル・戦術（陣形）。日本との接点：確かめられた縁が無いので入れない。
+# **スタッツの条件（足切り）**：クラブのトップチームの全公式戦（代表・育成年代は混ぜない）。
+#   昨季25/26：オリーセ 52試合4015分／パーマー 34試合2443分（2人とも900分超）。リーグ戦：オリーセ（ブンデスリーガ）32試合2320分／パーマー（プレミア）26試合1965分。
+#   今季26/27：オリーセ 10試合823分／パーマー 9試合756分（**450分は超えるが900分に届かない → 「いまの時点」と言う**）。
+#   リーグ・大会が違う（バイエルン＝ブンデス・CL・DFBポカール・スーパーカップ／チェルシー＝プレミア・CL・FAカップ・リーグ杯）一言を入れる。
+# **使った数と自分で割った値**（クラブの試合だけ。TM の大会別を足した。90分あたり＝(得点＋アシスト)×90÷出場分）
+#   25/26 オリーセ＝L1 32試合2320分15得点21アシスト＋CL 13試合1082分5得点7アシスト＋DFBポカール 6試合523分2得点3アシスト＋スーパーカップ 1試合90分＝52試合・4015分・22得点・31アシスト（計53→53×90÷4015＝1.19）。約76分に1回＝4015÷53。
+#   25/26 パーマー＝PL 26試合1965分10得点1アシスト＋CL 4試合277分1得点2アシスト＋FAカップ 3試合171分＋リーグ杯 1試合30分＝34試合・2443分・11得点・3アシスト（計14→14×90÷2443＝0.52）。約175分に1回＝2443÷14（174.5）。
+#   リーグ戦 25/26：オリーセ 36×90÷2320＝1.40／パーマー 11×90÷1965＝0.50。
+#   **出場時間をそろえた計算**：パーマーが 4015分出て率 0.516 のままなら 14×4015÷2443＝23.0（約23）。14→23 が出場時間の差（+9）、23→53 が90分あたりの差（+30）。差の合計 39。**仮の計算であって実際の数ではない**と台本で断る。
+#   季ごと（得点＋アシスト90分あたり）：オリーセ 23/24 16×90÷1277＝1.13（パレス）・24/25 43×90÷3842＝1.01・25/26 1.19・26/27 14×90÷823＝1.53（10試合）／
+#     パーマー 23/24 42×90÷3734＝1.01（チェルシー＋シティ序盤）・24/25 32×90÷4247＝0.68・25/26 0.52・26/27 7×90÷756＝0.83（9試合）。
+# **市場価値**（Transfermarkt の推移。百万€。年齢ごとの最高値）：オリーセ 21歳50（2023-10-09）・22歳65（2024-10-09）・23歳130（2025-10-14）・24歳180（2026-10-02）／
+#   パーマー 21歳55（2024-03-14）・22歳130（2024-12-16）・23歳120（2025-05-30）・24歳110（2026-10-07）。オリーセが初めてパーマーを上回ったのは 2025-10-14 の更新（130>120。2025-06-05 は100<120）。
+# 日程（ESPN、2026-10-23 時点）：チェルシー対トッテナム（プレミア）2026-10-24 16:30 UTC＝日本時間25日 1:30。フライブルク対バイエルン（ブンデス）2026-10-25 16:30 UTC＝日本時間26日 1:30。
+# 写真：すべて Wikimedia Commons（出典は各フォルダの credits.json）。
+slot: other_1
+date: "2026年10月24日"
+format: news
+series: 比べる
+people:
+  - マイケル・オリーセ
+  - コール・パーマー
+  - バイエルン
+  - チェルシー
+
+theme:
+  end_bg: assets/images/20261024_compare_olise_palmer/o_fra2/01_w.jpg
+  id: compare_566723_568177
+  league: england
+  kind: other
+  topic: マイケル・オリーセとコール・パーマー
+  prefix: ""
+  title: オリーセとパーマー、同じ24歳の左利き。点に絡んだ数は、なぜこれほど違うのか
+  hook: ""
+  question: 同じ24歳の左利きの2人は、昨季の点に絡んだ数を出場時間と90分あたりに分けると、どこが違うのか
+  takeaway: 昨季の点に絡んだ数は53と14。パーマーが同じ4015分出た計算でも約23で、差の39のうち30は90分あたり（1.19と0.52）の差
+  league_name: ""
+  opening_image: assets/images/20261024_compare_olise_palmer/o_fra2/01_w.jpg
+
+short_title: オリーセとパーマー、昨季の点に絡んだ数
+
+thumbnail:
+  photo: assets/images/20261024_compare_olise_palmer/o_fra3/01_w.jpg
+  photos:
+    - assets/images/20261024_compare_olise_palmer/o_fra3/01_w.jpg
+    - assets/images/20261024_compare_olise_palmer/p_py/01_w.jpg
+  short_photo: assets/images/20261024_compare_olise_palmer/o_fra1/01_v.jpg
+  face_link: VS
+  layout:
+    layout: classic
+    names: [オリーセ, パーマー]
+    name_colors: ["#dc052d", "#034694"]
+  line1: オリーセとパーマー
+  line2: 昨季の点に絡んだ数、53と14
+  tags: [マイケル・オリーセ, コール・パーマー, バイエルン, チェルシー]
+
+answer: 差の39のうち、出場時間で9、90分あたりで30。90分あたりは昨季1.19と0.52
+watch: 毎日、数字でサッカーを読み解きます
+
+sections:
+  - id: hook
+    heading: オリーセとパーマー、昨季に点へ絡んだ数は、どれだけ違ったのか
+    tier: 報道
+    telop: 昨季の点に絡んだ数
+    narrator: 解説
+    card: &hookcard
+      type: stats
+      title: 昨季の得点＋アシスト（クラブの全公式戦）
+      items:
+        - ["53", "", オリーセ]
+        - ["14", "", パーマー]
+        - ["2.3倍", "", 90分あたりの差]
+      focus: 0
+    say:
+      - text: 昨季、点に絡んだ数。オリーセが53、パーマーが14。
+        image: assets/images/20261024_compare_olise_palmer/o_fra2/01_w.jpg
+        card: none
+      - text: 得点とアシストの合計です。クラブの試合の数です。
+        image: assets/images/20261024_compare_olise_palmer/pair_a/01.jpg
+        card: {<<: *hookcard, focus: 1}
+      - text: 2人は24歳。左利きで、誕生日は5か月違いです。
+        emph: true
+        image: assets/images/20261024_compare_olise_palmer/o_fra3/01_w.jpg
+        card: {<<: *hookcard, focus: 2}
+      - text: 出場時間にも、大きな差があります。差は、どこから来たのか。
+        image: assets/images/20261024_compare_olise_palmer/pair_b/01.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/michael-olise/leistungsdaten/spieler/566723
+      - https://www.transfermarkt.com/cole-palmer/leistungsdaten/spieler/568177
+
+  - id: data
+    heading: オリーセとパーマーは、何歳でいくらの選手か
+    tier: 報道
+    telop: バイエルンとチェルシーの24歳
+    narrator: 解説
+    card: &datacard
+      type: duel
+      left: {name: オリーセ, club: バイエルン, photo: assets/images/20261024_compare_olise_palmer/o_fra1/01_sq.jpg, color: "#dc052d"}
+      right: {name: パーマー, club: チェルシー, photo: assets/images/20261024_compare_olise_palmer/p_lei/01_sq.jpg, color: "#034694"}
+      rows:
+        - [年齢, 24歳, 24歳]
+        - [誕生日, 2001年12月, 2002年5月]
+        - [所属, バイエルン, チェルシー]
+        - [代表, フランス, イングランド]
+        - [位置, 右ウイング, 攻撃的MF]
+        - [利き足, 左, 左]
+        - [市場価値, 1.8億€, 1.1億€]
+      bars: [市場価値]
+      note: 市場価値は Transfermarkt の推定（オリーセ2026年10月2日・パーマー10月7日更新）
+    say:
+      - text: オリーセは24歳。バイエルンの、フランス代表です。
+        image: assets/images/20261024_compare_olise_palmer/o_fra1/01_w.jpg
+        card: {<<: *datacard, highlight_row: 年齢}
+      - text: パーマーも24歳。チェルシーの、イングランド代表。
+        image: assets/images/20261024_compare_olise_palmer/pair_a/01.jpg
+        card: {<<: *datacard, highlight_row: 所属}
+      - text: 誕生日は、2001年12月と2002年5月です。
+        image: assets/images/20261024_compare_olise_palmer/o_fra3/01_w.jpg
+        card: {<<: *datacard, highlight_row: 誕生日}
+      - text: 位置は、右ウイングと攻撃的MF。利き足は、2人とも左です。
+        image: assets/images/20261024_compare_olise_palmer/pair_b/01.jpg
+        card: {<<: *datacard, highlight_row: 利き足}
+      - text: 市場価値は、推定の額で、1億8000万と1億1000万ユーロ。
+        image: assets/images/20261024_compare_olise_palmer/o_fra2/01_w.jpg
+        card: {<<: *datacard, highlight_row: 市場価値}
+    sources:
+      - https://www.transfermarkt.com/michael-olise/profil/spieler/566723
+      - https://www.transfermarkt.com/cole-palmer/profil/spieler/568177
+
+  - id: season
+    heading: 昨季の全公式戦、点に絡んだ数と出場時間は、どれだけ違うのか
+    tier: 報道
+    main: true
+    telop: 昨季の全公式戦
+    narrator: 解説
+    card: &seasoncard
+      type: duel
+      left: {name: オリーセ, club: バイエルン, photo: assets/images/20261024_compare_olise_palmer/o_fra1/01_sq.jpg, color: "#dc052d"}
+      right: {name: パーマー, club: チェルシー, photo: assets/images/20261024_compare_olise_palmer/p_lei/01_sq.jpg, color: "#034694"}
+      rows:
+        - [試合, "52", "34"]
+        - [出場時間, 4015分, 2443分]
+        - [得点, "22", "11"]
+        - [アシスト, "31", "3"]
+        - [得点＋アシスト, "53", "14"]
+        - [得点＋アシスト（90分あたり）, "1.19", "0.52"]
+      bars: [出場時間, 得点, アシスト, 得点＋アシスト, 得点＋アシスト（90分あたり）]
+      note: 昨季25/26のクラブの全公式戦。大会はバイエルンがブンデス・CL・DFBポカール・スーパーカップ、チェルシーがプレミア・CL・FAカップ・リーグ杯。90分あたりは自分で割った値
+    say:
+      - text: オリーセとパーマー、昨季の点に絡んだ数は、53と14でした。
+        short_only: true
+        image: assets/images/20261024_compare_olise_palmer/o_fra2/01_w.jpg
+        card: none
+      - text: 得点とアシストの合計を、昨季25/26の全公式戦で数えます。
+        image: assets/images/20261024_compare_olise_palmer/pair_a/01.jpg
+        card: none
+      - text: オリーセは52試合で4015分。パーマーは34試合で2443分です。
+        image: assets/images/20261024_compare_olise_palmer/o_fra3/01_w.jpg
+        card: {<<: *seasoncard, highlight_row: 出場時間}
+      - text: どちらも900分を超えていて、比べるには足ります。
+        card: {<<: *seasoncard, highlight_row: 出場時間}
+      - text: 得点は、22と11。アシストは、31と3です。
+        image: assets/images/20261024_compare_olise_palmer/pair_b/01.jpg
+        card: {<<: *seasoncard, highlight_row: アシスト}
+      - text: 合わせて53と14。90分に直すと、1.19と0.52。
+        emph: true
+        image: assets/images/20261024_compare_olise_palmer/o_fra1/01_w.jpg
+        card: {<<: *seasoncard, highlight_row: 得点＋アシスト（90分あたり）}
+      - text: オリーセは約76分に1回、パーマーは約175分に1回、点に絡んでいます。
+        image: assets/images/20261024_compare_olise_palmer/pair_a/01.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/michael-olise/leistungsdaten/spieler/566723
+      - https://www.transfermarkt.com/cole-palmer/leistungsdaten/spieler/568177
+      - https://en.wikipedia.org/wiki/Michael_Olise
+      - https://en.wikipedia.org/wiki/Cole_Palmer
+
+  - id: league
+    heading: それぞれのリーグ戦で並べると、差は縮むのか
+    tier: 報道
+    telop: 昨季のリーグ戦
+    narrator: 解説
+    card: &leaguecard
+      type: duel
+      left: {name: オリーセ, club: バイエルン, photo: assets/images/20261024_compare_olise_palmer/o_fra1/01_sq.jpg, color: "#dc052d"}
+      right: {name: パーマー, club: チェルシー, photo: assets/images/20261024_compare_olise_palmer/p_lei/01_sq.jpg, color: "#034694"}
+      rows:
+        - [試合, "32", "26"]
+        - [出場時間, 2320分, 1965分]
+        - [得点, "15", "10"]
+        - [アシスト, "21", "1"]
+        - [得点＋アシスト（90分あたり）, "1.40", "0.50"]
+      bars: [出場時間, 得点, アシスト, 得点＋アシスト（90分あたり）]
+      note: 昨季25/26のリーグ戦。オリーセはブンデスリーガ、パーマーはプレミアリーグ。90分あたりは自分で割った値
+    say:
+      - text: 今度は、それぞれのリーグ戦で並べます。
+        image: assets/images/20261024_compare_olise_palmer/o_fra2/01_w.jpg
+        card: *leaguecard
+      - text: オリーセはブンデスリーガ、パーマーはプレミアリーグ。リーグは違います。
+        image: assets/images/20261024_compare_olise_palmer/pair_b/01.jpg
+        card: {<<: *leaguecard, highlight_row: 試合}
+      - text: オリーセは32試合で2320分。パーマーは26試合で1965分。
+        image: assets/images/20261024_compare_olise_palmer/o_fra3/01_w.jpg
+        card: {<<: *leaguecard, highlight_row: 出場時間}
+      - text: 得点は、15と10。アシストは、21と1です。
+        image: assets/images/20261024_compare_olise_palmer/pair_a/01.jpg
+        card: {<<: *leaguecard, highlight_row: アシスト}
+      - text: 90分あたりは、オリーセが1.40、パーマーが0.50。
+        emph: true
+        image: assets/images/20261024_compare_olise_palmer/o_fra1/01_w.jpg
+        card: {<<: *leaguecard, highlight_row: 得点＋アシスト（90分あたり）}
+      - text: 全公式戦で見た1.19と0.52より、差は開きました。
+        image: assets/images/20261024_compare_olise_palmer/pair_b/01.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/michael-olise/leistungsdaten/spieler/566723
+      - https://www.transfermarkt.com/cole-palmer/leistungsdaten/spieler/568177
+      - https://en.wikipedia.org/wiki/Michael_Olise
+      - https://en.wikipedia.org/wiki/Cole_Palmer
+
+  - id: minutes
+    heading: 出場時間を同じにすると、差はどこまで縮まるのか
+    tier: 背景
+    telop: 出場時間をそろえた計算
+    narrator: 解説
+    card: &waterfall
+      type: waterfall
+      title: 昨季の得点＋アシスト（計算）
+      start: [パーマー, 14]
+      steps:
+        - [出場時間をオリーセと同じ4015分に, 9]
+        - [90分あたりをオリーセと同じ1.19に, 30]
+      total: [オリーセ, 53]
+      note: 出場時間の差は、パーマーが同じ4015分、いまの率のまま出たとして14×4015÷2443で計算。仮の計算で、実際の数ではない
+    say:
+      - text: ここで、差を2つに分けて考えます。パーマーの14から始めます。
+        image: assets/images/20261024_compare_olise_palmer/pair_a/01.jpg
+        card: *waterfall
+      - text: パーマーが、オリーセと同じ時間出たとします。率は、そのままにします。
+        image: assets/images/20261024_compare_olise_palmer/o_fra2/01_w.jpg
+        card: *waterfall
+      - text: 計算すると、約23です。出場時間の差で、9ふえます。
+        emph: true
+        image: assets/images/20261024_compare_olise_palmer/pair_b/01.jpg
+        card: *waterfall
+      - text: オリーセの53までは、あと30あります。これが、90分あたりの差です。
+        image: assets/images/20261024_compare_olise_palmer/o_fra1/01_w.jpg
+        card: *waterfall
+      - text: 差の39のうち、出場時間は9、90分あたりは30。
+        emph: true
+        image: assets/images/20261024_compare_olise_palmer/pair_a/01.jpg
+        card: none
+      - text: 仮の計算なので、実際の試合では、同じにはなりません。
+        image: assets/images/20261024_compare_olise_palmer/o_fra3/01_w.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/michael-olise/leistungsdaten/spieler/566723
+      - https://www.transfermarkt.com/cole-palmer/leistungsdaten/spieler/568177
+
+  - id: trend
+    heading: 90分あたりは、季ごとに、どう動いたのか
+    tier: 報道
+    telop: シーズンごとの90分あたり
+    narrator: 解説
+    card: &trendcard
+      type: line
+      title: 得点＋アシスト、90分あたり（クラブの全公式戦）
+      x: [23/24, 24/25, 25/26, 26/27]
+      series:
+        - [オリーセ, [1.13, 1.01, 1.19, 1.53]]
+        - [パーマー, [1.01, 0.68, 0.52, 0.83]]
+      focus: オリーセ
+      note: 26/27は10月20日ごろまでの数字（オリーセ823分・パーマー756分）。オリーセの23/24はクリスタル・パレス、パーマーの23/24はシティ序盤を含む
+    say:
+      - text: ここからは、季ごとの90分あたりです。
+        image: assets/images/20261024_compare_olise_palmer/pair_b/01.jpg
+        card: *trendcard
+      - text: 23/24。オリーセが1.13、パーマーが1.01。近い水準でした。
+        image: assets/images/20261024_compare_olise_palmer/o_fra1/01_w.jpg
+        card: {<<: *trendcard, highlight: 23/24}
+      - text: 24/25は、1.01と0.68。パーマーが下がりました。
+        image: assets/images/20261024_compare_olise_palmer/pair_a/01.jpg
+        card: {<<: *trendcard, highlight: 24/25}
+      - text: 25/26は、1.19と0.52。差が、いちばん開きました。
+        emph: true
+        image: assets/images/20261024_compare_olise_palmer/o_fra3/01_w.jpg
+        card: {<<: *trendcard, highlight: 25/26}
+      - text: 今季は、ここまで。オリーセが1.53、パーマーが0.83です。
+        image: assets/images/20261024_compare_olise_palmer/pair_b/01.jpg
+        card: {<<: *trendcard, highlight: 26/27}
+      - text: ただ、今季は始まったばかり。ここまでの数字です。
+        image: assets/images/20261024_compare_olise_palmer/o_fra2/01_w.jpg
+        card: {<<: *trendcard, highlight: 26/27}
+    sources:
+      - https://www.transfermarkt.com/michael-olise/leistungsdaten/spieler/566723
+      - https://www.transfermarkt.com/cole-palmer/leistungsdaten/spieler/568177
+      - https://en.wikipedia.org/wiki/Michael_Olise
+      - https://en.wikipedia.org/wiki/Cole_Palmer
+
+  - id: value
+    heading: 市場価値は、年齢ごとに並べると、どう違うのか
+    tier: 報道
+    telop: 年齢ごとの市場価値
+    narrator: 解説
+    card: &valuecard
+      type: duel
+      left: {name: オリーセ, club: バイエルン, photo: assets/images/20261024_compare_olise_palmer/o_fra1/01_sq.jpg, color: "#dc052d"}
+      right: {name: パーマー, club: チェルシー, photo: assets/images/20261024_compare_olise_palmer/p_lei/01_sq.jpg, color: "#034694"}
+      rows:
+        - [21歳の最高値, 5000万€, 5500万€]
+        - [22歳の最高値, 6500万€, 1.3億€]
+        - [23歳の最高値, 1.3億€, 1.2億€]
+        - [24歳（いま）, 1.8億€, 1.1億€]
+      bars: [21歳の最高値, 22歳の最高値, 23歳の最高値, 24歳（いま）]
+      note: Transfermarkt の市場価値の推移。年齢ごとの最高値。24歳はいまの時点（オリーセ2026年10月2日・パーマー10月7日）
+    say:
+      - text: 次は市場価値。年齢ごとに、いちばん高かった値を並べます。
+        image: assets/images/20261024_compare_olise_palmer/o_fra2/01_w.jpg
+        card: *valuecard
+      - text: 21歳は、オリーセが5000万ユーロ。パーマーが5500万ユーロ。
+        image: assets/images/20261024_compare_olise_palmer/pair_a/01.jpg
+        card: {<<: *valuecard, highlight_row: 21歳の最高値}
+      - text: 22歳は、オリーセが6500万、パーマーが1億3000万。
+        image: assets/images/20261024_compare_olise_palmer/o_fra3/01_w.jpg
+        card: {<<: *valuecard, highlight_row: 22歳の最高値}
+      - text: 23歳では、オリーセが1億3000万、パーマーが1億2000万ユーロ。
+        emph: true
+        image: assets/images/20261024_compare_olise_palmer/pair_b/01.jpg
+        card: {<<: *valuecard, highlight_row: 23歳の最高値}
+      - text: 24歳のいまは、オリーセが1億8000万、パーマーが1億1000万。
+        image: assets/images/20261024_compare_olise_palmer/o_fra1/01_w.jpg
+        card: {<<: *valuecard, highlight_row: 24歳（いま）}
+      - text: パーマーの最高は、22歳の1億3000万ユーロ。オリーセは、いまが最高です。
+        image: assets/images/20261024_compare_olise_palmer/pair_a/01.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/michael-olise/marktwertverlauf/spieler/566723
+      - https://www.transfermarkt.com/cole-palmer/marktwertverlauf/spieler/568177
+
+  - id: view
+    heading: 見立て・点に絡む差は、出場時間か、90分あたりか
+    tier: 背景
+    viewpoint: true
+    narrator: 解説
+    telop: 数字の違いが示すもの
+    card: &viewcard
+      type: duel
+      left: {name: オリーセ, club: バイエルン, photo: assets/images/20261024_compare_olise_palmer/o_fra1/01_sq.jpg, color: "#dc052d"}
+      right: {name: パーマー, club: チェルシー, photo: assets/images/20261024_compare_olise_palmer/p_lei/01_sq.jpg, color: "#034694"}
+      rows:
+        - [昨季の点に絡んだ数, "53", "14"]
+        - [昨季の90分あたり, "1.19", "0.52"]
+        - [昨季のリーグ戦, "1.40", "0.50"]
+        - [今季の90分あたり, "1.53", "0.83"]
+        - [市場価値, 1.8億€, 1.1億€]
+      bars: [昨季の点に絡んだ数, 昨季の90分あたり, 昨季のリーグ戦, 今季の90分あたり, 市場価値]
+      note: 90分あたりは得点＋アシスト。クラブの公式戦。今季は10月20日ごろまで（オリーセ823分・パーマー756分）
+    say:
+      - text: 見立てです。昨季、点に絡んだのは、オリーセが53、パーマーが14。
+        mark: {kind: circle, row: 0}
+        image: assets/images/20261024_compare_olise_palmer/o_fra2/01_w.jpg
+        card: {<<: *viewcard, highlight_row: 昨季の点に絡んだ数}
+      - text: 計算でも、パーマーは約23。差39のうち、30は出場時間で説明できません。
+        image: assets/images/20261024_compare_olise_palmer/pair_b/01.jpg
+        card: {<<: *viewcard, highlight_row: 昨季の90分あたり}
+      - text: リーグ戦で並べても、1.40と0.50。順は同じです。
+        image: assets/images/20261024_compare_olise_palmer/o_fra3/01_w.jpg
+        card: {<<: *viewcard, highlight_row: 昨季のリーグ戦}
+      - text: 今季は、1.53と0.83。市場価値の差も、同じ向きです。
+        emph: true
+        image: assets/images/20261024_compare_olise_palmer/pair_a/01.jpg
+        card: {<<: *viewcard, highlight_row: 今季の90分あたり}
+      - text: ただ、リーグが違います。パーマーは、昨季の出場時間も短くなっています。
+        image: assets/images/20261024_compare_olise_palmer/o_fra1/01_w.jpg
+        card: none
+      - text: 今季は、どちらも9〜10試合の数字です。
+        image: assets/images/20261024_compare_olise_palmer/pair_b/01.jpg
+        card: none
+      - text: 裏づけになるのは、昨季の90分あたりと、今季の序盤。この2点です。
+        image: assets/images/20261024_compare_olise_palmer/o_fra2/01_w.jpg
+        card: none
+      - text: チェルシーは、日本時間25日の午前1時半に、トッテナムと対戦します。
+        image: assets/images/20261024_compare_olise_palmer/pair_a/01.jpg
+        card: none
+      - text: バイエルンは、日本時間26日の午前1時半、フライブルクとの試合です。
+        image: assets/images/20261024_compare_olise_palmer/o_fra3/01_w.jpg
+        card: none
+      - text: 1.53と0.83。今季の90分あたりの動きを、見ていきます。
+        image: assets/images/20261024_compare_olise_palmer/pair_b/01.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/michael-olise/leistungsdaten/spieler/566723
+      - https://www.transfermarkt.com/cole-palmer/leistungsdaten/spieler/568177
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20261024
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/scoreboard?dates=20261025

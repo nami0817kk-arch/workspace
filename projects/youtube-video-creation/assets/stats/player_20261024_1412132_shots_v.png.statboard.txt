@@ -1,0 +1,6 @@
+title: ケナン・ユルドゥズの今季のシュート
+unit: xG
+shots=2
+goals=0
+xg=0.19
+source: FotMob

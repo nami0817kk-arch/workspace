@@ -1,0 +1,44 @@
+{
+ "frankfurt": {
+  "チャーリー・ケルベル": {
+   "role": "legend",
+   "file": "assets/photos/bd/frankfurt/frankfurt_legend_fc2261ce.jpg",
+   "page": "Charly Körbel"
+  },
+  "ベルント・ヘルツェンバイン": {
+   "role": "legend",
+   "file": "assets/photos/bd/frankfurt/frankfurt_legend_30b3db8c.jpg",
+   "page": "Bernd Hölzenbein"
+  },
+  "アレクサンダー・マイヤー": {
+   "role": "legend",
+   "file": "assets/photos/bd/frankfurt/frankfurt_legend_05ceddc3.jpg",
+   "page": "Alexander Meier"
+  },
+  "アディ・ヒュッター": {
+   "role": "manager",
+   "file": "assets/photos/bd/frankfurt/frankfurt_manager_b4762bfc.jpg",
+   "page": "Adi Hütter"
+  },
+  "長谷部誠": {
+   "role": "japan",
+   "file": "assets/photos/bd/frankfurt/frankfurt_japan_d0fde418.jpg",
+   "page": "Makoto Hasebe"
+  },
+  "鎌田大地": {
+   "role": "japan",
+   "file": "assets/photos/bd/frankfurt/frankfurt_japan_5d64a1bc.jpg",
+   "page": "Daichi Kamada"
+  },
+  "乾貴士": {
+   "role": "japan",
+   "file": "assets/photos/bd/frankfurt/frankfurt_japan_f1490cc6.jpg",
+   "page": "Takashi Inui"
+  },
+  "堂安律": {
+   "role": "japan",
+   "file": "assets/photos/bd/frankfurt/frankfurt_japan_04f3a460.jpg",
+   "page": "Ritsu Dōan"
+  }
+ }
+}

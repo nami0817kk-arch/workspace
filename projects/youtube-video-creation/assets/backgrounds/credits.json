@@ -891,15 +891,6 @@
   "club": "ホッフェンハイム"
  },
  {
-  "file": "stadium_フランクフルト_in.png",
-  "source": "wikimedia",
-  "title": "File:Commerzbank-Arena Panorama 20160424.jpg",
-  "page_url": "https://commons.wikimedia.org/wiki/File:Commerzbank-Arena_Panorama_20160424.jpg",
-  "author": "Alonstoter",
-  "license": "CC0",
-  "club": "フランクフルト"
- },
- {
   "file": "stadium_ハンブルガーSV_in.png",
   "source": "wikimedia",
   "title": "File:HSH Nordbank Arena.jpg",
@@ -1051,5 +1042,23 @@
   "author": "Arne Müseler",
   "license": "CC BY-SA 3.0 de",
   "club": "レバークーゼン"
+ },
+ {
+  "file": "stadium_フランクフルト.png",
+  "source": "wikimedia",
+  "title": "File:Deutsche bank park.jpg",
+  "page_url": "https://commons.wikimedia.org/wiki/File:Deutsche_bank_park.jpg",
+  "author": "Patrik Meyer",
+  "license": "CC BY-SA 4.0",
+  "club": "フランクフルト"
+ },
+ {
+  "file": "stadium_フランクフルト_in.png",
+  "source": "wikimedia",
+  "title": "File:Waldstadion match Eintracht Frankfurt - Wolfsburg 2023-24.jpg",
+  "page_url": "https://commons.wikimedia.org/wiki/File:Waldstadion_match_Eintracht_Frankfurt_-_Wolfsburg_2023-24.jpg",
+  "author": "Davicilio20",
+  "license": "CC0",
+  "club": "フランクフルト"
  }
 ]

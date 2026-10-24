@@ -1,0 +1,1409 @@
+# ケナン・ユルドゥズ（ユヴェントス／トルコ代表）の紹介。選手紹介の8節の型（2026-10-24、シリーズ「有名選手の紹介」。key: player_845654）。
+# **FotMob は使わない**。雛形（player_intro.py）の FotMob 由来の板・パーセンタイルは全部捨てた。
+# 数字は Transfermarkt API（プロフィール・市場価値の推移・季ごと大会ごとの成績・試合ごとの記録。控え research/raw/20261024_yildiz_tm.json・20261024_yildiz_games.json）と、自分で割った90分あたり。
+# **選んだ理由・重なり確認（2026-10-23）**：player_pool.py list（市場価値の順）で、scripts/ の 10/10〜10/23 に紹介があるのはライス・アルバレス・アンダーソン・サカ・ヴィルツ・ロジャーズ・ソボスライ・ムシアラ・ベリンガム・ラウタロ・カイセド。
+#   10/1〜10/9 の紹介済みはハーランド・ヤマル・オリーセ・エムバペ・ヴィティーニャ・ネヴェス・ペドリ。未紹介で市場価値が最上位は ユルドゥズ（7500万ユーロ・16位）。次点はバストーニ（6500万）。
+#   scripts/・research/posted.json・covered.yaml を「ユルドゥズ／ユルディズ／Yıldız／Yildiz／845654」で grep：台本・公開済み・covered は0件（output/pages の題材一覧のみ）。
+#   現役（2026-08-23 フロジノーネ戦に69分出場）。負傷離脱中（手術後3か月の見込み）。女子・Jリーグでもない。
+# **数字の軸**：ユヴェントスの全公式戦で、シュート 24→96→125（23/24・24/25・25/26）、枠内 10→30→51、得点 4→12→11、出場分 1086→3520→3696。1点あたりシュート 6.0→8.0→11.4。90分あたり 1.99→2.45→3.04。
+#   TM の scoringAttempts（ブロックを含む）。シーズン合計は TM の季別の数字と一致を確認（24/25 3520分12得点9A、25/26 3696分11得点10A）。
+# **通算（トップチーム。下部組織の U19 は除く）**：ユヴェントス 132試合27得点（23/24 32-4、24/25 52-12、25/26 47-11、26/27 1-0）／ユヴェントスNext Gen（セリエC）15試合2得点／トルコ代表 31試合5得点 → 178試合34得点。
+# **日本との接点：確かめられなかった**（ユルドゥズ・トルコ代表・ユヴェントスと日本の直接の接点を一次情報で見つけられず、入れていない）。
+# **一次情報・出典**：AP（ABC News 配信）2024-09-17 PSV 戦＝19歳136日でクラブ最年少のCL得点、デル・ピエーロ（20歳308日）を抜く、新方式の最初のゴール／ANSA 2026-08-31（左足の第5中足骨の骨折・手術は8/31アウクスブルク・3か月）／ANSA 2026-08-24／
+#   GQ（2026-06-03、quotidiano.net 英語版経由）の10番の発言（英訳からの自訳）／ESPN の日程（次は 10/25 17:00 UTC レッチェ戦＝日本時間 10/26 2:00）／英語版Wikipedia（バイエルン下部組織・契約切れ・初先発初得点・契約延長・最優秀若手）。
+#   Wikipedia のみの記述：バイエルンが再契約できなかった（「伝えています」で書く）、バルセロナとの争奪（「とされます」）、U19 の6得点8アシスト、最優秀若手（2025-26 Rising Star）。
+# **不安**：Wikipedia は 25/26 リーグ戦を「33試合10得点6アシスト」とし TM は 36試合10得点7アシスト。台本は TM の数字だけ。写真3枚の撮影者は確かめられていない（下）。
+# **入れなかったもの**：FotMob の指標、家族・私生活（両親の話）、移籍金、年俸、ユヴェントスの順位。
+# **日本語名・読み**：ケナン・ユルドゥズ、ユヴェントス、レーゲンスブルク、バイエルン、バルセロナ、ウディネーゼ、フロジノーネ、アウクスブルク、デル・ピエーロ、レッチェ、第5中足骨、トルコ。
+date: 2026年10月24日
+slot: other_1
+format: news
+series: 有名選手の紹介
+people:
+- ケナン・ユルドゥズ
+theme:
+  id: player_845654
+  league: italy
+  league_name: セリエA
+  kind: other
+  topic: ユヴェントス
+  title: ユルドゥズってどんな選手？ シュートは増えたのに、点は12から11。何が起きたか
+  question: ユヴェントスのケナン・ユルドゥズは、シュートが96本から125本に増えたのに、得点は12点から11点だった。10番のユルドゥズに、何が起きているのか
+  takeaway: ユヴェントスの全公式戦で、シュートは96本→125本、枠内は30本→51本、出場時間は3520分→3696分とほぼ同じ。得点は12→11で、1点にかかったシュートは8.0本から11.4本。23/24（出場少）は6.0本。8月23日に左足を痛めて手術、今季は1試合
+  nameplate: ケナン・ユルドゥズ｜ユヴェントス FW／トルコ代表
+  opening_image: assets/images/20261024_player_845654/pool/04_w.jpg
+  end_bg: assets/images/20261024_player_845654/pool/04_w.jpg
+  bgm: assets/audio/bgm_calm.wav
+watch: 毎日、数字でサッカーを読み解きます
+short_title: ユルドゥズってどんな選手？
+thumbnail:
+  line1: ユルドゥズ、178試合34点
+  line2: シュート96→125、点12→11
+  tags:
+  - ユヴェントス
+  photo: assets/images/20261024_player_845654/panel_p5.jpg
+  photos: []
+  short_photo: assets/images/20261024_player_845654/pool/04_v.jpg
+sections:
+- id: hook
+  heading: シュートは96本から125本。点は12から11。ユヴェントスの10番に、何が起きたのか
+  tier: 報道
+  telop: シュート96→125、得点12→11
+  narrator: 解説
+  card:
+    type: stats
+    title: ユルドゥズ ユヴェントスの2季（全公式戦）
+    items:
+    - - 96→125
+      - 本
+      - シュート。24/25→25/26
+    - - 30→51
+      - 本
+      - 枠内。24/25→25/26
+    - - 12→11
+      - 点
+      - 得点。24/25→25/26
+    focus: 0
+  say:
+  - text: ユヴェントスの10番、ケナン・ユルドゥズ。
+    image: assets/images/20261024_player_845654/pool/06_w.jpg
+    card:
+      type: stats
+      title: ユルドゥズ ユヴェントスの2季（全公式戦）
+      items:
+      - - 96→125
+        - 本
+        - シュート。24/25→25/26
+      - - 30→51
+        - 本
+        - 枠内。24/25→25/26
+      - - 12→11
+        - 点
+        - 得点。24/25→25/26
+      focus: 0
+  - text: 10番を着けて2季目の25/26は、シュートがさらに増えました。
+    card:
+      type: stats
+      title: ユルドゥズ ユヴェントスの2季（全公式戦）
+      items:
+      - - 96→125
+        - 本
+        - シュート。24/25→25/26
+      - - 30→51
+        - 本
+        - 枠内。24/25→25/26
+      - - 12→11
+        - 点
+        - 得点。24/25→25/26
+      focus: 0
+  - text: 前の季の、およそ1.3倍です。
+    image: assets/images/20261024_player_845654/pool/05_w.jpg
+    card:
+      type: stats
+      title: ユルドゥズ ユヴェントスの2季（全公式戦）
+      items:
+      - - 96→125
+        - 本
+        - シュート。24/25→25/26
+      - - 30→51
+        - 本
+        - 枠内。24/25→25/26
+      - - 12→11
+        - 点
+        - 得点。24/25→25/26
+      focus: 0
+  - text: 枠に飛んだのは、30本から51本。
+    card:
+      type: stats
+      title: ユルドゥズ ユヴェントスの2季（全公式戦）
+      items:
+      - - 96→125
+        - 本
+        - シュート。24/25→25/26
+      - - 30→51
+        - 本
+        - 枠内。24/25→25/26
+      - - 12→11
+        - 点
+        - 得点。24/25→25/26
+      focus: 1
+    emph: true
+  - text: 出場時間は、3520分と3696分。ほぼ同じです。
+    image: assets/images/20261024_player_845654/pool/04_w.jpg
+    card:
+      type: stats
+      title: ユルドゥズ ユヴェントスの2季（全公式戦）
+      items:
+      - - 96→125
+        - 本
+        - シュート。24/25→25/26
+      - - 30→51
+        - 本
+        - 枠内。24/25→25/26
+      - - 12→11
+        - 点
+        - 得点。24/25→25/26
+      focus: 1
+  - text: それでも、得点は12から11でした。
+    card:
+      type: stats
+      title: ユルドゥズ ユヴェントスの2季（全公式戦）
+      items:
+      - - 96→125
+        - 本
+        - シュート。24/25→25/26
+      - - 30→51
+        - 本
+        - 枠内。24/25→25/26
+      - - 12→11
+        - 点
+        - 得点。24/25→25/26
+      focus: 2
+    emph: true
+  - text: 何が起きているのかを、数字で見ていきます。
+    image: assets/images/20261024_player_845654/pool/04_w.jpg
+    card: none
+  - text: 今季は、足の負傷で、リーグ戦の出場が1試合にとどまっています。
+    image: assets/images/20261024_player_845654/pool/05_w.jpg
+    card: none
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/kenan-yildiz/leistungsdatendetails/spieler/845654
+- id: data
+  heading: ユルドゥズは、どんな立場で、いくらと見られている選手か
+  tier: 報道
+  telop: ユルドゥズの基礎DATA
+  narrator: 解説
+  card:
+    type: table
+    title: ケナン・ユルドゥズ（ユヴェントス）
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - 所属
+      - ユヴェントス（10番）
+    - - ポジション
+      - 左ウイング
+    - - 生年月日
+      - 2005年5月4日（21歳）
+    - - 出身
+      - ドイツ（レーゲンスブルク）
+    - - 身長・利き足
+      - 1.87m・両足
+    - - 代表
+      - トルコ（31試合5得点）
+    - - 契約・市場価値
+      - 2030年まで・7500万ユーロ
+    source: Transfermarkt
+  say:
+  - text: ユルドゥズは、ユヴェントスの攻撃的な選手。10番です。
+    image: assets/images/20261024_player_845654/pool/04_w.jpg
+    card: none
+  - text: ドイツのレーゲンスブルク出身。2005年5月4日生まれの、21歳。
+    card:
+      type: table
+      title: ケナン・ユルドゥズ（ユヴェントス）
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 所属
+        - ユヴェントス（10番）
+      - - ポジション
+        - 左ウイング
+      - - 生年月日
+        - 2005年5月4日（21歳）
+      - - 出身
+        - ドイツ（レーゲンスブルク）
+      - - 身長・利き足
+        - 1.87m・両足
+      - - 代表
+        - トルコ（31試合5得点）
+      - - 契約・市場価値
+        - 2030年まで・7500万ユーロ
+      source: Transfermarkt
+      highlight_row: 3
+  - text: 身長は1メートル87。利き足は、両足です。契約は、2030年まで。
+    image: assets/images/20261024_player_845654/pool/06_w.jpg
+    card:
+      type: table
+      title: ケナン・ユルドゥズ（ユヴェントス）
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 所属
+        - ユヴェントス（10番）
+      - - ポジション
+        - 左ウイング
+      - - 生年月日
+        - 2005年5月4日（21歳）
+      - - 出身
+        - ドイツ（レーゲンスブルク）
+      - - 身長・利き足
+        - 1.87m・両足
+      - - 代表
+        - トルコ（31試合5得点）
+      - - 契約・市場価値
+        - 2030年まで・7500万ユーロ
+      source: Transfermarkt
+      highlight_row: 4
+  - text: 代表は、トルコです。
+    image: assets/images/20261024_player_845654/pool/05_w.jpg
+    card:
+      type: table
+      title: ケナン・ユルドゥズ（ユヴェントス）
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 所属
+        - ユヴェントス（10番）
+      - - ポジション
+        - 左ウイング
+      - - 生年月日
+        - 2005年5月4日（21歳）
+      - - 出身
+        - ドイツ（レーゲンスブルク）
+      - - 身長・利き足
+        - 1.87m・両足
+      - - 代表
+        - トルコ（31試合5得点）
+      - - 契約・市場価値
+        - 2030年まで・7500万ユーロ
+      source: Transfermarkt
+      highlight_row: 5
+  - text: 市場価値は、推定で7500万ユーロ。2023年6月の、75倍です。
+    image: assets/images/20261024_player_845654/pool/04_w.jpg
+    card:
+      type: line
+      title: ユルドゥズの市場価値（百万ユーロ）
+      x:
+      - 23/6
+      - 23/12
+      - 24/3
+      - 24/10
+      - 25/6
+      - 25/10
+      - 26/5
+      series:
+      - - 市場価値
+        - - 1
+          - 10
+          - 30
+          - 40
+          - 50
+          - 75
+          - 75
+      focus: 市場価値
+      highlight: 25/10
+      source: Transfermarkt
+    emph: true
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/kenan-yildiz/profil/spieler/845654
+  - https://www.transfermarkt.com/kenan-yildiz/marktwertverlauf/spieler/845654
+- id: career
+  heading: バイエルンを離れた少年は、どうやってユヴェントスの10番になったのか
+  tier: 背景
+  telop: バイエルンから、10番へ
+  narrator: 解説
+  card:
+    type: timeline
+    title: ユルドゥズの歩み
+    rows:
+    - - '2012'
+      - 7歳でバイエルンの下部組織へ
+    - - '2022'
+      - 7月、契約が切れてユヴェントスへ
+    - - '2023'
+      - 8月にセリエAデビュー。12月に初得点
+    - - '2024'
+      - 8月、契約延長。10番へ
+    - - '2025'
+      - クラブW杯で3得点
+    - - '2026'
+      - 5月、セリエAの最優秀若手に
+    focus: 2012
+  say:
+  - text: ユルドゥズは、7歳から、バイエルンの下部組織にいました。
+    image: assets/images/20261024_player_845654/pool/06_w.jpg
+    card:
+      type: timeline
+      title: ユルドゥズの歩み
+      rows:
+      - - '2012'
+        - 7歳でバイエルンの下部組織へ
+      - - '2022'
+        - 7月、契約が切れてユヴェントスへ
+      - - '2023'
+        - 8月にセリエAデビュー。12月に初得点
+      - - '2024'
+        - 8月、契約延長。10番へ
+      - - '2025'
+        - クラブW杯で3得点
+      - - '2026'
+        - 5月、セリエAの最優秀若手に
+      focus: 2012
+  - text: U19では、主将を任されることもありました。
+    card: none
+  - text: 2022年7月、バイエルンとの契約が切れます。
+    image: assets/images/20261024_player_845654/pool/05_w.jpg
+    card:
+      type: timeline
+      title: ユルドゥズの歩み
+      rows:
+      - - '2012'
+        - 7歳でバイエルンの下部組織へ
+      - - '2022'
+        - 7月、契約が切れてユヴェントスへ
+      - - '2023'
+        - 8月にセリエAデビュー。12月に初得点
+      - - '2024'
+        - 8月、契約延長。10番へ
+      - - '2025'
+        - クラブW杯で3得点
+      - - '2026'
+        - 5月、セリエAの最優秀若手に
+      focus: 2022
+  - text: バイエルンは、再契約できなかったと、伝えています。
+    card:
+      type: timeline
+      title: ユルドゥズの歩み
+      rows:
+      - - '2012'
+        - 7歳でバイエルンの下部組織へ
+      - - '2022'
+        - 7月、契約が切れてユヴェントスへ
+      - - '2023'
+        - 8月にセリエAデビュー。12月に初得点
+      - - '2024'
+        - 8月、契約延長。10番へ
+      - - '2025'
+        - クラブW杯で3得点
+      - - '2026'
+        - 5月、セリエAの最優秀若手に
+      focus: 2022
+  - text: バルセロナとユヴェントスが、獲得を争ったとされます。
+    image: assets/images/20261024_player_845654/pool/06_w.jpg
+    card: none
+  - text: 7月12日、ユヴェントスが、獲得を発表しました。
+    card:
+      type: timeline
+      title: ユルドゥズの歩み
+      rows:
+      - - '2012'
+        - 7歳でバイエルンの下部組織へ
+      - - '2022'
+        - 7月、契約が切れてユヴェントスへ
+      - - '2023'
+        - 8月にセリエAデビュー。12月に初得点
+      - - '2024'
+        - 8月、契約延長。10番へ
+      - - '2025'
+        - クラブW杯で3得点
+      - - '2026'
+        - 5月、セリエAの最優秀若手に
+      focus: 2022
+  - text: 最初の1年は、セカンドチームのネクストジェンと、U19でプレーしました。
+    card: none
+  - text: 2023年8月20日、ウディネーゼ戦。途中出場の5分間で、セリエAデビュー。
+    image: assets/images/20261024_player_845654/pool/05_w.jpg
+    card: none
+  - text: 12月23日、フロジノーネ戦で、初めての先発。先制ゴールを決めます。
+    image: assets/images/20261024_player_845654/pool/06_w.jpg
+    card: none
+  - text: 18歳233日。ユヴェントスのセリエAで、外国籍の選手として最年少の得点でした。
+    card: none
+    emph: true
+  - text: 2024年8月16日、契約を2029年まで延長。ここから、10番を着けます。
+    image: assets/images/20261024_player_845654/pool/04_w.jpg
+    card: none
+  - text: 9月17日、チャンピオンズリーグ。オランダのアイントホーフェンとの試合です。
+    image: assets/images/20261024_player_845654/pool/05_w.jpg
+    card: none
+  - text: 大会が新しい形式になった、初日の最初のゴールです。
+    card: none
+  - text: 19歳136日。かつての10番、デルピエーロの20歳308日を抜きました。
+    card: none
+    emph: true
+  - text: 2025年6月のクラブW杯では、3得点。
+    image: assets/images/20261024_player_845654/pool/04_w.jpg
+    card:
+      type: timeline
+      title: ユルドゥズの歩み
+      rows:
+      - - '2012'
+        - 7歳でバイエルンの下部組織へ
+      - - '2022'
+        - 7月、契約が切れてユヴェントスへ
+      - - '2023'
+        - 8月にセリエAデビュー。12月に初得点
+      - - '2024'
+        - 8月、契約延長。10番へ
+      - - '2025'
+        - クラブW杯で3得点
+      - - '2026'
+        - 5月、セリエAの最優秀若手に
+      focus: 2025
+  - text: 2026年2月、契約を2030年まで延長。
+    image: assets/images/20261024_player_845654/pool/06_w.jpg
+    card:
+      type: timeline
+      title: ユルドゥズの歩み
+      rows:
+      - - '2012'
+        - 7歳でバイエルンの下部組織へ
+      - - '2022'
+        - 7月、契約が切れてユヴェントスへ
+      - - '2023'
+        - 8月にセリエAデビュー。12月に初得点
+      - - '2024'
+        - 8月、契約延長。10番へ
+      - - '2025'
+        - クラブW杯で3得点
+      - - '2026'
+        - 5月、セリエAの最優秀若手に
+      focus: 2026
+  - text: 5月には、セリエAの年間最優秀若手に選ばれました。
+    card:
+      type: timeline
+      title: ユルドゥズの歩み
+      rows:
+      - - '2012'
+        - 7歳でバイエルンの下部組織へ
+      - - '2022'
+        - 7月、契約が切れてユヴェントスへ
+      - - '2023'
+        - 8月にセリエAデビュー。12月に初得点
+      - - '2024'
+        - 8月、契約延長。10番へ
+      - - '2025'
+        - クラブW杯で3得点
+      - - '2026'
+        - 5月、セリエAの最優秀若手に
+      focus: 2026
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Kenan_Y%C4%B1ld%C4%B1z
+  - https://www.transfermarkt.com/kenan-yildiz/leistungsdatendetails/spieler/845654
+  - https://www.transfermarkt.com/kenan-yildiz/marktwertverlauf/spieler/845654
+  - https://abcnews.go.com/Sports/wireStory/juventus-19-year-yildiz-breaks-del-pieros-record-113773456
+- id: style
+  heading: ユルドゥズは、どんな選手か。撃つ数と、枠に飛ぶ数で見る
+  tier: 背景
+  telop: 撃つ数と、枠に飛ぶ数
+  narrator: 解説
+  card:
+    type: bars
+    title: 90分あたりのシュート
+    unit: 本
+    items:
+    - label: 23/24（出場少）
+      value: 1.99
+    - label: 24/25
+      value: 2.45
+    - label: 25/26
+      value: 3.04
+      highlight: true
+    source: Transfermarkt
+  say:
+  - text: ユルドゥズは、攻撃的MFにも、ウイングにも、2トップの一角にもなります。
+    image: assets/images/20261024_player_845654/pool/04_w.jpg
+    card: none
+  - text: 持ち味は、ペナルティエリアの外からのシュートと、ドリブルの技術だとされます。
+    card: none
+  - text: まず、90分あたりのシュート。
+    image: assets/images/20261024_player_845654/pool/05_w.jpg
+    card:
+      type: bars
+      title: 90分あたりのシュート
+      unit: 本
+      items:
+      - label: 23/24（出場少）
+        value: 1.99
+      - label: 24/25
+        value: 2.45
+      - label: 25/26
+        value: 3.04
+        highlight: true
+      source: Transfermarkt
+  - text: 25/26は、3.04本です。
+    card:
+      type: bars
+      title: 90分あたりのシュート
+      unit: 本
+      items:
+      - label: 23/24（出場少）
+        value: 1.99
+      - label: 24/25
+        value: 2.45
+      - label: 25/26
+        value: 3.04
+        highlight: true
+      source: Transfermarkt
+    emph: true
+  - text: 24/25は2.45本。23/24は1.99本で、出場の少ない季です。
+    image: assets/images/20261024_player_845654/pool/04_w.jpg
+    card:
+      type: bars
+      title: 90分あたりのシュート
+      unit: 本
+      items:
+      - label: 23/24（出場少）
+        value: 1.99
+      - label: 24/25
+        value: 2.45
+      - label: 25/26
+        value: 3.04
+        highlight: true
+      source: Transfermarkt
+  - text: 次に、枠に飛んだシュート。
+    card:
+      type: bars
+      title: 90分あたりの枠内シュート
+      unit: 本
+      items:
+      - label: 23/24（出場少）
+        value: 0.83
+      - label: 24/25
+        value: 0.77
+      - label: 25/26
+        value: 1.24
+        highlight: true
+      source: Transfermarkt
+  - text: 25/26は、90分あたり1.24本。24/25の0.77本から、1.6倍です。
+    image: assets/images/20261024_player_845654/pool/06_w.jpg
+    card:
+      type: bars
+      title: 90分あたりの枠内シュート
+      unit: 本
+      items:
+      - label: 23/24（出場少）
+        value: 0.83
+      - label: 24/25
+        value: 0.77
+      - label: 25/26
+        value: 1.24
+        highlight: true
+      source: Transfermarkt
+    emph: true
+  - text: 枠に飛ぶ割合は、24/25が31%。25/26は41%でした。
+    card: none
+  - text: 相手に倒された回数は、90分あたり1.7回と1.6回。ほぼ同じです。
+    image: assets/images/20261024_player_845654/pool/04_w.jpg
+    card: none
+  - text: パスは、90分あたり35.5本から37.8本。成功率は86.5%から83.9%。
+    card: none
+  - text: 変わったのは、撃つ数と、枠に飛ぶ数でした。
+    image: assets/images/20261024_player_845654/pool/05_w.jpg
+    card: none
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/kenan-yildiz/leistungsdatendetails/spieler/845654
+  - https://en.wikipedia.org/wiki/Kenan_Y%C4%B1ld%C4%B1z
+- id: past
+  heading: ユルドゥズは、5シーズンで、何試合に出て、何点取ってきたのか
+  tier: 報道
+  telop: 5シーズンの試合と得点
+  narrator: 解説
+  card:
+    type: table
+    title: ユルドゥズ 5シーズン（トップチームと代表。下部組織は除く）
+    columns:
+    - シーズン
+    - 試合
+    - 得点
+    - アシスト
+    - 出場時間
+    rows:
+    - - 22/23
+      - '10'
+      - '0'
+      - '1'
+      - 380分
+    - - 23/24
+      - '49'
+      - '7'
+      - '4'
+      - 2383分
+    - - 24/25
+      - '66'
+      - '16'
+      - '11'
+      - 4552分
+    - - 25/26
+      - '52'
+      - '11'
+      - '10'
+      - 4094分
+    - - 26/27（今季）
+      - '1'
+      - '0'
+      - '0'
+      - 69分
+    source: Transfermarkt
+    highlight_row: 0
+  say:
+  - text: ユルドゥズの5シーズンを、トップチームと代表で見ます。下部組織は除きます。
+    image: assets/images/20261024_player_845654/pool/05_w.jpg
+    card:
+      type: table
+      title: ユルドゥズ 5シーズン（トップチームと代表。下部組織は除く）
+      columns:
+      - シーズン
+      - 試合
+      - 得点
+      - アシスト
+      - 出場時間
+      rows:
+      - - 22/23
+        - '10'
+        - '0'
+        - '1'
+        - 380分
+      - - 23/24
+        - '49'
+        - '7'
+        - '4'
+        - 2383分
+      - - 24/25
+        - '66'
+        - '16'
+        - '11'
+        - 4552分
+      - - 25/26
+        - '52'
+        - '11'
+        - '10'
+        - 4094分
+      - - 26/27（今季）
+        - '1'
+        - '0'
+        - '0'
+        - 69分
+      source: Transfermarkt
+      highlight_row: 0
+  - text: 22/23は、ネクストジェンと代表の出場だけ。得点はありません。
+    card:
+      type: table
+      title: ユルドゥズ 5シーズン（トップチームと代表。下部組織は除く）
+      columns:
+      - シーズン
+      - 試合
+      - 得点
+      - アシスト
+      - 出場時間
+      rows:
+      - - 22/23
+        - '10'
+        - '0'
+        - '1'
+        - 380分
+      - - 23/24
+        - '49'
+        - '7'
+        - '4'
+        - 2383分
+      - - 24/25
+        - '66'
+        - '16'
+        - '11'
+        - 4552分
+      - - 25/26
+        - '52'
+        - '11'
+        - '10'
+        - 4094分
+      - - 26/27（今季）
+        - '1'
+        - '0'
+        - '0'
+        - 69分
+      source: Transfermarkt
+      highlight_row: 0
+  - text: 23/24は、49試合で7得点。セリエAの初得点も、この季です。
+    image: assets/images/20261024_player_845654/pool/04_w.jpg
+    card:
+      type: table
+      title: ユルドゥズ 5シーズン（トップチームと代表。下部組織は除く）
+      columns:
+      - シーズン
+      - 試合
+      - 得点
+      - アシスト
+      - 出場時間
+      rows:
+      - - 22/23
+        - '10'
+        - '0'
+        - '1'
+        - 380分
+      - - 23/24
+        - '49'
+        - '7'
+        - '4'
+        - 2383分
+      - - 24/25
+        - '66'
+        - '16'
+        - '11'
+        - 4552分
+      - - 25/26
+        - '52'
+        - '11'
+        - '10'
+        - 4094分
+      - - 26/27（今季）
+        - '1'
+        - '0'
+        - '0'
+        - 69分
+      source: Transfermarkt
+      highlight_row: 1
+  - text: 最多は、24/25の66試合。16得点、11アシスト、出場時間は4552分です。
+    card:
+      type: table
+      title: ユルドゥズ 5シーズン（トップチームと代表。下部組織は除く）
+      columns:
+      - シーズン
+      - 試合
+      - 得点
+      - アシスト
+      - 出場時間
+      rows:
+      - - 22/23
+        - '10'
+        - '0'
+        - '1'
+        - 380分
+      - - 23/24
+        - '49'
+        - '7'
+        - '4'
+        - 2383分
+      - - 24/25
+        - '66'
+        - '16'
+        - '11'
+        - 4552分
+      - - 25/26
+        - '52'
+        - '11'
+        - '10'
+        - 4094分
+      - - 26/27（今季）
+        - '1'
+        - '0'
+        - '0'
+        - 69分
+      source: Transfermarkt
+      highlight_row: 2
+    emph: true
+  - text: 25/26は、52試合で、10アシスト。
+    image: assets/images/20261024_player_845654/pool/06_w.jpg
+    card:
+      type: table
+      title: ユルドゥズ 5シーズン（トップチームと代表。下部組織は除く）
+      columns:
+      - シーズン
+      - 試合
+      - 得点
+      - アシスト
+      - 出場時間
+      rows:
+      - - 22/23
+        - '10'
+        - '0'
+        - '1'
+        - 380分
+      - - 23/24
+        - '49'
+        - '7'
+        - '4'
+        - 2383分
+      - - 24/25
+        - '66'
+        - '16'
+        - '11'
+        - 4552分
+      - - 25/26
+        - '52'
+        - '11'
+        - '10'
+        - 4094分
+      - - 26/27（今季）
+        - '1'
+        - '0'
+        - '0'
+        - 69分
+      source: Transfermarkt
+      highlight_row: 3
+  - text: 今季は、ここまで1試合です。
+    card:
+      type: table
+      title: ユルドゥズ 5シーズン（トップチームと代表。下部組織は除く）
+      columns:
+      - シーズン
+      - 試合
+      - 得点
+      - アシスト
+      - 出場時間
+      rows:
+      - - 22/23
+        - '10'
+        - '0'
+        - '1'
+        - 380分
+      - - 23/24
+        - '49'
+        - '7'
+        - '4'
+        - 2383分
+      - - 24/25
+        - '66'
+        - '16'
+        - '11'
+        - 4552分
+      - - 25/26
+        - '52'
+        - '11'
+        - '10'
+        - 4094分
+      - - 26/27（今季）
+        - '1'
+        - '0'
+        - '0'
+        - 69分
+      source: Transfermarkt
+      highlight_row: 4
+  - text: 続いて、通算です。ユヴェントスのトップチームは、132試合で27得点。
+    image: assets/images/20261024_player_845654/pool/05_w.jpg
+    card:
+      type: table
+      title: ユルドゥズ 通算（トップチーム）
+      columns:
+      - 所属
+      - 試合
+      - 得点
+      rows:
+      - - ユヴェントスNext Gen
+        - '15'
+        - '2'
+      - - ユヴェントス
+        - '132'
+        - '27'
+      - - トルコ代表
+        - '31'
+        - '5'
+      - - 合計
+        - '178'
+        - '34'
+      source: Transfermarkt
+      highlight_row: 1
+  - text: ネクストジェンは、15試合で2得点。
+    card:
+      type: table
+      title: ユルドゥズ 通算（トップチーム）
+      columns:
+      - 所属
+      - 試合
+      - 得点
+      rows:
+      - - ユヴェントスNext Gen
+        - '15'
+        - '2'
+      - - ユヴェントス
+        - '132'
+        - '27'
+      - - トルコ代表
+        - '31'
+        - '5'
+      - - 合計
+        - '178'
+        - '34'
+      source: Transfermarkt
+      highlight_row: 0
+  - text: トルコ代表では、31試合で5得点です。
+    image: assets/images/20261024_player_845654/pool/04_w.jpg
+    card:
+      type: table
+      title: ユルドゥズ 通算（トップチーム）
+      columns:
+      - 所属
+      - 試合
+      - 得点
+      rows:
+      - - ユヴェントスNext Gen
+        - '15'
+        - '2'
+      - - ユヴェントス
+        - '132'
+        - '27'
+      - - トルコ代表
+        - '31'
+        - '5'
+      - - 合計
+        - '178'
+        - '34'
+      source: Transfermarkt
+      highlight_row: 2
+  - text: すべて足すと、178試合で34得点になります。
+    card:
+      type: table
+      title: ユルドゥズ 通算（トップチーム）
+      columns:
+      - 所属
+      - 試合
+      - 得点
+      rows:
+      - - ユヴェントスNext Gen
+        - '15'
+        - '2'
+      - - ユヴェントス
+        - '132'
+        - '27'
+      - - トルコ代表
+        - '31'
+        - '5'
+      - - 合計
+        - '178'
+        - '34'
+      source: Transfermarkt
+      highlight_row: 3
+    emph: true
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/kenan-yildiz/leistungsdatendetails/spieler/845654
+  - https://en.wikipedia.org/wiki/Kenan_Y%C4%B1ld%C4%B1z
+- id: season
+  heading: 足を痛めたユルドゥズは、いま、どこにいるのか
+  tier: 報道
+  main: true
+  telop: 今季ここまで
+  narrator: 解説
+  card:
+    type: table
+    title: 今季のユルドゥズ（ユヴェントスの公式戦）
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - 公式戦（クラブ）
+      - 10試合（8/23〜10/22）
+    - - 出場
+      - 1試合・69分
+    - - 欠場
+      - 9試合（リーグ6・EL3）
+    - - 負傷
+      - 左足の第5中足骨を骨折
+    - - 手術
+      - 8月31日・成功と発表
+    - - 離脱の見込み
+      - 3か月（クラブ発表）
+    - - 次の試合
+      - 10/25 レッチェ（日本時間26日2時）
+    source: Transfermarkt・ANSA・ESPN
+    highlight_row: 0
+  say:
+  - text: ユルドゥズは、負傷で今季は1試合。昨季は、リーグ戦で36試合でした。
+    image: assets/images/20261024_player_845654/pool/04_w.jpg
+    card: none
+    short_only: true
+  - text: 今季のユルドゥズは、8月23日、リーグ開幕のフロジノーネ戦に先発しました。
+    image: assets/images/20261024_player_845654/pool/06_w.jpg
+    card:
+      type: table
+      title: 今季のユルドゥズ（ユヴェントスの公式戦）
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 公式戦（クラブ）
+        - 10試合（8/23〜10/22）
+      - - 出場
+        - 1試合・69分
+      - - 欠場
+        - 9試合（リーグ6・EL3）
+      - - 負傷
+        - 左足の第5中足骨を骨折
+      - - 手術
+        - 8月31日・成功と発表
+      - - 離脱の見込み
+        - 3か月（クラブ発表）
+      - - 次の試合
+        - 10/25 レッチェ（日本時間26日2時）
+      source: Transfermarkt・ANSA・ESPN
+      highlight_row: 0
+  - text: 69分間プレーして、チームは1対0で勝ちます。
+    card:
+      type: table
+      title: 今季のユルドゥズ（ユヴェントスの公式戦）
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 公式戦（クラブ）
+        - 10試合（8/23〜10/22）
+      - - 出場
+        - 1試合・69分
+      - - 欠場
+        - 9試合（リーグ6・EL3）
+      - - 負傷
+        - 左足の第5中足骨を骨折
+      - - 手術
+        - 8月31日・成功と発表
+      - - 離脱の見込み
+        - 3か月（クラブ発表）
+      - - 次の試合
+        - 10/25 レッチェ（日本時間26日2時）
+      source: Transfermarkt・ANSA・ESPN
+      highlight_row: 1
+  - text: シュートは2本、枠内は1本でした。
+    image: assets/images/20261024_player_845654/pool/06_w.jpg
+    card: none
+  - text: この試合で、左足を痛めました。診断は、足の甲の骨の骨折です。
+    card:
+      type: table
+      title: 今季のユルドゥズ（ユヴェントスの公式戦）
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 公式戦（クラブ）
+        - 10試合（8/23〜10/22）
+      - - 出場
+        - 1試合・69分
+      - - 欠場
+        - 9試合（リーグ6・EL3）
+      - - 負傷
+        - 左足の第5中足骨を骨折
+      - - 手術
+        - 8月31日・成功と発表
+      - - 離脱の見込み
+        - 3か月（クラブ発表）
+      - - 次の試合
+        - 10/25 レッチェ（日本時間26日2時）
+      source: Transfermarkt・ANSA・ESPN
+      highlight_row: 3
+    emph: true
+  - text: 8月31日、ドイツのアウクスブルクで手術。クラブは、完全な成功と発表しました。
+    image: assets/images/20261024_player_845654/pool/05_w.jpg
+    card:
+      type: table
+      title: 今季のユルドゥズ（ユヴェントスの公式戦）
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 公式戦（クラブ）
+        - 10試合（8/23〜10/22）
+      - - 出場
+        - 1試合・69分
+      - - 欠場
+        - 9試合（リーグ6・EL3）
+      - - 負傷
+        - 左足の第5中足骨を骨折
+      - - 手術
+        - 8月31日・成功と発表
+      - - 離脱の見込み
+        - 3か月（クラブ発表）
+      - - 次の試合
+        - 10/25 レッチェ（日本時間26日2時）
+      source: Transfermarkt・ANSA・ESPN
+      highlight_row: 4
+  - text: 離脱は、3か月の見込みです。
+    card:
+      type: table
+      title: 今季のユルドゥズ（ユヴェントスの公式戦）
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 公式戦（クラブ）
+        - 10試合（8/23〜10/22）
+      - - 出場
+        - 1試合・69分
+      - - 欠場
+        - 9試合（リーグ6・EL3）
+      - - 負傷
+        - 左足の第5中足骨を骨折
+      - - 手術
+        - 8月31日・成功と発表
+      - - 離脱の見込み
+        - 3か月（クラブ発表）
+      - - 次の試合
+        - 10/25 レッチェ（日本時間26日2時）
+      source: Transfermarkt・ANSA・ESPN
+      highlight_row: 5
+  - text: ここまでのユヴェントスの公式戦は、10試合。ユルドゥズが出たのは、1試合です。
+    image: assets/images/20261024_player_845654/pool/04_w.jpg
+    card:
+      type: table
+      title: 今季のユルドゥズ（ユヴェントスの公式戦）
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 公式戦（クラブ）
+        - 10試合（8/23〜10/22）
+      - - 出場
+        - 1試合・69分
+      - - 欠場
+        - 9試合（リーグ6・EL3）
+      - - 負傷
+        - 左足の第5中足骨を骨折
+      - - 手術
+        - 8月31日・成功と発表
+      - - 離脱の見込み
+        - 3か月（クラブ発表）
+      - - 次の試合
+        - 10/25 レッチェ（日本時間26日2時）
+      source: Transfermarkt・ANSA・ESPN
+      highlight_row: 0
+  - text: 欠場は、リーグ戦6試合と、ヨーロッパリーグ3試合。
+    card:
+      type: table
+      title: 今季のユルドゥズ（ユヴェントスの公式戦）
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 公式戦（クラブ）
+        - 10試合（8/23〜10/22）
+      - - 出場
+        - 1試合・69分
+      - - 欠場
+        - 9試合（リーグ6・EL3）
+      - - 負傷
+        - 左足の第5中足骨を骨折
+      - - 手術
+        - 8月31日・成功と発表
+      - - 離脱の見込み
+        - 3か月（クラブ発表）
+      - - 次の試合
+        - 10/25 レッチェ（日本時間26日2時）
+      source: Transfermarkt・ANSA・ESPN
+      highlight_row: 2
+  - text: 本人は、6月に、10番について、こう話しています。
+    image: assets/images/20261024_player_845654/pool/04_w.jpg
+    card: none
+  - voice: ユルドゥズ
+    text: ユヴェントスの10番は、ただのユニフォームではありません。
+  - voice: ユルドゥズ
+    text: 10番を着けるなら、いつも何か余分なものを出さなければ。
+    cont: true
+    pause: 0.5
+  - text: 今季のシュートは2本。昨季は、1試合あたり2.7本でした。
+    image: assets/images/20261024_player_845654/pool/05_w.jpg
+    card: none
+  - text: 得点は、まだありません。
+    card: none
+  quotes_from:
+  - https://sport.quotidiano.net/en/calcio/juventus/juve-yildiz-numero-10-non-e-una-maglia-qualsiasi-335450a1
+  sources:
+  - https://www.transfermarkt.com/kenan-yildiz/leistungsdatendetails/spieler/845654
+  - https://www.ansa.it/amp/english/newswire/english_service/2026/08/24/soccer-juves-yildiz-suffers-foot-injury-fears-of-a-long-layoff_fd9bf64d-dd69-43d7-a199-5386c9072ed2.html
+  - https://www.ansa.it/amp/english/news/2026/08/31/soccer-juves-yildiz-undergoes-foot-surgery-in-augsburg-sidelined-for-3-months_a131709d-2f12-4ead-ba45-06a41c7101b0.html
+  - https://sport.quotidiano.net/en/calcio/juventus/juve-yildiz-numero-10-non-e-una-maglia-qualsiasi-335450a1
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/teams/111/schedule?fixture=true
+- id: view
+  heading: ユルドゥズの点は、撃つ数についてきたのか。1点にかかったシュートで見る
+  tier: 背景
+  viewpoint: true
+  narrator: 解説
+  telop: シュート96→125、得点12→11
+  card:
+    type: table
+    title: ユルドゥズ ユヴェントスの全公式戦
+    columns:
+    - 季
+    - シュート
+    - 枠内
+    - 得点
+    - 1点あたり
+    rows:
+    - - 23/24
+      - '24'
+      - '10'
+      - '4'
+      - 6.0本
+    - - 24/25
+      - '96'
+      - '30'
+      - '12'
+      - 8.0本
+    - - 25/26
+      - '125'
+      - '51'
+      - '11'
+      - 11.4本
+    source: Transfermarkt
+    highlight_row: 0
+  say:
+  - text: 最後に、ユルドゥズの点を、撃った数と並べます。
+    image: assets/images/20261024_player_845654/pool/06_w.jpg
+    card:
+      type: table
+      title: ユルドゥズ ユヴェントスの全公式戦
+      columns:
+      - 季
+      - シュート
+      - 枠内
+      - 得点
+      - 1点あたり
+      rows:
+      - - 23/24
+        - '24'
+        - '10'
+        - '4'
+        - 6.0本
+      - - 24/25
+        - '96'
+        - '30'
+        - '12'
+        - 8.0本
+      - - 25/26
+        - '125'
+        - '51'
+        - '11'
+        - 11.4本
+      source: Transfermarkt
+      highlight_row: 0
+  - text: 24/25は、96本撃って、12得点。1点に、8本です。
+    card:
+      type: table
+      title: ユルドゥズ ユヴェントスの全公式戦
+      columns:
+      - 季
+      - シュート
+      - 枠内
+      - 得点
+      - 1点あたり
+      rows:
+      - - 23/24
+        - '24'
+        - '10'
+        - '4'
+        - 6.0本
+      - - 24/25
+        - '96'
+        - '30'
+        - '12'
+        - 8.0本
+      - - 25/26
+        - '125'
+        - '51'
+        - '11'
+        - 11.4本
+      source: Transfermarkt
+      highlight_row: 1
+  - text: 25/26は、125本撃って、11得点。1点に、11.4本です。
+    image: assets/images/20261024_player_845654/pool/05_w.jpg
+    card:
+      type: table
+      title: ユルドゥズ ユヴェントスの全公式戦
+      columns:
+      - 季
+      - シュート
+      - 枠内
+      - 得点
+      - 1点あたり
+      rows:
+      - - 23/24
+        - '24'
+        - '10'
+        - '4'
+        - 6.0本
+      - - 24/25
+        - '96'
+        - '30'
+        - '12'
+        - 8.0本
+      - - 25/26
+        - '125'
+        - '51'
+        - '11'
+        - 11.4本
+      source: Transfermarkt
+      highlight_row: 2
+    emph: true
+    mark:
+      kind: circle
+      row: 2
+  - text: 枠に飛んだ数は、1.7倍に増えました。
+    card:
+      type: table
+      title: ユルドゥズ ユヴェントスの全公式戦
+      columns:
+      - 季
+      - シュート
+      - 枠内
+      - 得点
+      - 1点あたり
+      rows:
+      - - 23/24
+        - '24'
+        - '10'
+        - '4'
+        - 6.0本
+      - - 24/25
+        - '96'
+        - '30'
+        - '12'
+        - 8.0本
+      - - 25/26
+        - '125'
+        - '51'
+        - '11'
+        - 11.4本
+      source: Transfermarkt
+      highlight_row: 2
+  - text: 枠に飛んだ1本が、得点になった割合は、40%から22%です。
+    image: assets/images/20261024_player_845654/pool/04_w.jpg
+    card: none
+  - text: 撃つ数は増え続け、得点は、12と11で、ほぼ同じでした。
+    card: none
+    emph: true
+  - text: 23/24は、1086分で24本、4得点。1点に6本でした。
+    image: assets/images/20261024_player_845654/pool/04_w.jpg
+    card:
+      type: table
+      title: ユルドゥズ ユヴェントスの全公式戦
+      columns:
+      - 季
+      - シュート
+      - 枠内
+      - 得点
+      - 1点あたり
+      rows:
+      - - 23/24
+        - '24'
+        - '10'
+        - '4'
+        - 6.0本
+      - - 24/25
+        - '96'
+        - '30'
+        - '12'
+        - 8.0本
+      - - 25/26
+        - '125'
+        - '51'
+        - '11'
+        - 11.4本
+      source: Transfermarkt
+      highlight_row: 0
+  - text: 負傷から戻ったあと、この数字がどう動くかを、見ることになります。
+    image: assets/images/20261024_player_845654/pool/04_w.jpg
+    card: none
+  - text: ユヴェントスの次の試合は、レッチェ戦。
+    image: assets/images/20261024_player_845654/pool/05_w.jpg
+    card: none
+  - text: 10月26日、日本時間の午前2時からです。
+    card: none
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/kenan-yildiz/leistungsdatendetails/spieler/845654
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/teams/111/schedule?fixture=true

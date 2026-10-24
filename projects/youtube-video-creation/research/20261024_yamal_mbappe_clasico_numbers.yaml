@@ -1,0 +1,154 @@
+# 取材メモ（2026年10月24日）ヤマル20、ムバッペ15。12試合の得点関与で見る、ヴィニシウス不在のクラシコ（ニュースのショート。見せ方 B＝写真を切り替え）
+# 取材: 2026-10-24。requests（ブラウザUA）で原文を読んだ。
+#   ・The Guardian「Is el clásico still the world's biggest match? Three questions before Barcelona v Real Madrid」(2026-10-23 09:00Z) — 本文を全部読んだ。控え research/raw/20261024_clasico_guardian.txt
+#       "Lamine Yamal has 20 goal contributions in just 12 games for Barcelona this season. Mbappé has 15 in the same number of games for Real Madrid."
+#       "Vinícius Júnior is suspended while Raphinha is only just returning to fitness after a minor muscle injury"
+#       "A Barça win would move them nine points clear of their rivals at the top of La Liga."
+#       "Messi scored 26 clásico goals, the most ... Ronaldo had the second most (18), tied with Alfredo Di Stéfano."
+#   ・ESPN の試合記録（site.api.espn.com の summary）で1試合ずつ数え直した（FotMob は使っていない）。
+#       バルサ12試合: research/raw/20261023_espn_<id>.json（8/23〜10/20、リーグ9・CL3）
+#       レアル12試合: research/raw/20261024_espn_rm_<id>.json ＋ 20261023_rm_leipzig_espn.json（8/22〜10/21、リーグ9・CL3）
+# 【数え直した結果】（公式戦。全試合先発）
+#   ヤマル 12試合 10ゴール10アシスト＝20。リーグ9試合 8G6A＝14／CL3試合 2G4A＝6。
+#     内訳 G/A: エルチェ0/0・アスレティック0/0・ラージョ2/0・バレンシア2/0・フェイエノールト1/2・レバンテ2/0・ラシン1/2・セビージャ0/2・ヘタフェ0/1・ガラタサライ0/2・ベティス1/1・PSG1/0
+#   ムバッペ 12試合 12ゴール3アシスト＝15。リーグ9試合 9G2A＝11／CL3試合 3G1A＝4。
+#     内訳 G/A: エスパニョール0/0・ソシエダ3/0・マラガ1/0・ベティス0/0・インテル1/0・ラージョ2/1・エルチェ1/1・アトレティコ0/0・ビジャレアル0/0・ローマ1/0・セビージャ2/0・ライプツィヒ1/1
+#   → ガーディアンの20と15に一致。ゴールの数はムバッペが上（12対10）、アシストはヤマルが上（10対3）。
+#   自分で割った1試合あたり: ヤマル 20÷12≒1.67、ムバッペ 15÷12＝1.25。
+#   順位（ESPN の順位表、2026-10-24 取得 research/raw/20261024_laliga_standings.json）: バルサ 9試合27（9連勝）、アトレティコ22、レアル21。→ レアルとの差は6、勝てば9（ガーディアンと一致）。
+#   ヴィニシウス: ESPN の記録で 10/10 ビジャレアル戦に途中出場して退場（redCards 1）、10/18 セビージャ戦は登録なし。出場停止の理由と試合数は記事に無いので、台本は「出場停止」だけ言う。
+#   クラシコの日時はバルサ公式の日程ページ（10/23 の控え）で現地25日（日）21時。
+# 確度: 得点関与の数字は試合記録を自分で数えた（ESPN 経由。報道）。出場停止・勝ち点差の言い方はガーディアン（報道）。メッシ26・ロナウド18はガーディアン（報道）。結果の予想は書かない。
+# 本人の言葉: 記事に2人の言葉は無い。作らない。型は B（ユーザー指定）。本人の言葉が無いので冒頭の前置きは1行。
+# 前の本との重なり: 20261020_compare_ranking_ga（得点＋アシストの5大リーグ比べ・リーグのみ）、20261022_compare_937958_433177（ヤマルとサカ）、20261022_ballondor_three・20261023_mbappe_never_satisfied（言葉の回）、20261023_raphinha_nine（ラフィーニャの数字）。公式戦12試合の内訳とクラシコ前の2人比べは未扱い。
+# 反応: 取り出していない。作らない。0件。approve は --no-voices で。
+# 写真: Commons（Bryan Berlin・Jester77aa08、CC BY-SA 4.0）。credits.json。10/18〜10/24 に使ったファイルは避けた（07 のマラガ戦は 10/16 に一度使用）。
+slot: la_liga
+date: "2026年10月24日"
+format: news
+no_main: true      # ニュースはショートだけ（2026-10-14）。締めで本編を案内しない
+people: [ラミン・ヤマル, キリアン・ムバッペ, バルセロナ, レアル・マドリード]
+short_style: B
+short_photos:
+  - assets/images/20261024_yamal_mbappe_clasico_numbers/01_v.jpg
+  - assets/images/20261024_yamal_mbappe_clasico_numbers/06_v.jpg
+  - assets/images/20261024_yamal_mbappe_clasico_numbers/03_v.jpg
+  - assets/images/20261024_yamal_mbappe_clasico_numbers/02_v.jpg
+  - assets/images/20261024_yamal_mbappe_clasico_numbers/04_v.jpg
+  - assets/images/20261024_yamal_mbappe_clasico_numbers/07_v.jpg
+
+short_question: あなたは、ゴールの多いムバッペと、アシストも多いヤマル、どちらの数字に驚きましたか。
+short_hook: ヤマル20、ムバッペ15。
+short_telops:
+  - {match: 得点に絡んだのは, text: ヤマル/12試合で得点関与20}
+  - {match: 15回です, text: ムバッペ/12試合で得点関与15}
+  - {match: ゴールだけなら, text: ゴールは/ムバッペ12・ヤマル10}
+  - {match: アシストは, text: アシストは/ヤマル10・ムバッペ3}
+  - {match: 出場停止, text: ヴィニシウスは/出場停止}
+  - {match: レアルとの差は6, text: 首位バルサとレアルの差は6}
+  - {match: 26ゴール, text: クラシコ最多/メッシ26・ロナウド18}
+  - {match: 1.67, text: 1試合あたり/ヤマル1.67・ムバッペ1.25}
+
+theme:
+  id: yamal_mbappe_clasico_numbers
+  league: spain
+  league_name: ラ・リーガ
+  prefix: ""
+  title: ヤマル20、ムバッペ15。ヴィニシウス不在のクラシコ前、数字で見えた2人の差とは
+  hook: ""
+  question: クラシコを前に、ヤマルとムバッペは今季どれだけ点に絡んでいるのか
+  takeaway: 1試合あたりの得点関与はヤマル1.67、ムバッペ1.25。ゴールはムバッペ12、アシストはヤマル10と、絡み方が違う
+
+thumbnail:
+  line1: ヤマルとムバッペ
+  line2: 12試合で20と15
+  tags: [バルセロナ, レアル・マドリード]
+  layout: versus
+  photos:
+    - assets/images/20261024_yamal_mbappe_clasico_numbers/01_w.jpg
+    - assets/images/20261024_yamal_mbappe_clasico_numbers/06_w.jpg
+  names: [ヤマル, ムバッペ]
+  numbers: ["20", "15"]
+  short_photo: assets/images/20261024_yamal_mbappe_clasico_numbers/01_v.jpg
+
+answer: 公式戦12試合で、ヤマルは10ゴール10アシストの20、ムバッペは12ゴール3アシストの15
+watch: 現地25日（日）21時のクラシコ
+
+sections:
+  - id: what
+    main: true
+    heading: 2人の12試合
+    tier: 報道
+    telop: ヤマル20、ムバッペ15
+    say:
+      - text: 現地25日、バルサとレアルのクラシコを前に、2人のエースの数字を数えました。
+        image: assets/images/20261024_yamal_mbappe_clasico_numbers/01_w.jpg
+      - text: バルセロナのヤマルは、今季の公式戦12試合で10ゴール10アシスト。
+        image: assets/images/20261024_yamal_mbappe_clasico_numbers/03_w.jpg
+        card: &gtable
+          type: table
+          title: 今季の公式戦12試合（自分で数えた）
+          columns: [選手, ゴール, アシスト, 合計]
+          rows:
+            - ["ヤマル（バルサ）", "10", "10", "20"]
+            - ["ムバッペ（レアル）", "12", "3", "15"]
+          highlight_row: 0
+      - text: 得点に絡んだのは20回。1試合に1回より多いペースです。
+        image: assets/images/20261024_yamal_mbappe_clasico_numbers/03_w.jpg
+        card:
+          <<: *gtable
+          highlight_row: 0
+      - text: レアル・マドリードのムバッペも同じ12試合で、12ゴール3アシスト。15回です。
+        image: assets/images/20261024_yamal_mbappe_clasico_numbers/06_w.jpg
+        card:
+          <<: *gtable
+          highlight_row: 1
+      - text: ゴールだけなら、ムバッペが12で、ヤマルの10を上回ります。
+        image: assets/images/20261024_yamal_mbappe_clasico_numbers/02_w.jpg
+        card: none
+      - text: アシストは、ヤマルが10。味方の点も、これだけ作っています。
+        image: assets/images/20261024_yamal_mbappe_clasico_numbers/01_w.jpg
+    official: false
+    sources:
+      - https://www.theguardian.com/football/2026/oct/23/el-clasico-real-madrid-barcelona-lamine-yamal-kylian-mbappe
+      - https://www.espn.com/soccer/match/_/gameId/401882846/barcelona-real-betis
+      - https://www.espn.com/soccer/match/_/gameId/401915313/real-madrid-rb-leipzig
+
+  - id: clasico
+    heading: ヴィニシウスのいないクラシコ
+    tier: 報道
+    telop: ヴィニシウスは出場停止
+    say:
+      - text: レアルのもう1人の主力、ヴィニシウスは出場停止で、この試合に出られません。
+        image: assets/images/20261024_yamal_mbappe_clasico_numbers/04_w.jpg
+      - text: ヤマルのバルサは9連勝で首位、勝ち点27。アトレティコ22、レアル21。
+        image: assets/images/20261024_yamal_mbappe_clasico_numbers/03_w.jpg
+      - text: レアルとの差は6で、バルサが勝てばその差は9になります。
+        image: assets/images/20261024_yamal_mbappe_clasico_numbers/03_w.jpg
+      - text: クラシコの歴代最多得点は、メッシの26ゴール。ロナウドが18で続きます。
+        card: none
+        image: assets/images/20261024_yamal_mbappe_clasico_numbers/02_w.jpg
+    official: false
+    sources:
+      - https://www.theguardian.com/football/2026/oct/23/el-clasico-real-madrid-barcelona-lamine-yamal-kylian-mbappe
+      - https://www.espn.com/soccer/standings/_/league/esp.1
+
+  - id: view
+    viewpoint: true
+    heading: 1試合あたりで数える
+    tier: 背景
+    telop: 1試合あたり ヤマル1.67、ムバッペ1.25
+    say:
+      - text: 見立てです。割り算をすると、1試合で1.67回のヤマルに、1.25回のムバッペ。
+        image: assets/images/20261024_yamal_mbappe_clasico_numbers/01_w.jpg
+      - text: 自分で決め切るムバッペと、決めて、味方にも作るヤマル。
+        image: assets/images/20261024_yamal_mbappe_clasico_numbers/06_w.jpg
+      - text: 点への絡み方が、はっきり違います。
+        image: assets/images/20261024_yamal_mbappe_clasico_numbers/04_w.jpg
+      - text: 2人がそろうクラシコは、現地25日の日曜、夜9時のキックオフです。
+        image: assets/images/20261024_yamal_mbappe_clasico_numbers/03_w.jpg
+    official: false
+    sources:
+      - https://www.theguardian.com/football/2026/oct/23/el-clasico-real-madrid-barcelona-lamine-yamal-kylian-mbappe
+      - https://www.fcbarcelona.com/en/football/first-team/schedule
+short_title: "ヤマル20、ムバッペ15。ヴィニシウス不在のクラシコ前、数字で見えた2人の差とは"

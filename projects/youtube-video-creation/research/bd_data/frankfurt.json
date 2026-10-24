@@ -1,0 +1,92 @@
+{
+ "title": "フランクフルト 基礎DATA",
+ "colors": [
+  "#E1000F",
+  "#1A1A1A"
+ ],
+ "crest": "assets/crests/フランクフルト.png",
+ "tiles": [
+  [
+   "クラブ創立",
+   "1899年",
+   "3月8日。前身のひとつ、ヴィクトリアから"
+  ],
+  [
+   "愛称",
+   "アドラー",
+   "ドイツ語で「鷲」。SGEとも。「気まぐれな歌姫」の別名も"
+  ],
+  [
+   "ホームタウン",
+   "フランクフルト",
+   "人口約76万人（2019年）。マイン川のほとり"
+  ],
+  [
+   "本拠地",
+   "ドイツ銀行パーク",
+   "収容 60,100人。18クラブで4番目"
+  ],
+  [
+   "オーナー",
+   "会員のクラブが約68%",
+   "株式会社の株の67.89%を、会員組織のクラブが持つ"
+  ],
+  [
+   "タイトル歴",
+   "ドイツ王者1回",
+   "ドイツカップ5回。ヨーロッパリーグ（前身含む）2回"
+  ],
+  [
+   "最多出場",
+   "602試合",
+   "ケルベル、1972〜1991年。ブンデスリーガ歴代最多"
+  ],
+  [
+   "直近のタイトル",
+   "ヨーロッパリーグ",
+   "2022年5月、決勝でレンジャーズにPK戦"
+  ],
+  [
+   "昨季の順位",
+   "8位",
+   "勝ち点44。優勝バイエルンと45差"
+  ]
+ ],
+ "trophies": [
+  [
+   "ドイツ選手権(1959)",
+   1
+  ],
+  [
+   "ブンデスリーガ",
+   0
+  ],
+  [
+   "DFBポカール",
+   5
+  ],
+  [
+   "UEFAカップ/EL",
+   2
+  ],
+  [
+   "チャンピオンズリーグ",
+   0
+  ],
+  [
+   "インタートト杯",
+   1
+  ]
+ ],
+ "sources": [
+  "https://en.wikipedia.org/wiki/Eintracht_Frankfurt",
+  "https://museum.eintracht.de/chronik/1899-1920/",
+  "https://klub.eintracht.de/news/strukturelle-einigkeit-25-jahre-eintracht-frankfurt-fussball-ag-169547/",
+  "https://en.eintracht.de/news/deutsche-bank-park-fasst-60100-zuschauer-178584",
+  "https://en.wikipedia.org/wiki/Frankfurt",
+  "https://en.wikipedia.org/wiki/Charly_K%C3%B6rbel",
+  "https://museum.eintracht.de/chronik/2016-2024/",
+  "https://site.api.espn.com/apis/v2/sports/soccer/ger.1/standings?season=2025"
+ ],
+ "notes": "取材の控えは research/bd_data/frankfurt_research.md。創立1899-03-08はクラブ博物館の年表（前身 Frankfurter FC Victoria、酒場の件は台本で言わない）。愛称 Die Adler=鷲・SGE・Launische Diva・Schlappekicker は英語版クラブ記事 Colours, crest and nicknames。人口763,380（2019）は英語版 Frankfurt。収容60,100は公式（2026-08-09 発表、51,500→59,500→60,100）、18クラブ順位は clubs.json の収容数を並べ、フランクフルトだけ公式の60,100に差し替えた（シュツットガルト60,058の上）。株67.89%はクラブ公式 klub.eintracht.de（2025-07-01）の『eingetragene Verein hält 67,89 Prozent der Anteile』。タイトルは英語版クラブ記事 Honours（ドイツ選手権1959・DFBポカール5・UEFAカップ/EL 2・インタートト1966-67・チャンピオンズリーグ準優勝1）。最多出場602はクラブ記事 Records（ケルベル、ブンデスリーガ。全大会は720）。直近のタイトルは2022-05-18 セビリアのヨーロッパリーグ決勝（1-1、PK5-4）。昨季は ESPN standings(season=2025) の8位・勝ち点44、バイエルンは89。"
+}

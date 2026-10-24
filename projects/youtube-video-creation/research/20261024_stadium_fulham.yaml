@@ -1,0 +1,624 @@
+# スタジアム紹介シリーズ：フラムの本拠地（クレイヴン・コテージ、10/24）。雛形は 10/23 パレスの回。
+# 軸：A＝収容2万8107席はプレミア20クラブで16位。ピッチは縦100×横65mで、縦も横も20クラブで最小。
+#     B＝テムズ川沿いの古い球場が、なぜ生き残ったのか。2002〜04年はQPRの球場に間借り、2004年に2万2000席で戻り、川沿いのスタンドを2025年までかけて建て替えた。
+# 収容・ピッチ：PL公式ハンドブック2026/27（Ground Capacity at start of the Season、控え research/raw/20261021_nufc_plhandbook.txt）。
+#   フラム 28,107（ピッチ 縦100×横65m）。15位イプスウィッチ 30,294／17位パレス 25,194／1位マンU 74,158。
+#   ピッチ：縦はフラム100・リヴァプール101・パレス101.5・チェルシー103の順で最短。横はフラム65・イプスウィッチ66・チェルシー67.5・ハル67.2…で最狭。多くのクラブは105×68。
+#   自分で引いた・割った：30,294-28,107=2,187／28,107-25,194=2,913／28,107÷74,158=0.379＝約38％／広さ 100×65=6,500 ÷ 105×68=7,140 = 0.91／49,335÷28,107=1.76／28,107-22,000=6,107。
+# 入場（PL公式の試合API、取得2026-10-24。控え research/raw/20261024_pl_matches_all.json）：
+#   2023/24 ホーム19試合＝合計461,722・平均24,301（最多24,467＝9/16 ルートン戦・最少23,598＝12/23 バーンリー戦）。
+#   2024/25 ホーム19試合＝合計509,689・平均26,826（最多27,770＝2025/4/6 リヴァプール戦・最少24,931＝11/4 ブレントフォード戦）。
+#   2025/26 ホーム19試合＝合計517,338・平均27,228（最多27,736＝10/18 アーセナル戦・最少26,113＝9/20 ブレントフォード戦）。
+#   2026/27 ここまでのホーム4試合＝合計109,569・平均27,392。
+#   自分で数えた：24/25と25/26の38試合＝合計1,027,027・平均27,027＝収容28,107の96.2％／最多27,770は収容の98.8％／2023/24→2025/26の平均は +2,927人（+12.0％）。
+#   注意：ハンドブックの28,107は今季の開幕時の収容。2023/24は工事中で収容が小さかったので、その季の割合は言わず平均人数だけ言う。
+# 本人・記録（ウィキペディア en "Craven Cottage" 取得2026-10-24。控え research/raw/20261024_fu_wp_craven.txt）：
+#   1896年からフラムの本拠地／1896-10-10 初の入場料試合（ミネルヴァ戦）／最初のスタンドは250席×4の木の箱＝愛称「ウサギ小屋」／1904年に州議会が安全を問題にし、1905年1月の裁判のあとアーチボルド・リーチが招かれ、1万5000ポンド（当時の記録）でパビリオンとステヴェニッジ・ロード・スタンドを建てる／
+#   2005年、ジョニー・ヘインズの死去（10月、交通事故）を受けスタンドを改名／パビリオンとヘインズ・スタンドはグレードIIの登録建造物／1933年、8万人の新球場案（大恐慌で実現せず）／1938-10-08 最多49,335人（ミルウォール戦）／1948年五輪の試合の会場／
+#   リヴァーサイドは1971/72に座席のスタンドが建つ（4,200席、ベンフィカとの親善で開く）／ヒルズボロ後のテイラー報告、1996年にジミー・ヒル会長が全席座席案（実現せず）／2001/02に立ち見席が残るのはプレミアでフラムだけ／最後のリーグ戦＝2002-04-27 レスター戦／
+#   2002/03・2003/04 QPRのロフタス・ロードに間借り／ファンの会「Back to the Cottage」／2003年12月に800万ポンドの改装案、2004年1月着工／2004-07-10 ワトフォードとの親善で2万2000席の全席座席として再開／
+#   2012-07-27 リヴァーサイド建て替えの許可（3万席へ）／2013年3月 施工会社選定／2019年5月 夏着工の確認／2019/20〜2021/22 収容は一時的に1万9000／2022-03-17 下段を2022/23に開く（2000人超）／完成は2021年の予定から2024年へずれた（「いくつかの問題」）／最多の座席時代の入場27,770＝2025-04-06 リヴァプール戦。
+#   完成後の収容：ウィキペディアは約2万9600〜2万9700、PLハンドブックは2万8107で割れる→台本ではハンドブックの数字で言い、割れていると断る。
+# 日本との接点（基礎の次の節に置いた）：ウィキペディア en "Junichi Inamoto"／ja "稲本潤一"（控え research/raw/20261024_fu_wp_inamoto.txt・20261024_fu_ja_inamoto.txt）：
+#   フラム在籍 2002〜2004（期限付き）／2002インタートト決勝でボローニャに合計5対3、稲本は2試合で4得点（第1戦1・第2戦ハットトリック）／フラム初の欧州の大会／2004年のイングランド戦で骨折しフラムを離れる。
+#   つまり稲本のいた2季（2002/03・2003/04）、リーグ戦の本拠地はクレイヴン・コテージではなかった。決勝の会場は一次情報で確かめていないので台本では言わない。
+# 割れる点（台本で断った）：①完成後の収容（上）／②ウィキペディアの「開場」の語は使わず「1896年から本拠地」と言う／③「プロサッカーに残る最古のスタンド」はウィキペディアの書き方なので「と書く」と断る。
+# 言わなかったもの：マイケル・ジャクソンの像（経緯が人の問題に近い）／エリック・ミラーの話（私生活・法的）／オーナー・財政／女子チームの話／完成の費用（資料に無い）。
+# 重なりを避けた：クラブ紹介⑩フラム（2026-09-20）は本拠地を1行＋「コテージ」の由来1節だけ。屋敷の由来・火事は言わない。稲本は欧州初制覇の話ではなく「本拠地にいなかった2季」の側から。
+# 読めなかった：クラブ公式の完成後の収容。決勝第2戦の会場。ブラウザ操作・JS実行は不使用（requests と WebSearch/WebFetch）。
+# 写真：assets/images/20261024_stadium_fulham/（Commons、出典は credits.json）。人物は特定していない。
+date: 2026年10月24日
+slot: other_1
+format: news
+series: スタジアム紹介
+voice_min: 0
+people: []
+watch: 毎日、数字でサッカーを読み解きます
+theme:
+  id: stadium_fulham
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: フラム
+  title: フラムの本拠地は、最小のピッチなのに、なぜ、100年以上前の姿で残ったのか
+  question: プレミア20クラブで最も小さいピッチの、テムズ川沿いの古い球場は、なぜ取り壊されず、いまの2万8107席になったのか
+  lead: 川のそばの、小さな本拠地。
+  hook: ''
+  opening_image: assets/images/20261024_stadium_fulham/01_w.jpg
+  end_bg: assets/images/20261024_stadium_fulham/01_w.jpg
+  takeaway: フラムの本拠地クレイヴン・コテージの収容は、今季の開幕時で2万8107人。プレミア20クラブで16位。ピッチは縦100×横65メートルで、縦も横も20クラブで最小。稲本潤一が在籍した2002〜04年の2季、フラムはこの球場を離れ、近所のキューピーアールの球場を借りていた。2004年に2万2000席の全席座席で戻り、1905年のスタンドは残した。川沿いのスタンドは2019年から建て替え、座席のスタンドでの最多入場は2025年4月の2万7770人。直近の2季38試合の平均入場は2万7027人で、収容の96.2％。完成後の収容は資料で数字が割れ、2万9600前後とも言われる
+  short_title: フラムの本拠地、ピッチは20クラブで最小
+thumbnail:
+  layout: scene
+  bold: false
+  callouts:
+  - 縦100m×横65m
+  - 2002〜04年は間借り
+  photo: assets/images/20261024_stadium_fulham/01_w.jpg
+  line1: フラムの本拠地
+  line2: ピッチは20クラブで最小
+  tags:
+  - フラム
+  - クレイヴン・コテージ
+  - 稲本潤一
+  - プレミアリーグ
+  - スタジアム紹介
+sections:
+- id: data
+  main: true
+  heading: クレイヴン・コテージの収容は、プレミアで何番目なのか
+  bg: assets/images/20261024_stadium_fulham/01_w.jpg
+  tier: 報道
+  telop: 収容は2万8107人。プレミア20クラブで16位。ピッチは縦も横も、20クラブで最小
+  narrator: 解説
+  card:
+    type: table
+    title: クレイヴン・コテージの基礎DATA
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - 収容人数
+      - 2万8107人（今季の開幕時）
+    - - 20クラブでは
+      - 16位（下から5番目）
+    - - 場所
+      - ロンドン西部、テムズ川のほとり
+    - - ピッチ
+      - 縦100×横65メートル（20クラブで最小）
+    - - 本拠地に
+      - 1896年から
+    - - 古いスタンド
+      - 1905年、アーチボルド・リーチ設計
+  say:
+  - text: フラムの本拠地の話です。
+    short_only: true
+    image: assets/images/20261024_stadium_fulham/01_w.jpg
+    card: none
+  - text: 収容は、2万8107人。今季のプレミア20クラブで、16番目です。
+    emph: true
+    image: assets/images/20261024_stadium_fulham/02_w.jpg
+    card: &id_rank
+      type: stats
+      title: プレミア16位の本拠地。すぐ上と、すぐ下
+      items:
+      - - '30294'
+        - 人
+        - 15位 イプスウィッチ
+      - - '28107'
+        - 人
+        - フラムの収容
+      - - '25194'
+        - 人
+        - 17位 パレス
+      focus: 1
+  - text: 15位は、イプスウィッチ。3万294人。差は、2187席。
+    image: assets/images/20261024_stadium_fulham/02_w.jpg
+    card:
+      <<: *id_rank
+      focus: 0
+  - text: 17位は、パレス。2万5194人。差は、2913席。
+    image: assets/images/20261024_stadium_fulham/02_w.jpg
+    card:
+      <<: *id_rank
+      focus: 2
+  - text: いちばん大きいのは、マンチェスター・ユナイテッド。7万4158席。
+    image: assets/images/20261024_stadium_fulham/03_w.jpg
+    card: none
+  - text: フラムの収容は、その約38％です。
+    emph: true
+    image: assets/images/20261024_stadium_fulham/03_w.jpg
+    card:
+      type: calc
+      title: 首位との差（自分で割った）
+      terms:
+      - - 2万8107人
+        - フラムの収容
+      - - 7万4158人
+        - マンチェスター・ユナイテッド
+      - - 0.38
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+  - text: フラムは、縦が100メートル、横が65メートル。
+    emph: true
+    image: assets/images/20261024_stadium_fulham/04_w.jpg
+    card: none
+  - text: 縦も横も、プレミア20クラブで、いちばん小さい数字。
+    image: assets/images/20261024_stadium_fulham/05_w.jpg
+    card: none
+  - text: 多くのクラブは、105×68メートルです。
+    image: assets/images/20261024_stadium_fulham/05_w.jpg
+    card: none
+  - text: 広さにすると、フラムは、その約91％。
+    emph: true
+    image: assets/images/20261024_stadium_fulham/05_w.jpg
+    card:
+      type: calc
+      title: ピッチの広さ（自分で割った）
+      terms:
+      - - 6500平方メートル
+        - フラム 100×65
+      - - 7140平方メートル
+        - 多くのクラブ 105×68
+      - - 0.91
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+  sources:
+  - https://resources.premierleague.pulselive.com/premierleague/document/2026/07/31/8a890ff9-176c-4364-a8ff-e08f995e2c86/TM2040_PL-Handbook-and-Collateral-2026-27_Digital_31.07.pdf
+  - https://en.wikipedia.org/wiki/Craven_Cottage
+- id: japan
+  heading: 稲本潤一がいた2年間、フラムの本拠地は、どこだったのか
+  bg: assets/images/20261024_stadium_fulham/01_w.jpg
+  tier: 背景
+  telop: 稲本潤一は2002〜04年に在籍。その2季、本拠地はクレイヴン・コテージではなかった
+  narrator: 解説
+  card: &id_jp
+    type: timeline
+    title: 稲本潤一と、フラムの本拠地（ウィキペディア）
+    rows:
+    - - 2002年
+      - インタートト優勝。稲本は2試合で4得点
+    - - 2002年4月27日
+      - コテージ最後のリーグ戦（レスター戦）
+    - - 2002/03・2003/04
+      - ロフタス・ロードに間借り
+    - - 2004年
+      - 稲本、イングランド戦で骨折し退団
+    - - 2004年7月10日
+      - 改装したコテージが再開
+    focus: 2002年
+    highlight_row: 0
+  say:
+  - text: 次は、この本拠地と、日本人の話です。
+    image: assets/images/20261024_stadium_fulham/05_w.jpg
+    card: none
+  - text: 稲本潤一が、フラムでプレーしたのは、2002年から2004年です。
+    image: assets/images/20261024_stadium_fulham/05_w.jpg
+    card:
+      <<: *id_jp
+      highlight_row: 0
+  - text: 2002年のインタートトカップ。
+    image: assets/images/20261024_stadium_fulham/02_w.jpg
+    card:
+      <<: *id_jp
+      highlight_row: 0
+  - text: 決勝は、ボローニャに、2試合の合計5対3で勝ちました。
+    image: assets/images/20261024_stadium_fulham/02_w.jpg
+    card:
+      <<: *id_jp
+      highlight_row: 0
+  - text: 稲本は、その5点のうち、4点を決めています。
+    emph: true
+    image: assets/images/20261024_stadium_fulham/02_w.jpg
+    card: none
+  - text: フラムにとって、初めてのヨーロッパの大会でした。
+    image: assets/images/20261024_stadium_fulham/02_w.jpg
+    card: none
+  - text: ところが、その2シーズン、フラムは、本拠地にいませんでした。
+    emph: true
+    image: assets/images/20261024_stadium_fulham/04_w.jpg
+    card: none
+  - text: 2002年4月27日、レスター戦が、改装前の、最後のリーグ戦です。
+    image: assets/images/20261024_stadium_fulham/04_w.jpg
+    card:
+      <<: *id_jp
+      highlight_row: 1
+  - text: 2002/03と2003/04は、ロフタス・ロードを借りました。
+    emph: true
+    image: assets/images/20261024_stadium_fulham/03_w.jpg
+    card:
+      <<: *id_jp
+      highlight_row: 2
+  - text: 近所のクラブ、キューピーアールの球場です。
+    image: assets/images/20261024_stadium_fulham/03_w.jpg
+    card: none
+  - text: 稲本は、2004年に、イングランド戦で左足を骨折して、フラムを離れます。
+    image: assets/images/20261024_stadium_fulham/03_w.jpg
+    card:
+      <<: *id_jp
+      highlight_row: 3
+  - text: コテージが、改装を終えて戻ってきたのも、同じ2004年です。
+    image: assets/images/20261024_stadium_fulham/03_w.jpg
+    card:
+      <<: *id_jp
+      highlight_row: 4
+  - text: 日本人が活躍した時代の本拠地は、工事の最中でした。
+    image: assets/images/20261024_stadium_fulham/01_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Junichi_Inamoto
+  - https://ja.wikipedia.org/wiki/稲本潤一
+  - https://en.wikipedia.org/wiki/Craven_Cottage
+- id: exile
+  heading: なぜ、フラムは、本拠地を離れなければならなかったのか
+  bg: assets/images/20261024_stadium_fulham/01_w.jpg
+  tier: 背景
+  telop: 2001/02に立ち見席が残るのは、プレミアでフラムだけ。2004年に2万2000席の全席座席で戻った
+  narrator: 解説
+  card: &id_exile
+    type: timeline
+    title: 本拠地を離れ、戻るまで（ウィキペディア）
+    rows:
+    - - 1996年
+      - 全席座席案を会長が発表。実現せず
+    - - 2001/02
+      - 立ち見席が残る、プレミアで唯一
+    - - 2002年4月
+      - 最後のリーグ戦の時点で、工事の計画なし
+    - - 2003年12月
+      - 800万ポンドの改装案を発表
+    - - 2004年1月
+      - 着工
+    - - 2004年7月10日
+      - 2万2000席で再開
+    focus: 1996年
+    highlight_row: 0
+  say:
+  - text: 本拠地を離れた理由は、立ち見席です。
+    image: assets/images/20261024_stadium_fulham/04_w.jpg
+    card: none
+  - text: テイラー報告のあと、プレミアでは、立ち見席が、禁じられました。
+    image: assets/images/20261024_stadium_fulham/04_w.jpg
+    card: none
+  - text: 1996年、当時の会長が、全席座席の案を、発表します。
+    image: assets/images/20261024_stadium_fulham/04_w.jpg
+    card:
+      <<: *id_exile
+      highlight_row: 0
+  - text: 2001/02。フラムは、立ち見席が残る、プレミアで唯一の本拠地でした。
+    emph: true
+    image: assets/images/20261024_stadium_fulham/05_w.jpg
+    card:
+      <<: *id_exile
+      highlight_row: 1
+  - text: その日になっても、工事の計画は、ありませんでした。
+    emph: true
+    image: assets/images/20261024_stadium_fulham/05_w.jpg
+    card:
+      <<: *id_exile
+      highlight_row: 2
+  - text: ファンは、反発しました。
+    image: assets/images/20261024_stadium_fulham/02_w.jpg
+    card: none
+  - text: 多くが、アウェーの試合にしか、行かなくなったと言われます。
+    image: assets/images/20261024_stadium_fulham/02_w.jpg
+    card: none
+  - text: 「コテージに戻れ」という名前の、ファンの会ができました。
+    emph: true
+    image: assets/images/20261024_stadium_fulham/02_w.jpg
+    card: none
+  - text: 2003年12月、800万ポンドの改装案が、発表されます。
+    image: assets/images/20261024_stadium_fulham/03_w.jpg
+    card:
+      <<: *id_exile
+      highlight_row: 3
+  - text: 2004年1月に、着工しました。
+    image: assets/images/20261024_stadium_fulham/03_w.jpg
+    card:
+      <<: *id_exile
+      highlight_row: 4
+  - text: 2004年7月10日、ワトフォードとの親善試合で、再開します。
+    emph: true
+    image: assets/images/20261024_stadium_fulham/03_w.jpg
+    card:
+      <<: *id_exile
+      highlight_row: 5
+  - text: 収容は、2万2000席の、全席座席でした。
+    image: assets/images/20261024_stadium_fulham/01_w.jpg
+    card: none
+  - text: 今の2万8107席は、そこから6107席、多い数字です。
+    image: assets/images/20261024_stadium_fulham/01_w.jpg
+    card:
+      type: calc
+      title: 再開時から増えた席（自分で引いた）
+      terms:
+      - - 2万8107席
+        - いまの収容
+      - - 2万2000席
+        - 2004年の再開
+      - - 6107席
+        - 引いた答え
+      ops:
+      - −
+      - ＝
+  sources:
+  - https://en.wikipedia.org/wiki/Craven_Cottage
+  - https://en.wikipedia.org/wiki/Fulham_F.C.
+- id: stand
+  heading: なぜ、1905年のスタンドは、壊されずに残ったのか
+  bg: assets/images/20261024_stadium_fulham/01_w.jpg
+  tier: 背景
+  telop: 1905年にリーチが建てたスタンドは、いまもある。壊す案は、1933年にも実現しなかった
+  narrator: 解説
+  card: &id_old
+    type: timeline
+    title: 1905年のスタンドの歩み（ウィキペディア）
+    rows:
+    - - 1896年
+      - 初の入場料試合。最初のスタンドは木の箱
+    - - 1905年
+      - リーチ設計。費用は当時の記録の1万5000ポンド
+    - - 1933年
+      - 8万人の新球場案。実現せず
+    - - 1938年
+      - 最多49,335人
+    - - 2005年
+      - スタンドが「ジョニー・ヘインズ」に改名
+    focus: 1905年
+    highlight_row: 1
+  say:
+  - text: 最初の入場料のある試合は、1896年10月10日です。
+    image: assets/images/20261024_stadium_fulham/05_w.jpg
+    card:
+      <<: *id_old
+      highlight_row: 0
+  - text: 最初のスタンドは、250席の木の箱を、4つ並べたもの。
+    image: assets/images/20261024_stadium_fulham/05_w.jpg
+    card: none
+  - text: 合計で1000席。いまの収容の、約28分の1。
+    image: assets/images/20261024_stadium_fulham/05_w.jpg
+    card: none
+  - text: ついた愛称は、ウサギ小屋でした。
+    emph: true
+    image: assets/images/20261024_stadium_fulham/05_w.jpg
+    card: none
+  - text: 安全を問題にされ、裁判になります。
+    image: assets/images/20261024_stadium_fulham/04_w.jpg
+    card: none
+  - text: そのあと設計を任されたのが、アーチボルド・リーチです。
+    image: assets/images/20261024_stadium_fulham/04_w.jpg
+    card: none
+  - text: 1905年、費用は1万5000ポンド。当時の記録でした。
+    emph: true
+    image: assets/images/20261024_stadium_fulham/04_w.jpg
+    card:
+      <<: *id_old
+      highlight_row: 1
+  - text: そのとき建ったのが、道路側のスタンドと、更衣室のパビリオン。
+    image: assets/images/20261024_stadium_fulham/02_w.jpg
+    card: none
+  - text: 2つとも、いまも使われ、グレードIIの登録建造物です。
+    emph: true
+    image: assets/images/20261024_stadium_fulham/02_w.jpg
+    card: none
+  - text: 1933年には、8万人入る新球場に、建て替える案もありました。
+    image: assets/images/20261024_stadium_fulham/03_w.jpg
+    card:
+      <<: *id_old
+      highlight_row: 2
+  - text: 大恐慌で、流れました。
+    image: assets/images/20261024_stadium_fulham/03_w.jpg
+    card: none
+  - text: 1938年10月8日、ミルウォール戦に、4万9335人が入ります。
+    emph: true
+    image: assets/images/20261024_stadium_fulham/03_w.jpg
+    card:
+      <<: *id_old
+      highlight_row: 3
+  - text: いまの収容の、約1.76倍です。
+    image: assets/images/20261024_stadium_fulham/01_w.jpg
+    card:
+      type: calc
+      title: 最多の入場は、いまの収容の何倍か（自分で割った）
+      terms:
+      - - 4万9335人
+        - 1938年の最多入場
+      - - 2万8107人
+        - いまの収容
+      - - 1.76倍
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+  - text: 2005年、元イングランド代表主将のジョニー・ヘインズが、亡くなります。
+    image: assets/images/20261024_stadium_fulham/01_w.jpg
+    card:
+      <<: *id_old
+      highlight_row: 4
+  - text: 道路側のスタンドは、その名前に改められました。
+    image: assets/images/20261024_stadium_fulham/01_w.jpg
+    card: none
+  - text: ウィキペディアは、プロサッカーに残る、最古のスタンドだと書いています。
+    emph: true
+    image: assets/images/20261024_stadium_fulham/04_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Craven_Cottage
+- id: riverside
+  heading: 川沿いのスタンドは、いつ、どれだけ席を増やしたのか
+  bg: assets/images/20261024_stadium_fulham/01_w.jpg
+  tier: 背景
+  telop: 2012年に許可、2019年に着工。工事中の3季は収容が1万9000席に下がった
+  narrator: 解説
+  card: &id_river
+    type: timeline
+    title: 川沿いのスタンド建て替えの歩み（ウィキペディア）
+    rows:
+    - - 1971/72
+      - 座席のスタンドが完成。4200席
+    - - 2012年7月
+      - 建て替えの許可。3万席に
+    - - 2019年5月
+      - 夏の着工を確認
+    - - 2019/20〜21/22
+      - 収容は一時的に1万9000
+    - - 2022年3月
+      - 下段が2022/23に開くと発表
+    - - 2025年4月6日
+      - 座席時代の最多27,770人
+    focus: 2012年7月
+    highlight_row: 1
+  say:
+  - text: 川に面したスタンドが、いちばん新しい側。
+    image: assets/images/20261024_stadium_fulham/05_w.jpg
+    card: none
+  - text: 1971/72に、座席のスタンドが建ちました。4200席。
+    image: assets/images/20261024_stadium_fulham/05_w.jpg
+    card:
+      <<: *id_river
+      highlight_row: 0
+  - text: 2011年の計画は、ここを、広げられる唯一の場所としました。
+    image: assets/images/20261024_stadium_fulham/04_w.jpg
+    card: none
+  - text: 2012年7月27日、建て替えが許可されます。3万席になる計画です。
+    emph: true
+    image: assets/images/20261024_stadium_fulham/04_w.jpg
+    card:
+      <<: *id_river
+      highlight_row: 1
+  - text: 2019年5月、その夏の着工を、クラブが確認します。
+    image: assets/images/20261024_stadium_fulham/02_w.jpg
+    card:
+      <<: *id_river
+      highlight_row: 2
+  - text: 工事の3シーズン、収容は、一時的に1万9000席まで下がりました。
+    emph: true
+    image: assets/images/20261024_stadium_fulham/02_w.jpg
+    card:
+      <<: *id_river
+      highlight_row: 3
+  - text: 完成の予定は、2021年から、2024年へずれました。
+    image: assets/images/20261024_stadium_fulham/02_w.jpg
+    card: none
+  - text: 2022年3月17日、クラブは、下段を2022/23に開けると発表します。
+    image: assets/images/20261024_stadium_fulham/03_w.jpg
+    card:
+      <<: *id_river
+      highlight_row: 4
+  - text: そして、2025年4月6日、リヴァプール戦。2万7770人です。
+    emph: true
+    image: assets/images/20261024_stadium_fulham/01_w.jpg
+    card:
+      <<: *id_river
+      highlight_row: 5
+  - text: 座席だけになってからの、最多の入場です。
+    image: assets/images/20261024_stadium_fulham/01_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Craven_Cottage
+- id: view
+  viewpoint: true
+  heading: 見立て・2万8107席は、どこまで埋まり、あと何席広がるのか
+  bg: assets/images/20261024_stadium_fulham/01_w.jpg
+  tier: 報道
+  telop: 工事中の2023/24の平均2万4301人から、2025/26は2万7228人へ。2季38試合は収容の96.2％
+  narrator: 解説
+  card: &id_view
+    type: table
+    title: ホームの平均入場（プレミア）
+    columns:
+    - 区切り
+    - 平均入場
+    rows:
+    - - 2023/24 ホーム19試合
+      - 2万4301人
+    - - 2024/25 ホーム19試合
+      - 2万6826人
+    - - 2025/26 ホーム19試合
+      - 2万7228人
+    - - 2026/27 ここまで 4試合
+      - 2万7392人
+    highlight_row: 0
+  say:
+  - text: では、新しいスタンドになって、1試合に何人、入っているのか。
+    emph: true
+    image: assets/images/20261024_stadium_fulham/05_w.jpg
+    card: none
+  - text: 工事が続いていた、2023/24のホーム19試合。平均は、2万4301人です。
+    image: assets/images/20261024_stadium_fulham/05_w.jpg
+    card:
+      <<: *id_view
+      highlight_row: 0
+    mark:
+      kind: circle
+      row: 0
+  - text: 2024/25は、2万6826人。
+    image: assets/images/20261024_stadium_fulham/02_w.jpg
+    card:
+      <<: *id_view
+      highlight_row: 1
+  - text: 2025/26は、2万7228人です。
+    image: assets/images/20261024_stadium_fulham/02_w.jpg
+    card:
+      <<: *id_view
+      highlight_row: 2
+  - text: 今季は、4試合を終えて、2万7392人。
+    image: assets/images/20261024_stadium_fulham/02_w.jpg
+    card:
+      <<: *id_view
+      highlight_row: 3
+  - text: 2023/24から2025/26で、平均は、2927人。約12％、増えました。
+    emph: true
+    image: assets/images/20261024_stadium_fulham/03_w.jpg
+    card: none
+  - text: 直近の2季、38試合の平均は、2万7027人です。
+    emph: true
+    image: assets/images/20261024_stadium_fulham/03_w.jpg
+    card: &id_fill
+      type: calc
+      title: 平均入場÷いまの収容（自分で割った）
+      terms:
+      - - 2万7027人
+        - 2季38試合の平均
+      - - 2万8107人
+        - いまの収容
+      - - 96.2％
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+  - text: いまの収容の、96.2％です。
+    image: assets/images/20261024_stadium_fulham/03_w.jpg
+    card: *id_fill
+  - text: 最多は、2025年4月6日のリヴァプール戦。収容の98.8％。
+    emph: true
+    image: assets/images/20261024_stadium_fulham/04_w.jpg
+    card: none
+  - text: 最少は、2024年11月4日のブレントフォード戦。2万4931人。
+    image: assets/images/20261024_stadium_fulham/04_w.jpg
+    card: none
+  - text: それでも、収容の88％を割った試合は、ゼロです。
+    image: assets/images/20261024_stadium_fulham/04_w.jpg
+    card: none
+  - text: 2012年の許可は、3万席でした。いまのハンドブックの数字は、2万8107席です。
+    emph: true
+    image: assets/images/20261024_stadium_fulham/01_w.jpg
+    card: none
+  - text: 完成後の収容は、ほかの資料に2万9600前後とあり、数字が割れています。
+    image: assets/images/20261024_stadium_fulham/01_w.jpg
+    card: none
+  - text: 3万席になっても、15位のイプスウィッチには、届きません。
+    emph: true
+    image: assets/images/20261024_stadium_fulham/05_w.jpg
+    card: none
+  - text: 16位のまま、広がる余地が、川のそばにあるかが、次の問いです。
+    image: assets/images/20261024_stadium_fulham/02_w.jpg
+    card: none
+  sources:
+  - https://sdp-prem-prod.premier-league-prod.pulselive.com/api/v1/competitions/8/seasons/2024/matchweeks/1/matches ほか（2023/24 〜 2026/27 の第1〜38節）
+  - https://resources.premierleague.pulselive.com/premierleague/document/2026/07/31/8a890ff9-176c-4364-a8ff-e08f995e2c86/TM2040_PL-Handbook-and-Collateral-2026-27_Digital_31.07.pdf
+  - https://en.wikipedia.org/wiki/Craven_Cottage
