@@ -1,0 +1,143 @@
+# 物語完結型ショート 第5版（10-22 ユーザー「もっと心が掴まれる作りに」「今だと、情報伝えるだけ」）。投稿しない。
+# 方針：情報を減らして、感情の1本線に絞る。「逃げた女が、二度目は逃げなかった」→「娘たちを生かすために残った」→「その娘たちは、のちに敵と味方に分かれた」→問い。
+#   場面は1つ（1583年4月、北ノ庄城の最後の夜）。説明（誰の妹・誰に嫁いだ・京極高次・徳川秀忠・和議・肖像の供養）は削った。
+#   声は静かに始め、転換（「だが」）と最後の問いで抑揚を上げる（voice: と行ごとの tone）。転換の前に0.4〜0.6秒の間を入れ、頂点（断る／送り出す）の直前に絵を暗くし、
+#   その絵にゆっくり寄る（zoom 0.14）。頂点の語《!…》だけ1.15倍。BGM は bgm: true（chiso/storyaudio.py で合成。本編は BGM なし）。
+#   最後の問いは1つのブロックで声のあとも残し、0.8秒の余白（BGM だけ）のあとに「本編は概要欄から」。
+# 2案（強い方＝B を選んだ）：
+#   案A「縦の線」…1573年の小谷落城（夫の最期・27歳）→10年→1583年の北ノ庄で断る→娘たちの嫁ぎ先→大坂の陣→問い。起承転結は整うが、時間が10年と32年に飛び、
+#       人名・年が並ぶ（説明になる）。冒頭は「二度目の落城で、お市は逃げなかった」。
+#   案B「ひと晩の場面」…冒頭に感情の結末の種類（別れ）と音（歌）を置き、1583年4月の北ノ庄城の一場面に絞る。断る→小谷の悔い→娘を送り出す（数え11歳の江）→生涯を閉じた→
+#       娘たちのその後（敵と味方）→問い。人名・年は最小限。→ こちらを選んだ。
+# 冒頭の1文（掴み。最初の2〜3秒）の候補5つと選んだ理由：
+#   1「逃げた女は、二度目、逃げなかった。」…穴＝一度目に逃げた女が、なぜ二度目は逃げない？／感情語＝逃げた・逃げなかった（対比）／主語が分からなくても「女が逃げなかった」場面が浮かぶ／
+#      根拠＝oichi.yaml 476行（逃げ出したことさえ悔やまれる＝本人が逃げた）・131行（2度目）・473行（お市は断った）／14字　★選んだ
+#   2「母は、三人の娘だけを城の外へ出した。」…穴＝なぜ娘だけ？母は？／感情語＝母・娘・だけ／誰の話か（母と娘）が一瞬で分かる／根拠＝487行／17字。中身まで言ってしまい、問いが残らない
+#   3「別れの夜、囲まれた城から歌が聞こえた。」…穴＝囲まれた城で歌？／感情語＝別れ／場面は最強だが主語が無く、誰の話か分からない／根拠＝497行（フロイス）／18字。→ 2文目に回した
+#   4「二度目の落城で、お市は逃げなかった。」…穴＝二度目？／感情語＝逃げなかった／お市の名は知られていても場面が弱い（「落城」は情報）／根拠＝131・473行／17字
+#   5「母は、城に残ると決めた。」…穴＝なぜ？／感情語＝残ると決めた／「決めた」は本人の意志（黒田の読み）で断定に近い／根拠＝481行（黒田基樹は意志を貫いたと読む）／結末の種類が無く弱い
+#   最後の問い「あなたなら、娘を送り出して、逃げずにいられますか。」は冒頭の「逃げなかった」に呼応する（ループで冒頭に戻る）。
+# 書き方：shots＝絵の定義（第2版から同じ。絵7枚）。lines＝語り（｜は絵の替わり目）と shots、行ごとに tone・pause（前の間）・dip（pause のあいだ絵を暗く）・zoom・boom（低い響き）。
+#   語りの文中の《》は黄色、《!》は黄色で1.15倍（声には強調をかけない）。画面の文字は語りそのまま（読点・句点で切った句を1ブロックで一度に出す）。
+# 事実の出どころは scripts/oichi.yaml の行（番号は out/oichi_story_s5_facts.md に照合表）。感情を足す語は資料に根拠のある範囲（「伝わる」「言われる」）に限る。
+title: お市の方｜逃げなかった姫と三人の娘（第5版）
+yt_title: 別れの夜、お市は城を出なかった｜お市の方と三人の娘
+ai_images: true
+art_dir: out/story/oichi2
+out: oichi_story_s5
+cta: 本編は概要欄から
+bgm: true
+voice: {speed: 1.0, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.1}
+header:
+  tag: お市の方
+  title: "《逃げなかった》姫と三人の娘"
+cards:
+  - type: versus                         # 感情の線を強める：城から送り出した娘3人と、城に残ったお市1人（三人の娘だけを、のところ）
+    from: 三人の娘だけを
+    until: いちばん下の江は
+    left: {tag: 送り出した娘, big: 3人, dots: 3, color: blue}
+    right: {tag: 残ったお市, big: 1人, dots: 1, color: red}
+    mid: 対
+    text_y: 0.84
+shots:
+  A:
+    kind: ai
+    move: in
+    ease: fast                      # 最初の3秒で寄りを効かせる（掴み）
+    bright: 1.5                     # 暗い絵なので明るくして、光と人物の大きさを強める（掴み）
+    prompt: "a single woman in a crimson kimono with long black hair seen strictly from behind, standing still in an open heavy wooden castle doorway flooded with bright morning light, her silhouette small and calm, no face visible, no other people"
+    must: 開いた城の戸口の光と、立ち止まる女性1人の後ろ姿（顔は写らない）
+  B:
+    kind: real
+    image: paintings/oichi_odani_castle_map.jpg
+    crop: [0.0, 0.0, 1.0, 0.62]
+    focus: [0.5, 0.3]
+    move: down
+    credit: "《小谷城図》江戸時代（Wikimedia Commons・パブリックドメイン）"
+    must: 小谷城の古絵図
+  C:
+    kind: real
+    image: paintings/oichi_katsuie_utamaro.jpg
+    focus: [0.5, 0.5]
+    move: in
+    credit: "喜多川歌麿《柴田修理進勝家と小谷の方》1803〜04年ごろ（Wikimedia Commons・パブリックドメイン）"
+    must: 鎧の勝家と、並ぶお市の絵
+  D:
+    kind: ai
+    move: out
+    prompt: "wide view of a large dark wooden castle gate in morning mist, exactly three small young girls seen strictly from behind walking out through the gate into the bright light, wearing kimono of three clearly different solid colors: red, indigo blue and pale green, no one else visible, no faces, a plain gate with no plaque and no sign board"
+    must: 城門を出る3人の少女の後ろ姿（ちょうど3人、顔は写らない）
+  G:
+    kind: composite
+    move: out
+    phrase_y: 0.76
+    images:
+      - {image: paintings/oichi_chacha_yodo_portrait.jpg, crop: [0.0, 0.3, 1.0, 1.0], label: 茶々}
+      - {image: paintings/oichi_hatsu_jokoin.jpg, crop: [0.0, 0.3, 1.0, 1.0], label: 初}
+      - {image: paintings/oichi_go_sugenin.jpg, crop: [0.0, 0.0, 1.0, 1.0], focus: [0.58, 0.5], label: 江}
+    credit: "伝 淀殿（奈良県立美術館蔵）／常高院像／崇源院像（いずれも江戸時代ごろ、Wikimedia Commons・パブリックドメイン）"
+    must: 茶々・初・江の肖像（3人）
+  E:
+    kind: real
+    image: paintings/nene_osaka_castle_summer_screen_detail.jpg
+    focus: [0.16, 0.38]
+    move: in
+    credit: "大坂夏の陣図屏風（部分、大阪城天守閣蔵）17世紀前半（Wikimedia Commons・パブリックドメイン）"
+    must: 大坂城の天守と合戦
+  F:
+    kind: real
+    image: paintings/oichi_portrait_jimyoin_full.jpg
+    crop: [0.0, 0.2, 1.0, 1.0]
+    focus: [0.5, 0.55]
+    move: in
+    credit: "《浅井長政夫人像》（お市の方、高野山持明院蔵）16世紀後半（Wikimedia Commons・パブリックドメイン）"
+    must: お市の肖像（高野山持明院）
+lines:
+  - 語り: 逃げた女は、《二度目》、《!逃げなかった》。
+    shot: A
+    tone: 強調
+    zoom: 0.14
+    boom: true
+  - 語り: 《別れ》の夜、囲まれた城から、歌が聞こえたという。
+    shot: A
+    tone: しみじみ
+    pause: 0.45
+  - 語り: 1583年4月、北ノ庄城。お市は、城を出るよう勧められたと伝わる。
+    shot: C
+    tone: しみじみ
+    pause: 0.4
+  - 語り: だが、お市は《!断った》。
+    shot: C
+    tone: 強調
+    pause: 0.55
+    dip: true
+    zoom: 0.14
+    boom: true
+  - 語り: 十年前、小谷から逃げたことを、《悔やんで》いたと伝わる。
+    shot: B
+    tone: しみじみ
+    pause: 0.45
+  - 語り: 三人の娘だけを、城から《!送り出した》。
+    shot: D
+    tone: 重い
+    pause: 0.55
+    dip: true
+    zoom: 0.14
+  - 語り: いちばん下の江は、まだ11歳だった。
+    shot: D
+    tone: しみじみ
+  - 語り: お市は、勝家とともに、37歳の《生涯を閉じた》。
+    shot: C
+    tone: 重い
+    pause: 0.5
+  - 語り: 母を失った三人の娘は、のちに、《敵と味方》に分かれる。
+    shot: G
+    tone: しみじみ
+    pause: 0.5
+  - 語り: 茶々は、母と同じように、城とともに《最期》を迎えた。
+    shot: E
+    tone: 重い
+  - 語り: あなたなら、娘を送り出して、《逃げずに》いられますか。
+    shot: F
+    tone: 疑問
+    pause: 0.6
