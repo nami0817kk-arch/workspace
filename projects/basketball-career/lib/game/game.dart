@@ -185,6 +185,7 @@ class Game {
     this.injuredStreak = 0,
     this.habit = 0,
     this.buildLabel = '',
+    Set<String>? buildsSeen,
     this.comebackPending = false,
     this.salary = 0,
     this.sponsor = 0,
@@ -222,6 +223,7 @@ class Game {
         recentEventIds = recentEventIds ?? [],
         growthLog = growthLog ?? [],
         recentActions = recentActions ?? [],
+        buildsSeen = buildsSeen ?? {},
         goalOptions = goalOptions ?? [],
         goalStart = goalStart ?? {},
         recentAchievements = recentAchievements ?? [],
@@ -336,6 +338,9 @@ class Game {
   /// いまのビルド(型とティア)の表示名。変わったときだけ知らせるために覚えておく。ビルドなしは空。
   String buildLabel;
 
+  /// これまでに到達したビルドとティア(`Build.name:tier`)。図鑑に使う。
+  final Set<String> buildsSeen;
+
   /// 直近のターンでビルドが決まった・変わったときの知らせ(画面に出す。保存はしない)。
   String? lastBuildNote;
 
@@ -396,6 +401,7 @@ class Game {
   void _updateBuild() {
     final b = buildOf(player);
     final label = b == null ? '' : b.label;
+    if (b != null) buildsSeen.add('${b.build.name}:${b.tier}');
     if (_buildCool > 0) _buildCool--;
     if (label.isNotEmpty && label != buildLabel && _buildCool == 0) {
       lastBuildNote = buildLabel.isEmpty
@@ -1265,6 +1271,7 @@ class Game {
         'injuredStreak': injuredStreak,
         'habit': habit,
         'buildLabel': buildLabel,
+        'buildsSeen': buildsSeen.toList()..sort(),
         'comebackPending': comebackPending,
         'salary': salary,
         'sponsor': sponsor,
@@ -1324,6 +1331,10 @@ class Game {
         injuredStreak: (j['injuredStreak'] as num?)?.toInt() ?? 0,
         habit: (j['habit'] as num?)?.toDouble() ?? 0,
         buildLabel: (j['buildLabel'] as String?) ?? '',
+        buildsSeen: {
+          for (final v in (j['buildsSeen'] as List?) ?? const [])
+            if (v is String) v,
+        },
         comebackPending: (j['comebackPending'] as bool?) ?? false,
         salary: (j['salary'] as num?)?.toInt() ?? 0,
         sponsor: (j['sponsor'] as num?)?.toInt() ?? 0,
