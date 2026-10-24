@@ -149,6 +149,7 @@ class _ProfileTab extends StatelessWidget {
       potential: s.potential,
       abilities: s.abilities,
       traits: s.traits,
+      skills: s.skills,
     );
     final ov = overallOf(s).round();
     final proYears = s.records.where((r) => r.stage == Stage.pro).length;
@@ -416,7 +417,7 @@ class _Traits extends StatelessWidget {
           Text('特性 (${ts.length})',
               style: Theme.of(context).textTheme.titleSmall),
           const SizedBox(height: 4),
-          if (ts.isEmpty) const Text('特性はまだありません。コーチに教わると習得できます。'),
+          if (ts.isEmpty) const Text('特性(生まれつきの体質・性格)はありません。'),
           for (final t in ts)
             ListTile(
               key: Key('trait-${t.name}'),
@@ -434,6 +435,30 @@ class _Traits extends StatelessWidget {
                   style: const TextStyle(fontWeight: FontWeight.bold)),
               subtitle: Text(t.description),
             ),
+          if (snapshot.skills.isNotEmpty) ...[
+            const Divider(),
+            Text('特殊能力 (${snapshot.skills.length})',
+                key: const Key('profile-skills'),
+                style: Theme.of(context).textTheme.titleSmall),
+            const SizedBox(height: 4),
+            Wrap(spacing: 6, runSpacing: 4, children: [
+              for (final k in snapshot.skills)
+                Tooltip(
+                  message: k.description,
+                  triggerMode: TooltipTriggerMode.tap,
+                  child: Chip(
+                    key: Key('profile-skill-${k.name}'),
+                    avatar: Icon(k.gold ? Icons.workspace_premium : Icons.bolt,
+                        size: 16,
+                        color: k.gold
+                            ? const Color(0xFFC9A227)
+                            : const Color(0xFFF9A825)),
+                    label: Text(k.label),
+                    visualDensity: VisualDensity.compact,
+                  ),
+                ),
+            ]),
+          ],
         ]),
       ),
     );

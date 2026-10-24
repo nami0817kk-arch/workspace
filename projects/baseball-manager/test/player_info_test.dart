@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:baseball_manager/game/skills.dart';
 import 'package:baseball_manager/game/career.dart';
 import 'package:baseball_manager/game/game.dart';
 import 'package:baseball_manager/game/life_log.dart';
@@ -80,13 +81,13 @@ void main() {
       expect(h.lifeLog.last.text, 'プロを諦めた');
     });
 
-    test('特性の習得・転向が記録される', () {
+    test('特殊能力の習得・転向が記録される', () {
       final g = Game.newGame(
           name: 't', role: Role.batter, rng: Random(5), potential: 60);
-      g.adminSetCoachTeaches(Trait.genius);
+      g.adminSetCoachTeaches(Skill.chance);
       g.adminSetCoachTips(4);
       expect(g.lifeLog.last.kind, 'trait');
-      expect(g.lifeLog.last.text, contains('天才肌'));
+      expect(g.lifeLog.last.text, contains('チャンス◯'));
       // 出来事で増えた特性も記録される。
       final h = Game.newGame(
           name: 't', role: Role.batter, rng: Random(6), potential: 60);

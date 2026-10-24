@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'career.dart';
 import 'player.dart';
+import 'skills.dart';
 import 'traits.dart';
 
 /// プロに入れなかったときの道。
@@ -13,15 +14,16 @@ enum Course {
   final int years;
 }
 
-/// 能力の総合評価 0〜99。二刀流は得意なほうで見る。
+/// 能力の総合評価 0〜99。二刀流は得意なほうで見る。特殊能力も評価に入る(`skillRating`)。
 double overall(Player p) {
   double avg(List<Ability> l) =>
       l.map(p.of).fold<int>(0, (a, b) => a + b) / l.length;
-  return switch (p.role) {
+  final base = switch (p.role) {
     Role.batter => avg(batterAbilities),
     Role.pitcher => avg(pitcherAbilities),
     Role.twoWay => _twoWayOverall(avg(batterAbilities), avg(pitcherAbilities)),
   };
+  return min(100.0, base + skillRating(p));
 }
 
 /// 二刀流の総合評価。得意な方が土台で、もう一方も育っているほど上乗せされる

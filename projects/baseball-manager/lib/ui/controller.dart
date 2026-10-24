@@ -21,6 +21,7 @@ import '../game/life.dart';
 import '../game/path.dart';
 import '../game/player.dart';
 import '../game/snapshot.dart';
+import '../game/skills.dart';
 import '../game/talent.dart';
 import '../game/traits.dart';
 import 'history.dart';
@@ -387,7 +388,7 @@ String recommendReason(Game g) {
   if (c.fatigue >= 70) return '疲れが${c.fatigue}と高いので、休養で回復しよう。';
   if (c.morale < 35) return 'やる気が${c.morale}と低いので、交流でやる気を上げよう。';
   if (recommendedPlan(g) == Plan.lesson) {
-    return 'コーチのコツを貯めると、特性を習得できる。今回は教わろう。';
+    return 'コーチのコツを貯めると、特殊能力を習得できる。今回は教わろう。';
   }
   return '体調は十分。練習で重点の能力を伸ばそう。';
 }
@@ -1044,6 +1045,29 @@ class GameController extends ChangeNotifier {
       _noteRankUps(before);
       _commit();
     }
+  }
+
+  /// 特殊能力を経験点で取る。取れなければ、その理由をトーストで知らせる。
+  void buySkill(Skill s) {
+    final g = game!;
+    final start = g.log.length;
+    final why = g.buySkill(s);
+    if (why != null) {
+      toast = '「${s.label}」は取れません: $why';
+      toastTone = -1;
+      notifyListeners();
+      return;
+    }
+    recent = g.log.sublist(start);
+    if (haptics) HapticFeedback.selectionClick();
+    _cue(Sfx.rankup);
+    _commit();
+  }
+
+  /// 「研究」で調べる特殊能力を決める(null で自動)。
+  void setStudyTarget(Skill? s) {
+    game!.setStudyTarget(s);
+    _commit();
   }
 
   void autoSpend() {

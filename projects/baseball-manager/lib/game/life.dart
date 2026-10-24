@@ -68,7 +68,7 @@ class Condition {
       Plan.train => (scale: 0.25, fatigue: 15, morale: 0),
       Plan.special => (scale: 0.45, fatigue: 35, morale: -5),
       Plan.rest => (scale: 0.05, fatigue: -40, morale: 5),
-      Plan.study => (scale: 0.12, fatigue: 5, morale: 10),
+      Plan.study => (scale: 0.12, fatigue: 5, morale: 10), // 主役は特殊能力のコツ(Game._gainTips)
       Plan.social => (scale: 0.03, fatigue: -10, morale: 20),
       Plan.match => (scale: 0.11, fatigue: 20, morale: 0),
       Plan.lesson => (scale: 0.15, fatigue: 12, morale: 0),
@@ -159,10 +159,7 @@ TermResult playTerm(
   for (final a in abilitiesOf(p.role)) {
     // 練習試合は特定の能力に偏らない。
     final f = action == Plan.match ? a : focus;
-    var x = yearlyDelta(p, a, f) *
-        e.scale *
-        share *
-        (action == Plan.study ? studyMultiplier(p.traits) : 1.0);
+    var x = yearlyDelta(p, a, f) * e.scale * share;
     if (x > 0) x *= trainBonus; // 投資(専属トレーナー)
     if (x >= 0) {
       final cat = categoryOf(a);

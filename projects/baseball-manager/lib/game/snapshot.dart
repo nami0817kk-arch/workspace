@@ -5,6 +5,7 @@ import 'life_log.dart';
 import 'path.dart';
 import 'player.dart';
 import 'records.dart';
+import 'skills.dart';
 import 'traits.dart';
 import 'flavor.dart';
 import 'world.dart';
@@ -19,6 +20,7 @@ class PlayerSnapshot {
     required this.potential,
     required this.abilities,
     required this.traits,
+    this.skills = const {},
     required this.records,
     required this.events,
     required this.overallHistory,
@@ -51,6 +53,9 @@ class PlayerSnapshot {
   final int potential;
   final Map<Ability, int> abilities;
   final Set<Trait> traits;
+
+  /// 特殊能力(古い写しは空。昔の特性で特殊能力に移したものは読み替える)。
+  final Set<Skill> skills;
   final List<SeasonRecord> records;
   final List<LifeEvent> events;
   final List<int> overallHistory;
@@ -111,6 +116,7 @@ class PlayerSnapshot {
         potential: g.player.potential,
         abilities: Map.of(g.player.abilities),
         traits: Set.of(g.player.traits),
+        skills: Set.of(g.player.skills),
         records: List.of(g.records),
         events: List.of(g.lifeLog),
         overallHistory: List.of(g.overallHistory),
@@ -144,6 +150,7 @@ class PlayerSnapshot {
         'potential': potential,
         'abilities': {for (final e in abilities.entries) e.key.name: e.value},
         'traits': [for (final t in traits) t.name],
+        'skills': [for (final s in skills) s.name],
         'records': [for (final r in records) r.toJson()],
         'events': [for (final e in events) e.toJson()],
         'overallHistory': overallHistory,
@@ -188,6 +195,12 @@ class PlayerSnapshot {
       traits: {
         for (final s in (j['traits'] as List?) ?? const [])
           if (Trait.parse(s as String) != null) Trait.parse(s)!,
+      },
+      skills: {
+        for (final s in (j['skills'] as List?) ?? const [])
+          if (Skill.parse(s as String) != null) Skill.parse(s)!,
+        for (final s in (j['traits'] as List?) ?? const [])
+          if (legacyTraitSkills[s] != null) legacyTraitSkills[s]!,
       },
       records: [
         for (final r in (j['records'] as List?) ?? const [])

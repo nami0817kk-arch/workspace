@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:baseball_manager/game/skills.dart';
 import 'package:baseball_manager/game/career.dart';
 import 'package:baseball_manager/game/exp.dart';
 import 'package:baseball_manager/game/flavor.dart';
@@ -106,7 +107,7 @@ void main() {
             case 4:
               g.adminSetCoachTeaches(rng.nextBool()
                   ? null
-                  : Trait.values[rng.nextInt(Trait.values.length)]);
+                  : Skill.values[rng.nextInt(Skill.values.length)]);
             case 5:
               g.adminSetCoachTips(rng.nextInt(8) - 2);
           }

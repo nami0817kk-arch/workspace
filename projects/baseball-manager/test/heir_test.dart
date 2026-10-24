@@ -70,10 +70,9 @@ void main() {
             parent: _parent(traits: {
               Trait.genius, // 受け継げる
               Trait.glassBody, // 悪い特性
-              Trait.slugger, // 打者の特性(投手には付かない)
             }));
         final t = g.player.traits;
-        expect(t, isNot(contains(Trait.slugger)));
+        expect(t, isNot(contains(Trait.glassBody)));
         if (t.contains(Trait.genius)) inherited++;
         for (final x in t) {
           expect(x.appliesTo(Role.pitcher), isTrue);

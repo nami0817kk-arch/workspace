@@ -22,6 +22,7 @@ import 'season.dart';
 import 'awards.dart';
 import 'marks.dart';
 import 'talent.dart';
+import 'skills.dart';
 import 'traits.dart';
 import 'tryout.dart';
 import 'after_career.dart';
@@ -136,7 +137,7 @@ class Game {
       traits: traits,
       gifts: gifts,
     );
-    final g = Game._(rng, p, Cast.initial(rng, role, p.traits), difficulty)
+    final g = Game._(rng, p, Cast.initial(rng, role, p.skills), difficulty)
       .._wasTwoWay = role == Role.twoWay
       ..parentName = parent?.name;
     g.overallHistory.add(overall(p).round());
@@ -469,6 +470,12 @@ class Game {
   final Map<String, int> childhood = {};
   int restCount = 0;
 
+  /// 特殊能力のコツ(0〜`maxSkillTips`)。貯まるほど安く取れる。
+  Map<Skill, int> skillTips = {};
+
+  /// 「研究」で調べる特殊能力(null ならコツの多いものを自動で選ぶ)。
+  Skill? studyTarget;
+
   /// 同じ能力を重点に練習・特訓を続けた回数(継続は力なり)。
   int focusStreak = 0;
   Ability? lastFocus;
@@ -584,6 +591,7 @@ class Game {
     exp = exp.add(gained);
     lastGain = gained;
     lastOutcome = wasInjured ? Outcome.normal : r.outcome;
+    if (!wasInjured) _gainTips(action, f, r.outcome);
     if (action == Plan.train || action == Plan.special) trainCount++;
     if (action == Plan.rest) restCount++;
     if (r.gotInjured) {
@@ -725,6 +733,92 @@ class Game {
     return r.bought;
   }
 
+  /// 特殊能力の値段(いまのコツで)。
+  int skillPrice(Skill s) => skillCost(s, skillTips[s] ?? 0);
+
+  /// 経験点で特殊能力を取る。取れなければ理由の文を返す(取れたら null)。
+  String? buySkill(Skill s) {
+    final why = skillBlock(player, s, exp, skillTips[s] ?? 0);
+    if (why != null) return why;
+    exp = exp.spend(s.category, skillPrice(s));
+    player = player.copyWith(skills: {...player.skills, s});
+    skillTips.remove(s);
+    if (studyTarget == s) studyTarget = null;
+    log.add('特殊能力「${s.label}」を取得した!');
+    _note('trait', '特殊能力「${s.label}」を取得');
+    return null;
+  }
+
+  /// 研究の対象を決める(null で自動)。取得済み・役割に合わないものは選べない。
+  void setStudyTarget(Skill? s) {
+    if (s != null && (!s.appliesTo(player.role) || player.skills.contains(s))) {
+      throw ArgumentError('研究できない特殊能力: ${s.name}');
+    }
+    studyTarget = s;
+  }
+
+  /// 研究で次にコツが貯まる特殊能力(選んだもの、なければ重点の種類でコツの多いもの)。
+  Skill? studyFocus(Ability focus) {
+    final t = studyTarget;
+    if (t != null && !player.skills.contains(t) && t.appliesTo(player.role)) {
+      return t;
+    }
+    return pickTipTarget(player, skillTips, Random(turnCount),
+            category: categoryOf(focus)) ??
+        pickTipTarget(player, skillTips, Random(turnCount));
+  }
+
+  /// 特殊能力のコツを `n` 足す(上限 `maxSkillTips`)。足せたら true。ログに出す。
+  bool _addTips(Skill? s, int n, String why) {
+    if (s == null || n <= 0 || player.skills.contains(s)) return false;
+    final before = skillTips[s] ?? 0;
+    final after = (before + n).clamp(0, maxSkillTips);
+    if (after == before) return false;
+    skillTips[s] = after;
+    log.add('$why「${s.label}」のコツ +${after - before}(Lv$after/$maxSkillTips・あと${skillPrice(s)}で取れる)');
+    return true;
+  }
+
+  /// 行動ごとに貯まる、特殊能力のコツ(行動の役割の違い)。
+  /// 研究=選んだ特殊能力に+2(研究熱心は+3)/特訓=好調・大成功で重点の種類に+1/
+  /// 練習試合=勝負どころの特殊能力に+1/交流=仲間の得意な種類に+1。練習・休養・コーチはなし。
+  void _gainTips(Plan action, Ability f, Outcome outcome) {
+    switch (action) {
+      case Plan.study:
+        _addTips(studyFocus(f), studious ? 3 : 2, '研究で');
+      case Plan.special:
+        if (outcome == Outcome.good || outcome == Outcome.great) {
+          _addTips(
+              pickTipTarget(player, skillTips, rng, category: categoryOf(f)),
+              1,
+              '特訓で');
+        }
+      case Plan.match:
+        _addTips(
+            pickTipTarget(player, skillTips, rng, matchesOnly: true) ??
+                pickTipTarget(player, skillTips, rng),
+            1,
+            '練習試合で');
+      case Plan.social:
+        final mates = [
+          for (final m in cast.teammates)
+            if (m.specialty != null) m
+        ];
+        if (mates.isNotEmpty) {
+          final m = mates[rng.nextInt(mates.length)];
+          final s = pickTipTarget(player, skillTips, rng,
+              category: categoryOf(m.specialty!));
+          _addTips(s, 1, '${m.name}に教わって');
+        }
+      case Plan.train:
+      case Plan.rest:
+      case Plan.lesson:
+        break;
+    }
+  }
+
+  bool get studious => player.traits.contains(Trait.studious);
+
   /// おまかせ: 種類ごとに低い能力から順に振り分ける。
   void autoSpend() {
     final r = autoSpendExp(player, exp);
@@ -812,8 +906,8 @@ class Game {
     _checkCoach();
   }
 
-  /// コーチが教える特性を差し替える(null なら教えられない)。
-  void adminSetCoachTeaches(Trait? t) {
+  /// コーチが教える特殊能力を差し替える(null なら教えられない)。
+  void adminSetCoachTeaches(Skill? t) {
     final i = cast.members.indexWhere((m) => m.kind == Kind.coach);
     if (i < 0) return;
     final c = cast.members[i];
@@ -874,16 +968,20 @@ class Game {
     return out;
   }
 
-  /// コツが貯まったら、コーチの教える特性を習得する。
+  /// コツが貯まったら、コーチの教える特殊能力を習得する(経験点は払わない)。
   void _checkCoach() {
     final coach = cast.coach;
     if (coach == null || coach.tips < tipsNeeded) return;
     coach.tips = 0;
     final t = coach.teaches;
-    if (t != null && canGain(player.traits, t)) {
-      player = player.copyWith(traits: gain(player.traits, t));
-      log.add('${coach.name}のコツをつかんだ! 特性「${t.label}」を習得。');
-      _note('trait', '特性「${t.label}」を習得(コーチ ${coach.name})');
+    final ready = t != null &&
+        t.appliesTo(player.role) &&
+        !player.skills.contains(t) &&
+        (t.requires == null || player.skills.contains(t.requires));
+    if (ready) {
+      player = player.copyWith(skills: {...player.skills, t});
+      log.add('${coach.name}のコツをつかんだ! 特殊能力「${t.label}」を習得。');
+      _note('trait', '特殊能力「${t.label}」を習得(コーチ ${coach.name})');
     } else {
       // 学びのボーナスは、前の学びからの間があくほど大きい(コーチばかりが最善にならないように)。
       final bonus = min(40, 3 * (turnCount - lastCoachTurn));
@@ -1310,7 +1408,7 @@ class Game {
           positionTeamAdjust(player, effectivePos),
       opponents: ev.opponents,
       rng: rng,
-      condition: condition.value + worldBonus(player.traits),
+      condition: condition.value + worldBonus(player.traits) + skillMatchBonus(player.skills),
     );
     final w = wrapWorld(event: ev, age: player.age, tournament: t);
     for (var i = 0; i < t.games.length; i++) {
@@ -1416,7 +1514,7 @@ class Game {
     if (phase == Phase.retired) return;
     final after = stage;
     if (after != before) {
-      cast.rotate(after, rng, player.role, player.traits);
+      cast.rotate(after, rng, player.role, player.skills);
       school = School.local;
       if (after != Stage.pro && after != Stage.pathChoice) {
         _note('stage', '${stageNameOf(after)}に進んだ');
@@ -1532,6 +1630,8 @@ class Game {
         'worldRecords': [for (final r in worldRecords) r.toJson()],
         'lifeLog': [for (final e in lifeLog) e.toJson()],
         'focusStreak': focusStreak,
+        'skillTips': skillTipsToJson(skillTips),
+        'studyTarget': studyTarget?.name,
         'turnCount': turnCount,
         'lastCoachTurn': lastCoachTurn,
         'monthRows': monthRows,
@@ -1565,13 +1665,15 @@ class Game {
       player,
       castJson != null
           ? Cast.fromJson(castJson)
-          : Cast.initial(rng, player.role, player.traits),
+          : Cast.initial(rng, player.role, player.skills),
       Difficulty.parse(j['difficulty']),
     );
     g.condition = Condition.fromJson(
         (j['condition'] as Map?)?.cast<String, dynamic>() ?? {});
     g.slot = (j['slot'] as num?)?.toInt() ?? 0;
     g.focusStreak = (j['focusStreak'] as num?)?.toInt() ?? 0;
+    g.skillTips = skillTipsFromJson(j['skillTips']);
+    g.studyTarget = Skill.parse((j['studyTarget'] as String?) ?? '');
     g.awakened = j['awakened'] == true;
     g.tryoutUsed = j['tryoutUsed'] == true;
     g.farmYears = (j['farmYears'] as num?)?.toInt() ?? 0;

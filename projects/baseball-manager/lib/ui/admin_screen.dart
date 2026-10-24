@@ -5,6 +5,7 @@ import '../game/exp.dart';
 import '../game/game.dart';
 import '../game/player.dart';
 import '../game/talent.dart';
+import '../game/skills.dart';
 import '../game/traits.dart';
 import 'controller.dart';
 import 'labels.dart';
@@ -155,7 +156,7 @@ class _Coach extends StatelessWidget {
             onChanged: (x) =>
                 controller.admin((g) => g.adminSetCoachTips(x.round())),
           ),
-          const Text('教える特性'),
+          const Text('教える特殊能力'),
           Wrap(spacing: 6, children: [
             ChoiceChip(
               key: const Key('admin-teach-none'),
@@ -164,7 +165,7 @@ class _Coach extends StatelessWidget {
               onSelected: (_) =>
                   controller.admin((g) => g.adminSetCoachTeaches(null)),
             ),
-            for (final t in Trait.values)
+            for (final t in Skill.values)
               ChoiceChip(
                 key: Key('admin-teach-${t.name}'),
                 label: Text(t.label),

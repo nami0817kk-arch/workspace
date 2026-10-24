@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:baseball_manager/game/skills.dart';
 import 'package:baseball_manager/game/career.dart';
 import 'package:baseball_manager/game/characters.dart';
 import 'package:baseball_manager/game/exp.dart';
@@ -116,16 +117,32 @@ void main() {
     }
   });
 
-  test('コーチが教える特性は、いま習得できるものだけ', () {
+  test('コーチが教えるのは、まだ持っていない特殊能力。金特はもとを持つ高校生から', () {
     for (var s = 0; s < 100; s++) {
-      final t =
-          teachableTrait(Stage.highSchool, const {Trait.clutch}, Random(s));
-      expect(t, isNot(Trait.clutch));
+      final t = teachableSkill(
+          Stage.highSchool, const {Skill.chance}, Random(s), Role.batter);
+      expect(t, isNot(Skill.chance));
       expect(t, isNotNull);
+      expect(t!.appliesTo(Role.batter), isTrue);
+      expect(t.gold, isFalse); // もとの特殊能力が無いので金特は出ない
     }
-    final all = {Trait.clutch, Trait.genius, Trait.starPower, Trait.sturdy};
-    expect(teachableTrait(Stage.highSchool, all, Random(1)), isNull);
-    expect(teachableTrait(Stage.retired, const {}, Random(1)), isNull);
+    // もとを持てば、高校から金特も教える。中学までは教えない
+    final base = {Skill.averageHitter};
+    final hs = {
+      for (var s = 0; s < 200; s++)
+        teachableSkill(Stage.highSchool, base, Random(s), Role.batter)
+    };
+    expect(hs, contains(Skill.geniusBat));
+    final jh = {
+      for (var s = 0; s < 200; s++)
+        teachableSkill(Stage.juniorHigh, base, Random(s), Role.batter)
+    };
+    expect(jh, isNot(contains(Skill.geniusBat)));
+    // 全部持っていれば null
+    expect(
+        teachableSkill(Stage.pro, skillsFor(Role.pitcher).toSet(), Random(1),
+            Role.pitcher),
+        isNull);
   });
 
   test('登場人物は保存して読み直せる。欠けた項目は既定値', () {
@@ -196,13 +213,13 @@ void main() {
     expect(c.lover!.bond, 16);
   });
 
-  test('コーチに教わり続けると、コツが貯まって特性を習得する', () {
+  test('コーチに教わり続けると、コツが貯まって特殊能力を習得する(経験点は払わない)', () {
     final g = _game(5, potential: 60);
     g.cast.coach!.tips = 0;
     final teaches = g.cast.coach!.teaches;
     expect(teaches, isNotNull);
     var turns = 0;
-    while (!g.player.traits.contains(teaches)) {
+    while (!g.player.skills.contains(teaches)) {
       if (++turns > 40) fail('習得できない');
       if (g.phase == Phase.event) {
         g.resolveEvent(1);
@@ -210,7 +227,7 @@ void main() {
       }
       g.choose(Plan.lesson, Ability.contact);
     }
-    expect(g.player.traits, contains(teaches));
+    expect(g.player.skills, contains(teaches));
     expect(g.cast.coach!.tips, lessThan(tipsNeeded));
     expect(g.log.any((l) => l.contains('習得')), isTrue);
   });
@@ -419,24 +436,24 @@ void _adminTests() {
     expect(gained(100), greaterThan(gained(0)));
   });
 
-  test('管理者: コツを満タンにすると、その場で特性を習得する。上限4つでも入る範囲は通常ルール', () {
+  test('管理者: コツを満タンにすると、その場で特殊能力を習得する', () {
     final g = _game(5);
-    g.adminSetCoachTeaches(Trait.genius);
+    g.adminSetCoachTeaches(Skill.chance);
     g.adminSetCoachTips(2);
-    expect(g.player.traits, isNot(contains(Trait.genius)));
+    expect(g.player.skills, isNot(contains(Skill.chance)));
     expect(g.cast.coach!.tips, 2);
     g.adminSetCoachTips(tipsNeeded);
-    expect(g.player.traits, contains(Trait.genius));
+    expect(g.player.skills, contains(Skill.chance));
     expect(g.cast.coach!.tips, 0); // 習得したらコツは0に戻る
-    expect(g.cast.coach!.teaches, Trait.genius);
+    expect(g.cast.coach!.teaches, Skill.chance);
   });
 
   test('管理者: コーチの教える特性を差し替えると、絆などはそのまま', () {
     final g = _game(5);
     final before = g.cast.coach!;
-    g.adminSetCoachTeaches(Trait.sturdy);
+    g.adminSetCoachTeaches(Skill.stealer);
     final after = g.cast.coach!;
-    expect(after.teaches, Trait.sturdy);
+    expect(after.teaches, Skill.stealer);
     expect((after.name, after.id, after.bond),
         (before.name, before.id, before.bond));
     g.adminSetCoachTeaches(null);

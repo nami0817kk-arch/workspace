@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'at_bat.dart';
 import 'player.dart';
-import 'traits.dart';
+import 'skills.dart';
 
 /// 1試合(または大会・シーズン通算)の個人成績。打者として/投手として、それぞれ数える。
 class Line {
@@ -411,7 +411,7 @@ Tournament playTournament(
     final pWin = (0.5 +
             (teamLevel - opp) / 100 +
             (g.rating - 50) / 200 +
-            (condition + tournamentBonus(p.traits) - 50) / 500)
+            (condition + matchBonus(p) - 50) / 500)
         .clamp(0.0, 1.0);
     final roll = rng.nextDouble();
     final win = isShutout(g) || roll < pWin;
@@ -502,7 +502,7 @@ TournamentProgress playTournamentToFinal(
     final pWin = (0.5 +
             (teamLevel - opp) / 100 +
             (g.rating - 50) / 200 +
-            (condition + tournamentBonus(p.traits) - 50) / 500)
+            (condition + matchBonus(p) - 50) / 500)
         .clamp(0.0, 1.0);
     if (i == opponents.length - 1) {
       // 決勝: 勝ち負けは、見せ場の決断のあとで決める。
@@ -659,7 +659,7 @@ LeagueProgress playLeagueChunk(
     final pWin = (0.5 +
             (teamLevel - opp) / 100 +
             (game.rating - 50) / 400 +
-            (condition + tournamentBonus(p.traits) - 50) / 800)
+            (condition + matchBonus(p) - 50) / 800)
         .clamp(0.0, 1.0);
     final won = rng.nextDouble() < pWin;
     won ? wins++ : losses++;
@@ -711,7 +711,7 @@ LeagueSeason playLeagueSeason(
     final pWin = (0.5 +
             (teamLevel - opp) / 100 +
             (game.rating - 50) / 400 +
-            (condition + tournamentBonus(p.traits) - 50) / 800)
+            (condition + matchBonus(p) - 50) / 800)
         .clamp(0.0, 1.0);
     final won = rng.nextDouble() < pWin;
     won ? wins++ : losses++;

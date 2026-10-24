@@ -1,5 +1,6 @@
 import 'at_bat.dart';
 import 'career.dart';
+import 'skills.dart';
 import 'traits.dart';
 
 /// `twoWay`(二刀流)は打者と投手の両方の能力を持つ。選べるのはプロの段階だけ(`switchRole`)。
@@ -48,6 +49,7 @@ class Player {
     Map<Ability, int>? abilities,
     this.traits = const {},
     this.gifts = const {},
+    this.skills = const {},
   }) : abilities = abilities ?? {for (final a in abilitiesOf(role)) a: 20};
 
   final String name;
@@ -64,6 +66,9 @@ class Player {
   /// 天賦(能力ごとの才能の偏り -2〜+2)。生まれつきで変わらない。`talent.dart`。
   final Map<Ability, int> gifts;
 
+  /// 特殊能力(経験点で取る。特性とは別の枠)。`skills.dart`。
+  final Set<Skill> skills;
+
   int gift(Ability a) => gifts[a] ?? 0;
 
   int of(Ability a) => abilities[a] ?? 0;
@@ -75,6 +80,7 @@ class Player {
     Map<Ability, int>? abilities,
     Set<Trait>? traits,
     Map<Ability, int>? gifts,
+    Set<Skill>? skills,
   }) =>
       Player(
         name: name,
@@ -84,6 +90,7 @@ class Player {
         abilities: abilities ?? this.abilities,
         traits: traits ?? this.traits,
         gifts: gifts ?? this.gifts,
+        skills: skills ?? this.skills,
       );
 
   Batter toBatter() => Batter(
@@ -101,6 +108,7 @@ class Player {
         'abilities': {for (final e in abilities.entries) e.key.name: e.value},
         'traits': [for (final t in traits) t.name],
         'gifts': {for (final e in gifts.entries) e.key.name: e.value},
+        'skills': [for (final s in skills) s.name],
       };
 
   /// 項目を足すときは既定値を置く(既存セーブを壊さない)。
@@ -126,6 +134,13 @@ class Player {
           if (Trait.parse(s as String) != null) Trait.parse(s)!,
       },
       gifts: giftsFromJson(j['gifts']),
+      skills: {
+        for (final s in (j['skills'] as List?) ?? const [])
+          if (Skill.parse(s as String) != null) Skill.parse(s)!,
+        // 特殊能力に移した昔の特性(長距離砲など)は、特殊能力として読み替える
+        for (final s in (j['traits'] as List?) ?? const [])
+          if (legacyTraitSkills[s] != null) legacyTraitSkills[s]!,
+      },
     );
   }
 }

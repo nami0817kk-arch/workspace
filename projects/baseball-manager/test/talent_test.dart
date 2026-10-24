@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:baseball_manager/game/skills.dart';
 import 'package:baseball_manager/game/achievements.dart';
 import 'package:baseball_manager/game/career.dart';
 import 'package:baseball_manager/game/exp.dart';
@@ -132,17 +133,15 @@ void main() {
       expect(rare / n, inInclusiveRange(0.025, 0.06));
     });
 
-    test('レア特性は7種で、役割に合うものだけが選ばれる', () {
-      expect(rareTraits.length, 7);
+    test('レア特性は5種で、役割に合うものだけが選ばれる', () {
+      expect(rareTraits.length, 5);
       expect(Trait.monster.rare, isTrue);
       expect(Trait.hardWorker.rare, isFalse);
       for (var s = 0; s < 300; s++) {
         final b = pickRare(Random(s), const {}, Role.batter)!;
         expect(b.appliesTo(Role.batter), isTrue);
-        expect(b, isNot(Trait.prodigyArm));
         final p = pickRare(Random(s), const {}, Role.pitcher)!;
         expect(p.appliesTo(Role.pitcher), isTrue);
-        expect(p, isNot(Trait.prodigyBat));
       }
     });
 
@@ -173,15 +172,15 @@ void main() {
       expect(tournamentBonus({Trait.ironWill}), 5);
     });
 
-    test('打撃・投球の天才は試合中だけ能力が上がる', () {
+    test('金の特殊能力(天才打者・天才投手)は試合中だけ能力が上がる', () {
       final bat = Player(
           name: 't',
           role: Role.batter,
           age: 20,
           potential: 60,
           abilities: {for (final a in batterAbilities) a: 50},
-          traits: {Trait.prodigyBat});
-      expect(traitAdjusted(bat).of(Ability.contact), 60);
+          skills: {Skill.geniusBat});
+      expect(traitAdjusted(bat).of(Ability.contact), 58);
       expect(bat.of(Ability.contact), 50);
       final arm = Player(
           name: 't',
@@ -189,7 +188,7 @@ void main() {
           age: 20,
           potential: 60,
           abilities: {for (final a in pitcherAbilities) a: 50},
-          traits: {Trait.prodigyArm});
+          skills: {Skill.geniusArm});
       expect(traitAdjusted(arm).of(Ability.stuff), 58);
     });
 
@@ -257,7 +256,6 @@ void main() {
     test('継承できるのは、役割に合う良い特性。レアは高い', () {
       expect(canCarry(Trait.genius, Role.batter), isTrue);
       expect(canCarry(Trait.glassBody, Role.batter), isFalse);
-      expect(canCarry(Trait.slugger, Role.pitcher), isFalse);
       expect(legacyCost(Trait.genius), 3);
       expect(legacyCost(Trait.monster), 8);
     });
@@ -271,8 +269,8 @@ void main() {
       expect(carried.player.gifts, plain.player.gifts);
       expect(carried.player.potential, plain.player.potential);
       final bad = Game.newGame(
-          name: 'a', role: Role.pitcher, rng: Random(4), carry: Trait.slugger);
-      expect(bad.player.traits, isNot(contains(Trait.slugger)));
+          name: 'a', role: Role.pitcher, rng: Random(4), carry: Trait.glassBody);
+      expect(bad.player.traits, isNot(contains(Trait.glassBody)));
     });
   });
 

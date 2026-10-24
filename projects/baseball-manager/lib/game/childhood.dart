@@ -81,9 +81,9 @@ Player _trait(Player p, Trait t) {
   return _gain(p, abilities.first, 1);
 }
 
-/// 役割に合う特性を1つ。打者向け・投手向けのどちらかを与える。
-Player _roleTrait(Player p, Trait bat, Trait pit) =>
-    _trait(p, p.role == Role.pitcher ? pit : bat);
+/// 役割に合う能力の天賦を1段階上げる(打者は `bat`、投手は `pit`)。
+Player _roleGift(Player p, Ability bat, Ability pit) =>
+    giftUp(p, p.role == Role.pitcher ? pit : bat);
 
 EventChoice _c(
   String label,
@@ -142,16 +142,13 @@ final List<ChildhoodStep> childhoodSteps = [
   ChildhoodStep(
     9,
     GameEvent('kid-idol', 'テレビで見た選手に、すっかり夢中になった。どんな選手?', [
-      _c(
-          '豪快な一発・剛速球の選手',
-          (p) => _roleTrait(
-              _gain(p, Ability.power, 1), Trait.slugger, Trait.fireballer)),
+      // 憧れは、その動きの才能(天賦)になる。特殊能力・特性は増やさない(2026-10-24)。
+      _c('豪快な一発・剛速球の選手',
+          (p) => _roleGift(_gain(p, Ability.power, 1), Ability.power, Ability.stuff)),
       _c('技巧派(ねらい打ち・精密な制球)',
-          (p) => _roleTrait(p, Trait.contactHitter, Trait.finesse)),
-      _c(
-          '足と体力で魅せる選手',
-          (p) => _roleTrait(
-              _gain(p, Ability.speed, 1), Trait.speedster, Trait.workhorse)),
+          (p) => _roleGift(p, Ability.contact, Ability.control)),
+      _c('足と体力で魅せる選手',
+          (p) => _roleGift(_gain(p, Ability.speed, 1), Ability.speed, Ability.stamina)),
     ]),
     const ['豪快な選手に憧れた', '技巧派の選手に憧れた', '足と体力の選手に憧れた'],
   ),

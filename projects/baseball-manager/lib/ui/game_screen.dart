@@ -13,6 +13,7 @@ import '../game/school.dart';
 import '../game/marks.dart';
 import '../game/goals.dart';
 import '../game/game.dart';
+import '../game/skills.dart';
 import '../game/invest.dart';
 import '../game/life.dart';
 import '../game/path.dart';
@@ -313,6 +314,7 @@ class _GameScreenState extends State<GameScreen> {
         _OverallHeader(game: game),
         _TraitChips(game: game),
         _AbilityCard(controller: controller, game: game),
+        _SkillCard(controller: controller, game: game),
       ];
 
   List<Widget> _careerTab(BuildContext context) => [
@@ -1287,9 +1289,9 @@ String _planShort(Plan p) => switch (p) {
 String _planSub(Plan p, Ability focus) => switch (p) {
       Plan.train || Plan.special || Plan.study => abilityLabel(focus),
       Plan.rest => '疲れを取る',
-      Plan.social => 'やる気',
-      Plan.match => '全体',
-      Plan.lesson => 'コツ',
+      Plan.social => 'やる気・コツ',
+      Plan.match => '全体・コツ',
+      Plan.lesson => 'コーチ',
     };
 
 class _PlanTile extends StatelessWidget {
@@ -1378,7 +1380,12 @@ class _PlanTile extends StatelessWidget {
                 ),
                 FittedBox(
                   fit: BoxFit.scaleDown,
-                  child: Text(sub ?? _planSub(plan, focus),
+                  child: Text(
+                      sub ??
+                          (plan == Plan.study
+                              ? (controller.game?.studyFocus(focus)?.label ??
+                                  'コツ')
+                              : _planSub(plan, focus)),
                       style: Theme.of(context)
                           .textTheme
                           .bodySmall
@@ -2464,6 +2471,142 @@ class _AdRecoveryButtonState extends State<_AdRecoveryButton> {
       onPressed: _busy ? null : _run,
       icon: Icon(free ? Icons.spa : Icons.ondemand_video, size: 18),
       label: Text(free ? '体を休める' : '動画で休む'),
+    );
+  }
+}
+
+/// 特殊能力(経験点で取る。コツが貯まるほど安い)。能力タブの下。
+class _SkillCard extends StatelessWidget {
+  const _SkillCard({required this.controller, required this.game});
+  final GameController controller;
+  final Game game;
+
+  @override
+  Widget build(BuildContext context) {
+    final p = game.player;
+    final list = skillsFor(p.role);
+    final owned = [
+      for (final s in list)
+        if (p.skills.contains(s)) s
+    ];
+    final open = [
+      for (final s in list)
+        if (!p.skills.contains(s)) s
+    ];
+    return Card(
+      key: const Key('skill-card'),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(12, 10, 12, 8),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Row(children: [
+            const Icon(Icons.bolt, color: Color(0xFFF9A825)),
+            const SizedBox(width: 6),
+            Expanded(
+              child: Text('特殊能力(${owned.length})',
+                  style: Theme.of(context).textTheme.titleMedium),
+            ),
+          ]),
+          const Text('経験点で取る。研究・特訓・練習試合・交流・コーチでコツが貯まると安くなる(コツ5で半額)。',
+              style: TextStyle(fontSize: 11, color: Colors.grey)),
+          if (owned.isNotEmpty) ...[
+            const SizedBox(height: 6),
+            Wrap(spacing: 6, runSpacing: 4, children: [
+              for (final s in owned)
+                Tooltip(
+                  message: s.description,
+                  triggerMode: TooltipTriggerMode.tap,
+                  child: Chip(
+                    key: Key('skill-owned-${s.name}'),
+                    avatar: Icon(s.gold ? Icons.workspace_premium : Icons.bolt,
+                        size: 16,
+                        color: s.gold
+                            ? const Color(0xFFC9A227)
+                            : const Color(0xFFF9A825)),
+                    label: Text(s.label),
+                    visualDensity: VisualDensity.compact,
+                  ),
+                ),
+            ]),
+          ],
+          const SizedBox(height: 4),
+          for (final s in open) _SkillRow(controller: controller, game: game, skill: s),
+        ]),
+      ),
+    );
+  }
+}
+
+class _SkillRow extends StatelessWidget {
+  const _SkillRow(
+      {required this.controller, required this.game, required this.skill});
+  final GameController controller;
+  final Game game;
+  final Skill skill;
+
+  @override
+  Widget build(BuildContext context) {
+    final s = skill;
+    final tips = game.skillTips[s] ?? 0;
+    final price = game.skillPrice(s);
+    final why = skillBlock(game.player, s, game.exp, tips);
+    final locked = s.requires != null && !game.player.skills.contains(s.requires);
+    final studying = game.studyTarget == s;
+    final canStudy = !locked && game.phase != Phase.retired;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 3),
+      child: Row(children: [
+        Expanded(
+          child: Tooltip(
+            message: locked
+                ? '${s.description}(「${s.requires!.label}」を取ると取れる)'
+                : s.description,
+            triggerMode: TooltipTriggerMode.tap,
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Row(children: [
+                if (s.gold)
+                  const Padding(
+                    padding: EdgeInsets.only(right: 2),
+                    child: Icon(Icons.workspace_premium,
+                        size: 14, color: Color(0xFFC9A227)),
+                  ),
+                Flexible(
+                  child: Text(s.label,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: locked ? Colors.grey : null)),
+                ),
+              ]),
+              Text(
+                  locked
+                      ? '「${s.requires!.label}」が先'
+                      : 'コツ ${'●' * tips}${'○' * (maxSkillTips - tips)}  ${s.category.label} $price',
+                  key: Key('skill-tips-${s.name}'),
+                  style: const TextStyle(fontSize: 11, color: Colors.grey)),
+            ]),
+          ),
+        ),
+        IconButton(
+          key: Key('skill-study-${s.name}'),
+          tooltip: studying ? '研究の対象(もう一度押すと自動に戻す)' : '「研究」でこのコツを貯める',
+          visualDensity: VisualDensity.compact,
+          isSelected: studying,
+          icon: const Icon(Icons.menu_book_outlined, size: 20),
+          selectedIcon:
+              const Icon(Icons.menu_book, size: 20, color: Color(0xFF5E35B1)),
+          onPressed: canStudy
+              ? () => controller.setStudyTarget(studying ? null : s)
+              : null,
+        ),
+        FilledButton.tonal(
+          key: Key('skill-buy-${s.name}'),
+          style: FilledButton.styleFrom(
+              visualDensity: VisualDensity.compact,
+              padding: const EdgeInsets.symmetric(horizontal: 10)),
+          onPressed: why == null ? () => controller.buySkill(s) : null,
+          child: const Text('取る'),
+        ),
+      ]),
     );
   }
 }

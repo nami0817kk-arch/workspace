@@ -86,9 +86,15 @@ void main() {
     expect(kid.length, 12);
     expect(kid.map((e) => e.age).toList(),
         [6, 7, 7, 8, 9, 9, 10, 10, 11, 11, 12, 12]);
-    // 打者の憧れは打者向けの特性になる
-    final b = _kidYears(3, (id, n) => id == 'kid-idol' ? 0 : 1);
-    expect(b.player.traits.map((t) => t.name), contains('slugger'));
+    // 憧れは、その動きの才能(天賦)になる(打者はパワー、投手は球威)
+    final idol = childhoodStepById('kid-idol')!.event.choices.first;
+    for (final role in [Role.batter, Role.pitcher]) {
+      final p0 = Player(name: 't', role: role, age: 9, potential: 50);
+      final r = idol.apply(p0, const Condition(), abilitiesOf(role).first);
+      final a = role == Role.pitcher ? Ability.stuff : Ability.power;
+      expect(r.player.gift(a), 1, reason: '$role');
+      expect(r.player.traits, isEmpty);
+    }
   });
 
   test('分かれ道は全部で20以上あり、どれも選択肢が3つ前後で記録の文がそろっている', () {
