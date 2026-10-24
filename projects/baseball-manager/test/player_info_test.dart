@@ -87,7 +87,7 @@ void main() {
       g.adminSetCoachTeaches(Skill.chance);
       g.adminSetCoachTips(4);
       expect(g.lifeLog.last.kind, 'trait');
-      expect(g.lifeLog.last.text, contains('チャンス◯'));
+      expect(g.lifeLog.last.text, contains('チャンス○'));
       // 出来事で増えた特性も記録される。
       final h = Game.newGame(
           name: 't', role: Role.batter, rng: Random(6), potential: 60);

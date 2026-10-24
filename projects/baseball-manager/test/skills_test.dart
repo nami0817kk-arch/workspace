@@ -188,6 +188,13 @@ void main() {
     });
   });
 
+  test('名前に、同梱フォントに無い記号(◯ U+25EF)を使わない(画面で□になる)', () {
+    for (final s in Skill.values) {
+      expect(s.label.contains('◯'), isFalse, reason: s.name);
+      expect(s.description.contains('◯'), isFalse, reason: s.name);
+    }
+  });
+
   test('特性は体質と性格だけになった(試合の能力を足す特性は無い)', () {
     expect(Trait.values.length, lessThanOrEqualTo(26));
     expect(rareTraits.length, 5);

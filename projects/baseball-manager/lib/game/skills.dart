@@ -12,13 +12,13 @@ import 'traits.dart';
 /// - 効き方は試合の間だけ(`skillAbilityDelta` / `skillMatchBonus`)。総合評価やドラフトの点には入らない。
 enum Skill {
   // ── 打者(打撃) ──
-  chance('チャンス◯', '大会・世界大会の勝負どころに強い(体調+6相当)。', Category.batting, 30),
+  chance('チャンス○', '大会・世界大会の勝負どころに強い(体調+6相当)。', Category.batting, 30),
   powerHitter('パワーヒッター', '試合でパワー+6。', Category.batting, 40),
   averageHitter('アベレージヒッター', '試合でミート+6。', Category.batting, 40),
-  eyePlus('選球眼◯', '試合で選球眼+6・ミート+1。', Category.batting, 35),
+  eyePlus('選球眼○', '試合で選球眼+6・ミート+1。', Category.batting, 35),
   wideAngle('広角打法', '試合でミート+3・パワー+3。', Category.batting, 45),
   // ── 打者(守備走塁) ──
-  stealer('盗塁◯', '試合で走力+6。', Category.running, 30),
+  stealer('盗塁○', '試合で走力+6。', Category.running, 30),
   fieldMaster('守備職人', '試合で守備+6。', Category.running, 30),
   strongArm('強肩', '試合で守備+3・走力+3。', Category.running, 35),
   // ── 打者の金特 ──
@@ -28,10 +28,10 @@ enum Skill {
       gold: true, requiresName: 'powerHitter'),
   // ── 投手(投球) ──
   strikeout('奪三振', '試合で球威+5。', Category.pitching, 40),
-  controlPlus('コントロール◯', '試合で制球+6。', Category.pitching, 40),
-  staminaPlus('スタミナ◯', '試合でスタミナ+6。', Category.pitching, 35),
-  pinch('対ピンチ◯', '大会・世界大会の勝負どころに強い(体調+6相当)。', Category.pitching, 30),
-  nobi('ノビ◯', '試合で球威+3・制球+2。', Category.pitching, 40),
+  controlPlus('コントロール○', '試合で制球+6。', Category.pitching, 40),
+  staminaPlus('スタミナ○', '試合でスタミナ+6。', Category.pitching, 35),
+  pinch('対ピンチ○', '大会・世界大会の勝負どころに強い(体調+6相当)。', Category.pitching, 30),
+  nobi('ノビ○', '試合で球威+3・制球+2。', Category.pitching, 40),
   heavyBall('重い球', '試合で球威+3・スタミナ+2。', Category.pitching, 35),
   // ── 投手の金特 ──
   geniusArm('天才投手', '金の特殊能力。試合で球威+8・制球+6。', Category.pitching, 130,
