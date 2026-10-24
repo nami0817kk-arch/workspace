@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'at_bat.dart';
 import 'player.dart';
-import 'traits.dart';
+import 'skills.dart';
 
 /// 1試合(または大会・シーズン通算)の個人成績。打者として/投手として、それぞれ数える。
 class Line {
@@ -136,7 +136,14 @@ class Line {
     return '${outs ~/ 3}${r == 0 ? '' : ' $r/3'}';
   }
 
-  double? get era => outs == 0 ? null : runsAllowed * 27 / outs;
+  /// 防御率。**30回以上投げた(90アウト〜)ときは、下限 `minSeasonEra`**(現実の記録でも1点を切る年はほぼ無い。
+  /// 失点の推定が0になるほど抑えた選手が「防御率0.00」で1シーズン投げ切るのを防ぐ)。
+  /// 1試合や1か月の防御率は、0.00になりうる。勝敗(`decidedStart`)は下限を使わない失点で決める。
+  double? get era {
+    if (outs == 0) return null;
+    final e = runsAllowed * 27 / outs;
+    return outs >= 90 ? max(e, minSeasonEra) : e;
+  }
 
   /// WHIP(1回あたりに出した走者の数)。
   double? get whip =>
@@ -246,6 +253,9 @@ const leagueEra = 3.90;
 /// 1打席あたりに足す、失点推定の基準値(平均的な環境で防御率が4点前後になる値)。
 const runBaseline = 0.10;
 
+/// シーズン(30回以上)の防御率の下限。
+const minSeasonEra = 0.90;
+
 /// その打席の打点(走者の動きは再現しないので、結果ごとの確率で決める)。
 int _rbiOf(AtBatResult r, Random rng) {
   final x = rng.nextDouble();
@@ -327,8 +337,11 @@ Line playGame(
     appeared = true;
     started = 1;
     final foe = Batter(contact: opp, power: opp, eye: opp);
-    // スタミナが低いと長く投げられない(対戦数が減る)。
-    final faced = (facedBase * (0.5 + p.of(Ability.stamina) / 200)).round();
+    // スタミナが低いと長く投げられない(対戦数が減る)。端数は確率で1人ぶん足す
+    // (四捨五入だと、スタミナ+6 程度の差がほとんどの能力で0人に丸められ、効かなかった)。
+    final rawFaced = facedBase * (0.5 + p.of(Ability.stamina) / 200);
+    final faced = rawFaced.floor() +
+        (rng.nextDouble() < rawFaced - rawFaced.floor() ? 1 : 0);
     for (var i = 0; i < faced; i++) {
       final r = simulateAtBat(p.toPitcher(), foe, rng);
       line += Line(
@@ -401,7 +414,7 @@ Tournament playTournament(
     final pWin = (0.5 +
             (teamLevel - opp) / 100 +
             (g.rating - 50) / 200 +
-            (condition + tournamentBonus(p.traits) - 50) / 500)
+            (condition + matchBonus(p) - 50) / 500)
         .clamp(0.0, 1.0);
     final roll = rng.nextDouble();
     final win = isShutout(g) || roll < pWin;
@@ -413,7 +426,137 @@ Tournament playTournament(
       roundsWon: won, rounds: opponents.length, line: line, games: games);
 }
 
-/// プロの1シーズン(リーグ戦)。
+/// 決勝の直前まで進めた途中経過。決勝で「見せ場の決断」を選べるように、決勝の勝ち負けだけ未決にしてある。
+/// (決勝の個人成績 `finalLine` は先に決めてあり、決断で変わるのは勝つ確率 `pWin` だけ)。
+class FinalMoment {
+  const FinalMoment({
+    required this.games,
+    required this.line,
+    required this.roundsWon,
+    required this.rounds,
+    required this.opponent,
+    required this.finalLine,
+    required this.pWin,
+  });
+
+  /// 決勝の前までの試合(全部勝っている)。
+  final List<TournamentGame> games;
+  final Line line;
+  final int roundsWon;
+  final int rounds;
+  final int opponent;
+  final Line finalLine;
+  final double pWin;
+
+  Map<String, dynamic> toJson() => {
+        'games': [
+          for (final g in games)
+            {'opponent': g.opponent, 'won': g.won, 'line': g.line.toJson()}
+        ],
+        'line': line.toJson(),
+        'roundsWon': roundsWon,
+        'rounds': rounds,
+        'opponent': opponent,
+        'finalLine': finalLine.toJson(),
+        'pWin': pWin,
+      };
+
+  factory FinalMoment.fromJson(Map<String, dynamic> j) => FinalMoment(
+        games: [
+          for (final g in (j['games'] as List? ?? const []))
+            TournamentGame(
+              opponent: ((g as Map)['opponent'] as num).toInt(),
+              won: g['won'] == true,
+              line: Line.fromJson((g['line'] as Map).cast<String, dynamic>()),
+            )
+        ],
+        line: Line.fromJson((j['line'] as Map).cast<String, dynamic>()),
+        roundsWon: (j['roundsWon'] as num).toInt(),
+        rounds: (j['rounds'] as num).toInt(),
+        opponent: (j['opponent'] as num).toInt(),
+        finalLine:
+            Line.fromJson((j['finalLine'] as Map).cast<String, dynamic>()),
+        pWin: (j['pWin'] as num).toDouble(),
+      );
+}
+
+/// `playTournamentToFinal` の結果。決勝まで進んだら `moment`(決勝は未決)、そこで負けていたら `done`。
+class TournamentProgress {
+  const TournamentProgress({this.done, this.moment});
+  final Tournament? done;
+  final FinalMoment? moment;
+}
+
+/// `playTournament` と同じ順で、**決勝の勝ち負けの手前まで**進める。
+/// 決勝より前で負ければ、その結果(`done`)を返す。決勝まで来たら `moment`。
+TournamentProgress playTournamentToFinal(
+  Player p, {
+  required int teamLevel,
+  required List<int> opponents,
+  required Random rng,
+  int condition = 50,
+}) {
+  var line = const Line();
+  var won = 0;
+  final games = <TournamentGame>[];
+  for (var i = 0; i < opponents.length; i++) {
+    final opp = opponents[i];
+    final g = playGame(p, opp, rng);
+    final pWin = (0.5 +
+            (teamLevel - opp) / 100 +
+            (g.rating - 50) / 200 +
+            (condition + matchBonus(p) - 50) / 500)
+        .clamp(0.0, 1.0);
+    if (i == opponents.length - 1) {
+      // 決勝: 勝ち負けは、見せ場の決断のあとで決める。
+      return TournamentProgress(
+        moment: FinalMoment(
+          games: games,
+          line: line,
+          roundsWon: won,
+          rounds: opponents.length,
+          opponent: opp,
+          finalLine: g,
+          pWin: pWin,
+        ),
+      );
+    }
+    line += g;
+    final roll = rng.nextDouble();
+    final win = isShutout(g) || roll < pWin;
+    games.add(TournamentGame(opponent: opp, won: win, line: g));
+    if (!win) {
+      return TournamentProgress(
+          done: Tournament(
+              roundsWon: won,
+              rounds: opponents.length,
+              line: line,
+              games: games));
+    }
+    won++;
+  }
+  // 試合が無い(通常は無い)。
+  return TournamentProgress(
+      done: Tournament(
+          roundsWon: won, rounds: opponents.length, line: line, games: games));
+}
+
+/// 決勝を決める。`bonus` は見せ場の決断で変わる勝つ確率(足し算)。無失点の登板は負けない(`isShutout`)。
+Tournament finishFinal(FinalMoment m, double bonus, Random rng) {
+  final roll = rng.nextDouble();
+  final win = isShutout(m.finalLine) || roll < (m.pWin + bonus).clamp(0.0, 1.0);
+  return Tournament(
+    roundsWon: m.roundsWon + (win ? 1 : 0),
+    rounds: m.rounds,
+    line: m.line + m.finalLine,
+    games: [
+      ...m.games,
+      TournamentGame(opponent: m.opponent, won: win, line: m.finalLine),
+    ],
+  );
+}
+
+/// プロのシーズン(リーグ戦)。
 class LeagueSeason {
   const LeagueSeason({
     required this.games,
@@ -519,7 +662,7 @@ LeagueProgress playLeagueChunk(
     final pWin = (0.5 +
             (teamLevel - opp) / 100 +
             (game.rating - 50) / 400 +
-            (condition + tournamentBonus(p.traits) - 50) / 800)
+            (condition + matchBonus(p) - 50) / 800)
         .clamp(0.0, 1.0);
     final won = rng.nextDouble() < pWin;
     won ? wins++ : losses++;
@@ -571,7 +714,7 @@ LeagueSeason playLeagueSeason(
     final pWin = (0.5 +
             (teamLevel - opp) / 100 +
             (game.rating - 50) / 400 +
-            (condition + tournamentBonus(p.traits) - 50) / 800)
+            (condition + matchBonus(p) - 50) / 800)
         .clamp(0.0, 1.0);
     final won = rng.nextDouble() < pWin;
     won ? wins++ : losses++;

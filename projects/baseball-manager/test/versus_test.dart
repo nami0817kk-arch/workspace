@@ -1,7 +1,7 @@
 import 'dart:math';
 
+import 'package:baseball_manager/game/skills.dart';
 import 'package:baseball_manager/game/player.dart';
-import 'package:baseball_manager/game/traits.dart';
 import 'package:baseball_manager/ui/controller.dart';
 import 'package:baseball_manager/ui/app.dart';
 import 'package:baseball_manager/ui/versus_screen.dart';
@@ -17,33 +17,33 @@ void main() {
   test('対戦テスト: 打者99 vs 投手10 は必ず出塁、投手99 vs 打者10 は必ず打ち取る', () {
     final a = runVersus(
         bat: _bat(99),
-        batTraits: {},
+        batSkills: {},
         pit: _pit(10),
-        pitTraits: {},
+        pitSkills: {},
         n: 2000,
         rng: Random(1));
     expect(a.onBase, 1.0);
     expect(a.battingAverage, 1.0);
     final b = runVersus(
         bat: _bat(10),
-        batTraits: {},
+        batSkills: {},
         pit: _pit(99),
-        pitTraits: {},
+        pitSkills: {},
         n: 2000,
         rng: Random(1));
     expect(b.onBase, 0.0);
     expect(b.strikeout, greaterThan(1800));
   });
 
-  test('対戦テスト: 特性の上乗せが反映される(アベレージヒッターは打率が上がる)', () {
-    VersusResult run(Set<Trait> t) => runVersus(
+  test('対戦テスト: 特殊能力の上乗せが反映される(アベレージヒッターは打率が上がる)', () {
+    VersusResult run(Set<Skill> t) => runVersus(
         bat: _bat(90),
-        batTraits: t,
+        batSkills: t,
         pit: _pit(65),
-        pitTraits: {},
+        pitSkills: {},
         n: 20000,
         rng: Random(2));
-    expect(run({Trait.contactHitter}).battingAverage,
+    expect(run({Skill.averageHitter}).battingAverage,
         greaterThan(run({}).battingAverage + 0.02));
   });
 

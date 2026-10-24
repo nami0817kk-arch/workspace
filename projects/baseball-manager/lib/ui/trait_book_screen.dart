@@ -19,9 +19,27 @@ class TraitBookScreen extends StatelessWidget {
         final all = Trait.values;
         final n = all.where((t) => seen.contains(t.name)).length;
         final groups = <(String, List<Trait>)>[
-          ('レア特性', [for (final t in all) if (t.rare) t]),
-          ('良い特性', [for (final t in all) if (!t.rare && t.positive) t]),
-          ('代償のある特性', [for (final t in all) if (!t.rare && !t.positive) t]),
+          (
+            'レア特性',
+            [
+              for (final t in all)
+                if (t.rare) t
+            ]
+          ),
+          (
+            '良い特性',
+            [
+              for (final t in all)
+                if (!t.rare && t.positive) t
+            ]
+          ),
+          (
+            '代償のある特性',
+            [
+              for (final t in all)
+                if (!t.rare && !t.positive) t
+            ]
+          ),
         ];
         return Scaffold(
           appBar: AppBar(title: const Text('特性図鑑')),
@@ -47,8 +65,7 @@ class TraitBookScreen extends StatelessWidget {
                               borderRadius: BorderRadius.circular(5),
                             ),
                             const SizedBox(height: 8),
-                            const Text(
-                                '一度でも持った特性が載ります。レア特性は、生まれつき4%、'
+                            const Text('一度でも持った特性が載ります。レア特性は、生まれつき4%、'
                                 'またはプロでタイトルや優勝をしたときの「覚醒」でだけ手に入ります。'),
                           ]),
                     ),
@@ -60,7 +77,8 @@ class TraitBookScreen extends StatelessWidget {
                           '${g.$1} (${g.$2.where((t) => seen.contains(t.name)).length} / ${g.$2.length})',
                           style: Theme.of(context).textTheme.titleSmall),
                     ),
-                    for (final t in g.$2) _Entry(trait: t, found: seen.contains(t.name)),
+                    for (final t in g.$2)
+                      _Entry(trait: t, found: seen.contains(t.name)),
                   ],
                 ],
               ),

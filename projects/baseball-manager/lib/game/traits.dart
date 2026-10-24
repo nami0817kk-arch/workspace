@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'player.dart';
+import 'skills.dart';
 
 /// 特性。能力とは別に、選手の個性として効き方を変える。
 /// 良いものだけでなく、代償のあるもの・悪いものもある。
@@ -18,23 +19,15 @@ enum Trait {
   starPower('華がある', 'ドラフトの評価に+5。', true),
   longevity('長持ち', '衰えがゆるやか。', true),
 
-  // ── 打者の特性 ──
-  slugger('長距離砲', '試合でパワー+9、ミート-1。一発がある。', true, TraitFor.batter),
-  contactHitter('アベレージヒッター', '試合でミート+9、パワー-2。当てるのがうまい。', true, TraitFor.batter),
-  patient('選球眼の鬼', '試合で選球眼+10、ミート+2。四球を選べる。', true, TraitFor.batter),
-  speedster('俊足', '試合で走力+8。二塁打・三塁打と盗塁が増える。', true, TraitFor.batter),
-
-  // ── 投手の特性 ──
-  fireballer('剛腕', '試合で球威+6、制球-4。三振を奪う。', true, TraitFor.pitcher),
-  finesse('精密機械', '試合で制球+8。四球を出さない。', true, TraitFor.pitcher),
-  workhorse('スタミナお化け', '試合でスタミナ+8。長いイニングを投げ抜く。', true, TraitFor.pitcher),
+  // 試合の能力を足すもの(長距離砲・剛腕など)は、2026-10-24 に特殊能力(`skills.dart`)へ移した。
+  // 特性は、生まれつきの体質と性格だけ。
 
   // ── 誰でも ──
   leader('キャプテンシー', 'チームをまとめ、大会・シーズンのチーム力が+3。', true),
   moodMaker('ムードメーカー', '友情タッグの経験点が増える(1.5倍)。', true),
   quickRecovery('回復力', '休養で疲れがよく抜ける(1.5倍)。', true),
   worldStage('国際舞台に強い', '世界大会での体調が+10相当になる。', true),
-  studious('研究熱心', '「研究」で貯まる経験点が1.4倍。', true),
+  studious('研究熱心', '「研究」で貯まる特殊能力のコツが1つ多い。', true),
   moody('ムラっ気', '気持ちの上下が激しい(上がるのも下がるのも1.3倍)。', false),
   slowRecovery('疲れが抜けにくい', '休養で疲れが抜けにくい(0.6倍)。', false),
   lonely('一匹狼', '友情タッグの経験点が減る(0.6倍)が、練習の伸びは1割増える。', false),
@@ -44,20 +37,17 @@ enum Trait {
   steelBody('鋼の肉体', '衰えがゆるやか(0.6倍)。疲れも溜まりにくい(0.8倍)。', true),
   ironWill('不屈', '怪我の影響が半分以下(0.4倍)。大会での体調が+5相当になる。', true),
   stagePresence('千両役者', '大会(世界大会も)での体調が+8相当になる。', true),
-  fortune('強運', '練習の「失敗」が半分に、「大成功」が1.6倍出る。', true),
-  prodigyBat('打撃の天才', '試合でミート+10・パワー+5・選球眼+5。', true, TraitFor.batter),
-  prodigyArm('投球の天才', '試合で球威+8・制球+6。', true, TraitFor.pitcher);
+  fortune('強運', '練習の「失敗」が半分に、「大成功」が1.6倍出る。', true);
 
-  const Trait(this.label, this.description, this.positive,
-      [this.forRole = TraitFor.any]);
+  const Trait(this.label, this.description, this.positive);
   final String label;
   final String description;
 
   /// 良い特性か(画面の色分けや、抽選の重みに使う)。
   final bool positive;
 
-  /// 打者・投手のどちらに効く特性か(打者の特性は投手に意味が無いので、与えない)。
-  final TraitFor forRole;
+  /// 打者・投手のどちらに効く特性か。役割に縛られる特性は特殊能力へ移したので、いまは全部 `any`。
+  TraitFor get forRole => TraitFor.any;
 
   /// レア特性か(通常の抽選には出ない。画面では金色で見せる)。
   bool get rare => rareTraits.contains(this);
@@ -87,8 +77,6 @@ const rareTraits = <Trait>{
   Trait.ironWill,
   Trait.stagePresence,
   Trait.fortune,
-  Trait.prodigyBat,
-  Trait.prodigyArm,
 };
 
 /// 生まれつきレア特性を1つ持つ確率。
@@ -103,8 +91,6 @@ const _conflicts = <Trait, Trait>{
   Trait.lateBloomer: Trait.earlyBloomer,
   Trait.sturdy: Trait.glassBody,
   Trait.clutch: Trait.nervy,
-  Trait.slugger: Trait.contactHitter,
-  Trait.fireballer: Trait.finesse,
   Trait.quickRecovery: Trait.slowRecovery,
   Trait.moodMaker: Trait.lonely,
   Trait.sunny: Trait.moody,
@@ -236,47 +222,13 @@ double draftBonus(Set<Trait> t) => t.contains(Trait.starPower) ? 5 : 0;
 
 // ── 新しい特性の効き方 ──
 
-/// 試合の間だけ効く能力の上乗せ(元の選手は変えない)。打者・投手の特性。
-Map<Ability, int> traitAbilityDelta(Set<Trait> t) {
-  final d = <Ability, int>{};
-  void add(Ability a, int n) => d[a] = (d[a] ?? 0) + n;
-  if (t.contains(Trait.slugger)) {
-    add(Ability.power, 9);
-    add(Ability.contact, -1);
-  }
-  if (t.contains(Trait.contactHitter)) {
-    add(Ability.contact, 9);
-    add(Ability.power, -2);
-  }
-  if (t.contains(Trait.patient)) {
-    add(Ability.eye, 10);
-    add(Ability.contact, 2);
-  }
-  if (t.contains(Trait.speedster)) add(Ability.speed, 8);
-  if (t.contains(Trait.fireballer)) {
-    add(Ability.stuff, 6);
-    add(Ability.control, -4);
-  }
-  if (t.contains(Trait.finesse)) add(Ability.control, 8);
-  if (t.contains(Trait.workhorse)) add(Ability.stamina, 8);
-  if (t.contains(Trait.prodigyBat)) {
-    add(Ability.contact, 10);
-    add(Ability.power, 5);
-    add(Ability.eye, 5);
-  }
-  if (t.contains(Trait.prodigyArm)) {
-    add(Ability.stuff, 8);
-    add(Ability.control, 6);
-  }
-  return d;
-}
-
-/// 試合の間だけ、特性で能力が上限(99)を超えられる。能力が99でも、特性の上乗せが消えないように。
+/// 試合の間だけ、特殊能力で能力が上限(99)を超えられる。能力が99でも、上乗せが消えないように。
 const gameAbilityCap = 120;
 
-/// 特性を反映した、試合用の選手。元の選手は変えない。
+/// 特殊能力(と特性)を反映した、試合用の選手。元の選手は変えない。
+/// 試合の能力を足すのは特殊能力だけ(特性は体質と性格。2026-10-24 に分けた)。
 Player traitAdjusted(Player p) {
-  final d = traitAbilityDelta(p.traits);
+  final d = skillAbilityDelta(p.skills);
   if (d.isEmpty) return p;
   return p.copyWith(abilities: {
     for (final e in p.abilities.entries)
@@ -297,13 +249,9 @@ double tagTraitMultiplier(Set<Trait> t) =>
     (t.contains(Trait.moodMaker) ? 1.5 : 1.0) *
     (t.contains(Trait.lonely) ? 0.6 : 1.0);
 
-/// 「研究」で貯まる量の倍率。
-double studyMultiplier(Set<Trait> t) => t.contains(Trait.studious) ? 1.4 : 1.0;
-
 /// 世界大会の体調に足す値。
 int worldBonus(Set<Trait> t) => t.contains(Trait.worldStage) ? 10 : 0;
 
 /// 練習の出来の振れ方。強運は失敗が半分・大成功が1.6倍(平均は少し上がる)。
-({double bad, double great}) outcomeLuck(Set<Trait> t) => t.contains(Trait.fortune)
-    ? (bad: 0.5, great: 1.6)
-    : (bad: 1.0, great: 1.0);
+({double bad, double great}) outcomeLuck(Set<Trait> t) =>
+    t.contains(Trait.fortune) ? (bad: 0.5, great: 1.6) : (bad: 1.0, great: 1.0);

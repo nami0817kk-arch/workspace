@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'career.dart';
 import 'player.dart';
+import 'skills.dart';
 import 'traits.dart';
 
 /// プロに入れなかったときの道。
@@ -13,15 +14,16 @@ enum Course {
   final int years;
 }
 
-/// 能力の総合評価 0〜99。二刀流は得意なほうで見る。
+/// 能力の総合評価 0〜99。二刀流は得意なほうで見る。特殊能力も評価に入る(`skillRating`)。
 double overall(Player p) {
   double avg(List<Ability> l) =>
       l.map(p.of).fold<int>(0, (a, b) => a + b) / l.length;
-  return switch (p.role) {
+  final base = switch (p.role) {
     Role.batter => avg(batterAbilities),
     Role.pitcher => avg(pitcherAbilities),
     Role.twoWay => _twoWayOverall(avg(batterAbilities), avg(pitcherAbilities)),
   };
+  return min(100.0, base + skillRating(p));
 }
 
 /// 二刀流の総合評価。得意な方が土台で、もう一方も育っているほど上乗せされる
@@ -35,7 +37,8 @@ double _twoWayOverall(double a, double b) {
 double draftScore(Player p, double achievement) =>
     0.7 * overall(p) + 0.3 * achievement.clamp(0, 100) + draftBonus(p.traits);
 
-const draftLine = 58.0; // 運を除いた合否ライン
+/// 運を除いた合否ライン(dart run -DBAL_DRAFT=600 で試せる。単位は0.1)。
+const draftLine = int.fromEnvironment('BAL_DRAFT', defaultValue: 595) / 10;
 const draftLuck = 10.0; // 運の振れ幅(±)
 
 /// ドラフトで指名されるか。能力と実績に運が乗る。

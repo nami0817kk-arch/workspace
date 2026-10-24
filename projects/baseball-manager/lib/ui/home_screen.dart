@@ -34,7 +34,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final name = TextEditingController(text: '');
   Role role = Role.batter;
-  Difficulty difficulty = Difficulty.normal;
 
   /// 二世として始めるときの親(殿堂の、結婚した選手)。なければ ふつうに始める。
   HistoryEntry? heir;
@@ -91,7 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _start() => widget.controller
-      .newGame(name.text, role, difficulty, heir?.snapshot, carry);
+      .newGame(name.text, role, Difficulty.normal, heir?.snapshot, carry);
 
   @override
   Widget build(BuildContext context) {
@@ -200,22 +199,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     '二刀流は、プロになってからいつでも選べます。(いまは${roleLabel(role)}から)',
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
-                  const SizedBox(height: 16),
-                  const Text('難しさ'),
-                  const SizedBox(height: 8),
-                  SegmentedButton<Difficulty>(
-                    key: const Key('difficulty'),
-                    segments: [
-                      for (final d in Difficulty.values)
-                        ButtonSegment(value: d, label: Text(d.label)),
-                    ],
-                    selected: {difficulty},
-                    onSelectionChanged: (s) =>
-                        setState(() => difficulty = s.first),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(difficulty.description,
-                      style: Theme.of(context).textTheme.bodySmall),
                   if (_heirCandidates.isNotEmpty) ...[
                     const SizedBox(height: 16),
                     const Text('二世として始める'),
@@ -256,8 +239,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           selected: carry == null,
                           onSelected: (_) => setState(() => carry = null),
                         ),
-                        for (final t
-                            in widget.controller.carryCandidates(role))
+                        for (final t in widget.controller.carryCandidates(role))
                           Tooltip(
                             message: t.description,
                             child: ChoiceChip(
@@ -271,7 +253,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ] else if (widget.controller.legacyPoints > 0) ...[
                     const SizedBox(height: 16),
-                    Text('継承ポイント ${widget.controller.legacyPoints}pt'
+                    Text(
+                        '継承ポイント ${widget.controller.legacyPoints}pt'
                         '(図鑑にある特性を持たせるには、あと少し貯める)',
                         style: Theme.of(context).textTheme.bodySmall),
                   ],
@@ -463,6 +446,12 @@ class _HistoryTile extends StatelessWidget {
       if (e.snapshot != null && e.snapshot!.difficulty != Difficulty.normal)
         e.snapshot!.difficulty.label,
       if (e.married) '結婚',
+      // レア特性(生まれつき・覚醒)を持っていた選手
+      if (e.snapshot != null && e.snapshot!.traits.any((t) => t.rare))
+        '★${[
+          for (final t in e.snapshot!.traits)
+            if (t.rare) t.label
+        ].join('・')}',
     ];
     return Card(
       child: ListTile(
@@ -498,7 +487,8 @@ Future<void> showHelp(BuildContext context) {
           '・練習すると「経験点」が貯まります。好きな能力に振り分けて強くします。\n'
           '・体力が減ると怪我しやすくなります。休養や交流で回復しましょう。\n'
           '・やる気が高いほど、経験点がたくさん貯まります。\n'
-          '・仲間と組むと友情タッグ練習、コーチに教わると特性を習得できます。\n'
+          '・仲間と組むと友情タッグ練習。コーチに4回教わると、コーチの特殊能力を習得できます。\n'
+          '・特殊能力(チャンス○・奪三振など)は経験点で取ります。研究・特訓・練習試合・交流でコツが貯まるほど安くなります(コツ5で半額)。特性(体質・性格)とは別の枠です。\n'
           '・夏の大会の成績がドラフトの評価になります。高校卒業時に指名されなければ、大学か社会人で1度だけ再挑戦できます。\n'
           '・プロになったら二刀流にいつでも挑戦できます(伸びは0.75倍。両方を伸ばせば評価が上乗せされ、年俸と人気も上がる)。\n'
           '・夏の大会(プロは10月のシーズン終了)のあとに、成績が記録されます。右上のグラフのボタンで、成績表を見られます。\n'
@@ -508,11 +498,11 @@ Future<void> showHelp(BuildContext context) {
           '・12歳・15歳・18歳(U-12・U-15・U-18)、大学・社会人の21歳(U-23)、プロは22歳から4年おきに「世界大会」があります。実力があると日本代表に選ばれ、世界一を目指します。\n'
           '・中学・高校・進路の最初の年と、プロの毎年のはじめに、ポジションを決められます。ポジションごとに必要な能力が違い、適性はランクで見えます。適性の低い所を選ぶとチーム力が下がります。\n'
           '・特性は34種類(うちレア7種)。打者・投手向けのものは、その役割の選手にだけつきます。成績の「指標」(OPS+・WHIPなど)は、項目をタップすると意味が出ます。\n'
-          '・能力には「天賦」(得意・苦手)があり、得意な能力は経験点が少なくて済みます。選手ごとに違います。\n'
+          '・才能は星5つで見えます。選手全体の才能と、能力ごとの才能(★が多いほど経験点が少なくて済む)があり、選手ごとに違います。幼少期の出来事で、才能が伸びることもあります。\n'
           '・レア特性は、生まれつき4%、またはプロでタイトルや優勝をしたときの「覚醒」(一生に一度)で手に入ります。持った特性は「特性図鑑」に残ります。\n'
           '・引退のたびに「継承ポイント」が貯まります(称号が高いほど多い)。次の選手を始めるとき、特性図鑑にある良い特性を生まれつき持たせられます(3pt、レアは8pt)。\n'
           '・同じ能力を重点に練習を続けると、経験点が少し増え、ときどき「開眼」します。重点を変えると連続は戻ります。\n'
-          '・プロでは、シーズン中の成績で月間MVPやオールスターに選ばれ、年の終わりに新人王・ベストナインなどの表彰があります。8年目からは一度だけ「FA権」で移籍を決められます。\n'
+          '・プロでは、シーズン中の成績で月間MVPやオールスターに選ばれ、年の終わりに新人王・ベストナイン・エース賞・三冠王・トリプルスリーなど、実際の野球にもある表彰や大記録があります(アマの大会にも大会優秀選手・最優秀選手があります)。8年目からは一度だけ「FA権」で移籍を決められます。\n'
           '・一生を通した達成は「実績」に残ります。ホームの実績カードから見られます。\n'
           '・引退までの一生が、あなたの選手の物語です。',
         ),

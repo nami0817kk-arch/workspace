@@ -7,6 +7,10 @@ import 'achievements_screen.dart';
 import 'admin_screen.dart';
 import 'controller.dart';
 import 'home_screen.dart' show showHelp;
+import 'guide_dialog.dart';
+import '../monetization/monetization.dart';
+import '../monetization/purchase_service.dart';
+import 'links.dart';
 import 'trait_book_screen.dart';
 import 'versus_screen.dart';
 
@@ -121,6 +125,14 @@ class SettingsScreen extends StatelessWidget {
                     onChanged: (v) => controller.setFlags(reduceMotion: v),
                   ),
                   SwitchListTile(
+                    key: const Key('sound-switch'),
+                    secondary: const Icon(Icons.volume_up_outlined),
+                    title: const Text('効果音'),
+                    subtitle: const Text('能力アップ・節目・ドラフト・優勝などで鳴ります。'),
+                    value: controller.soundOn,
+                    onChanged: (v) => controller.setFlags(sound: v),
+                  ),
+                  SwitchListTile(
                     key: const Key('haptics-switch'),
                     secondary: const Icon(Icons.vibration),
                     title: const Text('触覚フィードバック'),
@@ -132,9 +144,38 @@ class SettingsScreen extends StatelessWidget {
                     key: const Key('toasts-switch'),
                     secondary: const Icon(Icons.notifications_none),
                     title: const Text('行動の結果を画面の下に出す'),
-                    subtitle: const Text('「戻す」ボタンもここに出ます。'),
                     value: controller.toasts,
                     onChanged: (v) => controller.setFlags(toasts: v),
+                  ),
+                  if (controller.money != null)
+                    _AdsSection(money: controller.money!),
+                  ListTile(
+                    key: const Key('privacy-open'),
+                    leading: const Icon(Icons.privacy_tip_outlined),
+                    title: const Text('プライバシーポリシー'),
+                    trailing: const Icon(Icons.open_in_new, size: 18),
+                    onTap: () => _openLink(context, Links.privacy),
+                  ),
+                  ListTile(
+                    key: const Key('support-open'),
+                    leading: const Icon(Icons.support_agent_outlined),
+                    title: const Text('サポート・お問い合わせ'),
+                    trailing: const Icon(Icons.open_in_new, size: 18),
+                    onTap: () => _openLink(context, Links.support),
+                  ),
+                  ListTile(
+                    key: const Key('terms-open'),
+                    leading: const Icon(Icons.description_outlined),
+                    title: const Text('利用規約'),
+                    trailing: const Icon(Icons.open_in_new, size: 18),
+                    onTap: () => _openLink(context, Links.terms),
+                  ),
+                  ListTile(
+                    key: const Key('guide-open'),
+                    leading: const Icon(Icons.menu_book_outlined),
+                    title: const Text('はじめてのガイド'),
+                    subtitle: const Text('遊び方の流れを、もう一度見る。'),
+                    onTap: () => showGuide(context),
                   ),
                   ListTile(
                     key: const Key('keys-open'),
@@ -147,7 +188,6 @@ class SettingsScreen extends StatelessWidget {
                         content: const Text('Enter: おすすめの行動\n'
                             'R: 休養\n'
                             '1〜7: 練習・特訓・休養・研究・交流・練習試合・コーチ\n'
-                            'Z: ひとつ前に戻す\n'
                             '(パソコンのブラウザなどで使えます)'),
                         actions: [
                           TextButton(
@@ -237,55 +277,44 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
-  Future<void> _backup(BuildContext context) async {
-    final text = TextEditingController();
-    await showDialog<void>(
+  Future<void> _openLink(BuildContext context, Uri url) async {
+    final m = ScaffoldMessenger.of(context);
+    final ok = await Links.open(url);
+    if (!ok) m.showSnackBar(const SnackBar(content: Text('ページを開けませんでした')));
+  }
+
+  Future<void> _backup(BuildContext context) => showDialog<void>(
+        context: context,
+        builder: (ctx) => _BackupDialog(
+          controller: controller,
+          onRestore: (i) => _confirmRestoreAuto(ctx, i),
+        ),
+      );
+
+  Future<void> _confirmRestoreAuto(BuildContext context, int i) async {
+    final ok = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('バックアップ'),
-        content: SingleChildScrollView(
-          child: Column(mainAxisSize: MainAxisSize.min, children: [
-            const Text('「書き出す」で、いまのデータを文字列としてコピーします。'
-                'メモなどに貼っておけば、あとで「読み込む」で戻せます。'),
-            const SizedBox(height: 12),
-            TextField(
-              key: const Key('backup-text'),
-              controller: text,
-              minLines: 3,
-              maxLines: 6,
-              decoration: const InputDecoration(
-                  border: OutlineInputBorder(), hintText: '読み込むときは、ここに貼り付け'),
-            ),
-          ]),
-        ),
+        title: const Text('この時点に戻しますか?'),
+        content: const Text('いまのデータは、自動バックアップにとってから戻します。'),
         actions: [
           TextButton(
-            key: const Key('backup-export'),
-            onPressed: () async {
-              final m = ScaffoldMessenger.of(context);
-              await Clipboard.setData(
-                  ClipboardData(text: controller.exportBackup()));
-              m.showSnackBar(const SnackBar(content: Text('コピーしました')));
-            },
-            child: const Text('書き出す'),
-          ),
+              onPressed: () => Navigator.pop(ctx, false),
+              child: const Text('やめる')),
           FilledButton(
-            key: const Key('backup-import'),
-            onPressed: () async {
-              final m = ScaffoldMessenger.of(context);
-              final ok = await controller.importBackup(text.text);
-              m.showSnackBar(SnackBar(
-                  content: Text(ok ? '読み込みました' : '読み込めませんでした(文字列が違うかもしれません)')));
-              if (ok && ctx.mounted) Navigator.pop(ctx);
-            },
-            child: const Text('読み込む'),
-          ),
-          TextButton(
-              onPressed: () => Navigator.pop(ctx), child: const Text('閉じる')),
+              key: const Key('autobackup-restore-confirm'),
+              onPressed: () => Navigator.pop(ctx, true),
+              child: const Text('戻す')),
         ],
       ),
     );
-    text.dispose();
+    if (ok != true) return;
+    final done = await controller.restoreAutoBackup(i);
+    if (context.mounted) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(done ? '戻しました' : '戻せませんでした')));
+      if (done) Navigator.pop(context);
+    }
   }
 
   Future<void> _confirmRestart(BuildContext context) async {
@@ -334,5 +363,208 @@ class SettingsScreen extends StatelessWidget {
     if (ok != true) return;
     await controller.eraseAll();
     if (context.mounted) Navigator.of(context).popUntil((r) => r.isFirst);
+  }
+}
+
+/// バックアップのダイアログ。入力欄の持ち主はここ(閉じる動きの間も、安全に描かれる)。
+class _BackupDialog extends StatefulWidget {
+  const _BackupDialog({required this.controller, required this.onRestore});
+  final GameController controller;
+
+  /// 自動バックアップ `i` に戻す(確認つき)。
+  final Future<void> Function(int i) onRestore;
+
+  static String _fmtTime(DateTime t) =>
+      '${t.month}/${t.day} ${t.hour.toString().padLeft(2, '0')}:${t.minute.toString().padLeft(2, '0')}';
+
+  @override
+  State<_BackupDialog> createState() => _BackupDialogState();
+}
+
+class _BackupDialogState extends State<_BackupDialog> {
+  final text = TextEditingController();
+
+  @override
+  void dispose() {
+    text.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('バックアップ'),
+      content: SingleChildScrollView(
+        child: Column(mainAxisSize: MainAxisSize.min, children: [
+          const Text('「書き出す」で、いまのデータを文字列としてコピーします。'
+              'メモなどに貼っておけば、あとで「読み込む」で戻せます。'),
+          const SizedBox(height: 12),
+          if (widget.controller.autoBackups.isNotEmpty) ...[
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Text('自動バックアップ(最新$autoBackupMax件)',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+            ),
+            for (var i = 0; i < widget.controller.autoBackups.length; i++)
+              ListTile(
+                key: Key('autobackup-$i'),
+                dense: true,
+                contentPadding: EdgeInsets.zero,
+                title: Text(widget.controller.autoBackups[i].why),
+                subtitle: Text(_BackupDialog._fmtTime(
+                    widget.controller.autoBackups[i].at)),
+                trailing: TextButton(
+                  key: Key('autobackup-restore-$i'),
+                  onPressed: () => widget.onRestore(i),
+                  child: const Text('戻す'),
+                ),
+              ),
+            const SizedBox(height: 8),
+          ],
+          TextField(
+            key: const Key('backup-text'),
+            controller: text,
+            minLines: 3,
+            maxLines: 6,
+            decoration: const InputDecoration(
+                border: OutlineInputBorder(), hintText: '読み込むときは、ここに貼り付け'),
+          ),
+        ]),
+      ),
+      actions: [
+        if (widget.controller.sharer != null)
+          Builder(
+            builder: (bctx) => TextButton(
+              key: const Key('backup-share'),
+              onPressed: () {
+                final box = bctx.findRenderObject() as RenderBox?;
+                final origin = box == null
+                    ? null
+                    : box.localToGlobal(Offset.zero) & box.size;
+                widget.controller.sharer!
+                    .share(widget.controller.exportBackup(), origin: origin);
+              },
+              child: const Text('ファイルで共有'),
+            ),
+          ),
+        TextButton(
+          key: const Key('backup-export'),
+          onPressed: () async {
+            final m = ScaffoldMessenger.of(context);
+            await Clipboard.setData(
+                ClipboardData(text: widget.controller.exportBackup()));
+            m.showSnackBar(const SnackBar(content: Text('コピーしました')));
+          },
+          child: const Text('書き出す'),
+        ),
+        FilledButton(
+          key: const Key('backup-import'),
+          onPressed: () async {
+            final m = ScaffoldMessenger.of(context);
+            final ok = await widget.controller.importBackup(text.text);
+            m.showSnackBar(SnackBar(
+                content: Text(ok ? '読み込みました' : '読み込めませんでした(文字列が違うかもしれません)')));
+            if (ok && context.mounted) Navigator.pop(context);
+          },
+          child: const Text('読み込む'),
+        ),
+        TextButton(
+            onPressed: () => Navigator.pop(context), child: const Text('閉じる')),
+      ],
+    );
+  }
+}
+
+/// 広告を消す(買い切り)と、購入の復元。ストアに繋がらない環境では何も出さない(広告を消した後の表示は出す)。
+class _AdsSection extends StatefulWidget {
+  const _AdsSection({required this.money});
+  final Monetization money;
+
+  @override
+  State<_AdsSection> createState() => _AdsSectionState();
+}
+
+class _AdsSectionState extends State<_AdsSection> {
+  bool _storeAvailable = false;
+  String? _price;
+  bool _busy = false;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.money.addListener(_changed);
+    _load();
+  }
+
+  @override
+  void dispose() {
+    widget.money.removeListener(_changed);
+    super.dispose();
+  }
+
+  void _changed() {
+    if (mounted) setState(() {});
+  }
+
+  Future<void> _load() async {
+    final v = await widget.money.canBuy;
+    final price = v ? await widget.money.price : null;
+    if (!mounted) return;
+    setState(() {
+      _storeAvailable = v;
+      _price = price;
+    });
+  }
+
+  Future<void> _run({required bool restore}) async {
+    setState(() => _busy = true);
+    final m = ScaffoldMessenger.of(context);
+    PurchaseOutcome r;
+    try {
+      r = await (restore ? widget.money.restore() : widget.money.buy());
+    } catch (_) {
+      r = PurchaseOutcome.failed;
+    }
+    if (mounted) setState(() => _busy = false);
+    final text = switch (r) {
+      PurchaseOutcome.purchased => restore ? '購入を復元しました。広告は出なくなります。' : 'ありがとうございます。広告は出なくなります。',
+      PurchaseOutcome.pending => '保護者の承認を待っています。承認されると広告が消えます。',
+      PurchaseOutcome.canceled => '',
+      PurchaseOutcome.unavailable => restore ? '復元できる購入が見つかりませんでした。' : '今は購入できません。しばらくしてからもう一度どうぞ。',
+      PurchaseOutcome.failed => restore ? '復元できませんでした。通信を確かめてください。' : '購入できませんでした。もう一度どうぞ。',
+    };
+    if (text.isNotEmpty) m.showSnackBar(SnackBar(content: Text(text)));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final money = widget.money;
+    if (money.adFree) {
+      return const ListTile(
+        key: Key('ad-free-on'),
+        leading: Icon(Icons.check_circle, color: Color(0xFF43A047)),
+        title: Text('広告なし(購入済み)'),
+        subtitle: Text('ご支援ありがとうございます。'),
+      );
+    }
+    if (!_storeAvailable || _price == null) return const SizedBox.shrink();
+    return Column(children: [
+      ListTile(
+        key: const Key('remove-ads'),
+        leading: const Icon(Icons.block),
+        title: const Text('広告を消す'),
+        subtitle: const Text('年替わりの全画面広告が出なくなり、疲れを取る動画も不要になります(買い切り)。'),
+        trailing: Text(_price!, style: const TextStyle(fontWeight: FontWeight.bold)),
+        enabled: !_busy,
+        onTap: () => _run(restore: false),
+      ),
+      ListTile(
+        key: const Key('restore-purchases'),
+        leading: const Icon(Icons.restore),
+        title: const Text('購入を復元'),
+        enabled: !_busy,
+        onTap: () => _run(restore: true),
+      ),
+    ]);
   }
 }

@@ -13,6 +13,7 @@ import '../game/school.dart';
 import '../game/marks.dart';
 import '../game/goals.dart';
 import '../game/game.dart';
+import '../game/skills.dart';
 import '../game/invest.dart';
 import '../game/life.dart';
 import '../game/path.dart';
@@ -25,6 +26,7 @@ import 'art/story_image.dart';
 import 'admin_screen.dart';
 import 'controller.dart';
 import 'home_screen.dart' show showAdminToggled;
+import '../game/after_career.dart';
 import '../game/talent.dart';
 import 'labels.dart';
 import '../game/records.dart';
@@ -117,8 +119,6 @@ class _GameScreenState extends State<GameScreen> {
             SingleActivator(_digitKeys[i]): () =>
                 controller.act(Plan.values[i]),
         },
-        if (controller.canUndo)
-          const SingleActivator(LogicalKeyboardKey.keyZ): controller.undo,
       },
       child: Focus(autofocus: true, child: _scaffold(context, p)),
     );
@@ -314,6 +314,7 @@ class _GameScreenState extends State<GameScreen> {
         _OverallHeader(game: game),
         _TraitChips(game: game),
         _AbilityCard(controller: controller, game: game),
+        _SkillCard(controller: controller, game: game),
       ];
 
   List<Widget> _careerTab(BuildContext context) => [
@@ -473,7 +474,7 @@ class _Header extends StatelessWidget {
                               children: [
                                 Text(
                                     affiliationOf(game.stage, p.name,
-                                        proTeam: game.proTeam),
+                                        proTeam: game.proTeamLabel),
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                     style: t.titleSmall?.copyWith(
@@ -601,16 +602,19 @@ class _StatusCard extends StatelessWidget {
                 ]),
               )
             else if (c.fatigue >= 70)
-              const Padding(
-                padding: EdgeInsets.only(top: 4),
+              Padding(
+                padding: const EdgeInsets.only(top: 4),
                 child: Row(children: [
-                  Icon(Icons.battery_alert, color: Color(0xFFEF6C00), size: 18),
-                  SizedBox(width: 4),
-                  Expanded(
+                  const Icon(Icons.battery_alert,
+                      color: Color(0xFFEF6C00), size: 18),
+                  const SizedBox(width: 4),
+                  const Expanded(
                     child: Text('疲れがたまっています。休養がおすすめ',
                         key: Key('tired-note'),
                         style: TextStyle(color: Color(0xFFEF6C00))),
                   ),
+                  if (controller.canRecoverByAd)
+                    _AdRecoveryButton(controller: controller),
                 ]),
               ),
             if (spendable)
@@ -681,7 +685,7 @@ class _OverallHeader extends StatelessWidget {
             const SizedBox(height: 4),
             // 素質の星は途中で折れないよう、「素質」と「今年」を別の塊にして並べる
             Wrap(spacing: 14, children: [
-              Text('素質 ${potentialStars(game.player.potential)}',
+              Text('才能 ${talentStars(game.player.potential)}',
                   key: const Key('overall-delta')),
               if (delta != null && delta != 0)
                 Text('今年 ${delta > 0 ? '+' : ''}$delta'),
@@ -1025,10 +1029,9 @@ Ability _weakest(Player p) =>
 String _abilityNote(Player p, Ability a) {
   if (a == _weakest(p) && abilitiesOf(p.role).length > 1) return '伸ばしどころ';
   final v = p.of(a);
-  final g = p.gift(a) == 0 ? '' : ' ${giftLabel(p.gift(a))}';
-  if (v >= 90) return 'S$g';
+  if (v >= 90) return 'S';
   final next = (v ~/ 10 + 1) * 10;
-  return 'あと+${next - v}$g';
+  return 'あと+${next - v}';
 }
 
 class _AbilityCard extends StatelessWidget {
@@ -1076,11 +1079,11 @@ class _AbilityCard extends StatelessWidget {
                   RankBadge(value: p.of(a)),
                   const SizedBox(width: 6),
                   SizedBox(
-                      width: 60,
+                      width: 84,
                       child: Tooltip(
                           message: p.gift(a) == 0
                               ? abilityHint(a)
-                              : '${abilityHint(a)} 天賦: ${giftHint(p.gift(a))}',
+                              : '${abilityHint(a)} 才能: ${giftHint(p.gift(a))}',
                           triggerMode: TooltipTriggerMode.tap,
                           child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1092,13 +1095,21 @@ class _AbilityCard extends StatelessWidget {
                                 FittedBox(
                                     fit: BoxFit.scaleDown,
                                     alignment: Alignment.centerLeft,
-                                    child: Text(_abilityNote(p, a),
+                                    child: Text.rich(
+                                        TextSpan(children: [
+                                          TextSpan(
+                                              text: giftStars(p.gift(a)),
+                                              style: const TextStyle(
+                                                  color: Color(0xFFF9A825))),
+                                          TextSpan(
+                                              text: ' ${_abilityNote(p, a)}',
+                                              style: TextStyle(
+                                                  color: a == _weakest(p)
+                                                      ? const Color(0xFFEF6C00)
+                                                      : Colors.grey)),
+                                        ]),
                                         key: Key('note-${a.name}'),
-                                        style: TextStyle(
-                                            fontSize: 9,
-                                            color: a == _weakest(p)
-                                                ? const Color(0xFFEF6C00)
-                                                : Colors.grey))),
+                                        style: const TextStyle(fontSize: 10))),
                               ]))),
                   SizedBox(
                       width: 54,
@@ -1197,17 +1208,6 @@ class _ActionCard extends StatelessWidget {
                     key: const Key('recommend-reason'),
                     style: Theme.of(context).textTheme.bodySmall),
               ),
-              if (controller.canUndo)
-                IconButton(
-                  key: const Key('undo'),
-                  tooltip: 'ひとつ前に戻す',
-                  visualDensity: VisualDensity.compact,
-                  constraints:
-                      const BoxConstraints.tightFor(width: 36, height: 32),
-                  padding: EdgeInsets.zero,
-                  icon: const Icon(Icons.undo, size: 20),
-                  onPressed: controller.undo,
-                ),
               IconButton(
                 key: const Key('year-plan'),
                 tooltip: '今年の予定',
@@ -1289,9 +1289,9 @@ String _planShort(Plan p) => switch (p) {
 String _planSub(Plan p, Ability focus) => switch (p) {
       Plan.train || Plan.special || Plan.study => abilityLabel(focus),
       Plan.rest => '疲れを取る',
-      Plan.social => 'やる気',
-      Plan.match => '全体',
-      Plan.lesson => 'コツ',
+      Plan.social => 'やる気・コツ',
+      Plan.match => '全体・コツ',
+      Plan.lesson => 'コーチ',
     };
 
 class _PlanTile extends StatelessWidget {
@@ -1380,7 +1380,12 @@ class _PlanTile extends StatelessWidget {
                 ),
                 FittedBox(
                   fit: BoxFit.scaleDown,
-                  child: Text(sub ?? _planSub(plan, focus),
+                  child: Text(
+                      sub ??
+                          (plan == Plan.study
+                              ? (controller.game?.studyFocus(focus)?.label ??
+                                  'コツ')
+                              : _planSub(plan, focus)),
                       style: Theme.of(context)
                           .textTheme
                           .bodySmall
@@ -1479,10 +1484,63 @@ class _AutoRevealState extends State<_AutoReveal> {
   Widget build(BuildContext context) => widget.child;
 }
 
+/// 引退後の道を選ぶカード(プロを引退した選手だけ)。選ぶと、その道での10年後までの物語が出る。
+class _AfterPathCard extends StatelessWidget {
+  const _AfterPathCard({required this.controller, required this.game});
+  final GameController controller;
+  final Game game;
+
+  @override
+  Widget build(BuildContext context) {
+    final chosen = game.afterPath;
+    final result = game.secondCareer;
+    return Card(
+      key: const Key('after-path'),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text('引退後の道', style: Theme.of(context).textTheme.titleSmall),
+          const SizedBox(height: 4),
+          Text(chosen == null
+              ? 'プロを引退したあと、どの道に進む? 現役時代の成績・人気・資産で、結果が変わります。'
+              : '選び直すこともできます。'),
+          const SizedBox(height: 8),
+          Wrap(spacing: 6, runSpacing: 6, children: [
+            for (final p in AfterPath.values)
+              Tooltip(
+                message: p.description,
+                child: ChoiceChip(
+                  key: Key('after-${p.name}'),
+                  label: Text(p.label),
+                  selected: chosen == p,
+                  onSelected: (_) => controller.chooseAfterPath(p),
+                ),
+              ),
+          ]),
+          if (result != null) ...[
+            const Divider(height: 20),
+            Text('${chosen!.label}: ${result.tierLabel}',
+                key: const Key('after-tier'),
+                style: const TextStyle(fontWeight: FontWeight.bold)),
+            const SizedBox(height: 4),
+            for (final l in result.lines)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 2),
+                child: Text(l, key: const Key('after-line')),
+              ),
+          ],
+        ]),
+      ),
+    );
+  }
+}
+
 /// 出来事カードの見出し。段階ごとの分かれ道は「中学の分かれ道」のように出す。
 String _eventKind(String id, Stage stage) {
   if (id.startsWith('kid-')) return '幼少期の分かれ道';
   if (id.startsWith('turn-')) return '${stageLabel(stage)}の分かれ道';
+  if (id == 'final-moment') return '決勝の見せ場';
+  if (id == 'tryout') return '戦力外通告';
   return '出来事';
 }
 
@@ -2034,6 +2092,10 @@ class EndingView extends StatelessWidget {
                       style: const TextStyle(fontWeight: FontWeight.bold)),
                 );
               }),
+              if (e.madePro) ...[
+                const SizedBox(height: 12),
+                _AfterPathCard(controller: controller, game: game),
+              ],
               const SizedBox(height: 16),
               if (controller.lastLegacyGain > 0) ...[
                 Card(
@@ -2362,6 +2424,10 @@ String endingShareText(Game game) {
         : 'プロの舞台には立てなかった',
     '最高の総合評価 ${e.peakOverall}・優勝${e.championships}回・タイトル${e.titles.length}個',
     if (pro.isNotEmpty) careerSummary(game.records),
+    if (p.traits.isNotEmpty)
+      '特性: ${[
+        for (final t in p.traits) t.rare ? '★${t.label}' : t.label
+      ].join('・')}${game.awakened ? '(覚醒)' : ''}',
     if (pro.isNotEmpty)
       'プロ通算収入 ${fmtSalary(careerEarnings(pro))}(最終資産 ${fmtMoney(game.money)})',
     if (game.worldRecords.isNotEmpty)
@@ -2371,4 +2437,187 @@ String endingShareText(Game game) {
       '殿堂入り!',
   ];
   return lines.join('\n');
+}
+
+/// 疲れがたまった年に1度、動画を見て疲れを大きく抜く(任意。広告を消した人は動画なしで使える)。
+class _AdRecoveryButton extends StatefulWidget {
+  const _AdRecoveryButton({required this.controller});
+  final GameController controller;
+
+  @override
+  State<_AdRecoveryButton> createState() => _AdRecoveryButtonState();
+}
+
+class _AdRecoveryButtonState extends State<_AdRecoveryButton> {
+  bool _busy = false;
+
+  Future<void> _run() async {
+    setState(() => _busy = true);
+    final messenger = ScaffoldMessenger.maybeOf(context);
+    final text = await widget.controller.recoverByAd();
+    if (mounted) setState(() => _busy = false);
+    messenger?.hideCurrentSnackBar();
+    messenger?.showSnackBar(SnackBar(content: Text(text)));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final free = widget.controller.money?.adFree ?? false;
+    return TextButton.icon(
+      key: const Key('ad-recovery'),
+      style: TextButton.styleFrom(
+          visualDensity: VisualDensity.compact,
+          padding: const EdgeInsets.symmetric(horizontal: 8)),
+      onPressed: _busy ? null : _run,
+      icon: Icon(free ? Icons.spa : Icons.ondemand_video, size: 18),
+      label: Text(free ? '体を休める' : '動画で休む'),
+    );
+  }
+}
+
+/// 特殊能力(経験点で取る。コツが貯まるほど安い)。能力タブの下。
+class _SkillCard extends StatelessWidget {
+  const _SkillCard({required this.controller, required this.game});
+  final GameController controller;
+  final Game game;
+
+  @override
+  Widget build(BuildContext context) {
+    final p = game.player;
+    final list = skillsFor(p.role);
+    final owned = [
+      for (final s in list)
+        if (p.skills.contains(s)) s
+    ];
+    final open = [
+      for (final s in list)
+        if (!p.skills.contains(s)) s
+    ];
+    return Card(
+      key: const Key('skill-card'),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(12, 10, 12, 8),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Row(children: [
+            const Icon(Icons.bolt, color: Color(0xFFF9A825)),
+            const SizedBox(width: 6),
+            Expanded(
+              child: Text('特殊能力(${owned.length})',
+                  style: Theme.of(context).textTheme.titleMedium),
+            ),
+          ]),
+          const Text('経験点で取る。研究・特訓・練習試合・交流・コーチでコツが貯まると安くなる(コツ5で半額)。'
+              '緑の数字は、いまの能力で取ったときの1シーズンの見込み(打者は143試合、投手は先発28試合)。',
+              style: TextStyle(fontSize: 11, color: Colors.grey)),
+          if (owned.isNotEmpty) ...[
+            const SizedBox(height: 6),
+            Wrap(spacing: 6, runSpacing: 4, children: [
+              for (final s in owned)
+                Tooltip(
+                  message: '${s.description} ${effectText(s)}',
+                  triggerMode: TooltipTriggerMode.tap,
+                  child: Chip(
+                    key: Key('skill-owned-${s.name}'),
+                    avatar: Icon(s.gold ? Icons.workspace_premium : Icons.bolt,
+                        size: 16,
+                        color: s.gold
+                            ? const Color(0xFFC9A227)
+                            : const Color(0xFFF9A825)),
+                    label: Text(s.label),
+                    visualDensity: VisualDensity.compact,
+                  ),
+                ),
+            ]),
+          ],
+          const SizedBox(height: 4),
+          for (final s in open) _SkillRow(controller: controller, game: game, skill: s),
+        ]),
+      ),
+    );
+  }
+}
+
+class _SkillRow extends StatelessWidget {
+  const _SkillRow(
+      {required this.controller, required this.game, required this.skill});
+  final GameController controller;
+  final Game game;
+  final Skill skill;
+
+  @override
+  Widget build(BuildContext context) {
+    final s = skill;
+    final tips = game.skillTips[s] ?? 0;
+    final price = game.skillPrice(s);
+    final why = skillBlock(game.player, s, game.exp, tips);
+    final locked = s.requires != null && !game.player.skills.contains(s.requires);
+    final studying = game.studyTarget == s;
+    final canStudy = !locked && game.phase != Phase.retired;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 3),
+      child: Row(children: [
+        Expanded(
+          child: Tooltip(
+            message: locked
+                ? '${s.description}(「${s.requires!.label}」を取ると取れる)'
+                : '${s.description} ${effectText(s)}',
+            triggerMode: TooltipTriggerMode.tap,
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Row(children: [
+                if (s.gold)
+                  const Padding(
+                    padding: EdgeInsets.only(right: 2),
+                    child: Icon(Icons.workspace_premium,
+                        size: 14, color: Color(0xFFC9A227)),
+                  ),
+                Flexible(
+                  child: Text(s.label,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: locked ? Colors.grey : null)),
+                ),
+              ]),
+              Text(effectText(s),
+                  key: Key('skill-effect-${s.name}'),
+                  style: const TextStyle(fontSize: 11)),
+              if (!locked)
+                Text(skillImpact(game.player, s, game.stage).lines.join(' / '),
+                    key: Key('skill-impact-${s.name}'),
+                    style: const TextStyle(
+                        fontSize: 11, color: Color(0xFF2E7D32))),
+              Text(
+                  locked
+                      ? '「${s.requires!.label}」が先'
+                      : 'コツ ${'●' * tips}${'○' * (maxSkillTips - tips)}  ${s.category.label} $price',
+                  key: Key('skill-tips-${s.name}'),
+                  style: const TextStyle(fontSize: 11, color: Colors.grey)),
+            ]),
+          ),
+        ),
+        IconButton(
+          key: Key('skill-study-${s.name}'),
+          tooltip: studying ? '研究の対象(もう一度押すと自動に戻す)' : '「研究」でこのコツを貯める',
+          visualDensity: VisualDensity.compact,
+          isSelected: studying,
+          icon: const Icon(Icons.menu_book_outlined, size: 20),
+          selectedIcon:
+              const Icon(Icons.menu_book, size: 20, color: Color(0xFF5E35B1)),
+          onPressed: canStudy
+              ? () => controller.setStudyTarget(studying ? null : s)
+              : null,
+        ),
+        FilledButton.tonal(
+          key: Key('skill-buy-${s.name}'),
+          // テーマの既定は横いっぱい(Size.fromHeight)なので、行の中では幅を決める
+          style: FilledButton.styleFrom(
+              minimumSize: const Size(52, 36),
+              visualDensity: VisualDensity.compact,
+              padding: const EdgeInsets.symmetric(horizontal: 10)),
+          onPressed: why == null ? () => controller.buySkill(s) : null,
+          child: const Text('取る'),
+        ),
+      ]),
+    );
+  }
 }

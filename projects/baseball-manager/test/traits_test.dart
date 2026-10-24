@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:baseball_manager/game/skills.dart';
 import 'package:baseball_manager/game/career.dart';
 import 'package:baseball_manager/game/characters.dart';
 import 'package:baseball_manager/game/life.dart';
@@ -187,49 +188,50 @@ void main() {
     });
 
     test('矛盾する組み合わせは同時に持てない', () {
-      expect(canGain({Trait.slugger}, Trait.contactHitter), isFalse);
-      expect(canGain({Trait.fireballer}, Trait.finesse), isFalse);
       expect(canGain({Trait.quickRecovery}, Trait.slowRecovery), isFalse);
       expect(canGain({Trait.moodMaker}, Trait.lonely), isFalse);
       expect(canGain({Trait.leader}, Trait.lonely), isFalse);
       expect(canGain({Trait.sunny}, Trait.moody), isFalse);
-      expect(canGain({Trait.slugger}, Trait.patient), isTrue);
+      expect(canGain({Trait.genius}, Trait.sturdy), isTrue);
     });
 
-    test('試合用の能力: 特性ぶんだけ上がり下がりし、元の選手は変わらない', () {
+    test('試合用の能力: 特殊能力ぶんだけ上がり、元の選手は変わらない', () {
       final p = Player(
         name: 't',
         role: Role.batter,
         age: 20,
         potential: 50,
         abilities: {for (final a in batterAbilities) a: 50},
-        traits: {Trait.slugger, Trait.speedster},
+        skills: {Skill.powerHitter, Skill.stealer},
       );
       final adj = traitAdjusted(p);
-      expect(adj.of(Ability.power), 59);
-      expect(adj.of(Ability.contact), 49);
-      expect(adj.of(Ability.speed), 58);
+      expect(adj.of(Ability.power), 56);
+      expect(adj.of(Ability.contact), 50);
+      expect(adj.of(Ability.speed), 56);
       expect(p.of(Ability.power), 50);
-      // 能力が99でも、試合の間は特性の上乗せが消えない(上限は試合用の120)
+      // 能力が99でも、試合の間は上乗せが消えない(上限は試合用の120)
       final top = p.copyWith(abilities: {
         for (final a in batterAbilities) a: 99,
       });
-      expect(traitAdjusted(top).of(Ability.power), 108);
-      expect(traitAdjusted(top).of(Ability.contact), 98);
+      expect(traitAdjusted(top).of(Ability.power), 105);
       expect(top.of(Ability.power), 99); // 元の選手は変えない
-      // 特性が無ければ同じもの
-      expect(identical(traitAdjusted(p.copyWith(traits: {})), p), isFalse);
-      expect(traitAdjusted(p.copyWith(traits: {})).of(Ability.power), 50);
+      // 特殊能力が無ければ素の能力
+      expect(traitAdjusted(p.copyWith(skills: {})).of(Ability.power), 50);
+      // 特性は試合の能力を変えない(体質・性格だけ)
+      expect(
+          traitAdjusted(p.copyWith(skills: {}, traits: {Trait.genius}))
+              .of(Ability.power),
+          50);
     });
 
-    test('試合で実際に効く: 長距離砲は本塁打が増え、剛腕は三振が増える', () {
-      Player bat(Set<Trait> t) => Player(
+    test('試合で実際に効く: パワーヒッターは本塁打が増え、奪三振は三振が増える', () {
+      Player bat(Set<Skill> t) => Player(
           name: 't',
           role: Role.batter,
           age: 22,
           potential: 50,
           abilities: {for (final a in batterAbilities) a: 55},
-          traits: t);
+          skills: t);
       int hr(Player p) {
         final rng = Random(5);
         var n = 0;
@@ -239,15 +241,15 @@ void main() {
         return n;
       }
 
-      expect(hr(bat({Trait.slugger})), greaterThan(hr(bat({}))));
+      expect(hr(bat({Skill.powerHitter})), greaterThan(hr(bat({}))));
 
-      Player pit(Set<Trait> t) => Player(
+      Player pit(Set<Skill> t) => Player(
           name: 't',
           role: Role.pitcher,
           age: 22,
           potential: 50,
           abilities: {for (final a in pitcherAbilities) a: 55},
-          traits: t);
+          skills: t);
       int k(Player p) {
         final rng = Random(5);
         var n = 0;
@@ -257,7 +259,7 @@ void main() {
         return n;
       }
 
-      expect(k(pit({Trait.fireballer})), greaterThan(k(pit({}))));
+      expect(k(pit({Skill.strikeout})), greaterThan(k(pit({}))));
     });
 
     test('そのほかの効き方', () {
@@ -268,7 +270,6 @@ void main() {
       expect(recoveryMultiplier({}), 1.0);
       expect(tagTraitMultiplier({Trait.moodMaker}), 1.5);
       expect(tagTraitMultiplier({Trait.lonely}), 0.6);
-      expect(studyMultiplier({Trait.studious}), 1.4);
       expect(worldBonus({Trait.worldStage}), 10);
       expect(moraleGainMultiplier({Trait.moody}), greaterThan(1));
       expect(moraleLossMultiplier({Trait.moody}), greaterThan(1));
@@ -276,21 +277,7 @@ void main() {
       expect(growthMultiplier({Trait.lonely}, 20), closeTo(1.1, 1e-9));
     });
 
-    test('コーチは基本の特性を先に教え、覚えきったあとに個性派を教える', () {
-      final first =
-          teachableTrait(Stage.highSchool, {}, Random(1), Role.batter);
-      expect({Trait.clutch, Trait.genius, Trait.starPower}, contains(first));
-      // 基本の特性を3つとも持っていれば、個性派(長距離砲など)になる(上限4個の範囲で)
-      final later = teachableTrait(
-          Stage.highSchool,
-          {Trait.clutch, Trait.genius, Trait.starPower},
-          Random(1),
-          Role.batter);
-      expect(later, isNotNull);
-      expect({Trait.slugger, Trait.leader, Trait.moodMaker}, contains(later));
-    });
-
-    test('コーチは、役割に合わない特性を教えない', () {
+    test('コーチは、役割に合わない特殊能力を教えない', () {
       for (var seed = 0; seed < 200; seed++) {
         for (final stage in [
           Stage.youth,
@@ -299,24 +286,24 @@ void main() {
           Stage.pathChoice,
           Stage.pro
         ]) {
-          final t = teachableTrait(stage, {}, Random(seed), Role.pitcher);
+          final t = teachableSkill(stage, {}, Random(seed), Role.pitcher);
           if (t != null) expect(t.appliesTo(Role.pitcher), isTrue);
-          final b = teachableTrait(stage, {}, Random(seed), Role.batter);
+          final b = teachableSkill(stage, {}, Random(seed), Role.batter);
           if (b != null) expect(b.appliesTo(Role.batter), isTrue);
         }
       }
     });
   });
 
-  test('能力が全部99でも、打者の特性は試合で上乗せされる(アベレージヒッターは打率が上がる)', () {
-    double avg(Set<Trait> t) {
+  test('能力が全部99でも、打者の特殊能力は試合で上乗せされる(アベレージヒッターは打率が上がる)', () {
+    double avg(Set<Skill> t) {
       final p = Player(
           name: 't',
           role: Role.batter,
           age: 26,
           potential: 50,
           abilities: {for (final a in batterAbilities) a: 99},
-          traits: t);
+          skills: t);
       final rng = Random(7);
       var line = const Line();
       for (var i = 0; i < 20000; i++) {
@@ -325,7 +312,7 @@ void main() {
       return line.battingAverage!;
     }
 
-    expect(avg({Trait.contactHitter}), greaterThan(avg({}) + 0.02));
-    expect(avg({Trait.patient}), greaterThan(avg({})));
+    expect(avg({Skill.averageHitter}), greaterThan(avg({}) + 0.02));
+    expect(avg({Skill.eyePlus}), greaterThan(avg({})));
   });
 }

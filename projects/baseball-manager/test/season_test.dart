@@ -304,12 +304,41 @@ void main() {
             potential: 90,
             abilities: {for (final a in pitcherAbilities) a: 95});
         final s = playLeagueSeason(p,
-            teamLevel: 60,
-            opponents: const [55, 60, 65],
-            rng: Random(seed));
+            teamLevel: 60, opponents: const [55, 60, 65], rng: Random(seed));
         expect(s.line.losses, lessThanOrEqualTo(s.line.starts));
         expect(s.line.wins + s.line.losses, lessThanOrEqualTo(s.line.starts));
       }
+    });
+  });
+
+  group('防御率の下限', () {
+    test('30回以上投げて失点の推定が0でも、シーズンの防御率は0.90を下回らない', () {
+      final zero = Line(
+          games: 24,
+          starts: 24,
+          faced: 700,
+          outs: 560,
+          runsRaw: -runBaseline * 700);
+      expect(zero.runsAllowed, 0);
+      expect(zero.era, minSeasonEra);
+      // 少ない登板(1試合・1か月)は、そのまま 0.00 になりうる
+      final game = Line(
+          games: 1, starts: 1, faced: 24, outs: 18, runsRaw: -runBaseline * 24);
+      expect(game.era, 0);
+      // 下限より悪い防御率は変わらない
+      final normal = Line(
+          games: 24,
+          starts: 24,
+          faced: 700,
+          outs: 560,
+          runsRaw: 20 - runBaseline * 700 + 70);
+      expect(normal.era!, greaterThan(minSeasonEra));
+    });
+
+    test('勝敗(decidedStart)は下限を使わない: 無失点の登板に負けは付かない', () {
+      final g = Line(
+          games: 1, starts: 1, faced: 24, outs: 18, runsRaw: -runBaseline * 24);
+      expect(decidedStart(g, false).losses, 0);
     });
   });
 }

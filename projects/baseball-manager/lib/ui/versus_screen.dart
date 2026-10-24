@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 
 import '../game/at_bat.dart';
 import '../game/player.dart';
-import '../game/traits.dart';
+import '../game/exp.dart' show Category;
+import '../game/skills.dart';
+import '../game/traits.dart' show gameAbilityCap;
 
-/// 対戦テスト(管理者モード): 能力と特性を決めて、打者と投手を何千回も対戦させ、
+/// 対戦テスト(管理者モード): 能力と特殊能力を決めて、打者と投手を何千回も対戦させ、
 /// 結果の割合を見る。育成中の選手には何も影響しない(ゲームのバランス確認用)。
 class VersusScreen extends StatefulWidget {
   const VersusScreen({super.key});
@@ -30,25 +32,25 @@ class VersusResult {
   double get slugging => atBats == 0 ? 0 : totalBases / atBats;
 }
 
-/// 打者 `bat` と投手 `pit` を `n` 回対戦させる。特性の上乗せは試合用の能力として足す。
+/// 打者 `bat` と投手 `pit` を `n` 回対戦させる。特殊能力の上乗せは試合用の能力として足す。
 VersusResult runVersus({
   required Map<Ability, int> bat,
-  required Set<Trait> batTraits,
+  required Set<Skill> batSkills,
   required Map<Ability, int> pit,
-  required Set<Trait> pitTraits,
+  required Set<Skill> pitSkills,
   required int n,
   required Random rng,
 }) {
-  int adj(Map<Ability, int> m, Set<Trait> t, Ability a) =>
-      ((m[a] ?? 0) + (traitAbilityDelta(t)[a] ?? 0)).clamp(0, gameAbilityCap);
+  int adj(Map<Ability, int> m, Set<Skill> t, Ability a) =>
+      ((m[a] ?? 0) + (skillAbilityDelta(t)[a] ?? 0)).clamp(0, gameAbilityCap);
   final b = Batter(
-    contact: adj(bat, batTraits, Ability.contact),
-    power: adj(bat, batTraits, Ability.power),
-    eye: adj(bat, batTraits, Ability.eye),
+    contact: adj(bat, batSkills, Ability.contact),
+    power: adj(bat, batSkills, Ability.power),
+    eye: adj(bat, batSkills, Ability.eye),
   );
   final p = Pitcher(
-    control: adj(pit, pitTraits, Ability.control),
-    stuff: adj(pit, pitTraits, Ability.stuff),
+    control: adj(pit, pitSkills, Ability.control),
+    stuff: adj(pit, pitSkills, Ability.stuff),
   );
   final r = VersusResult(n);
   for (var i = 0; i < n; i++) {
@@ -86,26 +88,22 @@ class _VersusScreenState extends State<VersusScreen> {
     Ability.stuff: 10,
     Ability.control: 10,
   };
-  final Set<Trait> _batTraits = {};
-  final Set<Trait> _pitTraits = {};
+  final Set<Skill> _batSkills = {};
+  final Set<Skill> _pitSkills = {};
   double _teamA = 99, _teamB = 10;
   int _count = 5000;
   VersusResult? _result;
   double? _teamResult;
   int _seed = 1;
 
-  static const _batTraitList = [
-    Trait.slugger,
-    Trait.contactHitter,
-    Trait.patient,
-    Trait.speedster,
-    Trait.prodigyBat,
+  // 打席の結果に効く特殊能力(打撃・投球)。
+  static final _batTraitList = [
+    for (final k in Skill.values)
+      if (k.category == Category.batting && k.appliesTo(Role.batter)) k
   ];
-  static const _pitTraitList = [
-    Trait.fireballer,
-    Trait.finesse,
-    Trait.workhorse,
-    Trait.prodigyArm,
+  static final _pitTraitList = [
+    for (final k in Skill.values)
+      if (k.category == Category.pitching) k
   ];
 
   static String _abilityName(Ability a) => switch (a) {
@@ -131,9 +129,9 @@ class _VersusScreenState extends State<VersusScreen> {
     setState(() {
       _result = runVersus(
         bat: {for (final e in _bat.entries) e.key: e.value.round()},
-        batTraits: _batTraits,
+        batSkills: _batSkills,
         pit: {for (final e in _pit.entries) e.key: e.value.round()},
-        pitTraits: _pitTraits,
+        pitSkills: _pitSkills,
         n: _count,
         rng: Random(_seed++),
       );
@@ -168,7 +166,7 @@ class _VersusScreenState extends State<VersusScreen> {
             width: 32, child: Text('${v.round()}', textAlign: TextAlign.right)),
       ]);
 
-  Widget _traitChips(List<Trait> list, Set<Trait> have) => Wrap(
+  Widget _traitChips(List<Skill> list, Set<Skill> have) => Wrap(
         spacing: 6,
         children: [
           for (final t in list)
@@ -228,7 +226,7 @@ class _VersusScreenState extends State<VersusScreen> {
                     _result = null;
                   });
                 }, key: Key('vs-bat-${a.name}')),
-              _traitChips(_batTraitList, _batTraits),
+              _traitChips(_batTraitList, _batSkills),
               const SizedBox(height: 12),
               Text('投手', style: t.titleSmall),
               for (final a in _pit.keys)
@@ -238,7 +236,7 @@ class _VersusScreenState extends State<VersusScreen> {
                     _result = null;
                   });
                 }, key: Key('vs-pit-${a.name}')),
-              _traitChips(_pitTraitList, _pitTraits),
+              _traitChips(_pitTraitList, _pitSkills),
               const SizedBox(height: 12),
               Row(children: [
                 const Text('対戦回数'),

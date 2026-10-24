@@ -250,22 +250,8 @@ void main() {
           isFalse);
     });
 
-    test('むずかしいでの実績は、むずかしいでだけ', () {
-      expect(
-          _has('hard-pro', _snap(difficulty: Difficulty.hard, proStartAge: 19)),
-          isTrue);
-      expect(
-          _has('hard-pro',
-              _snap(difficulty: Difficulty.normal, proStartAge: 19)),
-          isFalse);
-      expect(
-          _has('hard-legend',
-              _snap(difficulty: Difficulty.hard, ending: 'レジェンド')),
-          isTrue);
-      expect(
-          _has('hard-legend',
-              _snap(difficulty: Difficulty.easy, ending: 'レジェンド')),
-          isFalse);
+    test('難しさの選択はなくしたので、むずかしい専用の実績も無い', () {
+      expect(achievements.any((a) => a.id.startsWith('hard-')), isFalse);
     });
   });
 

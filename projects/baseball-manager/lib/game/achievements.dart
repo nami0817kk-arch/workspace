@@ -1,5 +1,4 @@
 import 'career.dart';
-import 'difficulty.dart';
 import 'marks.dart';
 import 'player.dart';
 import 'records.dart';
@@ -124,10 +123,33 @@ final List<Achievement> achievements = [
       (s) => s.traits.length >= maxTraits),
   Achievement('rare-trait', '選ばれし者', 'レア特性を持って引退する(生まれつき、または覚醒)。',
       (s) => s.traits.any((t) => t.rare)),
-  Achievement('awakening', '眠れる才能', '節目の「覚醒」で、特性に目覚める。',
-      (s) => s.awakened),
-  Achievement('gifted', '才能の塊', '使う能力のうち、天賦が最大(+2)のものを3つ以上持つ。',
-      (s) => topGifts(s.role, s.gifts) >= 3),
+  Achievement('awakening', '眠れる才能', '節目の「覚醒」で、特性に目覚める。', (s) => s.awakened),
+  Achievement('gifted', '才能の塊', '使う能力の天賦の平均が+0.8以上(才能に恵まれて生まれる)。',
+      (s) => giftAverage(s.role, s.gifts) >= 0.8),
+  Achievement('triple-crown', '三冠王', '打率・本塁打・打点の三冠王に輝く。',
+      (s) => s.records.any((r) => r.awards.contains('三冠王'))),
+  Achievement('pitch-triple-crown', '投手三冠', '防御率・勝利・奪三振の投手三冠に輝く。',
+      (s) => s.records.any((r) => r.awards.contains('投手三冠'))),
+  Achievement('ace-award', 'エース賞', '先発投手の最高の栄誉「エース賞」を受ける。',
+      (s) => s.records.any((r) => r.awards.contains('エース賞'))),
+  Achievement('triple-three', 'トリプルスリー', '打率.300・30本塁打・30盗塁を同じ年に達成する。',
+      (s) => s.records.any((r) => r.awards.contains('トリプルスリー'))),
+  Achievement('series-mvp', 'シリーズの顔', '日本一の年に、シリーズMVPに選ばれる。',
+      (s) => s.records.any((r) => r.awards.contains('シリーズMVP'))),
+  Achievement('amateur-mvp', '大会の主役', 'アマの大会で「大会最優秀選手」に選ばれる。',
+      (s) => s.records.any((r) => r.awards.contains('大会最優秀選手'))),
+  Achievement(
+      'tryout-comeback',
+      'もう一度、舞台へ',
+      'トライアウトで契約を勝ち取り、現役を続ける。',
+      (s) => s.events
+          .any((e) => e.text.contains('トライアウトで') && e.text.contains('契約'))),
+  Achievement('second-career', 'セカンドキャリア', 'プロを引退したあと、新しい道(監督・解説者・実業家など)を選ぶ。',
+      (s) => s.afterPath != null),
+  Achievement('second-career-star', '第二の人生で輝く',
+      '引退後の道で「大成功」をおさめる(名監督・人気解説者・大実業家など)。', (s) => (s.afterTier ?? 0) >= 2),
+  Achievement('title-streak', '連続王者', 'プロで5年連続でタイトルを獲得する。',
+      (s) => longestTitleStreak(s.records) >= 5),
   Achievement('salary-oku', '億の男', '年俸が1億円を超える年を迎える。',
       (s) => s.records.any((r) => salaryOf(r) >= 10000)),
   Achievement('earnings-10', '一代で財を成す', 'プロ通算の収入が10億円を超える。',
@@ -155,10 +177,7 @@ final List<Achievement> achievements = [
       (s) => s.investTotal >= 9),
   Achievement('superstar', '国民的スター', '人気が90以上(Sランク)になる。',
       (s) => popularityOf(s.records, s.worldRecords) >= 90),
-  Achievement('hard-pro', '狭き門', '「むずかしい」で、プロ入りする。',
-      (s) => s.difficulty == Difficulty.hard && s.proStartAge != null),
-  Achievement('hard-legend', '不屈の伝説', '「むずかしい」で、レジェンドになる。',
-      (s) => s.difficulty == Difficulty.hard && s.endingTitle == 'レジェンド'),
+  // 「むずかしい」専用の実績(狭き門・不屈の伝説)は、難しさの選択をなくしたので外した(2026-10-24)。
 ];
 
 /// この一生で達成した実績の id。

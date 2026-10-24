@@ -21,6 +21,9 @@ class SeasonRecord {
     this.awards = const [],
     this.months = const [],
     this.twoWay = false,
+    this.farm = false,
+    this.chances = 0,
+    this.errors = 0,
   });
 
   final int age;
@@ -54,6 +57,16 @@ class SeasonRecord {
   /// 二刀流で戦った年か(スター性: 年俸×1.4・人気+1)。
   final bool twoWay;
 
+  /// 守備の記録(守備機会・失策)。守っていない年・投手は0。古いセーブも0。
+  final int chances;
+  final int errors;
+
+  /// 守備率(1 - 失策/守備機会)。守備機会が無ければ null。
+  double? get fieldingPct => chances == 0 ? null : 1 - errors / chances;
+
+  /// 二軍(育成契約を含む)で戦った年か。タイトル・表彰・日本一の対象にならず、年俸も低い。
+  final bool farm;
+
   bool get isLeague => rank != null;
   bool get champion =>
       isLeague ? rank == 1 : (rounds > 0 && roundsWon == rounds);
@@ -81,6 +94,9 @@ class SeasonRecord {
         'awards': awards,
         'months': months,
         'twoWay': twoWay,
+        'farm': farm,
+        'chances': chances,
+        'errors': errors,
       };
 
   /// 項目を足すときは既定値を置く。
@@ -106,6 +122,9 @@ class SeasonRecord {
           for (final t in (j['months'] as List?) ?? const []) t as String
         ],
         twoWay: (j['twoWay'] as bool?) ?? false,
+        farm: (j['farm'] as bool?) ?? false,
+        chances: (j['chances'] as num?)?.toInt() ?? 0,
+        errors: (j['errors'] as num?)?.toInt() ?? 0,
       );
 }
 
@@ -204,7 +223,8 @@ int salaryOf(SeasonRecord r) {
   final v = base *
       (1 + 0.15 * r.titles.length) *
       (r.overseas ? 2.5 : 1.0) *
-      (r.twoWay ? 1.4 : 1.0); // 二刀流は話題性で年俸が高い
+      (r.twoWay ? 1.4 : 1.0) * // 二刀流は話題性で年俸が高い
+      (r.farm ? 0.4 : 1.0); // 二軍(育成契約を含む)は年俸が低い
   return ((v.clamp(400, 200000) / 10).round() * 10).toInt();
 }
 
