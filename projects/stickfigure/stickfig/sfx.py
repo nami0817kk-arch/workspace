@@ -243,10 +243,17 @@ def bgm(seconds: float, mood: str = "battle", seed: int = 3) -> np.ndarray:
     return buf[:int(SR * seconds)]
 
 
-def render(plan: dict, path, mood: str = "battle", bgm_gain: float = 0.5, seed: int = 7) -> str:
-    s = se(plan, seed)
-    dur = len(s) / SR
-    m = bgm(dur, mood) if mood else np.zeros_like(s)
+def render(plan: dict, path, mood: str = "battle", bgm_gain: float = 0.5, seed: int = 7, style: str = "plain") -> str:
+    """style: plain(この file の音)/ anime(sfx_anime の戦闘アニメ風の効果音と BGM)。"""
+    if style == "anime":
+        from . import sfx_anime
+        s = sfx_anime.se(plan, seed)
+        dur = len(s) / SR
+        m = sfx_anime.bgm(dur, plan) if mood and mood != "none" else np.zeros_like(s)
+    else:
+        s = se(plan, seed)
+        dur = len(s) / SR
+        m = bgm(dur, mood) if mood else np.zeros_like(s)
     n = min(len(s), len(m))
     mix = s[:n] + bgm_gain * m[:n]
     fade = int(SR * 0.4)

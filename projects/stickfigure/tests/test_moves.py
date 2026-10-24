@@ -123,3 +123,36 @@ def test_air_combo_hits_in_the_air_and_leaves_defender_lying():
     last = sc["keys"]["B"][-1]
     assert abs(abs(last["roll"]) - 1.57) < 0.05               # 倒れたまま
     assert heel["tau"] < 4.0
+
+
+CAST3 = dict(A=dict(color=[0.5, 0.85, 0.3], style="kenpo", x=0.0, d=1),
+             B=dict(color=[0.25, 0.55, 0.95], style="kicker", x=1.6, d=-1),
+             D=dict(color=[0.92, 0.32, 0.28], style="brawler", x=-1.6, d=1))
+
+
+def test_three_fighters_turn_to_face_each_attacker():
+    # 3 対 1: 左の赤に殴られるときは緑が左を向き、右の青を殴るときは右を向く
+    def script(F, T):
+        T.exchange(F["A"], F["B"], "jab", 1.0, "stagger")
+        T.exchange(F["D"], F["A"], "cross", 1.8, "block")
+        T.exchange(F["A"], F["B"], "cross", 2.8, "stagger")
+    sc, rep, beats = _build(script, 3.6, CAST3)
+    keys = sc["keys"]["A"]
+    assert keys[int(1.0 * 30)]["dir"] > 0
+    assert keys[int(1.8 * 30)]["dir"] < 0
+    assert keys[int(2.8 * 30)]["dir"] > 0
+    for b in beats:
+        assert _tip_error(sc, b) < 0.06, b
+
+
+def test_anime_techniques_register_fx():
+    def script(F, T):
+        T.charge([F["D"], F["B"]], 0.5, 1.5, [[255, 110, 90], [110, 170, 255]])
+        T.beam(F["D"], 1.6, 0.8, F["A"].x, [255, 240, 220], targets=[F["A"]], dist=1.0, stay=True)
+        T.teleport(F["B"], 2.0, 2.4, -1)
+    sc, rep, beats = _build(script, 3.0, CAST3)
+    fx = sc["fx"]
+    assert len(fx["charge"]) == 2 and len(fx["beams"]) == 1 and len(fx["afterimages"]) == 1
+    assert sc["qa"]["max_teleport_frames"] >= 1
+    kb = sc["keys"]["B"]
+    assert abs(kb[int(2.0 * 30) + 1]["dx"] - kb[int(2.0 * 30)]["dx"]) > 0.5      # 1 コマで飛ぶ

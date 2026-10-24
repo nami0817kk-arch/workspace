@@ -203,3 +203,92 @@ def sting(rng, dur: float = 1.2) -> np.ndarray:
 
 SOUNDS = dict(hit=lambda r: hit(r, 1.0), heavy_hit=lambda r: hit(r, 1.8), guard=guard, flurry=flurry, teleport=zip_, charge=charge, aura=aura,
               beam=beam, ki_shot=ki_shot, explosion=explosion, clash=clash, dash=dash, land=land_heavy, sting=sting)
+
+
+# ---- 書き出しにつなぐ(台本の audio: {style: anime})----
+def se(plan: dict, seed: int = 7) -> np.ndarray:
+    """plan の当たり(events)と fx(charge・beams)の時刻に、戦闘アニメ風の音を置く。sfx.se の代わり。"""
+    from .sfx import _add
+    rng = np.random.default_rng(seed)
+    fps = plan["fps"]
+    dur = plan["n"] / fps
+    buf = np.zeros(int(SR * (dur + 2.5)))
+    fx = plan.get("scene", {}).get("fx", {})
+    frame_of = lambda tau: next((i for i, fr in enumerate(plan["frames"]) if fr["tau"] >= tau), plan["n"] - 1)
+    beam_len = {round(b["start"], 3): b["end"] - b["start"] for b in fx.get("beams", [])}
+    for e in plan["events"]:
+        t = e["frame"] / fps
+        k = e["kind"]
+        heavy = float(e.get("hold", 0.0)) >= 0.095
+        if k in ("hit", "kick"):
+            _add(buf, hit(rng, 1.8 if heavy else (1.25 if k == "kick" else 1.0)), t - 0.12, 1.0)
+        elif k == "clash":
+            _add(buf, clash(rng) if heavy else guard(rng), t, 0.9)
+        elif k == "miss":
+            _add(buf, swish(rng, 0.2), t - 0.16, 0.8)
+        elif k in ("land", "land2"):
+            _add(buf, land_heavy(rng), t, 0.55)
+        elif k in ("slam", "heel", "wall", "wave"):
+            _add(buf, explosion(rng, 1.6), t, 0.85)
+            _add(buf, punch(rng, 1.8), t, 0.8)
+        elif k == "beam":
+            _add(buf, beam(rng, max(0.6, beam_len.get(round(e.get("tau", t), 3), 1.4))), t, 1.0)
+        elif k == "blast":
+            _add(buf, explosion(rng, 2.0), t, 1.0)
+        elif k == "vanish":
+            _add(buf, zip_(rng), t, 0.9)
+        elif k == "rapid":
+            _add(buf, punch(rng, 0.25), t, 0.5)
+    for c in fx.get("charge", []):
+        f0 = frame_of(c["start"])
+        f1 = frame_of(c["end"])
+        d_ = max(0.4, (f1 - f0) / fps)
+        _add(buf, aura(rng, d_) if c.get("aura") else charge(rng, d_), f0 / fps, 0.8)
+    for b in fx.get("beams", []):                            # 光線の当たり(相手側)の爆発は、光線の終わりに
+        if b.get("boom", True):
+            _add(buf, explosion(rng, 1.8), frame_of(b["end"]) / fps - 0.1, 0.8)
+    return buf[:int(SR * dur)]
+
+
+def bgm(seconds: float, plan: dict = None, seed: int = 5) -> np.ndarray:
+    """戦闘アニメ風の BGM。速いテンポ(168)の太い低音の刻み + 金管っぽい和音の打ち込み + 太鼓。
+    溜め(fx.charge)の間は小さくし、光線の直前 0.4 秒は止める(溜めの音だけを聞かせる)。和音は短調(Am - F - G - Em)。"""
+    from .sfx import _add, _hz, _tone, thump
+    rng = np.random.default_rng(seed)
+    buf = np.zeros(int(SR * (seconds + 1.0)))
+    bpm = 168
+    beat = 60.0 / bpm
+    prog = [(57, [57, 60, 64]), (53, [53, 57, 60]), (55, [55, 59, 62]), (52, [52, 55, 59])]
+    nb = int(seconds / beat) + 1
+    for b in range(nb):
+        t = b * beat
+        root, chord = prog[(b // 8) % 4]
+        for h in range(2):                                   # 低音の 8 分の刻み(オクターブ下)
+            _add(buf, _tone(_hz(root - 24), beat * 0.45, "saw", 0.12), t + h * beat / 2, 0.20)
+        if b % 2 == 0:
+            _add(buf, thump(rng, 120, 0.2, 0.0), t, 0.55)       # 太鼓(1・3 拍)
+        else:
+            _add(buf, _filt(_noise(int(SR * 0.14), rng), 1200, 8000) * _env(int(SR * 0.14), 0.001, 0.05), t, 0.30)   # スネア(2・4 拍)
+        _add(buf, _filt(_noise(int(SR * 0.03), rng), 7000, 14000) * _env(int(SR * 0.03), 0.0005, 0.01), t + beat / 2, 0.10)
+        if b % 8 in (0, 3, 6):                               # 金管っぽい和音の打ち込み(シンコペーション)
+            for m in chord:
+                for det in (-0.2, 0.2):
+                    f = _hz(m + 12) * (1 + det / 100)
+                    _add(buf, _tone(f, beat * 0.9, "saw", 0.22), t, 0.05)
+    out = _filt(buf, 40, 12000)[:int(SR * seconds)]
+    if plan is not None:                                     # 溜めの間は小さく、光線の直前は止める
+        fx = plan.get("scene", {}).get("fx", {})
+        fps = plan["fps"]
+        gain = np.ones(len(out))
+        tau_to_t = lambda tau: next((i for i, fr in enumerate(plan["frames"]) if fr["tau"] >= tau), plan["n"] - 1) / fps
+        for c in fx.get("charge", []):
+            a_, b_ = int(SR * tau_to_t(c["start"])), int(SR * tau_to_t(c["end"]))
+            gain[a_:b_] = np.minimum(gain[a_:b_], 0.25)
+        for bm in fx.get("beams", []):
+            a_ = int(SR * max(0.0, tau_to_t(bm["start"]) - 0.4))
+            b_ = int(SR * tau_to_t(bm["start"]))
+            gain[a_:b_] = 0.0
+        k = int(SR * 0.08)                                   # 音量の切り替わりを滑らかに
+        gain = np.convolve(gain, np.ones(k) / k, mode="same")
+        out = out * gain
+    return out

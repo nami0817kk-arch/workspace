@@ -1,0 +1,10 @@
+# 3 対 1「倒した 3 人が、まとめて仕返しに来る」約 72 秒。2026-10-24 絵コンテで合意(Artifact 版 7)。音は戦闘アニメ風(audio.style anime)
+# 降臨 → 連携でピンチ → 覚醒 → 逆転 → 決着。中身は tools/shots/sanbiki.py
+name: sanbiki
+mood_cards: none
+items:
+  - shot: tools/shots/sanbiki_1.py           # 降臨: ひとり → 3 人が降り立つ → にらみ合い → 瞬間移動で四方から → 受け流し → 反撃
+  - shot: tools/shots/sanbiki_2.py           # 連携: 空中コンボ → 必死にさばく → 巨漢の一撃 → 3 人で溜めて合体光線
+  - shot: tools/shots/sanbiki_3.py           # 覚醒: 煙の中で起き上がる → オーラ → 光線を盾で受け止める
+  - shot: tools/shots/sanbiki_4.py           # 逆転: 瞬間移動で青 → 分身乱舞で赤 → 拳の激突 → 空中コンボで巨漢
+  - shot: tools/shots/sanbiki_5.py           # 決着: 起き上がった 3 人へ、とどめの光線 → 背を向ける

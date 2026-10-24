@@ -119,7 +119,7 @@ def build_scene(scene: dict, out: Path, reuse_figs: bool = False, force: bool = 
     if au is not False:                       # 効果音+BGM(計算で作る)を付ける
         from . import sfx
         wav = out / f"{scene.get('name', 'scene')}.wav"
-        sfx.render(pl, wav, (au or {}).get("mood", "battle"), float((au or {}).get("bgm_gain", 0.5)))
+        sfx.render(pl, wav, (au or {}).get("mood", "battle"), float((au or {}).get("bgm_gain", 0.5)), style=(au or {}).get("style", "plain"))
         silent = Path(mp4).with_name(Path(mp4).stem + "_silent.mp4")
         Path(mp4).replace(silent)
         subprocess.run([ff, "-y", "-loglevel", "error", "-i", str(silent), "-i", str(wav), "-c:v", "copy", "-af", "loudnorm=I=-16:TP=-2:LRA=12", "-c:a", "aac", "-b:a", "192k",

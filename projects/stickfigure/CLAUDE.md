@@ -332,7 +332,18 @@ python scripts/make_gallery.py 09_01:2.4 135_07_s1:3.6   # clip を順に再生�
 - **空中コンボ(`T.air_combo(打つ人, 受ける人, t)`)**: アッパーで打ち上げ → 受ける人は腰の軌道で浮き(roll 0 → 0.9 → 1.15 で回りながら、2 発のたびに押される)→ 打つ人が t+0.30 に跳び、t+0.58 拳・t+0.80 回し蹴り・t+1.02 蹴り落とし(踵)→ 受ける人が 5 コマで地面へ落ちて倒れたまま。**当たりの位置は受ける人の体を解析的に出し、打つ人の高さ(rz)と立ち位置(x)をそこに合わせる**(`b_sk`)。打つ人の手足は当たりの直前に `ang`(振りかぶり)、当たりで `p`(目標)。地面への叩きつけの時刻を返す
 - **キーは bout.stylize を避ける**: `stylize` は hz が 0.755〜0.815・lean がちょうど 0.12・ht がちょうど 0.0 のキーを構えの値に置き換える。新しい動作のキーは hz 0.83/0.60、lean は 0.12 以外、ht 0.01 で書く
 - **エフェクト(`build_bout` が集める)**: 火花(当たりの種類ごと。compose の `look.sparks`)・衝撃の輪(kick/heel/slam/wave)・土煙(`Fighter.dust` → puffs `land2`: 走り出し・着地・滑り・叩き)・流線(`Fighter.speed` → `fx.speed_lines`: 吹き飛びと滑りの間だけ)・閃光 1 コマ(`T.flashes`: 決めの一撃・`exchange(..., flash=True)`)・スミア(`anime.smear`)・衝撃波(`fx.waves`)。擬音の文字・白黒反転・放射線(`fx.radial`)は付けない(参考の見せ方に合わせて外してある)
-- 絵コンテの描画部品: `tools/storyboard.py` の `panel(fx=[("spark"|"dust"|"shock"|"smear"|"glint"|"guard", x, z, 大きさ[, 向き])], flash=0〜1)`
+- 絵コンテの描画部品: `tools/storyboard.py` の `panel(fx=[("spark"|"dust"|"shock"|"smear"|"glint"|"guard"|"beam"|"orb"|"shield", x, z, 大きさ, …)], back_fx=[("aura"|"pillar", …)], flash=0〜1)`
+
+## 3 対 1 と必殺技(2026-10-24〜25、「3 体 1 が良い」「アニメちっくなバトルに」「1 分以上」「音はドラゴンボールのアニメに寄せて」)
+
+見本 `tools/shots/sanbiki.py`(5 幕・約 72 秒、エピソード `scenes/episodes/sanbiki.yaml`)。絵コンテは `tools/storyboard_3v1.py`・`storyboard3_page.py`。
+- **向き替え(`Fighter.turn`、`Table.face_pair`)**: `exchange`・`clash` は打つ人と受ける人を自動で向き合わせる(向きが違う方は、手が空いた時刻か当たりの 0.45 秒前に向き直る)。体の向きは keyshot の `dir`(時刻で切り替わる)、足は 0.1 秒で新しい前後へ踏み替える(足の目標は入れ替えない)。1 対 1 なら何も起きない
+- **必殺技の部品(`Table.*`)**: `land_in`(上から降り立つ。着地の 2 コマ前まで足は角度のまま: 高い所で地面を狙うと脚が届かない)・`charge`(気を溜める構え + `fx.charge`。`aura=True` で覚醒の音)・`beam`(光線 `fx.beams` + 撃つ構え + 相手が吹き飛ぶ)・`shield`(気の盾)・`teleport`(1 コマで移動 + 残像の列。点検の「1 コマの飛び」の許容を自動で足す)・`clones`(分身)。人の動作は `Fighter.relax/kneel/hold_arm_out/start_lying/getup`
+- `air_combo(..., getup=0.6)` で叩きつけられた側が起き上がる(連携技を受けた主人公がまだ戦う)
+- **カメラ**: 4 人が入る `cam_scale` 4.4。`T.cam` の 5 つ目で追う x を決められる(空中コンボは技の場所を追う。既定の「全員の真ん中」だと、倒れた人に引っ張られて画面が空になった)
+- **巨漢の前に別の人がいると重なる**: 体が大きいので、近づくと前の人に重なって見える。巨漢を出す前に、前の人を `dash` で下がらせる(巨漢が通り抜けないよう、瞬間移動で入れてもよい)
+- **戦闘アニメ風の音(`stickfig/sfx_anime.py`、台本の `audio: {style: anime}`、`build_bout(sound="anime")`)**: 打撃(風切り→破裂→衝撃→胴鳴り)・受け・連打・瞬間移動・溜め・オーラ・光線・爆発・激突・着地を、当たりの種類と fx の時刻に置く。BGM は速いテンポの短調(金管っぽい和音 + 太い低音)、溜めの間は小さく、光線の直前 0.4 秒は止める。実在の作品の音は使わない(著作権・YouTube の自動判定)。見本は `tools/sound_samples.py`(mp3。artifact は m4a を配信しない)
+- 背景・幕の時刻と動画の時刻はヒットストップの分ずれる。コマを確かめるときは plan の `tau` からコマ番号を引く(`frames[i].tau`)
 
 ## 決まり・つまずき所(実際に踏んだもの)
 
