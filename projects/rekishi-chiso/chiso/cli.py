@@ -8,6 +8,7 @@
     python -m chiso.cli build   scripts/x.yaml          # 本番の動画。承認した台本の中身と一致しないと動かない
     python -m chiso.cli shorts  scripts/x.yaml [--draft]  # short: を付けた行からショートを全部作る
     python -m chiso.cli story-short scripts/story/x.yaml [--kana]   # 物語完結型のショート（10-22。絵は tools/gen_story_art.py）
+    python -m chiso.cli story-main scripts/story/x_main_look.yaml  # 物語型の本編（横）の見た目の静止画（10-24。chiso/storymain.py）
     python -m chiso.cli describe scripts/x.yaml [--keywords]   # 概要欄（章・クレジット・絵の出典。--keywords で扱う語）
     python -m chiso.cli assign  scripts/x.yaml --assets research/x_assets.md   # 絵の割り当ての下書き（out/x_assign.md）
     python -m chiso.cli keywords "織田信長" [--all]      # YouTube の検索候補でよく続く語・題名とタグの候補
@@ -628,6 +629,16 @@ def cmd_shorts(args) -> int:
     return 0
 
 
+def cmd_story_main(args) -> int:
+    """物語型の本編（横 16:9）の見た目を静止画で（10-24。動画はまだ書き出さない）。look の stills: の時点を PNG と一覧に。"""
+    from . import storymain
+    pngs, sheet, infos = storymain.stills(Path(args.look), load_config(), out_dir())
+    for p, info in zip(pngs, infos):
+        print(f"{p}  {info}")
+    print(sheet)
+    return 0
+
+
 def cmd_story_short(args) -> int:
     """物語完結型のショート（10-22）。scripts/story/*.yaml → out/<名前>_story_<番号>.mp4。--kana で読みだけ。"""
     from . import storyshort
@@ -1226,6 +1237,9 @@ def main(argv=None) -> int:
     s.add_argument("--draft", action="store_true")
     s.add_argument("--only", help="作るショートだけ（例 s1,s3）")
     s.set_defaults(fn=cmd_shorts)
+    s = sub.add_parser("story-main")
+    s.add_argument("look")
+    s.set_defaults(fn=cmd_story_main)
     s = sub.add_parser("story-short")
     s.add_argument("script")
     s.add_argument("--kana", action="store_true", help="読みをカタカナで出すだけ（音は作らない）")

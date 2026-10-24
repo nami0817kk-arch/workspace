@@ -1,0 +1,27 @@
+# 物語型の本編（横 16:9）の見た目の指定：お市の方（scripts/oichi-story.yaml）。chiso/storymain.py が読む。10-24 イメージ合わせ用（仮）。
+# 台本には手を入れず、帯の字・章ごとの「いま」・静止画にする時点と仮の絵をここに書く。
+script: scripts/oichi-story.yaml
+out: oichi_story_main
+art_dir: out/story/oichi3/gem          # "gem:P6" はここの P6.jpg（AI 絵。P3・P3b・P5・P5b は使わない）
+header:
+  tag: お市の方（織田信長の妹）
+  title: なぜ《二度目の落城》で、逃げなかったのか
+timeline: [1573 小谷, 1583 北ノ庄, 1615 大坂, 1629 天皇家]
+now:                                    # 章（sections の番号）ごとの「いま」の札と、年表のバーで光らせる点（-1 は光らせない）
+  0: [1583年 北ノ庄城, 1]
+  1: [1567年ごろ 小谷城, -1]
+  2: [1573年 小谷城, 0]
+  3: [1582年 清須, -1]
+  4: [1583年 北ノ庄城, 1]
+  5: [記録を読む, 1]
+  6: [1615年 大坂城, 2]
+  7: [1629年 将軍の家と天皇の家, 3]
+stills:
+  - {line: 0, picture: "gem:S1", note: 冒頭（0秒）北ノ庄の夜}
+  - {find: なぜお市は、二度目は, picture: "gem:P6", note: 冒頭の「なぜ」}
+  - {line: 44, picture: paintings/oichi_odani_castle_map.jpg, credit: "《小谷城図》江戸時代（Wikimedia Commons・パブリックドメイン）", chapter: true, note: 第2章の頭（章の題）}
+  - {find: この子たちだけは, picture: "gem:P2", side: center, note: 第2章 想像の台詞（仮の絵）}
+  - {find: さらぬだに, picture: "gem:P4", side: center, note: 第4章 辞世（記録）}
+  - {line: 138, note: 第5章 検証（記録の表）}
+  - {line: 176, note: 第7章 系図（明正天皇）}
+  - {line: 185, picture: "gem:S2", side: center, note: 最後の余韻}
