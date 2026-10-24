@@ -1,0 +1,201 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：お市の方（scripts/oichi-story.yaml）。chiso/storymain.py が読む。
+# 第2版（10-24）：他チャンネル15本の分析（dev/output/rekishi-chiso/research/main_screen_benchmark_1024.md）に合わせた。
+#   全幅の帯はやめて左上の小さな札「年月｜第N章 章題」・語りの文字は下中央1行24字まで・話し手の名前なし（想像の札だけ）・
+#   章の頭に章題カード（4秒、声の前）・最後に約20秒の終了画面の空き・全カットに寄り／パン・BGM あり（storyaudio の合成、声よりかなり小さく）。
+# 台本には手を入れず、ここに「いま」の年月・章の短い題・絵の割り当て（shots）・静止画にする時点を書く。
+script: scripts/oichi-story.yaml
+out: oichi_story_main
+art_dir: out/story/oichi3/gem
+main_art_dir: out/story/oichi3/main   # 16:9 の AI 絵（A01.jpg〜A25.jpg）。届いたものから使い、無いものは ai: の stand_in（縦）で仮置き
+
+# 章（sections の番号）ごとの左上の札「いま｜章題」。now＝章の頭の「いま」（null は年を出さない＝物語の時間が動かない章）。
+# dates＝その章の語りが年・月日を言った行（行の番号: 札の年月）。その行から替わる。台本の card の見出しは見ない（第3版、10-24）
+chapters:
+  0: {label: 序章 なぜ逃げなかったのか, now: 1583年4月}
+  1: {label: 第1章 同盟のしるしの花嫁, now: 1567年ごろ,
+      dates: {27: 1567年9月, 30: 1569年, 33: 1568年, 35: 1570年4月, 38: 1570年4月30日, 40: 1570年夏}}
+  2: {label: 第2章 小谷城の落城, now: 1573年8月,
+      dates: {47: 1573年8月26日, 50: 1573年8月27日夜, 57: 1573年9月1日}}
+  3: {label: 第3章 本能寺から再婚へ, now: 1573〜1582年,
+      dates: {69: 1576年, 70: 1582年, 71: 1582年6月2日, 74: 1582年6月27日, 79: 1582年8月20日}}
+  4: {label: 第4章 北ノ庄城の最後の夜, now: 1583年4月,
+      dates: {88: 1583年4月21日, 91: 1583年4月23日, 103: 1583年4月23日夜, 113: 1583年4月24日明け方}}
+  5: {label: 第5章 なぜ逃げなかったのか, now: null}
+  6: {label: 第6章 三人の娘、敵と味方へ, now: 1583年,
+      dates: {149: 1586年10月, 155: 1595年, 156: 1589年12月, 158: 1593年, 160: 1614年, 161: 1614年冬, 164: 1615年}}
+  7: {label: 第7章 お市の血はどこへ, now: 1604年,
+      dates: {171: 1623年, 173: 1607年, 174: 1620年, 176: 1629年, 181: 1643年}}
+no_tag_from: 183                       # 最後の余韻（この行から）と終了画面は、左上の札を出さない
+
+# 作る AI 絵（16:9 横・最大25枚）。stand_in は静止画で仮に使う今の縦の絵（無ければ近い絵）
+ai:
+  A01: {scene: 北ノ庄城の夜。篝火に囲まれた天守の遠景, stand_in: S1, horizontal_of: S1}
+  A02: {scene: 天守の大広間の最後の酒宴。灯の下で杯を交わす家臣たち（顔は小さく）, stand_in: S1}
+  A03: {scene: お市・決意の表情（胸から上・薄暗い城内）, stand_in: P6, horizontal_of: P6}
+  A04: {scene: お市・うつむく（城内、遠くに炎）, stand_in: P2, horizontal_of: P2}
+  A05: {scene: お市・涙をこらえる寄り, stand_in: P5c, horizontal_of: P5c}
+  A06: {scene: お市・窓辺で燃える城下を見る横顔（P4 より若い顔で作り直し）, stand_in: P4, horizontal_of: P4（作り直し）}
+  A07: {scene: 1567年 輿入れの行列が山の城へ向かう（秋・遠景）, stand_in: S2}
+  A08: {scene: 小谷城の尾根と、琵琶湖の北の平野（俯瞰の風景・人物なし）, stand_in: S3}
+  A09: {scene: 小谷城の縁側。若いお市と幼い茶々（穏やかな昼）, stand_in: P1}
+  A10: {scene: 1570年 文を前に思い悩むお市（室内・灯）, stand_in: P2}
+  A11: {scene: 1573年 夜の山城を囲む大軍の篝火, stand_in: S1}
+  A12: {scene: 1573年 城の一室で赤子を抱くお市と幼い娘2人, stand_in: P2}
+  A13: {scene: 本丸の長政（武将の後ろ姿）が妻に告げる。お市は向き合う, stand_in: P1}
+  A14: {scene: 夜明けの城門を、赤子を抱いたお市と幼い娘2人が出ていく（後ろ姿）, stand_in: S2}
+  A15: {scene: 十年の暮らし。屋敷の庭で育つ3人の娘（後ろ姿・遠景）, stand_in: S4}
+  A16: {scene: 1582年 知らせを聞いて立ち尽くすお市, stand_in: P2}
+  A17: {scene: 1582年 越前へ向かう輿の列（雪の残る山道）, stand_in: S3}
+  A18: {scene: 1583年 霧の戦場に向き合う旗の列（賤ヶ岳）, stand_in: S3, horizontal_of: S3}
+  A19: {scene: 板廊下を行く娘3人と、奥の武士の影, stand_in: S4, horizontal_of: S4}
+  A20: {scene: 母が娘3人を送り出す。お市の後ろ姿と、遠ざかる娘たち, stand_in: S4}
+  A21: {scene: 覚書を書き留める女房の手元（巻紙・筆・灯）, stand_in: P1}
+  A22: {scene: 1615年 炎上する大坂城の遠景, stand_in: S1}
+  A23: {scene: 1615年 知らせを聞く江の後ろ姿（徳川の屋敷）, stand_in: S4}
+  A24: {scene: 光の門を出ていく娘3人の後ろ姿, stand_in: S2, horizontal_of: S2}
+  A25: {scene: 終了画面用。月夜の北ノ庄の城跡と静かな川（右半分を空けた構図）, stand_in: S1}
+
+# 絵の割り当て：「行の番号 種類:絵 [切り出し]」。次の行の指定まで続く。
+#   ai:A01＝AI 絵を全面（切り出し wide/left/right/face。長いと自動で切り出しを替える）
+#   frame:<絵>＝実在の絵を額のカードにして、直前の AI 絵をぼかして暗くした上に置く
+#   part:<絵>＝横長の屏風・絵巻の一部を全面に（寄り・パン）
+#   図（figure）の出る行は、その時の絵を暗くして図を置く（自動）
+shots:
+  - 0 ai:A01 wide
+  - 1 ai:A02 wide
+  - 2 frame:paintings/oichi_portrait_jimyoin_bust.jpg
+  - 3 frame:paintings/oichi_katsuie_utamaro.jpg
+  - 5 ai:A14 wide
+  - 6 ai:A03 wide
+  - 7 ai:A20 wide
+  - 8 ai:A19 wide
+  - 9 ai:A03 face
+  - 10 ai:A04 wide
+  - 11 frame:paintings/oichi_odani_castle_ezu.jpg
+  - 12 ai:A21 wide
+  - 13 ai:A05 wide
+  - 14 frame:paintings/oichi_chacha_yodo_portrait.jpg
+  - 15 ai:A24 wide
+  - 17 ai:A07 wide
+  - 19 ai:A08 wide
+  - 20 ai:A09 wide
+  - 21 frame:paintings/nobunaga_kuniyoshi_musha.png
+  - 22 part:paintings/nobunaga_okehazama_toyonobu.jpg
+  - 23 ai:A09 left
+  - 24 frame:paintings/oichi_nagamasa_portrait_full.jpg
+  - 26 ai:A07 right
+  - 28 ai:A08 left
+  - 30 ai:A09 right
+  - 32 ai:A10 wide
+  - 33 part:paintings/nobunaga_rakuchu_uesugi_right.jpg
+  - 35 frame:paintings/nobunaga_portrait_chokoji.jpg
+  - 36 ai:A11 wide
+  - 39 frame:paintings/oichi_nagamasa_kuniyoshi.jpg
+  - 40 part:paintings/nobunaga_anegawa_screen.jpg
+  - 41 ai:A10 face
+  - 43 ai:A11 left
+  - 44 ai:A11 wide
+  - 48 ai:A12 wide
+  - 50 frame:paintings/akechi_hideyoshi_kodaiji.jpg
+  - 51 frame:paintings/oichi_odani_castle_map.jpg
+  - 52 ai:A13 wide
+  - 55 ai:A14 wide
+  - 56 ai:A12 left
+  - 57 frame:paintings/oichi_nagamasa_portrait_full.jpg
+  - 58 frame:paintings/oichi_odani_castle_ezu.jpg
+  - 60 ai:A11 left
+  - 62 ai:A14 right
+  - 63 ai:A04 wide
+  - 64 ai:A01 wide
+  - 65 ai:A15 wide
+  - 67 ai:A05 left
+  - 68 frame:paintings/oichi_portrait_jimyoin_bust.jpg
+  - 69 part:paintings/nobunaga_azuchi_castle_zu.jpg
+  - 70 ai:A15 right
+  - 71 part:paintings/nobunaga_honnoji_yoshitoshi.jpg
+  - 72 ai:A16 wide
+  - 74 frame:paintings/hidenaga_kiyosu_ehon_taikoki.jpg
+  - 75 frame:paintings/oichi_katsuie_portrait.jpg
+  - 76 ai:A08 left
+  - 77 frame:paintings/akechi_hideyoshi_kodaiji.jpg
+  - 78 frame:paintings/oichi_katsuie_portrait.jpg
+  - 79 frame:paintings/oichi_katsuie_utamaro.jpg
+  - 80 frame:paintings/oichi_katsuie_portrait.jpg
+  - 82 frame:paintings/oichi_katsuie_utamaro.jpg
+  - 84 ai:A17 wide
+  - 86 ai:A17 right
+  - 87 ai:A18 wide
+  - 90 frame:paintings/oichi_katsuie_yoshiiku.jpg
+  - 91 ai:A01 wide
+  - 92 frame:paintings/oichi_katsuie_portrait.jpg
+  - 94 ai:A03 wide
+  - 96 ai:A19 wide
+  - 99 ai:A20 wide
+  - 101 ai:A05 wide
+  - 103 ai:A02 wide
+  - 105 ai:A01 right
+  - 107 ai:A06 wide
+  - 108 ai:A06 face
+  - 109 ai:A01 face
+  - 110 frame:paintings/oichi_katsuie_utamaro.jpg
+  - 113 frame:paintings/oichi_katsuie_yoshiiku.jpg
+  - 115 ai:A01 face
+  - 116 ai:A05 face
+  - 117 frame:paintings/oichi_katsuie_portrait.jpg
+  - 118 frame:paintings/toshiie_photo_kitanosho_shibata_01.jpg
+  - 119 ai:A03 left
+  - 120 ai:A21 wide
+  - 123 ai:A05 wide
+  - 124 frame:paintings/oichi_odani_castle_map.jpg
+  - 126 ai:A14 left
+  - 127 frame:paintings/oichi_portrait_jimyoin_bust.jpg
+  - 129 ai:A04 left
+  - 131 ai:A03 wide
+  - 132 frame:paintings/oichi_hatsu_jokoin.jpg
+  - 134 frame:paintings/oichi_taiheiki_shui_1870.jpg
+  - 135 frame:paintings/akechi_hideyoshi_kodaiji.jpg
+  - 136 frame:paintings/hidenaga_kiyosu_ehon_taikoki.jpg
+  - 137 frame:paintings/oichi_katsuie_portrait.jpg
+  - 139 frame:paintings/akechi_hideyoshi_kodaiji.jpg
+  - 141 frame:paintings/oichi_nagamasa_kuniyoshi.jpg
+  - 142 ai:A10 wide
+  - 143 frame:paintings/nobunaga_portrait_chokoji.jpg
+  - 144 frame:paintings/oichi_retsujoden_1668.jpg
+  - 146 ai:A03 right
+  - 147 ai:A24 wide
+  - 148 frame:paintings/akechi_hideyoshi_kodaiji.jpg
+  - 149 frame:paintings/oichi_chacha_yodo_portrait.jpg
+  - 150 frame:paintings/nene_taiko_gosai_lccn.jpg
+  - 152 frame:paintings/oichi_hatsu_jokoin.jpg
+  - 154 frame:paintings/oichi_go_sugenin.jpg
+  - 155 frame:paintings/oichi_hidetada.jpg
+  - 156 frame:paintings/oichi_portrait_jimyoin_full.jpg
+  - 157 frame:paintings/oichi_portrait_jimyoin_bust.jpg
+  - 158 frame:paintings/oichi_hideyori.jpg
+  - 159 frame:paintings/nene_ieyasu_portrait.jpg
+  - 160 part:paintings/nene_osaka_castle_summer_screen_detail.jpg
+  - 164 ai:A22 wide
+  - 166 frame:paintings/hideyori_senhime_portrait.jpg
+  - 167 ai:A23 wide
+  - 169 frame:paintings/oichi_go_sugenin.jpg
+  - 170 frame:paintings/oichi_hidetada.jpg
+  - 172 ai:A24 left
+  - 179 frame:paintings/oichi_go_sugenin.jpg
+  - 180 frame:paintings/oichi_hatsu_jokoin.jpg
+  - 181 ai:A08 right
+  - 182 frame:paintings/oichi_go_sugenin.jpg
+  - 183 ai:A01 wide
+  - 184 ai:A14 wide
+  - 185 ai:A24 wide
+  - end ai:A25 left
+
+stills:
+  - {line: 0, note: 冒頭（0秒）北ノ庄の夜}
+  - {find: なぜお市は、二度目は, note: 冒頭の「なぜ」}
+  - {line: 44, chapter: true, note: 第2章の頭（章題カード）}
+  - {find: この子たちだけは, note: 第2章 想像の台詞}
+  - {find: さらぬだに, note: 第4章 辞世（記録・明朝）}
+  - {line: 138, note: 第5章 検証（記録の表）}
+  - {line: 176, note: 第7章 系図（明正天皇）}
+  - {line: 185, note: 最後の余韻}
+  - {end: true, note: 終了画面の空き（約20秒）}
