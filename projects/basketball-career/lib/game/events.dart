@@ -21,6 +21,7 @@ class Effect {
     this.schoolLabel,
     this.national = false,
     this.salaryPct = 0,
+    this.habit = 0,
   });
 
   /// 能力の増減(決まった能力)。
@@ -56,6 +57,9 @@ class Effect {
 
   /// 年俸の増減(%)。フリーエージェントでの契約交渉など。プロ以外では効かない。
   final int salaryPct;
+
+  /// 生活習慣(-10〜+10)への加算。幼少期の睡眠・食事・外遊びなど。身長の伸びに効く。
+  final double habit;
 }
 
 class EventOption {
@@ -582,6 +586,42 @@ const events = <EventDef>[
     options: [
       EventOption('勉強の時間を確保する', Effect(morale: 4, fatigue: -5)),
       EventOption('バスケを優先する', Effect(focusBonus: 2, morale: -3, fatigue: 5)),
+    ],
+  ),
+  EventDef(
+    id: 'sleep_habit',
+    title: '早寝早起き',
+    body: '夜遅くまで起きていると、朝がつらい。成長期は、寝ている間に体が伸びるという。',
+    minAge: 6,
+    maxAge: 15,
+    weight: 0.7,
+    options: [
+      EventOption('毎晩9時にはふとんに入る', Effect(habit: 3, morale: -1, fatigue: -4)),
+      EventOption('夜更かしして、動画を見る', Effect(habit: -3, morale: 6)),
+    ],
+  ),
+  EventDef(
+    id: 'meal_habit',
+    title: '食事のこと',
+    body: '給食の残しが多い、と先生に言われた。体を大きくするには、しっかり食べるのがいちばんらしい。',
+    minAge: 6,
+    maxAge: 15,
+    weight: 0.7,
+    options: [
+      EventOption('好き嫌いせず、牛乳も魚も食べる', Effect(habit: 3, fatigue: -3)),
+      EventOption('好きなものだけ食べる', Effect(habit: -2, morale: 4)),
+    ],
+  ),
+  EventDef(
+    id: 'outdoor_play',
+    title: '放課後の過ごし方',
+    body: '友だちが「公園でバスケしよう」と誘ってくれた。家ではゲームも待っている。',
+    minAge: 6,
+    maxAge: 15,
+    weight: 0.7,
+    options: [
+      EventOption('外で思いきり遊ぶ', Effect(habit: 2, morale: 6, fatigue: 4, focusBonus: 1)),
+      EventOption('家でゲームをする', Effect(habit: -2, morale: 5)),
     ],
   ),
   EventDef(

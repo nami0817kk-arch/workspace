@@ -272,6 +272,11 @@ class _PlayerCard extends StatelessWidget {
             Text('${trackLabel(game)}  ${game.number > 0 ? '#${game.number}  ' : ''}${p.position.label}  '
                 '${p.heightCm.toStringAsFixed(1)}cm  総合 ${p.overall.round()}'),
             Text('持ち味: ${p.position.perk}', style: const TextStyle(fontSize: 12)),
+            if (p.age <= 17)
+              Text(
+                  '生活習慣: ${game.habit >= 6 ? '良い' : game.habit < 0 ? '乱れ気味' : 'ふつう'}  '
+                  '(身長の伸び ${habitHeightMultiplier(game.habit) >= 1 ? '+' : ''}${((habitHeightMultiplier(game.habit) - 1) * 100).round()}%)',
+                  style: const TextStyle(fontSize: 12)),
             if (game.track == Track.pro && game.draftPick > 0)
               Text(draftLabel(game.draftPick),
                   style: const TextStyle(fontSize: 12)),
@@ -605,6 +610,29 @@ class _AbilityCard extends StatelessWidget {
             Text('能力  (◎○△ ＝ ${p.position.label} で効く度合い)',
                 style: const TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 6),
+            // 身長も能力の1つ(総合評価に入る。素質=ポテンシャルとは別)。
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 2),
+              child: Row(
+                children: [
+                  SizedBox(
+                      width: 124,
+                      child: Text('身長 ${_mark(heightWeightOf(p.position))}')),
+                  Expanded(
+                    child: LinearProgressIndicator(
+                      value: (p.heightCm / 220).clamp(0.0, 1.0),
+                      minHeight: 8,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  SizedBox(
+                    width: 52,
+                    child: Text('${p.heightCm.round()}cm',
+                        textAlign: TextAlign.right),
+                  ),
+                ],
+              ),
+            ),
             for (final a in Ability.values)
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 2),
