@@ -81,7 +81,8 @@ void main() {
     final g =
         _kidYears(3, (id, n) => id == 'kid-idol' ? 0 : 1, role: Role.pitcher);
     expect(g.childhood['kid-idol'], 0);
-    expect(g.player.traits.map((t) => t.name), contains('fireballer'));
+    // 憧れは特性ではなく天賦になった(特殊能力・特性は増やさない)
+    expect(g.lifeLog.any((e) => e.text.contains('豪快な選手に憧れた')), isTrue);
     final kid = g.lifeLog.where((e) => e.kind == 'childhood').toList();
     expect(kid.length, 12);
     expect(kid.map((e) => e.age).toList(),

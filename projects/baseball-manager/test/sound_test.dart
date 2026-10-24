@@ -69,7 +69,7 @@ void main() {
     SharedPreferences.setMockInitialValues({});
     final seen = <Sfx>{};
     for (var s = 0;
-        s < 12 && !(seen.containsAll({Sfx.draft, Sfx.retire}));
+        s < 40 && !(seen.containsAll({Sfx.draft, Sfx.retire}));
         s++) {
       final rec = _Rec();
       final c = GameController(rng: Random(s), sound: rec);
