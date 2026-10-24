@@ -60,7 +60,7 @@ MOVES = ("in", "right", "out", "left")
 class Grade(S.Grade):
     """ショートと同じ色調補正を横長で。文字の出る下の方を少し暗く。"""
 
-    def __init__(self, w: int = MW, h: int = MH):
+    def __init__(self, w: int = MW, h: int = MH, band_on: bool = True):
         import numpy as np
         self.np = np
         yy, xx = np.mgrid[0:h, 0:w].astype("float32")
@@ -70,7 +70,8 @@ class Grade(S.Grade):
         self.noise = [rng.standard_normal((h, w, 1)).astype("float32") for _ in range(6)]
         band = np.zeros(h, dtype="float32")
         top = int(h * 0.70)
-        band[top:] = 0.30 * np.clip((np.arange(top, h) - top) / ((h - top) * 0.6), 0, 1)
+        if band_on:
+            band[top:] = 0.30 * np.clip((np.arange(top, h) - top) / ((h - top) * 0.6), 0, 1)
         self.band = (1 - band)[:, None, None]
 
 
@@ -108,10 +109,12 @@ def picture(im: Image.Image, u: float = 0.5, move: str = "in", crop="wide", zoom
     return bg
 
 
-def framed(backdrop: Image.Image, painting: Image.Image, u: float = 0.5, variant: str = "a") -> Image.Image:
-    """実在の絵を額のカードにして、ぼかして暗くした下地の上に置く（b は少し寄せた版）。"""
+def framed(backdrop: Image.Image, painting: Image.Image | None, u: float = 0.5, variant: str = "a") -> Image.Image:
+    """実在の絵を額のカードにして、ぼかして暗くした下地の上に置く（b は少し寄せた版）。painting が None なら下地だけ（図の間）。"""
     bg = backdrop.filter(ImageFilter.GaussianBlur(18))
     bg = Image.eval(bg, lambda v: int(v * 0.40))
+    if painting is None:
+        return bg
     p = painting.convert("RGB")
     if variant == "b":                                   # 2つ目の切り出し：絵の上の方（顔・題字のある所）に寄せる
         p = p.crop((int(p.width * 0.08), 0, int(p.width * 0.92), int(p.height * 0.72)))
@@ -226,11 +229,17 @@ def text_layer(block, font, imagined: bool = False, cushion: bool = False, tag_f
     n = len(block.rows)
     top = MH * TEXT_Y - step * n / 2
     rows, x_left, x_right = [], MW, 0
-    for ri, row in enumerate(block.rows):
+    lists = []
+    for row in block.rows:
         items = []
         for u in row:
             s, m = S.phrase_plain(u.text)
             items += list(zip(s, m))
+        lists.append(items)
+    for ri in range(len(lists) - 1):                     # 行末に開きかっこを残さない（「『」で1行目が終わっていた）
+        while lists[ri] and lists[ri][-1][0] in "『「（(":
+            lists[ri + 1].insert(0, lists[ri].pop())
+    for ri, items in enumerate(lists):
         width = sum(font.getlength(ch) for ch, _ in items)
         x = (MW - width) / 2
         x_left, x_right = min(x_left, x), max(x_right, x + width)
@@ -299,26 +308,39 @@ class Cut:
 class Plan:
     """台本と見た目の指定から、ブロックの時刻（見積もり）・カットの並び・左上の札の字を決める。"""
 
-    def __init__(self, look: dict, sc):
+    def __init__(self, look: dict, sc, seconds: list[float] | None = None):
+        """seconds＝行ごとの本物の声の長さ（書き出し）。無ければ字数からの見積もり（静止画・表）。
+        行のあいだの間は本編の決まり（chiso/voice.py の gap_before）、章の頭は間 0.6 秒＋章題カード＋間 0.6 秒。"""
+        from .voice import gap_before
         self.look, self.sc = look, sc
         self.units: list[Unit] = []
         self.chapter_at: dict[int, float] = {}
+        self.line_at: dict[int, tuple[float, float]] = {}
         t = 0.0
-        prev_sec = None
+        prev = None
         for line in sc.lines:
-            if line.section != prev_sec:
-                if line.section > 0:
-                    self.chapter_at[line.section] = t
-                    t += CHAPTER_SECONDS
-                prev_sec = line.section
-            t += line.pause or 0.0
-            for b in blocks(line.text):
-                d = max(1.0, len(S.screen_plain(_btext(b))) / CPS)
+            if prev is not None and line.section != prev.section and line.section > 0:
+                t += 0.6
+                self.chapter_at[line.section] = t
+                t += CHAPTER_SECONDS + 0.6
+                gap = line.pause or 0.0
+            elif seconds is None:
+                gap = (line.pause or 0.0) + (LINE_GAP if prev is not None else 0.0)
+            else:
+                gap = gap_before(prev, line) if prev is not None else 0.0
+            t += gap
+            bl = blocks(line.text)
+            chars = [max(1, len(S.screen_plain(_btext(b)))) for b in bl]
+            dur = seconds[line.index] if seconds is not None else sum(max(1.0, c / CPS) for c in chars)
+            t0 = t
+            for b, c in zip(bl, chars):
+                d = dur * c / sum(chars) if seconds is not None else max(1.0, c / CPS)
                 self.units.append(Unit(line.index, b, t, t + d))
                 t += d
-            t += LINE_GAP
-        self.voice_end = t
-        self.total = t + END_SECONDS
+            self.line_at[line.index] = (t0, t)
+            prev = line
+        self.voice_end = t + 1.0
+        self.total = self.voice_end + END_SECONDS
         self.shots = self._shots()
         self.cuts = self._cuts()
 
@@ -388,8 +410,11 @@ class Plan:
         return len(self.cuts) - 1, self.cuts[-1]
 
     def unit_at(self, t: float) -> Unit | None:
-        for u in self.units:
-            if u.start <= t < u.end + LINE_GAP:
+        """時刻 t に出す語りのブロック。行の間の短い間（1.5秒まで）は前のブロックを残す。"""
+        for k, u in enumerate(self.units):
+            nxt = self.units[k + 1].start if k + 1 < len(self.units) else u.end + 0.5
+            hold = nxt if nxt - u.end <= 1.5 else u.end + 0.3
+            if u.start <= t < hold:
                 return u
         return None
 
@@ -429,7 +454,7 @@ class Plan:
 class Look:
     """見た目の指定（look の yaml）と台本から、時刻 t の画面を描く。"""
 
-    def __init__(self, look_path: str | Path, config: dict):
+    def __init__(self, look_path: str | Path, config: dict, seconds: list[float] | None = None):
         from . import render, script
         from .cli import ROOT, assets_dir
         self.look = yaml.safe_load(Path(look_path).read_text(encoding="utf-8"))
@@ -441,12 +466,26 @@ class Look:
         self.serif = serif_of(config["fonts"])
         self.painter = render.Painter(config, self.sc, self.assets, (MW, MH))
         self.grade = Grade()
-        self.plan = Plan(self.look, self.sc)
+        self.plan = Plan(self.look, self.sc, seconds)
         self.credits = {}
         for l in self.sc.lines:
             for p in (l.background, l.portrait):
                 if p and p.image not in self.credits:
                     self.credits[p.image] = p.credit or p.caption
+
+    def painting(self, ref: str) -> Image.Image:
+        """実在の絵（assets）に look の paint_fx（切り出し・明るさ・コントラスト）をかけたもの。元の画像は変えない。"""
+        from PIL import ImageEnhance
+        im = Image.open(self.assets / ref).convert("RGB")
+        fx = (self.look.get("paint_fx") or {}).get(ref) or {}
+        if fx.get("crop"):
+            x0, y0, x1, y1 = fx["crop"]
+            im = im.crop((int(im.width * x0), int(im.height * y0), int(im.width * x1), int(im.height * y1)))
+        if fx.get("bright"):
+            im = ImageEnhance.Brightness(im).enhance(float(fx["bright"]))
+        if fx.get("contrast"):
+            im = ImageEnhance.Contrast(im).enhance(float(fx["contrast"]))
+        return im
 
     def ai_image(self, key: str) -> Image.Image:
         """AI 絵（A01 など）。main_art_dir に届いていればそれ、無ければ stand_in の縦の絵で代える。"""
@@ -477,10 +516,10 @@ class Look:
                 img.paste(top, (0, 0), mask)
             return img
         if c.kind == "part":
-            return picture(Image.open(self.assets / c.ref), u, move, c.crop)
+            return picture(self.painting(c.ref), u, move, c.crop)
         if c.kind == "frame":
             back = picture(self.ai_image(c.backdrop), 0.5, "in", "wide")
-            return framed(back, Image.open(self.assets / c.ref), u, c.crop)
+            return framed(back, None if c.dim else self.painting(c.ref), u, c.crop)   # 図の間は額を出さない（10-25）
         if c.kind == "chapter":
             return picture(self.ai_image(c.backdrop or c.ref), u, "in", "wide")
         return picture(self.ai_image(c.ref), u, "in", c.crop)
@@ -634,3 +673,341 @@ def _grid(paths: list[Path], labels: list[str], target: Path, font, cols: int = 
     target.parent.mkdir(parents=True, exist_ok=True)
     sheet.save(target, quality=90)
     return target
+
+
+# --- 書き出し（10-25）-----------------------------------------------------------
+# 1コマずつ PIL で描くと 1コマ約2秒（45,000コマで25時間）かかるので、カットごとに補正済みの絵を1枚だけ作り、
+# 寄り・パンは cv2.warpAffine（小数の位置で補間するのでガタつかない）、文字・札・図は透明な画像を範囲だけ重ねる。
+# コマの範囲を何本かに分けて並行で描き、それぞれ ffmpeg に流して区切りの mp4 にし、最後につないで音を付ける。
+FADE = 0.4                      # 絵の替わり目の溶け合い（秒）
+TEXT_FADE = 0.15                # 語りの文字が出るときのフェード（秒）
+DIM = 0.53                      # 図の間の絵の暗さ（frame_at の黒 120/255 と同じ）
+BGM_DIFF_LU = 22.0              # BGM は声より 22LU 小さく（参考の本編は 15〜32dB 下、中央値 約23dB）
+FPS = 30
+
+
+def _premul(layer: Image.Image):
+    """透明な層 → 範囲だけの (x0, y0, 前掛けした色, 不透明度) の numpy。中身が無ければ None。"""
+    import numpy as np
+    box = layer.getbbox()
+    if not box:
+        return None
+    a = np.asarray(layer.crop(box), dtype=np.uint16)
+    alpha = a[..., 3:4]
+    return box[0], box[1], (a[..., :3] * alpha // 255).astype(np.uint8), np.repeat(alpha, 3, axis=2).astype(np.uint8)
+
+
+def _put(frame, ov, k: float = 1.0) -> None:
+    """frame（H x W x 3 の uint8）に前掛けした層を不透明度 k で重ねる（その範囲だけ）。"""
+    import cv2
+    import numpy as np
+    if ov is None or k <= 0.003:
+        return
+    x0, y0, pre, al = ov
+    h, w = al.shape[:2]
+    roi = frame[y0:y0 + h, x0:x0 + w]
+    if k < 0.997:
+        al = (al.astype(np.float32) * k).astype(np.uint8)
+        pre = (pre.astype(np.float32) * k).astype(np.uint8)
+    roi[:] = cv2.add(cv2.multiply(roi, 255 - al, scale=1 / 255), pre)
+
+
+class Video:
+    """本物の声の長さ（seconds）で決めたカットを、時刻 t のコマ（numpy）にする。"""
+
+    def __init__(self, look_path, config: dict, seconds: list[float]):
+        import numpy as np
+        self.np = np
+        self.lk = Look(look_path, config, seconds)
+        self.pl = self.lk.plan
+        self.prepared: dict[int, dict] = {}
+        self.ovs: dict = {}
+        band = np.ones(MH, dtype=np.float32)
+        top = int(MH * 0.70)
+        band[top:] = 1 - 0.30 * np.clip((np.arange(top, MH) - top) / ((MH - top) * 0.6), 0, 1)
+        self.band_top = top
+        self.band = (np.repeat(band[top:, None], MW, axis=1)[..., None].repeat(3, axis=2) * 255).astype(np.uint8)
+
+    # 絵 ------------------------------------------------------------------
+    def _crop_of(self, c: Cut):
+        spec = ((self.lk.look.get("ai") or {}).get(c.ref) or {}) if c.kind in ("ai", "end") else {}
+        if spec.get("lock"):
+            z0, fx, fy = spec["lock"]
+            return (float(z0), (float(fx), float(fy))), spec
+        if spec.get("crops") and c.crop in spec["crops"]:
+            z0, fx, fy = spec["crops"][c.crop]
+            return (float(z0), (float(fx), float(fy))), spec
+        return CROPS.get(c.crop, CROPS["wide"]), spec
+
+    def prep(self, i: int) -> dict:
+        if i in self.prepared:
+            return self.prepared[i]
+        for k in [k for k in self.prepared if k < i - 2]:
+            del self.prepared[k]
+        np = self.np
+        c = self.pl.cuts[i]
+        lk = self.lk
+        src = None
+        if c.kind in ("ai", "end"):
+            src = lk.ai_image(c.ref).convert("RGB")
+        elif c.kind == "part":
+            src = lk.painting(c.ref)
+        if src is not None and src.width / src.height >= 1.25:
+            crop, spec = self._crop_of(c)
+            if src.width > 2600:
+                src = src.resize((2600, round(src.height * 2600 / src.width)), Image.LANCZOS)
+            if spec.get("soften"):                                   # 上の遠景を暗くぼかす（A17）
+                k = float(spec["soften"])
+                hh = int(src.height * 0.55)
+                top = Image.eval(src.crop((0, 0, src.width, hh)).filter(ImageFilter.GaussianBlur(4)), lambda v: int(v * k))
+                mask = Image.linear_gradient("L").resize((src.width, hh)).transpose(Image.FLIP_TOP_BOTTOM)
+                src.paste(top, (0, 0), mask)
+            a = np.asarray(Grade(src.width, src.height, band_on=False)(src, i))
+            if c.dim:
+                a = (a.astype(np.float32) * DIM).astype(np.uint8)
+            p = {"src": a, "crop": crop, "move": MOVES[i % len(MOVES)] if c.kind != "end" else "in"}
+        else:                                                         # 額・章題カード・縦長の絵：止まった1枚を少しだけ寄せる
+            if c.kind == "chapter":
+                back = picture(lk.ai_image(c.backdrop or c.ref), 0.5, "in", "wide")
+                img = Grade(band_on=False)(back, i)
+                sec = lk.sc.sections[c.section]
+                label = ((lk.look.get("chapters") or {}).get(c.section) or {}).get("label", "").split(" ", 1)
+                img = chapter_card(img, label[0], sec.title, lk.font_of, lk.serif)
+            elif c.kind == "frame":
+                back = picture(lk.ai_image(c.backdrop), 0.5, "in", "wide")
+                img = Grade(band_on=False)(framed(back, None if c.dim else lk.painting(c.ref), 0.5, c.crop), i)
+            else:
+                img = Grade(band_on=False)(picture(src, 0.5, "in", c.crop), i)
+            a = np.asarray(img.convert("RGB"))
+            if c.dim:
+                a = (a.astype(np.float32) * DIM).astype(np.uint8)
+            p = {"src": a, "crop": (1.0, (0.5, 0.5)), "move": "in", "static": True}
+        self.prepared[i] = p
+        return p
+
+    def base(self, i: int, t: float):
+        import cv2
+        np = self.np
+        c = self.pl.cuts[i]
+        p = self.prep(i)
+        a = p["src"]
+        sh, sw = a.shape[:2]
+        u = min(1.0, max(0.0, (t - (c.start - FADE / 2)) / max(0.01, c.seconds + FADE)))
+        if p.get("static"):
+            z, dx, dy = 1.0 + 0.03 * u, 0.0, 0.0
+            cz, focus = 1.0, (0.5, 0.5)
+        else:
+            cz, focus = p["crop"]
+            z, dx, dy = S.motion(p["move"], u, 0.05)
+            z *= cz
+            if p["move"] in ("left", "right", "up", "down"):
+                z = max(z, 1.12)
+            z = min(z, ZOOM_CAP)
+        if sw / sh > MW / MH:
+            wh, ww = sh, sh * MW / MH
+        else:
+            ww, wh = sw, sw * MH / MW
+        ww, wh = ww / z, wh / z
+        cx = min(max(focus[0] * sw + dx * ww, ww / 2), sw - ww / 2)
+        cy = min(max(focus[1] * sh + dy * wh, wh / 2), sh - wh / 2)
+        sx, sy = MW / ww, MH / wh
+        m = np.array([[sx, 0, -(cx - ww / 2) * sx], [0, sy, -(cy - wh / 2) * sy]], dtype=np.float32)
+        return cv2.warpAffine(a, m, (MW, MH), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REFLECT)
+
+    # 重ねる物 --------------------------------------------------------------
+    def ov(self, key, build):
+        if key not in self.ovs:
+            if len(self.ovs) > 80:
+                self.ovs.pop(next(iter(self.ovs)))
+            lay = Image.new("RGBA", (MW, MH), (0, 0, 0, 0))
+            r = build(lay)
+            self.ovs[key] = _premul(r if isinstance(r, Image.Image) else lay)
+        return self.ovs[key]
+
+    def _cut_overlays(self, frame, c: Cut, line, w: float) -> None:
+        lk = self.lk
+        if c.kind in ("chapter", "end"):
+            return
+        if c.dim and line is not None and line.figure:
+            def fig(lay):
+                from . import figures
+                return figures.draw(lk.painter, lay, json.loads(line.figure), 1.0)
+            _put(frame, self.ov(("fig", line.index), fig), w)
+        if c.kind in ("ai", "frame") or (c.dim and c.backdrop):
+            _put(frame, self.ov(("ai",), lambda lay: draw_ai_label(lay, lk.font_of)), w)
+        if c.kind in ("frame", "part") and not c.dim:
+            text = lk.credits.get(c.ref) or Path(c.ref).stem
+            _put(frame, self.ov(("credit", c.ref), lambda lay: draw_credit(lay, text, lk.font_of)), w)
+
+    def frame(self, t: float):
+        import cv2
+        pl, lk = self.pl, self.lk
+        i, c = pl.cut_at(t)
+        img = self.base(i, t)
+        parts = [(c, 1.0)]
+        j, e = None, 0.0
+        if i + 1 < len(pl.cuts) and t >= c.end - FADE / 2:
+            j, e = i + 1, S._ease((t - (c.end - FADE / 2)) / FADE)
+        elif i > 0 and t < c.start + FADE / 2:
+            j, e = i - 1, 1 - S._ease((t - (c.start - FADE / 2)) / FADE)
+        if j is not None and e > 0.002:
+            img = cv2.addWeighted(img, 1 - e, self.base(j, t), e, 0)
+            parts = [(c, 1 - e), (pl.cuts[j], e)]
+        img = self.np.ascontiguousarray(img)
+        if c.kind != "chapter":
+            img[self.band_top:] = cv2.multiply(img[self.band_top:], self.band, scale=1 / 255)
+        unit = pl.unit_at(t)
+        line = lk.sc.lines[unit.line] if unit else None
+        for cc, w in parts:
+            self._cut_overlays(img, cc, line, w)
+        if c.kind in ("chapter", "end") or line is None:
+            return img
+        if not c.dim and line.card is not None:
+            prev = lk.sc.lines[line.index - 1].card if line.index else None
+            if prev != line.card:
+                t0 = pl.line_at[line.index][0]
+                _put(img, self.ov(("card", line.index), lambda lay: draw_card(lay, line.card.head, line.card.body, lk.font_of)),
+                     min(1.0, max(0.0, (t - t0) / 0.25)))
+        tag = pl.corner(line.index)
+        if tag:
+            _put(img, self.ov(("corner", tag), lambda lay: draw_corner(lay, tag, lk.font_of)))
+        k = pl.units.index(unit)
+        key = ("text", k)
+        if key not in self.ovs:
+            y = int(MH * TEXT_Y)
+            bright = float(img[y - 70:y + 70, 360:MW - 360].mean()) > 105
+            font = lk.serif(TEXT_SIZE) if is_record(line) else lk.font_of(TEXT_SIZE)
+            self.ov(key, lambda lay: text_layer(unit.block, font, line.imagined, bright, lk.font_of(24)))
+        _put(img, self.ovs[key], min(1.0, max(0.0, (t - unit.start) / TEXT_FADE + 0.15)))
+        return img
+
+
+def _render_segment(job: tuple) -> str:
+    """並行の1本：コマ f0〜f1 を描いて ffmpeg に流し、区切りの mp4 を書く。"""
+    look_path, config, seconds, f0, f1, target, ffmpeg_exe = job
+    import subprocess
+    v = Video(look_path, config, seconds)
+    cmd = [ffmpeg_exe, "-y", "-loglevel", "error", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{MW}x{MH}", "-r", str(FPS),
+           "-i", "-", "-c:v", "libx264", "-preset", "veryfast", "-crf", "19", "-pix_fmt", "yuv420p", "-g", str(FPS * 2),
+           "-threads", "2", str(target)]
+    proc = subprocess.Popen(cmd, stdin=subprocess.PIPE)
+    for n in range(f0, f1):
+        proc.stdin.write(v.frame((n + 0.5) / FPS).tobytes())
+    proc.stdin.close()
+    if proc.wait() != 0:
+        raise RuntimeError(f"ffmpeg が失敗しました: {target}")
+    return str(target)
+
+
+def voice_lines(sc, config) -> list:
+    """全行の声（chiso の音声合成。剣崎＝語り、人物の行は config の roles の声。控えは work/<台本>/voice で cli voice と同じ）。"""
+    from . import tts
+    from .cli import ROOT, load_readings, voices, work_dir
+    engine = tts.Voicevox(config["voicevox_url"])
+    vs = voices(config)
+    readings = load_readings(ROOT / "readings.yaml")
+    cache = work_dir(sc) / "voice"
+    out = []
+    for n, line in enumerate(sc.lines, 1):
+        out.append(tts.speak_line(engine, line, vs, readings, cache))
+        print(f"\r音声 {n}/{len(sc.lines)}", end="", flush=True)
+    print()
+    return out
+
+
+def build(look_path, config: dict, out_dir: Path, limit: float | None = None, workers: int = 4, name: str | None = None) -> dict:
+    """本編（横）を書き出す。limit 秒で打ち切る試し書きもできる。仮ファイルに書いて、長さを測ってから置き換える。
+    返すのは工程ごとの秒数・長さなど。"""
+    import os
+    import shutil
+    import subprocess
+    import time
+    from concurrent.futures import ProcessPoolExecutor
+    from . import mix, storyaudio
+    from .cli import ffmpeg, work_dir
+    times: dict[str, float] = {}
+    t_all = time.time()
+    lk0 = Look(look_path, config)
+    sc = lk0.sc
+    stem = name or sc.path.stem
+    wd = work_dir(sc) / "story_main"
+    wd.mkdir(parents=True, exist_ok=True)
+    t0 = time.time()
+    spoken = voice_lines(sc, config)
+    times["音声"] = time.time() - t0
+    seconds = [s.seconds for s in spoken]
+    pl = Plan(lk0.look, sc, seconds)
+    total = pl.total if limit is None else min(limit, pl.total)
+    t0 = time.time()
+    cues = [mix.Cue(line, round(pl.line_at[line.index][0], 3), round(pl.line_at[line.index][1], 3), s.wav)
+            for line, s in zip(sc.lines, spoken)]
+    import hashlib
+    key = hashlib.sha256(json.dumps([[str(c.wav), c.start] for c in cues] + [pl.total, BGM_DIFF_LU]).encode()).hexdigest()[:16]
+    keyfile = wd / "voice_bgm.key"
+    if (wd / "voice_bgm.wav").exists() and keyfile.exists() and keyfile.read_text() == key:   # 声の並びが同じなら BGM の重ねを使い回す（約6分）
+        bgm = json.loads((wd / "voice_bgm.json").read_text(encoding="utf-8"))
+    else:
+        mix.write_audio(cues, pl.total, wd / "voice.wav")
+        bgm = storyaudio.mix_voice_bgm(wd / "voice.wav", wd / "voice_bgm.wav", pl.total, [], ffmpeg(), diff_lu=BGM_DIFF_LU)
+        bgm = {k: (float(v) if hasattr(v, "__float__") and not isinstance(v, (list, dict)) else v) for k, v in bgm.items()}
+        (wd / "voice_bgm.json").write_text(json.dumps(bgm, ensure_ascii=False), encoding="utf-8")
+        keyfile.write_text(key)
+    times["声とBGMの重ね"] = time.time() - t0
+    t0 = time.time()
+    frames = int(round(total * FPS))
+    n_seg = max(workers * 2, 1) if limit is None or limit > 120 else workers
+    bounds = [frames * k // n_seg for k in range(n_seg + 1)]
+    segs = [wd / f"seg{k:02d}.mp4" for k in range(n_seg)]
+    jobs = [(str(look_path), config, seconds, bounds[k], bounds[k + 1], str(segs[k]), ffmpeg()) for k in range(n_seg)]
+    with ProcessPoolExecutor(max_workers=workers) as ex:
+        for k, _ in enumerate(ex.map(_render_segment, jobs), 1):
+            print(f"\r映像 {k}/{n_seg}", end="", flush=True)
+    print()
+    times["映像（描く＋符号化）"] = time.time() - t0
+    t0 = time.time()
+    lst = wd / "segments.txt"
+    lst.write_text("".join(f"file '{p.as_posix()}'\n" for p in segs), encoding="utf-8")
+    target = out_dir / f"{stem}.mp4"
+    part = out_dir / f"{stem}.{os.getpid()}.part.mp4"
+    cmd = [ffmpeg(), "-y", "-loglevel", "error", "-f", "concat", "-safe", "0", "-i", str(lst), "-i", str(wd / "voice_bgm.wav"),
+           "-t", f"{total:.3f}", "-map", "0:v", "-map", "1:a", "-c:v", "copy",
+           "-af", loud_gain(wd / "voice_bgm.wav"),     # 全体を同じ倍率で上げる（loudnorm は声の間で BGM を持ち上げ、差が 22→13LU に縮んだ。10-25）
+           "-c:a", "aac", "-b:a", "192k", "-ar", "48000",
+           "-movflags", "+faststart", str(part)]
+    subprocess.run(cmd, check=True)
+    dur = probe_seconds(part)
+    if abs(dur - total) > 1.0:
+        raise RuntimeError(f"書き出した長さ {dur:.1f}秒が予定 {total:.1f}秒と合いません（{part} は残しました）")
+    shutil.move(str(part), str(target))
+    for p in segs:
+        p.unlink(missing_ok=True)
+    times["つなぎと音"] = time.time() - t0
+    times["合計"] = time.time() - t_all
+    return {"target": target, "seconds": dur, "plan_total": pl.total, "times": times, "bgm": bgm, "cuts": len(pl.cuts)}
+
+
+def probe_seconds(path: Path) -> float:
+    """動画の長さ（秒）。ffprobe が無ければ ffmpeg の出力から読む。"""
+    import re as _re
+    import shutil
+    import subprocess
+    from .cli import ffmpeg
+    probe = shutil.which("ffprobe")
+    if probe:
+        out = subprocess.run([probe, "-v", "error", "-show_entries", "format=duration", "-of", "default=nw=1:nk=1", str(path)],
+                             capture_output=True, text=True, check=True).stdout
+        return float(out.strip())
+    err = subprocess.run([ffmpeg(), "-i", str(path)], capture_output=True, text=True, encoding="utf-8", errors="replace").stderr
+    h, m, s = _re.search(r"Duration: (\d+):(\d+):([\d.]+)", err).groups()
+    return int(h) * 3600 + int(m) * 60 + float(s)
+
+
+TARGET_LUFS = -16.0             # 本編の大きさ（YouTube の基準に近く。上げ過ぎると頭を叩く所が増える）
+
+
+def loud_gain(wav: Path) -> str:
+    """声＋BGM の全体を同じ倍率で TARGET_LUFS へ。はみ出す頭だけ alimiter で抑える（声と BGM の差は変えない）。"""
+    from . import storyaudio
+    from .cli import ffmpeg
+    gain = TARGET_LUFS - storyaudio.lufs(ffmpeg(), wav)
+    return f"volume={gain:.2f}dB,alimiter=limit=0.89:level=disabled"

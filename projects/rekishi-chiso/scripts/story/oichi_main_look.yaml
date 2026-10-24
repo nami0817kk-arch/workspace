@@ -56,6 +56,11 @@ ai:
   A24: {scene: 光の門を出ていく娘3人の後ろ姿, stand_in: S2, horizontal_of: S2}
   A25: {scene: 終了画面用。月夜の北ノ庄の城跡と静かな川（右半分を空けた構図）, stand_in: S1, lock: [1.0, 0.5, 0.5]}
 
+# 実在の絵の手当て（元の画像は変えない）：crop＝切り出し（幅・高さの割合 [左, 上, 右, 下]）、bright・contrast＝明るさ・コントラストの倍率
+paint_fx:
+  paintings/oichi_katsuie_portrait.jpg: {crop: [0.03, 0.32, 0.97, 0.97], bright: 1.35, contrast: 1.25}   # 暗い掛け軸。人物の所だけを明るく（10-25）
+  paintings/oichi_fukui_castle_map.jpg: {crop: [0.165, 0.02, 0.82, 0.955]}                             # 左の物差しと右の色見本の帯を外す（10-25）
+
 # 絵の割り当て：「行の番号 種類:絵 [切り出し]」。次の行の指定まで続く。
 #   ai:A01＝AI 絵を全面（切り出し wide/left/right/face。長いと自動で切り出しを替える）
 #   frame:<絵>＝実在の絵を額のカードにして、直前の AI 絵をぼかして暗くした上に置く
@@ -128,7 +133,7 @@ shots:
   - 87 ai:A18 wide
   - 90 frame:paintings/oichi_katsuie_yoshiiku.jpg
   - 91 ai:A01 wide
-  - 92 frame:paintings/oichi_katsuie_portrait.jpg
+  - 92 frame:paintings/oichi_katsuie_utamaro.jpg
   - 94 ai:A03 wide
   - 96 ai:A19 wide
   - 99 ai:A20 wide
@@ -142,7 +147,7 @@ shots:
   - 113 frame:paintings/oichi_katsuie_yoshiiku.jpg
   - 115 ai:A01 face
   - 116 ai:A05 face
-  - 117 frame:paintings/oichi_katsuie_portrait.jpg
+  - 117 frame:paintings/oichi_katsuie_utamaro.jpg
   - 118 frame:paintings/toshiie_photo_kitanosho_shibata_01.jpg
   - 119 ai:A03 left
   - 120 ai:A21 wide
@@ -156,7 +161,7 @@ shots:
   - 134 frame:paintings/oichi_taiheiki_shui_1870.jpg
   - 135 frame:paintings/akechi_hideyoshi_kodaiji.jpg
   - 136 frame:paintings/hidenaga_kiyosu_ehon_taikoki.jpg
-  - 137 frame:paintings/oichi_katsuie_portrait.jpg
+  - 137 frame:paintings/oichi_katsuie_utamaro.jpg
   - 139 frame:paintings/akechi_hideyoshi_kodaiji.jpg
   - 141 frame:paintings/oichi_nagamasa_kuniyoshi.jpg
   - 142 ai:A10 wide
