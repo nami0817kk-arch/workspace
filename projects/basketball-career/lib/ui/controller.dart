@@ -397,6 +397,10 @@ class GameController extends ChangeNotifier {
     if (g.lastCareerLines.isNotEmpty) {
       pending.add(Milestone(MilestoneKind.award, '通算記録!', g.lastCareerLines.join('\n')));
     }
+    final sponsorNote = g.lastSponsorNote;
+    if (sponsorNote != null) {
+      pending.add(Milestone(MilestoneKind.contract, 'スポンサー契約', sponsorNote));
+    }
     final contract = g.lastSalaryNote;
     if (contract != null) {
       pending.add(Milestone(MilestoneKind.contract, '契約更改', contract.replaceFirst('契約更改: ', '')));

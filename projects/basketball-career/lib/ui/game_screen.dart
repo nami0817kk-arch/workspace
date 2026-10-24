@@ -278,6 +278,9 @@ class _PlayerCard extends StatelessWidget {
             if (game.track == Track.pro && game.salary > 0)
               Text('年俸 ${moneyLabel(game.salary)}  (これまでの収入 ${moneyLabel(game.totalEarnings)})',
                   style: const TextStyle(fontSize: 12)),
+            if (game.track == Track.pro && game.sponsor > 0)
+              Text('スポンサー契約 年${moneyLabel(game.sponsor)}',
+                  style: const TextStyle(fontSize: 12)),
             if (game.track == Track.school && p.age >= 15 ||
                 game.track == Track.university ||
                 game.track == Track.corporate)

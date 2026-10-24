@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:basketball_career/game/advice.dart';
 import 'package:basketball_career/game/epilogue.dart';
 import 'package:basketball_career/game/game.dart';
+import 'package:basketball_career/game/honors.dart';
 import 'package:basketball_career/game/legacy.dart';
 import 'package:basketball_career/game/life.dart';
 import 'package:basketball_career/game/match.dart';
@@ -167,5 +168,123 @@ void main() {
     final ids = achievements.where((a) => a.earned(g)).map((a) => a.id).toSet();
     expect(ids, containsAll(['earn_5oku', 'career_points_2000']));
     expect(ids, isNot(contains('earn_20oku')));
+  });
+
+  group('スポンサー契約', () {
+    int sp({
+      double o = 75,
+      int h = 0,
+      bool champ = false,
+      bool star = false,
+      int pick = 40,
+      int caps = 0,
+      bool abroad = false,
+    }) =>
+        sponsorOf(
+            overall: o, honorsLastYear: h, champion: champ, star: star, draftPick: pick, caps: caps, abroad: abroad);
+
+    test('目立たなければ付かない・総合60未満は付かない', () {
+      expect(sp(), 0);
+      expect(sp(o: 55, h: 4, champ: true, star: true), 0);
+    });
+
+    test('表彰・優勝・華がある・上位指名・日本代表・海外で増え、最大3,000万円', () {
+      expect(sp(h: 1), 600);
+      expect(sp(h: 1, champ: true), 1500);
+      expect(sp(star: true), 900);
+      expect(sp(pick: 3), 600);
+      expect(sp(caps: 1), 600);
+      expect(sp(abroad: true), 600);
+      expect(sp(h: 9, champ: true, star: true, pick: 1, caps: 2, abroad: true), 3000);
+    });
+
+    test('年の終わりごとに通算収入へ、年俸とスポンサーの両方が入る', () {
+      final base = Game.start('x', rng: Random(1), events: false);
+      final g = Game(
+        eventsEnabled: false,
+        player: base.player.copyWith(age: 24, heightCm: 196, abilities: {for (final a in Ability.values) a: 78}),
+        rng: Random(2),
+        track: Track.pro,
+        salary: 2000,
+        sponsor: 900,
+      );
+      final age = g.player.age;
+      var guard = 0;
+      while (g.player.age == age && g.phase != Phase.retired && guard++ < 50) {
+        switch (g.phase) {
+          case Phase.season:
+            g.choose(recommendedAction(g), recommendedFocus(g.player));
+          case Phase.halftime:
+            g.resolveHalftime(bestHalftime(g.player, g.halftimeInfo!));
+          case Phase.clutch:
+            g.resolveClutch(Clutch.drive);
+          case Phase.event:
+            g.resolveEvent(0);
+          default:
+            break;
+        }
+      }
+      expect(g.totalEarnings, 2900, reason: '年俸2,000万+スポンサー900万');
+    });
+
+    test('スポンサーは保存・復元で変わらず、古いセーブは0', () {
+      final base = Game.start('x', rng: Random(1), events: false);
+      final g = Game(eventsEnabled: false, player: base.player, rng: Random(2), sponsor: 1200);
+      expect(Game.fromJson(g.toJson()).sponsor, 1200);
+      final j = g.toJson()..remove('sponsor');
+      expect(Game.fromJson(j).sponsor, 0);
+    });
+  });
+
+  group('引退後の進路', () {
+    Game ended({
+      int years = 0,
+      int coach = 20,
+      int team = 40,
+      int earnings = 0,
+      int honorsEach = 0,
+      bool abroadTitle = false,
+    }) {
+      final base = Game.start('x', rng: Random(1), events: false);
+      final g = Game(
+        eventsEnabled: false,
+        player: base.player.copyWith(age: 36),
+        rng: Random(2),
+        track: years > 0 ? Track.pro : Track.school,
+        coachBond: coach,
+        teamwork: team,
+        totalEarnings: earnings,
+        abroad: abroadTitle,
+      );
+      for (var i = 0; i < years; i++) {
+        g.records.add(YearRecord(
+          age: 25 + i, league: abroadTitle ? League.proAbroad : League.proDomestic, wins: 4, games: 8,
+          ppg: 12, rpg: 4, apg: 3, champion: abroadTitle && i == 0, achievement: 60,
+          honors: [for (var k = 0; k < honorsEach; k++) Honor.allStar],
+        ));
+      }
+      return g;
+    }
+
+    test('信頼・チームワークが高いプロ5年以上は指導者', () {
+      expect(secondCareer(ended(years: 6, coach: 60)), contains('指導者'));
+      expect(secondCareer(ended(years: 6, team: 70)), contains('指導者'));
+    });
+
+    test('表彰を重ねた・世界で優勝したなら解説者', () {
+      expect(secondCareer(ended(years: 6, honorsEach: 1)), contains('解説者'));
+      expect(secondCareer(ended(years: 3, abroadTitle: true)), contains('解説者'));
+    });
+
+    test('稼いだ額が大きければ育成アカデミー、プロ経験なしは地元のクラブ、それ以外は会社員', () {
+      expect(secondCareer(ended(years: 6, earnings: 120000)), contains('アカデミー'));
+      expect(secondCareer(ended()), contains('地元のクラブ'));
+      expect(secondCareer(ended(years: 2)), contains('会社員'));
+    });
+
+    test('エンディングに引退後の一文が入る', () {
+      final lines = epilogueLines(ended(years: 6, coach: 60));
+      expect(lines.any((l) => l.startsWith('引退後は')), isTrue);
+    });
   });
 }

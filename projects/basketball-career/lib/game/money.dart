@@ -26,6 +26,27 @@ int salaryOf({required double overall, required int honorsLastYear, required boo
   return (base / 10).round() * 10;
 }
 
+/// スポンサー契約の年収(万円)。人気で決まる: 前の年の表彰・優勝・華がある・上位指名・日本代表・海外での活躍。
+/// 総合60未満は付かない。1点あたり300万円、最大3,000万円。
+int sponsorOf({
+  required double overall,
+  required int honorsLastYear,
+  required bool champion,
+  required bool star,
+  required int draftPick,
+  required int caps,
+  required bool abroad,
+}) {
+  if (overall < 60) return 0;
+  final points = min(honorsLastYear, 4) * 2 +
+      (champion ? 3 : 0) +
+      (star ? 3 : 0) +
+      (draftPick >= 1 && draftPick <= 10 ? 2 : 0) +
+      (caps > 0 ? 2 : 0) +
+      (abroad ? 2 : 0);
+  return min(points * 300, 3000);
+}
+
 /// 「1億2,500万円」「850万円」のように読みやすく。
 String moneyLabel(int man) {
   if (man <= 0) return '0円';

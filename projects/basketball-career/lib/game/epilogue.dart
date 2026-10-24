@@ -22,6 +22,25 @@ int proYears(Game g) => g.records
     .toSet()
     .length;
 
+/// 引退後の進路(セカンドキャリア)。実績・人柄・収入で決まる。優先順に最初に当てはまるもの。
+String secondCareer(Game g) {
+  final py = proYears(g);
+  final name = g.player.name;
+  if (py >= 5 && (g.coachBond >= 50 || g.teamwork >= 60)) {
+    return '引退後は指導者の道へ。チームのコーチとして、次の世代の選手を育てている。';
+  }
+  if (g.honorTotal >= 3 || worldChampion(g) || (g.abroad && g.titles > 0)) {
+    return '引退後は解説者として、試合の中継で語り口が人気になった。$nameの解説を待つファンも多い。';
+  }
+  if (g.totalEarnings >= 100000) {
+    return '引退後は、稼いだ資金でバスケットボールの育成アカデミーを開き、子どもたちを教えている。';
+  }
+  if (py == 0) {
+    return '引退後は、地元のクラブで子どもたちにバスケを教えている。';
+  }
+  return '引退後は会社員として働きながら、週末はクラブチームでボールを追いかけている。';
+}
+
 /// 日本代表で世界大会を制したか。
 bool worldChampion(Game g) =>
     g.records.any((r) => r.league == League.national && r.champion);
@@ -137,7 +156,7 @@ List<String> epilogueLines(Game g) {
   }
 
   if (g.totalEarnings > 0) {
-    lines.add('プロで稼いだ生涯収入は、約${moneyLabel(g.totalEarnings)}。');
+    lines.add('プロで稼いだ生涯収入は、年俸とスポンサー契約をあわせて約${moneyLabel(g.totalEarnings)}。');
   }
 
   final cp = g.totalPoints;
@@ -193,6 +212,8 @@ List<String> epilogueLines(Game g) {
     thanks.add('仲間の${g.mate}とは、いまも連絡を取り合っている。');
   }
   if (thanks.isNotEmpty) lines.add(thanks.join(''));
+
+  lines.add(secondCareer(g));
 
   final reason = g.retiredReason ?? '現役を退いた';
   // 古いセーブの理由は「41歳で…」と年齢を含んでいる(重ねない)。
