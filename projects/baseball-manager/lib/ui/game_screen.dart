@@ -2521,7 +2521,8 @@ class _SkillCard extends StatelessWidget {
               style: TextStyle(fontSize: 11, color: Colors.grey)),
           Text(
               '値段は年齢で変わる: いま ×${skillAgeMultiplier(p.age).toStringAsFixed(2)}'
-              '(少年×0.5・中学×0.7・高校×0.85・19〜24歳×1.0・25〜29歳×1.25・30歳〜×1.5)。幼いうちほど身につけやすい。',
+              '(少年×0.5・中学×0.7・高校×0.85・19〜24歳×1.0・25〜29歳×1.25・30歳〜×1.5)。幼いうちほど身につけやすい。'
+              'また、特殊能力を1つ持つごとに次の値段が${(1 + tSkillStep / 100).toStringAsFixed(1)}倍になる。金特は$goldSkillAge歳(高校)から。',
               key: const Key('skill-age-note'),
               style: const TextStyle(fontSize: 11, color: Color(0xFF6D4C41))),
           if (weak.isNotEmpty) ...[
@@ -2575,7 +2576,13 @@ class _SkillRow extends StatelessWidget {
     final tips = game.skillTips[s] ?? 0;
     final price = game.skillPrice(s);
     final why = skillBlock(game.player, s, game.exp, tips);
-    final locked = s.requires != null && !game.player.skills.contains(s.requires);
+    final needsBase =
+        s.requires != null && !game.player.skills.contains(s.requires);
+    final tooYoung = s.gold && game.player.age < goldSkillAge;
+    final locked = needsBase || tooYoung;
+    final lockText = needsBase
+        ? '「${s.requires!.label}」が先'
+        : '金特は$goldSkillAge歳(高校)から';
     final studying = game.studyTarget == s;
     final canStudy = !locked && game.phase != Phase.retired;
     return Padding(
@@ -2584,7 +2591,7 @@ class _SkillRow extends StatelessWidget {
         Expanded(
           child: Tooltip(
             message: locked
-                ? '${s.description}(「${s.requires!.label}」を取ると取れる)'
+                ? '${s.description}($lockText)'
                 : '${s.description} ${effectText(s)}',
             triggerMode: TooltipTriggerMode.tap,
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -2631,7 +2638,7 @@ class _SkillRow extends StatelessWidget {
                         fontSize: 11, color: Color(0xFF2E7D32))),
               Text(
                   locked
-                      ? '「${s.requires!.label}」が先'
+                      ? lockText
                       : s.negative
                           ? '克服に ${s.category.label} $price'
                           : 'コツ ${'●' * tips}${'○' * (maxSkillTips - tips)}  ${s.category.label} $price',

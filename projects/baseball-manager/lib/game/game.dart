@@ -754,7 +754,8 @@ class Game {
       ];
 
   /// 特殊能力の値段(いまのコツで)。
-  int skillPrice(Skill s) => skillCost(s, skillTips[s] ?? 0, player.age);
+  int skillPrice(Skill s) =>
+      skillCost(s, skillTips[s] ?? 0, player.age, ownedSkillCount(player));
 
   /// 経験点で特殊能力を取る。取れなければ理由の文を返す(取れたら null)。
   String? buySkill(Skill s) {

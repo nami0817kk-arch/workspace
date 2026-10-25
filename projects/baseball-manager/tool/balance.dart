@@ -72,7 +72,10 @@ void _buySkills(Game g) {
     if (g.player.skills.contains(s)) g.buySkill(s);
   }
   for (final s in skillsFor(g.player.role)) {
-    if ((g.skillTips[s] ?? 0) >= 3 || s.gold) g.buySkill(s);
+    // 割に合う値段のときだけ(持つほど・年をとるほど高くなるので、高すぎるものは見送る)
+    if (((g.skillTips[s] ?? 0) >= 3 || s.gold) && g.skillPrice(s) <= s.baseCost) {
+      g.buySkill(s);
+    }
   }
 }
 

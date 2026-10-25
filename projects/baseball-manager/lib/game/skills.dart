@@ -223,13 +223,25 @@ double skillAgeMultiplier(int age) => age <= 12
                     ? 1.25
                     : 1.5;
 
-/// コツ `tips`・年齢 `age` のときの値段(年齢を渡さなければ倍率1.0の基準値)。
-int skillCost(Skill s, int tips, [int age = 20]) => max(
+/// 特殊能力を1つ持つごとに、次の値段が上がる割合(%、積み重なる)。dart run -DBAL_SKSTEP=20 で試せる。
+/// 経験点を全部特殊能力に使うと、少年のうちに全部取れてしまった(2026-10-25)ので、持つほど高くする。
+const tSkillStep = int.fromEnvironment('BAL_SKSTEP', defaultValue: 40);
+
+/// 金の特殊能力を取れる年齢(高校から)。
+const goldSkillAge = 16;
+
+/// コツ `tips`・年齢 `age`・すでに持っている数 `owned` のときの値段
+/// (年齢を渡さなければ倍率1.0、持っている数を渡さなければ0個として)。弱点の克服は、持っている数で上がらない。
+int skillCost(Skill s, int tips, [int age = 20, int owned = 0]) => max(
     1,
     (s.baseCost *
             (1 - skillTipDiscount * tips.clamp(0, maxSkillTips)) *
-            skillAgeMultiplier(age))
+            skillAgeMultiplier(age) *
+            (s.negative ? 1.0 : pow(1 + tSkillStep / 100, owned)))
         .round());
+
+/// 選手がすでに持っている特殊能力の数(弱点は数えない)。値段の上がり方に使う。
+int ownedSkillCount(Player p) => p.skills.where((k) => !k.negative).length;
 
 /// 役割で取れる特殊能力の一覧(画面の並び順: 金特は最後)。
 List<Skill> skillsFor(Role r) => [
@@ -267,7 +279,10 @@ String? skillBlock(Player p, Skill s, ExpPool pool, int tips) {
   if (p.skills.contains(s)) return '取得済み';
   final req = s.requires;
   if (req != null && !p.skills.contains(req)) return '「${req.label}」が先に要る';
-  if (pool.of(s.category) < skillCost(s, tips, p.age)) return '経験点が足りない';
+  if (s.gold && p.age < goldSkillAge) return '金特は$goldSkillAge歳(高校)から';
+  if (pool.of(s.category) < skillCost(s, tips, p.age, ownedSkillCount(p))) {
+    return '経験点が足りない';
+  }
   return null;
 }
 
@@ -295,7 +310,7 @@ double skillRating(Player p) {
 }
 
 /// 特殊能力が総合評価に効く重み(×100)。dart run -DBAL_SKW=40 で試せる。
-const tSkillWeight = int.fromEnvironment('BAL_SKW', defaultValue: 33);
+const tSkillWeight = int.fromEnvironment('BAL_SKW', defaultValue: 90);
 
 /// 投手の特殊能力が総合評価に効く重み(割る数×10)。dart run -DBAL_PSKILL=40 で試せる。
 const tPitcherSkillDiv = int.fromEnvironment('BAL_PSKILL', defaultValue: 35);

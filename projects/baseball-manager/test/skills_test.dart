@@ -70,8 +70,9 @@ void main() {
       expect(g.exp.of(Category.batting), before - skillCost(Skill.powerHitter, 0, 6));
       expect(skillCost(Skill.powerHitter, 0, 6), 20);
       expect(g.buySkill(Skill.powerHitter), '取得済み');
-      // もとを取ったので金特が取れる(値段は高い)
-      g.adminAddExp(200);
+      // もとを取ったので金特が取れる(値段は高い。金特は16歳から)
+      g.player = g.player.copyWith(age: 16);
+      g.adminAddExp(400);
       expect(g.buySkill(Skill.artist), isNull);
       expect(g.player.skills, contains(Skill.artist));
       expect(g.log.any((l) => l.contains('特殊能力「アーチスト」を取得')), isTrue);
@@ -234,6 +235,22 @@ void main() {
       expect(skillCost(Skill.powerHitter, 0, 10), 20); // 少年は半額
       expect(skillCost(Skill.powerHitter, 0, 20), 40); // 基準
       expect(skillCost(Skill.powerHitter, 0, 33), 60); // 30歳からは1.5倍
+    });
+
+    test('持つほど高くなる(1つごとに1.4倍、積み重なる)。弱点の克服は上がらない', () {
+      expect(skillCost(Skill.chance, 0, 20, 0), 30);
+      expect(skillCost(Skill.chance, 0, 20, 1), 42);
+      expect(skillCost(Skill.chance, 0, 20, 2), 59);
+      expect(skillCost(Skill.strikeoutProne, 0, 20, 5), 30);
+    });
+
+    test('金特は16歳(高校)から', () {
+      final g = _game();
+      g.player = g.player.copyWith(age: 12, skills: {Skill.averageHitter});
+      g.adminAddExp(2000);
+      expect(g.buySkill(Skill.geniusBat), contains('16歳'));
+      g.player = g.player.copyWith(age: 16);
+      expect(g.buySkill(Skill.geniusBat), isNull);
     });
 
     test('生まれつきの弱点: 0〜2個、役割に合うもの。同じ種なら同じ。乱数の並びは変えない', () {
