@@ -49,7 +49,13 @@ CHAPTER_SECONDS = 4.0           # 章題カード（声の前）
 CHAPTER_PAD = 0.3               # 章題カードの前後の間（10-25。0.6 から詰めた）
 GAP_SCALE = 0.75                # 行の間を本編の決まり（gap_before）の 0.75 倍に（10-25 比べで間が 32%、参考の中央値 24%）
 DIM_RUN = 45.0                  # 図の間も、これを超えたら1ブロックだけ図を外して絵を見せる（図は語りに合わせて書き込まれるので長めでよい）
-FOCUS_SECONDS = 1.6             # 語りが物・人を言ってから、そこへ寄りきるまで
+CUT_LEAD = 0.2                  # カットを替えるのは次の文の頭の 0.2 秒前（歴史横丁・キンブラは 0.1〜0.3 秒前）
+ZOOM_RATE = 0.012               # 寄り・引きの速さ（1秒あたりの拡大率の変化。参考の中央値 1.2%/秒。一定の速さで最初から最後まで）
+PAN_RATE = 0.016                # パンの速さ（1秒に画面の幅の約1.6%。参考は 1.4〜2.5%）。長いカットは余白の上限で遅くなる
+PAN_MIN, PAN_MAX = 1.08, 1.2    # パンのために絵を置く大きさ（余白の中を端から端へ流す）
+SAME_FADE = 0.5                 # 同じ絵の別の構図へ替えるときだけ溶け合わせる（ほかはハードカット）
+REVEAL_LEAD = 0.25              # 関係図の札は、その語の 0.25 秒前から出始める（キンブラ：0〜0.3 秒前）
+FRAME_CAP = 1.35                # 額のカードを寄せる上限
 END_SECONDS = 20.0              # 終了画面の空き
 CUT_MAX = 20.0                  # 1カットの長さの上限（これを超えると切り出しを替える）
 CUT_MIN = 8.0
@@ -515,7 +521,9 @@ class Plan:
         end = [s for s in self.shots if s[0] == "end"]
         if end:
             cuts.append(Cut("end", end[0][2], end[0][3], self.voice_end, self.total, (), section=lines[-1].section))
-        for a, b in zip(cuts, cuts[1:]):                 # 隙間（行間・間）は前のカットに含める
+        for a, b in zip(cuts, cuts[1:]):                 # 次のカットは次の文の頭の CUT_LEAD 秒前から（参考：0.1〜0.3秒前）。隙間は前のカットに含める
+            if b.lines and a.kind != "chapter" and b.start - CUT_LEAD > a.start + 1.0:
+                b.start -= CUT_LEAD
             a.end = b.start
         return cuts
 
@@ -802,7 +810,7 @@ def _grid(paths: list[Path], labels: list[str], target: Path, font, cols: int = 
 # 寄り・パンは cv2.warpAffine（小数の位置で補間するのでガタつかない）、文字・札・図は透明な画像を範囲だけ重ねる。
 # コマの範囲を何本かに分けて並行で描き、それぞれ ffmpeg に流して区切りの mp4 にし、最後につないで音を付ける。
 FADE = 0.4                      # 絵の替わり目の溶け合い（秒）
-TEXT_FADE = 0.15                # 語りの文字が出るときのフェード（秒）
+TEXT_FADE = 0.0                 # 語りの文字は一瞬で替える（10-25 参考どおり）
 DIM = 0.53                      # 図の間の絵の暗さ（frame_at の黒 120/255 と同じ）
 BGM_DIFF_LU = 30.5              # BGM の LUFS を声より 30.5LU 下に。比べの物差し（50ms の音の中央値と、声の切れ目の中央値の差）で約23dB になる
                                 # （10-25：22LU では物差しで 14.5dB だった。LUFS は声の大きい所で決まり、切れ目の差とは 8〜9dB ずれる）
@@ -908,9 +916,11 @@ class Video:
                 mask = Image.linear_gradient("L").resize((src.width, hh)).transpose(Image.FLIP_TOP_BOTTOM)
                 src.paste(top, (0, 0), mask)
             a = np.asarray(Grade(src.width, src.height, band_on=False)(src, i))
+            fxspec = (lk.look.get("fx") or {}).get(c.ref) if c.kind in ("ai", "end") else None
+            fx = FX(a, fxspec, seed=sum(map(ord, c.ref)), dim=DIM if c.dim else 1.0) if fxspec else None
             if c.dim:
                 a = (a.astype(np.float32) * DIM).astype(np.uint8)
-            p = {"src": a, "crop": crop, "move": MOVES[i % len(MOVES)] if c.kind != "end" else "in"}
+            p = {"src": a, "crop": crop, "move": MOVES[i % len(MOVES)] if c.kind != "end" else "in", "fx": fx}
         else:                                                         # 額・章題カード・縦長の絵：止まった1枚を少しだけ寄せる
             if c.kind == "chapter":
                 back = picture(lk.ai_image(c.backdrop or c.ref), 0.5, "in", "wide")
@@ -927,14 +937,14 @@ class Video:
             if c.dim:
                 a = (a.astype(np.float32) * DIM).astype(np.uint8)
             p = {"src": a, "crop": (1.0, (0.5, 0.5)), "move": "in", "static": True}
-        p["events"] = self._events(c, src)
+        p["path"] = self._path(i, c, p)
         self.prepared[i] = p
         return p
 
-    def _events(self, c: Cut, src) -> list:
-        """このカットで寄る時刻と先。AI 絵は絵の中の位置、額は額の中の絵の位置を画面の位置に直す。"""
+    def _targets(self, c: Cut) -> list[tuple[float, tuple]]:
+        """このカットで語られる物・人・場所（look の focus）の (言う時刻, (倍率, 中心x, 中心y))。額は額の中の絵の位置を画面の位置に直す。"""
         focus = self.lk.look.get("focus") or {}
-        if c.kind in ("ai",):
+        if c.kind == "ai":
             return self.pl.focus_events(c, focus.get(c.ref))
         if c.kind == "frame" and not c.dim:
             ev = self.pl.focus_events(c, focus.get(c.ref))
@@ -943,33 +953,77 @@ class Video:
             pw, ph = self.lk.painting(c.ref).size
             if c.crop == "b":
                 pw, ph = pw * 0.84, ph * 0.72
-            s = min(1180 / pw, 740 / ph)
-            w, h = pw * s, ph * s
+            s_ = min(1180 / pw, 740 / ph)
+            w, h = pw * s_, ph * s_
             x0, y0 = (MW - w) / 2, 92 + (740 - h) / 2
             out = []
             for te, (z, fx, fy) in ev:
                 if c.crop == "b":
                     fx, fy = (fx - 0.08) / 0.84, fy / 0.72
-                out.append((te, (z, (x0 + fx * w) / MW, (y0 + fy * h) / MH)))
+                out.append((te, (min(z, FRAME_CAP), (x0 + fx * w) / MW, (y0 + fy * h) / MH)))
             return out
         return []
 
+    def _path(self, i: int, c: Cut, p: dict) -> tuple:
+        """カットの最初と最後の窓 (倍率, 中心x, 中心y)。あいだは一定の速さで動かす（10-25 歴史横丁の型）。
+        動きはパン（平行移動）が主（10-25 ユーザー「寄せるではなく、上から下に、右から左に動くでは？」）：絵を PAN_SCALE 倍ほどに置き、
+        その余白の中を端から端へ流す。縦の構図（look の ai の pan: v）は上下、横の構図（pan: h、既定）は左右。隣のカットとは向きを替える。
+        向きと止まる所は話で決める：その行で語る物・人（look の focus）があれば、終わりにそれが画面の主役になる所で止める。
+        2つ語られれば1つ目から2つ目へ流す（明かしのパン）。寄り（拡大）は pan: zoom の絵（顔の感情の場面）だけ。"""
+        d = max(0.5, c.seconds)
+        if c.dim or c.kind == "chapter":                  # 図の間・章題カードは止める（キンブラ：図の場面は寄らない）
+            base = (1.0, 0.5, 0.5) if p.get("static") else (p["crop"][0], *p["crop"][1])
+            return base, base
+        cz, (fx, fy) = ((1.0, (0.5, 0.5)) if p.get("static") else p["crop"])
+        spec = ((self.lk.look.get("ai") or {}).get(c.ref) or {}) if c.kind in ("ai", "end") else {}
+        mode = str(spec.get("pan", "h"))
+        if c.kind == "frame":
+            mode = "v" if self.lk.painting(c.ref).height > self.lk.painting(c.ref).width else "h"
+        rate = PAN_RATE
+        room = min(PAN_MAX - 1, max(PAN_MIN - 1, rate * d))             # 余白（画面の幅に対する割合）
+        z = max(cz, 1 + room)
+        travel = 1 - 1 / z                                               # 窓が動ける量（絵の幅・高さに対する割合）
+        tg = self._targets(c) if c.kind in ("ai", "frame") else []
+        if mode == "zoom":                                # 顔の感情の場面：一定の速さでゆっくり寄る
+            z1 = min(ZOOM_CAP, cz * (1 + ZOOM_RATE * d))
+            ex, ey = (tg[0][1][1], tg[0][1][2]) if tg else (fx, fy)
+            return (cz, fx, fy), (z1, ex, ey)
+        if len(tg) >= 2:                                  # 明かしのパン：1つ目 → 2つ目
+            (_, a), (_, b) = tg[0], tg[1]
+            zz = max(z, 1 + min(0.25, abs(b[1] - a[1]) + abs(b[2] - a[2])))
+            zz = min(zz, PAN_MAX + 0.1)
+            return (zz, a[1], a[2]), (zz, b[1], b[2])
+        flip = (i // 1) % 2 == 1
+        if mode == "v":
+            sx, sy = 0.0, (1 if flip else -1)            # 上→下（窓が下へ）か 下→上
+        else:
+            sx, sy = (1 if flip else -1), 0.0            # 左→右 か 右→左
+        if tg:                                            # 語られる物・人の所で止まるように、反対側から流してくる
+            _, (_, tx, ty) = tg[0]
+            if mode == "v":
+                sy = 1 if ty >= fy else -1
+            else:
+                sx = 1 if tx >= fx else -1
+            end = (tx, ty)
+        else:                                             # 余白の端から端へ（流す向きの軸は絵の真ん中に置く）
+            end = (0.5 + sx * travel / 2 if sx else fx, 0.5 + sy * travel / 2 if sy else fy)
+        start = (end[0] - sx * travel, end[1] - sy * travel)
+        return (z, start[0], start[1]), (z, end[0], end[1])
     def base(self, i: int, t: float):
         import cv2
         np = self.np
         c = self.pl.cuts[i]
         p = self.prep(i)
         a = p["src"]
+        if p.get("fx") is not None:                          # 炎・灯・煙・霧・水面だけを少し動かす（寄る前の絵にかけるので位置はずれない）
+            a = p["fx"].apply(a, t)
         sh, sw = a.shape[:2]
-        # 絵は止めておき、語りが look の focus に書いた物・人・場所を言った瞬間にだけ、そこへ寄る（10-25。話に関係のない寄り・パンはしない）
-        cz, focus = (1.0, (0.5, 0.5)) if p.get("static") else p["crop"]
-        z, dx, dy = cz, 0.0, 0.0
-        for te, (tz, tx, ty) in p.get("events", []):
-            if t <= te:
-                break
-            e = S._ease((t - te) / FOCUS_SECONDS)
-            z = z + (tz - z) * e
-            focus = (focus[0] + (tx - focus[0]) * e, focus[1] + (ty - focus[1]) * e)
+        # カットの最初から最後まで一定の速さで（緩めない）。向きと終点は _path が話で決めている
+        (z0, x0_, y0_), (z1, x1_, y1_) = p["path"]
+        u = min(1.0, max(0.0, (t - c.start) / max(0.01, c.seconds)))
+        z = z0 + (z1 - z0) * u
+        focus = (x0_ + (x1_ - x0_) * u, y0_ + (y1_ - y0_) * u)
+        dx = dy = 0.0
         if sw / sh > MW / MH:
             wh, ww = sh, sh * MW / MH
         else:
@@ -998,24 +1052,59 @@ class Video:
         spec = self.pl.fig(line.index) if line is not None else None
         if c.dim and spec:
             r = self.pl.run_of(line.index)
-            if r and r["names"]:                          # 語りが名前を言った瞬間に、その項目を書き込む（0.6秒で描き進む）
-                n = max(1, sum(1 for x in r["times"] if x <= t))
-                p = 1.0 if n == 1 and t - r["times"][0] > 0.6 else min(1.0, max(0.0, (t - r["times"][n - 1]) / 0.6))
-                q = round(p * 8) / 8
-                s2 = dict(r["spec"], upto=n, grow_from=n - 1)
-                key = ("fig", r["key"], n, q)
-            else:
-                q, s2, key = 1.0, spec, ("fig", line.index)
+            if r and r["names"]:                          # 語りが名前を言う REVEAL_LEAD 秒前から、その項目を書き込む
+                times = [x - REVEAL_LEAD for x in r["times"]]
+                n = max(1, sum(1 for x in times if x <= t))
+                if r["spec"].get("type") == "people":     # 関係図・系図はキンブラ型：点線が0.2秒で伸びる→札が0.25秒で出る→関係の小札
+                    p = 1.0 if n == 1 and t - times[0] > 0.7 else min(1.0, max(0.0, (t - times[n - 1]) / 0.7))
+                    q = round(p * 14) / 14
+                    key = ("figk", r["key"], n, q)
 
-            def fig(lay, s2=s2, q=q):
-                from . import figures
-                return figures.draw(lk.painter, lay, s2, q)
+                    def fig(lay, spec=r["spec"], n=n, q=q):
+                        return people_reveal(lk.painter, lay, spec, n, q)
+                else:
+                    p = 1.0 if n == 1 and t - times[0] > 0.6 else min(1.0, max(0.0, (t - times[n - 1]) / 0.6))
+                    q = round(p * 8) / 8
+                    s2 = dict(r["spec"], upto=n, grow_from=n - 1)
+                    key = ("fig", r["key"], n, q)
+
+                    def fig(lay, s2=s2, q=q):
+                        from . import figures
+                        return figures.draw(lk.painter, lay, s2, q)
+            else:
+                key = ("fig", line.index)
+
+                def fig(lay, s2=spec):
+                    from . import figures
+                    return figures.draw(lk.painter, lay, s2, 1.0)
             _put(frame, self.ov(key, fig), w)
         if c.kind in ("ai", "frame") or (c.dim and c.backdrop):
             _put(frame, self.ov(("ai",), lambda lay: draw_ai_label(lay, lk.font_of)), w)
         if c.kind in ("frame", "part") and not c.dim:
             text = lk.credits.get(c.ref) or Path(c.ref).stem
             _put(frame, self.ov(("credit", c.ref), lambda lay: draw_credit(lay, text, lk.font_of)), w)
+
+    def _part(self, img, n: int, part: dict, age: float) -> None:
+        """look の parts の1つを、出てから age 秒の姿で重ねる（0.25秒で溶け出す。並ぶ物は1つずつ）。"""
+        lk = self.lk
+        kind = part["type"]
+        if kind in ("quote", "doc"):
+            k = min(1.0, max(0.0, age / 0.25))
+            q = round(k * 5) / 5
+            build = (lambda lay: draw_quote_card(lay, part, lk.font_of, lk.serif)) if kind == "quote" else \
+                (lambda lay: draw_doc_page(lay, part, lk.painting(part["image"]), lk.font_of))
+            _put(img, self.ov(("part", n), build), q)
+            return
+        items = part.get("items") or []
+        gap = float(part.get("every", 0.6))
+        shown = max(0, min(len(items), int(age / gap) + 1)) if age >= 0 else 0
+        step = min(1.0, max(0.0, (age - (shown - 1) * gap) / 0.25)) if shown else 0.0
+        q = round(step * 4) / 4
+        if kind == "versus3":
+            build = lambda lay: draw_versus_boxes(lay, part, shown, q, lk.font_of)
+        else:
+            build = lambda lay: draw_name_cards(lay, part, shown, q, lk.font_of, lk.serif, lk.painting)
+        _put(img, self.ov(("part", n, shown, q), build))
 
     def frame(self, t: float):
         import cv2
@@ -1024,10 +1113,12 @@ class Video:
         img = self.base(i, t)
         parts = [(c, 1.0)]
         j, e = None, 0.0
-        if i + 1 < len(pl.cuts) and t >= c.end - FADE / 2:
-            j, e = i + 1, S._ease((t - (c.end - FADE / 2)) / FADE)
-        elif i > 0 and t < c.start + FADE / 2:
-            j, e = i - 1, 1 - S._ease((t - (c.start - FADE / 2)) / FADE)
+        def same(a: Cut, b: Cut) -> bool:                 # 同じ絵の別の構図（切り出し・図の有無）だけ溶け合わせる。ほかはハードカット
+            return a.kind == b.kind and a.ref == b.ref and "chapter" not in (a.kind, b.kind)
+        if i + 1 < len(pl.cuts) and t >= c.end - SAME_FADE / 2 and same(c, pl.cuts[i + 1]):
+            j, e = i + 1, S._ease((t - (c.end - SAME_FADE / 2)) / SAME_FADE)
+        elif i > 0 and t < c.start + SAME_FADE / 2 and same(c, pl.cuts[i - 1]):
+            j, e = i - 1, 1 - S._ease((t - (c.start - SAME_FADE / 2)) / SAME_FADE)
         if j is not None and e > 0.002:
             img = cv2.addWeighted(img, 1 - e, self.base(j, t), e, 0)
             parts = [(c, 1 - e), (pl.cuts[j], e)]
@@ -1036,6 +1127,12 @@ class Video:
             img[self.band_top:] = cv2.multiply(img[self.band_top:], self.band, scale=1 / 255)
         unit = pl.unit_at(t)
         line = lk.sc.lines[unit.line] if unit else None
+        if line is not None and not c.dim and c.kind not in ("chapter", "end"):   # 部品が主役の間は、絵を図の間と同じだけ暗くする
+            for part in lk.look.get("parts") or []:
+                if int(part["from"]) <= line.index <= int(part.get("to", part["from"])) and part.get("dim", True):
+                    k_ = min(1.0, max(0.0, (t - (pl.line_at[int(part["from"])][0] - 0.2)) / 0.25))
+                    img = cv2.convertScaleAbs(img, alpha=1 - (1 - DIM) * k_)
+                    break
         for cc, w in parts:
             self._cut_overlays(img, cc, line, w, t)
         if c.kind in ("chapter", "end") or line is None:
@@ -1049,6 +1146,11 @@ class Video:
         tag = pl.corner(line.index)
         if tag:
             _put(img, self.ov(("corner", tag), lambda lay: draw_corner(lay, tag, lk.font_of)))
+        for n_part, part in enumerate(lk.look.get("parts") or []):     # 部品（史料の札・くい違いの箱・覚えてほしい名前・史料の頁）
+            a, b = int(part["from"]), int(part.get("to", part["from"]))
+            if a <= line.index <= b and not c.dim:
+                t0 = pl.line_at[a][0] - 0.2
+                self._part(img, n_part, part, t - t0)
         k = pl.units.index(unit)
         key = ("text", k)
         if key not in self.ovs:
@@ -1056,7 +1158,7 @@ class Video:
             bright = float(img[y - 70:y + 70, 360:MW - 360].mean()) > 105
             font = lk.serif(TEXT_SIZE) if is_record(line) else lk.font_of(TEXT_SIZE)
             self.ov(key, lambda lay: text_layer(unit.block, font, line.imagined, bright, lk.font_of(24)))
-        _put(img, self.ovs[key], 1.0 if k == 0 else min(1.0, max(0.0, (t - unit.start) / TEXT_FADE + 0.15)))   # 冒頭はフェード無しで0秒から
+        _put(img, self.ovs[key])                          # 字幕は文（ブロック）ごとに一瞬で替える（参考どおり。冒頭も0秒からはっきり）
         if is_record(line):                               # 記録の言葉：読んでいる所まで赤ペンの下線を引く（chiso/pen.py の mark の考え方）
             ov = self.ovs[key]
             if ov is not None:
@@ -1236,3 +1338,365 @@ def holds(plan: "Plan", long: float = 30.0) -> tuple[float, float]:
     marks.append(plan.total)
     gaps = [b - a for a, b in zip(marks, marks[1:])]
     return max(gaps), sum(g for g in gaps if g >= long) / plan.total
+
+
+# --- 絵の一部だけを動かす効果（10-25 ユーザー「Bもやろう」）--------------------------------------
+# 参考の本編の多くは絵の中身が動いている。話に関係ない寄り・パンはしないまま、場面の絵の「その物」だけを少し生かす：
+# 炎のゆらぎ＋舞い上がる火の粉・灯のにじみのちらつき・煙や霧の横流れ・水面の月の揺れ。look の fx: に絵ごとに書く。
+# 効果は補正済みの元の絵（寄る前）にかけるので、寄りがかかっても位置はずれない。どれも控えめに（雰囲気を壊さない）。
+FX_LOOP = 6.0                   # 火の粉のくり返しの長さ（秒）
+
+
+def _smooth_noise(t: float, seed: int, lo: float = 1.0, hi: float = 3.0) -> float:
+    """lo〜hi Hz のなめらかなゆらぎ（-1〜1）。周波数と位相の違う正弦を3つ重ねる。"""
+    import numpy as np
+    rng = np.random.default_rng(seed)
+    f = rng.uniform(lo, hi, 3)
+    ph = rng.uniform(0, 2 * np.pi, 3)
+    w = np.array([0.5, 0.3, 0.2])
+    return float((w * np.sin(2 * np.pi * f * t + ph)).sum() / w.sum())
+
+
+def _field(h: int, w: int, seed: int, cell: int = 48):
+    """なめらかな空間のむら（0〜1）。小さな乱数を拡大してぼかしたもの。"""
+    import cv2
+    import numpy as np
+    rng = np.random.default_rng(seed)
+    small = rng.random((max(2, h // cell), max(2, w // cell))).astype(np.float32)
+    f = cv2.resize(small, (w, h), interpolation=cv2.INTER_CUBIC)
+    f = cv2.GaussianBlur(f, (0, 0), cell / 2)
+    f -= f.min()
+    return f / max(1e-6, f.max())
+
+
+def _region(h: int, w: int, rect) -> tuple[int, int, int, int]:
+    if not rect:
+        return 0, 0, w, h
+    x0, y0, x1, y1 = rect
+    return int(w * x0), int(h * y0), int(w * x1), int(h * y1)
+
+
+class FX:
+    """1枚の絵（補正済みの numpy、RGB）に、look の fx の指定で効果を毎コマかける。"""
+
+    def __init__(self, src, spec: dict, seed: int = 0, dim: float = 1.0):
+        import cv2
+        import numpy as np
+        self.np, self.cv2 = np, cv2
+        self.spec, self.seed, self.dim = spec or {}, seed, dim
+        h, w = src.shape[:2]
+        self.h, self.w = h, w
+        hsv = cv2.cvtColor(src, cv2.COLOR_RGB2HSV).astype(np.float32)   # H 0〜180, S・V 0〜255
+        H, Sat, V = hsv[..., 0], hsv[..., 1] / 255, hsv[..., 2] / 255
+        self.layers = []
+        if "fire" in self.spec:
+            o = self.spec["fire"] or {}
+            warm = ((H <= 22) | (H >= 172)).astype(np.float32)
+            m = warm * np.clip((Sat - 0.40) / 0.25, 0, 1) * np.clip((V - 0.45) / 0.25, 0, 1)
+            m = self._clip(m, o.get("region"))
+            m = cv2.GaussianBlur(m, (0, 0), 3)
+            self.fire = m
+            self.fire_amp = float(o.get("amp", 0.12))
+            self.fire_fields = [_field(h, w, seed + k, 40) for k in range(2)]
+            if "sparks" in self.spec:
+                self._init_sparks(self.spec["sparks"] or {}, m)
+        if "lamp" in self.spec:
+            o = self.spec["lamp"] or {}
+            core = (((H <= 35) | (H >= 170)).astype(np.float32) * np.clip((V - 0.62) / 0.15, 0, 1)
+                    * np.clip((Sat - 0.08) / 0.2, 0, 1))
+            core = self._clip(core, o.get("region"))
+            glow = cv2.GaussianBlur(core, (0, 0), max(6, w / 90))
+            self.lamp = glow / max(1e-6, glow.max())
+            self.lamp_amp = float(o.get("amp", 0.08))
+        for key in ("smoke", "mist"):
+            if key in self.spec:
+                o = self.spec[key] or {}
+                x0, y0, x1, y1 = _region(h, w, o.get("region"))
+                band = np.zeros((h, w), np.float32)
+                band[y0:y1, x0:x1] = 1
+                band = cv2.GaussianBlur(band, (0, 0), max(8, (y1 - y0) / 6))
+                tex = [np.tile(_field(h, w, seed + 10 + k, 90 + 40 * k), (1, 2)) for k in range(2)]
+                color = np.array(o.get("color", [200, 205, 210] if key == "mist" else [120, 115, 110]), np.float32)
+                self.layers.append((band, tex, color, float(o.get("alpha", 0.10)), float(o.get("speed", 10))))
+        self.water = None
+        if "water" in self.spec:
+            o = self.spec["water"] or {}
+            self.water = (_region(h, w, o.get("region")), float(o.get("amp", 2.5)))
+
+    def _clip(self, m, rect):
+        if not rect:
+            return m
+        x0, y0, x1, y1 = _region(self.h, self.w, rect)
+        out = self.np.zeros_like(m)
+        out[y0:y1, x0:x1] = m[y0:y1, x0:x1]
+        return out
+
+    def _init_sparks(self, o: dict, mask) -> None:
+        np = self.np
+        rng = np.random.default_rng(self.seed + 99)
+        ys, xs = np.nonzero(mask > 0.5)
+        n = int(o.get("count", 40))
+        if len(xs) == 0:
+            self.sparks = None
+            return
+        pick = rng.integers(0, len(xs), n)
+        self.sparks = {
+            "x": xs[pick].astype(np.float32), "y": ys[pick].astype(np.float32),
+            "birth": rng.uniform(0, FX_LOOP, n), "life": rng.uniform(1.4, 3.0, n),
+            "vy": rng.uniform(18, 55, n) * self.h / 768, "sway": rng.uniform(4, 12, n) * self.h / 768,
+            "freq": rng.uniform(0.6, 1.6, n), "size": rng.uniform(1.0, 2.2, n) * self.h / 768,
+        }
+
+    @staticmethod
+    def _bbox(m, thr: float = 0.01, pad: int = 4, h: int = 0, w: int = 0, up: int = 0):
+        import numpy as np
+        ys, xs = np.nonzero(m > thr)
+        if len(xs) == 0:
+            return None
+        return (max(0, xs.min() - pad), max(0, ys.min() - pad - up), min(w, xs.max() + pad + 1), min(h, ys.max() + pad + 1))
+
+    def _rois(self):
+        """効果がかかる範囲だけを計算する（毎コマ全面を浮動小数で回すと 1コマ 0.3〜0.6 秒かかった）。"""
+        if hasattr(self, "_roi"):
+            return self._roi
+        r = {}
+        if hasattr(self, "fire"):
+            r["fire"] = self._bbox(self.fire, h=self.h, w=self.w)
+        if hasattr(self, "lamp"):
+            r["lamp"] = self._bbox(self.lamp, 0.02, h=self.h, w=self.w)
+        r["layers"] = [self._bbox(b, 0.02, h=self.h, w=self.w) for b, *_ in self.layers]
+        if getattr(self, "sparks", None):
+            sp = self.sparks
+            rise = int((sp["vy"] * sp["life"]).max()) + 8
+            x0, y0 = int(sp["x"].min()) - 20, int(sp["y"].min()) - rise
+            x1, y1 = int(sp["x"].max()) + 20, int(sp["y"].max()) + 10
+            r["sparks"] = (max(0, x0), max(0, y0), min(self.w, x1), min(self.h, y1))
+        self._roi = r
+        return r
+
+    def apply(self, src, t: float):
+        np, cv2 = self.np, self.cv2
+        roi = self._rois()
+        out = src.copy()
+        if roi.get("fire"):
+            x0, y0, x1, y1 = roi["fire"]
+            g = self.fire_amp * 0.6 * (self.fire_fields[0][y0:y1, x0:x1] * _smooth_noise(t, self.seed + 1)
+                                       + self.fire_fields[1][y0:y1, x0:x1] * _smooth_noise(t, self.seed + 2))   # 場所ごとに違う揺れ（±約10%）
+            k = 1 + self.fire[y0:y1, x0:x1] * g
+            out[y0:y1, x0:x1] = np.clip(out[y0:y1, x0:x1].astype(np.float32) * k[..., None], 0, 255).astype(np.uint8)
+        if roi.get("lamp"):
+            x0, y0, x1, y1 = roi["lamp"]
+            k = 1 + self.lamp[y0:y1, x0:x1] * self.lamp_amp * _smooth_noise(t, self.seed + 3, 0.5, 2.0)
+            out[y0:y1, x0:x1] = np.clip(out[y0:y1, x0:x1].astype(np.float32) * k[..., None], 0, 255).astype(np.uint8)
+        for (band, tex, color, alpha, speed), box in zip(self.layers, roi["layers"]):
+            if not box:
+                continue
+            x0, y0, x1, y1 = box
+            acc = np.zeros((y1 - y0, x1 - x0), np.float32)
+            for j, tx in enumerate(tex):
+                off = int((t * speed * (1 + 0.6 * j)) % self.w)
+                acc += tx[y0:y1, off + x0:off + x1] * (0.6 if j == 0 else 0.4)
+            a = (band[y0:y1, x0:x1] * np.clip(acc * 1.6 - 0.3, 0, 1.3) * alpha)[..., None]   # むらを強めて、流れが見えるように
+            part = out[y0:y1, x0:x1].astype(np.float32)
+            out[y0:y1, x0:x1] = (part * (1 - a) + color * a).astype(np.uint8)
+        if self.water:
+            (x0, y0, x1, y1), amp = self.water
+            yy, xx = np.mgrid[0:y1 - y0, 0:x1 - x0].astype(np.float32)
+            hh, ww = max(1, y1 - y0), max(1, x1 - x0)
+            taper = np.sin(np.pi * np.clip(yy / hh, 0, 1)) * np.sin(np.pi * np.clip(xx / ww, 0, 1))   # 範囲の縁では揺らさない（継ぎ目を出さない）
+            mx = xx + amp * taper * np.sin(2 * np.pi * ((yy + y0) / 34.0 + t * 0.25))
+            out[y0:y1, x0:x1] = cv2.remap(np.ascontiguousarray(src[y0:y1, x0:x1]), mx, yy, cv2.INTER_LINEAR,
+                                          borderMode=cv2.BORDER_REFLECT)
+        if roi.get("sparks"):
+            s = self.sparks
+            x0, y0, x1, y1 = roi["sparks"]
+            age = (t - s["birth"]) % FX_LOOP
+            alive = age < s["life"]
+            if alive.any():
+                glow = np.zeros((y1 - y0, x1 - x0), np.float32)
+                for x, y, a, life, vy, sw, fq, sz in zip(s["x"][alive], s["y"][alive], age[alive], s["life"][alive],
+                                                         s["vy"][alive], s["sway"][alive], s["freq"][alive], s["size"][alive]):
+                    px = x + sw * np.sin(2 * np.pi * fq * a) - x0
+                    py = y - vy * a - y0
+                    fade = min(1.0, a / 0.3) * max(0.0, 1 - a / life)
+                    cv2.circle(glow, (int(px), int(py)), max(1, int(round(sz))), float(fade), -1, cv2.LINE_AA)
+                glow = cv2.GaussianBlur(glow, (0, 0), 1.2)
+                add = glow[..., None] * np.array([255, 150, 50], np.float32) * 0.9 * self.dim
+                out[y0:y1, x0:x1] = np.clip(out[y0:y1, x0:x1].astype(np.float32) + add, 0, 255).astype(np.uint8)
+        return out
+
+
+# --- 関係図（キンブラ型）と部品（10-25 screen_parts_1025.md）---------------------------------------
+def people_reveal(painter, img: Image.Image, spec: dict, n: int, p: float) -> Image.Image:
+    """人物の関係図・系図を、先頭 n 人まで描く。n 人目は p（0〜1）で：赤い点線が 0.2 秒で伸びる → 札が 0.25 秒で溶け出す → 線の上の関係の小札。
+    並び（円の上の位置）は chiso/figures.py の people と同じ。紙の板・題も同じ（見た目をそろえる）。"""
+    import math
+    from . import figures as F
+    dr, (ax0, ay0, ax1, ay1) = F._panel(painter, img, spec.get("title", ""))
+    nodes = spec["nodes"]
+    total = len(nodes)
+    cx, cy = (ax0 + ax1) / 2, (ay0 + ay1) / 2 + 6
+    rx, ry = (ax1 - ax0) / 2 - 170, (ay1 - ay0) / 2 - 60
+    pos = {}
+    for i, (name, _role) in enumerate(nodes):
+        a = -math.pi / 2 + 2 * math.pi * i / total + (math.pi / total if total % 2 == 0 else 0)
+        pos[name] = (cx + rx * math.cos(a), cy + ry * math.sin(a))
+    shown = [nm for nm, _ in nodes[:n]]
+    new = nodes[n - 1][0] if n >= 1 else None
+    line_p = min(1.0, p / 0.29)                 # 0.2 秒ぶん（全体 0.7 秒の 0.29）
+    card_p = min(1.0, max(0.0, (p - 0.29) / 0.36))
+    tag_p = min(1.0, max(0.0, (p - 0.65) / 0.35))
+    layer = Image.new("RGBA", img.size, (0, 0, 0, 0))
+    ld = ImageDraw.Draw(layer, "RGBA")
+    ef = painter.font("gothic", 24)
+    for a, b, label in spec.get("edges", []):
+        if a not in shown or b not in shown:
+            continue
+        pa, pb = pos[a], pos[b]
+        k = 1.0
+        if new in (a, b) and n > 1:
+            k = line_p
+            if b == new:
+                pass
+            else:                                   # 新しい人から伸びるのではなく、前からいる人から新しい人へ伸ばす
+                pa, pb = pb, pa
+        ex, ey = pa[0] + (pb[0] - pa[0]) * k, pa[1] + (pb[1] - pa[1]) * k
+        L = math.hypot(ex - pa[0], ey - pa[1])
+        if L > 1:
+            ux, uy = (ex - pa[0]) / L, (ey - pa[1]) / L
+            dist = 0.0
+            while dist < L:                         # 点線（14画素の線と 9画素のすき間）
+                e2 = min(L, dist + 14)
+                ld.line([(pa[0] + ux * dist, pa[1] + uy * dist), (pa[0] + ux * e2, pa[1] + uy * e2)], fill=F.RED + (255,), width=5)
+                dist += 23
+        tk = 1.0 if new not in (a, b) or n == 1 else tag_p
+        if tk > 0.01:
+            mx, my = (pos[a][0] + pos[b][0]) / 2, (pos[a][1] + pos[b][1]) / 2
+            w = ef.getlength(label) + 22
+            al = int(255 * tk)
+            ld.rounded_rectangle([mx - w / 2, my - 19, mx + w / 2, my + 19], radius=8, fill=(255, 248, 230, al),
+                                 outline=F.RED + (al,), width=2)
+            ld.text((mx, my), label, font=ef, fill=F.RED + (al,), anchor="mm")
+    nf = painter.font("serif", 32, bold=True)
+    rf = painter.font("gothic", 22)
+    for i, (name, role) in enumerate(nodes[:n]):
+        al = 255 if (name != new or n == 1 and p >= 1) else int(255 * card_p)
+        if name == new and n == 1:
+            al = int(255 * min(1.0, p / 0.36))
+        if al <= 2:
+            continue
+        x, y = pos[name]
+        w = max(nf.getlength(name), rf.getlength(role)) + 40
+        ld.rounded_rectangle([x - w / 2, y - 44, x + w / 2, y + 44], radius=12, fill=(250, 244, 228, al),
+                             outline=F.COAST + (al,), width=3)
+        ld.text((x, y - 12), name, font=nf, fill=F.INKD + (al,), anchor="mm")
+        ld.text((x, y + 24), role, font=rf, fill=(110, 90, 60, al), anchor="mm")
+    img.alpha_composite(layer)
+    return img
+
+
+NAVY = (24, 36, 66)
+GOLD = (196, 164, 96)
+
+
+def draw_quote_card(lay: Image.Image, part: dict, font_of, serif) -> None:
+    """① 史料・要点の引用札（紺の半透明の板＋金の細枠。上に小見出し、中に太字2行まで、下に書名の小字）。画面の中央左に出す。
+    look: {type: quote, from: 行, to: 行, label: 史料|要点, text: 言葉, source: 書名}"""
+    d = ImageDraw.Draw(lay, "RGBA")
+    w = 980
+    x0, y0 = (MW - w) // 2, int(MH * 0.50)            # 出ている間は主役（絵は暗くしてある）。顔の目にかからないよう、字幕のすぐ上に大きく
+    tf = serif(54)
+    rows = [r for piece in str(part["text"]).split("／") for r in S._wrap_text(piece, tf, w - 80)][:3]   # 「／」で行を分けられる
+    h = 84 + 70 * len(rows) + (60 if part.get("source") else 28)
+    d.rounded_rectangle([x0, y0, x0 + w, y0 + h], radius=10, fill=NAVY + (215,))
+    d.rounded_rectangle([x0 + 8, y0 + 8, x0 + w - 8, y0 + h - 8], radius=6, outline=GOLD + (230,), width=2)
+    d.text((x0 + 36, y0 + 34), str(part.get("label", "史料")), font=font_of(28), fill=GOLD + (255,), anchor="lm")
+    for i, r in enumerate(rows):
+        d.text((x0 + 44, y0 + 84 + 70 * i + 30), r, font=tf, fill=(255, 255, 255, 255), anchor="lm")
+    if part.get("source"):
+        d.text((x0 + w - 36, y0 + h - 30), str(part["source"]), font=font_of(24), fill=(210, 214, 226, 255), anchor="rm")
+
+
+def draw_versus_boxes(lay: Image.Image, part: dict, shown: int, q: float, font_of) -> None:
+    """② 数のくい違い：箱を矢印でつないで横に並べ、最後の箱だけ赤（左から1つずつ出る）。
+    look: {type: versus3, from: 行, to: 行, items: [[見出し, 数], ...], every: 秒}"""
+    d = ImageDraw.Draw(lay, "RGBA")
+    items = part["items"]
+    n = len(items)
+    bw, bh, gap = 330, 150, 70
+    total = n * bw + (n - 1) * gap
+    x = (MW - total) / 2
+    y = 330
+    for i, (head, num) in enumerate(items[:shown]):
+        al = 255 if i < shown - 1 else int(255 * q)
+        last = i == n - 1
+        fill = ((150, 32, 36) if last else NAVY) + (int(225 * al / 255),)
+        d.rounded_rectangle([x, y, x + bw, y + bh], radius=12, fill=fill)
+        d.rounded_rectangle([x + 6, y + 6, x + bw - 6, y + bh - 6], radius=8, outline=GOLD + (al,), width=2)
+        d.text((x + bw / 2, y + 40), str(head), font=font_of(26), fill=(230, 232, 240, al), anchor="mm")
+        size = 50
+        while size > 26 and font_of(size).getlength(str(num)) > bw - 30:
+            size -= 2
+        d.text((x + bw / 2, y + 100), str(num), font=font_of(size), fill=(255, 255, 255, al), anchor="mm")
+        if i > 0:
+            ax = x - gap + 12
+            d.line([(ax, y + bh / 2), (x - 14, y + bh / 2)], fill=(255, 255, 255, al), width=5)
+            d.polygon([(x - 8, y + bh / 2), (x - 26, y + bh / 2 - 12), (x - 26, y + bh / 2 + 12)], fill=(255, 255, 255, al))
+        x += bw + gap
+
+
+def draw_name_cards(lay: Image.Image, part: dict, shown: int, q: float, font_of, serif, painting) -> None:
+    """③ 覚えてほしい名前：肖像（パブリックドメインの古画）＋名前の札を3枚、1枚ずつ。image が無い札は「？」。
+    look: {type: names, from: 行, to: 行, title: 見出し, items: [[名前, 一言, 絵の道のり], ...], every: 秒}"""
+    d = ImageDraw.Draw(lay, "RGBA")
+    items = part["items"]
+    n = len(items)
+    cw, ch, gap = 360, 470, 50
+    total = n * cw + (n - 1) * gap
+    x = (MW - total) / 2
+    y = 170
+    if part.get("title"):
+        d.text((MW / 2, y - 40), str(part["title"]), font=font_of(34), fill=(255, 255, 255, 255), anchor="mm",
+               stroke_width=4, stroke_fill=(0, 0, 0, 255))
+    for i, it in enumerate(items[:shown]):
+        name, note = it[0], it[1]
+        al = 255 if i < shown - 1 else int(255 * q)
+        d.rounded_rectangle([x, y, x + cw, y + ch], radius=12, fill=NAVY + (int(225 * al / 255),))
+        d.rounded_rectangle([x + 6, y + 6, x + cw - 6, y + ch - 6], radius=8, outline=GOLD + (al,), width=2)
+        box = (int(x + 24), int(y + 24), int(x + cw - 24), int(y + ch - 120))
+        if len(it) > 2 and it[2]:
+            im = painting(it[2])
+            im = S._fit_cell(im, box[2] - box[0], box[3] - box[1], tuple(it[3]) if len(it) > 3 else (0.5, 0.35))   # 4つ目＝顔の位置
+            if al < 255:
+                im = Image.blend(Image.new("RGB", im.size, NAVY), im, al / 255)
+            lay.paste(im, box[:2])
+        else:
+            d.text(((box[0] + box[2]) / 2, (box[1] + box[3]) / 2), "？", font=font_of(140), fill=(255, 255, 255, al), anchor="mm")
+        d.text((x + cw / 2, y + ch - 78), str(name), font=serif(42), fill=(255, 255, 255, al), anchor="mm")
+        d.text((x + cw / 2, y + ch - 32), str(note), font=font_of(24), fill=(210, 214, 226, al), anchor="mm")
+        x += cw + gap
+
+
+def draw_doc_page(lay: Image.Image, part: dict, page: Image.Image, font_of) -> None:
+    """⑤ 史料の頁：頁の画像を少し傾けて左に大きく置き、該当の行を赤の細枠で囲み、右上に出典の小字。
+    look: {type: doc, from: 行, to: 行, image: 頁の画像, box: [左, 上, 右, 下]（頁の割合）, source: 出典, note: 赤枠の横の札}"""
+    h = int(MH * 0.82)
+    w = int(page.width * h / page.height)
+    pg = page.convert("RGB").resize((w, h), Image.LANCZOS)
+    pd = ImageDraw.Draw(pg)
+    if part.get("box"):
+        bx0, by0, bx1, by1 = part["box"]
+        pd.rectangle([bx0 * w, by0 * h, bx1 * w, by1 * h], outline=(200, 30, 30), width=6)
+    rgba = pg.convert("RGBA").rotate(-2.0, expand=True, resample=Image.BICUBIC)
+    x0, y0 = 160, (MH - rgba.height) // 2
+    lay.alpha_composite(rgba, (x0, max(0, y0)))
+    d = ImageDraw.Draw(lay, "RGBA")
+    if part.get("note"):
+        f = font_of(40)
+        tw = f.getlength(part["note"])
+        nx = x0 + rgba.width + 40
+        d.rounded_rectangle([nx, MH * 0.42, nx + tw + 40, MH * 0.42 + 70], radius=8, fill=(170, 30, 34, 235))
+        d.text((nx + 20, MH * 0.42 + 35), part["note"], font=f, fill=(255, 255, 255, 255), anchor="lm")
+    if part.get("source"):
+        f = font_of(22)
+        d.text((MW - 30, 90), str(part["source"]), font=f, fill=(255, 255, 255, 230), anchor="ra")
