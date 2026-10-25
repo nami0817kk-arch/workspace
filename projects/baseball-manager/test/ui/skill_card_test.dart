@@ -1,6 +1,7 @@
 // 能力タブの特殊能力の欄: 絞り込み(コツあり/すべて)・並べ替え・取りどきをまとめて取る(2026-10-25)。
 import 'dart:math';
 
+import 'package:baseball_manager/game/exp.dart';
 import 'package:baseball_manager/game/game.dart';
 import 'package:baseball_manager/game/player.dart';
 import 'package:baseball_manager/game/skills.dart';
@@ -82,6 +83,26 @@ void main() {
     c.autoSpend();
     expect(g.player.skills, contains(Skill.stealer));
     expect(c.recent.any((l) => l.contains('盗塁')), isTrue);
+  });
+
+  testWidgets('取れない理由(コツが要る・あとN)が行に出て、コツ満タンなら研究ボタンは押せない', (t) async {
+    final c = await _open(t);
+    final g = c.game!;
+    g.exp = ExpPool({for (final k in Category.values) k: 0});
+    g.skillTips[Skill.stealer] = maxSkillTips;
+    g.skillTips[Skill.chance] = 1;
+    c.notifyListeners();
+    await t.pumpAndSettle();
+    await t.scrollUntilVisible(find.byKey(const Key('skill-filter')), 300,
+        scrollable: find.byType(Scrollable).first);
+    await t.tap(find.text('すべて'));
+    await t.pumpAndSettle();
+    String line(String k) =>
+        t.widget<Text>(find.byKey(Key('skill-tips-$k'))).data!;
+    expect(line('chance'), contains('あと${g.skillPrice(Skill.chance)}'));
+    expect(line('powerHitter'), contains('コツが要る'));
+    final study = t.widget<IconButton>(find.byKey(const Key('skill-study-stealer')));
+    expect(study.onPressed, isNull);
   });
 
   test('結果のコピーに、特殊能力の数と金特が出る', () {

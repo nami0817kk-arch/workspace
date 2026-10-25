@@ -2684,7 +2684,15 @@ class _SkillRow extends StatelessWidget {
         ? '「${s.requires!.label}」が先'
         : '金特は$goldSkillAge歳(高校)から';
     final studying = game.studyTarget == s;
-    final canStudy = !locked && game.phase != Phase.retired;
+    final full = tips >= maxSkillTips;
+    final canStudy = !locked && !full && game.phase != Phase.retired;
+    // 取れない理由を短く(経験点の不足・コツが無い)。年齢・もとの特殊能力は lockText で出す
+    final short = price - game.exp.of(s.category);
+    final need = locked || why == null
+        ? ''
+        : (!s.negative && tips < minSkillTips)
+            ? '  コツが要る'
+            : (short > 0 ? '  あと$short' : '');
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 3),
       child: Row(children: [
@@ -2740,8 +2748,8 @@ class _SkillRow extends StatelessWidget {
                   locked
                       ? lockText
                       : s.negative
-                          ? '克服に ${s.category.label} $price'
-                          : 'コツ ${'●' * tips}${'○' * (maxSkillTips - tips)}  ${s.category.label} $price',
+                          ? '克服に ${s.category.label} $price$need'
+                          : 'コツ ${'●' * tips}${'○' * (maxSkillTips - tips)}  ${s.category.label} $price$need',
                   key: Key('skill-tips-${s.name}'),
                   style: const TextStyle(fontSize: 11, color: Colors.grey)),
             ]),
@@ -2749,13 +2757,17 @@ class _SkillRow extends StatelessWidget {
         ),
         IconButton(
           key: Key('skill-study-${s.name}'),
-          tooltip: studying ? '研究の対象(もう一度押すと自動に戻す)' : '「研究」でこのコツを貯める',
+          tooltip: full
+              ? 'コツは満タン(研究しても増えない)'
+              : studying
+                  ? '研究の対象(もう一度押すと自動に戻す)'
+                  : '「研究」でこのコツを貯める',
           visualDensity: VisualDensity.compact,
           isSelected: studying,
           icon: const Icon(Icons.menu_book_outlined, size: 20),
           selectedIcon:
               const Icon(Icons.menu_book, size: 20, color: Color(0xFF5E35B1)),
-          onPressed: canStudy && !s.negative
+          onPressed: (canStudy || studying) && !s.negative
               ? () => controller.setStudyTarget(studying ? null : s)
               : null,
         ),
