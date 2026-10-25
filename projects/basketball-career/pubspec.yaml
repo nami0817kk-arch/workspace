@@ -30,6 +30,14 @@ flutter:
     - assets/art/ending_quiet.jpg
     - assets/art/path.jpg
     - assets/art/hall.jpg
+    - assets/art/scene_minibasket.jpg
+    - assets/art/scene_junior.jpg
+    - assets/art/scene_high.jpg
+    - assets/art/scene_university.jpg
+    - assets/art/scene_corporate.jpg
+    - assets/art/scene_pro.jpg
+    - assets/art/scene_abroad.jpg
+    - assets/art/scene_national.jpg
     - assets/art/icons/
 
   # 日本語フォントを同梱する(Web は足りない字形を外から取りに行って豆腐になる)。
