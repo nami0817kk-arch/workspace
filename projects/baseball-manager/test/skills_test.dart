@@ -59,6 +59,12 @@ void main() {
 
     test('経験点で取る。足りない・役割違い・金特のもとが無いと取れない', () {
       final g = _game();
+      // コツを1つもつかんでいなければ、経験点があっても取れない(何もしなくても取れてしまった)
+      g.adminAddExp(200);
+      expect(g.buySkill(Skill.powerHitter), contains('コツ'));
+      g.skillTips[Skill.powerHitter] = 1;
+      g.skillTips[Skill.artist] = 1;
+      g.adminAddExp(-200);
       expect(g.buySkill(Skill.powerHitter), '経験点が足りない');
       g.adminAddExp(200);
       expect(g.buySkill(Skill.strikeout), 'この役割では取れない');
@@ -67,7 +73,7 @@ void main() {
       expect(g.buySkill(Skill.powerHitter), isNull);
       expect(g.player.skills, contains(Skill.powerHitter));
       // 6歳なので値段は半額(幼いほど安い)
-      expect(g.exp.of(Category.batting), before - skillCost(Skill.powerHitter, 0, 6));
+      expect(g.exp.of(Category.batting), before - skillCost(Skill.powerHitter, 1, 6));
       expect(skillCost(Skill.powerHitter, 0, 6), 20);
       expect(g.buySkill(Skill.powerHitter), '取得済み');
       // もとを取ったので金特が取れる(値段は高い。金特は16歳から)
@@ -104,6 +110,7 @@ void main() {
     test('保存して読み直せる。昔の特性(長距離砲など)は特殊能力に読み替える', () {
       final g = _game();
       g.adminAddExp(100);
+      g.skillTips[Skill.stealer] = 1;
       g.buySkill(Skill.stealer);
       g.skillTips[Skill.chance] = 3;
       g.setStudyTarget(Skill.chance);
@@ -247,6 +254,7 @@ void main() {
     test('金特は16歳(高校)から', () {
       final g = _game();
       g.player = g.player.copyWith(age: 12, skills: {Skill.averageHitter});
+      g.skillTips[Skill.geniusBat] = 1;
       g.adminAddExp(2000);
       expect(g.buySkill(Skill.geniusBat), contains('16歳'));
       g.player = g.player.copyWith(age: 16);

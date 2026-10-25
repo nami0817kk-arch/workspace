@@ -227,6 +227,9 @@ double skillAgeMultiplier(int age) => age <= 12
 /// 経験点を全部特殊能力に使うと、少年のうちに全部取れてしまった(2026-10-25)ので、持つほど高くする。
 const tSkillStep = int.fromEnvironment('BAL_SKSTEP', defaultValue: 40);
 
+/// 特殊能力を取るのに要るコツの数(これ未満では取れない)。
+const minSkillTips = 1;
+
 /// 金の特殊能力を取れる年齢(高校から)。
 const goldSkillAge = 16;
 
@@ -282,6 +285,9 @@ String? skillBlock(Player p, Skill s, ExpPool pool, int tips) {
   final req = s.requires;
   if (req != null && !p.skills.contains(req)) return '「${req.label}」が先に要る';
   if (s.gold && p.age < goldSkillAge) return '金特は$goldSkillAge歳(高校)から';
+  // コツを1つもつかんでいないものは取れない(何もしなくても取れてしまった。2026-10-25)。
+  // コツは研究・特訓・練習試合・交流・コーチで貯まる。
+  if (tips < minSkillTips) return 'コツをつかんでいない(研究・特訓・練習試合・交流・コーチで)';
   if (pool.of(s.category) < skillCost(s, tips, p.age, ownedSkillCount(p))) {
     return '経験点が足りない';
   }

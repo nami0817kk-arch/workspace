@@ -2534,7 +2534,7 @@ class _SkillCard extends StatelessWidget {
                   style: Theme.of(context).textTheme.titleMedium),
             ),
           ]),
-          const Text('経験点で取る。研究・特訓・練習試合・交流・コーチでコツが貯まると安くなる(コツ5で半額)。'
+          const Text('経験点で取る。コツを1つ以上つかむと取れる。研究・特訓・練習試合・交流・コーチでコツが貯まり、貯まるほど安くなる(コツ5で半額)。'
               '緑の数字は、いまの能力で取ったときの1シーズンの見込み(打者は143試合、投手は先発28試合)。',
               style: TextStyle(fontSize: 11, color: Colors.grey)),
           Text(
