@@ -69,6 +69,10 @@ class Evidence:
 
     @property
     def work(self) -> str:
+        """同じ資料を1つに数える鍵。Web のページは発行元のサイト（ドメイン）ごとに1つ（同じ博物館の別の頁は独立に数えない）。"""
+        if self.entry == "Web" and self.url.startswith("http"):
+            host = urllib.parse.urlparse(self.url).netloc.lower()
+            return re.sub(r"^www\.", "", host)
         t = R.norm(self.title)
         t = re.sub(r"[:：].*$", "", t)
         return re.sub(r"(第?[0-9０-９一二三四五六七八九十]+[巻卷輯号冊編]?|[上中下]|vol\.?\d+)$", "", t, flags=re.I)
@@ -304,6 +308,27 @@ def evidence_for(spec: FactSpec, bodies: list[Body], sources: list[R.Source], an
     return out[:MAX_EVIDENCE]
 
 
+def _bigrams(s: str) -> set[str]:
+    s = re.sub(r"[、。「」『』（）()・\s]", "", R.norm(s))
+    return {s[i:i + 2] for i in range(len(s) - 1)}
+
+
+def overlap(a: str, b: str) -> float:
+    """主張どうしの2字の重なり（短いほうに対する割合）。"""
+    x, y = _bigrams(a), _bigrams(b)
+    return len(x & y) / min(len(x), len(y)) if x and y else 0.0
+
+
+def same_fact(claim: str, terms: list, spec: FactSpec) -> bool:
+    """語が2つ以上同じなら同じ事実とみなす（主張の文の似かたでは決めない：10-26 の政宗で、
+    「パウロ5世の肖像を献上」と「支倉がパウロ5世に会った」が 0.44 で似ていても別の事実だった）。"""
+    shared = {R.norm(str(t)) for t in terms} & {R.norm(t) for t in spec.terms}
+    return len(shared) >= 2
+
+
+SUSPECT = 0.38          # これ以上似ていたら「重複の疑い」として知らせる（まとめるのは人）
+
+
 def merge_cards_in(cards: list[Card], path: Path, slug: str) -> list[str]:
     """Agent が WebSearch・WebFetch で集めた事実カード（同じ形の YAML）を合わせる。id か主張が同じなら出どころを足し、無ければ新しいカード。"""
     data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
@@ -312,7 +337,14 @@ def merge_cards_in(cards: list[Card], path: Path, slug: str) -> list[str]:
     for row in rows or []:
         claim = str(row.get("claim", "")).strip()
         card = next((c for c in cards if c.spec.id == row.get("id") or (claim and c.spec.claim == claim)), None)
+        if card is None and claim:                  # 別の Agent が同じ事実を別の言い方で書いたもの
+            card = next((c for c in cards if same_fact(claim, row.get("terms") or [], c.spec)), None)
+            if card is not None:
+                log.append(f"重複をまとめた：「{claim[:30]}」→ {card.spec.id}")
         if card is None:
+            near = [c for c in cards if claim and overlap(claim, c.spec.claim) >= SUSPECT]
+            if near:
+                log.append(f"重複の疑い：「{claim[:30]}」と {near[0].spec.id}「{near[0].spec.claim[:30]}」（同じなら主張を同じ文に）")
             terms = row.get("terms") or [claim]
             card = Card(FactSpec(f"{slug}-{len(cards) + 1:02d}", claim, [str(t) for t in terms]))
             cards.append(card)

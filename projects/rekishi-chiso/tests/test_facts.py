@@ -83,7 +83,9 @@ def test_plan_aliases_dates_titles_and_queries():
     qs = E.site_queries(plan, ["1974 発掘"])
     assert set(qs) == set(E.KINDS) and any("site:ac.jp" in q for q in qs["学術"])
     assert all(q.startswith('"Date Masamune"') for q in qs["英語圏"])
-    assert any("1974 発掘" in q for q in qs["報道"])
+    assert "伊達政宗 1974 発掘 ニュース" in qs["報道"]
+    assert E.rank_aliases("伊達政宗", ["梵天丸"], ["伊達正宗", "正宗", "奥州王", "貞山公"]) == ["梵天丸", "貞山公", "奥州王"]
+    assert E.source_titles("『伊達政宗』『独眼竜政宗』『伊達治家記録』『枕草子』『木村宇右衛門覚書』", topic="伊達政宗") == ["伊達治家記録", "木村宇右衛門覚書"]
     md = E.render_plan(plan, qs)
     assert "Python から検索エンジンは叩かない" in md and "`伊達政宗 site:go.jp`" in md
 
@@ -306,3 +308,21 @@ def test_run_offline_with_cards_plan_chain_and_youtube(tmp_path, monkeypatch):
     assert y["demand"]["伊達政宗"] == ["伊達政宗 子孫", "伊達政宗 眼帯"]
     assert (tmp_path / "伊達政宗_plan_20261026.md").exists()
     assert any("YouTube Data API の単位：303" in x for x in printed)
+
+
+def test_merge_dedupe_rules_and_web_domains(tmp_path):
+    base = F.Card(F.FactSpec("m-16", "支倉常長はローマ教皇パウロ5世に会った", ["支倉", "パウロ"]))
+    rows = {"facts": [
+        {"claim": "使節が持ち帰った教皇パウロ5世の肖像は政宗に献上された", "terms": ["パウロ5世", "献上"],
+         "sources": [{"title": "a", "url": "https://x.example/a", "opened": "本文"}]},
+        {"claim": "支倉がパウロ5世に謁見した日", "terms": ["支倉", "パウロ"],
+         "sources": [{"title": "仙台市博物館 年表", "url": "https://www.city.sendai.jp/museum/1", "opened": "本文", "entry": "Web"},
+                     {"title": "仙台市博物館 収蔵品", "url": "https://www.city.sendai.jp/museum/2", "opened": "本文", "entry": "Web"}]}]}
+    p = tmp_path / "a.yaml"
+    p.write_text(yaml.safe_dump(rows, allow_unicode=True), encoding="utf-8")
+    cards = [base]
+    log = F.merge_cards_in(cards, p, "m")
+    assert len(cards) == 2                                   # 似た文でも語が違えば別の事実（重複の疑いだけ知らせる）
+    assert any("重複の疑い" in x for x in log)
+    assert any("重複をまとめた" in x for x in log)            # 語が2つ同じならまとめる
+    assert base.independent == 1                             # 同じサイトの2頁は1つと数える

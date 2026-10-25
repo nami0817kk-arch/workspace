@@ -86,9 +86,31 @@ def wareki_dates(full: str, limit: int = 15) -> list[str]:
     return [w for w, _ in c.most_common(limit)]
 
 
-def source_titles(full: str, limit: int = 20) -> list[str]:
-    c = Counter(m.group(1) for m in TITLES.finditer(full or ""))
+SOURCE_ENDS = ("記録", "覚書", "記", "録", "集", "譜", "談", "文書", "書状", "雑録", "日記", "実紀", "史料", "伝")
+
+
+def source_titles(full: str, limit: int = 20, topic: str = "") -> list[str]:
+    """本文の『』のうち、記録・覚書・家譜などで終わるもの（ドラマ・小説・古典の題を落とす）。"""
+    c = Counter(m.group(1) for m in TITLES.finditer(full or "") if m.group(1).endswith(SOURCE_ENDS) and m.group(1) != topic)
     return [w for w, _ in c.most_common(limit)]
+
+
+def _one_off(a: str, b: str) -> bool:
+    """1字だけ違う（「伊達正宗」のような書き違い）か、片方がもう片方の一部（「正宗」）。"""
+    if a in b or b in a:
+        return True
+    return len(a) == len(b) and sum(x != y for x, y in zip(a, b)) == 1
+
+
+def rank_aliases(topic: str, from_text: list[str], from_wd: list[str]) -> list[str]:
+    """検索に使う順：本文の幼名・号・官位 → Wikidata の別名のうち号・敬称らしいもの（公・丸・竜） → 残り。書き違い・3字未満は落とす。"""
+    out: list[str] = []
+    good = [a for a in from_wd if a.endswith(("公", "丸", "竜", "龍", "院", "守", "侍従"))]
+    for a in from_text + good + from_wd:
+        if len(a) < 3 or a == topic or _one_off(a, topic) or a in out:
+            continue
+        out.append(a)
+    return out
 
 
 def old_form(word: str) -> str:
@@ -106,16 +128,15 @@ def build_plan(topic: str, full: str = "", wikitext: str = "", fetcher=R.fetch) 
             plan.en_names, plan.aliases, plan.en_title = en, ja, enwiki
     except Exception as e:  # noqa: BLE001
         plan.errors.append(f"Wikidata: {type(e).__name__} {str(e)[:100]}")
-    for a in aliases_from_text(full):
-        if a not in plan.aliases and a != topic:
-            plan.aliases.append(a)
+    plan.aliases = rank_aliases(topic, aliases_from_text(full), plan.aliases)
     for w in [topic] + plan.aliases:
         o = old_form(w)
         if o != w and o not in plan.old_forms:
             plan.old_forms.append(o)
     plan.wareki = wareki_dates(full)
-    plan.source_titles = source_titles(full)
-    plan.scholars = [a for a, _ in Counter(c.author for c in wiki_citations(wikitext) if c.author).most_common(15)]
+    plan.source_titles = source_titles(full, topic=topic)
+    names = [re.sub(r"(編|著|監修|ほか|他)$", "", c.author.strip()) for c in wiki_citations(wikitext) if c.author]
+    plan.scholars = [a for a, _ in Counter(n for n in names if n and not n.endswith(("社", "会", "館", "局", "部", "所"))).most_common(15)]
     return plan
 
 
@@ -129,6 +150,9 @@ KINDS = {
     "英語圏": ["site:edu", "museum collection", "translation letter", "archive.org", "jstor"],
     "地元": ["観光協会", "郷土史", "市史", "町史", "史跡 案内板"],
 }
+
+
+FACT_TAIL = {"学術": "site:ac.jp", "公的": "site:go.jp", "博物館・寺社": "博物館", "報道": "ニュース", "地元": "郷土史"}
 
 
 def site_queries(plan: Plan, facts: list[str] | None = None) -> dict[str, list[str]]:
@@ -147,8 +171,9 @@ def site_queries(plan: Plan, facts: list[str] | None = None) -> dict[str, list[s
         for n in names[1:]:
             if kind != "英語圏":
                 qs.append(f"{n} {tails[0]}")
-        for f in (facts or [])[:4]:
-            qs.append((f'"{en}" ' if kind == "英語圏" and en else f"{plan.topic} ") + f + f" {tails[0]}")
+        if kind != "英語圏":
+            for f in (facts or [])[:4]:
+                qs.append(f"{plan.topic} {f} {FACT_TAIL[kind]}")
         if kind == "学術":
             qs += [f"{plan.topic} {s} {tails[0]}" for s in plan.scholars[:3]]
             qs += [f"{plan.topic} 『{s}』" for s in plan.source_titles[:3]]

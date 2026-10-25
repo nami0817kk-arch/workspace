@@ -16,7 +16,15 @@ WebSearch とまとめ記事で止まり、一次史料・論文・発掘報告�
 - Wikisource 日本語版（翻刻。原本で確かめるまで「翻刻」扱い）
 - Wikipedia 日本語版（知らない度の点検と、食い違いの手がかりだけに使う。出どころには数えない）
 
+- Internet Archive の全文検索（10-26。英語名で外国人の記録・英訳も。貸出の本は抜き出しだけ）
+- 国立公文書館デジタルアーカイブの目録（10-26。API は無く /search の画面。Crawl-delay 30 なので1回だけ）
+- コトバンク（10-26。/word/<名前> の辞典の本文。事実が辞典に出る＝知られている、の物差し。/search は robots.txt が断る）
+- Wikidata（--plan。別名・英語名）
+事実カード（--cards）は chiso/facts.py、検索の計画と芋づる（--plan・--chain）は chiso/expand.py、他チャンネルの既出（--yt）は chiso/ytseen.py。
+
 叩かない入口（md の「手で開く入口」に検索の URL だけ出す）：
+- HathiTrust の全文検索（robots.txt が /cgi/ を断る）・文化遺産オンライン（検索は POST と画面のトークン）・ColBase（公開の検索 API なし。
+  ジャパンサーチの cobas で拾える）・J-STAGE の PDF（robots.txt が /_pdf を断る。人が開いた URL を --pdf で渡せば読む）
 - CiNii Research：OpenSearch は appid（登録）が必須と書いてある → 道具からは叩かない。画面は手で開いてよい
 - 全国遺跡報告総覧：API が無く、robots.txt が検索結果を拒んでいる → 手で開く（発掘報告の PDF はここ）
 - 東京大学史料編纂所 データベース（SHIPS）：公開の API が無い（画面が内部で使う呼び出しは叩かない）→ 手で開く
@@ -857,6 +865,8 @@ def _cards(topic, results, facts, keywords, intro, full, out_dir, safe, stamp, t
     every = [s for r in results for s in r.items]
     rel = dedupe_across([s for s in every if relevant(s, topic, keywords)])
     bodies = F.gather_bodies(rel, specs, topic, fetcher=fetcher, pdfs=pdfs, log=notes)
+    from collections import Counter as _C
+    notes.append("開いた資料：" + "・".join(f"{k} {v}" for k, v in _C(f"{b.src.entry}（{b.opened}）" for b in bodies).items()))
     dicts: dict[str, str] = {}
     try:
         dicts = parse_kotobank(fetcher(kotobank_url(topic)))
@@ -890,7 +900,7 @@ def _cards(topic, results, facts, keywords, intro, full, out_dir, safe, stamp, t
             whole = Y.seen(topic, [], get, budget, cache=cache)
             notes.append(f"YouTube「{topic}」上位{whole.total}本・再生数の合計 {whole.views:,}")
             for c in cards:
-                words = [t for t in c.spec.terms if norm(t) not in norm(topic)]
+                words = [t for t in c.spec.terms if norm(t) not in norm(topic)][:2]     # 語が多いと誰も扱っていないように見える
                 s = Y.seen(f"{topic} {' '.join(words)}", words, get, budget, cache=cache)
                 c.youtube = {"verdict": s.verdict, "query": s.query, "top": s.total, "matched": s.matched,
                              "views": s.views, **({"error": s.error} if s.error else {}),
