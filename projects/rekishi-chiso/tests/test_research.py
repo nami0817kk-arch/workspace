@@ -141,6 +141,26 @@ def test_known_level():
     assert c[1] == "出ない" and "高" in c[2]
     d = R.known_level(R.parse_fact("x::疱瘡 眼帯"), intro, full)
     assert d[1].startswith("一部") and "眼帯" in d[1]
+    e = R.known_level(R.parse_fact("疱瘡のあと米沢城へ::疱瘡 米沢城"), intro, full)   # 別々の文にだけ出る
+    assert e[1].startswith("散らばる") and "高そう" in e[2]
+
+
+def test_classify_traps():
+    assert R.classify("春夏子規俳句評釈", "寒川鼠骨 著 大学館") == "一般書・雑誌"      # 出版社の「大学館」
+    assert R.classify("如々文集 第3輯", "岩田勝市 著 岩田勝市") == "一般書・雑誌"      # 人名の「〜市」
+    assert R.classify("遺骨", "鈴木尚", "瑞鳳殿伊達政宗の墓とその遺品", kind="記事") == "公的機関の発表"
+    assert R.classify("宛所を輻射状とする伊達政宗書状", "羽下 徳彦", "日本歴史 / 日本歴史学会 編", kind="記事") == "研究・論文"
+    ws = R.parse_ws(json.dumps({"query": {"search": [{"title": "東照宮御実紀附録/巻十七", "snippet": ""},
+                                                       {"title": "国史概説", "snippet": ""}]}}))
+    assert [s.tier for s in ws] == ["一次史料", "一般書・雑誌"]
+
+
+def test_dedupe_across_keeps_dated():
+    a = R.Source("宮城・瑞巌寺伊達政宗倚像について", "u1", "NDLサーチ", year=2024)
+    b = R.Source("宮城・瑞巌寺伊達政宗倚像について", "u2", "NDLサーチ")
+    c = R.Source("伊達政宗", "u3", "NDLサーチ", year=1934)
+    d = R.Source("伊達政宗", "u4", "NDLサーチ", year=1985)
+    assert [s.url for s in R.dedupe_across([b, a, c, d])] == ["u1", "u3", "u4"]
 
 
 def test_old_kanji_matches():
