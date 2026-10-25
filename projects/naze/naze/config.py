@@ -11,7 +11,17 @@ OUT = ROOT / "out"                      # 書き出し(gitignore)
 VOICEVOX = os.environ.get("VOICEVOX_URL", "http://127.0.0.1:50021")
 FONT = "C:/Windows/Fonts/YuGothB.ttc"
 FONT_REG = "C:/Windows/Fonts/YuGothM.ttc"
-W, H, FPS = 1080, 1920, 30
+FPS = 30
+# 縦(ショート)か横(本編)か。題材の ep.py の aspect="landscape" を __main__ が読んで、ほかを import する前に環境変数に入れる
+ASPECT = os.environ.get("NAZE_ASPECT", "portrait")
+W, H = (1920, 1080) if ASPECT == "landscape" else (1080, 1920)
+# 字幕・見出し・問い・結びの帯の位置(y は画素、size は字の大きさ)
+LAYOUT = dict(
+    portrait=dict(maxw=980, header=(150, 56), question=(380, 104), end_band=(1180, 1700), end_text=(1440, 92), sub=(1470, 70),
+                  sim_question=(520, 104), sim_band=(1380, 1780), sim_end=(1580, 88), sim_sub=(1640, 64)),
+    landscape=dict(maxw=1700, header=(70, 44), question=(470, 96), end_band=(760, 1010), end_text=(885, 80), sub=(960, 54),
+                   sim_question=(470, 96), sim_band=(760, 1010), sim_end=(885, 80), sim_sub=(975, 52)),
+)[ASPECT]
 
 
 def ffmpeg() -> str:

@@ -31,8 +31,9 @@ def write(frame: Callable[[int], Image.Image], n: int, audio: Path, out: Path, b
     return out
 
 
-def sheet(video: Path, times, out: Path, size=(360, 640)) -> Path:
+def sheet(video: Path, times, out: Path, size=None) -> Path:
     """動画から時刻 times(秒)のコマを抜いて横に並べる(目で確かめる用)。"""
+    size = size or (W // 3, H // 3)
     ims = []
     for i, t in enumerate(times):
         p = out.with_name(f"_s{i}.png")

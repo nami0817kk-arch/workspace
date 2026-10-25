@@ -13,7 +13,7 @@ from pathlib import Path
 from PIL import Image, ImageDraw
 
 from . import compose, overlay as ov, tts
-from .config import FPS, H, W
+from .config import FPS, H, LAYOUT, W
 
 
 def kana(ep: dict) -> None:
@@ -51,13 +51,13 @@ def frame_fn(ep: dict, out: Path):
         sub = d.get("sub", d.get("text", ""))
         style = d.get("style")
         if style == "question":
-            ov.rows(dr, sub, 520, 104, stroke=10)
+            ov.rows(dr, sub, *LAYOUT["sim_question"], stroke=10)
         elif style == "end":
-            ov.band(img, 1380, 1780, 0.8)
+            ov.band(img, *LAYOUT["sim_band"], 0.8)
             dr = ImageDraw.Draw(img)
-            ov.rows(dr, sub, 1580, 88, stroke=10)
+            ov.rows(dr, sub, *LAYOUT["sim_end"], stroke=10)
         elif cur:
-            ov.rows(dr, ov.page_of(sub, t, cur["start"], cur["end"]), 1640, 64)
+            ov.rows(dr, ov.page_of(sub, t, cur["start"], cur["end"]), *LAYOUT["sim_sub"])
         return img.convert("RGB")
 
     return frame, nf

@@ -22,7 +22,7 @@ bpy.ops.wm.read_factory_settings(use_empty=True)
 sc = bpy.context.scene
 sc.render.fps = FPS
 sc.frame_start, sc.frame_end = 1, NF
-sc.render.resolution_x, sc.render.resolution_y = 1080, 1920
+sc.render.resolution_x, sc.render.resolution_y = job.get("size", [1080, 1920])
 for eng in ("BLENDER_EEVEE", "BLENDER_EEVEE_NEXT"):
     try:
         sc.render.engine = eng
@@ -136,6 +136,8 @@ json.dump(proj, open(os.path.join(out, "proj.json"), "w"), separators=(",", ":")
 sc.render.image_settings.file_format = "PNG"
 if MODE == "all":
     sc.render.filepath = os.path.join(out, "frames", "f_")
+    sc.render.use_overwrite = False      # できているコマは飛ばす(長い書き出しを途中から再開できる)
+    sc.render.use_placeholder = True
     bpy.ops.render.render(animation=True)
 else:
     for f in [int(x) for x in MODE.split(",")]:

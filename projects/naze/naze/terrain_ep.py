@@ -18,7 +18,7 @@ import numpy as np
 from PIL import Image, ImageDraw
 
 from . import compose, dem as demmod, overlay as ov, terrain, tts
-from .config import FPS, W, blender
+from .config import FPS, H, LAYOUT, W, blender
 
 TR = 12          # カットの切り替えにかけるコマ数
 
@@ -75,15 +75,23 @@ def prep(ep: dict, out: Path) -> dict:
     if ep.get("rise"):
         l = L[ep["rise"]]
         rise = [int(l["start"] * FPS) + 1, max(int(l["start"] * FPS) + 2, int(l["end"] * FPS) - 10)]
-    job = dict(height=str(p["height"]), tex=str(p["tex"]), Wkm=Wkm, Hkm=Hkm, exag=ep["exag"], fps=FPS, frames=nf, lens=ep.get("lens", 28),
+    job = dict(height=str(p["height"]), tex=str(p["tex"]), Wkm=Wkm, Hkm=Hkm, exag=ep["exag"], fps=FPS, frames=nf, lens=ep.get("lens", 28), size=[W, H],
                keys=keys, rise=rise, points={k: v["pos"] for k, v in pts.items()}, heights={k: v["h"] for k, v in pts.items()}, out=str(out))
-    p["job"].write_text(json.dumps(job, ensure_ascii=False, indent=1), encoding="utf-8")
+    text = json.dumps(job, ensure_ascii=False, indent=1)
+    # 書き出しは途中から再開できる(できたコマは描き直さない)。設定が変わったら古いコマは捨てる
+    if p["job"].exists() and p["job"].read_text(encoding="utf-8") != text and (out / "frames").exists():
+        for f in (out / "frames").glob("f_*.png"):
+            f.unlink()
+    p["job"].write_text(text, encoding="utf-8")
     print(f"範囲 {Wkm:.1f}×{Hkm:.1f} km、コマ {nf}、地点の標高", {k: v["h"] for k, v in pts.items()})
     return job
 
 
 def render(out: Path, frames: str = "all") -> None:
     (out / "frames").mkdir(exist_ok=True)
+    for f in (out / "frames").glob("f_*.png"):
+        if f.stat().st_size == 0:           # 途中で止まったコマの置き場所(空のファイル)は描き直す
+            f.unlink()
     (out / "stills").mkdir(exist_ok=True)
     script = Path(__file__).with_name("blender_terrain.py")
     r = subprocess.run([blender(), "-b", "-P", str(script), "--", str(_paths(out)["job"]), frames], capture_output=True, text=True)
@@ -110,25 +118,25 @@ def frame_fn(ep: dict, out: Path, still: bool = False):
         ov.corner(dr, "出典：国土地理院（標高タイル）", f"高さは{ep['exag']:g}倍に強調")
         style = d.get("style")
         if style not in ("question", "end") and ep.get("header"):
-            ov.rows(dr, ep["header"], 150, 56, stroke=6)
+            ov.rows(dr, ep["header"], *LAYOUT["header"], stroke=6)
         row = proj[str(fi)]
         for lb in d.get("labels", []):
             t0 = cur["start"] + lb.get("at", 0.0) * (cur["end"] - cur["start"])
             a = min(1.0, max(0.0, (t - t0) * FPS / 8))
             x, y, z = row[lb["point"]]
             if z > 0 and 0.02 < x < 0.98 and 0.12 < y < 0.95:
-                ov.label(img, x * W, y * 1920, lb["text"].format(h=job["heights"].get(lb["point"]) or 0), lb.get("color", ov.WHITE), a, lb.get("below", False))
+                ov.label(img, x * W, y * H, lb["text"].format(h=job["heights"].get(lb["point"]) or 0), lb.get("color", ov.WHITE), a, lb.get("below", False))
         dr = ImageDraw.Draw(img)
         sub = d.get("sub", d.get("text", ""))
         if style == "question":
-            ov.rows(dr, sub, 380, 104, stroke=10)
+            ov.rows(dr, sub, *LAYOUT["question"], stroke=10)
         elif style == "end":
             a = min(1.0, (t - cur["start"]) * FPS / 10)
-            ov.band(img, 1180, 1700, 0.75 * a)
+            ov.band(img, *LAYOUT["end_band"], 0.75 * a)
             dr = ImageDraw.Draw(img)
-            ov.rows(dr, sub, 1440, 92, stroke=10)
+            ov.rows(dr, sub, *LAYOUT["end_text"], stroke=10)
         elif cur:
-            ov.rows(dr, ov.page_of(sub, t, cur["start"], cur["end"]), 1470, 70)
+            ov.rows(dr, ov.page_of(sub, t, cur["start"], cur["end"]), *LAYOUT["sub"])
         return img.convert("RGB")
 
     return frame, int(job["frames"])

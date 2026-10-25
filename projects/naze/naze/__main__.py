@@ -6,10 +6,10 @@
 from __future__ import annotations
 
 import importlib.util
+import os
+import re
 import sys
 from pathlib import Path
-
-from .config import OUT
 
 
 def load(folder: Path) -> dict:
@@ -24,8 +24,16 @@ def load(folder: Path) -> dict:
 def main(argv=None) -> int:
     argv = argv or sys.argv[1:]
     step, folder = argv[0], Path(argv[1])
+    if step == "long":
+        from . import long
+        return long.main(folder, argv[2:])
+    # 縦か横かは、字幕などの位置を決める config を読む前に決める
+    if re.search(r"aspect\s*=\s*[\"']landscape", (folder / "ep.py").read_text(encoding="utf-8")):
+        os.environ["NAZE_ASPECT"] = "landscape"
+    from .config import OUT
     ep = load(folder)
-    out = OUT / folder.name
+    # 本編の章(episodes/<題材>/<章>)は、題材の名前を頭に付けて出力先がぶつからないようにする
+    out = OUT / (folder.name if folder.parent.name == "episodes" else f"{folder.parent.name}_{folder.name}")
     out.mkdir(parents=True, exist_ok=True)
     kind = ep.get("kind", "terrain")
     if kind == "terrain":
@@ -42,12 +50,12 @@ def main(argv=None) -> int:
         elif step == "render":
             K.render(out)
         elif step == "compose":
-            print(K.final(ep, out, folder.name))
+            print(K.final(ep, out, out.name))
         elif step == "all":
             K.voice(ep, out)
             K.prep(ep, out)
             K.render(out)
-            print(K.final(ep, out, folder.name))
+            print(K.final(ep, out, out.name))
     else:
         from . import sim_ep as S
         if step == "kana":
@@ -57,7 +65,7 @@ def main(argv=None) -> int:
         elif step in ("compose", "all"):
             if step == "all":
                 S.voice(ep, out)
-            print(S.final(ep, out, folder.name))
+            print(S.final(ep, out, out.name))
         elif step == "stills":
             for p in S.stills(ep, out, argv[2]):
                 print(p)

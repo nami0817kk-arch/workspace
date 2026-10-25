@@ -9,7 +9,7 @@ from typing import List, Optional, Tuple
 
 from PIL import Image, ImageDraw, ImageFont
 
-from .config import FONT, W
+from .config import FONT, LAYOUT, W
 
 WHITE = (255, 255, 255)
 YEL = (255, 214, 64)
@@ -38,7 +38,7 @@ def _row_w(segs, f) -> float:
     return sum(f.getlength(t) for t, _ in segs)
 
 
-def rows(dr: ImageDraw.ImageDraw, text: str, cy: float, size: int, maxw: int = 980, color=WHITE, hl=YEL, stroke: int = 8, cx: float = W / 2) -> None:
+def rows(dr: ImageDraw.ImageDraw, text: str, cy: float, size: int, maxw: int = LAYOUT["maxw"], color=WHITE, hl=YEL, stroke: int = 8, cx: float = W / 2) -> None:
     """複数行を中央揃えで描く(はみ出すなら字を小さくする)。"""
     rs = [parse(r) for r in text.split("\n")]
     sz = size
