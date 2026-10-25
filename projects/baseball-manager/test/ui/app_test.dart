@@ -2169,7 +2169,8 @@ void _rankTests() {
     SharedPreferences.setMockInitialValues({});
     _tall(t);
     final rare = _until((g) => false, seed: 3, potential: 95)
-      ..adminSetTraits({Trait.monster});
+      ..adminSetTraits({Trait.monster})
+      ..adminSetSkills({Skill.averageHitter, Skill.geniusBat});
     final plain = _until((g) => false, seed: 4, potential: 95)
       ..adminSetTraits({Trait.hardWorker});
     await SaveStore()
@@ -2181,6 +2182,7 @@ void _rankTests() {
         scrollable: find.byType(Scrollable).first);
     expect(find.textContaining('★怪物'), findsOneWidget);
     expect(find.textContaining('★努力家'), findsNothing);
+    expect(find.textContaining('金特1'), findsOneWidget);
   });
 
   testWidgets('戦力外のトライアウト: 「受ける」「引退する」の選択が出て、引退を選ぶと終わる', (t) async {

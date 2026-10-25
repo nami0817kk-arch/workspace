@@ -475,6 +475,9 @@ class _HistoryTile extends StatelessWidget {
           for (final t in e.snapshot!.traits)
             if (t.rare) t.label
         ].join('・')}',
+      // 金特(特殊能力の最上位)を持っていた選手
+      if (e.snapshot != null && e.snapshot!.skills.any((k) => k.gold))
+        '金特${e.snapshot!.skills.where((k) => k.gold).length}',
     ];
     return Card(
       child: ListTile(
