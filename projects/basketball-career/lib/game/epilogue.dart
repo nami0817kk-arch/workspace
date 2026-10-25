@@ -1,6 +1,7 @@
 import 'build.dart';
 import 'honors.dart';
 import 'money.dart';
+import 'dream.dart';
 import 'game.dart';
 import 'season.dart';
 import 'player.dart';
@@ -208,6 +209,8 @@ List<String> epilogueLines(Game g) {
   }
 
   if (r.games > 0) lines.add(r.fate);
+
+  lines.add(dreamLine(g.dream, achievedAge: g.dreamAge));
 
   // 支えてくれた人たち。信頼・チームワークが高かったときだけ。
   final thanks = <String>[];

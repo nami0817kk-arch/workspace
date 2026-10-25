@@ -281,6 +281,7 @@ class _PlayerCard extends StatelessWidget {
             if (buildOf(p) != null)
               Text('ビルド: ${buildOf(p)!.label}',
                   style: const TextStyle(fontSize: 12)),
+            _DreamRow(game: game),
             if (p.age <= 17)
               Text(
                   '生活習慣: ${game.habit >= 6 ? '良い' : game.habit < 0 ? '乱れ気味' : 'ふつう'}  '
@@ -615,6 +616,12 @@ class _GrowthCard extends StatelessWidget {
       );
 }
 
+/// 年のはじめからの能力の伸び(0 以下は出さない)。
+int _yearGain(Game g, Ability a) {
+  final start = g.yearStart[a];
+  return start == null ? 0 : g.player.of(a) - start;
+}
+
 class _AbilityCard extends StatelessWidget {
   const _AbilityCard({required this.game});
   final Game game;
@@ -628,7 +635,7 @@ class _AbilityCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('能力  (◎○△ ＝ ${p.position.label} で効く度合い)',
+            Text('能力  (◎○△ ＝ ${p.position.label} で効く度合い / 緑の＋は今年の伸び)',
                 style: const TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 6),
             // 身長も能力の1つ(総合評価に入る。素質=ポテンシャルとは別)。
@@ -670,9 +677,21 @@ class _AbilityCard extends StatelessWidget {
                     ),
                     const SizedBox(width: 8),
                     SizedBox(
-                      width: 52,
-                      child: Text('${p.of(a)} ${rankOf(p.of(a))}',
-                          textAlign: TextAlign.right),
+                      width: 84,
+                      child: Text.rich(
+                        TextSpan(children: [
+                          TextSpan(text: '${p.of(a)} ${rankOf(p.of(a))}'),
+                          // 年のはじめからの伸び(育てている実感)。古いセーブ・年のはじめは出さない。
+                          if (_yearGain(game, a) > 0)
+                            TextSpan(
+                              text: ' +${_yearGain(game, a)}',
+                              style: const TextStyle(
+                                  color: Color(0xFF2E7D32),
+                                  fontWeight: FontWeight.bold),
+                            ),
+                        ]),
+                        textAlign: TextAlign.right,
+                      ),
                     ),
                   ],
                 ),
@@ -1344,6 +1363,45 @@ class _EndingView extends StatelessWidget {
           child: const Text('新しい選手を育てる'),
         ),
       ],
+    );
+  }
+}
+
+/// 夢(一生の目標)と、その進み具合。かなったあとは達成の年齢を出す。
+class _DreamRow extends StatelessWidget {
+  const _DreamRow({required this.game});
+  final Game game;
+
+  @override
+  Widget build(BuildContext context) {
+    final d = game.dream;
+    final done = game.dreamAge > 0;
+    final color = done ? const Color(0xFFF9A825) : Theme.of(context).colorScheme.primary;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+              done
+                  ? '夢「${d.label}」: ${game.dreamAge}歳でかなった'
+                  : '夢「${d.label}」: ${d.progressText(game.dreamStats)}',
+              style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color: done ? const Color(0xFFB26A00) : null)),
+          const SizedBox(height: 3),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(4),
+            child: LinearProgressIndicator(
+              value: game.dreamProgress,
+              minHeight: 6,
+              color: color,
+              backgroundColor: color.withValues(alpha: 0.18),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

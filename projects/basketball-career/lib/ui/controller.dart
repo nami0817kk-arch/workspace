@@ -9,6 +9,7 @@ import '../game/advice.dart';
 import '../game/career.dart';
 import '../game/collection.dart';
 import '../game/difficulty.dart';
+import '../game/dream.dart';
 import '../game/game.dart';
 import '../game/legacy.dart';
 import '../monetization/monetization.dart';
@@ -218,7 +219,9 @@ class GameController extends ChangeNotifier {
   }
 
   void newGame(String name,
-      [Difficulty difficulty = Difficulty.normal, int? number]) {
+      [Difficulty difficulty = Difficulty.normal,
+      int? number,
+      Dream dream = Dream.pro]) {
     final n = name.trim().isEmpty ? '名無し' : name.trim();
     newlyUnlocked = const [];
     game = Game.start(n,
@@ -226,6 +229,7 @@ class GameController extends ChangeNotifier {
         events: events,
         difficulty: difficulty,
         legacyBonus: legacyBonusFor(unlocked.length),
+        dream: dream,
         number: number);
     focus = recommendedFocus(game!.player);
     focusAuto = true;
@@ -373,6 +377,7 @@ class GameController extends ChangeNotifier {
       lastTournamentWinter = wasWinter;
     }
     if (r.yearEnded && g.lastGoalMessage != null) lines.add(g.lastGoalMessage!);
+    if (r.yearEnded && g.lastYearSummary != null) lines.add(g.lastYearSummary!);
     if (r.yearEnded && g.player.age != ageBefore) {
       lines.add('${g.player.age}歳になった。身長 ${g.player.heightCm.toStringAsFixed(1)}cm。');
     }
@@ -420,6 +425,10 @@ class GameController extends ChangeNotifier {
     }
     if (g.lastCareerLines.isNotEmpty) {
       pending.add(Milestone(MilestoneKind.award, '通算記録!', g.lastCareerLines.join('\n')));
+    }
+    final dreamNote = g.lastDreamNote;
+    if (dreamNote != null) {
+      pending.add(Milestone(MilestoneKind.goal, '夢がかなった!', dreamNote));
     }
     final buildNote = g.lastBuildNote;
     if (buildNote != null) {
@@ -569,6 +578,10 @@ class GameController extends ChangeNotifier {
     final e = g.pendingEvent!;
     final label = e.options[i].label;
     final lines = g.resolveEvent(i);
+    final dreamNote = g.lastDreamNote;
+    if (dreamNote != null) {
+      pending.add(Milestone(MilestoneKind.goal, '夢がかなった!', dreamNote));
+    }
     recent = [
       '${e.title}: 「$label」を選んだ。',
       if (lines.isNotEmpty) lines.join(' / '),
@@ -582,6 +595,10 @@ class GameController extends ChangeNotifier {
     if (r == Route.pro && ok) {
       pending.add(Milestone(MilestoneKind.contract, 'プロ契約!',
           '${g.player.name}は、${draftLabel(g.draftPick)}でプロの世界へ飛び込む。'));
+    }
+    final dreamNote = g.lastDreamNote;
+    if (dreamNote != null) {
+      pending.add(Milestone(MilestoneKind.goal, '夢がかなった!', dreamNote));
     }
     pathMessage = switch ((r, ok)) {
       (Route.pro, true) => 'プロ契約を勝ち取った!',

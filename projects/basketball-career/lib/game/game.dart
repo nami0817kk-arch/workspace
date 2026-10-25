@@ -3,6 +3,7 @@ import 'dart:math';
 import 'build.dart';
 import 'career.dart';
 import 'difficulty.dart';
+import 'dream.dart';
 import 'events.dart';
 import 'goals.dart';
 import 'honors.dart';
@@ -218,6 +219,9 @@ class Game {
     this.eventsEnabled = true,
     List<double>? recentAchievements,
     List<YearRecord>? records,
+    this.dream = Dream.pro,
+    this.dreamAge = 0,
+    Map<Ability, int>? yearStart,
   })  : rng = rng ?? Random(),
         rival = rival ?? Rival(name: 'ライバル', potential: 60),
         recentEventIds = recentEventIds ?? [],
@@ -226,6 +230,7 @@ class Game {
         buildsSeen = buildsSeen ?? {},
         goalOptions = goalOptions ?? [],
         goalStart = goalStart ?? {},
+        yearStart = yearStart ?? {},
         recentAchievements = recentAchievements ?? [],
         records = records ?? [];
 
@@ -235,6 +240,7 @@ class Game {
       bool events = true,
       Difficulty difficulty = Difficulty.normal,
       int legacyBonus = 0,
+      Dream dream = Dream.pro,
       int? number}) {
     final r = rng ?? Random();
     final potential = (30 + r.nextInt(40) + r.nextInt(31)).clamp(30, 100);
@@ -243,6 +249,7 @@ class Game {
           bonus: legacyBonus),
       rival: Rival.random(r),
       difficulty: difficulty,
+      dream: dream,
       rng: r,
       eventsEnabled: events,
       number: number ?? popularNumbers[r.nextInt(popularNumbers.length)],
@@ -266,6 +273,9 @@ class Game {
 
   /// 目標を選んだ時点の能力・ライバルへの勝ち数(達成の判定に使う)。
   Map<Ability, int> goalStart;
+
+  /// 年のはじめの能力(能力の画面に「今年 +n」を出すため。保存あり。古いセーブは空=差を出さない)。
+  Map<Ability, int> yearStart;
   int goalRivalWins;
 
   /// 今年の大会での最多勝ち数・最高の平均得点(目標の判定に使う)。
@@ -394,6 +404,65 @@ class Game {
 
   /// 直前の操作で新しく身についた得意技(画面が知らせたら使い終わり)。
   Set<Skill> lastNewSkills = {};
+
+  /// 始めるときに決めた夢(一生の目標)。かなった年齢は `dreamAge`(0 はまだ)。保存あり。
+  final Dream dream;
+  int dreamAge;
+
+  /// 直前の操作で夢がかなった知らせ(画面が知らせたら使い終わり。保存しない)。
+  String? lastDreamNote;
+
+  /// 直前の年末の「今年の成長」のまとめ(画面が見せたら使い終わり。保存しない)。
+  String? lastYearSummary;
+
+  /// 年のはじめと今の能力を比べて、今年の成長を一言にまとめる(年のはじめの記録が無ければ null)。
+  String? _yearSummary() {
+    if (yearStart.isEmpty) return null;
+    final base = player.copyWith(abilities: {
+      for (final a in Ability.values) a: yearStart[a] ?? player.of(a),
+    });
+    var topGain = 0;
+    Ability? top;
+    for (final a in Ability.values) {
+      final d = player.of(a) - (yearStart[a] ?? player.of(a));
+      if (d > topGain) {
+        topGain = d;
+        top = a;
+      }
+    }
+    final before = base.overall.round(), now = player.overall.round();
+    // この年の記録はまだ growthLog に入っていない(最後は前の年の終わり)。
+    final grew =
+        growthLog.isEmpty ? 0.0 : player.heightCm - growthLog.last.heightCm;
+    return '今年の成長: 総合 $before → $now(${now - before >= 0 ? '+' : ''}${now - before})'
+        '${top == null ? '' : ' / いちばん伸びた能力 ${top.label} +$topGain'}'
+        '${grew >= 0.5 ? ' / 身長 +${grew.toStringAsFixed(1)}cm' : ''}';
+  }
+
+  DreamStats get dreamStats => DreamStats(
+        turnedPro: track == Track.pro,
+        points: totalPoints,
+        titles: titles,
+        honors: honorTotal,
+        caps: caps,
+      );
+
+  /// 夢の進み具合(0〜1)。かなっていれば1。
+  double get dreamProgress =>
+      dreamAge > 0 ? 1.0 : dream.progress(dreamStats);
+
+  /// 夢がかなったかを見る。かなった瞬間に1度だけ、全能力+1と気持ちのごほうびを与えて知らせる。
+  void _checkDream() {
+    if (dreamAge > 0 || !dream.achieved(dreamStats)) return;
+    dreamAge = player.age;
+    player = player.copyWith(abilities: {
+      for (final e in player.abilities.entries)
+        e.key: (e.value + Dream.rewardAbilityBonus).clamp(0, 100),
+    });
+    condition = condition.copyWith(morale: condition.morale + Dream.rewardMorale);
+    lastDreamNote =
+        '夢「${dream.label}」がかなった! ごほうび: 全能力 +${Dream.rewardAbilityBonus}、気持ち +${Dream.rewardMorale}';
+  }
 
   /// 条件を満たした得意技を身につける。新しく身についたものを返す。
   /// 能力が変わったあとに、ビルド(型とティア)を見直す。変わったら知らせる。
@@ -564,6 +633,8 @@ class Game {
     lastSalaryNote = null;
     lastSponsorNote = null;
     lastBuildNote = null;
+    lastDreamNote = null;
+    lastYearSummary = null;
     lastCareerLines = const [];
     lastMetRival = false;
     lastNewSkills = {};
@@ -592,6 +663,7 @@ class Game {
     termInjured = r.gotInjured;
     _learnSkills();
     _updateBuild();
+    _checkDream();
     // 何もしなければ少しずつ薄れる(毎ターン -2)。交流・練習試合で保つ。
     teamwork = (teamwork +
             switch (action) {
@@ -904,6 +976,8 @@ class Game {
 
   void _endYear() {
     _evaluateGoal();
+    _checkDream();
+    lastYearSummary = _yearSummary();
     if (track == Track.pro) totalEarnings += salary + sponsor; // その年の年俸とスポンサー収入
     growthLog.add(GrowthPoint(player.age, player.overall, player.heightCm));
     final stageBefore = stage;
@@ -1007,6 +1081,7 @@ class Game {
     lastNewSkills = {};
     _learnSkills();
     _updateBuild();
+    _checkDream();
     teamwork = (teamwork + opt.effect.teamwork).clamp(0, 100);
     coachBond = (coachBond + opt.effect.coach).clamp(0, 100);
     if (opt.effect.national) nationalPending = true;
@@ -1117,6 +1192,7 @@ class Game {
 
   /// 次の年の目標の候補を引く(年が明けて、舞台が決まってから)。
   void _rollGoalOptions() {
+    yearStart = Map<Ability, int>.of(player.abilities);
     goalOptions = rollGoals(
       player,
       league: league,
@@ -1152,6 +1228,7 @@ class Game {
         if (eventsEnabled) pendingEventId = 'pro_join';
         pathPending = false;
         proRejected = false;
+        _checkDream();
         return true;
       }
       if (secondChance) {
@@ -1277,6 +1354,9 @@ class Game {
         'sponsor': sponsor,
         'totalEarnings': totalEarnings,
         'caps': caps,
+        'dream': dream.name,
+        'dreamAge': dreamAge,
+        'yearStart': {for (final e in yearStart.entries) e.key.name: e.value},
         'number': number,
         'mate': mate,
         'coachLabel': coachLabel,
@@ -1340,6 +1420,8 @@ class Game {
         sponsor: (j['sponsor'] as num?)?.toInt() ?? 0,
         totalEarnings: (j['totalEarnings'] as num?)?.toInt() ?? 0,
         caps: (j['caps'] as num?)?.toInt() ?? 0,
+        dream: Dream.parse(j['dream'] as String?),
+        dreamAge: (j['dreamAge'] as num?)?.toInt() ?? 0,
         mate: (j['mate'] as String?) ?? '',
         coachLabel: (j['coachLabel'] as String?) ?? '',
         rivalMet: (j['rivalMet'] as bool?) ?? (((j['rival'] as Map?)?['wins'] as num? ?? 0) + ((j['rival'] as Map?)?['losses'] as num? ?? 0) > 0),
@@ -1367,6 +1449,11 @@ class Game {
             : Goal.fromJson((j['goal'] as Map).cast<String, dynamic>()),
         goalStart: {
           for (final e in ((j['goalStart'] as Map?) ?? const {}).entries)
+            if (Ability.parse(e.key as String) != null)
+              Ability.parse(e.key as String)!: (e.value as num).toInt(),
+        },
+        yearStart: {
+          for (final e in ((j['yearStart'] as Map?) ?? const {}).entries)
             if (Ability.parse(e.key as String) != null)
               Ability.parse(e.key as String)!: (e.value as num).toInt(),
         },
