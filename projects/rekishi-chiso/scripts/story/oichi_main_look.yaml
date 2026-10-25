@@ -7,6 +7,7 @@ script: scripts/oichi-story.yaml
 out: oichi_story_main
 art_dir: out/story/oichi3/gem
 main_art_dir: out/story/oichi3/main   # 16:9 の AI 絵（A01.jpg〜A25.jpg）。届いたものから使い、無いものは ai: の stand_in（縦）で仮置き
+ai_disclosure: この動画の人物・情景の画像の多くは、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面の右上に「AI生成画像」と出しています）。   # 概要欄の「■ 画像について」（10-25）
 
 # 章（sections の番号）ごとの左上の札「いま｜章題」。now＝章の頭の「いま」（null は年を出さない＝物語の時間が動かない章）。
 # dates＝その章の語りが年・月日を言った行（行の番号: 札の年月）。その行から替わる。台本の card の見出しは見ない（第3版、10-24）

@@ -110,3 +110,20 @@ def test_put_blends_only_inside_the_box():
     frame = np.zeros((M.MH, M.MW, 3), dtype=np.uint8)
     M._put(frame, M._premul(lay), 1.0)
     assert frame[105, 105].tolist() == [255, 255, 255] and frame[50, 50].tolist() == [0, 0, 0]
+
+
+def test_story_description_chapters_and_credits():
+    from chiso.cli import load_config
+    look = yaml.safe_load(LOOK.read_text(encoding="utf-8"))
+    sc = script.load(ROOT / look["script"])
+    pl = M.Plan(look, sc, [3.0] * len(sc.lines))
+    ch = M.chapters(pl)
+    assert ch[0].startswith("0:00 ") and len(ch) >= 3 and len(ch) == len(sc.sections)
+    assert M.chapter_problems(pl) == []
+    cfg = load_config()
+    text = M.description(pl, cfg)
+    assert "■ 目次" in text and "Gemini" in text and "VOICEVOX:剣崎雌雄" in text
+    assert "春日部つむぎ" not in text                             # 物語型はつむぎが話さない
+    assert len(text) <= 5000
+    assert M.srt(pl).startswith("1\n00:00:00,000 --> ")
+    assert M.look_for(ROOT / "scripts/oichi-story.yaml") is not None
