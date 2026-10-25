@@ -372,6 +372,18 @@ void main() {
     }
     expect(ending, isNotNull, reason: '見栄えのするエンディングが見つからない');
     await _shoot(t, '07_ending', '称号と殿堂が物語を残す', ending!, purple);
+
+    // 8. どんな選手を目指すか: 育成画面の「型を選ぶ」ダイアログ(選んだ型の説明つき)。
+    final st = Game.start('ミナト', rng: Random(11), events: false, style: Build.sharpshooter);
+    _play(st, untilAge: 12);
+    while (st.slot != 0 && st.phase == Phase.season) {
+      st.choose(Action.rest, recommendedFocus(st.player));
+    }
+    await _shoot(t, '08_style', '目指す選手を、自分で選ぶ', _controller(st), orange,
+        act: (t) async {
+      await t.tap(find.text('型を選ぶ'));
+      await t.pump(const Duration(milliseconds: 400));
+    });
   });
 
   // 課金アイテムの審査用(App Store Connect の「審査に関する情報」)。値段(¥370)が写った設定画面。

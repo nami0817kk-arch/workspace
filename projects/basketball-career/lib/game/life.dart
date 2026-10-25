@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'career.dart';
+import 'build.dart';
 import 'player.dart';
 import 'traits.dart';
 
@@ -129,7 +130,8 @@ double yearlyDelta(Player p, Ability a, Ability focus) {
         talent *
         share *
         growthMultiplier(p.traits, p.age) *
-        abilityGrowthMultiplier(p.traits, a);
+        abilityGrowthMultiplier(p.traits, a) *
+        styleGrowthMultiplier(p.style, a);
   }
   final aging = switch (a) {
     Ability.speed || Ability.stamina || Ability.physical => 1.5,
