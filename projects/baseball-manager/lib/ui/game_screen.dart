@@ -2581,6 +2581,16 @@ class _SkillCardState extends State<_SkillCard> {
               'また、特殊能力を1つ持つごとに次の値段が${(1 + tSkillStep / 100).toStringAsFixed(1)}倍になる。金特は$goldSkillAge歳(高校)から。',
               key: const Key('skill-age-note'),
               style: const TextStyle(fontSize: 11, color: Color(0xFF6D4C41))),
+          if (game.skillPriceRiseNote case final rise?)
+            Padding(
+              padding: const EdgeInsets.only(top: 4),
+              child: Text(rise,
+                  key: const Key('skill-price-rise'),
+                  style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFFE65100))),
+            ),
           if (weak.isNotEmpty) ...[
             const SizedBox(height: 6),
             const Text('弱点(克服すると消える)',

@@ -41,6 +41,23 @@ void main() {
     expect(grew, isNot(contains(Skill.stealer)));
   });
 
+  test('値段が上がる年の最後のターンだけ、来年から上がると知らせる', () {
+    final g = _game();
+    g.player = g.player.copyWith(age: 12, skills: {});
+    g.skillTips[Skill.stealer] = 1;
+    g.slot = 0;
+    expect(g.skillPriceRiseNote, isNull); // 最後のターンではない
+    g.slot = g.slotsInYear - 1;
+    expect(g.skillPriceRiseNote, contains('×0.5→×0.7'));
+    g.player = g.player.copyWith(age: 11);
+    expect(g.skillPriceRiseNote, isNull); // 来年も同じ値段
+    g.player = g.player.copyWith(age: 12);
+    g.skillTips.clear();
+    expect(g.skillPriceRiseNote, isNull); // 取れそうなものも弱点も無い
+    g.player = g.player.copyWith(skills: {Skill.strikeoutProne});
+    expect(g.skillPriceRiseNote, isNotNull); // 弱点の克服も上がる
+  });
+
   test('管理者: 特殊能力の付け外しとコツの書き換え', () {
     final g = _game();
     g.skillTips[Skill.chance] = 2;

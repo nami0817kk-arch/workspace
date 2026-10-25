@@ -1068,6 +1068,9 @@ class GameController extends ChangeNotifier {
       recent = [...recent, note];
       if (toasts) toast = note;
     }
+    // 年の最後のターンになり、来年から値段が上がるなら知らせる
+    final rise = g.skillPriceRiseNote;
+    if (g.phase == Phase.term && rise != null) recent = [...recent, rise];
     toastTone = g.condition.injured || g.lastOutcome == Outcome.bad
         ? -1
         : (g.lastOutcome == Outcome.good || g.lastOutcome == Outcome.great
@@ -1293,9 +1296,16 @@ class GameController extends ChangeNotifier {
     final lines = <String>[];
     final gained = <Category, int>{};
     var turns = 0;
+    String? stopRise;
     for (var i = 0; i < g.slotsInYear; i++) {
       if (game!.phase != Phase.term || game!.player.age != age) break;
       if (pending.isNotEmpty) break;
+      // 来年から値段が上がる年の最後のターンで、いま取れるものがあれば止める(取り逃さない)
+      final rise = game!.skillPriceRiseNote;
+      if (turns > 0 && rise != null && game!.anySkillAffordable) {
+        stopRise = rise;
+        break;
+      }
       act(recommendedPlan(game!));
       turns++;
       for (final e in g.lastGain.entries) {
@@ -1322,8 +1332,13 @@ class GameController extends ChangeNotifier {
         recent = [...recent.where((l) => !l.contains('が取りどき!')), note];
         toast = '${recent.first}\n$note';
       }
-      notifyListeners();
     }
+    if (turns > 0 && stopRise != null) {
+      final stop = '年の最後の1回の前で止めた。$stopRise';
+      recent = [...recent.where((l) => l != stopRise), stop];
+      toast = turns > 1 ? '${recent.first}\n$stop' : stop;
+    }
+    if (turns > 1 || stopRise != null) notifyListeners();
   }
 
   void chooseEvent(int i) {

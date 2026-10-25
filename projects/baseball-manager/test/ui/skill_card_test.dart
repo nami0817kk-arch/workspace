@@ -106,6 +106,35 @@ void main() {
     expect(study.onPressed, isNull);
   });
 
+  testWidgets('おすすめで年末まで進めても、値段が上がる前の最後の1回の前で止まる', (t) async {
+    final c = await _open(t);
+    final g = c.game!;
+    g.player = g.player.copyWith(age: 12);
+    g.slot = 0;
+    g.skillTips[Skill.stealer] = 2;
+    g.adminAddExp(2000);
+    var stopped = false;
+    for (var i = 0; i < 60 && !stopped; i++) {
+      while (c.pending.isNotEmpty) {
+        c.dismissMilestone();
+      }
+      if (c.game!.phase == Phase.event) {
+        c.chooseEvent(0);
+        continue;
+      }
+      expect(c.game!.player.age, 12);
+      // 出来事のあとに最後のターンへ来たときは、年のはじめに戻してやり直す(止まるのは autoYear の中だけを見る)
+      if (c.game!.slot == c.game!.slotsInYear - 1) c.game!.slot = 0;
+      c.autoYear();
+      stopped = c.recent.isNotEmpty && c.recent.last.contains('止めた');
+    }
+    expect(stopped, isTrue);
+    expect(c.game!.player.age, 12);
+    expect(c.game!.slot, c.game!.slotsInYear - 1);
+    expect(c.recent.last, contains('最後の1回の前で止めた'));
+    expect(c.recent.last, contains('×0.5→×0.7'));
+  });
+
   test('研究の対象を選んでいて、コツが3つ未満なら、おすすめは研究', () {
     final g = Game.newGame(name: '研', role: Role.batter, rng: Random(2));
     g.condition = const Condition(fatigue: 0, morale: 60);

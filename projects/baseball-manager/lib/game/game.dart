@@ -762,6 +762,24 @@ class Game {
             s
       ];
 
+  /// 来年から特殊能力の値段が上がるとき(その年の最後のターン)の知らせ。
+  /// 取れそうなもの(コツ1つ以上)か弱点があるときだけ。それ以外は null。
+  String? get skillPriceRiseNote {
+    if (phase == Phase.retired || slot != slotsInYear - 1) return null;
+    final now = skillAgeMultiplier(player.age);
+    final next = skillAgeMultiplier(player.age + 1);
+    if (next <= now) return null;
+    final any = skillsFor(player.role).any((s) =>
+        !player.skills.contains(s) && !s.negative && (skillTips[s] ?? 0) >= minSkillTips);
+    if (!any && !player.skills.any((s) => s.negative)) return null;
+    String f(double x) => x.toStringAsFixed(2).replaceFirst(RegExp(r'0$'), '');
+    return '来年(${player.age + 1}歳)から特殊能力の値段が×${f(now)}→×${f(next)}に上がる。取るなら今のうちに。';
+  }
+
+  /// いまの経験点で取れる(克服できる)特殊能力が1つでもあるか。
+  bool get anySkillAffordable => skillsFor(player.role).any((s) =>
+      skillBlock(player, s, exp, skillTips[s] ?? 0) == null);
+
   /// 特殊能力の値段(いまのコツで)。
   int skillPrice(Skill s) =>
       skillCost(s, skillTips[s] ?? 0, player.age, ownedSkillCount(player));
