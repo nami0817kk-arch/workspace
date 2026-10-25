@@ -4,6 +4,7 @@ import 'money.dart';
 import 'dream.dart';
 import 'game.dart';
 import 'season.dart';
+import 'special.dart';
 import 'player.dart';
 
 /// ポジションの呼び名。
@@ -78,13 +79,16 @@ String shareText(Game g) {
   final p = g.player;
   final b = StringBuffer()
     ..writeln('バスケ育成: ${p.name}の物語')
-    ..writeln('称号「${careerTitle(g)}」(${g.difficulty.label})${g.number > 0 ? ' 背番号${g.number}${retiredNumber(g) ? '(永久欠番)' : ''}' : ''}')
+    ..writeln('称号「${careerTitle(g)}」${g.number > 0 ? ' 背番号${g.number}${retiredNumber(g) ? '(永久欠番)' : ''}' : ''}')
     ..writeln('${p.heightCm.toStringAsFixed(0)}cm ${positionNickname(p.position)} 総合${p.overall.round()}  ${p.age}歳で引退')
     ..writeln('通算 ${g.totalGames}試合 ${g.totalPoints}得点 ${g.totalRebounds}リバウンド ${g.totalAssists}アシスト')
     ..writeln('スティール${g.totalSteals} ブロック${g.totalBlocks} 3P${g.totalThrees}本${g.careerHigh == null ? '' : ' キャリアハイ${g.careerHigh!.points}点'}')
     ..writeln('優勝${g.titles}回 個人賞${g.awardCount}回${g.abroad ? ' 海外挑戦' : ''}');
   if (p.skills.isNotEmpty) {
     b.writeln('得意技: ${p.skills.map((k) => k.label).join('・')}');
+  }
+  if (p.specials.isNotEmpty) {
+    b.writeln('特殊能力: ${p.specials.length}/${Special.values.length}個(${p.specials.take(3).map((s) => s.label).join('・')}${p.specials.length > 3 ? ' ほか' : ''})');
   }
   if (g.rival.games > 0) {
     b.writeln('宿敵${g.rival.name}との通算 ${g.rival.wins}勝${g.rival.losses}敗');
@@ -202,6 +206,10 @@ List<String> epilogueLines(Game g) {
 
   if (p.skills.isNotEmpty) {
     lines.add('得意技は「${p.skills.map((k) => k.label).join('」「')}」。');
+  }
+  if (p.specials.isNotEmpty) {
+    lines.add('磨き上げた特殊能力は${p.specials.length}個。'
+        '「${p.specials.take(3).map((s) => s.label).join('」「')}」${p.specials.length > 3 ? 'ほか' : ''}が、勝負を支えた。');
   }
 
   if (g.careerHigh != null && g.careerHigh!.points >= 20) {

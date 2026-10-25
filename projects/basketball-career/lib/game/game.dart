@@ -488,7 +488,7 @@ class Game {
     sp += dreamSp;
     player = player.copyWith(abilities: {
       for (final e in player.abilities.entries)
-        e.key: (e.value + Dream.rewardAbilityBonus).clamp(0, 100),
+        e.key: (e.value + Dream.rewardAbilityBonus).clamp(0, abilityCap),
     });
     condition = condition.copyWith(morale: condition.morale + Dream.rewardMorale);
     lastDreamNote =

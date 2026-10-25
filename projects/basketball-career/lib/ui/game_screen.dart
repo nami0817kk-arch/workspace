@@ -18,6 +18,7 @@ import 'controller.dart';
 import 'history_screen.dart';
 import 'settings_screen.dart';
 import 'labels.dart';
+import '../game/difficulty.dart';
 import '../game/special.dart';
 import 'layout.dart';
 import 'special_picker.dart';
@@ -1369,7 +1370,7 @@ class _EndingView extends StatelessWidget {
                     style: const TextStyle(
                         fontSize: 20, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 4),
-                Text('称号「${careerTitle(g)}」  (${g.difficulty.label})${g.number > 0 ? '\n背番号${g.number}${retiredNumber(g) ? '(永久欠番)' : ''}' : ''}',
+                Text('称号「${careerTitle(g)}」${g.difficulty == Difficulty.normal ? '' : '  (${g.difficulty.label})'}${g.number > 0 ? '\n背番号${g.number}${retiredNumber(g) ? '(永久欠番)' : ''}' : ''}',
                     style: TextStyle(
                         color: Theme.of(context).colorScheme.primary,
                         fontWeight: FontWeight.bold)),
