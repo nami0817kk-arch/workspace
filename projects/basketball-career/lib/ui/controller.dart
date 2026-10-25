@@ -565,6 +565,42 @@ class GameController extends ChangeNotifier {
     notifyListeners();
   }
 
+  bool spAdBusy = false;
+
+  /// 動画を見て(広告を消した人はそのまま)特殊能力ポイント +1。1日3回まで。
+  /// **受け取りは画面に依らず、ここで行う**(広告を見ている間に画面を離れても入る。app-pitfalls #2)。
+  Future<void> watchAdForSp() async {
+    final g = game;
+    final m = money;
+    if (g == null || m == null || g.phase == Phase.retired || spAdBusy) return;
+    if (m.spAdsLeft <= 0) {
+      recent = ['今日はもう動画でポイントをもらえない(1日${Monetization.spAdsPerDay}回まで)。'];
+      notifyListeners();
+      return;
+    }
+    spAdBusy = true;
+    notifyListeners();
+    RecoverGate gate;
+    try {
+      gate = await m.claimSpReward();
+    } catch (_) {
+      gate = RecoverGate.unavailable;
+    }
+    spAdBusy = false;
+    if (gate == RecoverGate.granted && game == g && g.phase != Phase.retired) {
+      g.grantSp(1);
+      recent = ['特殊能力ポイント +1(いま ${g.sp})。'];
+      _commit();
+      return;
+    }
+    recent = [
+      gate == RecoverGate.declined
+          ? '動画を最後まで見るとポイントがもらえる。'
+          : '動画を読み込めなかった。あとでもう一度。',
+    ];
+    notifyListeners();
+  }
+
   /// おすすめの過ごし方で、今年(年が変わるまで)を進める。
   Future<void> autoYear() async {
     final g = game;
