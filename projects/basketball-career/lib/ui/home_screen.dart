@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../game/difficulty.dart';
+import '../game/dream.dart';
 import '../game/game.dart';
 import '../game/legacy.dart';
 import 'art/title_art.dart';
@@ -22,6 +23,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final _name = TextEditingController();
   Difficulty _difficulty = Difficulty.normal;
+  Dream _dream = Dream.pro;
 
   /// 選んだ背番号。null ならおまかせ。
   int? _number;
@@ -30,18 +32,19 @@ class _HomeScreenState extends State<HomeScreen> {
   void _start() {
     final c = widget.controller;
     if (c.howtoSeen) {
-      c.newGame(_name.text, _difficulty, _number);
+      c.newGame(_name.text, _difficulty, _number, _dream);
       return;
     }
     final name = _name.text;
     final difficulty = _difficulty;
     final number = _number;
+    final dream = _dream;
     Navigator.of(context).push(MaterialPageRoute<void>(
       builder: (ctx) => HowToScreen(
         onStart: () {
           c.markHowtoSeen();
           Navigator.of(ctx).pop();
-          c.newGame(name, difficulty, number);
+          c.newGame(name, difficulty, number, dream);
         },
       ),
     ));
@@ -102,6 +105,26 @@ class _HomeScreenState extends State<HomeScreen> {
                 Padding(
                   padding: const EdgeInsets.only(top: 4, bottom: 8),
                   child: Text(_difficulty.description,
+                      style: const TextStyle(fontSize: 12)),
+                ),
+                const Text('幼いころの夢(かなうとごほうび)',
+                    style: TextStyle(fontSize: 12)),
+                const SizedBox(height: 4),
+                Wrap(
+                  spacing: 6,
+                  runSpacing: 4,
+                  children: [
+                    for (final d in Dream.values)
+                      ChoiceChip(
+                        label: Text(d.label),
+                        selected: _dream == d,
+                        onSelected: (_) => setState(() => _dream = d),
+                      ),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 4, bottom: 8),
+                  child: Text('${_dream.goalText}。かなうと全能力 +${Dream.rewardAbilityBonus}',
                       style: const TextStyle(fontSize: 12)),
                 ),
                 const Text('背番号', style: TextStyle(fontSize: 12)),
