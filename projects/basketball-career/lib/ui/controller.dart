@@ -237,7 +237,7 @@ class GameController extends ChangeNotifier {
         dream: dream,
         style: style,
         number: number);
-    focus = recommendedFocus(game!.player);
+    _followRecommended();
     focusAuto = true;
     recent = const [];
     pathMessage = null;
@@ -253,10 +253,47 @@ class GameController extends ChangeNotifier {
     store.saveHowtoSeen();
   }
 
+  /// 第2重点(少し伸ばす能力)。なし(null)もできる。
+  Ability? focus2;
+
+  /// 重点を、おすすめの組(第1・第2)に合わせる。
+  void _followRecommended() {
+    final g = game;
+    if (g == null) return;
+    focus = recommendedFocus(g.player);
+    focus2 = recommendedFocus2(g.player, focus);
+  }
+
+  void _syncAuto() {
+    final g = game;
+    if (g == null) {
+      focusAuto = false;
+      return;
+    }
+    final f = recommendedFocus(g.player);
+    focusAuto = focus == f && focus2 == recommendedFocus2(g.player, f);
+  }
+
+  /// 第1重点(大きく伸ばす能力)を選ぶ。第2重点と同じになったら、第2重点は外す。
   void setFocus(Ability a) {
     focus = a;
-    // おすすめを選び直したら、自動の追従に戻る。
-    focusAuto = game != null && a == recommendedFocus(game!.player);
+    if (focus2 == a) focus2 = null;
+    _syncAuto(); // おすすめと同じ組に戻ったら、自動の追従に戻る。
+    notifyListeners();
+  }
+
+  /// 第2重点(少し伸ばす能力)を選ぶ。null でなし。第1重点と同じものは選べない。
+  void setFocus2(Ability? a) {
+    if (a == focus) return;
+    focus2 = a;
+    _syncAuto();
+    notifyListeners();
+  }
+
+  /// 重点をおすすめの組に戻す。
+  void useRecommendedFocus() {
+    _followRecommended();
+    focusAuto = true;
     notifyListeners();
   }
 
@@ -298,6 +335,7 @@ class GameController extends ChangeNotifier {
     final r = g.choose(
       a,
       focus,
+      focus2: focus2,
       chooseClutch: clutchPolicy == null ? null : (_) => clutchPolicy!,
       askClutch: ask && askClutch && clutchPolicy == null,
       askHalftime: ask && askClutch && clutchPolicy == null,
@@ -613,7 +651,7 @@ class GameController extends ChangeNotifier {
     // 目標は確実なほうを自動で選ぶ(選ぶ前なら)。
     if (g.goal == null && g.goalOptions.isNotEmpty && g.slot <= 2) g.adoptGoal(0);
     while (g.phase == Phase.season && g.player.age == age) {
-      focus = recommendedFocus(g.player);
+      _followRecommended();
       final r = act(recommendedAction(g), ask: false);
       if (r.tournament != null || r.satOut) await money?.tournamentPlayed();
       lines.addAll(recent.skip(1));
@@ -719,7 +757,7 @@ class GameController extends ChangeNotifier {
 
   void _commit() {
     final g = game;
-    if (g != null && focusAuto) focus = recommendedFocus(g.player);
+    if (g != null && focusAuto) _followRecommended();
     // 引退したら、殿堂に1度だけ書き込み、実績を解除する。
     if (g != null && g.phase == Phase.retired && !g.archived) {
       g.archived = true;

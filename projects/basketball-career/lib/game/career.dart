@@ -19,9 +19,9 @@ double growthFactor(int age) {
   if (age < 16) return 1.4;
   if (age < 19) return 1.2;
   if (age < 24) return 1.0;
-  if (age < 28) return 0.4;
-  if (age < 31) return -0.2;
-  return -0.8;
+  if (age < 28) return 0.45;
+  if (age < 31) return -0.1;
+  return -0.7;
 }
 
 /// 1年の身長の伸び(cm)の目安。成長期(10〜17歳)に集中し、20歳でほぼ止まる。
