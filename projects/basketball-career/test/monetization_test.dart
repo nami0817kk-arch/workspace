@@ -310,7 +310,8 @@ void main() {
       final (m, _, _) = await open();
       await tester.pumpWidget(MaterialApp(home: SettingsScreen(money: m)));
       await tester.pumpAndSettle();
-      expect(find.text('広告を消す(¥370)'), findsOneWidget);
+      // ストアが返す半角の円記号は、同梱フォントにある全角の円記号で出す(displayPrice)。
+      expect(find.text('広告を消す(￥370)'), findsOneWidget);
       expect(find.text('購入を復元'), findsOneWidget);
     });
 
@@ -383,5 +384,11 @@ void main() {
             reason: '$f が広告を直接扱っている。受け取りはコントローラが持つ');
       }
     });
+  });
+
+  test('値段の表示: 半角の円記号を、同梱フォントにある全角の円記号にそろえる', () {
+    expect(displayPrice('¥370'), '￥370');
+    expect(displayPrice('￥370'), '￥370');
+    expect(displayPrice('US\$2.99'), 'US\$2.99');
   });
 }

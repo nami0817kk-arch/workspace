@@ -34,6 +34,9 @@ import 'package:basketball_career/game/life.dart';
 import 'package:basketball_career/game/match.dart';
 import 'package:basketball_career/game/path.dart';
 import 'package:basketball_career/game/player.dart';
+import 'package:basketball_career/monetization/monetization.dart';
+import 'package:basketball_career/monetization/purchase_service.dart';
+import 'package:basketball_career/ui/settings_screen.dart';
 import 'package:basketball_career/ui/app.dart';
 import 'package:basketball_career/ui/controller.dart';
 import 'package:flutter/material.dart' hide Action, Route;
@@ -210,6 +213,29 @@ void _play(Game g, {required int untilAge}) {
   }
 }
 
+
+/// 課金アイテムの審査用: 値段(¥370)が出る設定画面を撮るための、偽のストア。
+class _PricedStore implements PurchaseService {
+  @override
+  set onDelivered(Future<void> Function(String productId)? callback) {}
+  @override
+  set onRevoked(Future<void> Function(String productId)? callback) {}
+  @override
+  Future<void> initialize() async {}
+  @override
+  Future<bool> isAvailable() async => true;
+  @override
+  Future<String?> priceLabel() async => '¥370';
+  @override
+  Future<PurchaseOutcome> buyRemoveAds() async => PurchaseOutcome.unavailable;
+  @override
+  Future<PurchaseOutcome> restore() async => PurchaseOutcome.unavailable;
+  @override
+  Future<bool?> hasEntitlement() async => null;
+  @override
+  void dispose() {}
+}
+
 void main() {
   testWidgets('ストア用スクリーンショット', (t) async {
     SharedPreferences.setMockInitialValues({'howtoSeen': true});
@@ -346,5 +372,39 @@ void main() {
     }
     expect(ending, isNotNull, reason: '見栄えのするエンディングが見つからない');
     await _shoot(t, '07_ending', '称号と殿堂が物語を残す', ending!, purple);
+  });
+
+  // 課金アイテムの審査用(App Store Connect の「審査に関する情報」)。値段(¥370)が写った設定画面。
+  // 掲載画像ではないので、値段が写っていてよい。iPhone の寸法だけ作る。
+  testWidgets('課金アイテムの審査用', (t) async {
+    if (_ipad) return;
+    SharedPreferences.setMockInitialValues({'howtoSeen': true});
+    await _loadFonts();
+    addTearDown(t.view.reset);
+    t.view.physicalSize = _logical * _ratio;
+    t.view.devicePixelRatio = _ratio;
+    final m = Monetization(await SharedPreferences.getInstance(), store: _PricedStore());
+    await t.pumpWidget(RepaintBoundary(
+      key: _key,
+      child: MediaQuery(
+        data: MediaQueryData(size: _logical, devicePixelRatio: _ratio),
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(fontFamily: 'NotoSansJP', colorSchemeSeed: const Color(0xFFE65100)),
+          home: SettingsScreen(money: m),
+        ),
+      ),
+    ));
+    await t.runAsync(() => Future.delayed(const Duration(milliseconds: 400)));
+    await t.pump(const Duration(milliseconds: 300));
+    expect(find.textContaining('広告を消す(￥370)'), findsOneWidget, reason: '値段のボタンが出ていない');
+    expect(find.byType(CircularProgressIndicator), findsNothing);
+    await t.runAsync(() async {
+      final b = _key.currentContext!.findRenderObject() as RenderRepaintBoundary;
+      final img = await b.toImage(pixelRatio: _ratio);
+      final data = await img.toByteData(format: ui.ImageByteFormat.png);
+      final dir = Directory('marketing/iap_review')..createSync(recursive: true);
+      File('${dir.path}/remove_ads.png').writeAsBytesSync(data!.buffer.asUint8List());
+    });
   });
 }

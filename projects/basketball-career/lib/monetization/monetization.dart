@@ -184,3 +184,7 @@ class Monetization extends ChangeNotifier {
     return r;
   }
 }
+
+/// 値段の表示用。同梱フォント(NotoSansJP)には半角の「¥」(U+00A5)が無く、全角の「￥」(U+FFE5)はあるので、
+/// ストアが返す「¥370」を「￥370」にそろえる(端末のフォントに頼らず、どの環境でも字が出る)。
+String displayPrice(String price) => price.replaceAll('¥', '￥');
