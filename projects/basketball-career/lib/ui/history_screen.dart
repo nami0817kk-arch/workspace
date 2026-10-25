@@ -8,6 +8,7 @@ import '../game/skills.dart';
 import '../game/traits.dart';
 import 'art/title_art.dart';
 import 'controller.dart';
+import 'layout.dart';
 
 /// 殿堂(過去の選手)と実績の一覧。
 class HistoryScreen extends StatelessWidget {
@@ -22,7 +23,7 @@ class HistoryScreen extends StatelessWidget {
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 560),
+            constraints: BoxConstraints(maxWidth: contentMaxWidth(context)),
             child: ListView(
               padding: const EdgeInsets.all(16),
               children: [

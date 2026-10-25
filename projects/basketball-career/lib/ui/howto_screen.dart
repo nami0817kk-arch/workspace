@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'layout.dart';
 
 /// 遊び方。はじめて始めるときに1度見せ、はじめの画面と設定からいつでも開ける。
 class HowToScreen extends StatelessWidget {
@@ -30,7 +31,7 @@ class HowToScreen extends StatelessWidget {
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 560),
+            constraints: BoxConstraints(maxWidth: contentMaxWidth(context)),
             child: ListView(
               padding: const EdgeInsets.all(16),
               children: [
