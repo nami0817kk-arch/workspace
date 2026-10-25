@@ -9,8 +9,8 @@ import '../game/advice.dart';
 import '../game/career.dart';
 import '../game/collection.dart';
 import '../game/build.dart';
-import '../game/difficulty.dart';
 import '../game/special.dart';
+import '../game/traits.dart';
 import '../game/dream.dart';
 import '../game/game.dart';
 import '../game/legacy.dart';
@@ -220,18 +220,20 @@ class GameController extends ChangeNotifier {
     }
   }
 
+  /// 新しく始める。生まれつきの特性は、始める画面で見せた(振り直せる)ものを `traits` で渡す。
+  /// 難易度の選択は無くした(いつも「ふつう」。古いセーブは保存された難易度のまま)。
   void newGame(String name,
-      [Difficulty difficulty = Difficulty.normal,
-      int? number,
+      {int? number,
       Dream dream = Dream.pro,
-      Build? style]) {
+      Build? style,
+      Set<Trait>? traits}) {
     final n = name.trim().isEmpty ? '名無し' : name.trim();
     newlyUnlocked = const [];
     game = Game.start(n,
         rng: _rng,
         events: events,
-        difficulty: difficulty,
         legacyBonus: legacyBonusFor(unlocked.length),
+        traits: traits,
         dream: dream,
         style: style,
         number: number);
