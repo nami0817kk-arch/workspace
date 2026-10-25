@@ -2500,10 +2500,21 @@ class _AdRecoveryButtonState extends State<_AdRecoveryButton> {
 }
 
 /// 特殊能力(経験点で取る。コツが貯まるほど安い)。能力タブの下。
-class _SkillCard extends StatelessWidget {
+class _SkillCard extends StatefulWidget {
   const _SkillCard({required this.controller, required this.game});
   final GameController controller;
   final Game game;
+
+  @override
+  State<_SkillCard> createState() => _SkillCardState();
+}
+
+class _SkillCardState extends State<_SkillCard> {
+  /// すべて出すか(既定は、コツのあるものだけ。41個並ぶと探しにくく、見込みの計算も重い)。
+  bool _all = false;
+
+  GameController get controller => widget.controller;
+  Game get game => widget.game;
 
   @override
   Widget build(BuildContext context) {
@@ -2513,10 +2524,22 @@ class _SkillCard extends StatelessWidget {
       for (final s in list)
         if (p.skills.contains(s)) s
     ];
+    final ready = game.skillsInSeason.toSet();
+    int tipsOf(Skill s) => game.skillTips[s] ?? 0;
+    // 取りどき → コツの多い順 → 安い順
     final open = [
       for (final s in list)
-        if (!p.skills.contains(s)) s
-    ];
+        if (!p.skills.contains(s) && (_all || tipsOf(s) > 0)) s
+    ]..sort((a, b) {
+        final r = (ready.contains(b) ? 1 : 0) - (ready.contains(a) ? 1 : 0);
+        if (r != 0) return r;
+        final t = tipsOf(b) - tipsOf(a);
+        if (t != 0) return t;
+        return game.skillPrice(a) - game.skillPrice(b);
+      });
+    final hidden = list
+        .where((s) => !p.skills.contains(s) && tipsOf(s) == 0)
+        .length;
     final weak = [
       for (final s in weaknessesFor(p.role))
         if (p.skills.contains(s)) s
@@ -2573,8 +2596,52 @@ class _SkillCard extends StatelessWidget {
                 ),
             ]),
           ],
-          const SizedBox(height: 4),
-          for (final s in open) _SkillRow(controller: controller, game: game, skill: s),
+          const SizedBox(height: 6),
+          // 狭い画面・大きい文字でも溢れないよう、折り返す
+          Wrap(
+              spacing: 8,
+              runSpacing: 6,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+            if (ready.isNotEmpty)
+              FilledButton.tonalIcon(
+                key: const Key('skill-buy-ready'),
+                style: FilledButton.styleFrom(
+                    minimumSize: const Size(0, 36),
+                    visualDensity: VisualDensity.compact),
+                onPressed: controller.buyReadySkills,
+                icon: const Icon(Icons.bolt, size: 18),
+                label: Text('取りどきを取る(${ready.length})'),
+              ),
+            SegmentedButton<bool>(
+              key: const Key('skill-filter'),
+              showSelectedIcon: false,
+              style: const ButtonStyle(visualDensity: VisualDensity.compact),
+              segments: const [
+                ButtonSegment(value: false, label: Text('コツあり')),
+                ButtonSegment(value: true, label: Text('すべて')),
+              ],
+              selected: {_all},
+              onSelectionChanged: (v) => setState(() => _all = v.first),
+            ),
+          ]),
+          if (!_all && open.isEmpty)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: Text(
+                  'コツをつかんだ特殊能力はまだありません。研究・特訓・練習試合・交流・コーチでコツが貯まります'
+                  '(「すべて」で一覧を見て、本のボタンで研究の対象を選べます)。',
+                  key: const Key('skill-none-yet'),
+                  style: Theme.of(context).textTheme.bodySmall),
+            ),
+          for (final s in open)
+            _SkillRow(controller: controller, game: game, skill: s),
+          if (!_all && hidden > 0)
+            TextButton(
+              key: const Key('skill-show-all'),
+              onPressed: () => setState(() => _all = true),
+              child: Text('コツのない特殊能力 $hidden 個を見る'),
+            ),
         ]),
       ),
     );

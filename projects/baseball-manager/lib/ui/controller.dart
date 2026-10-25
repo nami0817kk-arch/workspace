@@ -1040,9 +1040,21 @@ class GameController extends ChangeNotifier {
     final start = g.log.length;
     final before = g.stage;
     final n0 = pending.length;
+    final readyBefore = g.skillsInSeason.toSet();
     g.choose(a, focus);
     recent = [_summary(a, g), ...g.log.sublist(start)];
     toast = toasts ? recent.first : null;
+    // 新しく取りどきになった特殊能力があれば、知らせる(能力タブで取れる)
+    final newlyReady = [
+      for (final k in g.skillsInSeason)
+        if (!readyBefore.contains(k)) k
+    ];
+    if (newlyReady.isNotEmpty) {
+      final note =
+          '「${newlyReady.map((k) => k.label).join('」「')}」が取りどき!(能力タブで取れる)';
+      recent = [...recent, note];
+      if (toasts) toast = note;
+    }
     toastTone = g.condition.injured || g.lastOutcome == Outcome.bad
         ? -1
         : (g.lastOutcome == Outcome.good || g.lastOutcome == Outcome.great
@@ -1196,6 +1208,26 @@ class GameController extends ChangeNotifier {
     if (haptics) HapticFeedback.selectionClick();
     _cue(Sfx.rankup);
     _commit();
+  }
+
+  /// 取りどきの特殊能力(コツ3つ以上・いま取れる)を、まとめて取る。取れた数を返す。
+  int buyReadySkills() {
+    final g = game!;
+    final start = g.log.length;
+    var n = 0;
+    // 取ると次が高くなるので、取りどきを1つずつ見直しながら取る
+    for (;;) {
+      final ready = g.skillsInSeason;
+      if (ready.isEmpty) break;
+      if (g.buySkill(ready.first) != null) break;
+      n++;
+    }
+    if (n == 0) return 0;
+    recent = g.log.sublist(start);
+    if (haptics) HapticFeedback.selectionClick();
+    _cue(Sfx.rankup);
+    _commit();
+    return n;
   }
 
   /// 「研究」で調べる特殊能力を決める(null で自動)。
