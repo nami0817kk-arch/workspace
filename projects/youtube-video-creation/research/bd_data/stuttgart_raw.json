@@ -1,0 +1,734 @@
+{
+ "club_title": "VfB_Stuttgart",
+ "season_title": "2026–27_VfB_Stuttgart_season",
+ "squad": [
+  {
+   "no": "1",
+   "pos": "GK",
+   "nat": "GER",
+   "name": "Fabian Bredlow",
+   "page": "Fabian Bredlow",
+   "dob": "1995-03-02",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 32,
+   "club_goals": 0
+  },
+  {
+   "no": "2",
+   "pos": "DF",
+   "nat": "BEL",
+   "name": "Ameen Al-Dakhil",
+   "page": "Ameen Al-Dakhil",
+   "dob": "2002-03-06",
+   "captain": false,
+   "loan": false,
+   "team": "Belgium",
+   "caps": 6,
+   "club_caps": 15,
+   "club_goals": 0
+  },
+  {
+   "no": "3",
+   "pos": "DF",
+   "nat": "NED",
+   "name": "Ramon Hendriks",
+   "page": "Ramon Hendriks",
+   "dob": "2001-07-18",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 61,
+   "club_goals": 0
+  },
+  {
+   "no": "4",
+   "pos": "DF",
+   "nat": "GER",
+   "name": "Josha Vagnoman",
+   "page": "Josha Vagnoman",
+   "dob": "2000-12-11",
+   "captain": false,
+   "loan": false,
+   "team": "Germany",
+   "caps": 3,
+   "club_caps": 102,
+   "club_goals": 9
+  },
+  {
+   "no": "6",
+   "pos": "MF",
+   "nat": "GER",
+   "name": "Angelo Stiller",
+   "page": "Angelo Stiller",
+   "dob": "2001-04-04",
+   "captain": false,
+   "loan": false,
+   "team": "Germany",
+   "caps": 9,
+   "club_caps": 103,
+   "club_goals": 4
+  },
+  {
+   "no": "7",
+   "pos": "DF",
+   "nat": "GER",
+   "name": "Maximilian Mittelstädt",
+   "page": "Maximilian Mittelstädt",
+   "dob": "1997-03-18",
+   "captain": false,
+   "loan": false,
+   "team": "Germany",
+   "caps": 16,
+   "club_caps": 99,
+   "club_goals": 10
+  },
+  {
+   "no": "8",
+   "pos": "FW",
+   "nat": "POR",
+   "name": "Tiago Tomás",
+   "page": "Tiago Tomás",
+   "dob": "2002-06-16",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 69,
+   "club_goals": 12
+  },
+  {
+   "no": "9",
+   "pos": "FW",
+   "nat": "BIH",
+   "name": "Ermedin Demirović",
+   "page": "Ermedin Demirović",
+   "dob": "1998-03-25",
+   "captain": false,
+   "loan": false,
+   "team": "Bosnia and Herzegovina",
+   "caps": 48,
+   "club_caps": 66,
+   "club_goals": 30
+  },
+  {
+   "no": "10",
+   "pos": "MF",
+   "nat": "GER",
+   "name": "Chris Führich",
+   "page": "Chris Führich",
+   "dob": "1998-01-09",
+   "captain": false,
+   "loan": false,
+   "team": "Germany",
+   "caps": 10,
+   "club_caps": 163,
+   "club_goals": 26
+  },
+  {
+   "no": "11",
+   "pos": "MF",
+   "nat": "MAR",
+   "name": "Bilal El Khannouss",
+   "page": "Bilal El Khannouss",
+   "dob": "2004-05-10",
+   "captain": false,
+   "loan": false,
+   "team": "Morocco",
+   "caps": 46,
+   "club_caps": 31,
+   "club_goals": 5
+  },
+  {
+   "no": "14",
+   "pos": "DF",
+   "nat": "SUI",
+   "name": "Luca Jaquez",
+   "page": "Luca Jaquez",
+   "dob": "2003-06-02",
+   "captain": false,
+   "loan": false,
+   "team": "Switzerland",
+   "caps": 5,
+   "club_caps": 19,
+   "club_goals": 0
+  },
+  {
+   "no": "16",
+   "pos": "MF",
+   "nat": "TUR",
+   "name": "Atakan Karazor",
+   "page": "Atakan Karazor",
+   "dob": "1996-10-13",
+   "captain": false,
+   "loan": false,
+   "team": "Turkey",
+   "caps": 2,
+   "club_caps": 190,
+   "club_goals": 4
+  },
+  {
+   "no": "17",
+   "pos": "FW",
+   "nat": "GER",
+   "name": "Dženan Pejčinović",
+   "page": "Dženan Pejčinović",
+   "dob": "2005-02-15",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 6,
+   "club_goals": 0
+  },
+  {
+   "no": "18",
+   "pos": "FW",
+   "nat": "GER",
+   "name": "Jamie Leweling",
+   "page": "Jamie Leweling",
+   "dob": "2001-02-26",
+   "captain": false,
+   "loan": false,
+   "team": "Germany",
+   "caps": 6,
+   "club_caps": 99,
+   "club_goals": 13
+  },
+  {
+   "no": "20",
+   "pos": "DF",
+   "nat": "SUI",
+   "name": "Leonidas Stergiou",
+   "page": "Leonidas Stergiou",
+   "dob": "2002-03-03",
+   "captain": false,
+   "loan": false,
+   "team": "Switzerland",
+   "caps": 6,
+   "club_caps": 29,
+   "club_goals": 2
+  },
+  {
+   "no": "21",
+   "pos": "MF",
+   "nat": "GER",
+   "name": "Grischa Prömel",
+   "page": "Grischa Prömel",
+   "dob": "1995-01-09",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 6,
+   "club_goals": 1
+  },
+  {
+   "no": "22",
+   "pos": "DF",
+   "nat": "FRA",
+   "name": "Lorenz Assignon",
+   "page": "Lorenz Assignon",
+   "dob": "2000-06-22",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 25,
+   "club_goals": 0
+  },
+  {
+   "no": "23",
+   "pos": "DF",
+   "nat": "FRA",
+   "name": "Dan-Axel Zagadou",
+   "page": "Dan-Axel Zagadou",
+   "dob": "1999-06-03",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 41,
+   "club_goals": 1
+  },
+  {
+   "no": "24",
+   "pos": "DF",
+   "nat": "GER",
+   "name": "Jeff Chabot",
+   "page": "Jeff Chabot",
+   "dob": "1998-02-12",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 64,
+   "club_goals": 4
+  },
+  {
+   "no": "26",
+   "pos": "FW",
+   "nat": "GER",
+   "name": "Deniz Undav",
+   "page": "Deniz Undav",
+   "dob": "1996-07-19",
+   "captain": true,
+   "loan": false,
+   "team": "Germany",
+   "caps": 13,
+   "club_caps": 91,
+   "club_goals": 46
+  },
+  {
+   "no": "28",
+   "pos": "MF",
+   "nat": "DEN",
+   "name": "Nikolas Nartey",
+   "page": "Nikolas Nartey",
+   "dob": "2000-02-22",
+   "captain": false,
+   "loan": false,
+   "team": "Denmark",
+   "caps": 2,
+   "club_caps": 47,
+   "club_goals": 4
+  },
+  {
+   "no": "29",
+   "pos": "DF",
+   "nat": "GER",
+   "name": "Finn Jeltsch",
+   "page": "Finn Jeltsch",
+   "dob": "2006-07-17",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 41,
+   "club_goals": 0
+  },
+  {
+   "no": "31",
+   "pos": "FW",
+   "nat": "GER",
+   "name": "Justin Diehl",
+   "page": "Justin Diehl",
+   "dob": "2004-11-27",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 6,
+   "club_goals": 1
+  },
+  {
+   "no": "33",
+   "pos": "GK",
+   "nat": "GER",
+   "name": "Marius Funk",
+   "page": "Marius Funk",
+   "dob": "1996-01-01",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 0,
+   "club_goals": 0
+  },
+  {
+   "no": "39",
+   "pos": "MF",
+   "nat": "GER",
+   "name": "Ertuğrul Yiğit",
+   "page": "Ertuğrul Yiğit",
+   "dob": "",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "41",
+   "pos": "GK",
+   "nat": "GER",
+   "name": "Dennis Seimen",
+   "page": "Dennis Seimen",
+   "dob": "2005-12-01",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 2,
+   "club_goals": 0
+  },
+  {
+   "no": "43",
+   "pos": "FW",
+   "nat": "GER",
+   "name": "Jarzinho Malanga",
+   "page": "Jarzinho Malanga",
+   "dob": "2006-07-10",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 1,
+   "club_goals": 0
+  },
+  {
+   "no": "44",
+   "pos": "FW",
+   "nat": "SVK",
+   "name": "Leo Sauer",
+   "page": "Leo Sauer",
+   "dob": "2005-12-16",
+   "captain": false,
+   "loan": false,
+   "team": "Slovakia",
+   "caps": 15,
+   "club_caps": 5,
+   "club_goals": 0
+  },
+  {
+   "no": "46",
+   "pos": "GK",
+   "nat": "GER",
+   "name": "Stefan Drljača",
+   "page": "Stefan Drljača",
+   "dob": "1999-04-20",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 0,
+   "club_goals": 0
+  },
+  {
+   "no": "47",
+   "pos": "MF",
+   "nat": "AUT",
+   "name": "Yanik Spalt",
+   "page": "Yanik Spalt",
+   "dob": "2007-09-03",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 2,
+   "club_goals": 0
+  }
+ ],
+ "results": [
+  [
+   "28 August 2026",
+   "1",
+   "Bayern Munich",
+   "5–1",
+   "VfB Stuttgart"
+  ],
+  [
+   "4 September 2026",
+   "2",
+   "VfB Stuttgart",
+   "4–1",
+   "1. FC Köln"
+  ],
+  [
+   "12 September 2026",
+   "3",
+   "TSG Hoffenheim",
+   "2–1",
+   "VfB Stuttgart"
+  ],
+  [
+   "19 September 2026",
+   "4",
+   "VfB Stuttgart",
+   "0–1",
+   "Borussia Dortmund"
+  ],
+  [
+   "10 October 2026",
+   "5",
+   "SC Paderborn",
+   "0–2",
+   "VfB Stuttgart"
+  ],
+  [
+   "17 October 2026",
+   "6",
+   "Hamburger SV",
+   "1–0",
+   "VfB Stuttgart"
+  ],
+  [
+   "24 October 2026",
+   "7",
+   "VfB Stuttgart",
+   "2–3",
+   "Borussia Mönchengladbach"
+  ],
+  [
+   "31 October 2026",
+   "8",
+   "Bayer Leverkusen",
+   "",
+   "VfB Stuttgart"
+  ],
+  [
+   "6–8 November 2026",
+   "9",
+   "VfB Stuttgart",
+   "",
+   "Werder Bremen"
+  ],
+  [
+   "20–22 November 2026",
+   "10",
+   "Schalke 04",
+   "",
+   "VfB Stuttgart"
+  ],
+  [
+   "27–29 November 2026",
+   "11",
+   "VfB Stuttgart",
+   "",
+   "Eintracht Frankfurt"
+  ],
+  [
+   "4–6 December 2026",
+   "12",
+   "SV Elversberg",
+   "",
+   "VfB Stuttgart"
+  ],
+  [
+   "11–13 December 2026",
+   "13",
+   "VfB Stuttgart",
+   "",
+   "Union Berlin"
+  ],
+  [
+   "18–20 December 2026",
+   "14",
+   "SC Freiburg",
+   "",
+   "VfB Stuttgart"
+  ],
+  [
+   "8–10 January 2027",
+   "15",
+   "VfB Stuttgart",
+   "",
+   "FC Augsburg"
+  ],
+  [
+   "12–14 January 2027",
+   "16",
+   "RB Leipzig",
+   "",
+   "VfB Stuttgart"
+  ],
+  [
+   "15–17 January 2027",
+   "17",
+   "VfB Stuttgart",
+   "",
+   "Mainz 05"
+  ],
+  [
+   "22–24 January 2027",
+   "18",
+   "VfB Stuttgart",
+   "",
+   "Bayern Munich"
+  ],
+  [
+   "29–31 January 2027",
+   "19",
+   "1. FC Köln",
+   "",
+   "VfB Stuttgart"
+  ],
+  [
+   "5–7 February 2027",
+   "20",
+   "VfB Stuttgart",
+   "",
+   "TSG Hoffenheim"
+  ],
+  [
+   "12–14 February 2027",
+   "21",
+   "Borussia Dortmund",
+   "",
+   "VfB Stuttgart"
+  ],
+  [
+   "19–21 February 2027",
+   "22",
+   "VfB Stuttgart",
+   "",
+   "SC Paderborn"
+  ],
+  [
+   "26–28 February 2027",
+   "23",
+   "VfB Stuttgart",
+   "",
+   "Hamburger SV"
+  ],
+  [
+   "2–4 March 2027",
+   "24",
+   "Borussia Mönchengladbach",
+   "",
+   "VfB Stuttgart"
+  ],
+  [
+   "5–7 March 2027",
+   "25",
+   "VfB Stuttgart",
+   "",
+   "Bayer Leverkusen"
+  ],
+  [
+   "12–14 March 2027",
+   "26",
+   "Werder Bremen",
+   "",
+   "VfB Stuttgart"
+  ],
+  [
+   "19–21 March 2027",
+   "27",
+   "VfB Stuttgart",
+   "",
+   "Schalke 04"
+  ],
+  [
+   "2–4 April 2027",
+   "28",
+   "Eintracht Frankfurt",
+   "",
+   "VfB Stuttgart"
+  ],
+  [
+   "9–11 April 2027",
+   "29",
+   "VfB Stuttgart",
+   "",
+   "SV Elversberg"
+  ],
+  [
+   "16–18 April 2027",
+   "30",
+   "Union Berlin",
+   "",
+   "VfB Stuttgart"
+  ],
+  [
+   "23–25 April 2027",
+   "31",
+   "VfB Stuttgart",
+   "",
+   "SC Freiburg"
+  ],
+  [
+   "7–9 May 2027",
+   "32",
+   "FC Augsburg",
+   "",
+   "VfB Stuttgart"
+  ],
+  [
+   "14–16 May 2027",
+   "33",
+   "VfB Stuttgart",
+   "",
+   "RB Leipzig"
+  ],
+  [
+   "22 May 2027",
+   "34",
+   "Mainz 05",
+   "",
+   "VfB Stuttgart"
+  ],
+  [
+   "21 August 2026",
+   "First round",
+   "Hansa Rostock",
+   "0–4",
+   "VfB Stuttgart"
+  ],
+  [
+   "28 October 2026",
+   "Second round",
+   "SC Paderborn",
+   "",
+   "VfB Stuttgart"
+  ],
+  [
+   "9 September 2026",
+   "1",
+   "VfB Stuttgart",
+   "3–1",
+   "Viking"
+  ],
+  [
+   "14 October 2026",
+   "2",
+   "Slovan Bratislava",
+   "0–3",
+   "VfB Stuttgart"
+  ],
+  [
+   "20 October 2026",
+   "3",
+   "VfB Stuttgart",
+   "1–1",
+   "Atlético Madrid"
+  ],
+  [
+   "3 November 2026",
+   "4",
+   "Galatasaray",
+   "",
+   "VfB Stuttgart"
+  ],
+  [
+   "25 November 2026",
+   "5",
+   "Inter Milan",
+   "",
+   "VfB Stuttgart"
+  ],
+  [
+   "9 December 2026",
+   "6",
+   "VfB Stuttgart",
+   "",
+   "Lille"
+  ],
+  [
+   "19 January 2027",
+   "7",
+   "VfB Stuttgart",
+   "",
+   "Club Brugge"
+  ],
+  [
+   "27 January 2027",
+   "8",
+   "PSV Eindhoven",
+   "",
+   "VfB Stuttgart"
+  ]
+ ]
+}

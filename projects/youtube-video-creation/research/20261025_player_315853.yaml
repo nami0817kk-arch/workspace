@@ -1,0 +1,574 @@
+# アレッサンドロ・バストーニ（インテル／イタリア代表）の紹介。選手紹介の8節の型（2026-10-25、シリーズ「有名選手の紹介」。key: player_315853）。
+# **FotMob は使わない**。数字は Transfermarkt API（プロフィール・市場価値の推移・季ごと大会ごとの成績・試合ごとの記録。控え research/raw/20261025_bastoni_tm.json・20261025_bastoni_games.json）と、自分で割った90分あたり・何分に1本。
+# **選んだ理由・重なり確認（2026-10-25）**：player_pool.py list（市場価値の順）で、scripts/ の 10/01〜10/24 に紹介があるのは 1〜17位・19位・21位（ハーランド〜ユルドゥズ、ソボスライ、カイセド）。
+#   未紹介で市場価値が最上位は 18位のバストーニ（6500万ユーロ。10/24 の次点）。セリエA・インテル（5大リーグ）。
+#   scripts/・research/posted.json・covered.yaml を「バストーニ／Bastoni／315853」で grep：紹介・比べるの台本は0件。scripts/20261003_france_italy.md に試合の得点者として1行あるだけ。posted.json・covered.yaml は0件。
+#   現役（2026-10-21 CL に68分出場）。女子・Jリーグでもない。
+# **数字の軸**：インテルの全公式戦（TM の試合ごとの記録を足した）で 307試合8得点30アシスト・23966分。アシストは 20/21 4・21/22 3・22/23 6・23/24 4・24/25 6・25/26 6。
+#   何分に1本：20/21 872分・21/22 1109分・22/23 591分・23/24 731分・24/25 699分・25/26 533分。
+#   90分あたりのパス（記録が全試合そろう 22/23 から）：60.8→70.2→72.9→76.0、今季 85.9。成功率 85.3%・89.5%・89.0%・88.3%、今季 90.8%。
+#   インテル公式（2026-08-30）の300試合の表（セリエA209・CL56・コッパ20・EL5・スーパーコッパ6・クラブW杯4）と、TM の 8/30 時点の数（300）が一致。今季はその後7試合で307。
+#   季の切り方：クラブW杯（2025年6月）を TM は 24/25、インテル公式は 25/26 に数える。台本の季の表は TM（24/25 は57試合）。
+# **通算（トップチームと代表。下部組織・U21 は除く）**：アタランタ 9試合0得点／パルマ 24試合1得点／インテル 307試合8得点／イタリア代表 46試合5得点 → 386試合14得点。
+# **日本との接点**：2025年6月21日（現地）のクラブW杯、インテル 2-1 浦和レッズに72分から途中出場（TM・ESPN の試合記録。浦和の得点は渡邊凌磨 11分）。経歴の節に1行だけ置く（無理に広げない）。
+# **一次情報・出典**：インテル公式「Bastoni's 300 appearances for Inter」（2026-08-30。デビュー 2019/9/28 サンプドリア戦・初得点 2020/1/19 レッチェ戦・1季目33試合2得点・スクデットの季にバレッラとシュクリニアルへのアシスト・最優秀DF2回・CL決勝2回・2026年の2冠・2020年以降の9冠すべてを獲った5人の1人・300試合目は 8/30 カリアリ戦）／
+#   ESPN の試合記録と記事（2026-09-28 トルコ 1-4 イタリア：9分にCKから先制／2026-10-02 フランス 1-1 イタリア：55分オリーズのFK、68分にバストーニが相手のパスを奪って左足で同点。ジダン監督のフランスの本拠地での初戦）／
+#   football-italia（2024-25 セリエA最優秀DF）／英語版Wikipedia（7歳でアタランタの下部組織・2017/1/22 サンプドリア戦でセリエAデビュー・2017年夏にインテル移籍しアタランタへ貸し出し・2018-19 パルマ・ユーロ2020優勝・代表デビュー 2020/11/11）。
+# **入れなかったもの**：移籍金、年俸、私生活、2026年7月の報道（捜査）、2026年3月のW杯予選プレーオフ（退場）、イタリア代表のW杯の結果。FotMob の指標。
+# **本人の言葉**：取れなかった（インテル公式の300試合の記事・ESPN の2試合の記事に本人の発言は無い。ほかは WebFetch/requests で当たっていない）。台本に発言は置かない。
+# **不安**：今季の数は 10/24 時点。10/25 20:30（日本時間）にインテル対フィオレンティーナがあり、公開が試合後なら試合数が1つずれる。台本は「10月24日時点」と言う。
+# **日本語名・読み**：アレッサンドロ・バストーニ、インテル、アタランタ、パルマ、サンプドリア、レッチェ、カリアリ、バレッラ、シュクリニアル、ディマルコ、マイニャン、オリーズ、ジダン、浦和レッズ。
+date: 2026年10月25日
+slot: other_1
+format: news
+series: 有名選手の紹介
+people:
+- アレッサンドロ・バストーニ
+theme:
+  id: player_315853
+  league: italy
+  league_name: セリエA
+  kind: other
+  topic: インテル
+  title: バストーニってどんな選手？ DFでインテル30アシスト、何が違うのか
+  question: インテルのセンターバック、アレッサンドロ・バストーニは、7季で8得点に対してアシストが30。守る位置の選手が、なぜ点を作れるのか
+  takeaway: インテルの全公式戦で307試合8得点30アシスト。アシストは25/26に533分に1本（20/21は872分に1本）、90分あたりのパスは22/23の60.8本から25/26は76.0本、今季は85.9本。今季はインテルで0アシストだが、代表ではトルコ戦とフランス戦で2試合連続ゴール
+  nameplate: アレッサンドロ・バストーニ｜インテル DF／イタリア代表
+  opening_image: assets/images/20261025_player_315853/pool/01_r.jpg
+  end_bg: assets/images/20261025_player_315853/pool/01_r.jpg
+  bgm: assets/audio/bgm_calm.wav
+watch: 毎日、数字でサッカーを読み解きます
+short_title: バストーニってどんな選手？
+thumbnail:
+  line1: バストーニ、386試合14点
+  line2: DFでインテル30アシスト
+  tags:
+  - インテル
+  photo: assets/images/20261025_player_315853/panel_01.jpg
+  photos: []
+  short_photo: assets/images/20261025_player_315853/pool/01_v.jpg
+sections:
+- id: hook
+  heading: 守る位置の選手が、インテルで30アシスト。バストーニは何をしているのか
+  tier: 報道
+  telop: インテルで307試合、30アシスト
+  narrator: 解説
+  card: &hook_card
+    type: stats
+    title: バストーニ インテルの7季（全公式戦）
+    items:
+    - - '307'
+      - 試合
+      - 2019/20〜今季
+    - - '30'
+      - アシスト
+      - 得点の約4倍
+    - - '8'
+      - 点
+      - 得点
+    focus: 1
+  say:
+  - text: インテルの左のセンターバック、アレッサンドロ・バストーニ。
+    image: assets/images/20261025_player_315853/pool/03_r.jpg
+    card: none
+  - text: インテルで出た公式戦は、307試合です。
+    card:
+      <<: *hook_card
+      focus: 0
+  - text: 決めた点は8点。そして、アシストは、なんと30。
+    card:
+      <<: *hook_card
+      focus: 1
+    emph: true
+  - text: 守る位置の選手が、点の4倍近く、味方の得点を作ってきました。
+    image: assets/images/20261025_player_315853/pool/02_r.jpg
+    card:
+      <<: *hook_card
+      focus: 1
+  - text: 今季は、イタリア代表で、2試合続けてゴール。
+    image: assets/images/20261025_player_315853/pool/01_r.jpg
+    card: none
+  - text: 守るだけではない、この左利きのセンターバックを、数字で見ていきます。
+    card: none
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/alessandro-bastoni/leistungsdatendetails/spieler/315853
+  - https://www.inter.it/en/news/bastonis-300-appearances-for-inter
+- id: data
+  heading: バストーニは、どんな立場で、いくらと見られている選手か
+  tier: 報道
+  telop: バストーニの基礎DATA
+  narrator: 解説
+  card: &data_card
+    type: table
+    title: アレッサンドロ・バストーニ（インテル）
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - 所属
+      - インテル（95番）
+    - - ポジション
+      - センターバック（3バックの左）
+    - - 生年月日
+      - 1999年4月13日（27歳）
+    - - 出身
+      - イタリア（ロンバルディア州）
+    - - 身長・利き足
+      - 1.90m・左足
+    - - 代表
+      - イタリア（46試合5得点）
+    - - 契約・市場価値
+      - 2028年まで・6500万ユーロ
+    source: Transfermarkt
+  say:
+  - text: バストーニの、インテルでの持ち場は、後ろを3人で守る3バックの左。
+    image: assets/images/20261025_player_315853/pool/03_r.jpg
+    card: none
+  - text: 1999年4月13日生まれの27歳。イタリア北部、ロンバルディア州の出身です。
+    card:
+      <<: *data_card
+      highlight_row: 2
+  - text: 身長は1メートル90。利き足は左。
+    card:
+      <<: *data_card
+      highlight_row: 4
+  - text: 市場価値は、推定で6500万ユーロ。最高は2025年の8000万ユーロです。
+    image: assets/images/20261025_player_315853/pool/02_r.jpg
+    card:
+      type: line
+      title: バストーニの市場価値（百万ユーロ）
+      x:
+      - 17/6
+      - 19/3
+      - 20/3
+      - 21/5
+      - 24/3
+      - 25/3
+      - 26/5
+      series:
+      - - 市場価値
+        - - 1.5
+          - 15
+          - 35
+          - 60
+          - 70
+          - 80
+          - 65
+      focus: 市場価値
+      highlight: 25/3
+      source: Transfermarkt
+    emph: true
+  - text: 2017年6月の150万ユーロと比べると、およそ43倍になりました。
+    card: none
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/alessandro-bastoni/profil/spieler/315853
+  - https://www.transfermarkt.com/alessandro-bastoni/marktwertverlauf/spieler/315853
+- id: career
+  heading: 17歳でデビューした少年は、どうやってインテルの中心になったのか
+  tier: 背景
+  telop: アタランタから、インテルへ
+  narrator: 解説
+  card: &career_card
+    type: timeline
+    title: バストーニの歩み
+    rows:
+    - - '2017'
+      - 1月、17歳でセリエAデビュー。夏にインテルへ
+    - - '2018'
+      - パルマに貸し出し。24試合
+    - - '2019'
+      - 9月、インテルでデビュー
+    - - '2021'
+      - スクデット。ユーロ2020で優勝
+    - - '2024'
+      - スクデット。最優秀DFに（翌季も）
+    - - '2026'
+      - 2冠。8月、インテルで300試合
+    focus: 2017
+  say:
+  - text: バストーニは、7歳で、地元に近いアタランタの下部組織に入りました。
+    image: assets/images/20261025_player_315853/pool/02_r.jpg
+    card:
+      <<: *career_card
+      focus: 2017
+  - text: 2017年1月、サンプドリア戦。17歳で、セリエAに先発デビュー。
+    card:
+      <<: *career_card
+      focus: 2017
+  - text: いきなり、90分を戦い抜きます。
+    card:
+      <<: *career_card
+      focus: 2017
+  - text: その年の夏、インテルが獲得。そのまま、アタランタに貸し出しました。
+    card:
+      <<: *career_card
+      focus: 2017
+  - text: 2018年からの1季は、パルマへ。セリエAで出番を重ねます。
+    image: assets/images/20261025_player_315853/pool/01_r.jpg
+    card: none
+  - text: 2019年9月28日、サンプドリア戦。20歳で、インテルでのデビューです。
+    card:
+      <<: *career_card
+      focus: 2019
+  - text: 2020年1月、レッチェ戦。途中出場から、インテルで初めてのゴールを決めます。
+    image: assets/images/20261025_player_315853/pool/03_r.jpg
+    card: none
+  - text: インテル2季目の2021年に、リーグ優勝。
+    card:
+      <<: *career_card
+      focus: 2021
+  - text: この夏、優勝したユーロ2020のイタリア代表にも入っていました。
+    card:
+      <<: *career_card
+      focus: 2021
+  - text: 2024年は、2度目の優勝の季。
+    card: none
+  - text: セリエAの最優秀ディフェンダーに選ばれ、翌季も続けて受賞します。
+    image: assets/images/20261025_player_315853/pool/02_r.jpg
+    card:
+      <<: *career_card
+      focus: 2024
+    emph: true
+  - text: チャンピオンズリーグでは、2度、決勝の舞台に立ちました。
+    card: none
+  - text: 2025年6月のクラブワールドカップでは、日本の浦和レッズとも対戦。
+    image: assets/images/20261025_player_315853/pool/03_r.jpg
+    card: none
+  - text: バストーニは72分から途中出場し、インテルが2対1で勝っています。
+    card: none
+  - text: そして2026年、リーグとカップの2冠。
+    image: assets/images/20261025_player_315853/pool/01_r.jpg
+    card:
+      <<: *career_card
+      focus: 2026
+  - text: 2020年からインテルが獲ったタイトルは、9つ。
+    card:
+      <<: *career_card
+      focus: 2026
+  - text: そのすべてを手にした5人の1人だと、クラブは紹介しています。
+    card: none
+  - text: 8月30日のカリアリ戦で、インテルでの出場は300試合になりました。
+    image: assets/images/20261025_player_315853/pool/02_r.jpg
+    card: none
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Alessandro_Bastoni
+  - https://www.inter.it/en/news/bastonis-300-appearances-for-inter
+  - https://www.transfermarkt.com/alessandro-bastoni/leistungsdatendetails/spieler/315853
+  - https://football-italia.net/official-2024-25-serie-a-mvp-awards-revealed
+  - https://www.espn.com/soccer/match/_/gameId/724448
+- id: style
+  heading: バストーニは、どんな選手か。ボールに触る数で見る
+  tier: 背景
+  telop: 90分あたりのパス
+  narrator: 解説
+  card: &pass_card
+    type: bars
+    title: 90分あたりのパス（インテル・全公式戦）
+    unit: 本
+    items:
+    - label: 22/23
+      value: 60.8
+    - label: 23/24
+      value: 70.2
+    - label: 24/25
+      value: 72.9
+    - label: 25/26
+      value: 76.0
+    - label: 今季
+      value: 85.9
+      highlight: true
+    source: Transfermarkt
+  say:
+  - text: バストーニの持ち味は、左足のパスと、前へ出ていく動きだとされます。
+    image: assets/images/20261025_player_315853/pool/01_r.jpg
+    card: none
+  - text: 3バックの左から、外を追い越して上がり、ゴール前へボールを送ります。
+    card: none
+  - text: では、どれだけボールに触っているのか。90分あたりのパスの数です。
+    image: assets/images/20261025_player_315853/pool/02_r.jpg
+    card: *pass_card
+  - text: 22/23は60.8本。そこから毎季増えて、25/26は76.0本。
+    card: *pass_card
+  - text: 今季は、ここまで85.9本です。
+    card: *pass_card
+    emph: true
+  - text: 成功率は、今季が90.8%。25/26は88.3%でした。
+    image: assets/images/20261025_player_315853/pool/03_r.jpg
+    card: none
+  - text: 増え続けるパスの中から、味方の得点が生まれてきました。
+    card: none
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/alessandro-bastoni/leistungsdatendetails/spieler/315853
+  - https://www.inter.it/en/news/bastonis-300-appearances-for-inter
+- id: past
+  heading: バストーニは、インテルの各季で、何試合に出て、いくつ点に絡んだのか
+  tier: 報道
+  telop: インテルの6季
+  narrator: 解説
+  card: &past_card
+    type: table
+    title: バストーニ インテルの6季（全公式戦）
+    columns:
+    - シーズン
+    - 試合
+    - 得点
+    - アシスト
+    - 出場時間
+    rows:
+    - - 20/21
+      - '41'
+      - '0'
+      - '4'
+      - 3488分
+    - - 21/22
+      - '44'
+      - '1'
+      - '3'
+      - 3326分
+    - - 22/23
+      - '46'
+      - '0'
+      - '6'
+      - 3545分
+    - - 23/24
+      - '37'
+      - '1'
+      - '4'
+      - 2924分
+    - - 24/25
+      - '57'
+      - '2'
+      - '6'
+      - 4196分
+    - - 25/26
+      - '40'
+      - '2'
+      - '6'
+      - 3197分
+    source: Transfermarkt
+  say:
+  - text: インテルでの季ごとの数字です。1季目の19/20は、33試合で2得点でした。
+    image: assets/images/20261025_player_315853/pool/02_r.jpg
+    card:
+      <<: *past_card
+      highlight_row: 0
+  - text: 優勝した20/21は、41試合で4アシスト。
+    card:
+      <<: *past_card
+      highlight_row: 0
+  - text: 22/23は、46試合で6アシスト。
+    card:
+      <<: *past_card
+      highlight_row: 2
+  - text: 最も多く出たのは24/25の57試合。この季も6アシストです。
+    card:
+      <<: *past_card
+      highlight_row: 4
+    emph: true
+  - text: バストーニの得点は、多い季でも2点。
+    card: none
+  - text: その代わり、20/21からは、アシストを毎季3から6重ねてきました。
+    image: assets/images/20261025_player_315853/pool/01_r.jpg
+    card: none
+  - text: 通算です。インテルでの得点は、ここまで8。
+    card: &total_card
+      type: table
+      title: バストーニ 通算（トップチームと代表）
+      columns:
+      - 所属
+      - 試合
+      - 得点
+      rows:
+      - - アタランタ
+        - '9'
+        - '0'
+      - - パルマ
+        - '24'
+        - '1'
+      - - インテル
+        - '307'
+        - '8'
+      - - イタリア代表
+        - '46'
+        - '5'
+      - - 合計
+        - '386'
+        - '14'
+      source: Transfermarkt
+      highlight_row: 2
+  - text: アタランタは9試合、パルマは24試合で1得点。
+    card:
+      <<: *total_card
+      highlight_row: 0
+  - text: イタリア代表は、46試合で5得点。
+    image: assets/images/20261025_player_315853/pool/03_r.jpg
+    card:
+      <<: *total_card
+      highlight_row: 3
+  - text: すべて足すと、386試合で14得点です。
+    card:
+      <<: *total_card
+      highlight_row: 4
+    emph: true
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/alessandro-bastoni/leistungsdatendetails/spieler/315853
+  - https://www.inter.it/en/news/bastonis-300-appearances-for-inter
+- id: season
+  heading: 今季のバストーニは、インテルと代表で、何が起きているのか
+  tier: 報道
+  main: true
+  telop: 今季ここまで
+  narrator: 解説
+  card: &season_card
+    type: table
+    title: 今季のバストーニ（10月24日時点）
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - インテル
+      - 9試合・730分・0得点0アシスト
+    - - イタリア代表
+      - 3試合・270分・2得点
+    - - 9月28日 トルコ戦
+      - 9分、CKから先制（4対1）
+    - - 10月2日 フランス戦
+      - 68分、奪って同点（1対1）
+    - - 次の大きな試合
+      - 10月31日 ミラノダービー
+    source: Transfermarkt・ESPN
+    highlight_row: 0
+  say:
+  - text: センターバックのバストーニが、今季は代表で2試合続けてゴールを決めています。
+    image: assets/images/20261025_player_315853/pool/01_r.jpg
+    card: none
+    short_only: true
+  - text: 今季のバストーニ。インテルでは、ここまで9試合、730分に出ています。
+    image: assets/images/20261025_player_315853/pool/02_r.jpg
+    card:
+      <<: *season_card
+      highlight_row: 0
+  - text: 得点とアシストは、まだありません。
+    card:
+      <<: *season_card
+      highlight_row: 0
+  - text: 一方、9月末からのイタリア代表。
+    image: assets/images/20261025_player_315853/pool/01_r.jpg
+    card: none
+  - text: 9月28日のトルコ戦、9分。コーナーキックから、先制点を決めます。
+    card:
+      <<: *season_card
+      highlight_row: 2
+  - text: 試合は、イタリアが4対1で勝ちました。
+    card:
+      <<: *season_card
+      highlight_row: 2
+  - text: 10月2日は、パリでのフランス戦。
+    image: assets/images/20261025_player_315853/pool/03_r.jpg
+    card: none
+  - text: ジダン監督のフランスにとって、本拠地での初めての試合でした。
+    card: none
+  - text: 55分、オリーズのフリーキックで、フランスが先制します。
+    card:
+      <<: *season_card
+      highlight_row: 3
+  - text: 68分。バストーニが相手陣内でパスを奪い、そのままペナルティエリアへ。
+    card:
+      <<: *season_card
+      highlight_row: 3
+  - text: 左足で、マイニャンの守るゴールに流し込み、同点。
+    image: assets/images/20261025_player_315853/pool/01_r.jpg
+    card: none
+    emph: true
+  - text: 今季は代表の3試合で2得点。それまでの代表43試合では、3得点でした。
+    card:
+      <<: *season_card
+      highlight_row: 1
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/alessandro-bastoni/leistungsdatendetails/spieler/315853
+  - https://www.espn.com/soccer/match/_/gameId/401861077
+  - https://www.espn.com/soccer/match/_/gameId/401861103
+- id: view
+  heading: バストーニのアシストは、季を追って増えたのか。何分に1本かで見る
+  tier: 背景
+  viewpoint: true
+  narrator: 解説
+  telop: アシストは何分に1本か
+  card: &view_card
+    type: table
+    title: バストーニ インテルのアシスト（全公式戦）
+    columns:
+    - 季
+    - 出場時間
+    - アシスト
+    - 何分に1本
+    rows:
+    - - 20/21
+      - 3488分
+      - '4'
+      - 872分
+    - - 21/22
+      - 3326分
+      - '3'
+      - 1109分
+    - - 22/23
+      - 3545分
+      - '6'
+      - 591分
+    - - 24/25
+      - 4196分
+      - '6'
+      - 699分
+    - - 25/26
+      - 3197分
+      - '6'
+      - 533分
+    source: Transfermarkt
+    highlight_row: 0
+  say:
+  - text: 最後に、バストーニのアシストが何分に1本だったかを、季ごとに並べます。
+    image: assets/images/20261025_player_315853/pool/02_r.jpg
+    card:
+      <<: *view_card
+      highlight_row: 0
+  - text: 20/21は、872分に1本でした。
+    card:
+      <<: *view_card
+      highlight_row: 0
+  - text: 22/23は591分。24/25は699分です。
+    card:
+      <<: *view_card
+      highlight_row: 2
+  - text: そして25/26は、533分に1本。20/21より、およそ340分短くなりました。
+    card:
+      <<: *view_card
+      highlight_row: 4
+    emph: true
+    mark:
+      kind: circle
+      row: 4
+  - text: 試合にすると、およそ6試合に1本のペースです。
+    image: assets/images/20261025_player_315853/pool/03_r.jpg
+    card: none
+  - text: 22/23から25/26の間に、90分に直したパスも、およそ15本増えました。
+    card: none
+  - text: 今季のインテルでは、まだ0本。
+    image: assets/images/20261025_player_315853/pool/01_r.jpg
+    card: none
+  - text: 25/26のペースなら、1本目が出ていてもおかしくない時間です。
+    card: none
+  - text: トルコとフランスから点を奪ったバストーニが、インテルでは、どう点に絡むか。
+    image: assets/images/20261025_player_315853/pool/02_r.jpg
+    card: none
+  - text: 10月31日には、ミラノダービーが控えています。
+    card: none
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/alessandro-bastoni/leistungsdatendetails/spieler/315853
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/teams/110/schedule?fixture=true

@@ -1,0 +1,241 @@
+{{Infobox football match
+|title       = Barcelona v Atlético Madrid
+|image       = 
+|event       = [[2013–14 La Liga]] (round 38)
+|team1       = [[FC Barcelona|Barcelona]]
+|team1score  = 1
+|team2       = [[Atlético Madrid]]
+|team2score  = 1
+|details1    = Atlético Madrid wins La Liga title 
+|date1       = 17 May 2014
+|stadium1    = [[Camp Nou]]
+|city1       = [[Barcelona]], [[Catalonia]], Spain
+|referee1    = [[Antonio Mateu Lahoz]]
+|attendance1 = 96,973
+}}
+The '''Barcelona vs Atlético Madrid''' [[Association football|football]] match that took place on 17 May 2014 at the [[Camp Nou]] in [[Barcelona]], [[Spain]], was played during the 38th and therefore last round of the [[2013–14 La Liga]] season. Atlético and Barcelona came into the match occupying the top two positions in the league, separated by just three points, and thus both teams could still claim the title.
+
+It was the first time since 1951 and just the third time in league history the [[La Liga]] title came down to a head-to-head match on the final weekend of play (the others in [[1945–46 La Liga|1945–46]] and [[1950–51 La Liga|1950–51]] each involved one of the clubs involved in 2014, with [[Sevilla FC|Sevilla]] the other club on both occasions).<ref name="First time">{{cite news|title=Last day drama in Spain|publisher=ESPN|author=Michael Yokhin|date=16 May 2014|url=https://www.espnfc.com/blog/_/name/laliga/id/1879?cc=5901|access-date=21 April 2021|archive-url=https://web.archive.org/web/20140520075734/https://www.espnfc.com/blog/_/name/laliga/id/1879|archive-date=20 May 2014}}</ref> The result was a 1–1 draw, earning Atlético Madrid the point to win their first league title in 18 years, and their tenth overall.
+
+==Background==
+In the 36th round of La Liga, Atlético lost 0–2 to [[Levante UD|Levante]] at [[Estadi Ciutat de València]] while Barcelona and Real Madrid only earned one point in their home games against [[Getafe CF|Getafe]] and [[Valencia CF|Valencia]] respectively. With two weeks to play, Atlético led the table with a 3-point advantage over Barcelona and one point more over [[Real Madrid C.F.|Real Madrid]].
+
+After these results, Atlético could have won the league in the 37th and penultimate round if they earned one more point than Barcelona and Real. In this round, Atlético had a home tie against [[Málaga CF|Málaga]] while Barcelona visited relegation-threatened [[Elche CF|Elche]] and Real Madrid played at [[Balaídos]] against [[Celta de Vigo|Celta Vigo]].
+
+Despite both Barcelona and Real Madrid failing to win their respective games (Barcelona ended 0–0<ref>{{cite web|url=https://www.sbnation.com/soccer/2014/5/11/5707372/barcelona-elche-2014-la-liga-final-score-result|title=Elche vs. Barcelona: Final score 0-0, but Blaugrana alive despite dropped points|last=McCauley|first=Kim|publisher=SBNation|date=11 May 2014|access-date=19 February 2026}}</ref> and Real were out of the title race after losing 2–0<ref>{{cite web|url=http://www.betnumbers.gr/index.php?option=com_k2&view=item&id=256:celta-vigo-2-0-real-madrid-charles-sonroja-a-un-indolente-real-madrid&Itemid=730|title=Celta Vigo 2-0 Real Madrid: Charles double ends Ancelotti's men's title hopes|publisher=BetNumbers.gr|date=11 May 2014|access-date=28 July 2016}}{{Dead link|date=October 2019|bot=InternetArchiveBot|fix-attempted=yes}}</ref>), Atlético could not win the title at home as they only could earn one point after a 1–1 draw.<ref>{{cite news|url=https://www.bbc.com/sport/football/27301114|publisher=[[BBC Sport]]|title=Atletico Madrid 1-1 Malaga|date=11 May 2014|access-date=28 July 2016}}</ref>
+
+These results meant that the title would be decided in a head-to-head game at [[Camp Nou]] between Barcelona and Atlético, with Atlético having the advantage with a 3-point lead.<ref name="First time"/> The reverse fixture ended 0–0 meaning Atlético needed to avoid defeat to clinch the title, otherwise Barcelona would successfully defend their [[2012–13 La Liga|La Liga crown]] due to having the better head-to-head record out of the two sides.<ref>{{cite news|url=https://www.independent.co.uk/sport/football/european/la-liga-barcelona-v-atletico-madrid-match-preview-9385691.html|work=[[The Independent]]|last=Rice|first=Simon|title=La Liga: Barcelona v Atletico Madrid match preview|date=16 May 2014|access-date=19 February 2026}}</ref>
+
+{{#invoke:sports table|main|style=WDL
+|res_col_header=QR
+|team1=AM|name_AM=[[Atlético Madrid]]
+|team2=BAR|name_BAR=[[FC Barcelona|Barcelona]]
+|team3=RM|name_RM=[[Real Madrid C.F.|Real Madrid]]
+|win_AM=28|draw_AM=5|loss_AM=4|gf_AM=76|ga_AM=25
+|win_BAR=27|draw_BAR=5|loss_BAR=5|gf_BAR=99|ga_BAR=32
+|win_RM=26|draw_RM=6|loss_RM=5|gf_RM=101|ga_RM =37
+|update=complete
+|class_rules=1) Points; 2) Head-to-head points; 3) Head-to-head goal difference; 4) Goal difference; 5) Goals scored; 6) Fair-play points.<ref name="Rules">{{cite news|title=Reglamento General RFEF – Artículo 201. Sistema de puntos. (page 104)|url=https://rfef.es/sites/default/files/pdf/circulares/RG%201314.pdf|publisher=[[Royal Spanish Football Federation|RFEF]]|date=18 February 2013|access-date=8 July 2013}}</ref>
+|source=[http://www.bdfutbol.com/en/t/t2013-14.html BDFutbol]
+}}
+
+==Match==
+Atlético Madrid forwards [[Diego Costa]] and [[Arda Turan]] became injured within the first 30 minutes, and were substituted off. Five minutes before half time, Barcelona took the lead into the break thanks to a goal by [[Alexis Sánchez]] after receiving a chest-pass from [[Lionel Messi]].
+
+In the 49th minute of the second half however, a header from [[Diego Godín]] off a corner kick made the score 1–1. Eight minutes after the goal, Barcelona's [[Sergio Busquets]] could not continue playing.
+
+In the 64th minute Messi scored, but Barcelona were denied the lead they needed as the goal was ruled out for offside. Eventually the game ended as a 1–1 draw, which handed the ''Colchoneros'' their first league title in 18 years, and their 10th overall.<ref>{{cite news|url=https://www.theguardian.com/football/2014/may/17/barcelona-atletico-madrid-la-liga|title=Atlético Madrid celebrate La Liga title after draw at Barcelona|last=Lowe|first=Sid|work=[[The Guardian]]|date=17 May 2014|access-date=19 February 2026}}</ref>
+
+===Match details===
+{{Football box
+|date       = {{Start date|2014|5|17|df=y}}
+|time       = 18:00 [[Central European Summer Time|CEST]]
+|team1      = [[FC Barcelona|Barcelona]]
+|team2      = [[Atlético Madrid]]
+|score      = 1–1
+|goals1     = [[Alexis Sánchez|Sánchez]] {{goal|33}}
+|goals2     = [[Diego Godín|Godín]] {{goal|49}}
+|stadium    = [[Camp Nou]], [[Barcelona]]
+|attendance = 96,379
+|referee    = [[Antonio Mateu Lahoz|Mateu Lahoz]]
+|report     = [http://www.laliga.es/directo/temporada-2013-2014/laliga-santander/38/barcelona_atletico Report]
+}}
+{| width=92%
+|-
+|{{Football kit
+|pattern_la =_fcbarcelona1314h
+|pattern_b  =fcbarcelona1314h(2)
+|pattern_ra =fcbarcelona1314h
+|pattern_so =fcbarcelona1314h
+|leftarm    =062A78
+|body       =062A78
+|rightarm   =062A78
+|shorts     =062A78
+|socks      =BB0000
+|title      =Barcelona
+}}
+|{{Football kit
+|pattern_la=_am1314a
+|pattern_b=_am1314away
+|pattern_ra=_am1314a
+|pattern_sh=_am1314A
+|pattern_so=_am1415t1
+|leftarm=FFFFFF
+|body=FFFFFF
+|rightarm=FFFFFF
+|shorts=FFD900
+|socks=FFD900
+|title={{nowrap|Atlético Madrid}}
+}}
+|}
+
+{| width="100%"
+|valign="top" width="40%"|
+{| style="font-size:90%" cellspacing="0" cellpadding="0" align=center
+|-
+!width=25|!!width=25|
+|-
+|GK||'''13'''||{{flagicon|ESP}} [[José Manuel Pinto]]
+|-
+|DF||'''22'''||{{flagicon|BRA}} [[Dani Alves]]
+|-
+|DF||'''3'''||{{flagicon|ESP}} [[Gerard Piqué]]||{{yel|5}}||
+|-
+|DF||'''21'''||{{flagicon|BRA}} [[Adriano (footballer, born 1984)|Adriano]]
+|-
+|DF||'''14'''||{{flagicon|ARG}} [[Javier Mascherano]]||{{yel|90}}||
+|-
+|MF||'''4'''||{{flagicon|ESP}} [[Cesc Fàbregas]]||||{{suboff|77}}
+|-
+|MF||'''16'''||{{flagicon|ESP}} [[Sergio Busquets]]||{{yel|45+3}}||{{suboff|57}}
+|-
+|MF||'''8'''||{{flagicon|ESP}} [[Andrés Iniesta]] ([[Captain (association football)|c]])
+|-
+|FW||'''10'''||{{flagicon|ARG}} [[Lionel Messi]]||{{yel|45+3}}||
+|-
+|FW||'''9'''||{{flagicon|CHL}} [[Alexis Sánchez]]
+|-
+|FW||'''7'''||{{flagicon|ESP}} [[Pedro (footballer, born 1987)|Pedro Rodríguez]]||||{{suboff|62}}
+|-
+|colspan=3|'''Substitutes:'''
+|-
+|GK||'''25'''||{{flagicon|ESP}} [[Oier Olazábal]]
+|-
+|MF||'''6'''||{{flagicon|ESP}} [[Xavi (footballer, born 1980)|Xavi]]||||{{subon|77}}
+|-
+|FW||'''11'''||{{flagicon|BRA}} [[Neymar]]||||{{subon|62}}
+|-
+|DF||'''15'''||{{flagicon|ESP}} [[Marc Bartra]]
+|-
+|MF||'''17'''||{{flagicon|CMR}} [[Alex Song]]||{{yel|73}}||{{subon|57}}
+|-
+|DF||'''18'''||{{flagicon|ESP}} [[Jordi Alba]]
+|-
+|FW||'''20'''||{{flagicon|ESP}} [[Cristian Tello]]
+|-
+|colspan=3|'''Manager:'''
+|-
+|colspan=4|{{flagicon|ARG}} [[Gerardo Martino]]
+|}
+|valign=top width="50%"|
+{| style="font-size:90%; margin:auto" cellspacing="0" cellpadding="0"
+|-
+!width=25|!!width=25|
+|-
+|GK||'''13'''||{{flagicon|BEL}} [[Thibaut Courtois]]
+|-
+|DF||'''20'''||{{flagicon|ESP}} [[Juanfran (footballer, born 1985)|Juanfran]]
+|-
+|DF||'''3'''||{{flagicon|BRA}} [[Filipe Luís]]||{{yel|69}}
+|-
+|DF||'''2'''||{{flagicon|URU}} [[Diego Godín]]||{{yel|36}}
+|-
+|DF||'''23'''||{{flagicon|BRA}} [[Miranda (footballer, born 1984)|Miranda]]
+|-
+|MF||'''10'''||{{flagicon|TUR}} [[Arda Turan]]||||{{suboff|23}}
+|-
+|MF||'''5'''||{{flagicon|POR}} [[Tiago Mendes|Tiago]]||{{yel|37}}
+|-
+|MF||'''6'''||{{flagicon|ESP}} [[Koke (footballer, born 1992)|Koke]]
+|-
+|MF||'''14'''||{{flagicon|ESP}} [[Gabi (footballer, born 1983)|Gabi]] ([[Captain (association football)|c]])
+|-
+|FW||'''19'''||{{flagicon|ESP}} [[Diego Costa]]||||{{suboff|16}}
+|-
+|FW||'''9'''||{{flagicon|ESP}} [[David Villa]]
+|-
+|colspan=3|'''Substitutes:'''
+|-
+|GK||'''1'''||{{flagicon|ESP}} [[Daniel Aranzubia]]
+|-
+|MF||'''4'''||{{flagicon|ESP}} [[Mario Suárez (footballer)|Mario Suárez]]
+|-
+|FW||'''7'''||{{flagicon|ESP}} [[Adrián López|Adrián]]||||{{subon|16}} {{suboff|72}}
+|-
+|FW||'''8'''||{{flagicon|ESP}} [[Raúl García (footballer, born 1986)|Raúl García]]||{{yel|90+2}}||{{subon|23}}
+|-
+|DF||'''12'''||{{flagicon|BEL}} [[Toby Alderweireld]]
+|-
+|MF||'''14'''||{{flagicon|BRA}} [[Diego (footballer, born 1985)|Diego Ribas]]
+|-
+|MF||'''24'''||{{flagicon|ARG}} [[José Sosa]]||||{{subon|72}}
+|-
+|colspan=3|'''Manager:'''
+|-
+|colspan=4|{{flagicon|ARG}} [[Diego Simeone]]
+|}
+|}
+
+{| width=82% style="font-size: 90%"
+| width=50% valign=top|
+
+|style="width:60%; vertical-align:top;"|
+'''Match rules'''
+*90 minutes.
+*Maximum of three substitutions.
+|}
+
+==Aftermath==
+[[File:Atlético de Madrid, Liga 2013-2014 (Mayo 2014),.JPG|thumb|Atlético Madrid celebrated its 10th league title.]]
+{{#invoke:sports table|main|style=WDL
+|res_col_header=QR
+
+|team1=AM|name_AM=[[Atlético Madrid]]|status_AM=C
+|team2=BAR|name_BAR=[[FC Barcelona|Barcelona]]
+|team3=RM|name_RM=[[Real Madrid C.F.|Real Madrid]]
+
+|win_AM=28|draw_AM=6|loss_AM=4|gf_AM=77|ga_AM=26
+|win_BAR=27|draw_BAR=6|loss_BAR=5|gf_BAR=100|ga_BAR=33
+|win_RM=27|draw_RM=6|loss_RM=5|gf_RM=104|ga_RM=38
+
+|update=complete
+|class_rules=1) Points; 2) Head-to-head points; 3) Head-to-head goal difference; 4) Goal difference; 5) Goals scored; 6) Fair-play points.<ref name="Rules">{{cite news|title=Reglamento General RFEF – Artículo 201. Sistema de puntos. (page 104)|url=https://rfef.es/sites/default/files/pdf/circulares/RG%201314.pdf|publisher=[[Royal Spanish Football Federation|RFEF]]|date=18 February 2013|access-date=8 July 2013}}</ref>
+|source=[http://www.bdfutbol.com/en/t/t2013-14.html BDFutbol]
+}}
+
+It was the first time since the [[2003–04 La Liga]] that a club other than Barcelona or [[Real Madrid C.F.|Real Madrid]] won the title. It was also the first time in the 67-year history of the [[Camp Nou]] stadium that a visiting team had clinched the title in the stadium.
+
+The draw meant that Barcelona would finish second, regardless of Real Madrid's result against Barcelona's [[derbi barceloní|city rivals]] [[RCD Espanyol|Espanyol]], as ''Barça'' would at worst have the better head-to-head record over their ''[[El Clásico|Clásico]]'' rivals (winning 2–1 at home and 4–3 away). Nonetheless, Real Madrid won 3–1, meaning second place was instead decided on the head-to-head tiebreaker.<ref>{{cite web|url=https://www.skysports.com/football/r-madrid-vs-espanyol/311652|title=Primera Liga report: Real Madrid 3 Espanyol 1|publisher=British Sky Broadcasting|date=17 May 2014|access-date=18 September 2017}}</ref>
+
+Just after the game, [[Gerardo Martino]] resigned as Barcelona's manager after one season in charge. The club only won the [[2013 Supercopa de España|Supercopa de España]], they were eliminated by Atlético Madrid in the quarter-finals of the [[2013–14 UEFA Champions League|Champions League]] and lost 2–1 against Real Madrid in the [[2014 Copa del Rey Final|Copa del Rey Final]]. Two days later, [[Diego Godín]] was named [[La Liga Player of the Month|Player of the Month]] for May.<ref>{{cite web|url=https://www.laliga.com/noticias/premios-bbva-a-los-mejores-de-mayo|title=Premios BBVA a los mejores de mayo|publisher=LFP.es|date=19 May 2014|access-date=19 February 2026|language=es}}</ref>
+
+After celebrating the league title in [[Madrid]], Atlético played in the [[2014 UEFA Champions League Final|Champions League Final]] seven days later, against their [[Madrid Derby|local rivals]] Real Madrid. Despite a header from [[Diego Godín]] in the first half of the game, [[Sergio Ramos]] equalised for Real Madrid in the 3rd minute of second half stoppage time.<ref>{{cite news|title=Real finally secure La Decima|url=https://www.espnfc.com/us/en/report/392450/report.html?soccernet=true&cc=5901|access-date=25 May 2014|newspaper=ESPN FC|archive-url=https://web.archive.org/web/20140526040156/https://www.espnfc.com/us/en/report/392450/report.html?soccernet=true&cc=5901|archive-date=26 May 2014|url-status=dead}}</ref> In extra time, the Atlético players were visibly exhausted and eventually lost 4–1.<ref>{{cite news|url=https://www.bbc.co.uk/sport/football/27383593|title=Real Madrid 4-1 Atletico Madrid|publisher=BBC Sport|last=McNulty|first=Phil|date=25 May 2014|access-date=19 February 2026}}</ref>
+
+==References==
+{{Reflist}}
+
+==External links==
+*[https://www.laliga.es/noticias/la-epica-rojiblanca-conquista-la-liga Highlights and report]
+
+{{2013–14 in Spanish football}}
+{{FC Barcelona matches}}
+{{Atlético Madrid matches}}
+
+{{DEFAULTSORT:Barcelona 1-1 Atletico Madrid (May 2014)}}
+[[Category:2013–14 La Liga]]
+[[Category:La Liga matches]]
+[[Category:Atlético Madrid matches|Barcelona 2014]]
+[[Category:FC Barcelona matches|Atletico Madrid 2014]]
+[[Category:May 2014 sports events in Spain]]
+[[Category:2014 in Barcelona]]
+[[Category:Football matches in Barcelona]]

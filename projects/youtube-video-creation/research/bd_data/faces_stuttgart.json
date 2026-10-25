@@ -1,0 +1,39 @@
+{
+ "stuttgart": {
+  "ティモ・ヒルデブラント": {
+   "role": "legend",
+   "file": "assets/photos/bd/stuttgart/stuttgart_legend_8cc14cf6.jpg",
+   "page": "Timo Hildebrand"
+  },
+  "クラシミール・バラコフ": {
+   "role": "legend",
+   "file": "assets/photos/bd/stuttgart/stuttgart_legend_5791ba09.jpg",
+   "page": "Krasimir Balakov"
+  },
+  "マリオ・ゴメス": {
+   "role": "legend",
+   "file": "assets/photos/bd/stuttgart/stuttgart_legend_b7f2b553.jpg",
+   "page": "Mario Gómez"
+  },
+  "セバスティアン・ヘーネス": {
+   "role": "manager",
+   "file": "assets/photos/bd/stuttgart/stuttgart_manager_f5c404cf.jpg",
+   "page": "Sebastian Hoeneß"
+  },
+  "遠藤航": {
+   "role": "japan",
+   "file": "assets/photos/bd/stuttgart/stuttgart_japan_55e7d430.jpg",
+   "page": "Wataru Endo"
+  },
+  "伊藤洋輝": {
+   "role": "japan",
+   "file": "assets/photos/bd/stuttgart/stuttgart_japan_207654ff.jpg",
+   "page": "Hiroki Itō (footballer, born 1999)"
+  },
+  "岡崎慎司": {
+   "role": "japan",
+   "file": "assets/photos/bd/stuttgart/stuttgart_japan_6b860644.jpg",
+   "page": "Shinji Okazaki"
+  }
+ }
+}

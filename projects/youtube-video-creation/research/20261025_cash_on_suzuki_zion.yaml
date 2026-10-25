@@ -1,0 +1,158 @@
+# 取材メモ（2026年10月25日）ヴィラの右SBマティ・キャッシュが語る、鈴木彩艶の足元（ニュースのショート。見せ方 Y＝キャッシュの実在の言葉から始める）
+# 取材: 2026-10-25。requests（ブラウザUA）で本文を読んだ。検索エンジンのAI要約は使っていない（英語の元記事を探すのに検索を1回使ったが、出たのは2025年の別の試合で使っていない）。
+#   ・フットボールゾーン 2026-10-25 04:30「鈴木彩艶が『ミッドフィールダーかと思った』　シティ戦に攻守で躍動…同僚も驚き『信じられない』」https://www.football-zone.net/archives/680764 （全文。控え research/raw/20261025_cash_fz.html・_p2.html）
+#       キャッシュ（TNT Sports）:「彼は素晴らしいです。彼がやって来た最初のセッションのポゼッションドリルで、私はミッドフィルダーを獲得したのかと思いましたよ」
+#       「彼の視野の広さは信じられないほどですし、クロスボールを本当に上手くキャッチしてくれるので、フルバックとしては夢のようです」。記事の主写真はロイター（使わない）。
+#   ・GOAL（Yahoo!ニュース）2026-10-25 07:29「鈴木彩艶をヴィラ同僚が大絶賛！『最初はMFを獲得したのかと思ったよ！SBからすれば理想のGK』」https://news.yahoo.co.jp/articles/d0485796f4330e3990d37b9ab638f997e84f6f72 （全文。控え research/raw/20261025_cash_y_d0485796.html）
+#       「彼は素晴らしいよ。チームに合流して初めての練習でポゼッションドリルに参加したとき、『ミッドフィールダーと契約したのか？』と思ったほどだね！」
+#       「ボールを持った時の彼は本当に素晴らしい。面白いことに、左サイドバックの方を向いているように見せかけて、そこから急に方向を変え、逆のサイドバックの選手へ正確にパスを通すことがあるんだ。こっちは『そんなパスが来るなんて準備できてないよ！』と驚かされるほどだ」
+#       「彼の視野の広さは信じられないほどだし、クロスボールの処理も素晴らしい。サイドバックの選手からすれば、まさに理想的な存在だね」
+#       地の文: ヴィラは勝ち点11で6位に浮上。28日にリーグカップのボーンマス戦、31日の次節でフラム。
+#   ・日刊スポーツ（Yahoo!ニュース）2026-10-24 23:48「鈴木彩艶をアストンビラ在籍７季目のDFが『MFを獲得したのかと思った』と足元の技術を絶賛」https://news.yahoo.co.jp/articles/e0c0712e5310716c32666001406d269faa57ed37 （全文）
+#       「右サイドバックでフル出場したポーランド代表DFマティ・キャッシュ（29）」「アストンビラ在籍7シーズン目」「TNTスポーツのインタビュー」。地の文「足元の技術の高さをあらためて示し、武器の鋭いロングフィードも光った」。
+#   ・スポーティングニュース日本版（Yahoo!ニュース）2026-10-24 22:34 https://news.yahoo.co.jp/articles/cdcdda0a1c5b9e8dfa80b94c60a314f572d0419b （全文）
+#       21分のシェルキのシュートを鈴木がキャッチ、「直後には、伝家の宝刀ともいえるロングフィードで前線に正確かつ鋭いボールを供給」。→ 台本は分を言わず「前半、セーブの直後」とだけ言う。
+#   ・ESPN 試合データ（site.api.espn.com summary、event 401879256。控え research/raw/20261025_cash_espn_summary.json）https://www.espn.com/soccer/match/_/gameId/401879256
+#       ヴィラ2-1マンC。鈴木: 先発・セーブ6・失点1。キャッシュ: 先発RB。
+#       チームの数: ボール保持 ヴィラ36.8%・シティ63.2%／パス ヴィラ314本・シティ528本／ロングボール ヴィラ53本・シティ32本。
+# 訳の違い: 3つの日本語記事は同じTNTの言葉を別々に訳している（「ミッドフィルダーを獲得した」「ミッドフィールダーと契約したのか？」「MFを獲得した」）。
+#   → **台本の声は GOAL の訳で通す**（左SBのくだりを載せているのは GOAL だけ。3つを混ぜない）。TNT の元の映像・英語の原文は見ていない → 画面で「元はTNTスポーツの取材。日本語の訳」と断る。
+# 自分で数えたこと（背景・見立て）: ロングボールの割合 ヴィラ 53÷314＝約17%（約6本に1本）、シティ 32÷528＝約6%（約16本に1本）。**チームの数で、鈴木1人の数ではない**と台本で断る。
+# 【言わないこと】セーブの場面の細部（題1で別に作る。6セーブの一言だけ）／採点／マンCの監督の話／移籍金（10/22以前の本と食い違い）／キャッシュの英語の原文（見ていない）／鈴木のパス本数・成功率（ESPN に個人の数が無い）。
+# 本人の言葉: 鈴木本人の言葉は無い（作らない）。話者はキャッシュ（同僚）。Y の一言はキャッシュの言葉。
+# 反応: 0件（作らない。approve は --no-voices）。
+# 前の本との重なり: scripts/20261018〜25 を grep（鈴木・彩艶・キャッシュ・足元・パス）。10/24 の試合前の本で BBC の「短いパスも長いパスも出せる幅」を使った → 今回は使わない。10/22 のCLの70mのフィード・10/21 の「足元の落ち着き」とは別の言葉（キャッシュの言葉は初）。
+# 確度: キャッシュの言葉は 報道（日本語3媒体の孫引き。元はTNT）。試合結果と数は ESPN の記録（報道）。割合は自分の計算（背景）。
+# 写真の候補記事（主写真のクレジットを見た。すべて代理店なので使わない）: FZ=ロイター／FZ別記事 https://news.yahoo.co.jp/articles/5ed5d22eae2d84bdc19dce10c1250de1c80dd715 =AP/アフロ／GOAL=Getty／日刊=AP／スポーティングニュース=時事。
+# 写真: assets/images/20261025_cash_on_suzuki_zion/（credits.json）。詳細は報告に書いた。
+slot: japan
+date: "2026年10月25日"
+format: news
+no_main: true
+people: [鈴木彩艶, マティ・キャッシュ, アストン・ヴィラ, マンチェスター・シティ]
+
+short_style: Y
+short_hook_quote: 『ミッドフィールダーと契約したのか？』と思ったほどだね！
+short_question: 鈴木彩艶の足元で、いちばん驚いたプレーは何ですか。
+short_hook: ヴィラの同僚が、鈴木彩艶の足元を語りました。
+short_photos:
+  - assets/images/20261025_cash_on_suzuki_zion/01_v.jpg
+  - assets/images/20261025_cash_on_suzuki_zion/02_v.jpg
+short_telops:
+  - {match: 2対1, text: プレミア第8節/ヴィラ2-1マンC}
+  - {match: 今季初めての黒星, text: シティの開幕連勝を/7で止めた}
+  - {match: マティ・キャッシュ, text: 右サイドバック/マティ・キャッシュ}
+  - {match: 7シーズン目, text: ポーランド代表 29歳/ヴィラ在籍7シーズン目}
+  - {match: 日本語に訳した, text: 元はTNTスポーツの取材/言葉は日本語の訳}
+  - {match: 逆のサイドバック, text: キャッシュ/「逆のサイドバックへ正確にパス」}
+  - {match: 準備できてない, text: キャッシュ/「そんなパスが来るなんて」}
+  - {match: 理想的な存在, text: キャッシュ/「サイドバックには理想的な存在」}
+  - {match: 36.8%, text: ボール保持/ヴィラ36.8% シティ63.2%}
+  - {match: 53本, text: ロングボール/ヴィラ53本 シティ32本}
+  - {match: 6本に1本, text: ヴィラのパス/約6本に1本が長いボール}
+  - {match: フラム, text: 28日 リーグ杯ボーンマス戦/31日 フラム戦}
+
+theme:
+  id: cash_on_suzuki_zion
+  league: england
+  prefix: ""
+  title: 鈴木彩艶の足元に、ヴィラの同僚「ミッドフィールダーと契約したのか？」
+  hook: ""
+  question: ヴィラの同僚は、鈴木彩艶の足元をどう見ているのか
+  takeaway: 右サイドバックのキャッシュは、初めての練習でミッドフィールダーかと思い、逆サイドへのパスに驚かされると語った。押し込まれたシティ戦でも、ヴィラのパスは約6本に1本が長いボールだった
+
+thumbnail:
+  layout: face
+  line1: 鈴木彩艶の足元
+  line2: 同僚が驚いた
+  tags: [鈴木彩艶, マティ・キャッシュ, アストン・ヴィラ]
+  photo: assets/images/20261025_cash_on_suzuki_zion/01.jpg
+  short_photo: assets/images/20261025_cash_on_suzuki_zion/01_v.jpg
+
+answer: キャッシュの答えは「ミッドフィールダーと契約したのかと思った」。サイドバックには理想的な存在だという
+watch: 31日のフラム戦
+
+sections:
+  - id: what
+    main: true
+    heading: キャッシュが語ったこと
+    tier: 報道
+    telop: ヴィラの同僚が語る、鈴木彩艶の足元
+    say:
+      - text: ヴィラの同僚が、鈴木彩艶の足元に驚いていました。
+        image: assets/images/20261025_cash_on_suzuki_zion/01_w.jpg
+      - voice: マティ・キャッシュ
+        text: 彼は素晴らしいよ。チームに合流して初めての練習でポゼッションドリルに参加したとき、
+        image: assets/images/20261025_cash_on_suzuki_zion/02_w.jpg
+      - voice: マティ・キャッシュ
+        text: 『ミッドフィールダーと契約したのか？』と思ったほどだね！
+      - text: 語ったのは、右サイドバックのマティ・キャッシュです。
+        image: assets/images/20261025_cash_on_suzuki_zion/01_w.jpg
+      - text: ポーランド代表の29歳で、ヴィラで7シーズン目。
+        image: assets/images/20261025_cash_on_suzuki_zion/02_w.jpg
+      - text: ポゼッションドリルは、ボールを奪われずに回し続ける練習のことです。
+        image: assets/images/20261025_cash_on_suzuki_zion/01_w.jpg
+      - text: 24日のプレミアリーグ第8節、ヴィラはマンチェスター・シティに2対1で勝ちました。
+        image: assets/images/20261025_cash_on_suzuki_zion/02_w.jpg
+      - text: 開幕7連勝のシティに、今季初めての黒星を付けました。
+        image: assets/images/20261025_cash_on_suzuki_zion/01_w.jpg
+      - text: 元はティー・エヌ・ティー・スポーツの取材で、言葉は日本語に訳したものです。
+        image: assets/images/20261025_cash_on_suzuki_zion/02_w.jpg
+    official: false
+    sources:
+      - https://news.yahoo.co.jp/articles/d0485796f4330e3990d37b9ab638f997e84f6f72
+      - https://www.football-zone.net/archives/680764
+      - https://news.yahoo.co.jp/articles/e0c0712e5310716c32666001406d269faa57ed37
+      - https://www.espn.com/soccer/match/_/gameId/401879256
+
+  - id: pass
+    heading: キャッシュが驚いた、鈴木のパス
+    tier: 報道
+    telop: 「逆のサイドバックへ正確にパスを通す」
+    say:
+      - text: キャッシュが挙げたのは、鈴木がボールを持ったときのことでした。
+        image: assets/images/20261025_cash_on_suzuki_zion/01_w.jpg
+      - voice: マティ・キャッシュ
+        text: 左サイドバックの方を向いているように見せかけて、
+        image: assets/images/20261025_cash_on_suzuki_zion/02_w.jpg
+      - voice: マティ・キャッシュ
+        text: そこから急に方向を変え、逆のサイドバックの選手へ正確にパスを通すことがあるんだ。
+        cont: true
+      - voice: マティ・キャッシュ
+        text: こっちは『そんなパスが来るなんて準備できてないよ！』と驚かされるほどだ。
+        cont: true
+      - voice: マティ・キャッシュ
+        text: 彼の視野の広さは信じられないほどだし、クロスボールの処理も素晴らしい。
+        image: assets/images/20261025_cash_on_suzuki_zion/01_w.jpg
+      - voice: マティ・キャッシュ
+        text: サイドバックの選手からすれば、まさに理想的な存在だね。
+        cont: true
+    official: false
+    sources:
+      - https://news.yahoo.co.jp/articles/d0485796f4330e3990d37b9ab638f997e84f6f72
+
+  - id: view
+    viewpoint: true
+    heading: シティ戦のヴィラは、どうボールを運んだか
+    tier: 背景
+    telop: ヴィラのパスは、約6本に1本が長いボール
+    say:
+      - text: 見立てです。シティ戦の記録を、チーム全体で見ます。
+        image: assets/images/20261025_cash_on_suzuki_zion/02_w.jpg
+      - text: ボールを持った時間は、ヴィラが36.8%、シティが63.2%。
+        image: assets/images/20261025_cash_on_suzuki_zion/01_w.jpg
+        card: none
+      - text: 長いボールは、ヴィラが53本で、シティの32本より多く蹴っています。
+        image: assets/images/20261025_cash_on_suzuki_zion/02_w.jpg
+      - text: ヴィラのパスは、約6本に1本が長いボールでした。鈴木1人の数ではありません。
+        image: assets/images/20261025_cash_on_suzuki_zion/01_w.jpg
+      - text: 前半にはセーブの直後、鈴木の長いパスが前線へ正確に届いた場面も報じられています。
+        image: assets/images/20261025_cash_on_suzuki_zion/02_w.jpg
+      - text: ヴィラは28日にリーグカップのボーンマス戦、31日にフラム戦です。
+        image: assets/images/20261025_cash_on_suzuki_zion/01_w.jpg
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401879256
+      - https://news.yahoo.co.jp/articles/cdcdda0a1c5b9e8dfa80b94c60a314f572d0419b
+      - https://news.yahoo.co.jp/articles/d0485796f4330e3990d37b9ab638f997e84f6f72
+short_title: "鈴木彩艶の足元に、ヴィラの同僚「ミッドフィールダーと契約したのか？」"

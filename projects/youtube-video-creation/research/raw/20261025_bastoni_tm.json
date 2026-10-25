@@ -1,0 +1,4454 @@
+{
+ "profile": {
+  "id": "315853",
+  "name": "Alessandro Bastoni",
+  "shortName": "A. Bastoni",
+  "artistName": "",
+  "displayName": "",
+  "lifeDates": {
+   "age": 27,
+   "dateOfBirth": "1999-04-13",
+   "isDateOfBirthUnknown": false,
+   "dateOfDeath": null,
+   "isDateOfDeathUnknown": false
+  },
+  "birthPlaceDetails": {
+   "placeOfBirth": "Casalmaggiore",
+   "countryOfBirthId": 75,
+   "placeOfBirthAdditionalInfo": "Cremona, Lombardia",
+   "gender": "male"
+  },
+  "nationalityDetails": {
+   "passportName": "",
+   "nationalities": {
+    "nationalityId": 75,
+    "secondNationalityId": 0
+   }
+  },
+  "attributes": {
+   "height": 1.9,
+   "preferredFootId": 1,
+   "outfitterId": 3,
+   "positionGroup": "DEFENDER",
+   "positionGroupName": "Defender",
+   "positionId": 3,
+   "firstSidePositionId": 0,
+   "secondSidePositionId": 0,
+   "lastContractRenewal": {
+    "year": 2023,
+    "month": 7,
+    "day": 5
+   },
+   "contractUntil": "2028-06-30",
+   "contractOptionId": null,
+   "formerClubsNote": "Cannetese",
+   "consultantAgencyId": 2573,
+   "preferredFoot": {
+    "id": 1,
+    "name": "left"
+   },
+   "outfitter": {
+    "id": 3,
+    "name": "Puma"
+   },
+   "position": {
+    "id": 3,
+    "name": "Centre-Back",
+    "shortName": "CB",
+    "category": "Defender"
+   },
+   "consultantAgency": {
+    "id": 2573,
+    "name": "TMP SOCCER srl ",
+    "shortName": "TMP SOCCER srl ",
+    "verificationStatus": "not verified",
+    "verificationDate": null,
+    "unlockedDomains": [],
+    "isSpecialConsultantAgency": false,
+    "hasGlobalPremiumAccess": false,
+    "relativeUrl": "/tmp-soccer-srl/beraterfirma/berater/2573"
+   }
+  },
+  "preferences": {
+   "themeId": 0
+  },
+  "nominees": [],
+  "participations": [],
+  "relativeUrl": "/alessandro-bastoni/profil/spieler/315853",
+  "portraitUrl": "https://img.a.transfermarkt.technology/portrait/big/315853-1742497518.jpg",
+  "portraitUrlSource": "IMAGO",
+  "marketValueDetails": {
+   "current": {
+    "value": 65000000,
+    "currency": "EUR",
+    "compact": {
+     "prefix": "€",
+     "content": "65.00",
+     "suffix": "M"
+    },
+    "determined": "2026-05-29"
+   },
+   "previous": {
+    "value": 70000000,
+    "currency": "EUR",
+    "compact": {
+     "prefix": "€",
+     "content": "70.00",
+     "suffix": "M"
+    },
+    "determined": "2026-03-24"
+   },
+   "delta": {
+    "value": "-5.000.000 €",
+    "percentage": "-7,14 %",
+    "isVisible": false,
+    "type": "DECREASED"
+   },
+   "highest": {
+    "value": 80000000,
+    "currency": "EUR",
+    "compact": {
+     "prefix": "€",
+     "content": "80.00",
+     "suffix": "M"
+    },
+    "determined": "2025-12-23"
+   }
+  },
+  "clubAssignments": [
+   {
+    "playerId": "315853",
+    "clubId": "46",
+    "shirtNumber": 95,
+    "isCaptain": false,
+    "type": "current",
+    "debut": "2019-09-28",
+    "start": "2017-08-31"
+   },
+   {
+    "playerId": "315853",
+    "clubId": "3376",
+    "shirtNumber": null,
+    "isCaptain": false,
+    "type": "nationalTeam",
+    "debut": "2020-11-11"
+   }
+  ],
+  "lastClubId": 0
+ },
+ "mv": {
+  "history": [
+   {
+    "playerId": "315853",
+    "seasonId": 2016,
+    "clubId": "11998",
+    "age": 17,
+    "marketValue": {
+     "value": 75000,
+     "currency": "EUR",
+     "compact": {
+      "prefix": "€",
+      "content": "75,00",
+      "suffix": "K"
+     },
+     "determined": "2016-10-17"
+    }
+   },
+   {
+    "playerId": "315853",
+    "seasonId": 2016,
+    "clubId": "800",
+    "age": 17,
+    "marketValue": {
+     "value": 800000,
+     "currency": "EUR",
+     "compact": {
+      "prefix": "€",
+      "content": "800,00",
+      "suffix": "K"
+     },
+     "determined": "2017-03-28"
+    }
+   },
+   {
+    "playerId": "315853",
+    "seasonId": 2016,
+    "clubId": "800",
+    "age": 18,
+    "marketValue": {
+     "value": 1500000,
+     "currency": "EUR",
+     "compact": {
+      "prefix": "€",
+      "content": "1,50",
+      "suffix": "M"
+     },
+     "determined": "2017-06-08"
+    }
+   },
+   {
+    "playerId": "315853",
+    "seasonId": 2017,
+    "clubId": "800",
+    "age": 18,
+    "marketValue": {
+     "value": 2500000,
+     "currency": "EUR",
+     "compact": {
+      "prefix": "€",
+      "content": "2,50",
+      "suffix": "M"
+     },
+     "determined": "2017-10-13"
+    }
+   },
+   {
+    "playerId": "315853",
+    "seasonId": 2017,
+    "clubId": "800",
+    "age": 18,
+    "marketValue": {
+     "value": 2500000,
+     "currency": "EUR",
+     "compact": {
+      "prefix": "€",
+      "content": "2,50",
+      "suffix": "M"
+     },
+     "determined": "2017-12-29"
+    }
+   },
+   {
+    "playerId": "315853",
+    "seasonId": 2017,
+    "clubId": "800",
+    "age": 19,
+    "marketValue": {
+     "value": 2500000,
+     "currency": "EUR",
+     "compact": {
+      "prefix": "€",
+      "content": "2,50",
+      "suffix": "M"
+     },
+     "determined": "2018-06-07"
+    }
+   },
+   {
+    "playerId": "315853",
+    "seasonId": 2018,
+    "clubId": "130",
+    "age": 19,
+    "marketValue": {
+     "value": 7500000,
+     "currency": "EUR",
+     "compact": {
+      "prefix": "€",
+      "content": "7,50",
+      "suffix": "M"
+     },
+     "determined": "2018-12-20"
+    }
+   },
+   {
+    "playerId": "315853",
+    "seasonId": 2018,
+    "clubId": "130",
+    "age": 19,
+    "marketValue": {
+     "value": 15000000,
+     "currency": "EUR",
+     "compact": {
+      "prefix": "€",
+      "content": "15,00",
+      "suffix": "M"
+     },
+     "determined": "2019-03-01"
+    }
+   },
+   {
+    "playerId": "315853",
+    "seasonId": 2018,
+    "clubId": "130",
+    "age": 20,
+    "marketValue": {
+     "value": 15000000,
+     "currency": "EUR",
+     "compact": {
+      "prefix": "€",
+      "content": "15,00",
+      "suffix": "M"
+     },
+     "determined": "2019-06-06"
+    }
+   },
+   {
+    "playerId": "315853",
+    "seasonId": 2019,
+    "clubId": "46",
+    "age": 20,
+    "marketValue": {
+     "value": 23000000,
+     "currency": "EUR",
+     "compact": {
+      "prefix": "€",
+      "content": "23,00",
+      "suffix": "M"
+     },
+     "determined": "2019-12-12"
+    }
+   },
+   {
+    "playerId": "315853",
+    "seasonId": 2019,
+    "clubId": "46",
+    "age": 20,
+    "marketValue": {
+     "value": 35000000,
+     "currency": "EUR",
+     "compact": {
+      "prefix": "€",
+      "content": "35,00",
+      "suffix": "M"
+     },
+     "determined": "2020-03-03"
+    }
+   },
+   {
+    "playerId": "315853",
+    "seasonId": 2019,
+    "clubId": "46",
+    "age": 20,
+    "marketValue": {
+     "value": 31500000,
+     "currency": "EUR",
+     "compact": {
+      "prefix": "€",
+      "content": "31,00",
+      "suffix": "M"
+     },
+     "determined": "2020-04-08"
+    }
+   },
+   {
+    "playerId": "315853",
+    "seasonId": 2020,
+    "clubId": "46",
+    "age": 21,
+    "marketValue": {
+     "value": 45000000,
+     "currency": "EUR",
+     "compact": {
+      "prefix": "€",
+      "content": "45,00",
+      "suffix": "M"
+     },
+     "determined": "2020-08-25"
+    }
+   },
+   {
+    "playerId": "315853",
+    "seasonId": 2020,
+    "clubId": "46",
+    "age": 21,
+    "marketValue": {
+     "value": 50000000,
+     "currency": "EUR",
+     "compact": {
+      "prefix": "€",
+      "content": "50,00",
+      "suffix": "M"
+     },
+     "determined": "2020-12-29"
+    }
+   },
+   {
+    "playerId": "315853",
+    "seasonId": 2020,
+    "clubId": "46",
+    "age": 21,
+    "marketValue": {
+     "value": 55000000,
+     "currency": "EUR",
+     "compact": {
+      "prefix": "€",
+      "content": "55,00",
+      "suffix": "M"
+     },
+     "determined": "2021-03-23"
+    }
+   },
+   {
+    "playerId": "315853",
+    "seasonId": 2020,
+    "clubId": "46",
+    "age": 22,
+    "marketValue": {
+     "value": 60000000,
+     "currency": "EUR",
+     "compact": {
+      "prefix": "€",
+      "content": "60,00",
+      "suffix": "M"
+     },
+     "determined": "2021-05-25"
+    }
+   },
+   {
+    "playerId": "315853",
+    "seasonId": 2021,
+    "clubId": "46",
+    "age": 22,
+    "marketValue": {
+     "value": 60000000,
+     "currency": "EUR",
+     "compact": {
+      "prefix": "€",
+      "content": "60,00",
+      "suffix": "M"
+     },
+     "determined": "2021-12-28"
+    }
+   },
+   {
+    "playerId": "315853",
+    "seasonId": 2021,
+    "clubId": "46",
+    "age": 23,
+    "marketValue": {
+     "value": 60000000,
+     "currency": "EUR",
+     "compact": {
+      "prefix": "€",
+      "content": "60,00",
+      "suffix": "M"
+     },
+     "determined": "2022-06-07"
+    }
+   },
+   {
+    "playerId": "315853",
+    "seasonId": 2022,
+    "clubId": "46",
+    "age": 23,
+    "marketValue": {
+     "value": 55000000,
+     "currency": "EUR",
+     "compact": {
+      "prefix": "€",
+      "content": "55,00",
+      "suffix": "M"
+     },
+     "determined": "2022-11-11"
+    }
+   },
+   {
+    "playerId": "315853",
+    "seasonId": 2022,
+    "clubId": "46",
+    "age": 24,
+    "marketValue": {
+     "value": 60000000,
+     "currency": "EUR",
+     "compact": {
+      "prefix": "€",
+      "content": "60,00",
+      "suffix": "M"
+     },
+     "determined": "2023-06-15"
+    }
+   },
+   {
+    "playerId": "315853",
+    "seasonId": 2023,
+    "clubId": "46",
+    "age": 24,
+    "marketValue": {
+     "value": 60000000,
+     "currency": "EUR",
+     "compact": {
+      "prefix": "€",
+      "content": "60,00",
+      "suffix": "M"
+     },
+     "determined": "2023-12-20"
+    }
+   },
+   {
+    "playerId": "315853",
+    "seasonId": 2023,
+    "clubId": "46",
+    "age": 24,
+    "marketValue": {
+     "value": 70000000,
+     "currency": "EUR",
+     "compact": {
+      "prefix": "€",
+      "content": "70,00",
+      "suffix": "M"
+     },
+     "determined": "2024-03-12"
+    }
+   },
+   {
+    "playerId": "315853",
+    "seasonId": 2023,
+    "clubId": "46",
+    "age": 25,
+    "marketValue": {
+     "value": 70000000,
+     "currency": "EUR",
+     "compact": {
+      "prefix": "€",
+      "content": "70,00",
+      "suffix": "M"
+     },
+     "determined": "2024-06-05"
+    }
+   },
+   {
+    "playerId": "315853",
+    "seasonId": 2024,
+    "clubId": "46",
+    "age": 25,
+    "marketValue": {
+     "value": 75000000,
+     "currency": "EUR",
+     "compact": {
+      "prefix": "€",
+      "content": "75,00",
+      "suffix": "M"
+     },
+     "determined": "2024-12-18"
+    }
+   },
+   {
+    "playerId": "315853",
+    "seasonId": 2024,
+    "clubId": "46",
+    "age": 25,
+    "marketValue": {
+     "value": 80000000,
+     "currency": "EUR",
+     "compact": {
+      "prefix": "€",
+      "content": "80,00",
+      "suffix": "M"
+     },
+     "determined": "2025-03-25"
+    }
+   },
+   {
+    "playerId": "315853",
+    "seasonId": 2024,
+    "clubId": "46",
+    "age": 26,
+    "marketValue": {
+     "value": 80000000,
+     "currency": "EUR",
+     "compact": {
+      "prefix": "€",
+      "content": "80,00",
+      "suffix": "M"
+     },
+     "determined": "2025-06-17"
+    }
+   },
+   {
+    "playerId": "315853",
+    "seasonId": 2025,
+    "clubId": "46",
+    "age": 26,
+    "marketValue": {
+     "value": 80000000,
+     "currency": "EUR",
+     "compact": {
+      "prefix": "€",
+      "content": "80,00",
+      "suffix": "M"
+     },
+     "determined": "2025-12-23"
+    }
+   },
+   {
+    "playerId": "315853",
+    "seasonId": 2025,
+    "clubId": "46",
+    "age": 26,
+    "marketValue": {
+     "value": 70000000,
+     "currency": "EUR",
+     "compact": {
+      "prefix": "€",
+      "content": "70,00",
+      "suffix": "M"
+     },
+     "determined": "2026-03-24"
+    }
+   },
+   {
+    "playerId": "315853",
+    "seasonId": 2025,
+    "clubId": "46",
+    "age": 27,
+    "marketValue": {
+     "value": 65000000,
+     "currency": "EUR",
+     "compact": {
+      "prefix": "€",
+      "content": "65,00",
+      "suffix": "M"
+     },
+     "determined": "2026-05-29"
+    }
+   }
+  ],
+  "playerIds": [
+   "315853"
+  ],
+  "clubIds": [
+   "11998",
+   "800",
+   "130",
+   "46"
+  ],
+  "current": {
+   "playerId": "315853",
+   "seasonId": 2025,
+   "clubId": "46",
+   "age": 27,
+   "marketValue": {
+    "value": 65000000,
+    "currency": "EUR",
+    "compact": {
+     "prefix": "€",
+     "content": "65,00",
+     "suffix": "M"
+    },
+    "determined": "2026-05-29"
+   }
+  }
+ },
+ "season2016": {
+  "playerId": "315853",
+  "performance": [
+   {
+    "generalInformation": {
+     "seasonId": 2016,
+     "competitionId": "ITJ3",
+     "clubId": "11998",
+     "coachId": "1292",
+     "season": {
+      "id": 2016,
+      "display": "16/17",
+      "cyclicalName": "2017",
+      "nonCyclicalName": "16/17"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 5,
+      "assistsSum": 0,
+      "scorersSum": 5,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 35,
+      "opponentGoalsOnThePitch": 13,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 1,
+      "yellowCardGrossSum": 1,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 1080,
+      "startingCount": 12,
+      "substitutedOutCount": 0,
+      "substitutedInCount": 0,
+      "appearancesCount": 12
+     }
+    }
+   },
+   {
+    "generalInformation": {
+     "seasonId": 2016,
+     "competitionId": "FS",
+     "clubId": "21746",
+     "coachId": "16509",
+     "season": {
+      "id": 2016,
+      "display": "16/17",
+      "cyclicalName": "2017",
+      "nonCyclicalName": "16/17"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 0,
+      "assistsSum": 0,
+      "scorersSum": 0,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 7,
+      "opponentGoalsOnThePitch": 3,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 0,
+      "yellowCardGrossSum": 0,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 247,
+      "startingCount": 3,
+      "substitutedOutCount": 1,
+      "substitutedInCount": 0,
+      "appearancesCount": 3
+     }
+    }
+   },
+   {
+    "generalInformation": {
+     "seasonId": 2016,
+     "competitionId": "IT1",
+     "clubId": "800",
+     "coachId": "3436",
+     "season": {
+      "id": 2016,
+      "display": "16/17",
+      "cyclicalName": "2017",
+      "nonCyclicalName": "16/17"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 0,
+      "assistsSum": 0,
+      "scorersSum": 0,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 1,
+      "opponentGoalsOnThePitch": 1,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 0,
+      "yellowCardGrossSum": 0,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 153,
+      "startingCount": 1,
+      "substitutedOutCount": 0,
+      "substitutedInCount": 2,
+      "appearancesCount": 3
+     }
+    }
+   },
+   {
+    "generalInformation": {
+     "seasonId": 2016,
+     "competitionId": "TDV",
+     "clubId": "11998",
+     "coachId": "1292",
+     "season": {
+      "id": 2016,
+      "display": "16/17",
+      "cyclicalName": "2017",
+      "nonCyclicalName": "16/17"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 0,
+      "assistsSum": 0,
+      "scorersSum": 0,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 5,
+      "opponentGoalsOnThePitch": 2,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 0,
+      "yellowCardGrossSum": 0,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 180,
+      "startingCount": 2,
+      "substitutedOutCount": 0,
+      "substitutedInCount": 0,
+      "appearancesCount": 2
+     }
+    }
+   },
+   {
+    "generalInformation": {
+     "seasonId": 2016,
+     "competitionId": "CIT",
+     "clubId": "800",
+     "coachId": "3436",
+     "season": {
+      "id": 2016,
+      "display": "16/17",
+      "cyclicalName": "2017",
+      "nonCyclicalName": "16/17"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 0,
+      "assistsSum": 0,
+      "scorersSum": 0,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 3,
+      "opponentGoalsOnThePitch": 0,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 0,
+      "yellowCardGrossSum": 0,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 90,
+      "startingCount": 1,
+      "substitutedOutCount": 0,
+      "substitutedInCount": 0,
+      "appearancesCount": 1
+     }
+    }
+   },
+   {
+    "generalInformation": {
+     "seasonId": 2016,
+     "competitionId": "CITP",
+     "clubId": "11998",
+     "coachId": "1292",
+     "season": {
+      "id": 2016,
+      "display": "16/17",
+      "cyclicalName": "2017",
+      "nonCyclicalName": "16/17"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 0,
+      "assistsSum": 0,
+      "scorersSum": 0,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 1,
+      "opponentGoalsOnThePitch": 2,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 0,
+      "yellowCardGrossSum": 1,
+      "yellowRedCardsCount": 1,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 61,
+      "startingCount": 1,
+      "substitutedOutCount": 0,
+      "substitutedInCount": 0,
+      "appearancesCount": 1
+     }
+    }
+   },
+   {
+    "generalInformation": {
+     "seasonId": 2016,
+     "competitionId": "ITJE",
+     "clubId": "11998",
+     "coachId": "1292",
+     "season": {
+      "id": 2016,
+      "display": "16/17",
+      "cyclicalName": "2017",
+      "nonCyclicalName": "16/17"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 0,
+      "assistsSum": 0,
+      "scorersSum": 0,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 0,
+      "opponentGoalsOnThePitch": 1,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 0,
+      "yellowCardGrossSum": 0,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 90,
+      "startingCount": 1,
+      "substitutedOutCount": 0,
+      "substitutedInCount": 0,
+      "appearancesCount": 1
+     }
+    }
+   }
+  ],
+  "aggregated": {
+   "goalStatistics": {
+    "goalsSum": 5,
+    "assistsSum": 0,
+    "scorersSum": 5,
+    "ownGoalsSum": 0,
+    "teamGoalsOnThePitchSum": 52,
+    "opponentGoalsOnThePitch": 22,
+    "penaltyShooterAttempts": 0,
+    "penaltyShooterGoalsScored": 0,
+    "penaltyShooterSaves": 0,
+    "penaltyShooterMisses": 0,
+    "penaltyGoalkeeperAttempts": 0,
+    "penaltyGoalkeeperGoalsConceded": 0,
+    "penaltyGoalkeeperSaves": 0,
+    "penaltyGoalkeeperMisses": 0
+   },
+   "cardStatistics": {
+    "yellowCardNetSum": 1,
+    "yellowCardGrossSum": 2,
+    "yellowRedCardsCount": 1,
+    "redCardsCount": 0
+   },
+   "playingTimeStatistics": {
+    "playedMinutesSum": 1901,
+    "startingCount": 21,
+    "substitutedOutCount": 1,
+    "substitutedInCount": 2,
+    "appearancesCount": 23
+   }
+  },
+  "clubIds": [
+   "11998",
+   "21746",
+   "800",
+   "11998",
+   "800",
+   "11998",
+   "11998"
+  ],
+  "coachIds": [
+   "1292",
+   "16509",
+   "3436",
+   "1292",
+   "3436",
+   "1292",
+   "1292"
+  ],
+  "competitionIds": [
+   "ITJ3",
+   "FS",
+   "IT1",
+   "TDV",
+   "CIT",
+   "CITP",
+   "ITJE"
+  ]
+ },
+ "season2017": {
+  "playerId": "315853",
+  "performance": [
+   {
+    "generalInformation": {
+     "seasonId": 2017,
+     "competitionId": "IJ1",
+     "clubId": "11998",
+     "coachId": "42109",
+     "season": {
+      "id": 2017,
+      "display": "17/18",
+      "cyclicalName": "2018",
+      "nonCyclicalName": "17/18"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 1,
+      "assistsSum": 0,
+      "scorersSum": 1,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 20,
+      "opponentGoalsOnThePitch": 7,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 1,
+      "yellowCardGrossSum": 1,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 810,
+      "startingCount": 9,
+      "substitutedOutCount": 0,
+      "substitutedInCount": 0,
+      "appearancesCount": 9
+     }
+    }
+   },
+   {
+    "generalInformation": {
+     "seasonId": 2017,
+     "competitionId": "FS",
+     "clubId": "21426",
+     "coachId": "16509",
+     "season": {
+      "id": 2017,
+      "display": "17/18",
+      "cyclicalName": "2018",
+      "nonCyclicalName": "17/18"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 2,
+      "assistsSum": 0,
+      "scorersSum": 2,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 9,
+      "opponentGoalsOnThePitch": 4,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 0,
+      "yellowCardGrossSum": 0,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 424,
+      "startingCount": 5,
+      "substitutedOutCount": 3,
+      "substitutedInCount": 0,
+      "appearancesCount": 5
+     }
+    }
+   },
+   {
+    "generalInformation": {
+     "seasonId": 2017,
+     "competitionId": "U19Q",
+     "clubId": "21426",
+     "coachId": "16509",
+     "season": {
+      "id": 2017,
+      "display": "17/18",
+      "cyclicalName": "2018",
+      "nonCyclicalName": "17/18"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 0,
+      "assistsSum": 0,
+      "scorersSum": 0,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 13,
+      "opponentGoalsOnThePitch": 6,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 1,
+      "yellowCardGrossSum": 1,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 335,
+      "startingCount": 4,
+      "substitutedOutCount": 1,
+      "substitutedInCount": 0,
+      "appearancesCount": 4
+     }
+    }
+   },
+   {
+    "generalInformation": {
+     "seasonId": 2017,
+     "competitionId": "IT1",
+     "clubId": "800",
+     "coachId": "3436",
+     "season": {
+      "id": 2017,
+      "display": "17/18",
+      "cyclicalName": "2018",
+      "nonCyclicalName": "17/18"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 0,
+      "assistsSum": 0,
+      "scorersSum": 0,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 0,
+      "opponentGoalsOnThePitch": 1,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 0,
+      "yellowCardGrossSum": 0,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 87,
+      "startingCount": 0,
+      "substitutedOutCount": 0,
+      "substitutedInCount": 4,
+      "appearancesCount": 4
+     }
+    }
+   },
+   {
+    "generalInformation": {
+     "seasonId": 2017,
+     "competitionId": "CITP",
+     "clubId": "11998",
+     "coachId": "42109",
+     "season": {
+      "id": 2017,
+      "display": "17/18",
+      "cyclicalName": "2018",
+      "nonCyclicalName": "17/18"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 0,
+      "assistsSum": 0,
+      "scorersSum": 0,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 2,
+      "opponentGoalsOnThePitch": 5,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 2,
+      "yellowCardGrossSum": 2,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 180,
+      "startingCount": 2,
+      "substitutedOutCount": 0,
+      "substitutedInCount": 0,
+      "appearancesCount": 2
+     }
+    }
+   },
+   {
+    "generalInformation": {
+     "seasonId": 2017,
+     "competitionId": "CIT",
+     "clubId": "800",
+     "coachId": "3436",
+     "season": {
+      "id": 2017,
+      "display": "17/18",
+      "cyclicalName": "2018",
+      "nonCyclicalName": "17/18"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 0,
+      "assistsSum": 0,
+      "scorersSum": 0,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 2,
+      "opponentGoalsOnThePitch": 1,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 0,
+      "yellowCardGrossSum": 0,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 90,
+      "startingCount": 1,
+      "substitutedOutCount": 0,
+      "substitutedInCount": 0,
+      "appearancesCount": 1
+     }
+    }
+   },
+   {
+    "generalInformation": {
+     "seasonId": 2017,
+     "competitionId": "EL",
+     "clubId": "800",
+     "coachId": "3436",
+     "season": {
+      "id": 2017,
+      "display": "17/18",
+      "cyclicalName": "2018",
+      "nonCyclicalName": "17/18"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 0,
+      "assistsSum": 0,
+      "scorersSum": 0,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 0,
+      "opponentGoalsOnThePitch": 0,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 0,
+      "yellowCardGrossSum": 0,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 0,
+      "startingCount": 0,
+      "substitutedOutCount": 0,
+      "substitutedInCount": 0,
+      "appearancesCount": 0
+     }
+    }
+   }
+  ],
+  "aggregated": {
+   "goalStatistics": {
+    "goalsSum": 3,
+    "assistsSum": 0,
+    "scorersSum": 3,
+    "ownGoalsSum": 0,
+    "teamGoalsOnThePitchSum": 46,
+    "opponentGoalsOnThePitch": 24,
+    "penaltyShooterAttempts": 0,
+    "penaltyShooterGoalsScored": 0,
+    "penaltyShooterSaves": 0,
+    "penaltyShooterMisses": 0,
+    "penaltyGoalkeeperAttempts": 0,
+    "penaltyGoalkeeperGoalsConceded": 0,
+    "penaltyGoalkeeperSaves": 0,
+    "penaltyGoalkeeperMisses": 0
+   },
+   "cardStatistics": {
+    "yellowCardNetSum": 4,
+    "yellowCardGrossSum": 4,
+    "yellowRedCardsCount": 0,
+    "redCardsCount": 0
+   },
+   "playingTimeStatistics": {
+    "playedMinutesSum": 1926,
+    "startingCount": 21,
+    "substitutedOutCount": 4,
+    "substitutedInCount": 4,
+    "appearancesCount": 25
+   }
+  },
+  "clubIds": [
+   "11998",
+   "21426",
+   "21426",
+   "800",
+   "11998",
+   "800",
+   "800"
+  ],
+  "coachIds": [
+   "42109",
+   "16509",
+   "16509",
+   "3436",
+   "42109",
+   "3436",
+   "3436"
+  ],
+  "competitionIds": [
+   "IJ1",
+   "FS",
+   "U19Q",
+   "IT1",
+   "CITP",
+   "CIT",
+   "EL"
+  ]
+ },
+ "season2018": {
+  "playerId": "315853",
+  "performance": [
+   {
+    "generalInformation": {
+     "seasonId": 2018,
+     "competitionId": "IT1",
+     "clubId": "130",
+     "coachId": "35782",
+     "season": {
+      "id": 2018,
+      "display": "18/19",
+      "cyclicalName": "2019",
+      "nonCyclicalName": "18/19"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 1,
+      "assistsSum": 0,
+      "scorersSum": 1,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 22,
+      "opponentGoalsOnThePitch": 31,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 2,
+      "yellowCardGrossSum": 2,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 1685,
+      "startingCount": 18,
+      "substitutedOutCount": 1,
+      "substitutedInCount": 6,
+      "appearancesCount": 24
+     }
+    }
+   },
+   {
+    "generalInformation": {
+     "seasonId": 2018,
+     "competitionId": "FS",
+     "clubId": "11947",
+     "coachId": "20218",
+     "season": {
+      "id": 2018,
+      "display": "18/19",
+      "cyclicalName": "2019",
+      "nonCyclicalName": "18/19"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 1,
+      "assistsSum": 1,
+      "scorersSum": 2,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 6,
+      "opponentGoalsOnThePitch": 7,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 0,
+      "yellowCardGrossSum": 0,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 322,
+      "startingCount": 4,
+      "substitutedOutCount": 4,
+      "substitutedInCount": 1,
+      "appearancesCount": 5
+     }
+    }
+   },
+   {
+    "generalInformation": {
+     "seasonId": 2018,
+     "competitionId": "21EU",
+     "clubId": "11947",
+     "coachId": "20218",
+     "season": {
+      "id": 2018,
+      "display": "2019",
+      "cyclicalName": "2019",
+      "nonCyclicalName": "18/19"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 0,
+      "assistsSum": 0,
+      "scorersSum": 0,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 3,
+      "opponentGoalsOnThePitch": 2,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 0,
+      "yellowCardGrossSum": 0,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 182,
+      "startingCount": 2,
+      "substitutedOutCount": 0,
+      "substitutedInCount": 1,
+      "appearancesCount": 3
+     }
+    }
+   },
+   {
+    "generalInformation": {
+     "seasonId": 2018,
+     "competitionId": "CIT",
+     "clubId": "130",
+     "coachId": "35782",
+     "season": {
+      "id": 2018,
+      "display": "18/19",
+      "cyclicalName": "2019",
+      "nonCyclicalName": "18/19"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 0,
+      "assistsSum": 0,
+      "scorersSum": 0,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 0,
+      "opponentGoalsOnThePitch": 0,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 0,
+      "yellowCardGrossSum": 0,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 0,
+      "startingCount": 0,
+      "substitutedOutCount": 0,
+      "substitutedInCount": 0,
+      "appearancesCount": 0
+     }
+    }
+   }
+  ],
+  "aggregated": {
+   "goalStatistics": {
+    "goalsSum": 2,
+    "assistsSum": 1,
+    "scorersSum": 3,
+    "ownGoalsSum": 0,
+    "teamGoalsOnThePitchSum": 31,
+    "opponentGoalsOnThePitch": 40,
+    "penaltyShooterAttempts": 0,
+    "penaltyShooterGoalsScored": 0,
+    "penaltyShooterSaves": 0,
+    "penaltyShooterMisses": 0,
+    "penaltyGoalkeeperAttempts": 0,
+    "penaltyGoalkeeperGoalsConceded": 0,
+    "penaltyGoalkeeperSaves": 0,
+    "penaltyGoalkeeperMisses": 0
+   },
+   "cardStatistics": {
+    "yellowCardNetSum": 2,
+    "yellowCardGrossSum": 2,
+    "yellowRedCardsCount": 0,
+    "redCardsCount": 0
+   },
+   "playingTimeStatistics": {
+    "playedMinutesSum": 2189,
+    "startingCount": 24,
+    "substitutedOutCount": 5,
+    "substitutedInCount": 8,
+    "appearancesCount": 32
+   }
+  },
+  "clubIds": [
+   "130",
+   "11947",
+   "11947",
+   "130"
+  ],
+  "coachIds": [
+   "35782",
+   "20218",
+   "20218",
+   "35782"
+  ],
+  "competitionIds": [
+   "IT1",
+   "FS",
+   "21EU",
+   "CIT"
+  ]
+ },
+ "season2019": {
+  "playerId": "315853",
+  "performance": [
+   {
+    "generalInformation": {
+     "seasonId": 2019,
+     "competitionId": "IT1",
+     "clubId": "46",
+     "coachId": "3517",
+     "season": {
+      "id": 2019,
+      "display": "19/20",
+      "cyclicalName": "2020",
+      "nonCyclicalName": "19/20"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 2,
+      "assistsSum": 0,
+      "scorersSum": 2,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 51,
+      "opponentGoalsOnThePitch": 23,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 7,
+      "yellowCardGrossSum": 8,
+      "yellowRedCardsCount": 1,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 1922,
+      "startingCount": 21,
+      "substitutedOutCount": 4,
+      "substitutedInCount": 4,
+      "appearancesCount": 25
+     }
+    }
+   },
+   {
+    "generalInformation": {
+     "seasonId": 2019,
+     "competitionId": "EL",
+     "clubId": "46",
+     "coachId": "3517",
+     "season": {
+      "id": 2019,
+      "display": "19/20",
+      "cyclicalName": "2020",
+      "nonCyclicalName": "19/20"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 0,
+      "assistsSum": 1,
+      "scorersSum": 1,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 11,
+      "opponentGoalsOnThePitch": 4,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 1,
+      "yellowCardGrossSum": 1,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 368,
+      "startingCount": 4,
+      "substitutedOutCount": 1,
+      "substitutedInCount": 1,
+      "appearancesCount": 5
+     }
+    }
+   },
+   {
+    "generalInformation": {
+     "seasonId": 2019,
+     "competitionId": "U21Q",
+     "clubId": "11947",
+     "coachId": "16509",
+     "season": {
+      "id": 2019,
+      "display": "19/20",
+      "cyclicalName": "2020",
+      "nonCyclicalName": "19/20"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 0,
+      "assistsSum": 0,
+      "scorersSum": 0,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 6,
+      "opponentGoalsOnThePitch": 0,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 1,
+      "yellowCardGrossSum": 1,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 270,
+      "startingCount": 3,
+      "substitutedOutCount": 0,
+      "substitutedInCount": 0,
+      "appearancesCount": 3
+     }
+    }
+   },
+   {
+    "generalInformation": {
+     "seasonId": 2019,
+     "competitionId": "CIT",
+     "clubId": "46",
+     "coachId": "3517",
+     "season": {
+      "id": 2019,
+      "display": "19/20",
+      "cyclicalName": "2020",
+      "nonCyclicalName": "19/20"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 0,
+      "assistsSum": 0,
+      "scorersSum": 0,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 3,
+      "opponentGoalsOnThePitch": 3,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 0,
+      "yellowCardGrossSum": 0,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 270,
+      "startingCount": 3,
+      "substitutedOutCount": 0,
+      "substitutedInCount": 0,
+      "appearancesCount": 3
+     }
+    }
+   },
+   {
+    "generalInformation": {
+     "seasonId": 2019,
+     "competitionId": "FS",
+     "clubId": "11947",
+     "coachId": "16509",
+     "season": {
+      "id": 2019,
+      "display": "19/20",
+      "cyclicalName": "2020",
+      "nonCyclicalName": "19/20"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 0,
+      "assistsSum": 0,
+      "scorersSum": 0,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 4,
+      "opponentGoalsOnThePitch": 0,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 1,
+      "yellowCardGrossSum": 1,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 90,
+      "startingCount": 1,
+      "substitutedOutCount": 0,
+      "substitutedInCount": 0,
+      "appearancesCount": 1
+     }
+    }
+   },
+   {
+    "generalInformation": {
+     "seasonId": 2019,
+     "competitionId": "CL",
+     "clubId": "46",
+     "coachId": "3517",
+     "season": {
+      "id": 2019,
+      "display": "19/20",
+      "cyclicalName": "2020",
+      "nonCyclicalName": "19/20"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 0,
+      "assistsSum": 0,
+      "scorersSum": 0,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 0,
+      "opponentGoalsOnThePitch": 0,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 0,
+      "yellowCardGrossSum": 0,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 0,
+      "startingCount": 0,
+      "substitutedOutCount": 0,
+      "substitutedInCount": 0,
+      "appearancesCount": 0
+     }
+    }
+   }
+  ],
+  "aggregated": {
+   "goalStatistics": {
+    "goalsSum": 2,
+    "assistsSum": 1,
+    "scorersSum": 3,
+    "ownGoalsSum": 0,
+    "teamGoalsOnThePitchSum": 75,
+    "opponentGoalsOnThePitch": 30,
+    "penaltyShooterAttempts": 0,
+    "penaltyShooterGoalsScored": 0,
+    "penaltyShooterSaves": 0,
+    "penaltyShooterMisses": 0,
+    "penaltyGoalkeeperAttempts": 0,
+    "penaltyGoalkeeperGoalsConceded": 0,
+    "penaltyGoalkeeperSaves": 0,
+    "penaltyGoalkeeperMisses": 0
+   },
+   "cardStatistics": {
+    "yellowCardNetSum": 10,
+    "yellowCardGrossSum": 11,
+    "yellowRedCardsCount": 1,
+    "redCardsCount": 0
+   },
+   "playingTimeStatistics": {
+    "playedMinutesSum": 2920,
+    "startingCount": 32,
+    "substitutedOutCount": 5,
+    "substitutedInCount": 5,
+    "appearancesCount": 37
+   }
+  },
+  "clubIds": [
+   "46",
+   "46",
+   "11947",
+   "46",
+   "11947",
+   "46"
+  ],
+  "coachIds": [
+   "3517",
+   "3517",
+   "16509",
+   "3517",
+   "16509",
+   "3517"
+  ],
+  "competitionIds": [
+   "IT1",
+   "EL",
+   "U21Q",
+   "CIT",
+   "FS",
+   "CL"
+  ]
+ },
+ "season2020": {
+  "playerId": "315853",
+  "performance": [
+   {
+    "generalInformation": {
+     "seasonId": 2020,
+     "competitionId": "IT1",
+     "clubId": "46",
+     "coachId": "3517",
+     "season": {
+      "id": 2020,
+      "display": "20/21",
+      "cyclicalName": "2021",
+      "nonCyclicalName": "20/21"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 0,
+      "assistsSum": 3,
+      "scorersSum": 3,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 71,
+      "opponentGoalsOnThePitch": 26,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 6,
+      "yellowCardGrossSum": 6,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 2926,
+      "startingCount": 33,
+      "substitutedOutCount": 4,
+      "substitutedInCount": 0,
+      "appearancesCount": 33
+     }
+    }
+   },
+   {
+    "generalInformation": {
+     "seasonId": 2020,
+     "competitionId": "CL",
+     "clubId": "46",
+     "coachId": "3517",
+     "season": {
+      "id": 2020,
+      "display": "20/21",
+      "cyclicalName": "2021",
+      "nonCyclicalName": "20/21"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 0,
+      "assistsSum": 1,
+      "scorersSum": 1,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 6,
+      "opponentGoalsOnThePitch": 7,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 2,
+      "yellowCardGrossSum": 2,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 411,
+      "startingCount": 5,
+      "substitutedOutCount": 2,
+      "substitutedInCount": 1,
+      "appearancesCount": 6
+     }
+    }
+   },
+   {
+    "generalInformation": {
+     "seasonId": 2020,
+     "competitionId": "UNLA",
+     "clubId": "3376",
+     "coachId": "524",
+     "season": {
+      "id": 2020,
+      "display": "20/21",
+      "cyclicalName": "2021",
+      "nonCyclicalName": "20/21"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 0,
+      "assistsSum": 0,
+      "scorersSum": 0,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 4,
+      "opponentGoalsOnThePitch": 0,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 0,
+      "yellowCardGrossSum": 0,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 180,
+      "startingCount": 2,
+      "substitutedOutCount": 0,
+      "substitutedInCount": 0,
+      "appearancesCount": 2
+     }
+    }
+   },
+   {
+    "generalInformation": {
+     "seasonId": 2020,
+     "competitionId": "FS",
+     "clubId": "3376",
+     "coachId": "524",
+     "season": {
+      "id": 2020,
+      "display": "20/21",
+      "cyclicalName": "2021",
+      "nonCyclicalName": "20/21"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 0,
+      "assistsSum": 0,
+      "scorersSum": 0,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 7,
+      "opponentGoalsOnThePitch": 0,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 0,
+      "yellowCardGrossSum": 0,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 107,
+      "startingCount": 1,
+      "substitutedOutCount": 0,
+      "substitutedInCount": 1,
+      "appearancesCount": 2
+     }
+    }
+   },
+   {
+    "generalInformation": {
+     "seasonId": 2020,
+     "competitionId": "CIT",
+     "clubId": "46",
+     "coachId": "3517",
+     "season": {
+      "id": 2020,
+      "display": "20/21",
+      "cyclicalName": "2021",
+      "nonCyclicalName": "20/21"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 0,
+      "assistsSum": 0,
+      "scorersSum": 0,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 1,
+      "opponentGoalsOnThePitch": 2,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 0,
+      "yellowCardGrossSum": 0,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 151,
+      "startingCount": 2,
+      "substitutedOutCount": 2,
+      "substitutedInCount": 0,
+      "appearancesCount": 2
+     }
+    }
+   },
+   {
+    "generalInformation": {
+     "seasonId": 2020,
+     "competitionId": "UNFI",
+     "clubId": "3376",
+     "coachId": "524",
+     "season": {
+      "id": 2020,
+      "display": "2021",
+      "cyclicalName": "2021",
+      "nonCyclicalName": "20/21"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 0,
+      "assistsSum": 0,
+      "scorersSum": 0,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 3,
+      "opponentGoalsOnThePitch": 3,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 0,
+      "yellowCardGrossSum": 0,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 180,
+      "startingCount": 2,
+      "substitutedOutCount": 0,
+      "substitutedInCount": 0,
+      "appearancesCount": 2
+     }
+    }
+   },
+   {
+    "generalInformation": {
+     "seasonId": 2020,
+     "competitionId": "WMQ6",
+     "clubId": "3376",
+     "coachId": "524",
+     "season": {
+      "id": 2020,
+      "display": "2021",
+      "cyclicalName": "2021",
+      "nonCyclicalName": "20/21"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 0,
+      "assistsSum": 0,
+      "scorersSum": 0,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 6,
+      "opponentGoalsOnThePitch": 0,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 0,
+      "yellowCardGrossSum": 0,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 179,
+      "startingCount": 2,
+      "substitutedOutCount": 1,
+      "substitutedInCount": 0,
+      "appearancesCount": 2
+     }
+    }
+   },
+   {
+    "generalInformation": {
+     "seasonId": 2020,
+     "competitionId": "EURO",
+     "clubId": "3376",
+     "coachId": "524",
+     "season": {
+      "id": 2020,
+      "display": "2021",
+      "cyclicalName": "2021",
+      "nonCyclicalName": "20/21"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 0,
+      "assistsSum": 0,
+      "scorersSum": 0,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 1,
+      "opponentGoalsOnThePitch": 0,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 0,
+      "yellowCardGrossSum": 0,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 90,
+      "startingCount": 1,
+      "substitutedOutCount": 0,
+      "substitutedInCount": 0,
+      "appearancesCount": 1
+     }
+    }
+   }
+  ],
+  "aggregated": {
+   "goalStatistics": {
+    "goalsSum": 0,
+    "assistsSum": 4,
+    "scorersSum": 4,
+    "ownGoalsSum": 0,
+    "teamGoalsOnThePitchSum": 99,
+    "opponentGoalsOnThePitch": 38,
+    "penaltyShooterAttempts": 0,
+    "penaltyShooterGoalsScored": 0,
+    "penaltyShooterSaves": 0,
+    "penaltyShooterMisses": 0,
+    "penaltyGoalkeeperAttempts": 0,
+    "penaltyGoalkeeperGoalsConceded": 0,
+    "penaltyGoalkeeperSaves": 0,
+    "penaltyGoalkeeperMisses": 0
+   },
+   "cardStatistics": {
+    "yellowCardNetSum": 8,
+    "yellowCardGrossSum": 8,
+    "yellowRedCardsCount": 0,
+    "redCardsCount": 0
+   },
+   "playingTimeStatistics": {
+    "playedMinutesSum": 4224,
+    "startingCount": 48,
+    "substitutedOutCount": 9,
+    "substitutedInCount": 2,
+    "appearancesCount": 50
+   }
+  },
+  "clubIds": [
+   "46",
+   "46",
+   "3376",
+   "3376",
+   "46",
+   "3376",
+   "3376",
+   "3376"
+  ],
+  "coachIds": [
+   "3517",
+   "3517",
+   "524",
+   "524",
+   "3517",
+   "524",
+   "524",
+   "524"
+  ],
+  "competitionIds": [
+   "IT1",
+   "CL",
+   "UNLA",
+   "FS",
+   "CIT",
+   "UNFI",
+   "WMQ6",
+   "EURO"
+  ]
+ },
+ "season2021": {
+  "playerId": "315853",
+  "performance": [
+   {
+    "generalInformation": {
+     "seasonId": 2021,
+     "competitionId": "IT1",
+     "clubId": "46",
+     "coachId": "21624",
+     "season": {
+      "id": 2021,
+      "display": "21/22",
+      "cyclicalName": "2022",
+      "nonCyclicalName": "21/22"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 1,
+      "assistsSum": 3,
+      "scorersSum": 4,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 57,
+      "opponentGoalsOnThePitch": 18,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 4,
+      "yellowCardGrossSum": 4,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 2321,
+      "startingCount": 29,
+      "substitutedOutCount": 16,
+      "substitutedInCount": 2,
+      "appearancesCount": 31
+     }
+    }
+   },
+   {
+    "generalInformation": {
+     "seasonId": 2021,
+     "competitionId": "CL",
+     "clubId": "46",
+     "coachId": "21624",
+     "season": {
+      "id": 2021,
+      "display": "21/22",
+      "cyclicalName": "2022",
+      "nonCyclicalName": "21/22"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 0,
+      "assistsSum": 0,
+      "scorersSum": 0,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 8,
+      "opponentGoalsOnThePitch": 6,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 2,
+      "yellowCardGrossSum": 2,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 667,
+      "startingCount": 7,
+      "substitutedOutCount": 1,
+      "substitutedInCount": 1,
+      "appearancesCount": 8
+     }
+    }
+   },
+   {
+    "generalInformation": {
+     "seasonId": 2021,
+     "competitionId": "CIT",
+     "clubId": "46",
+     "coachId": "21624",
+     "season": {
+      "id": 2021,
+      "display": "21/22",
+      "cyclicalName": "2022",
+      "nonCyclicalName": "21/22"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 0,
+      "assistsSum": 0,
+      "scorersSum": 0,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 3,
+      "opponentGoalsOnThePitch": 0,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 0,
+      "yellowCardGrossSum": 0,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 218,
+      "startingCount": 3,
+      "substitutedOutCount": 2,
+      "substitutedInCount": 1,
+      "appearancesCount": 4
+     }
+    }
+   },
+   {
+    "generalInformation": {
+     "seasonId": 2021,
+     "competitionId": "SCI",
+     "clubId": "46",
+     "coachId": "21624",
+     "season": {
+      "id": 2021,
+      "display": "21/22",
+      "cyclicalName": "2022",
+      "nonCyclicalName": "21/22"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 0,
+      "assistsSum": 0,
+      "scorersSum": 0,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 2,
+      "opponentGoalsOnThePitch": 1,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 0,
+      "yellowCardGrossSum": 0,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 120,
+      "startingCount": 1,
+      "substitutedOutCount": 0,
+      "substitutedInCount": 0,
+      "appearancesCount": 1
+     }
+    }
+   },
+   {
+    "generalInformation": {
+     "seasonId": 2021,
+     "competitionId": "POWM",
+     "clubId": "3376",
+     "coachId": "524",
+     "season": {
+      "id": 2021,
+      "display": "21/22",
+      "cyclicalName": "2022",
+      "nonCyclicalName": "21/22"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 0,
+      "assistsSum": 0,
+      "scorersSum": 0,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 0,
+      "opponentGoalsOnThePitch": 1,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 0,
+      "yellowCardGrossSum": 0,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 90,
+      "startingCount": 1,
+      "substitutedOutCount": 0,
+      "substitutedInCount": 0,
+      "appearancesCount": 1
+     }
+    }
+   },
+   {
+    "generalInformation": {
+     "seasonId": 2021,
+     "competitionId": "AFT",
+     "clubId": "3376",
+     "coachId": "524",
+     "season": {
+      "id": 2021,
+      "display": "2022",
+      "cyclicalName": "2022",
+      "nonCyclicalName": "21/22"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 0,
+      "assistsSum": 0,
+      "scorersSum": 0,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 0,
+      "opponentGoalsOnThePitch": 1,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 0,
+      "yellowCardGrossSum": 0,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 13,
+      "startingCount": 0,
+      "substitutedOutCount": 0,
+      "substitutedInCount": 1,
+      "appearancesCount": 1
+     }
+    }
+   },
+   {
+    "generalInformation": {
+     "seasonId": 2021,
+     "competitionId": "FS",
+     "clubId": "3376",
+     "coachId": "524",
+     "season": {
+      "id": 2021,
+      "display": "21/22",
+      "cyclicalName": "2022",
+      "nonCyclicalName": "21/22"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 0,
+      "assistsSum": 0,
+      "scorersSum": 0,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 0,
+      "opponentGoalsOnThePitch": 1,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 0,
+      "yellowCardGrossSum": 0,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 14,
+      "startingCount": 0,
+      "substitutedOutCount": 0,
+      "substitutedInCount": 1,
+      "appearancesCount": 1
+     }
+    }
+   }
+  ],
+  "aggregated": {
+   "goalStatistics": {
+    "goalsSum": 1,
+    "assistsSum": 3,
+    "scorersSum": 4,
+    "ownGoalsSum": 0,
+    "teamGoalsOnThePitchSum": 70,
+    "opponentGoalsOnThePitch": 28,
+    "penaltyShooterAttempts": 0,
+    "penaltyShooterGoalsScored": 0,
+    "penaltyShooterSaves": 0,
+    "penaltyShooterMisses": 0,
+    "penaltyGoalkeeperAttempts": 0,
+    "penaltyGoalkeeperGoalsConceded": 0,
+    "penaltyGoalkeeperSaves": 0,
+    "penaltyGoalkeeperMisses": 0
+   },
+   "cardStatistics": {
+    "yellowCardNetSum": 6,
+    "yellowCardGrossSum": 6,
+    "yellowRedCardsCount": 0,
+    "redCardsCount": 0
+   },
+   "playingTimeStatistics": {
+    "playedMinutesSum": 3443,
+    "startingCount": 41,
+    "substitutedOutCount": 19,
+    "substitutedInCount": 6,
+    "appearancesCount": 47
+   }
+  },
+  "clubIds": [
+   "46",
+   "46",
+   "46",
+   "46",
+   "3376",
+   "3376",
+   "3376"
+  ],
+  "coachIds": [
+   "21624",
+   "21624",
+   "21624",
+   "21624",
+   "524",
+   "524",
+   "524"
+  ],
+  "competitionIds": [
+   "IT1",
+   "CL",
+   "CIT",
+   "SCI",
+   "POWM",
+   "AFT",
+   "FS"
+  ]
+ },
+ "season2022": {
+  "playerId": "315853",
+  "performance": [
+   {
+    "generalInformation": {
+     "seasonId": 2022,
+     "competitionId": "IT1",
+     "clubId": "46",
+     "coachId": "21624",
+     "season": {
+      "id": 2022,
+      "display": "22/23",
+      "cyclicalName": "2023",
+      "nonCyclicalName": "22/23"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 0,
+      "assistsSum": 2,
+      "scorersSum": 2,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 42,
+      "opponentGoalsOnThePitch": 25,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 3,
+      "yellowCardGrossSum": 3,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 2165,
+      "startingCount": 26,
+      "substitutedOutCount": 10,
+      "substitutedInCount": 3,
+      "appearancesCount": 29
+     }
+    }
+   },
+   {
+    "generalInformation": {
+     "seasonId": 2022,
+     "competitionId": "CL",
+     "clubId": "46",
+     "coachId": "21624",
+     "season": {
+      "id": 2022,
+      "display": "22/23",
+      "cyclicalName": "2023",
+      "nonCyclicalName": "22/23"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 0,
+      "assistsSum": 3,
+      "scorersSum": 3,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 17,
+      "opponentGoalsOnThePitch": 6,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 2,
+      "yellowCardGrossSum": 2,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 991,
+      "startingCount": 12,
+      "substitutedOutCount": 7,
+      "substitutedInCount": 0,
+      "appearancesCount": 12
+     }
+    }
+   },
+   {
+    "generalInformation": {
+     "seasonId": 2022,
+     "competitionId": "UNLA",
+     "clubId": "3376",
+     "coachId": "524",
+     "season": {
+      "id": 2022,
+      "display": "22/23",
+      "cyclicalName": "2023",
+      "nonCyclicalName": "22/23"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 1,
+      "assistsSum": 0,
+      "scorersSum": 1,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 6,
+      "opponentGoalsOnThePitch": 7,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 1,
+      "yellowCardGrossSum": 1,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 315,
+      "startingCount": 3,
+      "substitutedOutCount": 0,
+      "substitutedInCount": 1,
+      "appearancesCount": 4
+     }
+    }
+   },
+   {
+    "generalInformation": {
+     "seasonId": 2022,
+     "competitionId": "EMQ",
+     "clubId": "3376",
+     "coachId": "524",
+     "season": {
+      "id": 2022,
+      "display": "22/23",
+      "cyclicalName": "2023",
+      "nonCyclicalName": "22/23"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 0,
+      "assistsSum": 0,
+      "scorersSum": 0,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 7,
+      "opponentGoalsOnThePitch": 3,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 0,
+      "yellowCardGrossSum": 0,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 297,
+      "startingCount": 3,
+      "substitutedOutCount": 0,
+      "substitutedInCount": 1,
+      "appearancesCount": 4
+     }
+    }
+   },
+   {
+    "generalInformation": {
+     "seasonId": 2022,
+     "competitionId": "CIT",
+     "clubId": "46",
+     "coachId": "21624",
+     "season": {
+      "id": 2022,
+      "display": "22/23",
+      "cyclicalName": "2023",
+      "nonCyclicalName": "22/23"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 0,
+      "assistsSum": 0,
+      "scorersSum": 0,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 4,
+      "opponentGoalsOnThePitch": 3,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 1,
+      "yellowCardGrossSum": 1,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 304,
+      "startingCount": 4,
+      "substitutedOutCount": 2,
+      "substitutedInCount": 0,
+      "appearancesCount": 4
+     }
+    }
+   },
+   {
+    "generalInformation": {
+     "seasonId": 2022,
+     "competitionId": "SCI",
+     "clubId": "46",
+     "coachId": "21624",
+     "season": {
+      "id": 2022,
+      "display": "22/23",
+      "cyclicalName": "2023",
+      "nonCyclicalName": "22/23"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 0,
+      "assistsSum": 1,
+      "scorersSum": 1,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 3,
+      "opponentGoalsOnThePitch": 0,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 0,
+      "yellowCardGrossSum": 0,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 85,
+      "startingCount": 1,
+      "substitutedOutCount": 1,
+      "substitutedInCount": 0,
+      "appearancesCount": 1
+     }
+    }
+   },
+   {
+    "generalInformation": {
+     "seasonId": 2022,
+     "competitionId": "FS",
+     "clubId": "3376",
+     "coachId": "524",
+     "season": {
+      "id": 2022,
+      "display": "22/23",
+      "cyclicalName": "2023",
+      "nonCyclicalName": "22/23"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 0,
+      "assistsSum": 0,
+      "scorersSum": 0,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 3,
+      "opponentGoalsOnThePitch": 1,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 0,
+      "yellowCardGrossSum": 0,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 90,
+      "startingCount": 1,
+      "substitutedOutCount": 0,
+      "substitutedInCount": 0,
+      "appearancesCount": 1
+     }
+    }
+   },
+   {
+    "generalInformation": {
+     "seasonId": 2022,
+     "competitionId": "UNFI",
+     "clubId": "3376",
+     "coachId": "524",
+     "season": {
+      "id": 2022,
+      "display": "2023",
+      "cyclicalName": "2023",
+      "nonCyclicalName": "22/23"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 0,
+      "assistsSum": 0,
+      "scorersSum": 0,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 0,
+      "opponentGoalsOnThePitch": 0,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 0,
+      "yellowCardGrossSum": 0,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 0,
+      "startingCount": 0,
+      "substitutedOutCount": 0,
+      "substitutedInCount": 0,
+      "appearancesCount": 0
+     }
+    }
+   }
+  ],
+  "aggregated": {
+   "goalStatistics": {
+    "goalsSum": 1,
+    "assistsSum": 6,
+    "scorersSum": 7,
+    "ownGoalsSum": 0,
+    "teamGoalsOnThePitchSum": 82,
+    "opponentGoalsOnThePitch": 45,
+    "penaltyShooterAttempts": 0,
+    "penaltyShooterGoalsScored": 0,
+    "penaltyShooterSaves": 0,
+    "penaltyShooterMisses": 0,
+    "penaltyGoalkeeperAttempts": 0,
+    "penaltyGoalkeeperGoalsConceded": 0,
+    "penaltyGoalkeeperSaves": 0,
+    "penaltyGoalkeeperMisses": 0
+   },
+   "cardStatistics": {
+    "yellowCardNetSum": 7,
+    "yellowCardGrossSum": 7,
+    "yellowRedCardsCount": 0,
+    "redCardsCount": 0
+   },
+   "playingTimeStatistics": {
+    "playedMinutesSum": 4247,
+    "startingCount": 50,
+    "substitutedOutCount": 20,
+    "substitutedInCount": 5,
+    "appearancesCount": 55
+   }
+  },
+  "clubIds": [
+   "46",
+   "46",
+   "3376",
+   "3376",
+   "46",
+   "46",
+   "3376",
+   "3376"
+  ],
+  "coachIds": [
+   "21624",
+   "21624",
+   "524",
+   "524",
+   "21624",
+   "21624",
+   "524",
+   "524"
+  ],
+  "competitionIds": [
+   "IT1",
+   "CL",
+   "UNLA",
+   "EMQ",
+   "CIT",
+   "SCI",
+   "FS",
+   "UNFI"
+  ]
+ },
+ "season2023": {
+  "playerId": "315853",
+  "performance": [
+   {
+    "generalInformation": {
+     "seasonId": 2023,
+     "competitionId": "IT1",
+     "clubId": "46",
+     "coachId": "21624",
+     "season": {
+      "id": 2023,
+      "display": "23/24",
+      "cyclicalName": "2024",
+      "nonCyclicalName": "23/24"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 1,
+      "assistsSum": 4,
+      "scorersSum": 5,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 53,
+      "opponentGoalsOnThePitch": 16,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 5,
+      "yellowCardGrossSum": 5,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 2282,
+      "startingCount": 28,
+      "substitutedOutCount": 14,
+      "substitutedInCount": 0,
+      "appearancesCount": 28
+     }
+    }
+   },
+   {
+    "generalInformation": {
+     "seasonId": 2023,
+     "competitionId": "CL",
+     "clubId": "46",
+     "coachId": "21624",
+     "season": {
+      "id": 2023,
+      "display": "23/24",
+      "cyclicalName": "2024",
+      "nonCyclicalName": "23/24"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 0,
+      "assistsSum": 0,
+      "scorersSum": 0,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 6,
+      "opponentGoalsOnThePitch": 3,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 0,
+      "yellowCardGrossSum": 0,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 501,
+      "startingCount": 6,
+      "substitutedOutCount": 2,
+      "substitutedInCount": 1,
+      "appearancesCount": 7
+     }
+    }
+   },
+   {
+    "generalInformation": {
+     "seasonId": 2023,
+     "competitionId": "EURO",
+     "clubId": "3376",
+     "coachId": "517",
+     "season": {
+      "id": 2023,
+      "display": "2024",
+      "cyclicalName": "2024",
+      "nonCyclicalName": "23/24"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 1,
+      "assistsSum": 0,
+      "scorersSum": 1,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 3,
+      "opponentGoalsOnThePitch": 5,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 0,
+      "yellowCardGrossSum": 0,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 360,
+      "startingCount": 4,
+      "substitutedOutCount": 0,
+      "substitutedInCount": 0,
+      "appearancesCount": 4
+     }
+    }
+   },
+   {
+    "generalInformation": {
+     "seasonId": 2023,
+     "competitionId": "FS",
+     "clubId": "3376",
+     "coachId": "517",
+     "season": {
+      "id": 2023,
+      "display": "23/24",
+      "cyclicalName": "2024",
+      "nonCyclicalName": "23/24"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 0,
+      "assistsSum": 0,
+      "scorersSum": 0,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 2,
+      "opponentGoalsOnThePitch": 0,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 0,
+      "yellowCardGrossSum": 0,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 180,
+      "startingCount": 2,
+      "substitutedOutCount": 0,
+      "substitutedInCount": 0,
+      "appearancesCount": 2
+     }
+    }
+   },
+   {
+    "generalInformation": {
+     "seasonId": 2023,
+     "competitionId": "CIT",
+     "clubId": "46",
+     "coachId": "21624",
+     "season": {
+      "id": 2023,
+      "display": "23/24",
+      "cyclicalName": "2024",
+      "nonCyclicalName": "23/24"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 0,
+      "assistsSum": 0,
+      "scorersSum": 0,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 0,
+      "opponentGoalsOnThePitch": 0,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 0,
+      "yellowCardGrossSum": 0,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 75,
+      "startingCount": 1,
+      "substitutedOutCount": 1,
+      "substitutedInCount": 0,
+      "appearancesCount": 1
+     }
+    }
+   },
+   {
+    "generalInformation": {
+     "seasonId": 2023,
+     "competitionId": "SCI",
+     "clubId": "46",
+     "coachId": "21624",
+     "season": {
+      "id": 2023,
+      "display": "23/24",
+      "cyclicalName": "2024",
+      "nonCyclicalName": "23/24"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 0,
+      "assistsSum": 0,
+      "scorersSum": 0,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 2,
+      "opponentGoalsOnThePitch": 0,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 0,
+      "yellowCardGrossSum": 0,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 66,
+      "startingCount": 1,
+      "substitutedOutCount": 1,
+      "substitutedInCount": 0,
+      "appearancesCount": 1
+     }
+    }
+   }
+  ],
+  "aggregated": {
+   "goalStatistics": {
+    "goalsSum": 2,
+    "assistsSum": 4,
+    "scorersSum": 6,
+    "ownGoalsSum": 0,
+    "teamGoalsOnThePitchSum": 66,
+    "opponentGoalsOnThePitch": 24,
+    "penaltyShooterAttempts": 0,
+    "penaltyShooterGoalsScored": 0,
+    "penaltyShooterSaves": 0,
+    "penaltyShooterMisses": 0,
+    "penaltyGoalkeeperAttempts": 0,
+    "penaltyGoalkeeperGoalsConceded": 0,
+    "penaltyGoalkeeperSaves": 0,
+    "penaltyGoalkeeperMisses": 0
+   },
+   "cardStatistics": {
+    "yellowCardNetSum": 5,
+    "yellowCardGrossSum": 5,
+    "yellowRedCardsCount": 0,
+    "redCardsCount": 0
+   },
+   "playingTimeStatistics": {
+    "playedMinutesSum": 3464,
+    "startingCount": 42,
+    "substitutedOutCount": 18,
+    "substitutedInCount": 1,
+    "appearancesCount": 43
+   }
+  },
+  "clubIds": [
+   "46",
+   "46",
+   "3376",
+   "3376",
+   "46",
+   "46"
+  ],
+  "coachIds": [
+   "21624",
+   "21624",
+   "517",
+   "517",
+   "21624",
+   "21624"
+  ],
+  "competitionIds": [
+   "IT1",
+   "CL",
+   "EURO",
+   "FS",
+   "CIT",
+   "SCI"
+  ]
+ },
+ "season2024": {
+  "playerId": "315853",
+  "performance": [
+   {
+    "generalInformation": {
+     "seasonId": 2024,
+     "competitionId": "IT1",
+     "clubId": "46",
+     "coachId": "21624",
+     "season": {
+      "id": 2024,
+      "display": "24/25",
+      "cyclicalName": "2025",
+      "nonCyclicalName": "24/25"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 1,
+      "assistsSum": 5,
+      "scorersSum": 6,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 64,
+      "opponentGoalsOnThePitch": 21,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 4,
+      "yellowCardGrossSum": 5,
+      "yellowRedCardsCount": 1,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 2421,
+      "startingCount": 31,
+      "substitutedOutCount": 22,
+      "substitutedInCount": 2,
+      "appearancesCount": 33
+     }
+    }
+   },
+   {
+    "generalInformation": {
+     "seasonId": 2024,
+     "competitionId": "CL",
+     "clubId": "46",
+     "coachId": "21624",
+     "season": {
+      "id": 2024,
+      "display": "24/25",
+      "cyclicalName": "2025",
+      "nonCyclicalName": "24/25"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 0,
+      "assistsSum": 1,
+      "scorersSum": 1,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 21,
+      "opponentGoalsOnThePitch": 15,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 3,
+      "yellowCardGrossSum": 3,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 1079,
+      "startingCount": 12,
+      "substitutedOutCount": 4,
+      "substitutedInCount": 2,
+      "appearancesCount": 14
+     }
+    }
+   },
+   {
+    "generalInformation": {
+     "seasonId": 2024,
+     "competitionId": "UNLA",
+     "clubId": "3376",
+     "coachId": "517",
+     "season": {
+      "id": 2024,
+      "display": "24/25",
+      "cyclicalName": "2025",
+      "nonCyclicalName": "24/25"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 0,
+      "assistsSum": 0,
+      "scorersSum": 0,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 13,
+      "opponentGoalsOnThePitch": 8,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 1,
+      "yellowCardGrossSum": 1,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 540,
+      "startingCount": 6,
+      "substitutedOutCount": 0,
+      "substitutedInCount": 0,
+      "appearancesCount": 6
+     }
+    }
+   },
+   {
+    "generalInformation": {
+     "seasonId": 2024,
+     "competitionId": "WMQ6",
+     "clubId": "3376",
+     "coachId": "517",
+     "season": {
+      "id": 2024,
+      "display": "2025",
+      "cyclicalName": "2025",
+      "nonCyclicalName": "24/25"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 1,
+      "assistsSum": 0,
+      "scorersSum": 1,
+      "ownGoalsSum": 1,
+      "teamGoalsOnThePitchSum": 16,
+      "opponentGoalsOnThePitch": 11,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 3,
+      "yellowCardGrossSum": 3,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 536,
+      "startingCount": 6,
+      "substitutedOutCount": 1,
+      "substitutedInCount": 0,
+      "appearancesCount": 6
+     }
+    }
+   },
+   {
+    "generalInformation": {
+     "seasonId": 2024,
+     "competitionId": "CIT",
+     "clubId": "46",
+     "coachId": "21624",
+     "season": {
+      "id": 2024,
+      "display": "24/25",
+      "cyclicalName": "2025",
+      "nonCyclicalName": "24/25"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 0,
+      "assistsSum": 0,
+      "scorersSum": 0,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 4,
+      "opponentGoalsOnThePitch": 4,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 0,
+      "yellowCardGrossSum": 0,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 269,
+      "startingCount": 3,
+      "substitutedOutCount": 1,
+      "substitutedInCount": 1,
+      "appearancesCount": 4
+     }
+    }
+   },
+   {
+    "generalInformation": {
+     "seasonId": 2024,
+     "competitionId": "KLUB",
+     "clubId": "46",
+     "coachId": "56780",
+     "season": {
+      "id": 2024,
+      "display": "2025",
+      "cyclicalName": "2025",
+      "nonCyclicalName": "24/25"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 1,
+      "assistsSum": 0,
+      "scorersSum": 1,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 5,
+      "opponentGoalsOnThePitch": 2,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 2,
+      "yellowCardGrossSum": 2,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 269,
+      "startingCount": 3,
+      "substitutedOutCount": 1,
+      "substitutedInCount": 1,
+      "appearancesCount": 4
+     }
+    }
+   },
+   {
+    "generalInformation": {
+     "seasonId": 2024,
+     "competitionId": "SCI",
+     "clubId": "46",
+     "coachId": "21624",
+     "season": {
+      "id": 2024,
+      "display": "24/25",
+      "cyclicalName": "2025",
+      "nonCyclicalName": "24/25"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 0,
+      "assistsSum": 0,
+      "scorersSum": 0,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 4,
+      "opponentGoalsOnThePitch": 3,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 1,
+      "yellowCardGrossSum": 1,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 158,
+      "startingCount": 2,
+      "substitutedOutCount": 1,
+      "substitutedInCount": 0,
+      "appearancesCount": 2
+     }
+    }
+   },
+   {
+    "generalInformation": {
+     "seasonId": 2024,
+     "competitionId": "UNFI",
+     "clubId": "3376",
+     "coachId": "517",
+     "season": {
+      "id": 2024,
+      "display": "2025",
+      "cyclicalName": "2025",
+      "nonCyclicalName": "24/25"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 0,
+      "assistsSum": 0,
+      "scorersSum": 0,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 4,
+      "opponentGoalsOnThePitch": 5,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 1,
+      "yellowCardGrossSum": 1,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 180,
+      "startingCount": 2,
+      "substitutedOutCount": 0,
+      "substitutedInCount": 0,
+      "appearancesCount": 2
+     }
+    }
+   }
+  ],
+  "aggregated": {
+   "goalStatistics": {
+    "goalsSum": 3,
+    "assistsSum": 6,
+    "scorersSum": 9,
+    "ownGoalsSum": 1,
+    "teamGoalsOnThePitchSum": 131,
+    "opponentGoalsOnThePitch": 69,
+    "penaltyShooterAttempts": 0,
+    "penaltyShooterGoalsScored": 0,
+    "penaltyShooterSaves": 0,
+    "penaltyShooterMisses": 0,
+    "penaltyGoalkeeperAttempts": 0,
+    "penaltyGoalkeeperGoalsConceded": 0,
+    "penaltyGoalkeeperSaves": 0,
+    "penaltyGoalkeeperMisses": 0
+   },
+   "cardStatistics": {
+    "yellowCardNetSum": 15,
+    "yellowCardGrossSum": 16,
+    "yellowRedCardsCount": 1,
+    "redCardsCount": 0
+   },
+   "playingTimeStatistics": {
+    "playedMinutesSum": 5452,
+    "startingCount": 65,
+    "substitutedOutCount": 30,
+    "substitutedInCount": 6,
+    "appearancesCount": 71
+   }
+  },
+  "clubIds": [
+   "46",
+   "46",
+   "3376",
+   "3376",
+   "46",
+   "46",
+   "46",
+   "3376"
+  ],
+  "coachIds": [
+   "21624",
+   "21624",
+   "517",
+   "517",
+   "21624",
+   "56780",
+   "21624",
+   "517"
+  ],
+  "competitionIds": [
+   "IT1",
+   "CL",
+   "UNLA",
+   "WMQ6",
+   "CIT",
+   "KLUB",
+   "SCI",
+   "UNFI"
+  ]
+ },
+ "season2025": {
+  "playerId": "315853",
+  "performance": [
+   {
+    "generalInformation": {
+     "seasonId": 2025,
+     "competitionId": "IT1",
+     "clubId": "46",
+     "coachId": "56780",
+     "season": {
+      "id": 2025,
+      "display": "25/26",
+      "cyclicalName": "2026",
+      "nonCyclicalName": "25/26"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 1,
+      "assistsSum": 4,
+      "scorersSum": 5,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 62,
+      "opponentGoalsOnThePitch": 21,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 6,
+      "yellowCardGrossSum": 6,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 2249,
+      "startingCount": 28,
+      "substitutedOutCount": 12,
+      "substitutedInCount": 0,
+      "appearancesCount": 28
+     }
+    }
+   },
+   {
+    "generalInformation": {
+     "seasonId": 2025,
+     "competitionId": "CL",
+     "clubId": "46",
+     "coachId": "56780",
+     "season": {
+      "id": 2025,
+      "display": "25/26",
+      "cyclicalName": "2026",
+      "nonCyclicalName": "25/26"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 1,
+      "assistsSum": 1,
+      "scorersSum": 2,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 13,
+      "opponentGoalsOnThePitch": 11,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 2,
+      "yellowCardGrossSum": 2,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 691,
+      "startingCount": 8,
+      "substitutedOutCount": 1,
+      "substitutedInCount": 1,
+      "appearancesCount": 9
+     }
+    }
+   },
+   {
+    "generalInformation": {
+     "seasonId": 2025,
+     "competitionId": "CIT",
+     "clubId": "46",
+     "coachId": "56780",
+     "season": {
+      "id": 2025,
+      "display": "25/26",
+      "cyclicalName": "2026",
+      "nonCyclicalName": "25/26"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 0,
+      "assistsSum": 0,
+      "scorersSum": 0,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 2,
+      "opponentGoalsOnThePitch": 0,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 1,
+      "yellowCardGrossSum": 1,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 167,
+      "startingCount": 2,
+      "substitutedOutCount": 1,
+      "substitutedInCount": 0,
+      "appearancesCount": 2
+     }
+    }
+   },
+   {
+    "generalInformation": {
+     "seasonId": 2025,
+     "competitionId": "POWM",
+     "clubId": "3376",
+     "coachId": "27803",
+     "season": {
+      "id": 2025,
+      "display": "25/26",
+      "cyclicalName": "2026",
+      "nonCyclicalName": "25/26"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 0,
+      "assistsSum": 0,
+      "scorersSum": 0,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 2,
+      "opponentGoalsOnThePitch": 0,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 1,
+      "yellowCardGrossSum": 1,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 1
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 104,
+      "startingCount": 2,
+      "substitutedOutCount": 1,
+      "substitutedInCount": 0,
+      "appearancesCount": 2
+     }
+    }
+   },
+   {
+    "generalInformation": {
+     "seasonId": 2025,
+     "competitionId": "SCI",
+     "clubId": "46",
+     "coachId": "56780",
+     "season": {
+      "id": 2025,
+      "display": "25/26",
+      "cyclicalName": "2026",
+      "nonCyclicalName": "25/26"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 0,
+      "assistsSum": 1,
+      "scorersSum": 1,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 1,
+      "opponentGoalsOnThePitch": 1,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 0,
+      "yellowCardGrossSum": 0,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 90,
+      "startingCount": 1,
+      "substitutedOutCount": 0,
+      "substitutedInCount": 0,
+      "appearancesCount": 1
+     }
+    }
+   },
+   {
+    "generalInformation": {
+     "seasonId": 2025,
+     "competitionId": "FS",
+     "clubId": "3376",
+     "coachId": "527",
+     "season": {
+      "id": 2025,
+      "display": "25/26",
+      "cyclicalName": "2026",
+      "nonCyclicalName": "25/26"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 0,
+      "assistsSum": 0,
+      "scorersSum": 0,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 0,
+      "opponentGoalsOnThePitch": 0,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 0,
+      "yellowCardGrossSum": 0,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 0,
+      "startingCount": 0,
+      "substitutedOutCount": 0,
+      "substitutedInCount": 0,
+      "appearancesCount": 0
+     }
+    }
+   }
+  ],
+  "aggregated": {
+   "goalStatistics": {
+    "goalsSum": 2,
+    "assistsSum": 6,
+    "scorersSum": 8,
+    "ownGoalsSum": 0,
+    "teamGoalsOnThePitchSum": 80,
+    "opponentGoalsOnThePitch": 33,
+    "penaltyShooterAttempts": 0,
+    "penaltyShooterGoalsScored": 0,
+    "penaltyShooterSaves": 0,
+    "penaltyShooterMisses": 0,
+    "penaltyGoalkeeperAttempts": 0,
+    "penaltyGoalkeeperGoalsConceded": 0,
+    "penaltyGoalkeeperSaves": 0,
+    "penaltyGoalkeeperMisses": 0
+   },
+   "cardStatistics": {
+    "yellowCardNetSum": 10,
+    "yellowCardGrossSum": 10,
+    "yellowRedCardsCount": 0,
+    "redCardsCount": 1
+   },
+   "playingTimeStatistics": {
+    "playedMinutesSum": 3301,
+    "startingCount": 41,
+    "substitutedOutCount": 15,
+    "substitutedInCount": 1,
+    "appearancesCount": 42
+   }
+  },
+  "clubIds": [
+   "46",
+   "46",
+   "46",
+   "3376",
+   "46",
+   "3376"
+  ],
+  "coachIds": [
+   "56780",
+   "56780",
+   "56780",
+   "27803",
+   "56780",
+   "527"
+  ],
+  "competitionIds": [
+   "IT1",
+   "CL",
+   "CIT",
+   "POWM",
+   "SCI",
+   "FS"
+  ]
+ },
+ "season2026": {
+  "playerId": "315853",
+  "performance": [
+   {
+    "generalInformation": {
+     "seasonId": 2026,
+     "competitionId": "IT1",
+     "clubId": "46",
+     "coachId": "56780",
+     "season": {
+      "id": 2026,
+      "display": "26/27",
+      "cyclicalName": "2027",
+      "nonCyclicalName": "26/27"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 0,
+      "assistsSum": 0,
+      "scorersSum": 0,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 14,
+      "opponentGoalsOnThePitch": 8,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 1,
+      "yellowCardGrossSum": 1,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 482,
+      "startingCount": 6,
+      "substitutedOutCount": 3,
+      "substitutedInCount": 0,
+      "appearancesCount": 6
+     }
+    }
+   },
+   {
+    "generalInformation": {
+     "seasonId": 2026,
+     "competitionId": "CL",
+     "clubId": "46",
+     "coachId": "56780",
+     "season": {
+      "id": 2026,
+      "display": "26/27",
+      "cyclicalName": "2027",
+      "nonCyclicalName": "26/27"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 0,
+      "assistsSum": 0,
+      "scorersSum": 0,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 4,
+      "opponentGoalsOnThePitch": 6,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 0,
+      "yellowCardGrossSum": 1,
+      "yellowRedCardsCount": 1,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 248,
+      "startingCount": 3,
+      "substitutedOutCount": 0,
+      "substitutedInCount": 0,
+      "appearancesCount": 3
+     }
+    }
+   },
+   {
+    "generalInformation": {
+     "seasonId": 2026,
+     "competitionId": "UNLA",
+     "clubId": "3376",
+     "coachId": "524",
+     "season": {
+      "id": 2026,
+      "display": "26/27",
+      "cyclicalName": "2027",
+      "nonCyclicalName": "26/27"
+     }
+    },
+    "statistics": {
+     "goalStatistics": {
+      "goalsSum": 2,
+      "assistsSum": 0,
+      "scorersSum": 2,
+      "ownGoalsSum": 0,
+      "teamGoalsOnThePitchSum": 8,
+      "opponentGoalsOnThePitch": 3,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0
+     },
+     "cardStatistics": {
+      "yellowCardNetSum": 1,
+      "yellowCardGrossSum": 1,
+      "yellowRedCardsCount": 0,
+      "redCardsCount": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutesSum": 270,
+      "startingCount": 3,
+      "substitutedOutCount": 0,
+      "substitutedInCount": 0,
+      "appearancesCount": 3
+     }
+    }
+   }
+  ],
+  "aggregated": {
+   "goalStatistics": {
+    "goalsSum": 2,
+    "assistsSum": 0,
+    "scorersSum": 2,
+    "ownGoalsSum": 0,
+    "teamGoalsOnThePitchSum": 26,
+    "opponentGoalsOnThePitch": 17,
+    "penaltyShooterAttempts": 0,
+    "penaltyShooterGoalsScored": 0,
+    "penaltyShooterSaves": 0,
+    "penaltyShooterMisses": 0,
+    "penaltyGoalkeeperAttempts": 0,
+    "penaltyGoalkeeperGoalsConceded": 0,
+    "penaltyGoalkeeperSaves": 0,
+    "penaltyGoalkeeperMisses": 0
+   },
+   "cardStatistics": {
+    "yellowCardNetSum": 2,
+    "yellowCardGrossSum": 3,
+    "yellowRedCardsCount": 1,
+    "redCardsCount": 0
+   },
+   "playingTimeStatistics": {
+    "playedMinutesSum": 1000,
+    "startingCount": 12,
+    "substitutedOutCount": 3,
+    "substitutedInCount": 0,
+    "appearancesCount": 12
+   }
+  },
+  "clubIds": [
+   "46",
+   "46",
+   "3376"
+  ],
+  "coachIds": [
+   "56780",
+   "56780",
+   "524"
+  ],
+  "competitionIds": [
+   "IT1",
+   "CL",
+   "UNLA"
+  ]
+ }
+}

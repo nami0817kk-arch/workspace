@@ -1,0 +1,348 @@
+{{Short description|British subsidiary company}}
+{{More footnotes needed|date=September 2010}}
+{{Use dmy dates|date=August 2021}}
+{{Use British English|date=October 2013}}
+{{Infobox company
+| name                = Nissan Motor Manufacturing (UK) Ltd.
+| logo                = Nissan 2020 logo.svg
+| image               = Nissan Motor Works from the Air - geograph.org.uk - 486110.jpg
+| image_caption       = Nissan Motor Manufacturing UK from the Air, 2004
+| type                = Subsidiary
+| traded_as           =
+| predecessor         = 
+| successor           = 
+| founder             = 
+| defunct             = 
+| fate                = 
+| area_served         = Worldwide
+| key_people          = Andrew Humberstone (managing director)<ref>{{Cite web | title=Nissan appoints Andrew Humberstone as NMGB Managing Director | url=https://europe.nissannews.com/en-GB/releases/nissan-appoints-andrew-humberstone-as-nmgb-managing-director | archive-url=https://web.archive.org/web/20250726135716/https://europe.nissannews.com/en-GB/releases/nissan-appoints-andrew-humberstone-as-nmgb-managing-director | access-date=2026-07-08 | archive-date=2025-07-26}}</ref>
+| industry            = [[Automotive industry|Automotive]]
+| genre               = 
+| products            = Automobiles
+| services            = 
+| revenue             = 
+| operating_income    = 
+| net_income          = 
+| aum                 = 
+| assets              = 
+| equity              = 
+| owner               = 
+| num_employees       = approximately 6000<ref>{{cite news |title=British-built Nissan Qashqai confirmed as UK's best-selling new car of 2022|url=https://uk.nissannews.com/en-GB/releases/release-11a3798e690982990d7a74e66d1493a6-british-built-nissan-qashqai-confirmed-as-uks-best-selling-new-car-of-2022 |work=Nissan Official Great Britain Newsroom|date=5 January 2022}}</ref>
+| parent              = [[Nissan]]
+| divisions           = 
+| subsidiaries        = 
+| footnotes           = 
+| founded             = 1984
+| hq_location_city    = [[Sunderland]]
+| hq_location_country = England
+| hq_location         = 
+| num_locations       = 
+| website             = {{URL|www.nissan.co.uk}} 
+}}
+
+'''Nissan Motor Manufacturing (UK) Ltd''' ('''NMUK''') is a British subsidiary car manufacturing plant in [[Sunderland]]. It is owned and operated by the European division of Japanese car manufacturer [[Nissan]].
+
+== Geography ==
+Nissan Motor Manufacturing UK is located in Sunderland, Tyne and Wear, in [[North East England]]. It was built on the site of the former [[RAF Usworth]] airfield near the [[A19 road|A19]] and [[A1231 road|A1231]]. The factory is adjacent to the UK Nissan Distribution Centre (NDS) and has a number of on-site suppliers. The landscaped NMUK site incorporates [[conservation area]]s, such as ponds, lakes and woodland, and currently has 10 onsite wind turbines of the Vestas V47/660 type, producing up to 10% of the energy required for the plant. The site is located {{convert|5|mi|0}} from the [[Port of Tyne]] where international distribution is also based.{{Citation needed|date=May 2023}}
+
+== History ==
+Nissan had been importing cars from its native country Japan to the UK since 1968, under the [[Datsun]] brand (which was phased out between 1982 and 1984, when the Nissan brand took over completely).  After a steady start, its market share rose dramatically from just over 6,000 car sales in 1971 to more than 30,000 a year later, and reaching 100,000 a year before the end of the decade, aided by competitive prices, good equipment levels and a reputation for producing reliable cars. The success of Datsun came at a time when the British car industry, particularly [[British Leyland]], was blighted by strikes as well as reports of disappointing build quality and reliability of many of its cars.<ref>{{cite web|url=http://www.reallyloud.co.uk/1970s-best-selling-uk-cars/|title=The 1970's best selling UK cars|publisher=Reallyloud.co.uk|access-date=29 March 2017|archive-date=30 March 2017|archive-url=https://web.archive.org/web/20170330085244/http://www.reallyloud.co.uk/1970s-best-selling-uk-cars/|url-status=dead}}</ref>
+
+In February 1984, Nissan and the UK government signed an agreement to build a car plant in the UK. The following month a {{convert|799|acre|km2|adj=on}} greenfield site in Sunderland, Tyne and Wear, was chosen. As an incentive the land was offered to Nissan at agricultural prices; around £1,800 per acre. The [[North East England|North East region of England]] had recently undergone a period of [[deindustrialization|industrial decline]], with the closure of most of the [[shipyards]] on the [[River Wear|Wear]] and [[river Tyne|Tyne]], and the closure of many [[coal mining|coal mines]] on the once prosperous [[Durham, England|Durham]] coalfield. The high unemployment this caused meant Nissan had a large, eager, manufacturing-skilled workforce to draw upon. The site, once the Sunderland Airfield (formerly [[RAF Usworth]]), was close to ports on the Wear and Tyne, within easy driving distance of the international [[Newcastle International Airport|Newcastle Airport]], and close to major trunk roads such as the [[A1 road (Great Britain)|A1]] and A19, as well as major ports for the export of vehicles. The established company became known as Nissan Motor Manufacturing (UK) Ltd, or NMUK. A ground breaking ceremony took place in July, and work began on the site in November 1984, by building contractors [[Sir Robert McAlpine]].<ref name=mcalpine>{{cite news|url=https://www.chroniclelive.co.uk/news/history/30-years-ago-japanese-car-11663509|title=30 years ago: Japanese car giant Nissan arrives in the North East|date=26 July 2016|newspaper=Chronicle Live|access-date=14 October 2022}}</ref>
+
+One of Nissan's more controversial demands during the talks was that the plant be single-[[trade union|union]]. This was unprecedented in UK industry. In April 1985, an agreement was reached with the [[Amalgamated Engineering Union]] (AEU). However, critics argue that this means the plant workforce is weakly represented, as workers are only members of one single union. Nissan argues that as a result of the single-union agreement, its workforce is much more flexible than at other plants, and it points to the fact that not a single minute has been lost to [[strike action|industrial disputes]] at the factory in more than 30 years of production – a stark contrast to the strikes which hit the likes of British Leyland during the 1970s.{{Citation needed|date=May 2023}}
+
+[[File:Nissan Bluebird T72 1.8GS Hatchback at sunset.jpg|thumb|The [[Nissan Violet#T12|Nissan Bluebird]] was the first car to be produced at the factory.]]
+In December 1985, McAlpine handed over the completed factory building to Nissan for the installation of machinery and factory components, ahead of schedule.<ref name=mcalpine/> Phase 1 of the plant construction was completed in July 1986, consisting of a body, paint and final assembly Line.  The first [[Nissan Bluebird|Bluebird]] was produced shortly after and is on display at the [[Sunderland Museum and Winter Gardens]]. Official opening of the plant by then Prime Minister [[Margaret Thatcher]] and Nissan President Yutaka Kume took place in September 1986. By February 1987, NMUK had become the sole supplier of the Bluebird model to the UK market, after a brief spell of importing Japanese built models, and work on phase two of the plant began, with [[injection moulding|plastics moulding]] and engine assembly beginning in 1988, and was completed in May 1990.  This would prove to be a landmark year for the plant, with the introduction of the [[Nissan Primera|P10 Primera]], the first model to be wholly built at NMUK, replacing the Bluebird and going into production that summer. By 1991, despite the [[Early 1990s recession|recession]], the plant turned its first profit of £18.4&nbsp;million, and was awarded 'British Manufacturer' status by the [[Society of Motor Manufacturers and Traders]] (SMMT). Around this time, Nissan ended its relationship with [[Octav Botnar]] and the [[Automotive Financial Group]] (AFG), which had been its UK import concessionaire since 1970, and brought the import and distribution business in-house, basing it at the Sunderland plant. In August 1992, the plant began to produce two models, with the introduction of the highly successful [[Nissan Micra|Micra]], which was the first car of a Japanese brand to be voted "[[European Car of the Year]]". The Micra proved particularly popular with British and continental buyers, and was in production for a whole decade until the launch of the next generation Micra.{{Citation needed|date=February 2023}}
+
+The early 21st century was a period of growth for the plant, with the plant being awarded contracts to build the updated [[Nissan Almera|Almera]] from the end of 1999, becoming a three-model plant, and continuation of the Micra and Primera model changes. The [[Nissan Micra C+C|Micra C+C]] was also produced there after the introduction of a new Micra [[hatchback]] at the end of 2002.{{Citation needed|date=May 2023}}
+
+Late 2005 saw the introduction of the [[Nissan Note|Note]] model, and a year later came the demise of the Almera and the introduction of the [[Nissan Qashqai|Qashqai]]. At this point, NMUK had built a reputation for being the most efficient plant in Europe.{{Citation needed|date=May 2023}}
+
+The Primera five-door model had the distinction of being the first model built at NMUK to be exported to the Japanese market. By 2008, however, falling sales led to its demise (UK sales had finished two years earlier). The Qashqai became the main model for the plant, with such high demand that a night shift was introduced to keep up. Nearly 5,000 workers were employed at the plant by this stage; albeit 1,200 of them were made redundant in January 2009 as a result of the [[Late 2000s recession|recession]] which saw demand for new cars slump.<ref>{{cite web|url=http://www.scotsman.com/news/nissan-sheds-1-200-jobs-as-slump-hits-uk-s-biggest-car-factory-1-753035|title=Nissan sheds 1,200 jobs as slump hits UK's biggest car factory|publisher=The Scotsman}}</ref>
+
+Despite a temporary suspension of the third shift due to the [[automotive industry crisis of 2008]], the third shift was reintroduced, and the strong demand for the Qashqai has helped NMUK remain strong throughout the crisis.{{Citation needed|date=May 2023}}
+
+After the crisis, Nissan announced that the new [[Nissan Juke|Juke]] model would be built starting in July 2010, replacing the Micra (now produced in [[Chennai]], India) and that NMUK would be the European manufacturing location for the Electric Vehicle [[Nissan Leaf|Leaf]] model beginning in 2011, as well as an on-site lithium-ion battery manufacturing facility for an investment of £420 million (US$636 million), backed by the U.K. government.<ref>{{cite web |title=Nissan LEAF Production Starts At 3rd Assembly Plant In Sunderland, UK (27 March 2013) |url=https://insideevs.com/news/317436/nissan-leaf-production-starts-at-3rd-assembly-plant-in-sunderland-uk-factory-video/ |website=InsideEVs |access-date=28 April 2020 |language=en}}</ref> 2013 saw the introduction of the second-generation Note and Qashqai.
+
+Nissan's Sunderland plant in northeast England will play an important role in the firm's future, executives said in May 2020, despite plans to downsize elsewhere in Europe.<ref>[https://www.forbes.com/sites/alasdairlane/2020/05/31/brexit-boost-as-nissan-backs-britain-over-europe/#7cd43e315681 Brexit Boost As Nissan Backs Britain Over Europe], [[Forbes]], 31 May 2020</ref>
+
+In July 2021, Nissan announced plans to create 400 jobs at the Sunderland factory site to build a new electric vehicle and models such as the Juke, Qashqai and the Leaf.<ref>{{Cite web|date=26 July 2021|title=Nissan to create 400 jobs at Sunderland car factory|url=http://www.theguardian.com/business/2021/jul/26/nissan-to-create-400-jobs-at-sunderland-car-factory|access-date=28 July 2021|website=The Guardian|language=en}}</ref> This development forms part of plans to create 6,000 new jobs in Sunderland at Nissan and among its suppliers, under a blueprint announced by the company earlier in July as it invests £1bn to develop an electric vehicle manufacturing hub in the United Kingdom.<ref>{{Cite web|date=1 July 2021|title=Nissan sets out plans for £1bn electric car hub in Sunderland|url=http://www.theguardian.com/business/2021/jul/01/nissan-sets-out-plans-for-1bn-electric-car-hub-in-sunderland|access-date=6 August 2021|website=The Guardian|language=en}}</ref>
+
+In 2025, 273,000 cars were manufactured, 3% fewer than in 2024, and less than half of the plant's maximum production capacity of about 600,000 cars. In May 2026, Nissan consolidated all its production onto one of the two production lines, without a reduction of its about 6,000 employees. This created the possibility of a contract to build cars for Chinese manufacturer [[Chery]] in 2027.<ref name=guardian-20260603>{{cite news |url=https://www.theguardian.com/business/2026/jun/03/nissan-chery-car-building-deal-sunderland-factory |title=Nissan maps out deal to build cars for China's Chery at its Sunderland plant |last=Jolly |first=Jasper |newspaper=The Guardian |date=3 June 2026 |access-date=3 June 2026}}</ref>
+
+==Models produced at Nissan Motor Manufacturing UK ==
+[[File:2018 Nissan Leaf Tekna Front.jpg|thumb|The electric [[Nissan Leaf]] is produced at the plant.]]
+
+=== Current models ===
+* [[Nissan Qashqai]] (2006–present)
+* [[Nissan Juke]] (2010–present)
+* [[Nissan Leaf]] (2012–2024, 2025–present)
+* [[Nissan Kicks]] (2026–present)<ref>{{Cite web|title=Nissan Announces a New Model for Europe, with Production Planned for Sunderland, UK |url=https://uk.nissannews.com/en-GB/releases/nissan-announces-a-new-model-for-europe-with-production-planned-for-sunderland-uk |date=2026-09-16 |access-date=2026-09-16 |website=Nissan |language=en}}</ref>
+
+===Former models ===
+* [[Nissan Bluebird]] (1986–1990)
+* [[Nissan Primera]] (1990–2008)
+* [[Nissan Micra]] (1992–2010)
+* [[Nissan Almera]] (2000–2006)
+* [[Nissan Note]] (2005–2017)
+* [[Infiniti Q30]] (2015–2019)
+* [[Infiniti QX30]] (2016–2019)
+
+=== Production by model ===
+
+{| class="wikitable" style="float:center; clear:center; margin:0em 0em 1em 1em; text-align:center"
+|-
+! Year !! Qashqai !! Juke !! Note !! Leaf !! Micra !!  Q30/QX30 !! Total 
+|-
+| 2008 || 224,989 ||| – || 77,819 || – || 83,747 || – || '''386,555'''
+|-
+| 2009 || 198,841 || – || 50,880 || – || 88,429 || – || '''338,150'''
+|-
+| 2010 || 271,188 || 44,622 || 52,872 || – || 54,580 || – || '''423,262''' 
+|-
+| 2011 || 301,277 || 132,606 || 46,602 || – || – || – || '''480,485''' 
+|-
+| 2012 || 310,837 || 154,759 || 44,884 || 92 || – || – || '''510,572''' 
+|-
+| 2013 || 286,477 || 147,954 || 58,901 || 8,424 || – || – || '''501,756''' 
+|-
+| 2014 || 285,110 || 132,646 || 65,143 || 17,339 || – || – || '''500,238''' 
+|-
+| 2015 || 352,897 ||??? ||??? ||??? ||– || – || '''???''' 
+|-
+| 2016 ||??? ||??? ||??? ||??? ||– || – || '''507,544''' 
+|-
+| 2017 || 324,000 || 111,000 || 30,000 || 20,000 || – || 34,000 || '''519,000''' 
+|-
+| 2018 || – || – || – || – || – || – || – 
+|-
+|2019
+|
+|
+|–
+|
+|–
+|–
+|
+|-
+|2020
+|
+|
+|–
+|
+|–
+|–
+|
+|-
+|2021
+|
+|
+|–
+|
+|–
+|–
+|
+|-
+|2022
+|157,619<ref>{{Cite web |date=2023-01-05 |title=British-built Nissan Qashqai confirmed as UK's best-selling new car of 2022 |url=https://uk.nissannews.com/en-GB/releases/british-built-nissan-qashqai-confirmed-as-uks-best-selling-new-car-of-2022 |access-date=2023-01-08 |website=Official Great Britain Newsroom |language=en-GB}}</ref>
+|???
+|–
+|???
+|–
+|–
+|'''238,329'''<ref name=":0">{{Cite web |date=2024-01-25 |title=Nissan tops UK car manufacturing league for 2023 in stellar year for production |url=https://cardealermagazine.co.uk/publish/nissan-tops-uk-car-manufacturing-league-for-2023-in-stellar-year-for-production/296601 |access-date=2024-03-20 |website=Car Dealer Magazine |language=en}}</ref>
+|-
+|2023
+|???
+|???
+|–
+|???
+|–
+|–
+|'''324,893'''<ref name=":0" />
+|}
+
+According to Richard Aucock of Motoring Research, NMUK produced 507,444 cars at their Sunderland plant during 2016, making it the 2nd largest UK manufacturer behind [[Jaguar Land Rover]]. JLR reportedly produced 544,401 cars during the same period. No breakdown of figures to illustrate volumes per model have been published yet.<ref>{{cite web|url=https://www.motoringresearch.com/car-news/britains-biggest-car-makers-2016-ranked|title=Britain's biggest car makers 2016 – ranked|publisher=Motoring Research}}</ref><ref>{{cite web|url=https://www.chroniclelive.co.uk/business/business-news/nissan-sees-sales-profits-drop-15665313|title=Nissan sees sales and profits drop amid falling car production numbers|date=11 January 2019|publisher=Chronicle Live }}</ref>
+
+== Plant functions ==
+[[File:Nissan_Qashqai_1.jpg|thumb|The [[Nissan Qashqai]] is produced at the plant.]]
+NMUK is split into three logical areas: Body Assembly, Paint and Final Assembly. Each is further broken down into areas known as 'shops'.{{Citation needed|date=May 2023}}
+
+'''Press shop'''
+
+The first shop in the manufacturing process, the Press Shop is responsible for pressing the outer and inner body panels of the vehicle. NMUK houses a 5,000 tonne press capable of pressing two panels simultaneously – one of only two in use in any Nissan plant.{{Citation needed|date=May 2023}}
+
+'''Body shop'''
+
+Linked directly to the Press Shop, the Body Shop is a highly automated section of the factory with over 500 [[robot]]s in operation. Pressed-panels are welded together to create complete body shells.{{Citation needed|date=May 2023}}
+
+'''Body Paint shop'''
+
+Body shells are painted in a semi-clean environment using solvent-based paint. Shells are dipped in chemical tanks to cleanse them of any oils picked up on the panels during their manufacture in Body Shop. Once bodies have been dipped and cleansed, they are then immersed in an anti-corrosion paint dip called ED (Electrocoat Dip). This 'dip' coats the entire body, both inside and outside, and is the first paint coating it will receive. Once the 'dipped' body has been stoved in the ED oven, the body progresses to the 'Sealing' Booth. In this booth, the body has its interior panel joints, floor, tailgate, hood and door edges sealed with a PVC based sealant to prevent water ingress and corrosion as the car is driven on the road. Also within this zone, sound pads are added to the floor and boot to reduce road noise (standard practice in the motor industry). {{Citation needed|date=May 2023}}
+
+The next booth it enters is the 'Underbody' Booth. In this booth, similar to 'Sealing' Booth, the body's wheel arches are sealed using the same PVC based sealant. Robots then apply the [[underseal]] to the underfloor and wheel arches. Also robots are used to apply the SGC (Stone Guard Coat) layer to the sills: this coating is designed for abrasion resistance, i.e. preventing stone chips, scuffs, etc. From here, the body proceeds into the Undercoat Oven. The next zone is 'ED Sanding' booth where the body is inspected for any minor imperfections received in the ED Coat. The next zone is the 'Surfacer' Booth, where the body receives its second coat of paint, this being the Surfacer Coat, then into the Surfacer Oven. Next is 'Surfacer Sanding' Booth: the same as ED Sanding, this zone inspects the body for any imperfections picked up within the Surfacer coating. Next comes the 'Topcoat' Booth, where the body receives its final coats of paint, these being Topcoat and Clearcoat layers. After being stoved in the Topcoat oven, the body then enters the 'Touch-up' Booth where the body has its final inspection for any imperfections picked up in the Topcoat process. Once the body leaves here, it then moves on to the PBS (Painted Body Store) above Trim and Chassis to await the next step in the production process.{{Citation needed|date=May 2023}}
+
+Over £10m has been invested into the Paint Shop, in readiness for the upcoming introduction of Infiniti models Q30 & QX30, making Nissan Sunderland, the first plant outside Japan to produce this luxury brand, alongside its current models.{{Citation needed|date=May 2023}}
+
+'''Plastics shop'''
+
+Plastic components such as [[Bumper (automobile)|bumpers]] are injection-moulded on site.{{Citation needed|date=May 2023}}
+
+'''Plastic Paint Shop'''
+
+Bumpers molded in the Plastics shop are painted in the Plastic Paint shop which directly feeds Trim & chassis. The shop uses a combination of manual sprayers and robots to coat up to 900 bumper sets per shift. The process in Plastic Paint is similar to body paint, the parts are washed in a Powerwash facility before being masked (dependent on trim level). From here the parts are painted with primer, then basecoat, some colours get two coats of basecoat at different stations (Pearlescent effect). Then all part receive a layer of clearcoat before being stoved in an oven.{{Citation needed|date=May 2023}}
+
+'''Casting shop'''
+
+Aluminium engine components such as [[cylinder head]]s are produced in the state-of-the-art Casting plant.{{Citation needed|date=May 2023}}
+
+'''Unit shop'''
+
+1.2 turbo, 1.2 supercharged, 1.6 and 2.0 litre petrol engines are built on-site on the Unit Assembly line. The cylinder heads and camshafts are machined along the machining line before being shipped to the Assembly line. The Unit Shop contains its own engine testing areas. [[Diesel engine]]s are no longer produced at NMUK.{{Citation needed|date=May 2023}}
+
+'''Axle shop'''
+
+A second welding facility costing over £5m is currently being built to ease demand on the Axle Shop for Qashqai.{{Citation needed|date=May 2023}}
+
+'''Trim & chassis'''
+
+There are two parallel assembly lines in NMUK: Line 2 currently handles the Juke, Qashqai and Leaf; Line 1 handles the Qashqai and Qashqai E-Power. Painted bodies are stored in a large holding area called PBS (Painted Body Store), and are released in a specific scheduled sequence. They are brought into Trim & Chassis on suspended cradles. Each body moves through the assembly line and is fitted with interior (Trim), and exterior (Chassis) components. At one point in the process, the bodies are 'married' to a sub-assembled engine and subframe. Completed vehicles are sent down a Final Line, where all aspects of the car, from brakes to waterproofing, are tested. The car is then driven off-line to a holding area, ready to be distributed to a dealer.{{Citation needed|date=May 2023}}
+
+[[File:NMUK.JPG|thumb|right|The plant viewed from the south]]
+
+== Offices ==
+
+Although the plant is made up primarily of manufacturing areas, there is also a large office complex, housing supporting functions including: Personnel, Community Relations, Production Control, Engineering, Finance, Purchasing and Information Systems. Some of these support functions, including Purchasing, Finance and Information Systems are not just responsible for NMUK but for Nissan Europe as well. During a company restructuring exercise in 2003, large parts of the Purchasing department were relocated to [[Cranfield]]. This angered many in the plant, but widespread industrial action was avoided. In 2005, parts of the Finance department were relocated to [[Budapest]] in Hungary. In both instances, NMUK adopted a policy of finding new jobs in other departments for those who did not want to relocate.{{Citation needed|date=May 2023}}
+
+== Information technology ==
+
+NMUK relies heavily on information technology to function. Computer-controlled robots and other machinery, particularly in the body shop, are vital to production. These machines are maintained and controlled by specialist engineering teams. Other functions, such as the complex scheduling of vehicles, parts control and ordering, vehicle tracking, etc. are managed by software written in-house. Most of the software resides on an [[IBM]] mainframe computer. This mainframe is not just responsible for NMUK; it controls business functions across the Europe region, including NMUK's sister plant, [[Nissan Motor Ibérica|NMISA]], based in [[Barcelona]], Spain. The mainframe is located within the European Data Centre (EDC), which houses and maintains the mainframe and over 50 [[Server (computing)|servers]].{{Citation needed|date=May 2023}}
+
+== Workforce and productivity ==
+[[File:2017 Infiniti Q30 SE Diesel 1.5 Front.jpg|thumb|The plant has also produced cars for Nissan's luxury [[Infiniti]] brand.]]
+NMUK is one of the most productive car plants in Europe, producing more cars per worker than any other factory. There are 7000 staff directly employed by NMUK, and approximately 500 contracted, indirect staff. Employees at NMUK work a standard 39-hour week. While Office staff work on a fixed day shift basis, manufacturing staff work alternating morning and evening [[shift work|shifts]]. Morning shifts run from 7 am to 3:18 pm. Evening shifts run from approximately 4:35 pm to 12:53 am. Shift times can vary depending on requirements. When required, overtime is worked, although it balanced out during the year with planned downtime.{{Citation needed|date=May 2023}}
+
+A 3-shift system has been introduced at times of high demand, meaning that the factory is active 24 hours a day.  This is something that is only introduced if NMUK officials can be sure demand is high enough.
+Line 1 ran three shift production from August 2008 to the start of January 2009 to meet unprecedented demand for the Qashqai, however due to the credit crunch and falling orders the third shift was suspended and people released by voluntary redundancy.
+Line 1 reintroduced the 3rd shift from Jan 2010 until December 2019. This was removed due to the volatility of the car market.{{Citation needed|date=May 2023}}
+
+Staff at NMUK use a number of methods to ensure productivity remains high. Three of the main ones are [[Kaizen]], [[Just In Time (business)|Just in Time]] and Job Rotation.{{Citation needed|date=May 2023}}
+
+In July 2011, Nissan announced that it would be recruiting a further 200 jobs at the plant to deal with "record" levels of production.<ref>{{cite news|url=https://www.bbc.co.uk/news/uk-england-tyne-14230231|title=Sunderland's Nissan creates 200 new jobs|work=BBC News|date=21 July 2011}}</ref>
+
+'''Kaizen'''
+
+Kaizen is a Japanese word meaning Continuous Improvement. NMUK encourages all of its workforce to seek out areas in which improvements in their working environment, no matter how small, can be made. For example, a line-worker may have to bend down to pick a part out of a box as each vehicle goes past. This could have health and safety implications, as well as wasting time. Kaizen teams would then investigate, and possibly introduce a method in which the box is stored at an optimum height, within easy reach of the line-worker.
+Kaizen teams are based in every department. The emphasis is on small, manageable improvements, although large Kaizen projects have been undertaken, e.g. platforms that follow the vehicle down the line to prevent workers from having to walk alongside it while working.{{Citation needed|date=May 2023}}
+
+'''Just in Time (JIT)'''
+
+The JIT philosophy, encourages the use of the minimum amount of resources (e.g. space, time, material, workers) necessary to add value to a product.
+NMUK uses this management technique throughout the factory and beyond. Synchronous Suppliers deliver parts line-side only when they are required, therefore reducing the need to store large supplies of parts at great cost.{{Citation needed|date=May 2023}}
+
+'''Job rotation'''
+
+To keep the workforce flexible, NMUK operates a policy of '1 worker -> 3 jobs, 3 workers -> 1 job'. In other words, a worker should be competent in at least three different jobs, and at least three people should be capable of doing each job.
+This principle ensures that each job can be covered in the case of absence. It also means that jobs can be regularly rotated to prevent a worker from becoming bored in a particular role.{{Citation needed|date=May 2023}}
+
+== Training ==
+
+In accordance with its [[Investors in People]] responsibilities, NMUK has a Training department offering a range of on and off-the-job training. The Flexible Learning Centre established on-site is open to all staff and allows them to take part in over 300 courses.{{Citation needed|date=May 2023}}
+
+Technical on-the-job training is available to all staff, and most of the courses are given on-site by qualified trainers. People-development courses (e.g. presentation skills) are also provided. NMUK spends more per head on staff-development than the British industry average.{{Citation needed|date=May 2023}}
+
+NMUK has a Continuous Development Programme (CDP) whereby staff are given personal and professional objectives every year, and are appraised against the objects. This appraisal is linked to pay increases. This is also an opportunity for staff to identify where further training may be appropriate.{{Citation needed|date=May 2023}}
+
+== References ==
+{{Reflist}}
+
+== External links ==
+{{Commons category}}
+*{{Official website|http://www.nissan.co.uk }}
+*{{gbmapping|NZ340582}}
+
+{{navboxes top|title=Nissan Motor Manufacturing UK car timeline}}
+{| style="font-size:88%; width:100%;"
+|- style="background:#EFEFEF;"
+|rowspan=2 width=7.2%| '''Type'''
+|colspan=4 width=29%| 1980s
+|colspan=10 width=29%| 1990s
+|colspan=10 width=29%| 2000s
+|colspan=6 width=5.8%| 2010s
+|- style="background:#EFEFEF;"
+|width=2.9%|6||width=2.9%|7||width=2.9%|8||width=2.9%|9
+|width=2.9%|0||width=2.9%|1||width=2.9%|2||width=2.9%|3||width=2.9%|4||width=2.9%|5||width=2.9%|6||width=2.9%|7||width=2.9%|8||width=2.9%|9
+|width=2.9%|0||width=2.9%|1||width=2.9%|2||width=2.9%|3||width=2.9%|4||width=2.9%|5||width=2.9%|6||width=2.9%|7||width=2.9%|8||width=2.9%|9
+|width=2.9%|0||width=2.9%|1||width=2.9%|2||width=2.9%|3||width=2.9%|4||width=2.9%|5
+|- style="background:#E0E0E0;"
+|style="background:#EFEFEF;" rowspan=2| [[Supermini car|Supermini]]
+|colspan= 4|
+|colspan= 3|
+|colspan=10 style="background:#C0C0C0;"| [[Nissan March|Micra K11]]
+|colspan= 8 style="background:#C0C0C0;"| [[Nissan March|Micra K12]]
+|colspan= 5|
+|- style="background:#E0E0E0;"
+|colspan=4|
+|colspan=10|
+|colspan= 5|
+|colspan= 6 style="background:#C0C0C0;"| [[Nissan Micra C+C|Micra C+C CK12]]
+|colspan= 5|
+|- style="background:#E0E0E0;"
+|style="background:#EFEFEF;"| [[Small family car]]
+|colspan= 4|
+|colspan= 10|
+|colspan= 7 style="background:#C0C0C0;"| [[Nissan Almera|Almera N16]]
+|colspan= 3|
+|colspan= 6|
+|- style="background:#E0E0E0;"
+|style="background:#EFEFEF;"| [[Large family car]]
+|colspan= 5 style="background:#C0C0C0;"| [[Nissan Bluebird|Bluebird T12/T72]]
+|colspan= 5 style="background:#C0C0C0;"| [[Nissan Primera|Primera P10]]
+|colspan= 6 style="background:#C0C0C0;"| [[Nissan Primera|Primera P11]]
+|colspan= 7 style="background:#C0C0C0;"| [[Nissan Primera|Primera P12]]
+|colspan= 1|
+|colspan= 6|
+|- style="background:#E0E0E0;"
+|style="background:#EFEFEF;"| [[Mini MPV]]
+|colspan= 4|
+|colspan=10|
+|colspan= 6|
+|colspan= 7 style="background:#C0C0C0;"| [[Nissan Note|Note E11]]
+|colspan= 3 style="background:#C0C0C0;"| [[Nissan Note|Note E12]]
+|- style="background:#E0E0E0;"
+|style="background:#EFEFEF;"| [[Mini SUV]]
+|colspan= 4|
+|colspan=10|
+|colspan=10|
+|colspan= 6 style="background:#C0C0C0;"| [[Nissan Juke|Juke F15]]
+|- style="background:#E0E0E0;"
+|style="background:#EFEFEF;" rowspan=2| [[Crossover SUV]]
+|colspan= 4|
+|colspan=10|
+|colspan= 7|
+|colspan= 6 style="background:#C0C0C0;"| [[Nissan Qashqai|Qashqai J10]]
+|colspan= 3 style="background:#C0C0C0;"| [[Nissan Qashqai|Qashqai J11]]
+|- style="background:#E0E0E0;"
+|colspan=4|
+|colspan=10|
+|colspan= 8|
+|colspan= 5 style="background:#C0C0C0;"| [[Nissan Qashqai|Qashqai+2 NJ10]]
+|colspan= 3|
+|}
+{{navboxes bottom}}
+{{Nissan}}
+{{Automotive industry in the United Kingdom}}
+{{City of Sunderland}}
+{{Authority control}}
+{{Coord|54|55.2209|N|1|28.14239|W|region:GB|display=title}}
+
+{{DEFAULTSORT:Nissan Motor Manufacturing Uk}}
+[[Category:Vehicle manufacturing companies established in 1984]]
+[[Category:Companies based in the City of Sunderland]]
+[[Category:Nissan]]
+[[Category:Economy of the City of Sunderland]]
+[[Category:British subsidiaries of foreign companies]]
+[[Category:Motor vehicle assembly plants in the United Kingdom]]
+[[Category:1984 establishments in England]]
+[[Category:British companies established in 1984]]

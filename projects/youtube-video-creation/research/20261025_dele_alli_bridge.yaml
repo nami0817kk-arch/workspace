@@ -1,0 +1,143 @@
+# 取材メモ（2026年10月25日）デレ・アリがスタンフォード・ブリッジの客席に（ショートだけ・見せ方 X＝冒頭に強い一言）
+# 取材: 2026-10-25。ESPN（PA 配信、2026-10-24 20:24Z「Dele Alli proves Spurs' good luck charm at Stamford Bridge again」）の本文を
+#   ESPN の記事API（now.core.api.espn.com/v1/sports/news/50269221）で全部読んだ。控え research/raw/20261025_dele_espn.txt・_api.json。
+#   本文: 2018年のチェルシー戦の主役デレが、土曜にスタンフォード・ブリッジで観戦。ペンダースのオウンゴールとテルの単独突破の1点で、
+#   スパーズはプレミア時代（PL era）でチェルシーの本拠地2度目の勝利。デレはインスタのストーリーに元チェルシー主将テリーとの自撮り。
+#   事前に「僕がどこへ行くか、分かる人いる？」（who can guess where I'm going?）の画像→スタンフォード・ブリッジの画像。
+#   77分にスパーズが先制した場面で得点板を撮影。試合後は「ここはもう空席だ」（empty seat here now）と、テリーのいない席の写真。
+#   デレは30歳。2024-25シーズンのコモ以来、試合に出ていない（本文どおり。理由は書かれていないので言わない）。
+# 2018年の試合（一次情報）: プレミアリーグ公式の試合データ（footballapi.pulselive.com fixtures/22654、控え research/raw/20261025_dele_2018_pl.json）
+#   2018年4月1日（日）スタンフォード・ブリッジ、チェルシー 1-3 トッテナム。得点: モラタ30分（チェルシー）、エリクセン45+1分、デレ・アリ62分・66分。観客41,364人。
+#   ESPN の試合記録（event 480594）とも一致（デレは先発・シュート3本・枠内2本・2得点）。
+# 今日の試合（ESPN の試合記録 event 401878767、2026-10-24 16:30Z、控え research/raw/20261025_dele_match_20261024.json）:
+#   チェルシー 0-2 トッテナム。77分ペンダースのオウンゴール、80分パーマー退場（2枚目の黄）、87分テル。
+#   ※パーマーの退場は71分の黄＋80分の赤（記録の並びどおり）。退場の中身は言わない（主役ではない）。
+# 言わないこと: デレの私生活・心の健康・いまの所属や移籍先（本文に無い・扱わない）、テリーの反応（本文に無い）、
+#   「28年ぶり」など本文に無い記録、デ・ゼルビの発言（題9と同じ試合。主にしない）、得点板の動画の中身。
+# 本人の言葉: インスタのストーリーの一言（2つ）だけ。インタビューの言葉は無い → 型は X（Y にしない）。
+# 確度: 報道（ESPN/PA の記事。インスタの投稿そのものは見ていない）。2018年の数字は確定（プレミアリーグ公式のデータ）。今日の得点の分は ESPN の試合記録（報道）。
+# 反応: 作らない（0件）。
+# 写真: Commons の CC のみ（ESPN の写真は Getty なので使わない。インスタの画像も使わない）。どれもトッテナム／代表の現役時代。今日の客席の写真は無い。
+#   01＝2018年3月（CC BY 2.0 Tomasz Baranowski）、02＝2020年3月 CLライプツィヒ戦（CC BY-SA 4.0 Steffen Prößdorf）、
+#   03＝2017年5月（CC BY 2.0 dom fellowes）、04＝2017年4月 FA杯準決勝チェルシー戦（CC BY-SA 2.0、右の背番号20がデレ。縦は --center 0.81 でデレに寄せた）、
+#   05＝2018年W杯 イングランド代表（CC BY-SA 4.0。横の 05_w は 1006px と小さいので本文に使わず、縦 05_v だけショートで回す）。
+#   マンU戦2016の写真は群衆でデレが小さく外した。
+slot: premier
+date: "2026年10月25日"
+format: news
+no_main: true
+people: [デレ・アリ, トッテナム, チェルシー, テリー, テル]
+
+short_style: X
+short_hook_word: 2度目の勝利
+short_photos:
+  - assets/images/20261025_dele_alli_bridge/01_v.jpg
+  - assets/images/20261025_dele_alli_bridge/02_v.jpg
+  - assets/images/20261025_dele_alli_bridge/04_v.jpg
+
+short_question: デレ・アリの観戦は、トッテナムの験担ぎになると思いますか。
+short_hook: デレ・アリが客席に。スパーズ、チェルシーの本拠地でプレミア2度目の勝利。
+short_telops:
+  - {match: 客席, text: デレ・アリ（30歳）が/スタンフォード・ブリッジで観戦}
+  - {match: テリー, text: 元チェルシー主将テリーと/並んだ自撮りをインスタに}
+  - {match: オウンゴール, text: 77分 オウンゴールで先制/87分 テルが追加点}
+  - {match: 2度目の勝利, text: チェルシーの本拠地で/プレミア時代2度目の勝利}
+  - {match: 空席, text: 試合後のストーリー/「ここはもう空席だ」}
+  - {match: 4分で2点, text: 2018年4月1日/デレが62分と66分に2得点}
+
+theme:
+  id: dele_alli_bridge
+  league: england
+  league_name: プレミアリーグ
+  prefix: ""
+  title: デレ・アリがスタンフォード・ブリッジに。2018年の主役が見た2度目の勝利
+  hook: ""
+  question: 2018年の主役が見に来た日に、スパーズに何が起きたのか
+  takeaway: チェルシーの本拠地でのプレミア時代の勝利は、デレが2点を取った2018年と、デレが客席にいた今回の2度だけ
+
+thumbnail:
+  line1: デレ・アリが客席に
+  line2: 2度目の勝利
+  tags: [デレ・アリ, トッテナム]
+  layout: face
+  photo: assets/images/20261025_dele_alli_bridge/01_w.jpg
+  short_photo: assets/images/20261025_dele_alli_bridge/01_v.jpg
+
+answer: チェルシーの本拠地でプレミア時代2度目の勝利。1度目の2018年は、デレが2点を取った
+watch: 2度の勝利の両方に居合わせたデレ・アリ
+
+sections:
+  - id: what
+    main: true
+    heading: 客席にいたデレ・アリ
+    tier: 報道
+    telop: デレ・アリが、スタンフォード・ブリッジの客席に
+    say:
+      - text: 元トッテナムのデレ・アリ、30歳。試合の前、インスタにこう載せました。
+        short_only: true
+        image: assets/images/20261025_dele_alli_bridge/01_w.jpg
+        card: none
+      - voice: デレ・アリ
+        text: 僕がどこへ行くか、分かる人いる？
+      - text: 向かった先は、スタンフォード・ブリッジ。元チェルシー主将テリーとの自撮りも。
+        image: assets/images/20261025_dele_alli_bridge/02_w.jpg
+        card: none
+      - text: チェルシー戦、トッテナムは77分にオウンゴールで先制。デレは得点板を動画に。
+        image: assets/images/20261025_dele_alli_bridge/04_w.jpg
+        card: none
+      - text: 87分にはテルが1人で持ち込み、2対0の勝ち。
+        image: assets/images/20261025_dele_alli_bridge/01_w.jpg
+        card: none
+      - text: チェルシーの本拠地で、プレミアリーグになってから2度目の勝利です。
+        emph: true
+        image: assets/images/20261025_dele_alli_bridge/02_w.jpg
+        card: none
+      - text: 1度目は2018年4月。デレが4分で2点を決めて、3対1で勝った試合でした。
+        emph: true
+        image: assets/images/20261025_dele_alli_bridge/04_w.jpg
+        card: none
+      - text: 試合後、デレはテリーのいない席の写真を載せました。
+        image: assets/images/20261025_dele_alli_bridge/01_w.jpg
+        card: none
+      - voice: デレ・アリ
+        text: ここはもう空席だ。
+        short_voice: true
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50269221
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20261024
+      - https://www.premierleague.com/match/22654
+    quotes_from: ["ESPN https://www.espn.com/soccer/story/_/id/50269221"]
+
+  - id: past
+    heading: 2018年の試合は、どう動いたか
+    tier: 確定
+    telop: 2018年4月1日、チェルシー1対3トッテナム
+    say:
+      - text: デレ・アリが主役だった2018年の試合を、得点の順に見ます。
+        image: assets/images/20261025_dele_alli_bridge/04_w.jpg
+        card: &goals2018 {type: table, title: 2018年4月1日 チェルシー1対3トッテナム, columns: [分, 得点], rows: [[30分, モラタ（チェルシー）], [45+1分, エリクセン], [62分, デレ・アリ], [66分, デレ・アリ]]}
+      - text: 30分、モラタのゴールでリードを許し、前半の最後にエリクセンが同点に。
+        image: assets/images/20261025_dele_alli_bridge/04_w.jpg
+        card: *goals2018
+    official: true
+    sources:
+      - https://www.premierleague.com/match/22654
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/summary?event=480594
+
+  - id: view
+    viewpoint: true
+    heading: 2度の勝利に、同じ人
+    tier: 背景
+    telop: プレミア時代の2勝、どちらにもデレ
+    say:
+      - text: 見立てです。プレミアリーグで、トッテナムがこの場所で勝ったのは2度だけ。
+        image: assets/images/20261025_dele_alli_bridge/01_w.jpg
+        card: none
+      - text: 1度目はピッチで2点、2度目は客席から。どちらの日にも、デレがいました。
+        image: assets/images/20261025_dele_alli_bridge/04_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50269221
+short_title: "デレ・アリがスタンフォード・ブリッジに。2018年の主役が見た2度目の勝利"

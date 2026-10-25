@@ -1,0 +1,508 @@
+# スタジアム紹介シリーズ：サンダーランドの本拠地（スタジアム・オブ・ライト、10/25）。雛形は 10/24 フラムの回。
+# 重なりの確認（2026-10-25）：scripts/・research/covered.yaml・research/posted.json に stadium_sunderland は無い。
+#   クラブ紹介⑲サンダーランド（2026-09-20 公開）は、本拠地を「炭鉱の跡地・紋章の輪は巻き上げ機」の1行と、収容4万8095の1行、EL初戦の1対0だけ。
+#   名前の由来・日産・ローカー・パーク・入場の推移は言っていない。stadium_newcastle（10/21）は「8位はサンダーランド」の1行だけ。
+# 今の立場：PL公式ハンドブック2026/27 の Club Directory にサンダーランドがある（控え research/raw/20261021_nufc_plhandbook.txt 1679〜1775行）。
+#   2025/26 は7位（同 32829行）。2026/27 はプレミア2季目＋ヨーロッパリーグ（ウィキペディア en "2026–27 Sunderland A.F.C. season"、控え 20261025_sl_wp_season2627.txt）。
+# 軸：A＝収容4万8095人はプレミア20クラブで8位（ハンドブック）。
+#     B＝なぜ「光のスタジアム」か。炭鉱の跡地とデイビー・ランプ。その前に、日産の工場のとなりの案が日産の異議で消えた。
+#     C＝昨季の平均4万6704人は、開場以来の最高（2000/01 の4万6790人）まで86人。今季は3試合で4万6946人。9/16 に開場以来初の欧州の公式戦。
+# 収容・ピッチ（ハンドブック 1740〜1743行）：48,095／105×68m。ランキング：7位ニューカッスル 52,729／9位チェルシー 40,044／1位マンU 74,158。
+#   自分で引いた・割った：52,729-48,095=4,634／48,095-40,044=8,051／48,095÷74,158=0.649＝約65％／49,000-48,095=905。
+# 本拠地（ウィキペディア en "Stadium of Light"、控え research/raw/20261025_sl_wp_stadium.txt。元は公式の歴史本 Days ほか）：
+#   開場 1997-07-30（アヤックスと0対0の親善）／開場時 42,000 → 2000年に北スタンド増築で 49,000／建設中は「ウェアサイド・スタジアム」「ニュー・ローカー・パーク」／
+#   命名は 1997-07-30 の命名式、ボブ・マレー会長。言葉（引用）："For many years, miners at Wearmouth Colliery carried with them a Davy lamp as part of their working lives. Reflecting this tradition, the name allows the image of this light to shine forever."／
+#   ベンフィカの本拠地と同じ名前だとファンの反応は割れた。マレーの2017年の言葉："The Estadio de Luz in Portugal isn't the Stadium of Light, it is named after the area – Luz. … We are the only club whose stadium has that name, and it was because of the history of the region that I named it"／
+#   練習場 Academy of Light など「オブ・ライト」が広がった／
+#   候補地：1992年に日産の工場のとなりの案（ファンは「北のウェンブリー」）→ 発表の直後に日産が正式に異議、クラブはあきらめた／1995年までに、1993年12月に閉山したウェアマス炭鉱の跡が第一候補。ローカー・パークから数百ヤード／
+#   ローカー・パークのリーチの格子は西の駐車場の仕切りに使われている／
+#   入場：最多 48,353（2002-04-13 リヴァプール戦）／シーズン平均の最高 46,790（2000/01、プレミア）／最低 27,119（2003/04、2部）／2018/19 は3部で 32,156、3部の記録。
+#   割れる点：①収容はウィキペディア49,000・ハンドブック48,095・UEFA の試合データの capacity 48,707 → 台本はハンドブックで言い、増築後の4万9000と並べて「今季はそれより905少ない」とだけ言う。
+#     ②日産の案の席数（4万8000／4万9000で記事どうしが割れる）→ 言わない。③広げられる上限（6万3000／6万4000／8万4000）→ 言わない。④費用（2300万／2400万ポンド）→ 言わない。
+# 日産（ウィキペディア en "Nissan Motor Manufacturing UK"、控え 20261025_sl_wp_nmuk.txt）：1984年2月に英政府と工場の合意、翌月サンダーランドの土地を選ぶ／1986年7月に第1期が完成、最初の車はブルーバード。
+# 旧本拠地（ウィキペディア en "Roker Park"、控え 20261025_sl_wp_roker.txt）：開場 1898-09-10／1929年 リーチ設計のメインスタンド／最多 75,118（1933-03-04 FAカップ）／
+#   テイラー報告で全席座席にすると席が大きく減る・まわりが住宅の道で広げられない／最後のころの収容 約22,500／1996/97 が最後で、クラブ初のプレミアの季／
+#   お別れの試合のあと、チャーリー・ハーリーがセンタースポットを掘り、新しい本拠地に植えた／跡地は住宅、道の名は Promotion Close・Clockstand Close など。
+#   自分で割った：75,118÷48,095=1.56／48,095÷22,500=2.14。
+# 入場（PL公式の試合API、控え research/raw/20261024_pl_matches_all.json）：
+#   2025/26 はハンドブックの入場表（32910行）：19試合・平均46,704・合計887,382・97.1％・最多47,257（クリスタル・パレス戦）。
+#   2026/27 ここまでのホーム3試合：8/30 フラム 46,781／9/12 アーセナル 46,861／10/10 ブライトン 47,196 → 合計140,838・平均46,946（10/25 のリーズ戦はまだ）。
+#   自分で引いた：46,790-46,704=86／46,946-46,790=156／48,353-48,095=258。
+# 欧州：UEFA の試合データ（matchId 2050062、控え research/raw/20261025_sl_uefa_2050062.json）2026-09-16 サンダーランド 1-0 AZ、入場 45,555、会場 Stadium of Light。
+#   欧州の大会は 1973/74 以来（季の記事の本文）。本拠地の開場は1997年なので、この本拠地で初めての欧州の公式戦（親善のアヤックス戦・ユヴェントス戦は除く）。
+# 日本との接点：日本人選手の在籍は無い（research/pl_data/japan.json の sunderland は空）。本拠地の場所を決めた話に、日産の異議がある → 基礎の次の節に置いた。別競技の縁ではない。
+# 言わなかったもの：開場の式の来賓（王族）／ダイアナ元妃の名前に変える打診／オーナー・財政／女子チームの試合と記録／ラグビーとコンサートの記録／ダービーの勝敗。
+# 読めなかった：クラブ公式の歴史ページ（safc.com）。ブラウザ操作・JS実行は不使用（requests のみ）。
+# 写真：assets/images/20261025_stadium_sunderland/（Commons、出典は credits.json）。人物は特定していない。
+date: 2026年10月25日
+slot: other_1
+format: news
+series: スタジアム紹介
+voice_min: 0
+people: []
+watch: 毎日、数字でサッカーを読み解きます
+theme:
+  id: stadium_sunderland
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: サンダーランド
+  title: サンダーランドの本拠地は、なぜ「光のスタジアム」と名付けられたのか
+  question: 炭鉱の跡に建つサンダーランドの本拠地は、なぜ光の名を持ち、なぜその場所に建ったのか
+  lead: 炭鉱の跡に建つ、北の大きな本拠地。
+  hook: ''
+  opening_image: assets/images/20261025_stadium_sunderland/01_w.jpg
+  end_bg: assets/images/20261025_stadium_sunderland/01_w.jpg
+  takeaway: サンダーランドの本拠地スタジアム・オブ・ライトの収容は、今季の開幕時で4万8095人。プレミア20クラブで8位。最初の候補地は日産の工場のとなりだったが、日産の異議で消え、1993年に閉山したウェアマス炭鉱の跡に、1997年に開場した。名前は坑夫のデイビー・ランプから。昨季の平均入場4万6704人は、開場以来の最高の2000/01（4万6790人）まで86人。今季はリーグ戦3試合で4万6946人。2026年9月16日には、開場以来初めての欧州の公式戦を迎えた
+  short_title: サンダーランドの本拠地、収容はプレミア8位
+thumbnail:
+  layout: scene
+  bold: false
+  callouts:
+  - 炭鉱の跡に建つ
+  - 収容はプレミア8位
+  photo: assets/images/20261025_stadium_sunderland/01_w.jpg
+  line1: サンダーランドの本拠地
+  line2: 開場29年、初の欧州戦
+  tags:
+  - サンダーランド
+  - スタジアム・オブ・ライト
+  - ローカー・パーク
+  - プレミアリーグ
+  - スタジアム紹介
+sections:
+- id: data
+  main: true
+  heading: スタジアム・オブ・ライトの収容は、プレミアで何番目なのか
+  bg: assets/images/20261025_stadium_sunderland/01_w.jpg
+  tier: 報道
+  telop: 収容は4万8095人。プレミア20クラブで8位。開場は1997年、炭鉱の跡地
+  narrator: 解説
+  card:
+    type: table
+    title: スタジアム・オブ・ライトの基礎DATA
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - 収容人数
+      - 4万8095人（今季の開幕時）
+    - - 20クラブでは
+      - 8位
+    - - 場所
+      - サンダーランド、ウェア川の北の岸
+    - - 開場
+      - 1997年7月30日
+    - - 建った場所
+      - ウェアマス炭鉱の跡地
+    - - ピッチ
+      - 縦105×横68メートル
+  say:
+  - text: サンダーランドの本拠地、スタジアム・オブ・ライトの話です。
+    short_only: true
+    image: assets/images/20261025_stadium_sunderland/01_w.jpg
+    card: none
+  - text: 収容は、4万8095人。今季のプレミア20クラブで、8番目の大きさです。
+    emph: true
+    image: assets/images/20261025_stadium_sunderland/02_w.jpg
+    card: &id_rank
+      type: stats
+      title: プレミア8位の本拠地。すぐ上と、すぐ下
+      items:
+      - - '52729'
+        - 人
+        - 7位 ニューカッスル
+      - - '48095'
+        - 人
+        - サンダーランドの収容
+      - - '40044'
+        - 人
+        - 9位 チェルシー
+      focus: 1
+  - text: 7位は、同じ北東イングランドのニューカッスル。5万2729人。差は、4634席。
+    image: assets/images/20261025_stadium_sunderland/02_w.jpg
+    card:
+      <<: *id_rank
+      focus: 0
+  - text: 9位は、チェルシー。4万44人。差は、8051席です。
+    image: assets/images/20261025_stadium_sunderland/02_w.jpg
+    card:
+      <<: *id_rank
+      focus: 2
+  - text: 首位は、マンチェスター・ユナイテッドの7万4158席。
+    image: assets/images/20261025_stadium_sunderland/07_w.jpg
+    card: none
+  - text: サンダーランドの収容は、その約65％にあたります。
+    emph: true
+    image: assets/images/20261025_stadium_sunderland/07_w.jpg
+    card:
+      type: calc
+      title: 首位との差（自分で割った）
+      terms:
+      - - 4万8095人
+        - サンダーランドの収容
+      - - 7万4158人
+        - マンチェスター・ユナイテッド
+      - - 0.65
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+  sources:
+  - https://resources.premierleague.pulselive.com/premierleague/document/2026/07/31/8a890ff9-176c-4364-a8ff-e08f995e2c86/TM2040_PL-Handbook-and-Collateral-2026-27_Digital_31.07.pdf
+  - https://en.wikipedia.org/wiki/Stadium_of_Light
+- id: japan
+  heading: なぜ、最初の候補地だった日産の工場のとなりに、建たなかったのか
+  bg: assets/images/20261025_stadium_sunderland/01_w.jpg
+  tier: 背景
+  telop: 1992年、日産の工場のとなりに新しい本拠地の案。日産が正式に異議を出し、クラブはあきらめた
+  narrator: 解説
+  card: &id_jp
+    type: timeline
+    title: 日産の工場と、新しい本拠地の候補地（ウィキペディア）
+    rows:
+    - - 1984年
+      - 日産が、工場の土地にサンダーランドを選ぶ
+    - - 1986年
+      - 工場で最初の車、ブルーバード
+    - - 1992年
+      - 工場のとなりに新球場の案。日産が異議
+    - - 1993年12月
+      - ウェアマス炭鉱が閉山
+    - - 1995年
+      - 炭鉱の跡地が、第一の候補に
+    - - 1997年7月
+      - スタジアム・オブ・ライトが開場
+    focus: 1992年
+    highlight_row: 0
+  say:
+  - text: 次は、この本拠地の場所と、日本の会社の話です。
+    image: assets/images/20261025_stadium_sunderland/07_w.jpg
+    card: none
+  - text: 1990年代のはじめ、クラブは、古い本拠地を出て、新しい土地を探していました。
+    image: assets/images/20261025_stadium_sunderland/07_w.jpg
+    card: none
+  - text: 1984年、日産が、イギリスの工場の土地に、サンダーランドを選びました。
+    image: assets/images/20261025_stadium_sunderland/07_w.jpg
+    card:
+      <<: *id_jp
+      highlight_row: 0
+  - text: 1986年、その工場で、最初の車、ブルーバードが作られます。
+    image: assets/images/20261025_stadium_sunderland/07_w.jpg
+    card:
+      <<: *id_jp
+      highlight_row: 1
+  - text: 古い本拠地を出ると決めたクラブが、最初に選んだ候補地は、この工場のとなりでした。
+    emph: true
+    image: assets/images/20261025_stadium_sunderland/04_w.jpg
+    card:
+      <<: *id_jp
+      highlight_row: 2
+  - text: ファンは、その案を「北のウェンブリー」と呼びました。
+    image: assets/images/20261025_stadium_sunderland/04_w.jpg
+    card: none
+  - text: ところが、1992年に案が出ると、すぐに日産が、正式に異議を出します。
+    emph: true
+    image: assets/images/20261025_stadium_sunderland/04_w.jpg
+    card:
+      <<: *id_jp
+      highlight_row: 2
+  - text: クラブは、この案を、あきらめました。
+    image: assets/images/20261025_stadium_sunderland/03_w.jpg
+    card: none
+  - text: 次の候補は、1993年12月に閉山した、ウェアマス炭鉱の跡地。
+    image: assets/images/20261025_stadium_sunderland/03_w.jpg
+    card:
+      <<: *id_jp
+      highlight_row: 3
+  - text: 1995年には、ここが、第一の候補になります。
+    image: assets/images/20261025_stadium_sunderland/03_w.jpg
+    card:
+      <<: *id_jp
+      highlight_row: 4
+  - text: 古い本拠地から、わずか数百メートルの場所でした。
+    image: assets/images/20261025_stadium_sunderland/01_w.jpg
+    card: none
+  - text: 日本の会社の異議が、本拠地を、炭鉱の跡へ向かわせたことになります。
+    emph: true
+    image: assets/images/20261025_stadium_sunderland/01_w.jpg
+    card: none
+  - text: 1997年7月30日、炭鉱の跡に、4万2000席で開場します。
+    image: assets/images/20261025_stadium_sunderland/04_w.jpg
+    card:
+      <<: *id_jp
+      highlight_row: 5
+  - text: 2000年には4万9000席へ。開場のときより、7000席多くなりました。
+    image: assets/images/20261025_stadium_sunderland/04_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Stadium_of_Light
+  - https://en.wikipedia.org/wiki/Roker_Park
+  - https://en.wikipedia.org/wiki/Nissan_Motor_Manufacturing_UK
+- id: roker
+  heading: なぜ、100年近く使ったローカー・パークを、出なければならなかったのか
+  bg: assets/images/20261025_stadium_sunderland/01_w.jpg
+  tier: 背景
+  telop: 1898年から1997年までの本拠地。最多7万5118人。全席座席にすると、席が大きく減った
+  narrator: 解説
+  card: &id_roker
+    type: timeline
+    title: ローカー・パークの歩み（ウィキペディア）
+    rows:
+    - - 1898年9月
+      - ローカー・パークが開場
+    - - 1933年3月
+      - 最多7万5118人（FAカップ）
+    - - 1990年
+      - テイラー報告。全席座席へ
+    - - 1996/97
+      - 最後のシーズン。クラブ初のプレミア
+    focus: 1898年9月
+    highlight_row: 0
+  say:
+  - text: 古い本拠地は、ローカー・パーク。1898年9月10日に開きました。
+    image: assets/images/20261025_stadium_sunderland/06_w.jpg
+    card:
+      <<: *id_roker
+      highlight_row: 0
+  - text: 1933年3月4日、FAカップの試合に、7万5118人が入っています。
+    emph: true
+    image: assets/images/20261025_stadium_sunderland/06_w.jpg
+    card:
+      <<: *id_roker
+      highlight_row: 1
+  - text: いまの本拠地の収容の、約1.56倍です。
+    image: assets/images/20261025_stadium_sunderland/06_w.jpg
+    card:
+      type: calc
+      title: 旧本拠地の最多入場は、いまの収容の何倍か（自分で割った）
+      terms:
+      - - 7万5118人
+        - 1933年の最多入場
+      - - 4万8095人
+        - いまの収容
+      - - 1.56倍
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+  - text: 1990年、スタジアムの安全を見直した、テイラー報告が出ます。
+    image: assets/images/20261025_stadium_sunderland/02_w.jpg
+    card:
+      <<: *id_roker
+      highlight_row: 2
+  - text: 全部の席を、座席にすることが、求められました。
+    image: assets/images/20261025_stadium_sunderland/02_w.jpg
+    card: none
+  - text: 立ち見が中心のローカー・パークは、座席にすると、席が大きく減ります。
+    image: assets/images/20261025_stadium_sunderland/02_w.jpg
+    card: none
+  - text: まわりは住宅の道に囲まれ、広げる場所も、ありませんでした。
+    image: assets/images/20261025_stadium_sunderland/02_w.jpg
+    card: none
+  - text: 最後のころの収容は、約2万2500人。いまの本拠地は、その約2.1倍です。
+    emph: true
+    image: assets/images/20261025_stadium_sunderland/02_w.jpg
+    card: none
+  - text: 1996/97が、最後のシーズン。クラブにとって、初めてのプレミアの季でした。
+    image: assets/images/20261025_stadium_sunderland/06_w.jpg
+    card:
+      <<: *id_roker
+      highlight_row: 3
+  - text: お別れの試合のあと、名選手のチャーリー・ハーリーが、芝を掘り起こします。
+    image: assets/images/20261025_stadium_sunderland/06_w.jpg
+    card: none
+  - text: ピッチの真ん中の芝です。それは、新しい本拠地に植えられました。
+    emph: true
+    image: assets/images/20261025_stadium_sunderland/06_w.jpg
+    card: none
+  - text: 古いメインスタンドの鉄の格子も、いまの本拠地の駐車場の仕切りに、残っています。
+    emph: true
+    image: assets/images/20261025_stadium_sunderland/05_w.jpg
+    card: none
+  - text: このスタンドを設計したのは、建築家のアーチボルド・リーチ。
+    image: assets/images/20261025_stadium_sunderland/05_w.jpg
+    card: none
+  - text: 跡地は住宅になり、道には「昇格」「時計のスタンド」といった名前が付きました。
+    image: assets/images/20261025_stadium_sunderland/05_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Roker_Park
+  - https://en.wikipedia.org/wiki/Stadium_of_Light
+- id: name
+  heading: なぜ、「光のスタジアム」と名付けられたのか
+  bg: assets/images/20261025_stadium_sunderland/01_w.jpg
+  tier: 背景
+  telop: 名付けたのはボブ・マレー会長。坑夫が持ち歩いたデイビー・ランプから
+  narrator: 解説
+  card: &id_name
+    type: document
+    label: ボブ・マレー会長　命名式の言葉（1997年7月30日。英文の引用を訳した）
+    paragraphs:
+    - 長い年月、ウェアマス炭鉱の坑夫たちは、働く日々の一部として、デイビー・ランプを持ち歩いた。
+    - この伝統を映して、この名前は、その光の姿を、いつまでも輝かせる。
+    highlight:
+    - デイビー・ランプ
+    - いつまでも輝かせる
+  say:
+  - text: 建てているあいだは、正式な名前が無いままでした。
+    image: assets/images/20261025_stadium_sunderland/04_w.jpg
+    card: none
+  - text: 「ウェアサイド・スタジアム」や、「新しいローカー・パーク」と呼ばれていました。
+    image: assets/images/20261025_stadium_sunderland/04_w.jpg
+    card: none
+  - text: 名前の発表は、開場の日。アヤックスとの試合の、数時間前です。
+    emph: true
+    image: assets/images/20261025_stadium_sunderland/04_w.jpg
+    card: none
+  - text: 名付けたのは、当時のボブ・マレー会長。命名式で、こう話しています。
+    image: assets/images/20261025_stadium_sunderland/03_w.jpg
+    card: *id_name
+  - text: 長い年月、ウェアマス炭鉱の坑夫たちは、デイビー・ランプを持ち歩いた。
+    emph: true
+    image: assets/images/20261025_stadium_sunderland/03_w.jpg
+    card: *id_name
+  - text: この名前は、その光の姿を、いつまでも輝かせる。
+    image: assets/images/20261025_stadium_sunderland/03_w.jpg
+    card: *id_name
+  - text: デイビー・ランプは、炭鉱で使われた、安全灯のことです。
+    image: assets/images/20261025_stadium_sunderland/03_w.jpg
+    card: none
+  - text: 本拠地のそばには、炭鉱の巻き上げ車輪も、置かれています。
+    image: assets/images/20261025_stadium_sunderland/03_w.jpg
+    card: none
+  - text: ただ、ファンの反応は、分かれました。
+    image: assets/images/20261025_stadium_sunderland/02_w.jpg
+    card: none
+  - text: ポルトガルのベンフィカの本拠地と、同じ名前に聞こえたからです。
+    emph: true
+    image: assets/images/20261025_stadium_sunderland/02_w.jpg
+    card: none
+  - text: マレーは、2017年に、こう答えています。
+    image: assets/images/20261025_stadium_sunderland/02_w.jpg
+    card: &id_name2
+      type: document
+      label: ボブ・マレー　2017年のインタビュー（英文の引用を訳した）
+      paragraphs:
+      - ポルトガルのエスタディオ・ダ・ルスは、スタジアム・オブ・ライトではない。ルスという地域にちなんだ名前だ。
+      - その名前の本拠地を持つクラブは、私たちだけだ。この地域の歴史から、私が名付けた。
+      highlight:
+      - 地域にちなんだ名前
+      - 私たちだけ
+  - text: ベンフィカの本拠地は、ルスという地域の名前。この名前の本拠地は、私たちだけだ、と。
+    emph: true
+    image: assets/images/20261025_stadium_sunderland/02_w.jpg
+    card: *id_name2
+  - text: いま、「オブ・ライト」は、練習場のアカデミー・オブ・ライトにも、使われています。
+    image: assets/images/20261025_stadium_sunderland/01_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Stadium_of_Light
+- id: view
+  viewpoint: true
+  heading: 見立て・4万8095席は、開場以来いちばんの埋まり方に、届くのか
+  bg: assets/images/20261025_stadium_sunderland/01_w.jpg
+  tier: 報道
+  telop: 昨季の平均4万6704人は、開場以来の最高まで86人。今季は3試合で4万6946人
+  narrator: 解説
+  card: &id_view
+    type: table
+    title: ホームのリーグ戦の平均入場
+    columns:
+    - 区切り
+    - 平均入場
+    rows:
+    - - 2000/01（プレミア）
+      - 4万6790人（開場以来の最高）
+    - - 2003/04（2部）
+      - 2万7119人（開場以来の最低）
+    - - 2018/19（3部）
+      - 3万2156人
+    - - 2025/26（プレミア）
+      - 4万6704人
+    - - 2026/27 ここまで 3試合
+      - 4万6946人
+    highlight_row: 0
+  say:
+  - text: では、この本拠地は、毎試合どれだけ埋まっているのか。
+    emph: true
+    image: assets/images/20261025_stadium_sunderland/02_w.jpg
+    card: none
+  - text: 開場以来、シーズン平均の最高は、2000/01の4万6790人です。
+    image: assets/images/20261025_stadium_sunderland/02_w.jpg
+    card:
+      <<: *id_view
+      highlight_row: 0
+    mark:
+      kind: circle
+      row: 0
+  - text: いちばん少なかったのは、2部にいた2003/04。2万7119人。
+    image: assets/images/20261025_stadium_sunderland/02_w.jpg
+    card:
+      <<: *id_view
+      highlight_row: 1
+  - text: 3部にいた2018/19でも、平均は3万2156人。3部の記録でした。
+    emph: true
+    image: assets/images/20261025_stadium_sunderland/06_w.jpg
+    card:
+      <<: *id_view
+      highlight_row: 2
+  - text: 昨季、2025/26は、4万6704人。収容の97.1％です。
+    image: assets/images/20261025_stadium_sunderland/06_w.jpg
+    card:
+      <<: *id_view
+      highlight_row: 3
+  - text: 開場以来の最高まで、あと86人でした。
+    emph: true
+    image: assets/images/20261025_stadium_sunderland/06_w.jpg
+    card:
+      type: calc
+      title: 最高の平均との差（自分で引いた）
+      terms:
+      - - 4万6790人
+        - 2000/01の平均
+      - - 4万6704人
+        - 2025/26の平均
+      - - 86人
+        - 引いた答え
+      ops:
+      - −
+      - ＝
+  - text: 今季は、ホームのリーグ戦3試合で、平均4万6946人。
+    image: assets/images/20261025_stadium_sunderland/07_w.jpg
+    card:
+      <<: *id_view
+      highlight_row: 4
+  - text: まだ3試合ですが、最高の平均を、156人上回っています。
+    emph: true
+    image: assets/images/20261025_stadium_sunderland/07_w.jpg
+    card: none
+  - text: そして、2026年9月16日。ヨーロッパリーグの、オランダのアルクマール戦です。
+    image: assets/images/20261025_stadium_sunderland/02_w.jpg
+    card: none
+  - text: この本拠地で初めての、ヨーロッパの大会の公式戦でした。
+    emph: true
+    image: assets/images/20261025_stadium_sunderland/02_w.jpg
+    card: none
+  - text: 入場は4万5555人。結果は、1対0の勝利でした。
+    image: assets/images/20261025_stadium_sunderland/02_w.jpg
+    card: none
+  - text: クラブの欧州の大会は、ローカー・パーク時代の1973/74以来です。
+    image: assets/images/20261025_stadium_sunderland/06_w.jpg
+    card: none
+  - text: 入場の記録は、2002年4月13日のリヴァプール戦。4万8353人。
+    image: assets/images/20261025_stadium_sunderland/06_w.jpg
+    card: none
+  - text: いまの収容より、258人多い数字です。
+    emph: true
+    image: assets/images/20261025_stadium_sunderland/06_w.jpg
+    card: none
+  - text: 開場から30シーズン目。平均の最高を塗り替えるかどうかが、今季の見どころです。
+    image: assets/images/20261025_stadium_sunderland/01_w.jpg
+    card: none
+  sources:
+  - https://sdp-prem-prod.premier-league-prod.pulselive.com/api/v1/competitions/8/seasons/2026/matchweeks/1/matches ほか（2025/26・2026/27 の各節）
+  - https://resources.premierleague.pulselive.com/premierleague/document/2026/07/31/8a890ff9-176c-4364-a8ff-e08f995e2c86/TM2040_PL-Handbook-and-Collateral-2026-27_Digital_31.07.pdf
+  - https://match.uefa.com/v5/matches?matchId=2050062
+  - https://en.wikipedia.org/wiki/Stadium_of_Light
+  - https://en.wikipedia.org/wiki/2026–27_Sunderland_A.F.C._season

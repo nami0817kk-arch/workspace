@@ -1,0 +1,148 @@
+# 宇野禅斗の取材メモ（2026年10月25日・ショートだけ・見せ方 X＝冒頭に強い一言）
+# 取材: 2026-10-25。requests で原文を読んだ。
+#   ・フットボールゾーン 680628（2026-10-24）「22歳日本人が移籍後初アシスト「彼から生まれた」…」 本文を全部読んだ。
+#     第7節シュツットガルト戦に先発（2試合連続スタメン）。前半5分に先制を許す。前半38分、相手のクリアボールを
+#     ペナルティーエリア内から右足でダイレクトボレー、ふかさず正確にミート、GKの手前にいたスカリーがバックヒールでコースを変えてゴール。
+#     清水エスパルスから今季加入の22歳、移籍後初アシスト。後半に町野・モヒヤが決めて3-2で逃げ切り今季初勝利。
+#     地元メディア（Gladbach LIVE）の採点は「及第点といえる3点」、「彼のダイレクトシュートをスカリーが巧みなヒールでコースを変えて1点目が生まれた」。
+#     （同じ評に「前半30分は精彩を欠いた」「終盤に不運なハンド」もあるが、台本では使わない）
+#   ・サッカーキング 2220456（2026-10-24） 38分にこぼれ球に反応した宇野のボレー→同点、加入後初アシスト。橋岡と宇野はフル出場。
+#   ・サッカーキング 2215512（2026-10-12） 第5節ケルン戦で宇野はベンチ入り→途中出場でブンデスデビュー。88分に右からのクロスに合わせたボレーが枠を捉えたが相手のブロックに阻まれた。
+#   ・サッカーキング 2218072（2026-10-19、見出しのみ） 第6節ホッフェンハイム戦で初先発。
+#   ・ESPN の試合記録（scoreboard 2026-10-23）で得点の分（38分スカリー）は 10/24 の町野の本で確認済み。
+# 言わないこと: 試合の日本時間、次の試合の日時（読んでいない）、採点の物差しの説明（記事に無い）、ハンドの場面。
+# 本人の言葉: **無い**（フットボールゾーン・サッカーキングとも本人のコメント無し。「彼から生まれた」は地元メディアの評）→ 型は X。
+#   ブンデスリーガ公式の 10月のインタビュー（39581）に本人の言葉はあるが、この試合より前のもの → 使わない（題の出来事より前の発言は置かない）。
+# 反応: 探していない（0件。作らない）。
+# 10/24 の町野の本（scripts/20261024_machino_gladbach_first_win.md）と同じ試合。町野の話は1行だけ（viewpoint の1行目）。言い回し（逆転弾・敵地・左足・連敗を止めた）を重ねない。
+# 写真: 01 bundesliga.com（10月の宇野の記事の主写真。ボルシアMGの練習着）／02 フットボールチャンネル（写真：田中伸弥、日本代表）／03 日刊スポーツ（清水時代）。
+#   03 は 10/19 の宇野の本の置き場に取り込んだが動画には使っていない写真。3枚とも本人を目で確かめた。
+#   今日の試合の写真は、フットボールゾーン（アフロ）・サッカーキング（Getty）・ブンデス公式（imago）でどれも代理店 → 使えない。
+# 確度: 報道（フットボールゾーン・サッカーキング。得点の分はESPNの試合記録と一致）。
+slot: japan
+date: "2026年10月25日"
+format: news
+no_main: true
+people: [宇野禅斗, ボルシアMG, シュツットガルト, スカリー, 町野修斗]
+
+short_style: X
+short_hook_word: 移籍後初アシスト
+short_photos:
+  - assets/images/20261025_uno_zento_first_assist/01_v.jpg
+  - assets/images/20261025_uno_zento_first_assist/03_v.jpg
+
+short_question: 宇野禅斗は、ボルシアMGの中盤に定着できると思いますか。
+short_hook: 宇野禅斗、移籍後初アシスト。
+short_telops:
+  - {match: 第7節, text: ブンデス第7節/シュツットガルト 2-3 ボルシアMG}
+  - {match: 38分, text: 1点を追う前半38分}
+  - {match: ダイレクトボレー, text: 宇野が右足で/ダイレクトボレー}
+  - {match: かかと, text: スカリーがかかとで/コースを変えて同点}
+  - {match: 88分, text: デビュー戦の88分/ボレーはブロックに阻まれた}
+  - {match: フル出場, text: 宇野はフル出場/現地の採点は3}
+
+theme:
+  id: uno_zento_first_assist
+  league: germany
+  league_name: ブンデスリーガ
+  prefix: ""
+  title: 宇野禅斗が移籍後初アシスト。デビュー戦で弾かれたボレーは、3試合目にどうなったか
+  hook: ""
+  question: 宇野禅斗の右足のボレーは、どうやって同点の1点目になったのか
+  takeaway: デビュー戦の88分にはブロックされたボレーが、3試合目の前半38分には同点の1点目につながった。デビューから3試合で先発2つ、アシスト1つ
+
+thumbnail:
+  line1: 宇野禅斗が初アシスト
+  line2: 右足ボレーが同点に
+  tags: [宇野禅斗, ボルシアMG]
+  layout: face
+  photo: assets/images/20261025_uno_zento_first_assist/01_w.jpg
+  short_photo: assets/images/20261025_uno_zento_first_assist/01_v.jpg
+
+answer: 宇野禅斗の右足ボレーを、スカリーがかかとで変えて同点に。移籍後初アシスト
+watch: デビューから3試合で先発2つ・アシスト1つの宇野禅斗が、ボルシアMGの中盤に定着できるか
+
+sections:
+  - id: what
+    main: true
+    heading: 宇野禅斗の右足ボレー
+    tier: 報道
+    telop: 宇野禅斗、移籍後初アシスト
+    say:
+      - text: 宇野禅斗が、ボルシアMGに来て初めてのアシストを記録しました。
+        short_only: true
+        image: assets/images/20261025_uno_zento_first_assist/01_w.jpg
+        card: none
+      - text: ブンデスリーガ第7節、アウェーのシュツットガルト戦。宇野は2試合続けての先発です。
+        image: assets/images/20261025_uno_zento_first_assist/03_w.jpg
+        card: none
+      - text: 前半5分に先制を許し、1点を追う38分。
+        image: assets/images/20261025_uno_zento_first_assist/01_w.jpg
+        card: none
+      - text: 相手のクリアが、ペナルティーエリアの中の宇野へこぼれます。
+        image: assets/images/20261025_uno_zento_first_assist/03_w.jpg
+        card: none
+      - text: 宇野は右足でダイレクトボレー。浮かせずに、しっかり当てました。
+        emph: true
+        image: assets/images/20261025_uno_zento_first_assist/01_w.jpg
+        card: none
+      - text: そのシュートを、GKの手前にいたスカリーが、かかとで角度を変えてゴール。同点です。
+        image: assets/images/20261025_uno_zento_first_assist/03_w.jpg
+        card: none
+      - text: 清水エスパルスから今季加わった22歳の、移籍後初アシストでした。
+        image: assets/images/20261025_uno_zento_first_assist/01_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.football-zone.net/archives/680628
+      - https://www.soccer-king.jp/news/world/ger/20261024/2220456.html
+
+  - id: road
+    heading: デビュー戦で弾かれたボレー
+    tier: 報道
+    telop: デビューから3試合目のアシスト
+    say:
+      - text: 宇野のブンデスデビューは、第5節のケルン戦。途中からの出場でした。
+        image: assets/images/20261025_uno_zento_first_assist/03_w.jpg
+        card: none
+      - text: その試合の88分、右からのクロスにボレーで合わせました。
+        image: assets/images/20261025_uno_zento_first_assist/01_w.jpg
+        card: none
+      - text: しかし、シュートは相手のブロックに阻まれています。
+        image: assets/images/20261025_uno_zento_first_assist/03_w.jpg
+        card: none
+      - text: 第6節で初先発。そして第7節、今度はボレーが同点の1点目につながりました。
+        image: assets/images/20261025_uno_zento_first_assist/01_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/ger/20261012/2215512.html
+      - https://www.soccer-king.jp/news/world/ger/20261019/2218072.html
+      - https://www.football-zone.net/archives/680628
+
+  - id: view
+    viewpoint: true
+    heading: 3試合で先発2つ、アシスト1つ
+    tier: 報道
+    telop: 宇野はフル出場、チームは今季初勝利
+    say:
+      - text: 試合は後半に町野修斗とモヒヤが決めて、3対2。ボルシアMGの今季初勝利でした。
+        image: assets/images/20261025_uno_zento_first_assist/03_w.jpg
+        card: none
+      - text: 宇野はフル出場。現地の採点では、及第点の3でした。
+        image: assets/images/20261025_uno_zento_first_assist/01_w.jpg
+        card: none
+      - text: 見立てとしては、途中出場から先発へ、そしてアシストへ。
+        image: assets/images/20261025_uno_zento_first_assist/03_w.jpg
+        card: none
+      - text: 3試合で、一段ずつ上がってきました。
+        image: assets/images/20261025_uno_zento_first_assist/01_w.jpg
+        card: none
+      - text: 次は、自分の右足でゴールを決める番です。
+        image: assets/images/20261025_uno_zento_first_assist/03_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.football-zone.net/archives/680628
+      - https://www.soccer-king.jp/news/world/ger/20261024/2220456.html
+short_title: "宇野禅斗が移籍後初アシスト。デビュー戦で弾かれたボレーは、3試合目にどうなったか"

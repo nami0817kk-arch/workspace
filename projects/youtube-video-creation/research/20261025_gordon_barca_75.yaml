@@ -1,0 +1,172 @@
+# 取材メモ（2026年10月25日）ゴードン、バルサでの自己採点は「10点中7.5」。初めてのクラシコへ「まだ長い、長い道のりがある」（ニュースのショート。見せ方 Y＝ゴードン本人の言葉から始める）
+# 取材: 2026-10-25。ESPN の記事API（content.core.api.espn.com/v1/sports/news/50265160）で本文を全部読んだ。
+#   ・ESPN「Anthony Gordon delivers rating out of 10 for his start at Barcelona」（2026-10-24、Sam Marsden 記者。ESPN の単独取材）— 題材の元。
+#       地の文: 25歳。スペインで11試合2点5アシスト（scoring two goals and setting up five more in 11 appearances）。
+#       本人: "If I could put a number [on my start], I would say seven and a half [out of 10]"
+#             "it's been good, but I can still do so much more. In the Paris [Saint-Germain] game, for example, I think I could have done more."
+#             "It is these type of games where I need to be consistently on the highest level if I want to become the player that I really want to become."
+#             "there is still a long, long way to go to get where I want to get to."
+#       地の文: 代表ウィーク中に、エヴァートンとニューカッスルでプレミアにいたころ、いつも選手として敬意を払われているとは感じなかったと話していた。
+#       地の文: 火曜のCLで欧州王者PSGに2-4で敗れた（Tuesday's 4-2 defeat to European champions PSG）。
+#       本人（今は前より評価されていると感じるか）: "Yes, for sure" / "Because everybody watches Barcelona, so that alone allows more people to see my game."
+#             "I want my skills and attributes to be highlighted on the world's biggest stage ..."
+#       地の文: 日曜のクラシコがゴードンにとって初めて。会場はスポティファイ・カンプ・ノウ。米東部 午後4時（＝日本時間26日 朝5時）。
+#       本人: "I dreamed ..." / "So I always dreamed of it. I was never sure I would get it. ... it was a very big dream of mine."
+#       地の文: バルサ加入のあと、イングランド代表で初めてのW杯に出て、準決勝まで進んだ。
+#       本人: "it's a little bit of a scar from losing" / "I feel more experienced. I feel a lot calmer." / "I've gained a lot of confidence"
+#   → 台本の訳はこちらの自訳（英語の取材）。
+# 言わないこと: クラシコの結果の予想（決まり）。勝った場合の連勝記録・勝ち点差の話（予想に寄るので入れない）。PSG戦の中身・ゴードンの出来の採点（記事に無い）。
+#   プレミア時代の「敬意」の話は、この記事では地の文の要約で、本人の言い回しは載っていない → 地の文として「と話していた」とだけ言う。
+# 確度: 報道（ESPN の単独取材。本人の言葉）。
+# 反応: 0件。作らない。approve は --no-voices で。
+# 写真: 01・03・04 は Commons CC BY-SA 4.0（Bryan Berlin、2026年6月23日 W杯 イングランド対ガーナ）。02 は FCバルセロナ公式の記事主写真（8月のエルチェ戦、左の背番号17）。
+#   ESPN の主写真は Getty なので使わない。Commons の「Gordon in 2024」（fuboTV の映像）・「first goal for Barcelona celebration」（放送の切り出しの疑い）・バルサ公式の 2285678046.jpg（Getty の番号）は使わない。
+#   10/25 のイングランド代表の回で使った YantsImages 01 とは別の写真。
+slot: laliga
+date: "2026年10月25日"
+format: news
+no_main: true      # ニュースはショートだけ（2026-10-14）。締めで本編を案内しない
+people: [アンソニー・ゴードン, バルセロナ]
+
+short_style: Y
+short_hook_quote: 点数を付けるなら、10点中7.5点だ。
+short_question: ゴードンの自己採点7.5点、あなたなら何点を付けますか。
+short_hook: バルサのゴードン、自己採点は7.5点。
+short_telops:
+  - {match: 11試合, text: バルサで11試合/2ゴール 5アシスト}
+  - {match: まだずっとできる, text: 「よかった。でも/まだずっとできる」}
+  - {match: 2対4, text: 火曜のCL/バルセロナ2-4PSG}
+  - {match: 長い、長い道のり, text: 「まだ長い、長い/道のりがある」}
+  - {match: みんながバルサを見ている, text: 「みんながバルサを/見ている」}
+  - {match: 初めてのクラシコ, text: 日曜は/初めてのクラシコ}
+  - {match: 大きな夢, text: 「大きな夢だった」}
+  - {match: 準決勝, text: この夏のW杯/イングランドは準決勝まで}
+  - {match: 朝5時, text: クラシコ/日本時間26日 朝5時}
+
+theme:
+  id: gordon_barca_75
+  league: spain
+  league_name: ラ・リーガ
+  prefix: ""
+  title: ゴードン、バルサでの自己採点は「10点中7.5」。初のクラシコを前に語ったこと
+  hook: ""
+  question: バルセロナに移ったゴードンは、ここまでの自分に何点を付けたのか。初めてのクラシコを前に何を話したのか
+  takeaway: ゴードンは10点中7.5点と答え、PSG戦はもっとできたと話した。バルサでは世界中に見てもらえると語り、初めてのクラシコは大きな夢だったと明かした
+
+thumbnail:
+  line1: 自己採点 7.5/10
+  line2: ゴードン「まだ長い道のり」
+  tags: [ゴードン, バルセロナ, クラシコ]
+  layout: face
+  photo: assets/images/20261025_gordon_barca_75/01_w.jpg
+  short_photo: assets/images/20261025_gordon_barca_75/03_v.jpg
+
+answer: 10点中7.5点。「よかったが、まだずっとできる」
+watch: 26日（日本時間）のクラシコ、バルセロナ対レアル・マドリード
+
+short_photos:
+  - assets/images/20261025_gordon_barca_75/01_v.jpg
+  - assets/images/20261025_gordon_barca_75/02_v.jpg
+  - assets/images/20261025_gordon_barca_75/03_v.jpg
+  - assets/images/20261025_gordon_barca_75/04_v.jpg
+
+sections:
+  - id: what
+    main: true
+    heading: 自己採点は7.5点
+    tier: 報道
+    telop: ゴードンが付けた、バルサでの自分の点数
+    say:
+      - voice: ゴードン
+        text: 点数を付けるなら、10点中7.5点だ。
+        short_voice: true
+        image: assets/images/20261025_gordon_barca_75/03_w.jpg
+      - text: バルセロナのアンソニー・ゴードンが、移籍後の自分に付けた点数です。
+        image: assets/images/20261025_gordon_barca_75/02_w.jpg
+      - text: 25歳のイングランド代表。バルサでは11試合で2ゴール、5アシスト。
+        image: assets/images/20261025_gordon_barca_75/01_w.jpg
+      - text: 合わせて7つの得点に絡み、1試合平均で0.6を超えます。
+        image: assets/images/20261025_gordon_barca_75/03_w.jpg
+      - voice: ゴードン
+        text: よかった。でも、まだずっとできる。
+        image: assets/images/20261025_gordon_barca_75/01_w.jpg
+      - voice: ゴードン
+        text: パリ・サンジェルマン戦は、もっとできたと思う。
+        cont: true
+        image: assets/images/20261025_gordon_barca_75/01_w.jpg
+      - text: 今週火曜のチャンピオンズリーグ。
+        image: assets/images/20261025_gordon_barca_75/02_w.jpg
+      - text: バルサはパリ・サンジェルマンに2対4で敗れています。
+        image: assets/images/20261025_gordon_barca_75/02_w.jpg
+      - voice: ゴードン
+        text: こういう試合で、いつも最高の水準にいないといけない。
+        image: assets/images/20261025_gordon_barca_75/04_w.jpg
+      - voice: ゴードン
+        text: なりたい選手になるなら。まだ長い、長い道のりがある。
+        cont: true
+        image: assets/images/20261025_gordon_barca_75/04_w.jpg
+      - text: 英語で話した言葉を、こちらで日本語にしています。
+        image: assets/images/20261025_gordon_barca_75/03_w.jpg
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50265160
+
+  - id: stage
+    heading: 見てもらえる舞台と、夢だった一戦
+    tier: 報道
+    telop: プレミア時代との違いと、夢だった一戦
+    say:
+      - text: 代表ウィーク中、ゴードンはプレミア時代について話していました。
+        image: assets/images/20261025_gordon_barca_75/01_w.jpg
+      - text: エヴァートンとニューカッスルでは、いつも敬意を払われているとは感じなかった、と。
+        image: assets/images/20261025_gordon_barca_75/01_w.jpg
+      - text: 今は前より評価されていると感じるか。その問いへの答えです。
+        image: assets/images/20261025_gordon_barca_75/02_w.jpg
+      - voice: ゴードン
+        text: もちろん。みんながバルサを見ている。
+        image: assets/images/20261025_gordon_barca_75/02_w.jpg
+      - voice: ゴードン
+        text: それだけで、自分のプレーを見てもらえる。
+        cont: true
+        image: assets/images/20261025_gordon_barca_75/02_w.jpg
+      - voice: ゴードン
+        text: 世界でいちばん大きな舞台で、自分の力を見せたい。
+        image: assets/images/20261025_gordon_barca_75/03_w.jpg
+      - text: そして日曜は、ゴードンにとって最初のクラシコ、レアル・マドリード戦です。
+        image: assets/images/20261025_gordon_barca_75/04_w.jpg
+      - voice: ゴードン
+        text: ずっと夢見ていた。出られるかは、分からなかった。
+        image: assets/images/20261025_gordon_barca_75/01_w.jpg
+      - voice: ゴードン
+        text: でも、大きな夢だった。
+        cont: true
+        image: assets/images/20261025_gordon_barca_75/01_w.jpg
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50265160
+
+  - id: view
+    viewpoint: true
+    heading: W杯の負けから得た落ち着き
+    tier: 背景
+    telop: 準決勝の負けから得たもの
+    say:
+      - text: 見立てです。ゴードンはこの夏、バルサに移ったあと、W杯に出ました。
+        image: assets/images/20261025_gordon_barca_75/03_w.jpg
+      - text: イングランド代表は準決勝まで進み、そこで敗れています。
+        image: assets/images/20261025_gordon_barca_75/03_w.jpg
+      - voice: ゴードン
+        text: 負けたことは、少し傷として残っている。
+        image: assets/images/20261025_gordon_barca_75/04_w.jpg
+      - voice: ゴードン
+        text: でも、前よりずっと落ち着いた。
+        cont: true
+        image: assets/images/20261025_gordon_barca_75/04_w.jpg
+      - text: 自分への採点を、ゴードンが大舞台でどこまで上げられるかが見どころです。
+        image: assets/images/20261025_gordon_barca_75/02_w.jpg
+      - text: クラシコは日本時間26日の朝5時、会場はスポティファイ・カンプ・ノウです。
+        image: assets/images/20261025_gordon_barca_75/01_w.jpg
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50265160
+short_title: "ゴードン、バルサでの自己採点は「10点中7.5」。初のクラシコを前に語ったこと"

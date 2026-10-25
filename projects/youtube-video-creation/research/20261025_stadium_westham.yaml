@@ -1,0 +1,558 @@
+# スタジアム紹介シリーズ：ウェストハムの本拠地（ロンドン・スタジアム、10/25）。雛形は 10/24 フラムの回。
+# 重なりの確認（2026-10-25）：scripts/・research/covered.yaml・research/posted.json に stadium_westham は無い。
+#   kit_westham（10/21、ユニフォームとエンブレム）は紋章の回。アン・ブーリンの塔・紋章の話はこちらで言わない。
+#   stadium_tottenham（10/19）は「昨季の平均でトッテナムを上回ったのはマンUとウェストハム」と1行だけ触れている。
+# 今の立場：ウェストハムは 2025/26 プレミア18位で降格、2026/27 は2部（チャンピオンシップ）。
+#   出典：PL公式ハンドブック2026/27 の 2025/26 順位表（控え research/raw/20261021_nufc_plhandbook.txt 32840行）、
+#   ウィキペディア en "2026–27 West Ham United F.C. season"（控え research/raw/20261025_wh_wp_season2627.txt）。
+# 軸：A＝昨季のプレミア平均6万2455人は20クラブで3位、収容に対する割合99.9％は20クラブで最も高い（ハンドブックの入場表、32912行）。
+#     B＝五輪の陸上競技場が、なぜサッカーの本拠地になったのか。トラックが残った。
+#     C＝2部に落ちた今季も、ホーム5試合の平均は6万882人。
+# 収容・ピッチ（ウィキペディア en "London Stadium"、控え research/raw/20261025_wh_wp_london_stadium.txt）：
+#   2022-04-06 にサッカーの収容を6万2500へ（全体は6万8013）／ピッチ105×68m／五輪の間は8万人／着工2008-05-22・完成2011年3月／
+#   五輪後の計画は2万5000〜3万席の陸上競技場（25,000 to 30,000-seat）／2011-02-11 OPLC がウェストハムを選ぶ→2011-10-11 取り消し（トッテナムとレイトン・オリエントの裁判・国の補助の問題）／
+#   2013-03-22 99年の賃借／2016-04-14 に全文が公開され年250万ポンド、警備・場内整理・暖房・芝の手入れ・コーナーフラッグは払わない／
+#   2016-08-04 ドムジャレ戦3-0（工事中で5万4000に絞った）／プレミア初戦ボーンマス戦5万6977／
+#   陸上の団体（UK Athletics）は50年、毎年6月最後の金曜から7月末まで使う／2019年4月 えんじ色の覆い25万ポンド／
+#   2020年2月 下段に2つの新しいスタンド、多くの席を4メートル超ピッチへ近づける／ファンが遠いという専門家の声（Paul Fletcher）。
+#   建設費の4億8600万ポンドは評論の一文（Rowan Moore）にあるだけなので言わない。
+# 最多入場：ウィキペディア en "West Ham United F.C."（控え 20261025_wh_wp_club.txt）62,478 v リーズ 2023-05-21。
+# 旧本拠地（ウィキペディア en "Boleyn Ground"、控え 20261025_wh_wp_boleyn.txt）：
+#   1904〜2016／閉じたときの収容35,016／最後の試合2016-05-10 マンU戦3-2、入場34,907、この地で2398試合目／
+#   最多42,322（1970-10-17 トッテナム戦、立ち見の時代）／2016-07-15 に4000万ポンドで売却が完了・住宅の開発／
+#   2016-03-14 ジョン・ライオールの門を外し始める（新しい本拠地に移して据えるため）／記念のれんがの銘は新しい本拠地の小道に作り直された。
+# 入場（PL公式の試合API、控え research/raw/20261024_pl_matches_all.json）：
+#   2024/25 ホーム19試合＝合計1,186,819・平均62,464・最多62,476（2024-12-29 リヴァプール戦）・最少62,435（2024-12-09 ウルヴズ戦）→差41。
+#   2025/26 はハンドブックの入場表：19試合・合計1,186,646・平均62,455・99.9％・最多62,474（アーセナル戦）。
+#     API の18試合（アーセナル戦が欠ける）の最少は62,429（2026-01-06 フォレスト戦）→差45。
+#   2023/24 は API に 64,472（マンU戦）という収容を超える値があり、使わない。
+#   2025/26 の他クラブ（ハンドブック）：マンU 74,010／トッテナム 62,519／ウェストハム 62,455（3位）。割合はウェストハム99.9％が最高（ニューカッスル99.8、チェルシー・マンU99.7）。
+# 今季（2部）のホーム（ウィキペディアの試合記録の wikitext、控え 20261025_wh_wp_season2627_wikitext.txt）：
+#   8/22 チャールトン 62,264／9/1 ウルヴズ 59,113／9/5 ダービー 61,180／9/11 レクサム 59,712／10/9 QPR 62,140（10/24 サウサンプトン戦は記載なし）。
+#   アウェー6試合は10,605（リンカーン）〜25,510（ボルトン）。
+# 自分で引いた・割った：62,500÷35,016=1.785→約1.78倍／62,519-62,455=64／304,409÷5=60,882.0／62,455-60,882=1,573（2.52％）／
+#   60,882-35,016=25,866／62,478-42,322=20,156。
+#   2026/27 プレミアの収容（ハンドブック）で60,882を超えるのは マンU74,158・トッテナム62,850・リヴァプール61,276・マンC61,038 の4つ（アーセナル60,704は下）。
+# 日本との接点（基礎の次の節）：
+#   室伏広治 2012-08-05 ハンマー投げ銅 78m71（ウィキペディア ja "室伏広治"、en "Athletics at the 2012 Summer Olympics – Men's hammer throw"＝会場は Olympic Stadium、2004年の優勝者）。
+#   田中将大 2019-06-29 ロンドンシリーズ第1戦に先発、ヤンキースが17-13で勝利。大リーグのヨーロッパ初の公式戦（ja "田中将大"、en "MLB London Series"）。
+#   サッカーの日本人選手の縁は見つからなかったので、陸上と野球の2人だけ。降板の早さ（2/3回）は言わない。
+# 言わなかったもの：オーナーへの抗議・ボイコット・2018年の乱入（人と処分の話）／所有会社の入れ替わり／建設費／ブーリン城とアン・ブーリン（kit_westham で話した）／女子チーム。
+# 写真：assets/images/20261025_stadium_westham/（Commons、出典は credits.json）。人物は特定していない。
+date: 2026年10月25日
+slot: other_1
+format: news
+series: スタジアム紹介
+voice_min: 0
+people: []
+watch: 毎日、数字でサッカーを読み解きます
+theme:
+  id: stadium_westham
+  league: england
+  league_name: イングランド2部（チャンピオンシップ）
+  kind: other
+  topic: ウェストハム
+  title: ウェストハムの本拠地は、五輪の陸上競技場から、どうやって6万人の器になったのか
+  question: 2012年ロンドン五輪の陸上競技場は、どうやってウェストハムの6万人の本拠地になり、2部に落ちた今季は何人を集めているのか
+  lead: 五輪の主競技場が、クラブの本拠地に。
+  hook: ''
+  opening_image: assets/images/20261025_stadium_westham/01_w.jpg
+  end_bg: assets/images/20261025_stadium_westham/01_w.jpg
+  takeaway: ウェストハムの本拠地ロンドン・スタジアムは、2012年ロンドン五輪の主競技場。サッカーの収容は6万2500人。2016年に、112年いたアプトン・パークから移った。昨季のプレミアの平均入場は6万2455人で20クラブの3位、収容に対する割合99.9％は20クラブで最も高い。2部に落ちた今季も、ホーム5試合の平均は6万882人で、昨季から約2.5％の減りにとどまる。プレミアの今季の本拠地で、これより大きいのは4つだけ
+  short_title: ウェストハムの本拠地、2部でも平均6万人
+thumbnail:
+  layout: scene
+  bold: false
+  callouts:
+  - 2012年五輪の主会場
+  - 旧本拠地の1.78倍
+  photo: assets/images/20261025_stadium_westham/01_w.jpg
+  line1: ウェストハムの本拠地
+  line2: 2部でも平均6万882人
+  tags:
+  - ウェストハム
+  - ロンドン・スタジアム
+  - ロンドン五輪
+  - アプトン・パーク
+  - スタジアム紹介
+sections:
+- id: data
+  main: true
+  heading: ロンドン・スタジアムには、何人が入るのか
+  bg: assets/images/20261025_stadium_westham/01_w.jpg
+  tier: 報道
+  telop: サッカーの収容は6万2500人。昨季の平均入場6万2455人はプレミア3位、割合99.9％は20クラブで最高
+  narrator: 解説
+  card:
+    type: table
+    title: ロンドン・スタジアムの基礎DATA
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - 収容人数
+      - 6万2500人（サッカーの試合）
+    - - 場所
+      - ロンドン東部、五輪公園の南
+    - - 完成
+      - 2011年3月（2012年五輪の主競技場）
+    - - ピッチ
+      - 105×68メートル
+    - - 本拠地に
+      - 2016年から（99年の賃借）
+    - - 今季
+      - 2部（チャンピオンシップ）
+  say:
+  - text: ウェストハムの本拠地の話です。
+    short_only: true
+    image: assets/images/20261025_stadium_westham/01_w.jpg
+    card: none
+  - text: 収容は、サッカーの試合で、6万2500人。
+    emph: true
+    image: assets/images/20261025_stadium_westham/01_w.jpg
+  - text: 昨季のプレミア、ホームの平均入場は、6万2455人。20クラブで、3番目です。
+    emph: true
+    image: assets/images/20261025_stadium_westham/05_w.jpg
+    card: &id_rank
+      type: stats
+      title: 昨季のプレミア、ホームの平均入場（上位3クラブ）
+      items:
+      - - '74010'
+        - 人
+        - 1位 マンチェスター・ユナイテッド
+      - - '62519'
+        - 人
+        - 2位 トッテナム
+      - - '62455'
+        - 人
+        - 3位 ウェストハム
+      focus: 2
+  - text: 1位は、マンチェスター・ユナイテッド。7万4010人。
+    image: assets/images/20261025_stadium_westham/05_w.jpg
+    card:
+      <<: *id_rank
+      focus: 0
+  - text: 2位のトッテナムとの差は、わずか64人でした。
+    image: assets/images/20261025_stadium_westham/05_w.jpg
+    card:
+      <<: *id_rank
+      focus: 1
+  - text: 収容に対する割合は、99.9％。20クラブの中で、最も高い割合です。
+    emph: true
+    image: assets/images/20261025_stadium_westham/11_w.jpg
+    card: none
+  - text: ただ、ウェストハムは、昨季18位で降格し、今季は2部にいます。
+    image: assets/images/20261025_stadium_westham/09_w.jpg
+    card: none
+  - text: この器は、もとは2012年ロンドン五輪の、主競技場でした。
+    emph: true
+    image: assets/images/20261025_stadium_westham/03_w.jpg
+    card: none
+  sources:
+  - https://resources.premierleague.pulselive.com/premierleague/document/2026/07/31/8a890ff9-176c-4364-a8ff-e08f995e2c86/TM2040_PL-Handbook-and-Collateral-2026-27_Digital_31.07.pdf
+  - https://en.wikipedia.org/wiki/London_Stadium
+  - https://en.wikipedia.org/wiki/2026–27_West_Ham_United_F.C._season
+- id: japan
+  heading: この競技場で、日本人は何を残したのか
+  bg: assets/images/20261025_stadium_westham/03_w.jpg
+  tier: 背景
+  telop: 2012年に室伏広治が五輪の銅メダル。2019年には田中将大が、大リーグのヨーロッパ初の公式戦で先発した
+  narrator: 解説
+  card: &id_jp
+    type: timeline
+    title: ロンドン・スタジアムと日本人（ウィキペディア）
+    rows:
+    - - 2012年8月5日
+      - 室伏広治、ハンマー投げで銅（78m71）
+    - - 2016年8月
+      - ウェストハムが本拠地に
+    - - 2019年6月29日
+      - 大リーグ、ヨーロッパ初の公式戦
+    - - 同じ日
+      - ヤンキースの先発は田中将大
+    focus: 2012年8月5日
+    highlight_row: 0
+  say:
+  - text: この競技場には、日本人の足あとも、残っています。
+    image: assets/images/20261025_stadium_westham/03_w.jpg
+    card: none
+  - text: 2012年8月5日。ハンマー投げの室伏広治が、ここで銅メダルを取りました。
+    emph: true
+    image: assets/images/20261025_stadium_westham/03_w.jpg
+    card:
+      <<: *id_jp
+      highlight_row: 0
+  - text: 記録は、78メートル71。アテネの金に続く、2つ目の五輪メダルです。
+    image: assets/images/20261025_stadium_westham/10_w.jpg
+    card:
+      <<: *id_jp
+      highlight_row: 0
+  - text: そして、2019年6月29日。
+    image: assets/images/20261025_stadium_westham/10_w.jpg
+    card:
+      <<: *id_jp
+      highlight_row: 2
+  - text: 大リーグが、ヨーロッパで初めての公式戦を、ここで開きます。
+    emph: true
+    image: assets/images/20261025_stadium_westham/02_w.jpg
+    card: none
+  - text: ヤンキース対レッドソックス。ヤンキースの先発は、田中将大でした。
+    emph: true
+    image: assets/images/20261025_stadium_westham/02_w.jpg
+    card:
+      <<: *id_jp
+      highlight_row: 3
+  - text: 試合は、17対13で、ヤンキースが勝っています。
+    image: assets/images/20261025_stadium_westham/02_w.jpg
+    card: none
+  - text: サッカーのピッチの上に、野球の地面を重ねて作った2日間でした。
+    image: assets/images/20261025_stadium_westham/09_w.jpg
+    card: none
+  sources:
+  - https://ja.wikipedia.org/wiki/室伏広治
+  - https://en.wikipedia.org/wiki/Athletics_at_the_2012_Summer_Olympics_–_Men%27s_hammer_throw
+  - https://ja.wikipedia.org/wiki/田中将大
+  - https://en.wikipedia.org/wiki/MLB_London_Series
+- id: olympic
+  heading: なぜ、五輪の陸上競技場が、サッカーの本拠地になったのか
+  bg: assets/images/20261025_stadium_westham/04_w.jpg
+  tier: 背景
+  telop: 五輪のあとは2万5000〜3万席に縮める計画だった。2013年、ウェストハムが99年の賃借で入る
+  narrator: 解説
+  card: &id_oly
+    type: timeline
+    title: 五輪の競技場から、クラブの本拠地へ（ウィキペディア）
+    rows:
+    - - 2008年5月22日
+      - 着工
+    - - 2011年2月11日
+      - 五輪公園の会社が、ウェストハムを選ぶ
+    - - 2011年10月11日
+      - 裁判などを受け、決定を取り消し
+    - - 2012年夏
+      - 五輪。8万人が入る
+    - - 2013年3月22日
+      - 99年の賃借で合意
+    - - 2016年4月14日
+      - 契約の全文が公開。年250万ポンド
+    focus: 2013年3月22日
+    highlight_row: 0
+  say:
+  - text: 競技場の着工は、2008年5月22日。完成は、2011年3月です。
+    image: assets/images/20261025_stadium_westham/04_w.jpg
+    card:
+      <<: *id_oly
+      highlight_row: 0
+  - text: 五輪の間の収容は、8万人。
+    image: assets/images/20261025_stadium_westham/04_w.jpg
+    card: none
+  - text: そのあとは、3分の1ほどの、2万5000から3万席に縮める計画でした。
+    emph: true
+    image: assets/images/20261025_stadium_westham/04_w.jpg
+    card: none
+  - text: 2011年2月11日、五輪公園を引き継ぐ会社が、ウェストハムを選びます。
+    image: assets/images/20261025_stadium_westham/04_w.jpg
+    card:
+      <<: *id_oly
+      highlight_row: 1
+  - text: これに、トッテナムと、近所のレイトン・オリエントが、裁判で異を唱えました。
+    image: assets/images/20261025_stadium_westham/02_w.jpg
+    card: none
+  - text: 2011年10月11日、決定は取り消されます。
+    emph: true
+    image: assets/images/20261025_stadium_westham/02_w.jpg
+    card:
+      <<: *id_oly
+      highlight_row: 2
+  - text: 競技場は公のものとして残し、借り手を探す形に、変わりました。
+    image: assets/images/20261025_stadium_westham/02_w.jpg
+    card: none
+  - text: 翌2012年の夏、ここで五輪が開かれます。
+    image: assets/images/20261025_stadium_westham/10_w.jpg
+    card:
+      <<: *id_oly
+      highlight_row: 3
+  - text: 2013年3月22日、ウェストハムは、99年間借りる契約で合意します。
+    emph: true
+    image: assets/images/20261025_stadium_westham/10_w.jpg
+    card:
+      <<: *id_oly
+      highlight_row: 4
+  - text: 2016年に公開された契約では、使用料は、年250万ポンド。
+    emph: true
+    image: assets/images/20261025_stadium_westham/01_w.jpg
+    card:
+      <<: *id_oly
+      highlight_row: 5
+  - text: 警備や芝の手入れの費用は、クラブが払わない中身でした。
+    image: assets/images/20261025_stadium_westham/01_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/London_Stadium
+- id: upton
+  heading: 112年いたアプトン・パークから、何を持ってきたのか
+  bg: assets/images/20261025_stadium_westham/07_w.jpg
+  tier: 背景
+  telop: 旧本拠地は1904〜2016年。閉じたときの収容は3万5016席。正門と、記念のれんがの銘が新しい本拠地へ
+  narrator: 解説
+  card: &id_up
+    type: timeline
+    title: 旧本拠地ブーリン・グラウンド（ウィキペディア）
+    rows:
+    - - 1904年
+      - ウェストハムの本拠地に
+    - - 1970年10月17日
+      - 最多4万2322人（トッテナム戦）
+    - - 2016年3月14日
+      - 正門を外し始める
+    - - 2016年5月10日
+      - 最後の試合。マンUに3対2
+    - - 2016年7月15日
+      - 4000万ポンドで売却
+    focus: 2016年5月10日
+    highlight_row: 0
+  say:
+  - text: その前の本拠地は、ブーリン・グラウンド。地名から、アプトン・パークとも呼ばれます。
+    image: assets/images/20261025_stadium_westham/07_w.jpg
+    card: none
+  - text: 1904年から2016年まで、112年。
+    emph: true
+    image: assets/images/20261025_stadium_westham/07_w.jpg
+    card:
+      <<: *id_up
+      highlight_row: 0
+  - text: 閉じたときの収容は、3万5016席でした。
+    image: assets/images/20261025_stadium_westham/06_w.jpg
+    card: none
+  - text: 最後の試合は、2016年5月10日。マンチェスター・ユナイテッドに、3対2の勝ち。
+    emph: true
+    image: assets/images/20261025_stadium_westham/08_w.jpg
+    card:
+      <<: *id_up
+      highlight_row: 3
+  - text: この地で、2398試合目。入場は、3万4907人でした。
+    image: assets/images/20261025_stadium_westham/08_w.jpg
+    card:
+      <<: *id_up
+      highlight_row: 3
+  - text: 土地は、4000万ポンドで売られ、住宅の開発に回ります。
+    image: assets/images/20261025_stadium_westham/08_w.jpg
+    card:
+      <<: *id_up
+      highlight_row: 4
+  - text: 正門の「ジョン・ライオールの門」は、新しい本拠地に移すため、外されました。
+    image: assets/images/20261025_stadium_westham/07_w.jpg
+    card: none
+  - text: ファンが名前を刻んだ、記念のれんが。
+    image: assets/images/20261025_stadium_westham/07_w.jpg
+    card: none
+  - text: その文字も、新しい本拠地の小道に、作り直されています。
+    image: assets/images/20261025_stadium_westham/06_w.jpg
+    card: none
+  - text: 新しい収容は、旧本拠地の、約1.78倍です。
+    emph: true
+    image: assets/images/20261025_stadium_westham/06_w.jpg
+    card:
+      type: calc
+      title: 新旧の収容（自分で割った）
+      terms:
+      - - 6万2500人
+        - ロンドン・スタジアム
+      - - 3万5016席
+        - 閉じたときの旧本拠地
+      - - 1.78倍
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+  sources:
+  - https://en.wikipedia.org/wiki/Boleyn_Ground
+- id: track
+  heading: 陸上のトラックが残って、客席はどう変わったのか
+  bg: assets/images/20261025_stadium_westham/05_w.jpg
+  tier: 背景
+  telop: トラックは残り、客席が遠いという声が出た。えんじ色の覆い、席を4メートル超近づける計画、収容6万2500へ
+  narrator: 解説
+  card: &id_tr
+    type: timeline
+    title: サッカーの本拠地に近づけるまで（ウィキペディア）
+    rows:
+    - - 2016年8月4日
+      - 最初の公式戦。5万4000人に絞って
+    - - 2019年4月
+      - トラックを、えんじ色の覆いで隠す
+    - - 2020年2月
+      - 下の段に新しいスタンドを2つ。4メートル超近く
+    - - 2022年4月6日
+      - サッカーの収容を6万2500人に
+    - - 2023年5月21日
+      - 最多6万2478人（リーズ戦）
+    focus: 2016年8月4日
+    highlight_row: 0
+  say:
+  - text: 最初の公式戦は、2016年8月4日。ヨーロッパリーグの予選です。
+    image: assets/images/20261025_stadium_westham/11_w.jpg
+    card:
+      <<: *id_tr
+      highlight_row: 0
+  - text: スロベニアのドムジャレに、3対0の勝ち。
+    image: assets/images/20261025_stadium_westham/11_w.jpg
+    card:
+      <<: *id_tr
+      highlight_row: 0
+  - text: 工事が残っていて、収容は5万4000人。いまより8500人少ない数でした。
+    image: assets/images/20261025_stadium_westham/11_w.jpg
+    card:
+      <<: *id_tr
+      highlight_row: 0
+  - text: 陸上のトラックは、そのまま残りました。
+    emph: true
+    image: assets/images/20261025_stadium_westham/02_w.jpg
+    card: none
+  - text: イギリスの陸上の団体が、毎年6月の終わりから7月末まで使う約束です。
+    image: assets/images/20261025_stadium_westham/02_w.jpg
+    card: none
+  - text: 客席がピッチから遠い、という声が出ます。
+    image: assets/images/20261025_stadium_westham/11_w.jpg
+    card: none
+  - text: 2019年4月、トラックの上を、えんじ色の覆いで隠しました。
+    image: assets/images/20261025_stadium_westham/05_w.jpg
+    card:
+      <<: *id_tr
+      highlight_row: 1
+  - text: 2020年2月には、下の段に、新しいスタンドを入れる計画を出します。
+    image: assets/images/20261025_stadium_westham/05_w.jpg
+    card:
+      <<: *id_tr
+      highlight_row: 2
+  - text: 多くの席が、4メートル以上、ピッチに近づきます。
+    emph: true
+    image: assets/images/20261025_stadium_westham/05_w.jpg
+    card: none
+  - text: 2022年4月6日、契約で6万人までだった収容を、引き上げると発表。
+    image: assets/images/20261025_stadium_westham/11_w.jpg
+    card:
+      <<: *id_tr
+      highlight_row: 3
+  - text: 最多の入場は、2023年5月21日、リーズ戦の6万2478人です。
+    emph: true
+    image: assets/images/20261025_stadium_westham/01_w.jpg
+    card: none
+  - text: 旧本拠地の最多、4万2322人より、2万156人多い数字です。
+    image: assets/images/20261025_stadium_westham/01_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/London_Stadium
+  - https://en.wikipedia.org/wiki/West_Ham_United_F.C.
+  - https://en.wikipedia.org/wiki/Boleyn_Ground
+- id: view
+  viewpoint: true
+  heading: 見立て・2部に落ちて、6万人はどこまで残ったのか
+  bg: assets/images/20261025_stadium_westham/09_w.jpg
+  tier: 報道
+  telop: プレミアの2季は平均6万2464人と6万2455人。2部の今季はホーム5試合で6万882人、約2.5％の減り
+  narrator: 解説
+  card: &id_view
+    type: table
+    title: ホームの平均入場
+    columns:
+    - 区切り
+    - 平均入場
+    rows:
+    - - 2024/25 プレミア 19試合
+      - 6万2464人
+    - - 2025/26 プレミア 19試合
+      - 6万2455人
+    - - 2026/27 2部 ここまで5試合
+      - 6万882人
+    - - 参考：旧本拠地の収容
+      - 3万5016席
+    highlight_row: 0
+  say:
+  - text: では、1試合に、何人が入っているのか。
+    emph: true
+    image: assets/images/20261025_stadium_westham/09_w.jpg
+    card: none
+  - text: 2024/25のホーム19試合。平均は、6万2464人です。
+    image: assets/images/20261025_stadium_westham/09_w.jpg
+    card:
+      <<: *id_view
+      highlight_row: 0
+    mark:
+      kind: circle
+      row: 0
+  - text: 最多と最少の差は、19試合で、41人でした。
+    emph: true
+    image: assets/images/20261025_stadium_westham/09_w.jpg
+    card:
+      <<: *id_view
+      highlight_row: 0
+  - text: 2025/26も、ほぼ同じ平均。差は、45人です。
+    image: assets/images/20261025_stadium_westham/05_w.jpg
+    card:
+      <<: *id_view
+      highlight_row: 1
+  - text: 発表される入場者数は、ほぼ毎試合、満員の線にそろっていました。
+    image: assets/images/20261025_stadium_westham/05_w.jpg
+    card: none
+  - text: そして今季は、2部。ホーム5試合の平均は、6万882人です。
+    emph: true
+    image: assets/images/20261025_stadium_westham/11_w.jpg
+    card:
+      <<: *id_view
+      highlight_row: 2
+    mark:
+      kind: circle
+      row: 2
+  - text: 昨季より1573人。減りは、約2.5％にとどまります。
+    image: assets/images/20261025_stadium_westham/11_w.jpg
+    card:
+      type: calc
+      title: 昨季との差（自分で引いた）
+      terms:
+      - - 6万2455人
+        - 昨季の平均（プレミア）
+      - - 6万882人
+        - 今季の平均（2部・5試合）
+      - - 1573人
+        - 引いた答え
+      ops:
+      - −
+      - ＝
+  - text: 今季、2部のアウェー6試合の入場は、1万605人から、2万5510人。
+    image: assets/images/20261025_stadium_westham/02_w.jpg
+    card: none
+  - text: プレミアの今季の本拠地でも、6万882人より大きいのは、4つだけです。
+    emph: true
+    image: assets/images/20261025_stadium_westham/02_w.jpg
+    card: none
+  - text: マンチェスター・ユナイテッド、トッテナム、リヴァプール、マンチェスター・シティ。
+    image: assets/images/20261025_stadium_westham/02_w.jpg
+    card: none
+  - text: 旧本拠地の3万5016席なら、今の平均のうち、2万5866人が入りきりません。
+    emph: true
+    image: assets/images/20261025_stadium_westham/06_w.jpg
+    card:
+      type: calc
+      title: 旧本拠地の収容との差（自分で引いた）
+      terms:
+      - - 6万882人
+        - 今季の平均（2部）
+      - - 3万5016席
+        - 閉じたときの旧本拠地
+      - - 2万5866人
+        - 引いた答え
+      ops:
+      - −
+      - ＝
+  - text: 2部のシーズンを、最後まで、この6万人の線で終えられるか。
+    image: assets/images/20261025_stadium_westham/01_w.jpg
+    card: none
+  - text: そこが、これからの見どころです。
+    image: assets/images/20261025_stadium_westham/01_w.jpg
+    card: none
+  sources:
+  - https://sdp-prem-prod.premier-league-prod.pulselive.com/api/v1/competitions/8/seasons/2024/matchweeks/1/matches ほか（2024/25・2025/26 の第1〜38節）
+  - https://resources.premierleague.pulselive.com/premierleague/document/2026/07/31/8a890ff9-176c-4364-a8ff-e08f995e2c86/TM2040_PL-Handbook-and-Collateral-2026-27_Digital_31.07.pdf
+  - https://en.wikipedia.org/wiki/2026–27_West_Ham_United_F.C._season
+  - https://en.wikipedia.org/wiki/Boleyn_Ground

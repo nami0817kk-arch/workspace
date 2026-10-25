@@ -1,0 +1,448 @@
+# クラブの財政：ボルシア・ドルトムント（10/25 日、シリーズ「クラブの財政」、key: finance_dortmund、型は news）。
+#
+# 軸は「**上場クラブなので3か月ごとに数字が出る。半年たった時点の黒字1870万ユーロが、通年では赤字2170万ユーロになった。その差（約4040万）は、どこで消えたのか**」。
+#   答え：春（1〜6月）の放映権。チャンピオンズリーグを決勝トーナメントへのプレーオフで去り、テレビの収入が前の年より5870万ユーロ減った（減った収入6550万の約9割）。
+#   夏の選手の売却益（5930万のうち5290万が7〜9月）で前半は黒字だったが、後半を支える収入が無かった。
+#   ★他の財政回（バルサ・シティ・アルテタ・レアル・PSG・バイエルン・リヴァプール・マンU・トッテナム・シティ×アーセナル・チェルシー・インテル・ヴィラ・ユヴェントス・アトレティコ・ミラン・ニューカッスル）の軸は繰り返さない。
+#     バイエルン回の軸（株の持ち主＝会員、50プラス1）は出さない。株主の話は「上場している」「3か月ごとに数字を出す」「時価総額」までにとどめる。
+#     10/22 の bd_dortmund（クラブ紹介：満員の観客・香川・1997年CL・倒産寸前から連覇）の中身は使わない。観客数・倒産寸前の話は出さない。
+#   ★日本との接点：財政の数字には無い（香川の話は bd_dortmund で扱った）。無理に入れない（10/6 の決定）。
+#   ★選手個人の名前・移籍金の額・給料は出さない。女子・監督の話はしない。「経営が危ない」と断定しない。
+#
+# **決算期**：6月30日決算。2025-26＝2025年7月1日〜2026年6月30日（速報は2026-08-21）。2026-27 の第1四半期の発表は2026-11-12（クラブの資料の財務カレンダー）。
+#
+# **出どころ（読んだもの）**
+#   ○ クラブの適時開示（EQS 経由のアドホック開示。発行体が内容に責任を持つ一次の文書。deraktionaer.de と boerse-online.de に全文が転載。requests で本文を取得）
+#     ・通年の速報 2026-08-21「Borussia Dortmund meldet vorläufige Zahlen zum Geschäftsjahr 2025/2026」
+#       https://www.deraktionaer.de/nachricht/eqs-adhoc-borussia-dortmund-meldet-vorlaeufige-zahlen-zum-geschaeftsjahr-20252026-deutsch-546541.html
+#       「Konzernumsatzerlöse EUR 460,5 Mio. (Vorjahr: EUR 526,0 Mio.)」「Rückgang um EUR 65,5 Mio. ... insbesondere auf die TV-Vermarktung ... das Achtelfinale der UEFA Champions League verpasste, nachdem im Vorjahr das Viertelfinale erreicht worden war」
+#       「stichtagsbedingt geringere Einnahmen aus der Teilnahme an der FIFA Klub-Weltmeisterschaft 2025」「Die Werbeerlöse verzeichneten hingegen erneut einen Anstieg」
+#       「Konzernjahresfehlbetrag EUR 21,7 Mio. (Vorjahr: Konzernjahresüberschuss von EUR 6,5 Mio.)」「EBT EUR -20,3 Mio. (Vorjahr: EUR 9,5 Mio.)」「EBITDA EUR 92,2 Mio. (115,9)」
+#       内訳（百万ユーロ、今年／前の年）：Spielbetrieb 50.3/55.2、Werbung 157.9/153.6、TV-Vermarktung 168.5/227.2、Merchandising 38.7/40.0、Conference, Catering, Sonstige 45.1/50.0
+#       「Ergebnis aus Transfergeschäften EUR 59,3 Mio. (Vorjahr: EUR 37,8 Mio.)」「Bruttokonzerngesamtleistung EUR 537,2 Mio. (589,6)」
+#       「Personalaufwendungen von EUR 268,3 Mio. um EUR 8,4 Mio. auf EUR 259,9 Mio.」「Abschreibungen 105,3 → 111,4」「sonstige betriebliche Aufwendungen 162,3 → 145,4」
+#       「Aufgrund des Jahresfehlbetrags kann der Hauptversammlung für das Geschäftsjahr 2025/2026 keine Dividendenausschüttung vorgeschlagen werden」
+#       「erwartet für das Geschäftsjahr 2026/2027 ... ein Konzernjahresergebnis in einer Bandbreite von EUR 0 Mio. bis EUR 10 Mio.」（移籍と成績で変わりうる、と注記）
+#     ・第1四半期 2025-11-07：Konzernergebnis EUR 22,9 Mio.、Umsatz 107,0、Ergebnis aus Transfergeschäften 52,9 Mio.
+#       https://www.boerse-online.de/dpa-afx/eqs-adhoc-borussia-dortmund-meldet-vorlaeufige-zahlen-fuer-das-erste-quartal-q1-20252026-deutsch-482216.html
+#     ・半期 2026-02-09：Konzernergebnis EUR 18,7 Mio.（前の年の半期 7,7）、Umsatz 246,4、Transfer 54,9
+#       https://www.boerse-online.de/dpa-afx/eqs-adhoc-borussia-dortmund-meldet-vorlaeufige-zahlen-fuer-das-erste-halbjahr-h1-des-geschaeftsjahres-20252026-deutsch-501210.html
+#     ・第3四半期 2026-05-04：9か月の Konzernergebnis nach Steuern EUR 5,9 Mio.（前の年 12,9）、「Ausscheiden aus den Play-Offs der UEFA Champions League」が主因、
+#       9か月の TV 151,4（前の年 162,7）、Umsatz 371,4（393,3）、Transfer 55,1。第3四半期だけの Konzernergebnis EUR -12,8 Mio.
+#       https://www.boerse-online.de/dpa-afx/eqs-adhoc-borussia-dortmund-veroeffentlicht-vorlaeufige-zahlen-fuer-das-dritte-quartal-q3-20252026-deutsch-521877.html
+#   ○ クラブ公式の記事（bvb.de、2026-08-21「Bilanzpressekonferenz 2026: BVB kerngesund, kostenoptimiert und wachstumsstark」requests で本文）
+#       「wie bereits im Februar 2026 prognostiziert, einen Jahresfehlbeitrag von 21,7 Mio. EUR」「das frühe Ausscheiden aus der UEFA Champions League gegen Atalanta Bergamo ... Umsatzrückgang von 65,6 Mio. EUR」
+#       「Die Bilanz des einzigen börsennotierten Bundesligisten」、トレス取締役「Der Jahresfehlbeitrag von über 20 Millionen Euro ist für uns nicht zufriedenstellend. Gleichzeitig liegt unser Eigenkapital weiterhin bei rund 300 Mio. EUR,
+#       die Eigenkapitalquote übersteigt 50 Prozent, neue Finanzschulden wurden nicht aufgenommen ...」。★選手の名前（移籍した選手）は記事にあるが台本に出さない。
+#       ★減少額はアドホック開示が 65,5、記事が 65,6。年次報告の千ユーロ単位（526,019−460,467＝65,552）で「約6560万」に統一。
+#   ○ 年次報告 2025/2026（report.bvb.de、results of operations）：revenue EUR 460,467 thousand（526,019）、net transfer income 59,289（37,842）、EBT −20,339（9,537）、net loss 21,718（profit 6,497）。
+#   ○ 半期報告 H1 2025/2026（aktie.bvb.de の PDF）：Jahresergebnis 18.663 TEUR（7.749）、Umsatzerlöse 246.439。
+#   ○ クラブの会社資料（Fact Sheet、EQS の IR 配信、As of 23.10.2026）https://ir-api.eqs.com/media/factsheet/db2eb0af-cd25-4bd0-a65d-d14b6b30ebeb/assets/factsheet_de.pdf
+#       「Im Oktober 2000 vollzog Borussia Dortmund als erster Fußballclub in Deutschland den Gang an die Börse」「Prime Standard」
+#       「Market Cap 335,60 Mio EUR」「No. of shares 110.396.220」、株主 Bernd Geske 8.65%・Evonik 8.2%・SIGNAL IDUNA 5.98%・BV. Borussia 09 e.V. Dortmund 5.9%・PUMA 5.32%
+#       「(Geschäftsführungs-GmbH) ihr Alleingesellschafter ist der BV. Borussia 09 e.V. Dortmund」、財務カレンダー「Nov 12, 2026 Quartalsmitteilung Q1 2026/2027」「Nov 23, 2026 Hauptversammlung」
+#   ○ デロイト Football Money League 2026（2024/25）一次ページ（deloitte.com、2026-10-25 に WebFetch）：12位ドルトムント、11位インテル、13位アトレティコ（順位をページで確認）。
+#       収入の額はページ内の図（e.infogram.com）の値で、10/19 インテル回・10/22 アトレティコ回の取材で読んだもの：ドルトムント €531.3m、インテル €537.5m、アトレティコ €454.5m。
+#       デロイトの収入は「選手の移籍金を含まない」（ページ本文の注記。10/19・10/22 の取材メモに控え）。
+#   × 確かめられなかったもの：デロイトのドルトムントの前の年からの増減（図の前年値 531.7 と Goal の「+3%」が食い違う → 増減は言わない）、
+#     決算の本書（年次報告書）の数字（速報の数字だけ使う）、純債務、配当の前の年の額、チャンピオンズリーグのプレーオフの相手と日付（開示に無い。台本では言わない）、
+#     クラブW杯の収入がどちらの年度にいくら入ったか（開示は「決算の区切りの関係で今年は少ない」とだけ）、株価の前の年との比べ。
+#     デロイト 531.3 とクラブの 526.0（2024-25）の差の中身（集計の線が違う。台本で並べない）。
+#
+# 自分で計算した数（検算済み）
+#   収入の内訳の合計：50.3+157.9+168.5+38.7+45.1＝460.5 ✓／55.2+153.6+227.2+40.0+50.0＝526.0 ✓
+#   増減（板では試合日・グッズ・その他を1段 −11.1 にまとめた）：試合日 −4.9、広告 +4.3、放映権 −58.7、グッズ −1.3、その他 −4.9 → 合計 −65.5 ✓。58.7÷65.5＝89.6%→約9割。65.5÷526.0＝12.45%→約12%減
+#   損益の累計：9月末 +22.9、12月末 +18.7、3月末 +5.9、6月末 −21.7。四半期ごと：7〜9月 +22.9、10〜12月 18.7−22.9＝−4.2、1〜3月 −12.8（開示）、4〜6月 −21.7−5.9＝−27.6。合計 22.9−4.2−12.8−27.6＝−21.7 ✓
+#   半期の黒字から通年の赤字まで：18.7−(−21.7)＝40.4
+#   後半（1〜6月）の放映権：通年168.5−半期104.6＝63.9／前の年 227.2−98.2＝129.0 → 差 −65.1。4〜6月だけ：168.5−151.4＝17.1／前の年 227.2−162.7＝64.5
+#   選手の売買の益：7〜9月 52.9（通年59.3の 89.2%→約9割）。前の年より 59.3−37.8＝21.5 多い
+#   選手の売買の益を除いた税引前：−20.3−59.3＝−79.6／前の年 9.5−37.8＝−28.3
+#   人件費の割合：259.9÷460.5＝56.44%→56.4%／268.3÷526.0＝51.01%→51.0%。人件費の減り 8.4 対 収入の減り 65.5 → 65.5÷8.4＝7.8倍
+#   デロイト：537.5−531.3＝6.2、531.3−454.5＝76.8
+#   時価総額 335.6 ÷ 収入 460.5＝72.9%→約7割。335.6÷110.396220＝3.04ユーロ（1株。台本では使わない）
+#
+# 写真：assets/images/20261025_finance_dortmund/（Commons、出典は credits.json）。
+date: 2026年10月25日
+slot: other_1
+format: news
+series: クラブの財政
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+people:
+- ドルトムント
+theme:
+  end_bg: assets/images/20261025_finance_dortmund/01_w.jpg
+  id: finance_dortmund
+  league: germany
+  league_name: ブンデスリーガ
+  kind: other
+  topic: ドルトムント
+  title: ドルトムント、収入は世界12位。前半の黒字1870万ユーロは、どこで消えたのか
+  question: ドルトムントは半年の時点で1870万ユーロの黒字だったが、通年では2170万ユーロの赤字になった。その差は、どこで消えたのか
+  lead: ブンデスリーガで、ただ1つの上場クラブ、ドルトムント。
+  opening_image: assets/images/20261025_finance_dortmund/01_w.jpg
+  takeaway: デロイトの集計で2024-25の収入は5億3130万ユーロで世界12位。クラブが8月21日に出した2025-26の決算の速報は、収入4億6050万ユーロ（前の年5億2600万から約12%減）、通年の損益は2170万ユーロの赤字（前の年は650万ユーロの黒字）で、配当は提案しない。12月末の半期では1870万ユーロの黒字だった。収入の減り約6560万ユーロのうち5870万ユーロ（約9割）がテレビの放映権で、チャンピオンズリーグを決勝トーナメントへのプレーオフで去ったことが主な理由。選手の売買の益5930万ユーロ（約9割が7〜9月）を除くと、税引前は約7960万ユーロの赤字になる（自分で引いた数）。人件費は840万ユーロ減ったが、収入に対する割合は51.0%から56.4%に上がった
+  short_title: ドルトムント、半年の黒字が通年で赤字に
+thumbnail:
+  layout: number
+  crest_pos: right
+  photo: assets/images/20261025_finance_dortmund/02_w.jpg
+  number: 赤字2170万ユーロ
+  line1: ドルトムントの通年
+  line2: 半年の時点では黒字1870万ユーロ
+  callouts: [上場クラブの決算]
+  tags:
+  - ドルトムント
+  - ブンデスリーガ
+  - クラブの財政
+  - ジグナル・イドゥナ・パルク
+sections:
+- id: rank
+  heading: 収入は世界12位。上と下のクラブとは、どれだけ違うのか
+  tier: 報道
+  telop: 収入5億3130万ユーロで世界12位。選手の移籍金は含まない
+  narrator: 解説
+  card: &rank_table
+    type: table
+    title: 11位から13位の収入（デロイト、百万ユーロ）
+    columns: [順位, クラブ, 収入]
+    rows:
+    - [11位, インテル, '537.5']
+    - [12位, ドルトムント, '531.3']
+    - [13位, アトレティコ, '454.5']
+    highlight_row: 1
+  say:
+  - text: 会計事務所デロイトの集計で、ドルトムントの収入は世界12位です。
+    image: assets/images/20261025_finance_dortmund/01_w.jpg
+    card: none
+  - text: 2024-25の収入は、5億3130万ユーロ。
+    emph: true
+    card: *rank_table
+  - text: 上の11位は、インテル。差は、620万ユーロしかありません。
+    card:
+      <<: *rank_table
+      highlight_row: 0
+  - text: 下の13位は、アトレティコ。こちらとの差は、7680万ユーロです。
+    image: assets/images/20261025_finance_dortmund/02_w.jpg
+    card:
+      <<: *rank_table
+      highlight_row: 2
+  - text: このランキングの収入には、選手の移籍金が入っていません。
+    card: none
+  - text: ドルトムントの決算を読むには、そこが大事になります。
+    image: assets/images/20261025_finance_dortmund/06_w.jpg
+    card: none
+  sources:
+  - https://www.deloitte.com/uk/en/services/financial-advisory/analysis/deloitte-football-money-league.html
+- id: listed
+  heading: 上場しているクラブは、いつ、どんな数字を出すのか
+  tier: 確定
+  official: true
+  telop: 2000年10月、ドイツのクラブで初めて上場。数字は3か月ごとに出る
+  narrator: 解説
+  card: &ir_tl
+    type: timeline
+    title: ドルトムントの数字の発表（2025-26）
+    rows:
+    - [2025年11月7日, 7〜9月の数字]
+    - [2026年2月9日, 12月までの半期の数字]
+    - [2026年5月4日, 3月までの9か月の数字]
+    - [2026年8月21日, 通年の数字の速報]
+    focus: 0
+  say:
+  - text: ドルトムントは、2000年10月に株式を上場しました。
+    image: assets/images/20261025_finance_dortmund/03_w.jpg
+    card: none
+  - text: ドイツのクラブで、初めての上場です。
+    card: none
+  - text: 上場しているので、数字は、ほぼ3か月ごとに出てきます。
+    emph: true
+    card: *ir_tl
+  - text: 2025-26の年度も、11月、2月、5月、そして8月に、数字を出しました。
+    card:
+      <<: *ir_tl
+      focus: 3
+  - text: 株の値段の合計、時価総額は、10月23日の時点で3億3560万ユーロ。
+    image: assets/images/20261025_finance_dortmund/04_w.jpg
+    card: none
+  - text: 1年の収入の、約7割の大きさです。
+    card: none
+  - text: 3か月ごとの数字を並べると、1年の中で、お金の流れが変わった場所が見えます。
+    image: assets/images/20261025_finance_dortmund/01_w.jpg
+    card: none
+  sources:
+  - https://www.bvb.de/de/de/aktuelles/news/news.html/2026/8/21/Bilanzpressekonferenz-2026-BVB-kerngesund-kostenoptimiert-und-wachstumsstark.html
+  - https://ir-api.eqs.com/media/factsheet/db2eb0af-cd25-4bd0-a65d-d14b6b30ebeb/assets/factsheet_de.pdf
+  - https://www.boerse-online.de/dpa-afx/eqs-adhoc-borussia-dortmund-meldet-vorlaeufige-zahlen-fuer-das-erste-quartal-q1-20252026-deutsch-482216.html
+- id: profit
+  main: true
+  heading: 半年の黒字は、いつ、赤字に変わったのか
+  tier: 確定
+  official: true
+  telop: 12月末は黒字1870万ユーロ。6月末の通年は赤字2170万ユーロ
+  narrator: 解説
+  card: &cum_line
+    type: line
+    title: ドルトムントの損益の累計（税引後、百万ユーロ）
+    x: [9月末, 12月末, 3月末, 6月末]
+    series:
+    - [損益の累計, [22.9, 18.7, 5.9, -21.7]]
+    unit: 百万ユーロ
+    focus: 損益の累計
+    highlight: 12月末
+  say:
+  - text: ドルトムントは、2025-26の決算で、2170万ユーロの赤字になりました。
+    image: assets/images/20261025_finance_dortmund/02_w.jpg
+    card: none
+  - text: 前の年は、650万ユーロの黒字でした。
+    card: none
+  - text: 赤字のため、株主への配当は提案しない、とクラブは発表しています。
+    card: none
+  - text: ところが、12月末までの半年は、黒字でした。
+    emph: true
+    card: *cum_line
+  - text: 損益の累計は、9月末に2290万ユーロ。そこから減り続け、3月末には590万。
+    card:
+      <<: *cum_line
+      highlight: 3月末
+  - text: そして6月末に、マイナス2170万ユーロ。
+    emph: true
+    callword: 黒字が赤字に
+    image: assets/images/20261025_finance_dortmund/06_w.jpg
+    card:
+      <<: *cum_line
+      highlight: 6月末
+  - text: 3か月ずつに分けます。7月から9月は、2290万ユーロの黒字。
+    card: &q_wf
+      type: waterfall
+      title: 3か月ごとの損益（税引後、百万ユーロ）
+      steps:
+      - [7〜9月, 22.9]
+      - [10〜12月, -4.2]
+      - [1〜3月, -12.8]
+      - [4〜6月, -27.6]
+      total: [通年, -21.7]
+      unit: 百万ユーロ
+      highlight: 7〜9月
+  - text: 10月から12月は、420万の赤字。1月から3月は、1280万の赤字。
+    card:
+      <<: *q_wf
+      highlight: 1〜3月
+  - text: 4月から6月は、2760万ユーロの赤字です。
+    emph: true
+    image: assets/images/20261025_finance_dortmund/04_w.jpg
+    card:
+      <<: *q_wf
+      highlight: 4〜6月
+  - text: 12月末の黒字から、6月末の赤字まで、差は約4040万ユーロ。
+    card: none
+  - text: それが、1月からの半年で消えました。
+    card: none
+  sources:
+  - https://www.bvb.de/de/de/aktuelles/news/news.html/2026/8/21/Bilanzpressekonferenz-2026-BVB-kerngesund-kostenoptimiert-und-wachstumsstark.html
+  - https://report.bvb.de/annual-report/2025-2026/group-management-report/position-of-the-group/results-of-operations.html
+  - https://aktie.bvb.de/media/document/c3f8c843-ca60-46ed-9f0f-3885f62d6aee/assets/DE0005493092-Q2-2025-EQ-D-00.pdf
+  - https://www.deraktionaer.de/nachricht/eqs-adhoc-borussia-dortmund-meldet-vorlaeufige-zahlen-zum-geschaeftsjahr-20252026-deutsch-546541.html
+  - https://www.boerse-online.de/dpa-afx/eqs-adhoc-borussia-dortmund-meldet-vorlaeufige-zahlen-fuer-das-erste-halbjahr-h1-des-geschaeftsjahres-20252026-deutsch-501210.html
+  - https://www.boerse-online.de/dpa-afx/eqs-adhoc-borussia-dortmund-veroeffentlicht-vorlaeufige-zahlen-fuer-das-dritte-quartal-q3-20252026-deutsch-521877.html
+- id: tv
+  heading: 収入は約6560万ユーロ減った。いちばん減ったのは、どこか
+  tier: 確定
+  official: true
+  telop: 放映権は2億2720万から1億6850万ユーロへ。減った収入の約9割
+  narrator: 解説
+  card: &rev_wf
+    type: waterfall
+    title: 収入の増減（百万ユーロ）
+    start: [2024-25, 526.0]
+    steps:
+    - [放映権, -58.7]
+    - [スポンサーと広告, 4.3]
+    - [試合日・グッズ・その他, -11.1]
+    total: [2025-26, 460.5]
+    unit: 百万ユーロ
+    highlight: 放映権
+  say:
+  - text: ドルトムントの収入は、5億2600万ユーロから、4億6050万ユーロへ。
+    image: assets/images/20261025_finance_dortmund/02_w.jpg
+    card: none
+  - text: いちばん減ったのは、テレビの放映権。2億2720万から、1億6850万ユーロへ。
+    emph: true
+    card: *rev_wf
+  - text: 減ったのは5870万ユーロ。収入が減った分の、約9割です。
+    card: *rev_wf
+  - text: スポンサーと広告は、逆に430万ユーロ増えました。
+    card:
+      <<: *rev_wf
+      highlight: スポンサーと広告
+  - text: 放映権が減った理由を、クラブはこう書いています。
+    image: assets/images/20261025_finance_dortmund/06_w.jpg
+    card: &adhoc_doc
+      type: document
+      label: ドルトムントの決算の速報（2026年8月21日、訳）
+      paragraphs:
+      - 収入の減少は、主にテレビの放映権による。今年度はチャンピオンズリーグのベスト16に進めなかった。前の年度は準々決勝まで進んでいた。
+      - 2025年のクラブワールドカップの収入も、決算の区切りの関係で、今年度は少なかった。スポンサーと広告の収入は、再び増えた。
+      highlight: [ベスト16, 準々決勝]
+  - text: 2025-26は、ベスト16の手前のプレーオフで、アタランタに敗れています。
+    card: *adhoc_doc
+  - text: 放映権の差が大きく出たのは、年が明けてからの半年です。
+    image: assets/images/20261025_finance_dortmund/04_w.jpg
+    card: none
+  - text: 1月から6月の放映権は、6390万ユーロ。
+    emph: true
+    card: none
+  - text: 前の年の同じ半年は、1億2900万ユーロでした。
+    card: none
+  sources:
+  - https://www.bvb.de/de/de/aktuelles/news/news.html/2026/8/21/Bilanzpressekonferenz-2026-BVB-kerngesund-kostenoptimiert-und-wachstumsstark.html
+  - https://report.bvb.de/annual-report/2025-2026/group-management-report/position-of-the-group/results-of-operations.html
+  - https://aktie.bvb.de/media/document/c3f8c843-ca60-46ed-9f0f-3885f62d6aee/assets/DE0005493092-Q2-2025-EQ-D-00.pdf
+  - https://www.deraktionaer.de/nachricht/eqs-adhoc-borussia-dortmund-meldet-vorlaeufige-zahlen-zum-geschaeftsjahr-20252026-deutsch-546541.html
+  - https://www.boerse-online.de/dpa-afx/eqs-adhoc-borussia-dortmund-meldet-vorlaeufige-zahlen-fuer-das-erste-halbjahr-h1-des-geschaeftsjahres-20252026-deutsch-501210.html
+  - https://www.boerse-online.de/dpa-afx/eqs-adhoc-borussia-dortmund-veroeffentlicht-vorlaeufige-zahlen-fuer-das-dritte-quartal-q3-20252026-deutsch-521877.html
+- id: transfer
+  heading: 前半の黒字を支えたのは、何だったのか
+  tier: 確定
+  official: true
+  telop: 選手の売買の益は5930万ユーロ。そのうち5290万ユーロが7〜9月
+  narrator: 解説
+  card: &tr_stats
+    type: stats
+    title: ドルトムントの選手の売買の益（百万ユーロ）
+    items:
+    - ['52.9', 百万ユーロ, 7〜9月]
+    - ['59.3', 百万ユーロ, 通年]
+    - ['37.8', 百万ユーロ, 前の年の通年]
+    focus: 0
+  say:
+  - text: では、前半の黒字は、どこから来たのか。
+    image: assets/images/20261025_finance_dortmund/05_w.jpg
+    card: none
+  - text: ドルトムントが選手を売って得た益です。通年で5930万ユーロ。
+    emph: true
+    card:
+      <<: *tr_stats
+      focus: 1
+  - text: 前の年より、2150万ユーロ多い数字です。
+    card:
+      <<: *tr_stats
+      focus: 1
+  - text: そのうち5290万ユーロが、夏の移籍の時期、7月から9月に入りました。
+    card:
+      <<: *tr_stats
+      focus: 0
+  - text: 通年の約9割です。
+    card:
+      <<: *tr_stats
+      focus: 0
+  - text: 夏の売却で、前半は黒字になりました。
+    image: assets/images/20261025_finance_dortmund/06_w.jpg
+    card: none
+  - text: 後半には、それに代わる大きな収入がありませんでした。
+    card: none
+  - text: 選手の売買の益を引くと、税金を引く前の損益は約7960万ユーロの赤字。
+    emph: true
+    card: none
+  - text: こちらで引き算をした数です。
+    image: assets/images/20261025_finance_dortmund/04_w.jpg
+    card: none
+  - text: 前の年に同じ引き算をすると、約2830万ユーロの赤字でした。
+    card: none
+  sources:
+  - https://www.bvb.de/de/de/aktuelles/news/news.html/2026/8/21/Bilanzpressekonferenz-2026-BVB-kerngesund-kostenoptimiert-und-wachstumsstark.html
+  - https://report.bvb.de/annual-report/2025-2026/group-management-report/position-of-the-group/results-of-operations.html
+  - https://www.deraktionaer.de/nachricht/eqs-adhoc-borussia-dortmund-meldet-vorlaeufige-zahlen-zum-geschaeftsjahr-20252026-deutsch-546541.html
+  - https://www.boerse-online.de/dpa-afx/eqs-adhoc-borussia-dortmund-meldet-vorlaeufige-zahlen-fuer-das-erste-quartal-q1-20252026-deutsch-482216.html
+- id: view
+  viewpoint: true
+  heading: 見立て・赤字を決めたのは、費用の増えより、後半の放映権の穴
+  tier: 背景
+  telop: 収入は約6560万ユーロ減り、人件費は840万ユーロ減った
+  narrator: 解説
+  card: &view_table
+    type: table
+    title: 自分で数えてみた（決算の速報、2024-25から2025-26）
+    columns: [比べ, 答え]
+    rows:
+    - [収入の減り, 約6560万ユーロ（約12%）]
+    - [人件費の減り, 840万ユーロ]
+    - [人件費の収入に対する割合, 51.0%から56.4%]
+    - [1〜6月の放映権, 1億2900万から6390万]
+    highlight_row: 0
+  say:
+  - text: ここからは見立てです。ドルトムントの速報を、こちらで数え直しました。
+    image: assets/images/20261025_finance_dortmund/01_w.jpg
+    card: none
+  - text: 収入は、前の年より、約12%減りました。
+    emph: true
+    mark:
+      kind: circle
+      row: 0
+      col: 1
+    card:
+      <<: *view_table
+      highlight_row: 0
+  - text: 人件費は、2億6830万から、2億5990万ユーロへ。
+    card:
+      <<: *view_table
+      highlight_row: 1
+  - text: 減ったのは、840万ユーロです。
+    card:
+      <<: *view_table
+      highlight_row: 1
+  - text: 収入が減った幅は、人件費が減った幅の、約7.8倍です。
+    emph: true
+    mark:
+      kind: circle
+      row: 1
+      col: 1
+    card:
+      <<: *view_table
+      highlight_row: 1
+  - text: そのため、人件費の収入に対する割合は、51.0%から、56.4%に上がりました。
+    image: assets/images/20261025_finance_dortmund/02_w.jpg
+    card:
+      <<: *view_table
+      highlight_row: 2
+  - text: 題への答えです。
+    card:
+      <<: *view_table
+      highlight_row: 3
+  - text: 前半の黒字が消えたのは、後半の放映権が大きく減ったからです。
+    emph: true
+    card:
+      <<: *view_table
+      highlight_row: 3
+  - text: 1月からの半年の放映権は、前の年の半分ほどでした。
+    card:
+      <<: *view_table
+      highlight_row: 3
+  - text: 夏に選手を売った益は、前の年より大きかった。
+    image: assets/images/20261025_finance_dortmund/06_w.jpg
+    card: none
+  - text: それでも、後半の穴は埋まりませんでした。
+    card: none
+  - text: 決算の会見で、財務を担うトーマス・トレス取締役は、こう話しました。
+    image: assets/images/20261025_finance_dortmund/03_w.jpg
+    card: &tress_doc
+      type: document
+      label: トレス取締役（決算の会見、2026年8月21日、クラブ公式の記事から訳）
+      paragraphs:
+      - 2000万ユーロを超える赤字は、私たちにとって満足できるものではない。
+      - 同時に、自己資本はいまも約3億ユーロあり、自己資本比率は50%を超えている。新たな借り入れはしていない。
+      highlight: [満足できるものではない, 新たな借り入れはしていない]
+  - text: 赤字は認めたうえで、借り入れには頼っていない、という説明です。
+    card: *tress_doc
+  - text: クラブは、2026-27の損益を、0から1000万ユーロの黒字と見込んでいます。
+    card: none
+  - text: 移籍と成績で変わる、という前提つきです。
+    card: none
+  - text: 次の数字は、11月12日。7月から9月の数字が、また出ます。
+    image: assets/images/20261025_finance_dortmund/04_w.jpg
+    card: none
+  sources:
+  - https://www.bvb.de/de/de/aktuelles/news/news.html/2026/8/21/Bilanzpressekonferenz-2026-BVB-kerngesund-kostenoptimiert-und-wachstumsstark.html
+  - https://report.bvb.de/annual-report/2025-2026/group-management-report/position-of-the-group/results-of-operations.html
+  - https://www.deraktionaer.de/nachricht/eqs-adhoc-borussia-dortmund-meldet-vorlaeufige-zahlen-zum-geschaeftsjahr-20252026-deutsch-546541.html
+  - https://ir-api.eqs.com/media/factsheet/db2eb0af-cd25-4bd0-a65d-d14b6b30ebeb/assets/factsheet_de.pdf

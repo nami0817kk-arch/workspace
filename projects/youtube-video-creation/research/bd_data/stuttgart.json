@@ -1,0 +1,90 @@
+{
+ "title": "シュツットガルト 基礎DATA",
+ "colors": [
+  "#E32219",
+  "#1A1A1A"
+ ],
+ "crest": "assets/crests/シュツットガルト.png",
+ "tiles": [
+  [
+   "クラブ創立",
+   "1893年",
+   "9月9日。前身のシュツットガルトFVから。1912年の合併で今の名前に"
+  ],
+  [
+   "愛称",
+   "ディ・ローテン",
+   "ドイツ語で「赤」。白いシャツの赤い胸の帯は1925年から"
+  ],
+  [
+   "ホームタウン",
+   "シュツットガルト",
+   "人口約61万人。ドイツで6番目の大都市"
+  ],
+  [
+   "本拠地",
+   "MHPアレーナ",
+   "収容 60,058人（リーグ戦）。18クラブで5番目"
+  ],
+  [
+   "オーナー",
+   "会員のクラブが78.2%",
+   "メルセデス・ベンツとポルシェが10.4%ずつ"
+  ],
+  [
+   "タイトル歴",
+   "ドイツ王者5回",
+   "うちブンデスリーガ3回。ドイツカップ4回"
+  ],
+  [
+   "最多得点",
+   "166点",
+   "カール・アルゲーヴァー、1980〜1991年"
+  ],
+  [
+   "直近のタイトル",
+   "ドイツカップ",
+   "2025年5月、決勝でビーレフェルトに4対2"
+  ],
+  [
+   "昨季の順位",
+   "4位",
+   "勝ち点62。チャンピオンズリーグへ"
+  ]
+ ],
+ "trophies": [
+  [
+   "ドイツ選手権(1950・52)",
+   2
+  ],
+  [
+   "ブンデスリーガ",
+   3
+  ],
+  [
+   "DFBポカール",
+   4
+  ],
+  [
+   "UEFAカップ/EL",
+   0
+  ],
+  [
+   "チャンピオンズリーグ",
+   0
+  ],
+  [
+   "インタートト杯",
+   2
+  ]
+ ],
+ "sources": [
+  "https://en.wikipedia.org/wiki/VfB_Stuttgart",
+  "https://de.wikipedia.org/wiki/VfB_Stuttgart",
+  "https://en.wikipedia.org/wiki/MHPArena",
+  "https://en.wikipedia.org/wiki/Stuttgart",
+  "https://en.wikipedia.org/wiki/2025_DFB-Pokal_final",
+  "https://site.api.espn.com/apis/v2/sports/soccer/ger.1/standings?season=2025"
+ ],
+ "notes": "取材の控えは research/bd_data/stuttgart_research.md。創立1893-09-09（Stuttgarter FV、英語版クラブ記事 History）。1912-04-02 に FC Krone Cannstatt と合併して VfB。愛称 Die Roten／Die Schwaben（英語版 infobox）。赤い胸の帯（Brustring）は1925年から（ドイツ語版 Trikot の節）。人口612,663（英語版 Stuttgart の infobox）、本文は約63万人・6番目。収容60,058（リーグ戦、英語版 MHPArena の infobox、MHP の2024年発表）。18クラブ順位は clubs.json の収容数を並べ、フランクフルトを公式の60,100に差し替えた（フランクフルトの次の5番目）。株：ドイツ語版 infobox の anteilseigner＝e.V. 78.2%・Mercedes-Benz 10.4%・Porsche 10.4%・Jako 1.0%。タイトルは英語版 Honours（ドイツ王者 1950・1952・1983-84・1991-92・2006-07、DFBポカール 1953-54・1957-58・1996-97・2024-25、インタートト 2000・2002）。最多得点は英語版 Records の Top scorers（Allgöwer 166、大会の内訳は書いていない）。直近のタイトルは 2025-05-24 の DFBポカール決勝、Bielefeld に4-2。昨季は ESPN standings season=2025 で4位・勝点62（18勝8分8敗、71得点49失点）。"
+}
