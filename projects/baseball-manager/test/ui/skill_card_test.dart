@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:baseball_manager/game/exp.dart';
 import 'package:baseball_manager/game/game.dart';
+import 'package:baseball_manager/game/life.dart';
 import 'package:baseball_manager/game/player.dart';
 import 'package:baseball_manager/game/skills.dart';
 import 'package:baseball_manager/ui/app.dart';
@@ -103,6 +104,21 @@ void main() {
     expect(line('powerHitter'), contains('コツが要る'));
     final study = t.widget<IconButton>(find.byKey(const Key('skill-study-stealer')));
     expect(study.onPressed, isNull);
+  });
+
+  test('研究の対象を選んでいて、コツが3つ未満なら、おすすめは研究', () {
+    final g = Game.newGame(name: '研', role: Role.batter, rng: Random(2));
+    g.condition = const Condition(fatigue: 0, morale: 60);
+    // コーチの回(3回に1回)を避ける
+    while (g.slot % 3 == 2) {
+      g.slot++;
+    }
+    expect(recommendedPlan(g), isNot(Plan.study));
+    g.setStudyTarget(Skill.stealer);
+    expect(recommendedPlan(g), Plan.study);
+    expect(recommendReason(g), contains('盗塁'));
+    g.skillTips[Skill.stealer] = 3;
+    expect(recommendedPlan(g), isNot(Plan.study));
   });
 
   test('結果のコピーに、特殊能力の数と金特が出る', () {

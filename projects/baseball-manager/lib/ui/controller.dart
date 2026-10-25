@@ -379,7 +379,16 @@ Plan recommendedPlan(Game g) {
   if (coach != null && coach.tips < tipsNeeded && g.slot % 3 == 2) {
     return Plan.lesson;
   }
+  // 研究の対象を自分で選んでいて、まだ取りどき(コツ3つ)に届かなければ研究。
+  if (_studyPending(g)) return Plan.study;
   return Plan.train;
+}
+
+bool _studyPending(Game g) {
+  final t = g.studyTarget;
+  return t != null &&
+      !g.player.skills.contains(t) &&
+      (g.skillTips[t] ?? 0) < 3;
 }
 
 /// おすすめの理由(画面に出す)。
@@ -388,7 +397,11 @@ String recommendReason(Game g) {
   if (c.fatigue >= 70) return '疲れが${c.fatigue}と高いので、休養で回復しよう。';
   if (c.morale < 35) return 'やる気が${c.morale}と低いので、交流でやる気を上げよう。';
   if (recommendedPlan(g) == Plan.lesson) {
-    return 'コーチのコツを貯めると、特殊能力を習得できる。今回は教わろう。';
+    return 'コーチに4回教わると、コーチの特殊能力のコツが満タン(半額)になる。今回は教わろう。';
+  }
+  if (recommendedPlan(g) == Plan.study) {
+    final t = g.studyTarget!;
+    return '研究の対象「${t.label}」のコツが${g.skillTips[t] ?? 0}つ。3つで取りどきになるので研究しよう。';
   }
   return '体調は十分。練習で重点の能力を伸ばそう。';
 }
