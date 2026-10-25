@@ -46,6 +46,7 @@ class CourtHeader extends StatelessWidget {
                   (frame == null && !sync) ? const SizedBox.shrink() : child,
               errorBuilder: (_, __, ___) => const SizedBox.shrink(),
             ),
+            _Sprites(game: game, versus: versus),
             CustomPaint(
               painter: _CourtPainter(
                 heightCm: game.player.heightCm,
@@ -79,7 +80,99 @@ String sceneAsset(Game g) {
   return 'assets/art/scene_$name.jpg';
 }
 
-enum _Layer { background, foreground }
+enum _Layer { background, foreground, fallback }
+
+/// 選手の絵の色名(`assets/art/players/<kid|adult>_<色>.png`)。`jerseyColor` と同じ分け方。
+String spriteColorName(Track t, int age) => switch (t) {
+      Track.school => age < 13 ? 'yellow' : age < 16 ? 'blue' : 'red',
+      Track.university => 'green',
+      Track.corporate => 'teal',
+      Track.pro => 'purple',
+    };
+
+/// 選手の絵(Gemini 生成)。12歳までは子ども、それ以降は大人の絵。大きさは身長に比例し、
+/// ユニフォームの色は所属で変わる(絵は青を色相で替えた7色)。背番号は絵の上に文字で重ねる。
+/// 絵が読み込めないときは、コードで描いた選手に戻る。
+class _Sprites extends StatelessWidget {
+  const _Sprites({required this.game, required this.versus});
+  final Game game;
+  final bool versus;
+
+  /// 絵の幅÷高さ(子ども・大人でほぼ同じ)。
+  static const _aspect = 0.815;
+
+  @override
+  Widget build(BuildContext context) {
+    final p = game.player;
+    final kind = p.age < 13 ? 'kid' : 'adult';
+    final color = spriteColorName(game.track, p.age);
+    return LayoutBuilder(builder: (context, c) {
+      final w = c.maxWidth, h = c.maxHeight;
+      final scale = (p.heightCm / 210).clamp(0.5, 1.05);
+      final figH = h * 0.86 * scale;
+      final bottom = h * 0.03;
+      // 絵が読み込めなかったとき、その選手の枠の中にコードで描いた選手を出す。
+      Widget fallback() => CustomPaint(
+            painter: _CourtPainter(
+              heightCm: 210,
+              jersey: jerseyColor(game.track, p.age),
+              slot: game.slot,
+              number: game.number,
+              layer: _Layer.fallback,
+            ),
+          );
+      Widget sprite(String name, double cx, double hh,
+          {bool flip = false, int number = 0}) {
+        final ww = hh * _aspect;
+        // 背番号の位置(胴の中心)。ポーズが違うので子ども・大人で変える。
+        final tx = kind == 'kid' ? 0.58 : 0.48;
+        final ty = kind == 'kid' ? 0.52 : 0.40;
+        return Positioned(
+          left: cx - ww / 2,
+          bottom: bottom,
+          width: ww,
+          height: hh,
+          child: Transform.flip(
+            flipX: flip,
+            child: Stack(children: [
+              Positioned.fill(
+                child: Image.asset(
+                  'assets/art/players/$name.png',
+                  fit: BoxFit.contain,
+                  alignment: Alignment.bottomCenter,
+                  frameBuilder: (context, child, frame, sync) =>
+                      (frame == null && !sync) ? const SizedBox.shrink() : child,
+                  errorBuilder: (_, __, ___) => fallback(),
+                ),
+              ),
+              if (number > 0 && !flip)
+                Align(
+                  alignment: Alignment(tx * 2 - 1, ty * 2 - 1),
+                  child: Text('$number',
+                      style: TextStyle(
+                          fontFamily: 'NotoSansJP',
+                          color: Colors.white,
+                          fontWeight: FontWeight.w900,
+                          fontSize: hh * 0.11,
+                          shadows: const [
+                            Shadow(color: Colors.black54, blurRadius: 2)
+                          ])),
+                ),
+            ]),
+          ),
+        );
+      }
+
+      return Stack(fit: StackFit.expand, children: [
+        sprite('${kind}_$color', w * (versus ? 0.22 : 0.30), figH,
+            number: game.number),
+        if (versus)
+          sprite('adult_dark', w * 0.52, h * 0.86 * 0.98,
+              flip: true),
+      ]);
+    });
+  }
+}
 
 /// 所属ごとのユニフォーム色。
 Color jerseyColor(Track t, int age) => switch (t) {
@@ -112,7 +205,11 @@ class _CourtPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final w = size.width, h = size.height;
     if (layer == _Layer.foreground) {
-      _paintPlayers(canvas, size);
+      _paintOverlay(canvas, size);
+      return;
+    }
+    if (layer == _Layer.fallback) {
+      _paintFigures(canvas, size);
       return;
     }
 
@@ -173,8 +270,8 @@ class _CourtPainter extends CustomPainter {
 
   }
 
-  /// 絵(または下地)の上に、選手・VS・身長を重ねる。
-  void _paintPlayers(Canvas canvas, Size size) {
+  /// 選手の絵(`assets/art/players/`)が読み込めないときだけ使う、コードで描いた選手。
+  void _paintFigures(Canvas canvas, Size size) {
     final w = size.width, h = size.height;
     // 選手。身長 210cm のとき床から壁近くまで、115cm のとき小さく。
     final scale = (heightCm / 210).clamp(0.5, 1.05);
@@ -186,6 +283,13 @@ class _CourtPainter extends CustomPainter {
       // 向かい合うライバル(暗い色のユニフォーム、やや大きく)。
       _figure(canvas, Offset(w * 0.52, baseY), h * 0.78 * 0.98,
           color: const Color(0xFF263238), flip: true);
+    }
+  }
+
+  /// 絵の上に、VS と身長を重ねる。
+  void _paintOverlay(Canvas canvas, Size size) {
+    final w = size.width, h = size.height;
+    if (versus) {
       final tp = TextPainter(
         text: const TextSpan(
           text: 'VS',

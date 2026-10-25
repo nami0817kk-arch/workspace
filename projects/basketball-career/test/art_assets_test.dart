@@ -4,7 +4,9 @@ import 'dart:io';
 
 import 'package:basketball_career/game/life.dart';
 import 'package:basketball_career/game/match.dart';
+import 'package:basketball_career/game/game.dart';
 import 'package:basketball_career/game/season.dart';
+import 'package:basketball_career/ui/art/court.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -70,6 +72,25 @@ void main() {
               .existsSync(),
           isTrue,
           reason: '${lg.name} の会場の絵が無い');
+    }
+  });
+
+  test('選手の絵(子ども・大人×ユニフォーム7色)がそろい、所属ごとの色名で引ける', () {
+    for (final kind in ['kid', 'adult']) {
+      for (final color in ['yellow', 'blue', 'red', 'green', 'teal', 'purple', 'dark']) {
+        final f = File('assets/art/players/${kind}_$color.png');
+        expect(f.existsSync(), isTrue, reason: '${kind}_$color.png が無い');
+        expect(f.lengthSync(), lessThan(60 * 1024), reason: '${kind}_$color.png が重い');
+      }
+    }
+    expect(File('pubspec.yaml').readAsStringSync(), contains('assets/art/players/'));
+    // 所属×年齢の組み合わせすべてで、置いてある色名になる。
+    for (final t in Track.values) {
+      for (final age in [8, 14, 17, 20, 25, 35]) {
+        final name = spriteColorName(t, age);
+        expect(File('assets/art/players/adult_$name.png').existsSync(), isTrue,
+            reason: '$t $age 歳 → $name');
+      }
     }
   });
 
