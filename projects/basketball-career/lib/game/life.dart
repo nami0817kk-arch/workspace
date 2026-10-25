@@ -121,10 +121,11 @@ bool canChoose(Action a, Condition c) =>
 
 /// 能力 `a` が1年で動く量(ノイズ抜き)。1ターンはこれの4分の1を基準に使う。
 /// 伸びる年は素質が効き、下る年は重点を置いた能力が落ちにくい。
-double yearlyDelta(Player p, Ability a, Ability focus) {
+double yearlyDelta(Player p, Ability a, Ability focus, {Ability? focus2}) {
   final g = growthFactor(p.age);
   final talent = 0.5 + p.potential / 100; // 0.5〜1.5
-  final share = a == focus ? 1.0 : 0.25;
+  // 第1重点は大きく、第2重点は半分ほど、それ以外はわずか。自分で決めた能力が、はっきり伸びる。
+  final share = a == focus ? focusShare : (a == focus2 ? focus2Share : otherShare);
   if (g >= 0) {
     return 5.2 *
         g *
@@ -141,10 +142,24 @@ double yearlyDelta(Player p, Ability a, Ability focus) {
   };
   return 3.0 *
       g *
-      (a == focus ? 0.5 : 1.0) *
+      (a == focus ? 0.5 : (a == focus2 ? 0.75 : 1.0)) *
       aging *
       declineMultiplier(p.traits) *
       specialDeclineMultiplier(p.specials);
+}
+
+/// 重点ごとの伸びの配分(1年の基本の伸びに掛ける)。第1重点・第2重点・それ以外。
+/// 以前は 1.0／0.25(重点1つだけ)で、重点を選んでも他の能力がじわじわ伸びて「上げた感じ」が薄かった。
+const focusShare = 1.3;
+const focus2Share = 0.6;
+const otherShare = 0.12;
+
+/// 第2重点のおすすめ(第1重点を除いて、いちばん伸びしろが大きい能力)。
+Ability recommendedFocus2(Player p, Ability focus) {
+  final w = weightsOf(p.position);
+  final rest = [for (final a in w.keys) if (a != focus) a];
+  return rest.reduce((a, b) =>
+      w[a]! * (100 - p.of(a)) >= w[b]! * (100 - p.of(b)) ? a : b);
 }
 
 /// 今の重点のおすすめ。ポジションに効く能力のうち、伸びしろ(重み × (100 − 今の値))が最も大きいもの。
@@ -185,6 +200,7 @@ int _stochasticRound(double v, Random rng) {
   Ability focus,
   Random rng, {
   double growthScale = 1.0,
+  Ability? focus2,
 }) {
   if (!canChoose(action, c)) {
     throw StateError('怪我中に選べない過ごし方: $action');
@@ -195,8 +211,10 @@ int _stochasticRound(double v, Random rng) {
   var next = Map<Ability, int>.of(p.abilities);
   if (!c.injured) {
     for (final a in Ability.values) {
-      final mult = a == focus ? e.focus : e.other;
-      final yearly = yearlyDelta(p, a, focus);
+      final mult = a == focus
+          ? e.focus
+          : (a == focus2 ? e.focus * 0.6 + e.other * 0.4 : e.other);
+      final yearly = yearlyDelta(p, a, focus, focus2: focus2);
       // 伸びない過ごし方(休養)は、伸びる年には何も動かさない。衰えは止まらない。
       if (mult == 0 && yearly >= 0) continue;
       final base = yearly / 4 * (yearly < 0 ? 1.0 : mult);

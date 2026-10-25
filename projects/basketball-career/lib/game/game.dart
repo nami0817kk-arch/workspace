@@ -439,6 +439,9 @@ class Game {
   /// 直前の操作で夢がかなった知らせ(画面が知らせたら使い終わり。保存しない)。
   String? lastDreamNote;
 
+  /// 直前の過ごし方で動いた能力と、その量(能力の画面で「今回 +n」を出す。保存しない)。
+  Map<Ability, int> lastGains = {};
+
   /// 直前の年末の「今年の成長」のまとめ(画面が見せたら使い終わり。保存しない)。
   String? lastYearSummary;
 
@@ -660,6 +663,7 @@ class Game {
   TermReport choose(
     Action action,
     Ability focus, {
+    Ability? focus2,
     Clutch Function(int margin)? chooseClutch,
     bool askClutch = false,
     bool askHalftime = false,
@@ -680,7 +684,9 @@ class Game {
     lastNewSkills = {};
     final rut = isRut(action);
     final wasInjured = condition.injured;
+    final abilitiesBefore = Map<Ability, int>.of(player.abilities);
     final r = playTerm(player, condition, action, focus, rng,
+        focus2: focus2,
         growthScale: difficulty.growth * coachBoost * (rut ? slumpScale : 1.0));
     recentActions.add(action);
     while (recentActions.length > 3) {
@@ -688,6 +694,10 @@ class Game {
     }
     lastWasRut = rut;
     player = r.player;
+    lastGains = {
+      for (final a in Ability.values)
+        if (player.of(a) != abilitiesBefore[a]) a: player.of(a) - abilitiesBefore[a]!,
+    };
     condition = r.condition;
     // 長い怪我(3ターン以上)から治ったら、復帰の出来事が起きる。
     if (condition.injured) {

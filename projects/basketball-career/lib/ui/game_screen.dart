@@ -139,6 +139,8 @@ class _SeasonView extends StatelessWidget {
           _RecentCard(lines: c.recent),
           const SizedBox(height: 12),
         ],
+        _AbilityCard(game: g),
+        const SizedBox(height: 12),
         Card(
           child: Padding(
             padding: const EdgeInsets.all(16),
@@ -154,7 +156,22 @@ class _SeasonView extends StatelessWidget {
                     child: Text(summer ? 'この季節に大会がある。' : 'この季節に冬の全国選手権がある。'),
                   ),
                 const SizedBox(height: 12),
-                const Text('重点にする能力  (★ ＝ いま伸ばすのがおすすめ)'),
+                Row(
+                  children: [
+                    const Expanded(
+                      child: Text('① 大きく伸ばす能力  (★ ＝ おすすめ)',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
+                    if (!c.focusAuto)
+                      TextButton(
+                        onPressed: c.useRecommendedFocus,
+                        style: TextButton.styleFrom(
+                            visualDensity: VisualDensity.compact),
+                        child: const Text('おすすめに戻す',
+                            style: TextStyle(fontSize: 12)),
+                      ),
+                  ],
+                ),
                 const SizedBox(height: 4),
                 Wrap(
                   spacing: 6,
@@ -168,6 +185,32 @@ class _SeasonView extends StatelessWidget {
                         onSelected: (_) => c.setFocus(a),
                       ),
                   ],
+                ),
+                const SizedBox(height: 10),
+                const Text('② 少し伸ばす能力  (選ばなくてもよい)',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+                const SizedBox(height: 4),
+                Wrap(
+                  spacing: 6,
+                  children: [
+                    ChoiceChip(
+                      label: const Text('なし'),
+                      selected: c.focus2 == null,
+                      onSelected: (_) => c.setFocus2(null),
+                    ),
+                    for (final a in Ability.values)
+                      if (a != c.focus)
+                        ChoiceChip(
+                          label: Text(a.label),
+                          selected: c.focus2 == a,
+                          onSelected: (_) => c.setFocus2(a),
+                        ),
+                  ],
+                ),
+                const Padding(
+                  padding: EdgeInsets.only(top: 4),
+                  child: Text('選んだ能力だけがはっきり伸びる。選ばなかった能力は、ほとんど伸びない。',
+                      style: TextStyle(fontSize: 12)),
                 ),
                 const SizedBox(height: 12),
                 const Text('勝負どころの方針'),
@@ -226,8 +269,6 @@ class _SeasonView extends StatelessWidget {
           const SizedBox(height: 12),
           _RivalCard(game: g),
         ],
-        const SizedBox(height: 12),
-        _AbilityCard(game: g),
         const SizedBox(height: 12),
         _GrowthCard(game: g),
         if (g.canGoAbroad) ...[
@@ -665,7 +706,7 @@ class _AbilityCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('能力  (◎○△ ＝ ${p.position.label} で効く度合い / ◆ ＝ 目指す型で伸びやすい / 緑の＋は今年の伸び)',
+            Text('能力  (◎○△ ＝ ${p.position.label} で効く度合い / ◆ ＝ 目指す型 / ▲＝今回 / 緑＋＝今年の伸び)',
                 style: const TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 6),
             // 身長も能力の1つ(総合評価に入る。素質=ポテンシャルとは別)。
@@ -709,10 +750,20 @@ class _AbilityCard extends StatelessWidget {
                     ),
                     const SizedBox(width: 8),
                     SizedBox(
-                      width: 84,
+                      width: 118,
                       child: Text.rich(
                         TextSpan(children: [
                           TextSpan(text: '${p.of(a)} ${rankOf(p.of(a))}'),
+                          // 直前の過ごし方で動いた分(いま上がった感じ)。
+                          if ((game.lastGains[a] ?? 0) != 0)
+                            TextSpan(
+                              text: ' ${game.lastGains[a]! > 0 ? '▲' : '▼'}${game.lastGains[a]!.abs()}',
+                              style: TextStyle(
+                                  color: game.lastGains[a]! > 0
+                                      ? const Color(0xFFE65100)
+                                      : const Color(0xFF1565C0),
+                                  fontWeight: FontWeight.w900),
+                            ),
                           // 年のはじめからの伸び(育てている実感)。古いセーブ・年のはじめは出さない。
                           if (_yearGain(game, a) > 0)
                             TextSpan(

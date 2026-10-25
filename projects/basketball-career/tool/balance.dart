@@ -59,7 +59,9 @@ void main(List<String> args) {
           // 重点は今いちばん低い能力ではなく、ポジションに効く能力を順に回す。
           if (auto) {
             // 画面の「おすすめで1年進める」と同じ方針。
-            g.choose(recommendedAction(g), recommendedFocus(g.player));
+            final f = recommendedFocus(g.player);
+            g.choose(recommendedAction(g), f,
+                focus2: recommendedFocus2(g.player, f));
           } else if (spec) {
             // ポジションに効く能力のうち、重み×(100-今の値)がいちばん大きいものを重点にする。
             final w = weightsOf(g.player.position);
@@ -74,7 +76,7 @@ void main(List<String> args) {
             if (team && !g.condition.injured && (g.slot == 0 || g.slot == 2)) {
               act = Action.social;
             }
-            g.choose(act, focus);
+            g.choose(act, focus, focus2: recommendedFocus2(g.player, focus));
           } else if (smart) {
             // 一番低い能力を重点にし、疲れが軽いうちは特訓を混ぜる。
             final low = Ability.values.reduce(
@@ -82,10 +84,14 @@ void main(List<String> args) {
             final act = rest
                 ? Action.rest
                 : (g.condition.fatigue < 25 ? Action.intense : Action.practice);
-            g.choose(act, low);
+            final low2 = Ability.values
+                .where((a) => a != low)
+                .reduce((a, b) => g.player.of(a) <= g.player.of(b) ? a : b);
+            g.choose(act, low, focus2: low2);
           } else {
             g.choose(rest ? Action.rest : Action.practice,
-                Ability.values[guard % Ability.values.length]);
+                Ability.values[guard % Ability.values.length],
+                focus2: Ability.values[(guard + 1) % Ability.values.length]);
           }
           if (g.canGoAbroad) {
             g.goAbroad();
