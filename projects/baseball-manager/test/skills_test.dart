@@ -41,6 +41,22 @@ void main() {
     expect(grew, isNot(contains(Skill.stealer)));
   });
 
+  test('管理者: 特殊能力の付け外しとコツの書き換え', () {
+    final g = _game();
+    g.skillTips[Skill.chance] = 2;
+    g.setStudyTarget(Skill.chance);
+    g.adminSetSkills({Skill.chance, Skill.strikeoutProne});
+    expect(g.player.skills, {Skill.chance, Skill.strikeoutProne});
+    expect(g.skillTips[Skill.chance], isNull);
+    expect(g.studyTarget, isNull);
+    g.adminSetSkillTips(Skill.stealer, 9);
+    expect(g.skillTips[Skill.stealer], maxSkillTips);
+    g.adminSetSkillTips(Skill.chance, 3); // 持っているものは対象外
+    expect(g.skillTips[Skill.chance], isNull);
+    g.adminSetSkillTips(Skill.stealer, 0);
+    expect(g.skillTips.containsKey(Skill.stealer), isFalse);
+  });
+
   group('特殊能力', () {
     test('打者・投手で取れるものが分かれ、二刀流は両方', () {
       final bat = skillsFor(Role.batter).toSet();

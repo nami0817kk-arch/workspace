@@ -930,6 +930,24 @@ class Game {
         player.copyWith(gifts: {...player.gifts, a: v.clamp(giftMin, giftMax)});
   }
 
+  /// 特殊能力(弱点を含む)を、年齢・コツ・もとの特殊能力を無視して丸ごと置き換える。
+  void adminSetSkills(Set<Skill> s) {
+    player = player.copyWith(skills: Set.of(s));
+    skillTips.removeWhere((k, _) => s.contains(k));
+    if (studyTarget != null && s.contains(studyTarget)) studyTarget = null;
+  }
+
+  /// 特殊能力のコツを書き換える(0〜`maxSkillTips`)。持っているもの・弱点は対象外。
+  void adminSetSkillTips(Skill s, int n) {
+    if (player.skills.contains(s) || s.negative) return;
+    final v = n.clamp(0, maxSkillTips);
+    if (v == 0) {
+      skillTips.remove(s);
+    } else {
+      skillTips[s] = v;
+    }
+  }
+
   /// 覚醒済みの印を書き換える(もう一度覚醒を試したいとき)。
   void adminSetAwakened(bool v) => awakened = v;
 

@@ -505,6 +505,17 @@ void _rankTests() {
     await t.tap(find.byKey(const Key('admin-awakened')));
     await t.pumpAndSettle();
     expect(c.game!.awakened, isTrue);
+
+    // 特殊能力: 付け外しと、コツの満タン。
+    await t.ensureVisible(find.byKey(const Key('admin-skill-stealer')));
+    await t.tap(find.byKey(const Key('admin-skill-stealer')));
+    await t.pumpAndSettle();
+    expect(c.game!.player.skills, contains(Skill.stealer));
+    await t.ensureVisible(find.byKey(const Key('admin-tips-max')));
+    await t.tap(find.byKey(const Key('admin-tips-max')));
+    await t.pumpAndSettle();
+    expect(c.game!.skillTips[Skill.powerHitter], maxSkillTips);
+    expect(c.game!.skillTips.containsKey(Skill.stealer), isFalse);
   });
 
   testWidgets('管理者モードは覚えていて、7回タップでもう一度切れる', (t) async {
