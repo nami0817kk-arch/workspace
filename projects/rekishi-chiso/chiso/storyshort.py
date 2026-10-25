@@ -1814,3 +1814,66 @@ def contact_sheet(ffmpeg: str, video: Path, target: Path, every: float = 2.0, co
         target.parent.mkdir(parents=True, exist_ok=True)
         sheet.save(target, quality=88)
     return target
+
+
+# --- 投稿（10-25：物語型ショートの upload。cli の story-short-screen / story-short-upload）--------------------
+STORY_AI_NOTE = ("この動画の人物・情景の画像の多くは、Google の画像生成AI（Gemini）で作った想像上のイメージで、"
+                 "記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。")
+STORY_HASHTAGS = ["#日本史", "#戦国時代"]
+
+
+def video_of(path, doc: dict | None = None) -> Path:
+    """書き出した動画（out/<台本の out:>.mp4）。"""
+    from .cli import out_dir
+    doc = doc or load(path)
+    return out_dir() / f"{doc.get('out') or Path(path).stem}.mp4"
+
+
+def used_pictures(doc: dict) -> list[str]:
+    """画面に出した実在の絵（shots の kind: real と、カードの肖像）。出た順・重なりなし。"""
+    out = []
+    for shot in (doc.get("shots") or {}).values():
+        if shot.get("kind") == "real" and shot.get("image") and shot["image"] not in out:
+            out.append(shot["image"])
+        for it in shot.get("images") or []:              # 肖像を並べたカット（composite）
+            if isinstance(it, dict) and it.get("image") and it["image"] not in out:
+                out.append(it["image"])
+    for card in doc.get("cards") or []:
+        for it in card.get("items") or card.get("people") or []:
+            if isinstance(it, dict) and it.get("image") and it["image"] not in out:
+                out.append(it["image"])
+    return out
+
+
+def post_description(doc: dict, config: dict, main_video: str | None, known: dict | None = None) -> str:
+    """概要欄：台本の description（物語の要約・結末まで）→ 本編へのリンク → 画像の断り → 絵と出典（1作品1行）→ 音声 → ハッシュタグ → 運営。"""
+    import json
+    from urllib.parse import unquote
+    from .cli import assets_dir
+    out = [str(doc.get("description", "")).strip(), ""]
+    if main_video:
+        out += [f"本編はこちら → https://youtu.be/{main_video}", ""]
+    out += ["■ 画像について", str(doc.get("ai_disclosure") or STORY_AI_NOTE), ""]
+    cf = assets_dir(config) / "paintings" / "credits.json"
+    cr = json.loads(cf.read_text(encoding="utf-8")) if cf.exists() else {}
+    labels = dict(known or {})                           # 本編の台本で控えた作品名（画像 → 作品名）を先に
+    for shot in (doc.get("shots") or {}).values():
+        if shot.get("image") and shot.get("credit"):
+            labels[shot["image"]] = re.sub(r"（Wikimedia Commons・パブリックドメイン）$", "", shot["credit"])
+    rows, seen = [], set()
+    for img in used_pictures(doc):
+        info = cr.get(Path(img).stem) or {}
+        url = unquote(info.get("source", ""))
+        lab = labels.get(img) or Path(img).stem
+        if (url and url in seen) or lab in seen:
+            continue
+        seen.update({url, lab} - {""})
+        rows.append(f"{lab}　{url}" if url else lab)     # URL のすぐ後ろに字を付けない（リンクが壊れる）
+    if rows:
+        out += ["■ 画面の絵と出典（Wikimedia Commons。著作権の切れた作品）"] + rows + [""]
+    voice = (config.get("cast") or {}).get("語り", {}).get("name", "剣崎雌雄")
+    out += ["■ 音声", f"VOICEVOX:{voice}", ""]
+    tags = doc.get("hashtags") or ["#日本史", "#" + re.split(r"[（の]", str((doc.get("header") or {}).get("tag", "お市の方")) + "の")[0]
+                                   + ("の方" if "の方" in str((doc.get("header") or {}).get("tag", "")) else ""), "#戦国時代"]   # 台本の hashtags: で上書き
+    out += [" ".join(tags[:3]), "", f"運営：{config.get('operator', '')}"]
+    return "\n".join(out).strip()[:4900] + "\n"

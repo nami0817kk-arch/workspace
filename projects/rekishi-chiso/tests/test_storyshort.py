@@ -471,3 +471,12 @@ def test_header_styles_fit_width_and_stay_out_of_the_middle():
                 assert box[1] >= 1560 and box[3] <= 1700                      # C のバーは出典の上
             else:
                 assert box[3] <= bottom, (style, box)
+
+
+def test_story_short_post_description():
+    doc = S.load(SCRIPT.parent / "oichi_s11.yaml")
+    from chiso.cli import load_config
+    text = S.post_description(doc, load_config(), "lQrMu8QRQCs")
+    assert "本編はこちら → https://youtu.be/lQrMu8QRQCs" in text and "Gemini" in text
+    assert "VOICEVOX:剣崎雌雄" in text and "運営：つるはし社" in text and "#お市の方" in text
+    assert "https://commons.wikimedia.org/wiki/File:Oeyo.jpg" in text and len(text) <= 5000
