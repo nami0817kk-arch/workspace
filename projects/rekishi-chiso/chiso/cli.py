@@ -199,6 +199,8 @@ def preflight(sc, config) -> bool:
     errors += e
     warns += w
     warns += check_mod.lint(sc, config.get("short", {}).get("max_seconds", 60))
+    from . import factcheck                              # 台本と事実カードの突き合わせ（10-26。カードも # fact: も無い台本では何もしない）
+    warns += factcheck.check(sc, Path(sc.path).read_text(encoding="utf-8"), assets_dir(config).parent / "research")
     from . import reading                                # 読み違い（10-10）：辞書との食い違い・割れる字・辞書の巻き込み
     e, w = reading.notes(sc, load_readings(ROOT / "readings.yaml"), kana_source(config))
     errors += e
@@ -1350,9 +1352,30 @@ def cmd_research(args) -> int:
     """出どころの候補を入口（NDL・J-STAGE・ジャパンサーチ・Wikisource）から集め、知らない度と食い違いの欄を付けて md に。"""
     from . import research
     out = Path(args.out) if args.out else assets_dir(load_config()).parent / "research"
+    token = Path(args.token) if args.token else assets_dir(load_config()).parent / "secrets" / "token.json"
     path = research.run(args.topic, args.kw, args.phrase, args.fact, out, name=args.name,
-                        wiki_title=args.wiki, world=args.world)
+                        wiki_title=args.wiki, world=args.world, slug=args.slug, cards=args.cards or bool(args.cards_in),
+                        pdfs=args.pdf, cards_in=args.cards_in, yt=args.yt, yt_budget=args.yt_budget, token=token,
+                        plan=args.plan, chain=args.chain, naj=not args.no_naj)
     print(f"書き出しました: {path}")
+    return 0
+
+
+def cmd_fact_check(args) -> int:
+    """台本の `# fact:` と事実カードのつながり・冒頭3分の知らない事実の数（chiso/factcheck.py）。"""
+    from . import factcheck
+    sc = script_mod.load(args.script)
+    text = Path(args.script).read_text(encoding="utf-8")
+    research_dir = Path(args.research) if args.research else assets_dir(load_config()).parent / "research"
+    rows = factcheck.summary(sc, text, research_dir)
+    warns = factcheck.check(sc, text, research_dir)
+    if not rows and not warns:
+        print("事実カードも # fact: もありません（点検しません）")
+        return 0
+    for r in rows:
+        print(f"  {r}")
+    for w in warns:
+        print(f"  ! {w}")
     return 0
 
 
@@ -1410,7 +1433,22 @@ def main(argv=None) -> int:
     s.add_argument("--wiki", default="", help="Wikipedia の記事名が topic と違うとき")
     s.add_argument("--world", action="store_true", help="世界史：英語の Wikisource も探す")
     s.add_argument("--out", default="", help="書き出す場所（省けば assets_dir の隣の research/）")
+    s.add_argument("--cards", action="store_true", help="事実カード research/<題>_facts_YYYYMMDD.yaml を作る（--fact ごとに1枚。chiso/facts.py）")
+    s.add_argument("--slug", default="", help="カードの ID の頭（例 masamune → masamune-01）")
+    s.add_argument("--pdf", action="append", default=[],
+                   help="人が開いた PDF の URL（「URL::題」も可）。道具が本文を読んで該当箇所を抜く（全国遺跡報告総覧・J-STAGE の PDF など）")
+    s.add_argument("--cards-in", action="append", default=[], help="Agent が WebSearch・WebFetch で集めた事実カード（同じ形の YAML）を合わせる")
+    s.add_argument("--yt", action="store_true", help="他チャンネルでの既出を YouTube Data API で測る（読み取りのみ・単位を出す）")
+    s.add_argument("--yt-budget", type=int, default=1000, help="YouTube Data API の単位の上限（検索1回100）")
+    s.add_argument("--token", default="", help="YouTube の token.json（省けば secrets/token.json）")
+    s.add_argument("--plan", action="store_true", help="別名・旧字・和暦・史料名・研究者名・英語名と、種類ごとの site: 検索語を research/<題>_plan_YYYYMMDD.md に")
+    s.add_argument("--chain", action="store_true", help="Wikipedia の脚注と J-STAGE 論文の参考文献から、まだ無い文献をたどる（2段まで）")
+    s.add_argument("--no-naj", action="store_true", help="国立公文書館デジタルアーカイブを叩かない（Crawl-delay 30 秒）")
     s.set_defaults(fn=cmd_research)
+    s = sub.add_parser("fact-check", help="台本の # fact: と事実カード（research/<題>_facts_*.yaml）の突き合わせ")
+    s.add_argument("script")
+    s.add_argument("--research", default="", help="カードの置き場（省けば assets_dir の隣の research/）")
+    s.set_defaults(fn=cmd_fact_check)
     s = sub.add_parser("thumb")
     s.add_argument("script")
     s.add_argument("--variants", action="store_true", help="3案（a・b・c）と一覧の大きさの確認用を作る")
