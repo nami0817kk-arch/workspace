@@ -282,7 +282,7 @@ const timeoutBonus = 0.05;
 /// 勝負どころの成功率(0〜1)。`oppDefense` は相手の守備の強さ(0〜100)。
 /// ファウルをもらうは「ファウルを誘って、2本とも決める」確率(1本だけでも1点は入る)。
 double clutchChance(Player p, Clutch c, double oppDefense, double form,
-    {bool timeout = false, bool zone = false}) {
+    {bool timeout = false, bool zone = false, bool vsRival = false}) {
   final opp = oppDefense / 100;
   final double raw = switch (c) {
     Clutch.drive =>
@@ -306,7 +306,9 @@ double clutchChance(Player p, Clutch c, double oppDefense, double form,
   // 得意技の加算。
   final skill = p.skills.fold(0.0, (s, k) => s + k.clutchBonus(c));
   final to = (timeout ? timeoutBonus : 0.0) + (zone ? zoneBonus : 0.0);
-  final sp = specialClutchBonus(p.specials);
+  final sp = specialClutchBonus(p.specials) +
+      specialClutchPlayBonus(p.specials, c) +
+      specialRivalBonus(p.specials, vsRival);
   if (c == Clutch.drawFoul) return (raw + skill + to + sp).clamp(0.03, 0.9);
   return (raw * (0.8 + form * 0.2) +
           clutchBonus(p.traits) +
@@ -780,7 +782,7 @@ MatchResult finishMatch(Player p, MatchState s, Clutch? choice, Random rng) {
     used = c;
     var success = rng.nextDouble() <
         clutchChance(p, c, s.oppStrength, s.form,
-            timeout: s.timeout, zone: s.zone);
+            timeout: s.timeout, zone: s.zone, vsRival: s.vsRival);
     if (c == Clutch.drawFoul) {
       // ファウルを誘えたか→フリースロー2本。入った本数だけ得点(2本とも入れば成功)。
       var made = 0;

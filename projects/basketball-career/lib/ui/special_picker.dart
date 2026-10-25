@@ -26,27 +26,39 @@ class _SpecialDialog extends StatelessWidget {
     final have = g.player.specials;
     final cs = Theme.of(context).colorScheme;
     return AlertDialog(
-      title: Text('特殊能力  (ポイント ${g.sp})'),
+      title: Text('特殊能力 ${have.length}/${Special.values.length}'),
       content: SizedBox(
         width: double.maxFinite,
         child: ListView(
           shrinkWrap: true,
           children: [
-            const Padding(
-              padding: EdgeInsets.only(bottom: 8),
-              child: Text('年末にポイントがたまる(毎年1・目標達成+1・優勝+1)。好きな能力を選んで習得しよう。',
-                  style: TextStyle(fontSize: 12)),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Text(
+                  'ポイント ${g.sp}\n年末にたまる(毎年1・目標達成+1・優勝+1)。好きな能力を選んで習得しよう。',
+                  style: const TextStyle(fontSize: 12)),
             ),
-            for (final s in Special.values)
-              _Row(
-                special: s,
-                have: have.contains(s),
-                why: whyNot(have, g.sp, s),
-                onLearn: canLearn(have, g.sp, s)
-                    ? () => controller.learnSpecial(s)
-                    : null,
-                color: cs.primary,
+            for (final cat in SpecialCategory.values) ...[
+              Padding(
+                padding: const EdgeInsets.only(top: 10, bottom: 2),
+                child: Text(
+                    '${cat.label}  '
+                    '(${Special.values.where((s) => s.category == cat && have.contains(s)).length}'
+                    '/${Special.values.where((s) => s.category == cat).length})',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, color: cs.primary)),
               ),
+              for (final s in Special.values.where((s) => s.category == cat))
+                _Row(
+                  special: s,
+                  have: have.contains(s),
+                  why: whyNot(have, g.sp, s),
+                  onLearn: canLearn(have, g.sp, s)
+                      ? () => controller.learnSpecial(s)
+                      : null,
+                  color: cs.primary,
+                ),
+            ],
           ],
         ),
       ),

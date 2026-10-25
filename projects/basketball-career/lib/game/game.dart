@@ -608,7 +608,9 @@ class Game {
   /// チームワークによる味方の強さの上乗せ。パスが上手いほど効きが大きい。
   /// 大会の直前(この季節か前の季節)に研究をしていれば、相手を分析済み(相性の良い作戦が +0.6)。
   double get scoutBonus =>
-      recentActions.reversed.take(2).contains(Action.study) ? 0.6 : 0.0;
+      recentActions.reversed.take(2).contains(Action.study)
+          ? 0.6 + specialScoutBonus(player.specials)
+          : 0.0;
 
   double get teamBonus =>
       (teamwork - 50) *
@@ -697,14 +699,16 @@ class Game {
     // 何もしなければ少しずつ薄れる(毎ターン -2)。交流・練習試合で保つ。
     teamwork = (teamwork +
             switch (action) {
-              Action.social => 12,
-              Action.scrimmage => 6,
+              Action.social =>
+                (12 * specialTeamworkGainMultiplier(player.specials)).round(),
+              Action.scrimmage =>
+                (6 * specialTeamworkGainMultiplier(player.specials)).round(),
               _ => 0,
             } -
             specialTeamworkDecay(player.specials, teamworkDecay(player.traits)))
         .clamp(0, 100);
     if (action == Action.practice || action == Action.intense) {
-      coachBond = (coachBond + 1).clamp(0, 100);
+      coachBond = (coachBond + specialCoachGain(player.specials)).clamp(0, 100);
     }
 
     final national = slot == 3 && nationalPending && track == Track.pro;
@@ -720,6 +724,8 @@ class Game {
             teamBonus: teamBonus + schoolBonus,
             scout: scoutBonus,
             zones: player.specials.contains(Special.zone) ? 1 : 0,
+            timeouts: (national ? League.national : league).timeouts +
+                specialExtraTimeouts(player.specials),
             momentumMul: specialMomentumMultiplier(player.specials),
             askHalftime: askHalftime && chooseClutch == null);
         cr.advance(
@@ -818,7 +824,7 @@ class Game {
       chances: {
         for (final c in Clutch.values)
           c: clutchChance(player, c, s.oppStrength, s.form,
-              timeout: s.timeout, zone: s.zone),
+              timeout: s.timeout, zone: s.zone, vsRival: s.vsRival),
       },
     );
   }
@@ -1055,8 +1061,12 @@ class Game {
           final honorsLast = records
               .where((r) => r.age == player.age - 1)
               .fold(0, (s, r) => s + r.honors.length);
-          final next = salaryOf(
-              overall: player.overall, honorsLastYear: honorsLast, abroad: abroad);
+          final next = (salaryOf(
+                      overall: player.overall,
+                      honorsLastYear: honorsLast,
+                      abroad: abroad) *
+                  specialSalaryMultiplier(player.specials))
+              .round();
           if (next >= salary * 1.25) {
             lastSalaryNote = '契約更改: 年俸アップ! ${moneyLabel(salary)} → ${moneyLabel(next)}';
           } else if (next <= salary * 0.8) {
@@ -1065,15 +1075,18 @@ class Game {
           salary = next;
           // スポンサー契約: 前の年の活躍・人気で来年の契約が決まる。
           final lastYear = records.where((r) => r.age == player.age - 1);
-          final nextSponsor = sponsorOf(
-            overall: player.overall,
-            honorsLastYear: lastYear.fold(0, (s, r) => s + r.honors.length),
-            champion: lastYear.any((r) => r.champion),
-            star: player.traits.contains(Trait.starPower),
-            draftPick: draftPick,
-            caps: caps,
-            abroad: abroad,
-          );
+          final nextSponsor = (sponsorOf(
+                    overall: player.overall,
+                    honorsLastYear:
+                        lastYear.fold(0, (s, r) => s + r.honors.length),
+                    champion: lastYear.any((r) => r.champion),
+                    star: player.traits.contains(Trait.starPower),
+                    draftPick: draftPick,
+                    caps: caps,
+                    abroad: abroad,
+                  ) *
+                  specialSponsorMultiplier(player.specials))
+              .round();
           if (sponsor == 0 && nextSponsor > 0) {
             lastSponsorNote = 'スポンサー契約が決まった! 年${moneyLabel(nextSponsor)}';
           } else if (nextSponsor >= sponsor + 600) {

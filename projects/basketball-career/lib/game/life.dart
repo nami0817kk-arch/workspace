@@ -133,13 +133,18 @@ double yearlyDelta(Player p, Ability a, Ability focus) {
         growthMultiplier(p.traits, p.age) *
         abilityGrowthMultiplier(p.traits, a) *
         styleGrowthMultiplier(p.style, a) *
-        specialGrowthMultiplier(p.specials);
+        specialGrowthMultiplier(p.specials, a);
   }
   final aging = switch (a) {
     Ability.speed || Ability.stamina || Ability.physical => 1.5,
     _ => 1.0,
   };
-  return 3.0 * g * (a == focus ? 0.5 : 1.0) * aging * declineMultiplier(p.traits);
+  return 3.0 *
+      g *
+      (a == focus ? 0.5 : 1.0) *
+      aging *
+      declineMultiplier(p.traits) *
+      specialDeclineMultiplier(p.specials);
 }
 
 /// 今の重点のおすすめ。ポジションに効く能力のうち、伸びしろ(重み × (100 − 今の値))が最も大きいもの。
@@ -210,8 +215,10 @@ int _stochasticRound(double v, Random rng) {
   var morale = c.morale;
   final dm = e.morale;
   morale += dm > 0
-      ? (dm * moraleGainMultiplier(p.traits)).round()
-      : (dm * moraleLossMultiplier(p.traits)).round();
+      ? (dm * moraleGainMultiplier(p.traits) * specialMoraleGainMultiplier(p.specials))
+          .round()
+      : (dm * moraleLossMultiplier(p.traits) * specialMoraleLossMultiplier(p.specials))
+          .round();
 
   var injured = max(0, c.injuredTerms - 1);
   var injuryName = c.injuryName;
@@ -219,6 +226,7 @@ int _stochasticRound(double v, Random rng) {
   if (!c.injured) {
     final risk = e.injury *
         injuryMultiplier(p.traits) *
+        specialInjuryMultiplier(p.specials) *
         (c.fatigue >= 70 ? 2.0 : 1.0);
     if (rng.nextDouble() < risk) {
       final kind = rollInjury(rng);

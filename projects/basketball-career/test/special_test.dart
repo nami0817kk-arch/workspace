@@ -192,4 +192,82 @@ void main() {
       expect(() => g.useZone(), throwsStateError);
     });
   });
+
+  group('増えた特殊能力', () {
+    test('35種あり、分類ごとに並び、前提は同じ分類・先に定義されたものだけ', () {
+      expect(Special.values.length, 35);
+      for (final c in SpecialCategory.values) {
+        expect(Special.values.where((s) => s.category == c), isNotEmpty, reason: c.label);
+      }
+      for (final s in Special.values) {
+        final r = s.requires;
+        if (r != null) {
+          expect(Special.values.indexOf(r), lessThan(Special.values.indexOf(s)),
+              reason: '${s.label} の前提は先に並べる');
+        }
+      }
+      expect(learnPriority.toSet(), Special.values.toSet());
+      expect(learnPriority.length, Special.values.length, reason: '優先順に重複がない');
+    });
+
+    test('勝負どころの選択ごとの特化は、その選択だけに効く', () {
+      double c(Set<Special> sp, Clutch k) =>
+          clutchChance(_p(specials: sp), k, 60, 1.0);
+      expect(c({Special.threeAce}, Clutch.threePoint),
+          greaterThan(c({}, Clutch.threePoint)));
+      expect(c({Special.threeAce}, Clutch.drive), c({}, Clutch.drive));
+      expect(c({Special.foulAce}, Clutch.drawFoul),
+          greaterThan(c({}, Clutch.drawFoul)));
+    });
+
+    test('ライバルキラーはライバル戦だけ、ラストショットは前提の上に重なる', () {
+      double c(Set<Special> sp, {bool rival = false}) => clutchChance(
+          _p(specials: sp), Clutch.drive, 60, 1.0, vsRival: rival);
+      expect(c({Special.rivalKiller}, rival: true), greaterThan(c({}, rival: true)));
+      expect(c({Special.rivalKiller}), c({}));
+      expect(specialClutchBonus({Special.calm, Special.clutchMaster, Special.lastShot}),
+          greaterThan(specialClutchBonus({Special.calm, Special.clutchMaster})));
+    });
+
+    test('能力ごとの特訓は、その能力だけ伸びやすい', () {
+      final young = _p().copyWith(age: 14);
+      final trained = young.copyWith(specials: {Special.shooterTraining});
+      expect(yearlyDelta(trained, Ability.threePoint, Ability.threePoint),
+          greaterThan(yearlyDelta(young, Ability.threePoint, Ability.threePoint)));
+      expect(yearlyDelta(trained, Ability.rebound, Ability.rebound),
+          yearlyDelta(young, Ability.rebound, Ability.rebound));
+    });
+
+    test('長持ちは衰えを遅くし、体と心・チーム・プロの倍率が入っている', () {
+      final old = _p().copyWith(age: 35);
+      final lasting = old.copyWith(specials: {Special.longevity});
+      expect(yearlyDelta(lasting, Ability.speed, Ability.speed).abs(),
+          lessThan(yearlyDelta(old, Ability.speed, Ability.speed).abs()));
+      expect(specialInjuryMultiplier({Special.ironBody}), lessThan(1.0));
+      expect(specialMoraleLossMultiplier({Special.resetMind}), lessThan(1.0));
+      expect(specialMoraleGainMultiplier({Special.positive}), greaterThan(1.0));
+      expect(specialTeamworkGainMultiplier({Special.popular}), greaterThan(1.0));
+      expect(specialCoachGain({Special.favorite}), 2);
+      expect(specialCoachGain({}), 1);
+      expect(specialExtraTimeouts({Special.timeoutMaster}), 1);
+      expect(specialScoutBonus({Special.analyst}), greaterThan(0));
+      expect(specialTeamBonus({Special.gameMaker, Special.captainSense}),
+          greaterThan(specialTeamBonus({Special.gameMaker})));
+      expect(specialSponsorMultiplier({Special.fanFavorite}), 1.2);
+      expect(specialSalaryMultiplier({Special.negotiator}), 1.1);
+    });
+
+    test('スカウトの目に留まるで、プロ契約の評価点が上がる', () {
+      expect(offerScore(_p(specials: {Special.scoutEye}), 50) - offerScore(_p(), 50),
+          closeTo(3.0, 1e-9));
+    });
+
+    test('タイムアウトの名手で、大会のタイムアウトが1回増える', () {
+      final g = _clutchGame({Special.timeoutMaster});
+      final base = _clutchGame({});
+      expect(g, isNotNull);
+      expect(base, isNotNull);
+      expect(g!.run!.timeouts, base!.run!.timeouts + 1);
+    });
+  });
 }
