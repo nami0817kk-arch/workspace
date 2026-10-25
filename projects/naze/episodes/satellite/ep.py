@@ -5,14 +5,18 @@
 国際宇宙ステーション: 高さ約400km、新幹線(時速300km)の約92倍、秒速約7.7km(NASA は時速約17,500マイル = 秒速約7.8km)、約90分で一周。
   https://www.nasa.gov/international-space-station/space-station-facts-and-figures/
 ニュートンの大砲: ニュートン『世界の体系について』(A Treatise of the System of the World, 1728)の思考実験。
+地球の絵: assets/earth_gemini.jpg(Gemini で作った宇宙から見た地球。円の中心 511,512、半径 410 画素)。見せ方ごとに円へ貼り直す。
 """
 from __future__ import annotations
 
 import math
+from pathlib import Path
 
-from PIL import ImageDraw
+import numpy as np
+from PIL import Image, ImageDraw, ImageFilter
 
 from naze import overlay as O
+from naze.config import H, W
 
 GM, R, ALT = 398600.4418, 6371.0, 100.0
 V_ORBIT = math.sqrt(GM / (R + ALT))
@@ -83,6 +87,70 @@ EP = dict(
 )
 
 
+EARTH = np.asarray(Image.open(Path(__file__).with_name("assets") / "earth_gemini.jpg").convert("RGB")).astype(np.float32)
+E_CX, E_CY, E_R = 511.0, 512.0, 410.0
+_GX, _GY = np.meshgrid(np.arange(W, dtype=np.float32), np.arange(H, dtype=np.float32))
+
+
+def _stars() -> Image.Image:
+    rng = np.random.default_rng(7)
+    img = Image.new("RGBA", (W, H), (4, 8, 20, 255))
+    d = ImageDraw.Draw(img)
+    for _ in range(420):
+        x, y = rng.uniform(0, W), rng.uniform(0, H)
+        b = int(rng.uniform(70, 230))
+        r = rng.choice([0.8, 1.2, 1.8], p=[0.7, 0.24, 0.06])
+        d.ellipse([x - r, y - r, x + r, y + r], fill=(b, b, min(255, b + 20)))
+    return img
+
+
+SKY = _stars()
+_EARTH_CACHE: dict = {}
+
+
+def _earth(s: float, vx: float, vy: float) -> Image.Image:
+    """星空に地球(写真を円に貼ったもの)と大気の光を重ねた 1 枚。同じ見せ方の間は使い回す。"""
+    key = (round(s, 5), round(vx, 1), round(vy, 1))
+    if key in _EARTH_CACHE:
+        return _EARTH_CACHE[key]
+    X = (_GX - CX) / s + vx                 # 画面の画素 → 地球の中心を原点にした km
+    Y = -(_GY - CY) / s + vy
+    rr = np.sqrt(X * X + Y * Y) / R
+    out = np.asarray(SKY.convert("RGB")).astype(np.float32).copy()
+    inside = rr <= 1.0
+    if inside.any():
+        u = np.clip(E_CX + X[inside] / R * E_R, 0, EARTH.shape[1] - 2)
+        v = np.clip(E_CY - Y[inside] / R * E_R, 0, EARTH.shape[0] - 2)
+        x0, y0 = np.floor(u).astype(int), np.floor(v).astype(int)
+        fx, fy = (u - x0)[:, None], (v - y0)[:, None]
+        c = (EARTH[y0, x0] * (1 - fx) * (1 - fy) + EARTH[y0, x0 + 1] * fx * (1 - fy)
+             + EARTH[y0 + 1, x0] * (1 - fx) * fy + EARTH[y0 + 1, x0 + 1] * fx * fy)
+        out[inside] = c
+    # 大気: 地面の上に薄い青い光(遠景でも見えるよう、最低 5 画素ぶんの厚み)
+    thick = max(40.0 / R, 5.0 / (s * R))
+    halo = (rr > 1.0) & (rr < 1.0 + 4 * thick)
+    if halo.any():
+        a = np.exp(-(rr[halo] - 1.0) / thick)[:, None] * 0.85
+        out[halo] = out[halo] * (1 - a) + np.array([110, 180, 255], np.float32) * a
+    img = Image.fromarray(out.clip(0, 255).astype(np.uint8)).convert("RGBA")
+    if len(_EARTH_CACHE) > 64:
+        _EARTH_CACHE.clear()
+    _EARTH_CACHE[key] = img
+    return img
+
+
+def _mountain(dr: ImageDraw.ImageDraw, bx: float, by: float, mh: float) -> None:
+    """発射台の山(岩肌＋雪の頂)と、頂上の大砲(右向き)。"""
+    w = mh * 1.1
+    dr.polygon([(bx - w, by + 4), (bx - w * 0.35, by - mh * 0.55), (bx, by - mh), (bx + w * 0.4, by - mh * 0.5), (bx + w, by + 4)], fill=(96, 84, 72))
+    dr.polygon([(bx, by - mh), (bx + w * 0.4, by - mh * 0.5), (bx + w, by + 4), (bx + w * 0.15, by + 4)], fill=(70, 60, 52))
+    dr.polygon([(bx - w * 0.2, by - mh * 0.8), (bx, by - mh), (bx + w * 0.16, by - mh * 0.84), (bx + w * 0.02, by - mh * 0.74)], fill=(235, 240, 248))
+    k = max(1.0, mh / 90)
+    dr.rounded_rectangle([bx - 12 * k, by - mh - 14 * k, bx + 8 * k, by - mh + 2 * k], 4 * k, fill=(40, 42, 50))
+    dr.rectangle([bx, by - mh - 12 * k, bx + 30 * k, by - mh - 4 * k], fill=(55, 58, 68))
+    dr.ellipse([bx - 10 * k, by - mh - 4 * k, bx + 2 * k, by - mh + 8 * k], fill=(30, 30, 34))
+
+
 def _ease(u: float) -> float:
     u = max(0.0, min(1.0, u))
     return u * u * (3 - 2 * u)
@@ -119,16 +187,12 @@ def draw(img, dr: ImageDraw.ImageDraw, t: float, ctx) -> None:
 
     cid = ctx["cur"]["id"] if ctx["cur"] else "q"
     # 宇宙と地球
-    ex, ey = P(0, 0)
-    rr = R * s
-    dr.ellipse([ex - rr - 10, ey - rr - 10, ex + rr + 10, ey + rr + 10], fill=(24, 44, 90))
-    dr.ellipse([ex - rr, ey - rr, ex + rr, ey + rr], fill=(40, 110, 80), outline=(120, 200, 150), width=4)
+    img.paste(_earth(s, vx, vy), (0, 0))
+    dr = ImageDraw.Draw(img)
     # 山(高さ 100km。遠景では見えないので最小の大きさを持たせる)
     hx, hy = P(0, R + ALT)
     bx, by = P(0, R)
-    mh = max(by - hy, 14)
-    dr.polygon([(bx - mh * 0.9, by + 2), (bx, by - mh), (bx + mh * 0.9, by + 2)], fill=(150, 130, 100), outline=(220, 200, 160))
-    dr.rectangle([bx - 6, by - mh - 8, bx + 10, by - mh + 2], fill=(60, 60, 70))
+    _mountain(dr, bx, by, max(by - hy, 14))
 
     # 「まっすぐ進むと」と地面の逃げ方(key の行だけ)
     if cid == "key":
@@ -159,6 +223,7 @@ def draw(img, dr: ImageDraw.ImageDraw, t: float, ctx) -> None:
         pts = [P(x, y) for _, x, y in path[:n:2]] + [P(path[n - 1][1], path[n - 1][2])]
         live = cid == sid or (sid == "vo" and cid == "orbit")
         col = COL[sid] if live else tuple(int(c * 0.55) for c in COL[sid])
+        dr.line(pts, fill=O.NAVY, width=13 if live else 9, joint="curve")      # 海の青に紛れないよう濃い縁
         dr.line(pts, fill=col, width=7 if live else 5, joint="curve")
         if live or (sid == "vo" and cid in ("iss", "end")):
             px, py = pts[-1]
