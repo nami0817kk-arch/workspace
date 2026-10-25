@@ -134,7 +134,7 @@ def strip_tags(s: str) -> str:
 def norm(s: str) -> str:
     """照らし合わせ用：NFKC・空白を消す・旧字を新字に（よく出るものだけ）。"""
     s = unicodedata.normalize("NFKC", s or "")
-    s = s.translate(str.maketrans("兩畫獨眞國學當實營氣傳德龍廣澤會舊體", "両画独真国学当実営気伝徳竜広沢会旧体"))
+    s = s.translate(str.maketrans("兩畫獨眞國學當實營氣傳德龍廣澤會舊體發圖齋戰爭禮藏寫繪證從處號歲歷臺竝壽鐵燒殘變對樂萬與齒髮關縣圓團廳醫賣讀邊", "両画独真国学当実営気伝徳竜広沢会旧体発図斎戦争礼蔵写絵証従処号歳歴台並寿鉄焼残変対楽万与歯髪関県円団庁医売読辺"))
     return re.sub(r"\s+", "", s)
 
 
@@ -248,6 +248,116 @@ def parse_lab(text: str) -> list[Source]:
 
 def lab_hits(text: str) -> int:
     return int(json.loads(text).get("hit", 0))
+
+
+# 公開本の全文（頁ごとの OCR）。/dl/api/ は robots.txt で断られていない（断っているのは /dl/fulltext の検索画面）
+LAB_FULLTEXT = "https://lab.ndl.go.jp/dl/api/book/fulltext-json/{pid}"
+
+
+def lab_fulltext_url(pid: str) -> str:
+    return LAB_FULLTEXT.format(pid=pid)
+
+
+def parse_lab_fulltext(text: str) -> list[tuple[int, str]]:
+    """[(頁＝画像の番号, 本文)]。送信資料（著作権あり）は空で返る。"""
+    data = json.loads(text)
+    out = []
+    for p in data.get("list", []) or []:
+        if p.get("contents"):
+            out.append((int(p.get("page", 0)), str(p["contents"])))
+    return out
+
+
+# --- Internet Archive（全文検索。10-26 に叩いて確かめた。robots.txt は /control/・/report/ だけ断る） ----------
+
+IA_FTS = ("https://archive.org/services/search/beta/page_production/?user_query={q}"
+          "&service_backend=fts&hits_per_page={n}")
+LENDING = ("inlibrary", "printdisabled", "lendinglibrary", "internetarchivebooks")   # 貸出（ログインが要る）本
+
+
+def ia_url(query: str, n: int = 15) -> str:
+    return IA_FTS.format(q=urllib.parse.quote(query), n=n)
+
+
+def parse_ia(text: str) -> list[Source]:
+    """全文検索の当たり。highlight は本文の抜き出し（{{{語}}} が当たった所）。貸出の本は頁を開けない。"""
+    data = json.loads(text)
+    hits = (((data.get("response") or {}).get("body") or {}).get("hits") or {}).get("hits") or []
+    out = []
+    for h in hits:
+        f = h.get("fields") or {}
+        ident = f.get("identifier", "")
+        if not ident or f.get("mediatype") not in (None, "texts"):
+            continue
+        cols = f.get("collection") or []
+        lending = any(c in LENDING for c in cols)
+        page = f.get("page_num")
+        hl = [re.sub(r"\{\{\{|\}\}\}", "", x).replace("\n", " ") for x in (h.get("highlight") or {}).get("text", [])]
+        who = "・".join(f.get("creator") or [])
+        url = f"https://archive.org/details/{ident}" + (f"/page/n{page}" if page else "")
+        note = "貸出の本（読むにはログインが要る。抜き出しだけ）" if lending else "公開の本（頁を開ける）"
+        out.append(Source(title=str(f.get("title", "")), url=url, entry="Internet Archive",
+                          tier=classify(str(f.get("title", "")), who, "", default="一般書・雑誌"),
+                          year=year_of(f.get("year") or f.get("date")), who=who,
+                          snippet=" … ".join(x.strip()[:200] for x in hl[:3]), note=note))
+    return out
+
+
+# --- 国立公文書館デジタルアーカイブ（目録の検索。API は無く、検索画面 /search は robots.txt で断られていない。
+#     Crawl-delay: 30 なので1回の実行で1回だけ叩く） --------------------------------------------------------------
+
+NAJ = "https://www.digital.archives.go.jp/search?kw={q}&rows={n}"
+NAJ_WAIT = 30.0
+
+
+def naj_url(query: str, n: int = 20) -> str:
+    return NAJ.format(q=urllib.parse.quote(query), n=n)
+
+
+def parse_naj(text: str) -> list[Source]:
+    out = []
+    for m in re.finditer(r'<h3 id="row-\d+-title"[^>]*>\s*<a href="([^"]+)"[^>]*>(.*?)</a>', text, re.S):
+        url, title = m.group(1), strip_tags(m.group(2))
+        if url.startswith("/"):
+            url = "https://www.digital.archives.go.jp" + url
+        rest = text[m.end(): m.end() + 2500]
+        year = None
+        ym = re.search(r"(1[5-9]\d\d)年", strip_tags(rest))
+        if ym:
+            year = int(ym.group(1))
+        out.append(Source(title=title, url=url, entry="国立公文書館デジタルアーカイブ", tier="一次史料", year=year,
+                          note="公文書・内閣文庫の目録（中身は画像。開いて確かめる）"))
+    return out
+
+
+# --- コトバンク（辞典に出る＝知られている、の物差し。/word/ は robots.txt で断られていない。/search は断られている） ---
+
+KOTOBANK = "https://kotobank.jp/word/{q}"
+
+
+def kotobank_url(word: str) -> str:
+    return KOTOBANK.format(q=urllib.parse.quote(word))
+
+
+def parse_kotobank(text: str) -> dict[str, str]:
+    """{辞典の名前: 本文}。"""
+    out = {}
+    for art in re.split(r"<article ", text)[1:]:
+        name = re.search(r'<h2[^>]*>\s*<a[^>]*>(.*?)</a>', art, re.S)
+        body = re.sub(r"<script.*?</script>|<style.*?</style>", "", art.split("</article>")[0], flags=re.S)
+        if name:
+            out[strip_tags(name.group(1))] = strip_tags(body)
+    return out
+
+
+def dictionary_level(fact: "Fact", dicts: dict[str, str]) -> list[str]:
+    """事実の語が全部同じ文に出る辞典の名前。"""
+    terms = [norm(t) for t in fact.terms]
+    hits = []
+    for name, body in dicts.items():
+        if any(all(t in s for t in terms) for s in sentences(body)):
+            hits.append(name)
+    return hits
 
 
 # --- J-STAGE WebAPI ------------------------------------------------------------------
@@ -383,7 +493,7 @@ class Fact:
 def parse_fact(spec: str) -> Fact:
     """'表示の文::語1 語2' か、空白区切りの語だけ（そのまま表示にも使う）。"""
     if "::" in spec:
-        label, terms = spec.split("::", 1)
+        label, terms = spec.split("::")[:2]
     else:
         label, terms = spec, spec
     return Fact(label.strip(), [t for t in re.split(r"[\s　]+", terms.strip()) if t])
@@ -455,7 +565,8 @@ def _run(entry: EntryResult, url: str, parse, fetcher: Fetcher, label: str) -> l
 
 
 def collect(topic: str, keywords: list[str], phrases: list[str], fetcher: Fetcher = fetch,
-            per: int = 20, world: bool = False) -> list[EntryResult]:
+            per: int = 20, world: bool = False, en_names: list[str] | None = None,
+            naj: bool = True) -> list[EntryResult]:
     queries = [topic] + [f"{topic} {k}" for k in keywords]
     res: list[EntryResult] = []
 
@@ -490,6 +601,17 @@ def collect(topic: str, keywords: list[str], phrases: list[str], fetcher: Fetche
         for q in queries:
             e.items += _run(e, ws_url(q, 10, "en"), lambda t: parse_ws(t, "en"), fetcher, q)
         res.append(e)
+
+    # Internet Archive の全文：英語名（外国人が書いた日本の記録・英訳）と日本語名
+    e = EntryResult("Internet Archive（全文）")
+    for q in [f'"{n}"' for n in (en_names or [])] + [topic]:
+        e.items += _run(e, ia_url(q), parse_ia, fetcher, q)
+    res.append(e)
+
+    if naj:
+        e = EntryResult("国立公文書館デジタルアーカイブ（目録）")
+        e.items += _run(e, naj_url(topic), parse_naj, fetcher, topic)
+        res.append(e)
     for r in res:
         r.items = dedupe(r.items)
     return res
@@ -512,6 +634,8 @@ def relevant(s: Source, topic: str, keywords: list[str]) -> bool:
     """題・抜き出し・掲載誌に主題の語（4字以上なら前後2字の片方でもよい）が出るもの。
     書誌の入口（NDLサーチ・J-STAGE・ジャパンサーチ）は調べた語が出るだけでもよい。全文検索は主題の語が要る
     （「遺骨」で探すと別人の遺骨の話まで拾うため）。"""
+    if s.entry in ("Internet Archive", "国立公文書館デジタルアーカイブ"):
+        return True                         # 名前そのもの（英語名は引用符つき）で引いた当たり
     hay = norm(s.title + s.snippet + s.where)
     keys = [topic]
     if len(topic) >= 4:
@@ -561,6 +685,12 @@ def manual_links(topic: str, keywords: list[str]) -> list[tuple[str, str, str]]:
          "API は appid の登録が必須 → 道具は叩かない。画面は登録なしで使える"),
         ("NDLデジタルコレクション（全文・送信資料）", f"https://dl.ndl.go.jp/search/searchResult?keyword={q2}",
          "画面の全文検索。『図書館・個人送信』は個人送信の登録が要る（登録はユーザーが決める）"),
+        ("HathiTrust（全文検索）", f"https://babel.hathitrust.org/cgi/ls?q1={q};anyall1=phrase;lmt=ft",
+         "robots.txt が /cgi/ を断る → 道具は叩かない。英訳・外国人の記録は Internet Archive を先に（道具が叩く）"),
+        ("文化遺産オンライン", "https://bunka.nii.ac.jp/",
+         "検索は POST と画面のトークンが要る → 道具は叩かない。所蔵品の多くはジャパンサーチ（道具が叩く）にも入る"),
+        ("ColBase（国立博物館の所蔵品）", f"https://colbase.nich.go.jp/search?keyword={q}",
+         "公開の検索 API が無い（画面は JavaScript）→ ジャパンサーチの cobas で拾える（道具が叩く）"),
     ]
 
 
@@ -663,20 +793,111 @@ def render_md(topic: str, results: list[EntryResult], facts: list[Fact], wp_titl
 
 def run(topic: str, keywords: list[str], phrases: list[str], facts: list[str], out_dir: Path,
         name: str = "", wiki_title: str = "", world: bool = False, fetcher: Fetcher = fetch,
-        today: _dt.date | None = None) -> Path:
+        today: _dt.date | None = None, *, slug: str = "", cards: bool = False, pdfs: list[str] | None = None,
+        cards_in: list[str] | None = None, yt: bool = False, yt_budget: int = 1000, token: Path | None = None,
+        plan: bool = False, chain: bool = False, naj: bool = True, yt_fetcher: Fetcher | None = None,
+        log: Callable[[str], None] = print) -> Path:
+    """md（出どころの候補）を書き、--cards なら事実カードの YAML、--plan なら検索の計画の md も書く。返すのは md の場所。"""
     today = today or _dt.date.today()
-    title, intro, full, err = "", "", "", ""
+    title, intro, full, err, wikitext = "", "", "", "", ""
     try:                                   # Wikipedia を先に（Wikisource を続けて叩いたあとだと 429 になった）
         title, intro = parse_wp(fetcher(wp_url(wiki_title or topic, intro=True)))
         if title:
             time.sleep(WAIT if fetcher is fetch else 0)
             _, full = parse_wp(fetcher(wp_url(title, intro=False)))
+            if plan or chain:
+                from .expand import WP_WIKITEXT
+                time.sleep(WAIT if fetcher is fetch else 0)
+                wikitext = json.loads(fetcher(WP_WIKITEXT.format(lang="ja", q=urllib.parse.quote(title))))["parse"]["wikitext"]
     except Exception as e:  # noqa: BLE001
         err = f"{type(e).__name__} {str(e)[:120]}"
-    results = collect(topic, keywords, phrases, fetcher=fetcher, world=world)
-    md = render_md(topic, results, [parse_fact(f) for f in facts], title, intro, full, keywords, today, err)
     out_dir.mkdir(parents=True, exist_ok=True)
     safe = re.sub(r'[\\/:*?"<>|\s]+', "_", name or topic)
-    path = out_dir / f"{safe}_sources_{today.strftime('%Y%m%d')}.md"
+    stamp = today.strftime("%Y%m%d")
+    en_names: list[str] = []
+    the_plan = None
+    if plan:
+        from . import expand
+        the_plan = expand.build_plan(topic, full, wikitext, fetcher=fetcher)
+        en_names = the_plan.en_names[:1]
+        extra = [p for p in the_plan.old_forms[:2] + [a for a in the_plan.aliases if len(a) >= 3][:3] if p not in phrases]
+        phrases = list(phrases) + extra
+        fact_words = [" ".join(parse_fact(f).terms) for f in facts]
+        ppath = out_dir / f"{safe}_plan_{stamp}.md"
+        ppath.write_text(expand.render_plan(the_plan, expand.site_queries(the_plan, fact_words)), encoding="utf-8")
+        log(f"検索の計画: {ppath}")
+    results = collect(topic, keywords, phrases, fetcher=fetcher, world=world, en_names=en_names, naj=naj)
+    chain_md = ""
+    if chain:
+        from . import expand
+        every = [s for r in results for s in r.items]
+        seeds = [s.url for s in every if s.entry == "J-STAGE" and relevant(s, topic, keywords)]
+        cites, found, errs = expand.chain(seeds, wikitext, {s.title for s in every}, topic, fetcher=fetcher)
+        e = EntryResult("芋づる（脚注・参考文献から）", queries=[f"{len(cites)}件の文献"], items=found, errors=errs[:5])
+        results.append(e)
+        chain_md = expand.render_chain(cites, found, errs)
+    md = render_md(topic, results, [parse_fact(f) for f in facts], title, intro, full, keywords, today, err)
+    if chain_md:
+        md += "\n" + chain_md
+    if cards:
+        md += "\n" + _cards(topic, results, facts, keywords, intro, full, out_dir, safe, stamp, today, slug=slug,
+                             pdfs=pdfs, cards_in=cards_in, yt=yt, yt_budget=yt_budget, token=token, fetcher=fetcher,
+                             yt_fetcher=yt_fetcher, anchor=[topic] + ([topic[2:]] if len(topic) >= 4 else []), log=log)
+    path = out_dir / f"{safe}_sources_{stamp}.md"
     path.write_text(md, encoding="utf-8")
     return path
+
+
+def _cards(topic, results, facts, keywords, intro, full, out_dir, safe, stamp, today, *, slug, pdfs, cards_in, yt,
+           yt_budget, token, fetcher, yt_fetcher, anchor, log) -> str:
+    from . import facts as F
+    from . import ytseen as Y
+    notes: list[str] = []
+    specs = [F.parse_spec(f, slug or "fact", i + 1) for i, f in enumerate(facts)]
+    every = [s for r in results for s in r.items]
+    rel = dedupe_across([s for s in every if relevant(s, topic, keywords)])
+    bodies = F.gather_bodies(rel, specs, topic, fetcher=fetcher, pdfs=pdfs, log=notes)
+    dicts: dict[str, str] = {}
+    try:
+        dicts = parse_kotobank(fetcher(kotobank_url(topic)))
+    except Exception as e:  # noqa: BLE001
+        notes.append(f"コトバンク: {type(e).__name__}")
+    cards = []
+    for sp in specs:
+        c = F.Card(sp, F.evidence_for(sp, bodies, rel, anchor))
+        c.wikipedia = known_level(Fact(sp.claim, sp.terms), intro, full)[2] if full else ""
+        c.dictionaries = dictionary_level(Fact(sp.claim, sp.terms), dicts)
+        cards.append(c)
+    for p in cards_in or []:
+        notes += F.merge_cards_in(cards, Path(p), slug or "fact")
+    for c in cards:
+        if not c.wikipedia and full:
+            c.wikipedia = known_level(Fact(c.spec.claim, c.spec.terms), intro, full)[2]
+            c.dictionaries = dictionary_level(Fact(c.spec.claim, c.spec.terms), dicts)
+    budget = Y.Budget(yt_budget)
+    demand: dict = {}
+    if yt:
+        get = yt_fetcher
+        if get is None:
+            try:
+                get = Y.api_fetcher(Y.access_token(token))
+            except Exception as e:  # noqa: BLE001
+                notes.append(f"YouTube の許可: {type(e).__name__} {str(e)[:80]}")
+        demand = Y.demand(topic, fetcher=fetcher)
+        cpath = out_dir / "_youtube_cache.json"
+        cache = Y.load_cache(cpath, today.isoformat())
+        if get is not None:
+            whole = Y.seen(topic, [], get, budget, cache=cache)
+            notes.append(f"YouTube「{topic}」上位{whole.total}本・再生数の合計 {whole.views:,}")
+            for c in cards:
+                words = [t for t in c.spec.terms if norm(t) not in norm(topic)]
+                s = Y.seen(f"{topic} {' '.join(words)}", words, get, budget, cache=cache)
+                c.youtube = {"verdict": s.verdict, "query": s.query, "top": s.total, "matched": s.matched,
+                             "views": s.views, **({"error": s.error} if s.error else {}),
+                             "examples": [f"{t}（{ch}・{v:,}回）" for t, ch, v in s.top[:3]]}
+            Y.save_cache(cpath, today.isoformat(), cache)
+    ypath = out_dir / f"{safe}_facts_{stamp}.yaml"
+    F.write_yaml(topic, cards, ypath, budget.used, demand, notes, today)
+    log(f"事実カード: {ypath}")
+    log(f"YouTube Data API の単位：{budget.used}（上限 {yt_budget}）")
+    return F.render_cards_md(cards, budget.used, demand)
