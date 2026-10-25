@@ -418,10 +418,13 @@ class Fighter:
         a = self._away()
         self._start(t - 0.06, "block")
         self._hold_to(t - 0.06)
+        push = max(push, 0.22)                             # 受けても体は押される(押されないと「当たったのに動かない」と見えた 2026-10-25)
         x_end = self.x + a * push
         self.FH.append(dict(t=_r(t - 0.05), ang=(1.55, 1.95))); self.RH.append(dict(t=_r(t - 0.05), ang=(1.4, 1.95)))
         self._pre_static(t)
-        self.body.append(dict(t=_r(t + 0.28), x=_r(x_end), hz=0.76, lean=0.0, ht=0.12, ease="out"))
+        self.body.append(dict(t=_r(t + 0.06), x=_r(self.x + a * push * 0.6), hz=0.72, lean=-0.32, ht=0.45, ease="out"))      # 受けた瞬間に上体がのけぞり、顎が上がる
+        self.FH.append(dict(t=_r(t + 0.06), ang=(1.95, 1.55))); self.RH.append(dict(t=_r(t + 0.06), ang=(1.75, 1.6)))     # 受けた腕が押し上げられる
+        self.body.append(dict(t=_r(t + 0.28), x=_r(x_end), hz=0.76, lean=-0.05, ht=0.15, ease="out"))
         self.F.append(dict(t=_r(t + 0.28), p=(_r(self.lead + a * push), 0), lift=0.0, ease="out"))
         self.R.append(dict(t=_r(t + 0.28), p=(_r(self.rear + a * push), 0), lift=0.0, ease="out"))
         self.FH.append(dict(t=_r(t + 0.30), ang=(1.5, 1.9))); self.RH.append(dict(t=_r(t + 0.30), ang=(1.35, 1.9)))

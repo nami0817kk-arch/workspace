@@ -132,7 +132,7 @@ def act4(F, T):
     t_c = 3.9
     T.clones(A, t_c, t_c + 1.3, [D.x - 0.9, D.x + 0.9], src_tau=3.6)
     T.chain(A, D, [("jab", "stagger", dict(push=0.3)), ("cross", "stagger", dict(push=0.3)), ("hook", "stagger", dict(push=0.3)), ("upper", "stagger", dict(push=0.3)),
-                   ("belly", "fold", dict(push=0.35))], t_c + 0.1, gap=0.24)
+                   ("belly", "fold", dict(push=0.6))], t_c + 0.1, gap=0.24)
     T.exchange(A, D, "palm", 5.8, "launch", dist=2.0, stay=True, flash=True)
     T.clash(A, C, "cross", 7.6)                                                 # 巨漢と拳の激突
     T.hits.append(bout.H(7.6, "slam", (0.5 * (A.x + C.x), 1.4), 0.10))
