@@ -4,6 +4,7 @@ import '../app/links.dart';
 import '../monetization/monetization.dart';
 import 'howto_screen.dart';
 import '../monetization/purchase_service.dart';
+import 'layout.dart';
 
 /// 設定。広告を消す・購入の復元・プライバシー・問い合わせ・ライセンス。
 class SettingsScreen extends StatefulWidget {
@@ -91,7 +92,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 560),
+            constraints: BoxConstraints(maxWidth: contentMaxWidth(context)),
             child: ListView(
               padding: const EdgeInsets.all(16),
               children: [

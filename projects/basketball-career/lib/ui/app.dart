@@ -4,6 +4,7 @@ import 'controller.dart';
 import 'game_screen.dart';
 import 'home_screen.dart';
 import 'milestone_dialog.dart';
+import 'layout.dart';
 
 class BasketballCareerApp extends StatefulWidget {
   const BasketballCareerApp({super.key, this.controller});
@@ -26,6 +27,16 @@ class _BasketballCareerAppState extends State<BasketballCareerApp> {
       debugShowCheckedModeBanner: false,
       theme: _theme(Brightness.light),
       darkTheme: _theme(Brightness.dark),
+      // 幅の広い端末(iPad など)では文字を少し大きくする(小さく見えないように)。
+      builder: (context, child) {
+        final tablet = isTablet(context);
+        if (!tablet || child == null) return child ?? const SizedBox.shrink();
+        final mq = MediaQuery.of(context);
+        return MediaQuery(
+          data: mq.copyWith(textScaler: TextScaler.linear(mq.textScaler.scale(1.0) * 1.25)),
+          child: child,
+        );
+      },
       home: FutureBuilder<bool>(
         future: _loaded,
         builder: (context, snap) {

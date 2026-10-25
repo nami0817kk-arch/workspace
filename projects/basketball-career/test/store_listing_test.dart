@@ -65,7 +65,8 @@ void main() {
   test('実在の名称(商標)を提出する文面に入れていない', () {
     final submit = section('## 名前・サブタイトル・キーワード', '## スクリーンショット');
     final texts = submit.split('\n').where((l) => !l.startsWith('- ')).join('\n');
-    for (final w in ['NBA', 'Bリーグ', 'ウィンターカップ', 'インターハイ', 'ドラフト']) {
+    // 「ドラフト」は一般的な言葉で、ゲームの中にもある(2026-10-25 に許可)。固有名詞だけを禁止する。
+    for (final w in ['NBA', 'Bリーグ', 'ウィンターカップ', 'インターハイ']) {
       expect(texts.contains(w), isFalse, reason: w);
     }
   });

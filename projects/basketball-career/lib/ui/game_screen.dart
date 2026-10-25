@@ -18,6 +18,7 @@ import 'controller.dart';
 import 'history_screen.dart';
 import 'settings_screen.dart';
 import 'labels.dart';
+import 'layout.dart';
 
 /// 局面(季節 / 進路 / 引退)に合わせて画面を切り替える。
 class GameScreen extends StatelessWidget {
@@ -55,7 +56,7 @@ class GameScreen extends StatelessWidget {
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 560),
+            constraints: BoxConstraints(maxWidth: contentMaxWidth(context)),
             child: switch (game.phase) {
               Phase.season => _SeasonView(controller: controller, game: game),
               Phase.halftime =>

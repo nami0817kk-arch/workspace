@@ -8,6 +8,7 @@ import 'controller.dart';
 import 'history_screen.dart';
 import 'howto_screen.dart';
 import 'settings_screen.dart';
+import 'layout.dart';
 
 /// はじめの画面。名前を決めて、6歳から始める。
 class HomeScreen extends StatefulWidget {
@@ -58,7 +59,8 @@ class _HomeScreenState extends State<HomeScreen> {
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 480),
+            constraints:
+                BoxConstraints(maxWidth: contentMaxWidth(context, phone: 480)),
             child: ListView(
               padding: const EdgeInsets.all(24),
               shrinkWrap: true,
