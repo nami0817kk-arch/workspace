@@ -30,11 +30,12 @@ def test_fourteen_cuts_with_mixed_picture_kinds():
     kinds = {doc["shots"][k].get("kind", "ai") for k in cuts}
     assert kinds == {"ai", "real", "composite"}
     assert [k for k in cuts if k.startswith("P")] == ["P1", "P1b", "P6", "P2", "P4", "P5c"]            # 表情のあるAI人物絵（P5・P5b・P3・P3b は使わない）
+    from pathlib import Path
+    art = Path(__file__).resolve().parent.parent / "out" / "story"
     for k in cuts:
         s = doc["shots"][k]
-        if s.get("kind", "ai") == "ai" and str(s.get("file", "")).startswith("oichi3/"):
-            from pathlib import Path
-            assert (Path(__file__).resolve().parent.parent / "out" / "story" / s["file"]).exists() or s.get("placeholder"), k   # 届いた絵（なければ仮の絵）
+        if s.get("kind", "ai") == "ai" and str(s.get("file", "")).startswith("oichi3/") and art.exists():   # 絵は手元だけ（CI には無い）
+            assert (art / s["file"]).exists() or s.get("placeholder"), k   # 届いた絵（なければ仮の絵）
         if s.get("kind") in ("real", "composite"):
             assert s.get("credit"), k                                                    # 実在の絵は出典つき
 
@@ -475,8 +476,11 @@ def test_header_styles_fit_width_and_stay_out_of_the_middle():
 
 def test_story_short_post_description():
     doc = S.load(SCRIPT.parent / "oichi_s11.yaml")
-    from chiso.cli import load_config
-    text = S.post_description(doc, load_config(), "lQrMu8QRQCs")
+    from chiso.cli import assets_dir, load_config
+    config = load_config()
+    text = S.post_description(doc, config, "lQrMu8QRQCs")
     assert "本編はこちら → https://youtu.be/lQrMu8QRQCs" in text and "Gemini" in text
     assert "VOICEVOX:剣崎雌雄" in text and "運営：つるはし社" in text and "#お市の方" in text
-    assert "https://commons.wikimedia.org/wiki/File:Oeyo.jpg" in text and len(text) <= 5000
+    assert len(text) <= 5000
+    if (assets_dir(config) / "paintings" / "credits.json").exists():               # 絵の出典の控えは手元だけ（CI には無い）
+        assert "https://commons.wikimedia.org/wiki/File:Oeyo.jpg" in text
