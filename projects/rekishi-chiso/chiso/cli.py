@@ -1070,6 +1070,72 @@ def cmd_upload_shorts(args) -> int:
     return 0
 
 
+def story_short_screened(path: Path) -> Path:
+    return ROOT / "approvals" / f"{path.stem}.screened.json"
+
+
+def cmd_story_short_screen(args) -> int:
+    """物語型ショートの本番の動画をユーザーが見て OK と言ったときだけ打つ（台本を何本でも）。動画のハッシュを控える。"""
+    from . import storyshort
+    for raw in args.scripts:
+        path = Path(raw)
+        video = storyshort.video_of(path)
+        if not video.exists():
+            print(f"本番の動画がありません: {video}（story-short を先に）")
+            return 1
+        story_short_screened(path).write_text(json.dumps({"video": video.name, "sha256": _sha(video)}, ensure_ascii=False) + chr(10),
+                                              encoding="utf-8")
+        print(f"動画の確認を控えました: {path.stem}（{video.name}）")
+    return 0
+
+
+def cmd_story_short_upload(args) -> int:
+    """物語型ショートを順に予約投稿する（10-25）。--at から --every 分ごと。posted.json の鍵は <本編>:short:<s10 など>。
+    containsSyntheticMedia を付ける。題名は台本の yt_title、概要欄は storyshort.post_description、再生リストは本編の台本の shorts_playlists。"""
+    from . import shortpost, storyshort, upload as up
+    config = load_config()
+    paths = [Path(p) for p in args.scripts]
+    log = ROOT / "posted.json"
+    main_stem = args.main
+    main_sc = script_mod.load(ROOT / "scripts" / f"{main_stem}.yaml")
+    main = up.already_posted(log, f"{main_stem}:main")
+    if not main:
+        print(f"本編 {main_stem}:main が posted.json にありません（本編へのリンクが作れない）")
+        return 2
+    for path in paths:
+        a = story_short_screened(path)
+        v = storyshort.video_of(path)
+        if not a.exists() or not v.exists() or json.loads(a.read_text(encoding="utf-8"))["sha256"] != _sha(v):
+            print(f"{path.stem}: 本番の動画を見せて OK をもらってから story-short-screen（作り直したら確認し直し）")
+            if not args.dry_run:
+                return 2
+    times = shortpost.schedule(args.at, args.every, len(paths))
+    svc = None if args.dry_run else _service(need_manage=bool(main_sc.shorts_playlists))
+    if svc is None and not args.dry_run:
+        return 2
+    for path, at in zip(paths, times):
+        doc = storyshort.load(path)
+        sid = path.stem.rsplit("_", 1)[-1]
+        key = f"{main_stem}:short:{sid}"
+        done = up.already_posted(log, key)
+        if done:
+            print(f"{sid}: もう投稿してあります https://youtu.be/{done['video_id']}")
+            continue
+        title = str(doc.get("yt_title") or doc.get("title"))[:100]
+        known = {pic.image: (pic.credit or pic.caption) for line in main_sc.lines for pic in (line.background, line.portrait) if pic}
+        desc = storyshort.post_description(doc, config, main["video_id"], known)
+        tags = list(dict.fromkeys(TAGS + list(main_sc.tags)))[:30]
+        print(f"{sid}: {title}（{at}）")
+        if args.dry_run:
+            print(desc)
+            continue
+        vid = up.upload(svc, storyshort.video_of(path, doc), title, desc, tags, up.publish_time(at), synthetic_media=True)
+        up.record(log, {"key": key, "video_id": vid, "title": title, "publish_at": at})
+        print(f"  予約しました: https://youtu.be/{vid}")
+        _into_playlists(svc, main_sc.shorts_playlists, key, vid)
+    return 0
+
+
 def cmd_upload(args) -> int:
     from . import upload as up
     config = load_config()
@@ -1348,6 +1414,16 @@ def main(argv=None) -> int:
     s.add_argument("--every", type=int, default=60, help="何分ごとに出すか")
     s.add_argument("--only", default="", help="s1,s3 のように一部だけ")
     s.set_defaults(fn=cmd_upload_shorts)
+    s = sub.add_parser("story-short-screen")
+    s.add_argument("scripts", nargs="+")
+    s.set_defaults(fn=cmd_story_short_screen)
+    s = sub.add_parser("story-short-upload")
+    s.add_argument("scripts", nargs="+")
+    s.add_argument("--at", required=True, help="最初の公開時刻（日本時間）'YYYY-MM-DD HH:MM'")
+    s.add_argument("--every", type=int, default=60, help="何分ごとに出すか")
+    s.add_argument("--main", default="oichi-story", help="本編の台本の名前（posted.json の <名前>:main から本編のリンクを引く）")
+    s.add_argument("--dry-run", action="store_true", help="投稿せず、題名・時刻・概要欄だけ出す")
+    s.set_defaults(fn=cmd_story_short_upload)
     s = sub.add_parser("whoami")
     s.set_defaults(fn=cmd_whoami)
     s = sub.add_parser("playlists")

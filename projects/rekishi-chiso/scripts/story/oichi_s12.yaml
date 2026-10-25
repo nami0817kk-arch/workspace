@@ -1,0 +1,166 @@
+# 物語完結型ショート s12（2026-10-25）。本編 scripts/oichi-story.yaml の第7章「まとめ：お市の血はどこへ」から（その後型）。投稿しない。
+# 形式は oichi_s10.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。
+# 理解テスト4問：
+#   ①誰の話か：お市の方（織田信長の妹）と、その三女の江の子どもたち
+#   ②いつ・どこで何が：1623年 江の子・家光が三代将軍に／1620年 江の娘・和子が後水尾天皇のもとへ／1629年 和子の娘が7歳で明正天皇に
+#   ③なぜ：お市が北ノ庄城から送り出した三女の江が、徳川秀忠の妻になったから
+#   ④どうなったか：お市の孫が将軍に、ひ孫が女性の天皇に。江はその3年前に亡くなっていた
+# 事実と言い方は本編の第7章どおり（出典は oichi-story.yaml の頭）：
+#   家光 1604生・母は崇源院（江）・1623 三代将軍（Wikipedia「徳川家光」）／和子 1607生・1620 入内・のちに中宮（Wikipedia「徳川和子」）／
+#   明正天皇 1629（寛永6）数え7歳で位に・称徳天皇以来の女性の天皇・850年以上いなかった（コトバンク・Wikipedia「明正天皇」）／江は1626年に54歳で没 [W江]
+title: お市の方の血｜将軍の家と、天皇の家へ
+yt_title: お市の方の血は、将軍の家と天皇の家に入った【徳川家光・明正天皇】
+description: |-
+  1583年、お市の方は北ノ庄城で生涯を閉じ、三人の娘だけを城の外へ送り出しました。
+  三女の江は、のちに徳川秀忠の妻になります。江の子の家光は、1623年に江戸幕府の三代将軍に。
+  江の娘の和子は、1620年に後水尾天皇のもとへ入り、のちに中宮になりました。
+  そして1629年、和子の娘が7歳で天皇の位につきます。明正天皇。奈良時代の称徳天皇のあと、850年以上いなかった女性の天皇でした。
+  江はその3年前に亡くなっていて、この日を見ていません。
+ai_images: true
+art_dir: out/story/oichi3
+out: oichi_story_s12
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 12
+max_ai: 8
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: お市の方（織田信長の妹）
+  title: "その血は、《将軍と天皇》の家へ"
+now:
+  - {at: お市の方の血は, text: "1583年　北ノ庄城", point: 0}
+  - {at: 1604年, text: "1604年　家光", point: 1}
+  - {at: 1620年, text: "1620年　和子", point: 2}
+  - {at: 1629年, text: "1629年　明正天皇", point: 3}
+timeline:
+  - {label: "1583 北ノ庄"}
+  - {label: "1604 家光"}
+  - {label: "1620 和子"}
+  - {label: "1629 天皇"}
+cards:
+  - type: table                          # 系図（語った順に1行ずつ書き込む）
+    title: お市から、将軍の家と天皇の家へ
+    from: 三女の江は
+    until: 女性の天皇は
+    items:
+      - {at: 三女の江は, text: "お市　→　三女・江（秀忠の妻）"}
+      - {at: 徳川家光, text: "江の子　→　家光（三代将軍）"}
+      - {at: 1620年, text: "江の娘　→　和子（天皇の后）"}
+      - {at: 明正天皇, text: "和子の娘　→　明正天皇"}
+  - type: year
+    from: 女性の天皇は
+    until: 三女の江は
+    big: 850年
+    sub: 以上、女性の天皇がいなかった
+    text_y: 0.70
+shots:
+  A01:                                   # 1文目：北ノ庄城の夜（城に残って生涯を閉じた）
+    kind: ai
+    file: oichi3/main/A01.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 篝火に囲まれた夜の天守（中央）
+  A24:                                   # 娘3人を城の外へ（光の門）
+    kind: ai
+    file: oichi3/main/A24.jpg
+    focus: [0.5, 0.5]
+    move: up
+    must: 光の門を出る娘3人の後ろ姿
+  Go:                                    # 江の場面：頭巾の尼姿で顔の見えない肖像はやめ、江の後ろ姿の AI 絵に（10-25）
+    kind: ai
+    file: oichi3/main/A23.jpg
+    focus: [0.5, 0.42]
+    move: down
+    must: 江の後ろ姿
+  Hidetada:
+    kind: real
+    image: paintings/oichi_hidetada.jpg
+    focus: [0.5, 0.35]
+    move: down
+    credit: "《徳川秀忠像》江戸時代（Wikimedia Commons・パブリックドメイン）"
+    must: 秀忠（江の夫・家光の父）
+  Edo:                                   # 家光・三代将軍＝江戸の城（江戸図屏風の城の部分）
+    kind: real
+    image: paintings/ieyasu_edo_zu_byobu_castle_detail.jpg
+    focus: [0.5, 0.5]
+    move: left
+    credit: "《江戸図屏風》（部分）17世紀・寛永期（Wikimedia Commons・パブリックドメイン）"
+    must: 江戸の城（家光の時代）
+  Rakuchu:                               # 和子が天皇のもとへ（京都）
+    kind: real
+    image: paintings/nobunaga_rakuchu_uesugi_right.jpg
+    focus: [0.5, 0.45]
+    move: right
+    bright: 0.85
+    credit: "狩野永徳《洛中洛外図屏風》（上杉本）右隻（Wikimedia Commons・パブリックドメイン）"
+    must: 京都の町と御所の辺り
+  A21:                                   # 850年以上いなかった：記録を書く手元（年代の重み）
+    kind: ai
+    file: oichi3/main/A21.jpg
+    focus: [0.45, 0.6]
+    move: down
+    must: 巻紙に書く手元と灯
+  A23:                                   # 江はこの日を見ていない（後ろ姿）
+    kind: ai
+    file: oichi3/main/A23.jpg
+    focus: [0.5, 0.5]
+    move: up
+    must: 江の後ろ姿
+  A25:                                   # 最後の問い：月夜の城跡
+    kind: ai
+    file: oichi3/main/A25.jpg
+    focus: [0.35, 0.5]
+    move: right
+    text_y: 0.74
+    must: 月夜の北ノ庄の城跡と川
+lines:
+  - 語り: お市の方の血は、《!将軍の家》と、《!天皇の家》に入っていった。
+    shot: A01
+    tone: 強調
+  - 語り: 1583年、お市は北ノ庄城で生涯を閉じ、三人の娘だけを、城の外へ送り出した。
+    shot: A24
+    tone: しみじみ
+    pause: 0.15
+  - 語り: 三女の江は、のちに、徳川秀忠の妻になった。
+    shot: Go
+    tone: しみじみ
+    pause: 0.12
+  - 語り: 1604年、江は男の子を産んだ。のちの、徳川家光だ。
+    shot: Hidetada
+    tone: しみじみ
+    pause: 0.12
+  - 語り: 1623年、家光は、江戸幕府の三代将軍になった。お市の《孫》が、将軍になった。
+    shot: Edo
+    tone: 強調
+    pause: 0.12
+  - 語り: 江は、娘の和子も産んでいた。
+    shot: Go
+    tone: しみじみ
+    pause: 0.12
+  - 語り: 1620年、和子は、後水尾天皇のもとへ入り、のちに天皇の后になった。
+    shot: Rakuchu
+    tone: しみじみ
+    pause: 0.12
+  - 語り: 1629年、和子の娘が、7歳で天皇の位についた。明正天皇だ。
+    shot: Rakuchu
+    tone: 強調
+    pause: 0.3
+    dip: true
+  - 語り: 女性の天皇は、奈良時代の称徳天皇のあと、850年以上いなかった。お市の《!ひ孫》が、その天皇になった。
+    shot: A21
+    tone: 強調
+    pause: 0.12
+  - 語り: 三女の江は、その3年前に亡くなっていて、この日を見ていない。
+    shot: A23
+    tone: 重い
+    pause: 0.15
+  - 語り: あなたは、城の外へ送り出された娘から、天皇が生まれると、想像できましたか。
+    shot: A25
+    tone: 疑問
+    pause: 0.15
