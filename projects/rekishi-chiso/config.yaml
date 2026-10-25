@@ -624,6 +624,24 @@ roles:
     tone_strength: 0.5
     max_intonation: 1.3
     max_speed: 1.0
+  数正想像:                  # 10-26。kazumasa-story の想像の台詞。数正（出奔のとき50代）は落ち着いた年配の声 雀松朱司
+    label: 石川数正（想像）
+    name: 雀松朱司
+    style_id: 52
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  家康:                      # 10-26。kazumasa-story の記録の言葉（天正13年11月28日付 北条氏規あて書状の一節）。家康想像と同じ麒ヶ島宗麟
+    label: 徳川家康（書状の一節）
+    name: 麒ヶ島宗麟
+    style_id: 53
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
 
 character_credits:
   - "立ち絵：春日部つむぎ公式立ち絵素材（春日部つくし）"

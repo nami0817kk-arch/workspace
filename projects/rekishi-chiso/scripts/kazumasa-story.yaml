@@ -1,0 +1,747 @@
+# 物語型の本編（10-22 の見直し・scripts/_template_story.yaml を写した）。石川数正。2026-10-26 下書き（ユーザーに見せる前。reading-ok・approve はまだ）。投稿日は未定。
+# 型（ユーザーと決めた物語型）：1本に1つの「なぜ」＝「なぜ家康の右腕は、秀吉のもとへ走ったのか」を、再現ドラマ（場面を語りで描き、台詞も入れる）で掘る。
+#   語り手は剣崎1人（つむぎは出ない）。最後の章で「その後」（松本・死・天守・改易・子孫）まで語り、冒頭の場面（岡崎城の夜と家康の「退出」）に戻って閉じる。
+#   締めは余韻の一文＋登録のお願い。「今日の地層は」・次回予告・二人の締めは無し（10-24 ユーザー決定。story: true）。
+# 冒頭：場面（0〜10秒に知らない事実＝家康の手紙の「退出」）→ずれ（秀吉との交渉役で、息子も大坂にいた）→「なぜ」1文→答えのかけら（2023年初公開の手紙）
+#   →その後の予告（16日後の地震・天守の年代）→約束の1文→橋渡し（およそ1年前、於義丸の旅立ち）。あいさつ・章の予定・断り書きはしない。
+# 通説・説の検証は第4章だけ（辞典の食い違い・呉座・本郷のスパイ説の否定と引き抜き・菅原の新説と本人の留保）。
+# 大河「豊臣兄弟！」第40回（2026-10-18）で出奔が描かれたが、ドラマの台詞・創作は使っていない（ドラマの名前も語りに出さない）。
+#
+# 事実は事実カード（dev/output/rekishi-chiso/research/石川数正_facts_20261026.yaml、kazumasa-01〜51）にあるものだけ。行の上に `# fact: kazumasa-NN`。
+#   カードに無い「誰でも知っている前置き」（徳川家の重臣・家康のそばに長く仕えた・小牧・長久手のあと和睦・秀吉がのちの豊臣秀吉・康長が子）は短く使い、# fact を付けない（知らない事実に数えない）。
+#   日付は和暦を主に。出奔は「天正13年11月13日」（西暦の年を付けない。和暦の月日に西暦の年を付けた形は誤り）。地震は「天正13年11月29日」＋「西暦では1586年1月」だけ。
+#   石高はカードに無いので言わない。伝承（玄蕃石・名医の昔話）は使わない（玄蕃石は残酷・名医は伝承）。帰雲城の300人は「と伝わります」。
+#
+# 台詞の決まり（ユーザー決定 10-24）：記録の言葉＋想像の台詞。
+#   記録＝出どころを語りで言ってから `- 人物:`（who: 家康＝書状の一節。config の roles に足した）。現代語にした所は語りで「今の言葉にすると」と言う。
+#   想像＝ (1)記録と食い違わない (2)新しい事実を足さない（気持ち・決意の言葉だけ） (3)1本8か所まで（この台本は6か所） (4)画面に「想像」の札 (5)人を貶めない。
+#   各台詞のコメントに【記録】／【想像】と、食い違わない記録を書いた。数正の気持ちの台詞は、出奔の理由を言わせない（理由は記録に無い＝kazumasa-02）。
+#
+# 絵：paintings/ の既存の絵で仮置き（素材の置き場にあるものだけ）。松本城・天正地震・出奔の夜などの足りない場面は「AI絵：<英語の指示>」をコメントに。
+#   数正の肖像は mikata_ishikawa_kazumasa_portrait.jpg（長篠合戦図屏風の一部・石川数正と伝わる武者。612x816 で小さい）だけ。
+# 広告の配慮：帰雲城は「埋まった」「遭難した」まで。改易・死は「亡くなった」「葬礼」。玄蕃石の話（首を掲げた）は使わない。
+facts: 石川数正_facts_20261026.yaml
+story: true
+title: 石川数正｜なぜ家康の右腕は秀吉のもとへ走ったのか　2週間で崩れた立場
+series: ""
+playlists: [日本史を掘る（聞き流し）, 戦国時代を掘る]
+shorts_playlists: [日本史ショート]
+tags: [石川数正, 数正出奔, 徳川家康, 豊臣秀吉, 岡崎城, 於義丸, 結城秀康, 小笠原貞慶, 織田信雄, 天正地震, 帰雲城, 大垣城, フロイス, 松本城, 石川康長, 大久保長安, 戦国時代, 日本史, 歴史, 再現ドラマ, 歴史の地層]
+
+# 日本語の概要欄の頭（describe が一番上に出す）
+description_head: |-
+  天正13年11月13日の夜。徳川家康の右腕と呼ばれた男が、岡崎城から消えました。石川数正です。
+  向かった先は、それまで徳川の側で交渉を受け持ってきた相手、羽柴秀吉のもとでした。
+  なぜ、家康の右腕は、秀吉のもとへ走ったのか。
+  この動画でわかること
+  ・2023年に初めて公開された織田信雄の手紙と、数正の立場が2週間で崩れたという新しい読み
+  ・辞典・研究者で割れる「出奔の理由」と、スパイ説が退けられる理由
+  ・出奔の16日後の天正地震と、秀吉の正月の徳川攻めの命令
+  ・松本城の天守の年代調査、子の康長の改易、今も続く子孫の法要
+description_note: |-
+  再現の場面の台詞の一部は、記録をもとにした想像です。画面に「想像」の札と「（想像）」の名札を出しています。
+  記録に残る言葉は、出どころ（徳川家康の書状・フロイスの書簡・一柳家文書など）を語りで示してから読んでいます。
+
+en:
+  title: "Ishikawa Kazumasa: Why Did Ieyasu's Right-Hand Man Defect to Hideyoshi?"
+  description: |-
+    One night in the 13th year of Tensho, the man known as Tokugawa Ieyasu's right hand vanished from Okazaki Castle: Ishikawa Kazumasa. He went to Hashiba Hideyoshi, the very rival he had been negotiating with on Ieyasu's behalf.
+    Why did Ieyasu's right-hand man go over to Hideyoshi?
+    In this video you will learn:
+    - A letter from Oda Nobukatsu first shown in 2023, and a new reading that Kazumasa's position collapsed within two weeks
+    - How dictionaries and historians disagree on the reason, and why the "spy" theory is rejected
+    - The great Tensho earthquake 16 days later, and Hideyoshi's order to attack Ieyasu in the New Year
+    - The tree-ring dating of Matsumoto Castle's keep, the fall of his son Yasunaga, and the memorial still held by descendants
+    Some lines in the re-enacted scenes are imagined and marked "imagined" on screen; recorded words are read with their sources.
+    Japanese-language history video to listen to while you work (Japanese audio).
+  chapters:
+    - "Why Did Ieyasu's Right-Hand Man Go to Hideyoshi? Okazaki Castle"
+    - "Why Were Kazumasa's Sons in Osaka? The Departure of Ogimaru"
+    - "What Changed in Two Weeks? A Letter from Oda Nobukatsu"
+    - "What Happened That Night at Okazaki Castle?"
+    - "Traitor, Spy, or Cornered? What the Dictionaries and Historians Say"
+    - "Did the Earthquake 16 Days Later Save Ieyasu?"
+    - "Where Did His Family Go? Matsumoto Castle and the Descendants"
+
+texture: true
+recap: true
+
+timeline:
+  start: 1575
+  end: 1620
+  events: [[1584, 於義丸が大坂へ], [1585, 出奔・天正地震], [1590, 松本へ], [1596, 天守の木], [1613, 康長の改易]]
+
+terms:
+  出奔: 主君のもとを無断で去ること
+  取次: 大名どうしの交渉を受け持つ役
+  偏諱: 主君などの名の一字をもらって名乗ること
+  改易: 大名の領地を取り上げ、家を取りつぶすこと
+  年輪年代調査: 木の年輪の幅から、木が伐られた年を調べる方法
+  念持仏: 身近に置いて拝む小さな仏像
+
+# ショートは後で決める（ユーザー）
+shorts: {}
+
+# 次回予告は出さない（物語型、10-24 ユーザー決定）。next: は書かない
+
+thumbnail:
+  layout: scene
+  band: bottom
+  image: paintings/ieyasu_okazaki_castle_ryujo_zu.jpg
+  crop: [0, 0, 3715, 2090]
+  name: 石川数正
+  lead: なぜ家康の右腕は秀吉へ
+  main: 2週間で崩れた
+  # 2段：上に小さい問い（lead）、下に特大の一言（main）。答え（kazumasa-10 の読み）は第2章で出る。
+  # face が3回続く（okubo→oichi-story→kazumasa）ので scene（岡崎城の龍城図）。数正の肖像は 612x816 で小さく、顔の大写しには粗い
+
+sections:
+  # ================================================================ 導入（冒頭 約1分40秒）
+  - title: なぜ家康の右腕は、秀吉のもとへ走ったのか　天正13年 岡崎城
+    background: {image: paintings/ieyasu_okazaki_castle_ryujo_zu.jpg, credit: "《龍城図》岡崎城（江戸時代）"}
+    # AI絵：a Japanese castle on a hill at night in winter, 1580s, a few torches, a small group of riders leaving through a gate, seen from far away, muted colors, painterly, no faces
+    year: 1585
+    lines:
+      # 0〜10秒：場面から（あいさつなし）。日付は和暦のまま。西暦の年は付けない
+      # fact: kazumasa-01
+      - 語り: 徳川家康の右腕と呼ばれた男が、ある夜、岡崎城から消えました。天正13年11月13日のことです。
+        tone: 重い
+        card: {head: "天正13年11月13日", body: 岡崎城から消えた重臣}
+      # 10秒以内の知らない事実：家康の北条氏規あて書状（高岡市立博物館蔵）の「退出」
+      # fact: kazumasa-11
+      - 語り: その15日後、家康は手紙の中で、この出来事を、「《退出》」という言葉で書いています。
+        tone: しみじみ
+        card: {head: "15日後の家康の手紙", body: 「退出」と書いた}
+      - 語り: 男の名は、石川数正。家康のそばに、長く仕えてきた重臣です。
+        portrait: {image: paintings/mikata_ishikawa_kazumasa_portrait.jpg, caption: "石川数正と伝わる武者（長篠合戦図屏風の一部）"}
+      # fact: kazumasa-01
+      - 語り: 向かった先は、家康と張り合っていた、羽柴秀吉のもとでした。のちの豊臣秀吉です。
+        portrait: {image: paintings/akechi_hideyoshi_kodaiji.jpg, caption: "豊臣秀吉（狩野光信画、高台寺蔵）"}
+      # 10〜40秒：ずれ。取次（呉座勇一、『当代記』など）
+      # fact: kazumasa-28
+      - 語り: 実は、数正は、その秀吉との交渉を、徳川の側で受け持ってきた人でした。
+        tone: 強調
+        portrait: null
+        card: {head: "数正の役目", body: 秀吉との交渉の窓口}
+      # fact: kazumasa-29
+      - 語り: 前の年、家康の子が秀吉のもとへ送られたときには、数正の2人の息子も、一緒に大坂へ行っています。
+        background: {image: paintings/hidenaga_komaki_nagakute_screen.jpg, credit: "《小牧長久手合戦図屏風》18世紀（豊田市郷土資料館保管）"}
+        # AI絵：Osaka Castle in the 1580s seen across the river, golden roof tiles, painterly, muted colors（豊期大坂図屏風は 2.6:1 で細い帯になるので外した）
+        card: {head: "前の年", body: 数正の息子2人も大坂へ}
+      - 語り: 息子たちまで秀吉のもとに置いていた男が、今度は、自分が秀吉の側へ身を移した。
+        tone: しみじみ
+      # 40〜80秒：「なぜ」を1文
+      - 語り: なぜ、家康の右腕は、秀吉のもとへ走ったのか。
+        tone: 疑問
+        pause: 0.8
+        background: {image: paintings/mikata_okazaki_castle_ndl_41.jpg, credit: "〔日本古城絵図〕三州岡崎城図（江戸時代、国立国会図書館蔵）"}
+      # fact: kazumasa-02
+      - 語り: 数正自身が、その理由を書き残した記録は、見つかっていません。
+      # 答えのかけら（名詞1つ）：2023年初公開の織田信雄の書状（菅原義勝 2024）。答えそのものは言わない
+      # fact: kazumasa-08
+      - 語り: 手がかりは、2023年に、致道博物館で初めて公開された、《1通の手紙》にあります。
+        tone: 強調
+        card: {head: "2023年 初公開", body: 出奔のおよそ1か月前の手紙}
+      # fact: kazumasa-10
+      - 語り: その手紙から、数正の立場は、出奔の前の、わずか2週間で崩れていた、という読みが出てきました。
+      # その後の予告（第5・6章）
+      # fact: kazumasa-04
+      - 語り: そして、出奔から16日後。大きな地震が、家康と秀吉の運命を揺さぶります。
+        tone: 重い
+        background: {image: paintings/hanbei_mino_map.jpg, credit: "《美濃国郡県人跡路程図》（19世紀）"}
+        card: {head: "出奔の16日後", body: 大地震}
+      # fact: kazumasa-17
+      - 語り: 数正が建てたと言われてきた松本城の天守も、2025年の調べで、数正が亡くなったあとに建った、という結果が出ました。
+        card: {head: "2025年の調べ", body: 天守は数正の死後に建った}
+        background: {image: paintings/sanada_shinano_hiroshige2_1862.jpg, credit: "歌川広重（二代）《諸国六十八景 信濃 久米路橋》1862年"}
+        # AI絵：Matsumoto Castle keep, black wooden walls, reflected in a moat, early morning mist, painterly, muted colors
+      # 約束の1文
+      - 語り: これは、主君のもとを去った男と、その家族が背負った、ひとつの「なぜ」の記録です。
+        tone: しみじみ
+        pause: 0.6
+        portrait: {image: paintings/mikata_ishikawa_kazumasa_portrait.jpg, caption: "石川数正と伝わる武者（長篠合戦図屏風の一部）"}
+        background: {image: paintings/ieyasu_okazaki_castle_ryujo_zu.jpg, credit: "《龍城図》岡崎城（江戸時代）"}
+      # 橋渡し：出奔のおよそ1年前（天正12年12月、於義丸が大坂へ）
+      # fact: kazumasa-29
+      - 語り: 話は、出奔のおよそ1年前にさかのぼります。家康の子が、秀吉のもとへ旅立つ日からです。
+        portrait: null
+        pause: 0.6
+
+  # ================================================================ 第1章 人質と取次（天正12〜13年）
+  - title: 数正の息子は、なぜ大坂にいたのか　天正12年 於義丸の旅立ち
+    background: {image: paintings/hidenaga_komaki_nagakute_screen.jpg, credit: "《小牧長久手合戦図屏風》18世紀（豊田市郷土資料館保管）"}
+    year: 1584
+    lines:
+      # 前置き（誰でも知っている流れ。fact は付けない）
+      - 語り: 天正12年。家康は、尾張の小牧・長久手で、秀吉の大軍と戦いました。戦いのあと、両者は和睦します。
+        card: {head: "天正12年", body: 小牧・長久手のあと和睦}
+      # 昼間たかし（PRESIDENT Online 2026）：和睦の条件の要旨＝家康の実子と数正の実子を人質に
+      # fact: kazumasa-29
+      - 語り: その和睦の条件には、家康の子だけでなく、数正の子も、人質として出すことが含まれていた、と見られています。
+        tone: 強調
+      # fact: kazumasa-29
+      - 語り: 天正12年12月。家康の次男、於義丸が、秀吉の養子として大坂へ向かいました。のちに結城家を継ぎ、越前の大名になる、結城秀康です。
+        portrait: {image: paintings/mikata_yuki_hideyasu_portrait.jpg, caption: "結城秀康（於義丸）"}
+        card: {head: "天正12年12月", body: 於義丸が秀吉の養子に}
+      # fact: kazumasa-29
+      - 語り: その列には、数正の息子、康長と康勝の姿も、ありました。
+        portrait: null
+        background: {image: paintings/hideyoshi_osaka_zu_byobu.jpg, credit: "《豊臣期大坂図屏風》1607〜1615年ごろ（エッゲンベルク城蔵）"}
+        detail: {box: [0.3, 0.0, 0.7, 1.0], label: 大坂（豊臣期大坂図屏風の一部）}
+        # AI絵：a small procession of samurai boys on horseback leaving a castle town in winter, 1580s Japan, seen from behind, muted colors, no faces
+      # 取次（呉座勇一、アゴラ 2023。『当代記』など）
+      # fact: kazumasa-28
+      - 語り: 歴史学者の呉座勇一さんは、『当代記』などの記録をもとに、数正を徳川家の《取次》と見ています。秀吉との交渉の窓口です。
+        background: {image: paintings/ieyasu_nagakute_yasunobu.jpg, credit: "狩野安信《長久手戦役の徳川家康像》17世紀（徳川美術館蔵）"}
+        card: {head: "取次", body: 秀吉との交渉の窓口}
+      - 語り: 秀吉の言葉を家康に伝え、家康の答えを秀吉に返す。戦のあとの、いちばん難しい役目でした。
+      # 名乗り：菊地浩之（PRESIDENT WOMAN Online 2026）
+      # fact: kazumasa-15
+      - 語り: 系図研究者の菊地浩之さんによれば、このころの数正は、「数正」ではなく、「《康輝》」と名乗っていたといいます。
+        card: {head: "当時の名", body: 康輝（やすてる）}
+        background: {image: paintings/mikata_okazaki_castle_photo_2012.jpg, credit: "取り壊し前の岡崎城（古写真。写る天守は江戸時代のもの）"}
+      # fact: kazumasa-15
+      - 語り: 康輝の「康」は、家康の「康」。主君から、名の一字をもらった名前です。
+        figure: {type: stats, title: 数正の名乗り（菊地浩之さんの整理）, items: [[天正の前半, 数正, 若いころからの名], [天正13年ごろ, 康輝, 家康の「康」], [出奔のあと, 吉輝, 秀吉の「吉」]], upto: 2}
+      - 語り: 家康の名の一字を名乗る、家康の交渉役。その人が、秀吉と向き合っていたんです。
+        figure: null
+        tone: しみじみ
+      - 語り: 家康の子と、家康の重臣の子。その両方が、秀吉のもとに置かれたんです。
+        tone: しみじみ
+        background: {image: paintings/hideyoshi_osaka_zu_byobu.jpg, credit: "《豊臣期大坂図屏風》1607〜1615年ごろ（エッゲンベルク城蔵）"}
+        detail: {box: [0.3, 0.0, 0.7, 1.0], label: 大坂（豊臣期大坂図屏風の一部）}
+      - 語り: 人質を出すとは、家の子を相手のもとに置いて、裏切らない証しにすることです。主君の子と並んで、自分の子を差し出す。それだけ、数正は徳川の要の人でした。
+        background: {image: paintings/ieyasu_okazaki_castle_ryujo_zu.jpg, credit: "《龍城図》岡崎城（江戸時代）"}
+      # 【想像1】数正→息子たち。記録：康長・康勝が於義丸に従って大坂へ行った（kazumasa-29）。別れの言葉は記録に無い。気持ちだけ
+      - 人物: 「康長、康勝。……体を、いとえよ」
+        who: 数正想像
+        imagined: true
+        tone: しみじみ
+        portrait: {image: paintings/mikata_ishikawa_kazumasa_portrait.jpg, caption: "石川数正と伝わる武者（長篠合戦図屏風の一部）"}
+      - 語り: 数正が、このとき息子たちに何を言ったのか。その言葉は、残っていません。
+        portrait: null
+        background: {image: paintings/mikata_okazaki_castle_ndl_41.jpg, credit: "〔日本古城絵図〕三州岡崎城図（江戸時代、国立国会図書館蔵）"}
+      # 前置き（誰でも知っている流れ。Wikipedia の冒頭の範囲。fact は付けない）
+      - 語り: 数正は、家康が少年のころ、今川家の人質として駿府で暮らしていたときから、そばに付き従ってきた家臣です。
+        portrait: {image: paintings/mikata_ishikawa_kazumasa_portrait.jpg, caption: "石川数正と伝わる武者（長篠合戦図屏風の一部）"}
+      - 語り: 酒井忠次と並んで、家康の片腕と呼ばれるまでになりました。その長い道のりの先に、この和睦がありました。
+        portrait: null
+      # 前置き：天正13年7月に秀吉が関白に（誰でも知っている流れ）
+      - 語り: しかも相手の秀吉は、天正13年の夏、関白になります。徳川と秀吉の力の差は、開くばかりでした。
+        portrait: {image: paintings/akechi_hideyoshi_kodaiji.jpg, caption: "豊臣秀吉（狩野光信画、高台寺蔵）"}
+      - 語り: 強くなっていく相手と、主君とのあいだに立つ。数正の役目は、年を追うごとに、重くなっていきました。
+        background: {image: paintings/ieyasu_okazaki_castle_ryujo_zu.jpg, credit: "《龍城図》岡崎城（江戸時代）"}
+        portrait: null
+      # 秀吉からの人質の追加の求め（kazumasa-10：家康は10月28日に人質の追加を拒んだ＝追加の求めがあった）
+      # fact: kazumasa-10
+      - 語り: 和睦のあとも、秀吉は、さらに人質を出すよう求めてきます。数正は、人質を出す方向で、話をまとめようとしていました。
+        portrait: {image: paintings/hidenaga_hideyoshi_portrait_1600.jpg, caption: "豊臣秀吉（1600年ごろの肖像）"}
+      # 香原斗志（PRESIDENT Online 2023）：主戦派が大勢を占める徳川家
+      # fact: kazumasa-28
+      - 語り: ところが、徳川の家中は、秀吉ともう一度戦うべきだ、という声のほうが大きかった。歴史評論家の香原斗志さんは、そう書いています。
+        portrait: null
+        background: {image: paintings/ieyasu_komaki_chikanobu_honda_kato.jpg, credit: "楊洲周延《小牧長久手の合戦》明治時代"}
+      # 小笠原貞慶（菅原義勝 2024、柴裕之の研究を踏まえて）
+      # fact: kazumasa-09
+      - 語り: そして数正には、もう一人、後ろ盾として面倒を見てきた相手がいました。信濃の大名、小笠原貞慶です。
+        background: {image: paintings/sanada_shinano_hiroshige2_1862.jpg, credit: "歌川広重（二代）《諸国六十八景 信濃 久米路橋》1862年"}
+        card: {head: "小笠原貞慶", body: 数正が後ろ盾になった信濃の大名}
+        hook: true
+      - 語り: この貞慶が、天正13年の秋、数正の足もとを崩していきます。
+        tone: 重い
+        hook: true
+
+  # ================================================================ 第2章 2週間の急転（天正13年10月）
+  - title: 2週間で、何が変わったのか　天正13年10月 織田信雄の手紙
+    background: {image: paintings/mikata_okazaki_castle_ndl_41.jpg, credit: "〔日本古城絵図〕三州岡崎城図（江戸時代、国立国会図書館蔵）"}
+    # AI絵：an old Japanese letter on washi paper with brush calligraphy, lying on a wooden desk lit by a lamp, close-up, no readable text
+    year: 1585
+    lines:
+      # 菅原義勝「新出の織田信雄書状にみる石川数正出奔」（日本歴史 917号、2024）。書状は庄内藩士の家に伝来、2023年に致道博物館で初公開
+      # fact: kazumasa-08
+      - 語り: 2023年。致道博物館で、1通の手紙が初めて公開されました。庄内藩の武士の家に、伝わってきたものです。
+        card: {head: "2023年", body: 致道博物館で初公開}
+      # fact: kazumasa-08
+      - 語り: 日付は、天正13年10月14日。織田信雄が、家康にあてた手紙でした。数正が岡崎城から消える、およそ1か月前です。
+        card: {head: "天正13年10月14日", body: 織田信雄から家康へ}
+      - 語り: 信雄は、信長の次男です。小牧・長久手では、家康と組んで、秀吉と戦った人でした。
+      - 語り: ところが信雄は、家康より先に、秀吉と和睦していました。家康を戦いに引き込んだ相手が、先に手を引いていたんです。
+        card: {head: "織田信雄", body: 家康より先に秀吉と和睦}
+      - 語り: その信雄が、出奔のおよそ1か月前に、家康へ手紙を書いていた。そこには、徳川と秀吉のあいだの、その時の空気が残っていました。
+        background: {image: paintings/hidenaga_komaki_nagakute_screen.jpg, credit: "《小牧長久手合戦図屏風》18世紀（豊田市郷土資料館保管）"}
+      # fact: kazumasa-08
+      - 語り: この手紙から分かるのは、家康が、この時点ではまだ、秀吉とどう付き合うかを、決めかねていたことです。
+        tone: 強調
+      # fact: kazumasa-02, kazumasa-08
+      - 語り: この手紙を読み解いたのが、研究者の菅原義勝さんです。2024年、雑誌『日本歴史』に、その読みを書きました。
+        card: {head: "菅原義勝さん", body: 2024年『日本歴史』917号}
+      # 昼間たかし（PRESIDENT Online 2026「2週間の急転」）が菅原2024を紹介
+      # fact: kazumasa-10
+      - 語り: 2026年には、ライターの昼間たかしさんが、この読みを紹介し、数正が追い込まれた「2週間」に光を当てています。
+      # 10/17 付の秀吉書状の時点で貞慶はすでに秀吉と通じていた（昼間たかしの紹介）
+      # fact: kazumasa-09
+      - 語り: 菅原さんが目を向けたのは、小笠原貞慶です。10月17日付けの秀吉の手紙の時点で、貞慶は、すでに秀吉と通じていました。
+        background: {image: paintings/sanada_shinano_suwako_hiroshige2.jpg, credit: "歌川広重（二代）《諸国名所百景 信州諏訪湖》1860年"}
+        card: {head: "10月17日", body: 貞慶はすでに秀吉と通じていた}
+      # 【想像7】数正。記録：貞慶が秀吉と通じた（kazumasa-09）。驚きの気持ちの言葉だけ（責任の話・出奔の理由は言わせない）
+      - 人物: 「貞慶殿が、秀吉の側へ……」
+        who: 数正想像
+        imagined: true
+        tone: 重い
+        portrait: {image: paintings/mikata_ishikawa_kazumasa_portrait.jpg, caption: "石川数正と伝わる武者（長篠合戦図屏風の一部）"}
+      # fact: kazumasa-09
+      - 語り: 数正が後ろ盾になってきた大名が、秀吉の側へ離れた。菅原さんは、研究者の柴裕之さんの研究を踏まえて、これが数正の責任の問題になった、と推し量っています。
+        portrait: null
+      # fact: kazumasa-09
+      - 語り: 秀吉との交渉を受け持つ者が、自分が面倒を見てきた大名を、秀吉の側に取られた。そういう形になったんです。
+      # fact: kazumasa-10
+      - 語り: そして、10月28日。家康は、人質をこれ以上は出さない、秀吉とは手を切る、と決めます。
+        background: {image: paintings/hidenaga_komaki_nagakute_screen.jpg, credit: "《小牧長久手合戦図屏風》18世紀（豊田市郷土資料館保管）"}
+        tone: 重い
+        portrait: {image: paintings/ieyasu_portrait_toshodaigongen.jpg, caption: "徳川家康（伝 狩野探幽画）"}
+        card: {head: "10月28日", body: 家康、人質を拒み秀吉と決別}
+      - 語り: 人質を断れば、関白の秀吉と、ふたたび戦になるかもしれない。家康は、その覚悟を決めました。
+      # 【想像2】家康。記録：10月28日に人質の追加を拒み、秀吉と決別すると決めた（kazumasa-10）。決めた中身の言葉だけ。新しい事実なし
+      - 人物: 「人質は、もう出さぬ」
+        who: 家康想像
+        imagined: true
+        tone: 重い
+        background: {image: paintings/ieyasu_okazaki_castle_ryujo_zu.jpg, credit: "《龍城図》岡崎城（江戸時代）"}
+      # fact: kazumasa-10
+      - 語り: 人質を出す方向で話をまとめてきた数正の立場は、ここで、根もとから崩れました。
+        tone: 強調
+        portrait: null
+        figure: {type: numberline, title: 天正13年 数正の最後の1か月, items: [[信雄の手紙, 14], [貞慶は秀吉側, 17], [家康の決別, 28]], unit: 日（10月）, focus: 家康の決別}
+      - 語り: 10月14日の手紙では、まだ迷っていた家康が、28日には、手を切ると決めた。そのあいだ、わずか2週間です。
+        figure: {type: numberline, title: 天正13年 数正の最後の1か月, items: [[信雄の手紙, 14], [貞慶は秀吉側, 17], [家康の決別, 28]], unit: 日（10月）, focus: 家康の決別}
+      - 語り: 人質を出して、戦を避ける。数正が積み上げてきた交渉の道は、主君の一言で、行き止まりになりました。
+        figure: null
+      # 【想像3】数正。記録：人質を出す方向で調整していた立場が崩れた（kazumasa-10）。気持ちの言葉だけ（出奔の理由は言わせない）
+      - 人物: 「……殿」
+        who: 数正想像
+        imagined: true
+        tone: しみじみ
+        figure: null
+        portrait: {image: paintings/mikata_ishikawa_kazumasa_portrait.jpg, caption: "石川数正と伝わる武者（長篠合戦図屏風の一部）"}
+      - 語り: 秀吉との交渉の窓口は、家中で、ひとりだけ反対の側に立つことになりました。
+        portrait: null
+        hook: true
+      - 語り: 家康が手を切ると決めてから、半月。11月13日の夜が、やってきます。
+        background: {image: paintings/hidenaga_komaki_nagakute_screen.jpg, credit: "《小牧長久手合戦図屏風》18世紀（豊田市郷土資料館保管）"}
+        tone: 重い
+        hook: true
+
+  # ================================================================ 第3章 出奔の夜（天正13年11月13日）
+  - title: その夜、岡崎城で何が起きたのか　天正13年11月13日
+    background: {image: paintings/mikata_okazaki_castle_photo_2012.jpg, credit: "取り壊し前の岡崎城（古写真。写る天守は江戸時代のもの）"}
+    # AI絵：a lone samurai on horseback on a dark road at night, cold winter wind, a castle silhouette far behind, 1580s Japan, painterly, muted colors, face not visible
+    year: 1585
+    lines:
+      # サライ.jp（末原美裕 2026）：城代を務めていた岡崎城を突然出奔し、秀吉のもとへ
+      # fact: kazumasa-01
+      - 語り: 天正13年11月13日。数正は、岡崎城を預かる城代でした。家康の若いころからの、徳川の大事な城です。
+        card: {head: "天正13年11月13日", body: 数正は岡崎城の城代}
+      - 語り: 岡崎城は、家康が生まれた城でもあります。その城を、家康は、長年の重臣の数正に預けていました。
+      # fact: kazumasa-01
+      - 語り: その夜、数正は、城を出ます。行き先は、秀吉のもとでした。
+        tone: 重い
+      - 語り: 城代が、城を出る。徳川の大事な城を預かる人が、その夜のうちに、いなくなったんです。
+      # 【想像4】数正。記録：この夜に岡崎城を出て秀吉のもとへ（kazumasa-01）。理由は記録に無い（kazumasa-02）ので、決意の言葉だけ
+      - 人物: 「……行くぞ」
+        who: 数正想像
+        imagined: true
+        tone: 重い
+        portrait: {image: paintings/mikata_ishikawa_kazumasa_portrait.jpg, caption: "石川数正と伝わる武者（長篠合戦図屏風の一部）"}
+      - 語り: このとき、数正が、何を思って城を出たのか。それを書いた本人の言葉は、ありません。
+        portrait: null
+      - 語り: 少年の家康に付き従った日から、長い年月がたっていました。その年月を、数正は、ひと晩で後にしました。
+        background: {image: paintings/ieyasu_okazaki_castle_ryujo_zu.jpg, credit: "《龍城図》岡崎城（江戸時代）"}
+        tone: しみじみ
+      - 語り: 家康の側から見れば、交渉の窓口が、そのまま相手の側へ移ったことになります。徳川の内側を、いちばんよく知る人の一人でした。
+      # 【想像5】家康。記録：数正の出奔を知り、備えを固めた（kazumasa-11）。気持ちの言葉だけ
+      - 人物: 「数正が……」
+        who: 家康想像
+        imagined: true
+        tone: 重い
+        background: {image: paintings/ieyasu_nagakute_yasunobu.jpg, credit: "狩野安信《長久手戦役の徳川家康像》17世紀（徳川美術館蔵）"}
+      # 【記録】家康書状（天正13年11月28日付、北条氏規あて、高岡市立博物館蔵。文化遺産オンラインの釈文）。今の言葉にして家康の声で
+      # fact: kazumasa-11
+      - 語り: 15日後の11月28日。家康は、関東の北条氏規に、手紙を送っています。今は、富山県の高岡市立博物館にある手紙です。今の言葉にすると、こうです。
+        background: {image: paintings/mikata_okazaki_castle_ndl_41.jpg, credit: "〔日本古城絵図〕三州岡崎城図（江戸時代、国立国会図書館蔵）"}
+        card: {head: "11月28日", body: 家康から北条氏規への手紙}
+      # fact: kazumasa-11
+      - 人物: 「石河伯耆が退出したのち、こちらの備えなどは、いっそう堅く申し付けた」
+        who: 家康
+        tone: 重い
+      - 語り: 石河伯耆は、数正のことです。家康がこの出来事に使った言葉は、「退出」でした。
+        tone: しみじみ
+        card: {head: "家康の言葉", body: 「退出」}
+      - 語り: そして、すぐに続けて、備えを固めた、と書いています。数正が抜けたあと、家康は、守りを固め直していたんです。
+      # 軍制を武田流に（出どころなし・本文未見 → 伝わる）
+      # fact: kazumasa-03
+      - 語り: このあと徳川は、軍の決まりを、武田流に改めたと伝わります。
+        background: {image: paintings/ieyasu_okazaki_castle_ryujo_zu.jpg, credit: "《龍城図》岡崎城（江戸時代）"}
+      - 語り: それほど、重臣の出奔は、徳川にとって大きな出来事でした。
+        background: {image: paintings/ieyasu_takeda_shingen_kuniyoshi.jpg, credit: "歌川国芳《武田信玄》江戸時代"}
+      - 語り: 長く家康に仕えた重臣は、こうして、秀吉の家臣になりました。
+        tone: しみじみ
+        hook: true
+      - 語り: では、なぜなのか。この問いへの答えは、辞典によっても、研究者によっても、割れています。
+        tone: 疑問
+        hook: true
+
+  # ================================================================ 第4章 説を並べる（検証はこの章だけ）
+  - title: 裏切りか、スパイか　天正13年の出奔の読み
+    background: {image: paintings/mikata_okazaki_castle_ndl_41.jpg, credit: "〔日本古城絵図〕三州岡崎城図（江戸時代、国立国会図書館蔵）"}
+    portrait: {image: paintings/mikata_ishikawa_kazumasa_portrait.jpg, caption: "石川数正と伝わる武者（長篠合戦図屏風の一部）"}
+    year: 1585
+    lines:
+      # 食い違い①：日本大百科全書「路線論争に敗れて」⇔ 国史大辞典「原因不詳」（サライ.jp 2026 が両方を紹介）
+      # fact: kazumasa-28
+      - 語り: まず、辞典です。小学館の『日本大百科全書』は、数正が「《路線論争に敗れて》」出奔した、と説明しています。
+        card: {head: "日本大百科全書", body: 「路線論争に敗れて」}
+        figure: {type: stats, title: 出奔の理由　辞典の書き方, items: [[日本大百科全書（小学館）, 路線論争に敗れて, 理由を書く], [国史大辞典（吉川弘文館）, 原因は不詳, 理由を書かない]], upto: 1}
+      # fact: kazumasa-28
+      - 語り: 路線論争とは、秀吉と折り合うのか、戦い続けるのか、という家中の争いのことです。その争いに負けて、居場所を失った、という読み方です。
+        figure: {type: stats, title: 出奔の理由　辞典の書き方, items: [[日本大百科全書（小学館）, 路線論争に敗れて, 理由を書く], [国史大辞典（吉川弘文館）, 原因は不詳, 理由を書かない]], upto: 1}
+      # fact: kazumasa-02
+      - 語り: ところが、吉川弘文館の『国史大辞典』は、原因を不詳、つまり分からない、としています。同じ出来事を、二つの辞典が、違う形で書いているんです。
+        tone: 強調
+        figure: {type: stats, title: 出奔の理由　辞典の書き方, items: [[日本大百科全書（小学館）, 路線論争に敗れて, 理由を書く], [国史大辞典（吉川弘文館）, 原因は不詳, 理由を書かない]], upto: 2}
+      # 呉座勇一（アゴラ 2023）
+      # fact: kazumasa-28
+      - 語り: 路線の争いに負けた、という見方を、もう少し具体的に書く研究者もいます。呉座勇一さんは、数正は秀吉との仲直りを説き、決戦派の多い家中で孤立した、と見ています。
+        figure: null
+        background: {image: paintings/ieyasu_komaki_chikanobu_honda_kato.jpg, credit: "楊洲周延《小牧長久手の合戦》明治時代"}
+      # 香原斗志（PRESIDENT Online 2023）
+      # fact: kazumasa-28
+      - 語り: 歴史評論家の香原斗志さんも、人質を出す話を進めていた数正は、主戦派が大勢を占める家中で孤立した、と見ています。
+      # スパイ説：山岡荘八の小説、本郷和人が退ける（PRESIDENT Online 2023）
+      # fact: kazumasa-16
+      - 語り: 一方で、よく知られた話もあります。作家の山岡荘八の小説では、数正は、家康のために、わざと秀吉の側へ入り込んだスパイとして描かれました。
+        card: {head: "スパイ説", body: 山岡荘八の小説から}
+        background: {image: paintings/hidenaga_komaki_nagakute_screen.jpg, credit: "《小牧長久手合戦図屏風》18世紀（豊田市郷土資料館保管）"}
+      - 語り: 裏切り者と呼ばれてきた数正を、主君のために身を捨てた忠義の人として、描き直す物語でした。
+      # fact: kazumasa-16
+      - 語り: 東京大学史料編纂所の本郷和人さんは、このスパイ説を、退けています。
+        tone: 強調
+      # fact: kazumasa-35
+      - 語り: 本郷さんの見方は、こうです。当時の秀吉は、ほかの大名の家から、力のある家臣を、しきりに引き抜いていた。数正も、その一人だった、と。
+        portrait: {image: paintings/akechi_hideyoshi_kodaiji.jpg, caption: "豊臣秀吉（狩野光信画、高台寺蔵）"}
+        card: {head: "本郷和人さん", body: 秀吉の引き抜きに応じた}
+      # fact: kazumasa-35
+      - 語り: 本郷さんは、これを今の言葉で、秀吉の「ヘッドハンティング」と呼んでいます。数正は、それに応じた、という見方です。
+        background: {image: paintings/ieyasu_okazaki_castle_ryujo_zu.jpg, credit: "《龍城図》岡崎城（江戸時代）"}
+        portrait: null
+      # 菅原の新説と、本人の留保（昼間たかしの紹介）
+      # fact: kazumasa-09, kazumasa-10
+      - 語り: そして、第2章の菅原義勝さんの読み。貞慶の離反の責任を負わされ、家康の決別で、立場が2週間で崩れた、というものです。
+        portrait: null
+        background: {image: paintings/sanada_shinano_suwako_hiroshige2.jpg, credit: "歌川広重（二代）《諸国名所百景 信州諏訪湖》1860年"}
+        figure: {type: stats, title: 出奔の理由の読み, items: [[呉座勇一さん, 家中で孤立, 取次の立場], [本郷和人さん, 秀吉の引き抜き, スパイ説は退ける], [菅原義勝さん, 貞慶の離反と2週間, 2023年の手紙から]], upto: 3}
+      # fact: kazumasa-02
+      - 語り: ただ、菅原さん自身も、これを確かめる決め手の史料は無い、としています。新しい手紙は、手がかりであって、答えそのものではありません。
+        tone: しみじみ
+        figure: null
+        card: {head: "菅原さんの留保", body: 決め手の史料は無い}
+      - 語り: 辞典は、理由を書くものと、書かないものに分かれました。研究者は、孤立、引き抜き、2週間の急転と、それぞれ違う所に光を当てています。
+        tone: しみじみ
+      - 語り: 裏切り者か、主君のために動いたのか、追い詰められたのか。記録が語るのは、数正が城を出た日と、家康がそれを「退出」と書いたことまでです。
+        background: {image: paintings/ieyasu_okazaki_castle_ryujo_zu.jpg, credit: "《龍城図》岡崎城（江戸時代）"}
+        tone: しみじみ
+        hook: true
+      - 語り: そして、出奔から16日後。日本の真ん中を、大きな地震が襲います。
+        tone: 重い
+        hook: true
+
+  # ================================================================ 第5章 天正地震（天正13年11月29日）
+  - title: 16日後の大地震は、家康を救ったのか　天正13年11月29日
+    background: {image: paintings/hidenaga_komaki_nagakute_screen.jpg, credit: "《小牧長久手合戦図屏風》18世紀（豊田市郷土資料館保管）"}
+    portrait: {image: paintings/hidenaga_hideyoshi_portrait_1600.jpg, caption: "豊臣秀吉（1600年ごろの肖像）"}
+    # AI絵：a great earthquake at night in a 16th-century Japanese castle town, collapsing wooden houses and fire in the distance, people silhouettes running, painterly, muted colors, not graphic
+    year: 1585
+    lines:
+      # 一柳家文書（香原斗志 2023・呉座勇一 2023 が引く）
+      # fact: kazumasa-30
+      - 語り: 数正を迎えた秀吉は、動き出していました。翌年の正月に、家康を討つ、と決めたんです。
+        tone: 重い
+      # fact: kazumasa-30
+      - 語り: 『一柳家文書』という古文書には、このときの秀吉の指図が残っています。正月15日より前に、自分は大垣城まで出向く。準備を怠るな、と。
+        card: {head: "一柳家文書", body: 正月15日より前に大垣城へ}
+        figure: {type: map, title: 天正13年 秀吉の徳川攻めの道, bounds: [135.3, 137.6, 34.5, 36.3], places: [[大坂, 135.52, 34.69], [大垣, 136.61, 35.36], [岡崎, 137.16, 34.95], [長浜, 136.27, 35.38]], route: [大坂, 大垣, 岡崎], note: 正月15日より前に大垣城へ}
+      # 【想像6】秀吉。記録：正月に家康を討つと決め、諸将に準備を命じた（kazumasa-30）。命令の中身の言葉だけ
+      - 人物: 「正月には、家康を討つ」
+        who: 秀吉想像
+        imagined: true
+        tone: 重い
+        figure: null
+        portrait: {image: paintings/akechi_hideyoshi_kodaiji.jpg, caption: "豊臣秀吉（狩野光信画、高台寺蔵）"}
+      # 天正地震：天正13年11月29日（岐阜県防災課）・西暦1586年1月18日（松浦律子 2011）
+      # fact: kazumasa-12, kazumasa-26
+      - 語り: その準備のさなか、天正13年11月29日の夜。西暦では、1586年1月のことです。中部から近畿の一帯を、大きな地震が襲いました。天正地震です。
+        tone: 重い
+        portrait: null
+        background: {image: paintings/mikata_okazaki_castle_ndl_41.jpg, credit: "〔日本古城絵図〕三州岡崎城図（江戸時代、国立国会図書館蔵）"}
+        card: {head: "天正13年11月29日", body: 天正地震（1586年1月）}
+      # fact: kazumasa-12
+      - 語り: 地震の研究者、松浦律子さんの2011年の論文では、その大きさは、マグニチュード7.8から8.0ほどと見積もられています。
+        card: {head: "松浦律子さん 2011年", body: マグニチュード7.8〜8.0ほど}
+      # 小松原琢（産総研 地質調査総合センター 2019）
+      # fact: kazumasa-25
+      - 語り: 産業技術総合研究所の小松原琢さんの2019年の報告では、この地震は、29日の夜と30日の夜に続けて起きた、「《双子の地震》」だった可能性も示されています。
+        card: {head: "双子の地震？", body: 29日夜と30日夜}
+      # fact: kazumasa-40
+      - 語り: どの断層が動いたのかも、今も、研究者のあいだで説が分かれています。
+        background: {image: paintings/ieyasu_okazaki_castle_ryujo_zu.jpg, credit: "《龍城図》岡崎城（江戸時代）"}
+      # fact: kazumasa-41
+      - 語り: 実は、数正が城を出るおよそ3か月半前の夏にも、強い揺れがあった、という説があります。松浦さんが示したもので、三河や伊勢、京都が揺れたといいます。
+      # fact: kazumasa-26, kazumasa-30
+      - 語り: 岐阜県の防災の資料によれば、大垣城は、全壊して焼けました。秀吉が、正月に出向くと言っていた、あの城です。
+        tone: 強調
+        figure: {type: map, title: 天正13年 秀吉の徳川攻めの道, bounds: [135.3, 137.6, 34.5, 36.3], places: [[大坂, 135.52, 34.69], [大垣, 136.61, 35.36], [岡崎, 137.16, 34.95], [長浜, 136.27, 35.38]], route: [大坂, 大垣, 岡崎], note: 大垣城は全壊して焼けた}
+        mark: {type: circle, at: 2}
+        card: {head: "大垣城", body: 全壊して焼けた}
+      # 鎌田浩毅（現代ビジネス 2025）：岡崎城・長浜城も大きく損壊
+      # fact: kazumasa-26
+      - 語り: 鎌田浩毅さんによれば、三河の岡崎城や、近江の長浜城も、大きく傷みました。数正が去ったばかりの、あの岡崎城です。
+        figure: null
+        background: {image: paintings/ieyasu_okazaki_castle_ryujo_zu.jpg, credit: "《龍城図》岡崎城（江戸時代）"}
+      # 帰雲城（岐阜県防災課・白川村）
+      # fact: kazumasa-26, kazumasa-50
+      - 語り: 飛騨の山あいでは、帰雲城が、山崩れに城下ごと埋まりました。城主の内ヶ島氏の一族を含む領民300人が、遭難したと伝わります。
+        figure: null
+        background: {image: paintings/hanbei_mino_map.jpg, credit: "《美濃国郡県人跡路程図》（19世紀）"}
+        card: {head: "帰雲城", body: 山崩れで城下ごと埋まる}
+        # AI絵：a mountain valley in Hida, Japan, with a huge landslide scar on a steep slope, a river below, overcast sky, no people, painterly
+      # fact: kazumasa-50
+      - 語り: 白川村によれば、その城や城下町がどこにあったのかは、今も分かっていません。
+      # 松浦律子 2011：帰雲城の被害は本震の2日前の別の地震とする
+      # fact: kazumasa-13
+      - 語り: しかも松浦さんは、帰雲城を埋めたのは、本震の2日前に起きた、別の地震だった、という見方も示しています。
+      # フロイスの書簡（1586年10月15日付、下関発。ケンペル『日本誌』英訳に全文引用）
+      # fact: kazumasa-36
+      - 語り: この地震を、ヨーロッパに書き送った人がいます。宣教師のルイス・フロイスです。1586年10月15日付け、下関から出した手紙に、こうあります。
+        background: {image: paintings/hanbei_nagahama_map.jpg, credit: "《長浜町絵図》江戸時代"}
+        card: {head: "フロイスの手紙", body: 1586年10月15日 下関から}
+      # fact: kazumasa-36
+      - 語り: 大地は、40日のあいだ、揺れ続けた。
+        tone: 重い
+        card: {head: "フロイス", body: 揺れは40日続いた}
+      # fact: kazumasa-37
+      - 語り: 近江の長浜は、1000軒ほどの町でした。大地が裂けて、町の半分が呑み込まれ、残りの半分は、火事で焼けた、とフロイスは書いています。
+        detail: {box: [0.15, 0.1, 0.85, 0.8], label: 長浜の町（江戸時代の絵図）}
+      - 語り: 長浜は、かつて秀吉が、初めて自分の城を持った町でもありました。
+      # 長浜市（広報ながはま 2013年11月）：長浜町遺跡の発掘
+      # fact: kazumasa-24
+      - 語り: 長浜市の発掘では、波打って落ち込んだ地面の上に、厚い焼けた土の層が見つかりました。フロイスの手紙を、地面の下が裏付けたんです。
+        background: {image: paintings/ieyasu_okazaki_castle_ryujo_zu.jpg, credit: "《龍城図》岡崎城（江戸時代）"}
+        tone: 強調
+        card: {head: "長浜の発掘", body: 波打つ地面と厚い焼けた土}
+      # fact: kazumasa-39
+      - 語り: フロイスは、秀吉自身も、御殿が激しく揺れたので、急いで大坂へ引き上げた、と書いています。
+      # fact: kazumasa-38
+      - 語り: フロイスの手紙には、海辺のある町が、数日揺れ続けたあと海に呑まれ、城の跡だけが水の下に残った、という話も出てきます。
+      # 小松原琢（歴史地震 35号、2020）
+      # fact: kazumasa-42
+      - 語り: けれど、小松原琢さんの2020年の論文は、別の答えを出しています。伊勢湾に近い養老断層の東側では、1メートルを超える沈み込みや大きな津波は、起きなかったというんです。
+        tone: 疑問
+        background: {image: paintings/hideyoshi_osaka_zu_byobu.jpg, credit: "《豊臣期大坂図屏風》1607〜1615年ごろ（エッゲンベルク城蔵）"}
+        detail: {box: [0.3, 0.0, 0.7, 1.0], label: 大坂（豊臣期大坂図屏風の一部）}
+      # 松浦律子 2012（地震 65巻）
+      # fact: kazumasa-14
+      - 語り: 松浦さんの2012年の論文によれば、ヨーロッパに残る天正地震の記録は、もとをたどると、すべてこの手紙1通から出ています。
+        background: {image: paintings/hanbei_nagahama_map.jpg, credit: "《長浜町絵図》江戸時代"}
+        card: {head: "松浦律子さん 2012年", body: 欧州の記録はフロイスの手紙1通から}
+      # 食い違い②：地震で止まった（鎌田浩毅 2025・呉座勇一 2023）⇔ それだけか（眞邊明人 2023）
+      # fact: kazumasa-04
+      - 語り: では、地震は、家康を救ったのか。京都大学名誉教授の鎌田浩毅さんは、地震の被害で戦どころではなくなり、秀吉は家康を討つのをやめた、と述べています。
+        background: {image: paintings/ieyasu_okazaki_castle_ryujo_zu.jpg, credit: "《龍城図》岡崎城（江戸時代）"}
+        figure: {type: stats, title: 地震は徳川攻めを止めたのか, items: [[鎌田浩毅さん, 被害で討つのをやめた, 2025年], [呉座勇一さん, 戦を起こすのは難しくなった, 2023年], [眞邊明人さん, 時期をずらせば討てた, 2023年]], upto: 1}
+      # fact: kazumasa-04
+      - 語り: 呉座勇一さんも、秀吉の領国が大きな被害を受け、戦を起こすのは難しくなった、と見ています。
+        figure: {type: stats, title: 地震は徳川攻めを止めたのか, items: [[鎌田浩毅さん, 被害で討つのをやめた, 2025年], [呉座勇一さん, 戦を起こすのは難しくなった, 2023年], [眞邊明人さん, 時期をずらせば討てた, 2023年]], upto: 2}
+      # fact: kazumasa-04
+      - 語り: けれど、眞邊明人さんは、東洋経済オンラインの記事で、疑問を投げかけています。秀吉にその気があれば、時期さえずらせば、徳川を討つこともできたはずだ、と。
+        tone: 疑問
+        figure: {type: stats, title: 地震は徳川攻めを止めたのか, items: [[鎌田浩毅さん, 被害で討つのをやめた, 2025年], [呉座勇一さん, 戦を起こすのは難しくなった, 2023年], [眞邊明人さん, 時期をずらせば討てた, 2023年]], upto: 3}
+      - 語り: そして翌年、天正14年。家康は大坂へ上り、秀吉に臣従します。
+        background: {image: paintings/hideyoshi_osaka_zu_byobu.jpg, credit: "《豊臣期大坂図屏風》1607〜1615年ごろ（エッゲンベルク城蔵）"}
+        detail: {box: [0.3, 0.0, 0.7, 1.0], label: 大坂（豊臣期大坂図屏風の一部）}
+        figure: null
+      - 語り: 秀吉と折り合う道。数正が進めようとしていたその道を、最後は、家康自身が選んだことになります。
+        background: {image: paintings/ieyasu_okazaki_castle_ryujo_zu.jpg, credit: "《龍城図》岡崎城（江戸時代）"}
+        tone: しみじみ
+      - 語り: 地震が止めたのか、秀吉が別の道を選んだのか。はっきりしているのは、正月の徳川攻めが、行われなかったことです。
+        figure: null
+        background: {image: paintings/hidenaga_komaki_nagakute_screen.jpg, credit: "《小牧長久手合戦図屏風》18世紀（豊田市郷土資料館保管）"}
+        hook: true
+      - 語り: そして、秀吉のもとへ移った数正にも、新しい名前と、新しい城が待っていました。
+        hook: true
+
+  # ================================================================ 第6章（最後）その後：数正の家はどこへ ＋ 冒頭に戻る締め
+  - title: まとめ：家康の右腕の家は、どこへ行ったのか　松本城と子孫
+    background: {image: paintings/sanada_shinano_hiroshige2_1862.jpg, credit: "歌川広重（二代）《諸国六十八景 信濃 久米路橋》1862年"}
+    # AI絵：Matsumoto Castle keep with the Northern Alps behind it, late autumn, clear sky, painterly, muted colors
+    year: 1590
+    lines:
+      # 菊地浩之：出奔後は秀吉の偏諱で出雲守吉輝
+      # fact: kazumasa-15
+      - 語り: 秀吉の家臣になった数正は、名を改めます。菊地浩之さんによれば、秀吉の「吉」をもらって、「出雲守、《吉輝》」と名乗りました。
+        card: {head: "出奔のあと", body: 出雲守吉輝（よしてる）}
+        figure: {type: stats, title: 数正の名乗り（菊地浩之さんの整理）, items: [[天正の前半, 数正, 若いころからの名], [天正13年ごろ, 康輝, 家康の「康」], [出奔のあと, 吉輝, 秀吉の「吉」]], upto: 3}
+      - 語り: 家康の「康」から、秀吉の「吉」へ。名前の一字が、仕える相手を物語っています。
+        figure: null
+        tone: しみじみ
+      # 文化遺産オンライン（松本城天守の解説）：天正18年に封ぜられた石川数正はただちに改修に着手
+      # fact: kazumasa-05
+      - 語り: 天正18年。数正は、信濃の松本に領地を与えられ、城の改修に取りかかります。
+        card: {head: "天正18年", body: 信濃の松本へ}
+      # 観光庁 多言語解説文 R4-00230：古山寺御殿は数正の別名から
+      # fact: kazumasa-23
+      - 語り: 松本城の黒門の南には、数正の屋敷として建てられた、古山寺御殿がありました。古山寺は、数正のもう一つの呼び名です。
+      # 文化庁 国指定文化財等データベース（1930 指定の説明文）
+      # fact: kazumasa-21
+      - 語り: 呼び名といえば、1930年に国が松本城を史跡に指定したときの説明文では、城を営んだ人は「石川康昌」、その子は「光長」と書かれています。今の呼び名の、数正と康長とは、違う名前です。
+        background: {image: paintings/sanada_shinano_suwako_hiroshige2.jpg, credit: "歌川広重（二代）《諸国名所百景 信州諏訪湖》1860年"}
+        card: {head: "1930年の説明文", body: 「石川康昌」「光長」}
+      # 没年の食い違い③：文禄元年に没・12月14日七条河原で葬礼（サライ.jp）⇔ 文化遺産オンライン「文禄二年に没」
+      # fact: kazumasa-31
+      - 語り: けれど、松本での暮らしは、長くは続きません。文禄元年、数正は亡くなり、その年の12月14日、京都の七条河原で、葬礼が営まれました。
+        tone: しみじみ
+        background: {image: paintings/akechi_rakuchu_rakugai_uesugi_left.jpg, credit: "《上杉本洛中洛外図屏風》（上杉家蔵）"}
+        card: {head: "文禄元年12月14日", body: 京都の七条河原で葬礼}
+      # fact: kazumasa-05
+      - 語り: ただ、文化庁の文化遺産オンラインの解説は、数正が亡くなったのを、翌年の文禄2年としています。亡くなった年さえ、記録が割れているんです。
+        figure: {type: stats, title: 数正が亡くなった年, items: [[文禄元年（1592年）, 12月14日に七条河原で葬礼, 葬礼の記録から], [文禄2年（1593年）, 文化遺産オンラインの解説, 松本城天守の説明]], upto: 2}
+      # 天守の食い違い④：松本市「文禄2〜3年に数正・康長父子が築造」⇔ 2025年の年輪年代調査（光谷拓実・麓和善）
+      # fact: kazumasa-05
+      - 語り: 数正の名と結びついて語られてきたのが、松本城の天守です。松本市は、天守を、文禄2年から3年にかけて、数正と康長の父子が築いた、と説明してきました。
+        figure: null
+        background: {image: paintings/sanada_shinano_hiroshige2_1862.jpg, credit: "歌川広重（二代）《諸国六十八景 信濃 久米路橋》1862年"}
+        # AI絵：Matsumoto Castle keep close view, black lacquered wooden walls and white plaster, painterly
+        card: {head: "これまでの説明", body: 数正と康長の父子が築いた}
+      # fact: kazumasa-18
+      - 語り: ところが、文献の記録だけでは、天守がいつ建ったのかを決められませんでした。昭和の初めから、天正19年の説から慶長5年から6年の説まで、5つもの説が並んでいたんです。
+      # fact: kazumasa-17
+      - 語り: そこで松本市は、令和4年度から6年度にかけて、天守の柱の木の年輪を調べました。分かったのは、1階、3階、4階の柱が、1596年に伐られた木だったことです。
+        tone: 強調
+        card: {head: "年輪の調べ", body: 柱の木は1596年に伐られた}
+        background: {image: paintings/shingen_shinano_sarashina_hiroshige.jpg, credit: "歌川広重《本朝名所 信州更科田毎之月》1835年ごろ"}
+        figure: {type: numberline, title: 数正の死と、天守の柱の木, items: [[数正の葬礼, 1592], [柱の木を伐る, 1596], [天守ができる, 1597]], unit: 年, focus: 柱の木を伐る}
+      # fact: kazumasa-17
+      - 語り: 2025年の報告では、天守は、1596年から97年ごろに、短い期間で建てられたと推し量られています。数正の葬礼から、4年ほどあとです。
+        figure: {type: numberline, title: 数正の死と、天守の柱の木, items: [[数正の葬礼, 1592], [柱の木を伐る, 1596], [天守ができる, 1597]], unit: 年, focus: 天守ができる}
+      # fact: kazumasa-17
+      - 語り: 報告をまとめたのは、光谷拓実さんと麓和善さんです。紙の記録では決まらなかった答えを、木の年輪が出したんです。
+        figure: null
+      # 観光庁（松本市）：康長が大天守・乾小天守・渡櫓を完成。2025 報告書：天守築造者 石川三長（康長）
+      # fact: kazumasa-05
+      - 語り: 今の天守を建てたのは、父の数正ではなく、子の康長だった、ということになります。
+        background: {image: paintings/sanada_shinano_suwako_hiroshige2.jpg, credit: "歌川広重（二代）《諸国名所百景 信州諏訪湖》1860年"}
+        tone: しみじみ
+        figure: null
+      # fact: kazumasa-20
+      - 語り: 同じ調べで、天守の脇の辰巳附櫓も、天守と同じ工事で建てられたと考えられるようになりました。これまでは、江戸時代の寛永年間に、松平直政が足した、と説明されてきた櫓です。
+        card: {head: "辰巳附櫓", body: 天守と同じ工事で建った}
+      # fact: kazumasa-19
+      - 語り: 一方で、天守のいちばん上の2つの階には、1627年に伐られた梁が使われていました。上の2階は、このとき造り替えられたと確かめられています。
+        card: {head: "1627年", body: 上の2階を造り替え}
+      # fact: kazumasa-22
+      - 語り: 地面の下からも、手がかりが出ています。2017年、松本市教育委員会の発掘で、城の西の堀の土塁の一部が、石川氏の築城のころのものと考えられました。この土塁は、史跡に加えられています。
+        card: {head: "2017年", body: 石川氏のころの土塁を史跡に}
+        background: {image: paintings/shingen_shinano_sarashina_hiroshige.jpg, credit: "歌川広重《本朝名所 信州更科田毎之月》1835年ごろ"}
+      # 眞邊明人（東洋経済 2023）：康長は関ヶ原で東軍、外様の扱い
+      # fact: kazumasa-32
+      - 語り: その康長は、関ヶ原の戦いで、家康の東軍につきました。けれど、扱いは外様の大名。徳川の家に戻ったとは、みなされませんでした。
+        background: {image: paintings/ieyasu_sekigahara_zubyobu.jpg, credit: "《関ヶ原合戦図屏風》江戸時代"}
+      - 語り: 父が去った徳川に、子は、外様として仕えることになったんです。
+        tone: しみじみ
+      # oshiro-m.org（改易ガイド）：康長の娘を長安の長子藤三郎に
+      # fact: kazumasa-44, kazumasa-33
+      - 語り: 関ヶ原のあと、康長は、娘を、大久保長安の長男、藤三郎に嫁がせていました。
+      # fact: kazumasa-06
+      - 語り: 慶長18年、西暦1613年。大久保長安の事件に連なったとして、康長は領地を取り上げられ、家は改易されます。弟の康勝たちも、ともに改易されました。
+        tone: 重い
+        background: {image: paintings/ieyasu_edo_keicho_ezu_1608.jpg, credit: "《慶長江戸図》1608年（東京都立中央図書館蔵）"}
+        card: {head: "1613年", body: 康長の改易}
+      # fact: kazumasa-43
+      - 語り: 江戸時代の記録『慶長年録』には、こうした意味のことが書かれています。大久保長安と親しくしていて、隠した田が数多くあったので、遠くへ流した、と。
+        card: {head: "慶長年録", body: 長安と親しく、隠した田が多い}
+      - 語り: 康長と康勝。出奔の前の年、於義丸に従って大坂へ行った、あの2人の息子です。
+        tone: しみじみ
+      - 語り: 天正18年に数正が松本に入ってから、20年あまり。石川の家は、こうして松本を去りました。
+        background: {image: paintings/sanada_shinano_suwako_hiroshige2.jpg, credit: "歌川広重（二代）《諸国名所百景 信州諏訪湖》1860年"}
+        card: {head: "天正18年→1613年", body: 石川の家、松本を去る}
+      # fact: kazumasa-43
+      - 語り: 地元の松本には、改易の理由として、申告していない田んぼ、許しを得ない城の普請、家老どうしの争いの3つが伝わります。ただ、理由は後から付けられた、という見方もあります。
+        background: {image: paintings/shingen_shinano_sarashina_hiroshige.jpg, credit: "歌川広重《本朝名所 信州更科田毎之月》1835年ごろ"}
+      # fact: kazumasa-06
+      - 語り: 康長は、豊後の佐伯の毛利家に預けられ、遠い九州へ移りました。
+        # AI絵：a quiet small castle town by the sea in Bungo (Saiki), Kyushu, early 17th century, overcast, painterly, no people
+      # 信濃毎日新聞 2016：念持仏、1971年に福岡県の石川氏の子孫から松本市へ寄贈
+      # fact: kazumasa-45, kazumasa-06
+      - 語り: 康長が、その配所で、1642年に亡くなるまで、毎日拝んでいたと伝わる、小さな仏像があります。高さ30センチほどの、木彫りの念持仏です。
+        card: {head: "念持仏", body: 高さ約30センチの木彫り}
+        background: {image: paintings/sanada_shinano_suwako_hiroshige2.jpg, credit: "歌川広重（二代）《諸国名所百景 信州諏訪湖》1860年"}
+        # AI絵：a small old wooden Buddhist statue about 30 cm tall on a plain wooden stand, soft light, dark background, no text
+      # fact: kazumasa-45
+      - 語り: 1971年。この仏像は、福岡県に住む石川氏の子孫から、松本市に贈られました。今は、松本市立博物館が持っています。
+        card: {head: "1971年", body: 子孫から松本市へ}
+      - 語り: 九州へ移った康長の仏像は、350年あまりたって、子孫の手で、松本へ戻ってきたことになります。
+        tone: しみじみ
+      # fact: kazumasa-46
+      - 語り: 松本市の大手にある正行寺では、1973年から、ほぼ毎年、康長の命日に、数正と康長の親子の法要が営まれています。愛知県に住む子孫も、足を運んでいます。
+        card: {head: "1973年から", body: 正行寺で親子の法要}
+        background: {image: paintings/sanada_shinano_hiroshige2_1862.jpg, credit: "歌川広重（二代）《諸国六十八景 信濃 久米路橋》1862年"}
+        # AI絵：a quiet Buddhist temple hall in Matsumoto with incense smoke during a memorial service, no faces, painterly
+      # 墓所：兎川寺の数正夫妻の供養塔（るるぶ・松本市観光）、岡崎市美合町の本宗寺（岡崎歴史かたり人）
+      # fact: kazumasa-07
+      - 語り: 数正の墓所は、一つではありません。松本の兎川寺には、数正夫妻の供養塔があります。
+      # fact: kazumasa-47, kazumasa-07
+      - 語り: そして、三河の岡崎市美合町の本宗寺にも、数正の墓所があります。三河の真宗を立て直した叔母、妙西尼のそばに弔われている、と地元では伝えられています。
+        background: {image: paintings/mikata_okazaki_castle_ndl_41.jpg, credit: "〔日本古城絵図〕三州岡崎城図（江戸時代、国立国会図書館蔵）"}
+      - 語り: 主君のもとを去った男は、去ったはずの三河にも、眠っているんです。
+        tone: しみじみ
+      # 松本市 文化財課：兎川寺文書5点、2025年9月2日に市の重要文化財
+      # fact: kazumasa-48
+      - 語り: その兎川寺に伝わる、数正が寺に出した文書を含む古文書5点は、2025年の9月、松本市の重要文化財になりました。
+        background: {image: paintings/sanada_shinano_hiroshige2_1862.jpg, credit: "歌川広重（二代）《諸国六十八景 信濃 久米路橋》1862年"}
+      # 小和田哲男『徳川家家臣団―子孫たちの証言』（和樂web 2020 の紹介）。子孫の家に嫁いだ女性の言葉。名前は出さない
+      # fact: kazumasa-34
+      - 語り: 歴史学者の小和田哲男さんが、徳川家の家臣の子孫の話を集めた本があります。そこで、数正の子孫の家に嫁いだ女性は、出奔の理由は、家に伝わっていないと話しています。
+        background: {image: paintings/mikata_okazaki_castle_photo_2012.jpg, credit: "取り壊し前の岡崎城（古写真。写る天守は江戸時代のもの）"}
+        portrait: {image: paintings/mikata_ishikawa_kazumasa_portrait.jpg, caption: "石川数正と伝わる武者（長篠合戦図屏風の一部）"}
+      # fact: kazumasa-34
+      - 語り: そして、こう語っています。家康のもとを離れて、秀吉のほうへ行ってしまったのだから、「《なぜなのかと思った》」ことはある、と。
+        tone: しみじみ
+        pause: 0.6
+      # 締め：冒頭の場面に戻る
+      # fact: kazumasa-01
+      - 語り: 天正13年11月13日の夜。岡崎城を出た男の、その理由は、子孫の家にも、伝わっていませんでした。
+        tone: しみじみ
+        portrait: null
+        background: {image: paintings/ieyasu_okazaki_castle_ryujo_zu.jpg, credit: "《龍城図》岡崎城（江戸時代）"}
+        card: {head: "天正13年11月13日", body: 岡崎城}
+      - 語り: 残っているのは、新しく公開された1通の手紙と、主君の家康が、15日後に書いた、「退出」という言葉です。
+        tone: しみじみ
+      - 語り: 家康の「康」を名乗った男は、秀吉の「吉」を名乗る人になりました。その家に残ったのは、理由ではなく、問いでした。
+        tone: しみじみ
+      - 語り: 家康の右腕は、なぜ、秀吉のもとへ走ったのか。四百年あまりたった今も、その問いは、子孫の口から、同じ言葉で語られています。
+        tone: しみじみ
+        pause: 0.8
+      # 締め（物語型、10-24 ユーザー決定）：余韻の一文のあと、登録のお願いを短く
+      - 語り: 感想は、コメントで聞かせてください。チャンネル登録も、よろしくお願いします。
+        background: {image: paintings/mikata_okazaki_castle_ndl_41.jpg, credit: "〔日本古城絵図〕三州岡崎城図（江戸時代、国立国会図書館蔵）"}
+
+# ============================================================================
+# 台詞の一覧（記録／想像）
+# 記録（出どころを語りで言ってから読む）：
+#   - 家康「石河伯耆が退出したのち、こちらの備えなどは、いっそう堅く申し付けた」……天正13年11月28日付 北条氏規あて書状（高岡市立博物館蔵、文化遺産オンラインの釈文「石河伯耆退出已後、爰元手置等弥堅固申付候」、kazumasa-11）。今の言葉にした
+#   - 語りの中の記録：日本大百科全書「路線論争に敗れて」・国史大辞典「原因不詳」（サライ.jp の紹介）／一柳家文書の秀吉の指図（香原・呉座）／フロイスの書簡（ケンペル『日本誌』英訳の全文引用）／子孫の女性「なぜなのかと思った」（小和田哲男の本、和樂web の紹介）
+# 想像（6か所。roles の〇〇想像＋imagined: true＝字幕の上に「想像」の札）：
+#   1 数正「康長、康勝。……体を、いとえよ」（天正12年12月）……康長・康勝が於義丸に従って大坂へ行った記録（kazumasa-29）。別れの気持ちだけ
+#   2 家康「人質は、もう出さぬ」（天正13年10月28日）……人質の追加を拒んだ記録（kazumasa-10）の中身を言葉にしただけ
+#   3 数正「……殿」（10月末）……人質を出す方向の立場が崩れた記録（kazumasa-10）。気持ちだけ
+#   4 数正「……行くぞ」（11月13日夜）……岡崎城を出た記録（kazumasa-01）。理由は言わせない（kazumasa-02）
+#   5 家康「数正が……」（出奔を知って）……15日後の書状で備えを固めた記録（kazumasa-11）。気持ちだけ
+#   6 秀吉「正月には、家康を討つ」（天正13年11月）……一柳家文書の指図（kazumasa-30）の中身を言葉にしただけ

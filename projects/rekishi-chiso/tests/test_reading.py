@@ -121,6 +121,34 @@ MISREADS = [
     ("oichi-story", "その和子が", "まさこ", "マサコ"),
     ("oichi-story", "三法師", "さんぼうし", "ボオシ"),
     ("oichi-story", "天皇の位を", "くらいを", "クライオ"),
+    # 石川数正・物語型の本編（kazumasa-story、10-26）
+    ("kazumasa-story", "数正自身が", "かずまさ", "カズマサ"),
+    ("kazumasa-story", "康輝の「康」は", "「やす」は", "ヤスワ"),
+    ("kazumasa-story", "家中は", "かちゅうは", "カチュウワ"),
+    ("kazumasa-story", "香原斗志さん", "カハラトシ", "カハラ"),
+    ("kazumasa-story", "小笠原貞慶です", "サダヨシ", "サダヨシデス"),
+    ("kazumasa-story", "『日本歴史』", "にほんれきし", "ニホンレキシ"),
+    ("kazumasa-story", "『日本大百科全書』", "にほんだいひゃっかぜんしょ", "ニホンダイヒャッカゼンショ"),
+    ("kazumasa-story", "山岡荘八", "ヤマオカソウハチ", "ハチノ"),
+    ("kazumasa-story", "一柳家文書", "ひとつやなぎけもんじょ", "ヒトツ"),
+    ("kazumasa-story", "鎌田浩毅さん", "かまたひろき", "ヒロキ"),
+    ("kazumasa-story", "眞邊明人さん", "まなべあきひと", "アキヒト"),
+    ("kazumasa-story", "出雲守、", "いずものかみ", "イズモノカミ"),
+    ("kazumasa-story", "古山寺御殿", "こさんじごてん", "コサンジゴテン"),
+    ("kazumasa-story", "七条河原", "しちじょうがわら", "チジョオガワラ"),
+    ("kazumasa-story", "藤三郎", "とうざぶろう", "トオザブロウ"),
+    ("kazumasa-story", "大久保長安の長男", "おおくぼながやす", "ナガヤス"),
+    ("kazumasa-story", "豊後の佐伯", "さいき", "サイキ"),
+    ("kazumasa-story", "親子の法要", "おやこのほうよう", "オヤ"),
+    ("kazumasa-story", "要の人", "かなめのひと", "カナメノ"),
+    ("kazumasa-story", "結城家を継ぎ", "ゆうきけ", "ユウキケ"),
+    ("kazumasa-story", "ふたたび戦に", "いくさに", "イクサニ"),
+    ("kazumasa-story", "小松原琢さん", "こまつばらたく", "コマツバラ"),
+    ("kazumasa-story", "麓和善さん", "麓かずよし", "フモトカズヨシ"),
+    ("kazumasa-story", "きた櫓です", "きたやぐらです", "ヤグラデス"),
+    ("kazumasa-story", "本宗寺", "ほんしゅうじ", "ホンシュウジ"),
+    ("kazumasa-story", "美合町", "みあいちょう", "ミアイチョウ"),
+    ("kazumasa-story", "妙西尼", "みょうさいに", "ミョオサイニ"),
 ]
 
 
@@ -148,7 +176,7 @@ def test_misread_kana(stem, phrase, _said, kana):
 def test_misread_list_covers_the_four_episodes():
     # 約50か所（4本）を残している
     assert len(MISREADS) >= 50
-    assert {m[0] for m in MISREADS} == {"shikoutei", "hidenaga", "oichi", "hideyoshi", "yoshinobu", "oichi-story"}
+    assert {m[0] for m in MISREADS} == {"shikoutei", "hidenaga", "oichi", "hideyoshi", "yoshinobu", "oichi-story", "kazumasa-story"}
 
 
 # --- 置き換え ------------------------------------------------------------------
