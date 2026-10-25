@@ -99,11 +99,11 @@ class _VersusScreenState extends State<VersusScreen> {
   // 打席の結果に効く特殊能力(打撃・投球)。
   static final _batTraitList = [
     for (final k in Skill.values)
-      if (k.category == Category.batting && k.appliesTo(Role.batter)) k
+      if (k.category == Category.batting && !k.negative) k
   ];
   static final _pitTraitList = [
     for (final k in Skill.values)
-      if (k.category == Category.pitching) k
+      if (k.category == Category.pitching && !k.negative) k
   ];
 
   static String _abilityName(Ability a) => switch (a) {

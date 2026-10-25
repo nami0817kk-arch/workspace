@@ -136,6 +136,14 @@ class Game {
       abilities: {for (final a in abilitiesOf(role)) a: 15},
       traits: traits,
       gifts: gifts,
+      // 生まれつきの弱点(赤い特殊能力)。乱数の並びを変えないよう、素質と天賦から決める
+      skills: birthWeaknesses(
+          role,
+          (pot.toInt() * 7919 +
+                  gifts.values.fold<int>(0, (a, v) => (a * 5 + v + 2) & 0xfffffff) +
+                  name.codeUnits
+                      .fold<int>(0, (a, c) => (a * 31 + c) & 0x7fffffff)) &
+              0x7fffffff),
     );
     final g = Game._(rng, p, Cast.initial(rng, role, p.skills), difficulty)
       .._wasTwoWay = role == Role.twoWay
@@ -746,13 +754,19 @@ class Game {
       ];
 
   /// 特殊能力の値段(いまのコツで)。
-  int skillPrice(Skill s) => skillCost(s, skillTips[s] ?? 0);
+  int skillPrice(Skill s) => skillCost(s, skillTips[s] ?? 0, player.age);
 
   /// 経験点で特殊能力を取る。取れなければ理由の文を返す(取れたら null)。
   String? buySkill(Skill s) {
     final why = skillBlock(player, s, exp, skillTips[s] ?? 0);
     if (why != null) return why;
     exp = exp.spend(s.category, skillPrice(s));
+    if (s.negative) {
+      player = player.copyWith(skills: {...player.skills}..remove(s));
+      log.add('弱点「${s.label}」を克服した!');
+      _note('trait', '弱点「${s.label}」を克服');
+      return null;
+    }
     player = player.copyWith(skills: {...player.skills, s});
     skillTips.remove(s);
     if (studyTarget == s) studyTarget = null;

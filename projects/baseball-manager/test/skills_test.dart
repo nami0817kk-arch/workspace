@@ -36,7 +36,10 @@ void main() {
       expect(bat.where((s) => s.gold).length, 6);
       expect(pit.where((s) => !s.gold).length, 13);
       expect(pit.where((s) => s.gold).length, 5);
-      expect(Skill.values.length, 41);
+      expect(Skill.values.where((k) => !k.negative).length, 41);
+      // 弱点(赤): 打者5・投手4
+      expect(weaknessesFor(Role.batter).length, 5);
+      expect(weaknessesFor(Role.pitcher).length, 4);
       // 金特は一覧の最後に並ぶ
       expect(skillsFor(Role.batter).skipWhile((s) => !s.gold).every((s) => s.gold),
           isTrue);
@@ -63,7 +66,9 @@ void main() {
       final before = g.exp.of(Category.batting);
       expect(g.buySkill(Skill.powerHitter), isNull);
       expect(g.player.skills, contains(Skill.powerHitter));
-      expect(g.exp.of(Category.batting), before - 40);
+      // 6歳なので値段は半額(幼いほど安い)
+      expect(g.exp.of(Category.batting), before - skillCost(Skill.powerHitter, 0, 6));
+      expect(skillCost(Skill.powerHitter, 0, 6), 20);
       expect(g.buySkill(Skill.powerHitter), '取得済み');
       // もとを取ったので金特が取れる(値段は高い)
       g.adminAddExp(200);
@@ -76,7 +81,7 @@ void main() {
       final g = _game();
       g.skillTips[Skill.chance] = 5;
       g.adminAddExp(15);
-      expect(g.skillPrice(Skill.chance), 15);
+      expect(g.skillPrice(Skill.chance), skillCost(Skill.chance, 5, g.player.age));
       expect(g.buySkill(Skill.chance), isNull);
       expect(g.skillTips.containsKey(Skill.chance), isFalse);
     });
@@ -217,6 +222,58 @@ void main() {
     expect(skillImpact(pit, Skill.staminaPlus, Stage.pro).lines.join(' '), contains('投球回 +'));
     expect(effectText(Skill.wideAngle), '試合でミート+3・パワー+3');
     expect(effectText(Skill.gambler), '大会の勝負どころ+12');
+  });
+
+  group('年齢と弱点(2026-10-25)', () {
+    test('値段は幼いほど安く、大人になるほど高い', () {
+      final ages = [6, 12, 13, 15, 16, 18, 19, 24, 25, 29, 30, 40];
+      final prices = [for (final a in ages) skillCost(Skill.powerHitter, 0, a)];
+      for (var i = 1; i < prices.length; i++) {
+        expect(prices[i], greaterThanOrEqualTo(prices[i - 1]), reason: '${ages[i]}歳');
+      }
+      expect(skillCost(Skill.powerHitter, 0, 10), 20); // 少年は半額
+      expect(skillCost(Skill.powerHitter, 0, 20), 40); // 基準
+      expect(skillCost(Skill.powerHitter, 0, 33), 60); // 30歳からは1.5倍
+    });
+
+    test('生まれつきの弱点: 0〜2個、役割に合うもの。同じ種なら同じ。乱数の並びは変えない', () {
+      var none = 0, two = 0;
+      for (var s = 0; s < 400; s++) {
+        final w = birthWeaknesses(Role.batter, s);
+        expect(w.length, lessThanOrEqualTo(2));
+        expect(w.every((k) => k.negative && k.appliesTo(Role.batter)), isTrue);
+        expect(birthWeaknesses(Role.batter, s), w);
+        if (w.isEmpty) none++;
+        if (w.length == 2) two++;
+      }
+      expect(none / 400, closeTo(0.55, 0.08));
+      expect(two / 400, closeTo(0.12, 0.05));
+      for (final k in weaknessesFor(Role.pitcher)) {
+        expect(k.appliesTo(Role.batter), isFalse, reason: k.name);
+      }
+    });
+
+    test('弱点は試合で不利・総合評価も下がり、経験点で克服すると消える', () {
+      final g = _game();
+      g.player = g.player.copyWith(skills: {Skill.strikeoutProne, Skill.chanceBad});
+      expect(traitAdjusted(g.player).of(Ability.contact), g.player.of(Ability.contact) - 3);
+      expect(matchBonus(g.player), -6);
+      expect(skillRating(g.player), lessThan(0));
+      expect(effectText(Skill.strikeoutProne), '試合でミート-3');
+      expect(effectText(Skill.chanceBad), '大会の勝負どころ-6');
+      expect(g.buySkill(Skill.slowRunner), '持っていない');
+      g.adminAddExp(100);
+      final before = g.exp.of(Category.batting);
+      expect(g.buySkill(Skill.strikeoutProne), isNull);
+      expect(g.player.skills, isNot(contains(Skill.strikeoutProne)));
+      expect(g.exp.of(Category.batting), before - skillCost(Skill.strikeoutProne, 0, g.player.age));
+      expect(g.log.last, contains('克服'));
+      // 弱点は取れる一覧・コツ・コーチの対象にならない
+      expect(skillsFor(Role.batter).any((k) => k.negative), isFalse);
+      // 克服の見込みは良くなる向き(+)で出る
+      final imp = skillImpact(g.player, Skill.chanceBad, Stage.pro).lines.join();
+      expect(imp, contains('勝率 +'));
+    });
   });
 
   test('名前に、同梱フォントに無い記号(◯ U+25EF)を使わない(画面で□になる)', () {

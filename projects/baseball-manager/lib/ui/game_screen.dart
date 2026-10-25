@@ -2499,6 +2499,10 @@ class _SkillCard extends StatelessWidget {
       for (final s in list)
         if (!p.skills.contains(s)) s
     ];
+    final weak = [
+      for (final s in weaknessesFor(p.role))
+        if (p.skills.contains(s)) s
+    ];
     return Card(
       key: const Key('skill-card'),
       child: Padding(
@@ -2515,6 +2519,21 @@ class _SkillCard extends StatelessWidget {
           const Text('経験点で取る。研究・特訓・練習試合・交流・コーチでコツが貯まると安くなる(コツ5で半額)。'
               '緑の数字は、いまの能力で取ったときの1シーズンの見込み(打者は143試合、投手は先発28試合)。',
               style: TextStyle(fontSize: 11, color: Colors.grey)),
+          Text(
+              '値段は年齢で変わる: いま ×${skillAgeMultiplier(p.age).toStringAsFixed(2)}'
+              '(少年×0.5・中学×0.7・高校×0.85・19〜24歳×1.0・25〜29歳×1.25・30歳〜×1.5)。幼いうちほど身につけやすい。',
+              key: const Key('skill-age-note'),
+              style: const TextStyle(fontSize: 11, color: Color(0xFF6D4C41))),
+          if (weak.isNotEmpty) ...[
+            const SizedBox(height: 6),
+            const Text('弱点(克服すると消える)',
+                key: Key('weak-head'),
+                style: TextStyle(
+                    fontWeight: FontWeight.bold, color: Color(0xFFC62828))),
+            for (final s in weak)
+              _SkillRow(controller: controller, game: game, skill: s),
+            const Divider(),
+          ],
           if (owned.isNotEmpty) ...[
             const SizedBox(height: 6),
             Wrap(spacing: 6, runSpacing: 4, children: [
@@ -2581,7 +2600,9 @@ class _SkillRow extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          color: locked ? Colors.grey : null)),
+                          color: locked
+                              ? Colors.grey
+                              : (s.negative ? const Color(0xFFC62828) : null))),
                 ),
                 if (game.skillsInSeason.contains(s))
                   Container(
@@ -2611,7 +2632,9 @@ class _SkillRow extends StatelessWidget {
               Text(
                   locked
                       ? '「${s.requires!.label}」が先'
-                      : 'コツ ${'●' * tips}${'○' * (maxSkillTips - tips)}  ${s.category.label} $price',
+                      : s.negative
+                          ? '克服に ${s.category.label} $price'
+                          : 'コツ ${'●' * tips}${'○' * (maxSkillTips - tips)}  ${s.category.label} $price',
                   key: Key('skill-tips-${s.name}'),
                   style: const TextStyle(fontSize: 11, color: Colors.grey)),
             ]),
@@ -2625,7 +2648,7 @@ class _SkillRow extends StatelessWidget {
           icon: const Icon(Icons.menu_book_outlined, size: 20),
           selectedIcon:
               const Icon(Icons.menu_book, size: 20, color: Color(0xFF5E35B1)),
-          onPressed: canStudy
+          onPressed: canStudy && !s.negative
               ? () => controller.setStudyTarget(studying ? null : s)
               : null,
         ),
@@ -2637,7 +2660,7 @@ class _SkillRow extends StatelessWidget {
               visualDensity: VisualDensity.compact,
               padding: const EdgeInsets.symmetric(horizontal: 10)),
           onPressed: why == null ? () => controller.buySkill(s) : null,
-          child: const Text('取る'),
+          child: Text(s.negative ? '克服' : '取る'),
         ),
       ]),
     );

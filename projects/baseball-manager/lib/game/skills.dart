@@ -110,13 +110,38 @@ enum Skill {
       gold: true,
       requiresName: 'nobi'),
   braveHeart('強心臓', '金の特殊能力。どんなピンチでも動じない。', Category.pitching, 110,
-      match: 12, gold: true, requiresName: 'pinch');
+      match: 12, gold: true, requiresName: 'pinch'),
+
+  // ── 弱点(赤い特殊能力。2026-10-25)。生まれつき持つことがあり、経験点を払って「克服」する(消える)。
+  //    値段(`baseCost`)は克服に要る経験点。幼いほど安い(`skillAgeMultiplier`)。コツの対象にはならない。
+  chanceBad('チャンス×', '大事な場面で力む。', Category.batting, 30,
+      match: -6, negative: true),
+  strikeoutProne('三振', '空振りが多い。', Category.batting, 30,
+      effects: {Ability.contact: -3}, negative: true),
+  doublePlay('併殺', '内野ゴロで併殺になりやすい。', Category.batting, 25,
+      effects: {Ability.contact: -2, Ability.power: -1}, negative: true),
+  slowRunner('鈍足', '足が遅い。', Category.running, 30,
+      effects: {Ability.speed: -5}, negative: true),
+  errorProne('エラー', '捕球・送球のミスが多い。', Category.running, 30,
+      effects: {Ability.fielding: -5}, negative: true),
+  pinchBad('対ピンチ×', 'ピンチで崩れる。', Category.pitching, 30,
+      match: -6, negative: true),
+  wild('四球', '制球が乱れやすい。', Category.pitching, 35,
+      effects: {Ability.control: -5}, negative: true),
+  longBall('一発', '甘く入って長打を浴びる。', Category.pitching, 35,
+      effects: {Ability.stuff: -4}, negative: true),
+  slowStarter('スロースターター', '立ち上がりが不安定。', Category.pitching, 30,
+      effects: {Ability.stamina: -4}, negative: true);
 
   const Skill(this.label, this.description, this.category, this.baseCost,
       {this.effects = const {},
       this.match = 0,
       this.gold = false,
+      this.negative = false,
       this.requiresName});
+
+  /// 弱点(赤い特殊能力)。持っていると不利で、経験点を払って克服する。
+  final bool negative;
 
   final String label;
 
@@ -147,7 +172,7 @@ enum Skill {
 
   /// 大会の勝負どころに効く(練習試合でコツが貯まりやすい)特殊能力か。
   bool get forMatches =>
-      match > 0 ||
+      !negative && match > 0 ||
       this == Skill.stealer ||
       this == Skill.staminaPlus ||
       this == Skill.baserunning;
@@ -174,8 +199,8 @@ String effectText(Skill s) {
       };
   final parts = [
     if (s.effects.isNotEmpty)
-      '試合で${s.effects.entries.map((e) => '${jp(e.key)}+${e.value}').join('・')}',
-    if (s.match > 0) '大会の勝負どころ+${s.match}',
+      '試合で${s.effects.entries.map((e) => '${jp(e.key)}${e.value >= 0 ? '+' : ''}${e.value}').join('・')}',
+    if (s.match != 0) '大会の勝負どころ${s.match > 0 ? '+' : ''}${s.match}',
   ];
   return parts.join('、');
 }
@@ -184,25 +209,65 @@ String effectText(Skill s) {
 const maxSkillTips = 5;
 const skillTipDiscount = 0.10;
 
-/// コツ `tips` のときの値段。
-int skillCost(Skill s, int tips) =>
-    max(1, (s.baseCost * (1 - skillTipDiscount * tips.clamp(0, maxSkillTips))).round());
+/// 年齢による値段の倍率。**幼いほど身につけやすく、大人になるほど身につけにくい**(2026-10-25 ユーザー指示)。
+/// 少年(〜12歳)0.5・中学0.7・高校0.85・19〜24歳1.0・25〜29歳1.25・30歳〜1.5。
+double skillAgeMultiplier(int age) => age <= 12
+    ? 0.5
+    : age <= 15
+        ? 0.7
+        : age <= 18
+            ? 0.85
+            : age <= 24
+                ? 1.0
+                : age <= 29
+                    ? 1.25
+                    : 1.5;
+
+/// コツ `tips`・年齢 `age` のときの値段(年齢を渡さなければ倍率1.0の基準値)。
+int skillCost(Skill s, int tips, [int age = 20]) => max(
+    1,
+    (s.baseCost *
+            (1 - skillTipDiscount * tips.clamp(0, maxSkillTips)) *
+            skillAgeMultiplier(age))
+        .round());
 
 /// 役割で取れる特殊能力の一覧(画面の並び順: 金特は最後)。
 List<Skill> skillsFor(Role r) => [
       for (final s in Skill.values)
-        if (s.appliesTo(r) && !s.gold) s,
+        if (s.appliesTo(r) && !s.gold && !s.negative) s,
       for (final s in Skill.values)
         if (s.appliesTo(r) && s.gold) s,
     ];
 
+/// 役割の弱点(赤い特殊能力)の一覧。
+List<Skill> weaknessesFor(Role r) => [
+      for (final s in Skill.values)
+        if (s.negative && s.appliesTo(r)) s
+    ];
+
+/// 生まれつきの弱点。0個55%・1個33%・2個12%。乱数の並びを変えないよう、`seed`(素質・天賦から作る)で決める。
+Set<Skill> birthWeaknesses(Role r, int seed) {
+  // 近い種でも偏らないよう、混ぜてから使う
+  final rng = Random((seed * 0x9E3779B1 + 0x7F4A7C15) & 0x7fffffff);
+  final x = rng.nextDouble();
+  final n = x < 0.55 ? 0 : (x < 0.88 ? 1 : 2);
+  final pool = weaknessesFor(r)..shuffle(rng);
+  return pool.take(n).toSet();
+}
+
 /// 取れない理由(取れるなら null)。
 String? skillBlock(Player p, Skill s, ExpPool pool, int tips) {
   if (!s.appliesTo(p.role)) return 'この役割では取れない';
+  if (s.negative) {
+    // 弱点は「克服」(持っているものを消す)
+    if (!p.skills.contains(s)) return '持っていない';
+    if (pool.of(s.category) < skillCost(s, 0, p.age)) return '経験点が足りない';
+    return null;
+  }
   if (p.skills.contains(s)) return '取得済み';
   final req = s.requires;
   if (req != null && !p.skills.contains(req)) return '「${req.label}」が先に要る';
-  if (pool.of(s.category) < skillCost(s, tips)) return '経験点が足りない';
+  if (pool.of(s.category) < skillCost(s, tips, p.age)) return '経験点が足りない';
   return null;
 }
 
@@ -226,8 +291,11 @@ double skillRating(Player p) {
   // 投手は能力が3つで1点の重みが大きいので、打者と同じ5で割るのが基本(役割で得にならないように)。
   // ただし投手は経験点が1つの種類(投球)に集まり、特殊能力にも回しにくいので、少し重くする(`tPitcherSkillDiv`)。
   final div = p.role == Role.pitcher ? tPitcherSkillDiv / 10 : 5.0;
-  return pts / div * 0.5;
+  return pts / div * tSkillWeight / 100;
 }
+
+/// 特殊能力が総合評価に効く重み(×100)。dart run -DBAL_SKW=40 で試せる。
+const tSkillWeight = int.fromEnvironment('BAL_SKW', defaultValue: 33);
 
 /// 投手の特殊能力が総合評価に効く重み(割る数×10)。dart run -DBAL_PSKILL=40 で試せる。
 const tPitcherSkillDiv = int.fromEnvironment('BAL_PSKILL', defaultValue: 35);
@@ -269,8 +337,11 @@ SkillImpact skillImpact(Player p, Skill s, Stage stage, {int games = 250}) {
   final lines = <String>[];
   if (s.effects.isNotEmpty) {
     final opp = impactOpponent(stage);
-    final without = p.copyWith(skills: {...p.skills}..remove(s));
-    final with_ = without.copyWith(skills: {...without.skills, s});
+    // 弱点は「克服したら(なくなったら)」どれだけ良くなるかを出す(向きを逆にする)
+    final off = p.copyWith(skills: {...p.skills}..remove(s));
+    final on = off.copyWith(skills: {...off.skills, s});
+    final without = s.negative ? on : off;
+    final with_ = s.negative ? off : on;
     var a = const Line(), b = const Line();
     final r1 = Random(7), r2 = Random(7);
     for (var i = 0; i < games; i++) {
@@ -329,9 +400,9 @@ SkillImpact skillImpact(Player p, Skill s, Stage stage, {int games = 250}) {
     }
     if (lines.isEmpty) lines.add('打席・投球の数字はほぼ変わらない');
   }
-  if (s.match > 0) {
-    // 大会の1試合の勝率: 体調の差 / 500(`season.dart` の勝ち抜き戦と同じ式)
-    lines.add('大会の1試合の勝率 +${(s.match / 500 * 100).toStringAsFixed(1)}%');
+  if (s.match != 0) {
+    // 大会の1試合の勝率: 体調の差 / 500(`season.dart` の勝ち抜き戦と同じ式)。弱点は克服したときの上がり幅
+    lines.add('大会の1試合の勝率 +${(s.match.abs() / 500 * 100).toStringAsFixed(1)}%');
   }
   final out = SkillImpact(lines);
   if (_impactCache.length > 500) _impactCache.clear();
@@ -362,6 +433,7 @@ Skill? pickTipTarget(Player p, Map<Skill, int> tips, Random rng,
   final cands = [
     for (final s in skillsFor(p.role))
       if (!p.skills.contains(s) &&
+          !s.negative &&
           (tips[s] ?? 0) < maxSkillTips &&
           (category == null || s.category == category) &&
           (!matchesOnly || s.forMatches) &&

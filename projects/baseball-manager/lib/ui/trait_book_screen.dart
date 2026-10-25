@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../game/skills.dart';
 import '../game/traits.dart';
 import 'controller.dart';
 import 'labels.dart';
@@ -16,6 +17,13 @@ class TraitBookScreen extends StatelessWidget {
       listenable: controller,
       builder: (context, _) {
         final seen = controller.seenTraits;
+        final seenSkills = controller.seenSkills;
+        final skills = [
+          for (final k in Skill.values)
+            if (!k.negative && !k.gold) k,
+          for (final k in Skill.values)
+            if (k.gold) k,
+        ];
         final all = Trait.values;
         final n = all.where((t) => seen.contains(t.name)).length;
         final groups = <(String, List<Trait>)>[
@@ -42,7 +50,7 @@ class TraitBookScreen extends StatelessWidget {
           ),
         ];
         return Scaffold(
-          appBar: AppBar(title: const Text('特性図鑑')),
+          appBar: AppBar(title: const Text('図鑑(特性・特殊能力)')),
           body: Center(
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 560),
@@ -80,6 +88,48 @@ class TraitBookScreen extends StatelessWidget {
                     for (final t in g.$2)
                       _Entry(trait: t, found: seen.contains(t.name)),
                   ],
+                  // 特殊能力(取ったことがあるもの)。弱点は載せない。
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(4, 16, 4, 4),
+                    child: Text(
+                        '特殊能力 (${skills.where(seenSkills.contains).length} / ${skills.length})',
+                        key: const Key('skill-book-count'),
+                        style: Theme.of(context).textTheme.titleSmall),
+                  ),
+                  Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Wrap(spacing: 6, runSpacing: 6, children: [
+                        for (final k in skills)
+                          Tooltip(
+                            message: seenSkills.contains(k)
+                                ? '${k.description} ${effectText(k)}'
+                                : (k.gold
+                                    ? '金の特殊能力。「${k.requires?.label ?? ''}」を取ると取れる。'
+                                    : '経験点で取る。コツが貯まると安い。'),
+                            triggerMode: TooltipTriggerMode.tap,
+                            child: Chip(
+                              key: Key('skill-book-${k.name}'),
+                              visualDensity: VisualDensity.compact,
+                              avatar: Icon(
+                                  seenSkills.contains(k)
+                                      ? (k.gold
+                                          ? Icons.workspace_premium
+                                          : Icons.bolt)
+                                      : Icons.help_outline,
+                                  size: 16,
+                                  color: seenSkills.contains(k)
+                                      ? (k.gold
+                                          ? const Color(0xFFC9A227)
+                                          : const Color(0xFFF9A825))
+                                      : Colors.grey),
+                              label: Text(
+                                  seenSkills.contains(k) ? k.label : '???'),
+                            ),
+                          ),
+                      ]),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -93,8 +143,8 @@ class TraitBookScreen extends StatelessWidget {
 /// 未発見の特性の、手に入れ方のヒント。
 String _howToGet(Trait t) {
   if (t.rare) return 'レア特性。生まれつき4%、またはプロでタイトル・優勝をしたときの覚醒で手に入る。';
-  if (t.index < 12) return 'ふつうの特性。生まれつき・出来事・分かれ道・コーチの教えで身につく。';
-  return '個性派の特性。コーチに教わると身につく(基本の特性を覚えきってから)。';
+  if (t.index < 12) return 'ふつうの特性。生まれつき・出来事・分かれ道で身につく。';
+  return '個性派の特性。生まれつき・二世・継承で身につく。';
 }
 
 class _Entry extends StatelessWidget {

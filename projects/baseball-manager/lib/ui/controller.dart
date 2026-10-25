@@ -428,6 +428,9 @@ String eventResultText(Player p0, Condition c0, Player p1, Condition c1,
   return parts.join(' / ');
 }
 
+/// 図鑑の集合で、特殊能力を見分ける印。
+const skillBookPrefix = 'skill:';
+
 class GameController extends ChangeNotifier {
   GameController(
       {SaveStore? store,
@@ -691,8 +694,20 @@ class GameController extends ChangeNotifier {
   /// 解除した実績の id(何度遊んでも残る)。
   Set<String> unlocked = {};
 
-  /// 特性図鑑: これまでに持ったことのある特性(何度遊んでも残る)。
+  /// 特性図鑑: これまでに持ったことのある特性(何度遊んでも残る)。特殊能力は `skill:` を付けて同じ集合に入れる。
   Set<String> seenTraits = {};
+
+  /// 図鑑に載った特性の数(特殊能力は数えない)。
+  int get seenTraitCount =>
+      seenTraits.where((n) => !n.startsWith(skillBookPrefix)).length;
+
+  /// 図鑑に載った特殊能力。
+  Set<Skill> get seenSkills => {
+        for (final n in seenTraits)
+          if (n.startsWith(skillBookPrefix) &&
+              Skill.parse(n.substring(skillBookPrefix.length)) != null)
+            Skill.parse(n.substring(skillBookPrefix.length))!,
+      };
 
   /// 継承ポイント(貯まったぶん)と、直前の一生で増えたぶん(エンディングに出す)。
   int legacyPoints = 0;
@@ -709,7 +724,12 @@ class GameController extends ChangeNotifier {
 
   /// 持っている特性を図鑑に足す(増えたときだけ保存)。
   void _recordTraits(Game g) {
-    final names = {for (final t in g.player.traits) t.name};
+    // 特殊能力も同じ図鑑に「skill:名前」で残す(弱点は載せない)
+    final names = {
+      for (final t in g.player.traits) t.name,
+      for (final s in g.player.skills)
+        if (!s.negative) '$skillBookPrefix${s.name}',
+    };
     if (seenTraits.containsAll(names)) return;
     seenTraits = {...seenTraits, ...names};
     store.saveTraitBook(seenTraits);

@@ -155,6 +155,7 @@ Skill? teachableSkill(Stage s, Set<Skill> have, Random rng, [Role? role]) {
   final pool = [
     for (final k in Skill.values)
       if (!have.contains(k) &&
+          !k.negative &&
           (role == null || k.appliesTo(role)) &&
           (!k.gold || (!early && k.requires != null && have.contains(k.requires))))
         k

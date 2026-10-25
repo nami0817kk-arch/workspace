@@ -8,6 +8,7 @@ import '../game/difficulty.dart';
 import '../game/marks.dart';
 import '../game/player.dart';
 import '../game/talent.dart';
+import '../game/skills.dart';
 import '../game/traits.dart';
 import 'art/avatar.dart';
 import 'art/scene.dart';
@@ -313,7 +314,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           color: Color(0xFFD84315)),
                       title: const Text('特性図鑑'),
                       subtitle: Text(
-                          '${widget.controller.seenTraits.length} / ${Trait.values.length} 発見'),
+                          '特性 ${widget.controller.seenTraitCount} / ${Trait.values.length}・特殊能力 ${widget.controller.seenSkills.length} / ${Skill.values.where((k) => !k.negative).length}'),
                       trailing: const Icon(Icons.chevron_right),
                       onTap: () => Navigator.of(context).push(
                         MaterialPageRoute<void>(
@@ -488,7 +489,7 @@ Future<void> showHelp(BuildContext context) {
           '・体力が減ると怪我しやすくなります。休養や交流で回復しましょう。\n'
           '・やる気が高いほど、経験点がたくさん貯まります。\n'
           '・仲間と組むと友情タッグ練習。コーチに4回教わると、コーチの特殊能力を習得できます。\n'
-          '・特殊能力(チャンス○・奪三振など)は経験点で取ります。研究・特訓・練習試合・交流でコツが貯まるほど安くなります(コツ5で半額)。特性(体質・性格)とは別の枠です。\n'
+          '・特殊能力(チャンス○・奪三振など)は経験点で取ります。研究・特訓・練習試合・交流でコツが貯まるほど安くなります(コツ5で半額)。値段は幼いほど安く、大人になるほど高くなります。生まれつきの弱点(赤)は経験点で克服できます。特性(体質・性格)とは別の枠です。\n'
           '・夏の大会の成績がドラフトの評価になります。高校卒業時に指名されなければ、大学か社会人で1度だけ再挑戦できます。\n'
           '・プロになったら二刀流にいつでも挑戦できます(伸びは0.75倍。両方を伸ばせば評価が上乗せされ、年俸と人気も上がる)。\n'
           '・夏の大会(プロは10月のシーズン終了)のあとに、成績が記録されます。右上のグラフのボタンで、成績表を見られます。\n'

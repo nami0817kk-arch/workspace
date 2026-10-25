@@ -202,7 +202,7 @@ class SettingsScreen extends StatelessWidget {
                     key: const Key('settings-trait-book'),
                     leading: const Icon(Icons.auto_stories),
                     title: const Text('特性図鑑'),
-                    subtitle: Text('${controller.seenTraits.length} 発見'),
+                    subtitle: Text('特性 ${controller.seenTraitCount}・特殊能力 ${controller.seenSkills.length} 発見'),
                     onTap: () => Navigator.of(context).push(
                       MaterialPageRoute<void>(
                         builder: (_) => TraitBookScreen(controller: controller),

@@ -229,7 +229,7 @@ void main() {
       g.choose(Plan.lesson, Ability.contact);
     }
     expect(g.player.skills, isNot(contains(teaches))); // 無料ではもらえない
-    expect(g.skillPrice(teaches!), (teaches.baseCost / 2).round());
+    expect(g.skillPrice(teaches!), skillCost(teaches, maxSkillTips, g.player.age));
     expect(g.cast.coach!.tips, lessThan(tipsNeeded));
     expect(g.log.any((l) => l.contains('のコツをつかんだ')), isTrue);
   });

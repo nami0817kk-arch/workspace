@@ -451,11 +451,16 @@ class _Traits extends StatelessWidget {
                   triggerMode: TooltipTriggerMode.tap,
                   child: Chip(
                     key: Key('profile-skill-${k.name}'),
-                    avatar: Icon(k.gold ? Icons.workspace_premium : Icons.bolt,
+                    avatar: Icon(
+                        k.negative
+                            ? Icons.trending_down
+                            : (k.gold ? Icons.workspace_premium : Icons.bolt),
                         size: 16,
-                        color: k.gold
-                            ? const Color(0xFFC9A227)
-                            : const Color(0xFFF9A825)),
+                        color: k.negative
+                            ? const Color(0xFFC62828)
+                            : (k.gold
+                                ? const Color(0xFFC9A227)
+                                : const Color(0xFFF9A825))),
                     label: Text(k.label),
                     visualDensity: VisualDensity.compact,
                   ),

@@ -178,6 +178,20 @@ final List<Achievement> achievements = [
   Achievement('superstar', '国民的スター', '人気が90以上(Sランク)になる。',
       (s) => popularityOf(s.records, s.worldRecords) >= 90),
   // 「むずかしい」専用の実績(狭き門・不屈の伝説)は、難しさの選択をなくしたので外した(2026-10-24)。
+  // ── 特殊能力(2026-10-25) ──
+  Achievement('skills-5', '技の引き出し', '特殊能力を5つ以上持って引退する。',
+      (s) => s.skills.where((k) => !k.negative).length >= 5),
+  Achievement('skills-10', 'スペシャリスト', '特殊能力を10個以上持って引退する。',
+      (s) => s.skills.where((k) => !k.negative).length >= 10),
+  Achievement('gold-1', '金の輝き', '金の特殊能力を持って引退する。',
+      (s) => s.skills.any((k) => k.gold)),
+  Achievement('gold-3', '黄金の系譜', '金の特殊能力を3つ以上持って引退する。',
+      (s) => s.skills.where((k) => k.gold).length >= 3),
+  Achievement('overcome', '弱点克服', '生まれつきの弱点(赤い特殊能力)を克服する。',
+      (s) => s.events.any((e) => e.text.contains('を克服'))),
+  Achievement('young-skill', '早熟の技', '12歳までに特殊能力を取る。',
+      (s) => s.events.any((e) =>
+          e.age <= 12 && e.text.startsWith('特殊能力「') && e.text.endsWith('を取得'))),
 ];
 
 /// この一生で達成した実績の id。

@@ -165,7 +165,7 @@ class _Coach extends StatelessWidget {
               onSelected: (_) =>
                   controller.admin((g) => g.adminSetCoachTeaches(null)),
             ),
-            for (final t in Skill.values)
+            for (final t in Skill.values.where((k) => !k.negative))
               ChoiceChip(
                 key: Key('admin-teach-${t.name}'),
                 label: Text(t.label),

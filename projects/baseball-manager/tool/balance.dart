@@ -67,6 +67,10 @@ void skillUser(Game g) {
 /// 経験点を能力に振る前に、取りどきの特殊能力を取る(skillUser のとき)。
 bool buySkillsFirst = false;
 void _buySkills(Game g) {
+  // 弱点は見つけたら克服する(幼いほど安い)
+  for (final s in weaknessesFor(g.player.role)) {
+    if (g.player.skills.contains(s)) g.buySkill(s);
+  }
   for (final s in skillsFor(g.player.role)) {
     if ((g.skillTips[s] ?? 0) >= 3 || s.gold) g.buySkill(s);
   }
