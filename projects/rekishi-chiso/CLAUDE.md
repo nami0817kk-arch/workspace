@@ -252,7 +252,9 @@ python -m chiso.cli shorts   scripts/x.yaml [--draft] [--only s1,s3]
 python -m chiso.cli thumb    scripts/x.yaml [--variants] [--out dir]
 python -m chiso.cli describe scripts/x.yaml [--keywords]   # 概要欄
 python -m chiso.cli keywords "織田信長" [--all] # YouTube の検索候補によく続く語・題名・タグの下書き
-python -m chiso.cli research 伊達政宗 --kw 遺言 --phrase 政宗の木像 --fact "文::語 語"   # 出どころの候補（NDL・NDL全文・J-STAGE・ジャパンサーチ・Wikisource）・知らない度・食い違いの欄 → research/<題>_sources_YYYYMMDD.md（スキル rekishi-research）
+python -m chiso.cli research 伊達政宗 --kw 遺言 --phrase 政宗の木像 --fact "文::語 語"   # 出どころの候補（NDL・NDL全文・J-STAGE・ジャパンサーチ・Wikisource・Internet Archive・国立公文書館）・知らない度・食い違いの欄 → research/<題>_sources_YYYYMMDD.md（スキル rekishi-research）
+python -m chiso.cli research 伊達政宗 --slug masamune --cards --yt --plan --chain [--pdf URL] [--cards-in agents.yaml] --fact "主張::語 語"   # 事実カード（research/<題>_facts_*.yaml）・検索の計画（_plan_*.md）・芋づる。YouTube の単位を出す
+python -m chiso.cli fact-check scripts/x.yaml   # 台本の # fact: と事実カードの突き合わせ（check にも「事実：」で出る）
 python -m chiso.cli assign   scripts/x.yaml --assets research/x_assets.md   # 絵の割り当ての下書き
 python -m chiso.cli screen   scripts/x.yaml     # 本番の動画を見てもらった控え（OK のあとだけ）
 python -m chiso.cli upload   scripts/x.yaml --at "2026-10-05 19:00"
