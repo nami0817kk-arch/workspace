@@ -132,7 +132,44 @@ class Monetization extends ChangeNotifier {
   /// 「動画を見て元気になる」の前に呼ぶ。広告を消した人はそのまま、それ以外は動画を1本見てもらう。
   ///
   /// 動画を読み込み中なら少しだけ待つ([onWaiting] で「読み込み中」を出せる)。届かなければ回復しない。
-  Future<RecoverGate> beforeRecover({void Function()? onWaiting}) async {
+  Future<RecoverGate> beforeRecover({void Function()? onWaiting}) =>
+      _watchGate(onWaiting: onWaiting);
+
+  /// 1日に動画で特殊能力ポイントをもらえる回数。
+  static const spAdsPerDay = 3;
+
+  /// 日付の取り方(テストで差し替える)。
+  DateTime Function() clock = DateTime.now;
+
+  String get _today {
+    final n = clock();
+    return '${n.year}-${n.month}-${n.day}';
+  }
+
+  /// 今日あと何回、動画でポイントをもらえるか。日付が変わると戻る。
+  int get spAdsLeft => (_prefs.getString('spAdDay') == _today)
+      ? (spAdsPerDay - (_prefs.getInt('spAdCount') ?? 0)).clamp(0, spAdsPerDay)
+      : spAdsPerDay;
+
+  /// 「動画を見て特殊能力ポイント +1」の前に呼ぶ。広告を消した人はそのまま(動画なし)、
+  /// それ以外は動画を1本見てもらう。**今日の回数が残っているときだけ**。もらえたと答えたときだけ回数を使う
+  /// (途中で閉じた・読み込めなかったときは減らさない)。
+  Future<RecoverGate> claimSpReward({void Function()? onWaiting}) async {
+    if (spAdsLeft <= 0) return RecoverGate.unavailable;
+    final gate = await _watchGate(onWaiting: onWaiting);
+    if (gate == RecoverGate.granted) {
+      final today = _today;
+      final used = _prefs.getString('spAdDay') == today
+          ? (_prefs.getInt('spAdCount') ?? 0)
+          : 0;
+      await _prefs.setString('spAdDay', today);
+      await _prefs.setInt('spAdCount', used + 1);
+      notifyListeners();
+    }
+    return gate;
+  }
+
+  Future<RecoverGate> _watchGate({void Function()? onWaiting}) async {
     if (adFree) return RecoverGate.granted;
     if (!ads.isRewardedAdReady) {
       ads.ensureLoaded();

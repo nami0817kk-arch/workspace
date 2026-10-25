@@ -85,6 +85,16 @@ class FakeStore implements PurchaseService {
   void dispose() {}
 }
 
+/// 何も保存しない。
+class _NullStore extends SaveStore {
+  @override
+  Future<void> save(Map<String, dynamic> json) async {}
+  @override
+  Future<void> clear() async {}
+  @override
+  Future<Map<String, dynamic>?> load() async => null;
+}
+
 Future<(Monetization, FakeAds, FakeStore)> open(
     [Map<String, Object> saved = const {}]) async {
   SharedPreferences.setMockInitialValues(saved);
@@ -161,6 +171,72 @@ void main() {
       final (m, ads, _) = await open({'adFree': true});
       expect(await m.beforeRecover(), RecoverGate.granted);
       expect(ads.rewarded, 0);
+    });
+  });
+
+  group('動画で特殊能力ポイント', () {
+    test('最後まで見るとポイントがもらえ、1日3回まで。日付が変わると戻る', () async {
+      final (m, ads, _) = await open();
+      var now = DateTime(2026, 10, 25, 12);
+      m.clock = () => now;
+      expect(m.spAdsLeft, 3);
+      for (var i = 0; i < 3; i++) {
+        expect(await m.claimSpReward(), RecoverGate.granted);
+      }
+      expect(m.spAdsLeft, 0);
+      expect(await m.claimSpReward(), RecoverGate.unavailable, reason: '4回目はもらえない');
+      expect(ads.rewarded, 3, reason: '回数を使い切ったら動画も出さない');
+      now = DateTime(2026, 10, 26, 0, 5);
+      expect(m.spAdsLeft, 3);
+      expect(await m.claimSpReward(), RecoverGate.granted);
+    });
+
+    test('途中で閉じた・読み込めないときは、回数を使わない', () async {
+      final (m, ads, _) = await open();
+      m.clock = () => DateTime(2026, 10, 25, 12);
+      ads.watchToEnd = false;
+      expect(await m.claimSpReward(), RecoverGate.declined);
+      ads.watchToEnd = true;
+      ads.rewardedReady = false;
+      expect(await m.claimSpReward(), RecoverGate.unavailable);
+      expect(m.spAdsLeft, 3);
+    });
+
+    test('広告を消した人は、動画なしでもらえる(回数の上限は同じ)', () async {
+      final (m, ads, _) = await open({'adFree': true});
+      m.clock = () => DateTime(2026, 10, 25, 12);
+      for (var i = 0; i < 3; i++) {
+        expect(await m.claimSpReward(), RecoverGate.granted);
+      }
+      expect(await m.claimSpReward(), RecoverGate.unavailable);
+      expect(ads.rewarded, 0);
+    });
+
+    test('回数は端末に残る(再起動しても使い切ったまま)', () async {
+      final (m, _, _) = await open();
+      m.clock = () => DateTime(2026, 10, 25, 12);
+      for (var i = 0; i < 3; i++) {
+        await m.claimSpReward();
+      }
+      final (m2, _, _) = await open({'spAdDay': '2026-10-25', 'spAdCount': 3});
+      m2.clock = () => DateTime(2026, 10, 25, 20);
+      expect(m2.spAdsLeft, 0);
+    });
+
+    test('コントローラが受け取ると、ポイントが+1される。使い切ったら増えない', () async {
+      SharedPreferences.setMockInitialValues({});
+      final prefs = await SharedPreferences.getInstance();
+      final ads = FakeAds();
+      final m = Monetization(prefs, ads: ads, store: FakeStore());
+      m.clock = () => DateTime(2026, 10, 25, 12);
+      final c = GameController(
+          store: _NullStore(), rng: Random(1), events: false, money: m);
+      c.game = Game.start('x', rng: Random(1), events: false);
+      final before = c.game!.sp;
+      for (var i = 0; i < 5; i++) {
+        await c.watchAdForSp();
+      }
+      expect(c.game!.sp, before + 3, reason: '1日3回まで');
     });
   });
 
@@ -378,9 +454,9 @@ void main() {
       final controller = File('lib/ui/controller.dart').readAsStringSync();
       expect(controller.contains('mounted'), isFalse,
           reason: '報酬の受け取りを mounted の後ろに置かない');
-      for (final f in ['game_screen', 'home_screen', 'history_screen']) {
+      for (final f in ['game_screen', 'home_screen', 'history_screen', 'special_picker']) {
         final ui = File('lib/ui/$f.dart').readAsStringSync();
-        expect(ui.contains('beforeRecover'), isFalse,
+        expect(ui.contains('beforeRecover') || ui.contains('claimSpReward'), isFalse,
             reason: '$f が広告を直接扱っている。受け取りはコントローラが持つ');
       }
     });

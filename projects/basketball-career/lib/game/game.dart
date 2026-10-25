@@ -419,6 +419,12 @@ class Game {
   /// 直前の年末に得たポイント(画面が見せたら使い終わり。保存しない)。
   int lastSpGain = 0;
 
+  /// 特殊能力ポイントを増やす(動画を見たごほうび)。
+  void grantSp(int n) {
+    if (phase == Phase.retired) throw StateError('引退後はもらえない');
+    sp += n;
+  }
+
   /// 特殊能力を習得する。ポイントと前提が足りなければ `StateError`。
   void learnSpecial(Special s) {
     if (phase == Phase.retired) throw StateError('引退後は習得できない');

@@ -32,6 +32,22 @@ class _SpecialDialog extends StatelessWidget {
         child: ListView(
           shrinkWrap: true,
           children: [
+            if (controller.money != null)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: OutlinedButton(
+                  onPressed: controller.spAdBusy ||
+                          controller.money!.spAdsLeft <= 0
+                      ? null
+                      : controller.watchAdForSp,
+                  child: Text(controller.spAdBusy
+                      ? '読み込み中…'
+                      : controller.money!.spAdsLeft <= 0
+                          ? '今日の動画ポイントは使い切った'
+                          : '${controller.money!.recoverNeedsAd ? '動画を見て' : ''}ポイント +1'
+                              '(今日あと${controller.money!.spAdsLeft}回)'),
+                ),
+              ),
             Padding(
               padding: const EdgeInsets.only(bottom: 8),
               child: Text(
