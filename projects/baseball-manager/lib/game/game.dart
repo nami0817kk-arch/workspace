@@ -899,7 +899,7 @@ class Game {
 
   // ── 管理者機能(調整・検証用。ホーム画面のタイトルを7回タップで有効) ──
   //
-  // 通常の遊びでは使わない。上限(特性は4つまで)や矛盾(大器晩成と早熟など)も無視して書き換える。
+  // 通常の遊びでは使わない。上限(特性は`maxTraits`つまで)や矛盾(大器晩成と早熟など)も無視して書き換える。
 
   /// 素質(0〜100)を書き換える。
   /// 動画を見た特典で、経験点を足す(使える種類すべてに `n`)。
@@ -962,7 +962,7 @@ class Game {
     exp = ExpPool({for (final c in Category.values) c: max(0, exp.of(c) + n)});
   }
 
-  /// コーチのコツを書き換える。`tipsNeeded` 以上にすると、その場で特性を習得する。
+  /// コーチのコツを書き換える。`tipsNeeded` 以上にすると、その場でコーチの特殊能力のコツが満タンになる。
   void adminSetCoachTips(int n) {
     final coach = cast.coach;
     if (coach == null) return;

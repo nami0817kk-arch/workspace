@@ -147,7 +147,7 @@ class _Coach extends StatelessWidget {
           Text('コーチ: ${coach.name}',
               style: Theme.of(context).textTheme.titleSmall),
           const SizedBox(height: 4),
-          Text('コツ ${coach.tips} / $tipsNeeded(満タンにするとその場で習得)',
+          Text('コツ ${coach.tips} / $tipsNeeded(満タンにすると、教える特殊能力のコツがその場で満タン)',
               style: const TextStyle(fontSize: 12)),
           Slider(
             key: const Key('admin-tips'),

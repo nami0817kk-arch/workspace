@@ -13,7 +13,7 @@ void main() {
   test('今日のヒントは日付で決まり、同じ日は同じ。種類が12ある', () {
     final d = DateTime(2026, 10, 19);
     expect(tipOf(d), tipOf(d));
-    expect(tipCount, 12);
+    expect(tipCount, 16);
     final seen = {
       for (var i = 0; i < 40; i++) tipOf(DateTime(2026, 10, 1 + i % 28, 0))
     };
@@ -30,6 +30,9 @@ void main() {
     }
     expect(yearPlanOf(Stage.pro, 26).any((e) => e.contains('世界大会')), isTrue);
     expect(yearPlanOf(Stage.pro, 27).any((e) => e.contains('世界大会')), isFalse);
+    expect(yearPlanOf(Stage.highSchool, 16).any((e) => e.contains('金特')), isTrue);
+    expect(yearPlanOf(Stage.highSchool, 17).any((e) => e.contains('金特')), isFalse);
+    expect(yearPlanOf(Stage.youth, 8).any((e) => e.contains('特殊能力')), isTrue);
   });
 }
 

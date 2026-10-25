@@ -374,7 +374,7 @@ Plan recommendedPlan(Game g) {
   final c = g.condition;
   if (c.fatigue >= 70) return Plan.rest;
   if (c.morale < 35) return Plan.social;
-  // コーチのコツが貯まりきっていなければ、3回に1回は教わる(特性の習得につながる)。
+  // コーチのコツが貯まりきっていなければ、3回に1回は教わる(コーチの特殊能力のコツが満タンになる)。
   final coach = g.cast.coach;
   if (coach != null && coach.tips < tipsNeeded && g.slot % 3 == 2) {
     return Plan.lesson;

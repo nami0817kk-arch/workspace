@@ -78,7 +78,7 @@ String actionHint(Plan a) => switch (a) {
       Plan.study => '特殊能力のコツ+2(安く取れるようになる)。経験点はわずか',
       Plan.social => 'やる気が上がり、仲間から特殊能力のコツ。家族・恋人との絆',
       Plan.match => '全体に少し貯まり、勝負どころの特殊能力のコツ',
-      Plan.lesson => 'コーチのコツが貯まる(4回で特殊能力を習得)',
+      Plan.lesson => 'コーチのコツが貯まる(4回でコーチの特殊能力のコツが満タン)',
     };
 
 String categoryLabel(Category c) => c.label;
