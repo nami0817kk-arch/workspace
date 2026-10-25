@@ -123,6 +123,8 @@ void main() {
   testWidgets('練習のあと、「いまの結果」に貯まった経験点が出る。能力のランクが並ぶ', (t) async {
     final c = await _start(t);
     c.newGame('テスト', Role.batter);
+    c.recent = []; // 生まれ(引き直しの見本)によっては、生まれ持った才能の知らせが出るので消す
+    c.notifyListeners();
     await t.pumpAndSettle();
     expect(find.byKey(const Key('recent')), findsNothing);
     await _tab(t, 'ability');
@@ -146,6 +148,7 @@ void main() {
   testWidgets('育成タブに、おすすめの印つきの行動が並び、疲れると休養がおすすめになる', (t) async {
     final c = await _start(t);
     c.newGame('テスト', Role.batter);
+    c.recent = []; // 生まれ持った才能の知らせは消しておく
     await t.pumpAndSettle();
     expect(find.byKey(const Key('recommended-train')), findsOneWidget);
     expect(c.recent, isEmpty);
@@ -1562,6 +1565,7 @@ void _rankTests() {
       expect(find.byKey(const Key('danger-match')), findsOneWidget);
       expect(find.byKey(const Key('danger-train')), findsNothing);
       c.game!.condition = c.game!.condition.copyWith(fatigue: 0);
+      c.recent = []; // 生まれ持った才能の知らせは消しておく
       c.notifyListeners();
       await t.pumpAndSettle();
       expect(c.recent, isEmpty);

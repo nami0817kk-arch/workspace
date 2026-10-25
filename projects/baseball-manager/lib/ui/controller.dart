@@ -827,6 +827,29 @@ class GameController extends ChangeNotifier {
     }
   }
 
+  /// 新規開始画面で引いた「生まれ」の種(2026-10-25 ユーザー「初期に保持している特性をランダムで決められるように」)。
+  /// 同じ種なら、才能・天賦・生まれつきの特性・弱点が同じになる。null なら、ふつうに乱数で決める。
+  int? birthSeed;
+
+  /// 生まれを引き直す(新規開始画面の「引き直す」)。
+  void rerollBirth({bool notify = true}) {
+    birthSeed = _rng.nextInt(1 << 31);
+    if (notify) notifyListeners();
+  }
+
+  /// いまの種で始めたらどうなるかの見本(保存も乱数の消費もしない)。
+  Game previewBirth(String name, Role role,
+      {PlayerSnapshot? parent, Trait? carry}) {
+    final use =
+        carry != null && carryCandidates(role).contains(carry) ? carry : null;
+    return Game.newGame(
+        parent: parent,
+        carry: use,
+        name: name.trim().isEmpty ? '名無し' : name.trim(),
+        role: role,
+        rng: Random(birthSeed ?? 0));
+  }
+
   void newGame(String name, Role role,
       [Difficulty difficulty = Difficulty.normal,
       PlayerSnapshot? parent,
@@ -853,7 +876,9 @@ class GameController extends ChangeNotifier {
         carry: use,
         name: name.trim().isEmpty ? '名無し' : name.trim(),
         role: role,
-        rng: _rng);
+        // 新規開始画面で引いた生まれがあれば、その見本どおりに始める
+        rng: birthSeed != null ? Random(birthSeed!) : _rng);
+    birthSeed = null;
     recent = birthTalentNotes(game!.player);
     if (autoGuide && !guideSeen) guidePending = true;
     focus = abilitiesOf(role).first;

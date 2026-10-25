@@ -79,7 +79,7 @@ const tSpecial = int.fromEnvironment('BAL_SPECIAL', defaultValue: 40);
 const tSpecialFatigue = int.fromEnvironment('BAL_SPFAT', defaultValue: 35);
 const tLesson = int.fromEnvironment('BAL_LESSON', defaultValue: 15);
 const tMatchFix = bool.fromEnvironment('BAL_MATCHFIX', defaultValue: true);
-const tLessonGap = int.fromEnvironment('BAL_LGAP', defaultValue: 8);
+const tLessonGap = int.fromEnvironment('BAL_LGAP', defaultValue: 10);
 const tMatch = int.fromEnvironment('BAL_MATCH', defaultValue: 105);
 const tLessonGapCap = int.fromEnvironment('BAL_LGAPCAP', defaultValue: 40);
 

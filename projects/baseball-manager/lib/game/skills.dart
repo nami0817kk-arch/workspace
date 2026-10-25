@@ -231,17 +231,19 @@ const tSkillStep = int.fromEnvironment('BAL_SKSTEP', defaultValue: 40);
 const goldSkillAge = 16;
 
 /// コツ `tips`・年齢 `age`・すでに持っている数 `owned` のときの値段
-/// (年齢を渡さなければ倍率1.0、持っている数を渡さなければ0個として)。弱点の克服は、持っている数で上がらない。
+/// (年齢を渡さなければ倍率1.0、持っている数を渡さなければ0個として)。弱点の克服と金特は、持っている数で上がらない。
 int skillCost(Skill s, int tips, [int age = 20, int owned = 0]) => max(
     1,
     (s.baseCost *
             (1 - skillTipDiscount * tips.clamp(0, maxSkillTips)) *
             skillAgeMultiplier(age) *
-            (s.negative ? 1.0 : pow(1 + tSkillStep / 100, owned)))
+            (s.negative || s.gold ? 1.0 : pow(1 + tSkillStep / 100, owned)))
         .round());
 
-/// 選手がすでに持っている特殊能力の数(弱点は数えない)。値段の上がり方に使う。
-int ownedSkillCount(Player p) => p.skills.where((k) => !k.negative).length;
+/// 選手がすでに持っている特殊能力の数(弱点・金特は数えない)。値段の上がり方に使う。
+/// 金特は、もとの特殊能力が要るぶん値段が上がらない(上がると、だれも金特に届かなかった)。
+int ownedSkillCount(Player p) =>
+    p.skills.where((k) => !k.negative && !k.gold).length;
 
 /// 役割で取れる特殊能力の一覧(画面の並び順: 金特は最後)。
 List<Skill> skillsFor(Role r) => [
@@ -313,7 +315,7 @@ double skillRating(Player p) {
 const tSkillWeight = int.fromEnvironment('BAL_SKW', defaultValue: 90);
 
 /// 投手の特殊能力が総合評価に効く重み(割る数×10)。dart run -DBAL_PSKILL=40 で試せる。
-const tPitcherSkillDiv = int.fromEnvironment('BAL_PSKILL', defaultValue: 35);
+const tPitcherSkillDiv = int.fromEnvironment('BAL_PSKILL', defaultValue: 50);
 
 /// 大会(世界大会も)の体調に足す値(特殊能力のぶん)。
 int skillMatchBonus(Set<Skill> s) => s.fold(0, (a, k) => a + k.match);

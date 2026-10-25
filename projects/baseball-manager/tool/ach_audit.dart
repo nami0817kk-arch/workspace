@@ -12,6 +12,7 @@ import 'package:baseball_manager/game/invest.dart';
 import 'package:baseball_manager/game/life.dart';
 import 'package:baseball_manager/game/path.dart';
 import 'package:baseball_manager/game/player.dart';
+import 'package:baseball_manager/game/skills.dart';
 import 'package:baseball_manager/game/snapshot.dart';
 
 void main(List<String> a) {
@@ -35,9 +36,21 @@ void main(List<String> a) {
     final retireAge = 33 + r.nextInt(10);
     // 10人に1人は、プロで伸び悩む選手(戦力外→トライアウトの実績を調べるため)。
     final weak = r.nextInt(10) == 0;
+    // 3人に1人は、特殊能力を集める選手(弱点は克服し、取れる特殊能力を安い順に取る)。
+    final skillFan = r.nextInt(3) == 0;
     var steps = 0;
     while (g.phase != Phase.retired) {
       if (++steps > 6000) throw StateError('終わらない seed=$s');
+      if (skillFan) {
+        for (final k in weaknessesFor(g.player.role)) {
+          if (g.player.skills.contains(k)) g.buySkill(k);
+        }
+        final cands = [...skillsFor(g.player.role)]
+          ..sort((x, y) => g.skillPrice(x).compareTo(g.skillPrice(y)));
+        for (final k in cands) {
+          if (g.buySkill(k) == null) break;
+        }
+      }
       g.autoSpend();
       switch (g.phase) {
         case Phase.term:
@@ -74,8 +87,10 @@ void main(List<String> a) {
                   Plan.train,
                   Plan.special,
                   Plan.lesson,
-                  Plan.social
-                ][r.nextInt(4)];
+                  Plan.social,
+                  if (skillFan) Plan.study,
+                  if (skillFan) Plan.match,
+                ][r.nextInt(skillFan ? 6 : 4)];
           g.choose(plan, ab[r.nextInt(ab.length)]);
         case Phase.event:
           g.resolveEvent(g.pendingEvent!.id == 'tryout'

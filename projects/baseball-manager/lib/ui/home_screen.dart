@@ -9,6 +9,7 @@ import '../game/marks.dart';
 import '../game/player.dart';
 import '../game/talent.dart';
 import '../game/skills.dart';
+import '../game/snapshot.dart';
 import '../game/traits.dart';
 import 'art/avatar.dart';
 import 'art/scene.dart';
@@ -50,7 +51,20 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    // 生まれ(才能・特性・弱点)の見本を引いておく。名前を変えると見本も変わる
+    if (widget.controller.birthSeed == null) {
+      widget.controller.rerollBirth(notify: false); // 画面を作っている最中なので知らせない
+    }
+    name.addListener(_nameChanged);
+  }
+
+  void _nameChanged() => setState(() {});
+
+  @override
   void dispose() {
+    name.removeListener(_nameChanged);
     name.dispose();
     super.dispose();
   }
@@ -199,6 +213,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   Text(
                     '二刀流は、プロになってからいつでも選べます。(いまは${roleLabel(role)}から)',
                     style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                  const SizedBox(height: 16),
+                  _BirthPreview(
+                    controller: widget.controller,
+                    name: name.text,
+                    role: role,
+                    parent: heir?.snapshot,
+                    carry: carry,
                   ),
                   if (_heirCandidates.isNotEmpty) ...[
                     const SizedBox(height: 16),
@@ -521,4 +543,116 @@ void showAdminToggled(BuildContext context, GameController c) {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(content: Text('管理者モード: ${c.adminMode ? 'オン' : 'オフ'}')),
   );
+}
+
+/// 新規開始画面: この選手の「生まれ」(才能・生まれつきの特性・弱点・天賦の目立つもの)の見本と、引き直すボタン。
+/// 2026-10-25 ユーザー「最初の選手画面で、初期に保持している特性をランダムで決められるように」。
+class _BirthPreview extends StatelessWidget {
+  const _BirthPreview({
+    required this.controller,
+    required this.name,
+    required this.role,
+    this.parent,
+    this.carry,
+  });
+  final GameController controller;
+  final String name;
+  final Role role;
+  final PlayerSnapshot? parent;
+  final Trait? carry;
+
+  @override
+  Widget build(BuildContext context) {
+    final p = controller
+        .previewBirth(name, role, parent: parent, carry: carry)
+        .player;
+    final weak = [
+      for (final k in weaknessesFor(role))
+        if (p.skills.contains(k)) k
+    ];
+    final good = [
+      for (final a in abilitiesOf(role))
+        if (p.gift(a) >= 1) a
+    ];
+    final bad = [
+      for (final a in abilitiesOf(role))
+        if (p.gift(a) <= -1) a
+    ];
+    return Card(
+      key: const Key('birth-preview'),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Row(children: [
+            const Icon(Icons.child_care, color: Color(0xFF6D4C41)),
+            const SizedBox(width: 6),
+            const Expanded(
+              child: Text('生まれ持ったもの',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+            ),
+            FilledButton.tonalIcon(
+              key: const Key('birth-reroll'),
+              style: FilledButton.styleFrom(
+                  minimumSize: const Size(0, 36),
+                  visualDensity: VisualDensity.compact),
+              onPressed: controller.rerollBirth,
+              icon: const Icon(Icons.casino, size: 18),
+              label: const Text('引き直す'),
+            ),
+          ]),
+          const SizedBox(height: 6),
+          Text('才能 ${talentStars(p.potential)}',
+              key: const Key('birth-talent'),
+              style: const TextStyle(color: Color(0xFFF9A825))),
+          const SizedBox(height: 4),
+          Wrap(spacing: 6, runSpacing: 4, children: [
+            if (p.traits.isEmpty)
+              const Chip(
+                  key: Key('birth-no-trait'),
+                  visualDensity: VisualDensity.compact,
+                  label: Text('特性なし')),
+            for (final t in p.traits)
+              Tooltip(
+                message: t.description,
+                triggerMode: TooltipTriggerMode.tap,
+                child: Chip(
+                  key: Key('birth-trait-${t.name}'),
+                  visualDensity: VisualDensity.compact,
+                  avatar: Icon(t.rare ? Icons.stars : Icons.auto_awesome,
+                      size: 16, color: traitIconColor(t)),
+                  label: Text(t.rare ? '★${t.label}' : t.label),
+                ),
+              ),
+            for (final k in weak)
+              Tooltip(
+                message: '弱点。${effectText(k)}(経験点で克服できる。幼いうちほど安い)',
+                triggerMode: TooltipTriggerMode.tap,
+                child: Chip(
+                  key: Key('birth-weak-${k.name}'),
+                  visualDensity: VisualDensity.compact,
+                  avatar: const Icon(Icons.trending_down,
+                      size: 16, color: Color(0xFFC62828)),
+                  label: Text(k.label,
+                      style: const TextStyle(color: Color(0xFFC62828))),
+                ),
+              ),
+          ]),
+          if (good.isNotEmpty || bad.isNotEmpty) ...[
+            const SizedBox(height: 4),
+            Text(
+                [
+                  if (good.isNotEmpty)
+                    '得意: ${good.map(abilityLabel).join('・')}',
+                  if (bad.isNotEmpty) '苦手: ${bad.map(abilityLabel).join('・')}',
+                ].join('  '),
+                key: const Key('birth-gifts'),
+                style: Theme.of(context).textTheme.bodySmall),
+          ],
+          const SizedBox(height: 4),
+          Text('気に入るまで引き直せます(名前や役割を変えても変わります)。',
+              style: Theme.of(context).textTheme.bodySmall),
+        ]),
+      ),
+    );
+  }
 }
