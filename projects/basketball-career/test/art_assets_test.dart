@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:basketball_career/game/life.dart';
 import 'package:basketball_career/game/match.dart';
+import 'package:basketball_career/game/season.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -13,6 +14,15 @@ void main() {
     'ending_quiet',
     'path',
     'hall',
+    // 段階ごとの会場(育成画面の上の絵。`sceneAsset` が選ぶ)。
+    'scene_minibasket',
+    'scene_junior',
+    'scene_high',
+    'scene_university',
+    'scene_corporate',
+    'scene_pro',
+    'scene_abroad',
+    'scene_national',
   ];
 
   test('アプリ内の絵がすべて assets にあり、pubspec.yaml に宣言されている', () {
@@ -25,7 +35,7 @@ void main() {
       expect(pubspec, contains('assets/art/$n.jpg'), reason: '$n.jpg が pubspec.yaml に無い');
       total += f.lengthSync();
     }
-    expect(total, lessThan(2 * 1024 * 1024), reason: '絵の合計でアプリを重くしない');
+    expect(total, lessThan(4 * 1024 * 1024), reason: '絵の合計でアプリを重くしない');
   });
 
   test('コードで使っている絵の名前が、置いてある絵と一致する', () {
@@ -39,7 +49,28 @@ void main() {
         used.add(m.group(1)!);
       }
     }
-    expect(used, arts.toSet());
+    // 会場の絵は名前を組み立てて読む(`scene_$name`)ので、別のテストで全段階を確かめる。
+    used.remove('scene_');
+    expect(used, arts.where((n) => !n.startsWith('scene_')).toSet());
+  });
+
+  test('どの段階でも会場の絵が決まり、その絵が置いてある', () {
+    for (final lg in League.values) {
+      expect(
+          File('assets/art/scene_${switch (lg) {
+            League.minibasket => 'minibasket',
+            League.juniorHigh => 'junior',
+            League.highSchool => 'high',
+            League.university => 'university',
+            League.corporate => 'corporate',
+            League.proDomestic => 'pro',
+            League.proAbroad => 'abroad',
+            League.national => 'national',
+          }}.jpg')
+              .existsSync(),
+          isTrue,
+          reason: '${lg.name} の会場の絵が無い');
+    }
   });
 
   test('ボタンのアイコンが、過ごし方・勝負どころ・ハーフタイムの全種類にある', () {
