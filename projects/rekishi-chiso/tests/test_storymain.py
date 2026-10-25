@@ -36,7 +36,7 @@ def test_corner_tag_is_small_top_left():
     lay = Image.new("RGBA", (M.MW, M.MH), (0, 0, 0, 0))
     M.draw_corner(lay, "1583年4月｜第4章 北ノ庄城の最後の夜", font_of)
     x0, y0, x1, y1 = lay.getbbox()
-    assert y1 - y0 <= M.MH * 0.04 and x1 <= M.MW * 0.4          # 全幅の帯ではなく、左上の小さな札
+    assert y1 - y0 <= M.MH * 0.06 and x1 <= M.MW * 0.45         # 全幅の帯ではなく、左上の小さな札（字は約2.8%、10-25）
 
 
 def test_plan_follows_shot_rules():
@@ -45,7 +45,8 @@ def test_plan_follows_shot_rules():
     pl = M.Plan(look, sc)
     body = [c for c in pl.cuts if c.kind != "end"]
     avg = sum(c.seconds for c in body) / len(body)
-    assert 10 <= avg <= 15                                        # 1カットの平均 10〜15秒
+    assert 9.5 <= avg <= 15                                       # 1カットの平均 約10〜15秒（10-25 に額の続く所へ絵を挟んで少し短くなった）
+    assert M.holds(pl)[1] <= 0.15                                 # 30秒以上替わらない時間は15%まで
     ai = {c.ref for c in pl.cuts if c.kind in ("ai", "end")} | {c.backdrop for c in pl.cuts if c.kind == "frame"}
     assert len(ai) <= 25                                          # AI 絵は25枚まで
     assert set(ai) <= set(look["ai"])

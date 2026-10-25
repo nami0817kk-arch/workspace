@@ -126,7 +126,8 @@ shots:
   - 77 frame:paintings/akechi_hideyoshi_kodaiji.jpg
   - 78 frame:paintings/oichi_katsuie_portrait.jpg
   - 79 frame:paintings/oichi_katsuie_utamaro.jpg
-  - 80 frame:paintings/oichi_katsuie_portrait.jpg
+  - 80 ai:A04 right   # 額が続いて30秒を超えないよう全面の絵を挟む（10-25）
+  - 81 frame:paintings/oichi_katsuie_portrait.jpg
   - 82 frame:paintings/oichi_katsuie_utamaro.jpg
   - 84 ai:A17 wide
   - 86 frame:paintings/oichi_fukui_castle_map.jpg   # A17（雪の山道）は山が日本らしくないので1行だけ
@@ -144,6 +145,7 @@ shots:
   - 108 ai:A06 face
   - 109 ai:A01 face
   - 110 frame:paintings/oichi_katsuie_utamaro.jpg
+  - 112 ai:A02 right   # 額が続いて30秒を超えないよう全面の絵を挟む（10-25）
   - 113 frame:paintings/oichi_katsuie_yoshiiku.jpg
   - 115 ai:A01 face
   - 116 ai:A05 face
@@ -159,7 +161,7 @@ shots:
   - 131 ai:A03 wide
   - 132 frame:paintings/oichi_hatsu_jokoin.jpg
   - 134 frame:paintings/oichi_taiheiki_shui_1870.jpg
-  - 135 frame:paintings/akechi_hideyoshi_kodaiji.jpg
+  - 135 ai:A05 left   # 額が続いて30秒を超えないよう全面の絵を挟む（10-25）
   - 136 frame:paintings/hidenaga_kiyosu_ehon_taikoki.jpg
   - 137 frame:paintings/oichi_katsuie_utamaro.jpg
   - 139 frame:paintings/akechi_hideyoshi_kodaiji.jpg
@@ -167,6 +169,7 @@ shots:
   - 142 ai:A10 wide
   - 143 frame:paintings/nobunaga_portrait_chokoji.jpg
   - 144 frame:paintings/oichi_retsujoden_1668.jpg
+  - 145 ai:A06 left   # 額が続いて30秒を超えないよう全面の絵を挟む（10-25）
   - 146 ai:A03 right
   - 147 ai:A24 wide
   - 148 frame:paintings/akechi_hideyoshi_kodaiji.jpg
@@ -174,12 +177,13 @@ shots:
   - 150 frame:paintings/nene_taiko_gosai_lccn.jpg
   - 151 ai:A24 right                     # 額の絵が2分続かないよう、娘たちの絵を挟む
   - 152 frame:paintings/oichi_hatsu_jokoin.jpg
+  - 153 ai:A19 left   # 額が続いて30秒を超えないよう全面の絵を挟む（10-25）
   - 154 frame:paintings/oichi_go_sugenin.jpg
   - 155 frame:paintings/oichi_hidetada.jpg
-  - 156 frame:paintings/oichi_portrait_jimyoin_full.jpg
+  - 156 ai:A23 left   # 額が続いて30秒を超えないよう全面の絵を挟む（10-25）
   - 157 frame:paintings/oichi_portrait_jimyoin_bust.jpg
   - 158 frame:paintings/oichi_hideyori.jpg
-  - 159 frame:paintings/nene_ieyasu_portrait.jpg
+  - 159 ai:A18 right   # 額が続いて30秒を超えないよう全面の絵を挟む（10-25）
   - 160 part:paintings/nene_osaka_castle_summer_screen_detail.jpg
   - 164 ai:A22 wide
   - 166 frame:paintings/hideyori_senhime_portrait.jpg
@@ -195,6 +199,42 @@ shots:
   - 184 ai:A14 wide
   - 185 ai:A20 wide                     # 余韻：門の向こうへ去る娘たちと、見送る母の後ろ姿
   - end ai:A25 wide
+
+# 図を前後の行に広げ、語りがその記録・人物を言った瞬間に1項目ずつ書き込む（10-25。サッカーの表の行が1本ずつ出る見せ方を流用）。
+# items は書き込む順（語りが言う順）。line の図を from〜to の行に出す
+figure_extend:
+  - {line: 138, from: 132, to: 140, items: [渓心院文, 村井重頼覚書, 柴田合戦記]}   # 記録の比べ：渓心院文(132)→村井重頼覚書(136)→柴田合戦記(140)
+  - {line: 172, from: 170, to: 178}                                              # 系図：江(170)→家光→和子(173)→明正天皇(176)
+  - {line: 98, from: 98, to: 98, items: [茶々, 初, 江]}                           # 三人の年：語りは茶々→初→江の順に言う
+
+# 語りがその物・人・場所を言った瞬間にだけ寄る（「語:[倍率, 中心x, 中心y]」。| で言い方を並べる）。それ以外の絵は止めておく（10-25）
+# AI 絵は絵の中の位置、額（frame）は額の中の絵の位置で書く
+focus:
+  A01: {天守: [1.3, 0.5, 0.28]}
+  A03: {断り|逃げなかった|残ると決め|自分で: [1.25, 0.5, 0.38]}
+  A04: {炎|燃: [1.25, 0.75, 0.38]}
+  A06: {辞世|歌: [1.25, 0.66, 0.38], 城下|燃え: [1.25, 0.25, 0.55]}
+  A11: {大軍|篝火|囲: [1.2, 0.5, 0.62]}
+  A12: {生まれたばかり|赤ん坊|江を産: [1.3, 0.5, 0.62]}
+  A13: {長政: [1.25, 0.32, 0.42]}
+  A14: {娘たち|娘を連れ: [1.25, 0.5, 0.66]}
+  A20: {娘|送り出: [1.3, 0.6, 0.55]}
+  A24: {娘|送り出: [1.25, 0.5, 0.62]}
+  paintings/oichi_katsuie_utamaro.jpg: {勝家: [1.7, 0.55, 0.18], 小谷の方|お市: [1.7, 0.25, 0.5]}
+  paintings/oichi_portrait_jimyoin_bust.jpg: {お市|肖像|この絵: [1.6, 0.5, 0.42]}
+  paintings/oichi_portrait_jimyoin_full.jpg: {お市|肖像|この絵: [1.7, 0.5, 0.53]}
+  paintings/oichi_nagamasa_portrait_full.jpg: {長政: [1.7, 0.5, 0.47]}
+  paintings/oichi_hatsu_jokoin.jpg: {初: [1.7, 0.53, 0.48]}
+  paintings/oichi_go_sugenin.jpg: {江: [1.6, 0.6, 0.25]}
+  paintings/oichi_chacha_yodo_portrait.jpg: {茶々|淀殿: [1.7, 0.45, 0.6]}
+  paintings/oichi_hidetada.jpg: {秀忠: [1.7, 0.5, 0.47]}
+  paintings/oichi_katsuie_portrait.jpg: {勝家: [1.6, 0.42, 0.47]}
+  paintings/akechi_hideyoshi_kodaiji.jpg: {秀吉: [1.6, 0.42, 0.47]}
+  paintings/oichi_katsuie_yoshiiku.jpg: {勝家: [1.6, 0.27, 0.2]}
+  paintings/oichi_hideyori.jpg: {秀頼: [1.7, 0.5, 0.57]}
+  paintings/nene_ieyasu_portrait.jpg: {家康: [1.7, 0.5, 0.58]}
+  paintings/hideyori_senhime_portrait.jpg: {千姫: [1.6, 0.47, 0.3]}
+  paintings/oichi_nagamasa_kuniyoshi.jpg: {長政|小豆: [1.5, 0.4, 0.45]}
 
 stills:
   - {line: 0, note: 冒頭（0秒）北ノ庄の夜}

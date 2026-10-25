@@ -27,6 +27,7 @@
 from __future__ import annotations
 
 import json
+import re
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -45,8 +46,12 @@ ROW_STEP = 1.32
 CPS = 5.5                       # 声の速さの見積もり（字/秒。毎分約330字＝本編の声）
 LINE_GAP = 0.45                 # 行と行のあいだ（見積もり）
 CHAPTER_SECONDS = 4.0           # 章題カード（声の前）
+CHAPTER_PAD = 0.3               # 章題カードの前後の間（10-25。0.6 から詰めた）
+GAP_SCALE = 0.75                # 行の間を本編の決まり（gap_before）の 0.75 倍に（10-25 比べで間が 32%、参考の中央値 24%）
+DIM_RUN = 45.0                  # 図の間も、これを超えたら1ブロックだけ図を外して絵を見せる（図は語りに合わせて書き込まれるので長めでよい）
+FOCUS_SECONDS = 1.6             # 語りが物・人を言ってから、そこへ寄りきるまで
 END_SECONDS = 20.0              # 終了画面の空き
-CUT_MAX = 18.0                  # 1カットの長さの上限（これを超えると切り出しを替える）
+CUT_MAX = 20.0                  # 1カットの長さの上限（これを超えると切り出しを替える）
 CUT_MIN = 8.0
 RUN_MAX = 20.0                  # 同じ絵を続けて出す上限（図の間は数えない）
 IMAGINED_COLOR = (88, 82, 96)   # render.py の「想像」札と同じ灰紫
@@ -149,12 +154,12 @@ def serif_of(fonts: dict):
 
 
 def draw_corner(lay: Image.Image, text: str, font_of) -> None:
-    """左上の小さな札「1583年4月｜第4章 北ノ庄城の最後の夜」（高さ40px＝約3.7%）。"""
-    f = font_of(25)
+    """左上の小さな札「1583年4月｜第4章 北ノ庄城の最後の夜」。字の高さは画面の約2.8%（10-25。2.0% はスマホで読みにくかった）、札は約5%。"""
+    f = font_of(34)
     d = ImageDraw.Draw(lay, "RGBA")
     w = f.getlength(text)
-    d.rounded_rectangle([24, 22, 24 + w + 28, 62], radius=8, fill=(0, 0, 0, 140))
-    d.text((38, 42), text, font=f, fill=(255, 255, 255, 240), anchor="lm")
+    d.rounded_rectangle([24, 20, 24 + w + 32, 74], radius=9, fill=(0, 0, 0, 140))
+    d.text((40, 47), text, font=f, fill=(255, 255, 255, 240), anchor="lm")
 
 
 def draw_ai_label(lay: Image.Image, font_of) -> None:
@@ -177,22 +182,31 @@ def draw_credit(lay: Image.Image, text: str, font_of) -> None:
 
 
 def draw_card(lay: Image.Image, head: str, body: str, font_of) -> None:
-    """台本の card（見出し＋本文）を右上に：見出しを大きく、赤い下線、下に本文。"""
-    x0, y0, x1 = 1330, 84, MW - 36
+    """台本の card（見出し＋本文）を右上に小さく（幅約20%）：見出し、赤い下線、下に本文。
+    年・月日だけの見出しは出さない（年は左上の札にある。10-25 比べで右上の大きな札は参考 0/15）。is_point_card で選ぶ。"""
+    x0, y0, x1 = MW - 36 - 384, 96, MW - 36
     d = ImageDraw.Draw(lay, "RGBA")
-    size = 76
-    while size > 40 and font_of(size).getlength(head) > (x1 - x0) - 50:
+    size = 56
+    while size > 32 and font_of(size).getlength(head) > (x1 - x0) - 40:
         size -= 4
-    bf = font_of(34)
-    rows = S._wrap_text(body, bf, (x1 - x0) - 50)[:2] if body else []
-    h = 34 + size + 30 + 46 * len(rows) + 22
+    bf = font_of(26)
+    rows = S._wrap_text(body, bf, (x1 - x0) - 40)[:2] if body else []
+    h = 26 + size + 24 + 36 * len(rows) + 16
     d.rounded_rectangle([x0, y0, x1, y0 + h], radius=16, fill=(10, 8, 6, 160))
     cx = (x0 + x1) / 2
-    d.text((cx, y0 + 24 + size / 2), head, font=font_of(size), fill=S.WHITE, anchor="mm", stroke_width=5, stroke_fill=S.BLACK)
-    uy = y0 + 32 + size + 4
-    d.rounded_rectangle([x0 + 50, uy, x1 - 50, uy + 7], radius=3, fill=S.RED + (255,))
+    d.text((cx, y0 + 18 + size / 2), head, font=font_of(size), fill=S.WHITE, anchor="mm", stroke_width=4, stroke_fill=S.BLACK)
+    uy = y0 + 24 + size + 4
+    d.rounded_rectangle([x0 + 40, uy, x1 - 40, uy + 5], radius=2, fill=S.RED + (255,))
     for i, r in enumerate(rows):
-        d.text((cx, uy + 38 + 46 * i), r, font=bf, fill=S.WHITE, anchor="mm", stroke_width=3, stroke_fill=S.BLACK)
+        d.text((cx, uy + 28 + 36 * i), r, font=bf, fill=S.WHITE, anchor="mm", stroke_width=3, stroke_fill=S.BLACK)
+
+
+_DATE_HEAD = re.compile(r"^(紀元前)?\d{1,4}年|^\d{1,2}月|^\d{3,4}〜")
+
+
+def is_point_card(card) -> bool:
+    """右上に出す札か：数・要点（「37歳」「2度目の落城」）は出す。年・月日で始まる見出し（「1583年4月」）は左上の札に任せて出さない。"""
+    return card is not None and not _DATE_HEAD.match(card.head)
 
 
 def chapter_card(backdrop: Image.Image, label: str, title: str, font_of, serif) -> Image.Image:
@@ -320,14 +334,14 @@ class Plan:
         prev = None
         for line in sc.lines:
             if prev is not None and line.section != prev.section and line.section > 0:
-                t += 0.6
+                t += CHAPTER_PAD
                 self.chapter_at[line.section] = t
-                t += CHAPTER_SECONDS + 0.6
+                t += CHAPTER_SECONDS + CHAPTER_PAD
                 gap = line.pause or 0.0
             elif seconds is None:
                 gap = (line.pause or 0.0) + (LINE_GAP if prev is not None else 0.0)
             else:
-                gap = gap_before(prev, line) if prev is not None else 0.0
+                gap = gap_before(prev, line) * GAP_SCALE if prev is not None else 0.0
             t += gap
             bl = blocks(line.text)
             chars = [max(1, len(S.screen_plain(_btext(b)))) for b in bl]
@@ -343,6 +357,102 @@ class Plan:
         self.total = self.voice_end + END_SECONDS
         self.shots = self._shots()
         self.cuts = self._cuts()
+
+    # --- 図（台本の figure と、look の figure_extend で前後の行に広げたもの）---------------
+    def fig(self, idx: int) -> dict | None:
+        """行 idx に出す図（dict）。look の figure_extend [{line, from, to, items}] で、その行の図を from〜to の行に広げる
+        （語りがその記録・人物を言う行まで図を出しておき、言った瞬間に書き込むため。items で項目の並びを語る順に直せる）。"""
+        if not hasattr(self, "_figs"):
+            figs: dict[int, dict] = {}
+            for line in self.sc.lines:
+                if line.figure:
+                    figs[line.index] = json.loads(line.figure)
+            for ext in self.look.get("figure_extend") or []:
+                spec = dict(json.loads(self.sc.lines[int(ext["line"])].figure))
+                for k in ("upto", "grow_from"):
+                    spec.pop(k, None)
+                if ext.get("items"):
+                    key = "nodes" if spec.get("type") == "people" else "items"
+                    order = {name: i for i, name in enumerate(ext["items"])}
+                    spec[key] = sorted(spec[key], key=lambda it: order.get(it[0], 99))
+                for i in range(int(ext["from"]), int(ext["to"]) + 1):
+                    figs[i] = spec
+            self._figs = figs
+        return self._figs.get(idx)
+
+    def word_time(self, words, t0: float, t1: float) -> float | None:
+        """t0〜t1 のあいだで、語りが words（字の並びか、そのリスト）のどれかを言い始める時刻（ブロックの中の字の位置で按分）。"""
+        if isinstance(words, str):
+            words = [words]
+        for u in self.units:
+            if u.end <= t0 or u.start >= t1:
+                continue
+            text = S.screen_plain(_btext(u.block))
+            hits = [text.find(w) for w in words if w and text.find(w) >= 0]
+            if hits:
+                return u.start + (u.end - u.start) * min(hits) / max(1, len(text))
+        return None
+
+    def fig_runs(self) -> list[dict]:
+        """続けて同じ図が出る行のまとまりごとに、項目（人物・記録・地点）が書き込まれる時刻。
+        語りがその名前を言った瞬間に1つずつ出る（言わない項目は、前の項目と一緒に出る）。最初の項目は図が出たときから。"""
+        if hasattr(self, "_runs"):
+            return self._runs
+        from .figures import base_key
+        runs: list[dict] = []
+        for line in self.sc.lines:
+            spec = self.fig(line.index)
+            if not spec:
+                continue
+            key = base_key(spec)
+            if runs and runs[-1]["key"] == key and runs[-1]["lines"][-1] == line.index - 1:
+                runs[-1]["lines"].append(line.index)
+                continue
+            runs.append({"key": key, "lines": [line.index], "spec": {k: v for k, v in spec.items() if k not in ("upto", "grow_from")}})
+        for r in runs:
+            t0 = self.line_at[r["lines"][0]][0] - 0.3
+            t1 = self.line_at[r["lines"][-1]][1] + 0.5
+            spec = r["spec"]
+            kind = spec.get("type")
+            if kind == "people":
+                names = [n[0] for n in spec.get("nodes", [])]
+            elif kind == "map":
+                names = list(spec.get("route") or [])
+            elif kind in ("stats", "numberline", "bars", "line", "calc"):
+                key = {"bars": "bars", "line": "points", "calc": "terms"}.get(kind, "items")
+                names = [it[0] for it in spec.get(key, [])]
+            else:
+                names = []
+            times = []
+            for i, name in enumerate(names):
+                variants = [str(name)] + [v for v in re.split(r"[（）()・]", str(name)) if len(v) >= 1 and v != name]
+                variants += [v.replace("の方", "") for v in variants if v.endswith("の方")]
+                variants += [v[2:] for v in variants if len(v) >= 4 and not v.endswith("天皇")]   # 「徳川和子」→「和子」（語りは名だけで言う）
+                hit = self.word_time(variants, t0, t1) if i else None
+                times.append(t0 + 0.3 if hit is None else hit)
+            for i in range(1, len(times)):                  # 前の項目より先には出さない（先頭から順に描く図のため）
+                times[i] = max(times[i], times[i - 1])
+            r["names"], r["times"] = names, times
+            r["t0"], r["t1"] = t0, t1
+        self._runs = runs
+        return runs
+
+    def run_of(self, idx: int) -> dict | None:
+        for r in self.fig_runs():
+            if idx in r["lines"]:
+                return r
+        return None
+
+    def focus_events(self, c: "Cut", spec: dict) -> list[tuple[float, tuple]]:
+        """カットの中で、語りが look の focus に書いた語を言った時刻と、寄る先 (倍率, 中心x, 中心y)。
+        話に関係のない寄り・パンはしない（10-25 ユーザー「ただ寄るとかは、話に関係ないのはあまり意味ないのでは？」）。"""
+        out = []
+        for words, target in (spec or {}).items():
+            ws = [w for w in str(words).split("|") if w]
+            t = self.word_time(ws, c.start, c.end)
+            if t is not None:
+                out.append((t, tuple(float(x) for x in target)))
+        return sorted(out)[:2]
 
     def _shots(self) -> list[tuple]:
         out = []
@@ -366,7 +476,7 @@ class Plan:
         groups = []                                      # (shot, dim, [units])
         for u in self.units:
             shot = self.shot_of(u.line)
-            dim = bool(lines[u.line].figure)
+            dim = bool(self.fig(u.line))
             if groups and groups[-1][0] == shot and groups[-1][1] == dim and lines[groups[-1][2][-1].line].section == lines[u.line].section:
                 groups[-1][2].append(u)
             else:
@@ -384,15 +494,24 @@ class Plan:
             order = cycle[kind]
             k = order.index(crop) if crop in order else 0
             piece: list[Unit] = []
+            breathe = False
             for u in us:
                 acc = (piece[-1].end - piece[0].start) if piece else 0.0
-                if piece and not dim and acc + (u.end - u.start) > CUT_MAX and acc >= CUT_MIN:
+                if breathe:                                  # 図を外した1ブロックのあと、図に戻る
+                    cuts.append(self._cut(kind, ref, order[k % len(order)], piece, False, last_ai, sec))
+                    k += 1
+                    piece, breathe = [], False
+                elif piece and not dim and acc + (u.end - u.start) > CUT_MAX and acc >= CUT_MIN:
                     cuts.append(self._cut(kind, ref, order[k % len(order)], piece, dim, last_ai, sec))
                     k += 1
                     piece = []
+                elif piece and dim and acc + (u.end - u.start) > DIM_RUN and acc >= CUT_MIN:
+                    cuts.append(self._cut(kind, ref, order[k % len(order)], piece, True, last_ai, sec))
+                    k += 1
+                    piece, breathe = [], True             # 次の1ブロックは図を外して絵だけ（画面を替える）
                 piece.append(u)
             if piece:
-                cuts.append(self._cut(kind, ref, order[k % len(order)], piece, dim, last_ai, sec))
+                cuts.append(self._cut(kind, ref, order[k % len(order)], piece, dim and not breathe, last_ai, sec))
         end = [s for s in self.shots if s[0] == "end"]
         if end:
             cuts.append(Cut("end", end[0][2], end[0][3], self.voice_end, self.total, (), section=lines[-1].section))
@@ -540,11 +659,14 @@ class Look:
         unit = self.plan.unit_at(t)
         line = self.sc.lines[unit.line if unit else c.lines[0]]
         lay = Image.new("RGBA", (MW, MH), (0, 0, 0, 0))
-        if c.dim and line.figure:
+        if c.dim and self.plan.fig(line.index):
             from . import figures
             img = Image.alpha_composite(img, Image.new("RGBA", (MW, MH), (0, 0, 0, 120)))
-            img = figures.draw(self.painter, img, json.loads(line.figure), 1.0)
-        elif line.card is not None:
+            r = self.plan.run_of(line.index)
+            n = sum(1 for x in r["times"] if x <= t) if r and r["names"] else None
+            spec = dict(self.plan.fig(line.index), **({"upto": max(1, n)} if n is not None else {}))
+            img = figures.draw(self.painter, img, spec, 1.0)
+        elif is_point_card(line.card):
             prev = self.sc.lines[line.index - 1].card if line.index else None
             if prev != line.card:
                 draw_card(lay, line.card.head, line.card.body, self.font_of)
@@ -682,7 +804,8 @@ def _grid(paths: list[Path], labels: list[str], target: Path, font, cols: int = 
 FADE = 0.4                      # 絵の替わり目の溶け合い（秒）
 TEXT_FADE = 0.15                # 語りの文字が出るときのフェード（秒）
 DIM = 0.53                      # 図の間の絵の暗さ（frame_at の黒 120/255 と同じ）
-BGM_DIFF_LU = 22.0              # BGM は声より 22LU 小さく（参考の本編は 15〜32dB 下、中央値 約23dB）
+BGM_DIFF_LU = 30.5              # BGM の LUFS を声より 30.5LU 下に。比べの物差し（50ms の音の中央値と、声の切れ目の中央値の差）で約23dB になる
+                                # （10-25：22LU では物差しで 14.5dB だった。LUFS は声の大きい所で決まり、切れ目の差とは 8〜9dB ずれる）
 FPS = 30
 
 
@@ -710,6 +833,28 @@ def _put(frame, ov, k: float = 1.0) -> None:
         al = (al.astype(np.float32) * k).astype(np.uint8)
         pre = (pre.astype(np.float32) * k).astype(np.uint8)
     roi[:] = cv2.add(cv2.multiply(roi, 255 - al, scale=1 / 255), pre)
+
+
+def _put_scaled(frame, ov, scale: float, k: float = 1.0) -> None:
+    """前掛けした層を、その範囲の真ん中を中心に scale 倍して重ねる（図の板のゆっくりの寄り）。"""
+    import cv2
+    import numpy as np
+    if ov is None:
+        return
+    x0, y0, pre, al = ov
+    h, w = al.shape[:2]
+    px, py = int(w * (scale - 1) / 2) + 2, int(h * (scale - 1) / 2) + 2
+    X0, Y0 = max(0, x0 - px), max(0, y0 - py)
+    X1, Y1 = min(frame.shape[1], x0 + w + px), min(frame.shape[0], y0 + h + py)
+    big_pre = np.zeros((Y1 - Y0, X1 - X0, 3), np.uint8)
+    big_al = np.zeros((Y1 - Y0, X1 - X0, 3), np.uint8)
+    big_pre[y0 - Y0:y0 - Y0 + h, x0 - X0:x0 - X0 + w] = pre
+    big_al[y0 - Y0:y0 - Y0 + h, x0 - X0:x0 - X0 + w] = al
+    cx, cy = x0 - X0 + w / 2, y0 - Y0 + h / 2
+    m = np.array([[scale, 0, (1 - scale) * cx], [0, scale, (1 - scale) * cy]], dtype=np.float32)
+    size = (X1 - X0, Y1 - Y0)
+    _put(frame, (X0, Y0, cv2.warpAffine(big_pre, m, size, flags=cv2.INTER_LINEAR),
+                 cv2.warpAffine(big_al, m, size, flags=cv2.INTER_LINEAR)), k)
 
 
 class Video:
@@ -782,8 +927,32 @@ class Video:
             if c.dim:
                 a = (a.astype(np.float32) * DIM).astype(np.uint8)
             p = {"src": a, "crop": (1.0, (0.5, 0.5)), "move": "in", "static": True}
+        p["events"] = self._events(c, src)
         self.prepared[i] = p
         return p
+
+    def _events(self, c: Cut, src) -> list:
+        """このカットで寄る時刻と先。AI 絵は絵の中の位置、額は額の中の絵の位置を画面の位置に直す。"""
+        focus = self.lk.look.get("focus") or {}
+        if c.kind in ("ai",):
+            return self.pl.focus_events(c, focus.get(c.ref))
+        if c.kind == "frame" and not c.dim:
+            ev = self.pl.focus_events(c, focus.get(c.ref))
+            if not ev:
+                return []
+            pw, ph = self.lk.painting(c.ref).size
+            if c.crop == "b":
+                pw, ph = pw * 0.84, ph * 0.72
+            s = min(1180 / pw, 740 / ph)
+            w, h = pw * s, ph * s
+            x0, y0 = (MW - w) / 2, 92 + (740 - h) / 2
+            out = []
+            for te, (z, fx, fy) in ev:
+                if c.crop == "b":
+                    fx, fy = (fx - 0.08) / 0.84, fy / 0.72
+                out.append((te, (z, (x0 + fx * w) / MW, (y0 + fy * h) / MH)))
+            return out
+        return []
 
     def base(self, i: int, t: float):
         import cv2
@@ -792,17 +961,15 @@ class Video:
         p = self.prep(i)
         a = p["src"]
         sh, sw = a.shape[:2]
-        u = min(1.0, max(0.0, (t - (c.start - FADE / 2)) / max(0.01, c.seconds + FADE)))
-        if p.get("static"):
-            z, dx, dy = 1.0 + 0.03 * u, 0.0, 0.0
-            cz, focus = 1.0, (0.5, 0.5)
-        else:
-            cz, focus = p["crop"]
-            z, dx, dy = S.motion(p["move"], u, 0.05)
-            z *= cz
-            if p["move"] in ("left", "right", "up", "down"):
-                z = max(z, 1.12)
-            z = min(z, ZOOM_CAP)
+        # 絵は止めておき、語りが look の focus に書いた物・人・場所を言った瞬間にだけ、そこへ寄る（10-25。話に関係のない寄り・パンはしない）
+        cz, focus = (1.0, (0.5, 0.5)) if p.get("static") else p["crop"]
+        z, dx, dy = cz, 0.0, 0.0
+        for te, (tz, tx, ty) in p.get("events", []):
+            if t <= te:
+                break
+            e = S._ease((t - te) / FOCUS_SECONDS)
+            z = z + (tz - z) * e
+            focus = (focus[0] + (tx - focus[0]) * e, focus[1] + (ty - focus[1]) * e)
         if sw / sh > MW / MH:
             wh, ww = sh, sh * MW / MH
         else:
@@ -824,15 +991,26 @@ class Video:
             self.ovs[key] = _premul(r if isinstance(r, Image.Image) else lay)
         return self.ovs[key]
 
-    def _cut_overlays(self, frame, c: Cut, line, w: float) -> None:
+    def _cut_overlays(self, frame, c: Cut, line, w: float, t: float = 0.0) -> None:
         lk = self.lk
         if c.kind in ("chapter", "end"):
             return
-        if c.dim and line is not None and line.figure:
-            def fig(lay):
+        spec = self.pl.fig(line.index) if line is not None else None
+        if c.dim and spec:
+            r = self.pl.run_of(line.index)
+            if r and r["names"]:                          # 語りが名前を言った瞬間に、その項目を書き込む（0.6秒で描き進む）
+                n = max(1, sum(1 for x in r["times"] if x <= t))
+                p = 1.0 if n == 1 and t - r["times"][0] > 0.6 else min(1.0, max(0.0, (t - r["times"][n - 1]) / 0.6))
+                q = round(p * 8) / 8
+                s2 = dict(r["spec"], upto=n, grow_from=n - 1)
+                key = ("fig", r["key"], n, q)
+            else:
+                q, s2, key = 1.0, spec, ("fig", line.index)
+
+            def fig(lay, s2=s2, q=q):
                 from . import figures
-                return figures.draw(lk.painter, lay, json.loads(line.figure), 1.0)
-            _put(frame, self.ov(("fig", line.index), fig), w)
+                return figures.draw(lk.painter, lay, s2, q)
+            _put(frame, self.ov(key, fig), w)
         if c.kind in ("ai", "frame") or (c.dim and c.backdrop):
             _put(frame, self.ov(("ai",), lambda lay: draw_ai_label(lay, lk.font_of)), w)
         if c.kind in ("frame", "part") and not c.dim:
@@ -859,10 +1037,10 @@ class Video:
         unit = pl.unit_at(t)
         line = lk.sc.lines[unit.line] if unit else None
         for cc, w in parts:
-            self._cut_overlays(img, cc, line, w)
+            self._cut_overlays(img, cc, line, w, t)
         if c.kind in ("chapter", "end") or line is None:
             return img
-        if not c.dim and line.card is not None:
+        if not c.dim and is_point_card(line.card):
             prev = lk.sc.lines[line.index - 1].card if line.index else None
             if prev != line.card:
                 t0 = pl.line_at[line.index][0]
@@ -878,7 +1056,24 @@ class Video:
             bright = float(img[y - 70:y + 70, 360:MW - 360].mean()) > 105
             font = lk.serif(TEXT_SIZE) if is_record(line) else lk.font_of(TEXT_SIZE)
             self.ov(key, lambda lay: text_layer(unit.block, font, line.imagined, bright, lk.font_of(24)))
-        _put(img, self.ovs[key], min(1.0, max(0.0, (t - unit.start) / TEXT_FADE + 0.15)))
+        _put(img, self.ovs[key], 1.0 if k == 0 else min(1.0, max(0.0, (t - unit.start) / TEXT_FADE + 0.15)))   # 冒頭はフェード無しで0秒から
+        if is_record(line):                               # 記録の言葉：読んでいる所まで赤ペンの下線を引く（chiso/pen.py の mark の考え方）
+            ov = self.ovs[key]
+            if ov is not None:
+                x0, y0, _pre, al = ov
+                h, w_ = al.shape[:2]
+                frac = min(1.0, max(0.0, (t - unit.start) / max(0.3, unit.end - unit.start)))
+                rows = len(unit.block.rows)
+                step = int(TEXT_SIZE * ROW_STEP)
+                base_y = int(MH * TEXT_Y - step * rows / 2)
+                total = frac * rows
+                for ri in range(rows):
+                    part = min(1.0, max(0.0, total - ri))
+                    if part <= 0:
+                        break
+                    y = base_y + step * ri + int(TEXT_SIZE * 1.02)
+                    xa, xb = x0 + 20, x0 + w_ - 20
+                    cv2.line(img, (xa, y), (int(xa + (xb - xa) * part), y), (196, 40, 40), 4, cv2.LINE_AA)
         return img
 
 
@@ -952,6 +1147,7 @@ def build(look_path, config: dict, out_dir: Path, limit: float | None = None, wo
         bgm = {k: (float(v) if hasattr(v, "__float__") and not isinstance(v, (list, dict)) else v) for k, v in bgm.items()}
         (wd / "voice_bgm.json").write_text(json.dumps(bgm, ensure_ascii=False), encoding="utf-8")
         keyfile.write_text(key)
+    bgm["gap_db"] = pause_gap_db(wd / "voice_bgm.wav")         # 比べと同じ物差し（声の中央値と切れ目の差）。参考の中央値 23dB
     times["声とBGMの重ね"] = time.time() - t0
     t0 = time.time()
     frames = int(round(total * FPS))
@@ -1011,3 +1207,32 @@ def loud_gain(wav: Path) -> str:
     from .cli import ffmpeg
     gain = TARGET_LUFS - storyaudio.lufs(ffmpeg(), wav)
     return f"volume={gain:.2f}dB,alimiter=limit=0.89:level=disabled"
+
+
+def pause_gap_db(wav: Path) -> float:
+    """声と BGM の差の物差し（research の mainana/audio.py と同じ）：50ms ごとの音の大きさの中央値と、
+    それより 12dB 以上小さい所（声の切れ目）の中央値の差。"""
+    import numpy as np
+    from . import storyaudio
+    a, sr = storyaudio.read_wav(wav)
+    n = int(sr * 0.05)
+    fr = a[:len(a) // n * n].reshape(-1, n)
+    db = 20 * np.log10(np.sqrt((fr ** 2).mean(1)) + 1e-7)
+    p50 = float(np.percentile(db, 50))
+    pause = db < p50 - 12
+    return p50 - float(np.median(db[pause])) if pause.sum() > 10 else float("nan")
+
+
+def holds(plan: "Plan", long: float = 30.0) -> tuple[float, float]:
+    """画面が大きく替わる所（絵・図の有無が替わる所）の間隔から、(いちばん長い間, long 秒以上替わらない時間の割合)。
+    同じ絵の切り出しの替わりは数えない（比べの changes.py では替わりと数えられないことがあるので、厳しい側で見る）。"""
+    marks = [0.0]
+    prev = None
+    for c in plan.cuts:
+        key = (c.kind, c.backdrop if c.kind == "frame" else c.ref, c.dim)   # 額どうしは下地が同じなら替わりと見なさない（真ん中の絵だけ替わる）
+        if prev is not None and key != prev:
+            marks.append(c.start)
+        prev = key
+    marks.append(plan.total)
+    gaps = [b - a for a, b in zip(marks, marks[1:])]
+    return max(gaps), sum(g for g in gaps if g >= long) / plan.total
