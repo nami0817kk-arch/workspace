@@ -3,6 +3,7 @@ import 'dart:math';
 import 'career.dart';
 import 'build.dart';
 import 'player.dart';
+import 'special.dart';
 import 'traits.dart';
 
 /// 季節ごとの過ごし方。
@@ -131,7 +132,8 @@ double yearlyDelta(Player p, Ability a, Ability focus) {
         share *
         growthMultiplier(p.traits, p.age) *
         abilityGrowthMultiplier(p.traits, a) *
-        styleGrowthMultiplier(p.style, a);
+        styleGrowthMultiplier(p.style, a) *
+        specialGrowthMultiplier(p.specials);
   }
   final aging = switch (a) {
     Ability.speed || Ability.stamina || Ability.physical => 1.5,
@@ -202,7 +204,9 @@ int _stochasticRound(double v, Random rng) {
 
   var fatigue = c.fatigue;
   final df = e.fatigue;
-  fatigue += df > 0 ? (df * fatigueMultiplier(p.traits)).round() : df;
+  fatigue += df > 0
+      ? (df * fatigueMultiplier(p.traits)).round()
+      : (df * specialRecoveryMultiplier(p.specials)).round();
   var morale = c.morale;
   final dm = e.morale;
   morale += dm > 0

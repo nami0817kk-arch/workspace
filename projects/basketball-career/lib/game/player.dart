@@ -1,6 +1,7 @@
 import 'build.dart';
 import 'career.dart';
 import 'skills.dart';
+import 'special.dart';
 import 'traits.dart';
 
 /// 能力。0〜99。
@@ -63,6 +64,7 @@ class Player {
     this.traits = const {},
     this.skills = const {},
     this.style,
+    this.specials = const {},
   }) : abilities = abilities ?? {for (final a in Ability.values) a: startLevel};
 
   final String name;
@@ -85,6 +87,9 @@ class Player {
   /// 目指すプレースタイル(ビルド)。プレーヤーが選ぶ。null ならおまかせ(能力のつき方から自動で決まる)。
   final Build? style;
 
+  /// 習得した特殊能力(特殊能力ポイントで、自分で選んで習得する)。
+  final Set<Special> specials;
+
   int of(Ability a) => abilities[a] ?? 0;
 
   Player copyWith({
@@ -95,6 +100,7 @@ class Player {
     Set<Skill>? skills,
     Build? style,
     bool clearStyle = false,
+    Set<Special>? specials,
   }) =>
       Player(
         name: name,
@@ -106,6 +112,7 @@ class Player {
         traits: traits ?? this.traits,
         skills: skills ?? this.skills,
         style: clearStyle ? null : (style ?? this.style),
+        specials: specials ?? this.specials,
       );
 
   /// 身長が効く補正つきの能力(リバウンド・ゴール下は高いほど、ドリブル・スピードは低いほど有利)。
@@ -167,6 +174,7 @@ class Player {
         'traits': [for (final t in traits) t.name],
         'skills': [for (final k in skills) k.name],
         'style': style?.name,
+        'specials': [for (final x in specials) x.name],
       };
 
   /// 項目を足すときは既定値を置く(既存セーブを壊さない)。
@@ -193,6 +201,10 @@ class Player {
           if (Skill.parse(s as String) != null) Skill.parse(s)!,
       },
       style: Build.parse(j['style'] as String?),
+      specials: {
+        for (final s in (j['specials'] as List?) ?? const [])
+          if (Special.parse(s as String?) != null) Special.parse(s)!,
+      },
     );
   }
 }

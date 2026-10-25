@@ -8,6 +8,7 @@ import 'package:basketball_career/game/build.dart';
 import 'package:basketball_career/game/difficulty.dart';
 import 'package:basketball_career/game/dream.dart';
 import 'package:basketball_career/game/game.dart';
+import 'package:basketball_career/game/special.dart';
 import 'package:basketball_career/game/life.dart';
 import 'package:basketball_career/game/match.dart';
 import 'package:basketball_career/game/path.dart';
@@ -31,6 +32,8 @@ void main(List<String> args) {
       ? Difficulty.hard
       : (args.contains('--easy') ? Difficulty.easy : Difficulty.normal);
   var turnsTotal = 0, endAgeTotal = 0;
+  // --specials: 特殊能力を優先順に習得しながら遊ぶ(おまかせ)。
+  final specials = args.contains('--specials');
   // --style=<ビルド名> で目指す型を選んだ遊び方を測る(例: --style=sharpshooter)。無ければおまかせ。
   final styleArg = args.where((a) => a.startsWith('--style=')).map((a) => a.substring(8)).firstOrNull;
   final style = Build.parse(styleArg);
@@ -46,6 +49,12 @@ void main(List<String> args) {
       }
       switch (g.phase) {
         case Phase.season:
+          if (specials) {
+            // 特殊能力は、安くて広く効くものから、ポイントがたまり次第習得する。
+            for (final x in learnPriority) {
+              if (canLearn(g.player.specials, g.sp, x)) g.learnSpecial(x);
+            }
+          }
           final rest = g.condition.fatigue >= 60 || g.condition.injured;
           // 重点は今いちばん低い能力ではなく、ポジションに効く能力を順に回す。
           if (auto) {
@@ -131,6 +140,7 @@ void main(List<String> args) {
   }
   String pct(int v) => '${(v / n * 100).toStringAsFixed(1)}%';
   print('難易度: ${diff.label}');
+  print('特殊能力: ${specials ? '優先順に習得' : 'なし'}');
   print('1周の操作回数(画面で止まる回数)の平均: ${(turnsTotal / n).toStringAsFixed(0)} / 引退の平均年齢: ${(endAgeTotal / n).toStringAsFixed(1)}歳');
   print('プロ入り: ${pct(pro)}(高校から直接 ${pct(direct)})');
   print('海外挑戦: ${pct(abroad)}');

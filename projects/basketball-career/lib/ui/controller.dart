@@ -10,6 +10,7 @@ import '../game/career.dart';
 import '../game/collection.dart';
 import '../game/build.dart';
 import '../game/difficulty.dart';
+import '../game/special.dart';
 import '../game/dream.dart';
 import '../game/game.dart';
 import '../game/legacy.dart';
@@ -381,6 +382,9 @@ class GameController extends ChangeNotifier {
     }
     if (r.yearEnded && g.lastGoalMessage != null) lines.add(g.lastGoalMessage!);
     if (r.yearEnded && g.lastYearSummary != null) lines.add(g.lastYearSummary!);
+    if (r.yearEnded && g.lastSpGain > 0) {
+      lines.add('特殊能力ポイント +${g.lastSpGain}(いま ${g.sp})');
+    }
     if (r.yearEnded && g.player.age != ageBefore) {
       lines.add('${g.player.age}歳になった。身長 ${g.player.heightCm.toStringAsFixed(1)}cm。');
     }
@@ -478,6 +482,26 @@ class GameController extends ChangeNotifier {
     final s = run?.pending;
     if (run == null || s == null || s.timeout || run.timeouts <= 0) return;
     g.useTimeout();
+    _commit();
+  }
+
+  /// 勝負どころでゾーンに入る(習得していて、この大会でまだ使っていないときだけ)。
+  void useZone() {
+    final g = game;
+    if (g == null || g.phase != Phase.clutch) return;
+    final run = g.run;
+    final s = run?.pending;
+    if (run == null || s == null || s.zone || run.zones <= 0) return;
+    g.useZone();
+    _commit();
+  }
+
+  /// 特殊能力を習得する(ポイントと前提が足りるときだけ)。
+  void learnSpecial(Special s) {
+    final g = game;
+    if (g == null || !canLearn(g.player.specials, g.sp, s)) return;
+    g.learnSpecial(s);
+    recent = ['特殊能力「${s.label}」を習得した。'];
     _commit();
   }
 

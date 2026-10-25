@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'player.dart';
 import 'build.dart';
+import 'special.dart';
 import 'traits.dart';
 
 /// 勝負どころ(最後の攻防)で選べるプレー。
@@ -144,6 +145,7 @@ class MatchState {
     this.fouls = 0,
     this.fouledOut = false,
     this.timeout = false,
+    this.zone = false,
   });
 
   final int team;
@@ -169,8 +171,10 @@ class MatchState {
   /// タイムアウトを取ったか(最後の攻防の成功率が上がる)。
   final bool timeout;
 
-  /// タイムアウトを取った状態にした試合。
-  MatchState withTimeout() => MatchState(
+  /// ゾーン(特殊能力)を使ったか(最後の攻防の成功率が大きく上がる)。
+  final bool zone;
+
+  MatchState _copy({bool? timeout, bool? zone}) => MatchState(
         team: team,
         opp: opp,
         points: points,
@@ -188,8 +192,15 @@ class MatchState {
         vsRival: vsRival,
         fouls: fouls,
         fouledOut: fouledOut,
-        timeout: true,
+        timeout: timeout ?? this.timeout,
+        zone: zone ?? this.zone,
       );
+
+  /// タイムアウトを取った状態にした試合。
+  MatchState withTimeout() => _copy(timeout: true);
+
+  /// ゾーンに入った状態にした試合。
+  MatchState withZone() => _copy(zone: true);
 
   int get margin => team - opp;
 
@@ -215,6 +226,7 @@ class MatchState {
         'fouls': fouls,
         'fouledOut': fouledOut,
         'timeout': timeout,
+        'zone': zone,
       };
 
   factory MatchState.fromJson(Map<String, dynamic> j) => MatchState(
@@ -242,6 +254,7 @@ class MatchState {
         fouls: (j['fouls'] as num?)?.toInt() ?? 0,
         fouledOut: (j['fouledOut'] as bool?) ?? false,
         timeout: (j['timeout'] as bool?) ?? false,
+        zone: (j['zone'] as bool?) ?? false,
       );
 }
 
@@ -269,7 +282,7 @@ const timeoutBonus = 0.05;
 /// 勝負どころの成功率(0〜1)。`oppDefense` は相手の守備の強さ(0〜100)。
 /// ファウルをもらうは「ファウルを誘って、2本とも決める」確率(1本だけでも1点は入る)。
 double clutchChance(Player p, Clutch c, double oppDefense, double form,
-    {bool timeout = false}) {
+    {bool timeout = false, bool zone = false}) {
   final opp = oppDefense / 100;
   final double raw = switch (c) {
     Clutch.drive =>
@@ -292,15 +305,17 @@ double clutchChance(Player p, Clutch c, double oppDefense, double form,
   };
   // 得意技の加算。
   final skill = p.skills.fold(0.0, (s, k) => s + k.clutchBonus(c));
-  final to = timeout ? timeoutBonus : 0.0;
-  if (c == Clutch.drawFoul) return (raw + skill + to).clamp(0.03, 0.9);
+  final to = (timeout ? timeoutBonus : 0.0) + (zone ? zoneBonus : 0.0);
+  final sp = specialClutchBonus(p.specials);
+  if (c == Clutch.drawFoul) return (raw + skill + to + sp).clamp(0.03, 0.9);
   return (raw * (0.8 + form * 0.2) +
           clutchBonus(p.traits) +
           clutchPlayBonus(p.traits, c) +
           buildClutchBonus(p, c) +
           perk +
           skill +
-          to)
+          to +
+          sp)
       .clamp(0.03, 0.9);
 }
 
@@ -581,7 +596,11 @@ int foulsOf(Player p, int quarters, double mul, Random rng) {
   final aggressive = 0.8 +
       (p.effective(Ability.defense) - 50) / 100 +
       (p.effective(Ability.physical) - 50) / 200;
-  final lambda = 0.45 * quarters * aggressive.clamp(0.4, 1.6) * mul;
+  final lambda = 0.45 *
+      quarters *
+      aggressive.clamp(0.4, 1.6) *
+      mul *
+      specialFoulMultiplier(p.specials);
   return _poisson(lambda, rng).clamp(0, 5);
 }
 
@@ -621,7 +640,9 @@ MatchState playSecondHalf(Player p, MatchHalf h, Halftime choice, Random rng,
       boost = ((p.overall - 50) * 0.05 + 1.0) * k - 0.8;
       shareAdd = 0.08 * k;
   }
-  var fit = h.style.fit(choice, p) * halftimeFitMultiplier(p.traits);
+  var fit = h.style.fit(choice, p) *
+      halftimeFitMultiplier(p.traits) *
+      specialFitMultiplier(p.specials);
   if (fit > 0) fit += scout;
   var team = h.team, opp = h.opp;
   final tq = [...h.teamQuarters], oq = [...h.oppQuarters];
@@ -758,7 +779,8 @@ MatchResult finishMatch(Player p, MatchState s, Clutch? choice, Random rng) {
     final c = choice ?? bestClutch(p, s.oppStrength, s.form);
     used = c;
     var success = rng.nextDouble() <
-        clutchChance(p, c, s.oppStrength, s.form, timeout: s.timeout);
+        clutchChance(p, c, s.oppStrength, s.form,
+            timeout: s.timeout, zone: s.zone);
     if (c == Clutch.drawFoul) {
       // ファウルを誘えたか→フリースロー2本。入った本数だけ得点(2本とも入れば成功)。
       var made = 0;

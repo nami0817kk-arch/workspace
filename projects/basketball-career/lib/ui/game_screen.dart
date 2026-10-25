@@ -18,7 +18,9 @@ import 'controller.dart';
 import 'history_screen.dart';
 import 'settings_screen.dart';
 import 'labels.dart';
+import '../game/special.dart';
 import 'layout.dart';
+import 'special_picker.dart';
 import 'style_picker.dart';
 
 /// 局面(季節 / 進路 / 引退)に合わせて画面を切り替える。
@@ -115,7 +117,10 @@ class _SeasonView extends StatelessWidget {
       children: [
         CourtHeader(game: g),
         const SizedBox(height: 12),
-        _PlayerCard(game: g, onPickStyle: () => showStylePicker(context, c)),
+        _PlayerCard(
+            game: g,
+            onPickStyle: () => showStylePicker(context, c),
+            onPickSpecial: () => showSpecialPicker(context, c)),
         const SizedBox(height: 12),
         _GoalCard(controller: c, game: g),
         const SizedBox(height: 12),
@@ -264,11 +269,14 @@ class _SeasonView extends StatelessWidget {
 }
 
 class _PlayerCard extends StatelessWidget {
-  const _PlayerCard({required this.game, this.onPickStyle});
+  const _PlayerCard({required this.game, this.onPickStyle, this.onPickSpecial});
   final Game game;
 
   /// 目指すプレースタイルを選び直す(育成画面だけ。無ければ出さない)。
   final VoidCallback? onPickStyle;
+
+  /// 特殊能力の習得画面を開く(育成画面だけ)。
+  final VoidCallback? onPickSpecial;
 
   @override
   Widget build(BuildContext context) {
@@ -303,6 +311,7 @@ class _PlayerCard extends StatelessWidget {
                 ],
               ),
             _DreamRow(game: game),
+            if (onPickSpecial != null) _SpecialRow(game: game, onTap: onPickSpecial!),
             if (p.age <= 17)
               Text(
                   '生活習慣: ${game.habit >= 6 ? '良い' : game.habit < 0 ? '乱れ気味' : 'ふつう'}  '
@@ -1092,6 +1101,20 @@ class _ClutchView extends StatelessWidget {
                       child: Text('タイムアウトを取る(残り${run.timeouts}回・+5%)'),
                     ),
                   ),
+                if (s.zone)
+                  const Padding(
+                    padding: EdgeInsets.only(bottom: 8),
+                    child: Text('ゾーン中: +12%',
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                  )
+                else if (run.zones > 0)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: OutlinedButton(
+                      onPressed: controller.useZone,
+                      child: const Text('ゾーンに入る(この大会で1回・+12%)'),
+                    ),
+                  ),
                 for (final k in Clutch.values)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 8),
@@ -1422,6 +1445,43 @@ class _DreamRow extends StatelessWidget {
               color: color,
               backgroundColor: color.withValues(alpha: 0.18),
             ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// 習得した特殊能力と、ためたポイント。タップで習得画面を開く。
+class _SpecialRow extends StatelessWidget {
+  const _SpecialRow({required this.game, required this.onTap});
+  final Game game;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final have = game.player.specials;
+    final canBuy = Special.values.any((s) => canLearn(have, game.sp, s));
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+                have.isEmpty
+                    ? '特殊能力: なし  ポイント ${game.sp}'
+                    : '特殊能力: ${have.map((s) => s.label).join('・')}  ポイント ${game.sp}',
+                style: const TextStyle(fontSize: 12)),
+          ),
+          TextButton(
+            onPressed: onTap,
+            style: TextButton.styleFrom(
+                visualDensity: VisualDensity.compact,
+                padding: const EdgeInsets.symmetric(horizontal: 8)),
+            child: Text(canBuy ? '習得できる!' : '一覧',
+                style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: canBuy ? FontWeight.bold : FontWeight.normal)),
           ),
         ],
       ),

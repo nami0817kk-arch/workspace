@@ -126,7 +126,9 @@ class TournamentRun {
       this.pendingHalf,
       this.askHalftime = false,
       this.scout = 0,
-      this.teamBonus = 0})
+      this.teamBonus = 0,
+      this.zones = 0,
+      this.momentumMul = 1.0})
       : timeouts = timeouts ?? league.timeouts,
         matches = matches ?? [];
 
@@ -144,6 +146,12 @@ class TournamentRun {
   int round;
   int wins;
 
+  /// ゾーン(特殊能力)の残り回数(習得していれば大会ごとに1回)。
+  int zones;
+
+  /// 勢いの効きの倍率(特殊能力「熱血」で1.5)。
+  final double momentumMul;
+
   /// タイムアウトの残り(大会全体で数回だけ)。大事な試合の最後の攻防で使うと成功率が+5%。
   int timeouts;
 
@@ -151,7 +159,7 @@ class TournamentRun {
   int streak;
 
   /// 勢いによる味方の強さへの加算。1試合あたり0.8、3試合分(±2.4)まで。
-  double get momentum => streak.clamp(-3, 3) * 0.8;
+  double get momentum => streak.clamp(-3, 3) * 0.8 * momentumMul;
 
   /// 勝負どころで選択を待っている試合。null なら止まっていない。
   MatchState? pending;
@@ -318,6 +326,8 @@ class TournamentRun {
         'wins': wins,
         'streak': streak,
         'timeouts': timeouts,
+        'zones': zones,
+        'momentumMul': momentumMul,
         'teamBonus': teamBonus,
         'scout': scout,
         'pending': pending?.toJson(),
@@ -338,6 +348,8 @@ class TournamentRun {
         wins: (j['wins'] as num?)?.toInt() ?? 0,
         streak: (j['streak'] as num?)?.toInt() ?? 0,
         timeouts: (j['timeouts'] as num?)?.toInt(),
+        zones: (j['zones'] as num?)?.toInt() ?? 0,
+        momentumMul: (j['momentumMul'] as num?)?.toDouble() ?? 1.0,
         teamBonus: (j['teamBonus'] as num?)?.toDouble() ?? 0,
         scout: (j['scout'] as num?)?.toDouble() ?? 0,
         askHalftime: (j['askHalftime'] as bool?) ?? false,
