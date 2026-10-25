@@ -241,12 +241,14 @@ class Game {
       Difficulty difficulty = Difficulty.normal,
       int legacyBonus = 0,
       Dream dream = Dream.pro,
+      Build? style,
       int? number}) {
     final r = rng ?? Random();
     final potential = (30 + r.nextInt(40) + r.nextInt(31)).clamp(30, 100);
     final g = Game(
       player: newPlayer(name, potential, r.nextDouble(), rollInnateTraits(r),
-          bonus: legacyBonus),
+              bonus: legacyBonus)
+          .copyWith(style: style),
       rival: Rival.random(r),
       difficulty: difficulty,
       dream: dream,
@@ -462,6 +464,14 @@ class Game {
     condition = condition.copyWith(morale: condition.morale + Dream.rewardMorale);
     lastDreamNote =
         '夢「${dream.label}」がかなった! ごほうび: 全能力 +${Dream.rewardAbilityBonus}、気持ち +${Dream.rewardMorale}';
+  }
+
+  /// 目指すプレースタイルを選ぶ・変える(null でおまかせ)。育成中いつでも変えられる。
+  /// 選んだ型に効く能力は伸びやすくなる(`styleGrowthMultiplier`)。変えても、いまの能力は変わらない。
+  void setStyle(Build? style) {
+    if (phase == Phase.retired) throw StateError('引退後は変えられない');
+    player = player.copyWith(style: style, clearStyle: style == null);
+    buildLabel = buildOf(player)?.label ?? '';
   }
 
   /// 条件を満たした得意技を身につける。新しく身についたものを返す。

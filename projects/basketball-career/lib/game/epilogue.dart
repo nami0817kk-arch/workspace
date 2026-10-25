@@ -211,6 +211,12 @@ List<String> epilogueLines(Game g) {
   if (r.games > 0) lines.add(r.fate);
 
   lines.add(dreamLine(g.dream, achievedAge: g.dreamAge));
+  final style = g.player.style;
+  if (style != null) {
+    final last = buildOf(g.player);
+    lines.add('目指したのは「${style.label}」。'
+        '${last != null && last.build == style && last.tier >= 2 ? '最後は「${last.label}」にまで磨き上げた。' : '理想の姿には届かなくても、その道を信じて歩き続けた。'}');
+  }
 
   // 支えてくれた人たち。信頼・チームワークが高かったときだけ。
   final thanks = <String>[];

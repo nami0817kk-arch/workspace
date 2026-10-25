@@ -4,6 +4,7 @@
 import 'dart:math';
 
 import 'package:basketball_career/game/advice.dart';
+import 'package:basketball_career/game/build.dart';
 import 'package:basketball_career/game/difficulty.dart';
 import 'package:basketball_career/game/dream.dart';
 import 'package:basketball_career/game/game.dart';
@@ -30,8 +31,11 @@ void main(List<String> args) {
       ? Difficulty.hard
       : (args.contains('--easy') ? Difficulty.easy : Difficulty.normal);
   var turnsTotal = 0, endAgeTotal = 0;
+  // --style=<ビルド名> で目指す型を選んだ遊び方を測る(例: --style=sharpshooter)。無ければおまかせ。
+  final styleArg = args.where((a) => a.startsWith('--style=')).map((a) => a.substring(8)).firstOrNull;
+  final style = Build.parse(styleArg);
   for (var seed = 0; seed < n; seed++) {
-    final g = Game.start('x', rng: Random(seed), difficulty: diff);
+    final g = Game.start('x', rng: Random(seed), difficulty: diff, style: style);
     var guard = 0;
     var seen18 = false;
     while (g.phase != Phase.retired && guard++ < 500) {

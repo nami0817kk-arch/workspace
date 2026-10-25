@@ -19,6 +19,7 @@ import 'history_screen.dart';
 import 'settings_screen.dart';
 import 'labels.dart';
 import 'layout.dart';
+import 'style_picker.dart';
 
 /// 局面(季節 / 進路 / 引退)に合わせて画面を切り替える。
 class GameScreen extends StatelessWidget {
@@ -114,7 +115,7 @@ class _SeasonView extends StatelessWidget {
       children: [
         CourtHeader(game: g),
         const SizedBox(height: 12),
-        _PlayerCard(game: g),
+        _PlayerCard(game: g, onPickStyle: () => showStylePicker(context, c)),
         const SizedBox(height: 12),
         _GoalCard(controller: c, game: g),
         const SizedBox(height: 12),
@@ -263,8 +264,11 @@ class _SeasonView extends StatelessWidget {
 }
 
 class _PlayerCard extends StatelessWidget {
-  const _PlayerCard({required this.game});
+  const _PlayerCard({required this.game, this.onPickStyle});
   final Game game;
+
+  /// 目指すプレースタイルを選び直す(育成画面だけ。無ければ出さない)。
+  final VoidCallback? onPickStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -278,9 +282,26 @@ class _PlayerCard extends StatelessWidget {
           children: [
             Text('${trackLabel(game)}  ${game.number > 0 ? '#${game.number}  ' : ''}${p.position.label}  '
                 '${p.heightCm.toStringAsFixed(1)}cm  総合 ${p.overall.round()}'),
-            if (buildOf(p) != null)
-              Text('ビルド: ${buildOf(p)!.label}',
-                  style: const TextStyle(fontSize: 12)),
+            if (buildOf(p) != null || onPickStyle != null)
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                        p.style == null
+                            ? 'ビルド: ${buildOf(p)?.label ?? 'まだ決まっていない'}(おまかせ)'
+                            : '目指す型: ${buildOf(p)?.label ?? p.style!.label}',
+                        style: const TextStyle(fontSize: 12)),
+                  ),
+                  if (onPickStyle != null)
+                    TextButton(
+                      onPressed: onPickStyle,
+                      style: TextButton.styleFrom(
+                          visualDensity: VisualDensity.compact,
+                          padding: const EdgeInsets.symmetric(horizontal: 8)),
+                      child: const Text('型を選ぶ', style: TextStyle(fontSize: 12)),
+                    ),
+                ],
+              ),
             _DreamRow(game: game),
             if (p.age <= 17)
               Text(
@@ -635,7 +656,7 @@ class _AbilityCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('能力  (◎○△ ＝ ${p.position.label} で効く度合い / 緑の＋は今年の伸び)',
+            Text('能力  (◎○△ ＝ ${p.position.label} で効く度合い / ◆ ＝ 目指す型で伸びやすい / 緑の＋は今年の伸び)',
                 style: const TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 6),
             // 身長も能力の1つ(総合評価に入る。素質=ポテンシャルとは別)。
@@ -668,7 +689,9 @@ class _AbilityCard extends StatelessWidget {
                   children: [
                     SizedBox(
                         width: 124,
-                        child: Text('${a.label} ${_mark(weightsOf(p.position)[a])}')),
+                        child: Text(
+                            '${a.label} ${_mark(weightsOf(p.position)[a])}'
+                            '${p.style != null && styleKeys(p.style!).contains(a) ? ' ◆' : ''}')),
                     Expanded(
                       child: LinearProgressIndicator(
                         value: p.of(a) / abilityCap,

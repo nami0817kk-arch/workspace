@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../game/build.dart';
 import '../game/difficulty.dart';
 import '../game/dream.dart';
 import '../game/game.dart';
@@ -7,6 +8,7 @@ import '../game/legacy.dart';
 import 'art/title_art.dart';
 import 'controller.dart';
 import 'history_screen.dart';
+import 'style_picker.dart';
 import 'howto_screen.dart';
 import 'settings_screen.dart';
 import 'layout.dart';
@@ -24,6 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final _name = TextEditingController();
   Difficulty _difficulty = Difficulty.normal;
   Dream _dream = Dream.pro;
+  Build? _style;
 
   /// 選んだ背番号。null ならおまかせ。
   int? _number;
@@ -32,19 +35,20 @@ class _HomeScreenState extends State<HomeScreen> {
   void _start() {
     final c = widget.controller;
     if (c.howtoSeen) {
-      c.newGame(_name.text, _difficulty, _number, _dream);
+      c.newGame(_name.text, _difficulty, _number, _dream, _style);
       return;
     }
     final name = _name.text;
     final difficulty = _difficulty;
     final number = _number;
     final dream = _dream;
+    final style = _style;
     Navigator.of(context).push(MaterialPageRoute<void>(
       builder: (ctx) => HowToScreen(
         onStart: () {
           c.markHowtoSeen();
           Navigator.of(ctx).pop();
-          c.newGame(name, difficulty, number, dream);
+          c.newGame(name, difficulty, number, dream, style);
         },
       ),
     ));
@@ -127,6 +131,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Text('${_dream.goalText}。かなうと全能力 +${Dream.rewardAbilityBonus}',
                       style: const TextStyle(fontSize: 12)),
                 ),
+                const Text('どんな選手を目指す?(育成中も変えられる)',
+                    style: TextStyle(fontSize: 12)),
+                const SizedBox(height: 4),
+                StyleSelector(
+                    value: _style,
+                    onChanged: (b) => setState(() => _style = b)),
+                const SizedBox(height: 8),
                 const Text('背番号', style: TextStyle(fontSize: 12)),
                 const SizedBox(height: 4),
                 Wrap(

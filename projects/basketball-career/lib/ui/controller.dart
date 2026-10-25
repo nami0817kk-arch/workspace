@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../game/advice.dart';
 import '../game/career.dart';
 import '../game/collection.dart';
+import '../game/build.dart';
 import '../game/difficulty.dart';
 import '../game/dream.dart';
 import '../game/game.dart';
@@ -221,7 +222,8 @@ class GameController extends ChangeNotifier {
   void newGame(String name,
       [Difficulty difficulty = Difficulty.normal,
       int? number,
-      Dream dream = Dream.pro]) {
+      Dream dream = Dream.pro,
+      Build? style]) {
     final n = name.trim().isEmpty ? '名無し' : name.trim();
     newlyUnlocked = const [];
     game = Game.start(n,
@@ -230,6 +232,7 @@ class GameController extends ChangeNotifier {
         difficulty: difficulty,
         legacyBonus: legacyBonusFor(unlocked.length),
         dream: dream,
+        style: style,
         number: number);
     focus = recommendedFocus(game!.player);
     focusAuto = true;
@@ -609,6 +612,19 @@ class GameController extends ChangeNotifier {
       (Route.corporate, _) => '実業団に入った。3年間で力をつけよう。',
     };
     recent = const [];
+    _commit();
+  }
+
+  /// 目指すプレースタイルを変える(null でおまかせ)。重点がおすすめ任せなら、型に合わせて動く。
+  void setStyle(Build? style) {
+    final g = game;
+    if (g == null || g.phase == Phase.retired) return;
+    g.setStyle(style);
+    recent = [
+      style == null
+          ? 'プレースタイルをおまかせにした。'
+          : '目指すプレースタイルを「${style.label}」にした。',
+    ];
     _commit();
   }
 
