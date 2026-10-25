@@ -475,7 +475,8 @@ class _BackupDialogState extends State<_BackupDialog> {
   }
 }
 
-/// 広告を消す(買い切り)と、購入の復元。ストアに繋がらない環境では何も出さない(広告を消した後の表示は出す)。
+/// 買い切りの商品(広告を消す・継承ブースト・育成サポート)と、購入の復元。
+/// ストアに繋がらない環境では、持っている商品だけ出す。
 class _AdsSection extends StatefulWidget {
   const _AdsSection({required this.money});
   final Monetization money;
@@ -484,9 +485,31 @@ class _AdsSection extends StatefulWidget {
   State<_AdsSection> createState() => _AdsSectionState();
 }
 
+/// 商品の名前と中身(表示用)。
+const _items = <(String, String, String, IconData)>[
+  (
+    PurchaseService.removeAdsId,
+    '広告を消す',
+    '年替わりの全画面広告が出なくなり、動画の特典(疲れを取る・経験点・継承ポイント)も動画なしでもらえます。',
+    Icons.block
+  ),
+  (
+    PurchaseService.legacyBoostId,
+    '継承ブースト',
+    '引退のたびに貯まる継承ポイントが2倍になります。次の選手を強く始めやすくなります。',
+    Icons.card_giftcard
+  ),
+  (
+    PurchaseService.growthSupportId,
+    '育成サポート',
+    '経験点がいつも1割多く貯まります。',
+    Icons.trending_up
+  ),
+];
+
 class _AdsSectionState extends State<_AdsSection> {
   bool _storeAvailable = false;
-  String? _price;
+  final Map<String, String?> _prices = {};
   bool _busy = false;
 
   @override
@@ -507,28 +530,36 @@ class _AdsSectionState extends State<_AdsSection> {
   }
 
   Future<void> _load() async {
-    final v = await widget.money.canBuy;
-    final price = v ? await widget.money.price : null;
+    final v = await widget.money.storeAvailable;
+    final prices = <String, String?>{};
+    if (v) {
+      for (final it in _items) {
+        prices[it.$1] = await widget.money.priceOf(it.$1);
+      }
+    }
     if (!mounted) return;
     setState(() {
       _storeAvailable = v;
-      _price = price;
+      _prices
+        ..clear()
+        ..addAll(prices);
     });
   }
 
-  Future<void> _run({required bool restore}) async {
+  Future<void> _run(String? id) async {
     setState(() => _busy = true);
     final m = ScaffoldMessenger.of(context);
+    final restore = id == null;
     PurchaseOutcome r;
     try {
-      r = await (restore ? widget.money.restore() : widget.money.buy());
+      r = await (restore ? widget.money.restore() : widget.money.buyItem(id));
     } catch (_) {
       r = PurchaseOutcome.failed;
     }
     if (mounted) setState(() => _busy = false);
     final text = switch (r) {
-      PurchaseOutcome.purchased => restore ? '購入を復元しました。広告は出なくなります。' : 'ありがとうございます。広告は出なくなります。',
-      PurchaseOutcome.pending => '保護者の承認を待っています。承認されると広告が消えます。',
+      PurchaseOutcome.purchased => restore ? '購入を復元しました。' : 'ありがとうございます。購入が完了しました。',
+      PurchaseOutcome.pending => '保護者の承認を待っています。承認されると届きます。',
       PurchaseOutcome.canceled => '',
       PurchaseOutcome.unavailable => restore ? '復元できる購入が見つかりませんでした。' : '今は購入できません。しばらくしてからもう一度どうぞ。',
       PurchaseOutcome.failed => restore ? '復元できませんでした。通信を確かめてください。' : '購入できませんでした。もう一度どうぞ。',
@@ -539,32 +570,39 @@ class _AdsSectionState extends State<_AdsSection> {
   @override
   Widget build(BuildContext context) {
     final money = widget.money;
-    if (money.adFree) {
-      return const ListTile(
-        key: Key('ad-free-on'),
-        leading: Icon(Icons.check_circle, color: Color(0xFF43A047)),
-        title: Text('広告なし(購入済み)'),
-        subtitle: Text('ご支援ありがとうございます。'),
-      );
+    final rows = <Widget>[];
+    for (final it in _items) {
+      final (id, label, desc, icon) = it;
+      if (money.owns(id)) {
+        rows.add(ListTile(
+          key: Key(id == PurchaseService.removeAdsId ? 'ad-free-on' : 'owned-$id'),
+          leading: const Icon(Icons.check_circle, color: Color(0xFF43A047)),
+          title: Text('$label(購入済み)'),
+          subtitle: Text(desc),
+        ));
+      } else if (_storeAvailable && _prices[id] != null) {
+        rows.add(ListTile(
+          key: Key(id == PurchaseService.removeAdsId ? 'remove-ads' : 'buy-$id'),
+          leading: Icon(icon),
+          title: Text(label),
+          subtitle: Text('$desc(買い切り)'),
+          trailing: Text(_prices[id]!,
+              style: const TextStyle(fontWeight: FontWeight.bold)),
+          enabled: !_busy,
+          onTap: () => _run(id),
+        ));
+      }
     }
-    if (!_storeAvailable || _price == null) return const SizedBox.shrink();
-    return Column(children: [
-      ListTile(
-        key: const Key('remove-ads'),
-        leading: const Icon(Icons.block),
-        title: const Text('広告を消す'),
-        subtitle: const Text('年替わりの全画面広告が出なくなり、疲れを取る動画も不要になります(買い切り)。'),
-        trailing: Text(_price!, style: const TextStyle(fontWeight: FontWeight.bold)),
-        enabled: !_busy,
-        onTap: () => _run(restore: false),
-      ),
-      ListTile(
+    if (_storeAvailable && _prices.values.any((v) => v != null)) {
+      rows.add(ListTile(
         key: const Key('restore-purchases'),
         leading: const Icon(Icons.restore),
         title: const Text('購入を復元'),
         enabled: !_busy,
-        onTap: () => _run(restore: true),
-      ),
-    ]);
+        onTap: () => _run(null),
+      ));
+    }
+    if (rows.isEmpty) return const SizedBox.shrink();
+    return Column(children: rows);
   }
 }

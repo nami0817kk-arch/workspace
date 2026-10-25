@@ -465,6 +465,83 @@ class GameController extends ChangeNotifier {
   }
 
   /// 動画を見て疲れを取る。結果は「いまの結果」の文面(取れなかった理由を含む)で返す。
+  /// 動画の特典の、経験点の量(年に1回)。
+  static const adExpBonus = 10;
+
+  /// 動画で経験点をもらった歳(同じ歳には1度だけ)。
+  int _expAdAge = -1;
+
+  /// 動画で継承ポイントをもらったか(引退のたびに1度だけ)。
+  bool _legacyAdUsed = false;
+
+  /// 動画を見てもらう。見終えれば null、そうでなければ断る文を返す。
+  Future<String?> _watchReward(String declined,
+      {void Function()? onWaiting}) async {
+    final r = await money!.beforeRecovery(onWaiting: onWaiting);
+    if (r == RecoveryGate.granted) return null;
+    return switch (r) {
+      RecoveryGate.declined => declined,
+      RecoveryGate.showFailed => '動画を出せませんでした。しばらくしてからもう一度どうぞ。',
+      _ => '今は動画を読み込めません。通信を確かめて、あとでもう一度どうぞ。',
+    };
+  }
+
+  /// 動画で経験点をもらえるか(育成中・その歳にまだ使っていない)。
+  bool get canExpByAd {
+    final g = game;
+    return money != null &&
+        g != null &&
+        g.phase != Phase.retired &&
+        g.player.age != _expAdAge;
+  }
+
+  /// 動画を見て、経験点を足す(年に1回)。
+  Future<String> expByAd({void Function()? onWaiting}) async {
+    final g = game;
+    if (!canExpByAd || g == null) return '今は使えません。';
+    _expAdAge = g.player.age;
+    final why = await _watchReward('最後まで見ると経験点がもらえます。', onWaiting: onWaiting);
+    if (why != null) {
+      _expAdAge = -1;
+      return why;
+    }
+    if (!identical(game, g)) return '選手が替わったので、経験点は入りませんでした。';
+    final start = g.log.length;
+    g.gainAdExp(adExpBonus);
+    recent = g.log.sublist(start);
+    _cue(Sfx.gain);
+    _commit();
+    return '経験点 +$adExpBonus(全種類)';
+  }
+
+  /// 引退したあと、動画で継承ポイントを1つもらえるか(引退のたびに1度だけ)。
+  bool get canLegacyByAd {
+    final g = game;
+    return money != null &&
+        g != null &&
+        g.phase == Phase.retired &&
+        g.archived &&
+        !_legacyAdUsed;
+  }
+
+  /// 動画を見て、継承ポイントを1つ足す。
+  Future<String> legacyByAd({void Function()? onWaiting}) async {
+    if (!canLegacyByAd) return '今は使えません。';
+    _legacyAdUsed = true;
+    final why =
+        await _watchReward('最後まで見ると継承ポイントがもらえます。', onWaiting: onWaiting);
+    if (why != null) {
+      _legacyAdUsed = false;
+      return why;
+    }
+    legacyPoints += 1;
+    lastLegacyGain += 1;
+    store.saveLegacy(legacyPoints);
+    _cue(Sfx.gain);
+    notifyListeners();
+    return '継承ポイント +1(いま ${legacyPoints}pt)';
+  }
+
   Future<String> recoverByAd({void Function()? onWaiting}) async {
     final m = money;
     final g = game;
@@ -863,6 +940,8 @@ class GameController extends ChangeNotifier {
     _backedAge = -1;
     _adAge = -1;
     _recoveredAge = -1;
+    _expAdAge = -1;
+    _legacyAdUsed = false;
     // 継承: 図鑑にあり、ポイントが足りる特性だけ。持たせたぶんのポイントを使う。
     Trait? use;
     if (carry != null && carryCandidates(role).contains(carry)) {
@@ -942,8 +1021,17 @@ class GameController extends ChangeNotifier {
     };
   }
 
+  /// 育成サポートの経験点1割増し(買い切り)。
+  static const growthSupportBoost = 1.1;
+
+  /// 買った特典を、いまの選手に入れる(保存はしないので、行動の前に毎回)。
+  void _applyPurchases(Game g) {
+    g.expBoost = money?.growthSupport == true ? growthSupportBoost : 1.0;
+  }
+
   void act(Plan a) {
     final g = game!;
+    _applyPurchases(g);
     if (!abilitiesOf(g.player.role).contains(focus)) {
       focus = abilitiesOf(g.player.role).first;
     }
@@ -1147,6 +1235,7 @@ class GameController extends ChangeNotifier {
   void autoYear() {
     final g = game;
     if (g == null) return;
+    _applyPurchases(g);
     final age = g.player.age;
     final lines = <String>[];
     final gained = <Category, int>{};
@@ -1294,7 +1383,8 @@ class GameController extends ChangeNotifier {
       autoBackup('${g.player.name}が引退したとき');
       final e = g.ending;
       if (e != null) {
-        lastLegacyGain = legacyPointsOf(madePro: e.madePro, title: e.title);
+        lastLegacyGain = legacyPointsOf(madePro: e.madePro, title: e.title) *
+            (money?.legacyBoost == true ? 2 : 1); // 継承ブースト(買い切り)は2倍
         legacyPoints += lastLegacyGain;
         store.saveLegacy(legacyPoints);
       }

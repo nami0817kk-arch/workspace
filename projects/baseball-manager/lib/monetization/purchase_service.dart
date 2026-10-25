@@ -24,33 +24,42 @@ enum PurchaseOutcome {
   failed,
 }
 
-/// 「広告を消す」（買い切り・非消費型、370円。ユーザー決定 2026-09-27）の窓口。
-/// goso-boat の purchase_service.dart を写したもの(野球育成も同じ決まり)。
+/// 買い切り(非消費型)の商品の窓口。goso-boat の purchase_service.dart を、商品を複数にしたもの。
+/// **消耗型は扱わない**(払ったのに届かなかったとき、復元で戻せない。docs/app-pitfalls.md 7番)。
 abstract class PurchaseService {
-  /// App Store Connect の商品IDと一致させること。
+  /// App Store Connect の商品IDと一致させること(1文字も違えない)。
+  /// 広告を消す(370円。2026-10-21)。
   static const removeAdsId = 'baseball_manager_remove_ads';
+
+  /// 継承ブースト(250円。引退のたびの継承ポイントが2倍。2026-10-25)。
+  static const legacyBoostId = 'baseball_manager_legacy_boost';
+
+  /// 育成サポート(370円。経験点がいつも1割多い。2026-10-25)。
+  static const growthSupportId = 'baseball_manager_growth_support';
+
+  static const allIds = [removeAdsId, legacyBoostId, growthSupportId];
 
   /// **届いたら、待っているかどうかに関係なく呼ぶ。** ストアの通知は購入を始めた
   /// 瞬間に返るとは限らない（家族の承認・別の端末での購入・起動時の再送）。
   set onDelivered(Future<void> Function(String productId)? callback);
 
-  /// 返金・取り消しされた購入が届いたら呼ぶ（広告を戻す）。
+  /// 返金・取り消しされた購入が届いたら呼ぶ（その特典を戻す）。
   set onRevoked(Future<void> Function(String productId)? callback);
 
   Future<void> initialize();
   Future<bool> isAvailable();
 
   /// 表示用の価格（「¥370」など）。取れなければ null。
-  Future<String?> priceLabel();
+  Future<String?> priceLabel(String productId);
 
-  Future<PurchaseOutcome> buyRemoveAds();
+  Future<PurchaseOutcome> buy(String productId);
 
-  /// 機種変更・再インストール後に戻す。iOS は復元の導線が審査要件。
+  /// 機種変更・再インストール後に戻す（全部の商品）。iOS は復元の導線が審査要件。
   Future<PurchaseOutcome> restore();
 
-  /// 端末の購入記録から見て、いま「広告を消す」の権利があるか。
+  /// 端末の購入記録から見て、いまその商品の権利があるか。
   /// true=有効な取引がある、false=取引はあるが全部返金済み、null=分からない（記録が無い・読めない）。
-  Future<bool?> hasEntitlement();
+  Future<bool?> hasEntitlement(String productId);
 
   void dispose();
 }
@@ -70,16 +79,17 @@ class NoOpPurchaseService implements PurchaseService {
   Future<bool> isAvailable() async => false;
 
   @override
-  Future<String?> priceLabel() async => null;
+  Future<String?> priceLabel(String productId) async => null;
 
   @override
-  Future<PurchaseOutcome> buyRemoveAds() async => PurchaseOutcome.unavailable;
+  Future<PurchaseOutcome> buy(String productId) async =>
+      PurchaseOutcome.unavailable;
 
   @override
   Future<PurchaseOutcome> restore() async => PurchaseOutcome.unavailable;
 
   @override
-  Future<bool?> hasEntitlement() async => null;
+  Future<bool?> hasEntitlement(String productId) async => null;
 
   @override
   void dispose() {}
@@ -92,28 +102,33 @@ class StorePurchaseService implements PurchaseService {
   Future<void> Function(String productId)? _onDelivered;
   Future<void> Function(String productId)? _onRevoked;
 
-  /// いま待っている購入と復元。重ねて押されたら同じものを返す（2度押しで結果が食い違わないように）。
+  /// いま待っている購入(商品ごと)と復元。重ねて押されたら同じものを返す（2度押しで結果が食い違わないように）。
   /// 別々に持つのは、復元の「対象なし」が購入の結果として返らないようにするため。
-  Completer<PurchaseOutcome>? _buying;
+  final Map<String, Completer<PurchaseOutcome>> _buying = {};
   Completer<PurchaseOutcome>? _restoring;
-  ProductDetails? _product;
+  final Map<String, ProductDetails> _products = {};
 
   @override
-  set onDelivered(Future<void> Function(String productId)? callback) => _onDelivered = callback;
+  set onDelivered(Future<void> Function(String productId)? callback) =>
+      _onDelivered = callback;
 
   @override
-  set onRevoked(Future<void> Function(String productId)? callback) => _onRevoked = callback;
+  set onRevoked(Future<void> Function(String productId)? callback) =>
+      _onRevoked = callback;
 
   /// 返金・取り消し済みの取引か。StoreKit 2 のプラグインは取り消された取引も「購入」として流してくるので、
   /// 取引の JSON（Transaction.jsonRepresentation）の revocationDate で見分ける。
-  static bool isRevoked(PurchaseDetails p) => _revokedJson(p.verificationData.localVerificationData);
+  static bool isRevoked(PurchaseDetails p) =>
+      _revokedJson(p.verificationData.localVerificationData);
 
   @override
   Future<void> initialize() async {
     _subscription = _iap.purchaseStream.listen(
       _onUpdate,
       onError: (_) {
-        _finish(_buying, PurchaseOutcome.failed);
+        for (final c in [..._buying.values]) {
+          _finish(c, PurchaseOutcome.failed);
+        }
         _finish(_restoring, PurchaseOutcome.failed);
       },
     );
@@ -121,24 +136,28 @@ class StorePurchaseService implements PurchaseService {
 
   Future<void> _onUpdate(List<PurchaseDetails> purchases) async {
     for (final p in purchases) {
-      if (p.productID != PurchaseService.removeAdsId) continue;
+      if (!PurchaseService.allIds.contains(p.productID)) continue;
+      final waiting = _buying[p.productID];
       if (p.status == PurchaseStatus.pending) {
         // 保護者の承認待ち。待っている側には「承認待ち」と返し、承認されたら改めて届く
-        _finish(_buying, PurchaseOutcome.pending);
+        _finish(waiting, PurchaseOutcome.pending);
         continue;
       }
-      if ((p.status == PurchaseStatus.purchased || p.status == PurchaseStatus.restored) && isRevoked(p)) {
-        // 返金された。広告を戻し、取引は片付ける。待っている購入・復元には「広告なし」と返さない
+      if ((p.status == PurchaseStatus.purchased ||
+              p.status == PurchaseStatus.restored) &&
+          isRevoked(p)) {
+        // 返金された。特典を戻し、取引は片付ける。待っている購入・復元には「買えた」と返さない
         try {
           await _onRevoked?.call(p.productID);
           if (p.pendingCompletePurchase) unawaited(_iap.completePurchase(p));
         } catch (_) {
-          // 広告を戻せなかったら完了させない。次の起動でもう一度届く
+          // 戻せなかったら完了させない。次の起動でもう一度届く
         }
         continue;
       }
       var received = true;
-      if (p.status == PurchaseStatus.purchased || p.status == PurchaseStatus.restored) {
+      if (p.status == PurchaseStatus.purchased ||
+          p.status == PurchaseStatus.restored) {
         try {
           await _onDelivered?.call(p.productID);
         } catch (_) {
@@ -148,25 +167,26 @@ class StorePurchaseService implements PurchaseService {
       switch (p.status) {
         case PurchaseStatus.purchased:
         case PurchaseStatus.restored:
-          // 買った・戻ったのなら、どちらを待っていても「広告なし」になった
-          _finish(_buying, PurchaseOutcome.purchased);
+          _finish(waiting, PurchaseOutcome.purchased);
           _finish(_restoring, PurchaseOutcome.purchased);
         case PurchaseStatus.canceled:
-          _finish(_buying, PurchaseOutcome.canceled);
+          _finish(waiting, PurchaseOutcome.canceled);
         case PurchaseStatus.error:
-          _finish(_buying, PurchaseOutcome.failed);
+          _finish(waiting, PurchaseOutcome.failed);
           _finish(_restoring, PurchaseOutcome.failed);
         case PurchaseStatus.pending:
           break;
       }
       // 受け取れなかったぶんは完了通知を返さない。次の起動でストアがもう一度送ってくる
-      if (received && p.pendingCompletePurchase) unawaited(_iap.completePurchase(p));
+      if (received && p.pendingCompletePurchase) {
+        unawaited(_iap.completePurchase(p));
+      }
     }
   }
 
   void _finish(Completer<PurchaseOutcome>? c, PurchaseOutcome o) {
     if (c == null || c.isCompleted) return;
-    if (identical(c, _buying)) _buying = null;
+    _buying.removeWhere((_, v) => identical(v, c));
     if (identical(c, _restoring)) _restoring = null;
     c.complete(o);
   }
@@ -180,49 +200,57 @@ class StorePurchaseService implements PurchaseService {
     }
   }
 
-  Future<ProductDetails?> _load() async {
-    if (_product != null) return _product;
-    final r = await _iap.queryProductDetails({PurchaseService.removeAdsId});
-    return _product = r.productDetails.where((p) => p.id == PurchaseService.removeAdsId).firstOrNull;
+  Future<ProductDetails?> _load(String id) async {
+    if (_products.containsKey(id)) return _products[id];
+    final r = await _iap.queryProductDetails(PurchaseService.allIds.toSet());
+    for (final d in r.productDetails) {
+      _products[d.id] = d;
+    }
+    return _products[id];
   }
 
   @override
-  Future<String?> priceLabel() async {
+  Future<String?> priceLabel(String productId) async {
     try {
-      return (await _load())?.price;
+      return (await _load(productId))?.price;
     } catch (_) {
       return null;
     }
   }
 
   @override
-  Future<PurchaseOutcome> buyRemoveAds() async {
-    final running = _buying;
+  Future<PurchaseOutcome> buy(String productId) async {
+    final running = _buying[productId];
     if (running != null && !running.isCompleted) return running.future;
     // 商品情報を取りに行く前に場所を取る（取得中の2度押しで2回買いに行かないように）
-    final c = _buying = Completer<PurchaseOutcome>();
+    final c = _buying[productId] = Completer<PurchaseOutcome>();
     try {
-      final product = await _load();
+      final product = await _load(productId);
       if (c.isCompleted) return await c.future; // 取得中に購入が届いた（起動時の再送・家族の承認）
       if (product == null) {
         _finish(c, PurchaseOutcome.unavailable);
         return await c.future;
       }
-      final started = await _iap.buyNonConsumable(purchaseParam: PurchaseParam(productDetails: product));
+      final started = await _iap.buyNonConsumable(
+          purchaseParam: PurchaseParam(productDetails: product));
       if (!started) _finish(c, PurchaseOutcome.failed);
       // StoreKit 2 では購入の画面が閉じてから戻り、結果は通知で届く。
-      // 通知が来ないまま待ち続けないための上限（届けば onDelivered で広告は消える）
+      // 通知が来ないまま待ち続けないための上限（届けば onDelivered で特典が付く）
       return await c.future.timeout(
         const Duration(minutes: 5),
         onTimeout: () {
-          // 取りやめと決めつけない。後から届けば onDelivered で広告は消える
+          // 取りやめと決めつけない。後から届けば onDelivered で特典が付く
           _finish(c, PurchaseOutcome.pending);
           return PurchaseOutcome.pending;
         },
       );
     } catch (e) {
       // StoreKit が取りやめを例外で返すことがある。自分でやめたのを「失敗」と出さない
-      _finish(c, '$e'.contains('userCancelled') ? PurchaseOutcome.canceled : PurchaseOutcome.failed);
+      _finish(
+          c,
+          '$e'.contains('userCancelled')
+              ? PurchaseOutcome.canceled
+              : PurchaseOutcome.failed);
       return await c.future;
     }
   }
@@ -257,10 +285,10 @@ class StorePurchaseService implements PurchaseService {
   }
 
   @override
-  Future<bool?> hasEntitlement() async {
+  Future<bool?> hasEntitlement(String productId) async {
     try {
       final mine = (await SK2Transaction.transactions())
-          .where((t) => t.productId == PurchaseService.removeAdsId)
+          .where((t) => t.productId == productId)
           .toList();
       if (mine.isEmpty) return null;
       return mine.any((t) => !_revokedJson(t.jsonRepresentation));

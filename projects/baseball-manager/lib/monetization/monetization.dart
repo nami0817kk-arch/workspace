@@ -24,7 +24,8 @@ enum RecoveryGate {
 /// - 全画面広告: 年が変わる節目で、4年に1回。13歳になるまで（少年野球のあいだ）と、広告を消した人には出さない。
 ///   選択の途中には出さない（年を進めた直後に、少し置いてから出す）。
 /// - 動画広告: 疲れがたまった年に1度、見ると疲れが大きく抜ける（任意）。読み込めていないときは出さない。
-/// - 広告を消す: 全画面広告が出なくなり、疲れを取る特典も動画なしで使える。
+/// - 広告を消す: 全画面広告が出なくなり、動画の特典も動画なしで使える。
+/// - 継承ブースト・育成サポート(2026-10-25): 買い切り。効き目は `legacyBoost` / `growthSupport` を見る側で。
 class Monetization extends ChangeNotifier {
   Monetization(this._prefs, {AdService? ads, PurchaseService? store})
       : ads = ads ?? NoOpAdService(),
@@ -45,18 +46,41 @@ class Monetization extends ChangeNotifier {
 
   bool get adFree => _prefs.getBool(_adFreeKey) ?? false;
 
+  static String _ownKey(String id) => 'baseball_owned_$id';
+
+  /// その商品を持っているか(広告を消す は `adFree`)。
+  bool owns(String id) => id == PurchaseService.removeAdsId
+      ? adFree
+      : (_prefs.getBool(_ownKey(id)) ?? false);
+
+  /// 継承ブースト: 引退のたびの継承ポイントが2倍。
+  bool get legacyBoost => owns(PurchaseService.legacyBoostId);
+
+  /// 育成サポート: 経験点がいつも1割多い。
+  bool get growthSupport => owns(PurchaseService.growthSupportId);
+
+  Future<void> _setOwned(String id, bool v) async {
+    if (id == PurchaseService.removeAdsId) {
+      v ? await _setAdFree() : await _clearAdFree();
+      return;
+    }
+    if (owns(id) == v) return;
+    await _prefs.setBool(_ownKey(id), v);
+    notifyListeners();
+  }
+
   Future<void> start() async {
     store.onDelivered = (id) async {
-      if (id != PurchaseService.removeAdsId) return;
+      if (!PurchaseService.allIds.contains(id)) return;
       _deliveries++;
-      await _setAdFree();
+      await _setOwned(id, true);
     };
     store.onRevoked = (id) async {
-      if (id != PurchaseService.removeAdsId) return;
-      // 家族から共有された分や買い直した分など、ほかに有効な取引が残っていれば広告は戻さない
+      if (!PurchaseService.allIds.contains(id)) return;
+      // 家族から共有された分や買い直した分など、ほかに有効な取引が残っていれば戻さない
       final seen = _deliveries;
-      if (await store.hasEntitlement() == true || seen != _deliveries) return;
-      await _clearAdFree();
+      if (await store.hasEntitlement(id) == true || seen != _deliveries) return;
+      await _setOwned(id, false);
     };
     try {
       await store.initialize();
@@ -81,9 +105,13 @@ class Monetization extends ChangeNotifier {
   /// 再インストール後は「購入を復元」を押さなくても広告なしに戻す。記録が読めなければ何もしない。
   Future<void> _reconcile() async {
     final seen = _deliveries;
-    final e = await store.hasEntitlement();
-    if (e == true && !adFree) await _setAdFree();
-    if (e == false && adFree && seen == _deliveries) await _clearAdFree();
+    for (final id in PurchaseService.allIds) {
+      final e = await store.hasEntitlement(id);
+      if (e == true && !owns(id)) await _setOwned(id, true);
+      if (e == false && owns(id) && seen == _deliveries) {
+        await _setOwned(id, false);
+      }
+    }
   }
 
   Future<void> _clearAdFree() async {
@@ -167,17 +195,22 @@ class Monetization extends ChangeNotifier {
   bool get needsAd => !adFree;
 
   Future<bool> get canBuy async => !adFree && await store.isAvailable();
-  Future<String?> get price => store.priceLabel();
+  Future<String?> get price => store.priceLabel(PurchaseService.removeAdsId);
 
-  Future<PurchaseOutcome> buy() async {
-    final r = await store.buyRemoveAds();
-    if (r == PurchaseOutcome.purchased) await _setAdFree();
+  /// ストアに繋がるか(購入の項目を出すか)。
+  Future<bool> get storeAvailable => store.isAvailable();
+  Future<String?> priceOf(String id) => store.priceLabel(id);
+
+  /// 広告を消す を買う(前からの呼び名)。
+  Future<PurchaseOutcome> buy() => buyItem(PurchaseService.removeAdsId);
+
+  /// 商品を買う。届いた時点で onDelivered が特典を付けているが、念のためここでも立てる。
+  Future<PurchaseOutcome> buyItem(String id) async {
+    final r = await store.buy(id);
+    if (r == PurchaseOutcome.purchased) await _setOwned(id, true);
     return r;
   }
 
-  Future<PurchaseOutcome> restore() async {
-    final r = await store.restore();
-    if (r == PurchaseOutcome.purchased) await _setAdFree();
-    return r;
-  }
+  /// 全部の商品を復元する(届いたぶんは onDelivered で付く)。
+  Future<PurchaseOutcome> restore() => store.restore();
 }

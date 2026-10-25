@@ -317,6 +317,15 @@ class _GameScreenState extends State<GameScreen> {
 
   List<Widget> _abilityTab() => [
         _OverallHeader(game: game),
+        if (controller.canExpByAd)
+          _AdRewardTile(
+            key: const Key('ad-exp'),
+            controller: controller,
+            icon: Icons.fitness_center,
+            title: '経験点 +${GameController.adExpBonus}(全種類)',
+            subtitle: '年に1回',
+            run: controller.expByAd,
+          ),
         _TraitChips(game: game),
         _AbilityCard(controller: controller, game: game),
         _SkillCard(controller: controller, game: game),
@@ -2102,6 +2111,15 @@ class EndingView extends StatelessWidget {
                 _AfterPathCard(controller: controller, game: game),
               ],
               const SizedBox(height: 16),
+              if (controller.canLegacyByAd)
+                _AdRewardTile(
+                  key: const Key('ad-legacy'),
+                  controller: controller,
+                  icon: Icons.card_giftcard,
+                  title: '継承ポイント +1',
+                  subtitle: '引退のたびに1回',
+                  run: controller.legacyByAd,
+                ),
               if (controller.lastLegacyGain > 0) ...[
                 Card(
                   key: const Key('legacy-gain'),
@@ -2670,6 +2688,60 @@ class _SkillRow extends StatelessWidget {
           child: Text(s.negative ? '克服' : '取る'),
         ),
       ]),
+    );
+  }
+}
+
+/// 動画を見て特典をもらうタイル(広告を消した人は、動画なしでもらえる)。
+class _AdRewardTile extends StatefulWidget {
+  const _AdRewardTile({
+    super.key,
+    required this.controller,
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.run,
+  });
+  final GameController controller;
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final Future<String> Function({void Function()? onWaiting}) run;
+
+  @override
+  State<_AdRewardTile> createState() => _AdRewardTileState();
+}
+
+class _AdRewardTileState extends State<_AdRewardTile> {
+  bool _busy = false;
+
+  Future<void> _go() async {
+    setState(() => _busy = true);
+    final messenger = ScaffoldMessenger.maybeOf(context);
+    final text = await widget.run();
+    if (mounted) setState(() => _busy = false);
+    messenger?.hideCurrentSnackBar();
+    messenger?.showSnackBar(SnackBar(content: Text(text)));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final free = widget.controller.money?.adFree ?? false;
+    return Card(
+      color: const Color(0xFFFFF8E1),
+      child: ListTile(
+        dense: true,
+        leading: Icon(free ? widget.icon : Icons.ondemand_video,
+            color: const Color(0xFFB26A00)),
+        title: Text(free ? widget.title : '動画を見て ${widget.title}',
+            style: const TextStyle(fontWeight: FontWeight.bold)),
+        subtitle: Text(widget.subtitle),
+        trailing: FilledButton.tonal(
+          style: FilledButton.styleFrom(minimumSize: const Size(64, 36)),
+          onPressed: _busy ? null : _go,
+          child: Text(free ? 'もらう' : '見る'),
+        ),
+      ),
     );
   }
 }

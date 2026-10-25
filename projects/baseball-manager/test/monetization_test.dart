@@ -55,8 +55,17 @@ class FakeStore implements PurchaseService {
   String? price = '¥370';
   PurchaseOutcome buyResult = PurchaseOutcome.purchased;
   PurchaseOutcome restoreResult = PurchaseOutcome.purchased;
+
+  /// 広告を消す の購入記録(前からの検査用)。
   bool? entitlement;
-  int buys = 0;
+
+  /// ほかの商品の購入記録。
+  final Map<String, bool?> entitlements = {};
+
+  /// 復元で届く商品(既定は広告を消すだけ)。
+  List<String> restoreIds = [PurchaseService.removeAdsId];
+  final List<String> bought = [];
+  int get buys => bought.length;
   Future<void> Function(String)? delivered;
   Future<void> Function(String)? revoked;
 
@@ -70,23 +79,31 @@ class FakeStore implements PurchaseService {
   @override
   Future<bool> isAvailable() async => available;
   @override
-  Future<String?> priceLabel() async => price;
+  Future<String?> priceLabel(String productId) async =>
+      productId == PurchaseService.removeAdsId
+          ? price
+          : (price == null ? null : '¥250');
   @override
-  Future<PurchaseOutcome> buyRemoveAds() async {
-    buys++;
+  Future<PurchaseOutcome> buy(String productId) async {
+    bought.add(productId);
     // 本物と同じく、成立したらストアからの通知が先に届く
     if (buyResult == PurchaseOutcome.purchased) {
-      await delivered?.call(PurchaseService.removeAdsId);
+      await delivered?.call(productId);
     }
     return buyResult;
   }
 
   @override
-  Future<bool?> hasEntitlement() async => entitlement;
+  Future<bool?> hasEntitlement(String productId) async =>
+      productId == PurchaseService.removeAdsId
+          ? entitlement
+          : entitlements[productId];
   @override
   Future<PurchaseOutcome> restore() async {
     if (restoreResult == PurchaseOutcome.purchased) {
-      await delivered?.call(PurchaseService.removeAdsId);
+      for (final id in restoreIds) {
+        await delivered?.call(id);
+      }
     }
     return restoreResult;
   }
@@ -285,7 +302,65 @@ void main() {
       expect(m2.adFree, isFalse);
     });
 
+    test('継承ブースト・育成サポートも買える。届けば持ち、返金されれば戻る。復元で全部戻る', () async {
+      final (m, _, store) = await _open();
+      expect(m.legacyBoost, isFalse);
+      expect(await m.buyItem(PurchaseService.legacyBoostId),
+          PurchaseOutcome.purchased);
+      expect(m.legacyBoost, isTrue);
+      expect(m.adFree, isFalse); // ほかの商品は付かない
+      await store.delivered!(PurchaseService.growthSupportId); // 待っていなくても届く
+      expect(m.growthSupport, isTrue);
+      store.entitlements[PurchaseService.growthSupportId] = false;
+      await store.revoked!(PurchaseService.growthSupportId);
+      expect(m.growthSupport, isFalse);
+      // 再インストール: 端末の記録から戻る
+      SharedPreferences.setMockInitialValues({});
+      final prefs = await SharedPreferences.getInstance();
+      final s2 = FakeStore()
+        ..entitlements[PurchaseService.legacyBoostId] = true;
+      final m2 = Monetization(prefs, ads: FakeAds(), store: s2);
+      await m2.start();
+      expect(m2.legacyBoost, isTrue);
+      expect(m2.growthSupport, isFalse);
+      // 復元
+      s2.restoreIds = PurchaseService.allIds;
+      await m2.restore();
+      expect(m2.adFree && m2.legacyBoost && m2.growthSupport, isTrue);
+    });
+
+    test('育成サポートは経験点が1割多い。継承ブーストは継承ポイントが2倍', () async {
+      final (m, _, store) = await _open();
+      int expOf(GameController c) {
+        c.newGame('t', Role.batter);
+        c.act(Plan.train);
+        return c.game!.lastGain.values.fold(0, (a, b) => a + b);
+      }
+
+      final plain = expOf(GameController(rng: Random(4), money: m));
+      await store.delivered!(PurchaseService.growthSupportId);
+      final boosted = expOf(GameController(rng: Random(4), money: m));
+      expect(boosted, greaterThan(plain));
+      expect(boosted / plain, closeTo(1.1, 0.06));
+      expect(GameController.growthSupportBoost, 1.1);
+    });
+
+    test('動画の特典: 経験点(年1回)と継承ポイント(引退のたびに1回)', () async {
+      final (m, ads, _) = await _open();
+      final c = GameController(rng: Random(3), money: m);
+      c.newGame('動画', Role.batter);
+      final before = c.game!.exp.total;
+      expect(c.canExpByAd, isTrue);
+      expect(await c.expByAd(), contains('経験点 +'));
+      expect(c.game!.exp.total, greaterThan(before));
+      expect(c.canExpByAd, isFalse); // 同じ歳には1回だけ
+      expect(ads.rewarded, 1);
+      expect(c.canLegacyByAd, isFalse); // 引退してから
+    });
+
     test('商品IDは App Store Connect に作るものと同じ', () {
+      expect(PurchaseService.legacyBoostId, 'baseball_manager_legacy_boost');
+      expect(PurchaseService.growthSupportId, 'baseball_manager_growth_support');
       expect(PurchaseService.removeAdsId, 'baseball_manager_remove_ads');
     });
   });

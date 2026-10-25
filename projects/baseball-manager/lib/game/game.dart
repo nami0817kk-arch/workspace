@@ -481,6 +481,9 @@ class Game {
   final Map<String, int> childhood = {};
   int restCount = 0;
 
+  /// 経験点の倍率(育成サポート=1.1。買ったかどうかは端末の記録なので、保存せず画面側が入れる)。
+  double expBoost = 1.0;
+
   /// 特殊能力のコツ(0〜`maxSkillTips`)。貯まるほど安く取れる。
   Map<Skill, int> skillTips = {};
 
@@ -592,6 +595,12 @@ class Game {
       if (streakBonus > 1 && gained[k] != null) {
         gained = {...gained, k: (gained[k]! * streakBonus).round()};
       }
+    }
+    // 育成サポート(買い切り)の経験点の上乗せ。保存はしない(画面側が毎回入れる)
+    if (expBoost != 1.0 && gained.isNotEmpty) {
+      gained = {
+        for (final e in gained.entries) e.key: (e.value * expBoost).round(),
+      };
     }
     if (difficulty != Difficulty.normal) {
       gained = {
@@ -889,6 +898,12 @@ class Game {
   // 通常の遊びでは使わない。上限(特性は4つまで)や矛盾(大器晩成と早熟など)も無視して書き換える。
 
   /// 素質(0〜100)を書き換える。
+  /// 動画を見た特典で、経験点を足す(使える種類すべてに `n`)。
+  void gainAdExp(int n) {
+    exp = exp.add(spreadExp(player.role, n));
+    log.add('動画を見て、自主練に励んだ。経験点 +$n(全種類)');
+  }
+
   /// 動画を見た特典で、疲れを大きく抜く(怪我は治さない)。保存する項目は増えない。
   void relieveFatigue() {
     condition = condition.copyWith(
