@@ -2437,6 +2437,20 @@ class _GoalRow extends StatelessWidget {
 }
 
 /// 結果を共有するための短い文章。
+/// 結果のコピーの特殊能力の行(「特殊能力5個(金特: 天才打者)」)。弱点は数えない。無ければ null。
+String? skillShareLine(Player p) {
+  final owned = [
+    for (final k in p.skills)
+      if (!k.negative) k
+  ];
+  if (owned.isEmpty) return null;
+  final gold = [
+    for (final k in owned)
+      if (k.gold) k.label
+  ];
+  return '特殊能力${owned.length}個${gold.isEmpty ? '' : '(金特: ${gold.join('・')})'}';
+}
+
 String endingShareText(Game game) {
   final e = game.ending!;
   final p = game.player;
@@ -2452,6 +2466,7 @@ String endingShareText(Game game) {
       '特性: ${[
         for (final t in p.traits) t.rare ? '★${t.label}' : t.label
       ].join('・')}${game.awakened ? '(覚醒)' : ''}',
+    if (skillShareLine(p) case final line?) line,
     if (pro.isNotEmpty)
       'プロ通算収入 ${fmtSalary(careerEarnings(pro))}(最終資産 ${fmtMoney(game.money)})',
     if (game.worldRecords.isNotEmpty)

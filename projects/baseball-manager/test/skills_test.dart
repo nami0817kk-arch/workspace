@@ -22,6 +22,25 @@ void _act(Game g, Plan p, [Ability? f]) {
 }
 
 void main() {
+  test('研究の対象のコツが満タンなら、研究は別の特殊能力に回る(空振りしない)', () {
+    final g = _game();
+    g.setStudyTarget(Skill.stealer);
+    expect(g.studyFocus(Ability.contact), Skill.stealer);
+    g.skillTips[Skill.stealer] = maxSkillTips;
+    final next = g.studyFocus(Ability.contact);
+    expect(next, isNotNull);
+    expect(next, isNot(Skill.stealer));
+    // 研究すると、満タンでない別の特殊能力にコツが入る
+    final before = Map.of(g.skillTips);
+    _act(g, Plan.study, Ability.contact);
+    final grew = [
+      for (final s in g.skillTips.keys)
+        if ((g.skillTips[s] ?? 0) > (before[s] ?? 0)) s
+    ];
+    expect(grew, isNotEmpty);
+    expect(grew, isNot(contains(Skill.stealer)));
+  });
+
   group('特殊能力', () {
     test('打者・投手で取れるものが分かれ、二刀流は両方', () {
       final bat = skillsFor(Role.batter).toSet();

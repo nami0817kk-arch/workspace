@@ -1,10 +1,12 @@
 // 能力タブの特殊能力の欄: 絞り込み(コツあり/すべて)・並べ替え・取りどきをまとめて取る(2026-10-25)。
 import 'dart:math';
 
+import 'package:baseball_manager/game/game.dart';
 import 'package:baseball_manager/game/player.dart';
 import 'package:baseball_manager/game/skills.dart';
 import 'package:baseball_manager/ui/app.dart';
 import 'package:baseball_manager/ui/controller.dart';
+import 'package:baseball_manager/ui/game_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -70,6 +72,28 @@ void main() {
     await t.pumpAndSettle();
     expect(g.player.skills.containsAll({Skill.stealer, Skill.chance}), isTrue);
     expect(g.player.skills, isNot(contains(Skill.powerHitter)));
+  });
+
+  testWidgets('おまかせ振り分けは、取りどきの特殊能力を先に取ってから能力に振る', (t) async {
+    final c = await _open(t);
+    final g = c.game!;
+    g.skillTips[Skill.stealer] = 4;
+    g.adminAddExp(500);
+    c.autoSpend();
+    expect(g.player.skills, contains(Skill.stealer));
+    expect(c.recent.any((l) => l.contains('盗塁')), isTrue);
+  });
+
+  test('結果のコピーに、特殊能力の数と金特が出る', () {
+    final g = Game.newGame(name: '写', role: Role.batter, rng: Random(1));
+    g.player = g.player.copyWith(
+        skills: {Skill.stealer, Skill.chance, Skill.strikeoutProne});
+    expect(skillShareLine(g.player), '特殊能力2個');
+    g.player = g.player.copyWith(skills: {Skill.strikeoutProne});
+    expect(skillShareLine(g.player), isNull);
+    final gold = skillsFor(Role.batter).firstWhere((k) => k.gold);
+    g.player = g.player.copyWith(skills: {Skill.stealer, gold});
+    expect(skillShareLine(g.player), '特殊能力2個(金特: ${gold.label})');
   });
 
   testWidgets('せまい画面(幅320)・大きい文字(1.6倍)でも、特殊能力の欄が溢れない', (t) async {

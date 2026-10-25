@@ -794,9 +794,13 @@ class Game {
   }
 
   /// 研究で次にコツが貯まる特殊能力(選んだもの、なければ重点の種類でコツの多いもの)。
+  /// 選んだもののコツが満タンなら、研究が無駄にならないよう自動で選ぶ。
   Skill? studyFocus(Ability focus) {
     final t = studyTarget;
-    if (t != null && !player.skills.contains(t) && t.appliesTo(player.role)) {
+    if (t != null &&
+        !player.skills.contains(t) &&
+        t.appliesTo(player.role) &&
+        (skillTips[t] ?? 0) < maxSkillTips) {
       return t;
     }
     return pickTipTarget(player, skillTips, Random(turnCount),

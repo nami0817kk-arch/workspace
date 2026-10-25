@@ -1236,9 +1236,17 @@ class GameController extends ChangeNotifier {
     _commit();
   }
 
+  /// おまかせ振り分け。取りどきの特殊能力(コツ3つ以上)を先に取り、残りを能力に振る
+  /// (先に能力へ使い切ると、半額近い特殊能力を取り逃すため)。
   void autoSpend() {
     final before = _ranks();
-    game!.autoSpend();
+    final g = game!;
+    final start = g.log.length;
+    while (g.skillsInSeason.isNotEmpty) {
+      if (g.buySkill(g.skillsInSeason.first) != null) break;
+    }
+    if (g.log.length > start) recent = g.log.sublist(start);
+    g.autoSpend();
     _noteRankUps(before);
     _commit();
   }
@@ -1293,6 +1301,14 @@ class GameController extends ChangeNotifier {
         ...lines.reversed.take(8).toList().reversed,
       ];
       toast = recent.first;
+      // 進めている間に取りどきになった特殊能力は、最後にまとめて知らせる(8行に押し出されないように)
+      final ready = g.skillsInSeason;
+      if (ready.isNotEmpty) {
+        final note =
+            '「${ready.map((k) => k.label).join('」「')}」が取りどき!(能力タブで取れる)';
+        recent = [...recent.where((l) => !l.contains('が取りどき!')), note];
+        toast = '${recent.first}\n$note';
+      }
       notifyListeners();
     }
   }
