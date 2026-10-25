@@ -29,12 +29,13 @@ no_tag_from: 183                       # 最後の余韻（この行から）と
 
 # AI 絵（16:9 横・25枚。10-25 にそろった：main_art_dir）。stand_in は届く前の仮の縦の絵。
 # crops＝切り出しの名前ごとの [倍率, 中心x, 中心y]（人物の位置に合わせる）、lock＝この切り出しだけ使う、soften＝上の遠景を暗くぼかす（暗さ）
+# pan＝カットの中の動き（10-25）：h＝左右に流す（既定。城下・戦場・行列・廊下）、v＝上下に流す（全身・天守）、zoom＝ゆっくり寄る（顔の感情の場面だけ）
 ai:
-  A01: {scene: 北ノ庄城の夜。篝火に囲まれた天守の遠景, stand_in: S1, horizontal_of: S1}
+  A01: {scene: 北ノ庄城の夜。篝火に囲まれた天守の遠景, stand_in: S1, horizontal_of: S1, pan: v}
   A02: {scene: 天守の大広間の最後の酒宴。灯の下で杯を交わす家臣たち（顔は小さく）, stand_in: S1}
-  A03: {scene: お市・決意の表情（胸から上・薄暗い城内）, stand_in: P6, horizontal_of: P6}
+  A03: {scene: お市・決意の表情（胸から上・薄暗い城内）, stand_in: P6, horizontal_of: P6, pan: zoom}
   A04: {scene: お市・うつむく（城内、遠くに炎）, stand_in: P2, horizontal_of: P2, crops: {right: [1.15, 0.55, 0.45], face: [1.25, 0.36, 0.40]}}
-  A05: {scene: お市・涙をこらえる寄り, stand_in: P5c, horizontal_of: P5c, lock: [1.0, 0.5, 0.40]}
+  A05: {scene: お市・涙をこらえる寄り, stand_in: P5c, horizontal_of: P5c, lock: [1.0, 0.5, 0.5], pan: h}   # 寄るとあごが字幕にかかるので左右に流す
   A06: {scene: お市・窓辺で燃える城下を見る横顔（P4 より若い顔で作り直し）, stand_in: P4, horizontal_of: P4（作り直し）, crops: {left: [1.15, 0.40, 0.45], face: [1.25, 0.68, 0.40]}}
   A07: {scene: 1567年 輿入れの行列が山の城へ向かう（秋・遠景）, stand_in: S2}
   A08: {scene: 小谷城の尾根と、琵琶湖の北の平野（俯瞰の風景・人物なし）, stand_in: S3}
@@ -43,17 +44,17 @@ ai:
   A11: {scene: 1573年 夜の山城を囲む大軍の篝火, stand_in: S1}
   A12: {scene: 1573年 城の一室で赤子を抱くお市と幼い娘2人, stand_in: P2, crops: {wide: [1.12, 0.55, 0.66], left: [1.18, 0.50, 0.66], right: [1.18, 0.60, 0.66], face: [1.25, 0.55, 0.62]}}   # 子どもの顔が下の方にあるので、切り出しを下へ
   A13: {scene: 本丸の長政（武将の後ろ姿）が妻に告げる。お市は向き合う, stand_in: P1}
-  A14: {scene: 夜明けの城門を、赤子を抱いたお市と幼い娘2人が出ていく（後ろ姿）, stand_in: S2}
+  A14: {scene: 夜明けの城門を、赤子を抱いたお市と幼い娘2人が出ていく（後ろ姿）, stand_in: S2, pan: v}
   A15: {scene: 十年の暮らし。屋敷の庭で育つ3人の娘（後ろ姿・遠景）, stand_in: S4}
-  A16: {scene: 1582年 知らせを聞いて立ち尽くすお市, stand_in: P2, crops: {face: [1.25, 0.32, 0.40], right: [1.15, 0.50, 0.45]}}
+  A16: {scene: 1582年 知らせを聞いて立ち尽くすお市, stand_in: P2, crops: {face: [1.25, 0.32, 0.40], right: [1.15, 0.50, 0.45]}, pan: v}
   A17: {scene: 1582年 越前へ向かう輿の列（雪の残る山道）, stand_in: S3, lock: [1.15, 0.45, 0.68], soften: 0.55}
   A18: {scene: 1583年 霧の戦場に向き合う旗の列（賤ヶ岳）, stand_in: S3, horizontal_of: S3}
   A19: {scene: 板廊下を行く娘3人と、奥の武士の影, stand_in: S4, horizontal_of: S4}
   A20: {scene: 母が娘3人を送り出す。お市の後ろ姿と、遠ざかる娘たち, stand_in: S4}
   A21: {scene: 覚書を書き留める女房の手元（巻紙・筆・灯）, stand_in: P1, lock: [1.22, 0.35, 0.35]}
   A22: {scene: 1615年 炎上する大坂城の遠景, stand_in: S1}
-  A23: {scene: 1615年 知らせを聞く江の後ろ姿（徳川の屋敷）, stand_in: S4}
-  A24: {scene: 光の門を出ていく娘3人の後ろ姿, stand_in: S2, horizontal_of: S2}
+  A23: {scene: 1615年 知らせを聞く江の後ろ姿（徳川の屋敷）, stand_in: S4, pan: v}
+  A24: {scene: 光の門を出ていく娘3人の後ろ姿, stand_in: S2, horizontal_of: S2, pan: v}
   A25: {scene: 終了画面用。月夜の北ノ庄の城跡と静かな川（右半分を空けた構図）, stand_in: S1, lock: [1.0, 0.5, 0.5]}
 
 # 実在の絵の手当て（元の画像は変えない）：crop＝切り出し（幅・高さの割合 [左, 上, 右, 下]）、bright・contrast＝明るさ・コントラストの倍率
@@ -235,6 +236,36 @@ focus:
   paintings/nene_ieyasu_portrait.jpg: {家康: [1.7, 0.5, 0.58]}
   paintings/hideyori_senhime_portrait.jpg: {千姫: [1.6, 0.47, 0.3]}
   paintings/oichi_nagamasa_kuniyoshi.jpg: {長政|小豆: [1.5, 0.4, 0.45]}
+
+# 絵の一部だけを動かす効果（10-25 ユーザー「Bもやろう」。chiso/storymain.py の FX）。話に関係のある場面の絵だけ、控えめに。
+#   fire＝明るい暖色の所（色で自動で選ぶ）の明るさを1〜3Hzでゆらす・sparks＝その近くから火の粉が舞い上がる・lamp＝灯のにじみを0.5〜2Hzでちらつかせる
+#   smoke／mist＝薄い層をゆっくり横に流す・water＝水面の映りを揺らす。region＝[左, 上, 右, 下]（絵の幅・高さの割合）で範囲をしぼる
+fx:
+  A01: {fire: {}, sparks: {count: 45}}
+  A06: {fire: {region: [0, 0, 0.5, 1]}, sparks: {count: 40}, smoke: {region: [0, 0, 0.5, 0.55], alpha: 0.10, speed: 9}}
+  A22: {fire: {}, sparks: {count: 55}, smoke: {region: [0, 0, 1, 0.55], alpha: 0.10, speed: 8}}
+  A11: {fire: {}, sparks: {count: 25}}
+  A04: {fire: {region: [0.62, 0, 1, 0.62]}, sparks: {count: 15}, lamp: {region: [0.42, 0.25, 0.62, 0.75]}}
+  A10: {lamp: {region: [0.25, 0.25, 0.55, 0.8]}}
+  A12: {lamp: {region: [0.75, 0.3, 0.98, 0.9]}}
+  A16: {lamp: {region: [0, 0.45, 0.3, 0.95]}}
+  A21: {lamp: {region: [0, 0, 0.45, 0.7]}}
+  A14: {mist: {region: [0.2, 0.68, 0.8, 0.98], alpha: 0.18, speed: 7, color: [225, 228, 235]}}   # 足もとの朝霧だけ（人物にはかけない）
+  A18: {mist: {region: [0, 0.25, 1, 0.8], alpha: 0.12, speed: 6}}
+  A25: {water: {region: [0.62, 0.72, 0.9, 0.98], amp: 2.0}}
+
+# 部品（10-25 screen_parts_1025.md。chiso/storymain.py の draw_quote_card・draw_versus_boxes・draw_name_cards・draw_doc_page）。
+# from〜to の行のあいだ出す（行の番号は台本の行の順、0 始まり）。出ている間は絵を図の間と同じだけ暗くする（dim: false で切れる）
+parts:
+  - {type: names, from: 16, to: 17, title: この物語で覚えてほしい名前, every: 0.7,
+     items: [[お市の方, 二度の落城を生きた, paintings/oichi_portrait_jimyoin_bust.jpg],
+             [柴田勝家, 二人目の夫, paintings/oichi_katsuie_portrait.jpg, [0.45, 0.5]],
+             [茶々・初・江, 送り出された三人の娘, paintings/oichi_chacha_yodo_portrait.jpg, [0.45, 0.62]]]}
+  - {type: quote, from: 93, to: 93, label: 史料, text: 城を出られよ, source: 『柴田合戦記』（今の言葉にしたもの）}
+  - {type: quote, from: 123, to: 123, label: 史料, text: どうして、今度も／逃げ出すことができましょう, source: 『渓心院文』（今の言葉にしたもの）}
+  - {type: quote, from: 146, to: 146, label: 要点, text: 逃げたことを悔やみ、／二度目は逃げないと決めた, source: 記録の側に残るお市}
+  - {type: versus3, from: 153, to: 153, every: 1.2,
+     items: [[初の結婚・一説, 1584年], [初の結婚・別の説, 1587年], [黒田基樹さんの見方, 初1584・江1585]]}
 
 stills:
   - {line: 0, note: 冒頭（0秒）北ノ庄の夜}
