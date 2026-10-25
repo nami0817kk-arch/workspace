@@ -55,6 +55,16 @@ SCENES = [
     ('07_result', "__start('m');for(var r=1;r<=NROUND;r++){__round();__judge();S.call.n=S.call.order.length;S.call.done=true;if(!ROUNDS[r].fin)nextRound(S);}"
                   "applyFarewell(S);startPrep(S);S.prep.leader=S.tr.filter(function(t){return t.status==='debut';})[0].id;startMonth(S);"
                   "['tv','mv','rest','tv'].forEach(function(k){weekDo(S,k);});finishMonth(S);S.ending=false;"),
+    # 2026-10-25 1.0.1 の掲載画像：見せ場を足す
+    ('08_crit', "__start('m');alive(S).forEach(function(t,i){if(i%3)t.temperRev=true;});applyPlan(S);applyLesson(S);S.ap=0;afterTalk(S);"
+                "if(S.phase==='interview')applyInterview(S);while(S.phase==='event'){resolveEvent(S,0);nextEvent(S);}S.phase='stage';applyFeature(S);"
+                "S.phase='critique';alive(S).forEach(function(t){var b=critBest(t);if(b>=0)S.crit[t.id]=b;});"),
+    ('09_ending', "__start('f');for(var r=1;r<=NROUND;r++){__round();__judge();S.call.n=S.call.order.length;S.call.done=true;if(!ROUNDS[r].fin)nextRound(S);}"
+                  "applyFarewell(S);startPrep(S);S.prep.leader=S.tr.filter(function(t){return t.status==='debut';})[0].id;startMonth(S);"
+                  "['tv','mv','rest','tv'].forEach(function(k){weekDo(S,k);});finishMonth(S);S.ending=true;ui.endPause=true;ui.endY=-900;",
+     "var rl=document.querySelector('.ending .roll');if(rl){ui.endPause=true;ui.endY=-900;rl.style.transform='translateY(-900px)';}"),
+    ('10_enddex', "S=null;ui.tsub='rec';var c=loadCareer();c.seasons=c.seasons||9;c.endings={};ENDS.slice(0,9).forEach(function(e,i){c.endings[e.k]={s:i+1,g:'ルミナス',gr:'A'};});saveCareer(c);",
+     "var d=document.querySelector('.edex details');if(d){d.open=true;d.closest('.edex').scrollIntoView({block:'start'});window.scrollBy(0,-70);}"),
 ]
 # 課金アイテムの審査用：値段の付いた「広告を消す」ボタンが写った1枚（iPhone の寸法。値段は日本の価格の目安）
 IAP_SHOT = ('3_課金審査用', 'remove_ads', "S=null;ui.tsub=null;APP.price='¥370';APP.canBuy=true;")
@@ -112,13 +122,17 @@ async def shoot():
                 (OUT / dev).mkdir(parents=True, exist_ok=True)
                 await tab.call('Emulation.setDeviceMetricsOverride', width=w, height=h, deviceScaleFactor=dpr, mobile=True)
                 scenes = SCENES + ([IAP_SHOT[1:]] if dev.startswith('1_') else [])
-                for name, setup in scenes:
+                for sc in scenes:
+                    name, setup, after = (list(sc) + [''])[:3]
                     await tab.call('Page.navigate', url=f'http://127.0.0.1:{PORT}/index.html')
                     for _ in range(100):
                         if await tab.js("typeof render==='function'&&document.readyState==='complete'"):
                             break
                         await asyncio.sleep(.1)
                     await tab.js("ui.tipsOff=true;ui.quick=false;ui.set.fs='%s';applySet();" % fs + PLAY + setup + "render();window.scrollTo(0,0);true")
+                    if after:
+                        await asyncio.sleep(1.2)
+                        await tab.js(after + ";true")
                     await asyncio.sleep(2.2)  # 入りの動き・アイキャッチ・顔の絵が落ち着くまで
                     bad = await tab.js("var t=document.body.innerText;['テスト版','読み込んでいます','問題が起きました','undefined','NaN','¥','円で買う'].filter(function(x){return t.indexOf(x)>=0;})")
                     if name == IAP_SHOT[1]:
