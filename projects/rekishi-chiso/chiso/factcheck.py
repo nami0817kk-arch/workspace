@@ -125,7 +125,7 @@ def check(script, text: str, research_dir: Path) -> list[str]:
                 continue
             strong = bool(card.get("opened_body")) or int(card.get("independent", 0)) >= 2
             if not strong and not any(h in line_text for h in HEDGES):
-                warns.append(f"事実：{row} の {fid} は本文を開いておらず出どころも{card.get('independent', 0)}つだけ。"
+                warns.append(f"事実：{row} の {fid} は本文を開いておらず、独立した出どころは{card.get('independent', 0)}つ。"
                              f"「と伝わります」の言い方にするか、出どころをもう1つ探す")
             if card.get("unknown") in ("中", "高"):
                 unknown_rows.append(t0[idx])
