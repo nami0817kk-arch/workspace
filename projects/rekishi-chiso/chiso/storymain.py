@@ -1700,3 +1700,150 @@ def draw_doc_page(lay: Image.Image, part: dict, page: Image.Image, font_of) -> N
     if part.get("source"):
         f = font_of(22)
         d.text((MW - 30, 90), str(part["source"]), font=f, fill=(255, 255, 255, 230), anchor="ra")
+
+
+# --- 投稿の準備（10-25：物語型の本編の概要欄・目次・字幕は storymain の並びから）-------------------------------
+DEFAULT_AI_NOTE = ("この動画の人物・情景の画像の多くは、Google の画像生成AI（Gemini）で作った想像上のイメージで、"
+                   "記録映像・実在の写真ではありません（画面の右上に「AI生成画像」と出しています）。")
+
+
+def look_for(script_path) -> Path | None:
+    """台本に対応する見た目の指定（scripts/story/*_main_look.yaml の script: がその台本）。無ければ None（旧型の本編）。"""
+    from .cli import ROOT
+    name = Path(script_path).name
+    for p in sorted((ROOT / "scripts" / "story").glob("*_main_look.yaml")):
+        try:
+            d = yaml.safe_load(p.read_text(encoding="utf-8")) or {}
+        except Exception:
+            continue
+        if Path(str(d.get("script", ""))).name == name:
+            return p
+    return None
+
+
+def timeline(look_path, config: dict) -> "Plan":
+    """本物の声の長さ（音声の控えから）で決めた並び。書き出しと同じ Plan。"""
+    from . import script
+    from .cli import ROOT
+    look = yaml.safe_load(Path(look_path).read_text(encoding="utf-8"))
+    sc = script.load(ROOT / look["script"])
+    spoken = voice_lines(sc, config)
+    return Plan(look, sc, [s.seconds for s in spoken])
+
+
+def _clock(t: float) -> str:
+    t = int(t)
+    h, rest = divmod(t, 3600)
+    m, s = divmod(rest, 60)
+    return f"{h}:{m:02}:{s:02}" if h else f"{m}:{s:02}"
+
+
+def chapters(plan: "Plan") -> list[str]:
+    """概要欄の目次。序章は 0:00、ほかの章は章題カードの出る時刻（書き出しと同じ並び）。"""
+    titles = [s.title.replace("　", " ") for s in plan.sc.sections]
+    out = [f"0:00 {titles[0]}"]
+    for sec in sorted(plan.chapter_at):
+        out.append(f"{_clock(plan.chapter_at[sec])} {titles[sec]}")
+    return out
+
+
+def chapter_problems(plan: "Plan") -> list[str]:
+    """YouTube の章の決まり（0:00 から・3つ以上・各10秒以上）に合わない所。"""
+    starts = [0.0] + [plan.chapter_at[s] for s in sorted(plan.chapter_at)]
+    out = []
+    if len(starts) < 3:
+        out.append(f"章が{len(starts)}つしかありません（3つ以上）")
+    for i, (a, b) in enumerate(zip(starts, starts[1:] + [plan.total])):
+        if b - a < 10:
+            out.append(f"{i + 1}つ目の章が{b - a:.0f}秒しかありません（10秒以上）")
+    return out
+
+
+def srt(plan: "Plan") -> str:
+    """字幕（画面の語りの文字と同じかたまり・同じ時刻）。想像の台詞は頭に（想像）。"""
+    out = []
+    units = plan.units
+    for n, u in enumerate(units, 1):
+        nxt = units[n].start if n < len(units) else u.end + 0.5
+        end = min(nxt, u.end + 0.6)
+        line = plan.sc.lines[u.line]
+        text = "\n".join(S.screen_plain("".join(x.text for x in row)) for row in u.block.rows)
+        if line.imagined:
+            text = "（想像）" + text
+        out.append(f"{n}\n{_srt_clock(u.start)} --> {_srt_clock(end)}\n{text}\n")
+    return "\n".join(out)
+
+
+def _srt_clock(t: float) -> str:
+    ms = int(round(t * 1000))
+    h, ms = divmod(ms, 3600000)
+    m, ms = divmod(ms, 60000)
+    s, ms = divmod(ms, 1000)
+    return f"{h:02}:{m:02}:{s:02},{ms:03}"
+
+
+def voice_names(config: dict, sc) -> list[str]:
+    """この台本で実際に話している声だけ（物語型はつむぎが話さないので出さない）。"""
+    from . import people
+    names = []
+    roles = people.roles(config)
+    for line in sc.lines:
+        info = (config.get("cast") or {}).get(line.speaker) or roles.get(line.speaker) or {}
+        n = info.get("name")
+        if n and n not in names:
+            names.append(n)
+    return names
+
+
+def description(plan: "Plan", config: dict) -> str:
+    """物語型の本編の概要欄：物語の頭 → 目次 → 台詞の断り → 画像の断り → 実在の絵の出典 → 音声 → 運営。5000字に収める。"""
+    from .cli import DESC_ROOM, assets_dir
+    from urllib.parse import unquote
+    sc, look = plan.sc, plan.look
+    out = []
+    if sc.description_head:
+        out += [sc.description_head.strip(), ""]
+    out += ["■ 目次"] + chapters(plan) + [""]
+    if sc.description_note:
+        out += ["■ この動画の台詞について", sc.description_note.strip(), ""]
+    out += ["■ 画像について", str(look.get("ai_disclosure") or DEFAULT_AI_NOTE).strip(), ""]
+    refs = []
+    for c in plan.cuts:                                  # 書き出しで使った実在の絵（額・屏風の一部）と部品の肖像
+        if c.kind in ("frame", "part") and c.ref not in refs:
+            refs.append(c.ref)
+    for part in look.get("parts") or []:
+        for it in part.get("items") or []:
+            if part.get("type") == "names" and len(it) > 2 and it[2] and it[2] not in refs:
+                refs.append(it[2])
+    credits_by_image = {}
+    for line in sc.lines:
+        for pic in (line.background, line.portrait):
+            if pic and pic.image not in credits_by_image:
+                credits_by_image[pic.image] = pic.credit or pic.caption
+    cf = assets_dir(config) / "paintings" / "credits.json"
+    cr = json.loads(cf.read_text(encoding="utf-8")) if cf.exists() else {}
+    rows, seen, cc0 = [], set(), 0                       # 1作品1行「作品名（所蔵・年）　URL」。許諾が違うもの（CC0）だけ末尾に（10-25「出典はまとめて」）
+    for r in refs:
+        lab = credits_by_image.get(r) or Path(r).stem
+        info = cr.get(Path(r).stem) or {}
+        url = unquote(info.get("source", ""))
+        if (url and url in seen) or lab in seen:
+            continue
+        seen.update({url, lab} - {""})
+        mark = ""
+        if "CC0" in str(info.get("license", "")) or "CC0" in lab:
+            mark, cc0 = " （CC0）", cc0 + 1
+            lab = lab.replace("（CC0）", "").rstrip()
+        rows.append(f"{lab}　{url}{mark}" if url else f"{lab}{mark}")   # URL のすぐ後ろに字を付けない（リンクが壊れる）
+    tail = ["■ 音声"] + [f"VOICEVOX:{n}" for n in voice_names(config, sc)] + ["", f"運営：{config.get('operator', '')}"]
+    head = "■ 画面の絵と出典（Wikimedia Commons。著作権の切れた作品" + (f"、写真{cc0}点は CC0）" if cc0 else "）")
+    room = DESC_ROOM - len("\n".join(out + tail)) - len(head) - 4
+    pics, used = [head], 0
+    for k, row in enumerate(rows):
+        if used + len(row) + 1 > room:
+            pics.append(f"ほか{len(rows) - k}点（Wikimedia Commons）")
+            break
+        pics.append(row)
+        used += len(row) + 1
+    body = out + (pics + [""] if rows else []) + tail
+    return "\n".join(body).strip() + "\n"

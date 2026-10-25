@@ -825,9 +825,38 @@ def full_description(sc, config, cues, keywords: bool = True) -> str:
     return text + ("\n" + line + "\n" if line else "")
 
 
+def story_main_parts(path: Path, config) -> tuple | None:
+    """物語型の本編（scripts/story/*_main_look.yaml がある台本）なら (概要欄, 字幕の道のり, 並び)。旧型なら None。
+    目次・字幕の時刻は storymain の実際の並び（章題カード・本物の声の長さ）から出す（旧型の描画の時刻とは食い違うため。10-25）。"""
+    from . import storymain
+    look = storymain.look_for(path)
+    if look is None:
+        return None
+    plan = storymain.timeline(look, config)
+    for prob in storymain.chapter_problems(plan):
+        print(f"  ! 章：{prob}")
+    srt_p = out_dir() / f"{path.stem}.srt"
+    srt_p.write_text(storymain.srt(plan), encoding="utf-8")
+    return storymain.description(plan, config), srt_p, plan
+
+
+def synthetic_media_of(path: Path, sc) -> bool:
+    """AI の絵を使う動画か（containsSyntheticMedia を付ける）：物語型（story: true）か、台本の ai_images: true。"""
+    raw = yaml.safe_load(Path(path).read_text(encoding="utf-8")) or {}
+    return bool(getattr(sc, "story", False) or raw.get("ai_images"))
+
+
 def cmd_describe(args) -> int:
     config = load_config()
     sc = script_mod.load(args.script)
+    story = story_main_parts(Path(args.script), config)
+    if story is not None:
+        text = story[0]
+        target = out_dir() / f"{sc.path.stem}_description.txt"
+        target.write_text(text, encoding="utf-8")
+        print(text)
+        print(f"（物語型の本編：目次と字幕は storymain の並びから。字幕 {story[1].name}・{len(text)}字）")
+        return 0
     cues = []
     if not args.no_voice:
         cues, _ = synthesize(sc, config)
@@ -1061,13 +1090,18 @@ def cmd_upload(args) -> int:
         print(f"もう投稿してあります: https://youtu.be/{done['video_id']}（{done['publish_at']}）")
         return 1
     publish_at = up.publish_time(args.at)
-    cues, _ = synthesize(sc, config)
-    desc = full_description(sc, config, cues)
+    story = story_main_parts(path, config)
+    if story is not None:                                 # 物語型の本編：概要欄・目次・字幕は storymain の並びから
+        desc, srt_story, _plan = story
+    else:
+        cues, _ = synthesize(sc, config)
+        desc = full_description(sc, config, cues)
+    synthetic = synthetic_media_of(path, sc)
     thumb_p = out_dir() / f"{path.stem}_thumbnail.png"
     if not thumb_p.exists():
         from . import thumb
         thumb.make(sc, config, assets_dir(config), work_dir(sc)).save(thumb_p)
-    srt = out_dir() / f"{path.stem}.srt"
+    srt = srt_story if story is not None else out_dir() / f"{path.stem}.srt"   # 無ければ字幕なしで上がる（upload は有るときだけ付ける）
     tags = list(dict.fromkeys(TAGS + list(sc.tags) + [x for x in (sc.series, sc.thumbnail.get("name", "")) if x]))
     from . import channel
     loc = channel.localizations(sc.en, desc) if sc.en else None     # 章の数の食い違いは投稿の前に止める
@@ -1075,7 +1109,9 @@ def cmd_upload(args) -> int:
     if svc is None:
         return 2
     print(f"投稿します：{sc.title}"); print(f"  公開 {args.at}（日本時間）")
-    vid = up.upload(svc, video, sc.title, desc, tags, publish_at, thumb_p, srt, localizations=loc)
+    if synthetic:
+        print("  改変・合成されたコンテンツ（containsSyntheticMedia）を申告します")
+    vid = up.upload(svc, video, sc.title, desc, tags, publish_at, thumb_p, srt, localizations=loc, synthetic_media=synthetic)
     up.record(log, {"key": key, "video_id": vid, "title": sc.title, "publish_at": args.at})
     print(f"予約しました: https://youtu.be/{vid}")
     _into_playlists(svc, sc.playlists, key, vid)
