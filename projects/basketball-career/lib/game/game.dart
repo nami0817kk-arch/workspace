@@ -14,6 +14,7 @@ import 'path.dart';
 import 'player.dart';
 import 'rival.dart';
 import 'skills.dart';
+import 'special.dart';
 import 'season.dart';
 import 'traits.dart';
 
@@ -221,6 +222,7 @@ class Game {
     List<YearRecord>? records,
     this.dream = Dream.pro,
     this.dreamAge = 0,
+    this.sp = 0,
     Map<Ability, int>? yearStart,
   })  : rng = rng ?? Random(),
         rival = rival ?? Rival(name: 'ライバル', potential: 60),
@@ -411,6 +413,21 @@ class Game {
   final Dream dream;
   int dreamAge;
 
+  /// 特殊能力ポイント(年末にたまる。`learnSpecial` で使う。保存あり)。
+  int sp;
+
+  /// 直前の年末に得たポイント(画面が見せたら使い終わり。保存しない)。
+  int lastSpGain = 0;
+
+  /// 特殊能力を習得する。ポイントと前提が足りなければ `StateError`。
+  void learnSpecial(Special s) {
+    if (phase == Phase.retired) throw StateError('引退後は習得できない');
+    final why = whyNot(player.specials, sp, s);
+    if (why != null) throw StateError('習得できない: ${s.label}($why)');
+    sp -= s.cost;
+    player = player.copyWith(specials: {...player.specials, s});
+  }
+
   /// 直前の操作で夢がかなった知らせ(画面が知らせたら使い終わり。保存しない)。
   String? lastDreamNote;
 
@@ -457,13 +474,14 @@ class Game {
   void _checkDream() {
     if (dreamAge > 0 || !dream.achieved(dreamStats)) return;
     dreamAge = player.age;
+    sp += dreamSp;
     player = player.copyWith(abilities: {
       for (final e in player.abilities.entries)
         e.key: (e.value + Dream.rewardAbilityBonus).clamp(0, 100),
     });
     condition = condition.copyWith(morale: condition.morale + Dream.rewardMorale);
     lastDreamNote =
-        '夢「${dream.label}」がかなった! ごほうび: 全能力 +${Dream.rewardAbilityBonus}、気持ち +${Dream.rewardMorale}';
+        '夢「${dream.label}」がかなった! ごほうび: 全能力 +${Dream.rewardAbilityBonus}、気持ち +${Dream.rewardMorale}、特殊能力ポイント +$dreamSp';
   }
 
   /// 目指すプレースタイルを選ぶ・変える(null でおまかせ)。育成中いつでも変えられる。
@@ -599,7 +617,8 @@ class Game {
       (player.position == Position.pointGuard ? 1.4 : 1.0) +
       player.skills.fold(0.0, (s, k) => s + k.teamBonus) +
       traitTeamBonus(player.traits) +
-      buildTeamBonus(player);
+      buildTeamBonus(player) +
+      specialTeamBonus(player.specials);
 
   /// 冬の大会(全国選手権)がある段階。高校と大学・実業団。
   bool get hasWinterCup => stage == Stage.highSchool || stage == Stage.college;
@@ -645,6 +664,7 @@ class Game {
     lastBuildNote = null;
     lastDreamNote = null;
     lastYearSummary = null;
+    lastSpGain = 0;
     lastCareerLines = const [];
     lastMetRival = false;
     lastNewSkills = {};
@@ -681,7 +701,7 @@ class Game {
               Action.scrimmage => 6,
               _ => 0,
             } -
-            teamworkDecay(player.traits))
+            specialTeamworkDecay(player.specials, teamworkDecay(player.traits)))
         .clamp(0, 100);
     if (action == Action.practice || action == Action.intense) {
       coachBond = (coachBond + 1).clamp(0, 100);
@@ -699,6 +719,8 @@ class Game {
         final cr = TournamentRun(national ? League.national : league,
             teamBonus: teamBonus + schoolBonus,
             scout: scoutBonus,
+            zones: player.specials.contains(Special.zone) ? 1 : 0,
+            momentumMul: specialMomentumMultiplier(player.specials),
             askHalftime: askHalftime && chooseClutch == null);
         cr.advance(
           player,
@@ -747,6 +769,19 @@ class Game {
     cr.pending = s.withTimeout();
   }
 
+  /// 勝負どころで、ゾーン(特殊能力)に入る(習得していて、この大会でまだ使っていないときだけ。成功率+12%)。
+  void useZone() {
+    final cr = run;
+    final s = cr?.pending;
+    if (phase != Phase.clutch || cr == null || s == null) {
+      throw StateError('今は勝負どころではない: $phase');
+    }
+    if (s.zone) throw StateError('この試合ではもうゾーンに入っている');
+    if (cr.zones <= 0) throw StateError('ゾーンは使えない');
+    cr.zones--;
+    cr.pending = s.withZone();
+  }
+
   /// ハーフタイムで止まっている試合に、選んだ作戦を渡して続きを進める。
   TermReport resolveHalftime(Halftime choice) {
     final cr = run;
@@ -782,7 +817,8 @@ class Game {
       oppStrength: s.oppStrength,
       chances: {
         for (final c in Clutch.values)
-          c: clutchChance(player, c, s.oppStrength, s.form, timeout: s.timeout),
+          c: clutchChance(player, c, s.oppStrength, s.form,
+              timeout: s.timeout, zone: s.zone),
       },
     );
   }
@@ -988,6 +1024,12 @@ class Game {
     _evaluateGoal();
     _checkDream();
     lastYearSummary = _yearSummary();
+    // 特殊能力ポイント: 毎年1、目標達成+1、優勝+1。
+    lastSpGain = spForYear(
+      goalAchieved: lastGoalMessage?.startsWith('目標達成') ?? false,
+      champion: records.any((r) => r.age == player.age && r.champion),
+    );
+    sp += lastSpGain;
     if (track == Track.pro) totalEarnings += salary + sponsor; // その年の年俸とスポンサー収入
     growthLog.add(GrowthPoint(player.age, player.overall, player.heightCm));
     final stageBefore = stage;
@@ -1366,6 +1408,7 @@ class Game {
         'caps': caps,
         'dream': dream.name,
         'dreamAge': dreamAge,
+        'sp': sp,
         'yearStart': {for (final e in yearStart.entries) e.key.name: e.value},
         'number': number,
         'mate': mate,
@@ -1432,6 +1475,7 @@ class Game {
         caps: (j['caps'] as num?)?.toInt() ?? 0,
         dream: Dream.parse(j['dream'] as String?),
         dreamAge: (j['dreamAge'] as num?)?.toInt() ?? 0,
+        sp: (j['sp'] as num?)?.toInt() ?? 0,
         mate: (j['mate'] as String?) ?? '',
         coachLabel: (j['coachLabel'] as String?) ?? '',
         rivalMet: (j['rivalMet'] as bool?) ?? (((j['rival'] as Map?)?['wins'] as num? ?? 0) + ((j['rival'] as Map?)?['losses'] as num? ?? 0) > 0),

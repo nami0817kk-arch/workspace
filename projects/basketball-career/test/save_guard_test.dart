@@ -49,6 +49,8 @@ String fingerprint(Game g) => jsonEncode({
       'dream': g.dream.name,
       'style': g.player.style?.name,
       'dreamAge': g.dreamAge,
+      'sp': g.sp,
+      'specials': [for (final x in g.player.specials) x.name],
       'yearStart': [for (final a in Ability.values) g.yearStart[a]],
       'nat': g.nationalPending,
       'draft': g.draftPick,

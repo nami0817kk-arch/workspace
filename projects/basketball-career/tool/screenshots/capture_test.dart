@@ -28,6 +28,7 @@ import 'package:basketball_career/game/build.dart';
 import 'package:basketball_career/game/collection.dart';
 import 'package:basketball_career/game/honors.dart';
 import 'package:basketball_career/game/skills.dart';
+import 'package:basketball_career/game/special.dart';
 import 'package:basketball_career/game/traits.dart';
 import 'package:basketball_career/game/game.dart';
 import 'package:basketball_career/game/life.dart';
@@ -382,6 +383,20 @@ void main() {
     await _shoot(t, '08_style', '目指す選手を、自分で選ぶ', _controller(st), orange,
         act: (t) async {
       await t.tap(find.text('型を選ぶ'));
+      await t.pump(const Duration(milliseconds: 400));
+    });
+
+    // 9. 特殊能力: ポイントを使って、好きな能力を選んで習得する画面。
+    final sg = Game.start('ミナト', rng: Random(11), events: false, style: Build.sharpshooter);
+    _play(sg, untilAge: 14);
+    while (sg.slot != 0 && sg.phase == Phase.season) {
+      sg.choose(Action.rest, recommendedFocus(sg.player));
+    }
+    sg.sp = 9;
+    sg.learnSpecial(Special.calm);
+    await _shoot(t, '09_special', '特殊能力を選んで習得', _controller(sg), green,
+        act: (t) async {
+      await t.tap(find.text('習得できる!'));
       await t.pump(const Duration(milliseconds: 400));
     });
   });

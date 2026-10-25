@@ -86,7 +86,7 @@ A rival stands in your way almost every year. Pick your school, win a pro contra
 
 All leagues, teams, players and tournaments are fictional. Contains ads. The in-app purchase Remove Ads turns off full-screen ads and lets you recover without watching videos.
 
-## スクリーンショット（iPhone 1206x2622・iPad 13インチ 2064x2752 の2組、各8枚。最初の3枚が検索結果に出る）
+## スクリーンショット（iPhone 1206x2622・iPad 13インチ 2064x2752 の2組、各9枚。最初の3枚が検索結果に出る）
 
 `tool/screenshots/capture_test.dart` が作る（iPhone は `flutter test tool/screenshots/capture_test.dart`、iPad は `DEVICE=ipad` を付ける）。出力は `marketing/screenshots/iphone/` と `ipad/`。
 
@@ -98,6 +98,7 @@ All leagues, teams, players and tournaments are fictional. Contains ads. The in-
 6. 「集めて埋める、図鑑」 … 殿堂の図鑑（タイトル・ビルド・特性・得意技）
 7. 「称号と殿堂が物語を残す」 … エンディング
 8. 「目指す選手を、自分で選ぶ」 … プレースタイル(ビルド)を選ぶダイアログ
+9. 「特殊能力を選んで習得」 … 特殊能力の習得画面(前提・必要ポイント)
 
 **撮るときの決まり**（`docs/app-pitfalls.md` #4・Apple 2.3.2・2.3.7）:
 - 読み込み中の画面を撮らない。撮るたびに `CircularProgressIndicator` が無いこと・文字が一定数あることを検査する。画像（絵・アイコン）の読み込みも待ってから撮る。

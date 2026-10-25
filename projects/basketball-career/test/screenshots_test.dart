@@ -17,18 +17,18 @@ void main() {
   };
 
   for (final e in expected.entries) {
-    test('${e.key}の掲載画像は ${e.value.$1}x${e.value.$2} で、8枚そろっている', () {
+    test('${e.key}の掲載画像は ${e.value.$1}x${e.value.$2} で、9枚そろっている', () {
       final dir = Directory('marketing/screenshots/${e.key}');
       expect(dir.existsSync(), isTrue, reason: '${dir.path} が無い');
       final files = dir.listSync().whereType<File>().where((f) => f.path.endsWith('.png')).toList()
         ..sort((a, b) => a.path.compareTo(b.path));
-      expect(files.length, 8, reason: '8枚(01_season〜08_style)');
+      expect(files.length, 9, reason: '9枚(01_season〜09_special)');
       for (final f in files) {
         expect(_size(f), e.value, reason: f.path);
         expect(f.lengthSync(), lessThan(8 * 1024 * 1024), reason: '${f.path} が大きすぎる(App Store の上限は8MB)');
       }
       expect(files.first.path, contains('01_season'));
-      expect(files.last.path, contains('08_style'));
+      expect(files.last.path, contains('09_special'));
     });
   }
 }
