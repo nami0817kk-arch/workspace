@@ -108,7 +108,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         if (_storeAvailable && !m.adFree && _price != null)
                           ListTile(
                             leading: const Icon(Icons.block_rounded),
-                            title: Text('広告を消す($_price)'),
+                            title: Text('広告を消す(${displayPrice(_price!)})'),
                             subtitle: const Text('全画面広告が出なくなり、動画なしで回復できる。'),
                             enabled: !_busy,
                             onTap: () => _run(restore: false),
