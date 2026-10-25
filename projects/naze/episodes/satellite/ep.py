@@ -2,7 +2,7 @@
 
 弾の道すじは、地球の重力(GM = 398600.4418 km³/s²、半径 6371 km)で 0.5 秒刻みに自分で計算したもの。空気の抵抗は無し。
 高さ 100 km から水平に撃つと: 秒速2km → 約300km先、5km → 約930km先、7km → 約2,230km先、7.85km → 落ちずに一周(約86分)。
-国際宇宙ステーション: 高さ約400km、秒速約7.7km(NASA は時速約17,500マイル = 秒速約7.8km)、約90分で一周。
+国際宇宙ステーション: 高さ約400km、新幹線(時速300km)の約92倍、秒速約7.7km(NASA は時速約17,500マイル = 秒速約7.8km)、約90分で一周。
   https://www.nasa.gov/international-space-station/space-station-facts-and-figures/
 ニュートンの大砲: ニュートン『世界の体系について』(A Treatise of the System of the World, 1728)の思考実験。
 """
@@ -46,7 +46,7 @@ NEAR = (0.95, (450.0, R - 60.0))
 MID = (0.36, (1150.0, R - 380.0))
 FAR = (0.075, (0.0, 1870.0))       # 地球を少し下へ(上に数字の札を置く)
 QV = (0.058, (0.0, 6700.0))         # 問いの文字の下に地球
-VIEW = dict(q=QV, setup=NEAR, cond=NEAR, v2=NEAR, v5=NEAR, key=MID, v7=MID, vo=FAR, point=FAR, iss=FAR, end=FAR)
+VIEW = dict(q=QV, ans=QV, setup=NEAR, v2=NEAR, v5=NEAR, key=MID, v7=MID, vo=FAR, orbit=FAR, iss=FAR, end=FAR)
 CX, CY = 540, 860
 
 EP = dict(
@@ -56,26 +56,29 @@ EP = dict(
     credit="道すじは地球の重力で計算（空気の抵抗なし）",
     lines=[
         dict(id="q", text="人工衛星は、なぜ落ちてこないの？", sub="人工衛星は\nなぜ【落ちて】\nこないの？", style="question"),
-        dict(id="setup", text="ニュートンも考えた実験です。とても高い山の上から、大砲の弾を、まっすぐ横に撃ってみます。",
-             sub="ニュートンも考えた実験です。|とても高い山の上から、\n大砲の弾を【まっすぐ横】に撃ってみます。"),
-        dict(id="cond", text="山の高さは100km。空気の抵抗は、無いものとします。", sub="山の高さは【100km】。\n空気の抵抗は、無いものとします。",
-             say="やまのたかさは、ひゃっキロ。くうきのていこうは、ないものとします。"),
-        dict(id="v2", text="秒速2km。約300km先に落ちました。", sub="秒速2km。\n約【300km】先に落ちました。",
-             say="びょうそく、にキロ。やく、さんびゃっキロさきに、おちました。"),
-        dict(id="v5", text="秒速5km。約900km先。速いほど、遠くへ飛びます。", sub="秒速5km。約【900km】先。\n速いほど、遠くへ飛びます。",
-             say="びょうそく、ごキロ。やく、きゅうひゃっキロさき。はやいほど、とおくへとびます。"),
-        dict(id="key", text="でも、地球は丸い。遠くへ飛ぶほど、地面も下へ逃げていきます。", sub="でも、地球は【丸い】。|遠くへ飛ぶほど、\n地面も【下へ逃げて】いきます。"),
-        dict(id="v7", text="秒速7km。約2200km先まで飛びました。", sub="秒速7km。\n約【2,200km】先まで飛びました。",
-             say="びょうそく、ななキロ。やく、にせんにひゃっキロさきまで、とびました。"),
-        dict(id="vo", text="秒速7.8km。弾は落ち続けているのに、地面に届きません。そのまま地球を一周しました。",
-             sub="秒速7.8km。|弾は落ち続けているのに、\n【地面に届きません】。|そのまま\n地球を【一周】しました。",
-             say="びょうそく、ななてんはちキロ。たまは、おちつづけているのに、じめんに、とどきません。そのまま、ちきゅうを、いっしゅうしました。"),
-        dict(id="point", text="人工衛星は、落ちてこないのではなく、ずっと落ち続けているのです。",
-             sub="人工衛星は、落ちてこないのではなく、\n【ずっと落ち続けている】のです。"),
-        dict(id="iss", text="国際宇宙ステーションも、秒速およそ8kmで、約90分で地球を一周しています。",
-             sub="国際宇宙ステーションも、秒速およそ8km。\n約【90分】で地球を一周しています。",
-             say="こくさいうちゅうステーションも、びょうそく、およそはちキロで、やくきゅうじゅっぷんで、ちきゅうを、いっしゅうしています。"),
-        dict(id="end", text="速さで、地面をよけ続ける。それが人工衛星です。", sub="速さで、\n【地面をよけ続ける】。", style="end"),
+        dict(id="ans", text="答えは、ものすごい速さで、横に飛んでいるから。大砲で確かめてみましょう。",
+             sub="答えは、ものすごい速さで\n【横に飛んでいる】から。|大砲で確かめてみましょう。"),
+        dict(id="setup", text="高い山の上から、弾をまっすぐ横に撃ちます。山の高さは100km、空気はないことにします。",
+             sub="高い山の上から、\n弾を【まっすぐ横】に撃ちます。|山の高さは100km、\n空気はないことにします。",
+             say="たかいやまのうえから、たまを、まっすぐよこに、うちます。やまのたかさは、ひゃっキロ、くうきは、ないことにします。"),
+        dict(id="v2", text="ゆっくり撃つと、すぐ落ちます。秒速2kmで、300km先。", sub="ゆっくり撃つと、すぐ落ちます。\n秒速2kmで、【300km】先。",
+             say="ゆっくりうつと、すぐおちます。びょうそく、にキロで、さんびゃっキロさき。"),
+        dict(id="v5", text="もっと速く。秒速5kmだと、900km先まで飛びました。", sub="もっと速く。\n秒速5kmだと、【900km】先まで飛びました。",
+             say="もっとはやく。びょうそく、ごキロだと、きゅうひゃっキロさきまで、とびました。"),
+        dict(id="key", text="ここで大事なのは、地球が丸いこと。弾が遠くへ行くほど、地面はカーブして下がっていきます。",
+             sub="ここで大事なのは、地球が【丸い】こと。|弾が遠くへ行くほど、\n地面はカーブして【下がって】いきます。"),
+        dict(id="v7", text="秒速7kmなら、2200km先。弾が落ちる分と、地面が下がる分が、近くなってきました。",
+             sub="秒速7kmなら、【2,200km】先。|弾が落ちる分と、地面が下がる分が、\n【近く】なってきました。",
+             say="びょうそく、ななキロなら、にせんにひゃっキロさき。たまがおちるぶんと、じめんがさがるぶんが、ちかくなってきました。"),
+        dict(id="vo", text="そして秒速7.8km。弾が落ちる分だけ、地面も下がる。だから、いつまでたっても地面に届きません。",
+             sub="そして秒速7.8km。|弾が落ちる分だけ、\n【地面も下がる】。|だから、いつまでたっても\n【地面に届きません】。",
+             say="そして、びょうそく、ななてんはちキロ。たまがおちるぶんだけ、じめんも、さがる。だから、いつまでたっても、じめんに、とどきません。"),
+        dict(id="orbit", text="弾はそのまま、地球を一周しました。これが人工衛星です。", sub="弾はそのまま、地球を【一周】。\nこれが【人工衛星】です。"),
+        dict(id="iss", text="宇宙ステーションも同じ。新幹線のおよそ90倍の速さで、90分で地球を一周しています。",
+             sub="宇宙ステーションも同じ。|新幹線のおよそ【90倍】の速さで、\n【90分】で地球を一周しています。",
+             say="うちゅうステーションも、おなじ。しんかんせんの、およそ、きゅうじゅうばいの、はやさで、きゅうじゅっぷんで、ちきゅうを、いっしゅうしています。"),
+        dict(id="end", text="落ちていないのではなく、落ちながら、地面をよけ続けている。それが人工衛星です。",
+             sub="落ちながら、\n【地面をよけ続けている】。", style="end"),
     ],
 )
 
@@ -101,10 +104,11 @@ def _view(ctx, t):
 def _shot_k(ctx, sid, t):
     """その弾の進み 0〜1(撃つ行の 0.1〜0.85 で飛ぶ)。撃つ前は None。"""
     L = ctx["L"]
-    l = L[sid]
-    if t < l["start"]:
+    t0 = L[sid]["start"]
+    t1 = L["orbit"]["end"] if sid == "vo" else L[sid]["end"]     # 一周は「届きません」と「一周しました」の2行かけて回る
+    if t < t0:
         return None
-    return _ease((t - l["start"] - 0.1 * (l["end"] - l["start"])) / (0.75 * (l["end"] - l["start"])))
+    return _ease((t - t0 - 0.1 * (t1 - t0)) / (0.75 * (t1 - t0)))
 
 
 def draw(img, dr: ImageDraw.ImageDraw, t: float, ctx) -> None:
@@ -153,15 +157,15 @@ def draw(img, dr: ImageDraw.ImageDraw, t: float, ctx) -> None:
         path = SHOTS[sid]
         n = max(2, int(len(path) * k))
         pts = [P(x, y) for _, x, y in path[:n:2]] + [P(path[n - 1][1], path[n - 1][2])]
-        live = cid == sid
+        live = cid == sid or (sid == "vo" and cid == "orbit")
         col = COL[sid] if live else tuple(int(c * 0.55) for c in COL[sid])
         dr.line(pts, fill=col, width=7 if live else 5, joint="curve")
-        if live or (sid == "vo" and cid in ("point", "iss", "end")):
+        if live or (sid == "vo" and cid in ("iss", "end")):
             px, py = pts[-1]
-            if sid == "vo" and cid != "vo":
+            if sid == "vo" and cid in ("iss", "end"):
                 # 一周したあとは衛星として回り続ける
                 L = ctx["L"]
-                tt = (t - L["vo"]["end"]) * 2 * math.pi / 8.0
+                tt = (t - L["orbit"]["end"]) * 2 * math.pi / 8.0
                 px, py = P(-(R + ALT) * math.sin(-tt), (R + ALT) * math.cos(tt))
             dr.ellipse([px - 13, py - 13, px + 13, py + 13], fill=O.WHITE, outline=col, width=5)
         if sid != "vo" and k >= 1.0:
@@ -172,7 +176,7 @@ def draw(img, dr: ImageDraw.ImageDraw, t: float, ctx) -> None:
                 dr.text((lx - f.getlength(DIST[sid]) / 2, ly + 22), DIST[sid], font=f, fill=COL[sid] if live else O.DIM, stroke_width=4, stroke_fill=O.NAVY)
 
     # 問いの行: 地球を回る衛星
-    if cid == "q":
+    if cid in ("q", "ans"):
         tt = t * 2 * math.pi / 6.0
         px, py = P((R + 900) * math.sin(tt), (R + 900) * math.cos(tt))
         dr.ellipse([px - 14, py - 14, px + 14, py + 14], fill=O.WHITE, outline=O.YEL, width=5)
@@ -184,5 +188,5 @@ def draw(img, dr: ImageDraw.ImageDraw, t: float, ctx) -> None:
         dr.text((CX - f.getlength(txt) / 2, 250), txt, font=f, fill=COL[cid], stroke_width=8, stroke_fill=O.NAVY)
     elif cid == "iss":
         f = O.font(64)
-        for j, txt in enumerate(["高さ 約400km", "秒速 約8km", "一周 約90分"]):
+        for j, txt in enumerate(["新幹線の 約90倍", "秒速 約8km", "一周 約90分"]):
             dr.text((CX - f.getlength(txt) / 2, 240 + j * 90), txt, font=f, fill=O.YEL, stroke_width=6, stroke_fill=O.NAVY)

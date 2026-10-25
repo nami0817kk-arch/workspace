@@ -18,7 +18,7 @@ import numpy as np
 
 from .config import VOICEVOX
 
-STYLE = 30          # No.7 アナウンス
+STYLE = 21          # 剣崎雌雄 ノーマル(2026-10-26 ユーザーが7人から選んだ。クレジットは「VOICEVOX:剣崎雌雄」)
 SPEED = 1.1
 GAP = 0.3
 
