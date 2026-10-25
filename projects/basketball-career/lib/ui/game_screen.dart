@@ -1470,7 +1470,8 @@ class _SpecialRow extends StatelessWidget {
             child: Text(
                 have.isEmpty
                     ? '特殊能力: なし  ポイント ${game.sp}'
-                    : '特殊能力: ${have.map((s) => s.label).join('・')}  ポイント ${game.sp}',
+                    : '特殊能力 ${have.length}/${Special.values.length}: '
+                        '${have.take(3).map((s) => s.label).join('・')}${have.length > 3 ? ' ほか' : ''}  ポイント ${game.sp}',
                 style: const TextStyle(fontSize: 12)),
           ),
           TextButton(

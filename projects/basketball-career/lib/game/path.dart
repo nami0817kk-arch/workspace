@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'player.dart';
+import 'special.dart';
 import 'traits.dart';
 
 /// 高校卒業(と、大学・実業団の卒業)で選べる進路。
@@ -25,7 +26,8 @@ double offerScore(Player p, double achievement) =>
     p.overall * 0.7 +
     achievement * 0.3 +
     (p.heightCm - 185) * 0.15 +
-    scoutBonus(p.traits);
+    scoutBonus(p.traits) +
+    specialOfferBonus(p.specials);
 
 const _sureLine = 70.0;
 const _neverLine = 35.0;
