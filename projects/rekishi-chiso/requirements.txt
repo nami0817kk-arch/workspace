@@ -2,6 +2,8 @@
 PyYAML>=6.0
 # 画面の描画
 Pillow>=10.1          # 10.1 から ImageFont.load_default(size)（tests の内蔵フォント）
+# 物語型の BGM の合成・縦の切り出し（chiso/storyaudio.py・storyshort.py・storymain.py）
+numpy>=1.26
 # ffmpeg のバイナリ（システムに無いとき用）
 imageio-ffmpeg>=0.5
 # 読みの点検（chiso/reading.py）。共有ライブラリ libs/yomi（fugashi・unidic-lite を連れてくる）。モノレポ内参照
