@@ -244,11 +244,13 @@ class Game {
       int legacyBonus = 0,
       Dream dream = Dream.pro,
       Build? style,
+      Set<Trait>? traits,
       int? number}) {
     final r = rng ?? Random();
     final potential = (30 + r.nextInt(40) + r.nextInt(31)).clamp(30, 100);
     final g = Game(
-      player: newPlayer(name, potential, r.nextDouble(), rollInnateTraits(r),
+      player: newPlayer(
+              name, potential, r.nextDouble(), traits ?? rollInnateTraits(r),
               bonus: legacyBonus)
           .copyWith(style: style),
       rival: Rival.random(r),

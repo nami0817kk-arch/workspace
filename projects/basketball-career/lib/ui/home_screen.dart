@@ -1,10 +1,12 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 import '../game/build.dart';
-import '../game/difficulty.dart';
 import '../game/dream.dart';
 import '../game/game.dart';
 import '../game/legacy.dart';
+import '../game/traits.dart';
 import 'art/title_art.dart';
 import 'controller.dart';
 import 'history_screen.dart';
@@ -24,8 +26,11 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final _name = TextEditingController();
-  Difficulty _difficulty = Difficulty.normal;
   Dream _dream = Dream.pro;
+
+  /// 生まれつきの特性の抽選(種)。「振り直す」で替わる。始めたときの特性は、いま見えているもの。
+  int _traitSeed = DateTime.now().microsecondsSinceEpoch;
+  Set<Trait> get _traits => rollInnateTraits(Random(_traitSeed));
   Build? _style;
 
   /// 選んだ背番号。null ならおまかせ。
@@ -35,11 +40,12 @@ class _HomeScreenState extends State<HomeScreen> {
   void _start() {
     final c = widget.controller;
     if (c.howtoSeen) {
-      c.newGame(_name.text, _difficulty, _number, _dream, _style);
+      c.newGame(_name.text,
+          number: _number, dream: _dream, style: _style, traits: _traits);
       return;
     }
     final name = _name.text;
-    final difficulty = _difficulty;
+    final traits = _traits;
     final number = _number;
     final dream = _dream;
     final style = _style;
@@ -48,7 +54,8 @@ class _HomeScreenState extends State<HomeScreen> {
         onStart: () {
           c.markHowtoSeen();
           Navigator.of(ctx).pop();
-          c.newGame(name, difficulty, number, dream, style);
+          c.newGame(name,
+              number: number, dream: dream, style: style, traits: traits);
         },
       ),
     ));
@@ -94,23 +101,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     border: OutlineInputBorder(),
                   ),
                 ),
-                const SizedBox(height: 4),
-                Wrap(
-                  spacing: 8,
-                  children: [
-                    for (final d in Difficulty.values)
-                      ChoiceChip(
-                        label: Text(d.label),
-                        selected: _difficulty == d,
-                        onSelected: (_) => setState(() => _difficulty = d),
-                      ),
-                  ],
+                const SizedBox(height: 8),
+                _TraitRoll(
+                  traits: _traits,
+                  onReroll: () => setState(
+                      () => _traitSeed = Random().nextInt(1 << 30)),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 4, bottom: 8),
-                  child: Text(_difficulty.description,
-                      style: const TextStyle(fontSize: 12)),
-                ),
+                const SizedBox(height: 8),
                 const Text('幼いころの夢(かなうとごほうび)',
                     style: TextStyle(fontSize: 12)),
                 const SizedBox(height: 4),
@@ -197,6 +194,50 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// 生まれつきの特性のくじ。いまの結果を見せ、気に入らなければ何度でも振り直せる。
+class _TraitRoll extends StatelessWidget {
+  const _TraitRoll({required this.traits, required this.onReroll});
+  final Set<Trait> traits;
+  final VoidCallback onReroll;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            const Expanded(
+              child: Text('生まれつきの特性(くじ引き)',
+                  style: TextStyle(fontSize: 12)),
+            ),
+            TextButton.icon(
+              onPressed: onReroll,
+              icon: const Icon(Icons.casino_rounded, size: 18),
+              label: const Text('振り直す'),
+            ),
+          ],
+        ),
+        if (traits.isEmpty)
+          const Text('特性なし(育てるうちに出来事で身につくこともある)。',
+              style: TextStyle(fontSize: 12))
+        else
+          for (final t in traits)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 2),
+              child: Text('${t.label}: ${t.description}',
+                  style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: t.positive
+                          ? Theme.of(context).colorScheme.primary
+                          : Theme.of(context).colorScheme.error)),
+            ),
+      ],
     );
   }
 }

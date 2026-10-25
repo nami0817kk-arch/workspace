@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:basketball_career/game/game.dart';
+import 'package:basketball_career/game/traits.dart';
 import 'package:basketball_career/game/life.dart';
 import 'package:basketball_career/game/match.dart';
 import 'package:basketball_career/game/path.dart';
@@ -55,6 +56,30 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('夏の過ごし方'), findsOneWidget);
     expect(find.text('いまの結果'), findsOneWidget);
+  });
+
+  testWidgets('はじめの画面に難易度の選択は無く、特性のくじと振り直しがある', (tester) async {
+    tall(tester);
+    final c = GameController(rng: Random(1), events: false);
+    await tester.pumpWidget(BasketballCareerApp(controller: c));
+    await tester.pumpAndSettle();
+    for (final d in ['やさしい', 'ふつう', 'むずかしい']) {
+      expect(find.text(d), findsNothing, reason: '難易度の選択は無くした');
+    }
+    expect(find.text('生まれつきの特性(くじ引き)'), findsOneWidget);
+    expect(find.text('振り直す'), findsOneWidget);
+    await tester.tap(find.text('振り直す'));
+    await tester.pumpAndSettle();
+    expect(find.text('6歳から始める'), findsOneWidget);
+  });
+
+  test('始めるときに渡した生まれつきの特性が、そのまま選手に入る(空でもよい)', () {
+    final c = GameController(rng: Random(1), events: false);
+    c.newGame('くじ', traits: {Trait.genius, Trait.lefty});
+    expect(c.game!.player.traits, {Trait.genius, Trait.lefty});
+    final d = GameController(rng: Random(1), events: false);
+    d.newGame('なし', traits: <Trait>{});
+    expect(d.game!.player.traits, isEmpty);
   });
 
   testWidgets('遊び方は1度だけ自動で出て、あとはいつでも開ける', (tester) async {
