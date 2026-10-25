@@ -1,6 +1,6 @@
 # ひかりの指名（hikari7）
 
-2026-10-04 に題名を「ひかりの七席」から「ひかりの指名」に変えた（デビューは5〜8人で7に限らないため）。App Store の名前は「ひかりの指名：オーディション育成ゲーム」。「アイドル」は使わない（アーティストとして扱う）。フォルダ名・Bundle ID・保存の名前（hikari7_*）は変えない
+2026-10-04 に題名を「ひかりの七席」から「ひかりの指名」に変えた（デビューは5〜8人で7に限らないため）。App Store の名前は「ひかりの指名：オーディション育成ゲーム」。「アイドル」は使わない（アーティストとして扱う。ただし利用者に見えない App Store のキーワード欄だけは入れる、2026-10-25 ユーザー判断）。フォルダ名・Bundle ID・保存の名前（hikari7_*）は変えない
 
 オーディション番組のプロデューサーになり、練習生の中からデビューメンバーを自分で選ぶ1人用ゲーム（仮題）。
 本番は **iOS アプリ**（無料＋広告＋広告を消す買い切り、護送ボートと同じ形）。
@@ -27,6 +27,7 @@
 | `tool/make_bgm.py` | BGM 6曲を作る（`platform/ai-lab` の audiogen で合成。生成AIではない）。`app/assets/audio/bgm/` に MP3 |
 | `tool/make_voice.py` | 台詞の声を作る（手元の VOICEVOX ENGINE で合成）。`app/assets/audio/voice/<声>/<FNV>.mp3` と `index.json`。足りない分だけ作る |
 | `tool/screenshots.py` | App Store の掲載画像を撮る（iPhone 中型 1206×2622・iPad 13インチ、各7枚。2026-10-08 に必須が中型に変わった。手元の Edge を画面なしで動かす。先に `build_app_web.py`）。iPad は文字の大きさ「とても大きい」で撮る |
+| `tool/store_images.py` | 掲載画像に見出し・添え書きを付けて並べ直す（1.0.1〜。見せ場を先に）。`build/store/` に出す |
 | `tool/make_icon.py` | アプリアイコンを作る（元の絵は `art/icon_src.jpg`。2026-10-04 に FLUX.1 schnell の10案からユーザーが選んだ「3人のうち真ん中だけにスポットライト」） |
 | `fonts/` | 見出し書体 Dela Gothic One（OFL）。使う字だけに絞って埋め込む |
 | `web-test/` | テスト用Web版に添える `_headers`・`robots.txt` |
