@@ -12,6 +12,7 @@
     python -m chiso.cli describe scripts/x.yaml [--keywords]   # 概要欄（章・クレジット・絵の出典。--keywords で扱う語）
     python -m chiso.cli assign  scripts/x.yaml --assets research/x_assets.md   # 絵の割り当ての下書き（out/x_assign.md）
     python -m chiso.cli keywords "織田信長" [--all]      # YouTube の検索候補でよく続く語・題名とタグの候補
+    python -m chiso.cli research 伊達政宗 --kw 遺言 --phrase 政宗の木像 --fact "文::語 語"   # 出どころの候補（NDL・J-STAGE ほか）と知らない度
     python -m chiso.cli kana    scripts/x.yaml          # 全行の読みをカタカナで書き出す（読み違いの点検）
     python -m chiso.cli thumb   scripts/x.yaml [--variants]   # サムネイル（--variants で3案 a・b・c と一覧の大きさの確認用）
     python -m chiso.cli screen  scripts/x.yaml          # 本番の動画を見てもらった控え（ユーザーの OK のあとだけ）
@@ -1345,6 +1346,16 @@ def cmd_prepare_characters(args) -> int:
     return 0
 
 
+def cmd_research(args) -> int:
+    """出どころの候補を入口（NDL・J-STAGE・ジャパンサーチ・Wikisource）から集め、知らない度と食い違いの欄を付けて md に。"""
+    from . import research
+    out = Path(args.out) if args.out else assets_dir(load_config()).parent / "research"
+    path = research.run(args.topic, args.kw, args.phrase, args.fact, out, name=args.name,
+                        wiki_title=args.wiki, world=args.world)
+    print(f"書き出しました: {path}")
+    return 0
+
+
 def main(argv=None) -> int:
     p = argparse.ArgumentParser(prog="chiso")
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -1388,6 +1399,18 @@ def main(argv=None) -> int:
     s.add_argument("name", help="人物・出来事の名前（例：織田信長）")
     s.add_argument("--all", action="store_true", help="頭文字をあ〜ん全部（46回）。既定は各行の頭の10回")
     s.set_defaults(fn=cmd_keywords)
+    s = sub.add_parser("research", help="出どころの候補を無料の入口から集めて research/<題>_sources_YYYYMMDD.md に（chiso/research.py）")
+    s.add_argument("topic", help="人物・出来事の名前（例：伊達政宗）")
+    s.add_argument("--kw", action="append", default=[], help="名前と組み合わせて探す語（何度でも。例 --kw 瑞鳳殿 --kw 遺言）")
+    s.add_argument("--phrase", action="append", default=[],
+                   help="NDL デジタルの全文で探す句（空白なしの1句。旧字の本も多い。例 --phrase 政宗の木像）")
+    s.add_argument("--fact", action="append", default=[],
+                   help="知らない度を測る事実の候補「表示の文::語1 語2」（語が全部 Wikipedia に出るかを見る）")
+    s.add_argument("--name", default="", help="ファイル名の題（省けば topic）")
+    s.add_argument("--wiki", default="", help="Wikipedia の記事名が topic と違うとき")
+    s.add_argument("--world", action="store_true", help="世界史：英語の Wikisource も探す")
+    s.add_argument("--out", default="", help="書き出す場所（省けば assets_dir の隣の research/）")
+    s.set_defaults(fn=cmd_research)
     s = sub.add_parser("thumb")
     s.add_argument("script")
     s.add_argument("--variants", action="store_true", help="3案（a・b・c）と一覧の大きさの確認用を作る")
