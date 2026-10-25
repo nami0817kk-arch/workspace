@@ -52,7 +52,9 @@ TIERS = ("一次史料", "研究・論文", "公的機関の発表", "報道", "
 PRIMARY_WORDS = ("史料", "文書", "日記", "覚書", "家譜", "実録", "記録", "書状", "日録", "年譜", "遺文",
                  "治家記録", "古記録", "大日本史料", "藩翰譜", "寛政重修", "書簡", "御用留")
 OFFICIAL_WORDS = ("教育委員会", "博物館", "美術館", "資料館", "文化財", "研究所", "史料編纂所", "公文書館",
-                  "文化庁", "宮内庁", "国立", "県立", "市立", "図書館", "埋蔵文化財", "記念館", "再建期成会")
+                  "文化庁", "宮内庁", "国立", "県立", "市立", "埋蔵文化財", "記念館", "再建期成会", "市役所", "県庁")
+# Wikisource の題で、近世までの記録・編纂物らしい終わり方（成立年は開いて確かめる）
+WS_PRIMARY_ENDS = ("記", "録", "集", "日記", "聞書", "夜話", "譜", "軍記", "実紀", "文書", "書状", "耆談", "武鑑", "遺香", "附録")
 NEWS_WORDS = ("新聞", "新報", "通信社", "放送", "NHK", "日報", "タイムス", "ニュース")
 ACADEMIC_WORDS = ("大学", "学会", "研究会", "史学", "学報", "紀要", "論集", "研究紀要", "考古学", "学術")
 
@@ -160,9 +162,10 @@ def classify(title: str, who: str = "", where: str = "", default: str = "一般�
         return "一次史料"
     if any(k in t + where for k in REPORT_WORDS):
         return "公的機関の発表"            # 発掘・調査の報告書（中の章も含む）
-    if any(k in w for k in ACADEMIC_WORDS):
+    w2 = re.sub(r"大[学學]館", "", w)          # 出版社の「大学館」は大学ではない
+    if any(k in w2 for k in ACADEMIC_WORDS):
         return "研究・論文"
-    if any(k in w for k in OFFICIAL_WORDS) or re.search(r"(市|県|町|村)(役所|役場)?(\s|$)", who or ""):
+    if any(k in w for k in OFFICIAL_WORDS):
         return "公的機関の発表"
     return default
 
@@ -343,9 +346,12 @@ def parse_ws(text: str, lang: str = "ja") -> list[Source]:
     out = []
     for r in data.get("query", {}).get("search", []):
         t = r.get("title", "")
+        base = re.split(r"[/（(]", t)[0].strip()
+        base = re.sub(r"[\s_]*(巻|卷)?[之の]?[一二三四五六七八九十廿百\d]+[巻卷]?$", "", base)
+        tier = "一次史料" if base.endswith(WS_PRIMARY_ENDS) or is_primary_title(base) else "一般書・雑誌"
         out.append(Source(title=t, url=f"https://{lang}.wikisource.org/wiki/" + urllib.parse.quote(t.replace(" ", "_")),
-                          entry="Wikisource", tier="一次史料", snippet=strip_tags(r.get("snippet", ""))[:160],
-                          note="翻刻（誰が起こしたか・底本を原本で確かめる）"))
+                          entry="Wikisource", tier=tier, snippet=strip_tags(r.get("snippet", ""))[:160],
+                          note="翻刻（成立年・誰が起こしたか・底本を確かめる。江戸後期の編纂物や軍記も混じる）"))
     return out
 
 
@@ -383,20 +389,33 @@ def parse_fact(spec: str) -> Fact:
     return Fact(label.strip(), [t for t in re.split(r"[\s　]+", terms.strip()) if t])
 
 
+def sentences(text: str) -> list[str]:
+    return [norm(x) for x in re.split(r"[。\n]", text or "") if x.strip()]
+
+
 def known_level(fact: Fact, intro: str, full: str) -> tuple[str, str, str]:
-    """(導入部, 本文, 判定)。語が全部出たら「出る」。導入部に出る＝誰でも知っている。"""
-    ni, nf = norm(intro), norm(full)
-    def where(text: str) -> tuple[bool, list[str]]:
-        missing = [t for t in fact.terms if norm(t) not in text]
-        return not missing, missing
-    in_intro, _ = where(ni)
-    in_full, miss = where(nf)
+    """(導入部, 本文, 判定)。語が全部**同じ文に**出たら「出る」。導入部に出る＝誰でも知っている。
+    語が別々の文に散らばるだけなら「散らばる」（その事実が書いてあるとは限らない）。"""
+    terms = [norm(t) for t in fact.terms]
+    def in_one_sentence(text: str) -> bool:
+        return any(all(t in s for t in terms) for s in sentences(text))
+    in_intro = in_one_sentence(intro)
+    in_full = in_one_sentence(full)
+    nf = norm(full)
+    miss = [t for t, n in zip(fact.terms, terms) if n not in nf]
     a = "出る" if in_intro else "出ない"
-    b = "出る" if in_full else ("出ない" if len(miss) == len(fact.terms) else f"一部（無い語：{'・'.join(miss)}）")
+    if in_full:
+        b = "出る"
+    elif not miss:
+        b = "散らばる（同じ文には無い）"
+    else:
+        b = "出ない" if len(miss) == len(fact.terms) else f"一部（無い語：{'・'.join(miss)}）"
     if in_intro:
         verdict = "誰でも知っている（冒頭に使わない）"
     elif in_full:
         verdict = "知る人は知る（記事の奥）"
+    elif not miss:
+        verdict = "知らない度：高そう（語は散らばる。記事を目で確かめる）"
     else:
         verdict = "知らない度：高（記事に無い）"
     return a, b, verdict
@@ -503,11 +522,13 @@ def relevant(s: Source, topic: str, keywords: list[str]) -> bool:
 
 
 def dedupe_across(items: list[Source]) -> list[Source]:
-    """入口をまたいだ同じ資料（ジャパンサーチの bibnl・dignl は NDL の写し）を、題と年で1つに。先に来たものを残す。"""
+    """入口をまたいだ同じ資料（ジャパンサーチの bibnl・dignl は NDL の写し）を、題と年で1つに。先に来たものを残す。
+    年の無いものは、同じ題で年のあるものがあれば落とす（NDL の雑誌記事は書誌が2つ返ることがある）。"""
+    dated = {norm(s.title) for s in items if s.year}
     seen, out = set(), []
     for s in items:
         key = (norm(s.title), s.year)
-        if key in seen:
+        if key in seen or (s.year is None and norm(s.title) in dated):
             continue
         seen.add(key)
         out.append(s)
@@ -530,8 +551,10 @@ def manual_links(topic: str, keywords: list[str]) -> list[tuple[str, str, str]]:
     q = urllib.parse.quote(topic)
     q2 = urllib.parse.quote(" ".join([topic] + keywords[:1]))
     return [
-        ("東京大学史料編纂所 SHIPS（大日本史料・古記録）", f"https://wwwap.hi.u-tokyo.ac.jp/ships/cross/search?keyword={q}",
-         "公開 API なし。画面で開く。大日本史料の綱文・古記録の全文"),
+        ("東京大学史料編纂所 SHIPS（大日本史料・古記録）",
+         f"https://wwwap.hi.u-tokyo.ac.jp/ships/cross/search?keyword={q}&page=1&itemsperpage=200&sortby=score"
+         f"&sortdesc=false&sortitem=%E9%96%A2%E9%80%A3%E5%BA%A6%E9%A0%86",
+         "公開 API なし。画面で開く（page 以下が無いと検索されない。結果は数秒あとに出る）。大日本史料の綱文・古記録・古文書の全文"),
         ("全国遺跡報告総覧（発掘報告書）", f"https://sitereports.nabunken.go.jp/ja/search?all={q2}",
          "API なし・robots.txt が検索を拒むので道具は叩かない。報告書 PDF の全文検索"),
         ("CiNii Research（論文・博士論文）", f"https://cir.nii.ac.jp/all?q={q2}",
