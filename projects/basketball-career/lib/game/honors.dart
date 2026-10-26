@@ -69,6 +69,24 @@ extension TournamentHonors on TournamentResult {
   double get spg => games == 0 ? 0 : steals / games;
   double get bpg => games == 0 ? 0 : blocks / games;
 
+  /// 個人ランキングの順位(得点・リバウンド・アシスト)。個人タイトルのある大会(大学・実業団・プロ、4試合以上)だけ。
+  /// 他の選手は作らないので目安: タイトルの基準に届けば1位(タイトルと必ずそろう)、届かなければ差に応じて2位以下。
+  Map<String, int>? get statRanks {
+    if (games < 4 || _scale(league) == 0) return null;
+    final s = _scale(league);
+    int rank(double v, double line) {
+      if (v >= line) return 1;
+      // 基準に対して足りない割合1%ごとにだいたい1つ下がる(2位〜40位)。
+      return (2 + ((line - v) / line * 100).floor()).clamp(2, 40);
+    }
+
+    return {
+      '得点': rank(ppg, 22 * s * league.scoreScale),
+      'リバウンド': rank(rpg, 10.5 * s),
+      'アシスト': rank(apg, 7.5 * s),
+    };
+  }
+
   /// この大会で受けた表彰の一覧(`Honor.all` の順)。
   /// `rookie` はプロ1年目か。日本代表の大会(4試合の短期戦)は個人タイトルの対象外。
   List<String> honors({required bool rookie}) {
