@@ -932,6 +932,8 @@ class _MatchRow extends StatelessWidget {
                     '${m.threes > 0 ? ' 3P${m.threes}本' : ''}'
                     '${m.clutch == null ? '' : '  勝負どころ:${m.clutch!.label}${m.clutchSuccess == true ? '成功' : '失敗'}'}',
                     style: const TextStyle(fontSize: 12)),
+                if (!m.box.isEmpty)
+                  Text(m.box.line(m.threes), style: const TextStyle(fontSize: 12)),
                 if (story != null)
                   Text(story,
                       style: const TextStyle(

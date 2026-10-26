@@ -102,7 +102,10 @@ List<Goal> rollGoals(
         target: max(2, rounds - 1),
         stretch: true),
     if (rivalActive) const Goal(kind: GoalKind.beatRival, target: 1, stretch: true),
-    Goal(kind: GoalKind.scorer, target: 12 + p.age ~/ 4, stretch: true),
+    Goal(
+        kind: GoalKind.scorer,
+        target: ((12 + p.age ~/ 4) * league.scoreScale).round(),
+        stretch: true),
   ];
   return [safe, pool[rng.nextInt(pool.length)]];
 }

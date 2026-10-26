@@ -40,7 +40,7 @@ TournamentResult _t(League l, List<MatchResult> ms) => TournamentResult(
 void main() {
   group('個人タイトル・表彰', () {
     test('プロで1試合平均の得点が高ければ得点王、リバウンドが高ければリバウンド王', () {
-      final t = _t(League.proDomestic, [for (var i = 0; i < 6; i++) _m(pts: 25, reb: 12)]);
+      final t = _t(League.proDomestic, [for (var i = 0; i < 6; i++) _m(pts: 30, reb: 12)]);
       final h = t.honors(rookie: false);
       expect(h, contains(Honor.scoringKing));
       expect(h, contains(Honor.reboundKing));
@@ -53,7 +53,7 @@ void main() {
     });
 
     test('新人王はプロ1年目だけ(2年目は同じ成績でも付かない)', () {
-      final ms = [for (var i = 0; i < 6; i++) _m(pts: 24, reb: 9, ast: 6)];
+      final ms = [for (var i = 0; i < 6; i++) _m(pts: 28, reb: 9, ast: 6)];
       final t = _t(League.proDomestic, ms);
       expect(t.honors(rookie: true), contains(Honor.rookie));
       expect(t.honors(rookie: false), isNot(contains(Honor.rookie)));

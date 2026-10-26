@@ -24,6 +24,28 @@ enum League {
 
   bool get elimination => this != proDomestic && this != proAbroad;
 
+  /// 点数の規模(高校=1.0)。実際のバスケに近づけるため、段階ごとに1試合の点数が違う:
+  /// ミニバス約43点・中学約61点・高校約72点・大学約76点・実業団約78点・国内プロ約84点・代表約83点・海外の最高峰約112点。
+  /// 勝率は変えず(強さの差も同じ比率で効く)、点数の見た目と、勝負どころに入る点差の窓だけが変わる。
+  double get scoreScale => switch (this) {
+        League.minibasket => 0.60,
+        League.juniorHigh => 0.85,
+        League.highSchool => 1.0,
+        League.university => 1.05,
+        League.corporate => 1.08,
+        League.proDomestic => 1.17,
+        League.proAbroad => 1.55,
+        League.national => 1.15,
+      };
+
+  /// 1クォーターの長さ(分)。ミニバス6・中学8・高校〜国内プロ10・海外の最高峰12(4クォーター)。
+  int get quarterMinutes => switch (this) {
+        League.minibasket => 6,
+        League.juniorHigh => 8,
+        League.proAbroad => 12,
+        _ => 10,
+      };
+
   /// レギュラーシーズンの後のプレーオフの試合数(プロだけ。準決勝・決勝の2つ)。
   int get playoffRounds => elimination ? 0 : 2;
 
@@ -63,7 +85,7 @@ class TournamentResult {
       matches.fold(0, (s, m) => m.points > s ? m.points : s);
 
   /// 個人の評価(得点・リバウンド・アシストから)。
-  double get individual => individualRating(ppg, rpg, apg);
+  double get individual => individualRating(ppg / league.scoreScale, rpg, apg);
 
   /// 大会の個人賞。優勝して個人評価が高ければ最優秀選手、個人評価だけ高ければベスト5。
   String? get award {
@@ -211,6 +233,8 @@ class TournamentRun {
           (opp?.bonus ?? 0);
       final h = playFirstHalf(
         p,
+        scale: league.scoreScale,
+        gameMinutes: league.quarterMinutes * 4,
         teamStrength: league.teamStrength + teamBonus + momentum,
         oppStrength: strength,
         form: form,
@@ -309,7 +333,7 @@ class TournamentRun {
     final regular = matches.take(league.rounds).where((m) => m.won).length;
     final playoff = matches.skip(league.rounds).where((m) => m.won).length;
     final achievement = regular / league.rounds * 60 +
-        individualRating(ppg, rpg, apg) * 0.4 +
+        individualRating(ppg / league.scoreScale, rpg, apg) * 0.4 +
         playoff * 6;
     return TournamentResult(
       league: league,
