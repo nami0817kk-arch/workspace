@@ -257,4 +257,36 @@ void main() {
       }
     });
   });
+
+  test('プロの決勝シリーズは、ライバルとの再戦になることがある(決勝以外のプレーオフでは出ない)', () {
+    var finals = 0, rivalFinals = 0;
+    for (var seed = 0; seed < 150; seed++) {
+      final base = Game.start('x', rng: Random(seed), events: false);
+      final g = Game(
+        eventsEnabled: false,
+        player: base.player.copyWith(age: 26, heightCm: 194, clearPositionLock: true,
+            abilities: {for (final a in Ability.values) a: 88}),
+        rng: Random(seed),
+        track: Track.pro,
+        salary: 3000,
+        slot: 1,
+        rival: base.rival,
+      );
+      g.choose(Action.rest, Ability.defense);
+      final t = g.lastReport?.tournament;
+      if (t == null) continue;
+      final po = t.playoffMatches;
+      for (final m in po) {
+        if (m.vsRival) expect(m.tag, contains('決勝'), reason: 'seed $seed: ${m.tag}');
+        if (m.vsRival) expect(m.tag, isNot(contains('準決勝')));
+      }
+      if ((t.seriesWon ?? 0) >= 1) {
+        finals++;
+        if (po.any((m) => m.vsRival)) rivalFinals++;
+      }
+    }
+    expect(finals, greaterThan(20));
+    expect(rivalFinals, greaterThan(0), reason: '決勝でライバルと当たることがある');
+    expect(rivalFinals, lessThan(finals), reason: 'いつもライバルではない');
+  });
 }

@@ -106,6 +106,9 @@ List<String> matchHighlights(MatchResult m, {int doubleCount = 1}) {
     m.steals >= 10,
     m.blocks >= 10,
   ].where((x) => x).length;
+  if (m.vsRival && m.tag.contains('決勝') && !m.tag.contains('準決勝')) {
+    out.add(m.won ? '宿敵との決勝で勝った。' : '宿敵との決勝で敗れた。');
+  }
   if (m.overtimes > 0) {
     out.add(m.won
         ? '${m.overtimes > 1 ? '${m.overtimes}度の' : ''}延長の末に勝ち切った。'
