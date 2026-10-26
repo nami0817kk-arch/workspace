@@ -27,6 +27,20 @@ enum Track { school, university, corporate, pro }
 /// リーグの呼び名(知らせの文に使う)。
 String leagueLabelOf(League l) => l.label;
 
+/// 大会のベストゲームを一言で(得点＋リバウンド＋アシスト×1.5、勝ちは+5で比べる)。試合が無ければ空。
+String bestGameOf(List<MatchResult> ms) {
+  if (ms.isEmpty) return '';
+  double score(MatchResult m) =>
+      m.points + m.rebounds + m.assists * 1.5 + (m.won ? 5 : 0);
+  final b = ms.reduce((a, c) => score(c) > score(a) ? c : a);
+  final parts = [
+    '${b.points}点',
+    if (b.rebounds >= 5) '${b.rebounds}リバウンド',
+    if (b.assists >= 5) '${b.assists}アシスト',
+  ];
+  return '${parts.join('')}${b.opponent.isEmpty ? '' : ' vs ${b.opponent}'}(${b.won ? '勝ち' : '負け'})';
+}
+
 /// 1年の大会の記録。
 class YearRecord {
   const YearRecord({
@@ -48,7 +62,11 @@ class YearRecord {
     this.honors = const [],
     this.box = const BoxScore(),
     this.benchGames = 0,
+    this.bestGame = '',
   });
+
+  /// その大会のベストゲーム(「34点12リバウンド vs ○○(勝ち)」)。古いセーブは空。
+  final String bestGame;
 
   /// 控え(ベンチスタート)で出た試合の数。古いセーブは0。
   final int benchGames;
@@ -85,6 +103,7 @@ class YearRecord {
         'honors': honors,
         'box': box.toJson(),
         'bench': benchGames,
+        'best': bestGame,
         'winter': winter,
         'award': award,
         'steals': steals,
@@ -124,6 +143,7 @@ class YearRecord {
         honors: [for (final v in (j['honors'] as List?) ?? const []) v as String],
         box: BoxScore.fromJson((j['box'] as Map?)?.cast<String, dynamic>()),
         benchGames: (j['bench'] as num?)?.toInt() ?? 0,
+        bestGame: (j['best'] as String?) ?? '',
       );
 }
 
@@ -527,9 +547,15 @@ class Game {
     // この年の記録はまだ growthLog に入っていない(最後は前の年の終わり)。
     final grew =
         growthLog.isEmpty ? 0.0 : player.heightCm - growthLog.last.heightCm;
+    // 今年の大会(夏・冬)のベストゲーム。
+    final best = records
+        .where((r) => r.age == player.age && r.bestGame.isNotEmpty)
+        .map((r) => r.bestGame)
+        .lastOrNull;
     return '今年の成長: 総合 $before → $now(${now - before >= 0 ? '+' : ''}${now - before})'
         '${top == null ? '' : ' / いちばん伸びた能力 ${top.label} +$topGain'}'
-        '${grew >= 0.5 ? ' / 身長 +${grew.toStringAsFixed(1)}cm' : ''}';
+        '${grew >= 0.5 ? ' / 身長 +${grew.toStringAsFixed(1)}cm' : ''}'
+        '${best == null ? '' : ' / 今年のベストゲーム: $best'}';
   }
 
   DreamStats get dreamStats => DreamStats(
@@ -1104,6 +1130,7 @@ class Game {
       honors: lastHonors,
       box: t.box,
       benchGames: t.matches.where((m) => !m.starter).length,
+      bestGame: bestGameOf(t.matches),
     ));
     // 控えから先発へ(同じリーグの前の大会は控えが多く、今回は全部先発)。
     final prevSame = records.reversed.skip(1).where((r) => r.league == t.league).firstOrNull;
