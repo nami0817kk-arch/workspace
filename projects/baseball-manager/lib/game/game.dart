@@ -649,8 +649,14 @@ class Game {
   /// 行動のあとの続き: 分かれ道・出来事、なければ次のターンへ。
   void _finishTurn(Ability f, double share) {
     // 幼少期の分かれ道は、その歳の2回目の行動のあとに必ず出る(くじでは出ない)。
+    // 社会人は20歳が最後の年(21歳でドラフト)。21歳の分かれ道「ドラフトの年」も、20歳のうちに出す。
+    final corporateFinal = stage == Stage.pathChoice &&
+        route == Course.corporate &&
+        player.age == 20;
     final kid = stage != Stage.pro && stage != Stage.retired
-        ? childhoodStepFor(player.age, childhood, slot)?.event
+        ? (childhoodStepFor(player.age, childhood, slot) ??
+                (corporateFinal ? childhoodStepFor(21, childhood, slot) : null))
+            ?.event
         : null;
     final e = kid ??
         drawEvent(rng,

@@ -297,7 +297,7 @@ final List<ChildhoodStep> childhoodSteps = [
   ChildhoodStep(
     21,
     GameEvent('turn-route-pro', 'ドラフトが近づいてきた。どうアピールする?', [
-      _c('リーグ戦で結果を出すことに集中する',
+      _c('試合で結果を出すことに集中する',
           (p) => _byRole(p, Ability.power, Ability.stuff, 1),
           fatigue: 5),
       _c('スカウトとの面談に力を入れる', (p) => p, morale: 3),

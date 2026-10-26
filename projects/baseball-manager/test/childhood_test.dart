@@ -30,6 +30,31 @@ Game _kidYears(int seed, int Function(String id, int n) pick,
 }
 
 void main() {
+  test('社会人は20歳が最後の年。21歳の分かれ道「ドラフトの年」も20歳のうちに出る', () {
+    var seen = 0;
+    for (var seed = 0; seed < 30 && seen < 3; seed++) {
+      final g = Game.newGame(name: '社', role: Role.batter, rng: Random(seed), potential: 30);
+      var n = 0;
+      while (g.phase != Phase.retired && g.stage != Stage.pro && n++ < 3000) {
+        g.autoSpend();
+        switch (g.phase) {
+          case Phase.term:
+            g.choose(Plan.train, Ability.contact);
+          case Phase.event:
+            g.resolveEvent(0);
+          case Phase.pathChoice:
+            g.chooseRoute(Course.corporate);
+          case Phase.retired:
+            break;
+        }
+      }
+      if (g.route != Course.corporate || g.stage == Stage.pro) continue;
+      seen++;
+      expect(g.childhood.containsKey('turn-route-pro'), isTrue);
+    }
+    expect(seen, greaterThan(0));
+  });
+
   test('幼少期の分かれ道は、決まった歳に1回ずつ、7つとも必ず出る', () {
     for (var s = 0; s < 30; s++) {
       final seen = <String, int>{};
