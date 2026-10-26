@@ -6,6 +6,8 @@ EP の主な項目:
   lines=[{id, text, say?, sub?, pause?, style?: question|end, labels?: [{point, text, color, at(0〜1), below?}]}]
   shots=[{line, a:{look, dist, height, yaw}, b:{...}}]   look は地点の名前か [x, y](km)。yaw は度(0 = 南から北を見る、90 = 東から西を見る)
   rise=行 id(この行で平らな地図から立ち上がる。無ければ最初から立体)
+  pins=[{point, text}] を EP に置くと、問いと結び以外の間、地形の上に小さな地名を常に出す(本編向き)
+  行に compare={value, unit, n, note?, at} を付けると、数字を身近なものに換える図(箱を n 個並べる)が出る
   行に profile={a: 地点, b: 地点, at: 0〜1, names: [a の名, b の名]} を付けると、その行で a→b に地形を切った断面図が出る(地形の上に切り線も)
 """
 from __future__ import annotations
@@ -123,12 +125,31 @@ def frame_fn(ep: dict, out: Path, still: bool = False):
         if style not in ("question", "end", "cta") and ep.get("header"):
             ov.rows(dr, ep["header"], *LAYOUT["header"], stroke=6)
         row = proj[str(fi)]
+        if style not in ("question", "end", "cta"):
+            for pn in ep.get("pins", []):
+                x, y, z = row[pn["point"]]
+                if z > 0 and 0.02 < x < 0.9 and 0.12 < y < 0.9:
+                    ov.pin(img, x * W, y * H, pn["text"])
+        # 比べの図・断面図が出ている間、その箱にかかる札は出さない(重なるので)
+        panels = []
+        for key, lay in (("compare", "compare"), ("profile", "profile")):
+            if d.get(key) and cur and t >= cur["start"] + d[key].get("at", 0.0) * (cur["end"] - cur["start"]):
+                panels.append(LAYOUT[lay])
+        def in_panel(px, py):
+            return any(bx0 - 20 <= px <= bx1 + 20 and by0 - 130 <= py <= by1 + 90 for bx0, by0, bx1, by1 in panels)
         for lb in d.get("labels", []):
             t0 = cur["start"] + lb.get("at", 0.0) * (cur["end"] - cur["start"])
             a = min(1.0, max(0.0, (t - t0) * FPS / 8))
             x, y, z = row[lb["point"]]
+            if in_panel(x * W, y * H):
+                continue
             if z > 0 and 0.02 < x < 0.98 and 0.12 < y < 0.95:
                 ov.label(img, x * W, y * H, lb["text"].format(h=job["heights"].get(lb["point"]) or 0), lb.get("color", ov.WHITE), a, lb.get("below", False))
+        if d.get("compare") and cur:
+            cp = d["compare"]
+            t0 = cur["start"] + cp.get("at", 0.0) * (cur["end"] - cur["start"])
+            if t >= t0:
+                ov.compare(img, min(1.0, (t - t0) / 1.6), cp, LAYOUT["compare"])
         if d.get("profile") and cur:
             pr = d["profile"]
             t0 = cur["start"] + pr.get("at", 0.0) * (cur["end"] - cur["start"])

@@ -17,9 +17,9 @@ ASPECT = os.environ.get("NAZE_ASPECT", "portrait")
 W, H = (1920, 1080) if ASPECT == "landscape" else (1080, 1920)
 # 字幕・見出し・問い・結びの帯の位置(y は画素、size は字の大きさ)
 LAYOUT = dict(
-    portrait=dict(maxw=980, header=(150, 56), question=(380, 104), end_band=(1180, 1700), end_text=(1440, 92), sub=(1470, 70), profile=(110, 1000, 970, 1330),
+    portrait=dict(maxw=980, header=(150, 56), question=(380, 104), end_band=(1180, 1700), end_text=(1440, 92), sub=(1470, 70), profile=(110, 1000, 970, 1330), compare=(70, 1040, 1010, 1300),
                   sim_question=(520, 104), sim_band=(1380, 1780), sim_end=(1580, 88), sim_sub=(1640, 64)),
-    landscape=dict(maxw=1700, header=(70, 44), question=(470, 96), end_band=(760, 1010), end_text=(885, 80), sub=(960, 54), profile=(1150, 520, 1860, 860),
+    landscape=dict(maxw=1700, header=(70, 44), question=(470, 96), end_band=(760, 1010), end_text=(885, 80), sub=(960, 54), profile=(1150, 520, 1860, 860), compare=(1060, 600, 1880, 860),
                    sim_question=(470, 96), sim_band=(760, 1010), sim_end=(885, 80), sim_sub=(975, 52)),
 )[ASPECT]
 

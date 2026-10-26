@@ -37,6 +37,7 @@ EP = dict(
         yama_e=(139.5680, 35.3170),
     ),
     rise="data",
+    pins=[dict(point="hachimangu", text="鶴岡八幡宮"), dict(point="yuigahama", text="由比ヶ浜")],
     lines=[
         dict(id="q", text="なぜ幕府は、鎌倉に置かれたの？", sub="なぜ幕府は\n【鎌倉】に\n置かれたの？", style="question", say="なぜばくふは、かまくらに、おかれたの？"),
         dict(id="data", text="答えは、地形にあります。鎌倉の地形を、立体にしてみました。", sub="答えは、【地形】にあります。|鎌倉の地形を、立体にしてみました。"),
@@ -53,6 +54,7 @@ EP = dict(
              labels=[dict(point="nagoe", text="名越切通", color=O.YEL, at=0.5)]),
         dict(id="mamori", text="道が細いので、少ない人数でも、守りやすかったのです。", sub="道が細いので、少ない人数でも、\n【守りやすかった】のです。"),
         dict(id="nana", text="主な入り口は、たった7つ。鎌倉七口と呼ばれます。", sub="主な入り口は、たった【7つ】。\n「鎌倉七口」と呼ばれます。",
+             section=True, compare=dict(value="入り口 7つ", unit="切通", n=7, note="まちの外へ出る道の数", at=0.1),
              say="おもないりぐちは、たったななつ。かまくらななくちと、よばれます。",
              labels=[dict(point="nagoe", text="名越", color=O.YEL, at=0.0, below=True), dict(point="asaina", text="朝夷奈", color=O.YEL, at=0.15),
                      dict(point="kobukuro", text="巨福呂坂", color=O.YEL, at=0.3)]),

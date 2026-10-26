@@ -52,6 +52,11 @@ def frame_fn(ep: dict, out: Path):
         if ep.get("credit"):
             ov.corner(dr, ep["credit"])
         d = defs[cur["id"]] if cur else {}
+        if d.get("compare") and cur:
+            cp = d["compare"]
+            t0 = cur["start"] + cp.get("at", 0.0) * (cur["end"] - cur["start"])
+            if t >= t0:
+                ov.compare(img, min(1.0, (t - t0) / 1.6), cp, LAYOUT["compare"])
         sub = d.get("sub", d.get("text", ""))
         style = d.get("style")
         if style == "question":

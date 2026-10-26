@@ -121,6 +121,50 @@ def band(img: Image.Image, y0: int, y1: int, alpha: float = 0.75) -> None:
     img.alpha_composite(ov)
 
 
+def compare(img: Image.Image, k: float, spec: dict, box) -> None:
+    """数字を身近なものに換える図。spec = {value: "380km²", unit: "山手線の内側", n: 6, note?: "6つ入る広さ"}。
+    左に大きな数字、右に unit の箱が n 個(k で 1 つずつ増える)。n が 20 を超えるときは 10 ごとにまとめる。"""
+    x0, y0, x1, y1 = box
+    a = min(1.0, k * 4)
+    ovl = Image.new("RGBA", img.size, (0, 0, 0, 0))
+    od = ImageDraw.Draw(ovl)
+    od.rounded_rectangle([x0, y0, x1, y1], 18, fill=NAVY + (int(215 * a),), outline=(255, 255, 255, int(120 * a)), width=2)
+    img.alpha_composite(ovl)
+    dr = ImageDraw.Draw(img)
+    f_big, f_mid, f_sm = font(72), font(40), font(32)
+    vx = x0 + 36
+    dr.text((vx, y0 + 28), spec["value"], font=f_big, fill=YEL)
+    if spec.get("note"):
+        dr.text((vx, y0 + 28 + 84), spec["note"], font=f_sm, fill=DIM)
+    n = int(spec["n"])
+    shown = max(0, min(n, int(round(k * n + 1e-6))))
+    gx0 = vx + max(f_big.getlength(spec["value"]), f_sm.getlength(spec.get("note", ""))) + 48
+    gw = x1 - 28 - gx0
+    cols = min(n, 10)
+    cell = min(64, int(gw / cols) - 8)
+    rows_n = (n + cols - 1) // cols
+    gy0 = y0 + (y1 - y0) / 2 - (rows_n * (cell + 8)) / 2 - 10
+    for i in range(n):
+        cx, cy = gx0 + (i % cols) * (cell + 8), gy0 + (i // cols) * (cell + 8)
+        on = i < shown
+        dr.rounded_rectangle([cx, cy, cx + cell, cy + cell], 10, fill=OCHRE if on else (40, 52, 84), outline=(255, 255, 255) if on else (90, 100, 130), width=2)
+    lab = f"{spec['unit']} × {n}"
+    dr.text((gx0, gy0 + rows_n * (cell + 8) + 6), lab, font=f_mid, fill=WHITE)
+    BOXES.append(("label", (x0, y0, x1, y1), "比べの図", 1.0))
+
+
+def pin(img: Image.Image, x: float, y: float, text: str, alpha: float = 0.85, size: int = 34) -> None:
+    """地形の上に常に出す小さな地名(点と字だけ。札より目立たない)。"""
+    f = font(size)
+    ovl = Image.new("RGBA", img.size, (0, 0, 0, 0))
+    od = ImageDraw.Draw(ovl)
+    a = int(255 * alpha)
+    od.ellipse([x - 6, y - 6, x + 6, y + 6], fill=(255, 255, 255, a), outline=NAVY + (a,), width=2)
+    od.text((x + 12, y - size * 0.7), text, font=f, fill=(255, 255, 255, a), stroke_width=4, stroke_fill=NAVY + (a,))
+    img.alpha_composite(ovl)
+    BOXES.append(("pin", (x - 6, y - size * 0.7, x + 12 + f.getlength(text), y + size * 0.6), text, 1.0))
+
+
 CTA_TEXT = "チャンネル登録と高評価、よろしくお願いします。"
 THUMB = "\U0001F44D"
 SYM_FONT = "C:/Windows/Fonts/seguisym.ttf"
