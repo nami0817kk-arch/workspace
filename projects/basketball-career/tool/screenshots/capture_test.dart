@@ -247,13 +247,15 @@ void main() {
     const green = (Color(0xFF004D40), Color(0xFF00796B));
     const purple = (Color(0xFF4A148C), Color(0xFF7B1FA2));
 
-    // 1. 育成画面: 6年ぶんの成長のあとの、年のはじめ(目標の選択が出る)。
+    // 1. 育成画面: 6年ぶんの成長のあと、春に練習した直後。
     final a = Game.start('ミナト', rng: Random(11), events: false);
     _play(a, untilAge: 12);
     while (a.slot != 0 && a.phase == Phase.season) {
       a.choose(Action.rest, recommendedFocus(a.player));
     }
-    await _shoot(t, '01_season', '6歳から、選手を育てる', _controller(a), orange);
+    // 春に1回練習した後(下の帯に「練習した。成長: …」が出る)。
+    final c1 = _controller(a)..act(Action.practice);
+    await _shoot(t, '01_season', '6歳から、選手を育てる', c1, orange);
 
     // 2. 勝負どころ: ライバル戦(タイムアウトのボタンも出る)。
     GameController? clutch;

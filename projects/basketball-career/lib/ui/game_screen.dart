@@ -116,6 +116,8 @@ class _SeasonView extends StatefulWidget {
 class _SeasonViewState extends State<_SeasonView> {
   /// 重点などの設定のカード(下のボタンの「重点を変える」から、ここまで送る)。
   final _settingsKey = GlobalKey();
+  /// 「いまの結果」のカード(下の結果の帯から、ここまで送る)。
+  final _recentKey = GlobalKey();
   final _scroll = ScrollController();
 
   @override
@@ -129,8 +131,23 @@ class _SeasonViewState extends State<_SeasonView> {
     if (_settingsKey.currentContext == null && _scroll.hasClients) {
       await _scroll.animateTo(_scroll.position.maxScrollExtent,
           duration: const Duration(milliseconds: 250), curve: Curves.easeOut);
+      await WidgetsBinding.instance.endOfFrame; // 送った先のカードが作られるのを待つ
     }
     final ctx = _settingsKey.currentContext;
+    if (ctx != null && ctx.mounted) {
+      await Scrollable.ensureVisible(ctx,
+          duration: const Duration(milliseconds: 250), curve: Curves.easeOut);
+    }
+  }
+
+  /// 「いまの結果」のカードまで送る。上の方にあるので、まだ作られていなければ先に一番上へ戻してから合わせる。
+  Future<void> _showRecent() async {
+    if (_recentKey.currentContext == null && _scroll.hasClients) {
+      await _scroll.animateTo(0,
+          duration: const Duration(milliseconds: 250), curve: Curves.easeOut);
+      await WidgetsBinding.instance.endOfFrame; // 送った先のカードが作られるのを待つ
+    }
+    final ctx = _recentKey.currentContext;
     if (ctx != null && ctx.mounted) {
       await Scrollable.ensureVisible(ctx,
           duration: const Duration(milliseconds: 250), curve: Curves.easeOut);
@@ -151,6 +168,7 @@ class _SeasonViewState extends State<_SeasonView> {
           controller: c,
           game: g,
           onShowSettings: _showSettings,
+          onShowRecent: _showRecent,
           canChooseAction: (a) => canChoose(a, cond),
         ),
       ],
@@ -164,16 +182,13 @@ class _SeasonViewState extends State<_SeasonView> {
       children: [
         CourtHeader(game: g),
         const SizedBox(height: 12),
-        _PlayerCard(
-            game: g,
-            onPickStyle: () => showStylePicker(context, c),
-            onPickSpecial: () => showSpecialPicker(context, c),
-            onPickPosition: () => showPositionPicker(context, c)),
-        const SizedBox(height: 12),
-        _GoalCard(controller: c, game: g),
-        const SizedBox(height: 12),
+        // 押した結果は、いちばん上(絵のすぐ下)に出す。下の帯を押すとここへ戻る。
         if (c.pathMessage != null) ...[
           _Note(text: c.pathMessage!),
+          const SizedBox(height: 12),
+        ],
+        if (c.recent.isNotEmpty) ...[
+          _RecentCard(key: _recentKey, lines: c.recent),
           const SizedBox(height: 12),
         ],
         if (c.lastTournament != null) ...[
@@ -184,10 +199,14 @@ class _SeasonViewState extends State<_SeasonView> {
               teamName: g.teamLabel),
           const SizedBox(height: 12),
         ],
-        if (c.recent.isNotEmpty) ...[
-          _RecentCard(lines: c.recent),
-          const SizedBox(height: 12),
-        ],
+        _PlayerCard(
+            game: g,
+            onPickStyle: () => showStylePicker(context, c),
+            onPickSpecial: () => showSpecialPicker(context, c),
+            onPickPosition: () => showPositionPicker(context, c)),
+        const SizedBox(height: 12),
+        _GoalCard(controller: c, game: g),
+        const SizedBox(height: 12),
         _AbilityCard(game: g),
         const SizedBox(height: 12),
         Card(
@@ -535,11 +554,13 @@ class _ActionBar extends StatelessWidget {
     required this.controller,
     required this.game,
     required this.onShowSettings,
+    required this.onShowRecent,
     required this.canChooseAction,
   });
   final GameController controller;
   final Game game;
   final VoidCallback onShowSettings;
+  final VoidCallback onShowRecent;
   final bool Function(Action) canChooseAction;
 
   @override
@@ -596,6 +617,34 @@ class _ActionBar extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              // 押した結果を、ボタンのすぐ上で読めるように(結果のカードは一覧の上の方にあって見えないことが多い)。
+              if (c.recent.isNotEmpty)
+                InkWell(
+                  onTap: onShowRecent,
+                  borderRadius: BorderRadius.circular(8),
+                  child: Container(
+                    width: double.infinity,
+                    margin: const EdgeInsets.only(top: 2, bottom: 2),
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: cs.secondaryContainer,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            resultStripText(c.recent),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(fontSize: 12, color: cs.onSecondaryContainer),
+                          ),
+                        ),
+                        Icon(Icons.expand_less, size: 18, color: cs.onSecondaryContainer),
+                      ],
+                    ),
+                  ),
+                ),
               Row(
                 children: [
                   Expanded(
@@ -1081,8 +1130,12 @@ class _MatchRow extends StatelessWidget {
   }
 }
 
+/// 下の結果の帯に出す短い文。最初の2行(「練習した。」と「成長: …」など)をつなぐ。
+@visibleForTesting
+String resultStripText(List<String> lines) => lines.take(2).join('  ');
+
 class _RecentCard extends StatelessWidget {
-  const _RecentCard({required this.lines});
+  const _RecentCard({super.key, required this.lines});
   final List<String> lines;
 
   @override

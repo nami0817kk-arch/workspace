@@ -9,6 +9,7 @@ import 'package:basketball_career/game/player.dart';
 import 'package:basketball_career/game/rival.dart';
 import 'package:basketball_career/ui/app.dart';
 import 'package:basketball_career/ui/controller.dart';
+import 'package:basketball_career/ui/game_screen.dart' show resultStripText;
 import 'package:basketball_career/ui/milestone_dialog.dart';
 import 'package:flutter/material.dart' hide Action, Route;
 import 'package:flutter/services.dart';
@@ -190,7 +191,7 @@ void main() {
     await tester.tap(find.text('遊びに行く'));
     await tester.pumpAndSettle();
     expect(c.game!.pendingEventId, isNull);
-    expect(find.textContaining('「遊びに行く」を選んだ'), findsOneWidget);
+    expect(find.textContaining('「遊びに行く」を選んだ'), findsWidgets); // 結果のカードと下の帯
     expect(find.text('春の過ごし方'), findsOneWidget);
   });
 
@@ -367,15 +368,33 @@ void main() {
       final r = tester.getRect(f);
       expect(r.bottom, lessThanOrEqualTo(844), reason: '${a.label} が画面の外にある');
     }
-    final slot = c.game!.slot;
-    await tester.tap(find.text('休養'));
-    await tester.pumpAndSettle();
-    expect(c.game!.slot, isNot(slot), reason: 'スクロールせずに押せて、季節が進む');
     // 「重点を変える」で、重点の設定まで送られる。
     await tester.tap(find.text('重点を変える'));
     await tester.pumpAndSettle();
     final chip = tester.getRect(find.textContaining('① 大きく伸ばす能力'));
     expect(chip.top, lessThan(844));
+    // 下までスクロールしたまま練習しても(春なので大会は無い)、結果はボタンのすぐ上の帯で読める。
+    expect(c.game!.slot, 0);
+    await tester.tap(find.text('練習'));
+    await tester.pumpAndSettle();
+    expect(c.game!.slot, 1, reason: 'スクロールせずに押せて、季節が進む');
+    final strip = find.textContaining('練習した。');
+    expect(strip, findsWidgets);
+    final stripRect = tester.getRect(strip.last);
+    expect(stripRect.bottom, lessThanOrEqualTo(844));
+    expect(stripRect.top, greaterThan(844 - 260), reason: '帯は画面の下(ボタンの上)にある');
+    expect(resultStripText(c.recent), contains('成長'), reason: '何が伸びたかも帯に出る');
+    // 帯を押すと「いまの結果」のカードまで戻る。
+    await tester.tap(strip.last);
+    await tester.pumpAndSettle();
+    final card = tester.getRect(find.text('いまの結果'));
+    expect(card.top, greaterThanOrEqualTo(0));
+    expect(card.top, lessThan(844 - 260));
+  });
+
+  test('結果の帯は最初の2行をつなぐ', () {
+    expect(resultStripText(const ['練習した。', '成長: 3Pシュート +2', 'ほか']), '練習した。  成長: 3Pシュート +2');
+    expect(resultStripText(const ['休養した。']), '休養した。');
   });
 
   testWidgets('勝負どころ・出来事の選択肢も、ふつうのスマホの画面に収まる(スクロールしなくても押せる)', (tester) async {
