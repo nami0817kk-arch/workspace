@@ -21,6 +21,8 @@ NAVY = (8, 16, 36)
 DIM = (220, 225, 235)
 
 _fc = {}
+# 点検用: そのコマで描いた字の箱 [(種類, (x0, y0, x1, y1), 文字)]。frame_fn がコマの頭で空にする
+BOXES: list = []
 
 
 def font(sz: int, path: str = FONT) -> ImageFont.FreeTypeFont:
@@ -49,6 +51,7 @@ def rows(dr: ImageDraw.ImageDraw, text: str, cy: float, size: int, maxw: int = L
     y = cy - lh * len(rs) // 2
     for r in rs:
         x = cx - _row_w(r, f) / 2
+        BOXES.append(("text", (x - stroke, y - stroke, x + _row_w(r, f) + stroke, y + lh), "".join(t for t, _ in r), sz / size))
         for t, h in r:
             dr.text((x, y), t, font=f, fill=hl if h else color, stroke_width=stroke, stroke_fill=NAVY)
             x += f.getlength(t)
@@ -97,14 +100,18 @@ def label(img: Image.Image, x: float, y: float, text: str, col, alpha: float, be
     od.ellipse([x - 11, y - 11, x + 11, y + 11], fill=tuple(col) + (a,), outline=(255, 255, 255, a), width=4)
     od.rounded_rectangle([cx - tw / 2 - 22, by0, cx + tw / 2 + 22, by1], 16, fill=NAVY + (int(215 * alpha),), outline=tuple(col) + (a,), width=4)
     od.text((cx - tw / 2, by0 + 8), text, font=f, fill=tuple(col) + (a,))
+    if alpha > 0.5:
+        BOXES.append(("label", (cx - tw / 2 - 22, min(by0, y), cx + tw / 2 + 22, max(by1, y)), text, 1.0))
     img.alpha_composite(ov)
 
 
 def corner(dr: ImageDraw.ImageDraw, left: str = "", right: str = "", size: int = 30) -> None:
     f = font(size)
     if left:
+        BOXES.append(("corner", (36, 40, 36 + f.getlength(left), 40 + size * 1.3), left, 1.0))
         dr.text((36, 40), left, font=f, fill=DIM, stroke_width=4, stroke_fill=NAVY)
     if right:
+        BOXES.append(("corner", (W - 36 - f.getlength(right), 40, W - 36, 40 + size * 1.3), right, 1.0))
         dr.text((W - 36 - f.getlength(right), 40), right, font=f, fill=DIM, stroke_width=4, stroke_fill=NAVY)
 
 

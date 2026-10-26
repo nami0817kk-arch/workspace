@@ -12,7 +12,7 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw
 
-from . import compose, overlay as ov, tts
+from . import compose, overlay as ov, sfx, tts
 from .config import FPS, H, LAYOUT, W
 
 
@@ -38,6 +38,7 @@ def frame_fn(ep: dict, out: Path):
 
     def frame(fi: int) -> Image.Image:
         t = (fi - 1) / FPS
+        ov.BOXES.clear()
         img = Image.new("RGBA", (W, H), (10, 18, 40, 255))
         dr = ImageDraw.Draw(img)
         cur = ov.current(lines, t)
@@ -74,6 +75,14 @@ def stills(ep: dict, out: Path, frames: str) -> list:
     return res
 
 
+def sfx_events(ep: dict, out: Path) -> list:
+    """題材の ep.py に sfx_events(L) があればそれを使う(L は id → 行の時刻)。無ければ行の頭(2 行目から)に「シュッ」。"""
+    L = {l["id"]: l for l in json.loads((out / "timeline.json").read_text(encoding="utf-8"))["lines"]}
+    f = getattr(ep["_mod"], "sfx_events", None)
+    return f(L) if f else [(L[d["id"]]["start"], "whoosh") for d in ep["lines"][1:]]
+
+
 def final(ep: dict, out: Path, name: str) -> Path:
     fr, n = frame_fn(ep, out)
-    return compose.write(fr, n, out / "narration.wav", out / f"{name}.mp4", bgm=ep.get("bgm"))
+    audio = sfx.mix(out / "narration.wav", sfx_events(ep, out), out / "narration_sfx.wav") if ep.get("sfx", True) else out / "narration.wav"
+    return compose.write(fr, n, audio, out / f"{name}.mp4", bgm=ep.get("bgm"))

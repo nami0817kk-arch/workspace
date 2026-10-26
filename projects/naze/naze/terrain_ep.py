@@ -17,7 +17,7 @@ from pathlib import Path
 import numpy as np
 from PIL import Image, ImageDraw
 
-from . import compose, dem as demmod, overlay as ov, terrain, tts
+from . import compose, dem as demmod, overlay as ov, sfx, terrain, tts
 from .config import FPS, H, LAYOUT, W, blender
 
 TR = 12          # カットの切り替えにかけるコマ数
@@ -110,6 +110,7 @@ def frame_fn(ep: dict, out: Path, still: bool = False):
 
     def frame(fi: int) -> Image.Image:
         t = (fi - 1) / FPS
+        ov.BOXES.clear()
         src = out / ("stills" if still else "frames") / (f"s_{fi:04d}.png" if still else f"f_{fi:04d}.png")
         img = Image.open(src).convert("RGBA")
         dr = ImageDraw.Draw(img)
@@ -155,6 +156,17 @@ def stills(ep: dict, out: Path, frames: str) -> list:
     return res
 
 
+def sfx_events(ep: dict, out: Path) -> list:
+    """カットの切り替え(2 つ目以降のカットの頭)に「シュッ」、札が出る瞬間に「ポン」。"""
+    L = {l["id"]: l for l in json.loads(_paths(out)["timeline"].read_text(encoding="utf-8"))["lines"]}
+    ev = [(L[s["line"]]["start"], "whoosh") for s in ep["shots"][1:]]
+    for d in ep["lines"]:
+        l = L[d["id"]]
+        ev += [(l["start"] + lb.get("at", 0.0) * (l["end"] - l["start"]), "pop") for lb in d.get("labels", [])]
+    return ev
+
+
 def final(ep: dict, out: Path, name: str) -> Path:
     fr, n = frame_fn(ep, out)
-    return compose.write(fr, n, out / "narration.wav", out / f"{name}.mp4", bgm=ep.get("bgm"))
+    audio = sfx.mix(out / "narration.wav", sfx_events(ep, out), out / "narration_sfx.wav") if ep.get("sfx", True) else out / "narration.wav"
+    return compose.write(fr, n, audio, out / f"{name}.mp4", bgm=ep.get("bgm"))

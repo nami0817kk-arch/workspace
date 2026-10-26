@@ -5,6 +5,7 @@
 
 使い方: python -m naze.upload 動画.mp4 --title "…" --desc-file 説明.txt [--publish-at 2026-10-26T09:00:00+09:00]
 --publish-at を付けると非公開で上げて、その時刻に公開する予約になる。投稿の前に必ず動画をユーザーに見せる。
+`python -m naze qc` に通っていない動画(点検のあとで変わった動画も)は止める。
 """
 from __future__ import annotations
 
@@ -37,6 +38,8 @@ def main():
     ap.add_argument("--publish-at", default="")
     ap.add_argument("--tags", default="なぜ,解説,雑学")
     a = ap.parse_args()
+    from .qc import gate
+    gate(Path(a.video))                    # 点検に通っていない動画は上げない
     from googleapiclient.http import MediaFileUpload
     yt = service()
     me = yt.channels().list(part="snippet", mine=True).execute().get("items", [])
