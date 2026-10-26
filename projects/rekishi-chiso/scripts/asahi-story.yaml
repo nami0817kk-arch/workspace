@@ -1,0 +1,787 @@
+# 物語型の本編（10-22 の見直し・scripts/_template_story.yaml を写した）。旭姫（秀吉の妹）と大政所（秀吉の母）。2026-10-26 下書き（ユーザーに見せる前。reading-ok・approve はまだ）。
+# 公開の予定は 10/27 12:00。同じ日の 19:00 は石川数正の本編（scripts/kazumasa-story.yaml）。数正の出奔は第1章の前置きの2文だけにして、中身を重ねない。
+# 型（ユーザーと決めた物語型）：1本に1つの「なぜ」＝「なぜ秀吉は、妹と母を家康に差し出したのか」を、再現ドラマ（場面を語りで描き、台詞も入れる）で掘る。
+#   主役は旭（44歳で家康に嫁ぎ、48歳で亡くなるまで）。語り手は剣崎1人（つむぎは出ない）。
+#   最後の章で「その後」（死・喪を伏せた・南明院と瑞龍寺・大政所の寿塔）まで語り、冒頭の場面（池鯉鮒の西の野）に戻って閉じる。
+#   締めは余韻の一文＋登録のお願い。「今日の地層は」・次回予告・二人の締めは無し（10-24 ユーザー決定。story: true）。
+# 冒頭：場面（0〜10秒に知らない事実＝44歳の花嫁が野原で受け渡された）→ずれ（前の夫がいた・5か月後に母も「人質」として）→「なぜ」1文
+#   →答えのかけら（婚礼の10日後の秀吉の朱印状）→その後の予告（喪を伏せた・2021年に初公開の寺）→約束の1文→橋渡し（輿入れの半年ほど前）。
+#   あいさつ・章の予定・断り書きはしない。
+# 通説・説の検証は第3章だけ（無理やりの離縁・前の夫の2つの説・朱印状の「懇望」・薪の山の話）。
+# 記録の食い違いを並べたのは3か所：①前の夫（佐治日向守／副田吉成、500石／5万石、自害／出家）②縁組を望んだのは誰か（通説／朱印状）③亡くなった場所（聚楽第／伏見）。
+#   薪の山の話は、江戸時代の書物の話と『岡崎市史』の判断を並べる形で「伝承」として言った（図は出さない）。
+# 大河「豊臣兄弟！」第40〜41回で描かれたが、ドラマの台詞・創作は使っていない（ドラマの名前も語りに出さない）。
+#
+# 事実は事実カード（dev/output/rekishi-chiso/research/旭姫_facts_20261026.yaml、asahi-01〜51）にあるものだけ。行の上に `# fact: asahi-NN`。
+#   カードの中で重複の疑いのある組（11と40・13と42・16と48・18と38）は、言う中身に近いほうの ID を付けた。
+#   カードに無い「誰でも知っている前置き」（小牧・長久手のあと和睦・家康がなかなか上洛しない・数正の出奔・家康が大坂で臣従・小田原攻め）は短く使い、# fact を付けない。
+#   数字は出どころの文にあるものだけ。『家忠日記』のくずし字を担当が読んだ数（3000貫など）は使わない。
+#   亡くなった場所の食い違いは、カード（asahi-17）にある聚楽第と伏見だけ。有馬は前の年の湯治（asahi-15）としてだけ言う（有馬で亡くなったという記録はカードに無い）。
+#   法名（南明院光室總旭大姉など）は読みが割れるので声にしない。多伊城も読みを確かめられないので「但馬の城」と言う。
+#
+# 台詞の決まり（ユーザー決定 10-24）：記録の言葉＋想像の台詞。
+#   記録＝出どころを語りで言ってから `- 人物:`（who: 秀吉書状＝天正14年の朱印状・書状の一節。config の roles に足した）。現代語にした所は語りで「今の言葉にすると」と言う。
+#   日記（『家忠日記』『宇野主水日記』『当代記』）は語りの中で読む（日記の書き手の声は作らない）。
+#   想像＝ (1)記録と食い違わない (2)新しい事実を足さない（気持ちの言葉だけ） (3)1本8か所まで（この台本は5か所） (4)画面に「想像」の札 (5)人を貶めない。
+#   各台詞のコメントに【記録】／【想像】と、食い違わない記録を書いた。家康の気持ちの台詞は作らない（夫婦仲の記録が無い＝asahi-49）。
+#
+# 絵：paintings/ の既存の絵で仮置き（素材の置き場にあるものだけ）。池鯉鮒の野・輿入れの行列・夜の早駆け・南明院・瑞龍寺などの足りない場面は「AI絵：<英語の指示>」をコメントに。
+#   旭の肖像は hidenaga_asahihime.jpg（南明院殿の賛のある縦長の肖像。738x2400）、大政所は hidenaga_omandokoro.jpg。
+# 広告の配慮：前の夫の最期は「自ら命を絶った」まで。薪の話は「火を放つ構え」まで（焼き殺す等は言わない）。死は「亡くなった」。
+facts: 旭姫_facts_20261026.yaml
+story: true
+title: 旭姫｜なぜ秀吉は妹と母を家康に差し出したのか　縁組を望んだのは誰だった
+series: ""
+playlists: [日本史を掘る（聞き流し）, 戦国時代を掘る]
+shorts_playlists: [日本史ショート]
+tags: [旭姫, 朝日姫, 駿河御前, 南明院, 大政所, 豊臣秀吉, 徳川家康, 豊臣秀長, 池鯉鮒, 知立, 家忠日記, 本多重次, 井伊直政, 副田甚兵衛, 佐治日向守, 聚楽第, 瑞龍寺, 東福寺, 三溪園, 戦国時代, 日本史, 歴史, 再現ドラマ, 歴史の地層]
+
+# 日本語の概要欄の頭（describe が一番上に出す）
+description_head: |-
+  天正14年5月11日。三河の池鯉鮒の野原で、44歳の花嫁が、兄の家来から夫の家来へと渡されました。豊臣秀吉の妹、旭です。嫁ぎ先は、徳川家康でした。
+  5か月後には、秀吉の母、大政所も三河へ下ります。表向きは「娘に会いたい」。けれど同じ時代の日記は、その姿を「人質」と書きました。
+  なぜ秀吉は、妹と母を、家康に差し出したのか。
+  この動画でわかること
+  ・婚礼の10日後に秀吉が出した朱印状と、「縁組を望んだのは家康の側」という読み
+  ・前の夫は誰だったのか。2つの説と、100倍違う見返りの話
+  ・大政所の三河下りの日々と、「薪の山」の話の出どころ
+  ・48歳の死が伏せられたわけと、2021年に初めて公開された寺、2023年に文化財になった品
+description_note: |-
+  再現の場面の台詞の一部は、記録をもとにした想像です。画面に「想像」の札と「（想像）」の名札を出しています。
+  記録に残る言葉は、出どころ（秀吉の朱印状・書状、『家忠日記』『宇野主水日記』『当代記』など）を語りで示してから読んでいます。
+
+en:
+  title: "Asahi-hime: Why Did Hideyoshi Send His Sister and His Mother to Ieyasu?"
+  description: |-
+    On the 11th day of the 5th month of Tensho 14, in a field at Chiryu in Mikawa, a 44-year-old bride was handed over from her brother's men to her husband's men. She was Asahi, the younger sister of Toyotomi Hideyoshi, and the groom was Tokugawa Ieyasu.
+    Five months later Hideyoshi's mother, Omandokoro, also went to Mikawa. Officially she wanted to see her daughter; a diary of the time called her a hostage.
+    Why did Hideyoshi send his sister and his mother to Ieyasu?
+    In this video you will learn:
+    - Hideyoshi's red-seal letter written ten days after the wedding, and the reading that it was Ieyasu's side that wanted the marriage
+    - Two different names for Asahi's first husband, and two rewards that differ a hundredfold
+    - Omandokoro's weeks at Okazaki Castle, and where the "pile of firewood" story comes from
+    - Why her death at 48 was kept secret, the Kyoto temple first opened to the public in 2021, and the items designated cultural properties in 2023
+    Some lines in the re-enacted scenes are imagined and marked "imagined" on screen; recorded words are read with their sources.
+    Japanese-language history video to listen to while you work (Japanese audio).
+  chapters:
+    - "Why Did Hideyoshi Send His Sister and Mother? A Field at Chiryu"
+    - "Why Was the 44-Year-Old Bride Handed Over in a Field? The Wedding of 1586"
+    - "Why Send His One and Only Mother? Omandokoro in Okazaki"
+    - "Was Asahi Really Forced to Divorce? Her First Husband and Hideyoshi's Letter"
+    - "Why Did Lady Suruga Ride Through the Night? Sunpu and Kyoto"
+    - "Where Does Asahi Rest? Nanmeiin and Zuiryuji"
+
+texture: true
+recap: true
+
+timeline:
+  start: 1540
+  end: 1595
+  events: [[1543, 旭が生まれる], [1586, 輿入れ・大政所の三河下り], [1590, 旭が亡くなる]]
+
+terms:
+  釣輿: 担ぎ棒に吊り下げて運ぶ輿
+  起請文: 約束を神仏に誓って書く文書
+  朱印状: 朱色の印を押した、武家の命令や知らせの書状
+  証人: 約束の証しとして相手のもとに置く人。人質
+  塔頭: 大きな寺の境内にある小さな寺
+  打敷: 仏前の机に掛ける敷物
+  寿塔: 生きているうちに建てておく墓
+  覆堂: 塔や像を雨風から守るために覆う建物
+
+# ショートは後で決める（ユーザー）
+shorts: {}
+
+# 次回予告は出さない（物語型、10-24 ユーザー決定）。next: は書かない
+
+thumbnail:
+  layout: face
+  side: right
+  image: paintings/hidenaga_asahihime.jpg
+  crop: [0, 1480, 738, 1960]
+  name: 旭姫
+  lead: 秀吉はなぜ妹と母を家康へ
+  main: 44歳の花嫁
+  # 2段：上に小さい問い（lead）、下に特大の一言（main）。44歳は冒頭の10秒以内に出る（asahi-03）。
+  # 構図は okubo→oichi-story（face）→kazumasa-story（scene）のあと。face は2回続かない。肖像は 738 幅で小さいので、粗ければ scene（浜松の広重）に替える
+
+sections:
+  # ================================================================ 導入（冒頭 約1分40秒）
+  - title: なぜ秀吉は、妹と母を家康に差し出したのか　天正14年 池鯉鮒の野
+    background: {image: paintings/kira_okazaki_hiroshige.jpg, credit: "歌川広重《東海道五十三次 岡崎》（三河の国）1833年ごろ"}
+    # AI絵：a wide open field in Mikawa province in early summer, 1580s Japan, a long bridal procession of palanquins and attendants meeting a group of samurai, seen from far away, muted colors, painterly, no faces
+    year: 1586
+    lines:
+      # 0〜10秒：場面から（あいさつなし）。44歳（岡崎市史 1926・渡辺世祐 1919）と、野原での受け渡し（家忠日記）
+      # fact: asahi-03, asahi-08
+      - 語り: 44歳の花嫁が、野原の真ん中で、兄の家来の手から、夫の家来の手へと、渡されました。
+        tone: 重い
+        card: {head: "44歳の花嫁", body: 野原で受け渡された}
+      # fact: asahi-08
+      - 語り: 天正14年5月11日。三河の池鯉鮒の、西の野でのことです。
+        card: {head: "天正14年5月11日", body: 三河 池鯉鮒の西の野}
+      # fact: asahi-08
+      - 語り: 迎えに出た徳川の家臣、松平家忠は、その日の日記に、「西の野まで、請け取った」と記しました。
+        tone: しみじみ
+      - 語り: 花嫁の名は、旭。豊臣秀吉の妹です。嫁ぎ先は、徳川家康でした。
+        portrait: {image: paintings/hidenaga_asahihime.jpg, caption: "朝日（秀吉・秀長の妹、江戸時代の肖像）"}
+      # fact: asahi-09
+      - 語り: 輿は12丁、釣輿は15丁。付き従う女性と従者は、150人あまり。
+        portrait: null
+        card: {head: "嫁入りの行列", body: 輿12丁・釣輿15丁・150人あまり}
+      # 10〜40秒：ずれ。前の夫がいた（asahi-01）
+      # fact: asahi-01
+      - 語り: けれど、この花嫁には、前の夫がいました。
+        tone: 強調
+      # fact: asahi-02
+      - 語り: その夫が誰だったのか。記録は、ひとつに定まっていません。
+      # fact: asahi-41
+      - 語り: そして5か月後。今度は、秀吉の母、大政所が、同じ池鯉鮒を通って、三河の岡崎城へ入ります。
+        portrait: {image: paintings/hidenaga_omandokoro.jpg, caption: "大政所（秀吉・秀長の母、江戸時代の肖像）"}
+        background: {image: paintings/mikata_okazaki_castle_ndl_41.jpg, credit: "〔日本古城絵図〕三州岡崎城図（江戸時代、国立国会図書館蔵）"}
+        card: {head: "5か月後", body: 母の大政所も三河へ}
+      # fact: asahi-11
+      - 語り: 表向きの理由は、「娘に会いたい」。けれど、同じ時代の日記は、その姿を、「《人質》」と書きました。
+        tone: 重い
+      # 40〜80秒：「なぜ」を1文
+      - 語り: なぜ秀吉は、妹と母を、家康に差し出したのか。
+        tone: 疑問
+        pause: 0.8
+        portrait: null
+        background: {image: paintings/ieyasu_okazaki_castle_ryujo_zu.jpg, credit: "《龍城図》岡崎城（江戸時代）"}
+      # 答えのかけら：天正14年5月24日付の秀吉の朱印状（八幡和郎・濱田浩一郎 2026 が引く）。婚礼（14日）の10日後。答えそのもの（誰が望んだか）は第3章で
+      # fact: asahi-38
+      - 語り: 手がかりは、婚礼の10日後に、秀吉自身が出した、《1通の朱印状》にあります。
+        tone: 強調
+        card: {head: "天正14年5月24日", body: 秀吉の朱印状}
+      # fact: asahi-38
+      - 語り: そこには、縁組をしきりに望んだのは誰だったのか、秀吉の言い分が書かれていました。
+      # その後の予告（第5章）
+      # fact: asahi-05, asahi-16
+      - 語り: 旭が家康の妻でいたのは、4年足らず。48歳で亡くなったとき、徳川の家は、その死を伏せました。
+        tone: 重い
+        background: {image: paintings/akechi_rakuchu_rakugai_uesugi_left.jpg, credit: "《上杉本洛中洛外図屏風》（上杉家蔵）"}
+        card: {head: "48歳の死", body: 徳川は喪を伏せた}
+      # fact: asahi-26
+      - 語り: 旭が眠る京都の寺が、初めて一般に公開されたのは、2021年の秋。そこには、旭の肖像も並びました。
+        card: {head: "2021年の秋", body: 京都の寺が初めて公開}
+        portrait: {image: paintings/hidenaga_asahihime.jpg, caption: "朝日（秀吉・秀長の妹、江戸時代の肖像）"}
+      # 約束の1文
+      - 語り: これは、兄の天下取りのさなかに、東へ送られた妹と母の、ひとつの「なぜ」の記録です。
+        tone: しみじみ
+        pause: 0.6
+        background: {image: paintings/kira_okazaki_hiroshige.jpg, credit: "歌川広重《東海道五十三次 岡崎》（三河の国）1833年ごろ"}
+      # 橋渡し：輿入れの半年ほど前（天正13年の冬）
+      - 語り: 話は、輿入れの半年ほど前にさかのぼります。家康が、秀吉のもとへ、なかなか来ようとしなかったころです。
+        portrait: null
+        pause: 0.6
+
+  # ================================================================ 第1章 輿入れ（天正14年4〜5月）
+  - title: 44歳の花嫁は、なぜ野原で渡されたのか　天正14年 池鯉鮒
+    background: {image: paintings/hidenaga_komaki_nagakute_screen.jpg, credit: "《小牧長久手合戦図屏風》18世紀（豊田市郷土資料館保管）"}
+    year: 1586
+    lines:
+      # 前置き（誰でも知っている流れ。fact は付けない）。数正の出奔は2文まで（19:00 の回と重ねない）
+      - 語り: 天正12年。家康と秀吉は、尾張の小牧・長久手で戦い、そのあと和睦しました。
+        card: {head: "天正12年", body: 小牧・長久手のあと和睦}
+      - 語り: けれど家康は、秀吉のいる大坂へ、あいさつに出向こうとはしません。天正13年の冬には、家康の重臣の石川数正が、秀吉のもとへ走りました。
+        background: {image: paintings/ieyasu_okazaki_castle_ryujo_zu.jpg, credit: "《龍城図》岡崎城（江戸時代）"}
+      - 語り: 張りつめたままの、徳川と秀吉。そこへ持ち上がったのが、縁組の話でした。秀吉の妹の旭を、家康の妻に迎える話です。
+        portrait: {image: paintings/hidenaga_asahihime.jpg, caption: "朝日（秀吉・秀長の妹、江戸時代の肖像）"}
+      # 黒田基樹（プレジデントオンライン 2026）
+      # fact: asahi-07
+      - 語り: 歴史学者の黒田基樹さんが、2026年にプレジデントオンラインで書いた記事によれば、婚礼は、はじめ4月28日の予定でした。
+        portrait: null
+        background: {image: paintings/hideyoshi_osaka_zu_byobu.jpg, credit: "《豊臣期大坂図屏風》1607〜1615年ごろ（エッゲンベルク城蔵）"}
+        detail: {box: [0.3, 0.0, 0.7, 1.0], label: 大坂（豊臣期大坂図屏風の一部）}
+        card: {head: "はじめの予定", body: 4月28日}
+      # fact: asahi-07
+      - 語り: 家康は、結納の使者として、家臣の天野康景を送ります。ところが秀吉は、見知らない者をよこした、と怒ったといいます。
+        background: {image: paintings/mikata_hamamatsu_hiroshige_1855.jpg, credit: "歌川広重《東海道五十三次之内 浜松》1848年ごろ"}
+        portrait: {image: paintings/hideyoshi_portrait_osaka_city_1600.jpg, caption: "豊臣秀吉（大阪市立美術館蔵、1600年）"}
+      - 語り: 使者ひとりの顔ぶれで、婚礼の日取りが動く。この縁組が、ただの嫁入りではなかったことが、ここからも見えてきます。
+      # fact: asahi-07
+      - 語り: さらに、起請文、つまり約束を神仏に誓う文書のことでも話がもつれ、日取りは何度も延びました。
+        portrait: null
+      # fact: asahi-07
+      - 語り: 最後は、5月9日、10日、11日と、一日ずつ、ずれていきます。
+        figure: {type: stats, title: 天正14年 旭の婚礼の日取り, items: [[はじめの予定, 4月28日, 使者と起請文でもつれる], [一日ずつ延びる, 5月9日・10日, 黒田基樹さんの紹介], [池鯉鮒で受け渡し, 5月11日, 家忠日記]], upto: 3}
+      - 語り: 花嫁の来る日が、一日ずつ先へ延びていく。送る側にとっても、迎える側にとっても、気の張る初夏でした。
+        figure: null
+        tone: しみじみ
+      # 渡辺世祐『豊太閤と其家族』（1919）
+      # fact: asahi-09
+      - 語り: 大正8年、1919年に出た、渡辺世祐の『豊太閤と其家族』は、このときの行列を、こう記します。
+        background: {image: paintings/akechi_rakuchu_rakugai_uesugi_right.jpg, credit: "狩野永徳《洛中洛外図屏風》（上杉本）右隻"}
+      # fact: asahi-09
+      - 語り: 輿12丁、釣輿15丁、女性と従者150人あまり。美しく飾った行列で、京都を発った、と。
+        # AI絵：a long bridal procession of lacquered palanquins leaving Kyoto along a road in early summer, 1580s Japan, attendants on foot, seen from the side and far away, muted colors, painterly, no faces
+        card: {head: "渡辺世祐 1919年", body: 輿12丁・釣輿15丁・150人あまり}
+      - 語り: 京の町を出ていく、長い行列。その真ん中の輿に、44歳の旭が乗っていました。
+        tone: しみじみ
+      # 家忠日記 天正14年5月11日条（明治30年 木版翻刻、岡崎市史・黒田基樹 2026 も引く）
+      # fact: asahi-08
+      - 語り: 5月11日。行列は、三河の池鯉鮒に着きます。今の愛知県知立市のあたりです。
+        background: {image: paintings/kira_okazaki_hiroshige.jpg, credit: "歌川広重《東海道五十三次 岡崎》（三河の国）1833年ごろ"}
+        card: {head: "天正14年5月11日", body: 池鯉鮒（今の知立市）}
+        figure: {type: map, title: 天正14年5月 旭の道のり, bounds: [135.5, 138.0, 34.5, 35.4], places: [[京都, 135.77, 35.01], [池鯉鮒, 137.05, 35.0], [吉田, 137.39, 34.77], [浜松, 137.73, 34.71]], route: [京都, 池鯉鮒], note: 池鯉鮒の西の野で受け渡し}
+      # fact: asahi-08
+      - 語り: 徳川の家臣、松平家忠は、自分で迎えに出ていました。その日の日記には、こうあります。「池鯉鮒まで、御祝言の御迎えに出た。西の野まで、請け取った」。
+        tone: しみじみ
+        card: {head: "家忠日記", body: 「西の野まで請け取った」}
+      - 語り: 「請け取った」。日記の言葉は、短く、事務的です。花嫁を迎えた日の記録としては、ずいぶん素っ気ない一行でした。
+        background: {image: paintings/ieyasu_okazaki_castle_ryujo_zu.jpg, credit: "《龍城図》岡崎城（江戸時代）"}
+        tone: しみじみ
+      # fact: asahi-08
+      - 語り: 京から付いてきた秀吉の側の者たちは、ここで旭を、徳川の側へ渡しました。町の中でも、城の中でもない。国と国のあいだの、野原でした。
+        background: {image: paintings/kira_okazaki_hiroshige.jpg, credit: "歌川広重《東海道五十三次 岡崎》（三河の国）1833年ごろ"}
+        figure: null
+      # 【想像1】旭。記録：池鯉鮒の西の野で羽柴方から徳川方へ受け渡された（asahi-08）。気持ちの言葉だけ（新しい事実なし）
+      - 人物: 「……参りましょう」
+        who: 旭想像
+        imagined: true
+        tone: しみじみ
+        portrait: {image: paintings/hidenaga_asahihime.jpg, caption: "朝日（秀吉・秀長の妹、江戸時代の肖像）"}
+      - 語り: ここから先は、兄の家ではなく、夫の家です。
+        portrait: null
+      # fact: asahi-10
+      - 語り: 旭の一行は、12日に吉田、今の豊橋に着いて、1日とどまります。
+        background: {image: paintings/mikata_yoshida_castle_ndl_36.jpg, credit: "〔日本古城絵図〕三州吉田城図（江戸時代、国立国会図書館蔵）"}
+        figure: {type: map, title: 天正14年5月 旭の道のり, bounds: [135.5, 138.0, 34.5, 35.4], places: [[京都, 135.77, 35.01], [池鯉鮒, 137.05, 35.0], [吉田, 137.39, 34.77], [浜松, 137.73, 34.71]], route: [京都, 池鯉鮒, 吉田], note: 12日に吉田で1日とどまる}
+      # fact: asahi-10
+      - 語り: そして14日、遠江の浜松へ。渡辺世祐によれば、いったん家臣の榊原康政の屋敷に入り、それから城に入って、婚礼を挙げました。
+        background: {image: paintings/ieyasu_hamamatsu_hiroshige_1834.jpg, credit: "歌川広重《東海道五十三次之内 濱松 冬枯の図》1834年ごろ"}
+        figure: {type: map, title: 天正14年5月 旭の道のり, bounds: [135.5, 138.0, 34.5, 35.4], places: [[京都, 135.77, 35.01], [池鯉鮒, 137.05, 35.0], [吉田, 137.39, 34.77], [浜松, 137.73, 34.71]], route: [京都, 池鯉鮒, 吉田, 浜松], note: 14日に浜松で婚礼}
+        card: {head: "5月14日", body: 浜松で婚礼}
+      - 語り: 池鯉鮒から、3日。浜松は、家康が長く本拠にしてきた城です。旭は、ここで、徳川家康の妻になりました。
+        tone: しみじみ
+      # 岡崎市史（1926）
+      # fact: asahi-03
+      - 語り: 1926年にまとめられた『岡崎市史』によれば、このとき家康は45歳、旭は44歳でした。
+        figure: {type: stats, title: 天正14年5月 婚礼のときの年, items: [[徳川家康, 45歳, 夫], [旭, 44歳, 妻]], upto: 2}
+        card: {head: "婚礼のとき", body: 家康45歳・旭44歳}
+      # 徳富猪一郎（蘇峰）『近世日本国民史 豊臣氏時代』1922
+      # fact: asahi-03
+      - 語り: 徳富蘇峰は、1922年の『近世日本国民史』で、このときの旭を、すでに44歳の、中年の女性だった、と書きました。
+        background: {image: paintings/mikata_hamamatsu_hiroshige_1855.jpg, credit: "歌川広重《東海道五十三次之内 浜松》1848年ごろ"}
+        figure: null
+        tone: しみじみ
+      - 語り: 若い姫の輿入れではありません。40代の半ばで、前の暮らしを離れ、見知らぬ国の城に入った人でした。
+        tone: しみじみ
+        portrait: {image: paintings/hidenaga_asahihime.jpg, caption: "朝日（秀吉・秀長の妹、江戸時代の肖像）"}
+      - 語り: 兄の秀吉は、このころ、天下をほぼ手の内に収めつつありました。その兄の妹として、旭は、徳川の家に入ったんです。
+      - 語り: 縁組は、まとまりました。けれど、婚礼から5か月たっても、家康は、まだ秀吉のもとへ来ません。
+        background: {image: paintings/hideyoshi_osaka_zu_byobu.jpg, credit: "《豊臣期大坂図屏風》1607〜1615年ごろ（エッゲンベルク城蔵）"}
+        detail: {box: [0.3, 0.0, 0.7, 1.0], label: 大坂（豊臣期大坂図屏風の一部）}
+        portrait: null
+        hook: true
+      - 語り: 次に秀吉が三河へ送ったのは、自分の母でした。
+        background: {image: paintings/ieyasu_okazaki_castle_ryujo_zu.jpg, credit: "《龍城図》岡崎城（江戸時代）"}
+        tone: 重い
+        hook: true
+
+  # ================================================================ 第2章 大政所の三河下り（天正14年9〜11月）
+  - title: なぜ「二人と無き母」を三河へ　天正14年 大政所と岡崎城
+    background: {image: paintings/mikata_okazaki_castle_ndl_41.jpg, credit: "〔日本古城絵図〕三州岡崎城図（江戸時代、国立国会図書館蔵）"}
+    portrait: {image: paintings/hidenaga_omandokoro.jpg, caption: "大政所（秀吉・秀長の母、江戸時代の肖像）"}
+    year: 1586
+    lines:
+      # 秀吉の天正14年9月の書状（岡崎市史 1935 が引く）
+      # fact: asahi-39
+      - 語り: 婚礼から4か月。秀吉の妹を妻に迎えても、家康は、動きませんでした。
+        card: {head: "婚礼から4か月", body: 家康は動かない}
+      # fact: asahi-39
+      - 語り: 天正14年の9月。秀吉は、徳川の側へ書状を送ります。1935年の『岡崎市史』が引いている一通です。
+        card: {head: "天正14年9月", body: 秀吉の書状}
+
+      # fact: asahi-39
+      - 語り: 家康が、京の聚楽へ来るのなら、と前置きして、秀吉は、こう書きました。今の言葉にすると、こうです。
+        background: {image: paintings/hidenaga_jurakudai_screen.jpg, credit: "《聚楽第図屏風》桃山時代（三井記念美術館蔵）"}
+        portrait: {image: paintings/hideyoshi_portrait_osaka_city_1600.jpg, caption: "豊臣秀吉（大阪市立美術館蔵、1600年）"}
+      # 【記録】秀吉書状「左候者二人與無之母於濱松迄相越可申候。馬乘一人不添可進候」（岡崎市史 別巻下巻 1935）。今の言葉にして秀吉の声で
+      # fact: asahi-39
+      - 人物: 「そうであれば、二人といない母を、浜松まで行かせよう。馬に乗る供も、一人も付けずに、そちらへ送ろう」
+        who: 秀吉書状
+        tone: 重い
+      # fact: asahi-39
+      - 語り: 「《二人と無き母》」。この世に、ただ一人の母です。その母を、供も付けずに、相手のもとへ行かせる、というんです。
+        background: {image: paintings/kira_okazaki_hiroshige.jpg, credit: "歌川広重《東海道五十三次 岡崎》（三河の国）1833年ごろ"}
+        tone: 強調
+        portrait: {image: paintings/hidenaga_omandokoro.jpg, caption: "大政所（秀吉・秀長の母、江戸時代の肖像）"}
+        card: {head: "秀吉の書状", body: 「二人と無き母」}
+      - 語り: 母を差し出す側が、ここまで書く。それほど、家康の上洛は、秀吉にとって大事なことでした。
+      # 烈祖成績（江戸時代の編纂物）・岡崎市史 1935
+      # fact: asahi-51
+      - 語り: 江戸時代にまとめられた『烈祖成績』には、弟の秀長が、母を敵の国の人質に出すのは、武将の恥だ、と諫めた話が出てきます。
+        portrait: {image: paintings/hidenaga_portrait_shungakuin.jpg, caption: "豊臣秀長（春岳院蔵とされる肖像、江戸時代）"}
+      # fact: asahi-51
+      - 語り: 秀吉は笑って、大きなことをなす者は、小さな傷をかえりみない、と退けた、と伝わります。
+        portrait: {image: paintings/hideyoshi_portrait_osaka_city_1600.jpg, caption: "豊臣秀吉（大阪市立美術館蔵、1600年）"}
+      - 語り: 母を差し出すことに、身内からも反対の声があった。少なくとも、江戸時代の人たちは、そう書き残しました。
+        tone: しみじみ
+      # 渡辺世祐 1919（9月26日に浅野長政・織田長益らを岡崎へ。行き先は浜松から岡崎に）
+      # fact: asahi-04
+      - 語り: 渡辺世祐によれば、9月26日、秀吉は、浅野長政や織田長益らを岡崎へ送り、家康の上洛が決まります。大政所の行き先も、浜松から、岡崎に変わりました。
+        portrait: null
+        background: {image: paintings/ieyasu_okazaki_castle_ryujo_zu.jpg, credit: "《龍城図》岡崎城（江戸時代）"}
+      # 多聞院日記・家忠日記（岡崎市史 1935、烈祖成績）
+      # fact: asahi-41
+      - 語り: 『多聞院日記』によれば、大政所が京を発ったのは、10月13日。
+        card: {head: "10月13日", body: 大政所、京を発つ}
+      # fact: asahi-41
+      - 語り: 18日、松平家忠は、池鯉鮒まで迎えに出て、輿を守って、岡崎城へ入りました。5か月前に旭が渡された、あの池鯉鮒です。
+        background: {image: paintings/kira_okazaki_hiroshige.jpg, credit: "歌川広重《東海道五十三次 岡崎》（三河の国）1833年ごろ"}
+        card: {head: "10月18日", body: 池鯉鮒から岡崎城へ}
+      - 語り: 旭が渡されたのは、初夏の野原。母が通ったのは、秋の終わりの道でした。
+        tone: しみじみ
+      # 家忠日記 天正14年10月17日条（明治30年 木版翻刻）
+      # fact: asahi-04
+      - 語り: その前の日の、家忠の日記です。「秀吉の御母、大政所が、家康様の御上洛の、《人質に》、明日18日に、岡崎まで御越しになる」。
+        tone: 重い
+        card: {head: "家忠日記 10月17日", body: 「人質に」}
+      # 宇野主水日記（本願寺の側の日記。岡崎市史 1935 が引く）
+      # fact: asahi-40
+      - 語り: 本願寺の側の、宇野主水の日記も、同じことを記しています。大政所の三河下りは、「御証人の体」。つまり、人質としての旅だ、と。
+        background: {image: paintings/hideyoshi_osaka_zu_byobu.jpg, credit: "《豊臣期大坂図屏風》1607〜1615年ごろ（エッゲンベルク城蔵）"}
+        detail: {box: [0.3, 0.0, 0.7, 1.0], label: 大坂（豊臣期大坂図屏風の一部）}
+        card: {head: "宇野主水日記", body: 「御証人の体」}
+      - 語り: 徳川の側の家忠も、本願寺の側の宇野主水も、同じ旅を、人質と書いたことになります。
+        background: {image: paintings/mikata_okazaki_castle_ndl_41.jpg, credit: "〔日本古城絵図〕三州岡崎城図（江戸時代、国立国会図書館蔵）"}
+      # fact: asahi-40
+      - 語り: そして、こう続けます。表向きは、御息女に会いたい、ということで下られたのだ、と。
+        tone: しみじみ
+      - 語り: 証人とは、約束の証しとして、相手のもとに置かれる人のことです。家康が上洛して戻るまで、大政所は、岡崎にとどまることになりました。
+      - 語り: 表向きは、母が娘に会いに行く旅。中身は、家康を京へ呼ぶための、人質でした。
+        tone: しみじみ
+        background: {image: paintings/mikata_okazaki_castle_ndl_41.jpg, credit: "〔日本古城絵図〕三州岡崎城図（江戸時代、国立国会図書館蔵）"}
+        portrait: {image: paintings/hidenaga_omandokoro.jpg, caption: "大政所（秀吉・秀長の母、江戸時代の肖像）"}
+      # 落穂集（18世紀の逸話集。岡崎市史 1935 が引く）。江戸時代の書物なので「書く」と言う
+      # fact: asahi-45
+      - 語り: 岡崎で、母と娘は顔を合わせます。18世紀の逸話集『落穂集』は、大政所が、輿の戸が開くのも待ちかねて、旭に抱きつき、涙を流した、と書いています。
+        background: {image: paintings/ieyasu_okazaki_castle_ryujo_zu.jpg, credit: "《龍城図》岡崎城（江戸時代）"}
+        card: {head: "落穂集", body: 輿の戸が開くのも待ちかねて}
+        # AI絵：an elderly noblewoman stepping out of a lacquered palanquin and embracing a middle-aged woman in a castle courtyard, 1580s Japan, warm evening light, seen from a distance, painterly, faces not detailed
+      # 【想像2】大政所。記録：『落穂集』の、輿から出るなり旭に抱きつき涙を流した（asahi-45）。気持ちの言葉だけ
+      - 人物: 「旭……」
+        who: 大政所想像
+        imagined: true
+        tone: しみじみ
+      # 【想像3】旭。同じ場面（asahi-45）。気持ちの言葉だけ
+      - 人物: 「母上……」
+        who: 旭想像
+        imagined: true
+        tone: しみじみ
+        portrait: {image: paintings/hidenaga_asahihime.jpg, caption: "朝日（秀吉・秀長の妹、江戸時代の肖像）"}
+      # fact: asahi-45
+      - 語り: ただ、これを書いた『落穂集』は、出来事から100年以上のちの書物です。
+        portrait: null
+      - 語り: 兄の天下のために東へ来た娘と、同じ兄のために東へ来た母。ふたりが会えたのは、人質の旅の中でした。
+        portrait: null
+        tone: しみじみ
+      - 語り: 旭にとっては、嫁いで半年。知る人の少ない徳川の家で迎えた、母との再会でした。
+        tone: しみじみ
+      # 前置き（誰でも知っている流れ。fact は付けない）
+      - 語り: 母が岡崎に入ったのを見て、家康は、大坂へ向かいます。そして秀吉に会い、その家臣の列に加わりました。
+        background: {image: paintings/hideyoshi_osaka_zu_byobu.jpg, credit: "《豊臣期大坂図屏風》1607〜1615年ごろ（エッゲンベルク城蔵）"}
+        detail: {box: [0.3, 0.0, 0.7, 1.0], label: 大坂（豊臣期大坂図屏風の一部）}
+      - 語り: 母と妹。秀吉が東へ送ったふたりは、家康を動かすための、重しになったんです。
+        detail: {box: [0.3, 0.0, 0.7, 1.0], label: 大坂（豊臣期大坂図屏風の一部）}
+        tone: しみじみ
+      # 家忠日記（岡崎市史 1926 が引く）：11月12日に大政所が帰り、井伊直政が道中付き添う
+      # fact: asahi-12
+      - 語り: 家康が戻ると、11月12日、大政所は帰っていきます。岡崎にいたのは、10月18日から、25日ほどでした。
+        background: {image: paintings/mikata_okazaki_castle_ndl_41.jpg, credit: "〔日本古城絵図〕三州岡崎城図（江戸時代、国立国会図書館蔵）"}
+        figure: {type: stats, title: 天正14年 大政所の三河下り, items: [[京を発つ, 10月13日, 多聞院日記], [岡崎城に入る, 10月18日, 家忠日記], [岡崎を発つ, 11月12日, 約25日の滞在]], upto: 3}
+        card: {head: "11月12日", body: 大政所、岡崎を発つ}
+      # 烈祖成績・家忠日記・サライ 2023：井伊直政が大坂まで送り届け、秀吉が直政をもてなした
+      # fact: asahi-46, asahi-12
+      - 語り: 帰りの道に付き添ったのは、徳川の若い重臣、井伊直政でした。江戸時代の『烈祖成績』は、直政が大坂まで送り届け、秀吉が直政をもてなした、と伝えます。
+        figure: null
+        portrait: {image: paintings/ieyasu_ii_naomasa_portrait.jpg, caption: "井伊直政（肖像）"}
+      # fact: asahi-46
+      - 語り: 母を見送った旭は、11月16日、浜松へ帰りました。
+        portrait: {image: paintings/hidenaga_asahihime.jpg, caption: "朝日（秀吉・秀長の妹、江戸時代の肖像）"}
+        background: {image: paintings/ieyasu_hamamatsu_hiroshige_1834.jpg, credit: "歌川広重《東海道五十三次之内 濱松 冬枯の図》1834年ごろ"}
+        card: {head: "11月16日", body: 旭、浜松へ}
+      - 語り: 母は西へ、娘は東へ。岡崎で、ふたりの道は、また分かれました。
+        tone: しみじみ
+      - 語り: 母と妹を差し出して、秀吉は、家康を呼び寄せた。ふつうは、そう語られてきました。
+        portrait: null
+        hook: true
+      - 語り: けれど、その語りには、記録と合わない所があります。まず、旭の前の夫のことです。
+        tone: 疑問
+        hook: true
+
+  # ================================================================ 第3章 語られてきた話を記録で読む（検証はこの章だけ）
+  - title: 旭は、本当に無理やり離縁させられたのか　前の夫と天正14年の朱印状
+    background: {image: paintings/ieyasu_hamamatsu_hiroshige_1834.jpg, credit: "歌川広重《東海道五十三次之内 濱松 冬枯の図》1834年ごろ"}
+    year: 1586
+    lines:
+      # 通説：愛知県 Aichi Now・濱田浩一郎（PRESIDENT Online 2026）
+      # fact: asahi-01
+      - 語り: 愛知県の観光のページには、旭について、こんな一文があります。すでに44歳、夫もいたが、無理やり離縁させられた。
+        card: {head: "よく語られる話", body: 無理やり離縁させられた}
+      # fact: asahi-01
+      - 語り: 歴史研究者の濱田浩一郎さんも、2026年の記事で、兄の命令で夫と離縁させられ、44歳で家康の正室になった、と言われている、と紹介しています。
+      # 食い違い①：前の夫の名（渡辺世祐 1919・徳富 1922・濱田 2026）
+      # fact: asahi-02
+      - 語り: ところが、その前の夫が誰だったのか。そこから、記録が割れています。
+        tone: 強調
+      # fact: asahi-02
+      - 語り: 『改正三河後風土記』は、佐治日向守。『尾張志』は、副田与左衛門、あるいは甚兵衛、吉成。
+        figure: {type: stats, title: 旭の前の夫　2つの説, items: [[佐治日向守, 改正三河後風土記ほか, 江戸の徳川方の書物], [副田吉成, 尾張志, 尾張の地誌]], upto: 2}
+      # fact: asahi-02
+      - 語り: 1919年に、渡辺世祐は、すでにこう書いていました。確かなことは、明らかでない。
+        figure: {type: stats, title: 旭の前の夫　2つの説, items: [[佐治日向守, 改正三河後風土記ほか, 江戸の徳川方の書物], [副田吉成, 尾張志, 尾張の地誌]], upto: 2}
+        tone: しみじみ
+      # 佐治日向守説：見返りは500石（渡辺 1919）・自害（武徳編年集成）
+      # fact: asahi-19, asahi-34
+      - 語り: 佐治日向守とする話では、秀吉は、離縁の見返りに、500石を加増しようとしました。日向守はそれを断り、のちに、自ら命を絶ったといいます。
+        figure: null
+        background: {image: paintings/hidenaga_komaki_nagakute_screen.jpg, credit: "《小牧長久手合戦図屏風》18世紀（豊田市郷土資料館保管）"}
+      # 八幡和郎（アゴラ 2026）
+      # fact: asahi-36
+      - 語り: 八幡和郎さんは、2026年にアゴラに書いた記事で、この佐治日向守の説は、8代将軍吉宗のころの『武徳編年集成』が採って、通説になったものだ、としています。
+      # fact: asahi-36
+      - 語り: そして、浅井三姉妹の江の、最初の夫、佐治一成と、取り違えたのではないか、と見ています。
+        tone: 疑問
+      # 副田吉成説：尾張志（岡崎市史 1935 が引く）
+      # fact: asahi-35, asahi-19
+      - 語り: 一方、『尾張志』の副田吉成の話では、秀吉が示した見返りは、《5万石》。副田は、妻の代わりに知行をもらうのは、武士の本意ではない、と固く断ったと伝わります。
+        background: {image: paintings/ieyasu_okazaki_castle_ryujo_zu.jpg, credit: "《龍城図》岡崎城（江戸時代）"}
+      # fact: asahi-34
+      - 語り: そして髪を剃り、隠斎と名乗って、烏森村で、静かに一生を終えた、と。
+        tone: しみじみ
+      # fact: asahi-19
+      - 語り: 500石と、5万石。同じ見返りの話で、数が、100倍も違うんです。
+        tone: 強調
+        figure: {type: stats, title: 前の夫への見返り, items: [[佐治日向守の説, 500石, 断って自ら命を絶つ], [副田吉成の説, 5万石, 断って出家し隠斎に]], upto: 2}
+        card: {head: "見返りの差", body: 500石と5万石　100倍}
+      - 語り: 片方は命を絶ち、片方は出家して生き延びる。前の夫の最期まで、話によって正反対なんです。
+      # 副田説のもう一つ（武家事紀・八幡 2026）
+      # fact: asahi-20
+      - 語り: 副田については、別の話もあります。副田が守っていた城を一揆に奪われ、その失態で、秀吉が妹を取り返した、というものです。
+        figure: null
+      # fact: asahi-20
+      - 語り: その城も、江戸時代の『武家事紀』では但馬、八幡さんの紹介では播磨と、場所が食い違っています。
+        background: {image: paintings/hidenaga_tajima_map_1780.jpg, credit: "秀一堂《但馬国輿地全図》1780年"}
+      # 武家事紀（濱田 2026）・菊地浩之（PRESIDENT Online 2026）
+      # fact: asahi-37
+      - 語り: そして、同じ『武家事紀』は、旭の離縁を、家康との結婚の4年前、天正10年ごろのこととしています。
+        tone: 強調
+        card: {head: "武家事紀", body: 離縁は結婚の4年前}
+      # fact: asahi-37
+      - 語り: 系図研究者の菊地浩之さんも、2026年の記事で、本能寺の変の直後に副田が失態を犯し、ふたりは離婚させられていた、と述べています。
+        background: {image: paintings/ieyasu_okazaki_castle_ryujo_zu.jpg, credit: "《龍城図》岡崎城（江戸時代）"}
+        card: {head: "菊地浩之さん", body: 本能寺の変の直後に離婚}
+      - 語り: もしそうなら、旭は、家康との縁組のために夫と別れたのでは、ありません。別れたのは、ずっと前だったことになります。
+        tone: しみじみ
+      # 食い違い②：縁組を望んだのは誰か。天正14年5月24日付の秀吉の朱印状（八幡 2026・濱田 2026 が引く）
+      # fact: asahi-38
+      - 語り: ここで、冒頭の朱印状です。婚礼の10日後、天正14年5月24日の日付で、秀吉は、こう記しました。今の言葉にすると、こうです。
+        background: {image: paintings/hideyoshi_osaka_zu_byobu.jpg, credit: "《豊臣期大坂図屏風》1607〜1615年ごろ（エッゲンベルク城蔵）"}
+        detail: {box: [0.3, 0.0, 0.7, 1.0], label: 大坂（豊臣期大坂図屏風の一部）}
+        # AI絵：an old Japanese letter on washi paper with brush calligraphy and a red square seal, lying on a dark wooden desk, close-up, soft lamp light, no readable text
+        card: {head: "天正14年5月24日", body: 秀吉の朱印状}
+      # 【記録】秀吉朱印状「家康の事、種々縁辺等の儀迄懇望せしめ候」（八幡和郎・濱田浩一郎 2026 が引く）。今の言葉にして秀吉の声で
+      # fact: asahi-38
+      - 人物: 「家康は、縁組のことまで、いろいろと、しきりに望んできた」
+        detail: {box: [0.3, 0.0, 0.7, 1.0], label: 大坂（豊臣期大坂図屏風の一部）}
+        who: 秀吉書状
+        tone: 重い
+      # fact: asahi-38
+      - 語り: 原文は、「家康の事、種々、縁辺等の儀まで、《懇望》せしめ候」。縁組を望んだのは、家康の側だった、と秀吉は書いたんです。
+        detail: {box: [0.3, 0.0, 0.7, 1.0], label: 大坂（豊臣期大坂図屏風の一部）}
+        tone: 強調
+        card: {head: "朱印状の言葉", body: 「縁辺等の儀迄懇望」}
+      # 黒田基樹の読み（八幡 2026・濱田 2026 の紹介、角川選書 2026 の目次）
+      # fact: asahi-18
+      - 語り: 黒田基樹さんは、この朱印状をもとに、縁組を強く望んだのは家康の側で、旭は、前の夫の失脚で、すでに離縁していた、と見ています。
+        background: {image: paintings/ieyasu_hamamatsu_hiroshige_1834.jpg, credit: "歌川広重《東海道五十三次之内 濱松 冬枯の図》1834年ごろ"}
+        figure: {type: stats, title: 縁組を望んだのは誰か, items: [[よく語られる話, 秀吉が無理に離縁させた, 観光のページ・多くの解説], [秀吉の朱印状, 家康がしきりに望んだ, 天正14年5月24日], [黒田基樹さん, 離縁は前の夫の失脚で, 朱印状と武家事紀から]], upto: 3}
+      - 語り: もっとも、これは秀吉の側が書いた手紙です。無理やり別れさせたのか、別れていた妹の縁組だったのか。記録は、ふたつの話を、並べたままです。
+        tone: しみじみ
+        figure: {type: stats, title: 縁組を望んだのは誰か, items: [[よく語られる話, 秀吉が無理に離縁させた, 観光のページ・多くの解説], [秀吉の朱印状, 家康がしきりに望んだ, 天正14年5月24日], [黒田基樹さん, 離縁は前の夫の失脚で, 朱印状と武家事紀から]], upto: 3}
+      - 語り: 誰が望んだ縁組だったのか。その答えによって、旭の44歳の輿入れは、まったく違う物語に見えてきます。
+        tone: しみじみ
+      # 薪の山の話（伝承）：藩翰譜・烈祖成績・落穂集（江戸時代の書物）⇔ 岡崎市史 1935「此事の實否は明ならず」
+      # fact: asahi-42
+      - 語り: もうひとつ、よく知られた話があります。大政所が岡崎にいたあいだ、徳川の家臣の本多重次が、宿所のまわりに、薪を積み上げた、という話です。
+        figure: null
+        background: {image: paintings/mikata_okazaki_castle_ndl_41.jpg, credit: "〔日本古城絵図〕三州岡崎城図（江戸時代、国立国会図書館蔵）"}
+        # AI絵：stacks of firewood piled around a quiet wooden residence inside a castle at dusk, 1580s Japan, guards standing far off, no fire, muted colors, painterly, no faces
+      # fact: asahi-42
+      - 語り: 新井白石の『藩翰譜』では、重次が配下に命じて、大政所のいる所の近くに、薪を山のように積み重ねます。
+        card: {head: "藩翰譜", body: 薪を山のように積み重ねた}
+      # fact: asahi-42
+      - 語り: 江戸時代の『烈祖成績』によれば、家康の身に、もしものことがあれば、火を放つ構えだった、といいます。
+        card: {head: "烈祖成績", body: もしもの時は火を放つ構え}
+      # fact: asahi-43
+      - 語り: しかも『藩翰譜』では、はやる重次を、井伊直政と大久保忠世が、「しばらく待たれよ」と止めていたことになっています。
+        background: {image: paintings/ieyasu_okazaki_castle_ryujo_zu.jpg, credit: "《龍城図》岡崎城（江戸時代）"}
+      # fact: asahi-44
+      - 語り: 『落穂集』は、京へ戻った大政所が、重次を死罪か遠流にしてほしい、と秀吉に強く求めた、とまで書いています。
+      # fact: asahi-42, asahi-13
+      - 語り: けれど、1935年の『岡崎市史』は、この話について、「その実否は、明らかでない」と書きました。どれも、江戸時代の書物に出てくる話なんです。
+        tone: 強調
+        card: {head: "岡崎市史 1935年", body: 「実否は明らかでない」}
+      - 語り: 人質の母が、薪の山に囲まれていた。話としては、よくできています。けれど、その出どころは、江戸時代の書物なんです。
+        background: {image: paintings/kira_okazaki_hiroshige.jpg, credit: "歌川広重《東海道五十三次 岡崎》（三河の国）1833年ごろ"}
+        tone: しみじみ
+      - 語り: 徳川の家臣たちが、人質の母を前に、どれほど張りつめていたか。のちの時代の人たちは、それを、薪の山という形で語ったのかもしれません。
+        tone: しみじみ
+      # fact: asahi-13
+      - 語り: 岡崎に着いた大政所が本物かどうか、旭を呼んで確かめさせた、という話もあります。こちらは、『岡崎市史』が、「おそらく事実ではないだろう」と退けています。
+        background: {image: paintings/mikata_okazaki_castle_ndl_41.jpg, credit: "〔日本古城絵図〕三州岡崎城図（江戸時代、国立国会図書館蔵）"}
+      - 語り: 母と娘が抱き合った場面も、薪の山も、残っているのは、のちの時代の書物の中でした。
+        tone: しみじみ
+        hook: true
+      - 語り: 一方、記録がはっきり残しているのは、そのあとの旭の、ある夜の早駆けです。
+        background: {image: paintings/ieyasu_fuchu_abe_river_hiroshige_1833.jpg, credit: "歌川広重《東海道五十三次之内 府中 安部川》1833年ごろ"}
+        hook: true
+
+  # ================================================================ 第4章 駿河御前（天正14〜17年）
+  - title: 駿河御前は、なぜ夜通し京へ　天正16年 駿府から京へ
+    background: {image: paintings/ieyasu_fuchu_abe_river_hiroshige_1833.jpg, credit: "歌川広重《東海道五十三次之内 府中 安部川》1833年ごろ"}
+    year: 1588
+    lines:
+      # 浜松市 都市整備部公園課（浜松城の変遷）
+      # fact: asahi-30
+      - 語り: 天正14年。家康は、本拠を、浜松城から駿府城へ移します。今の静岡市です。
+        background: {image: paintings/ieyasu_hamamatsu_hiroshige_1834.jpg, credit: "歌川広重《東海道五十三次之内 濱松 冬枯の図》1834年ごろ"}
+        card: {head: "天正14年", body: 浜松から駿府へ}
+      - 語り: 駿府は、東海道の府中。広重が描いた、この宿場町です。
+        background: {image: paintings/ieyasu_fuchu_abe_river_hiroshige_1833.jpg, credit: "歌川広重《東海道五十三次之内 府中 安部川》1833年ごろ"}
+      # fact: asahi-30
+      - 語り: 旭が、「《駿河御前》」と呼ばれるのは、この駿府に住んだからです。
+        portrait: {image: paintings/hidenaga_asahihime.jpg, caption: "朝日（秀吉・秀長の妹、江戸時代の肖像）"}
+        card: {head: "駿河御前", body: 駿府に住んだ旭の呼び名}
+      # 静岡市（駿府城跡天守台野外展示事業）・静岡新聞 2023
+      # fact: asahi-31
+      - 語り: その駿府城の跡では、2016年から発掘が続けられました。慶長のころの天守台の内側から、もう一つ古い、天正のころの天守台が見つかっています。
+        background: {image: paintings/ieyasu_kunozan_kunitsuna_1863.jpg, credit: "歌川国綱《東海道名所之内 久能山》1863年"}
+        portrait: null
+        card: {head: "2016年からの発掘", body: 天正のころの天守台}
+        # AI絵：an excavated stone castle foundation inside a larger stone foundation, Shizuoka, modern day, overcast, wide view, no people
+      # fact: asahi-31
+      - 語り: 静岡市は、これを家康が築いたものとして、天守台の重なりを、野外で見られるように整えています。旭が駿河御前と呼ばれた、その天正のころの、家康の城の跡です。
+      - 語り: ふたつの時代の天守台の重なりは、今、目で見ることができます。
+      # 家忠日記（岡崎市史 1935 が引く）：天正16年6月22日
+      # fact: asahi-14
+      - 語り: 天正16年6月22日。駿府に、知らせが届きます。大坂にいる大政所が、重い病だ、というんです。
+        tone: 重い
+        background: {image: paintings/hideyoshi_osaka_zu_byobu.jpg, credit: "《豊臣期大坂図屏風》1607〜1615年ごろ（エッゲンベルク城蔵）"}
+        detail: {box: [0.3, 0.0, 0.7, 1.0], label: 大坂（豊臣期大坂図屏風の一部）}
+        card: {head: "天正16年6月22日", body: 大政所、重い病}
+      # fact: asahi-14
+      - 語り: 松平家忠の日記には、こうあります。「大坂の大政所様の御病気が、ことのほか重く、上方へ御上りになる、と知らせが来た。御前様は、夜通し、御通りになった」。
+        background: {image: paintings/ieyasu_fuchu_abe_river_hiroshige_1833.jpg, credit: "歌川広重《東海道五十三次之内 府中 安部川》1833年ごろ"}
+        # AI絵：a palanquin and a few riders hurrying along the Tokaido road at night under a cloudy moon, torches, 1580s Japan, seen from far away, painterly, muted colors, no faces
+        card: {head: "家忠日記", body: 「御前様は夜通し御通り」}
+      - 語り: 御前様は、旭のことです。母の病を聞いた旭は、夜を通して、京へ向かって進んでいきました。
+        tone: しみじみ
+      - 語り: 家忠の日記は、夜通しで通り過ぎた、と書くだけです。その夜の旭の顔を、書き留めた人はいません。
+        background: {image: paintings/kira_okazaki_hiroshige.jpg, credit: "歌川広重《東海道五十三次 岡崎》（三河の国）1833年ごろ"}
+      # 【想像4】旭。記録：大政所の重病を聞いて夜通し上洛した（asahi-14）。気持ちの言葉だけ（新しい事実なし）
+      - 人物: 「母上……どうか、間に合いますように」
+        who: 旭想像
+        imagined: true
+        tone: 重い
+        portrait: {image: paintings/hidenaga_asahihime.jpg, caption: "朝日（秀吉・秀長の妹、江戸時代の肖像）"}
+      - 語り: 母の病の知らせを受けて、夜を徹して西へ。嫁いで2年。旭は、いまも、大政所の娘でした。
+        tone: しみじみ
+        portrait: null
+      # fact: asahi-14
+      - 語り: 大政所の病は、赤痢と記されています。けれど、このときは、持ち直しました。
+        background: {image: paintings/hidenaga_jurakudai_screen.jpg, credit: "《聚楽第図屏風》桃山時代（三井記念美術館蔵）"}
+        portrait: {image: paintings/hidenaga_omandokoro.jpg, caption: "大政所（秀吉・秀長の母、江戸時代の肖像）"}
+      - 語り: 旭の夜通しの旅は、間に合ったんです。
+        tone: しみじみ
+      # 烈祖成績（江戸時代の編纂物）
+      # fact: asahi-47
+      - 語り: このとき、家康も、旭とともに京へ上りました。江戸時代の『烈祖成績』は、旭はそのまま京に留まった、としています。
+        portrait: null
+        background: {image: paintings/hidenaga_jurakudai_screen.jpg, credit: "《聚楽第図屏風》桃山時代（三井記念美術館蔵）"}
+      - 語り: 家康は駿府、旭は京。夫婦は、離れて暮らすことになりました。
+        background: {image: paintings/akechi_rakuchu_rakugai_uesugi_left.jpg, credit: "《上杉本洛中洛外図屏風》（上杉家蔵）"}
+        tone: しみじみ
+      # 岡崎市史（1926）
+      # fact: asahi-15
+      - 語り: 翌年、天正17年の5月。1926年の『岡崎市史』によれば、旭は、自分の病のために、有馬の湯へ、湯治に出かけています。
+        card: {head: "天正17年5月", body: 有馬で湯治}
+        # AI絵：a hot spring town in the mountains near Arima, late 16th century Japan, steam rising, wooden bathhouses, early summer, painterly, no people
+      - 語り: 体の弱りは、このころから、始まっていたのかもしれません。
+        background: {image: paintings/akechi_rakuchu_rakugai_uesugi_right.jpg, credit: "狩野永徳《洛中洛外図屏風》（上杉本）右隻"}
+        tone: しみじみ
+      - 語り: 母の病に駆けつけた娘が、翌年には、自分の体をいたわる旅に出ていたんです。
+        tone: しみじみ
+      # 和樂web（2026）・濱田浩一郎（2026）
+      # fact: asahi-49
+      - 語り: では、家康と旭は、どんな夫婦だったのか。和樂webの2026年の記事は、仲が良かった話も、悪かった話も無く、謎に包まれている、と書きます。
+        background: {image: paintings/mikata_hamamatsu_hiroshige_1855.jpg, credit: "歌川広重《東海道五十三次之内 浜松》1848年ごろ"}
+        portrait: {image: paintings/ieyasu_portrait_toshodaigongen.jpg, caption: "徳川家康（伝 狩野探幽画）"}
+      # fact: asahi-49
+      - 語り: 別居だったから、愛情が薄かった。そう見る人もいます。けれど濱田さんも、それは推測にとどまる、と断っています。ふたりの間の言葉は、何も残っていません。
+        tone: しみじみ
+        background: {image: paintings/ieyasu_fuchu_abe_river_hiroshige_1833.jpg, credit: "歌川広重《東海道五十三次之内 府中 安部川》1833年ごろ"}
+        portrait: null
+        hook: true
+      - 語り: 有馬の湯から、8か月。天正18年の正月が、やってきます。秀吉が、関東の北条を攻めようとしていた、その正月でした。
+        tone: 重い
+        hook: true
+
+  # ================================================================ 第5章（最後）その後：旭の死と2つの寺 ＋ 冒頭に戻る締め
+  - title: まとめ：48歳の旭は、どこに眠っているのか　南明院と瑞龍寺
+    background: {image: paintings/hidenaga_jurakudai_screen.jpg, credit: "《聚楽第図屏風》桃山時代（三井記念美術館蔵）"}
+    year: 1590
+    lines:
+      # 岡崎市史 1935・渡辺世祐 1919・濱田 2026（徳川幕府家譜・幕府祚胤伝）
+      # fact: asahi-05
+      - 語り: 天正18年1月14日。旭は、亡くなりました。48歳でした。
+        tone: 重い
+        card: {head: "天正18年1月14日", body: 48歳で亡くなる}
+      # fact: asahi-05
+      - 語り: 1935年の『岡崎市史』は、京の聚楽第で亡くなった、と書きます。多くの書物が、そう伝えています。
+      # 食い違い③：亡くなった場所（岡崎市史 1935 が雍州府志を引く）
+      # fact: asahi-17
+      - 語り: ところが、『雍州府志』という書物は、伏見で亡くなった、としています。
+        tone: 疑問
+        figure: {type: stats, title: 旭が亡くなった場所, items: [[聚楽第, 岡崎市史・多くの書物, 京の秀吉の屋敷], [伏見, 雍州府志, 岡崎市史が引く]], upto: 2}
+      # fact: asahi-17
+      - 語り: 『岡崎市史』は、旭が最後にいつ京へ上ったのかも、記録が無い、としています。どこで最期を迎えたのかさえ、記録が割れているんです。
+        figure: {type: stats, title: 旭が亡くなった場所, items: [[聚楽第, 岡崎市史・多くの書物, 京の秀吉の屋敷], [伏見, 雍州府志, 岡崎市史が引く]], upto: 2}
+      # 当代記（岡崎市史 1935 が引く）・渡辺 1919
+      # fact: asahi-16
+      - 語り: 『当代記』という記録には、こうあります。家康公の奥方が、京都で病で亡くなった。小田原へ兵を出すころだったので、隠しておかれた。
+        figure: null
+        background: {image: paintings/ieyasu_fuchu_abe_river_hiroshige_1833.jpg, credit: "歌川広重《東海道五十三次之内 府中 安部川》1833年ごろ"}
+        card: {head: "当代記", body: 小田原への出陣のころで、隠した}
+      # 烈祖成績・濱田 2026
+      # fact: asahi-48
+      - 語り: 徳川の家臣たちが、関東へ兵を出そうとしていた、その時でした。家康が、葬儀のために京へ上ることは、ありませんでした。
+        tone: しみじみ
+      - 語り: 妻の死が、戦の前の秘密になった。旭の死は、最後まで、兄と夫の戦の都合の中にありました。
+        tone: しみじみ
+      # 烈祖成績（江戸時代の編纂物。カードは1つの出どころ）→「伝わります」
+      # fact: asahi-50
+      - 語り: 旭が亡くなった翌日。家康の子の、12歳の秀忠が、京の聚楽に上がりました。そのとき大政所は、自分の手で、秀忠の髪を結い直した、と伝わります。
+        background: {image: paintings/hidenaga_jurakudai_screen.jpg, credit: "《聚楽第図屏風》桃山時代（三井記念美術館蔵）"}
+        portrait: {image: paintings/oichi_hidetada.jpg, caption: "徳川秀忠（江戸時代）"}
+        card: {head: "翌日", body: 大政所、秀忠の髪を結う}
+      # 【想像5】大政所。記録：旭の死の翌日に秀忠の髪を結い直したと伝わる（asahi-50）。気持ちの言葉だけ（旭の名も出来事も足さない）
+      - 人物: 「……さあ、これで、よい」
+        who: 大政所想像
+        imagined: true
+        tone: しみじみ
+        portrait: {image: paintings/hidenaga_omandokoro.jpg, caption: "大政所（秀吉・秀長の母、江戸時代の肖像）"}
+      - 語り: 娘を亡くした次の日に、娘の夫の子の髪を整える。その手が何を思っていたのかは、どこにも書かれていません。
+        portrait: null
+        tone: しみじみ
+      # 岡崎市史 1935・渡辺 1919・烈祖成績
+      # fact: asahi-06
+      - 語り: 旭は、京都の東福寺の塔頭、南明院に葬られました。のちに旭が南明院とも呼ばれるのは、このためです。
+        background: {image: paintings/akechi_rakuchu_rakugai_uesugi_left.jpg, credit: "《上杉本洛中洛外図屏風》（上杉家蔵）"}
+        # AI絵：a quiet Zen sub-temple in Kyoto in autumn, a small stone five-tiered pagoda grave on a high spot in the garden, red maple leaves, soft light, painterly, no people
+        card: {head: "東福寺 南明院", body: 旭の墓所}
+      # おにわさん（2021）
+      # fact: asahi-28
+      - 語り: ただ、南明院の創建は、室町時代の応永21年、1414年。足利義持によるもので、旭のために建てた寺では、ありません。
+        background: {image: paintings/nene_kyoto_map_1696.jpg, credit: "《京都の地図》元禄9年（1696年）"}
+      - 語り: 旭は、もとからあった寺に、迎え入れられたことになります。
+      # おにわさん（2021）・京都風光
+      # fact: asahi-27
+      - 語り: 境内の高い所には、旭の五輪塔が残ります。方丈には、徳川家の歴代の位牌が、まつられています。
+      # おにわさん（2021）・京都古文化保存協会
+      # fact: asahi-26
+      - 語り: ふだんは公開されていないこの寺が、初めて公開されたのは、2021年の秋。第57回の京都非公開文化財特別公開で、旭の肖像画と、徳川秀忠の書状が並びました。
+        tone: 強調
+        portrait: {image: paintings/hidenaga_asahihime.jpg, caption: "朝日（秀吉・秀長の妹、江戸時代の肖像）"}
+        card: {head: "2021年の秋", body: 南明院、初めての公開}
+      - 語り: 旭が亡くなって、430年あまり。その寺の門が、ようやく開いたんです。
+        tone: しみじみ
+      # ニッポン旅マガジン（2022）・静岡県『名蹟勝地』（1921）
+      # fact: asahi-06
+      - 語り: 旭の骨は分けられ、駿府の瑞龍寺にも墓が築かれました。1921年の静岡県の案内書は、苔むした五輪の大きな石塔が、その墓だ、と案内しています。
+        portrait: null
+        background: {image: paintings/ieyasu_fuchu_abe_river_hiroshige_1833.jpg, credit: "歌川広重《東海道五十三次之内 府中 安部川》1833年ごろ"}
+        # AI絵：an old mossy stone five-tiered pagoda grave behind a small Zen temple in Shizuoka, quiet morning, painterly, no people
+      # ニッポン旅マガジン（2022）：駿国雑志（1843）の開基・秀吉の墓参
+      # fact: asahi-29
+      - 語り: 江戸時代の地誌『駿国雑志』は、旭を、この寺を開いた人としています。秀吉は、小田原攻めに向かう途中、この墓に参った、と伝わります。
+        portrait: {image: paintings/hideyoshi_portrait_osaka_city_1600.jpg, caption: "豊臣秀吉（大阪市立美術館蔵、1600年）"}
+      # 静岡市大河ドラマ活用推進協議会（2023）
+      # fact: asahi-24
+      - 語り: 瑞龍寺には、旭が亡くなって半年あまりのちの、天正18年8月22日付けの、秀吉の朱印状が残っています。
+        background: {image: paintings/ieyasu_kunozan_kunitsuna_1863.jpg, credit: "歌川国綱《東海道名所之内 久能山》1863年"}
+        portrait: null
+        card: {head: "天正18年8月22日", body: 瑞龍寺に残る秀吉の朱印状}
+      # fact: asahi-22
+      - 語り: 2023年4月12日。静岡市は、瑞龍寺に伝わる旭ゆかりの品5点を、市の有形文化財に指定しました。
+        tone: 強調
+        card: {head: "2023年4月12日", body: 瑞龍寺の5点が市の文化財に}
+        figure: {type: stats, title: 瑞龍寺関係資料（静岡市の文化財 2023年）, items: [[打敷, 旭の小袖を仕立て直したと伝わる, 仏前の敷物], [豊臣秀吉朱印状, 天正18年8月22日, 旭の死の半年あまり後], [由緒書（覚）, 寛永11年6月, 寺と旭の結びつき]], upto: 3}
+      # fact: asahi-23
+      - 語り: その一つ、仏前に掛ける打敷は、旭が身に着けた小袖を、仕立て直したものと伝わります。
+        figure: {type: stats, title: 瑞龍寺関係資料（静岡市の文化財 2023年）, items: [[打敷, 旭の小袖を仕立て直したと伝わる, 仏前の敷物], [豊臣秀吉朱印状, 天正18年8月22日, 旭の死の半年あまり後], [由緒書（覚）, 寛永11年6月, 寺と旭の結びつき]], upto: 3}
+        # AI絵：an old Japanese silk altar cloth with a woven crest pattern, laid on a dark wooden altar table, soft light, close-up, no text
+      # fact: asahi-25
+      - 語り: 寺の由緒を書いた覚え書きは、寛永11年、1634年の6月のもの。寺と旭の結びつきを書き留めた、江戸の初めの記録です。
+        background: {image: paintings/ieyasu_fuchu_abe_river_hiroshige_1833.jpg, credit: "歌川広重《東海道五十三次之内 府中 安部川》1833年ごろ"}
+        figure: null
+      # 静岡新聞（2022）
+      # fact: asahi-33
+      - 語り: 2022年には、瑞龍寺の檀家の有志が、創建460年と、旭の没後430年に合わせて、『瑞龍寺史』をまとめています。
+      - 語り: 没後430年。地元の人たちは、今も、旭を寺の始まりの人として、語り継いでいるんです。
+        tone: しみじみ
+      # 三溪園保勝会・文化庁（旧天瑞寺寿塔覆堂、1931年 重要文化財）
+      # fact: asahi-32
+      - 語り: 母の大政所にも、いまに残るものがあります。天正19年、1591年。秀吉は、病から回復した母の長寿を祈って、生きているうちの墓、寿塔を建てました。
+        background: {image: paintings/akechi_rakuchu_rakugai_uesugi_right.jpg, credit: "狩野永徳《洛中洛外図屏風》（上杉本）右隻"}
+        portrait: {image: paintings/hidenaga_omandokoro.jpg, caption: "大政所（秀吉・秀長の母、江戸時代の肖像）"}
+        card: {head: "天正19年", body: 大政所の寿塔}
+      # fact: asahi-32
+      - 語り: その寿塔を覆っていた建物は、いま、横浜の三溪園にあり、国の重要文化財になっています。
+        card: {head: "三溪園", body: 寿塔の覆堂（重要文化財）}
+        # AI絵：a small ornate wooden Momoyama-period hall with a curved roof standing among trees in a Japanese garden, autumn, soft light, painterly, no people
+      - 語り: 娘の旭は、母より先に亡くなりました。母の長寿を祈る塔が建ったのは、その翌年です。
+        tone: しみじみ
+      # 締め：冒頭の場面（池鯉鮒の西の野）と問いに戻る
+      # fact: asahi-08
+      - 語り: 天正14年5月11日。池鯉鮒の西の野で、44歳の花嫁は、兄の家から、夫の家へ渡されました。
+        tone: しみじみ
+        portrait: null
+        background: {image: paintings/kira_okazaki_hiroshige.jpg, credit: "歌川広重《東海道五十三次 岡崎》（三河の国）1833年ごろ"}
+        card: {head: "天正14年5月11日", body: 池鯉鮒の西の野}
+      - 語り: なぜ秀吉は、妹と母を差し出したのか。母については、秀吉の書状と、同じ時代の日記が答えています。家康を京へ呼ぶための、証人でした。
+        background: {image: paintings/mikata_okazaki_castle_ndl_41.jpg, credit: "〔日本古城絵図〕三州岡崎城図（江戸時代、国立国会図書館蔵）"}
+        card: {head: "母は", body: 家康を京へ呼ぶための証人}
+        tone: しみじみ
+      - 語り: 秀吉は、ふたりを差し出して、家康を、自分の家臣の列に加えました。
+      - 語り: けれど妹については、無理やり別れさせたという話と、家康の側が望んだという秀吉の手紙が、今も並んでいます。
+        background: {image: paintings/ieyasu_hamamatsu_hiroshige_1834.jpg, credit: "歌川広重《東海道五十三次之内 濱松 冬枯の図》1834年ごろ"}
+        card: {head: "妹は", body: 無理やりか、家康の望みか}
+        tone: しみじみ
+      - 語り: 44歳で野原を渡り、48歳で、その死を伏せられた人。
+        tone: しみじみ
+      - 語り: 旭自身の言葉は、一つも残っていません。残ったのは、京都と駿府の、ふたつの墓です。
+        portrait: {image: paintings/hidenaga_asahihime.jpg, caption: "朝日（秀吉・秀長の妹、江戸時代の肖像）"}
+        tone: しみじみ
+        pause: 0.8
+
+      # 締め（物語型、10-24 ユーザー決定）：余韻の一文のあと、登録のお願いを短く
+      - 語り: 感想は、コメントで聞かせてください。チャンネル登録も、よろしくお願いします。
+        background: {image: paintings/ieyasu_hamamatsu_hiroshige_1834.jpg, credit: "歌川広重《東海道五十三次之内 濱松 冬枯の図》1834年ごろ"}
+
+# ============================================================================
+# 台詞の一覧（記録／想像）
+# 記録（出どころを語りで言ってから読む）：
+#   - 秀吉「そうであれば、二人といない母を、浜松まで行かせよう。馬に乗る供も、一人も付けずに、そちらへ送ろう」……天正14年9月の書状（岡崎市史 別巻下巻 1935 の引用「左候者二人與無之母於濱松迄相越可申候。馬乘一人不添可進候」、asahi-39）。今の言葉にした
+#   - 秀吉「家康は、縁組のことまで、いろいろと、しきりに望んできた」……天正14年5月24日付の朱印状（「家康の事、種々縁辺等の儀迄懇望せしめ候」、八幡和郎・濱田浩一郎 2026 が引く、asahi-38）。今の言葉にした。原文も語りで読む
+#   - 語りの中の記録：家忠日記（5月11日「池鯉鮒迄御祝言御迎ニ出候、西の野まて請取候」・10月17日「人質ニ」・天正16年6月「御前樣は夜通御とをり」）／
+#     宇野主水日記「御證人之躰也。面向ハ御息女ニ逢被申度ニ付而」／当代記「家康公妻室於京都病死給。小田原爲出勢比之間令隱密」／岡崎市史 1935「此事の實否は明ならず」「恐く事實にあらざるべし」
+# 想像（5か所。roles の〇〇想像＋imagined: true＝字幕の上に「想像」の札）：
+#   1 旭「……参りましょう」（天正14年5月11日、池鯉鮒）……西の野で羽柴方から徳川方へ受け渡された記録（asahi-08）。気持ちだけ
+#   2 大政所「旭……」（天正14年10月、岡崎）……『落穂集』の、輿から出るなり旭に抱きつき涙を流した話（asahi-45）。気持ちだけ
+#   3 旭「母上……」（同じ場面）……同上（asahi-45）
+#   4 旭「母上……どうか、間に合いますように」（天正16年6月、夜通しの上洛）……大政所の重病を聞いて夜通し上洛した記録（asahi-14）。気持ちだけ
+#   5 大政所「……さあ、これで、よい」（天正18年1月15日、聚楽）……秀忠の髪を自分で結い直したと伝わる話（asahi-50、烈祖成績）。気持ちだけ
