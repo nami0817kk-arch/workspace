@@ -240,6 +240,19 @@ String? rivalDuelLine(RivalStory s, int age, int slot, Line month) {
   return good ? '${s.team}の$nとの直接対決。気迫で上回った!' : '${s.team}の$nとの直接対決。ここは競り負けた…';
 }
 
+/// 1試合の平均の観客数(万人)。人気と勝率から。球場の大きさがあるので、満員(4.5万人)で頭打ち
+/// (2026-10-26 ログを読んで、人気の高い選手のいる年に「平均6.7万人」が出ていた)。
+double attendanceOf(int popularity, double winPct) =>
+    (1.6 + popularity * 0.022 + winPct * 1.0).clamp(1.2, 4.5);
+
+/// 月報の観客動員の一行。満員なら、そう言う。
+String attendanceLine(int popularity, double winPct) {
+  final a = attendanceOf(popularity, winPct);
+  return a >= 4.5
+      ? '観客動員: 連日の満員(平均4.5万人)。'
+      : '観客動員: 平均${a.toStringAsFixed(1)}万人。';
+}
+
 /// 優勝パレードに集まった人数(万人)。人気から。
 int paradeCrowd(int popularity) => 2 + popularity ~/ 4;
 

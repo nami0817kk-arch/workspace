@@ -111,6 +111,11 @@ void markTests3() {
     expect(rivalDuelLine(s, 22, 0, const Line()), isNull); // 対決は決まった月だけ
     expect(rivalDuelLine(s, 15, 1, const Line()), isNull); // まだプロでない
     expect(paradeCrowd(80), greaterThan(paradeCrowd(0)));
+    // 観客は球場の大きさで頭打ち(満員4.5万人)
+    expect(attendanceOf(100, 0.7), 4.5);
+    expect(attendanceLine(100, 0.7), contains('満員'));
+    expect(attendanceOf(0, 0.4), inInclusiveRange(1.2, 2.5));
+    expect(attendanceOf(60, 0.6), greaterThan(attendanceOf(20, 0.6)));
     expect(childrenOf('みさき'), inInclusiveRange(1, 3));
   });
 }

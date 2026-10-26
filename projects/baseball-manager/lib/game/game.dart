@@ -1233,10 +1233,8 @@ class Game {
     log.add('$month: ${d.isEmpty ? '' : '$d。'}チームは${m.wins}勝${m.losses}敗。');
     monthRows
         .add('$month: ${d.isEmpty ? '出場なし' : d} / ${m.wins}勝${m.losses}敗');
-    final crowd = (1.5 +
-        popularityOf(records, worldRecords) * 0.04 +
-        (m.wins + m.losses == 0 ? 0 : m.wins / (m.wins + m.losses)) * 1.5);
-    log.add('観客動員: 平均${crowd.toStringAsFixed(1)}万人。');
+    log.add(attendanceLine(popularityOf(records, worldRecords),
+        m.wins + m.losses == 0 ? 0.5 : m.wins / (m.wins + m.losses)));
     final rs = storyOfCharacter(cast.rival)?.avoiding(proTeam);
     final duel =
         rs == null ? null : rivalDuelLine(rs, player.age, slot, m.line);
