@@ -423,6 +423,9 @@ class GameController extends ChangeNotifier {
     if (r.yearEnded && g.lastGoalMessage != null) lines.add(g.lastGoalMessage!);
     if (r.yearEnded && g.lastYearSummary != null) lines.add(g.lastYearSummary!);
     if (r.yearEnded && g.lastPositionNote != null) lines.add(g.lastPositionNote!);
+    if (t != null && g.lastTournamentFatigue > 0) {
+      lines.add('${t.games}試合の連戦で疲れが残った(疲れ +${g.lastTournamentFatigue})。');
+    }
     final role = g.lastRoleNote;
     if (role != null) {
       lines.add(role);

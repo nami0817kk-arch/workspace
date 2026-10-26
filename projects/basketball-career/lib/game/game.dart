@@ -770,6 +770,7 @@ class Game {
     lastYearSummary = null;
     lastPositionNote = null;
     lastRoleNote = null;
+    lastTournamentFatigue = 0;
     lastSpGain = 0;
     lastCareerLines = const [];
     lastMetRival = false;
@@ -1088,7 +1089,15 @@ class Game {
         bonus: difficulty.opponent + ease);
   }
 
+  /// 大会の連戦で残る疲れ。6試合を超えた分(プレーオフ・決勝トーナメントまで勝ち進んだ分)1試合あたり2、最大12(プレーオフを長く戦うほど疲れる)。
+  static int tournamentFatigue(int games) => min(12, max(0, games - 6) * 2);
+
+  /// 直前の大会で残った疲れ(画面が知らせたら使い終わり。保存しない)。
+  int lastTournamentFatigue = 0;
+
   void _record(TournamentResult t, {bool winter = false}) {
+    lastTournamentFatigue = tournamentFatigue(t.games);
+    condition = condition.copyWith(fatigue: condition.fatigue + lastTournamentFatigue);
     if (t.league == League.national) {
       nationalPending = false;
       caps++;
