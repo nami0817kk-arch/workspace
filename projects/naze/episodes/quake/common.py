@@ -10,7 +10,10 @@ from naze import overlay as O
 
 HERE = Path(__file__).resolve().parent
 ASSETS = HERE / "assets"
-CREDIT = "地図: Natural Earth / NOAA ETOPO1 / プレート境界 Bird(2003) / 震源 USGS"
+from naze.config import ASPECT  # noqa: E402
+
+CREDIT = ("地図: Natural Earth / NOAA ETOPO1 / プレート境界 Bird(2003) / 震源 USGS" if ASPECT == "landscape"
+          else "Natural Earth / ETOPO1 / Bird(2003) / USGS")
 JP = "japan_m4_2014_2023"
 WORLD = "world_m6_2014-2023"
 
@@ -38,7 +41,7 @@ PLATES_FILL = dict(kind="plates", id="plates_fill", fill=True)
 def plate_labels(portrait: bool = False) -> list:
     pos = {"PA": (150, 33), "PS": (138.2, 31.4), "NA": (142.6, 41.3), "EU": (128, 40)}
     if portrait:
-        pos = {"PA": (143.8, 33.5), "PS": (136, 30.5), "NA": (142.5, 42.8), "EU": (133, 39.5)}
+        pos = {"PA": (143.3, 33.5), "PS": (136.6, 30.8), "NA": (142.2, 42.6), "EU": (135.4, 40.4)}
     return [dict(kind="label", id=f"pl_{g}", at_ll=pos[g], text=M.PLATE_NAME[g], color=M.PLATE_COL[g], size=40 if portrait else 46, at=0.15 + i * 0.12)
             for i, g in enumerate(("PA", "PS", "NA", "EU"))]
 

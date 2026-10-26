@@ -46,7 +46,7 @@ def frame_fn(ep: dict, out: Path):
         scene = cur
         if cur and cur["id"] == "cta":          # お願いの間は、最後の場面をそのまま見せる
             scene, k = lines[-2], 1.0
-        ctx = dict(lines=lines, cur=scene, L=L, k=k, at=lambda i: L[i]["start"], defs=defs)
+        ctx = dict(lines=lines, cur=scene, L=L, k=k, at=lambda i: L[i]["start"], defs=defs, cta=bool(cur and cur["id"] == "cta"))
         draw(img, dr, t, ctx)
         dr = ImageDraw.Draw(img)
         if ep.get("credit"):

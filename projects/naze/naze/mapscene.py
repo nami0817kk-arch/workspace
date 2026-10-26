@@ -477,6 +477,8 @@ def render(img: Image.Image, t: float, ctx: dict, drift: float = 0.02) -> View:
     dur = max(1e-6, cur["end"] - cur["start"])
     prev_ids = {L.get("id") for L in (prev or {}).get("layers", [])} if now is not prev else set()
     for L in now.get("layers", []):
+        if L["kind"] == "label" and ctx.get("cta"):
+            continue                                          # 登録のお願いの間は地図の札を消す(帯と重なるので)
         if L.get("id") in prev_ids:
             a, k = 1.0, 1.0
         else:
@@ -586,7 +588,7 @@ def draw(img: Image.Image, dr: ImageDraw.ImageDraw, t: float, ctx: dict) -> None
     cur = ctx["cur"] or lines[0]
     i = next(j for j, l in enumerate(lines) if l["id"] == cur["id"])
     P = (sc[i] or {}).get("panel")
-    if P:
+    if P and not ctx.get("cta"):
         prevP = (sc[i - 1] or {}).get("panel") if i > 0 else None
         if prevP is P:
             draw_panel(img, P, 1.0, 1.0)

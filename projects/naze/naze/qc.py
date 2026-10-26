@@ -70,9 +70,10 @@ def script(ep: dict, tl: dict) -> tuple[list, list]:
         warns.append("身近な比べが無い(倍・個分・歩いて○分 など)")
     if not TWIST.search(whole):
         warns.append("思い込みの切り返しが無い(普通は〜のはず、ところが〜)")
-    if not HANDOFF.search(body[-1]["text"] + (body[-2]["text"] if len(body) > 1 else "")):
+    last = ep.get("cta", True)            # 本編の途中の章(cta=False)には結びの型を求めない
+    if last and not HANDOFF.search(body[-1]["text"] + (body[-2]["text"] if len(body) > 1 else "")):
         warns.append("結びに暮らしへの渡しが無い(次に〜したら〜を見てください)")
-    if ASPECT == "landscape" and not re.search(r"思い出して|冒頭|最初の", whole):
+    if last and ASPECT == "landscape" and not re.search(r"思い出して|冒頭|最初の", whole):
         warns.append("本編なのに伏線の回収が無い(〜を思い出してください)")
     if ASPECT == "portrait" and tl["total"] > 178:
         fails.append(f"ショートが長すぎる {tl['total']:.0f} 秒(3 分以内)")
