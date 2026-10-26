@@ -55,6 +55,7 @@ def main():
     ap.add_argument("--desc-file", required=True)
     ap.add_argument("--publish-at", default="")
     ap.add_argument("--tags", default="なぜ,解説,雑学")
+    ap.add_argument("--thumb", default="", help="サムネイルの画像(1280×720 の jpg)。チャンネルが電話認証済みでないと設定できない")
     a = ap.parse_args()
     from .qc import gate
     gate(Path(a.video))                    # 点検に通っていない動画は上げない
@@ -78,6 +79,12 @@ def main():
         if st:
             print(f"  {int(st.progress() * 100)}%")
     print(f"投稿しました: https://youtu.be/{res['id']}" + (f"(公開予約 {a.publish_at})" if a.publish_at else "(公開)"))
+    if a.thumb:
+        try:
+            yt.thumbnails().set(videoId=res["id"], media_body=MediaFileUpload(a.thumb, mimetype="image/jpeg")).execute()
+            print("サムネイルを設定しました")
+        except Exception as e:                 # 電話認証のないチャンネルは 403。Studio で手で差し替える
+            print(f"サムネイルを設定できなかった(Studio で差し替える): {str(e)[:160]}")
 
 
 if __name__ == "__main__":

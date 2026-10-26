@@ -43,7 +43,7 @@ for k, t in TITLES.items():
         ch = OUT / "chapters.txt"
         body += ["▼目次", ch.read_text(encoding="utf-8").strip() if ch.exists() else "(書き出し後に入る)", ""]
     else:
-        body += ["▼本編（15分）はチャンネルのページから", ""]
+        body += ["▼本編（11分）", "https://youtu.be/AVi4eWvjriI", ""]
     body += [SOURCES, "", FOOT]
     (OUT / f"desc_{k}.txt").write_text("\n".join(body) + "\n", encoding="utf-8")
 (OUT / "titles.json").write_text(json.dumps(TITLES, ensure_ascii=False, indent=1), encoding="utf-8")

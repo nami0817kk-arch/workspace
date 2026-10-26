@@ -21,7 +21,7 @@
   - `render` は途中から再開できる（できたコマは飛ばす）。`prep` で設定が変わると古いコマは捨てる
 - 計算の回（kind: sim）: `kana` → `voice` → `stills` → `compose`。画面は `ep.py` の `draw(img, dr, t, ctx)` が描く
 - 声は VOICEVOX の剣崎雌雄（id 21、2026-10-26 ユーザーが選んだ）。読みは `kana` で全行を見て、違えば `say` で直す。概要欄に「VOICEVOX:剣崎雌雄」
-- 投稿: `python -m naze.upload 動画 --title … --desc-file … --publish-at 2026-10-26T09:00:00+09:00`（カテゴリ教育。予約は 9〜24 時）
+- 投稿: `python -m naze.upload 動画 --title … --desc-file … --publish-at 2026-10-27T19:00:00+09:00 [--thumb サムネ.jpg]`（カテゴリ教育）。本編は 19 時、翌日にショート 5 本を 11・12・13・14・16 時
 
 ## ショート（縦 1080×1920・3 分以内）と本編（横 1920×1080・15 分前後）
 
