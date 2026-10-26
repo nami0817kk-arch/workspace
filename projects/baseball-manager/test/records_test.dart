@@ -203,7 +203,7 @@ void main() {
           jsonDecode(jsonEncode(r.toJson())) as Map<String, dynamic>);
       expect((q.age, q.stage, q.roundsWon, q.rivalWon),
           (17, Stage.highSchool, 2, true));
-      expect(q.resultText, '3回戦敗退');
+      expect(q.resultText, '全国大会 準々決勝敗退');
       expect(
           const SeasonRecord(
                   age: 1,
@@ -212,7 +212,7 @@ void main() {
                   roundsWon: 4,
                   rounds: 4)
               .resultText,
-          '優勝');
+          '全国優勝');
       expect(
           const SeasonRecord(age: 1, stage: Stage.pro, line: Line(), rank: 1)
               .resultText,

@@ -41,7 +41,7 @@ const guidePages = <GuidePage>[
       'assets/icons/plan_study.png'),
   GuidePage(
       '勝負どころでは、選ぶ',
-      '分かれ道の選択や、夏の大会の決勝の「見せ場」では、得意な能力に合った作戦を選ぶと有利です。'
+      '分かれ道の選択や、アマチュアの大会の決勝の「見せ場」では、得意な能力に合った作戦を選ぶと有利です。'
           '戦力外になっても、一度だけトライアウトで再挑戦できます。',
       'assets/icons/plan_match.png'),
   GuidePage(

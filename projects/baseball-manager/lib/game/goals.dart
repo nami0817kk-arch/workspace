@@ -46,7 +46,7 @@ class Goal {
   bool? achieved;
 
   String get text => switch (kind) {
-        GoalKind.rounds => '夏の大会で${target.round()}勝以上',
+        GoalKind.rounds => '今年の大会で${target.round()}勝以上',
         GoalKind.rank => '${target.round()}位以内',
         GoalKind.battingAverage => '打率${fmtRate(target)}以上',
         GoalKind.homeRuns => '本塁打${target.round()}本以上',

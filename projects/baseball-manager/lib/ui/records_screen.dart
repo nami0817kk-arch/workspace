@@ -45,7 +45,7 @@ class RecordsView extends StatelessWidget {
       return const Card(
         child: Padding(
           padding: EdgeInsets.all(16),
-          child: Text('まだ成績がありません。\n夏の大会(プロは10月のシーズン終了)のあとに記録されます。'),
+          child: Text('まだ成績がありません。\nその年の大会(高校は夏の大会、プロはシーズン終了)のあとに記録されます。'),
         ),
       );
     }

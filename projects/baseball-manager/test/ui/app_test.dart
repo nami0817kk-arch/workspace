@@ -605,10 +605,11 @@ void _rankTests() {
     await t.tap(find.byKey(const Key('records-open')));
     await t.pumpAndSettle();
     expect(find.textContaining('プロ通算 ('), findsOneWidget);
-    // 順位(「3位」)か、優勝(「リーグ優勝」)のどちらかが表に出る。
+    // 順位(「3位」)か、優勝(「リーグ優勝」)のどちらかが表に出る。ポストシーズンの結果が続くこともある(「3位・CSファイナル敗退」)。
     expect(
         find.byWidgetPredicate((w) =>
-            w is Text && RegExp(r'^(\d位|リーグ優勝)$').hasMatch(w.data ?? '')),
+            w is Text &&
+            RegExp(r'^(\d位|リーグ優勝)(・.+)?$').hasMatch(w.data ?? '')),
         findsWidgets);
   });
 

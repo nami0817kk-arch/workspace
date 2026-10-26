@@ -1,3 +1,4 @@
+import 'competition.dart';
 import 'dart:math';
 
 import 'calendar.dart';
@@ -237,12 +238,6 @@ String? rivalDuelLine(RivalStory s, int age, int slot, Line month) {
       (month.hasPitching && (month.era ?? 99) <= 3.00);
   final n = s.name;
   return good ? '${s.team}の$nとの直接対決。気迫で上回った!' : '${s.team}の$nとの直接対決。ここは競り負けた…';
-}
-
-/// 日本シリーズ(リーグ優勝のあと)。乱数は使わず、年齢と名前と今年の出来から決める。
-bool wonSeries(String name, int age, Line season) {
-  final bonus = ((season.rating - 50) / 2).round();
-  return _hash(name, age) % 100 < 50 + bonus;
 }
 
 /// 優勝パレードに集まった人数(万人)。人気から。
@@ -519,15 +514,19 @@ List<String> yearPlanOf(Stage stage, int age) => switch (stage) {
       Stage.highSchool => [
           '入学の年: 進学先とポジションを決める',
           if (age == 16) 'この年から: 金特が取れる',
-          '夏: 高校の大会（ドラフトの評価になる）',
+          '7月: 夏の大会（地方大会→全国大会。ドラフトの評価になる）',
           '18歳: U-18の世界大会（実力しだい）',
           '卒業の年: ドラフト会議'
         ],
-      Stage.pathChoice => ['大学・社会人: 夏の大会と、卒業の年のドラフト', '21歳: U-23の世界大会（実力しだい）'],
+      Stage.pathChoice => [
+          '大学: 春のリーグ戦→大学選手権 / 社会人: 都市対抗(地区予選→本大会)',
+          '卒業の年: ドラフト会議',
+          '21歳: U-23の世界大会（実力しだい）'
+        ],
       Stage.pro => [
           '年のはじめ: ポジション・オフの過ごし方・今年の目標',
-          '4〜9月: 月ごとのペナント（4か月目にオールスター）',
-          '10月: シーズン終了。表彰・日本シリーズ・契約更改',
+          '4〜9月: ペナントレース143試合（6月は交流戦、7月にオールスター）',
+          '10月: 3位までがクライマックスシリーズ→日本シリーズ。表彰・契約更改',
           if (age >= 22 && (age - 22) % 4 == 0) 'この年: 世界大会（実力しだい）',
           '8年目〜: 一生に一度のFA権',
         ],
@@ -535,13 +534,16 @@ List<String> yearPlanOf(Stage stage, int age) => switch (stage) {
     };
 
 /// 次の大会(プロはシーズン終了)までの残り。大会のターンを過ぎていれば null(来年)。
-({int left, String name, String unit})? untilTournament(Stage stage, int slot) {
+({int left, String name, String unit})? untilTournament(Stage stage, int slot,
+    {bool corporate = false}) {
   if (stage == Stage.retired) return null;
   final t = stage == Stage.pro ? 6 : (isMonthly(stage) ? 3 : 1);
   if (slot > t) return null;
   return (
     left: t - slot,
-    name: stage == Stage.pro ? 'シーズン終了' : '夏の大会',
+    name: stage == Stage.pro
+        ? 'シーズン終了'
+        : amateurEventName(stage, corporate: corporate),
     unit: isMonthly(stage) ? 'か月' : '季節',
   );
 }

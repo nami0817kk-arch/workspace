@@ -45,11 +45,15 @@ void main() {
     for (var s = 0; s < 40; s++) {
       final g = _new(s, potential: 80);
       _autoPlay(g);
-      for (final l in g.log.where((l) => l.startsWith('夏の大会は'))) {
+      for (final l in g.log.where((l) => RegExp(
+              r'^(夏の学童大会|夏の中学大会|夏の大会|大学選手権|都市対抗)は')
+          .hasMatch(l))) {
         seen++;
         expect(l, isNot(contains('回戦突破')));
         expect(
-            RegExp(r'^夏の大会は(初戦で敗れた|準優勝|(\d+回戦|準決勝)で敗れた)。$').hasMatch(l), isTrue,
+            RegExp(r'は(初戦で敗れた|準優勝|(県大会|地方大会|全国大会|リーグ戦|大学選手権|地区予選|本大会)の(準々決勝|準決勝|決勝|優勝決定戦|代表決定戦)で敗れた)。$')
+                .hasMatch(l),
+            isTrue,
             reason: l);
       }
     }

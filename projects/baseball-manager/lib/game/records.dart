@@ -1,10 +1,11 @@
 import 'dart:math';
 
 import 'career.dart';
+import 'competition.dart';
 import 'world.dart';
 import 'season.dart';
 
-/// 1年ぶんの成績(アマチュアは夏の大会、プロはシーズン通算)。
+/// 1年ぶんの成績(アマチュアはその年の大会、プロはシーズン通算とポストシーズン)。
 class SeasonRecord {
   const SeasonRecord({
     required this.age,
@@ -24,6 +25,8 @@ class SeasonRecord {
     this.farm = false,
     this.chances = 0,
     this.errors = 0,
+    this.corporate = false,
+    this.post = '',
   });
 
   final int age;
@@ -67,16 +70,27 @@ class SeasonRecord {
   /// 二軍(育成契約を含む)で戦った年か。タイトル・表彰・日本一の対象にならず、年俸も低い。
   final bool farm;
 
+  /// 社会人(都市対抗)の年か。大学なら false。古いセーブも false。
+  final bool corporate;
+
+  /// プロのポストシーズンの結果(「日本一」「日本シリーズ敗退」「CSファイナル敗退」)。出なかった年・古いセーブは空。
+  final String post;
+
   bool get isLeague => rank != null;
   bool get champion =>
       isLeague ? rank == 1 : (rounds > 0 && roundsWon == rounds);
 
-  /// 表の「結果」欄: 「優勝」「2回戦敗退」「3位」など。
+  /// 表の「結果」欄: 「全国優勝」「地方大会 決勝敗退」「リーグ優勝・日本一」「3位・CSファイナル敗退」など。
   String get resultText {
-    if (isLeague) return rank == 1 ? 'リーグ優勝' : '$rank位';
+    if (isLeague) {
+      final base = rank == 1 ? 'リーグ優勝' : '$rank位';
+      return post.isEmpty ? base : '$base・$post';
+    }
     if (rounds == 0) return '-';
-    if (roundsWon == rounds) return '優勝';
-    return '${roundsWon + 1}回戦敗退';
+    if (roundsWon == rounds) {
+      return amateurChampionText(stage, corporate: corporate);
+    }
+    return amateurLossText(stage, roundsWon, rounds, corporate: corporate);
   }
 
   Map<String, dynamic> toJson() => {
@@ -97,6 +111,8 @@ class SeasonRecord {
         'farm': farm,
         'chances': chances,
         'errors': errors,
+        'corporate': corporate,
+        'post': post,
       };
 
   /// 項目を足すときは既定値を置く。
@@ -125,6 +141,8 @@ class SeasonRecord {
         farm: (j['farm'] as bool?) ?? false,
         chances: (j['chances'] as num?)?.toInt() ?? 0,
         errors: (j['errors'] as num?)?.toInt() ?? 0,
+        corporate: (j['corporate'] as bool?) ?? false,
+        post: (j['post'] as String?) ?? '',
       );
 }
 

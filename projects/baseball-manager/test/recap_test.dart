@@ -123,10 +123,11 @@ void main() {
           final added = g.log.sublist(before);
           final rounds =
               added.where((l) => RegExp(r'^[○●] .* vs ').hasMatch(l));
-          if (rounds.isNotEmpty && added.any((l) => l.contains('夏の大会'))) {
+          if (rounds.isNotEmpty &&
+              added.any((l) => RegExp(r'(大会|選手権|都市対抗)(は|で)').hasMatch(l))) {
             checked++;
             // 最後の試合が負けなら●、優勝なら全部○
-            if (added.any((l) => l.contains('で優勝した'))) {
+            if (added.any((l) => l.endsWith('優勝した!'))) {
               expect(rounds.every((l) => l.startsWith('○')), isTrue);
             } else {
               expect(rounds.last.startsWith('●'), isTrue, reason: '$added');

@@ -110,18 +110,6 @@ void markTests3() {
     expect(bad, contains('競り負け'));
     expect(rivalDuelLine(s, 22, 0, const Line()), isNull); // 対決は決まった月だけ
     expect(rivalDuelLine(s, 15, 1, const Line()), isNull); // まだプロでない
-    // 同じ入力なら同じ結果。出来が良いほど勝ちやすい。
-    const great =
-        Line(games: 140, atBats: 500, hits: 190, totalBases: 380, walks: 90);
-    expect(wonSeries('t', 25, great), wonSeries('t', 25, great));
-    var wins = 0, winsPoor = 0;
-    for (var age = 20; age < 220; age++) {
-      if (wonSeries('t', age, great)) wins++;
-      if (wonSeries('t', age, const Line(games: 140, atBats: 500, hits: 90))) {
-        winsPoor++;
-      }
-    }
-    expect(wins, greaterThan(winsPoor));
     expect(paradeCrowd(80), greaterThan(paradeCrowd(0)));
     expect(childrenOf('みさき'), inInclusiveRange(1, 3));
   });

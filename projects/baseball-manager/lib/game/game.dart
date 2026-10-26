@@ -23,6 +23,7 @@ import 'awards.dart';
 import 'marks.dart';
 import 'talent.dart';
 import 'skills.dart';
+import 'competition.dart';
 import 'traits.dart';
 import 'tryout.dart';
 import 'after_career.dart';
@@ -217,13 +218,13 @@ class Game {
   String? get proTeamLabel =>
       proTeam == null ? null : (onFarm ? '$proTeam 二軍(育成)' : proTeam);
 
-  /// 夏の大会の決勝を前にして、見せ場の決断を待っている途中経過。決まれば null に戻る(保存する)。
+  /// アマの大会の決勝を前にして、見せ場の決断を待っている途中経過。決まれば null に戻る(保存する)。
   FinalMoment? pendingFinal;
   int proYears = 0;
   int peakOverall = 0;
   int championships = 0;
   bool _wasTwoWay = false;
-  final List<double> achievements = []; // 夏の大会ごとの実績
+  final List<double> achievements = []; // アマの大会ごとの実績
   final List<String> log = []; // 画面に出す出来事の記録
   Outcome lastOutcome = Outcome.normal; // 直前のターンの出来(保存しない・画面の表示用)
   Map<Category, int> lastGain = const {}; // 直前のターンで貯まった経験点(保存しない・画面の表示用)
@@ -1204,9 +1205,13 @@ class Game {
       log.add('$slotName: 怪我で全試合を欠場。チームは${m.wins}勝${m.losses}敗。');
       return;
     }
-    log.add('$slotName: ${d.isEmpty ? '' : '$d。'}チームは${m.wins}勝${m.losses}敗。');
+    // 6月は交流戦(もう一方のリーグの球団と戦う)。海外の年は呼ばない。
+    final month = isInterleagueMonth(slotName) && !overseas
+        ? '$slotName(交流戦)'
+        : slotName;
+    log.add('$month: ${d.isEmpty ? '' : '$d。'}チームは${m.wins}勝${m.losses}敗。');
     monthRows
-        .add('$slotName: ${d.isEmpty ? '出場なし' : d} / ${m.wins}勝${m.losses}敗');
+        .add('$month: ${d.isEmpty ? '出場なし' : d} / ${m.wins}勝${m.losses}敗');
     final crowd = (1.5 +
         popularityOf(records, worldRecords) * 0.04 +
         (m.wins + m.losses == 0 ? 0 : m.wins / (m.wins + m.losses)) * 1.5);
@@ -1290,7 +1295,7 @@ class Game {
     _summerAftermath(prog.done, null);
   }
 
-  /// 夏の大会(またはプロのシーズン)の結果が出たあとの、記録・ライバル・世界大会など。
+  /// その年の大会(またはプロのシーズン)の結果が出たあとの、記録・ライバル・世界大会など。
   void _summerAftermath(Tournament? tournament, LeagueSeason? league) {
     var ach = tournament?.achievement ?? 0;
     bool? rivalWon;
@@ -1336,7 +1341,20 @@ class Game {
               titles: titles,
               fieldingPct: field.pct,
             );
+      // 3位までがクライマックスシリーズ(海外はプレーオフ)→ 日本シリーズ。名前と年齢の乱数で決める。
+      final ps = farm
+          ? null
+          : playPostseason(
+              name: player.name,
+              age: player.age,
+              rank: league.rank,
+              winPct: league.games == 0 ? 0.5 : league.wins / league.games,
+              rating: league.line.rating.round(),
+              team: proTeam,
+              overseas: overseas,
+            );
       final rec = SeasonRecord(
+        post: ps?.result ?? '',
         age: player.age,
         stage: stage,
         line: league.line,
@@ -1365,24 +1383,26 @@ class Game {
       if (league.missed > 0) log.add('怪我で${league.missed}試合を欠場した。');
       if (farm) {
         log.add('二軍の今季は${league.rank}位(${league.wins}勝${league.losses}敗)。');
-      } else if (league.rank == 1) {
-        championships++;
-        log.add('リーグ優勝!');
-        log.add(
-            '優勝パレードには${paradeCrowd(popularityOf(records, worldRecords))}万人が集まった。');
-        if (wonSeries(player.name, player.age, league.line)) {
-          log.add('日本シリーズを制して、日本一に輝いた!');
+      } else {
+        if (league.rank == 1) {
+          championships++;
+          log.add('リーグ優勝!');
+        } else {
+          log.add('今季は${league.rank}位(${league.wins}勝${league.losses}敗)。');
+        }
+        log.addAll(ps!.lines);
+        if (ps.champion && !overseas) {
           awards.add('日本一');
           // シリーズMVP: 日本一の年に、打撃か投球がとくに良かった選手。
           if ((league.line.ops ?? 0) >= 0.850 ||
               (league.line.hasPitching && (league.line.era ?? 99) <= 2.50)) {
             awards.add('シリーズMVP');
           }
-        } else {
-          log.add('日本シリーズでは惜しくも敗れた。');
         }
-      } else {
-        log.add('今季は${league.rank}位(${league.wins}勝${league.losses}敗)。');
+        if (league.rank == 1 || ps.champion) {
+          log.add(
+              '優勝パレードには${paradeCrowd(popularityOf(records, worldRecords))}万人が集まった。');
+        }
       }
       final d = describeLine(league.line);
       if (d.isNotEmpty) log.add('今季成績: $d');
@@ -1439,7 +1459,9 @@ class Game {
           roundsWon: tournament.roundsWon,
           rounds: tournament.rounds,
           rating: tournament.line.rating);
+      final corp = stage == Stage.pathChoice && route == Course.corporate;
       final rec = SeasonRecord(
+        corporate: corp,
         age: player.age,
         stage: stage,
         line: tournament.line,
@@ -1457,16 +1479,12 @@ class Game {
       }
       if (tournament.champion) {
         championships++;
-        log.add('夏の大会で優勝した!');
+        log.add(amateurChampionLine(stage, corporate: corp));
         _tryAwaken(0.03, '優勝の勢いで、');
       } else {
         // 負けた試合(次の試合)の名前で、どこまで行ったかを伝える。
-        final lost = roundLabel(tournament.roundsWon, tournament.rounds);
-        log.add(tournament.roundsWon == 0
-            ? '夏の大会は初戦で敗れた。'
-            : tournament.roundsWon == tournament.rounds - 1
-                ? '夏の大会は準優勝。'
-                : '夏の大会は$lostで敗れた。');
+        log.add(amateurLossLine(stage, tournament.roundsWon, tournament.rounds,
+            corporate: corp));
       }
       final d = describeLine(tournament.line);
       if (d.isNotEmpty) log.add('大会成績: $d');
@@ -1477,12 +1495,17 @@ class Game {
   /// 勝ち抜き戦の各試合を、ログに残す(相手・勝ち負け・自分の出来)。
   void _logRounds(Tournament t) {
     final own = affiliationOf(stage, player.name, proTeam: proTeam);
+    final corp = stage == Stage.pathChoice && route == Course.corporate;
+    final qualify = amateurQualifyIndex(stage, t.rounds, corporate: corp);
     for (var i = 0; i < t.games.length; i++) {
       final g = t.games[i];
       final name = opponentName(stage, player.age, i,
-          corporate: route == Course.corporate, own: own);
+          corporate: corp, own: own);
       final d = describeGame(g.line);
-      log.add('${g.won ? '○' : '●'} ${roundLabel(i, t.rounds)} vs $name'
+      if (qualify != null && i == qualify) {
+        log.add(amateurQualifyLine(stage, corporate: corp));
+      }
+      log.add('${g.won ? '○' : '●'} ${amateurRoundLabel(stage, i, t.rounds, corporate: corp)} vs $name'
           '${d.isEmpty ? '' : ' — $d'}'
           '${isHeroGame(g.line, won: g.won) ? ' ★殊勲(${heroNoteOf(g.line)})' : ''}');
       if (i == t.rounds - 1 && g.won && isHeroGame(g.line, won: true)) {

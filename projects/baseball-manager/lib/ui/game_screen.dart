@@ -445,7 +445,8 @@ class _Header extends StatelessWidget {
     final p = game.player;
     final cs = Theme.of(context).colorScheme;
     final t = Theme.of(context).textTheme;
-    final u = untilTournament(game.stage, game.slot);
+    final u = untilTournament(game.stage, game.slot,
+        corporate: game.route == Course.corporate);
     // 絵と文字は重ねず、左に絵・右に所属などを並べる。
     return Semantics(
       button: true,
