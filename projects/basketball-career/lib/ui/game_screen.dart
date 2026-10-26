@@ -887,7 +887,11 @@ class _TournamentCard extends StatelessWidget {
             if (standingsOf(t) case final table?)
               _StandingsTile(table: table, spots: playoffSpots(t.league)),
             for (var i = 0; i < t.matches.length; i++)
-              _MatchRow(index: i, m: t.matches[i], league: t.league),
+              _MatchRow(
+                  index: i,
+                  m: t.matches[i],
+                  league: t.league,
+                  doubleCount: _doublesUpTo(t.matches, i)),
           ],
         ),
       ),
@@ -895,8 +899,20 @@ class _TournamentCard extends StatelessWidget {
   }
 }
 
+/// 大会の i 試合目までに、ダブルダブル(2部門で10以上)が何度あったか(i 試合目を含む)。
+int _doublesUpTo(List<MatchResult> ms, int i) {
+  bool dd(MatchResult m) =>
+      [m.points >= 10, m.rebounds >= 10, m.assists >= 10, m.steals >= 10, m.blocks >= 10]
+          .where((x) => x)
+          .length >=
+      2;
+  return ms.take(i + 1).where(dd).length;
+}
+
 class _MatchRow extends StatelessWidget {
-  const _MatchRow({required this.index, required this.m, required this.league});
+  const _MatchRow(
+      {required this.index, required this.m, required this.league, this.doubleCount = 1});
+  final int doubleCount;
   final int index;
   final MatchResult m;
   final League league;
@@ -933,7 +949,7 @@ class _MatchRow extends StatelessWidget {
                 Text('得点${m.points} リバウンド${m.rebounds} アシスト${m.assists}'
                     '${m.steals > 0 ? ' スティール${m.steals}' : ''}'
                     '${m.blocks > 0 ? ' ブロック${m.blocks}' : ''}'
-                    '${m.threes > 0 ? ' 3P${m.threes}本' : ''}'
+                    '${m.threes > 0 && m.box.isEmpty ? ' 3P${m.threes}本' : ''}'
                     '${m.clutch == null ? '' : '  勝負どころ:${m.clutch!.label}${m.clutchSuccess == true ? '成功' : '失敗'}'}',
                     style: const TextStyle(fontSize: 12)),
                 if (!m.box.isEmpty)
@@ -942,7 +958,7 @@ class _MatchRow extends StatelessWidget {
                   Text(story,
                       style: const TextStyle(
                           fontSize: 12, fontStyle: FontStyle.italic)),
-                for (final h in matchHighlights(m))
+                for (final h in matchHighlights(m, doubleCount: doubleCount))
                   Text('★ $h',
                       style: TextStyle(
                           fontSize: 12,
