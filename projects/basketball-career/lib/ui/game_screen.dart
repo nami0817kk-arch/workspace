@@ -104,18 +104,62 @@ const _seasonNames = ['春', '夏', '秋', '冬'];
 
 // ── 育成(季節) ──
 
-class _SeasonView extends StatelessWidget {
+class _SeasonView extends StatefulWidget {
   const _SeasonView({required this.controller, required this.game});
   final GameController controller;
   final Game game;
 
   @override
+  State<_SeasonView> createState() => _SeasonViewState();
+}
+
+class _SeasonViewState extends State<_SeasonView> {
+  /// 重点などの設定のカード(下のボタンの「重点を変える」から、ここまで送る)。
+  final _settingsKey = GlobalKey();
+  final _scroll = ScrollController();
+
+  @override
+  void dispose() {
+    _scroll.dispose();
+    super.dispose();
+  }
+
+  /// 設定のカードまで送る。リストは画面の外を作らないので、まだ作られていなければ先に下まで送ってから合わせる。
+  Future<void> _showSettings() async {
+    if (_settingsKey.currentContext == null && _scroll.hasClients) {
+      await _scroll.animateTo(_scroll.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 250), curve: Curves.easeOut);
+    }
+    final ctx = _settingsKey.currentContext;
+    if (ctx != null && ctx.mounted) {
+      await Scrollable.ensureVisible(ctx,
+          duration: const Duration(milliseconds: 250), curve: Curves.easeOut);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final c = controller;
-    final g = game;
+    final c = widget.controller;
+    final g = widget.game;
     final cond = g.condition;
     final summer = g.slot == 1;
+    // 過ごし方のボタンは画面の下に固定する(毎回スクロールしないと押せない、という声から)。
+    return Column(
+      children: [
+        Expanded(child: _list(context, c, g, summer)),
+        _ActionBar(
+          controller: c,
+          game: g,
+          onShowSettings: _showSettings,
+          canChooseAction: (a) => canChoose(a, cond),
+        ),
+      ],
+    );
+  }
+
+  Widget _list(BuildContext context, GameController c, Game g, bool summer) {
     return ListView(
+      controller: _scroll,
       padding: const EdgeInsets.all(16),
       children: [
         CourtHeader(game: g),
@@ -136,8 +180,8 @@ class _SeasonView extends StatelessWidget {
           _TournamentCard(
               result: c.lastTournament!,
               winter: c.lastTournamentWinter,
-              honors: game.lastHonors,
-              teamName: game.teamLabel),
+              honors: g.lastHonors,
+              teamName: g.teamLabel),
           const SizedBox(height: 12),
         ],
         if (c.recent.isNotEmpty) ...[
@@ -147,6 +191,7 @@ class _SeasonView extends StatelessWidget {
         _AbilityCard(game: g),
         const SizedBox(height: 12),
         Card(
+          key: _settingsKey,
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
@@ -242,17 +287,11 @@ class _SeasonView extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 16),
-                for (final a in Action.values)
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 8),
-                    child: _ActionButton(
-                      action: a,
-                      recommended: a == recommendedAction(g),
-                      enabled: canChoose(a, cond),
-                      rut: g.isRut(a),
-                      onPressed: () => c.play(a),
-                    ),
-                  ),
+                Text(
+                    '過ごし方は画面の下のボタンから選ぶ。'
+                    '${[for (final a in Action.values) '${a.label}=${a.description}'].join(' ')}',
+                    style: const TextStyle(fontSize: 11)),
+                const SizedBox(height: 8),
                 OutlinedButton(
                   onPressed: c.autoYear,
                   child: const Text('おすすめで1年進める'),
@@ -490,40 +529,98 @@ class _PlayerCard extends StatelessWidget {
 }
 
 /// 過ごし方のボタン。おすすめは濃く塗って「おすすめ」と添える。
-class _ActionButton extends StatelessWidget {
-  const _ActionButton({
-    required this.action,
-    required this.recommended,
-    required this.enabled,
-    required this.rut,
-    required this.onPressed,
+/// 画面の下に固定する過ごし方のボタン(3つずつ2段)と、いまの重点。
+class _ActionBar extends StatelessWidget {
+  const _ActionBar({
+    required this.controller,
+    required this.game,
+    required this.onShowSettings,
+    required this.canChooseAction,
   });
-  final Action action;
-  final bool recommended;
-  final bool enabled;
-  final bool rut;
-  final VoidCallback onPressed;
+  final GameController controller;
+  final Game game;
+  final VoidCallback onShowSettings;
+  final bool Function(Action) canChooseAction;
 
   @override
   Widget build(BuildContext context) {
-    final child = Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(recommended ? '${action.label}  (おすすめ)' : action.label,
-            style: const TextStyle(fontWeight: FontWeight.bold)),
-        if (rut)
-          Text('マンネリ気味(伸びが少し落ちる)',
-              style: TextStyle(
-                  fontSize: 11,
-                  color: recommended ? Colors.white : const Color(0xFFC62828))),
-        Text(action.description, style: const TextStyle(fontSize: 12)),
-      ],
+    final c = controller;
+    final g = game;
+    final cs = Theme.of(context).colorScheme;
+    final rec = recommendedAction(g);
+    Widget button(Action a) {
+      final enabled = canChooseAction(a);
+      final label = Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Image.asset('assets/art/icons/act_${a.name}.png',
+              width: 26,
+              height: 26,
+              errorBuilder: (_, __, ___) => const SizedBox(width: 26, height: 26)),
+          Text(a.label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+          if (a == rec)
+            const Text('おすすめ', style: TextStyle(fontSize: 10))
+          else if (g.isRut(a))
+            const Text('マンネリ', style: TextStyle(fontSize: 10, color: Color(0xFFC62828))),
+        ],
+      );
+      final style = FilledButton.styleFrom(
+        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
+        minimumSize: const Size(0, 64),
+      );
+      final cb = enabled ? () => c.play(a) : null;
+      return Expanded(
+        child: Padding(
+          padding: const EdgeInsets.all(3),
+          child: a == rec
+              ? FilledButton(onPressed: cb, style: style, child: label)
+              : FilledButton.tonal(onPressed: cb, style: style, child: label),
+        ),
+      );
+    }
+
+    const acts = Action.values;
+    return DecoratedBox(
+      // 影ではなく上の細い線で区切る(影は端末によって太い黒い帯に見えた)。
+      decoration: BoxDecoration(
+        color: cs.surface,
+        border: Border(top: BorderSide(color: cs.outlineVariant)),
+      ),
+      child: SafeArea(
+        top: false,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(8, 4, 8, 6),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                        '${_seasonNames[g.slot]}  重点 ①${c.focus.label}${c.focus2 == null ? '' : ' ②${c.focus2!.label}'}',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                  ),
+                  TextButton(
+                    onPressed: onShowSettings,
+                    style: TextButton.styleFrom(
+                        visualDensity: VisualDensity.compact,
+                        padding: const EdgeInsets.symmetric(horizontal: 8)),
+                    child: const Text('重点を変える', style: TextStyle(fontSize: 12)),
+                  ),
+                ],
+              ),
+              Row(children: [for (final a in acts.take(3)) button(a)]),
+              Row(children: [for (final a in acts.skip(3)) button(a)]),
+            ],
+          ),
+        ),
+      ),
     );
-    final cb = enabled ? onPressed : null;
-    final withIcon = _WithIcon('assets/art/icons/act_${action.name}.png', child);
-    return recommended
-        ? FilledButton(onPressed: cb, child: withIcon)
-        : FilledButton.tonal(onPressed: cb, child: withIcon);
   }
 }
 
