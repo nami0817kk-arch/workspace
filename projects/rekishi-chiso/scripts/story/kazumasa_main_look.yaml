@@ -196,7 +196,7 @@ shots:
   - 141 part:paintings/shingen_shinano_sarashina_hiroshige.jpg
   - 142 ai:K15 wide
   - 143 ai:K15 face
-  - 144 frame:paintings/sanada_shinano_suwako_hiroshige2.jpg
+  - 144 ai:K13 wide                     # 松本市へ寄贈（10-26 広重の諏訪湖は話と合わないので替えた）
   - 145 ai:K15 wide
   - 146 ai:K16 wide
   - 147 part:paintings/shingen_shinano_sarashina_hiroshige.jpg
