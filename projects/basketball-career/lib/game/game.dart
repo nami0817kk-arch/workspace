@@ -1039,6 +1039,17 @@ class Game {
           rival: false,
           bonus: difficulty.opponent);
     }
+    // 決勝(プレーオフの決勝シリーズ)は、勝ち上がってきたライバルとの再戦になることがある(素質が高いほど勝ち上がる)。
+    final finalRound = l.rounds + l.playoffRounds - 1;
+    if (l.playoffRounds > 0 &&
+        round == finalRound &&
+        rival.activeAt(player.age) &&
+        rng.nextDouble() < rival.potential / 130) {
+      return (
+          name: rival.name,
+          rival: true,
+          bonus: rival.edgeAt(player.age) + difficulty.opponent + ease);
+    }
     if (round == rivalRound && rival.activeAt(player.age)) {
       return (
           name: rival.name,
