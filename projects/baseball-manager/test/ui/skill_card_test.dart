@@ -106,33 +106,47 @@ void main() {
     expect(study.onPressed, isNull);
   });
 
-  testWidgets('おすすめで年末まで進めても、値段が上がる前の最後の1回の前で止まる', (t) async {
+  testWidgets('年末まで: 1回押せば、出来事・節目を選び終えるたびに続きが進み、年が変わる', (t) async {
     final c = await _open(t);
-    final g = c.game!;
-    g.player = g.player.copyWith(age: 12);
-    g.slot = 0;
-    g.skillTips[Skill.stealer] = 2;
-    g.adminAddExp(2000);
-    var stopped = false;
-    for (var i = 0; i < 60 && !stopped; i++) {
+    // 6〜18歳の毎年(分かれ道の出来事が必ず出る年)で、押すのは年に1回だけ
+    for (var year = 0; year < 13; year++) {
+      final age = c.game!.player.age;
+      if (c.game!.phase != Phase.term) break;
+      c.autoYear();
+      for (var i = 0; i < 40 && c.game!.player.age == age; i++) {
+        if (c.pending.isNotEmpty) {
+          c.dismissMilestone();
+        } else if (c.game!.phase == Phase.event) {
+          c.chooseEvent(0);
+        } else {
+          break; // 選ぶものが無いのに止まっていれば失敗
+        }
+      }
+      if (c.game!.phase == Phase.pathChoice) break;
+      expect(c.game!.player.age, age + 1, reason: '$age歳で止まった: ${c.recent}');
+    }
+  });
+
+  testWidgets('年末まで: 自分で行動を選んだら、出来事のあとに続きを勝手に進めない', (t) async {
+    final c = await _open(t);
+    c.autoYear();
+    while (c.pending.isNotEmpty) {
+      c.dismissMilestone();
+    }
+    // 年の途中で手で行動 → 出来事が出ても、選んだあとは止まったまま
+    for (var i = 0; i < 20; i++) {
+      if (c.game!.phase != Phase.term) break;
+      final slot = c.game!.slot;
+      c.act(Plan.rest);
       while (c.pending.isNotEmpty) {
         c.dismissMilestone();
       }
       if (c.game!.phase == Phase.event) {
         c.chooseEvent(0);
-        continue;
+        expect(c.game!.slot, anyOf(slot + 1, 0));
+        break;
       }
-      expect(c.game!.player.age, 12);
-      // 出来事のあとに最後のターンへ来たときは、年のはじめに戻してやり直す(止まるのは autoYear の中だけを見る)
-      if (c.game!.slot == c.game!.slotsInYear - 1) c.game!.slot = 0;
-      c.autoYear();
-      stopped = c.recent.isNotEmpty && c.recent.last.contains('止めた');
     }
-    expect(stopped, isTrue);
-    expect(c.game!.player.age, 12);
-    expect(c.game!.slot, c.game!.slotsInYear - 1);
-    expect(c.recent.last, contains('最後の1回の前で止めた'));
-    expect(c.recent.last, contains('×0.5→×0.7'));
   });
 
   test('研究の対象を選んでいて、コツが3つ未満なら、おすすめは研究', () {

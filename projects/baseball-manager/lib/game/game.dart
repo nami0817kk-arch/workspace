@@ -777,10 +777,6 @@ class Game {
     return '来年(${player.age + 1}歳)から特殊能力の値段が×${f(now)}→×${f(next)}に上がる。取るなら今のうちに。';
   }
 
-  /// いまの経験点で取れる(克服できる)特殊能力が1つでもあるか。
-  bool get anySkillAffordable => skillsFor(player.role).any((s) =>
-      skillBlock(player, s, exp, skillTips[s] ?? 0) == null);
-
   /// 特殊能力の値段(いまのコツで)。
   int skillPrice(Skill s) =>
       skillCost(s, skillTips[s] ?? 0, player.age, ownedSkillCount(player));

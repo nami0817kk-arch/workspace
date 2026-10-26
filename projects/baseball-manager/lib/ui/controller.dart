@@ -955,6 +955,7 @@ class GameController extends ChangeNotifier {
     _recoveredAge = -1;
     _expAdAge = -1;
     _legacyAdUsed = false;
+    _autoYearAge = null;
     // 継承: 図鑑にあり、ポイントが足りる特性だけ。持たせたぶんのポイントを使う。
     Trait? use;
     if (carry != null && carryCandidates(role).contains(carry)) {
@@ -980,6 +981,7 @@ class GameController extends ChangeNotifier {
   /// 進行中のゲームを差し込む(続きから・テスト用)。
   void adopt(Game g) {
     game = g;
+    _autoYearAge = null;
     focus = abilitiesOf(g.player.role).first;
     notifyListeners();
   }
@@ -1044,6 +1046,8 @@ class GameController extends ChangeNotifier {
 
   void act(Plan a) {
     final g = game!;
+    // 自分で行動を選んだら、「年末まで」の続きはしない
+    if (!_inAutoYear) _autoYearAge = null;
     _applyPurchases(g);
     if (!abilitiesOf(g.player.role).contains(focus)) {
       focus = abilitiesOf(g.player.role).first;
@@ -1210,6 +1214,7 @@ class GameController extends ChangeNotifier {
   void dismissMilestone() {
     if (pending.isNotEmpty) pending.removeAt(0);
     notifyListeners();
+    _resumeAutoYear();
   }
 
   void spend(Ability a) {
@@ -1299,27 +1304,29 @@ class GameController extends ChangeNotifier {
     }
   }
 
+  /// 「年末まで」で進めている途中の歳。出来事・節目で止まったら、選び終えたところで続きを進める。
+  /// 年が変わる・進路を選ぶ・自分で行動を選ぶと null に戻る。
+  int? _autoYearAge;
+  bool _inAutoYear = false;
+
   /// おすすめの過ごし方で、今年(年が変わるまで)を進める。
-  /// 出来事・進路の選択・節目の演出が出たらそこで止まる(選ぶのは本人)。
-  void autoYear() {
+  /// 出来事・節目の演出が出たらいったん止まり、選び終える(閉じる)と自動で続きを進める
+  /// (2026-10-26 ユーザー「年末まで押しても年末まで行かない」)。進路の選択では止まる。
+  void autoYear({List<String> carry = const []}) {
     final g = game;
     if (g == null) return;
     _applyPurchases(g);
     final age = g.player.age;
+    _autoYearAge = age;
     final lines = <String>[];
     final gained = <Category, int>{};
     var turns = 0;
-    String? stopRise;
     for (var i = 0; i < g.slotsInYear; i++) {
       if (game!.phase != Phase.term || game!.player.age != age) break;
       if (pending.isNotEmpty) break;
-      // 来年から値段が上がる年の最後のターンで、いま取れるものがあれば止める(取り逃さない)
-      final rise = game!.skillPriceRiseNote;
-      if (turns > 0 && rise != null && game!.anySkillAffordable) {
-        stopRise = rise;
-        break;
-      }
+      _inAutoYear = true;
       act(recommendedPlan(game!));
+      _inAutoYear = false;
       turns++;
       for (final e in g.lastGain.entries) {
         gained[e.key] = (gained[e.key] ?? 0) + e.value;
@@ -1346,12 +1353,31 @@ class GameController extends ChangeNotifier {
         toast = '${recent.first}\n$note';
       }
     }
-    if (turns > 0 && stopRise != null) {
-      final stop = '年の最後の1回の前で止めた。$stopRise';
-      recent = [...recent.where((l) => l != stopRise), stop];
-      toast = turns > 1 ? '${recent.first}\n$stop' : stop;
+    // 出来事の結果など、続きを進める前の行を先に残す
+    if (carry.isNotEmpty && turns > 0) recent = [...carry, ...recent];
+    // 年が変わった・進路の選択など、もう続けないとき
+    final h = game!;
+    if (h.player.age != age ||
+        h.phase == Phase.retired ||
+        h.phase == Phase.pathChoice) {
+      _autoYearAge = null;
     }
-    if (turns > 1 || stopRise != null) notifyListeners();
+    if (turns > 1 || carry.isNotEmpty) notifyListeners();
+  }
+
+  /// 「年末まで」の途中で出来事・節目に止まっていたら、続きを進める。
+  void _resumeAutoYear() {
+    final target = _autoYearAge;
+    final g = game;
+    if (target == null || g == null) return;
+    if (g.player.age != target ||
+        g.phase == Phase.retired ||
+        g.phase == Phase.pathChoice) {
+      _autoYearAge = null;
+      return;
+    }
+    if (g.phase != Phase.term || pending.isNotEmpty) return;
+    autoYear(carry: List.of(recent));
   }
 
   void chooseEvent(int i) {
@@ -1369,6 +1395,7 @@ class GameController extends ChangeNotifier {
     ];
     _detect(before, game!, recent);
     _commit();
+    _resumeAutoYear();
   }
 
   void chooseRoute(Course r) {
