@@ -18,7 +18,8 @@ Q11 = Q(id="q2011", data="world_m6_2011-2011", by_depth=False, color=O.RED, size
 S3 = dict(view=(142.3, 38.3, 7), layers=[Q11, EPI, RUPTURE])
 S4 = dict(view=(139.8, 37.2, 9), layers=[RUPTURE, dict(kind="line", id="to", a=TOKYO, b=OSAKA, at=0.2),
                                         dict(kind="label", id="tol", at_ll=(137.6, 36.2), text="東京〜大阪 約400km", color=O.YEL, size=40, at=0.5)])
-S5 = dict(view=(142.3, 38.3, 7), layers=[RUPTURE, EPI], panel=dict(kind="big", text="約28m", sub="いちばん大きくずれた所（ビル9階ほど）", size=130, at=0.1))
+S5 = dict(view=(142.3, 38.3, 7), layers=[RUPTURE, EPI], panel=dict(kind="big", text="約28m", sub="いちばん大きくずれた所（ビル9階ほど）", size=130, at=0.1,
+                                                                  box=(60, 200, 1020, 620)))
 S6 = dict(view=P_TOHOKU, layers=[RUPTURE], panel=section_panel(at=0.0, grow=0.6))
 S7 = dict(view=(142.3, 38.3, 7), layers=[Q11, EPI, RUPTURE])
 

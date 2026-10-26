@@ -577,7 +577,7 @@ def draw_panel(img: Image.Image, P: dict, a: float, k: float) -> None:
         s = min(bw / im.width, bh / im.height)
         im = im.resize((int(im.width * s), int(im.height * s)), Image.LANCZOS)
         img.paste(im, (int((x0 + x1) / 2 - im.width / 2), int((y0 + y1) / 2 - im.height / 2)))
-    ov.BOXES.append(("label", box, "パネル", 1.0))
+    ov.BOXES.append(("panel", box, "パネル", 1.0))
 
 
 def draw(img: Image.Image, dr: ImageDraw.ImageDraw, t: float, ctx: dict) -> None:

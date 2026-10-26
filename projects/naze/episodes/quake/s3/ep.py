@@ -14,7 +14,7 @@ S2 = dict(view=P_TOHOKU, layers=[Q(id="qt"), LINE])
 S3 = dict(view=P_TOHOKU, layers=[Q(id="qt"), LINE], panel=SEC)
 DEEP = Q(id="qdeep", filter=lambda q: q[2] >= 300, size=1.8, grow=0.6)
 S4 = dict(view=(140, 30, 16), layers=[DEEP, dict(kind="label", id="deepest", at_ll=(140.6, 26.9), text="最深 686km", color=(190, 90, 230), size=52, at=0.3)],
-          panel=dict(kind="compare", value="686km", unit="富士山10個", n=18, note="富士山の約180個分", at=0.5))
+          panel=dict(kind="compare", value="686km", unit="富士山10個", n=18, note="富士山の約180個分", at=0.5, box=(60, 200, 1020, 620)))
 
 EP = dict(
     kind="sim", title="1万回の震源を並べたら", credit=CREDIT,

@@ -102,7 +102,10 @@ def layout(frame_fn, nf: int) -> tuple[list, list]:
             if k == "text" and sc < SHRINK_WARN:
                 hits.setdefault(("字が縮む", k, s), []).append(t)
             for k2, b2, s2, _ in bs[i + 1:]:
-                if "label" in (k, k2) and _overlap(b, b2) > 0:
+                pair = {k, k2}
+                # 札は何とも重ならない。図の枠(panel)は札・地名とだけ見る(枠の中の字や、枠の下の字幕はわざと重ねている)
+                bad = "label" in pair or ("panel" in pair and pair & {"pin", "cta"})
+                if bad and _overlap(b, b2) > 0:
                     hits.setdefault(("重なり", s, s2), []).append(t)
     fails, warns = [], []
     for key, ts in hits.items():
