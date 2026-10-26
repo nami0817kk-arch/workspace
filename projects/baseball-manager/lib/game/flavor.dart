@@ -223,9 +223,12 @@ String positionOf(Player p, [Pos? chosen]) =>
     effectivePosition(p, chosen).label;
 
 /// 背番号。少年野球は付けない(null)。投手は1〜19、野手は2〜99。
-int? uniformNumberOf(Stage stage, Player p) {
+/// `ikusei` は育成契約(二軍スタート)の間。実際のプロ野球と同じく3桁の背番号で、
+/// 一軍に上がる(支配下登録)と2桁に変わる。
+int? uniformNumberOf(Stage stage, Player p, {bool ikusei = false}) {
   if (stage == Stage.youth) return null;
   final h = _h(p.name, 5 + stage.index);
+  if (stage == Stage.pro && ikusei) return 101 + h % 40;
   if (p.role == Role.pitcher) {
     return stage == Stage.pro ? 11 + h % 19 : 1 + h % 11;
   }
@@ -235,9 +238,9 @@ int? uniformNumberOf(Stage stage, Player p) {
 
 /// 1行の選手カード: 「背番号18 ・ 右投左打 ・ 遊撃手」。
 String playerCardLine(Stage stage, Player p,
-    {Pos? position, int? numberOverride}) {
-  final n =
-      (stage == Stage.pro ? numberOverride : null) ?? uniformNumberOf(stage, p);
+    {Pos? position, int? numberOverride, bool ikusei = false}) {
+  final n = (stage == Stage.pro ? numberOverride : null) ??
+      uniformNumberOf(stage, p, ikusei: ikusei);
   return [
     if (n != null) '背番号$n',
     handednessOf(p.name),

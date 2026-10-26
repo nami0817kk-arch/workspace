@@ -500,6 +500,7 @@ class _Header extends StatelessWidget {
                                 Text(
                                     playerCardLine(game.stage, p,
                                         position: game.position,
+                                        ikusei: game.onFarm,
                                         numberOverride: specialNumberOf(
                                             p.role, game.records)),
                                     maxLines: 2,

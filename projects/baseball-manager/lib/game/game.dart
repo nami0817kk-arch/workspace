@@ -1605,7 +1605,11 @@ class Game {
     if (rs != null) log.addAll(rivalNews(rs, player.age));
 
     if (phase != Phase.retired) log.add('── ${player.age}歳 ──');
-    final an = ageNote(player.age, pro: turnedPro);
+    // 大学(22歳でドラフト)・社会人(21歳でドラフト)の、最後の夏を迎える年
+    final finalYear = !turnedPro &&
+        route != null &&
+        player.age == (route == Course.corporate ? 20 : 21);
+    final an = ageNote(player.age, finalYear: finalYear);
     if (an != null && phase != Phase.retired) log.add(an);
     if (turnedPro) {
       if (proTeam != null && !overseas && proYears >= 1 && proYears % 3 == 0) {
@@ -1616,7 +1620,7 @@ class Game {
         farmYears--;
         if (promoted(yearsLeft: farmYears, overall: overall(player))) {
           farmYears = 0;
-          log.add('一軍に昇格した!');
+          log.add('一軍に昇格した! 支配下登録され、背番号は${uniformNumberOf(Stage.pro, player)}に。');
           _note('team', '一軍に昇格');
         }
       }
@@ -1679,7 +1683,8 @@ class Game {
       proTeam = team;
       final round = draftRound(margin);
       log.add('ドラフトで指名された! $team から$round位指名。');
-      log.add(pressConferenceNote(round, uniformNumberOf(Stage.pro, player)));
+      log.add(pressConferenceNote(round,
+          uniformNumberOf(Stage.pro, player, ikusei: farmYearsFor(round) > 0)));
       farmYears = farmYearsFor(round);
       nextSalary = rookieSalary(round);
       log.add('契約: 1年目の年俸は${fmtSalary(nextSalary)}。');

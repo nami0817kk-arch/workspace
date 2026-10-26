@@ -205,6 +205,13 @@ void markTests8() {
     expect(m.every((e) => e.$2 >= 1 && e.$2 <= 6), isTrue);
     expect(ageNote(18), contains('進路'));
     expect(ageNote(19), isNull);
+    // 大学・社会人の最後の夏の年に出す(ドラフトに落ちたあとではなく)
+    expect(ageNote(21, finalYear: true), contains('ドラフト'));
+    expect(ageNote(22), isNull);
+    // 育成契約の間は3桁、一軍に上がると2桁
+    final p = _p(Role.batter, const {});
+    expect(uniformNumberOf(Stage.pro, p, ikusei: true)!, greaterThan(100));
+    expect(uniformNumberOf(Stage.pro, p)!, lessThan(100));
     expect(yearSummaryOf(7, 3), contains('7回'));
   });
 }
