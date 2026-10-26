@@ -1,0 +1,24 @@
+{
+ "freiburg": {
+  "ニルス・ペーターゼン": {
+   "role": "legend",
+   "file": "assets/photos/bd/freiburg/freiburg_legend_2f988574.jpg",
+   "page": "Nils Petersen"
+  },
+  "パピス・シセ": {
+   "role": "legend",
+   "file": "assets/photos/bd/freiburg/freiburg_legend_bce454e8.jpg",
+   "page": "Papiss Cissé"
+  },
+  "ユリアン・シュスター": {
+   "role": "manager",
+   "file": "assets/photos/bd/freiburg/freiburg_manager_aaf7d17c.jpg",
+   "page": "Julian Schuster"
+  },
+  "ニコラス・ヘーフラー": {
+   "role": "legend",
+   "file": "assets/photos/bd/freiburg/freiburg_legend_bcc959d0.jpg",
+   "page": "Nicolas Höfler"
+  }
+ }
+}

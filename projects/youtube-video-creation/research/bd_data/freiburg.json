@@ -1,0 +1,82 @@
+{
+ "title": "フライブルク 基礎DATA",
+ "colors": [
+  "#E30613",
+  "#1A1A1A"
+ ],
+ "crest": "assets/crests/フライブルク.png",
+ "tiles": [
+  [
+   "クラブ創立",
+   "1904年",
+   "5月30日。前身の2クラブが1912年に1つに"
+  ],
+  [
+   "愛称",
+   "ブライスガウのブラジル人",
+   "1990年代、魅せるサッカーから"
+  ],
+  [
+   "ホームタウン",
+   "フライブルク",
+   "人口10万人超では、ドイツでいちばん南の都市"
+  ],
+  [
+   "本拠地",
+   "オイローパパルク・シュタディオン",
+   "収容 34,700人。2021年に開業"
+  ],
+  [
+   "クラブの形",
+   "会員のクラブ",
+   "正式名は登録協会（e.V.）"
+  ],
+  [
+   "タイトル歴",
+   "2部優勝4回",
+   "1部・カップ・欧州は準優勝まで"
+  ],
+  [
+   "最多得点",
+   "106点",
+   "ヴィンチェンツォ・グリフォ。2026年3月に更新"
+  ],
+  [
+   "初の欧州決勝",
+   "2026年",
+   "ヨーロッパリーグ準優勝"
+  ],
+  [
+   "昨季の順位",
+   "7位",
+   "勝ち点47。カンファレンスリーグへ"
+  ]
+ ],
+ "trophies": [
+  [
+   "ブンデスリーガ",
+   0
+  ],
+  [
+   "DFBポカール",
+   0
+  ],
+  [
+   "UEFAカップ/EL",
+   0
+  ],
+  [
+   "2.ブンデスリーガ",
+   4
+  ]
+ ],
+ "sources": [
+  "https://en.wikipedia.org/wiki/SC_Freiburg",
+  "https://en.wikipedia.org/wiki/Europa-Park_Stadion",
+  "https://en.wikipedia.org/wiki/Freiburg_im_Breisgau",
+  "https://en.wikipedia.org/wiki/Vincenzo_Grifo",
+  "https://en.wikipedia.org/wiki/2026_UEFA_Europa_League_final",
+  "https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/teams/126/schedule?season=2025"
+ ],
+ "notes": "取材の控えは research/bd_data/freiburg_research.md。創立 1904-05-30（英語版 infobox。前身 FFV 04 と FC Schwalbe が1904年、SV と Union が1912年に Sportclub Freiburg）。愛称 Breisgau-Brasilianer（英語版 infobox・History、1994-95 の3位のころ）。人口10万人超でドイツ最南の都市（英語版 Freiburg im Breisgau 冒頭）。収容34,700・2021年10月完成（英語版 SC Freiburg / Europa-Park Stadion）。正式名 Sport-Club Freiburg e.V.（infobox fullname）。タイトルは英語版 Honours（2. Bundesliga 優勝 1992-93・2002-03・2008-09・2015-16、DFBポカール準優勝 2021-22、EL 準優勝 2025-26）。最多得点はグリフォ（英語版本人記事：2026-03-19 のゲンク戦で106点目、ペーターゼンの105点を超えた。その後の数は数えていない）。昨季は ESPN の日程から13勝8分13敗・勝ち点47・7位（last_season.json と一致）。"
+}

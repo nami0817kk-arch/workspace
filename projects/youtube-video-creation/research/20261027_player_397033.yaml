@@ -1,0 +1,596 @@
+# サンドロ・トナーリ（トッテナム／イタリア代表）の紹介。選手紹介の8節の型（2026-10-27、シリーズ「有名選手の紹介」。key: player_397033）。
+# **FotMob は使わない**（雛形が書いた FotMob の板4種＝assets/stats/player_20261027_867414_* は消した）。数字は Transfermarkt API（プロフィール・市場価値の推移・試合ごとの記録。控え research/raw/20261027_tonali_tm.json）と、自分で割った90分あたり。
+# **選んだ理由・重なり確認（2026-10-26）**：player_pool.py list で、scripts/ に紹介があるのは 1〜21位（ハーランド〜カイセド、10/26 のコネまで）。
+#   未紹介のうち市場価値が最上位は 23位のトナーリ（一覧の値 8000万ユーロ。22位バリオス 5500万・25位ムベウモと27位クーニャ 7500万より上。TM の現在値は 2026-10-07 に 9000万）。
+#   今季もプレミアリーグの1部：TM の試合記録で 26/27 のプレミア 8試合（8/22〜10/24）、ESPN の順位表で トッテナムは8試合で勝ち点9の14位。英語版Wikipedia の infobox も currentclub = Tottenham Hotspur。
+#   scripts/・research/posted.json・covered.yaml を「トナーリ／Tonali／397033」で grep：紹介・比べるの台本は0件。移籍の回（10/5 移籍の答え合わせ・10/16 ニューカッスルの移籍期間・10/18 トッテナムの移籍期間）に名前が出るだけ。posted.json は0件。
+#   現役（10/24 のチェルシー戦に90分出場）。女子・Jリーグでもない。
+# **数字の軸**：トップチームと代表の通算（下部組織・U19・U21 は除く）：ブレシア 89試合6得点／ミラン 130試合7得点／ニューカッスル 110試合10得点／トッテナム 8試合0得点／イタリア代表 36試合4得点 → 373試合27得点。
+#   Wikipedia の表（クラブは 10/10 時点・代表は 10/5 時点）と、ブレシア・ミラン・ニューカッスル・代表は一致。トッテナムは Wikipedia 6試合＋10/19・10/24 の2試合で8。ニューカッスル公式の退団発表も「110試合10得点」。
+#   90分あたりのパス（TM、リーグ戦だけ）：21/22 ミラン 47.2（成功率85.5%）→ 22/23 ミラン 46.5（81.0%）→ 24/25 ニューカッスル 50.1（85.9%）→ 25/26 ニューカッスル 55.1（84.3%）→ 今季トッテナム 62.7（89.7%、699分）。
+#   90分あたりのシュート（リーグ戦）：24/25 1.20 → 25/26 1.31 → 今季 1.67。
+#   トッテナムのリーグ戦（トナーリは8試合とも先発）：ブレントフォード 0-3、ニューカッスル 0-2、フォレスト 0-0、エヴァートン 0-0、ヴィラ 2-3、マンU 1-1（アシスト）、コヴェントリー 3-1、チェルシー 2-0 → 最初の5試合は勝ち点2、直近3試合は勝ち点7。ESPN の日程と一致。
+#   市場価値：2018/2 25万ユーロ → 2019/6 2500万 → 2022/6 5000万 → 2023/10 6000万 → 2025/10 7500万 → 2026/10/7 9000万（最高）。
+# **日本との接点**：無し（TM のトッテナムの登録28人に日本国籍の選手はいない。ブレシア・ミラン・ニューカッスルの在籍期間にも日本人の同僚は見つけていない）。無理に入れない。
+# **一次情報・出典**：トッテナム公式（2026-07-06 加入の発表。本人・デ・ゼルビ監督・ランゲSDの言葉）／ニューカッスル公式（2026-07-06 退団の発表：110試合10得点・クラブが受け取った移籍金で2番目）／
+#   ロイター（The Star 転載：報道で最大1億ポンド・初期費用9250万ポンド・トッテナムのクラブ記録）／英語版Wikipedia（ローディ生まれ・ピアチェンツァとブレシアの下部組織・2017/8/26 17歳でデビュー・18/19 セリエB優勝・
+#   2019/10/26 ジェノア戦のFKでセリエA初得点・2019/10/15 代表デビュー・2020/9/9 ミランへレンタル・2021/7/8 完全移籍・2021/8/29 カリアリ戦のFKでミラン初得点・2022/5/8 22歳の誕生日にヴェローナ戦2得点・21/22 優勝（11年ぶり）・
+#   2023/7/3 ニューカッスルへ、報道で約7000万ユーロ＝イタリア人選手の史上最高額・2023/8/12 プレミア初戦で初得点・2025/3/16 リーグカップ優勝（クラブの国内主要タイトルは70年ぶり）、準々決勝ブレントフォード戦で2得点・ピルロと比べられた・子どものころからのミランファン）。
+#   日付と得点は TM の試合記録で突き合わせた（ジェノア戦・カリアリ戦・ヴェローナ戦・ヴィラ戦・ブレントフォード戦）。
+# **入れなかったもの**：23/24 に出場が12試合にとどまった理由（法的・処分の話は入れない決まり）、結婚・子ども、年俸、給料を下げてミランに残った話（出典がファンサイト）、ガットゥーゾに近いと言った話（calciomercato の元記事が404で確かめられない）、W杯予選の結果。FotMob の指標。
+# **本人の言葉**：トッテナム公式の加入発表から（英語の原文を訳した）。
+# **不安**：今季の数は 10/26 時点。トッテナムの移籍金は報道の値（クラブは非公表）。写真は Commons の CC BY / BY-SA だけ（説明とファイル名で本人としている。目で確かめた）。
+date: 2026年10月27日
+slot: other_1
+format: news
+series: 有名選手の紹介
+people:
+- サンドロ・トナーリ
+- ロベルト・デ・ゼルビ
+theme:
+  id: player_397033
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: トッテナム
+  title: トナーリってどんな選手？ クラブ史上最高額の中盤は、トッテナムで何を変えたのか
+  question: トッテナムがクラブ史上最高額で迎えたサンドロ・トナーリは、どんな中盤の選手で、トッテナムで何が変わったのか
+  takeaway: 通算373試合27得点。プレミアの90分あたりのパスはニューカッスルの24/25が50.1本、25/26が55.1本、トッテナムの今季は62.7本で成功率89.7%。トッテナムはトナーリが先発した最初の5試合で勝ち点2、直近3試合で勝ち点7
+  nameplate: サンドロ・トナーリ｜トッテナム MF／イタリア代表
+  opening_image: assets/images/20261027_player_397033/pool/03_w.jpg
+  end_bg: assets/images/20261027_player_397033/pool/03_w.jpg
+  bgm: assets/audio/bgm_calm.wav
+watch: 毎日、数字でサッカーを読み解きます
+short_title: トナーリってどんな選手？
+thumbnail:
+  line1: トナーリ、373試合27点
+  line2: 移籍金は最大1億ポンド
+  tags:
+  - トッテナム
+  photo: assets/images/20261027_player_397033/panel_01.jpg
+  photos: []
+  short_photo: assets/images/20261027_player_397033/pool/03_v.jpg
+sections:
+- id: hook
+  heading: トッテナムが、クラブ史上最高額で迎えた中盤。トナーリとは何者か
+  tier: 報道
+  telop: トッテナム、クラブ史上最高額
+  narrator: 解説
+  card: &hook_card
+    type: stats
+    title: サンドロ・トナーリの数字
+    items:
+    - - 最大1億
+      - ポンド
+      - 2026年 トッテナムへ（報道）
+    - - 7000万
+      - ユーロ
+      - 2023年 ニューカッスルへ（報道）
+    - - '373'
+      - 試合
+      - クラブと代表の通算
+    focus: 0
+  say:
+  - text: この夏、トッテナムの中盤にやってきた、イタリア代表のサンドロ・トナーリ。
+    image: assets/images/20261027_player_397033/pool/03_w.jpg
+    card: none
+  - text: 移籍金は、報道で最大1億ポンド。トッテナムが払った額として、クラブ史上の最高です。
+    image: assets/images/20261027_player_397033/pool/01_w.jpg
+    card:
+      <<: *hook_card
+      focus: 0
+    emph: true
+  - text: 3年前、ミランからニューカッスルへ移ったときも、報道でおよそ7000万ユーロ。
+    card:
+      <<: *hook_card
+      focus: 1
+  - text: イタリア人の選手として、史上いちばん高い移籍でした。
+    card:
+      <<: *hook_card
+      focus: 1
+  - text: 2度も大きな値が付いた中盤は、どんな選手なのか。数字で見ていきます。
+    card: none
+  quotes_from: []
+  sources:
+  - https://www.thestar.com.my/sport/football/2026/07/06/soccer-spurs-sign-tonali-for-a-club-record-100-million
+  - https://www.newcastleunited.com/en/news/sandro-tonali-leaves-newcastle-united-for-tottenham-hotspur
+  - https://en.wikipedia.org/wiki/Sandro_Tonali
+- id: data
+  heading: トナーリは、どんな立場で、いくらと見られている選手か
+  tier: 報道
+  telop: サンドロ・トナーリの基礎DATA
+  narrator: 解説
+  card: &data_card
+    type: table
+    title: サンドロ・トナーリ（トッテナム）
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - 所属
+      - トッテナム（16番）
+    - - ポジション
+      - 守備的MF
+    - - 生年月日
+      - 2000年5月8日（26歳）
+    - - 出身
+      - イタリア（ロンバルディア州ローディ）
+    - - 身長・利き足
+      - 1.81m・右足
+    - - 代表
+      - イタリア（36試合4得点）
+    - - 契約・市場価値
+      - 2032年まで・9000万ユーロ
+    source: Transfermarkt
+  say:
+  - text: トナーリの持ち場は、中盤の底。トッテナムでは背番号16をつけています。
+    image: assets/images/20261027_player_397033/pool/01_w.jpg
+    card: none
+  - text: 2000年5月8日生まれの26歳。
+    image: assets/images/20261027_player_397033/pool/01_w.jpg
+    card:
+      <<: *data_card
+      highlight_row: 2
+  - text: 生まれは、イタリア北部ロンバルディア州のローディです。
+    card:
+      <<: *data_card
+      highlight_row: 3
+  - text: 市場価値は、推定で9000万ユーロ。
+    card: none
+  - text: 10月7日の見直しで、自身の最高値に届いています。
+    card:
+      type: line
+      title: トナーリの市場価値（百万ユーロ）
+      x:
+      - 18/2
+      - 19/6
+      - 20/3
+      - 22/6
+      - 23/10
+      - 24/5
+      - 25/10
+      - 26/10
+      series:
+      - - 市場価値
+        - - 0.25
+          - 25
+          - 35
+          - 50
+          - 60
+          - 38
+          - 75
+          - 90
+      focus: 市場価値
+      highlight: 26/10
+      source: Transfermarkt
+    emph: true
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/sandro-tonali/profil/spieler/397033
+  - https://www.transfermarkt.com/sandro-tonali/marktwertverlauf/spieler/397033
+  - https://en.wikipedia.org/wiki/Sandro_Tonali
+- id: career
+  heading: ブレシアの少年は、どうやってイタリアの中盤の顔になったのか
+  tier: 背景
+  telop: ブレシアから、ミラン、ニューカッスル、トッテナムへ
+  narrator: 解説
+  card: &career_card
+    type: timeline
+    title: トナーリの歩み
+    rows:
+    - - '2017'
+      - 8月、17歳でブレシアでデビュー（2部）
+    - - '2019'
+      - 2部で優勝。19歳でイタリア代表デビュー
+    - - '2022'
+      - ミランで、11年ぶりのリーグ優勝
+    - - '2025'
+      - ニューカッスルでリーグカップ優勝
+    - - '2026'
+      - 7月、トッテナムへ
+    focus: '2017'
+  say:
+  - text: トナーリは、2012年から、ブレシアの下部組織で育ちました。
+    image: assets/images/20261027_player_397033/pool/03_w.jpg
+    card:
+      <<: *career_card
+      focus: '2017'
+  - text: 2017年8月26日、2部のアヴェッリーノ戦。17歳でプロデビュー。
+    card:
+      <<: *career_card
+      focus: '2017'
+  - text: 同じブレシアで育った名手ピルロと、位置もプレーもよく比べられました。
+    card: none
+  - text: 2季目の2019年、ブレシアの一員として2部で優勝。1部へ上がります。
+    card:
+      <<: *career_card
+      focus: '2019'
+  - text: その年の10月15日には、19歳でイタリア代表にデビュー。
+    card:
+      <<: *career_card
+      focus: '2019'
+  - text: 2020年9月、子どものころから応援していたミランへ、まずはレンタルで加わります。
+    image: assets/images/20261027_player_397033/milan/02_w.jpg
+    card: none
+  - text: 翌年の夏に完全移籍。21/22は、ミランが11年ぶりにリーグを制した季です。
+    card:
+      <<: *career_card
+      focus: '2022'
+    emph: true
+  - text: 2023年の夏には、イングランドに渡り、ニューカッスルの一員に。
+    image: assets/images/20261027_player_397033/pool/04_w.jpg
+    card: none
+  - text: 2025年3月、イングランドのリーグカップ決勝で、リヴァプールに2対1。
+    card:
+      <<: *career_card
+      focus: '2025'
+  - text: ニューカッスルにとって、70年ぶりの国内の主要タイトルでした。
+    card:
+      <<: *career_card
+      focus: '2025'
+  - text: 準々決勝のブレントフォード戦で2得点。勝ち上がりを支えました。
+    card: none
+  - text: そして2026年7月6日、トッテナムが加入を発表しました。
+    image: assets/images/20261027_player_397033/pool/01_w.jpg
+    card:
+      <<: *career_card
+      focus: '2026'
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Sandro_Tonali
+  - https://www.tottenhamhotspur.com/news/1076467/welcome-sandro-tonali-makes-the-move-to-n17
+  - https://www.transfermarkt.com/sandro-tonali/leistungsdatendetails/spieler/397033
+- id: style
+  heading: トナーリは、どこで点に絡むMFなのか。2つの初ゴールに見る持ち味
+  tier: 背景
+  telop: 中盤の底から、蹴って、運ぶ
+  narrator: 解説
+  card: &style_card
+    type: table
+    title: トナーリの節目のゴール
+    columns:
+    - 日付
+    - 試合
+    - 中身
+    rows:
+    - - 2019年10月26日
+      - ジェノア戦（ブレシア）
+      - セリエA初得点・直接FK
+    - - 2021年8月29日
+      - カリアリ戦（ミラン）
+      - ミラン初得点・直接FK
+    - - 2022年5月8日
+      - ヴェローナ戦（ミラン）
+      - 22歳の誕生日に2得点
+    - - 2023年8月12日
+      - ヴィラ戦（ニューカッスル）
+      - プレミア初戦で先制点
+    source: Wikipedia・Transfermarkt
+  say:
+  - text: トナーリの本来の仕事は、中盤の底から長いパスで試合を組み立てること。
+    image: assets/images/20261027_player_397033/milan/02_w.jpg
+    card: none
+  - text: 右利きですが、長いパスは左右どちらの足でも蹴ると言われます。
+    card: none
+  - text: もう1つの武器が、セットプレーです。
+    image: assets/images/20261027_player_397033/pool/03_w.jpg
+    card:
+      <<: *style_card
+      highlight_row: 0
+  - text: 2019年10月、セリエAの初ゴールは、ジェノア戦の直接フリーキックでした。
+    card:
+      <<: *style_card
+      highlight_row: 0
+  - text: ミランでの初ゴールも、2021年8月のカリアリ戦。これも直接フリーキックです。
+    card:
+      <<: *style_card
+      highlight_row: 1
+  - text: ゴール前に出ていく力も。優勝を争った22年5月8日、22歳の誕生日のヴェローナ戦。
+    image: assets/images/20261027_player_397033/milan/02_w.jpg
+    card:
+      <<: *style_card
+      highlight_row: 2
+  - text: 同点と勝ち越しの2点を決めて、ミランを首位に戻しました。
+    card:
+      <<: *style_card
+      highlight_row: 2
+    emph: true
+  - text: ニューカッスルでも、プレミアの初戦、ヴィラ戦で先制点を決めています。
+    image: assets/images/20261027_player_397033/pool/04_w.jpg
+    card:
+      <<: *style_card
+      highlight_row: 3
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Sandro_Tonali
+  - https://www.transfermarkt.com/sandro-tonali/leistungsdatendetails/spieler/397033
+- id: past
+  heading: トナーリは、クラブの各季で、何試合に出て、いくつ点に絡んだのか
+  tier: 報道
+  telop: ミランとニューカッスルの6季
+  narrator: 解説
+  card: &past_card
+    type: table
+    title: トナーリ クラブでの6季（全公式戦）
+    columns:
+    - シーズン
+    - クラブ
+    - 試合
+    - 得点
+    - アシスト
+    rows:
+    - - 20/21
+      - ミラン
+      - '37'
+      - '0'
+      - '0'
+    - - 21/22
+      - ミラン
+      - '45'
+      - '5'
+      - '3'
+    - - 22/23
+      - ミラン
+      - '48'
+      - '2'
+      - '10'
+    - - 23/24
+      - ニューカッスル
+      - '12'
+      - '1'
+      - '0'
+    - - 24/25
+      - ニューカッスル
+      - '45'
+      - '6'
+      - '3'
+    - - 25/26
+      - ニューカッスル
+      - '53'
+      - '3'
+      - '7'
+    source: Transfermarkt
+  say:
+  - text: トナーリがミランに来た20/21は37試合。得点とアシストは0でした。
+    image: assets/images/20261027_player_397033/milan/02_w.jpg
+    card:
+      <<: *past_card
+      highlight_row: 0
+  - text: 2季目は5得点。3季目の22/23は、アシストが10まで増えています。
+    card:
+      <<: *past_card
+      highlight_row: 2
+  - text: ニューカッスルで6得点を挙げたのが24/25。25/26は53試合に出ました。
+    card:
+      <<: *past_card
+      highlight_row: 5
+    emph: true
+  - text: 続いて通算です。ブレシアは89試合で6得点。
+    image: assets/images/20261027_player_397033/pool/01_w.jpg
+    card: &total_card
+      type: table
+      title: トナーリ 通算（トップチームと代表）
+      columns:
+      - 所属
+      - 試合
+      - 得点
+      rows:
+      - - ブレシア
+        - '89'
+        - '6'
+      - - ミラン
+        - '130'
+        - '7'
+      - - ニューカッスル
+        - '110'
+        - '10'
+      - - トッテナム
+        - '8'
+        - '0'
+      - - イタリア代表
+        - '36'
+        - '4'
+      - - 合計
+        - '373'
+        - '27'
+      source: Transfermarkt
+      highlight_row: 0
+  - text: ミランは130試合で7得点。ニューカッスルは110試合で10得点です。
+    card:
+      <<: *total_card
+      highlight_row: 2
+  - text: 代表も足すと、通算373試合で27得点になります。
+    card:
+      <<: *total_card
+      highlight_row: 5
+    emph: true
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/sandro-tonali/leistungsdatendetails/spieler/397033
+  - https://en.wikipedia.org/wiki/Sandro_Tonali
+  - https://www.newcastleunited.com/en/news/sandro-tonali-leaves-newcastle-united-for-tottenham-hotspur
+- id: season
+  heading: 今季のトナーリは、トッテナムで何を見せているのか
+  tier: 報道
+  main: true
+  telop: 今季ここまで
+  narrator: 解説
+  card: &season_card
+    type: table
+    title: 今季のトナーリ（10月26日時点）
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - トッテナム
+      - 8試合・699分・1アシスト
+    - - 最初の5試合
+      - 勝ちなし（勝ち点2）
+    - - 直近3試合
+      - 2勝1分（勝ち点7）
+    - - イタリア代表
+      - 4試合・262分・1アシスト
+    source: Transfermarkt・ESPN
+    highlight_row: 0
+  say:
+  - text: クラブ史上最高額で、トッテナムに来たイタリア代表のトナーリ。今季の中身を見ます。
+    image: assets/images/20261027_player_397033/pool/01_w.jpg
+    card: none
+    short_only: true
+  - text: トッテナムでは、リーグ戦の8試合すべてに先発。699分に出ています。
+    image: assets/images/20261027_player_397033/pool/01_w.jpg
+    card: none
+  - text: デビュー戦は8月22日、ブレントフォードとの敵地の一戦。0対3の完敗でした。
+    card:
+      <<: *season_card
+      highlight_row: 0
+  - text: 次の試合の相手は、前の所属のニューカッスル。ここも0対2の負けでした。
+    image: assets/images/20261027_player_397033/pool/04_w.jpg
+    card: none
+  - text: 最初の5試合で、勝ち点は2。昨季17位のチームは、今季も苦しい出だしでした。
+    image: assets/images/20261027_player_397033/pool/03_w.jpg
+    card:
+      <<: *season_card
+      highlight_row: 1
+  - text: 流れが変わったのは10月。マンチェスター・ユナイテッド戦は1対1の引き分けです。
+    card:
+      <<: *season_card
+      highlight_row: 2
+  - text: 追いついた終盤のゴールは、トナーリのクロスからでした。
+    card: none
+    emph: true
+  - text: そこからコヴェントリーに3対1、チェルシーに敵地で2対0の連勝。
+    card: none
+  - text: 直近の3試合で、勝ち点7を積みました。
+    image: assets/images/20261027_player_397033/pool/01_w.jpg
+    card:
+      <<: *season_card
+      highlight_row: 2
+  - text: イタリア代表でも、9月からの4試合に出ています。
+    image: assets/images/20261027_player_397033/pool/03_w.jpg
+    card:
+      <<: *season_card
+      highlight_row: 3
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/sandro-tonali/leistungsdatendetails/spieler/397033
+  - https://www.espn.com/soccer/team/fixtures/_/id/367/tottenham-hotspur
+- id: words
+  heading: トナーリは、なぜトッテナムを選んだのか。本人と監督の言葉
+  tier: 報道
+  telop: 加入の日の言葉
+  narrator: 解説
+  card: &words_card
+    type: document
+    label: トッテナム公式 加入の発表（2026年7月6日）の訳
+    paragraphs:
+    - 4つか5つのクラブがあると言われていた。でも、ここしかなかった。
+    - 監督と2時間近く話した。魔法のようだった。すぐに、トッテナムと契約しなければと分かった。
+    - 彼は、私の地元のクラブ、ブレシアの下部組織から出てきた選手だ。ずっと見てきた。（デ・ゼルビ監督）
+    highlight:
+    - ここしかなかった
+    - ブレシア
+  say:
+  - text: 加入の日、トナーリはクラブにこう話しています。
+    image: assets/images/20261027_player_397033/pool/01_w.jpg
+    card: none
+  - voice: トナーリ
+    text: 4つか5つのクラブがあると言われていた。
+    card: *words_card
+  - voice: トナーリ
+    text: でも、ここしかなかった。
+    card: *words_card
+  - voice: トナーリ
+    text: 監督と2時間近く話した。魔法のようだった。
+    card: *words_card
+  - voice: トナーリ
+    text: すぐに、契約しなければと分かった。
+    card: *words_card
+    pause: 0.5
+  - text: その監督が、ロベルト・デ・ゼルビ。実は、ブレシアの生まれです。
+    image: assets/images/20261027_player_397033/pool/03_w.jpg
+    card: none
+  - voice: デ・ゼルビ
+    text: 彼は、私の地元のクラブ、ブレシアの下部組織から出てきた。
+    card: *words_card
+  - voice: デ・ゼルビ
+    text: ずっと見てきた選手だ。
+    card: *words_card
+    pause: 0.5
+  quotes_from:
+  - トッテナム公式 https://www.tottenhamhotspur.com/news/1076467/welcome-sandro-tonali-makes-the-move-to-n17
+  sources:
+  - https://www.tottenhamhotspur.com/news/1076467/welcome-sandro-tonali-makes-the-move-to-n17
+- id: view
+  heading: 同じプレミアで比べると、トナーリの仕事はトッテナムで増えたのか
+  tier: 背景
+  viewpoint: true
+  narrator: 解説
+  telop: 90分あたりのパス（リーグ戦）
+  card: &view_card
+    type: table
+    title: トナーリ リーグ戦の90分あたり
+    columns:
+    - 季
+    - パス
+    - 成功率
+    - シュート
+    rows:
+    - - 21/22 ミラン
+      - 47.2本
+      - 85.5%
+      - 1.28本
+    - - 22/23 ミラン
+      - 46.5本
+      - 81.0%
+      - 1.06本
+    - - 24/25 ニューカッスル
+      - 50.1本
+      - 85.9%
+      - 1.20本
+    - - 25/26 ニューカッスル
+      - 55.1本
+      - 84.3%
+      - 1.31本
+    - - 今季 トッテナム
+      - 62.7本
+      - 89.7%
+      - 1.67本
+    source: Transfermarkt
+    highlight_row: 0
+  say:
+  - text: 最後に、同じリーグ戦どうしで、トナーリの仕事の量を比べます。
+    image: assets/images/20261027_player_397033/pool/03_w.jpg
+    card:
+      <<: *view_card
+      highlight_row: 0
+  - text: ミランの2季は、90分あたりのパスが47本前後でした。
+    card:
+      <<: *view_card
+      highlight_row: 1
+  - text: ニューカッスルでは、24/25が50.1本、25/26が55.1本。
+    card:
+      <<: *view_card
+      highlight_row: 3
+  - text: トッテナムの今季は62.7本。成功率も89.7%で、5季の中で最高です。
+    card:
+      <<: *view_card
+      highlight_row: 4
+    emph: true
+    mark:
+      kind: circle
+      row: 4
+  - text: シュートも、90分あたり1.31本から1.67本に増えました。
+    image: assets/images/20261027_player_397033/pool/01_w.jpg
+    card: none
+  - text: とはいえ、トッテナムでの出場はまだ8試合。勝ち始めたのも、直近の3試合です。
+    card: none
+  - text: ボールが集まるいまの形で、勝ち点を積み続けられるのか。
+    image: assets/images/20261027_player_397033/pool/03_w.jpg
+    card: none
+  - text: 次は10月31日、本拠地でのクリスタル・パレス戦です。
+    card: none
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/sandro-tonali/leistungsdatendetails/spieler/397033
+  - https://www.espn.com/soccer/team/fixtures/_/id/367/tottenham-hotspur

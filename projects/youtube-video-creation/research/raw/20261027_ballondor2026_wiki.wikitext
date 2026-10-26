@@ -1,0 +1,579 @@
+{{Short description|Annual association football award}}
+{{pp|small=yes}}
+{{Use Oxford spelling|date=July 2026}}
+{{Use dmy dates|date=July 2026}}
+{{Infobox award
+| name = 2026 Ballon d'Or
+| image = Ousmane Dembele France v Senegal 16 June 2026-341 (cropped).jpg
+| caption = Reigning Ballon d'Or winner [[Ousmane Dembélé]]
+| date = 26 October 2026
+| location = [[London Palladium]], [[London]]
+| presenter = ''[[France Football]]''
+| host          = [[Kate Scott (British presenter)|Kate Scott]]<br/>[[Thierry Henry]]<ref>{{cite web |url=https://www.lequipe.fr/Football/Actualites/De-cbs-au-ballon-d-or-thierry-henry-sera-maitre-de-ceremonie-au-cote-de-kate-scott/1736959 |title=De CBS au Ballon d'Or : Thierry Henry sera maître de cérémonie au côté de Kate Scott |date=19 October 2026 |publisher=[[L'Équipe]] |language=fr |access-date=23 October 2026 }}</ref>
+| winner        = <!-- TBA -->
+| website = {{URL|ballondor.com}}<!--
+| award1_type   = [[Ballon d'Or]]
+| award1_winner =  
+| award2_type   = [[Ballon d'Or Féminin]]
+| award2_winner = TBA
+| award3_type   = [[Kopa Trophy]]
+| award3_winner = TBA
+| award4_type   = [[Yashin Trophy]]
+| award4_winner = TBA
+| award5_type   = [[Gerd Müller Trophy]]
+| award5_winner = TBA-->
+| previous = [[2025 Ballon d'Or|2025]]
+| main = [[Ballon d'Or]]
+| next = [[2027 Ballon d'Or|2027]]
+}}
+The '''2026 Ballon d'Or''' ({{lit|'''2026 Golden Ball'''}}) will be the 70th annual ceremony of the [[Ballon d'Or]], presented by ''[[France Football]]'', recognising the best footballers in the world in the 2025–26 season. For the fifth time in the history of the award, it will be given based on the results of the season instead of the calendar year. This is the period from 3 August 2025 to 19 July 2026.<ref>{{cite web |url=https://ballondor.com/news/posts/check-all-the-criteria-and-full-regulations-to-understand-ballon-dor-2026-trophy |title=Check all the Criteria and Full Regulations to understand Ballon d'Or 2026 trophy |website=ballondor.com |access-date=8 September 2026 |date=7 September 2026 |archive-date=8 September 2026 |archive-url=https://web.archive.org/web/20260908083434/https://ballondor.com/news/posts/check-all-the-criteria-and-full-regulations-to-understand-ballon-dor-2026-trophy |url-status=live }}</ref> The ceremony will take place on 26 October 2026 at the [[London Palladium]] in [[London]].<ref name="SportsIllustrated2026">{{cite magazine |last=Ross-Murray |first=Ewan |date=29 May 2026 |title=2026 Ballon d'Or Ceremony: History Made As Location, Details Revealed |url=https://www.si.com/soccer/2026-ballon-dor-ceremony-history-made-location-details-revealed |access-date=11 June 2026 |magazine=[[Sports Illustrated]] |issn=0038-822X |archive-date=30 May 2026 |archive-url=https://web.archive.org/web/20260530130651/https://www.si.com/soccer/2026-ballon-dor-ceremony-history-made-location-details-revealed |url-status=live}}</ref><ref name="UEFA2026">{{cite web |title=2026 Ballon d'Or ceremony date and host city announced |url=https://www.uefa.com/ballondor/news/02a5-20bba5196317-e0e34001e13b-1000--2026-ballon-d-or-ceremony-date-and-host-city-announced/ |publisher=[[UEFA]] |access-date=11 June 2026 |date=28 May 2026 |archive-date=11 June 2026 |archive-url=https://web.archive.org/web/20260611073628/https://www.uefa.com/ballondor/news/02a5-20bba5196317-e0e34001e13b-1000--2026-ballon-d-or-ceremony-date-and-host-city-announced/ |url-status=live}}</ref> This also marks the first time the ceremony will be organised outside France.
+
+==Ballon d'Or==
+{{Main|Ballon d'Or}}
+
+''Club listed is the one which the player represented during the 2025–26 season.''
+
+Thirty players were nominated for the 2026 Men's Ballon d'Or. 
+
+{| class="wikitable sortable"
+|+ 2026 Men's Ballon d'Or
+! Rank !! Player !! Nationality !! Position !! Club !! Points
+|-
+| || [[Jude Bellingham]] || {{flagicon|ENG}} [[England national football team|England]] || {{sort|1|[[Midfielder]]}} || {{fbaicon|ESP}} [[Real Madrid CF|Real Madrid]] ||
+|-
+| || [[Pau Cubarsí]] || {{flagicon|ESP}} [[Spain national football team|Spain]] || [[Defender (association football)|Defender]] || {{fbaicon|ESP}} [[FC Barcelona|Barcelona]] ||
+|-
+| || [[Marc Cucurella]] || {{flagicon|ESP}} [[Spain national football team|Spain]] || [[Defender (association football)|Defender]] || {{fbaicon|ENG}} [[Chelsea F.C.|Chelsea]] ||
+|-
+| || [[Ousmane Dembélé]] || {{flagicon|FRA}} [[France national football team|France]] || {{sort|0|[[Forward (association football)|Forward]]}} || {{fbaicon|FRA}} [[Paris Saint-Germain FC|Paris Saint-Germain]] ||
+|-
+| || [[Luis Díaz (footballer, born 1997)|Luis Díaz]] || {{flagicon|COL}} [[Colombia national football team|Colombia]] || {{sort|0|[[Forward (association football)|Forward]]}} || {{fbaicon|GER}} [[FC Bayern Munich|Bayern Munich]] ||
+|-
+| || [[Bruno Fernandes]] || {{flagicon|POR}} [[Portugal national football team|Portugal]] || {{sort|1|[[Midfielder]]}} || {{fbaicon|ENG}} [[Manchester United F.C.|Manchester United]] ||
+|-
+| || [[Gabriel Magalhães]] || {{flagicon|BRA}} [[Brazil national football team|Brazil]] || [[Defender (association football)|Defender]] || {{fbaicon|ENG}} [[Arsenal F.C.|Arsenal]] ||
+|-
+| || [[Erling Haaland]] || {{flagicon|NOR}} [[Norway national football team|Norway]] || {{sort|0|[[Forward (association football)|Forward]]}} || {{fbaicon|ENG}} [[Manchester City F.C.|Manchester City]] ||
+|-
+| || [[Achraf Hakimi]] || {{flagicon|MAR}} [[Morocco national football team|Morocco]] || [[Defender (association football)|Defender]] || {{fbaicon|FRA}} [[Paris Saint-Germain F.C.|Paris Saint-Germain]] ||
+|-
+| || [[Harry Kane]] || {{flagicon|ENG}} [[England national football team|England]] || {{sort|0|[[Forward (association football)|Forward]]}} || {{fbaicon|GER}} [[FC Bayern Munich|Bayern Munich]] ||
+|-
+| || [[Khvicha Kvaratskhelia]] || {{flagicon|GEO}} [[Georgia national football team|Georgia]] || {{sort|0|[[Forward (association football)|Forward]]}} || {{fbaicon|FRA}} [[Paris Saint-Germain F.C.|Paris Saint-Germain]] || 
+|-
+| || [[Sadio Mané]] || {{flagicon|SEN}} [[Senegal national football team|Senegal]] || {{sort|0|[[Forward (association football)|Forward]]}} || {{fbaicon|KSA}} [[Al Nassr FC|Al Nassr]] ||
+|-
+| || [[Marquinhos]] || {{flagicon|BRA}} [[Brazil national football team|Brazil]] || [[Defender (association football)|Defender]] || {{fbaicon|FRA}} [[Paris Saint-Germain F.C.|Paris Saint-Germain]] ||
+|-
+| || [[Lautaro Martínez]] || {{flagicon|ARG}} [[Argentina national football team|Argentina]] || {{sort|0|[[Forward (association football)|Forward]]}} || {{fbaicon|ITA}} [[Inter Milan]] ||
+|-
+| || [[Kylian Mbappé]] || {{flagicon|FRA}} [[France national football team|France]] || {{sort|0|[[Forward (association football)|Forward]]}} || {{fbaicon|ESP}} [[Real Madrid CF|Real Madrid]] ||
+|-
+| || [[Nuno Mendes (footballer, born 2002)|Nuno Mendes]] || {{flagicon|POR}} [[Portugal national football team|Portugal]] || [[Defender (association football)|Defender]] || {{fbaicon|FRA}} [[Paris Saint-Germain F.C.|Paris Saint-Germain]] ||
+|-
+| || [[Lionel Messi]] || {{flagicon|ARG}} [[Argentina national football team|Argentina]] || {{sort|0|[[Forward (association football)|Forward]]}} || {{fbaicon|USA}} [[Inter Miami CF|Inter Miami]] ||
+|-
+| || [[João Neves]] || {{flagicon|POR}} [[Portugal national football team|Portugal]] || {{sort|1|[[Midfielder]]}} || {{fbaicon|FRA}} [[Paris Saint-Germain F.C.|Paris Saint-Germain]] ||
+|-
+| || [[Michael Olise]] || {{flagicon|FRA}} [[France national football team|France]] || {{sort|0|[[Forward (association football)|Forward]]}} || {{fbaicon|GER}} [[FC Bayern Munich|Bayern Munich]] ||
+|-
+| || [[Willian Pacho]] || {{flagicon|ECU}} [[Ecuador national football team|Ecuador]] || [[Defender (association football)|Defender]] || {{fbaicon|FRA}} [[Paris Saint-Germain F.C.|Paris Saint-Germain]] ||
+|-
+| || [[Julián Quiñones]] || {{flagicon|MEX}} [[Mexico national football team|Mexico]] || {{sort|0|[[Forward (association football)|Forward]]}} || {{fbaicon|KSA}} [[Al Qadsiah FC|Al-Qadsiah]] ||
+|-
+| || [[Declan Rice]] || {{flagicon|ENG}} [[England national football team|England]] || {{sort|1|[[Midfielder]]}} || {{fbaicon|ENG}} [[Arsenal F.C.|Arsenal]] ||
+|-
+| || [[Rodri]]|| {{flagicon|ESP}} [[Spain national football team|Spain]] || {{sort|1|[[Midfielder]]}} || {{fbaicon|ENG}} [[Manchester City F.C.|Manchester City]] ||
+|-
+| || [[Fabián Ruiz]] || {{flagicon|ESP}} [[Spain national football team|Spain]] || {{sort|1|[[Midfielder]]}} || {{fbaicon|FRA}} [[Paris Saint-Germain F.C.|Paris Saint-Germain]] ||
+|-
+| || [[William Saliba]] || {{flagicon|FRA}} [[France national football team|France]] || [[Defender (association football)|Defender]] || {{fbaicon|ENG}} [[Arsenal F.C.|Arsenal]] ||
+|-
+| || [[Ferran Torres]] || {{flagicon|ESP}} [[Spain national football team|Spain]] || {{sort|0|[[Forward (association football)|Forward]]}} || {{fbaicon|ESP}} [[FC Barcelona|Barcelona]] ||
+|-
+| || [[Dayot Upamecano]] || {{flagicon|FRA}} [[France national football team|France]] || [[Defender (association football)|Defender]] || {{fbaicon|GER}} [[FC Bayern Munich|Bayern Munich]] ||
+|-
+| || [[Vinícius Júnior]] || {{flagicon|BRA}} [[Brazil national football team|Brazil]] || {{sort|0|[[Forward (association football)|Forward]]}} || {{fbaicon|ESP}} [[Real Madrid CF|Real Madrid]] ||
+|-
+| || [[Vitinha]]|| {{flagicon|POR}} [[Portugal national football team|Portugal]] || {{sort|1|[[Midfielder]]}} || {{fbaicon|FRA}} [[Paris Saint-Germain F.C.|Paris Saint-Germain]] || 
+|-
+| || [[Lamine Yamal]] || {{flagicon|ESP}} [[Spain national football team|Spain]] || {{sort|0|[[Forward (association football)|Forward]]}} || {{fbaicon|ESP}} [[FC Barcelona|Barcelona]] ||
+|}
+
+==Ballon d'Or Féminin==
+{{main|Ballon d'Or Féminin}}
+Thirty players were nominated for the 2026 Ballon d'Or Féminin.
+
+{| class="wikitable sortable"
+|+ 2026 Ballon d'Or Féminin
+! Rank !! Player !! Nationality !! Position !! Club !! Points
+|-
+|   || [[Selma Bacha]] || {{flagicon|FRA}} [[France women's national football team|France]] || [[Defender (association football)|Defender]] || {{fbaicon|FRA}} [[OL Lyonnes]] ||
+|-
+|   || [[Barbra Banda]] || {{flagicon|ZAM}} [[Zambia women's national football team|Zambia]] || [[Forward (association football)|Forward]] || {{fbaicon|USA}} [[Orlando Pride]] ||
+|-
+|   || [[Klara Bühl]] || {{flagicon|GER}} [[Germany women's national football team|Germany]] || [[Forward (association football)|Forward]] || {{fbaicon|GER}} [[FC Bayern Munich (women)|Bayern Munich]] ||
+|-
+|   || [[Esmee Brugts]] || {{flagicon|NED}} [[Netherlands women's national football team|Netherlands]] || [[Midfielder]] || {{fbaicon|ESP}} [[FC Barcelona Femení|Barcelona]] ||
+|-
+|   || [[Mariona Caldentey]] || {{flagicon|ESP}} [[Spain women's national football team|Spain]] || [[Forward (association football)|Forward]] || {{fbaicon|ENG}} [[Arsenal W.F.C.|Arsenal]] ||
+|-
+|   || [[Scarlett Camberos]] || {{flagicon|MEX}} [[Mexico women's national football team|Mexico]] || [[Forward (association football)|Forward]] || {{fbaicon|MEX}} [[Club América (women)|Club América]] ||
+|-
+|   || [[Kerstin Casparij]] || {{flagicon|NED}} [[Netherlands women's national football team|Netherlands]] || [[Defender (association football)|Defender]] || {{fbaicon|ENG}} [[Manchester City W.F.C.|Manchester City]] ||
+|-
+|   || [[Temwa Chawinga]] || {{flagicon|MWI}} [[Malawi women's national football team|Malawi]] || [[Forward (association football)|Forward]] || {{fbaicon|USA}} [[Kansas City Current]] ||
+|-
+|   || [[Cata Coll]] || {{flagicon|ESP}} [[Spain women's national football team|Spain]] || [[Goalkeeper (association football)|Goalkeeper]] || {{fbaicon|ESP}} [[FC Barcelona Femení|Barcelona]] ||
+|-
+|   || [[Melchie Dumornay]] || {{flagicon|HAI}} [[Haiti women's national football team|Haiti]] || [[Midfielder]] || {{fbaicon|FRA}} [[OL Lyonnes]] ||
+|-
+|   || [[Caroline Graham Hansen]] || {{flagicon|NOR}} [[Norway women's national football team|Norway]] || [[Forward (association football)|Forward]] || {{fbaicon|ESP}} [[FC Barcelona Femení|Barcelona]] ||
+|-
+|   || [[Alex Greenwood]] || {{flagicon|ENG}} [[England women's national football team|England]] || [[Defender (association football)|Defender]] || {{fbaicon|ENG}} [[Manchester City W.F.C.|Manchester City]] ||
+|-
+|   || [[Patri Guijarro]] || {{flagicon|ESP}} [[Spain women's national football team|Spain]] || [[Midfielder]] || {{fbaicon|ESP}} [[FC Barcelona Femení|Barcelona]] ||
+|-
+|   || [[Pernille Harder]] || {{flagicon|DEN}} [[Denmark women's national football team|Denmark]] || [[Forward (association football)|Forward]] || {{fbaicon|GER}} [[FC Bayern Munich (women)|Bayern Munich]] ||
+|-
+|   || [[Yui Hasegawa]] || {{flagicon|JPN}} [[Japan women's national football team|Japan]] || [[Midfielder]] || {{fbaicon|ENG}} [[Manchester City W.F.C.|Manchester City]] ||
+|-
+|   || [[Rose Lavelle]] || {{flagicon|USA}} [[United States women's national soccer team|United States]] || [[Midfielder]] || {{fbaicon|USA}} [[NJ/NY Gotham FC|Gotham FC]] ||
+|-
+|   || [[Mapi León]] || {{flagicon|ESP}} [[Spain women's national football team|Spain]] || [[Defender (association football)|Defender]] || {{fbaicon|ESP}} [[FC Barcelona Femení|Barcelona]] ||
+|-
+|   || [[Lorena (footballer)|Lorena]] || {{flagicon|BRA}} [[Brazil women's national football team|Brazil]] || [[Goalkeeper (association football)|Goalkeeper]] || {{fbaicon|USA}} [[Kansas City Current]] ||
+|-
+|   || [[Melvine Malard]] || {{flagicon|FRA}} [[France women's national football team|France]] || [[Forward (association football)|Forward]] || {{fbaicon|ENG}} [[Manchester United W.F.C.|Manchester United]] ||
+|-
+|   || [[Manaka Matsukubo]] || {{flagicon|JPN}} [[Japan women's national football team|Japan]] || [[Forward (association football)|Forward]] || {{fbaicon|USA}} [[North Carolina Courage]] ||
+|-
+|   || [[Vivianne Miedema]] || {{flagicon|NED}} [[Netherlands women's national football team|Netherlands]] || [[Forward (association football)|Forward]] || {{fbaicon|ENG}} [[Manchester City W.F.C.|Manchester City]] ||
+|-
+|   || [[Ewa Pajor]] || {{flagicon|POL}} [[Poland women's national football team|Poland]] || [[Forward (association football)|Forward]] || {{fbaicon|ESP}} [[FC Barcelona Femení|Barcelona]] ||
+|-
+|   || [[Clàudia Pina]] || {{flagicon|ESP}} [[Spain women's national football team|Spain]] || [[Forward (association football)|Forward]] || {{fbaicon|ESP}} [[FC Barcelona Femení|Barcelona]] ||
+|-
+|   || [[Alexia Putellas]] || {{flagicon|ESP}} [[Spain women's national football team|Spain]] || [[Midfielder]] || {{fbaicon|ESP}} [[FC Barcelona Femení|Barcelona]] ||
+|-
+|   || [[Wendie Renard]] || {{flagicon|FRA}} [[France women's national football team|France]] || [[Defender (association football)|Defender]] || {{fbaicon|FRA}} [[OL Lyonnes]] ||
+|-
+|   || [[Alessia Russo]] || {{flagicon|ENG}} [[England women's national football team|England]] || [[Forward (association football)|Forward]] || {{fbaicon|ENG}} [[Arsenal W.F.C.|Arsenal]] ||
+|-
+|   || [[Khadija Shaw]] || {{flagicon|JAM}} [[Jamaica women's national football team|Jamaica]] || [[Forward (association football)|Forward]] || {{fbaicon|ENG}} [[Manchester City W.F.C.|Manchester City]] ||
+|-
+|   || [[Momoko Tanikawa]] || {{flagicon|JPN}} [[Japan women's national football team|Japan]] || [[Midfielder]] || {{fbaicon|GER}} [[FC Bayern Munich (women)|Bayern Munich]] ||
+|-
+|   || [[Caroline Weir]] || {{flagicon|SCO}} [[Scotland women's national football team|Scotland]] || [[Midfielder]] || {{fbaicon|ESP}} [[Real Madrid Femenino|Real Madrid]] ||
+|-
+|   || [[Tessa Wullaert]] || {{flagicon|BEL}} [[Belgium women's national football team|Belgium]] || [[Forward (association football)|Forward]] || {{fbaicon|ITA}} [[Inter Milan (women)|Inter Milan]] ||
+|}
+
+==Men's Kopa Trophy==
+{{main|Kopa Trophy}}
+Ten players were nominated for the 2026 Men's Kopa Trophy.
+
+{| class="wikitable sortable"
+|+ 2026 Kopa Trophy Nominees
+!scope="col"|Player
+!scope="col"|Nationality
+!scope="col"|Position
+!scope="col"|Club
+|-
+|[[Kerim Alajbegović]]
+|{{fbaicon|BIH}} [[Bosnia and Herzegovina national football team|Bosnia and Herzegovina]]
+|[[Forward (association football)|Forward]]
+|{{fbaicon|AUT}} [[FC Red Bull Salzburg|Red Bull Salzburg]]
+|-
+|[[Ayyoub Bouaddi]]
+|{{fbaicon|MAR}} [[Morocco national football team|Morocco]]
+|[[Midfielder]]
+|{{fbaicon|FRA}} [[Lille OSC|Lille]]
+|-
+|[[Pau Cubarsí]]
+|{{fbaicon|ESP}} [[Spain national football team|Spain]]
+|[[Defender (association football)|Defender]]
+|{{fbaicon|ESP}} [[FC Barcelona|Barcelona]]
+|-
+|[[Yan Diomande]]
+|{{fbaicon|CIV}} [[Ivory Coast national football team|Ivory Coast]]
+|[[Forward (association football)|Forward]]
+|{{fbaicon|GER}} [[RB Leipzig]]
+|-
+|[[Lennart Karl]]
+|{{fbaicon|GER}} [[Germany national football team|Germany]]
+|[[Forward (association football)|Forward]]
+|{{fbaicon|GER}} [[FC Bayern Munich|Bayern Munich]]
+|-
+|[[Éli Junior Kroupi]]
+|{{fbaicon|FRA}} [[France national football team|France]]
+|[[Forward (association football)|Forward]]
+|{{fbaicon|ENG}} [[AFC Bournemouth|Bournemouth]]
+|-
+|[[Lamine Yamal]]
+|{{fbaicon|ESP}} [[Spain national football team|Spain]]
+|[[Forward (association football)|Forward]]
+|{{fbaicon|ESP}} [[FC Barcelona|Barcelona]]
+|-
+|[[Johan Manzambi]]
+|{{fbaicon|SUI}} [[Switzerland national football team|Switzerland]]
+|[[Midfielder]]
+|{{fbaicon|GER}} [[SC Freiburg|Freiburg]]
+|-
+|[[Ibrahim Maza]]
+|{{fbaicon|ALG}} [[Algeria national football team|Algeria]]
+|[[Midfielder]]
+|{{fbaicon|GER}} [[Bayer 04 Leverkusen|Bayer Leverkusen]]
+|-
+|[[Warren Zaïre-Emery]]
+|{{fbaicon|FRA}} [[France national football team|France]]
+|[[Midfielder]]
+|{{fbaicon|FRA}} [[Paris Saint-Germain F.C.|Paris Saint-Germain]]
+|}
+
+==Women's Kopa Trophy==
+{{main|Kopa Trophy}}
+Five players were nominated for the 2026 Women's Kopa Trophy.
+
+{| class="wikitable sortable"
+|+ 2026 Women's Kopa Trophy Nominees
+!scope="col"|Rank
+!scope="col"|Player
+!scope="col"|Nationality
+!scope="col"|Position
+!scope="col"|Club
+!scope="col"|Points
+|-
+|
+|[[Veerle Buurman]]
+|{{fbaicon|NED}} [[Netherlands women's national football team|Netherlands]]
+|[[Defender (association football)|Defender]]
+|{{fbaicon|ENG}} [[Chelsea F.C. Women|Chelsea]]
+|
+|-
+|
+|[[Vicky López]]
+|{{fbaicon|ESP}} [[Spain women's national football team|Spain]]
+|[[Forward (association football)|Forward]]
+|{{fbaicon|ESP}} [[FC Barcelona Femení|Barcelona]]
+|
+|-
+|
+|[[Felicia Schröder]]
+|{{fbaicon|SWE}} [[Sweden women's national football team|Sweden]]
+|[[Forward (association football)|Forward]]
+|{{fbaicon|SWE}} [[BK Häcken FF|BK Häcken]]
+|
+|-
+|
+|[[Clara Serrajordi]]
+|{{fbaicon|ESP}} [[Spain women's national football team|Spain]]
+|[[Midfielder]]
+|{{fbaicon|ESP}} [[FC Barcelona Femení|Barcelona]]
+|
+|-
+|
+|[[Lily Yohannes]]
+|{{fbaicon|USA}} [[United States women's national soccer team|United States]]
+|[[Midfielder]]
+|{{fbaicon|FRA}} [[OL Lyonnes]]
+|
+|}
+
+==Men's Yashin Trophy==
+{{main|Yashin Trophy}}
+Ten goalkeepers were nominated for the 2026 Men's Yashin Trophy.
+
+{| class="wikitable sortable"
+|+ 2026 Yashin Trophy Nominees
+! scope="col" |Rank
+! scope="col" |Player
+! scope="col" |Nationality
+! scope="col" |Club
+! scope="col" |Points
+|-
+|
+|{{sortname|Yassine|Bounou}}
+|{{flagicon|MAR}} [[Morocco national football team|Morocco]]
+|{{fbaicon|KSA}} [[Al Hilal SFC|Al-Hilal]]
+|
+|-
+|
+|{{sortname|Thibaut|Courtois}}
+|{{flagicon|BEL}} [[Belgium national football team|Belgium]]
+|{{fbaicon|ESP}} [[Real Madrid CF|Real Madrid]]
+|
+|-
+|
+|{{sortname|Joan|Garcia}}
+|{{flagicon|ESP}} [[Spain national football team|Spain]]
+|{{fbaicon|ESP}} [[FC Barcelona|Barcelona]]
+|
+|-
+|
+|{{sortname|Gregor|Kobel}}
+|{{flagicon|SUI}} [[Switzerland national football team|Switzerland]]
+|{{fbaicon|GER}} [[Borussia Dortmund]]
+|
+|-
+|
+|{{sortname|Emiliano|Martínez}}
+|{{flagicon|ARG}} [[Argentina national football team|Argentina]]
+|{{fbaicon|ENG}} [[Aston Villa F.C.|Aston Villa]]
+|
+|-
+|
+|{{sortname|Édouard|Mendy}}
+|{{flagicon|SEN}} [[Senegal national football team|Senegal]]
+|{{fbaicon|KSA}} [[Al-Ahli Saudi FC|Al-Ahli]]
+|
+|-
+|
+|{{sortname|David|Raya}}
+|{{flagicon|ESP}} [[Spain national football team|Spain]]
+|{{fbaicon|ENG}} [[Arsenal F.C.|Arsenal]]
+|
+|-
+|
+|{{sortname|Matvey|Safonov}}
+|{{flagicon|RUS}} [[Russia national football team|Russia]]
+|{{fbaicon|FRA}} [[Paris Saint-Germain F.C.|Paris Saint-Germain]]
+|
+|-
+|
+|{{sortname|Unai|Simón}}
+|{{flagicon|ESP}} [[Spain national football team|Spain]]
+|{{fbaicon|ESP}} [[Athletic Bilbao]]
+|
+|-
+|
+|[[Vozinha]]
+|{{flagicon|CPV}} [[Cape Verde national football team|Cape Verde]]
+|{{flagicon|POR}} [[G.D. Chaves|Chaves]]
+|
+|}
+
+==Women's Yashin Trophy==
+{{main|Yashin Trophy}}
+Five goalkeepers were nominated for the 2026 Women's Yashin Trophy.
+
+{| class="wikitable sortable"
+|+ 2026 Women's Yashin Trophy Nominees
+! scope="col" |Rank
+! scope="col" |Player
+! scope="col" |Nationality
+! scope="col" |Club
+! scope="col" |Points
+|-
+|
+|[[Ann-Katrin Berger]]
+|{{flagicon|GER}} [[Germany women's national football team|Germany]]
+|{{fbaicon|USA}} [[NJ/NY Gotham FC|Gotham FC]]
+|
+|-
+|
+|[[Cata Coll]]
+|{{flagicon|ESP}} [[Spain women's national football team|Spain]]
+|{{fbaicon|ESP}} [[FC Barcelona Femení|Barcelona]]
+|
+|-
+|
+|[[Hannah Hampton]]
+|{{flagicon|ENG}} [[England women's national football team|England]]
+|{{fbaicon|ENG}} [[Chelsea F.C. Women|Chelsea]]
+|
+|-
+|
+|[[Lorena (footballer)|Lorena]]
+|{{flagicon|BRA}} [[Brazil women's national football team|Brazil]]
+|{{fbaicon|USA}} [[Kansas City Current]]
+|
+|-
+|
+|[[Ayaka Yamashita (footballer)|Ayaka Yamashita]]
+|{{flagicon|JPN}} [[Japan women's national football team|Japan]]
+|{{fbaicon|ENG}} [[Manchester City W.F.C.|Manchester City]]
+|
+|}
+
+==Gerd Müller Trophy==
+{{main|Gerd Müller Trophy}}
+
+==Sócrates Award==
+{{main|Sócrates Award}}
+
+==Men's Club of the Year==
+{| class="wikitable"
+|+ 2026 Men's Club of the Year ranking
+! scope="col" |Rank
+! scope="col" |Club
+! scope="col" |{{abbr|Total|total Ballon d'Or nominees}}
+! scope="col" class="unsortable" |Ballon d'Or
+! scope="col" |Points
+|-
+! scope="row" |
+|{{Flatlist|* {{fbaicon|ENG}} [[Arsenal F.C.|Arsenal]]}}
+| align="center" |3
+|
+|
+|-
+! scope="row" |
+|{{Flatlist|* {{fbaicon|GER}} [[FC Bayern Munich|Bayern Munich]]}}
+| align="center" |4
+|
+|
+|-
+! scope="row" |
+|{{Flatlist|* {{fbaicon|NOR}} [[FK Bodø/Glimt|Bodø/Glimt]]}}
+| align="center" |0
+|
+|
+|-
+! scope="row" |
+|{{Flatlist|* {{fbaicon|BRA}} [[CR Flamengo|Flamengo]]}}
+| align="center" |0
+|
+|
+|-
+! scope="row" |
+|{{Flatlist|* {{fbaicon|FRA}} [[Paris Saint-Germain F.C.|Paris Saint-Germain]]}}
+| align="center" |'''9'''
+|
+|
+|}
+
+==Women's Club of the Year==
+{| class="wikitable"
+|+ 2026 Women's Club of the Year ranking
+! scope="col" |Rank
+! scope="col" |Club
+! scope="col" |{{abbr|Total|total Ballon d'Or nominees}}
+! scope="col" class="unsortable" |Ballon d'Or
+! scope="col" |Points
+|-
+! scope="row" |
+|{{Flatlist|* {{fbaicon|ESP}} [[FC Barcelona Femení|Barcelona]]}}
+| align="center" |'''8'''
+|
+|
+|-
+! scope="row" |
+|{{Flatlist|* {{fbaicon|GER}} [[FC Bayern Munich (women)|Bayern Munich]]}}
+| align="center" |3
+|
+|
+|-
+! scope="row" |
+|{{Flatlist|* {{fbaicon|MEX}} [[Club América (women)|Club América]]}}
+| align="center" |1
+|
+|
+|-
+! scope="row" |
+|{{Flatlist|* {{fbaicon|ENG}} [[Manchester City W.F.C.|Manchester City]]}}
+| align="center" |5
+|
+|
+|-
+! scope="row" |
+|{{Flatlist|* {{fbaicon|FRA}} [[OL Lyonnes]]}}
+| align="center" |3
+|
+|
+|}
+
+==Men's Coach of the Year==
+Five coaches were nominated for the 2026 Men's Johan Cruyff Trophy.
+
+{| class="wikitable sortable"
+!Rank
+!Coach
+!Nationality
+!Team
+!Points
+|-
+|
+|{{sortname|Mikel|Arteta}}
+|{{Flagu|Spain}}
+|{{fbaicon|ENG}} [[Arsenal F.C.|Arsenal]]
+|
+|-
+|
+|{{sortname|Luis|de la Fuente|Luis de la Fuente (footballer, born 1961)}}
+|{{Flagu|Spain}}
+|{{fbaicon|ESP}} [[Spain national football team|Spain]]
+|
+|-
+|
+|{{sortname|Unai|Emery}}
+|{{Flagu|Spain}}
+|{{fbaicon|ENG}} [[Aston Villa F.C.|Aston Villa]]
+|
+|-
+|
+|{{sortname|Vincent|Kompany}}
+|{{Flagu|Belgium}}
+|{{fbaicon|GER}} [[FC Bayern Munich|Bayern Munich]]
+|
+|-
+|
+|{{sortname|Luis|Enrique}}
+|{{Flagu|Spain}}
+|{{fbaicon|FRA}} [[Paris Saint-Germain F.C.|Paris Saint-Germain]]
+|
+|}
+
+==Women's Coach of the Year==
+Five coaches were nominated for the 2026 Women's Johan Cruyff Trophy.
+
+{| class="wikitable sortable"
+!Rank
+!Coach
+!Nationality
+!Team(s)
+!Points
+|-
+|
+|{{sortname|Jonatan|Giráldez}}
+|{{Flagu|Spain}}
+|{{fbaicon|FRA}} [[OL Lyonnes]]
+|
+|-
+|
+|{{sortname|Andrée|Jeglertz}}
+|{{Flagu|Sweden}}
+|{{fbaicon|ENG}} [[Manchester City W.F.C.|Manchester City]]
+|
+|-
+|
+|{{sortname|Nils|Nielsen}}
+|{{Flagu|Denmark}}
+|{{fbaicon|JPN}} [[Japan women's national football team|Japan]]
+|
+|-
+|
+|{{sortname|Pere|Romeu}}
+|{{Flagu|Spain}}
+|{{fbaicon|ESP}} [[FC Barcelona Femení|Barcelona]]
+|
+|-
+|
+|{{sortname|Elena|Sadiku}}
+|{{Flagu|Sweden}}
+|{{fbaicon|SCO}} [[Celtic F.C. Women|Celtic]]<br />{{fbaicon|SWE}} [[BK Häcken FF|BK Häcken]]
+|
+|}
+
+== References ==
+{{Reflist}}
+
+{{Ballon d'Or recipients}}
+{{Ballon d'Or Féminin recipients}}
+{{Kopa Trophy}}
+{{Yashin Trophy}}
+{{Gerd Müller Trophy}}
+{{Sócrates Award}}
+
+[[Category:Ballon d'Or by year|2026]]
+[[Category:2026 in association football|Ballon d'Or]]
+[[Category:2026 sports awards|Ballon d'Or]]

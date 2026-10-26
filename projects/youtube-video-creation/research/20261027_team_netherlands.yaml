@@ -1,0 +1,481 @@
+# 代表チーム紹介 オランダ代表（10/27 作成。固定シリーズ9「代表チーム紹介」。見本は 10/26 のポルトガル代表 scripts/20261026_team_portugal.md）。7節：フック→基礎DATA（板）→日本との関係（早い節へ）→歴史と転機（年表）→看板選手（表）→いまのチーム→見立て。
+# **軸（2026-10-27）**：「オランダは出場した直近3大会のW杯で16試合負けなし（最後の負けは2010年の決勝）。それでも3大会ともPK戦で止まった。頂点に届かないのはなぜか」。答えは見立ての節（16試合の得点を「PK戦になった4試合」と「それ以外の12試合」に分けた1試合あたりの得点、W杯のPK戦の通算成績、シャビ監督の4試合）。
+# **日本との接点**：2026年W杯の初戦で日本と2対2（中村敬斗・鎌田大地）。この大会でオランダから2点を取ったのは日本だけ。基礎DATAの次の節に置いた。
+# **重なりの確認（2026-10-27）**：scripts/・research/covered.yaml・research/posted.json を grep。オランダ代表の「紹介」回（team_netherlands）は無い。代表チーム紹介の既出はエクアドル・ニュージーランド・ブラジル・ドイツ・スペイン・アルゼンチン・フランス・イングランド・ポルトガル。オランダ代表が主役の news は covered.yaml に 9/24「オランダ代表の主将が続投を決めた、10秒の会話」・9/25「シャビのオランダ初陣、同点弾のガクポが…」・9/28「シャビのオランダが初勝利。2発の23歳が…」（scripts/20260925_xavi.md・20260928d_xavi.md）、10/18 にシャビのレジェンド回（scripts/20261018_xavi_legend.md）。**秋の4試合の結果は 9/25・9/28 の news と材料が重なる**ので、いまのチームの節は結果の並びにとどめ、見立ての主はW杯16試合の数え直しにした。直近30日にオランダ代表を主役にした紹介ものは無い。
+# ---- 確かめたこと（2026-10-27。WebFetch の要約は使わず、requests で生の値を読んだ）----
+#  ・FIFAランク：9位（2026-10-07 発表）。Wikipedia の Module:SportsRankings/data/FIFA World Rankings（updated 7 October 2026）で Netherlands 9・前回比0。FIFA の記事（inside.fifa.com/en/news/coca-cola-mens-world-ranking-october-2026-portugal-spain）の表は「Moves into top 10: None / Moves out of top 10: None」（オランダの順位そのものは記事本文に無い）。点数は書かない。日本は17位（同じ表）。
+#  ・W杯：出場12回（1934年が初）。最高は準優勝3回（1974・1978・2010）。Netherlands national football team の infobox と Netherlands at the FIFA World Cup の表。決勝：1974年 西ドイツに1-2、1978年 アルゼンチンに延長1-3、2010年 スペインに延長0-1。2014年は3位（準決勝アルゼンチンにPK戦2-4、3位決定戦ブラジルに3-0）。2018年は予選敗退（Did not qualify）。2022年は8強（準々決勝アルゼンチンに2-2、PK戦3-4）。
+#  ・「2010年の決勝のあと、W杯で正式に負けた試合が無い。2014・2022・2026はどれもPK戦で終わった」は Netherlands at the FIFA World Cup の冒頭の本文（have not officially lost a match since the 2010 final…）。試合の表で数え直した：2014年 7試合5勝2分（15得点4失点）／2022年 5試合3勝2分（10得点4失点）／2026年 4試合2勝2分（11得点5失点）＝16試合10勝6分0敗・36得点13失点。PK戦は記録の上では引き分け。
+#  ・PK戦になった4試合（2014 コスタリカ0-0・2014 アルゼンチン0-0・2022 アルゼンチン2-2・2026 モロッコ1-1）＝3得点3失点。それ以外の12試合＝33得点10失点。自分で割った（検算した）：16試合 36÷16=2.25／4試合 3÷4=0.75／12試合 33÷12=2.75（2.75÷0.75=3.67）。4試合は延長を含む120分。
+#  ・W杯のPK戦は5回で1勝4敗（同じ表の pso）：1998年準決勝ブラジル2-4負け／2014年準々決勝コスタリカ4-3勝ち／2014年準決勝アルゼンチン2-4負け／2022年準々決勝アルゼンチン3-4負け／2026年ラウンド32モロッコ2-3負け。
+#  ・2026年W杯（Netherlands national football team の試合一覧と ESPN の fifa.world scoreboard を突き合わせた）：グループF 6/14 日本2-2（ファン・ダイク51分・サマーヴィル64分／中村敬斗57分・鎌田大地88分。**鎌田の分は ESPN が89分**なので語りでは「終盤」）／6/20 スウェーデン5-1（ブロビー5・17分、ガクポ47・54分、サマーヴィル89分）／6/25 チュニジア3-1（敵地扱い。スヒリのオウンゴール3分・ブロビー7分・ファン・ヘッケ62分）→ グループ1位・勝ち点7（2026 FIFA World Cup Group F の本文）。日本はグループ2位でラウンド32 ブラジルに1-2。ラウンド32 6/29 モロッコ1-1（ガクポ72分／ディオプ90+1分）PK戦2-3（クープマイネルスは1人目で成功）。この大会でオランダから2点を取ったのは日本だけ（失点は日本2・スウェーデン1・チュニジア1・モロッコ1）。
+#  ・EURO：優勝1回（1988年、決勝ソ連に2-0。UEFA Euro 1988 final の infobox）。
+#  ・監督：シャビ。KNVB の発表（onsoranje.nl「Xavi Hernández nieuwe bondscoach Nederlands elftal (m)」2026-08-12）＝契約は2030年W杯まで、クーマンの後任。BBC（2026-08-12「Xavi becomes first non-Dutch Netherlands coach since 1978」）＝1978年のエルンスト・ハッペル以来の外国人監督、クーマンはモロッコ戦の敗退のあと辞任。
+#  ・主将：フィルジル・ファン・ダイク（infobox の Captain、名簿の印 captain）。代表100試合14得点（名簿、10/4 のセルビア戦のあと）。Virgil van Dijk の記事「On 4 October 2026, Van Dijk earned his 100th international cap … the 11th Dutchman to earn over 100 caps」。
+#  ・愛称：Oranje（infobox）。本文「after the House of Orange-Nassau and their distinctive orange jerseys」。
+#  ・名簿・年齢：Wikipedia の Current squad（9〜10月のネーションズリーグの名簿。caps と goals は 10/4 のあと）と各選手の記事の infobox（currentclub）。2026-10-27 時点の年齢（生年月日から計算）：ファン・ダイク 1991-07-08=35（リヴァプール、DF、100試合14得点）、ダンフリース 1996-04-18=30（レアル・マドリード、DF、80試合）、フラーフェンベルフ 2002-05-16=24（リヴァプール、MF）、クープマイネルス 1998-02-28=28（ユヴェントス、MF）、ガクポ 1999-05-07=27（リヴァプール、FW、56試合25得点。W杯2026は3得点）、メールディンク 2003-07-24=23（AZ、FW、4試合2得点）。
+#  ・W杯のあと（試合一覧と ESPN の uefa.nations scoreboard で日付・スコア・得点者を確認）：ネーションズリーグ 9/24 ドイツ1-1（ネメハ32分／ガクポ90+2分）／9/27 セルビア2-1（敵地。メールディンク30・69分／ヨヴィッチ46分）／10/1 ギリシャ2-2（敵地。イオアニディス23分・マスラス45+2分／ファン・ダイク59分・ラインデルス89分）／10/4 セルビア2-1（クープマイネルス31分・ジルクゼー71分〔ESPN は72分〕／ツヴェトコヴィッチ35分）＝2勝2分・7得点5失点。先に失点したのはドイツ戦とギリシャ戦で、どちらも追いついた。シャビ監督の記録 4試合2勝2分0敗（Xavi の記事の監督成績の表）。次は 11/13 ギリシャ（ホーム）、11/16 ドイツ（敵地）。自分で割った：7÷4=1.75・5÷4=1.25。
+#  ・日本との対戦：国際Aマッチ4試合、日本から見て0勝2分2敗・4得点8失点（Japan national football team records and statistics の Head-to-head：NED 2009–2026 4・0・2・2・4・8。Netherlands … records and statistics の JPN 4・2・2・0・8・4、as of 14 June 2026）。試合は Japan national football team results の各表：2009-09-05 親善試合 0-3（エンスヘーデ）／2010-06-19 W杯 0-1（ダーバン）／2013-11-16 親善試合 2-2（ゲンク）／2026-06-14 W杯 2-2（アーリントン）。2010年の1点はスナイデル（2010 FIFA World Cup Group E の本文、52分ごろ）。
+# ---- 言わないもの ----
+#  ・怪我（ガクポ・ファン・ヘッケらの離脱の印）／私生活／ファン・ハールの病気（本文にあるが入れない）／背番号／戦術の説明／監督の契約の金額／9/24 の news の中身（主将の続投の会話）。
+# ---- 写真（assets/images/20261027_team_netherlands/、出典は credits.json）----
+#  ・n01_anthem：Commons CC BY 4.0（CNC33）2026-06-25 オランダ対チュニジアの国歌の場面。n02_fans・n03_postgame・n04_kickoff：Commons CC BY-SA 4.0（elisfkc3）同じ試合。n05_2010：Commons CC BY-SA 2.0（Patrick de Laive）2010年W杯 オランダ対日本のキックオフ前。n06_vandijk・n07_gakpo：Commons CC0（Timmy96）2026-01-04 フラム対リヴァプール（クラブのユニフォーム）。n09_xavi：KNVB 公式の就任発表の写真（ネットの画像、20261018_xavi_legend から流用）。japan_pair/01：中村敬斗（Lyon Foot の記事の写真）＋鎌田大地（Commons CC BY-SA 4.0、Sven Mandel、2022年のフランクフルト）を横に並べた1枚。代理店・放送映像は使っていない。
+date: 2026年10月27日
+slot: other_1
+format: news
+series: 代表チーム紹介
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+people:
+- オランダ代表
+- シャビ
+- フィルジル・ファン・ダイク
+theme:
+  id: team_netherlands
+  league: japan
+  league_name: オランダ代表
+  kind: preview
+  topic: オランダ代表
+  title: オランダ代表は、W杯で16試合負けなし。それでも頂点に届かないのは、なぜか
+  question: W杯で16試合負けていないオランダは、なぜ3大会ともPK戦で止まったのか
+  lead: W杯は16試合負けなし。それでも3大会、PK戦で止まった。
+  hook: ''
+  opening_image: assets/stats/tb_netherlands_data_t.png
+  end_bg: assets/images/20261027_team_netherlands/n02_fans_w.jpg
+  takeaway: オランダは出場した直近3大会（2014・2022・2026年）のW杯で16試合10勝6分、36得点13失点。最後に負けたのは2010年の決勝。PK戦になった4試合は3得点（1試合あたり0.75）で、それ以外の12試合の2.75より3倍以上少ない。W杯のPK戦は通算1勝4敗。守りは崩れず、点が要る試合で点が取れずにPK戦で止まる形が3大会続いた。シャビ監督の4試合は2勝2分で1試合あたり1.75得点、先に失点した2試合はどちらも追いついた。11月13日のギリシャ戦と16日のドイツ戦が確かめになる。
+thumbnail:
+  board: assets/stats/tb_netherlands_data.png
+  line1: オランダ代表
+  line2: W杯16試合負けなし
+  crest_main:
+  - オランダ
+  tags:
+  - オランダ代表
+  - ワールドカップ
+  - 日本代表
+  - シャビ
+  - ファン・ダイク
+  - 代表チーム紹介
+sections:
+- id: hook
+  heading: W杯で16試合負けなし。なぜ、頂点に届かないのか
+  main: true
+  tier: 背景
+  telop: W杯は16試合負けなし。3大会ともPK戦で止まった
+  narrator: 解説
+  say:
+  - text: オランダ代表がワールドカップで最後に負けたのは、**2010年の決勝**です。
+    image: assets/stats/tb_netherlands_data1.png
+    no_telop: true
+    emph: true
+  - text: そのあと出場した2014年、2022年、2026年の3大会は、どれもPK戦で優勝への道が止まりました。
+    image: assets/stats/tb_netherlands_data2.png
+    no_telop: true
+  - text: PK戦での敗退は、記録の上では引き分け。3大会で負けた試合は、ひとつもありません。
+    image: assets/stats/tb_netherlands_data_t.png
+    no_telop: true
+  - text: 2026年の大会で、その最初の試合を2対2で引き分けたのが、日本でした。
+    image: assets/stats/tb_netherlands_data_r1.png
+    no_telop: true
+  - text: 負けないのに、なぜ頂点に届かないのでしょうか。
+    image: assets/stats/tb_netherlands_data_t.png
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Netherlands_at_the_FIFA_World_Cup
+  - https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_Group_F
+  - https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_knockout_stage
+- id: data
+  heading: オランダ代表は、どんな数字を持つ国なのか
+  tier: 背景
+  telop: オランダ代表の基礎DATA
+  narrator: 解説
+  say:
+  - text: オランダのフィファランクは**9位**。10月7日の発表です。
+    image: assets/stats/tb_netherlands_data0.png
+    no_telop: true
+  - text: 準優勝は、ワールドカップで3回。1974年、1978年、2010年です。
+    image: assets/stats/tb_netherlands_data1.png
+    no_telop: true
+  - text: ヨーロッパ選手権は、1988年に優勝しています。
+    image: assets/stats/tb_netherlands_data3.png
+    no_telop: true
+  - text: 監督はシャビ。2026年8月に就任しました。
+    image: assets/stats/tb_netherlands_data4.png
+    no_telop: true
+  - text: 主将は、ディフェンダーのフィルジル・ファン・ダイクです。
+    image: assets/stats/tb_netherlands_data5.png
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Module:SportsRankings/data/FIFA_World_Rankings
+  - https://inside.fifa.com/en/news/coca-cola-mens-world-ranking-october-2026-portugal-spain
+  - https://en.wikipedia.org/wiki/Netherlands_national_football_team
+  - https://www.onsoranje.nl/nieuws/nederlands-elftal-mannen/82662/xavi-hern%C3%A1ndez-nieuwe-bondscoach-nederlands-elftal-m
+- id: japan
+  heading: 日本は、オランダとどう戦ってきたのか
+  tier: 背景
+  telop: 日本から見て4試合0勝2分2敗。2026年W杯は2対2
+  narrator: 解説
+  card: &id_jp
+    type: table
+    title: 日本とオランダの国際Aマッチ
+    columns:
+    - 年月
+    - 大会
+    - 日本から見た結果
+    rows:
+    - - 2009年9月
+      - 親善試合
+      - 0-3
+    - - 2010年6月
+      - W杯
+      - 0-1
+    - - 2013年11月
+      - 親善試合
+      - 2-2
+    - - 2026年6月
+      - W杯
+      - 2-2
+  say:
+  - text: 日本とオランダは、これまで4回、正式な代表戦で顔を合わせています。
+    image: assets/stats/tb_netherlands_data7.png
+    no_telop: true
+  - text: 日本から見て、2引き分け2敗。まだ勝ったことはありません。
+    image: assets/images/20261027_team_netherlands/n05_2010_w.jpg
+    card: *id_jp
+  - text: 2010年のワールドカップは、0対1。スナイデルの1点に敗れました。
+    card:
+      <<: *id_jp
+      highlight_row: 1
+  - text: そして2026年6月14日、2つの国はワールドカップの最初の試合で当たりました。
+    card:
+      <<: *id_jp
+      highlight_row: 3
+  - text: 51分にファン・ダイクが先制し、57分に中村敬斗が追いつきます。
+    image: assets/images/20261027_team_netherlands/japan_pair/01.jpg
+    card: none
+  - text: 64分に勝ち越されても、終盤に鎌田大地が決めて2対2。
+    emph: true
+    card: none
+  - text: この大会で、オランダから2点を取ったのは日本だけでした。
+    card: none
+  - text: オランダはこの組を1位で、日本は2位で抜けています。
+    image: assets/images/20261027_team_netherlands/n01_anthem_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_records_and_statistics
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_results_(2000%E2%80%932009)
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_results_(2010%E2%80%932019)
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_results_(2020%E2%80%93present)
+  - https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_Group_F
+  - https://en.wikipedia.org/wiki/2010_FIFA_World_Cup_Group_E
+- id: history
+  heading: オランダは、どの大会で頂点に近づいてきたのか
+  tier: 背景
+  telop: 準優勝3回。1988年にヨーロッパ王者
+  narrator: 解説
+  card: &id_hist
+    type: timeline
+    title: オランダ代表の歩み
+    rows:
+    - - 1974年
+      - W杯で準優勝
+    - - 1978年
+      - W杯で2大会続けて準優勝
+    - - 1988年
+      - ヨーロッパ選手権で優勝
+    - - 2010年
+      - W杯で3度目の準優勝
+    - - 2014年
+      - W杯で3位
+    - - 2026年
+      - W杯はベスト32
+    focus: 1988年
+  say:
+  - text: オランダがワールドカップの決勝に最初に立ったのは、1974年です。
+    image: assets/images/20261027_team_netherlands/n04_kickoff_w.jpg
+    card: *id_hist
+  - text: 相手は西ドイツで、1対2の敗戦。
+    card:
+      <<: *id_hist
+      highlight_row: 0
+  - text: 4年後の1978年も、決勝でアルゼンチンに延長で敗れました。
+    card:
+      <<: *id_hist
+      highlight_row: 1
+  - text: 大きな大会で頂点に立ったのは、1988年のヨーロッパ選手権。
+    emph: true
+    image: assets/images/20261027_team_netherlands/n01_anthem_w.jpg
+    card: none
+  - text: 決勝で、ソ連に2対0で勝ちました。
+    card:
+      <<: *id_hist
+      highlight_row: 2
+  - text: 2010年は3度目の決勝。スペインに延長で敗れました。
+    card:
+      <<: *id_hist
+      highlight_row: 3
+  - text: 2014年は準決勝でアルゼンチンにPK戦で敗れ、3位決定戦に勝って3位。
+    card:
+      <<: *id_hist
+      highlight_row: 4
+  - text: 2018年は、予選で敗れて出場を逃しました。
+    image: assets/images/20261027_team_netherlands/n02_fans_w.jpg
+    card: none
+  - text: 2022年は準々決勝。相手はまたアルゼンチンで、2対2からのPK戦でした。
+    image: assets/images/20261027_team_netherlands/n03_postgame_w.jpg
+    card: none
+  - text: 2026年はベスト32。モロッコとのPK戦で敗れています。
+    card:
+      <<: *id_hist
+      highlight_row: 5
+  sources:
+  - https://en.wikipedia.org/wiki/Netherlands_at_the_FIFA_World_Cup
+  - https://en.wikipedia.org/wiki/UEFA_Euro_1988_final
+  - https://en.wikipedia.org/wiki/Netherlands_national_football_team
+- id: players
+  heading: いまの看板選手は、誰なのか
+  tier: 背景
+  telop: 看板選手を、所属・名前・位置・年齢で
+  narrator: 解説
+  card: &id_pl
+    type: table
+    title: オランダ代表の看板選手
+    columns:
+    - 所属
+    - 名前
+    - 位置
+    - 年齢
+    rows:
+    - - リヴァプール
+      - フィルジル・ファン・ダイク
+      - DF
+      - '35'
+    - - レアル・マドリード
+      - デンゼル・ダンフリース
+      - DF
+      - '30'
+    - - リヴァプール
+      - ライアン・フラーフェンベルフ
+      - MF
+      - '24'
+    - - ユヴェントス
+      - テウン・クープマイネルス
+      - MF
+      - '28'
+    - - リヴァプール
+      - コーディ・ガクポ
+      - FW
+      - '27'
+    - - AZ
+      - メックス・メールディンク
+      - FW
+      - '23'
+  say:
+  - text: いまのオランダの中心にいる、6人です。
+    image: assets/images/20261027_team_netherlands/n02_fans_w.jpg
+    card: *id_pl
+  - text: 年齢は、10月27日の時点のものです。
+    card: *id_pl
+  - text: 主将は、リヴァプールのファン・ダイク。35歳。
+    image: assets/images/20261027_team_netherlands/n06_vandijk_w.jpg
+    card:
+      <<: *id_pl
+      highlight_row: 0
+  - text: 10月4日のセルビア戦で、代表100試合に届きました。
+    emph: true
+    card: none
+  - text: オランダで、11人目の100試合です。
+    card: none
+  - text: レアル・マドリードのダンフリースは30歳。代表80試合です。
+    image: assets/images/20261027_team_netherlands/n01_anthem_w.jpg
+    card:
+      <<: *id_pl
+      highlight_row: 1
+  - text: 中盤は、リヴァプールのフラーフェンベルフと、ユヴェントスのクープマイネルス。
+    card:
+      <<: *id_pl
+      highlight_row: 2
+  - text: クープマイネルスは、ワールドカップのPK戦で1人目を決めています。
+    card:
+      <<: *id_pl
+      highlight_row: 3
+  - text: 前線の柱は、リヴァプールのガクポ。27歳で、代表56試合25得点。
+    image: assets/images/20261027_team_netherlands/n07_gakpo_w.jpg
+    card:
+      <<: *id_pl
+      highlight_row: 4
+  - text: ワールドカップでは3点。シャビ監督の初戦でも、90分を過ぎて同点弾を決めました。
+    card: none
+  - text: 23歳のメールディンクは、AZのフォワード。9月のセルビア戦で2点を決めています。
+    image: assets/images/20261027_team_netherlands/n03_postgame_w.jpg
+    card:
+      <<: *id_pl
+      highlight_row: 5
+  sources:
+  - https://en.wikipedia.org/wiki/Netherlands_national_football_team
+  - https://en.wikipedia.org/wiki/Virgil_van_Dijk
+  - https://en.wikipedia.org/wiki/Cody_Gakpo
+  - https://en.wikipedia.org/wiki/Mexx_Meerdink
+- id: now
+  heading: シャビ監督のオランダは、W杯のあとをどう戦っているのか
+  tier: 背景
+  telop: シャビ監督の4試合は、2勝2分。7得点
+  narrator: 解説
+  card: &id_nw
+    type: table
+    title: W杯のあと オランダの4試合
+    columns:
+    - 日付
+    - 相手
+    - オランダの結果
+    rows:
+    - - 9月24日
+      - ドイツ
+      - 1-1
+    - - 9月27日
+      - セルビア（敵地）
+      - 2-1
+    - - 10月1日
+      - ギリシャ（敵地）
+      - 2-2
+    - - 10月4日
+      - セルビア
+      - 2-1
+  say:
+  - text: モロッコ戦のあと、クーマン監督が退き、8月にシャビ監督が後を継ぎました。
+    image: assets/images/20261027_team_netherlands/n09_xavi_w.jpg
+    card: none
+  - text: オランダが外国人の監督を迎えるのは、1978年以来です。
+    card: none
+  - text: 契約は、2030年のワールドカップまで。
+    card: none
+  - text: 秋の公式戦、ネーションズリーグは、ここまで4試合で2勝2引き分け。
+    card: *id_nw
+  - text: ネーションズリーグは、ヨーロッパの代表が組ごとに争う公式の大会です。
+    card: *id_nw
+  - text: 初戦のドイツ戦は、90分を過ぎてガクポが追いつき、1対1の引き分け。
+    image: assets/images/20261027_team_netherlands/n07_gakpo_w.jpg
+    card:
+      <<: *id_nw
+      highlight_row: 0
+  - text: 9月27日は敵地でセルビアに2対1。シャビ監督の初勝利です。
+    card:
+      <<: *id_nw
+      highlight_row: 1
+  - text: 10月1日のギリシャ戦は、2点を先に失ってから追いつき、2対2の引き分け。
+    emph: true
+    image: assets/images/20261027_team_netherlands/n09_xavi_w.jpg
+    card: none
+  - text: 10月4日は、もう一度セルビアを2対1で破りました。
+    card:
+      <<: *id_nw
+      highlight_row: 3
+  - text: 4試合で7得点5失点。先に失点した2試合は、どちらも追いつきました。
+    image: assets/images/20261027_team_netherlands/n04_kickoff_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Netherlands_national_football_team
+  - https://en.wikipedia.org/wiki/Xavi_(footballer,_born_1980)
+  - https://www.bbc.com/sport/football/articles/c77g5dne45lo
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.nations/scoreboard?dates=20261001
+- id: viewpoint
+  viewpoint: true
+  heading: 16試合負けなしで、PK戦に止まる。数字では、どこに差があるのか
+  tier: 背景
+  telop: PK戦の4試合は1試合0.75点。ほかの12試合は2.75点
+  narrator: 解説
+  card: &id_vp
+    type: table
+    title: W杯3大会・16試合の得点（2014・2022・2026年）
+    columns:
+    - 試合
+    - 数
+    - 得点
+    - 1試合あたり
+    rows:
+    - - PK戦になった試合
+      - '4'
+      - '3'
+      - '0.75'
+    - - それ以外の試合
+      - '12'
+      - '33'
+      - '2.75'
+  say:
+  - text: 見立てに入ります。オランダが出場した直近3大会の、全試合の得点を分けて数えました。
+    image: assets/images/20261027_team_netherlands/n02_fans_w.jpg
+    card: none
+  - text: あわせて36点。1試合に2点を超える数字です。
+    card: *id_vp
+  - text: PK戦までもつれた4試合に絞ると、取った点は3点。
+    emph: true
+    card:
+      <<: *id_vp
+      highlight_row: 0
+  - text: 延長までの120分を戦って、1試合に1点にも届きません。
+    mark:
+      kind: circle
+      row: 0
+      col: 3
+    card:
+      <<: *id_vp
+      highlight_row: 0
+  - text: それ以外の12試合は33点。1試合に3点近く取っていて、3倍以上の差があります。
+    mark:
+      kind: circle
+      row: 1
+      col: 3
+    card:
+      <<: *id_vp
+      highlight_row: 1
+  - text: 一方で、その4試合の失点も3点。守りは持ちこたえています。
+    image: assets/images/20261027_team_netherlands/n03_postgame_w.jpg
+    card: none
+  - text: そしてPK戦は、ワールドカップで通算1勝4敗です。
+    card: &id_vp2
+      type: table
+      title: オランダのW杯のPK戦
+      columns:
+      - 年
+      - 段階
+      - 相手
+      - PK戦
+      rows:
+      - - 1998年
+        - 準決勝
+        - ブラジル
+        - 2-4 負け
+      - - 2014年
+        - 準々決勝
+        - コスタリカ
+        - 4-3 勝ち
+      - - 2014年
+        - 準決勝
+        - アルゼンチン
+        - 2-4 負け
+      - - 2022年
+        - 準々決勝
+        - アルゼンチン
+        - 3-4 負け
+      - - 2026年
+        - ラウンド32
+        - モロッコ
+        - 2-3 負け
+  - text: 負けない守りはある。けれど、点が要る試合で点が取れない。
+    card:
+      <<: *id_vp2
+      highlight_row: 4
+  - text: その結果、PK戦で止まる。数字は、そう読めます。
+    card:
+      <<: *id_vp2
+      highlight_row: 4
+  - text: シャビ監督の4試合も、2勝2引き分けで負けなしです。
+    image: assets/images/20261027_team_netherlands/n09_xavi_w.jpg
+    card: none
+  - text: 次は11月13日にホームでギリシャ、16日に敵地でドイツ。
+    card: none
+  - text: どちらも、この秋に先に点を奪われた相手です。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Netherlands_at_the_FIFA_World_Cup
+  - https://en.wikipedia.org/wiki/Netherlands_national_football_team

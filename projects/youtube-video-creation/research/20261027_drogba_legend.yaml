@@ -1,0 +1,452 @@
+# ディディエ・ドログバ（元コートジボワール代表FW）の紹介。シリーズ「レジェンドの紹介（世界）」2026-10-27。型は 10/26 のジェラードと同じ9節（フック→基礎DATA→日本との接点→歩み→持ち味→あの試合→引退のあと→マル秘話→見立て）。
+# **FotMob・DataMB・FBref・Sofascore・Transfermarkt は不使用**。数字は英語版 Wikipedia（Didier Drogba の成績表・本文、2012 UEFA Champions League final、2014 FIFA World Cup Group C、各カップ決勝の記事、Japan national football team results (2010–2019)）・BBC（2018-11-21 引退の記事と本人の言葉）と、自分で足した値だけ。
+# **私生活・法的な問題は入れない**（Personal and family life の節は使わない）。2005年の内戦の停戦の呼びかけは、因果の言い方が資料で割れるので入れない。女子サッカーは入れない。
+#
+# **重なりの確認（10/26）**：scripts/・research/covered.yaml・research/posted.json を「drogba／ドログバ」で grep。ドログバが主役の回は無し（9/20 のチェルシー紹介の名選手の1人として出ただけ。36日前で30日の外）。レジェンド既出（ジダン・ロナウジーニョ・シャビ・イニエスタ・ベッカム・ロナウド・アンリ・イブラヒモビッチ・マルディーニ・カカ・ジェラード）とも重ならない。
+# **イスタンブール（2005年CL決勝）は山場にしない**。山場は 2012年5月19日ミュンヘンの CL決勝（10/24・10/26 と別の試合）。
+# **引退の確認（一次情報に近いもの）**：BBC 2018-11-21「Didier Drogba: Chelsea and Ivory Coast legend retires from playing」を requests で本文確認（本人「After 20 years, I have decided to put an end to my playing career」、BBC World Service の Sportshour）。最後の試合は 2018-11-08 の USL カップ決勝（ルイヴィル・シティに0対1、Wikipedia／Sky Sports）。→ **現役ではない（48歳）**。
+# **いまの立場**：引退後もフェニックス・ライジングの共同オーナー（Wikipedia）。2018年に Peace and Sport の副会長（Wikipedia）。バロンドールの授賞式の司会を 2019・2021・2022・2023・2024 の5回（各年の Ballon d'Or の記事の host 欄。2020は中止、2025 は別の司会）。2026-05-11 パリの UNFP 表彰式で、財団の活動に「市民の選手（Citizen Player）」賞（Seneweb 2026-05-12。**確度は報道**）。
+# **日本との接点（台本の「日本」節）**：
+#   - 2010-06-04 スイスのシオン（スタッド・トゥールビヨン）親善試合 日本0対2コートジボワール（Japan national football team results）。この試合で闘莉王との接触で右腕の尺骨を骨折、翌日に手術。2010-06-15 W杯初戦ポルトガル戦（0対0）に保護具を着けて65分から出場（Wikipedia International career）。6/20 ブラジル戦で78分に頭で得点（W杯でブラジルから点を取ったアフリカの国の初の選手）。
+#   - 2014-06-14（現地22時、日本時間6/15 10時）ブラジルのレシフェ、W杯1次リーグC組 コートジボワール2対1日本。本田圭佑16分、ドログバ62分に途中出場、ボニー64分、ジェルビーニョ66分（2014 FIFA World Cup Group C のメンバー表）。入って2分後・4分後の2点＝自分で引いた値。
+# **数字の出どころと自分で足した値**
+# - チェルシー 381試合164点（BBC 2018-11-21 本文＋Wikipedia の成績表。**季ごとの行を自分で足して 341/157＋40/7＝381/164 と一致を確認**）。
+# - マルセイユ 55試合32点（2003-04 の1季、Wikipedia の成績表）。ほかのクラブ（ル・マン72/15・ギャンガン50/24・上海11/8・ガラタサライ53/20・モントリオール41/23・フェニックス26/17）＝253/107（自分で足した値）。クラブ合計 689/303（表の Career total と一致）。
+# - コートジボワール代表 105試合65点（BBC・Wikipedia。年別の表を自分で足して一致）。国の歴代でいちばん多い得点。W杯は 2006・2010・2014 の3大会。
+# - サムネの表：チェルシー 381/164、マルセイユ 55/32、ほかのクラブ 253/107、コートジボワール代表 105/65、合計 794/368（自分で足した値）。**Wikipedia の成績表には citation needed の印あり**（チェルシーと代表は BBC と一致）。
+# - タイトル（BBC）：プレミアリーグ4・FAカップ4・リーグカップ3・CL1。得点王2回（2006-07 に20点、2009-10 に29点）。アフリカ年間最優秀選手2回（2006・2009）。2012-03-10 にアフリカ出身で初めてプレミアで100点（Wikipedia）。
+# - 決勝（チェルシー、コミュニティ・シールドを除く）：2005リーグ杯1点・2007リーグ杯2点・2007FA杯1点・2008リーグ杯1点・2008CL 0点・2009FA杯1点・2010FA杯1点・2012FA杯1点・2012CL1点＝**9試合9点**（各決勝の記事の得点者を自分で数えた。Wikipedia の「nine goals in nine cup final appearances for Chelsea」と一致）。FAカップ決勝4回すべてで得点した初めての選手（Wikipedia、BBC を出典）。
+# - 2012年CL決勝：2012-05-19 ミュンヘン、アリアンツ・アレーナ（バイエルンの本拠地）。ミュラー83分、ドログバ88分（チェルシーのこの試合最初のコーナーキック、マタのキックを頭で）。延長でドログバがリベリーを倒してPK→ロッベンをチェフが止める。PK戦4対3（マタ失敗、オリッチ・シュバインシュタイガー失敗、5人目ドログバ成功）。UEFA の数字：シュート43対9、コーナーキック20対1。試合の最優秀選手（UEFA）。チェルシー初の欧州王者。2008年決勝では延長117分に退場し、PK戦の5人目を蹴れなかった（2012年の記事の本文）。
+# - 見立て（自分で足した・割った値。成績表の季ごとの行から）：チェルシー全体 381試合164点＝約2.3試合に1点／いちばん点を取った 2009-10 は44試合37点＝約1.2試合に1点／決勝 9試合9点＝1試合に1点。決勝のペースは全体の約2.3倍。
+# - 本人の言葉（BBC 2018-11-21、Football Focus の聞き取り）：「If it was a movie, I don't know if you could have written the scenario better.」／右サイドバックの話（11歳でダンケルクのチームに入り右サイドバック、叔父「why are you playing as a right-back? As a family we only have strikers」、次の町でストライカーと名乗って1季40点）／「Before joining Le Mans in 1998 I was writing letters to first division teams for a trial and I would never get a positive answer」。1部のデビューは23歳（BBC「did not play top-flight football until the age of 23」）。
+# - マルセイユのユニフォームは、街のノートルダム・ド・ラ・ギャルド大聖堂に額に入れて飾られている（2004年UEFAカップ決勝の前に本人が贈った。Wikipedia）。
+# **入れなかったもの**：私生活・家族、2005年の停戦の呼びかけ、2008年の退場の中身・2009年の主審への抗議と処分、移籍金の調査（Stevens 報告）、マラリア、上海との契約の争い、連盟会長選、W杯2026の発言（1つの記事だけ）、資産の話。
+# **読みで怪しいもの**：上海申花（「シャンハイサルハナ」→「上海シェンファ」と書く）、右腕（「ウワン」→「右の腕」と書く）、最多（「いちばん多い」と書く）、ノイアー・チェフ（割れる。チェフは「キーパーのチェフ」で見る）。
+title: ドログバは、どんな選手だった？ 1本きりのコーナーキックで、何をしたのか
+format: news
+short_title: ドログバは、どんな選手だった？
+series: レジェンドの紹介
+topic: ディディエ・ドログバ
+date: 2026年10月27日
+slot: other_1
+people: [ディディエ・ドログバ]
+watch: 毎日、数字でサッカーを読み解きます
+theme: {id: legend_drogba, league: england, league_name: プレミアリーグ, kind: other, topic: ディディエ・ドログバ, title: ドログバは、どんな選手だった？ 1本きりのコーナーキックで、何をしたのか, question: チェルシーで381試合に出たドログバは、何を残した選手で、いまは何をしているのか, takeaway: チェルシー全体では約2.3試合に1点。決勝だけを数えると9試合で9点、1試合に1点。大舞台ほど、ふだんの2倍以上のペースで決めた,
+  nameplate: ディディエ・ドログバ｜元コートジボワール代表 FW, opening_image: assets/images/20261027_drogba_legend/07_w.jpg, end_bg: assets/images/20261027_drogba_legend/02_w.jpg, bgm: assets/audio/bgm_calm.wav, outro_title: 毎日、数字でサッカーを読み解きます}
+thumbnail:
+  line1: ドログバ794試合368点
+  line2: コーナー1本で欧州の頂点へ
+  tags: [チェルシー]
+  photo: assets/images/20261027_drogba_legend/panel_01.jpg
+  photos: []
+  short_photo: assets/images/20261027_drogba_legend/01_v.jpg
+sections:
+- id: hook
+  heading: シュート9本のチームは、どうやって追いついたのか
+  tier: 報道
+  telop: 2012年、ミュンヘン
+  card: &hk
+    type: stats
+    title: ドログバ 元FW（48歳）
+    items:
+    - ['381', 試合, チェルシーの公式戦]
+    - ['164', 点, チェルシーの公式戦]
+    - ['65', 点, コートジボワール代表]
+    focus: 0
+  say:
+  - {text: 2012年5月、ミュンヘン。チャンピオンズリーグの決勝は、相手の本拠地でした。, card: none, image: assets/images/20261027_drogba_legend/07_w.jpg}
+  - {text: シュートは、相手の43本に対して9本。, card: none}
+  - {text: コーナーキックは、20本対1本でした。, card: none}
+  - {text: そのたった1本から、頭で同点に追いついた男がいます。, card: none, image: assets/images/20261027_drogba_legend/11_w.jpg, emph: true}
+  - text: ディディエ・ドログバ。チェルシーで164得点は、クラブの歴代で4番目です。
+    card: *hk
+    image: assets/images/20261027_drogba_legend/08_w.jpg
+    callword: 381試合
+  - text: 代表では65点。コートジボワールの歴代1位の記録です。
+    card:
+      type: stats
+      title: ドログバ 元FW（48歳）
+      items:
+      - ['381', 試合, チェルシーの公式戦]
+      - ['164', 点, チェルシーの公式戦]
+      - ['65', 点, コートジボワール代表]
+      focus: 2
+    image: assets/images/20261027_drogba_legend/06_w.jpg
+  - {text: 大きな試合ほど、点を取った男。その中身を、数えていきます。, card: none, image: assets/images/20261027_drogba_legend/02_w.jpg}
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/2012_UEFA_Champions_League_final', 'https://en.wikipedia.org/wiki/Didier_Drogba', 'https://www.bbc.co.uk/sport/football/46294137']
+- id: data
+  heading: ドログバは、いつ、どこで生まれ、どんな選手か
+  tier: 報道
+  telop: ドログバの基礎DATA
+  card: &dt
+    type: table
+    title: ディディエ・ドログバ
+    columns: [項目, 内容]
+    rows: &dtr
+    - [生年月日, 1978年3月11日・コートジボワール]
+    - [ポジション, フォワード（189cm）]
+    - [おもなクラブ, マルセイユ・チェルシー]
+    - [代表, 105試合65得点・W杯3回]
+    - [引退, 2018年11月（40歳）]
+    source: Wikipedia
+    highlight_row: 0
+  say:
+  - text: ドログバは、1978年3月11日、コートジボワールの大きな街、アビジャン生まれ。
+    card: *dt
+    image: assets/images/20261027_drogba_legend/08_w.jpg
+  - text: ポジションはフォワード。身長は189センチです。
+    card:
+      type: table
+      title: ディディエ・ドログバ
+      columns: [項目, 内容]
+      rows: *dtr
+      source: Wikipedia
+      highlight_row: 1
+    image: assets/images/20261027_drogba_legend/10_w.jpg
+  - text: 名を上げたのは、フランスのマルセイユ。そして、イングランドのチェルシーです。
+    card:
+      type: table
+      title: ディディエ・ドログバ
+      columns: [項目, 内容]
+      rows: *dtr
+      source: Wikipedia
+      highlight_row: 2
+    image: assets/images/20261027_drogba_legend/02_w.jpg
+  - text: コートジボワール代表は105試合65得点。ワールドカップは3大会に出場。
+    card:
+      type: table
+      title: ディディエ・ドログバ
+      columns: [項目, 内容]
+      rows: *dtr
+      source: Wikipedia
+      highlight_row: 3
+    image: assets/images/20261027_drogba_legend/06_w.jpg
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/Didier_Drogba', 'https://www.bbc.co.uk/sport/football/46294137']
+- id: japan
+  heading: ドログバは、日本代表との2試合で、何があったのか
+  tier: 報道
+  telop: 骨折した試合と、逆転した試合
+  say:
+  - {text: 日本代表とは、2つの大事な試合で向き合っています。, card: none, image: assets/images/20261027_drogba_legend/06_w.jpg}
+  - {text: 1つ目は2010年6月4日、スイスでの親善試合。ワールドカップの直前です。, card: none, image: assets/images/20261027_drogba_legend/10_w.jpg}
+  - {text: 闘莉王と競り合ったドログバは、右の腕の骨を折り、翌日に手術を受けます。, card: none, image: assets/images/20261027_drogba_legend/02_w.jpg, emph: true}
+  - {text: それでも、11日後のワールドカップ初戦。, card: none}
+  - {text: 腕を守る道具を着けて、65分からピッチに入りました。, card: none}
+  - {text: 2つ目は2014年、ブラジルで開かれたワールドカップの初戦。, card: none, image: assets/images/20261027_drogba_legend/11_w.jpg}
+  - {text: 日本は16分、本田圭佑のゴールで先に点を取ります。, card: none}
+  - {text: 62分、ベンチから出てきたのがドログバでした。, card: none, image: assets/images/20261027_drogba_legend/08_w.jpg}
+  - {text: その2分後にボニー、さらに2分後にジェルビーニョ。どちらも頭で決めて、逆転します。, card: none, emph: true}
+  - {text: ドログバが入ってから、わずか4分で2点。日本は、1対2の逆転負けでした。, card: none, image: assets/images/20261027_drogba_legend/06_w.jpg, callword: 4分で2点}
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/2014_FIFA_World_Cup_Group_C', 'https://en.wikipedia.org/wiki/Japan_national_football_team_results_(2010%E2%80%932019)', 'https://en.wikipedia.org/wiki/Didier_Drogba']
+- id: career
+  heading: 1部のデビューが23歳の選手は、どうしてチェルシーの顔になったのか
+  tier: 報道
+  telop: 遅咲きのフォワード
+  card: &cr
+    type: timeline
+    title: 歩んできた道
+    rows: &crr
+    - ['1999', 21歳でプロの契約]
+    - ['2002', 23歳で1部のギャンガンへ]
+    - ['2003', マルセイユで32得点]
+    - ['2004', チェルシーへ]
+    - ['2012', ヨーロッパの王者に]
+    - ['2018', 40歳で引退]
+    focus: 0
+  say:
+  - text: プロの契約は1999年、21歳。フランス2部のル・マンでした。
+    card: *cr
+    image: assets/images/20261027_drogba_legend/10_w.jpg
+  - text: 1部でプレーしたのは23歳から。2002年1月、ギャンガンへ移ります。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows: *crr
+      focus: 1
+      highlight_row: 0
+    image: assets/images/20261027_drogba_legend/08_w.jpg
+  - text: 翌年はマルセイユへ。1シーズンで32得点。前の季より11点多く決めます。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows: *crr
+      focus: 2
+      highlight_row: 0
+    image: assets/images/20261027_drogba_legend/02_w.jpg
+    emph: true
+  - {text: フランスの選手たちが選ぶ、その年の最優秀選手にもなります。, card: none}
+  - text: 2004年、モウリーニョ監督に呼ばれてチェルシーへ。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows: *crr
+      focus: 3
+      highlight_row: 0
+    image: assets/images/20261027_drogba_legend/10_w.jpg
+  - {text: 2400万ポンドは、当時チェルシーで最も高い移籍金です。, card: none}
+  - {text: 2012年にヨーロッパの王者となり、中国、トルコへ。, card: none, image: assets/images/20261027_drogba_legend/10_w.jpg}
+  - {text: 2014年にチェルシーへ戻って、もう一度リーグ優勝。, card: none, image: assets/images/20261027_drogba_legend/02_w.jpg}
+  - {text: 最後のクラブは、アメリカのフェニックス・ライジングでした。, card: none, image: assets/images/20261027_drogba_legend/06_w.jpg}
+  - text: 2018年11月、40歳で、引退を表明しました。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows: *crr
+      focus: 5
+      highlight_row: 0
+    image: assets/images/20261027_drogba_legend/06_w.jpg
+  - {text: 発表のときの、本人の言葉です。, card: none, image: assets/images/20261027_drogba_legend/06_w.jpg}
+  - {voice: ドログバ, text: 20年たって、選手を終えると決めた。, card: none, pause: 0.6}
+  quotes_from: ['https://www.bbc.co.uk/sport/football/46294137']
+  sources: ['https://en.wikipedia.org/wiki/Didier_Drogba', 'https://www.bbc.co.uk/sport/football/46294137']
+- id: style
+  heading: ドログバのプレーは、何がほかのフォワードと違ったのか
+  tier: 報道
+  telop: 体で守り、頭で決め、遠くから打つ
+  card: &st
+    type: table
+    title: ドログバの持ち味
+    columns: [項目, 中身]
+    rows: &str
+    - [武器1, 背中で相手を抑える体の強さ]
+    - [武器2, 空中戦とヘディング]
+    - [武器3, 強くまっすぐなフリーキック]
+    - [記録, 得点王2回・プレミア優勝4回]
+    source: Wikipedia
+    highlight_row: 0
+  say:
+  - text: ドログバの武器、まずは体の強さ。ゴールに背を向けても、ボールを失いません。
+    card: *st
+    image: assets/images/20261027_drogba_legend/08_w.jpg
+  - text: 2つ目は、空中戦。189センチの高さと強さで、競り合いに勝ちます。
+    card:
+      type: table
+      title: ドログバの持ち味
+      columns: [項目, 中身]
+      rows: *str
+      source: Wikipedia
+      highlight_row: 1
+    image: assets/images/20261027_drogba_legend/11_w.jpg
+  - text: 3つ目は、フリーキック。回転をかけず、強くまっすぐ蹴り込みます。
+    card:
+      type: table
+      title: ドログバの持ち味
+      columns: [項目, 中身]
+      rows: *str
+      source: Wikipedia
+      highlight_row: 2
+    image: assets/images/20261027_drogba_legend/10_w.jpg
+  - text: プレミアの得点王は2回。2009年から10年は、リーグ戦29点でした。
+    card:
+      type: table
+      title: ドログバの持ち味
+      columns: [項目, 中身]
+      rows: *str
+      source: Wikipedia
+      highlight_row: 3
+    image: assets/images/20261027_drogba_legend/09_w.jpg
+    emph: true
+  - {text: 2012年3月には、アフリカ出身で初めて、プレミアリーグ100点に届きました。, card: none, image: assets/images/20261027_drogba_legend/08_w.jpg}
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/Didier_Drogba']
+- id: match
+  heading: 2012年のミュンヘンで、ドログバは何を変えたのか
+  tier: 報道
+  main: true
+  telop: 88分の同点と、5人目のPK
+  card: &mt
+    type: timeline
+    title: 2012年 CL決勝 バイエルン対チェルシー
+    rows: &mtr
+    - [83分, ミュラーの得点で0対1]
+    - [88分, 最初のコーナーから同点]
+    - [延長, PKを与えるも、チェフが止める]
+    - [PK戦, 2人が外し、3対3]
+    - [5人目, ドログバが決めて優勝]
+    focus: 0
+    highlight_row: 0
+  say:
+  - {text: ドログバ。, short_only: true, card: none, image: assets/images/20261027_drogba_legend/08_w.jpg}
+  - {text: いちばん語られるのは、2012年のチャンピオンズリーグ決勝です。, short_only: true, card: none}
+  - {text: 2012年5月19日、ミュンヘン。相手は、そこを本拠地にするバイエルンでした。, card: none, image: assets/images/20261027_drogba_legend/11_w.jpg}
+  - text: 押され続けたチェルシーは、83分にミュラーに決められ、0対1で負けている展開に。
+    card: *mt
+    image: assets/images/20261027_drogba_legend/11_w.jpg
+  - text: 88分、初めてのコーナーキック。マタのキックを、ドログバが頭で同点に。
+    card:
+      type: timeline
+      title: 2012年 CL決勝 バイエルン対チェルシー
+      rows: *mtr
+      focus: 1
+      highlight_row: 0
+    image: assets/images/20261027_drogba_legend/09_w.jpg
+    emph: true
+  - text: 延長では、ドログバがリベリーを倒して、PKを与えます。
+    card:
+      type: timeline
+      title: 2012年 CL決勝 バイエルン対チェルシー
+      rows: *mtr
+      focus: 2
+      highlight_row: 0
+    image: assets/images/20261027_drogba_legend/11_w.jpg
+  - {text: そのPKを、キーパーのチェフが止めました。, card: none}
+  - text: PK戦では、チェルシーの1人目が外し、バイエルンは4人目と5人目が外します。
+    card:
+      type: timeline
+      title: 2012年 CL決勝 バイエルン対チェルシー
+      rows: *mtr
+      focus: 3
+      highlight_row: 0
+    image: assets/images/20261027_drogba_legend/09_w.jpg
+  - {text: ドログバは4年前の決勝で、延長に退場し、PK戦の5人目を蹴れませんでした。, card: none, image: assets/images/20261027_drogba_legend/11_w.jpg}
+  - text: 今度の5人目は、ドログバ。決めて、チェルシーは初めてヨーロッパの王者に。
+    card:
+      type: timeline
+      title: 2012年 CL決勝 バイエルン対チェルシー
+      rows: *mtr
+      focus: 4
+      highlight_row: 0
+    image: assets/images/20261027_drogba_legend/09_w.jpg
+    callword: 5人目
+  - {text: これが、最初のチェルシーで最後の試合でした。のちに、こう話しています。, card: none, image: assets/images/20261027_drogba_legend/02_w.jpg}
+  - {voice: ドログバ, text: 映画だとしても、これ以上の筋書きは書けなかったと思う。, card: none, pause: 0.6}
+  quotes_from: ['https://www.bbc.co.uk/sport/football/46294137']
+  sources: ['https://en.wikipedia.org/wiki/2012_UEFA_Champions_League_final', 'https://en.wikipedia.org/wiki/Didier_Drogba']
+- id: after
+  heading: 引退のあと、ドログバは何をしてきたのか
+  tier: 報道
+  telop: 共同オーナー、司会、財団
+  card: &af
+    type: timeline
+    title: 引退のあと
+    rows: &afr
+    - [2018年, 最後のクラブの共同オーナーを続ける]
+    - [2019〜24年, バロンドールの授賞式で司会]
+    - [2026年5月, 財団の活動で表彰]
+    focus: 0
+    highlight_row: 0
+  say:
+  - text: ドログバは最後のクラブで、選手と共同オーナーを兼ねていました。
+    card: *af
+    image: assets/images/20261027_drogba_legend/06_w.jpg
+  - {text: 引退後もクラブに残り、アメリカの1部へ入るための仕事を続けます。, card: none}
+  - text: 2019年から、世界一の選手を選ぶバロンドールの式で、司会を5回。
+    card:
+      type: timeline
+      title: 引退のあと
+      rows: *afr
+      focus: 1
+      highlight_row: 0
+    image: assets/images/20261027_drogba_legend/11_w.jpg
+    emph: true
+  - text: 2026年5月には、フランスの選手会の表彰式で、財団の活動に賞を受けました。
+    card:
+      type: timeline
+      title: 引退のあと
+      rows: *afr
+      focus: 2
+      highlight_row: 0
+    image: assets/images/20261027_drogba_legend/06_w.jpg
+  - {text: マルセイユで年間最優秀選手に選ばれてから、22年後の同じ舞台です。, card: none, image: assets/images/20261027_drogba_legend/06_w.jpg}
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/Didier_Drogba', "https://en.wikipedia.org/wiki/2024_Ballon_d'Or", 'https://seneweb.com/en/news/Sport/france-didier-drogba-distingue-aux-trophees-unfp-2026_n_492333.html']
+- id: secret
+  heading: 右サイドバックの少年と、マルセイユの大聖堂には、何があったのか
+  tier: 報道
+  telop: 叔父のひと言と、教会のユニフォーム
+  card: &sc
+    type: table
+    title: 知られざる、3つの話
+    columns: [いつ, 何があったか]
+    rows: &scr
+    - [11歳, 最初のチームでは右サイドバック]
+    - [ル・マンの前, 1部へ手紙を書き続けた]
+    - [2004年, ユニフォームが大聖堂に]
+    source: BBC・Wikipedia
+    highlight_row: 0
+  say:
+  - {text: ここで、ドログバのあまり知られていない話を3つ。, card: none, image: assets/images/20261027_drogba_legend/10_w.jpg}
+  - text: 1つ目。初めてチームに入ったのは11歳、フランス北部のダンケルクでした。
+    card: *sc
+    image: assets/images/20261027_drogba_legend/10_w.jpg
+  - {text: 位置は、右サイドバックでした。, card: none}
+  - {text: それを見た叔父は、こう言ったと、本人が明かしています。, card: none}
+  - {text: なぜ右サイドバックなんだ。うちはストライカーの家系だぞ。, card: none, pause: 0.5}
+  - {text: 次の町では、ストライカーと名乗って入団。そのシーズン、40点を取りました。, card: none, image: assets/images/20261027_drogba_legend/08_w.jpg, emph: true}
+  - text: 2つ目。ル・マンに入る前は、1部のクラブへ手紙で練習参加を願い続けました。
+    card:
+      type: table
+      title: 知られざる、3つの話
+      columns: [いつ, 何があったか]
+      rows: *scr
+      source: BBC・Wikipedia
+      highlight_row: 1
+    image: assets/images/20261027_drogba_legend/02_w.jpg
+  - {text: 良い返事は、1つも来なかったそうです。, card: none}
+  - text: 3つ目。マルセイユで着たユニフォームは、街の大聖堂に、額に入れて飾られています。
+    card:
+      type: table
+      title: 知られざる、3つの話
+      columns: [いつ, 何があったか]
+      rows: *scr
+      source: BBC・Wikipedia
+      highlight_row: 2
+    image: assets/images/20261027_drogba_legend/10_w.jpg
+  - {text: 2004年の大きな決勝の前に、本人が教会へ贈ったものです。, card: none, image: assets/images/20261027_drogba_legend/08_w.jpg}
+  quotes_from: ['https://www.bbc.co.uk/sport/football/46294137']
+  sources: ['https://www.bbc.co.uk/sport/football/46294137', 'https://en.wikipedia.org/wiki/Didier_Drogba']
+- id: view
+  heading: 決勝のドログバは、ふだんのドログバと何が違ったのか
+  tier: 背景
+  viewpoint: true
+  telop: 2.3試合に1点から、1試合に1点へ
+  card: &vw
+    type: table
+    title: ドログバ チェルシーの得点のペース（公式戦）
+    columns: [何を数えたか, 試合, 得点, 何試合に1点]
+    rows: &vwr
+    - [チェルシー全体, '381', '164', '2.3']
+    - [いちばん点を取った季, '44', '37', '1.2']
+    - [決勝だけ, '9', '9', '1.0']
+    source: Wikipedia
+    highlight_row: 0
+  say:
+  - text: 最後に、ドログバのチェルシーでの得点のペースを、3つの数え方で並べます。
+    card: *vw
+    image: assets/images/20261027_drogba_legend/09_w.jpg
+  - text: チェルシーの公式戦すべてで数えると、約2.3試合に1点です。
+    card:
+      type: table
+      title: ドログバ チェルシーの得点のペース（公式戦）
+      columns: [何を数えたか, 試合, 得点, 何試合に1点]
+      rows: *vwr
+      source: Wikipedia
+      highlight_row: 0
+    image: assets/images/20261027_drogba_legend/08_w.jpg
+  - text: いちばん点を取った2009年から10年は、44試合で37点。約1.2試合に1点。
+    card:
+      type: table
+      title: ドログバ チェルシーの得点のペース（公式戦）
+      columns: [何を数えたか, 試合, 得点, 何試合に1点]
+      rows: *vwr
+      source: Wikipedia
+      highlight_row: 1
+    image: assets/images/20261027_drogba_legend/10_w.jpg
+  - text: そして、カップ戦とヨーロッパの決勝だけを数えると、9試合で9点。1試合に1点です。
+    card:
+      type: table
+      title: ドログバ チェルシーの得点のペース（公式戦）
+      columns: [何を数えたか, 試合, 得点, 何試合に1点]
+      rows: *vwr
+      source: Wikipedia
+      highlight_row: 2
+    image: assets/images/20261027_drogba_legend/11_w.jpg
+    emph: true
+    mark: {kind: circle, row: 2, col: 3}
+  - {text: 決勝のペースは、全体のおよそ2.3倍。, card: none, image: assets/images/20261027_drogba_legend/02_w.jpg}
+  - {text: 大舞台に強いという評判は、数字でも裏づけられます。, card: none}
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/Didier_Drogba', 'https://en.wikipedia.org/wiki/2012_UEFA_Champions_League_final', 'https://en.wikipedia.org/wiki/2007_FA_Cup_final']

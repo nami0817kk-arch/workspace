@@ -1,0 +1,537 @@
+# 岡崎慎司（元日本代表FW）の紹介。シリーズ「レジェンドの紹介（日本）」2026-10-27。型は 10/26 の大久保嘉人と同じ8節。
+# **FotMob・DataMB・FBref・Sofascore・Transfermarkt は不使用**。数字は STVV 日本公式・BBC・毎日新聞・サッカーキング・現代ビジネス・日本語/英語版 Wikipedia の成績表と試合記録、自分で足した値だけ。
+# **私生活（家族・結婚）・怪我の中身・病気・法的な問題は入れない。女子サッカーは入れない**。Jリーグは経歴の事実（清水の所属・期間・リーグ戦の数）だけで、Jリーグそのものを題材にしない。
+#
+# **重なりの確認（2026-10-26）**：scripts/・research/covered.yaml・research/posted.json を「岡崎」で grep。
+#   岡崎慎司が主役の回は無い（ザッケローニ監督・シュトゥットガルト紹介・遠藤保仁の回に名前が出るだけ）。scripts/20261027_* にも無い。
+#   直近の日本人レジェンド（中田英寿・長谷部誠・中村俊輔・内田篤人・川口能活・小野伸二・稲本潤一・遠藤保仁・大久保嘉人）とも別人。
+# **引退の確認（一次情報）**：STVV 日本公式「【お知らせ】FW岡崎慎司選手 現役引退のお知らせ」（stvv.jp/news/team/20240226_2、2024-02-26）
+#   「FW岡崎慎司選手が2023-24シーズンをもって現役を引退することになりました」。→ **現役ではない**。BBC 2024-02-26 も同じ。
+# **いまの立場**：2024-06-17 の引退会見で、ドイツ6部 FCバサラ・マインツの監督に就くと発表（サッカーキング 2024-06-17/18）。
+#   現代ビジネス 2026-05-13（元川悦子）の見出し「ドイツ6部で監督を務める元日本代表・岡崎慎司」、写真の説明「ドイツ6部FCバサラ・マインツの監督を務める岡崎」。
+#   **2026-05 より後の立場は確かめられなかった**ので、台本は「2026年5月の取材では」と時点を添える。
+# **日本との接点**：全体が日本代表・W杯の話（代表119試合50得点、W杯は2010・2014・2018）。基礎DATAの次に代表の節を置いた。
+#
+# **数字の出どころと台本での扱い**
+# - **日本代表 119試合50得点**：英語版 Wikipedia の年別（RSSSF 引用）2008=4/0・2009=16/15・2010=15/3・2011=14/8・2012=9/3・2013=14/7・2014=13/4・2015=13/7・2016=8/2・2017=5/1・2018=5/0・2019=3/0。合計を自分で足して 119試合・50得点。
+#   デイリースポーツ 2024-02-26「代表通算１１９試合に出場し、歴代３位となる通算５０得点」。日本語版 Wikipedia「代表で50点を決めたのは釜本邦茂、三浦知良に続いて3人目」（50点目は 2017-03-28 タイ戦。英語版の得点一覧と一致）。
+#   区切り（自分で足した）：2008〜09 = 20試合15得点、2010〜15 = 78試合32得点、2016〜19 = 21試合3得点。119÷50＝2.38 →「およそ2.4試合に1点」。
+#   2009年の15得点：英語版「IFFHS … World's Top Goal Scorer of 2009 … for his 15 goals with the national team」（AS 2010-01-09 引用）。台本では「その年、代表の得点で世界一」とは言わず「国際サッカー歴史統計連盟が、2009年に代表でいちばん点を取った選手に選んだ」と言う。
+# - **2009-06-06 ウズベキスタン戦**：1対0、決勝点（英語版の得点一覧 No.7）。毎日新聞 2010-06-24「Ｗ杯出場を決めた昨年６月のウズベキスタン戦では、決勝のシュート。…こぼれ球をヘディングで押し込む泥臭いゴール」。写真 08 は Commons の同じ試合のゴールの場面（説明文 "Shinji Okazaki's goal … Uzbekistan 0-1 Japan"）。
+# - **W杯**：2010年は4試合すべて途中出場、デンマーク戦（2010-06-24、3対1）の87分に3点目（英語版 2010 Group E：本田のパスを無人のゴールへ）。
+#   毎日新聞 2010-06-24（デンマーク戦の前）の本人の言葉「おれも決めたい。チャンスは必ずある」。2014年はコロンビア戦（1対4）の前半45+1分に頭で同点（英語版 2014 Group C）。2018年は出場（3大会連続はデイリー・STVV の経歴）。W杯の得点は2。
+# - **クラブ（リーグ戦）**：英語版 Wikipedia の成績表。清水 121試合42得点、シュトゥットガルト 63/10、マインツ 65/27（2013-14 は33試合15得点、2014-15 は32試合12得点）、レスター 114/14（2015-16 は36試合5得点）、
+#   ウエスカ 62/13（37+25。表の合計欄の63は足し算と合わないので 62 を使う。infobox も 62）、カルタヘナ 32/2、シント＝トロイデン 37/1。欧州のリーグ戦は 128+114+62+32+37＝373試合67得点（自分で足した）。全部で 494試合109得点（infobox と一致）。
+#   サッカーキング 2024-06-18「5カ国7クラブでプレー」「マインツ在籍時にはブンデスリーガ2年連続2ケタ得点」。
+#   マインツの 65試合27得点 → 65÷27＝2.41 ≒ 代表の 2.38。見立てで「どちらも、およそ2.4試合に1点」と言う。
+# - **レスター 2015-16**：英語版 2015–16 Premier League「bookmakers had given Leicester City odds of 5000/1」「champions for the first time in their 132-year history」「previous season … finish 14th」。
+#   勝ち点：レスター 23勝12分3敗＝81、アーセナル 20勝11分7敗＝71（同ページの表から自分で計算）。差は10。
+#   2016-03-14 ニューカッスル戦：1対0、岡崎の25分の得点（英語版 2015–16 Leicester City season の試合表）。BBC 2016-03-14「spectacular overhead kick」「extended their lead at the top … to five points」「with just eight games left」「fifth league goal of the season」。
+#   日本語版 Wikipedia「本拠地キング・パワー・スタジアムでの初ゴールをオーバーヘッドキックで決め」。3月は 5日ワトフォード 1対0・14日ニューカッスル 1対0・19日パレス 1対0（英語版のシーズン記事）。
+# - **ウエスカ 2019-20**：2部で37試合12得点、2部優勝と1部昇格（英語版の成績表と Honours、SD Huesca 公式 2020-07-25 の契約延長の記事）。
+# - **シュトゥットガルト**：2012-02-19 ハノーファー戦のオーバーヘッドがドイツの「月間最優秀ゴール」。日本人では1978年4月の奥寺康彦以来2人目（英語版、VfB 公式 2012-03-11 引用）。
+# - **本人の言葉**：①STVV 日本公式の引退コメント（一次情報）から2文を原文のまま。②サッカーキング 2024-06-18（引退会見、元川悦子）の会見の言葉を原文のまま。③毎日新聞 2010-06-24 の「おれも決めたい。チャンスは必ずある」。
+# - **一生ダイビングヘッド**：毎日新聞 2010-06-24「プロ入りする際、少年時代の恩師、山村俊一さん（３４）から贈られた言葉」「お前は止まったら終わり。一生跳び続けろ」「１日２００回のヘディング」。
+# - **バサラ・マインツ**：日本語版 Wikipedia「2014年8月14日、ドイツ11部リーグに…設立」「5年連続で昇格…2020年時点でドイツ6部」。footballista 2022-03-16「創設者は岡崎慎司」「現在ドイツ6部」。現代ビジネス 2026-05「ドイツ6部」。
+# - 年齢：1986-04-16 生まれ → 2026-10-27 で40歳、2024-02-26 で37歳（デイリーも37）、2016-03-14 で29歳、2010-06-24 で24歳（毎日も24）。
+#
+# **入れなかったもの**：膝の怪我の中身、マラガとの契約解除の理由（賃金の話）、家族、北京五輪の成績、カルタヘナ・シント＝トロイデンでの細かい数字、最後の試合の日（Sporza の報道しか当たれず）、
+#   「欧州主要リーグのリーグ戦日本人最多（15点）」（いまも最多かを確かめられなかった）、移籍金の額。
+# **写真**：レスター時代は Commons の 2017-08-26 マンチェスター・ユナイテッド戦（Ardfern、CC BY-SA 4.0）。2016年のニューカッスル戦そのものの写真は無い（行では「その試合の写真」と言わない）。
+#   代表は Commons のウズベキスタン戦のゴール（TwoWings、CC BY 3.0）と 2018 スイス戦（PD）。引退会見は STVV 撮影（サッカーキング掲載）。監督の写真は現代ビジネス掲載。
+watch: 毎日、数字でサッカーを読み解きます
+title: 岡崎慎司は、どんな選手だった？ 代表50点の男は、なぜ後悔を語ったのか
+format: news
+short_title: 岡崎慎司は、どんな選手だった？
+series: レジェンドの紹介
+topic: 岡崎慎司
+date: 2026年10月27日
+slot: other_1
+people:
+- 岡崎慎司
+theme:
+  id: legend_okazaki_shinji
+  league: japan
+  league_name: ワールドカップ
+  kind: other
+  topic: 岡崎慎司
+  title: 岡崎慎司は、どんな選手だった？ 代表50点の男は、なぜ後悔を語ったのか
+  question: 日本代表で50得点を挙げ、レスターでプレミアリーグ優勝を経験した岡崎慎司は、どんな選手で、いまは何をしているのか
+  takeaway: 岡崎慎司の点の取り方は、日本代表が119試合50得点、マインツが65試合27得点で、どちらもおよそ2.4試合に1点。レスターでは36試合5得点で、5000倍のオッズからの優勝の一員。それでも本人は「後悔だらけ」と言い、いまはドイツ6部で監督をしている
+  nameplate: 岡崎慎司｜元日本代表 FW
+  opening_image: assets/images/20261027_okazaki_shinji_legend/06_w.jpg
+  end_bg: assets/images/20261027_okazaki_shinji_legend/08_w.jpg
+  bgm: assets/audio/bgm_calm.wav
+  outro_title: 毎日、数字でサッカーを読み解きます
+thumbnail:
+  line1: 岡崎慎司、代表119戦50点
+  line2: レスターでプレミア優勝
+  tags:
+  - レスター
+  photo: assets/images/20261027_okazaki_shinji_legend/panel_06.jpg
+  photos: []
+  short_photo: assets/images/20261027_okazaki_shinji_legend/06_v.jpg
+sections:
+- id: hook
+  heading: 首位のレスターを救ったオーバーヘッドは、誰のゴールだったのか
+  tier: 報道
+  telop: 2016年3月14日、イングランド・レスター
+  card: &hookcard
+    type: stats
+    title: 岡崎慎司 元日本代表FW（40歳）
+    items:
+    - - '119'
+      - 試合
+      - 日本代表（2008〜2019年）
+    - - '50'
+      - 得点
+      - 日本代表の歴代3位
+    - - '3'
+      - 大会
+      - W杯（2010・2014・2018年）
+    focus: 1
+  say:
+  - text: 2016年3月14日。プレミアリーグ、首位レスター・シティのホーム。
+    image: assets/images/20261027_okazaki_shinji_legend/06_w.jpg
+    card: none
+  - text: 相手はニューカッスル。前半25分、日本人のフォワードが、オーバーヘッドで決めます。
+    card: none
+  - text: この1点を守って、1対0の勝ち。レスターは2位との差を5に広げました。
+    card: none
+    emph: true
+  - text: そのフォワードの名前は、岡崎慎司。
+    image: assets/images/20261027_okazaki_shinji_legend/08_w.jpg
+    card: {<<: *hookcard, focus: 0}
+  - text: 日本代表では、119試合で50得点。歴代3位の数字です。
+    card: {<<: *hookcard, focus: 1}
+  - text: ワールドカップは、3大会続けて出場しました。
+    card: {<<: *hookcard, focus: 2}
+  - text: 「一生ダイビングヘッド」を胸に跳び続けた20年を、たどります。
+    image: assets/images/20261027_okazaki_shinji_legend/07_w.jpg
+    card: none
+  quotes_from: []
+  sources:
+  - https://www.bbc.com/sport/football/35741942
+  - https://en.wikipedia.org/wiki/2015%E2%80%9316_Leicester_City_F.C._season
+  - https://en.wikipedia.org/wiki/2015%E2%80%9316_Premier_League
+  - https://daily.co.jp/soccer/2024/02/26/0017370384.shtml
+- id: data
+  heading: 岡崎慎司は、どこでプレーし、何を残した選手か
+  tier: 報道
+  telop: 岡崎慎司の基礎DATA
+  card: &datacard
+    type: table
+    title: 岡崎慎司
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - 生年月日
+      - 1986年4月16日・兵庫県生まれ
+    - - ポジション
+      - FW
+    - - 欧州のクラブ
+      - 4か国・6クラブ
+    - - 日本代表
+      - 119試合50得点（2008〜2019）
+    - - 主なタイトル
+      - プレミアリーグ優勝（2015-16）
+    - - 代表のタイトル
+      - アジアカップ優勝（2011）
+    - - 欧州のリーグ戦
+      - 373試合67得点
+    - - 引退
+      - 2023-24シーズン限り（シント＝トロイデン）
+    source: STVV・Wikipedia
+    highlight_row: 0
+  say:
+  - text: 岡崎慎司の生まれは、1986年4月16日。兵庫県の出身で、いま40歳です。
+    image: assets/images/20261027_okazaki_shinji_legend/10_w.jpg
+    card: {<<: *datacard, highlight_row: 0}
+  - text: 欧州では、ドイツ・イングランド・スペイン・ベルギーの4か国でプレー。
+    card: {<<: *datacard, highlight_row: 2}
+  - text: 大きなタイトルは、レスターでのプレミアリーグ優勝と、日本代表でのアジアカップ優勝。
+    image: assets/images/20261027_okazaki_shinji_legend/06_w.jpg
+    card: none
+    emph: true
+  - text: 引退は、2024年に終わったシーズン限り。シント＝トロイデンで終えました。
+    image: assets/images/20261027_okazaki_shinji_legend/10_w.jpg
+    card: {<<: *datacard, highlight_row: 7}
+  quotes_from: []
+  sources:
+  - https://stvv.jp/news/team/20240226_2
+  - https://en.wikipedia.org/wiki/Shinji_Okazaki
+  - https://ja.wikipedia.org/wiki/%E5%B2%A1%E5%B4%8E%E6%85%8E%E5%8F%B8
+- id: numbers
+  heading: 岡崎慎司の代表50得点は、どう積み上がったのか
+  tier: 報道
+  telop: 日本代表で119試合50得点
+  card: &numcard
+    type: table
+    title: 岡崎慎司 日本代表の出場と得点
+    columns:
+    - 年
+    - 試合
+    - 得点
+    rows:
+    - - 2008〜2009
+      - '20'
+      - '15'
+    - - 2010〜2015
+      - '78'
+      - '32'
+    - - 2016〜2019
+      - '21'
+      - '3'
+    - - 合計
+      - '119'
+      - '50'
+    source: Wikipedia
+    highlight_row: 3
+  say:
+  - text: 日本代表での、岡崎慎司の記録を、時期に分けて見ます。
+    image: assets/images/20261027_okazaki_shinji_legend/08_w.jpg
+    card: {<<: *numcard, highlight_row: 3}
+  - text: 最初の2年、2008年と2009年は、20試合で15得点。
+    card: {<<: *numcard, highlight_row: 0}
+  - text: その後の6年の、78試合32得点より速いペースでした。
+    card: {<<: *numcard, highlight_row: 1}
+    emph: true
+  - text: 2009年6月のウズベキスタン戦。こぼれ球を頭で押し込み、これが決勝点になります。
+    card: none
+  - text: 日本は1対0で勝ち、ワールドカップ出場を決めます。
+    card: none
+  - text: 2010年、南アフリカ大会。最初の2試合は途中出場で、まだゴールはありません。
+    image: assets/images/20261027_okazaki_shinji_legend/09.jpg
+    card: none
+  - text: 岡崎慎司は、デンマーク戦の前に、こう話していました。
+    card: none
+  - voice: 岡崎慎司
+    text: おれも決めたい。チャンスは必ずある。
+    card: none
+  - text: その試合、87分。本田圭佑のパスを、空いたゴールへ流し込みます。
+    image: assets/images/20261027_okazaki_shinji_legend/08_w.jpg
+    card: none
+    emph: true
+  - text: 3対1の勝ち。日本は、グループリーグを突破しました。
+    card: none
+  - text: 2014年のブラジル大会では、コロンビア戦の前半終了間際に、頭で同点のゴール。
+    image: assets/images/20261027_okazaki_shinji_legend/10_w.jpg
+    card: {<<: *numcard, highlight_row: 1}
+  - text: 2017年3月のタイ戦で、代表50点目。釜本邦茂、三浦知良に続く、3人目でした。
+    card: {<<: *numcard, highlight_row: 3}
+  quotes_from:
+  - https://web.archive.org/web/20110917072828/http://mainichi.jp/enta/sports/soccer/10fwc/archive/news/2010/06/20100624k0000e050031000c.html
+  sources:
+  - https://en.wikipedia.org/wiki/Shinji_Okazaki
+  - https://en.wikipedia.org/wiki/2010_FIFA_World_Cup_Group_E
+  - https://en.wikipedia.org/wiki/2014_FIFA_World_Cup_Group_C
+  - https://web.archive.org/web/20110917072828/http://mainichi.jp/enta/sports/soccer/10fwc/archive/news/2010/06/20100624k0000e050031000c.html
+  - https://ja.wikipedia.org/wiki/%E5%B2%A1%E5%B4%8E%E6%85%8E%E5%8F%B8
+- id: career
+  heading: 清水から欧州へ渡った岡崎慎司は、どこで点を取ったのか
+  tier: 報道
+  telop: ドイツ、イングランド、スペイン、ベルギー
+  card: &careercard
+    type: table
+    title: 歩んできた道（リーグ戦）
+    columns:
+    - 年
+    - 所属
+    - 試合・得点
+    rows:
+    - - 2005〜2010
+      - 清水エスパルス
+      - 121試合42得点
+    - - 2011〜2013
+      - シュトゥットガルト
+      - 63試合10得点
+    - - 2013〜2015
+      - マインツ
+      - 65試合27得点
+    - - 2015〜2019
+      - レスター
+      - 114試合14得点
+    - - 2019〜2022
+      - ウエスカ・カルタヘナ
+      - 94試合15得点
+    - - 2022〜2024
+      - シント＝トロイデン
+      - 37試合1得点
+    source: Wikipedia
+    highlight_row: 0
+  say:
+  - text: 2005年、兵庫の滝川第二高校から、清水エスパルスへ入ります。
+    image: assets/images/20261027_okazaki_shinji_legend/08_w.jpg
+    card: {<<: *careercard, highlight_row: 0}
+  - text: 2011年1月、岡崎慎司はドイツ1部のシュトゥットガルトへ。
+    card: {<<: *careercard, highlight_row: 1}
+  - text: 2012年2月のオーバーヘッドは、ドイツの月間最優秀ゴールに選ばれます。
+    image: assets/images/20261027_okazaki_shinji_legend/07_w.jpg
+    card: none
+  - text: 日本人では、奥寺康彦以来2人目でした。
+    card: none
+  - text: 2013年、マインツへ。1年目も2年目も、リーグ戦で2桁の得点を挙げます。
+    card: none
+    emph: true
+  - text: 2015年6月、イングランドのレスター・シティへ。
+    image: assets/images/20261027_okazaki_shinji_legend/10_w.jpg
+    card: {<<: *careercard, highlight_row: 3}
+  - text: 2019年からはスペイン。2部のウエスカで12得点。
+    card: {<<: *careercard, highlight_row: 4}
+  - text: 最後は、ベルギーのシント＝トロイデンへ。
+    card: {<<: *careercard, highlight_row: 5}
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Shinji_Okazaki
+  - https://ja.wikipedia.org/wiki/%E5%B2%A1%E5%B4%8E%E6%85%8E%E5%8F%B8
+  - https://www.soccer-king.jp/news/japan/japan_other/20240618/1902537.html
+- id: match
+  heading: 5000倍のレスターで、岡崎慎司のオーバーヘッドは何を変えたのか
+  tier: 報道
+  telop: 2015-16、132年で初めての優勝
+  main: true
+  card: &leicard
+    type: timeline
+    title: 2015-16 レスターと岡崎慎司
+    rows:
+    - - 開幕前
+      - 前の季は14位。優勝のオッズは5000倍
+    - - 2015年8月
+      - 岡崎慎司がプレミアリーグにデビュー
+    - - 2016年3月5日
+      - ワトフォードに1対0
+    - - 2016年3月14日
+      - ニューカッスルに1対0。岡崎のオーバーヘッド
+    - - 2016年3月19日
+      - パレスに1対0
+    - - 2016年5月
+      - 132年で初めての優勝。勝ち点81
+    focus: 3
+    highlight_row: 0
+  say:
+  - text: 元日本代表のフォワード、岡崎慎司。
+    image: assets/images/20261027_okazaki_shinji_legend/06_w.jpg
+    card: none
+    short_only: true
+  - text: 2015年の夏、岡崎慎司が加わったレスターは、前の季を14位で終えたクラブでした。
+    image: assets/images/20261027_okazaki_shinji_legend/10_w.jpg
+    card: {<<: *leicard, highlight_row: 0}
+  - text: 開幕前、賭けの会社が付けた優勝のオッズは、5000倍です。
+    card: {<<: *leicard, highlight_row: 0}
+    emph: true
+  - text: そのチームが、春には首位に立っていました。
+    image: assets/images/20261027_okazaki_shinji_legend/07_w.jpg
+    card: none
+  - text: 3月、レスターは1対0の勝ちを3つ重ねます。
+    image: assets/images/20261027_okazaki_shinji_legend/10_w.jpg
+    card: {<<: *leicard, highlight_row: 2}
+  - text: その真ん中が、3月14日のニューカッスル戦でした。
+    card: {<<: *leicard, highlight_row: 3}
+  - text: 前半25分。岡崎慎司が体を倒しながら、足を振り上げました。
+    image: assets/images/20261027_okazaki_shinji_legend/06_w.jpg
+    card: none
+    emph: true
+  - text: レスターの本拠地で、岡崎慎司が決めた初めてのゴールでした。
+    card: none
+  - text: 5月、レスターは創設から132年で初めて、イングランドの1部で優勝します。
+    image: assets/images/20261027_okazaki_shinji_legend/10_w.jpg
+    card: {<<: *leicard, highlight_row: 5}
+    callword: 132年で初
+  - text: 勝ち点は81。2位のアーセナルとは、10の差でした。
+    card: {<<: *leicard, highlight_row: 5}
+  - text: 岡崎慎司は、この季のリーグ戦38試合のうち36試合に出場。
+    image: assets/images/20261027_okazaki_shinji_legend/06_w.jpg
+    card: none
+  - text: 優勝したチームの、前線の一角でした。
+    card: none
+    emph: true
+  quotes_from: []
+  sources:
+  - https://www.bbc.com/sport/football/35741942
+  - https://en.wikipedia.org/wiki/2015%E2%80%9316_Leicester_City_F.C._season
+  - https://en.wikipedia.org/wiki/2015%E2%80%9316_Premier_League
+  - https://ja.wikipedia.org/wiki/%E5%B2%A1%E5%B4%8E%E6%85%8E%E5%8F%B8
+- id: secret
+  heading: 「一生ダイビングヘッド」と、自分で作ったクラブには、何があったのか
+  tier: 報道
+  telop: 恩師の言葉と、ドイツ11部からのクラブ
+  card: &secretcard
+    type: table
+    title: 数字の外にある、2つの話
+    columns:
+    - いつ
+    - 何があったか
+    rows:
+    - - プロ入りのとき
+      - 恩師から「一生ダイビングヘッド」
+    - - 2014年8月
+      - ドイツ11部にバサラ・マインツを作る
+    source: 毎日新聞・Wikipedia
+    highlight_row: 0
+  say:
+  - text: 岡崎慎司の、数字の外にある話を2つ。
+    image: assets/images/20261027_okazaki_shinji_legend/08_w.jpg
+    card: {<<: *secretcard, highlight_row: 0}
+  - text: 1つ目は、プロに入るときに、少年時代の恩師から贈られた言葉。
+    card: {<<: *secretcard, highlight_row: 0}
+  - text: 山村俊一さんの「一生ダイビングヘッド」です。
+    card: {<<: *secretcard, highlight_row: 0}
+  - text: 込められた思いは、「お前は止まったら終わり。一生跳び続けろ」。
+    card: none
+    emph: true
+  - text: ウズベキスタン戦の決勝点も、こぼれ球に頭から飛び込んだゴールでした。
+    image: assets/images/20261027_okazaki_shinji_legend/09.jpg
+    card: none
+  - text: 2つ目は、2014年8月。マインツでプレーしていた岡崎慎司は、
+    image: assets/images/20261027_okazaki_shinji_legend/04_w.jpg
+    card: {<<: *secretcard, highlight_row: 1}
+  - text: ドイツ11部に、自分たちのクラブを作ります。
+    card: {<<: *secretcard, highlight_row: 1}
+  - text: 名前は、FCバサラ・マインツ。
+    card: {<<: *secretcard, highlight_row: 1}
+  - text: そこから5年続けて昇格し、ドイツ6部まで上がりました。
+    card: none
+    emph: true
+  quotes_from: []
+  sources:
+  - https://web.archive.org/web/20110917072828/http://mainichi.jp/enta/sports/soccer/10fwc/archive/news/2010/06/20100624k0000e050031000c.html
+  - https://ja.wikipedia.org/wiki/%E5%B2%A1%E5%B4%8E%E6%85%8E%E5%8F%B8
+  - https://www.footballista.jp/special/135134
+- id: after
+  heading: 引退した岡崎慎司は、いま、どこで何をしているのか
+  tier: 報道
+  telop: 引退のあと、自分で作ったクラブの監督に
+  card: &aftercard
+    type: timeline
+    title: 最後の1年と、引退のあと
+    rows:
+    - - 2024年2月26日
+      - 今季限りでの引退を発表。37歳
+    - - 2024年6月17日
+      - 引退会見。バサラ・マインツの監督に
+    - - 2026年5月
+      - ドイツ6部で監督を続ける
+    focus: 2
+    highlight_row: 0
+  say:
+  - text: 2024年2月26日。シント＝トロイデンが、岡崎慎司の引退を発表します。
+    image: assets/images/20261027_okazaki_shinji_legend/10_w.jpg
+    card: {<<: *aftercard, highlight_row: 0}
+  - text: このシーズン限りで、37歳でした。
+    card: {<<: *aftercard, highlight_row: 0}
+  - text: 本人のコメントは、こうでした。
+    image: assets/images/20261027_okazaki_shinji_legend/01_w.jpg
+    card: none
+  - voice: 岡崎慎司
+    text: 気付いたら体がボロボロで、
+    card: none
+  - voice: 岡崎慎司
+    text: そして自然と自分に限界を感じました。
+    card: none
+    cont: true
+  - voice: 岡崎慎司
+    text: このクラブに来た事、
+    card: none
+    cont: true
+  - voice: 岡崎慎司
+    text: このクラブで引退を決意した事は運命だと感じています。
+    card: none
+    cont: true
+  - text: 6月17日の引退会見。岡崎慎司は、自分の20年について、こう話しています。
+    image: assets/images/20261027_okazaki_shinji_legend/10_w.jpg
+    card: {<<: *aftercard, highlight_row: 1}
+  - voice: 岡崎慎司
+    image: assets/images/20261027_okazaki_shinji_legend/01_w.jpg
+    text: 自分の選手生活は後悔だらけ。
+    card: none
+  - voice: 岡崎慎司
+    text: ワールドカップ3大会に出て、50ゴールを取ったと
+    card: none
+    cont: true
+  - voice: 岡崎慎司
+    text: 言われること自体も悔しいですね。
+    card: none
+  - text: 理由は、自分で口にしてきた目標です。
+    image: assets/images/20261027_okazaki_shinji_legend/10_w.jpg
+    card: none
+  - text: ワールドカップ優勝、プレミアで2桁得点、4大リーグでのプレー。
+    card: none
+  - text: そのほとんどに届かなかった、と会見で話しています。
+    card: none
+    emph: true
+    cont: true
+  - text: 同じ会見で、新しい仕事も明かします。自分が作ったバサラ・マインツの監督です。
+    image: assets/images/20261027_okazaki_shinji_legend/04_w.jpg
+    card: {<<: *aftercard, highlight_row: 1}
+  - text: 2026年5月の取材でも、紹介は「ドイツ6部の監督」。
+    card: {<<: *aftercard, highlight_row: 2}
+  - text: 11部から作ったクラブで、いまは選手を育てる側に立っています。
+    card: none
+    emph: true
+  quotes_from:
+  - https://stvv.jp/news/team/20240226_2
+  - https://www.soccer-king.jp/news/japan/japan_other/20240618/1902537.html
+  sources:
+  - https://stvv.jp/news/team/20240226_2
+  - https://www.soccer-king.jp/news/japan/japan_other/20240618/1902537.html
+  - https://www.soccer-king.jp/news/world/ger/20240617/1902169.html
+  - https://gendai.media/articles/-/166849
+- id: view
+  heading: 2.4試合に1点のフォワードは、レスターで何を変えたのか
+  tier: 背景
+  telop: 代表もマインツも、およそ2.4試合に1点
+  viewpoint: true
+  card: &viewcard
+    type: table
+    title: 岡崎慎司の点の取り方
+    columns:
+    - 場面
+    - 試合・得点
+    - 何試合に1点
+    rows:
+    - - 日本代表
+      - 119試合50得点
+      - およそ2.4
+    - - マインツ
+      - 65試合27得点
+      - およそ2.4
+    - - レスター 2015-16
+      - 36試合5得点
+      - およそ7.2
+    source: Wikipedia
+    highlight_row: 0
+  say:
+  - text: 岡崎慎司の点の取り方を、3つの場面で比べます。
+    image: assets/images/20261027_okazaki_shinji_legend/08_w.jpg
+    card: {<<: *viewcard, highlight_row: 0}
+  - text: 日本代表は、およそ2.4試合に1点。
+    card: {<<: *viewcard, highlight_row: 0}
+  - text: マインツのリーグ戦も、65試合で27得点。こちらも、ほぼ同じペースです。
+    card: {<<: *viewcard, highlight_row: 1}
+    emph: true
+    mark:
+      kind: circle
+      row: 1
+      col: 何試合に1点
+  - text: ところが優勝したレスターの1年目は、5得点。7試合で1点ほどのペースです。
+    image: assets/images/20261027_okazaki_shinji_legend/10_w.jpg
+    card: {<<: *viewcard, highlight_row: 2}
+  - text: 点のペースは3分の1。
+    image: assets/images/20261027_okazaki_shinji_legend/06_w.jpg
+    card: none
+  - text: それでもニューカッスル戦の1点は、首位を守る勝ち点3になりました。
+    card: none
+  - text: そして5000倍のチームは、頂点に立ちました。
+    card: none
+    emph: true
+  - text: 本人は、その歩みを「後悔だらけ」と言います。
+    image: assets/images/20261027_okazaki_shinji_legend/01_w.jpg
+    card: none
+  - text: それでも、止まらずに跳び続けた。それが、岡崎慎司というフォワードでした。
+    card: none
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Shinji_Okazaki
+  - https://www.bbc.com/sport/football/35741942
+  - https://www.soccer-king.jp/news/japan/japan_other/20240618/1902537.html

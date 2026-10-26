@@ -1,0 +1,566 @@
+# 監督紹介：フリック（10/27 火、シリーズ「監督紹介」、key: manager_flick、型は news）。9節の型（2026-10-20 決定）。見本は 20261026_manager_arteta。
+# 順：フック→基礎DATA→**日本との接点（基礎DATAの次）**→歩みと転機→戦術の色（実例の試合1つ）→数字で見る→本人の言葉→マル秘話→見立て。
+#
+# **重なりの確認（2026-10-26 に自分で）**：scripts/・research/covered.yaml・research/posted.json を grep。フリックを主題にした「人物紹介」（監督紹介）は無し。
+#   既出の監督紹介：グアルディオラ・アンチェロッティ・モウリーニョ・クロップ・シメオネ・アルテタ。ルイス・エンリケは 10/26 にショートがあるので避けた。
+#   フリックの名前が題に出る既存の本：10/10 ショート「フリックがヤマルに付けた条件」、10/17 ショート「フリック監督のヤマルへの答え」（どちらもヤマルの起用の話）。
+#   → この回は「監督フリックの経歴・勝率・戦術・日本との縁」で主題が違う。ヤマルの起用の話・10/10・10/17 の発言は使わない。
+#   10/24「ドイツ代表ってどんなチーム？」は代表の紹介。日本戦の2試合はあちらでも触れている可能性があるが、こちらは「監督フリックが率いた試合」として出す。
+#   10/25 のクラシコ（バルサ 1-2 レアル）は 10/26 にニュース2本（ムバッペ・ペドリ）がある → 今季の成績の数字として1敗に数えるだけ。中身は語らない。
+#
+# **いまの立場（確かめた）**
+#   ○ 英語版 Wikipedia「Hansi Flick」（控え research/raw/20261027_flick_wiki.txt）：currentclub = Barcelona (manager)。Managerial statistics は「match played 25 October 2026」まで。
+#   ○ 同「2026–27 FC Barcelona season」（控え research/raw/20261027_barca_2026_27_wiki.txt、updated 25 October 2026）：Head coach = Hansi Flick。リーグは首位。
+#   ○ ESPN の日程（site.api.espn.com esp.1 teams/83/schedule、控え research/raw/20261027_barca_espn_schedule.json）：今季のリーグ10試合。2026-10-25 バルセロナ 1-2 レアル・マドリード まで。今季も1部（ラ・リーガ）。
+#   ○ BBC 2026-05（控え research/raw/20261027_flick_bbc_2026.txt）：2028年まで契約延長（さらに1年の選択肢）。
+#   × クラブ公式（fcbarcelona.com）の監督ページは当たっていない。
+#
+# **通算の数え方（台本とサムネをそろえる）**＝1部のクラブと代表（バイエルン・ドイツ代表・バルセロナ）の全公式戦。
+#   4部・5部時代のビクトリア・バムメンタールとホッフェンハイム（2000〜05、当時4部→3部）は数えない（地域カップを含まない数字で、トップの舞台ではないため）。
+#   英語版 Wikipedia「Managerial statistics」：バイエルン 86試合 70勝9分7敗（255得点85失点）／ドイツ代表 25試合 12勝7分6敗（60得点30失点）／バルセロナ 130試合 99勝10分21敗（374得点155失点）
+#   ＝241試合 181勝 26分 34敗。勝率 181/241＝75.1%（自分で割った）。
+#     チームごとの勝率（自分で割った）：バイエルン 70/86＝81.4%、ドイツ代表 12/25＝48.0%、バルセロナ 99/130＝76.2%。
+#     1試合あたりの勝ち点（3点・1点で自分で数えた）：バイエルン 219/86＝2.55、ドイツ代表 43/25＝1.72（Wikipedia の 1.72 と一致）、バルセロナ 307/130＝2.36。
+#     1試合あたりの得点：バイエルン 255/86＝2.97、ドイツ代表 60/25＝2.40、バルセロナ 374/130＝2.88。
+#   バルセロナの130試合の突き合わせ：2025-26 シーズン記事の Overall record＝57試合 44勝3分10敗、今季＝13試合 11勝0分2敗 → 残り 2024-25＝60試合 44勝7分9敗（記事の形式が違い直接は数えられなかった）。
+#   優勝（Wikipedia Honours「Manager」）：バイエルン 7（ブンデスリーガ 2019-20・2020-21、DFBポカール 2019-20、DFLスーパーカップ 2020、チャンピオンズリーグ 2019-20、UEFAスーパーカップ 2020、クラブW杯 2020）
+#     ／バルセロナ 5（ラ・リーガ 2024-25・2025-26、コパ・デル・レイ 2024-25、スーペルコパ 2025・2026）＝**12冠**。ホッフェンハイムの4部優勝・地域カップは数えない。
+#   1部のクラブで率いた季：2019-20・2020-21（バイエルン）・2024-25・2025-26（バルセロナ）の4季すべてでリーグ優勝（BBC「has won a league title in each of his past four seasons in club management」）。
+#   今季（Wikipedia の Overall record、2026-10-25 まで）：ラ・リーガ10試合 9勝1敗（40得点11失点、首位）／チャンピオンズリーグ3試合 2勝1敗＝13試合 11勝2敗。勝率 11/13＝84.6%（自分で割った）。
+#
+# **基礎**：1965-02-24 西ドイツ・ハイデルベルク生まれ（61歳）。MF。バイエルン（1985〜90）で104試合5得点、ブンデスリーガ優勝4回・DFBポカール1回。ケルンを経て1993年にプロを退く。A代表の出場は無し。
+#   1996 4部のビクトリア・バムメンタールで選手兼監督 → 2000 ホッフェンハイム（4部優勝で3部へ）→ ザルツブルクのコーチ → 2006-08-23 ドイツ代表のコーチ（レーヴ監督のもと、2014 W杯優勝）
+#   → 2014〜17 ドイツサッカー連盟のスポーツディレクター → 2019-07 バイエルンのコーチ → 2019-11-03 監督に（コヴァチの退任）→ 2021-08 ドイツ代表監督 → 2023-09-10 解任 → 2024-05-29 バルセロナ。
+#   就任の前の季（2023-24、シャビ監督）：英語版 Wikipedia「2023–24 FC Barcelona season」（控え research/raw/20261027_2023-24_FC_Barcelona_season.txt）＝リーグ2位、コパ準々決勝、スーペルコパ準優勝、CL準々決勝＝タイトルなし。
+#   バルセロナ公式（2024-05-29、控え research/raw/20261027_flick_fcb_new.txt）：バイエルンの最初の25試合で22勝。グアルディオラの最初の25試合の21勝を上回った。
+#
+# **日本との接点（一次で確かめた範囲。サッカーの縁だけ）**
+#   ○ ESPN の試合記録（fifa.world summary?event=633797、控え research/raw/20261027_wc2022_ger_jpn_espn.json）：2022-11-23 カタール W杯 ドイツ 1-2 日本（ハリーファ国際スタジアム、42,608人）。
+#       33分 ドイツのPK、75分 堂安律、83分 浅野拓磨。支配率 ドイツ73.9%・日本26.1%、シュート 26対12、枠内 9対4。
+#   ○ ESPN（fifa.friendly summary?event=669756、控え research/raw/20261027_fr2023_ger_jpn_espn.json）：2023-09-09 親善試合 ドイツ 1-4 日本（ヴォルフスブルク）。
+#       11分 伊東純也、19分 ドイツ（サネ）、22分 上田綺世、90分 浅野拓磨、90+2分 田中碧。
+#   ○ Guardian 2023-09-10（控え research/raw/20261027_flick_guardian_sack.txt）：翌日に解任。1926年に代表監督の職ができてから、解任された初めての監督。25試合12勝。就任から8連勝。
+#   ○ 英語版 Wikipedia：ドイツは2022年W杯でグループ3位、2大会続けてグループで敗退。
+#   × フリックが日本の選手を率いたことは無い。バルセロナに日本人選手はいない。
+#
+# **戦術の色（実例の試合＝2024-10-26 ラ・リーガ、レアル・マドリード 0-4 バルセロナ、サンティアゴ・ベルナベウ）**
+#   ○ ESPN の試合記録（esp.1 summary?event=704766、控え research/raw/20261027_clasico_20241026_espn.json）：54分・56分 レヴァンドフスキ、77分 ヤマル、84分 ラフィーニャ。
+#       オフサイド レアル12・バルサ1。支配率 バルサ58.7%・レアル41.3%。シュート 15対9。
+#   ○ 英語版 Wikipedia「Hansi Flick」Manager profile：高いライン・組織だったプレス・攻めたオフサイドトラップ。12回のオフサイドは2013年以降のラ・リーガの1試合で最多。基本は4-2-3-1。
+#       バイエルンでは「奪ってから10秒以内」の得点（2020年の 8-2 バルセロナ戦で最初の4点のうち3点）。
+#   ※ レヴァンドフスキの読みは「レバン/ドフスキ」と割れる → 名前を出さない（「54分と56分に2点」）。
+# **本人の言葉（自訳。原文は出典）**：
+#   ①2026-05-10 リーグ優勝を決めたクラシコ（バルサ 2-0 レアル）のあと、テレビで（Barca Blaugranes、控え research/raw/20261027_flick_bbg_title.txt）：
+#     "I'll never forget this moment. My team is fantastic and I'm delighted. I'm very proud of my players."
+#   ②2026-05 契約延長のとき（BBC、控え research/raw/20261027_flick_bbc_2026.txt）：
+#     "A lot of coaches would be happy if they get a contract of three, four or five years, but in Barca's case it's good to limit it."
+#     "We go to 2028 and then we'll see if everything is right, and, if so, we can decide on one more year."
+#     ※同じ記事・同じ日の家族の話（父の死）は私生活なので入れない。
+# **マル秘話**：
+#   ・2020-08-14 チャンピオンズリーグ準々決勝、バイエルン 8-2 バルセロナ（英語版 Wikipedia／バルセロナ公式「a painful 8-2 defeat for Barça ... at the hands of Flick's team」）。4年後、そのバルセロナの監督に。
+#   ・バイエルンは 2020年2月16日〜9月18日に公式戦23連勝。ドイツのプロサッカーの記録（英語版 Wikipedia）。
+#   ・2024-25 は公式戦でレアル・マドリードに4戦4勝（リーグ2・スーペルコパ決勝 5-2・コパ決勝 3-2 延長）（英語版 Wikipedia）。
+#   ・ドイツ代表のコーチを2006〜14年の8年。2014年 W杯優勝。
+#
+# **入れなかったもの**：家族・私生活（父の死・結婚・政治の役目）、解任の評価や批判の引用、選手交代への批判、契約の金額、ヤマルの起用の話（10/10・10/17 と重なる）、
+#   10/25 のクラシコの中身、女子、Jリーグ、SNS の反応、ESPN 以外の数字の推測。
+# **日本語名・読み（audio_query で確かめた）**：ハンジ・フリック／フリック監督／ハイデルベルク／バイエルン／ホッフェンハイム／堂安律（ドオアンリツ）／浅野拓磨／伊東純也／上田綺世（ウエダアヤセ）／
+#   田中碧（タナカアオ）／ヴォルフスブルク／ドーハ／コパ・デル・レイ／スーペルコパ／ラミン・ヤマル／ラフィーニャ／ベルナベウ／クラシコ はどれも通った。
+#   割れる：ギュンドアン（ギュ/ン/ドアン）→ 名前を出さない。レヴァンドフスキ（レバン/ドフスキ）→ 名前を出さない。「最多」は使わず「いちばん多い」。
+date: 2026年10月27日
+slot: other_1
+format: news
+series: 監督紹介
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+people:
+- フリック
+- 堂安律
+- 浅野拓磨
+theme:
+  end_bg: assets/images/20261027_manager_flick/09.jpg
+  id: manager_flick
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: フリック
+  title: フリック監督ってどんな人？日本戦の翌日に代表を去り、バルサで何を変えたのか
+  question: バルセロナのフリック監督は、どんな人なのか。日本に敗れた翌日にドイツ代表を去った監督は、バルセロナで何を変えて2季続けて優勝したのか
+  lead: バルセロナ監督、ハンジ・フリック。
+  opening_image: assets/images/20261027_manager_flick/02_w.jpg
+  takeaway: 通算はバイエルン・ドイツ代表・バルセロナで241試合181勝、勝率75.1%（2026年10月25日の試合まで）。1試合あたりの勝ち点は、バイエルン2.55・バルセロナ2.36に対し、ドイツ代表は1.72。毎日練習できるクラブで強く、集まる日の少ない代表では数字が落ちた。1部のクラブで率いた4季は、すべてリーグ優勝
+  short_title: フリック、日本戦の翌日に代表を去り、バルサで2連覇
+  nameplate: フリック｜バルセロナ監督
+thumbnail:
+  line1: フリック、241試合181勝
+  line2: 1部で率いた4季、全部優勝
+  tags:
+  - バルセロナ
+  photo: assets/images/20261027_manager_flick/panel_01.jpg
+  photos: []
+  short_photo: assets/images/20261027_manager_flick/01_v.jpg
+sections:
+- id: hook
+  main: true
+  heading: 1部で率いた4季、すべてリーグ優勝。フリックとは、どんな監督なのか
+  tier: 報道
+  telop: 1部のクラブを率いた4季、そのすべてでリーグ優勝
+  narrator: 解説
+  card: &hook_stats
+    type: stats
+    title: フリックの監督成績（2026年10月25日まで）
+    items:
+    - ['4', 季, 1部のクラブを率いた季。すべてリーグ優勝]
+    - ['12', 冠, バイエルンで7、バルセロナで5]
+    - ['241', 試合, バイエルン・ドイツ代表・バルセロナ]
+    focus: 0
+  say:
+  - text: 1部のクラブを率いた4つのシーズン、そのすべてでリーグ優勝。
+    image: assets/images/20261027_manager_flick/08_w.jpg
+    emph: true
+    card: none
+  - voice: フリック
+    text: この瞬間は、一生忘れない。
+  - voice: フリック
+    text: 私のチームは素晴らしい。
+    cont: true
+  - voice: フリック
+    text: 選手たちを、とても誇りに思う。
+    cont: true
+    pause: 0.5
+    image: assets/images/20261027_manager_flick/01_w.jpg
+    card: none
+  - text: 今年5月、バルセロナで2季続けての優勝を決めた夜の言葉です。
+    image: assets/images/20261027_manager_flick/09.jpg
+    card:
+      <<: *hook_stats
+      focus: 0
+  - text: さかのぼって、2023年9月。
+    image: assets/images/20261027_manager_flick/04_w.jpg
+    card: none
+  - text: ドイツ代表の監督だった彼は、日本に敗れた翌日に職を離れていました。
+    image: assets/images/20261027_manager_flick/04_w.jpg
+    emph: true
+    card: none
+  - text: バルセロナの、ハンジ・フリックです。
+    image: assets/images/20261027_manager_flick/02_w.jpg
+    card: none
+  quotes_from:
+  - https://www.barcablaugranes.com/barcelona-la-liga/119956/ill-never-forget-this-moment-hansi-flick-gets-emotional-after-barcelona-beat-real-madrid-and-seal-la-liga-title
+  sources:
+  - https://www.bbc.com/sport/football/articles/c3v2d7ww36lo
+  - https://www.barcablaugranes.com/barcelona-la-liga/119956/ill-never-forget-this-moment-hansi-flick-gets-emotional-after-barcelona-beat-real-madrid-and-seal-la-liga-title
+  - https://www.theguardian.com/football/2023/sep/10/germany-sack-head-coach-hansi-flick-after-japan-thrashing
+- id: data
+  heading: フリックは、いつから、どんな経歴の人か
+  tier: 報道
+  telop: フリックの基礎DATA
+  narrator: 解説
+  card: &data_table
+    type: table
+    title: フリック（61歳）の基礎DATA
+    columns: [項目, 中身]
+    rows:
+    - [生年月日, 1965年2月24日（ドイツ・ハイデルベルク）]
+    - [選手時代, MF。バイエルンでリーグ優勝4回]
+    - [コーチ, 2006〜14年 ドイツ代表（W杯優勝）]
+    - [監督, バイエルン → ドイツ代表 → バルセロナ]
+    - [今季のリーグ, 10試合で9勝1敗・首位（10月25日時点）]
+    highlight_row: 3
+    source: 英語版Wikipedia・ESPN
+  say:
+  - text: フリックは1965年2月24日、ドイツのハイデルベルク生まれの61歳。
+    image: assets/images/20261027_manager_flick/09.jpg
+    card:
+      <<: *data_table
+      highlight_row: 0
+  - text: 2006年からの8年間は、ドイツ代表のコーチ。
+    image: assets/images/20261027_manager_flick/06_w.jpg
+    card:
+      <<: *data_table
+      highlight_row: 2
+  - text: 2014年のワールドカップ優勝を、ベンチで支えました。
+    image: assets/images/20261027_manager_flick/06_w.jpg
+    card:
+      <<: *data_table
+      highlight_row: 2
+  - text: 監督としては、バイエルン、ドイツ代表、そして2024年からバルセロナ。
+    image: assets/images/20261027_manager_flick/09.jpg
+    emph: true
+    card:
+      <<: *data_table
+      highlight_row: 3
+  - text: 今季のリーグは10試合で9勝1敗。首位に立っています。
+    card:
+      <<: *data_table
+      highlight_row: 4
+  sources:
+  - https://en.wikipedia.org/wiki/Hansi_Flick
+  - https://en.wikipedia.org/wiki/2026%E2%80%9327_FC_Barcelona_season
+- id: japan
+  heading: フリックと日本は、どこでつながるのか
+  tier: 報道
+  telop: 日本とは2度。2022年W杯と、2023年の親善試合
+  narrator: 解説
+  card: &jp_table
+    type: table
+    title: フリックのドイツ代表と日本
+    columns: [いつ, 結果]
+    rows:
+    - [2022年11月23日 W杯（ドーハ）, ドイツ 1-2 日本]
+    - [支配率・シュート（W杯）, ドイツ 74%・26本、日本 26%・12本]
+    - [2023年9月9日 親善試合, ドイツ 1-4 日本]
+    - [2023年9月10日, フリックが代表監督を退く]
+    highlight_row: 0
+    source: ESPN・Guardian
+  say:
+  - text: フリックと日本の縁は、代表監督を務めた2021年からの2年間にあります。
+    image: assets/images/20261027_manager_flick/04_w.jpg
+    card: none
+  - text: 2022年11月23日、カタールのワールドカップ初戦。相手は日本でした。
+    image: assets/images/20261027_manager_flick/09.jpg
+    card:
+      <<: *jp_table
+      highlight_row: 0
+  - text: ボール支配率はドイツが74%、シュートは26本対12本。
+    card:
+      <<: *jp_table
+      highlight_row: 1
+  - text: PKで先制したドイツに、75分に堂安律、83分に浅野拓磨。
+    image: assets/images/20261027_manager_flick/09.jpg
+    card:
+      <<: *jp_table
+      highlight_row: 0
+  - text: 日本の2対1の逆転勝ちです。
+    emph: true
+    card:
+      <<: *jp_table
+      highlight_row: 0
+  - text: ドイツは、2大会続けてグループで敗退します。
+    image: assets/images/20261027_manager_flick/03_w.jpg
+    card: none
+  - text: 翌年9月9日、ドイツのヴォルフスブルクで、もう一度日本と戦います。
+    image: assets/images/20261027_manager_flick/09.jpg
+    card:
+      <<: *jp_table
+      highlight_row: 2
+  - text: 伊東純也、上田綺世、浅野拓磨、田中碧がゴール。日本が4対1で勝ちました。
+    card:
+      <<: *jp_table
+      highlight_row: 2
+  - text: その翌日、ドイツサッカー連盟はフリックとの別れを決めます。
+    emph: true
+    card:
+      <<: *jp_table
+      highlight_row: 3
+  - text: 1926年に代表監督の職ができてから、
+    image: assets/images/20261027_manager_flick/01_w.jpg
+    card: none
+  - text: 解任という形で去ったのは、フリックが初めてでした。
+    image: assets/images/20261027_manager_flick/01_w.jpg
+    card: none
+  sources:
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/summary?event=633797
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.friendly/summary?event=669756
+  - https://www.theguardian.com/football/2023/sep/10/germany-sack-head-coach-hansi-flick-after-japan-thrashing
+- id: career
+  heading: 4部の選手兼監督から、どうやって欧州の頂点に立ったのか
+  tier: 背景
+  telop: 歩みと転機。4部から、コーチ8年、そして6冠
+  narrator: 解説
+  card: &career_tl
+    type: timeline
+    title: フリックの歩み
+    rows:
+    - [1996年, 4部のクラブで選手兼監督]
+    - [2006〜14年, ドイツ代表のコーチ。W杯優勝]
+    - [2019年11月, バイエルンのコーチから監督に]
+    - [2020年, 3冠。翌年2月までに6冠]
+    - [2024年5月, バルセロナの監督に]
+    focus: 0
+  say:
+  - text: 監督の始まりは1996年。ドイツ4部のクラブで、選手と監督を兼ねました。
+    image: assets/images/20261027_manager_flick/05_w.jpg
+    card: *career_tl
+  - text: その後は代表のコーチや、連盟とクラブの役員。長く裏方を続けます。
+    image: assets/images/20261027_manager_flick/06_w.jpg
+    card:
+      <<: *career_tl
+      focus: 1
+  - text: 転機は2019年11月。
+    image: assets/images/20261027_manager_flick/05_w.jpg
+    card:
+      <<: *career_tl
+      focus: 2
+  - text: コーチとして入ったバイエルンで、監督が去り、フリックが後を継ぎます。
+    image: assets/images/20261027_manager_flick/05_w.jpg
+    card:
+      <<: *career_tl
+      focus: 2
+  - text: 最初の25試合で22勝。バイエルン時代のグアルディオラより1つ多い勝ち数です。
+    emph: true
+    card:
+      <<: *career_tl
+      focus: 2
+  - text: その季に、リーグ、カップ、チャンピオンズリーグの3冠。
+    image: assets/images/20261027_manager_flick/09.jpg
+    card:
+      <<: *career_tl
+      focus: 3
+  - text: 翌年2月のクラブワールドカップまでに、獲ったタイトルは6つ。6冠と呼ばれます。
+    card:
+      <<: *career_tl
+      focus: 3
+  - text: 代表監督を経て、2024年5月にバルセロナへ。
+    image: assets/images/20261027_manager_flick/09.jpg
+    card:
+      <<: *career_tl
+      focus: 4
+  - text: 前の季のバルセロナは、リーグ2位でタイトルなし。
+    image: assets/images/20261027_manager_flick/02_w.jpg
+    card: none
+  - text: それが1年目で、リーグ、コパ・デル・レイ、スーペルコパの国内3冠。
+    image: assets/images/20261027_manager_flick/07_w.jpg
+    card: none
+  - text: 2年目もリーグとスーペルコパを制しました。
+    image: assets/images/20261027_manager_flick/07_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Hansi_Flick
+  - https://www.fcbarcelona.com/en/football/first-team/news/4029878/hansi-flick-is-the-new-fc-barcelona-coach
+  - https://en.wikipedia.org/wiki/2023%E2%80%9324_FC_Barcelona_season
+- id: style
+  heading: フリックのサッカーは、2024年のクラシコで、何を見せたのか
+  tier: 報道
+  telop: 戦術の色。2024年10月26日、レアル・マドリード 0対4 バルセロナ
+  narrator: 解説
+  card: &style_doc
+    type: document
+    label: 英語版Wikipediaの要約（訳）
+    paragraphs:
+    - 守備のラインを高く保つ。
+    - チーム全体で、そろって前からプレスをかける。
+    - 攻めたオフサイドトラップで、相手を止める。
+    highlight:
+    - ラインを高く保つ
+    - 前からプレス
+    - オフサイドトラップ
+  say:
+  - text: フリックのサッカーを形づくる約束事は、3つ。
+    image: assets/images/20261027_manager_flick/09.jpg
+    card: *style_doc
+  - text: 守備のラインを高く保つこと。チーム全体で、そろって前からプレスをかけること。
+    card: *style_doc
+  - text: そして、守備の列を一斉に上げて相手を反則にする、オフサイドトラップです。
+    card: *style_doc
+  - text: いちばんよく表れたのは、就任1年目の2024年10月26日。
+    image: assets/images/20261027_manager_flick/01_w.jpg
+    card: none
+  - text: 敵地ベルナベウでの、クラシコです。
+  - text: レアル・マドリードは、この試合で12回もオフサイドにかかりました。
+    image: assets/images/20261027_manager_flick/09.jpg
+    emph: true
+    card: &style_stats
+      type: stats
+      title: 2024年10月26日 レアル・マドリード 0-4 バルセロナ
+      items:
+      - ['12', 回, レアル・マドリードのオフサイド]
+      - ['58.7', '%', バルセロナのボール支配率]
+      - ['15', 本, バルセロナのシュート（レアルは9本）]
+      focus: 0
+  - text: 2013年以降のラ・リーガの1試合で、いちばん多い回数です。
+    card:
+      <<: *style_stats
+      focus: 0
+  - text: 支配率はバルセロナが58.7%。シュートは15本対9本。
+    card:
+      <<: *style_stats
+      focus: 1
+  - text: 54分と56分に、わずか2分で2点。
+    image: assets/images/20261027_manager_flick/08_w.jpg
+    card: none
+  - text: 77分にラミン・ヤマル、84分にラフィーニャ。4対0の勝利でした。
+    card: none
+  sources:
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/summary?event=704766
+  - https://en.wikipedia.org/wiki/Hansi_Flick
+- id: numbers
+  heading: 通算241試合、チームごとの勝率はどれだけ違うのか
+  tier: 報道
+  telop: 通算181勝。勝率はバイエルン81.4%、バルセロナ76.2%、ドイツ代表48.0%
+  narrator: 解説
+  card: &rate_bars
+    type: bars
+    title: フリックの勝率（チームごと、%）
+    unit: '%'
+    items:
+    - label: バイエルン
+      value: 81.4
+    - label: バルセロナ
+      value: 76.2
+      highlight: true
+    - label: ドイツ代表
+      value: 48.0
+  say:
+  - text: フリックの成績を、数字で見ていきます。
+    image: assets/images/20261027_manager_flick/09.jpg
+    card: &total_stats
+      type: stats
+      title: フリックの通算（10月25日まで）
+      items:
+      - ['241', 試合, バイエルン・ドイツ代表・バルセロナ]
+      - ['181', 勝, 引き分け26・負け34]
+      - ['75.1', '%', 勝率]
+      focus: 2
+  - text: 1部のクラブと代表を合わせて241試合で181勝。勝率は75.1%です。
+    emph: true
+    card:
+      <<: *total_stats
+      focus: 2
+  - text: チームごとに分けると、バイエルンは86試合で70勝。勝率81.4%。
+    image: assets/images/20261027_manager_flick/07_w.jpg
+    card: *rate_bars
+  - text: バルセロナは130試合で99勝。76.2%です。
+    card: *rate_bars
+  - text: ところがドイツ代表では12勝。勝率は48.0%でした。
+    card: *rate_bars
+  - text: 獲ったタイトルは12。バイエルンで7つ、バルセロナで5つです。
+    image: assets/images/20261027_manager_flick/03_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Hansi_Flick
+  - https://en.wikipedia.org/wiki/2025%E2%80%9326_FC_Barcelona_season
+- id: words
+  heading: 本人は、優勝の夜と契約のときに、何を語ったのか
+  tier: 報道
+  telop: 2026年5月、2連覇を決めた夜と、契約を延ばしたとき
+  narrator: 解説
+  card: &words_doc
+    type: document
+    label: フリックの言葉（2026年5月、訳）
+    paragraphs:
+    - 3年、4年、5年の契約を喜ぶ監督は多い。
+    - でもバルサでは、期間を区切るのがいい。
+    - 2028年まで。そこで全部うまくいっていれば、もう1年を決められる。
+    highlight:
+    - 期間を区切るのがいい
+    - 全部うまくいっていれば
+  say:
+  - text: ここで、フリック本人の言葉。2026年5月、バルセロナと契約を延ばしたときです。
+    image: assets/images/20261027_manager_flick/09.jpg
+    card: *words_doc
+  - voice: フリック
+    text: 3年、4年、5年の契約をもらえたら、喜ぶ監督は多いでしょう。
+  - voice: フリック
+    text: でもバルサの場合は、期間を区切るのがいいんです。
+    cont: true
+  - voice: フリック
+    text: 2028年まで。
+    cont: true
+  - voice: フリック
+    text: そこで全部うまくいっていれば、もう1年を決められる。
+    cont: true
+    pause: 0.5
+  - text: 長い約束より、1年ずつ結果で確かめる。勝ち続けることを前提にした言葉です。
+    image: assets/images/20261027_manager_flick/01_w.jpg
+    card: none
+  quotes_from:
+  - https://www.bbc.com/sport/football/articles/c3v2d7ww36lo
+  sources:
+  - https://www.bbc.com/sport/football/articles/c3v2d7ww36lo
+- id: secret
+  heading: 数字の外にある話。バルセロナを8対2で破った監督が、バルセロナへ
+  tier: 背景
+  telop: 8対2の相手の監督に。23連勝、クラシコ4戦4勝
+  narrator: 解説
+  card: &sec_table
+    type: table
+    title: 数字の外にある話
+    columns: [いつ, 何があったか]
+    rows:
+    - [2020年8月, バイエルンでバルセロナに8対2]
+    - [2020年2〜9月, 公式戦23連勝。ドイツのプロの記録]
+    - [2024年5月, そのバルセロナの監督に]
+    - [2024-25, レアル・マドリードに公式戦4戦4勝]
+    highlight_row: 0
+    source: 英語版Wikipedia・FCバルセロナ公式
+  say:
+  - text: ここから、数字の外の話。2020年8月、チャンピオンズリーグの準々決勝。
+    image: assets/images/20261027_manager_flick/03_w.jpg
+    card: none
+  - text: フリックのバイエルンは、バルセロナを8対2で破っています。
+    image: assets/images/20261027_manager_flick/05_w.jpg
+    emph: true
+    card:
+      <<: *sec_table
+      highlight_row: 0
+  - text: この年、バイエルンは公式戦23連勝。ドイツのプロサッカーの記録です。
+    card:
+      <<: *sec_table
+      highlight_row: 1
+  - text: その4年後、フリックは、あの夜の相手、バルセロナの監督になります。
+    image: assets/images/20261027_manager_flick/09.jpg
+    card:
+      <<: *sec_table
+      highlight_row: 2
+  - text: 1年目は、レアル・マドリードとの公式戦に4戦4勝。
+    card:
+      <<: *sec_table
+      highlight_row: 3
+  - text: リーグの2試合に、スーペルコパとコパ・デル・レイの決勝。全部で勝ちました。
+    image: assets/images/20261027_manager_flick/07_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Hansi_Flick
+  - https://www.fcbarcelona.com/en/football/first-team/news/4029878/hansi-flick-is-the-new-fc-barcelona-coach
+- id: view
+  viewpoint: true
+  heading: 見立て・同じ監督なのに、なぜ代表では数字が落ちたのか
+  tier: 背景
+  telop: 1試合あたりの勝ち点。バイエルン2.55、バルセロナ2.36、ドイツ代表1.72
+  narrator: 解説
+  card: &view_table
+    type: table
+    title: 自分で数えてみた
+    columns: [チーム, 1試合あたりの勝ち点, 1試合あたりの得点]
+    rows:
+    - [バイエルン（86試合）, '2.55', '2.97']
+    - [バルセロナ（130試合）, '2.36', '2.88']
+    - [ドイツ代表（25試合）, '1.72', '2.40']
+    - [今季のバルセロナ（13試合）, 11勝2敗, リーグ10試合で40点]
+    highlight_row: 2
+  say:
+  - text: 見立てです。フリックの3つのチームを、1試合あたりの勝ち点で並べました。
+    image: assets/images/20261027_manager_flick/09.jpg
+    card: *view_table
+  - text: バイエルンは2.55、バルセロナは2.36。
+    card:
+      <<: *view_table
+      highlight_row: 0
+  - text: ドイツ代表は1.72。クラブより、1試合あたり0.6点以上少ない数字です。
+    emph: true
+    mark: {kind: circle, row: 2, col: 1}
+    card:
+      <<: *view_table
+      highlight_row: 2
+  - text: 高いラインとそろったプレスは、毎日の練習で動きを体に入れてこそ働きます。
+    image: assets/images/20261027_manager_flick/04_w.jpg
+    card: none
+  - text: 数日しか集まれない代表では、その時間が足りなかった。そう見ています。
+    card: none
+  - text: そして今季のバルセロナ。公式戦13試合で11勝2敗。
+    image: assets/images/20261027_manager_flick/09.jpg
+    card:
+      <<: *view_table
+      highlight_row: 3
+  - text: リーグでは、1試合に4点のペースで点を取っています。
+    image: assets/images/20261027_manager_flick/09.jpg
+    card:
+      <<: *view_table
+      highlight_row: 3
+  - text: 次に見るのは、リーグ3連覇に届くかどうかです。
+    image: assets/images/20261027_manager_flick/01_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Hansi_Flick
+  - https://en.wikipedia.org/wiki/2026%E2%80%9327_FC_Barcelona_season

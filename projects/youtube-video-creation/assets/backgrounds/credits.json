@@ -882,15 +882,6 @@
   "club": "ハンブルガーSV"
  },
  {
-  "file": "stadium_フライブルク_in.png",
-  "source": "wikimedia",
-  "title": "File:Europa-Park Stadion 17.05.2025.jpg",
-  "page_url": "https://commons.wikimedia.org/wiki/File:Europa-Park_Stadion_17.05.2025.jpg",
-  "author": "Kaupson",
-  "license": "CC0",
-  "club": "フライブルク"
- },
- {
   "file": "stadium_レアルマドリード.png",
   "source": "wikimedia",
   "title": "File:M-estadio-santiago-bernabeu-diciembre-2024-a.jpg",
@@ -1078,5 +1069,23 @@
   "author": "Markus Unger",
   "license": "CC BY 2.5",
   "club": "ライプツィヒ"
+ },
+ {
+  "file": "stadium_フライブルク_in.png",
+  "source": "wikimedia",
+  "title": "File:SC-Stadion Südtribüne (enhanced).jpg",
+  "page_url": "https://commons.wikimedia.org/wiki/File:SC-Stadion_S%C3%BCdtrib%C3%BCne_(enhanced).jpg",
+  "author": "Thorbjörn Jörger",
+  "license": "CC BY-SA 3.0 de",
+  "club": "フライブルク"
+ },
+ {
+  "file": "stadium_フライブルク.png",
+  "source": "wikimedia",
+  "title": "File:Europa Park Stadion in Freiburg mit Achim-Stocker-Straße im Vordergrund 2.jpg",
+  "page_url": "https://commons.wikimedia.org/wiki/File:Europa_Park_Stadion_in_Freiburg_mit_Achim-Stocker-Stra%C3%9Fe_im_Vordergrund_2.jpg",
+  "author": "Andreas Schwarzkopf",
+  "license": "CC BY-SA 4.0",
+  "club": "フライブルク"
  }
 ]

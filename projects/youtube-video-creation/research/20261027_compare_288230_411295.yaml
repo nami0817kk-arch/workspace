@@ -1,0 +1,417 @@
+# 取材メモ（10/27 火、シリーズ「比べる」、key: compare_288230_411295）。ウスマン・デンベレ（パリ・サンジェルマン・29歳）×ラフィーニャ（バルセロナ・29歳）。
+# **FotMob・DataMB は使っていない**。数字は Transfermarkt（2026-10-26 取得。控え: research/raw/20261027_dembele_tm.json・20261027_raphinha_tm.json）。
+#   Transfermarkt 番号：デンベレ 288230・ラフィーニャ 411295。API（tmapi-alpha）の performance-season・performance-game・market-value-history を3秒あけて取得。
+#   クロスチェック：英語版 Wikipedia の Career statistics（2026-10-26 取得。控え: research/raw/20261027_dembele_wiki.wikitext・20261027_raphinha_wiki.wikitext）。
+#     試合・得点は季ごとに TM と Wikipedia が一致（デンベレ 22/23 35試合8点・23/24 42試合6点・24/25 53試合35点・25/26 40試合20点・26/27 10試合4点、
+#     ラフィーニャ 50試合10点・37試合10点・57試合34点・33試合21点・11試合15点）。アシスト・出場時間は Transfermarkt だけ。代表の試合は混ぜない（クラブの試合だけ）。
+# **選んだ理由**：直近の比べ（10/2エムバペ×ハーランド・10/3クラシコ・10/9ベリンガム×ムシアラ・10/11マレン×ラウタロ・10/12ドルトムント×モナコ・10/14バレバ×カマラ・10/16エムバペ×ヴィニシウス・
+#   10/17ペドリ×ヴィティーニャ・10/19バイエルン×ドルトムント・10/20ランキング（ラフィーニャ・ヤマル・エムバペ）・10/21ライス×ネヴェス・10/22ヤマル×サカ・10/23ヴィルツ×ロジャーズ・10/24オリーセ×パーマー・
+#   10/25ケイン×レヴァンドフスキ・10/26ブルーノ×ウーデゴール）に、デンベレは一度も出ていない。2人を比べた回は無い（scripts/*compare*・research/*compare*・posted.json の build 名・covered.yaml を grep）。
+#   ラフィーニャは 10/20 のランキングと 10/23 のショート（今季14点・9番への変身）で今季の得点を扱った。**この回の軸は 24/25（バロンドールの対象の季）**で、今季の数字は最後の節で短く触れるだけ。
+#   大物の名前（2025年バロンドール1位と5位）×比べる軸（24/25 のクラブの得点は35と34で1点差、出場時間は1173分の差）。
+#   ほかに当たって外した候補：サラー（今季トラブゾンスポル＝扱うリーグの外、10/26 のメモ）・クヴァラツヘリア（10/22 に手術の報）・ファン・ダイク×サリバ（守備の選手は基本の数で比べにくい）。
+# **この回の軸**：24/25 のクラブの全公式戦。得点 35 と 34、出場時間 3488分と4661分。1点にかかった時間は 3488÷35＝99.7（約100分）と 4661÷34＝137.1（約137分）。
+#   90分あたりの得点 35×90÷3488＝0.903（0.90）と 34×90÷4661＝0.657（0.66）。アシスト 16 と 26。得点＋アシスト 51 と 60（90分あたり 1.32 と 1.16）。
+#   CL（24/25）：デンベレ 15試合1166分8点6アシスト、ラフィーニャ 14試合1224分13点9アシスト（ラフィーニャはギラシーと並ぶ得点王・アシストも1位、Raphinha の Wikipedia）。
+#   バルセロナは準決勝でインテルに敗退（第2戦 3対4、Raphinha の Wikipedia）。PSG は決勝でインテルに 5対0、デンベレは2アシスト（Dembélé の Wikipedia）。
+#   バロンドール 2025（対象は 2024-08-01〜2025-07-13）：1位デンベレ 1380点、5位ラフィーニャ 620点（2025 Ballon d'Or の Wikipedia。控え: research/raw/20261027_ballondor2025_wiki.wikitext）。
+#   季ごとのクラブの得点（90分あたり）：デンベレ 22/23 8点2169分 0.33・23/24 6点2856分 0.19・24/25 0.90・25/26 20点2200分 0.82、
+#     ラフィーニャ 10点2925分 0.31・10点1950分 0.46・0.66・21点2194分 0.86。
+#   使っていない素材：年俸・負傷の中身・私生活・代表の数字・パーセンタイル・戦術の細部・移籍金（単位がユーロとポンドで割れるので出さない）・2026年バロンドールの候補（ラフィーニャは候補一覧に無い。選手を小さく見せる方向に働くので言わない）。
+#   日本との接点（確かめた縁）：ラフィーニャは 2022年6月6日の日本代表対ブラジル代表（日本で開催、ブラジルが 1対0）に先発し、63分まで出場（ESPN の試合記録 634664。控え: research/raw/20261027_espn_jpn_bra_20220606.json）。
+#     2025年10月14日の日本対ブラジル（日本が 3対2）にはラフィーニャの名前が無い（同じく ESPN 757632）。デンベレ側の日本との縁は見つからない（入れない）。
+# **スタッツの条件（足切り）**：クラブのトップチームの全公式戦（リーグ・CL・国内カップ・スーパーカップ・クラブW杯）。代表・育成年代は混ぜない。
+#   24/25 は2人とも 900分を大きく超える。26/27 はデンベレ 473分・ラフィーニャ 792分で **900分に届かない → 「いまの時点」と言う**（どちらも450分は超える）。
+# **使った数**（TM の大会別）
+#   デンベレ 24/25＝リーグ・アン 29試合1736分21点8A＋CL 15試合1166分8点6A＋クープ・ドゥ・フランス 4試合298分3点1A＋クラブW杯 4試合198分2点1A＋トロフェ・デ・シャンピオン 1試合90分1点＝53試合・3488分・35点・16A
+#   ラフィーニャ 24/25＝ラ・リーガ 36試合2845分18点12A＋CL 14試合1224分13点9A＋国王杯 5試合423分1点4A＋スーペルコパ 2試合169分2点1A＝57試合・4661分・34点・26A
+#   1試合あたりの出場：3488÷53＝65.8分、4661÷57＝81.8分。
+#   デンベレ 26/27＝リーグ・アン 5試合238分1点2A＋CL 3試合160分3点3A＋UEFAスーパーカップ 1試合45分1A＋トロフェ 1試合30分＝10試合・473分・4点・6A（最後の試合は 10/20）
+#   ラフィーニャ 26/27＝ラ・リーガ 9試合661分13点3A＋CL 2試合131分2点＝11試合・792分・15点・3A（最後の試合は 10/25）
+#   **PSG は日本時間 10/27 4:30 にリヨン戦**（ESPN）。公開の時刻にはデンベレの数字が1試合ぶん古くなるので、今季の数字は「10月25日まで」と言う。
+# 同じクラブにいた季（Wikipedia）：ラフィーニャは 2022年7月15日にリーズからバルセロナへ。デンベレは 2023年8月12日にバルセロナから PSG へ。22/23 は同じバルセロナで、2人ともラ・リーガ（2022–23）とスーペルコパ（2023）の優勝に名前がある。
+# プロフィール（TM）：デンベレ 1997-05-15 生・フランス代表・両足・PSG の背番号10・市場価値 1億€（2026-06-01）。ラフィーニャ 1996-12-14 生・ブラジル代表・左足・バルセロナの背番号11・主将・市場価値 7000万€（2026-06-05）。
+#   ラフィーニャは 2026年9月5日に主将に決まり、ブラジル人で初めて（Raphinha の Wikipedia、2026–27 の節）。
+# 日程（ESPN、2026-10-26 時点）：ル・アーヴル対PSG 2026-10-30 18:00 UTC＝日本時間31日 3:00。バルセロナ対アラベス 2026-10-31 20:00 UTC＝日本時間11月1日 5:00。
+# 写真：すべて Wikimedia Commons（出典は各フォルダの credits.json）。デンベレ＝2026年W杯のノルウェー戦2枚・モロッコ戦・スペイン戦・セネガル戦、ラフィーニャ＝2026年W杯モロッコ戦3枚、2人＝並べた2枚（pair_a・pair_b）。
+slot: other_1
+date: "2026年10月27日"
+format: news
+series: 比べる
+people:
+  - ウスマン・デンベレ
+  - ラフィーニャ
+  - パリ・サンジェルマン
+  - バルセロナ
+
+theme:
+  end_bg: assets/images/20261027_compare_288230_411295/pair_b/01.jpg
+  id: compare_288230_411295
+  league: france
+  kind: other
+  topic: ウスマン・デンベレとラフィーニャ
+  prefix: ""
+  title: デンベレとラフィーニャ、35点と34点。1点差の裏で開いていたものは何か
+  hook: ""
+  question: 24/25 のクラブの得点は35と34。1点差の2人は、出場時間・90分あたり・アシストで、どれだけ違ったのか
+  takeaway: 1点にかかった時間はデンベレ約100分・ラフィーニャ約137分で、点を取る速さはデンベレが上。得点とアシストの合計は60と51で、ラフィーニャが上
+  league_name: フランスとスペイン
+  opening_image: assets/images/20261027_compare_288230_411295/pair_a/01.jpg
+
+short_title: デンベレとラフィーニャ、35点と34点
+
+thumbnail:
+  photo: assets/images/20261027_compare_288230_411295/pair_a/01.jpg
+  photos:
+    - assets/images/20261027_compare_288230_411295/d_nor84/01.jpg
+    - assets/images/20261027_compare_288230_411295/r_mar133/01.jpg
+  short_photo: assets/images/20261027_compare_288230_411295/pair_a/01_v.jpg
+  face_link: VS
+  layout:
+    layout: classic
+    names: [デンベレ, ラフィーニャ]
+    name_colors: ["#2b6cd4", "#a50044"]
+  line1: デンベレとラフィーニャ
+  line2: 35点と34点、出場は1173分差
+  tags: [ウスマン・デンベレ, ラフィーニャ, パリ・サンジェルマン, バルセロナ]
+
+answer: 1点にかかった時間は約100分と約137分でデンベレが速く、得点とアシストの合計は60と51でラフィーニャが上
+watch: 毎日、数字でサッカーを読み解きます
+
+sections:
+  - id: hook
+    heading: 2025年のバロンドール、1位と5位の2人は何点取っていたのか
+    tier: 報道
+    telop: 2025年 バロンドール
+    narrator: 解説
+    card: &hookcard
+      type: stats
+      title: 24/25 クラブの全公式戦の得点
+      items:
+        - ["35", 点, デンベレ]
+        - ["34", 点, ラフィーニャ]
+        - ["1173", 分, 出場時間の差]
+      focus: 2
+    say:
+      - text: 2025年のバロンドール。1位はウスマン・デンベレ。
+        image: assets/images/20261027_compare_288230_411295/pair_a/01.jpg
+        card: none
+      - text: 5位に、ラフィーニャが入りました。
+        image: assets/images/20261027_compare_288230_411295/pair_a/01.jpg
+        card: none
+      - text: 対象になった24/25の季、クラブで取った点は、デンベレが35。
+        image: assets/images/20261027_compare_288230_411295/d_nor84/01_w.jpg
+        card: {<<: *hookcard, focus: 0}
+      - text: ラフィーニャが34。差は、わずか1点です。
+        image: assets/images/20261027_compare_288230_411295/r_mar133/01_w.jpg
+        card: {<<: *hookcard, focus: 1}
+      - text: ところが、ピッチに立っていた時間は、1173分も違いました。
+        emph: true
+        image: assets/images/20261027_compare_288230_411295/pair_b/01.jpg
+        card: {<<: *hookcard, focus: 2}
+    sources:
+      - https://en.wikipedia.org/wiki/2025_Ballon_d%27Or
+      - https://www.transfermarkt.com/ousmane-dembele/leistungsdaten/spieler/288230
+      - https://www.transfermarkt.com/raphinha/leistungsdaten/spieler/411295
+
+  - id: data
+    heading: デンベレとラフィーニャは、何歳で、いまどこにいるのか
+    tier: 報道
+    telop: 同じ29歳の2人
+    narrator: 解説
+    card: &datacard
+      type: duel
+      left: {name: デンベレ, club: パリSG, photo: assets/images/20261027_compare_288230_411295/d_nor84/01_sq.jpg, color: "#2b6cd4"}
+      right: {name: ラフィーニャ, club: バルセロナ, photo: assets/images/20261027_compare_288230_411295/r_mar133/01_sq.jpg, color: "#a50044"}
+      rows:
+        - [年齢, 29歳, 29歳]
+        - [代表, フランス, ブラジル]
+        - [利き足, 両足, 左]
+        - [背番号, "10", "11"]
+        - [いまのクラブへ, 2023年8月, 2022年7月]
+        - [市場価値, 1億€, 7000万€]
+      bars: false
+      note: 市場価値は Transfermarkt（2026年6月の値）
+    say:
+      - text: デンベレは29歳。フランス代表で、パリ・サンジェルマンの背番号10です。
+        image: assets/images/20261027_compare_288230_411295/d_mar195/01_w.jpg
+        card: {<<: *datacard, highlight_row: 年齢}
+      - text: ラフィーニャも29歳。ブラジル代表で、バルセロナの背番号11。
+        image: assets/images/20261027_compare_288230_411295/r_mar208/01_w.jpg
+        card: {<<: *datacard, highlight_row: 代表}
+      - text: 今季からはバルセロナの主将で、ブラジル人では初めてです。
+        image: assets/images/20261027_compare_288230_411295/r_mar208/01_w.jpg
+        card: {<<: *datacard, highlight_row: 背番号}
+      - text: 市場価値は、デンベレが1億ユーロ。ラフィーニャは7000万ユーロと見られています。
+        image: assets/images/20261027_compare_288230_411295/d_nor81/01_w.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/ousmane-dembele/profil/spieler/288230
+      - https://www.transfermarkt.com/raphinha/profil/spieler/411295
+      - https://en.wikipedia.org/wiki/Ousmane_Demb%C3%A9l%C3%A9
+      - https://en.wikipedia.org/wiki/Raphinha
+
+  - id: japan
+    heading: ラフィーニャは、日本代表とどこで戦っていたのか
+    tier: 報道
+    telop: 日本代表との試合
+    narrator: 解説
+    card: &japancard
+      type: table
+      title: 日本代表とブラジル代表の親善試合
+      columns: [日付, 結果, ラフィーニャ]
+      rows:
+        - [2022年6月6日, ブラジルが1対0, 先発・63分まで]
+    say:
+      - text: ラフィーニャには、日本代表と戦った試合があります。
+        image: assets/images/20261027_compare_288230_411295/r_mar151/01_w.jpg
+        card: none
+      - text: 2022年6月6日、日本で行われた親善試合です。
+        image: assets/images/20261027_compare_288230_411295/r_mar151/01_w.jpg
+        card: *japancard
+      - text: ラフィーニャは先発して、63分までプレーしました。
+        image: assets/images/20261027_compare_288230_411295/r_mar151/01_w.jpg
+        card: *japancard
+      - text: 試合はブラジルが1対0で勝っています。
+        image: assets/images/20261027_compare_288230_411295/r_mar133/01_w.jpg
+        card: none
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/634664
+
+  - id: season
+    heading: 24/25の季、2人の出場時間と点はどれだけ違うのか
+    tier: 報道
+    main: true
+    telop: 24/25 クラブの全公式戦
+    narrator: 解説
+    card: &seasoncard
+      type: duel
+      left: {name: デンベレ, club: 24/25, photo: assets/images/20261027_compare_288230_411295/d_nor84/01_sq.jpg, color: "#2b6cd4"}
+      right: {name: ラフィーニャ, club: 24/25, photo: assets/images/20261027_compare_288230_411295/r_mar133/01_sq.jpg, color: "#a50044"}
+      rows:
+        - [試合, "53", "57"]
+        - [出場時間, 3488分, 4661分]
+        - [得点, "35", "34"]
+        - [アシスト, "16", "26"]
+        - [得点（90分あたり）, "0.90", "0.66"]
+      bars: [出場時間, 得点, アシスト, 得点（90分あたり）]
+      note: 24/25 のクラブの全公式戦（リーグ・CL・国内カップ・スーパーカップ・クラブW杯）。90分あたりは自分で割った値
+    say:
+      - text: ウスマン・デンベレとラフィーニャ。24/25のクラブの得点は35と34でした。
+        short_only: true
+        image: assets/images/20261027_compare_288230_411295/pair_a/01.jpg
+        card: none
+      - text: 24/25のクラブの公式戦をすべて足すと、出た試合は53と57。
+        image: assets/images/20261027_compare_288230_411295/d_esp129/01_w.jpg
+        card: {<<: *seasoncard, highlight_row: 試合}
+      - text: 出場時間は、デンベレが3488分、ラフィーニャが4661分。
+        image: assets/images/20261027_compare_288230_411295/r_mar151/01_w.jpg
+        card: {<<: *seasoncard, highlight_row: 出場時間}
+      - text: 1試合の平均の出場は、66分と82分。ラフィーニャが長く出ていました。
+        image: assets/images/20261027_compare_288230_411295/r_mar151/01_w.jpg
+        card: {<<: *seasoncard, highlight_row: 出場時間}
+      - text: それでも得点は、ほぼ同じ。90分に直すと、0.90と0.66です。
+        emph: true
+        image: assets/images/20261027_compare_288230_411295/d_nor84/01_w.jpg
+        card: {<<: *seasoncard, highlight_row: 得点（90分あたり）}
+      - text: 一方、アシストは16と26。ここはラフィーニャが10上回っています。
+        image: assets/images/20261027_compare_288230_411295/r_mar208/01_w.jpg
+        card: {<<: *seasoncard, highlight_row: アシスト}
+    sources:
+      - https://www.transfermarkt.com/ousmane-dembele/leistungsdaten/spieler/288230
+      - https://www.transfermarkt.com/raphinha/leistungsdaten/spieler/411295
+      - https://en.wikipedia.org/wiki/Ousmane_Demb%C3%A9l%C3%A9
+      - https://en.wikipedia.org/wiki/Raphinha
+
+  - id: pace
+    heading: 1点を取るのに、2人はそれぞれ何分かかっていたのか
+    tier: 背景
+    telop: 1点にかかった時間
+    narrator: 解説
+    card: &calccard
+      type: calc
+      title: デンベレの24/25（クラブの全公式戦）
+      terms:
+        - ["3488", 出場時間（分）]
+        - ["35", 得点]
+        - ["約100", 1点にかかった分]
+      ops: [÷, ＝]
+    say:
+      - text: 出場時間を得点で割って、何分に1点だったかを出します。
+        image: assets/images/20261027_compare_288230_411295/pair_b/01.jpg
+        card: none
+      - text: デンベレは、約100分に1点。
+        image: assets/images/20261027_compare_288230_411295/d_nor81/01_w.jpg
+        card: *calccard
+      - text: 同じように割ると、ラフィーニャは約137分に1点です。
+        image: assets/images/20261027_compare_288230_411295/r_mar133/01_w.jpg
+        card: none
+      - text: 1点あたりで、デンベレのほうが、およそ37分短い時間で点に届いていました。
+        emph: true
+        image: assets/images/20261027_compare_288230_411295/d_esp129/01_w.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/ousmane-dembele/leistungsdaten/spieler/288230
+      - https://www.transfermarkt.com/raphinha/leistungsdaten/spieler/411295
+
+  - id: cl
+    heading: チャンピオンズリーグでは、どちらが点に多く絡んでいたのか
+    tier: 報道
+    telop: 24/25 チャンピオンズリーグ
+    narrator: 解説
+    card: &clcard
+      type: duel
+      left: {name: デンベレ, club: 24/25 CL, photo: assets/images/20261027_compare_288230_411295/d_nor84/01_sq.jpg, color: "#2b6cd4"}
+      right: {name: ラフィーニャ, club: 24/25 CL, photo: assets/images/20261027_compare_288230_411295/r_mar133/01_sq.jpg, color: "#a50044"}
+      rows:
+        - [試合, "15", "14"]
+        - [得点, "8", "13"]
+        - [アシスト, "6", "9"]
+        - [最後の試合, 決勝 5対0, 準決勝 3対4]
+      bars: [得点, アシスト]
+      note: 24/25 の UEFA チャンピオンズリーグ。最後の試合はどちらもインテル戦
+    say:
+      - text: 24/25のチャンピオンズリーグに絞ると、数字は入れ替わります。
+        image: assets/images/20261027_compare_288230_411295/r_mar208/01_w.jpg
+        card: {<<: *clcard, highlight_row: 試合}
+      - text: ラフィーニャは13得点9アシスト。得点王タイで、アシストも大会で1位でした。
+        emph: true
+        image: assets/images/20261027_compare_288230_411295/r_mar151/01_w.jpg
+        card: {<<: *clcard, highlight_row: 得点}
+      - text: デンベレは8得点6アシストです。
+        image: assets/images/20261027_compare_288230_411295/d_mar195/01_w.jpg
+        card: {<<: *clcard, highlight_row: アシスト}
+      - text: ただ、バルセロナは準決勝でインテルに敗れました。
+        image: assets/images/20261027_compare_288230_411295/r_mar133/01_w.jpg
+        card: {<<: *clcard, highlight_row: 最後の試合}
+      - text: そのインテルに、パリ・サンジェルマンは決勝で5対0。デンベレは2アシストでした。
+        image: assets/images/20261027_compare_288230_411295/d_nor84/01_w.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/ousmane-dembele/leistungsdaten/spieler/288230
+      - https://www.transfermarkt.com/raphinha/leistungsdaten/spieler/411295
+      - https://en.wikipedia.org/wiki/Raphinha
+      - https://en.wikipedia.org/wiki/Ousmane_Demb%C3%A9l%C3%A9
+
+  - id: trend
+    heading: 90分あたりの得点は、4つの季でどう動いたのか
+    tier: 報道
+    telop: クラブの得点（90分あたり）
+    narrator: 解説
+    card: &trendcard
+      type: line
+      title: クラブの得点、90分あたり（季ごと）
+      x: [22/23, 23/24, 24/25, 25/26]
+      series:
+        - [デンベレ, [0.33, 0.19, 0.90, 0.82]]
+        - [ラフィーニャ, [0.31, 0.46, 0.66, 0.86]]
+      focus: デンベレ
+      note: 得点と出場時間は Transfermarkt。自分で割った値
+    say:
+      - text: 次は、4つの季のクラブの得点を、90分ごとの数に直して比べます。
+        image: assets/images/20261027_compare_288230_411295/pair_b/01.jpg
+        card: *trendcard
+      - text: 2人は22/23の1季、同じバルセロナにいて、そろってリーグ優勝しています。
+        image: assets/images/20261027_compare_288230_411295/pair_a/01.jpg
+        card: {<<: *trendcard, highlight: 22/23}
+      - text: その季の数字は、デンベレ0.33、ラフィーニャ0.31。肩を並べていました。
+        image: assets/images/20261027_compare_288230_411295/pair_a/01.jpg
+        card: {<<: *trendcard, highlight: 22/23}
+      - text: 23/24は、ラフィーニャが0.46で上。デンベレは0.19でした。
+        image: assets/images/20261027_compare_288230_411295/r_mar208/01_w.jpg
+        card: {<<: *trendcard, highlight: 23/24}
+      - text: そして24/25。デンベレは0.90と、前の季の4倍を超えました。
+        emph: true
+        image: assets/images/20261027_compare_288230_411295/d_nor81/01_w.jpg
+        card: {<<: *trendcard, highlight: 24/25}
+      - text: 25/26は、ラフィーニャが0.86、デンベレが0.82。また並んでいます。
+        image: assets/images/20261027_compare_288230_411295/r_mar151/01_w.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/ousmane-dembele/leistungsdaten/spieler/288230
+      - https://www.transfermarkt.com/raphinha/leistungsdaten/spieler/411295
+
+  - id: now
+    heading: 今季ここまで、2人の数字はどう並んでいるのか
+    tier: 報道
+    telop: 26/27 のいまの時点
+    narrator: 解説
+    card: &nowcard
+      type: duel
+      left: {name: デンベレ, club: 26/27, photo: assets/images/20261027_compare_288230_411295/d_nor84/01_sq.jpg, color: "#2b6cd4"}
+      right: {name: ラフィーニャ, club: 26/27, photo: assets/images/20261027_compare_288230_411295/r_mar133/01_sq.jpg, color: "#a50044"}
+      rows:
+        - [試合, "10", "11"]
+        - [出場時間, 473分, 792分]
+        - [得点, "4", "15"]
+        - [アシスト, "6", "3"]
+      bars: [出場時間, 得点, アシスト]
+      note: 26/27 のクラブの全公式戦（10月25日まで）。2人とも900分に届かないので、いまの時点の数字
+    say:
+      - text: 今季は10月25日まで、デンベレが473分、ラフィーニャが792分。
+        image: assets/images/20261027_compare_288230_411295/d_sen386/01_w.jpg
+        card: {<<: *nowcard, highlight_row: 出場時間}
+      - text: ラフィーニャは11試合で15得点。主将になった季に、点が止まりません。
+        emph: true
+        image: assets/images/20261027_compare_288230_411295/r_mar208/01_w.jpg
+        card: {<<: *nowcard, highlight_row: 得点}
+      - text: デンベレは10試合で4得点6アシスト。アシストでは上回っています。
+        image: assets/images/20261027_compare_288230_411295/d_mar195/01_w.jpg
+        card: {<<: *nowcard, highlight_row: アシスト}
+      - text: どちらも出場は900分未満。季の途中の、標本の小さい数字です。
+        image: assets/images/20261027_compare_288230_411295/pair_b/01.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/ousmane-dembele/leistungsdaten/spieler/288230
+      - https://www.transfermarkt.com/raphinha/leistungsdaten/spieler/411295
+
+  - id: view
+    heading: 見立て・35点と34点の1点差は、何を隠していたのか
+    tier: 背景
+    viewpoint: true
+    narrator: 解説
+    telop: 数字の違いが示すもの
+    card: &viewcard
+      type: duel
+      left: {name: デンベレ, club: パリSG, photo: assets/images/20261027_compare_288230_411295/d_nor84/01_sq.jpg, color: "#2b6cd4"}
+      right: {name: ラフィーニャ, club: バルセロナ, photo: assets/images/20261027_compare_288230_411295/r_mar133/01_sq.jpg, color: "#a50044"}
+      rows:
+        - [24/25 の得点, "35", "34"]
+        - [1点にかかった時間, 約100分, 約137分]
+        - [得点＋アシスト, "51", "60"]
+        - [CLの得点＋アシスト, "14", "22"]
+      bars: [24/25 の得点, 得点＋アシスト, CLの得点＋アシスト]
+      lower: [1点にかかった時間]
+      note: 24/25 のクラブの全公式戦（CLは UEFA チャンピオンズリーグだけ）。1点にかかった時間は自分で計算した値
+    say:
+      - text: 見立てです。24/25の得点は35と34。表では1点差でも、中身は違いました。
+        mark: {kind: circle, row: 0}
+        image: assets/images/20261027_compare_288230_411295/pair_a/01.jpg
+        card: {<<: *viewcard, highlight_row: 24/25 の得点}
+      - text: 点を取る速さでは、デンベレが上です。
+        image: assets/images/20261027_compare_288230_411295/d_nor84/01_w.jpg
+        card: {<<: *viewcard, highlight_row: 1点にかかった時間}
+      - text: 点に絡んだ数は、得点とアシストの合計で60と51。こちらはラフィーニャが上です。
+        emph: true
+        image: assets/images/20261027_compare_288230_411295/r_mar133/01_w.jpg
+        card: {<<: *viewcard, highlight_row: 得点＋アシスト}
+      - text: チャンピオンズリーグに絞っても、22と14で、ラフィーニャが上回っていました。
+        image: assets/images/20261027_compare_288230_411295/r_mar151/01_w.jpg
+        card: {<<: *viewcard, highlight_row: CLの得点＋アシスト}
+      - text: 裏づけになるのは、1点あたりで開いた37分と、点に絡んだ数の差の9。この2点です。
+        image: assets/images/20261027_compare_288230_411295/pair_b/01.jpg
+        card: none
+      - text: 次の試合。パリ・サンジェルマンは日本時間31日の未明、敵地でル・アーヴル戦。
+        image: assets/images/20261027_compare_288230_411295/d_mar195/01_w.jpg
+        card: none
+      - text: バルセロナは、日本時間11月1日の早朝に、ホームでアラベス戦です。
+        image: assets/images/20261027_compare_288230_411295/r_mar208/01_w.jpg
+        card: none
+      - text: 今季は得点のラフィーニャ、アシストのデンベレ。この形が続くのか、注目です。
+        image: assets/images/20261027_compare_288230_411295/pair_a/01.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/ousmane-dembele/leistungsdaten/spieler/288230
+      - https://www.transfermarkt.com/raphinha/leistungsdaten/spieler/411295
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/all/teams/160/schedule?fixture=true
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/all/teams/83/schedule?fixture=true

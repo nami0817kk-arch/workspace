@@ -1,0 +1,416 @@
+# クラブの財政：VfBシュツットガルト（10/27 火、シリーズ「クラブの財政」、key: finance_stuttgart、型は news）。
+#
+# 題材の選び方：デロイト Football Money League 2026（2024/25）の順で、財政の回をまだ出していないクラブ。
+#   1〜17位（レアル・バルサ・バイエルン・PSG・リヴァプール・シティ・アーセナル・マンU・トッテナム・チェルシー・インテル・ドルトムント・アトレティコ・ヴィラ・ミラン・ユヴェントス・ニューカッスル）は既出。
+#   18位がシュツットガルト（scripts/・research/posted.json・research/covered.yaml に finance_stuttgart は無い）。19位ベンフィカ、20位ウェストハム（今季2部）。
+#   ★10/25 にクラブ紹介（bd_stuttgart：16位の翌年に2位・日本人8人・1989年のUEFA杯決勝・語る3人・監督・登録選手）を出している。
+#     中身は使わない（勝ち点33→73、日本人選手、1989年、選手名は出さない）。こちらはお金の数字だけで組む。2位の季は「チャンピオンズリーグに出た理由」として1行だけ。
+#   ★今季も1部：英語版 Wikipedia「2026–27 VfB Stuttgart season」「the club's seventh consecutive campaign in the Bundesliga」「participating in the DFB-Pokal and the UEFA Champions League」（10/26 時点でリーグ15位）。
+#
+# 軸は「**デロイトの上位20で、1年の伸び率がいちばん大きい（+79%）。1億3080万ユーロの増えは、どこから来たのか**」。
+#   答え：増えた分の約53%が放映権（5100万→1億2100万、約2.4倍。チャンピオンズリーグに出た季）。試合日も約1.9倍（CLのホーム戦と、改修したスタジアムのもてなしの席）、商業も約1.4倍で、3つとも伸びた。
+#   ★他の財政回の軸（バルサ＝使える上限／シティ＝判決／アルテタ＝契約／レアル＝スクワッド・コスト・ルール／PSG＝関連当事者取引／バイエルン＝株の持ち主／リヴァプール＝放映権／マンU＝償却・金融費用／
+#     トッテナム＝優勝の年の赤字／シティ×アーセナル＝収入の差と給料の比率／チェルシー＝トッテナムとの差／インテル＝10位との差／ヴィラ＝放映権の割合が最高／ユヴェントス＝放映権の特需と商業の穴／
+#     アトレティコ＝増えた収入の約85%が商業／ミラン＝欧州なしの年の赤字／ニューカッスル＝買収後はじめての黒字／ドルトムント＝半期の黒字が通年で赤字／ナポリ＝優勝の年にランキングから消えた）は繰り返さない。
+#     こちらは「伸び率が上位20でいちばん」と「3つの柱が全部伸びた中身」を軸にする。
+#   ★日本との接点：財政の数字には無い（日本人選手は bd_stuttgart で扱った）。無理に入れない（10/6 の決定）。
+#   ★選手個人の名前・移籍金の額・給料は出さない（2025年の大きな売却の選手名も言わない）。監督の話はしない。女子の話はしない。「経営が危ない」「安泰」と断定しない。
+#   ★アルファベット（UEFA・AG・MHP）は読み上げに出さない。スタジアムは「本拠地のスタジアム」と言う。
+#
+# **決算期**：クラブの会社（VfB Stuttgart 1893 AG）は1月〜12月の暦年で決算（クラブ公式「in the 2024 calendar year」）。デロイトはシーズン（2024-25）で並べ直した数。2つは線の引き方が違うので、台本では並べて足し引きしない。
+#
+# **出どころ（読んだもの）**
+#   ○ デロイト Football Money League 2026（2024/25）一次ページ（deloitte.com UK、2026-10-26 に requests で本文を取得）
+#       https://www.deloitte.com/uk/en/services/financial-advisory/analysis/deloitte-football-money-league.html
+#       「18. VFB Stuttgart」「Also reappearing in the Money League for the first time in over a decade (2009/10) is VfB Stuttgart, which reported an almost 90% increase in matchday revenue to €70m (2023/24: €37m).
+#        This was driven largely by competing in the UCL and from additional hospitality revenue following the renovation of the MHP Arena.」
+#       「Revenue excludes player/coach transfer fees」（作り方の注記。10/26 ナポリ回の取材で同じページから控え）
+#     ページ内の図（e.infogram.com、requests で取得。2026-10-26）
+#       シュツットガルト https://e.infogram.com/_/fgWl5rYPPa4Tc2ZPewVF ：「2025 Revenue €296.3m (2024: €165.5m)」「Change on previous year +79% (+€130.8m)」「DFML position 18」「Bundesliga 9th」「UEFA Champions League Group stage」
+#         「REVENUE 2021-2025 (€m)」の表（Matchday／Broadcast／Commercial）：2021 3/49/38、2022 25/48/59、2023 28/53/66、2024 37/51/77、2025 70/121/106。Wages は n/d。
+#       上位20の伸び率（各クラブの図、同じ日に取得）：ヴィラ +45%（€450.2m、2024: €310.2m）、インテル +37%（€537.5m、2024: €391m）、バルサ +27%、ベンフィカ +27%、リヴァプール +17%、アーセナル +15%、
+#         ユヴェントス +13%、バイエルン +12%、レアル +11%、アトレティコ +11%、トッテナム +9%、チェルシー +7%、ニューカッスル +7%、PSG +4%、ドルトムント +3%（€531.3m）、ミラン +3%、マンU +3%、シティ −1%、ウェストハム −14%。
+#         → **+79% は上位20でいちばん大きい伸び率**（2番目ヴィラ +45%）。★伸びた額ではインテル +1億4650万がシュツットガルト +1億3080万より大きい → 「額でいちばん」とは言わない。
+#   ○ クラブ公式（vfb.de、2026-01-24「VfB Stuttgart back in the Football Money League」、requests で本文）
+#       https://www.vfb.de/en/vfb/latest/news/club/2026/vfb-stuttgart-zurueck-in-der-football-money-league/
+#       「Ranked 18th ... it marks VfB’s return to the list for the first time since 2009/10」「revenue of €296.3 million, a 79 percent increase on the previous campaign」
+#       「driven primarily by ... participation in the 2024/25 UEFA Champions League, winning the DFB Cup, and securing a runners-up finish in the 2023/24 Bundesliga season」
+#       ヴェーレ社長（CEO）「Our return to the Football Money League is a strong signal for us and the result of a collective effort. It shows just how much VfB have gained in profile, appeal and stability in recent years, both domestically and internationally.」
+#       「VfB are one of three Bundesliga clubs in the latest top 20」
+#   ○ クラブ公式（vfb.de、2025-04-05「VfB post record revenue and profit」）
+#       https://www.vfb.de/en/vfb/latest/news/club/2025/vfb-mit-rekordertrag-und-rekordgewinn/
+#       「VfB Stuttgart 1893 AG generated a revenue of €299.8m in the 2024 calendar year – a new record for the club – while the resulting profit of €15.4m is also an all-time high」
+#       「In addition to transfer income, VfB’s participation in the UEFA Champions League had a significant impact on revenue and profit growth. The additional home games, along with the opening of the new Mercedes-Benz Business Centre, resulted in an increase in turnover of €18m.
+#        Sponsorship income also increased significantly by €9m, with merchandising revenue rising from €10m to €17m.」
+#       ヴェーレ社長「It’s also clear that we’re still a long way from achieving bulging accounts. We’re in the process of repaying our stadium loans – a responsibility that remains a challenging one.」
+#   ○ クラブ公式（vfb.de、2024-07「finanzbericht-ag-mgv-2024」）
+#       https://www.vfb.de/en/vfb/latest/news/club/2024/finanzbericht-ag-mgv-2024-/
+#       「record revenues, of €217.9 million in 2023」「record expenditure of €217.2 million」「we were redeveloping the MHP Arena throughout the 2023 financial year. Half of the revenues have come from media and transfer dealings」
+#       （2023年の黒字70万ユーロ＝217.9−217.2。同じ記事に「slight surplus of €700,000」とあると検索結果の要約が引いたが、本文の取得範囲では見ていない → 引き算の 70万だけ使う）
+#   ○ 2025年の決算（2026-07-26 の会員総会。dpa の記事。確度は報道）
+#       https://www.schwaebische.de/regional/baden-wuerttemberg/vfb-vermeldet-bestmarken-wohlgemuth-zukunft-bald-geklaert-4744786（Veröffentlicht 26.07.2026）
+#       「Die VfB Stuttgart 1893 AG erzielte im Geschäftsjahr 2025 einen Gesamtertrag von 383,6 Millionen Euro und einen Gewinn nach Steuern von 22,5 Millionen Euro. Das Eigenkapital stieg bis zum 31. Dezember 2025 auf 83,4 Millionen Euro」
+#       「verkaufte mit 156.500 Trikots so viele wie nie zuvor」「höchsten Zuschauerschnitt seiner Geschichte」
+#       同じ数字：ran.de（SID）https://ran.joyn.de/sports/fussball/bundesliga/bundesliga-vfb-stuttgart-praesentiert-rekordzahlen-gesundes-und-nachhaltiges-wachstum-161259 、flashscore.de（SID）
+#   ○ 英語版 Wikipedia「2024–25 VfB Stuttgart season」：Bundesliga 9th、DFB-Pokal Winners（2025-05-24 決勝でビーレフェルトに4対2）、UEFA Champions League League phase（8試合 3勝1分4敗）、
+#       「earning qualification to the 2025–26 UEFA Europa League」、Average home league attendance 59,265
+#   ○ 英語版 Wikipedia「2026–27 VfB Stuttgart season」：Bundesliga（15th、10/26 時点）、DFB-Pokal、UEFA Champions League League phase
+#   × 確かめられなかったもの：人件費（デロイトは n/d）、2024-25 シーズンでのクラブの損益（クラブは暦年）、2025年の売上の内訳、借入の残り、
+#     2023年の黒字の記事の原文（引き算で出した70万だけ使う）、デロイトの「2009/10」の年の順位と額、2025-26（ヨーロッパリーグの季）のデロイトの数（来年1月に出る見込み・未発表）。
+#
+# 自分で計算した数（検算済み）
+#   伸び：296.3−165.5＝130.8 ✓（デロイトの +€130.8m と一致）、130.8÷165.5＝79.0% ✓
+#   内訳の合計（デロイトの図の丸めた値）：2024: 37+51+77＝165 ／ 2025: 70+121+106＝297（デロイトの合計 165.5・296.3 と丸めの差）
+#   増減の板：165 +70（放映権 121−51） +33（試合日 70−37） +29（商業 106−77）＝297 ✓。増え 132
+#   放映権の割合：70÷132＝53.0%→約53%（半分を少し超える）
+#   倍率：放映権 121÷51＝2.37→約2.4倍、試合日 70÷37＝1.89→約1.9倍、商業 106÷77＝1.38→約1.4倍
+#   4年の推移（2020-21〜2024-25、内訳の合計）：90、132、147、165、297。297÷90＝3.3倍
+#   2020-21 の試合日 300万（観客をほぼ入れられなかった季）
+#   ドルトムント 531.3 との差：531.3−296.3＝235.0、296.3÷531.3＝55.8%→約56%
+#   クラブの暦年：2023 217.9（費用 217.2、差 +0.7）、2024 299.8（+15.4）、2025 383.6（+22.5）。2023→2025：383.6÷217.9＝1.76倍
+#
+# 写真：assets/images/20261027_finance_stuttgart/（Commons、出典は credits.json）。01 は通路から見た内部、05 は夜の看板（暗いのでサムネに使わない）。
+date: 2026年10月27日
+slot: other_1
+format: news
+series: クラブの財政
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+people:
+- シュツットガルト
+theme:
+  end_bg: assets/images/20261027_finance_stuttgart/06_w.jpg
+  id: finance_stuttgart
+  league: germany
+  league_name: ブンデスリーガ
+  kind: other
+  topic: シュツットガルト
+  title: シュツットガルト、収入が1年で79%増。上位20で最大の伸びの中身は？
+  question: シュツットガルトは、デロイトの収入ランキングで2024-25に18位へ戻り、1年の伸び率は上位20でいちばん大きい79%だった。その増えは、どこから来たのか
+  lead: 15シーズンぶりに、世界で稼ぐクラブの20位以内へ戻った、シュツットガルト。
+  opening_image: assets/images/20261027_finance_stuttgart/06_w.jpg
+  takeaway: デロイトの集計で、シュツットガルトの2024-25の収入は2億9630万ユーロで世界18位（前の年1億6550万ユーロから79%増、上位20でいちばん大きい伸び率。2番目はアストン・ヴィラの45%）。一覧に入るのは2009-10以来。増えた約1億3200万ユーロのうち約53%（7000万ユーロ）が放映権で、チャンピオンズリーグに出た季だった（5100万→1億2100万、約2.4倍）。試合日も3700万→7000万ユーロ（約1.9倍）、スポンサーなどの商業も7700万→1億600万ユーロ（約1.4倍）と、3つとも伸びた。それでも12位ドルトムント（5億3130万ユーロ）の約56%（自分で割った数）。クラブの決算（暦年、選手の売却を含む）は2024年に売上2億9980万・黒字1540万、2025年に売上3億8360万・黒字2250万ユーロで、どちらも過去最高だった
+  short_title: シュツットガルト、収入が1年で79%増
+thumbnail:
+  layout: number
+  crest_pos: right
+  photo: assets/images/20261027_finance_stuttgart/04_w.jpg
+  number: 収入+79%
+  line1: シュツットガルトの1年
+  line2: 上位20でいちばんの伸び
+  callouts: [世界18位]
+  tags:
+  - シュツットガルト
+  - ブンデスリーガ
+  - クラブの財政
+  - デロイト
+sections:
+- id: rank
+  heading: シュツットガルトは、世界で何番目に稼ぐクラブになったのか
+  tier: 報道
+  telop: 2024-25は世界18位。収入は2億9630万ユーロ、1年で79%増
+  narrator: 解説
+  card: &rank_table
+    type: table
+    title: デロイトの収入ランキング 伸び率（2024-25）
+    columns: [順位, クラブ, 伸び率]
+    rows:
+    - [18位, シュツットガルト, '+79%']
+    - [14位, アストン・ヴィラ, '+45%']
+    - [11位, インテル, '+37%']
+    highlight_row: 0
+  say:
+  - text: 収入の大きい順に、世界のクラブを並べた一覧。会計事務所デロイトの集計です。
+    image: assets/images/20261027_finance_stuttgart/06_w.jpg
+    card: none
+  - text: 2024-25シーズンのシュツットガルトは、18位。
+    card: none
+  - text: 収入は、2億9630万ユーロ。
+    emph: true
+    card: none
+  - text: 前の年は1億6550万ユーロ。1年で1億3080万ユーロのプラスです。
+    card: none
+  - text: 伸び率は79%。上位20クラブの中で、いちばん大きな伸びでした。
+    emph: true
+    card: *rank_table
+  - text: 2番目のアストン・ヴィラが45%、3番目のインテルが37%でした。
+    card:
+      <<: *rank_table
+      highlight_row: 1
+  - text: この20位以内に入るのは、2009年から10年のシーズン以来です。
+    image: assets/images/20261027_finance_stuttgart/03_w.jpg
+    card: none
+  - text: この一覧の収入には、移籍金は入っていません。
+    card: none
+  sources:
+  - https://www.deloitte.com/uk/en/services/financial-advisory/analysis/deloitte-football-money-league.html
+  - https://e.infogram.com/_/fgWl5rYPPa4Tc2ZPewVF
+  - https://www.vfb.de/en/vfb/latest/news/club/2026/vfb-stuttgart-zurueck-in-der-football-money-league/
+- id: tv
+  main: true
+  heading: 1年で増えた1億3000万ユーロ、いちばん伸びたのは何か
+  tier: 報道
+  telop: 放映権は5100万から1億2100万ユーロへ。チャンピオンズリーグに出た季
+  narrator: 解説
+  card: &rev_wf
+    type: waterfall
+    title: シュツットガルトの収入の増減（百万ユーロ）
+    start: [2023-24, 165]
+    steps:
+    - [放映権, 70]
+    - [試合日, 33]
+    - [スポンサー・商業, 29]
+    total: [2024-25, 297]
+    unit: 百万ユーロ
+    highlight: 放映権
+  say:
+  - text: シュツットガルトの収入は、1年で79%増えて、2億9630万ユーロになりました。
+    image: assets/images/20261027_finance_stuttgart/06_w.jpg
+    card: none
+    short_only: true
+  - text: 増えた収入を、3つの柱に分けます。伸び幅の1位は、テレビの放映権。
+    image: assets/images/20261027_finance_stuttgart/04_w.jpg
+    card: *rev_wf
+  - text: 5100万から、1億2100万ユーロへ。約2.4倍です。
+    emph: true
+    card: *rev_wf
+  - text: 増えた分の、半分を少し超える大きさです。
+    card: *rev_wf
+  - text: このシーズン、シュツットガルトはチャンピオンズリーグを戦いました。
+    image: assets/images/20261027_finance_stuttgart/02_w.jpg
+    card: none
+  - text: 前のシーズンのブンデスリーガで、2位に入ったからです。
+    card: none
+  - text: 大会では、36クラブで戦う最初の段階、リーグフェーズで敗退しています。
+    card: none
+  sources:
+  - https://e.infogram.com/_/fgWl5rYPPa4Tc2ZPewVF
+  - https://www.vfb.de/en/vfb/latest/news/club/2026/vfb-stuttgart-zurueck-in-der-football-money-league/
+  - https://en.wikipedia.org/wiki/2024%E2%80%9325_VfB_Stuttgart_season
+- id: matchday
+  heading: 試合日の収入は、なぜ2倍近くになったのか
+  tier: 報道
+  telop: 試合日の収入は3700万から7000万ユーロへ。約1.9倍
+  narrator: 解説
+  card: &md_doc
+    type: document
+    label: デロイト Football Money League 2026（訳）
+    paragraphs:
+    - シュツットガルトの試合日の収入は、ほぼ90%増えて7000万ユーロになった（2023-24は3700万ユーロ）。
+    - 主な理由は、チャンピオンズリーグに出たことと、本拠地のスタジアムの改修のあとに増えた、企業向けのもてなしの席の収入だ。
+    highlight: [ほぼ90%増えて, もてなしの席]
+  say:
+  - text: 2つ目の柱は、シュツットガルトの、試合の日の収入です。
+    image: assets/images/20261027_finance_stuttgart/02_w.jpg
+    card:
+      <<: *rev_wf
+      highlight: 試合日
+  - text: 3700万から、7000万ユーロへ。
+    card:
+      <<: *rev_wf
+      highlight: 試合日
+  - text: デロイトは、その理由を、こう書いています。
+    card: *md_doc
+  - text: チャンピオンズリーグのホームの試合と、改修したスタジアムの、企業向けの席です。
+    emph: true
+    card: *md_doc
+  - text: 本拠地のスタジアムは、2023年の1年をかけて、改修を続けていました。
+    image: assets/images/20261027_finance_stuttgart/01_w.jpg
+    card: none
+  - text: クラブの2024年の決算でも、同じ理由が挙がっています。
+    card: none
+  - text: ホームの試合の増加と、ビジネスセンターの開業で、売上は1800万ユーロ増。
+    card: none
+  sources:
+  - https://www.deloitte.com/uk/en/services/financial-advisory/analysis/deloitte-football-money-league.html
+  - https://www.vfb.de/en/vfb/latest/news/club/2025/vfb-mit-rekordertrag-und-rekordgewinn/
+  - https://www.vfb.de/en/vfb/latest/news/club/2024/finanzbericht-ag-mgv-2024-/
+- id: commercial
+  heading: スポンサーとグッズは、どれだけ伸びたのか
+  tier: 報道
+  telop: スポンサー・商業は7700万から1億600万ユーロへ。約1.4倍
+  narrator: 解説
+  card: &cm_stats
+    type: stats
+    title: クラブの2024年の決算（暦年）
+    items:
+    - ['+9', 百万ユーロ, スポンサーの収入の増え]
+    - ['10→17', 百万ユーロ, グッズの売上]
+    - ['156,500', 枚, 2025年に売れたユニフォーム]
+    focus: 0
+  say:
+  - text: 3つ目の柱は、シュツットガルトの、スポンサーやグッズなどの商業。
+    image: assets/images/20261027_finance_stuttgart/05_w.jpg
+    card:
+      <<: *rev_wf
+      highlight: スポンサー・商業
+  - text: 7700万から、1億600万ユーロへ伸びました。
+    card:
+      <<: *rev_wf
+      highlight: スポンサー・商業
+  - text: クラブの2024年の決算では、スポンサーの収入が、900万ユーロのプラス。
+    card: *cm_stats
+  - text: グッズの売上は、1000万から、1700万ユーロに伸びています。
+    emph: true
+    card:
+      <<: *cm_stats
+      focus: 1
+  - text: 2025年には、ユニフォームが15万6500枚売れました。クラブの記録です。
+    card:
+      <<: *cm_stats
+      focus: 2
+  sources:
+  - https://e.infogram.com/_/fgWl5rYPPa4Tc2ZPewVF
+  - https://www.vfb.de/en/vfb/latest/news/club/2025/vfb-mit-rekordertrag-und-rekordgewinn/
+  - https://www.schwaebische.de/regional/baden-wuerttemberg/vfb-vermeldet-bestmarken-wohlgemuth-zukunft-bald-geklaert-4744786
+- id: history
+  heading: 4年前の収入は、いくらだったのか
+  tier: 報道
+  telop: 2020-21は9000万ユーロ。4年で約3.3倍
+  narrator: 解説
+  card: &hist_line
+    type: line
+    title: シュツットガルトの収入（デロイト、百万ユーロ）
+    x: [2020-21, 2021-22, 2022-23, 2023-24, 2024-25]
+    series:
+    - [収入, [90, 132, 147, 165, 297]]
+    - [放映権, [49, 48, 53, 51, 121]]
+    unit: 百万ユーロ
+    focus: 収入
+    highlight: 2024-25
+  say:
+  - text: もう少し、さかのぼります。
+    image: assets/images/20261027_finance_stuttgart/03_w.jpg
+    card: none
+  - text: 2020年から21年のシーズン、シュツットガルトの収入は9000万ユーロ。
+    card:
+      <<: *hist_line
+      highlight: 2020-21
+  - text: 試合日の収入は、300万ユーロ。観客を、ほとんど入れられなかった時期です。
+    card:
+      <<: *hist_line
+      highlight: 2020-21
+  - text: そこから、1億3200万、1億4700万、1億6500万と、少しずつ伸びました。
+    card:
+      <<: *hist_line
+      highlight: 2023-24
+  - text: 2024-25シーズンには、2億9700万ユーロへ。4年で約3.3倍です。
+    emph: true
+    card: *hist_line
+  - text: 放映権の線は、4年のあいだ5000万ユーロ前後で、ほとんど動いていませんでした。
+    image: assets/images/20261027_finance_stuttgart/04_w.jpg
+    card: none
+  sources:
+  - https://www.deloitte.com/uk/en/services/financial-advisory/analysis/deloitte-football-money-league.html
+  - https://e.infogram.com/_/fgWl5rYPPa4Tc2ZPewVF
+- id: pnl
+  heading: クラブの決算では、利益は残ったのか
+  tier: 報道
+  telop: クラブの決算は2024年に黒字1540万、2025年に黒字2250万ユーロ
+  narrator: 解説
+  card: &pnl_table
+    type: table
+    title: クラブの決算（暦年、選手の売却を含む、百万ユーロ）
+    columns: [年, 売上, 損益]
+    rows:
+    - [2023年, '217.9', '+0.7']
+    - [2024年, '299.8', '+15.4']
+    - [2025年, '383.6', '+22.5']
+    highlight_row: 1
+  say:
+  - text: では、シュツットガルトの手元に、利益は残ったのか。
+    image: assets/images/20261027_finance_stuttgart/06_w.jpg
+    card: none
+  - text: クラブの会社は、1月から12月で決算を出します。数には、移籍で得たお金も入ります。
+    card: none
+  - text: 2023年は、売上2億1790万ユーロで、黒字は70万ユーロ。
+    card:
+      <<: *pnl_table
+      highlight_row: 0
+  - text: 2024年は、売上2億9980万、黒字1540万ユーロ。
+    emph: true
+    card: *pnl_table
+  - text: 売上も黒字も、その時点でのクラブの過去最高でした。
+    image: assets/images/20261027_finance_stuttgart/03_w.jpg
+    card: none
+  - text: 2025年は、売上3億8360万、黒字2250万ユーロです。
+    card:
+      <<: *pnl_table
+      highlight_row: 2
+  - text: それでも、社長のアレクサンダー・ヴェーレは、2025年の春に、こう話しています。
+    image: assets/images/20261027_finance_stuttgart/01_w.jpg
+    card: &wehrle_doc
+      type: document
+      label: ヴェーレ社長（2025年4月の会員総会、クラブ公式の記事から訳）
+      paragraphs:
+      - 私たちの金庫が、ふくらんでいるわけではないことも、はっきりしている。
+      - スタジアムの借り入れを、返している途中だ。これはいまも、重い責任だ。
+      highlight: [ふくらんでいるわけではない, 借り入れを、返している途中]
+  - text: 記録が続いても、スタジアムの借り入れを返す途中だ、という説明です。
+    card: *wehrle_doc
+  sources:
+  - https://www.vfb.de/en/vfb/latest/news/club/2024/finanzbericht-ag-mgv-2024-/
+  - https://www.vfb.de/en/vfb/latest/news/club/2025/vfb-mit-rekordertrag-und-rekordgewinn/
+  - https://www.schwaebische.de/regional/baden-wuerttemberg/vfb-vermeldet-bestmarken-wohlgemuth-zukunft-bald-geklaert-4744786
+- id: view
+  viewpoint: true
+  heading: 見立て・79%の伸びは、半分が放映権、残りは試合日と商業
+  tier: 背景
+  telop: 増えた分の約53%が放映権。それでもドルトムントの約56%
+  narrator: 解説
+  card: &view_table
+    type: table
+    title: 自分で数えてみた（2023-24から2024-25）
+    columns: [比べ, 答え]
+    rows:
+    - [増えた収入のうち放映権, 約53%]
+    - [いちばん小さい伸び（商業）, 1.4倍]
+    - [12位ドルトムントとの比べ, 約56%]
+    highlight_row: 0
+  say:
+  - text: ここからは見立てです。デロイトの内訳を、自分で割ってみます。
+    image: assets/images/20261027_finance_stuttgart/02_w.jpg
+    card: none
+  - text: 1年で増えた収入のうち、放映権の分が、約53%です。
+    mark:
+      kind: circle
+      row: 0
+      col: 1
+    card: *view_table
+  - text: 残りの半分は、試合日と商業。3つの柱が、どれも1.4倍以上に伸びました。
+    emph: true
+    mark:
+      kind: circle
+      row: 1
+      col: 1
+    card:
+      <<: *view_table
+      highlight_row: 1
+  - text: ただ、12位のドルトムントの収入は、5億3130万ユーロ。
+    card:
+      <<: *view_table
+      highlight_row: 2
+  - text: シュツットガルトの収入は、その約56%。差は、2億3500万ユーロあります。
+    card:
+      <<: *view_table
+      highlight_row: 2
+  - text: 題への答えです。
+    image: assets/images/20261027_finance_stuttgart/04_w.jpg
+    card: none
+  - text: 79%の伸びの、半分は放映権でした。
+    emph: true
+    card: none
+  - text: もう半分は、試合の日の売上と、スポンサーやグッズの伸びです。
+    card: none
+  - text: 2025年から26年は、カップ戦の優勝で、ヨーロッパリーグに出たシーズン。
+    image: assets/images/20261027_finance_stuttgart/03_w.jpg
+    card: none
+  - text: その数字が載る、デロイトの次の一覧は、例年1月に出ます。
+    card: none
+  - text: そして今季、シュツットガルトは、チャンピオンズリーグに戻っています。
+    card: none
+  sources:
+  - https://e.infogram.com/_/fgWl5rYPPa4Tc2ZPewVF
+  - https://e.infogram.com/_/6taNnP0KgciXP0pbfWlI
+  - https://en.wikipedia.org/wiki/2024%E2%80%9325_VfB_Stuttgart_season
+  - https://en.wikipedia.org/wiki/2026%E2%80%9327_VfB_Stuttgart_season

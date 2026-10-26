@@ -1,0 +1,517 @@
+# ユニフォームとエンブレムの歴史 サンダーランド（10/27 作成）。雛形は 10/26 クリスタル・パレス回。
+# 題の問い：サンダーランドの黒猫は、なぜ2000年まで正式な愛称ではなかったのか。
+# 重なり確認（2026-10-26）：scripts/・research/covered.yaml の kit_*・research/posted.json を grep。サンダーランドのユニフォーム回は無し
+#   （20260920_pl19_sunderland はクラブ紹介＝愛称は「ブラック・キャッツ。黒猫です」の1行だけ。20261025_stadium_sunderland はスタジアム＝
+#    デイビー・ランプ・日産・ローカー・パーク。20261026_tanaka_ao_sunderland はニュース。いずれも別シリーズ。紋章・縞・投票・メーカーは言っていない）。
+#   この回では、スタジアムの回で言った名前の由来（デイビー・ランプ）・日産・入場の数は言わない。紋章のてっぺんの輪だけ1行。
+# 今季のリーグ：ウィキペディア en "2026–27 Premier League" の本文と順位表にサンダーランドがある（プレミアの1部）。
+#   "2026–27 Sunderland A.F.C. season"：2026-09-05 ブレントフォード 1-1 サンダーランド（写真の試合）。
+# 取材：requests（ブラウザ User-Agent）と WebFetch だけ。ブラウザ操作・JS実行・検索のAI要約を根拠にはしていない。
+#   読んだ：ウィキペディア en "Sunderland A.F.C."（Colours and crest／Nicknames／Kit sponsorship の表）、"1937 FA Cup final"、"ASICS"、"Penshaw Monument"。
+#   ガーディアン 2000-02-22「Sunderland find new identity as The Black Cats」：投票1万票で黒猫48%・マッケムズ37%、候補5つ
+#     （ライト・ブリゲード、マイナーズ、SOLs も）、1997年の移転から3年近く正式な愛称が無かった、プレミアで最後、
+#     ウェア川の河口を守った大砲の陣地の名前が元、12月に募集、会長ボブ・マレーの言葉。
+#   クロニクル 2020-02-04：1937年のFAカップ決勝で、ファンのビリー・モリスが黒猫をコートの下に隠して行った話。決勝はプレストンに3対1。
+#   Historical Football Kits（HFK。ファンの資料サイトだが典拠を明記）：1884年12月まで紺一色、赤と白の左右分け、縦縞は1887-09-24、
+#     1913年FAカップ決勝（クリスタル・パレス、12万人、ヴィラに0対1、胸に街の紋章）、1950年代半ばの光る素材の赤（照明の試合）、
+#     1972年10月 ストーコウが最初にしたのが黒いパンツに戻すこと、1973年決勝の頭文字の印、1977-78 から船の紋章（1972年から公式）、
+#     1981〜83 ル・コック・スポルティフのデザインは不評、1991年の手直し、1997年の新しい紋章（船を外す＝造船はもう無い、輪は炭鉱の跡）、
+#     2018年の赤いパンツ→反発でホーム黒・アウェー赤。
+#   読めなかった：クラブ公式の過去の紋章・愛称・ユニフォームのページ（web.archive が 429、WebFetch も web.archive 不可）。safc.com は JS で本文が出ない。
+# ---- 食い違い・断ったこと ----
+#   ・正式な愛称になった年：ウィキペディア・ガーディアン（当時の記事）は2000年、HFK とクロニクルは1997年とも読める→当時の記事の2000年2月で言う。
+#   ・投票の数：ガーディアン「1万票の48%」、HFK「1万1000人の半分以上」→ガーディアンの数で言う。
+#   ・大砲の陣地の時代：ガーディアン「18世紀」、ウィキペディア「ナポレオン戦争」→年代は言わない。
+#   ・黒猫がローカー・パークにいた時期（ウィキペディア 1900〜10年代、クロニクル 1960年代）→言わない。
+#   ・1937年の黒猫：クロニクル「コートの下」、ウィキペディア「胸のポケット」→「黒猫を連れて行った、と伝わります」。
+#   ・縦縞の始まり：HFK 1887-09-24、ウィキペディア 1887–88 季、HFK が引くクラブ公式の別説 1886年9月→「1887年」とだけ言う。
+#   ・1997年の紋章の両脇の2頭：ウィキペディアは "two lions, the black cats of Sunderland"（クラブ公式の紋章ページを典拠）。獅子か黒猫か読みが割れる
+#     →「ウィキペディアが引くクラブの説明では、両脇の2頭が、サンダーランドの黒猫」とだけ言い、「黒猫が戻った」とは言い切らない。
+#   ・1972年に黒猫が消えた理由は、どの出典にも無い→理由は言わない。
+#   ・アシックスの年：ウィキペディアの表 1997–00、HFK 1997-1999・1999-2000 → 1997〜2000年の3シーズン。
+# ---- 自分で数えた数 ----
+#   縦縞 2026−1887=139年。いまの紋章 2026−1997=29年。黒猫の愛称 2026−2000=26年。
+#   シャツのメーカー（ウィキペディアの表）：アンブロ75-81・ル・コック81-83・ナイキ83-86・パトリック86-88・ヒュンメル88-94・アヴェック94-97・
+#     アシックス97-00・ナイキ00-04・ディアドラ04-05・ロンズデール05-07・アンブロ07-12・アディダス12-20・ナイキ20-24・ヒュンメル24-＝14回（10社）。
+#     ナイキ3回、アンブロ2回、ヒュンメル2回。1975年から 2026−1975=51年。51÷14≒3.64→約3.6年。139÷3.64≒38.2→およそ38倍。
+#   投票：100−48−37=15（残り3つの合計）。
+# ---- 日本との接点 ----
+#   シャツのメーカーがアシックス（神戸に本社。ウィキペディア ASICS）1997〜2000年。新しい本拠地・新しい紋章と同じ年から。
+#   その3年に2部優勝（勝ち点105は当時の記録）、翌季プレミア7位・フィリップス30得点でゴールデンシュー（ウィキペディア）。
+#   日本人選手の在籍は無い（research/pl_data/japan.json）。第2節に置いた。
+# ---- 写真（assets/images/20261027_kit_sunderland/、出典は credits.json）----
+#   Commons の CC0・CC BY・CC BY-SA のみ。代理店・放送映像なし。ジャカは2枚（ホームの縞＝サムネだけ／紺のアウェー）。
+#   2026-09-05 ブレントフォード戦はアウェーの紺なので、縞は 2025-05-24 ウェンブリーのサポーターの写真で見せる。
+#   船の紋章（1972〜97年の型）はヴォークスの名入りの旗の写真（CC0）。スタジアム回の写真とは別のファイル。エンブレム画像は使っていない。
+date: 2026年10月27日
+slot: other_2
+format: news
+series: ユニフォームとエンブレムの歴史
+voice_min: 0
+people:
+- サンダーランド
+- グラニト・ジャカ
+watch: 毎日、数字でサッカーを読み解きます
+theme:
+  end_bg: assets/images/20261027_kit_sunderland/f01_wembley.jpg
+  id: kit_sunderland
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: サンダーランド
+  title: サンダーランドの黒猫は、なぜ2000年まで正式な愛称ではなかったのか
+  question: サンダーランドの黒猫は、なぜ2000年まで正式な愛称ではなく、紋章からも一度消えていたのか
+  opening_image: assets/images/20261027_kit_sunderland/k01_xhaka.jpg
+  lead: 胸に、赤と白の縞。
+  hook: ''
+  takeaway: 黒猫が正式な愛称になったのは2000年2月の投票（1万票の48%）。1997年に本拠地を移して、それまでの本拠地の名前の呼び名が使えなくなったため。紋章の黒猫は1972年に消え、1997年の紋章で両脇の2頭がクラブの説明では黒猫とされる。赤と白の縦縞は1887年から139年。一方、シャツのメーカーは1975年から51年で14回、平均3.6年。日本のアシックスは1997〜2000年の3年で、昇格とプレミア7位の3年だった
+  hook_unused: ''
+thumbnail:
+  layout: classic
+  callouts:
+  - 投票で黒猫48%
+  - 日本のアシックスが3年
+  photo: assets/images/20261027_kit_sunderland/pair/01.jpg
+  line1: サンダーランドの黒猫
+  line2: 正式な愛称は2000年から
+  tags:
+  - サンダーランド
+  - ユニフォーム
+  - エンブレム
+  - ブラック・キャッツ
+  - アシックス
+  - グラニト・ジャカ
+x-cards:
+  nick: &nick
+    type: timeline
+    title: 黒猫が愛称になるまで（ガーディアン・ウィキペディアほか）
+    rows:
+    - - 1937年
+      - FAカップ初優勝。黒猫の言い伝え
+    - - 1997年
+      - 本拠地を移し、呼び名が無くなる
+    - - 1999年12月
+      - 愛称の投票を始める。候補は5つ
+    - - 2000年2月
+      - ブラック・キャッツに決まる
+    focus: 2000年2月
+    highlight_row: 3
+  vote: &vote
+    type: table
+    title: 2000年の愛称の投票（ガーディアン。約1万票）
+    columns:
+    - 候補
+    - 得票
+    rows:
+    - - ブラック・キャッツ
+      - 48%
+    - - マッケムズ
+      - 37%
+    - - 残り3つの合計
+      - 15%
+    highlight_row: 0
+  asics: &asics
+    type: table
+    title: アシックスがシャツを作った3年（ウィキペディア）
+    columns:
+    - 季
+    - できごと
+    rows:
+    - - 1997〜98年
+      - 新しい本拠地と、新しい紋章
+    - - 1998〜99年
+      - 2部で優勝。勝ち点105
+    - - 1999〜2000年
+      - プレミア7位。フィリップス30点
+    highlight_row: 0
+  colours: &colours
+    type: timeline
+    title: シャツとパンツの色の歩み（ウィキペディア・HFK）
+    rows:
+    - - 1879年
+      - 創立。青一色
+    - - 1884年12月
+      - 赤と白。左右で色を分けたシャツ
+    - - 1887年
+      - 赤と白の縦縞
+    - - 1972年
+      - パンツを黒に戻す
+    - - 2018年
+      - パンツを赤に。反発でホームは黒
+    focus: 1887年
+    highlight_row: 2
+  crest: &crest
+    type: timeline
+    title: 紋章の歩み（ウィキペディア・HFK）
+    rows:
+    - - 1972年まで
+      - 船・街の紋章・黒猫・ボール
+    - - 1972年
+      - 黒猫が消え、船とボールと縞に
+    - - 1977年
+      - 船の紋章が、初めてシャツに
+    - - 1997年
+      - 船を外し、記念碑と橋と輪
+    focus: 1997年
+    highlight_row: 3
+  view: &view
+    type: table
+    title: 残ったものと、替わったもの
+    columns:
+    - もの
+    - 長さ
+    rows:
+    - - 赤と白の縦縞（1887年から）
+      - 139年
+    - - いまの紋章（1997年から）
+      - 29年
+    - - 黒猫の愛称（2000年から）
+      - 26年
+    - - シャツのメーカー（1975年から）
+      - 51年で14回
+    highlight_row: 0
+sections:
+- id: cat
+  main: true
+  heading: サンダーランドの黒猫は、なぜ2000年まで正式な愛称ではなかったのか
+  bg: assets/images/20261027_kit_sunderland/k01_xhaka.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 黒猫が正式な愛称になったのは2000年2月。1万票の投票で48%
+  card: *nick
+  say:
+  - text: 今回は、サンダーランドの、胸の紋章と、愛称です。
+    image: assets/images/20261027_kit_sunderland/k01_xhaka.jpg
+    card: none
+    emph: true
+  - text: 愛称は、ブラック・キャッツ。黒猫たち、です。
+    image: assets/images/20261027_kit_sunderland/k01_xhaka.jpg
+    card: none
+  - text: ところが、これが正式な愛称になったのは、2000年。
+    image: assets/images/20261027_kit_sunderland/k01_xhaka.jpg
+    card:
+      <<: *nick
+      highlight_row: 3
+    emph: true
+  - text: それまでは、本拠地ローカー・パークの名前から取った呼び名でした。
+    image: assets/images/20261027_kit_sunderland/k02_lineup.jpg
+    card: none
+  - text: 1997年、クラブは本拠地を移します。古い呼び名は、使えなくなりました。
+    image: assets/images/20261027_kit_sunderland/k02_lineup.jpg
+    card:
+      <<: *nick
+      highlight_row: 1
+  - text: そこから3年近く、クラブには、正式な愛称がありません。
+    image: assets/images/20261027_kit_sunderland/k02_lineup.jpg
+    card: none
+  - text: プレミアリーグで、正式な愛称を持たない、最後のクラブになっていました。
+    image: assets/images/20261027_kit_sunderland/k02_lineup.jpg
+    card: none
+  - text: 移転から2年あまりの1999年12月、クラブは愛称の投票を始めます。
+    image: assets/images/20261027_kit_sunderland/f01_wembley.jpg
+    card:
+      <<: *nick
+      highlight_row: 2
+  - text: 黒猫のほか、街の人の呼び名マッケムズ、炭鉱夫を意味するマイナーズなど。
+    image: assets/images/20261027_kit_sunderland/f01_wembley.jpg
+    card: none
+  - text: およそ1万票のうち、黒猫が48%。2位のマッケムズは、37%でした。
+    image: assets/images/20261027_kit_sunderland/f01_wembley.jpg
+    card: *vote
+    emph: true
+  - text: 当時の会長、ボブ・マレーの言葉です。
+    image: assets/images/20261027_kit_sunderland/f01_wembley.jpg
+    card: none
+  - text: これからは、サポーターが選んだ名前として、ブラック・キャッツを誇りにできる。
+    image: assets/images/20261027_kit_sunderland/f01_wembley.jpg
+    card:
+      type: document
+      label: ボブ・マレー会長（ガーディアン 2000年2月22日。英文を訳した）
+      paragraphs:
+      - これからは、サポーターが選んだ名前として、ブラック・キャッツであることを誇りにできる。
+      highlight:
+      - サポーターが選んだ
+  - text: では、なぜ黒猫なのか。
+    image: assets/images/20261027_kit_sunderland/k01_xhaka.jpg
+    card: none
+  - text: 当時の新聞によれば、もとは、ウェア川の河口を守った、大砲の陣地。
+    image: assets/images/20261027_kit_sunderland/l02_bridge.jpg
+    card: none
+  - text: その陣地が、黒猫の名で呼ばれていました。
+    image: assets/images/20261027_kit_sunderland/l02_bridge.jpg
+    card: none
+  - text: もう1つの話は、1937年。イングランドのカップ戦、FAカップの決勝です。
+    image: assets/images/20261027_kit_sunderland/f01_wembley.jpg
+    card:
+      <<: *nick
+      highlight_row: 0
+  - text: ファンの1人が、黒猫を連れて、会場に行った、と伝わります。
+    image: assets/images/20261027_kit_sunderland/f01_wembley.jpg
+    card: none
+    emph: true
+  - text: サンダーランドは、プレストンに3対1で勝ち、初めて、FAカップを取りました。
+    image: assets/images/20261027_kit_sunderland/f01_wembley.jpg
+    card: none
+  sources:
+  - https://www.theguardian.com/football/2000/feb/22/newsstory.sport4
+  - https://en.wikipedia.org/wiki/Sunderland_A.F.C.
+  - https://www.chroniclelive.co.uk/sport/football/football-news/why-sunderland-called-black-cats-17687845
+  - https://en.wikipedia.org/wiki/1937_FA_Cup_final
+- id: japan
+  heading: 新しい本拠地で、最初のシャツを作ったのはどこか
+  bg: assets/images/20261027_kit_sunderland/k03_match.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 1997年から2000年まで、シャツを作ったのは日本のアシックス。昇格とプレミア7位の3年
+  card: *asics
+  say:
+  - text: 日本との接点は、サンダーランドのシャツの、メーカーです。
+    image: assets/images/20261027_kit_sunderland/k03_match.jpg
+    card: none
+  - text: 1997年、本拠地を移したその年から、シャツを作ったのは、アシックス。
+    image: assets/images/20261027_kit_sunderland/k03_match.jpg
+    card:
+      <<: *asics
+      highlight_row: 0
+    emph: true
+  - text: 神戸に本社を置く、日本のスポーツ用品の会社です。
+    image: assets/images/20261027_kit_sunderland/k03_match.jpg
+    card: none
+  - text: 新しい本拠地と、新しい紋章。その最初の3シーズンを、アシックスが担いました。
+    image: assets/images/20261027_kit_sunderland/k03_match.jpg
+    card:
+      <<: *asics
+      highlight_row: 0
+  - text: この3年で、チームは大きく動きます。
+    image: assets/images/20261027_kit_sunderland/k02_lineup.jpg
+    card: none
+  - text: 1998年から99年の季、2部で優勝。勝ち点は105。当時の記録です。
+    image: assets/images/20261027_kit_sunderland/k02_lineup.jpg
+    card:
+      <<: *asics
+      highlight_row: 1
+    emph: true
+  - text: 次の季は、プレミアリーグで7位。
+    image: assets/images/20261027_kit_sunderland/k02_lineup.jpg
+    card:
+      <<: *asics
+      highlight_row: 2
+  - text: フォワードのケヴィン・フィリップスは、30得点。
+    image: assets/images/20261027_kit_sunderland/f01_wembley.jpg
+    card: none
+  - text: ヨーロッパのリーグの得点王に贈られる、ゴールデンシューを受けます。
+    image: assets/images/20261027_kit_sunderland/f01_wembley.jpg
+    card: none
+    emph: true
+  - text: フィリップスにとって、1部で戦う、初めての季でした。
+    image: assets/images/20261027_kit_sunderland/f01_wembley.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Sunderland_A.F.C.
+  - https://www.historicalkits.co.uk/Sunderland/Sunderland.htm
+  - https://en.wikipedia.org/wiki/ASICS
+- id: colours
+  heading: 赤と白の縞は、最初からの色だったのか
+  bg: assets/images/20261027_kit_sunderland/f01_wembley.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 最初は青一色。1884年に赤と白、縦縞は1887年から。パンツの黒は2018年にも揺れた
+  card: *colours
+  say:
+  - text: 続いては、色。サンダーランドのホームは、赤と白の縦縞に、黒いパンツです。
+    image: assets/images/20261027_kit_sunderland/f01_wembley.jpg
+    card: none
+  - text: でも、1879年の創立のころの色は、青一色でした。
+    image: assets/images/20261027_kit_sunderland/f01_wembley.jpg
+    card:
+      <<: *colours
+      highlight_row: 0
+    emph: true
+  - text: 1884年12月、赤と白に。最初は、左右で色を分けたシャツです。
+    image: assets/images/20261027_kit_sunderland/f01_wembley.jpg
+    card:
+      <<: *colours
+      highlight_row: 1
+  - text: 縦縞になったのは、1887年。
+    image: assets/images/20261027_kit_sunderland/f01_wembley.jpg
+    card:
+      <<: *colours
+      highlight_row: 2
+  - text: 1913年のFAカップ決勝。12万人の前で、胸には、街の紋章を付けていました。
+    image: assets/images/20261027_kit_sunderland/k02_lineup.jpg
+    card: none
+  - text: 相手はアストン・ヴィラ。0対1で、優勝には届きません。
+    image: assets/images/20261027_kit_sunderland/k02_lineup.jpg
+    card: none
+  - text: 1950年代には、照明の下で見えやすいよう、光る素材の赤いシャツを着た試合も。
+    image: assets/images/20261027_kit_sunderland/k02_lineup.jpg
+    card: none
+  - text: 1972年10月、監督ボブ・ストーコウが、最初にしたこと。
+    image: assets/images/20261027_kit_sunderland/k03_match.jpg
+    card: none
+  - text: それは、パンツを、伝統の黒に戻すことでした。
+    image: assets/images/20261027_kit_sunderland/k03_match.jpg
+    card:
+      <<: *colours
+      highlight_row: 3
+    emph: true
+  - text: 1981年からの2年は、フランスのル・コック・スポルティフの、変わったデザイン。
+    image: assets/images/20261027_kit_sunderland/k03_match.jpg
+    card: none
+  - text: これは、とても不評でした。
+    image: assets/images/20261027_kit_sunderland/k03_match.jpg
+    card: none
+  - text: 2018年には、パンツを赤にします。新しい出発の印でした。
+    image: assets/images/20261027_kit_sunderland/k01_xhaka.jpg
+    card:
+      <<: *colours
+      highlight_row: 4
+  - text: ところが、サポーターの反発は強く、ホームは黒、アウェーは赤に落ち着きます。
+    image: assets/images/20261027_kit_sunderland/k01_xhaka.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Sunderland_A.F.C.
+  - https://www.historicalkits.co.uk/Sunderland/Sunderland.htm
+- id: crest
+  heading: 紋章から消えた船は、何を表していたのか
+  bg: assets/images/20261027_kit_sunderland/v01_vaux.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 最初の紋章には船と黒猫。1972年に黒猫が消え、1997年に船も外れた
+  card: *crest
+  say:
+  - text: 最初の紋章には、船と、街の紋章の上の部分、黒猫、そしてボール。
+    image: assets/images/20261027_kit_sunderland/v01_vaux.jpg
+    card: none
+  - text: 船は、造船の街だった印です。
+    image: assets/images/20261027_kit_sunderland/v01_vaux.jpg
+    card: none
+  - text: 1972年、紋章が替わり、黒猫が消えます。残ったのは、船とボールと縞。
+    image: assets/images/20261027_kit_sunderland/v01_vaux.jpg
+    card:
+      <<: *crest
+      highlight_row: 1
+    emph: true
+  - text: ただ、この紋章がシャツに付くのは、1977年からでした。
+    image: assets/images/20261027_kit_sunderland/v01_vaux.jpg
+    card:
+      <<: *crest
+      highlight_row: 2
+  - text: その前の1973年、2部にいながら、FAカップの決勝で、リーズに1対0。
+    image: assets/images/20261027_kit_sunderland/k02_lineup.jpg
+    card: none
+  - text: このときの胸は、クラブの頭文字を組んだ印でした。
+    image: assets/images/20261027_kit_sunderland/k02_lineup.jpg
+    card: none
+  - text: 1997年、本拠地の移転に合わせて、新しい紋章。
+    image: assets/images/20261027_kit_sunderland/k01_xhaka.jpg
+    card: none
+  - text: 造船はもう無く、船は外されました。
+    image: assets/images/20261027_kit_sunderland/k01_xhaka.jpg
+    card:
+      <<: *crest
+      highlight_row: 3
+    emph: true
+  - text: 左上には、古代ギリシャの神殿の形をした、ペンショー・モニュメント。
+    image: assets/images/20261027_kit_sunderland/l01_penshaw.jpg
+    card: none
+  - text: 右下には、ウェア川にかかる橋、ウェアマス・ブリッジ。
+    image: assets/images/20261027_kit_sunderland/l02_bridge.jpg
+    card: none
+  - text: いちばん上の輪は、炭鉱の巻き上げ機。本拠地が、炭鉱の跡に建つからです。
+    image: assets/images/20261027_kit_sunderland/l02_bridge.jpg
+    card: none
+  - text: そして、両脇の2頭。
+    image: assets/images/20261027_kit_sunderland/k01_xhaka.jpg
+    card: none
+  - text: ウィキペディアが引くクラブの説明では、これがサンダーランドの黒猫です。
+    image: assets/images/20261027_kit_sunderland/k01_xhaka.jpg
+    card: none
+  - text: ラテン語の標語は、卓越を求めて。
+    image: assets/images/20261027_kit_sunderland/k01_xhaka.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Sunderland_A.F.C.
+  - https://www.historicalkits.co.uk/Sunderland/Sunderland.htm
+  - https://en.wikipedia.org/wiki/Penshaw_Monument
+- id: view
+  viewpoint: true
+  heading: 見立て・縞は139年、メーカーは51年で14回。何が残り、何が替わったのか
+  bg: assets/images/20261027_kit_sunderland/f01_wembley.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 縞は139年。メーカーは51年で14回、平均3.6年。縞はその、およそ38倍
+  card: *view
+  say:
+  - text: サンダーランドの縞と紋章、愛称、メーカー。何年続いたかを、比べます。
+    image: assets/images/20261027_kit_sunderland/f01_wembley.jpg
+    card: none
+    emph: true
+  - text: 赤と白の縦縞は、1887年から。139年です。
+    image: assets/images/20261027_kit_sunderland/f01_wembley.jpg
+    card:
+      <<: *view
+      highlight_row: 0
+    mark:
+      kind: circle
+      row: 0
+  - text: いまの紋章は、1997年から29年。黒猫の愛称は、2000年から26年。
+    image: assets/images/20261027_kit_sunderland/k01_xhaka.jpg
+    card:
+      <<: *view
+      highlight_row: 1
+  - text: 一方、シャツのメーカーは、1975年からの51年で、14回替わりました。
+    image: assets/images/20261027_kit_sunderland/k01_xhaka.jpg
+    card:
+      <<: *view
+      highlight_row: 3
+  - text: ナイキは3回、アンブロとヒュンメルは2回、戻ってきています。
+    image: assets/images/20261027_kit_sunderland/k03_match.jpg
+    card: none
+  - text: 51を14で割ると、およそ3.6。1回あたり、4年に届きません。
+    image: assets/images/20261027_kit_sunderland/k03_match.jpg
+    card:
+      type: calc
+      title: メーカー1回あたりの平均（自分で割った）
+      terms:
+      - - 51年
+        - 1975年から
+      - - 14回
+        - メーカーの交代
+      - - 約3.6年
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+    emph: true
+  - text: アシックスの3年は、平均より少し短い。
+    image: assets/images/20261027_kit_sunderland/k03_match.jpg
+    card: none
+  - text: それでも、昇格とプレミア7位の3年でした。
+    image: assets/images/20261027_kit_sunderland/k03_match.jpg
+    card: none
+  - text: そして、縞の139年は、3.6年の、およそ38倍です。
+    image: assets/images/20261027_kit_sunderland/f01_wembley.jpg
+    card:
+      type: calc
+      title: 縞はメーカーの平均の何倍か（自分で割った）
+      terms:
+      - - 139年
+        - 赤と白の縦縞
+      - - 約3.6年
+        - メーカーの平均
+      - - 約38倍
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+    emph: true
+  - text: メーカーは替わり続け、縞は残る。
+    image: assets/images/20261027_kit_sunderland/f01_wembley.jpg
+    card: none
+  - text: 黒猫は、2000年に、やっと正式な名前になりました。
+    image: assets/images/20261027_kit_sunderland/f01_wembley.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Sunderland_A.F.C.
+  - https://www.theguardian.com/football/2000/feb/22/newsstory.sport4

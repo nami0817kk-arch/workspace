@@ -1,0 +1,1230 @@
+{{Short description|Annual association football award event in France}}
+{{Use Oxford spelling|date=June 2024}}
+{{Use dmy dates|date=June 2024}}
+{{Infobox award
+| name = 2025 Ballon d'Or
+| image = Ousmane Dembele France v Senegal 16 June 2026-341 (cropped).jpg
+| caption = 2025 Ballon d'Or winner, [[Ousmane Dembélé]]
+| date = 22 September 2025
+| location = [[Théâtre du Châtelet]], [[Paris]], France
+| presenter = ''[[France Football]]''
+| host = [[Kate Scott (British presenter)|Kate Scott]]<br/>[[Ruud Gullit]]<ref>{{cite web |url=https://www.lequipe.fr/Football/Actualites/Ruud-gullit-et-kate-scott-maitres-de-ceremonie-du-ballon-d-or-2025/1591525 |title=Ruud Gullit et Kate Scott maîtres de cérémonie du Ballon d'Or 2025 |date=8 September 2025 |publisher=[[L'Équipe]] |language=fr |accessdate=8 September 2025  }}</ref>
+| website = {{URL|ballondor.com}}
+| award1_type = [[Ballon d'Or]]
+| award1_winner = {{flagicon|FRA}} [[Ousmane Dembélé]]<br>(1st award)
+| award2_type = [[Ballon d'Or Féminin]]
+| award2_winner = {{flagicon|ESP}} [[Aitana Bonmatí]]<br>(3rd award)
+| award3_type = [[Kopa Trophy]]
+| award3_winner = '''Men's:'''<br>{{flagicon|ESP}} [[Lamine Yamal]]<br>(2nd award)<br>'''Women's:'''<br>{{flagicon|ESP}} [[Vicky López]]<br>(1st award)
+| award4_type = [[Yashin Trophy]]
+| award4_winner = '''Men's:'''<br>{{flagicon|ITA}} [[Gianluigi Donnarumma]]<br>(2nd award)<br>'''Women's:'''<br>{{flagicon|ENG}} [[Hannah Hampton]]<br>(1st award)
+| award5_type = [[Gerd Müller Trophy]]
+| award5_winner = '''Men's:'''<br>{{flagicon|SWE}} [[Viktor Gyökeres]]<br>(1st award)<br>'''Women's:'''<br>{{flagicon|POL}} [[Ewa Pajor]]<br>(1st award)
+| previous = [[2024 Ballon d'Or|2024]]
+| main = [[Ballon d'Or]]
+| next = [[2026 Ballon d'Or|2026]]
+}}
+The '''2025 Ballon d'Or''' ({{lit|'''2025 Golden Ball'''}}) was the 69th annual ceremony of the [[Ballon d'Or]], presented by ''[[France Football]]'', recognising the best footballers in the world in the 2024–25 season. For the fourth time in the history of the award, it was awarded based on the results of the season instead of the calendar year. This was the period from 1 August 2024 to 13 July 2025 ([[2025 FIFA Club World Cup final|final]] of the [[2025 FIFA Club World Cup]]) for the men's award, and to 2 August 2025 ([[2025 Copa América Femenina final|final]] of the [[2025 Copa América Femenina]]) for the women's award. The ceremony took place on 22 September 2025, with the nominees having been announced on 7 August 2025.<ref name="UEFA">{{cite news |title=2025 Ballon d'Or ceremony date, venue and awards announced |url=https://www.uefa.com/news-media/news/0299-1dcb47a46ca9-683cdc08a032-1000--2025-ballon-d-or-ceremony-date-venue-and-awards-announced/ |publisher=[[UEFA]] |access-date=24 May 2025 |date=19 May 2025 |archive-date=24 May 2025 |archive-url=https://web.archive.org/web/20250524102215/https://www.uefa.com/news-media/news/0299-1dcb47a46ca9-683cdc08a032-1000--2025-ballon-d-or-ceremony-date-venue-and-awards-announced/ |url-status=live}}</ref><ref name="SportsIllustrated">{{cite magazine |last=Mallow |first=Max |date=19 May 2025 |title=Ballon d'Or 2025 Ceremony Date, Location Announced |url=https://www.si.com/soccer/ballon-dor-2025-ceremony-date-location-announced |access-date=24 May 2025 |magazine=[[Sports Illustrated]] |issn=0038-822X |archive-date=24 May 2025 |archive-url=https://web.archive.org/web/20250524102103/https://www.si.com/soccer/ballon-dor-2025-ceremony-date-location-announced |url-status=live}}</ref><ref>{{cite web|url=https://www.theguardian.com/football/2025/sep/22/ousmane-dembele-aitana-bonmati-ballon-dor-awards-football|title=Ousmane Dembélé and Aitana ¬Bonmatí land Ballon d'Or awards as England duo honoured|date=22 September 2025|work=Guardian|accessdate=23 September 2025}}</ref>
+
+==Ballon d'Or==
+{{Main|Ballon d'Or}}
+
+''Club listed is the one which the player represented during the 2024–25 season.''
+
+30 players were nominated for the 2025 Men's Ballon d'Or.
+
+{| class="wikitable sortable"
+|+2025 Ballon d'Or
+! scope="col" |Rank
+! scope="col" |Player
+! scope="col" |Nationality
+! scope="col" |Position
+! scope="col" |Club
+! scope="col" |Points
+|- style="background-color:#FFF68F"
+!scope=“row” | 1
+|'''[[Ousmane Dembélé]]'''
+|{{Flagu|France}}
+|[[Forward (association football)|Forward]]
+|{{fbaicon|FRA}} [[Paris Saint-Germain FC|Paris Saint-Germain]]
+|'''1380'''
+|-
+!2
+|[[Lamine Yamal]]
+|{{Flagu|Spain}}
+|[[Forward (association football)|Forward]]
+|{{fbaicon|ESP}} [[FC Barcelona|Barcelona]]
+|1059
+|-
+!3
+|[[Vitinha]]
+|{{Flagu|Portugal}}
+|[[Midfielder]]
+|{{fbaicon|FRA}} [[Paris Saint-Germain FC|Paris Saint-Germain]]
+|703
+|-
+!4
+|[[Mohamed Salah]]
+|{{Flagu|Egypt}}
+|[[Forward (association football)|Forward]]
+|{{fbaicon|ENG}} [[Liverpool F.C.|Liverpool]]
+|657
+|-
+!5
+|[[Raphinha]]
+|{{Flagu|Brazil}}
+|[[Forward (association football)|Forward]]
+|{{fbaicon|ESP}} [[FC Barcelona|Barcelona]]
+|620
+|-
+!6
+|[[Achraf Hakimi]]
+|{{Flagu|Morocco}}
+|[[Defender (association football)|Defender]]
+|{{fbaicon|FRA}} [[Paris Saint-Germain FC|Paris Saint-Germain]]
+|484
+|-
+!7
+|[[Kylian Mbappé]]
+|{{Flagu|France}}
+|[[Forward (association football)|Forward]]
+|{{fbaicon|ESP}} [[Real Madrid CF|Real Madrid]]
+|378
+|-
+!8
+|[[Cole Palmer]]
+|{{Flagu|England}}
+|[[Forward (association football)|Forward]]
+|{{fbaicon|ENG}} [[Chelsea F.C.|Chelsea]]
+|211
+|-
+!9
+|[[Gianluigi Donnarumma]]
+|{{Flagu|Italy}}
+|[[Goalkeeper (association football)|Goalkeeper]]
+|{{fbaicon|FRA}} [[Paris Saint-Germain FC|Paris Saint-Germain]]
+|172
+|-
+!10
+|[[Nuno Mendes (footballer, born 2002)|Nuno Mendes]]
+|{{Flagu|Portugal}}
+|[[Defender (association football)|Defender]]
+|{{fbaicon|FRA}} [[Paris Saint-Germain FC|Paris Saint-Germain]]
+|171
+|-
+!11
+|[[Pedri]]
+|{{Flagu|Spain}}
+|[[Midfielder]]
+|{{fbaicon|ESP}} [[FC Barcelona|Barcelona]]
+|124
+|-
+!12
+|[[Khvicha Kvaratskhelia]]
+|{{Flagu|Georgia}}
+|[[Forward (association football)|Forward]]
+|{{fbaicon|ITA}} [[SSC Napoli|Napoli]]<br>{{fbaicon|FRA}} [[Paris Saint-Germain FC|Paris Saint-Germain]]
+|123
+|-
+!13
+|[[Harry Kane]]
+|{{Flagu|England}}
+|[[Forward (association football)|Forward]]
+|{{fbaicon|GER}} [[FC Bayern Munich|Bayern Munich]]
+|112
+|-
+!14
+|[[Désiré Doué]]
+|{{Flagu|France}}
+|[[Midfielder]]
+|{{fbaicon|FRA}} [[Paris Saint-Germain F.C.|Paris Saint-Germain]]
+|74
+|-
+!15
+|[[Viktor Gyökeres]]
+|{{Flagu|Sweden}}
+|[[Forward (association football)|Forward]]
+|{{fbaicon|POR}} [[Sporting CP]]
+|56
+|-
+!16
+|[[Vinícius Júnior]]
+|{{Flagu|Brazil}}
+|[[Forward (association football)|Forward]]
+|{{fbaicon|ESP}} [[Real Madrid CF|Real Madrid]]
+|51
+|-
+!17
+|[[Robert Lewandowski]]
+|{{Flagu|Poland}}
+|[[Forward (association football)|Forward]]
+|{{fbaicon|ESP}} [[FC Barcelona|Barcelona]]
+|49
+|-
+!18
+|[[Scott McTominay]]
+|{{Flagu|Scotland}}
+|[[Midfielder]]
+|{{fbaicon|ENG}} [[Manchester United F.C.|Manchester United]]<br>{{fbaicon|ITA}} [[SSC Napoli|Napoli]]
+|45
+|-
+!19
+|[[João Neves]]
+|{{Flagu|Portugal}}
+|[[Midfielder]]
+|{{fbaicon|FRA}} [[Paris Saint-Germain FC|Paris Saint-Germain]]
+|40
+|-
+!20
+|[[Lautaro Martínez]]
+|{{Flagu|Argentina}}
+|[[Forward (association football)|Forward]]
+|{{fbaicon|ITA}} [[Inter Milan]]
+|37
+|-
+!21
+|[[Serhou Guirassy]]
+|{{Flagu|Guinea}}
+|[[Forward (association football)|Forward]]
+|{{fbaicon|GER}} [[Borussia Dortmund]]
+|25
+|-
+!22
+|[[Alexis Mac Allister]]
+|{{Flagu|Argentina}}
+|[[Midfielder]]
+|{{fbaicon|ENG}} [[Liverpool F.C.|Liverpool]]
+|21
+|-
+!23
+|[[Jude Bellingham]]
+|{{Flagu|England}}
+|[[Midfielder]]
+|{{fbaicon|ESP}} [[Real Madrid CF|Real Madrid]]
+|21
+|-
+!24
+|[[Fabián Ruiz]]
+|{{Flagu|Spain}}
+|[[Midfielder]]
+|{{fbaicon|FRA}} [[Paris Saint-Germain FC|Paris Saint-Germain]]
+|20
+|-
+!25
+|[[Denzel Dumfries]]
+|{{Flagu|Netherlands}}
+|[[Defender (association football)|Defender]]
+|{{fbaicon|ITA}} [[Inter Milan]]
+|20
+|-
+!26
+|[[Erling Haaland]]
+|{{Flagu|Norway}}
+|[[Forward (association football)|Forward]]
+|{{fbaicon|ENG}} [[Manchester City F.C.|Manchester City]]
+|18
+|-
+!27
+|[[Declan Rice]]
+|{{Flagu|England}}
+|[[Midfielder]]
+|{{fbaicon|ENG}} [[Arsenal F.C.|Arsenal]]
+|13
+|-
+!28
+|[[Virgil van Dijk]]
+|{{Flagu|Netherlands}}
+|[[Defender (association football)|Defender]]
+|{{fbaicon|ENG}} [[Liverpool F.C.|Liverpool]]
+|7
+|-
+!29
+|[[Florian Wirtz]]
+|{{Flagu|Germany}}
+|[[Midfielder]]
+|{{fbaicon|GER}} [[Bayer 04 Leverkusen|Bayer Leverkusen]]
+|5
+|-
+!30
+|[[Michael Olise]]
+|{{Flagu|France}}
+|[[Forward (association football)|Forward]]
+|{{fbaicon|GER}} [[FC Bayern Munich|Bayern Munich]]
+|4
+|}
+{{notelist}}
+
+
+{| class="wikitable sortable"
+|+ Ballon D'Or Detailed Votes by Country
+|-
+
+!Country!!scope="col" {{vert header| Dembélé   }}!!scope="col" {{vert header| Yamal }}!!scope="col" {{vert header| Vitinha }}!!scope="col" {{vert header| Salah }}!!scope="col" {{vert header| Raphinha }}!!scope="col" {{vert header| Hakimi }}!!scope="col" {{vert header| Mbappé  }}!!scope="col" {{vert header| Palmer }}!!scope="col" {{vert header| Donnarumma }}!!scope="col" {{vert header| Mendes }}!!scope="col" {{vert header| Pedri }}!!scope="col" {{vert header| Kvaratskhelia }}!!scope="col" {{vert header| Kane }}!!scope="col" {{vert header| Doué  }}!!scope="col" {{vert header| Gyökeres  }}!!scope="col" {{vert header| Vinícius }}!!scope="col" {{vert header| Lewandowski }}!!scope="col" {{vert header| McTominay }}!!scope="col" {{vert header| Neves }}!!scope="col" {{vert header| L. Martínez }}!!scope="col" {{vert header| Guirassy }}!!scope="col" {{vert header| Mac Allister }}!!scope="col" {{vert header| Bellingham }}!!scope="col" {{vert header| Dumfries }}!!scope="col" {{vert header| Fabián }}!!scope="col" {{vert header| Haaland }}!!scope="col" {{vert header| Rice }}!!scope="col" {{vert header| Van Dijk }}!!scope="col" {{vert header| Wirtz }}!!scope="col" {{vert header| Olise 
+}}
+|-
+|{{flagu|Albania}}||style="background-color: gold" | 15||style="background-color: #cc9966" | 10||4||0||0||2||8||style="background-color: silver" | 12||7||0||0||0||3||0||1||0||0||0||5||0||0||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Algeria}}||style="background-color: silver" | 12||style="background-color: gold" | 15||0||5||style="background-color: #cc9966" | 10||7||0||2||0||0||8||0||0||3||0||0||4||0||1||0||0||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Angola}}||style="background-color: gold" | 15||style="background-color: #cc9966" | 10||style="background-color: silver" | 12||2||8||0||7||3||5||4||1||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Argentina}}||style="background-color: gold" | 15||style="background-color: #cc9966" | 10||style="background-color: silver" | 12||7||4||0||1||3||0||0||8||0||2||0||0||0||0||0||0||0||0||5||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Australia}}||style="background-color: gold" | 15||style="background-color: #cc9966" | 10||7||style="background-color: silver" | 12||8||3||5||2||1||0||0||0||0||4||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Austria}}||style="background-color: #cc9966" | 10||style="background-color: silver" | 12||style="background-color: gold" | 15||5||2||8||0||0||0||7||0||0||4||0||0||0||0||0||0||1||0||0||0||0||0||0||0||0||0||3
+|-
+|{{flagu|Bahrain}}||7||style="background-color: #cc9966" | 10||2||style="background-color: gold" | 15||4||style="background-color: silver" | 12||8||0||0||0||0||3||0||0||0||5||0||0||0||0||0||0||0||0||0||0||0||1||0||0
+|-
+|{{flagu|Belarus}}||style="background-color: gold" | 15||style="background-color: silver" | 12||0||8||style="background-color: #cc9966" | 10||2||3||5||0||0||0||0||4||0||7||0||0||0||0||0||0||0||0||0||0||1||0||0||0||0
+|-
+|{{flagu|Belgium}}||style="background-color: silver" | 12||style="background-color: #cc9966" | 10||7||2||8||style="background-color: gold" | 15||1||0||4||5||3||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Benin}}||style="background-color: gold" | 15||8||2||5||7||style="background-color: silver" | 12||style="background-color: #cc9966" | 10||0||4||0||0||0||0||0||0||0||0||0||0||3||1||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Bolivia}}||style="background-color: gold" | 15||style="background-color: #cc9966" | 10||8||7||style="background-color: silver" | 12||5||0||2||0||0||0||4||0||3||0||0||0||0||0||1||0||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Bosnia and Herzegovina}}||style="background-color: gold" | 15||style="background-color: #cc9966" | 10||3||8||style="background-color: silver" | 12||0||7||5||0||1||0||2||4||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Brazil}}||7||style="background-color: gold" | 15||style="background-color: #cc9966" | 10||5||style="background-color: silver" | 12||0||4||2||0||0||0||8||0||0||0||3||0||0||0||0||0||1||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Bulgaria}}||style="background-color: gold" | 15||8||1||3||2||0||5||style="background-color: silver" | 12||7||style="background-color: #cc9966" | 10||0||4||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Burkina Faso}}||style="background-color: gold" | 15||style="background-color: #cc9966" | 10||8||1||7||style="background-color: silver" | 12||2||4||3||0||0||0||0||5||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Cameroon}}||style="background-color: gold" | 15||8||4||0||3||style="background-color: #cc9966" | 10||5||0||style="background-color: silver" | 12||7||0||0||0||0||0||0||0||0||0||0||2||0||0||0||0||0||0||0||0||1
+|-
+|{{flagu|Canada}}||style="background-color: gold" | 15||style="background-color: silver" | 12||style="background-color: #cc9966" | 10||8||7||1||4||3||0||5||0||2||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Cape Verde}}||style="background-color: gold" | 15||style="background-color: #cc9966" | 10||5||0||style="background-color: silver" | 12||0||4||0||0||7||3||0||0||2||0||8||0||0||1||0||0||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Chile}}||style="background-color: #cc9966" | 10||style="background-color: silver" | 12||style="background-color: gold" | 15||7||0||0||2||5||8||1||0||0||0||0||4||0||0||0||0||0||0||3||0||0||0||0||0||0||0||0
+|-
+|{{flagu|China}}||style="background-color: gold" | 15||style="background-color: silver" | 12||style="background-color: #cc9966" | 10||7||8||3||0||1||5||0||4||0||0||0||0||0||0||0||0||2||0||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Colombia}}||style="background-color: gold" | 15||style="background-color: #cc9966" | 10||style="background-color: silver" | 12||5||8||0||3||1||7||0||4||0||0||0||0||0||2||0||0||0||0||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Costa Rica}}||style="background-color: gold" | 15||style="background-color: silver" | 12||8||style="background-color: #cc9966" | 10||7||5||4||1||0||0||0||0||0||0||2||0||3||0||0||0||0||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Croatia}}||style="background-color: #cc9966" | 10||7||style="background-color: gold" | 15||4||0||0||2||style="background-color: silver" | 12||0||0||0||8||3||0||1||0||0||0||5||0||0||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Curacao}}||style="background-color: gold" | 15||style="background-color: #cc9966" | 10||5||8||style="background-color: silver" | 12||0||7||0||3||2||4||0||0||0||0||0||0||0||0||0||0||0||0||1||0||0||0||0||0||0
+|-
+|{{flagu|Czechia}}||style="background-color: gold" | 15||style="background-color: #cc9966" | 10||7||2||4||style="background-color: silver" | 12||5||8||0||0||0||3||1||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Denmark}}||style="background-color: gold" | 15||style="background-color: silver" | 12||8||style="background-color: #cc9966" | 10||7||5||0||2||3||0||0||4||1||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|DR Congo}}||style="background-color: gold" | 15||5||1||3||8||style="background-color: silver" | 12||7||2||0||0||0||0||4||style="background-color: #cc9966" | 10||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Ecuador}}||style="background-color: gold" | 15||style="background-color: silver" | 12||7||style="background-color: #cc9966" | 10||3||0||1||5||0||0||2||4||8||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Egypt}}||style="background-color: silver" | 12||2||0||style="background-color: gold" | 15||4||8||style="background-color: #cc9966" | 10||7||0||0||0||0||0||0||1||0||3||0||0||0||0||0||5||0||0||0||0||0||0||0
+|-
+|{{flagu|El Salvador}}||7||style="background-color: silver" | 12||style="background-color: gold" | 15||style="background-color: #cc9966" | 10||8||4||0||0||1||5||0||0||3||0||0||0||2||0||0||0||0||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|England}}||style="background-color: gold" | 15||style="background-color: silver" | 12||style="background-color: #cc9966" | 10||8||7||5||4||0||0||3||0||0||2||0||0||0||0||1||0||0||0||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Equatorial Guinea}}||style="background-color: silver" | 12||style="background-color: gold" | 15||0||0||8||5||0||7||1||4||style="background-color: #cc9966" | 10||0||0||3||0||0||0||0||0||0||0||0||0||2||0||0||0||0||0||0
+|-
+|{{flagu|Finland}}||style="background-color: gold" | 15||7||0||style="background-color: #cc9966" | 10||style="background-color: silver" | 12||0||3||2||0||0||0||0||5||0||4||0||8||1||0||0||0||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|France}}||style="background-color: gold" | 15||style="background-color: silver" | 12||5||4||8||style="background-color: #cc9966" | 10||2||0||7||1||0||0||3||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Gabon}}||style="background-color: silver" | 12||style="background-color: #cc9966" | 10||8||5||4||style="background-color: gold" | 15||3||7||0||0||1||0||2||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Georgia}}||style="background-color: silver" | 12||style="background-color: #cc9966" | 10||7||0||4||8||3||1||2||5||0||style="background-color: gold" | 15||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Germany}}||style="background-color: silver" | 12||style="background-color: gold" | 15||7||style="background-color: #cc9966" | 10||8||0||5||0||0||3||0||0||2||0||4||0||0||0||0||0||0||0||0||0||0||0||0||0||1||0
+|-
+|{{flagu|Ghana}}||style="background-color: gold" | 15||style="background-color: silver" | 12||5||8||7||style="background-color: #cc9966" | 10||4||0||3||0||0||0||0||1||2||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Greece}}||style="background-color: gold" | 15||8||style="background-color: silver" | 12||3||0||7||0||4||style="background-color: #cc9966" | 10||0||0||0||0||0||0||0||0||2||0||5||0||0||0||0||1||0||0||0||0||0
+|-
+|{{flagu|Guatemala}}||style="background-color: gold" | 15||style="background-color: silver" | 12||5||1||7||0||8||style="background-color: #cc9966" | 10||0||0||0||0||0||0||0||3||0||0||0||2||0||0||4||0||0||0||0||0||0||0
+|-
+|{{flagu|Guinea}}||style="background-color: gold" | 15||8||0||5||style="background-color: silver" | 12||3||7||0||0||2||0||0||0||0||4||0||0||0||0||0||style="background-color: #cc9966" | 10||0||1||0||0||0||0||0||0||0
+|-
+|{{flagu|Haiti}}||style="background-color: gold" | 15||5||7||8||style="background-color: silver" | 12||3||0||0||style="background-color: #cc9966" | 10||4||2||0||0||0||0||0||1||0||0||0||0||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Honduras}}||style="background-color: gold" | 15||style="background-color: silver" | 12||7||1||style="background-color: #cc9966" | 10||0||8||0||0||0||0||0||2||0||0||5||0||0||0||0||0||0||3||0||0||4||0||0||0||0
+|-
+|{{flagu|Hungary}}||style="background-color: gold" | 15||8||0||style="background-color: silver" | 12||0||2||7||0||style="background-color: #cc9966" | 10||0||0||3||0||0||4||0||1||0||0||0||0||5||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Iceland}}||style="background-color: gold" | 15||style="background-color: silver" | 12||8||style="background-color: #cc9966" | 10||7||0||4||0||1||2||0||5||0||3||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Iran}}||style="background-color: #cc9966" | 10||style="background-color: gold" | 15||8||7||style="background-color: silver" | 12||5||2||0||4||3||1||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Iraq}}||style="background-color: gold" | 15||5||3||7||style="background-color: #cc9966" | 10||style="background-color: silver" | 12||8||2||0||0||0||0||0||0||1||0||0||0||0||0||0||0||0||0||0||0||4||0||0||0
+|-
+|{{flagu|Ireland}}||style="background-color: gold" | 15||7||8||5||style="background-color: silver" | 12||4||0||0||0||style="background-color: #cc9966" | 10||3||0||0||0||1||0||0||0||0||0||0||0||0||0||0||0||0||2||0||0
+|-
+|{{flagu|Israel}}||style="background-color: gold" | 15||style="background-color: silver" | 12||style="background-color: #cc9966" | 10||7||8||4||3||0||2||5||0||0||0||1||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Italy}}||style="background-color: silver" | 12||style="background-color: gold" | 15||3||style="background-color: #cc9966" | 10||0||7||2||0||8||0||5||0||0||4||0||0||0||0||0||1||0||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Ivory Coast}}||style="background-color: gold" | 15||7||style="background-color: #cc9966" | 10||3||1||style="background-color: silver" | 12||8||0||0||2||0||0||0||5||0||0||0||0||0||0||4||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Jamaica}}||style="background-color: gold" | 15||style="background-color: silver" | 12||7||8||style="background-color: #cc9966" | 10||0||4||0||5||0||1||0||0||0||0||3||0||0||0||2||0||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Japan}}||style="background-color: gold" | 15||8||7||5||1||style="background-color: silver" | 12||0||0||0||0||style="background-color: #cc9966" | 10||0||0||0||0||0||0||2||0||0||0||0||0||0||0||0||3||0||4||0
+|-
+|{{flagu|Jordan}}||style="background-color: #cc9966" | 10||style="background-color: silver" | 12||3||style="background-color: gold" | 15||4||5||7||8||0||0||0||0||2||0||0||0||0||0||0||1||0||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Kosovo}}||style="background-color: gold" | 15||style="background-color: #cc9966" | 10||style="background-color: silver" | 12||7||0||0||5||8||0||0||2||4||0||0||0||3||0||0||0||0||0||0||1||0||0||0||0||0||0||0
+|-
+|{{flagu|Luxembourg}}||style="background-color: gold" | 15||style="background-color: silver" | 12||7||8||style="background-color: #cc9966" | 10||5||0||0||1||0||0||3||0||0||0||0||0||0||2||4||0||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Mali}}||style="background-color: gold" | 15||style="background-color: silver" | 12||0||style="background-color: #cc9966" | 10||4||7||8||3||0||0||0||0||5||0||0||0||0||0||0||2||1||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Mexico}}||style="background-color: gold" | 15||style="background-color: #cc9966" | 10||style="background-color: silver" | 12||0||8||0||0||3||0||2||5||0||0||4||0||0||0||0||1||0||0||0||0||0||7||0||0||0||0||0
+|-
+|{{flagu|Montenegro}}||style="background-color: gold" | 15||8||2||5||style="background-color: #cc9966" | 10||style="background-color: silver" | 12||0||4||7||0||0||0||3||0||0||0||0||1||0||0||0||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Morocco}}||style="background-color: #cc9966" | 10||style="background-color: silver" | 12||7||8||4||style="background-color: gold" | 15||5||3||0||0||0||0||0||0||0||0||0||0||0||1||2||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Mozambique}}||7||style="background-color: #cc9966" | 10||2||style="background-color: silver" | 12||0||0||style="background-color: gold" | 15||0||1||5||0||0||3||0||0||8||0||0||0||0||0||0||0||0||0||4||0||0||0||0
+|-
+|{{flagu|Netherlands}}||style="background-color: silver" | 12||style="background-color: gold" | 15||8||style="background-color: #cc9966" | 10||7||0||2||0||0||0||0||5||0||0||3||0||0||0||0||0||0||0||0||4||0||0||0||1||0||0
+|-
+|{{flagu|New Zealand}}||style="background-color: gold" | 15||style="background-color: #cc9966" | 10||8||style="background-color: silver" | 12||7||0||5||4||1||2||0||3||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Nigeria}}||style="background-color: gold" | 15||style="background-color: silver" | 12||7||style="background-color: #cc9966" | 10||0||8||0||0||2||0||0||5||0||0||1||0||3||0||0||0||4||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|North Macedonia}}||style="background-color: gold" | 15||style="background-color: silver" | 12||8||7||style="background-color: #cc9966" | 10||0||5||4||0||0||1||0||0||3||0||0||0||0||0||0||0||0||0||2||0||0||0||0||0||0
+|-
+|{{flagu|Northern Ireland}}||style="background-color: gold" | 15||style="background-color: #cc9966" | 10||8||style="background-color: silver" | 12||5||1||0||0||0||4||0||7||0||0||0||0||0||2||0||0||0||0||0||0||0||0||0||3||0||0
+|-
+|{{flagu|Norway}}||style="background-color: gold" | 15||style="background-color: silver" | 12||style="background-color: #cc9966" | 10||8||7||4||0||5||0||1||0||2||0||0||0||0||0||0||0||0||0||0||0||0||3||0||0||0||0||0
+|-
+|{{flagu|Oman}}||style="background-color: gold" | 15||8||0||style="background-color: silver" | 12||7||style="background-color: #cc9966" | 10||5||0||0||0||2||0||4||0||0||3||0||0||0||0||0||0||0||0||0||1||0||0||0||0
+|-
+|{{flagu|Palestine}}||style="background-color: gold" | 15||style="background-color: silver" | 12||style="background-color: #cc9966" | 10||7||5||8||2||0||0||1||0||0||0||0||4||0||0||0||0||0||0||0||0||0||0||0||3||0||0||0
+|-
+|{{flagu|Panama}}||style="background-color: gold" | 15||style="background-color: silver" | 12||8||0||7||0||style="background-color: #cc9966" | 10||0||0||0||0||0||3||0||2||1||4||0||5||0||0||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Paraguay}}||style="background-color: gold" | 15||style="background-color: silver" | 12||8||1||7||0||style="background-color: #cc9966" | 10||0||0||0||5||0||0||0||0||4||0||0||0||3||0||2||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Peru}}||style="background-color: gold" | 15||8||style="background-color: silver" | 12||2||style="background-color: #cc9966" | 10||5||7||4||0||0||3||0||0||0||0||0||0||0||0||0||0||0||1||0||0||0||0||0||0||0
+|-
+|{{flagu|Poland}}||style="background-color: silver" | 12||style="background-color: gold" | 15||4||8||style="background-color: #cc9966" | 10||0||5||1||0||2||0||0||0||3||0||0||7||0||0||0||0||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Portugal}}||style="background-color: gold" | 15||style="background-color: #cc9966" | 10||style="background-color: silver" | 12||8||3||0||2||5||0||7||0||0||1||0||0||0||0||0||0||0||0||0||0||4||0||0||0||0||0||0
+|-
+|{{flagu|Qatar}}||style="background-color: gold" | 15||8||style="background-color: #cc9966" | 10||0||0||style="background-color: silver" | 12||7||0||0||5||0||1||3||0||0||0||0||0||0||0||0||0||2||0||0||4||0||0||0||0
+|-
+|{{flagu|Romania}}||style="background-color: gold" | 15||style="background-color: silver" | 12||4||0||7||style="background-color: #cc9966" | 10||1||0||0||8||2||0||0||5||0||0||3||0||0||0||0||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Russia}}||style="background-color: gold" | 15||style="background-color: silver" | 12||8||4||5||3||2||0||style="background-color: #cc9966" | 10||7||0||0||0||0||1||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Saudi Arabia}}||style="background-color: gold" | 15||style="background-color: silver" | 12||8||4||5||style="background-color: #cc9966" | 10||2||1||0||3||7||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Scotland}}||style="background-color: silver" | 12||8||4||style="background-color: #cc9966" | 10||0||0||0||0||1||0||0||0||0||0||0||0||0||style="background-color: gold" | 15||0||2||0||5||0||7||0||0||3||0||0||0
+|-
+|{{flagu|Senegal}}||style="background-color: gold" | 15||style="background-color: silver" | 12||5||7||8||style="background-color: #cc9966" | 10||4||1||0||0||3||0||0||0||0||0||0||0||0||2||0||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Serbia}}||style="background-color: gold" | 15||style="background-color: #cc9966" | 10||7||5||0||0||style="background-color: silver" | 12||0||0||0||0||0||3||8||0||2||0||0||0||1||0||0||0||0||0||4||0||0||0||0
+|-
+|{{flagu|Slovakia}}||style="background-color: gold" | 15||7||8||style="background-color: #cc9966" | 10||style="background-color: silver" | 12||5||2||0||4||3||0||1||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Slovenia}}||style="background-color: gold" | 15||style="background-color: #cc9966" | 10||0||style="background-color: silver" | 12||2||8||7||0||0||0||0||1||0||0||0||3||0||5||0||4||0||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|South Africa}}||style="background-color: silver" | 12||style="background-color: #cc9966" | 10||8||style="background-color: gold" | 15||5||7||4||1||0||0||0||0||2||3||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|South Korea}}||style="background-color: gold" | 15||style="background-color: silver" | 12||style="background-color: #cc9966" | 10||7||0||8||4||0||0||2||0||1||5||0||0||0||0||3||0||0||0||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Spain}}||style="background-color: #cc9966" | 10||style="background-color: gold" | 15||style="background-color: silver" | 12||8||7||0||3||5||0||4||2||0||0||0||0||0||0||0||0||0||0||0||0||0||1||0||0||0||0||0
+|-
+|{{flagu|Sweden}}||style="background-color: gold" | 15||7||8||style="background-color: silver" | 12||style="background-color: #cc9966" | 10||3||4||0||2||0||0||0||5||0||0||0||0||1||0||0||0||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Switzerland}}||style="background-color: gold" | 15||style="background-color: #cc9966" | 10||style="background-color: silver" | 12||0||3||8||1||2||0||4||0||0||0||0||7||0||0||0||5||0||0||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Syria}}||style="background-color: gold" | 15||8||1||style="background-color: #cc9966" | 10||style="background-color: silver" | 12||3||2||0||4||0||0||0||5||0||0||0||0||7||0||0||0||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Tunisia}}||style="background-color: silver" | 12||style="background-color: gold" | 15||4||7||5||style="background-color: #cc9966" | 10||3||0||0||0||8||0||2||0||0||0||0||0||0||0||1||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Turkey}}||style="background-color: gold" | 15||style="background-color: silver" | 12||8||style="background-color: #cc9966" | 10||7||5||0||0||0||4||0||0||3||2||0||0||0||1||0||0||0||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Uganda}}||style="background-color: gold" | 15||5||style="background-color: silver" | 12||0||7||0||4||3||0||0||0||0||2||0||1||0||8||0||style="background-color: #cc9966" | 10||0||0||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Ukraine}}||style="background-color: silver" | 12||style="background-color: #cc9966" | 10||style="background-color: gold" | 15||7||0||1||0||2||0||0||0||3||0||0||0||0||0||4||5||0||0||0||0||0||8||0||0||0||0||0
+|-
+|{{flagu|United Arab Emirates}}||7||style="background-color: gold" | 15||style="background-color: #cc9966" | 10||4||5||style="background-color: silver" | 12||1||2||3||0||0||8||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|United States}}||style="background-color: gold" | 15||style="background-color: silver" | 12||8||style="background-color: #cc9966" | 10||7||5||3||1||0||0||0||0||4||2||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Uruguay}}||style="background-color: gold" | 15||style="background-color: silver" | 12||style="background-color: #cc9966" | 10||1||5||7||0||0||3||2||8||4||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Uzbekistan}}||style="background-color: gold" | 15||style="background-color: silver" | 12||style="background-color: #cc9966" | 10||7||8||0||4||2||0||3||5||0||0||0||1||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Venezuela}}||style="background-color: silver" | 12||style="background-color: #cc9966" | 10||style="background-color: gold" | 15||7||8||2||5||4||0||0||1||0||3||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Wales}}||style="background-color: gold" | 15||style="background-color: silver" | 12||8||style="background-color: #cc9966" | 10||7||3||2||1||0||4||0||5||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0||0
+|-
+|{{flagu|Zambia}}||style="background-color: gold" | 15||style="background-color: silver" | 12||0||7||3||style="background-color: #cc9966" | 10||8||2||0||0||0||5||1||0||0||0||0||0||0||0||0||0||4||0||0||0||0||0||0||0
+|-
+
+
+|}
+
+==Ballon d'Or Féminin==
+{{main|Ballon d'Or Féminin}}
+Thirty players were nominated for the 2025 Ballon d'Or Fémenin.
+{| class="wikitable sortable"
+|+2025 Ballon d'Or Fémenin
+! scope="col" |Rank
+!Player
+!Nationality
+!Position
+!Club(s)
+!Points
+|- style="background-color:#FFF68F"
+!1
+|'''{{sortname|Aitana|Bonmatí}}'''
+|{{Flagu|Spain}}
+|[[Midfielder]]
+|{{fbaicon|ESP}} [[FC Barcelona Femení|Barcelona]]
+|'''506'''
+|-
+!2
+|{{sortname|Mariona|Caldentey}}
+|{{Flagu|Spain}}
+|[[Forward (association football)|Forward]]
+|{{fbaicon|ENG}} [[Arsenal W.F.C.|Arsenal]]
+|478
+|-
+! scope="row"|3
+|{{sortname|Alessia|Russo}}
+|{{Flagu|England}}
+|[[Forward (association football)|Forward]]
+|{{fbaicon|ENG}} [[Arsenal W.F.C.|Arsenal]]
+|420
+|-
+! scope="row"|4
+|{{sortname|Alexia|Putellas}}
+|{{Flagu|Spain}}
+|[[Midfielder]]
+|{{fbaicon|ESP}} [[FC Barcelona Femení|Barcelona]]
+|388
+|-
+! scope="row"|5
+|{{sortname|Chloe|Kelly}}
+|{{Flagu|England}}
+|[[Forward (association football)|Forward]]
+|{{fbaicon|ENG}} [[Manchester City W.F.C.|Manchester City]]<br>{{fbaicon|ENG}} [[Arsenal W.F.C.|Arsenal]]
+|233
+|-
+! scope="row"|6
+|{{sortname|Patricia|Guijarro}}
+|{{Flagu|Spain}}
+|[[Midfielder]]
+|{{fbaicon|ESP}} [[FC Barcelona Femení|Barcelona]]
+|157
+|-
+! scope="row"|7
+|{{sortname|Leah|Williamson}}
+|{{Flagu|England}}
+|[[Defender (association football)|Defender]]
+|{{fbaicon|ENG}} [[Arsenal W.F.C.|Arsenal]]
+|151
+|-
+! scope="row"|8
+|{{sortname|Ewa|Pajor}}
+|{{Flagu|Poland}}
+|[[Forward (association football)|Forward]]
+|{{fbaicon|ESP}} [[FC Barcelona Femení|Barcelona]]
+|139
+|-
+! scope="row"|9
+|{{sortname|Lucy|Bronze}}
+|{{Flagu|England}}
+|[[Defender (association football)|Defender]] 
+|{{fbaicon|ENG}} [[Chelsea F.C. Women|Chelsea]]
+|135
+|-
+! scope="row"|10
+|{{sortname|Hannah|Hampton}}
+|{{Flagu|England}}
+|[[Goalkeeper (association football)|Goalkeeper]]
+|{{fbaicon|ENG}} [[Chelsea F.C. Women|Chelsea]]
+|122
+|-
+! scope="row"| 11
+|{{sortname|Clàudia|Pina}}
+|{{Flagu|Spain}}
+|[[Forward (association football)|Forward]]
+|{{fbaicon|ESP}} [[FC Barcelona Femení|Barcelona]]
+|113
+|-
+! scope="row"| 12
+|[[Marta (footballer)|Marta]]
+|{{Flagu|Brazil}}
+|[[Forward (association football)|Forward]]
+|{{fbaicon|USA}} [[Orlando Pride]]
+|106
+|-
+! scope="row"| 13
+|{{sortname|Caroline|Graham Hansen}}
+|{{Flagu|Norway}}
+|[[Forward (association football)|Forward]]
+|{{fbaicon|ESP}} [[FC Barcelona Femení|Barcelona]]
+|92
+|-
+! scope="row"| 14
+|{{sortname|Barbra|Banda}}
+|{{Flagu|Zambia}}
+|[[Forward (association football)|Forward]]
+|{{fbaicon|USA}} [[Orlando Pride]]
+|47
+|-
+! scope="row"| 15
+|{{sortname|Sandy|Baltimore}}
+|{{Flagu|France}}
+|[[Forward (association football)|Forward]]
+|{{fbaicon|ENG}} [[Chelsea F.C. Women|Chelsea]]
+|42
+|-
+! scope="row"|16
+|{{sortname|Cristiana|Girelli}}
+|{{Flagu|Italy}}
+|[[Forward (association football)|Forward]]
+|{{fbaicon|ITA}} [[Juventus FC (women)|Juventus]]
+|40
+|-
+! scope="row"|17
+|{{sortname|Temwa|Chawinga}}
+|{{Flagu|Malawi}}
+|[[Forward (association football)|Forward]]
+|{{nowrap|{{fbaicon|USA}} [[Kansas City Current]]}}
+|29
+|-
+! scope="row"|18
+|{{sortname|Melchie|Dumornay}}
+|{{Flagu|Haiti}}
+|[[Midfielder]]
+|{{fbaicon|FRA}} [[Olympique Lyonnais Féminin|Lyon]]
+|27
+|-
+! scope="row"|19
+|{{sortname|Klara|Bühl}}
+|{{Flagu|Germany}}
+|[[Forward (association football)|Forward]]
+|{{fbaicon|GER}} [[FC Bayern Munich (women)|Bayern Munich]]
+|25
+|-
+! scope="row"|20
+|{{sortname|Pernille|Harder}}
+|{{Flagu|Denmark}}
+|[[Forward (association football)|Forward]]
+|{{fbaicon|GER}} [[FC Bayern Munich (women)|Bayern Munich]]
+|20
+|-
+! scope="row"|21
+|{{sortname|Amanda|Gutierres}}
+|{{Flagu|Brazil}}
+|[[Forward (association football)|Forward]]
+|{{fbaicon|BRA}} [[SE Palmeiras (women)|Palmeiras]]
+|20
+|-
+! scope="row"|22
+|{{sortname|Esther|González}}
+|{{Flagu|Spain}}
+|[[Forward (association football)|Forward]]
+|{{fbaicon|USA}} [[Gotham FC]]
+|19
+|-
+! scope="row"|23
+|{{sortname|Johanna|Rytting Kaneryd}}
+|{{Flagu|Sweden}}
+|[[Midfielder]]
+|{{fbaicon|ENG}} [[Chelsea F.C. Women|Chelsea]]
+|11
+|-
+! scope="row"|24
+|{{sortname|Sofia|Cantore}}
+|{{Flagu|Italy}}
+|[[Forward (association football)|Forward]]
+|{{fbaicon|ITA}} [[Juventus FC (women)|Juventus]]
+|9
+|-
+! scope="row"|25
+|{{sortname|Emily|Fox}}
+|{{Flagu|United States}}
+|[[Defender (association football)|Defender]]
+|{{fbaicon|ENG}} [[Arsenal W.F.C.|Arsenal]]
+|7
+|-
+! scope="row"|26
+|{{sortname|Lindsey|Heaps}}
+|{{Flagu|United States}}
+|[[Midfielder]]
+|{{fbaicon|FRA}} [[Olympique Lyonnais Féminin|Lyon]]
+|5
+|-
+! scope="row" rowspan="2" | 27
+|{{sortname|Clara|Mateo}} 
+|{{Flagu|France}}
+|[[Forward (association football)|Forward]]
+|{{fbaicon|FRA}} [[Paris FC (women)|Paris FC]]
+|4
+|-
+|{{sortname|Frida|Maanum}}
+|{{Flagu|Norway}}
+|[[Midfielder]]
+|{{fbaicon|ENG}} [[Arsenal W.F.C.|Arsenal]]
+|4
+|-
+! scope="row"|29
+|{{sortname|Steph|Catley}}
+|{{Flagu|Australia}}
+|[[Defender (association football)|Defender]]
+|{{fbaicon|ENG}} [[Arsenal W.F.C.|Arsenal]]
+|1
+|-
+! scope="row"|30
+|{{sortname|Caroline|Weir}}
+|{{Flagu|Scotland}}
+|[[Midfielder]]
+|{{fbaicon|ESP}} [[Real Madrid Femenino|Real Madrid]]
+|0
+|}
+{{notelist}}
+
+==Men's Kopa Trophy==
+{{main|Kopa Trophy}}
+Ten players were nominated for the 2025 Men's Kopa Trophy.
+{| class="wikitable sortable"
+|+ 2025 Men's Kopa Trophy ranking
+!scope="col"|Rank
+!scope="col"|Player
+!scope="col"|Nationality
+!scope="col"|Position
+!scope="col"|Club(s)
+!scope="col"|Points
+|- style="background-color:#FFF68F"
+!scope="row"|1
+|'''{{sortname|Lamine|Yamal}}'''
+|{{Flagu|Spain}}
+|[[Forward (association football)|Forward]]
+|{{fbaicon|ESP}} [[FC Barcelona|Barcelona]]
+|'''124'''
+|-
+!scope="row"|2
+|{{sortname|Désiré|Doué}}
+|{{Flagu|France}}
+|[[Midfielder]]
+|{{nowrap|{{fbaicon|FRA}} [[Paris Saint-Germain FC|Paris Saint-Germain]]}}
+|72
+|-
+!scope="row"|3
+|{{sortname|João|Neves}}
+|{{Flagu|Portugal}}
+|[[Midfielder]]
+|{{fbaicon|FRA}} [[Paris Saint-Germain FC|Paris Saint-Germain]]
+|23
+|-
+!scope="row"|4
+|{{sortname||Estêvão|Estêvão Willian}}
+|{{Flagu|Brazil}}
+|[[Forward (association football)|Forward]]
+|{{fbaicon|BRA}} [[SE Palmeiras|Palmeiras]]
+|9
+|-
+!scope="row"|5
+|{{sortname|Kenan|Yıldız}}
+|{{Flagu|Turkey}}
+|[[Forward (association football)|Forward]]
+|{{fbaicon|ITA}} [[Juventus FC|Juventus]]
+|6
+|-
+!scope="row"|6
+|{{sortname|Dean|Huijsen}}
+|{{Flagu|Spain}}
+|[[Defender (association football)|Defender]]
+|{{fbaicon|ENG}} [[AFC Bournemouth|Bournemouth]]<br>{{fbaicon|ESP}} [[Real Madrid CF|Real Madrid]]
+|5
+|-
+!scope="row"|7
+|{{sortname|Pau|Cubarsí}}
+|{{Flagu|Spain}}
+|[[Defender (association football)|Defender]]
+|{{fbaicon|ESP}} [[FC Barcelona|Barcelona]]
+|3
+|-
+!scope="row"|8
+|{{sortname|Rodrigo|Mora|dab=footballer, born 2007}}
+|{{Flagu|Portugal}}
+|[[Forward (association football)|Forward]]
+|{{fbaicon|POR}} [[FC Porto|Porto]]
+|1
+|-
+!scope="row" rowspan="2" |9
+|{{sortname|Ayyoub|Bouaddi}}
+|{{Flagu|France}}
+|[[Midfielder]]
+|{{fbaicon|FRA}} [[Lille OSC|Lille]]
+|0
+|-
+|{{sortname|Myles|Lewis-Skelly}}
+|{{Flagu|England}}
+|[[Midfielder]]
+|{{fbaicon|ENG}} [[Arsenal F.C.|Arsenal]]
+|0
+|-
+|}
+
+== Women's Kopa Trophy ==
+{{main|Kopa Trophy}}
+Five players were nominated for the 2025 Women's Kopa Trophy.
+{| class="wikitable"
+|+2025 Women's Kopa Trophy ranking
+!Rank
+!Player
+!Nationality
+!Position
+!Club(s)
+!Points
+|- style="background-color:#FFF68F"
+!scope="row"|1
+|'''{{sortname|Vicky|López}}'''
+|{{Flagu|Spain}}
+|[[Midfielder]]
+|{{fbaicon|ESP}} [[FC Barcelona Femení|Barcelona]]
+|'''15'''
+|-
+!scope="row"|2
+|{{sortname|Linda|Caicedo}}
+|{{Flagu|Colombia}}
+|[[Forward (association football)|Forward]]
+|{{nowrap|{{fbaicon|ESP}} [[Real Madrid Femenino|Real Madrid]]}}
+|12
+|-
+!scope="row"|3
+|{{sortname|Wieke|Kaptein}}
+|{{Flagu|Netherlands}}
+|[[Midfielder]]
+|{{fbaicon|ENG}} [[Chelsea F.C. Women|Chelsea]]
+|8
+|-
+!scope="row"|4
+|{{sortname|Michelle|Agyemang}}
+|{{Flagu|England}}
+|[[Forward (association football)|Forward]]
+|{{fbaicon|ENG}} [[Brighton & Hove Albion W.F.C.|Brighton & Hove Albion]]
+|5
+|-
+!scope="row"|5
+|{{sortname|Claudia|Martínez}}
+|{{Flagu|Paraguay}}
+|[[Forward (association football)|Forward]]
+|{{Fbaicon|PAR}} [[Club Olimpia|Olimpia]]
+|2
+|}
+{{notelist}}
+
+==Men's Yashin Trophy==
+{{main|Yashin Trophy}}
+Ten goalkeepers were nominated for the 2025 Men's Yashin Trophy.
+{| class="wikitable sortable"
+|+2025 Men's Yashin Trophy ranking
+! scope="col" |Rank
+! scope="col" |Player
+! scope="col" |Nationality
+! scope="col" |Club(s)
+! scope="col" |Points
+|- style="background-color:#FFF68F"
+!scope="row"|1
+|'''{{sortname|Gianluigi|Donnarumma}}'''
+|{{Flagu|Italy}}
+|{{nowrap|{{fbaicon|FRA}} [[Paris Saint-Germain FC|Paris Saint-Germain]]}}
+|'''486'''
+|-
+!scope="row"|2
+|{{sortname||Alisson|Alisson Becker}}
+|{{Flagu|Brazil}}
+|{{fbaicon|ENG}} [[Liverpool F.C.|Liverpool]]
+|120
+|-
+!scope="row"|3
+|{{sortname|Yann|Sommer}}
+|{{Flagu|Switzerland}}
+|{{fbaicon|ITA}} [[Inter Milan]]
+|112
+|-
+!scope="row"|4
+|{{sortname|Thibaut|Courtois}}
+|{{Flagu|Belgium}}
+|{{fbaicon|ESP}} [[Real Madrid CF|Real Madrid]]
+|69
+|-
+!scope="row"|5
+|{{sortname|Yassine|Bounou}}
+|{{Flagu|Morocco}}
+|{{fbaicon|KSA}} [[Al Hilal SFC|Al-Hilal]]
+|48
+|-
+!scope="row"|6
+|{{sortname|David|Raya}}
+|{{Flagu|Spain}}
+|{{fbaicon|ENG}} [[Arsenal F.C.|Arsenal]]
+|31
+|-
+!scope="row"|7
+|{{sortname|Jan|Oblak}}
+|{{Flagu|Slovenia}}
+|{{fbaicon|ESP}} [[Atlético Madrid]]
+|31
+|-
+!scope="row"|8
+|{{sortname|Emiliano|Martínez}}
+|{{Flagu|Argentina}}
+|{{fbaicon|ENG}} [[Aston Villa F.C.|Aston Villa]]
+|7
+|-
+!scope="row"|9
+|{{sortname|Lucas|Chevalier}}
+|{{Flagu|France}}
+|{{fbaicon|FRA}} [[Lille OSC|Lille]]
+|5
+|-
+!scope="row"|10
+|{{sortname|Matz|Sels}}
+|{{Flagu|Belgium}}
+|{{fbaicon|ENG}} [[Nottingham Forest F.C.|Nottingham Forest]]
+|4
+|}
+
+== Women's Yashin Trophy ==
+{{main|Yashin Trophy}}
+Five goalkeepers were nominated for the 2025 Women's Yashin Trophy.
+{| class="wikitable"
+|+2025 Women's Yashin Trophy ranking
+!Rank
+!Player
+!Nationality
+!Club(s)
+!Points
+|- style="background-color:#FFF68F
+!scope="row"|1
+|'''[[Hannah Hampton]]'''
+|{{Flagu|England}}
+|{{fbaicon|ENG}} [[Chelsea F.C. Women|Chelsea]]
+|'''88'''
+|-
+!scope="row"|2
+|[[Ann-Katrin Berger]]
+|{{Flagu|Germany}}
+|{{fbaicon|USA}} [[Gotham FC]]
+|26
+|-
+!scope="row"|3
+|[[Cata Coll]]
+|{{Flagu|Spain}}
+|{{fbaicon|ESP}} [[FC Barcelona Femení|Barcelona]]
+|25
+|-
+!scope="row"|4
+|[[Chiamaka Nnadozie]]
+|{{Flagu|Nigeria}}
+|{{fbaicon|FRA}} [[Paris FC (women)|Paris FC]]
+|6
+|-
+!scope="row"|5
+|[[Daphne van Domselaar]]
+|{{Flagu|Netherlands}}
+|{{fbaicon|ENG}} [[Arsenal W.F.C.|Arsenal]]
+|5
+|}
+
+==Gerd Müller Trophy==
+{{main|Gerd Müller Trophy}}
+The nominees for the award were announced on 7 August 2025. The award is given to player who scored the most goals in a calendar year. It is named after German legend [[Gerd Müller]].
+
+{| class="wikitable"
+|+2025 Gerd Müller Trophy ranking - Men
+! scope="col" |Rank
+! scope="col" |Player
+! scope="col" |Nationality
+! scope="col" |Position
+! scope="col" |Club
+! scope="col" |Goals
+|- style="background-color:#FFF68F"
+! scope="row" |1
+|'''{{sortname|Viktor|Gyökeres}}'''
+|{{Flagu|Sweden}}
+| [[Forward (association football)|Forward]]
+|{{fbaicon|POR}} [[Sporting CP]]
+|'''63'''
+|-
+! scope="row" |2
+|{{sortname|Harry|Kane}}
+|{{Flagu|England}}
+| [[Forward (association football)|Forward]]
+|{{fbaicon|GER}} [[FC Bayern Munich|Bayern Munich]]
+|48
+|-
+! scope="row" |3
+|{{sortname|Kylian|Mbappé}}
+|{{Flagu|France}}
+| [[Forward (association football)|Forward]]
+|{{fbaicon|ESP}} [[Real Madrid CF|Real Madrid]]
+|46
+|-
+! scope="row" |4
+|{{sortname|Erling|Haaland}}
+|{{Flagu|Norway}}
+| [[Forward (association football)|Forward]]
+|{{fbaicon|ENG}} [[Manchester City F.C.|Manchester City]]
+|45
+|-
+! scope="row" |5
+|{{sortname|Robert|Lewandowski}}
+|{{Flagu|Poland}}
+| [[Forward (association football)|Forward]]
+|{{fbaicon|ESP}} [[FC Barcelona|Barcelona]]
+|44
+|}
+{| class="wikitable"
+|+2025 Gerd Müller Trophy ranking - Women
+! scope="col" |Rank
+! scope="col" |Player
+! scope="col" |Nationality
+! scope="col" |Position
+! scope="col" |Club
+! scope="col" |Goals
+|- style="background-color:#FFF68F"
+! scope="row" |1
+|'''{{sortname|Ewa|Pajor}}'''
+|{{Flagu|Poland}}
+|[[Forward (association football)|Forward]]
+|{{fbaicon|ESP}} [[FC Barcelona Femení|Barcelona]]
+|'''52'''
+|-
+! scope="row" |2
+|{{sortname|Clàudia|Pina}}
+|{{Flagu|Spain}}
+|[[Forward (association football)|Forward]]
+|{{fbaicon|ESP}} [[FC Barcelona Femení|Barcelona]]
+|33
+|-
+! scope="row" |3
+|{{sortname|Esther|González}}
+|{{Flagu|Spain}}
+|[[Forward (association football)|Forward]]
+|{{fbaicon|USA}} [[Gotham FC]]
+|29
+|-
+! scope="row" |4
+|{{sortname|Cristiana|Girelli}}
+|{{Flagu|Italy}}
+|[[Forward (association football)|Forward]]
+|{{fbaicon|ITA}} [[Juventus FC (women)|Juventus]]
+|28
+|-
+! scope="row" rowspan="2" |5
+|{{sortname|Pernille|Harder}}
+|{{Flagu|Denmark}}
+|[[Forward (association football)|Forward]]
+|{{fbaicon|GER}} [[FC Bayern Munich (women)|Bayern Munich]]
+|27
+|-
+|{{sortname|Alexia|Putellas}}
+|{{Flagu|Spain}}
+|[[Forward (association football)|Forward]]
+|{{fbaicon|ESP}} [[FC Barcelona Femení|Barcelona]]
+|27
+|}
+
+==Sócrates Award==
+{{main|Sócrates Award}}
+The nominees for the award were announced on 7 August 2025.<ref name="UEFA" /><ref name="SportsIllustrated" /> The '''Sócrates Award''' is an [[association football]] award presented to the best humanitarian work by a footballer worldwide during a joint ceremony with the [[Ballon d'Or]]. The award is presented by ''[[France Football]]'' in collaboration with ''[[Peace and Sport]]'' and is named after late Brazilian footballer [[Sócrates]], who co-founded the [[Corinthians Democracy]] movement, in opposition to the ruling [[military dictatorship in Brazil]] during the 1980s.
+
+{| class="wikitable"
+|+2025 Sócrates Award winner
+! scope="col" |Winner
+! scope="col" |Nationality
+|- style="background-color:#FFF68F"
+| '''Xana Foundation'''
+| {{flagu|Spain}}
+|}
+
+==Men's Club of the Year==
+{{main|Club of the Year (France Football)}}
+{| class="wikitable"
+|+2025 Men's Club of the Year ranking
+! scope="col" |Rank
+! scope="col" |Club
+! scope="col" |{{abbr|Total|total players}}
+! scope="col" class="unsortable" |Ballon d'Or
+! scope="col" |Points
+|- style="background-color:#FFF68F"
+! scope="row" |1
+|{{Flatlist|* {{fbaicon|FRA}} [[Paris Saint-Germain FC|Paris Saint-Germain]]}}
+| align="center" |'''9'''
+|{{flagathlete|'''[[Ousmane Dembélé]]'''|FRA}}<br />{{flagathlete|[[Gianluigi Donnarumma]]|ITA}}<br />{{flagathlete|[[Désiré Doué]]|FRA}}<br />{{flagathlete|[[Achraf Hakimi]]|MAR}}<br />{{flagathlete|[[Khvicha Kvaratskhelia]]|GEO}}<br />{{flagathlete|[[Nuno Mendes (footballer, born 2002)|Nuno Mendes]]|POR}}<br />{{flagathlete|[[João Neves]]|POR}}<br />{{flagathlete|[[Fabián Ruiz]]|ESP}}<br />{{flagathlete|[[Vitinha (footballer, born February 2000)|Vitinha]]|POR}}
+|'''199'''
+|- 
+! scope="row" |2
+|{{Flatlist|* {{fbaicon|ESP}} [[FC Barcelona|Barcelona]]}}
+| align="center" |4
+|{{flagathlete|''[[Lamine Yamal]]''|ESP}}<br />{{flagathlete|[[Raphinha]]|BRA}}<br />{{flagathlete|[[Pedri]]|ESP}}<br />{{flagathlete|[[Robert Lewandowski]]|POL}}
+|41
+|- 
+! scope="row" |3
+|{{Flatlist|* {{fbaicon|ENG}} [[Chelsea F.C.|Chelsea]]}}
+| align="center" |1
+|{{flagathlete|[[Cole Palmer]]|ENG}}
+|32
+|- 
+! scope="row" |4
+|{{Flatlist|* {{fbaicon|ENG}} [[Liverpool F.C.|Liverpool]]}}
+| align="center" |3
+|{{flagathlete|[[Mohamed Salah]]|EGY}}<br />{{flagathlete|[[Alexis Mac Allister]]|ARG}}<br />{{flagathlete|[[Virgil van Dijk]]|NED}}
+|26
+|- 
+! scope="row" |5
+|{{Flatlist|* {{fbaicon|BRA}} [[Botafogo FR|Botafogo]]}}
+| align="center" |0
+|
+|2
+|}
+
+==Women's Club of the Year==
+{{main|Club of the Year (France Football)}}
+{| class="wikitable"
+|+2025 Women's Club of the Year ranking
+! scope="col" |Rank
+! scope="col" |Club
+! scope="col" |{{abbr|Total|total players}}
+! scope="col" class="unsortable" |Ballon d'Or
+! scope="col" |Points
+|- style="background-color:#FFF68F"
+! scope="row" |1
+|{{Flatlist|* {{fbaicon|ENG}} [[Arsenal W.F.C.|Arsenal]]}}
+| align="center" |'''7'''
+|{{flagathlete|''[[Mariona Caldentey]]''|ESP}}<br />{{flagathlete|[[Steph Catley]]|AUS}}<br />{{flagathlete|[[Emily Fox]]|USA}}<br />{{flagathlete|[[Chloe Kelly]]|ENG}}<br />{{flagathlete|[[Frida Maanum]]|NOR}}<br />{{flagathlete|[[Alessia Russo]]|ENG}}<br />{{flagathlete|[[Leah Williamson]]|ENG}}
+|'''75'''
+|-
+! scope="row" |2
+|{{Flatlist|* {{fbaicon|ESP}} [[FC Barcelona Femení|Barcelona]]}}
+| align="center" |6
+|{{flagathlete|'''[[Aitana Bonmatí]]'''|ESP}}<br />{{flagathlete|[[Alexia Putellas]]|ESP}}<br />{{flagathlete|[[Patricia Guijarro]]|ESP}}<br />{{flagathlete|[[Ewa Pajor]]|POL}}<br />{{flagathlete|[[Clàudia Pina]]|ESP}}<br />{{flagathlete|[[Caroline Graham Hansen]]|NOR}}
+|51
+|-
+! scope="row" |3
+|{{Flatlist|* {{fbaicon|ENG}} [[Chelsea F.C. Women|Chelsea]]}}
+| align="center" |4
+|{{flagathlete|[[Lucy Bronze]]|ENG}}<br />{{flagathlete|[[Hannah Hampton]]|ENG}}<br />{{flagathlete|[[Sandy Baltimore]]|FRA}}<br />{{flagathlete|[[Johanna Rytting Kaneryd]]|SWE}}
+|14
+|-
+! scope="row" |4
+|{{Flatlist|* {{fbaicon|USA}} [[Orlando Pride]]}}
+| align="center" |2
+|{{flagathlete|[[Marta (footballer)|Marta]]|BRA}}<br />{{flagathlete|[[Barbra Banda]]|ZAM}}
+|8
+|-
+! scope="row" |5
+|{{Flatlist|* {{fbaicon|FRA}} [[OL Lyonnes|Lyon]]}}
+| align="center" |2
+|{{flagathlete|[[Melchie Dumornay]]|HAI}}<br />{{flagathlete|[[Lindsey Heaps]]|USA}}
+|2
+|}
+
+==Men's Coach of the Year==
+{{main|Johan Cruyff Trophy (France Football)}}
+Five coaches were nominated for the 2025 Men's Johan Cruyff Trophy.
+
+{| class="wikitable sortable"
+|+2025 Men's Coach of the Year Award
+!Rank
+!Coach
+!Nationality
+!Team(s)
+!Points
+|- style="background-color:#FFF68F"
+!scope="row"|1
+|'''{{sortname|Luis|Enrique}}'''
+|{{Flagu|Spain}}
+|{{nowrap|{{fbaicon|FRA}} [[Paris Saint-Germain FC|Paris Saint-Germain]]}}
+|'''118'''
+|-
+!scope="row"|2
+|{{sortname|Hansi|Flick}}
+|{{Flagu|Germany}}
+|{{fbaicon|ESP}} [[F.C. Barcelona|Barcelona]]
+|44
+|-
+!scope="row"|3
+|{{sortname|Enzo|Maresca}}
+|{{Flagu|Italy}}
+|{{fbaicon|ENG}} [[Chelsea F.C.|Chelsea]]
+|27
+|-
+!scope="row"|4
+|{{sortname|Arne|Slot}}
+|{{Flagu|Netherlands}}
+|{{fbaicon|ENG}} [[Liverpool F.C.|Liverpool]]
+|26
+|-
+!scope="row"|5
+|{{sortname|Antonio|Conte}}
+|{{Flagu|Italy}}
+|{{fbaicon|ITA}} [[SSC Napoli|Napoli]]
+|6
+|}
+
+==Women's Coach of the Year==
+{{main|Johan Cruyff Trophy (France Football)}}
+Five coaches were nominated for the 2025 Women's Johan Cruyff Trophy.
+
+{| class="wikitable sortable"
+|+2025 Women's Coach of the Year Award
+!Rank
+!Coach
+!Nationality
+!Team(s)
+!Points
+|- style="background-color:#FFF68F"
+!scope="row"|1
+|'''{{sortname|Sarina|Wiegman}}'''
+|{{Flagu|Netherlands}}
+|{{fbw|ENG}}
+|'''84'''
+|-
+!scope="row"|2
+|{{sortname|Renée|Slegers}}
+|{{Flagu|Netherlands}}
+|{{fbaicon|ENG}} [[Arsenal W.F.C.|Arsenal]]
+|46
+|-
+!scope="row"|3
+|{{sortname|Sonia|Bompastor}}
+|{{Flagu|France}}
+|{{fbaicon|ENG}} [[Chelsea F.C. Women|Chelsea]]
+|15
+|-
+!scope="row"|4
+|{{sortname|Arthur|Elias}}
+|{{Flagu|Brazil}}
+|{{fbw|BRA}}
+|5
+|-
+!scope="row"|5
+|{{sortname|Justine|Madugu}}
+|{{Flagu|Nigeria}}
+|{{fbw|NGA}}
+|0
+|}
+
+== References ==
+{{Reflist}}
+
+{{Ballon d'Or recipients}}
+{{Ballon d'Or Féminin recipients}}
+{{Kopa Trophy}}
+{{Yashin Trophy}}
+{{Gerd Müller Trophy}}
+{{Sócrates Award}}
+
+[[Category:Ballon d'Or by year|2025]]
+[[Category:2025 in association football|Ballon d'Or]]
+[[Category:2025 sports awards|Ballon d'Or]]
