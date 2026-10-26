@@ -77,9 +77,9 @@ extension TournamentHonors on TournamentResult {
     if (ppg >= 22 * s * league.scoreScale) out.add(Honor.scoringKing);
     if (rpg >= 10.5 * s) out.add(Honor.reboundKing);
     if (apg >= 7.5 * s) out.add(Honor.assistKing);
-    if (spg >= 2.0 * s) out.add(Honor.stealKing);
-    if (bpg >= 1.1 * s) out.add(Honor.blockKing);
-    if (spg + bpg >= 2.8 * s && wins * 2 >= games) out.add(Honor.defensivePlayer);
+    if (spg >= 2.25 * s) out.add(Honor.stealKing);
+    if (bpg >= 1.15 * s) out.add(Honor.blockKing);
+    if (spg + bpg >= 3.0 * s && wins * 2 >= games) out.add(Honor.defensivePlayer);
     if (rookie && _isPro(league) && individual >= 78) out.add(Honor.rookie);
     if (_isPro(league) && individual >= 86) out.add(Honor.allStar);
     if (matches.any((m) => m.points >= 10 && m.rebounds >= 10 && m.assists >= 10)) {
