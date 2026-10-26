@@ -88,6 +88,15 @@ enum League {
         League.national => 1.15,
       };
 
+  /// これより総合が低いと、控え(ベンチスタート)になる。プロと代表だけ(学生は全員が主力として扱う)。
+  /// 控えは出場時間が短く、得点やリバウンドの取り分も小さい。
+  double? get benchLine => switch (this) {
+        League.proDomestic => 56,
+        League.proAbroad => 66,
+        League.national => 62,
+        _ => null,
+      };
+
   /// 1クォーターの長さ(分)。ミニバス6・中学8・高校〜国内プロ10・海外の最高峰12(4クォーター)。
   int get quarterMinutes => switch (this) {
         League.minibasket => 6,
@@ -359,6 +368,7 @@ class TournamentRun {
         p,
         scale: league.scoreScale,
         gameMinutes: league.quarterMinutes * 4,
+        benchBelow: league.benchLine,
         teamStrength: league.teamStrength + teamBonus + momentum,
         oppStrength: strength,
         form: form,

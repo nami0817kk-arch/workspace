@@ -181,4 +181,44 @@ void main() {
       expect(YearRecord.fromJson(j).box.isEmpty, isTrue);
     });
   });
+
+  group('控え(ベンチスタート)', () {
+    test('プロで総合が控えの線より低いと控え。出場時間と個人の数字が小さい。学生の大会では全員先発', () {
+      final weak = _p(level: 30), strong = _p(level: 80);
+      expect(weak.overall, lessThan(League.proDomestic.benchLine!));
+      expect(strong.overall, greaterThanOrEqualTo(League.proDomestic.benchLine!));
+      var benchMin = 0, starMin = 0, benchShare = 0.0, starShare = 0.0;
+      for (var i = 0; i < 200; i++) {
+        MatchResult play(Player p) {
+          final rng = Random(i);
+          final h = playFirstHalf(p,
+              teamStrength: 62, oppStrength: 62, form: 1, rng: rng,
+              scale: 1.17, gameMinutes: 40, benchBelow: League.proDomestic.benchLine);
+          return finishMatch(p, playSecondHalf(p, h, Halftime.keep, rng), null, rng);
+        }
+        final b = play(weak), s = play(strong);
+        expect(b.starter, isFalse);
+        expect(s.starter, isTrue);
+        benchMin += b.box.minutes;
+        starMin += s.box.minutes;
+        benchShare += b.points / b.teamScore;
+        starShare += s.points / s.teamScore;
+      }
+      expect(benchMin / 200, lessThan(starMin / 200 * 0.75));
+      expect(benchShare, lessThan(starShare));
+      expect(League.highSchool.benchLine, isNull);
+      expect(League.university.benchLine, isNull);
+    });
+
+    test('先発かどうかは保存で残り、古いセーブは先発', () {
+      final h = playFirstHalf(_p(level: 30),
+          teamStrength: 62, oppStrength: 62, form: 1, rng: Random(1), benchBelow: 56);
+      expect(MatchHalf.fromJson(h.toJson()).starter, isFalse);
+      final s = playSecondHalf(_p(level: 30), h, Halftime.keep, Random(1));
+      expect(MatchState.fromJson(s.toJson()).starter, isFalse);
+      final r = finishMatch(_p(level: 30), s, null, Random(1));
+      expect(MatchResult.fromJson(r.toJson()).starter, isFalse);
+      expect(MatchResult.fromJson(r.toJson()..remove('starter')).starter, isTrue);
+    });
+  });
 }
