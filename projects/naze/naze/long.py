@@ -34,10 +34,22 @@ def _duration(ff: str, video: Path) -> float:
 
 
 def _card(ff: str, n: int, title: str, out: Path) -> Path:
-    """章の札(紺の地に「第n章」と章の題)。音は無音。"""
+    """章の札(紺の地に「第n章」と章の題)。音は頭に小さな「シュッ」(無音が続かないように)。"""
+    import wave
+    import numpy as np
     from PIL import Image, ImageDraw
-    from . import overlay as ov
+    from . import overlay as ov, sfx
     from .config import FPS, H, W
+    sr = 48000
+    a = np.zeros(int(CARD_SEC * sr), np.float32)
+    s = sfx.whoosh(sr) * 0.18 * 32767
+    a[int(0.1 * sr):int(0.1 * sr) + len(s)] += s[: len(a) - int(0.1 * sr)]
+    wav = out.with_suffix(".wav")
+    with wave.open(str(wav), "wb") as w:
+        w.setnchannels(1)
+        w.setsampwidth(2)
+        w.setframerate(sr)
+        w.writeframes(a.clip(-32768, 32767).astype(np.int16).tobytes())
     img = Image.new("RGB", (W, H), (8, 16, 36))
     dr = ImageDraw.Draw(img)
     ov.rows(dr, f"第{n}章", H * 0.40, 60, color=ov.OCHRE, stroke=0)
@@ -45,9 +57,9 @@ def _card(ff: str, n: int, title: str, out: Path) -> Path:
     dr.line([(W * 0.3, H * 0.62), (W * 0.7, H * 0.62)], fill=ov.OCHRE, width=3)
     png = out.with_suffix(".png")
     img.save(png)
-    subprocess.run([ff, "-y", "-loglevel", "error", "-loop", "1", "-i", str(png), "-f", "lavfi", "-i", "anullsrc=r=48000:cl=stereo",
+    subprocess.run([ff, "-y", "-loglevel", "error", "-loop", "1", "-i", str(png), "-i", str(wav),
                     "-t", str(CARD_SEC), "-r", str(FPS), "-c:v", "libx264", "-crf", "20", "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "160k",
-                    "-ar", "48000", str(out)], check=True)
+                    "-ar", "48000", "-ac", "1", str(out)], check=True)
     return out
 
 
@@ -80,8 +92,14 @@ def main(folder: Path, args) -> int:
     lst = out / "concat.txt"
     lst.write_text("".join(f"file '{p.resolve().as_posix()}'\n" for p in pieces), encoding="utf-8")
     final = out / f"{folder.name}.mp4"
+    tmp = out / "_joined.mp4"
     subprocess.run([ff, "-y", "-loglevel", "error", "-f", "concat", "-safe", "0", "-i", str(lst), "-c:v", "libx264", "-preset", "medium", "-crf", "20",
-                    "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "160k", "-ar", "48000", "-movflags", "+faststart", str(final)], check=True)
+                    "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-ac", "1", str(tmp)], check=True)
+    # つないだ全体で音量を測り直してそろえ、ピークを抑える(章ごとに作った時期で処理が違っても、仕上がりをそろえる)
+    from .compose import _loudnorm
+    subprocess.run([ff, "-y", "-loglevel", "error", "-i", str(tmp), "-c:v", "copy", "-af", _loudnorm(tmp) + ",alimiter=limit=0.84:level=false",
+                    "-c:a", "aac", "-b:a", "160k", "-ar", "48000", "-movflags", "+faststart", str(final)], check=True)
+    tmp.unlink()
     (out / "chapters.txt").write_text("\n".join(toc) + "\n", encoding="utf-8")
     print(final)
     print("\n".join(toc))
