@@ -2,10 +2,10 @@
 
 このファイルは `growth-loop` ワークフローが自動生成している。手で編集しても次回上書きされる。
 
-- 最終更新: 2026-10-19
-- 平均成熟度: **81** `▁▄▁▇███▇▆▅▅`
+- 最終更新: 2026-10-26
+- 平均成熟度: **81** `▁▄▁▇███▇▆▅▅▅`
 - これまでに解決: **122** 件
-- 未対応: **64** 件（ほかに判断待ち 1 件）
+- 未対応: **67** 件（ほかに判断待ち 1 件）
 
 ## プロジェクト別の成熟度
 
@@ -29,8 +29,9 @@
 | `workspace/projects/baseball-manager` | Flutter | 85 | ±0 | 2 |
 | `workspace/projects/rekishi-chiso` | Python | 85 | ±0 | 6 |
 | `workspace/projects/ipa-kakomon` | Python | 78 | ±0 | 3 |
+| `workspace/projects/basketball-career` | Flutter | 75 | ±0 | 3 |
 | `workspace/projects/dailyquarry-home` | Python | 75 | ±0 | 3 |
-| `workspace/projects/tenbin` | Flutter | 75 | +13 | 6 |
+| `workspace/projects/tenbin` | Flutter | 75 | ±0 | 6 |
 | `workspace/projects/working-holiday` | Python | 75 | ±0 | 4 |
 | `workspace/projects/hikari7` | Flutter | 67 | ±0 | 4 |
 | `workspace/projects/tsuruhashi` | Flutter | 67 | ±0 | 3 |
@@ -40,18 +41,18 @@
 
 ## 次にやること
 
-1. **[高] README が無い** — `workspace/projects/hikari7`
+1. **[高] README が無い** — `workspace/projects/basketball-career`
    - README.md に「目的」「動かし方」「構成」の3節を書く。長さは要らない。 参考: workspace/projects/soccer-manager が既に同じことをやっているので、そこから写すのが早い。
-2. **[高] 環境変数を使っているのに .gitignore が .env を除外していない** — `workspace/projects/hikari7`
-   - `.gitignore` に `.env` を追加する。1行で終わる割に事故の期待値が大きい。
-3. **[高] 環境変数を使っているのに .gitignore が .env を除外していない** — `workspace/projects/rekishi-chiso`
-   - `.gitignore` に `.env` を追加する。1行で終わる割に事故の期待値が大きい。
-4. **[高] README が無い** — `workspace/projects/tenbin`
+2. **[高] README が無い** — `workspace/projects/tsuruhashi`
    - README.md に「目的」「動かし方」「構成」の3節を書く。長さは要らない。 参考: workspace/projects/soccer-manager が既に同じことをやっているので、そこから写すのが早い。
-5. **[高] 環境変数を使っているのに .gitignore が .env を除外していない** — `workspace/projects/tenbin`
+3. **[高] 環境変数を使っているのに .gitignore が .env を除外していない** — `workspace/projects/tsuruhashi`
+   - `.gitignore` に `.env` を追加する。1行で終わる割に事故の期待値が大きい。
+4. **[高] README が無い** — `workspace/projects/working-holiday`
+   - README.md に「目的」「動かし方」「構成」の3節を書く。長さは要らない。 参考: workspace/projects/soccer-manager が既に同じことをやっているので、そこから写すのが早い。
+5. **[高] 環境変数を使っているのに .gitignore が .env を除外していない** — `workspace/projects/working-holiday`
    - `.gitignore` に `.env` を追加する。1行で終わる割に事故の期待値が大きい。
 
-詳細と依頼文は `docs/growth/2026-10-19.md` を見る。
+詳細と依頼文は `docs/growth/2026-10-26.md` を見る。
 
 ## あなたの判断が要るもの
 
