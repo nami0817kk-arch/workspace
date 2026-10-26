@@ -1265,11 +1265,7 @@ class Game {
     final duel =
         rs == null ? null : rivalDuelLine(rs, player.age, slot, m.line);
     if (duel != null) log.add(duel);
-    final mvp = (m.line.hasBatting &&
-            m.line.atBats >= 50 &&
-            (m.line.ops ?? 0) >= 1.000) ||
-        (m.line.hasPitching && m.line.outs >= 18 && (m.line.era ?? 99) <= 1.50);
-    if (mvp && !onFarm) {
+    if (monthlyMvp(m.line, player.name, player.age, slot) && !onFarm) {
       log.add('$slotNameの月間MVPに選ばれた!');
       _note('title', '$slotNameの月間MVP');
       condition = condition.copyWith(morale: condition.morale + 5);
@@ -1280,7 +1276,11 @@ class Game {
   void _allStar() {
     if (slot != 3 || condition.injured || onFarm) return;
     final prog = seasonProgress;
-    if (prog == null || prog.line.games < 40) return;
+    // 打者は40試合以上、投手は8試合以上の先発(投手は試合数が少なく、選ばれていなかった)
+    if (prog == null ||
+        (prog.line.games < 40 && prog.line.starts < 8)) {
+      return;
+    }
     final l = prog.line;
     final pop = popularityOf(records, worldRecords);
     final good = (l.hasBatting && (l.ops ?? 0) >= 0.800) ||

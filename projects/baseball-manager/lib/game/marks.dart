@@ -253,6 +253,21 @@ String attendanceLine(int popularity, double winPct) {
       : '観客動員: 平均${a.toStringAsFixed(1)}万人。';
 }
 
+/// 月間MVP(リーグで毎月1人)。飛び抜けた月(打者 OPS1.100以上・50打数〜、投手 防御率1.20以下・
+/// 18回〜)のうち、出来が良いほど選ばれやすい。選ぶのは名前・年齢・月から(乱数の並びは変えない)。
+/// それまでは OPS1.000 で必ず選ばれ、強い打者は毎月のように取っていた。
+bool monthlyMvp(Line l, String name, int age, int slot) {
+  double chance = 0;
+  if (l.hasBatting && l.atBats >= 50 && (l.ops ?? 0) >= 1.100) {
+    chance = 0.35 + ((l.ops ?? 0) - 1.100) * 2;
+  }
+  if (l.hasPitching && l.outs >= 54 && (l.era ?? 99) <= 1.20) {
+    chance = max(chance, 0.35 + (1.20 - (l.era ?? 99)) * 0.6);
+  }
+  if (chance <= 0) return false;
+  return _hash('$name/mvp/$slot', age) % 100 < (chance.clamp(0, 0.8) * 100);
+}
+
 /// 優勝パレードに集まった人数(万人)。人気から。
 int paradeCrowd(int popularity) => 2 + popularity ~/ 4;
 

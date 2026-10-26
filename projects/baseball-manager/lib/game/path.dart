@@ -66,9 +66,17 @@ bool hasSecondChance({required bool alreadyRetried}) => !alreadyRetried;
 const releaseLine = 35.0;
 const releaseYears = 2;
 
+/// 年齢ごとの戦力外の基準。30歳までは `releaseLine`、そこから1歳ごとに3.5ずつ上がる
+/// (衰えたベテランは、若手より高い出来を求められる。2026-10-26 測ると、ふつうの選手が
+/// 一軍に20年以上いて、全員が40歳を過ぎても現役だった)。`-DBAL_RELSTEP=0` で従来。
+double releaseLineFor(int age) {
+  const step = int.fromEnvironment('BAL_RELSTEP', defaultValue: 35) / 10;
+  return releaseLine + max(0, age - 30) * step;
+}
+
 /// 今年の評価を踏まえた「低迷の連続年数」。基準を上回れば0に戻る。
 int nextLowYears(Player p, int lowYears) =>
-    overall(p) < releaseLine ? lowYears + 1 : 0;
+    overall(p) < releaseLineFor(p.age) ? lowYears + 1 : 0;
 
 bool isReleased(int lowYears) => lowYears >= releaseYears;
 

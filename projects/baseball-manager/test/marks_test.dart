@@ -251,4 +251,15 @@ void markTests9() {
     final old = p.copyWith(age: 36);
     expect(projectedOverall(old, Ability.contact, 41), lessThanOrEqualTo(now));
   });
+
+  test('月間MVP: 飛び抜けた月だけ。いつも選ばれるわけではない', () {
+    const great = Line(atBats: 70, hits: 32, totalBases: 60, walks: 15);
+    const fine = Line(atBats: 70, hits: 22, totalBases: 35, walks: 8);
+    var picked = 0;
+    for (var age = 22; age < 122; age++) {
+      if (monthlyMvp(great, 'た', age, 2)) picked++;
+      expect(monthlyMvp(fine, 'た', age, 2), isFalse);
+    }
+    expect(picked, inInclusiveRange(20, 85));
+  });
 }

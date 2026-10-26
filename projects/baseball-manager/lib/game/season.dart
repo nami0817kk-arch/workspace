@@ -603,7 +603,7 @@ class LeagueSeason {
 
 /// 勝率から順位(1〜6位)を決める。
 int leagueRank(double winPct) {
-  if (winPct >= 0.600) return 1;
+  if (winPct >= 0.575) return 1; // 0.600 だと優勝が6%しかなかった(6球団なら約17%)
   if (winPct >= 0.550) return 2;
   if (winPct >= 0.510) return 3;
   if (winPct >= 0.480) return 4;

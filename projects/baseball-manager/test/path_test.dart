@@ -146,4 +146,11 @@ void twoWayOverallTests() {
       expect(overall(two(90, 90)), 100);
     });
   });
+
+  test('戦力外の基準は30歳を過ぎると年ごとに上がる', () {
+    expect(releaseLineFor(25), releaseLine);
+    expect(releaseLineFor(30), releaseLine);
+    expect(releaseLineFor(36), greaterThan(releaseLineFor(33)));
+    expect(releaseLineFor(38), greaterThan(55));
+  });
 }
