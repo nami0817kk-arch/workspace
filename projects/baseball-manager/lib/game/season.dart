@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'at_bat.dart';
+import 'career.dart';
 import 'player.dart';
 import 'skills.dart';
 
@@ -281,6 +282,19 @@ double _runValue(AtBatResult r) => switch (r) {
 const _batterTurns = 4; // 1試合の打席
 const _pitcherFaced = 18; // 1試合の対戦打者(先発1人ぶんの目安)
 
+/// アマの大会で、エースが1試合に対戦する打者の基準(スタミナで0.75〜1倍ほど)。
+/// 少年・中学は7回制、高校から9回制。エースは完投に近い(2026-10-26 ログを読んで、2〜4回しか投げていなかった)。
+/// dart run -DBAL_TFACE=0 で従来(18人)に戻せる。
+int amateurFacedBase(Stage stage) {
+  const knob = int.fromEnvironment('BAL_TFACE', defaultValue: 1);
+  if (knob == 0) return _pitcherFaced;
+  return switch (stage) {
+    Stage.youth => 21,
+    Stage.juniorHigh => 24,
+    _ => 30,
+  };
+}
+
 /// 相手の強さ `opp`(0〜99)で1試合ぶんの個人成績を出す。
 /// `bat` / `pitch` で、その試合に打つか・投げるかを絞れる(先発ローテーションなど)。
 /// `facedBase` は投手の対戦打者数の基準(スタミナで増減する)。
@@ -404,12 +418,13 @@ Tournament playTournament(
   required List<int> opponents,
   required Random rng,
   int condition = 50,
+  int facedBase = _pitcherFaced,
 }) {
   var line = const Line();
   var won = 0;
   final games = <TournamentGame>[];
   for (final opp in opponents) {
-    final g = playGame(p, opp, rng);
+    final g = playGame(p, opp, rng, facedBase: facedBase);
     line += g;
     final pWin = (0.5 +
             (teamLevel - opp) / 100 +
@@ -495,13 +510,14 @@ TournamentProgress playTournamentToFinal(
   required List<int> opponents,
   required Random rng,
   int condition = 50,
+  int facedBase = _pitcherFaced,
 }) {
   var line = const Line();
   var won = 0;
   final games = <TournamentGame>[];
   for (var i = 0; i < opponents.length; i++) {
     final opp = opponents[i];
-    final g = playGame(p, opp, rng);
+    final g = playGame(p, opp, rng, facedBase: facedBase);
     final pWin = (0.5 +
             (teamLevel - opp) / 100 +
             (g.rating - 50) / 200 +

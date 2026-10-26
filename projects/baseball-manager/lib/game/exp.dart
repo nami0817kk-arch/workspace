@@ -43,7 +43,7 @@ double roleExpFactor(Role r) {
 /// レジェンドも多かった(`tool/balance.dart 600 normal`: 平凡のプロ入り 打者43%/投手62%、レジェンド 3%/19%)。
 /// 能力が3つで底上げが効き、投球の経験点が1つの種類に集まるため。0.85 にすると揃う
 /// (平凡 43.3%/43.8%・レジェンド 3.0%/4.0%、上手い 47.2%/46.2%・レジェンド 23.2%/21.5%)。0.75 だと投手が低すぎる(31%)。
-const pitcherPace = int.fromEnvironment('BAL_PPACE', defaultValue: 85) / 100;
+const pitcherPace = int.fromEnvironment('BAL_PPACE', defaultValue: 82) / 100;
 
 /// 能力1ぶん(基準)を経験点にしたときの量。練習の伸びはこれを掛けて貯まる。
 const expPerPoint = 8;

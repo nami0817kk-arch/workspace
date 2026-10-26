@@ -34,6 +34,9 @@ void main() {
       expect(amateurLossLine(Stage.highSchool, 0, 5), '夏の大会は初戦で敗れた。');
       expect(amateurLossLine(Stage.highSchool, 1, 5), '夏の大会は地方大会の決勝で敗れた。');
       expect(amateurLossLine(Stage.highSchool, 4, 5), '夏の大会は準優勝。');
+      // 大会名と段の名前が同じなら重ねない
+      expect(amateurLossLine(Stage.pathChoice, 1, 4), '大学選手権は準々決勝で敗れた。');
+      expect(amateurLossLine(Stage.pathChoice, 1, 4, corporate: true), '都市対抗は本大会の準々決勝で敗れた。');
       expect(amateurChampionLine(Stage.highSchool), '夏の大会で全国優勝した!');
       expect(amateurChampionLine(Stage.pathChoice, corporate: true), '都市対抗で優勝した!');
       for (final s in [Stage.youth, Stage.juniorHigh, Stage.highSchool, Stage.pathChoice]) {

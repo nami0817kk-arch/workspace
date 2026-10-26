@@ -211,6 +211,9 @@ class Game {
   /// 二軍(育成契約)で過ごす残りの年数。0なら一軍。保存する(古いセーブは0=一軍)。
   int farmYears = 0;
 
+  /// 次のプロのシーズンの年俸(万円)。ドラフトで新人の契約、毎年の契約更改で決まる。0 は古いセーブ(成績から計算)。
+  int nextSalary = 0;
+
   /// 二軍にいるか(プロ入りしていて、残りの年数がある)。
   bool get onFarm => turnedPro && farmYears > 0;
 
@@ -414,6 +417,11 @@ class Game {
     overseasTeam = overseasTeams[rng.nextInt(overseasTeams.length)];
     condition = condition.copyWith(morale: condition.morale - 8);
     log.add('海を渡った! アメリカの$overseasTeamに移籍する。');
+    // 向こうの球団との契約(年俸は桁違い)
+    if (nextSalary > 0) {
+      nextSalary = ((nextSalary * 2.5 / 10).round() * 10).clamp(400, 200000).toInt();
+      log.add('契約: 今季の年俸は${fmtSalary(nextSalary)}。');
+    }
     _note('overseas', 'アメリカの$overseasTeamに移籍');
     _newGoal(); // 相手が強くなるので、目標も立て直す
   }
@@ -425,6 +433,10 @@ class Game {
     overseas = false;
     condition = condition.copyWith(morale: condition.morale + 6);
     log.add('日本のリーグに復帰した。');
+    if (nextSalary > 0) {
+      nextSalary = ((nextSalary / 2.5 / 10).round() * 10).clamp(400, 200000).toInt();
+      log.add('契約: 今季の年俸は${fmtSalary(nextSalary)}。');
+    }
     _note('overseas', '日本のリーグに復帰');
     _newGoal();
   }
@@ -680,6 +692,8 @@ class Game {
       teamBoost = -1; // 新しい球団は、あまり強くない
       condition = condition.copyWith(morale: condition.morale + 10);
       log.add('トライアウトで好投・好打を見せ、$nextと契約を勝ち取った!');
+      // 拾ってもらった契約なので、年俸は低め
+      if (nextSalary > 0) nextSalary = min(nextSalary, 1000);
       _note('team', 'トライアウトで$nextと契約');
       _newGoal();
     } else {
@@ -689,16 +703,21 @@ class Game {
   }
 
   /// 決勝の見せ場の決断。決まったら決勝の勝ち負けを決め、大会の続き(記録・ライバル・世界大会)を進める。
+  /// 決勝の見せ場で選んだ作戦の一文(保存しない。その場でログに出すだけ)。
+  String? _finalNote;
+
   void _resolveFinalMoment(int index) {
     final m = pendingFinal!;
     final stance = finalStances(player)[index];
     pendingEvent = null;
     pendingFinal = null;
     phase = Phase.term;
-    log.add('決勝の最終回、${player.name}は「${stance.$1}」を選んだ。');
+    // 決勝の試合の行のすぐ前に出す(_logRounds)
+    _finalNote = '決勝の最終回、${player.name}は「${stance.$1}」を選んだ。';
     final bonus = finalBonus(index, player, rng);
     final t = finishFinal(m, bonus, rng);
     _summerAftermath(t, null);
+    _finalNote = null;
     _finishTurn(_eventFocus, slotShare(stage));
   }
 
@@ -1280,6 +1299,7 @@ class Game {
       opponents: l.opponents,
       rng: rng,
       condition: condition.value,
+      facedBase: amateurFacedBase(stage),
     );
     if (prog.moment != null) {
       // 決勝まで勝ち上がった。勝負を決める場面の決断を、選んでもらう。
@@ -1295,6 +1315,8 @@ class Game {
   void _summerAftermath(Tournament? tournament, LeagueSeason? league) {
     var ach = tournament?.achievement ?? 0;
     bool? rivalWon;
+    // ライバルとの勝負・今年の目標は、試合の結果のあとに出す(読む順を、起きた順に合わせる)
+    String? rivalLine;
     final rival = cast.rival;
     if (rival != null) {
       final mine = overall(player) + (rng.nextDouble() * 2 - 1) * 8;
@@ -1303,12 +1325,12 @@ class Game {
         cast.rivalWins++;
         ach = min(100, ach + 5);
         condition = condition.copyWith(morale: condition.morale + 10);
-        log.add('${rival.name}に勝った!');
+        rivalLine = 'ライバルの${rival.name}との今年の勝負は、こちらの勝ち!';
       } else {
         rivalWon = false;
         cast.rivalLosses++;
         condition = condition.copyWith(morale: condition.morale - 8);
-        log.add('${rival.name}に負けた…');
+        rivalLine = 'ライバルの${rival.name}との今年の勝負は、向こうの勝ち…';
       }
       rival.addBond(5);
     }
@@ -1350,6 +1372,7 @@ class Game {
               overseas: overseas,
             );
       final rec = SeasonRecord(
+        contract: nextSalary,
         post: ps?.result ?? '',
         age: player.age,
         stage: stage,
@@ -1369,13 +1392,6 @@ class Game {
       );
       monthRows = [];
       records.add(rec);
-      _judgeGoal(rec);
-      // N年連続でタイトルを獲ったとき。
-      final streak = currentTitleStreak(records);
-      if (const [3, 5, 8].contains(streak)) {
-        log.add('$streak年連続でタイトルを獲得!');
-        _note('title', '$streak年連続でタイトルを獲得');
-      }
       if (league.missed > 0) log.add('怪我で${league.missed}試合を欠場した。');
       if (farm) {
         log.add('二軍の今季は${league.rank}位(${league.wins}勝${league.losses}敗)。');
@@ -1405,6 +1421,12 @@ class Game {
       for (final t in titles) {
         log.add('タイトル獲得: $t!');
       }
+      // N年連続でタイトルを獲ったとき。
+      final streak = currentTitleStreak(records);
+      if (const [3, 5, 8].contains(streak)) {
+        log.add('$streak年連続でタイトルを獲得!');
+        _note('title', '$streak年連続でタイトルを獲得');
+      }
       if (titles.isNotEmpty) {
         _tryAwaken(0.08, 'タイトルを獲った今季、');
       } else if (league.rank == 1) {
@@ -1421,33 +1443,27 @@ class Game {
         log.add('記録達成: $m!');
         _note('title', m);
       }
+      _judgeGoal(rec);
+      if (rivalLine != null) log.add(rivalLine);
       log.add(coachWordOf(player));
-      // 年俸が資産に入る(前の年も見てなだらかに決めた年俸)。
-      final pays = salariesOf(records);
-      money += pays.last;
+      // 今季の年俸が資産に入る(シーズン前に決まっていた額)。
+      final now = salariesOf(records).last;
+      money += now;
       final cm = cmFeeOf(popularityOf(records, worldRecords));
       if (cm > 0) {
         money += cm;
         log.add('CM出演料: ${fmtMoney(cm)}');
       }
-      // 契約更改(前の年からの増減)。保存はせず、成績から計算する。
-      final proPays = [
-        for (var i = 0; i < records.length; i++)
-          if (records[i].stage == Stage.pro) pays[i]
-      ];
-      final now = proPays.last;
-      if (proPays.length >= 2) {
-        final prev = proPays[proPays.length - 2];
-        final diff = now - prev;
-        final mark = diff > 0
-            ? '(アップ)'
-            : diff < 0
-                ? '(ダウン)'
-                : '(現状維持)';
-        log.add('契約更改: 年俸 ${fmtSalary(prev)} → ${fmtSalary(now)} $mark');
-      } else {
-        log.add('契約更改: 年俸 ${fmtSalary(now)}');
-      }
+      // 契約更改: 今季の成績で、来季の年俸が決まる。
+      final next = renewSalary(now, rec);
+      nextSalary = next;
+      final diff = next - now;
+      final mark = diff > 0
+          ? '(アップ)'
+          : diff < 0
+              ? '(ダウン)'
+              : '(現状維持)';
+      log.add('契約更改: 来季の年俸 ${fmtSalary(now)} → ${fmtSalary(next)} $mark');
     } else if (tournament != null) {
       achievements.add(ach);
       // アマの大会の表彰(大会優秀選手・大会最優秀選手)。
@@ -1467,7 +1483,6 @@ class Game {
         awards: ampAwards,
       );
       records.add(rec);
-      _judgeGoal(rec);
       _logRounds(tournament);
       for (final w in ampAwards) {
         log.add('表彰: $w!');
@@ -1484,6 +1499,8 @@ class Game {
       }
       final d = describeLine(tournament.line);
       if (d.isNotEmpty) log.add('大会成績: $d');
+      _judgeGoal(rec);
+      if (rivalLine != null) log.add(rivalLine);
     }
     _playWorld();
   }
@@ -1501,6 +1518,7 @@ class Game {
       if (qualify != null && i == qualify) {
         log.add(amateurQualifyLine(stage, corporate: corp));
       }
+      if (i == t.rounds - 1 && _finalNote != null) log.add(_finalNote!);
       log.add('${g.won ? '○' : '●'} ${amateurRoundLabel(stage, i, t.rounds, corporate: corp)} vs $name'
           '${d.isEmpty ? '' : ' — $d'}'
           '${isHeroGame(g.line, won: g.won) ? ' ★殊勲(${heroNoteOf(g.line)})' : ''}');
@@ -1660,6 +1678,8 @@ class Game {
       log.add('ドラフトで指名された! $team から$round位指名。');
       log.add(pressConferenceNote(round, uniformNumberOf(Stage.pro, player)));
       farmYears = farmYearsFor(round);
+      nextSalary = rookieSalary(round);
+      log.add('契約: 1年目の年俸は${fmtSalary(nextSalary)}。');
       if (farmYears > 0) {
         log.add('育成契約での入団。まずは二軍で力をつけて、一軍昇格を目指す。');
         _note('team', '育成契約で入団(二軍からのスタート)');
@@ -1772,6 +1792,7 @@ class Game {
         'tryoutUsed': tryoutUsed,
         'pendingFinal': pendingFinal?.toJson(),
         'farmYears': farmYears,
+        'nextSalary': nextSalary,
         'afterPath': afterPath?.name,
       };
 
@@ -1804,6 +1825,7 @@ class Game {
     g.awakened = j['awakened'] == true;
     g.tryoutUsed = j['tryoutUsed'] == true;
     g.farmYears = (j['farmYears'] as num?)?.toInt() ?? 0;
+    g.nextSalary = (j['nextSalary'] as num?)?.toInt() ?? 0;
     g.afterPath = AfterPath.parse(j['afterPath'] as String?);
     final pf = j['pendingFinal'];
     if (pf is Map) {

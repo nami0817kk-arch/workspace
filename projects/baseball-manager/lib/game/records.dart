@@ -27,6 +27,7 @@ class SeasonRecord {
     this.errors = 0,
     this.corporate = false,
     this.post = '',
+    this.contract = 0,
   });
 
   final int age;
@@ -76,6 +77,10 @@ class SeasonRecord {
   /// プロのポストシーズンの結果(「日本一」「日本シリーズ敗退」「CSファイナル敗退」)。出なかった年・古いセーブは空。
   final String post;
 
+  /// この年の年俸(万円)。シーズン前に決まっている額(1年目は新人の契約、2年目からは前の年の契約更改)。
+  /// 0 は古いセーブ(成績から計算した値を使う)。
+  final int contract;
+
   bool get isLeague => rank != null;
   bool get champion =>
       isLeague ? rank == 1 : (rounds > 0 && roundsWon == rounds);
@@ -113,6 +118,7 @@ class SeasonRecord {
         'errors': errors,
         'corporate': corporate,
         'post': post,
+        'contract': contract,
       };
 
   /// 項目を足すときは既定値を置く。
@@ -143,6 +149,7 @@ class SeasonRecord {
         errors: (j['errors'] as num?)?.toInt() ?? 0,
         corporate: (j['corporate'] as bool?) ?? false,
         post: (j['post'] as String?) ?? '',
+        contract: (j['contract'] as num?)?.toInt() ?? 0,
       );
 }
 
@@ -255,25 +262,45 @@ String fmtSalary(int man) {
   return rest == 0 ? '$oku億円' : '$oku億$rest万円';
 }
 
-/// 年ごとの年俸(万円)。契約更改のように、前の年の年俸も見てなだらかに決める
-/// (その年の成績だけだと、タイトルを逃した翌年に半分になることがあった)。
-/// その年の成績の年俸を65%・前の年の年俸を35%で混ぜ、下がるときも前の年の60%より下げない。
-/// 二軍→一軍、日本→海外のような契約の替わり目もなだらかになる。プロ以外の年は 0。保存はしない。
+/// 新人の年俸(万円)。ドラフトの順位で決まる(実際のプロ野球の目安。6位=育成契約)。
+int rookieSalary(int round) => switch (round) {
+      1 => 1500,
+      2 => 1200,
+      3 => 1000,
+      4 => 900,
+      5 => 800,
+      _ => 400,
+    };
+
+/// 契約更改: 今季の年俸 `current` と今季の記録 `r` から、来季の年俸を決める。
+/// 今季の成績の年俸(`salaryOf`)を65%・今季の年俸を35%で混ぜる。下がるときは、
+/// 減額の上限(1億円を超える年俸は4割、それ以下は2割5分まで)より下げない。
+int renewSalary(int current, SeasonRecord r) {
+  final raw = salaryOf(r);
+  final floor = current * (current > 10000 ? 0.6 : 0.75);
+  final v = max(0.65 * raw + 0.35 * current, floor);
+  return ((v / 10).round() * 10).clamp(400, 200000).toInt();
+}
+
+/// 年ごとの年俸(万円)。記録に年俸(`contract`)があればそれを、無い古い記録は
+/// 前の年の年俸と成績から契約更改のように計算する。プロ以外の年は 0。
 List<int> salariesOf(List<SeasonRecord> rs) {
   final out = <int>[];
   int? prev;
+  SeasonRecord? prevRec;
   for (final r in rs) {
     if (r.stage != Stage.pro) {
       out.add(0);
       continue;
     }
-    final raw = salaryOf(r);
-    final v = prev == null
-        ? raw
-        : max(0.65 * raw + 0.35 * prev, 0.6 * prev).round();
-    final s = ((v / 10).round() * 10).clamp(400, 200000);
+    final s = r.contract > 0
+        ? r.contract
+        : (prev == null || prevRec == null
+            ? salaryOf(r)
+            : renewSalary(prev, prevRec));
     out.add(s);
     prev = s;
+    prevRec = r;
   }
   return out;
 }

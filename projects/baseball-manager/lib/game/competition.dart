@@ -112,8 +112,11 @@ String amateurLossLine(Stage stage, int roundsWon, int total,
   final name = amateurEventName(stage, corporate: corporate);
   if (roundsWon == 0) return '$nameは初戦で敗れた。';
   if (roundsWon == total - 1) return '$nameは準優勝。';
-  final label = amateurRoundLabel(stage, roundsWon, total, corporate: corporate)
-      .replaceFirst(' ', 'の');
+  var label = amateurRoundLabel(stage, roundsWon, total, corporate: corporate);
+  // 「大学選手権は大学選手権の準々決勝」のような重なりを避ける
+  label = label.startsWith('$name ')
+      ? label.substring(name.length + 1)
+      : label.replaceFirst(' ', 'の');
   return '$nameは$labelで敗れた。';
 }
 
@@ -234,7 +237,7 @@ Postseason playPostseason({
   // 相手ももう一方のリーグを勝ち抜いた球団なので、5割に寄せる
   final js = _series(r, 0.5 + (p - 0.5) * 0.5, need: 4, maxGames: 7);
   lines.add('$series(vs $opp): ${rec(js)}'
-      '${js.won ? (overseas ? 'で、アメリカのリーグの頂点に立った!' : 'で日本シリーズを制して、日本一に輝いた!') : 'で敗れた。'}');
+      '${js.won ? (overseas ? 'で、アメリカのリーグの頂点に立った!' : 'で制し、日本一に輝いた!') : 'で敗れた。'}');
   return Postseason(
     lines: lines,
     champion: js.won,

@@ -356,9 +356,12 @@ class _GameScreenState extends State<GameScreen> {
               child: ListTile(
                 leading: const Icon(Icons.savings, color: Color(0xFF2E7D32)),
                 title: Text('資産 ${fmtMoney(game.money)}'),
-                subtitle: Text(game.records.any((r) => r.stage == Stage.pro)
-                    ? '昨年の年俸 ${fmtSalary(salaryIn(game.records, game.records.lastWhere((r) => r.stage == Stage.pro)))}'
-                    : '年俸はシーズンのあとに決まります'),
+                // 今季の年俸は、ドラフト(新人の契約)か前の年の契約更改で決まっている
+                subtitle: Text(game.nextSalary > 0
+                    ? '今季の年俸 ${fmtSalary(game.nextSalary)}(シーズン後に資産に入る)'
+                    : game.records.any((r) => r.stage == Stage.pro)
+                        ? '昨年の年俸 ${fmtSalary(salaryIn(game.records, game.records.lastWhere((r) => r.stage == Stage.pro)))}'
+                        : '年俸はシーズンのあとに決まります'),
               ),
             ),
           ),

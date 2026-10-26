@@ -7,6 +7,7 @@ import 'package:baseball_manager/game/game.dart';
 import 'package:baseball_manager/game/life.dart';
 import 'package:baseball_manager/game/path.dart';
 import 'package:baseball_manager/game/player.dart';
+import 'package:baseball_manager/game/records.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// 決まった方針で最後まで遊ぶ。疲れたら休養、それ以外は練習。
@@ -51,7 +52,7 @@ void main() {
         seen++;
         expect(l, isNot(contains('回戦突破')));
         expect(
-            RegExp(r'は(初戦で敗れた|準優勝|(県大会|地方大会|全国大会|リーグ戦|大学選手権|地区予選|本大会)の(準々決勝|準決勝|決勝|優勝決定戦|代表決定戦)で敗れた)。$')
+            RegExp(r'は(初戦で敗れた|準優勝|((県大会|地方大会|全国大会|リーグ戦|大学選手権|地区予選|本大会)の)?(準々決勝|準決勝|決勝|優勝決定戦|代表決定戦)で敗れた)。$')
                 .hasMatch(l),
             isTrue,
             reason: l);
@@ -294,7 +295,7 @@ void _historyTests() {
     fail('プロになった選手がいない');
   });
 
-  test('プロの毎年に契約更改のログが出る(2年目からは前の年との増減つき)', () {
+  test('プロの毎年に契約更改のログが出る(今季の年俸 → 来季の年俸)。1年目は新人の契約', () {
     for (var s = 0; s < 60; s++) {
       final g = _new(s, potential: 100);
       _autoPlay(g, stop: (g) => g.phase == Phase.retired);
@@ -302,8 +303,14 @@ void _historyTests() {
       if (pro < 3) continue;
       final lines = g.log.where((l) => l.startsWith('契約更改')).toList();
       expect(lines.length, pro);
-      expect(lines.first, isNot(contains('→')));
-      expect(lines.skip(1).every((l) => l.contains('→')), isTrue);
+      expect(lines.every((l) => l.contains('来季の年俸') && l.contains('→')), isTrue);
+      // 1年目はドラフトの順位で決まる新人の年俸(1億円を超えたりしない)
+      expect(g.log.any((l) => l.startsWith('契約: 1年目の年俸')), isTrue);
+      final first = g.records.firstWhere((r) => r.stage == Stage.pro);
+      expect(first.contract, inInclusiveRange(400, 1500));
+      // 2年目の年俸は、1年目の契約更改で決めた額
+      final pros = g.records.where((r) => r.stage == Stage.pro).toList();
+      expect(pros[1].contract, renewSalary(pros[0].contract, pros[0]));
       return;
     }
     fail('3年以上プロにいた選手がいない');
