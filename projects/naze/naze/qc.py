@@ -24,6 +24,11 @@ from . import overlay as ov
 from .config import ASPECT, FPS, H, W, ffmpeg
 
 CPS_WARN, CPS_FAIL = 8.5, 10.0          # 語りの速さ(字/秒、句読点を除く)
+SENT_MAX = 25                           # 一文の字数(docs/writing.md)
+NUMS_PER_MIN = 4.0                      # 数字の数(1 分あたり)
+COMPARE = re.compile(r"倍|個分|杯分|歩いて|階建て|ぶん|分の|同じくらい|と同じ|ほどの")   # 身近な比べ
+TWIST = re.compile(r"実は|ところが|しかし|でも、|ではなく|多くの人|と思いますか|思うかもしれません")   # 思い込みの切り返し
+HANDOFF = re.compile(r"見てください|思い出してください|見たら|立ったら|通ったら|乗ったら|見上げたら")   # 暮らしへの渡し
 SHRINK_WARN = 0.8                       # 字幕が長すぎて元の大きさの 8 割より小さくなる
 STATIC_WARN, STATIC_FAIL = 4.0, 7.0     # 画面が止まったままの秒数
 SAMPLE_FPS = 6                          # 画面の点検で見るコマの間隔
@@ -48,6 +53,27 @@ def script(ep: dict, tl: dict) -> tuple[list, list]:
         sub = d.get("sub")
         if sub and d.get("style") != "end" and _plain(sub) != _plain(d["text"]):
             warns.append(f"字幕が語りと違う [{l['id']}] 字幕「{_plain(sub)}」/ 語り「{_plain(d['text'])}」")
+    body = [d for d in ep["lines"] if d.get("style") != "cta"]
+    whole = "".join(d["text"] for d in body)
+    for d in body:
+        for s in re.split(r"[。？！?!]", d["text"]):
+            if len(_plain(s)) > SENT_MAX + 8:
+                warns.append(f"一文が長い [{d['id']}] {len(_plain(s))}字「{s[:18]}…」(目安 {SENT_MAX} 字)")
+    dur_body = max(1.0, tl["lines"][len(body) - 1]["end"])
+    nums = len(re.findall(r"\d+", whole))
+    if nums / (dur_body / 60) < NUMS_PER_MIN:
+        warns.append(f"数字が少ない {nums} 個({nums / (dur_body / 60):.1f}/分、目安 {NUMS_PER_MIN}/分)")
+    first = body[0]["text"]
+    if first.rstrip("。").endswith(("？", "?", "の")) and not re.search(r"\d", first):
+        warns.append("冒頭が問いだけ(意外な事実を数字つきで言い切ってから問う。docs/writing.md)")
+    if not COMPARE.search(whole):
+        warns.append("身近な比べが無い(倍・個分・歩いて○分 など)")
+    if not TWIST.search(whole):
+        warns.append("思い込みの切り返しが無い(普通は〜のはず、ところが〜)")
+    if not HANDOFF.search(body[-1]["text"] + (body[-2]["text"] if len(body) > 1 else "")):
+        warns.append("結びに暮らしへの渡しが無い(次に〜したら〜を見てください)")
+    if ASPECT == "landscape" and not re.search(r"思い出して|冒頭|最初の", whole):
+        warns.append("本編なのに伏線の回収が無い(〜を思い出してください)")
     if ASPECT == "portrait" and tl["total"] > 178:
         fails.append(f"ショートが長すぎる {tl['total']:.0f} 秒(3 分以内)")
     first = tl["lines"][0]
