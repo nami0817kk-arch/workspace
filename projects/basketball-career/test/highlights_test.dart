@@ -64,6 +64,11 @@ void main() {
           contains('12本中9本'));
     });
 
+    test('2度目からのダブルダブルは、今大会何度目かを添える', () {
+      expect(matchHighlights(_m(pts: 18, reb: 11)).join(), isNot(contains('度目')));
+      expect(matchHighlights(_m(pts: 18, reb: 11), doubleCount: 3).join(), contains('今大会3度目'));
+    });
+
     test('見どころは多くても2つまで', () {
       final h = matchHighlights(_m(ot: 1, pts: 30, team: 70, reb: 12, ast: 11, threes: 6, stl: 5, blk: 4, fouledOut: true));
       expect(h, hasLength(2));

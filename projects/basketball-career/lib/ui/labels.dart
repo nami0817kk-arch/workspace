@@ -89,7 +89,8 @@ String? matchStory(MatchResult m) {
 
 /// 試合の見どころ(個人の活躍の一言)。目立ったものから最大2つ。点の基準はチームの得点に対する割合で見る
 /// (点数の規模がリーグごとに違うため)。延長・退場・ダブルダブル・3Pの量・守備の数字など。
-List<String> matchHighlights(MatchResult m) {
+/// `doubleCount` はその大会で何度目のダブルダブル(以上)か。2度目からは「今大会n度目」と添える(スターだと毎試合並ぶため)。
+List<String> matchHighlights(MatchResult m, {int doubleCount = 1}) {
   final out = <String>[];
   final share = m.teamScore == 0 ? 0.0 : m.points / m.teamScore;
   final cats = [
@@ -105,9 +106,9 @@ List<String> matchHighlights(MatchResult m) {
         : '${m.overtimes > 1 ? '${m.overtimes}度の' : ''}延長の末に力尽きた。');
   }
   if (cats >= 3) {
-    out.add('トリプルダブル(${m.points}点${m.rebounds}リバウンド${m.assists}アシスト)。');
+    out.add('トリプルダブル(${m.points}点${m.rebounds}リバウンド${m.assists}アシスト)${doubleCount > 1 ? '。今大会$doubleCount度目' : ''}。');
   } else if (cats == 2) {
-    out.add('ダブルダブル(${m.points}点・${m.rebounds >= 10 ? '${m.rebounds}リバウンド' : '${m.assists}アシスト'})。');
+    out.add('ダブルダブル(${m.points}点・${m.rebounds >= 10 ? '${m.rebounds}リバウンド' : '${m.assists}アシスト'})${doubleCount > 1 ? '。今大会$doubleCount度目' : ''}。');
   }
   if (share >= 0.40 && m.points >= 15) {
     out.add('チームの${(share * 100).round()}%にあたる${m.points}点を一人で挙げた。');
