@@ -196,7 +196,9 @@ class _ProfileTab extends StatelessWidget {
                           affiliationOf(
                               s.stage == Stage.retired ? Stage.pro : s.stage,
                               s.name,
-                              proTeam: s.overseasTeam ?? s.proTeam),
+                              proTeam: s.overseasTeam ?? s.proTeam,
+                              seed: s.teamSeed,
+                              corporate: s.corporate),
                           key: const Key('profile-affiliation')),
                       Text(
                           playerCardLine(

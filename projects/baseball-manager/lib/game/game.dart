@@ -141,14 +141,28 @@ class Game {
       skills: birthWeaknesses(
           role,
           (pot.toInt() * 7919 +
-                  gifts.values.fold<int>(0, (a, v) => (a * 5 + v + 2) & 0xfffffff) +
+                  gifts.values
+                      .fold<int>(0, (a, v) => (a * 5 + v + 2) & 0xfffffff) +
                   name.codeUnits
                       .fold<int>(0, (a, c) => (a * 31 + c) & 0x7fffffff)) &
               0x7fffffff),
     );
     final g = Game._(rng, p, Cast.initial(rng, role, p.skills), difficulty)
       .._wasTwoWay = role == Role.twoWay
-      ..parentName = parent?.name;
+      ..parentName = parent?.name
+      // チーム名・対戦相手の種。生まれ(素質・天賦・特性)と名前から決める(乱数の並びは変えない)。
+      // 同じ名前で始めても、生まれが違えば別のチームになる。
+      ..teamSeed = 1 +
+          ((pot.toInt() * 104729 +
+                  gifts.values
+                          .fold<int>(0, (a, v) => (a * 7 + v + 3) & 0xfffffff) *
+                      31 +
+                  traits.fold<int>(
+                          0, (a, t) => (a * 37 + t.index + 1) & 0xfffffff) *
+                      17 +
+                  name.codeUnits
+                      .fold<int>(0, (a, c) => (a * 131 + c) & 0x7fffffff)) &
+              0x3fffffff);
     g.overallHistory.add(overall(p).round());
     g._note('stage', '${stageNameOf(Stage.youth)}を始めた');
     if (parent != null) {
@@ -172,6 +186,15 @@ class Game {
   Ability _eventFocus = Ability.contact;
 
   Course? route; // 大学/社会人を選んだか
+
+  /// チーム名・対戦相手の名前の種(選手ごと)。0 は古いセーブ(名前だけで決める)。
+  int teamSeed = 0;
+
+  /// 画面に出す所属(少年のチーム・中学・高校・大学・社会人・プロ球団)。
+  String get affiliation => affiliationOf(stage, player.name,
+      proTeam: proTeamLabel,
+      seed: teamSeed,
+      corporate: route == null ? null : route == Course.corporate);
   bool turnedPro = false;
   int lowYears = 0;
 
@@ -419,7 +442,8 @@ class Game {
     log.add('海を渡った! アメリカの$overseasTeamに移籍する。');
     // 向こうの球団との契約(年俸は桁違い)
     if (nextSalary > 0) {
-      nextSalary = ((nextSalary * 2.5 / 10).round() * 10).clamp(400, 200000).toInt();
+      nextSalary =
+          ((nextSalary * 2.5 / 10).round() * 10).clamp(400, 200000).toInt();
       log.add('契約: 今季の年俸は${fmtSalary(nextSalary)}。');
     }
     _note('overseas', 'アメリカの$overseasTeamに移籍');
@@ -434,7 +458,8 @@ class Game {
     condition = condition.copyWith(morale: condition.morale + 6);
     log.add('日本のリーグに復帰した。');
     if (nextSalary > 0) {
-      nextSalary = ((nextSalary / 2.5 / 10).round() * 10).clamp(400, 200000).toInt();
+      nextSalary =
+          ((nextSalary / 2.5 / 10).round() * 10).clamp(400, 200000).toInt();
       log.add('契約: 今季の年俸は${fmtSalary(nextSalary)}。');
     }
     _note('overseas', '日本のリーグに復帰');
@@ -796,7 +821,9 @@ class Game {
     final next = skillAgeMultiplier(player.age + 1);
     if (next <= now) return null;
     final any = skillsFor(player.role).any((s) =>
-        !player.skills.contains(s) && !s.negative && (skillTips[s] ?? 0) >= minSkillTips);
+        !player.skills.contains(s) &&
+        !s.negative &&
+        (skillTips[s] ?? 0) >= minSkillTips);
     if (!any && !player.skills.any((s) => s.negative)) return null;
     String f(double x) => x.toStringAsFixed(2).replaceFirst(RegExp(r'0$'), '');
     return '来年(${player.age + 1}歳)から特殊能力の値段が×${f(now)}→×${f(next)}に上がる。取るなら今のうちに。';
@@ -855,7 +882,8 @@ class Game {
     final after = (before + n).clamp(0, maxSkillTips);
     if (after == before) return false;
     skillTips[s] = after;
-    log.add('$why「${s.label}」のコツ +${after - before}(Lv$after/$maxSkillTips・あと${skillPrice(s)}で取れる)');
+    log.add(
+        '$why「${s.label}」のコツ +${after - before}(Lv$after/$maxSkillTips・あと${skillPrice(s)}で取れる)');
     return true;
   }
 
@@ -1227,12 +1255,10 @@ class Game {
       return;
     }
     // 6月は交流戦(もう一方のリーグの球団と戦う)。海外の年は呼ばない。
-    final month = isInterleagueMonth(slotName) && !overseas
-        ? '$slotName(交流戦)'
-        : slotName;
+    final month =
+        isInterleagueMonth(slotName) && !overseas ? '$slotName(交流戦)' : slotName;
     log.add('$month: ${d.isEmpty ? '' : '$d。'}チームは${m.wins}勝${m.losses}敗。');
-    monthRows
-        .add('$month: ${d.isEmpty ? '出場なし' : d} / ${m.wins}勝${m.losses}敗');
+    monthRows.add('$month: ${d.isEmpty ? '出場なし' : d} / ${m.wins}勝${m.losses}敗');
     log.add(attendanceLine(popularityOf(records, worldRecords),
         m.wins + m.losses == 0 ? 0.5 : m.wins / (m.wins + m.losses)));
     final rs = storyOfCharacter(cast.rival)?.avoiding(proTeam);
@@ -1514,19 +1540,20 @@ class Game {
 
   /// 勝ち抜き戦の各試合を、ログに残す(相手・勝ち負け・自分の出来)。
   void _logRounds(Tournament t) {
-    final own = affiliationOf(stage, player.name, proTeam: proTeam);
+    final own = affiliation;
     final corp = stage == Stage.pathChoice && route == Course.corporate;
     final qualify = amateurQualifyIndex(stage, t.rounds, corporate: corp);
     for (var i = 0; i < t.games.length; i++) {
       final g = t.games[i];
       final name = opponentName(stage, player.age, i,
-          corporate: corp, own: own);
+          corporate: corp, own: own, seed: teamSeed);
       final d = describeGame(g.line);
       if (qualify != null && i == qualify) {
         log.add(amateurQualifyLine(stage, corporate: corp));
       }
       if (i == t.rounds - 1 && _finalNote != null) log.add(_finalNote!);
-      log.add('${g.won ? '○' : '●'} ${amateurRoundLabel(stage, i, t.rounds, corporate: corp)} vs $name'
+      log.add(
+          '${g.won ? '○' : '●'} ${amateurRoundLabel(stage, i, t.rounds, corporate: corp)} vs $name'
           '${d.isEmpty ? '' : ' — $d'}'
           '${isHeroGame(g.line, won: g.won) ? ' ★殊勲(${heroNoteOf(g.line)})' : ''}');
       if (i == t.rounds - 1 && g.won && isHeroGame(g.line, won: true)) {
@@ -1556,7 +1583,9 @@ class Game {
           positionTeamAdjust(player, effectivePos),
       opponents: ev.opponents,
       rng: rng,
-      condition: condition.value + worldBonus(player.traits) + skillMatchBonus(player.skills),
+      condition: condition.value +
+          worldBonus(player.traits) +
+          skillMatchBonus(player.skills),
     );
     final w = wrapWorld(event: ev, age: player.age, tournament: t);
     for (var i = 0; i < t.games.length; i++) {
@@ -1627,7 +1656,8 @@ class Game {
         farmYears--;
         if (promoted(yearsLeft: farmYears, overall: overall(player))) {
           farmYears = 0;
-          log.add('一軍に昇格した! 支配下登録され、背番号は${uniformNumberOf(Stage.pro, player)}に。');
+          log.add(
+              '一軍に昇格した! 支配下登録され、背番号は${uniformNumberOf(Stage.pro, player)}に。');
           _note('team', '一軍に昇格');
         }
       }
@@ -1807,6 +1837,7 @@ class Game {
         'tryoutUsed': tryoutUsed,
         'pendingFinal': pendingFinal?.toJson(),
         'farmYears': farmYears,
+        'teamSeed': teamSeed,
         'nextSalary': nextSalary,
         'afterPath': afterPath?.name,
       };
@@ -1840,6 +1871,7 @@ class Game {
     g.awakened = j['awakened'] == true;
     g.tryoutUsed = j['tryoutUsed'] == true;
     g.farmYears = (j['farmYears'] as num?)?.toInt() ?? 0;
+    g.teamSeed = (j['teamSeed'] as num?)?.toInt() ?? 0;
     g.nextSalary = (j['nextSalary'] as num?)?.toInt() ?? 0;
     g.afterPath = AfterPath.parse(j['afterPath'] as String?);
     final pf = j['pendingFinal'];

@@ -1,3 +1,6 @@
+import 'package:baseball_manager/game/game.dart';
+import 'dart:math';
+import 'dart:convert';
 import 'package:baseball_manager/game/career.dart';
 import 'package:baseball_manager/game/flavor.dart';
 import 'package:baseball_manager/game/player.dart';
@@ -78,5 +81,37 @@ void main() {
     expect(playerCardLine(Stage.youth, b), isNot(contains('背番号')));
     expect(playerCardLine(Stage.highSchool, b), contains('背番号'));
     expect(playerCardLine(Stage.highSchool, b), contains('投'));
+  });
+
+  test('チーム名は選手ごとの種でばらける(同じ名前でも)。大学・社会人も所属が出る', () {
+    final teams = {
+      for (var seed = 1; seed <= 40; seed++)
+        affiliationOf(Stage.highSchool, 'ユウタ', seed: seed)
+    };
+    expect(teams.length, greaterThan(8));
+    final opps = {
+      for (var seed = 1; seed <= 40; seed++)
+        opponentName(Stage.highSchool, 17, 0, seed: seed)
+    };
+    expect(opps.length, greaterThan(8));
+    expect(affiliationOf(Stage.pathChoice, 'ユウタ', seed: 3, corporate: false),
+        contains('大学'));
+    expect(affiliationOf(Stage.pathChoice, 'ユウタ', seed: 3, corporate: true),
+        contains('野球部'));
+    expect(affiliationOf(Stage.pathChoice, 'ユウタ'), '進路を考え中');
+  });
+
+  test('ゲーム: 同じ名前でも生まれが違えば別の種。保存しても変わらない', () {
+    final seeds = {
+      for (var s = 0; s < 20; s++)
+        Game.newGame(name: 'おなじ', role: Role.batter, rng: Random(s)).teamSeed
+    };
+    expect(seeds.length, greaterThan(15));
+    expect(seeds.contains(0), isFalse);
+    final g = Game.newGame(name: 'おなじ', role: Role.batter, rng: Random(3));
+    final back = Game.fromJson(
+        jsonDecode(jsonEncode(g.toJson())) as Map<String, dynamic>, Random(1));
+    expect(back.teamSeed, g.teamSeed);
+    expect(back.affiliation, g.affiliation);
   });
 }

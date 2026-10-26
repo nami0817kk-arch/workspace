@@ -37,6 +37,8 @@ class PlayerSnapshot {
     this.position,
     this.overseasTeam,
     this.parentName,
+    this.teamSeed = 0,
+    this.corporate,
     this.money = 0,
     this.investTotal = 0,
     this.rivalTalent,
@@ -89,6 +91,12 @@ class PlayerSnapshot {
   /// 二世のとき、親の名前。
   final String? parentName;
 
+  /// チーム名の種(`Game.teamSeed`)。古い記録は0(名前だけで決める)。
+  final int teamSeed;
+
+  /// 大学・社会人のどちらに進んだか(進んでいなければ null)。
+  final bool? corporate;
+
   /// 資産(万円)と、投資のレベルの合計(最大9)。
   final int money;
   final int investTotal;
@@ -133,6 +141,8 @@ class PlayerSnapshot {
         position: g.position,
         overseasTeam: g.overseas ? g.overseasTeam : null,
         parentName: g.parentName,
+        teamSeed: g.teamSeed,
+        corporate: g.route == null ? null : g.route == Course.corporate,
         money: g.money,
         investTotal: g.invests.values.fold(0, (a, b) => a + b),
         rivalTalent: g.cast.rival?.talent,
@@ -167,6 +177,8 @@ class PlayerSnapshot {
         'position': position?.name,
         'overseasTeam': overseasTeam,
         'parentName': parentName,
+        'teamSeed': teamSeed,
+        'corporate': corporate,
         'money': money,
         'investTotal': investTotal,
         'rivalTalent': rivalTalent,
@@ -230,6 +242,8 @@ class PlayerSnapshot {
       position: Pos.parse(j['position'] as String?),
       overseasTeam: j['overseasTeam'] as String?,
       parentName: j['parentName'] as String?,
+      teamSeed: (j['teamSeed'] as num?)?.toInt() ?? 0,
+      corporate: j['corporate'] as bool?,
       money: (j['money'] as num?)?.toInt() ?? 0,
       investTotal: (j['investTotal'] as num?)?.toInt() ?? 0,
       rivalTalent: (j['rivalTalent'] as num?)?.toInt(),

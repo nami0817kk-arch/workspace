@@ -491,8 +491,7 @@ class _Header extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                    affiliationOf(game.stage, p.name,
-                                        proTeam: game.proTeamLabel),
+                                    game.affiliation,
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                     style: t.titleSmall?.copyWith(
