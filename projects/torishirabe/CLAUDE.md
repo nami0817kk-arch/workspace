@@ -11,7 +11,8 @@
 
 ## いまの状態
 
-- `prototype/game.html` … 2026-09-28 の試作（3事件）。事件データは `/*DATA-START*/` 〜 `/*DATA-END*/` の配列
+- `prototype/game.html` … 試作。事件は30件（易しい10・普通12・難しい8）。事件データは `/*DATA-START*/` 〜 `/*DATA-END*/` の配列
+- `tool/check_cases.js` … 事件データの検査（Node のみ）。`node projects/torishirabe/tool/check_cases.js --list` で一覧も出る。CI は `.github/workflows/torishirabe-check.yml`
 - 本番の器（Flutter）はまだ無い。試作で遊び方が固まってから、hikari7 と同じ「HTML を WebView に同梱」の形で作る予定
 
 ## 事件データの決まり
@@ -20,3 +21,7 @@
 - 嘘は1つの事件にちょうど1つ。**facts と食い違う証言の行がちょうど1つ**、それを否定する手がかりがちょうど1枚
 - `via` は「名前でなく特徴で人物を示す手がかり」の結び付け。特徴は本人の証言か別の手がかりで確定していること
 - 手がかりの本文には `word`（省略時は `value`）が必ず含まれる
+- 手がかりは嘘をつかない（主張はすべて facts どおり）
+- `kind` は見破り方の種類: 居場所 / 時刻 / 持ち物 / 特徴（via の特徴を本人が証言）/ 組み合わせ（via の特徴が別の手がかりでだけ分かる）
+- 当番表・持ち場の札は「そこにいた」証しにしない（書き換えた刑期の決め手）。居場所の証しは目撃・本人の記録で
+- 事件を足したら必ず check_cases.js を通す
