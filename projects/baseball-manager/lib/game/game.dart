@@ -308,7 +308,7 @@ class Game {
     if (t == null) return false;
     player = player.copyWith(traits: gain(player.traits, t));
     awakened = true;
-    log.add('$why 眠っていた才能が目覚めた!特性「${t.label}」に覚醒した!');
+    log.add('$why眠っていた才能が目覚めた! 特性「${t.label}」に覚醒した!');
     _note('trait', '覚醒: 特性「${t.label}」');
     return true;
   }
@@ -1694,7 +1694,8 @@ class Game {
     }
     _rotateCast(before);
     _newGoal();
-    if (turnedPro && phase != Phase.retired && proTeam != null) {
+    // 戦力外通告のあと(トライアウトを選ぶ前)は、開幕の文を出さない
+    if (turnedPro && phase == Phase.term && proTeam != null) {
       // 海外の年は、日本の球団のスローガン・球場を出さない
       log.add(overseas
           ? '${player.age}歳シーズン開幕。アメリカの$overseasTeamで迎える、プロ${player.age - (proStartAge ?? player.age) + 1}年目のシーズン。'

@@ -687,7 +687,7 @@ LeagueProgress playLeagueChunk(
         .clamp(0.0, 1.0);
     final won = rng.nextDouble() < pWin;
     won ? wins++ : losses++;
-    line += (starts && game.outs >= 15) ? decidedStart(game, won) : game;
+    line += starts ? decidedStart(game, won) : game;
   }
   return LeagueProgress(
       games: prog.games + count,
@@ -703,11 +703,14 @@ LeagueProgress playLeagueChunk(
 /// ペナントまで強制すると、投手のリーグ優勝が倍になってバランスが崩れた。
 bool isShutout(Line game) => game.outs >= 15 && game.runsAllowed < 0.5;
 
-/// 5回以上投げた先発の勝敗を付ける。勝ちはチームが勝った試合。
-/// **負けは、チームが負け、かつ自分が失点した試合だけ**(無失点なのに負けにはならない。
-/// 勝敗も付かない試合になる)。防御率0なのに敗戦、という不自然さを防ぐ。
-Line decidedStart(Line game, bool teamWon) =>
-    game.withDecision(win: teamWon, loss: !teamWon && game.runsAllowed >= 0.5);
+/// 先発の勝敗を付ける。
+/// - 勝ち: チームが勝ち、5回(15アウト)以上投げて、失点が4点まで(打ち込まれた試合は勝ち投手にならない)。
+/// - 負け: チームが負け、自分が失点した試合。**投げた回に関係なく**付く(早い回でKOされても負け)。
+///   無失点なのに負けにはならない(防御率0なのに敗戦、という不自然さを防ぐ)。
+/// (2026-10-26 KOされた試合に負けが付かず、防御率3点台で268勝91敗(勝率.75)になっていた)
+Line decidedStart(Line game, bool teamWon) => game.withDecision(
+    win: teamWon && game.outs >= 15 && game.runsAllowed < 4.5,
+    loss: !teamWon && game.runsAllowed >= 0.5);
 
 /// プロの1シーズンの試合数。
 const leagueGames = 143;
@@ -739,7 +742,7 @@ LeagueSeason playLeagueSeason(
         .clamp(0.0, 1.0);
     final won = rng.nextDouble() < pWin;
     won ? wins++ : losses++;
-    line += (starts && game.outs >= 15) ? decidedStart(game, won) : game;
+    line += starts ? decidedStart(game, won) : game;
   }
   return LeagueSeason(games: games, wins: wins, losses: losses, line: line);
 }
