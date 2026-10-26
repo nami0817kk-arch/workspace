@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'build.dart';
 import 'career.dart';
 import 'skills.dart';
@@ -29,7 +31,8 @@ enum Ability {
   }
 }
 
-/// ポジション。身長と能力から決まる(選べない)。
+/// ポジション。身長と能力から「おすすめ」が決まるが、節目(13・16・19・22歳)にしか見直さない。
+/// 好きなポジションを選んで固定することもできる(`Player.positionLock`)。
 enum Position {
   pointGuard('PG'),
   shootingGuard('SG'),
@@ -39,6 +42,13 @@ enum Position {
 
   const Position(this.label);
   final String label;
+
+  static Position? parse(String? s) {
+    for (final p in values) {
+      if (p.name == s) return p;
+    }
+    return null;
+  }
 
   /// ポジションの持ち味(試合での効き方)。
   String get perk => switch (this) {
@@ -65,6 +75,7 @@ class Player {
     this.skills = const {},
     this.style,
     this.specials = const {},
+    this.positionLock,
   }) : abilities = abilities ?? {for (final a in Ability.values) a: startLevel};
 
   final String name;
@@ -90,6 +101,10 @@ class Player {
   /// 習得した特殊能力(特殊能力ポイントで、自分で選んで習得する)。
   final Set<Special> specials;
 
+  /// いまのポジション(決めたもの)。null のときは、その時の身長と能力から決まる(古いセーブ)。
+  /// 以前は身長や能力が変わるたびにポジションが入れ替わり、総合評価の重みも変わって急に弱くなっていた。
+  final Position? positionLock;
+
   int of(Ability a) => abilities[a] ?? 0;
 
   Player copyWith({
@@ -101,6 +116,8 @@ class Player {
     Build? style,
     bool clearStyle = false,
     Set<Special>? specials,
+    Position? positionLock,
+    bool clearPositionLock = false,
   }) =>
       Player(
         name: name,
@@ -113,6 +130,7 @@ class Player {
         skills: skills ?? this.skills,
         style: clearStyle ? null : (style ?? this.style),
         specials: specials ?? this.specials,
+        positionLock: clearPositionLock ? null : (positionLock ?? this.positionLock),
       );
 
   /// 身長が効く補正つきの能力(リバウンド・ゴール下は高いほど、ドリブル・スピードは低いほど有利)。
@@ -129,7 +147,11 @@ class Player {
     return v.clamp(0, 120).toDouble();
   }
 
-  Position get position {
+  /// 決めたポジション。決めていなければ、いまの身長と能力から決まるもの。
+  Position get position => positionLock ?? suggestedPosition;
+
+  /// いまの身長と能力から見た、おすすめのポジション(節目に見直すときと、ポジションの選択の目安に使う)。
+  Position get suggestedPosition {
     if (heightCm >= 203) return Position.center;
     if (heightCm >= 195) {
       // 内側が得意なら 199cm からセンター、それ未満はパワーフォワード。
@@ -161,7 +183,19 @@ class Player {
     final hw = heightWeightOf(position);
     sum += heightRating * hw;
     total += hw;
-    return (sum / total).clamp(0, 99).toDouble();
+    final base = sum / total;
+    // 得意の強み: 重みの大きい能力(2以上)のうち、高い上位3つの平均を混ぜる。
+    // 平均だけだと、3Pが99でも他が低いと総合が上がらず、「強みを伸ばした」手応えが総合に出なかった。
+    final key = [
+      for (final e in w.entries)
+        if (e.value >= 2) effective(e.key),
+    ]..sort((a, b) => b.compareTo(a));
+    final top = key.isEmpty
+        ? base
+        : key.take(3).fold(0.0, (s, v) => s + v) / min(3, key.length);
+    // ふつうに育てたときの上位3つと全体の差(約12)を超えた分だけ、強みとして上乗せする(平均的な選手は変わらない)。
+    final bonus = specialtyWeight * max(0.0, top - base - specialtyGap);
+    return (base + bonus).clamp(0, 99).toDouble();
   }
 
   Map<String, dynamic> toJson() => {
@@ -175,6 +209,7 @@ class Player {
         'skills': [for (final k in skills) k.name],
         'style': style?.name,
         'specials': [for (final x in specials) x.name],
+        'position': positionLock?.name,
       };
 
   /// 項目を足すときは既定値を置く(既存セーブを壊さない)。
@@ -201,6 +236,7 @@ class Player {
           if (Skill.parse(s as String) != null) Skill.parse(s)!,
       },
       style: Build.parse(j['style'] as String?),
+      positionLock: Position.parse(j['position'] as String?),
       specials: {
         for (final s in (j['specials'] as List?) ?? const [])
           if (Special.parse(s as String?) != null) Special.parse(s)!,
@@ -211,6 +247,10 @@ class Player {
 
 /// 身長の評価(0〜100)。
 double heightRatingOf(double cm) => ((cm - 155) / 65 * 100).clamp(0, 100).toDouble();
+
+/// 総合評価に足す「得意の強み」。重みの大きい能力の上位3つの平均が、全体の平均を `specialtyGap` 超えた分の 25%。
+const specialtyWeight = 0.25;
+const specialtyGap = 12.0;
 
 /// 身長が総合評価に効く度合い(ポジションの重みと同じ尺度)。大きい選手ほど身長が効く。
 int heightWeightOf(Position p) => switch (p) {

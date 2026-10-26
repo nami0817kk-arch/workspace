@@ -121,7 +121,8 @@ class _SeasonView extends StatelessWidget {
         _PlayerCard(
             game: g,
             onPickStyle: () => showStylePicker(context, c),
-            onPickSpecial: () => showSpecialPicker(context, c)),
+            onPickSpecial: () => showSpecialPicker(context, c),
+            onPickPosition: () => showPositionPicker(context, c)),
         const SizedBox(height: 12),
         _GoalCard(controller: c, game: g),
         const SizedBox(height: 12),
@@ -311,7 +312,8 @@ class _SeasonView extends StatelessWidget {
 }
 
 class _PlayerCard extends StatelessWidget {
-  const _PlayerCard({required this.game, this.onPickStyle, this.onPickSpecial});
+  const _PlayerCard(
+      {required this.game, this.onPickStyle, this.onPickSpecial, this.onPickPosition});
   final Game game;
 
   /// 目指すプレースタイルを選び直す(育成画面だけ。無ければ出さない)。
@@ -319,6 +321,9 @@ class _PlayerCard extends StatelessWidget {
 
   /// 特殊能力の習得画面を開く(育成画面だけ)。
   final VoidCallback? onPickSpecial;
+
+  /// ポジションを選ぶダイアログを開く(育成画面だけ)。
+  final VoidCallback? onPickPosition;
 
   @override
   Widget build(BuildContext context) {
@@ -330,8 +335,23 @@ class _PlayerCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('${trackLabel(game)}  ${game.number > 0 ? '#${game.number}  ' : ''}${p.position.label}  '
-                '${p.heightCm.toStringAsFixed(1)}cm  総合 ${p.overall.round()}'),
+            Row(
+              children: [
+                Expanded(
+                  child: Text('${trackLabel(game)}  ${game.number > 0 ? '#${game.number}  ' : ''}${p.position.label}'
+                      '${game.positionAuto ? '' : '(固定)'}  '
+                      '${p.heightCm.toStringAsFixed(1)}cm  総合 ${p.overall.round()}'),
+                ),
+                if (onPickPosition != null)
+                  TextButton(
+                    onPressed: onPickPosition,
+                    style: TextButton.styleFrom(
+                        visualDensity: VisualDensity.compact,
+                        padding: const EdgeInsets.symmetric(horizontal: 8)),
+                    child: const Text('ポジション', style: TextStyle(fontSize: 12)),
+                  ),
+              ],
+            ),
             if (buildOf(p) != null || onPickStyle != null)
               Row(
                 children: [
@@ -1256,7 +1276,18 @@ class _EventView extends StatelessWidget {
                     padding: const EdgeInsets.only(bottom: 8),
                     child: FilledButton(
                       onPressed: () => controller.chooseEvent(i),
-                      child: Text(e.options[i].label),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(e.options[i].label,
+                              textAlign: TextAlign.center),
+                          // 何が起きるか(特性がつく理由も)を、選ぶ前に見せる。
+                          if (e.options[i].effect.previewLines().isNotEmpty)
+                            Text(e.options[i].effect.previewLines().join(' / '),
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(fontSize: 11)),
+                        ],
+                      ),
                     ),
                   ),
               ],

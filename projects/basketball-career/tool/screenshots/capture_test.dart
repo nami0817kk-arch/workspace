@@ -279,6 +279,7 @@ void main() {
       final g = Game(
         eventsEnabled: false,
         player: base.player.copyWith(
+          clearPositionLock: true, // 身長と能力に合うポジションにする(始めたときの PG のままにしない)
           age: 26,
           heightCm: 196,
           abilities: {
@@ -314,6 +315,7 @@ void main() {
     final path = Game(
       eventsEnabled: false,
       player: pbase.player.copyWith(
+          clearPositionLock: true, // 身長と能力に合うポジションにする(始めたときの PG のままにしない)
         age: 19,
         heightCm: 190,
         abilities: {for (final x in Ability.values) x: 66},
@@ -328,6 +330,7 @@ void main() {
     final pro = Game(
       eventsEnabled: false,
       player: sbase.player.copyWith(
+          clearPositionLock: true, // 身長と能力に合うポジションにする(始めたときの PG のままにしない)
         age: 27,
         heightCm: 196,
         abilities: {

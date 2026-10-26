@@ -223,6 +223,7 @@ class Game {
     this.dream = Dream.pro,
     this.dreamAge = 0,
     this.sp = 0,
+    this.positionAuto = true,
     Map<Ability, int>? yearStart,
   })  : rng = rng ?? Random(),
         rival = rival ?? Rival(name: 'ライバル', potential: 60),
@@ -248,11 +249,13 @@ class Game {
       int? number}) {
     final r = rng ?? Random();
     final potential = (30 + r.nextInt(40) + r.nextInt(31)).clamp(30, 100);
+    final first = newPlayer(
+            name, potential, r.nextDouble(), traits ?? rollInnateTraits(r),
+            bonus: legacyBonus)
+        .copyWith(style: style);
     final g = Game(
-      player: newPlayer(
-              name, potential, r.nextDouble(), traits ?? rollInnateTraits(r),
-              bonus: legacyBonus)
-          .copyWith(style: style),
+      // ポジションは節目にしか見直さない(身長や能力が動くたびに入れ替わって弱くならないように)。
+      player: first.copyWith(positionLock: first.suggestedPosition),
       rival: Rival.random(r),
       difficulty: difficulty,
       dream: dream,
@@ -414,6 +417,41 @@ class Game {
   /// 始めるときに決めた夢(一生の目標)。かなった年齢は `dreamAge`(0 はまだ)。保存あり。
   final Dream dream;
   int dreamAge;
+
+  /// ポジションを節目(13・16・19・22歳)に自動で見直すか。自分で選んで固定したら false(保存あり)。
+  bool positionAuto;
+
+  /// 直前に起きたポジションの変更の知らせ(画面が知らせたら使い終わり。保存しない)。
+  String? lastPositionNote;
+
+  /// ポジションを見直す年齢。身長が大きく動く時期の節目と、プロに入る前後だけ。
+  static const positionReviewAges = {13, 16, 19, 22};
+
+  /// ポジションを見直す(おまかせのときだけ)。変わったら知らせる。
+  void _reviewPosition() {
+    if (!positionAuto) return;
+    final now = player.suggestedPosition;
+    if (now == player.positionLock) return;
+    final before = player.positionLock;
+    player = player.copyWith(positionLock: now);
+    if (before != null) {
+      lastPositionNote =
+          'ポジションが ${before.label} から ${now.label} に変わった(身長と能力の変化で)。${now.perk}';
+    }
+  }
+
+  /// ポジションを自分で選ぶ。null でおまかせ(いまのおすすめに合わせ、節目ごとに見直す)。
+  /// 選ぶと、そのポジションで固定される(総合評価の重みもそのポジションのもの)。
+  void setPosition(Position? p) {
+    if (phase == Phase.retired) throw StateError('引退後は変えられない');
+    if (p == null) {
+      positionAuto = true;
+      player = player.copyWith(positionLock: player.suggestedPosition);
+    } else {
+      positionAuto = false;
+      player = player.copyWith(positionLock: p);
+    }
+  }
 
   /// 特殊能力ポイント(年末にたまる。`learnSpecial` で使う。保存あり)。
   int sp;
@@ -678,6 +716,7 @@ class Game {
     lastBuildNote = null;
     lastDreamNote = null;
     lastYearSummary = null;
+    lastPositionNote = null;
     lastSpGain = 0;
     lastCareerLines = const [];
     lastMetRival = false;
@@ -1059,6 +1098,7 @@ class Game {
     final stageBefore = stage;
     slot = 0;
     player = ageUp(player, rng, habit: habit);
+    if (positionReviewAges.contains(player.age)) _reviewPosition();
     switch (track) {
       case Track.school:
         if (player.age >= 19) pathPending = true;
@@ -1440,6 +1480,7 @@ class Game {
         'dream': dream.name,
         'dreamAge': dreamAge,
         'sp': sp,
+        'posAuto': positionAuto,
         'yearStart': {for (final e in yearStart.entries) e.key.name: e.value},
         'number': number,
         'mate': mate,
@@ -1507,6 +1548,7 @@ class Game {
         dream: Dream.parse(j['dream'] as String?),
         dreamAge: (j['dreamAge'] as num?)?.toInt() ?? 0,
         sp: (j['sp'] as num?)?.toInt() ?? 0,
+        positionAuto: (j['posAuto'] as bool?) ?? true,
         mate: (j['mate'] as String?) ?? '',
         coachLabel: (j['coachLabel'] as String?) ?? '',
         rivalMet: (j['rivalMet'] as bool?) ?? (((j['rival'] as Map?)?['wins'] as num? ?? 0) + ((j['rival'] as Map?)?['losses'] as num? ?? 0) > 0),

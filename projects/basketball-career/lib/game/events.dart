@@ -60,6 +60,28 @@ class Effect {
 
   /// 生活習慣(-10〜+10)への加算。幼少期の睡眠・食事・外遊びなど。身長の伸びに効く。
   final double habit;
+
+  /// 選ぶ前に画面に出す、この選択肢で起きること(特性が身につく理由が分からない、という指摘から)。
+  /// 決まった増減だけを書く(重点の能力への加算・怪我は確率つきで書く)。
+  List<String> previewLines() {
+    String sgn(num d) => d > 0 ? '+$d' : '$d';
+    return [
+      for (final e in abilities.entries) '${e.key.label} ${sgn(e.value)}',
+      if (focusBonus != 0) '重点の能力 ${sgn(focusBonus)}',
+      if (morale != 0) '気持ち ${sgn(morale)}',
+      if (fatigue != 0) '疲れ ${sgn(fatigue)}',
+      if (injuryChance > 0) '怪我の危険 ${(injuryChance * 100).round()}%',
+      if (heightCm != 0) '身長 ${sgn(heightCm)}cm',
+      if (achievement != 0) '進路の評価 ${sgn(achievement.round())}',
+      if (teamwork != 0) 'チームワーク ${sgn(teamwork)}',
+      if (coach != 0) 'コーチとの信頼 ${sgn(coach)}',
+      if (schoolLabel != null) '進学先: $schoolLabel',
+      if (national) '日本代表に参加する',
+      if (salaryPct != 0) '年俸 ${sgn(salaryPct)}%',
+      if (habit != 0) '生活習慣 ${habit > 0 ? '良くなる' : '乱れる'}',
+      if (trait != null) '特性「${trait!.label}」がつく(${trait!.description})',
+    ];
+  }
 }
 
 class EventOption {
@@ -692,15 +714,18 @@ const events = <EventDef>[
   ),
 ];
 
+/// すべての出来事(通常・進学・プロ・フリーエージェント・怪我からの復帰・代表)。
+List<EventDef> get allEvents => [
+      ...events,
+      ...schoolEvents,
+      ...proEvents,
+      ...proFaEvents,
+      ...injuryEvents,
+      ...nationalEvents,
+    ];
+
 EventDef? eventById(String id) {
-  for (final e in [
-    ...events,
-    ...schoolEvents,
-    ...proEvents,
-    ...proFaEvents,
-    ...injuryEvents,
-    ...nationalEvents,
-  ]) {
+  for (final e in allEvents) {
     if (e.id == id) return e;
   }
   return null;
