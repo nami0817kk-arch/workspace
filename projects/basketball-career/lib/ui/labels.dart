@@ -89,6 +89,12 @@ String? matchStory(MatchResult m) {
 
 /// 試合の見どころ(個人の活躍の一言)。目立ったものから最大2つ。点の基準はチームの得点に対する割合で見る
 /// (点数の規模がリーグごとに違うため)。延長・退場・ダブルダブル・3Pの量・守備の数字など。
+/// 勝負どころの時計の一言(「第4クォーター 残り14秒」)。同じ試合ならいつも同じ秒数。
+String clutchClock(MatchState s) {
+  final secs = 6 + ((s.team * 7 + s.opp * 13 + s.points) % 19);
+  return '第4クォーター 残り$secs秒';
+}
+
 /// `doubleCount` はその大会で何度目のダブルダブル(以上)か。2度目からは「今大会n度目」と添える(スターだと毎試合並ぶため)。
 List<String> matchHighlights(MatchResult m, {int doubleCount = 1}) {
   final out = <String>[];

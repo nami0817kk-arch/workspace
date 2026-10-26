@@ -1156,11 +1156,8 @@ class _ClutchView extends StatelessWidget {
     final s = run.pending!;
     final info = game.clutchInfo!;
     final m = s.margin;
-    final situation = m == 0
-        ? '同点。残りはあと1回の攻防。'
-        : m > 0
-            ? '$m点リード。守り切れば勝ち。'
-            : '${-m}点ビハインド。決めれば逆転だ。';
+    final situation = '${clutchClock(s)}、'
+        '${m == 0 ? '同点。残りはあと1回の攻防。' : m > 0 ? '$m点リード。守り切れば勝ち。' : '${-m}点ビハインド。${-m <= 2 ? '決めれば逆転だ。' : -m == 3 ? '3Pなら追いつける。' : '1本では追いつけない。決めて望みをつなぐ。'}'}';
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [

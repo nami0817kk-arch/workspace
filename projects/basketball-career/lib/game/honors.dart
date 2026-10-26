@@ -18,9 +18,11 @@ class Honor {
   static const finalMvp = 'ファイナルMVP';
   static const allStar = 'オールスター選出';
   static const tripleDouble = 'トリプルダブル';
+  static const mvp = 'シーズンMVP';
 
   /// 並べる順番(画面・文章で使う)。
   static const all = [
+    mvp,
     finalMvp,
     scoringKing,
     reboundKing,
@@ -45,8 +47,12 @@ class Honor {
     finalMvp: '優勝を決める決勝で、いちばん活躍した選手。',
     allStar: 'ファン投票と監督推薦で選ばれる、リーグを代表する選手。',
     tripleDouble: '1試合で得点・リバウンド・アシストのすべてが10以上。',
+    mvp: 'レギュラーシーズンでいちばん活躍した選手(チームも勝ち越していること)。プロだけ。',
   };
 }
+
+/// シーズンMVPの個人評価の基準(オールスター86より上)。
+const mvpLine = 93.0;
 
 /// リーグごとの目安の強さ(プロを1としたときの数字の大きさ)。
 double _scale(League l) => switch (l) {
@@ -82,6 +88,9 @@ extension TournamentHonors on TournamentResult {
     if (spg + bpg >= 3.0 * s && wins * 2 >= games) out.add(Honor.defensivePlayer);
     if (rookie && _isPro(league) && individual >= 78) out.add(Honor.rookie);
     if (_isPro(league) && individual >= 86) out.add(Honor.allStar);
+    if (_isPro(league) && individual >= mvpLine && regularWins * 2 > league.rounds) {
+      out.add(Honor.mvp);
+    }
     if (matches.any((m) => m.points >= 10 && m.rebounds >= 10 && m.assists >= 10)) {
       out.add(Honor.tripleDouble);
     }
