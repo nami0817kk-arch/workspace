@@ -131,26 +131,115 @@ class View:
         return View(a.lon + dl * u, a.lat + (b.lat - a.lat) * u, span)
 
 
+def _warp(arr: np.ndarray, box, border, interp=None) -> np.ndarray:
+    """arr の box=(x0, y0, x1, y1) の範囲を画面(W×H)に引き伸ばす(OpenCV。PIL の transform より何十倍も速い)。"""
+    import cv2
+    x0, y0, x1, y1 = box
+    m = np.array([[(x1 - x0) / W, 0, x0], [0, (y1 - y0) / H, y0]], np.float64)
+    return cv2.warpAffine(arr, m, (W, H), flags=(interp if interp is not None else cv2.INTER_LINEAR) | cv2.WARP_INVERSE_MAP,
+                          borderMode=cv2.BORDER_CONSTANT, borderValue=border)
+
+
+@lru_cache(maxsize=1)
+def _arrays():
+    """(世界図, 海底地形の下地に世界図を縁でなじませて混ぜた絵, 範囲)。混ぜるのは一度だけ(毎コマ混ぜると遅い)。"""
+    import cv2
+    rb, (lo0, la0, lo1, la1) = relief_base()
+    wa, ra = np.asarray(world_base()), np.asarray(rb)
+    h, w = ra.shape[:2]
+    # 海底地形の下地の画素 → 世界図の画素
+    x0 = (wrap(lo0) + 180.0) * KX * WPX
+    y0 = (90.0 - la1) * WPX
+    k = WPX / RPX
+    m = np.array([[k, 0, x0], [0, k, y0]], np.float64)
+    wr = cv2.warpAffine(wa, m, (w, h), flags=cv2.INTER_LINEAR | cv2.WARP_INVERSE_MAP, borderMode=cv2.BORDER_CONSTANT, borderValue=OCEAN)
+    mask = (np.asarray(relief_mask()).astype(np.float32) / 255.0)[..., None]
+    comb = (ra * mask + wr * (1 - mask)).astype(np.uint8)
+    return wa, comb, (lo0, la0, lo1, la1)
+
+
 def base(v: View) -> Image.Image:
     """その見え方の下地(世界図の上に、寄ったときは海底地形の下地を重ねる)。"""
-    wb = world_base()
-    k = v.s / WPX
-    x0 = (wrap(v.lon) + 180.0) * KX * WPX - (W / 2) / k
-    y0 = (90.0 - v.lat) * WPX - (H / 2) / k
-    box = (x0, y0, x0 + W / k, y0 + H / k)
-    img = wb.transform((W, H), Image.EXTENT, box, Image.BILINEAR, fillcolor=OCEAN)
+    import cv2
+    wa, comb, (lo0, la0, lo1, la1) = _arrays()
     fade = min(1.0, max(0.0, (75.0 - v.span) / 25.0))
+    img = None
+    if fade < 1:
+        k = v.s / WPX
+        x0 = (wrap(v.lon) + 180.0) * KX * WPX - (W / 2) / k
+        y0 = (90.0 - v.lat) * WPX - (H / 2) / k
+        img = _warp(wa, (x0, y0, x0 + W / k, y0 + H / k), OCEAN)
     if fade > 0:
-        rb, (lo0, la0, lo1, la1) = relief_base()
         k2 = v.s / RPX
         cx = (wrap(v.lon) - wrap(lo0)) * KX * RPX
         cy = (la1 - v.lat) * RPX
         box2 = (cx - (W / 2) / k2, cy - (H / 2) / k2, cx + (W / 2) / k2, cy + (H / 2) / k2)
-        r = rb.transform((W, H), Image.EXTENT, box2, Image.BILINEAR, fillcolor=(0, 0, 0))
-        m = Image.new("L", rb.size, 255).transform((W, H), Image.EXTENT, box2, Image.NEAREST, fillcolor=0)
-        m = m.filter(ImageFilter.GaussianBlur(18)).point(lambda p: int(p * fade))
-        img = Image.composite(r, img, m)
-    return img.convert("RGBA")
+        r = _warp(comb, box2, OCEAN, cv2.INTER_AREA if k2 < 0.5 else cv2.INTER_LINEAR)
+        img = r if img is None else cv2.addWeighted(r, fade, img, 1 - fade, 0)
+    rgba = np.empty((H, W, 4), np.uint8)
+    rgba[..., :3] = img
+    rgba[..., 3] = 255
+    return Image.fromarray(rgba, "RGBA")
+
+
+@lru_cache(maxsize=1)
+def relief_mask() -> Image.Image:
+    """海底地形の下地の縁をぼかした重ね方の濃さ(一度だけ作る。毎コマぼかすと遅い)。"""
+    rb, _ = relief_base()
+    m = Image.new("L", rb.size, 0)
+    e = 90
+    ImageDraw.Draw(m).rectangle([e, e, rb.size[0] - e, rb.size[1] - e], fill=255)
+    return m.filter(ImageFilter.GaussianBlur(40))
+
+
+_QCACHE: dict = {}
+MARGIN = 1.35                              # 点の下書きは画面より少し広く描く(ゆっくりした寄り引きでも端が切れないように)
+
+
+def _quake_raster(L: dict, ref: View):
+    """震源の点を ref の見え方で一度だけ描いた (色, 何番目の点か) の 2 枚。点は古い順に上に重ねる。"""
+    key = (L.get("id"), L["data"], ref.lon, ref.lat, round(ref.span, 5), L.get("size", 1.0), L.get("by_depth", True))
+    if key in _QCACHE:
+        return _QCACHE[key]
+    qs = quakes(L["data"], L.get("minmag", 0.0))
+    f = L.get("filter")
+    if f:
+        qs = [q for q in qs if f(q)]
+    w, h = int(W * MARGIN), int(H * MARGIN)
+    ox, oy = (w - W) / 2, (h - H) / 2
+    col = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+    idx = Image.new("I", (w, h), 2 ** 30)
+    dc, di = ImageDraw.Draw(col), ImageDraw.Draw(idx)
+    sc = L.get("size", 1.0) * min(2.0, max(0.5, ref.s / 60))
+    for i in range(len(qs) - 1, -1, -1):              # 新しい順に描き、古い点で上書き(idx は「いちばん古い点の番号」)
+        lon, lat, dep, mag, _ = qs[i]
+        x, y = ref.px(lon, lat)
+        x, y = x + ox, y + oy
+        if -10 < x < w + 10 and -10 < y < h + 10:
+            r = (1.2 + max(0.0, mag - 4) * 1.5) * sc
+            c = depth_col(dep) if L.get("by_depth", True) else tuple(L.get("color", ov.YEL))
+            dc.ellipse([x - r, y - r, x + r, y + r], fill=c + (204,))
+            di.ellipse([x - r, y - r, x + r, y + r], fill=i)
+    if len(_QCACHE) > 24:
+        _QCACHE.clear()
+    _QCACHE[key] = (np.asarray(col).copy(), np.asarray(idx).astype(np.int32), len(qs))
+    return _QCACHE[key]
+
+
+def _ref_to_view(ref: View, v: View):
+    """今の見え方 v の画素 → 下書き(ref、余白つき)の画素 の変換(Image.AFFINE に渡す係数)。"""
+    w, h = W * MARGIN, H * MARGIN
+    ox, oy = (w - W) / 2, (h - H) / 2
+    dl = wrap(v.lon) - wrap(ref.lon)
+    if dl > 180:
+        dl -= 360
+    elif dl < -180:
+        dl += 360
+    a = ref.s / v.s
+    # x_ref = W/2 + ox + ((x - W/2)/(KX*v.s) + dl) * KX*ref.s
+    c = W / 2 + ox + (-W / 2) * a + dl * KX * ref.s
+    f = H / 2 + oy + (-H / 2) * a - (v.lat - ref.lat) * ref.s
+    return (a, 0, c, 0, a, f)
 
 
 # ---- データ -----------------------------------------------------------------------------
@@ -263,11 +352,21 @@ def _poly_px(v: View, pts) -> list:
     return out
 
 
-def draw_layer(img: Image.Image, v: View, L: dict, a: float, k: float) -> None:
-    """a は不透明度(0〜1)、k は出方の進み(0〜1。点の数・線の長さ)。"""
+def draw_layer(img: Image.Image, v: View, L: dict, a: float, k: float, ref: View = None) -> None:
+    """a は不透明度(0〜1)、k は出方の進み(0〜1。点の数・線の長さ)。ref を渡すと震源の点は下書きを使い回す(速い)。"""
     if a <= 0:
         return
     kind = L["kind"]
+    if kind == "quakes" and ref is not None:
+        import cv2
+        col, idx, n_all = _quake_raster(L, ref)
+        a0, _, c, _, a1, f = _ref_to_view(ref, v)
+        m = np.array([[a0, 0, c], [0, a1, f]], np.float64)
+        ct = cv2.warpAffine(col, m, (W, H), flags=cv2.INTER_LINEAR | cv2.WARP_INVERSE_MAP, borderMode=cv2.BORDER_CONSTANT, borderValue=(0, 0, 0, 0))
+        it = cv2.warpAffine(idx, m, (W, H), flags=cv2.INTER_NEAREST | cv2.WARP_INVERSE_MAP, borderMode=cv2.BORDER_CONSTANT, borderValue=2 ** 30)
+        ct[..., 3] = (ct[..., 3].astype(np.float32) * (it < int(n_all * k)) * a).astype(np.uint8)
+        img.alpha_composite(Image.fromarray(ct, "RGBA"))
+        return
     lay = Image.new("RGBA", img.size, (0, 0, 0, 0))
     d = ImageDraw.Draw(lay)
     A = int(255 * a)
@@ -384,7 +483,7 @@ def render(img: Image.Image, t: float, ctx: dict, drift: float = 0.02) -> View:
             t0 = cur["start"] + L.get("at", 0.0) * dur
             a = _ease((t - t0) / 0.5)
             k = _ease((t - t0) / max(0.3, L.get("grow", 0.6) * dur)) if L["kind"] in ("quakes", "plates", "line", "arrow") else 1.0
-        draw_layer(img, v, L, a, k)
+        draw_layer(img, v, L, a, k, ref=vn)
     return v
 
 
@@ -394,6 +493,8 @@ def render(img: Image.Image, t: float, ctx: dict, drift: float = 0.02) -> View:
 def _box(P: dict) -> tuple:
     if P.get("box"):
         return P["box"]
+    if P["kind"] == "section" and H > W:
+        return (W * 0.04, H * 0.40, W * 0.96, H * 0.78)     # 縦の断面図は大きく
     return (W * 0.52, H * 0.12, W * 0.96, H * 0.80) if W > H else (W * 0.06, H * 0.50, W * 0.94, H * 0.74)
 
 
@@ -452,7 +553,7 @@ def draw_panel(img: Image.Image, P: dict, a: float, k: float) -> None:
         for lon, dep in pts[:n]:
             px, py = ax.px(lon, -min(dep, dmax))
             c = depth_col(dep)
-            d.ellipse([px - 4, py - 4, px + 4, py + 4], fill=c)
+            d.ellipse([px - 5, py - 5, px + 5, py + 5], fill=c)
         if P.get("trend") and k >= 1:
             d.line([ax.px(*P["trend"][0]), ax.px(*P["trend"][1])], fill=ov.WHITE, width=5)
     elif kind == "big":

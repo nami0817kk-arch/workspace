@@ -50,17 +50,18 @@ TOKYO, OSAKA = (139.767, 35.681), (135.495, 34.702)
 
 @lru_cache(maxsize=1)
 def section_pts() -> list:
-    """北緯37.5〜39.5度・M4以上の震源(経度, 深さ)。東北を東西に切った断面に使う。"""
+    """北緯37.5〜39.5度・M4以上の震源(経度, 深さ)、2000〜2023年。東北を東西に切った断面に使う(点を増やして板の形を見やすく)。"""
     out = []
-    with open(M.QK / f"{JP}.csv", encoding="utf-8") as f:
-        for r in csv.DictReader(f):
-            if r["type"] == "earthquake" and 37.5 <= float(r["latitude"]) <= 39.5 and 139.0 <= float(r["longitude"]) <= 145.0:
-                out.append((float(r["longitude"]), float(r["depth"])))
+    for name in ("japan_m4_2000_2013", JP):
+        with open(M.QK / f"{name}.csv", encoding="utf-8") as f:
+            for r in csv.DictReader(f):
+                if r["type"] == "earthquake" and 37.5 <= float(r["latitude"]) <= 39.5 and 139.0 <= float(r["longitude"]) <= 145.0:
+                    out.append((float(r["longitude"]), float(r["depth"])))
     return out
 
 
 def section_panel(**kw) -> dict:
-    return dict(kind="section", pts=section_pts(), lon=(139.0, 145.0), dmax=200, title="東北・北緯38度の断面（縦は深さ km）",
+    return dict(kind="section", pts=section_pts(), lon=(139.0, 145.0), dmax=200, title="北緯38度の断面（深さkm・2000〜23年）",
                 trend=[(144.2, -10), (140.0, -115)], **kw)
 
 
