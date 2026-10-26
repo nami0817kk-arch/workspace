@@ -79,10 +79,21 @@ img = shade_left(img, 0.56)
 cx, cy = v.px(139.0, 36.8)
 circle(img, cx, cy, 320)
 text_block(img, ["なぜ日本は", "【地震】が", "多いのか？"], 70, 90, size=138)
-ImageDraw.Draw(img).text((74, 572), "世界に占める日本の割合", font=O.font(52), fill=O.WHITE, stroke_width=6, stroke_fill=O.NAVY)
-badge(img, 70, 650, "広さ", "0.25%", O.WHITE)
-ImageDraw.Draw(img).text((420, 690), "→", font=O.font(90), fill=O.WHITE, stroke_width=6, stroke_fill=O.NAVY)
-badge(img, 510, 650, "大地震", "約2割", O.YEL)
-ImageDraw.Draw(img).text((74, 870), "1万回の震源で確かめる", font=O.font(50), fill=O.DIM, stroke_width=6, stroke_fill=O.NAVY)
+def mixed(img, x, y, parts):
+    """大きさと色の違う字を 1 行に並べる。parts = [(字, 大きさ, 色)]。下をそろえる。"""
+    d = ImageDraw.Draw(img)
+    base_y = y + max(s for _, s, _ in parts)
+    for t, s, c in parts:
+        f = O.font(s)
+        d.text((x, base_y - s * 1.05), t, font=f, fill=c, stroke_width=8, stroke_fill=O.NAVY)
+        x += f.getlength(t)
+
+
+lay = Image.new("RGBA", img.size, (0, 0, 0, 0))
+ImageDraw.Draw(lay).rounded_rectangle([50, 590, 930, 870], 26, fill=O.NAVY + (200,))
+img.alpha_composite(lay)
+mixed(img, 80, 600, [("日本の国土は 世界の", 52, O.WHITE), ("0.25%", 96, O.WHITE)])
+mixed(img, 80, 728, [("なのに大地震は 世界の", 52, O.WHITE), ("約2割", 104, O.YEL)])
+ImageDraw.Draw(img).text((74, 900), "1万回の震源で確かめる", font=O.font(46), fill=O.DIM, stroke_width=6, stroke_fill=O.NAVY)
 img.convert("RGB").resize((1280, 720), Image.LANCZOS).save(OUT / "thumb_long.jpg", quality=93)
 print(OUT / "thumb_long.jpg")
