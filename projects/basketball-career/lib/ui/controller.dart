@@ -422,6 +422,7 @@ class GameController extends ChangeNotifier {
     }
     if (r.yearEnded && g.lastGoalMessage != null) lines.add(g.lastGoalMessage!);
     if (r.yearEnded && g.lastYearSummary != null) lines.add(g.lastYearSummary!);
+    if (r.yearEnded && g.lastPositionNote != null) lines.add(g.lastPositionNote!);
     if (r.yearEnded && g.lastSpGain > 0) {
       lines.add('特殊能力ポイント +${g.lastSpGain}(いま ${g.sp})');
     }
@@ -712,6 +713,19 @@ class GameController extends ChangeNotifier {
       (Route.corporate, _) => '実業団に入った。3年間で力をつけよう。',
     };
     recent = const [];
+    _commit();
+  }
+
+  /// ポジションを選ぶ(null でおまかせ)。
+  void setPosition(Position? p) {
+    final g = game;
+    if (g == null || g.phase == Phase.retired) return;
+    g.setPosition(p);
+    recent = [
+      p == null
+          ? 'ポジションをおまかせにした(いまは ${g.player.position.label}。節目に見直す)。'
+          : 'ポジションを ${p.label} にした。',
+    ];
     _commit();
   }
 

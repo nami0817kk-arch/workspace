@@ -77,6 +77,23 @@ void main() {
         expect(t.takeException(), isNull);
       });
 
+      testWidgets('ポジションを選ぶダイアログ', (t) async {
+        phone(t);
+        await show(t, _busy(), scale);
+        await t.ensureVisible(find.text('ポジション'));
+        await t.tap(find.text('ポジション'));
+        await t.pumpAndSettle();
+        expect(t.takeException(), isNull);
+        expect(find.text('ポジションを選ぶ'), findsOneWidget);
+        await t.tap(find.text('C'));
+        await t.pumpAndSettle();
+        expect(t.takeException(), isNull);
+        await t.tap(find.text('これで行く'));
+        await t.pumpAndSettle();
+        expect(t.takeException(), isNull);
+        expect(find.textContaining('(固定)'), findsOneWidget);
+      });
+
       testWidgets('特殊能力の習得画面(習得できるものがある・ない)', (t) async {
         phone(t, height: 2400);
         final c = _busy();

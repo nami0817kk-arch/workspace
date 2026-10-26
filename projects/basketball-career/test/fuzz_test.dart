@@ -30,6 +30,8 @@ String? _violation(Game g) {
     return '身長が不自然: ${g.player.heightCm}';
   }
   if (g.dreamProgress < 0 || g.dreamProgress > 1) return '夢の進み具合が範囲外';
+  if (g.player.positionLock == null) return 'ポジションが決まっていない';
+  if (g.player.overall < 0 || g.player.overall > 99) return '総合が範囲外: ${g.player.overall}';
   if (g.salary < 0 || g.sponsor < 0 || g.totalEarnings < 0) return 'お金がマイナス';
   final run = g.run;
   if (run != null && (run.timeouts < 0 || run.zones < 0)) return 'タイムアウト・ゾーンの残りがマイナス';
@@ -63,6 +65,9 @@ void main() {
           if (r.nextInt(6) == 0) {
             final options = learnPriority.where((s) => canLearn(g.player.specials, g.sp, s)).toList();
             if (options.isNotEmpty) g.learnSpecial(options[r.nextInt(options.length)]);
+          }
+          if (r.nextInt(30) == 0) {
+            g.setPosition(r.nextBool() ? null : Position.values[r.nextInt(Position.values.length)]);
           }
           if (r.nextInt(40) == 0) {
             g.setStyle(r.nextBool() ? null : Build.values[r.nextInt(Build.values.length)]);
