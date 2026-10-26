@@ -61,6 +61,8 @@
 - **関係図・系図はキンブラ型**：赤い点線が0.2秒で伸びる → 人物の札が0.25秒で溶け出す → 線の上の関係の小札。**系図・関係図の間は背景を止めたままでよい（1分近く続いても可。10-25 ユーザー「系図なら止まっても良い」）**
 - 図を前後の行に広げて、語る行まで出しておくには look の `figure_extend: [{line, from, to, items}]`（`items` で書き込む順を語る順に）
 - 地図は道のりが地点を言うたびに伸びる。数直線・数の表も語る順に
+- **台本に無い図は look の `figures: [{from, to, spec}]` で足す**（10-26 数正：関係図・地図。台本を変えると承認が外れるため）。`spec: null` はその行の台本の図を外す（史料の札を主役にする行など）。
+  地図に `reveal: true` を書くと、道のりの線を引かずに `places` を語る順に赤い点で打つ（地震の被害の範囲など）
 
 ## 5. 部品（look の `parts:`、from〜to の行のあいだ。出ている間は絵を暗くする）
 
@@ -70,6 +72,7 @@
 | ② 数のくい違い（箱を矢印でつなぎ、最後を赤。左から1つずつ） | `versus3` | `{type: versus3, from, to, items: [[見出し, 数], ...], every: 秒}` | 年・年齢・人数の説が割れる行 |
 | ③ 覚えてほしい名前（肖像＋名前の札を3枚、1枚ずつ） | `names` | `{type: names, from, to, title, items: [[名前, 一言, 絵], ...], every}`（絵が無ければ「？」） | 序章の終わり |
 | ④ 地図の矢印・印 | （図の map） | 台本の `figure: {type: map, route: [...]}`。語りが地点を言うと伸びる | 合戦・移動 |
+| （補）覚えてほしい名前に AI 絵 | `names` | items の絵に `ai:K14`（肖像の古画が無い人物） | 10-26 |
 | ⑤ 史料の頁＋該当の行を赤枠＋右上に出典 | `doc` | `{type: doc, from, to, image, box: [左,上,右,下], source, note}` | 記録を頁から見せる行（パブリックドメインの頁の画像があるとき） |
 
 ## 6. 音
@@ -83,7 +86,11 @@
 ```
 python -m chiso.cli story-main scripts/story/x_main_look.yaml [--ver v6]     # look の stills: の静止画と一覧、全カットの表（out/<名前>_shotlist.md）
 python -m chiso.cli story-main scripts/story/x_main_look.yaml --build [--limit 60]   # 本編を書き出す（声・BGM 込み。--limit で頭の何秒だけ試し）
+python -m chiso.cli story-main scripts/story/x_main_look.yaml --frames L0+2,L19+6,C2,end [--sheet out/x.jpg]   # 書き出しと同じ描き方（パン・fx・部品・図の書き込み）で、その時点のコマだけ
 ```
+
+- 部品（parts）の出ている行は、台本の右上の札（card）を出さない（同じ言葉を2つ並べない。10-26）
+- 台本に出てこない実在の絵の出典は look の `credits: {paintings/x.jpg: 作品名}`（左下の字・概要欄）
 
 - 書き出しは、カットごとに補正済みの絵を1枚作り、動きは cv2 の小数の位置の補間、文字・札・図は透明な画像を範囲だけ重ね、8本に分けて4本ずつ並行で描いて ffmpeg でつなぐ（25分の本編で約30分）
 - 仮ファイルに書いて長さを測ってから置き換える。ディスクの空きが30GB未満なら止まる。書き出しを2本同時に走らせない

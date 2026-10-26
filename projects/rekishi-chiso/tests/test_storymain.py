@@ -127,3 +127,18 @@ def test_story_description_chapters_and_credits():
     assert len(text) <= 5000
     assert M.srt(pl).startswith("1\n00:00:00,000 --> ")
     assert M.look_for(ROOT / "scripts/oichi-story.yaml") is not None
+
+
+def test_look_figures_add_and_remove_and_reveal_map():
+    """look の figures: で台本に無い図を足す・spec: null で外す。reveal の地図は地点を語る順に打つ（10-26 数正）。"""
+    look_path = ROOT / "scripts/story/kazumasa_main_look.yaml"
+    look = yaml.safe_load(look_path.read_text(encoding="utf-8"))
+    sc = script.load(ROOT / look["script"])
+    pl = M.Plan(look, sc)
+    assert pl.fig(19)["type"] == "people" and pl.fig(90) is None and pl.fig(97)["type"] == "map"
+    r = pl.run_of(98)
+    assert r["names"] == ["大垣城", "岡崎城", "長浜城", "帰雲城"]
+    assert r["times"] == sorted(r["times"]) and r["times"][-1] > pl.line_at[99][0]   # 帰雲城は 99 で言ってから
+    s2 = M.Plan.fig_upto(r["spec"], 2)
+    assert [p[0] for p in s2["places"]] == ["大垣城", "岡崎城"] and "reveal" not in s2
+    assert pl.runs() == []
