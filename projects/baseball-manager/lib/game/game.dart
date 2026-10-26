@@ -30,7 +30,7 @@ import 'after_career.dart';
 import 'farm.dart';
 import 'fielding.dart';
 import 'final_moment.dart';
-import 'training.dart' show abilityCap;
+import 'training.dart' show abilityCap, applyAgeCeiling;
 
 /// いま何を待っているか。画面はこれを見て出すものを決める。
 enum Phase {
@@ -1647,6 +1647,16 @@ class Game {
         player.age == (route == Course.corporate ? 20 : 21);
     final an = ageNote(player.age, finalYear: finalYear);
     if (an != null && phase != Phase.retired) log.add(an);
+    // 年齢による上限(体の限界)を超えている能力は、上限まで落ちる
+    if (phase != Phase.retired) {
+      final aged = applyAgeCeiling(player);
+      if (aged.drops.isNotEmpty) {
+        player = aged.player;
+        log.add('体の衰え: ${[
+          for (final d in aged.drops) '${_abilityJp(d.$1)} ${d.$2}→${d.$3}'
+        ].join('・')}');
+      }
+    }
     if (turnedPro) {
       if (proTeam != null && !overseas && proYears >= 1 && proYears % 3 == 0) {
         log.add('新人の${kohaiOf(proTeam!, player.age)}が入団してきた。');

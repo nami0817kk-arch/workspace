@@ -14,6 +14,7 @@ import '../game/marks.dart';
 import '../game/goals.dart';
 import '../game/game.dart';
 import '../game/skills.dart';
+import '../game/training.dart' show abilityCap, ageCeiling;
 import '../game/invest.dart';
 import '../game/life.dart';
 import '../game/path.dart';
@@ -1045,8 +1046,11 @@ Ability _weakest(Player p) =>
 
 /// 能力の行の小さな注記: いちばん低い能力は「伸ばしどころ」、他は次のランクまでの差。
 String _abilityNote(Player p, Ability a) {
-  if (a == _weakest(p) && abilitiesOf(p.role).length > 1) return '伸ばしどころ';
   final v = p.of(a);
+  // 年齢による上限(体の限界)がかかっていれば、それを先に知らせる
+  final cap = ageCeiling(p, a);
+  if (cap < abilityCap) return v >= cap ? '年齢の上限' : '上限$cap';
+  if (a == _weakest(p) && abilitiesOf(p.role).length > 1) return '伸ばしどころ';
   if (v >= 90) return 'S';
   final next = (v ~/ 10 + 1) * 10;
   return 'あと+${next - v}';
@@ -1089,6 +1093,15 @@ class _AbilityCard extends StatelessWidget {
                 child: const Text('経験点が貯まっています。「+1」で能力に振り分けましょう。'),
               ),
             AbilityRadar(player: p),
+            if (abilitiesOf(p.role).any((a) => ageCeiling(p, a) < abilityCap))
+              Padding(
+                padding: const EdgeInsets.only(top: 4),
+                child: Text(
+                    '${p.age}歳。体の衰えで、能力に年齢の上限がある(経験点でもそれより上には上げられない)。'
+                    'パワー・走力・守備・球威・スタミナは早く、ミート・選球眼・制球はゆっくり下がる。',
+                    key: const Key('age-cap-note'),
+                    style: const TextStyle(fontSize: 11, color: Color(0xFFC62828))),
+              ),
             const SizedBox(height: 4),
             for (final a in abilitiesOf(p.role))
               Padding(
@@ -1122,9 +1135,11 @@ class _AbilityCard extends StatelessWidget {
                                           TextSpan(
                                               text: ' ${_abilityNote(p, a)}',
                                               style: TextStyle(
-                                                  color: a == _weakest(p)
-                                                      ? const Color(0xFFEF6C00)
-                                                      : Colors.grey)),
+                                                  color: p.of(a) >= ageCeiling(p, a)
+                                                      ? const Color(0xFFC62828)
+                                                      : a == _weakest(p)
+                                                          ? const Color(0xFFEF6C00)
+                                                          : Colors.grey)),
                                         ]),
                                         key: Key('note-${a.name}'),
                                         style: const TextStyle(fontSize: 10))),

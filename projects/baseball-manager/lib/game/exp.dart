@@ -1,3 +1,4 @@
+import 'training.dart' show ageCeiling;
 import 'dart:math';
 
 import 'player.dart';
@@ -104,7 +105,8 @@ class ExpPool {
   final v = p.of(a);
   final cost = expCost(v, p.gift(a));
   final c = categoryOf(a);
-  if (v >= 99 || pool.of(c) < cost) return null;
+  // 年齢による上限(体の限界)より上には上げられない
+  if (v >= 99 || v >= ageCeiling(p, a) || pool.of(c) < cost) return null;
   return (
     player: p.copyWith(abilities: {...p.abilities, a: v + 1}),
     pool: pool.spend(c, cost),
@@ -132,7 +134,7 @@ class ExpPool {
     for (final c in Category.values) {
       final cands = [
         for (final a in abilitiesOf(p.role))
-          if (categoryOf(a) == c && p.of(a) < 99) a,
+          if (categoryOf(a) == c && p.of(a) < 99 && p.of(a) < ageCeiling(p, a)) a,
       ]..sort((x, y) => p.of(x).compareTo(p.of(y)));
       for (final a in cands) {
         final r = buy(p, pool, a);
