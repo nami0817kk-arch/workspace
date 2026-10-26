@@ -50,6 +50,8 @@ description: 解説チャンネル「理の書」（YouTube @kotowari_no_sho、�
 8. **本編**: `episodes/<題材>/long.py` に章を並べ `python -m naze long episodes/<題材>`。`chapters.txt` の目次を概要欄に貼る。
    サムネは `python -m naze.thumb <字の無い stills のコマ> out.jpg "1行目" "【強調】2行目" --sub "添え書き"`
 9. **見せる（動画）**: 投稿の前に必ず動画を送る（ショートは mp4 をそのまま。本編は 30MB を超えるので qc_sheet.png とサムネを先に、mp4 は求められたら）
+9.5 **題名とサムネ**: `docs/titles.md` の型。知っている名前＋「〜」ではなかった（思い込みの否定）＋数字＋確かめ方。本編 30〜50 字、ショート 20〜35 字。
+    1 セットで同じ結びを 3 本以上にしない。サムネは字 2〜3 行・大事な 1 語だけ黄色・主役に赤い丸（`--focus` で主役を右に寄せる）
 10. **upload**: `python -m naze.upload 動画.mp4 --title … --desc-file episodes/<題材>/desc.txt --publish-at 2026-10-27T12:00:00+09:00`。
     カテゴリは教育。予約は 9〜24 時。概要欄は 出典 → 音声のクレジット → 運営：のこぎり社 → タグ。本名・nami・0817 を出さない
 
