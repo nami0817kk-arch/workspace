@@ -7,6 +7,7 @@ EP の主な項目:
   shots=[{line, a:{look, dist, height, yaw}, b:{...}}]   look は地点の名前か [x, y](km)。yaw は度(0 = 南から北を見る、90 = 東から西を見る)
   rise=行 id(この行で平らな地図から立ち上がる。無ければ最初から立体)
   pins=[{point, text}] を EP に置くと、問いと結び以外の間、地形の上に小さな地名を常に出す(本編向き)
+  行に panel={kind: big|quote|image|bars|steps, ...} を付けると図の枠が出る(mapscene.draw_panel)。dem_z で標高タイルの細かさ(広い山は 12)
   行に compare={value, unit, n, note?, at} を付けると、数字を身近なものに換える図(箱を n 個並べる)が出る
   行に profile={a: 地点, b: 地点, at: 0〜1, names: [a の名, b の名]} を付けると、その行で a→b に地形を切った断面図が出る(地形の上に切り線も)
 """
@@ -44,7 +45,7 @@ def voice(ep: dict, out: Path) -> dict:
 
 def prep(ep: dict, out: Path) -> dict:
     p = _paths(out)
-    d = demmod.load(*ep["bbox"])
+    d = demmod.load(*ep["bbox"], z=ep.get("dem_z", 14))
     terrain.texture(d, ep.get("stops", terrain.STOPS), **ep.get("tex_opts", {})).save(p["tex"])
     np.save(p["height"], terrain.heights(d))
     pts = terrain.points(d, ep["points"], ep["exag"])
@@ -135,6 +136,9 @@ def frame_fn(ep: dict, out: Path, still: bool = False):
         for key, lay in (("compare", "compare"), ("profile", "profile")):
             if d.get(key) and cur and t >= cur["start"] + d[key].get("at", 0.0) * (cur["end"] - cur["start"]):
                 panels.append(LAYOUT[lay])
+        if d.get("panel") and cur and t >= cur["start"] + d["panel"].get("at", 0.0) * (cur["end"] - cur["start"]):
+            from . import mapscene
+            panels.append(mapscene._box(d["panel"]))
         def in_panel(px, py):
             return any(bx0 - 20 <= px <= bx1 + 20 and by0 - 130 <= py <= by1 + 90 for bx0, by0, bx1, by1 in panels)
         for lb in d.get("labels", []):
@@ -145,6 +149,12 @@ def frame_fn(ep: dict, out: Path, still: bool = False):
                 continue
             if z > 0 and 0.02 < x < 0.98 and 0.12 < y < 0.95:
                 ov.label(img, x * W, y * H, lb["text"].format(h=job["heights"].get(lb["point"]) or 0), lb.get("color", ov.WHITE), a, lb.get("below", False))
+        if d.get("panel") and cur and style not in ("question", "end", "cta"):
+            from . import mapscene
+            P = d["panel"]
+            t0 = cur["start"] + P.get("at", 0.0) * (cur["end"] - cur["start"])
+            if t >= t0:
+                mapscene.draw_panel(img, P, min(1.0, (t - t0) / 0.4), min(1.0, (t - t0) / max(0.4, P.get("grow", 1.2))))
         if d.get("compare") and cur:
             cp = d["compare"]
             t0 = cur["start"] + cp.get("at", 0.0) * (cur["end"] - cur["start"])
@@ -179,7 +189,7 @@ def _profiles(ep: dict) -> dict:
     need = [d for d in ep["lines"] if d.get("profile")]
     if not need:
         return res
-    d = demmod.load(*ep["bbox"])
+    d = demmod.load(*ep["bbox"], z=ep.get("dem_z", 14))
     h = terrain.clean(d)
     for ln in need:
         pr = ln["profile"]

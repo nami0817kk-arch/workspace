@@ -571,6 +571,23 @@ def draw_panel(img: Image.Image, P: dict, a: float, k: float) -> None:
         if P.get("src"):
             g = ov.font(30)
             d.text((x1 - pad - g.getlength(P["src"]), y1 - 56), P["src"], font=g, fill=ov.DIM)
+    elif kind == "steps":
+        # 重なりの年表: items = [(名前, 説明)] を下(古い)から上(新しい)へ積む。k で 1 段ずつ出る
+        items = P["items"]
+        n = len(items)
+        gy0, gy1 = y0 + 90, y1 - 30
+        hh = (gy1 - gy0) / n
+        f1, f2 = ov.font(int(min(54, hh * 0.42))), ov.font(int(min(36, hh * 0.28)))
+        cols = P.get("colors") or [(110, 90, 70), (150, 120, 85), (190, 150, 95), (236, 190, 100)]
+        shown = int(round(k * n + 1e-6))
+        for i, (name, sub) in enumerate(items):
+            if i >= shown:
+                break
+            yb = gy1 - i * hh
+            c = cols[i % len(cols)]
+            d.rounded_rectangle([x0 + pad, yb - hh + 8, x1 - pad, yb - 4], 14, fill=c)
+            d.text((x0 + pad + 24, yb - hh + 8 + (hh - 12) / 2 - f1.size * 0.62), name, font=f1, fill=ov.WHITE, stroke_width=4, stroke_fill=ov.NAVY)
+            d.text((x1 - pad - 24 - f2.getlength(sub), yb - hh + 8 + (hh - 12) / 2 - f2.size * 0.6), sub, font=f2, fill=ov.WHITE, stroke_width=3, stroke_fill=ov.NAVY)
     elif kind == "image":
         im = Image.open(P["path"]).convert("RGB")
         bw, bh = int(x1 - x0 - 16), int(y1 - y0 - 16)

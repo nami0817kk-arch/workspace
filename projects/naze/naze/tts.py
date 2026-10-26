@@ -25,7 +25,13 @@ GAP = 0.3
 
 def _say(line: dict) -> str:
     s = line.get("say") or line["text"]
-    return re.sub(r"[【】|]", "", s).replace("\n", "")
+    s = re.sub(r"[【】|]", "", s).replace("\n", "")
+    # 数字のあとの単位は読みを決めておく(VOICEVOX は m を「エム」、km² などを英字で読む)
+    s = re.sub(r"(\d)km³", r"\1立方キロメートル", s)
+    s = re.sub(r"(\d)km", r"\1キロメートル", s)
+    s = re.sub(r"(\d)cm", r"\1センチメートル", s)
+    s = re.sub(r"(\d)m(?![a-zA-Z])", r"\1メートル", s)
+    return s
 
 
 def _query(text: str, style: int) -> dict:
