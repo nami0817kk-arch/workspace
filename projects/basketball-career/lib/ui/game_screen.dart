@@ -943,7 +943,7 @@ class _MatchRow extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                    '${m.tag.isNotEmpty ? m.tag : (league.playoffRounds > 0 && index >= league.rounds ? roundLabelOf(league, index) : '${index + 1}試合目')}  ${m.teamScore}-${m.oppScore}${m.overtimes > 0 ? '(延長${m.overtimes > 1 ? m.overtimes : ''})' : ''}'
+                    '${m.tag.isNotEmpty ? m.tag : (league.playoffRounds > 0 && index >= league.rounds ? roundLabelOf(league, index) : '${index + 1}試合目')}  ${m.teamScore}-${m.oppScore}${m.overtimes > 0 ? '(延長${m.overtimes > 1 ? m.overtimes : ''})' : ''}${m.starter ? '' : '  控え'}'
                     '${m.opponent.isEmpty ? '' : '  vs ${m.vsRival ? 'ライバル ' : ''}${m.opponent}'}',
                     style: const TextStyle(fontWeight: FontWeight.bold)),
                 Text('得点${m.points} リバウンド${m.rebounds} アシスト${m.assists}'
