@@ -37,15 +37,15 @@ header:
   tag: 石川康長（石川数正の息子）
   title: "息子の康長は、《松本城》を失った"
 now:
-  - {at: 石川数正の子, text: "慶長年間　松本城", point: 0}
-  - {at: 慶長18年, text: "慶長18年　松本城", point: 0}
-  - {at: 九州の, text: "慶長18年〜　豊後・佐伯", point: 0}
+  - {at: 石川数正の子, text: "慶長　松本城", point: 0}
+  - {at: 慶長18年, text: "慶長18年　松本", point: 0}
+  - {at: 九州の, text: "慶長18年　佐伯", point: 0}
   - {at: 1971年, text: "1971年　松本市", point: 1}
-  - {at: 1973年, text: "1973年〜　松本・正行寺", point: 2}
+  - {at: 1973年, text: "1973年　正行寺", point: 2}
 timeline:
-  - {label: "慶長18 改易"}
-  - {label: "1971 仏像"}
-  - {label: "1973〜 法要"}
+  - {label: "慶長18"}
+  - {label: "1971"}
+  - {label: "1973"}
 cards:
   - type: year                           # 慶長18年 改易
     from: 慶長18年
@@ -64,7 +64,7 @@ shots:
   K14z:                                  # 1文目：康長の顔
     kind: ai
     file: kazumasa/main/K14.jpg
-    focus: [0.33, 0.3]
+    focus: [0.28, 0.3]
     move: in
     zoom: 0.14
     text_y: 0.74
@@ -121,7 +121,7 @@ shots:
   K14q:                                  # 最後の問い：天守を見上げる康長
     kind: ai
     file: kazumasa/main/K14.jpg
-    focus: [0.36, 0.45]
+    focus: [0.28, 0.45]
     move: up
     text_y: 0.74
     must: 天守を見上げる康長
@@ -136,7 +136,7 @@ lines:
     tone: しみじみ
     pause: 0.12
   # fact: kazumasa-32
-  - 語り: けれど扱いは外様の大名で、徳川の家に戻ったとは、みなされなかったとされる。
+  - 語り: けれど扱いは外様の大名で、徳川の家に戻ったとは、みなされなかった、とされる。
     shot: K04
     tone: しみじみ
     pause: 0.12

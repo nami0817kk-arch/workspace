@@ -37,14 +37,14 @@ header:
   title: "松本城の天守は、《死後》に建った"
 now:
   - {at: 石川数正が, text: "国宝　松本城天守", point: 2}
-  - {at: 天正18年, text: "天正18年　信濃・松本", point: 0}
-  - {at: 文禄元年, text: "文禄元年　京都・七条河原", point: 1}
-  - {at: そこで松本市は, text: "令和4〜6年度　年輪の調べ", point: 2}
-  - {at: 2025年の報告, text: "1596〜97年ごろ　松本城", point: 2}
+  - {at: 天正18年, text: "天正18年　松本", point: 0}
+  - {at: 文禄元年, text: "文禄元年　京都", point: 1}
+  - {at: そこで松本市は, text: "令和　年輪の調べ", point: 2}
+  - {at: 2025年の報告, text: "1596年ごろ", point: 2}
 timeline:
-  - {label: "天正18 松本へ"}
-  - {label: "文禄元 数正の死"}
-  - {label: "1596 柱の木"}
+  - {label: "天正18"}
+  - {label: "文禄元"}
+  - {label: "1596"}
 cards:
   - type: year                           # 1596年（柱の木が伐られた年）
     from: 1596年に伐られた
@@ -55,11 +55,10 @@ cards:
   - type: table                          # 天守はいつ・誰が（語った順に1行ずつ）
     title: 天守を建てたのは
     from: 2025年の報告
-    until: あなたなら
+    until: 今の天守を
     items:
       - {at: 2025年の報告, text: "文禄元年　数正の葬礼（京都）"}
       - {at: 数正の葬礼から, text: "1596〜97年ごろ　天守が建つ"}
-      - {at: 子の康長だった, text: "建てたのは　子の康長"}
 shots:
   K13:                                   # 1文目：松本城の天守
     kind: ai
@@ -78,7 +77,7 @@ shots:
   K14:                                   # 松本市の説明：父子が築いた（天守を見上げる康長）
     kind: ai
     file: kazumasa/main/K14.jpg
-    focus: [0.36, 0.4]
+    focus: [0.28, 0.4]
     move: up
     text_y: 0.74
     must: 天守を見上げる康長
@@ -116,7 +115,7 @@ shots:
   K14z:                                  # 建てたのは子の康長（顔に寄る）
     kind: ai
     file: kazumasa/main/K14.jpg
-    focus: [0.33, 0.3]
+    focus: [0.28, 0.3]
     move: in
     zoom: 0.18
     text_y: 0.74
