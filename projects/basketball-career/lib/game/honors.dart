@@ -71,10 +71,10 @@ extension TournamentHonors on TournamentResult {
     final s = _scale(league);
     final out = <String>{};
 
-    if (champion && _isPro(league) && matches.isNotEmpty && matches.last.points >= 18) {
+    if (champion && _isPro(league) && matches.isNotEmpty && matches.last.points >= (18 * league.scoreScale).round()) {
       out.add(Honor.finalMvp);
     }
-    if (ppg >= 22 * s) out.add(Honor.scoringKing);
+    if (ppg >= 22 * s * league.scoreScale) out.add(Honor.scoringKing);
     if (rpg >= 10.5 * s) out.add(Honor.reboundKing);
     if (apg >= 7.5 * s) out.add(Honor.assistKing);
     if (spg >= 2.0 * s) out.add(Honor.stealKing);

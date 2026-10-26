@@ -26,6 +26,104 @@ enum Clutch {
 }
 
 /// 試合の結果。
+/// ボックススコア(試合ごとの細かい成績)。シュートの本数・フリースロー・ターンオーバー・出場時間。
+/// 得点・3Pの本数と食い違わないように作る(`boxScoreOf`)。古いセーブは 0 のまま(画面に出さない)。
+class BoxScore {
+  const BoxScore({
+    this.fgMade = 0,
+    this.fgAttempts = 0,
+    this.threeAttempts = 0,
+    this.ftMade = 0,
+    this.ftAttempts = 0,
+    this.turnovers = 0,
+    this.minutes = 0,
+  });
+
+  /// フィールドゴール(2点・3点)の成功と試投。3Pは3P本数(`MatchResult.threes`)と試投。
+  final int fgMade;
+  final int fgAttempts;
+  final int threeAttempts;
+  final int ftMade;
+  final int ftAttempts;
+  final int turnovers;
+  final int minutes;
+
+  bool get isEmpty => fgAttempts == 0 && ftAttempts == 0 && minutes == 0;
+
+  /// 試合の成績の1行(シュート・3P・フリースロー・ターンオーバー・出場時間)。`threes` は3Pの成功本数。
+  String line(int threes) =>
+      'FG $fgMade/$fgAttempts  3P $threes/$threeAttempts  FT $ftMade/$ftAttempts  ターンオーバー$turnovers  出場$minutes分';
+
+  Map<String, dynamic> toJson() => {
+        'fgm': fgMade,
+        'fga': fgAttempts,
+        'tpa': threeAttempts,
+        'ftm': ftMade,
+        'fta': ftAttempts,
+        'tov': turnovers,
+        'min': minutes,
+      };
+
+  factory BoxScore.fromJson(Map<String, dynamic>? j) => BoxScore(
+        fgMade: (j?['fgm'] as num?)?.toInt() ?? 0,
+        fgAttempts: (j?['fga'] as num?)?.toInt() ?? 0,
+        threeAttempts: (j?['tpa'] as num?)?.toInt() ?? 0,
+        ftMade: (j?['ftm'] as num?)?.toInt() ?? 0,
+        ftAttempts: (j?['fta'] as num?)?.toInt() ?? 0,
+        turnovers: (j?['tov'] as num?)?.toInt() ?? 0,
+        minutes: (j?['min'] as num?)?.toInt() ?? 0,
+      );
+}
+
+/// 得点 `points`・3P `threes` に合うボックススコアを作る(2点シュート×2＋3P×3＋フリースロー＝得点)。
+/// 成功率は能力から決まる(2点は42〜58%・3Pは28〜44%・フリースローは `freeThrowChance`)。
+BoxScore boxScoreOf(
+  Player p, {
+  required int points,
+  required int threes,
+  required double form,
+  required int gameMinutes,
+  required bool fouledOut,
+  required Random rng,
+}) {
+  final rem0 = max(0, points - 3 * threes);
+  final fta0 = (rem0 * 0.2 / 0.8).round();
+  final ftp = freeThrowChance(p, form);
+  var ftm = 0;
+  for (var i = 0; i < fta0; i++) {
+    if (rng.nextDouble() < ftp) ftm++;
+  }
+  ftm = min(ftm, rem0);
+  if ((rem0 - ftm).isOdd) ftm = ftm > 0 ? ftm - 1 : ftm + 1;
+  ftm = ftm.clamp(0, rem0);
+  final fg2 = max(0, (rem0 - ftm) ~/ 2);
+  final inside = (p.effective(Ability.inside) + p.effective(Ability.midRange)) / 2;
+  final p2 = (0.40 + inside / 100 * 0.2 + (form - 1) * 0.1).clamp(0.38, 0.62);
+  final p3 = (0.27 + p.effective(Ability.threePoint) / 100 * 0.17 + (form - 1) * 0.1)
+      .clamp(0.24, 0.46);
+  int attempts(int made, double pct) =>
+      made == 0 ? (rng.nextDouble() < 0.5 ? 1 : 0) : max(made, (made / pct + (rng.nextDouble() - 0.5) * 1.6).round());
+  final a2 = attempts(fg2, p2), a3 = attempts(threes, p3);
+  final fta = max(ftm, ftm == 0 ? fta0 : (ftm / ftp).round());
+  final handle = (p.effective(Ability.pass) + p.effective(Ability.dribble)) / 2;
+  final tov = max(
+      0,
+      (gameMinutes / 48 * (1.0 + (65 - handle) / 22) + (rng.nextDouble() - 0.5) * 2)
+          .round()
+          .clamp(0, 9));
+  var minutes = (gameMinutes * (0.55 + p.effective(Ability.stamina) / 100 * 0.27)).round();
+  if (fouledOut) minutes = (minutes * 0.8).round();
+  return BoxScore(
+    fgMade: fg2 + threes,
+    fgAttempts: a2 + a3,
+    threeAttempts: a3,
+    ftMade: ftm,
+    ftAttempts: fta,
+    turnovers: tov,
+    minutes: minutes.clamp(1, gameMinutes),
+  );
+}
+
 class MatchResult {
   const MatchResult({
     required this.won,
@@ -45,6 +143,7 @@ class MatchResult {
     this.vsRival = false,
     this.fouls = 0,
     this.fouledOut = false,
+    this.box = const BoxScore(),
   });
 
   final bool won;
@@ -75,6 +174,9 @@ class MatchResult {
   final int fouls;
   final bool fouledOut;
 
+  /// シュートの本数・フリースロー・ターンオーバー・出場時間(ボックススコア)。古いセーブは空。
+  final BoxScore box;
+
   int get margin => teamScore - oppScore;
 
   Map<String, dynamic> toJson() => {
@@ -95,6 +197,7 @@ class MatchResult {
         'vsRival': vsRival,
         'fouls': fouls,
         'fouledOut': fouledOut,
+        'box': box.toJson(),
       };
 
   factory MatchResult.fromJson(Map<String, dynamic> j) => MatchResult(
@@ -121,6 +224,7 @@ class MatchResult {
         vsRival: (j['vsRival'] as bool?) ?? false,
         fouls: (j['fouls'] as num?)?.toInt() ?? 0,
         fouledOut: (j['fouledOut'] as bool?) ?? false,
+        box: BoxScore.fromJson((j['box'] as Map?)?.cast<String, dynamic>()),
       );
 }
 
@@ -146,7 +250,13 @@ class MatchState {
     this.fouledOut = false,
     this.timeout = false,
     this.zone = false,
+    this.scale = 1.0,
+    this.gameMinutes = 40,
   });
+
+  /// その試合の点数の規模(`League.scoreScale`)と、試合時間(分)。
+  final double scale;
+  final int gameMinutes;
 
   final int team;
   final int opp;
@@ -194,6 +304,8 @@ class MatchState {
         fouledOut: fouledOut,
         timeout: timeout ?? this.timeout,
         zone: zone ?? this.zone,
+        scale: scale,
+        gameMinutes: gameMinutes,
       );
 
   /// タイムアウトを取った状態にした試合。
@@ -205,7 +317,7 @@ class MatchState {
   int get margin => team - opp;
 
   /// 点差が近く、最後の攻防を選べるか。
-  bool get needsClutch => margin.abs() <= clutchWindow;
+  bool get needsClutch => margin.abs() <= clutchWindowOf(scale);
 
   Map<String, dynamic> toJson() => {
         'team': team,
@@ -227,6 +339,8 @@ class MatchState {
         'fouledOut': fouledOut,
         'timeout': timeout,
         'zone': zone,
+        'scale': scale,
+        'gameMinutes': gameMinutes,
       };
 
   factory MatchState.fromJson(Map<String, dynamic> j) => MatchState(
@@ -255,11 +369,16 @@ class MatchState {
         fouledOut: (j['fouledOut'] as bool?) ?? false,
         timeout: (j['timeout'] as bool?) ?? false,
         zone: (j['zone'] as bool?) ?? false,
+        scale: (j['scale'] as num?)?.toDouble() ?? 1.0,
+        gameMinutes: (j['gameMinutes'] as num?)?.toInt() ?? 40,
       );
 }
 
 /// 勝負どころに入る点差(最終クォーター終了時、この点差以内)。
 const clutchWindow = 3;
+
+/// 点数の規模に応じた、勝負どころに入る点差(ミニバス2点・高校3点・海外の最高峰5点)。
+int clutchWindowOf(double scale) => (clutchWindow * scale).round().clamp(2, 6);
 
 double _noise(Random rng) =>
     (rng.nextDouble() + rng.nextDouble() + rng.nextDouble() - 1.5) / 1.5;
@@ -436,7 +555,13 @@ class MatchHalf {
     this.vsRival = false,
     this.style = OppStyle.balanced,
     this.fouls = 0,
+    this.scale = 1.0,
+    this.gameMinutes = 40,
   });
+
+  /// その試合の点数の規模と試合時間(分)。
+  final double scale;
+  final int gameMinutes;
 
   final int team;
   final int opp;
@@ -463,7 +588,7 @@ class MatchHalf {
   int get margin => team - opp;
 
   /// 作戦を選ぶ価値がある点差(12点以内)。大差なら自動で進む。
-  bool get needsDecision => margin.abs() <= 12;
+  bool get needsDecision => margin.abs() <= (12 * scale).round();
 
   Map<String, dynamic> toJson() => {
         'team': team,
@@ -482,6 +607,8 @@ class MatchHalf {
         'vsRival': vsRival,
         'style': style.name,
         'fouls': fouls,
+        'scale': scale,
+        'gameMinutes': gameMinutes,
       };
 
   factory MatchHalf.fromJson(Map<String, dynamic> j) => MatchHalf(
@@ -507,6 +634,8 @@ class MatchHalf {
         vsRival: (j['vsRival'] as bool?) ?? false,
         style: OppStyle.parse(j['style'] as String?) ?? OppStyle.balanced,
         fouls: (j['fouls'] as num?)?.toInt() ?? 0,
+        scale: (j['scale'] as num?)?.toDouble() ?? 1.0,
+        gameMinutes: (j['gameMinutes'] as num?)?.toInt() ?? 40,
       );
 }
 
@@ -523,16 +652,21 @@ MatchHalf playFirstHalf(
   String opponent = '',
   bool vsRival = false,
   OppStyle style = OppStyle.balanced,
+  double scale = 1.0,
+  int gameMinutes = 40,
 }) {
   final mine = teamStrength * 0.6 + p.overall * form * 0.4;
   var team = 0, opp = 0;
   final tq = <int>[], oq = <int>[];
   for (var q = 0; q < 2; q++) {
-    final t = max(8,
-        (18 + (mine - 50) * 0.12 + style.pace + _noise(rng) * 5).round());
+    final t = max(
+        (8 * scale).round(),
+        (scale * (18 + (mine - 50) * 0.12 + style.pace + _noise(rng) * 5))
+            .round());
     final o = max(
-        8,
-        (18 + (oppStrength - 50) * 0.12 + style.pace + _noise(rng) * 5)
+        (8 * scale).round(),
+        (scale *
+                (18 + (oppStrength - 50) * 0.12 + style.pace + _noise(rng) * 5))
             .round());
     tq.add(t);
     oq.add(o);
@@ -589,6 +723,8 @@ MatchHalf playFirstHalf(
     vsRival: vsRival,
     style: style,
     fouls: foulsOf(p, 2, 1.0, rng),
+    scale: scale,
+    gameMinutes: gameMinutes,
   );
 }
 
@@ -649,23 +785,26 @@ MatchState playSecondHalf(Player p, MatchHalf h, Halftime choice, Random rng,
   var team = h.team, opp = h.opp;
   final tq = [...h.teamQuarters], oq = [...h.oppQuarters];
   for (var q = 0; q < 2; q++) {
+    final sc = h.scale;
     final t = max(
-        8,
-        (18 +
-                (h.mine - 50) * 0.12 +
-                shift +
-                boost +
-                fit +
-                h.style.pace +
-                _noise(rng) * 5 * noiseMul)
+        (8 * sc).round(),
+        (sc *
+                (18 +
+                    (h.mine - 50) * 0.12 +
+                    shift +
+                    boost +
+                    fit +
+                    h.style.pace +
+                    _noise(rng) * 5 * noiseMul))
             .round());
     final o = max(
-        8,
-        (18 +
-                (h.oppStrength - 50) * 0.12 +
-                shift +
-                h.style.pace +
-                _noise(rng) * 5 * noiseMul)
+        (8 * sc).round(),
+        (sc *
+                (18 +
+                    (h.oppStrength - 50) * 0.12 +
+                    shift +
+                    h.style.pace +
+                    _noise(rng) * 5 * noiseMul))
             .round());
     tq.add(t);
     oq.add(o);
@@ -681,7 +820,7 @@ MatchState playSecondHalf(Player p, MatchHalf h, Halftime choice, Random rng,
   };
   final fouls = min(5, h.fouls + foulsOf(p, 2, foulMul, rng));
   final fouledOut = fouls >= 5;
-  if (fouledOut) team = max(0, team - 3); // 最後のクォーターに主力がいない
+  if (fouledOut) team = max(0, team - (3 * h.scale).round()); // 最後のクォーターに主力がいない
   var pts = (team * (h.share + shareAdd).clamp(0.04, 0.55) * h.form).round();
   if (fouledOut) {
     pts = (pts * 0.8).round();
@@ -713,13 +852,15 @@ MatchState playSecondHalf(Player p, MatchHalf h, Halftime choice, Random rng,
     vsRival: h.vsRival,
     fouls: fouls,
     fouledOut: fouledOut,
+    scale: h.scale,
+    gameMinutes: h.gameMinutes,
   );
 }
 
 /// 自動で選ぶ作戦。追っていればペース、リードしていれば守り、僅差でエースが強ければエース。
 /// 相手の持ち味との相性(`OppStyle.fit`)も足して、いちばん点が取れる作戦を選ぶ。
 Halftime bestHalftime(Player p, MatchHalf h) {
-  final m = h.margin;
+  final m = h.margin / h.scale; // 点数の規模が違っても、同じ感覚で判断する
   Halftime base;
   if (m <= -4) {
     base = Halftime.tempo;
@@ -851,6 +992,13 @@ MatchResult finishMatch(Player p, MatchState s, Clutch? choice, Random rng) {
     vsRival: s.vsRival,
     fouls: s.fouls,
     fouledOut: s.fouledOut,
+    box: boxScoreOf(p,
+        points: points,
+        threes: s.threes + (used == Clutch.threePoint && ok == true ? 1 : 0),
+        form: s.form,
+        gameMinutes: s.gameMinutes,
+        fouledOut: s.fouledOut,
+        rng: rng),
   );
 }
 
