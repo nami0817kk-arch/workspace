@@ -1488,6 +1488,7 @@ class _EndingView extends StatelessWidget {
                   Text('${r.age}歳 ${leagueLabel(r.league)}${r.winter ? '(冬)' : ''} '
                       '${r.wins}勝${r.games - r.wins}敗'
                       '${r.champion ? ' 優勝' : ''}${r.award == null ? '' : ' [${r.award}]'}  '
+                      '${r.benchGames > 0 ? '(控え${r.benchGames}試合) ' : ''}'
                       '${r.ppg.toStringAsFixed(1)}点 '
                       '${r.rpg.toStringAsFixed(1)}R '
                       '${r.apg.toStringAsFixed(1)}A'

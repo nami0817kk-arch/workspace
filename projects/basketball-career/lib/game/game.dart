@@ -24,6 +24,9 @@ enum Phase { season, halftime, clutch, event, path, retired }
 /// どこでプレーしているか。
 enum Track { school, university, corporate, pro }
 
+/// リーグの呼び名(知らせの文に使う)。
+String leagueLabelOf(League l) => l.label;
+
 /// 1年の大会の記録。
 class YearRecord {
   const YearRecord({
@@ -44,7 +47,11 @@ class YearRecord {
     this.highPoints = 0,
     this.honors = const [],
     this.box = const BoxScore(),
+    this.benchGames = 0,
   });
+
+  /// 控え(ベンチスタート)で出た試合の数。古いセーブは0。
+  final int benchGames;
 
   /// その大会のボックススコアの合計(シュートの本数・フリースロー・出場時間)。古いセーブは空。
   final BoxScore box;
@@ -77,6 +84,7 @@ class YearRecord {
   Map<String, dynamic> toJson() => {
         'honors': honors,
         'box': box.toJson(),
+        'bench': benchGames,
         'winter': winter,
         'award': award,
         'steals': steals,
@@ -115,6 +123,7 @@ class YearRecord {
         highPoints: (j['highPoints'] as num?)?.toInt() ?? 0,
         honors: [for (final v in (j['honors'] as List?) ?? const []) v as String],
         box: BoxScore.fromJson((j['box'] as Map?)?.cast<String, dynamic>()),
+        benchGames: (j['bench'] as num?)?.toInt() ?? 0,
       );
 }
 
@@ -427,6 +436,9 @@ class Game {
   /// ポジションを節目(13・16・19・22歳)に自動で見直すか。自分で選んで固定したら false(保存あり)。
   bool positionAuto;
 
+  /// 控えから先発になった知らせ(画面が知らせたら使い終わり。保存しない)。
+  String? lastRoleNote;
+
   /// 直前に起きたポジションの変更の知らせ(画面が知らせたら使い終わり。保存しない)。
   String? lastPositionNote;
 
@@ -723,6 +735,7 @@ class Game {
     lastDreamNote = null;
     lastYearSummary = null;
     lastPositionNote = null;
+    lastRoleNote = null;
     lastSpGain = 0;
     lastCareerLines = const [];
     lastMetRival = false;
@@ -1071,7 +1084,16 @@ class Game {
       highPoints: t.highPoints,
       honors: lastHonors,
       box: t.box,
+      benchGames: t.matches.where((m) => !m.starter).length,
     ));
+    // 控えから先発へ(同じリーグの前の大会は控えが多く、今回は全部先発)。
+    final prevSame = records.reversed.skip(1).where((r) => r.league == t.league).firstOrNull;
+    if (prevSame != null &&
+        prevSame.benchGames * 2 >= prevSame.games &&
+        t.matches.isNotEmpty &&
+        t.matches.every((m) => m.starter)) {
+      lastRoleNote = '控えから先発の座をつかんだ!(${leagueLabelOf(t.league)})';
+    }
     final after = (totalPoints, totalRebounds, totalAssists);
     final lines = <String>[];
     void crossed(String name, int b, int a) {

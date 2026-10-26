@@ -423,6 +423,11 @@ class GameController extends ChangeNotifier {
     if (r.yearEnded && g.lastGoalMessage != null) lines.add(g.lastGoalMessage!);
     if (r.yearEnded && g.lastYearSummary != null) lines.add(g.lastYearSummary!);
     if (r.yearEnded && g.lastPositionNote != null) lines.add(g.lastPositionNote!);
+    final role = g.lastRoleNote;
+    if (role != null) {
+      lines.add(role);
+      pending.add(Milestone(MilestoneKind.contract, '先発に定着!', role));
+    }
     if (r.yearEnded && g.lastSpGain > 0) {
       lines.add('特殊能力ポイント +${g.lastSpGain}(いま ${g.sp})');
     }
