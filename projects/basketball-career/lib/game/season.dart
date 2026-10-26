@@ -138,6 +138,9 @@ class TournamentResult {
   int get blocks => matches.fold(0, (s, m) => s + m.blocks);
   int get threes => matches.fold(0, (s, m) => s + m.threes);
 
+  /// 大会のボックススコアの合計(古い試合は空)。
+  BoxScore get box => matches.fold(const BoxScore(), (s, m) => s + m.box);
+
   /// 1試合の最多得点。
   int get highPoints =>
       matches.fold(0, (s, m) => m.points > s ? m.points : s);

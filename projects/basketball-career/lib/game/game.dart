@@ -43,7 +43,11 @@ class YearRecord {
     this.threes = 0,
     this.highPoints = 0,
     this.honors = const [],
+    this.box = const BoxScore(),
   });
+
+  /// その大会のボックススコアの合計(シュートの本数・フリースロー・出場時間)。古いセーブは空。
+  final BoxScore box;
 
   final int age;
   final League league;
@@ -72,6 +76,7 @@ class YearRecord {
 
   Map<String, dynamic> toJson() => {
         'honors': honors,
+        'box': box.toJson(),
         'winter': winter,
         'award': award,
         'steals': steals,
@@ -109,6 +114,7 @@ class YearRecord {
         threes: (j['threes'] as num?)?.toInt() ?? 0,
         highPoints: (j['highPoints'] as num?)?.toInt() ?? 0,
         honors: [for (final v in (j['honors'] as List?) ?? const []) v as String],
+        box: BoxScore.fromJson((j['box'] as Map?)?.cast<String, dynamic>()),
       );
 }
 
@@ -1064,6 +1070,7 @@ class Game {
       threes: t.threes,
       highPoints: t.highPoints,
       honors: lastHonors,
+      box: t.box,
     ));
     final after = (totalPoints, totalRebounds, totalAssists);
     final lines = <String>[];
@@ -1417,6 +1424,12 @@ class Game {
   int get totalSteals => records.fold(0, (s, r) => s + r.steals);
   int get totalBlocks => records.fold(0, (s, r) => s + r.blocks);
   int get totalThrees => records.fold(0, (s, r) => s + r.threes);
+
+  /// 通算のボックススコア(シュート成功率の計算に使う。古い記録は入らない)。
+  BoxScore get careerBox => records.fold(const BoxScore(), (s, r) => s + r.box);
+
+  /// ボックススコアのある年だけの3P成功数(成功率の分子をそろえるため)。
+  int get boxedThrees => records.where((r) => !r.box.isEmpty).fold(0, (s, r) => s + r.threes);
 
   /// キャリアハイ(1試合の最多得点)とその年齢。記録が無ければ null。
   ({int points, int age})? get careerHigh {

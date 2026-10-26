@@ -1494,6 +1494,7 @@ class _EndingView extends StatelessWidget {
                       '${r.ppg.toStringAsFixed(1)}点 '
                       '${r.rpg.toStringAsFixed(1)}R '
                       '${r.apg.toStringAsFixed(1)}A'
+                      '${r.box.isEmpty ? '' : '  ${shootingLine(r.box, r.threes, digits: 0)}'}'
                       '${r.honors.isEmpty ? '' : '  ${r.honors.join('・')}'}'),
               ],
             ),
