@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:basketball_career/game/game.dart';
+import 'package:basketball_career/game/life.dart';
 import 'package:basketball_career/game/match.dart';
 import 'package:basketball_career/game/player.dart';
 import 'package:basketball_career/game/season.dart';
@@ -150,6 +151,34 @@ void main() {
       final old = (s.toJson()..remove('scale')..remove('gameMinutes'));
       expect(MatchState.fromJson(old).scale, 1.0);
       expect(MatchState.fromJson(old).gameMinutes, 40);
+    });
+  });
+
+  group('シュート成功率(大会・年・通算)', () {
+    test('成功率の表示: 試投が無ければ「-」、あれば小数1桁の%', () {
+      expect(pctLabel(0, 0), '-');
+      expect(pctLabel(9, 20), '45.0%');
+      expect(pctLabel(1, 3, digits: 0), '33%');
+      const b = BoxScore(fgMade: 10, fgAttempts: 20, threeAttempts: 8, ftMade: 4, ftAttempts: 5);
+      expect(shootingLine(b, 3), 'FG 50.0%・3P 37.5%・FT 80.0%');
+    });
+
+    test('ボックススコアは足し合わせられ、年の記録・通算に入り、保存で残る', () {
+      final g = Game.start('x', rng: Random(4), events: false);
+      var guard = 0;
+      while (g.records.isEmpty && guard++ < 20) {
+        g.choose(Action.practice, Ability.threePoint);
+      }
+      expect(g.records, isNotEmpty);
+      final r = g.records.first;
+      expect(r.box.isEmpty, isFalse);
+      expect(g.careerBox.fgAttempts, greaterThanOrEqualTo(r.box.fgAttempts));
+      final back = Game.fromJson(g.toJson());
+      expect(back.records.first.box.fgMade, r.box.fgMade);
+      expect(back.careerBox.ftAttempts, g.careerBox.ftAttempts);
+      // 古い記録(ボックススコアなし)は空で読める。
+      final j = r.toJson()..remove('box');
+      expect(YearRecord.fromJson(j).box.isEmpty, isTrue);
     });
   });
 }

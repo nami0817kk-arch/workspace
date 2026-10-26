@@ -50,6 +50,17 @@ class BoxScore {
 
   bool get isEmpty => fgAttempts == 0 && ftAttempts == 0 && minutes == 0;
 
+  /// 2つのボックススコアを足したもの(大会・年・通算の合計に使う)。3Pの成功は別に数える(`threes`)。
+  BoxScore operator +(BoxScore o) => BoxScore(
+        fgMade: fgMade + o.fgMade,
+        fgAttempts: fgAttempts + o.fgAttempts,
+        threeAttempts: threeAttempts + o.threeAttempts,
+        ftMade: ftMade + o.ftMade,
+        ftAttempts: ftAttempts + o.ftAttempts,
+        turnovers: turnovers + o.turnovers,
+        minutes: minutes + o.minutes,
+      );
+
   /// 試合の成績の1行(シュート・3P・フリースロー・ターンオーバー・出場時間)。`threes` は3Pの成功本数。
   String line(int threes) =>
       'FG $fgMade/$fgAttempts  3P $threes/$threeAttempts  FT $ftMade/$ftAttempts  ターンオーバー$turnovers  出場$minutes分';
@@ -74,6 +85,14 @@ class BoxScore {
         minutes: (j?['min'] as num?)?.toInt() ?? 0,
       );
 }
+
+/// 成功率の表示(「47.8%」)。試投が無ければ「-」。
+String pctLabel(int made, int attempts, {int digits = 1}) =>
+    attempts == 0 ? '-' : '${(made / attempts * 100).toStringAsFixed(digits)}%';
+
+/// シュート成功率の1行(FG・3P・FT)。3Pの成功は `threes`。
+String shootingLine(BoxScore b, int threes, {int digits = 1}) =>
+    'FG ${pctLabel(b.fgMade, b.fgAttempts, digits: digits)}・3P ${pctLabel(threes, b.threeAttempts, digits: digits)}・FT ${pctLabel(b.ftMade, b.ftAttempts, digits: digits)}';
 
 /// 得点 `points`・3P `threes` に合うボックススコアを作る(2点シュート×2＋3P×3＋フリースロー＝得点)。
 /// 成功率は能力から決まる(2点は42〜58%・3Pは28〜44%・フリースローは `freeThrowChance`)。
