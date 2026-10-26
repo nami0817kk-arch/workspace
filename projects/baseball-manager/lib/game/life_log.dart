@@ -56,8 +56,9 @@ List<TimelineEntry> timelineOf(
     List<LifeEvent> events, List<SeasonRecord> records) {
   const order = {
     'stage': 0,
-    'route': 1,
-    'draft': 2,
+    // 「指名されなかった」→「大学で再挑戦」の順(起きた順)
+    'draft': 1,
+    'route': 2,
     'role': 3,
     'trait': 4,
     'world': 5,
@@ -65,13 +66,18 @@ List<TimelineEntry> timelineOf(
     'title': 6,
     'retire': 9,
   };
+  // 古いセーブには、アマの表彰が節目(「大会優秀選手」)にも残っている。成績の「表彰: …」と重ねない。
+  final noted = {for (final e in events) '${e.age}/${e.text}'};
   final all = <TimelineEntry>[
     for (final e in events) TimelineEntry(e.age, e.kind, e.text),
     for (final r in records) ...[
+      // 優勝は、どの大会か分かる言い方で(「全国優勝」「大学日本一」「都市対抗優勝」)
       if (r.champion)
-        TimelineEntry(r.age, 'champion', r.isLeague ? 'リーグ優勝' : '大会で優勝'),
+        TimelineEntry(r.age, 'champion', r.isLeague ? 'リーグ優勝' : r.resultText),
       for (final t in r.titles) TimelineEntry(r.age, 'title', 'タイトル獲得: $t'),
-      for (final w in r.awards) TimelineEntry(r.age, 'title', '表彰: $w'),
+      for (final w in r.awards)
+        if (!noted.contains('${r.age}/$w'))
+          TimelineEntry(r.age, 'title', '表彰: $w'),
     ],
   ];
   // 同じ年の中は、節目→成績→引退の順。元の順序は保つ。

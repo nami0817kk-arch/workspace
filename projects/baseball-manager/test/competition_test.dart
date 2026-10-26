@@ -5,6 +5,7 @@ import 'package:baseball_manager/game/career.dart';
 import 'package:baseball_manager/game/competition.dart';
 import 'package:baseball_manager/game/game.dart';
 import 'package:baseball_manager/game/life.dart';
+import 'package:baseball_manager/game/life_log.dart';
 import 'package:baseball_manager/game/path.dart';
 import 'package:baseball_manager/game/player.dart';
 import 'package:baseball_manager/game/records.dart';
@@ -164,5 +165,27 @@ void main() {
     expect(proYears, greaterThan(5));
     expect(inter, greaterThan(0));
     expect(cs, greaterThan(0));
+  });
+
+  test('経歴: 指名なし→再挑戦の順、アマの表彰は重ねない', () {
+    final t = timelineOf(const [
+      LifeEvent(19, 'route', '大学で再挑戦'),
+      LifeEvent(19, 'draft', 'ドラフトで指名されなかった'),
+      LifeEvent(21, 'title', '大会最優秀選手'),
+    ], const [
+      SeasonRecord(
+          age: 21,
+          stage: Stage.pathChoice,
+          line: Line(),
+          roundsWon: 4,
+          rounds: 4,
+          awards: ['大会最優秀選手']),
+    ]);
+    expect(t.map((e) => e.text).toList(), [
+      'ドラフトで指名されなかった',
+      '大学で再挑戦',
+      '大学日本一',
+      '大会最優秀選手',
+    ]);
   });
 }

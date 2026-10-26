@@ -143,7 +143,7 @@ void main() {
         'title',
         'retire'
       ]);
-      expect(t[1].text, '大会で優勝');
+      expect(t[1].text, '全国優勝'); // 少年の夏の学童大会
       expect(t[4].text, 'リーグ優勝');
       expect(t[5].text, 'タイトル獲得: 首位打者');
     });

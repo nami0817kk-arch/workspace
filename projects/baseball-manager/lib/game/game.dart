@@ -1435,11 +1435,15 @@ class Game {
       for (final w in awards) {
         log.add('表彰: $w!');
       }
+      // 通算の記録(プロ初安打など)は一軍の成績だけで数える(実際のプロ野球と同じ)。
+      // 二軍の年は出さない(出すと、一軍に上がった年に「プロ初安打」がもう一度出た)。
       var careerBefore = const Line();
       for (final r in proBefore) {
         careerBefore += r.line;
       }
-      for (final m in careerMarks(careerBefore, careerBefore + league.line)) {
+      for (final m in farm
+          ? const <String>[]
+          : careerMarks(careerBefore, careerBefore + league.line)) {
         log.add('記録達成: $m!');
         _note('title', m);
       }
@@ -1485,8 +1489,7 @@ class Game {
       records.add(rec);
       _logRounds(tournament);
       for (final w in ampAwards) {
-        log.add('表彰: $w!');
-        _note('title', w);
+        log.add('表彰: $w!'); // 経歴には、成績の表彰として出る(_note すると重なる)
       }
       if (tournament.champion) {
         championships++;
