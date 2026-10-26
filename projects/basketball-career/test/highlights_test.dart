@@ -1,4 +1,9 @@
+import 'dart:math';
+
+import 'package:basketball_career/game/game.dart';
+import 'package:basketball_career/game/life.dart';
 import 'package:basketball_career/game/match.dart';
+import 'package:basketball_career/game/player.dart';
 import 'package:basketball_career/ui/labels.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -84,6 +89,31 @@ void main() {
     test('見どころは多くても2つまで', () {
       final h = matchHighlights(_m(ot: 1, pts: 30, team: 70, reb: 12, ast: 11, threes: 6, stl: 5, blk: 4, fouledOut: true));
       expect(h, hasLength(2));
+    });
+  });
+
+  group('年のベストゲーム', () {
+    test('得点・リバウンド・アシスト・勝ちで比べた一番の試合を一言にする', () {
+      final ms = [
+        _m(pts: 12, reb: 3, ast: 2),
+        MatchResult(won: true, teamScore: 90, oppScore: 80, points: 31, rebounds: 11, assists: 4, opponent: '北斗高校'),
+        _m(won: false, team: 70, opp: 75, pts: 28, reb: 2, ast: 1),
+      ];
+      expect(bestGameOf(ms), '31点11リバウンド vs 北斗高校(勝ち)');
+      expect(bestGameOf(const []), '');
+    });
+
+    test('年末の「今年の成長」に、その年のベストゲームが入る。記録に残り保存される', () {
+      final g = Game.start('x', rng: Random(4), events: false);
+      String? summary;
+      var guard = 0;
+      while (summary == null && guard++ < 40) {
+        g.choose(Action.practice, Ability.threePoint);
+        summary = g.lastYearSummary;
+      }
+      expect(summary, contains('今年のベストゲーム'));
+      expect(g.records.first.bestGame, isNotEmpty);
+      expect(YearRecord.fromJson(g.records.first.toJson()).bestGame, g.records.first.bestGame);
     });
   });
 }
