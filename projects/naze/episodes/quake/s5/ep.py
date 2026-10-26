@@ -14,7 +14,8 @@ S2 = dict(view=P_JAPAN, layers=[Q(id="qall")], panel=dict(kind="quote", text="�
 S3 = dict(view=P_JAPAN, layers=[PLATES], panel=dict(kind="image", path=str(ASSETS / "ruler_gemini.jpg"), at=0.0))
 S4 = dict(view=P_JAPAN, layers=[PLATES], panel=dict(kind="image", path=str(ASSETS / "subduction_gemini.jpg"), at=0.0))
 S5 = dict(view=NV, layers=[PLATES_FILL, PLATES] + NANKAI)
-S6 = dict(view=NV, layers=[PLATES_FILL, PLATES] + NANKAI, panel=dict(kind="big", text="60〜90%程度以上", sub="30年以内（別の計算では20〜50%）", size=86, at=0.1))
+S6 = dict(view=NV, layers=[PLATES_FILL, PLATES] + NANKAI, panel=dict(kind="big", text="60〜90%程度以上", sub="30年以内（別の計算では20〜50%）", size=86, at=0.1,
+                                                                    box=(60, 200, 1020, 620)))
 
 EP = dict(
     kind="sim", title="地震の予知はできない、と気象庁も言っている", credit=CREDIT,
