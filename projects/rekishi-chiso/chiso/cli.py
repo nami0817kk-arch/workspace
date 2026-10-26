@@ -651,6 +651,13 @@ def cmd_story_main(args) -> int:
             print(f"  {k}: {v / 60:.1f}分")
         print("  BGM:", {k: (round(v, 2) if isinstance(v, float) else v) for k, v in r["bgm"].items()})
         return 0
+    if args.frames:                                       # 書き出しと同じ描き方で、指定の時点のコマだけ（10-26）
+        pngs, sheet = storymain.frames_at(Path(args.look), config, args.frames.split(","), out_dir(),
+                                          Path(args.sheet) if args.sheet else None)
+        for p in pngs:
+            print(p)
+        print(sheet)
+        return 0
     pngs, sheet, infos = storymain.stills(Path(args.look), config, out_dir(), f"_{args.ver}")
     for p, info in zip(pngs, infos):
         print(f"{p}  {info}")
@@ -1400,6 +1407,8 @@ def main(argv=None) -> int:
     s.add_argument("--limit", type=float, default=0, help="--build と一緒に：頭の何秒だけ書き出す（試し）")
     s.add_argument("--workers", type=int, default=4, help="--build：並行で描く本数")
     s.add_argument("--name", default="", help="--build：出力の名前（既定は台本の名前。out/<名前>.mp4）")
+    s.add_argument("--frames", default="", help="書き出さず、書き出しと同じ描き方でこの時点のコマを PNG と一覧に（秒・L行・L行+秒・C章・end。例 L0,L19+3,C2,end）")
+    s.add_argument("--sheet", default="", help="--frames の一覧の置き場（既定 out/<名前>_frames.jpg）")
     s.set_defaults(fn=cmd_story_main)
     s = sub.add_parser("story-short")
     s.add_argument("script")

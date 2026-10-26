@@ -383,6 +383,13 @@ class Plan:
                     spec[key] = sorted(spec[key], key=lambda it: order.get(it[0], 99))
                 for i in range(int(ext["from"]), int(ext["to"]) + 1):
                     figs[i] = spec
+            for add in self.look.get("figures") or []:       # look だけで足す図（台本に無い関係図・地図。10-26 数正）。spec: null はその行の図を外す
+                spec = add.get("spec")
+                for i in range(int(add["from"]), int(add.get("to", add["from"])) + 1):
+                    if spec is None:
+                        figs.pop(i, None)
+                    else:
+                        figs[i] = dict(spec)
             self._figs = figs
         return self._figs.get(idx)
 
@@ -422,8 +429,8 @@ class Plan:
             kind = spec.get("type")
             if kind == "people":
                 names = [n[0] for n in spec.get("nodes", [])]
-            elif kind == "map":
-                names = list(spec.get("route") or [])
+            elif kind == "map":                         # reveal: true の地図は、道のりではなく地点を語る順に1つずつ打つ（被害の範囲など）
+                names = [p[0] for p in spec.get("places", [])] if spec.get("reveal") else list(spec.get("route") or [])
             elif kind in ("stats", "numberline", "bars", "line", "calc"):
                 key = {"bars": "bars", "line": "points", "calc": "terms"}.get(kind, "items")
                 names = [it[0] for it in spec.get(key, [])]
@@ -442,6 +449,13 @@ class Plan:
             r["t0"], r["t1"] = t0, t1
         self._runs = runs
         return runs
+
+    @staticmethod
+    def fig_upto(spec: dict, n: int) -> dict:
+        """図を先頭 n 項目まで描く形に。reveal の地図は地点を n 個まで（線は引かない）、ほかは upto（前の項目は描き終えたまま）。"""
+        if spec.get("type") == "map" and spec.get("reveal"):
+            return {k: v for k, v in spec.items() if k not in ("reveal", "upto", "grow_from")} | {"places": spec["places"][:max(1, n)]}
+        return dict(spec, upto=n, grow_from=n - 1)
 
     def run_of(self, idx: int) -> dict | None:
         for r in self.fig_runs():
@@ -599,6 +613,11 @@ class Look:
             for p in (l.background, l.portrait):
                 if p and p.image not in self.credits:
                     self.credits[p.image] = p.credit or p.caption
+        self.credits.update(self.look.get("credits") or {})   # 台本に出てこない絵の出典（look の credits:）
+
+    def picture_of(self, ref: str) -> Image.Image:
+        """部品（覚えてほしい名前）の絵：「ai:K15」は AI 絵、ほかは実在の絵。"""
+        return self.ai_image(ref[3:]) if str(ref).startswith("ai:") else self.painting(ref)
 
     def painting(self, ref: str) -> Image.Image:
         """実在の絵（assets）に look の paint_fx（切り出し・明るさ・コントラスト）をかけたもの。元の画像は変えない。"""
@@ -672,7 +691,10 @@ class Look:
             img = Image.alpha_composite(img, Image.new("RGBA", (MW, MH), (0, 0, 0, 120)))
             r = self.plan.run_of(line.index)
             n = sum(1 for x in r["times"] if x <= t) if r and r["names"] else None
-            spec = dict(self.plan.fig(line.index), **({"upto": max(1, n)} if n is not None else {}))
+            spec = dict(self.plan.fig(line.index))
+            if n is not None:
+                spec = Plan.fig_upto(spec, max(1, n))
+                spec.pop("grow_from", None)
             img = figures.draw(self.painter, img, spec, 1.0)
         elif is_point_card(line.card):
             prev = self.sc.lines[line.index - 1].card if line.index else None
@@ -727,6 +749,44 @@ def stills(look_path: str | Path, config: dict, out_dir: Path, suffix: str = "_v
         labels.append(f"{i}. 約{m}分{s:02d}秒  {spec.get('note', '')}")
     sheet = _grid(pngs, labels, out_dir / f"{lk.look.get('out', 'story_main')}_stills{suffix}.jpg", config["fonts"]["gothic"])
     return pngs, sheet, infos
+
+
+def frames_at(look_path: str | Path, config: dict, specs: list[str], out_dir: Path, sheet: Path | None = None) -> tuple[list[Path], Path]:
+    """書き出しと同じ描き方（Video：パン・fx・部品・図の書き込み）で、指定の時点のコマを PNG と一覧に（10-26）。
+    時点は「秒」か「L行」（その行の頭の 1 秒後）・「L行+秒」・「C章」（章題カード）・「end」。声の長さは音声の控え（無ければ作る）から。"""
+    from . import script
+    from .cli import ROOT
+    look = yaml.safe_load(Path(look_path).read_text(encoding="utf-8"))
+    sc = script.load(ROOT / look["script"])
+    seconds = [s.seconds for s in voice_lines(sc, config)]
+    v = Video(look_path, config, seconds)
+    pl = v.pl
+    name = look.get("out", "story_main")
+    single = out_dir / f"{name}_frames"
+    single.mkdir(parents=True, exist_ok=True)
+    pngs, labels = [], []
+    for k, s in enumerate(specs, 1):
+        s = s.strip()
+        if s == "end":
+            t = pl.voice_end + END_SECONDS / 2
+        elif s.startswith("C"):
+            t = pl.chapter_at[int(s[1:])] + CHAPTER_SECONDS / 2
+        elif s.startswith("L"):
+            ln, _, plus = s[1:].partition("+")
+            t = pl.line_at[int(ln)][0] + (float(plus) if plus else 1.0)
+        else:
+            t = float(s)
+        img = Image.fromarray(v.frame(t))
+        p = single / f"{k:02d}.png"
+        img.save(p)
+        pngs.append(p)
+        i, c = pl.cut_at(t)
+        unit = pl.unit_at(t)
+        m, sec = divmod(int(t), 60)
+        labels.append(f"{k}. {m}:{sec:02d}  行{unit.line if unit else '-'}  {c.kind}:{Path(c.ref).stem}{'（図）' if c.dim else ''}")
+    target = sheet or out_dir / f"{name}_frames.jpg"
+    target.parent.mkdir(parents=True, exist_ok=True)
+    return pngs, _grid(pngs, labels, target, config["fonts"]["gothic"])
 
 
 def shotlist(look_path: str | Path, config: dict, target: Path) -> dict:
@@ -1065,7 +1125,7 @@ class Video:
                 else:
                     p = 1.0 if n == 1 and t - times[0] > 0.6 else min(1.0, max(0.0, (t - times[n - 1]) / 0.6))
                     q = round(p * 8) / 8
-                    s2 = dict(r["spec"], upto=n, grow_from=n - 1)
+                    s2 = Plan.fig_upto(r["spec"], n)
                     key = ("fig", r["key"], n, q)
 
                     def fig(lay, s2=s2, q=q):
@@ -1103,7 +1163,7 @@ class Video:
         if kind == "versus3":
             build = lambda lay: draw_versus_boxes(lay, part, shown, q, lk.font_of)
         else:
-            build = lambda lay: draw_name_cards(lay, part, shown, q, lk.font_of, lk.serif, lk.painting)
+            build = lambda lay: draw_name_cards(lay, part, shown, q, lk.font_of, lk.serif, lk.picture_of)
         _put(img, self.ov(("part", n, shown, q), build))
 
     def frame(self, t: float):
@@ -1137,7 +1197,8 @@ class Video:
             self._cut_overlays(img, cc, line, w, t)
         if c.kind in ("chapter", "end") or line is None:
             return img
-        if not c.dim and is_point_card(line.card):
+        covered = any(int(p_["from"]) <= line.index <= int(p_.get("to", p_["from"])) for p_ in lk.look.get("parts") or [])
+        if not c.dim and is_point_card(line.card) and not covered:   # 部品が出ている行は右上の札を出さない（同じ言葉を2つ並べない。10-26）
             prev = lk.sc.lines[line.index - 1].card if line.index else None
             if prev != line.card:
                 t0 = pl.line_at[line.index][0]
@@ -1813,13 +1874,15 @@ def description(plan: "Plan", config: dict) -> str:
             refs.append(c.ref)
     for part in look.get("parts") or []:
         for it in part.get("items") or []:
-            if part.get("type") == "names" and len(it) > 2 and it[2] and it[2] not in refs:
+            if part.get("type") == "names" and len(it) > 2 and it[2] and it[2] not in refs and not str(it[2]).startswith("ai:"):
                 refs.append(it[2])
     credits_by_image = {}
     for line in sc.lines:
         for pic in (line.background, line.portrait):
             if pic and pic.image not in credits_by_image:
                 credits_by_image[pic.image] = pic.credit or pic.caption
+    for k, v in (look.get("credits") or {}).items():
+        credits_by_image.setdefault(k, v)
     cf = assets_dir(config) / "paintings" / "credits.json"
     cr = json.loads(cf.read_text(encoding="utf-8")) if cf.exists() else {}
     rows, seen, cc0 = [], set(), 0                       # 1作品1行「作品名（所蔵・年）　URL」。許諾が違うもの（CC0）だけ末尾に（10-25「出典はまとめて」）
