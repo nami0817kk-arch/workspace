@@ -23,7 +23,7 @@ enum Dream {
   pro('プロの舞台へ', 'プロ契約を勝ち取る', 1),
   scorer('エースの証', '通算1,500得点', 1500),
   champion('勝ち続けるチーム', '大会で通算2回優勝する', 2),
-  honors('名を残す', '個人タイトル・表彰を通算3つ', 3),
+  honors('名を残す', '個人タイトル・表彰を通算2つ', 2),
   national('日の丸を背負う', '日本代表に招集され、世界の舞台に立つ', 1);
 
   const Dream(this.label, this.goalText, this.target);
