@@ -47,6 +47,20 @@ void main() {
       expect(h, isNot(contains(Honor.assistKing)));
     });
 
+    test('シーズンMVPはプロで個人評価がとても高く、チームも勝ち越したときだけ', () {
+      final great = [for (var i = 0; i < 6; i++) _m(pts: 34, reb: 11, ast: 8)];
+      expect(_t(League.proDomestic, great).honors(rookie: false), contains(Honor.mvp));
+      // 負け越しなら、個人がすごくてもMVPにならない。
+      final losing = [
+        for (var i = 0; i < 6; i++)
+          MatchResult(won: i < 2, teamScore: i < 2 ? 90 : 80, oppScore: i < 2 ? 80 : 90,
+              points: 34, rebounds: 11, assists: 8),
+      ];
+      expect(_t(League.proDomestic, losing).honors(rookie: false), isNot(contains(Honor.mvp)));
+      // 大学ではMVPは付かない(プロだけ)。
+      expect(_t(League.university, great).honors(rookie: false), isNot(contains(Honor.mvp)));
+    });
+
     test('平凡な成績なら何も付かない', () {
       final t = _t(League.proDomestic, [for (var i = 0; i < 6; i++) _m()]);
       expect(t.honors(rookie: true), isEmpty);

@@ -69,6 +69,18 @@ void main() {
       expect(matchHighlights(_m(pts: 18, reb: 11), doubleCount: 3).join(), contains('今大会3度目'));
     });
 
+    test('勝負どころの時計は第4クォーター残り6〜24秒で、同じ試合なら同じ', () {
+      for (var t = 50; t < 120; t += 7) {
+        final s = MatchState(team: t, opp: t + 1, points: 12, rebounds: 4, assists: 3,
+            teamStrength: 60, oppStrength: 60, form: 1, teamQuarters: const [], oppQuarters: const []);
+        final c = clutchClock(s);
+        expect(c, startsWith('第4クォーター 残り'));
+        final secs = int.parse(RegExp(r'(\d+)秒').firstMatch(c)!.group(1)!);
+        expect(secs, inInclusiveRange(6, 24));
+        expect(clutchClock(s), c);
+      }
+    });
+
     test('見どころは多くても2つまで', () {
       final h = matchHighlights(_m(ot: 1, pts: 30, team: 70, reb: 12, ast: 11, threes: 6, stl: 5, blk: 4, fouledOut: true));
       expect(h, hasLength(2));
