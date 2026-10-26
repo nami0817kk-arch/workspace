@@ -118,7 +118,7 @@ def frame_fn(ep: dict, out: Path, still: bool = False):
         d = defs[cur["id"]] if cur else {}
         ov.corner(dr, "出典：国土地理院（標高タイル）", f"高さは{ep['exag']:g}倍に強調")
         style = d.get("style")
-        if style not in ("question", "end") and ep.get("header"):
+        if style not in ("question", "end", "cta") and ep.get("header"):
             ov.rows(dr, ep["header"], *LAYOUT["header"], stroke=6)
         row = proj[str(fi)]
         for lb in d.get("labels", []):
@@ -136,6 +136,8 @@ def frame_fn(ep: dict, out: Path, still: bool = False):
             ov.band(img, *LAYOUT["end_band"], 0.75 * a)
             dr = ImageDraw.Draw(img)
             ov.rows(dr, sub, *LAYOUT["end_text"], stroke=10)
+        elif style == "cta":
+            ov.cta(img, t - cur["start"], LAYOUT["end_band"])
         elif cur:
             ov.rows(dr, ov.page_of(sub, t, cur["start"], cur["end"]), *LAYOUT["sub"])
         return img.convert("RGB")

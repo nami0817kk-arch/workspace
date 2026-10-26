@@ -19,6 +19,11 @@ def load(folder: Path) -> dict:
     sp.loader.exec_module(mod)
     ep = dict(mod.EP)
     ep["_mod"] = mod
+    # 結びに「チャンネル登録と高評価」のお願いを足す(本編は最後の章だけ。long が NAZE_CTA=0 で止める)
+    if ep.get("cta", True) and os.environ.get("NAZE_CTA", "1") != "0":
+        from .overlay import CTA_TEXT
+        ep["lines"] = list(ep["lines"]) + [dict(id="cta", text=CTA_TEXT, style="cta", pause=0.2,
+                                                 say="チャンネルとうろくと、こうひょうか、よろしくおねがいします。")]
     return ep
 
 

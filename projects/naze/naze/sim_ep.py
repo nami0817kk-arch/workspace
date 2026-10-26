@@ -43,7 +43,10 @@ def frame_fn(ep: dict, out: Path):
         dr = ImageDraw.Draw(img)
         cur = ov.current(lines, t)
         k = 0.0 if not cur else max(0.0, min(1.0, (t - cur["start"]) / max(1e-6, cur["end"] - cur["start"])))
-        ctx = dict(lines=lines, cur=cur, L=L, k=k, at=lambda i: L[i]["start"], defs=defs)
+        scene = cur
+        if cur and cur["id"] == "cta":          # お願いの間は、最後の場面をそのまま見せる
+            scene, k = lines[-2], 1.0
+        ctx = dict(lines=lines, cur=scene, L=L, k=k, at=lambda i: L[i]["start"], defs=defs)
         draw(img, dr, t, ctx)
         dr = ImageDraw.Draw(img)
         if ep.get("credit"):
@@ -57,6 +60,8 @@ def frame_fn(ep: dict, out: Path):
             ov.band(img, *LAYOUT["sim_band"], 0.8)
             dr = ImageDraw.Draw(img)
             ov.rows(dr, sub, *LAYOUT["sim_end"], stroke=10)
+        elif style == "cta":
+            ov.cta(img, t - cur["start"], LAYOUT["sim_band"])
         elif cur:
             ov.rows(dr, ov.page_of(sub, t, cur["start"], cur["end"]), *LAYOUT["sim_sub"])
         return img.convert("RGB")

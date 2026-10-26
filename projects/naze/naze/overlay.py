@@ -119,3 +119,44 @@ def band(img: Image.Image, y0: int, y1: int, alpha: float = 0.75) -> None:
     ov = Image.new("RGBA", img.size, (0, 0, 0, 0))
     ImageDraw.Draw(ov).rectangle([0, y0, W, y1], fill=NAVY + (int(255 * alpha),))
     img.alpha_composite(ov)
+
+
+CTA_TEXT = "チャンネル登録と高評価、よろしくお願いします。"
+THUMB = "\U0001F44D"
+SYM_FONT = "C:/Windows/Fonts/seguisym.ttf"
+
+
+def cta(img: Image.Image, t: float, band_y, size: int = 64) -> None:
+    """結びのお願い: 帯の上に「チャンネル登録」と高評価のボタン。t はお願いの行が始まってからの秒。
+    0.25 秒で現れ、1.2 秒で登録が「登録済み」に、1.6 秒で高評価の手が黄色になる。"""
+    a = min(1.0, t / 0.25)
+    y0, y1 = band_y
+    band(img, y0, y1, 0.8 * a)
+    dr = ImageDraw.Draw(img)
+    cy = (y0 + y1) / 2
+    rows(dr, "チャンネル登録と【高評価】\nよろしくお願いします", cy - (y1 - y0) * 0.2, size, stroke=8)
+    f = font(int(size * 0.8))
+    by = cy + (y1 - y0) * 0.2
+    bh = int(size * 1.35)
+    done = t > 1.2
+    sub_t = "登録済み" if done else "チャンネル登録"
+    sw = f.getlength(sub_t) + size * 1.0
+    gap = size * 0.6
+    tw = sw + gap + bh * 1.6
+    x = W / 2 - tw / 2
+    pop = 1.0 + 0.08 * max(0.0, 1 - abs(t - 1.2) / 0.15)
+    ov = Image.new("RGBA", img.size, (0, 0, 0, 0))
+    od = ImageDraw.Draw(ov)
+    A = int(255 * a)
+    w2 = sw * pop
+    od.rounded_rectangle([x + sw / 2 - w2 / 2, by - bh / 2, x + sw / 2 + w2 / 2, by + bh / 2], bh // 2,
+                         fill=((90, 90, 96) if done else (220, 30, 36)) + (A,))
+    od.text((x + sw / 2 - f.getlength(sub_t) / 2, by - f.size * 0.62), sub_t, font=f, fill=(255, 255, 255, A))
+    tx = x + sw + gap
+    liked = t > 1.6
+    od.rounded_rectangle([tx, by - bh / 2, tx + bh * 1.6, by + bh / 2], bh // 2, fill=(30, 36, 56, A), outline=(255, 255, 255, A), width=3)
+    g = ImageFont.truetype(SYM_FONT, int(bh * 1.05))
+    bb = g.getbbox(THUMB)
+    od.text((tx + bh * 0.8 - (bb[0] + bb[2]) / 2, by - (bb[1] + bb[3]) / 2), THUMB, font=g, fill=(YEL if liked else WHITE) + (A,))
+    img.alpha_composite(ov)
+    BOXES.append(("cta", (x, by - bh / 2, x + tw, by + bh / 2), "登録と高評価", 1.0))

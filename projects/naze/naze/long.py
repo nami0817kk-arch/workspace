@@ -68,7 +68,8 @@ def main(folder: Path, args) -> int:
         pf = folder / part["ep"]
         video = OUT / f"{folder.name}_{pf.name}" / f"{folder.name}_{pf.name}.mp4"
         if "--skip-build" not in args or not video.exists():
-            r = subprocess.run([sys.executable, "-m", "naze", "all", str(pf)])
+            env = dict(os.environ, NAZE_CTA="1" if i == len(L["parts"]) else "0")   # お願いは最後の章だけ
+            r = subprocess.run([sys.executable, "-m", "naze", "all", str(pf)], env=env)
             if r.returncode != 0:
                 raise SystemExit(f"章 {i}({part['title']})の書き出しが失敗した")
         if i > 1:
