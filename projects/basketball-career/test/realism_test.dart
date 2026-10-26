@@ -221,4 +221,35 @@ void main() {
       expect(MatchResult.fromJson(r.toJson()..remove('starter')).starter, isTrue);
     });
   });
+
+  group('控えから先発へ', () {
+    test('前の大会で控えが多く、今回の大会が全部先発なら「先発の座をつかんだ」と知らせる。記録に控えの試合数が残る', () {
+      var noted = 0;
+      for (var seed = 0; seed < 20; seed++) {
+        final base = Game.start('x', rng: Random(seed), events: false);
+        final g = Game(
+          eventsEnabled: false,
+          player: base.player.copyWith(age: 25, heightCm: 194, clearPositionLock: true,
+              abilities: {for (final a in Ability.values) a: 80}),
+          rng: Random(seed),
+          track: Track.pro,
+          salary: 2000,
+          slot: 1,
+          records: [
+            YearRecord(age: 24, league: League.proDomestic, wins: 3, games: 6, ppg: 6, rpg: 2, apg: 1,
+                champion: false, achievement: 40, benchGames: 6),
+          ],
+        );
+        g.choose(Action.rest, Ability.defense);
+        final last = g.records.last;
+        expect(last.benchGames, 0, reason: '総合が高いので全部先発');
+        if (g.lastRoleNote != null) {
+          noted++;
+          expect(g.lastRoleNote, contains('先発の座'));
+        }
+        expect(YearRecord.fromJson(last.toJson()).benchGames, last.benchGames);
+      }
+      expect(noted, 20);
+    });
+  });
 }
