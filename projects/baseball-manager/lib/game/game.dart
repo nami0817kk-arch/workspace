@@ -1605,10 +1605,10 @@ class Game {
     if (rs != null) log.addAll(rivalNews(rs, player.age));
 
     if (phase != Phase.retired) log.add('── ${player.age}歳 ──');
-    final an = ageNote(player.age);
+    final an = ageNote(player.age, pro: turnedPro);
     if (an != null && phase != Phase.retired) log.add(an);
     if (turnedPro) {
-      if (proTeam != null && proYears >= 1 && proYears % 3 == 0) {
+      if (proTeam != null && !overseas && proYears >= 1 && proYears % 3 == 0) {
         log.add('新人の${kohaiOf(proTeam!, player.age)}が入団してきた。');
       }
       proYears++;
@@ -1644,9 +1644,12 @@ class Game {
     _rotateCast(before);
     _newGoal();
     if (turnedPro && phase != Phase.retired && proTeam != null) {
-      log.add('${player.age}歳シーズン開幕。${overseas ? overseasTeam : proTeam}'
-          'のスローガンは「${sloganOf(proTeam!, player.age)}」。'
-          '本拠地は${stadiumOf(proTeam!)}。');
+      // 海外の年は、日本の球団のスローガン・球場を出さない
+      log.add(overseas
+          ? '${player.age}歳シーズン開幕。アメリカの$overseasTeamで迎える、プロ${player.age - (proStartAge ?? player.age) + 1}年目のシーズン。'
+          : '${player.age}歳シーズン開幕。$proTeam'
+              'のスローガンは「${sloganOf(proTeam!, player.age)}」。'
+              '本拠地は${stadiumOf(proTeam!)}。');
     }
   }
 

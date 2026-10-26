@@ -312,7 +312,7 @@ void main() {
   });
 
   group('防御率の下限', () {
-    test('30回以上投げて失点の推定が0でも、シーズンの防御率は0.90を下回らない', () {
+    test('30回以上投げて失点の推定が0でも、シーズンの防御率は下限(0.78)を下回らず、1点前後はなだらかに散らばる', () {
       final zero = Line(
           games: 24,
           starts: 24,
@@ -320,7 +320,15 @@ void main() {
           outs: 560,
           runsRaw: -runBaseline * 700);
       expect(zero.runsAllowed, 0);
-      expect(zero.era, minSeasonEra);
+      expect(zero.era, closeTo(minSeasonEra, 1e-9));
+      // 1.20 より良い年は、縮めて並べる(順番は保つ)
+      Line pitched(double runs) => Line(
+          games: 24, starts: 24, faced: 700, outs: 560,
+          runsRaw: runs - runBaseline * 700);
+      final a = pitched(5).era!, b = pitched(20).era!;
+      expect(a, lessThan(b));
+      expect(a, greaterThan(minSeasonEra));
+      expect(b, lessThan(1.20));
       // 少ない登板(1試合・1か月)は、そのまま 0.00 になりうる
       final game = Line(
           games: 1, starts: 1, faced: 24, outs: 18, runsRaw: -runBaseline * 24);

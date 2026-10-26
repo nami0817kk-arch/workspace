@@ -143,8 +143,13 @@ class Line {
   double? get era {
     if (outs == 0) return null;
     final e = runsAllowed * 27 / outs;
-    return outs >= 90 ? max(e, minSeasonEra) : e;
+    if (outs < 90 || e >= _eraSoft) return e;
+    // 1.20 を下回るぶんは縮めて、下限(0.00 で `minSeasonEra`)へなだらかに寄せる
+    // (一律の下限だと、毎年「防御率0.90」がそろって作り物に見えた)。
+    return _eraSoft - (_eraSoft - e) * (_eraSoft - minSeasonEra) / _eraSoft;
   }
+
+  static const _eraSoft = 1.20;
 
   /// WHIP(1回あたりに出した走者の数)。
   double? get whip =>
@@ -255,7 +260,7 @@ const leagueEra = 3.90;
 const runBaseline = 0.10;
 
 /// シーズン(30回以上)の防御率の下限。
-const minSeasonEra = 0.90;
+const minSeasonEra = 0.78;
 
 /// その打席の打点(走者の動きは再現しないので、結果ごとの確率で決める)。
 int _rbiOf(AtBatResult r, Random rng) {

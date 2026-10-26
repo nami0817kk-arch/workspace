@@ -244,8 +244,21 @@ String careerSummary(List<SeasonRecord> rs) {
 int salaryOf(SeasonRecord r) {
   if (r.stage != Stage.pro) return 0;
   final base = 500 * pow(1.065, r.line.rating - 30);
+  // 投手は勝ち星と防御率でも評価される(評価の数字だけだと、19勝の投手が2000万円台だった)。
+  final l = r.line;
+  final pitcherOnly = l.hasPitching && !l.hasBatting;
+  final pitch = !pitcherOnly
+      ? 1.0
+      : (1 + 0.12 * max(0, l.wins - 5)).clamp(1.0, 3.0) *
+          switch (l.era ?? 9) {
+            <= 2.0 => 1.4,
+            <= 3.0 => 1.2,
+            <= 4.0 => 1.0,
+            _ => 0.85,
+          };
   // 海外のリーグは年俸が桁違い(×2.5)。
   final v = base *
+      pitch *
       (1 + 0.15 * r.titles.length) *
       (r.overseas ? 2.5 : 1.0) *
       (r.twoWay ? 1.4 : 1.0) * // 二刀流は話題性で年俸が高い
