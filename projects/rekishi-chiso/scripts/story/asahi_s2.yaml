@@ -42,7 +42,7 @@ now:
   - {at: もっとも, text: "天正14年　浜松", point: 1}
 timeline:
   - {label: "天正10年"}
-  - {label: "天正14年5月"}
+  - {label: "5月"}
   - {label: "5月24日"}
 cards:
   - type: table                          # 2つの話（語った順に1行ずつ）
@@ -88,7 +88,7 @@ shots:
     crop: [0.0, 0.12, 1.0, 0.85]
     focus: [0.5, 0.45]
     move: down
-    credit: "《豊臣秀吉像》1600年（大阪市立美術館蔵、Wikimedia Commons・パブリックドメイン）"
+    credit: "《豊臣秀吉像》1600年 大阪市立美術館蔵（Wikimedia Commons・パブリックドメイン）"
     must: 秀吉の肖像
   K04w:                                  # 「家康は、縁組のことまで…望んできた」：書院の家康
     kind: ai

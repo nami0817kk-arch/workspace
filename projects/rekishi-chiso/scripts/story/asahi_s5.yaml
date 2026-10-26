@@ -52,7 +52,7 @@ cards:
     sub: 旭　48歳で亡くなる
     text_y: 0.70
   - type: year
-    from: 2021年
+    from: この寺が
     until: そこには
     big: 2021年秋
     sub: 南明院　初めての公開
@@ -70,7 +70,7 @@ shots:
     image: paintings/hidenaga_jurakudai_screen.jpg
     focus: [0.3, 0.4]
     move: left
-    credit: "《聚楽第図屏風》桃山時代（三井記念美術館蔵、Wikimedia Commons・パブリックドメイン）"
+    credit: "《聚楽第図屏風》桃山時代 三井記念美術館蔵（Wikimedia Commons・パブリックドメイン）"
     must: 聚楽第の屏風
   K05w:                                  # 秀吉の小田原攻め
     kind: ai
