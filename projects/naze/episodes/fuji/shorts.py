@@ -100,4 +100,8 @@ S = {
 
 def ep_for(name: str) -> dict:
     s = S[name]
-    return dict(BASE, aspect="portrait", title=s["title"], lines=s["lines"], shots=s["shots"])
+    return dict(BASE, aspect="portrait", title=s["title"], lines=s["lines"], shots=s["shots"], header=HEADERS[name])
+
+
+HEADERS = {"s1": "富士山は【左右対称】？", "s2": "富士山の中の【古い山】", "s3": "富士山は【どれだけ大きい】？",
+           "s4": "富士山の【最後の噴火】", "s5": "富士山の頂上は【なぜ寒い】？"}

@@ -166,7 +166,7 @@ def frame_fn(ep: dict, out: Path, still: bool = False):
             if t >= t0:
                 _draw_profile(img, row, profiles[cur["id"]], pr, min(1.0, (t - t0) / 1.4))
         dr = ImageDraw.Draw(img)
-        sub = d.get("sub", d.get("text", ""))
+        sub = d.get("sub") or ov.auto_sub(d.get("text", ""), LAYOUT["sub"][1], LAYOUT["maxw"])
         if style == "question":
             ov.rows(dr, sub, *LAYOUT["question"], stroke=10)
         elif style == "end":

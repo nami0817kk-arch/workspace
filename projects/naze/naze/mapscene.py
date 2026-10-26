@@ -497,7 +497,7 @@ def _box(P: dict) -> tuple:
         return P["box"]
     if P["kind"] == "section" and H > W:
         return (W * 0.04, H * 0.40, W * 0.96, H * 0.78)     # 縦の断面図は大きく
-    return (W * 0.52, H * 0.12, W * 0.96, H * 0.80) if W > H else (W * 0.06, H * 0.50, W * 0.94, H * 0.74)
+    return (W * 0.52, H * 0.12, W * 0.96, H * 0.80) if W > H else (W * 0.06, H * 0.40, W * 0.94, H * 0.68)
 
 
 def _frame(img: Image.Image, box, a: float) -> None:
