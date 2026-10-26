@@ -289,4 +289,33 @@ void main() {
     expect(rivalFinals, greaterThan(0), reason: '決勝でライバルと当たることがある');
     expect(rivalFinals, lessThan(finals), reason: 'いつもライバルではない');
   });
+
+  test('大会の連戦の疲れ: 6試合までは残らず、プレーオフまで勝ち進んだ分だけ残る(最大12)', () {
+    expect(Game.tournamentFatigue(3), 0);
+    expect(Game.tournamentFatigue(6), 0);
+    expect(Game.tournamentFatigue(8), 4);
+    expect(Game.tournamentFatigue(14), 12);
+    expect(Game.tournamentFatigue(30), 12);
+    // 実際に長いシリーズを戦うと、大会のあとに疲れが増えている。
+    var saw = false;
+    for (var seed = 0; seed < 60 && !saw; seed++) {
+      final base = Game.start('x', rng: Random(seed), events: false);
+      final g = Game(
+        eventsEnabled: false,
+        player: base.player.copyWith(age: 26, heightCm: 194, clearPositionLock: true,
+            abilities: {for (final a in Ability.values) a: 88}),
+        rng: Random(seed),
+        track: Track.pro,
+        salary: 3000,
+        slot: 1,
+      );
+      g.choose(Action.rest, Ability.defense);
+      final t = g.lastReport?.tournament;
+      if (t != null && t.games > 8) {
+        expect(g.lastTournamentFatigue, Game.tournamentFatigue(t.games));
+        saw = true;
+      }
+    }
+    expect(saw, isTrue);
+  });
 }
