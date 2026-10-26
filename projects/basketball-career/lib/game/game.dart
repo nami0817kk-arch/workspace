@@ -210,6 +210,7 @@ class Game {
     this.caps = 0,
     this.number = 0,
     this.mate = '',
+    this.teamName = '',
     this.coachLabel = '',
     List<Action>? recentActions,
     this.schoolBonus = 0,
@@ -361,6 +362,12 @@ class Game {
 
   /// チームメイトの名前とコーチの名前(段階が変わると替わる。出来事の文に入る)。
   String mate;
+
+  /// いま所属しているチームの名前(架空。進学・移籍・プロ入り・海外挑戦で変わる)。古いセーブは空。
+  String teamName;
+
+  /// 画面に出すチームの名前(古いセーブで空なら「自チーム」)。
+  String get teamLabel => teamName.isEmpty ? '自チーム' : teamName;
   String coachLabel;
 
   /// プロ契約のときのドラフト指名順位(1〜60)。0 は指名なし(古いセーブ・プロ以外)。
@@ -643,6 +650,7 @@ class Game {
   void _newTeamNames() {
     mate = mateName(rng);
     coachLabel = coachName(rng);
+    teamName = opponentTeamName(league, rng);
   }
 
   EventDef? get pendingEvent =>
@@ -1240,6 +1248,8 @@ class Game {
     if (opt.effect.school != null) {
       schoolBonus = opt.effect.school!;
       schoolLabel = opt.effect.schoolLabel ?? '';
+      // 進学先・入団先・移籍先を選んだ: 新しいチームの名前。
+      teamName = opponentTeamName(league, rng);
     }
     if (opt.effect.salaryPct != 0 && salary > 0) {
       final next = (salary * (100 + opt.effect.salaryPct) / 100 / 10).round() * 10;
@@ -1414,6 +1424,7 @@ class Game {
   void goAbroad() {
     if (!canGoAbroad) throw StateError('海外挑戦はできない');
     abroad = true;
+    teamName = opponentTeamName(League.proAbroad, rng);
   }
 
   /// プロの選手が自分で引退を決める。
@@ -1519,6 +1530,7 @@ class Game {
         'yearStart': {for (final e in yearStart.entries) e.key.name: e.value},
         'number': number,
         'mate': mate,
+        'teamName': teamName,
         'coachLabel': coachLabel,
         'recentActions': [for (final a in recentActions) a.name],
         'schoolBonus': schoolBonus,
@@ -1585,6 +1597,7 @@ class Game {
         sp: (j['sp'] as num?)?.toInt() ?? 0,
         positionAuto: (j['posAuto'] as bool?) ?? true,
         mate: (j['mate'] as String?) ?? '',
+        teamName: (j['teamName'] as String?) ?? '',
         coachLabel: (j['coachLabel'] as String?) ?? '',
         rivalMet: (j['rivalMet'] as bool?) ?? (((j['rival'] as Map?)?['wins'] as num? ?? 0) + ((j['rival'] as Map?)?['losses'] as num? ?? 0) > 0),
         recentActions: [
