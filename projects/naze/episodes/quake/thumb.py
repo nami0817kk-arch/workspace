@@ -60,13 +60,28 @@ def circle(img, x, y, r):
     d.ellipse([x - r, y - r, x + r, y + r], outline=(235, 45, 45), width=14)
 
 
-# 本編: 日本の周りの地震(10年・1万回)とプレート。字は左、主役(日本と震源の帯)は右
-img, v = base((132.0, 36.0, 44), [PLATES, Q(id="q", data=JP, size=1.0)])
+def badge(img, x, y, label, value, col, w=330, h=170):
+    """数字の札(小さな見出し＋大きな数字)。"""
+    lay = Image.new("RGBA", img.size, (0, 0, 0, 0))
+    d = ImageDraw.Draw(lay)
+    d.rounded_rectangle([x, y, x + w, y + h], 26, fill=O.NAVY + (235,), outline=tuple(col) + (255,), width=6)
+    img.alpha_composite(lay)
+    d = ImageDraw.Draw(img)
+    f1, f2 = O.font(44), O.font(96)
+    d.text((x + w / 2 - f1.getlength(label) / 2, y + 14), label, font=f1, fill=O.WHITE)
+    d.text((x + w / 2 - f2.getlength(value) / 2, y + 62), value, font=f2, fill=tuple(col))
+
+
+# 本編: 問い(左上)＋数字の札 2 つ(左下)＋震源で光る日本(右)に赤い丸
+img, v = base((131.5, 36.2, 40), [Q(id="q", data=JP, size=1.0)])
 img = glow(img)
-img = shade_left(img, 0.55)
-cx, cy = v.px(139.2, 36.6)
-circle(img, cx, cy, 330)
-text_block(img, ["陸地0.25%", "なのに地震は", "【世界の2割】"], 70, 250, size=128)
-ImageDraw.Draw(img).text((74, 900), "1万回の震源で確かめる", font=O.font(54), fill=O.DIM, stroke_width=6, stroke_fill=O.NAVY)
+img = shade_left(img, 0.56)
+cx, cy = v.px(139.0, 36.8)
+circle(img, cx, cy, 320)
+text_block(img, ["なぜ日本は", "【地震】が", "多いのか？"], 70, 90, size=138)
+badge(img, 70, 640, "日本の陸地", "0.25%", O.WHITE)
+ImageDraw.Draw(img).text((418, 680), "→", font=O.font(90), fill=O.WHITE, stroke_width=6, stroke_fill=O.NAVY)
+badge(img, 510, 640, "世界の大地震", "約2割", O.YEL, w=360)
+ImageDraw.Draw(img).text((74, 860), "1万回の震源で確かめる", font=O.font(50), fill=O.DIM, stroke_width=6, stroke_fill=O.NAVY)
 img.convert("RGB").resize((1280, 720), Image.LANCZOS).save(OUT / "thumb_long.jpg", quality=93)
 print(OUT / "thumb_long.jpg")
