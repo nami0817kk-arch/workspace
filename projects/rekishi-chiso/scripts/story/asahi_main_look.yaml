@@ -1,0 +1,325 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：旭姫と大政所（scripts/asahi-story.yaml）。chiso/storymain.py が読む。
+# 10-26 作成。台本には手を入れない（承認・reading-ok 済み。変えると控えが外れる）。決まりは docs/story-main.md・スキル rekishi-story-screen。
+# 絵の方針：AI 絵は 18 枚（A01〜A18）＋数正の回の K04（家康）・K05（秀吉）をそのまま使う（新しく作らない）。同じ絵を時間をずらして使い回す（続けて 20 秒まで）。
+#   人物は表情のある全面の AI 絵が主役。実在の絵（パブリックドメイン）は額（frame:）と屏風・絵図の一部（part:）。
+# AI 絵の指示の一覧（英語・顔立ちの設定）：dev/output/rekishi-chiso/research/asahi_ai_images.md
+# 届く前は art_dir の仮の絵（A01.jpg〜、番号と場面だけ書いた灰色の板）で代える。届いたら main_art_dir に A01.jpg〜を置くだけ。
+# K04・K05 は out/story/kazumasa/main/ から out/story/asahi/main/（と ph/）へ写してある（out/ は git に入らないので、無ければ写し直す）。
+script: scripts/asahi-story.yaml
+out: asahi_story_main
+art_dir: out/story/asahi/ph          # 仮の絵（placeholder）＋ K04・K05 の写し
+main_art_dir: out/story/asahi/main   # Gemini の 16:9 の絵（A01.jpg〜A18.jpg）＋ K04・K05 の写し
+ai_disclosure: この動画の人物・情景の画像の多くは、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面の右上に「AI生成画像」と出しています）。
+
+# 章ごとの左上の札「いま｜章題」。台本は和暦を主に書くので札も和暦（西暦の年は付けない。2021年など今の出来事は西暦）。
+# dates＝語りがその年・月日を言った行から替える（研究・論文・書物の年は物語の「いま」ではないので替えない）
+chapters:
+  0: {label: 序章 なぜ妹と母を差し出したのか, now: 天正14年5月11日,
+      dates: {7: 天正14年10月, 10: 天正14年5月24日, 12: 天正18年, 13: 2021年秋, 14: 天正14年, 15: 天正13年冬}}
+  1: {label: 第1章 44歳の花嫁, now: 天正12年,
+      dates: {17: 天正13年冬, 18: 天正14年, 19: 天正14年4月, 28: 天正14年5月11日, 34: 天正14年5月12日, 35: 天正14年5月14日, 41: 天正14年秋}}
+  2: {label: 第2章 二人と無き母, now: 天正14年9月,
+      dates: {53: 天正14年10月13日, 54: 天正14年10月18日, 56: 天正14年10月17日, 62: 天正14年10月18日, 68: 天正14年10月, 70: 天正14年11月12日, 72: 天正14年11月16日}}
+  3: {label: 第3章 前の夫と1通の朱印状, now: null}
+  4: {label: 第4章 駿河御前の夜通しの旅, now: 天正14年,
+      dates: {116: 天正16年6月22日, 124: 天正16年, 126: 天正17年5月, 131: 天正18年正月}}
+  5: {label: 第5章 旭はどこに眠るのか, now: 天正18年1月14日,
+      dates: {139: 天正18年1月15日, 142: 天正18年, 146: 2021年秋, 148: 天正18年, 150: 天正18年8月22日, 151: 2023年4月12日, 154: 2022年, 156: 天正19年}}
+# 概要欄「■ 参考にした資料」（事実カード 旭姫_facts_20261026.yaml のうち本文を開いた主なもの。題はカードの題のまま。10-26）
+references:
+  - 岡崎市 編『岡崎市史 別巻下巻』（第十六章 第五節 朝日姫の婚嫁）1935年　https://dl.ndl.go.jp/pid/1170626/1/128
+  - 柴田顕正 編『岡崎市史』1926年　https://dl.ndl.go.jp/pid/1020234/1/330
+  - 渡辺世祐『豊太閤と其家族』1919年　https://dl.ndl.go.jp/pid/953289/1/185
+  - 徳富猪一郎『近世日本国民史 豊臣氏時代』1922年　https://dl.ndl.go.jp/pid/960830/1/25
+  - 松平家忠『家忠日記 第4』（明治30年 東京帝国大学 木版翻刻）　https://dl.ndl.go.jp/pid/772516/1/23
+  - 安積覚 編『烈祖成績 巻之7,8』　https://dl.ndl.go.jp/pid/781742/1/8
+  - 八幡和郎「大河「豊臣兄弟！」旭の結婚をめぐる論争」アゴラ（2026）　https://agora-web.jp/?p=543094
+  - 濱田浩一郎「家康の正室・旭姫（朝日姫）の記事」プレジデントオンライン（2026）　https://president.jp/articles/-/119517
+  - 黒田基樹「家康が秀長に並ぶ「豊臣政権のナンバー2」に上り詰めたワケ」プレジデントオンライン（2026）　https://president.jp/articles/-/109686
+  - 菊地浩之「家康の妻たち」プレジデントオンライン（2026）　https://president.jp/articles/-/120075
+  - 愛知県 Aichi Now「戦国時代のヒロイン（旭姫）」　https://aichinow.pref.aichi.jp/omotenashi/heroines/
+  - おにわさん「南明院庭園“蒼穹庭”」（2021）　https://oniwa.garden/kyoto-nanmeiin-temple-%E5%8D%97%E6%98%8E%E9%99%A2/
+  - 静岡市大河ドラマ「どうする家康」活用推進協議会「家康公の正室・旭姫ゆかりの瑞龍寺の文化財資料を公開します！」（2023）　https://kyodonewsprwire.jp/release/202309129467
+  - 静岡市「駿府城跡天守台野外展示事業」　https://www.city.shizuoka.lg.jp/s6725/s013130.html
+  - 三溪園保勝会「旧天瑞寺寿塔覆堂」　https://www.sankeien.or.jp/learn/facilities/tenzuiji/
+  - 和樂web「朝日姫」（2026）　https://intojapanwaraku.com/culture/292076/
+no_tag_from: 159                     # 締め（冒頭の西の野に戻る所）から札を出さない
+
+# AI 絵（16:9 横・18枚＋K04・K05）。scene は日本語の要約（英語の指示は research/asahi_ai_images.md）。
+# pan：h＝左右（既定）・v＝上下・zoom＝ゆっくり寄る（顔の感情の場面だけ）。crops＝切り出し [倍率, 中心x, 中心y]
+ai:
+  A01: {scene: 天正14年5月11日 池鯉鮒の西の野。輿の列（左）と徳川の侍の一団（右）が向き合う遠景, pan: h}
+  A02: {scene: 旭・胸から上（40代半ば・素朴な顔・淡い打掛）。初夏の野、後ろに輿, pan: zoom, crops: {face: [1.25, 0.45, 0.40], left: [1.18, 0.42, 0.45]}}
+  A03: {scene: 京を発つ嫁入りの行列（漆の輿が並ぶ）横長の遠景, pan: h}
+  A04: {scene: 浜松城の婚礼。旭（右・白の打掛）と家康（左奥・横顔）, crops: {right: [1.18, 0.62, 0.45], left: [1.18, 0.30, 0.42]}}
+  A05: {scene: 大政所・胸から上（70代前半・小柄・深いしわ）, pan: zoom, crops: {face: [1.25, 0.55, 0.40]}}
+  A06: {scene: 天正14年10月 秋の街道を行く大政所の輿と護衛（後ろ姿）, pan: h}
+  A07: {scene: 岡崎城の中庭の夕方。輿から出た大政所（右）が旭（左）に抱きつく, crops: {left: [1.18, 0.38, 0.45], right: [1.18, 0.65, 0.48], face: [1.25, 0.52, 0.42]}}
+  A08: {scene: 岡崎の宿所の夕暮れ。軒下に暗く積まれた薪、遠くに侍の後ろ姿（火なし）, pan: h}
+  A09: {scene: 駿府城と安倍川、遠くに富士（人物なし）, pan: h}
+  A10: {scene: 天正16年6月 夜通し京へ向かう輿と松明（東海道）, pan: h}
+  A11: {scene: 旭・夜の輿の中で母を案じる（小さな灯）, pan: zoom, crops: {face: [1.25, 0.5, 0.40]}}
+  A12: {scene: 聚楽第の遠景（金箔瓦）、手前に京の町屋の屋根（人物なし）, pan: h}
+  A13: {scene: 有馬の湯の町、湯けむり（人物なし）, pan: v}
+  A14: {scene: 大政所が少年（秀忠・後ろ姿）の髪を結い直す, crops: {left: [1.18, 0.40, 0.42], right: [1.18, 0.62, 0.52]}}
+  A15: {scene: 東福寺 南明院の高い所の五輪塔（秋・紅葉。人物なし）, pan: v}
+  A16: {scene: 駿府 瑞龍寺の苔むした五輪塔（人物なし）}
+  A17: {scene: 三溪園 寿塔の覆堂（遠景・木立に半分隠れる。人物なし）}
+  A18: {scene: 終了画面用。夕暮れの野と松並木（右半分を空けた構図）, lock: [1.0, 0.5, 0.5]}
+  K04: {scene: 数正の回の家康・書院の上座で厳しい顔（40代・胸から上）, pan: zoom, crops: {face: [1.25, 0.5, 0.40]}}
+  K05: {scene: 数正の回の秀吉・金の襖の御殿に座る。笑みと鋭い目, crops: {face: [1.25, 0.5, 0.40]}}
+
+# 実在の絵の手当て（元の画像は変えない）。縦長の肖像は人物のところを切り出す（上は賛の文字）
+paint_fx:
+  paintings/hidenaga_asahihime.jpg: {crop: [0.0, 0.55, 1.0, 0.98]}
+  paintings/hidenaga_omandokoro.jpg: {crop: [0.08, 0.30, 0.98, 0.95]}
+
+# 絵の割り当て：「行の番号 種類:絵 [切り出し]」。次の行の指定まで続く。図（figure）の出る行は、その時の絵を暗くして図を置く（自動）
+shots:
+  # 序章（0〜15）：西の野の受け渡し → 旭 → 行列 → ずれ（前の夫・5か月後に母も）→ なぜ → かけら（朱印状）→ 予告（死を伏せた・寺）→ 約束 → 橋渡し
+  - 0 ai:A01 wide
+  - 2 part:paintings/kira_okazaki_hiroshige.jpg
+  - 3 frame:paintings/hidenaga_asahihime.jpg
+  - 4 ai:A03 wide
+  - 5 ai:A02 face
+  - 6 ai:A02 left
+  - 7 ai:A06 wide
+  - 8 ai:A05 face
+  - 9 part:paintings/ieyasu_okazaki_castle_ryujo_zu.jpg
+  - 10 ai:K05 wide
+  - 11 ai:K05 face
+  - 12 ai:A12 wide
+  - 13 ai:A15 wide
+  - 14 ai:A01 right                    # 覚えてほしい名前（14〜15）の下地
+  # 第1章（16〜42）
+  - 16 part:paintings/hidenaga_komaki_nagakute_screen.jpg
+  - 17 ai:K04 face
+  - 18 ai:K05 wide                     # 関係図（秀吉—旭—家康）
+  - 19 part:paintings/hideyoshi_osaka_zu_byobu.jpg
+  - 20 ai:K05 face
+  - 21 ai:K04 wide
+  - 22 part:paintings/mikata_hamamatsu_hiroshige_1855.jpg
+  - 23 ai:A03 wide                     # 日取りの表（台本の図）
+  - 24 ai:A02 wide
+  - 25 part:paintings/akechi_rakuchu_rakugai_uesugi_right.jpg
+  - 26 ai:A03 wide
+  - 27 ai:A03 right
+  - 28 ai:A01 wide                     # 地図（台本：京都→池鯉鮒）
+  - 29 ai:A01 left                     # 史料の札（家忠日記）
+  - 30 part:paintings/kira_okazaki_hiroshige.jpg
+  - 31 ai:A01 wide
+  - 32 ai:A02 face                     # 【想像】……参りましょう
+  - 33 ai:A02 wide
+  - 34 part:paintings/mikata_yoshida_castle_ndl_36.jpg   # 地図（→吉田）
+  - 35 part:paintings/ieyasu_hamamatsu_hiroshige_1834.jpg # 地図（→浜松）
+  - 36 ai:A04 wide
+  - 37 ai:A04 left                     # 年の表（台本の図）
+  - 38 ai:A04 right
+  - 39 ai:A02 face
+  - 40 ai:K05 wide
+  - 41 ai:K04 face
+  - 42 ai:A05 wide
+  # 第2章（43〜75）
+  - 43 ai:K04 wide
+  - 44 part:paintings/hideyoshi_osaka_zu_byobu.jpg
+  - 45 frame:paintings/hideyoshi_portrait_osaka_city_1600.jpg
+  - 46 ai:K05 face                     # 【記録】二人といない母を…
+  - 47 ai:A05 face                     # 史料の札（二人と無き母）
+  - 48 ai:K05 wide
+  - 49 frame:paintings/hidenaga_portrait_shungakuin.jpg
+  - 50 ai:K05 face
+  - 51 ai:A05 wide
+  - 52 part:paintings/ieyasu_okazaki_castle_ryujo_zu.jpg
+  - 53 ai:A06 wide                     # 地図（京都→池鯉鮒→岡崎）53〜54
+  - 55 ai:A06 right
+  - 56 part:paintings/mikata_okazaki_castle_ndl_41.jpg
+  - 57 ai:A06 left                     # 史料の札（宇野主水日記）
+  - 58 ai:A05 wide
+  - 59 part:paintings/mikata_okazaki_castle_ndl_41.jpg
+  - 60 ai:A05 face
+  - 61 frame:paintings/hidenaga_omandokoro.jpg
+  - 62 ai:A07 wide
+  - 63 ai:A07 right                    # 【想像】旭……
+  - 64 ai:A07 left                     # 【想像】母上……
+  - 65 part:paintings/ieyasu_okazaki_castle_ryujo_zu.jpg
+  - 66 ai:A07 wide
+  - 67 ai:A02 wide
+  - 68 ai:K04 wide                     # 関係図（秀吉—大政所—旭—家康）68〜69
+  - 70 part:paintings/mikata_okazaki_castle_ndl_41.jpg   # 大政所の三河下りの表（台本の図）
+  - 71 frame:paintings/ieyasu_ii_naomasa_portrait.jpg
+  - 72 part:paintings/ieyasu_hamamatsu_hiroshige_1834.jpg
+  - 73 ai:A06 wide
+  - 74 ai:K05 wide
+  - 75 ai:A02 face
+  # 第3章（76〜109）：語られてきた話を記録で読む
+  - 76 part:paintings/ieyasu_hamamatsu_hiroshige_1834.jpg
+  - 77 frame:paintings/hidenaga_asahihime.jpg
+  - 78 ai:A02 wide
+  - 79 ai:A02 left                     # 前の夫の2つの説（台本の図）79〜80
+  - 81 part:paintings/hidenaga_komaki_nagakute_screen.jpg
+  - 82 ai:K05 wide
+  - 83 part:paintings/mikata_okazaki_castle_ndl_41.jpg
+  - 84 part:paintings/ieyasu_okazaki_castle_ryujo_zu.jpg
+  - 85 part:paintings/kira_okazaki_hiroshige.jpg
+  - 86 ai:K05 wide                     # 見返りの表（台本の図）
+  - 87 ai:A02 face                     # くい違いの箱①（前の夫の最期）
+  - 88 ai:K05 face
+  - 89 part:paintings/hidenaga_tajima_map_1780.jpg
+  - 90 ai:A02 left
+  - 91 part:paintings/ieyasu_okazaki_castle_ryujo_zu.jpg
+  - 92 ai:A02 wide                     # くい違いの箱②（離縁の時期）
+  - 93 ai:K05 wide
+  - 94 ai:K05 face                     # 【記録】家康は、縁組のことまで…
+  - 95 part:paintings/hideyoshi_osaka_zu_byobu.jpg        # 史料の札（朱印状）
+  - 96 ai:K04 wide                     # 縁組を望んだのは誰か（台本の図）96〜97
+  - 98 ai:A04 wide
+  - 99 ai:A08 wide
+  - 100 ai:A08 right
+  - 101 part:paintings/mikata_okazaki_castle_ndl_41.jpg
+  - 102 frame:paintings/ieyasu_ii_naomasa_portrait.jpg
+  - 103 ai:A05 wide
+  - 104 part:paintings/ieyasu_okazaki_castle_ryujo_zu.jpg
+  - 105 ai:A08 wide
+  - 106 ai:A08 left
+  - 107 ai:A05 face
+  - 108 ai:A07 wide
+  - 109 ai:A10 wide
+  # 第4章（110〜131）：駿河御前
+  - 110 ai:A09 wide                    # 地図（浜松→駿府）
+  - 111 part:paintings/ieyasu_fuchu_abe_river_hiroshige_1833.jpg
+  - 112 frame:paintings/hidenaga_asahihime.jpg
+  - 113 ai:A09 left
+  - 114 ai:K04 wide
+  - 115 ai:A09 right
+  - 116 part:paintings/hideyoshi_osaka_zu_byobu.jpg
+  - 117 ai:A10 wide
+  - 118 ai:A10 left                    # 地図（駿府→京）
+  - 119 ai:A10 right
+  - 120 ai:A11 face                    # 【想像】母上……どうか、間に合いますように
+  - 121 ai:A11 wide
+  - 122 frame:paintings/hidenaga_omandokoro.jpg
+  - 123 ai:A05 face
+  - 124 part:paintings/hidenaga_jurakudai_screen.jpg
+  - 125 ai:A12 wide
+  - 126 ai:A13 wide
+  - 128 ai:A02 wide
+  - 129 frame:paintings/ieyasu_portrait_toshodaigongen.jpg
+  - 130 ai:K04 face
+  - 131 ai:A12 left
+  # 第5章（132〜165）：その後 ＋ 冒頭に戻る締め
+  - 132 ai:A12 wide
+  - 133 part:paintings/hidenaga_jurakudai_screen.jpg
+  - 134 part:paintings/nene_kyoto_map_1696.jpg            # 亡くなった場所の表（台本の図）
+  - 135 ai:A12 right                   # くい違いの箱③（亡くなった場所）
+  - 136 ai:K04 wide                    # 史料の札（当代記）
+  - 137 part:paintings/ieyasu_fuchu_abe_river_hiroshige_1833.jpg
+  - 138 ai:A02 face
+  - 139 ai:A14 wide
+  - 140 ai:A14 left                    # 【想像】……さあ、これで、よい
+  - 141 frame:paintings/oichi_hidetada.jpg
+  - 142 ai:A15 wide
+  - 143 part:paintings/nene_kyoto_map_1696.jpg
+  - 144 ai:A15 wide
+  - 146 frame:paintings/hidenaga_asahihime.jpg
+  - 147 ai:A15 wide
+  - 148 ai:A16 wide
+  - 149 frame:paintings/hideyoshi_portrait_osaka_city_1600.jpg
+  - 150 ai:A16 right
+  - 151 part:paintings/ieyasu_fuchu_abe_river_hiroshige_1833.jpg   # 瑞龍寺の5点の表（台本の図）151〜152
+  - 153 ai:A16 left
+  - 154 ai:A09 wide
+  - 155 ai:A16 wide
+  - 156 frame:paintings/hidenaga_omandokoro.jpg
+  - 157 ai:A17 wide
+  - 158 ai:A05 face
+  - 159 ai:A01 wide                    # 締め：冒頭の西の野に戻る
+  - 160 part:paintings/mikata_okazaki_castle_ndl_41.jpg
+  - 161 ai:K05 wide
+  - 162 ai:A04 wide
+  - 163 ai:A02 face
+  - 164 ai:A15 wide
+  - 165 ai:A01 right
+  - end ai:A18 wide
+
+# look だけで足す図（台本には無い。語りがその名前・地点を言う 0.25 秒前に1つずつ書き込む）。spec: null はその行の台本の図を外す
+figures:
+  # 関係図①：18「秀吉の妹の旭を、家康の妻に迎える話」。語る順に 秀吉 → 旭 → 家康
+  - {from: 18, to: 18, spec: {type: people, title: 天正14年 持ち上がった縁組,
+      nodes: [[豊臣秀吉, 兄], [旭, 秀吉の妹・44歳], [徳川家康, 縁組の相手]],
+      edges: [[豊臣秀吉, 旭, 兄と妹], [旭, 徳川家康, 縁組]]}}
+  # 地図：大政所の三河下り（53 京を発つ → 54 池鯉鮒から岡崎城へ）
+  - {from: 53, to: 54, spec: {type: map, title: 天正14年10月 大政所の道のり, bounds: [135.5, 137.6, 34.55, 35.3],
+      places: [[京都, 135.77, 35.01], [池鯉鮒, 137.05, 35.0], [岡崎, 137.16, 34.95]], route: [京都, 池鯉鮒, 岡崎], note: 18日に岡崎城へ}}
+  # 関係図②：68〜69「母と妹。秀吉が東へ送ったふたりは、家康を動かすための、重しになった」
+  - {from: 68, to: 69, spec: {type: people, title: 天正14年 秀吉が三河へ送ったふたり,
+      nodes: [[豊臣秀吉, 兄であり子], [大政所, 秀吉の母], [旭, 秀吉の妹], [徳川家康, 旭の夫]],
+      edges: [[豊臣秀吉, 大政所, 母と子], [豊臣秀吉, 旭, 兄と妹], [旭, 徳川家康, 5月 夫婦に], [大政所, 徳川家康, 10月 証人として岡崎へ]]}}
+  # 地図：110「本拠を、浜松城から駿府城へ」
+  - {from: 110, to: 110, spec: {type: map, title: 天正14年 家康の本拠, bounds: [136.8, 138.8, 34.5, 35.3],
+      places: [[岡崎, 137.16, 34.95], [浜松, 137.73, 34.71], [駿府, 138.38, 34.98]], route: [浜松, 駿府], note: 浜松城から駿府城へ}}
+  # 地図：118「夜を通して、京へ向かって」
+  - {from: 118, to: 118, spec: {type: map, title: 天正16年6月 駿府から京へ, bounds: [135.5, 138.8, 34.5, 35.4],
+      places: [[京, 135.77, 35.01], [池鯉鮒, 137.05, 35.0], [浜松, 137.73, 34.71], [駿府, 138.38, 34.98]], route: [駿府, 京], note: 夜通しで上る}}
+  # 135 は くい違いの箱③を主役にするので、台本の表を外す（134 は表のまま）
+  - {from: 135, to: 135, spec: null}
+
+# 語りがその物・人を言うと、カットの終わりにそれが主役になる所で止まる（2つ語られれば1つ目→2つ目の明かしのパン）
+# AI 絵の位置は指示の構図（research/asahi_ai_images.md）に合わせた。絵が届いたら位置を見て直す
+focus:
+  A01: {兄の家来|京から|秀吉の側: [1.2, 0.30, 0.60], 夫の家来|徳川|家忠: [1.2, 0.72, 0.60]}
+  A03: {輿|行列: [1.2, 0.5, 0.58]}
+  A04: {家康: [1.2, 0.28, 0.40], 旭|妻: [1.2, 0.62, 0.42]}
+  A06: {輿|大政所: [1.2, 0.5, 0.60]}
+  A07: {大政所|母: [1.2, 0.65, 0.48], 旭|娘: [1.2, 0.38, 0.45]}
+  A08: {宿所|大政所: [1.2, 0.5, 0.45], 薪: [1.2, 0.5, 0.75], 重次: [1.2, 0.82, 0.55]}
+  A09: {駿府城|城: [1.2, 0.42, 0.45], 富士: [1.2, 0.78, 0.25]}
+  A10: {輿|夜通し|夜を: [1.2, 0.62, 0.58]}
+  A12: {聚楽: [1.2, 0.5, 0.38]}
+  A14: {大政所: [1.2, 0.40, 0.40], 秀忠|髪: [1.2, 0.62, 0.55]}
+  A15: {五輪塔: [1.25, 0.68, 0.38], 寺|南明院: [1.2, 0.30, 0.45]}
+  A16: {五輪|石塔|墓: [1.2, 0.42, 0.45]}
+  paintings/hidenaga_asahihime.jpg: {旭|朝日: [1.4, 0.25, 0.40]}
+  paintings/hidenaga_omandokoro.jpg: {大政所: [1.4, 0.40, 0.30]}
+  paintings/hideyoshi_portrait_osaka_city_1600.jpg: {秀吉: [1.5, 0.5, 0.30]}
+
+# 絵の一部だけを動かす（話に合う絵だけ・控えめに。顔・人物にはかけない）。届いた絵で範囲を見て直す
+fx:
+  A08: {lamp: {region: [0.35, 0.30, 0.65, 0.60]}}                     # 障子の向こうの灯
+  A09: {mist: {region: [0, 0.65, 1, 0.95], alpha: 0.12, speed: 6}}    # 川面の朝霧
+  A10: {lamp: {region: [0.45, 0.35, 0.98, 0.80]}}                     # 松明の灯
+  A13: {smoke: {region: [0.25, 0.10, 0.75, 0.60], alpha: 0.12, speed: 4}}   # 湯けむり
+  A16: {mist: {region: [0, 0.60, 1, 0.95], alpha: 0.10, speed: 5}}    # 朝の湿り気
+
+# 部品（from〜to の行、0 始まり。出ている間は絵を暗くする）
+parts:
+  - {type: names, from: 14, to: 15, title: この物語で覚えてほしい名前, every: 0.7,
+     items: [[旭, 秀吉の妹・44歳で家康の妻に, paintings/hidenaga_asahihime.jpg, [0.25, 0.40]],
+             [大政所, 秀吉と旭の母, paintings/hidenaga_omandokoro.jpg, [0.40, 0.30]],
+             [徳川家康, 旭の夫, ai:K04, [0.5, 0.40]]]}
+  - {type: quote, from: 29, to: 29, label: 史料, text: 池鯉鮒まで御祝言の御迎えに出た／西の野まで請け取った,
+     source: 『家忠日記』天正14年5月11日（今の言葉にしたもの）}
+  - {type: quote, from: 47, to: 47, label: 史料, text: 二人と無き母を／浜松まで行かせよう,
+     source: 秀吉の書状（天正14年9月・『岡崎市史』1935年が引く）}
+  - {type: quote, from: 57, to: 57, label: 史料, text: 御證人之躰也,
+     source: 『宇野主水日記』天正14年（『岡崎市史』1935年が引く）}
+  - {type: versus3, from: 87, to: 87, every: 1.2,
+     items: [[佐治日向守の説, 自ら命を絶つ], [副田吉成の説, 出家して隠斎に], [渡辺世祐 1919年, 確かなことは不明]]}
+  - {type: versus3, from: 92, to: 92, every: 1.2,
+     items: [[よく語られる話, 縁組のために離縁], [『武家事紀』, 結婚の4年前に離縁], [菊地浩之さん, 本能寺の変の直後]]}
+  - {type: quote, from: 95, to: 95, label: 史料, text: 家康の事、種々／縁辺等の儀迄懇望せしめ候,
+     source: 秀吉の朱印状（天正14年5月24日付）}
+  - {type: versus3, from: 135, to: 135, every: 1.2,
+     items: [[『岡崎市史』ほか, 聚楽第], [『雍州府志』, 伏見], [『岡崎市史』, 最後の上洛の記録なし]]}
+  - {type: quote, from: 136, to: 136, label: 史料, text: 家康公妻室於京都病死給／小田原爲出勢比之間令隱密,
+     source: 『当代記』（『岡崎市史』1935年が引く）}
+
+# 静止画（story-main を --frames なしで回したとき。簡易の描き方で、パン・部品は出ない。目で見るのは --frames の方）
+stills:
+  - {line: 0, note: 冒頭（0秒）池鯉鮒の西の野}
+  - {line: 14, note: 序章の終わり 覚えてほしい名前}
+  - {line: 29, note: 第1章 家忠日記の札}
+  - {line: 68, note: 第2章 関係図（秀吉が三河へ送ったふたり）}
+  - {line: 95, note: 第3章 朱印状（記録・明朝）}
+  - {line: 118, note: 第4章 駿府から京への地図}
+  - {line: 135, note: 第5章 亡くなった場所のくい違い}
+  - {end: true, note: 終了画面の空き}
