@@ -19,6 +19,7 @@ import 'history_screen.dart';
 import 'settings_screen.dart';
 import 'labels.dart';
 import '../game/difficulty.dart';
+import '../game/honors.dart';
 import '../game/special.dart';
 import '../game/standings.dart';
 import 'layout.dart';
@@ -878,6 +879,9 @@ class _TournamentCard extends StatelessWidget {
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Theme.of(context).colorScheme.primary)),
+            if (t.statRanks case final r?)
+              Text('リーグの個人ランキング: ${r.entries.map((e) => '${e.key}${e.value}位').join('・')}',
+                  style: const TextStyle(fontSize: 12)),
             Text('実績 ${t.achievement.round()}(${achievementWord(t.achievement)})  '
                 '平均 ${t.ppg.toStringAsFixed(1)}点 ${t.rpg.toStringAsFixed(1)}R ${t.apg.toStringAsFixed(1)}A',
                 style: const TextStyle(fontSize: 12)),

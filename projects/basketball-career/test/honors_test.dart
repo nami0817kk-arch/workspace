@@ -61,6 +61,20 @@ void main() {
       expect(_t(League.university, great).honors(rookie: false), isNot(contains(Honor.mvp)));
     });
 
+    test('個人ランキング: タイトルに届けば1位(タイトルとそろう)、届かなければ差に応じて2位以下。学生の大会は無し', () {
+      final king = _t(League.proDomestic, [for (var i = 0; i < 6; i++) _m(pts: 30, reb: 12)]);
+      expect(king.statRanks!['得点'], 1);
+      expect(king.honors(rookie: false), contains(Honor.scoringKing));
+      expect(king.statRanks!['リバウンド'], 1);
+      final mid = _t(League.proDomestic, [for (var i = 0; i < 6; i++) _m(pts: 20, reb: 6)]);
+      expect(mid.statRanks!['得点'], greaterThan(1));
+      expect(mid.statRanks!['リバウンド'], greaterThan(mid.statRanks!['得点']!));
+      for (final v in mid.statRanks!.values) {
+        expect(v, inInclusiveRange(1, 40));
+      }
+      expect(_t(League.highSchool, [for (var i = 0; i < 5; i++) _m(pts: 30)]).statRanks, isNull);
+    });
+
     test('平凡な成績なら何も付かない', () {
       final t = _t(League.proDomestic, [for (var i = 0; i < 6; i++) _m()]);
       expect(t.honors(rookie: true), isEmpty);
