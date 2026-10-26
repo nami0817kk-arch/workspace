@@ -1914,14 +1914,15 @@ void main() {
 
     test('フリースロー2本の結果が得点に入る(0〜2点)。2本とも入れば成功', () {
       final s = MatchState(
-        team: 60, opp: 61, points: 10, rebounds: 4, assists: 3,
+        team: 60, opp: 63, points: 10, rebounds: 4, assists: 3,
         teamStrength: 60, oppStrength: 60, form: 1,
-        teamQuarters: const [15, 15, 15, 15], oppQuarters: const [15, 15, 15, 16],
+        teamQuarters: const [15, 15, 15, 15], oppQuarters: const [15, 15, 16, 17],
       );
       final scored = <int>{};
       var okCount = 0;
       for (var seed = 0; seed < 300; seed++) {
         final r = finishMatch(shooter(90), s, Clutch.drawFoul, Random(seed));
+        if (r.overtimes > 0) continue; // 延長戦の得点が混ざる試合は、この検査の対象外
         final gained = r.points - s.points;
         scored.add(gained);
         expect(gained, inInclusiveRange(0, 2));
@@ -2426,14 +2427,29 @@ void main() {
             wins: ws.where((w) => w).length,
             achievement: 70);
 
-    test('呼び名: 7・8戦目はプレーオフの準決勝・決勝、学生の大会は回戦', () {
-      expect(roundLabelOf(League.proDomestic, 5), '6回戦');
+    test('呼び名: レギュラーシーズンは節・決勝トーナメントは準決勝・決勝、学生の勝ち抜きは回戦', () {
+      expect(roundLabelOf(League.proDomestic, 5), 'レギュラーシーズン 第6節');
       expect(roundLabelOf(League.proDomestic, 6), 'プレーオフ準決勝');
       expect(roundLabelOf(League.proDomestic, 7), 'プレーオフ決勝');
       expect(roundLabelOf(League.highSchool, 3), '4回戦');
       expect(League.highSchool.playoffRounds, 0);
       expect(League.proAbroad.playoffRounds, 2);
       expect(League.proDomestic.qualifyWins, 3);
+      // 大学はリーグ戦(6試合)のあと決勝トーナメント(準々決勝・準決勝・決勝)。
+      expect(League.university.rounds, 6);
+      expect(League.university.playoffRounds, 3);
+      expect(roundLabelOf(League.university, 2), 'リーグ戦 第3節');
+      expect(roundLabelOf(League.university, 6), '決勝トーナメント準々決勝');
+      expect(roundLabelOf(League.university, 8), '決勝トーナメント決勝');
+    });
+
+    test('プレーオフはシリーズ(国内プロは準決勝3戦・決勝5戦、海外の最高峰は5戦・7戦。先に過半数)', () {
+      expect(League.proDomestic.playoffSeries, [3, 5]);
+      expect(League.proAbroad.playoffSeries, [5, 7]);
+      expect(League.proDomestic.seriesNeed(0), 2);
+      expect(League.proDomestic.seriesNeed(1), 3);
+      expect(League.proAbroad.seriesNeed(1), 4);
+      expect(League.highSchool.playoffSeries, isEmpty);
     });
 
     test('レギュラーシーズンとプレーオフの勝ち数を分けて数える。優勝はプレーオフを勝ち抜いたとき', () {
@@ -2452,6 +2468,7 @@ void main() {
     test('プレーオフの勝ちは実績に加点される', () {
       final run = TournamentRun(League.proDomestic);
       run.matches.addAll([for (final w in [true, true, true, true, false, false, true, true]) m(w)]);
+      run.seriesWon = 2;
       final a = run.result().achievement;
       final run2 = TournamentRun(League.proDomestic);
       run2.matches.addAll([for (final w in [true, true, true, true, false, false]) m(w)]);
@@ -2473,7 +2490,8 @@ void main() {
         final st = playTournament(strongP, League.proDomestic, form: 1, rng: Random(seed));
         if (st.reachedPlayoffs) {
           strongIn++;
-          expect(st.games, inInclusiveRange(7, 8));
+          // 準決勝(3戦)で2〜3試合、決勝(5戦)で3〜5試合。
+          expect(st.games, inInclusiveRange(League.proDomestic.rounds + 2, League.proDomestic.rounds + 8));
         }
         if (st.champion) champs++;
       }
@@ -2488,10 +2506,15 @@ void main() {
       for (var seed = 0; seed < 200; seed++) {
         final t = playTournament(strongP, League.proAbroad, form: 1, rng: Random(seed));
         final po = t.playoffMatches;
-        if (po.isNotEmpty && !po.first.won) {
-          expect(po, hasLength(1), reason: '準決勝で負けたら決勝は無い');
+        if (po.isEmpty) continue;
+        final won = t.seriesWon!;
+        if (won < League.proAbroad.playoffRounds) {
+          // どこかのシリーズに負けて終わった: 最後の試合は負け。
+          expect(po.last.won, isFalse, reason: 'seed $seed');
+        } else {
+          expect(t.champion, isTrue);
+          expect(po.last.won, isTrue);
         }
-        if (po.length == 2) expect(po.first.won, isTrue);
       }
     });
 
@@ -2715,9 +2738,12 @@ void main() {
       expect(opponentTeamName(League.national, Random(1)), isNotEmpty);
     });
 
-    test('世界大会は勝ち抜き(負けたら終わり)で4回戦。名前は日本代表', () {
-      expect(League.national.elimination, isTrue);
-      expect(League.national.rounds, 4);
+    test('世界大会は予選グループ(3試合)のあと決勝トーナメント(準々決勝・準決勝・決勝)。名前は日本代表', () {
+      expect(League.national.elimination, isFalse);
+      expect(League.national.rounds, 3);
+      expect(League.national.playoffRounds, 3);
+      expect(League.national.qualifyWins, 2);
+      expect(League.national.regularName, '予選グループ');
       expect(League.national.label, '日本代表');
     });
 
