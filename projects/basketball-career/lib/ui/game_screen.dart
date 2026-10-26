@@ -938,6 +938,12 @@ class _MatchRow extends StatelessWidget {
                   Text(story,
                       style: const TextStyle(
                           fontSize: 12, fontStyle: FontStyle.italic)),
+                for (final h in matchHighlights(m))
+                  Text('★ $h',
+                      style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.primary)),
               ],
             ),
           ),
@@ -1467,7 +1473,8 @@ class _EndingView extends StatelessWidget {
                       '${r.champion ? ' 優勝' : ''}${r.award == null ? '' : ' [${r.award}]'}  '
                       '${r.ppg.toStringAsFixed(1)}点 '
                       '${r.rpg.toStringAsFixed(1)}R '
-                      '${r.apg.toStringAsFixed(1)}A'),
+                      '${r.apg.toStringAsFixed(1)}A'
+                      '${r.honors.isEmpty ? '' : '  ${r.honors.join('・')}'}'),
               ],
             ),
           ),

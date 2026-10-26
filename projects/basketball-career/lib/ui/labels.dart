@@ -86,3 +86,40 @@ String? matchStory(MatchResult m) {
   if (m.margin.abs() <= 3) return '最後までもつれる接戦だった。';
   return null;
 }
+
+/// 試合の見どころ(個人の活躍の一言)。目立ったものから最大2つ。点の基準はチームの得点に対する割合で見る
+/// (点数の規模がリーグごとに違うため)。延長・退場・ダブルダブル・3Pの量・守備の数字など。
+List<String> matchHighlights(MatchResult m) {
+  final out = <String>[];
+  final share = m.teamScore == 0 ? 0.0 : m.points / m.teamScore;
+  final cats = [
+    m.points >= 10,
+    m.rebounds >= 10,
+    m.assists >= 10,
+    m.steals >= 10,
+    m.blocks >= 10,
+  ].where((x) => x).length;
+  if (m.overtimes > 0) {
+    out.add(m.won
+        ? '${m.overtimes > 1 ? '${m.overtimes}度の' : ''}延長の末に勝ち切った。'
+        : '${m.overtimes > 1 ? '${m.overtimes}度の' : ''}延長の末に力尽きた。');
+  }
+  if (cats >= 3) {
+    out.add('トリプルダブル(${m.points}点${m.rebounds}リバウンド${m.assists}アシスト)。');
+  } else if (cats == 2) {
+    out.add('ダブルダブル(${m.points}点・${m.rebounds >= 10 ? '${m.rebounds}リバウンド' : '${m.assists}アシスト'})。');
+  }
+  if (share >= 0.40 && m.points >= 15) {
+    out.add('チームの${(share * 100).round()}%にあたる${m.points}点を一人で挙げた。');
+  } else if (m.threes >= 5) {
+    out.add('3Pを${m.threes}本沈めた。');
+  }
+  if (m.fouledOut) out.add('ファウル5つで退場してしまった。');
+  if (m.steals >= 4) out.add('${m.steals}スティールで流れを変えた。');
+  if (m.blocks >= 4) out.add('${m.blocks}ブロックでゴール下を守り切った。');
+  final b = m.box;
+  if (!b.isEmpty && b.fgAttempts >= 10 && b.fgMade / b.fgAttempts >= 0.65) {
+    out.add('シュート${b.fgAttempts}本中${b.fgMade}本を決める高確率。');
+  }
+  return out.take(2).toList();
+}
