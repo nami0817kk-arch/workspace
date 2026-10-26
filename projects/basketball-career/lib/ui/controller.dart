@@ -703,7 +703,7 @@ class GameController extends ChangeNotifier {
     final ok = g.chooseRoute(r);
     if (r == Route.pro && ok) {
       pending.add(Milestone(MilestoneKind.contract, 'プロ契約!',
-          '${g.player.name}は、${draftLabel(g.draftPick)}でプロの世界へ飛び込む。'));
+          '${g.player.name}は、${draftLabel(g.draftPick)}で${g.teamLabel}に指名され、プロの世界へ飛び込む。'));
     }
     final dreamNote = g.lastDreamNote;
     if (dreamNote != null) {

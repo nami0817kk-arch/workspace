@@ -73,4 +73,18 @@ void main() {
       expect(names, contains(m.opponent));
     }
   });
+
+  test('自分のチームには名前があり、順位表にもその名前で出る。進学・プロ入り・海外挑戦で変わり、保存で残る', () {
+    final g = Game.start('x', rng: Random(9), events: false);
+    expect(g.teamName, isNotEmpty);
+    expect(g.teamName, endsWith('ミニバスクラブ'));
+    final t = playTournament(_p(70), League.proDomestic, form: 1, rng: Random(2));
+    final table = standingsOf(t, usName: 'サクラホークス')!;
+    expect(table.firstWhere((s) => s.isUs).name, 'サクラホークス');
+    final back = Game.fromJson(g.toJson());
+    expect(back.teamName, g.teamName);
+    // 古いセーブ(名前なし)は「自チーム」と出す。
+    final old = Game.fromJson(g.toJson()..remove('teamName'));
+    expect(old.teamLabel, '自チーム');
+  });
 }

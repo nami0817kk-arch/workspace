@@ -135,7 +135,8 @@ class _SeasonView extends StatelessWidget {
           _TournamentCard(
               result: c.lastTournament!,
               winter: c.lastTournamentWinter,
-              honors: game.lastHonors),
+              honors: game.lastHonors,
+              teamName: game.teamLabel),
           const SizedBox(height: 12),
         ],
         if (c.recent.isNotEmpty) ...[
@@ -458,6 +459,8 @@ class _PlayerCard extends StatelessWidget {
                   if (game.track == Track.pro && game.salary > 0)
                     Text('これまでの収入 ${moneyLabel(game.totalEarnings)}',
                         style: const TextStyle(fontSize: 12)),
+                  if (game.teamName.isNotEmpty)
+                    Text('所属: ${game.teamName}', style: const TextStyle(fontSize: 12)),
                   if (game.mate.isNotEmpty || game.coachLabel.isNotEmpty)
                     Text(
                         'コーチ: ${game.coachLabel.isEmpty ? '-' : game.coachLabel}  /  仲間: ${game.mate.isEmpty ? '-' : game.mate}',
@@ -840,8 +843,12 @@ class _Meter extends StatelessWidget {
 /// 大会の結果。試合ごとに ○● と得点・個人成績・流れの一言を並べる。
 class _TournamentCard extends StatelessWidget {
   const _TournamentCard(
-      {required this.result, required this.winter, this.honors = const []});
+      {required this.result,
+      required this.winter,
+      this.honors = const [],
+      this.teamName = '自チーム'});
   final TournamentResult result;
+  final String teamName;
   final bool winter;
   final List<String> honors;
 
@@ -880,11 +887,11 @@ class _TournamentCard extends StatelessWidget {
                 padding: const EdgeInsets.only(bottom: 4),
                 child: Text(
                     '${t.league.regularName} ${t.regularWins}勝${t.league.rounds - t.regularWins}敗'
-                    '${ourRank(standingsOf(t)) == null ? '' : '(${ourRank(standingsOf(t))}位/${leagueTeams(t.league)}チーム)'}'
+                    '${ourRank(standingsOf(t, usName: teamName)) == null ? '' : '(${ourRank(standingsOf(t, usName: teamName))}位/${leagueTeams(t.league)}チーム)'}'
                     '${t.reachedPlayoffs ? '  →  ${t.league.playoffName} ${t.playoffWins}勝${t.playoffMatches.length - t.playoffWins}敗${t.seriesWon == null ? '' : '(${t.seriesWon}/${t.league.playoffRounds}ラウンド突破)'}' : '  (${t.league.playoffName}進出ならず。${t.league.qualifyWins}勝が必要)'}',
                     style: const TextStyle(fontWeight: FontWeight.bold)),
               ),
-            if (standingsOf(t) case final table?)
+            if (standingsOf(t, usName: teamName) case final table?)
               _StandingsTile(table: table, spots: playoffSpots(t.league)),
             for (var i = 0; i < t.matches.length; i++)
               _MatchRow(
