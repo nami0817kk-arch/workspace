@@ -289,7 +289,7 @@ final List<GameEvent> events = [
     EventChoice('今は断る',
         (p, c, f) => (player: p, condition: c.copyWith(morale: c.morale + 5))),
   ]),
-  GameEvent('rival', '同い年のライバルが現れた。', [
+  GameEvent('rival', 'よそのチームに、手ごわい同い年の選手が現れた。', [
     EventChoice(
         '意識して追いかける',
         (p, c, f) => (
@@ -350,7 +350,7 @@ final List<GameEvent> events = [
       when: (stage, cast) => cast.lover != null),
   GameEvent(
       'family',
-      '母がお弁当を作って待っていた。',
+      '母が、好物の手料理を作って待っていてくれた。',
       [
         EventChoice(
           '感謝して食べる',
@@ -533,7 +533,7 @@ final List<GameEvent> events = [
       );
     }),
   ]),
-  GameEvent('big-chance', '練習試合で先発のチャンスが回ってきた。', [
+  GameEvent('big-chance', '次の試合で、先発出場のチャンスが回ってきた。', [
     EventChoice.risky('挑む', (p, c, f, rng) {
       if (rng.nextDouble() < 0.5) {
         return (
@@ -972,7 +972,7 @@ final List<GameEvent> events = [
       weight: 0.5),
   GameEvent(
       'summer-camp',
-      '夏の合宿に誘われた。',
+      '強化合宿に誘われた。',
       [
         EventChoice(
             '最後まで参加する',
