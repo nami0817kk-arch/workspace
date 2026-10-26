@@ -1,0 +1,467 @@
+# ブンデスリーガ18クラブ紹介 ⑥ライプツィヒ（2026-10-26 作成。見本は 10/25 のシュツットガルト）。tools/plbuild.py（CLUB_LEAGUE=bundesliga）で組み立て。
+# 材料は research/bd_data/leipzig*.json・leipzig_say.yaml・leipzig_research.md。（出力名・theme.id・date・question・takeaway・people・season の viewpoint と出典・watch は手で足した。scratchpad の post.py）
+format: news
+voice_min: 0
+slot: other_1
+date: 2026年10月26日
+people:
+- ライプツィヒ
+- 山本桜大
+short_title: ライプツィヒ、5部から7年で1部。どうやって
+series: ブンデスリーガチーム紹介
+theme:
+  id: bd_leipzig
+  league: germany
+  league_name: ブンデスリーガ
+  kind: other
+  topic: ライプツィヒ
+  title: ライプツィヒは創立から7年で1部へ。5部からどう駆け上がったのか
+  question: 創立から7年で1部に上がったライプツィヒ。5部からどう駆け上がったのか
+  hook: 5部で始めたクラブが、今月はレアル・マドリードと戦いました。
+  lead: 飲料会社が生んだ、17歳のクラブ。
+  opening_image: assets/stats/bd_leipzig_data_t.png
+  takeaway: 今季のリーグ戦はホーム4試合で18得点0失点、1試合4.50点は昨季ホームの2.35の倍近い。一方アウェーは3戦全敗。ホームの相手はいまの順位が平均およそ12位、アウェーの相手は平均4位で、強い相手に敵地で勝てるかが次の物差し
+thumbnail:
+  line1: ライプツィヒの7年
+  line2: 5部から1部へ
+  crest_main:
+  - ライプツィヒ
+  tags:
+  - ライプツィヒ
+  - ブンデスリーガ
+  - レッドブル
+  - 山本桜大
+  layout: classic
+  board: assets/stats/bd_leipzig_data_t.png
+sections:
+- id: data
+  heading: いま見る理由と基礎DATA
+  main: true
+  tier: 背景
+  telop: ホームは4戦全勝。監督はデミチェリス。日本人の山本桜大と契約
+  narrator: キャスター
+  say:
+  - text: 今季のリーグ戦、ホームでは4戦全勝。**18得点**で、失点はありません。
+    image: assets/stats/bd_leipzig_data_r1.png
+    no_telop: true
+  - text: 監督は、この6月に就任したデミチェリスです。
+    image: assets/stats/bd_leipzig_data_r2.png
+    no_telop: true
+  - text: 今夏には、日本人の山本桜大とも契約しました。
+    image: assets/stats/bd_leipzig_data_r3.png
+    no_telop: true
+  - text: いまはレンタルに出ていて、ライプツィヒでの出場はまだありません。
+    image: assets/stats/bd_leipzig_data_r3.png
+    no_telop: true
+  - image: assets/stats/bd_leipzig_data0.png
+    text: 創立は**2009年**。5部のクラブから、出場の権利を買って始まりました。
+    no_telop: true
+  - image: assets/stats/bd_leipzig_data1.png
+    text: 愛称は「ディ・ローテン・ブレン」。ドイツ語で、赤い雄牛です。
+    no_telop: true
+  - image: assets/stats/bd_leipzig_map.png
+    text: ホームタウンはライプツィヒ。人口は約**63万人**で、ドイツで8番目の都市です。
+    no_telop: true
+  - image: assets/backgrounds/stadium_ライプツィヒ.png
+    text: 本拠地はレッドブル・アレーナ。収容は**4万7800人**。
+  - image: assets/backgrounds/stadium_ライプツィヒ.png
+    text: 旧東ドイツの地域では、いちばん大きなサッカー場です。
+  - image: assets/stats/bd_leipzig_data4.png
+    text: 運営会社の株は、レッドブルが**99%**。ただ、ドイツの決まりで、議決権の過半はクラブ側が持ちます。
+    no_telop: true
+  - image: assets/stats/bd_leipzig_cups.png
+    text: タイトルはドイツカップが**2回**。2022年と2023年に連覇しました。
+    no_telop: true
+  - image: assets/stats/bd_leipzig_data6.png
+    text: クラブの最多得点は、ティモ・ヴェルナーの**113点**です。
+    no_telop: true
+  - image: assets/stats/bd_leipzig_data7.png
+    text: 直近のタイトルは、2023年8月のスーパーカップ。リーグ王者のバイエルンに3対0で勝ちました。
+    no_telop: true
+  - image: assets/stats/bd_leipzig_last.png
+    text: 昨季のリーグ戦は**3位**。勝ち点**65**で、今季のチャンピオンズリーグの切符を取りました。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/RB_Leipzig
+  - https://en.wikipedia.org/wiki/2026–27_RB_Leipzig_season
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/teams/11420/schedule?season=2026
+  - https://www.bundesliga.com/en/bundesliga/news/rb-leipzig-martin-demichelis-new-head-coach-ole-werner-37798
+  - https://www.bundesliga.com/en/bundesliga/news/ota-yamamoto-who-is-leipzig-japanese-midfielder-38043
+  bg: assets/backgrounds/stadium_ライプツィヒ_in.png
+  official: false
+- id: rise
+  heading: 5部から7年で1部へ。どうやって駆け上がったのか
+  tier: 背景
+  telop: 2009年に5部で始まり、2016年に1部へ。1部の1季目は2位
+  narrator: 解説
+  main: true
+  card:
+    type: table
+    title: ライプツィヒが1部に上がるまで
+    columns: &id001
+    - ''
+    - ''
+    rows:
+    - - 2009-10 5部
+      - 1位。74得点17失点
+    - - 2010-13 4部
+      - 3季目に1位、入れ替え戦も勝つ
+  say:
+  - 会社のレッドブルは、3年半をかけて、ドイツで投資先を探しました。
+  - 選んだのはライプツィヒ。1994年から、1部のクラブが無い街でした。
+  - 最初のシーズンは5部で1位。**74得点**で、失点は17です。
+  - text: 4部では2度足踏みし、3季目に1位。昇格をかけたプレーオフも勝ち抜きます。
+    card:
+      type: table
+      title: ライプツィヒが1部に上がるまで
+      columns: *id001
+      rows:
+      - - 2013-14 3部
+        - 2位。1季で2部へ
+      - - 2014-16 2部
+        - 5位のあと、2位で1部へ
+  - 3部は1季で2位。3部ができてから、1季で2部へ上がった初めてのクラブです。
+  - 2部の2季目を前にした2015年の夏、新しい選手に使ったのは約1860万ユーロ。
+  - 2部のほかのクラブを、全部合わせたより多い額でした。
+  - text: そのシーズンに2位。創立から7年の2016年、1部に届きました。
+    card:
+      type: table
+      title: ライプツィヒが1部に上がるまで
+      columns: *id001
+      rows:
+      - - 2016-17 1部
+        - 2位。勝ち点67
+    image: assets/images/bd_leipzig_rise/scene.jpg
+  - 1部の1季目は、開幕から13試合負けなし。昇格したクラブの記録です。
+  - 最後は2位。勝ち点**67**で、いきなりチャンピオンズリーグへ進みました。
+  sources:
+  - https://en.wikipedia.org/wiki/RB_Leipzig
+  - https://site.api.espn.com/apis/v2/sports/soccer/ger.1/standings?season=2016
+  bg: assets/backgrounds/stadium_ライプツィヒ_in.png
+  official: false
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: 強度の高さ。若い選手を集める。上がるのが速い
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns: &id002
+    - ''
+    - ''
+    rows:
+    - &id003
+      - プレーの色
+      - 強度の高さ
+  say:
+  - text: ライプツィヒのプレーの色は、強度の高さ。
+    image: assets/photos/bd/leipzig/leipzig_manager_2dfc9298.jpg
+  - 監督のデミチェリスが掲げるのも、勇敢で強度の高いサッカーです。
+  - text: 運営の型は、10代から20代前半の選手を集めること。
+    card:
+      type: table
+      title: このクラブの特徴
+      columns: *id002
+      rows:
+      - *id003
+      - &id004
+        - 運営の型
+        - 若い選手を集める
+  - 今季の登録選手のうち、**9人**が21歳以下。平均は**24.4歳**です。
+  - text: クラブの気質は、上がるのが速いこと。
+    card:
+      type: table
+      title: このクラブの特徴
+      columns: *id002
+      rows:
+      - *id003
+      - *id004
+      - - クラブの気質
+        - 上がるのが速い
+  - 1部に上がってからの10回のシーズンは、すべて7位以内。うち**8回**が4位以内です。
+  sources:
+  - https://en.wikipedia.org/wiki/RB_Leipzig
+  - https://www.bundesliga.com/en/bundesliga/news/rb-leipzig-martin-demichelis-new-head-coach-ole-werner-37798
+  - https://site.api.espn.com/apis/v2/sports/soccer/ger.1/standings?season=2025
+  bg: assets/backgrounds/stadium_ライプツィヒ_in.png
+  official: false
+- id: episode
+  heading: 2020年、チャンピオンズリーグ4強。どこまで勝ち進んだのか
+  tier: 背景
+  telop: 2020年のチャンピオンズリーグ。初めての4強
+  narrator: 解説
+  card:
+    type: table
+    title: 2019-20のチャンピオンズリーグ
+    columns: &id005
+    - ''
+    - ''
+    rows:
+    - - グループ
+      - リヨン、ベンフィカ、ゼニトを抑えて1位
+    - - ベスト16
+      - トッテナムに合計4対0
+  say:
+  - text: 2019年から20年のチャンピオンズリーグ。
+    image: assets/images/bd_leipzig_episode/scene.jpg
+  - ライプツィヒは、グループを1位で抜けます。
+  - 率いたのは、1987年生まれのナーゲルスマンです。
+  - ベスト16はトッテナム。敵地で1対0、ホームで3対0の勝ち。点を与えませんでした。
+  - text: 準々決勝からは、リスボンでの一発勝負。観客のいない試合です。
+    card:
+      type: table
+      title: 2019-20のチャンピオンズリーグ
+      columns: *id005
+      rows:
+      - - 準々決勝
+        - アトレティコに2対1
+      - - 準決勝
+        - パリ・サンジェルマンに0対3
+  - アトレティコ・マドリードに2対1。決勝点は88分、タイラー・アダムスでした。
+  - 準決勝はパリ・サンジェルマンに0対3。初めての4強で、止まりました。
+  sources:
+  - https://en.wikipedia.org/wiki/2019%E2%80%9320_UEFA_Champions_League_knockout_phase
+  - https://en.wikipedia.org/wiki/RB_Leipzig
+  bg: assets/backgrounds/stadium_ライプツィヒ_in.png
+  official: false
+- id: legends
+  heading: このクラブを語る3人
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - &id006
+      - ティモ・ヴェルナー
+      - 2016-20・22-26
+      - 最多113得点
+  say:
+  - text: ヴェルナーは2016年、20歳でライプツィヒに加わりました。
+    image: assets/photos/bd/leipzig/leipzig_legend_e7388ae6.jpg
+  - 移籍金は、当時のクラブ最高額です。
+  - 1部の1季目に**21得点**。ドイツ人選手で最多でした。
+  - 2度の在籍で、クラブの最多得点を持っています。
+  sources:
+  - https://en.wikipedia.org/wiki/Timo_Werner
+  - https://en.wikipedia.org/wiki/Yussuf_Poulsen
+  - https://en.wikipedia.org/wiki/P%C3%A9ter_Gul%C3%A1csi
+  bg: assets/backgrounds/stadium_ライプツィヒ_in.png
+  official: false
+- id: legends2
+  heading: このクラブを語る3人（2人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id006
+    - &id007
+      - ユスフ・ポウルセン
+      - 2013-2025
+      - 最多425試合
+  say:
+  - text: ポウルセンは2013年、まだ3部だったライプツィヒに加わりました。
+    image: assets/photos/bd/leipzig/leipzig_legend_9b8f1b80.jpg
+  - 3部から1部まで、3年で駆け上がった1人です。
+  - 12年在籍し、全公式戦で**425試合**。クラブの最多出場です。
+  sources:
+  - https://en.wikipedia.org/wiki/Timo_Werner
+  - https://en.wikipedia.org/wiki/Yussuf_Poulsen
+  - https://en.wikipedia.org/wiki/P%C3%A9ter_Gul%C3%A1csi
+  bg: assets/backgrounds/stadium_ライプツィヒ_in.png
+  official: false
+- id: legends3
+  heading: このクラブを語る3人（3人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id006
+    - *id007
+    - - ペーテル・グラーチ
+      - 2015-2026
+      - 初タイトルの主将
+  say:
+  - text: グラーチは2015年、2部のときに加わったゴールキーパー。
+    image: assets/photos/bd/leipzig/leipzig_legend_9dc8a9a7.jpg
+  - 2021年から主将。2022年、クラブ初のタイトルとなるドイツカップを獲りました。
+  - 全公式戦で**362試合**。2026年まで、ライプツィヒのゴール前に立ちました。
+  sources:
+  - https://en.wikipedia.org/wiki/Timo_Werner
+  - https://en.wikipedia.org/wiki/Yussuf_Poulsen
+  - https://en.wikipedia.org/wiki/P%C3%A9ter_Gul%C3%A1csi
+  bg: assets/backgrounds/stadium_ライプツィヒ_in.png
+  official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はデミチェリス。就任は2026年6月。契約は2028年まで
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - マルティン・デミチェリス
+    - - 就任
+      - 2026年6月
+    - - 契約
+      - 2028年まで
+  say:
+  - text: ライプツィヒの今季の監督は、マルティン・デミチェリス。**45歳**のアルゼンチン人です。
+    image: assets/photos/bd/leipzig/leipzig_manager_2dfc9298.jpg
+  - 選手のころはバイエルンで、ブンデスリーガ**174試合**。4度の優勝を味わっています。
+  - 就任は2026年6月で、2028年までの契約を結んでいます。
+  sources:
+  - https://en.wikipedia.org/wiki/RB_Leipzig
+  - https://www.bundesliga.com/en/bundesliga/news/rb-leipzig-martin-demichelis-new-head-coach-ole-werner-37798
+  - https://en.wikipedia.org/wiki/Mart%C3%ADn_Demichelis
+  bg: assets/backgrounds/stadium_ライプツィヒ_in.png
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - text: 今季の登録選手は28人です。
+    image: assets/stats/bd_leipzig_gk.png
+    no_telop: true
+  - image: assets/stats/bd_leipzig_gk_f.png
+    text: ゴールキーパーは3人。
+    no_telop: true
+  - image: assets/stats/bd_leipzig_gk_f.png
+    text: オリャン・ニーランはノルウェー代表で**79試合**。
+    no_telop: true
+  - image: assets/stats/bd_leipzig_df_f.png
+    text: ディフェンダーは9人。
+    no_telop: true
+  - image: assets/stats/bd_leipzig_df_f.png
+    text: 主将を務めるのが**ダヴィド・ラウム**。
+    no_telop: true
+  - image: assets/stats/bd_leipzig_df_f.png
+    text: リーグ戦で**117試合**に出ています。
+    no_telop: true
+  - image: assets/stats/bd_leipzig_df_f.png
+    text: ヴィリ・オルバンはハンガリー代表で**72試合**。
+    no_telop: true
+  - image: assets/stats/bd_leipzig_mf_f.png
+    text: ミッドフィールダーは10人。
+    no_telop: true
+  - image: assets/stats/bd_leipzig_mf_f.png
+    text: クリストフ・バウムガルトナーはオーストリア代表で**58試合**。
+    no_telop: true
+  - image: assets/stats/bd_leipzig_mf_f.png
+    text: ニコラス・ザイヴァルトはオーストリア代表で**55試合**。
+    no_telop: true
+  - image: assets/stats/bd_leipzig_fw_f.png
+    text: フォワードは6人。
+    no_telop: true
+  - image: assets/stats/bd_leipzig_fw_f.png
+    text: ヨハン・バカヨコはベルギー代表で**18試合**。
+    no_telop: true
+  - image: assets/stats/bd_leipzig_fw_f.png
+    text: アントニオ・ヌサはリーグ戦で**63試合**。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/RB_Leipzig
+  bg: assets/backgrounds/stadium_ライプツィヒ_in.png
+  official: false
+- id: season
+  heading: 今季のここまで
+  tier: 報道
+  telop: 7試合で4勝3敗。5位
+  narrator: 解説
+  card:
+    type: table
+    title: ブンデスリーガの結果
+    columns:
+    - 節
+    - 相手
+    - 結果
+    rows:
+    - - 第1節
+      - ボルシアMG（ホーム）
+      - 3対0
+    - - 第2節
+      - ブレーメン（アウェー）
+      - 1対3
+    - - 第3節
+      - ハンブルガーSV（ホーム）
+      - 5対0
+    - - 第4節
+      - レバークーゼン（アウェー）
+      - 0対2
+    - - 第5節
+      - フランクフルト（ホーム）
+      - 6対0
+    - - 第6節
+      - バイエルン（アウェー）
+      - 1対6
+    - - 第7節
+      - エルフェルスベルク（ホーム）
+      - 4対0
+  say:
+  - リーグ戦はここまで7試合で、**4勝3敗**。
+  - 順位は**5位**、勝ち点は**12**です。
+  - 勝ちの4つは、どれもホーム。負けの3つは、どれもアウェー。
+  - text: 昨季のホームは、1試合あたり**2.35**得点でした。
+    card:
+      type: stats
+      title: 1試合あたりの得点（リーグ戦）
+      items:
+      - - '4.50'
+        - ''
+        - 今季のホーム 4試合
+      - - '2.35'
+        - ''
+        - 昨季のホーム 17試合
+      - - '0.67'
+        - ''
+        - 今季のアウェー 3試合
+      focus: 0
+  - text: 今季のホームは**4.50**。倍に近い数です。
+    mark:
+      kind: circle
+      item: 0
+  - ただ、ホームで当たった4クラブは、いまの順位が平均でおよそ12位。
+  - アウェーの3クラブは、平均4位です。
+  - text: チャンピオンズリーグも同じ形です。
+    card: none
+    image: assets/images/bd_leipzig_episode/scene.jpg
+  - ホームでは、オランダのアイントホーフェンを1対0で下しました。
+  - 敵地ではコモとレアル・マドリードに、どちらも1対4で敗れています。
+  - ライプツィヒの次は、ドイツ時間の27日。
+  - ドイツカップの2回戦で、敵地のロート・ヴァイス・エッセンと戦います。
+  sources:
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/teams/11420/schedule?season=2026
+  - https://site.api.espn.com/apis/v2/sports/soccer/ger.1/standings
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/teams/11420/schedule?season=2025
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/ger.dfb_pokal/teams/11420/schedule?season=2026
+  bg: assets/backgrounds/stadium_ライプツィヒ_in.png
+  official: false
+  viewpoint: true
+watch: 毎日、数字でサッカーを読み解きます

@@ -1,0 +1,525 @@
+# ユニフォームとエンブレムの歴史 クリスタル・パレス（10/26 作成）。雛形は 10/25 エヴァートン回。
+# 題の問い：クリスタル・パレスの紋章の鷲は、どこから来たのか。
+# 重なり確認（2026-10-26）：scripts/・research/covered.yaml の kit_*・research/posted.json を grep。パレスのユニフォーム回は無し
+#   （20261023_stadium_palace はスタジアム、20260920_pl08_palace はクラブ紹介、20261008_palace_ranking・20261019_kamada_palace_brighton はニュース。いずれも別シリーズ）。
+# 今季のリーグ：ウィキペディア en "2026–27 Premier League" の20クラブにクリスタル・パレスがある（プレミアの1部）。
+# 取材：requests（ブラウザ User-Agent）だけ。ブラウザ操作・JS実行・検索のAI要約を根拠にはしていない。
+#   読んだ：ウィキペディア en "Crystal Palace F.C."（Colours and crest／Kit manufacturers and sponsors／Mascots）、"Daichi Kamada"、"TDK"、
+#     "Eintracht Frankfurt"・"SS Lazio"（どちらも紋章が鷲）、"2026–27 Crystal Palace F.C. season"（冨安の加入）。
+#   クラブ公式：鎌田の加入 2024-07-01、鎌田の選手ページ（"continues a long tradition of wearing Eagles"、FAカップ決勝で90分、背番号18）、
+#     冨安の加入 2026-08-07（背番号17）、1861年の紋章 2022-06-18（1905→1861、建物は1936年に焼失＝歴史家マニングの言葉）、
+#     テンポラル 2026-05-21（2026/27 から胸の広告）。
+#   イブニング・スタンダード 2012-03-27（web.archive）：アリソン（1973〜76）がベンフィカの鷲（アギアス）に倣い、グレイジャーズ→イーグルス。
+#     えんじと水色との68年の縁を終わらせ、赤と青の縞に。6案からファン投票。キャラ（本物の鷲）がピッチを飛ぶ。
+#   クロイドン・ガーディアン 2013-05-08（web.archive）：新しい紋章。前年の投票ははっきりした1位が出ず、ファンの1人がデザイナーと描いた。
+#     塔・ガラスの建物・鷲を残し、創立の年を足した。
+#   Historical Football Kits（HFK。ファンの資料サイトだが典拠を明記）：1905-07-05 の議事録「Cardinal and Blue jerseys」、
+#     1935-36 に頭文字の刺繍、1955 に水晶宮の正面の紋章、1964 全身白、1972 丸い紋章（Glaziers）、1987 新しい紋章、2013-14 から新紋章、
+#     2022 に 1861 へ。1861 の系譜には Metcalf と Nicholson の反論がある、とも書く。
+# ---- 食い違い・断ったこと ----
+#   ・1905年の色：ウィキペディアは「えんじと水色（Villa の Goodman の縁）」、HFK は議事録の「cardinal（深い赤）と青」、
+#     クラブ公式の歴史家マニングの言葉は「1905年に赤と青」→台本では「ウィキペディアはえんじと水色、議事録の言葉はカーディナルと青。呼び名は記録で割れる」と両方言う。
+#   ・2013年の紋章：ウィキペディアは「2012年に更新」、スタンダード（2012-03）は投票、クロイドン・ガーディアン（2013-05）と HFK は2013年発表・2013/14 から
+#     →「2013年」と言う。2012年の投票の勝った案が使われたかは割れる→「前の年の投票では、はっきりした1位が出なかった」だけ言う。
+#   ・1973年の縞の手本：バルセロナはウィキペディアだけ（スタンダードは触れない）→「ウィキペディアによれば」と付ける。
+#   ・1964年の全身白：ウィキペディア「レアル・マドリードに倣った」、HFK「そう思われることが多い」→「倣った、と言われます」。
+#   ・「クラブ初の日本人選手」はウィキペディアだけで、クラブ公式の加入記事の本文に見当たらない→今回は言わない（10/23 スタジアム回でも使用済み）。
+#   ・鎌田の出場数はクラブのページの中で割れる（25/26 が本文46、表30）→出場数は言わない。
+#   ・建物の万博の年（1851）はこの回の出典で確かめていない→年は言わず「ロンドン万博の建物」とだけ（HFK "former Great Exhibition building"）。
+#   ・いまの紋章の鷲がボールをつかんでいるかは確かめていない→1973年の紋章（ウィキペディア：eagle holding a ball）だけに言う。
+# ---- 自分で数えた数 ----
+#   2026−1973=53年（鷲・赤と青の縞）。1973−1905=68年（スタンダードの「68年」と一致）。1955−1936=19年。2026−1936=90年。
+#   胸の会社（ウィキペディアの一覧）：レッド・ローズ・トップスコア・AVR・アンドリュー・コープランド・フライ・ヴァージン・チューリップ・TDK・チャーチル・
+#     GAC・ネッテラー・マンション・マンベットX・W88・シンチ・NET88・テンポラル＝16社。1983年から 2026−1983=43年、43÷16≒2.7年。
+#   TDK は 1993〜1999＝6年。6÷2.7≒2.2倍。いちばん長いのは GAC（2006〜14、8年）→TDK を「いちばん」とは言わない。
+#   53÷2.7≒19.6→「およそ20倍」。
+# ---- 日本との接点 ----
+#   鎌田大地（2024-07-01 加入、背番号18、クラブ公式の紹介「鷲を着る長い伝統を続けている」＝フランクフルト・ラツィオ・パレスの3クラブとも紋章が鷲）。
+#   冨安健洋（2026-08-07 加入、背番号17）。胸の広告 TDK（1993〜1999、東京の電機メーカー）。第2節に置いた。女子チームの話は入れていない。
+# ---- 写真（assets/images/20261026_kit_palace/、出典は credits.json）----
+#   Commons の CC・CC0 のみ（鎌田2枚＋サムネ用の切り出し・水晶宮1枚から2つの切り出し・パレード）。代理店・放送映像なし。
+#   1936年の火事の写真（PD）と1854年の水晶宮・FAカップ優勝の表彰台は、元が小さく1.6倍を超えて引き伸ばすので使わなかった。
+#   10/23 スタジアム回の写真とは別のファイル。エンブレム画像は使っていない。
+date: 2026年10月26日
+slot: other_2
+format: news
+series: ユニフォームとエンブレムの歴史
+voice_min: 0
+people:
+- クリスタル・パレス
+- 鎌田大地
+watch: 毎日、数字でサッカーを読み解きます
+theme:
+  end_bg: assets/images/20261026_kit_palace/f02_parade.jpg
+  id: kit_palace
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: クリスタル・パレス
+  title: クリスタル・パレスの紋章の鷲は、どこから来たのか
+  question: クリスタル・パレスの紋章の鷲は、どこから来て、なぜ53年も残っているのか
+  opening_image: assets/images/20261026_kit_palace/k01_kamada.jpg
+  lead: 胸に、鷲。
+  hook: ''
+  takeaway: 鷲は1973年、監督アリソンがポルトガルのベンフィカに倣って入れたもので、赤と青の縞も同じ年から53年。紋章のガラスの建物は1936年に焼けたが、1955年から紋章に入り続けている。一方、胸の広告の会社は1983年から43年で16社、平均2.7年。日本のTDKは6年で平均の2倍あまり。鎌田大地はフランクフルト・ラツィオ・パレスと、3クラブ続けて胸に鷲
+  hook_unused: ''
+thumbnail:
+  layout: classic
+  callouts:
+  - 鎌田は3つ目の鷲
+  - 胸に日本のTDK
+  photo: assets/images/20261026_kit_palace/k00_thumb.jpg
+  line1: クリスタル・パレスの鷲
+  line2: 手本はポルトガルのベンフィカ
+  tags:
+  - クリスタル・パレス
+  - ユニフォーム
+  - エンブレム
+  - 鎌田大地
+  - ベンフィカ
+  - TDK
+x-cards:
+  eagle: &eagle
+    type: timeline
+    title: 紋章の歩み（ウィキペディア・スタンダード紙ほか）
+    rows:
+    - - 1955年
+      - 水晶宮の建物の正面を紋章に
+    - - 1972年
+      - 丸い紋章。愛称はグレイジャーズ
+    - - 1973年
+      - 監督アリソン。愛称も紋章も鷲に
+    - - 1987年
+      - 鷲と水晶宮を1つの紋章に
+    - - 2013年
+      - ファンの案から新しい紋章
+    focus: 1973年
+    highlight_row: 2
+  kamada: &kamada
+    type: table
+    title: 鎌田大地が着た、胸の鷲（ウィキペディア・クラブ公式）
+    columns:
+    - クラブ
+    - いた時期
+    - 紋章
+    rows:
+    - - フランクフルト
+      - 2017〜23年
+      - 鷲（愛称もアドラー＝鷲）
+    - - ラツィオ
+      - 2023〜24年
+      - 金色の鷲
+    - - クリスタル・パレス
+      - 2024年〜
+      - 鷲（愛称もイーグルス）
+    highlight_row: 2
+  colours: &colours
+    type: timeline
+    title: シャツの色の歩み（ウィキペディア・HFK）
+    rows:
+    - - 1905年
+      - えんじと水色（議事録はカーディナルと青）
+    - - 1938年
+      - 白いシャツに黒のパンツ
+    - - 1964年
+      - 全身白。レアル・マドリードに倣う
+    - - 1966年
+      - えんじと水色に戻る
+    - - 1973年
+      - 赤と青の縦縞
+    focus: 1973年
+    highlight_row: 4
+  building: &building
+    type: timeline
+    title: 紋章のガラスの建物（クラブ公式・ウィキペディアほか）
+    rows:
+    - - 1936年11月
+      - 水晶宮が火事で焼け落ちる
+    - - 1955年
+      - 建物の正面が、初めて紋章に
+    - - 1964年
+      - 紋章がシャツから消える
+    - - 1987年
+      - 鷲と並んで、紋章に戻る
+    - - 2022年
+      - 紋章の年を1905から1861に
+    focus: 1955年
+    highlight_row: 1
+  view: &view
+    type: table
+    title: 残ったものと、替わったもの
+    columns:
+    - もの
+    - 長さ
+    rows:
+    - - 鷲（1973年から）
+      - 53年
+    - - 赤と青の縞（1973年から）
+      - 53年
+    - - 紋章の水晶宮（焼けてから）
+      - 90年
+    - - 胸の会社（1983年から）
+      - 43年で16社
+    highlight_row: 0
+sections:
+- id: eagle
+  main: true
+  heading: クリスタル・パレスの紋章の鷲は、どこから来たのか
+  bg: assets/images/20261026_kit_palace/k01_kamada.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 鷲は1973年から。監督アリソンが、ポルトガルのベンフィカの鷲に倣った
+  card: *eagle
+  say:
+  - text: 今回は、クリスタル・パレスの、胸の紋章です。
+    image: assets/images/20261026_kit_palace/k02_kamada_gold.jpg
+    card: none
+    emph: true
+  - text: 真ん中には、大きな鷲。愛称も、イーグルス。鷲たち、です。
+    image: assets/images/20261026_kit_palace/k02_kamada_gold.jpg
+    card: none
+  - text: でも、この鷲が来たのは、1973年。それより前の紋章に、鷲はいません。
+    image: assets/images/20261026_kit_palace/k01_kamada.jpg
+    card:
+      <<: *eagle
+      highlight_row: 2
+    emph: true
+  - text: それまでの愛称は、グレイジャーズ。ガラス職人、という意味でした。
+    image: assets/images/20261026_kit_palace/k01_kamada.jpg
+    card:
+      <<: *eagle
+      highlight_row: 1
+  - text: クラブの名前のもとになった、ガラスの建物から来た呼び名です。
+    image: assets/images/20261026_kit_palace/f02_parade.jpg
+    card: none
+  - text: 変えたのは、1973年に来た監督、マルコム・アリソン。
+    image: assets/images/20261026_kit_palace/f02_parade.jpg
+    card: none
+  - text: 古くて地味な印象を、新しくしたかった、と当時の新聞は書いています。
+    image: assets/images/20261026_kit_palace/f02_parade.jpg
+    card:
+      <<: *eagle
+      highlight_row: 2
+  - text: 手本にしたのは、ポルトガルのベンフィカ。愛称は、鷲を意味する、アギアス。
+    image: assets/images/20261026_kit_palace/f02_parade.jpg
+    card:
+      <<: *eagle
+      highlight_row: 2
+    emph: true
+  - text: こうして愛称は、イーグルスに。紋章は、ボールをつかんだ鷲になりました。
+    image: assets/images/20261026_kit_palace/k02_kamada_gold.jpg
+    card: none
+  - text: 1987年には、鷲と、ガラスの建物を、1つの紋章にまとめます。
+    image: assets/images/20261026_kit_palace/k02_kamada_gold.jpg
+    card:
+      <<: *eagle
+      highlight_row: 3
+  - text: 2013年の紋章は、ファンの1人の案を、デザイナーと仕上げたもの。
+    image: assets/images/20261026_kit_palace/k02_kamada_gold.jpg
+    card:
+      <<: *eagle
+      highlight_row: 4
+  - text: 前の年には、6つの案で投票もしましたが、はっきりした1位は出ていません。
+    image: assets/images/20261026_kit_palace/k02_kamada_gold.jpg
+    card: none
+  - text: いまも、ホームの試合の前には、本物の鷲が、スタジアムの端から端へ飛びます。
+    image: assets/images/20261026_kit_palace/f02_parade.jpg
+    card: none
+    emph: true
+  - text: 2010年から続く、習わし。
+    image: assets/images/20261026_kit_palace/f02_parade.jpg
+    card: none
+  sources:
+  - https://web.archive.org/web/20140107072737/http://www.standard.co.uk/sport/football/facelift-for-crystal-palaces-benfica-eagle-7593041.html
+  - https://en.wikipedia.org/wiki/Crystal_Palace_F.C.
+  - https://web.archive.org/web/20131113145227/http://www.yourlocalguardian.co.uk/news/10404267.Crystal_Palace_unveils_new_football_club_crest/
+  - https://www.historicalkits.co.uk/Crystal_Palace/Crystal_Palace.htm
+- id: japan
+  heading: 鎌田大地が胸に付けた鷲は、いくつ目か
+  bg: assets/images/20261026_kit_palace/k01_kamada.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 鎌田はフランクフルト・ラツィオ・パレスと、3クラブ続けて胸に鷲。胸の広告には1993〜99年、日本のTDK
+  card: *kamada
+  say:
+  - text: 日本との接点は、鎌田大地です。
+    image: assets/images/20261026_kit_palace/k01_kamada.jpg
+    card: none
+  - text: 2024年7月1日、ラツィオとの契約を終えて、パレスへ。
+    image: assets/images/20261026_kit_palace/k01_kamada.jpg
+    card: none
+  - text: フランクフルトのときの監督、グラスナーと、また組みました。
+    image: assets/images/20261026_kit_palace/k01_kamada.jpg
+    card: none
+  - text: クラブ公式の紹介に、こんな一文があります。鷲を着るという、長い伝統を、続けている。
+    image: assets/images/20261026_kit_palace/k01_kamada.jpg
+    card:
+      <<: *kamada
+      highlight_row: 2
+    emph: true
+  - text: ドイツで長くいた、アイントラハト・フランクフルト。愛称はアドラー。鷲です。
+    image: assets/images/20261026_kit_palace/k01_kamada.jpg
+    card:
+      <<: *kamada
+      highlight_row: 0
+  - text: 次のイタリア、ラツィオ。紋章は、金色の鷲。
+    image: assets/images/20261026_kit_palace/k02_kamada_gold.jpg
+    card:
+      <<: *kamada
+      highlight_row: 1
+  - text: そして、パレス。3つのクラブ続けて、胸に鷲がいます。
+    image: assets/images/20261026_kit_palace/k02_kamada_gold.jpg
+    card:
+      <<: *kamada
+      highlight_row: 2
+    emph: true
+  - text: その鷲を胸に、鎌田はパレスで、タイトルを取ります。
+    image: assets/images/20261026_kit_palace/k02_kamada_gold.jpg
+    card: none
+  - text: 2025年5月17日、イングランドのカップ戦、FAカップの決勝。
+    image: assets/images/20261026_kit_palace/f02_parade.jpg
+    card: none
+  - text: パレスは、マンチェスター・シティに、1対0で勝ちます。
+    image: assets/images/20261026_kit_palace/f02_parade.jpg
+    card: none
+  - text: 鎌田は、90分、ピッチに立ちました。パレスが初めて取った、大きなタイトルです。
+    image: assets/images/20261026_kit_palace/k02_kamada_gold.jpg
+    card: none
+    emph: true
+  - text: 今季は、日本代表の冨安健洋も、パレスに加わりました。
+    image: assets/images/20261026_kit_palace/k02_kamada_gold.jpg
+    card: none
+  - text: もう1つの縁は、シャツの胸。
+    image: assets/images/20261026_kit_palace/f02_parade.jpg
+    card: none
+  - text: 1993年から1999年まで、胸の広告は、ティーディーケーでした。
+    image: assets/images/20261026_kit_palace/f02_parade.jpg
+    card: none
+    telop: 1993年から1999年まで、胸の広告は、TDKでした
+  - text: カセットテープでも知られた、日本の会社。本社は、東京。
+    image: assets/images/20261026_kit_palace/f02_parade.jpg
+    card: none
+  - text: この6年の間に、パレスは、プレミアリーグに2度上がっています。
+    image: assets/images/20261026_kit_palace/f02_parade.jpg
+    card: none
+  sources:
+  - https://www.cpfc.co.uk/news/announcement/daichi-kamada-signs-for-crystal-palace/
+  - https://www.cpfc.co.uk/teams/first-team/midfielder/daichi-kamada
+  - https://en.wikipedia.org/wiki/Eintracht_Frankfurt
+  - https://en.wikipedia.org/wiki/SS_Lazio
+  - https://www.cpfc.co.uk/news/announcement/palace-sign-takehiro-tomiyasu/
+  - https://en.wikipedia.org/wiki/TDK
+- id: colours
+  heading: 赤と青の縞は、最初からの色だったのか
+  bg: assets/images/20261026_kit_palace/f02_parade.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 長い時代の色は、えんじと水色。1938年の白、1964年の全身白を経て、1973年に赤と青の縞
+  card: *colours
+  say:
+  - text: では、シャツの色。いまのホームは、赤と青の縦縞です。
+    image: assets/images/20261026_kit_palace/k02_kamada_gold.jpg
+    card: none
+  - text: この縞も、1973年のアリソンが決めたもの。
+    image: assets/images/20261026_kit_palace/k02_kamada_gold.jpg
+    card: none
+  - text: ウィキペディアによれば、手本はバルセロナ。
+    image: assets/images/20261026_kit_palace/f02_parade.jpg
+    card:
+      <<: *colours
+      highlight_row: 4
+    emph: true
+  - text: その前の長い時代、パレスの色は、えんじと水色でした。
+    image: assets/images/20261026_kit_palace/k01_kamada.jpg
+    card:
+      <<: *colours
+      highlight_row: 0
+  - text: 1905年、プロのクラブができます。
+    image: assets/images/20261026_kit_palace/k01_kamada.jpg
+    card: none
+  - text: 立ち上げに加わったのが、エドマンド・グッドマン。
+    image: assets/images/20261026_kit_palace/k01_kamada.jpg
+    card: none
+  - text: アストン・ヴィラで、働いていた人です。ヴィラの色も、えんじと水色。
+    image: assets/images/20261026_kit_palace/f02_parade.jpg
+    card: none
+  - text: ただ、クラブの議事録に残る言葉は、カーディナル、深い赤と、青。
+    image: assets/images/20261026_kit_palace/f02_parade.jpg
+    card:
+      <<: *colours
+      highlight_row: 0
+  - text: 色の呼び名は、記録で割れます。
+    image: assets/images/20261026_kit_palace/f02_parade.jpg
+    card: none
+  - text: 1938年には、白いシャツに、黒いパンツ。
+    image: assets/images/20261026_kit_palace/k02_kamada_gold.jpg
+    card:
+      <<: *colours
+      highlight_row: 1
+  - text: 1964年には、上から下まで、真っ白。
+    image: assets/images/20261026_kit_palace/k02_kamada_gold.jpg
+    card:
+      <<: *colours
+      highlight_row: 2
+  - text: その2年ほど前に、親善試合をした、レアル・マドリードに倣った、と言われます。
+    image: assets/images/20261026_kit_palace/k01_kamada.jpg
+    card: none
+    emph: true
+  - text: 1966年、えんじと水色に戻り、1973年、赤と青の縞へ。
+    image: assets/images/20261026_kit_palace/k01_kamada.jpg
+    card:
+      <<: *colours
+      highlight_row: 4
+  - text: 2005年は、創立100年の記念の年。
+    image: assets/images/20261026_kit_palace/k01_kamada.jpg
+    card: none
+  - text: 1971年ごろの、えんじと青と白のシャツを、もう一度着ています。
+    image: assets/images/20261026_kit_palace/k01_kamada.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Crystal_Palace_F.C.
+  - https://www.historicalkits.co.uk/Crystal_Palace/Crystal_Palace.htm
+- id: building
+  heading: 紋章のガラスの建物は、いま、どこにあるのか
+  bg: assets/images/20261026_kit_palace/p01_palace.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 水晶宮は1936年に焼け落ちた。紋章に入ったのは、その19年あとの1955年
+  card: *building
+  say:
+  - text: 鷲の後ろにある、ガラスの建物。これが、クリスタル・パレス。水晶宮です。
+    image: assets/images/20261026_kit_palace/p01_palace.jpg
+    card: none
+  - text: もとは、ロンドン万博の建物。それを、ロンドンの南に移して建て直しました。
+    image: assets/images/20261026_kit_palace/p01_palace.jpg
+    card: none
+  - text: 鉄とガラスでできた、巨大な建物です。
+    image: assets/images/20261026_kit_palace/p01_palace.jpg
+    card: none
+    emph: true
+  - text: 建物を持つ会社は、1857年、ここでクリケットのクラブも作っています。
+    image: assets/images/20261026_kit_palace/p01_palace.jpg
+    card:
+      <<: *building
+      highlight_row: 1
+  - text: ところが、1936年11月30日の夜。
+    image: assets/images/20261026_kit_palace/p02_palace_close.jpg
+    card: none
+  - text: 水晶宮は、火事で、焼け落ちます。
+    image: assets/images/20261026_kit_palace/p02_palace_close.jpg
+    card: none
+    emph: true
+  - text: 建物の正面が、初めてクラブの紋章になったのは、1955年。
+    image: assets/images/20261026_kit_palace/k01_kamada.jpg
+    card: none
+  - text: 焼けて、19年あとのことでした。
+    image: assets/images/20261026_kit_palace/k01_kamada.jpg
+    card:
+      <<: *building
+      highlight_row: 1
+    emph: true
+  - text: 1964年に、紋章はいったんシャツから消え、1987年、鷲と並んで戻ります。
+    image: assets/images/20261026_kit_palace/k01_kamada.jpg
+    card:
+      <<: *building
+      highlight_row: 3
+  - text: 2022年には、紋章の年を、1905から1861に替えました。
+    image: assets/images/20261026_kit_palace/k02_kamada_gold.jpg
+    card:
+      <<: *building
+      highlight_row: 4
+  - text: クラブの説明では、1861年に、そのクリケットの仲間が作ったチームが始まり。
+    image: assets/images/20261026_kit_palace/f02_parade.jpg
+    card: none
+  - text: ただ、いまのクラブと、そのチームのつながりには、異を唱える研究もあります。
+    image: assets/images/20261026_kit_palace/f02_parade.jpg
+    card: none
+  sources:
+  - https://www.cpfc.co.uk/news/announcement/crystal-palace-football-club-release-new-1861-crest-for-badge-to-honour-footballing-history/2022-06-18/
+  - https://en.wikipedia.org/wiki/Crystal_Palace_F.C.
+  - https://www.historicalkits.co.uk/Crystal_Palace/Crystal_Palace.htm
+  - https://commons.wikimedia.org/wiki/File:Crystal_Palace_fire_1936.jpg
+- id: view
+  viewpoint: true
+  heading: 見立て・鷲と縞は53年、胸の会社は16社。何が残り、何が替わったのか
+  bg: assets/images/20261026_kit_palace/k01_kamada.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 鷲と縞は53年。胸の会社は43年で16社、平均2.7年。TDKの6年は平均の2倍あまり
+  card: *view
+  say:
+  - text: パレスの鷲と縞、そして胸の広告。続いた長さを、並べてみます。
+    image: assets/images/20261026_kit_palace/k01_kamada.jpg
+    card: none
+    emph: true
+  - text: 鷲と、赤と青の縞は、どちらも1973年から。53年です。
+    image: assets/images/20261026_kit_palace/k01_kamada.jpg
+    card:
+      <<: *view
+      highlight_row: 0
+    mark:
+      kind: circle
+      row: 0
+  - text: 一方、胸の会社は、1983年から43年で、16社。
+    image: assets/images/20261026_kit_palace/k02_kamada_gold.jpg
+    card:
+      <<: *view
+      highlight_row: 3
+  - text: 今季からは、アメリカのソフトウェア会社、テンポラル。
+    image: assets/images/20261026_kit_palace/k02_kamada_gold.jpg
+    card:
+      <<: *view
+      highlight_row: 3
+  - text: 43を16で割ると、およそ2.7。1社あたり、3年に届きません。
+    image: assets/images/20261026_kit_palace/f02_parade.jpg
+    card:
+      type: calc
+      title: 胸の会社1社の平均（自分で割った）
+      terms:
+      - - 43年
+        - 1983年から
+      - - 16社
+        - 胸の会社
+      - - 約2.7年
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+    emph: true
+  - text: 日本のティーディーケーは、6年。平均の、2倍あまりです。
+    image: assets/images/20261026_kit_palace/f02_parade.jpg
+    card:
+      type: calc
+      title: TDKは平均の何倍か（自分で割った）
+      terms:
+      - - 6年
+        - TDK
+      - - 約2.7年
+        - 胸の会社の平均
+      - - 約2.2倍
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+    telop: 日本のTDKは、6年。平均の、2倍あまりです
+  - text: そして、鷲と縞の53年。これは、2.7年の、およそ20倍です。
+    image: assets/images/20261026_kit_palace/k01_kamada.jpg
+    card:
+      <<: *view
+      highlight_row: 1
+  - text: 紋章の水晶宮は、焼けてから90年。建物はもう無いのに、胸には残っています。
+    image: assets/images/20261026_kit_palace/p01_palace.jpg
+    card:
+      <<: *view
+      highlight_row: 2
+    emph: true
+  - text: 胸の広告は数年で替わり、鷲と、焼けた建物は、半世紀を超えて残る。
+    image: assets/images/20261026_kit_palace/k01_kamada.jpg
+    card: none
+  - text: その鷲を、いま、3つ目のクラブで着ているのが、鎌田大地です。
+    image: assets/images/20261026_kit_palace/k01_kamada.jpg
+    card: none
+    emph: true
+  sources:
+  - https://en.wikipedia.org/wiki/Crystal_Palace_F.C.
+  - https://www.cpfc.co.uk/news/partner-news/crystal-palace-fc-announce-temporal-as-new-front-of-shirt-partner/

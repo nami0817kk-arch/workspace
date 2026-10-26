@@ -1,0 +1,378 @@
+# 取材メモ（10/26 月、シリーズ「比べる」、key: compare_240306_316264）。ブルーノ・フェルナンデス（マンチェスター・ユナイテッド・32歳）×マルティン・ウーデゴール（アーセナル・27歳）。
+# **FotMob・DataMB は使っていない**。数字は Transfermarkt（2026-10-26 取得。控え: research/raw/20261026_bruno_tm.json・20261026_odegaard_tm.json）。
+#   Transfermarkt 番号：ブルーノ 240306・ウーデゴール 316264。API（tmapi-alpha）で プロフィール・市場価値・季ごとの大会別成績・試合ごとの記録を3秒あけて取得。
+#   クロスチェック：英語版 Wikipedia の Career statistics（2026-10-26 取得。控え: research/raw/20261026_bruno_wiki.wikitext・20261026_odegaard_wiki.wikitext）。
+#     25/26 の試合・得点は TM と Wikipedia が一致（ブルーノ 37試合9得点・ウーデゴール 36試合1得点）。26/27 は Wikipedia の更新が古い（ブルーノは9/20まで、ウーデゴールは10/21まで）ので TM の値。
+#   アシスト・出場時間は Transfermarkt だけ。代表の試合は混ぜない（クラブの試合だけ）。
+# **選んだ理由**：直近の比べ（10/2エムバペ×ハーランド・10/3クラシコ・10/9ベリンガム×ムシアラ・10/11マレン×ラウタロ・10/12ドルトムント×モナコ・10/14バレバ×カマラ・10/16エムバペ×ヴィニシウス・
+#   10/17ペドリ×ヴィティーニャ・10/19バイエルン×ドルトムント・10/20ランキング・10/21ライス×ネヴェス・10/22ヤマル×サカ・10/23ヴィルツ×ロジャーズ・10/24オリーセ×パーマー・10/25ケイン×レヴァンドフスキ）に
+#   2人はどちらも出ていない（scripts/*compare*・research/*compare*・posted.json の build 名・covered.yaml を grep で確認）。2人の名前が一緒に出たのは 10/5 の試合の回（ポルトガル対ノルウェー、代表戦の結果）だけで、2人を比べた回は無い。
+#   大物の名前（プレミアの背番号8の主将2人）×比べる軸（25/26 の同じ5月24日に、ブルーノは1季21アシストのプレミア記録、ウーデゴールは主将として優勝。アシスト21と7の差を、出場時間と90分あたりに分ける）。
+#   ほかに当たって外した候補：アーセナル×シティ（10/17 に財政で2クラブの回あり）・イサク×ギョケレシュ（9/26 にスウェーデン代表の回で2人が並んだ。ギョケレシュは今季413分で450分に届かない）・
+#   イサク×エキティケ（エキティケは今季0分）・クヴァラツヘリア（10/22 に手術の報）・サラー（今季トラブゾンスポル＝扱うリーグの外）・ロドリ（今季バルセロナ）。
+# **この回の軸**：25/26 のプレミアのアシストは 21 と 7。出場時間は 3068分と1371分。90分あたりは 0.62 と 0.46。
+#   差の14を「出場時間の差」と「90分あたりの差」に分ける：ウーデゴールの7 × (3068÷1371＝2.24) ＝ 15.7（約16）→ 出場時間の分が約9、90分あたりの分が約5。
+#   季ごとのプレミアのアシスト（90分あたり）：ブルーノ 21/22 0.17・22/23 0.22・23/24 0.23・24/25 0.33・25/26 0.62、ウーデゴール 0.13・0.20・0.32・0.31・0.46。
+#   使っていない素材：年俸・負傷の中身・私生活・代表の数字・パーセンタイル・戦術・批判（Wikipedia の主将ぶりへの批判の節）。ユナイテッドの今の順位（15位）は選手を小さく見せる方向に働くので言わない。10/25 のボーンマス戦（ブルーノは出場なし）も言わない。
+#   日本との接点（確かめた縁）：ウーデゴールの完全移籍（2021-08-20、Ødegaard の Wikipedia）の11日後に、冨安健洋がアーセナルへ（2021-08-31、Tomiyasu の Wikipedia）。冨安は 2025年7月に合意で契約を解消（同）。2021/22〜2024/25 の4季、同じクラブ。ブルーノ側の日本との縁は見つからない（入れない）。
+# **スタッツの条件（足切り）**：クラブのトップチームの全公式戦（リーグ・CL・EL・FA杯・リーグ杯・コミュニティ・シールド）。代表・育成年代は混ぜない。
+#   25/26 は2人とも 900分を超える（3203分・1984分）。26/27 は 884分と950分で **900分に届かない → 「いまの時点」と言う**。
+# **使った数**（TM の大会別。90分あたり＝数×90÷出場分）
+#   ブルーノ 25/26＝プレミア 35試合3068分9得点21アシスト＋リーグ杯 1試合45分＋FA杯 1試合90分1アシスト＝37試合・3203分・9得点・22アシスト（アシスト90分あたり 0.62）
+#   ウーデゴール 25/26＝プレミア 24試合1371分1得点7アシスト＋CL 8試合440分1アシスト＋リーグ杯 2試合91分＋FA杯 2試合82分＝36試合・1984分・1得点・8アシスト（0.36）
+#   プレミアだけ：ブルーノ 21×90÷3068＝0.616、ウーデゴール 7×90÷1371＝0.460。1試合あたりの出場：3068÷35＝87.7分、1371÷24＝57.1分。
+#   季ごとのプレミア（TM）：ブルーノ 21/22 36試合3118分6A・22/23 37試合3320分8A・23/24 35試合3120分8A・24/25 36試合3023分11A。
+#     ウーデゴール 21/22 36試合2793分4A・22/23 37試合3150分15得点7A・23/24 35試合3104分11A・24/25 30試合2332分8A。
+#   ブルーノ 26/27＝プレミア 7試合630分3得点1アシスト＋CL 3試合237分1得点＋リーグ杯 1試合17分＝11試合・884分・4得点・1アシスト。
+#   ウーデゴール 26/27＝プレミア 8試合652分2得点＋CL 3試合200分1得点1アシスト＋コミュニティ・シールド 1試合84分1得点＋リーグ杯 1試合14分＝13試合・950分・4得点・1アシスト。
+# **記録と優勝**（Wikipedia）：ブルーノは 2026-05-17 にヘンリー（02/03）とデ・ブライネ（19/20）の20に並び、2026-05-24 の最終節（アウェーのブライトン戦 3対0）でドルグへのアシストで21。プレミアの1季の最多（Bruno Fernandes の Wikipedia、2025–26 の節）。
+#   アーセナルは 2026-05-24 の最終節でクリスタル・パレスに 2対1 で勝ち、トロフィーを受けた。22年ぶり（2025–26 Premier League の Wikipedia）。ウーデゴールは 2022年7月から主将（Arsenal 公式 2022-07-30）。ブルーノは 2023年7月20日から主将（Bruno の Wikipedia）。
+# **移籍**（Wikipedia）：ブルーノ 2020年1月 スポルティング→ユナイテッド、初期の移籍金 5500万€。ウーデゴール 2021年1月にレンタル、2021-08-20 に完全移籍、3500万€（Wikipedia）。
+# 日程（ESPN、2026-10-26 時点）：チェルシー対ユナイテッド 2026-10-31 12:30 UTC＝日本時間31日 21:30。リヴァプール対アーセナル 2026-11-01 16:30 UTC＝日本時間2日 1:30。
+# 写真：すべて Wikimedia Commons（出典は各フォルダの credits.json）。ブルーノ＝2026年W杯クロアチア戦3枚・2021年ユナイテッド1枚、ウーデゴール＝2026年W杯フランス戦2枚・モロッコ戦2枚・2022年アーセナル1枚、2人＝2022年9月のユナイテッド対アーセナルの入場。
+slot: other_1
+date: "2026年10月26日"
+format: news
+series: 比べる
+people:
+  - ブルーノ・フェルナンデス
+  - マルティン・ウーデゴール
+  - マンチェスター・ユナイテッド
+  - アーセナル
+
+theme:
+  end_bg: assets/images/20261026_compare_240306_316264/pair_cap/01_w.jpg
+  id: compare_240306_316264
+  league: england
+  kind: other
+  topic: ブルーノ・フェルナンデスとマルティン・ウーデゴール
+  prefix: ""
+  title: ブルーノとウーデゴール、アシスト21と7。14の差はどこから来たのか
+  hook: ""
+  question: 25/26 のプレミアでアシスト21と7。14の差は、出場時間と90分あたりに分けると、どう説明できるのか
+  takeaway: 差の14のうち約9は出場時間の差。90分あたりでもブルーノ0.62・ウーデゴール0.46で、ブルーノが上
+  league_name: ""
+  opening_image: assets/images/20261026_compare_240306_316264/pair_b/01.jpg
+
+short_title: ブルーノとウーデゴール、アシスト21と7
+
+thumbnail:
+  photo: assets/images/20261026_compare_240306_316264/pair_a/01.jpg
+  photos:
+    - assets/images/20261026_compare_240306_316264/b_cro3/01.jpg
+    - assets/images/20261026_compare_240306_316264/o_wc1/01.jpg
+  short_photo: assets/images/20261026_compare_240306_316264/b_cro2/01_v.jpg
+  face_link: VS
+  layout:
+    layout: classic
+    names: [ブルーノ, ウーデゴール]
+    name_colors: ["#da291c", "#063672"]
+  line1: ブルーノとウーデゴール
+  line2: 21アシストと優勝、同じ5月24日
+  tags: [ブルーノ・フェルナンデス, ウーデゴール, マンチェスター・ユナイテッド, アーセナル]
+
+answer: 差の14のうち約9は出場時間。90分あたりでも0.62と0.46でブルーノが上
+watch: 毎日、数字でサッカーを読み解きます
+
+sections:
+  - id: hook
+    heading: 2026年5月24日、2人の主将には何が起きていたのか
+    tier: 報道
+    telop: 2026年5月24日
+    narrator: 解説
+    card: &hookcard
+      type: stats
+      title: 25/26 プレミアリーグのアシスト
+      items:
+        - ["21", "", ブルーノ・フェルナンデス]
+        - ["7", "", ウーデゴール]
+        - ["20", "", それまでの1季の最多]
+      focus: 0
+    say:
+      - text: 2026年5月24日、プレミアリーグの最終節。
+        image: assets/images/20261026_compare_240306_316264/pair_b/01.jpg
+        card: none
+      - text: ブルーノ・フェルナンデスは、この日21本目のアシスト。
+        image: assets/images/20261026_compare_240306_316264/b_cro2/01_w.jpg
+        card: {<<: *hookcard, focus: 0}
+      - text: ヘンリーとデ・ブライネの20を超えて、1季の最多記録になりました。
+        emph: true
+        image: assets/images/20261026_compare_240306_316264/b_cro2/01_w.jpg
+        card: {<<: *hookcard, focus: 2}
+      - text: 同じ日、ウーデゴールは主将として、優勝のトロフィーを受けました。
+        image: assets/images/20261026_compare_240306_316264/o_wc1/01_w.jpg
+        card: none
+      - text: ただ、その季のアシストは7。記録の21とは、14の差があります。
+        image: assets/images/20261026_compare_240306_316264/pair_a/01.jpg
+        card: {<<: *hookcard, focus: 1}
+    sources:
+      - https://en.wikipedia.org/wiki/Bruno_Fernandes
+      - https://en.wikipedia.org/wiki/2025%E2%80%9326_Premier_League
+      - https://www.transfermarkt.com/bruno-fernandes/leistungsdaten/spieler/240306
+      - https://www.transfermarkt.com/martin-odegaard/leistungsdaten/spieler/316264
+
+  - id: data
+    heading: ブルーノとウーデゴールは、何歳で、いつ主将になったのか
+    tier: 報道
+    telop: 背番号8の主将2人
+    narrator: 解説
+    card: &datacard
+      type: duel
+      left: {name: ブルーノ, club: マンチェスター・U, photo: assets/images/20261026_compare_240306_316264/b_cro3/01_sq.jpg, color: "#da291c"}
+      right: {name: ウーデゴール, club: アーセナル, photo: assets/images/20261026_compare_240306_316264/o_wc1/01_sq.jpg, color: "#063672"}
+      rows:
+        - [年齢, 32歳, 27歳]
+        - [代表, ポルトガル, ノルウェー]
+        - [利き足, 右, 左]
+        - [加入, 2020年1月, 2021年1月]
+        - [移籍金, 5500万€, 3500万€]
+        - [主将, 2023年7月から, 2022年7月から]
+      bars: false
+      note: 移籍金は最初に払われた額。ウーデゴールは2021年1月にレンタルで加わり、8月に完全移籍
+    say:
+      - text: ブルーノは32歳。ポルトガル代表で、ユナイテッドの背番号8です。
+        image: assets/images/20261026_compare_240306_316264/b_cro1/01_w.jpg
+        card: {<<: *datacard, highlight_row: 年齢}
+      - text: ウーデゴールは27歳。ノルウェー代表の主将で、アーセナルの背番号8。
+        image: assets/images/20261026_compare_240306_316264/o_mar1/01_w.jpg
+        card: {<<: *datacard, highlight_row: 代表}
+      - text: ブルーノは2020年1月、スポルティングから。最初の移籍金は5500万ユーロ。
+        image: assets/images/20261026_compare_240306_316264/b_mu1/01_w.jpg
+        card: {<<: *datacard, highlight_row: 移籍金}
+      - text: ウーデゴールは2021年1月にレンタルで来て、8月に3500万ユーロで完全移籍。
+        image: assets/images/20261026_compare_240306_316264/o_ars1/01_w.jpg
+        card: {<<: *datacard, highlight_row: 加入}
+      - text: クラブの主将には、ウーデゴールが2022年7月、ブルーノが翌年の7月に。
+        image: assets/images/20261026_compare_240306_316264/pair_b/01.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/bruno-fernandes/profil/spieler/240306
+      - https://www.transfermarkt.com/martin-odegaard/profil/spieler/316264
+      - https://en.wikipedia.org/wiki/Bruno_Fernandes
+      - https://en.wikipedia.org/wiki/Martin_%C3%98degaard
+
+  - id: japan
+    heading: ウーデゴールは、日本の選手とどこで重なっているのか
+    tier: 背景
+    telop: 日本の選手との縁
+    narrator: 解説
+    say:
+      - text: ウーデゴールには、日本の選手との縁があります。
+        image: assets/images/20261026_compare_240306_316264/o_ars1/01_w.jpg
+        card: none
+      - text: 2021年8月20日に完全移籍が決まって、その11日後。
+        image: assets/images/20261026_compare_240306_316264/o_ars1/01_w.jpg
+        card: none
+      - text: 冨安健洋が、ボローニャからアーセナルに加わりました。
+        image: assets/images/20261026_compare_240306_316264/o_mar2/01_w.jpg
+        card: none
+      - text: 2人は2025年の夏まで、4つの季を同じクラブで過ごしています。
+        image: assets/images/20261026_compare_240306_316264/o_mar2/01_w.jpg
+        card: none
+    sources:
+      - https://en.wikipedia.org/wiki/Martin_%C3%98degaard
+      - https://en.wikipedia.org/wiki/Takehiro_Tomiyasu
+
+  - id: season
+    heading: 記録の季、2人の出場時間とアシストはどれだけ違うのか
+    tier: 報道
+    main: true
+    telop: 25/26 の全公式戦
+    narrator: 解説
+    card: &seasoncard
+      type: duel
+      left: {name: ブルーノ, club: 25/26, photo: assets/images/20261026_compare_240306_316264/b_cro3/01_sq.jpg, color: "#da291c"}
+      right: {name: ウーデゴール, club: 25/26, photo: assets/images/20261026_compare_240306_316264/o_wc1/01_sq.jpg, color: "#063672"}
+      rows:
+        - [試合, "37", "36"]
+        - [出場時間, 3203分, 1984分]
+        - [得点, "9", "1"]
+        - [アシスト, "22", "8"]
+        - [アシスト（90分あたり）, "0.62", "0.36"]
+      bars: [出場時間, 得点, アシスト, アシスト（90分あたり）]
+      note: 25/26 のクラブの全公式戦（プレミア・CL・FA杯・リーグ杯）。90分あたりは自分で割った値
+    say:
+      - text: ブルーノは21アシストでプレミア記録。ウーデゴールは優勝の季に7アシスト。
+        short_only: true
+        image: assets/images/20261026_compare_240306_316264/b_cro2/01_w.jpg
+        card: none
+      - text: 25/26の全公式戦で並べます。試合の数は、37と36。ほとんど同じです。
+        image: assets/images/20261026_compare_240306_316264/b_cro1/01_w.jpg
+        card: {<<: *seasoncard, highlight_row: 試合}
+      - text: ところが出場時間は、3203分と1984分。1200分以上の開きがあります。
+        emph: true
+        image: assets/images/20261026_compare_240306_316264/o_wc2/01_w.jpg
+        card: {<<: *seasoncard, highlight_row: 出場時間}
+      - text: アシストは、22と8。得点は9と1でした。
+        image: assets/images/20261026_compare_240306_316264/b_cro2/01_w.jpg
+        card: {<<: *seasoncard, highlight_row: アシスト}
+      - text: 90分に直すと、アシストはブルーノが0.62、ウーデゴールが0.36です。
+        image: assets/images/20261026_compare_240306_316264/pair_b/01.jpg
+        card: {<<: *seasoncard, highlight_row: アシスト（90分あたり）}
+      - text: プレミアだけでは、1試合の出場が平均88分と57分。ここが大きな違いです。
+        image: assets/images/20261026_compare_240306_316264/o_mar1/01_w.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/bruno-fernandes/leistungsdaten/spieler/240306
+      - https://www.transfermarkt.com/martin-odegaard/leistungsdaten/spieler/316264
+      - https://en.wikipedia.org/wiki/Bruno_Fernandes
+      - https://en.wikipedia.org/wiki/Martin_%C3%98degaard
+
+  - id: trend
+    heading: プレミアの90分あたりのアシストは、5つの季でどう動いたのか
+    tier: 報道
+    telop: プレミアのアシスト（90分あたり）
+    narrator: 解説
+    card: &trendcard
+      type: line
+      title: プレミアのアシスト、90分あたり（季ごと）
+      x: [21/22, 22/23, 23/24, 24/25, 25/26]
+      series:
+        - [ブルーノ, [0.17, 0.22, 0.23, 0.33, 0.62]]
+        - [ウーデゴール, [0.13, 0.20, 0.32, 0.31, 0.46]]
+      focus: ブルーノ
+      note: アシストと出場時間は Transfermarkt。自分で割った値
+    say:
+      - text: 次は、プレミアのアシストを90分あたりにして、5つの季で並べます。
+        image: assets/images/20261026_compare_240306_316264/pair_b/01.jpg
+        card: *trendcard
+      - text: 23/24は、ウーデゴールが0.32、ブルーノが0.23。
+        image: assets/images/20261026_compare_240306_316264/o_ars1/01_w.jpg
+        card: {<<: *trendcard, highlight: 23/24}
+      - text: この季は、ウーデゴールが上でした。
+        image: assets/images/20261026_compare_240306_316264/o_ars1/01_w.jpg
+        card: {<<: *trendcard, highlight: 23/24}
+      - text: 24/25も、0.33と0.31。ほぼ並んでいます。
+        image: assets/images/20261026_compare_240306_316264/b_mu1/01_w.jpg
+        card: {<<: *trendcard, highlight: 24/25}
+      - text: そして25/26。ブルーノは0.62。前の季のほぼ2倍に跳ね上がりました。
+        emph: true
+        image: assets/images/20261026_compare_240306_316264/b_cro2/01_w.jpg
+        card: {<<: *trendcard, highlight: 25/26}
+      - text: ウーデゴールも0.46。5つの季で、いちばん高い数字でした。
+        image: assets/images/20261026_compare_240306_316264/o_mar1/01_w.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/bruno-fernandes/leistungsdaten/spieler/240306
+      - https://www.transfermarkt.com/martin-odegaard/leistungsdaten/spieler/316264
+
+  - id: split
+    heading: アシスト14の差は、出場時間と90分あたりで、どう分かれるのか
+    tier: 背景
+    telop: 差の14を分ける計算
+    narrator: 解説
+    card: &calccard
+      type: calc
+      title: ウーデゴールがブルーノと同じ3068分出ていたら（計算の上）
+      terms:
+        - ["7", 25/26 のアシスト]
+        - ["2.24", 出場時間の比（3068÷1371）]
+        - ["約16", 同じ時間なら]
+      ops: [×, ＝]
+    say:
+      - text: ここで、ブルーノとの14の差を、2つの理由に切り分けます。
+        image: assets/images/20261026_compare_240306_316264/pair_b/01.jpg
+        card: none
+      - text: プレミアの出場時間は、3068分と1371分。
+        image: assets/images/20261026_compare_240306_316264/b_cro1/01_w.jpg
+        card: *calccard
+      - text: 比べると、2.24倍の開きです。
+        image: assets/images/20261026_compare_240306_316264/b_cro1/01_w.jpg
+        card: *calccard
+      - text: ウーデゴールの7に2.24を掛けると、計算の上では約16。
+        emph: true
+        image: assets/images/20261026_compare_240306_316264/o_mar2/01_w.jpg
+        card: *calccard
+      - text: つまり14の差のうち、約9は出場時間の差。
+        image: assets/images/20261026_compare_240306_316264/pair_a/01.jpg
+        card: none
+      - text: 残りの約5は、90分あたりで比べた分の開きです。
+        image: assets/images/20261026_compare_240306_316264/pair_a/01.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/bruno-fernandes/leistungsdaten/spieler/240306
+      - https://www.transfermarkt.com/martin-odegaard/leistungsdaten/spieler/316264
+
+  - id: now
+    heading: 今季ここまで、2人の数字はどう並んでいるのか
+    tier: 報道
+    telop: 26/27 のいまの時点
+    narrator: 解説
+    card: &nowcard
+      type: duel
+      left: {name: ブルーノ, club: 26/27, photo: assets/images/20261026_compare_240306_316264/b_cro3/01_sq.jpg, color: "#da291c"}
+      right: {name: ウーデゴール, club: 26/27, photo: assets/images/20261026_compare_240306_316264/o_wc1/01_sq.jpg, color: "#063672"}
+      rows:
+        - [試合, "11", "13"]
+        - [出場時間, 884分, 950分]
+        - [得点, "4", "4"]
+        - [アシスト, "1", "1"]
+      bars: [出場時間]
+      note: 26/27 のクラブの全公式戦（10月26日の時点）。2人とも900分に届かないので、いまの時点の数字
+    say:
+      - text: 今季は、ここまでクラブの全公式戦で、ブルーノが884分、ウーデゴールが950分。
+        image: assets/images/20261026_compare_240306_316264/o_mar1/01_w.jpg
+        card: {<<: *nowcard, highlight_row: 出場時間}
+      - text: 得点は、2人とも4。アシストも、2人とも1です。
+        emph: true
+        image: assets/images/20261026_compare_240306_316264/b_cro1/01_w.jpg
+        card: {<<: *nowcard, highlight_row: 得点}
+      - text: ウーデゴールは、出場時間でブルーノを上回っています。
+        image: assets/images/20261026_compare_240306_316264/o_wc2/01_w.jpg
+        card: none
+      - text: ただ、2人とも900分に届かない、いまの時点の数字です。
+        image: assets/images/20261026_compare_240306_316264/pair_b/01.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/bruno-fernandes/leistungsdaten/spieler/240306
+      - https://www.transfermarkt.com/martin-odegaard/leistungsdaten/spieler/316264
+
+  - id: view
+    heading: 見立て・アシスト14の差は、出場時間か、90分あたりか
+    tier: 背景
+    viewpoint: true
+    narrator: 解説
+    telop: 数字の違いが示すもの
+    card: &viewcard
+      type: duel
+      left: {name: ブルーノ, club: マンチェスター・U, photo: assets/images/20261026_compare_240306_316264/b_cro3/01_sq.jpg, color: "#da291c"}
+      right: {name: ウーデゴール, club: アーセナル, photo: assets/images/20261026_compare_240306_316264/o_wc1/01_sq.jpg, color: "#063672"}
+      rows:
+        - [25/26 プレミアのアシスト, "21", "7"]
+        - [プレミアの出場時間, 3068分, 1371分]
+        - [90分あたり, "0.62", "0.46"]
+        - [同じ出場時間なら, "21", 約16]
+      bars: [25/26 プレミアのアシスト, プレミアの出場時間, 90分あたり]
+      note: 25/26 のプレミアリーグ。90分あたりと「同じ出場時間なら」は自分で計算した値
+    say:
+      - text: 見立てです。25/26のプレミアで開いたアシストの差は、14。
+        mark: {kind: circle, row: 0}
+        image: assets/images/20261026_compare_240306_316264/pair_cap/01_w.jpg
+        card: {<<: *viewcard, highlight_row: 25/26 プレミアのアシスト}
+      - text: その半分を超える約9は、プレミアで2.24倍あった、出場時間から来ています。
+        image: assets/images/20261026_compare_240306_316264/o_ars1/01_w.jpg
+        card: {<<: *viewcard, highlight_row: プレミアの出場時間}
+      - text: 同じ時間で比べても、0.62と0.46。90分あたりでも、ブルーノが上です。
+        emph: true
+        image: assets/images/20261026_compare_240306_316264/b_cro2/01_w.jpg
+        card: {<<: *viewcard, highlight_row: 90分あたり}
+      - text: 出場時間がそろえば、差は計算の上で約5まで縮まります。
+        image: assets/images/20261026_compare_240306_316264/o_wc1/01_w.jpg
+        card: {<<: *viewcard, highlight_row: 同じ出場時間なら}
+      - text: 裏づけになるのは、出場時間の比の2.24と、90分あたりの0.16の差。この2点。
+        image: assets/images/20261026_compare_240306_316264/pair_b/01.jpg
+        card: none
+      - text: 2人の次の試合。ユナイテッドは31日に、アウェーでチェルシー戦。
+        image: assets/images/20261026_compare_240306_316264/b_cro1/01_w.jpg
+        card: none
+      - text: アーセナルは、日本時間で11月2日の未明にアウェーでリヴァプール戦です。
+        image: assets/images/20261026_compare_240306_316264/o_mar1/01_w.jpg
+        card: none
+      - text: 今季、いま同じ4得点1アシストの2人。出場時間の差がどう動くか、見ていきます。
+        image: assets/images/20261026_compare_240306_316264/pair_a/01.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/bruno-fernandes/leistungsdaten/spieler/240306
+      - https://www.transfermarkt.com/martin-odegaard/leistungsdaten/spieler/316264
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/all/teams/360/schedule?fixture=true
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/all/teams/359/schedule?fixture=true

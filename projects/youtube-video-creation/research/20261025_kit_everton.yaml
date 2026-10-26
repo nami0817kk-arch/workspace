@@ -1,0 +1,1023 @@
+# ユニフォームとエンブレムの歴史 エヴァートン（10/25 作成）。雛形は 10/24 アストン・ヴィラ回。
+# 題の問い：エヴァートンの紋章の塔は、もとは何の建物で、なぜ紋章になったのか。
+# 重なり確認（2026-10-25）：scripts/・research/covered.yaml の kit_*・research/posted.json を grep。エヴァートンのユニフォーム回は無し
+#   （20261022_stadium_everton はスタジアム、20260920_pl09_everton はクラブ紹介、20261010_moyes_everton はニュース。いずれも別シリーズ）。
+# 取材：requests（ブラウザ User-Agent）・WebFetch・WebSearch（URL探しと裏取り）。ブラウザ操作・JS実行・検索のAI要約を根拠にはしていない。
+#   読んだ：ウィキペディア en "Everton F.C."（Colours and badge／Nickname／Shirt sponsors and manufacturers／Honours）、"Everton Lock-Up"、"NEC"。
+#   クラブ公式の紋章の歴史（2012年の web.archive 控え）：ケリーの「4か月悩んだ」、月桂樹＝勝者、モットーの意味、1938/39 初日に披露・その季に優勝。
+#   クラブ公式 2024-06-14（キャストアと契約、2024/25 から）。BBC 2013-05-27・2013-10-03、ガーディアン 2014-07-04、インディペンデント 2013-10。
+#   readeverton.com（ファンのサイト。胸の会社の一覧・CMC が10社目）。
+# ---- 食い違い・断ったこと ----
+#   ・紋章がシャツに付いた年：ウィキペディアと BBC は1978年、クラブ公式（2012年控え）は1980年→台本に入れない。
+#   ・NEC の期間：ウィキペディア 1985〜1995、readeverton 1985〜1996→「1985年から、およそ10年」とだけ言う。1986/87 はどちらでも含む。
+#     1986/87 の優勝シャツに NEC が載っていた写真・一次の記録は見ていない（期間からの推論）→「優勝したころの胸」と言い、「優勝シャツ」とは言い切らない。
+#   ・投票の割合：BBC「ほぼ80%」、ガーディアン「78%」→「およそ8割」。
+#   ・2026/27 のホームの細部（襟・差し色）はサイト間で割れ、クラブ公式の原文に届かない→入れない。
+#   ・いまの紋章に「1878」が入っているかは今回の出典で確かめていない→言わない（残したもの4つは2013年のクラブの説明）。
+# ---- 自分で数えた数 ----
+#   2026−1938=88年（塔が紋章に）。2026−1901=125年（ロイヤルブルー）。1938→2013=75年（モットー。BBC も「75年」）。
+#   胸の会社：ハフニア・NEC・ダンカ・ワン・ツー・ワン・ケジャン・チャン・スポーツペサ・カズー・ステーク・CMC＝10社（ウィキペディアの一覧。readeverton も「10社目」）。
+#   2026−1979=47年、47÷10=4.7年。88÷4.7≒18.7→「およそ19倍」。1787−1644=143年（ウィキペディアは「almost 150 years」→「およそ150年あと」）。
+# ---- 日本との接点 ----
+#   日本人選手の在籍は無し（research/pl_data/japan.json でも無し）。接点は胸の広告の NEC（東京に本社。ウィキペディア NEC）。第2節に置いた。女子チームの話は入れていない。
+# ---- 写真（assets/images/20261025_kit_everton/、出典は credits.json）----
+#   Commons の CC のみ（塔3枚・グディソン3枚）。代理店・放送映像なし。10/22 スタジアム回の写真とは別のファイル。エンブレム画像は使っていない。
+date: 2026年10月25日
+slot: other_2
+format: news
+series: ユニフォームとエンブレムの歴史
+voice_min: 0
+people:
+- エヴァートン
+watch: 毎日、数字でサッカーを読み解きます
+theme:
+  end_bg: assets/images/20261025_kit_everton/e01_tower.jpg
+  id: kit_everton
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: エヴァートン
+  title: エヴァートンの紋章の塔は、もとは何の建物だったのか
+  question: エヴァートンの紋章にある塔は、もとは何の建物で、なぜ紋章になったのか
+  opening_image: assets/images/20261025_kit_everton/e01_tower.jpg
+  lead: 胸に、石の塔。
+  hook: ''
+  takeaway: 紋章の塔は1787年にできた村の牢屋で、1938年から88年。ロイヤルブルーは1901年から125年。一方、胸の広告の会社は1979年から47年で10社、平均4.7年。2013年に消えたモットーは、ファンの署名と投票で1シーズンで戻った。最後のリーグ優勝（1986/87）のころの胸は日本のNECだった
+  hook_unused: ''
+thumbnail:
+  layout: classic
+  callouts:
+  - モットーは1季で復活
+  - 胸に日本のNEC
+  photo: assets/images/20261025_kit_everton/e01_tower.jpg
+  line1: エヴァートンの紋章の塔
+  line2: もとは、村の牢屋
+  tags:
+  - エヴァートン
+  - ユニフォーム
+  - エンブレム
+  - プリンス・ルパートの塔
+  - NEC
+sections:
+- id: crest
+  main: true
+  heading: エヴァートンの紋章の塔は、もとは何の建物だったのか
+  bg: assets/images/20261025_kit_everton/e01_tower.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 紋章の塔は1787年にできた村の牢屋。1938年、秘書のケリーがネクタイの紋章に選んだ
+  card:
+    type: timeline
+    title: 紋章の塔の歩み（クラブ公式・ウィキペディア）
+    rows:
+    - - 1644年
+      - ルパート王子の軍が、この丘に陣
+    - - 1787年
+      - 塔ができる。酔っぱらいを入れる牢
+    - - 1938年
+      - 秘書ケリーが、ネクタイの紋章に
+    - - 2013年5月
+      - 新しい紋章。モットーが消える
+    - - 2014年7月
+      - 投票の紋章。モットーが戻る
+    focus: 1938年
+    highlight_row: 1
+  say:
+  - text: 今回は、エヴァートンの、胸の紋章です。
+    image: assets/images/20261025_kit_everton/e01_tower.jpg
+    card: none
+    emph: true
+  - text: 真ん中にあるのは、石の塔。
+    image: assets/images/20261025_kit_everton/e01_tower.jpg
+    card: none
+  - text: この塔は、リバプールのエヴァートン地区に、いまも立っています。
+    image: assets/images/20261025_kit_everton/e01_tower.jpg
+    card:
+      type: timeline
+      title: 紋章の塔の歩み（クラブ公式・ウィキペディア）
+      rows:
+      - - 1644年
+        - ルパート王子の軍が、この丘に陣
+      - - 1787年
+        - 塔ができる。酔っぱらいを入れる牢
+      - - 1938年
+        - 秘書ケリーが、ネクタイの紋章に
+      - - 2013年5月
+        - 新しい紋章。モットーが消える
+      - - 2014年7月
+        - 投票の紋章。モットーが戻る
+      focus: 1938年
+      highlight_row: 1
+  - text: できたのは、1787年。
+    image: assets/images/20261025_kit_everton/e01_tower.jpg
+    card:
+      type: timeline
+      title: 紋章の塔の歩み（クラブ公式・ウィキペディア）
+      rows:
+      - - 1644年
+        - ルパート王子の軍が、この丘に陣
+      - - 1787年
+        - 塔ができる。酔っぱらいを入れる牢
+      - - 1938年
+        - 秘書ケリーが、ネクタイの紋章に
+      - - 2013年5月
+        - 新しい紋章。モットーが消える
+      - - 2014年7月
+        - 投票の紋章。モットーが戻る
+      focus: 1938年
+      highlight_row: 1
+  - text: もとは、村の牢屋です。酔っぱらいや、軽い罪の人を、一晩入れておく場所でした。
+    image: assets/images/20261025_kit_everton/e03_tower3.jpg
+    card: none
+    emph: true
+  - text: 呼び名は、プリンス・ルパートの塔。
+    image: assets/images/20261025_kit_everton/e03_tower3.jpg
+    card: none
+  - text: 1644年、ルパート王子の軍が、この丘に陣を張った話から来ています。
+    image: assets/images/20261025_kit_everton/e03_tower3.jpg
+    card:
+      type: timeline
+      title: 紋章の塔の歩み（クラブ公式・ウィキペディア）
+      rows:
+      - - 1644年
+        - ルパート王子の軍が、この丘に陣
+      - - 1787年
+        - 塔ができる。酔っぱらいを入れる牢
+      - - 1938年
+        - 秘書ケリーが、ネクタイの紋章に
+      - - 2013年5月
+        - 新しい紋章。モットーが消える
+      - - 2014年7月
+        - 投票の紋章。モットーが戻る
+      focus: 1938年
+      highlight_row: 0
+  - text: ただ、塔ができたのは、その、およそ150年あとです。
+    image: assets/images/20261025_kit_everton/e03_tower3.jpg
+    card:
+      type: timeline
+      title: 紋章の塔の歩み（クラブ公式・ウィキペディア）
+      rows:
+      - - 1644年
+        - ルパート王子の軍が、この丘に陣
+      - - 1787年
+        - 塔ができる。酔っぱらいを入れる牢
+      - - 1938年
+        - 秘書ケリーが、ネクタイの紋章に
+      - - 2013年5月
+        - 新しい紋章。モットーが消える
+      - - 2014年7月
+        - 投票の紋章。モットーが戻る
+      focus: 1938年
+      highlight_row: 0
+  - text: では、なぜ牢屋が、紋章になったのか。
+    image: assets/images/20261025_kit_everton/e01_tower.jpg
+    card: none
+    emph: true
+  - text: 1938年、クラブの秘書、セオ・ケリーが、クラブのネクタイを作ろうとします。
+    image: assets/images/20261025_kit_everton/e01_tower.jpg
+    card:
+      type: timeline
+      title: 紋章の塔の歩み（クラブ公式・ウィキペディア）
+      rows:
+      - - 1644年
+        - ルパート王子の軍が、この丘に陣
+      - - 1787年
+        - 塔ができる。酔っぱらいを入れる牢
+      - - 1938年
+        - 秘書ケリーが、ネクタイの紋章に
+      - - 2013年5月
+        - 新しい紋章。モットーが消える
+      - - 2014年7月
+        - 投票の紋章。モットーが戻る
+      focus: 1938年
+      highlight_row: 2
+  - text: 色は青。そこに入れる印を、任されました。
+    image: assets/images/20261025_kit_everton/e01_tower.jpg
+    card:
+      type: timeline
+      title: 紋章の塔の歩み（クラブ公式・ウィキペディア）
+      rows:
+      - - 1644年
+        - ルパート王子の軍が、この丘に陣
+      - - 1787年
+        - 塔ができる。酔っぱらいを入れる牢
+      - - 1938年
+        - 秘書ケリーが、ネクタイの紋章に
+      - - 2013年5月
+        - 新しい紋章。モットーが消える
+      - - 2014年7月
+        - 投票の紋章。モットーが戻る
+      focus: 1938年
+      highlight_row: 2
+  - text: ケリー本人の言葉が、クラブに残っています。4か月、悩んだ、と。
+    image: assets/images/20261025_kit_everton/g03_main.jpg
+    card: none
+  - text: そして、地区の真ん中に立つ、この塔を描くことにしました。
+    image: assets/images/20261025_kit_everton/g03_main.jpg
+    card: none
+  - text: 両わきには、月桂樹の輪。昔から、勝者の印です。
+    image: assets/images/20261025_kit_everton/g03_main.jpg
+    card:
+      type: timeline
+      title: 紋章の塔の歩み（クラブ公式・ウィキペディア）
+      rows:
+      - - 1644年
+        - ルパート王子の軍が、この丘に陣
+      - - 1787年
+        - 塔ができる。酔っぱらいを入れる牢
+      - - 1938年
+        - 秘書ケリーが、ネクタイの紋章に
+      - - 2013年5月
+        - 新しい紋章。モットーが消える
+      - - 2014年7月
+        - 投票の紋章。モットーが戻る
+      focus: 1938年
+      highlight_row: 2
+  - text: 下には、ラテン語のモットー。ニル・サティス・ニシ・オプティムム。
+    image: assets/images/20261025_kit_everton/g03_main.jpg
+    card:
+      type: timeline
+      title: 紋章の塔の歩み（クラブ公式・ウィキペディア）
+      rows:
+      - - 1644年
+        - ルパート王子の軍が、この丘に陣
+      - - 1787年
+        - 塔ができる。酔っぱらいを入れる牢
+      - - 1938年
+        - 秘書ケリーが、ネクタイの紋章に
+      - - 2013年5月
+        - 新しい紋章。モットーが消える
+      - - 2014年7月
+        - 投票の紋章。モットーが戻る
+      focus: 1938年
+      highlight_row: 2
+  - text: 意味は、最高のもの以外では、足りない。
+    image: assets/images/20261025_kit_everton/g03_main.jpg
+    card: none
+    emph: true
+  - text: ネクタイは、1938年のシーズンの初日に、お披露目されます。
+    image: assets/images/20261025_kit_everton/g01_goodison.jpg
+    card: none
+  - text: そのシーズン、エヴァートンは、リーグを制します。
+    image: assets/images/20261025_kit_everton/g01_goodison.jpg
+    card: none
+    emph: true
+  sources:
+  - https://en.wikipedia.org/wiki/Everton_Lock-Up
+  - https://en.wikipedia.org/wiki/Everton_F.C.
+  - https://web.archive.org/web/20120125062750/http://www.evertonfc.com/history/history-of-the-club-crest.html
+- id: japan
+  heading: 最後のリーグ優勝のころ、胸にあったのはどこの会社か
+  bg: assets/images/20261025_kit_everton/g02_goodison.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 胸の広告は1979年から。1985年からの約10年はNEC。最後のリーグ優勝は1986/87
+  card:
+    type: table
+    title: 胸の広告の会社（ウィキペディア）
+    columns:
+    - 会社
+    - 期間
+    - その間のリーグ優勝
+    rows:
+    - - ハフニア
+      - 1979〜85年
+      - 1984/85
+    - - NEC（日本）
+      - 1985年から約10年
+      - 1986/87
+    - - （7社）
+      - 1990年代半ば〜2026年
+      - なし
+    - - CMCマーケッツ
+      - 2026/27〜
+      - ―
+    highlight_row: 1
+  say:
+  - text: 日本との接点は、シャツの胸です。
+    image: assets/images/20261025_kit_everton/g02_goodison.jpg
+    card: none
+  - text: エヴァートンの胸に、初めて広告が付いたのは、1979年。
+    image: assets/images/20261025_kit_everton/g02_goodison.jpg
+    card:
+      type: table
+      title: 胸の広告の会社（ウィキペディア）
+      columns:
+      - 会社
+      - 期間
+      - その間のリーグ優勝
+      rows:
+      - - ハフニア
+        - 1979〜85年
+        - 1984/85
+      - - NEC（日本）
+        - 1985年から約10年
+        - 1986/87
+      - - （7社）
+        - 1990年代半ば〜2026年
+        - なし
+      - - CMCマーケッツ
+        - 2026/27〜
+        - ―
+      highlight_row: 0
+  - text: そして1985年から、およそ10年。胸にあったのは、エヌイーシーでした。
+    image: assets/images/20261025_kit_everton/g02_goodison.jpg
+    card:
+      type: table
+      title: 胸の広告の会社（ウィキペディア）
+      columns:
+      - 会社
+      - 期間
+      - その間のリーグ優勝
+      rows:
+      - - ハフニア
+        - 1979〜85年
+        - 1984/85
+      - - NEC（日本）
+        - 1985年から約10年
+        - 1986/87
+      - - （7社）
+        - 1990年代半ば〜2026年
+        - なし
+      - - CMCマーケッツ
+        - 2026/27〜
+        - ―
+      highlight_row: 1
+    telop: そして1985年から、およそ10年。胸にあったのは、NECでした
+    emph: true
+  - text: 東京に本社がある、日本の電機メーカーです。
+    image: assets/images/20261025_kit_everton/g02_goodison.jpg
+    card: none
+  - text: この間の、1986年のシーズン。エヴァートンは、1部リーグで優勝します。
+    image: assets/images/20261025_kit_everton/g01_goodison.jpg
+    card:
+      type: table
+      title: 胸の広告の会社（ウィキペディア）
+      columns:
+      - 会社
+      - 期間
+      - その間のリーグ優勝
+      rows:
+      - - ハフニア
+        - 1979〜85年
+        - 1984/85
+      - - NEC（日本）
+        - 1985年から約10年
+        - 1986/87
+      - - （7社）
+        - 1990年代半ば〜2026年
+        - なし
+      - - CMCマーケッツ
+        - 2026/27〜
+        - ―
+      highlight_row: 1
+  - text: 1部は、いまのプレミアリーグにあたる、いちばん上のリーグ。
+    image: assets/images/20261025_kit_everton/g01_goodison.jpg
+    card: none
+  - text: これが、いまのところ、最後のリーグ優勝。1部の優勝は、全部で9回。
+    image: assets/images/20261025_kit_everton/g01_goodison.jpg
+    card:
+      type: table
+      title: 胸の広告の会社（ウィキペディア）
+      columns:
+      - 会社
+      - 期間
+      - その間のリーグ優勝
+      rows:
+      - - ハフニア
+        - 1979〜85年
+        - 1984/85
+      - - NEC（日本）
+        - 1985年から約10年
+        - 1986/87
+      - - （7社）
+        - 1990年代半ば〜2026年
+        - なし
+      - - CMCマーケッツ
+        - 2026/27〜
+        - ―
+      highlight_row: 1
+  - text: つまり、最後に優勝したころの胸は、日本の会社の名前でした。
+    image: assets/images/20261025_kit_everton/g01_goodison.jpg
+    card: none
+    emph: true
+  - text: その前の、1984年のシーズンにも、リーグを制覇。そのときの胸は、ハフニア。
+    image: assets/images/20261025_kit_everton/g03_main.jpg
+    card:
+      type: table
+      title: 胸の広告の会社（ウィキペディア）
+      columns:
+      - 会社
+      - 期間
+      - その間のリーグ優勝
+      rows:
+      - - ハフニア
+        - 1979〜85年
+        - 1984/85
+      - - NEC（日本）
+        - 1985年から約10年
+        - 1986/87
+      - - （7社）
+        - 1990年代半ば〜2026年
+        - なし
+      - - CMCマーケッツ
+        - 2026/27〜
+        - ―
+      highlight_row: 0
+  - text: エヌイーシーのあと、胸の会社は、何度も替わります。
+    image: assets/images/20261025_kit_everton/g03_main.jpg
+    card:
+      type: table
+      title: 胸の広告の会社（ウィキペディア）
+      columns:
+      - 会社
+      - 期間
+      - その間のリーグ優勝
+      rows:
+      - - ハフニア
+        - 1979〜85年
+        - 1984/85
+      - - NEC（日本）
+        - 1985年から約10年
+        - 1986/87
+      - - （7社）
+        - 1990年代半ば〜2026年
+        - なし
+      - - CMCマーケッツ
+        - 2026/27〜
+        - ―
+      highlight_row: 2
+    telop: NECのあと、胸の会社は、何度も替わります
+  - text: 今季からは、シーエムシー・マーケッツ。数えると、10社目です。
+    image: assets/images/20261025_kit_everton/g03_main.jpg
+    card:
+      type: table
+      title: 胸の広告の会社（ウィキペディア）
+      columns:
+      - 会社
+      - 期間
+      - その間のリーグ優勝
+      rows:
+      - - ハフニア
+        - 1979〜85年
+        - 1984/85
+      - - NEC（日本）
+        - 1985年から約10年
+        - 1986/87
+      - - （7社）
+        - 1990年代半ば〜2026年
+        - なし
+      - - CMCマーケッツ
+        - 2026/27〜
+        - ―
+      highlight_row: 3
+    telop: 今季からは、CMCマーケッツ。数えると、10社目です
+  - text: シャツを作る会社は、2024年から、キャストア。
+    image: assets/images/20261025_kit_everton/g02_goodison.jpg
+    card: none
+  - text: イギリスの、スポーツ用品のメーカーです。
+    image: assets/images/20261025_kit_everton/g02_goodison.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Everton_F.C.
+  - https://en.wikipedia.org/wiki/NEC
+  - https://readeverton.com/everton-shirt-sponsors-ranked-hafnia-cmc-markets/
+  - https://www.evertonfc.com/news/2024/june/14/everton-and-castore-partner-in-landmark-agreement/
+- id: colours
+  heading: エヴァートンのシャツは、最初から青だったのか
+  bg: assets/images/20261025_kit_everton/g01_goodison.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 白・縞・黒・サーモンピンクを経て、1901/02にロイヤルブルー。1906年の空色はファンの反対で戻した
+  card:
+    type: timeline
+    title: シャツの色の歩み（ウィキペディア）
+    rows:
+    - - はじめ
+      - 白、のちに青と白の縞
+    - - その後
+      - 黒に染める。赤いたすき
+    - - 1892年
+      - サーモンピンクと紺の縞
+    - - 1901/02
+      - ロイヤルブルーに白のパンツ
+    - - 1906年
+      - 空色にしたが、ファンの反対で戻す
+    focus: 1901/02
+    highlight_row: 3
+  say:
+  - text: では、シャツの色。エヴァートンといえば、ロイヤルブルー。鮮やかな、濃い青です。
+    image: assets/images/20261025_kit_everton/g01_goodison.jpg
+    card: none
+  - text: でも、最初は白でした。そのあと、青と白の縞。
+    image: assets/images/20261025_kit_everton/g01_goodison.jpg
+    card:
+      type: timeline
+      title: シャツの色の歩み（ウィキペディア）
+      rows:
+      - - はじめ
+        - 白、のちに青と白の縞
+      - - その後
+        - 黒に染める。赤いたすき
+      - - 1892年
+        - サーモンピンクと紺の縞
+      - - 1901/02
+        - ロイヤルブルーに白のパンツ
+      - - 1906年
+        - 空色にしたが、ファンの反対で戻す
+      focus: 1901/02
+      highlight_row: 0
+  - text: 困ったのは、入ってきた選手が、前のチームのシャツで、試合に出たことです。
+    image: assets/images/20261025_kit_everton/g01_goodison.jpg
+    card:
+      type: timeline
+      title: シャツの色の歩み（ウィキペディア）
+      rows:
+      - - はじめ
+        - 白、のちに青と白の縞
+      - - その後
+        - 黒に染める。赤いたすき
+      - - 1892年
+        - サーモンピンクと紺の縞
+      - - 1901/02
+        - ロイヤルブルーに白のパンツ
+      - - 1906年
+        - 空色にしたが、ファンの反対で戻す
+      focus: 1901/02
+      highlight_row: 0
+  - text: 色がばらばらで、見分けがつきません。
+    image: assets/images/20261025_kit_everton/e02_towerblue.jpg
+    card: none
+  - text: そこで、シャツを黒に染めます。安く済み、きちんと見えるように。
+    image: assets/images/20261025_kit_everton/e02_towerblue.jpg
+    card:
+      type: timeline
+      title: シャツの色の歩み（ウィキペディア）
+      rows:
+      - - はじめ
+        - 白、のちに青と白の縞
+      - - その後
+        - 黒に染める。赤いたすき
+      - - 1892年
+        - サーモンピンクと紺の縞
+      - - 1901/02
+        - ロイヤルブルーに白のパンツ
+      - - 1906年
+        - 空色にしたが、ファンの反対で戻す
+      focus: 1901/02
+      highlight_row: 1
+  - text: でも、黒だけでは、喪服のよう。赤いたすきを足しました。
+    image: assets/images/20261025_kit_everton/e02_towerblue.jpg
+    card:
+      type: timeline
+      title: シャツの色の歩み（ウィキペディア）
+      rows:
+      - - はじめ
+        - 白、のちに青と白の縞
+      - - その後
+        - 黒に染める。赤いたすき
+      - - 1892年
+        - サーモンピンクと紺の縞
+      - - 1901/02
+        - ロイヤルブルーに白のパンツ
+      - - 1906年
+        - 空色にしたが、ファンの反対で戻す
+      focus: 1901/02
+      highlight_row: 1
+    emph: true
+  - text: あだ名は、スコットランドの連隊の名前、ブラック・ウォッチ。
+    image: assets/images/20261025_kit_everton/e02_towerblue.jpg
+    card: none
+  - text: 1892年、グディソン・パークに移ると、サーモンピンクと紺の縞。
+    image: assets/images/20261025_kit_everton/g03_main.jpg
+    card:
+      type: timeline
+      title: シャツの色の歩み（ウィキペディア）
+      rows:
+      - - はじめ
+        - 白、のちに青と白の縞
+      - - その後
+        - 黒に染める。赤いたすき
+      - - 1892年
+        - サーモンピンクと紺の縞
+      - - 1901/02
+        - ロイヤルブルーに白のパンツ
+      - - 1906年
+        - 空色にしたが、ファンの反対で戻す
+      focus: 1901/02
+      highlight_row: 2
+  - text: ロイヤルブルーに、白のパンツ。この形が初めて出るのは、1901年のシーズンです。
+    image: assets/images/20261025_kit_everton/g03_main.jpg
+    card:
+      type: timeline
+      title: シャツの色の歩み（ウィキペディア）
+      rows:
+      - - はじめ
+        - 白、のちに青と白の縞
+      - - その後
+        - 黒に染める。赤いたすき
+      - - 1892年
+        - サーモンピンクと紺の縞
+      - - 1901/02
+        - ロイヤルブルーに白のパンツ
+      - - 1906年
+        - 空色にしたが、ファンの反対で戻す
+      focus: 1901/02
+      highlight_row: 3
+    emph: true
+  - text: ここから、あだ名は、ザ・ブルーズ。
+    image: assets/images/20261025_kit_everton/g03_main.jpg
+    card: none
+  - text: 1906年には、空色を着たこともあります。
+    image: assets/images/20261025_kit_everton/g02_goodison.jpg
+    card:
+      type: timeline
+      title: シャツの色の歩み（ウィキペディア）
+      rows:
+      - - はじめ
+        - 白、のちに青と白の縞
+      - - その後
+        - 黒に染める。赤いたすき
+      - - 1892年
+        - サーモンピンクと紺の縞
+      - - 1901/02
+        - ロイヤルブルーに白のパンツ
+      - - 1906年
+        - 空色にしたが、ファンの反対で戻す
+      focus: 1901/02
+      highlight_row: 4
+  - text: でも、ファンが反対して、ロイヤルブルーに戻りました。
+    image: assets/images/20261025_kit_everton/g02_goodison.jpg
+    card:
+      type: timeline
+      title: シャツの色の歩み（ウィキペディア）
+      rows:
+      - - はじめ
+        - 白、のちに青と白の縞
+      - - その後
+        - 黒に染める。赤いたすき
+      - - 1892年
+        - サーモンピンクと紺の縞
+      - - 1901/02
+        - ロイヤルブルーに白のパンツ
+      - - 1906年
+        - 空色にしたが、ファンの反対で戻す
+      focus: 1901/02
+      highlight_row: 4
+    emph: true
+  - text: 1901年から、今年まで。
+    image: assets/images/20261025_kit_everton/g02_goodison.jpg
+    card:
+      type: calc
+      title: 青になって何年か（自分で引いた）
+      terms:
+      - - 2026年
+        - いま
+      - - 1901年
+        - ロイヤルブルー
+      - - 125年
+        - 引いた答え
+      ops:
+      - −
+      - ＝
+  - text: 125年です。
+    image: assets/images/20261025_kit_everton/g02_goodison.jpg
+    card:
+      type: calc
+      title: 青になって何年か（自分で引いた）
+      terms:
+      - - 2026年
+        - いま
+      - - 1901年
+        - ロイヤルブルー
+      - - 125年
+        - 引いた答え
+      ops:
+      - −
+      - ＝
+    emph: true
+  sources:
+  - https://en.wikipedia.org/wiki/Everton_F.C.
+- id: motto
+  heading: 75年続いたモットーは、なぜ1シーズンで紋章に戻ったのか
+  bg: assets/images/20261025_kit_everton/e01_tower.jpg
+  tier: 報道
+  narrator: 解説
+  telop: 2013年5月の紋章でモットーが消え、署名は2万2000人超。投票の紋章で2014年7月に戻った
+  card:
+    type: table
+    title: 2013〜14年の紋章の騒ぎ（BBC・ガーディアン）
+    columns:
+    - いつ
+    - できごと
+    rows:
+    - - 2013年5月
+      - 新しい紋章。モットーと月桂樹が消える
+    - - 同じ5月
+      - 反対の署名。のちに2万2000人を超える
+    - - 2013年10月3日
+      - 3案から投票。1万343票、約8割
+    - - 2014年7月
+      - 新しい紋章を使い始める
+    highlight_row: 0
+  say:
+  - text: 紋章の下にある、ラテン語のモットー。
+    image: assets/images/20261025_kit_everton/e01_tower.jpg
+    card: none
+  - text: これが一度、エヴァートンの紋章から消えたことがあります。
+    image: assets/images/20261025_kit_everton/e01_tower.jpg
+    card: none
+    emph: true
+  - text: 2013年の5月。クラブは、新しい紋章を出しました。
+    image: assets/images/20261025_kit_everton/e01_tower.jpg
+    card:
+      type: table
+      title: 2013〜14年の紋章の騒ぎ（BBC・ガーディアン）
+      columns:
+      - いつ
+      - できごと
+      rows:
+      - - 2013年5月
+        - 新しい紋章。モットーと月桂樹が消える
+      - - 同じ5月
+        - 反対の署名。のちに2万2000人を超える
+      - - 2013年10月3日
+        - 3案から投票。1万343票、約8割
+      - - 2014年7月
+        - 新しい紋章を使い始める
+      highlight_row: 0
+  - text: クラブの歴史で、10番目の形です。
+    image: assets/images/20261025_kit_everton/e01_tower.jpg
+    card:
+      type: table
+      title: 2013〜14年の紋章の騒ぎ（BBC・ガーディアン）
+      columns:
+      - いつ
+      - できごと
+      rows:
+      - - 2013年5月
+        - 新しい紋章。モットーと月桂樹が消える
+      - - 同じ5月
+        - 反対の署名。のちに2万2000人を超える
+      - - 2013年10月3日
+        - 3案から投票。1万343票、約8割
+      - - 2014年7月
+        - 新しい紋章を使い始める
+      highlight_row: 0
+  - text: ねらいは、小さく印刷しても、見分けやすいこと。
+    image: assets/images/20261025_kit_everton/e01_tower.jpg
+    card: none
+  - text: 残したのは、塔と、盾と、クラブの名前と、創立の年。
+    image: assets/images/20261025_kit_everton/e03_tower3.jpg
+    card: none
+  - text: 消えたのは、月桂樹の輪と、ラテン語のモットーでした。
+    image: assets/images/20261025_kit_everton/e03_tower3.jpg
+    card: none
+    emph: true
+  - text: ファンの反対の署名は、2万2000人を超えます。
+    image: assets/images/20261025_kit_everton/e03_tower3.jpg
+    card:
+      type: table
+      title: 2013〜14年の紋章の騒ぎ（BBC・ガーディアン）
+      columns:
+      - いつ
+      - できごと
+      rows:
+      - - 2013年5月
+        - 新しい紋章。モットーと月桂樹が消える
+      - - 同じ5月
+        - 反対の署名。のちに2万2000人を超える
+      - - 2013年10月3日
+        - 3案から投票。1万343票、約8割
+      - - 2014年7月
+        - 新しい紋章を使い始める
+      highlight_row: 1
+  - text: クラブは、謝りました。
+    image: assets/images/20261025_kit_everton/g01_goodison.jpg
+    card:
+      type: table
+      title: 2013〜14年の紋章の騒ぎ（BBC・ガーディアン）
+      columns:
+      - いつ
+      - できごと
+      rows:
+      - - 2013年5月
+        - 新しい紋章。モットーと月桂樹が消える
+      - - 同じ5月
+        - 反対の署名。のちに2万2000人を超える
+      - - 2013年10月3日
+        - 3案から投票。1万343票、約8割
+      - - 2014年7月
+        - 新しい紋章を使い始める
+      highlight_row: 1
+  - text: ただ、ユニフォームの業者との段取りで、その年は、新しい紋章のまま。
+    image: assets/images/20261025_kit_everton/g01_goodison.jpg
+    card: none
+  - text: 2013年10月3日、3つの案から、ファンの投票。
+    image: assets/images/20261025_kit_everton/g01_goodison.jpg
+    card:
+      type: table
+      title: 2013〜14年の紋章の騒ぎ（BBC・ガーディアン）
+      columns:
+      - いつ
+      - できごと
+      rows:
+      - - 2013年5月
+        - 新しい紋章。モットーと月桂樹が消える
+      - - 同じ5月
+        - 反対の署名。のちに2万2000人を超える
+      - - 2013年10月3日
+        - 3案から投票。1万343票、約8割
+      - - 2014年7月
+        - 新しい紋章を使い始める
+      highlight_row: 2
+  - text: 選ばれた案は、1万343票。投票した人の、およそ8割です。
+    image: assets/images/20261025_kit_everton/g01_goodison.jpg
+    card:
+      type: table
+      title: 2013〜14年の紋章の騒ぎ（BBC・ガーディアン）
+      columns:
+      - いつ
+      - できごと
+      rows:
+      - - 2013年5月
+        - 新しい紋章。モットーと月桂樹が消える
+      - - 同じ5月
+        - 反対の署名。のちに2万2000人を超える
+      - - 2013年10月3日
+        - 3案から投票。1万343票、約8割
+      - - 2014年7月
+        - 新しい紋章を使い始める
+      highlight_row: 2
+    emph: true
+  - text: 当時の監督、ロベルト・マルティネスの言葉です。
+    image: assets/images/20261025_kit_everton/g03_main.jpg
+    card: none
+  - text: ファンは、塔とモットーを見たがっていた。ニル・サティスが戻るのは大事だ、と。
+    image: assets/images/20261025_kit_everton/g03_main.jpg
+    card: none
+  - text: 新しい紋章を使い始めたのは、2014年の7月です。
+    image: assets/images/20261025_kit_everton/e01_tower.jpg
+    card:
+      type: table
+      title: 2013〜14年の紋章の騒ぎ（BBC・ガーディアン）
+      columns:
+      - いつ
+      - できごと
+      rows:
+      - - 2013年5月
+        - 新しい紋章。モットーと月桂樹が消える
+      - - 同じ5月
+        - 反対の署名。のちに2万2000人を超える
+      - - 2013年10月3日
+        - 3案から投票。1万343票、約8割
+      - - 2014年7月
+        - 新しい紋章を使い始める
+      highlight_row: 3
+  - text: 塔と、盾と、モットー。この3つがそろっています。
+    image: assets/images/20261025_kit_everton/e01_tower.jpg
+    card:
+      type: table
+      title: 2013〜14年の紋章の騒ぎ（BBC・ガーディアン）
+      columns:
+      - いつ
+      - できごと
+      rows:
+      - - 2013年5月
+        - 新しい紋章。モットーと月桂樹が消える
+      - - 同じ5月
+        - 反対の署名。のちに2万2000人を超える
+      - - 2013年10月3日
+        - 3案から投票。1万343票、約8割
+      - - 2014年7月
+        - 新しい紋章を使い始める
+      highlight_row: 3
+  sources:
+  - https://www.bbc.co.uk/news/uk-england-merseyside-22679092
+  - https://www.bbc.co.uk/news/uk-england-merseyside-24379555
+  - https://www.theguardian.com/football/2014/jul/04/everton-club-crest-fans-backlash-badge
+- id: view
+  viewpoint: true
+  heading: 見立て・塔は88年、胸の会社は10社。何が動いて、何が動かないのか
+  bg: assets/images/20261025_kit_everton/e01_tower.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 塔は88年、青は125年。胸の会社は47年で10社、平均4.7年。モットーが消えたのは1シーズン
+  card:
+    type: table
+    title: 動いたものと、動かないもの
+    columns:
+    - もの
+    - 続いた長さ
+    rows:
+    - - 紋章の塔（1938年から）
+      - 88年
+    - - ロイヤルブルー（1901年から）
+      - 125年
+    - - モットーが消えた期間
+      - 1シーズン
+    - - 胸の会社（1979年から）
+      - 47年で10社
+    highlight_row: 0
+  say:
+  - text: エヴァートンの塔、青、胸の広告。長く続いたものと、すぐ替わったものを比べます。
+    image: assets/images/20261025_kit_everton/e01_tower.jpg
+    card: none
+    emph: true
+  - text: 塔が紋章に入って、88年。ロイヤルブルーは、125年。
+    image: assets/images/20261025_kit_everton/e01_tower.jpg
+    card:
+      type: table
+      title: 動いたものと、動かないもの
+      columns:
+      - もの
+      - 続いた長さ
+      rows:
+      - - 紋章の塔（1938年から）
+        - 88年
+      - - ロイヤルブルー（1901年から）
+        - 125年
+      - - モットーが消えた期間
+        - 1シーズン
+      - - 胸の会社（1979年から）
+        - 47年で10社
+      highlight_row: 0
+    mark:
+      kind: circle
+      row: 0
+  - text: 一方、胸の会社は、1979年から47年で、10社。
+    image: assets/images/20261025_kit_everton/g01_goodison.jpg
+    card:
+      type: table
+      title: 動いたものと、動かないもの
+      columns:
+      - もの
+      - 続いた長さ
+      rows:
+      - - 紋章の塔（1938年から）
+        - 88年
+      - - ロイヤルブルー（1901年から）
+        - 125年
+      - - モットーが消えた期間
+        - 1シーズン
+      - - 胸の会社（1979年から）
+        - 47年で10社
+      highlight_row: 3
+  - text: 47を10で割ると、4.7。ひとつの会社は、平均で5年たらずです。
+    image: assets/images/20261025_kit_everton/g01_goodison.jpg
+    card:
+      type: calc
+      title: 胸の会社1社の平均（自分で割った）
+      terms:
+      - - 47年
+        - 1979年から
+      - - 10社
+        - 胸の会社
+      - - 4.7年
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+    emph: true
+  - text: 塔は、その平均の、およそ19倍の長さ、続いています。
+    image: assets/images/20261025_kit_everton/g01_goodison.jpg
+    card:
+      type: calc
+      title: 塔は胸の会社の何倍か（自分で割った）
+      terms:
+      - - 88年
+        - 塔
+      - - 4.7年
+        - 胸の会社の平均
+      - - 約19倍
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+  - text: そして、モットーが紋章から消えていたのは、1シーズンだけ。
+    image: assets/images/20261025_kit_everton/e02_towerblue.jpg
+    card:
+      type: table
+      title: 動いたものと、動かないもの
+      columns:
+      - もの
+      - 続いた長さ
+      rows:
+      - - 紋章の塔（1938年から）
+        - 88年
+      - - ロイヤルブルー（1901年から）
+        - 125年
+      - - モットーが消えた期間
+        - 1シーズン
+      - - 胸の会社（1979年から）
+        - 47年で10社
+      highlight_row: 2
+  - text: ファンが戻したのは、胸の広告ではなく、塔とモットーの側でした。
+    image: assets/images/20261025_kit_everton/e02_towerblue.jpg
+    card: none
+    emph: true
+  - text: この先、紋章を変えるというクラブの発表は、確かめた範囲では、出ていません。
+    image: assets/images/20261025_kit_everton/g02_goodison.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Everton_F.C.

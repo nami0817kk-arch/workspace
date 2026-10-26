@@ -1,0 +1,179 @@
+# 取材メモ（2026年10月26日）ヒュルツェラー「勝とうとしたのは1チームだけ」。ボール64%で0対2のブライトン（ニュースのショート。見せ方 Y＝監督本人の言葉から始める）
+# 取材: 2026-10-26。requests で本文を読んだ（ESPN は記事API content.core.api.espn.com と試合API site.api.espn.com、BBC はライブ頁の本文と試合の数字、選手採点の記事）。
+#   ・ESPN「Brighton's Fabian Hürzeler digs at Liverpool - 'one team' tried to create」（10/25 18:37Z）— 題材の元。試合後の会見。
+#       地の文: 2-0。グロスのオウンゴールとイサクの得点。ブライトンは支配率で上回り、xG もリヴァプールより高かった。リヴァプールはイラオラ監督のもとで公式戦4連勝、リーグ4位へ。
+#       本人: "I think everyone in the stadium saw that there was one team who really tried to create and try to win this game and therefore I have to praise my players"
+#             "today I think it was just the difference that they scored, we didn't score." / "They really defended the box well. We didn't have that efficiency."
+#             "We couldn't keep the clean sheet because we made easy mistakes, we lost some important personal duels."
+#             "that is very frustrating because we all have the feeling that there is a missed opportunity here today."
+#   ・BBC ライブ頁（https://www.bbc.com/sport/football/live/cmdx325w7gy6t、10/25）
+#       本人（BBC MOTD、何をすればよかったか）: "Scored goals." / "It's a missed opportunity." / "we are very disappointed."
+#       地の文: 0-0 の時にアヤリの大きな好機（グロスの折り返し）が枠の上。そのあと2点を続けて失う。支配率64%、枠内シュートは1本だけ。今季のプレミアで初めての無得点。
+#               アリソンのつなぎのミスからアヤリのシュートが右ポストの根元。次は水曜、リーグカップ（カラバオ杯）16強でマンチェスター・シティとアウェー。
+#       試合の数字（BBC の Match Stats）: 支配率 リヴァプール35.6% ブライトン64.4% / xG 0.87 対 1.35 / シュート 13 対 17 / 枠内 4 対 1 / ポスト 0 対 1。
+#   ・BBC 採点の記事（https://www.bbc.com/sport/football/articles/crwyd857p00yo）: 1点目はグロスのクリアがヴィルツの足元に落ち、ヴィルツのシュートがグロスに当たって入った。2点目はその4分後、バルコラの折り返しをイサク。
+#       リーグ戦の失点は9月16日以来だった（conceded in the league for the first time since 16 September）。
+#   ・ESPN 試合API（event 401878765）: 17分 グロスのオウンゴール、21分 イサク（アシスト バルコラ）。支配率 64.4%、シュート 17（枠内1）。
+# 言わないこと: リーグ連勝が「4で止まった」（題材一覧にあるが、今日読めた本文では確かめられなかった）。カディオールの負傷の詳細（本文は腰を押さえて6分に交代、だけ）。
+#   遠藤航（リヴァプールの控えで出番なし）・三笘薫（出ていない）は触れない。10/24 のグロスのショートの言い回し（35歳・走る距離・一歩先・ワイン・月間MVP・23得点）は使わない。
+# 訳はこちらの自訳（英語の会見）。
+# 確度: 報道（ESPN・BBC。得点の分と数字は ESPN の試合記録と BBC の Match Stats で一致）。
+# 反応: 0件。作らない。approve は --no-voices で。
+# 写真: 01〜05 は Commons の CC0（Timmy96、2026-01-24 フラム戦の前後に撮った本人の写真）。試合の日の写真ではない。代理店の写真（ESPN の主写真は Getty）は使わない。
+slot: premier
+date: "2026年10月26日"
+format: news
+no_main: true      # ニュースはショートだけ（2026-10-14）。締めで本編を案内しない
+people: [ファビアン・ヒュルツェラー]
+
+short_style: Y
+short_hook_quote: 本当に崩して勝とうとしたチームは、1つだけだった。
+short_question: ブライトンに足りなかったのは、運だと思いますか、それとも決める力だと思いますか。
+short_hook: ボール64%、シュート17本。それでも0対2。
+short_telops:
+  - {match: 本当に崩して, text: ヒュルツェラー監督/「勝とうとしたのは1チーム」}
+  - {match: 17分, text: 17分 オウンゴールで先制される}
+  - {match: 21分, text: 21分 イサクに2点目}
+  - {match: 64%, text: ボール支配率/ブライトン 64%}
+  - {match: 17本, text: シュート 17本 対 13本}
+  - {match: 枠に飛んだのは, text: 枠内シュート/ブライトン 1本 対 4本}
+  - {match: 点を取ることだ, text: 何をすればよかった？/「点を取ること」}
+  - {match: 1.35, text: 期待値（xG）/1.35 対 0.87}
+  - {match: 今季初めて, text: 今季のプレミアで/初めての無得点}
+  - {match: 水曜, text: 次は水曜 リーグカップ16強/アウェーでマンチェスター・シティ}
+
+theme:
+  id: hurzeler_one_team
+  league: england
+  league_name: プレミアリーグ
+  prefix: ""
+  title: ヒュルツェラー「勝とうとしたのは1チームだけ」。64%で負けた理由
+  hook: ""
+  question: ボールを64%持ち、シュートも多かったブライトンが、なぜアンフィールドで0対2だったのか
+  takeaway: シュートは17本対13本、期待値も1.35対0.87で上回ったが、枠に飛んだのは1本対4本。差は監督の言う「決めたかどうか」に出ていた
+
+thumbnail:
+  line1: ヒュルツェラー
+  line2: 「勝とうとしたのは1チーム」
+  tags: [ブライトン, リヴァプール, プレミアリーグ]
+  layout: face
+  photo: assets/images/20261026_hurzeler_one_team/04_w.jpg
+  short_photo: assets/images/20261026_hurzeler_one_team/04_v.jpg
+
+answer: シュートも期待値も上回ったが、枠内は1本だけ。監督は「違いは決めたかどうか」と話した
+watch: 水曜のリーグカップ16強、マンチェスター・シティ戦
+
+short_photos:
+  - assets/images/20261026_hurzeler_one_team/04_v.jpg
+  - assets/images/20261026_hurzeler_one_team/01_v.jpg
+  - assets/images/20261026_hurzeler_one_team/05_v.jpg
+  - assets/images/20261026_hurzeler_one_team/02_v.jpg
+  - assets/images/20261026_hurzeler_one_team/03_v.jpg
+
+sections:
+  - id: what
+    main: true
+    heading: 試合のあとの監督の言葉
+    tier: 報道
+    telop: アンフィールドで0対2。ヒュルツェラー監督が話したこと
+    say:
+      - text: ブライトンは25日、アウェーでリヴァプールに0対2で敗れました。
+        image: assets/images/20261026_hurzeler_one_team/04_w.jpg
+      - voice: ヒュルツェラー
+        text: 本当に崩して勝とうとしたチームは、1つだけだった。
+        short_voice: true
+        image: assets/images/20261026_hurzeler_one_team/05_w.jpg
+      - voice: ヒュルツェラー
+        text: スタジアムにいた全員が、それを見たと思う。
+        cont: true
+        image: assets/images/20261026_hurzeler_one_team/01_w.jpg
+      - voice: ヒュルツェラー
+        text: だから、選手たちをほめなければいけない。
+        cont: true
+        image: assets/images/20261026_hurzeler_one_team/01_w.jpg
+      - text: 17分、ヴィルツのシュートがグロスに当たって、オウンゴールで先制されます。
+        image: assets/images/20261026_hurzeler_one_team/05_w.jpg
+      - text: その4分後の21分、イサクが追加点。リードは2点に広がります。
+        image: assets/images/20261026_hurzeler_one_team/05_w.jpg
+      - text: まだ点が動く前には、アヤリに大きなチャンスがありました。
+        image: assets/images/20261026_hurzeler_one_team/02_w.jpg
+      - text: ただ、そのシュートはゴールの上へ外れています。
+        image: assets/images/20261026_hurzeler_one_team/02_w.jpg
+      - voice: ヒュルツェラー
+        text: 彼らは決めて、僕らは決めなかった。
+        image: assets/images/20261026_hurzeler_one_team/02_w.jpg
+      - voice: ヒュルツェラー
+        text: 今日の違いは、それだけだと思う。
+        cont: true
+        image: assets/images/20261026_hurzeler_one_team/02_w.jpg
+      - text: 監督の言葉は英語の会見から、こちらで訳しています。
+        image: assets/images/20261026_hurzeler_one_team/03_w.jpg
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50278357
+      - https://www.bbc.com/sport/football/live/cmdx325w7gy6t
+
+  - id: numbers
+    heading: 数字で見ると、どちらが押していたか
+    tier: 報道
+    telop: 支配率64%、シュート17本。でも枠内は1本
+    say:
+      - text: ボールの支配率は、ブライトンが64%。
+        image: assets/images/20261026_hurzeler_one_team/04_w.jpg
+      - text: ブライトンのシュートは17本。相手の13本より多く打っています。
+        image: assets/images/20261026_hurzeler_one_team/04_w.jpg
+      - text: ただ、枠に飛んだのはブライトンが1本だけ。リヴァプールは4本です。
+        image: assets/images/20261026_hurzeler_one_team/01_w.jpg
+      - text: 何をすればよかったかと聞かれて、監督の答えは短いものでした。
+        image: assets/images/20261026_hurzeler_one_team/01_w.jpg
+      - voice: ヒュルツェラー
+        text: 点を取ることだ。
+        image: assets/images/20261026_hurzeler_one_team/05_w.jpg
+      - voice: ヒュルツェラー
+        text: 彼らはペナルティーエリアをよく守った。
+        image: assets/images/20261026_hurzeler_one_team/05_w.jpg
+      - voice: ヒュルツェラー
+        text: 僕らには、その決める力がなかった。
+        cont: true
+        image: assets/images/20261026_hurzeler_one_team/05_w.jpg
+    official: false
+    sources:
+      - https://www.bbc.com/sport/football/live/cmdx325w7gy6t
+      - https://www.espn.com/soccer/story/_/id/50278357
+
+  - id: view
+    viewpoint: true
+    heading: 期待値では上回った。では、何が足りなかったか
+    tier: 背景
+    telop: 期待値は1.35対0.87。差は枠に飛ばせたかどうか
+    say:
+      - text: ここからは見立てです。
+        image: assets/images/20261026_hurzeler_one_team/02_w.jpg
+      - text: シュートの位置や形から、入ってもおかしくない点の数を表すのが期待値です。
+        image: assets/images/20261026_hurzeler_one_team/02_w.jpg
+      - text: その期待値は、ブライトンが1.35、リヴァプールは0.87でした。
+        image: assets/images/20261026_hurzeler_one_team/02_w.jpg
+      - text: 中身でも上回っていたのに、最後の一歩、枠に飛ばすところで差がつきました。
+        image: assets/images/20261026_hurzeler_one_team/03_w.jpg
+      - text: ブライトンがプレミアリーグで点を取れなかったのは、今季初めてでした。
+        image: assets/images/20261026_hurzeler_one_team/03_w.jpg
+      - voice: ヒュルツェラー
+        text: 簡単なミスをして、大事な1対1で負けた。
+        image: assets/images/20261026_hurzeler_one_team/01_w.jpg
+      - text: 次は水曜、リーグカップの16強です。
+        image: assets/images/20261026_hurzeler_one_team/04_w.jpg
+      - text: 今度もアウェーで、マンチェスター・シティと戦います。
+        image: assets/images/20261026_hurzeler_one_team/04_w.jpg
+      - voice: ヒュルツェラー
+        text: とても悔しい。
+        image: assets/images/20261026_hurzeler_one_team/04_w.jpg
+      - voice: ヒュルツェラー
+        text: 今日は逃したチャンスだったと、みんなが感じている。
+        cont: true
+        image: assets/images/20261026_hurzeler_one_team/04_w.jpg
+    official: false
+    sources:
+      - https://www.bbc.com/sport/football/live/cmdx325w7gy6t
+      - https://www.bbc.com/sport/football/articles/crwyd857p00yo
+      - https://www.espn.com/soccer/story/_/id/50278357
+short_title: "ヒュルツェラー「勝とうとしたのは1チームだけ」。64%で負けた理由"

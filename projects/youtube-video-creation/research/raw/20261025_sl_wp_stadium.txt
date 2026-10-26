@@ -1,0 +1,441 @@
+{{short description|Football stadium in Sunderland, England}}
+{{About|the home ground of Sunderland A.F.C.|the home ground of S.L. Benfica|Estádio da Luz}}
+{{Use British English|date=January 2013}}
+{{Use dmy dates|date=November 2020}}
+{{Infobox venue
+| name = Stadium of Light
+| logo_image =Stadium of light logo.png
+| logo_size = 250px
+| full_name = Stadium of Light
+| image = [[File:Sunderland stadium of light.jpg|250px]]
+| image_caption = '''[[UEFA stadium categories|UEFA]]''' {{rating|4|4}}
+| address = Millennium Way
+| location = [[Monkwearmouth]], [[Sunderland]]<br>England<br>SR5 1SU
+| groundbreaking = May 1996
+| opened = 	30 July 1997; 29 years ago
+| expanded = 2000
+| owner = [[Sunderland A.F.C.|Sunderland]] 100%
+| surface = [[Grass]]
+| architect = PNF Architects
+| main_contractors = Ballast Wiltshire
+| record_attendance = '''Football''': {{formatnum: 48353}} (Sunderland v Liverpool, 13 April 2002)<br />
+'''Concerts''': {{formatnum:60000}} ([[Ed Sheeran]], 3 June 2022)
+| dimensions = 115 × 75 yards (105 × 68 metres)
+| tenants = [[Sunderland A.F.C.|Sunderland]] (1997–present)
+| public_transit = {{rint|newcastle}} [[Stadium of Light Metro station|Stadium of Light]]<br />{{rint|newcastle}} [[St Peter's Metro station|St. Peter’s]]
+| capacity = 49,000 – [[Association football|football]]<br />60,000 – concerts
+| cost = [[Pound sterling|£]]24&nbsp;million<ref>{{cite web|url=http://www.awaygrounds.com/sunderland-stadium-of-light/|title=Away Grounds » Sunderland – Stadium of Light|date=14 November 2020}}</ref>
+}}
+
+The '''Stadium of Light''' is an [[all-seater stadium|all-seater]] [[association football|football]] [[stadium]] in [[Sunderland]], England, and the [[List of Sunderland A.F.C. grounds|eighth and current home]] to Premier League club [[Sunderland A.F.C.|Sunderland]]. With seating for 49,000&nbsp;spectators,<ref name="SAFCabout">{{cite web|url=https://www.safc.com/club-information/history/timeline|title=Timeline - Stadium of Light |publisher=Sunderland A.F.C. |access-date=17 June 2026}}</ref> the Stadium of Light is the [[List of English football stadia by capacity|10th largest]] football stadium in England. The stadium primarily hosts [[Sunderland A.F.C.|Sunderland]] home matches. The stadium was named by chairman [[Bob Murray (businessman)|Bob Murray]] to reflect the [[coal mining]] heritage of the North East and the former [[Monkwearmouth Colliery]] site on which it stands.<ref name=":0">{{Cite news|url=https://www.chroniclelive.co.uk/sport/football/football-news/princess-diana-stadium-sir-bob-13376071|title=The Princess Diana Stadium? Sir Bob Murray reveals request to rename the Stadium of Light|last=Hunter|first=James|date=2017-07-24|work=nechronicle|access-date=2018-10-15}}</ref> A [[Davy lamp]] monument stands at the entrance to reflect the coal mining industry that brought prosperity to the town.<ref>{{cite book|last=Days|first=Paul |author2=John Hudson |author3=John Hudson |author4=Bernard Callaghan |title=Sunderland AFC: The Official History 1879–2000|publisher=Business Education Publishers Ltd|date=1 December 1999|page=302|isbn=978-0-9536984-1-7}}</ref>
+
+As well as hosting Sunderland games, the stadium has hosted three matches for the [[England national football team]], as well as an [[England national under-20 football team|England under-20]], an [[England national under-21 football team|England under-21]] and two [[England women's national football team|England women's team]] matches. With an original capacity of 42,000, it was expanded in 2000 to seat 49,000. Its simple design is apparently to allow for redevelopments up to a capacity of 64,000.<ref name="p300" /> The attendance record at the Stadium of Light is 48,353 set on 13 April 2002, when Sunderland played [[Liverpool F.C.|Liverpool]] with the visitors running out 1–0 winners. Along with hosting football matches, the stadium has played host to performers such as [[Beyoncé]], [[Rihanna]], [[Oasis (band)|Oasis]], [[Take That]], [[Kings of Leon]], [[P!nk]], [[Coldplay]], [[Spice Girls]] and [[Elton John]]. The ground also holds conference and banqueting suites, the Black Cats Bar, and a club shop selling Sunderland merchandise.
+
+==Planning and construction==
+Following the release of the [[Taylor Report]] in January 1990, Sunderland was obliged to make plans to turn their [[Roker Park]] home into an all-seater stadium.<ref name="roker">Days, pp297-298.</ref> Roker Park was a ground that mainly consisted of standing terraces, and if converted into all-seater it would have held far fewer spectators than before.<ref name="roker" /> Enclosed by residential streets on all sides, expansion was practically impossible. So, by 1991, Sunderland chairman [[Bob Murray (businessman)|Bob Murray]] had started to scour the local area for possible sites to build a new all-seater stadium.<ref name="roker" />
+
+The front-runner that emerged was a proposed stadium located on an area of land adjacent to the [[Nissan Motor Manufacturing (UK) Ltd|Nissan car plant]].<ref name="possiblestadium">Days, pp299-300</ref> The 49,000 all-seater ground was labelled "the [[Wembley Stadium (1923)|Wembley]] of the North" by Sunderland fans and would boast a capacity that not even [[Manchester United F.C.|Manchester United]]'s [[Old Trafford]] exceeded until 1996.<ref name="possiblestadium" /> The plans did not come to fruition. Shortly after the plans were announced in 1992, [[Nissan]] launched an official objection, ultimately forcing Sunderland to abandon the idea.<ref name="possiblestadium" /> By 1995, the site of the [[Wearmouth Colliery]], which had closed in December 1993, was identified as the club's preferred location for a new stadium.<ref name="possiblestadium" /> The area, on the north bank of the [[River Wear]] in the Sheepfolds district of Sunderland, was only a few hundred yards from Roker Park, and close to the centre of the city.
+[[File:Stadium_of_Light_(Sunderland_A.F.C.).jpg|thumb|Exterior of the East Stand]]
+In 1993, Sunderland's planned new stadium was on the shortlist for [[UEFA Euro 1996|Euro 96]] venues, as England had been named as hosts of the competition in May 1992. However, it soon become clear that a new stadium in Sunderland would not be ready in time for the tournament.
+
+On 13 November 1995, the Sunderland chairman Bob Murray announced that the [[Tyne and Wear Development Corporation]] had approved plans for Sunderland to build a 34,000-seater stadium on the Monkwearmouth site.<ref name="p301">Days, p301</ref>
+Ballast Wiltshier, a contracting company that had built the [[Amsterdam Arena]], was contracted to build the stadium at an initial cost of £15&nbsp;million.<ref name="p301" /> In June 1996, as the planned capacity rose to more than 40,000, construction work began.<ref name="p301" /> The capacity was revised again in early 1997, and the stadium was completed on time, with a capacity of 42,000.<ref name="p301" /> The stadium's design allows possible expansion of a further tier; completed expansion of the whole upper tier would produce a capacity of 63,000, although it is believed by some that the stadium can expand to a maximum capacity of 84,000, this would seem unlikely ever to be exercised.<ref name="p300" />
+[[File:Stadium of Light (Sunderland).jpg|left|thumb|Interior of the stadium]]
+The stadium was opened on 30 July 1997 by Prince Andrew, Duke of York (later [[Andrew Mountbatten-Windsor]]), with bands such as [[Status Quo (band)|Status Quo]], [[Upside Down (boyband)|Upside Down]] and [[Kavana (singer)|Kavana]] playing. To celebrate the opening of the stadium, Sunderland played a [[Exhibition game#Football (soccer)|friendly]] against the [[Netherlands|Dutch]] side [[AFC Ajax|Ajax]], which ended in a 0–0 draw.<ref name="p301" />
+
+The move did not happen without criticism. Famous actor and Sunderland supporter, often named in the media "Sunderland's most famous supporter",<ref>{{Cite web|title=Peter O'Toole Dies - Sunderland Most Famous Supporter Is Dead|url=https://wearsideonline.com/peter-otoole-dies/|last=Terry {{!}}|first=Paper|date=2013-12-23|website=Wearside Online|language=en-GB|access-date=2020-05-13}}</ref> [[Peter O'Toole]], said he wasn't as much a fan as he used to be since the team left [[Roker Park]].<ref>{{Cite web|url=https://bleacherreport.com/articles/855822-english-premier-league-each-clubs-most-famous-fans|title=English Premier League: Each Club's Most Famous Fans|website=[[Bleacher Report]]}}</ref><ref>{{cite web | url=https://safc.blog/peter-otoole-and-a-lost-sunderland-passion/ | title=Peter O'Toole and a lost Sunderland passion | date=14 September 2010 | first=Colin | last=Randall | access-date=12 January 2020}}</ref> Playwright Tom Kelly and actor Paul Dunn created a one-man play called ''I Left My Heart at Roker Park'' about a fan struggling with the move and what [[Roker Park]] meant for him; the play originally ran in 1997, and has had a few revivals since.<ref>{{Cite web|title=I Left My Heart in Roker Park|url=https://rokerreport.sbnation.com/2014/8/11/5990401/i-left-my-heart-at-roker-park-roker-report-meets-paul-dunn|last=Gav1879|date=2014-08-11|website=Roker Report|language=en|access-date=2020-05-13}}</ref><ref>{{Cite web|title=Theatre review: I Left My Heart in Roker Park... (And Extra Time at the Stadium of Light) at Customs House, South Shields|url=https://www.britishtheatreguide.info/reviews/rokerpark-rev|website=British Theatre Guide|language=en-GB|access-date=2020-05-13}}</ref><ref>{{Cite web|title=Share your Stadium of Light tales|url=https://www.sunderlandecho.com/news/share-your-stadium-light-tales-357411|website=www.sunderlandecho.com|date=11 May 2017 |language=en|access-date=2020-05-13}}</ref>
+
+The North Stand was extended in 2000 to bring the capacity to 49,000, costing the club a further £7&nbsp;million, making the final cost of the stadium £23&nbsp;million.<ref name="p300">Days, p303</ref> On 18 July 2006, a statue of [[1973 FA Cup Final]] winning manager [[Bob Stokoe]] was unveiled outside the stadium.<ref>{{cite web|url=http://www.safc.com/news/?page_id=9960|title=Stokoe statue unveiled|last=Alexander|first=Nick|publisher=Sunderland A.F.C.|date=18 July 2006|access-date=6 December 2008}}</ref> At the end of season [[The Football League|Football League]] awards, the Stadium of Light was named the ''Best Away Ground'', with other contenders including [[Crewe Alexandra F.C.|Crewe Alexandra]]'s [[Alexandra Stadium]] and [[Plymouth Argyle F.C.|Plymouth Argyle]]'s [[Home Park]].<ref>{{cite web|url=http://www.safc.com/articles/article.php?page_id=11883|title=SoL voted best away ground|last=Alexandra|first=Nick|publisher=Sunderland A.F.C.|date=5 March 2007|access-date=6 December 2008}}</ref> Sunderland celebrated the tenth anniversary of the stadium with a pre-season friendly against [[Juventus FC|Juventus]] on 6 August 2007; the game was drawn 1–1.<ref>{{cite news|url=https://www.theguardian.com/football/2007/aug/06/newsstory.sunderland|title=Keane eyes Mido and Gordon as Ranieri backs Black Cats to surprise|last=Taylor|first=Louise|date=6 August 2007|access-date=6 December 2007|location=London|work=The Guardian}}</ref>
+
+== Name ==
+During construction, the stadium had not adopted an official name, and had been known colloquially as the "Wearside Stadium" and "New Roker Park".<ref name="p302">Days, p302</ref>
+
+The name was eventually revealed as the Stadium of Light at a naming ceremony on 30 July 1997, hours before the opening game against [[AFC Ajax|Ajax]] (0-0).<ref>{{Cite news|url=https://www.sunderlandecho.com/news/1997-goodbye-to-roker-park-1-1153003|title=1997: Goodbye to Roker Park|access-date=2018-10-15|language=en|archive-date=15 October 2018|archive-url=https://web.archive.org/web/20181015153320/https://www.sunderlandecho.com/news/1997-goodbye-to-roker-park-1-1153003|url-status=dead}}</ref> Speaking at the naming event, Bob Murray explained the inspiration for the name came from the [[Coal mining]] heritage of the region and the stadium's [[Monkwearmouth Colliery]] site:<blockquote>''"For many years, miners at Wearmouth Colliery carried with them a Davy lamp as part of their working lives. Reflecting this tradition, the name allows the image of this light to shine forever."''</blockquote>
+[[File:Miners lamp Stadium of Light Sunderland.jpg|left|thumb|Davy Lamp outside of the Stadium of Light]]
+To emphasise the fact, a statue of a miner's [[Davy lamp]] was located in front of the stadium's ticket office, adjacent to the stadium.<ref name="p302" /> The stadium name had been associated with the area since 1970 when it appeared in a ''[[Monty Python's Flying Circus]]'' episode "Literary Football", which was hosted by a native of South Shields, [[Eric Idle]].<ref>{{cite web | url=https://www.youtube.com/watch?v=sw8ZL_gcTSM | title=Monty Python - Literary Football | website=[[YouTube]] | date=29 January 2007 }}</ref>
+
+The name initially drew mixed reactions from Sunderland fans, with many unhappy that the name was already associated with the home ground of [[S.L. Benfica|Benfica]].<ref name=":1">{{Cite news|url=https://www.sunderlandecho.com/news/sunderland-could-sell-stadium-name-1-1110561|archive-url=https://web.archive.org/web/20181015153109/https://www.sunderlandecho.com/news/sunderland-could-sell-stadium-name-1-1110561|url-status=dead|archive-date=15 October 2018|title=Sunderland could sell stadium name|access-date=2018-10-15|language=en}}</ref><ref>{{Cite news|url=https://www.telegraph.co.uk/football/0/happens-next-team-moves-stadium-every-new-ground-since-1988/stadium-light/ |archive-url=https://ghostarchive.org/archive/20220112/https://www.telegraph.co.uk/football/0/happens-next-team-moves-stadium-every-new-ground-since-1988/stadium-light/ |archive-date=12 January 2022 |url-access=subscription |url-status=live|title=What happens next when a team moves stadium? Every new ground since 1988 assessed|date=2017|work=The Telegraph|access-date=2018-10-15|language=en-GB|issn=0307-1235}}{{cbignore}}</ref> A film crew for the ''[[Premier Passions]]'' documentary series recorded the moment that Bob Murray faced Sunderland fans immediately after the naming, with many expressing their disappointment. The similarity to the name of Benfica's home, [[Estádio da Luz]], often anglicised to The Stadium of Light, has led to some visiting fans and reporters to erroneously assume that Sunderland's home was named after the Portuguese stadium.<ref>{{Cite news|url=https://www.standard.co.uk/sport/wembley-sends-for-bob-the-builder-6355610.html|title=Wembley sends for Bob the builder|work=Evening Standard|access-date=2018-10-15|language=en-GB}}</ref><ref>{{Cite book|title=Back in the Game|last=baverstock|first=Neil|publisher=Lulu Enterprises, UK Ltd|year=2007|isbn=978-1847532886|pages=69}}</ref> Murray responded directly to this in a 2017 interview with the ''[[Evening Chronicle]]'', in which he said:
+<blockquote>"The Estadio de Luz in Portugal isn’t the Stadium of Light, it is named after the area – Luz. It’s like, say, Elland Road or Old Trafford. We are the only club whose stadium has that name, and it was because of the history of the region that I named it".<ref name=":0" /></blockquote>In the same interview, Murray revealed that, shortly after the stadium opened, he was approached by a representative of the [[Labour Party (UK)|Labour]] government, asking if he would consider renaming the stadium after [[Diana, Princess of Wales]], who died in September 1997.<ref name=":0" /> Murray refused the request, as he believed the stadium should be named in honour of those in the region who had worked in darkness.
+
+The 'Of Light' suffix became a recognisable part of the Sunderland brand, and was used in a number of other areas related to the club; the [[Academy of Light]] is the club's training facility and youth academy, the [[Foundation of Light]] is a [[registered Charity|registered charity]] affiliated with the club and the [[Beacon of Light]] is a sports and education centre, owned by the Foundation, which is adjacent to the stadium. The club's official magazine was called ''Legion of Light'' before it was discontinued in January 2017.
+
+In March 2010, Sunderland Chairman [[Niall Quinn]] announced the club were considering plans to sell naming rights to the stadium as a new way to boost income.<ref name=":1" /> The plans were shelved shortly after. The possibility of selling the naming rights was floated again by chief executive Margaret Byrne in 2013.<ref>{{Cite news|url=http://www.thejournal.co.uk/sport/football/football-news/sunderland-would-consider-new-stadium-4394890|title=Sunderland would consider new Stadium name|last=Douglas|first=Mark|date=2013-03-02|work=journallive|access-date=2018-11-07|language=en|archive-date=8 November 2018|archive-url=https://web.archive.org/web/20181108025643/http://www.thejournal.co.uk/sport/football/football-news/sunderland-would-consider-new-stadium-4394890|url-status=dead}}</ref> Discussing the options of selling the stadium name in October 2018, chairman [[Stewart Donald]] said:<blockquote>"I think the fans should have a say on whether they are comfortable with it. My gut feel is that even if we didn't consult with them, the vibe I get is that they aren't particularly attached to the name of the stadium. It's not a sacred thing like some of the other grounds."<ref>{{Cite news|url=https://www.shieldsgazette.com/sport/football/sunderland-afc/stewart-donald-reveals-talks-over-renaming-sunderland-s-stadium-of-light-1-9420295|title=Stewart Donald reveals talks over renaming Sunderland's Stadium of Light|access-date=2018-11-07|language=en}}</ref></blockquote>
+
+==Structure and facilities==
+[[File:StadiumofLightPlan.png|thumb|right|A plan of the layout of The Stadium of Light. The shaded area indicates the section designated for away fans.]]
+The stadium is in the shape of a square bowl, and is separated into the Jimmy Montgomery Stand (West Stand),<ref>{{cite web |title=Sunderland unveil The Jimmy Montgomery Stand in pre-match ceremony |url=https://www.sunderlandecho.com/sport/football/sunderland-afc/sunderland-unveil-the-jimmy-montgomery-stand-in-pre-match-ceremony-5127298 |website=Sunderland Echo |access-date=15 May 2025 |language=en |date=14 May 2025}}</ref> North Stand, East Stand and the Roker End (South Stand). The stands have all formerly had commercial names as part of sponsorship deals, e.g. the Vaux Stand (West), the Carling Stand (North), Fosters Stand (East) and the Metro FM Stand (South).<ref name="stands">{{cite web|url=http://www.safc.com/tickets/?page_id=12682|title=2008/09 Matchday Prices|publisher=Sunderland A.F.C.|access-date=6 December 2008}}</ref> The South Stand was renamed to the Roker End in December 2018, following a poll organised by the Red & White Army supporters club.<ref>{{Cite news|url=https://www.bbc.com/sport/football/46565616|title=The Roker End: Sunderland rename Stadium of Light's South Stand|date=2018-12-14|access-date=2019-01-21|language=en-GB}}</ref> The Roker End was the name of the stand behind the goal at the southern end Sunderland's former ground, Roker Park.<ref>{{Cite web|url=https://www.chroniclelive.co.uk/sport/football/football-news/roker-end-sunderland-stadium-memories-15567732|title=Memories of a Roker Ender - as the famous name returns to the Stadium of Light|last=Mason|first=Rob|date=2018-12-18|website=nechronicle|access-date=2019-01-21}}</ref>
+
+The West Stand includes the Premier Concourse which is the name of the upper tier<ref>{{cite web|url=https://www.chroniclelive.co.uk/sport/football/football-news/sunderlands-premier-concourse-closure-sign-14388790|title=Mothballed Seats|date=9 March 2018|publisher=Newcastle Chronicle|access-date=23 April 2018}}</ref> and a number of executive boxes.<ref>{{cite web|url=http://www.safc.com/hospitality/?page_id=9664|title=Executive Boxes|publisher=Sunderland A.F.C.|access-date=6 December 2008}}</ref> The North Stand also includes an upper tier, formerly branded the Strongbow Upper, which contained the exterior seating for the Black Cats Bar, an enhanced match-day experience with padded seating and an exclusive catering facilities and bar. When the away fans were relocated in 2012, the Black Cats Bar seating was relocated to the rear of the North Stand lower tier.<ref>{{cite web|url=http://www.safc.com/hospitality/?page_id=9666|title=Black Cats Bar|publisher=Sunderland A.F.C.|access-date=6 December 2008}}</ref>
+
+Within the stadium is a concourse, housing the [[turnstile]]s, emergency exits, food kiosks, bars and toilet facilities. The concourse allows uninterrupted spectator access throughout the inner stadium bowl, with the exception being a gap between the South Stand and the South West corner. The concourse is linked to the seating bowl via a series of access ramps. The South East corner of the stadium is designated as the Family Zone,<ref>{{Cite news|url=https://www.safc.com/fans/family-zone|title=Family Zone|work=Sunderland association football Club|access-date=2018-10-17|language=en-GB}}</ref> and has family-oriented branding within the concourse, as well as entertainment such as [[PlayStation 4]] consoles.
+
+Away fans were seated in the west half of the South Stand when the ground opened in 1997, but in November 2011, the club announced that the away supporters' section would be moved from the South Stand to the North Stand Upper from the beginning of the [[2012–13 Sunderland A.F.C. season|2012–13 season]].<ref>{{cite web|url=http://www.sunderlandecho.com/news/local/away_fans_heading_north_at_the_sunderland_stadium_of_light_1_3948670|title=Away fans headiS north at the Sunderland Stadium of Light|author=David Allison|date=8 November 2011|publisher=Sunderland Echo|access-date=5 December 2011|archive-date=11 December 2011|archive-url=https://web.archive.org/web/20111211051829/http://www.sunderlandecho.com/news/local/away_fans_heading_north_at_the_sunderland_stadium_of_light_1_3948670|url-status=dead}}</ref><ref>{{cite web|url=http://tyneandwear.sky.com/sunderland/article/9759/ellis-short-plans-to-bring-the-fear-factor-back-to-the-stadium|title=Away Fans|publisher=Sky Tyne and Wear|access-date=12 February 2012|url-status=dead|archive-url=https://archive.today/20130624212323/http://tyneandwear.sky.com/sunderland/article/9759/ellis-short-plans-to-bring-the-fear-factor-back-to-the-stadium|archive-date=24 June 2013}}</ref>
+
+The [[association football pitch|pitch]] is several metres below the level of the ground outside the stadium.<ref>{{cite web|url=http://www.safc.com/anniversary/?page_id=12626|title=SoL 10th anniversary|publisher=Sunderland A.F.C.|access-date=6 December 2008}}</ref> The pitch uses a lighting system from Stadium Grow Lighting to ensure the grass can grow at any time of year. The device controls various aspects of the pitch, including exposure to light, temperature, water, and air, to make the grass able to grow in any conditions.<ref>{{cite web|url=http://www.safc.com/club/?page_id=2809&page=1|title=The Pitch|publisher=Sunderland A.F.C.|access-date=6 December 2008}}</ref>[[File:Bob Stokoe Memorial Statue, Stadium of Light - geograph.org.uk - 334579.jpg|thumbnail|right|Statue of former Sunderland manager Bob Stokoe (1930–2004) outside the South East corner of the Stadium]]
+[[File:Black Cat House, Stadium of Light - geograph.org.uk - 334577.jpg|left|thumb|Black Cat House - originally used as a ticket office but later turned into the SAFC club store.]]
+To the North East of the stadium stands the Black Cat House, a separate building which was the location of the [[Box office]] and club administrative offices, but became the club merchandise store in 2024, with the ticket office transferring to a unit in the East Stand. There is a large car park behind the West Stand and two car parks behind the East Stand, but match-day parking is permit only.<ref>{{Cite web|url=https://www.sunderland.gov.uk/article/14061/Stadium-of-Light-CPMS|title=Stadium of Light CPMS - Sunderland City Council|website=www.sunderland.gov.uk|access-date=2018-10-17}}</ref> Fragments of the iconic [[Archibald Leitch]] latticework, taken from the Main Stand at Roker Park, is used to separate parts of the Western Car Park.<ref>{{Cite news|url=https://www.safc.com/news/club-news/2017/july/the-story-behind-the-sol|title=The story behind the SoL|date=2017-07-19|work=Sunderland association football Club|access-date=2018-10-17|language=en-GB}}</ref> Wooden boards mimicking the Leitch lattice work were also added to the Roker End in 2019 as part of an initiative by the Red & White Army supporters group to bring a sense of identity to renamed stand.<ref>{{Cite web|url=https://rokerreport.sbnation.com/2019/4/17/18411766/roker-park-latticework-makes-a-comeback-and-more-flags-ordered-in-time-for-sunderland-v-donny|title=Roker Park latticework makes a comeback - and MORE flags ordered in time for Sunderland v Donny|last=Gav1879|date=2019-04-17|website=Roker Report|access-date=2019-05-10}}</ref>
+
+The perimeter walls of the stadium incorporate a "Wall of Fame" feature, where names can be engraved into the bricks of the walls.<ref>{{cite web|url=https://www.safc.com/shop/?page_id=2634|title=SAFC Wall of Fame|publisher=Sunderland A.F.C.|access-date=6 December 2008}}</ref> The interior of the stadium holds a banqueting suite, which can seat from 460 to 600 people.<ref>{{cite web|url=http://www.safc.com/home/?page_id=9814|title=Banqueting Suite|publisher=Sunderland A.F.C.|access-date=6 December 2008}}</ref> The stadium also contains several conferencing suites, that can be hired for events.<ref>{{cite web|url=http://www.safc.com/uploads/documents/jan_08/safc_1200485425_Suite-Specifications.jpg|archive-url=https://web.archive.org/web/20181017204003/https://www.safc.com/uploads/documents/jan_08/safc_1200485425_Suite-Specifications.jpg|url-status=dead|archive-date=17 October 2018|title=Suite Specifications|publisher=Sunderland A.F.C.|access-date=6 December 2008}}</ref> Quinn's Bar, housed in the West Stand, was named after former player and chairman [[Niall Quinn]] and includes memorabilia from the club's history.<ref>{{Cite news|url=https://www.sunderlandecho.com/news/stadium-of-light-bar-named-after-niall-quinn-1-4415031|title=Stadium of Light bar named after Niall Quinn|access-date=2018-10-17|language=en}}</ref> Originally it was available for non-match-day visitors, but has since become exclusive for match-day hospitality and event packages.
+
+In 2004, the ''Centre for Light'' was opened by the [[Foundation of Light|SAFC Foundation]] within the Stadium. The £1.6m learning facility, built over multiple floors, included five learning areas supporting up to 120 visiting children per day.<ref>{{Cite news|url=https://www.sunderlandecho.com/news/a-bit-of-class-at-the-stadium-of-light-1-1118129|title=A bit of class at the Stadium of Light|access-date=2018-11-07|language=en|archive-date=8 November 2018|archive-url=https://web.archive.org/web/20181108025631/https://www.sunderlandecho.com/news/a-bit-of-class-at-the-stadium-of-light-1-1118129|url-status=dead}}</ref> In 2015, Sunderland became the first football club in the world to open a [[sensory room]] within the Stadium - thereby allowing people on the [[Autism spectrum]] to watch matches in a sound-proofed environment.<ref name="The Independent">{{Cite news|url=https://www.independent.co.uk/sport/football/news-and-comment/sunderland-sensory-room-game-life-autistic-fans-supporters-a8286746.html |archive-url=https://ghostarchive.org/archive/20220524/https://www.independent.co.uk/sport/football/news-and-comment/sunderland-sensory-room-game-life-autistic-fans-supporters-a8286746.html |archive-date=24 May 2022 |url-access=subscription |url-status=live|title=Inside Sunderland sensory room bringing game to life for autistic fans|work=The Independent|access-date=2018-11-07|language=en-GB}}</ref> It was named the ''Nathan Shippey Sensory Room'' after Nathan's parents petitioned the club to set the room up.<ref>{{Cite news|url=https://www.eurosport.co.uk/football/premier-league/2015-2016/sunderland-s-sensory-room-for-autistic-fans-lauded-as-absolutely-incredible_sto5105807/story.shtml|title=Sunderland's sensory room for autistic fans lauded as 'absolutely incredible'|date=2016-02-04|work=Eurosport UK|access-date=2018-11-07}}</ref> The sensory room provided a huge success, with the model being adopted at other clubs around the world. Sunderland opened their second sensory room in 2018.<ref name="The Independent"/>
+
+In March 2018, it was announced that after the relegation to [[EFL League One]], the Premier Concourse would be closed during the [[2018–19 Sunderland A.F.C. season|2018–19 season]],<ref name="SAFCuppertiers">{{cite news|url=https://www.bbc.co.uk/sport/football/43346488|title=About the Upper tiers being removed|work=BBC Sport |access-date=9 March 2018}}</ref> although it was temporarily reopened to accommodate a large crowd for the [[Boxing Day]] game against [[Bradford City A.F.C.|Bradford City]]<ref>{{Cite web|url=https://www.chroniclelive.co.uk/sport/football/football-news/premier-concourse-re-open-boxing-15561514|title=Stadium of Light's Premier Concourse to re-open|last=Rayner|first=Stuart|date=2018-12-17|website=nechronicle|access-date=2019-01-21}}</ref> and again on the final home league game against [[Portsmouth F.C.|Portsmouth]]. After promotion back to [[EFL Championship]], the Premier Concourse permanently reopened.
+
+=== Seats ===
+The stadium originally had mainly red seats, except for a Sunderland emblem and the words "SUNDERLAND A.F.C" in white lettering on the East Stand, and the slogan "HA'WAY THE LADS" ("Ha'way" is a [[Mackem]] dialect equivalent of the [[Geordie]] word "Howay", meaning "Come on"<ref>{{Cite web|url=https://en.oxforddictionaries.com/definition/howay|archive-url=https://web.archive.org/web/20181017164620/https://en.oxforddictionaries.com/definition/howay|url-status=dead|archive-date=17 October 2018|title=howay {{!}} Definition of howay in English by Oxford Dictionaries|website=Oxford Dictionaries {{!}} English|access-date=2018-10-16}}</ref>) in white lettering on the North Stand. A thin band of white seats also circled the top of the East and South stand.
+
+[[File:A floodlit Stadium of Light - panoramio.jpg|thumb|right|East Stand of the stadium on the left]]Over time, sections of red seats become bleached by the sun, turning them pink - which became a source of mockery from opposing fans.<ref>{{Cite news|url=https://www.sunderlandecho.com/sport/football/newcastle-united/the-pink-seats-are-going-at-sunderland-s-stadium-of-light-is-it-time-newcastle-gave-st-james-s-park-a-facelift-1-9342806|title=The pink seats are going at Sunderland's Stadium of Light – is it time Newcastle gave St James's Park a facelift?|access-date=2018-10-17|language=en}}</ref> Sunderland fans petitioned the club to replace the seats, even noting on the inclusion of the faded pink seats in the digital replica of the Stadium of Light in the [[FIFA (video game series)|''FIFA'']] video game.<ref>{{Cite news|url=https://www.sunderlandecho.com/news/sunderland-fan-starts-campaign-to-replace-pink-seats-at-stadium-of-light-1-7930490|title=Sunderland fan starts campaign to replace 'pink' seats at Stadium of Light|access-date=2018-10-17|language=en|archive-date=17 October 2018|archive-url=https://web.archive.org/web/20181017163157/https://www.sunderlandecho.com/news/sunderland-fan-starts-campaign-to-replace-pink-seats-at-stadium-of-light-1-7930490|url-status=dead}}</ref> In 2016, the club announced that a programme of seat changes would take place as part of a face-lift for the stadium's 20th anniversary.<ref>{{Cite news|url=https://www.sunderlandecho.com/sport/football/sunderland-afc/sunderland-afc-to-replace-pink-seats-as-stadium-of-light-undergoes-20th-anniversary-face-lift-1-8057339|title=Sunderland AFC to replace 'pink' seats as Stadium of Light undergoes 20th anniversary face-lift|access-date=2018-10-17|language=en|archive-date=17 October 2018|archive-url=https://web.archive.org/web/20181017203021/https://www.sunderlandecho.com/sport/football/sunderland-afc/sunderland-afc-to-replace-pink-seats-as-stadium-of-light-undergoes-20th-anniversary-face-lift-1-8057339|url-status=dead}}</ref> Sections of the East Stand were replaced, but further work stalled.
+
+When [[Stewart Donald]] purchased the club in the summer of 2018, frustration over the pink seats (and the general state of the stadium) came up frequently in his early engagements with fans. In June, Donald announced that he had purchased 31,500 seats and requested Sunderland fans to volunteer to help change them.<ref>{{Cite news|url=https://www.sunderlandecho.com/sport/football/sunderland-afc/stewart-donald-confirms-that-sunderland-are-set-to-replace-pink-seats-at-the-stadium-of-light-1-9203513|title=Stewart Donald confirms that Sunderland are set to replace pink seats at the Stadium of Light|access-date=2018-10-17|language=en|archive-date=17 October 2018|archive-url=https://web.archive.org/web/20181017203103/https://www.sunderlandecho.com/sport/football/sunderland-afc/stewart-donald-confirms-that-sunderland-are-set-to-replace-pink-seats-at-the-stadium-of-light-1-9203513|url-status=dead}}</ref> The seat change took place in phases, with hundreds of volunteering fans joined occasionally by club officials and players. Phase I was the South East corner and was completed on 19 July 2018,<ref>{{Cite news|url=https://www.chroniclelive.co.uk/sport/football/football-news/phase-one-stadium-light-face-14930298|title=Phase one of Stadium of Light face-lift complete|last=Rayner|first=Stuart|date=2018-07-19|work=nechronicle|access-date=2018-10-17}}</ref> Phase II was the North East corner and North Stand on was completed on 15 September 2018,<ref>{{Cite news|url=https://www.safc.com/news/club-news/2018/september/seat-change-phase-3|title=Sign up to lend a hand this October|date=2018-10-08|work=Sunderland association football Club|access-date=2018-10-17|language=en-GB}}</ref> and Phase III the South West corner completed in October 2018. The fourth and final phase, replacing 10,000 seats in the South and West stands, began on 29 October 2018.<ref>{{Cite news|url=https://www.sunderlandecho.com/sport/football/sunderland-afc/here-s-how-sunderland-afc-fans-can-help-fit-10-000-seats-in-final-phase-of-stadium-of-light-revamp-1-9412337|title=Here's how Sunderland AFC fans can help fit 10,000 seats in final phase of Stadium of Light revamp|access-date=2018-11-05|language=en}}</ref> The corners were replaced with white seats, while the sides and ends were left red. The emblem and lettering remained. The club were nominated as a finalist in 'Best Club Marketing Initiative' category at the 2018 Business Football Awards for the seat change activity.<ref>{{Cite news|url=https://www.safc.com/news/club-news/2018/september/football-business-awards-nomination|title=Big Seat Change recognised|date=2018-09-27|work=Sunderland association football Club|access-date=2018-10-17|language=en-GB}}</ref>
+
+== Fan Zone ==
+A 6,000 capacity Fan Zone, modelled on similar schemes at [[Manchester City F.C.|Manchester City]] and those at [[NFL]] games in the [[United States]], was approved by Sunderland City Council in July 2015.<ref>{{Cite web|url=http://www.sunderlandecho.com/news/local/all-news/sunderland-councillors-back-plan-for-new-6-000-fan-zone-at-stadium-of-light-1-7339536|archive-url=https://web.archive.org/web/20150704223754/http://www.sunderlandecho.com/news/local/all-news/sunderland-councillors-back-plan-for-new-6-000-fan-zone-at-stadium-of-light-1-7339536|url-status=dead|archive-date=4 July 2015|title=Sunderland councillors back plan for new 6,000 fan zone at Stadium of Light}}</ref> It followed a successful trial prior to a game against [[West Ham United F.C.|West Ham United]] in January 2013.<ref name=":2">{{Cite news|url=https://www.sunderlandecho.com/news/fan-zone-ahead-of-football-1-5306478|title=Fan zone ahead of football|access-date=2018-10-17|language=en|archive-date=17 October 2018|archive-url=https://web.archive.org/web/20181017203023/https://www.sunderlandecho.com/news/fan-zone-ahead-of-football-1-5306478|url-status=dead}}</ref>
+
+It was opened on the first home game of the [[2015–16 Sunderland A.F.C. season|2015–16 season]]. The zone was located in the car park outside the East Stand and South East corner, and included live music, children's activities (including a [[Five-a-side football]] pitch), food and drink kiosks and on-stage interviews with club legends.<ref name=":3">{{Cite news|url=https://www.sunderlandecho.com/our-region/sunderland/what-s-new-in-the-sunderland-afc-fan-zone-this-season-1-8073372|title=What's new in the Sunderland AFC Fan Zone this season?|access-date=2018-10-17|language=en|archive-date=17 October 2018|archive-url=https://web.archive.org/web/20181017163203/https://www.sunderlandecho.com/our-region/sunderland/what-s-new-in-the-sunderland-afc-fan-zone-this-season-1-8073372|url-status=dead}}</ref> The Fan Zone opened three hours before kick-off and for a few hours after the game, and was accessible to ticket-holding spectators, including away fans.<ref name=":2" /> Due to the temporary structures in use, the Fan Zone was closed for safety reasons during periods of high winds.<ref>{{Cite news|url=https://www.sunderlandecho.com/news/sunderland-afc-shut-fanzone-due-to-storm-frank-frankie-and-the-heartstrings-gig-cancelled-1-7649301|archive-url=https://web.archive.org/web/20181017203058/https://www.sunderlandecho.com/news/sunderland-afc-shut-fanzone-due-to-storm-frank-frankie-and-the-heartstrings-gig-cancelled-1-7649301|url-status=dead|archive-date=17 October 2018|title=Sunderland AFC shut fanzone due to Storm Frank: Frankie and the Heartstrings gig cancelled|access-date=2018-10-17|language=en}}</ref> An enhanced version of the Fan Zone was opened for the [[England national football team|England]] senior international game vs [[Australia men's national soccer team|Australia]] in 2016.<ref>{{Cite news|url=https://www.chroniclelive.co.uk/whats-on/whats-on-news/stadium-light-opens-enhanced-fan-11377133|title=Stadium of Light opens enhanced fan zone for England game|last=Jeffery|first=Sarah|date=2016-05-24|work=nechronicle|access-date=2018-10-17}}</ref>
+
+The Fan Zone re-opened for the [[2016–17 Sunderland A.F.C. season|2016–17 season]] opener against [[Middlesbrough F.C.|Middlesbrough]],<ref name=":3" /> but as the season progressed, poor performance on the field and financial troubles off the field led to the Fan Zone being cancelled.
+
+In a Q&A with supporters association 'Red & White Army', new club owner [[Stewart Donald]] committed to bring back the Fan Zone.<ref>{{Cite news|url=https://rokerreport.sbnation.com/2018/7/30/17631656/news-sunderland-looking-at-re-naming-stands-whilst-the-fanzone-will-re-open-for-charlton-game|title=NEWS: Sunderland looking at re-naming stands, whilst the FanZone will re-open for Charlton game|work=Roker Report|access-date=2018-10-17}}</ref> It returned for the opening game of the [[2018–19 Sunderland A.F.C. season|2018–19 season]] against [[Charlton Athletic F.C.|Charlton Athletic]], although smaller than the 2015 version, it was open to anyone - not just ticket-holding spectators. The Fan Zone no longer re-opens after a game.
+
+== Stadium Village ==
+A 30 [[hectare]] site area around the Stadium, including the Sheepfolds [[Industrial park|Industrial estate]], was designated as the 'Stadium Village' development zone by Sunderland City Council in 2007 - and a draft [[Supplementary planning document]] was released in 2009.<ref>{{Cite web|url=https://data.gov.uk/dataset/bca934ed-cf18-47e7-913d-9ffac8cf8d38/stadium-village-development-framework|title=Stadium Village Development Framework - data.gov.uk|website=data.gov.uk|date=3 March 2015|language=en|access-date=2018-10-16}}</ref> The plan, adopted in 2010, described a framework for redeveloping the Stadium Village area into a mixture of commercial, residential and entertainment facilities with a focus on health and well-being.<ref>{{cite web |url=http://www.sunderland.gov.uk/Committees/CMIS5/Document.ashx?czJKcaeAi5tUFL1DTL2UE4zNRBcoShgo=Rc7Vktuyqn5gQWzRVLfGbHTbl3Itd4SYdxZ%2FGCjMcJ7hpMlm%2FHR8fw%3D%3D&rUzwRPf%2BZ3zd4E7Ikn8Lyw%3D%3D=pwRE6AGJFLDNlh225F5QMaQWCtPHwdhUfCZ%2FLUQzgA2uL5jNRG4jdQ%3D%3D&mCTIbCubSFfXsDGW9IXnlg%3D%3D=hFflUdN3100%3D&kCx1AnS9%2FpWZQ40DXFvdEw%3D%3D=hFflUdN3100%3D&uJovDxwdjMPoYv%2BAJvYtyA%3D%3D=ctNJFf55vVA%3D&FgPlIEJYlotS%2BYGoBi5olA%3D%3D=NHdURQburHA%3D&d9Qjj0ag1Pd993jsyOJqFvmyB7X0CSQK=ctNJFf55vVA%3D&WGewmoAfeNR9xqBux0r1Q8Za60lavYmz=ctNJFf55vVA%3D&WGewmoAfeNQ16B2MHuCpMRKZMwaG1PaO=ctNJFf55vVA |title=Archived copy |website=www.sunderland.gov.uk |access-date=17 January 2022 |archive-url=https://web.archive.org/web/20181017203135/http://www.sunderland.gov.uk/Committees/CMIS5/Document.ashx?czJKcaeAi5tUFL1DTL2UE4zNRBcoShgo=Rc7Vktuyqn5gQWzRVLfGbHTbl3Itd4SYdxZ%2FGCjMcJ7hpMlm%2FHR8fw%3D%3D&rUzwRPf%2BZ3zd4E7Ikn8Lyw%3D%3D=pwRE6AGJFLDNlh225F5QMaQWCtPHwdhUfCZ%2FLUQzgA2uL5jNRG4jdQ%3D%3D&mCTIbCubSFfXsDGW9IXnlg%3D%3D=hFflUdN3100%3D&kCx1AnS9%2FpWZQ40DXFvdEw%3D%3D=hFflUdN3100%3D&uJovDxwdjMPoYv%2BAJvYtyA%3D%3D=ctNJFf55vVA%3D&FgPlIEJYlotS%2BYGoBi5olA%3D%3D=NHdURQburHA%3D&d9Qjj0ag1Pd993jsyOJqFvmyB7X0CSQK=ctNJFf55vVA%3D&WGewmoAfeNR9xqBux0r1Q8Za60lavYmz=ctNJFf55vVA%3D&WGewmoAfeNQ16B2MHuCpMRKZMwaG1PaO=ctNJFf55vVA |archive-date=17 October 2018 |url-status=dead}}</ref> The plan was consistent with wider redevelopment plans across Sunderland, then under the umbrella of [[Sunderland Arc]] agency. In preparation for the redevelopment plans, the council began buying up plots in the area in 2008.<ref>{{Cite news|url=https://www.sunderlandecho.com/news/business/sporting-village-progress-goes-on-1-1148121|title=Sporting village progress goes on|access-date=2018-10-17|language=en|archive-date=17 October 2018|archive-url=https://web.archive.org/web/20181017203030/https://www.sunderlandecho.com/news/business/sporting-village-progress-goes-on-1-1148121|url-status=dead}}</ref>
+
+Initial redevelopment work focused on the Northern end of the site, adjacent to the stadium's North Stand and the Black Cat House ticket office. The buildings in this area have ''Stadium Park'' as their address. The [[Sunderland Aquatic Centre]], including an Olympic-sized swimming pool and fitness centre, opened in April 2008.<ref>{{Cite news|url=https://news.bbc.co.uk/2/hi/uk_news/england/wear/7300127.stm|title=City's £20m swimming pool opening|date=2008-03-17|access-date=2018-10-17|language=en-GB}}</ref> In December 2014 construction work began on a new 141-room [[Hilton Garden Inn]]<ref>{{Cite web|url=http://hiltongardeninn3.hilton.com/en/hotels/united-kingdom/hilton-garden-inn-sunderland-NCLGIGI/index.html|title=Sunderland Hotels - Hilton Garden Inn Sunderland}}</ref> which opened on 28 April 2016.<ref>{{cite web|url=http://news.hiltongardeninn.com/index.cfm/newsroom/detail/30490|title=Hilton Garden Inn Shines in Sunderland - Hilton Garden Inn Media Center}}</ref><ref>{{Cite web|url=http://www.sunderlandecho.com/news/business/work-starts-on-sunderland-s-new-hilton-hotel-1-6988462|title=Work starts on Sunderland's new Hilton Hotel|access-date=12 July 2015|archive-date=24 September 2015|archive-url=https://web.archive.org/web/20150924111926/http://www.sunderlandecho.com/news/business/work-starts-on-sunderland-s-new-hilton-hotel-1-6988462|url-status=dead}}</ref> The [[Beacon of Light]], a sports, education and community centre, opened in the summer of 2018 alongside the Aquatic Centre.<ref>{{Cite news|url=https://www.sunderlandecho.com/our-region/sunderland/first-look-inside-sunderland-s-beacon-of-light-as-20million-centre-gets-ready-for-opening-1-9205580|archive-url=https://web.archive.org/web/20180615032845/https://www.sunderlandecho.com/our-region/sunderland/first-look-inside-sunderland-s-beacon-of-light-as-20million-centre-gets-ready-for-opening-1-9205580|url-status=dead|archive-date=15 June 2018|title=First look inside Sunderland's Beacon of Light as £20million centre gets ready for opening|access-date=2018-10-16|language=en}}</ref>
+
+In 2009, during a review of the Stadium Village plans, city councilors expressed ambitions to build an [[Indoor skiing]] facility on the site and an expression of interest was issued to potential developers.<ref>{{Cite web|url=https://www.thenorthernecho.co.uk/news/4706366.Plan_for_real-snow_ski_slope_unveiled/|title=Plan for real-snow ski slope unveiled|website=The Northern Echo|date=28 October 2009 |language=en|access-date=2018-10-16}}</ref><ref>{{Cite news|url=https://news.bbc.co.uk/2/hi/uk_news/england/wear/8490100.stm|title=Developer sought for new ski dome|date=2010|access-date=2018-10-17|language=en-GB}}</ref>
+
+In the spring of 2011, the Sunderland Arc redevelopment agency was shut down, after its funding was pulled due to austerity cuts.<ref>{{Cite news|url=https://www.sunderlandecho.com/news/the-17-year-saga-of-sunderland-s-vaux-site-1-7864073|title=The 17-year saga of Sunderland's Vaux site|access-date=2018-10-17|language=en|archive-date=17 October 2018|archive-url=https://web.archive.org/web/20181017203048/https://www.sunderlandecho.com/news/the-17-year-saga-of-sunderland-s-vaux-site-1-7864073|url-status=dead}}</ref> This put the long-term future of the Stadium Village plan in doubt. However the council partnered with IDPartnership Group to push ahead with the plan,<ref>{{Cite news|url=http://idpartnership.com/portfolio/masterplanning/stadium-village/|title=Stadium Village {{!}} IDPartnership|date=2017-09-29|work=IDPartnership|access-date=2018-10-17|language=en-GB|archive-date=17 October 2018|archive-url=https://web.archive.org/web/20181017203114/http://idpartnership.com/portfolio/masterplanning/stadium-village/|url-status=dead}}</ref> and in September 2017, a 'masterplan' for Phase II of the Stadium Village area was approved by Sunderland council and released for [[public consultation]].<ref>{{Cite news|url=https://www.sunderlandecho.com/our-region/sunderland/ground-breaking-vision-for-sunderland-s-stadium-village-reach-next-stage-1-8764012|title=Ground-breaking vision for Sunderland's Stadium Village reach next stage|access-date=2018-10-16|language=en}}</ref> The Phase II area covers an area to the South and East of the stadium and proposals included facilities such as a [[Velodrome]], an [[Ice rink]], a [[Conference center|Conference centre]] and a [[Climbing wall]].<ref>{{Cite news|url=https://www.sunderlandecho.com/news/ice-arena-velodrome-climbing-wall-and-hotels-in-masterplan-for-stadium-village-in-sunderland-1-8752111|title=Ice arena, velodrome, climbing wall and hotels in masterplan for Stadium Village in Sunderland|access-date=2018-10-16|language=en|archive-date=17 October 2018|archive-url=https://web.archive.org/web/20181017163205/https://www.sunderlandecho.com/news/ice-arena-velodrome-climbing-wall-and-hotels-in-masterplan-for-stadium-village-in-sunderland-1-8752111|url-status=dead}}</ref>
+
+A key part of the new masterplan is ''Stadium Way'', a proposed tree-lined [[boulevard]] linking the [[St Peter's Metro station]] with a proposed [[Plaza]] at the South East corner of the stadium.<ref>pg 81-83 - ''Stadium Village Masterplan - Draft Supplementary Planning Document'', Sunderland City Council, December 2017</ref> The plaza would incorporate an enhanced Fan Zone, and is modelled on a similar space being developed as part of the [[Tottenham Hotspur Stadium]] in London.<ref>Pg 78-80, ''Stadium Village Masterplan - Draft Supplementary Planning Document'', Sunderland City Council, December 2017</ref>[[File:Stadium of Light, Sunderland afc.jpg|thumb|right|Exterior view of Stadium above the River Wear]]
+
+==International matches==
+As well as holding Sunderland games, the stadium has also hosted [[England national football team|England]] matches. The stadium was one of several venues used as temporary home grounds for the [[England national football team|England]] team while the redevelopment of [[Wembley Stadium]] took place.<ref>{{cite news|url=https://news.bbc.co.uk/sport2/hi/football/internationals/6676421.stm|title=End of the road for England|publisher=BBC Sport|date=29 May 2007|access-date=29 May 2007|author=Paul Fletcher}}</ref> It hosted its first England game in 1999, when they played [[Belgium national football team|Belgium]] in a friendly match, which England won 2–1.<ref>{{cite web|url=http://www.englandfootballonline.com/Seas1990-00/1999-00/M0762Bel1999.html|title=England 2 Belgium 1|publisher=England Football Online|access-date=6 December 2008}}</ref> It played host to its first competitive England match on 2 April 2003, when they played [[Turkey national football team|Turkey]] in a [[UEFA Euro 2004 qualifying#Group 7|Euro 2004 qualifying match]], which England won 2–0.<ref>{{cite news|url=https://news.bbc.co.uk/sport2/hi/football/internationals/england/2909009.stm|title=England surge past Turkey|date=2 April 2003|publisher=BBC Sport|access-date=6 December 2008}}</ref> The Stadium of Light also held an [[England national under-20 football team|England under 20]] match against [[Italy national football team|Italy]] on 27 November 2002, Italy beat England 5–3.<ref name="Wright">{{cite web|url=http://www.thefa.com/England/U20s/NewsAndFeatures/Postings/2002/11/32265.htm|archive-url=https://archive.today/20050408014732/http://www.thefa.com/England/U20s/NewsAndFeatures/Postings/2002/11/32265.htm|url-status=dead|archive-date=8 April 2005|title=Under-20s given the Chop by Italy|last=Wright|first=James|date=27 November 2002|publisher=The FA|access-date=6 December 2008}}</ref> On 10 June 2003 it hosted an [[England national under-21 football team|England's under-21s]] [[2004 UEFA European Under-21 Championship qualification Group 7|2004 U21 European Championship qualifier]] match against [[Slovakia national under-21 football team|Slovakia's under-21s]]. The hosts beat the visitors 2–0 through [[Peter Doležaj]]'s fortieth minute own goal and [[Phil Jagielka]]'s eighty third-minute goal with 11,223 in attendance.
+
+On 4 March 2016 it was announced that the Stadium of Light would host England for a friendly against [[Australia men's national soccer team|Australia]] on 27 May 2016 as part of their preparations for [[Euro 2016]].<ref>{{cite web|url=http://www.thefa.com/news/england/2016/feb/england-euro-preparation-games-announced-180216|title=England to play in Manchester and Sunderland as part of Euro 2016 preparation - England - The FA|first=The Football|last=Association}}</ref> The sold-out match finished in a 2–1 victory for England, with goals from [[Marcus Rashford]] (on his international debut), [[Wayne Rooney]] and an own goal from [[Eric Dier]].<ref>{{cite news|url=https://www.bbc.co.uk/sport/football/36339159|title=England 2-1 Australia|first=Phil McNulty Chief football writer at the Stadium of|last=Light|work=BBC Sport }}</ref>
+
+On 30 September 2021, it was announced that the Stadium would host its first women's football international; an [[England women's national football team|England]] [[2023 FIFA Women's World Cup qualification – UEFA Group D|2023 World Cup qualifier]] against [[Austria women's national football team|Austria]] on 27 November 2021.<ref>{{cite web |title=Lionesses to Play Sunderland |url=https://www.englandfootball.com/articles/2021/Sep/30/england-women-to-play-austria-in-sunderland-20213009 |website=England Football |access-date=30 September 2021}}</ref>
+
+{| class="wikitable"
+|+International matches played at the Stadium of Light
+!scope=col|Date
+!scope=col|Team #1
+!scope=col|Result
+!scope=col|Team #2
+!scope=col|Competition
+!scope=col|Attendance
+!scope=col|Ref.
+|-
+|scope=row|10 October 1999
+|align=right|{{fb-rt|ENG}}
+|align=center|2–1
+|{{fb|BEL}}
+|[[Exhibition match|Friendly]]
+|40,897
+|<ref>{{Cite web|title=Spectacular goals boost England |url=https://news.bbc.co.uk/2/hi/sport/football/470628.stm |date=10 October 1999 |access-date=5 February 2024 |publisher=BBC}}</ref>
+|-
+|scope=row|16 July 2000
+|align=right|{{fbu-rt|16|ENG}}
+|align=center|1–2
+|{{fbu|16|BRA}}
+|Nationwide Under 16 International Tournament
+|21,061
+|<ref>{{Cite web|title=Boys from Brazil show England the way
+|url=https://www.theguardian.com/football/2000/jul/17/newsstory.sport2 |date=17 July 2000 |access-date=4 June 2025 |work=The Guardian |first=John |last=Wardle}}</ref>
+|-
+|scope=row|27 November 2002
+|align=right|{{fbu-rt|20|ENG}}
+|align=center|3–5
+|{{fbu|20|ITA}}
+|U20 Four Nations Tournament
+|6,544
+|<ref>{{Cite web|title=West-European Four Nations U-20 2002/03 |url=https://news.bbc.co.uk/2/hi/sport/football/470628.stm |date=3 February 2004 |access-date=5 February 2024 |publisher=RSSSF |first=Erik |last=Gavin}}</ref>
+|-
+|scope=row|2 April 2003
+|align=right|{{fb-rt|ENG}}
+|align=center|2–0
+|{{fb|TUR}}
+|[[UEFA Euro 2004 qualifying Group 7|UEFA Euro 2004 qualifying]]
+|47,667
+|<ref>{{Cite web|title=England surge past Turkey |url=https://news.bbc.co.uk/sport2/hi/football/internationals/england/2909009.stm |date=2 April 2003 |access-date=5 February 2024 |publisher=BBC}}</ref>
+|-
+|scope=row|10 June 2003
+|align=right|{{fbu-rt|21|ENG}}
+|align=center|2–0
+|{{fbu|21|SVK}}
+|[[2004 UEFA European Under-21 Championship qualification Group 7|2004 UEFA European Under-21 Championship qualification]]
+|11,223
+|<ref>{{Cite web|title=History: England-Slovakia |url=https://www.uefa.com/under21/match/69468--england-vs-slovakia/ |access-date=5 February 2024 |publisher=UEFA}}</ref>
+|-
+|scope=row|27 May 2016
+|align=right|{{fb-rt|ENG}}
+|align=center|2–1
+|{{fb|AUS}}
+|Friendly
+|46,595
+|<ref>{{Cite web|title=England 2-1 Australia |url=http://www.bbc.com/sport/football/36339159 |date=27 May 2016 |access-date=5 February 2024 |publisher=BBC |first=Phil |last=McNulty}}</ref>
+|-
+|scope=row|27 November 2021
+|align=right|{{fbw-rt|ENG}}
+|align=center|1–0
+|{{fb|AUT}}
+|[[2023 FIFA Women's World Cup qualification – UEFA Group D|2023 FIFA Women's World Cup qualification]]
+|9,159
+|<ref>{{Cite web|title=England-Austria |url=https://www.uefa.com/womensworldcup/match/2032368/ |date=27 November 2021 |access-date=5 February 2024 |publisher=UEFA}}</ref>
+|-
+|scope=row|22 September 2023
+|align=right|{{fbw-rt|ENG}}
+|align=center|2–1
+|{{fb|SCO}}
+|[[2023–24 UEFA Women's Nations League A|2023–24 UEFA Women's Nations League]]
+|41,947
+|<ref>{{Cite web|title=England-Scotland |url=https://www.uefa.com/womensnationsleague/match/2037961/ |archive-url=https://web.archive.org/web/20230505163002/https://www.uefa.com/womensnationsleague/match/2037961/ |url-status=dead |archive-date=5 May 2023 |date=22 September 2023 |access-date=5 February 2024 |publisher=UEFA}}</ref>
+|}
+
+==Other uses==
+
+=== Other Football ===
+The Stadium of Light has hosted the final of the [[Durham Challenge Cup]] three times; in 2008, 2019.<ref>{{Cite web|title=Sunderland announce new partnership agreement with Durham FA|url=https://www.thenorthernecho.co.uk/sport/17508625.durham-challenge-cup-final-staged-sunderlands-stadium-light/|access-date=2021-10-15|website=The Northern Echo|date=18 March 2019 |language=en}}</ref> and 2023.<ref>{{Cite web |last=Carruthers |first=Mark |date=3 May 2023 |title=Hebburn Town manager targets history ahead of Durham Challenge Cup Final |url=https://www.shieldsgazette.com/sport/football/hebburn-town-manager-targets-history-ahead-of-durham-challenge-cup-final-4127657 |website=Shields Gazette}}</ref> It was due to host the 2020 final, but this was cancelled due to COVID-19. The Stadium of Light has also played host to finals for youth football, including the U14 Premier League Cup Final in 2014.<ref>{{Cite web|title=English Schools' Football Association (ESFA) - News 2011-2012|url=http://www.esfa.co.uk/news/?2012/04/05/113039/sunderland-afc-to-host-u14-premier-league-cup-final|access-date=2021-10-15|website=www.esfa.co.uk}}</ref> It will host the 2026 final.<ref>{{cite web|url=https://www.durhamfa.com/news/2026/jan/22/2026-durham-challenge-cup-final-to-be-staged-at-the-stadium-of-light|title=2026 Durham Challenge Cup Final to be staged at the Stadium of Light|publisher=Durham FA|access-date=18 February 2026}}</ref>
+
+=== Rugby union === 
+In August 2023, the stadium was confirmed as one of eight host venues for the women's [[2025 Women's Rugby World Cup]].<ref name="2025 Rugby World Cup1">{{cite news | url=https://www.bbc.co.uk/sport/rugby-union/66576330 | title=Rugby World Cup 2025: Eight host venues named for tournament in England | publisher=[[BBC Sport]] | date=21 August 2023 | access-date=22 August 2023 | language=en-UK}}</ref><ref>{{cite web |title=Everything you need to know about the eight Rugby World Cup 2025 venues {{!}} World Rugby |url=https://www.world.rugby/news/834544/everything-you-need-to-know-about-the-eight-rugby-world-cup-2025-venues |publisher=[[World Rugby]] |access-date=13 December 2023 |date=21 August 2023}}</ref> In December 2023, it was confirmed that the stadium would host the tournament's opening game.<!--between {{ruw|ENG|noflag=1}} and {{RUW||noflag=1}}--><ref>{{cite web |title=Rugby World Cup 2025: England to kick off tournament at Sunderland's Stadium of Light |url=https://www.skysports.com/rugby-union/news/37243/13027973/rugby-world-cup-2025-england-to-kick-off-tournament-at-sunderlands-stadium-of-light |publisher=[[Sky Sports]] |access-date=13 December 2023 |language=en |date=11 December 2023}}</ref><ref>{{cite web |title=Women's Rugby World Cup England 2025 confirms opening and closing venues {{!}} World Rugby |url=https://www.world.rugby/news/897778/womens-rugby-world-cup-england-2025-confirms-opening-and-closing-venues |publisher=[[World Rugby]] |access-date=13 December 2023 |date=11 December 2023}}</ref>
+{| class="wikitable"
+|+Rugby union matches played at the Stadium of Light
+!scope=col|Date
+!scope=col|Country
+!scope=col|Score
+!scope=col|Country
+!scope=col|Use
+!scope=col|Attendance
+!scope=col|Ref
+|-
+| 22 August 2025
+|align="right"| {{ruw-rt|ENG}}
+|align="center"| [[2025 Women's Rugby World Cup Pool A#England vs United States|69–7]]
+| {{ruw|USA}}
+|[[2025 Women's Rugby World Cup#Pool stage|2025 Women's Rugby World Cup pool stage]]
+|42,723
+|<ref>{{cite web |last1=Henson |first1=Mike |title=England open World Cup with 11-try win over USA |url=https://www.bbc.co.uk/sport/rugby-union/articles/cn92pvd8ynvo |website=BBC Sport |access-date=22 August 2025 |date=22 August 2025}}</ref>
+|-
+| 17 April 2027
+|align="right"| {{ruw-rt|ENG}}
+|align="center"| [[2027 Women's Six Nations Championship#England vs Scotland|vs.]]
+| {{ruw|SCO}}
+|[[2027 Women's Six Nations Championship]]
+|
+|
+|-
+|}
+
+=== Concerts ===
+[[File:PXL 20220604 211930151.NIGHT.jpg|thumb|230px|Ed Sheeran's [[+−=÷× Tour]], Stadium of Light, Sunderland, 2022]]
+
+{|class="wikitable"  | class="wikitable sortable" style="text-align:center;"
+|+Concerts at the Stadium of Light
+!Date!!Artist!!Tour!!Attendance!!Revenue<br>{{citation needed|date=September 2024}}
+|-
+|5 June 2009
+| rowspan="2" |[[Take That]]
+| rowspan="2" |[[Take That Presents: The Circus Live|Take That Present: The Circus Live]]
+| rowspan="2" |—
+| rowspan="2" |—
+|-
+|6 June 2009
+|-
+|10 June 2009
+|[[Oasis (band)|Oasis]]
+|[[Dig Out Your Soul Tour]]
+| —
+| —
+|-
+|27 May 2011
+| rowspan="4" |Take That
+| rowspan="4" |[[Progress Live]]
+| rowspan="4" |206,334 / 206,334
+| rowspan="4" |$21,600,077
+|-
+|28 May 2011
+|-
+|30 May 2011
+|-
+|31 May 2011
+|-
+|11 June 2010
+|[[Pink (singer)|Pink]]
+|[[The Funhouse Summer Carnival Tour]]
+|—
+|—
+|-
+|17 June 2011
+|[[Kings of Leon]]
+|[[Come Around Sundown World Tour]]
+|—
+|—
+|-
+|7 June 2012
+|[[Coldplay]]
+|[[Mylo Xyloto Tour]]
+|55,220 / 55,220
+|$4,331,891
+|-
+|21 June 2012
+|[[Bruce Springsteen and the E-Street Band]]
+|[[Wrecking Ball World Tour]]
+|41,564 / 52,900<br>{{clarify|date=September 2024}}
+|$3,693,333
+|-
+|24 June 2012
+|[[Red Hot Chili Peppers]]
+|[[I'm with You World Tour]]
+|—
+|—
+|-
+|13 June 2013
+|[[Bon Jovi]]
+|[[Because We Can (concert tour)|Because We Can Tour]]
+|41,649 / 41,649
+|$2,612,563
+|-
+|20 June 2013
+|[[Rihanna]]
+|[[Diamonds World Tour]]
+|54,259 / 54,259
+|$4,413,716
+|-
+|28 May 2014
+|[[One Direction]]
+|[[Where We Are Tour (One Direction)|Where We Are Tour]]
+|51,231 / 51,231
+|$4,383,490
+|-
+|25 May 2015
+|[[Foo Fighters]]
+|[[Sonic Highways World Tour]]
+| 40,000
+|—
+|-
+|28 June 2016
+|[[Beyoncé]]
+|[[The Formation World Tour]]
+|48,952 / 48,952
+|$4,996,960
+|-
+|6 June 2019
+|[[Spice Girls]]
+|[[Spice World – 2019 Tour]]
+|45,429 / 45,429
+|$4,512,900
+|-
+|3 June 2022
+| rowspan="2" |[[Ed Sheeran]]
+| rowspan="2" |[[+−=÷× Tour]]
+| rowspan="2" |106,641 / 106,641
+| rowspan="2" |$8,887,711
+|-
+|4 June 2022
+|-
+|19 June 2022
+|[[Elton John]]
+|[[Farewell Yellow Brick Road]]
+|33,771 / 33,771
+|$4,609,018
+|-
+|23 May 2023
+|Beyoncé
+|[[Renaissance World Tour]]
+|44,790 / 44,790
+|$6,727,118
+|-
+|10 June 2023
+| rowspan="2" |P!nk
+| rowspan="2" |[[Summer Carnival (tour)|Summer Carnival]]
+| rowspan="2" |96,650 / 96,650
+| rowspan="2" |$11,832,455
+|-
+|11 June 2023
+|-
+|22 May 2024
+|Bruce Springsteen and the E Street Band
+|[[Springsteen and E Street Band 2023 Tour|2024 World Tour]]
+| 45,775
+|
+|-
+|4 July 2024
+|[[Scouting for Girls]]
+|Stadium of Light Summer Sessions
+|—
+|—
+|-  
+|9 June 2026
+|Take That
+|[[The Circus Live – Summer 2026]]
+|—
+|—
+|}
+
+=== University of Sunderland ===
+The Stadium of Light hosted the [[University of Sunderland]]'s graduation ceremonies for 21 years <ref>{{Cite web |date=2025-04-30 |title=North East university to no longer hold graduations at popular stadium |url=https://www.thenorthernecho.co.uk/news/25127050.university-sunderland-moves-graduations-stadium-light/ |access-date=2026-07-27 |website=The Northern Echo |language=en}}</ref>, following their relocation to the venue in 2004. The university held graduation ceremonies at the stadium twice a year during this period.
+
+The stadium won the RSVP magazine's ''Most creative use of a sporting venue'' award in 2007 for its usage as the university's graduation site.<ref>{{cite web|url=http://www.safc.com/home/?page_id=13236|title=SoL wins national award|publisher=Sunderland A.F.C.|access-date=12 December 2008}}</ref>
+
+In January 2026, the university moved its graduation ceremonies to The Fire Station in Sunderland city centre. The first ceremonies at the new venue took place between 12 and 16 January 2026.<ref>{{Cite web |title=University of Sunderland graduations in the heart of the city |url=https://www.sunderland.ac.uk/news/2026/university-of-sunderland-graduations-in-the-heart-of-the-city |access-date=2026-07-27 |website=The University of Sunderland |language=en}}</ref>
+
+==Records==
+{{See also|List of Sunderland A.F.C. records and statistics}}
+
+=== Attendances ===
+The highest football attendance at the Stadium of Light is 48,353 set on 13 April 2002 for a Premier League game between Sunderland and Liverpool. The Stadium attendance record for non-football is 60,000 on 3 June 2022 for an Ed Sheeran concert.<ref name=":5">{{Cite web |title=Ed Sheeran's Mathematics tour breaks records on first night at Stadium of Light |url=https://www.sunderlandecho.com/business/review-of-ed-sheerans-mathematics-tour-breaks-records-on-first-night-at-sunderlands-stadium-of-light-3719814 |access-date=2022-06-05 |website=www.sunderlandecho.com |date=4 June 2022 |language=en}}</ref>
+
+The lowest league attendance at the stadium was 22,167 against [[Wigan Athletic F.C.|Wigan Athletic]] on 2 December 2003.<ref>{{cite web|url=http://thestatcat.co.uk/Imatchdets/IMD1191.asp|title=Sunderland 1–1 Wigan Athletic|publisher=The Stat Cat|access-date=6 December 2008|url-status=dead|archive-url=https://web.archive.org/web/20090212091133/http://thestatcat.co.uk/Imatchdets/IMD1191.asp|archive-date=12 February 2009}}</ref> The lowest recorded attendance for a first-team competitive game at the Stadium of Light was 3,498 vs [[Oldham Athletic A.F.C.|Oldham Athletic]] in the [[EFL Trophy]] Second Round on 1 December 2021.<ref>{{Cite web|title=Sunderland vs Oldham Athletic on 01 Dec 21 - Match Centre - Oldham Athletic|url=https://www.oldhamathletic.co.uk/matches/fixtures/first-team/202122/december/sunderland-vs-oldham-athletic-on-30-nov-21/|access-date=2021-12-29|website=www.oldhamathletic.co.uk}}</ref> A [[dead rubber]] game vs. [[Bradford City A.F.C.|Bradford City]] in the same tournament on 9 November 2021 did not have an officially recorded attendance.<ref>{{Cite web|title=%competition_name% (Sky Sports)|url=https://www.skysports.com/football/sunderland-vs-bradford-city/live/454497|access-date=2021-12-29|website=Sky Sports|language=en}}</ref>
+
+The highest seasonal average at the stadium since it was opened was 46,790 in the [[2000–01 in English football|2000–01 season]] while Sunderland were playing in the Premier League.<ref>{{cite web|url=http://thestatcat.co.uk/Mseasons/MSG122.asp|title=2000–01 season|publisher=The Stat Cat|access-date=6 December 2008|url-status=dead|archive-url=https://web.archive.org/web/20090212091152/http://thestatcat.co.uk/Mseasons/MSG122.asp|archive-date=12 February 2009}}</ref> The lowest average attendance at the Stadium of Light was 27,119 in the [[2003–04 in English football|2003–04]] season in Division One.<ref name="thestatcat.co.uk">{{cite web|url=http://thestatcat.co.uk/Mseasons/MSG125.asp|title=2003–04 season|publisher=The Stat Cat|access-date=6 December 2008|url-status=dead|archive-url=https://web.archive.org/web/20090212091231/http://thestatcat.co.uk/Mseasons/MSG125.asp|archive-date=12 February 2009}}</ref> The highest total seasonal attendance was recorded during the [[1998–99 in English football|1998–99 season]] when the aggregate was 890,660 in a season where Sunderland were First Division champions, and [[Football League Cup|League Cup]] semi-finalists.<ref>{{cite web|url=http://thestatcat.co.uk/Mseasons/MSG120.asp|title=1998–99 season|publisher=The Stat Cat|access-date=6 December 2008|url-status=dead|archive-url=https://web.archive.org/web/20090212091147/http://thestatcat.co.uk/Mseasons/MSG120.asp|archive-date=12 February 2009}}</ref> The lowest seasonal aggregate at the Stadium of Light was 572,241 in the [[2019–20 in English football|2019–20 season]], as Sunderland played only 19 of a planned 23 games due to the season's curtailment because of the [[COVID-19 pandemic]]. The following season saw all games played behind closed doors due to the pandemic.
+
+In the [[2018–19 Sunderland A.F.C. season|2018-19 season]], Sunderland averaged a home league crowd of 32,156, setting a new record for [[EFL League One|the third tier]], while the [[Boxing Day]] game against [[Bradford City A.F.C.|Bradford City]] attracted 46,039, both a League One record, and the highest attended league game outside of the [[Premier League]] that season.<ref>{{Cite web|url=https://www.chroniclelive.co.uk/sport/football/football-news/sunderland-lead-way-football-league-16249062|title=Sunderland lead the way as Football League hits 60-year high|last=Rayner|first=Stuart|date=2019-05-09|website=nechronicle|access-date=2019-05-10}}</ref>
+
+On {{date|13 October 2024}}, [[Sunderland A.F.C. Women|Sunderland Women]] and [[Newcastle United W.F.C.|Newcastle Women]] set a new attendance record of 15,387 for the [[Women's Championship]] in their first meeting in the league, a [[Wear–Tyne derby]] match played at the stadium.<ref>{{cite web |last1=Taylor |first1=Louise |title=Newcastle and Sunderland striving to give WSL north-eastern outpost |url=https://www.theguardian.com/football/2024/oct/13/newcastle-and-sunderland-striving-to-give-wsl-north-eastern-outpost |website=[[The Guardian]] |access-date=13 October 2024 |archive-url=https://archive.today/20241013190348/https://www.theguardian.com/football/2024/oct/13/newcastle-and-sunderland-striving-to-give-wsl-north-eastern-outpost |archive-date=13 October 2024 |language=en |date=13 October 2024 |url-status=live}}</ref> The previous record had been an attendance of 11,137, set in 2022.<ref>{{cite web |title=Women's Championship: Sunderland vs Newcastle to break attendance record |url=https://www.bbc.co.uk/sport/football/articles/c07n21y4pkjo |website=[[BBC Sport]] |access-date=13 October 2024 |archive-url=https://archive.today/20241013185541/https://www.bbc.com/sport/football/articles/c07n21y4pkjo |archive-date=13 October 2024 |language=en |date=11 October 2024 |url-status=live}}</ref>
+
+=== Results ===
+Sunderland's largest margin of victory at the stadium was a 7–0 win over [[Oxford United]] in Division 1 during the [[1998–99 Sunderland A.F.C. season|1998–99]] promotion season.
+
+Sunderland's biggest defeat at the Stadium of Light was 5-0 in a Premier League match against Nottingham Forest on 24th April 2026. Before that, it was also 5–0 in a preseason friendly (marking the 20th anniversary of the stadium) against [[Celtic F.C.|Celtic]] on 29 July 2017.<ref>{{Cite web|url=https://www.chroniclelive.co.uk/sport/football/match-reports/sunderland-0-5-celtic-report-13404591|title = Sunderland 0-5 Celtic report: Stadium of Light celebrations fall flat as Black Cats are thrashed|date = 29 July 2017}}</ref> Prior to 2026, Sunderland's biggest league defeat at the Stadium of Light is 4–0 which has happened on five occasions: vs. [[Arsenal F.C.|Arsenal]] (11 May 2003), vs. [[Manchester United F.C.|Manchester United]] (26 December 2007), vs. [[Aston Villa F.C.|Aston Villa]] (14 March 2015), vs. [[Southampton F.C.|Southampton]] (11 February 2017) and vs. [[Middlesbrough F.C.|Middlesbrough]] (7 October 2023).
+
+The highest scoring matches at the Stadium of Light with nine goals are a 6–3 Sunderland victory over [[Exeter City F.C.|Exeter City]] in Round 2 of the [[EFL Cup]] on 25 August 2015, and a 5–4 Sunderland defeat to [[Coventry City F.C.|Coventry City]] in League One on 13 April 2019.<ref>{{Cite news|title=Sunderland 4-5 Coventry City|language=en-GB|work=BBC Sport|url=https://www.bbc.com/sport/football/47836111|access-date=2021-12-29}}</ref>
+
+==Transport==
+[[File:The Stadium of Light Metro Station, Monkwearmouth, Sunderland, 17th April 2006 - geograph.org.uk - 153442.jpg|thumbnail|right|The Stadium of Light Tyne Wear Metro station]]
+[[Sunderland railway station]] is connected to [[London King's Cross railway station|London King's Cross]] by occasional direct services run by the Open Access operator [[Grand Central (train operating company)|Grand Central]]. The station is near the stadium.<ref>{{cite web|url=http://www.grandcentralrail.co.uk/our_service.html|title=Our Route & Services|publisher=Grand Central Railway|access-date=6 December 2008 |archive-url = https://web.archive.org/web/20080207133435/http://www.grandcentralrail.co.uk/our_service.html |archive-date = 7 February 2008}}</ref> The [[St Peter's Metro station|St Peter's]] and [[Stadium of Light Metro station]]s were built as part of the Sunderland extension. Both are quite near the stadium, though ironically St. Peter's is nearer to the stadium than the Stadium of Light station. The [[Tyne and Wear Metro|Metro]] was extended into Sunderland in 2002.<ref>{{cite web|url=http://www.railway-technology.com/projects/tyne/|title=Tyne & Wear Metro Rapid-Transit System, United Kingdom|publisher=Railway Technology|access-date=6 December 2008}}</ref> A [[park and ride]] system is available on match days to allow spectators to park away from the stadium,<ref>{{cite web|url=http://www.safc.com/tickets/?page_id=6428|title=Park and Ride|publisher=Sunderland A.F.C.|access-date=6 December 2008}}</ref> and a new footbridge has been built to link the stadium to the south bank of the river as part of the stadium park regeneration project.<ref>{{cite web|url=http://www.cartoplus.co.uk/sunderland/text_alt_2/04_northsund.htm |title=Area Proposals&nbsp;— Sunderland North |publisher=Sunderland City Council |access-date=6 December 2008 |url-status=dead |archive-url=https://web.archive.org/web/20070401171158/http://www.cartoplus.co.uk/sunderland/text_alt_2/04_northsund.htm |archive-date=1 April 2007 }}</ref>
+
+==References==
+'''General'''
+{{refbegin}}
+* {{cite book|title=Sunderland AFC: The Official History 1879–2000|last=Days |first=Paul |date=1 December 1999|publisher=Business Education Publishers Ltd|isbn=978-0-9536984-1-7|page=336|author2=John Hudson |author3=John Hudson |author4=Bernard Callaghan }}
+{{refend}}
+
+'''Specific'''
+{{Reflist}}
+
+==External links==
+{{Coord|format=dms|display=title}}
+{{Commons category|Stadium of Light}}
+* [https://www.bbc.co.uk/wear/in_pictures/360_panoramas/sporting_venues/index.shtml BBC Wear] Interactive 360-degree views of the Stadium of Light
+* [http://www.stadiumguide.com/stadiumoflight/ Stadium of Light - Sunderland - The Stadium Guide]
+
+{{Sunderland A.F.C.}}
+{{Premier League venues}}
+{{2025 Rugby World Cup venues}}
+{{City of sunderland}}
+{{Music venues and festivals of Tyne and Wear|state=autocollapse}}
+{{Authority control}}
+
+{{DEFAULTSORT:Stadium Of Light}}
+[[Category:Sunderland A.F.C.]]
+[[Category:Home Grounds of Sunderland A.F.C.]]
+[[Category:Football venues in England]]
+[[Category:Premier League venues]]
+[[Category:Tourist attractions in the City of Sunderland]]
+[[Category:Buildings and structures in the City of Sunderland]]
+[[Category:Sports venues in Tyne and Wear]]
+[[Category:Sport in the City of Sunderland]]
+[[Category:Sports venues completed in 1997]]
+[[Category:English Football League venues]]
+[[Category:Music venues in Tyne and Wear]]
+[[Category:2025 Women's Rugby World Cup venues]]

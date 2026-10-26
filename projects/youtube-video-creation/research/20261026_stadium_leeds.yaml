@@ -1,0 +1,486 @@
+# スタジアム紹介シリーズ：リーズ・ユナイテッドの本拠地（エランド・ロード、10/26）。雛形は 10/25 サンダーランドの回。
+# 重なりの確認（2026-10-26）：scripts/・research/covered.yaml・research/posted.json に stadium_leeds は無い（scripts/*stadium* は17本、リーズ無し）。
+#   クラブ紹介⑬リーズ（2026-09-20／09-21 公開）とユニフォーム kit_leeds（10/16）は別シリーズ。本拠地の持ち主の移り変わり・拡張・入場の推移は言っていない。
+# 今の立場（一次情報）：PL公式ハンドブック2026/27 の Club Directory: Leeds United（控え research/raw/20261021_nufc_plhandbook.txt 1155〜1239行）。
+#   収容 37,633（Ground Capacity at start of the Season）・ピッチ 105×68m。2025/26 は14位（同 32836行）。
+#   PL公式の試合API（sdp-prem-prod.premier-league-prod.pulselive.com）2026/27 第2・4・5・7節がエランド・ロードのリーグ戦。第8節 10/25 サンダーランド対リーズは未開始（PreMatch）。
+# 田中碧の在籍（一次情報）：PL公式の試合API の出場表（matches/2645230・2645240・2645260 の lineups）。背番号22。
+#   8/30 ブレントフォード戦は途中（45分から、2645210 の events）／9/14 ニューカッスル戦・9/20 パレス戦・10/18 マンU戦は先発。→ ホームのリーグ戦4試合すべてに出場（先発3・途中1）。
+#   9/14：32分の先制点は公式記録でニューカッスルのマイリーのオウンゴール（2645230 events の goalType Own）。田中のミドルが当たって入った（サッカーキング 2026-09-15）。4対1、入場36,693。
+#   9/20：パレスの先発に冨安健洋・鎌田大地（2645240 lineups）。日本人3人が先発。0対0、入場36,462。
+# 軸：A＝収容3万7633人はプレミア20クラブで10位（ハンドブック）。
+#     B＝本拠地は2度クラブの手を離れた。1982年に市へ売り、1998年に買い戻し。2004年に財政難で売り、2017年に当時の親会社の会社が買い、2024年3月27日に20年ぶりにクラブの持ち物に。
+#     C＝拡張の許可（2026-01-08）で最大5万3000席へ。昨季の平均は収容の97.5％、シーズンチケットの順番待ちは2万6000人。増える約1万5000席では足りない。
+# 収容のランキング（ハンドブック）：9位チェルシー 40,044／10位リーズ 37,633／11位ヴィラ 36,887／1位マンU 74,158。6位エヴァートン 52,769・7位ニューカッスル 52,729。
+#   自分で引いた・割った：40,044-37,633=2,411／37,633-36,887=746／37,633÷74,158=0.507＝約51％／53,000-37,633=15,367／26,000-15,367=10,633／57,892-53,000=4,892／57,892÷37,633=1.54。
+#   5万3000席を今季の20クラブに当てはめると、エヴァートン52,769より上で6番目（自分で並べた。BBC は「イングランドのサッカー場で7番目」と書く＝別の物差しなので言わない）。
+# 本拠地の歴史（ウィキペディア en "Elland Road"、控え scratchpad の wp_elland.txt）：
+#   エランドの町へ向かう道（A643）沿い。ビール会社の土地で、向かいのパブにちなみ「オールド・ピーコック・グラウンド」→ 愛称ピーコックス。
+#   1897年にラグビーのホルベックが使い始める。1904年にリーズ・シティが借りる。1919年にシティが不正な支払いでリーグから追放。1920年に、できたばかりのリーズ・ユナイテッドが250ポンドで買う。
+#   最多入場 57,892（1967-03-15、FAカップ5回戦の再試合、サンダーランド戦）。
+#   1982年夏に市へ250万ポンドで売り、125年の借地。1998年に親会社リーズ・スポーティングが1000万ポンドで買い戻す。
+#   1993年完成の東スタンドは1万7000席・550万ポンド（BBC 2026-01-08 も「1993年の550万ポンドの東スタンド以来の大きな改修」と書く）。
+#   2017年6月、ラドリザーニの会社 Greenfield Investment が2000万ポンドで買う（金額はヨークシャー・イヴニング・ポストの記事が出典。台本では言わない）。
+# 持ち主（リーズ公式 2024-07-10 "Elland Road ownership transferred back to Leeds United"、BBC 2024-07-10）：
+#   2004年に財政難の中で売った／2017年に当時の親会社 Greenfield Investment が買う／2020年12月に Elland Road Limited へ／2023年7月に49ersエンタープライズが両社を握る／
+#   2024年3月27日、Elland Road Limited がリーズ・ユナイテッド・フットボールクラブの持ち物に。2004年以来はじめて。キニアCEOの言葉（訳した）。地域の共有財産（ACV）にも登録。
+# 拡張（リーズ公式 2026-01-08 "Leeds United secure planning permission…"、BBC 2026-01-08）：
+#   市の計画委員会が許可。西と北のスタンドを広げ、南を手直しして最大5万3000席。UEFA カテゴリー4。シーズンチケットの順番待ち2万6000人。協議の回答の98％が賛成。委員会は11対1。
+#   大きな工事は（2025/26 の）シーズンが終わってから。工事中も本拠地は使い続ける。完成の年はクラブの記事に無い（ウィキペディアの「2030年」は出典が開けず、言わない）。
+# 入場：2025/26 はハンドブックの入場表（32904行）：19試合・平均36,695・97.5％・最多36,909（マンU戦、2026-01-04）。
+#   2026/27 ホーム4試合（PL公式API）：8/30 35,974／9/14 36,693／9/20 36,462／10/18 36,983 → 合計146,112・平均36,528。10/18 は昨季のどのホーム戦より74人多い。
+#   収容の大きい・小さいの話の基準はハンドブックの 37,633 にそろえる（BBC は拡張前を 37,645 と書く。言わない）。
+# 言わなかったもの：ジプシーの呪いの言い伝え（人を傷つけかねない）／コンサート・ラグビー／2001年の移転の計画／オーナーの名前と買収額／女子チーム／ユーロ96。
+# 写真：assets/images/20261026_stadium_leeds/（Commons、出典は credits.json）。人物は特定していない。
+date: 2026年10月26日
+slot: other_1
+format: news
+series: スタジアム紹介
+voice_min: 0
+people: []
+watch: 毎日、数字でサッカーを読み解きます
+theme:
+  id: stadium_leeds
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: リーズ
+  title: リーズの本拠地エランド・ロードは、なぜ20年もクラブの物ではなかったのか
+  question: 1919年からリーズが使い続ける本拠地は、なぜ2004年から20年もクラブの持ち物でなく、どう戻り、これからどう変わるのか
+  lead: 田中碧がプレーする、ヨークシャーの古い本拠地。
+  hook: ''
+  opening_image: assets/images/20261026_stadium_leeds/01_w.jpg
+  end_bg: assets/images/20261026_stadium_leeds/01_w.jpg
+  takeaway: リーズの本拠地エランド・ロードの収容は、今季の開幕時で3万7633人。プレミア20クラブで10位。1982年に市へ売って1998年に買い戻し、2004年に財政難で売ってから、2024年3月に20年ぶりにクラブの持ち物に戻った。2026年1月に最大5万3000席への拡張が許可されたが、昨季の平均入場は収容の97.5％、シーズンチケットの順番待ちは2万6000人で、増える約1万5000席を上回る
+  short_title: リーズの本拠地、収容はプレミア10位
+thumbnail:
+  layout: scene
+  bold: false
+  callouts:
+  - 1982年にも手放した
+  - 5万3000席へ
+  photo: assets/images/20261026_stadium_leeds/01_w.jpg
+  line1: リーズのエランド・ロード
+  line2: 20年ぶりに戻った本拠地
+  tags:
+  - リーズ
+  - エランド・ロード
+  - 田中碧
+  - プレミアリーグ
+  - スタジアム紹介
+sections:
+- id: data
+  main: true
+  heading: エランド・ロードの収容は、プレミアで何番目なのか
+  bg: assets/images/20261026_stadium_leeds/01_w.jpg
+  tier: 報道
+  telop: 収容は3万7633人。プレミア20クラブで10位。1919年からリーズの本拠地
+  narrator: 解説
+  card:
+    type: table
+    title: エランド・ロードの基礎DATA
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - 収容人数
+      - 3万7633人（今季の開幕時）
+    - - 20クラブでは
+      - 10位
+    - - 場所
+      - リーズ南部のビーストン
+    - - リーズの本拠地
+      - 1919年から
+    - - 最多入場
+      - 5万7892人（1967年）
+    - - ピッチ
+      - 縦105×横68メートル
+  say:
+  - text: リーズの本拠地、エランド・ロードの話です。
+    short_only: true
+    image: assets/images/20261026_stadium_leeds/01_w.jpg
+    card: none
+  - text: 収容は、3万7633人。今季のプレミア20クラブで、ちょうど真ん中の10番目です。
+    emph: true
+    image: assets/images/20261026_stadium_leeds/02_w.jpg
+    card: &id_rank
+      type: stats
+      title: プレミア10位の本拠地。すぐ上と、すぐ下
+      items:
+      - - '40044'
+        - 人
+        - 9位 チェルシー
+      - - '37633'
+        - 人
+        - リーズの収容
+      - - '36887'
+        - 人
+        - 11位 アストン・ヴィラ
+      focus: 1
+  - text: 9位は、チェルシー。4万44人。差は、2411席。
+    image: assets/images/20261026_stadium_leeds/02_w.jpg
+    card:
+      <<: *id_rank
+      focus: 0
+  - text: 11位は、アストン・ヴィラ。3万6887人。差は、わずか746席です。
+    image: assets/images/20261026_stadium_leeds/02_w.jpg
+    card:
+      <<: *id_rank
+      focus: 2
+  - text: 首位は、マンチェスター・ユナイテッドの7万4158席。
+    image: assets/images/20261026_stadium_leeds/03_w.jpg
+    card: none
+  - text: エランド・ロードの収容は、そのおよそ半分、約51％です。
+    emph: true
+    image: assets/images/20261026_stadium_leeds/03_w.jpg
+    card:
+      type: calc
+      title: 首位との差（自分で割った）
+      terms:
+      - - 3万7633人
+        - リーズの収容
+      - - 7万4158人
+        - マンチェスター・ユナイテッド
+      - - 0.51
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+  sources:
+  - https://resources.premierleague.pulselive.com/premierleague/document/2026/07/31/8a890ff9-176c-4364-a8ff-e08f995e2c86/TM2040_PL-Handbook-and-Collateral-2026-27_Digital_31.07.pdf
+  - https://en.wikipedia.org/wiki/Elland_Road
+- id: japan
+  heading: 田中碧は、今季のエランド・ロードで何を見せてきたのか
+  bg: assets/images/20261026_stadium_leeds/01_w.jpg
+  tier: 報道
+  telop: 今季ホームのリーグ戦4試合すべてに出場。9月14日は先制点の起点、9月20日は日本人3人が先発
+  narrator: 解説
+  card: &id_jp
+    type: table
+    title: 田中碧の、今季エランド・ロードのリーグ戦（プレミア公式の記録）
+    columns:
+    - 日付
+    - 相手と結果
+    - 田中碧
+    rows:
+    - - 8月30日
+      - ブレントフォード　1対1
+      - 後半から出場
+    - - 9月14日
+      - ニューカッスル　4対1
+      - 先発
+    - - 9月20日
+      - クリスタル・パレス　0対0
+      - 先発
+    - - 10月18日
+      - マンチェスター・U　1対1
+      - 先発
+    highlight_row: 0
+  say:
+  - text: ここからは、田中碧と、この本拠地の話です。
+    image: assets/images/20261026_stadium_leeds/02_w.jpg
+    card: none
+  - text: 田中碧は、今季、ホームのリーグ戦4試合すべてに出ています。
+    emph: true
+    image: assets/images/20261026_stadium_leeds/02_w.jpg
+    card: *id_jp
+  - text: 8月30日のブレントフォード戦は、後半から。そのあとの3試合は、先発です。
+    image: assets/images/20261026_stadium_leeds/02_w.jpg
+    card:
+      <<: *id_jp
+      highlight_row: 0
+  - text: 9月14日のニューカッスル戦。32分、田中のミドルが、相手に当たってゴールへ。
+    emph: true
+    image: assets/images/20261026_stadium_leeds/03_w.jpg
+    card:
+      <<: *id_jp
+      highlight_row: 1
+  - text: 記録は、相手のオウンゴール。それでも、この1点から、リーズは4対1の大勝です。
+    image: assets/images/20261026_stadium_leeds/03_w.jpg
+    card: none
+  - text: 9月20日の、クリスタル・パレス戦。
+    image: assets/images/20261026_stadium_leeds/03_w.jpg
+    card:
+      <<: *id_jp
+      highlight_row: 2
+  - text: 田中碧と、パレスの冨安健洋、鎌田大地。日本人3人が、先発で顔をそろえました。
+    emph: true
+    image: assets/images/20261026_stadium_leeds/07_w.jpg
+    card: none
+  - text: 10月18日の、マンチェスター・ユナイテッド戦も、田中は先発です。
+    image: assets/images/20261026_stadium_leeds/07_w.jpg
+    card:
+      <<: *id_jp
+      highlight_row: 3
+  - text: この日の入場は、3万6983人。昨季の、どのホームのリーグ戦よりも多い数字でした。
+    emph: true
+    image: assets/images/20261026_stadium_leeds/07_w.jpg
+    card: none
+  sources:
+  - https://sdp-prem-prod.premier-league-prod.pulselive.com/api/v1/matches/2645230/events
+  - https://sdp-prem-prod.premier-league-prod.pulselive.com/api/v1/matches/2645240/lineups
+  - https://sdp-prem-prod.premier-league-prod.pulselive.com/api/v1/matches/2645260/lineups
+  - https://www.soccer-king.jp/news/world/eng/20260915/2205107.html
+- id: name
+  heading: なぜ「エランド・ロード」と呼ばれ、どうリーズの物になったのか
+  bg: assets/images/20261026_stadium_leeds/01_w.jpg
+  tier: 背景
+  telop: エランドの町へ向かう道の名前。1920年、できたばかりのリーズが250ポンドで買った
+  narrator: 解説
+  card: &id_name
+    type: timeline
+    title: エランド・ロードの始まり（ウィキペディア）
+    rows:
+    - - 1897年
+      - ラグビーのホルベックが使い始める
+    - - 1904年
+      - リーズ・シティが借りる
+    - - 1919年
+      - シティがリーグから追放される
+    - - 1920年
+      - リーズ・ユナイテッドが250ポンドで買う
+    - - 1967年3月
+      - 最多5万7892人（FAカップ）
+    focus: 1920年
+    highlight_row: 0
+  say:
+  - text: エランド・ロードは、もともと道の名前です。
+    image: assets/images/20261026_stadium_leeds/08_w.jpg
+    card: none
+  - text: リーズの街から、エランドという町へ向かう道。その道沿いに、この本拠地があります。
+    image: assets/images/20261026_stadium_leeds/08_w.jpg
+    card: none
+  - text: 土地は、もともとビール会社の持ち物でした。
+    image: assets/images/20261026_stadium_leeds/08_w.jpg
+    card: none
+  - text: 呼び名は、向かいのパブの名前から、オールド・ピーコック・グラウンド。
+    image: assets/images/20261026_stadium_leeds/08_w.jpg
+    card: none
+  - text: リーズの古い愛称、ピーコックス、クジャクは、ここから来ています。
+    emph: true
+    image: assets/images/20261026_stadium_leeds/05_w.jpg
+    card: none
+  - text: 1897年、最初に使ったのは、ラグビーのホルベックでした。
+    image: assets/images/20261026_stadium_leeds/05_w.jpg
+    card:
+      <<: *id_name
+      highlight_row: 0
+  - text: 1904年に、サッカーのリーズ・シティが借ります。
+    image: assets/images/20261026_stadium_leeds/05_w.jpg
+    card:
+      <<: *id_name
+      highlight_row: 1
+  - text: ところが1919年、シティは、選手への不正な支払いで、リーグを追われます。
+    image: assets/images/20261026_stadium_leeds/05_w.jpg
+    card:
+      <<: *id_name
+      highlight_row: 2
+  - text: 1920年、できたばかりのリーズ・ユナイテッドが、250ポンドで買いました。
+    emph: true
+    image: assets/images/20261026_stadium_leeds/06_w.jpg
+    card:
+      <<: *id_name
+      highlight_row: 3
+  - text: 最多の入場は、1967年3月、FAカップのサンダーランド戦。5万7892人です。
+    image: assets/images/20261026_stadium_leeds/06_w.jpg
+    card:
+      <<: *id_name
+      highlight_row: 4
+  - text: 今の席の数の、約1.54倍。立ち見が中心だった時代の数字です。
+    emph: true
+    image: assets/images/20261026_stadium_leeds/06_w.jpg
+    card:
+      type: calc
+      title: 最多入場は、いまの収容の何倍か（自分で割った）
+      terms:
+      - - 5万7892人
+        - 1967年の最多入場
+      - - 3万7633人
+        - いまの収容
+      - - 1.54倍
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+  sources:
+  - https://en.wikipedia.org/wiki/Elland_Road
+- id: owner
+  heading: なぜ、本拠地は20年もクラブの物ではなかったのか
+  bg: assets/images/20261026_stadium_leeds/01_w.jpg
+  tier: 報道
+  telop: 1982年に市へ、2004年に財政難で売った。2024年3月、20年ぶりにクラブの持ち物に
+  narrator: 解説
+  card: &id_own
+    type: timeline
+    title: エランド・ロードの持ち主（リーズ公式・ウィキペディア）
+    rows:
+    - - 1982年
+      - 市へ売り、借りて使う
+    - - 1998年
+      - クラブの親会社が買い戻す
+    - - 2004年
+      - 財政難の中で、ふたたび売る
+    - - 2017年
+      - 当時の親会社の会社が買う
+    - - 2024年3月
+      - リーズ・ユナイテッドの持ち物に
+    focus: 2024年3月
+    highlight_row: 0
+  say:
+  - text: 1920年に買った本拠地は、その後、2度、ほかの持ち主に渡ります。
+    image: assets/images/20261026_stadium_leeds/04_w.jpg
+    card: none
+  - text: 1度目は、1982年。クラブは本拠地を、リーズ市に250万ポンドで売ります。
+    emph: true
+    image: assets/images/20261026_stadium_leeds/04_w.jpg
+    card:
+      <<: *id_own
+      highlight_row: 0
+  - text: 市から125年の約束で借り、自分の本拠地で、借り手として試合をしました。
+    image: assets/images/20261026_stadium_leeds/04_w.jpg
+    card: none
+  - text: 1998年、クラブの親会社が、1000万ポンドで買い戻します。
+    image: assets/images/20261026_stadium_leeds/04_w.jpg
+    card:
+      <<: *id_own
+      highlight_row: 1
+  - text: 2度目は、2004年。財政難の中で、本拠地は、ふたたび売られました。
+    emph: true
+    image: assets/images/20261026_stadium_leeds/03_w.jpg
+    card:
+      <<: *id_own
+      highlight_row: 2
+  - text: 2017年、当時のクラブの親会社にあたる会社が、本拠地を買います。
+    image: assets/images/20261026_stadium_leeds/03_w.jpg
+    card:
+      <<: *id_own
+      highlight_row: 3
+  - text: ただ、持ち主は、クラブそのものではありませんでした。
+    image: assets/images/20261026_stadium_leeds/03_w.jpg
+    card: none
+  - text: 2024年3月27日、本拠地の会社が、リーズ・ユナイテッドの持ち物になります。
+    emph: true
+    image: assets/images/20261026_stadium_leeds/05_w.jpg
+    card:
+      <<: *id_own
+      highlight_row: 4
+  - text: クラブが本拠地を持つのは、2004年以来。20年ぶりでした。
+    image: assets/images/20261026_stadium_leeds/05_w.jpg
+    card: none
+  - text: 当時の最高経営責任者、アンガス・キニアは、こう話しています。
+    image: assets/images/20261026_stadium_leeds/06_w.jpg
+    card: &id_kinnear
+      type: document
+      label: アンガス・キニアCEO　リーズ公式の発表（2024年7月10日。英文を訳した）
+      paragraphs:
+      - 会社の形が、少し変わっただけに見えるかもしれない。
+      - それでもサポーターは、この意味を分かってくれるはずだ。リーズ・ユナイテッドとエランド・ロードは、いつまでも分かちがたく結ばれているべきだ、という持ち主の意思だ。
+      highlight:
+      - 分かちがたく結ばれている
+  - text: クラブと本拠地は、いつまでも分かちがたく結ばれているべきだ、と。
+    emph: true
+    image: assets/images/20261026_stadium_leeds/06_w.jpg
+    card: *id_kinnear
+  - text: 本拠地は、市の登録で、地域の共有の財産にもなっています。
+    image: assets/images/20261026_stadium_leeds/07_w.jpg
+    card: none
+  sources:
+  - https://www.leedsunited.com/en/news/elland-road-ownership-transferred-back-to-leeds-united
+  - https://www.bbc.co.uk/sport/football/articles/c728418j8ygo
+  - https://en.wikipedia.org/wiki/Elland_Road
+- id: view
+  viewpoint: true
+  heading: 見立て・5万3000席になれば、順番を待つ2万6000人は入れるのか
+  bg: assets/images/20261026_stadium_leeds/01_w.jpg
+  tier: 報道
+  telop: 昨季の平均は収容の97.5％。拡張で増えるのは約1万5000席、順番待ちは2万6000人
+  narrator: 解説
+  card: &id_view
+    type: table
+    title: エランド・ロードの入場と、拡張の数字
+    columns:
+    - 区切り
+    - 数字
+    rows:
+    - - 2025/26 平均入場
+      - 3万6695人（収容の97.5％）
+    - - 2026/27 ここまで 4試合
+      - 平均3万6528人
+    - - 拡張後の収容
+      - 最大5万3000人
+    - - 増える席
+      - 1万5367席
+    - - シーズンチケットの順番待ち
+      - 2万6000人
+    highlight_row: 0
+  say:
+  - text: では、毎試合の客席は、どこまで埋まっているのか。
+    emph: true
+    image: assets/images/20261026_stadium_leeds/02_w.jpg
+    card: none
+  - text: 昨季のホームのリーグ戦は、平均3万6695人。収容の97.5％です。
+    image: assets/images/20261026_stadium_leeds/02_w.jpg
+    card:
+      <<: *id_view
+      highlight_row: 0
+    mark:
+      kind: circle
+      row: 0
+  - text: 今季は、ここまでホーム4試合で、平均3万6528人。
+    image: assets/images/20261026_stadium_leeds/02_w.jpg
+    card:
+      <<: *id_view
+      highlight_row: 1
+  - text: 2026年1月8日、リーズ市の計画委員会が、本拠地の拡張を許可しました。
+    image: assets/images/20261026_stadium_leeds/04_w.jpg
+    card: none
+  - text: 西と北のスタンドを広げ、収容は、最大5万3000人になります。
+    emph: true
+    image: assets/images/20261026_stadium_leeds/04_w.jpg
+    card:
+      <<: *id_view
+      highlight_row: 2
+  - text: 今季の20クラブに並べると、エヴァートンを抜いて、6番目です。
+    image: assets/images/20261026_stadium_leeds/04_w.jpg
+    card: none
+  - text: 増える席は、約1万5000。
+    image: assets/images/20261026_stadium_leeds/04_w.jpg
+    card:
+      <<: *id_view
+      highlight_row: 3
+  - text: ところが、シーズンチケットの順番を待つ人は、2万6000人います。
+    emph: true
+    image: assets/images/20261026_stadium_leeds/07_w.jpg
+    card:
+      <<: *id_view
+      highlight_row: 4
+  - text: 増える席を全部回しても、まだ約1万600人が待つ計算です。
+    emph: true
+    image: assets/images/20261026_stadium_leeds/07_w.jpg
+    card:
+      type: calc
+      title: 順番待ちと、増える席（自分で引いた）
+      terms:
+      - - 2万6000人
+        - 順番待ち
+      - - 1万5367席
+        - 増える席
+      - - 1万633人
+        - 引いた答え
+      ops:
+      - −
+      - ＝
+  - text: 5万3000席でも、1967年の最多入場には、4892人届きません。
+    image: assets/images/20261026_stadium_leeds/07_w.jpg
+    card: none
+  - text: クラブは1月の発表で、工事のあいだも、ここで試合を続けると約束しています。
+    image: assets/images/20261026_stadium_leeds/01_w.jpg
+    card: none
+  - text: 20年ぶりに戻った本拠地が、どこまで大きくなるか。そこが、この先の注目です。
+    image: assets/images/20261026_stadium_leeds/01_w.jpg
+    card: none
+  sources:
+  - https://www.leedsunited.com/en/news/leeds-united-secure-planning-permission-for-transformational-elland-road
+  - https://www.bbc.com/news/articles/c89qyp49z2po
+  - https://resources.premierleague.pulselive.com/premierleague/document/2026/07/31/8a890ff9-176c-4364-a8ff-e08f995e2c86/TM2040_PL-Handbook-and-Collateral-2026-27_Digital_31.07.pdf
+  - https://sdp-prem-prod.premier-league-prod.pulselive.com/api/v1/competitions/8/seasons/2026/matchweeks/7/matches ほか（2026/27 の第2・4・5節）

@@ -1,0 +1,516 @@
+# 代表チーム紹介 イングランド代表（10/25 作成。固定シリーズ9「代表チーム紹介」。見本は 10/24 のフランス代表 scripts/20261024_team_france.md）。7節：フック→基礎DATA（板）→歴史と転機（年表）→看板選手（表）→日本との関係→いまのチーム→見立て。
+# **軸（2026-10-25）**：「2026年W杯でイングランドは8試合20得点・3位、60年ぶりのメダル。それでも準決勝で敗れた。何が足りなかったのか」。答えは見立ての節（準決勝の負け方＝先制してから逆転された2018・2026、4大会の1試合の得点と失点）。
+# **重なりの確認（2026-10-25）**：scripts/・research/covered.yaml・research/posted.json を grep。イングランド代表の「紹介」回（team_england）は無い。scripts/20261004_england_croatia.md は試合の news で別題。covered.yaml の eng_spa_nations（9/27 スペイン戦）・record_kane（10/6・10/7 ケインの最多出場）は試合・記録のニュースで別題（紹介ものではない）。直近30日にイングランド代表を主役にした紹介ものは無い（10/24 の team_france は3位決定戦の相手として名前が出るだけ）。
+# ---- 確かめたこと（2026-10-25。WebFetch の要約は使わず、requests／curl で生の値を読んだ。検索のAI要約は根拠にしていない）----
+#  ・FIFAランク：4位（2026-10-07 発表）。Wikipedia の Module:SportsRankings/data/FIFA World Rankings（updated 7 October 2026）＝England 4・前回から変化0。FIFA 公式の記事（inside.fifa.com/en/news/coca-cola-mens-world-ranking-october-2026-portugal-spain）は 1スペイン・2アルゼンチン・3フランス・5ポルトガル（2つ上げ）・6ブラジル・7モロッコ・トップ10の出入り無しと書き、4位の国名は書いていない＝Wikipedia の値と矛盾しない。FIFA 公式の国別ページ（inside.fifa.com/fifa-rankings/world-ranking/ENG）は 2026-07-20 時点の 4位。**10月の4位を FIFA の表そのもので見たわけではない**（API は 10月の dateId で空を返した）。点数は書かない。次の発表は11月18日。
+#  ・W杯の成績（Wikipedia en の England at the FIFA World Cup の生の表）：出場17回、優勝1回（1966年、自国開催。決勝は西ドイツに延長4-2、ハーストが3点＝W杯の決勝で初めてのハットトリック）、2026年3位（3位決定戦はフランスに6-4。1966年以来の最高成績で、優勝以来初めてのメダル。大会20得点はイングランドの1大会の最多で、フランスと並んで大会最多）、4位 1990・2018。
+#  ・準決勝（同じ表の By match。スコアと分は各大会の knockout stage の記事の football box）：1966 ポルトガルに2-1（ボビー・チャールトン2点）／1990 西ドイツと延長1-1、PK戦3-4（ブレーメ60分・リネカー80分）、3位決定戦はイタリアに1-2／2018 クロアチアに延長1-2（トリッピアー5分／ペリシッチ68分・マンジュキッチ109分）、3位決定戦はベルギーに0-2／2026 アルゼンチンに1-2（ゴードン55分／エンソ・フェルナンデス85分・ラウタロ・マルティネス90+2分）。
+#  ・2026年W杯の8試合（England at the FIFA World Cup の試合一覧と、ESPN の scoreboard／summary API で日付・スコア・得点者を突き合わせた）：6/17 クロアチア4-2（ケイン12分PK・42分、ベリンガム47分、ラッシュフォード85分）／6/23 ガーナ0-0／6/27 パナマ2-0（ベリンガム62分・ケイン67分）／7/1 ラウンド32 コンゴ民主共和国2-1（ケイン75・86分）／7/5（現地。ESPN は 7/6 01:00Z）ラウンド16 メキシコ3-2（ベリンガム36・38分、ケイン60分PK）／7/11 準々決勝 ノルウェー延長2-1（ベリンガム45+2・93分）／7/15 準決勝 アルゼンチン1-2／7/18 3位決定戦 フランス6-4（ライス3分・コンサ18分・サカ37・45+1・87分PK・ベリンガム90+8分）＝8試合6勝1分1敗・20得点12失点。得点者：ベリンガム7・ケイン6・サカ3・ラッシュフォード・ゴードン・ライス・コンサ各1（en_wc の 2026 の行と一致）。無失点はガーナ戦とパナマ戦の2試合。ノックアウトの5試合はすべて失点（1・2・1・2・4）。
+#  ・自分で割った数（検算した。PK戦は除く。延長の得点は含む）：1試合あたり 1966年 得点11÷6=1.83・失点3÷6=0.50／1990年 8÷7=1.14・6÷7=0.86／2018年 12÷7=1.71・8÷7=1.14／2026年 20÷8=2.50・12÷8=1.50（Overall record の表）。準決勝でリードしていた時間：2018年は5分〜68分＝63分、2026年は55分〜85分＝30分。
+#  ・EURO：準優勝2回。2020年決勝はイタリアと1-1、PK戦で敗れる（ウェンブリー）。2024年決勝はスペインに1-2（England national football team の本文）。
+#  ・監督：トーマス・トゥヘル（ドイツ人）。FA が 2024-10-16 に発表、2025-01-01 から（England national football team の本文と infobox）。
+#  ・主将：ハリー・ケイン（infobox・名簿の captain）。所属バイエルン。代表125試合91得点（名簿の注記「Caps and goals are correct as of 6 October 2026」）。最多出場はシルトンと並ぶ125（infobox の Most caps に2人）、得点91は最多（Top scorer）。10/6 のチェコ戦でケインが2点（ESPN）。
+#  ・愛称：The Three Lions。連盟：The Football Association（UEFA）。
+#  ・名簿・年齢：Wikipedia の Current squad（ネーションズリーグ 9〜10月の22人）と各選手の記事の infobox（いまのクラブ）。生年月日から 2026-10-25 時点で計算：ケイン 1993-07-28=33（バイエルン、FW）、ベリンガム 2003-06-29=23（レアル・マドリード、MF）、サカ 2001-09-05=25（アーセナル、FW）、ゴードン 2001-02-24=25（バルセロナ、2026–。FW）、グエイ 2000-07-13=26（マンチェスター・シティ、2026–。DF）、ピックフォード 1994-03-07=32（エヴァートン、GK）。
+#  ・W杯のあと（England national football team results 2020–present と ESPN の scoreboard／summary で日付・スコア・得点者を確認）：ネーションズリーグ 9/26 スペイン2-3（ウェンブリー。ゴードン36分・ケイン40分）／9/29 チェコ2-0（プラハ。ゴードン47分・ケイン69分）／10/3 クロアチア7-0（リエカ。ケイン2・サカ2・ベリンガム・ゴードン・ロジャーズ）／10/6 チェコ3-0（ウェンブリー。オウンゴール・ケイン2）＝4試合3勝1敗・14得点3失点、ケイン6点・ゴードン3点。次は 11/12 クロアチア（ウェンブリー）、11/15 スペイン（マドリード）。
+#  ・日本との対戦：日本代表の試合記録（Wikipedia en の Japan national football team results 1990–1999・2000–2009・2010–2019・2020–present の生の表を ENG で拾った）。1995-06-03 ウェンブリー アンブロカップ 1-2／2004-06-01 マンチェスター 親善（FA Summer Tournament）1-1／2010-05-30 グラーツ（オーストリア）親善 1-2／2026-03-31 ウェンブリー 親善（Kirin World Challenge 2026）1-0＝4試合1勝1分2敗・4得点5失点（検算した）。得点者：1995 アンダートン48分・プラット88分PK／井原正巳62分（Umbro Cup の記事の football box。88分のPKは柱谷のハンドで退場のあと）／2004 オーウェン22分／小野伸二53分（England results 2000–2019 の football box）／2010 田中マルクス闘莉王7分／闘莉王72分・中澤佑二83分のオウンゴール（同）／2026 三笘薫23分（jp20 の football box と ESPN）。JFA の年別ページ：2026年「4/1（日本時間）KIRIN WORLD CHALLENGE 2026 ○1-0 イングランド ロンドン／ウェンブリー・スタジアム」、2010年「2010/05/30 国際親善試合 ●1-2 イングランド UPCアレナ」で確認。2004年の JFA ページは 404、1995年は見ていない。**JFA の通算対戦成績は取れていない**ので「1990年以降の記録で4試合」と言い、通算とは言わない。「日本が初勝利」とは言い切らない（「勝利」と書く）。
+# ---- 言わないもの ----
+#  ・背番号／私生活／怪我（ライスが今回の名簿にいない理由を含む）／監督の契約／戦術の説明／日本戦の通算（JFA 未確認）／クアンサーの退場と処分の騒動／選手を小さく見せる言い方。
+# ---- 写真（assets/images/20261025_team_england/、出典は credits.json。Commons の CC BY-SA 4.0、撮影 Bryan Berlin・YantsImages。代理店・放送映像は使っていない）----
+date: 2026年10月25日
+slot: other_1
+format: news
+series: 代表チーム紹介
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+people:
+- イングランド代表
+- ハリー・ケイン
+- トゥヘル
+theme:
+  id: team_england
+  league: japan
+  league_name: イングランド代表
+  kind: preview
+  topic: イングランド代表
+  title: イングランド代表は、60年ぶりにメダルを取った。準決勝で、何が足りなかったのか
+  question: 2026年のW杯で20得点を取って3位になったイングランドは、準決勝で何が足りなかったのか
+  lead: W杯で20得点。60年ぶりのメダル。
+  hook: ''
+  opening_image: assets/stats/tb_england_data_t.png
+  end_bg: assets/images/20261025_team_england/e06_kane_gha_w.jpg
+  takeaway: イングランドは2026年のW杯で8試合20得点12失点、3位決定戦でフランスに6対4で勝って3位（1966年以来のメダル）。準決勝はアルゼンチンに1対2で、55分に先制しながら85分と90+2分に失点した。2018年の準決勝も5分に先制して延長で逆転負け。準決勝まで進んだ4大会の1試合あたりは、2026年が得点2.50・失点1.50でどちらも最多（PK戦を除く）。ノックアウトの5試合はすべて失点。11月12日のクロアチア戦と15日のスペイン戦が確かめになる。
+thumbnail:
+  board: assets/stats/tb_england_data.png
+  line1: イングランド代表
+  line2: W杯3位、60年ぶりのメダル
+  crest_main:
+  - イングランド
+  tags:
+  - イングランド代表
+  - 日本代表
+  - ワールドカップ
+  - ハリー・ケイン
+  - 代表チーム紹介
+sections:
+- id: hook
+  heading: 20点を取って3位。準決勝で、何が足りなかったのか
+  main: true
+  tier: 背景
+  telop: W杯で20得点。1966年以来のメダル
+  narrator: 解説
+  say:
+  - text: イングランド代表は、2026年のワールドカップで**3位**。
+    image: assets/stats/tb_england_data2.png
+    no_telop: true
+    emph: true
+  - text: メダルは、優勝した1966年以来、60年ぶりです。
+    image: assets/stats/tb_england_data_r1.png
+    no_telop: true
+  - text: 8試合で20得点。イングランドが1つの大会で取った点として、いちばん多い数です。
+    image: assets/stats/tb_england_data_t.png
+    no_telop: true
+  - text: それでも準決勝では、アルゼンチンに1対2で敗れました。
+    image: assets/stats/tb_england_data_r1.png
+    no_telop: true
+  - text: 日本との国際Aマッチは、1990年以降で4試合。日本が勝ったのは1回です。
+    image: assets/stats/tb_england_data_r2.png
+    no_telop: true
+  - text: その1回は、2026年3月のウェンブリーでした。
+    image: assets/stats/tb_england_data_r2.png
+    no_telop: true
+  - text: 点を取り続けたチームが、準決勝を越えられなかった理由は、どこにあったのでしょうか。
+    image: assets/stats/tb_england_data_r1.png
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/England_at_the_FIFA_World_Cup
+  - https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_knockout_stage
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_results_(2020%E2%80%93present)
+  - https://www.jfa.jp/samuraiblue/schedule_result/2026.html
+- id: data
+  heading: イングランド代表は、どんな数字を持つ国なのか
+  tier: 背景
+  telop: イングランド代表の基礎DATA
+  narrator: 解説
+  say:
+  - text: フィファランクは**4位**。上にはスペイン、アルゼンチン、フランス。
+    image: assets/stats/tb_england_data0.png
+    no_telop: true
+  - text: ワールドカップの優勝は**1回**。自国で開いた、1966年の大会です。
+    image: assets/stats/tb_england_data1.png
+    no_telop: true
+  - text: ヨーロッパ選手権は、2020年と2024年に、2大会続けて準優勝。
+    image: assets/stats/tb_england_data3.png
+    no_telop: true
+  - text: 監督は、ドイツ出身のトーマス・トゥヘル。2025年1月から、チームを率いています。
+    image: assets/stats/tb_england_data4.png
+    no_telop: true
+  - text: 主将は、バイエルンのハリー・ケインです。
+    image: assets/stats/tb_england_data5.png
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Module:SportsRankings/data/FIFA_World_Rankings
+  - https://inside.fifa.com/en/news/coca-cola-mens-world-ranking-october-2026-portugal-spain
+  - https://en.wikipedia.org/wiki/England_national_football_team
+- id: history
+  heading: イングランドは、W杯の準決勝でどう戦ってきたのか
+  tier: 背景
+  telop: 準決勝は4回。勝ったのは1966年
+  narrator: 解説
+  card: &id_histA
+    type: timeline
+    title: イングランドのW杯 準決勝
+    rows:
+    - - 1966年
+      - ポルトガルに2対1。決勝は西ドイツに延長4対2
+    - - 1990年
+      - 西ドイツと1対1、PK戦3対4
+    - - 2018年
+      - クロアチアに延長で1対2
+    - - 2026年
+      - アルゼンチンに1対2
+    focus: 1966年
+  say:
+  - text: イングランドが、ワールドカップの準決勝に進んだのは4回です。
+    card: *id_histA
+  - text: 最初は1966年。準決勝は、ポルトガルに2対1の勝ち。
+    card:
+      <<: *id_histA
+      highlight_row: 0
+  - text: 決勝は西ドイツと延長までもつれて、4対2。これが、ただ1度の優勝です。
+    card:
+      <<: *id_histA
+      highlight_row: 0
+  - text: 決勝で3点を取ったのは、ジェフ・ハースト。
+    image: assets/images/20261025_team_england/e01_kane_pan_w.jpg
+    card: none
+  - text: ワールドカップの決勝で、初めてのハットトリックでした。
+    emph: true
+    card: none
+  - text: 次は24年後の1990年。西ドイツと1対1、PK戦に3対4で敗れました。
+    card:
+      <<: *id_histA
+      highlight_row: 1
+  - text: 3位決定戦もイタリアに1対2の負け。4位に終わりました。
+    card:
+      <<: *id_histA
+      highlight_row: 1
+  - text: 2018年は、クロアチアと準決勝。延長の末、1対2の負け。
+    card:
+      <<: *id_histA
+      highlight_row: 2
+  - text: このときも3位決定戦はベルギーに0対2の負けで、4位でした。
+    image: assets/images/20261025_team_england/e07_bell_gha_w.jpg
+    card: none
+  - text: 2026年は、アルゼンチンに1対2の負け。
+    emph: true
+    card:
+      <<: *id_histA
+      highlight_row: 3
+  - text: それでも3位決定戦はフランスに6対4で勝って、3位になりました。
+    image: assets/images/20261025_team_england/e03_saka_pan_w.jpg
+    card: none
+  - text: 大きな大会の決勝は、ヨーロッパ選手権で2回。どちらも敗れています。
+    card: &id_histB
+      type: timeline
+      title: ヨーロッパ選手権の決勝
+      rows:
+      - - 2020年
+        - イタリアと1対1、PK戦で敗れる
+      - - 2024年
+        - スペインに1対2
+      focus: 2020年
+  - text: 2020年はウェンブリーで、イタリアとPK戦までもつれての負け。
+    card:
+      <<: *id_histB
+      highlight_row: 0
+  - text: 2024年は、スペインに1対2の負けでした。
+    card:
+      <<: *id_histB
+      highlight_row: 1
+  sources:
+  - https://en.wikipedia.org/wiki/England_at_the_FIFA_World_Cup
+  - https://en.wikipedia.org/wiki/1990_FIFA_World_Cup_knockout_stage
+  - https://en.wikipedia.org/wiki/2018_FIFA_World_Cup_knockout_stage
+  - https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_knockout_stage
+  - https://en.wikipedia.org/wiki/England_national_football_team
+- id: players
+  heading: いまの看板選手は、誰なのか
+  tier: 背景
+  telop: 看板選手を、所属・名前・位置・年齢で
+  narrator: 解説
+  card: &id_pl
+    type: table
+    title: イングランド代表の看板選手
+    columns:
+    - 所属
+    - 名前
+    - 位置
+    - 年齢
+    rows:
+    - - バイエルン
+      - ケイン
+      - FW
+      - '33'
+    - - レアル・マドリード
+      - ベリンガム
+      - MF
+      - '23'
+    - - アーセナル
+      - サカ
+      - FW
+      - '25'
+    - - バルセロナ
+      - ゴードン
+      - FW
+      - '25'
+    - - マンチェスター・シティ
+      - グエイ
+      - DF
+      - '26'
+    - - エヴァートン
+      - ピックフォード
+      - GK
+      - '32'
+  say:
+  - text: いまのチームの中心になる、6人です。
+    card: *id_pl
+  - text: 表は、所属と名前、位置、そして10月25日時点の年齢です。
+    card: *id_pl
+  - text: 主将のケインは33歳。代表で125試合に出て、91得点。
+    image: assets/images/20261025_team_england/e06_kane_gha_w.jpg
+    card:
+      <<: *id_pl
+      highlight_row: 0
+  - text: 91得点はイングランドの歴代最多。125試合は、シルトンと並ぶ最多です。
+    emph: true
+    card: none
+  - text: レアル・マドリードのベリンガムは23歳。
+    image: assets/images/20261025_team_england/e07_bell_gha_w.jpg
+    card:
+      <<: *id_pl
+      highlight_row: 1
+  - text: 2026年のワールドカップでは7得点。チームの最多でした。
+    card:
+      <<: *id_pl
+      highlight_row: 1
+  - text: アーセナルのサカは25歳。3位決定戦のフランス戦で、3点を決めました。
+    image: assets/images/20261025_team_england/e03_saka_pan_w.jpg
+    card: none
+  - text: バルセロナのゴードンは25歳。準決勝の先制点を決めた選手です。
+    image: assets/images/20261025_team_england/e04_gordon_gha_w.jpg
+    card:
+      <<: *id_pl
+      highlight_row: 3
+  - text: 守備の柱は、マンチェスター・シティのグエイ。26歳。
+    card:
+      <<: *id_pl
+      highlight_row: 4
+  - text: ゴールを守るのは、エヴァートンのピックフォード。32歳のゴールキーパーです。
+    card:
+      <<: *id_pl
+      highlight_row: 5
+  sources:
+  - https://en.wikipedia.org/wiki/England_national_football_team
+  - https://en.wikipedia.org/wiki/England_at_the_FIFA_World_Cup
+- id: japan
+  heading: 日本は、イングランドとどう戦ってきたのか
+  tier: 背景
+  telop: 1995年の1対2から、2026年の1対0まで4試合
+  narrator: 解説
+  card: &id_jp
+    type: table
+    title: 日本とイングランドの対戦（日本の得点が先）
+    columns:
+    - 年
+    - 大会
+    - スコア
+    rows:
+    - - 1995年6月
+      - アンブロカップ
+      - 1-2
+    - - 2004年6月
+      - 親善試合
+      - 1-1
+    - - 2010年5月
+      - 親善試合
+      - 1-2
+    - - 2026年3月
+      - 親善試合
+      - 1-0
+  say:
+  - text: 日本とイングランドの国際Aマッチは、1990年以降で4試合。
+    image: assets/images/20261025_team_england/e02_bell_pan_w.jpg
+    card: *id_jp
+  - text: 日本の1勝1分2敗。得点は4、失点は5です。
+    card: *id_jp
+  - text: 1995年6月は、4か国が集まったアンブロカップで、1対2の負け。
+    card:
+      <<: *id_jp
+      highlight_row: 0
+  - text: 井原正巳の得点で追いつきましたが、88分のPKで勝ち越されました。
+    card:
+      <<: *id_jp
+      highlight_row: 0
+  - text: 2004年6月は、マンチェスターで1対1の引き分け。
+    card:
+      <<: *id_jp
+      highlight_row: 1
+  - text: オーウェンに先制され、小野伸二が同点にしました。
+    image: assets/images/20261025_team_england/e01_kane_pan_w.jpg
+    card: none
+  - text: 2010年5月は、オーストリアのグラーツで1対2の負け。
+    card:
+      <<: *id_jp
+      highlight_row: 2
+  - text: 田中マルクス闘莉王が先に決め、オウンゴール2つで逆転されました。
+    card:
+      <<: *id_jp
+      highlight_row: 2
+  - text: そして2026年3月31日、ウェンブリー。
+    emph: true
+    card:
+      <<: *id_jp
+      highlight_row: 3
+  - text: 23分に三笘薫が決めて、日本が1対0で勝利。
+    emph: true
+    card:
+      <<: *id_jp
+      highlight_row: 3
+  - text: その3か月半後、イングランドはワールドカップで3位になっています。
+    image: assets/images/20261025_team_england/e06_kane_gha_w.jpg
+    card: none
+  sources:
+  - https://www.jfa.jp/samuraiblue/schedule_result/2026.html
+  - https://www.jfa.jp/samuraiblue/schedule_result/2010.html
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_results_(1990%E2%80%931999)
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_results_(2000%E2%80%932009)
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_results_(2010%E2%80%932019)
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_results_(2020%E2%80%93present)
+  - https://en.wikipedia.org/wiki/Umbro_Cup
+  - https://en.wikipedia.org/wiki/England_national_football_team_results_(2000%E2%80%932019)
+- id: now
+  heading: トゥヘル監督のイングランドは、W杯のあとをどう戦っているのか
+  tier: 背景
+  telop: W杯のあとの4試合は、3勝1敗。14得点
+  narrator: 解説
+  card: &id_nw
+    type: table
+    title: W杯のあと イングランドの4試合
+    columns:
+    - 日付
+    - 相手
+    - イングランドの結果
+    rows:
+    - - 9月26日
+      - スペイン
+      - 2-3
+    - - 9月29日
+      - チェコ
+      - 2-0
+    - - 10月3日
+      - クロアチア
+      - 7-0
+    - - 10月6日
+      - チェコ
+      - 3-0
+  say:
+  - text: 大会のあと、イングランドはネーションズリーグを4試合戦って、3勝1敗です。
+    image: assets/images/20261025_team_england/e07_bell_gha_w.jpg
+    card: *id_nw
+  - text: ネーションズリーグは、ヨーロッパの国どうしで争う公式の大会です。
+    card: *id_nw
+  - text: 9月26日は、ウェンブリーでスペインに2対3の負け。
+    card:
+      <<: *id_nw
+      highlight_row: 0
+  - text: 9月29日は、チェコに2対0の勝ち。
+    card:
+      <<: *id_nw
+      highlight_row: 1
+  - text: 10月3日は、クロアチアに7対0の勝ち。
+    emph: true
+    image: assets/images/20261025_team_england/e02_bell_pan_w.jpg
+    card: none
+  - text: 10月6日は、チェコに3対0の勝ち。
+    card:
+      <<: *id_nw
+      highlight_row: 3
+  - text: この試合でケインは2点を取り、代表の出場数でシルトンに並びました。
+    image: assets/images/20261025_team_england/e06_kane_gha_w.jpg
+    card: none
+  - text: 4試合で14得点、3失点。14点のうち6点が、ケインの得点です。
+    card: *id_nw
+  sources:
+  - https://en.wikipedia.org/wiki/England_national_football_team_results_(2020%E2%80%93present)
+  - https://en.wikipedia.org/wiki/England_national_football_team
+- id: viewpoint
+  viewpoint: true
+  heading: 先制した準決勝で逆転された2回。数字はどこが違ったのか
+  tier: 背景
+  telop: 2026年は55分に先制、85分から2失点
+  narrator: 解説
+  card: &id_vp
+    type: table
+    title: 先制して逆転された W杯の準決勝
+    columns:
+    - 大会
+    - 先制
+    - 失点
+    - リード
+    rows:
+    - - 2018年
+      - 5分
+      - 68分・延長109分
+      - 63分
+    - - 2026年
+      - 55分
+      - 85分・90+2分
+      - 30分
+  say:
+  - text: 見立てに入ります。比べるのは、準決勝の負け方と、4大会の数字。
+    image: assets/images/20261025_team_england/e04_gordon_gha_w.jpg
+    card: none
+  - text: 2018年と2026年の準決勝は、どちらもイングランドが先制していました。
+    card: *id_vp
+  - text: 2018年は5分に先制。68分と延長の109分に失点しました。
+    card:
+      <<: *id_vp
+      highlight_row: 0
+  - text: 2026年は55分に先制。85分と90分過ぎの2点で、逆転されました。
+    emph: true
+    mark:
+      kind: circle
+      row: 1
+      col: 2
+    card:
+      <<: *id_vp
+      highlight_row: 1
+  - text: リードしていた時間は、2018年が63分、2026年は30分です。
+    card:
+      <<: *id_vp
+      highlight_row: 1
+  - text: 次は、準決勝まで進んだ4大会を並べます。
+    card: &id_vp2
+      type: table
+      title: W杯 準決勝まで進んだ4大会（PK戦を除く）
+      columns:
+      - 大会
+      - 結果
+      - 1試合の得点
+      - 1試合の失点
+      rows:
+      - - 1966年
+        - 優勝
+        - '1.83'
+        - '0.50'
+      - - 1990年
+        - 4位
+        - '1.14'
+        - '0.86'
+      - - 2018年
+        - 4位
+        - '1.71'
+        - '1.14'
+      - - 2026年
+        - 3位
+        - '2.50'
+        - '1.50'
+  - text: 1試合の得点は、2026年が2.50。4大会で最も多い数字。
+    mark:
+      kind: circle
+      row: 3
+      col: 2
+    card:
+      <<: *id_vp2
+      highlight_row: 3
+  - text: 一方、1試合の失点も1.50で、4大会の最多。
+    emph: true
+    mark:
+      kind: circle
+      row: 3
+      col: 3
+    card:
+      <<: *id_vp2
+      highlight_row: 3
+  - text: 優勝した年は0.50。その3倍にあたります。
+    card:
+      <<: *id_vp2
+      highlight_row: 0
+  - text: 2026年の8試合で、無失点はガーナ戦とパナマ戦の2試合。
+    image: assets/images/20261025_team_england/e02_bell_pan_w.jpg
+    card: none
+  - text: 負ければ終わりのトーナメント5試合は、すべて失点しています。
+    card: none
+  - text: 点は取れた。最後の数分を守りきれるかが、準決勝を分けました。
+    card: none
+  - text: 確かめるのは、11月12日のクロアチア戦と、15日のスペイン戦。
+    image: assets/images/20261025_team_england/e06_kane_gha_w.jpg
+    card: none
+  - text: どちらも、ワールドカップのあとに一度戦った相手です。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/England_at_the_FIFA_World_Cup
+  - https://en.wikipedia.org/wiki/2018_FIFA_World_Cup_knockout_stage
+  - https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_knockout_stage
+  - https://en.wikipedia.org/wiki/England_national_football_team_results_(2020%E2%80%93present)

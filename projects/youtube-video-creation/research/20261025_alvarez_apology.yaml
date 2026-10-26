@@ -1,0 +1,150 @@
+# 取材メモ（2026年10月25日）アルバレス「W杯中の言葉を謝りたい」。デポルティーボ戦の決勝点のあと（ニュースのショート。見せ方 Y）
+# 取材: 2026-10-25。requests（ブラウザUA）と ESPN の公開API で読んだ。検索エンジンのAI要約は使っていない。
+#   ・ESPN の記事（50270296「Julián Álvarez apologizes to Atlético Madrid fans over bid to join Barcelona」著者 Alex Kirkland、2026-10-24T22:46Z。
+#     now.core.api.espn.com/v1/sports/news/50270296 で本文を最後まで読んだ）
+#       … 「apologized to Atlético Madrid fans for attempting to force a departure from the club in the summer」
+#       … 「crucial 48th minute goal」「1-0 LaLiga win over Deportivo A Coruña on Saturday」「two points behind leaders Barcelona ahead of Sunday's Clásico」
+#       … 「said he wanted to leave Atlético during the World Cup, with Barcelona his preferred destination」
+#       … 「having scored twice in four days, ending a six-month goal drought」
+#       … 「injury-hit, difficult start to the season」「frequently been whistled and booed by Atlético fans at the Metropolitano」
+#       … 「first in LaLiga for eight months and first league goal in front of Atlético's home fans since November 2025」
+#       … 「While many fans applauded Álvarez's goal on Saturday, some continued to voice their disapproval.」
+#   ・ESPN の試合データ（site.api.espn.com .../esp.1/summary?event=401882834。控え research/raw/20261025_espn_atletico_deportivo.json）
+#       … 48分 アルバレス、至近距離から右足で右下へ。1-0。会場 Riyadh Air Metropolitano。**分の根拠**
+#   ・ESPN の順位表（esp.1 standings、25日朝に取得）… 1位バルセロナ 9試合 勝ち点27／2位アトレティコ 10試合 勝ち点25／3位レアル 9試合 21。
+# 本人・監督の言葉（ESPN 50270296。Movistar への発言を英語で伝えたものを訳した。語は足していない）:
+#   ・アルバレス "I want to apologize to our fans for my words during the World Cup" →「W杯中の自分の言葉について、ファンに謝りたい」
+#     "It was a mistake in terms of how I expressed myself and the timing." →「言い方も、タイミングも、間違いだった」
+#     "I understand the fans [anger] especially given how they've supported me since I arrived. They have been very generous toward me." →「来てからずっと支えてくれたのだから、ファンが怒るのは分かる。とても温かく接してくれた」
+#     "Now it's time for me to get to work and give everything I've got." →「いまは仕事に向かって、持っているものを全部出すときだ」
+#     "I'm feeling better and better" →「どんどん良くなっている」
+#     "When you feel good in life, it shows on the pitch. Even though we are professionals, everything has an impact." →「人生で調子がいいと、ピッチに出る。プロでも、全部が影響する」
+#   ・シメオネ "I have a great deal of respect for people who apologize, because apologizing is not easy" →「謝る人を、私はとても尊敬する。謝るのは簡単ではないから」
+#     "We need him." →「我々には彼が必要だ」
+#     "If the club wants to reach the heights the fans dream of, we need Julián Álvarez to be at his best." →「クラブがファンの夢見る高さに届くには、ジュリアンが最高の状態でいる必要がある」
+# 謝った中身は、本人の言葉の範囲だけにする（「W杯中の言葉」「言い方とタイミング」）。W杯中に何と言ったかの細部は、この記事に原文が無いので言わない。
+# 移籍の噂の確度: 「W杯中に出たいと話し、行き先はバルサを望んだ」は ESPN の地の文＝報道。交渉・金額・クラブ間のやり取りは言わない。
+# 確度: 結果・分・順位は ESPN の試合記録と順位表＝報道（クラブ・リーグ公式は読めていない）。
+# 重なりを避けたもの: 10/21「174日ぶりのゴール」（CLシュトゥットガルト戦の得点経過・174日・グリマルド）、10/12 の選手紹介（あだ名・経歴）、
+#   今日（10/25）のシメオネ監督紹介（アルバレスの言葉は使っていない）。CL の得点は「4日で2点」の一言にとどめる。
+# 反応: 当たっていない（作らない）。approve は --no-voices で。
+# 写真: Commons（Bryan Berlin、CC BY-SA 4.0、2026年7月 W杯エジプト戦）。過去に使った 305・065・173・251・052・146・105・056 は避け、
+#   相手選手と並ぶ 222・303・142・124 から本人を切った。**アトレティコの姿の写真は無い**（W杯の姿。この題材は「W杯中の言葉」なので合う）。
+slot: laliga
+date: "2026年10月25日"
+format: news
+no_main: true
+people: [フリアン・アルバレス, アトレティコ・マドリード, デポルティーボ, シメオネ, バルセロナ]
+
+short_style: Y
+short_hook_quote: W杯中の自分の言葉について、ファンに謝りたい。
+short_question: アルバレスの謝罪で、スタンドの空気は変わると思いますか。
+short_hook: アルバレスが、アトレティコのファンに謝りました。
+short_photos:
+  - assets/images/20261025_alvarez_apology/03_v.jpg
+  - assets/images/20261025_alvarez_apology/01_v.jpg
+  - assets/images/20261025_alvarez_apology/02_v.jpg
+  - assets/images/20261025_alvarez_apology/04_v.jpg
+short_telops:
+  - {match: "48分", text: "アトレティコ1対0デポルティーボ/48分 アルバレス"}
+  - {match: "8か月ぶり", text: "リーグ戦のゴールは8か月ぶり/ホームでは2025年11月以来"}
+  - {match: "口笛", text: "今季はホームで/口笛やブーイング"}
+  - {match: "タイミング", text: "アルバレス/「言い方もタイミングも間違い」"}
+  - {match: "尊敬", text: "シメオネ監督/「謝る人を尊敬する」"}
+  - {match: "勝ち点25", text: "アトレティコ2位・勝ち点25/首位バルサと2差"}
+
+theme:
+  id: alvarez_apology
+  league: spain
+  league_name: ラ・リーガ
+  prefix: ""
+  title: アルバレス、8か月ぶりのリーグ戦ゴールのあとで謝ったこと
+  hook: ""
+  question: アルバレスは、決勝点のあとで何を謝ったのか
+  takeaway: 謝ったのは「W杯中の言葉」の言い方とタイミング。4日で2点、チームは首位バルサと勝ち点2差。スタンドが戻るかは、ここからの点で決まる
+
+thumbnail:
+  layout: face
+  line1: アルバレス
+  line2: ファンに謝罪
+  tags: [アルバレス, アトレティコ]
+  photo: assets/images/20261025_alvarez_apology/03_w.jpg
+  short_photo: assets/images/20261025_alvarez_apology/03_v.jpg
+
+answer: W杯中にクラブを出たいと話した、その言葉の言い方とタイミングを謝った
+watch: 25日のクラシコ（バルセロナ対レアル）の結果で、首位との差が動く
+
+sections:
+  - id: what
+    heading: 決勝点のあと、何を話したか
+    tier: 報道
+    telop: アルバレス、決勝点のあとでファンに謝罪
+    say:
+      - text: 24日のラ・リーガ。アトレティコは、ホームでデポルティーボを1対0で破りました。
+        image: assets/images/20261025_alvarez_apology/01_w.jpg
+      - 決めたのは48分、アルバレス。ゴール前で、右足で押し込みました。
+      - text: リーグ戦のゴールは8か月ぶり。ホームのファンの前では、2025年11月以来です。
+        image: assets/images/20261025_alvarez_apology/02_w.jpg
+      - この夏のW杯のあいだに、アルバレスはアトレティコを出たいと話しました。
+      - 行き先に望んだのは、バルセロナでした。
+      - text: 今季はケガもあり、ホームのスタジアムでは、口笛やブーイングを受けてきました。
+        image: assets/images/20261025_alvarez_apology/04_w.jpg
+      - 試合のあと、本人がその話に触れました。
+    official: false
+    sources:
+      - https://now.core.api.espn.com/v1/sports/news/50270296
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/summary?event=401882834
+    quotes_from: ["ESPN https://now.core.api.espn.com/v1/sports/news/50270296"]
+
+  - id: words
+    main: true
+    heading: アルバレスは何を謝ったか
+    tier: 報道
+    telop: アルバレス「W杯中の言葉を謝りたい」
+    say:
+      - voice: アルバレス
+        text: W杯中の自分の言葉について、ファンに謝りたい。
+        image: assets/images/20261025_alvarez_apology/03_w.jpg
+        short_voice: true
+      - voice: アルバレス
+        text: 言い方も、タイミングも、間違いだった。
+        cont: true
+      - text: アルバレスは夏のW杯中、アトレティコを出てバルセロナへ行きたいと話していました。
+        short_only: true
+      - voice: アルバレス
+        text: 来てからずっと支えてくれたのだから、ファンが怒るのは分かる。
+        image: assets/images/20261025_alvarez_apology/01_w.jpg
+      - voice: アルバレス
+        text: いまは仕事に向かって、持っているものを全部出すときだ。
+        cont: true
+      - text: シメオネ監督は、こう受け止めています。
+        image: assets/images/20261025_alvarez_apology/02_w.jpg
+      - voice: シメオネ監督
+        text: 謝る人を、私はとても尊敬する。謝るのは、簡単ではないから。
+      - voice: シメオネ監督
+        text: クラブがファンの夢見る高さに届くには、
+      - voice: シメオネ監督
+        text: フリアン・アルバレスが最高の状態でいる必要がある。
+        cont: true
+    official: false
+    sources:
+      - https://now.core.api.espn.com/v1/sports/news/50270296
+    quotes_from: ["ESPN https://now.core.api.espn.com/v1/sports/news/50270296"]
+
+  - id: view
+    viewpoint: true
+    heading: スタンドは戻るか
+    tier: 背景
+    telop: アトレティコ2位・勝ち点25。首位バルサと2差
+    say:
+      - text: 見立てです。この日のゴールには拍手が多く出ましたが、不満の声も残っていました。
+        image: assets/images/20261025_alvarez_apology/04_w.jpg
+      - アルバレスは20日のチャンピオンズリーグで半年ぶりに決め、4日で2点目。
+      - text: チームは10試合で勝ち点25の2位。9試合で27の首位バルセロナと、2差です。
+        image: assets/images/20261025_alvarez_apology/03_w.jpg
+      - 謝った言葉に、スタンドが応えるか。ここからのゴール次第でしょう。
+    official: false
+    sources:
+      - https://now.core.api.espn.com/v1/sports/news/50270296
+      - https://site.api.espn.com/apis/v2/sports/soccer/esp.1/standings
+short_title: "アルバレス、8か月ぶりのリーグ戦ゴールのあとで謝ったこと"

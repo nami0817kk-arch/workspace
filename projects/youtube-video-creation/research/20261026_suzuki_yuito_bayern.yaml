@@ -1,0 +1,186 @@
+# 取材メモ（2026年10月26日）鈴木唯人、出場停止明けのバイエルン戦にフル出場（ニュースのショートだけ。見せ方 X）
+# 取材: 2026-10-26。requests（ブラウザUA）と ESPN の API で本文を読んだ。検索エンジンのAI要約は使っていない。
+#   ・ゲキサカ 試合記録 461838（26/10/26 03:26、データ提供 Opta） https://web.gekisaka.jp/news/world/detail/?461838-461838-fl
+#       フライブルク 1-3 バイエルン（前半0-2）。得点 ウパメカノ16分・ニャブリ42分・ビショフOG82分・オリーズ90+5分。
+#       鈴木唯人（MF14）先発・交代なし。山本理仁 58分から。GK長田澪 先発。後藤啓介 控え（出番なし）。伊藤洋輝 86分（カールと交代）。バイエルンの監督欄は Aaron John Danks。
+#   ・ESPN summary（event 401884759）の実況（Opta）: 16分 ベステの左足のシュート（ブロック）Assisted by Yuito Suzuki／27分 鈴木オフサイド／
+#       30分 鈴木の右足ミドル「too high」Assisted by Osterhage／60分 鈴木がFK獲得／85分 マタノビッチの右足シュート（ブロック）Assisted by Yuito Suzuki。
+#       鈴木の個人記録: シュート1・枠内0・得点0。チーム: シュート16対17、枠内4対9、支配率44.1%（使わない）。
+#   ・ESPN 50253173（2026-10-25T18:43Z, PA）「Bayern Munich hold off Freiburg in first game without Kompany」: 首位に戻った／コンパニ入院後の初の試合で助監督ダンクスが指揮。
+#   ・サッカーキング 2221024（2026-10-26 03:28）: 16分、中央で前を向いた鈴木がドリブルで前進→右へ→ベステのシュートをウパメカノがブロック→そこからカウンターでウパメカノが先制。
+#       82分グリフォ→マケンゴの折り返しに山本が合わせ、ビショフのオウンゴールを誘う。鈴木はフル出場。フライブルクは公式戦3連敗。
+#       28日にDFBポカール2回戦、フライブルクは塩貝健人のヴォルフスブルクと。
+#   ・サッカーキング 2218064（10/19）: 第6節レヴァークーゼン戦、鈴木唯人は出場停止のため欠場。
+#   ・フットボールゾーン 678834: 10月11日の第5節シャルケ戦で警告2枚、プロ初の退場。「これまでリーグ戦5試合4得点」。→ 今季リーグ6試合4得点（第6節は出場停止、第7節は無得点）。
+#   ・フットボールゾーン 617799（2025-11-23 公開）: 2025年11月22日、第11節のバイエルン戦で前半12分に右足ボレーで先制点。
+# 言わないこと: 試合の日本時間、採点、チームのシュート数・支配率、コンパニの容体の細部（10/24 の本で扱った。入院は前置き1行だけ）、ECLの相手。
+# 本人の言葉: **無い**（日本語の試合記事・クラブ公式「Die Stimmen zum Bayern-Spiel」はシュスター監督・ギンター・マタノビッチ・トロイの4人だけ）→ 型は X。
+# 反応: 探していない（0件。作らない。approve は --no-voices）。
+# 重なり: scripts/20261022〜20261026 を grep。鈴木唯人は 10/20 のトッテナム関心の本（写真は Commons）以来。コンパニの入院は 20261024_kompany_hospital（言い回し「練習中に倒れ」「徹底的な検査」を使わない）。
+# 写真: SCフライブルク公式のギャラリー「Die Bilder zum Heimspiel gegen Bayern」（クラブの撮影者 Achim Keller / Lukas Auer。代理店ではない）。
+#   01＝Galerie7（ドリブル、短パンに14。元が857px で縦に2.24倍になるので使わない）、04＝Galerie14（背中に YUITO 14 の後ろ姿）、02＝Galerie9（ウパメカノと競る）、03＝Galerie19（バイエルンの選手に囲まれて持ち運ぶ）。3枚とも目で本人を確認（Galerie13 の背番号14の後ろ姿と、20番の山本理仁の顔と見比べた）。
+#   facecrop は 01・03 で別の顔を主役に取ったので --center で切り直した（× の表示は検出の取り違えで、切った絵は鈴木が入っている）。
+# 確度: 報道（クラブ公式の試合記録は見ていないので報道どまり。Opta の試合記録・ESPN の実況）。経過の描写はサッカーキング（報道）。
+slot: japan
+date: "2026年10月26日"
+format: news
+no_main: true
+people: [鈴木唯人, フライブルク, バイエルン, 伊藤洋輝, 山本理仁, ウパメカノ, オリーズ]
+
+short_style: X
+short_hook_word: 出場停止明けの90分
+short_question: 鈴木唯人は、次のヴォルフスブルク戦で得点を取り戻せると思いますか。
+short_hook: 鈴木唯人、出場停止明けのバイエルン戦で90分。
+short_photos:
+  - assets/images/20261026_suzuki_yuito_bayern/02_v.jpg
+  - assets/images/20261026_suzuki_yuito_bayern/03_v.jpg
+  - assets/images/20261026_suzuki_yuito_bayern/04_v.jpg
+short_telops:
+  - {match: 出場停止, text: 前の節は/退場による出場停止}
+  - {match: 16分, text: 16分/ドリブルで運んでベステへ}
+  - {match: カウンター, text: 止められた直後に/ウパメカノの先制点}
+  - {match: 30分, text: 30分/右足のミドルは枠の上}
+  - {match: 85分, text: 85分/マタノビッチへのパス}
+  - {match: オウンゴール, text: 82分 山本理仁の折り返しから/1点差に}
+  - {match: ダンクス, text: コンパニ監督の入院後/初の試合}
+  - {match: ボレー, text: 昨季11月のバイエルン戦/右足ボレーで先制点}
+  - {match: ヴォルフスブルク, text: 28日 ドイツカップ2回戦/相手はヴォルフスブルク}
+
+theme:
+  id: suzuki_yuito_bayern
+  league: germany
+  league_name: ブンデスリーガ
+  prefix: ""
+  title: 鈴木唯人、出場停止明けでバイエルンと90分。昨季先制点の相手に何を残したか
+  hook: ""
+  question: 出場停止明けの鈴木唯人は、バイエルン戦で何を残したのか
+  takeaway: 得点は無かったが、シュートにつながるパスが2本、自分のシュートが1本。昨季は同じ相手から先制点を決めていて、今季はリーグ6試合で4得点
+
+thumbnail:
+  layout: face
+  line1: 鈴木唯人、王者と90分
+  line2: 出場停止明けの一戦
+  tags: [鈴木唯人, フライブルク, バイエルン]
+  photo: assets/images/20261026_suzuki_yuito_bayern/02_w.jpg
+  short_photo: assets/images/20261026_suzuki_yuito_bayern/02_v.jpg
+
+answer: 得点は無かったが、16分と85分にシュートにつながるパス、30分に右足のミドル。チームは1対3で敗れた
+watch: 28日のドイツカップ2回戦、ヴォルフスブルク戦
+
+sections:
+  - id: what
+    main: true
+    heading: 出場停止明けの90分
+    tier: 報道
+    telop: 鈴木唯人、バイエルン戦にフル出場
+    say:
+      - text: 鈴木唯人がバイエルン戦にフル出場。フライブルクは1対3で敗れました。
+        short_only: true
+        image: assets/images/20261026_suzuki_yuito_bayern/02_w.jpg
+        card: none
+      - text: ブンデスリーガ第7節、ホームでのバイエルン戦。鈴木は先発です。
+        image: assets/images/20261026_suzuki_yuito_bayern/03_w.jpg
+        card: none
+      - text: 前の節は、退場による出場停止で出られませんでした。
+        image: assets/images/20261026_suzuki_yuito_bayern/04_w.jpg
+        card: none
+      - text: 16分、ピッチの中央で前を向き、ドリブルで運んで右へ。
+        image: assets/images/20261026_suzuki_yuito_bayern/02_w.jpg
+        card: none
+      - text: そこから、ベステのシュートにつなげました。
+        emph: true
+        image: assets/images/20261026_suzuki_yuito_bayern/03_w.jpg
+        card: none
+      - text: ところが、そのシュートを止めたウパメカノから、カウンター。
+        image: assets/images/20261026_suzuki_yuito_bayern/04_w.jpg
+        card: none
+      - text: そのままウパメカノに決められ、先制されます。
+        image: assets/images/20261026_suzuki_yuito_bayern/02_w.jpg
+        card: none
+      - text: 30分には、自分で右足のミドル。これは枠の上へ外れました。
+        image: assets/images/20261026_suzuki_yuito_bayern/03_w.jpg
+        card: none
+      - text: 85分にも、マタノビッチのシュートにつながるパスを出しています。
+        image: assets/images/20261026_suzuki_yuito_bayern/04_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/world/detail/?461838-461838-fl
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/summary?event=401884759
+      - https://www.soccer-king.jp/news/world/ger/20261026/2221024.html
+      - https://www.soccer-king.jp/news/world/ger/20261019/2218064.html
+
+  - id: match
+    heading: 1対3の流れ
+    tier: 報道
+    telop: フライブルク 1-3 バイエルン
+    say:
+      - text: 前半42分にはニャブリにも決められ、2点を追って後半へ。
+        image: assets/images/20261026_suzuki_yuito_bayern/02_w.jpg
+        card: &goals
+          type: timeline
+          title: フライブルク 1-3 バイエルン
+          rows:
+            - [16分, ウパメカノ（バイエルン）]
+            - [42分, ニャブリ（バイエルン）]
+            - [82分, ビショフのオウンゴール（フライブルク）]
+            - ["90+5分", オリーズ（バイエルン）]
+          highlight_row: 1
+      - text: 82分、途中から入った山本理仁が折り返しに合わせ、ビショフのオウンゴールで1点差。
+        image: assets/images/20261026_suzuki_yuito_bayern/03_w.jpg
+        card:
+          <<: *goals
+          highlight_row: 2
+      - text: 86分にはバイエルンの伊藤洋輝も入り、鈴木・山本と日本人どうしの対戦に。
+        image: assets/images/20261026_suzuki_yuito_bayern/04_w.jpg
+        card: none
+      - text: それでも最後は90分プラス5分、オリーズに3点目を決められました。
+        image: assets/images/20261026_suzuki_yuito_bayern/02_w.jpg
+        card: none
+      - text: バイエルンはコンパニ監督の入院後、初の試合でした。
+        image: assets/images/20261026_suzuki_yuito_bayern/03_w.jpg
+        card: none
+      - text: 助監督ダンクスの指揮で、首位に戻っています。
+        image: assets/images/20261026_suzuki_yuito_bayern/02_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/world/detail/?461838-461838-fl
+      - https://www.soccer-king.jp/news/world/ger/20261026/2221024.html
+      - https://content.core.api.espn.com/v1/sports/news/50253173
+
+  - id: view
+    viewpoint: true
+    heading: 昨季は先制点の相手
+    tier: 報道
+    telop: 鈴木唯人、今季リーグ6試合で4得点
+    say:
+      - text: 見立てです。昨季の11月、鈴木は同じバイエルンから先制点を奪っています。
+        image: assets/images/20261026_suzuki_yuito_bayern/04_w.jpg
+        card: none
+      - text: 右足のボレーでした。
+        image: assets/images/20261026_suzuki_yuito_bayern/02_w.jpg
+        card: none
+      - text: 今回は得点こそ無かったものの、味方のシュートを2回演出し、自分でも1本打ちました。
+        image: assets/images/20261026_suzuki_yuito_bayern/03_w.jpg
+        card:
+          type: stats
+          title: 鈴木唯人のバイエルン戦
+          items:
+            - ["90", 分, フル出場]
+            - ["2", 回, 味方のシュートを演出]
+            - ["1", 本, 自分のシュート]
+          focus: 1
+      - text: 今季のリーグ戦は、6試合で4得点。フライブルクはこれで公式戦3連敗です。
+        image: assets/images/20261026_suzuki_yuito_bayern/04_w.jpg
+        card: none
+      - text: 次は28日、ドイツカップ2回戦。塩貝健人のいるヴォルフスブルクとの対戦です。
+        image: assets/images/20261026_suzuki_yuito_bayern/02_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.football-zone.net/archives/617799
+      - https://www.football-zone.net/archives/678834
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/summary?event=401884759
+      - https://www.soccer-king.jp/news/world/ger/20261026/2221024.html
+short_title: "鈴木唯人、出場停止明けでバイエルンと90分。昨季先制点の相手に何を残したか"

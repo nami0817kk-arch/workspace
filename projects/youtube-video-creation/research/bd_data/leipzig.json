@@ -1,0 +1,84 @@
+{
+ "title": "ライプツィヒ 基礎DATA",
+ "colors": [
+  "#DD0741",
+  "#0C2043"
+ ],
+ "crest": "assets/crests/ライプツィヒ.png",
+ "tiles": [
+  [
+   "クラブ創立",
+   "2009年",
+   "5月19日。5部のクラブから出場の権利を買って始まった"
+  ],
+  [
+   "愛称",
+   "ディ・ローテン・ブレン",
+   "ドイツ語で「赤い雄牛」"
+  ],
+  [
+   "ホームタウン",
+   "ライプツィヒ",
+   "人口約63万人。ドイツで8番目の都市"
+  ],
+  [
+   "本拠地",
+   "レッドブル・アレーナ",
+   "収容 47,800人（リーグ戦）。旧東ドイツで最大"
+  ],
+  [
+   "オーナー",
+   "レッドブルが99%",
+   "運営会社の株。議決権の過半はクラブが持つ"
+  ],
+  [
+   "タイトル歴",
+   "ドイツカップ2回",
+   "2022年・2023年。スーパーカップ1回"
+  ],
+  [
+   "最多得点",
+   "113点",
+   "ティモ・ヴェルナー、全公式戦"
+  ],
+  [
+   "直近のタイトル",
+   "スーパーカップ",
+   "2023年8月、バイエルンに3対0"
+  ],
+  [
+   "昨季の順位",
+   "3位",
+   "勝ち点65。チャンピオンズリーグへ"
+  ]
+ ],
+ "trophies": [
+  [
+   "ブンデスリーガ",
+   0
+  ],
+  [
+   "DFBポカール",
+   2
+  ],
+  [
+   "DFLスーパーカップ",
+   1
+  ],
+  [
+   "UEFAカップ/EL",
+   0
+  ],
+  [
+   "チャンピオンズリーグ",
+   0
+  ]
+ ],
+ "sources": [
+  "https://en.wikipedia.org/wiki/RB_Leipzig",
+  "https://en.wikipedia.org/wiki/Red_Bull_Arena_(Leipzig)",
+  "https://en.wikipedia.org/wiki/Leipzig",
+  "https://site.api.espn.com/apis/v2/sports/soccer/ger.1/standings?season=2025"
+ ],
+ "notes": "取材の控えは research/bd_data/leipzig_research.md。創立 2009-05-19（英語版 infobox・History）。SSV Markranstädt から5部（NOFV-Oberliga）の出場権を買った（同 History、約35万ユーロと報じられた＝台本には入れない）。愛称 Die Roten Bullen（英語版 infobox）。人口 633,592（2025-12-31、英語版 Leipzig infobox）・8番目の都市（同本文）。収容 47,800（リーグ戦、英語版 Red Bull Arena の infobox）、旧東ドイツで最大のサッカー場（同本文）。オーナーは運営会社（GmbH）の株の99%が Red Bull GmbH、議決権の過半は協会（e.V.）（英語版 Organization and finance の GmbH）。タイトルは英語版 Honours（DFBポカール 2021-22・2022-23、スーパーカップ 2023）。最多得点は英語版 Top goalscorers（Werner 113、全公式戦、2026-05-09 時点の表。本人は2026年1月に退団）。スーパーカップ 2023-08-13 にバイエルンに3-0（英語版 History）。昨季は ESPN standings season=2025 で3位・勝点65（20勝5分9敗、66得点47失点）。"
+}

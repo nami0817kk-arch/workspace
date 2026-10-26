@@ -1,0 +1,563 @@
+# カカ（元ブラジル代表MF）の紹介。シリーズ「レジェンドの紹介（世界）」2026-10-25。型は 10/24 のマルディーニと同じ9節（フック→基礎DATA→日本との接点→歩み→持ち味→あの試合→引退のあと→マル秘話→見立て）。
+# **FotMob・DataMB・FBref・Sofascore・Transfermarkt は不使用**。数字は英語版 Wikipedia（Kaká の成績表・Honours・各大会ページ）・Reuters（2007-12-17、web.archive.org で本文確認）・globoesporte（2017-12-17 引退）・Guardian/Reuters（2017-12-17）・ESPN Deportes（2025-05-19）と、自分で足した値だけ。
+# **私生活・宗教・法的な問題は入れない**（18歳のプールの事故と脊椎の骨折、信仰の話、家族、人道活動の話は入れない。Reuters の受賞の言葉も、聖書に触れる後半は使わず「夢」の前半だけ）。女子サッカーは入れない。
+#
+# **重なりの確認（10/25）**：scripts/・research/covered.yaml・research/posted.json を「kaka／カカ」で grep。カカが主役の回は無し（20261016_record_transfer_fee と 20261022_manager_ancelotti の本文に名前が出るだけ）。
+# **引退の確認（一次情報に近いもの）**：globoesporte 2017-12-17「Kaká anuncia aposentadoria」（TV Globo の番組で本人が発表。「A minha palavra final é que o ciclo da minha carreira como jogador profissional se encerra aqui.」を requests で本文確認）＋ Guardian（Reuters 配信）2017-12-17「Kaká retires from football at age of 35」。最後の公式戦は 2017-10-15 のオーランド対コロンバス（0対1、英語版 Wikipedia）。→ **現役ではない（44歳）**。
+# **いまの立場**：2025-05-19 の ESPN Deportes（Cazé TV のインタビューの紹介）で本人が「チームが私が助けになると思うなら、準備はできている」「2017年にやめてから準備してきた」と話し、ハーバードのスポーツビジネスの講座と CBF の指導者講習を受けたと説明。**アンチェロッティのスタッフ入りは報道止まりで、CBF・本人の発表は見つからない**（ポルトガル語の検索でも「正式な招待は無かった」と本人が答えた記事のみ）。2026年に企業の広告大使の報道（Boticário・BTG Pactual）はあるが、サッカーの役職ではないので入れない。台本は「2025年5月に準備はできていると話した→いまの役職は2026年10月の時点で確かめられていない」と言う。
+# **日本との接点（台本の「日本」節）**：
+#   - 2002年W杯：優勝メンバー。決勝は 2002-06-30 横浜国際総合競技場（2002 FIFA World Cup Final の記事）。**カカの出場は 6/13 韓国・水原のコスタリカ戦の25分のみ**（Kaká の記事。Group C の記事で会場＝Suwon を確認）。決勝は出ていないので「優勝メンバー」「決勝の舞台は横浜」とだけ言う。
+#   - 2003-12-14 横浜：トヨタ杯（インターコンチネンタルカップ）ミラン対ボカ 1対1、PK戦で敗戦。カカは先発・77分交代（2003 Intercontinental Cup の記事のメンバー表）。
+#   - 2007-12 クラブW杯（日本開催）：準決勝 12/13 横浜 浦和に1対0（得点はセードルフ）、決勝 12/16 横浜 ボカに4対2、カカは61分に得点。大会のゴールデンボール（2007 FIFA Club World Cup の記事）。出場は成績表の 2007-08 の「Other」（CWC 2試合1得点）。
+#   - 2012-10-16 ポーランド・ヴロツワフの親善試合 日本0対4ブラジル。カカは4点目（Kaká の記事の代表ゴール一覧の29番目＝最後。年別の表でも2013年以降0点）。**確度は報道（JFA の試合記録は未確認）**。
+#   - 日本で出た試合は3つ（2003年1・2007年2）。自分で数えた値。台本では数を言わない（W杯決勝は出ていないため、言うと混ざる）。
+# **数字の出どころと自分で足した値**
+# - 通算：英語版 Wikipedia の成績表。クラブ 654試合208点（サンパウロ 125/47＋期限付き 24/3、ミラン 270/95＋37/9、レアル 120/29、オーランド 78/25）。**季ごとの行を自分で足して 654・208 と一致を確認**。代表 92試合29点（年別の表を足して一致）。合計 746試合237点（自分で足した値）。サムネの表：ミラン 307/104、レアル 120/29、ほか2クラブ（サンパウロ149/50＋オーランド78/25）227/75、代表 92/29、合計 746/237。
+# - 2007年バロンドール：2007-12-02 パリで発表、カカ 444点・C.ロナウド 277点・メッシ 255点（2007 Ballon d'Or の記事）。差の167点は自分で引いた値。「このあと10年はメッシとロナウドだけ」＝記事の「2018年にモドリッチが10年の独占を終わらせた」。
+# - FIFA年間最優秀選手 2007：カカ 1047票・メッシ 504票・ロナウド 426票（Reuters 2007-12-17。本文に「他の2人の合計より多い」）。504＋426＝930 は自分で足した値。ペレの言葉「He's the complete player.」も同じ記事。カカの言葉「When I was young I dreamed of playing for Sao Paulo and playing just one game for the national team. That was it」も同じ記事（続く聖書の一文は使わない）。
+# - 移籍金：ミランへ約850万ユーロ（記事は「reported €8.5 million」＝報道）、レアルへ 6700万ユーロ（2009-06-08 に両クラブが確認、と Wikipedia）。
+# - 2006-07 CL：準決勝 第1戦 2007-04-24 オールド・トラッフォード ユナイテッド3対2ミラン（ロナウド5分、カカ22分・37分、ルーニー59分・90+1分）、第2戦 05-02 サン・シーロ ミラン3対0（カカ11分、セードルフ30分、ジラルディーノ78分）、合計5対3（2006–07 UEFA Champions League knockout stage の記事）。決勝 2対1 でカカは2点目をアシスト（Kaká の記事）。大会得点王10点（同）。
+# - 見立て：ミラン（2003-04〜2008-09、6季）270試合95点、1季平均45.0試合、95÷270＝0.352（約2.8試合に1点）／レアル（2009-10〜2012-13、4季）120試合29点、平均30.0試合、約4.1試合に1点。**全部自分で割った値**。レアルの 2010-08-05 の左ひざの手術（クラブ発表、と Wikipedia）、2011-01-03 ヘタフェ戦で復帰、2011-12 ラ・リーガで9アシスト（Wikipedia）。
+# - 2006-09-03 ロンドン（エミレーツ）のアルゼンチン戦 3対0 の3点目。途中出場、自陣からメッシを振り切って運んだ。本人が「最高のゴール」と見ている（BBC 2018 の記事、と Wikipedia）。**確度は報道**。
+# - 2009-01 マンチェスター・シティの1億ポンド超の申し出（BBC 2009-01-13、と Wikipedia）→ 1/19 にミラン側がシティの撤退を発表。**確度は報道**。台本ではミランの会長の名前は出さない。
+# - オーランド：MLS デビュー 2015-03-08 ニューヨーク・シティ戦でFKの同点弾、リーグ戦 75試合24点（Wikipedia）。
+# **入れなかったもの**：私生活（家族・結婚・信仰・プールの事故）、2010年W杯の退場、広告大使、ミランの会長の名前、Time 100、SNS の人数。
+# **日本語名・読みで怪しいもの**：カカ・ガマ・サンパウロ・インザーギ・セードルフ・ジラルディーノ・ルーニー・オールド・トラッフォード・サン・シーロ・ヴロツワフ・ボカ・オーランド・シティ・コロンバス・ヘタフェ・ペレ（audio_query で見る）。
+title: ミランのカカは、どんな選手だった？ メッシ・ロナウド前の世界一に、何があったのか
+format: news
+short_title: ミランのカカは、どんな選手だった？
+series: レジェンドの紹介
+topic: カカ
+date: 2026年10月25日
+slot: other_1
+people: [カカ]
+watch: 毎日、数字でサッカーを読み解きます
+theme: {id: legend_kaka, league: italy, league_name: イタリア・セリエA, kind: other, topic: カカ, title: ミランのカカは、どんな選手だった？ メッシ・ロナウド前の世界一に、何があったのか, question: 2007年にバロンドールを受けたカカは、何を残した選手で、いまは何をしているのか, takeaway: ミランの6シーズンは1シーズン平均45試合・約2.8試合に1点、レアル・マドリードの4シーズンは平均30試合・約4.1試合に1点。出場の数は3分の2になったが、2つのクラブでタイトルを重ねた,
+  nameplate: カカ｜元ブラジル代表 MF, opening_image: assets/images/20261025_kaka_legend/02_w.jpg, end_bg: assets/images/20261025_kaka_legend/02_w.jpg, bgm: assets/audio/bgm_calm.wav, outro_title: 毎日、数字でサッカーを読み解きます}
+thumbnail:
+  line1: カカ、通算746試合237点
+  line2: バロンドール・横浜で世界一
+  tags: [ミラン]
+  photo: assets/images/20261025_kaka_legend/panel_01.jpg
+  photos: []
+  short_photo: assets/images/20261025_kaka_legend/02_v.jpg
+sections:
+- id: hook
+  heading: メッシとロナウドの前に、世界一に選ばれた選手は何を残したのか
+  tier: 報道
+  telop: 2007年、バロンドール
+  card: &id001
+    type: stats
+    title: カカ 元MF（44歳）
+    items:
+    - ['746', 試合, クラブと代表の公式戦]
+    - ['237', 点, クラブと代表の公式戦]
+    - ['2007', 年, バロンドール]
+    focus: 0
+  say:
+  - {text: 2007年12月、パリ。サッカーで最も知られた個人の賞、バロンドール。, card: none, image: assets/images/20261025_kaka_legend/02_w.jpg}
+  - {text: 選ばれたのは、ミランのカカでした。, card: none}
+  - {text: 2位のクリスティアーノ・ロナウドに、167点の差をつけての受賞です。, card: none}
+  - {text: このあと10年、この賞を受けたのは、メッシとロナウドの2人に限られます。, card: none, image: assets/images/20261025_kaka_legend/01_w.jpg, emph: true}
+  - text: クラブと代表を合わせて、746試合で237得点。約3.1試合に1点のペース。
+    card: *id001
+    image: assets/images/20261025_kaka_legend/01_r.jpg
+    callword: 746試合
+  - text: ワールドカップ、チャンピオンズリーグ、バロンドール。3つを手にしました。
+    card:
+      type: stats
+      title: カカ 元MF（44歳）
+      items:
+      - ['746', 試合, クラブと代表の公式戦]
+      - ['237', 点, クラブと代表の公式戦]
+      - ['2007', 年, バロンドール]
+      focus: 2
+    image: assets/images/20261025_kaka_legend/07_r.jpg
+  - {text: 世界一に選ばれた選手は、何を残したのか。数えていきます。, card: none, image: assets/images/20261025_kaka_legend/02_w.jpg}
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/2007_Ballon_d%27Or', 'https://en.wikipedia.org/wiki/Kak%C3%A1']
+- id: data
+  heading: カカは、いつ、どこで生まれ、どんな選手か
+  tier: 報道
+  telop: カカの基礎DATA
+  card: &id002
+    type: table
+    title: カカ
+    columns: [項目, 内容]
+    rows: &id003
+    - [生年月日, 1982年4月22日・ブラジル（ガマ）]
+    - [ポジション, 攻撃的MF（186cm）]
+    - [クラブ, サンパウロ・ミラン・レアル・オーランド]
+    - [ブラジル代表, 92試合29得点・W杯3回]
+    - [引退, 2017年12月（35歳）]
+    source: Wikipedia
+    highlight_row: 0
+  say:
+  - text: カカは、1982年4月22日、ブラジルのガマ生まれ。44歳です。
+    card: *id002
+    image: assets/images/20261025_kaka_legend/06_w.jpg
+  - text: ポジションは、攻撃的ミッドフィルダー。身長は186センチです。
+    card:
+      type: table
+      title: カカ
+      columns: [項目, 内容]
+      rows: *id003
+      source: Wikipedia
+      highlight_row: 1
+    image: assets/images/20261025_kaka_legend/01_r.jpg
+  - text: サンパウロ、ミラン、レアル・マドリード、オーランド・シティでプレー。
+    card:
+      type: table
+      title: カカ
+      columns: [項目, 内容]
+      rows: *id003
+      source: Wikipedia
+      highlight_row: 2
+    image: assets/images/20261025_kaka_legend/07_r.jpg
+  - text: ブラジル代表は92試合29得点。ワールドカップには3回出ています。
+    card:
+      type: table
+      title: カカ
+      columns: [項目, 内容]
+      rows: *id003
+      source: Wikipedia
+      highlight_row: 3
+    image: assets/images/20261025_kaka_legend/06_w.jpg
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/Kak%C3%A1']
+- id: japan
+  heading: カカは、日本のピッチで、何を手にしたのか
+  tier: 報道
+  telop: 横浜で、2度の世界一
+  card: &id004
+    type: table
+    title: カカと日本
+    columns: [年, 場所, 相手, 結果]
+    rows: &id005
+    - ['2002', 横浜, W杯決勝, 優勝メンバー]
+    - ['2003', 横浜, ボカ, 1対1 PK負け]
+    - ['2007', 横浜, 浦和, 1対0]
+    - ['2007', 横浜, ボカ, 4対2 優勝]
+    - ['2012', ポーランド, 日本代表, 4対0]
+    source: Wikipedia
+    highlight_row: 0
+  say:
+  - {text: 日本との縁は、2002年のワールドカップから始まります。, card: none, image: assets/images/20261025_kaka_legend/01_w.jpg}
+  - text: 20歳のカカは、優勝メンバーのひとり。決勝の舞台は、横浜でした。
+    card: *id004
+    image: assets/images/20261025_kaka_legend/01_r.jpg
+  - text: 大会での出場は、韓国で行われたコスタリカ戦の25分です。
+    card:
+      type: table
+      title: カカと日本
+      columns: [年, 場所, 相手, 結果]
+      rows: *id005
+      source: Wikipedia
+      highlight_row: 0
+    image: assets/images/20261025_kaka_legend/07_r.jpg
+  - text: 2003年12月は、ミランで横浜へ。ボカと1対1、PK戦で敗れました。
+    card:
+      type: table
+      title: カカと日本
+      columns: [年, 場所, 相手, 結果]
+      rows: *id005
+      source: Wikipedia
+      highlight_row: 1
+    image: assets/images/20261025_kaka_legend/06_w.jpg
+  - {text: 2007年12月、ふたたび横浜。各大陸の王者が集まる大会です。, card: none, image: assets/images/20261025_kaka_legend/07_w.jpg}
+  - text: 準決勝は、浦和レッズに1対0で勝ちます。
+    card:
+      type: table
+      title: カカと日本
+      columns: [年, 場所, 相手, 結果]
+      rows: *id005
+      source: Wikipedia
+      highlight_row: 2
+    image: assets/images/20261025_kaka_legend/01_r.jpg
+  - text: 決勝はボカに4対2で勝利。61分には、カカ自身も決めました。
+    card:
+      type: table
+      title: カカと日本
+      columns: [年, 場所, 相手, 結果]
+      rows: *id005
+      source: Wikipedia
+      highlight_row: 3
+    image: assets/images/20261025_kaka_legend/07_r.jpg
+    emph: true
+  - {text: 大会でいちばんの選手に贈られる賞も、カカの手に渡りました。, card: none, image: assets/images/20261025_kaka_legend/06_w.jpg}
+  - {text: 日本代表との試合にも、記録が残っています。, card: none, image: assets/images/20261025_kaka_legend/01_w.jpg}
+  - text: 2012年10月、ポーランドでの親善試合。日本に4対0で勝った試合の4点目。
+    card:
+      type: table
+      title: カカと日本
+      columns: [年, 場所, 相手, 結果]
+      rows: *id005
+      source: Wikipedia
+      highlight_row: 4
+    image: assets/images/20261025_kaka_legend/06_w.jpg
+  - {text: これが、ブラジル代表で決めた、最後のゴールになりました。, card: none, image: assets/images/20261025_kaka_legend/01_w.jpg, emph: true}
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/2002_FIFA_World_Cup_Final', 'https://en.wikipedia.org/wiki/2002_FIFA_World_Cup_Group_C', 'https://en.wikipedia.org/wiki/2003_Intercontinental_Cup', 'https://en.wikipedia.org/wiki/2007_FIFA_Club_World_Cup',
+    'https://en.wikipedia.org/wiki/Kak%C3%A1']
+- id: career
+  heading: サンパウロの18歳は、どう世界一の選手になったのか
+  tier: 報道
+  telop: サンパウロから、世界一へ
+  card: &id006
+    type: timeline
+    title: 歩んできた道
+    rows: &id007
+    - ['2001', サンパウロでデビュー（18歳）]
+    - ['2003', ミランへ。1年目でセリエA優勝]
+    - ['2007', 欧州王者。世界一の選手に]
+    - ['2009', レアル・マドリードへ]
+    - ['2013', ミランに戻る]
+    - [2015〜17, アメリカのオーランド・シティ]
+    focus: 0
+    highlight_row: 0
+  say:
+  - text: サンパウロのトップチームにデビューしたのは、2001年。18歳でした。
+    card: *id006
+    image: assets/images/20261025_kaka_legend/01_r.jpg
+  - text: 2003年、21歳でミランへ。移籍金は、約850万ユーロとされています。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows: *id007
+      focus: 1
+      highlight_row: 0
+    image: assets/images/20261025_kaka_legend/07_r.jpg
+  - text: 1年目から先発に定着し、リーグ優勝を手にしました。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows: *id007
+      focus: 1
+      highlight_row: 0
+    image: assets/images/20261025_kaka_legend/06_w.jpg
+  - text: 2007年は、ヨーロッパの王者。そして、世界一の選手として表彰されます。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows: *id007
+      focus: 2
+      highlight_row: 0
+    image: assets/images/20261025_kaka_legend/01_r.jpg
+  - {text: 受賞の夜、本人は、こう振り返りました。, card: none, image: assets/images/20261025_kaka_legend/07_w.jpg}
+  - {voice: カカ, text: 子どものころの夢は、サンパウロでプレーすること。, card: none, image: assets/images/20261025_kaka_legend/02_w.jpg}
+  - {voice: カカ, text: そして、代表で1試合に出ること。それが夢のすべてだった。, cont: true, pause: 0.6, card: none}
+  - text: 2009年、レアル・マドリードへ。移籍金は、6700万ユーロ。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows: *id007
+      focus: 3
+      highlight_row: 0
+    image: assets/images/20261025_kaka_legend/07_r.jpg
+  - text: 2013年にミランへ戻り、2015年からは、アメリカのオーランド・シティへ。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows: *id007
+      focus: 5
+      highlight_row: 0
+    image: assets/images/20261025_kaka_legend/06_w.jpg
+  quotes_from: ['https://web.archive.org/web/20151005052113/http://uk.reuters.com/article/2007/12/17/uk-soccer-fifa-world-player-idUKL1765574220071217']
+  sources: ['https://en.wikipedia.org/wiki/Kak%C3%A1']
+- id: style
+  heading: カカのプレーは、何が他の選手と違ったのか
+  tier: 報道
+  telop: 加速と、パスと、両足
+  card: &id008
+    type: table
+    title: カカの持ち味
+    columns: [項目, 中身]
+    rows: &id009
+    - [武器1, ボールを運ぶ加速とドリブル]
+    - [武器2, 守備を割るパス]
+    - [武器3, 両足の強いシュート]
+    - [位置, トップ下。前線の1人の後ろも]
+    source: Wikipedia
+    highlight_row: 0
+  say:
+  - text: 持ち味の1つ目は、ボールを持って前へ運ぶ、加速とドリブル。
+    card: *id008
+    image: assets/images/20261025_kaka_legend/01_r.jpg
+  - text: 186センチの長い歩幅で、守備のあいだを抜けていきました。
+    card:
+      type: table
+      title: カカの持ち味
+      columns: [項目, 中身]
+      rows: *id009
+      source: Wikipedia
+      highlight_row: 0
+    image: assets/images/20261025_kaka_legend/07_r.jpg
+  - text: 2つ目は、パス。守備を割るパスで、味方の得点を作りました。
+    card:
+      type: table
+      title: カカの持ち味
+      columns: [項目, 中身]
+      rows: *id009
+      source: Wikipedia
+      highlight_row: 1
+    image: assets/images/20261025_kaka_legend/06_w.jpg
+  - text: 最後は、シュート。右利きですが、両足で強く蹴ることができました。
+    card:
+      type: table
+      title: カカの持ち味
+      columns: [項目, 中身]
+      rows: *id009
+      source: Wikipedia
+      highlight_row: 2
+    image: assets/images/20261025_kaka_legend/01_r.jpg
+  - {text: 2007年の、フィファ年間最優秀選手の投票で、カカは1047票。, card: none, image: assets/images/20261025_kaka_legend/06_w.jpg}
+  - {text: 2位のメッシと3位のロナウドを足した930票より、多い数でした。, card: none, emph: true}
+  - {text: 賞を手渡したペレは、こう話しています。, card: none, image: assets/images/20261025_kaka_legend/07_w.jpg}
+  - {voice: ペレ, text: 彼は、完璧な選手だ。, card: none, pause: 0.6, image: assets/images/20261025_kaka_legend/02_w.jpg}
+  quotes_from: ['https://web.archive.org/web/20151005052113/http://uk.reuters.com/article/2007/12/17/uk-soccer-fifa-world-player-idUKL1765574220071217']
+  sources: ['https://en.wikipedia.org/wiki/Kak%C3%A1']
+- id: match
+  heading: 2007年のオールド・トラッフォードで、カカは何を見せたのか
+  tier: 報道
+  main: true
+  telop: 準決勝で、3得点
+  card: &id010
+    type: timeline
+    title: 2007年 CL準決勝 ユナイテッド対ミラン
+    rows: &id011
+    - [5分, ロナウドの先制でユナイテッドがリード]
+    - [22分・37分, カカが2点。2対1と逆転]
+    - [59分・90+1分, ルーニーが2点。3対2で敗戦]
+    - [5月2日, サン・シーロで11分にカカ。3対0]
+    - [合計, 5対3で決勝へ]
+    - [5月23日, 決勝でリヴァプールに2対1]
+    focus: 0
+    highlight_row: 0
+  say:
+  - {text: 世界一の選手、カカ。, short_only: true, card: none, image: assets/images/20261025_kaka_legend/07_w.jpg}
+  - {text: よく語られるのは、2007年のチャンピオンズリーグ準決勝。, short_only: true, card: none}
+  - {text: 2007年4月24日、オールド・トラッフォード。, card: none, image: assets/images/20261025_kaka_legend/07_w.jpg}
+  - {text: 相手は、マンチェスター・ユナイテッドです。, card: none}
+  - text: 5分、クリスティアーノ・ロナウドが先制します。
+    card: *id010
+    image: assets/images/20261025_kaka_legend/07_r.jpg
+  - text: 22分、カカが同点。37分にも決めて、ミランが逆転。
+    card:
+      type: timeline
+      title: 2007年 CL準決勝 ユナイテッド対ミラン
+      rows: *id011
+      focus: 1
+      highlight_row: 0
+    image: assets/images/20261025_kaka_legend/06_w.jpg
+    emph: true
+  - text: ただ後半にルーニーが2点。2対1からひっくり返され、3対2の負け。
+    card:
+      type: timeline
+      title: 2007年 CL準決勝 ユナイテッド対ミラン
+      rows: *id011
+      focus: 2
+      highlight_row: 0
+    image: assets/images/20261025_kaka_legend/07_r.jpg
+  - {text: 1週間後の5月2日、ミランの本拠地、サン・シーロ。, card: none, image: assets/images/20261025_kaka_legend/07_w.jpg}
+  - text: 11分、先制したのは、またカカでした。
+    card:
+      type: timeline
+      title: 2007年 CL準決勝 ユナイテッド対ミラン
+      rows: *id011
+      focus: 3
+      highlight_row: 0
+    image: assets/images/20261025_kaka_legend/07_r.jpg
+  - text: ミランは3対0で勝ち、2試合の合計5対3で、決勝へ進みます。
+    card:
+      type: timeline
+      title: 2007年 CL準決勝 ユナイテッド対ミラン
+      rows: *id011
+      focus: 4
+      highlight_row: 0
+    image: assets/images/20261025_kaka_legend/06_w.jpg
+  - text: 決勝はリヴァプールに2対1で勝利。カカは2点目をアシスト。
+    card:
+      type: timeline
+      title: 2007年 CL準決勝 ユナイテッド対ミラン
+      rows: *id011
+      focus: 5
+      highlight_row: 0
+    image: assets/images/20261025_kaka_legend/07_r.jpg
+  - {text: この大会でカカが決めたのは10点。出場した選手で、いちばん多い数でした。, card: none, image: assets/images/20261025_kaka_legend/07_w.jpg, emph: true}
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/2006%E2%80%9307_UEFA_Champions_League_knockout_stage', 'https://en.wikipedia.org/wiki/2007_UEFA_Champions_League_final', 'https://en.wikipedia.org/wiki/Kak%C3%A1']
+- id: after
+  heading: アメリカでの3年と引退のあと、カカは何をしてきたのか
+  tier: 報道
+  telop: 引退の発表と、いま
+  card: &id012
+    type: timeline
+    title: オーランドから、引退のあと
+    rows: &id013
+    - [2015年3月, MLSデビュー戦で同点ゴール]
+    - [2015〜17年, リーグ戦75試合24得点]
+    - [2017年10月, 最後の公式戦]
+    - [2017年12月, 引退を発表（35歳）]
+    - [2025年5月, 代表を手伝う準備はできていると話す]
+    focus: 0
+    highlight_row: 0
+  say:
+  - text: 2015年3月8日、オーランド・シティのデビュー戦。
+    card: *id012
+    image: assets/images/20261025_kaka_legend/07_r.jpg
+  - text: カカはフリーキックで、同点に追いつきました。
+    card:
+      type: timeline
+      title: オーランドから、引退のあと
+      rows: *id013
+      focus: 0
+      highlight_row: 0
+    image: assets/images/20261025_kaka_legend/06_w.jpg
+  - text: 3シーズンで、リーグ戦は75試合24得点でした。
+    card:
+      type: timeline
+      title: オーランドから、引退のあと
+      rows: *id013
+      focus: 1
+      highlight_row: 0
+    image: assets/images/20261025_kaka_legend/01_r.jpg
+  - text: 2017年10月15日のコロンバス戦が、最後の公式戦になります。
+    card:
+      type: timeline
+      title: オーランドから、引退のあと
+      rows: *id013
+      focus: 2
+      highlight_row: 0
+    image: assets/images/20261025_kaka_legend/07_r.jpg
+  - text: 12月17日、ブラジルのテレビ番組で、引退を発表しました。
+    card:
+      type: timeline
+      title: オーランドから、引退のあと
+      rows: *id013
+      focus: 3
+      highlight_row: 0
+    image: assets/images/20261025_kaka_legend/06_w.jpg
+  - {voice: カカ, text: プロの選手としての私のキャリアは、ここで終わります。, card: none, pause: 0.6, image: assets/images/20261025_kaka_legend/02_w.jpg}
+  - text: 2025年5月には、ブラジル代表を手伝う準備はできている、と話しています。
+    card:
+      type: timeline
+      title: オーランドから、引退のあと
+      rows: *id013
+      focus: 4
+      highlight_row: 0
+    image: assets/images/20261025_kaka_legend/01_r.jpg
+  - {text: ただ、2026年10月の時点で、いまの役職ははっきりしていません。, card: none, image: assets/images/20261025_kaka_legend/06_w.jpg}
+  quotes_from: ['https://globoesporte.globo.com/programas/esporte-espetacular/noticia/kaka-anuncia-aposentadoria-e-diz-que-vai-estudar-para-ser-dirigente.ghtml', 'https://espndeportes.espn.com/futbol/brasil/nota/_/id/15206696/kaka-listo-asistente-ancelotti-brasil']
+  sources: ['https://www.theguardian.com/football/2017/dec/17/kaka-retires-football-age-35-milan-brazil', 'https://en.wikipedia.org/wiki/Kak%C3%A1']
+- id: secret
+  heading: メッシを振り切ったゴールと、1億ポンドの誘いには、何があったのか
+  tier: 報道
+  telop: 最高のゴールと、残った冬
+  card: &id014
+    type: table
+    title: 知られざる、2つの話
+    columns: [いつ, 何があったか]
+    rows: &id015
+    - [2006年9月, 本人が最高と呼ぶゴール]
+    - [2009年1月, 1億ポンド超の誘いでも残留]
+    source: Wikipedia
+    highlight_row: 0
+  say:
+  - text: 1つ目の話。2006年9月3日、ロンドンでのアルゼンチンとの親善試合。
+    card: *id014
+    image: assets/images/20261025_kaka_legend/07_r.jpg
+    emph: true
+  - text: 途中から出たカカは、メッシを振り切り、ピッチの大部分を一人で運んでゴール。
+    card:
+      type: table
+      title: 知られざる、2つの話
+      columns: [いつ, 何があったか]
+      rows: *id015
+      source: Wikipedia
+      highlight_row: 0
+    image: assets/images/20261025_kaka_legend/06_w.jpg
+  - {text: 本人が、キャリアでいちばんと見ているゴールです。, card: none, image: assets/images/20261025_kaka_legend/02_w.jpg}
+  - text: 2つ目の話。2009年1月、カカに、マンチェスター・シティが手を挙げます。
+    card:
+      type: table
+      title: 知られざる、2つの話
+      columns: [いつ, 何があったか]
+      rows: *id015
+      source: Wikipedia
+      highlight_row: 1
+    image: assets/images/20261025_kaka_legend/01_r.jpg
+    emph: true
+  - text: 提示した額は、1億ポンドを超えると報じられました。
+    card:
+      type: table
+      title: 知られざる、2つの話
+      columns: [いつ, 何があったか]
+      rows: *id015
+      source: Wikipedia
+      highlight_row: 1
+    image: assets/images/20261025_kaka_legend/07_r.jpg
+  - {text: 1月19日、ミランはシティが申し出を取り下げたと発表。カカはミランに残りました。, card: none, image: assets/images/20261025_kaka_legend/07_w.jpg}
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/Kak%C3%A1']
+- id: view
+  heading: ミランとレアルで、カカの出場と得点のペースはどう変わったのか
+  tier: 背景
+  viewpoint: true
+  telop: 1季の出場は、45から30へ
+  card: &id016
+    type: table
+    title: カカ ミランとレアルの比べ（公式戦）
+    columns: [時期, 試合, 1季平均, 何試合に1点]
+    rows: &id017
+    - [ミラン 2003〜09（6季）, '270', '45.0', '2.8']
+    - [レアル 2009〜13（4季）, '120', '30.0', '4.1']
+    source: Wikipedia
+    highlight_row: 0
+  say:
+  - text: 最後に、カカのミランとレアル・マドリードの数字を並べます。
+    card: *id016
+    image: assets/images/20261025_kaka_legend/06_w.jpg
+  - text: ミランの6シーズンは270試合。1シーズン平均45試合に出ました。
+    card:
+      type: table
+      title: カカ ミランとレアルの比べ（公式戦）
+      columns: [時期, 試合, 1季平均, 何試合に1点]
+      rows: *id017
+      source: Wikipedia
+      highlight_row: 0
+    image: assets/images/20261025_kaka_legend/01_r.jpg
+    emph: true
+  - text: 得点は95。約2.8試合に1点のペースです。
+    card:
+      type: table
+      title: カカ ミランとレアルの比べ（公式戦）
+      columns: [時期, 試合, 1季平均, 何試合に1点]
+      rows: *id017
+      source: Wikipedia
+      highlight_row: 0
+    image: assets/images/20261025_kaka_legend/07_r.jpg
+  - text: レアルの4シーズンは120試合。平均は30試合です。
+    card:
+      type: table
+      title: カカ ミランとレアルの比べ（公式戦）
+      columns: [時期, 試合, 1季平均, 何試合に1点]
+      rows: *id017
+      source: Wikipedia
+      highlight_row: 1
+    image: assets/images/20261025_kaka_legend/06_w.jpg
+  - text: 得点は29で、約4.1試合に1点でした。
+    card:
+      type: table
+      title: カカ ミランとレアルの比べ（公式戦）
+      columns: [時期, 試合, 1季平均, 何試合に1点]
+      rows: *id017
+      source: Wikipedia
+      highlight_row: 1
+    image: assets/images/20261025_kaka_legend/01_r.jpg
+    mark: {kind: circle, row: 1, col: 2}
+  - {text: 2010年8月に左ひざを手術し、復帰は翌年1月、ヘタフェとの試合でした。, card: none, image: assets/images/20261025_kaka_legend/04_w.jpg}
+  - {text: それでも2011年から12年は、リーグで9アシスト。優勝に加わりました。, card: none, image: assets/images/20261025_kaka_legend/04_w.jpg}
+  - {text: 1シーズンの出場は、45試合から30試合に。けがとの戦いが、数字に表れています。, card: none, image: assets/images/20261025_kaka_legend/02_w.jpg}
+  - {text: ミランで世界一、レアルでリーグ優勝。2つの名門に、タイトルを残した選手でした。, card: none, image: assets/images/20261025_kaka_legend/07_w.jpg}
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/Kak%C3%A1']

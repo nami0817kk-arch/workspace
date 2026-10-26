@@ -70,7 +70,7 @@
    "2",
    "VfB Stuttgart",
    "4–1",
-   "1. FC Köln"
+   "1. Köln"
   ],
   [
    "5 September 2026",
@@ -309,9 +309,38 @@
    "Eintracht Frankfurt",
    "1–0",
    "1. Köln"
+  ],
+  [
+   "10 October 2026",
+   "5",
+   "SC Paderborn 07",
+   "0–2",
+   "VfB Stuttgart"
+  ],
+  [
+   "17 October 2026",
+   "6",
+   "Hamburger SV",
+   "1–0",
+   "VfB Stuttgart"
+  ],
+  [
+   "23 October 2026",
+   "7",
+   "VfB Stuttgart",
+   "2–3",
+   "Borussia Mönchengladbach"
+  ],
+  [
+   "24 October 2026",
+   "7",
+   "RB Leipzig",
+   "4–0",
+   "SV Elversberg"
   ]
  ],
  "bayern_note": "バイエルンの第5・6節だけ追記（ESPN scoreboard の 2026-10-10・10-17、2026-10-20 取得）。ほかのクラブの第5節以降は未取得。",
  "leverkusen_note": "レバークーゼンの第5・6節だけ追記（ESPN scoreboard の 2026-10-10・10-18、2026-10-22 取得）。",
- "frankfurt_note": "フランクフルトの第5・6節は ESPN（site.api.espn.com/apis/site/v2/sports/soccer/all/teams/125/schedule、2026-10-23 取得）で追記。第5節 ライプツィヒに0-6（10/10 敵地）、第6節 ケルンに1-0（10/16 ホーム）。 第6節の相手は plbuild.club_matches が『1. FC Köln』を取りこぼす（' FC' を削って比べる）ため、results.json 上は『1. Köln』と書いた。"
+ "frankfurt_note": "フランクフルトの第5・6節は ESPN（site.api.espn.com/apis/site/v2/sports/soccer/all/teams/125/schedule、2026-10-23 取得）で追記。第5節 ライプツィヒに0-6（10/10 敵地）、第6節 ケルンに1-0（10/16 ホーム）。 第6節の相手は plbuild.club_matches が『1. FC Köln』を取りこぼす（' FC' を削って比べる）ため、results.json 上は『1. Köln』と書いた。",
+ "stuttgart_note": "シュツットガルトの第5〜7節は ESPN（site.api.espn.com/apis/site/v2/sports/soccer/ger.1/teams/134/schedule?season=2026、2026-10-25 取得）で追記。第5節 パーダーボルンに2-0（10/10 敵地）、第6節 ハンブルガーSVに0-1（10/17 敵地）、第7節 ボルシアMGに2-3（10/23 ホーム）。英語版の 2026–27 VfB Stuttgart season とも結果は一致（第7節の日付は記事では24日、ESPN は 10/23 18:30 UTC）。 第2節の相手は plbuild.club_matches が『1. FC Köln』を取りこぼすため、フランクフルトの第6節と同じく『1. Köln』と書いた。"
 }

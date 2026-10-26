@@ -1,0 +1,186 @@
+# 田中碧の取材メモ（2026年10月26日・ショートだけ・見せ方 X＝冒頭に強い一言）
+# 取材: 2026-10-26 朝。requests で原文を読んだ。
+#   ・ゲキサカ 461837（2026-10-26 03:23）本文を全部読んだ。PL第8節 サンダーランド 0-0 リーズ（スタジアム・オブ・ライト）。
+#     田中は先発し後半44分まで（89分にロングスタッフと交代）。「3試合未勝利で7位のリーズ」。
+#     後半31分、ゆっくり敵陣へ→パスをつないだ先で最後に受けた田中が、PAライン上で反転しながら左足シュート。
+#     ゴール左隅を狙ったが GK ロビン・ルーフスにセーブされた。広い範囲で守備をカバー、中盤の底から攻撃のスイッチ、敵陣まで顔を出した。
+#     リーズは4試合未勝利。
+#   ・リーズ公式 試合記事（late-chances-come-and-go…、10/25）本文を全部読んだ。嵐（Storm Boelo）の強風の中の試合。観客46,182。
+#     田中の場面「エリアの縁で受け、一方へ、もう一方へと体をひねり、ゴールの下隅へ低いシュート。ルーフスが弾き、
+#     カルヴァート＝ルーウィンが詰めようとする前に押さえた」。
+#   ・リーズ公式 ファルケ監督の会見（daniel-farke-makes-point-declaration…、10/25）本文を全部読んだ。発言は原文から訳した:
+#     "It was not the nicest piece of football" / "weather conditions where you could hardly predict the curve of the ball" /
+#     "second year back on Premier League level, you travel back home from an away ground with a point and also with a clean sheet, that's always a good result."
+#     田中についての言葉は無い。
+#   ・ESPN の試合記録（event 401878764）：シュート リーズ11（枠内4）・サンダーランド15（枠内4）。89分 田中→ロングスタッフ。
+#   ・ESPN の順位表（10/26 朝）：リーズ 7位 8試合2勝5分1敗 勝ち点11／サンダーランド 20位（最下位）勝ち点5。
+#     引き分け5はリーグ最多（ブレントフォードと並ぶ。自分で数えた）。
+#   ・ESPN のリーズの日程：直近4試合 パレス0-0・アーセナル1-2・マンU1-1・サンダーランド0-0（3分1敗、得点2）。
+# 本人の言葉: **無い**（ゲキサカ・リーズ公式とも田中のコメント無し）→ 型は X。監督の言葉は田中についてではないので Y にしない。
+# 反応: 探していない（0件。作らない）。
+# 重ねないもの: 10/20 の地元紙の採点の本・10/21 の手袋とファルケの本（言い回し「手袋」「採点」「謎」を使わない）。
+#   10/26 のリーズのスタジアムの本（エランド・ロード・本拠地の成績・収容）には触れない。今日は敵地の試合。
+# 写真: Commons（CC0, Timmy96, 2025-09-13 フラム戦の到着と入場）3枚。01 と 02 は 10/20〜21 に使っていないファイル。
+#   03 は右の人物が田中（左はカルヴァート＝ルーウィン）。3枚とも本人を目で確かめた。
+#   今日の試合の写真はゲキサカの主写真が ©Getty Images（代理店）で使えない。リーズ公式の試合記事に田中の写真は無い。
+# 確度: 報道（ゲキサカ・リーズ公式・ESPN の試合記録で一致）。
+slot: japan
+date: "2026年10月26日"
+format: news
+no_main: true
+people: [田中碧, リーズ, サンダーランド, ルーフス, ファルケ監督]
+
+short_style: X
+short_hook_word: 暴風の中の左足
+short_photos:
+  - assets/images/20261026_tanaka_ao_sunderland/01_v.jpg
+  - assets/images/20261026_tanaka_ao_sunderland/03_v.jpg
+  - assets/images/20261026_tanaka_ao_sunderland/02_v.jpg
+
+short_question: 田中碧のミドルシュート、風の無い日なら入っていたと思いますか。
+short_hook: 田中碧、暴風の中の左足。
+short_telops:
+  - {match: 第8節, text: プレミア第8節/サンダーランド 0-0 リーズ}
+  - {match: 後半31分, text: 0対0の後半31分}
+  - {match: 体をひねって, text: ライン上で反転/左足で左隅へ}
+  - {match: ルーフス, text: GKルーフスが/弾いて押さえた}
+  - {match: 引き分けは5つ, text: 8試合で引き分け5/リーグ最多タイ}
+
+theme:
+  id: tanaka_ao_sunderland
+  league: england
+  league_name: プレミアリーグ
+  prefix: ""
+  title: 田中碧が反転して放った左足ミドル。暴風の敵地サンダーランドで起きたこと
+  hook: ""
+  question: 田中碧が反転して打った左足のシュートは、どうなったのか
+  takeaway: 4試合勝ちなしでも負けは1つだけ。8試合で引き分け5つはリーグ最多タイで、引き分けを勝ちに変える1点が足りていない
+
+thumbnail:
+  line1: 田中碧の左足ミドル
+  line2: 暴風の中で狙った左隅
+  tags: [田中碧, リーズ]
+  layout: face
+  photo: assets/images/20261026_tanaka_ao_sunderland/03_w.jpg
+  short_photo: assets/images/20261026_tanaka_ao_sunderland/01_v.jpg
+
+answer: 田中碧の左足の低いシュートは、GKルーフスに弾かれた。試合は0対0
+watch: 引き分けの多いリーズが、勝ち点3に変える1点をどこから取るか
+
+sections:
+  - id: what
+    main: true
+    heading: 反転して打った左足
+    tier: 報道
+    telop: 田中碧、暴風の中の左足
+    say:
+      - text: 田中碧が先発した、ここまで1勝のサンダーランドとの一戦。
+        image: assets/images/20261026_tanaka_ao_sunderland/01_w.jpg
+        short_only: true
+        card: none
+      - text: プレミアリーグ第8節、敵地での試合は、嵐の強い風の中で行われました。
+        image: assets/images/20261026_tanaka_ao_sunderland/03_w.jpg
+        card: none
+      - text: ボールがどう曲がるか、ほとんど読めない天候だった。
+        image: assets/images/20261026_tanaka_ao_sunderland/02_w.jpg
+        voice: ファルケ監督
+        card: none
+      - text: 互いに点が入らないまま迎えた、後半31分。
+        image: assets/images/20261026_tanaka_ao_sunderland/01_w.jpg
+        card: none
+      - text: リーズがパスをつなぎ、最後にペナルティーエリアのライン上で田中が受けます。
+        image: assets/images/20261026_tanaka_ao_sunderland/03_w.jpg
+        card: none
+      - text: 右へ、左へと体をひねって反転し、左足で低いシュート。ゴールの左隅を狙いました。
+        image: assets/images/20261026_tanaka_ao_sunderland/02_w.jpg
+        emph: true
+        card: none
+      - text: これをGKのルーフスが弾きます。
+        image: assets/images/20261026_tanaka_ao_sunderland/01_w.jpg
+        card: none
+      - text: 詰めてきたカルヴァート＝ルーウィンより先に、ボールを押さえました。
+        image: assets/images/20261026_tanaka_ao_sunderland/03_w.jpg
+        card: none
+      - text: 田中は中盤の底から攻撃のスイッチを入れ、敵陣にも顔を出しました。
+        image: assets/images/20261026_tanaka_ao_sunderland/02_w.jpg
+        card: none
+      - text: プレーしたのは、後半44分までです。
+        image: assets/images/20261026_tanaka_ao_sunderland/01_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/world/detail/?461837-461837-fl
+      - https://www.leedsunited.com/en/news/late-chances-come-and-go-as-leeds-and-sunderland-play-out-scrappy-draw
+      - https://www.leedsunited.com/en/news/daniel-farke-makes-point-declaration-after-draw-with-sunderland
+
+  - id: farke
+    heading: 監督が受け入れた0対0
+    tier: 報道
+    telop: ファルケ監督「受け入れるしかない」
+    quotes_from:
+      - https://www.leedsunited.com/en/news/daniel-farke-makes-point-declaration-after-draw-with-sunderland
+    say:
+      - text: 田中碧が退いたあとも点は動かず、0対0の引き分け。
+        image: assets/images/20261026_tanaka_ao_sunderland/03_w.jpg
+        card: none
+      - text: ファルケ監督は、内容についても隠しませんでした。
+        image: assets/images/20261026_tanaka_ao_sunderland/02_w.jpg
+        card: none
+      - text: きれいなサッカーではなかった。
+        image: assets/images/20261026_tanaka_ao_sunderland/01_w.jpg
+        voice: ファルケ監督
+        card: none
+      - text: こういう日は、それを受け入れるしかない。
+        image: assets/images/20261026_tanaka_ao_sunderland/03_w.jpg
+        voice: ファルケ監督
+        cont: true
+        card: none
+      - text: プレミアに戻って2年目。
+        image: assets/images/20261026_tanaka_ao_sunderland/02_w.jpg
+        voice: ファルケ監督
+        card: none
+      - text: 敵地から勝ち点1と無失点を持ち帰れば、いつでも良い結果だ。
+        image: assets/images/20261026_tanaka_ao_sunderland/01_w.jpg
+        voice: ファルケ監督
+        cont: true
+        card: none
+    official: false
+    sources:
+      - https://www.leedsunited.com/en/news/daniel-farke-makes-point-declaration-after-draw-with-sunderland
+
+  - id: view
+    viewpoint: true
+    heading: 引き分け5つが意味するもの
+    tier: 報道
+    telop: 4試合勝ちなし、負けは1つ
+    say:
+      - text: 田中碧のリーズは、これで4試合勝ちなし。
+        image: assets/images/20261026_tanaka_ao_sunderland/03_w.jpg
+        card: none
+      - text: ただ、その4試合の負けは、アーセナル戦の1つだけです。
+        image: assets/images/20261026_tanaka_ao_sunderland/02_w.jpg
+        card: none
+      - text: 8試合を終えて、2勝5分け1敗の7位。
+        image: assets/images/20261026_tanaka_ao_sunderland/01_w.jpg
+        card: none
+      - text: 引き分けは5つで、ブレントフォードと並んでリーグで最も多い数です。
+        image: assets/images/20261026_tanaka_ao_sunderland/03_w.jpg
+        card: none
+      - text: 一方で、この4試合で決めたのは2点だけ。
+        image: assets/images/20261026_tanaka_ao_sunderland/02_w.jpg
+        card: none
+      - text: 見立てとしては、守りは崩れていません。
+        image: assets/images/20261026_tanaka_ao_sunderland/01_w.jpg
+        card: none
+      - text: 足りないのは、引き分けを勝ちに変える1点です。
+        image: assets/images/20261026_tanaka_ao_sunderland/03_w.jpg
+        card: none
+      - text: 中盤の底から打てる田中碧の左足は、その1点の候補の1つです。
+        image: assets/images/20261026_tanaka_ao_sunderland/02_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.espn.com/soccer/standings/_/league/eng.1
+      - https://www.espn.com/soccer/team/results/_/id/357
+      - https://web.gekisaka.jp/news/world/detail/?461837-461837-fl
+short_title: "田中碧が反転して放った左足ミドル。暴風の敵地サンダーランドで起きたこと"

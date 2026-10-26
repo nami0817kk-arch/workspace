@@ -1,0 +1,1672 @@
+{{Multiple issues|
+{{primary sources|date=September 2026}}
+{{more citations needed|date=June 2026}}
+}}
+{{Infobox football club season
+|club               = [[Atlético Madrid]]
+|season             = [[2026–27 in Spanish football|2026–27]]
+|image              = 
+|image_size         = 
+|alt                = 
+|caption            = 
+|chrtitle           = President
+|chairman           = [[Enrique Cerezo]]
+|ownertitle         = 
+|owner              = 
+|mgrtitle           = Head coach
+|manager            = [[Diego Simeone]]
+|stdtitle           = 
+|stadium            = [[Metropolitano Stadium|Riyadh Air Metropolitano]]
+|league             = [[La Liga]]
+|league result      = ''[[2026–27 La Liga|2nd]]''
+|cup1               = [[Copa del Rey]]
+|cup1 result        = ''[[2026–27 Copa del Rey|Round of 32]]''
+|cup2               = [[Supercopa de España]]
+|cup2 result        = ''[[2027 Supercopa de España|Semi-finals]]''
+|cup3               = [[UEFA Champions League]]
+|cup3 result        = ''[[2026–27 UEFA Champions League|League phase]]''
+|league topscorer   = <br>[[Álex Baena]] (5)
+|season topscorer   = <br>Álex Baena (5)
+|highest attendance = 
+|lowest attendance  = 
+|average attendance = 
+|largest win        = 4–0 vs [[CA Osasuna|Osasuna]] (H)
+|largest loss       = 0–3 vs [[Athletic Bilbao]] (A)
+|pattern_la1        = _atleticomadrid2627h
+|pattern_b1         = _atleticomadrid2627h
+|pattern_ra1        = _atleticomadrid2627h
+|pattern_sh1        = _atleticomadrid2627h
+|pattern_so1        = _atleticomadrid2627hl
+|leftarm1           = FF0000
+|body1              = FF0000
+|rightarm1          = FF0000
+|shorts1            = 0000FF
+|socks1             = 0000FF
+|pattern_la2        = _atleticomadrid2627a
+|pattern_b2         = _atleticomadrid2627a
+|pattern_ra2        = _atleticomadrid2627a
+|pattern_sh2        = _atleticomadrid2627a
+|pattern_so2        = _monterrey1213t1
+|leftarm2           = 000000
+|body2              = 000000
+|rightarm2          = 000000
+|shorts2            = 000000
+|socks2             = 000000
+| pattern_la3       = _atleticomadrid2627t
+| pattern_b3        = _atleticomadrid2627t
+| pattern_ra3       = _atleticomadrid2627t
+| pattern_sh3       = _atleticomadrid2627t
+| pattern_so3       = _atleticomadrid2627tl
+| leftarm3          = 
+| body3             = 
+| rightarm3         = 
+| shorts3           =
+| socks3            = 
+|prevseason         = [[2025–26 Atlético Madrid season|2025–26]]
+|nextseason         = ''2027–28''
+}}
+The '''2026–27 season''' is the [[List of Atlético Madrid seasons|124th season]] in the history of [[Atlético Madrid]], and the club's 25th consecutive season in [[La Liga]]. In addition to the [[2026–27 La Liga|domestic league]], the club is participating in the [[2026–27 Copa del Rey|Copa del Rey]], the [[2027 Supercopa de España|Supercopa de España]] and the [[2026–27 UEFA Champions League|UEFA Champions League]].
+
+This is the first season since [[2020–21 Atlético Madrid season|2020–21]] without [[Antoine Griezmann]], who departed the club to join [[Major League Soccer]] side [[Orlando City SC|Orlando City]].
+
+== Kits ==
+{|
+|{{Football kit
+|pattern_la        = _atleticomadrid2627h
+|pattern_b         = _atleticomadrid2627h
+|pattern_ra        = _atleticomadrid2627h
+|pattern_sh        = _atleticomadrid2627h
+|pattern_so        = _atleticomadrid2627hl
+|leftarm           = FF0000
+|body              = FF0000
+|rightarm          = FF0000
+|shorts            = 0000FF
+|socks             = 0000FF
+| title    = Home
+}}
+<!--
+|{{Football kit
+|pattern_la        = _atleticomadrid2526h
+|pattern_b         = _atleticomadrid2526h
+|pattern_ra        = _atleticomadrid2526h
+|pattern_sh        = 
+|pattern_so        = 
+|leftarm           = FF0000
+|body              = FF0000
+|rightarm          = FF0000
+|shorts            = FF0000
+|socks             = FF0000
+|title    = Home alt
+}}
+|{{Football kit
+|pattern_la        = _atleticomadrid2526h
+|pattern_b         = _atleticomadrid2526h
+|pattern_ra        = _atleticomadrid2526h
+|pattern_sh        = 
+|pattern_so        = 
+|leftarm           = FF0000
+|body              = FF0000
+|rightarm          = FF0000
+|shorts            = 0000FF
+|socks             = FF0000
+|title    = Home alt 2
+}} -->
+|{{Football kit
+|pattern_la        = _atleticomadrid2627a
+|pattern_b         = _atleticomadrid2627a
+|pattern_ra        = _atleticomadrid2627a
+|pattern_sh        = _atleticomadrid2627a
+|pattern_so        = 
+|leftarm           = 000000
+|body              = 000000
+|rightarm          = 000000
+|shorts            = 000000
+|socks             = 000000
+| title    = Away 
+}}
+<!--|{{Football kit
+|pattern_la        = _atleticomadrid2526t
+|pattern_b         = _atleticomadrid2526t
+|pattern_ra        = _atleticomadrid2526t
+|pattern_sh        = _atleticomadrid2526t
+|pattern_so        =
+|leftarm           = 0088FF
+|body              = 0088FF
+|rightarm          = 0088FF
+|shorts            = 0088FF
+|socks             = 0088FF
+| title    = Third
+}}
+|{{Football kit
+| pattern_la = _whiteborder
+| pattern_b  = _atlmadrid120y
+| pattern_ra = _whiteborder
+| pattern_sh = _atlmadrid120y
+| pattern_so = 
+| leftarm  = 0000E8
+| body     = 0000E8
+| rightarm = 0000E8
+| shorts   = 0000E8
+| socks    = 0000E8
+| title    = Retro Matchday Kit
+}}
+|{{Football kit
+| pattern_la = _nikegardien6b
+| pattern_b  = _nikegardien6b
+| pattern_ra = _nikegardien6b
+| pattern_sh = _nikegardien6b
+| pattern_so = 
+| leftarm    = 
+| body       = 
+| rightarm   = 
+| shorts     = 
+| socks      = 000000
+| title      = Goalkeeper 1
+}}
+|{{Football kit
+| pattern_la = _nikegardien6y
+| pattern_b  = _nikegardien6y
+| pattern_ra = _nikegardien6y
+| pattern_sh = _nikegardien6y
+| pattern_so = 
+| leftarm    = 
+| body       = 
+| rightarm   = 
+| shorts     = 
+| socks      = FFF000
+| title      = Goalkeeper 2
+}}
+|{{Football kit
+| pattern_la = _nikegardien6o
+| pattern_b  = _nikegardien6o
+| pattern_ra = _nikegardien6o
+| pattern_sh = _nikegardien6o
+| pattern_so = 
+| leftarm    = 
+| body       = 
+| rightarm   = 
+| shorts     = 
+| socks      = FF6000
+| title      = Goalkeeper 3
+}}
+|{{Football kit
+| pattern_la = _nikeT90gk2526y
+| pattern_b  = _nikeT90gk2526y
+| pattern_ra = _nikeT90gk2526y
+| pattern_sh = _nikeT90gk2526y
+| pattern_so = 
+| leftarm    = 
+| body       = 
+| rightarm   = 
+| shorts     = 
+| socks      = FFCC00
+| title      = Total 90 1.
+}}
+|{{Football kit
+| pattern_la = _nikeT90gk2526g
+| pattern_b  = _nikeT90gk2526g
+| pattern_ra = _nikeT90gk2526g
+| pattern_sh = _nikeT90gk2526g
+| pattern_so = 
+| leftarm    = 
+| body       = 
+| rightarm   = 
+| shorts     = 
+| socks      = 006030
+| title      = Total 90 2.
+}}-->
+|}
+
+==Players==
+{{updated|3 September 2026}}<ref name="Squad">{{cite web|url=https://www.atleticodemadrid.com/jugadores-primer-equipo/|title=Primer Equipo|publisher=Atlético Madrid|access-date=1 September 2022|archive-date=2 September 2022|archive-url=https://web.archive.org/web/20220902002632/https://www.atleticodemadrid.com/jugadores-primer-equipo/|url-status=live}}</ref>
+{{Fs start}}
+{{Fs player|no=1|nat=ARG|pos=GK|name=[[Juan Musso]]}}
+{{Fs player|no=3|nat=MEX|pos=MF|name=[[Obed Vargas]]}}
+{{Fs player|no=4|nat=ESP|pos=MF|name=[[Rodri Mendoza]]}}
+{{Fs player|no=5|nat=USA|pos=MF|name=[[Johnny Cardoso]]}}
+{{Fs player|no=6|nat=ESP|pos=MF|name=[[Koke (footballer, born 1992)|Koke]]|other=[[Captain (association football)|captain]]}}
+{{Fs player|no=7|nat=KOR|pos=MF|name=[[Lee Kang-in]]}}
+{{Fs player|no=8|nat=ESP|pos=MF|name=[[Pablo Barrios (footballer)|Pablo Barrios]]|other=[[Captain (association football)#Vice-captain|4th captain]]}}
+{{Fs player|no=9|nat=NOR|pos=FW|name=[[Alexander Sørloth]]}}
+{{Fs player|no=10|nat=ESP|pos=MF|name=[[Álex Baena]]}}
+{{Fs player|no=11|nat=NGA|pos=FW|name=[[Ademola Lookman]]}}
+{{Fs player|no=13|nat=SVN|pos=GK|name=[[Jan Oblak]]|other=[[Captain (association football)#Vice-captain|vice-captain]]}}
+{{Fs player|no=14|nat=ESP|pos=MF|name=[[Marcos Llorente]]|other=[[Captain (association football)#Vice-captain|3rd captain]]}}
+{{Fs player|no=15|nat=CAN|pos=FW|name=[[Jonathan David]]|other=on loan from [[Juventus FC|Juventus]]}}
+{{Fs mid}}
+{{Fs player|no=16|nat=ESP|pos=MF|name=[[Arnau Ortiz]]}}
+{{Fs player|no=17|nat=SVK|pos=DF|name=[[Dávid Hancko]]}}
+{{Fs player|no=18|nat=ESP|pos=DF|name=[[Marc Pubill]]}}
+{{Fs player|no=19|nat=ARG|pos=FW|name=[[Julián Alvarez]]}}
+{{Fs player|no=20|nat=ARG|pos=MF|name=[[Giuliano Simeone]]}}
+{{Fs player|no=21|nat=ARG|pos=DF|name=[[Cristian Romero]]}}
+{{Fs player|no=22|nat=ESP|pos=DF|name=[[Álex Grimaldo]]}}
+{{Fs player|no=23|nat=DEN|pos=MF|name=[[Morten Hjulmand]]}} 
+{{Fs player|no=24|nat=ESP|pos=DF|name=[[Robin Le Normand]]}}
+{{Fs player|no=25|nat=ESP|pos=GK|name=[[Salvi Esquivel]]}}
+{{Fs player|no=27|nat=ESP|pos=DF|name=[[Jorge Domínguez (footballer, born 2009)|Jorge Domínguez]]}}
+{{Fs player|no=30|nat=ESP|pos=DF|name=[[Dani Martínez]]}}
+{{Fs end}}
+
+== Transfers ==
+===In===
+{| class="wikitable"
+!Date
+!Pos.
+!Age
+!Player
+!From
+!Type
+!Fee
+!Ref.
+|-
+| rowspan=4  |{{dts|format=dmy|2026|6|30}}
+|align=center| [[Goalkeeper (association football)|GK]]
+|align=center| {{Age|1998|1|20|2026|7|1}}
+|{{flagicon|ROU}} [[Horațiu Moldovan]]
+|[[Real Oviedo|Oviedo]]
+|colspan="2" rowspan="3" align="center" |Loan return
+|
+|-
+|align=center| [[Midfielder|MF]]
+|align=center| {{Age|1995|11|12|2026|7|1}}
+|{{flagicon|FRA}} [[Thomas Lemar]]
+|[[Girona FC|Girona]]
+|
+|-
+|align=center| [[Forward (association football)|FW]]
+|align=center| {{Age|2002|4|22|2026|7|1}}
+|{{flagicon|ESP}} [[Carlos Martín (footballer)|Carlos Martín]]
+|[[Rayo Vallecano]]
+|
+|-
+|align=center| [[Defender (association football)|DF]]
+|align=center| {{Age|1995|9|20|2026|7|1}}
+|{{flagicon|ESP}} [[Álex Grimaldo]]
+|{{fbaicon|GER}} [[Bayer 04 Leverkusen|Bayer Leverkusen]]
+| rowspan=4  | Transfer
+|align=center|€15,000,000
+|align=center|<ref>{{cite news |url= https://en.atleticodemadrid.com/noticias/welcome-grimaldo6 |title=Welcome, Grimaldo! |publisher=Atlético Madrid |date=30 June 2026 |access-date=30 June 2026}}</ref>
+|-
+|{{dts|format=dmy|2026|7|11}}
+|align=center| [[Midfielder|MF]]
+|align=center| {{Age|1999|6|25|2026|7|11}}
+|{{flagicon|DEN}} [[Morten Hjulmand]]
+|{{fbaicon|POR}} [[Sporting CP]]
+|align=center|€45,000,000
+|align=center|<ref>{{cite news |url=https://en.atleticodemadrid.com/noticias/welcome-hjulmand|title=Welcome, Hjulmand! |publisher=Atlético Madrid |date=11 July 2026 |access-date=11 July 2026}}</ref>
+|-
+|{{dts|format=dmy|2026|7|25}}
+|align=center| [[Midfielder|MF]]
+|align=center| {{Age|2001|2|19|2026|7|25}}
+|{{flagicon|KOR}} [[Lee Kang-in]]
+|{{fbaicon|FRA}} [[Paris Saint-Germain FC|Paris Saint-Germain]]
+|align=center|€35,000,000
+|align=center|<ref>{{cite news |url=https://en.atleticodemadrid.com/noticias/kang-in-lee-signs-with-atletico-de-madrid |title=Welcome, Kang In Lee! |publisher=Atlético Madrid |date=25 July 2026 |access-date=25 July 2026}}</ref>
+|-
+|{{dts|format=dmy|2026|8|15}}
+|align=center| [[Defender (association football)|DF]]
+|align=center| {{Age|1998|4|27|2026|8|15}}
+|{{flagicon|ARG}} [[Cristian Romero]]
+|{{fbaicon|ENG}} [[Tottenham Hotspur F.C.|Tottenham Hotspur]]
+|align=center|€35,000,000
+|align=center|<ref>{{cite news |url=https://en.atleticodemadrid.com/noticias/welcome-cuti-romero |title=Welcome, ‘Cuti’ Romero! |publisher=Atlético Madrid |date=15 August 2026 |access-date=15 August 2026}}</ref>
+|-
+|{{dts|format=dmy|2026|9|1}}
+|align=center| [[Forward (association football)|FW]]
+|align=center| {{Age|2000|1|14|2026|9|1}}
+|{{flagicon|CAN}} [[Jonathan David]]
+|{{fbaicon|ITA}} [[Juventus FC|Juventus]]
+|colspan="2" align="center" |Loan
+|align=center|<ref>{{cite news |url=https://en.atleticodemadrid.com/noticias/welcome-jonathan-david |title=Welcome, Jonathan David!
+|publisher=Atlético Madrid |date=1 September 2026 |access-date=1 September 2026}}</ref>
+|}
+Total expenditure: {{Decrease}} €130&nbsp;million <small>''(excluding potential add-ons, bonuses, undisclosed figures and future transfers)''</small>
+
+===Out===
+{| class="wikitable"
+!Date
+!Pos.
+!Age
+!Player
+!To
+!Type
+!Fee
+!Ref.
+|-
+| rowspan=4 | {{dts|format=dmy|2026|6|30}}
+|align=center| [[Forward (association football)|FW]]
+|align=center| {{Age|1991|3|21|2026|6|30}}
+|{{flagicon|FRA}} [[Antoine Griezmann]]
+|{{fbaicon|USA}} [[Orlando City SC|Orlando City]]
+| rowspan=2  | Transfer
+|align=center| Free
+|align=center|<ref>{{cite news |url=https://en.atleticodemadrid.com/noticias/agreement-with-orlando-city-sc-for-griezmanns-arrival-next-season |title=Agreement with Orlando City SC for Griezmann’s arrival next season |publisher=Atlético Madrid |date=24 March 2026 |access-date=30 June 2026}}</ref>
+|-
+|align=center| [[Midfielder|MF]]
+|align=center| {{Age|2006|6|28|2026|7|1}}
+|{{flagicon|ESP}} [[Jano Monserrate]]
+|{{fbaicon|NED}} [[AFC Ajax|Ajax]]
+|align=center| Free
+|align=center|<ref>{{cite news |url=https://www.atleticodemadrid.com/noticias/acuerdo-con-el-ajax-para-el-traspaso-de-jano-monserrate |title=Acuerdo con el Ajax para el traspaso de Jano Monserrate |publisher=Atlético Madrid |language=es |date=30 June 2026 |access-date=30 June 2026}}</ref>
+|-
+|align=center| [[Midfielder|MF]]
+|align=center| {{Age|1998|4|6|2026|7|1}}
+|{{flagicon|ARG}} [[Nicolás González (footballer, born 1998)|Nicolás González]]
+|{{fbaicon|ITA}} [[Juventus FC|Juventus]]
+|colspan="2" align="center" |End of loan
+|
+|-
+|align=center| [[Defender (association football)|DF]]
+|align=center| {{Age|1995|6|17|2026|7|1}}
+|{{flagicon|FRA}} [[Clément Lenglet]]
+|{{fbaicon|POR}} [[S.L. Benfica|Benfica]]
+|colspan="2" align="center" |Loan
+|align=center|<ref>{{cite news |url=https://en.atleticodemadrid.com/noticias/lenglet-to-join-benfica |title=Lenglet to join Benfica |publisher=Atlético Madrid |date=30 June 2026 |access-date=30 June 2026}}</ref>
+|-
+|{{dts|format=dmy|2026|7|14}}
+|align=center| [[Goalkeeper (association football)|GK]]
+|align=center| {{Age|1998|1|20|2026|7|15}}
+|{{flagicon|ROU}} [[Horațiu Moldovan]]
+|{{fbaicon|TUR}} [[Eyüpspor]]
+|colspan="2" align="center" |Loan
+|
+|-
+|{{dts|format=dmy|2026|7|28}}
+|align=center| [[Defender (association football)|DF]]
+|align=center| {{Age|2005|1|10|2026|7|28}}
+|{{flagicon|ESP}} [[Julio Díaz (footballer, born 2005)|Julio Díaz]]
+|[[Sevilla FC|Sevilla]]
+| rowspan=7 | Transfer
+|align=center| €1,000,000
+|align=center|<ref>{{cite news |url=https://www.atleticodemadrid.com/noticias/acuerdo-con-el-sevilla-para-el-traspaso-de-julio |title=Acuerdo con el Sevilla para el traspaso de Julio |publisher=Atlético Madrid |language=es |date=28 July 2026 |access-date=28 July 2026}}</ref>
+|-
+|{{dts|format=dmy|2026|8|6}}
+|align=center| [[Midfielder|MF]]
+|align=center| {{Age|2006|3|15|2026|8|6}}
+|{{flagicon|ESP}} [[Javi Morcillo]]
+|[[Elche CF|Elche]]
+|align=center| €1,500,000
+|align=center|<ref>{{cite news |url=https://www.atleticodemadrid.com/noticias/acuerdo-con-el-elche-para-el-traspaso-de-javier-morcillo |title=Acuerdo con el Elche para el traspaso de Javier Morcillo |publisher=Atlético Madrid |language=es |date=6 August 2026 |access-date=6 August 2026}}</ref>
+|-
+|{{dts|format=dmy|2026|8|8}}
+|align=center| [[Midfielder|MF]]
+|align=center| {{Age|2001|4|26|2026|8|8}}
+|{{flagicon|ARG}} [[Thiago Almada]]
+|{{fbaicon|ARG}} [[Club Atlético River Plate|River Plate]]
+|align=center| €20,000,000
+|align=center|<ref>{{cite news |url=https://en.atleticodemadrid.com/noticias/agreement-with-river-plate-over-the-transfer-of-almada |title=Agreement with River Plate over the transfer of Almada |publisher=Atlético Madrid |date=8 August 2026 |access-date=8 August 2026}}</ref>
+|-
+|{{dts|format=dmy|2026|8|12}}
+|align=center| [[Defender (association football)|DF]]
+|align=center| {{Age|1998|4|6|2026|8|12}}
+|{{flagicon|ARG}} [[Nahuel Molina]]
+|{{fbaicon|ITA}} [[AS Roma|Roma]]
+|align=center| €18,000,000
+|align=center|<ref>{{cite news |url=https://en.atleticodemadrid.com/noticias/agreement-with-as-roma-over-the-transfer-of-nahuel-molina |title=Agreement with AS Roma over the transfer of Nahuel Molina |publisher=Atlético Madrid |date=12 August 2026 |access-date=12 August 2026}}</ref>
+|-
+|{{dts|format=dmy|2026|8|19}}
+|align=center| [[Defender (association football)|DF]]
+|align=center| {{Age|2002|7|11|2026|8|19}}
+|{{flagicon|ITA}} [[Matteo Ruggeri]]
+|{{fbaicon|ENG}} [[Aston Villa F.C.|Aston Villa]]
+|align=center| €25,000,000
+|align=center|<ref>{{cite news |url=https://en.atleticodemadrid.com/noticias/agreement-with-aston-villa-over-the-transfer-of-ruggeri |title=Agreement with Aston Villa over the transfer of Ruggeri |publisher=Atlético Madrid |date=19 August 2026 |access-date=19 August 2026}}</ref>
+|-
+|{{dts|format=dmy|2026|8|27}}
+|align=center| [[Defender (association football)|DF]]
+|align=center| {{Age|2005|6|3|2026|8|27}}
+|{{flagicon|ESP}} [[Javier Boñar]]
+|[[Girona FC|Girona]]
+|align=center| €2,000,000
+|align=center|<ref>{{cite news |url=https://www.atleticodemadrid.com/noticias/acuerdo-con-el-girona-para-el-traspaso-de-javier-bonar |title=Acuerdo con el Girona para el traspaso de Javier Boñar |publisher=Atlético Madrid |date=27 August 2026 |access-date=27 August 2026}}</ref>
+|-
+|{{dts|format=dmy|2026|8|31}}
+|align=center| [[Midfielder|MF]]
+|align=center| {{Age|2005|6|5|2026|8|31}}
+|{{flagicon|ESP}} [[Iker Luque]]
+|[[Racing de Santander|Racing Santander]]
+|align=center| €1,500,000
+|align=center|<ref>{{cite news |url=https://www.atleticodemadrid.com/noticias/acuerdo-con-el-racing-de-santander-para-el-traspaso-de-iker-luque |title=Acuerdo con el Racing de Santander para el traspaso de Iker Luque |publisher=Atlético Madrid |date=31 August 2026 |access-date=31 August 2026}}</ref>
+|-
+| rowspan=2 | {{dts|format=dmy|2026|9|1}}
+|align=center| [[Midfielder|MF]]
+|align=center| {{Age|1995|11|12|2026|9|1}}
+|{{flagicon|FRA}} [[Thomas Lemar]]
+|[[Elche CF|Elche]]
+|rowspan=3 colspan="2" align="center" |Loan
+|align=center|<ref>{{cite news |url=https://en.atleticodemadrid.com/noticias/agreement-with-elche-over-the-loan-of-lemar |title=Agreement with Elche over the loan of Lemar |publisher=Atlético Madrid |date=1 September 2026 |access-date=1 September 2026}}</ref>
+|-
+|align=center| [[Defender (association football)|DF]]
+|align=center| {{Age|1995|1|20|2026|9|1}}
+|{{flagicon|URU}} [[José María Giménez|José Giménez]]
+|[[Deportivo de A Coruña|Deportivo A Coruña]]
+|align=center|<ref>{{cite news |url=https://en.atleticodemadrid.com/noticias/agreement-with-rc-deportivo-over-the-loan-of-gimenez |title=Agreement with RC Deportivo over the loan of Giménez |publisher=Atlético Madrid |date=1 September 2026 |access-date=1 September 2026}}</ref>
+|-
+|{{dts|format=dmy|2026|9|2}}
+|align=center| [[Forward (association football)|FW]]
+|align=center| {{Age|2002|4|22|2026|9|2}}
+|{{flagicon|ESP}} [[Carlos Martín (footballer)|Carlos Martín]]
+|{{fbaicon|CRO}} [[HNK Hajduk Split|Hajduk Split]]
+|align=center|<ref>{{cite news |url=https://en.atleticodemadrid.com/noticias/agreement-with-hajduk-split-for-the-loan-of-carlos-martin |title=Agreement with Hajduk Split for the loan of Carlos Martín |publisher=Atlético Madrid |date=2 September 2026 |access-date=2 September 2026}}</ref>
+|-
+|{{dts|format=dmy|2026|9|3}}
+|align=center| [[Forward (association football)|FW]]
+|align=center| {{Age|2005|2|11|2026|9|3}}
+|{{flagicon|ESP}} [[Rayane Belaid]]
+|[[Rayo Vallecano]]
+| Transfer
+|align=center| €500,000
+|align=center|<ref>{{cite news |url=https://www.atleticodemadrid.com/noticias/acuerdo-con-el-rayo-vallecano-para-el-traspaso-de-rayane |title=Acuerdo con el Rayo Vallecano para el traspaso de Rayane |publisher=Atlético Madrid |date=3 September 2026 |access-date=3 September 2026}}</ref>
+|}
+Total expenditure: {{Increase}} €69.5&nbsp;million <small>''(excluding potential add-ons, bonuses, undisclosed figures and future transfers)''</small>
+
+==Pre-season and friendlies==
+{{legend2|#CCFFCC|Win|border=1px solid #AAAAAA}} {{legend2|#FFFFCC|Draw|border=1px solid #AAAAAA}} {{legend2|#FFCCCC|Loss|border=1px solid #AAAAAA}} {{legend2|#FFFFFF|Fixtures|border=1px solid #AAAAAA}}
+
+{{Football box collapsible
+|round = [[Exhibition game#Club football|Friendly]]
+|date = 29 July 2026
+|time = 20:30 [[Western European Summer Time|WEST]] ([[UTC+01:00|UTC+1]])
+|team1 = Atlético Madrid
+|score = 4–1
+|report = https://en.atleticodemadrid.com/noticias/4-1-pre-season-win-over-getafe-in-training-match
+|team2 = [[Getafe CF|Getafe]]  
+|goals1 =
+*[[Ademola Lookman|Lookman]] {{goal|5||35}}
+*[[Arnau Ortiz|Ortiz]] {{goal|56}}
+*[[Obed Vargas|Vargas]] {{goal|89|pen.}}
+|goals2 =
+*[[Álvaro Gutiérrez Kittel|Kittel]] {{goal|41}}
+*[[Mady Macalou|Mady]] {{yel|54}}
+|stadium = [[Estadio Cerro del Espino]]
+|location = [[Majadahonda]], Spain
+|attendance = 0 (Fan free ground match)
+|referee = Álvaro Rodríguez Prieto
+|result = W
+}}
+{{Football box collapsible
+|round = [[Exhibition game#Club football|Snapdragon Cup]]
+|date = 1 August 2026
+|time = 15:00 [[Western European Summer Time|WEST]] ([[UTC+01:00|UTC+1]])
+|team1 = [[Manchester United F.C.|Manchester United]]
+|score = 2–1
+|report = https://en.atleticodemadrid.com/postpartidos/atletico-de-madrid-manchester-united-01-08-2026-15-00-2
+|team2 =  Atlético Madrid 
+|goals1 =
+*[[Ayden Heaven|Heaven]] {{yel|50}}
+*[[Bryan Mbeumo|Mbeumo]] {{goal|53|pen.|74}}
+|goals2 =
+*[[Arnau Ortiz|Ortiz]] {{goal|5}}
+|stadium = [[Nationalarenan]]
+|location = [[Stockholm]], Sweden
+|attendance = 30,000
+|referee = Adam Ladebäck ([[Swedish Football Association|Sweden]])
+|result = L
+}}
+{{Football box collapsible
+|round = [[Exhibition game#Club football|2026 coupang play series]]
+|date = 9 August 2026
+|time = 13:00 [[Western European Summer Time|WEST]] ([[UTC+01:00|UTC+1]])
+|team1 = [[Manchester City F.C.|Manchester City]] 
+|score = 3–1
+|report = https://en.atleticodemadrid.com/postpartidos/atletico-de-madrid-manchester-city-09-08-2026-17-07
+|team2 =  Atlético Madrid 
+|goals1 =
+*[[Omar Marmoush|Marmoush]] {{goal|57||59}}
+*[[Joško Gvardiol|Gvardiol]] {{yel|89}}
+*[[Rayan Aït-Nouri|Aït-Nouri]] {{goal|90}}
+|goals2 =
+*[[Jorge Domínguez (footballer, born 2009)|Domínguez]] {{goal|43}}
+*[[Morten Hjulmand|Hjulmand]] {{yel|55}}
+|stadium = [[Seoul World Cup Stadium|Sangam Stadium]]
+|location = [[Seoul]], South Korea
+|attendance = 50,078
+|referee = Kim Jong-hyeok ([[Korea Football Association|South Korea]])
+|result = L
+}}
+{{Football box collapsible
+|round = [[Exhibition game#Club football|Friendly]]
+|date = 14 August 2026
+|time = 17:30 [[Western European Summer Time|WEST]] ([[UTC+01:00|UTC+1]])
+|team1 = [[Olympique de Marseille|Marseille]]
+|score = 1–2
+|report = https://en.atleticodemadrid.com/postpartidos/olympique-de-marsella-atletico-de-madrid-14-08-2026-17-30-2
+|team2 =  Atlético Madrid 
+|goals1 =
+*[[Igor Paixão|Paixão]] {{goal|22}}, {{yel|41}}
+*[[Leonardo Balerdi|Balerdi]] {{yel|48}}
+*[[Geoffrey Kondogbia|Kondogbia]] {{yel|62}}
+|goals2 =
+*[[Giuliano Simeone|Simeone]] {{yel|5}}
+*[[Robin Le Normand|Le Normand]] {{yel|17}}
+*[[Rodri Mendoza|Mendoza]] {{goal|39}}
+*[[Carlos Martín (footballer)|Martín]] {{goal|78}}
+|stadium = [[Stade Vélodrome]]
+|location = [[Marseille]], France 
+|attendance = 45,000
+|referee = Aurelien Petit ([[French Football Federation|France]])
+|result = W
+}}
+
+== Competitions ==
+=== Overall record ===
+{{Fb overview2
+|c=4
+|c1=[[2026–27 La Liga|La Liga]] |fm1=19 August 2026 |lm1=28–30 May 2027|sr1=Matchday 1 |fp1=TBD |w1=7 |d1=1 |l1=1 |f1=19 |a1=8
+|c2=[[2026–27 Copa del Rey|Copa del Rey]] |fm2=15–17 December 2026 |lm2=TBD |sr2=Round of 32 |fp2=TBD |w2=0 |d2=0 |l2=0 |f2=0 |a2=0
+|c3=[[2027 Supercopa de España|Supercopa de España]] |fm3=2 February 2027 |lm3=February 2027 |sr3=Semi-finals |fp3=TBD |w3=0 |d3=0 |l3=0 |f3=0 |a3=0
+|c4=[[2026–27 UEFA Champions League|UEFA Champions League]] |fm4=9 September 2026 |lm4=TBD |sr4=League phase |fp4=TBD |w4=1 |d4=1 |l4=1 |f4=4 |a4=3
+|u=20 October 2026
+|s=[https://int.soccerway.com/teams/spain/atl-tico-madrid/2020/ Soccerway]
+}}
+
+=== La Liga ===
+{{main|2026–27 La Liga}}
+
+==== League table ====
+{{2026–27 La Liga table|showteam=ATM}}
+
+====Results summary====
+{{Fb_rs|hw=3|hd=1|hl=0|hgf=10|hga=3|aw=4|ad=0|al=1|agf=9|aga=5}}
+{{Fb_rs footer|u=17 October 2026|s=[https://www.laliga.com/en-GB/laliga-easports/standing La Liga]|date=June 2026}}
+
+====Results by round====
+{{#invoke:sports rbr table|table|legendpos=b
+| update=17 October 2026
+| header=Round
+| label1=Ground
+| res1=H/H/A/A/A/H/H/A/A/H/A/H/A/A/H/H/A/A/H/H/A/H/A/A/H/A/H/A/H/A/H/H/A/H/A/H/H/A
+| label2=Result
+| res2=W/D/W/L/W/W/W/W/W/////////////////////////////
+| label3=Position
+| pos3=3/6/3/6/5/4/2/2/2/////////////////////////////
+| color_W=green2|text_W=Win
+| color_D=yellow2|text_D=Draw
+| color_L=red2|text_L=Loss
+| text_H=Home|text_A=Away
+| color1=gold|color_2-4=green1|color_5=blue1|color_6=yellow1|color_18-20=red1
+| source=[https://www.laliga.com/en-GB/laliga-easports/standing La Liga]
+}}
+
+====Matches====
+The match schedule was released on 30 June 2026.<ref>{{cite news|title=Calendario completo Primera División · Temporada 2026/27|trans-title=Complete Primera División calendar · Season 2026/27|url=https://rfef.es/es/noticias/calendario-completo-primera-division-temporada-202627|publisher=Royal Spanish Football Federation|language=es|date=30 June 2026|access-date=30 June 2026|archive-date=30 June 2026|archive-url=https://web.archive.org/web/20260630191029/https://rfef.es/es/noticias/calendario-completo-primera-division-temporada-202627|url-status=live}}</ref>
+
+{{Football box collapsible
+|round = 1
+|date = 19 August 2026
+|time = 21:00 [[Central European Summer Time|CEST]] ([[UTC+02:00|UTC+2]])
+|team1 = Atlético Madrid
+|score = 2–0
+|report = https://www.laliga.com/en-GB/match/temporada-2026-2027-laliga-ea-sports-atletico-de-madrid-malaga-cf-1
+|team2 = [[Málaga CF|Málaga]]
+|goals1 =
+*[[Dávid Hancko|Hancko]] {{yel|15}}
+*[[Jorge Domínguez (footballer, born 2009)|Domínguez]] {{yel|37}}
+*[[Lee Kang-in|Lee]] {{goal|70}}
+*[[Álex Baena|Baena]] {{goal|85}}
+|goals2 =
+*[[Carlos Puga|Puga]] {{yel|45+4}}
+*[[Juan Cruz (footballer, born 2000)|Cruz]] {{yel|80}}
+*[[Ramón Enríquez|Ramón]] {{yel|88}}
+|stadium = [[Metropolitano Stadium|Riyadh Air Metropolitano]]
+|location = [[Madrid]]
+|attendance = 65,785
+|referee = Adrián Cordero Vega
+|result = W
+}}
+{{Football box collapsible
+|round = 2
+|date = 23 August 2026
+|time = 17:00 [[Central European Summer Time|CEST]] ([[UTC+02:00|UTC+2]])
+|team1 = Atlético Madrid
+|score = 2–2
+|report = https://www.laliga.com/en-GB/match/temporada-2026-2027-laliga-ea-sports-atletico-de-madrid-villarreal-cf-2
+|team2 = [[Villarreal CF|Villarreal]]
+|goals1 =
+*[[Álex Baena|Baena]] {{yel|54}}
+*[[Marc Pubill|Pubill]] {{goal|59}}
+*[[Robin Le Normand|Le Normand]] {{sentoff|0|76}}
+*[[Morten Hjulmand|Hjulmand]] {{yel|77}}
+*[[Giuliano Simeone|Simeone]] {{goal|85}}
+*[[José María Giménez|Giménez]] {{yel|90+1}}
+|goals2 =
+*[[Santiago Mouriño|Mouriño]] {{yel|50}}
+*[[Gerard Moreno|Gerard]] {{goal|66|pen.}}
+*[[Georges Mikautadze|Mikautadze]] {{goal|78|pen.}}
+*[[Juan Foyth|Foyth]] {{yel|90+10}}
+|stadium = [[Metropolitano Stadium|Riyadh Air Metropolitano]]
+|location = [[Madrid]]
+|attendance = 61,978
+|referee = [[Alejandro Hernández Hernández]]
+|result = D
+}}
+{{Football box collapsible
+|round = 3
+|date = 29 August 2026
+|time = 21:30 [[Central European Summer Time|CEST]] ([[UTC+02:00|UTC+2]])
+|team1 = [[Sevilla FC|Sevilla]]
+|score = 1–3
+|report = https://www.laliga.com/en-GB/match/temporada-2026-2027-laliga-ea-sports-sevilla-fc-atletico-de-madrid-3
+|team2 = Atlético Madrid
+|goals1 =
+*[[Miguel Sierra (footballer)|Sierra]] {{goal|66}}
+*[[Isaac Romero|Romero]] {{yel|89}}
+*[[Gabriel Suazo|Suazo]] {{yel|90+1}}
+|goals2 =
+*[[Álex Baena|Baena]] {{goal|4||33}}
+*[[Ademola Lookman|Lookman]] {{goal|26}}
+*[[Marcos Llorente|Llorente]] {{yel|45+4}}
+*[[Marc Pubill|Pubill]] {{yel|90+6}}
+|stadium = [[Ramón Sánchez-Pizjuán Stadium|Ramón Sánchez-Pizjuán]]
+|location = [[Seville]]
+|attendance = 38,340
+|referee = Javier Alberola Rojas
+|result = W
+}}
+{{Football box collapsible
+|round = 4
+|date = 5 September 2026
+|time = 16:15 [[Central European Summer Time|CEST]] ([[UTC+02:00|UTC+2]])
+|team1 = [[Athletic Bilbao]]
+|score = 3–0
+|report = https://www.laliga.com/en-GB/match/temporada-2026-2027-laliga-ea-sports-athletic-club-atletico-de-madrid-4
+|team2 = Atlético Madrid
+|goals1 =
+*[[Nico Williams|N. Williams]] {{goal|46}}
+*[[Robert Navarro (footballer)|Navarro]] {{goal|48}}
+*[[Oihan Sancet|Sancet]] {{goal|90}}
+|goals2 =
+*[[Lee Kang-in|Lee]] {{yel|39}}
+|stadium = [[San Mamés Stadium (2013)|San Mamés]]
+|location = [[Bilbao]]
+|attendance = 48,425
+|referee = [[José Luis Munuera Montero]]
+|result = L
+}}
+{{Football box collapsible
+|round = 5
+|date = 13 September 2026
+|time = 21:00 [[Central European Summer Time|CEST]] ([[UTC+02:00|UTC+2]])
+|team1 = [[Real Sociedad]]
+|score = 0–3
+|report = https://www.laliga.com/en-GB/match/temporada-2026-2027-laliga-ea-sports-real-sociedad-atletico-de-madrid-5
+|team2 = Atlético Madrid
+|goals1 =
+*[[Yangel Herrera|Herrera]] {{yel|18}}
+*[[Mikel Oyarzabal|Oyarzabal]] {{yel|78}}
+|goals2 =
+*[[Johnny Cardoso|Cardoso]] {{yel|75}}
+*[[Álex Grimaldo|Grimaldo]] {{goal|84|pen.}}
+*[[Jonathan David|David]] {{goal|90}}
+*[[Giuliano Simeone|Simeone]] {{goal|90+5}}
+|stadium = [[Anoeta Stadium|Anoeta]]
+|location = [[San Sebastián]]
+|attendance = 31,834 
+|referee = [[Juan Martínez Munuera]]
+|result = W
+}}
+{{Football box collapsible
+|round = 6
+|date = 16 September 2026
+|time = 19:00 [[Central European Summer Time|CEST]] ([[UTC+02:00|UTC+2]])
+|team1 = Atlético Madrid
+|score = 4–0
+|report = https://www.laliga.com/en-GB/match/temporada-2026-2027-laliga-ea-sports-atletico-de-madrid-ca-osasuna-6
+|team2 = [[CA Osasuna|Osasuna]]
+|goals1 =
+*[[Jonathan David|David]] {{goal|24}}
+*[[Ademola Lookman|Lookman]] {{yel|50}}
+*[[Lee Kang-in|Lee]] {{goal|54}}
+*[[Robin Le Normand|Le Normand]] {{goal|63}}
+*[[Álex Baena|Baena]] {{goal|82}}
+|goals2 =
+*[[Rubén García (footballer, born 1993)|Ru. García]] {{yel|86}}
+*[[Abel Bretones|Bretones]] {{yel|90+3}}
+|stadium = [[Metropolitano Stadium|Riyadh Air Metropolitano]]
+|location = [[Madrid]]
+|attendance = 60,869
+|referee = Francisco José Hernández Maeso
+|result = W
+}}
+{{Football box collapsible
+|round = [[Madrid derby|7]]
+|date = 20 September 2026
+|time = 16:15 [[Central European Summer Time|CEST]] ([[UTC+02:00|UTC+2]])
+|team1 = Atlético Madrid
+|score = 2–1
+|report = https://www.laliga.com/en-GB/match/temporada-2026-2027-laliga-ea-sports-atletico-de-madrid-real-madrid-7
+|team2 = [[Real Madrid CF|Real Madrid]]
+|goals1 =
+*[[Marc Pubill|Pubill]] {{yel|35}}
+*[[Cristian Romero|Romero]] {{yel|38}}
+*[[Álex Grimaldo|Grimaldo]] {{goal|53|pen.}}
+*[[Jonathan David|David]] {{goal|59}}
+|goals2 =
+*[[Denzel Dumfries|Dumfries]] {{yel|49}}
+*[[Dean Huijsen|Huijsen]] {{sentoff|0|52}}
+*[[Jude Bellingham|Bellingham]] {{yel|78}}
+*[[Antonio Rüdiger|Rüdiger]] {{goal|89}}
+|stadium = [[Metropolitano Stadium|Riyadh Air Metropolitano]]
+|location = [[Madrid]]
+|attendance = 70,514
+|referee = Miguel Ángel Ortiz Arias
+|result = W
+}}
+{{Football box collapsible
+|round = 8
+|date = 10 October 2026
+|time = 16:15 [[Central European Summer Time|CEST]] ([[UTC+02:00|UTC+2]])
+|team1 = [[Deportivo Alavés|Alavés]]
+|score = 1–2
+|report = https://www.laliga.com/en-GB/match/temporada-2026-2027-laliga-ea-sports-deportivo-alaves-atletico-de-madrid-8
+|team2 = Atlético Madrid
+|goals1 =
+*[[Lucas Boyé|Boyé]] {{goal|45+6|pen.}}
+*[[Ángel Pérez (footballer, born 2002)|Pérez]] {{sentoff|0|61}}
+|goals2 =
+*[[Álex Grimaldo|Grimaldo]] {{goal|33}}
+*[[Ademola Lookman|Lookman]] {{yel|45}}
+*[[Robin Le Normand|Le Normand]] {{yel|45+1}}
+*[[Cristian Romero|Romero]] {{goal|87}}
+*[[Johnny Cardoso|Cardoso]] {{yel|90+2}}
+|stadium = [[Mendizorrotza Stadium|Mendizorrotza]]
+|location = [[Vitoria-Gasteiz]]
+|attendance = 17,741
+|referee = Alejandro Quintero González
+|result = W
+}}
+{{Football box collapsible
+|round = 9
+|date = 17 October 2026
+|time = 14:00 [[Central European Summer Time|CEST]] ([[UTC+02:00|UTC+2]])
+|team1 = [[RCD Espanyol|Espanyol]]
+|score = 0–1
+|report = https://www.laliga.com/en-GB/match/temporada-2026-2027-laliga-ea-sports-rcd-espanyol-de-barcelona-atletico-de-madrid-9
+|team2 = Atlético Madrid
+|goals1 =
+*[[Roger Hinojo|Hinojo]] {{yel|81}}
+*[[Unai Nuñez|Nuñez]] {{yel|87}}
+|goals2 =
+*[[Morten Hjulmand|Hjulmand]] {{yel|22}}
+*[[Lee Kang-in|Lee]] {{yel|43}}
+*[[Cristian Romero|Romero]] {{yel|66}}
+*[[Álex Baena|Baena]] {{yel|68}}, {{goal|89}}
+*[[Rodri Mendoza|Mendoza]] {{yel|79}}
+|stadium = [[RCDE Stadium]]
+|location = [[Cornellà de Llobregat]]
+|attendance = 30,882
+|referee = [[Alejandro Hernández Hernández]]
+|result = W
+}}
+{{Football box collapsible
+|round = 10
+|date = 24 October 2026
+|time = 21:00 [[Central European Summer Time|CEST]] ([[UTC+02:00|UTC+2]])
+|team1 = Atlético Madrid
+|score = 
+|report = https://www.laliga.com/en-GB/match/temporada-2026-2027-laliga-ea-sports-atletico-de-madrid-rc-deportivo-10
+|team2 = [[Deportivo de A Coruña|Deportivo A Coruña]]
+|goals1 =
+|goals2 =
+|stadium = [[Metropolitano Stadium|Riyadh Air Metropolitano]]
+|location = [[Madrid]]
+|attendance = 
+|referee = 
+|result = 
+}}
+{{Football box collapsible
+|round = 11
+|date = 31 October 2026
+|time = 14:00 [[Central European Time|CET]] ([[UTC+01:00|UTC+1]])
+|team1 = [[Levante UD|Levante]]
+|score = 
+|report = https://www.laliga.com/en-GB/match/temporada-2026-2027-laliga-ea-sports-levante-ud-atletico-de-madrid-11
+|team2 = Atlético Madrid
+|goals1 =
+|goals2 =
+|stadium = [[Estadi Ciutat de València|Ciutat de València]]
+|location = [[Valencia]]
+|attendance = 
+|referee = 
+|result = 
+}}
+{{Football box collapsible
+|round = 12
+|date = 8 November 2026
+|time = 21:00 [[Central European Time|CET]] ([[UTC+01:00|UTC+1]])
+|team1 = Atlético Madrid
+|score = 
+|report = https://www.laliga.com/en-GB/match/temporada-2026-2027-laliga-ea-sports-atletico-de-madrid-fc-barcelona-12
+|team2 = [[FC Barcelona|Barcelona]]
+|goals1 =
+|goals2 =
+|stadium = [[Metropolitano Stadium|Riyadh Air Metropolitano]]
+|location = [[Madrid]]
+|attendance = 
+|referee = 
+|result = 
+}}
+{{Football box collapsible
+|round = 13
+|date = 22 November 2026
+|time = --:-- [[Central European Time|CET]] ([[UTC+01:00|UTC+1]])
+|team1 = [[Getafe CF|Getafe]]
+|score = 
+|report = https://www.laliga.com/en-GB/match/temporada-2026-2027-laliga-ea-sports-getafe-cf-atletico-de-madrid-13
+|team2 = Atlético Madrid
+|goals1 =
+|goals2 =
+|stadium = [[Estadio Coliseum|Coliseum]]
+|location = [[Getafe]]
+|attendance = 
+|referee = 
+|result = 
+}}
+{{Football box collapsible
+|round = 14
+|date = 29 November 2026
+|time = --:-- [[Central European Time|CET]] ([[UTC+01:00|UTC+1]])
+|team1 = [[Elche CF|Elche]]
+|score = 
+|report = https://www.laliga.com/en-GB/match/temporada-2026-2027-laliga-ea-sports-elche-cf-atletico-de-madrid-14
+|team2 = Atlético Madrid
+|goals1 =
+|goals2 =
+|stadium = [[Estadio Martínez Valero|Martínez Valero]]
+|location = [[Elche]]
+|attendance = 
+|referee = 
+|result = 
+}}
+{{Football box collapsible
+|round = 15
+|date = 6 December 2026
+|time = --:-- [[Central European Time|CET]] ([[UTC+01:00|UTC+1]])
+|team1 = Atlético Madrid
+|score = 
+|report = https://www.laliga.com/en-GB/match/temporada-2026-2027-laliga-ea-sports-atletico-de-madrid-real-betis-15
+|team2 = [[Real Betis]]
+|goals1 =
+|goals2 =
+|stadium = [[Metropolitano Stadium|Riyadh Air Metropolitano]]
+|location = [[Madrid]]
+|attendance = 
+|referee = 
+|result = 
+}}
+{{Football box collapsible
+|round = 16
+|date = 13 December 2026
+|time = --:-- [[Central European Time|CET]] ([[UTC+01:00|UTC+1]])
+|team1 = Atlético Madrid
+|score = 
+|report = https://www.laliga.com/en-GB/match/temporada-2026-2027-laliga-ea-sports-atletico-de-madrid-valencia-cf-16
+|team2 = [[Valencia CF|Valencia]]
+|goals1 =
+|goals2 =
+|stadium = [[Metropolitano Stadium|Riyadh Air Metropolitano]]
+|location = [[Madrid]]
+|attendance = 
+|referee = 
+|result = 
+}}
+{{Football box collapsible
+|round = 17
+|date = 20 December 2026
+|time = --:-- [[Central European Time|CET]] ([[UTC+01:00|UTC+1]])
+|team1 = [[RC Celta de Vigo|Celta Vigo]]
+|score = 
+|report = https://www.laliga.com/en-GB/match/temporada-2026-2027-laliga-ea-sports-rc-celta-atletico-de-madrid-17
+|team2 = Atlético Madrid
+|goals1 =
+|goals2 =
+|stadium = [[Balaídos Stadium|Abanca-Balaídos]]
+|location = [[Vigo]]
+|attendance = 
+|referee = 
+|result = 
+}}
+{{Football box collapsible
+|round = 18
+|date = 3 January 2027
+|time = --:-- [[Central European Time|CET]] ([[UTC+01:00|UTC+1]])
+|team1 = [[Rayo Vallecano]]
+|score = 
+|report = https://www.laliga.com/en-GB/match/temporada-2026-2027-laliga-ea-sports-rayo-vallecano-atletico-de-madrid-18
+|team2 = Atlético Madrid
+|goals1 =
+|goals2 =
+|stadium = [[Butarque Stadium|Butarque]]
+|location = [[Leganés]]
+|attendance = 
+|referee = 
+|result = 
+}}
+{{Football box collapsible
+|round = 19
+|date = 10 January 2027
+|time = --:-- [[Central European Time|CET]] ([[UTC+01:00|UTC+1]])
+|team1 = Atlético Madrid
+|score = 
+|report = http://laliga.com/en-GB/match/temporada-2026-2027-laliga-ea-sports-atletico-de-madrid-r-racing-club-19
+|team2 = [[Racing de Santander|Racing Santander]]
+|goals1 =
+|goals2 =
+|stadium = [[Metropolitano Stadium|Riyadh Air Metropolitano]]
+|location = [[Madrid]]
+|attendance = 
+|referee = 
+|result = 
+}}
+{{Football box collapsible
+|round = 20
+|date = 17 January 2027
+|time = --:-- [[Central European Time|CET]] ([[UTC+01:00|UTC+1]])
+|team1 = Atlético Madrid
+|score = 
+|report = https://www.laliga.com/en-GB/match/temporada-2026-2027-laliga-ea-sports-atletico-de-madrid-real-sociedad-20
+|team2 = [[Real Sociedad]]
+|goals1 =
+|goals2 =
+|stadium = [[Metropolitano Stadium|Riyadh Air Metropolitano]]
+|location = [[Madrid]]
+|attendance = 
+|referee = 
+|result = 
+}}
+{{Football box collapsible
+|round = 21
+|date = 24 January 2026
+|time = --:-- [[Central European Time|CET]] ([[UTC+01:00|UTC+1]])
+|team1 = [[Deportivo de A Coruña|Deportivo A Coruña]]
+|score = 
+|report = https://www.laliga.com/en-GB/match/temporada-2026-2027-laliga-ea-sports-rc-deportivo-atletico-de-madrid-21
+|team2 = Atlético Madrid
+|goals1 =
+|goals2 =
+|stadium = [[Estadio Riazor|ABANCA-Riazor]]
+|location = [[A Coruña]]
+|attendance = 
+|referee = 
+|result = 
+}}
+{{Football box collapsible
+|round = 22
+|date = 31 January 2027
+|time = --:-- [[Central European Time|CET]] ([[UTC+01:00|UTC+1]])
+|team1 = Atlético Madrid
+|score = 
+|report = https://www.laliga.com/en-GB/match/temporada-2026-2027-laliga-ea-sports-atletico-de-madrid-rcd-espanyol-de-barcelona-22
+|team2 = [[RCD Espanyol|Espanyol]]
+|goals1 =
+|goals2 =
+|stadium = [[Metropolitano Stadium|Riyadh Air Metropolitano]]
+|location = [[Madrid]]
+|attendance = 
+|referee = 
+|result = 
+}}
+{{Football box collapsible
+|round = 23
+|date = 7 February 2027
+|time = --:-- [[Central European Time|CET]] ([[UTC+01:00|UTC+1]])
+|team1 = [[FC Barcelona|Barcelona]]
+|score = 
+|report = https://www.laliga.com/en-GB/match/temporada-2026-2027-laliga-ea-sports-fc-barcelona-atletico-de-madrid-23
+|team2 = Atlético Madrid
+|goals1 =
+|goals2 =
+|stadium = [[Camp Nou|Spotify Camp Nou]]
+|location = [[Barcelona]]
+|attendance = 
+|referee = 
+|result = 
+}}
+{{Football box collapsible
+|round = 24
+|date = 14 February 2027
+|time = --:-- [[Central European Time|CET]] ([[UTC+01:00|UTC+1]])
+|team1 = [[CA Osasuna|Osasuna]]
+|score = 
+|report = https://www.laliga.com/en-GB/match/temporada-2026-2027-laliga-ea-sports-ca-osasuna-atletico-de-madrid-24
+|team2 = Atlético Madrid
+|goals1 =
+|goals2 =
+|stadium = [[El Sadar Stadium|El Sadar]]
+|location = [[Pamplona]]
+|attendance = 
+|referee = 
+|result = 
+}}
+{{Football box collapsible
+|round = 25
+|date = 21 February 2027
+|time = --:-- [[Central European Time|CET]] ([[UTC+01:00|UTC+1]])
+|team1 = Atlético Madrid
+|score = 
+|report = https://www.laliga.com/en-GB/match/temporada-2026-2027-laliga-ea-sports-atletico-de-madrid-elche-cf-25
+|team2 = [[Elche CF|Elche]]
+|goals1 =
+|goals2 =
+|stadium = [[Metropolitano Stadium|Riyadh Air Metropolitano]]
+|location = [[Madrid]]
+|attendance = 
+|referee = 
+|result = 
+}}
+{{Football box collapsible
+|round = 26
+|date = 28 February 2027
+|time = --:-- [[Central European Time|CET]] ([[UTC+01:00|UTC+1]])
+|team1 = [[Málaga CF|Málaga]]
+|score = 
+|report = https://www.laliga.com/en-GB/match/temporada-2026-2027-laliga-ea-sports-malaga-cf-atletico-de-madrid-26
+|team2 = Atlético Madrid
+|goals1 =
+|goals2 =
+|stadium = [[Estadio La Rosaleda|La Rosaleda]]
+|location = [[Málaga]]
+|attendance = 
+|referee = 
+|result = 
+}}
+{{Football box collapsible
+|round = 27
+|date = 7 March 2027
+|time = --:-- [[Central European Time|CET]] ([[UTC+01:00|UTC+1]])
+|team1 = Atlético Madrid
+|score = 
+|report = https://www.laliga.com/en-GB/match/temporada-2026-2027-laliga-ea-sports-atletico-de-madrid-rc-celta-27
+|team2 = [[RC Celta de Vigo|Celta Vigo]]
+|goals1 =
+|goals2 =
+|stadium = [[Metropolitano Stadium|Riyadh Air Metropolitano]]
+|location = [[Madrid]]
+|attendance = 
+|referee = 
+|result = 
+}}
+{{Football box collapsible
+|round = 28
+|date = 14 March 2027
+|time = --:-- [[Central European Time|CET]] ([[UTC+01:00|UTC+1]])
+|team1 = [[Racing de Santander|Racing Santander]]
+|score = 
+|report = https://www.laliga.com/en-GB/match/temporada-2026-2027-laliga-ea-sports-r-racing-club-atletico-de-madrid-28
+|team2 = Atlético Madrid
+|goals1 =
+|goals2 =
+|stadium = [[Campos de Sport de El Sardinero|El Sardinero]]
+|location = [[Santander, Spain|Santander]]
+|attendance = 
+|referee = 
+|result = 
+}}
+{{Football box collapsible
+|round = 29
+|date = 21 March 2027
+|time = --:-- [[Central European Time|CET]] ([[UTC+01:00|UTC+1]])
+|team1 = Atlético Madrid
+|score = 
+|report = https://www.laliga.com/en-GB/match/temporada-2026-2027-laliga-ea-sports-atletico-de-madrid-getafe-cf-29
+|team2 = [[Getafe CF|Getafe]]
+|goals1 =
+|goals2 =
+|stadium = [[Metropolitano Stadium|Riyadh Air Metropolitano]]
+|location = [[Madrid]]
+|attendance = 
+|referee = 
+|result = 
+}}
+{{Football box collapsible
+|round = [[Madrid derby|30]]
+|date = 4 April 2027
+|time = --:-- [[Central European Summer Time|CEST]] ([[UTC+02:00|UTC+2]])
+|team1 = [[Real Madrid CF|Real Madrid]]
+|score = 
+|report = https://www.laliga.com/en-GB/match/temporada-2026-2027-laliga-ea-sports-real-madrid-atletico-de-madrid-30
+|team2 = Atlético Madrid
+|goals1 =
+|goals2 =
+|stadium = [[Bernabéu (stadium)|Bernabéu]]
+|location = [[Madrid]]
+|attendance = 
+|referee = 
+|result = 
+}}
+{{Football box collapsible
+|round = 31
+|date = 11 April 2027
+|time = --:-- [[Central European Summer Time|CEST]] ([[UTC+02:00|UTC+2]])
+|team1 = Atlético Madrid
+|score = 
+|report = https://www.laliga.com/en-GB/match/temporada-2026-2027-laliga-ea-sports-atletico-de-madrid-levante-ud-31
+|team2 = [[UD Levante|Levante]]
+|goals1 =
+|goals2 =
+|stadium = [[Metropolitano Stadium|Riyadh Air Metropolitano]]
+|location = [[Madrid]]
+|attendance = 
+|referee = 
+|result = 
+}}
+{{Football box collapsible
+|round = 32
+|date = 18 April 2027
+|time = --:-- [[Central European Summer Time|CEST]] ([[UTC+02:00|UTC+2]])
+|team1 = Atlético Madrid
+|score = 
+|report = https://www.laliga.com/en-GB/match/temporada-2026-2027-laliga-ea-sports-atletico-de-madrid-sevilla-fc-32
+|team2 = [[Sevilla FC|Sevilla]]
+|goals1 =
+|goals2 =
+|stadium = [[Metropolitano Stadium|Riyadh Air Metropolitano]]
+|location = [[Madrid]]
+|attendance = 
+|referee = 
+|result = 
+}}
+{{Football box collapsible
+|round = 33
+|date = 21 April 2027
+|time = --:-- [[Central European Summer Time|CEST]] ([[UTC+02:00|UTC+2]])
+|team1 = [[Villarreal CF|Villarreal]]
+|score = 
+|report = https://www.laliga.com/en-GB/match/temporada-2026-2027-laliga-ea-sports-villarreal-cf-atletico-de-madrid-33
+|team2 = Atlético Madrid
+|goals1 =
+|goals2 =
+|stadium = [[Estadio de la Cerámica]]
+|location = [[Villarreal]]
+|attendance = 
+|referee = 
+|result = 
+}}
+{{Football box collapsible
+|round = 34
+|date = 2 May 2027
+|time = --:-- [[Central European Summer Time|CEST]] ([[UTC+02:00|UTC+2]])
+|team1 = Atlético Madrid
+|score = 
+|report = https://www.laliga.com/en-GB/match/temporada-2026-2027-laliga-ea-sports-atletico-de-madrid-deportivo-alaves-34
+|team2 = [[Deportivo Alavés|Alavés]]
+|goals1 =
+|goals2 =
+|stadium = [[Metropolitano Stadium|Riyadh Air Metropolitano]]
+|location = [[Madrid]]
+|attendance = 
+|referee = 
+|result = 
+}}
+{{Football box collapsible
+|round = 35
+|date = 9 May 2027
+|time = --:-- [[Central European Summer Time|CEST]] ([[UTC+02:00|UTC+2]])
+|team1 = [[Valencia CF|Valencia]]
+|score = 
+|report = https://www.laliga.com/en-GB/match/temporada-2026-2027-laliga-ea-sports-valencia-cf-atletico-de-madrid-35
+|team2 = Atlético Madrid
+|goals1 =
+|goals2 =
+|stadium = [[Mestalla Stadium|Mestalla]]
+|location = [[Valencia]]
+|attendance = 
+|referee = 
+|result = 
+}}
+{{Football box collapsible
+|round = 36
+|date = 16 May 2027
+|time = --:-- [[Central European Summer Time|CEST]] ([[UTC+02:00|UTC+2]])
+|team1 = Atlético Madrid
+|score = 
+|report = https://www.laliga.com/en-GB/match/temporada-2026-2027-laliga-ea-sports-atletico-de-madrid-rayo-vallecano-36
+|team2 = [[Rayo Vallecano]]
+|goals1 =
+|goals2 =
+|stadium = [[Metropolitano Stadium|Riyadh Air Metropolitano]]
+|location = [[Madrid]]
+|attendance = 
+|referee = 
+|result = 
+}}
+{{Football box collapsible
+|round = 37
+|date = 23 May 2027
+|time = --:-- [[Central European Summer Time|CEST]] ([[UTC+02:00|UTC+2]])
+|team1 = Atlético Madrid
+|score = 
+|report = https://www.laliga.com/en-GB/match/temporada-2026-2027-laliga-ea-sports-atletico-de-madrid-athletic-club-37
+|team2 = [[Athletic Bilbao]]
+|goals1 =
+|goals2 =
+|stadium = [[Metropolitano Stadium|Riyadh Air Metropolitano]]
+|location = [[Madrid]]
+|attendance = 
+|referee = 
+|result =  
+}}
+{{Football box collapsible
+|round = 38
+|date = 30 May 2027
+|time = --:-- [[Central European Summer Time|CEST]] ([[UTC+02:00|UTC+2]])
+|team1 = [[Real Betis]]
+|score = 
+|report = https://www.laliga.com/en-GB/match/temporada-2026-2027-laliga-ea-sports-real-betis-atletico-de-madrid-38
+|team2 = Atlético Madrid
+|goals1 =
+|goals2 =
+|stadium = [[Estadio de La Cartuja|La Cartuja]]
+|location = [[Seville]]
+|attendance = 
+|referee = 
+|result = 
+}}
+
+=== Copa del Rey ===
+{{Main|2026–27 Copa del Rey}}
+Atlético entered the tournament in the round of 32, as they qualified for the [[2027 Supercopa de España]].
+
+=== Supercopa de España ===
+{{main|2027 Supercopa de España}}
+
+{{Football box collapsible
+|round      = [[2027 Supercopa de España#Semi-finals|Semi-finals]]
+|date       = 2 February 2027
+|time       = 22:00 [[Time in Turkey|TRT]] ([[UTC+03:00|UTC+3]])
+|team1      = [[FC Barcelona|Barcelona]]
+|score      = 
+|report     = 
+|team2      = Atlético Madrid
+|goals1     =
+|goals2     =
+|stadium    = [[Şükrü Saracoğlu Stadium]]
+|location   = [[Istanbul]], Turkey
+|attendance = 
+|referee    = 
+|result     = 
+}}
+
+=== UEFA Champions League ===
+{{main|2026–27 UEFA Champions League}}
+
+====League phase====
+{{main|2026–27 UEFA Champions League league phase}}
+The league phase draw was held on 27 August 2026.<ref>{{cite news|url=https://www.uefa.com/news-media/news/02a0-1f71bdf70a9a-b6067bd647f2-1000--2026-european-football-calendar-match-and-draw-dates-for-all/|title=2026 European football calendar: Dates for all UEFA competitions, draws and events|publisher=UEFA|date=9 May 2026|access-date=22 May 2026|archive-date=9 March 2026|archive-url=https://web.archive.org/web/20260309032310/https://www.uefa.com/news-media/news/02a0-1f71bdf70a9a-b6067bd647f2-1000--2026-european-football-calendar-match-and-draw-dates-for-all/|url-status=live}}</ref>
+
+{{2026–27 UEFA Champions League league phase table|showteam=ATM}}
+
+{{#invoke:sports rbr table|table|legendpos=b
+| updated=20 October 2026
+| header=Round
+| label1=Ground
+| res1=A/H/A/H/H/A/A/H
+| label2=Result
+| res2=L/W/D/////
+| label3=Position
+| pos3=25/15//////
+| color_W=green2|text_W=Win
+| color_D=yellow2|text_D=Draw
+| color_L=red2|text_L=Loss
+| text_H=Home|text_A=Away
+| color_1-8=green1|color_9-16=blue1|color_17-24=blue2
+| source=[https://www.uefa.com/uefachampionsleague/fixtures-results/ UEFA]
+}}
+
+{{Football box collapsible
+|round = [[2026–27 UEFA Champions League league phase#Liverpool v Atlético Madrid|1]]
+|date = 9 September 2026
+|time = 20:00 [[British Summer Time|BST]] ([[UTC+01:00|UTC+1]])
+|team1 = [[Liverpool F.C.|Liverpool]] {{fbaicon|ENG}}
+|score = 2–1
+|report = https://www.uefa.com/uefachampionsleague/match/2049560/
+|team2 = {{fbaicon|ESP}} Atlético Madrid
+|goals1 =
+*[[Alexis Mac Allister|Mac Allister]] {{yel|28}}, {{goal|50}}
+*[[Dominik Szoboszlai|Szoboszlai]] {{goal|40}}
+|goals2 =
+*[[Marcos Llorente|Llorente]] {{goal|17}}
+*[[Marc Pubill|Pubill]] {{yel|52}}
+|stadium = [[Anfield]]
+|location = [[Liverpool]], England
+|attendance = 59,870
+|referee = [[Davide Massa]] ([[Italian Football Federation|Italy]])
+|result = L
+}}
+{{Football box collapsible
+|round = [[2026–27 UEFA Champions League league phase#Atlético Madrid v Manchester United|2]]
+|date = 13 October 2026
+|time = 21:00 [[Central European Summer Time|CEST]] ([[UTC+02:00|UTC+2]])
+|team1 = Atlético Madrid {{fbaicon|ESP}}
+|score = 2–0
+|report = https://www.uefa.com/uefachampionsleague/match/2049573/
+|team2 = {{fbaicon|ENG}} [[Manchester United F.C.|Manchester United]]
+|goals1 =
+*[[Pablo Barrios (footballer)|Barrios]] {{goal|1}}
+*[[Ademola Lookman|Lookman]] {{goal|79}}
+*[[Robin Le Normand|Le Normand]] {{yel|88}}
+|goals2 =
+*[[Marcus Rashford|Rashford]] {{yel|52}}
+*[[Leny Yoro|Yoro]] {{sentoff|0|74}}
+|stadium = [[Metropolitano Stadium|Riyadh Air Metropolitano]]
+|location = [[Madrid]], Spain
+|attendance = 69,493
+|referee = [[Glenn Nyberg]] ([[Swedish Football Association|Sweden]])
+|result = W
+}}
+{{Football box collapsible
+|round = [[2026–27 UEFA Champions League league phase#VfB Stuttgart v Atlético Madrid|3]]
+|date = 20 October 2026
+|time = 21:00 [[Central European Summer Time|CEST]] ([[UTC+02:00|UTC+2]])
+|team1 = [[VfB Stuttgart]] {{fbaicon|GER}}
+|score = 1–1
+|report = https://www.uefa.com/uefachampionsleague/match/2049596/
+|team2 = {{fbaicon|ESP}} Atlético Madrid
+|goals1 =
+*[[Maximilian Mittelstädt|Mittelstädt]] {{yel|17}}
+*[[Jamie Leweling|Leweling]] {{goal|36}}
+|goals2 =
+*[[Julián Alvarez|Alvarez]] {{goal|47}}
+*[[Morten Hjulmand|Hjulmand]] {{sentoff|0|64}}
+|stadium = [[MHPArena]]
+|location = [[Stuttgart]], Germany
+|attendance = 58,000
+|referee = [[Serdar Gözübüyük]] ([[Royal Dutch Football Association|Netherlands]])
+|result = D
+}}
+{{Football box collapsible
+|round = [[2026–27 UEFA Champions League league phase#Atlético Madrid v Bayern Munich|4]]
+|date = 3 November 2026
+|time = 21:00 [[Central European Time|CET]] ([[UTC+01:00|UTC+1]])
+|team1 = Atlético Madrid {{fbaicon|ESP}}
+|score = 
+|report = https://www.uefa.com/uefachampionsleague/match/2049608/
+|team2 = {{fbaicon|GER}} [[FC Bayern Munich|Bayern Munich]]
+|goals1 =
+|goals2 =
+|stadium = [[Metropolitano Stadium|Riyadh Air Metropolitano]]
+|location = [[Madrid]], Spain
+|attendance = 
+|referee = 
+|result = 
+}}
+{{Football box collapsible
+|round = [[2026–27 UEFA Champions League league phase#Atlético Madrid v Viking|5]]
+|date = 25 November 2026
+|time = 21:00 [[Central European Time|CET]] ([[UTC+01:00|UTC+1]])
+|team1 = Atlético Madrid {{fbaicon|ESP}}
+|score = 
+|report = https://www.uefa.com/uefachampionsleague/match/2049636/
+|team2 = {{fbaicon|NOR}} [[Viking FK|Viking]]
+|goals1 =
+|goals2 =
+|stadium = [[Metropolitano Stadium|Riyadh Air Metropolitano]]
+|location = [[Madrid]], Spain
+|attendance = 
+|referee = 
+|result = 
+}}
+{{Football box collapsible
+|round = [[2026–27 UEFA Champions League league phase#PSV Eindhoven v Atlético Madrid|6]]
+|date = 9 December 2026
+|time = 21:00 [[Central European Time|CET]] ([[UTC+01:00|UTC+1]])
+|team1 = [[PSV Eindhoven]] {{fbaicon|NED}}
+|score = 
+|report = https://www.uefa.com/uefachampionsleague/match/2049656/
+|team2 = {{fbaicon|ESP}} Atlético Madrid
+|goals1 =
+|goals2 =
+|stadium = [[Philips Stadion]]
+|location = [[Eindhoven]], Netherlands
+|attendance = 
+|referee = 
+|result = 
+}}
+{{Football box collapsible
+|round = [[2026–27 UEFA Champions League league phase#Bodø/Glimt v Atlético Madrid|7]]
+|date = 19 January 2027
+|time = 18:45 [[Central European Time|CET]] ([[UTC+01:00|UTC+1]])
+|team1 = [[FK Bodø/Glimt|Bodø/Glimt]] {{fbaicon|NOR}}
+|score = 
+|report = https://www.uefa.com/uefachampionsleague/match/2049666/
+|team2 = {{fbaicon|ESP}} Atlético Madrid
+|goals1 =
+|goals2 =
+|stadium = [[Aspmyra Stadion]]
+|location = [[Bodø (town)|Bodø]], Norway
+|attendance = 
+|referee = 
+|result = 
+}}
+{{Football box collapsible
+|round = [[2026–27 UEFA Champions League league phase#Atlético Madrid v Fenerbahçe|8]]
+|date = 27 January 2027
+|time = 21:00 [[Central European Time|CET]] ([[UTC+01:00|UTC+1]])
+|team1 = Atlético Madrid {{fbaicon|ESP}}
+|score = 
+|report = https://www.uefa.com/uefachampionsleague/match/2049685/
+|team2 = {{fbaicon|TUR}} [[Fenerbahçe S.K. (football)|Fenerbahçe]]
+|goals1 =
+|goals2 =
+|stadium = [[Metropolitano Stadium|Riyadh Air Metropolitano]]
+|location = [[Madrid]], Spain
+|attendance = 
+|referee = 
+|result = 
+}}
+
+==Statistics==
+
+===Squad statistics===
+{{Efs start|[[2025–26 La Liga|La Liga]]|[[2025–26 Copa del Rey|Copa del Rey]]|[[2026 Supercopa de España|Supercopa de España]]|[[2025–26 UEFA Champions League|Champions League]]}}
+|-
+! colspan="14" style="background:#dcdcdc; text-align:center"|Goalkeepers
+{{Efs player|no=1 |pos=GK|nat=ARG|name=[[Juan Musso]]                                              |0  |0 |0 |0 |0 |0 |0 |0}}
+{{Efs player|no=13|pos=GK|nat=SVN|name=[[Jan Oblak]]                                               |9  |0 |0 |0 |0 |0 |3 |0}}
+{{Efs player|no=25|pos=GK|nat=ESP|name=[[Salvi Esquivel]]                                          |0  |0 |0 |0 |0 |0 |0 |0}}
+|-
+! colspan="14" style="background:#dcdcdc; text-align:center"|Defenders
+{{Efs player|no=17|pos=DF|nat=SVK|name=[[Dávid Hancko]]                                            |7+2|0 |0 |0 |0 |0 |3 |0}}
+{{Efs player|no=18|pos=DF|nat=ESP|name=[[Marc Pubill]]                                             |6+1|1 |0 |0 |0 |0 |2+1|0}}
+{{Efs player|no=21|pos=DF|nat=ARG|name=[[Cristian Romero]]                                         |5+1|1 |0 |0 |0 |0 |2 |0}}
+{{Efs player|no=22|pos=DF|nat=ESP|name=[[Álex Grimaldo]]                                           |7+1|3 |0 |0 |0 |0 |2+1|0}}
+{{Efs player|no=24|pos=DF|nat=ESP|name=[[Robin Le Normand]]                                        |4+1|1 |0 |0 |0 |0 |0+3|0}}
+{{Efs player|no=27|pos=DF|nat=ESP|name=[[Jorge Domínguez (footballer, born 2009)|Jorge Domínguez]] |1  |0 |0 |0 |0 |0 |0 |0}}
+{{Efs player|no=30|pos=DF|nat=ESP|name=[[Dani Martínez]]                                           |2  |0 |0 |0 |0 |0 |0 |0}}
+|-
+! colspan="14" style="background:#dcdcdc; text-align:center"|Midfielders
+{{Efs player|no=3 |pos=MF|nat=MEX|name=[[Obed Vargas]]                                             |0  |0 |0 |0 |0 |0 |0+1|0}}
+{{Efs player|no=4 |pos=MF|nat=ESP|name=[[Rodri Mendoza]]                                           |2+2|0 |0 |0 |0 |0 |0 |0}}
+{{Efs player|no=5 |pos=MF|nat=USA|name=[[Johnny Cardoso]]                                          |3+3|0 |0 |0 |0 |0 |1+1|0}}
+{{Efs player|no=6 |pos=MF|nat=ESP|name=[[Koke (footballer, born 1992)|Koke]]                       |4+4|0 |0 |0 |0 |0 |1 |0}}
+{{Efs player|no=7 |pos=MF|nat=KOR|name=[[Lee Kang-in]]                                             |7+2|2 |0 |0 |0 |0 |2 |0}}
+{{Efs player|no=8 |pos=MF|nat=ESP|name=[[Pablo Barrios (footballer)|Pablo Barrios]]                |5+1|0 |0 |0 |0 |0 |3 |1}}
+{{Efs player|no=10|pos=MF|nat=ESP|name=[[Álex Baena]]                                              |5+4|5 |0 |0 |0 |0 |3 |0}}
+{{Efs player|no=14|pos=MF|nat=ESP|name=[[Marcos Llorente]]                                         |6+3|0 |0 |0 |0 |0 |3 |1}}
+{{Efs player|no=16|pos=MF|nat=ESP|name=[[Arnau Ortiz]]                                             |1+4|0 |0 |0 |0 |0 |0 |0}}
+{{Efs player|no=20|pos=MF|nat=ARG|name=[[Giuliano Simeone]]                                        |7+2|2 |0 |0 |0 |0 |3 |0}}
+{{Efs player|no=23|pos=MF|nat=DEN|name=[[Morten Hjulmand]]                                         |5+3|0 |0 |0 |0 |0 |1+2|0}}
+|-
+! colspan="14" style="background:#dcdcdc; text-align:center"|Forwards
+{{Efs player|no=9 |pos=FW|nat=NOR|name=[[Alexander Sørloth]]                                       |0+1|0 |0 |0 |0 |0 |0+1|0}}
+{{Efs player|no=11|pos=FW|nat=NGA|name=[[Ademola Lookman]]                                         |8+1|1 |0 |0 |0 |0 |0+3|1}}
+{{Efs player|no=15|pos=FW|nat=CAN|name=[[Jonathan David]]                                          |4+1|3 |0 |0 |0 |0 |1+2|0}}
+{{Efs player|no=19|pos=FW|nat=ARG|name=[[Julián Alvarez]]                                          |0+5|0 |0 |0 |0 |0 |3 |1}}
+|-
+! colspan=14 style=background:#dcdcdc; text-align:center|Players transferred/loaned out during the season
+{{Efs player|no=2 |pos=DF|nat=URU|name=[[José María Giménez|José Giménez]]                         |0+2|0 |0 |0 |0 |0 |0 |0}}
+{{Efs player|no=12|pos=FW|nat=ESP|name=[[Carlos Martín (footballer)|Carlos Martín]]                |1  |0 |0 |0 |0 |0 |0 |0}}
+{{Efs player|no=15|pos=MF|nat=FRA|name=[[Thomas Lemar]]                                            |0  |0 |0 |0 |0 |0 |0 |0}}
+{{Fb cs footer|u=20 October 2026|s=[https://fbref.com/en/squads/db3b9613/2026-2027/all_comps/Atletico-Madrid-Stats-All-Competitions#all_stats_player_summary FBREF]|date=September 2026}}
+
+===Goalscorers===
+
+{| class="wikitable" style="text-align:center"
+|-
+!width=10|{{Tooltip|Rank|Rank}}
+!width=10|{{Tooltip|No.|Squad Number}}
+!width=10|{{Tooltip|Pos.|Position}}
+!width=10|{{Tooltip|Nat.|Nationality}}
+!width=200|Player
+!width=120|[[2026–27 La Liga|La Liga]]
+!width=120|[[2026–27 Copa del Rey|Copa del Rey]]
+!width=150|[[2027 Supercopa de España|Supercopa de España]]
+!width=150|[[2026–27 UEFA Champions League|Champions League]]
+!width=120|Total
+|-
+|rowspan=1|'''1'''
+|10
+|[[Midfielder|MF]]
+|{{flagicon|ESP}}
+|[[Álex Baena]]
+|5
+|0
+|0
+|0
+|'''5'''
+|-
+|rowspan=2|'''2'''
+|15
+|[[Forward (association football)|FW]]
+|{{flagicon|CAN}}
+|[[Jonathan David]]
+|3
+|0
+|0
+|0
+|'''3'''
+|-
+|22
+|[[Defender (association football)|DF]]
+|{{flagicon|ESP}}
+|[[Álex Grimaldo]]
+|3
+|0
+|0
+|0
+|'''3'''
+|-
+|rowspan=3|'''4'''
+|7
+|[[Midfielder|MF]]
+|{{flagicon|KOR}}
+|[[Lee Kang-in]]
+|2
+|0
+|0
+|0
+|'''2'''
+|-
+|11
+|[[Forward (association football)|FW]]
+|{{flagicon|NGA}}
+|[[Ademola Lookman]]
+|1
+|0
+|0
+|1
+|'''2'''
+|-
+|20
+|[[Midfielder|MF]]
+|{{flagicon|ARG}}
+|[[Giuliano Simeone]]
+|2
+|0
+|0
+|0
+|'''2'''
+|-
+|rowspan=6|'''7'''
+|8
+|[[Midfielder|MF]]
+|{{flagicon|ESP}}
+|[[Pablo Barrios (footballer)|Pablo Barrios]]
+|0
+|0
+|0
+|1
+|'''1'''
+|-
+|14
+|[[Midfielder|MF]]
+|{{flagicon|ESP}}
+|[[Marcos Llorente]]
+|0
+|0
+|0
+|1
+|'''1'''
+|-
+|18
+|[[Defender (association football)|DF]]
+|{{flagicon|ESP}}
+|[[Marc Pubill]]
+|1
+|0
+|0
+|0
+|'''1'''
+|-
+|19
+|[[Forward (association football)|FW]]
+|{{flagicon|ARG}}
+|[[Julián Alvarez]]
+|0
+|0
+|0
+|1
+|'''1'''
+|-
+|21
+|[[Defender (association football)|DF]]
+|{{flagicon|ARG}}
+|[[Cristian Romero]]
+|1
+|0
+|0
+|0
+|'''1'''
+|-
+|24
+|[[Defender (association football)|DF]]
+|{{flagicon|ESP}}
+|[[Robin Le Normand]]
+|1
+|0
+|0
+|0
+|'''1'''
+|-
+|colspan=5|[[Own goal#Association football|Own goals]]
+|0
+|0
+|0
+|0
+|'''0'''
+|-
+!colspan=5|Totals
+!19
+!0
+!0
+!4
+!23
+|}
+{{small|Source: [https://fbref.com/en/squads/db3b9613/2026-2027/all_comps/Atletico-Madrid-Stats-All-Competitions#all_stats_player_summary FBREF]}}
+
+<small><sup>1</sup>Player left the club during the season.</small>
+
+== References ==
+{{Reflist}}
+
+{{Atlético Madrid}}
+{{Atlético Madrid seasons}}
+{{2026–27 in Spanish football}}
+
+{{DEFAULTSORT:2026-27 Atletico Madrid season}}
+[[Category:Atlético Madrid seasons]]
+[[Category:Spanish football clubs 2026–27 season|Atlético Madrid]]
+[[Category:2026 in Madrid]]
+[[Category:2026–27 UEFA Champions League participants seasons|Atlético Madrid]]
+[[Category:2027 in Madrid]]

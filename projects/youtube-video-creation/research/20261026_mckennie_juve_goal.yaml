@@ -1,0 +1,146 @@
+# 取材メモ（2026年10月26日）マッケニーが4月以来の1点。レッチェ0-2ユヴェントス（ショートだけ・見せ方 X＝冒頭に強い一言）
+# 取材: 2026-10-26。ESPN（ESPN News Services、2026-10-25 19:29Z「McKennie scores 1st goal since April in much-needed Juventus win」）の本文を
+#   ESPN の記事API（now.core.api.espn.com/v1/sports/news/50278887）で全部読んだ。控え research/raw/20261026_mckennie_espn.txt・_api.json。
+#   本文: マッケニーがレッチェ戦で先制、2-0。FKのボールに飛び込んで流し込んだ（30分の少し前）。セリエA今季初、公式戦では4月以来＝13試合の無得点を止めた。
+#   前半終わりにドウグラス・ルイスが追加点。7位・勝ち点14。木曜のEL、本拠地でレンヌに追いついて2-2、スパレッティとチームにブーイング。
+#   マッケニーは9・10月の米国代表から外れた（ポチェッティーノが新しい顔を多く入れた。W杯はベスト16でベルギーに敗退）。
+# 試合記録（ESPN event 401874772、控え research/raw/20261026_mckennie_match.json）: 2026-10-25 17:00Z レッチェ 0-2 ユヴェントス（Via del Mare）。
+#   29分 マッケニー（右足、セットプレーからドウグラス・ルイスのスルーパス）、41分 ドウグラス・ルイス（ガッティのアシスト）、90+4分 レッチェのガスパール退場。
+#   シュート: レッチェ16本（枠内4）、ユヴェントス8本（枠内2）。支配率 ユヴェ58.3%。
+# 本文の食い違い: ESPN 本文は前節ラツィオ戦を「lost ... a lackluster draw」と書くが、ESPN の試合記録（2026-10-18）は ユヴェントス 0-3 ラツィオ（本拠地）。
+#   → 記録に合わせ「前節は本拠地でラツィオに0対3」と言う。題材の一覧の「ラツィオと分け」は誤り。
+#   EL レンヌ戦は ESPN の記録で ユヴェントス 2-2 レンヌ（10/22）。
+# 言わないこと: 得点の細かい形（本文と記録で言い方が違う。「フリーキックの流れから」までにする）、13試合の中身、代表から外れた理由（本文に無い）、
+#   11月の代表に呼ばれるか（本文に無い）、ガスパールの退場の中身（主役でない）、観客数（記録が0で不明）。
+# 本人の言葉: 試合後の言葉は見つからなかった（ESPN 本文に無し。juventus.com の「Sala Stampa | Lecce-Juventus」は 2024-01 の記事で別の試合）→ 型は X。
+# 確度: 報道（ESPN）。試合の分・シュート数は ESPN の試合記録（報道）。
+# 反応: 作らない（0件）。
+# 写真: Commons の CC BY-SA 4.0（Bryan Berlin）、2026年W杯の米国代表。ユヴェントスの写真は 2021年の1500x1000 しか無く縦に切ると細いので使わない。
+#   01＝2026-07-06 W杯ベスト16 ベルギー戦の練習着（横。01_v は 720px と細いのでショートでは回さない）、02・03・04＝2026-06-19 W杯 オーストラリア戦（縦）。
+slot: other_1
+date: "2026年10月26日"
+format: news
+no_main: true
+people: [マッケニー, ユヴェントス, レッチェ, スパレッティ, ドウグラス・ルイス, ポチェッティーノ]
+
+short_style: X
+short_hook_word: 4月以来の1点
+short_photos:
+  - assets/images/20261026_mckennie_juve_goal/02_v.jpg
+  - assets/images/20261026_mckennie_juve_goal/03_v.jpg
+  - assets/images/20261026_mckennie_juve_goal/04_v.jpg
+
+short_question: マッケニーは、また米国代表に呼ばれると思いますか。
+short_hook: 代表から外れたマッケニーが4月以来の1点。ブーイングのユヴェントスに勝ち点3。
+short_telops:
+  - {match: ブーイング, text: 木曜のEL レンヌに2対2/本拠地でブーイング}
+  - {match: 29分, text: 29分 マッケニーが先制/41分 ドウグラス・ルイス}
+  - {match: 13試合, text: セリエA今季初ゴール/公式戦13試合の無得点を止めた}
+  - {match: 代表, text: W杯はベスト16で敗退/9月・10月の米国代表は外れた}
+  - {match: 枠に飛んだ, text: シュート レッチェ16本・ユヴェ8本/枠内2本が2点に}
+
+theme:
+  id: mckennie_juve_goal
+  league: italy
+  league_name: セリエA
+  prefix: ""
+  title: マッケニー、4月以来の1点。代表から外れた男が救ったもの
+  hook: ""
+  question: 代表から外れたマッケニーの1点は、ユヴェントスに何をもたらしたのか
+  takeaway: シュートはレッチェの半分の8本。枠に飛んだ2本がどちらも入り、マッケニーの1点目がブーイングのあとの勝ち点3を引き寄せた
+
+thumbnail:
+  line1: マッケニー、4月以来の1点
+  line2: 代表落ちの男が救った
+  tags: [マッケニー, ユヴェントス]
+  layout: face
+  photo: assets/images/20261026_mckennie_juve_goal/01_w.jpg
+  short_photo: assets/images/20261026_mckennie_juve_goal/02_v.jpg
+
+answer: 前節0対3・木曜はブーイングのユヴェントスに、マッケニーの先制点で2対0の勝ち。7位に浮上
+watch: 代表から外れたあとのマッケニーの1点
+
+sections:
+  - id: what
+    main: true
+    heading: ブーイングの3日後、マッケニーの先制点
+    tier: 報道
+    telop: レッチェ0対2ユヴェントス、先制はマッケニー
+    say:
+      - text: ユヴェントスのマッケニー。W杯のあと、アメリカ代表から外れています。
+        short_only: true
+        image: assets/images/20261026_mckennie_juve_goal/02_w.jpg
+        card: none
+      - text: 日曜のレッチェ戦で、4月以来のゴールを決めました。
+        short_only: true
+        image: assets/images/20261026_mckennie_juve_goal/03_w.jpg
+        card: none
+      - text: ユヴェントスは前節、本拠地でラツィオに0対3の負け。
+        image: assets/images/20261026_mckennie_juve_goal/04_w.jpg
+        card: {type: table, title: ユヴェントスの直近3試合, columns: [試合, 相手, 結果], rows: [[セリエA 前節, ラツィオ, 0対3 負け], [木曜 EL, レンヌ, 2対2 引き分け], [日曜 セリエA, レッチェ, 2対0 勝ち]], highlight_row: 0}
+      - text: 木曜のヨーロッパリーグは、レンヌに追いついて2対2の引き分け。
+        image: assets/images/20261026_mckennie_juve_goal/02_w.jpg
+        card: {type: table, title: ユヴェントスの直近3試合, columns: [試合, 相手, 結果], rows: [[セリエA 前節, ラツィオ, 0対3 負け], [木曜 EL, レンヌ, 2対2 引き分け], [日曜 セリエA, レッチェ, 2対0 勝ち]], highlight_row: 1}
+      - text: 引き分けたあと、本拠地ではスパレッティ監督とチームにブーイング。
+        image: assets/images/20261026_mckennie_juve_goal/03_w.jpg
+        card: none
+      - text: その3日後のレッチェ戦。
+        image: assets/images/20261026_mckennie_juve_goal/04_w.jpg
+        card: none
+      - text: 29分、フリーキックの流れからマッケニーが流し込み、先制します。
+        image: assets/images/20261026_mckennie_juve_goal/02_w.jpg
+        card: none
+      - text: セリエAでは今季初ゴール。公式戦で13試合続いた無得点を、ここで止めました。
+        emph: true
+        image: assets/images/20261026_mckennie_juve_goal/03_w.jpg
+        card: none
+      - text: 41分にはドウグラス・ルイスが追加点。2対0の勝ちで、7位に上がりました。
+        image: assets/images/20261026_mckennie_juve_goal/04_w.jpg
+        card: {type: table, title: ユヴェントスの直近3試合, columns: [試合, 相手, 結果], rows: [[セリエA 前節, ラツィオ, 0対3 負け], [木曜 EL, レンヌ, 2対2 引き分け], [日曜 セリエA, レッチェ, 2対0 勝ち]], highlight_row: 2}
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50278887
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=401874772
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/scoreboard?dates=20261018
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.europa/scoreboard?dates=20261022
+
+  - id: national
+    heading: 代表から外れたあとの1点
+    tier: 報道
+    telop: W杯のあと、9月と10月の代表には呼ばれず
+    say:
+      - text: 夏のワールドカップ、アメリカはベスト16でベルギーに敗れました。
+        image: assets/images/20261026_mckennie_juve_goal/01_w.jpg
+        card: none
+      - text: その後の9月と10月、ポチェッティーノ監督は新しい顔を多く呼びました。
+        image: assets/images/20261026_mckennie_juve_goal/03_w.jpg
+        card: none
+      - text: マッケニーは、その中に入っていません。
+        image: assets/images/20261026_mckennie_juve_goal/04_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50278887
+
+  - id: view
+    viewpoint: true
+    heading: シュート8本で2点
+    tier: 背景
+    telop: レッチェ16本、ユヴェントス8本
+    say:
+      - text: 見立てです。押していたのはレッチェのほうでした。
+        image: assets/images/20261026_mckennie_juve_goal/01_w.jpg
+        card: none
+      - text: シュートはレッチェが16本、ユヴェントスは半分の8本です。
+        image: assets/images/20261026_mckennie_juve_goal/02_w.jpg
+        card: {type: table, title: レッチェ0対2ユヴェントス, columns: [項目, レッチェ, ユヴェントス], rows: [[シュート, 16本, 8本], [枠内, 4本, 2本], [得点, 0, 2]], highlight_row: 0}
+      - text: 枠に飛んだのは2本だけで、その2本がどちらも入りました。
+        image: assets/images/20261026_mckennie_juve_goal/03_w.jpg
+        card: {type: table, title: レッチェ0対2ユヴェントス, columns: [項目, レッチェ, ユヴェントス], rows: [[シュート, 16本, 8本], [枠内, 4本, 2本], [得点, 0, 2]], highlight_row: 1}
+      - text: ブーイングの3日後、押されても勝ちきった。その口火が、マッケニーの1点です。
+        image: assets/images/20261026_mckennie_juve_goal/04_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=401874772
+short_title: "マッケニー、4月以来の1点。代表から外れた男が救ったもの"

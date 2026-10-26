@@ -1,0 +1,24 @@
+{
+ "leipzig": {
+  "ティモ・ヴェルナー": {
+   "role": "legend",
+   "file": "assets/photos/bd/leipzig/leipzig_legend_e7388ae6.jpg",
+   "page": "Timo Werner"
+  },
+  "ユスフ・ポウルセン": {
+   "role": "legend",
+   "file": "assets/photos/bd/leipzig/leipzig_legend_9b8f1b80.jpg",
+   "page": "Yussuf Poulsen"
+  },
+  "ペーテル・グラーチ": {
+   "role": "legend",
+   "file": "assets/photos/bd/leipzig/leipzig_legend_9dc8a9a7.jpg",
+   "page": "Péter Gulácsi"
+  },
+  "マルティン・デミチェリス": {
+   "role": "manager",
+   "file": "assets/photos/bd/leipzig/leipzig_manager_2dfc9298.jpg",
+   "page": "Martín Demichelis"
+  }
+ }
+}

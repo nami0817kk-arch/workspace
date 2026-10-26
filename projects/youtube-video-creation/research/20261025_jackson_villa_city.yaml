@@ -1,0 +1,176 @@
+# 取材メモ（2026年10月25日）ニコラス・ジャクソン、マンC相手に2発（ニュースのショート。見せ方 Y＝本人の一言から始める）
+# 題材の元: research/20261025_topics_src.yaml 番号6（ユーザー○）。
+# 取材: 2026-10-25。requests（ブラウザUA）と ESPN の API で本文を全部読んだ。
+#   ・BBC スポーツ「From Chelsea reject to Watkins 'upgrade' - Jackson makes fast Villa start」
+#       - チェルシーから最大6,500万ポンド（up to £65m）で今夏加入。ワトキンスの直接の後釜。25歳のセネガル代表。
+#       - ヴィラで最初の11試合で7点、最近の6試合で6点。CLは全勝のスタート。
+#       - チェルシーではプレミア65試合24点、平均210分に1点、シュートの決定率15%。ヴィラではリーグ7試合4点、138分に1点、決定率21%。
+#         xG を2上回っている。BBC 自身が「標本はずっと小さい」と断っている。
+#       - この試合のヴィラの枠内シュート2本は、どちらもジャクソンの右足で、どちらもゴール。
+#       - ワトキンスはヴィラでプレミア221試合91点、8月にアル・ヒラルへ。
+#       - エメリとはビジャレアル時代に一緒（3年）。チェルシーは3,500万ポンドで獲得。
+#       - 本人（BBC Match of the Day）'The players, the manager, the team - everything is incredible' 'I'm very happy that I'm here and hopefully we can do amazing things together.'
+#       - エメリ（MOTD）'I knew him at Villarreal ... I know, as well, his humility.'
+#   ・ESPN（ESPN News Services、10/24 18:09Z）「Man City lose 100% Premier League record with defeat at Aston Villa」
+#       - ジャクソン 'It is incredible. It was difficult, but we got the win and that is the most important thing. Now we can focus on the next one.'
+#       - 6分、グエヒがボールを収められずマッギン→ジャクソンが先制。2点目は1時間のところ（試合記録は60分）、ムバイェのパスからドンナルンマの下を抜けた。今季4点目（リーグ）。
+#       - シティはヴィラ・パークでリーグ4連敗。プレミアで今季初の黒星。
+#       - 鈴木彩艶が何度もセーブ。グヴァルディオルの強烈なシュートをバーへ（「決定的だった」）。
+#   ・ESPN 試合記録（gameId 401879256）: 2-1。6分ジャクソン（アシスト マッギン）、52分ハーランド、60分ジャクソン（アシスト ムバイェ）。
+#       ヴィラ：シュート8・枠内2・支配率36.8%・セーブ6。シティ：シュート15・枠内7。
+#   ・AP（ESPN 経由）: シティはリーグ8連勝を狙っていた。ジャクソンは全大会で今季7点。
+# 自分で数えた比べ（見立て）: 210分 ÷ 138分 ≒ 1.5。1点までにかかる時間が、チェルシー時代の約3分の2（72分短い）。
+# 確度: 確定（スコア・得点者・時間は ESPN の試合記録）。移籍金・分あたりの数字は報道（BBC）。
+# 鈴木彩艶: 同じ試合。1行だけ（6セーブは ESPN の試合記録のヴィラの Saves）。主にしない。
+# 反応: 0件。作らない。approve は --no-voices で。
+# 読み: 「ワトキンスの後」は「ノゴオ」と読まれたので「あと」とひらがなで書いた。
+# 写真: Commons。01・03・04・05 は Bryan Berlin（CC BY-SA 4.0、2026年W杯 フランス対セネガル）、06 は Timmy96（CC0、2025年4月のチェルシー）。
+#   ヴィラでの写真は見つからない（BBC・ESPN の記事の写真は Getty）。04 は背中の「N. JACKSON 11」で顔は写らない。05 は縦版が720px幅なのでショートに使わない。
+slot: premier
+date: "2026年10月25日"
+format: news
+no_main: true      # ニュースはショートだけ（2026-10-14）。締めで本編を案内しない
+people: [ニコラス・ジャクソン, アストン・ヴィラ, マンチェスター・シティ, 鈴木彩艶]
+
+short_style: Y
+short_hook_quote: 信じられない。難しかったけど、勝ちました。
+short_question: ジャクソンは、ワトキンスの穴を埋められると思いますか。
+short_hook: ジャクソン、マンCに2発。
+short_telops:
+  - {match: 7連勝, text: マンC 開幕からのリーグ連勝を/ヴィラ・パークで止めた}
+  - {match: 枠内シュートは2本, text: ヴィラの枠内シュート2本/どちらもジャクソンのゴール}
+  - {match: 11試合で7点, text: ヴィラで11試合7点/最近の6試合で6点}
+  - {match: 6500万ポンド, text: チェルシーから今夏加入/移籍金は最大6500万ポンド}
+  - {match: 210分, text: チェルシー時代 210分に1点/ヴィラ 138分に1点}
+  - {match: 鈴木彩艶, text: 鈴木彩艶も/枠内7本のうち6本を止めた}
+
+theme:
+  id: jackson_villa_city
+  league: england
+  league_name: プレミアリーグ
+  prefix: ""
+  title: ジャクソン、マンCを止めた2発。チェルシー時代から変わった数字
+  hook: ""
+  question: チェルシーから来たジャクソンは、ヴィラで何が変わったのか
+  takeaway: 1点までにかかる時間は、チェルシー時代の210分から138分へ。約3分の2になった
+
+thumbnail:
+  layout: face
+  line1: ジャクソン マンCに2発
+  line2: ヴィラで6試合6点
+  tags: [ジャクソン, アストン・ヴィラ, プレミアリーグ]
+  photo: assets/images/20261025_jackson_villa_city/01_w.jpg
+  short_photo: assets/images/20261025_jackson_villa_city/01_v.jpg
+
+answer: ヴィラでは138分に1点。チェルシー時代の210分に1点より、約3分の2の時間で決めている
+watch: 最近の6試合で6点の勢いが続くか
+
+short_photos:
+  - assets/images/20261025_jackson_villa_city/01_v.jpg
+  - assets/images/20261025_jackson_villa_city/03_v.jpg
+  - assets/images/20261025_jackson_villa_city/04_v.jpg
+
+sections:
+  - id: what
+    main: true
+    heading: シティの連勝を止めた2点
+    tier: 報道
+    telop: ジャクソンの2点で、ヴィラが2対1
+    say:
+      - text: 開幕からリーグ7連勝のマンチェスター・シティ。
+        image: assets/images/20261025_jackson_villa_city/01_w.jpg
+        card: none
+      - text: その連勝を止めたのは、ニコラス・ジャクソンの2点でした。
+        image: assets/images/20261025_jackson_villa_city/01_w.jpg
+        card: none
+      - voice: ジャクソン
+        text: 信じられない。難しかったけど、勝ちました。
+        short_voice: true
+        image: assets/images/20261025_jackson_villa_city/01_w.jpg
+        card: none
+      - voice: ジャクソン
+        text: それがいちばん大事です。
+        cont: true
+        image: assets/images/20261025_jackson_villa_city/03_w.jpg
+        card: none
+      - text: 前半6分、シティの守備がボールを収めきれず、マッギンのパスからジャクソンが先制。
+        image: assets/images/20261025_jackson_villa_city/03_w.jpg
+        card: none
+      - text: 後半7分にハーランドの頭で追いつかれ、後半15分にジャクソンがもう1点。
+        image: assets/images/20261025_jackson_villa_city/04_w.jpg
+        card: none
+      - text: シティがこの場所でリーグ戦に負けるのは、4試合続けてです。
+        image: assets/images/20261025_jackson_villa_city/04_w.jpg
+        card: none
+      - text: この試合、ヴィラの枠内シュートは2本だけ。
+        image: assets/images/20261025_jackson_villa_city/03_w.jpg
+        card: none
+      - text: どちらもジャクソンの右足で、どちらもゴールです。
+        image: assets/images/20261025_jackson_villa_city/04_w.jpg
+        card: none
+      - text: ヴィラの鈴木彩艶はセーブ6本。シティの枠内7本で、入ったのは1点だけ。
+        image: assets/images/20261025_jackson_villa_city/01_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50265416/man-city-lose-100-premier-league-record-defeat-aston-villa
+      - http://www.espn.com/soccer/report/_/gameId/401879256
+      - https://www.bbc.co.uk/sport/football/articles/c6p9gkdzzpnro
+    quotes_from: ["ESPN https://www.espn.com/soccer/story/_/id/50265416/man-city-lose-100-premier-league-record-defeat-aston-villa"]
+
+  - id: numbers
+    heading: ヴィラに来てからの数字
+    tier: 報道
+    telop: ヴィラで11試合7点、最近の6試合で6点
+    say:
+      - text: ジャクソンは今夏、チェルシーから最大6500万ポンドで加入しました。
+        image: assets/images/20261025_jackson_villa_city/03_w.jpg
+        card: none
+      - text: 8月にサウジアラビアへ移ったワトキンスの、あとを継ぐストライカーです。
+        image: assets/images/20261025_jackson_villa_city/04_w.jpg
+        card: none
+      - text: ヴィラでは11試合で7点。しかも最近の6試合で6点です。
+        image: assets/images/20261025_jackson_villa_city/03_w.jpg
+        card: none
+      - text: 本人は、新しいクラブについてこう話しています。
+        image: assets/images/20261025_jackson_villa_city/01_w.jpg
+        card: none
+      - voice: ジャクソン
+        text: 選手も、監督も、チームも。全部が信じられないくらいいい。
+        image: assets/images/20261025_jackson_villa_city/01_w.jpg
+        card: none
+      - voice: ジャクソン
+        text: ここに来られて、とても幸せです。
+        cont: true
+        image: assets/images/20261025_jackson_villa_city/04_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.bbc.co.uk/sport/football/articles/c6p9gkdzzpnro
+    quotes_from: ["BBC https://www.bbc.co.uk/sport/football/articles/c6p9gkdzzpnro"]
+
+  - id: view
+    viewpoint: true
+    heading: 1点までの時間
+    tier: 報道
+    telop: チェルシーでは210分に1点、ヴィラでは138分に1点
+    say:
+      - text: ジャクソンは、チェルシーではプレミア65試合で24点。
+        image: assets/images/20261025_jackson_villa_city/03_w.jpg
+        card: none
+      - text: 210分に1点のペースでした。
+        image: assets/images/20261025_jackson_villa_city/04_w.jpg
+        card: none
+      - text: ヴィラでは、リーグ7試合で4点。138分に1点。
+        image: assets/images/20261025_jackson_villa_city/03_w.jpg
+        card: none
+      - text: 見立てです。1点までにかかる時間は、チェルシー時代のおよそ3分の2。
+        image: assets/images/20261025_jackson_villa_city/01_w.jpg
+        card: none
+      - text: ただし、ヴィラではまだ7試合。この数字が続くかどうかは、これから。
+        image: assets/images/20261025_jackson_villa_city/04_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.bbc.co.uk/sport/football/articles/c6p9gkdzzpnro
+short_title: "ジャクソン、マンCを止めた2発。チェルシー時代から変わった数字"

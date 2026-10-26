@@ -1,0 +1,374 @@
+# クラブの財政：SSCナポリ（10/26 月、シリーズ「クラブの財政」、key: finance_napoli、型は news）。
+#
+# 軸は「**イタリアで優勝した2024-25に、デロイトの収入ランキングの30位までから名前が消えた（前の年は22位）。王者の稼ぎに何が起きたのか**」。
+#   答え：欧州の大会に1つも出なかった（前の季のリーグ10位）ので、放映権が1億4220万→7810万（−6410万、約45%）。前の年の放映権のうち7020万は欧州の大会から。
+#   同じ年に、選手の償却（7090万→1億1150万）と人件費（1億1640万→1億4210万）が増え、足すと+6630万。収入の穴とほぼ同じ大きさの費用の増え。
+#   選手の売買の益1億250万（収入の約35%）で、赤字は2140万で止まった。益を除いた収入と費用の差は約1億2720万の赤字（自分で引いた数）。
+#   ★他の財政回の軸（バルサ＝使える上限／シティ＝判決／アルテタ＝契約／レアル＝スクワッド・コスト・ルール／PSG＝関連当事者取引／バイエルン＝株の持ち主／リヴァプール＝放映権／マンU＝償却・金融費用／
+#     トッテナム＝優勝の年の赤字／シティ×アーセナル＝収入の差と給料の比率／チェルシー＝トッテナムとの差／インテル＝10位との差／ヴィラ＝放映権の割合が最高／ユヴェントス＝放映権の特需と商業の穴／
+#     アトレティコ＝増えた収入の約85%が商業／ミラン＝欧州なしの年の赤字／ニューカッスル＝買収後はじめての黒字／ドルトムント＝半期の黒字が通年で赤字）は繰り返さない。
+#     ミラン回と「欧州なしの赤字」が近いので、こちらは**ランキングから消えたこと**と**収入の穴と費用の増えが同じ大きさ**（償却の分け方を含む）を軸にする。
+#   ★日本との接点：財政の数字には無い。無理に入れない（10/6 の決定）。
+#   ★選手個人の名前・移籍金の額・給料・獲得の総額は出さない（1月の大きな売却の選手名も言わない）。監督の話・報酬もしない。女子の話はしない。「経営が危ない」と断定しない。
+#   ★アルファベット（UEFA）は読み上げに出さない（「欧州の大会」と言う）。
+#
+# **決算期**：6月30日決算。2024-25＝2024年7月1日〜2025年6月30日。**2025-26（2026年6月30日）の決算は 10/26 時点でまだ報じられていない**（前の年の決算は 2025-11-20 に報じられた）。
+#
+# **出どころ（読んだもの）**
+#   ○ デロイト Football Money League 2026（2024/25、deloitte.com UK、2026-10-26 に requests で本文を取得）
+#       上位20と「Ranking 21-30」の表：「21 Galatasaray 273.6 … 27 AS Roma 216.3 … 29 Wolverhampton Wanderers 206.3 30 Brentford 206.0」。**ナポリは上位30のどこにも無い**（本文にも Napoli の語が無い）。
+#       「Revenue excludes player/coach transfer fees, VAT and other sales related taxes.」（作り方の注記）
+#   ○ デロイト Football Money League 2025（2023/24）：ナポリ 22位 €253.6m（21位ブライトン 256.8、23位ローマ 249.0、前の年19位）。
+#       deloitte.com の 2025 年版ページは今は 404。**英語版 Wikipedia の「Deloitte Football Money League」2023–24 の表（Deloitte を出典にした写し）と、検索結果が引いた Deloitte UK の表の文で確認**（同じ値）。
+#   ○ ナポリの決算 2024-25（クラブは上場しておらず、決算を自分のサイトで出していない。**イタリアの経済紙 Calcio e Finanza がクラブの決算の書類を読んだ記事**。確度は報道）
+#       2025-11-20 https://www.calcioefinanza.it/2025/11/20/napoli-bilancio-2025-rosso-perdita/ 「perdita di 21,4 milioni」「riserva volontaria, che ammonta a 216,6 milioni」
+#         「formazione partenopea ha chiuso al decimo posto in Serie A, rimanendo esclusa da tutte le competizioni europee」「oltre 43 milioni di euro già maturati in questa stagione」（2025-26 の欧州の大会の分。11月時点）
+#       2025-12-02 https://www.calcioefinanza.it/2025/12/02/napoli-bilancio-2025-fatturato-costi-debiti/
+#         収入（百万ユーロ、2024-25／2023-24）：試合日 24.1/27.4、スポンサー・商業 68.1/70.2、放映権 78.1/142.2（2023-24 はリーグ 66.5・欧州の大会 70.2）、
+#           選手の権利の管理 110.3/72.9（うち売買の益 102.5/70.7）、その他 10.2/15.5、合計 290.8/328.2
+#         費用：サービス 36.0/30.2、人件費 142.1/116.4、償却と評価減 118.2/75.4（うち選手 111.5/70.9）、その他 19.3/22.4、合計 315.6/244.4
+#         収入と費用の差 −24.7（前の年 +83.7）、税引前 −20.6（+91.2）、最終 −21.4（+63.0）。純資産 190.2（211.6）。手元の資金 174.4（210.5）。
+#         「scelta del club partenopeo di utilizzare gli ammortamenti a quota decrescente, che quindi porta ad avere i costi maggiori nei primi anni di contratto」（償却は最初の年ほど多い分け方）
+#         「voce impattata non solo dalle grandi spese del mercato estivo 2024」
+#       ★同じ記事の中で 2023-24 の売買の益が 70.8 と 70.7 の2通り → **前の年の売買の益は台本で言わない**（選手の権利の管理の合計 72.9 だけ増減の板に使う）。
+#       ★裏づけ：同じ社の 2026-04-16 の分析記事（銀行家の分析）が「ricavi ricorrenti per circa 180 milioni」（2025年）→ 自分で足した 180.5 と合う。napolinetwork.com の記事は同じ数字を写したもの。
+#   ○ 英語版 Wikipedia「2024–25 SSC Napoli season」：「Napoli secured a fourth Serie A title and a second in three seasons」「did not play in any European competition for the first time since the 2009–10 season」
+#   ○ 英語版 Wikipedia「2026–27 SSC Napoli season」：セリエA・コッパ・イタリア・チャンピオンズリーグに出場中（**今季も1部＝扱うリーグ**。10/25 の試合後で9位）。
+#   × 確かめられなかったもの：2025-26 の決算（未発表）、デロイトの 2024-25 のナポリの収入の額（一覧に無い）、借入の中身（台本で言わない）、2023-24 の売買の益（記事の中で2通り）。
+#
+# 自分で計算した数（検算済み）
+#   収入の合計：24.1+68.1+78.1+110.3+10.2＝290.8 ✓／27.4+70.2+142.2+72.9+15.5＝328.2 ✓
+#   選手の売買（権利の管理）を除いた収入：290.8−110.3＝180.5／328.2−72.9＝255.3 → 減り 74.8（29.3%→約3割）。デロイトの 2023-24 の 253.6 と近い（線の引き方が少し違う）
+#   30位ブレントフォード 206.0 − 180.5＝25.5 → 約2550万届かない
+#   増減の板（収入。試合日−3.3・商業−2.1・その他−5.3は1段−10.7にまとめた）：328.2 −64.1（放映権） +37.4（選手の売買 110.3−72.9） −3.3（試合日） −2.1（スポンサー・商業） −5.3（その他）＝290.8 ✓
+#   放映権：142.2−78.1＝64.1、64.1÷142.2＝45.1%→約45%
+#   増減の板（費用。ほかの償却+2.2・サービス+5.8・その他−3.1は1段+4.9にまとめた）：244.4 +25.7（人件費） +40.6（選手の償却） +2.2（ほかの償却 6.7−4.5） +5.8（サービス） −3.1（その他）＝315.6 ✓。費用の増え 71.2
+#   人件費＋選手の償却の増え：25.7+40.6＝66.3（放映権の減り 64.1 とほぼ同じ）
+#   売買の益の割合：102.5÷290.8＝35.2%→約35%
+#   売買の益を除いた収入と費用の差：−24.7−102.5＝−127.2
+#   人件費÷売買を除いた収入：142.1÷180.5＝78.7%／116.4÷255.3＝45.6%
+#
+# 写真：assets/images/20261026_finance_napoli/（Commons、出典は credits.json）。05（駐車場が主の外観）は落とした。
+date: 2026年10月26日
+slot: other_1
+format: news
+series: クラブの財政
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+people:
+- ナポリ
+theme:
+  end_bg: assets/images/20261026_finance_napoli/01_w.jpg
+  id: finance_napoli
+  league: italy
+  league_name: セリエA
+  kind: other
+  topic: ナポリ
+  title: ナポリ、優勝の年に収入は世界30位の外。王者の稼ぎに、何が起きたのか
+  question: ナポリはイタリアで優勝した2024-25に、デロイトの収入ランキングの30位までから名前が消えた。王者の稼ぎに、何が起きたのか
+  lead: 3シーズンで2回、イタリアの頂点に立ったクラブ、ナポリ。
+  opening_image: assets/images/20261026_finance_napoli/01_w.jpg
+  takeaway: デロイトの収入ランキングで、ナポリは2023-24の22位（2億5360万ユーロ）から、2024-25は30位までの一覧に名前が無くなった（30位は2億600万ユーロ）。報道されたクラブの決算では、2024-25は優勝の年に2140万ユーロの赤字（前の年は6300万ユーロの黒字）。欧州の大会に出なかったため、放映権が1億4220万から7810万ユーロへ約45%減った。同じ年に人件費と選手の償却が合わせて6630万ユーロ増え、収入の穴とほぼ同じ大きさになった。選手の売買の益1億250万ユーロ（収入の約35%）を除くと、収入と費用の差は約1億2720万ユーロの赤字（自分で引いた数）。人件費は、選手の売買を除いた収入の45.6%から78.7%に上がった
+  short_title: ナポリ、優勝の年に収入ランキングから消えた
+thumbnail:
+  layout: number
+  crest_pos: right
+  photo: assets/images/20261026_finance_napoli/02_w.jpg
+  number: 赤字2140万ユーロ
+  line1: ナポリの優勝の年
+  line2: 収入ランキングは30位の外
+  callouts: [前の年は22位]
+  tags:
+  - ナポリ
+  - セリエA
+  - クラブの財政
+  - マラドーナ・スタジアム
+sections:
+- id: rank
+  heading: 優勝した年、収入ランキングで何位だったのか
+  tier: 報道
+  telop: 2023-24は22位。優勝した2024-25は、30位までに名前が無い
+  narrator: 解説
+  card: &rank_table
+    type: table
+    title: デロイトの収入ランキング（百万ユーロ）
+    columns: [年度, 順位, 収入]
+    rows:
+    - [2023-24, ナポリ 22位, '253.6']
+    - [2024-25, ナポリ 30位までに無し, ―]
+    - [2024-25, 30位 ブレントフォード, '206.0']
+    highlight_row: 0
+  say:
+  - text: 会計事務所デロイトは、毎年、世界のクラブを、収入の順に並べています。
+    image: assets/images/20261026_finance_napoli/01_w.jpg
+    card: none
+  - text: 2023-24のナポリは、22位。収入は、2億5360万ユーロでした。
+    emph: true
+    card: *rank_table
+  - text: ところが、2024-25の一覧には、30位までに、ナポリの名前がありません。
+    card:
+      <<: *rank_table
+      highlight_row: 1
+  - text: 30位のブレントフォードでも、収入は2億600万ユーロです。
+    card:
+      <<: *rank_table
+      highlight_row: 2
+  - text: イタリアからは、インテル、ミラン、ユヴェントス、27位のローマが入っています。
+    card:
+      <<: *rank_table
+      highlight_row: 2
+  - text: 2024-25は、ナポリがイタリアのリーグで、4回目の優勝をした年です。
+    image: assets/images/20261026_finance_napoli/04_w.jpg
+    card: none
+  - text: デロイトの数え方では、選手を売ったお金は、収入に数えません。
+    card: none
+  sources:
+  - https://www.deloitte.com/uk/en/services/financial-advisory/analysis/deloitte-football-money-league.html
+  - https://en.wikipedia.org/wiki/Deloitte_Football_Money_League
+  - https://en.wikipedia.org/wiki/2024%E2%80%9325_SSC_Napoli_season
+- id: pnl
+  main: true
+  heading: 優勝の年、ナポリの損益はどう変わったのか
+  tier: 報道
+  telop: 2023-24は黒字6300万ユーロ。優勝した2024-25は赤字2140万ユーロ
+  narrator: 解説
+  card: &pnl_table
+    type: table
+    title: ナポリの決算（百万ユーロ）
+    columns: [項目, 2023-24, 2024-25]
+    rows:
+    - [収入, '328.2', '290.8']
+    - [費用, '244.4', '315.6']
+    - [最終の損益, '+63.0', '-21.4']
+    highlight_row: 2
+  say:
+  - text: イタリアで優勝した2024-25、ナポリの最終の損益は、マイナス2140万ユーロ。
+    image: assets/images/20261026_finance_napoli/03_w.jpg
+    card: none
+  - text: 前の年は、6300万ユーロの黒字です。
+    emph: true
+    card: *pnl_table
+  - text: 収入は、3億2820万から、2億9080万ユーロへ減りました。
+    card:
+      <<: *pnl_table
+      highlight_row: 0
+  - text: 費用は、2億4440万から、3億1560万ユーロへ増えています。
+    emph: true
+    card:
+      <<: *pnl_table
+      highlight_row: 1
+  - text: 収入が減って、費用が増えた。その2つが、同じ年に起きました。
+    image: assets/images/20261026_finance_napoli/06_w.jpg
+    card: none
+  - text: 赤字は、クラブが積み立ててきたお金の一部で埋めています。
+    card: none
+  - text: その積み立ては2億1660万ユーロで、赤字の約10倍ありました。
+    card: none
+  sources:
+  - https://www.calcioefinanza.it/2025/11/20/napoli-bilancio-2025-rosso-perdita/
+  - https://www.calcioefinanza.it/2025/12/02/napoli-bilancio-2025-fatturato-costi-debiti/
+- id: tv
+  heading: いちばん減った収入は、どこか
+  tier: 報道
+  telop: 放映権は1億4220万から7810万ユーロへ。欧州の大会に出なかった
+  narrator: 解説
+  card: &rev_wf
+    type: waterfall
+    title: ナポリの収入の増減（百万ユーロ）
+    start: [2023-24, 328.2]
+    steps:
+    - [放映権, -64.1]
+    - [選手の売買, 37.4]
+    - [試合日・商業・その他, -10.7]
+    total: [2024-25, 290.8]
+    unit: 百万ユーロ
+    highlight: 放映権
+  say:
+  - text: 収入を、項目ごとに分けます。落ち込みが最も大きいのは、テレビの放映権。
+    image: assets/images/20261026_finance_napoli/02_w.jpg
+    card: *rev_wf
+  - text: 1億4220万から、7810万ユーロへ。約45%、減りました。
+    emph: true
+    card: *rev_wf
+  - text: 前の年の放映権のうち、7020万ユーロは、欧州の大会からのお金でした。
+    card: none
+  - text: 2023-24のナポリは、チャンピオンズリーグに出ていました。
+    card: none
+  - text: ところが、その季のリーグは10位。次の季の、欧州の大会を逃します。
+    image: assets/images/20261026_finance_napoli/04_w.jpg
+    card: none
+  - text: ナポリが欧州の大会に1つも出なかったのは、2009-10以来のことです。
+    emph: true
+    card: none
+  - text: 一方で、選手の売買からの収入は、逆に3740万ユーロのプラス。
+    image: assets/images/20261026_finance_napoli/02_w.jpg
+    card:
+      <<: *rev_wf
+      highlight: 選手の売買
+  - text: 試合日の収入も、スポンサーと商業も、少しずつ減っています。
+    card:
+      <<: *rev_wf
+      highlight: 試合日・商業・その他
+  sources:
+  - https://www.calcioefinanza.it/2025/12/02/napoli-bilancio-2025-fatturato-costi-debiti/
+  - https://www.calcioefinanza.it/2025/11/20/napoli-bilancio-2025-rosso-perdita/
+  - https://en.wikipedia.org/wiki/2024%E2%80%9325_SSC_Napoli_season
+- id: cost
+  heading: 費用は、どこで増えたのか
+  tier: 報道
+  telop: 選手の償却は7090万から1億1150万ユーロへ。人件費も2570万ユーロ増
+  narrator: 解説
+  card: &cost_wf
+    type: waterfall
+    title: ナポリの費用の増減（百万ユーロ）
+    start: [2023-24, 244.4]
+    steps:
+    - [人件費, 25.7]
+    - [選手の償却, 40.6]
+    - [その他の費用, 4.9]
+    total: [2024-25, 315.6]
+    unit: 百万ユーロ
+    highlight: 選手の償却
+  say:
+  - text: 費用は、1年で7120万ユーロの増加です。
+    image: assets/images/20261026_finance_napoli/03_w.jpg
+    card: none
+  - text: いちばん増えたのは、選手の償却。7090万から、1億1150万ユーロへ。
+    emph: true
+    card: *cost_wf
+  - text: 償却とは、選手を獲るのに払ったお金を、契約の年数に分けるものです。
+    card: *cost_wf
+  - text: その分を、毎年少しずつ、費用にしていきます。
+    card: *cost_wf
+  - text: ナポリは、契約の最初の年ほど多く費用にする分け方を、とっています。
+    image: assets/images/20261026_finance_napoli/01_w.jpg
+    card: none
+  - text: そのため、2024年の夏に獲った選手の分が、この年に重く乗りました。
+    card: none
+  - text: 人件費も、1億1640万から、1億4210万ユーロへ。
+    image: assets/images/20261026_finance_napoli/03_w.jpg
+    card:
+      <<: *cost_wf
+      highlight: 人件費
+  - text: 上がり幅は、2570万ユーロです。
+    card:
+      <<: *cost_wf
+      highlight: 人件費
+  sources:
+  - https://www.calcioefinanza.it/2025/12/02/napoli-bilancio-2025-fatturato-costi-debiti/
+  - https://www.calcioefinanza.it/2025/11/20/napoli-bilancio-2025-rosso-perdita/
+- id: transfer
+  heading: 赤字を、この大きさで止めたのは何か
+  tier: 報道
+  telop: 選手の売買の益は1億250万ユーロ。収入の約35%
+  narrator: 解説
+  card: &tr_stats
+    type: stats
+    title: ナポリの選手の売買の益（2024-25）
+    items:
+    - ['102.5', 百万ユーロ, 選手の売買の益]
+    - ['35', '%', 収入に占める割合]
+    - ['-127.2', 百万ユーロ, 益を除いた収入と費用の差]
+    focus: 0
+  say:
+  - text: では、ナポリの赤字を、2000万ユーロほどで止めたのは、何だったのか。
+    image: assets/images/20261026_finance_napoli/04_w.jpg
+    card: none
+  - text: ナポリを支えたのは、選手の売却で生まれた益。2024-25は、1億250万ユーロ。
+    emph: true
+    card: *tr_stats
+  - text: 収入全体の、約35%にあたります。
+    card:
+      <<: *tr_stats
+      focus: 1
+  - text: 収入から費用を引いた差は、マイナス2470万ユーロ。
+    image: assets/images/20261026_finance_napoli/06_w.jpg
+    card: none
+  - text: そこから、売却の益を除くと、約1億2720万ユーロのマイナスです。
+    emph: true
+    card:
+      <<: *tr_stats
+      focus: 2
+  - text: この数は、決算の数字から、こちらで計算しました。
+    card: none
+  sources:
+  - https://www.calcioefinanza.it/2025/12/02/napoli-bilancio-2025-fatturato-costi-debiti/
+- id: view
+  viewpoint: true
+  heading: 見立て・優勝の年の赤字は、放映権の穴と、同じ大きさの費用の増え
+  tier: 背景
+  telop: 放映権の減り6410万ユーロ。人件費と選手の償却の増え6630万ユーロ
+  narrator: 解説
+  card: &view_table
+    type: table
+    title: 自分で数えてみた（2023-24から2024-25）
+    columns: [比べ, 答え]
+    rows:
+    - [放映権の減り, 6410万ユーロ]
+    - [人件費と選手の償却の増え, 6630万ユーロ]
+    - [選手の売買を除いた収入, 2億5530万から1億8050万]
+    - [人件費の、その収入に対する割合, 45.6%から78.7%]
+    highlight_row: 0
+  say:
+  - text: ここからは見立てです。ナポリの決算の数字を、こちらで並べ直しました。
+    image: assets/images/20261026_finance_napoli/06_w.jpg
+    card: none
+  - text: 放映権の減りは、6410万ユーロ。
+    mark:
+      kind: circle
+      row: 0
+      col: 1
+    card: *view_table
+  - text: 人件費と選手の償却の増えを足すと、6630万ユーロです。
+    emph: true
+    mark:
+      kind: circle
+      row: 1
+      col: 1
+    card:
+      <<: *view_table
+      highlight_row: 1
+  - text: 収入の穴と、ほぼ同じ大きさの費用の増えが、同じ年に重なりました。
+    card:
+      <<: *view_table
+      highlight_row: 1
+  - text: 選手の売買を除いた収入は、2億5530万から、1億8050万ユーロへ。
+    image: assets/images/20261026_finance_napoli/02_w.jpg
+    card:
+      <<: *view_table
+      highlight_row: 2
+  - text: 約3割の減りです。
+    card:
+      <<: *view_table
+      highlight_row: 2
+  - text: デロイトの30位のクラブには、約2550万ユーロ届きません。
+    card:
+      <<: *view_table
+      highlight_row: 2
+  - text: 人件費をこの収入で割ると、45.6%から、78.7%に上がります。
+    emph: true
+    card:
+      <<: *view_table
+      highlight_row: 3
+  - text: 題への答えです。
+    image: assets/images/20261026_finance_napoli/01_w.jpg
+    card: none
+  - text: 優勝の年に、ランキングから名前が消えたのは、欧州の大会の分が無かったからです。
+    emph: true
+    card: none
+  - text: 同じ年に費用も増え、選手を売った益でも、赤字は埋まりきりませんでした。
+    card: none
+  - text: 2025-26は、ナポリがチャンピオンズリーグに復帰した季です。
+    image: assets/images/20261026_finance_napoli/02_w.jpg
+    card: none
+  - text: 去年の11月の時点で、欧州の大会の収入は、4300万ユーロを超えていました。
+    card: none
+  - text: その2025-26の決算は、まだ出ていません。
+    image: assets/images/20261026_finance_napoli/03_w.jpg
+    card: none
+  - text: 前の年の決算の数字が出たのは、11月でした。
+    card: none
+  sources:
+  - https://www.calcioefinanza.it/2025/12/02/napoli-bilancio-2025-fatturato-costi-debiti/
+  - https://www.calcioefinanza.it/2025/11/20/napoli-bilancio-2025-rosso-perdita/
+  - https://www.deloitte.com/uk/en/services/financial-advisory/analysis/deloitte-football-money-league.html

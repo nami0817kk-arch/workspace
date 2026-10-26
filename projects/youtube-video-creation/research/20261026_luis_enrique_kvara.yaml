@@ -1,0 +1,188 @@
+# 取材メモ（2026年10月26日）ルイス・エンリケ「クヴァラはもっと強くなって戻る。疑いはない」（ニュースのショート。見せ方 Y＝監督の言葉から始める）
+# 10/22 のクヴァラツヘリアの前十字じん帯の本（本人のインスタの言葉・昨季48試合19得点・90分あたり0.59・9か月→2027年7月）の続報。
+#   今回は監督の言葉と、PSG の今の位置（リーグ戦の歩み・リヨン戦）で組む。10/22 の数字・言い回し・写真（PSG公式の KVARA_nmt9er・22_kvara・Commons）は使わない。
+# 取材: 2026-10-26。requests で本文を全部読んだ（検索エンジンの要約は使っていない）。
+#   ・PSG 公式「Luis Enrique: "Facing OL is an extra motivation"」（2026-10-24T13:30Z、24日の会見。リヨン戦の前）— 一次情報。発言を全部読んだ。
+#       "Unfortunately, we already suspected after the game how serious the injury was. Our thoughts are with the player and what he's going to go through, it's difficult.
+#        But ultimately, you have to stay positive and remember that if you want to play at the highest level for 10 to 15 years, you're going to suffer injuries, that's the life of a professional footballer.
+#        Kvara is a fighter ... He has been, is and will continue to be a very important player for us. We'll stand by him ... He'll come back even stronger, I have no doubt about that."
+#       "No injury means that we absolutely must sign a new player. Since the start of the season, I've always said that we could cope with any injuries. ... But it's never because of an injury."
+#       "That's what we showed against Barcelona: we played the final stages of the game without our captain Marquinhos and without Kvara, who is a key player. We were also without the current Ballon d'Or winner, Ousmane Dembélé, for almost the entire match. And yet, we showed that we play the same way. That's our strength."
+#       "Three or four weeks ago, we were still a long way behind the top team in the table. And now, we have the chance to go top."
+#   ・ESPN（記事API content.core.api.espn.com/v1/sports/news/50279147、PA、10/25 19:37Z）— 題材の元。同じ発言。地の文: バルサに4-2、今季絶望（ruled out for the remainder of the season）、
+#       月曜にリヨンを迎える、4月の前回対戦はリヨンに1-2で負けた（PSG were beaten 2-1 by Lyon in April）。
+# 数字（自分で数えた）: ESPN の順位表・PSG の日程（site.api.espn.com fra.1、10/26 取得）。
+#   リーグ戦: レンヌ 2-2（分）・リール 2-2（分）・モナコ 1-2（負）＝開幕3試合で勝ち点2。その後 ブレスト 1-0・マルセイユ 2-1・ル・マン 3-1・ストラスブール 3-1 の4連勝。
+#   いま 7試合 勝ち点14 の5位。首位レンヌ 8試合 勝ち点16（25日にストラスブールに0-3で負け）。リヨンも7試合 勝ち点14。
+#   → 26日のリヨン戦に PSG が勝てば勝ち点17で首位（レンヌ16を上回る）。自分で数えた。
+#   試合は現地26日20時30分（日本時間27日4時30分）。公開（26日19:30）の時点では未消化。結果は言わない。
+# 確度: 発言は 確定（クラブ公式の会見記事）。4月の対戦は 報道（ESPN）。順位・勝ち点は自分で数えた（背景）。
+# 訳はこちらの自訳（会見はスペイン語か仏語→公式の英訳から訳した）。
+# 言わないこと: 本人のインスタの言葉・昨季の数字・復帰の時期（10/22 で言った）。補強の噂。バロンドールの日程の話。
+# 反応: 0件。作らない。approve は --no-voices で。
+# 写真: 01・02 は 24日の会見の写真（PSG公式の会見記事の主写真と本文の写真）、03 は同じ会見の告知記事の写真。どれもクラブの撮影（©Paris Saint-Germain）。
+#   代理店のクレジット・透かしは無い（目で見た）。本人（ルイス・エンリケ）を目で確かめた。10/15 のエンリケ（Commons 2014・2015）とは別。
+slot: other_1
+date: "2026年10月26日"
+format: news
+no_main: true
+people: [ルイス・エンリケ, フヴィチャ・クヴァラツヘリア, パリ・サンジェルマン]
+
+short_style: Y
+short_hook_quote: 彼はもっと強くなって戻ってくる。そこに疑いはない。
+short_question: エンリケ監督の言葉どおり、パリはクヴァラ抜きでも首位に立てると思いますか。
+short_hook: クヴァラツヘリアの今季絶望を受けて、監督が会見で話しました。
+short_telops:
+  - {match: 重いケガだと, text: 「試合のあと すでに/重いケガだと疑っていた」}
+  - {match: 15年, text: 「10年、15年トップでやるなら/ケガはする」}
+  - {match: 戦う男, text: 「クヴァラは/戦う男だ」}
+  - {match: 疑いはない, text: 「もっと強くなって戻る/疑いはない」}
+  - {match: 絶対に新しい選手, text: 「ケガを理由に/選手を獲ることはない」}
+  - {match: 4対2, text: バルサに4対2}
+  - {match: 勝ち点2, text: 開幕3試合/勝ち点2}
+  - {match: 4連勝, text: そこから4連勝/勝ち点14で5位}
+  - {match: 勝ち点17, text: リヨンに勝てば/勝ち点17で首位}
+
+theme:
+  id: luis_enrique_kvara
+  league: france
+  league_name: リーグ・アン
+  prefix: ""
+  title: ルイス・エンリケ、今季絶望のクヴァラに「疑いはない」。補強を否定した理由
+  hook: ""
+  question: クヴァラツヘリアの今季絶望を受けて、ルイス・エンリケ監督は何を話したのか
+  takeaway: 開幕3試合で勝ち点2だったPSGは、そこから4連勝で勝ち点14の5位。首位レンヌは16で、26日のリヨン戦に勝てば17で首位に立つ。監督は補強せずにこのまま戦うと話した
+
+thumbnail:
+  line1: ルイス・エンリケ
+  line2: 「疑いはない」
+  tags: [パリ・サンジェルマン, リーグ・アン]
+  layout: face
+  photo: assets/images/20261026_luis_enrique_kvara/03_hook.jpg
+  short_photo: assets/images/20261026_luis_enrique_kvara/02_v.jpg
+
+answer: クヴァラはもっと強くなって戻る、疑いはない。ケガを理由に新しい選手を獲ることはない
+watch: 26日のリヨン戦（勝てば首位）
+
+short_photos:
+  - assets/images/20261026_luis_enrique_kvara/02_v.jpg
+  - assets/images/20261026_luis_enrique_kvara/01_v.jpg
+  - assets/images/20261026_luis_enrique_kvara/03_v.jpg
+
+sections:
+  - id: what
+    main: true
+    heading: 監督が会見で話したこと
+    tier: 確定
+    telop: クヴァラツヘリアの今季絶望。ルイス・エンリケの言葉
+    say:
+      - text: クヴァラことクヴァラツヘリアが、前十字じん帯で今季絶望。
+        image: assets/images/20261026_luis_enrique_kvara/02_w.jpg
+      - text: パリ・サンジェルマンのエンリケ監督が、会見で話しました。
+        image: assets/images/20261026_luis_enrique_kvara/02_w.jpg
+      - voice: ルイス・エンリケ
+        text: 残念だが、試合のあと、すでに重いケガだと疑っていた。
+        image: assets/images/20261026_luis_enrique_kvara/01_w.jpg
+      - voice: ルイス・エンリケ
+        text: 10年、15年とトップでやりたいなら、ケガはする。
+        cont: true
+        image: assets/images/20261026_luis_enrique_kvara/01_w.jpg
+      - voice: ルイス・エンリケ
+        text: それが、プロのサッカー選手の人生だ。
+        cont: true
+        image: assets/images/20261026_luis_enrique_kvara/03_w.jpg
+      - voice: ルイス・エンリケ
+        text: クヴァラは、戦う男だ。
+        image: assets/images/20261026_luis_enrique_kvara/03_w.jpg
+      - voice: ルイス・エンリケ
+        text: 彼はもっと強くなって戻ってくる。そこに疑いはない。
+        short_voice: true
+        image: assets/images/20261026_luis_enrique_kvara/03_hook.jpg
+      - text: 24日、リヨン戦を前にした会見での言葉です。
+        image: assets/images/20261026_luis_enrique_kvara/02_w.jpg
+    official: true
+    sources:
+      - https://www.psg.fr/en/content/luis-enrique-facing-ol-is-an-extra-motivation-paris-saint-germain-olympique-lyonnais-conference-de-presse-ligue-1-20262027
+      - https://content.core.api.espn.com/v1/sports/news/50279147
+
+  - id: sign
+    heading: 代わりの選手は獲るのか
+    tier: 確定
+    telop: 「ケガを理由に選手を獲ることはない」
+    say:
+      - text: 補強については、はっきり否定しました。
+        image: assets/images/20261026_luis_enrique_kvara/01_w.jpg
+      - voice: ルイス・エンリケ
+        text: ケガをしたからといって、
+        image: assets/images/20261026_luis_enrique_kvara/01_w.jpg
+      - voice: ルイス・エンリケ
+        text: 絶対に新しい選手を獲らなければ、ということはない。
+        cont: true
+        image: assets/images/20261026_luis_enrique_kvara/03_w.jpg
+      - text: 開幕から、どんなケガにも対応できると言ってきた、とも話しています。
+        image: assets/images/20261026_luis_enrique_kvara/03_w.jpg
+      - text: クヴァラツヘリアが痛めたバルサ戦は、4対2で勝っています。
+        image: assets/images/20261026_luis_enrique_kvara/02_w.jpg
+      - voice: ルイス・エンリケ
+        text: 終盤は、主将のマルキーニョスもクヴァラもいなかった。
+        image: assets/images/20261026_luis_enrique_kvara/02_w.jpg
+      - voice: ルイス・エンリケ
+        text: バロンドールを持つデンベレも、ほぼ試合の全部でいなかった。
+        cont: true
+        image: assets/images/20261026_luis_enrique_kvara/01_w.jpg
+      - voice: ルイス・エンリケ
+        text: それでも、同じやり方で戦えると示した。それが我々の強さだ。
+        cont: true
+        image: assets/images/20261026_luis_enrique_kvara/01_w.jpg
+    official: true
+    sources:
+      - https://www.psg.fr/en/content/luis-enrique-facing-ol-is-an-extra-motivation-paris-saint-germain-olympique-lyonnais-conference-de-presse-ligue-1-20262027
+
+  - id: view
+    viewpoint: true
+    heading: クヴァラ抜きで、首位に届くか
+    tier: 背景
+    telop: 開幕3試合で勝ち点2。そこから4連勝
+    say:
+      - text: 見立てです。パリ・サンジェルマンのリーグ戦を、自分たちで数えました。
+        image: assets/images/20261026_luis_enrique_kvara/03_w.jpg
+      - text: 開幕から3試合は、2引き分け1敗で、勝ち点2。
+        image: assets/images/20261026_luis_enrique_kvara/03_w.jpg
+        card:
+          type: table
+          title: PSGのリーグ戦（7試合）
+          columns: [時期, 成績, 勝ち点]
+          rows:
+            - [開幕3試合, 2分1敗, "2"]
+            - [その後4試合, 4連勝, "+12"]
+            - [いま, 5位, "14"]
+          highlight_row: 0
+      - text: そこから4連勝して、いまは勝ち点14の5位です。
+        image: assets/images/20261026_luis_enrique_kvara/02_w.jpg
+        card:
+          type: table
+          title: PSGのリーグ戦（7試合）
+          columns: [時期, 成績, 勝ち点]
+          rows:
+            - [開幕3試合, 2分1敗, "2"]
+            - [その後4試合, 4連勝, "+12"]
+            - [いま, 5位, "14"]
+          highlight_row: 2
+      - text: 首位のレンヌは、勝ち点16。26日のリヨン戦に勝てば、勝ち点17で首位に立ちます。
+        image: assets/images/20261026_luis_enrique_kvara/02_w.jpg
+        card: none
+      - text: そのリヨンには、4月に本拠地で1対2で敗れています。
+        image: assets/images/20261026_luis_enrique_kvara/01_w.jpg
+      - voice: ルイス・エンリケ
+        text: 3、4週間前は、首位から遠く離れていた。
+        image: assets/images/20261026_luis_enrique_kvara/01_w.jpg
+      - voice: ルイス・エンリケ
+        text: 今は、首位に立つチャンスがある。
+        cont: true
+        image: assets/images/20261026_luis_enrique_kvara/03_w.jpg
+    official: false
+    sources:
+      - https://www.psg.fr/en/content/luis-enrique-facing-ol-is-an-extra-motivation-paris-saint-germain-olympique-lyonnais-conference-de-presse-ligue-1-20262027
+      - https://content.core.api.espn.com/v1/sports/news/50279147
+      - https://site.api.espn.com/apis/v2/sports/soccer/fra.1/standings
+short_title: "ルイス・エンリケ、今季絶望のクヴァラに「疑いはない」。補強を否定した理由"

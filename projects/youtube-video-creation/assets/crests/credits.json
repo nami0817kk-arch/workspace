@@ -514,5 +514,17 @@
     "file": "フランス.png",
     "source": "https://commons.wikimedia.org/wiki/File:Flag_of_France.svg",
     "note": "国旗。パブリックドメイン"
+  },
+  {
+    "club": "ポルトガル",
+    "file": "ポルトガル.png",
+    "source": "https://commons.wikimedia.org/wiki/File:Flag_of_Portugal.svg",
+    "note": "国旗（Commons: Public domain）"
+  },
+  {
+    "club": "ローマ",
+    "file": "ローマ.png",
+    "source": "https://thumb.wikimedia.org/wikipedia/en/thumb/f/f7/AS_Roma_logo_%282017%29.svg/330px-AS_Roma_logo_%282017%29.svg.png?utm_source=en.wikipedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "note": "権利は晴れていない。小さく添えるだけ"
   }
 ]

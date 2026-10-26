@@ -1,0 +1,720 @@
+{
+ "club_title": "RB_Leipzig",
+ "season_title": "2026–27_RB_Leipzig_season",
+ "squad": [
+  {
+   "no": "1",
+   "pos": "GK",
+   "nat": "NOR",
+   "name": "Ørjan Nyland",
+   "page": "Ørjan Nyland",
+   "dob": "1990-09-10",
+   "captain": false,
+   "loan": false,
+   "team": "Norway",
+   "caps": 79,
+   "club_caps": 3,
+   "club_goals": 0
+  },
+  {
+   "no": "2",
+   "pos": "DF",
+   "nat": "FRA",
+   "name": "Abdoul Koné",
+   "page": "Abdoul Koné",
+   "dob": "2005-04-22",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 1,
+   "club_goals": 0
+  },
+  {
+   "no": "3",
+   "pos": "DF",
+   "nat": "FRA",
+   "name": "Maxime Estève",
+   "page": "Maxime Estève",
+   "dob": "2002-05-26",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 3,
+   "club_goals": 0
+  },
+  {
+   "no": "4",
+   "pos": "DF",
+   "nat": "HUN",
+   "name": "Willi Orbán",
+   "page": "Willi Orbán",
+   "dob": "1992-11-03",
+   "captain": false,
+   "loan": false,
+   "team": "Hungary",
+   "caps": 72,
+   "club_caps": 298,
+   "club_goals": 30
+  },
+  {
+   "no": "6",
+   "pos": "MF",
+   "nat": "COD",
+   "name": "Ezechiel Banzuzi",
+   "page": "Ezechiel Banzuzi",
+   "dob": "2005-02-16",
+   "captain": false,
+   "loan": false,
+   "team": "DR Congo",
+   "caps": 1,
+   "club_caps": 31,
+   "club_goals": 1
+  },
+  {
+   "no": "7",
+   "pos": "FW",
+   "nat": "NOR",
+   "name": "Antonio Nusa",
+   "page": "Antonio Nusa",
+   "dob": "2005-04-17",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 63,
+   "club_goals": 10
+  },
+  {
+   "no": "8",
+   "pos": "MF",
+   "nat": "GER",
+   "name": "Assan Ouédraogo",
+   "page": "Assan Ouédraogo",
+   "dob": "2006-05-09",
+   "captain": false,
+   "loan": false,
+   "team": "Germany",
+   "caps": 1,
+   "club_caps": 23,
+   "club_goals": 4
+  },
+  {
+   "no": "9",
+   "pos": "FW",
+   "nat": "ESP",
+   "name": "Marc Guiu",
+   "page": "Marc Guiu",
+   "dob": "2006-01-04",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 1,
+   "club_goals": 0
+  },
+  {
+   "no": "10",
+   "pos": "MF",
+   "nat": "GER",
+   "name": "Brajan Gruda",
+   "page": "Brajan Gruda",
+   "dob": "2004-05-31",
+   "captain": false,
+   "loan": true,
+   "team": "",
+   "caps": null,
+   "club_caps": 18,
+   "club_goals": 3
+  },
+  {
+   "no": "11",
+   "pos": "FW",
+   "nat": "BEL",
+   "name": "Johan Bakayoko",
+   "page": "Johan Bakayoko",
+   "dob": "2003-04-20",
+   "captain": false,
+   "loan": false,
+   "team": "Belgium",
+   "caps": 18,
+   "club_caps": 22,
+   "club_goals": 2
+  },
+  {
+   "no": "13",
+   "pos": "MF",
+   "nat": "AUT",
+   "name": "Nicolas Seiwald",
+   "page": "Nicolas Seiwald",
+   "dob": "2001-05-04",
+   "captain": false,
+   "loan": false,
+   "team": "Austria",
+   "caps": 55,
+   "club_caps": 90,
+   "club_goals": 0
+  },
+  {
+   "no": "14",
+   "pos": "MF",
+   "nat": "AUT",
+   "name": "Christoph Baumgartner",
+   "page": "Christoph Baumgartner",
+   "dob": "1999-08-01",
+   "captain": false,
+   "loan": false,
+   "team": "Austria",
+   "caps": 58,
+   "club_caps": 97,
+   "club_goals": 21
+  },
+  {
+   "no": "16",
+   "pos": "DF",
+   "nat": "GER",
+   "name": "Lukas Klostermann",
+   "page": "Lukas Klostermann",
+   "dob": "1996-06-03",
+   "captain": false,
+   "loan": false,
+   "team": "Germany",
+   "caps": 22,
+   "club_caps": 247,
+   "club_goals": 14
+  },
+  {
+   "no": "17",
+   "pos": "DF",
+   "nat": "GER",
+   "name": "Ridle Baku",
+   "page": "Ridle Baku",
+   "dob": "1998-04-08",
+   "captain": false,
+   "loan": false,
+   "team": "Germany",
+   "caps": 8,
+   "club_caps": 56,
+   "club_goals": 6
+  },
+  {
+   "no": "20",
+   "pos": "MF",
+   "nat": "GER",
+   "name": "Rocco Reitz",
+   "page": "Rocco Reitz",
+   "dob": "2002-05-29",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 4,
+   "club_goals": 1
+  },
+  {
+   "no": "21",
+   "pos": "MF",
+   "nat": "MAR",
+   "name": "Neil El Aynaoui",
+   "page": "Neil El Aynaoui",
+   "dob": "2001-07-02",
+   "captain": false,
+   "loan": true,
+   "team": "Morocco",
+   "caps": 25,
+   "club_caps": 6,
+   "club_goals": 0
+  },
+  {
+   "no": "22",
+   "pos": "DF",
+   "nat": "GER",
+   "name": "David Raum",
+   "page": "David Raum",
+   "dob": "1998-04-22",
+   "captain": true,
+   "loan": false,
+   "team": "Germany",
+   "caps": 40,
+   "club_caps": 117,
+   "club_goals": 6
+  },
+  {
+   "no": "23",
+   "pos": "DF",
+   "nat": "FRA",
+   "name": "Castello Lukeba",
+   "page": "Castello Lukeba",
+   "dob": "2002-12-17",
+   "captain": false,
+   "loan": false,
+   "team": "France",
+   "caps": 1,
+   "club_caps": 85,
+   "club_goals": 2
+  },
+  {
+   "no": "25",
+   "pos": "GK",
+   "nat": "GER",
+   "name": "Leopold Zingerle",
+   "page": "Leopold Zingerle",
+   "dob": "1994-04-10",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 0,
+   "club_goals": 0
+  },
+  {
+   "no": "26",
+   "pos": "GK",
+   "nat": "BEL",
+   "name": "Maarten Vandevoordt",
+   "page": "Maarten Vandevoordt",
+   "dob": "2002-02-26",
+   "captain": false,
+   "loan": false,
+   "team": "Belgium",
+   "caps": 1,
+   "club_caps": 23,
+   "club_goals": 0
+  },
+  {
+   "no": "27",
+   "pos": "FW",
+   "nat": "FRA",
+   "name": "Tidiam Gomis",
+   "page": "Tidiam Gomis",
+   "dob": "2006-08-08",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 33,
+   "club_goals": 4
+  },
+  {
+   "no": "28",
+   "pos": "MF",
+   "nat": "FRA",
+   "name": "Christopher Nkunku",
+   "page": "Christopher Nkunku",
+   "dob": "1997-11-14",
+   "captain": false,
+   "loan": true,
+   "team": "France",
+   "caps": 18,
+   "club_caps": 125,
+   "club_goals": 51
+  },
+  {
+   "no": "30",
+   "pos": "MF",
+   "nat": "SRB",
+   "name": "Andrija Maksimović",
+   "page": "Andrija Maksimović",
+   "dob": "2007-06-05",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 13,
+   "club_goals": 1
+  },
+  {
+   "no": "35",
+   "pos": "DF",
+   "nat": "GER",
+   "name": "Max Finkgräfe",
+   "page": "Max Finkgräfe",
+   "dob": "2004-03-27",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 16,
+   "club_goals": 1
+  },
+  {
+   "no": "37",
+   "pos": "MF",
+   "nat": "GER",
+   "name": "Benno Kaltefleiter",
+   "page": "Benno Kaltefleiter",
+   "dob": "",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "39",
+   "pos": "DF",
+   "nat": "GER",
+   "name": "Benjamin Henrichs",
+   "page": "Benjamin Henrichs",
+   "dob": "1997-02-23",
+   "captain": false,
+   "loan": false,
+   "team": "Germany",
+   "caps": 19,
+   "club_caps": 136,
+   "club_goals": 7
+  },
+  {
+   "no": "40",
+   "pos": "FW",
+   "nat": "BRA",
+   "name": "Rômulo",
+   "page": "Rômulo Cardoso",
+   "dob": "2002-02-08",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 35,
+   "club_goals": 12
+  },
+  {
+   "no": "45",
+   "pos": "FW",
+   "nat": "FRA",
+   "name": "Samba Konaté",
+   "page": "Samba Konaté",
+   "dob": "2009-02-27",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 3,
+   "club_goals": 0
+  },
+  {
+   "no": "47",
+   "pos": "MF",
+   "nat": "GER",
+   "name": "Viggo Gebel",
+   "page": "Viggo Gebel",
+   "dob": "2007-11-22",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 1,
+   "club_goals": 0
+  }
+ ],
+ "results": [
+  [
+   "29 August 2026",
+   "1",
+   "RB Leipzig",
+   "3–0",
+   "Borussia Mönchengladbach"
+  ],
+  [
+   "5 September 2026",
+   "2",
+   "Werder Bremen",
+   "3–1",
+   "RB Leipzig"
+  ],
+  [
+   "13 September 2026",
+   "3",
+   "RB Leipzig",
+   "5–0",
+   "Hamburger SV"
+  ],
+  [
+   "20 September 2026",
+   "4",
+   "Bayer Leverkusen",
+   "2–0",
+   "RB Leipzig"
+  ],
+  [
+   "10 October 2026",
+   "5",
+   "RB Leipzig",
+   "6–0",
+   "Eintracht Frankfurt"
+  ],
+  [
+   "17 October 2026",
+   "6",
+   "Bayern Munich",
+   "6–1",
+   "RB Leipzig"
+  ],
+  [
+   "24 October 2026",
+   "7",
+   "RB Leipzig",
+   "4–0",
+   "SV Elversberg"
+  ],
+  [
+   "31 October 2026",
+   "8",
+   "Schalke 04",
+   "",
+   "RB Leipzig"
+  ],
+  [
+   "7 November 2026",
+   "9",
+   "RB Leipzig",
+   "",
+   "FC Augsburg"
+  ],
+  [
+   "21 November 2026",
+   "10",
+   "Union Berlin",
+   "",
+   "RB Leipzig"
+  ],
+  [
+   "29 November 2026",
+   "11",
+   "SC Freiburg",
+   "",
+   "RB Leipzig"
+  ],
+  [
+   "4–6 December 2026",
+   "12",
+   "RB Leipzig",
+   "",
+   "Mainz 05"
+  ],
+  [
+   "11–13 December 2026",
+   "13",
+   "1. FC Köln",
+   "",
+   "RB Leipzig"
+  ],
+  [
+   "18–20 December 2026",
+   "14",
+   "RB Leipzig",
+   "",
+   "Borussia Dortmund"
+  ],
+  [
+   "8–10 January 2027",
+   "15",
+   "SC Paderborn",
+   "",
+   "RB Leipzig"
+  ],
+  [
+   "12–14 January 2027",
+   "16",
+   "RB Leipzig",
+   "",
+   "VfB Stuttgart"
+  ],
+  [
+   "15–17 January 2027",
+   "17",
+   "TSG Hoffenheim",
+   "",
+   "RB Leipzig"
+  ],
+  [
+   "22–24 January 2027",
+   "18",
+   "Borussia Mönchengladbach",
+   "",
+   "RB Leipzig"
+  ],
+  [
+   "29–31 January 2027",
+   "19",
+   "RB Leipzig",
+   "",
+   "Werder Bremen"
+  ],
+  [
+   "5–7 February 2027",
+   "20",
+   "Hamburger SV",
+   "",
+   "RB Leipzig"
+  ],
+  [
+   "12–14 February 2027",
+   "21",
+   "RB Leipzig",
+   "",
+   "Bayer Leverkusen"
+  ],
+  [
+   "19–21 February 2027",
+   "22",
+   "Eintracht Frankfurt",
+   "",
+   "RB Leipzig"
+  ],
+  [
+   "26–28 February 2027",
+   "23",
+   "RB Leipzig",
+   "",
+   "Bayern Munich"
+  ],
+  [
+   "2–4 March 2027",
+   "24",
+   "SV Elversberg",
+   "",
+   "RB Leipzig"
+  ],
+  [
+   "5–7 March 2027",
+   "25",
+   "RB Leipzig",
+   "",
+   "Schalke 04"
+  ],
+  [
+   "12–14 March 2027",
+   "26",
+   "FC Augsburg",
+   "",
+   "RB Leipzig"
+  ],
+  [
+   "19–21 March 2027",
+   "27",
+   "RB Leipzig",
+   "",
+   "Union Berlin"
+  ],
+  [
+   "2–4 April 2027",
+   "28",
+   "RB Leipzig",
+   "",
+   "SC Freiburg"
+  ],
+  [
+   "9–11 April 2027",
+   "29",
+   "Mainz 05",
+   "",
+   "RB Leipzig"
+  ],
+  [
+   "16–18 April 2027",
+   "30",
+   "RB Leipzig",
+   "",
+   "1. FC Köln"
+  ],
+  [
+   "23–25 April 2027",
+   "31",
+   "Borussia Dortmund",
+   "",
+   "RB Leipzig"
+  ],
+  [
+   "7–9 May 2027",
+   "32",
+   "RB Leipzig",
+   "",
+   "SC Paderborn"
+  ],
+  [
+   "14–16 May 2027",
+   "33",
+   "VfB Stuttgart",
+   "",
+   "RB Leipzig"
+  ],
+  [
+   "22 May 2027",
+   "34",
+   "RB Leipzig",
+   "",
+   "TSG Hoffenheim"
+  ],
+  [
+   "22 August 2026",
+   "First round",
+   "Eintracht Trier",
+   "0–6",
+   "RB Leipzig"
+  ],
+  [
+   "27 October 2026",
+   "Second round",
+   "Rot-Weiss Essen",
+   "",
+   "RB Leipzig"
+  ],
+  [
+   "10 September 2026",
+   "1",
+   "Como",
+   "4–1",
+   "RB Leipzig"
+  ],
+  [
+   "13 October 2026",
+   "2",
+   "RB Leipzig",
+   "1–0",
+   "PSV Eindhoven"
+  ],
+  [
+   "21 October 2026",
+   "3",
+   "Real Madrid",
+   "4–1",
+   "RB Leipzig"
+  ],
+  [
+   "4 November 2026",
+   "4",
+   "RB Leipzig",
+   "",
+   "Manchester City"
+  ],
+  [
+   "24 November 2026",
+   "5",
+   "RB Leipzig",
+   "",
+   "Lens"
+  ],
+  [
+   "8 December 2026",
+   "6",
+   "Manchester United",
+   "",
+   "RB Leipzig"
+  ],
+  [
+   "20 January 2027",
+   "7",
+   "RB Leipzig",
+   "",
+   "Shakhtar Donetsk"
+  ],
+  [
+   "27 January 2027",
+   "8",
+   "Feyenoord",
+   "",
+   "RB Leipzig"
+  ]
+ ]
+}

@@ -1,0 +1,1290 @@
+{{Short description|English football club season}}
+{{Use dmy dates|date=March 2026}}
+{{Infobox football club season
+| club = [[Sunderland A.F.C.|Sunderland]]
+| season = [[2026–27 in English football|2026–27]]
+| owner = [[Kyril Louis-Dreyfus]] (64%)<br>[[Juan Sartori]] (36%)
+| chairman = Kyril Louis-Dreyfus
+| manager = [[Régis Le Bris]]
+| mgrtitle = Head coach
+| stadium = [[Stadium of Light]]
+| league = [[Premier League]]
+| league result = ''[[2026–27 Premier League|20th]]''
+| cup1 = [[FA Cup]]
+| cup1 result = ''[[2026–27 FA Cup|Third round]]''
+| cup2 = [[EFL Cup]]
+| cup2 result = ''[[2026–27 EFL Cup|Fourth round]]''
+| cup3 = [[UEFA Europa League]]
+| cup3 result = ''[[2026–27 UEFA Europa League|League phase]]''
+| league topscorer = <br>[[Brian Brobbey]] (3)
+| season topscorer = <br>Brian Brobbey (3)
+| highest attendance = 
+| lowest attendance = 
+| average attendance = 
+| largest win = 
+| largest loss = 
+| pattern_la1 =_sunderland2627h
+| pattern_b1 = _sunderland2627h
+| pattern_ra1 = _sunderland2627h
+| pattern_sh1 =_sunderland2627h
+| pattern_so1 =_redtop
+| leftarm1 = ff0000
+| body1 = ff0000
+| rightarm1 = ff0000
+| shorts1 = 000000
+| socks1 = 000000
+| pattern_la2 = _sunderland2627a
+| pattern_b2 = _sunderland2627a
+| pattern_ra2 =_sunderland2627a
+| pattern_sh2 = _sunderland2627a
+| pattern_so2 = 
+| leftarm2 = ff9fbf
+| body2 = ff9fbf
+| rightarm2 = ff9fbf
+| shorts2 = ff9fbf
+| socks2 = ff9fbf
+| pattern_la3 = _sunderland2627t
+| pattern_b3 = _sunderland2627t
+| pattern_ra3 = _sunderland2627t
+| pattern_sh3 = _sunderland2627t
+| pattern_so3 =
+| leftarm3 = 00008B
+| body3 = 00008B
+| rightarm3 = 00008B
+| shorts3 = 00008B
+| socks3 = 00008B
+| prevseason = [[2025–26 Sunderland A.F.C. season|2025–26]]
+| nextseason = ''2027–28''
+}}
+The '''2026–27 season''' is the 148th season in the history of [[Sunderland A.F.C.|Sunderland Association Football Club]], and the club's second consecutive season in the [[Premier League]]. In addition to the [[2026–27 Premier League|domestic league]], the club is also participating in the [[2026–27 FA Cup|FA Cup]], the [[2026–27 EFL Cup|EFL Cup]], and the [[2026–27 UEFA Europa League|UEFA Europa League]].
+
+Last season was the first time in the club's history that they qualified for a European competition through a league position, and this is also their first time competing in any European competition since the [[1973–74 European Cup Winners' Cup|1973–74 season]].
+
+==Transfers and contracts==
+===In===
+{| class="wikitable plainrowheaders sortable"
+|-
+! style="background:#DD0000;color:#FFFFFF;" |Date
+! style="background:#DD0000;color:#FFFFFF;" |Pos.
+! style="background:#DD0000;color:#FFFFFF;" |Player
+! style="background:#DD0000;color:#FFFFFF;" |From
+! style="background:#DD0000;color:#FFFFFF;" |Fee
+! style="background:#DD0000;color:#FFFFFF;" |Ref.
+|-
+! colspan="7" | [[Sunderland A.F.C.|First team]]
+|-
+| 15 July 2026 || [[Defender (association football)#Full-back|RB]] || {{flagicon|BEL}} [[Thomas Meunier]] || {{fbaicon|FRA}} [[Lille OSC|Lille]] || [[Bosman ruling|Free]] || <ref>{{cite news |title=Thomas Meunier joins Sunderland |url=https://www.safc.com/news/2026/july/15/thomas-meunier-joins-sunderland/ |access-date=15 July 2026 |publisher=Sunderland A.F.C. |date=15 July 2026}}</ref>
+|-
+| 21 August 2026 || [[Defender (association football)#Full-back|LB]] || {{flagicon|FRA}} [[Dayann Methalie]] || {{fbaicon|FRA}} [[Toulouse FC|Toulouse]] || £23,900,000{{efn|A potential further £1,700,000 in add-ons}} || <ref>{{cite news |title=Dayann Methalie signs for Sunderland |url=https://www.safc.com/news/2026/august/21/dayann-methalie-signs-for-sunderland-/ |access-date=21 August 2026 |publisher=Sunderland A.F.C. |date=21 August 2026}}</ref><ref>{{cite news |title=Black Cats strike deal! Sunderland reach £25.6m agreement with Toulouse for rising defender Dayann Methalie |url=https://uk.sports.yahoo.com/news/black-cats-strike-deal-sunderland-164314828.html |access-date=21 August 2026 |publisher=Yahoo Sports |date=15 August 2026}}</ref>
+|-
+| 24 August 2026 || [[Midfielder#Defensive midfielder|DM]] || {{flagicon|COD}} [[Jules Ahoka]] || {{fbaicon|BEL}} [[Royal Antwerp FC|Antwerp]] || £8,600,000 || <ref>{{cite news |title=Jules Ahoka signs for Sunderland AFC |url=https://www.safc.com/news/2026/august/24/jules-ahoka-signs-for-sunderland-afc/ |access-date=24 August 2026 |publisher=Sunderland A.F.C. |date=24 August 2026}}</ref><ref>{{cite news |title=Sunderland sign Ahoka from Royal Antwerp |url=https://au.sports.yahoo.com/sunderland-sign-ahoka-royal-antwerp-165021104.html |access-date=24 August 2026 |publisher=Yahoo Sports |date=24 August 2026}}</ref>
+|-
+| rowspan="2"| 1 September 2026 || [[Forward (association football)#Winger|LW]] || {{flagicon|BEL}} [[Malick Fofana]] || {{fbaicon|FRA}} [[Olympique Lyonnais|Lyon]] || £25,700,000{{efn|A potential further £4,300,000 in add-ons}} || <ref>{{cite web |title=Malick Fofana: Sunderland finally complete signing of Lyon winger after Deadline Day drama with Crystal Palace |url=https://www.skysports.com/football/news/11695/13580106/malick-fofana-sunderland-finally-complete-signing-of-lyon-winger-after-deadline-day-drama-with-crystal-palace |website=[[Sky Sports]] |access-date=2 September 2026 |date=2 September 2026}}</ref>
+|-
+| [[Striker (association football)|ST]] || {{flagicon|ECU}} [[Juan Riquelme Angulo]] || {{fbaicon|ECU}} [[Independiente del Valle]] || £5,000,000 || <ref>{{cite web |title=Transfer news: Summer transfer window 2026 - Premier League deals, ins and outs |url=https://www.skysports.com/football/transfer-deals |website=[[Sky Sports]] |access-date=2 September 2026 |date=2 September 2026}}</ref>
+|-
+! colspan="7" | [[Sunderland A.F.C. Under-21s and Academy|Academy]]
+|-
+| rowspan="2"| 1 July 2026 || [[Forward (association football)#Winger|RW]] || {{flagicon|ENG}} Ethan Berry || {{fbaicon|ENG}} [[Crystal Palace F.C.|Crystal Palace]] || rowspan="2"| [[Bosman ruling|Free]] || <ref name="ScholarIntake">{{cite news |title=Scholar intakes 2026-2027 |url=https://www.safc.com/news/2026/july/01/scholar-2026-27/?utm_source=copilot.com |access-date=9 July 2026 |publisher=Sunderland A.F.C. |date=1 July 2026}}</ref>
+|-
+| [[Midfielder#Central midfielder|CM]] || {{flagicon|NIR}} Adam Nelson || {{fbaicon|NIR}} [[Glentoran F.C.|Glentoran]] || <ref name="ScholarIntake" />
+|-
+| 26 July 2026 || [[Defender (association football)#Centre-back|CB]] || {{flagicon|NIR}} Alfie Pollock || {{fbaicon|NIR}} [[Glenavon F.C.|Glenavon]] || Undisclosed || <ref>{{cite news |title=Sunderland's latest Academy of Light addition hailed as a 'great example' for young players |url=https://www.sunderlandecho.com/sport/football/sunderland-afc/sunderland-latest-academy-of-light-addition-great-example-8822316 |access-date=26 July 2026 |publisher=Sunderland Echo |date=26 July 2026}}</ref>
+|}
+{{notelist}}
+
+===Out===
+{| class="wikitable plainrowheaders sortable"
+|-
+! style="background:#DD0000;color:#FFFFFF;" |Date
+! style="background:#DD0000;color:#FFFFFF;" |Pos.
+! style="background:#DD0000;color:#FFFFFF;" |Player
+! style="background:#DD0000;color:#FFFFFF;" |To
+! style="background:#DD0000;color:#FFFFFF;" |Fee
+! style="background:#DD0000;color:#FFFFFF;" |Ref.
+|-
+! colspan="7" | [[Sunderland A.F.C.|First team]]
+|-
+| 18 June 2026 || [[Midfielder#Attacking midfielder|AM]] || {{flagicon|ENG}} [[Harrison Jones (English footballer)|Harrison Jones]] || {{fbaicon|ENG}} [[Peterborough United F.C.|Peterborough United]] || Undisclosed || <ref>{{cite news |title=Harrison Jones joins Peterborough United |url=https://www.safc.com/news/2026/june/18/harrison-jones-joins-peterborough-united/ |access-date=18 June 2026 |publisher=Sunderland A.F.C. |date=18 June 2026}}</ref>
+|-
+| 26 June 2026 || [[Defender (association football)#Centre-back|CB]] || {{flagicon|ENG}} [[Zak Johnson]] || {{fbaicon|ENG}} [[York City F.C.|York City]] || Undisclosed || <ref>{{cite news |title=Zak Johnson departs |url=https://www.safc.com/news/2026/june/26/zak-johnson-departs/ |access-date=27 June 2026 |publisher=Sunderland A.F.C. |date=26 June 2026}}</ref>
+|-
+| 1 July 2026 || [[Striker (association football)|ST]] || {{flagicon|UKR}} [[Nazariy Rusyn]] || {{fbaicon|UKR}} [[FC Karpaty Lviv|Karpaty Lviv]] || Undisclosed || <ref>{{cite news |title=Rusyn Joins Karpaty On Permanent Deal |url=https://www.safc.com/news/2026/july/01/rusyn-joins-karpaty-on-permanent-deal/ |access-date=1 July 2026 |publisher=Sunderland A.F.C. |date=1 July 2026}}</ref><ref>{{cite news |title=Sunderland working to offload fringe figures this summer |url=https://www.thenorthernecho.co.uk/sport/26220437.sunderland-working-offload-fringe-figures-summer/#:~:text=It's%20said%20Sunderland%20will%20receive,Cats%20since%20January%20last%20year. |access-date=1 July 2026 |publisher=The Northern Echo |date=23 June 2026}}</ref>
+|-
+| 5 July 2026 || [[Striker (association football)|ST]] || {{flagicon|ESP}} [[Eliezer Mayenda]] || {{fbaicon|FRA}} [[Stade Rennais FC|Rennes]] || £22,000,000 || <ref>{{cite web |author1=Phil Smith |title=Eliezer Mayenda issues first words as a Stade Rennais player as Sunderland transfer confirmed |url=https://www.sunderlandecho.com/sport/football/sunderland-afc/sunderland-transfer-news-eliezer-mayenda-8779099 |website=[[Sunderland Echo]] |access-date=5 July 2026 |date=5 July 2026}}</ref>
+|-
+| 16 July 2026 || [[Defender (association football)#Full-back|RB]] || {{flagicon|FRA}} [[Timothée Pembélé]] || {{fbaicon|FRA}} [[Le Havre AC|Le Havre]] || rowspan="2" | Undisclosed || <ref>{{cite news |title=Timothée Pembélé Joins Le Havre |url=https://www.safc.com/news/2026/july/16/timoth-e-pemb-l--joins-le-havre/ |access-date=16 July 2026 |publisher=Sunderland A.F.C. |date=16 July 2026}}</ref>
+|-
+| 4 August 2026 || [[Striker (association football)|ST]] || {{flagicon|NGA}} [[Ahmed Abdullahi (footballer)|Ahmed Abdullahi]] || {{fbaicon|TUR}} [[Eyüpspor]] || <ref>{{cite news |title=Abdullahi joins Eyüpspor on permanent deal |url=https://www.safc.com/news/2026/august/04/abdullahi-joins-ey-pspor-on-permanent-deal/ |access-date=4 August 2026 |publisher=Sunderland A.F.C. |date=4 August 2026}}</ref>
+|-
+| 10 August 2026 || [[Defender (association football)#Full-back|LB]] || {{flagicon|COD}} [[Arthur Masuaku]] || {{fbaicon|TUR}} [[Konyaspor]] || Undisclosed || <ref>{{cite news |title=Masuaku Makes Turkish Move |url=https://www.safc.com/news/2026/august/10/masuaku-makes-turkish-move/ |access-date=10 August 2026 |publisher=Sunderland A.F.C. |date=10 August 2026}}</ref><ref>{{cite news |title=Süper Lig'de transfer bombası patladı: Beşiktaş'ın eski yıldızı Türkiye'ye dönüyor! |url=https://www.gazetebirlik.com/spor/super-ligde-transfer-bombasi-patladi-besiktasin-eski-yildizi-turkiyeye-donuyor/1062680 |access-date=10 August 2026 |publisher=Yeni Birlik Gazetesi |date=10 August 2026 |language=Turkish}}</ref>
+|-
+| rowspan="2" | 11 August 2026 || [[Defender (association football)#Centre-back|CB]] || {{flagicon|NOR}} [[Leo Hjelde]] || {{fbaicon|BEL}} [[KV Mechelen|Mechelen]] || Undisclosed || <ref>{{cite news |title=Hjelde Makes KV Mechelen Move |url=https://www.safc.com/news/2026/august/11/hjelde-makes-kv-mechelen-move/ |access-date=12 August 2026 |publisher=Sunderland A.F.C. |date=11 August 2026}}</ref>
+|-
+| [[Goalkeeper (association football)|GK]] || {{flagicon|ENG}} [[Anthony Patterson]] || {{fbaicon|WAL}} [[Wrexham A.F.C.|Wrexham]] || £10,000,000 || <ref>{{cite news |title=Patterson Pens Wrexham Deal |url=https://www.safc.com/news/2026/august/11/patterson-pens-wrexham-deal/ |access-date=11 August 2026 |publisher=Sunderland A.F.C. |date=11 August 2026}}</ref><ref>{{cite news |title=Anthony Patterson completes move from Sunderland to Wrexham |url=https://www.thenorthernecho.co.uk/sport/26455503.anthony-patterson-completes-move-sunderland-wrexham/ |access-date=11 August 2026 |publisher=The Northern Echo |date=11 August 2026}}</ref>
+|-
+| 1 September 2026 || [[Striker (association football)|ST]] || {{flagicon|POR}} [[Luís Semedo]] || {{fbaicon|FRA}} [[Clermont Foot 63|Clermont Foot]] || Undisclosed || <ref>{{cite news |title=Semedo Joins Clermont On Permanent Transfer |url=https://www.safc.com/news/2026/august/31/semedo-joins-clermont-on-permanent-transfer/ |access-date=1 September 2026 |publisher=Sunderland AFC |date=1 September 2026}}</ref>
+|-
+! colspan="7" | [[Sunderland A.F.C. Under-21s and Academy|Academy]]
+|}
+{{notelist}}
+
+===Loans in===
+{| class="wikitable plainrowheaders sortable"
+|-
+! style="background:#DD0000;color:#FFFFFF;" |Date
+! style="background:#DD0000;color:#FFFFFF;" |Pos.
+! style="background:#DD0000;color:#FFFFFF;" |Player
+! style="background:#DD0000;color:#FFFFFF;" |From
+! style="background:#DD0000;color:#FFFFFF;" |Date until
+! style="background:#DD0000;color:#FFFFFF;" |Ref.
+|-
+! colspan="7" | [[Sunderland A.F.C.|First team]]
+|-
+| 1 September 2026 || [[Defender (association football)#Centre-back|CB]] || {{flagicon|AUT}} [[Kevin Danso]] || {{fbaicon|ENG}} [[Tottenham Hotspur F.C.|Tottenham Hotspur]] || End of Season || <ref>{{Cite web |date=1 September 2026 |title=Kevin Danso joins Sunderland AFC on loan |url=https://www.safc.com/news/2026/september/01/kevin-danso-joins-sunderland-afc-on-loan/ |access-date=1 September 2026 |website=Sunderland Association Football Club}}</ref>
+|-
+! colspan="7" | [[Sunderland A.F.C. Under-21s and Academy|Academy]]
+|}
+{{notelist}}
+
+===Loans out===
+{| class="wikitable plainrowheaders sortable"
+|-
+! style="background:#DD0000;color:#FFFFFF;" |Date
+! style="background:#DD0000;color:#FFFFFF;" |Pos.
+! style="background:#DD0000;color:#FFFFFF;" |Player
+! style="background:#DD0000;color:#FFFFFF;" |To
+! style="background:#DD0000;color:#FFFFFF;" |Loaned until
+! style="background:#DD0000;color:#FFFFFF;" |Ref.
+|-
+! colspan="7" | [[Sunderland A.F.C.|First team]]
+|-
+| 20 June 2026{{efn|The loan was announced on 18 June, and would officially begin on 20 June once the [[Serbian SuperLiga]] transfer window opened.}} || [[Midfielder#Attacking midfielder|AM]] || {{flagicon|SRB}} [[Milan Aleksić (footballer)|Milan Aleksić]] || {{fbaicon|SRB}} [[FK Partizan|Partizan]] || rowspan="3"| End of season || <ref>{{cite news |title=Milan Aleksić Joins Partizan Belgrade On Loan |url=https://www.safc.com/news/2026/june/18/milan-aleksi--joins-partizan-belgrade-on-loan/ |access-date=18 June 2026 |publisher=Sunderland A.F.C. |date=18 June 2026}}</ref>
+|-
+| 27 August 2026 || [[Defender (association football)#Centre-back|CB]] || {{flagicon|NED}} [[Jenson Seelt]] || {{fbaicon|WAL}} [[Swansea City A.F.C.|Swansea City]] || <ref name="Seelt" />
+|-
+| 2 September 2026 || [[Forward (association football)#Winger|LW]] || {{flagicon|CIV}} [[Simon Adingra]] || {{fbaicon|NED}} [[AFC Ajax|Ajax]] || <ref>{{cite web |author1=Dominic Shaw |title=Sunderland's Simon Adingra joins Ajax on season-long loan |url=https://www.thenorthernecho.co.uk/sport/26517130.sunderlands-simon-adingra-joins-ajax-season-long-loan/ |website=[[The Northern Echo]] |access-date=2 September 2026 |date=2 September 2026}}</ref>
+|-
+! colspan="7" | [[Sunderland A.F.C. Under-21s and Academy|Academy]]
+|-
+| 29 June 2026 || [[Goalkeeper (association football)|GK]] || {{flagicon|ENG}} [[Matty Young (footballer, born 2006)|Matty Young]] || {{fbaicon|ENG}} [[Huddersfield Town A.F.C.|Huddersfield Town]] || End of season || <ref>{{cite news |title=Matty Young joins Huddersfield Town on loan |url=https://www.safc.com/news/2026/june/29/matty-young-joins-huddersfield-town-on-loan/ |access-date=29 June 2026 |publisher=Sunderland A.F.C. |date=29 June 2026}}</ref>
+|-
+| rowspan="3" | 9 October 2026 || [[Defender (association football)#Full-back|LB]] || {{flagicon|ENG}} Bayley Hester || {{fbaicon|ENG}} [[Heaton Stannington F.C.|Heaton Stannington]] || rowspan="3" | 9 November 2026 || <ref name="HesterHolcroftJones">{{cite news |title=Academy trio head out on loan |url=https://www.safc.com/news/2026/october/09/academy-trio-head-out-on-loan/ |access-date=14 October 2026 |publisher=Sunderland AFC |date=9 October 2026}}</ref>
+|-
+| [[Defender (association football)#Centre-back|CB]] || {{flagicon|ENG}} Finlay Holcroft || {{fbaicon|ENG}} [[Spennymoor Town F.C.|Spennymoor Town]] || <ref name="HesterHolcroftJones" />
+|-
+| [[Midfielder#Central midfielder|CM]] || {{flagicon|ENG}} Jaydon Jones || {{fbaicon|ENG}} [[Hebburn Town F.C.|Hebburn Town]] || <ref name="HesterHolcroftJones" />
+|-
+| 14 October 2026 || [[Defender (association football)#Centre-back|CB]] || {{flagicon|ENG}} Luke Bell || {{fbaicon|ENG}} [[Darlington F.C.|Darlington]] || 15 November 2026 || <ref>{{cite news |title=Darlington sign Luke Bell on Loan |url=https://darlingtonfc.co.uk/news/darlington-sign-luke-bell-on-loan |access-date=14 October 2026 |publisher=Darlington FC |date=14 October 2026}}</ref>
+|}
+{{notelist}}
+
+===Released / Out of contract===
+{| class="wikitable plainrowheaders sortable"
+|-
+! style="background:#DD0000;color:#FFFFFF;" |Date
+! style="background:#DD0000;color:#FFFFFF;" |Pos.
+! style="background:#DD0000;color:#FFFFFF;" |Player
+! style="background:#DD0000;color:#FFFFFF;" |Subsequent club
+! style="background:#DD0000;color:#FFFFFF;" |Joined date
+! style="background:#DD0000;color:#FFFFFF;" |Ref.
+|-
+!colspan=6|[[Sunderland A.F.C.|First team]]
+|-
+| rowspan="4"| 30 June 2026 || [[Midfielder#Central midfielder|CM]] || {{flagicon|ENG}} [[Dan Neil (footballer)|Dan Neil]] || {{fbaicon|SCO}} [[Rangers F.C.|Rangers]] || 1 July 2026 || <ref name="Retained List">{{cite news |title=Sunderland AFC announce retained list for 2026-27 |url=https://www.safc.com/news/2026/june/10/sunderland-afc-announce-retained-list-for-2026-27/ |access-date=10 June 2026 |publisher=Sunderland A.F.C. |date=10 June 2026}}</ref><ref>{{cite news |title=Rangers Announce Signing Of Dan Neil |url=https://www.rangers.co.uk/article/rangers-announce-signing-of-dan-neil/4pgPzDcH4JgTwvCRc0myeJ |access-date=9 July 2026 |publisher=Rangers F.C. |date=9 July 2026}}</ref>
+|-
+| [[Defender (association football)#Full-back|LB]] || {{flagicon|LVA}} [[Dennis Cirkin]] || {{fbaicon|ENG}} [[Queens Park Rangers]]|| 12 August 2026 || <ref name="Retained List" /><ref>{{cite news|url=https://www.bbc.co.uk/sport/football/articles/ce97px112d8o|title=QPR sign former Sunderland defender Cirkin|work=BBC Sport|date=12 August 2026|access-date=12 August 2026}}</ref>
+|-
+| [[Forward (association football)#Winger|RW]] || {{flagicon|BFA}} [[Bertrand Traoré]] || {{fbaicon|ENG}} [[Wolverhampton Wanderers F.C.|Wolverhampton Wanderers]] || 7 September 2026 || <ref name="Retained List" /><ref>{{cite news |title=Traore signs to bolster Peixoto's squad |url=https://www.wolves.co.uk/news/mens-first-team/20260907-traore-signs-to-bolster-peixotos-squad/ |access-date=8 September 2026 |publisher=Wolverhampton Wanderers FC |date=7 September 2026}}</ref>
+|-
+| [[Defender (association football)#Full-back|RB]] || {{flagicon|WAL}} [[Niall Huggins]] || || || <ref name="Retained List" />
+|-
+!colspan=6|[[Sunderland A.F.C. Under-21s and Academy|Academy]]
+|-
+| rowspan="11"| 30 June 2026 || [[Defender (association football)#Full-back|LB]] || {{flagicon|ENG}} [[Oliver Bainbridge]] || {{fbaicon|ENG}} [[Boreham Wood F.C.|Boreham Wood]] || rowspan="2"| 1 July 2026 || <ref name="Retained List" /><ref>{{cite news |title=Welcome, Oliver Bainbridge! |url=https://www.borehamwoodfootballclub.co.uk/welcome-oliver-bainbridge/ |access-date=9 July 2026 |publisher=Boreham Wood F.C. |date=9 July 2026}}</ref>
+|-
+| [[Defender (association football)#Full-back|RB]] || {{flagicon|ENG}} [[Tom Lavery (footballer)|Tom Lavery]] || {{fbaicon|ENG}} [[Gateshead F.C.|Gateshead]] || <ref name="Retained List" /><ref>{{cite news |title=Tommy Lavery Signs For Gateshead FC |url=https://gateshead-fc.com/tommy-lavery-signs-for-gateshead-fc/ |access-date=9 July 2026 |publisher=Gateshead F.C. |date=25 June 2026}}</ref>
+|-
+| [[Forward (association football)#Winger|LW]] || {{flagicon|NIR}} [[Rhys Walsh]] || {{fbaicon|NIR}} [[Glentoran F.C.|Glentoran]] || 9 July 2026 || <ref name="Retained List" /><ref>{{cite news |title=Rhys Walsh returns home on long-term deal |url=https://www.glentoran.com/news/academy-graduate-rhys-walsh-returns-home-on-long-term-deal/ |access-date=9 July 2026 |publisher=Glentoran F.C. |date=9 July 2026}}</ref>
+|-
+| [[Defender (association football)#Full-back|RB]] || {{flagicon|ENG}} George Bell || || || <ref name="Retained List" />
+|-
+| [[Midfielder#Defensive midfielder|DM]] || {{flagicon|ENG}} Marshall Burke || || || <ref name="Retained List" />
+|-
+| [[Goalkeeper (association football)|GK]] || {{flagicon|ENG}} Dan Cameron || {{fbaicon|ENG}} [[Gateshead F.C.|Gateshead]]|| 15 August 2026 || <ref name="Retained List" />
+|-
+| [[Midfielder#Defensive midfielder|DM]] || {{flagicon|GER}} Elias Lenz || || || <ref name="Retained List" />
+|-
+| [[Forward (association football)#Winger|RW]] || {{flagicon|ENG}} Ethan Moore || {{fbaicon|ENG}} [[Kidderminster Harriers F.C.|Kidderminster Harriers]]|| 17 July 2026|| <ref name="Retained List" />
+|-
+| [[Goalkeeper (association football)|GK]] || {{flagicon|ENG}} [[Adam Richardson (footballer, born 2003)|Adam Richardson]] || || || <ref name="Retained List" />
+|-
+| [[Midfielder#Defensive midfielder|DM]] || {{flagicon|LVA}} Ivan Struk || {{fbaicon|USA}} [[Siena Saints men's soccer|Siena Saints]]|| 31 July 2026 || <ref name="Retained List" />
+|-
+| [[Striker (association football)|ST]]|| {{flagicon|ENG}} Jake Waters || {{fbaicon|ENG}} [[Hebburn Town F.C.|Hebburn Town]]|| 7 August 2026 || <ref name="Retained List" />
+|}
+{{notelist}}
+
+===New contracts===
+{| class="wikitable plainrowheaders sortable"
+|-
+! style="background:#DD0000;color:#FFFFFF;" |Date
+! style="background:#DD0000;color:#FFFFFF;" |Pos.
+! style="background:#DD0000;color:#FFFFFF;" |Player
+! style="background:#DD0000;color:#FFFFFF;" |Contract expiry
+! style="background:#DD0000;color:#FFFFFF;" |Ref.
+|-
+!colspan=6|[[Sunderland A.F.C.|First team]]
+|-
+| 25 August 2026 || [[Forward (association football)#Winger|LW]] || {{flagicon|ENG}} [[Romaine Mundle]] || rowspan="3" | 30 June 2030 || <ref>{{cite news |title=Mundle Signs New Deal With Sunderland |url=https://www.safc.com/news/2026/august/25/-mundle-signs-new-deal-with-sunderland/ |access-date=25 August 2026 |publisher=Sunderland A.F.C. |date=25 August 2026}}</ref>
+|-
+| rowspan="2" | 27 August 2026 || [[Striker (association football)|ST]]|| {{flagicon|HAI}} [[Wilson Isidor]] || <ref>{{cite news |title=Wilson Isidor pens new contract |url=https://www.safc.com/news/2026/august/27/wilson-isidor-pens-new-contract/ |access-date=27 August 2026 |publisher=Sunderland AFC |date=27 August 2026}}</ref>
+|-
+| [[Defender (association football)#Centre-back|CB]] || {{flagicon|NED}} [[Jenson Seelt]] || <ref name="Seelt">{{cite news |title=Jenson Seelt signs new deal and joins Swansea on loan |url=https://www.safc.com/news/2026/august/27/jenson-seelt-signs-new-deal-and-joins-swansea-on-loan/ |access-date=27 August 2026 |publisher=Sunderland AFC |date=27 August 2026}}</ref>
+|-
+| 28 August 2026 || [[Goalkeeper (association football)|GK]] || {{flagicon|NED}} [[Robin Roefs]] || rowspan="2" | 30 June 2031 || <ref>{{cite news |title=Roefs Extends Sunderland AFC Stay |url=https://www.safc.com/news/2026/august/28/roefs-extends-sunderland-afc-stay/ |access-date=28 August 2026 |publisher=Sunderland AFC |date=28 August 2026}}</ref>
+|-
+| 23 September 2026 || [[Midfielder#Central midfielder|CM]] || {{flagicon|FRA}} [[Enzo Le Fée]] || <ref>{{cite news |title=Le Fée Pens New Sunderland AFC Contract |url=https://www.safc.com/news/2026/september/23/le-f-e-pens-new-sunderland-afc-contract/ |access-date=24 September 2026 |publisher=Sunderland AFC |date=23 September 2026}}</ref>
+|-
+!colspan=6|[[Sunderland A.F.C. Under-21s and Academy|Academy]]
+|-
+| 1 July 2026 || [[Defender (association football)#Full-back|RB]] || {{flagicon|ENG}} Jenson Jones || 30 June 2028 || <ref>{{cite news |title=Jenson Jones Signs New Contract |url=https://www.safc.com/news/2026/july/01/jenson-jones-signs-new-contract/ |access-date=1 July 2026 |publisher=Sunderland A.F.C. |date=1 July 2026}}</ref>
+|-
+| rowspan="2"| 2 July 2026 || [[Midfielder#Central midfielder|CM]] || {{flagicon|ENG}} Joe Neild || rowspan="6"| Undisclosed{{efn|name=FPC|First professional contract}} || <ref>{{cite news |title=Joe Neild signs first pro contract |url=https://www.safc.com/news/2026/july/02/joe-neild-signs-first-pro-contract/ |access-date=2 July 2026 |publisher=Sunderland A.F.C. |date=2 July 2026}}</ref>
+|-
+| [[Forward (association football)#Winger|LW]] || {{flagicon|ENG}} Felix Scott || <ref>{{cite news |title=Felix Scott signs first pro contract |url=https://www.safc.com/news/2026/july/02/felix-scott-signs-first-pro-contract/ |access-date=2 July 2026 |publisher=Sunderland A.F.C. |date=2 July 2026}}</ref>
+|-
+| rowspan="2"| 3 July 2026 || [[Midfielder#Attacking midfielder|CAM]] || {{flagicon|ENG}} Charlie Dinsdale || <ref>{{cite news |title=Charlie Dinsdale signs first pro contract |url=https://www.safc.com/news/2026/july/03/charlie-dinsdale-signs-first-pro-contract/ |access-date=3 July 2026 |publisher=Sunderland A.F.C. |date=3 July 2026}}</ref>
+|-
+| [[Defender (association football)#Full-back|LB]] || {{flagicon|ENG}} Bayley Hester || <ref>{{cite news |title=Bayley Hester signs pro contract |url=https://www.safc.com/news/2026/july/03/bayley-hester-signs-pro-contract/ |access-date=3 July 2026 |publisher=Sunderland A.F.C. |date=3 July 2026}}</ref>
+|-
+| 6 July 2026 || [[Defender (association football)#Full-back|LB]] || {{flagicon|ENG}} Archie Lightfoot || <ref>{{cite news |title=Archie Lightfoot signs first pro contract |url=https://www.safc.com/news/2026/july/06/archie-lightfoot-signs-first-pro-contract/ |access-date=6 July 2026 |publisher=Sunderland A.F.C. |date=6 July 2026}}</ref>
+|-
+| rowspan="2"| 7 July 2026 || [[Striker (association football)|ST]]|| {{flagicon|ARM}} [[Finn Geragusian]]|| <ref>{{cite news |title=Finn Geragusian signs pro contract |url=https://www.safc.com/news/2026/july/07/finn-geragusian-signs-pro-contract/ |access-date=7 July 2026 |publisher=Sunderland A.F.C. |date=7 July 2026}}</ref>
+|-
+| [[Midfielder#Attacking midfielder|CAM]] || {{flagicon|ENG}} Jack Whittaker || 30 June 2028 || <ref>{{cite news |title=Jack Whittaker signs new contract |url=https://www.safc.com/news/2026/july/07/Jack-Whittaker-signs-new-contract/ |access-date=7 July 2026 |publisher=Sunderland A.F.C. |date=7 July 2026}}</ref>
+|-
+| rowspan="2"| 20 July 2026 || [[Striker (association football)|ST]]|| {{flagicon|AUS}} Marcus Neill || Undisclosed{{efn|name=FPC}} || <ref>{{cite news |title=Marcus Neill signs pro contract |url=https://www.safc.com/news/2026/july/20/marcus-neill-signs-pro-contract/ |access-date=20 July 2026 |publisher=Sunderland A.F.C. |date=20 July 2026}}</ref>
+|-
+| [[Forward (association football)#Winger|LW]] || {{flagicon|UKR}} [[Timur Tutierov]] || Undisclosed || <ref>{{cite news |title=Tutierov Pens Contract Extension |url=https://www.safc.com/news/2026/july/20/tutierov-pens-contract-extension/ |access-date=20 July 2026 |publisher=Sunderland A.F.C. |date=20 July 2026}}</ref>
+|-
+| rowspan="2"| 21 July 2026 || [[Defender (association football)#Centre-back|CB]] || {{flagicon|ENG}} Finlay Holcroft || rowspan="3" | Undisclosed{{efn|name=FPC}} || <ref>{{cite news |title=Finlay Holcroft signs professional deal |url=https://www.safc.com/news/2026/july/21/finlay-holcroft-signs-professional-deal/ |access-date=21 July 2026 |publisher=Sunderland A.F.C. |date=21 July 2026}}</ref>
+|-
+| [[Midfielder#Central midfielder|CM]] || {{flagicon|ENG}} Liam Hunt || <ref>{{cite news |title=Liam Hunt signs pro deal |url=https://www.safc.com/news/2026/july/21/liam-hunt-signs-pro-deal/ |access-date=21 July 2026 |publisher=Sunderland A.F.C. |date=21 July 2026}}</ref>
+|-
+| 7 September 2026 || [[Goalkeeper (association football)|GK]] || {{flagicon|ENG}} Joe Cowan || <ref>{{cite news |title=Joe Cowan signs professional contract |url=https://www.safc.com/news/2026/september/07/joe-cowan-signs-professional-contract/ |access-date=8 September 2026 |publisher=Sunderland AFC |date=7 September 2026}}</ref>
+|}
+{{notelist}}
+
+==Pre-season and friendlies==
+
+On 4 March, Sunderland announced a pre-season tour in the [[United States]] with matches against [[Leeds United F.C.|Leeds United]], [[Liverpool F.C.|Liverpool]] and [[Wrexham A.F.C.|Wrexham]].<ref>{{cite news |title=Pre-season: Sunderland return to North America |url=https://www.safc.com/news/2026/march/04/pre-season--sunderland-return-to-north-america/ |access-date=9 March 2026 |publisher=Sunderland AFC |date=4 March 2026}}</ref> In June, three further friendlies were confirmed, to complete the schedule, against [[York City F.C.|York City]], [[RC Lens|Lens]] and [[Stade Rennais FC|Rennes]].<ref>{{cite news |title=Sunderland AFC Confirm Full 2026-27 Pre-Season Schedule |url=https://www.safc.com/news/2026/june/08/----sunderland-afc-confirm-full-2026-27-pre-season-schedule/ |access-date=8 June 2026 |publisher=Sunderland AFC |date=8 June 2026}}</ref>
+
+{{legend2|#CCFFCC|Win|border=1px solid #AAAAAA}}
+{{legend2|#FFFFCC|Draw|border=1px solid #AAAAAA}}
+{{legend2|#FFCCCC|Loss|border=1px solid #AAAAAA}}
+{{legend2|#FFFFFF|Fixtures|border=1px solid #AAAAAA}}
+
+{{football box collapsible 
+| round      = [[Exhibition game#Club football|Friendly]]
+| date       = 18 July 2026
+| time       = 15:00 [[British Summer Time|BST]]
+| team1      = [[York City F.C.|York City]]
+| score      = 1−5
+| report     = https://www.safc.com/news/2026/july/18/sunderland-score-five-at-york-in-pre-season-opener/
+| team2      = Sunderland
+| goals1     = 
+*[[Greg Olley|Olley]] {{goal|55}}
+| goals2     = 
+*[[Enzo Le Fée|Le Fée]] {{goal|7||45}}
+*[[Chris Rigg|Rigg]] {{goal|37}}
+*[[Timur Tutierov|Tutierov]] {{goal|44}}
+*Proctor {{goal|56}}
+| stadium    = [[York Community Stadium|LNER Community Stadium]]
+| location   = [[Huntington, North Yorkshire|Huntington]]
+| attendance = 
+| referee    = 
+| result     = W
+}}
+{{football box collapsible 
+| round      = [[Exhibition game#Club football|Friendly]]
+| date       = 25 July 2026
+| time       = 17:00 [[Central Daylight Time|CDT]]
+| team1      = [[Liverpool F.C.|Liverpool]]
+| score      = 4–2
+| report     = https://www.safc.com/news/2026/july/25/sunderland-defeated-by-liverpool-in-nashville/
+| team2      = Sunderland
+| goals1     = 
+*[[Kieran Morrison (footballer)|Morrison]] {{goal|13}}
+*[[Dominik Szoboszlai|Szoboszlai]] {{goal|56}}
+*[[Federico Chiesa|Chiesa]] {{goal|72}}
+*[[Lewis Koumas|Koumas]] {{goal|85}}
+| goals2     = 
+*[[Dan Ballard (footballer)|Ballard]] {{yel|20}}
+*[[Enzo Le Fée|Le Fée]] {{goal|28}}
+*[[Timur Tutierov|Tutierov]] {{goal|49}}
+| stadium    = [[Geodis Park]]
+| attendance = 24,897
+| location   = [[Nashville, Tennessee|Nashville]], United States
+| result     = L
+}}
+{{football box collapsible 
+| round      = [[Exhibition game#Club football|Friendly]]
+| date       = 30 July 2026
+| time       = 19:30 [[Eastern Daylight Time|EDT]]
+| team1      = [[Leeds United F.C.|Leeds United]]
+| score      = 1–0
+| report     = https://www.safc.com/news/2026/july/31/lads-defeated-by-leeds-in-new-jersey/
+| team2      = Sunderland
+| goals1     = 
+*[[Lukas Nmecha|Nmecha]] {{goal|8}}
+| stadium    = [[Sports Illustrated Stadium]]
+| location   = [[Harrison, New Jersey|Harrison]], United States
+| attendance = 
+| referee    = 
+| result     = L
+}}
+{{football box collapsible 
+| round      = [[Exhibition game#Club football|Friendly]]
+| date       = 2 August 2026
+| time       = 12:00 [[Eastern Daylight Time|EDT]]
+| team1      = Sunderland
+| score      = 1–0
+| report     = https://www.safc.com/news/2026/august/02/Sunderland-defeat-Wrexham-in-Philadelphia/
+| team2      = [[Wrexham A.F.C.|Wrexham]]
+| goals1     = 
+*[[Nordi Mukiele|Mukiele]] {{goal|34}}
+*[[Habib Diarra|Diarra]] {{yel|61}}
+*[[Jenson Seelt|Seelt]] {{yel|65}}
+| goals2     = 
+*[[Dominic Hyam|Hyam]] {{yel|32}}
+*[[George Dobson (footballer, born 1997)|Dobson]] {{yel|56}}
+| stadium    = [[Subaru Park]]
+| location   = [[Chester, Pennsylvania|Chester]], United States
+| attendance = 
+| referee    = 
+| result     = W
+}}
+{{football box collapsible 
+| round      = [[Exhibition game#Club football|Friendly]]
+| date       = 8 August 2026
+| time       = 12:00 [[Central European Summer Time|CEST]]
+| team1      = [[RC Lens|Lens]]
+| score      = 4–1
+| report     = https://www.safc.com/news/2026/august/08/young-safc-xi-beaten-by-rc-lens/
+| team2      = Sunderland
+| goals1     = 
+*{{Abbr|Seddik|Mohamed Seddik}} {{goal|}}
+*[[Ruben Aguilar|Aguilar]] {{goal|pen.}}
+*{{Abbr|Fernoc|Djulian Fernoc}} {{goal|77}}
+*{{Abbr|Diarra|Moussa Diarra}} {{goal|82}}
+| goals2     = 
+*{{Abbr|Proctor|Tom Proctor}} {{goal|11}}, {{penmiss}}
+*[[Jocelin Ta Bi|Ta Bi]] {{penmiss}}
+| stadium    = Stade François Blin
+| location   = [[Avion, Pas-de-Calais|Avion]], France
+| attendance = 0 ([[Behind closed doors (sport)|BCD]])
+| referee    = 
+| result     = L
+}}
+{{football box collapsible 
+| round      = [[Exhibition game#Club football|Friendly]]
+| date       = 8 August 2026
+| time       = 17:00 [[Central European Summer Time|CEST]]
+| team1      = [[RC Lens|Lens]]
+| score      = 0–2
+| report     = https://www.safc.com/news/2026/august/08/Hume-and-Isidor-on-target-as-Sunderland-win-in-Lens/
+| team2      = Sunderland
+| goals2     = 
+*[[Trai Hume|Hume]] {{goal|66}}
+*[[Wilson Isidor|Isidor]] {{goal|82}}
+| stadium    = [[Stade Bollaert-Delelis]]
+| location   = [[Lens, Pas-de-Calais|Lens]], France 
+| attendance = 
+| referee    = 
+| result     = W
+}}
+{{football box collapsible 
+| round      = [[Exhibition game#Club football|Friendly]]
+| date       = 15 August 2026
+| time       = 15:00 [[British Summer Time|BST]]
+| team1      = Sunderland
+| score      = 2−1
+| report     = https://www.safc.com/news/2026/august/15/sunderland-defeat-stade-rennais/
+| team2      = [[Stade Rennais FC|Rennes]]
+| goals1     = 
+*[[Brian Brobbey|Brobbey]] {{goal|66}}
+*[[Trai Hume|Hume]] {{goal|70}}
+| goals2     = 
+*[[Esteban Lepaul|Lepaul]] {{goal|32|pen.}}
+| stadium    = [[Stadium of Light]]
+| location   = [[Monkwearmouth]]
+| attendance = 
+| referee    = 
+| result     = W
+}}
+
+==Competitions==
+===Overall record===
+{{Fb overview2
+|c=4
+|c1=[[2026–27 Premier League|Premier League]] |fm1=22 August 2026 |lm1=30 May 2027 |sr1=Matchday 1 |fp1=TBD |w1=1 |d1=1 |l1=5 |f1=6 |a1=14
+|c2=[[2026–27 FA Cup|FA Cup]] |fm2=January 2027 |lm2=TBD |sr2=Third round |fp2=TBD |w2=0 |d2=0 |l2=0 |f2=0 |a2=0
+|c3=[[2026–27 EFL Cup|EFL Cup]] |fm3=8 September 2026 |lm3=TBD |sr3=Third round |fp3=TBD |w3=1 |d3=0 |l3=0 |f3=1 |a3=0
+|c4=[[2026–27 UEFA Europa League|UEFA Europa League]] |fm4=16 September 2026 |lm4=TBD |sr4=League phase |fp4=TBD |w4=2 |d4=1 |l4=0 |f4=4 |a4=2
+|u=22 October 2026
+|s=[https://int.soccerway.com/teams/england/sunderland-afc/683 Soccerway]
+}}
+
+===Premier League===
+{{main|2026–27 Premier League}}
+
+====League table====
+{{:2026–27 Premier League|showteam=SUN}}
+
+====Results summary====
+{{Fb rs |hw=1 |hd=0 |hl=2 |hgf=1 |hga=4 |aw=0 |ad=1 |al=3 |agf=5 |aga=10}}
+{{Fb rs footer |u=18 October 2026 |s=[https://int.soccerway.com/teams/england/sunderland-afc/683 Soccerway]|date=July 2025}}
+
+====Results by round====
+{{#invoke:sports rbr table|table|legendpos=b
+| update = 18 October 2026
+| header = Round
+| label1 = Ground
+| res1 = A/H/A/H/A/H/A/H/A/H/A/H/A/A/H/H/A/A/H/H
+| label2 = Result
+| res2 = L/W/D/L/L/L/L
+| label3 = Position
+| pos3 = 14/11/12/14/14/17/20
+| label4 = Points
+| pos4 = 0p/3p/4p/4p/4p/4p/4p
+| color_W = green1 |text_W = Win
+| color_D = yellow1 |text_D = Draw
+| color_L = red1 |text_L = Loss
+| color_P = lightgrey |text_P = Postponed
+| text_H = Home |text_A = Away
+| color_1 = gold |color_2–4 = green1 |color_5 = blue1 |color_18–20 = red1
+| source = [https://www.premierleague.com/fixtures?cl=17 Premier League]
+}}
+
+====Matches====
+On 19 June 2026, the [[Premier League]] fixtures were released.<ref>{{cite news |title=Sunderland's 2026-27 Premier League fixtures confirmed |url=https://www.safc.com/news/2026/june/19/sunderland-s-2026-27-premier-league-fixtures-confirmed/ |access-date=19 June 2026 |publisher=Sunderland A.F.C. |date=19 June 2026}}</ref>
+
+{{legend2|#CCFFCC|Win|border=1px solid #AAAAAA}}
+{{legend2|#FFFFCC|Draw|border=1px solid #AAAAAA}}
+{{legend2|#FFCCCC|Loss|border=1px solid #AAAAAA}}
+{{legend2|#FFFFFF|Fixtures|border=1px solid #AAAAAA}}
+
+{{football box collapsible
+| round      = 1
+| date       = 22 August 2026
+| time       = 15:00 [[British Summer Time|BST]]
+| team1      = [[Ipswich Town F.C.|Ipswich Town]]
+| score      = 2–1
+| report     = https://www.premierleague.com/en/match/2645199
+| team2      = Sunderland
+| goals1     = 
+*[[Emersonn]] {{goal|24}}
+*[[Jack Clarke (footballer, born 2000)|Clarke]] {{goal|90}}
+| goals2     = 
+*[[Dan Ballard (footballer)|Ballard]] {{yel|36}}
+*[[Nilson Angulo|Angulo]] {{goal|39}}, {{yel|55}}
+*[[Luke O'Nien|O'Nien]] {{yel|63}}
+| stadium    = [[Portman Road]]
+| location   = [[Ipswich]]
+| attendance = 29,669
+| referee    = [[Farai Hallam]]
+| result     = L
+}}
+{{football box collapsible
+| round      = 2
+| date       = 30 August 2026
+| time       = 14:00 [[British Summer Time|BST]]
+| team1      = Sunderland
+| score      = 1–0
+| report     = https://www.premierleague.com/en/match/2645213
+| team2      = [[Fulham F.C.|Fulham]]
+| goals1     = 
+*[[Wilson Isidor|Isidor]] {{goal|75}}
+| goals2     = 
+*[[Joachim Andersen (footballer)|Andersen]] {{yel|35}}
+*[[César Palacios (footballer, born 2004)|Palacios]] {{yel|59}}
+| stadium    = [[Stadium of Light]]
+| location   = [[Sunderland]]
+| attendance = 46,781
+| referee    = [[Michael Salisbury]]
+| result     = W
+| note       = Fixture was initially scheduled for 29 August, but was rescheduled for live [[Sky Sports]] broadcasting.<ref name="AugSepTV">{{cite news |title=Two Sunderland fixtures moved for TV broadcast |url=https://www.safc.com/news/2026/july/07/two-sunderland-fixtures-moved-for-tv-broadcast/ |access-date=7 July 2026 |publisher=Sunderland A.F.C. |date=7 July 2026}}</ref>
+}}
+{{football box collapsible
+| round      = 3
+| date       = 5 September 2026
+| time       = 15:00 [[British Summer Time|BST]]
+| team1      = [[Brentford F.C.|Brentford]]
+| score      = 1–1
+| report     = https://www.premierleague.com/en/match/2645216
+| team2      = Sunderland
+| goals1     = 
+*[[Mamadou Sangaré|Sangaré]] {{yel|30}}
+*[[Vitaly Janelt|Janelt]] {{goal|57}}, {{yel|62}}
+*[[Yehor Yarmolyuk|Yarmolyuk]] {{yel|69}}
+| goals2     = 
+*[[Noah Sadiki|Sadiki]] {{yel|14}}
+*[[Enzo Le Fée|Le Fée]] {{goal|82|pen.}}
+*[[Granit Xhaka|Xhaka]] {{yel|88}}
+| stadium    = [[Brentford Community Stadium]]
+| location   = [[Brentford]]
+| attendance = 17,131
+| referee    = [[Thomas Bramall]]
+| result     = D
+}}
+{{football box collapsible
+| round      = 4
+| date       = 12 September 2026
+| time       = 20:00 [[British Summer Time|BST]]
+| team1      = Sunderland
+| score      = 0–2
+| report     = https://www.premierleague.com/en/match/2645233
+| team2      = [[Arsenal F.C.|Arsenal]]
+| goals1     = 
+*[[Reinildo Mandava|Mandava]] {{sentoff|2|28|90+6}}
+*[[Enzo Le Fée|Le Fée]] {{penmiss}} 56'
+*[[Dan Ballard (footballer)|Ballard]] {{yel|66}}
+*[[Granit Xhaka|Xhaka]] {{yel|69}}
+*[[Brian Brobbey|Brobbey]] {{yel|81}}
+*[[Nordi Mukiele|Mukiele]] {{yel|90+1}}
+| goals2     = 
+*[[Bruno Guimarães]] {{goal|58}}
+*[[Gabriel Magalhães|Gabriel]] {{yel|90+1}}
+*[[Kai Havertz|Havertz]] {{yel|90+3}}
+*[[Bukayo Saka|Saka]] {{goal|90+7|pen.}}
+| stadium    = [[Stadium of Light]]
+| location   = [[Sunderland]]
+| attendance = 46,861
+| referee    = [[John Brooks (referee)|John Brooks]]
+| result     = L
+| note       = Fixture was initially scheduled for a 15:00 kick-off, but was pushed back for live [[TNT Sports (United Kingdom)|TNT Sports]] broadcasting.<ref name="AugSepTV" />
+}}
+{{football box collapsible
+| round      = 5
+| date       = 20 September 2026
+| time       = 14:00 [[British Summer Time|BST]]
+| team1      = [[Manchester City F.C.|Manchester City]]
+| score      = 5–3
+| report     = https://www.premierleague.com/en/match/2645241
+| team2      = Sunderland
+| goals1     = 
+*[[Enzo Fernández|Fernández]] {{goal|9}}
+*[[Rayan Cherki|Cherki]] {{goal|29}}
+*[[Antoine Semenyo|Semenyo]] {{goal|43||57}}
+*[[Erling Haaland|Haaland]] {{goal|81}}
+| goals2     = 
+*[[Dayann Methalie|Methalie]] {{yel|8}}
+*[[Brian Brobbey|Brobbey]] {{goal|12||33||59}}
+| stadium    = [[Etihad Stadium]]
+| location   = [[Manchester]]
+| attendance = 60,312
+| referee    = [[Robert Jones (referee)|Robert Jones]]
+| result     = L
+| note       = Fixture was initially scheduled for 19 September, but was pushed back a day due to [[2026–27 EFL Cup|EFL Cup]] involvements on the preceding Thursday.<ref>{{cite news |title=Manchester City away fixture moved |url=https://www.safc.com/news/2026/august/28/manchester-city-away-fixture-moved/ |date=28 August 2026 |access-date=30 August 2026 |publisher=Sunderland A.F.C. }}</ref>
+}}
+{{football box collapsible
+| round      = 6
+| date       = 10 October 2026
+| time       = 15:00 [[British Summer Time|BST]]
+| team1      = Sunderland
+| score      = 0–2
+| report     = https://www.premierleague.com/en/match/2645254
+| team2      = [[Brighton & Hove Albion F.C.|Brighton & Hove Albion]]
+| goals1     = 
+| goals2     = 
+*[[Olivier Boscagli|Boscagli]] {{yel|36}}
+*[[Maxim De Cuyper|De Cuyper]] {{goal|53}}
+*[[Pascal Struijk|Struijk]] {{sentoff|0|57}}
+*[[Jaouen Hadjam|Hadjam]] {{goal|90+3}}
+| stadium    = [[Stadium of Light]]
+| location   = [[Sunderland]]
+| attendance = 47,196
+| referee    = [[Thomas Bramall]]
+| result     = L
+}}
+{{football box collapsible
+| round      = 7
+| date       = 18 October 2026
+| time       = 14:00 [[British Summer Time|BST]]
+| team1      = [[AFC Bournemouth|Bournemouth]]
+| score      = 2–0
+| report     = https://www.premierleague.com/en/match/2645255
+| team2      = Sunderland
+| goals1     = 
+*[[Marcus Tavernier|Tavernier]] {{goal|6}}
+*[[António Silva (footballer)|Silva]] {{yel|26}}
+*[[Lewis Cook (footballer, born 1997)|Cook]] {{yel|45+6}}
+*[[Evanilson (footballer, born 1999)|Evanilson]] {{goal|48}}
+*[[Ryan Christie|Christie]] {{yel|79}}
+| goals2     = 
+*[[Kevin Danso|Danso]] {{sentoff|0|17}}
+*[[Omar Alderete|Alderete]] {{yel|40}}
+*[[Chris Rigg|Rigg]] {{yel|65}}
+| stadium    = [[Dean Court]]
+| location   = [[Bournemouth]]
+| attendance = 12,004
+| referee    = [[Craig Pawson]]
+| result     = L
+| note       = Fixture was initially scheduled for 17 October, but was rescheduled for live [[Sky Sports]] broadcasting.<ref name="OctTVPicks">{{cite news |title=Bournemouth & Leeds fixtures moved for live television coverage |url=https://www.safc.com/news/2026/august/17/bournemouth-and-leeds-fixtures-moved-for-live-television-coverage/ |access-date=17 August 2026 |publisher=Sunderland A.F.C. |date=17 August 2026}}</ref>
+}}
+{{football box collapsible
+| round      = 8
+| date       = 25 October 2026
+| time       = 16:30 [[British Summer Time|BST]]
+| team1      = Sunderland
+| score      = 
+| report     = 
+| team2      = [[Leeds United F.C.|Leeds United]]
+| goals1     = 
+| goals2     = 
+| stadium    = [[Stadium of Light]]
+| location   = [[Sunderland]]
+| attendance = 
+| referee    = 
+| result     = 
+| note       = Fixture was initially scheduled for 24 October, but was rescheduled for live [[Sky Sports]] broadcasting.<ref name="OctTVPicks" />
+}}
+{{football box collapsible
+| round      = 9
+| date       = 31 October 2026
+| time       = 15:00 [[Greenwich Mean Time|GMT]]
+| team1      = [[Coventry City F.C.|Coventry City]]
+| score      = 
+| report     = 
+| team2      = Sunderland
+| goals1     = 
+| goals2     = 
+| stadium    = [[Coventry Building Society Arena]]
+| location   = [[Coventry]]
+| attendance = 
+| referee    = 
+| result     = 
+}}
+{{football box collapsible
+| round      = 10
+| date       = 8 November 2026
+| time       = 14:00 [[Greenwich Mean Time|GMT]]
+| team1      = Sunderland
+| score      = 
+| report     = 
+| team2      = [[Chelsea F.C.|Chelsea]]
+| goals1     = 
+| goals2     = 
+| stadium    = [[Stadium of Light]]
+| location   = [[Sunderland]]
+| attendance = 
+| referee    = 
+| result     = 
+| note       = Fixture was initially scheduled for 7 November, but was pushed back a day due to [[UEFA Europa League]] commitments on the preceding Thursday.<ref name="NovTVPicks">{{cite news |title=November fixture amendments |url=https://www.safc.com/news/2026/september/21/november-fixture-amendments/ |access-date=24 September 2026 |publisher=Sunderland AFC |date=21 September 2026}}</ref>
+}}
+{{football box collapsible
+| round      = 11
+| date       = 21 November 2026
+| time       = 15:00 [[Greenwich Mean Time|GMT]]
+| team1      = [[Aston Villa F.C.|Aston Villa]]
+| score      = 
+| report     = 
+| team2      = Sunderland
+| goals1     = 
+| goals2     = 
+| stadium    = [[Villa Park]]
+| location   = [[Birmingham]]
+| attendance = 
+| referee    = 
+| result     = 
+}}
+{{football box collapsible
+| round      = 12
+| date       = 29 November 2026
+| time       = 14:05 [[Greenwich Mean Time|GMT]]
+| team1      = Sunderland
+| score      = 
+| report     = 
+| team2      = [[Tottenham Hotspur F.C.|Tottenham Hotspur]]
+| goals1     = 
+| goals2     = 
+| stadium    = [[Stadium of Light]]
+| location   = [[Sunderland]]
+| attendance = 
+| referee    = 
+| result     = 
+| note       = Fixture was initially scheduled for 28 November, but was pushed back a day due to [[UEFA Europa League]] commitments on the preceding Thursday.<ref name="NovTVPicks" />
+}}
+{{football box collapsible
+| round      = 13
+| date       = 2 December 2026
+| time       = 20:00 [[Greenwich Mean Time|GMT]]
+| team1      = [[Liverpool F.C.|Liverpool]]
+| score      = 
+| report     = 
+| team2      = Sunderland
+| goals1     = 
+| goals2     = 
+| stadium    = [[Anfield]]
+| location   = [[Liverpool]]
+| attendance = 
+| referee    = 
+| result     = 
+| note       = Fixture was initially scheduled for a 20:00 kick-off, but was brought forward half-an-hour for live [[Sky Sports]] broadcasting.<ref name="DecTVPicks">{{cite news |title=Four Sunderland fixtures rescheduled by Premier League |url=https://www.safc.com/news/2026/october/19/four-sunderland-fixtures-rescheduled-by-premier-league/ |access-date=19 October 2026 |publisher=Sunderland AFC |date=19 October 2026}}</ref>
+}}
+{{football box collapsible
+| round      = 14
+| date       = 6 December 2026
+| time       = 14:00 [[Greenwich Mean Time|GMT]]
+| team1      = [[Newcastle United F.C.|Newcastle United]]
+| score      = 
+| report     = 
+| team2      = Sunderland
+| goals1     = 
+| goals2     = 
+| stadium    = [[St James' Park]]
+| location   = [[Newcastle upon Tyne]]
+| attendance = 
+| referee    = 
+| result     = 
+| note       = Fixture was initially scheduled for 5 December, but was pushed back a day for live [[Sky Sports]] broadcasting.<ref name="DecTVPicks" />
+}}
+{{football box collapsible
+| round      = 15
+| date       = 13 December 2026
+| time       = 14:00 [[Greenwich Mean Time|GMT]]
+| team1      = Sunderland
+| score      = 
+| report     = 
+| team2      = [[Nottingham Forest F.C.|Nottingham Forest]]
+| goals1     = 
+| goals2     = 
+| stadium    = [[Stadium of Light]]
+| location   = [[Sunderland]]
+| attendance = 
+| referee    = 
+| result     = 
+| note       = Fixture was initially scheduled for 12 December, but was pushed back a day for live [[Sky Sports]] broadcasting.<ref name="DecTVPicks" />
+}}
+{{football box collapsible
+| round      = 16
+| date       = 20 December 2026
+| time       = 14:00 [[Greenwich Mean Time|GMT]]
+| team1      = Sunderland
+| score      = 
+| report     = 
+| team2      = [[Crystal Palace F.C.|Crystal Palace]]
+| goals1     = 
+| goals2     = 
+| stadium    = [[Stadium of Light]]
+| location   = [[Sunderland]]
+| attendance = 
+| referee    = 
+| result     = 
+| note       = Fixture was initially scheduled for 19 December, but was pushed back a day for live [[Sky Sports]] broadcasting.<ref name="DecTVPicks" />
+}}
+{{football box collapsible
+| round      = 17
+| date       = 26 December 2026
+| time       = 15:00 [[Greenwich Mean Time|GMT]]
+| team1      = [[Everton F.C.|Everton]]
+| score      = 
+| report     = 
+| team2      = Sunderland
+| goals1     = 
+| goals2     = 
+| stadium    = [[Hill Dickinson Stadium]]
+| location   = [[Liverpool]]
+| attendance = 
+| referee    = 
+| result     = 
+}}
+{{football box collapsible
+| round      = 18
+| date       = 30 December 2026
+| time       = 19:30 [[Greenwich Mean Time|GMT]]
+| team1      = [[Manchester United F.C.|Manchester United]]
+| score      = 
+| report     = 
+| team2      = Sunderland
+| goals1     = 
+| goals2     = 
+| stadium    = [[Old Trafford]]
+| location   = [[Trafford]]
+| attendance = 
+| referee    = 
+| result     = 
+}}
+{{football box collapsible
+| round      = 19
+| date       = 2 January 2027
+| time       = 15:00 [[Greenwich Mean Time|GMT]]
+| team1      = Sunderland
+| score      = 
+| report     = 
+| team2      = [[Hull City A.F.C.|Hull City]]
+| goals1     = 
+| goals2     = 
+| stadium    = [[Stadium of Light]]
+| location   = [[Sunderland]]
+| attendance = 
+| referee    = 
+| result     = 
+}}
+{{football box collapsible
+| round      = 20
+| date       = 5 January 2027
+| time       = 20:15 [[Greenwich Mean Time|GMT]]
+| team1      = Sunderland
+| score      = 
+| report     = 
+| team2      = [[Liverpool F.C.|Liverpool]]
+| goals1     = 
+| goals2     = 
+| stadium    = [[Stadium of Light]]
+| location   = [[Sunderland]]
+| attendance = 
+| referee    = 
+| result     = 
+}}
+
+===FA Cup===
+{{main|2026–27 FA Cup}}
+
+As a Premier League club, Sunderland enter the competition in the third round.
+
+{{legend2|#BBF3BB|Win|border=1px solid #AAAAAA}}
+{{legend2|#FFFFBB|Draw|border=1px solid #AAAAAA}}
+{{legend2|#FFBBBB|Loss|border=1px solid #AAAAAA}}
+{{legend2|#FFFFFF|Fixtures|border=1px solid #AAAAAA}}
+
+===EFL Cup===
+{{main|2026–27 EFL Cup}}
+
+As a Premier League club competing in a European competition, Sunderland entered the EFL Cup in the third round, and were drawn at home against [[Hull City A.F.C.|Hull City]].<ref>{{cite news |title=Carabao Cup: Sunderland to host Hull City |url=https://www.safc.com/news/2026/august/26/carabao-cup--sunderland-to-host-hull-city/ |access-date=27 August 2026 |publisher=Sunderland A.F.C. |date=26 August 2026}}</ref><ref>{{cite news |title=Hull City carabao cup fixture confirmed |url=https://www.safc.com/news/2026/august/28/Hull-City-carabao-cup-fixture-confirmed/ |access-date=28 August 2026 |publisher=Sunderland A.F.C. |date=28 August 2026}}</ref> They were then drawn at home to [[Brentford F.C.|Brentford]] in the fourth round.<ref>{{cite news |title=Sunderland to host Brentford in Carabao Cup fourth round |url=https://www.safc.com/news/2026/september/16/sunderland-to-host-brentford-in-carabao-cup-fourth-round/ |access-date=18 September 2026 |publisher=Sunderland A.F.C. |date=16 September 2026}}</ref><ref>{{cite news |title=Date and kick-off time confirmed for Brentford cup tie |url=https://www.safc.com/news/2026/september/18/sunderland-v-brentford-carabao-cup-tie-confirmed/ |access-date=18 September 2026 |publisher=Sunderland A.F.C. |date=18 September 2026}}</ref>
+
+{{legend2|#BBF3BB|Win|border=1px solid #AAAAAA}}
+{{legend2|#FFFFBB|Draw|border=1px solid #AAAAAA}}
+{{legend2|#FFBBBB|Loss|border=1px solid #AAAAAA}}
+{{legend2|#FFFFFF|Fixtures|border=1px solid #AAAAAA}}
+
+{{football box collapsible 
+| round      = [[2026–27 EFL Cup#Third round|Third round]]
+| date       = 8 September 2026
+| time       = 19:45 [[British Summer Time|BST]]
+| team1      = Sunderland
+| score      = 1–0
+| report     = https://www.efl.com/match-centre/g2685171
+| team2      = [[Hull City A.F.C.|Hull City]]
+| goals1     = 
+*[[Luke O'Nien|O'Nien]] {{yel|62}}
+*[[Chemsdine Talbi|Taibi]] {{goal|71}}
+| goals2     = 
+*[[Lucas Gourna-Douath|Gourna-Douath]] {{yel|54}}
+*[[John Egan (footballer, born 1992)|Egan]] {{yel|72}}
+*[[Elliot Stroud|Stroud]] {{yel|90+4}}
+| stadium    = [[Stadium of Light]]
+| location   = [[Sunderland]]
+| attendance = 25,472
+| referee    = [[Paul Tierney (referee)|Paul Tierney]]
+| result     = W
+}}
+{{football box collapsible 
+| round      = [[2026–27 EFL Cup#Fourth round|Fourth round]]
+| date       = 28 October 2026
+| time       = 19:45 [[Greenwich Mean Time|GMT]]
+| team1      = Sunderland
+| score      = 
+| report     = https://www.efl.com/match-centre/g2687774
+| team2      = [[Brentford F.C.|Brentford]]
+| goals1     = 
+| goals2     = 
+| stadium    = [[Stadium of Light]]
+| location   = [[Sunderland]]
+| attendance = 
+| referee    = 
+| result     = 
+}}
+
+===UEFA Europa League===
+{{main|2026–27 UEFA Europa League}}
+
+====League phase====
+{{main|2026–27 UEFA Europa League league phase}}
+
+Sunderland were drawn against [[AZ Alkmaar|AZ]], [[GNK Dinamo Zagreb|Dinamo Zagreb]], [[Jagiellonia Białystok]], and [[PFC Levski Sofia|Levski Sofia]] at home, and [[S.C.U. Torreense|Torreense]], [[Lech Poznań]], [[AC Milan|Milan]], and [[RSC Anderlecht|Anderlecht]] away in the league phase.<ref>{{cite news |title=Sunderland discover UEFA Europa League opponents |url=https://www.safc.com/news/2026/august/28/sunderland-learn-who-they-will-face-in-the-uefa-europa-league/ |access-date=28 August 2026 |publisher=Sunderland A.F.C. |date=28 August 2026}}</ref>
+
+{{:2026–27 UEFA Europa League league phase|transcludesection=Table|showteam=SUN}}
+
+{{#invoke:sports rbr table|table|legendpos=b
+| updated = 22 October 2026
+| header = Round
+| label1 = Ground
+| res1 = H/A/A/H/H/A/A/H
+| label2 = Result
+| res2 = W/W/D
+| label3 = Position
+| pos3 = 15/9/9
+| label4 = Points
+| pos4 = 3p/6p/7p
+| color_W = green1 |text_W = Win
+| color_D = yellow1 |text_D = Draw
+| color_L = red1 |text_L = Loss
+| text_H = Home |text_A = Away
+| color_1–8 = green1 |color_9–16 = blue1 |color_17–24 = blue2
+| source = [https://www.uefa.com/uefaeuropaleague/fixtures-results UEFA]
+}}
+
+{{legend2|#BBF3BB|Win|border=1px solid #AAAAAA}}
+{{legend2|#FFFFBB|Draw|border=1px solid #AAAAAA}}
+{{legend2|#FFBBBB|Loss|border=1px solid #AAAAAA}}
+{{legend2|#FFFFFF|Fixtures|border=1px solid #AAAAAA}}
+
+{{football box collapsible
+| round      = [[2026–27 UEFA Europa League league phase#Sunderland v AZ|1]]
+| date       = 16 September 2026
+| time       = 20:00 [[British Summer Time|BST]]
+| team1      = Sunderland {{fbaicon|ENG}}
+| score      = 1–0
+| report     = https://www.uefa.com/uefaeuropaleague/match/2050062
+| team2      = {{fbaicon|NED}} [[AZ Alkmaar|AZ]]
+| goals1     = 
+*[[Trai Hume|Hume]] {{yel|22}}
+*[[Omar Alderete|Alderete]] {{yel|30}}
+*[[Enzo Le Fée|Le Fée]] {{goal|66|pen.}}
+*[[Nordi Mukiele|Mukiele]] {{yel|72}}
+| goals2     = 
+*[[Ayoub Oufkir|Oufkir]] {{yel|39}}
+*[[Weslley Patati|Patati]] {{yel|65}}
+| stadium    = [[Stadium of Light]]
+| location   = [[Sunderland]], England
+| attendance = 45,555
+| referee    = Jérémie Pignard ([[French Football Federation|France]])
+| result     = W
+}}
+{{football box collapsible
+| round      = [[2026–27 UEFA Europa League league phase#Torreense v Sunderland|2]]
+| date       = 15 October 2026
+| time       = 17:45 [[Western European Summer Time|WEST]]
+| team1      = [[S.C.U. Torreense|Torreense]] {{fbaicon|POR}}
+| score      = 1–2
+| report     = https://www.uefa.com/uefaeuropaleague/match/2050091
+| team2      = {{fbaicon|ENG}} Sunderland
+| goals1     = 
+*[[Volnei Feltes|Feltes]] {{goal|37}}
+*[[Jonathan Mutombo|Mutombo]] {{yel|43}}
+| goals2     = 
+*[[Trai Hume|Hume]] {{yel|45}}
+*[[Jules Ahoka|Ahoka]] {{goal|67}}
+*[[Enzo Le Fée|Le Fée]] {{yel|79}}
+*[[Nordi Mukiele|Mukiele]] {{yel|85}}
+*[[Noah Sadiki|Sadiki]] {{goal|90+3}}
+| stadium    = [[Estádio Dr. Magalhães Pessoa]]
+| location   = [[Leiria]], Portugal
+| attendance = 6,321
+| referee    = Enea Jorgji ([[Albanian Football Association|Albania]])
+| result     = W
+| note       = The match was played at Estádio Dr. Magalhães Pessoa in Leiria, instead of Torreense's regular stadium, [[Estádio Manuel Marques]] in [[Torres Vedras]], which did not meet UEFA requirements.
+}}
+{{football box collapsible
+| round      = [[2026–27 UEFA Europa League league phase#Lech Poznań v Sunderland|3]]
+| date       = 22 October 2026
+| time       = 18:45 [[Central European Summer Time|CEST]]
+| team1      = [[Lech Poznań]] {{fbaicon|POL}}
+| score      = 1–1
+| report     = https://www.uefa.com/uefaeuropaleague/match/2050101/
+| team2      = {{fbaicon|ENG}} Sunderland
+| goals1     = 
+*[[Leo Bengtsson|Bengtsson]] {{goal|70}}
+| goals2     = 
+*[[Timur Tutyerov|Tutyerov]] {{goal|2}}
+*[[Kevin Danso|Danso]] {{yel|41}}
+| stadium    = [[Poznań Stadium]]
+| location   = [[Poznań]], Poland
+| attendance = 
+| referee    = Balázs Berke ([[Hungarian Football Federation|Hungary]])
+| result     = D
+}}
+{{football box collapsible
+| round      = [[2026–27 UEFA Europa League league phase#Sunderland v Dinamo Zagreb|4]]
+| date       = 5 November 2026
+| time       = 20:00 [[Greenwich Mean Time|GMT]]
+| team1      = Sunderland {{fbaicon|ENG}}
+| score      = 
+| report     = https://www.uefa.com/uefaeuropaleague/match/2050122/
+| team2      = {{fbaicon|CRO}} [[GNK Dinamo Zagreb|Dinamo Zagreb]]
+| goals1     = 
+| goals2     = 
+| stadium    = [[Stadium of Light]]
+| location   = [[Sunderland]], England
+| attendance = 
+| referee    = 
+| result     = 
+}}
+{{football box collapsible
+| round      = [[2026–27 UEFA Europa League league phase#Sunderland v Jagiellonia Białystok|5]]
+| date       = 26 November 2026
+| time       = 20:00 [[Greenwich Mean Time|GMT]]
+| team1      = Sunderland {{fbaicon|ENG}}
+| score      = 
+| report     = https://www.uefa.com/uefaeuropaleague/match/2050140/
+| team2      = {{fbaicon|POL}} [[Jagiellonia Białystok]]
+| goals1     = 
+| goals2     = 
+| stadium    = [[Stadium of Light]]
+| location   = [[Sunderland]], England
+| attendance = 
+| referee    = 
+| result     = 
+}}
+{{football box collapsible
+| round      = [[2026–27 UEFA Europa League league phase#Milan v Sunderland|6]]
+| date       = 10 December 2026
+| time       = 21:00 [[Central European Time|CET]]
+| team1      = [[AC Milan|Milan]] {{fbaicon|ITA}}
+| score      = 
+| report     = https://www.uefa.com/uefaeuropaleague/match/2050149/
+| team2      = {{fbaicon|ENG}} Sunderland
+| goals1     = 
+| goals2     = 
+| stadium    = [[San Siro]]
+| location   = [[Milan]], Italy
+| attendance = 
+| referee    = 
+| result     = 
+}}
+{{football box collapsible
+| round      = [[2026–27 UEFA Europa League league phase#Anderlecht v Sunderland|7]]
+| date       = 21 January 2027
+| time       = 21:00 [[Central European Time|CET]]
+| team1      = [[RSC Anderlecht|Anderlecht]] {{fbaicon|BEL}}
+| score      = 
+| report     = https://www.uefa.com/uefaeuropaleague/match/2050172/
+| team2      = {{fbaicon|ENG}} Sunderland
+| goals1     = 
+| goals2     = 
+| stadium    = [[Constant Vanden Stock Stadium]]
+| location   = [[Anderlecht]], Belgium
+| attendance = 
+| referee    = 
+| result     = 
+}}
+{{football box collapsible
+| round      = [[2026–27 UEFA Europa League league phase#Sunderland v Levski Sofia|8]]
+| date       = 28 January 2027
+| time       = 20:00 [[Greenwich Mean Time|GMT]]
+| team1      = Sunderland {{fbaicon|ENG}}
+| score      = 
+| report     = https://www.uefa.com/uefaeuropaleague/match/2050194/
+| team2      = {{fbaicon|BUL}} [[PFC Levski Sofia|Levski Sofia]]
+| goals1     = 
+| goals2     = 
+| stadium    = [[Stadium of Light]]
+| location   = [[Sunderland]], England
+| attendance = 
+| referee    = 
+| result     = 
+}}
+
+==Statistics==
+===Appearances===
+{{updated|match played 18 October 2026}}
+Players with no appearances are not included on the list, ''italics'' indicate a loaned in player.
+{{Efs start|[[2026–27 Premier League|Premier League]]|[[2026–27 FA Cup|FA Cup]]|[[2026–27 EFL Cup|EFL Cup]]|[[2026–27 UEFA Europa League|Europa League]]}}
+{{Efs player|no=4 |pos=DF|nat=AUT|name=''[[Kevin Danso]]''                                      |5+0|0|0+0|0|0+0|0|1+0|0}}
+{{Efs player|no=5 |pos=DF|nat=NIR|name=[[Dan Ballard (footballer)|Daniel Ballard]]              |5+0|0|0+0|0|0+0|0|0+1|0}}
+{{Efs player|no=6 |pos=DF|nat=FRA|name=[[Dayann Methalie]]                                      |1+1|0|0+0|0|1+0|0|1+0|0}}
+{{Efs player|no=7 |pos=FW|nat=MAR|name=[[Chemsdine Talbi]]                                      |0+1|0|0+0|0|1+0|1|0+0|0}}
+{{Efs player|no=8 |pos=MF|nat=IRL|name=[[Alan Browne (footballer)|Alan Browne]]                 |0+0|0|0+0|0|0+1|0|0+0|0}}
+{{Efs player|no=9 |pos=FW|nat=NED|name=[[Brian Brobbey]]                                        |5+0|3|0+0|0|0+0|0|0+1|0}}
+{{Efs player|no=10|pos=FW|nat=ECU|name=[[Nilson Angulo]]                                        |6+0|1|0+0|0|0+0|0|1+1|0}}
+{{Efs player|no=11|pos=MF|nat=ENG|name=[[Chris Rigg]]                                           |1+2|0|0+0|0|1+0|0|1+1|0}}
+{{Efs player|no=12|pos=DF|nat=BEL|name=[[Thomas Meunier]]                                       |6+0|0|0+0|0|0+1|0|0+1|0}}
+{{Efs player|no=13|pos=DF|nat=ENG|name=[[Luke O'Nien]]                                          |1+1|0|0+0|0|1+0|0|1+0|0}}
+{{Efs player|no=14|pos=FW|nat=ENG|name=[[Romaine Mundle]]                                       |0+1|0|0+0|0|0+0|0|0+0|0}}
+{{Efs player|no=15|pos=DF|nat=PAR|name=[[Omar Alderete]]                                        |1+1|0|0+0|0|1+0|0|2+0|0}}
+{{Efs player|no=17|pos=DF|nat=MOZ|name=[[Reinildo Mandava]]                                     |6+0|0|0+0|0|0+0|0|1+1|0}}
+{{Efs player|no=18|pos=FW|nat=HAI|name=[[Wilson Isidor]]                                        |1+5|1|0+0|0|1+0|0|1+0|0}}
+{{Efs player|no=19|pos=MF|nat=SEN|name=[[Habib Diarra]]                                         |0+3|0|0+0|0|0+0|0|0+0|0}}
+{{Efs player|no=20|pos=DF|nat=FRA|name=[[Nordi Mukiele]]                                        |6+0|0|0+0|0|0+0|0|1+1|0}}
+{{Efs player|no=22|pos=GK|nat=NED|name=[[Robin Roefs]]                                          |7+0|0|0+0|0|0+0|0|2+0|0}}
+{{Efs player|no=27|pos=MF|nat=COD|name=[[Noah Sadiki]]                                          |7+0|0|0+0|0|0+0|0|2+0|1}}
+{{Efs player|no=28|pos=MF|nat=FRA|name=[[Enzo Le Fée]]                                          |7+0|1|0+0|0|0+0|0|1+1|1}}
+{{Efs player|no=29|pos=MF|nat=COD|name=[[Jules Ahoka]]                                          |0+1|0|0+0|0|1+0|0|1+0|1}}
+{{Efs player|no=31|pos=GK|nat=SWE|name=[[Melker Ellborg]]                                       |0+0|0|0+0|0|1+0|0|0+0|0}}
+{{Efs player|no=32|pos=DF|nat=NIR|name=[[Trai Hume]]                                            |4+2|0|0+0|0|1+0|0|2+0|0}}
+{{Efs player|no=34|pos=MF|nat=SUI|name=[[Granit Xhaka]]                                         |7+0|0|0+0|0|0+0|0|1+1|0}}
+{{Efs player|no=37|pos=FW|nat=CIV|name=[[Jocelin Ta Bi]]                                        |0+1|0|0+0|0|1+0|0|0+0|0}}
+{{Efs player|no=39|pos=FW|nat=BEL|name=[[Malick Fofana]]                                        |0+4|0|0+0|0|1+0|0|2+0|0}}
+{{Efs player|no=50|pos=FW|nat=ECU|name=[[Juan Riquelme Angulo]]                                 |0+1|0|0+0|0|0+0|0|0+0|0}}
+{{Efs player|no=57|pos=FW|nat=UKR|name=[[Timur Tutierov]]                                       |1+0|0|0+0|0|0+1|0|1+0|0}}
+{{Efs player|no=77|pos=MF|nat=ENG|name=Tom Proctor                                              |0+0|0|0+0|0|0+1|0|0+0|0}}
+|}
+
+===Assists===
+{{updated|match played 18 October 2026}}
+{{Small|Includes all competitive matches. The list is sorted by squad number when number of assists are equal. Players with no assists not included in the list.}}
+{| class="wikitable sortable" style="text-align:center"
+|-
+! |{{Abbr|Rank|Ranking}}
+! |{{Abbr|Pos.|Position}}
+! |{{Abbr|No.|Squad number}}
+! |Player
+! |Premier League
+! |FA Cup
+! |EFL Cup
+! |Europa League
+! |'''Total'''
+|-
+! rowspan="1" |1
+|[[Defender (association football)|DF]]
+|12
+|{{flagicon|BEL}} [[Thomas Meunier]]
+|1
+|0
+|1
+|0
+|2
+|-
+! rowspan="5" |2
+|[[Forward (association football)|FW]]
+|10
+|{{flagicon|ECU}} [[Nilson Angulo]]
+|1
+|0
+|0
+|0
+|1
+|-
+|[[Midfielder|MF]]
+|19
+|{{flagicon|SEN}} [[Habib Diarra]]
+|1
+|0
+|0
+|0
+|1
+|-
+|[[Forward (association football)|FW]]
+|18
+|{{flagicon|FRA}} [[Enzo Le Fée]]
+|1
+|0
+|0
+|0
+|1
+|-
+| [[Defender (association football)|DF]] || 20 || {{flagicon|FRA}} [[Nordi Mukiele]]
+| 0 || 0 || 0 || 1 || 1
+|-
+| [[Midfielder|MF]] || 34 || {{flagicon|SUI}} [[Granit Xhaka]]
+| 0 || 0 || 0 || 1 || 1
+|-
+! colspan="4" | '''Totals'''!!4!!0!!1!!2!!7
+|}
+
+===Disciplinary record===
+{{updated|match played 18 October 2026}}
+{{Small|Includes all competitive matches. The list is sorted by squad number when disciplinary points / points per card / number of cards are equal. Players with no cards not included in the list.}}
+{| class="wikitable sortable" style="text-align:center;"
+|-
+! rowspan="2" | Rank
+! rowspan="2" | {{abbr|No.|Squad Number}}
+! rowspan="2" | {{abbr|Pos.|Position}}
+! rowspan="2" | {{abbr|Nat.|Nationality}}
+! rowspan="2" | Name
+! colspan="3" | [[2026–27 Premier League|Premier League]] 
+! colspan="3" | [[2026–27 FA Cup|FA Cup]]
+! colspan="3" | [[2026–27 EFL Cup|EFL Cup]]
+! colspan="3" | [[2026–27 UEFA Europa League|Europa League]]
+! colspan="3" | Total
+|-
+! {{fb yellow card}}!! {{fb second yellow card}}!! {{fb red card}}!! {{fb yellow card}}!! {{fb second yellow card}}!! {{fb red card}}!! {{fb yellow card}}!! {{fb second yellow card}}!! {{fb red card}}!! {{fb yellow card}}!! {{fb second yellow card}}!! {{fb red card}}!! {{fb yellow card}}!! {{fb second yellow card}}!! {{fb red card}}
+|-
+! rowspan="1" | 1
+| 4 || [[Defender (association football)#Centre-back|CB]] || {{flagicon|AUT}} || [[Kevin Danso]]
+| 0 || 0 || 1 || 0 || 0 || 0 || 0 || 0 || 0 || 0 || 0 || 0 || '''0''' || '''0''' || '''1'''
+|-
+! rowspan="1' | 2
+| 17 || [[Defender (association football)#Full-back|LB]] || {{flagicon|MOZ}} || [[Reinildo Mandava]]
+| 0 || 1 || 0 || 0 || 0 || 0 || 0 || 0 || 0 || 0 || 0 || 0 || '''0''' || '''1''' || '''0'''
+|-
+! rowspan="1" | 3
+| 20 || [[Defender (association  football)#Full-back|RB]] || {{flagicon|FRA}} || [[Nordi Mukiele]]
+| 1 || 0 || 0 || 0 || 0 || 0 || 0 || 0 || 0 || 2 || 0 || 0 || '''3''' || '''0''' || '''0'''
+|-
+! rowspan="5" | 4
+| 5 || [[Defender (association football)#Centre-back|CB]] || {{flagicon|NIR}} || [[Dan Ballard (footballer)|Daniel Ballard]]
+| 2 || 0 || 0 || 0 || 0 || 0 || 0 || 0 || 0 || 0 || 0 || 0 || '''2''' || '''0''' || '''0'''
+|-
+| 13 || [[Defender (association football)#Centre-back|CB]] || {{flagicon|ENG}} || [[Luke O'Nien]]
+| 1 || 0 || 0 || 0 || 0 || 0 || 1 || 0 || 0 || 0 || 0 || 0 || '''2''' || '''0''' || '''0'''
+|-
+| 15 || [[Defender (association football)#Centre-back|CB]] || {{flagicon|PAR}} || [[Omar Alderete]]
+| 1 || 0 || 0 || 0 || 0 || 0 || 0 || 0 || 0 || 1 || 0 || 0 || '''2''' || '''0''' || '''0'''
+|-
+| 32 || [[Defender (association football)#Full-back|RB]] || {{flagicon|NIR}} || [[Trai Hume]]
+| 0 || 0 || 0 || 0 || 0 || 0 || 0 || 0 || 0 || 2 || 0 || 0 || '''2''' || '''0''' || '''0'''
+|-
+| 34 || [[Midfielder#Defensive midfielder|CDM]] || {{flagicon|SUI}} || [[Granit Xhaka]]
+| 2 || 0 || 0 || 0 || 0 || 0 || 0 || 0 || 0 || 0 || 0 || 0 || '''2''' || '''0''' || '''0'''
+|-
+! rowspan="6" | 9
+| 6 || [[Defender (association football)#Full-back|LB]] || {{flagicon|FRA}} || [[Dayann Methalie]]
+| 1 || 0 || 0 || 0 || 0 || 0 || 0 || 0 || 0 || 0 || 0 || 0 || '''1''' || '''0''' || '''0'''
+|-
+| 9 || [[Forward (association football)#Centre forward|CF]] || {{flagicon|NED}} || [[Brian Brobbey]]
+| 1 || 0 || 0 || 0 || 0 || 0 || 0 || 0 || 0 || 0 || 0 || 0 || '''1''' || '''0''' || '''0'''
+|-
+| 10 || [[Forward (association football)#Winger|LW]] || {{flagicon|ECU}} || [[Nilson Angulo]]
+| 1 || 0 || 0 || 0 || 0 || 0 || 0 || 0 || 0 || 0 || 0 || 0 || '''1''' || '''0''' || '''0'''
+|-
+| 11 || [[Midfielder#Attacking midfielder|CAM]] || {{flagicon|ENG}} || [[Chris Rigg]]
+| 1 || 0 || 0 || 0 || 0 || 0 || 0 || 0 || 0 || 0 || 0 || 0 || '''1''' || '''0''' || '''0'''
+|-
+| 27 || [[Midfielder#Central midfielder|CM]] || {{flagicon|COD}} || [[Noah Sadiki]]
+| 1 || 0 || 0 || 0 || 0 || 0 || 0 || 0 || 0 || 0 || 0 || 0 || '''1''' || '''0''' || '''0'''
+|-
+| 28 || [[Midfielder#Central midfielder|CM]] || {{flagicon|FRA}} || [[Enzo Le Fée]]
+| 0 || 0 || 0 || 0 || 0 || 0 || 0 || 0 || 0 || 1 || 0 || 0 || '''1''' || '''0''' || '''0'''
+|-
+! colspan="5" | Total
+! 12 !! 1 !! 1
+!  0 !! 0 !! 0
+!  1 !! 0 !! 0
+!  6 !! 0 !! 0
+! 19 !! 1 !! 1
+|}
+
+==Awards==
+===Player awards===
+====Premier League Goal of the Month====
+{| class="wikitable sortable" style="text-align:center; font-size:95%;"
+|-
+!scope="col" style="background:#DD0000;color:#FFFFFF"|Month
+!scope="col" style="background:#DD0000;color:#FFFFFF"|{{abbr|Pos.|Position}}
+!scope="col" style="background:#DD0000;color:#FFFFFF"|Player
+!scope="col" style="background:#DD0000;color:#FFFFFF"|Opposition
+!scope="col" style="background:#DD0000;color:#FFFFFF"|Result
+!scope="col" style="background:#DD0000;color:#FFFFFF" class="unsortable"|{{abbr|Ref.|Reference(s)}}
+|-
+|August
+|FW
+|style="text-align:left;"|{{flagg|cxxlo|ECU}} [[Nilson Angulo]]
+|v. [[Ipswich Town F.C.|Ipswich Town]]
+|{{nom}}
+|<ref>{{cite news |title=Guinness Goal of the Month |url=https://www.premierleague.com/en/awards/goal-of-the-month/2026-27/august |access-date=12 September 2026 |publisher=Premier League |date=3 September 2026}}</ref>
+|}
+
+==References==
+{{Reflist}}
+
+{{Sunderland A.F.C.}}
+{{Sunderland A.F.C. seasons}}
+{{2026–27 in English men's football}}
+
+{{DEFAULTSORT:2026-27 Sunderland A.F.C. season}}
+[[Category:Sunderland A.F.C. seasons]]
+[[Category:2026–27 Premier League by team|Sunderland]]
+[[Category:2026–27 UEFA Europa League participants seasons|Sunderland]]

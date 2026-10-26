@@ -1,0 +1,512 @@
+# ブンデスリーガ18クラブ紹介 ⑤シュツットガルト（2026-10-25 作成。見本は 10/24 のフランクフルト）。tools/plbuild.py（CLUB_LEAGUE=bundesliga）で組み立て。
+# 材料は research/bd_data/stuttgart*.json・stuttgart_say.yaml・stuttgart_research.md。（出力名・theme.id・date・question・takeaway・season の viewpoint と出典・watch は手で足した。scratchpad の post.py）
+format: news
+voice_min: 0
+slot: other_1
+date: 2026年10月25日
+people:
+- シュツットガルト
+short_title: シュツットガルト、16位から1年で2位。なぜ
+series: ブンデスリーガチーム紹介
+theme:
+  id: bd_stuttgart
+  league: germany
+  league_name: ブンデスリーガ
+  kind: other
+  topic: シュツットガルト
+  title: シュツットガルトは16位の翌年に2位。勝ち点40を上積みできたのはなぜか
+  question: 16位の翌年に2位のシュツットガルト。勝ち点40を上積みできたのはなぜか
+  hook: 2023年に入れ替え戦へ回ったクラブが、いまはチャンピオンズリーグにいます。
+  lead: 白いシャツに、赤い胸の帯。1925年から続く目印。
+  opening_image: assets/stats/bd_stuttgart_data_t.png
+  takeaway: ヘーネス監督の就任から昨季までの110試合は1試合あたり勝ち点1.80。今季のリーグ戦は0.86で、5敗のうち4つが1点差。同じ監督のまま、数字は半分に届いていない
+thumbnail:
+  line1: シュツットガルトの1年
+  line2: 16位から2位へ
+  crest_main:
+  - シュツットガルト
+  tags:
+  - シュツットガルト
+  - ブンデスリーガ
+  - 遠藤航
+  - 伊藤洋輝
+  layout: classic
+  board: assets/stats/bd_stuttgart_data_t.png
+sections:
+- id: data
+  heading: いま見る理由と基礎DATA
+  main: true
+  tier: 背景
+  telop: 日本人8人がプレー。CLは3試合で無敗。リーグは7試合で15位
+  narrator: キャスター
+  say:
+  - text: 遠藤航や伊藤洋輝など、日本人8人がプレーしてきました。
+    image: assets/stats/bd_stuttgart_data_r1.png
+    no_telop: true
+  - text: 今季はチャンピオンズリーグで、3試合を2勝1引き分け。
+    image: assets/stats/bd_stuttgart_data_r2.png
+    no_telop: true
+  - text: 一方、リーグ戦は7試合で15位。バイエルンとの差は、勝ち点8です。
+    image: assets/stats/bd_stuttgart_data_r3.png
+    no_telop: true
+  - image: assets/stats/bd_stuttgart_data0.png
+    text: 創立は**1893年**。前身のクラブのひとつが、9月9日に生まれました。
+    no_telop: true
+  - image: assets/stats/bd_stuttgart_data1.png
+    text: 愛称は「ディ・ローテン」。ドイツ語で、赤のことです。
+    no_telop: true
+  - image: assets/stats/bd_stuttgart_map.png
+    text: ホームタウンはシュツットガルト。人口は約**61万人**。ドイツで6番目の大都市です。
+    no_telop: true
+  - image: assets/backgrounds/stadium_シュツットガルト.png
+    text: 本拠地はエムエイチピー・アレーナ。収容は**6万58人**で、18クラブでは5番目。
+  - image: assets/backgrounds/stadium_シュツットガルト.png
+    text: 2023年の夏までの名前は、メルセデス・ベンツ・アレーナです。
+  - image: assets/stats/bd_stuttgart_data4.png
+    text: 株の**78.2%**は、会員のクラブが持ちます。メルセデス・ベンツとポルシェも、10.4%ずつ。
+    no_telop: true
+  - image: assets/stats/bd_stuttgart_cups.png
+    text: ドイツ王者は**5回**、ドイツカップは**4回**。ブンデスリーガの優勝は、2007年が最後です。
+    no_telop: true
+  - image: assets/stats/bd_stuttgart_data6.png
+    text: クラブの最多得点は、カール・アルゲーヴァーの**166点**です。
+    no_telop: true
+  - image: assets/stats/bd_stuttgart_data7.png
+    text: 直近のタイトルは、**2025年**のドイツカップ。決勝でビーレフェルトに4対2。
+    no_telop: true
+  - image: assets/stats/bd_stuttgart_last.png
+    text: 昨季のリーグ戦は**4位**。勝ち点**62**で、チャンピオンズリーグに戻りました。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/VfB_Stuttgart
+  - https://en.wikipedia.org/wiki/2026–27_VfB_Stuttgart_season
+  - https://site.api.espn.com/apis/v2/sports/soccer/ger.1/standings
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/teams/134/schedule?season=2026
+  - https://en.wikipedia.org/wiki/Wataru_Endo
+  - https://en.wikipedia.org/wiki/Hiroki_It%C5%8D_(footballer,_born_1999)
+  bg: assets/backgrounds/stadium_シュツットガルト_in.png
+  official: false
+- id: japan
+  heading: 2011年から、日本人は8人。誰が何を残したのか
+  tier: 背景
+  telop: 2011年から日本人8人。遠藤航はリーグ戦120試合13得点
+  narrator: 解説
+  say:
+  - text: 2011年から、少なくとも8人の日本人選手が、シュツットガルトに在籍しました。
+    card:
+      type: table
+      title: シュツットガルトの日本人選手（リーグ戦。2部を含む）
+      columns:
+      - 名前
+      - 在籍
+      - 試合と得点
+      rows:
+      - - 岡崎慎司
+        - 2011-2013
+        - 63試合10得点
+      - - 酒井高徳
+        - 2012-2015
+        - 71試合1得点
+      - - 細貝萌
+        - 2016-2017
+        - 10試合0得点
+      - - 浅野拓磨
+        - 2016-2018
+        - 41試合5得点
+      - - 遠藤航
+        - 2019-2023
+        - 120試合13得点
+      - - 伊藤洋輝
+        - 2021-2024
+        - 85試合2得点
+      - - 原口元気
+        - 2023-2024
+        - 13試合0得点
+      - - チェイス・アンリ
+        - 2024-2025
+        - 12試合0得点
+    image: assets/images/bd_stuttgart_team2013/scene.jpg
+  - 最初は岡崎慎司。2011年に加わり、リーグ戦**63試合**で10得点を挙げました。
+  - 酒井高徳は2012年から、レンタルの期間も含めてリーグ戦**71試合**。
+  - text: 遠藤航は、2019年から4年在籍。主将も務めました。
+    card: none
+    image: assets/images/bd_stuttgart_pair_endo_ito/01.jpg
+  - 2022年5月の最終節、ケルン戦。遠藤の決勝点で、入れ替え戦を避けて残りました。
+  - 伊藤洋輝は2021年から3年。2位になった年も、守備の主力の1人でした。
+  - 浅野拓磨、細貝萌、原口元気、チェイス・アンリもプレーしました。
+  - 今季の登録選手に、日本人はいません。
+  sources:
+  - https://en.wikipedia.org/wiki/Shinji_Okazaki
+  - https://en.wikipedia.org/wiki/G%C5%8Dtoku_Sakai
+  - https://en.wikipedia.org/wiki/Hajime_Hosogai
+  - https://en.wikipedia.org/wiki/Takuma_Asano
+  - https://en.wikipedia.org/wiki/Wataru_Endo
+  - https://en.wikipedia.org/wiki/Hiroki_It%C5%8D_(footballer,_born_1999)
+  - https://en.wikipedia.org/wiki/Genki_Haraguchi
+  - https://en.wikipedia.org/wiki/Anrie_Chase
+  - https://en.wikipedia.org/wiki/2021%E2%80%9322_VfB_Stuttgart_season
+  bg: assets/backgrounds/stadium_シュツットガルト_in.png
+  official: false
+- id: rise
+  heading: 勝ち点33から73へ。1年で何が起きたのか
+  tier: 背景
+  telop: 2023年4月に監督交代。26試合で勝ち点20、残り8試合で13
+  narrator: 解説
+  card:
+    type: table
+    title: 2022-23から2023-24のリーグ戦
+    columns: &id001
+    - ''
+    - ''
+    rows:
+    - - 2022-23 第26節まで
+      - 26試合で勝ち点20
+    - - 2022-23 残り8試合
+      - 8試合で勝ち点13
+  say:
+  - 2023年4月3日、シュツットガルトは監督を代えます。
+  - 来たのは、セバスティアン・ヘーネスでした。
+  - それまでの26試合は勝ち点**20**。残りの8試合で13、合わせて**33**でした。
+  - 16位で、2部の3位ハンブルクとの入れ替え戦へ。
+  - text: 合計6対1で勝ち、1部に残ります。
+    card:
+      type: table
+      title: 2022-23から2023-24のリーグ戦
+      columns: *id001
+      rows:
+      - - 入れ替え戦
+        - ハンブルガーSVに合計6対1
+      - - 2023-24
+        - 34試合で勝ち点73、2位
+  - 翌シーズンは34試合で**23勝**。勝ち点**73**で、2位に入りました。
+  - 前のシーズンから、勝ち点40の上積みです。
+  - text: 点を取ったのはギラシ。リーグ戦**28得点**で、クラブの1シーズンの記録を作りました。
+    image: assets/images/bd_stuttgart_guirassy/scene.jpg
+  - 失点は、前のシーズンの57から**39**に減っています。
+  sources:
+  - https://en.wikipedia.org/wiki/2022%E2%80%9323_VfB_Stuttgart_season
+  - https://en.wikipedia.org/wiki/2022%E2%80%9323_Bundesliga
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/teams/134/schedule?season=2022
+  - https://site.api.espn.com/apis/v2/sports/soccer/ger.1/standings?season=2023
+  - https://en.wikipedia.org/wiki/Serhou_Guirassy
+  bg: assets/backgrounds/stadium_シュツットガルト_in.png
+  official: false
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: 点を取りにいく。若い選手を育てる。落ちても1年で戻る
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns: &id002
+    - ''
+    - ''
+    rows:
+    - &id003
+      - プレーの色
+      - 点を取りにいく
+  say:
+  - text: シュツットガルトのプレーの色は、点を取りにいくこと。
+    image: assets/photos/bd/stuttgart/stuttgart_manager_f5c404cf.jpg
+  - 2位になった2023年から24年は、**78得点**。1試合あたり約2.3点です。
+  - text: 運営の型は、若い選手を育てること。
+    card:
+      type: table
+      title: このクラブの特徴
+      columns: *id002
+      rows:
+      - *id003
+      - &id004
+        - 運営の型
+        - 若い選手を育てる
+  - 19歳以下のドイツ選手権は**10回**優勝。どのクラブよりも多い数です。
+  - text: 気質は、落ちても1年で戻ること。
+    card:
+      type: table
+      title: このクラブの特徴
+      columns: *id002
+      rows:
+      - *id003
+      - *id004
+      - - クラブの気質
+        - 落ちても1年で戻る
+  - 2016年と2019年に2部へ落ち、どちらも1年で1部に戻りました。
+  sources:
+  - https://en.wikipedia.org/wiki/VfB_Stuttgart
+  - https://site.api.espn.com/apis/v2/sports/soccer/ger.1/standings?season=2023
+  - https://site.api.espn.com/apis/v2/sports/soccer/ger.1/standings?season=2015
+  - https://site.api.espn.com/apis/v2/sports/soccer/ger.1/standings?season=2018
+  bg: assets/backgrounds/stadium_シュツットガルト_in.png
+  official: false
+- id: episode
+  heading: 1989年、マラドーナのナポリと決勝。どこまで迫ったのか
+  tier: 背景
+  telop: 1989年のユーエファカップ決勝。ナポリに合計4対5
+  narrator: 解説
+  card:
+    type: table
+    title: 1988-89のユーエファカップ
+    columns: &id005
+    - ''
+    - ''
+    rows:
+    - - 準決勝
+      - ドレスデンに合計2対1
+  say:
+  - text: 1989年、シュツットガルトはユーエファカップを勝ち進みます。
+    image: assets/images/bd_stuttgart_neckar/scene.jpg
+  - いまのヨーロッパリーグの、前身の大会です。
+  - text: 準決勝は東ドイツのドレスデン。合計2対1で、決勝へ進みました。
+    card:
+      type: table
+      title: 1988-89のユーエファカップ
+      columns: *id005
+      rows:
+      - - 決勝 1戦目（敵地）
+        - ナポリに1対2
+  - 決勝の相手は、マラドーナが主将を務めるナポリです。
+  - 1戦目は敵地で1対2の負け。先制のあと、マラドーナのPKで追いつかれました。
+  - text: 2戦目は、いまの本拠地で3対3の引き分け。
+    card:
+      type: table
+      title: 1988-89のユーエファカップ
+      columns: *id005
+      rows:
+      - - 決勝 2戦目（ホーム）
+        - ナポリと3対3
+  - クリンスマンも決めましたが、合計4対5で敗れ、届きませんでした。
+  sources:
+  - https://en.wikipedia.org/wiki/1989_UEFA_Cup_final
+  - https://en.wikipedia.org/wiki/1988%E2%80%9389_UEFA_Cup
+  bg: assets/backgrounds/stadium_シュツットガルト_in.png
+  official: false
+- id: legends
+  heading: このクラブを語る3人
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - &id006
+      - ティモ・ヒルデブラント
+      - 1999-2007
+      - 884分無失点
+  say:
+  - text: ヒルデブラントは1999年から8年、シュツットガルトのゴールを守りました。
+    image: assets/photos/bd/stuttgart/stuttgart_legend_8cc14cf6.jpg
+  - 2003年から04年に、**884分**続けて無失点。ブンデスリーガの記録です。
+  sources:
+  - https://en.wikipedia.org/wiki/Timo_Hildebrand
+  - https://en.wikipedia.org/wiki/Krasimir_Balakov
+  - https://en.wikipedia.org/wiki/Mario_G%C3%B3mez
+  bg: assets/backgrounds/stadium_シュツットガルト_in.png
+  official: false
+- id: legends2
+  heading: このクラブを語る3人（2人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id006
+    - &id007
+      - クラシミール・バラコフ
+      - 1995-2003
+      - 1997年カップ優勝
+  say:
+  - text: バラコフは1995年から2003年まで在籍。ブルガリア代表で92試合の司令塔です。
+    image: assets/photos/bd/stuttgart/stuttgart_legend_5791ba09.jpg
+  - シュツットガルトでは、エウベル、ボビッチと攻めを組みました。
+  - 1997年には、ドイツカップを獲っています。
+  sources:
+  - https://en.wikipedia.org/wiki/Timo_Hildebrand
+  - https://en.wikipedia.org/wiki/Krasimir_Balakov
+  - https://en.wikipedia.org/wiki/Mario_G%C3%B3mez
+  bg: assets/backgrounds/stadium_シュツットガルト_in.png
+  official: false
+- id: legends3
+  heading: このクラブを語る3人（3人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id006
+    - *id007
+    - - マリオ・ゴメス
+      - 2003-09・18-20
+      - 2007年の優勝
+  say:
+  - text: ゴメスはシュツットガルトに2度在籍。2003年からと、2018年からです。
+    image: assets/photos/bd/stuttgart/stuttgart_legend_b7f2b553.jpg
+  - 2007年の優勝の年は**14得点**。ドイツの年間最優秀選手にもなりました。
+  sources:
+  - https://en.wikipedia.org/wiki/Timo_Hildebrand
+  - https://en.wikipedia.org/wiki/Krasimir_Balakov
+  - https://en.wikipedia.org/wiki/Mario_G%C3%B3mez
+  bg: assets/backgrounds/stadium_シュツットガルト_in.png
+  official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はヘーネス。就任は2023年4月。契約は2028年まで
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - セバスティアン・ヘーネス
+    - - 就任
+      - 2023年4月3日
+    - - 契約
+      - 2028年まで
+  say:
+  - text: 今季の監督も、セバスティアン・ヘーネス。**44歳**のドイツ人です。
+    image: assets/photos/bd/stuttgart/stuttgart_manager_f5c404cf.jpg
+  - 就任は**2023年4月**。契約は、2028年までです。
+  - 子どものころ、シュツットガルトの下部組織でもプレーしていました。
+  sources:
+  - https://en.wikipedia.org/wiki/VfB_Stuttgart
+  - https://en.wikipedia.org/wiki/Sebastian_Hoene%C3%9F
+  - https://en.wikipedia.org/wiki/2022%E2%80%9323_VfB_Stuttgart_season
+  bg: assets/backgrounds/stadium_シュツットガルト_in.png
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - text: 今季の登録選手は29人です。
+    image: assets/stats/bd_stuttgart_gk.png
+    no_telop: true
+  - image: assets/stats/bd_stuttgart_gk_f.png
+    text: ゴールキーパーは4人。
+    no_telop: true
+  - image: assets/stats/bd_stuttgart_gk_f.png
+    text: ファビアン・ブレドロウはリーグ戦で**32試合**。
+    no_telop: true
+  - image: assets/stats/bd_stuttgart_df_f.png
+    text: ディフェンダーは10人。
+    no_telop: true
+  - image: assets/stats/bd_stuttgart_df_f.png
+    text: マクシミリアン・ミッテルシュテットはドイツ代表で**16試合**。
+    no_telop: true
+  - image: assets/stats/bd_stuttgart_df_f.png
+    text: ヨシャ・ヴァグノマンはリーグ戦で**102試合**。
+    no_telop: true
+  - image: assets/stats/bd_stuttgart_mf_f.png
+    text: ミッドフィールダーは7人。
+    no_telop: true
+  - image: assets/stats/bd_stuttgart_mf_f.png
+    text: アタカン・カラゾルはリーグ戦で**190試合**。
+    no_telop: true
+  - image: assets/stats/bd_stuttgart_mf_f.png
+    text: クリス・フューリッヒはドイツ代表で**10試合**。
+    no_telop: true
+  - image: assets/stats/bd_stuttgart_fw_f.png
+    text: フォワードは8人。
+    no_telop: true
+  - image: assets/stats/bd_stuttgart_fw_f.png
+    text: 主将を務めるのが**デニズ・ウンダフ**。
+    no_telop: true
+  - image: assets/stats/bd_stuttgart_fw_f.png
+    text: リーグ戦で**91試合**に出ています。
+    no_telop: true
+  - image: assets/stats/bd_stuttgart_fw_f.png
+    text: エルメディン・デミロヴィッチは、ボスニア・ヘルツェゴビナ代表で**48試合**。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/VfB_Stuttgart
+  bg: assets/backgrounds/stadium_シュツットガルト_in.png
+  official: false
+- id: season
+  heading: 今季のここまで
+  tier: 報道
+  telop: 7試合で2勝5敗。15位
+  narrator: 解説
+  card:
+    type: table
+    title: ブンデスリーガの結果
+    columns:
+    - 節
+    - 相手
+    - 結果
+    rows:
+    - - 第1節
+      - バイエルン（アウェー）
+      - 1対5
+    - - 第2節
+      - ケルン（ホーム）
+      - 4対1
+    - - 第3節
+      - ホッフェンハイム（アウェー）
+      - 1対2
+    - - 第4節
+      - ドルトムント（ホーム）
+      - 0対1
+    - - 第5節
+      - パーダーボルン（アウェー）
+      - 2対0
+    - - 第6節
+      - ハンブルガーSV（アウェー）
+      - 0対1
+    - - 第7節
+      - ボルシアMG（ホーム）
+      - 2対3
+  say:
+  - ブンデスリーガは7試合を終えて、**2勝5敗**です。
+  - 順位は**15位**、勝ち点は**6**です。
+  - 5つの負けのうち、4つは1点差でした。
+  - チャンピオンズリーグでは、ここまで負けていません。
+  - text: ヘーネス監督の就任から昨季までは、110試合で、1試合あたり勝ち点**1.80**。
+    card:
+      type: stats
+      title: 1試合あたりの勝ち点（リーグ戦）
+      items:
+      - - '1.80'
+        - ''
+        - 就任から昨季まで 110試合
+      - - '0.86'
+        - ''
+        - 今季 7試合
+      focus: 1
+  - text: 今季のリーグ戦は、1試合あたり**0.86**です。
+    mark:
+      kind: circle
+      item: 1
+  - シュツットガルトの次は、ドイツ時間の28日。
+  - ドイツカップの2回戦で、敵地のパーダーボルンと戦います。
+  sources:
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/teams/134/schedule?season=2026
+  - https://site.api.espn.com/apis/v2/sports/soccer/ger.1/standings
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/teams/134/schedule?season=2026
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/teams/134/schedule?season=2022
+  - https://site.api.espn.com/apis/v2/sports/soccer/ger.1/standings?season=2023
+  bg: assets/backgrounds/stadium_シュツットガルト_in.png
+  official: false
+  viewpoint: true
+watch: 毎日、数字でサッカーを読み解きます

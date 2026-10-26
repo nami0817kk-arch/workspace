@@ -1,0 +1,146 @@
+# 取材メモ（2026年10月26日）鎌田大地フル出場。パレス0-2ニューカッスル（PL第8節、25日）。ホームでブーイング、サージュ監督の言葉。ニュースのショート。見せ方 X＝冒頭に強い一言
+# 取材: 2026-10-26。requests（ブラウザUA）で本文を読んだ。検索エンジンのAI要約は使っていない。
+#   ・ゲキサカ 2026-10-26 01:12「鎌田フル出場のクリスタル・パレスが連敗…」（https://web.gekisaka.jp/news/world/detail/?461833-461833-fl、全文読んだ）:
+#       鎌田はボランチの一角で先発、冨安は負傷でメンバー外。後半2分 デディッチ→マーフィーのクロス→オスラ。後半13分 デディッチのクロスにバーンズが右足ダイレクト。
+#       後半32分 ピノの肘打ちでVAR→イエロー。2試合連続のノーゴール。17位。
+#       ※本文の「リーグ単独最多17失点」「2勝1分け4敗」は ESPN の順位表（8試合 2勝1分5敗・19失点）・BBC（8試合で5敗目・19失点）と食い違う → 数字は ESPN・BBC を使う。
+#   ・ESPN 試合記録（site.api.espn.com summary event=401879254）: シュート パレス17・ニューカッスル10、枠内 4・2、支配率 52.6%・47.4%。得点 47分オスラ・58分バーンズ。鎌田は先発・交代なし、シュート1。
+#     ESPN 順位表（eng.1 standings、26日朝）: パレス 8試合 2勝1分5敗 9得点19失点 勝ち点7 17位。失点2番目はイプスウィッチ16。18位フォレスト勝ち点6。
+#     ESPN 記事: 試合終了の笛でホームの一部からブーイング。
+#   ・パレス公式 試合レポート（https://www.cpfc.co.uk/news/match-reports/match-report-highlights-crystal-palace-newcastle-october-2026/）:
+#       7分、マクニールが運んで横へ → 鎌田のシュートはゴール前を横切り（当たり損ね）、マテタに届きかけて外へ。前半はパレスの方が機会が多かった。
+#   ・パレス公式 サージュ監督（https://www.cpfc.co.uk/news/first-team/sage-reacts-to-newcastle-defeat/）: "we missed 15 minutes in this game: the first 15 minutes in the second-half." 次はリーグカップ（カラバオ杯）でフラムとのアウェー（週の半ば）。
+#   ・BBC（https://www.bbc.co.uk/sport/football/articles/c6kg5jmrzd2jo）: サージュは3年契約の4か月目。会見で "There is no noise inside the club." "The boos are normal because we don't have the result." "Inside, we are just really focused on solutions." 次のリーグ戦は土曜にトッテナムのアウェー。
+# 【言わないこと】媒体名／鎌田の公式戦100試合（10/23 の本で使った）／ブライトン戦0-5の中身（10/19 の本）／解任の憶測（言い切らない。言うなら「進退は決まっていない」）／VAR の場面／冨安（10/20 の本）／評論家の「優しすぎる」。
+# 本人の言葉: 鎌田本人の試合後の言葉は見つからなかった（ゲキサカ・BBC・ESPN・パレス公式）。監督の言葉はある → 鎌田が主語の X（監督の言葉は語りの中で引く）。
+# 反応: 0件（作らない。approve は --no-voices）。
+# 写真: 試合の記事の主写真はゲキサカ＝Getty（不可）。パレス公式の写真（cortextech）から鎌田を3枚（ドリブル・ゴール前・昨季のカンファレンスリーグ優勝杯）。今日の試合の鎌田の写真は見つからなかった。
+#   サージュ監督の試合中の写真は、写っている人が本人と確かめられず使わない。
+slot: japanese
+date: "2026年10月26日"
+format: news
+no_main: true
+people: [鎌田大地, クリスタル・パレス, ニューカッスル, ピエール・サージュ]
+short_style: X
+short_hook_word: ブーイング
+short_photos:
+  - assets/images/20261026_kamada_palace_newcastle/01_v.jpg
+  - assets/images/20261026_kamada_palace_newcastle/02_v.jpg
+  - assets/images/20261026_kamada_palace_newcastle/03_v.jpg
+short_question: 鎌田大地のいるパレス、立て直すには何が要ると思いますか。
+short_hook: 鎌田大地はフル出場。ホームのパレスに、ブーイングが起きました。
+short_telops:
+  - {match: 第8節, text: 25日 プレミアリーグ第8節/パレス 0-2 ニューカッスル}
+  - {match: シュートは17本, text: シュート 17本 対 10本/枠内 4本 対 2本}
+  - {match: 後半の立ち上がり, text: 後半2分 オスラ/後半13分 バーンズ}
+  - {match: 15分を落とした, text: サージュ監督/「後半の最初の15分を落とした」}
+  - {match: 19失点, text: 8試合で19失点/リーグでいちばん多い}
+
+theme:
+  id: kamada_palace_newcastle
+  league: england
+  prefix: ""
+  title: 鎌田大地は90分。ホームでブーイングを浴びたパレス、監督が返した言葉
+  hook: ""
+  question: ホームで0対2、ブーイングを浴びたパレスの監督は何と答えたのか
+  takeaway: シュートは17本対10本で上回りながら、後半の立ち上がりの11分で2失点。8試合で19失点はリーグでいちばん多い
+
+thumbnail:
+  line1: 鎌田大地、90分
+  line2: パレスにブーイング
+  tags: [鎌田大地, クリスタル・パレス, ニューカッスル]
+  layout: face
+  photo: assets/images/20261026_kamada_palace_newcastle/01_w.jpg
+  short_photo: assets/images/20261026_kamada_palace_newcastle/01_v.jpg
+
+answer: 監督は「ブーイングは普通だ。クラブの中に雑音はない」と答えた
+watch: 次のパレスの試合
+
+sections:
+  - id: what
+    main: true
+    heading: ホームで0対2、鎌田は最後まで
+    tier: 確定
+    telop: パレス0-2ニューカッスル。鎌田はボランチでフル出場
+    say:
+      - text: 25日のプレミアリーグ第8節。
+        image: assets/images/20261026_kamada_palace_newcastle/01_w.jpg
+      - text: 鎌田大地のクリスタル・パレスは、ホームでニューカッスルに0対2で負けました。
+        image: assets/images/20261026_kamada_palace_newcastle/01_w.jpg
+        card: none
+      - text: 鎌田はボランチで先発し、交代せずに90分を戦いました。
+        image: assets/images/20261026_kamada_palace_newcastle/02_w.jpg
+        card: none
+      - text: 前半7分には、鎌田のシュートがゴール前を横切って外れました。
+        image: assets/images/20261026_kamada_palace_newcastle/02_w.jpg
+        card: none
+      - text: 試合を通して、シュートは17本。ニューカッスルの10本を上回りました。
+        image: assets/images/20261026_kamada_palace_newcastle/01_w.jpg
+        card: {type: stats, title: パレス対ニューカッスル, items: [[17, 本, パレスのシュート], [10, 本, ニューカッスルのシュート], [0, 点, パレスの得点]], focus: 0}
+      - text: それでも、後半の立ち上がりに試合が決まります。
+        image: assets/images/20261026_kamada_palace_newcastle/01_w.jpg
+        card: none
+      - text: 後半2分にオスラ、13分にバーンズ。11分のあいだに2点を奪われました。
+        emph: true
+        image: assets/images/20261026_kamada_palace_newcastle/02_w.jpg
+        card: {type: timeline, title: 後半の立ち上がり, rows: [[後半2分, オスラが先制], [後半13分, バーンズが追加点]], highlight_row: 1}
+      - text: 試合が終わると、ホームのスタンドからブーイングが起きました。
+        image: assets/images/20261026_kamada_palace_newcastle/03_w.jpg
+        card: none
+    official: true
+    sources:
+      - https://web.gekisaka.jp/news/world/detail/?461833-461833-fl
+      - https://www.cpfc.co.uk/news/match-reports/match-report-highlights-crystal-palace-newcastle-october-2026/
+      - https://www.espn.com/soccer/match/_/gameId/401879254
+
+  - id: sage
+    heading: 監督が返した言葉
+    tier: 確定
+    telop: サージュ監督「クラブの中に雑音はない」
+    say:
+      - text: 試合後、就任4か月のサージュ監督は、敗因をこう話しました。
+        image: assets/images/20261026_kamada_palace_newcastle/03_w.jpg
+      - text: 「後半の最初の15分を落とした」。
+        image: assets/images/20261026_kamada_palace_newcastle/01_w.jpg
+        card: none
+      - text: ブーイングについて聞かれると、
+        image: assets/images/20261026_kamada_palace_newcastle/01_w.jpg
+        card: none
+      - text: 「結果が出ていないのだから、ブーイングは普通のことだ」。
+        image: assets/images/20261026_kamada_palace_newcastle/02_w.jpg
+        card: none
+      - text: そして「クラブの中に雑音はない」。
+        emph: true
+        image: assets/images/20261026_kamada_palace_newcastle/02_w.jpg
+        card: none
+      - text: 「中では、解決策だけに集中している」と続けました。
+        image: assets/images/20261026_kamada_palace_newcastle/03_w.jpg
+        card: none
+    official: true
+    sources:
+      - https://www.cpfc.co.uk/news/first-team/sage-reacts-to-newcastle-defeat/
+      - https://www.bbc.co.uk/sport/football/articles/c6kg5jmrzd2jo
+
+  - id: view
+    viewpoint: true
+    heading: 8試合で19失点
+    tier: 報道
+    telop: 8試合で19失点はリーグでいちばん多い。勝ち点7で17位
+    say:
+      - text: 見立てです。鎌田大地が中盤を担うパレスは、ここまで8試合で19失点。
+        image: assets/images/20261026_kamada_palace_newcastle/02_w.jpg
+        card: {type: stats, title: パレスの8試合, items: [[19, 失点, リーグでいちばん多い], [16, 失点, 2番目のイプスウィッチ], [7, 点, 勝ち点（17位）]], focus: 0}
+      - text: 2番目に多いイプスウィッチの16より、3つ多い数字です。
+        image: assets/images/20261026_kamada_palace_newcastle/02_w.jpg
+        card: {type: stats, title: パレスの8試合, items: [[19, 失点, リーグでいちばん多い], [16, 失点, 2番目のイプスウィッチ], [7, 点, 勝ち点（17位）]], focus: 1}
+      - text: 勝ち点は7で17位。18位のフォレストとは、1点しか離れていません。
+        image: assets/images/20261026_kamada_palace_newcastle/03_w.jpg
+        card: none
+      - text: 次は週の半ばにリーグカップでフラム、週末はトッテナムとのアウェー戦です。
+        image: assets/images/20261026_kamada_palace_newcastle/01_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.espn.com/soccer/standings/_/league/eng.1
+      - https://www.bbc.co.uk/sport/football/articles/c6kg5jmrzd2jo
+      - https://www.cpfc.co.uk/news/first-team/sage-reacts-to-newcastle-defeat/

@@ -1,0 +1,561 @@
+# マヌ・コネ（ローマ／フランス代表）の紹介。選手紹介の8節の型（2026-10-26、シリーズ「有名選手の紹介」。key: player_624690）。
+# **FotMob は使わない**。数字は Transfermarkt API（プロフィール・市場価値の推移・試合ごとの記録。控え research/raw/20261026_kone_tm.json）と、自分で割った90分あたり・何分に1回。
+# **選んだ理由・重なり確認（2026-10-26）**：player_pool.py list（市場価値の順）で、scripts/ の 10/01〜10/25 に紹介があるのは 1〜19位・21位（ハーランド〜ソボスライ、カイセド）。
+#   未紹介で市場価値が最上位は 20位のマヌ・コネ（6000万ユーロ。9/22 に5000万から上がった）。セリエA・ローマ（5大リーグの1部）。
+#   今季もセリエAの1部：TM の試合記録で 26/27 のセリエA 6試合・CL 2試合（8/24〜10/14）、ESPN の 9/19 ローマ対インテル（セリエA）にコネの2得点。英語版Wikipedia の infobox も currentclub = Roma。
+#   scripts/・research/posted.json・covered.yaml を「コネ／Koné／Kone／624690」で grep：紹介・比べるの台本は0件（「コネ」は遠藤・レバンテの台本の別語の一部だけ）。posted.json・covered.yaml は0件。
+#   現役（10/14 の CL に17分出場。10/17 からローマの3試合はけがで欠場：TM の記録）。女子・Jリーグでもない。
+# **数字の軸**：トップチームと代表の通算（下部組織・Bチーム・U18〜U23 は除く）：トゥールーズ 59試合6得点／ボルシアMG 86試合6得点／ローマ 90試合6得点／フランス代表 22試合0得点 → 257試合18得点。Wikipedia の表と一致。
+#   90分あたりのパス（TM。記録が全試合そろう 22/23 から）：46.3（22/23 グラードバッハ）→39.9→45.9（24/25 ローマ）→51.3→今季58.2。成功率 87.2%・85.7%・90.9%・90.5%・今季90.7%。
+#   得点に絡むペース（得点＋アシスト、全公式戦の出場時間）：21/22 4で2355分＝589分／22/23 2で2710分＝1355分／23/24 3で1717分＝572分／24/25 5で3437分＝687分／25/26 5で2758分＝552分／今季 2で481分＝241分。
+#   市場価値：2019/9 15万ユーロ → 2023/6 4000万 → 2024/5 2000万 → 2025/6 4000万 → 2025/10 5000万 → 2026/9/22 6000万（最高）。15万の400倍。
+# **日本との接点**：ボルシアMG で板倉滉とチームメイト（板倉の加入は2022年夏）。TM の試合記録を突き合わせて、2人とも出た公式戦は34試合（控え research/raw/20261026_kone_itakura.json）。経歴の節に置く。
+# **一次情報・出典**：ESPN の試合記録（2026-09-19 ローマ 2-2 インテル：6分・37分コネ、46分・79分ラウタロ／2026 W杯 準決勝 フランス 0-2 スペイン、3位決定戦 フランス 4-6 イングランド）／
+#   ローマ公式（2024-08-30 加入の発表）／ボルシアMG 公式（2021-01-21 獲得の発表）／英語版Wikipedia（コロンブ生まれ・コートジボワール出身の両親・下部組織・2019/5/24 ディジョン戦でデビュー・900万ユーロの報道・ポカールのバイエルン戦 5-0 で初得点・推定1800万ユーロ・五輪銀・2024/9/6 イタリア戦で代表デビュー・W杯メンバー）。
+# **入れなかったもの**：年俸、私生活、けがの部位、宗教、22/23 の警告数。FotMob の指標。
+# **本人の言葉**：取れなかった（Wikipedia の引く romapress・Forbes は WebFetch/requests で当たっていない。ローマ公式の加入記事に発言の引用は無い）。台本に発言は置かない。
+# **不安**：今季の数は 10/25 時点。けがからの復帰時期は確かめていない。02.jpg（ローマの練習着、遠景）は顔が小さく、Commons の説明とファイル名で本人としている。
+# **日本語名・読み**：マヌ・コネ（audio_query: マ'ヌ、コ'ネ）、ローマ、インテル、トゥールーズ、ディジョン、ボルシア・メンヒェングラートバッハ（グラードバッハ）、バイエルン、ラウタロ・マルティネス、板倉滉、コロンブ。
+date: 2026年10月26日
+slot: other_1
+format: news
+series: 有名選手の紹介
+people:
+- マヌ・コネ
+- 板倉滉
+theme:
+  id: player_624690
+  league: italy
+  league_name: セリエA
+  kind: other
+  topic: ローマ
+  title: マヌ・コネってどんな選手？ インテルから2点、ローマで何が変わったのか
+  question: ローマの中盤、マヌ・コネは、今季インテルから1試合で2点を奪った。点を取る役ではなかったMFに、何が変わったのか
+  takeaway: 通算257試合18得点。ローマで90分あたりのパスは24/25の45.9本から今季58.2本、成功率は3季とも90%超（グラードバッハは85〜87%）。得点に絡むペースは25/26の552分に1回から、今季は241分に1回（8試合。2点はインテル戦の1試合）
+  nameplate: マヌ・コネ｜ローマ MF／フランス代表
+  opening_image: assets/images/20261026_player_624690/pool/07_r.jpg
+  end_bg: assets/images/20261026_player_624690/pool/03_w.jpg
+  bgm: assets/audio/bgm_calm.wav
+watch: 毎日、数字でサッカーを読み解きます
+short_title: マヌ・コネってどんな選手？
+thumbnail:
+  line1: コネ、通算257試合18点
+  line2: インテル戦で1人2ゴール
+  tags:
+  - ローマ
+  photo: assets/images/20261026_player_624690/panel_01.jpg
+  photos: []
+  short_photo: assets/images/20261026_player_624690/pool/07_v.jpg
+sections:
+- id: hook
+  heading: 点を取る役ではなかったMFが、インテルから2点。コネに何が起きたのか
+  tier: 報道
+  telop: インテルから、1試合で2点
+  narrator: 解説
+  card: &hook_card
+    type: stats
+    title: マヌ・コネの数字
+    items:
+    - - '2'
+      - 点
+      - 9月、王者インテルから
+    - - '2'
+      - 点
+      - 25/26の1季で
+    - - '400'
+      - 倍
+      - 市場価値（2019年から）
+    focus: 0
+  say:
+  - text: ローマの中盤を支える、フランス代表のマヌ・コネ。
+    image: assets/images/20261026_player_624690/pool/07_r.jpg
+    card: none
+  - text: 今季、昨季の王者インテルを相手に、1人で2点を決めました。
+    image: assets/images/20261026_player_624690/pool/07_r.jpg
+    card:
+      <<: *hook_card
+      focus: 0
+    emph: true
+  - text: ローマでの昨季、25/26の得点は、1季を通して2点。
+    card:
+      <<: *hook_card
+      focus: 1
+  - text: その数に、たった1試合で並んだことになります。
+    card:
+      <<: *hook_card
+      focus: 1
+  - text: 市場価値は、18歳のころの400倍に。
+    card:
+      <<: *hook_card
+      focus: 2
+  - text: つなぎ役のMFに、いま何が変わっているのか。数字で見ていきます。
+    card: none
+  quotes_from: []
+  sources:
+  - https://www.espn.com/soccer/match/_/gameId/401874753
+  - https://www.transfermarkt.com/manu-kone/leistungsdatendetails/spieler/624690
+- id: data
+  heading: コネは、どんな立場で、いくらと見られている選手か
+  tier: 報道
+  telop: マヌ・コネの基礎DATA
+  narrator: 解説
+  card: &data_card
+    type: table
+    title: マヌ・コネ（ローマ）
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - 所属
+      - ローマ（17番）
+    - - ポジション
+      - セントラルMF
+    - - 生年月日
+      - 2001年5月17日（25歳）
+    - - 出身
+      - フランス（パリ近郊のコロンブ）
+    - - 身長・利き足
+      - 1.85m・右足
+    - - 代表
+      - フランス（22試合0得点）
+    - - 契約・市場価値
+      - 2029年まで・6000万ユーロ
+    source: Transfermarkt
+  say:
+  - text: コネの持ち場は、中盤の真ん中。ローマでは背番号17をつけています。
+    image: assets/images/20261026_player_624690/pool/02_w.jpg
+    card: none
+  - text: 2001年5月17日生まれの25歳。
+    image: assets/images/20261026_player_624690/pool/07_r.jpg
+    card:
+      <<: *data_card
+      highlight_row: 2
+  - text: パリ近郊のコロンブで、コートジボワール出身の両親のもとに生まれました。
+    card:
+      <<: *data_card
+      highlight_row: 3
+  - text: 市場価値は、推定で6000万ユーロ。これまででいちばん高い額です。
+    card:
+      type: line
+      title: コネの市場価値（百万ユーロ）
+      x:
+      - 19/9
+      - 21/6
+      - 23/6
+      - 24/5
+      - 25/6
+      - 25/10
+      - 26/9
+      series:
+      - - 市場価値
+        - - 0.15
+          - 7
+          - 40
+          - 20
+          - 40
+          - 50
+          - 60
+      focus: 市場価値
+      highlight: 26/9
+      source: Transfermarkt
+    emph: true
+  - text: 2019年9月に付いた最初の値は、15万ユーロでした。
+    card: none
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/manu-kone/profil/spieler/624690
+  - https://www.transfermarkt.com/manu-kone/marktwertverlauf/spieler/624690
+  - https://en.wikipedia.org/wiki/Manu_Kon%C3%A9
+- id: career
+  heading: パリ郊外の少年は、どうやってフランス代表の中盤にたどり着いたのか
+  tier: 背景
+  telop: トゥールーズから、ドイツ、そしてローマへ
+  narrator: 解説
+  card: &career_card
+    type: timeline
+    title: コネの歩み
+    rows:
+    - - '2019'
+      - 5月、18歳でリーグ・アン デビュー
+    - - '2021'
+      - グラードバッハへ。バイエルンから初得点
+    - - '2022'
+      - 日本代表の板倉滉とチームメイトに
+    - - '2024'
+      - パリ五輪で銀。8月、ローマへ
+    - - '2026'
+      - W杯で5試合。フランスは4位
+    focus: 2019
+  say:
+  - text: コネは、地元の小さなクラブから、パリFCなどの下部組織へ。
+    image: assets/images/20261026_player_624690/pool/07_r.jpg
+    card:
+      <<: *career_card
+      focus: 2019
+  - text: 15歳で、トゥールーズに移りました。
+    card:
+      <<: *career_card
+      focus: 2019
+  - text: 2019年5月24日、ディジョン戦。
+    card:
+      <<: *career_card
+      focus: 2019
+  - text: 18歳で、フランス1部のリーグ・アンにデビューします。
+    card:
+      <<: *career_card
+      focus: 2019
+  - text: 2部で戦った20/21は、リーグ戦の36試合に出場。
+    card: none
+  - text: 1部だった前の季の13試合から、大きく増えます。
+    card: none
+  - text: 2021年1月、ドイツのボルシア・メンヒェングラートバッハが獲得を発表。
+    image: assets/images/20261026_player_624690/pool/06_r.jpg
+    card:
+      <<: *career_card
+      focus: 2021
+  - text: 通称グラードバッハ。移籍金は、報道で900万ユーロ。
+    card:
+      <<: *career_card
+      focus: 2021
+  - text: 1季目の10月27日、ドイツカップのバイエルン戦。
+    card:
+      <<: *career_card
+      focus: 2021
+  - text: グラードバッハが5対0で大勝したこの試合で、クラブでの初ゴールを決めています。
+    card: none
+    emph: true
+  - text: 2022年の夏、グラードバッハに、日本代表の板倉滉が加わります。
+    image: assets/images/20261026_player_624690/pool/07_r.jpg
+    card:
+      <<: *career_card
+      focus: 2022
+  - text: 2人がそろって出た公式戦は、34試合。
+    card:
+      <<: *career_card
+      focus: 2022
+  - text: コネがグラードバッハで出た86試合の、およそ4割です。
+    card: none
+  - text: 2024年の夏は、パリ五輪。フランスの一員として決勝まで勝ち進みます。
+    card: none
+  - text: 決勝は延長の末、スペインに3対5。コネは105分まで戦い、銀メダルを手にしました。
+    card:
+      <<: *career_card
+      focus: 2024
+  - text: その年の8月30日、ローマへ。推定の移籍金は1800万ユーロ。
+    image: assets/images/20261026_player_624690/pool/01_w.jpg
+    card: none
+  - text: 9月6日には、イタリア戦でフランス代表にデビューします。
+    image: assets/images/20261026_player_624690/pool/03_w.jpg
+    card: none
+  - text: 2026年のワールドカップでは、5試合に出場。
+    image: assets/images/20261026_player_624690/pool/06_r.jpg
+    card:
+      <<: *career_card
+      focus: 2026
+  - text: フランスは準決勝でスペインに敗れ、4位で大会を終えています。
+    card:
+      <<: *career_card
+      focus: 2026
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Manu_Kon%C3%A9
+  - https://www.borussia.de/en/news/news/2021-01-21-borussia-sign-kouadio-kone-and-loan-him-out-until-the-end-of-the-season
+  - https://www.asroma.com/en/news/71769/manu-kone-is-a-new-giallorossi-player
+  - https://www.transfermarkt.com/manu-kone/leistungsdatendetails/spieler/624690
+  - https://www.espn.com/soccer/match/_/gameId/760514
+- id: style
+  heading: コネは、どれだけボールに触る選手になったのか
+  tier: 背景
+  telop: 90分あたりのパス
+  narrator: 解説
+  card: &pass_card
+    type: bars
+    title: 90分あたりのパス（クラブ・全公式戦）
+    unit: 本
+    items:
+    - label: 22/23 MG
+      value: 46.3
+    - label: 23/24 MG
+      value: 39.9
+    - label: 24/25 ローマ
+      value: 45.9
+    - label: 25/26 ローマ
+      value: 51.3
+    - label: 今季 ローマ
+      value: 58.2
+      highlight: true
+    source: Transfermarkt
+  say:
+  - text: コネの役目は、中盤の真ん中で、守備と攻撃をつなぐことです。
+    image: assets/images/20261026_player_624690/pool/02_w.jpg
+    card: none
+  - text: そのつなぎで、ボールに何回触っているのか。パスの数を、90分あたりに直しました。
+    image: assets/images/20261026_player_624690/pool/07_r.jpg
+    card: *pass_card
+  - text: グラードバッハの22/23は46.3本、23/24は39.9本でした。
+    card: *pass_card
+  - text: ローマに来ると、24/25は45.9本、25/26は51.3本。
+    card: *pass_card
+  - text: 今季は、ここまで58.2本です。
+    card: *pass_card
+    emph: true
+  - text: パスの成功率は、グラードバッハの2季が87.2%と85.7%。
+    image: assets/images/20261026_player_624690/pool/03_w.jpg
+    card: none
+  - text: ローマの3季は、どれも90%を超えています。
+    card: none
+  - text: 触る回数が増えても、ボールを失わない確かさは保たれています。
+    card: none
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/manu-kone/leistungsdatendetails/spieler/624690
+- id: past
+  heading: コネは、クラブの各季で、何試合に出て、いくつ点に絡んだのか
+  tier: 報道
+  telop: クラブでの6季
+  narrator: 解説
+  card: &past_card
+    type: table
+    title: コネ クラブでの6季（全公式戦）
+    columns:
+    - シーズン
+    - クラブ
+    - 試合
+    - 得点
+    - アシスト
+    rows:
+    - - 20/21
+      - トゥールーズ
+      - '42'
+      - '5'
+      - '1'
+    - - 21/22
+      - ボルシアMG
+      - '29'
+      - '3'
+      - '1'
+    - - 22/23
+      - ボルシアMG
+      - '31'
+      - '1'
+      - '1'
+    - - 23/24
+      - ボルシアMG
+      - '25'
+      - '2'
+      - '1'
+    - - 24/25
+      - ローマ
+      - '45'
+      - '2'
+      - '3'
+    - - 25/26
+      - ローマ
+      - '37'
+      - '2'
+      - '3'
+    source: Transfermarkt
+  say:
+  - text: トゥールーズの20/21は、42試合で5得点。
+    image: assets/images/20261026_player_624690/pool/06_r.jpg
+    card:
+      <<: *past_card
+      highlight_row: 0
+  - text: グラードバッハの3季は、29試合、31試合、25試合に出ています。
+    card:
+      <<: *past_card
+      highlight_row: 2
+  - text: いちばん多く出たのは、ローマ1季目の24/25。45試合で2得点3アシストです。
+    card:
+      <<: *past_card
+      highlight_row: 4
+    emph: true
+  - text: ローマでは、2季続けて、アシストが3つずつ。
+    card: none
+  - text: コネの通算です。トゥールーズは59試合で6得点。
+    card: &total_card
+      type: table
+      title: コネ 通算（トップチームと代表）
+      columns:
+      - 所属
+      - 試合
+      - 得点
+      rows:
+      - - トゥールーズ
+        - '59'
+        - '6'
+      - - ボルシアMG
+        - '86'
+        - '6'
+      - - ローマ
+        - '90'
+        - '6'
+      - - フランス代表
+        - '22'
+        - '0'
+      - - 合計
+        - '257'
+        - '18'
+      source: Transfermarkt
+      highlight_row: 0
+  - text: グラードバッハとローマでも、それぞれ6得点。
+    card:
+      <<: *total_card
+      highlight_row: 2
+  - text: フランス代表は、22試合に出ています。
+    card:
+      <<: *total_card
+      highlight_row: 3
+  - text: すべて足すと、257試合で18得点です。
+    card:
+      <<: *total_card
+      highlight_row: 4
+    emph: true
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/manu-kone/leistungsdatendetails/spieler/624690
+  - https://en.wikipedia.org/wiki/Manu_Kon%C3%A9
+- id: season
+  heading: 今季のコネは、ローマで何を見せているのか
+  tier: 報道
+  main: true
+  telop: 今季ここまで
+  narrator: 解説
+  card: &season_card
+    type: table
+    title: 今季のコネ（10月25日時点）
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - ローマ
+      - 8試合・481分・2得点
+    - - 9月19日 インテル戦
+      - 6分と37分に得点（2対2）
+    - - フランス代表
+      - 3試合・151分
+    - - 10月17日から
+      - けがで3試合欠場
+    source: Transfermarkt・ESPN
+    highlight_row: 0
+  say:
+  - text: ローマのMFマヌ・コネが、インテルとの大一番で2点。昨季は1季で2点の選手です。
+    image: assets/images/20261026_player_624690/pool/03_w.jpg
+    card: none
+    short_only: true
+  - text: 今季のコネ。ローマでは、ここまで8試合、481分に出ています。
+    image: assets/images/20261026_player_624690/pool/07_r.jpg
+    card:
+      <<: *season_card
+      highlight_row: 0
+  - text: 決めた2点は、どちらも同じ試合でした。
+    card:
+      <<: *season_card
+      highlight_row: 0
+  - text: 9月19日、ローマの本拠地に、昨季のリーグ王者インテルを迎えた一戦。
+    image: assets/images/20261026_player_624690/pool/02_w.jpg
+    card: none
+  - text: 6分、コネが先制ゴール。
+    image: assets/images/20261026_player_624690/pool/06_r.jpg
+    card:
+      <<: *season_card
+      highlight_row: 1
+  - text: 37分にも決めて、前半のうちに2点をリードします。
+    card:
+      <<: *season_card
+      highlight_row: 1
+    emph: true
+  - text: 後半、ラウタロ・マルティネスに2点を返され、最後は2対2で引き分けました。
+    image: assets/images/20261026_player_624690/pool/03_w.jpg
+    card: none
+  - text: 3日後の9月22日、コネの市場価値は1000万ユーロ上がりました。
+    card: none
+  - text: フランス代表でも、9月からの3試合に出場。
+    image: assets/images/20261026_player_624690/pool/07_r.jpg
+    card:
+      <<: *season_card
+      highlight_row: 2
+  - text: ただ、10月17日の試合からは、けがで3試合続けて欠場しています。
+    card:
+      <<: *season_card
+      highlight_row: 3
+  quotes_from: []
+  sources:
+  - https://www.espn.com/soccer/match/_/gameId/401874753
+  - https://www.transfermarkt.com/manu-kone/leistungsdatendetails/spieler/624690
+- id: view
+  heading: コネが点に絡むペースは、季を追って上がったのか。何分に1回かで見る
+  tier: 背景
+  viewpoint: true
+  narrator: 解説
+  telop: 点に絡むのは何分に1回か
+  card: &view_card
+    type: table
+    title: コネ 得点＋アシスト（全公式戦）
+    columns:
+    - 季
+    - 出場時間
+    - 得点＋アシスト
+    - 何分に1回
+    rows:
+    - - 21/22 MG
+      - 2355分
+      - '4'
+      - 589分
+    - - 22/23 MG
+      - 2710分
+      - '2'
+      - 1355分
+    - - 24/25 ローマ
+      - 3437分
+      - '5'
+      - 687分
+    - - 25/26 ローマ
+      - 2758分
+      - '5'
+      - 552分
+    - - 今季 ローマ
+      - 481分
+      - '2'
+      - 241分
+    source: Transfermarkt
+    highlight_row: 0
+  say:
+  - text: 最後に、コネが点に絡むペースを並べます。
+    image: assets/images/20261026_player_624690/pool/07_r.jpg
+    card:
+      <<: *view_card
+      highlight_row: 0
+  - text: 得点とアシストを足して、何分に1回かで見ます。
+    card:
+      <<: *view_card
+      highlight_row: 0
+  - text: グラードバッハの21/22は589分に1回。22/23は1355分に1回でした。
+    card:
+      <<: *view_card
+      highlight_row: 1
+  - text: ローマでは、24/25が687分、25/26が552分に1回。
+    card:
+      <<: *view_card
+      highlight_row: 3
+  - text: そして今季は、241分に1回。25/26の半分に満たない時間です。
+    card:
+      <<: *view_card
+      highlight_row: 4
+    emph: true
+    mark:
+      kind: circle
+      row: 4
+  - text: ただ、今季はまだ8試合。数字を作ったのは、インテル戦の1試合です。
+    image: assets/images/20261026_player_624690/pool/03_w.jpg
+    card: none
+  - text: 一方で、パスの数も、22/23から今季までに、90分に直して12本ほど増えました。
+    card: none
+  - text: ボールに触る回数が増えたいま、ゴール前に出ていく場面も増えるのか。
+    image: assets/images/20261026_player_624690/pool/01_w.jpg
+    card: none
+  - text: けがから戻ったあとの試合が、その答えになります。
+    card: none
+  quotes_from: []
+  sources:
+  - https://www.transfermarkt.com/manu-kone/leistungsdatendetails/spieler/624690

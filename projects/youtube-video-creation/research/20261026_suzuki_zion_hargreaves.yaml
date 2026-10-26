@@ -1,0 +1,137 @@
+# 取材メモ（2026年10月26日）元イングランド代表ハーグリーブスが鈴木彩艶を「実験室で作られた選手のようだ」と評した（ニュースのショート。見せ方 X＝評した言葉を冒頭の一言に）
+# 取材: 2026-10-26。requests（ブラウザUA）で本文を読んだ。検索エンジンのAI要約は使っていない（Yahoo!ニュースの記事検索で日本語記事の一覧を出しただけ）。
+#   ・フットボールゾーン 2026-10-26 06:50「王者撃破の好守連発に『実験室で作られたよう』　鈴木彩艶が放つ強烈なインパクト…現地称賛『完璧な補強』」https://www.football-zone.net/archives/680867 （全文。控え research/raw/20261026_hargreaves_680867.html）
+#       ハーグリーブス:「鈴木彩艶は実験室で作られた選手のようだ。素晴らしいサイズ、素晴らしい足元の技術を持った偉大なGKだ。優れたシュートストッパーであると同時に長い距離、短い距離どちらの配給も素晴らしい」
+#       地の文: 「英公共放送『BBC』で解説を務めた」。7試合連続先発。主写真はロイター（使わない）。
+#   ・スポニチ（Yahoo!ニュース）2026-10-25 10:14 https://news.yahoo.co.jp/articles/cd22598d60bb065beeb6f8e3321c75672cb67299 （全文）
+#       同じ言葉を「TNTスポーツで解説していた」（地元メディアによれば）として別の訳で載せる。主写真はAP（使わない）。
+#   ・スポニチ（Yahoo!ニュース）2026-10-26 02:00 https://news.yahoo.co.jp/articles/14a1f9379aa6cc1f750aefbaa0690de46a63f49f （全文）
+#       「1メートル90、100キロの巨体」「中継で解説を務めた…ハーグリーブス氏」。
+#   ・フットボールチャンネル（Yahoo!ニュース）2026-10-25 05:25 https://news.yahoo.co.jp/articles/8324a72b4356171e17509396a4c9d767879c2204 （全文。元はバーミンガム・ライブ）
+#       エメリ監督（試合後）:「ビルドアップにおいて、彼は本当に素晴らしい選手だ。短いパスを出すことができ、相手のプレスを突破するために、どこで数的優位を作れるかを理解している」
+#   ・BBC ライブ https://www.bbc.com/sport/football/live/cj62ynzwg4pet （控え research/raw/20261026_hargreaves_bbc_cj62ynzwg4pet.html。選手の記録の埋め込みを読んだ）
+#       鈴木: 90分・セーブ6・パス45本・成功率71.1%。ドンナルンマ（シティのGK）: 90分・セーブ0・パス13本・成功率100%。ハーグリーブスの言葉は BBC の本文には無かった。
+# 食い違い: 解説した局が FZ は BBC、スポニチ は TNTスポーツ。元の映像は見ていない → **局の名前は言わない**（「中継で解説した」とだけ。スポニチ 14a1f937 の言い方）。
+# 訳: ハーグリーブスの言葉は **FZ の訳で通す**（題材の元。スポニチの訳と混ぜない）。英語の原文は見ていない → 画面で「言葉は日本語の訳」と断る。
+# ボール保持（ESPN 試合データ、10/25 の控え research/raw/20261025_cash_espn_summary.json）: ヴィラ36.8%・シティ63.2% → 台本は数字を言わず「シティより短い」とだけ。
+# 自分で数えたこと（見立て）: パス 45÷13＝約3.5倍。成功本数 45×0.711＝32本、13×1.00＝13本。**ボールを持つ時間の数字（36.8%）は 10/25 のキャッシュの本で読んだので、今回は数字で言わない**。
+# エメリ監督の試合後の言葉（短いパス・数的優位）は60秒に入らず、途中で切れるので外した（作らない・縮めない）。
+# 【言わないこと】放送局の名前・媒体名・採点／セーブの場面の細部（10/25 の6セーブの本で読んだ）／「枠内7本で1点」の並べ方（同）／キャッシュの言葉（10/25 の本）／
+#   次の日程（10/25 のキャッシュの本と同じ締めになる）／移籍金・前任のマルティネス（10/22 以前の本）／VillaNEWS の「完璧な補強」（見出しの孫引きで本文が無い）。
+# 本人の言葉: 鈴木本人の試合後の言葉は無い（スポニチの「少しずつ成長できている」は試合前の言葉。題の出来事より前なので置かない）→ Y にしない。X（short_hook_word はハーグリーブスの言葉の頭）。
+# 反応: 0件（作らない。approve は --no-voices）。
+# 前の本との重なり: scripts/20261018〜26 を grep（実験室・ハーグリーブス・ドンナルンマ・45本・1メートル90・100キロ・数的優位・配球・体格）→ 当たり無し。
+#   10/24 の本の「短いパスも長いパスも出せる幅」は地の文では使わない（ハーグリーブス・エメリの言葉の中だけ）。
+# 確度: ハーグリーブス・エメリの言葉は 報道（日本語の記事の孫引き）。試合の記録は BBC の試合データ（報道）。比べた倍率は自分の計算（背景）。
+slot: japanese
+date: "2026年10月26日"
+format: news
+no_main: true
+people: [鈴木彩艶, オーウェン・ハーグリーブス, ジャンルイジ・ドンナルンマ, アストン・ヴィラ, マンチェスター・シティ]
+
+short_style: X
+short_hook_word: 実験室で作られた
+short_photos:
+  - assets/images/20261026_suzuki_zion_hargreaves/01_v.jpg
+  - assets/images/20261026_suzuki_zion_hargreaves/03_v.jpg
+  - assets/images/20261026_suzuki_zion_hargreaves/04_v.jpg
+short_question: ハーグリーブスが挙げた4つのうち、鈴木彩艶のいちばんの武器はどれだと思いますか。
+short_hook: 24日、鈴木彩艶のヴィラは、首位のシティに2対1で勝ちました。
+short_telops:
+  - {match: ハーグリーブス, text: 元イングランド代表/オーウェン・ハーグリーブス}
+  - {match: 解説として, text: シティ戦の中継の解説/言葉は日本語の訳}
+  - {match: 1メートル90, text: 鈴木彩艶/1メートル90・100キロ}
+  - {match: 45本, text: パス/鈴木45本 ドンナルンマ13本}
+  - {match: 71.1%, text: パスの成功率/鈴木71.1% ドンナルンマ100%}
+
+theme:
+  id: suzuki_zion_hargreaves
+  league: england
+  prefix: ""
+  title: 鈴木彩艶は「実験室で作られた選手のようだ」。元イングランド代表が挙げたのは
+  hook: ""
+  question: 元イングランド代表は、鈴木彩艶の何を見て「実験室で作られた」と言ったのか
+  takeaway: ハーグリーブスが挙げたのは体格・足元・シュートを止める力・長短の配給。シティ戦の鈴木はパス45本で、相手GKドンナルンマの3倍を超えた
+
+thumbnail:
+  layout: face
+  line1: 鈴木彩艶に元英国代表
+  line2: 「実験室で作られた」
+  tags: [鈴木彩艶, アストン・ヴィラ, マンチェスター・シティ]
+  photo: assets/images/20261026_suzuki_zion_hargreaves/01_w.jpg
+  short_photo: assets/images/20261026_suzuki_zion_hargreaves/01_v.jpg
+
+answer: 挙げたのは、体格・足元の技術・シュートを止める力・長短の配給の4つ
+watch: 鈴木のパスの数
+
+sections:
+  - id: what
+    main: true
+    heading: 「実験室で作られた」と言われた理由
+    tier: 報道
+    telop: 元イングランド代表ハーグリーブス「鈴木彩艶は実験室で作られた選手のようだ」
+    say:
+      - text: 元イングランド代表のオーウェン・ハーグリーブスが、鈴木彩艶をこう評しました。
+        image: assets/images/20261026_suzuki_zion_hargreaves/01_w.jpg
+      - voice: ハーグリーブス
+        text: 鈴木彩艶は実験室で作られた選手のようだ。
+        emph: true
+        image: assets/images/20261026_suzuki_zion_hargreaves/04_w.jpg
+      - voice: ハーグリーブス
+        text: 素晴らしいサイズ、素晴らしい足元の技術を持った偉大なGKだ。
+        cont: true
+        card: {type: verdict, title: ハーグリーブスが挙げた4つ, rows: [[サイズ, ◎], [足元の技術, ◎], [シュートを止める力, ◎], [長短の配給, ◎]], highlight_row: 0}
+      - voice: ハーグリーブス
+        text: 優れたシュートストッパーであると同時に、
+        cont: true
+        card: {type: verdict, title: ハーグリーブスが挙げた4つ, rows: [[サイズ, ◎], [足元の技術, ◎], [シュートを止める力, ◎], [長短の配給, ◎]], highlight_row: 2}
+      - voice: ハーグリーブス
+        text: 長い距離、短い距離どちらの配給も素晴らしい。
+        cont: true
+        card: {type: verdict, title: ハーグリーブスが挙げた4つ, rows: [[サイズ, ◎], [足元の技術, ◎], [シュートを止める力, ◎], [長短の配給, ◎]], highlight_row: 3}
+    official: false
+    sources:
+      - https://www.football-zone.net/archives/680867
+      - https://news.yahoo.co.jp/articles/cd22598d60bb065beeb6f8e3321c75672cb67299
+
+  - id: size
+    heading: 最初に挙げた「サイズ」
+    tier: 報道
+    telop: 鈴木彩艶は1メートル90・100キロ
+    say:
+      - text: シティ戦の中継で、解説として話した言葉です。
+        image: assets/images/20261026_suzuki_zion_hargreaves/03_w.jpg
+        card: none
+      - text: 最初に挙げたサイズ。鈴木彩艶は、身長1メートル90、体重100キロです。
+        image: assets/images/20261026_suzuki_zion_hargreaves/04_w.jpg
+    official: false
+    sources:
+      - https://news.yahoo.co.jp/articles/14a1f9379aa6cc1f750aefbaa0690de46a63f49f
+      - https://news.yahoo.co.jp/articles/cd22598d60bb065beeb6f8e3321c75672cb67299
+      - https://web.gekisaka.jp/news/world/detail/?461731-461731-fl
+
+  - id: view
+    viewpoint: true
+    heading: 鈴木とドンナルンマ、ゴールキーパー同士の数
+    tier: 報道
+    telop: パスは鈴木45本、ドンナルンマ13本
+    say:
+      - text: 見立てです。シティのゴールキーパー、ドンナルンマと、この試合の記録を比べます。
+        image: assets/images/20261026_suzuki_zion_hargreaves/01_w.jpg
+      - text: 止めたシュートは、鈴木が6本、ドンナルンマは0本でした。
+        image: assets/images/20261026_suzuki_zion_hargreaves/04_w.jpg
+        card: {type: table, title: シティ戦のゴールキーパー2人, columns: [項目, 鈴木彩艶, ドンナルンマ], rows: [[セーブ, 6本, 0本], [パス, 45本, 13本], [パスの成功率, 71.1%, 100%]], highlight_row: 0}
+      - text: パスは、鈴木が45本、ドンナルンマが13本。鈴木は3倍を超えています。
+        emph: true
+        card: {type: table, title: シティ戦のゴールキーパー2人, columns: [項目, 鈴木彩艶, ドンナルンマ], rows: [[セーブ, 6本, 0本], [パス, 45本, 13本], [パスの成功率, 71.1%, 100%]], highlight_row: 1}
+      - text: 成功率は、ドンナルンマの100%に対して、鈴木は71.1%です。
+        image: assets/images/20261026_suzuki_zion_hargreaves/03_w.jpg
+        card: {type: table, title: シティ戦のゴールキーパー2人, columns: [項目, 鈴木彩艶, ドンナルンマ], rows: [[セーブ, 6本, 0本], [パス, 45本, 13本], [パスの成功率, 71.1%, 100%]], highlight_row: 2}
+      - text: ボールを持つ時間がシティより短い中で、パスの出どころになっていたのは鈴木でした。
+        image: assets/images/20261026_suzuki_zion_hargreaves/01_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.bbc.com/sport/football/live/cj62ynzwg4pet
+      - https://www.espn.com/soccer/match/_/gameId/401879256
+short_title: "鈴木彩艶は「実験室で作られた選手のようだ」。元イングランド代表が挙げたのは"

@@ -1,0 +1,522 @@
+# スティーヴン・ジェラード（元イングランド代表MF）の紹介。シリーズ「レジェンドの紹介（世界）」2026-10-26。型は 10/25 のカカと同じ9節（フック→基礎DATA→日本との接点→歩み→持ち味→あの試合→引退のあと→マル秘話→見立て）。
+# **FotMob・DataMB・FBref・Sofascore・Transfermarkt は不使用**。数字は英語版 Wikipedia（Steven Gerrard の成績表・Honours・各大会ページ）・BBC（2016-11-24 引退、2025-10-11 レンジャーズ）・Liverpool Echo（2026-10-25）と、自分で足した値だけ。
+# **私生活・法的な問題は入れない**（Wikipedia の Personal life・Legal problems の節は使わない）。女子サッカーは入れない。
+#
+# **重なりの確認（10/26）**：scripts/・research/covered.yaml・research/posted.json を「gerrard／ジェラード」で grep。ジェラードが主役の回は無し（20260911_macallister・20260916/20 のリヴァプール紹介・20261023_ibrahimovic_legend・20261024_maldini_legend の本文に名前が出るだけ）。
+# **注意**：10/24 のマルディーニの回が、同じ 2005年CL決勝（イスタンブール）を「あの試合」にしている。こちらはジェラードの側（54分の頭の得点・60分のPKを得た場面・残ると決めた言葉）から語り、言い回しは重ねない。
+# **引退の確認（一次情報に近いもの）**：BBC 2016-11-24「Steven Gerrard: Liverpool great retires after 19-year career」（本人の声明「I fulfilled my childhood dream by pulling on the famous red shirt of Liverpool.」を requests で本文確認）＋ Guardian 2016-11-24。最後の試合は 2016-11-06 の MLS プレーオフ、コロラド戦（PK戦で敗退、Wikipedia）。→ **現役ではない（46歳）**。
+# **いまの立場**：監督は リヴァプールの育成（2017〜18）→ レンジャーズ（2018〜21、2020-21 リーグ無敗優勝）→ アストン・ヴィラ（2021〜22）→ アル・イテファク（2023-07〜2025-01-29 合意で退任、Wikipedia／Sky Sports）。2025-10-11 にレンジャーズへの復帰を断った（BBC 本文確認）。2026-10-25 の Liverpool Echo：2025年1月から監督の職に無く、TNT Sports の解説を務める。本人が Open Goal で「At the moment I am happy, I am doing TV with TNT. I have signed a new deal.」。バーンリーの監督の最有力という記事は**賭け屋のオッズの話なので台本に入れない**。台本は「2026年10月の時点で、監督の職には就いていない・テレビの解説を続けている」と時点を断る。
+# **日本との接点（台本の「日本」節）**：
+#   - 2002年W杯（日韓大会）：イングランドは出場したが、ジェラードは足の付け根の故障で辞退（Wikipedia International career）。
+#   - 2004-06-01 マンチェスター（シティ・オブ・マンチェスター・スタジアム）：FAサマートーナメント イングランド1対1日本。ジェラードは先発・82分交代。得点はオーウェン22分、小野伸二53分（2004 FA Summer Tournament の記事のメンバー表）。大会はイングランドが得失点差で優勝＝ジェラードが代表で手にした唯一のタイトル（Steven Gerrard の記事）。
+#   - 2005-12 FIFAクラブ世界選手権（日本開催）：準決勝 12/15 横浜国際総合競技場 サプリサに3対0（クラウチ2点、ジェラード32分）、決勝 12/18 横浜 サンパウロに0対1（ミネイロ27分）。大会の2位の選手の賞（シルバーボール）（2005 FIFA Club World Championship の記事）。出場は成績表 2005-06 の「Other」2試合1得点と一致。
+# **数字の出どころと自分で足した値**
+# - リヴァプール 710試合186点（BBC 2016-11-24 本文＋Wikipedia の成績表。**季ごとの行を自分で足して 710・186 と一致を確認**）。
+# - LAギャラクシー 39試合5点（Wikipedia の季ごとの行 15/2・24/3 を自分で足した値。**Wikipedia の「Career total」の行は 749/190 で、行の和 749/191 と1点食い違う**（国内カップの得点の和が合わない）。台本ではギャラクシーの得点を言わない。サムネの表の合計は行の和）。
+# - イングランド代表 114試合21点（BBC が114、21は Wikipedia の年別の表を自分で足した値）。W杯は 2006・2010・2014 の3大会。代表デビュー 2000-05-31 ウクライナ戦。
+# - サムネの表：リヴァプール 710/186、LAギャラクシー 39/5、イングランド代表 114/21、合計 863/212（自分で足した値）。
+# - リヴァプールのタイトル：FAカップ2（2001・2006）、リーグカップ3（2001・2003・2012）、CL1（2005）、UEFAカップ1（2001）、UEFAスーパーカップ1（2001）、コミュニティ・シールド1（2006）＝9（BBC「winning nine trophies」と一致）。
+# - 2005年CL決勝：2005-05-25 イスタンブール、アタテュルク・オリンピック・スタジアム。マルディーニ1分、クレスポ39分・44分で前半0対3。ジェラード54分（リーセのクロスを頭）、シュミツェル56分、60分にジェラードがガットゥーゾに倒されてPK→シャビ・アロンソが止められた跳ね返りを決める。延長117分にドゥデクがシェフチェンコのシュートを2度止める。PK戦3対2。ジェラードは5人目の予定で蹴らず。試合の最優秀選手（2005 UEFA Champions League final の記事）。54分から60分＝6分は自分で引いた値。
+# - 「How can I leave after a night like this?」（Wikipedia が BBC の記事を出典に引く。**確度は報道**）。
+# - 2006年FAカップ決勝：2006-05-13 カーディフのミレニアム・スタジアム、ウェストハムと3対3（ジェラード54分・90+1分。2点目は約35ヤード＝約32メートルのボレー）、PK戦3対1（ジェラードは成功）。「ジェラード・ファイナル」。この2点で FAカップ・リーグカップ・UEFAカップ・CL の4つの決勝すべてで得点した唯一の選手に（Steven Gerrard の記事）。
+# - チェルシーの誘い：2004年夏に2000万ポンドの申し出を断る。2005年7月5日に一度は契約延長の提示を断るが、翌6日に4年契約（Steven Gerrard の記事）。**確度は報道**。
+# - 見立て（全部自分で足した・割った値。成績表の季ごとの行から）：1998-99〜2003-04（6季）240試合28点＝約8.6試合に1点／2004-05〜2009-10（6季）292試合104点＝約2.8試合に1点／2010-11〜2014-15（5季）178試合54点＝約3.3試合に1点。合計 710・186 と一致。いちばん多いのは 2008-09 の24点（44試合）。主将は 2003年10月から（Wikipedia）。
+# - レンジャーズ 2020-21：38試合無敗、勝ち点102、失点13（Wikipedia）。
+# **入れなかったもの**：私生活・家族・法的な問題、2014年4月のチェルシー戦のスリップ、ヴィラでの成績、賭け屋のオッズ、ゴシップ系の記事、2010年の日本戦（出場を一次情報で確かめられなかった）。
+# **日本語名・読みで怪しいもの**：ジェラード・ウィストン・ホリエ・ベニテス・リーセ・シュミツェル・ガットゥーゾ・ドゥデク・シェフチェンコ・クレスポ・ミネイロ・サプリサ・アタテュルク・クラウチ・オーウェン・ギャラクシー・イテファク・レンジャーズ（audio_query で見る）。
+title: ジェラードは、どんな選手だった？ 0対3からの6分間に、主将は何をしたのか
+format: news
+short_title: ジェラードは、どんな選手だった？
+series: レジェンドの紹介
+topic: スティーヴン・ジェラード
+date: 2026年10月26日
+slot: other_1
+people: [スティーヴン・ジェラード]
+watch: 毎日、数字でサッカーを読み解きます
+theme: {id: legend_gerrard, league: england, league_name: プレミアリーグ, kind: other, topic: スティーヴン・ジェラード, title: ジェラードは、どんな選手だった？ 0対3からの6分間に、主将は何をしたのか, question: リヴァプールで710試合に出たジェラードは、何を残した選手で、いまは何をしているのか, takeaway: リヴァプールの最初の6シーズンは約8.6試合に1点、2004年からの6シーズンは約2.8試合に1点。中盤の選手のまま、点を取るペースが3倍になった,
+  nameplate: スティーヴン・ジェラード｜元イングランド代表 MF, opening_image: assets/images/20261026_gerrard_legend/01_w.jpg, end_bg: assets/images/20261026_gerrard_legend/02_w.jpg, bgm: assets/audio/bgm_calm.wav, outro_title: 毎日、数字でサッカーを読み解きます}
+thumbnail:
+  line1: ジェラード710試合186点
+  line2: 0対3から6分で追いついた
+  tags: [リヴァプール]
+  photo: assets/images/20261026_gerrard_legend/panel_01.jpg
+  photos: []
+  short_photo: assets/images/20261026_gerrard_legend/02_v.jpg
+sections:
+- id: hook
+  heading: 0対3から追いついた主将は、何を残したのか
+  tier: 報道
+  telop: 2005年、イスタンブール
+  card: &id001
+    type: stats
+    title: ジェラード 元MF（46歳）
+    items:
+    - ['710', 試合, リヴァプールの公式戦]
+    - ['186', 点, リヴァプールの公式戦]
+    - ['114', 試合, イングランド代表]
+    focus: 0
+  say:
+  - {text: 2005年5月、イスタンブール。ヨーロッパの王者を決める一戦。, card: none, image: assets/images/20261026_gerrard_legend/01_w.jpg}
+  - {text: 前半を終えて、リヴァプールは0対3で負けていました。, card: none}
+  - {text: 後半、わずか6分で追いつきます。先頭に立ったのは、主将でした。, card: none, image: assets/images/20261026_gerrard_legend/02_w.jpg, emph: true}
+  - text: スティーヴン・ジェラード。リヴァプールで710試合、186得点。
+    card: *id001
+    image: assets/images/20261026_gerrard_legend/05_w.jpg
+    callword: 710試合
+  - text: イングランド代表でも主将を務めた、中盤の選手です。
+    card:
+      type: stats
+      title: ジェラード 元MF（46歳）
+      items:
+      - ['710', 試合, リヴァプールの公式戦]
+      - ['186', 点, リヴァプールの公式戦]
+      - ['114', 試合, イングランド代表]
+      focus: 2
+    image: assets/images/20261026_gerrard_legend/05_w.jpg
+  - {text: 1つのクラブに17シーズン。その主将は、何を残したのか。数えていきます。, card: none, image: assets/images/20261026_gerrard_legend/01_w.jpg}
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/2005_UEFA_Champions_League_final', 'https://en.wikipedia.org/wiki/Steven_Gerrard', 'https://www.bbc.com/sport/football/37972429']
+- id: data
+  heading: ジェラードは、いつ、どこで生まれ、どんな選手か
+  tier: 報道
+  telop: ジェラードの基礎DATA
+  card: &id002
+    type: table
+    title: スティーヴン・ジェラード
+    columns: [項目, 内容]
+    rows: &id003
+    - [生年月日, 1980年5月30日・イングランド]
+    - [ポジション, 中盤（185cm）]
+    - [クラブ, リヴァプール・LAギャラクシー]
+    - [イングランド代表, 114試合21得点・W杯3回]
+    - [引退, 2016年11月（36歳）]
+    source: Wikipedia
+    highlight_row: 0
+  say:
+  - text: ジェラードは、1980年5月30日、リヴァプールの近くの町、ウィストン生まれ。
+    card: *id002
+    image: assets/images/20261026_gerrard_legend/02_w.jpg
+  - text: ポジションは中盤。身長は185センチです。
+    card:
+      type: table
+      title: スティーヴン・ジェラード
+      columns: [項目, 内容]
+      rows: *id003
+      source: Wikipedia
+      highlight_row: 1
+    image: assets/images/20261026_gerrard_legend/05_w.jpg
+  - text: プロのクラブは、リヴァプールと、アメリカのLAギャラクシーの2つだけ。
+    card:
+      type: table
+      title: スティーヴン・ジェラード
+      columns: [項目, 内容]
+      rows: *id003
+      source: Wikipedia
+      highlight_row: 2
+    image: assets/images/20261026_gerrard_legend/01_w.jpg
+  - text: イングランド代表は114試合21得点。ワールドカップには3回出ました。
+    card:
+      type: table
+      title: スティーヴン・ジェラード
+      columns: [項目, 内容]
+      rows: *id003
+      source: Wikipedia
+      highlight_row: 3
+    image: assets/images/20261026_gerrard_legend/05_w.jpg
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/Steven_Gerrard', 'https://www.bbc.com/sport/football/37972429']
+- id: japan
+  heading: ジェラードは、日本の代表と横浜で、何をしたのか
+  tier: 報道
+  telop: 日本代表と、横浜の2試合
+  card: &id004
+    type: table
+    title: ジェラードと日本
+    columns: [年, 場所, 相手, 結果]
+    rows: &id005
+    - ['2002', 日本・韓国, W杯, けがで辞退]
+    - ['2004', マンチェスター, 日本代表, 1対1]
+    - ['2005', 横浜, サプリサ, 3対0]
+    - ['2005', 横浜, サンパウロ, 0対1]
+    source: Wikipedia
+    highlight_row: 0
+  say:
+  - {text: 日本との縁は、まず、出られなかった大会から始まります。, card: none, image: assets/images/20261026_gerrard_legend/05_w.jpg}
+  - text: 2002年、日本と韓国のワールドカップ。足の付け根のけがで、辞退しました。
+    card: *id004
+    image: assets/images/20261026_gerrard_legend/05_w.jpg
+  - {text: 2004年6月、マンチェスターで日本代表と対戦。ジェラードは先発です。, card: none, image: assets/images/20261026_gerrard_legend/02_w.jpg}
+  - text: 試合は1対1の引き分け。日本の同点ゴールは、小野伸二でした。
+    card:
+      type: table
+      title: ジェラードと日本
+      columns: [年, 場所, 相手, 結果]
+      rows: *id005
+      source: Wikipedia
+      highlight_row: 1
+    image: assets/images/20261026_gerrard_legend/05_w.jpg
+  - {text: この大会でイングランドは優勝。ジェラードが代表で手にした、ただ1つのタイトルです。, card: none, image: assets/images/20261026_gerrard_legend/05_w.jpg}
+  - {text: 2005年12月、リヴァプールの主将として横浜へ。クラブの世界一を争う大会です。, card: none, image: assets/images/20261026_gerrard_legend/01_w.jpg}
+  - text: 準決勝はサプリサに3対0。32分に、ジェラード自身も決めました。
+    card:
+      type: table
+      title: ジェラードと日本
+      columns: [年, 場所, 相手, 結果]
+      rows: *id005
+      source: Wikipedia
+      highlight_row: 2
+    image: assets/images/20261026_gerrard_legend/02_w.jpg
+    emph: true
+  - text: 決勝はサンパウロに0対1で敗れ、世界一はならず。
+    card:
+      type: table
+      title: ジェラードと日本
+      columns: [年, 場所, 相手, 結果]
+      rows: *id005
+      source: Wikipedia
+      highlight_row: 3
+    image: assets/images/20261026_gerrard_legend/05_w.jpg
+  - {text: それでも、大会で2番目の選手に贈られる賞は、ジェラードの手に渡りました。, card: none, image: assets/images/20261026_gerrard_legend/01_w.jpg}
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/2004_FA_Summer_Tournament', 'https://en.wikipedia.org/wiki/2005_FIFA_Club_World_Championship', 'https://en.wikipedia.org/wiki/Steven_Gerrard']
+- id: career
+  heading: 18歳の控えは、どうしてリヴァプールの主将になったのか
+  tier: 報道
+  telop: 地元の少年から、主将へ
+  card: &id006
+    type: timeline
+    title: 歩んできた道
+    rows: &id007
+    - ['1998', 18歳でデビュー]
+    - ['2001', カップ戦3つを制す]
+    - ['2003', 23歳で主将に]
+    - ['2005', ヨーロッパの王者に]
+    - ['2015', アメリカのLAギャラクシーへ]
+    - ['2016', 36歳で引退]
+    focus: 0
+    highlight_row: 0
+  say:
+  - text: デビューは1998年11月、18歳。途中から出た、ブラックバーン戦でした。
+    card: *id006
+    image: assets/images/20261026_gerrard_legend/05_w.jpg
+  - text: 2001年、20歳。1シーズンで、3つのカップ戦の優勝を手にします。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows: *id007
+      focus: 1
+      highlight_row: 0
+    image: assets/images/20261026_gerrard_legend/01_w.jpg
+  - text: 2003年10月、23歳で主将に。2015年まで、腕章を巻き続けます。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows: *id007
+      focus: 2
+      highlight_row: 0
+    image: assets/images/20261026_gerrard_legend/02_w.jpg
+    emph: true
+  - {text: 2005年には、ヨーロッパの王者。この話は、あとでくわしく見ます。, card: none, image: assets/images/20261026_gerrard_legend/05_w.jpg}
+  - text: 2015年、17シーズンを過ごしたリヴァプールを離れ、LAギャラクシーへ。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows: *id007
+      focus: 4
+      highlight_row: 0
+    image: assets/images/20261026_gerrard_legend/01_w.jpg
+  - text: 2016年11月24日、36歳で、現役を退くと発表します。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows: *id007
+      focus: 5
+      highlight_row: 0
+    image: assets/images/20261026_gerrard_legend/02_w.jpg
+  - {text: 発表の日の、本人の声明です。, card: none, image: assets/images/20261026_gerrard_legend/05_w.jpg}
+  - {voice: ジェラード, text: リヴァプールの赤いシャツを着て、子どものころの夢をかなえた。, card: none, pause: 0.6, image: assets/images/20261026_gerrard_legend/02_w.jpg}
+  quotes_from: ['https://www.bbc.com/sport/football/37972429']
+  sources: ['https://en.wikipedia.org/wiki/Steven_Gerrard', 'https://www.bbc.com/sport/football/37972429']
+- id: style
+  heading: ジェラードのプレーは、何がほかの選手と違ったのか
+  tier: 報道
+  telop: 走り、奪い、遠くから決める
+  card: &id008
+    type: table
+    title: ジェラードの持ち味
+    columns: [項目, 中身]
+    rows: &id009
+    - [武器1, 守備から攻撃まで走りきる体力]
+    - [武器2, 遠くからの強いシュート]
+    - [武器3, 遠くへ通す長いパス]
+    - [位置, 中盤の真ん中。右サイドや後ろも]
+    source: Wikipedia
+    highlight_row: 0
+  say:
+  - text: ジェラードの持ち味の1つ目は、守備から攻撃まで、ピッチを上下に走りきる体力。
+    card: *id008
+    image: assets/images/20261026_gerrard_legend/01_w.jpg
+  - text: 2つ目は、遠くからのシュート。3つの決勝で、遠くから決めています。
+    card:
+      type: table
+      title: ジェラードの持ち味
+      columns: [項目, 中身]
+      rows: *id009
+      source: Wikipedia
+      highlight_row: 1
+    image: assets/images/20261026_gerrard_legend/05_w.jpg
+    emph: true
+  - text: 3つ目は、長いパス。後ろから、試合の流れを動かしました。
+    card:
+      type: table
+      title: ジェラードの持ち味
+      columns: [項目, 中身]
+      rows: *id009
+      source: Wikipedia
+      highlight_row: 2
+    image: assets/images/20261026_gerrard_legend/02_w.jpg
+  - text: 真ん中のほか、右サイド、前線のすぐ後ろ、右サイドバックでもプレーしています。
+    card:
+      type: table
+      title: ジェラードの持ち味
+      columns: [項目, 中身]
+      rows: *id009
+      source: Wikipedia
+      highlight_row: 3
+    image: assets/images/20261026_gerrard_legend/01_w.jpg
+  - {text: 2009年には、イングランドの記者が選ぶ年間最優秀選手にも選ばれました。, card: none, image: assets/images/20261026_gerrard_legend/05_w.jpg}
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/Steven_Gerrard']
+- id: match
+  heading: 2005年のイスタンブールで、ジェラードは何を変えたのか
+  tier: 報道
+  main: true
+  telop: 0対3から、6分で同点
+  card: &id010
+    type: timeline
+    title: 2005年 CL決勝 ミラン対リヴァプール
+    rows: &id011
+    - [前半, 1分・39分・44分に失点。0対3]
+    - [54分, ジェラードが頭で1点目]
+    - [56分, シュミツェルが2点目]
+    - [60分, 主将が倒されてPK。3対3]
+    - [延長, 117分にドゥデクが2度止める]
+    - [PK戦, 3対2で優勝]
+    focus: 0
+    highlight_row: 0
+  say:
+  - {text: 主将ジェラード。, short_only: true, card: none, image: assets/images/20261026_gerrard_legend/02_w.jpg}
+  - {text: いちばん語られるのは、2005年のチャンピオンズリーグ決勝です。, short_only: true, card: none}
+  - {text: 2005年5月25日、トルコのイスタンブール。相手はミランでした。, card: none, image: assets/images/20261026_gerrard_legend/01_w.jpg}
+  - text: 前半だけで3点を失い、0対3で負けたまま折り返します。
+    card: *id010
+    image: assets/images/20261026_gerrard_legend/05_w.jpg
+  - text: 54分。左からのクロスに、ジェラードが頭で合わせて、1点目。
+    card:
+      type: timeline
+      title: 2005年 CL決勝 ミラン対リヴァプール
+      rows: *id011
+      focus: 1
+      highlight_row: 0
+    image: assets/images/20261026_gerrard_legend/02_w.jpg
+    emph: true
+  - text: 2分後の56分、シュミツェルの遠いシュートで、1点差。
+    card:
+      type: timeline
+      title: 2005年 CL決勝 ミラン対リヴァプール
+      rows: *id011
+      focus: 2
+      highlight_row: 0
+    image: assets/images/20261026_gerrard_legend/01_w.jpg
+  - text: 60分、ゴール前へ走り込んだジェラードが倒されて、PK。
+    card:
+      type: timeline
+      title: 2005年 CL決勝 ミラン対リヴァプール
+      rows: *id011
+      focus: 3
+      highlight_row: 0
+    image: assets/images/20261026_gerrard_legend/05_w.jpg
+  - {text: シャビ・アロンソのPKは止められますが、跳ね返りを決めて3対3の引き分けに。, card: none, image: assets/images/20261026_gerrard_legend/02_w.jpg, callword: 6分で同点}
+  - text: 延長の117分には、キーパーのドゥデクが、至近距離のシュートを2度止めます。
+    card:
+      type: timeline
+      title: 2005年 CL決勝 ミラン対リヴァプール
+      rows: *id011
+      focus: 4
+      highlight_row: 0
+    image: assets/images/20261026_gerrard_legend/01_w.jpg
+  - text: PK戦を3対2で制して、リヴァプールはヨーロッパの王者に。
+    card:
+      type: timeline
+      title: 2005年 CL決勝 ミラン対リヴァプール
+      rows: *id011
+      focus: 5
+      highlight_row: 0
+    image: assets/images/20261026_gerrard_legend/05_w.jpg
+  - {text: 試合の最優秀選手は、ジェラード。その夜の言葉です。, card: none, image: assets/images/20261026_gerrard_legend/02_w.jpg}
+  - {voice: ジェラード, text: こんな夜のあとで、どうして出ていけるだろう。, card: none, pause: 0.6}
+  quotes_from: ['https://news.bbc.co.uk/sport2/hi/football/europe/4578603.stm']
+  sources: ['https://en.wikipedia.org/wiki/2005_UEFA_Champions_League_final', 'https://en.wikipedia.org/wiki/Steven_Gerrard']
+- id: after
+  heading: 引退のあと、ジェラードは何をしてきたのか
+  tier: 報道
+  telop: 監督の8年と、いま
+  card: &id012
+    type: timeline
+    title: 引退のあと
+    rows: &id013
+    - [2017年, リヴァプールの育成の指導者に]
+    - [2018〜21年, レンジャーズの監督]
+    - [2021〜22年, アストン・ヴィラの監督]
+    - [2023〜25年, サウジのアル・イテファクの監督]
+    - [2026年10月, テレビの解説を続ける]
+    focus: 0
+    highlight_row: 0
+  say:
+  - text: ジェラードは引退の翌年、2017年に、リヴァプールの育成年代の指導を始めます。
+    card: *id012
+    image: assets/images/20261026_gerrard_legend/05_w.jpg
+  - text: 2018年には、スコットランドのレンジャーズの監督に。
+    card:
+      type: timeline
+      title: 引退のあと
+      rows: *id013
+      focus: 1
+      highlight_row: 0
+    image: assets/images/20261026_gerrard_legend/01_w.jpg
+  - text: 3シーズン目の2020年から21年、リーグ戦38試合を1つも負けずに優勝。
+    card:
+      type: timeline
+      title: 引退のあと
+      rows: *id013
+      focus: 1
+      highlight_row: 0
+    image: assets/images/20261026_gerrard_legend/02_w.jpg
+    emph: true
+  - {text: それまでは、宿敵セルティックが9シーズン続けて優勝していました。, card: none}
+  - {text: 勝ち点は102、失点は13。ジェラードの、監督として初めてのリーグ優勝です。, card: none, image: assets/images/20261026_gerrard_legend/05_w.jpg}
+  - text: そのあとはアストン・ヴィラ、サウジアラビアのアル・イテファクを率いました。
+    card:
+      type: timeline
+      title: 引退のあと
+      rows: *id013
+      focus: 3
+      highlight_row: 0
+    image: assets/images/20261026_gerrard_legend/01_w.jpg
+  - text: 2025年1月にイテファクを離れてからは、監督の職に就いていません。
+    card:
+      type: timeline
+      title: 引退のあと
+      rows: *id013
+      focus: 4
+      highlight_row: 0
+    image: assets/images/20261026_gerrard_legend/02_w.jpg
+  - {text: 2026年10月の時点では、テレビの解説を続けている、と本人が話しています。, card: none, image: assets/images/20261026_gerrard_legend/05_w.jpg}
+  quotes_from: ['https://www.liverpoolecho.co.uk/sport/football/football-news/steven-gerrard-liverpool-championship-burnley-34814951']
+  sources: ['https://en.wikipedia.org/wiki/Steven_Gerrard', 'https://www.bbc.co.uk/sport/football/articles/cvgqgqd9z9yo', 'https://www.liverpoolecho.co.uk/sport/football/football-news/steven-gerrard-liverpool-championship-burnley-34814951']
+- id: secret
+  heading: ジェラード・ファイナルと、チェルシーの誘いには、何があったのか
+  tier: 報道
+  telop: 4つの決勝で得点、残った夏
+  card: &id014
+    type: table
+    title: 知られざる、2つの話
+    columns: [いつ, 何があったか]
+    rows: &id015
+    - [2006年5月, 終了間際の同点弾でFAカップ優勝]
+    - [2004〜05年, チェルシーの誘いを断って残留]
+    source: Wikipedia
+    highlight_row: 0
+  say:
+  - text: まずは2006年5月、FAカップ決勝。相手はウェストハムです。
+    card: *id014
+    image: assets/images/20261026_gerrard_legend/01_w.jpg
+    emph: true
+  - text: 2対3で負けていた後半ロスタイム。約32メートルのボレーで同点に。
+    card:
+      type: table
+      title: 知られざる、2つの話
+      columns: [いつ, 何があったか]
+      rows: *id015
+      source: Wikipedia
+      highlight_row: 0
+    image: assets/images/20261026_gerrard_legend/02_w.jpg
+  - {text: PK戦で勝ったこの試合は、ジェラード・ファイナルと呼ばれています。, card: none, image: assets/images/20261026_gerrard_legend/05_w.jpg}
+  - {text: この2点で、ジェラードは4つの大会の決勝すべてで点を取った、ただ1人の選手に。, card: none, image: assets/images/20261026_gerrard_legend/01_w.jpg}
+  - {text: FAカップ、リーグカップ、ウエファカップ、チャンピオンズリーグの4つです。, card: none}
+  - text: もう1つは、2004年の夏。チェルシーが2000万ポンドで手を挙げます。
+    card:
+      type: table
+      title: 知られざる、2つの話
+      columns: [いつ, 何があったか]
+      rows: *id015
+      source: Wikipedia
+      highlight_row: 1
+    image: assets/images/20261026_gerrard_legend/02_w.jpg
+    emph: true
+  - text: 2005年7月には、契約延長の話がこじれ、一度は提示を断りました。
+    card:
+      type: table
+      title: 知られざる、2つの話
+      columns: [いつ, 何があったか]
+      rows: *id015
+      source: Wikipedia
+      highlight_row: 1
+    image: assets/images/20261026_gerrard_legend/05_w.jpg
+  - {text: それでも翌日に、4年の契約を結んで残留しました。, card: none, image: assets/images/20261026_gerrard_legend/02_w.jpg}
+  - {text: リヴァプールでのリーグ優勝1度は、よそでの何度もの優勝より重い。, card: none}
+  - {text: 残った理由を、ジェラードはそう話しています。, card: none}
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/2006_FA_Cup_final', 'https://en.wikipedia.org/wiki/Steven_Gerrard']
+- id: view
+  heading: リヴァプールの17シーズンで、ジェラードの点のペースはどう変わったのか
+  tier: 背景
+  viewpoint: true
+  telop: 8.6試合に1点から、2.8試合に1点へ
+  card: &id016
+    type: table
+    title: ジェラード リヴァプールの時期ごとの比べ（公式戦）
+    columns: [時期, 試合, 得点, 何試合に1点]
+    rows: &id017
+    - [1998〜2004（6季）, '240', '28', '8.6']
+    - [2004〜2010（6季）, '292', '104', '2.8']
+    - [2010〜2015（5季）, '178', '54', '3.3']
+    source: Wikipedia
+    highlight_row: 0
+  say:
+  - text: 最後に、ジェラードのリヴァプールでの17シーズンを、3つの時期に分けて並べます。
+    card: *id016
+    image: assets/images/20261026_gerrard_legend/05_w.jpg
+  - text: 最初の6シーズンは240試合で28点。約8.6試合に1点です。
+    card:
+      type: table
+      title: ジェラード リヴァプールの時期ごとの比べ（公式戦）
+      columns: [時期, 試合, 得点, 何試合に1点]
+      rows: *id017
+      source: Wikipedia
+      highlight_row: 0
+    image: assets/images/20261026_gerrard_legend/01_w.jpg
+  - text: 主将になったあと、2004年からの6シーズンは292試合で104点。
+    card:
+      type: table
+      title: ジェラード リヴァプールの時期ごとの比べ（公式戦）
+      columns: [時期, 試合, 得点, 何試合に1点]
+      rows: *id017
+      source: Wikipedia
+      highlight_row: 1
+    image: assets/images/20261026_gerrard_legend/02_w.jpg
+    emph: true
+  - text: 約2.8試合に1点。点を取るペースは、およそ3倍になりました。
+    card:
+      type: table
+      title: ジェラード リヴァプールの時期ごとの比べ（公式戦）
+      columns: [時期, 試合, 得点, 何試合に1点]
+      rows: *id017
+      source: Wikipedia
+      highlight_row: 1
+    image: assets/images/20261026_gerrard_legend/05_w.jpg
+    mark: {kind: circle, row: 1, col: 3}
+  - {text: 最後の5シーズンも178試合で54点。約3.3試合に1点を保っています。, card: none, image: assets/images/20261026_gerrard_legend/01_w.jpg}
+  - {text: 中盤のまま、点も取れる主将へ。ジェラードの変化は、この割り算に出ています。, card: none, image: assets/images/20261026_gerrard_legend/02_w.jpg}
+  quotes_from: []
+  sources: ['https://en.wikipedia.org/wiki/Steven_Gerrard']

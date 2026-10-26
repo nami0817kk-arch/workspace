@@ -1,0 +1,429 @@
+# 取材メモ（10/25 日、シリーズ「比べる」、key: compare_132098_38253）。ハリー・ケイン（バイエルン・33歳）×ロベルト・レヴァンドフスキ（元バイエルン・38歳）。
+# **FotMob・DataMB は使っていない**。数字は Transfermarkt（2026-10-25 取得。控え: research/raw/20261025_kane_tm.json・20261025_lewandowski_tm.json・20261025_kane_lewa_transfers.json）。
+#   Transfermarkt 番号：ケイン 132098・レヴァンドフスキ 38253。API（tmapi-alpha）を番号ごとに（プロフィール・市場価値・季ごとの大会別成績・移籍歴）3秒あけて取得。
+#   クロスチェック：英語版 Wikipedia の Career statistics（2026-10-25 取得。控え: research/raw/20261025_kane_wiki.wikitext・20261025_lewandowski_wiki.wikitext）。
+#   **バイエルンでの季ごとの試合・得点は Transfermarkt と Wikipedia が全季一致**：
+#     ケイン 23/24 45試合44得点・24/25 51試合41得点（クラブW杯5試合3得点を含む）・25/26 51試合61得点・26/27 11試合10得点（Wikipedia は 10月21日の試合まで）。バイエルン通算 158試合156得点。
+#     レヴァンドフスキ 14/15 49試合25得点・15/16 51試合42得点・16/17 47試合43得点・17/18 48試合41得点・18/19 47試合40得点・19/20 47試合55得点・20/21 40試合48得点・21/22 46試合50得点。通算 375試合344得点。
+#   アシスト・出場時間・PKの得点は Transfermarkt だけ（大会別の penaltyShooterGoalsScored / Attempts を足した）。代表の試合は混ぜない（クラブの試合だけ）。
+# **選んだ理由**：直近の比べ（10/2エムバペ×ハーランド・10/3クラシコ・10/9ベリンガム×ムシアラ・10/11マレン×ラウタロ・10/12ドルトムント×モナコ・10/14バレバ×カマラ・10/16エムバペ×ヴィニシウス・
+#   10/17ペドリ×ヴィティーニャ・10/19バイエルン×ドルトムント・10/20ランキング・10/21ライス×ネヴェス・10/22ヤマル×サカ・10/23ヴィルツ×ロジャーズ・10/24オリーセ×パーマー）に
+#   ケイン・レヴァンドフスキはどちらも出ていない（posted.json・scripts/*compare*・covered.yaml を grep で確認。ケインはニュース（CL10試合連続・契約延長・ブンデス100点）、
+#   レヴァンドフスキは記録の回（CL通算・ハーランドのCL60点）に名前が出るだけで、2人を比べた回は無い）。選手紹介・レジェンドにも2人の回は無い。
+#   大物の名前（バイエルンの歴代の9番2人）×比べる軸（同じ147試合・PKを除く・同じ年齢）。ケインが 25/26 の61点でレヴァンドフスキの55点（19/20）を超えたこと（Wikipedia）が入口。
+#   **この回の軸**：バイエルンの最初の3季（どちらもちょうど147試合）で146点と110点。差の36を ①PKの差（38と12）と ②来た年齢（30歳と25歳）に分ける。
+#   ③30歳を迎えた季から3季で並べると、90分あたりは2人とも1.10（1点に約82分）で同じ。PK以外はレヴァンドフスキ0.92・ケイン0.81。④年齢ごとの推移。
+#   使っていない素材：年俸・負傷・私生活・代表の数字・パーセンタイル・戦術。レヴァンドフスキのいまの所属（MLS）は扱うリーグの外なので言わない。
+#   日本との接点（確かめた縁）：レヴァンドフスキのアシストで香川真司が決め、ドルトムントが連覇を決めた（2012-04-21。Lewandowski の Wikipedia）。ケインのいまのバイエルンに伊藤洋輝（TM：所属27・背番号21、日本代表）。
+# **スタッツの条件（足切り）**：クラブのトップチームの全公式戦（リーグ・CL・DFBポカール・スーパーカップ・クラブW杯・UEFAスーパーカップ）。代表・育成年代は混ぜない。
+#   どの3季も 900分を大きく超える。ケインの 26/27（33歳）は 11試合892分で **900分に届かない → 「いまの時点」と言う**。
+# **使った数と自分で割った値**（クラブの試合だけ。TM の大会別を足した。90分あたり＝得点×90÷出場分）
+#   ケイン 23/24＝L1 32試合2843分36得点(PK5/5)＋CL 12試合1065分8得点(PK3/3)＋スーパーカップ 1試合26分＝45試合・3934分・44得点・12アシスト・PK8（1.01）
+#   ケイン 24/25＝L1 31試合2391分26得点(PK9/9)＋CL 13試合1119分11得点(PK4/4)＋クラブW杯 5試合376分3得点＋ポカール 2試合72分1得点＝51試合・3958分・41得点・14アシスト・PK13（0.93）
+#   ケイン 25/26＝L1 31試合2382分36得点(PK10/11)＋CL 13試合1041分14得点(PK4/5)＋ポカール 6試合537分10得点(PK3/4)＋スーパーカップ 1試合90分1得点＝51試合・4050分・61得点・7アシスト・PK17（1.36）
+#   ケイン 3季計＝147試合・11942分・146得点・33アシスト・PK38（蹴った41）→ 1.10、PK以外108→0.81。1点に 11942÷146＝81.8分（約82分）。
+#   ケイン 26/27＝11試合・892分・10得点・7アシスト・PK4 → 1.01（いまの時点）。
+#   レヴァンドフスキ 14/15＝L1 31試合2487分17得点(PK1/1)＋CL 12試合932分6得点＋ポカール 5試合495分2得点(PK0/1)＋スーパーカップ 1試合90分＝49試合・4004分・25得点・13アシスト・PK1（0.56）
+#   レヴァンドフスキ 15/16＝L1 32試合2654分30得点(PK2/2)＋CL 12試合942分9得点＋ポカール 6試合570分3得点＋スーパーカップ 1試合72分＝51試合・4238分・42得点・7アシスト・PK2（0.89）
+#   レヴァンドフスキ 16/17＝L1 33試合2777分30得点(PK5/5)＋CL 9試合794分8得点(PK4/4)＋ポカール 4試合360分5得点＋スーパーカップ 1試合90分＝47試合・4021分・43得点・9アシスト・PK9（0.96）
+#   レヴァンドフスキ 最初の3季計＝147試合・12263分・110得点・29アシスト・PK12（蹴った13）→ 0.81、PK以外98→0.72。1点に 12263÷110＝111.5分。
+#   **差の分け方**：146−110＝36。PKの得点の差 38−12＝26、PK以外の差 108−98＝10。
+#   **同じ年ごろ**（30歳を迎えた季から3季。ケインは1993-07-28生で 23/24 開幕時30歳。レヴァンドフスキは1988-08-21生で 18/19 の8月に30歳）：
+#   レヴァンドフスキ 18/19＝47試合・4180分・40得点・PK7（0.86）／19/20＝47試合・4134分・55得点・PK7（1.20）／20/21＝40試合・3389分・48得点・PK10（1.27）
+#     → 134試合・11703分・143得点・PK24（蹴った26）→ 1.10、PK以外119→0.92。1点に 11703÷143＝81.8分。
+#   33歳の季：レヴァンドフスキ 21/22＝46試合・4006分・50得点（1.12）／ケイン 26/27＝11試合・892分・10得点（1.01、いまの時点）。
+# **移籍**（Transfermarkt の移籍歴）：ケイン 2023-08-12 トッテナム→バイエルン、30歳、移籍金 9500万€（TM の値。Wikipedia は「最大1億1000万€」と書く。台本は「推定9500万ユーロ」）。
+#   レヴァンドフスキ 2014-07-01 ドルトムント→バイエルン、25歳、移籍金なし（Wikipedia「free transfer」）。
+# **記録**（Kane の Wikipedia）：25/26 の61点で、レヴァンドフスキの19/20の55点を超え、21世紀のクラブ最多。
+# 日程（ESPN、2026-10-25 時点）：フライブルク対バイエルン（ブンデス）2026-10-25 16:30 UTC＝日本時間26日 1:30。
+# 写真：すべて Wikimedia Commons（出典は各フォルダの credits.json）。ケイン＝ザルツブルク戦（2025年1月）2枚・イングランド（2026年6月）1枚、レヴァンドフスキ＝2018〜2019年のバイエルン3枚。
+slot: other_1
+date: "2026年10月25日"
+format: news
+series: 比べる
+people:
+  - ハリー・ケイン
+  - ロベルト・レヴァンドフスキ
+  - バイエルン
+
+theme:
+  end_bg: assets/images/20261025_compare_132098_38253/l_wob/01_w.jpg
+  id: compare_132098_38253
+  league: germany
+  kind: other
+  topic: ハリー・ケインとロベルト・レヴァンドフスキ
+  prefix: ""
+  title: ケインとレヴァンドフスキ、最初の147試合。36点の差は何で開いたのか
+  hook: ""
+  question: バイエルンの最初の147試合で146点と110点。36点の差は、PKと来た年齢に分けると、どう説明できるのか
+  takeaway: 差の36のうち26はPK。30歳を迎えた季から3季で並べると、90分あたりは2人とも1.10で、PK以外はレヴァンドフスキ0.92・ケイン0.81
+  league_name: ""
+  opening_image: assets/images/20261025_compare_132098_38253/pair_a/01.jpg
+
+short_title: ケインとレヴァンドフスキ、最初の147試合
+
+thumbnail:
+  photo: assets/images/20261025_compare_132098_38253/pair_a/01.jpg
+  photos:
+    - assets/images/20261025_compare_132098_38253/k_sal4/01.jpg
+    - assets/images/20261025_compare_132098_38253/l_fcb1/01.jpg
+  short_photo: assets/images/20261025_compare_132098_38253/k_eng1/01_v.jpg
+  face_link: VS
+  layout:
+    layout: classic
+    names: [ケイン, レヴァンドフスキ]
+    name_colors: ["#dc052d", "#0066b2"]
+  line1: ケインとレヴァンドフスキ
+  line2: 最初の147試合、146点と110点
+  tags: [ハリー・ケイン, ロベルト・レヴァンドフスキ, バイエルン]
+
+answer: 差の36のうち26はPK。同じ30〜32歳なら90分あたりは2人とも1.10、PK以外はレヴァンドフスキが上
+watch: 毎日、数字でサッカーを読み解きます
+
+sections:
+  - id: hook
+    heading: ケインとレヴァンドフスキ、バイエルンの最初の147試合で何点取ったのか
+    tier: 報道
+    telop: 最初の147試合の得点
+    narrator: 解説
+    card: &hookcard
+      type: stats
+      title: バイエルンでの最初の3季の得点（クラブの全公式戦）
+      items:
+        - ["146", "", ケイン]
+        - ["110", "", レヴァンドフスキ]
+        - ["147", "", 試合の数（2人とも）]
+      focus: 0
+    say:
+      - text: バイエルンに来てから最初の3季。ケインは146点、レヴァンドフスキは110点。
+        image: assets/images/20261025_compare_132098_38253/pair_a/01.jpg
+        card: none
+      - text: クラブの全公式戦の得点です。差は、36点あります。
+        image: assets/images/20261025_compare_132098_38253/k_sal3/01_w.jpg
+        card: {<<: *hookcard, focus: 1}
+      - text: 試合の数は、2人ともちょうど147。同じ数で並びました。
+        emph: true
+        image: assets/images/20261025_compare_132098_38253/l_fcb1/01_w.jpg
+        card: {<<: *hookcard, focus: 2}
+      - text: ただ、バイエルンに来た年齢は30歳と25歳。
+        image: assets/images/20261025_compare_132098_38253/pair_b/01.jpg
+        card: none
+      - text: ここにも、もう1つの違いがあります。
+        image: assets/images/20261025_compare_132098_38253/pair_b/01.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/harry-kane/leistungsdaten/spieler/132098
+      - https://www.transfermarkt.com/robert-lewandowski/leistungsdaten/spieler/38253
+
+  - id: data
+    heading: ケインとレヴァンドフスキは、何歳で、どうバイエルンに来たのか
+    tier: 報道
+    telop: バイエルンの9番2人
+    narrator: 解説
+    card: &datacard
+      type: duel
+      left: {name: ケイン, club: バイエルン, photo: assets/images/20261025_compare_132098_38253/k_eng1/01_sq.jpg, color: "#dc052d"}
+      right: {name: レヴァンドフスキ, club: 元バイエルン, photo: assets/images/20261025_compare_132098_38253/l_fcb1/01_sq.jpg, color: "#0066b2"}
+      rows:
+        - [年齢, 33歳, 38歳]
+        - [代表, イングランド, ポーランド]
+        - [位置, センターFW, センターFW]
+        - [利き足, 右, 右]
+        - [加入, 2023年8月, 2014年7月]
+        - [加入の年齢, 30歳, 25歳]
+        - [移籍金, 9500万€, なし（満了）]
+      bars: false
+      note: 移籍金は Transfermarkt の推定。レヴァンドフスキは契約満了でドルトムントから移った
+    say:
+      - text: ケインは33歳。イングランド代表の主将で、いまのバイエルンの9番です。
+        image: assets/images/20261025_compare_132098_38253/k_eng1/01_w.jpg
+        card: {<<: *datacard, highlight_row: 年齢}
+      - text: レヴァンドフスキは38歳。ポーランド代表の主将です。
+        image: assets/images/20261025_compare_132098_38253/l_tr1/01_w.jpg
+        card: {<<: *datacard, highlight_row: 代表}
+      - text: ケインは2023年8月、30歳でトッテナムから。移籍金は、推定9500万ユーロ。
+        image: assets/images/20261025_compare_132098_38253/k_sal4/01_w.jpg
+        card: {<<: *datacard, highlight_row: 加入の年齢}
+      - text: レヴァンドフスキは2014年7月、25歳。契約満了で、移籍金はなし。
+        image: assets/images/20261025_compare_132098_38253/l_fcb1/01_w.jpg
+        card: {<<: *datacard, highlight_row: 移籍金}
+      - text: レヴァンドフスキはバイエルンに8季いて、375試合で344点を挙げました。
+        image: assets/images/20261025_compare_132098_38253/l_wob/01_w.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/harry-kane/profil/spieler/132098
+      - https://www.transfermarkt.com/robert-lewandowski/profil/spieler/38253
+      - https://www.transfermarkt.com/harry-kane/transfers/spieler/132098
+      - https://en.wikipedia.org/wiki/Robert_Lewandowski
+
+  - id: japan
+    heading: 2人は、日本の選手とどこで重なっているのか
+    tier: 背景
+    telop: 日本の選手との縁
+    narrator: 解説
+    say:
+      - text: 2人には、日本の選手との縁もあります。
+        image: assets/images/20261025_compare_132098_38253/pair_b/01.jpg
+        card: none
+      - text: 2012年4月21日。レヴァンドフスキのアシストから、香川真司がゴール。
+        image: assets/images/20261025_compare_132098_38253/l_tr1/01_w.jpg
+        card: none
+      - text: この1点で、ドルトムントはリーグ連覇を決めました。
+        image: assets/images/20261025_compare_132098_38253/l_tr1/01_w.jpg
+        card: none
+      - text: ケインのいまのバイエルンには、日本代表の伊藤洋輝がいます。
+        image: assets/images/20261025_compare_132098_38253/k_sal3/01_w.jpg
+        card: none
+    sources:
+      - https://en.wikipedia.org/wiki/Robert_Lewandowski
+      - https://www.transfermarkt.com/hiroki-ito/profil/spieler/353892
+
+  - id: first3
+    heading: 最初の3季の全公式戦、得点と出場時間はどれだけ違うのか
+    tier: 報道
+    main: true
+    telop: バイエルンの最初の3季
+    narrator: 解説
+    card: &firstcard
+      type: duel
+      left: {name: ケイン, club: 23/24〜25/26, photo: assets/images/20261025_compare_132098_38253/k_eng1/01_sq.jpg, color: "#dc052d"}
+      right: {name: レヴァンドフスキ, club: 14/15〜16/17, photo: assets/images/20261025_compare_132098_38253/l_fcb1/01_sq.jpg, color: "#0066b2"}
+      rows:
+        - [試合, "147", "147"]
+        - [出場時間, 11942分, 12263分]
+        - [得点, "146", "110"]
+        - [アシスト, "33", "29"]
+        - [得点（90分あたり）, "1.10", "0.81"]
+      bars: [出場時間, 得点, アシスト, 得点（90分あたり）]
+      note: バイエルンに来てから最初の3季。クラブの全公式戦（リーグ・CL・DFBポカール・スーパーカップ・クラブW杯）。90分あたりは自分で割った値
+    say:
+      - text: ケインとレヴァンドフスキ、最初の147試合の得点は、146と110でした。
+        short_only: true
+        image: assets/images/20261025_compare_132098_38253/pair_b/01.jpg
+        card: none
+      - text: 数えるのは全公式戦。リーグも、チャンピオンズリーグも、カップ戦も。
+        image: assets/images/20261025_compare_132098_38253/pair_a/01.jpg
+        card: none
+      - text: ケインは23/24から25/26。レヴァンドフスキは14/15から16/17です。
+        image: assets/images/20261025_compare_132098_38253/k_sal4/01_w.jpg
+        card: {<<: *firstcard, highlight_row: 試合}
+      - text: 試合は147ずつ。出場時間は、11942分と12263分。
+        image: assets/images/20261025_compare_132098_38253/l_wob/01_w.jpg
+        card: {<<: *firstcard, highlight_row: 出場時間}
+      - text: 得点は、146と110。アシストは、33と29です。
+        image: assets/images/20261025_compare_132098_38253/k_eng1/01_w.jpg
+        card: {<<: *firstcard, highlight_row: 得点}
+      - text: 90分に直すと、ケインが1.10、レヴァンドフスキが0.81。
+        emph: true
+        image: assets/images/20261025_compare_132098_38253/pair_b/01.jpg
+        card: {<<: *firstcard, highlight_row: 得点（90分あたり）}
+      - text: ケインは約82分に1点。レヴァンドフスキは約111分に1点でした。
+        image: assets/images/20261025_compare_132098_38253/pair_a/01.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/harry-kane/leistungsdaten/spieler/132098
+      - https://www.transfermarkt.com/robert-lewandowski/leistungsdaten/spieler/38253
+      - https://en.wikipedia.org/wiki/Harry_Kane
+      - https://en.wikipedia.org/wiki/Robert_Lewandowski
+
+  - id: trend
+    heading: 1季目から3季目まで、90分あたりの得点はどう動いたのか
+    tier: 報道
+    telop: 季ごとの90分あたり
+    narrator: 解説
+    card: &trendcard
+      type: line
+      title: 得点、90分あたり（バイエルンでの季。クラブの全公式戦）
+      x: [1季目, 2季目, 3季目]
+      series:
+        - [ケイン, [1.01, 0.93, 1.36]]
+        - [レヴァンドフスキ, [0.56, 0.89, 0.96]]
+      focus: ケイン
+      note: ケインは23/24〜25/26、レヴァンドフスキは14/15〜16/17。自分で割った値
+    say:
+      - text: 季ごとに、90分あたりの得点を並べます。
+        image: assets/images/20261025_compare_132098_38253/l_wob/01_w.jpg
+        card: *trendcard
+      - text: 1季目は、1.01と0.56。レヴァンドフスキは49試合で25点でした。
+        image: assets/images/20261025_compare_132098_38253/k_sal3/01_w.jpg
+        card: {<<: *trendcard, highlight: 1季目}
+      - text: 2季目は、0.93と0.89。ここで、ほぼ並びました。
+        image: assets/images/20261025_compare_132098_38253/pair_b/01.jpg
+        card: {<<: *trendcard, highlight: 2季目}
+      - text: 3季目は、1.36と0.96。ケインはこの季、61点を挙げています。
+        emph: true
+        image: assets/images/20261025_compare_132098_38253/k_sal4/01_w.jpg
+        card: {<<: *trendcard, highlight: 3季目}
+      - text: 61点は、レヴァンドフスキの55点を超えて、今世紀のクラブ最多でした。
+        image: assets/images/20261025_compare_132098_38253/pair_a/01.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/harry-kane/leistungsdaten/spieler/132098
+      - https://www.transfermarkt.com/robert-lewandowski/leistungsdaten/spieler/38253
+      - https://en.wikipedia.org/wiki/Harry_Kane
+
+  - id: penalty
+    heading: PKの得点を分けると、36点の差はどこまで縮むのか
+    tier: 背景
+    telop: PKを分けた計算
+    narrator: 解説
+    card: &waterfall
+      type: waterfall
+      title: 最初の3季の得点（PKとそれ以外に分ける）
+      start: [レヴァンドフスキ, 110]
+      steps:
+        - [PKの得点の差（38と12）, 26]
+        - [PK以外の得点の差（108と98）, 10]
+      total: [ケイン, 146]
+      note: PKの得点は Transfermarkt の大会別の数を足した値。クラブの全公式戦
+    say:
+      - text: ここで、PKで決めた点を分けて考えます。
+        image: assets/images/20261025_compare_132098_38253/pair_b/01.jpg
+        card: *waterfall
+      - text: PKの得点は、ケインが38、レヴァンドフスキが12。蹴った数は、41と13です。
+        image: assets/images/20261025_compare_132098_38253/k_eng1/01_w.jpg
+        card: *waterfall
+      - text: 差の36のうち、26はPKの差です。
+        emph: true
+        image: assets/images/20261025_compare_132098_38253/l_fcb1/01_w.jpg
+        card: *waterfall
+      - text: PKを除くと、108と98。差は、10まで縮みます。
+        image: assets/images/20261025_compare_132098_38253/k_sal3/01_w.jpg
+        card: *waterfall
+      - text: 90分あたりでは、PKを除いて、0.81と0.72です。
+        image: assets/images/20261025_compare_132098_38253/pair_a/01.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/harry-kane/leistungsdaten/spieler/132098
+      - https://www.transfermarkt.com/robert-lewandowski/leistungsdaten/spieler/38253
+
+  - id: sameage
+    heading: 同じ30歳からの3季で並べると、どちらが上なのか
+    tier: 報道
+    telop: 30歳を迎えた季から3季
+    narrator: 解説
+    card: &agecard
+      type: duel
+      left: {name: ケイン, club: 23/24〜25/26, photo: assets/images/20261025_compare_132098_38253/k_eng1/01_sq.jpg, color: "#dc052d"}
+      right: {name: レヴァンドフスキ, club: 18/19〜20/21, photo: assets/images/20261025_compare_132098_38253/l_fcb1/01_sq.jpg, color: "#0066b2"}
+      rows:
+        - [試合, "147", "134"]
+        - [出場時間, 11942分, 11703分]
+        - [得点, "146", "143"]
+        - [PKの得点, "38", "24"]
+        - [得点（90分あたり）, "1.10", "1.10"]
+        - [PK以外（90分あたり）, "0.81", "0.92"]
+      bars: [出場時間, 得点, PKの得点, 得点（90分あたり）, PK以外（90分あたり）]
+      note: どちらも30歳を迎えた季から3季。クラブの全公式戦。90分あたりは自分で割った値
+    say:
+      - text: 今度は、年齢をそろえます。30歳を迎えた季から、3季です。
+        image: assets/images/20261025_compare_132098_38253/l_wob/01_w.jpg
+        card: none
+      - text: レヴァンドフスキは、18/19から20/21。ケインと同じ年ごろです。
+        image: assets/images/20261025_compare_132098_38253/l_tr1/01_w.jpg
+        card: {<<: *agecard, highlight_row: 試合}
+      - text: 試合は134で、ケインより13少ない。得点は143。
+        image: assets/images/20261025_compare_132098_38253/k_sal4/01_w.jpg
+        card: {<<: *agecard, highlight_row: 得点}
+      - text: 90分あたりは、2人とも1.10。1点に、どちらも約82分です。
+        emph: true
+        image: assets/images/20261025_compare_132098_38253/pair_b/01.jpg
+        card: {<<: *agecard, highlight_row: 得点（90分あたり）}
+      - text: PKを除くと、レヴァンドフスキが0.92、ケインが0.81。
+        image: assets/images/20261025_compare_132098_38253/l_fcb1/01_w.jpg
+        card: {<<: *agecard, highlight_row: PK以外（90分あたり）}
+      - text: 同じ年ごろでは、PK以外の点は、レヴァンドフスキが多く取っていました。
+        image: assets/images/20261025_compare_132098_38253/k_sal3/01_w.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/harry-kane/leistungsdaten/spieler/132098
+      - https://www.transfermarkt.com/robert-lewandowski/leistungsdaten/spieler/38253
+      - https://en.wikipedia.org/wiki/Robert_Lewandowski
+
+  - id: ages
+    heading: 30歳から33歳まで、年齢ごとの得点はどう動いたのか
+    tier: 報道
+    telop: 年齢ごとの90分あたり
+    narrator: 解説
+    card: &agetrend
+      type: line
+      title: 得点、90分あたり（年齢の季ごと。クラブの全公式戦）
+      x: [30歳, 31歳, 32歳, 33歳]
+      series:
+        - [ケイン, [1.01, 0.93, 1.36, 1.01]]
+        - [レヴァンドフスキ, [0.86, 1.20, 1.27, 1.12]]
+      focus: ケイン
+      note: ケインの33歳は26/27の10月21日まで（11試合892分）。レヴァンドフスキは18/19〜21/22
+    say:
+      - text: 次は1季ずつ。30歳から33歳までの季を並べます。
+        image: assets/images/20261025_compare_132098_38253/pair_a/01.jpg
+        card: *agetrend
+      - text: 30歳は、1.01と0.86。31歳は、0.93と1.20です。
+        image: assets/images/20261025_compare_132098_38253/k_eng1/01_w.jpg
+        card: {<<: *agetrend, highlight: 31歳}
+      - text: 32歳では、ケインが1.36。レヴァンドフスキの1.27を上回りました。
+        emph: true
+        image: assets/images/20261025_compare_132098_38253/l_wob/01_w.jpg
+        card: {<<: *agetrend, highlight: 32歳}
+      - text: 33歳。レヴァンドフスキは1.12。ケインは、今季ここまで1.01です。
+        image: assets/images/20261025_compare_132098_38253/k_sal4/01_w.jpg
+        card: {<<: *agetrend, highlight: 33歳}
+      - text: ただ、ケインの33歳は、まだ11試合の数字です。
+        image: assets/images/20261025_compare_132098_38253/l_tr1/01_w.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/harry-kane/leistungsdaten/spieler/132098
+      - https://www.transfermarkt.com/robert-lewandowski/leistungsdaten/spieler/38253
+
+  - id: view
+    heading: 見立て・36点の差は、PKか、来た年齢か
+    tier: 背景
+    viewpoint: true
+    narrator: 解説
+    telop: 数字の違いが示すもの
+    card: &viewcard
+      type: duel
+      left: {name: ケイン, club: バイエルン, photo: assets/images/20261025_compare_132098_38253/k_eng1/01_sq.jpg, color: "#dc052d"}
+      right: {name: レヴァンドフスキ, club: 元バイエルン, photo: assets/images/20261025_compare_132098_38253/l_fcb1/01_sq.jpg, color: "#0066b2"}
+      rows:
+        - [最初の3季の得点, "146", "110"]
+        - [PKの得点, "38", "12"]
+        - [PK以外の得点, "108", "98"]
+        - [30〜32歳の90分あたり, "1.10", "1.10"]
+        - [30〜32歳のPK以外, "0.81", "0.92"]
+      bars: [最初の3季の得点, PKの得点, PK以外の得点, 30〜32歳のPK以外]
+      note: 得点はクラブの全公式戦。90分あたりは自分で割った値。上の3行は最初の3季（ケイン23/24〜25/26・レヴァンドフスキ14/15〜16/17）
+    say:
+      - text: 見立てです。最初の3季で開いた差は、36点。
+        mark: {kind: circle, row: 0}
+        image: assets/images/20261025_compare_132098_38253/pair_b/01.jpg
+        card: {<<: *viewcard, highlight_row: 最初の3季の得点}
+      - text: そのうち26点は、PKの差。PK以外の差は、10点です。
+        image: assets/images/20261025_compare_132098_38253/k_sal3/01_w.jpg
+        card: {<<: *viewcard, highlight_row: PKの得点}
+      - text: もう1つは、来た年齢。レヴァンドフスキは25歳、ケインは30歳でした。
+        image: assets/images/20261025_compare_132098_38253/l_fcb1/01_w.jpg
+        card: {<<: *viewcard, highlight_row: PK以外の得点}
+      - text: 同じ30歳からの3季なら、90分あたりは1.10で並びます。
+        emph: true
+        image: assets/images/20261025_compare_132098_38253/pair_a/01.jpg
+        card: {<<: *viewcard, highlight_row: 30〜32歳の90分あたり}
+      - text: PKを除けば、0.92と0.81。レヴァンドフスキが上です。
+        image: assets/images/20261025_compare_132098_38253/l_tr1/01_w.jpg
+        card: {<<: *viewcard, highlight_row: 30〜32歳のPK以外}
+      - text: 裏づけになるのは、PKの数の差と、同じ年ごろの90分あたり。この2点。
+        image: assets/images/20261025_compare_132098_38253/k_eng1/01_w.jpg
+        card: none
+      - text: ケインの次の試合は、アウェーのフライブルク戦。日本時間で26日の未明です。
+        image: assets/images/20261025_compare_132098_38253/k_sal4/01_w.jpg
+        card: none
+      - text: ケインの33歳はいま1.01。同じ33歳のレヴァンドフスキは1.12。
+        image: assets/images/20261025_compare_132098_38253/k_sal3/01_w.jpg
+        card: none
+      - text: この差が縮まるかどうか、見ていきます。
+        image: assets/images/20261025_compare_132098_38253/pair_b/01.jpg
+        card: none
+    sources:
+      - https://www.transfermarkt.com/harry-kane/leistungsdaten/spieler/132098
+      - https://www.transfermarkt.com/robert-lewandowski/leistungsdaten/spieler/38253
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/scoreboard?dates=20261025

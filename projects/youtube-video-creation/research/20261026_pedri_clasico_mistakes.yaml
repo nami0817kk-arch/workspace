@@ -1,0 +1,165 @@
+# 取材メモ（2026年10月26日）ペドリ「ミスの代償を払った」。クラシコ1対2で負けたバルサ側の言葉（ニュースのショート。見せ方 Y）
+# 取材: 2026-10-26 昼。requests（ブラウザUA）と ESPN の公開API で読んだ。検索エンジンのAI要約は使っていない。
+#   ・ESPN の記事（50282662「Pedri says Barcelona paid for stupid mistakes in loss to Real Madrid」著者 Sam Marsden、2026-10-25T23:57Z。
+#     now.core.api.espn.com/v1/sports/news/50282662 で本文を最後まで読んだ。控え research/raw/20261026_pedri_espn.txt・_api.json）
+#       … 「Barcelona's perfect start to the LaLiga season was ended by Real Madrid in the Clásico at Spotify Camp Nou on Sunday」
+#       … 「Madrid halted Barça's winning streak in the league at nine games to move within three points」
+#       … 「Raphinha's 15th goal of the campaign」「with Barça pushing for a winner late on, they left space in behind」
+#       … 「After 11 consecutive victories in all competitions, they have now lost back-to-back games after also losing 4-2 at Paris Saint-Germain last Tuesday」
+#       … 「injury list which includes Andreas Christensen, Jules Koundé and Eric García -- and now Xavi Espart, who was taken off in the first half」
+#       … 「Barça remain top of LaLiga, two points clear of Atlético and now just three ahead of Real Madrid. They return to action next Saturday when they host Alavés.」
+# 本人・監督の言葉（ESPN 50282662。ペドリは DAZN、フリックは試合後の会見。英語で伝えたものを訳した。語は足していない。スペイン語の原文は当たれていない）:
+#   ・ペドリ "In general, we didn't play well." →「全体として、いい試合ができなかった」
+#     "We were not ourselves in the first half." →「前半は、自分たちらしくなかった」
+#     "we did not defend the second goal well -- from a transition, as well, which we knew they could do." →「2点目はうまく守れなかった。切り替えからで、相手ができると分かっていた形だった」
+#     "in the first half we were really slow, we lost the ball stupidly a lot and you pay for those mistakes." →「前半は本当に遅かった。ばかげた形で何度もボールを失った。そういうミスは、代償を払うことになる」
+#   ・フリック "you could see today we missed the freshness." →「今日は、フレッシュさが足りなかったのが見えたはずだ」
+#     "But in the big games, small things are important. They decide the games." →「大きな試合では、小さなことが大事だ。それが試合を決める」
+#     "It's the first defeat in LaLiga. We won nine in a row." →「リーグで初めての負けだ。9つ続けて勝ってきた」
+# 「ばかげた」は本人が自分たちに向けた言葉（stupidly）。人を貶す語としては使わない（台本の地の文では使わない）。
+# 重なりを避けたもの: 同じ日 18:30 のムバッペのショート（scripts/20261026_mbappe_100_clasico.md）。得点の表（41分・61分・87分）、100点目・24人目・383点、
+#   ジェラール・マルティンのクリアの話は使わない。ムバッペの名前は決勝点の1行だけ（100点目は言わない）。数字は「11連勝→2連敗」「首位との差」で組む。
+#   10/23 ラフィーニャの9番の本（今季14点）とは、ラフィーニャの今季15点目を1行だけ。
+# 確度: 結果・連勝・順位・次の試合は ESPN の記事＝報道。言葉は報道（ESPN が DAZN と会見から引用）。見立ては背景。
+# 反応: 当たっていない（作らない）。approve は --no-voices で。
+# 写真: Commons（Bryan Berlin、CC BY-SA 4.0、2026年7月 W杯のフランス戦・アルゼンチン戦）。10/17・10/22 に使った 164・190・197 は避けた。
+#   01＝フランス戦 244（左にフランスの選手、本人は右）、02＝フランス戦 026（試合前、顔の大写し）、03＝アルゼンチン戦 191、04＝フランス戦 226、05＝アルゼンチン戦 221。
+#   **バルサの姿の写真は無い**（今日の試合の写真は代理店 Getty しか無いので使わない）。ショートは横幅の大きい 02・03・04 の縦版を使う。
+slot: laliga
+date: "2026年10月26日"
+format: news
+no_main: true
+people: [ペドリ, バルセロナ, レアル・マドリード, フリック, ラフィーニャ]
+
+short_style: Y
+short_hook_quote: ばかげた形で、何度もボールを失った。
+short_question: ペドリの言う「ミス」と、フリック監督の言う「疲れ」。負けの理由はどちらだと思いますか。
+short_hook: ペドリが、クラシコの負けを振り返りました。
+short_photos:
+  - assets/images/20261026_pedri_clasico_mistakes/02_v.jpg
+  - assets/images/20261026_pedri_clasico_mistakes/03_v.jpg
+  - assets/images/20261026_pedri_clasico_mistakes/04_v.jpg
+short_telops:
+  - {match: "ばかげた", text: "ペドリ/「ミスの代償を払う」"}
+  - {match: "11連勝", text: "公式戦11連勝のあと/2連敗"}
+  - {match: "フレッシュさ", text: "フリック監督/「フレッシュさが足りなかった」"}
+  - {match: "勝ち点27", text: "バルサ首位・勝ち点27/アトレティコと2差・レアルと3差"}
+
+theme:
+  id: pedri_clasico_mistakes
+  league: spain
+  league_name: ラ・リーガ
+  prefix: ""
+  title: ペドリがクラシコのあとで口にした、負けの理由
+  hook: ""
+  question: クラシコで負けたバルサの中で、ペドリは何を悔やんだのか
+  takeaway: ペドリは前半のボールの失い方を、フリック監督は疲れを挙げた。公式戦11連勝のあとの2連敗で、首位の差はアトレティコと2、レアルと3
+
+thumbnail:
+  layout: face
+  line1: ペドリ
+  line2: 「代償を払った」
+  tags: [ペドリ, バルセロナ]
+  photo: assets/images/20261026_pedri_clasico_mistakes/04_w.jpg
+  short_photo: assets/images/20261026_pedri_clasico_mistakes/02_v.jpg
+
+answer: 前半の遅さと、何度も簡単にボールを失ったこと。そのミスの代償を払った、と話した
+watch: 31日（土）、ホームのアラベス戦
+
+sections:
+  - id: what
+    heading: 開幕からの連勝が止まった夜
+    tier: 報道
+    telop: バルセロナ1対2レアル。今季リーグ初黒星
+    say:
+      - text: 25日のクラシコ。バルセロナはホームで、レアル・マドリードに1対2で負けました。
+        image: assets/images/20261026_pedri_clasico_mistakes/01_w.jpg
+        card: none
+      - text: 開幕から続いたリーグの連勝は、9で止まりました。
+        image: assets/images/20261026_pedri_clasico_mistakes/03_w.jpg
+        card: none
+      - text: 後半、ラフィーニャの今季15点目で一度は追いつきました。
+        image: assets/images/20261026_pedri_clasico_mistakes/04_w.jpg
+        card: none
+      - text: しかし勝ち越しを狙って前に出た裏を突かれ、終盤、ムバッペに決勝点を許しました。
+        image: assets/images/20261026_pedri_clasico_mistakes/05_w.jpg
+        card: none
+      - text: 試合のあと、中盤のペドリが自分たちの戦い方を振り返りました。
+        image: assets/images/20261026_pedri_clasico_mistakes/03_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://now.core.api.espn.com/v1/sports/news/50282662
+    quotes_from: ["ESPN https://now.core.api.espn.com/v1/sports/news/50282662"]
+
+  - id: words
+    main: true
+    heading: ペドリは何を悔やんだのか
+    tier: 報道
+    telop: ペドリ「ミスの代償を払うことになる」
+    say:
+      - voice: ペドリ
+        text: 前半は本当に遅かった。
+        image: assets/images/20261026_pedri_clasico_mistakes/05_w.jpg
+        card: none
+      - voice: ペドリ
+        text: ばかげた形で、何度もボールを失った。
+        short_voice: true
+      - voice: ペドリ
+        text: そういうミスは、代償を払うことになる。
+        cont: true
+      - text: バルセロナのペドリが、クラシコでレアルに1対2で負けたあとに話しました。
+        short_only: true
+      - voice: ペドリ
+        text: 全体として、いい試合ができなかった。
+        image: assets/images/20261026_pedri_clasico_mistakes/03_w.jpg
+        card: none
+      - voice: ペドリ
+        text: 前半は、自分たちらしくなかった。
+        cont: true
+      - voice: ペドリ
+        text: 2点目は、うまく守れなかった。
+        image: assets/images/20261026_pedri_clasico_mistakes/04_w.jpg
+        card: none
+      - voice: ペドリ
+        text: 切り替えからで、相手ができると分かっていた形だった。
+        cont: true
+      - text: 一方、フリック監督が挙げたのは、疲れでした。
+        image: assets/images/20261026_pedri_clasico_mistakes/01_w.jpg
+        card: none
+      - voice: フリック監督
+        text: 今日は、フレッシュさが足りなかったのが見えたはずだ。
+      - voice: フリック監督
+        text: 大きな試合では、小さなことが大事だ。それが試合を決める。
+        image: assets/images/20261026_pedri_clasico_mistakes/05_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://now.core.api.espn.com/v1/sports/news/50282662
+    quotes_from: ["ESPN https://now.core.api.espn.com/v1/sports/news/50282662"]
+
+  - id: view
+    viewpoint: true
+    heading: 11連勝のあとの2連敗
+    tier: 背景
+    telop: 公式戦11連勝のあと2連敗。それでも首位
+    say:
+      - text: 見立てです。バルサは公式戦11連勝のあと、これで2連敗になりました。
+        image: assets/images/20261026_pedri_clasico_mistakes/03_w.jpg
+        card: &run {type: table, title: バルセロナのこの1週間, columns: [日, 試合, 結果], rows: [[21日, パリSG（CL・敵地）, 2対4], [25日, レアル・マドリード（リーグ）, 1対2]], highlight_row: 1}
+      - text: 21日にはチャンピオンズリーグで、パリSGに4対2で負けていました。
+        image: assets/images/20261026_pedri_clasico_mistakes/04_w.jpg
+        card: {<<: *run, highlight_row: 0}
+      - text: 守備陣には、クンデ、クリステンセン、エリック・ガルシアのけが人が並びます。
+        image: assets/images/20261026_pedri_clasico_mistakes/01_w.jpg
+        card: none
+      - text: それでも10試合で勝ち点27の首位。2位アトレティコと2差、レアルとは3差です。
+        image: assets/images/20261026_pedri_clasico_mistakes/04_w.jpg
+        card: none
+      - text: 次は31日、ホームのアラベス戦。
+        image: assets/images/20261026_pedri_clasico_mistakes/05_w.jpg
+        card: none
+      - text: ペドリが悔やんだボールの失い方を、まず直せるか。そこが見どころです。
+    official: false
+    sources:
+      - https://now.core.api.espn.com/v1/sports/news/50282662

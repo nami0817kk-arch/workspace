@@ -1,0 +1,512 @@
+# 大久保嘉人（元日本代表FW）の紹介。シリーズ「レジェンドの紹介（日本）」2026-10-26。型は 10/25 の遠藤保仁と同じ8節。
+# **FotMob・DataMB・FBref・Sofascore・Transfermarkt は不使用**。数字は セレッソ大阪公式・JFA公式・日刊スポーツ（当時の記事）・日本語/英語版 Wikipedia の成績表と試合記録、自分で足した値だけ。
+# **私生活（家族・結婚・移住）は入れない。女子サッカーは入れない。病気・怪我・法的な問題（退場・暴言）は入れない**。Jリーグは経歴の事実（所属・期間・J1通算の記録）だけで、Jリーグそのものを題材にしない。
+#
+# **重なりの確認（2026-10-26）**：scripts/・research/covered.yaml・research/posted.json を「大久保」「okubo」「中澤」「nakazawa」で grep。
+#   出てくるのは 2026-09-29 の **小久保玲央ブライアン（kokubo）**（別人）だけ。大久保嘉人の回は無い。直近の中田英寿・長谷部誠・中村俊輔・内田篤人・川口能活・小野伸二・稲本潤一・遠藤保仁とも別人。
+# **引退の確認（一次情報）**：セレッソ大阪公式「大久保 嘉人選手 現役引退のお知らせ」（cerezo.jp/news/2021-1119-1800/、2021-11-19）
+#   「大久保 嘉人 選手が、2021シーズン限りで現役を引退することになりました」。→ **現役ではない**。AFC公式（2021-11-20）も同じ。
+# **いまの立場**：FC Jurong（運営 NSG Global）公式 2025-09-01「Yoshito Okubo Appointed as Club Director of Albirex Niigata Barcelona」
+#   ＝2025–26シーズンから、留学プログラム「アルビレックス新潟バルセロナ」のクラブディレクター。プログラムは「football, language learning, and daily life overseas」。
+# **日本との接点**：全体が日本代表・W杯の話（代表60試合、W杯は2010・2014）。
+#
+# **数字の出どころと台本での扱い**
+# - **日本代表 60試合6得点**：英語・日本語 Wikipedia（jfootball-db 引用）、AFC公式「60 caps」、日刊スポーツ 2021-11-20「国際Aマッチ通算60試合6得点」。
+#   年別（英語版）2003=14・2004=3・2005=2・2006=0・2007=2・2008=12・2009=9・2010=11・2011=0・2012=1・2013=0・2014=6 の合計 60、得点 0+0+0+0+2+3+0+0+0+0+0+1=6 を自分で確認。
+#   区切り（自分で足した）：2003〜05 = 19試合0得点、2007〜10 = 34試合5得点、2012〜14 = 7試合1得点。2007年以降 = 41試合6得点 → 41÷6＝6.8 →「およそ7試合に1点」。
+#   初ゴール 2007-10-17 エジプト戦（2得点）＝21試合目（19＋2007年8月のカメルーン戦＝20、エジプト戦＝21。日本語 Wikipedia の「21試合目」と一致）。
+#   代表デビュー 2003-05-31 韓国戦（日刊スポーツのプロフィル）。最後の得点前は 2008-11-13 シリア戦、次が 2014-06-06 ザンビア戦（英語 Wikipedia の得点一覧）。
+# - **W杯**：2006年は落選（日本語 Wikipedia）。2010年は4試合すべて先発（英語 Wikipedia の Group E / knockout stage の先発表：カメルーン戦 CF、オランダ・デンマーク・パラグアイ戦 LW）。
+#   2014年はメンバー発表 2014-05-12（JFA公式 news/00000776 の FW 欄に「大久保 嘉人（川崎フロンターレ）」）。本大会は3試合（コートジボワール 67分から、ギリシャ・コロンビア先発。英語 Wikipedia Group C）。W杯の得点は0なので言わない。
+#   2012年2月のアイスランド戦以来の選出（日本語 Wikipedia、年別の 2012=1・2013=0 と合う）→「2年以上、呼ばれていなかった」。
+# - **マジョルカ**：期限付き移籍の決定 2004-11-08、スペイン初戦 2005-01-09 デポルティーボ戦で1得点1アシスト（日刊スポーツ「大久保嘉人プロフィル」）。試合は2対2（英語 Wikipedia 2004–05 La Liga の結果表 MLL–RCD 2–2）。
+#   残留争い（日刊スポーツ大阪版 2005-05-31「マジョルカ奇跡的残留、大久保も残留濃厚」）：4月10日のサラゴサ戦の負けでレバンテと勝ち点11差 → 以後7試合4勝3分け → 最後の3試合に大久保が先発（最終節は79分までプレー、ベティスと1対1）→ レバンテが負けて17位で残留。
+#   残り3試合のうち2試合の得点（アスレティック戦・デポルティーボ戦）は日本語 Wikipedia（日刊の「3戦連発はならなかった」と合う）。スコアは英語 Wikipedia の結果表 MLL–ATH 4–3、RCD–MLL 0–3。
+#   最終の勝ち点：マジョルカ 10勝9分＝39、レバンテ 9勝10分＝37（英語 Wikipedia の順位表から自分で計算）。差は2。
+#   スペイン通算 39試合5得点（日本語・英語 Wikipedia。2004-05 は13試合3得点で日刊のプロフィルと一致）。
+# - **ヴォルフスブルク**：2009年1月に加入、リーグ戦9試合0得点（英語 Wikipedia）。2008–09 はクラブ初のリーグ優勝（英語 Wikipedia 2008–09 Bundesliga「secured their first national title」）。長谷部誠も同じチーム（日本語 Wikipedia）。2009年6月に神戸へ戻る。
+# - **J1通算 474試合191得点**：セレッソ大阪公式の引退の知らせ（一次情報）。歴代最多は日刊スポーツ 2021-11-20。**Jリーグの話は、この1行だけ**（経歴の事実）。
+# - **アテネ五輪 3試合2得点**：日刊スポーツのプロフィル「３試合で２得点」。高校三冠・インターハイと選手権の得点王：同プロフィル。アジア年間最優秀ユース選手（2003）：同プロフィル・FIFA。
+# - **本人の言葉**：①日刊スポーツ大阪版 2005-05-31 の残留直後の談話（記事の（残留は）は記者の補いなので外し、残りは原文のまま）。②セレッソ大阪公式の引退コメント（一次情報）から1文を原文のまま。
+# - **久保竜彦の言葉**：週プレNEWS 2017-05-09（本文を requests で読んで一字一句確認）「一緒にやったＦＷで一番スゴいと思ったのが嘉人でした。猫っていうか、チーターっていうか、体の使い方がうまい。」
+# - 年齢：1982-06-09 生まれ → 2026-10-26 で44歳、2021-11-19 で39歳（日刊も39歳）、2005-01-09 で22歳。
+#
+# **入れなかったもの**：家族・結婚・スペインへの移住（私生活）、退場・暴言・ベッカムとの小競り合い（日刊のやんちゃアラカルト）、怪我、テレビ出演、J1の3年連続得点王の中身（Jリーグを題材にしない）、マガト監督とのいきさつ（Number の記事のみ）。
+# **写真がマジョルカ・ヴォルフスブルク時代のものは取れなかった**（Commons に無し、記事の写真は代理店か小さい）。台本ではその時代の行に別の時期の写真を敷く。
+# **日本語名・読みで怪しいもの**（audio_query で確認）：大久保嘉人＝オオクボヨシト（○）、苅田町＝カンダマチ（○、台本では使わない）、マジョルカ（○）、ヴォルフスブルク（○）、デポルティーボ・ラ・コルーニャ（区切れるが音は正しい）、レバンテ（○）、クーペル（○）、アルビレックス新潟バルセロナ（○）、嘉人（ヨシト○）。
+watch: 毎日、数字でサッカーを読み解きます
+title: 大久保嘉人は、どんな選手だった？ スペインの残り3試合に、何があったのか
+format: news
+short_title: 大久保嘉人は、どんな選手だった？
+series: レジェンドの紹介
+topic: 大久保嘉人
+date: 2026年10月26日
+slot: other_1
+people:
+- 大久保嘉人
+theme:
+  id: legend_okubo_yoshito
+  league: japan
+  league_name: ワールドカップ
+  kind: other
+  topic: 大久保嘉人
+  title: 大久保嘉人は、どんな選手だった？ スペインの残り3試合に、何があったのか
+  question: 日本代表で60試合に出て、スペインとドイツでもプレーした大久保嘉人は、どんな選手で、いまは何をしているのか
+  takeaway: 大久保嘉人の代表は、最初の19試合が0得点で、2007年からの41試合で6得点、およそ7試合に1点。マジョルカでは勝ち点11差から残り3試合で2得点、2014年は2年以上呼ばれなかったあとにゴール。点が出ない時期のあとに、次の場所で取り返してきた
+  nameplate: 大久保嘉人｜元日本代表 FW
+  opening_image: assets/images/20261026_okubo_yoshito_legend/02_w.jpg
+  end_bg: assets/images/20261026_okubo_yoshito_legend/01_w.jpg
+  bgm: assets/audio/bgm_calm.wav
+  outro_title: 毎日、数字でサッカーを読み解きます
+thumbnail:
+  line1: 大久保嘉人、代表60試合6点
+  line2: マジョルカ残留へ2戦連発
+  tags:
+  - 日本
+  photo: assets/images/20261026_okubo_yoshito_legend/panel_04.jpg
+  photos: []
+  short_photo: assets/images/20261026_okubo_yoshito_legend/02_v.jpg
+sections:
+- id: hook
+  heading: スペインの初戦で1点1アシストした22歳は、どんな選手だったのか
+  tier: 報道
+  telop: 2005年1月9日、スペイン・マジョルカ
+  card: &hookcard
+    type: stats
+    title: 大久保嘉人 元日本代表FW（44歳）
+    items:
+    - - '60'
+      - 試合
+      - 日本代表（2003〜2014年）
+    - - '2'
+      - 大会
+      - W杯（2010・2014年）
+    - - '2'
+      - か国
+      - 欧州の1部（スペイン・ドイツ）
+    focus: 0
+  say:
+  - text: 2005年1月9日。スペイン1部、マジョルカのホーム。
+    image: assets/images/20261026_okubo_yoshito_legend/04_w.jpg
+    card: none
+  - text: 相手は、デポルティーボ・ラ・コルーニャです。
+    card: none
+  - text: 22歳の日本人FWの、スペインでのデビュー戦です。
+    card: none
+  - text: いきなり1点を決め、1点をアシスト。試合は2対2の引き分けでした。
+    card: none
+    emph: true
+  - text: その選手の名前は、大久保嘉人。
+    image: assets/images/20261026_okubo_yoshito_legend/01_w.jpg
+    card: {<<: *hookcard, focus: 0}
+  - text: 日本代表では、60試合。
+    card: {<<: *hookcard, focus: 0}
+  - text: ワールドカップは2010年と2014年の2大会で、7試合に出ました。
+    card: {<<: *hookcard, focus: 1}
+  - text: スペインとドイツ、2つの国の1部でプレーしました。
+    card: {<<: *hookcard, focus: 2}
+  - text: 国見高校のエースから始まった歩みを、見ていきます。
+    image: assets/images/20261026_okubo_yoshito_legend/06.jpg
+    card: none
+  quotes_from: []
+  sources:
+  - https://www.nikkansports.com/soccer/world/world-j/wj_okubo_p.html
+  - https://en.wikipedia.org/wiki/2004%E2%80%9305_La_Liga
+  - https://en.wikipedia.org/wiki/Yoshito_%C5%8Ckubo
+- id: data
+  heading: 大久保嘉人は、どこでプレーし、何を残した選手か
+  tier: 報道
+  telop: 大久保嘉人の基礎DATA
+  card: &datacard
+    type: table
+    title: 大久保嘉人
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - 生年月日
+      - 1982年6月9日・福岡県生まれ
+    - - ポジション
+      - FW（左MFも）
+    - - 欧州のクラブ
+      - マジョルカ・ヴォルフスブルク
+    - - 日本代表
+      - 60試合6得点（2003〜2014）
+    - - 主なタイトル
+      - ブンデスリーガ優勝（2008-09）
+    - - 個人の賞
+      - アジア年間最優秀ユース選手（2003）
+    - - J1通算
+      - 474試合191得点（歴代最多）
+    - - 引退
+      - 2021年限り（セレッソ大阪）
+    source: セレッソ大阪・日刊スポーツ・Wikipedia
+    highlight_row: 0
+  say:
+  - text: 大久保嘉人の生まれは、1982年6月9日。福岡県の出身で、いま44歳です。
+    image: assets/images/20261026_okubo_yoshito_legend/06.jpg
+    card: {<<: *datacard, highlight_row: 0}
+  - text: 欧州では、スペインのマジョルカと、ドイツのヴォルフスブルクでプレーしました。
+    card: {<<: *datacard, highlight_row: 2}
+  - text: ドイツでは、ブンデスリーガ優勝のメンバーに名を連ねています。
+    card: {<<: *datacard, highlight_row: 4}
+  - text: 日本のリーグでは、J1で通算191得点。いまも歴代最多の記録です。
+    image: assets/images/20261026_okubo_yoshito_legend/03_w.jpg
+    card: none
+    emph: true
+  - text: 引退は2021年限り。最後のクラブは、プロの始まりと同じセレッソ大阪でした。
+    image: assets/images/20261026_okubo_yoshito_legend/06.jpg
+    card: {<<: *datacard, highlight_row: 7}
+  quotes_from: []
+  sources:
+  - https://www.cerezo.jp/news/2021-1119-1800/
+  - https://www.nikkansports.com/soccer/news/202111190001191.html
+  - https://www.nikkansports.com/soccer/world/world-j/wj_okubo_p.html
+  - https://en.wikipedia.org/wiki/Yoshito_%C5%8Ckubo
+- id: career
+  heading: 国見高校のエースは、どうやって欧州へ渡ったのか
+  tier: 報道
+  telop: 高校三冠から、スペインとドイツへ
+  card: &careercard
+    type: table
+    title: 歩んできた道
+    columns:
+    - 年
+    - 所属
+    - 出来事
+    rows:
+    - - 2001〜2004
+      - セレッソ大阪
+      - プロ入り、2003年に代表デビュー
+    - - '2004'
+      - U-23日本代表
+      - アテネ五輪で3試合2得点
+    - - 2005〜2006
+      - マジョルカ
+      - スペイン1部で39試合5得点
+    - - 2007〜2008
+      - ヴィッセル神戸
+      - 代表に戻り、初ゴール
+    - - '2009'
+      - ヴォルフスブルク
+      - ブンデスリーガ優勝
+    - - 2009〜2021
+      - 日本の6クラブ
+      - 2021年限りで引退
+    source: 日刊スポーツ・Wikipedia
+    highlight_row: 0
+  say:
+  - text: 2000年、長崎の国見高校は、インターハイ・国体・選手権の三冠を達成します。
+    image: assets/images/20261026_okubo_yoshito_legend/02_w.jpg
+    card: none
+  - text: 大久保嘉人は、夏のインターハイと冬の選手権、両方で得点王でした。
+    card: none
+    emph: true
+  - text: 2001年、セレッソ大阪へ。2003年5月の韓国戦が、日本代表のデビューでした。
+    image: assets/images/20261026_okubo_yoshito_legend/03_w.jpg
+    card: {<<: *careercard, highlight_row: 0}
+  - text: 2004年はアテネ五輪。3試合で2得点を挙げました。
+    card: {<<: *careercard, highlight_row: 1}
+  - text: その年の11月、スペイン1部のマジョルカへ、期限付きの移籍が決まります。
+    card: {<<: *careercard, highlight_row: 2}
+  - text: スペインでは2季で39試合、5得点。
+    card: {<<: *careercard, highlight_row: 2}
+  - text: 2007年にヴィッセル神戸へ移り、8月、およそ1年10か月ぶりに代表へ戻ります。
+    image: assets/images/20261026_okubo_yoshito_legend/06.jpg
+    card: none
+  - text: 10月のエジプト戦で、代表の初ゴール。21試合目でした。
+    card: none
+    emph: true
+  - text: 2009年1月、ドイツのヴォルフスブルクへ。
+    image: assets/images/20261026_okubo_yoshito_legend/03_w.jpg
+    card: {<<: *careercard, highlight_row: 4}
+  - text: 6月に神戸へ戻り、そのあと日本の6つのクラブに在籍しました。
+    card: {<<: *careercard, highlight_row: 5}
+  quotes_from: []
+  sources:
+  - https://www.nikkansports.com/soccer/world/world-j/wj_okubo_p.html
+  - https://ja.wikipedia.org/wiki/%E5%A4%A7%E4%B9%85%E4%BF%9D%E5%98%89%E4%BA%BA
+  - https://en.wikipedia.org/wiki/Yoshito_%C5%8Ckubo
+  - https://www.cerezo.jp/news/2021-1119-1800/
+- id: numbers
+  heading: 大久保嘉人の代表60試合は、どう積み上がったのか
+  tier: 報道
+  telop: 日本代表で60試合6得点
+  card: &numcard
+    type: table
+    title: 大久保嘉人 日本代表の出場
+    columns:
+    - 年
+    - 試合
+    - 得点
+    rows:
+    - - 2003〜2005
+      - '19'
+      - '0'
+    - - 2007〜2010
+      - '34'
+      - '5'
+    - - 2012〜2014
+      - '7'
+      - '1'
+    - - 合計
+      - '60'
+      - '6'
+    source: Wikipedia
+    highlight_row: 3
+  say:
+  - text: 日本代表での、大久保嘉人の記録を見ます。得点は、6。
+    image: assets/images/20261026_okubo_yoshito_legend/06.jpg
+    card: {<<: *numcard, highlight_row: 3}
+  - text: 2003年から2005年は、まだ得点がありませんでした。
+    card: {<<: *numcard, highlight_row: 0}
+  - text: 2006年のドイツ大会は、メンバーに入れていません。
+    image: assets/images/20261026_okubo_yoshito_legend/01_w.jpg
+    card: none
+  - text: 2007年から2010年は、34試合で5得点。
+    image: assets/images/20261026_okubo_yoshito_legend/06.jpg
+    card: {<<: *numcard, highlight_row: 1}
+  - text: 2010年の南アフリカ大会は、4試合とも先発でした。
+    image: assets/images/20261026_okubo_yoshito_legend/01_w.jpg
+    card: none
+    emph: true
+  - text: 初戦のカメルーン戦は前線。残りの3試合は、左サイドでした。
+    card: none
+  - text: 2014年のブラジル大会では、3試合に出場。
+    image: assets/images/20261026_okubo_yoshito_legend/06.jpg
+    card: {<<: *numcard, highlight_row: 2}
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Yoshito_%C5%8Ckubo
+  - https://en.wikipedia.org/wiki/2010_FIFA_World_Cup_Group_E
+  - https://en.wikipedia.org/wiki/2010_FIFA_World_Cup_knockout_stage
+  - https://en.wikipedia.org/wiki/2014_FIFA_World_Cup_Group_C
+- id: match
+  heading: マジョルカの残留争いで、大久保嘉人は何をしたのか
+  tier: 報道
+  telop: 2005年、勝ち点11差からの残留
+  main: true
+  card: &mllcard
+    type: timeline
+    title: 2004-05 マジョルカの半年
+    rows:
+    - - 1月9日
+      - デポルティーボと2対2。1点1アシスト
+    - - 4月10日
+      - サラゴサに負け、レバンテと勝ち点11差
+    - - 残り3試合
+      - 大久保が3試合続けて先発
+    - - 第36節
+      - アスレティックに4対3。ゴール
+    - - 第37節
+      - デポルティーボに3対0。ゴール
+    - - 第38節
+      - ベティスと1対1。17位で残留
+    focus: 5
+    highlight_row: 0
+  say:
+  - text: 元日本代表のFW、大久保嘉人。
+    image: assets/images/20261026_okubo_yoshito_legend/04_w.jpg
+    card: none
+    short_only: true
+  - text: 2005年5月、マジョルカの最終節のあと、こう話しました。
+    image: assets/images/20261026_okubo_yoshito_legend/02_w.jpg
+    card: none
+  - voice: 大久保嘉人
+    text: 本当に苦しい時期があって、無理だろうなという時があった。
+    card: none
+  - voice: 大久保嘉人
+    text: でも負けなくて残留ができた。
+    card: none
+    cont: true
+  - text: スペインでの初戦は、1点1アシスト。
+    image: assets/images/20261026_okubo_yoshito_legend/04_w.jpg
+    card: none
+    short_only: true
+  - text: シーズンの途中、チームは下位に沈みます。
+    image: assets/images/20261026_okubo_yoshito_legend/04_w.jpg
+    card: none
+  - text: 4月10日、サラゴサに負けた時点で、レバンテとの勝ち点の差は11。
+    card: {<<: *mllcard, highlight_row: 1}
+    emph: true
+  - text: そこから最後までの7試合、マジョルカは4勝3分けで、1度も負けません。
+    card: none
+  - text: その最後の3試合、クーペル監督は、大久保を先発に選びます。
+    image: assets/images/20261026_okubo_yoshito_legend/02_w.jpg
+    card: none
+  - text: アスレティック・ビルバオ戦は、4対3の勝ち。大久保がゴールを決めます。
+    image: assets/images/20261026_okubo_yoshito_legend/04_w.jpg
+    card: {<<: *mllcard, highlight_row: 3}
+  - text: 次のデポルティーボ戦も、3対0の勝ち。2試合続けてのゴールでした。
+    card: none
+    emph: true
+  - text: 最終節は、ベティスと1対1の引き分け。
+    image: assets/images/20261026_okubo_yoshito_legend/02_w.jpg
+    card: none
+  - text: 同じ時間、残留を争うレバンテが負けます。
+    card: none
+  - text: マジョルカは17位で、1部に残りました。勝ち点39と37、差は2でした。
+    image: assets/images/20261026_okubo_yoshito_legend/04_w.jpg
+    card: {<<: *mllcard, highlight_row: 5}
+    callword: 1部残留
+    emph: true
+  quotes_from:
+  - https://web.archive.org/web/20051109080802/http://osaka.nikkansports.com/osc/p-ot-tp3-050531-0023.html
+  sources:
+  - https://web.archive.org/web/20051109080802/http://osaka.nikkansports.com/osc/p-ot-tp3-050531-0023.html
+  - https://www.nikkansports.com/soccer/world/world-j/wj_okubo_p.html
+  - https://en.wikipedia.org/wiki/2004%E2%80%9305_La_Liga
+  - https://ja.wikipedia.org/wiki/%E5%A4%A7%E4%B9%85%E4%BF%9D%E5%98%89%E4%BA%BA
+- id: after
+  heading: 引退した大久保嘉人は、いま、どこで何をしているのか
+  tier: 報道
+  telop: 引退のあと、ふたたびスペインへ
+  card: &aftercard
+    type: timeline
+    title: 最後の1年と、引退のあと
+    rows:
+    - - 2021年1月
+      - 15年ぶりにセレッソ大阪へ
+    - - 2021年11月19日
+      - シーズン限りでの引退を発表。39歳
+    - - 2025年9月
+      - アルビレックス新潟バルセロナのクラブディレクター
+    focus: 2
+    highlight_row: 0
+  say:
+  - text: 2021年、大久保嘉人は、15年ぶりにセレッソ大阪へ戻ります。
+    image: assets/images/20261026_okubo_yoshito_legend/01_w.jpg
+    card: {<<: *aftercard, highlight_row: 0}
+  - text: 11月19日、そのシーズン限りで引退すると、クラブが発表します。39歳でした。
+    card: {<<: *aftercard, highlight_row: 1}
+  - text: クラブが出したコメントには、こうあります。
+    image: assets/images/20261026_okubo_yoshito_legend/02_w.jpg
+    card: none
+  - voice: 大久保嘉人
+    text: 苦しいことが一番多かったかもしれません。
+    card: none
+  - voice: 大久保嘉人
+    text: しかしそれが自分を強くしてくれたと思っています。
+    card: none
+    cont: true
+  - text: そしていま。2025年9月から、新しい肩書きがあります。
+    image: assets/images/20261026_okubo_yoshito_legend/07_w.jpg
+    card: {<<: *aftercard, highlight_row: 2}
+  - text: アルビレックス新潟バルセロナの、クラブディレクターです。
+    card: {<<: *aftercard, highlight_row: 2}
+  - text: 日本の若い選手が、スペインでサッカーと語学を学ぶ場です。
+    card: {<<: *aftercard, highlight_row: 2}
+  - text: 20年前に自分が戦った国で、次の世代を支えています。
+    card: none
+    emph: true
+  quotes_from:
+  - https://www.cerezo.jp/news/2021-1119-1800/
+  sources:
+  - https://www.cerezo.jp/news/2021-01-09-12-01/
+  - https://www.cerezo.jp/news/2021-1119-1800/
+  - https://www.fcjurong.com/en/news/44451/
+- id: secret
+  heading: サプライズの代表入りと、久保竜彦の一言には、何があったのか
+  tier: 報道
+  telop: 2年ぶりの代表と「一番スゴい」FW
+  card: &secretcard
+    type: table
+    title: 数字の外にある、2つの話
+    columns:
+    - いつ
+    - 何があったか
+    rows:
+    - - 2014年
+      - 2年以上ぶりに、W杯のメンバーへ
+    - - 2017年
+      - 久保竜彦が「一番スゴい」と語る
+    source: JFA・週プレNEWS
+    highlight_row: 0
+  say:
+  - text: 大久保嘉人の、数字の外にある話を、2つ。
+    image: assets/images/20261026_okubo_yoshito_legend/03_w.jpg
+    card: {<<: *secretcard, highlight_row: 0}
+  - text: 1つ目は、2014年5月12日。ブラジル大会の日本代表が発表されます。
+    card: {<<: *secretcard, highlight_row: 0}
+  - text: FWの欄に、大久保嘉人の名前がありました。
+    image: assets/images/20261026_okubo_yoshito_legend/04_w.jpg
+    card: none
+  - text: それまでの最後の代表戦は、2012年2月のアイスランド戦。
+    card: none
+  - text: 2年以上、呼ばれていなかった選手です。
+    card: none
+    emph: true
+  - text: 6月のザンビア戦では、2008年以来の代表ゴールを決めました。
+    card: none
+  - text: 2つ目は、元日本代表のFW、久保竜彦の言葉です。
+    image: assets/images/20261026_okubo_yoshito_legend/03_w.jpg
+    card: {<<: *secretcard, highlight_row: 1}
+  - text: 2017年のインタビューで、こう振り返っています。
+    card: none
+  - text: 一緒にプレーしたFWで、いちばんすごいと思ったのは大久保嘉人だった、と。
+    image: assets/images/20261026_okubo_yoshito_legend/01_w.jpg
+    card: none
+    emph: true
+  - text: 理由は、体の使い方。「猫っていうか、チーターっていうか」と表しました。
+    card: none
+  quotes_from:
+  - https://wpb.shueisha.co.jp/news/sports/20170509-84395/
+  sources:
+  - https://www.jfa.jp/news/00000776/
+  - https://en.wikipedia.org/wiki/Yoshito_%C5%8Ckubo
+  - https://ja.wikipedia.org/wiki/%E5%A4%A7%E4%B9%85%E4%BF%9D%E5%98%89%E4%BA%BA
+  - https://wpb.shueisha.co.jp/news/sports/20170509-84395/
+- id: view
+  heading: 点が出ない時期のあと、大久保嘉人はどう取り返したのか
+  tier: 背景
+  telop: 最初の19試合は0点、その後41試合で6点
+  viewpoint: true
+  card: &viewcard
+    type: table
+    title: 点が出ない時期と、そのあと
+    columns:
+    - 場面
+    - 出なかった時期
+    - そのあと
+    rows:
+    - - 日本代表
+      - 最初の19試合で0点
+      - 41試合で6点
+    - - マジョルカ
+      - 勝ち点11差の下位
+      - 残り3試合で2点
+    - - 2014年
+      - 2年以上呼ばれず
+      - ザンビア戦でゴール
+    source: Wikipedia・日刊スポーツ
+    highlight_row: 0
+  say:
+  - text: 大久保嘉人の歩みを、点が出なかった時期と、そのあとで比べます。
+    image: assets/images/20261026_okubo_yoshito_legend/06.jpg
+    card: {<<: *viewcard, highlight_row: 0}
+  - text: 日本代表は、最初の19試合で0得点。
+    card: {<<: *viewcard, highlight_row: 0}
+  - text: それが2007年からの41試合では、6得点。およそ7試合に1点です。
+    card: {<<: *viewcard, highlight_row: 0}
+    emph: true
+    mark:
+      kind: circle
+      row: 0
+      col: そのあと
+  - text: マジョルカでは、勝ち点11差の下位から、残り3試合で2得点。
+    card: {<<: *viewcard, highlight_row: 1}
+  - text: 2014年は、2年以上呼ばれなかったあとに、ワールドカップ直前の試合でゴール。
+    image: assets/images/20261026_okubo_yoshito_legend/03_w.jpg
+    card: {<<: *viewcard, highlight_row: 2}
+  - text: 本人の言葉どおり、苦しい時期の多い20年でした。
+    image: assets/images/20261026_okubo_yoshito_legend/01_w.jpg
+    card: none
+  - text: それでも、点が出ない時期のあとに、次の場所で取り返す。
+    card: none
+  - text: それが、大久保嘉人というFWでした。
+    card: none
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Yoshito_%C5%8Ckubo
+  - https://web.archive.org/web/20051109080802/http://osaka.nikkansports.com/osc/p-ot-tp3-050531-0023.html
+  - https://www.cerezo.jp/news/2021-1119-1800/

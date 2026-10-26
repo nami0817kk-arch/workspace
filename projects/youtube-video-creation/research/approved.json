@@ -2166,5 +2166,157 @@
  "20261024_gross_brighton_35": {
   "at": "2026-10-24T11:21:08+09:00",
   "digest": "0133ec0bbe949f96"
+ },
+ "20261025_kit_everton": {
+  "at": "2026-10-25T01:26:13+09:00",
+  "digest": "b9ea7b812b80f8d7"
+ },
+ "20261025_finance_dortmund": {
+  "at": "2026-10-25T01:42:07+09:00",
+  "digest": "b36e01382218b130"
+ },
+ "20261025_player_315853": {
+  "at": "2026-10-25T02:05:14+09:00",
+  "digest": "46bb07ea9787a5e8"
+ },
+ "20261025_team_england": {
+  "at": "2026-10-25T03:31:31+09:00",
+  "digest": "3a13359c8e549301"
+ },
+ "20261025_compare_132098_38253": {
+  "at": "2026-10-25T02:33:52+09:00",
+  "digest": "5aee5bb713d6f68f"
+ },
+ "20261025_stadium_sunderland": {
+  "at": "2026-10-25T02:50:21+09:00",
+  "digest": "8b6ea688ec39e246"
+ },
+ "20261025_manager_simeone": {
+  "at": "2026-10-25T02:56:20+09:00",
+  "digest": "36ad97b4c1e8216a"
+ },
+ "20261025_bd_stuttgart": {
+  "at": "2026-10-25T03:05:25+09:00",
+  "digest": "bd91ddd3e9ba44d2"
+ },
+ "20261025_endo_yasuhito_legend": {
+  "at": "2026-10-25T03:11:27+09:00",
+  "digest": "eed8177c74d740c1"
+ },
+ "20261025_kaka_legend": {
+  "at": "2026-10-25T03:19:53+09:00",
+  "digest": "f04352d5ac554c99"
+ },
+ "20261025_suzuki_zion_six_saves": {
+  "at": "2026-10-25T11:14:52+09:00",
+  "digest": "0177bba5a304dbd1"
+ },
+ "20261025_cash_on_suzuki_zion": {
+  "at": "2026-10-25T11:14:53+09:00",
+  "digest": "20ab8f76e2700f9c"
+ },
+ "20261025_uno_zento_first_assist": {
+  "at": "2026-10-25T11:14:54+09:00",
+  "digest": "979ede25c2b67720"
+ },
+ "20261025_jackson_villa_city": {
+  "at": "2026-10-25T11:14:56+09:00",
+  "digest": "ea0a14b8c6a6f8d9"
+ },
+ "20261025_dezerbi_mask_off": {
+  "at": "2026-10-25T11:14:57+09:00",
+  "digest": "a4db9e2dd18d9fc3"
+ },
+ "20261025_alvarez_apology": {
+  "at": "2026-10-25T11:14:58+09:00",
+  "digest": "bacba3ee9a8655f6"
+ },
+ "20261025_gordon_barca_75": {
+  "at": "2026-10-25T11:14:59+09:00",
+  "digest": "318490e0eecc97f2"
+ },
+ "20261025_dele_alli_bridge": {
+  "at": "2026-10-25T11:15:00+09:00",
+  "digest": "dfb50051c09d4b96"
+ },
+ "20261026_team_portugal": {
+  "at": "2026-10-26T00:43:46+09:00",
+  "digest": "8bb10a1834748415"
+ },
+ "20261026_stadium_leeds": {
+  "at": "2026-10-26T00:52:48+09:00",
+  "digest": "2b1785122a78c2e0"
+ },
+ "20261026_finance_napoli": {
+  "at": "2026-10-26T01:02:33+09:00",
+  "digest": "562e9c31d1f648f9"
+ },
+ "20261026_manager_arteta": {
+  "at": "2026-10-26T01:11:39+09:00",
+  "digest": "dfac269fe8532a58"
+ },
+ "20261026_okubo_yoshito_legend": {
+  "at": "2026-10-26T01:22:17+09:00",
+  "digest": "096bb6a4abd6ab5a"
+ },
+ "20261026_player_624690": {
+  "at": "2026-10-26T01:32:10+09:00",
+  "digest": "0d90d33aebd9067a"
+ },
+ "20261026_kit_palace": {
+  "at": "2026-10-26T01:41:04+09:00",
+  "digest": "b9c855fc6b2825a0"
+ },
+ "20261026_bd_leipzig": {
+  "at": "2026-10-26T02:11:06+09:00",
+  "digest": "d5c3a31e760b0c8d"
+ },
+ "20261026_compare_240306_316264": {
+  "at": "2026-10-26T01:53:12+09:00",
+  "digest": "63654d12bcfe78b4"
+ },
+ "20261026_gerrard_legend": {
+  "at": "2026-10-26T02:00:27+09:00",
+  "digest": "a5f99ce45f406fde"
+ },
+ "20261026_kamada_palace_newcastle": {
+  "at": "2026-10-26T08:01:47+09:00",
+  "digest": "9884015d1e238cf3"
+ },
+ "20261026_machida_hoffenheim_leverkusen": {
+  "at": "2026-10-26T08:05:09+09:00",
+  "digest": "5e8760018e05c2c4"
+ },
+ "20261026_suzuki_zion_hargreaves": {
+  "at": "2026-10-26T08:08:17+09:00",
+  "digest": "51b8858f13d65b87"
+ },
+ "20261026_tanaka_ao_sunderland": {
+  "at": "2026-10-26T08:11:46+09:00",
+  "digest": "caf0a808a8debce2"
+ },
+ "20261026_suzuki_yuito_bayern": {
+  "at": "2026-10-26T08:15:28+09:00",
+  "digest": "fcd419fafbea8b80"
+ },
+ "20261026_mbappe_100_clasico": {
+  "at": "2026-10-26T08:18:58+09:00",
+  "digest": "9da395e3985d154c"
+ },
+ "20261026_luis_enrique_kvara": {
+  "at": "2026-10-26T08:22:45+09:00",
+  "digest": "136c4f2a9610dff3"
+ },
+ "20261026_pedri_clasico_mistakes": {
+  "at": "2026-10-26T13:40:58+09:00",
+  "digest": "a1802e67243088f2"
+ },
+ "20261026_mckennie_juve_goal": {
+  "at": "2026-10-26T13:46:06+09:00",
+  "digest": "9c0895e0a9039b8d"
+ },
+ "20261026_hurzeler_one_team": {
+  "at": "2026-10-26T13:55:15+09:00",
+  "digest": "58b0b88faffaeee3"
  }
 }

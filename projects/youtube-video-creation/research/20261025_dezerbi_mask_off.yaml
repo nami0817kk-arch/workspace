@@ -1,0 +1,168 @@
+# 取材メモ（2026年10月25日）デ・ゼルビ「仮面を外して、正直に話した」。チェルシーに2対0のトッテナム（ニュースのショート。見せ方 Y＝デ・ゼルビ本人の言葉から始める）
+# 取材: 2026-10-25。requests で本文を全部読んだ（ESPN は記事API content.core.api.espn.com、BBC とトッテナム公式は本文、公式は pulselive の記事API）。
+#   ・ESPN「Roberto De Zerbi: Tottenham are 'a complete team' after win at Chelsea」（10/24 20:06Z）— 題材の元。
+#       地の文: 2-0。77分のペンダース（チェルシーGK）のオウンゴール、その10分後にテル。スパーズはスタンフォード・ブリッジで、プレミアリーグ34回の訪問で2勝目（only their second win at Stamford Bridge in 34 Premier League visits）。
+#               昨季は降格をぎりぎりで逃れ、約4億ポンドで10人を補強したのに、今季の序盤は最下位にいた（sat bottom of the table）。
+#       本人: "Now it is a complete team." / "When we stay for dinner and stay together in the dressing room I see a different group, a different relationship and different atmosphere among the players."
+#             "Before Manchester, we spoke a lot, a big, big meeting, removing the mask and speaking honestly, clearly in front of ourselves. From that moment I think it changed something in ourselves."
+#             マンU戦（今月、1-1）の前のミーティング（地の文: De Zerbi revealed the squad held a meeting prior to the club's 1-1 draw at Manchester United earlier this month）。
+#   ・BBC「The candid meeting that 'changed' Spurs - are they finally on way back?」（10/24 21:14Z）
+#       地の文: この勝利で12位。1月2日以来いちばん高い順位（their highest league position since 2 January）。
+#               リーグ戦の連勝は、直近42試合で2回目（just the second time they have won two league games in a row in 42 attempts）。
+#               支配率68%以上は2025年4月以来（68% possession）。今季のリーグ初勝利は、月曜のコヴェントリー戦で7試合目だった（seven attempts）。
+#       本人: "Seven points after Manchester. Before Manchester we spoke a lot, we had a big meeting. We removed the masks and spoke honestly and clearly in front of ourselves. From that moment, I think something started to change within us."
+#             "We have changed the spirit of the group and improved the performances of the players, especially some of the more fragile players, maybe the younger players. We have suffered enough."
+#   ・トッテナム公式「Brilliant win at the Bridge」（10/24）: 支配率はほぼ70%（almost 70 per cent possession）。77分（残り13分）にペンダースが自陣へ押し込む、87分にテルが自陣から運んで決めた。
+#       「Stamford Bridge で34年で2勝目（our second win at Stamford Bridge in 34 years）」。
+#   ・トッテナム公式「Chelsea 0-2 Spurs | Roberto De Zerbi's verdict」（10/24）: "complete performance" / "now we are improving in the mentality"。
+# 数え方の食い違い: 「34」は ESPN が「プレミアリーグ34回の訪問」、公式が「34年で」、BBC は「36年でリーグ2勝目」。どれも「2勝目」は同じ。台本は ESPN の「プレミアリーグで34回目の訪問で2勝目」で言う（プレミアは1992年から＝公式の34年と同じ期間）。
+#   補強額は ESPN 約4億ポンド・BBC 3億ポンド超で食い違うので言わない。
+# 自分で数えた比べ（見立て）: マンU戦は今季リーグ6試合目（コヴェントリー戦が7試合目の初勝利＝BBC、マンU戦の後が3試合で勝ち点7＝本人）。
+#   ミーティング前: 開幕から5試合で勝ちなし。ミーティング後: マンU 1-1・コヴェントリー 3-1（BBC 本文）・チェルシー 2-0 の3試合で2勝1分、勝ち点7。
+# 言わないこと: マディソンの負傷（別の題材 22）。パーマーの退場（10/24 のアロンソのショートと重なる）。補強額。キックオフ時刻。
+# 訳はこちらの自訳（英語の会見。ESPN と BBC で言い回しが少し違う。ミーティングの言葉は ESPN の形で引く）。
+# 確度: 報道（ESPN・BBC。スコア・得点の分はトッテナム公式で確認）。
+# 反応: 0件。作らない。approve は --no-voices で。
+# 写真: 01〜05 はトッテナム公式（pulselive の写真API、表記なし＝クラブの撮影）。01＝試合中のデ・ゼルビ（左端にアロンソが写る。縦切りの 01_v は本人だけ）、02＝10/23 の試合前会見、03＝10月の練習、04・05＝チェルシー戦の得点後の選手。
+#   代理店のクレジット・透かしは無い（目で見た）。公式の「POST MATCH」の文字入り画像は使わない。10/19・10/20 のデ・ゼルビ／トッテナムの写真（Commons のシャフタール時代）とは別。
+slot: premier
+date: "2026年10月25日"
+format: news
+no_main: true      # ニュースはショートだけ（2026-10-14）。締めで本編を案内しない
+people: [ロベルト・デ・ゼルビ, トッテナム, チェルシー]
+
+short_style: Y
+short_hook_quote: 仮面を外して、自分たちの前で、正直に、はっきり話した。
+short_question: トッテナムは、このまま上がっていくと思いますか。
+short_hook: 開幕5試合で勝ちなし。そこから3試合で勝ち点7。
+short_telops:
+  - {match: 大きな、大きな, text: マンU戦の前に/大きなミーティング}
+  - {match: 仮面を外して, text: 「仮面を外して/正直に話した」}
+  - {match: 77分, text: 77分 オウンゴールで先制}
+  - {match: 87分, text: 87分 テルが独走で2点目}
+  - {match: 34回目, text: プレミアで34回目の訪問}
+  - {match: これが2回目, text: スタンフォード・ブリッジで/2勝目}
+  - {match: 完成したチーム, text: 「今は/完成したチームだ」}
+  - {match: 5試合で勝ちなし, text: ミーティングの前/開幕から5試合 勝ちなし}
+  - {match: 勝ち点7, text: ミーティングのあと/3試合で勝ち点7}
+  - {match: 12位, text: 12位まで浮上/1月2日以来の高さ}
+
+theme:
+  id: dezerbi_mask_off
+  league: england
+  league_name: プレミアリーグ
+  prefix: ""
+  title: デ・ゼルビ「仮面を外して話した」。勝てなかったスパーズを変えたもの
+  hook: ""
+  question: 開幕から勝てなかったトッテナムが、敵地でチェルシーに完勝した。デ・ゼルビは何が変わったと話したのか
+  takeaway: デ・ゼルビはマンU戦の前のミーティングを転機に挙げた。その前は開幕5試合で勝ちなし、あとは3試合で勝ち点7。12位まで上がり、リーグ戦の連勝は直近42試合で2回目だった
+
+thumbnail:
+  line1: デ・ゼルビ
+  line2: 「仮面を外して話した」
+  tags: [トッテナム, プレミアリーグ]
+  layout: face
+  photo: assets/images/20261025_dezerbi_mask_off/02_w.jpg
+  short_photo: assets/images/20261025_dezerbi_mask_off/01_v.jpg
+
+answer: マンU戦の前に大きなミーティングを開き、仮面を外して正直に話したこと。そこから何かが変わったと話した
+watch: トッテナムの次のリーグ戦
+
+short_photos:
+  - assets/images/20261025_dezerbi_mask_off/01_v.jpg
+  - assets/images/20261025_dezerbi_mask_off/02_v.jpg
+  - assets/images/20261025_dezerbi_mask_off/03_v.jpg
+  - assets/images/20261025_dezerbi_mask_off/04_v.jpg
+  - assets/images/20261025_dezerbi_mask_off/05_v.jpg
+
+sections:
+  - id: what
+    main: true
+    heading: マンU戦の前のミーティング
+    tier: 報道
+    telop: 敵地でチェルシーに2対0。デ・ゼルビが明かした転機
+    say:
+      - text: 開幕から勝てなかったトッテナムが、アウェーでチェルシーを2対0で破りました。
+        image: assets/images/20261025_dezerbi_mask_off/01_w.jpg
+      - text: 試合のあと、デ・ゼルビ監督はマンチェスター・ユナイテッド戦の前の話をしました。
+        image: assets/images/20261025_dezerbi_mask_off/01_w.jpg
+      - voice: デ・ゼルビ
+        text: マンチェスターの前に、たくさん話した。
+        image: assets/images/20261025_dezerbi_mask_off/02_w.jpg
+      - voice: デ・ゼルビ
+        text: 大きな、大きなミーティングだ。
+        cont: true
+        image: assets/images/20261025_dezerbi_mask_off/02_w.jpg
+      - voice: デ・ゼルビ
+        text: 仮面を外して、自分たちの前で、正直に、はっきり話した。
+        short_voice: true
+        image: assets/images/20261025_dezerbi_mask_off/02_w.jpg
+      - voice: デ・ゼルビ
+        text: あの時から、自分たちの中で何かが変わったと思う。
+        cont: true
+        image: assets/images/20261025_dezerbi_mask_off/03_w.jpg
+      - text: 会見は英語で、訳はこちらで付けました。
+        image: assets/images/20261025_dezerbi_mask_off/03_w.jpg
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50268600
+      - https://www.bbc.com/sport/football/articles/cqev38dz34vxo
+
+  - id: game
+    heading: チェルシー戦の2点と、34回目の訪問
+    tier: 報道
+    telop: 支配率はおよそ7割。スタンフォード・ブリッジの2対0
+    say:
+      - text: 77分、チェルシーのキーパー、ペンダースのオウンゴールで先制。
+        image: assets/images/20261025_dezerbi_mask_off/05_w.jpg
+      - text: 87分には、テルが自陣からボールを運んで、ひとりで2点目を決めました。
+        image: assets/images/20261025_dezerbi_mask_off/04_w.jpg
+      - text: ボールの支配率は、およそ7割でした。
+        image: assets/images/20261025_dezerbi_mask_off/01_w.jpg
+      - text: チェルシーの本拠地スタンフォード・ブリッジに、プレミアリーグで来たのは34回目。
+        image: assets/images/20261025_dezerbi_mask_off/01_w.jpg
+      - text: ここで勝ったのは、これが2回目です。
+        image: assets/images/20261025_dezerbi_mask_off/01_w.jpg
+      - voice: デ・ゼルビ
+        text: 今は、完成したチームだ。
+        image: assets/images/20261025_dezerbi_mask_off/02_w.jpg
+      - voice: デ・ゼルビ
+        text: 夕食の時も、更衣室でも、前とは違うグループが見える。
+        cont: true
+        image: assets/images/20261025_dezerbi_mask_off/03_w.jpg
+      - voice: デ・ゼルビ
+        text: 違う関係、違う空気だ。
+        cont: true
+        image: assets/images/20261025_dezerbi_mask_off/03_w.jpg
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50268600
+      - https://www.tottenhamhotspur.com/news/2026/october/brilliant-win-at-the-bridge/
+      - https://www.tottenhamhotspur.com/news/2026/october/chelsea-0-2-spurs-roberto-de-zerbis-verdict/
+
+  - id: view
+    viewpoint: true
+    heading: ミーティングの前と後で、何が違うか
+    tier: 背景
+    telop: 開幕5試合で勝ちなし。そこから3試合で勝ち点7
+    say:
+      - text: 見立てです。ミーティングより前は、開幕から5試合で勝ちなしでした。
+        image: assets/images/20261025_dezerbi_mask_off/03_w.jpg
+      - text: そのあとは、マンUと1対1で引き分け。
+        image: assets/images/20261025_dezerbi_mask_off/04_w.jpg
+      - text: 続くコヴェントリー戦とチェルシー戦は、どちらも勝ち。
+        image: assets/images/20261025_dezerbi_mask_off/04_w.jpg
+      - text: 3試合で2勝1引き分け、勝ち点7。前の5試合より、はっきり上向きです。
+        image: assets/images/20261025_dezerbi_mask_off/05_w.jpg
+      - text: 順位は12位まで上がりました。1月2日以来の高さです。
+        image: assets/images/20261025_dezerbi_mask_off/01_w.jpg
+      - text: リーグ戦の連勝も、直近42試合でまだ2回目。続けられるかが、次の試合で試されます。
+        image: assets/images/20261025_dezerbi_mask_off/01_w.jpg
+      - voice: デ・ゼルビ
+        text: もう十分、苦しんだ。
+        image: assets/images/20261025_dezerbi_mask_off/02_w.jpg
+    official: false
+    sources:
+      - https://www.bbc.com/sport/football/articles/cqev38dz34vxo
+      - https://www.espn.com/soccer/story/_/id/50268600
+short_title: "デ・ゼルビ「仮面を外して話した」。勝てなかったスパーズを変えたもの"

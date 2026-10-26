@@ -1,0 +1,201 @@
+# 取材メモ（2026年10月26日）町田浩樹が先発フル出場、ホッフェンハイム3-0レヴァークーゼン（ブンデス第7節、25日）。ニュースのショート。見せ方 Y＝本人の一言から始める（試合前の言葉と断る）
+# 取材: 2026-10-26。requests（ブラウザUA）で本文・データを読んだ。検索エンジンのAI要約は事実に使っていない（URL探しにだけ使った）。
+#   ・ESPN 試合データ（site.api.espn.com … ger.1/summary?event=401884760）: ホッフェンハイム3-0レヴァークーゼン、会場 PreZero Arena（ジンスハイム）。
+#       町田浩樹は先発（CD-L）で交代なし＝フル出場。記録はシュート1（35分、左足の枠外）・ファウル1。町田が絡んだ守備の場面は記録に無い → 「町田が止めた」とは言わない。
+#       79分 クラマリッチのPK（0-0から先制。77〜78分に中断あり）／89分 プラス（左足の外から。クラマリッチのアシスト、速攻）／90+1分 プラスに2枚目の警告で退場（"for excessive celebration"＝喜び方）／90+5分 メルシュテット。
+#       レヴァークーゼン：シュート9・枠内1・支配率58.4%。ホッフェンハイム：シュート20・枠内6。
+#       順位（同じ API の standings、7試合消化）：ホッフェンハイム 勝ち点9で10位。
+#   ・ESPN 2025-08-23（event=746722）: レヴァークーゼン1-2ホッフェンハイム（敵地）。町田は42分に警告、45+1分に負傷で交代（Arthur Chaves と）。
+#   ・サッカーキング 2025-08-24 https://www.soccer-king.jp/news/japan/national/20250824/2054660.html : 開幕戦レヴァークーゼン戦の40分、グリマルドと衝突して左ひざを負傷。検査で左ひざ前十字じん帯断裂。
+#       → 分は媒体（40分）と ESPN の交代（45+1分）で違うので、台本は「前半の終わり」と言う。
+#   ・GOAL 2025-08-24（同じ件。クラブが精密検査の結果を公式サイトで発表、手術が必要）。
+#   ・フットボールゾーン 2026-10-25 https://www.football-zone.net/archives/680707 （中野吉之伴、全文読んだ）:
+#       **言葉はヨーロッパリーグのリヨン戦（22日）のあとの取材＝この試合の3日前**。台本では「試合の3日前に」と断る。
+#       「ブンデスリーガになるとリーグ戦のレベルが上がって。連戦になるとかなり疲労度だったり、インテンシティが高いなかで連戦をこなさなきゃいけないので、そこはすごく違いを感じますね」
+#       「僕らは前からプレッシングでハメに行くというか、潰しに行くチームなので、それがやっぱり機能しないとひっくり返されて、長い距離を走らなきゃいけないですし。」
+#       「今シーズンやりながらどんどん良くなってきている、自分の身体自体も良くなっている感覚があるので、ここからかなと思います」
+#       地の文：今季第3節のシュツットガルト戦で約1年ぶりの公式戦復帰、第4節パーダーボルン戦でフル出場。ホッフェンハイムは6節終了時で14位。
+# 試合のあとの言葉: 町田本人・監督の、この試合のあとの言葉は見つからなかった（日本語の試合記事も、25日夜〜26日朝の検索では出ていない。共同の「町田浩樹はフル出場」は18日のボルシアMG戦のもの）。→ 試合前の言葉だけを、試合前と断って使う。
+# 自分で数えたこと: 2025年8月23日 → 2026年10月25日 は 428日（1年2か月）。順位は 14位（6節終了時、記事）→ 10位（7節終了時、ESPN）。
+# 【言わないこと】媒体名／町田の採点（出ていない）／「町田が止めた」場面（記録に無い）／コンパニの件（同じ日の別の試合）／10/16 の本（ELの初ゴール・復帰の日数）の言い直し。
+# 反応: 探していない（0件。作らない）。approve は --no-voices。
+# 前の本との重なり: posted / covered / scripts 20261018〜26 を grep。町田は 10/16（ELでの初ゴール）・10/19・10/23 の本で一行ずつ。今回は「ケガをした相手に完封」で話が別。
+#   10/23 のシリーズ（レヴァークーゼンの紹介）は「次はホッフェンハイム」と言うだけ。10/26 のシリーズ本編とは重ならない。
+# 確度: 結果・出場は ESPN の試合データ（報道）。ケガは報道（クラブ発表を伝えた記事）。本人の言葉は報道（試合前の取材）。
+# 写真: assets/images/20261026_machida_hoffenheim_leverkusen/（credits.json）。この試合の写真は、記事の主写真が全部代理店（アフロ・Getty）で使わない。
+#   01 = Commons「Go Ahead Eagles - Royale Union Saint-Gillloise」2024（CC BY 2.0、Carlo Bruil。Category:Kōki Machida）＝新しく使う
+#   02 = Commons「Koki Machida USG 2023」（CC BY-SA 4.0）＝10/16 の本と同じ写真
+#   03 = Commons「Japan vs Thailand 2024-01-01 0320」から町田だけを切った（CC BY 4.0）。450x800 と小さい。子どもは入らない範囲で切った
+slot: japan
+date: "2026年10月26日"
+format: news
+no_main: true
+people: [町田浩樹, ホッフェンハイム, レヴァークーゼン, アンドレイ・クラマリッチ]
+
+short_style: Y
+short_hook_quote: 自分の身体自体も良くなっている感覚があるので、
+short_question: 町田浩樹、日本代表に戻ってきてほしいと思いますか。
+short_hook: 町田浩樹がフル出場で完封。相手は、1年2か月前にひざを痛めたあのチームです。
+short_photos:
+  - assets/images/20261026_machida_hoffenheim_leverkusen/01_v.jpg
+  - assets/images/20261026_machida_hoffenheim_leverkusen/02_v.jpg
+short_telops:
+  - {match: 3日前, text: 試合の3日前/リヨン戦のあとの取材}
+  - {match: 第7節, text: 25日 ブンデスリーガ第7節/ホッフェンハイム 3-0 レヴァークーゼン}
+  - {match: 最後までプレー, text: 町田浩樹/先発でフル出場}
+  - {match: 枠内は1本, text: レヴァークーゼン/シュート9本・枠内1本}
+  - {match: 2025年8月23日, text: 2025年8月23日 開幕戦/相手はレヴァークーゼン}
+  - {match: 前十字靱帯, text: 左ひざ/前十字靱帯の断裂}
+  - {match: 428日, text: ケガの日から/428日}
+  - {match: 10位, text: ホッフェンハイム/14位から10位へ}
+
+theme:
+  id: machida_hoffenheim_leverkusen
+  league: germany
+  prefix: ""
+  title: 町田浩樹がフル出場で完封。1年2か月前、ひざを痛めた試合の相手は
+  hook: ""
+  question: 町田浩樹がフル出場で完封した相手は、どんなチームだったのか
+  takeaway: 1年2か月前にひざの前十字靱帯を切った試合の相手、レヴァークーゼンに、今度は90分立って完封。相手の枠内シュートは1本で、ホッフェンハイムは14位から10位に上がった
+
+thumbnail:
+  layout: face
+  line1: 町田浩樹、フル出場で完封
+  line2: 相手はあの日のチーム
+  tags: [町田浩樹, ホッフェンハイム, レヴァークーゼン]
+  photo: assets/images/20261026_machida_hoffenheim_leverkusen/01_w.jpg
+  short_photo: assets/images/20261026_machida_hoffenheim_leverkusen/01_v.jpg
+
+answer: 相手は、1年2か月前の開幕戦で町田が左ひざの前十字靱帯を切った試合のレヴァークーゼン
+watch: 次のホッフェンハイムの試合
+
+sections:
+  - id: what
+    main: true
+    heading: 町田浩樹、フル出場で完封
+    tier: 報道
+    telop: ホッフェンハイム3-0レヴァークーゼン。町田浩樹はフル出場
+    say:
+      - text: 試合の3日前、町田浩樹は、いまの体について語っていました。
+        image: assets/images/20261026_machida_hoffenheim_leverkusen/01_w.jpg
+      - voice: 町田浩樹
+        text: 自分の身体自体も良くなっている感覚があるので、
+        image: assets/images/20261026_machida_hoffenheim_leverkusen/01_w.jpg
+      - voice: 町田浩樹
+        text: ここからかなと思います。
+        cont: true
+        image: assets/images/20261026_machida_hoffenheim_leverkusen/01_w.jpg
+      - text: 25日のブンデスリーガ第7節。
+        image: assets/images/20261026_machida_hoffenheim_leverkusen/02_w.jpg
+      - text: ホッフェンハイムがホームで、レヴァークーゼンを3対0で下しました。
+        image: assets/images/20261026_machida_hoffenheim_leverkusen/02_w.jpg
+      - text: 日本代表の町田浩樹は、先発して最後までプレーしています。
+        emph: true
+        image: assets/images/20261026_machida_hoffenheim_leverkusen/02_w.jpg
+      - text: レヴァークーゼンのシュートは9本。枠内は1本だけでした。
+        image: assets/images/20261026_machida_hoffenheim_leverkusen/01_w.jpg
+        card: {type: stats, title: レヴァークーゼンを抑えた数字, items: [[9, 本, 相手のシュート], [1, 本, 相手の枠内], [0, 点, 失点]], focus: 1}
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401884760
+      - https://www.football-zone.net/archives/680707
+
+  - id: past
+    heading: 1年2か月前、同じ相手との試合
+    tier: 報道
+    telop: 2025年8月23日の開幕戦、相手はレヴァークーゼン
+    say:
+      - text: 町田にとって、レヴァークーゼンは特別な相手です。
+        image: assets/images/20261026_machida_hoffenheim_leverkusen/01_w.jpg
+        card: none
+      - text: 2025年8月23日、ブンデスリーガの開幕戦。相手はレヴァークーゼンでした。
+        image: assets/images/20261026_machida_hoffenheim_leverkusen/01_w.jpg
+      - text: 先発した町田は、前半の終わりに左ひざを痛めて交代。
+        image: assets/images/20261026_machida_hoffenheim_leverkusen/01_w.jpg
+      - text: 検査の結果は、左ひざの前十字靱帯の断裂でした。
+        image: assets/images/20261026_machida_hoffenheim_leverkusen/02_w.jpg
+      - text: 戻ってきたのは、今季の第3節。約1年ぶりの公式戦でした。
+        image: assets/images/20261026_machida_hoffenheim_leverkusen/02_w.jpg
+      - text: その相手に、今度は最後までピッチに立ち、0点に抑えました。
+        emph: true
+        image: assets/images/20261026_machida_hoffenheim_leverkusen/01_w.jpg
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/japan/national/20250824/2054660.html
+      - https://www.espn.com/soccer/match/_/gameId/746722
+      - https://www.football-zone.net/archives/680707
+
+  - id: goals
+    heading: 0対0から最後の10分で3点
+    tier: 報道
+    telop: 79分PK、89分、90+5分
+    say:
+      - text: 町田のいる守備は、終盤まで相手に点を与えません。
+        image: assets/images/20261026_machida_hoffenheim_leverkusen/01_w.jpg
+        card: none
+      - text: 79分、クラマリッチがPKを決めて先制。
+        image: assets/images/20261026_machida_hoffenheim_leverkusen/01_w.jpg
+        card: {type: timeline, title: 最後の10分, rows: [[79分, クラマリッチがPKで先制], [89分, プラスが外から2点目], [90+5分, メルシュテットが3点目]], highlight_row: 0}
+      - text: 89分にはプラスが外から決めて、2点のリード。
+        image: assets/images/20261026_machida_hoffenheim_leverkusen/02_w.jpg
+        card: {type: timeline, title: 最後の10分, rows: [[79分, クラマリッチがPKで先制], [89分, プラスが外から2点目], [90+5分, メルシュテットが3点目]], highlight_row: 1}
+      - text: プラスはこのあと、喜び方で2枚目の警告を受けて退場しています。
+        image: assets/images/20261026_machida_hoffenheim_leverkusen/02_w.jpg
+        card: none
+      - text: それでも試合の最後、メルシュテットが押し込んで、3点差です。
+        image: assets/images/20261026_machida_hoffenheim_leverkusen/01_w.jpg
+        card: {type: timeline, title: 最後の10分, rows: [[79分, クラマリッチがPKで先制], [89分, プラスが外から2点目], [90+5分, メルシュテットが3点目]], highlight_row: 2}
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401884760
+
+  - id: words
+    heading: 試合の3日前に語った、ドイツの重さ
+    tier: 報道
+    telop: 試合の3日前、リヨン戦のあとの取材
+    say:
+      - text: 試合の3日前、ヨーロッパリーグのリヨン戦のあと。
+        image: assets/images/20261026_machida_hoffenheim_leverkusen/02_w.jpg
+      - text: 町田は、ベルギー時代との違いを語っていました。
+        image: assets/images/20261026_machida_hoffenheim_leverkusen/01_w.jpg
+      - voice: 町田浩樹
+        text: ブンデスリーガになるとリーグ戦のレベルが上がって。
+        image: assets/images/20261026_machida_hoffenheim_leverkusen/01_w.jpg
+      - voice: 町田浩樹
+        text: 僕らは前からプレッシングでハメに行くというか、
+        image: assets/images/20261026_machida_hoffenheim_leverkusen/01_w.jpg
+      - voice: 町田浩樹
+        text: 潰しに行くチームなので、
+        cont: true
+        image: assets/images/20261026_machida_hoffenheim_leverkusen/01_w.jpg
+      - voice: 町田浩樹
+        text: それがやっぱり機能しないとひっくり返されて、
+        cont: true
+        image: assets/images/20261026_machida_hoffenheim_leverkusen/02_w.jpg
+      - voice: 町田浩樹
+        text: 長い距離を走らなきゃいけないですし。
+        cont: true
+        image: assets/images/20261026_machida_hoffenheim_leverkusen/02_w.jpg
+    official: false
+    sources:
+      - https://www.football-zone.net/archives/680707
+
+  - id: view
+    viewpoint: true
+    heading: ケガをした日から428日
+    tier: 背景
+    telop: 428日後、同じ相手に90分で完封
+    say:
+      - text: 見立てです。町田がひざを痛めた開幕戦から、この試合まで428日。
+        image: assets/images/20261026_machida_hoffenheim_leverkusen/02_w.jpg
+        card: {type: stats, title: あの日と今日, items: [[428, 日, ケガの日から], [90, 分, 今日の出場], [1, 本, 相手の枠内]], focus: 0}
+      - text: ホッフェンハイムは、前の節を終えて14位。この勝ちで10位に上がりました。
+        image: assets/images/20261026_machida_hoffenheim_leverkusen/01_w.jpg
+        card: none
+      - text: 本人が言った「ここから」は、この試合で一つ形になった、と見ています。
+        image: assets/images/20261026_machida_hoffenheim_leverkusen/01_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401884760
+      - https://www.football-zone.net/archives/680707

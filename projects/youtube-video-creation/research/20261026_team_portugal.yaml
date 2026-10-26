@@ -1,0 +1,439 @@
+# 代表チーム紹介 ポルトガル代表（10/26 作成。固定シリーズ9「代表チーム紹介」。見本は 10/25 のイングランド代表 scripts/20261025_team_england.md）。7節：フック→基礎DATA（板）→歴史と転機（年表）→看板選手（表）→日本との関係→いまのチーム→見立て。
+# **軸（2026-10-26）**：「2026年W杯は16強（スペインに0対1、90+1分の失点）。監督がマルティネスからジェズスに替わり、秋のネーションズリーグは4戦4勝。何が変わったのか」。答えは見立ての節（直近3大会のW杯の1試合の得点と失点、W杯と秋の4試合の比べ、得点者の数）。
+# **重なりの確認（2026-10-26）**：scripts/・research/covered.yaml・research/posted.json を grep。ポルトガル代表の「紹介」回（team_portugal）は無い。scripts/20261003_portugal_without.md（10/3 公開。ロナウド不在で4得点、得点者4人）と scripts/20261005_match_portugal_norway.md（10/5 公開。ノルウェー戦2対1）は試合の news で別題。ただし**秋の4試合の得点者が散った話は 10/3 の news と材料が重なる**（こちらは見立ての一部にとどめ、W杯3大会との比べを主にした）。covered.yaml の ronaldo_portugal_squad（9/20）・9/25・9/25・9/28 のロナウド／ジェズスの回も news。直近30日にポルトガル代表を主役にした紹介ものは無い（10/5 の coach_jesus は監督の経歴、10/17 の compare_pedri_vitinha は選手の比べ）。
+# ---- 確かめたこと（2026-10-26。WebFetch の要約は使わず、requests で生の値を読んだ）----
+#  ・FIFAランク：5位（2026-10-07 発表、2つ上げた）。FIFA 公式の記事（inside.fifa.com/en/news/coca-cola-mens-world-ranking-october-2026-portugal-spain）の本文「Portugal (5th, up 2), who have leapfrogged both Brazil (6th, down 1) and Morocco (7th, also down 1)」「Portugal the sole climbers among top 10」。Wikipedia の Module:SportsRankings/data/FIFA World Rankings（updated 7 October 2026）も Portugal 5・+2。点数は書かない。
+#  ・W杯：出場9回（1966年が初）。最高は1966年の3位（Portugal at the FIFA World Cup の表。準決勝イングランドに1-2、3位決定戦ソ連に2-1）。エウゼビオが9得点で大会の得点王（1966 FIFA World Cup の記事本文）。
+#  ・2026年W杯（Portugal national football team の試合一覧と ESPN の scoreboard を突き合わせた）：グループK 6/17 コンゴ民主共和国1-1（ジョアン・ネヴェス6分／ウィサ45+5分）／6/23 ウズベキスタン5-0（ロナウド6・39分、ヌーノ・メンデス17分、オウンゴール60分、レオン87分）／6/27 コロンビア0-0 → グループ2位（2026 FIFA World Cup Group K の本文「Portugal also advanced as group runners-up」）。ラウンド32 7/2 クロアチア2-1（ペリシッチ53分／ロナウド68分PK・ゴンサロ・ラモス90+4分）。ラウンド16 7/6 スペイン0-1（メリーノ90+1分）。＝5試合2勝2分1敗・8得点3失点（Portugal at the FIFA World Cup の 2026 の行と一致）。ロナウドは3点。
+#  ・直近3大会のW杯（同じ表）：2018年 16強 4試合6得点6失点／2022年 8強 5試合12得点6失点／2026年 16強 5試合8得点3失点。自分で割った（検算した）：2018年 1.50・1.50／2022年 2.40・1.20／2026年 1.60・0.60。
+#  ・EURO：優勝1回（2016年、決勝フランスに延長1-0。UEFA Euro 2016 final の infobox）。2004年は自国開催で準優勝（決勝ギリシャに0-1。UEFA Euro 2004 final）。ネーションズリーグ優勝2回：2019年（決勝オランダに1-0）・2025年（決勝スペインと2-2、PK戦5-3）。
+#  ・監督：ジョルジェ・ジェズス。2026-07-10 に就任（Portugal national football team の本文、出典は FPF の発表「Jorge Jesus é o novo selecionador nacional」）。前任のロベルト・マルティネスはスペイン戦のあとに辞任（同）。
+#  ・ロナウド：代表234試合・146得点はどちらも国の最多（infobox の Most caps・Top scorer）。2026年7月2日のクロアチア戦の得点が国の最年長得点（41歳。records の節）。**主将は板・語りに書かない**：infobox は Bruno Fernandes、名簿の印はロナウド＝captain／ベルナルド・シルヴァ＝vice、ブルーノ＝3rd で食い違う。さらに Cristiano Ronaldo の記事は 10/10 に FPF がロナウドを暫定の出場停止にしたと書く（処分の話は決まりで入れない）。
+#  ・愛称：Seleção das Quinas（infobox）。キナスは国旗の盾の紋章。
+#  ・名簿・年齢：Wikipedia の Current squad（9〜10月のネーションズリーグの名簿。caps と goals は 10/4 のノルウェー戦のあと）と各選手の記事の infobox。生年月日から 2026-10-26 時点で計算：ブルーノ・フェルナンデス 1994-09-08=32（マンチェスター・ユナイテッド、MF、97試合29得点）、ヴィティーニャ 2000-02-13=26（パリ・サンジェルマン、MF）、ジョアン・ネヴェス 2004-09-27=22（パリ・サンジェルマン、MF）、ヌーノ・メンデス 2002-06-19=24（パリ・サンジェルマン、DF）、ルベン・ディアス 1997-05-14=29（マンチェスター・シティ、DF、84試合）、ゴンサロ・ラモス 2001-06-20=25（ACミラン、FW。記事の currentclub で確認）。
+#  ・W杯のあと（試合一覧と ESPN の scoreboard で日付・スコア・得点者を確認）：ネーションズリーグ 9/24 ウェールズ1-0（フェリックス22分）／9/27 ノルウェー2-1（敵地。フェリックス17分・ラモス54分／ハーランド51分）／10/1 デンマーク4-2（敵地。カンセロ13分・ラモス25分・ヴィティーニャ67分・フェリックス87分）／10/4 ノルウェー2-1（カンセロ38分・ラモス79分／アイエル36分）＝4戦4勝・9得点4失点。得点者：フェリックス3・ラモス3・カンセロ2・ヴィティーニャ1。ロナウドの得点は0（ESPN の名簿でロナウドは 9/24 先発・9/27 ベンチ・10/1 と 10/4 は名簿に無し）。次は 11/14 デンマーク（ホーム）、11/17 ウェールズ（敵地）。FIFA の記事は「ポルトガル・スペイン・スイスの3つがネーションズリーグを4連勝で始めた」と書く（「最初の4試合を全勝したのはポルトガルだけ」という Wikipedia の文は FIFA と食い違うので使わない）。
+#  ・自分で割った数：秋の4試合 9÷4=2.25・4÷4=1.00。W杯2026 8÷5=1.60・3÷5=0.60。
+#  ・日本との対戦：**国際Aマッチは0試合**。Japan national football team records and statistics の Head-to-head（updated 5 October 2026）に POR の行が無い。Portugal national football team records and statistics の Head-to-head（as of 4 October 2026）に Japan の行が無い。Japan national football team results の 1980–1989・1990–1999・2000–2009・2010–2019・2020–present の生の表にも Portugal の試合は無い（2020–present の Portugal は主審の国籍の1か所だけ）。JFA の通算表は見ていない。
+#  ・日本との縁（サッカーだけ）：ゴンサロ・ゲデスは 2026年W杯のポルトガルの選手（記事のカテゴリ「2026 FIFA World Cup players」と Portugal squad 2026 FIFA World Cup のひな形）で、2025年からレアル・ソシエダ（infobox）。久保建英もレアル・ソシエダ（config/japan_abroad.yaml）。
+# ---- 言わないもの ----
+#  ・ロナウドとジェズス監督の対立・ロナウドの離脱と暫定の出場停止（処分）／主将の名前（食い違い）／背番号／私生活／怪我（コンセイソンの退場を含む）／監督の契約／戦術の説明／「4連勝で始めたのはポルトガルだけ」。
+# ---- 写真（assets/images/20261026_team_portugal/、出典は credits.json。Commons の CC BY-SA 4.0、撮影 Bryan Berlin。2026-07-02 クロアチア対ポルトガル。代理店・放送映像は使っていない）----
+date: 2026年10月26日
+slot: other_1
+format: news
+series: 代表チーム紹介
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+people:
+- ポルトガル代表
+- クリスティアーノ・ロナウド
+- ジョルジェ・ジェズス
+theme:
+  id: team_portugal
+  league: japan
+  league_name: ポルトガル代表
+  kind: preview
+  topic: ポルトガル代表
+  title: ポルトガル代表は、W杯16強から4戦4勝。監督が替わって、何が変わったのか
+  question: 2026年のW杯でベスト16に終わったポルトガルは、監督が替わって何が変わったのか
+  lead: W杯は16強。秋は4戦4勝。
+  hook: ''
+  opening_image: assets/stats/tb_portugal_data_t.png
+  end_bg: assets/images/20261026_team_portugal/p05_ramos_w.jpg
+  takeaway: ポルトガルは2026年のW杯で5試合8得点3失点、ラウンド16でスペインに0対1（90+1分の失点）で敗れた。直近3大会のW杯の1試合あたりの失点は2018年1.50・2022年1.20・2026年0.60で、2026年がいちばん少ない。ジェズス監督の秋のネーションズリーグは4戦4勝で、1試合あたり得点2.25・失点1.00。得点はW杯の1.60から増え、失点も0.60から増えた。W杯の8点のうち3点はロナウド、秋の9点は4人で分け合った。11月14日のデンマーク戦と17日のウェールズ戦が確かめになる。
+thumbnail:
+  board: assets/stats/tb_portugal_data.png
+  line1: ポルトガル代表
+  line2: W杯16強から4戦4勝
+  crest_main:
+  - ポルトガル
+  tags:
+  - ポルトガル代表
+  - ワールドカップ
+  - クリスティアーノ・ロナウド
+  - ネーションズリーグ
+  - 代表チーム紹介
+sections:
+- id: hook
+  heading: W杯は16強。監督が替わって、何が変わったのか
+  main: true
+  tier: 背景
+  telop: W杯は16強。秋は4戦4勝
+  narrator: 解説
+  say:
+  - text: ポルトガル代表は、2026年のワールドカップで**ベスト16**。
+    image: assets/stats/tb_portugal_data2.png
+    no_telop: true
+    emph: true
+  - text: スペインに0対1。決勝点は、90分を過ぎてからの1点でした。
+    image: assets/stats/tb_portugal_data2.png
+    no_telop: true
+  - text: 大会のあと、監督が替わりました。
+    image: assets/stats/tb_portugal_data_r1.png
+    no_telop: true
+  - text: 秋の公式戦、ネーションズリーグは4試合を戦って4連勝。
+    image: assets/stats/tb_portugal_data_t.png
+    no_telop: true
+  - text: 10月のフィファランクでは、2つ上げて5位になりました。
+    image: assets/stats/tb_portugal_data_r2.png
+    no_telop: true
+  - text: ワールドカップと秋のあいだで、数字はどう動いたのでしょうか。
+    image: assets/stats/tb_portugal_data_r1.png
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Portugal_at_the_FIFA_World_Cup
+  - https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_knockout_stage
+  - https://en.wikipedia.org/wiki/Portugal_national_football_team
+  - https://inside.fifa.com/en/news/coca-cola-mens-world-ranking-october-2026-portugal-spain
+- id: data
+  heading: ポルトガル代表は、どんな数字を持つ国なのか
+  tier: 背景
+  telop: ポルトガル代表の基礎DATA
+  narrator: 解説
+  say:
+  - text: フィファランクは**5位**。10月の発表で、トップ10の中で順位を上げたのはポルトガルだけでした。
+    image: assets/stats/tb_portugal_data0.png
+    no_telop: true
+  - text: ワールドカップの最高成績は、初出場だった1966年の3位。
+    image: assets/stats/tb_portugal_data1.png
+    no_telop: true
+  - text: ヨーロッパ選手権は、2016年に優勝しています。
+    image: assets/stats/tb_portugal_data3.png
+    no_telop: true
+  - text: 監督は、ジョルジェ・ジェズス。2026年7月に就任しました。
+    image: assets/stats/tb_portugal_data4.png
+    no_telop: true
+  - text: 代表の出場と得点の最多は、クリスティアーノ・ロナウド。234試合で146得点です。
+    image: assets/stats/tb_portugal_data5.png
+    no_telop: true
+  sources:
+  - https://inside.fifa.com/en/news/coca-cola-mens-world-ranking-october-2026-portugal-spain
+  - https://en.wikipedia.org/wiki/Module:SportsRankings/data/FIFA_World_Rankings
+  - https://en.wikipedia.org/wiki/Portugal_national_football_team
+  - https://en.wikipedia.org/wiki/Portugal_at_the_FIFA_World_Cup
+- id: history
+  heading: ポルトガルは、どんな大会で名を上げてきたのか
+  tier: 背景
+  telop: 1966年の3位から、2016年のヨーロッパ王者へ
+  narrator: 解説
+  card: &id_histA
+    type: timeline
+    title: ポルトガル代表の歩み
+    rows:
+    - - 1966年
+      - W杯に初めて出て3位
+    - - 2004年
+      - 自国開催のヨーロッパ選手権で準優勝
+    - - 2016年
+      - ヨーロッパ選手権で初めての優勝
+    - - 2019年
+      - ネーションズリーグで優勝
+    - - 2025年
+      - ネーションズリーグで2度目の優勝
+    - - 2026年
+      - W杯はベスト16
+    focus: 2016年
+  say:
+  - text: ポルトガルが、初めてワールドカップに出たのは1966年です。
+    card: *id_histA
+  - text: その大会で、いきなり3位。
+    card:
+      <<: *id_histA
+      highlight_row: 0
+  - text: 9点を決めて大会の得点王になったのが、エウゼビオでした。
+    emph: true
+    card:
+      <<: *id_histA
+      highlight_row: 0
+  - text: 2004年は、自分の国で開いたヨーロッパ選手権。
+    image: assets/images/20261026_team_portugal/p01_ronaldo_w.jpg
+    card: none
+  - text: 決勝でギリシャに0対1で敗れて、準優勝でした。
+    card: none
+  - text: 初めての大きなタイトルは、2016年のヨーロッパ選手権です。
+    card:
+      <<: *id_histA
+      highlight_row: 2
+  - text: 決勝はフランスと0対0のまま延長に入り、1対0で勝ちました。
+    emph: true
+    card:
+      <<: *id_histA
+      highlight_row: 2
+  - text: そこからネーションズリーグを、2019年と2025年に2度制しました。
+    card:
+      <<: *id_histA
+      highlight_row: 4
+  - text: 2025年の決勝はスペインと2対2。PK戦を5対3で取っています。
+    image: assets/images/20261026_team_portugal/p02_bruno_w.jpg
+    card: none
+  - text: そして2026年のワールドカップは、ベスト16で終わりました。
+    card:
+      <<: *id_histA
+      highlight_row: 5
+  sources:
+  - https://en.wikipedia.org/wiki/Portugal_at_the_FIFA_World_Cup
+  - https://en.wikipedia.org/wiki/1966_FIFA_World_Cup
+  - https://en.wikipedia.org/wiki/UEFA_Euro_2004_final
+  - https://en.wikipedia.org/wiki/UEFA_Euro_2016_final
+  - https://en.wikipedia.org/wiki/2019_UEFA_Nations_League_final
+  - https://en.wikipedia.org/wiki/2025_UEFA_Nations_League_final
+- id: players
+  heading: いまの看板選手は、誰なのか
+  tier: 背景
+  telop: 看板選手を、所属・名前・位置・年齢で
+  narrator: 解説
+  card: &id_pl
+    type: table
+    title: ポルトガル代表の看板選手
+    columns:
+    - 所属
+    - 名前
+    - 位置
+    - 年齢
+    rows:
+    - - マンチェスター・ユナイテッド
+      - ブルーノ・フェルナンデス
+      - MF
+      - '32'
+    - - パリ・サンジェルマン
+      - ヴィティーニャ
+      - MF
+      - '26'
+    - - パリ・サンジェルマン
+      - ジョアン・ネヴェス
+      - MF
+      - '22'
+    - - パリ・サンジェルマン
+      - ヌーノ・メンデス
+      - DF
+      - '24'
+    - - マンチェスター・シティ
+      - ルベン・ディアス
+      - DF
+      - '29'
+    - - ACミラン
+      - ゴンサロ・ラモス
+      - FW
+      - '25'
+  say:
+  - text: いまのポルトガルを引っぱる、6人です。
+    card: *id_pl
+  - text: 年齢は、10月26日時点で数えています。
+    card: *id_pl
+  - text: マンチェスター・ユナイテッドのブルーノ・フェルナンデスは32歳。
+    image: assets/images/20261026_team_portugal/p02_bruno_w.jpg
+    card:
+      <<: *id_pl
+      highlight_row: 0
+  - text: 代表で97試合に出て29得点。中盤から点も取る選手です。
+    card: none
+  - text: 中盤は、パリ・サンジェルマンの3人が支えます。
+    image: assets/images/20261026_team_portugal/p03_vitinha_w.jpg
+    card: none
+  - text: ヴィティーニャは26歳。10月1日のデンマーク戦で、3点目を決めました。
+    card:
+      <<: *id_pl
+      highlight_row: 1
+  - text: 22歳のジョアン・ネヴェスは、ワールドカップの初戦で6分に先制点。
+    image: assets/images/20261026_team_portugal/p04_neves_w.jpg
+    card:
+      <<: *id_pl
+      highlight_row: 2
+  - text: ディフェンダーのヌーノ・メンデスは24歳。ウズベキスタン戦で1点を決めています。
+    image: assets/images/20261026_team_portugal/p06_mendes_w.jpg
+    card:
+      <<: *id_pl
+      highlight_row: 3
+  - text: 守備の柱は、マンチェスター・シティのルベン・ディアス。29歳で、代表84試合です。
+    image: assets/images/20261026_team_portugal/p08_dias_w.jpg
+    card:
+      <<: *id_pl
+      highlight_row: 4
+  - text: 前線は、ACミランのゴンサロ・ラモス。25歳。
+    image: assets/images/20261026_team_portugal/p05_ramos_w.jpg
+    card:
+      <<: *id_pl
+      highlight_row: 5
+  - text: ワールドカップのクロアチア戦では、終了間際に決勝点を決めました。
+    emph: true
+    card:
+      <<: *id_pl
+      highlight_row: 5
+  sources:
+  - https://en.wikipedia.org/wiki/Portugal_national_football_team
+  - https://en.wikipedia.org/wiki/Gon%C3%A7alo_Ramos
+- id: japan
+  heading: 日本は、ポルトガルと戦ったことがあるのか
+  tier: 背景
+  telop: 国際Aマッチは0試合。近い縁はソシエダに
+  narrator: 解説
+  say:
+  - text: 代表どうしの正式な試合、国際Aマッチで、日本とポルトガルの対戦は0試合です。
+    image: assets/stats/tb_portugal_data7.png
+    no_telop: true
+  - text: いちばん近い縁は、スペインのレアル・ソシエダにあります。
+    image: assets/images/20261026_team_portugal/p07_guedes_w.jpg
+  - text: ワールドカップのメンバーだったゴンサロ・ゲデスは、久保建英のチームメートです。
+  sources:
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_records_and_statistics
+  - https://en.wikipedia.org/wiki/Portugal_national_football_team_records_and_statistics
+  - https://en.wikipedia.org/wiki/Japan_national_football_team_results_(2020%E2%80%93present)
+  - https://en.wikipedia.org/wiki/Gon%C3%A7alo_Guedes
+- id: now
+  heading: ジェズス監督のポルトガルは、W杯のあとをどう戦っているのか
+  tier: 背景
+  telop: W杯のあとの4試合は、4戦4勝。9得点
+  narrator: 解説
+  card: &id_nw
+    type: table
+    title: W杯のあと ポルトガルの4試合
+    columns:
+    - 日付
+    - 相手
+    - ポルトガルの結果
+    rows:
+    - - 9月24日
+      - ウェールズ
+      - 1-0
+    - - 9月27日
+      - ノルウェー（敵地）
+      - 2-1
+    - - 10月1日
+      - デンマーク（敵地）
+      - 4-2
+    - - 10月4日
+      - ノルウェー
+      - 2-1
+  say:
+  - text: スペイン戦のあと、マルティネス監督が退き、7月にジェズス監督が就任しました。
+    image: assets/images/20261026_team_portugal/p03_vitinha_w.jpg
+    card: none
+  - text: 秋のネーションズリーグで、ポルトガルはここまで4戦4勝です。
+    card: *id_nw
+  - text: ネーションズリーグは、ヨーロッパの代表チームが組に分かれて戦う公式戦です。
+    card: *id_nw
+  - text: 9月24日は、ウェールズに1対0の勝ち。
+    card:
+      <<: *id_nw
+      highlight_row: 0
+  - text: 9月27日は、敵地でノルウェーに2対1の勝ち。
+    card:
+      <<: *id_nw
+      highlight_row: 1
+  - text: 10月1日は、敵地でデンマークに4対2の勝ち。
+    emph: true
+    image: assets/images/20261026_team_portugal/p02_bruno_w.jpg
+    card: none
+  - text: 10月4日は、ノルウェーにもう一度2対1で勝ちました。
+    card:
+      <<: *id_nw
+      highlight_row: 3
+  - text: 4試合で9得点、4失点。
+    card: *id_nw
+  - text: 9点のうち3点ずつを、ジョアン・フェリックスとゴンサロ・ラモスが決めています。
+    image: assets/images/20261026_team_portugal/p05_ramos_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Portugal_national_football_team
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.nations/scoreboard?dates=20261001
+  - https://inside.fifa.com/en/news/coca-cola-mens-world-ranking-october-2026-portugal-spain
+- id: viewpoint
+  viewpoint: true
+  heading: W杯と秋の4試合。点の取り方と守り方は、どう変わったのか
+  tier: 背景
+  telop: W杯は失点0.6。秋は得点2.25
+  narrator: 解説
+  card: &id_vp
+    type: table
+    title: 直近3大会のW杯（1試合あたり）
+    columns:
+    - 大会
+    - 結果
+    - 得点
+    - 失点
+    rows:
+    - - 2018年
+      - 16強
+      - '1.50'
+      - '1.50'
+    - - 2022年
+      - 8強
+      - '2.40'
+      - '1.20'
+    - - 2026年
+      - 16強
+      - '1.60'
+      - '0.60'
+  say:
+  - text: 見立てに入ります。直近3大会のワールドカップと、秋の4試合を比べます。
+    image: assets/images/20261026_team_portugal/p04_neves_w.jpg
+    card: none
+  - text: まずは、ポルトガルのワールドカップの、1試合あたりの数字です。
+    card: *id_vp
+  - text: 2026年の失点は、1試合あたり0.6。直近の3大会で、いちばん少ない数字でした。
+    emph: true
+    mark:
+      kind: circle
+      row: 2
+      col: 3
+    card:
+      <<: *id_vp
+      highlight_row: 2
+  - text: 一方で得点は1.6。8強の2022年の2.4より、0.8少なくなっています。
+    mark:
+      kind: circle
+      row: 2
+      col: 2
+    card:
+      <<: *id_vp
+      highlight_row: 2
+  - text: スペイン戦は無得点。守りの良さを、勝ちにつなげられませんでした。
+    image: assets/images/20261026_team_portugal/p01_ronaldo_w.jpg
+    card: none
+  - text: 次は、ワールドカップと秋の4試合を並べます。
+    card: &id_vp2
+      type: table
+      title: W杯2026と秋の4試合（1試合あたり）
+      columns:
+      - 期間
+      - 監督
+      - 得点
+      - 失点
+      rows:
+      - - W杯 5試合
+        - マルティネス
+        - '1.60'
+        - '0.60'
+      - - 秋 4試合
+        - ジェズス
+        - '2.25'
+        - '1.00'
+  - text: 秋の4試合は、1試合あたり2.25得点。ワールドカップより0.65多い。
+    mark:
+      kind: circle
+      row: 1
+      col: 2
+    card:
+      <<: *id_vp2
+      highlight_row: 1
+  - text: ただ失点も1試合あたり1で、ワールドカップの0.6より増えました。
+    emph: true
+    card:
+      <<: *id_vp2
+      highlight_row: 1
+  - text: 大会の格も、相手も違うので、そのまま比べられる数字ではありません。
+    image: assets/images/20261026_team_portugal/p05_ramos_w.jpg
+    card: none
+  - text: 決めた人も変わりました。ワールドカップの8点のうち、3点はロナウド。
+    card: none
+  - text: 秋の9点は、フェリックス、ラモス、カンセロ、ヴィティーニャの4人。
+    card: none
+  - text: 守りのワールドカップから、点を取りにいく秋へ。失点を減らせるかが、次の課題です。
+    image: assets/images/20261026_team_portugal/p03_vitinha_w.jpg
+    card: none
+  - text: 答えが見えるのは、11月14日のデンマーク戦と、17日のウェールズ戦です。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Portugal_at_the_FIFA_World_Cup
+  - https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_knockout_stage
+  - https://en.wikipedia.org/wiki/Portugal_national_football_team

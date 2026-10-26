@@ -837,24 +837,6 @@
   "club": "シャルケ"
  },
  {
-  "file": "stadium_シュツットガルト_in.png",
-  "source": "wikimedia",
-  "title": "File:Mercedes-Benz Arena - Blick von der Eckfahne über das Spielfeld.jpg",
-  "page_url": "https://commons.wikimedia.org/wiki/File:Mercedes-Benz_Arena_-_Blick_von_der_Eckfahne_%C3%BCber_das_Spielfeld.jpg",
-  "author": "RudolfSimon",
-  "license": "CC BY-SA 3.0",
-  "club": "シュツットガルト"
- },
- {
-  "file": "stadium_ライプツィヒ_in.png",
-  "source": "wikimedia",
-  "title": "File:Red Bull Arena Panorama cropped.jpg",
-  "page_url": "https://commons.wikimedia.org/wiki/File:Red_Bull_Arena_Panorama_cropped.jpg",
-  "author": "Markus Unger",
-  "license": "CC BY 2.5",
-  "club": "ライプツィヒ"
- },
- {
   "file": "stadium_エルフェルスベルク_in.png",
   "source": "wikimedia",
   "title": "File:SV 07 Elversberg (Supporters) 2024-09-22 (03).jpg",
@@ -1060,5 +1042,41 @@
   "author": "Davicilio20",
   "license": "CC0",
   "club": "フランクフルト"
+ },
+ {
+  "file": "stadium_シュツットガルト.png",
+  "source": "wikimedia",
+  "title": "File:Mercedes-Benz-Arena Stuttgart.JPG",
+  "page_url": "https://commons.wikimedia.org/wiki/File:Mercedes-Benz-Arena_Stuttgart.JPG",
+  "author": "MSeses",
+  "license": "CC BY-SA 3.0",
+  "club": "シュツットガルト"
+ },
+ {
+  "file": "stadium_シュツットガルト_in.png",
+  "source": "wikimedia",
+  "title": "File:The MHP Arena and the renovated main stand of the stadium during a group match of the 2024 European Championship.jpg",
+  "page_url": "https://commons.wikimedia.org/wiki/File:The_MHP_Arena_and_the_renovated_main_stand_of_the_stadium_during_a_group_match_of_the_2024_European_Championship.jpg",
+  "author": "Vincenzo.togni",
+  "license": "CC BY 4.0",
+  "club": "シュツットガルト"
+ },
+ {
+  "file": "stadium_ライプツィヒ.png",
+  "source": "wikimedia",
+  "title": "File:Leipzig stadium.jpg",
+  "page_url": "https://commons.wikimedia.org/wiki/File:Leipzig_stadium.jpg",
+  "author": "Arne Müseler",
+  "license": "CC BY-SA 3.0 de",
+  "club": "ライプツィヒ"
+ },
+ {
+  "file": "stadium_ライプツィヒ_in.png",
+  "source": "wikimedia",
+  "title": "File:Red Bull Arena Panorama cropped.jpg",
+  "page_url": "https://commons.wikimedia.org/wiki/File:Red_Bull_Arena_Panorama_cropped.jpg",
+  "author": "Markus Unger",
+  "license": "CC BY 2.5",
+  "club": "ライプツィヒ"
  }
 ]

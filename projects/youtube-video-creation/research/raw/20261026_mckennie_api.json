@@ -1,0 +1,194 @@
+{
+ "resultsCount": 1,
+ "resultsLimit": 10,
+ "resultsOffset": 0,
+ "headlines": [
+  {
+   "id": 50278887,
+   "nowId": "1-50278887",
+   "contentKey": "50278887-1-21-1",
+   "dataSourceIdentifier": "97f6873a462c8",
+   "publishedkey": "soccer401874772",
+   "type": "Recap",
+   "gameId": "401874772",
+   "headline": "McKennie scores 1st goal since April in much-needed Juventus win",
+   "description": "Weston McKennie opened the scoring for Juventus in a 2-0 win over Lecce on Sunday to help the Serie A side course correct after a pair of disappointing results.",
+   "linkText": "McKennie scores 1st goal since April in much-needed Juventus win",
+   "categorized": "2026-10-25T19:45:49Z",
+   "originallyPosted": "2026-10-25T19:29:00Z",
+   "lastModified": "2026-10-25T19:45:48Z",
+   "published": "2026-10-25T19:29:00Z",
+   "section": "Serie A",
+   "images": [
+    {
+     "dataSourceIdentifier": "ab9e942cdaff0",
+     "id": 50278811,
+     "type": "header",
+     "name": "Juventus celeb McKennie vs Lecce_261025 [1296x729]",
+     "caption": "Juventus players celebrate after scoring a goal against Lecce in Serie A.",
+     "alt": "Juventus players celebrate after scoring a goal against Lecce in Serie A.",
+     "credit": "Getty Images",
+     "height": 729,
+     "width": 1296,
+     "url": "https://a.espncdn.com/photo/2026/1025/r1736020_1296x729_16-9.jpg"
+    }
+   ],
+   "video": [],
+   "categories": [
+    {
+     "id": 137798,
+     "type": "league",
+     "uid": "s:600~l:730",
+     "guid": "9c1e0753-2757-3b78-a6ed-1b595caf8191",
+     "description": "Italian Serie A",
+     "sportId": 600,
+     "leagueId": 12,
+     "league": {
+      "id": 730,
+      "description": "Italian Serie A",
+      "abbreviation": "Serie A",
+      "links": {
+       "mobile": {
+        "leagues": {
+         "href": "https://www.espn.com/soccer/league/_/name/ita.1"
+        }
+       },
+       "web": {
+        "leagues": {
+         "href": "https://www.espn.com/soccer/league/_/name/ita.1"
+        }
+       }
+      }
+     }
+    },
+    {
+     "id": 142584,
+     "type": "team",
+     "uid": "s:600~t:111",
+     "guid": "87fe4844-a7cf-c88e-2ebe-aeb57325e990",
+     "description": "Juventus",
+     "sportId": 600,
+     "teamId": 111,
+     "team": {
+      "id": 111,
+      "description": "Juventus",
+      "abbreviation": "JUV",
+      "shortDisplayName": "Juventus",
+      "links": {
+       "mobile": {
+        "teams": {
+         "href": "https://www.espn.com/soccer/club/_/id/111/juventus"
+        }
+       },
+       "web": {
+        "teams": {
+         "href": "https://www.espn.com/soccer/club/_/id/111/juventus"
+        }
+       }
+      }
+     }
+    },
+    {
+     "id": 193744,
+     "type": "team",
+     "uid": "s:600~t:113",
+     "guid": "31a93cae-ada9-1d2f-08bf-b2c6f7ad9859",
+     "description": "Lecce",
+     "sportId": 600,
+     "teamId": 113,
+     "team": {
+      "id": 113,
+      "description": "Lecce",
+      "abbreviation": "LEC",
+      "shortDisplayName": "Lecce",
+      "links": {
+       "mobile": {
+        "teams": {
+         "href": "https://www.espn.com/soccer/club/_/id/113/lecce"
+        }
+       },
+       "web": {
+        "teams": {
+         "href": "https://www.espn.com/soccer/club/_/id/113/lecce"
+        }
+       }
+      }
+     }
+    },
+    {
+     "id": 81497,
+     "type": "league",
+     "uid": "s:600",
+     "guid": "119cfa41-71d4-39bf-a790-6273a52b0259",
+     "description": "Soccer",
+     "sportId": 600,
+     "leagueId": 600,
+     "league": {
+      "id": 600,
+      "description": "Soccer",
+      "links": {
+       "mobile": {
+        "leagues": {
+         "href": "https://www.espn.com/soccer/"
+        }
+       },
+       "web": {
+        "leagues": {
+         "href": "https://www.espn.com/soccer/"
+        }
+       }
+      }
+     }
+    },
+    {
+     "type": "event",
+     "uid": "s:600~l:730~e:401874772",
+     "guid": "53098dcb-d0fc-35cd-90fc-b309debe32c3",
+     "description": "Juventus @ Lecce",
+     "eventId": 401874772,
+     "event": {
+      "id": 401874772,
+      "sport": "soccer",
+      "league": "ita.1",
+      "description": "Juventus @ Lecce"
+     }
+    }
+   ],
+   "keywords": [
+    "Italian Serie A",
+    "Juventus",
+    "Lecce",
+    "Soccer",
+    "Juventus @ Lecce"
+   ],
+   "story": "<p><a data-player-guid=\"80f154c0-ef1f-6615-9238-d22a3d6cd0e1\" href=\"http://espn.com/soccer/player/_/id/256715/weston-mckennie\">Weston McKennie</a> opened the scoring for <a data-clubhouse-guid=\"87fe4844-a7cf-c88e-2ebe-aeb57325e990\" href=\"http://espn.com/soccer/team?id=111\">Juventus</a> in a 2-0 win over <a data-clubhouse-guid=\"31a93cae-ada9-1d2f-08bf-b2c6f7ad9859\" href=\"http://espn.com/soccer/team?id=113\">Lecce</a> on Sunday to help the <a data-league-guid=\"9c1e0753-2757-3b78-a6ed-1b595caf8191\" href=\"https://www.espn.com/soccer/league/_/name/ITA.1\">Serie A</a> side course correct after a pair of disappointing results.</p>\n<p>The <a data-clubhouse-guid=\"e6b65d49-258c-b730-b7db-df75c6b1f714\" href=\"http://espn.com/soccer/team?id=660\">United States</a> midfielder swooped in to redirect a free kick over the top of the Lecce defense into the back of the net just before the 30-minute mark. It was his first goal in Serie A this season and first in all competitions for Juventus since April -- ending a 13-game drought.</p>\n<p><a data-player-guid=\"49c4e855-290e-368c-ab24-ebea7a222d37\" href=\"http://espn.com/soccer/player/_/id/320074/douglas-luiz\">Douglas Luiz</a> scored another for the visitors just before halftime to Luciano Spalletti's side all it would need to pick up the three points and move up to seventh in the table on 14 points.</p>\n<p>Juventus had lost their last game in Serie A -- a lackluster draw against <a data-clubhouse-guid=\"bbeffb3b-a5b0-c47a-afdf-dcaf5280f9d2\" href=\"http://espn.com/soccer/team?id=112\">Lazio</a> last weekend -- before having to come from behind to draw with <a data-clubhouse-guid=\"e3ab20bb-ecc1-da4d-1524-9e30c6a6bd18\" href=\"http://espn.com/soccer/team?id=169\">Stade Rennais</a> 2-2 in the Europa League on Thursday.</p>\n<p>Boos could be heard ringing down on Spalletti and his team after the draw with Rennes at the Allianz in Turin in midweek as the former <a data-clubhouse-guid=\"e5383473-2c2c-672e-5c37-253cfce49818\" href=\"http://espn.com/soccer/team?id=162\">Italy</a> manager looks to get Juventus back on course in Serie A and in Europe.</p>\n<p>McKennie was left out of the U.S. squad in the September/October international window in which Mauricio Pochettino brought in a number of new faces in the team's first games since losing to <a data-clubhouse-guid=\"4084f797-3877-2af0-b70f-570d25a1a141\" href=\"http://espn.com/soccer/team?id=459\">Belgium</a> in the round of 16 at the <a data-league-guid=\"34f478c4-cf9a-35da-abd5-33db021e09d2\" href=\"https://www.espn.com/soccer/worldcup/\">FIFA World Cup</a> last summer.</p>\n<p><em>Information from ESPN Global Research was used in this recap.</em></p>\n",
+   "allowComments": true,
+   "allowContentReactions": false,
+   "allowSearch": true,
+   "byline": "ESPN News Services",
+   "isLiveBlog": false,
+   "links": {
+    "api": {
+     "self": {
+      "href": "https://content.core.api.espn.com/v1/sports/news/50278887"
+     }
+    },
+    "app": {
+     "sportscenter": {
+      "href": "sportscenter://x-callback-url/showStory?uid=50278887"
+     }
+    },
+    "mobile": {
+     "href": "http://m.espn.go.com/soccer/story?storyId=50278887"
+    },
+    "web": {
+     "href": "http://www.espn.com/soccer/report/_/gameId/401874772"
+    }
+   },
+   "premium": false
+  }
+ ],
+ "breakingNews": [],
+ "timestamp": "2026-10-26T04:17:56Z",
+ "status": "success"
+}

@@ -1,0 +1,566 @@
+# 監督紹介：アルテタ（10/26 月、シリーズ「監督紹介」、key: manager_arteta、型は news）。9節の型（2026-10-20 決定）。見本は 20261025_manager_simeone。
+# 順：フック→基礎DATA→**日本との接点（基礎DATAの次）**→歩みと転機→戦術の色（実例の試合1つ）→数字で見る→本人の言葉→マル秘話→見立て。
+#
+# **重なりの確認（2026-10-26 に自分で）**：scripts/・research/covered.yaml・research/posted.json を grep。アルテタを主題にした「人物紹介」（監督紹介）は無し。
+#   アルテタの名前が題に出る既存の本：9/13 news「アルテタがプレシーズンに、わざと起こしていたことの中身」、9/23 news「アルテタがアーセナルと新たに4年契約…」、
+#   10/8 財政「アルテタ、アーセナルで2030年まで。プレミア最高給の中身」（契約・年俸）、10/21 news「ラヤ…アルテタは『ごく少数』」、10/24 news「サカ…アルテタが口にした課題」。
+#   → この回は「監督アルテタの経歴・勝率・戦術の色・優勝まで」で、財政の回（契約・年俸）とは主題が違う。**年俸・契約の期限・契約の中身は入れない**（10/8 と重なるため）。
+#   9/13 の「プレシーズンにわざと起こしていたこと」（更衣室を暑く…）、10/21・10/24 の発言は使わない。直近30日にアルテタの本が4本ある（財政1・ニュース本編0・ショート2）ので報告に書く。
+#
+# **いまの立場（確かめた）**
+#   ○ 英語版 Wikipedia「Mikel Arteta」（控え research/raw/20261026_arteta_wiki.txt）：currentclub = Arsenal (manager)。
+#   ○ 同「2026–27 Arsenal F.C. season」（控え research/raw/20261026_arsenal_2026_27_wiki.txt）：manager = Mikel Arteta。
+#   ○ ESPN の日程（site.api.espn.com eng.1 teams/359/schedule）：2026-10-24 アーセナル 2-0 エヴァートン ほか今季の試合。今季も1部（プレミア）。
+#   × クラブ公式（arsenal.com）の監督ページは当たっていない。契約の期限は 10/8 の回と重なるので台本に入れない。
+#
+# **通算の数え方（台本とサムネをそろえる）**＝トップチームの全公式戦。監督はアーセナルだけ（シティのコーチ時代、代理の1試合は数えない）。
+#   英語版 Wikipedia「Managerial statistics」（updated: match played 24 October 2026）：366試合 224勝 68分 74敗。勝率 224/366＝61.2%（自分で割った）。
+#   就任の発表は 2019-12-20、指揮は 2019-12-22 から（12/21 エヴァートン戦は暫定のリュングベリ）。
+#   優勝（Wikipedia Honours「Manager」欄）：プレミアリーグ 2025-26／FAカップ 2019-20／コミュニティ・シールド 2020・2023・2026＝**5冠**。
+#     準優勝（EFLカップ 2025-26、チャンピオンズリーグ 2025-26）は数えない。
+#   今季（ESPN・Wikipedia の Overall record、2026-10-24 まで）：プレミア8試合 7勝1敗（13得点5失点、勝ち点21・2位）／チャンピオンズリーグ3試合 2勝1分／EFLカップ1勝／コミュニティ・シールド1勝
+#     ＝13試合 11勝1分1敗。勝率 11/13＝84.6%（自分で割った）。
+#
+# **基礎**：1982-03-26 スペイン・サン・セバスティアン生まれ（44歳）。MF。バルセロナの下部組織 → バルセロナB → パリ・サンジェルマン（期限付き）→ レンジャーズ → レアル・ソシエダ → エヴァートン → アーセナル（2011〜2016）。
+#   アーセナルでは 2014-15 から主将（Wikipedia）、FAカップ優勝 2014・2015。スペインのA代表の出場は無し（世代別だけ）→ 台本では代表に触れない。
+#   2016-07-03 マンチェスター・シティのコーチ（グアルディオラの下）。2016年の引退後すぐ。
+#   就任時：BBC 2019-12-20「Arsenal are 10th in the Premier League with 22 points」（控え research/raw/20261026_arteta_bbc_appoint.txt）。
+#
+# **日本との接点（一次で確かめた範囲。サッカーの縁だけ）**
+#   ○ 英語版 Wikipedia「Takehiro Tomiyasu」（控え research/raw/20261026_tomiyasu_wiki.txt）：2021-08-31 アーセナル加入、2021-09-11 ノリッジ戦（1-0）で初出場、
+#     2021年9月のクラブの月間最優秀選手（ファン投票51%）。アーセナルでは 2021-22〜2024-25 に全公式戦 84試合2得点（Career statistics の表）。2025年7月に契約を解除して退団。
+#     ボローニャでは全公式戦64試合（同じ表）。いまはクリスタル・パレス（2026-08-07 加入）。在籍はアルテタの就任後なので、84試合はすべてアルテタの指揮。
+#   × アルテタが日本で指揮した試合・日本代表との接点は見つからない。けがの経緯は入れない（「けがが多かった」とも言わない）。
+#
+# **戦術の色（実例の試合＝2025-04-08 チャンピオンズリーグ準々決勝 第1戦、アーセナル 3-0 レアル・マドリード）**
+#   ○ ESPN の試合記録（site.api.espn.com uefa.champions summary?event=733608、控え research/raw/20261026_arsenal_realmadrid_2025_espn.json）：
+#       58分 ライスの直接フリーキック、70分 ライスの直接フリーキック、75分 メリーノ（ルイス＝スケリーのアシスト）。支配率 アーセナル53.4%・レアル46.6%。シュート 12対9。
+#       ※ESPN の「枠内」は 11 と出ていて怪しい（シュート12本で枠内11）→ 枠内は使わない。
+#   ○ 第2戦 2025-04-16 レアル・マドリード 1-2 アーセナル（ESPN scoreboard）→ 2戦合計 5-1。準決勝は 2008-09 以来（Wikipedia「Mikel Arteta」）。
+#   ○ 英語版 Wikipedia「Declan Rice」：1試合に直接フリーキック2点は、チャンピオンズリーグの決勝トーナメントで初めて。
+#   ○ 英語版 Wikipedia「Mikel Arteta」Style of management：4-3-3 が主、ボールを持って試合を支配する／攻めているあいだも後ろに3-2の形を残して相手の速攻を防ぐ／攻撃のセットプレーで点を取る。
+#       セットプレー専門のコーチ（2021年7月からニコラ・ジョベール）を置く（同記事の Arsenal の節）。
+# **本人の言葉（自訳。原文は出典）**：
+#   ①2019-12-20 BBC：「We need to be competing for the top trophies in the game」「I'm realistic enough to know it won't happen overnight」
+#   ②2026-05 優勝の直後（Irish News、PA配信の記事。控え research/raw/20261026_arteta_irishnews.txt）：
+#     "We came very close. We fell short on three occasions, and that was very painful."
+#   ③2026-05-21 Al Jazeera（控え research/raw/20261026_arteta_aljazeera.txt）："I've asked that question to myself, am I good enough to lead these players to win a major trophy? Until you do it, you cannot validate yourself."
+#     ※同じ記事の家族の話（バーベキュー・息子）は私生活なので入れない。
+# **マル秘話（英語版 Wikipedia・プレミアリーグ公式）**：
+#   ・FAカップを、アーセナルの主将と監督の両方で獲ったのは初めて（2020年の決勝 2-1 チェルシー）。就任1年目の主要タイトルはジョージ・グラハム（1986-87）以来。
+#   ・2021-22 は開幕3連敗、勝ち点0・得点0で最下位。9月のリーグ戦を全勝して初の月間最優秀監督。月間最優秀監督は計8回（Honours）。
+#   ・2023年3月12日、168試合目で100勝。アーセナルの監督で、その時点の勝率は最高（Wikipedia）。
+#   ・プレミアリーグ公式（2026-05-19、控え research/raw/20261026_arteta_pl_titlemanagers.txt）：プレミアで優勝した13人目の監督。プレーしたクラブでプレミア優勝した初の監督。
+#     44歳54日は、プレミア優勝監督で3番目の若さ（上の2つはモウリーニョ）。スペイン人では、グアルディオラに次ぐ2人目。
+#   ・2026-05-30 チャンピオンズリーグ決勝（ブダペスト）でパリ・サンジェルマンと1-1、PK 3-4。クラブとして20年ぶりの決勝。
+# **勝ち点の推移（英語版 Wikipedia「List of Arsenal F.C. seasons」、控え research/raw/20261026_arsenal_seasons_wiki.txt）**：
+#   2025-26 マンチェスター・シティ 23勝9分6敗＝78（2位）、2023-24 シティ 28勝7分3敗＝91（優勝）（英語版 Wikipedia 各季の Premier League の表、控え research/raw/20261026_2025_26_pl_wiki.txt ほか）。
+#   2020-21 61（8位）／2021-22 69（5位）／2022-23 84（2位）／2023-24 89（2位、失点29）／2024-25 74（2位）／2025-26 85（1位、26勝7分5敗、71得点27失点）。2019-20 は途中就任なので並べない。
+#
+# **入れなかったもの**：家族・私生活、年俸・契約（10/8 の財政の回と重なる）、退場・処分、審判への発言、他の監督との優劣、選手のけがの経緯、女子チーム、Jリーグ、SNS の反応、
+#   9/13・10/21・10/24 の回で使った発言とエピソード。ESPN の枠内シュートの数（怪しい）。
+# **日本語名・読みで怪しいもの（audio_query で確かめた）**：メリーノ（メ'リイ/ノ'/ガ' と割れる）→ 台本では名前を出さない。ノリッジ（ノ'/リッジ'セン と割れる）→ 名前を出さない。
+#   「グアルディオラの下で」はシタデと読む → 「もとで」と書く。アルテタ・サン・セバスティアン・冨安健洋（トミヤスタケヒロ）・エヴァートン・レンジャーズ・ブダペスト・レアル・マドリード・
+#   デクラン・ライス・ボーンマス・コミュニティ・シールド・パリ・サンジェルマン・レアル・ソシエダ・マンチェスター・シティ はどれも通った。
+date: 2026年10月26日
+slot: other_1
+format: news
+series: 監督紹介
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+people:
+- アルテタ
+- 冨安健洋
+theme:
+  end_bg: assets/images/20261026_manager_arteta/01_w.jpg
+  id: manager_arteta
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: アルテタ
+  title: アルテタ監督ってどんな人？10位のアーセナルを、どう優勝させたのか
+  question: アーセナルのアルテタ監督は、どんな人なのか。就任した日に10位だったチームを、どうやって22年ぶりのリーグ優勝まで運んだのか
+  lead: アーセナル監督、ミケル・アルテタ。
+  opening_image: assets/images/20261026_manager_arteta/01_w.jpg
+  takeaway: 通算は366試合、224勝で勝率61.2%（アーセナルだけ、2026年10月24日の試合まで）。優勝は5冠で、2026年に22年ぶりのプレミア優勝。リーグの勝ち点は2020-21の61から、3季続けて2位（84・89・74）をへて、優勝の季は85。2位だった2023-24の89より4少ないが、2位シティとの差は2点の負け（89対91）から7点の勝ち（85対78）に変わった。今季は10月24日まで13試合で11勝1分け1敗
+  short_title: アルテタ、10位から22年ぶり優勝
+  nameplate: アルテタ｜アーセナル監督
+thumbnail:
+  line1: アルテタ、366試合224勝
+  line2: 史上初、古巣でプレミア優勝
+  tags:
+  - アーセナル
+  photo: assets/images/20261026_manager_arteta/panel_01.jpg
+  photos: []
+  short_photo: assets/images/20261026_manager_arteta/01_v.jpg
+sections:
+- id: hook
+  main: true
+  heading: 就任した日は10位。アルテタは、どうやってアーセナルを優勝させたのか
+  tier: 報道
+  telop: 就任の日は10位。6年あまり後、22年ぶりのプレミア優勝
+  narrator: 解説
+  card: &hook_stats
+    type: stats
+    title: アルテタとアーセナル（2019年12月〜）
+    items:
+    - ['10', 位, 就任が決まった日の順位（2019年12月）]
+    - ['22', 年ぶり, 2026年5月のプレミア優勝]
+    - ['366', 試合, 率いた公式戦（2026年10月24日まで）]
+    focus: 1
+  say:
+  - text: 就任の日は10位。6年あまり後、22年ぶりのリーグ優勝。
+    image: assets/images/20261026_manager_arteta/03_w.jpg
+    emph: true
+    card: none
+  - voice: アルテタ
+    text: 本当にあと少しだった。3度、届かなかった。
+  - voice: アルテタ
+    text: あれは、とても苦しかった。
+    cont: true
+    pause: 0.5
+    image: assets/images/20261026_manager_arteta/01_w.jpg
+    card: none
+  - text: 選手としてプレーしたクラブでプレミアを制した、史上初めての監督。
+    image: assets/images/20261026_manager_arteta/02_w.jpg
+    card:
+      <<: *hook_stats
+      focus: 1
+  - text: アーセナルの、ミケル・アルテタです。
+    image: assets/images/20261026_manager_arteta/01_w.jpg
+    card: none
+  quotes_from:
+  - https://www.irishnews.com/sport/soccer/emotional-mikel-arteta-thrilled-by-way-arsenal-became-premier-league-champions-2VKOPQMKZVLQJMQNDVZCYYSZ7M/
+  sources:
+  - https://www.bbc.com/sport/football/50817660
+  - https://www.premierleague.com/en/news/4660971/every-premier-league-title-winning-manager-in-history
+  - https://www.irishnews.com/sport/soccer/emotional-mikel-arteta-thrilled-by-way-arsenal-became-premier-league-champions-2VKOPQMKZVLQJMQNDVZCYYSZ7M/
+- id: data
+  heading: アルテタは、いつから、どんな経歴の人か
+  tier: 報道
+  telop: アルテタの基礎DATA
+  narrator: 解説
+  card: &data_table
+    type: table
+    title: アルテタ（44歳）の基礎DATA
+    columns: [項目, 中身]
+    rows:
+    - [生年月日, 1982年3月26日（スペイン・サン・セバスティアン）]
+    - [選手時代, MF。2014年からアーセナルの主将]
+    - [コーチ, 2016〜19年 マンチェスター・シティ]
+    - [アーセナルの監督, 2019年12月20日に就任が決まる]
+    - [今季のリーグ, 8試合で7勝1敗・2位（10月24日時点）]
+    highlight_row: 3
+    source: 英語版Wikipedia・ESPN
+  say:
+  - text: アルテタは1982年3月26日、スペインのサン・セバスティアン生まれの44歳。
+    image: assets/images/20261026_manager_arteta/02_w.jpg
+    card:
+      <<: *data_table
+      highlight_row: 0
+  - text: 選手時代はMF。2011年にアーセナルへ来て、2014年からは主将を務めました。
+    image: assets/images/20261026_manager_arteta/04_w.jpg
+    card:
+      <<: *data_table
+      highlight_row: 1
+  - text: 引退した2016年、マンチェスター・シティで、グアルディオラのもとでコーチに。
+    card:
+      <<: *data_table
+      highlight_row: 2
+  - text: そして2019年12月、古巣アーセナルの監督に決まりました。
+    image: assets/images/20261026_manager_arteta/02_w.jpg
+    emph: true
+    card:
+      <<: *data_table
+      highlight_row: 3
+  sources:
+  - https://en.wikipedia.org/wiki/Mikel_Arteta
+  - https://en.wikipedia.org/wiki/2026%E2%80%9327_Arsenal_F.C._season
+- id: japan
+  heading: アルテタと日本は、どこでつながるのか
+  tier: 報道
+  telop: 日本とは、冨安健洋。アルテタのもとで84試合
+  narrator: 解説
+  card: &jp_table
+    type: table
+    title: 冨安健洋とアルテタのアーセナル
+    columns: [いつ, 何があったか]
+    rows:
+    - [2021年8月31日, ボローニャからアーセナルへ]
+    - [2021年9月11日, 初出場。1対0で勝利]
+    - [2021年9月, クラブの月間最優秀選手（ファン投票）]
+    - [2021〜25年, 全公式戦で84試合2得点]
+    highlight_row: 3
+    source: 英語版Wikipedia
+  say:
+  - text: アルテタと日本の縁といえば、冨安健洋です。
+    image: assets/images/20261026_manager_arteta/06_w.jpg
+    card: none
+  - text: 2021年8月31日、イタリアのボローニャから、アーセナルへ移りました。
+    image: assets/images/20261026_manager_arteta/01_w.jpg
+    card:
+      <<: *jp_table
+      highlight_row: 0
+  - text: 初めての試合は9月11日。1対0で勝った試合です。
+    card:
+      <<: *jp_table
+      highlight_row: 1
+  - text: その月、クラブの月間最優秀選手に選ばれます。
+    image: assets/images/20261026_manager_arteta/06_w.jpg
+    emph: true
+    card: none
+  - text: アーセナルでは2025年まで、全公式戦で84試合に出て2得点。
+    image: assets/images/20261026_manager_arteta/01_w.jpg
+    card:
+      <<: *jp_table
+      highlight_row: 3
+  - text: イタリアのボローニャで出た64試合を、上回る数です。
+    card:
+      <<: *jp_table
+      highlight_row: 3
+  - text: 在籍した4季は、どれもアルテタが監督だった時期です。
+    image: assets/images/20261026_manager_arteta/02_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Takehiro_Tomiyasu
+- id: career
+  heading: 10位から優勝まで、アルテタの転機はどこだったのか
+  tier: 背景
+  telop: 歩みと転機。FAカップ、開幕3連敗、3度の2位
+  narrator: 解説
+  card: &career_tl
+    type: timeline
+    title: アルテタの監督としての歩み
+    rows:
+    - [2019年12月, アーセナルの監督に。リーグは10位]
+    - [2020年8月, FAカップ優勝]
+    - [2021年8月, 開幕から3連敗]
+    - [2023〜25年, 3季続けてリーグ2位]
+    - [2026年5月, 22年ぶりのリーグ優勝]
+    focus: 0
+  say:
+  - text: アルテタの最初のタイトルは、すぐに来ました。
+    image: assets/images/20261026_manager_arteta/02_w.jpg
+    card: *career_tl
+  - text: 就任から8か月の2020年8月。イングランド伝統のカップ戦、FAカップです。
+    card:
+      <<: *career_tl
+      focus: 1
+  - text: 決勝でチェルシーに2対1。監督として最初のタイトルでした。
+    card:
+      <<: *career_tl
+      focus: 1
+  - text: ところが2021年の夏、開幕から3連敗。勝ち点0、得点0のスタートでした。
+    emph: true
+    card:
+      <<: *career_tl
+      focus: 2
+  - text: クラブは、監督を代えませんでした。
+    image: assets/images/20261026_manager_arteta/01_w.jpg
+    card: none
+  - text: その9月、リーグ戦を全勝して、初めての月間最優秀監督に選ばれます。
+    card: none
+  - text: 2023年からは、3季続けてリーグ2位。あと一歩が、続きました。
+    image: assets/images/20261026_manager_arteta/02_w.jpg
+    card:
+      <<: *career_tl
+      focus: 3
+  - text: 迎えた2026年5月19日。
+    card:
+      <<: *career_tl
+      focus: 4
+  - text: 追っていたシティが引き分け、アーセナルが王者になります。
+    image: assets/images/20261026_manager_arteta/03_w.jpg
+    emph: true
+    card:
+      <<: *career_tl
+      focus: 4
+  - text: 同じ月にはチャンピオンズリーグでも、クラブとして20年ぶりに決勝へ。
+    card: none
+  - text: パリ・サンジェルマンとの決勝は1対1。PK戦の末に、準優勝でした。
+    image: assets/images/20261026_manager_arteta/01_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Mikel_Arteta
+  - https://www.premierleague.com/en/news/4660971/every-premier-league-title-winning-manager-in-history
+- id: style
+  heading: アルテタのサッカーは、2025年のレアル・マドリード戦で、何を見せたのか
+  tier: 報道
+  telop: 戦術の色。2025年4月8日、アーセナル 3対0 レアル・マドリード
+  narrator: 解説
+  card: &style_doc
+    type: document
+    label: 英語版Wikipediaの要約（訳）
+    paragraphs:
+    - ボールを持って、試合を支配する。
+    - 攻めているあいだも、後ろに人を残して、相手の速攻を止める。
+    - セットプレーから、点を取る。
+    highlight:
+    - 試合を支配
+    - 相手の速攻を止める
+    - セットプレー
+  say:
+  - text: アルテタのチームの色は、3つあります。
+    image: assets/images/20261026_manager_arteta/02_w.jpg
+    card: *style_doc
+  - text: まず、ボールを持って試合を支配すること。
+    card: *style_doc
+  - text: 次に、攻めているあいだも後ろに人を残し、相手の速攻を止めること。
+    card: *style_doc
+  - text: そして、コーナーキックやフリーキックのセットプレー。専門のコーチも置いています。
+    card: *style_doc
+  - text: その色がはっきり出たのが、2025年4月8日。チャンピオンズリーグの準々決勝です。
+    image: assets/images/20261026_manager_arteta/01_w.jpg
+    card: none
+  - text: 相手は、前回の大会を制したレアル・マドリードでした。
+    card: none
+  - text: 58分、デクラン・ライスの直接フリーキックで先制。
+    image: assets/images/20261026_manager_arteta/02_w.jpg
+    emph: true
+    card: &style_stats
+      type: stats
+      title: 2025年4月8日 アーセナル 3-0 レアル・マドリード
+      items:
+      - ['58', 分, ライスの直接フリーキック]
+      - ['70', 分, ライスの2本目の直接フリーキック]
+      - ['75', 分, 3点目]
+      focus: 0
+  - text: 70分にも、ライスがもう1本。
+    card:
+      <<: *style_stats
+      focus: 1
+  - text: 1試合で直接フリーキック2点は、この大会の決勝トーナメントで初めてでした。
+    emph: true
+    card:
+      <<: *style_stats
+      focus: 1
+  - text: 75分に3点目。3対0の勝利です。
+    card:
+      <<: *style_stats
+      focus: 2
+  - text: ボール支配率は、アーセナルが53%。シュートは12本対9本でした。
+    image: assets/images/20261026_manager_arteta/01_w.jpg
+    card: none
+  - text: 敵地の第2戦も2対1。合わせて5対1で勝ち抜きます。
+    card: none
+  - text: 2009年以来の、準決勝進出でした。
+    image: assets/images/20261026_manager_arteta/02_w.jpg
+    card: none
+  sources:
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=733608
+  - https://en.wikipedia.org/wiki/Declan_Rice
+  - https://en.wikipedia.org/wiki/Mikel_Arteta
+- id: numbers
+  heading: 通算366試合の中で、リーグの勝ち点はどう伸びたのか
+  tier: 報道
+  telop: 通算224勝。優勝は5冠、リーグの勝ち点は61から85へ
+  narrator: 解説
+  card: &pts_line
+    type: line
+    title: アーセナルのリーグの勝ち点（アルテタの季）
+    x: ['20-21', '21-22', '22-23', '23-24', '24-25', '25-26']
+    series:
+    - [勝ち点, [61, 69, 84, 89, 74, 85]]
+    unit: ''
+    focus: 勝ち点
+    highlight: '25-26'
+  say:
+  - text: アルテタの成績を、数字で見ていきます。
+    image: assets/images/20261026_manager_arteta/01_w.jpg
+    card: &total_stats
+      type: stats
+      title: アルテタの通算（アーセナル、10月24日まで）
+      items:
+      - ['366', 試合, 率いた公式戦]
+      - ['224', 勝, 引き分け68・負け74]
+      - ['61.2', '%', 勝率]
+      focus: 2
+  - text: 通算は366試合で224勝。勝率は61.2%です。
+    emph: true
+    card:
+      <<: *total_stats
+      focus: 2
+  - text: リーグの勝ち点は、最初の丸1季が61で8位。
+    image: assets/images/20261026_manager_arteta/02_w.jpg
+    card:
+      <<: *pts_line
+      highlight: '20-21'
+  - text: そこから69、84と伸び、2位が3度続きます。
+    card:
+      <<: *pts_line
+      highlight: '23-24'
+  - text: そして優勝の季に、85。
+    card:
+      <<: *pts_line
+      highlight: '25-26'
+  - text: 優勝は5冠。リーグとFAカップが1つずつ。
+    image: assets/images/20261026_manager_arteta/03_w.jpg
+    card: &title_bars
+      type: bars
+      title: アルテタの優勝の内訳（冠）
+      unit: ''
+      items:
+      - label: コミュニティ・シールド
+        value: 3
+      - label: プレミアリーグ
+        value: 1
+        highlight: true
+      - label: FAカップ
+        value: 1
+  - text: そして、シーズンの幕開けを告げるコミュニティ・シールドが3つです。
+    card: *title_bars
+  sources:
+  - https://en.wikipedia.org/wiki/Mikel_Arteta
+  - https://en.wikipedia.org/wiki/List_of_Arsenal_F.C._seasons
+- id: words
+  heading: 本人は、就任の日と優勝のあとで、何を語ったのか
+  tier: 報道
+  telop: 2019年12月の就任の日と、2026年5月の優勝のあと
+  narrator: 解説
+  card: &words_doc
+    type: document
+    label: アルテタの言葉（2019年12月・2026年5月、訳）
+    paragraphs:
+    - いちばん大きなタイトルを争うチームでなければならない。
+    - 一晩で変わらないことは、分かっている。
+    - この選手たちを優勝に導くだけの力が、自分にあるのか。
+    highlight:
+    - いちばん大きなタイトル
+    - 一晩で変わらない
+    - 自分にあるのか
+  say:
+  - text: ここで、アルテタ本人の言葉。まずは6年前の冬、監督に決まったときです。
+    image: assets/images/20261026_manager_arteta/02_w.jpg
+    card: *words_doc
+  - voice: アルテタ
+    text: いちばん大きなタイトルを、争うチームでなければならない。
+  - voice: アルテタ
+    text: 一晩で変わらないことは、分かっています。
+    cont: true
+    pause: 0.5
+  - text: もう1つは、優勝のあとの会見。重圧の中で、自分を疑ったことを認めました。
+    image: assets/images/20261026_manager_arteta/03_w.jpg
+    card: *words_doc
+  - voice: アルテタ
+    text: この選手たちを優勝に導く力が、自分にあるのか。
+  - voice: アルテタ
+    text: そう、自分に問いました。
+    cont: true
+  - voice: アルテタ
+    text: 実際に勝つまでは、自分を認めることはできないんです。
+    cont: true
+    pause: 0.5
+  quotes_from:
+  - https://www.bbc.com/sport/football/50817660
+  - https://www.aljazeera.com/sports/2026/5/21/arteta-built-a-fire-over-watching-arsenal-crowned-premier-league-winners
+  sources:
+  - https://www.bbc.com/sport/football/50817660
+  - https://www.aljazeera.com/sports/2026/5/21/arteta-built-a-fire-over-watching-arsenal-crowned-premier-league-winners
+- id: secret
+  heading: 数字の外にある話。主将でも監督でも、FAカップを獲っていた
+  tier: 背景
+  telop: 主将と監督でFAカップ。優勝監督で3番目の若さ
+  narrator: 解説
+  card: &sec_table
+    type: table
+    title: 数字の外にある話
+    columns: [いつ, 何があったか]
+    rows:
+    - [2020年8月, 主将と監督の両方でFAカップ。クラブで初]
+    - [2023年3月, 168試合目で100勝。当時のクラブ最高の勝率]
+    - [2026年5月, 44歳54日でプレミア優勝。3番目の若さ]
+    - [通算, 月間最優秀監督に8回]
+    highlight_row: 0
+    source: 英語版Wikipedia・プレミアリーグ公式
+  say:
+  - text: ここから、数字の外の話。アルテタは、選手としてもFAカップを2度獲っています。
+    image: assets/images/20261026_manager_arteta/05_w.jpg
+    card: none
+  - text: 2020年には、監督でも優勝。
+    image: assets/images/20261026_manager_arteta/01_w.jpg
+    card:
+      <<: *sec_table
+      highlight_row: 0
+  - text: 主将と監督の両方でFAカップを獲った、クラブで初めての人です。
+    card:
+      <<: *sec_table
+      highlight_row: 0
+  - text: 2023年3月には、168試合目で100勝目。
+    image: assets/images/20261026_manager_arteta/02_w.jpg
+    card:
+      <<: *sec_table
+      highlight_row: 1
+  - text: その時点で、アーセナルの歴代監督で最も高い勝率でした。
+    card:
+      <<: *sec_table
+      highlight_row: 1
+  - text: プレミアで優勝したとき、44歳54日。
+    image: assets/images/20261026_manager_arteta/03_w.jpg
+    emph: true
+    card:
+      <<: *sec_table
+      highlight_row: 2
+  - text: 優勝した監督で3番目の若さです。上の2つは、どちらもモウリーニョでした。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Mikel_Arteta
+  - https://www.premierleague.com/en/news/4660971/every-premier-league-title-winning-manager-in-history
+- id: view
+  viewpoint: true
+  heading: 見立て・2位の季より少ない勝ち点で、なぜ優勝に届いたのか
+  tier: 背景
+  telop: 89点で2位、85点で優勝。シティとの差は、2点の負けから7点の勝ちへ
+  narrator: 解説
+  card: &view_table
+    type: table
+    title: 自分で数えてみた
+    columns: [比べ, 答え]
+    rows:
+    - [2023-24 アーセナルとシティの勝ち点, 89対91（2点差で2位）]
+    - [2025-26 アーセナルとシティの勝ち点, 85対78（7点差で優勝）]
+    - [アーセナルの失点（2023-24→2025-26）, 29→27]
+    - [今季の勝率（10月24日まで13試合）, 84.6%（通算は61.2%）]
+    highlight_row: 0
+  say:
+  - text: 見立てです。アルテタのアーセナルが2位だった季と、優勝した季を並べました。
+    image: assets/images/20261026_manager_arteta/01_w.jpg
+    card: *view_table
+  - text: 2位だった3季前は、勝ち点89。
+    card:
+      <<: *view_table
+      highlight_row: 0
+  - text: それでも優勝したシティの91に、2点届きませんでした。
+    card:
+      <<: *view_table
+      highlight_row: 0
+  - text: 優勝した昨季は85。2位の季より、4点少ない勝ち点です。
+    emph: true
+    card:
+      <<: *view_table
+      highlight_row: 1
+  - text: ただ、2位のシティは78。差は2点の負けから、7点の勝ちに変わりました。
+    emph: true
+    mark: {kind: circle, row: 1, col: 1}
+    card:
+      <<: *view_table
+      highlight_row: 1
+  - text: 失点は29から27へ。勝ち点を落としながらも、守りの数字は締まっていました。
+    image: assets/images/20261026_manager_arteta/03_w.jpg
+    card: none
+  - text: そして今季。10月24日まで13試合で11勝1敗、引き分けが1つ。勝率84.6%。
+  - text: 通算の勝率を、大きく上回っています。
+    card:
+      <<: *view_table
+      highlight_row: 3
+    image: assets/images/20261026_manager_arteta/02_w.jpg
+    emph: true
+    card:
+      <<: *view_table
+      highlight_row: 3
+  - text: リーグは8試合で7勝1敗の2位。次に見るのは、2連覇できるかどうかです。
+    image: assets/images/20261026_manager_arteta/01_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/List_of_Arsenal_F.C._seasons
+  - https://en.wikipedia.org/wiki/Mikel_Arteta
+  - https://en.wikipedia.org/wiki/2026%E2%80%9327_Arsenal_F.C._season

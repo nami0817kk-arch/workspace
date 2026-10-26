@@ -1,0 +1,526 @@
+# 遠藤保仁（元日本代表MF）の紹介。シリーズ「レジェンドの紹介（日本）」2026-10-25。型は 10/24 の稲本潤一と同じ8節。
+# **FotMob・DataMB・FBref・Sofascore・Transfermarkt は不使用**。数字は 日本語/英語版 Wikipedia の成績表・W杯の Wikipedia 試合記録・ガンバ大阪公式・読売新聞（アーカイブ）と、自分で足した値だけ。
+# **私生活（家族・結婚）は入れない。女子サッカーは入れない。病気・法的な問題は入れない**。Jリーグは経歴の事実（所属・期間）だけで、Jリーグそのものを題材にしない。
+#
+# **重なりの確認（2026-10-25）**：scripts/・research/covered.yaml・research/posted.json を「遠藤」「保仁」「Yasuhito」「endo」で grep。
+#   出てくるのは 2026-09-04 の **遠藤航**（別人）だけ。遠藤保仁の回は無い。直近の中田英寿・長谷部誠・中村俊輔・内田篤人・川口能活・小野伸二・稲本潤一とも別人。
+# **引退の確認（一次情報）**：ガンバ大阪公式（gamba-osaka.net/news/index/no/16046/、2024-01-09）
+#   「ジュビロ磐田所属の遠藤 保仁選手が2023シーズンをもって現役を引退し、2024シーズンよりガンバ大阪のトップチームコーチに就任」。→ **現役ではない**。
+#   ジュビロ磐田公式の引退の知らせ（nw_seq=9360）は本文がスクリプトで描かれていて requests では読めなかった。
+# **いまの立場**：ガンバ大阪公式の選手・スタッフ一覧（gamba-osaka.net/team/players/、2026-10-25 に確認）で「監督 明神 智和」「ヘッドコーチ 遠藤 保仁」。
+#   日本語 Wikipedia は「2026/27シーズンよりヘッドコーチに昇格（2026年7月〜）」。昇格の日付はクラブ公式で未確認なので、台本は「いまは、ヘッドコーチ」とだけ言う。
+# **日本との接点**：全体が日本代表・W杯の話（代表152試合、W杯は2006・2010・2014のメンバー）。欧州でのプレーは無い。
+#
+# **数字の出どころ・食い違いと台本での扱い**
+# - **日本代表 152試合15得点**：日本語・英語 Wikipedia（jfootball-db 引用）。英語版「Japan national football team」の最多出場表も 152 で1位（2位 長友佑都 146、現役）。
+#   年別（日本語版）2002=1・2003=11・2004=16・2005=8・2006=8・2007=13・2008=16・2009=12・2010=15・2011=13・2012=11・2013=16・2014=8・2015=4 の合計 152、得点の合計 15 を自分で確認。
+#   区切り：2002〜05 = 36試合3得点、2006 = 8試合0得点、2007〜10 = 56試合6得点、2011〜15 = 52試合6得点（自分で足した）。
+#   **JFA の選手名鑑は数字がスクリプトで描かれていて読めなかった**（未確認）。
+# - **代表の節目**：初出場 2002-11-20 アルゼンチン戦（ジーコ監督）。100試合 2010-10-12 韓国戦、日本で4人目（サッカーキング 2010-10-13、Wikipedia 引用）。
+#   123試合目 2012-10-16 ブラジル戦で井原正巳の122を抜く（スポニチ 2012-10-16、Wikipedia 引用）。150試合 2015-01-16 イラク戦。最後の152試合目 2015-01-23 UAE戦（1対1、PK4-5）＝150試合目から7日後。
+# - **W杯**：2006年は登録されたが出場なし（英語 Wikipedia「2006 FIFA World Cup Group F」の3試合の出場者に名前が無いことを確認）。「フィールドプレーヤーで唯一」は朝日新聞（Wikipedia 引用）のみで自分で数え切れなかったので言わない。
+#   2010年は4試合すべてに先発（英語 Wikipedia の Group E と knockout stage の先発表）：6/14 カメルーン1-0、6/19 オランダ0-1、6/24 デンマーク3-1、6/29 パラグアイ0-0（PK3-5、日本の1人目の遠藤は成功）。
+#   2014年は2試合とも途中出場（コートジボワール 54分から、ギリシャ 46分から）。→ W杯は6試合1得点（自分で足した）。
+# - **デンマーク戦**（英語 Wikipedia の試合記録、現地 2010-06-24 20:30、ルステンブルク）：本田17分（FK）・遠藤30分（FK）・トマソン81分・岡崎87分。遠藤は90+1分に交代。
+#   「デンマークは勝つしかなかった」「日本は国外の大会で初めて決勝トーナメントへ」は英語 Wikipedia の本文。遠藤のW杯初得点は日本語 Wikipedia。
+# - **2本のFKの比べ**（読売新聞 2010-06-26「本田は無回転、遠藤は高速回転…日本のFK分析」、web.archive.org で本文を読んだ）：
+#   本田は時速110キロ近く・ほとんど回転しない。遠藤は時速86キロ・毎秒8回転・4歩の助走、右方向へ飛び出し左へ曲がって右隅。本田はボールのかなり後ろから。「W杯史上44年ぶりの1試合2本のFK成功」。
+#   86÷110＝0.78 → 「およそ8割の速さ」は自分で割った（110は「近く」なので「およそ」を付ける）。
+# - **見立ての比べ**：ドイツ大会より前の2002〜05年は36試合÷4年＝年9試合、2007〜14年は 13+16+12+15+13+11+16+8＝104試合÷8年＝年13試合。13÷9＝1.44 →「およそ1.4倍」（自分で割った）。
+# - **ガンバ大阪のリーグ戦 605試合98得点**：英語 Wikipedia の表。日本語版の年別（2001〜2020）を自分で足しても 605/98 で一致。
+#   **リーグ戦の通算は 775（英語版）と 776（日本語版、2023年の磐田が20か21か）で食い違う**ので、通算は台本に出さない。
+# - **クラブW杯 2008 準決勝**：2008-12-18 ガンバ大阪 3-5 マンチェスター・ユナイテッド、遠藤 85分PK（英語 Wikipedia「2008 FIFA Club World Cup」）。「コロコロPK」の呼び名はデイリースポーツ 2010-06-11（Wikipedia 引用）。
+# - **本田圭佑の言葉**：朝日新聞 2011-01-31「MVPは本田圭　サッカーアジア杯優勝」（本文を requests で読んで一字一句確認）「個人的にはヤットさん（遠藤）だと思う。ああいう人がいなかったら勝負は紙一重だった」。
+# - **本人の言葉**：ガンバ大阪公式（2024-01-09）のコメントから2文を原文のまま（一次情報）。
+# - アジア年間最優秀選手 2009・アジアカップ優勝 2004/2011：日本語・英語 Wikipedia。年齢：1980-01-28 生まれ → 2026-10-25 で46歳、2024-01-09 で43歳（ガンバ公式のプロフィールも43歳）。
+#
+# **入れなかったもの**：私生活（家族・兄）、CM・アニメの声の出演、J1の出場記録や Jリーグ30年のMVP（Jリーグを題材にしない）、オシム監督の評価の言葉、2006年に出番が無かった理由。
+# **日本語名・読みで怪しいもの**（audio_query で確認）：遠藤保仁＝エンドオヤスヒト（○）、ルステンブルク＝ル/ス/テンブルク（区切れるが音は正しい）、明神智和＝ミョオジントモカズ（○）、ヤットさん（○）、紆余曲折（○）。
+watch: 毎日、数字でサッカーを読み解きます
+title: 遠藤保仁は、どんな選手だった？ 日本代表の152試合に、何があったのか
+format: news
+short_title: 遠藤保仁は、どんな選手だった？
+series: レジェンドの紹介
+topic: 遠藤保仁
+date: 2026年10月25日
+slot: other_1
+people:
+- 遠藤保仁
+theme:
+  id: legend_endo_yasuhito
+  league: japan
+  league_name: ワールドカップ
+  kind: other
+  topic: 遠藤保仁
+  title: 遠藤保仁は、どんな選手だった？ 日本代表の152試合に、何があったのか
+  question: 日本代表で歴代最多の152試合に出た遠藤保仁は、どんな選手で、いまは何をしているのか
+  takeaway: 遠藤保仁の代表出場は、ドイツW杯より前の4年が年9試合、2007年からの8年は年13試合で、およそ1.4倍。2010年のデンマーク戦で決めたフリーキックは時速86キロで、本田圭佑のおよそ8割の速さ。速さではなく、狙った所に置く力で積み上げた
+  nameplate: 遠藤保仁｜元日本代表 MF
+  opening_image: assets/images/20261025_endo_yasuhito_legend/06_w.jpg
+  end_bg: assets/images/20261025_endo_yasuhito_legend/06_w.jpg
+  bgm: assets/audio/bgm_calm.wav
+  outro_title: 毎日、数字でサッカーを読み解きます
+thumbnail:
+  line1: 遠藤保仁、152試合15点
+  line2: 日本代表で、歴代最多の出場
+  tags:
+  - 日本
+  photo: assets/images/20261025_endo_yasuhito_legend/panel_01.jpg
+  photos: []
+  short_photo: assets/images/20261025_endo_yasuhito_legend/01_v.jpg
+sections:
+- id: hook
+  heading: 日本代表で歴代最多の試合に出た中盤は、どんな選手だったのか
+  tier: 報道
+  telop: 2010年6月24日、南アフリカ
+  card: &hookcard
+    type: stats
+    title: 遠藤保仁 元日本代表MF（46歳）
+    items:
+    - - '152'
+      - 試合
+      - 日本代表（2002〜2015年）
+    - - '3'
+      - 大会
+      - W杯のメンバー（2006〜14年）
+    - - '26'
+      - 年
+      - プロとして（1998〜2023年）
+    focus: 0
+  say:
+  - text: 2010年6月24日。南アフリカの、ルステンブルク。
+    image: assets/images/20261025_endo_yasuhito_legend/05_w.jpg
+    card: none
+  - text: ワールドカップ、日本とデンマークの試合です。
+    card: none
+  - text: 30分、1本のフリーキックが、ゴールに吸い込まれます。
+    card: none
+  - text: 蹴ったのは、元日本代表のMF、遠藤保仁。
+    card: {<<: *hookcard, focus: 0}
+    emph: true
+  - text: 日本代表の出場数は、いまも日本の歴代最多です。
+    card: {<<: *hookcard, focus: 0}
+  - text: ワールドカップのメンバーには、3大会続けて選ばれました。
+    card: {<<: *hookcard, focus: 1}
+  - text: プロ生活は、26年。
+    card: {<<: *hookcard, focus: 2}
+  - text: 鹿児島からの道のりを、たどります。
+    image: assets/images/20261025_endo_yasuhito_legend/06_w.jpg
+    card: none
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/2010_FIFA_World_Cup_Group_E
+  - https://en.wikipedia.org/wiki/Japan_national_football_team
+  - https://ja.wikipedia.org/wiki/%E9%81%A0%E8%97%A4%E4%BF%9D%E4%BB%81
+- id: data
+  heading: 遠藤保仁は、どこでプレーし、何を手にした選手か
+  tier: 報道
+  telop: 遠藤保仁の基礎DATA
+  card: &datacard
+    type: table
+    title: 遠藤保仁
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - 生年月日
+      - 1980年1月28日・鹿児島県生まれ
+    - - ポジション
+      - MF（ボランチ・攻撃的MF）
+    - - クラブ
+      - 横浜F・京都・G大阪・磐田
+    - - 日本代表
+      - 152試合15得点（2002〜2015）
+    - - 主なタイトル
+      - アジアカップ（2004・2011）
+    - - 個人の賞
+      - アジア年間最優秀選手（2009）
+    - - 引退
+      - 2023年限り（2024年1月発表）
+    - - 現在
+      - ガンバ大阪のヘッドコーチ
+    source: Wikipedia・ガンバ大阪
+    highlight_row: 0
+  say:
+  - text: 遠藤保仁の生まれは、1980年1月28日。鹿児島県の出身で、いま46歳です。
+    image: assets/images/20261025_endo_yasuhito_legend/03.jpg
+    card: {<<: *datacard, highlight_row: 0}
+  - text: プロでは、日本の4つのクラブでプレーしました。
+    card: {<<: *datacard, highlight_row: 2}
+  - text: 日本代表では、アジアカップを2度、制しています。
+    card: {<<: *datacard, highlight_row: 4}
+  - text: 2009年には、アジア年間最優秀選手の賞を受けています。
+    image: assets/images/20261025_endo_yasuhito_legend/14.jpg
+    card: none
+  - text: 引退は2023年限り。いまは、ガンバ大阪のヘッドコーチです。
+    image: assets/images/20261025_endo_yasuhito_legend/03.jpg
+    card: {<<: *datacard, highlight_row: 7}
+  quotes_from: []
+  sources:
+  - https://ja.wikipedia.org/wiki/%E9%81%A0%E8%97%A4%E4%BF%9D%E4%BB%81
+  - https://en.wikipedia.org/wiki/Yasuhito_End%C5%8D
+  - https://www.gamba-osaka.net/news/index/no/16046/
+  - https://www.gamba-osaka.net/team/players/
+- id: career
+  heading: 鹿児島から来た中盤は、どうやって日本代表の中心になったのか
+  tier: 報道
+  telop: 高校からプロへ、そして代表の7番へ
+  card: &careercard
+    type: table
+    title: 歩んできた道
+    columns:
+    - 年
+    - 所属
+    - 出来事
+    rows:
+    - - '1998'
+      - 横浜フリューゲルス
+      - 高校からプロへ
+    - - 1999〜2000
+      - 京都パープルサンガ
+      - ワールドユース準優勝
+    - - 2001〜2020
+      - ガンバ大阪
+      - 2002年に代表デビュー
+    - - 2006〜2015
+      - 日本代表
+      - 7番を背負う
+    - - 2020〜2023
+      - ジュビロ磐田
+      - 2023年限りで引退
+    - - 2024〜
+      - ガンバ大阪
+      - コーチ、のちヘッドコーチ
+    source: Wikipedia・ガンバ大阪
+    highlight_row: 0
+  say:
+  - text: 遠藤保仁は1998年、鹿児島実業高校から、横浜フリューゲルスへ。
+    image: assets/images/20261025_endo_yasuhito_legend/14r_w.jpg
+    card: {<<: *careercard, highlight_row: 0}
+  - text: 1999年、20歳以下の世界大会、ワールドユースで準優勝します。
+    card: {<<: *careercard, highlight_row: 1}
+  - text: 2001年にガンバ大阪へ。2020年まで在籍します。
+    card: {<<: *careercard, highlight_row: 2}
+  - text: 2002年11月、アルゼンチン戦で、日本代表に初めて出ます。
+    image: assets/images/20261025_endo_yasuhito_legend/05_w.jpg
+    card: none
+  - text: ところが2006年、ドイツのワールドカップ。
+    card: none
+  - text: メンバーに入りながら、出番は1度もありませんでした。
+    card: none
+    emph: true
+  - text: 大会のあと、オシム監督のもとで、中田英寿の7番を受け継ぎます。
+    image: assets/images/20261025_endo_yasuhito_legend/03.jpg
+    card: {<<: *careercard, highlight_row: 3}
+  - text: 岡田武史監督の時代は、長谷部誠と中盤の真ん中を組みました。
+    card: {<<: *careercard, highlight_row: 3}
+  - text: 2020年、ジュビロ磐田へ移ります。
+    image: assets/images/20261025_endo_yasuhito_legend/14r_w.jpg
+    card: {<<: *careercard, highlight_row: 4}
+  - text: 2023年まで、ここでプレーを続けました。
+    card: {<<: *careercard, highlight_row: 4}
+    emph: true
+  quotes_from: []
+  sources:
+  - https://ja.wikipedia.org/wiki/%E9%81%A0%E8%97%A4%E4%BF%9D%E4%BB%81
+  - https://en.wikipedia.org/wiki/Yasuhito_End%C5%8D
+  - https://en.wikipedia.org/wiki/2006_FIFA_World_Cup_Group_F
+  - https://www.gamba-osaka.net/news/index/no/16046/
+- id: numbers
+  heading: 遠藤保仁の152試合は、どう積み上がったのか
+  tier: 報道
+  telop: 日本代表で152試合15得点
+  card: &numcard
+    type: table
+    title: 遠藤保仁 日本代表の出場
+    columns:
+    - 年
+    - 試合
+    - 得点
+    rows:
+    - - 2002〜2005
+      - '36'
+      - '3'
+    - - '2006'
+      - '8'
+      - '0'
+    - - 2007〜2010
+      - '56'
+      - '6'
+    - - 2011〜2015
+      - '52'
+      - '6'
+    - - 合計
+      - '152'
+      - '15'
+    source: Wikipedia
+    highlight_row: 4
+  say:
+  - text: 遠藤保仁の、日本代表の数字です。得点は、15。
+    image: assets/images/20261025_endo_yasuhito_legend/01.jpg
+    card: {<<: *numcard, highlight_row: 4}
+    emph: true
+  - text: 2002年から2005年の4年で、36試合。
+    card: {<<: *numcard, highlight_row: 0}
+  - text: 2007年から2010年の4年で、56試合です。
+    card: {<<: *numcard, highlight_row: 2}
+  - text: 2010年10月の韓国戦で、100試合に届きます。日本で4人目でした。
+    image: assets/images/20261025_endo_yasuhito_legend/05_w.jpg
+    card: none
+  - text: 2012年10月のブラジル戦が、123試合目。
+    card: none
+  - text: 井原正巳の122試合を抜いて、日本の最多になります。
+    card: none
+    emph: true
+  - text: 2015年1月、アジアカップのイラク戦で、150試合。
+    image: assets/images/20261025_endo_yasuhito_legend/01.jpg
+    card: {<<: *numcard, highlight_row: 3}
+  - text: 最後の代表戦は、その7日後。アラブ首長国連邦との準々決勝でした。
+    card: {<<: *numcard, highlight_row: 3}
+  quotes_from: []
+  sources:
+  - https://ja.wikipedia.org/wiki/%E9%81%A0%E8%97%A4%E4%BF%9D%E4%BB%81
+  - https://en.wikipedia.org/wiki/Yasuhito_End%C5%8D
+  - https://en.wikipedia.org/wiki/Japan_national_football_team
+- id: match
+  heading: 2010年の南アフリカで、遠藤保仁は何を決めたのか
+  tier: 報道
+  telop: 2010年、4試合すべてに先発
+  main: true
+  card: &wccard
+    type: timeline
+    title: 2010年 南アフリカW杯
+    rows:
+    - - 6月14日
+      - カメルーンに1対0。先発
+    - - 6月19日
+      - オランダに0対1。先発
+    - - 6月24日
+      - デンマークに3対1。30分にFK
+    - - 6月29日
+      - パラグアイと0対0。PK戦で敗退
+    focus: 2
+    highlight_row: 0
+  say:
+  - text: 元日本代表のMF、遠藤保仁。
+    image: assets/images/20261025_endo_yasuhito_legend/wc.jpg
+    card: none
+    short_only: true
+  - text: 日本代表で152試合。歴代最多の選手です。
+    card: none
+    short_only: true
+  - text: 4年前のドイツで、出番のなかった遠藤。
+    image: assets/images/20261025_endo_yasuhito_legend/wc.jpg
+    card: none
+  - text: 2010年の大会では、4試合すべてに先発します。
+    card: {<<: *wccard, highlight_row: 0}
+  - text: 初戦はカメルーンに1対0の勝ち。2戦目はオランダに0対1の負け。
+    card: {<<: *wccard, highlight_row: 1}
+  - text: 3戦目は6月24日のデンマーク戦。相手は、勝つしかない立場でした。
+    card: {<<: *wccard, highlight_row: 2}
+  - text: 17分、本田圭佑がフリーキックを決めます。
+    image: assets/images/20261025_endo_yasuhito_legend/wc.jpg
+    card: none
+  - text: 30分。今度は遠藤が、ゴール正面から蹴ります。
+    image: assets/images/20261025_endo_yasuhito_legend/wc.jpg
+    card: none
+    emph: true
+  - text: 壁の外から曲げて、ゴールの右隅へ。日本のリードは2点に。
+    card: none
+  - text: 遠藤の、ワールドカップ初ゴールでした。
+    card: none
+    callword: W杯初ゴール
+  - text: 81分に1点を返されますが、87分に岡崎慎司が3点目。
+    card: {<<: *wccard, highlight_row: 2}
+  - text: 3対1。日本は、国外の大会で初めて、決勝トーナメントへ進みます。
+    card: {<<: *wccard, highlight_row: 2}
+    emph: true
+  - text: 1回戦はパラグアイ。120分を0対0の引き分けで終えます。
+    image: assets/images/20261025_endo_yasuhito_legend/wc.jpg
+    card: none
+  - text: PK戦。日本の1人目は遠藤。きっちり決めます。
+    image: assets/images/20261025_endo_yasuhito_legend/14r_w.jpg
+    card: {<<: *wccard, highlight_row: 3}
+  - text: それでも3対5で敗れ、大会を終えました。
+    card: {<<: *wccard, highlight_row: 3}
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/2010_FIFA_World_Cup_Group_E
+  - https://en.wikipedia.org/wiki/2010_FIFA_World_Cup_knockout_stage
+  - https://ja.wikipedia.org/wiki/%E9%81%A0%E8%97%A4%E4%BF%9D%E4%BB%81
+- id: after
+  heading: 引退した遠藤保仁は、いま、どこで何をしているのか
+  tier: 報道
+  telop: 引退のあと、ガンバ大阪へ
+  card: &aftercard
+    type: timeline
+    title: 引退のあと
+    rows:
+    - - 2024年1月9日
+      - 2023年限りでの引退を発表。43歳
+    - - 2024年〜
+      - ガンバ大阪のトップチームコーチ
+    - - 2026年10月
+      - ガンバ大阪のヘッドコーチ
+    focus: 2
+    highlight_row: 0
+  say:
+  - text: 2024年1月9日。遠藤保仁の引退が発表されます。43歳でした。
+    image: assets/images/20261025_endo_yasuhito_legend/14r_w.jpg
+    card: {<<: *aftercard, highlight_row: 0}
+  - text: 同じ日に、ガンバ大阪が、トップチームのコーチ就任を発表します。
+    card: {<<: *aftercard, highlight_row: 1}
+  - text: クラブを通じて、こうコメントしています。
+    image: assets/images/20261025_endo_yasuhito_legend/14.jpg
+    card: none
+  - voice: 遠藤保仁
+    text: 私のキャリアの中でも多くの月日を過ごしたクラブで、
+    image: assets/images/20261025_endo_yasuhito_legend/14.jpg
+    card: none
+  - voice: 遠藤保仁
+    text: また戦うことが出来ることを大変嬉しく思います。
+    image: assets/images/20261025_endo_yasuhito_legend/14.jpg
+    card: none
+    cont: true
+  - voice: 遠藤保仁
+    text: 指導者としては勉強の身なので、紆余曲折あると思いますが、
+    image: assets/images/20261025_endo_yasuhito_legend/14.jpg
+    card: none
+    cont: true
+  - voice: 遠藤保仁
+    text: 選手達と共に成長し、チームの勝利に貢献していきたいです。
+    image: assets/images/20261025_endo_yasuhito_legend/14.jpg
+    card: none
+    cont: true
+  - text: そしていま、クラブの名簿での肩書きは、ヘッドコーチ。
+    image: assets/images/20261025_endo_yasuhito_legend/14r_w.jpg
+    card: {<<: *aftercard, highlight_row: 2}
+  - text: 明神智和監督のもとで、チームを支えています。
+    card: {<<: *aftercard, highlight_row: 2}
+    emph: true
+  quotes_from:
+  - https://www.gamba-osaka.net/news/index/no/16046/
+  sources:
+  - https://www.gamba-osaka.net/news/index/no/16046/
+  - https://www.gamba-osaka.net/team/players/
+  - https://ja.wikipedia.org/wiki/%E9%81%A0%E8%97%A4%E4%BF%9D%E4%BB%81
+- id: secret
+  heading: コロコロPKと、本田圭佑の一言には、何があったのか
+  tier: 報道
+  telop: コロコロPKと「ヤットさん」
+  card: &secretcard
+    type: table
+    title: 数字の外にある、2つの話
+    columns:
+    - いつ
+    - 何があったか
+    rows:
+    - - 2008年
+      - クラブW杯で、マンUから「コロコロPK」
+    - - 2011年
+      - アジアカップ優勝。本田が名前を挙げる
+    source: Wikipedia・デイリースポーツ・朝日新聞
+    highlight_row: 0
+  say:
+  - text: 遠藤保仁の、数字の外にある話を、2つ。
+    image: assets/images/20261025_endo_yasuhito_legend/14r_w.jpg
+    card: {<<: *secretcard, highlight_row: 0}
+  - text: 1つ目は、コロコロPK。ゆっくり転がして決めるPKで、知られていました。
+    image: assets/images/20261025_endo_yasuhito_legend/14.jpg
+    card: none
+  - text: 2008年12月、アジア王者として出た、クラブワールドカップの準決勝。
+    image: assets/images/20261025_endo_yasuhito_legend/14r_w.jpg
+    card: {<<: *secretcard, highlight_row: 0}
+  - text: 相手は、マンチェスター・ユナイテッドでした。
+    card: {<<: *secretcard, highlight_row: 0}
+  - text: 85分、遠藤はこの転がすPKでゴールを奪います。試合は3対5の負けでした。
+    image: assets/images/20261025_endo_yasuhito_legend/14.jpg
+    card: none
+  - text: 2つ目は、2011年のアジアカップ。日本は優勝します。
+    image: assets/images/20261025_endo_yasuhito_legend/03.jpg
+    card: {<<: *secretcard, highlight_row: 1}
+  - text: 大会の最優秀選手は、本田圭佑でした。
+    card: {<<: *secretcard, highlight_row: 1}
+  - text: その本田が、こう話しています。
+    image: assets/images/20261025_endo_yasuhito_legend/05_w.jpg
+    card: none
+  - voice: 本田圭佑
+    text: 個人的にはヤットさんだと思う。
+    image: assets/images/20261025_endo_yasuhito_legend/05_w.jpg
+    card: none
+  - voice: 本田圭佑
+    text: ああいう人がいなかったら勝負は紙一重だった。
+    image: assets/images/20261025_endo_yasuhito_legend/05_w.jpg
+    card: none
+    cont: true
+  - text: ヤットさんとは、遠藤保仁の呼び名です。
+    image: assets/images/20261025_endo_yasuhito_legend/05_w.jpg
+    card: none
+  quotes_from:
+  - https://www.asahi.com/sports/fb/japan/TKY201101310067.html
+  sources:
+  - https://ja.wikipedia.org/wiki/%E9%81%A0%E8%97%A4%E4%BF%9D%E4%BB%81
+  - https://en.wikipedia.org/wiki/2008_FIFA_Club_World_Cup
+  - http://www.daily.co.jp/soccer/2010/06/12/0003081927.shtml
+  - https://www.asahi.com/sports/fb/japan/TKY201101310067.html
+- id: view
+  heading: 遠藤保仁の武器は、ボールの速さだったのか
+  tier: 背景
+  telop: 時速86キロ、本田のおよそ8割
+  viewpoint: true
+  card: &viewcard
+    type: table
+    title: 2本のフリーキック（2010年デンマーク戦）
+    columns:
+    - 項目
+    - 本田圭佑
+    - 遠藤保仁
+    rows:
+    - - 時間
+      - 17分
+      - 30分
+    - - ボールの速さ
+      - 時速110キロ近く
+      - 時速86キロ
+    - - 回転
+      - ほとんど無回転
+      - 毎秒8回転
+    - - 助走
+      - かなり後ろから
+      - 4歩
+    source: 読売新聞
+    highlight_row: 0
+  say:
+  - text: デンマーク戦の、2本のフリーキックを比べます。
+    image: assets/images/20261025_endo_yasuhito_legend/01.jpg
+    card: {<<: *viewcard, highlight_row: 0}
+  - text: 本田のボールは、時速110キロ近く。ほとんど回転しない、ぶれる球でした。
+    card: {<<: *viewcard, highlight_row: 1}
+  - text: 遠藤のボールは、時速86キロ。本田の、およそ8割の速さです。
+    card: {<<: *viewcard, highlight_row: 1}
+    emph: true
+    mark:
+      kind: circle
+      row: 1
+      col: 遠藤保仁
+  - text: そのかわり、毎秒8回転。鋭く曲がって、右隅に入りました。
+    card: {<<: *viewcard, highlight_row: 2}
+  - text: 助走は、わずか4歩でした。
+    image: assets/images/20261025_endo_yasuhito_legend/14r_w.jpg
+    card: {<<: *viewcard, highlight_row: 3}
+  - text: ワールドカップで、1試合に2本のフリーキックが決まったのは、44年ぶりでした。
+    image: assets/images/20261025_endo_yasuhito_legend/05_w.jpg
+    card: none
+  - text: 出場数でも比べます。ドイツ大会より前の4年は、年に9試合。
+    image: assets/images/20261025_endo_yasuhito_legend/05_w.jpg
+    card: none
+  - text: 2007年からの8年は、年に13試合。およそ1.4倍です。
+    card: none
+  - text: 速さではなく、狙った所に置く力。それが、13年の代表生活を支えました。
+    image: assets/images/20261025_endo_yasuhito_legend/06_w.jpg
+    card: none
+  quotes_from: []
+  sources:
+  - https://web.archive.org/web/20100628163322/http://www.yomiuri.co.jp/wcup/2010/news/japan/news/20100625-OYT1T01198.htm
+  - https://ja.wikipedia.org/wiki/%E9%81%A0%E8%97%A4%E4%BF%9D%E4%BB%81
+  - https://en.wikipedia.org/wiki/2010_FIFA_World_Cup_Group_E

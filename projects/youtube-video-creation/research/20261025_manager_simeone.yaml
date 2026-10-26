@@ -1,0 +1,564 @@
+# 監督紹介：シメオネ（10/25 日、シリーズ「監督紹介」、key: manager_simeone、型は news）。9節の型（2026-10-20 決定）。見本は 20261024_manager_klopp。
+# 順：フック→基礎DATA→**日本との接点（基礎DATAの次）**→歩みと転機→戦術の色（実例の試合1つ）→数字で見る→本人の言葉→マル秘話→見立て。
+#
+# **重なりの確認（2026-10-25 に自分で）**：scripts/・research/covered.yaml・research/posted.json を grep。シメオネを主題にした「人物紹介」は無し。
+#   シメオネの名前が出る既存の本：9/22 quote「シメオネ、ダービー勝利のすぐあとに『バルセロナ』」（本人の発言1件のニュース。題材は別）、
+#   10/3 公開のクラブ紹介「アトレティコ・マドリード。最初は、どこのクラブの支店だったのか」（監督として1行・発言2行）、
+#   10/22 財政「アトレティコ、収入は13位…」（シメオネの名前は無し）、10/21 アルバレスのゴール（試合後の発言1行）。
+#   → この回は「監督シメオネの経歴・勝率・戦術の色」で、クラブ紹介・財政とは主題が違う。ただし直近30日にアトレティコの本が2本あるので報告に書く。
+#   クラブ紹介で使った「コケ」の発言・9/22 の「バルセロナ」の発言は使わない。
+#
+# **いまの立場（確かめた）**
+#   ○ 英語版 Wikipedia「2026–27 Atlético Madrid season」（控え research/raw/20261025_atm_2026_27_wiki.txt）：Head coach = Diego Simeone。
+#   ○ Europa Press（infobae 経由、2026-10-09）「Diego Pablo Simeone: "Las tres semanas de parón rompen la continuidad en lo deportivo"」：
+#       「El entrenador del Atlético de Madrid, Diego Pablo Simeone」アラベス戦の前日会見（控え research/raw/20261025_infobae_simeone_1009.txt）。
+#   ○ 英語版 Wikipedia「Diego Simeone」（控え research/raw/20261025_simeone_wiki.txt）：current_club = Atlético Madrid (manager)。
+#   × クラブ公式（atleticodemadrid.com）は requests・WebFetch とも 403 で読めなかった。
+#   × 契約の期限：Wikipedia は「2023-11-09 に 2027-06-30 まで延長」。2026年3月に「延長に合意」と書く報道があるが一次で確かめられない → 契約の期限は台本に入れない。
+#
+# **通算の数え方（台本とサムネをそろえる）**＝トップチームの全公式戦。英語版 Wikipedia「Managerial statistics」（updated: match played 20 October 2026）を自分で足し直した。
+#   行（試合・勝・分・敗）：ラシン(2006) 14・5・3・6／エストゥディアンテス 61・34・15・12／リーベル・プレート 45・20・13・12／サン・ロレンソ 47・21・9・17／
+#   カターニア 18・7・3・8／ラシン(2011) 20・8・10・2／アトレティコ 812・478・174・160。
+#   **合計 1017試合 573勝 227分 217敗（勝率 56.3%）。Wikipedia の合計欄と一致。**
+#   アトレティコ 478/812＝58.9%。アトレティコより前の5チーム（ラシンは1つに数える）205試合 95勝＝46.3%。差 12.6ポイント。
+#   エストゥディアンテス 34/61＝55.7%、リーベル 20/45＝44.4%、ほか3チーム（ラシン・サン・ロレンソ・カターニア）99試合41勝。
+#   優勝（Wikipedia Honours「Manager」欄）：エストゥディアンテス1（2006 アペルトゥーラ）／リーベル1（2008 クラウスーラ）／
+#     アトレティコ8（ラ・リーガ 2013-14・2020-21／国王杯 2012-13／スーペルコパ 2014／ヨーロッパリーグ 2011-12・2017-18／UEFAスーパーカップ 2012・2018）＝**10冠**。
+#     種類別：リーグ4（スペイン2・アルゼンチン2）／欧州4（EL2・UEFA SC2）／国内カップ1／国内スーパー杯1＝10。準優勝（CL 2014・2016、国王杯 2025-26）は数えない。
+# **選手時代・基礎**：1970-04-28 ブエノスアイレス生まれ（56歳）。愛称「チョロ」。MF。クラブはベレス・サルスフィエルド、ピサ、セビージャ、アトレティコ（1994-97・2003-05）、インテル、ラツィオ、ラシンの7つ。
+#   アルゼンチン代表：infobox 108試合、出場表 106試合（食い違う）→ 台本は「100試合以上」（Wikipedia 本文「capped over 100 times」）。
+#   1995-96 にアトレティコでリーグと国王杯の2冠。
+#
+# **日本との接点（一次で確かめた範囲）**
+#   ○ 英語版 Wikipedia「1998 FIFA World Cup Group H」（FIFA の試合記録を出典に持つ）：1998-06-14 トゥールーズ、アルゼンチン 1-0 日本（バティストゥータ28分）。
+#       シメオネは主将（c）で先発。日本は川口能活・中田英寿・中山雅史らが先発、監督は岡田武史。
+#   ○ 同「2002 FIFA World Cup Group F」：6/2 アルゼンチン 1-0 ナイジェリア（鹿島スタジアム、茨城）、6/7 アルゼンチン 0-1 イングランド（札幌ドーム）。どちらもシメオネが先発。
+#       3試合目（6/12 宮城、スウェーデン戦）の出場表にシメオネの名前は無い → 「2試合に先発」と言う。
+#   × アトレティコで日本人選手を率いた例は無い（確かめた範囲で）。
+#
+# **戦術の色（実例の試合＝2014-05-17 ラ・リーガ最終節、バルセロナ 1-1 アトレティコ）**
+#   ○ ESPN の試合記録（site.api.espn.com esp.1 summary?event=372838、控え research/raw/20261025_barca_atm_2014_espn.json）：
+#       16分 ディエゴ・コスタ、23分 アルダ・トゥランがけがで交代。33分 アレクシス・サンチェス（メッシのアシスト）。49分 ゴディンの頭（ガビのコーナー）。
+#       支配率 バルセロナ64%・アトレティコ36%、シュート 11対12、枠内 4対3、コーナー 4対8（アトレティコが多い）。
+#   ○ 英語版 Wikipedia「Barcelona 1–1 Atlético Madrid (May 2014)」（控え research/raw/20261025_barca_atm_2014_wiki.txt）：試合前の勝ち点差3、引き分けでアトレティコの優勝。
+#       最終の表：アトレティコ 28勝6分4敗（勝ち点90）。2003-04 以来、バルサとレアル以外の優勝。1996年以来の優勝。
+#       ※ゴディンの分は Wikipedia の人物記事が48分、試合記事・ESPN が49分 → 49分。
+#   ○ 英語版 Wikipedia「Diego Simeone」Style of management：狭い4-4-2（4人の2列）、奪ったら全員で速く攻める、セットプレーで取り相手に取らせない。
+#   ○ 同：2013-14 の勝ち点90は、1995-96 の87を上回る。
+#   ○ 同 Style of management：「preferred formation is the 4–4–2, which he first practised when he was manager of Estudiantes in 2006」。
+# **本人の言葉（自訳。原文は出典）**：
+#   ①2014-05-17 Goal「Simeone: I'm sure Aragones was defending with us」（archive.org 版、控え research/raw/ に本文なし→下に原文）：
+#     "Today is one of the best days in the history of Atleti." / "At half-time I told them to be relaxed. In the first half we did well. I knew if we scored, it would cost them. That's what happened."
+#   ②2026-10-09 Europa Press（infobae）："Somos agradecidos de haber tenidos a los dos mejores jugadores de la historia. Messi es insuperable…"（メッシとマラドーナについて）
+# **マル秘話（英語版 Wikipedia）**：就任後の最初の試合はマラガと0-0／2021-03-10 アスレティック戦の勝利で309勝目、ルイス・アラゴネスを抜いてクラブの監督で最多勝／
+#   2023-11-28 フェイエノールト戦でCL100試合目、1つのクラブではファーガソン・ヴェンゲルに次ぐ3人目／2026-05-02 バレンシア戦で監督通算1000試合目（出典はクラブ公式＝403で原文は未確認）／
+#   選手と監督の両方でアトレティコにリーグ優勝をもたらしたのは、ルイス・アラゴネスに次ぐ2人目。
+#   欧州のトップリーグで、いま最も長く同じクラブを率いる監督（Wikipedia 冒頭。2部を含めるとフランク・シュミットに次ぐ2位）。
+# **今季（英語版 Wikipedia「2026–27 Atlético Madrid season」、ラ・リーガ公式の順位表を出典に持つ。update 17 October 2026）**：9試合 7勝1分1敗、19得点8失点、2位。
+#
+# **入れなかったもの**：家族（息子たちが選手であることを含む）・私生活・信仰、退場・出場停止・審判への抗議（2014 CL決勝・2018 アーセナル戦）、1998年のベッカムとの場面、
+#   年俸・契約金、契約の期限、2025-26 の国王杯決勝・CL の敗退の評価、他の監督との優劣、女子チーム、Jリーグ、SNS の反応、9/22 とクラブ紹介で使った発言。
+# **日本語名・読みで怪しいもの（audio_query で確かめた）**：シメオネ・アトレティコ・エストゥディアンテス・リーベル・プレート・サン・ロレンソ・カターニア・ラシン・ゴディン・ガビ・
+#   ディエゴ・コスタ・アルダ・トゥラン・カンプ・ノウ・ブエノスアイレス・チョロ・ルイス・アラゴネス・トゥールーズ・鹿島・札幌ドーム・バティストゥータ・中田英寿・マラドーナ・マラガ はどれも通った。
+date: 2026年10月25日
+slot: other_1
+format: news
+series: 監督紹介
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+people:
+- シメオネ
+theme:
+  end_bg: assets/images/20261025_manager_simeone/01_w.jpg
+  id: manager_simeone
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: シメオネ
+  title: シメオネ監督ってどんな人？アトレティコで14年、その戦い方はどこで生まれたのか
+  question: アトレティコのシメオネ監督は、どんな人なのか。同じクラブで14年、812試合を率いるやり方は、どこで生まれたのか
+  lead: アトレティコ・マドリード監督、シメオネ。
+  opening_image: assets/images/20261025_manager_simeone/01_w.jpg
+  takeaway: 通算は1017試合、573勝で勝率56.3%（トップチーム、2026年10月20日の試合まで）。優勝は10冠で、アトレティコ8・アルゼンチン2。アトレティコでは812試合で勝率58.9%、その前の5チームの46.3%より12.6ポイント高い。2014年は勝ち点90でリーグ優勝、優勝を決めたカンプ・ノウの最終節は支配率36%で1対1。今季のリーグは10月17日時点で9試合7勝1分け1敗の2位
+  short_title: シメオネ、14年で812試合
+  nameplate: シメオネ｜アトレティコ・マドリード監督
+thumbnail:
+  line1: シメオネ、通算10冠
+  line2: アトレティコで812試合
+  tags:
+  - アトレティコ・マドリード
+  photo: assets/images/20261025_manager_simeone/panel_01.jpg
+  photos: []
+  short_photo: assets/images/20261025_manager_simeone/01_v.jpg
+sections:
+- id: hook
+  main: true
+  heading: 同じクラブで812試合。シメオネは、どんな監督なのか
+  tier: 報道
+  telop: アトレティコで812試合。リーグ優勝は2度
+  narrator: 解説
+  card: &hook_stats
+    type: stats
+    title: シメオネ アトレティコでの実績（2011年12月〜）
+    items:
+    - ['812', 試合, アトレティコで率いた公式戦]
+    - ['8', 冠, アトレティコでの優勝]
+    - ['2', 度, リーグ優勝。2014年と2021年]
+    focus: 0
+  say:
+  - text: 2011年の就任以来、アトレティコで812試合。
+    image: assets/images/20261025_manager_simeone/01_w.jpg
+    card: none
+  - text: 2014年5月、リーグ優勝を決めた日の言葉です。
+    image: assets/images/20261025_manager_simeone/06_w.jpg
+    card: none
+  - voice: シメオネ
+    text: 今日は、アトレティの歴史の中でも、最高の日の1つです。
+    pause: 0.5
+  - text: 欧州のトップリーグで、いま最も長く1つのクラブを率いる監督。
+  - text: アトレティコ・マドリードの、ディエゴ・シメオネです。
+    image: assets/images/20261025_manager_simeone/01_w.jpg
+    card: none
+  quotes_from:
+  - https://www.goal.com/en-gb/news/3277/la-liga/2014/05/17/4824696/simeone-im-sure-aragones-was-defending-with-us
+  sources:
+  - https://en.wikipedia.org/wiki/Diego_Simeone
+  - https://www.goal.com/en-gb/news/3277/la-liga/2014/05/17/4824696/simeone-im-sure-aragones-was-defending-with-us
+- id: data
+  heading: アトレティコのシメオネは、いつから、どんな経歴の人か
+  tier: 報道
+  telop: シメオネの基礎DATA
+  narrator: 解説
+  card: &data_table
+    type: table
+    title: シメオネ（56歳）の基礎DATA
+    columns: [項目, 中身]
+    rows:
+    - [生年月日, 1970年4月28日（アルゼンチン・ブエノスアイレス）]
+    - [愛称, チョロ]
+    - [選手時代, MF。7クラブ、アルゼンチン代表でW杯3大会]
+    - [アトレティコの監督, 2011年12月23日に就任]
+    - [今季のリーグ, 9試合で7勝1分け1敗・2位（10月17日時点）]
+    highlight_row: 3
+    source: 英語版Wikipedia・ラ・リーガ
+  say:
+  - text: シメオネは1970年4月28日、ブエノスアイレス生まれの56歳。
+    image: assets/images/20261025_manager_simeone/01_w.jpg
+    card:
+      <<: *data_table
+      highlight_row: 0
+  - text: 愛称は、チョロ。
+    card:
+      <<: *data_table
+      highlight_row: 1
+  - text: 選手時代はMF。アルゼンチン代表として、ワールドカップに3度出ました。
+    image: assets/images/20261025_manager_simeone/06_w.jpg
+    card:
+      <<: *data_table
+      highlight_row: 2
+  - text: 監督としては、2011年12月23日、アトレティコに就任しました。
+    emph: true
+    card:
+      <<: *data_table
+      highlight_row: 3
+  sources:
+  - https://en.wikipedia.org/wiki/Diego_Simeone
+  - https://en.wikipedia.org/wiki/2026%E2%80%9327_Atl%C3%A9tico_Madrid_season
+  - https://www.infobae.com/america/agencias/2026/10/09/diego-pablo-simeone-las-tres-semanas-de-paron-rompen-la-continuidad-en-lo-deportivo/
+- id: japan
+  heading: シメオネと日本は、どこでつながるのか
+  tier: 報道
+  telop: 日本とは、ワールドカップ。1998年の日本戦と、2002年の日本での2試合
+  narrator: 解説
+  card: &jp_table
+    type: table
+    title: シメオネと日本（ワールドカップ、選手として）
+    columns: [日付, 試合, 場所]
+    rows:
+    - [1998年6月14日, アルゼンチン 1対0 日本, フランス・トゥールーズ]
+    - [2002年6月2日, アルゼンチン 1対0 ナイジェリア, 茨城・鹿島]
+    - [2002年6月7日, アルゼンチン 0対1 イングランド, 北海道・札幌]
+    highlight_row: 0
+    source: 英語版Wikipedia（FIFAの試合記録）
+  say:
+  - text: シメオネと日本をつなぐのは、選手として戦ったワールドカップの舞台。
+    image: assets/images/20261025_manager_simeone/09_w.jpg
+    card: *jp_table
+  - text: 1998年6月14日、フランスのトゥールーズ。アルゼンチンの相手は、日本でした。
+    card:
+      <<: *jp_table
+      highlight_row: 0
+  - text: 日本にとって初めてのワールドカップの、最初の試合でした。
+    card:
+      <<: *jp_table
+      highlight_row: 0
+  - text: シメオネは、主将として先発しています。
+    emph: true
+    card:
+      <<: *jp_table
+      highlight_row: 0
+  - text: 日本は中田英寿らが先発。バティストゥータの1点で、アルゼンチンが勝ちました。
+    image: assets/images/20261025_manager_simeone/06_w.jpg
+    card: none
+  - text: 4年後の2002年は、日本と韓国の大会。
+    image: assets/images/20261025_manager_simeone/09_w.jpg
+    card:
+      <<: *jp_table
+      highlight_row: 1
+  - text: シメオネは、茨城の鹿島と、北海道の札幌ドームで、2試合に先発しました。
+    emph: true
+    card:
+      <<: *jp_table
+      highlight_row: 2
+  sources:
+  - https://en.wikipedia.org/wiki/1998_FIFA_World_Cup_Group_H
+  - https://en.wikipedia.org/wiki/2002_FIFA_World_Cup_Group_F
+- id: career
+  heading: アトレティコの8冠は、どう積み上がったのか。転機はどこだったのか
+  tier: 背景
+  telop: 歩みと転機。アルゼンチン、イタリア、そしてアトレティコ
+  narrator: 解説
+  card: &career_tl
+    type: timeline
+    title: シメオネの監督としての歩み
+    rows:
+    - [2006〜11, アルゼンチンとイタリアの5クラブ。リーグ優勝2度]
+    - [2011年12月, アトレティコの監督に]
+    - [2012〜14, ヨーロッパリーグ、国王杯、リーグ優勝]
+    - [2014・16, チャンピオンズリーグの決勝へ]
+    - [2018〜21, 2度目のヨーロッパリーグとリーグ優勝]
+    focus: 0
+  say:
+  - text: シメオネの監督の道は2006年。現役を終えたラシンで、そのまま始まります。
+    image: assets/images/20261025_manager_simeone/04_w.jpg
+    card: *career_tl
+  - text: 2006年には、エストゥディアンテスでリーグ優勝。
+    card:
+      <<: *career_tl
+      focus: 0
+  - text: 2008年には、リーベル・プレートでも優勝しました。
+    card:
+      <<: *career_tl
+      focus: 0
+  - text: 転機は2011年の年末。アトレティコは、カップ戦の国王杯で、3部に敗れていました。
+    image: assets/images/20261025_manager_simeone/04_w.jpg
+    card:
+      <<: *career_tl
+      focus: 1
+  - text: 監督を解任したアトレティコから、声がかかります。
+    emph: true
+    card:
+      <<: *career_tl
+      focus: 1
+  - text: 最初の季に、ヨーロッパリーグで優勝。決勝は、3対0で制しました。
+    card:
+      <<: *career_tl
+      focus: 2
+  - text: 2013年5月には、国王杯の決勝で、レアル・マドリードに2対1で勝ちます。
+    image: assets/images/20261025_manager_simeone/01_w.jpg
+    card: none
+  - text: 2014年はリーグ優勝。欧州のチャンピオンズリーグでも、決勝まで進みます。
+    image: assets/images/20261025_manager_simeone/02_w.jpg
+    emph: true
+    card:
+      <<: *career_tl
+      focus: 2
+  - text: 決勝は2014年と2016年。どちらも相手はレアル・マドリードで、あと一歩でした。
+    card:
+      <<: *career_tl
+      focus: 3
+  - text: 2018年に2度目のヨーロッパリーグ、2021年に2度目のリーグ優勝。
+    image: assets/images/20261025_manager_simeone/04_w.jpg
+    card:
+      <<: *career_tl
+      focus: 4
+  - text: そして2026年5月2日、監督として通算1000試合目を迎えました。
+    image: assets/images/20261025_manager_simeone/06_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Diego_Simeone
+- id: style
+  heading: シメオネのサッカーは、2014年のカンプ・ノウで、何を見せたのか
+  tier: 報道
+  telop: 戦術の色。2014年5月17日、バルセロナ 1対1 アトレティコ
+  narrator: 解説
+  card: &style_stats
+    type: stats
+    title: 2014年5月17日 ラ・リーガ最終節 バルセロナ対アトレティコ
+    items:
+    - ['3', 差, 試合前の勝ち点の差（アトレティコが首位）]
+    - ['1', 対1, 引き分けで、アトレティコの優勝]
+    focus: 0
+  say:
+  - text: 2014年5月17日、リーグの最終節。バルセロナの本拠地、カンプ・ノウで見ます。
+    image: assets/images/20261025_manager_simeone/01_w.jpg
+    card: *style_stats
+  - text: 首位アトレティコと2位バルセロナは、勝ち点3の差。
+    card:
+      <<: *style_stats
+      focus: 0
+  - text: 引き分けでも、アトレティコの優勝でした。
+    card:
+      <<: *style_stats
+      focus: 0
+  - text: ところが前半、ディエゴ・コスタとアルダ・トゥランが、けがで交代します。
+    image: assets/images/20261025_manager_simeone/04_w.jpg
+    card: none
+  - text: 33分、バルセロナが先制。
+    card: none
+  - text: 49分、ガビのコーナーキックから、ゴディンが頭で同点に。
+    image: assets/images/20261025_manager_simeone/04_w.jpg
+    emph: true
+    card: none
+  - text: 1対1の引き分け。1996年以来、18年ぶりのリーグ優勝が決まりました。
+    image: assets/images/20261025_manager_simeone/02_w.jpg
+    emph: true
+    card:
+      <<: *style_stats
+      focus: 1
+  - text: ボール支配率は、アトレティコが36%、バルセロナが64%。
+    image: assets/images/20261025_manager_simeone/01_w.jpg
+    card: &style_poss
+      type: stats
+      title: 2014年5月17日 バルセロナ 1-1 アトレティコ
+      items:
+      - ['36', '%', アトレティコの支配率]
+      - ['12', 対11, シュートの数]
+      - ['8', 対4, コーナーキックの数]
+      focus: 0
+  - text: それでもシュートは12本対11本、コーナーキックは8本対4本でした。
+    emph: true
+    card:
+      <<: *style_poss
+      focus: 2
+  - text: シメオネのチームの特徴、1つ目は守り。4人ずつ2列で、真ん中を狭くします。
+    image: assets/images/20261025_manager_simeone/06_w.jpg
+    card: &style_doc
+      type: document
+      label: 英語版Wikipediaの要約（訳）
+      paragraphs:
+      - 守りは、4人ずつ2列に並ぶ、狭い4-4-2。
+      - ボールを奪ったら、全員で速く攻める。
+      - セットプレーで点を取り、相手には取らせない。
+      highlight:
+      - 狭い4-4-2
+      - 全員で速く攻める
+      - セットプレー
+  - text: この4-4-2は、2006年のエストゥディアンテスで使い始めた形です。
+    card: *style_doc
+  - text: 2つ目は、奪ってからの速さ。
+    card: *style_doc
+  - text: 3つ目は、コーナーキックやフリーキックなどのセットプレーです。
+    card: *style_doc
+  - text: この日の同点も、コーナーキックから生まれました。
+    image: assets/images/20261025_manager_simeone/04_w.jpg
+    card: none
+  sources:
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/summary?event=372838
+  - https://en.wikipedia.org/wiki/Barcelona_1%E2%80%931_Atl%C3%A9tico_Madrid_(May_2014)
+  - https://en.wikipedia.org/wiki/Diego_Simeone
+- id: numbers
+  heading: 通算1017試合の数字は、チームごとに、どう違うのか
+  tier: 報道
+  telop: アトレティコで478勝。優勝10冠のうち、アトレティコが8
+  narrator: 解説
+  card: &club_table
+    type: table
+    title: シメオネの通算（トップチーム）
+    columns: [所属, 試合, 勝, 冠]
+    rows:
+    - [アトレティコ, '812', '478', '8']
+    - [エストゥディアンテス, '61', '34', '1']
+    - [リーベル・プレート, '45', '20', '1']
+    - [ほか3チーム, '99', '41', '0']
+    - [合計, '1017', '573', '10']
+    highlight_row: 4
+    source: 英語版Wikipedia（行を足し直した）
+  say:
+  - text: シメオネの成績を、チームごとに見ていきます。
+    image: assets/images/20261025_manager_simeone/04_w.jpg
+    card: *club_table
+  - text: いちばん多いのは、アトレティコ。478勝を積みました。
+    image: assets/images/20261025_manager_simeone/01_w.jpg
+    emph: true
+    card:
+      <<: *club_table
+      highlight_row: 0
+  - text: アルゼンチンでは、エストゥディアンテスとリーベル・プレートで優勝しています。
+    card:
+      <<: *club_table
+      highlight_row: 1
+  - text: 合計は、1017試合。573勝で、勝率56.3%。優勝は10冠です。
+    image: assets/images/20261025_manager_simeone/04_w.jpg
+    emph: true
+    card:
+      <<: *club_table
+      highlight_row: 4
+  - text: 優勝10冠を種類で分けると、リーグ優勝が4つ。うち2つはアルゼンチン。
+    card: &title_bars
+      type: bars
+      title: シメオネの優勝の内訳（冠）
+      unit: ''
+      items:
+      - label: 欧州の大会
+        value: 4
+        highlight: true
+      - label: リーグ優勝
+        value: 4
+      - label: 国内カップ
+        value: 1
+      - label: 国内のスーパー杯
+        value: 1
+  - text: 欧州の大会も4冠。ヨーロッパリーグと、欧州のスーパーカップを2度ずつです。
+    image: assets/images/20261025_manager_simeone/06_w.jpg
+    card: *title_bars
+  sources:
+  - https://en.wikipedia.org/wiki/Diego_Simeone
+- id: words
+  heading: 本人は、優勝の日と、いまの会見で、何を語ったのか
+  tier: 報道
+  telop: 2014年5月の最終節のあとと、2026年10月9日の会見
+  narrator: 解説
+  card: &words_doc
+    type: document
+    label: シメオネの言葉（2014年5月・2026年10月、訳）
+    paragraphs:
+    - ハーフタイムに、落ち着けと言いました。
+    - 1点取れば、向こうは苦しくなると分かっていた。
+    - 歴史上最高の2人の選手を持てたことに、感謝しています。
+    highlight:
+    - 落ち着け
+    - 苦しくなる
+    - 感謝
+  say:
+  - text: ここで、シメオネ本人の言葉。2014年の最終節、ハーフタイムの話です。
+    image: assets/images/20261025_manager_simeone/04_w.jpg
+    card: *words_doc
+  - voice: シメオネ
+    text: ハーフタイムに、落ち着けと言いました。
+  - voice: シメオネ
+    text: 前半は、よくやれていた。
+    cont: true
+  - voice: シメオネ
+    text: 1点取れば、向こうは苦しくなると分かっていた。
+    cont: true
+  - voice: シメオネ
+    text: その通りになりました。
+    cont: true
+    pause: 0.5
+  - text: もう1つは、2026年10月9日の会見。
+    image: assets/images/20261025_manager_simeone/06_w.jpg
+  - text: メッシとマラドーナ、どちらが上かを聞かれました。
+    image: assets/images/20261025_manager_simeone/06_w.jpg
+    card: *words_doc
+  - voice: シメオネ
+    text: 歴史上最高の2人の選手を持てたことに、感謝しています。
+  - voice: シメオネ
+    text: メッシは、誰にも越えられない選手です。
+    cont: true
+    pause: 0.5
+  quotes_from:
+  - https://www.goal.com/en-gb/news/3277/la-liga/2014/05/17/4824696/simeone-im-sure-aragones-was-defending-with-us
+  - https://www.infobae.com/america/agencias/2026/10/09/diego-pablo-simeone-las-tres-semanas-de-paron-rompen-la-continuidad-en-lo-deportivo/
+  sources:
+  - https://www.goal.com/en-gb/news/3277/la-liga/2014/05/17/4824696/simeone-im-sure-aragones-was-defending-with-us
+  - https://www.infobae.com/america/agencias/2026/10/09/diego-pablo-simeone-las-tres-semanas-de-paron-rompen-la-continuidad-en-lo-deportivo/
+- id: secret
+  heading: 数字の外にある話。選手としても、アトレティコで優勝していた
+  tier: 背景
+  telop: 選手で2冠、監督で最多勝。チャンピオンズリーグ100試合は3人目
+  narrator: 解説
+  card: &sec_table
+    type: table
+    title: 数字の外にある話
+    columns: [いつ, 何があったか]
+    rows:
+    - [1996年, 選手として、アトレティコでリーグと国王杯の2冠]
+    - [2011年12月, 監督として最初の試合は、マラガと0対0]
+    - [2021年3月, 309勝目。クラブの監督で最多の勝利数に]
+    - [2023年11月, 1つのクラブでチャンピオンズリーグ100試合。3人目]
+    highlight_row: 0
+    source: 英語版Wikipedia
+  say:
+  - text: ここから、数字の外の話。シメオネは、選手としてもアトレティコで優勝しています。
+    image: assets/images/20261025_manager_simeone/04_w.jpg
+    card:
+      <<: *sec_table
+      highlight_row: 0
+  - text: 1996年、リーグと国王杯の2冠です。
+    card:
+      <<: *sec_table
+      highlight_row: 0
+  - text: アトレティコで、選手と監督の両方でリーグ優勝。ルイス・アラゴネスに次ぐ2人目です。
+    card:
+      <<: *sec_table
+      highlight_row: 0
+  - text: 監督として最初の試合は、敵地のマラガ戦。引き分けでした。
+    image: assets/images/20261025_manager_simeone/01_w.jpg
+    card: none
+  - text: 2021年3月10日には、309勝目。
+    image: assets/images/20261025_manager_simeone/01_w.jpg
+    card:
+      <<: *sec_table
+      highlight_row: 2
+  - text: そのアラゴネスを抜いて、クラブの監督で最多の勝利数になりました。
+    emph: true
+    card:
+      <<: *sec_table
+      highlight_row: 2
+  - text: 2023年11月28日には、チャンピオンズリーグで100試合目。
+    image: assets/images/20261025_manager_simeone/04_w.jpg
+    card:
+      <<: *sec_table
+      highlight_row: 3
+  - text: 1つのクラブでの100試合は、ファーガソン、ヴェンゲルに次ぐ3人目です。
+    card:
+      <<: *sec_table
+      highlight_row: 3
+  sources:
+  - https://en.wikipedia.org/wiki/Diego_Simeone
+- id: view
+  viewpoint: true
+  heading: 見立て・アトレティコに来て、勝率はどれだけ上がったのか
+  tier: 背景
+  telop: アトレティコの前は46.3%、アトレティコでは58.9%。今季は9試合で7勝
+  narrator: 解説
+  card: &view_table
+    type: table
+    title: 自分で数えてみた
+    columns: [比べ, 答え]
+    rows:
+    - [アトレティコより前（5チーム・205試合）の勝率, 46.3%]
+    - [アトレティコ（812試合）の勝率, 58.9%]
+    - [2014年に優勝した季の勝ち点, 90（1996年の優勝の季は87）]
+    - [今季のリーグ（10月17日時点）, 9試合7勝1分け1敗・2位]
+    highlight_row: 0
+  say:
+  - text: 見立てです。シメオネの勝率を、アトレティコの前と後で分けて数えました。
+    image: assets/images/20261025_manager_simeone/06_w.jpg
+    card: *view_table
+  - text: アトレティコの前、5つのチームでは205試合で95勝。勝率は46.3%です。
+    card:
+      <<: *view_table
+      highlight_row: 0
+  - text: アトレティコでは、勝率58.9%。前より、12.6ポイント高い数字です。
+    image: assets/images/20261025_manager_simeone/01_w.jpg
+    emph: true
+    mark: {kind: circle, row: 1, col: 1}
+    card:
+      <<: *view_table
+      highlight_row: 1
+  - text: 2014年の優勝の季は勝ち点90。自身が選手だった1996年の87を上回りました。
+    card:
+      <<: *view_table
+      highlight_row: 2
+  - text: 今季のリーグは、9試合で7勝1分け1敗。10月17日の時点で2位です。
+    image: assets/images/20261025_manager_simeone/04_w.jpg
+    emph: true
+    card: none
+  - text: 就任から14年余り。選手でも監督でも優勝を知るクラブで、指揮が続きます。
+    image: assets/images/20261025_manager_simeone/06_w.jpg
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Diego_Simeone
+  - https://en.wikipedia.org/wiki/2026%E2%80%9327_Atl%C3%A9tico_Madrid_season
