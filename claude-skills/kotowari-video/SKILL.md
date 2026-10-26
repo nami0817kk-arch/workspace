@@ -41,6 +41,8 @@ description: 解説チャンネル「理の書」（YouTube @kotowari_no_sho、�
    声は剣崎雌雄（id 21）。概要欄に「音声：VOICEVOX:剣崎雌雄」
 6. **地形の回**: 実在の場所は `tex_opts=dict(photo=True, photo_sat=1.35, photo_gain=1.12)`（空中写真）、高さが主役なら色分け。
    谷や台地を言う行には `profile=dict(a=…, b=…, names=[…])` で断面図を 1 つ入れる。
+   数字を身近なものに換える行には `compare=dict(value=…, unit=…, n=…)`（箱を n 個並べる。計算の回でも使える）。
+   本編は `pins=[…]` で地名を常に出し、節の頭の行に `section=True` でひと呼吸入れる。
    `prep` → `stills 1,60,…`（行ごとに 1 コマ）を**目で見る**（札の重なり・海の暗さ・カメラの向き）→ `render`（本編の章は 1 章 40 分前後、夜に回す。途中から再開できる）
    計算の回: `ep.py` に `draw()` と `sfx_events(L)`。`stills` で目で見る
 7. **compose → qc**: `qc` が台本（速さ・字幕と語りの差・文の長さ・数字の数・冒頭と結びの型）・画面（重なり・はみ出し・黒・止まり）・音（音量・無音）を見る。
