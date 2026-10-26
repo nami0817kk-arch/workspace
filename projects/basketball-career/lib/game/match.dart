@@ -120,7 +120,7 @@ BoxScore boxScoreOf(
     ftMade: ftm,
     ftAttempts: fta,
     turnovers: tov,
-    minutes: minutes.clamp(1, gameMinutes),
+    minutes: minutes.clamp(1, gameMinutes + 15),
   );
 }
 
@@ -144,7 +144,15 @@ class MatchResult {
     this.fouls = 0,
     this.fouledOut = false,
     this.box = const BoxScore(),
+    this.overtimes = 0,
+    this.tag = '',
   });
+
+  /// 延長戦の回数(0 なら4クォーターで決着)。
+  final int overtimes;
+
+  /// 試合の呼び名(プレーオフのシリーズでは「プレーオフ準決勝 第2戦(1勝0敗)」など)。空なら回戦で呼ぶ。
+  final String tag;
 
   final bool won;
   final int teamScore;
@@ -179,6 +187,30 @@ class MatchResult {
 
   int get margin => teamScore - oppScore;
 
+  /// 試合の呼び名(`tag`)を付けた同じ結果。
+  MatchResult withTag(String t) => MatchResult(
+        won: won,
+        teamScore: teamScore,
+        oppScore: oppScore,
+        points: points,
+        rebounds: rebounds,
+        assists: assists,
+        steals: steals,
+        blocks: blocks,
+        threes: threes,
+        clutch: clutch,
+        clutchSuccess: clutchSuccess,
+        teamQuarters: teamQuarters,
+        oppQuarters: oppQuarters,
+        opponent: opponent,
+        vsRival: vsRival,
+        fouls: fouls,
+        fouledOut: fouledOut,
+        box: box,
+        overtimes: overtimes,
+        tag: t,
+      );
+
   Map<String, dynamic> toJson() => {
         'won': won,
         'teamScore': teamScore,
@@ -198,6 +230,8 @@ class MatchResult {
         'fouls': fouls,
         'fouledOut': fouledOut,
         'box': box.toJson(),
+        'ot': overtimes,
+        'tag': tag,
       };
 
   factory MatchResult.fromJson(Map<String, dynamic> j) => MatchResult(
@@ -225,6 +259,8 @@ class MatchResult {
         fouls: (j['fouls'] as num?)?.toInt() ?? 0,
         fouledOut: (j['fouledOut'] as bool?) ?? false,
         box: BoxScore.fromJson((j['box'] as Map?)?.cast<String, dynamic>()),
+        overtimes: (j['ot'] as num?)?.toInt() ?? 0,
+        tag: (j['tag'] as String?) ?? '',
       );
 }
 
@@ -962,8 +998,24 @@ MatchResult finishMatch(Player p, MatchState s, Clutch? choice, Random rng) {
     }
   }
 
+  // 同点なら延長戦(5分。1クォーターの半分ほどの得点)。決着がつくまで、最大3回。
+  var overtimes = 0;
+  while (team == opp && overtimes < 3) {
+    overtimes++;
+    final share = s.team == 0 ? 0.15 : (points / max(1, s.team)).clamp(0.04, 0.55);
+    final t = max(
+        (4 * s.scale).round(),
+        (s.scale * (9 + (s.teamStrength - 50) * 0.06 + _noise(rng) * 3)).round());
+    final o = max(
+        (4 * s.scale).round(),
+        (s.scale * (9 + (s.oppStrength - 50) * 0.06 + _noise(rng) * 3)).round());
+    team += t;
+    opp += o;
+    points += (t * share).round();
+  }
   final bool won;
   if (team == opp) {
+    // 3回延長しても同点なら、最後の1本で決まる。
     won = rng.nextDouble() < 0.5 + (s.teamStrength - s.oppStrength) / 200;
     if (won) {
       team += 2;
@@ -992,11 +1044,12 @@ MatchResult finishMatch(Player p, MatchState s, Clutch? choice, Random rng) {
     vsRival: s.vsRival,
     fouls: s.fouls,
     fouledOut: s.fouledOut,
+    overtimes: overtimes,
     box: boxScoreOf(p,
         points: points,
         threes: s.threes + (used == Clutch.threePoint && ok == true ? 1 : 0),
         form: s.form,
-        gameMinutes: s.gameMinutes,
+        gameMinutes: s.gameMinutes + 5 * overtimes,
         fouledOut: s.fouledOut,
         rng: rng),
   );

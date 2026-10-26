@@ -8,11 +8,11 @@ enum League {
   minibasket('ミニバス', 3, 34, 36),
   juniorHigh('中学', 4, 42, 44),
   highSchool('高校', 5, 50, 52),
-  university('大学', 4, 56, 58),
-  corporate('実業団', 4, 55, 57),
+  university('大学', 6, 56, 58),
+  corporate('実業団', 6, 55, 57),
   proDomestic('国内プロ', 6, 62, 64),
   proAbroad('海外プロ', 6, 72, 76),
-  national('日本代表', 4, 66, 78);
+  national('日本代表', 3, 66, 78);
 
   const League(this.label, this.rounds, this.teamStrength, this.oppBase);
   final String label;
@@ -22,7 +22,57 @@ enum League {
   final double teamStrength;
   final double oppBase;
 
-  bool get elimination => this != proDomestic && this != proAbroad;
+  /// 大会の形式。決勝トーナメント(プレーオフ)の各ラウンドの試合数(先に過半数を取ると勝ち抜け)。
+  /// 空なら、負けたら終わりの勝ち抜き戦(ミニバス・中学・高校)。
+  /// 大学・実業団はリーグ戦(6試合)のあと決勝トーナメント、日本代表は予選グループ(3試合)のあと決勝トーナメント(3回)、
+  /// 国内プロは準決勝3戦・決勝5戦、海外の最高峰は準決勝5戦・決勝7戦(先に過半数)。
+  List<int> get playoffSeries => switch (this) {
+        League.university => const [1, 1, 1],
+        League.corporate => const [1, 1],
+        League.national => const [1, 1, 1],
+        League.proDomestic => const [3, 5],
+        League.proAbroad => const [5, 7],
+        _ => const [],
+      };
+
+  bool get elimination => playoffSeries.isEmpty;
+
+  /// 決勝トーナメントの名前と、予選(リーグ戦)の名前。
+  String get playoffName => switch (this) {
+        League.proDomestic || League.proAbroad => 'プレーオフ',
+        _ => '決勝トーナメント',
+      };
+  String get regularName => switch (this) {
+        League.proDomestic || League.proAbroad => 'レギュラーシーズン',
+        League.national => '予選グループ',
+        _ => 'リーグ戦',
+      };
+
+  /// 相手が強くなる幅。予選(リーグ戦)は1試合ごとに `regularStep`、決勝トーナメントは1ラウンドごとに `playoffStep`。
+  /// 勝ち抜き戦は1回戦ごとに +2.5。シリーズ(先に過半数)は1試合ごとの差が積み上がるので、決勝トーナメントの上げ幅は小さめ。
+  double get regularStep => switch (this) {
+        League.university => 0.9,
+        League.corporate => 1.1,
+        League.national => 1.5,
+        _ => 2.5,
+      };
+  double get playoffStep => switch (this) {
+        League.university => 0.8,
+        League.corporate => 2.0,
+        League.national => 1.5,
+        League.proDomestic => 1.4,
+        League.proAbroad => -1.0,
+        _ => 2.5,
+      };
+
+  /// `round`(0 始まり)の試合の、相手の強さの上乗せ。
+  double rampAt(int round) {
+    if (round < rounds) return round * regularStep;
+    return (rounds - 1) * regularStep + (round - rounds + 1) * playoffStep;
+  }
+
+  /// ラウンド `i`(0 始まり)で勝ち抜けるのに要る勝ち数。
+  int seriesNeed(int i) => (playoffSeries[i] + 1) ~/ 2;
 
   /// 点数の規模(高校=1.0)。実際のバスケに近づけるため、段階ごとに1試合の点数が違う:
   /// ミニバス約43点・中学約61点・高校約72点・大学約76点・実業団約78点・国内プロ約84点・代表約83点・海外の最高峰約112点。
@@ -47,10 +97,14 @@ enum League {
       };
 
   /// レギュラーシーズンの後のプレーオフの試合数(プロだけ。準決勝・決勝の2つ)。
-  int get playoffRounds => elimination ? 0 : 2;
+  int get playoffRounds => playoffSeries.length;
 
   /// プレーオフに進める勝ち数(レギュラーシーズンの半分)。
-  int get qualifyWins => (rounds + 1) ~/ 2;
+  int get qualifyWins => switch (this) {
+        League.university => 4,
+        League.national => 2,
+        _ => (rounds + 1) ~/ 2,
+      };
 
   /// 大会全体で使えるタイムアウトの数(試合数に応じて。大事な試合を選んで使う)。
   int get timeouts => switch (this) {
@@ -67,7 +121,11 @@ class TournamentResult {
     required this.matches,
     required this.wins,
     required this.achievement,
+    this.seriesWon,
   });
+
+  /// 決勝トーナメント(プレーオフ)で勝ち抜けたラウンドの数。null は古い形(試合の勝ちで数える)。
+  final int? seriesWon;
 
   final League league;
   final List<MatchResult> matches;
@@ -111,8 +169,10 @@ class TournamentResult {
   /// 優勝。プロはプレーオフ(準決勝・決勝)を勝ち抜いたとき。
   bool get champion => league.playoffRounds == 0
       ? wins == league.rounds
-      : playoffMatches.length == league.playoffRounds &&
-          playoffMatches.every((m) => m.won);
+      : (seriesWon != null
+          ? seriesWon == league.playoffRounds
+          : playoffMatches.length == league.playoffRounds &&
+              playoffMatches.every((m) => m.won));
   double get ppg => games == 0 ? 0 : matches.fold(0, (s, m) => s + m.points) / games;
   double get rpg => games == 0 ? 0 : matches.fold(0, (s, m) => s + m.rebounds) / games;
   double get apg => games == 0 ? 0 : matches.fold(0, (s, m) => s + m.assists) / games;
@@ -121,9 +181,17 @@ class TournamentResult {
 /// 回戦の呼び名。
 String roundLabelOf(League league, int r) {
   if (league.playoffRounds > 0 && r >= league.rounds) {
-    return r == league.rounds ? 'プレーオフ準決勝' : 'プレーオフ決勝';
+    final i = r - league.rounds; // 決勝トーナメントの何番目か
+    final fromEnd = league.playoffRounds - 1 - i;
+    final name = switch (fromEnd) {
+      0 => '決勝',
+      1 => '準決勝',
+      2 => '準々決勝',
+      _ => '${i + 1}回戦',
+    };
+    return '${league.playoffName}$name';
   }
-  return '${r + 1}回戦';
+  return league.playoffRounds > 0 ? '${league.regularName} 第${r + 1}節' : '${r + 1}回戦';
 }
 
 /// 個人の評価 0〜100(50 が平均)。得点・リバウンド・アシストの1試合平均から。
@@ -150,11 +218,29 @@ class TournamentRun {
       this.scout = 0,
       this.teamBonus = 0,
       this.zones = 0,
-      this.momentumMul = 1.0})
+      this.momentumMul = 1.0,
+      this.seriesWins = 0,
+      this.seriesLosses = 0,
+      this.seriesWon = 0,
+      this.eliminated = false,
+      this.seriesOpp})
       : timeouts = timeouts ?? league.timeouts,
         matches = matches ?? [];
 
   final League league;
+
+  /// いま戦っている決勝トーナメントのシリーズの、勝ち数・負け数。
+  int seriesWins;
+  int seriesLosses;
+
+  /// 決勝トーナメントで勝ち抜けたラウンドの数。
+  int seriesWon;
+
+  /// 決勝トーナメントで負けて、大会が終わったか。
+  bool eliminated;
+
+  /// いまのシリーズの相手(名前・ライバルか・強さの上乗せ・強さ)。シリーズのあいだ同じ相手と戦う。
+  Map<String, dynamic>? seriesOpp;
 
   /// ハーフタイムの作戦を自分で選ぶ大会か(続きの試合でも同じ)。
   final bool askHalftime;
@@ -195,19 +281,37 @@ class TournamentRun {
       return round >= league.rounds ||
           (league.elimination && matches.isNotEmpty && !matches.last.won);
     }
-    // プロ: レギュラーシーズン→(半分以上勝てば)プレーオフ。プレーオフは負けたら終わり。
+    // リーグ戦(予選)→(規定の勝ち数に届けば)決勝トーナメント(プレーオフ)。決勝トーナメントはシリーズに負けたら終わり。
     final total = league.rounds + league.playoffRounds;
-    if (round >= total) return true;
-    if (round == league.rounds) {
-      final regular = matches.where((m) => m.won).length;
+    if (eliminated || round >= total) return true;
+    if (round == league.rounds && seriesWins == 0 && seriesLosses == 0) {
+      final regular = matches.take(league.rounds).where((m) => m.won).length;
       return regular < league.qualifyWins;
     }
-    if (round > league.rounds) return !matches.last.won;
     return false;
+  }
+
+  /// 決勝トーナメントを戦っているか。
+  bool get inPlayoffs => league.playoffRounds > 0 && round >= league.rounds && round < league.rounds + league.playoffRounds;
+
+  /// いまのシリーズで勝ち抜けに要る勝ち数(決勝トーナメントでなければ1)。
+  int get _need => inPlayoffs ? league.seriesNeed(round - league.rounds) : 1;
+
+  /// 選択を自分で決める試合か。シリーズの途中で、どちらもまだ決着がつかない試合は自動で進む
+  /// (7戦まで毎試合止まると多すぎるので、リーチがかかった試合と最終戦だけ選ぶ)。
+  bool get _decisive => !inPlayoffs || _need == 1 || seriesWins == _need - 1 || seriesLosses == _need - 1;
+
+  /// いまの試合の呼び名(シリーズなら「プレーオフ準決勝 第2戦(1勝0敗)」。それ以外は空)。
+  String get _tag {
+    if (!inPlayoffs || league.playoffSeries[round - league.rounds] == 1) return '';
+    return '${roundLabel(round)} 第${seriesWins + seriesLosses + 1}戦($seriesWins勝$seriesLosses敗)';
   }
 
   /// その回戦の呼び名(プロのプレーオフは「プレーオフ準決勝」「プレーオフ決勝」)。
   String roundLabel(int r) => roundLabelOf(league, r);
+
+  /// いまの試合の呼び名。シリーズなら何戦目かと勝敗も付く。
+  String get currentLabel => _tag.isNotEmpty ? _tag : roundLabel(round);
 
   /// 次の試合の対戦相手の名前(待機中はその試合の相手)。
   String? get nextOpponent => pending?.opponent ?? pendingHalf?.opponent;
@@ -226,11 +330,28 @@ class TournamentRun {
   }) {
     while (pending == null && pendingHalf == null && !finished) {
       final isFinal = round == league.rounds - 1;
-      final opp = pickOpponent?.call(round, isFinal);
-      final strength = league.oppBase +
-          round * 2.5 +
-          (rng.nextDouble() - 0.5) * 8 +
-          (opp?.bonus ?? 0);
+      final bool continuing = inPlayoffs && seriesOpp != null;
+      final ({String name, bool rival, double bonus})? opp = continuing
+          ? (
+              name: seriesOpp!['name'] as String,
+              rival: seriesOpp!['rival'] as bool,
+              bonus: (seriesOpp!['bonus'] as num).toDouble(),
+            )
+          : pickOpponent?.call(round, isFinal);
+      final strength = continuing
+          ? (seriesOpp!['strength'] as num).toDouble()
+          : league.oppBase +
+              league.rampAt(round) +
+              (rng.nextDouble() - 0.5) * 8 +
+              (opp?.bonus ?? 0);
+      if (inPlayoffs && !continuing) {
+        seriesOpp = {
+          'name': opp?.name ?? '',
+          'rival': opp?.rival ?? false,
+          'bonus': opp?.bonus ?? 0.0,
+          'strength': strength,
+        };
+      }
       final h = playFirstHalf(
         p,
         scale: league.scoreScale,
@@ -246,7 +367,7 @@ class TournamentRun {
       Halftime? hc;
       if (h.needsDecision) {
         hc = chooseHalftime?.call(h.margin);
-        if (hc == null && askHalftime) {
+        if (hc == null && askHalftime && _decisive) {
           pendingHalf = h; // 作戦を選ぶまで止まる
           return;
         }
@@ -264,7 +385,7 @@ class TournamentRun {
     Clutch? choice;
     if (s.needsClutch) {
       choice = chooseClutch?.call(s.margin);
-      if (choice == null && askClutch) {
+      if (choice == null && askClutch && _decisive) {
         pending = s;
         return false;
       }
@@ -314,7 +435,9 @@ class TournamentRun {
   }
 
   void _finish(Player p, MatchState s, Clutch? choice, Random rng) {
-    final m = finishMatch(p, s, choice, rng);
+    final tag = _tag;
+    var m = finishMatch(p, s, choice, rng);
+    if (tag.isNotEmpty) m = m.withTag(tag);
     matches.add(m);
     if (m.won) {
       wins++;
@@ -322,7 +445,28 @@ class TournamentRun {
     } else {
       streak = streak < 0 ? streak - 1 : -1;
     }
-    round++;
+    if (inPlayoffs) {
+      // シリーズ: 先に過半数を取れば勝ち抜け、取られれば敗退。
+      final need = _need;
+      if (m.won) {
+        seriesWins++;
+      } else {
+        seriesLosses++;
+      }
+      if (seriesWins >= need || seriesLosses >= need) {
+        if (seriesWins >= need) {
+          seriesWon++;
+        } else {
+          eliminated = true;
+        }
+        round++;
+        seriesWins = 0;
+        seriesLosses = 0;
+        seriesOpp = null;
+      }
+    } else {
+      round++;
+    }
   }
 
   TournamentResult result() {
@@ -331,15 +475,18 @@ class TournamentRun {
     final rpg = n == 0 ? 0.0 : matches.fold(0, (s, m) => s + m.rebounds) / n;
     final apg = n == 0 ? 0.0 : matches.fold(0, (s, m) => s + m.assists) / n;
     final regular = matches.take(league.rounds).where((m) => m.won).length;
-    final playoff = matches.skip(league.rounds).where((m) => m.won).length;
-    final achievement = regular / league.rounds * 60 +
-        individualRating(ppg / league.scoreScale, rpg, apg) * 0.4 +
-        playoff * 6;
+    // 勝ち上がり6割: 勝ち抜き戦は勝った回戦の割合、リーグ戦＋決勝トーナメントは 予選の勝率(20)と突破したラウンドの割合(62)。以前の勝ち抜き戦と同じ水準にそろえた。
+    final winScore = league.playoffRounds > 0
+        ? regular / league.rounds * 20 + seriesWon / league.playoffRounds * 62
+        : regular / league.rounds * 60;
+    final achievement =
+        winScore + individualRating(ppg / league.scoreScale, rpg, apg) * 0.4;
     return TournamentResult(
       league: league,
       matches: matches,
       wins: wins,
       achievement: achievement.clamp(0, 100).toDouble(),
+      seriesWon: league.playoffRounds > 0 ? seriesWon : null,
     );
   }
 
@@ -352,6 +499,11 @@ class TournamentRun {
         'timeouts': timeouts,
         'zones': zones,
         'momentumMul': momentumMul,
+        'seriesWins': seriesWins,
+        'seriesLosses': seriesLosses,
+        'seriesWon': seriesWon,
+        'eliminated': eliminated,
+        'seriesOpp': seriesOpp,
         'teamBonus': teamBonus,
         'scout': scout,
         'pending': pending?.toJson(),
@@ -374,6 +526,11 @@ class TournamentRun {
         timeouts: (j['timeouts'] as num?)?.toInt(),
         zones: (j['zones'] as num?)?.toInt() ?? 0,
         momentumMul: (j['momentumMul'] as num?)?.toDouble() ?? 1.0,
+        seriesWins: (j['seriesWins'] as num?)?.toInt() ?? 0,
+        seriesLosses: (j['seriesLosses'] as num?)?.toInt() ?? 0,
+        seriesWon: (j['seriesWon'] as num?)?.toInt() ?? 0,
+        eliminated: (j['eliminated'] as bool?) ?? false,
+        seriesOpp: (j['seriesOpp'] as Map?)?.cast<String, dynamic>(),
         teamBonus: (j['teamBonus'] as num?)?.toDouble() ?? 0,
         scout: (j['scout'] as num?)?.toDouble() ?? 0,
         askHalftime: (j['askHalftime'] as bool?) ?? false,

@@ -41,7 +41,7 @@ class Rival {
 
   /// 強さの目安(画面に出す)。リーグの相手の強さに上乗せ分を足した数。
   int levelAt(League league, int age) =>
-      (league.oppBase + 2.5 * (league.rounds - 2) + edgeAt(age)).round();
+      (league.oppBase + league.rampAt(max(1, league.rounds - 2)) + edgeAt(age)).round();
 
   int get games => wins + losses;
 
