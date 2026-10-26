@@ -30,6 +30,24 @@ def service():
     return build("youtube", "v3", credentials=c)
 
 
+def title_warnings(title: str) -> list:
+    """docs/titles.md の型から外れているところ(止めない。目で読んで判断する)。"""
+    import re
+    t = re.sub(r"#\S+", "", title).strip()
+    short = "#shorts" in title.lower()
+    lo, hi = (20, 35) if short else (30, 50)
+    w = []
+    if not lo <= len(t) <= hi:
+        w.append(f"長さ {len(t)} 字({'ショート' if short else '本編'}は {lo}〜{hi} 字)")
+    if not re.search(r"\d", t):
+        w.append("数字が無い(深さ・年・倍・km を 1 つ)")
+    if not re.search(r"ない|なかった|違|誤解|実は|のに", t):
+        w.append("思い込みの否定が無い(「〜」ではなかった/実は〜ていない)")
+    if re.search(r"[｜|]", t):
+        w.append("｜で区切っている(伸びにくかった型)")
+    return w
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("video")
@@ -40,6 +58,8 @@ def main():
     a = ap.parse_args()
     from .qc import gate
     gate(Path(a.video))                    # 点検に通っていない動画は上げない
+    for w in title_warnings(a.title):
+        print("題名の△:", w)
     from googleapiclient.http import MediaFileUpload
     yt = service()
     me = yt.channels().list(part="snippet", mine=True).execute().get("items", [])
