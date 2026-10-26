@@ -149,6 +149,31 @@ MISREADS = [
     ("kazumasa-story", "本宗寺", "ほんしゅうじ", "ホンシュウジ"),
     ("kazumasa-story", "美合町", "みあいちょう", "ミアイチョウ"),
     ("kazumasa-story", "妙西尼", "みょうさいに", "ミョオサイニ"),
+    # 旭姫・大政所・物語型の本編（asahi-story、10-26）
+    ("asahi-story", "三河の池鯉鮒の", "ちりゅう", "チリュウ"),
+    ("asahi-story", "『豊太閤と其家族』", "ほうたいこうとそのかぞく", "ホオタイ"),
+    ("asahi-story", "『近世日本国民史』", "きんせいにほんこくみんし", "キンセイニホン"),
+    ("asahi-story", "馬に乗る供も", "のるともも", "ノルトモモ"),
+    ("asahi-story", "秀吉の御母", "おんハハ", "オンハハ"),
+    ("asahi-story", "御越しになる", "おこしになる", "オコシニ"),
+    ("asahi-story", "「御証人の体」", "ごしょうにんのてい", "ゴショオニンノテイ"),
+    ("asahi-story", "秀吉が直政を", "なおまさを", "ナオマサオ"),
+    ("asahi-story", "佐治日向守とする", "さじひゅうがのかみ", "ヒュウガノ"),
+    ("asahi-story", "『尾張志』は", "おわりし", "オワリシ"),
+    ("asahi-story", "副田については", "そえだ", "ソエダ"),
+    ("asahi-story", "500石と", "ごひゃっこく", "ゴヒャッコク"),
+    ("asahi-story", "八幡さんの紹介", "やわたさん", "ワタサン"),
+    ("asahi-story", "三姉妹の江の", "ごうの", "ゴウノ"),
+    ("asahi-story", "懇望せしめ候", "せしめそうろう", "セシメソオロウ"),
+    ("asahi-story", "天守台の重なり", "かさなり", "カサナリ"),
+    ("asahi-story", "御通りになった", "おとおりになった", "オトオリ"),
+    ("asahi-story", "『雍州府志』", "ようしゅうふし", "ヨオシュウフシ"),
+    ("asahi-story", "『駿国雑志』", "すんこくざっし", "スンコク"),
+    ("asahi-story", "打敷は", "うちしき", "ウチシキ"),
+    ("asahi-story", "寿塔を建てました", "じゅとう", "ジュトオ"),
+    ("asahi-story", "差し出す側が", "さしだすがわが", "ワガ"),
+    ("asahi-story", "戦の都合", "いくさのつごう", "ツゴオ"),
+    ("asahi-story", "家忠の日記は", "いえただ", "イエタダ"),
 ]
 
 
@@ -176,7 +201,7 @@ def test_misread_kana(stem, phrase, _said, kana):
 def test_misread_list_covers_the_four_episodes():
     # 約50か所（4本）を残している
     assert len(MISREADS) >= 50
-    assert {m[0] for m in MISREADS} == {"shikoutei", "hidenaga", "oichi", "hideyoshi", "yoshinobu", "oichi-story", "kazumasa-story"}
+    assert {m[0] for m in MISREADS} == {"shikoutei", "hidenaga", "oichi", "hideyoshi", "yoshinobu", "oichi-story", "kazumasa-story", "asahi-story"}
 
 
 # --- 置き換え ------------------------------------------------------------------
