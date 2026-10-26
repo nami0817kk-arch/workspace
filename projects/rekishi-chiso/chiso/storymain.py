@@ -1867,6 +1867,8 @@ def description(plan: "Plan", config: dict) -> str:
     out += ["■ 目次"] + chapters(plan) + [""]
     if sc.description_note:
         out += ["■ この動画の台詞について", sc.description_note.strip(), ""]
+    if look.get("references"):                           # 調べの主な出どころ（10-26 調べの強化。look の references: に1行ずつ）
+        out += ["■ 参考にした資料"] + [str(r).strip() for r in look["references"]] + [""]
     out += ["■ 画像について", str(look.get("ai_disclosure") or DEFAULT_AI_NOTE).strip(), ""]
     refs = []
     for c in plan.cuts:                                  # 書き出しで使った実在の絵（額・屏風の一部）と部品の肖像

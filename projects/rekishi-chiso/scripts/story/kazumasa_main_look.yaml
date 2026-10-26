@@ -26,7 +26,25 @@ chapters:
       dates: {92: 天正13年11月29日, 114: 天正14年}}
   6: {label: 第6章 数正の家はどこへ, now: 天正13年〜,
       dates: {120: 天正18年, 123: 文禄元年, 127: 1596年, 134: 慶長5年, 137: 慶長18年（1613年）, 144: 1971年, 146: 1973年〜, 150: 2025年}}
-no_tag_from: 153                       # 締め（冒頭の夜に戻る所）から札を出さない
+# 概要欄「■ 参考にした資料」（事実カード 石川数正_facts_20261026.yaml のうち本文を開いた主なもの。10-26）
+references:
+  - 徳川家康書状（北条氏規宛、天正13年11月28日付・高岡市立博物館蔵）文化遺産オンライン　https://online.bunka.go.jp/heritages/detail/604149
+  - 菅原義勝「新出の織田信雄書状にみる石川数正出奔」『日本歴史』917号（2024）　https://cir.nii.ac.jp/crid/1520020242776812160
+  - 昼間たかし「家康に40年近く仕えたのに秀吉へ出奔…」プレジデントオンライン（2026、菅原2024の紹介）　https://president.jp/articles/-/120258
+  - 松本市『国宝松本城天守創建年代調査報告書（概要版）』（2025）　https://www.city.matsumoto.nagano.jp/uploaded/attachment/119628.pdf
+  - 文化庁 国指定文化財等データベース「松本城」　https://kunishitei.bunka.go.jp/bsys/maindetails/401/1167
+  - 松浦律子「天正地震の震源域特定：史料情報の詳細検討による最新成果」『活断層研究』35号（2011）　https://www.jstage.jst.go.jp/article/afr/2011/35/2011_29/_article/-char/ja
+  - 松浦律子「天正地震に関する欧州史料の素性と確実な内容」『地震 第2輯』65巻1号（2012）　https://doi.org/10.4294/zisin.65.1
+  - 小松原琢「濃尾平野西部における天正地震時の沈降に関する初歩的検討」産総研 地質調査総合センター速報 No.79（2019）　https://www.gsj.jp/data/coastal-geology/GSJ_INTERIMREP_079_2019_06.pdf
+  - 岐阜県 防災課「天正地震」　https://www.pref.gifu.lg.jp/kurashi/bosai/shizen-saigai/11115/siryou/tenshojishin.html
+  - ケンペル『日本誌』英訳（1727年、フロイスの書簡を引用）Internet Archive　https://archive.org/details/historyofjapanto01kaem
+  - 鎌田浩毅「江戸幕府の初代将軍・徳川家康は『討伐』されるはずだった…」現代ビジネス（2025）　https://gendai.media/articles/-/161145
+  - 眞邊明人「『石川数正』全てを抱え家康の下を去る53歳の決断」東洋経済オンライン（2023）　https://toyokeizai.net/articles/-/696509
+  - 本郷和人「家康の重臣・石川数正はスパイになったわけではない…」PRESIDENT WOMAN Online（2023）　https://president.jp/articles/-/73247
+  - 呉座勇一「大河ドラマ『どうする家康』解説⑥：家康はいつ秀吉に臣従したか」アゴラ（2023）　https://agora-web.jp/?p=389255
+  - 信濃毎日新聞「松本城、歴史の先人しのぶ 石川数正・康長親子の法要」（2016）　https://www.shinmai.co.jp/feature/matsumoto_castle/article/201612/14017510.html
+  - 松本市「兎川寺文書」（2025 市重要文化財）　https://www.city.matsumoto.nagano.jp/soshiki/134/182597.html
+no_tag_from: 153                     # 締め（冒頭の夜に戻る所）から札を出さない
 
 # AI 絵（16:9 横・17枚）。scene は日本語の要約（英語の指示は research/kazumasa_ai_images.md）。
 # pan：h＝左右（既定）・v＝上下（天守・山の斜面）・zoom＝ゆっくり寄る（顔の感情の場面だけ）。crops＝切り出し [倍率, 中心x, 中心y]
