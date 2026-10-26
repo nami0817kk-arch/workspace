@@ -20,6 +20,7 @@ import 'settings_screen.dart';
 import 'labels.dart';
 import '../game/difficulty.dart';
 import '../game/special.dart';
+import '../game/standings.dart';
 import 'layout.dart';
 import 'special_picker.dart';
 import 'style_picker.dart';
@@ -879,9 +880,12 @@ class _TournamentCard extends StatelessWidget {
                 padding: const EdgeInsets.only(bottom: 4),
                 child: Text(
                     '${t.league.regularName} ${t.regularWins}勝${t.league.rounds - t.regularWins}敗'
+                    '${ourRank(standingsOf(t)) == null ? '' : '(${ourRank(standingsOf(t))}位/${leagueTeams(t.league)}チーム)'}'
                     '${t.reachedPlayoffs ? '  →  ${t.league.playoffName} ${t.playoffWins}勝${t.playoffMatches.length - t.playoffWins}敗${t.seriesWon == null ? '' : '(${t.seriesWon}/${t.league.playoffRounds}ラウンド突破)'}' : '  (${t.league.playoffName}進出ならず。${t.league.qualifyWins}勝が必要)'}',
                     style: const TextStyle(fontWeight: FontWeight.bold)),
               ),
+            if (standingsOf(t) case final table?)
+              _StandingsTile(table: table, spots: playoffSpots(t.league)),
             for (var i = 0; i < t.matches.length; i++)
               _MatchRow(index: i, m: t.matches[i], league: t.league),
           ],
@@ -1578,6 +1582,42 @@ class _SpecialRow extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+/// リーグ戦(予選)の順位表。開くと全チームの勝敗が出る(進出圏に線)。
+class _StandingsTile extends StatelessWidget {
+  const _StandingsTile({required this.table, required this.spots});
+  final List<Standing> table;
+  final int spots;
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return ExpansionTile(
+      tilePadding: EdgeInsets.zero,
+      dense: true,
+      title: const Text('順位表', style: TextStyle(fontSize: 13)),
+      children: [
+        for (var i = 0; i < table.length; i++) ...[
+          if (i == spots)
+            Divider(height: 8, color: cs.primary.withValues(alpha: 0.5)),
+          Row(
+            children: [
+              SizedBox(width: 32, child: Text('${i + 1}位', style: const TextStyle(fontSize: 12))),
+              Expanded(
+                child: Text(table[i].name,
+                    style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: table[i].isUs ? FontWeight.bold : FontWeight.normal,
+                        color: table[i].isUs ? cs.primary : null)),
+              ),
+              Text('${table[i].wins}勝${table[i].losses}敗', style: const TextStyle(fontSize: 12)),
+            ],
+          ),
+        ],
+      ],
     );
   }
 }
