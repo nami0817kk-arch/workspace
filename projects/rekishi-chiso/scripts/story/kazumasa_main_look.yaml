@@ -48,6 +48,10 @@ ai:
   K15: {scene: 康長・晩年。九州の配所の質素な部屋で、高さ30センチほどの木彫りの仏像を拝む（灯・斜め後ろから）, crops: {face: [1.25, 0.55, 0.45]}}
   K16: {scene: 松本の寺の本堂の法要。線香の煙と灯明（人の顔は描かない）}
   K17: {scene: 終了画面用。月夜の城跡の石垣と静かな川（右半分を空けた構図）, lock: [1.0, 0.5, 0.5]}
+  # 10-26 追加（信濃の広重の風景が話と合わなかった所）
+  K18: {scene: 松本城の黒門の南の武家屋敷（古山寺御殿）。冬の朝、後ろに北アルプス（人物なし）}
+  K19: {scene: 天守の内部。太い柱と梁、格子窓の細い光、木目と年輪（人物なし）, pan: v}
+  K20: {scene: 信濃の古い寺の境内の奥。苔むした石の供養塔2基と杉木立（人物なし）}
 
 # 台本に出てこない実在の絵の出典（左下の小さな字・概要欄）
 credits:
@@ -176,33 +180,33 @@ shots:
   - 118 ai:K02 right                   # 名乗りの表（台本の図）
   - 119 frame:paintings/hidenaga_hideyoshi_portrait_1600.jpg
   - 120 ai:K13 wide
-  - 121 frame:paintings/sanada_shinano_hiroshige2_1862.jpg
-  - 122 frame:paintings/sanada_shinano_suwako_hiroshige2.jpg
+  - 121 ai:K18 wide
+  - 122 ai:K13 wide
   - 123 part:paintings/akechi_rakuchu_rakugai_uesugi_left.jpg   # 124 は没年の表（台本の図）
   - 125 ai:K13 wide
-  - 126 frame:paintings/sanada_shinano_hiroshige2_1862.jpg
+  - 126 ai:K19 wide
   - 127 ai:K13 wide                    # 数直線（台本の図）127〜128
   - 129 ai:K13 right
   - 130 ai:K14 wide
   - 131 ai:K13 left
-  - 132 part:paintings/shingen_shinano_sarashina_hiroshige.jpg
-  - 133 frame:paintings/sanada_shinano_hiroshige2_1862.jpg
+  - 132 ai:K19 wide
+  - 133 ai:K13 wide
   - 134 part:paintings/ieyasu_sekigahara_zubyobu.jpg
   - 135 ai:K14 face
   - 136 ai:K14 wide                    # 姻戚の関係図（数正—康長—長安）136〜137
   - 138 frame:paintings/ieyasu_edo_keicho_ezu_1608.jpg
   - 139 ai:K06 right                   # あの2人の息子（序章・第1章の行列に戻る）
   - 140 ai:K13 right
-  - 141 part:paintings/shingen_shinano_sarashina_hiroshige.jpg
+  - 141 ai:K18 wide
   - 142 ai:K15 wide
   - 143 ai:K15 face
   - 144 ai:K13 wide                     # 松本市へ寄贈（10-26 広重の諏訪湖は話と合わないので替えた）
   - 145 ai:K15 wide
   - 146 ai:K16 wide
-  - 147 part:paintings/shingen_shinano_sarashina_hiroshige.jpg
+  - 147 ai:K20 wide
   - 148 part:paintings/kira_okazaki_hiroshige.jpg
   - 149 part:paintings/mikata_okazaki_castle_ndl_41.jpg
-  - 150 frame:paintings/sanada_shinano_hiroshige2_1862.jpg
+  - 150 ai:K20 wide
   - 151 frame:paintings/mikata_ishikawa_kazumasa_portrait.jpg
   - 152 ai:K02 wide
   - 153 ai:K01 wide                    # 締め：冒頭の夜に戻る
