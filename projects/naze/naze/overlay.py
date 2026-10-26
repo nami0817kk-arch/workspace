@@ -58,6 +58,31 @@ def rows(dr: ImageDraw.ImageDraw, text: str, cy: float, size: int, maxw: int = L
         y += lh
 
 
+NUM_HL = re.compile(r"(約?\d[\d,.]*(?:〜\d[\d,.]*)?(?:%|km|cm|m|倍|回|割|年|個|分の1|台)?)")
+
+
+def auto_sub(text: str, size: int, maxw: int) -> str:
+    """台本の文から字幕を作る: 数字を【】で強調し、1 行に収まらなければ真ん中に近い「、」で折る。"""
+    n = [0]
+
+    def hl(m):
+        g = m.group(1)
+        if re.fullmatch(r"\d{4}年", g) or n[0] >= 2:       # 西暦は強調しない・1 行に 2 つまで
+            return g
+        n[0] += 1
+        return f"【{g}】"
+
+    s = NUM_HL.sub(hl, text)
+    if font(size).getlength(re.sub(r"[【】]", "", s)) <= maxw:
+        return s
+    cuts = [m.end() for m in re.finditer(r"[、。]", s[:-1])]
+    if not cuts:
+        return s
+    mid = len(s) / 2
+    c = min(cuts, key=lambda i: abs(i - mid))
+    return s[:c] + "\n" + s[c:]
+
+
 def page_of(sub: str, t: float, start: float, end: float) -> str:
     pages = sub.split("|")
     if len(pages) == 1:

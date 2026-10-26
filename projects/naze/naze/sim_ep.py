@@ -57,7 +57,7 @@ def frame_fn(ep: dict, out: Path):
             t0 = cur["start"] + cp.get("at", 0.0) * (cur["end"] - cur["start"])
             if t >= t0:
                 ov.compare(img, min(1.0, (t - t0) / 1.6), cp, LAYOUT["compare"])
-        sub = d.get("sub", d.get("text", ""))
+        sub = d.get("sub") or ov.auto_sub(d.get("text", ""), LAYOUT["sim_sub"][1], LAYOUT["maxw"])
         style = d.get("style")
         if style == "question":
             ov.rows(dr, sub, *LAYOUT["sim_question"], stroke=10)

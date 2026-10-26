@@ -62,7 +62,8 @@ def synth(lines: List[dict], out: Path, style: int = STYLE, speed: float = SPEED
                                      headers={"Content-Type": "application/json"}, method="POST")
         w = wave.open(io.BytesIO(urllib.request.urlopen(req, timeout=120).read()))
         a = np.frombuffer(w.readframes(w.getnframes()), np.int16)
-        timed.append(dict(l, start=round(t, 3), end=round(t + len(a) / sr, 3)))
+        keep = {k: v for k, v in l.items() if k not in ("scene", "labels", "profile", "compare")}   # 時間割には場面の設定を入れない(関数が入っていると保存できない)
+        timed.append(dict(keep, start=round(t, 3), end=round(t + len(a) / sr, 3)))
         chunks.append((t, a))
         t += len(a) / sr + float(l.get("pause", _gap_after(l)))
     total = t + tail
