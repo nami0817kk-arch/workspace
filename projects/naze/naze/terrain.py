@@ -25,9 +25,21 @@ def clean(d: Dem) -> np.ndarray:
     return ndimage.median_filter(h, size=3)
 
 
-def texture(d: Dem, stops: Sequence[Tuple[float, tuple]] = STOPS, valley: float = 0.75, valley_min: float = 9.0, slope_dark: float = 0.35) -> Image.Image:
+def texture(d: Dem, stops: Sequence[Tuple[float, tuple]] = STOPS, valley: float = 0.75, valley_min: float = 9.0, slope_dark: float = 0.35,
+            photo: bool = False, photo_sat: float = 0.85, photo_gain: float = 1.05) -> Image.Image:
+    """photo=True なら国土地理院の空中写真を貼る(標高の 2 倍の細かさ)。海は少し暗く・青く寄せて字を立たせる。"""
     h = clean(d)
     sea = np.isnan(d.h)
+    if photo:
+        from . import dem as demmod
+        img = demmod.photo(d)
+        a = np.asarray(img).astype(np.float32)
+        g = a.mean(-1, keepdims=True)
+        a = (g + (a - g) * photo_sat) * photo_gain
+        # 海: 写真の海は白っぽく写るので、紺に寄せる
+        sea2 = np.asarray(Image.fromarray(sea.astype(np.uint8) * 255).resize(img.size, Image.BILINEAR)).astype(np.float32)[..., None] / 255
+        a = a * (1 - sea2 * 0.75) + np.array(SEA, np.float32) * sea2 * 0.75
+        return Image.fromarray(np.clip(a, 0, 255).astype(np.uint8))
     xs = np.array([s[0] for s in stops], float)
     col = np.stack([np.interp(h, xs, [s[1][i] for s in stops]) for i in range(3)], -1)
     if valley > 0:                                                     # 周りより低い所(谷)を青に寄せる

@@ -74,3 +74,32 @@ def load(lon0: float, lat0: float, lon1: float, lat1: float, z: int = 14) -> Dem
     lat_c = (lat0 + lat1) / 2
     mpp = 40075016.686 * math.cos(math.radians(lat_c)) / (2 ** z * 256)
     return Dem(dem[cy0:cy1, cx0:cx1], mpp, x0, y0, z)
+
+
+def photo(d: Dem, z_add: int = 1) -> Image.Image:
+    """標高と同じ範囲の空中写真(国土地理院 シームレス空中写真)。標高より z_add 段細かいタイルで取り、標高の画素に合わせた大きさで返す。
+    出典の表示は「出典：国土地理院（空中写真）」。https://maps.gsi.go.jp/development/ichiran.html#seamlessphoto"""
+    z = d.z + z_add
+    k = 2 ** z_add
+    tdir = CACHE / "photo"
+    tdir.mkdir(parents=True, exist_ok=True)
+    H, W = d.h.shape
+    px0, py0 = d.x0 * 256 * k, d.y0 * 256 * k                  # 範囲の左上(z の画素)
+    tx0, ty0 = int(px0 // 256), int(py0 // 256)
+    tx1, ty1 = int((px0 + W * k) // 256), int((py0 + H * k) // 256)
+    canvas = Image.new("RGB", ((tx1 - tx0 + 1) * 256, (ty1 - ty0 + 1) * 256), (20, 40, 70))
+    for ty in range(ty0, ty1 + 1):
+        for tx in range(tx0, tx1 + 1):
+            p = tdir / f"{z}_{tx}_{ty}.jpg"
+            if not p.exists():
+                try:
+                    p.write_bytes(urllib.request.urlopen(f"https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{tx}/{ty}.jpg", timeout=30).read())
+                except Exception:
+                    continue
+                time.sleep(0.15)
+            try:
+                canvas.paste(Image.open(p).convert("RGB"), ((tx - tx0) * 256, (ty - ty0) * 256))
+            except Exception:
+                pass
+    ox, oy = int(px0 - tx0 * 256), int(py0 - ty0 * 256)
+    return canvas.crop((ox, oy, ox + W * k, oy + H * k))

@@ -6,6 +6,7 @@ EP の主な項目:
   lines=[{id, text, say?, sub?, pause?, style?: question|end, labels?: [{point, text, color, at(0〜1), below?}]}]
   shots=[{line, a:{look, dist, height, yaw}, b:{...}}]   look は地点の名前か [x, y](km)。yaw は度(0 = 南から北を見る、90 = 東から西を見る)
   rise=行 id(この行で平らな地図から立ち上がる。無ければ最初から立体)
+  行に profile={a: 地点, b: 地点, at: 0〜1, names: [a の名, b の名]} を付けると、その行で a→b に地形を切った断面図が出る(地形の上に切り線も)
 """
 from __future__ import annotations
 
@@ -17,7 +18,7 @@ from pathlib import Path
 import numpy as np
 from PIL import Image, ImageDraw
 
-from . import compose, dem as demmod, overlay as ov, sfx, terrain, tts
+from . import chart, compose, dem as demmod, overlay as ov, sfx, terrain, tts
 from .config import FPS, H, LAYOUT, W, blender
 
 TR = 12          # カットの切り替えにかけるコマ数
@@ -107,6 +108,7 @@ def frame_fn(ep: dict, out: Path, still: bool = False):
     job = json.loads(p["job"].read_text(encoding="utf-8"))
     lines = tl["lines"]
     defs = {l["id"]: l for l in ep["lines"]}
+    profiles = _profiles(ep)
 
     def frame(fi: int) -> Image.Image:
         t = (fi - 1) / FPS
@@ -116,7 +118,7 @@ def frame_fn(ep: dict, out: Path, still: bool = False):
         dr = ImageDraw.Draw(img)
         cur = ov.current(lines, t)
         d = defs[cur["id"]] if cur else {}
-        ov.corner(dr, "出典：国土地理院（標高タイル）", f"高さは{ep['exag']:g}倍に強調")
+        ov.corner(dr, "出典：国土地理院（標高タイル・空中写真）" if ep.get("tex_opts", {}).get("photo") else "出典：国土地理院（標高タイル）", f"高さは{ep['exag']:g}倍に強調")
         style = d.get("style")
         if style not in ("question", "end", "cta") and ep.get("header"):
             ov.rows(dr, ep["header"], *LAYOUT["header"], stroke=6)
@@ -127,6 +129,11 @@ def frame_fn(ep: dict, out: Path, still: bool = False):
             x, y, z = row[lb["point"]]
             if z > 0 and 0.02 < x < 0.98 and 0.12 < y < 0.95:
                 ov.label(img, x * W, y * H, lb["text"].format(h=job["heights"].get(lb["point"]) or 0), lb.get("color", ov.WHITE), a, lb.get("below", False))
+        if d.get("profile") and cur:
+            pr = d["profile"]
+            t0 = cur["start"] + pr.get("at", 0.0) * (cur["end"] - cur["start"])
+            if t >= t0:
+                _draw_profile(img, row, profiles[cur["id"]], pr, min(1.0, (t - t0) / 1.4))
         dr = ImageDraw.Draw(img)
         sub = d.get("sub", d.get("text", ""))
         if style == "question":
@@ -143,6 +150,65 @@ def frame_fn(ep: dict, out: Path, still: bool = False):
         return img.convert("RGB")
 
     return frame, int(job["frames"])
+
+
+def _profiles(ep: dict) -> dict:
+    """profile を持つ行ごとに、a→b を 240 等分した標高(m)と長さ(km)。"""
+    res = {}
+    need = [d for d in ep["lines"] if d.get("profile")]
+    if not need:
+        return res
+    d = demmod.load(*ep["bbox"])
+    h = terrain.clean(d)
+    for ln in need:
+        pr = ln["profile"]
+        (lon0, lat0), (lon1, lat1) = ep["points"][pr["a"]], ep["points"][pr["b"]]
+        n = 240
+        hs = []
+        for i in range(n + 1):
+            px, py = d.pixel(lon0 + (lon1 - lon0) * i / n, lat0 + (lat1 - lat0) * i / n)
+            x, y = min(h.shape[1] - 1, max(0, int(px))), min(h.shape[0] - 1, max(0, int(py)))
+            hs.append(max(0.0, float(h[y, x])))
+        (ax, ay), (bx, by) = d.pixel(lon0, lat0), d.pixel(lon1, lat1)
+        res[ln["id"]] = dict(h=hs, km=math.hypot(bx - ax, by - ay) * d.mpp / 1000)
+    return res
+
+
+def _draw_profile(img: Image.Image, row: dict, data: dict, pr: dict, k: float) -> None:
+    """地形の上に切り線、下に断面のグラフ。k は 0〜1 で線とグラフが伸びる。"""
+    a, b = row[pr["a"]], row[pr["b"]]
+    ovl = Image.new("RGBA", img.size, (0, 0, 0, 0))
+    od = ImageDraw.Draw(ovl)
+    if a[2] > 0 and b[2] > 0:
+        x0, y0, x1, y1 = a[0] * W, a[1] * H, b[0] * W, b[1] * H
+        L = math.hypot(x1 - x0, y1 - y0)
+        for s in range(0, int(L * k), 26):
+            f0, f1 = s / L, min(L * k, s + 14) / L
+            od.line([(x0 + (x1 - x0) * f0, y0 + (y1 - y0) * f0), (x0 + (x1 - x0) * f1, y0 + (y1 - y0) * f1)], fill=(255, 255, 255, 230), width=5)
+    bx0, by0, bx1, by1 = LAYOUT["profile"]
+    od.rounded_rectangle([bx0, by0, bx1, by1], 18, fill=ov.NAVY + (int(215 * min(1.0, k * 3)),), outline=(255, 255, 255, 120), width=2)
+    img.alpha_composite(ovl)
+    dr = ImageDraw.Draw(img)
+    hs, km = data["h"], data["km"]
+    top = max(50.0, math.ceil(max(hs) / 50.0) * 50.0)
+    ax = chart.Axes(bx0 + 110, by0 + 56, bx1 - 40, by1 - 70, (0, km), (0, top))
+    yt = [0, top / 2, top]
+    xt = [0, round(km / 2, 1), round(km, 1)]
+    ax.frame(dr, xt, yt, "", "標高 m（横は km）")
+    pts = [(km * i / (len(hs) - 1), v) for i, v in enumerate(hs)]
+    n = max(2, int(len(pts) * k))
+    poly = [ax.px(x, y) for x, y in pts[:n]]
+    fill = Image.new("RGBA", img.size, (0, 0, 0, 0))
+    ImageDraw.Draw(fill).polygon(poly + [ax.px(pts[n - 1][0], 0), ax.px(0, 0)], fill=ov.OCHRE + (90,))
+    img.alpha_composite(fill)
+    dr = ImageDraw.Draw(img)
+    ax.curve(dr, pts, ov.OCHRE, width=6, upto=k)
+    names = pr.get("names")
+    if names:
+        f = ov.font(34)
+        dr.text((bx0 + 110, by1 - 40), names[0], font=f, fill=ov.WHITE)
+        dr.text((bx1 - 40 - f.getlength(names[1]), by1 - 40), names[1], font=f, fill=ov.WHITE)
+    ov.BOXES.append(("label", (bx0, by0, bx1, by1), "断面図", 1.0))
 
 
 def stills(ep: dict, out: Path, frames: str) -> list:
