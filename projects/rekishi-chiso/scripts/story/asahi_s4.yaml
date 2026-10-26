@@ -1,0 +1,196 @@
+# 物語完結型ショート asahi_s4（2026-10-26）。投稿しない（ユーザーが動画を見てから）。形式は oichi_s10〜s14 を写した。決まりは docs/story-shorts.md。想像の台詞なし。
+# 本編 scripts/asahi-story.yaml の切り口④：母を「人質」に（大政所の三河下り）
+# 事実カード：dev/output/rekishi-chiso/research/旭姫_facts_20261026.yaml
+#   asahi-39（天正14年9月の秀吉の書状：家康が聚楽へ来るなら「二人と無き母」を馬乗り一人も付けずに浜松まで送る）／
+#   asahi-41（10月13日に京を発ち、18日に松平家忠が池鯉鮒まで迎えに出て岡崎城に入った）／
+#   asahi-11・asahi-40（『宇野主水日記』「是一、御證人之躰也。面向ハ御息女ニ逢被申度ニ付而」）／asahi-04（『家忠日記』10月17日条「家康様御上洛候人質ニ」）／
+#   asahi-45（『落穂集』：輿の戸が開くのも待ちかねて旭に抱きつき涙を流した。18世紀の書物）／
+#   asahi-42・asahi-13（薪を積んだ話は『落穂集』『藩翰譜』『烈祖成績』など江戸時代の書物。岡崎市史 1935年「実否は明ならず」）／
+#   asahi-12（11月12日に帰る。岡崎にいたのは約25日。帰りは井伊直政が付き添った）
+# 薪の話は「火を放つ構え」まで（本編と同じ。焼き殺す等は言わない）。江戸時代の書物の話だと言う。
+# 理解テスト4問：
+#   ①誰の話か：大政所（豊臣秀吉の母）
+#   ②いつ・どこで何が：天正14年10月18日、娘の旭が嫁いだ徳川の三河・岡崎城に入った
+#   ③なぜ：秀吉が、家康を京へ呼ぶため「二人と無き母」を送ると申し出た。表向きは「娘に会いたい」、日記には「御証人（人質）」
+#   ④どうなったか：家康が京から戻ると、11月12日に帰った（約25日）。薪の話は江戸時代の書物の話で、実否は明らかでない
+title: 大政所｜「娘に会いたい」と、人質の旅へ
+yt_title: 秀吉の母・大政所は「娘に会いたい」という名目で、家康の人質になった
+description: |-
+  天正14年9月、豊臣秀吉は、徳川家康が京へ来るなら「二人と無き母」を送ろう、と書状に書きました。
+  10月18日、秀吉の母、大政所は、娘の旭が嫁いだ三河の岡崎城に入ります。
+  本願寺の側の『宇野主水日記』は、この旅を「御証人の体」、つまり人質の旅と書き、表向きは娘に会いたいということだった、と続けています。
+  江戸時代の書物には、岡崎で旭に抱きついて泣いた話や、徳川の家臣が宿所のまわりに薪を積んだ話が出てきますが、薪の話は、1935年の『岡崎市史』が「実否は明らかでない」としています。
+  家康が京から戻ると、大政所は11月12日に帰りました。岡崎にいたのは、25日ほどでした。
+hashtags: ["#大政所", "#旭姫", "#日本史"]
+ai_images: true
+art_dir: out/story/asahi
+out: asahi_story_s4
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 12
+max_ai: 10
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 大政所（豊臣秀吉の母）
+  title: "「娘に会いたい」と、《人質》の旅へ"
+now:
+  - {at: 秀吉の母, text: "天正14年　岡崎", point: 1}
+  - {at: 天正14年5月, text: "天正14年　浜松", point: 0}
+  - {at: 10月18日, text: "天正14年　岡崎", point: 1}
+  - {at: 11月12日, text: "天正14年　岡崎", point: 2}
+timeline:
+  - {label: "5月"}
+  - {label: "10月18日"}
+  - {label: "11月12日"}
+cards:
+  - type: map                            # 京から岡崎へ
+    from: 10月18日
+    until: 本願寺
+    bounds: [135.5, 137.6, 34.55, 35.3]
+    places: [[京, 135.77, 35.01], [岡崎, 137.16, 34.95]]
+    route: [京, 岡崎]
+    hot: 岡崎
+  - type: table                          # 表向きと日記（語った順に1行ずつ）
+    title: 大政所の三河下り
+    from: 本願寺
+    until: 落穂集
+    items:
+      - {at: 本願寺, text: "日記　御証人の体（人質）"}
+      - {at: 表向きは, text: "表向き　娘に会いたい"}
+shots:
+  A05f:                                  # 1文目：大政所の顔
+    kind: ai
+    file: asahi/main/A05.jpg
+    focus: [0.58, 0.35]
+    move: in
+    zoom: 0.12
+    must: 大政所の顔
+  A04:                                   # 天正14年5月、旭が家康に嫁いだ
+    kind: ai
+    file: asahi/main/A04.jpg
+    focus: [0.68, 0.0]
+    move: left
+    zoom: 0.6
+    must: 婚礼の旭
+  K04:                                   # 家康は来なかった
+    kind: ai
+    file: asahi/main/K04.jpg
+    focus: [0.5, 0.0]
+    move: in
+    zoom: 0.2
+    must: 家康の顔
+  K05f:                                  # 秀吉の書状「二人と無き母」
+    kind: ai
+    file: asahi/main/K05.jpg
+    focus: [0.5, 0.2]
+    move: in
+    zoom: 0.15
+    must: 秀吉の顔
+  A06:                                   # 10月、秋の街道を行く大政所の輿
+    kind: ai
+    file: asahi/main/A06.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 秋の街道を行く輿
+  Okazaki:                               # 岡崎城（『宇野主水日記』の行）
+    kind: real
+    image: paintings/mikata_okazaki_castle_ndl_41.jpg
+    crop: [0.1, 0.1, 0.9, 0.9]
+    focus: [0.5, 0.5]
+    move: down
+    bright: 0.7
+    credit: "〔日本古城絵図〕三州岡崎城図（江戸時代、国立国会図書館蔵、Wikimedia Commons・パブリックドメイン）"
+    must: 岡崎城の絵図
+  Omandokoro:                            # 表向きは娘に会いたい：大政所の肖像
+    kind: real
+    image: paintings/hidenaga_omandokoro.jpg
+    crop: [0.08, 0.15, 0.98, 0.95]
+    focus: [0.45, 0.4]
+    move: down
+    credit: "《大政所像》江戸時代（Wikimedia Commons・パブリックドメイン）"
+    must: 大政所の肖像
+  A07:                                   # 『落穂集』：旭に抱きつく大政所（大政所の顔に寄せる）
+    kind: ai
+    file: asahi/main/A07.jpg
+    focus: [0.62, 0.0]
+    move: right
+    zoom: 0.8
+    must: 抱き合う母と娘
+  A08:                                   # 薪の話：宿所の軒下の薪
+    kind: ai
+    file: asahi/main/A08.jpg
+    focus: [0.4, 0.6]
+    move: left
+    must: 宿所と軒下の薪
+  A06r:                                  # 11月12日に帰る：街道の輿（右の騎馬から輿へ）
+    kind: ai
+    file: asahi/main/A06.jpg
+    focus: [0.6, 0.5]
+    move: left
+    zoom: 0.3
+    must: 街道を行く輿
+lines:
+  - 語り: 秀吉の母、大政所は、「娘に会いたい」という名目で、《!人質》の旅に出た。
+    # fact: asahi-11, asahi-40
+    shot: A05f
+    tone: 強調
+  - 語り: 天正14年5月、秀吉の妹、旭は、徳川家康に嫁いだ。
+    # fact: asahi-10
+    shot: A04
+    tone: しみじみ
+    pause: 0.12
+  - 語り: それでも家康は、まだ来なかった。
+    # fact: asahi-39（9月の書状で、家康が聚楽へ来るなら、と条件を付けている）
+    shot: K04
+    tone: しみじみ
+    pause: 0.12
+  - 語り: 9月、秀吉は書状で、家康が京へ来るなら、《二人と無き母》を、浜松まで行かせよう、と申し出た。
+    # fact: asahi-39
+    shot: K05f
+    tone: しみじみ
+    pause: 0.12
+  - 語り: 10月18日、大政所は、三河の岡崎城に入った。
+    # fact: asahi-41
+    shot: A06
+    tone: しみじみ
+    pause: 0.12
+  - 語り: 本願寺の側の、宇野主水の日記は、この旅を、「御証人の体」、人質の旅だと記した。
+    # fact: asahi-11, asahi-40
+    shot: Okazaki
+    tone: しみじみ
+    pause: 0.12
+  - 語り: 表向きは、娘に会いたい、ということで下られたのだ、と。
+    # fact: asahi-40（「面向ハ御息女ニ逢被申度ニ付而」）
+    shot: Omandokoro
+    tone: しみじみ
+    pause: 0.15
+  - 語り: 『落穂集』という江戸時代の書物は、岡崎で大政所が旭に抱きつき、涙を流した、と書く。
+    # fact: asahi-45
+    shot: A07
+    tone: しみじみ
+    pause: 0.12
+  - 語り: 徳川の家臣が、宿所のまわりに薪を積み、火を放つ構えだった、という話もある。
+    # fact: asahi-42
+    shot: A08
+    tone: 重い
+    pause: 0.12
+  - 語り: けれど、『岡崎市史』は1935年に、この話の実否は、《明らかでない》と書いた。
+    # fact: asahi-13, asahi-42
+    shot: A08
+    tone: 重い
+    pause: 0.15
+  - 語り: 家康が京から戻ると、大政所は、11月12日に帰った。
+    # fact: asahi-12
+    shot: A06r
+    tone: しみじみ
+    pause: 0.12
+  - 語り: あなたなら、子どものために、人質の旅に出られますか。
+    shot: A05f
+    tone: 疑問
+    pause: 0.15
