@@ -352,19 +352,125 @@ void main() {
     expect(c.pending, isEmpty);
   });
 
+  testWidgets('過ごし方のボタンは画面の下に固定され、スクロールしなくても押せる', (tester) async {
+    // ふつうのスマホの大きさ(縦長にしない)。
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    final c = GameController(store: _NullStore(), rng: Random(1), events: false);
+    c.game = Game.start('ケイ', rng: Random(2), events: false);
+    await tester.pumpWidget(BasketballCareerApp(controller: c));
+    await tester.pumpAndSettle();
+    for (final a in Action.values) {
+      final f = find.text(a.label);
+      expect(f, findsOneWidget, reason: a.label);
+      final r = tester.getRect(f);
+      expect(r.bottom, lessThanOrEqualTo(844), reason: '${a.label} が画面の外にある');
+    }
+    final slot = c.game!.slot;
+    await tester.tap(find.text('休養'));
+    await tester.pumpAndSettle();
+    expect(c.game!.slot, isNot(slot), reason: 'スクロールせずに押せて、季節が進む');
+    // 「重点を変える」で、重点の設定まで送られる。
+    await tester.tap(find.text('重点を変える'));
+    await tester.pumpAndSettle();
+    final chip = tester.getRect(find.textContaining('① 大きく伸ばす能力'));
+    expect(chip.top, lessThan(844));
+  });
+
+  testWidgets('勝負どころ・出来事の選択肢も、ふつうのスマホの画面に収まる(スクロールしなくても押せる)', (tester) async {
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    // 勝負どころ
+    GameController? found;
+    for (var seed = 0; seed < 400 && found == null; seed++) {
+      final c = GameController(store: _NullStore(), rng: Random(seed), events: false);
+      c.game = Game(
+        eventsEnabled: false,
+        player: Player(name: 'ケイ', age: 15, potential: 70, heightCm: 178, heightGenes: 0.5,
+            abilities: {for (final a in Ability.values) a: 55}),
+        rng: Random(seed),
+        slot: 1,
+      );
+      c.act(Action.rest);
+      while (c.game!.phase == Phase.halftime) {
+        c.game!.resolveHalftime(Halftime.keep);
+      }
+      if (c.game!.phase == Phase.clutch) found = c;
+    }
+    await tester.pumpWidget(BasketballCareerApp(controller: found!));
+    await tester.pumpAndSettle();
+    for (final k in Clutch.values) {
+      final r = tester.getRect(find.textContaining('${k.label}  成功率'));
+      expect(r.bottom, lessThanOrEqualTo(844), reason: '${k.label} が画面の外');
+    }
+    // 出来事
+    final ev = GameController(store: _NullStore(), rng: Random(1), events: false);
+    ev.game = Game.start('ケイ', rng: Random(1), events: false)..pendingEventId = 'friends';
+    await tester.pumpWidget(const SizedBox()); // 前の画面の状態を持ち越さない
+    await tester.pumpWidget(BasketballCareerApp(controller: ev));
+    await tester.pumpAndSettle();
+    final e = ev.game!.pendingEvent!;
+    for (final o in e.options) {
+      final r = tester.getRect(find.text(o.label));
+      expect(r.bottom, lessThanOrEqualTo(844), reason: '${o.label} が画面の外');
+    }
+    // ハーフタイム
+    GameController? half;
+    for (var seed = 0; seed < 400 && half == null; seed++) {
+      final c = GameController(store: _NullStore(), rng: Random(seed), events: false);
+      c.game = Game(
+        eventsEnabled: false,
+        player: Player(name: 'ケイ', age: 15, potential: 70, heightCm: 178, heightGenes: 0.5,
+            abilities: {for (final a in Ability.values) a: 55}),
+        rng: Random(seed),
+        slot: 1,
+      );
+      c.act(Action.rest);
+      if (c.game!.phase == Phase.halftime) half = c;
+    }
+    await tester.pumpWidget(const SizedBox());
+    await tester.pumpWidget(BasketballCareerApp(controller: half!));
+    await tester.pumpAndSettle();
+    for (final h in Halftime.values) {
+      final r = tester.getRect(find.textContaining(h.label).first);
+      expect(r.bottom, lessThanOrEqualTo(844), reason: '${h.label} が画面の外');
+    }
+    // 進路
+    final p = GameController(store: _NullStore(), rng: Random(1), events: false);
+    p.game = Game(
+      eventsEnabled: false,
+      player: Player(name: 'ユウ', age: 19, potential: 70, heightCm: 185, heightGenes: 0.5,
+          abilities: {for (final a in Ability.values) a: 60}),
+      rng: Random(1),
+      pathPending: true,
+    );
+    await tester.pumpWidget(const SizedBox());
+    await tester.pumpWidget(BasketballCareerApp(controller: p));
+    await tester.pumpAndSettle();
+    // 画面外は作られないので、名前で探して見つかること自体も確かめる。
+    for (final route in p.game!.availableRoutes) {
+      final r = tester.getRect(find.text(route.label));
+      expect(r.bottom, lessThanOrEqualTo(844), reason: '${route.label} が画面の外');
+    }
+  });
+
   testWidgets('おすすめの過ごし方に印が付き、状態で変わる', (tester) async {
     tall(tester);
     final c = GameController(store: _NullStore(), rng: Random(1), events: false);
     c.game = Game.start('ケイ', rng: Random(2), events: false);
     await tester.pumpWidget(BasketballCareerApp(controller: c));
     await tester.pumpAndSettle();
-    expect(find.textContaining('(おすすめ)'), findsOneWidget);
+    // 画面の下に固定したボタンのうち、おすすめの1つにだけ「おすすめ」が付く。
+    expect(find.text('おすすめ'), findsOneWidget);
     // 疲れていれば休養がおすすめになる。
     c.game!.condition = const Condition(fatigue: 90);
     c.notifyListeners();
     await tester.pumpAndSettle();
-    expect(find.text('休養  (おすすめ)'), findsOneWidget);
-    expect(find.textContaining('(おすすめ)'), findsOneWidget);
+    expect(find.text('おすすめ'), findsOneWidget);
+    final recButton = find.ancestor(of: find.text('おすすめ'), matching: find.byType(FilledButton));
+    expect(find.descendant(of: recButton, matching: find.text('休養')), findsOneWidget);
   });
 
   test('能力のランクが上がると知らせる', () {
