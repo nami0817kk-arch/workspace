@@ -101,6 +101,21 @@ def main(folder: Path, args) -> int:
                     "-c:a", "aac", "-b:a", "160k", "-ar", "48000", "-movflags", "+faststart", str(final)], check=True)
     tmp.unlink()
     (out / "chapters.txt").write_text("\n".join(toc) + "\n", encoding="utf-8")
+    # 本編の点検: どの章も点検に通っていて、つないだ全体の音がそろっていること(upload の関門が qc.json を見る)
+    import json
+    from datetime import datetime
+    from .qc import sound
+    fails = []
+    for part in L["parts"]:
+        q = OUT / f"{folder.name}_{part['ep']}" / "qc.json"
+        if not q.exists() or not json.loads(q.read_text(encoding="utf-8")).get("passed"):
+            fails.append(f"章が点検に通っていない: {part['ep']}")
+    _, warns, stats = sound(final)
+    st = final.stat()
+    (out / "qc.json").write_text(json.dumps(dict(passed=not fails, at=datetime.now().isoformat(timespec="seconds"), video=final.name,
+                                                 size=st.st_size, mtime=st.st_mtime, fails=fails, warns=warns, stats=stats),
+                                            ensure_ascii=False, indent=1), encoding="utf-8")
+    print("点検", "通過" if not fails else "✖ " + " / ".join(fails), *warns)
     print(final)
     print("\n".join(toc))
     print(f"長さ {_stamp(_duration(ff, final))}")

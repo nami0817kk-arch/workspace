@@ -152,7 +152,7 @@ P["s5"] = dict(title="火星の夕焼けは青い", lines=[
     dict(id="c1", text="火星の夕焼けは、青い。", scene=MARS_SET),
     dict(id="c2", text="2015年4月、探査車キュリオシティが撮った火星の夕焼けでは、太陽のまわりが青く写っています。"),
     dict(id="c3", text="昼の火星の空は、オレンジから赤っぽい色。夕焼けと、昼の色が、地球と逆なのです。", scene=MARS_DAY),
-    dict(id="c4", text="なぜでしょう。", style="question", sub="なぜ火星の夕焼けは\n【青い】のか"),
+    dict(id="c4", text="なぜでしょう。", style="question", sub="なぜ火星の夕焼けは\n【青い】のか", scene=MARS_SET),
     dict(id="c5", text="答えは、空気の中の粒。火星の空気には、細かい砂ぼこりが、たくさん舞っています。"),
     dict(id="c6", text="NASAは、この砂ぼこりの細かい粒が、青い光を通しやすいと説明しています。", scene=MARS_SET),
     dict(id="c7", text="地球の空は、小さな空気の粒が、青を散らばらせて青くなる。粒が違えば、空の色も変わるのです。", scene=SCAT),

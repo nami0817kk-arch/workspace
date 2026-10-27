@@ -75,12 +75,51 @@ def auto_sub(text: str, size: int, maxw: int) -> str:
     s = NUM_HL.sub(hl, text)
     if font(size).getlength(re.sub(r"[【】]", "", s)) <= maxw:
         return s
-    cuts = [m.end() for m in re.finditer(r"[、。]", s[:-1])]
-    if not cuts:
-        return s
-    mid = len(s) / 2
-    c = min(cuts, key=lambda i: abs(i - mid))
-    return s[:c] + "\n" + s[c:]
+    f = font(size)
+
+    def fits(t):
+        return f.getlength(re.sub(r"[【】]", "", t)) <= maxw
+
+    def split(t):
+        cuts = [m.end() for m in re.finditer(r"[、。]", t[:-1])]
+        if not cuts:
+            return None
+        mid = len(t) / 2
+        c = min(cuts, key=lambda i: abs(i - mid))
+        return [t[:c], t[c:]]
+
+    if H > W:
+        # 縦は 1 行に 15 字ほどしか入らない。「、」ごとに詰めて行を作り、それでも長い所は字の途中で折る。
+        # 3 行までは 1 画面、それより多ければ 2 行ずつ画面を替える(page_of が語りの進みに合わせてめくる)
+        toks = re.findall(r"[^、。]+[、。]?", s)
+        units = []
+        for tk in toks:
+            if fits(tk):
+                units.append(tk)
+                continue
+            cur = ""
+            for ch in re.findall(r"【[^】]*】|.", tk):
+                if cur and ch not in "、。" and not fits(cur + ch):
+                    # なるべく助詞のあと(ことを|思い出して)、無ければ「ひらがな→漢字・カタカナ」の切れ目で折る(撮った|火星)
+                    near = range(len(cur) - 1, max(0, len(cur) - 11), -1)
+                    kana_kanji = [j for j in near if "ぁ" <= cur[j - 1] <= "ん" and not ("ぁ" <= cur[j] <= "ん") and cur[j] not in "【】ー"]
+                    j = next((j for j in kana_kanji if cur[j - 1] in "をがはにでともへ"), kana_kanji[0] if kana_kanji else len(cur))
+                    units.append(cur[:j])
+                    cur = cur[j:]
+                cur += ch
+            if cur:
+                units.append(cur)
+        rows = []
+        for u in units:
+            if rows and fits(rows[-1] + u):
+                rows[-1] += u
+            else:
+                rows.append(u)
+        if len(rows) <= 3:
+            return "\n".join(rows)
+        return "|".join("\n".join(rows[i:i + 2]) for i in range(0, len(rows), 2))
+    rs = split(s) or [s]
+    return "\n".join(rs)
 
 
 def page_of(sub: str, t: float, start: float, end: float) -> str:
