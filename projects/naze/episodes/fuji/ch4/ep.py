@@ -17,7 +17,7 @@ EP = dict(BASE, aspect="landscape", cta=False, title="第4章 山頂ではない
         dict(id="c4", text="流れた溶岩が固まった上に、今の青木ヶ原の森が、広がっています。", labels=[dict(point="aokigahara", text="青木ヶ原", color=O.GREEN, at=0.2)]),
         dict(id="c5", text="この溶岩は、当時あった大きな湖を、埋めてしまいました。"),
         dict(id="c6", text="そうして分かれて残ったのが、今の西湖と、精進湖です。", labels=LAKES),
-        dict(id="c7", text="富士五湖の形にも、噴火が刻まれているのです。", labels=LAKES + [dict(point="kawaguchi", text="河口湖", color=O.BLUE, at=0.2), dict(point="motosu", text="本栖湖", color=O.BLUE, at=0.3)]),
+        dict(id="c7", text="富士五湖の形にも、噴火が刻まれているのです。", labels=LAKES + [dict(point="kawaguchi", text="河口湖", color=O.BLUE, at=0.2)]),
         dict(id="c8", text="そして、1707年。富士山の、最後の噴火が起きます。宝永噴火です。", section=True,
              say="そして、せんななひゃくななねん。ふじさんの、さいごの、ふんかが、おきます。ほうえい、ふんかです。"),
         dict(id="c9", text="噴火したのは、山頂ではなく、南東の斜面。標高3000m付近でした。", labels=[dict(point="hoei", text="宝永火口", color=O.RED, at=0.3)]),
