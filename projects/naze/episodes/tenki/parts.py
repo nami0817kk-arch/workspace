@@ -120,7 +120,7 @@ P["ch5"] = dict(title="第5章 本当に、沈むことはあるのか",
     lines=[
         dict(id="c1", text="では、東京は、本当に沈むことがあるのでしょうか。", section=True),
         dict(id="c2", text="江東区・墨田区・足立区・葛飾区・江戸川区。江東5区が、2018年に、大きな水害の想定を出しました。",
-             labels=[L("koto", "江東区", O.WHITE, 0.0), L("sumida", "墨田区", O.WHITE, 0.15), L("adachi", "足立区", O.WHITE, 0.3), L("katsushika", "葛飾区", O.WHITE, 0.45), L("edogawa", "江戸川区", O.WHITE, 0.6, True)]),
+             labels=[L("koto", "江東区", O.WHITE, 0.0), L("sumida", "墨田区", O.WHITE, 0.15), L("adachi", "足立区", O.WHITE, 0.3), L("edogawa", "江戸川区", O.WHITE, 0.6)]),
         dict(id="c3", text="荒川や江戸川が大きくあふれたり、大きな高潮が来たりしたとき。"),
         dict(id="c4", text="最大で、約10m浸水する地域がある。", panel=dict(kind="big", text="最大 約10m", sub="浸水の深さ（江東5区の想定）", at=0.2), say="さいだいで、やく、じゅうメートル、しんすいする、ちいきが、ある。"),
         dict(id="c5", text="水が引くまでに、2週間以上かかる地域もある。", panel=dict(kind="big", text="2週間以上", sub="水が引くまで（江東5区の想定）", at=0.1)),

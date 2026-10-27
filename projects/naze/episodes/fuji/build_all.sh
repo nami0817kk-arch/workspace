@@ -15,7 +15,7 @@ for e in ch1 ch2 ch3 ch4 ch5 s1 s2 s3 s4 s5; do
   python -m naze prep "episodes/fuji/$e" > "$log" 2>&1 \
     && python -m naze render "episodes/fuji/$e" >> "$log" 2>&1 \
     && python -m naze compose "episodes/fuji/$e" >> "$log" 2>&1 \
-    && { python -m naze qc "episodes/fuji/$e" >> "$log" 2>&1; echo "$e 点検 $?"; rm -rf "$out/frames"; }
+    && { python -m naze qc "episodes/fuji/$e" >> "$log" 2>&1 && rm -rf "$out/frames"; echo "$e 点検 $?(✖ ならコマを残す)"; }
   echo "$e 終了 $? $(date +%H:%M) 空き $(df -h /c | tail -1 | awk '{print $4}')"
 done
 python -m naze long episodes/fuji --skip-build > out/_fuji_build_long.log 2>&1
