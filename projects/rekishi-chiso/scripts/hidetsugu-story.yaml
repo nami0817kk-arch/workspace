@@ -1,0 +1,619 @@
+# 物語型の本編（10-22 の見直し・scripts/_template_story.yaml と asahi-story.yaml の型）。豊臣秀次。2026-10-28 下書き（reading-ok・approve・build はまだ）。
+# 公開の予定は 10/28 19:00。同じ日の別の回は千利休（scripts/rikyu-story.yaml）。
+# 型：1本に1つの「なぜ」＝「なぜ秀次は高野山で腹を切ったのか――秀吉は本当に切腹を命じたのか」。語り手は剣崎1人（つむぎは出ない）。
+#   冒頭（10秒以内）＝切腹の3日前の「高野山に住まわせる」条々（hidetsugu-05）。
+#   第1章 失脚と高野山へ／第2章 7月12日の条々と14日の「仲直り」／第3章 命令はあったのか（矢部説と勢田説の表。検証はこの章が中心）／
+#   第4章 「殺生関白」の出どころと近江八幡／第5章 その後（妻子・聚楽第・瑞泉寺・瑞龍寺・発掘・柳の間・享年）→冒頭の条々に戻って閉じる。
+#   締めは余韻の一文＋登録のお願い。「今日の地層は」・次回予告・二人の締めは無し（story: true）。
+# 記録の食い違いを表で並べたのは3か所：①矢部健太郎説と勢田勝郭説（「むしちゆへ」の読み・13日の命令は間に合うか・重んじる記録）
+#   ②妻子の処刑の日付（8月2日／7月15日。人数も本で数人違う）③享年（28歳／32歳）。
+#   ほかに語りだけで：切腹の時刻（『川角太閤記』の五ツ時分に命令が届いた／『御湯殿上日記』のよつ時に切腹）・墓石の「七月十四日」（伝承）。
+#
+# 事実は事実カード（dev/output/rekishi-chiso/research/豊臣秀次_facts_20261028.yaml、hidetsugu-01〜28）にあるものだけ。行の上に `# fact: hidetsugu-NN`。
+#   カードに無い「誰でも知っている前置き」（秀次は秀吉の甥・秀吉の跡を継いで関白になった）は短く使い、# fact を付けない。
+#   処刑の人数は「三十人あまり」だけ（39人とは言わない。カード hidetsugu-03・25 の勢田 2015・日本歴史地名大系の言い方）。
+#   『玉櫛笥』の首をさらした話・木村重茲の家族の処刑の方法・介錯の様子は言わない（広告の配慮。人数・場所・日付まで、「命を奪われた」）。
+#   切腹は「腹を切った」まで。様子は描かない。
+#
+# 台詞の決まり（10-24）：記録の言葉は出どころを語りで言ってから、語りの中で読む（書状の声は作らない。原文は語りで「今の言葉にすると」）。
+#   想像の台詞は4か所（秀次想像。config の roles に足した。白上虎太郎）。気持ちの言葉だけ・新しい事実を足さない・どちらの説にも寄せない。
+#   秀吉の台詞は作らない（命令したか、が主題なので、秀吉の気持ちは想像でも書かない）。
+#
+# 絵：paintings/ の既存の絵で仮置き。秀吉の AI 絵は数正の回の K05（と同じ人）を look で使う（新しく作らない）。
+#   足りない場面（高野山・青巌寺・伏見からの山道・柳の間・瑞泉寺の五輪塔・八幡堀・発掘現場）は「AI絵：<英語の指示>」をコメントに。
+facts: 豊臣秀次_facts_20261028.yaml
+story: true
+title: 豊臣秀次｜なぜ高野山で腹を切ったのか　秀吉は本当に切腹を命じたのか
+series: ""
+playlists: [日本史を掘る（聞き流し）, 戦国時代を掘る]
+shorts_playlists: [日本史ショート]
+tags: [豊臣秀次, 秀次事件, 秀次切腹, 豊臣秀吉, 関白, 高野山, 青巌寺, 金剛峯寺, 柳の間, 木食応其, 甫庵太閤記, 川角太閤記, 御湯殿上日記, 兼見卿記, 矢部健太郎, 殺生関白, 聚楽第, 三条河原, 瑞泉寺, 角倉了以, 瑞龍寺, 日秀尼, 近江八幡, 八幡山城, 八幡堀, 戦国時代, 日本史, 歴史, 再現ドラマ, 歴史の地層]
+
+# 日本語の概要欄の頭（describe が一番上に出す）
+description_head: |-
+  文禄4年7月12日。秀吉は、高野山にあてて、甥の豊臣秀次を「高野山に住まわせる」ための決まりを書きました。供は15人まで、刀も脇差も帯びさせない。
+  その3日後、関白だった秀次は、高野山の青巌寺で腹を切りました。
+  なぜ秀次は、高野山で腹を切ったのか。秀吉は、本当に切腹を命じたのか。
+  この動画でわかること
+  ・7月12日付の「高野住山」の決まりと、14日に使者が伝えた「仲直り」の言葉
+  ・切腹の命令状が『甫庵太閤記』にしか出てこないわけと、矢部健太郎さん・勢田勝郭さんの正反対の読み
+  ・「殺生関白」という呼び名の出どころと、近江八幡に残る秀次の町
+  ・「一宇も残さず」壊された聚楽第、1611年に建った京都の寺、2024年に重要文化財になった建物
+description_note: |-
+  再現の場面の台詞の一部は、記録をもとにした想像です。画面に「想像」の札と「（想像）」の名札を出しています。
+  記録に残る言葉は、出どころ（秀吉の条々、『兼見卿記』『御湯殿上日記』『川角太閤記』『甫庵太閤記』など）を語りで示してから読んでいます。
+
+en:
+  title: "Toyotomi Hidetsugu: Did Hideyoshi Really Order His Seppuku?"
+  description: |-
+    On the 12th day of the 7th month of Bunroku 4 (1595), Hideyoshi sent rules to Mount Koya for his nephew Hidetsugu to "live on the mountain": no more than fifteen attendants, and no swords.
+    Three days later Hidetsugu, the former Kampaku, took his own life at Seiganji on Mount Koya.
+    Why did he die there, and did Hideyoshi really order it?
+    In this video you will learn:
+    - The rules of the 12th and the envoy's promise of reconciliation on the 14th
+    - Why the seppuku order appears only in the Hoan Taikoki, and two historians who read the same diary line in opposite ways
+    - Where the nickname "the Killing Regent" came from, and the town of Omi-Hachiman that Hidetsugu founded
+    - Jurakudai torn down "without leaving a single building", a Kyoto temple founded in 1611, and a hall designated an Important Cultural Property in 2024
+    Some lines in the re-enacted scenes are imagined and marked "imagined" on screen; recorded words are read with their sources.
+    Japanese-language history video to listen to while you work (Japanese audio).
+  chapters:
+    - "Why Did Hidetsugu Die on Mount Koya? The Rules of the 12th"
+    - "Why Did the Regent Leave Fushimi for Mount Koya? July 1595"
+    - "Did Hideyoshi Mean for Him to Live on the Mountain? The Rules and the Envoy"
+    - "Did Hideyoshi Really Order the Seppuku? Two Historians, One Diary Line"
+    - "Why Was He Called the Killing Regent? Omi-Hachiman"
+    - "What Was Erased, and What Remained? Jurakudai, Zuisenji and Zuiryuji"
+
+texture: true
+recap: true
+
+timeline:
+  start: 1580
+  end: 2025
+  events: [[1585, 近江八幡の町を開く], [1595, 高野山で腹を切る], [2024, 柳の間のある建物が重要文化財に]]
+
+terms:
+  関白: 天皇を助けて政治を行う、公家の最高の位
+  条々: 決まりを箇条書きにした文書
+  奉行: 政権の実務を受け持つ役の家臣
+  連署状: 何人かが名を連ねて出した書状
+  落書: 世の中を皮肉って、名を伏せて書き、辻などに掲げた文
+  五輪塔: 5つの石を積んで作る供養の塔
+  塔頭: 大きな寺の境内にある小さな寺
+  重要文化財: 国が指定する、特に大切な文化財
+
+# ショートは後で決める
+shorts: {}
+
+# 次回予告は出さない（物語型、10-24 ユーザー決定）。next: は書かない
+
+thumbnail:
+  layout: face
+  side: right
+  image: paintings/hidenaga_hidetsugu.jpg
+  crop: [0, 0, 1866, 1700]
+  name: 豊臣秀次
+  lead: 秀吉は本当に切腹を命じたのか
+  main: 命令書が無い
+  # 2段：上に小さい問い（lead）、下に特大の一言（main）。命令状の写しが無い（hidetsugu-02）は冒頭1分以内に出る。
+  # 構図：前の回（asahi-story）が face なので、続けたくなければ scene（聚楽第図屏風）に替える
+
+sections:
+  # ================================================================ 導入（冒頭 約1分40秒）
+  - title: なぜ秀次は高野山で腹を切ったのか　文禄4年7月12日の条々
+    background: {image: paintings/akechi_rakuchu_rakugai_uesugi_left.jpg, credit: "《上杉本洛中洛外図屏風》（上杉家蔵）"}
+    # AI絵：Mount Koya in summer 1595, a quiet Buddhist temple compound among tall cedar trees in mountain mist, seen from far away, muted colors, painterly, no people
+    year: 1595
+    lines:
+      # 0〜10秒：知らない事実（切腹の3日前の「住まわせる」条々）
+      # fact: hidetsugu-05
+      - 語り: 秀次が高野山で腹を切る3日前。秀吉は、秀次を「高野山に住まわせる」ための、決まりを書いていました。
+        tone: 重い
+        card: {head: "切腹の3日前", body: 「高野山に住まわせる」}
+      # fact: hidetsugu-05
+      - 語り: 供の者は、15人まで。刀も脇差も、帯びさせない。山の出入り口には、番を置く。
+        card: {head: "7月12日の条々", body: 供15人・刀を帯びない}
+      - 語り: それは、死なせる相手への言葉ではなく、山で暮らし続ける人のための、決まりでした。
+        tone: しみじみ
+      # fact: hidetsugu-01
+      - 語り: けれど、文禄4年、1595年の7月15日。秀吉の甥で、関白にまでなった豊臣秀次は、高野山の青巌寺で、腹を切りました。
+        tone: 重い
+        portrait: {image: paintings/hidenaga_hidetsugu.jpg, caption: "豊臣秀次（17世紀前半の肖像）"}
+        card: {head: "文禄4年7月15日", body: 高野山 青巌寺}
+      # fact: hidetsugu-02
+      - 語り: 秀吉が、切腹を命じた。そう語られてきました。けれど、その命令状の写しは、見つかっていません。
+        tone: 強調
+      # fact: hidetsugu-02
+      - 語り: 歴史学者の矢部健太郎さんは、2016年の記事で、その命令は、江戸時代の『甫庵太閤記』に記されているだけだ、と書いています。
+        portrait: null
+        card: {head: "切腹の命令状", body: 『甫庵太閤記』にだけ}
+      - 語り: なぜ秀次は、高野山で腹を切ったのか。秀吉は、本当に、切腹を命じたのか。
+        tone: 疑問
+        pause: 0.8
+      # fact: hidetsugu-08
+      - 語り: 手がかりのひとつは、切腹の翌日、宮中の『御湯殿上日記』に書かれた、「《むしちゆへ》」という、短い言葉です。
+        tone: 強調
+        card: {head: "御湯殿上日記", body: 「むしちゆへ」}
+      # fact: hidetsugu-08
+      - 語り: この同じ一言を、ふたりの研究者が、正反対に読んでいます。
+      # その後の予告（第5章）
+      # fact: hidetsugu-17
+      - 語り: 秀次がいなくなったあと、京都の聚楽第は、「一宇も残さず」壊されました。
+        background: {image: paintings/hidenaga_jurakudai_screen.jpg, credit: "《聚楽第図屏風》桃山時代（三井記念美術館蔵）"}
+        card: {head: "聚楽第", body: 「一宇も残さず」}
+      # fact: hidetsugu-23
+      - 語り: そして京都の三条には、今も、49の五輪塔が並ぶ寺があります。
+        background: {image: paintings/ryoma_kyoto_sanjo_ohashi_hiroshige_1833.jpg, credit: "歌川広重《京師 三条大橋》1833年ごろ"}
+        card: {head: "京都 三条", body: 49の五輪塔}
+        # AI絵：rows of small weathered stone five-tiered gorinto pagodas in a quiet temple yard in Kyoto, soft rain, muted colors, painterly, no people
+      # fact: hidetsugu-04
+      - 語り: 秀次に付けられた、「殺生関白」という悪い呼び名にも、はっきりした出どころがあります。
+      # 約束の1文
+      - 語り: これは、秀吉の跡継ぎとして関白になった男が、高野山で迎えた最後の数日の、ひとつの「なぜ」の記録です。
+        tone: しみじみ
+        pause: 0.6
+        background: {image: paintings/akechi_rakuchu_rakugai_uesugi_left.jpg, credit: "《上杉本洛中洛外図屏風》（上杉家蔵）"}
+      # 橋渡し
+      - 語り: 話は、その一週間ほど前。伏見から始まります。
+        pause: 0.6
+
+  # ================================================================ 第1章 失脚（文禄4年7月8日〜13日）
+  - title: 関白は、なぜ伏見から高野山へ向かったのか　文禄4年7月
+    background: {image: paintings/nene_fushimi_earthquake_yoshitoshi.jpg, credit: "月岡芳年《伏見大地震桃山御殿図》1885年（国立国会図書館蔵。伏見城を描いた後世の絵）"}
+    year: 1595
+    lines:
+      # 前置き（誰でも知っている流れ。fact は付けない）
+      - 語り: 豊臣秀次は、秀吉の姉の子です。子のいなかった秀吉の跡を継いで、関白の位に就いていました。
+        portrait: {image: paintings/hidenaga_hidetsugu.jpg, caption: "豊臣秀次（17世紀前半の肖像）"}
+      - 語り: その秀次に、謀反の疑いがかけられます。
+        tone: 重い
+      # 大垣城主歴代記（1921）の記述・勢田 2015
+      # fact: hidetsugu-01, hidetsugu-07
+      - 語り: 文禄4年の7月8日。秀次は、伏見から、紀伊の高野山へ向かいました。入ったのは、山の寺の、青巌寺です。
+        card: {head: "7月8日", body: 伏見から高野山へ}
+        figure: {type: map, title: 文禄4年7月 秀次の道のり, bounds: [135.2, 136.2, 34.0, 35.2], places: [[伏見, 135.77, 34.93], [高野山, 135.59, 34.21]], route: [伏見, 高野山], note: 7月8日に伏見を発つ}
+        # AI絵：a small group of travelers in plain clothes climbing a steep mountain path through tall cedar forest toward Mount Koya, summer 1595, seen from far away, muted colors, painterly, no faces
+      # 兼見卿記 7月9日（勢田 2015 注16）
+      # fact: hidetsugu-15
+      - 語り: その翌日、7月9日。公家の吉田兼見は、日記『兼見卿記』に、こう書きました。「《御謀反治定》」。謀反は、決まった、と。
+        figure: null
+        tone: 重い
+        background: {image: paintings/akechi_rakuchu_rakugai_uesugi_right.jpg, credit: "狩野永徳《洛中洛外図屏風》（上杉本）右隻"}
+        card: {head: "兼見卿記 7月9日", body: 「御謀反治定」}
+      # fact: hidetsugu-15
+      - 語り: 続けて、仲間の者が何人もいて、これから取り調べがある、とも。そして、大名たちが、恐れおののいている、と。
+      # 御湯殿上日記 7月13日（勢田 2015）
+      # fact: hidetsugu-15
+      - 語り: 一方、宮中の『御湯殿上日記』は、7月13日、秀吉のことを、「御わづらひ」と書いています。
+        card: {head: "御湯殿上日記 7月13日", body: 秀吉は「御わづらひ」}
+      - 語り: 謀反が決まった、と書く日記と、秀吉が思いわずらっている、と書く日記。同じ数日を、ふたつの日記は、違う温度で書きとめていました。
+        tone: しみじみ
+      # 銀5000枚（勢田 2015 注28・矢部書の目次）
+      # fact: hidetsugu-13
+      - 語り: そして、もうひとつ。秀次は、失脚の直前に、秀吉に断りなく、《銀5000枚》を、朝廷の側に差し出していました。
+        tone: 強調
+        card: {head: "銀5000枚", body: 秀吉に断りなく朝廷へ}
+      # fact: hidetsugu-13
+      - 語り: 『御湯殿上日記』に、この銀のことが初めて出てくるのは、7月12日。秀次が、高野山に入ったあとのことです。
+      - 語り: 秀吉の知らないところで、関白が、朝廷に大金を差し出していた。そのことが、どう受け止められたのか。
+        tone: 疑問
+      # 勢田 2015
+      # fact: hidetsugu-07
+      - 語り: ただ、2015年に、奈良工業高等専門学校の研究紀要に論文を出した勢田さんは、7月8日に高野山行きを命じた時点では、秀吉に、秀次を殺す気はなかった、と見ています。
+        background: {image: paintings/nene_fushimi_earthquake_yoshitoshi.jpg, credit: "月岡芳年《伏見大地震桃山御殿図》1885年（国立国会図書館蔵。伏見城を描いた後世の絵）"}
+        card: {head: "勢田勝郭 2015年", body: 8日の時点で殺す気はなかった}
+      - 語り: 命を取るつもりなら、遠い山に送る必要は、ありません。秀次は、山に送られたんです。
+        tone: しみじみ
+      - 語り: 伏見から高野山までは、山道を越える長い旅です。関白だった人が、わずかな供を連れて、その道を登っていきました。
+        tone: しみじみ
+      # 【想像1】秀次。記録：7月8日に伏見から高野山へ（hidetsugu-01・07）。気持ちの言葉だけ（どちらの説にも寄せない）
+      - 人物: 「……なぜ、こうなった」
+        who: 秀次想像
+        imagined: true
+        tone: しみじみ
+        portrait: {image: paintings/hidenaga_hidetsugu.jpg, caption: "豊臣秀次（17世紀前半の肖像）"}
+      - 語り: 秀次が山に入って、4日後。秀吉は、高野山にあてて、1通の文書を出します。
+        portrait: null
+        hook: true
+      - 語り: そこに書かれていたのは、秀次の、山での暮らし方でした。
+        tone: 重い
+        hook: true
+
+  # ================================================================ 第2章 7月12日の条々と14日の使者
+  - title: 秀吉は、秀次を高野山に住まわせるつもりだったのか　7月12日の条々
+    background: {image: paintings/akechi_rakuchu_rakugai_uesugi_left.jpg, credit: "《上杉本洛中洛外図屏風》（上杉家蔵）"}
+    # AI絵：an old Japanese document of numbered articles written in brush calligraphy on washi paper, lying on a dark wooden desk in a mountain temple, close-up, soft light, no readable text
+    year: 1595
+    lines:
+      # 宮本義己 2017（矢部書の紹介）・勢田 2015
+      # fact: hidetsugu-05
+      - 語り: 7月12日の日付で、秀吉は、高野山の木食応其にあてて、箇条書きの決まりを出しました。応其は、秀吉が頼りにしていた高野山の僧です。
+        card: {head: "7月12日", body: 秀吉から木食応其へ}
+      # fact: hidetsugu-05
+      - 語り: 写しは、『佐竹家旧記』と『南行雑録』に残っています。その書き出しは、「秀次を、高野山に住まわせる」。
+        tone: 強調
+        card: {head: "佐竹家旧記・南行雑録", body: 「高野山に住まわせる」}
+      # fact: hidetsugu-05
+      - 語り: 続いて、秀次のそばに置く者の数です。原文は、「召し使い候者、侍十人。このうち坊主、台所人ども、下人、小者、下男ども五人。都合十五人たるべく候」。
+        figure: {type: stats, title: 7月12日の条々, items: [[供の者, 15人まで, 侍10人とほか5人], [刀と脇差, 帯びない, 秀次も供も], [山の出入り口, 番を置く, 出入りを見る]], upto: 1}
+      # fact: hidetsugu-05
+      - 語り: 侍が10人と、身の回りの者が5人。あわせて、15人です。
+        figure: {type: stats, title: 7月12日の条々, items: [[供の者, 15人まで, 侍10人とほか5人], [刀と脇差, 帯びない, 秀次も供も], [山の出入り口, 番を置く, 出入りを見る]], upto: 1}
+      # fact: hidetsugu-05
+      - 語り: 刀も脇差も、帯びてはならない。
+        figure: {type: stats, title: 7月12日の条々, items: [[供の者, 15人まで, 侍10人とほか5人], [刀と脇差, 帯びない, 秀次も供も], [山の出入り口, 番を置く, 出入りを見る]], upto: 2}
+      # fact: hidetsugu-05
+      - 語り: 山の出入り口には、番を置く。
+        figure: {type: stats, title: 7月12日の条々, items: [[供の者, 15人まで, 侍10人とほか5人], [刀と脇差, 帯びない, 秀次も供も], [山の出入り口, 番を置く, 出入りを見る]], upto: 3}
+      - 語り: 人数を決め、刃物を取り上げ、出入りを見張る。山に閉じ込めて、そこで暮らさせるための決まりです。
+        tone: しみじみ
+        figure: null
+      - 語り: 3日後に腹を切らせる相手に、供の人数まで、細かく決めておくでしょうか。
+        tone: 疑問
+      # 福原長尭（勢田 2015 が引く『川角太閤記』）
+      # fact: hidetsugu-10
+      - 語り: この12日、伏見からは、秀吉の使者の福原長尭が、高野山へ向けて出発しています。
+        background: {image: paintings/nene_fushimi_earthquake_yoshitoshi.jpg, credit: "月岡芳年《伏見大地震桃山御殿図》1885年（国立国会図書館蔵。伏見城を描いた後世の絵）"}
+        card: {head: "7月12日", body: 使者 福原長尭が出発}
+      # fact: hidetsugu-12
+      - 語り: 福原が秀次のもとに着いたのは、14日。江戸時代の初めにまとめられた『川角太閤記』によれば、福原は、秀次に、こう伝えました。
+        background: {image: paintings/akechi_rakuchu_rakugai_uesugi_left.jpg, credit: "《上杉本洛中洛外図屏風》（上杉家蔵）"}
+      # 【記録】『川角太閤記』「終には目出たく御中なほりなさるべく候ふ間」（勢田 2015 が引く）。語りの中で読む
+      # fact: hidetsugu-12
+      - 語り: 「終には、目出たく、御仲直りなさるべく候」。今の言葉にすると、いずれ、めでたく、仲直りなさるでしょう。
+        tone: 強調
+        card: {head: "川角太閤記 7月14日", body: 「目出たく御仲直り」}
+      # fact: hidetsugu-12
+      - 語り: そう言って福原は、秀次から、刀などの道具を、差し出させます。
+      - 語り: 12日の条々は、刀を帯びさせない、と決めていました。福原は、その決まりのとおりに、刃物を預かったことになります。
+      - 語り: 仲直りの見込みを伝え、刃物を預かる。この日の使者の言葉には、切腹の気配が、ありません。
+        tone: しみじみ
+      # 【想像2】秀次。記録：14日に福原から「目出たく御仲直り」と伝えられた（hidetsugu-12）。気持ちの言葉だけ
+      - 人物: 「……仲直り、か」
+        who: 秀次想像
+        imagined: true
+        tone: しみじみ
+        portrait: {image: paintings/hidenaga_hidetsugu.jpg, caption: "豊臣秀次（17世紀前半の肖像）"}
+      # 13日に福島正則・池田が出発（勢田 2015）
+      # fact: hidetsugu-10
+      - 語り: けれど、その前の日、13日。伏見からは、別の使者が、高野山へ向けて出ていました。福島正則と、池田伊予守です。
+        portrait: null
+        background: {image: paintings/nene_fushimi_earthquake_yoshitoshi.jpg, credit: "月岡芳年《伏見大地震桃山御殿図》1885年（国立国会図書館蔵。伏見城を描いた後世の絵）"}
+        card: {head: "7月13日", body: 福島正則・池田伊予守が出発}
+      - 語り: 12日に出た使者は、仲直りを告げた。13日に出た使者は、何を運んでいたのか。
+        tone: 疑問
+        hook: true
+      - 語り: 答えは、15日の朝に出ます。
+        tone: 重い
+        hook: true
+
+  # ================================================================ 第3章 命令はあったのか（矢部説と勢田説）
+  - title: 秀吉は、本当に切腹を命じたのか　7月15日 青巌寺
+    background: {image: paintings/akechi_rakuchu_rakugai_uesugi_left.jpg, credit: "《上杉本洛中洛外図屏風》（上杉家蔵）"}
+    # AI絵：the interior of a Japanese mountain temple hall at early morning, sliding doors painted with willow trees and herons, empty room, soft light through paper screens, painterly, no people
+    year: 1595
+    lines:
+      # 川角太閤記（勢田 2015）
+      # fact: hidetsugu-11
+      - 語り: 『川角太閤記』は、その朝のことを、時刻まで書いています。7月15日の「五ツ時分」。今の午前7時前後に、秀吉からの命令が伝えられた、と。
+        card: {head: "川角太閤記", body: 15日の五ツ時分に命令}
+      # fact: hidetsugu-11
+      - 語り: この話のもとは、その場にいて生き残った、秀次の近くに仕えた者からの、聞き書きだ、といわれています。
+      # 御湯殿上日記 7月16日（勢田 2015 補論Ⅰ）
+      # fact: hidetsugu-08
+      - 語り: 翌16日の『御湯殿上日記』は、こう記します。「関白殿、昨日十五日の四つ時に、御腹切らせられ候よし申す」。
+        tone: 重い
+        card: {head: "御湯殿上日記 7月16日", body: 15日の四つ時に}
+      # fact: hidetsugu-09
+      - 語り: 四つ時は、今の午前10時ごろ。秀次は、その時刻に、腹を切りました。
+      - 語り: では、その命令は、いつ、どこから出たのか。
+        tone: 疑問
+      # 通説の形（渡辺世祐 1919 p.74）
+      # fact: hidetsugu-01
+      - 語り: 100年あまり前、大正8年、1919年に出た、渡辺世祐の『豊太閤と其家族』は、こう書いています。
+      # fact: hidetsugu-01
+      - 語り: 15日、太閤の使者として、福島正則、福原、池田が高野山に着いた。そして木食応其を呼び、秀次に切腹を命じる太閤の沙汰を伝えた、と。
+        card: {head: "渡辺世祐 1919年", body: 15日に使者が切腹の沙汰を伝えた}
+      # 増補大垣城主歴代記（1921 p.16）
+      # fact: hidetsugu-01
+      - 語り: 1921年の『増補大垣城主歴代記』も、秀次は、7月8日に職を辞して高野山の青巌寺に押し込められ、15日、秀吉公の命によって自ら命を絶った、と記します。
+      # 続撰清正記（国史叢書 1916 p.70）
+      # fact: hidetsugu-01
+      - 語り: 江戸時代の『続撰清正記』では、奉行たちが名を連ねた書状を木食応其に送り、秀次に切腹のことを告げさせた、となっています。
+      - 語り: 使者が来て、命令を伝え、秀次が腹を切る。わたしたちがよく知る筋書きは、こうした本の中で、形になっていきました。
+        tone: しみじみ
+      - 語り: では、その筋書きのもとになった命令状は、どこにあるのか。
+        tone: 疑問
+      # 甫庵太閤記の13日付 奉行連署状（古事類苑 1914 が引く）
+      # fact: hidetsugu-02
+      - 語り: 江戸時代に書かれた『甫庵太閤記』には、7月13日の日付で、奉行たちが名を連ねた、切腹の命令状が載っています。
+        card: {head: "甫庵太閤記", body: 13日付の命令状}
+      # fact: hidetsugu-02
+      - 語り: その一節は、「秀次公、御謀叛の条々、少しも疑い無きにより、御切腹を進めらるべきの旨に候」。謀反は疑いない、だから切腹を、という文面です。
+        tone: 重い
+      # 矢部 2016（東洋経済）
+      # fact: hidetsugu-02
+      - 語り: ところが、矢部健太郎さんによれば、この命令状は、ほかの写しが確認されていません。出てくるのは、『甫庵太閤記』の中だけです。
+        tone: 強調
+      # fact: hidetsugu-02
+      - 語り: 矢部さんは、これを、甫庵が江戸時代に「創作」したもの、と見ています。
+      # 勢田も「虚構」（hidetsugu-10）
+      # fact: hidetsugu-10
+      - 語り: 驚くのは、矢部さんの説に反対する勢田さんも、この命令状については、史料として使えないことは明白だ、と書いていることです。
+        tone: 強調
+        background: {image: paintings/nene_fushimi_earthquake_yoshitoshi.jpg, credit: "月岡芳年《伏見大地震桃山御殿図》1885年（国立国会図書館蔵。伏見城を描いた後世の絵）"}
+      # fact: hidetsugu-10
+      - 語り: 『甫庵太閤記』は、3人の使者がそろって高野山へ向かった、と書きます。けれど実際には、福原は12日、福島と池田は13日に、別々に出ていました。
+        card: {head: "3人の使者", body: 12日と13日に別々に出発}
+      - 語り: 命令状は、ふたりとも信じない。それでも、ふたりの結論は、正反対です。
+        tone: しみじみ
+      # 矢部説（宮本 2017・東洋経済 2016）
+      # fact: hidetsugu-06
+      - 語り: 矢部健太郎さんは、2013年の論文と、2016年の本『関白秀次の切腹』で、こう考えました。秀吉には、秀次に腹を切らせる意思はなかった。
+        background: {image: paintings/akechi_rakuchu_rakugai_uesugi_left.jpg, credit: "《上杉本洛中洛外図屏風》（上杉家蔵）"}
+        card: {head: "矢部健太郎", body: 秀吉に切腹させる意思はなかった}
+      # fact: hidetsugu-06
+      - 語り: 秀次は、身の潔白を示すために、自ら腹を切った。切腹には、「究極の請願の形態」という一面があり、自分から行う例があった、と矢部さんは書いています。
+      # fact: hidetsugu-06
+      - 語り: 秀吉にとっては、想定外の死。政権はそれを取り繕うために、「天下の大罪人、秀次」という謀反人の姿を作り上げ、妻子の処刑で、幕を引いた。
+        tone: 重い
+      # 勢田説（2015）
+      # fact: hidetsugu-07
+      - 語り: これに対して、勢田さんは、2015年の論文で、雪冤のための自刃、つまり、無実を晴らすために自ら命を絶ったという説は、うなずけない、と書きました。
+        card: {head: "勢田勝郭 2015年", body: 「首肯できない」}
+      # fact: hidetsugu-07
+      - 語り: 勢田さんの見方では、8日の時点で、殺す気はなかった。けれど、13日までに、秀吉の方針が変わった。そして15日、秀次は、秀吉の命令で腹を切った。
+      # 食い違い①：表で3点
+      # fact: hidetsugu-08
+      - 語り: ふたりの読みが、はっきり分かれるところが、3つあります。まず、冒頭の「むしちゆへ」です。
+        figure: {type: table, title: 秀次の切腹　ふたつの説, cols: [矢部健太郎, 勢田勝郭], rows: [[「むしちゆへ」, 無実を示すため切腹, 無実なのにと人が言う], [13日の命令, 15日朝に届かない, 14日の午前に着く], [重んじる記録, 12日の条々, 川角太閤記の聞き書き]], upto: 1}
+      # fact: hidetsugu-08
+      - 語り: 『御湯殿上日記』の、「むしちゆへ、かくの事候のよし申すなり」。矢部さんは、無実を証明するために、こうなった、と読みます。
+        figure: {type: table, title: 秀次の切腹　ふたつの説, cols: [矢部健太郎, 勢田勝郭], rows: [[「むしちゆへ」, 無実を示すため切腹, 無実なのにと人が言う], [13日の命令, 15日朝に届かない, 14日の午前に着く], [重んじる記録, 12日の条々, 川角太閤記の聞き書き]], upto: 1}
+      # fact: hidetsugu-08
+      - 語り: 勢田さんは、無実なのに、こんなことになった、と人々が言っている、という伝え聞きだ、と読みます。同じ一言が、まったく逆の意味になるんです。
+        tone: 強調
+        figure: {type: table, title: 秀次の切腹　ふたつの説, cols: [矢部健太郎, 勢田勝郭], rows: [[「むしちゆへ」, 無実を示すため切腹, 無実なのにと人が言う], [13日の命令, 15日朝に届かない, 14日の午前に着く], [重んじる記録, 12日の条々, 川角太閤記の聞き書き]], upto: 1}
+      # fact: hidetsugu-09
+      - 語り: ふたつめは、時間です。矢部さんは、13日に出た命令を、15日の午前10時までに高野山へ届けるのは、物理的に不可能だ、とします。
+        figure: {type: table, title: 秀次の切腹　ふたつの説, cols: [矢部健太郎, 勢田勝郭], rows: [[「むしちゆへ」, 無実を示すため切腹, 無実なのにと人が言う], [13日の命令, 15日朝に届かない, 14日の午前に着く], [重んじる記録, 12日の条々, 川角太閤記の聞き書き]], upto: 2}
+      # fact: hidetsugu-09
+      - 語り: 勢田さんは、伏見を出た使者は、14日の午前中には、余裕で高野山に着ける、と反論します。
+        figure: {type: table, title: 秀次の切腹　ふたつの説, cols: [矢部健太郎, 勢田勝郭], rows: [[「むしちゆへ」, 無実を示すため切腹, 無実なのにと人が言う], [13日の命令, 15日朝に届かない, 14日の午前に着く], [重んじる記録, 12日の条々, 川角太閤記の聞き書き]], upto: 2}
+      # fact: hidetsugu-05, hidetsugu-11
+      - 語り: みっつめは、どの記録を重んじるか。矢部さんの本は、12日の条々の「住まわせる」を重く見ます。
+        figure: {type: table, title: 秀次の切腹　ふたつの説, cols: [矢部健太郎, 勢田勝郭], rows: [[「むしちゆへ」, 無実を示すため切腹, 無実なのにと人が言う], [13日の命令, 15日朝に届かない, 14日の午前に着く], [重んじる記録, 12日の条々, 川角太閤記の聞き書き]], upto: 3}
+      # fact: hidetsugu-11
+      - 語り: 勢田さんは、その場にいた者の聞き書きといわれる『川角太閤記』の、15日の朝に命令が届いた、という一文を重く見ます。
+        figure: {type: table, title: 秀次の切腹　ふたつの説, cols: [矢部健太郎, 勢田勝郭], rows: [[「むしちゆへ」, 無実を示すため切腹, 無実なのにと人が言う], [13日の命令, 15日朝に届かない, 14日の午前に着く], [重んじる記録, 12日の条々, 川角太閤記の聞き書き]], upto: 3}
+      # fact: hidetsugu-07
+      - 語り: 2021年には、藤井讓治さんも、「秀次切腹をめぐって」という論文を出しています。答えは、まだ一つに決まっていません。
+        figure: null
+        tone: しみじみ
+      # 【想像3】秀次。記録：15日の朝、腹を切った（hidetsugu-01・08）。気持ちの言葉だけ（自らか命令か、どちらにも寄せない）
+      - 人物: 「……もはや、これまで」
+        who: 秀次想像
+        imagined: true
+        tone: 重い
+        portrait: {image: paintings/hidenaga_hidetsugu.jpg, caption: "豊臣秀次（17世紀前半の肖像）"}
+      - 語り: 命令で切ったのか。自ら切ったのか。どちらにしても、秀次の死のあと、政権は、秀次を「謀反人」として扱っていきます。
+        portrait: null
+        hook: true
+      - 語り: その姿を、いちばん強く人々に焼きつけたのが、ひとつの呼び名でした。
+        tone: 重い
+        hook: true
+
+  # ================================================================ 第4章 「殺生関白」の出どころと近江八幡
+  - title: 秀次は、なぜ「殺生関白」と呼ばれたのか　甫庵太閤記の落書
+    background: {image: paintings/akechi_rakuchu_rakugai_uesugi_right.jpg, credit: "狩野永徳《洛中洛外図屏風》（上杉本）右隻"}
+    year: 1595
+    lines:
+      # 甫庵太閤記（正保3年刊本）
+      # fact: hidetsugu-04
+      - 語り: 「殺生関白」。この呼び名は、どこから来たのか。
+        tone: 疑問
+      # fact: hidetsugu-04
+      - 語り: 江戸時代の『甫庵太閤記』は、そのころ、京の町の辻々に、夜ごと落書が出た、と書きます。
+        card: {head: "甫庵太閤記", body: 京の辻々に夜ごと落書}
+      # fact: hidetsugu-04
+      - 語り: 落書の文句は、「院の御所、手向けのための狩りなれば、これを殺生関白という」。
+        tone: 重い
+        card: {head: "落書", body: 「せっしょう関白」}
+      # 本朝通鑑・渡辺世祐 1929
+      # fact: hidetsugu-04
+      - 語り: 江戸幕府の儒者、林羅山と林春斎の『本朝通鑑』は、殺生と摂政は、音が近い、と書き添えました。摂政と並ぶ関白の位に、殺生の字を重ねた、言葉遊びです。
+      # 続撰清正記（国史叢書 1916）
+      # fact: hidetsugu-04
+      - 語り: 別の江戸時代の書物、『続撰清正記』は、鳥や獣を殺す狩りを好んだので、世の人が殺生関白と呼んだ、とします。
+      # 絵本太閤記（明治刊本 1884 p.322）
+      # fact: hidetsugu-04
+      - 語り: 明治17年、1884年に刷られた『絵本太閤記』では、一条の辻に札が立ち、先帝への手向けのための狩りなれば、これや殺生関白、と書かれていた、という形になっています。
+      # 渡辺世祐『稿本石田三成』1929
+      # fact: hidetsugu-04
+      - 語り: 1929年、渡辺世祐は『稿本石田三成』で、世の人が殺生関白と呼んだ、殺生は摂政と音が通じるからだ、と書きました。
+      # 小和田哲男 2002（書名）
+      # fact: hidetsugu-04
+      - 語り: 2002年には、小和田哲男さんの本が、『豊臣秀次　「殺生関白」の悲劇』という題で出ています。この呼び名は、400年をこえて、秀次の名に付いて回ってきました。
+      - 語り: 辻の落書から、江戸の書物へ、そして明治の本へ。呼び名は、書き写されるたびに、少しずつ形を整えていきました。
+        tone: しみじみ
+      # 矢部 2016
+      # fact: hidetsugu-04
+      - 語り: 矢部健太郎さんは、2016年の記事で、秀次の「殺生関白」も、「信頼すべき根拠のない作り話であった」と書いています。
+        tone: 強調
+        card: {head: "矢部健太郎 2016年", body: 「根拠のない作り話」}
+      # 今泉 2026
+      # fact: hidetsugu-21
+      - 語り: 古城探訪家の今泉慎一さんも、2026年の記事で、秀次の悪い行いの話は、あくまで後世の創作だ、としています。
+      - 語り: では、作り話の外に残る秀次は、どんな人だったのか。その手がかりが、近江にあります。
+        tone: 疑問
+      # 近江八幡（観光庁の解説文 2022・2024）
+      # fact: hidetsugu-19
+      - 語り: 1585年。まだ若い秀次は、近江の八幡山に城を築き、その麓に、町を開きました。今の、滋賀県近江八幡市です。
+        background: {image: paintings/mitsunari_omi_hakkei_seta_hiroshige.jpg, credit: "歌川広重《近江八景 瀬田夕照》1857年ごろ（メトロポリタン美術館蔵）"}
+        card: {head: "1585年", body: 八幡山城の城下町を開く}
+        figure: {type: map, title: 1585年 秀次の町, bounds: [135.6, 136.4, 34.8, 35.4], places: [[近江八幡, 136.09, 35.13], [安土, 136.14, 35.16], [京都, 135.77, 35.01]], note: 八幡山の麓に城下町}
+      # fact: hidetsugu-19
+      - 語り: 秀次は、商人を広く呼び集め、税を免じ、自由に商いができる町にしました。そして、町に、八幡堀を掘らせます。
+        figure: null
+        card: {head: "八幡堀", body: 秀次が掘らせた}
+        # AI絵：a calm canal lined with old white-walled merchant storehouses and willow trees in Omi-Hachiman, a small wooden boat, early morning mist, painterly, no people
+      # 今泉 2026
+      # fact: hidetsugu-21
+      - 語り: 城下には、安土の町をにぎわせていた商人たちを移した、といわれています。
+      # fact: hidetsugu-21
+      - 語り: 近江八幡の側からは、整然とした城下町にこそ、秀次の本当の資質が見える、という評価があります。
+        tone: しみじみ
+      - 語り: 殺生関白と呼ばれた人が、商人の町を開いた人でもあった。ふたつの姿は、どうにも重なりません。
+        tone: しみじみ
+        portrait: {image: paintings/hidenaga_hidetsugu.jpg, caption: "豊臣秀次（17世紀前半の肖像）"}
+      # 【想像4】秀次。記録：1585年に八幡山城の城下町を開いた（hidetsugu-19）。気持ちの言葉だけ
+      - 人物: 「……よい町に、なれ」
+        who: 秀次想像
+        imagined: true
+        tone: しみじみ
+      - 語り: けれど、秀次の死のあと、秀次にまつわるものは、次々と消されていきます。
+        portrait: null
+        hook: true
+      - 語り: 消されたのは、人だけではありませんでした。
+        tone: 重い
+        hook: true
+
+  # ================================================================ 第5章 その後（消されたもの・残ったもの）
+  - title: まとめ：秀次のあと、何が消され、何が残ったのか　三条河原と聚楽第
+    background: {image: paintings/ryoma_kyoto_sanjo_ohashi_hiroshige_1833.jpg, credit: "歌川広重《京師 三条大橋》1833年ごろ"}
+    year: 1595
+    lines:
+      # 兼見卿記（勢田 2015 注24）。方法は言わない
+      # fact: hidetsugu-16
+      - 語り: 処罰は、秀次ひとりで終わりませんでした。『兼見卿記』によれば、秀次の側近だった木村重茲の家族も、7月の下旬に、命を奪われています。
+        tone: 重い
+      # 食い違い②：妻子の処刑の日付と人数（勢田 2015・日本歴史地名大系・矢部書の目次）
+      # fact: hidetsugu-03, hidetsugu-25
+      - 語り: そして、秀次の妻と子どもたち。勢田さんの論文は、8月2日、妻妾三十人あまりが、その子とともに、京都の三条河原で命を奪われた、と書きます。
+        card: {head: "8月2日", body: 三条河原}
+      # fact: hidetsugu-25
+      - 語り: ところが、この日付も、記録によって違います。
+        tone: 強調
+        figure: {type: stats, title: 秀次の妻子の処刑　日付の食い違い, items: [[勢田勝郭 2015年, 8月2日, 妻妾三十人あまりと子], [矢部健太郎の本, 8月2日, 目次「妻子の公開処刑」], [日本歴史地名大系, 7月15日, 遺児と妻妾三十人あまり]], upto: 2}
+      # fact: hidetsugu-25
+      - 語り: 平凡社の『日本歴史地名大系』は、7月15日、秀次が腹を切ったのと同じ日付で書いています。人数も、本によって、数人ずつ違います。
+        figure: {type: stats, title: 秀次の妻子の処刑　日付の食い違い, items: [[勢田勝郭 2015年, 8月2日, 妻妾三十人あまりと子], [矢部健太郎の本, 8月2日, 目次「妻子の公開処刑」], [日本歴史地名大系, 7月15日, 遺児と妻妾三十人あまり]], upto: 3}
+      - 語り: 多くの人の命が奪われた出来事なのに、その日付と数さえ、記録はそろっていないんです。
+        tone: しみじみ
+        figure: null
+      # 銀の返却（勢田 2015 注28）
+      # fact: hidetsugu-13
+      - 語り: 秀次が差し出した銀5000枚は、8月5日、そっくり秀吉の側へ返されたようです。
+        card: {head: "8月5日", body: 銀5000枚が返される}
+      # 聚楽第の破却（京都市 2023・日本西教史）
+      # fact: hidetsugu-17
+      - 語り: そして、京都の聚楽第。秀吉が築いた、豪華な城です。秀次の失脚とともに、この城も壊されました。
+        background: {image: paintings/hidenaga_jurakudai_screen.jpg, credit: "《聚楽第図屏風》桃山時代（三井記念美術館蔵）"}
+      # fact: hidetsugu-17
+      - 語り: 宣教師の側の記録をもとにした『日本西教史』は、聚楽第を、「一宇も残さず、基礎にいたるまで、ことごとく壊させた」と書いています。
+        tone: 重い
+        card: {head: "日本西教史", body: 「一宇も残さず」}
+      # fact: hidetsugu-17
+      - 語り: 建物や石垣の材は、伏見などへ運ばれました。築かれてから壊されるまで、わずか9年でした。
+        card: {head: "聚楽第", body: 築城から破却まで9年}
+      # 発掘（京都府埋文 2013・京都市 2023）
+      # fact: hidetsugu-26
+      - 語り: その聚楽第が、地面の下から姿を見せ始めます。2012年の発掘で、本丸の南の濠の石垣が、初めて見つかりました。濠からは、金箔の瓦も出ています。
+        card: {head: "2012年の発掘", body: 本丸南の濠の石垣・金箔瓦}
+        # AI絵：an archaeological excavation site in a Kyoto residential street, exposed old stone wall foundations in a trench, gold-leaf roof tile fragments on a tray, daylight, documentary style, no faces
+      # fact: hidetsugu-27
+      - 語り: 2023年には、絵図にも描かれていない西の外堀の跡とみられる、幅およそ12メートル、深さおよそ3メートルの堀の跡が、初めて確かめられました。
+        card: {head: "2023年の発掘", body: 幅約12m・深さ約3mの堀}
+      # 京都市 2023 記者発表
+      # fact: hidetsugu-01
+      - 語り: 2023年の京都市の記者発表も、秀次が失脚した文禄4年に、聚楽第は徹底的に壊された、と考えられる、と書いています。
+      - 語り: 一つも残さず壊された城が、400年あまりたって、少しずつ、地面の下から戻ってきています。
+        tone: しみじみ
+      # 瑞泉寺（日本歴史地名大系・精選版 日本国語大辞典・ニッポン旅マガジン）
+      # fact: hidetsugu-23
+      - 語り: 三条河原の塚は、「悪逆塚」とも、「畜生塚」とも呼ばれました。
+        background: {image: paintings/ryoma_kyoto_sanjo_ohashi_hiroshige_1833.jpg, credit: "歌川広重《京師 三条大橋》1833年ごろ"}
+        card: {head: "三条河原の塚", body: 「悪逆塚」「畜生塚」}
+      # fact: hidetsugu-22
+      - 語り: 慶長16年、1611年。高瀬川を開いた豪商、角倉了以が、僧の桂叔とはかって、この塚を建て直します。これが、今の瑞泉寺の始まりです。
+        card: {head: "1611年", body: 角倉了以が瑞泉寺を開く}
+      # fact: hidetsugu-23
+      - 語り: 寺の言い伝えでは、了以は、高瀬川の工事の途中で、「秀次悪逆塚、文禄四年七月十四日」と刻まれた墓石を、掘り当てたといいます。
+        tone: しみじみ
+      # fact: hidetsugu-23
+      - 語り: 刻まれた日付は、14日。秀次が腹を切った15日とも、妻子の8月2日とも、合いません。これも、伝承のなかの日付です。
+        card: {head: "墓石の言い伝え", body: 「七月十四日」}
+      # fact: hidetsugu-23
+      - 語り: 瑞泉寺の境内には、今も、49の五輪塔が並んでいます。
+        tone: しみじみ
+        card: {head: "瑞泉寺", body: 49の五輪塔}
+      # 瑞龍寺（精選版 日本国語大辞典・観光庁）。移転年の食い違いは語りだけ
+      # fact: hidetsugu-20
+      - 語り: 秀次の母、日秀尼は、文禄5年、1596年、息子の菩提をとむらうために、京都に瑞龍寺を開きました。村雲御所と呼ばれた寺です。
+        portrait: {image: paintings/hidenaga_hidetsugu.jpg, caption: "豊臣秀次（17世紀前半の肖像）"}
+        card: {head: "1596年", body: 日秀尼が瑞龍寺を開く}
+      # fact: hidetsugu-20
+      - 語り: その瑞龍寺は、昭和になって、京都から、近江八幡の八幡山の上へ移されました。建っているのは、秀次の八幡山城の、本丸の跡です。移った年は、1961年とも、1963年ともいわれます。
+        portrait: null
+        background: {image: paintings/mitsunari_omi_hakkei_seta_hiroshige.jpg, credit: "歌川広重《近江八景 瀬田夕照》1857年ごろ（メトロポリタン美術館蔵）"}
+        card: {head: "瑞龍寺", body: 八幡山城の本丸跡へ}
+      - 語り: 母が息子のために建てた寺は、息子が開いた町を見下ろす山の上に、帰ってきたことになります。
+        tone: しみじみ
+      - 語り: 京都の三条と、近江の八幡山。秀次をとむらう寺は、ふたつの土地に分かれて、今も残っています。
+      # 柳の間（まっぷる・文化遺産オンライン）
+      # fact: hidetsugu-24
+      - 語り: 高野山の金剛峯寺には、「柳の間」と呼ばれる部屋があります。山本探斎が描いた、柳と鷺の襖絵から付いた名で、「秀次自刃の間」とも呼ばれてきました。
+        background: {image: paintings/akechi_rakuchu_rakugai_uesugi_left.jpg, credit: "《上杉本洛中洛外図屏風》（上杉家蔵）"}
+        card: {head: "金剛峯寺", body: 柳の間（秀次自刃の間）}
+        # AI絵：a quiet tatami room in a Japanese temple with sliding doors painted with willow branches and white herons, soft daylight, empty room, painterly, no people
+      # fact: hidetsugu-24
+      - 語り: ただ、今の建物、大主殿は、幕末の文久2年、1862年に建てられたものです。2024年の1月に、国の重要文化財になりました。
+        card: {head: "大主殿", body: 1862年の建物・2024年に重要文化財}
+      - 語り: 秀次が最期を迎えた部屋そのものは、もう、ありません。今の建物ができたのは、秀次の死から、260年あまりのちです。その名前だけが、建て直された部屋に、受け継がれています。
+        tone: しみじみ
+      # 食い違い③：享年（宮本 2017 が紹介する矢部書の目次）
+      # fact: hidetsugu-14, hidetsugu-28
+      - 語り: 秀次の年も、記録によって違います。『甫庵太閤記』や『公卿補任』による通説は、28歳。
+        figure: {type: stats, title: 秀次の享年　2つの説, items: [[甫庵太閤記・公卿補任, 28歳, 通説], [所三男氏持参文書, 32歳, 矢部健太郎の説]], upto: 1}
+      # fact: hidetsugu-14
+      - 語り: 矢部さんは、『所三男氏持参文書』という史料から、32歳という説を出しています。
+        figure: {type: stats, title: 秀次の享年　2つの説, items: [[甫庵太閤記・公卿補任, 28歳, 通説], [所三男氏持参文書, 32歳, 矢部健太郎の説]], upto: 2}
+      - 語り: 命令か、自らか。28か、32か。秀次の最期は、日付も年も、まだ揺れたままです。
+        tone: しみじみ
+        figure: null
+
+      # 締め：冒頭の条々（7月12日）に戻る
+      # fact: hidetsugu-05
+      - 語り: 文禄4年7月12日。秀吉は、秀次を、高野山に住まわせる、と書きました。供は15人。刀は帯びない。
+        tone: しみじみ
+        background: {image: paintings/akechi_rakuchu_rakugai_uesugi_left.jpg, credit: "《上杉本洛中洛外図屏風》（上杉家蔵）"}
+        card: {head: "7月12日の条々", body: 「高野山に住まわせる」}
+      # fact: hidetsugu-08
+      - 語り: その3日後に、秀次は腹を切りました。命令だったのか、潔白を示すためだったのか。答えは、「むしちゆへ」という一言を、どう読むかにかかっています。
+        tone: しみじみ
+      - 語り: 伏見を出た使者は、仲直りを告げ、別の使者は、何かを運んでいた。15日の朝、高野山で何が伝えられたのか。その場の言葉は、聞き書きの中にしか残っていません。
+        tone: しみじみ
+      - 語り: 山で暮らすための決まりは、守られることのないまま、写しだけが残りました。
+        tone: しみじみ
+        portrait: {image: paintings/hidenaga_hidetsugu.jpg, caption: "豊臣秀次（17世紀前半の肖像）"}
+        pause: 0.8
+
+      # 締め（物語型、10-24 ユーザー決定）：余韻の一文のあと、登録のお願いを短く
+      - 語り: 感想は、コメントで聞かせてください。チャンネル登録も、よろしくお願いします。
+        portrait: null
+
+# ============================================================================
+# 台詞の一覧（記録／想像）
+# 記録（出どころを語りで言ってから、語りの中で読む。書状の声は作らない）：
+#   - 7月12日の条々「召使候者侍十人、此内坊主、台所人共、下人、小者、下男共五人、都合十五人可為候」（勢田 2015 p.3、hidetsugu-05）
+#   - 『兼見卿記』7月9日「御謀反治定、歴々一味之衆在之、連々可有御糺明」（勢田 2015 注16、hidetsugu-15）。「諸大名恐怖」もカードの claim
+#   - 『川角太閤記』「終には目出たく御中なほりなさるべく候ふ間」（勢田 2015 p.4、hidetsugu-12）
+#   - 『御湯殿上日記』7月16日「くわんはくとの、きのふ十五日のよつ時に御はらきらせられ候よし申。むしちゆへかくの事候のよし申なり」（hidetsugu-08）
+#   - 『甫庵太閤記』13日付の連署状「依秀次公御謀叛之條々少も依無疑之、可被進御切腹之旨候」（古事類苑 1914、hidetsugu-02）
+#   - 『甫庵太閤記』の落書「院の御所手向のためのかりなれはこれをせつしやう関白といふ」（hidetsugu-04）
+#   - 矢部 2016「信頼すべき根拠のない作り話であった」・「究極の請願の形態」（hidetsugu-04・06）／『日本西教史』「一宇も残さず、基礎にいたるまで悉く毀たしめ」（hidetsugu-17）
+# 想像（4か所。roles の 秀次想像＋imagined: true＝字幕の上に「想像」の札）：
+#   1 秀次「……なぜ、こうなった」（7月8日、伏見から高野山へ）……hidetsugu-01・07。気持ちだけ
+#   2 秀次「……仲直り、か」（7月14日、福原の言葉を聞いて）……hidetsugu-12。気持ちだけ
+#   3 秀次「……もはや、これまで」（7月15日の朝）……hidetsugu-01・08。自らか命令か、どちらにも寄せない
+#   4 秀次「……よい町に、なれ」（1585年、近江八幡）……hidetsugu-19。気持ちだけ
