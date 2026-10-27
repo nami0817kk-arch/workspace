@@ -1,0 +1,27 @@
+{
+ "long": {
+  "id": "ueFjqY_JJGw",
+  "publish_at": "2026-10-29T21:00:00+09:00",
+  "thumb": "out/sky/thumb_long.jpg"
+ },
+ "s1": {
+  "id": "qJ6N5NpRfFw",
+  "publish_at": "2026-10-30T17:00:00+09:00"
+ },
+ "s2": {
+  "id": "58SJyON2S8M",
+  "publish_at": "2026-10-30T18:00:00+09:00"
+ },
+ "s3": {
+  "id": "TIJZ4K0_oEI",
+  "publish_at": "2026-10-30T19:00:00+09:00"
+ },
+ "s4": {
+  "id": "yIf8okNzIQk",
+  "publish_at": "2026-10-30T20:00:00+09:00"
+ },
+ "s5": {
+  "id": "eUX--Lxu9fc",
+  "publish_at": "2026-10-30T21:00:00+09:00"
+ }
+}
