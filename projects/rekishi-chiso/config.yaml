@@ -669,6 +669,15 @@ roles:
     tone_strength: 0.5
     max_intonation: 1.3
     max_speed: 1.0
+  利休想像:                  # 10-28。rikyu-story の想像の台詞。利休（数え70歳）は年配の落ち着いた男性の声 雀松朱司（秀吉書状の玄野武宏と別の声）
+    label: 千利休（想像）
+    name: 雀松朱司
+    style_id: 52
+    speed: 0.92
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
 
 character_credits:
   - "立ち絵：春日部つむぎ公式立ち絵素材（春日部つくし）"
